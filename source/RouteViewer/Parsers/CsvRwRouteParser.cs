@@ -4061,8 +4061,8 @@ namespace OpenBve {
 												}
 											}
 										}
-										int ttidx = -1, tdt = -1, tnt = -1;
 										if (!PreviewOnly) {
+											int ttidx = -1, tdt = -1, tnt = -1;
 											if (Arguments.Length >= 12 && Arguments[11].Length > 0) {
 												if (!NumberFormats.TryParseIntVb6(Arguments[11], out ttidx)) {
 													ttidx = -1;

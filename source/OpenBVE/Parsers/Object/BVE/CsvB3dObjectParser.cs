@@ -69,10 +69,8 @@ namespace OpenBve {
 		/// <summary>Loads a CSV or B3D object from a file.</summary>
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
 		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
-		/// <param name="ForceTextureRepeatX">Whether to force TextureWrapMode.Repeat for the X axis of the texture.</param>
-		/// <param name="ForceTextureRepeatY">Whether to force TextureWrapMode.Repeat for the Y axis of the texture.</param>
 		/// <returns>The object loaded.</returns>
-		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
+		internal static ObjectManager.StaticObject ReadObject(string FileName, Encoding Encoding) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			bool IsB3D = string.Equals(System.IO.Path.GetExtension(FileName), ".b3d", StringComparison.OrdinalIgnoreCase);
 			// initialize object
@@ -1084,7 +1082,7 @@ namespace OpenBve {
 									//so re-read with the default ANSI charset
 									if (Command.IndexOf("牃慥整敍桳畂汩敤", StringComparison.Ordinal) != -1 || Command.IndexOf("䵛獥䉨極摬牥", StringComparison.Ordinal) != -1)
 									{
-										Object = ReadObject(FileName, Encoding.Default, ForceTextureRepeatX, ForceTextureRepeatY);
+										Object = ReadObject(FileName, Encoding.Default);
 										return Object;
 									}
 									else

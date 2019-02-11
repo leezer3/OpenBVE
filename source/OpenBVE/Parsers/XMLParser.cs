@@ -48,8 +48,7 @@ namespace OpenBve
                             {
                                 case ".csv":
                                 case ".b3d":
-                                    Object = CsvB3dObjectParser.ReadObject(objectPath, encoding,
-                                        ForceTextureRepeatX, ForceTextureRepeatY);
+                                    Object = CsvB3dObjectParser.ReadObject(objectPath, encoding);
                                     break;
                                 case ".x":
                                     Object = XObjectParser.ReadObject(objectPath, encoding);

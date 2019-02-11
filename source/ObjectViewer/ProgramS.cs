@@ -152,9 +152,7 @@ namespace OpenBve {
 			if(e.Delta != 0)
 			{
 				double dx = -0.025 * e.Delta;
-				World.AbsoluteCameraPosition.X += dx * World.AbsoluteCameraDirection.X;
-				World.AbsoluteCameraPosition.Y += dx * World.AbsoluteCameraDirection.Y;
-				World.AbsoluteCameraPosition.Z += dx * World.AbsoluteCameraDirection.Z;
+				World.AbsoluteCameraPosition += dx * World.AbsoluteCameraDirection;
 				ReducedMode = false;
 			}
 		}
@@ -253,26 +251,18 @@ namespace OpenBve {
 	            {
                     World.AbsoluteCameraPosition = MouseCameraPosition;
                     double dx = -0.025 * (double)(currentMouseState.X - previousMouseState.X);
-                    World.AbsoluteCameraPosition.X += dx * World.AbsoluteCameraSide.X;
-                    World.AbsoluteCameraPosition.Y += dx * World.AbsoluteCameraSide.Y;
-                    World.AbsoluteCameraPosition.Z += dx * World.AbsoluteCameraSide.Z;
+                    World.AbsoluteCameraPosition += dx * World.AbsoluteCameraSide;
                     double dy = 0.025 * (double)(currentMouseState.Y - previousMouseState.Y);
-                    World.AbsoluteCameraPosition.X += dy * World.AbsoluteCameraUp.X;
-                    World.AbsoluteCameraPosition.Y += dy * World.AbsoluteCameraUp.Y;
-                    World.AbsoluteCameraPosition.Z += dy * World.AbsoluteCameraUp.Z;
+                    World.AbsoluteCameraPosition += dy * World.AbsoluteCameraUp;
                     ReducedMode = false;
 	            }
 	            else
 	            {
                     World.AbsoluteCameraPosition = MouseCameraPosition;
                     double dx = -0.025 * (double)(currentMouseState.X - previousMouseState.X);
-                    World.AbsoluteCameraPosition.X += dx * World.AbsoluteCameraSide.X;
-                    World.AbsoluteCameraPosition.Y += dx * World.AbsoluteCameraSide.Y;
-                    World.AbsoluteCameraPosition.Z += dx * World.AbsoluteCameraSide.Z;
+                    World.AbsoluteCameraPosition += dx * World.AbsoluteCameraSide;
                     double dz = -0.025 * (double)(currentMouseState.Y - previousMouseState.Y);
-                    World.AbsoluteCameraPosition.X += dz * World.AbsoluteCameraDirection.X;
-                    World.AbsoluteCameraPosition.Y += dz * World.AbsoluteCameraDirection.Y;
-                    World.AbsoluteCameraPosition.Z += dz * World.AbsoluteCameraDirection.Z;
+                    World.AbsoluteCameraPosition += dz * World.AbsoluteCameraDirection;
                     ReducedMode = false;
 	            }
 	        }

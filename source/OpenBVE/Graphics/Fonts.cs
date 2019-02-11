@@ -35,9 +35,9 @@ namespace OpenBve {
 		internal class OpenGlFontTable {
 			// --- members ---
 			/// <summary>The characters stored in this table.</summary>
-			internal OpenGlFontChar[] Characters;
+			internal readonly OpenGlFontChar[] Characters;
 			/// <summary>The texture that stores the characters.</summary>
-			internal Texture Texture;
+			internal readonly Texture Texture;
 			// --- constructors ---
 			/// <summary>Creates a new table of characters.</summary>
 			/// <param name="font">The font.</param>

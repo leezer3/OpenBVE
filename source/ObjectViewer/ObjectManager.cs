@@ -1973,12 +1973,12 @@ namespace OpenBve
                         catch (Exception ex)
                         {
 			                Interface.AddMessage(MessageType.Error, false, "The new Obj parser raised the following exception: " + ex);
-                            Result = WavefrontObjParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
+                            Result = WavefrontObjParser.ReadObject(FileName, Encoding);
                         }
                     }
                     else
                     {
-                        Result = WavefrontObjParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
+                        Result = WavefrontObjParser.ReadObject(FileName, Encoding);
                     }
 		            break;
 				case ".s":
@@ -2089,12 +2089,12 @@ namespace OpenBve
                         catch (Exception ex)
                         {
 			                Interface.AddMessage(MessageType.Error, false, "The new Obj parser raised the following exception: " + ex);
-                            Result = WavefrontObjParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
+                            Result = WavefrontObjParser.ReadObject(FileName, Encoding);
                         }
                     }
                     else
                     {
-                        Result = WavefrontObjParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
+                        Result = WavefrontObjParser.ReadObject(FileName, Encoding);
                     }
 		            break;
 				default:

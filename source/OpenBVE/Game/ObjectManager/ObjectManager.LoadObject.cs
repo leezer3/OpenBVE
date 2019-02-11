@@ -122,7 +122,7 @@ namespace OpenBve
 			{
 				case ".csv":
 				case ".b3d":
-					Result = CsvB3dObjectParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
+					Result = CsvB3dObjectParser.ReadObject(FileName, Encoding);
 					break;
 				case ".x":
 					if (Interface.CurrentOptions.CurrentXParser != Interface.XParsers.Original)
@@ -171,12 +171,12 @@ namespace OpenBve
 						catch (Exception ex)
 						{
 							Interface.AddMessage(MessageType.Error, false, "The new Obj parser raised the following exception: " + ex);
-							Result = WavefrontObjParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
+							Result = WavefrontObjParser.ReadObject(FileName, Encoding);
 						}
 					}
 					else
 					{
-						Result = WavefrontObjParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
+						Result = WavefrontObjParser.ReadObject(FileName, Encoding);
 					}
 					break;
 				case ".s":
@@ -242,7 +242,7 @@ namespace OpenBve
 			{
 				case ".csv":
 				case ".b3d":
-					Result = CsvB3dObjectParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
+					Result = CsvB3dObjectParser.ReadObject(FileName, Encoding);
 					break;
 				case ".x":
 					if (Interface.CurrentOptions.CurrentXParser != Interface.XParsers.Original)
@@ -283,12 +283,12 @@ namespace OpenBve
 						catch (Exception ex)
 						{
 							Interface.AddMessage(MessageType.Error, false, "The new Obj parser raised the following exception: " + ex);
-							Result = WavefrontObjParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
+							Result = WavefrontObjParser.ReadObject(FileName, Encoding);
 						}
 					}
 					else
 					{
-						Result = WavefrontObjParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
+						Result = WavefrontObjParser.ReadObject(FileName, Encoding);
 					}
 					break;
 				/*

@@ -16,6 +16,7 @@ namespace OpenBve {
 			int height = 0;
 			if (text != null && font != null) {
 				for (int i = 0; i < text.Length; i++) {
+					// ReSharper disable once NotAccessedVariable
 					Texture texture;
 					Fonts.OpenGlFontChar data;
 					i += font.GetCharacterData(text, i, out texture, out data) - 1;

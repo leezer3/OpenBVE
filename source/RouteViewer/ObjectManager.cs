@@ -1677,7 +1677,7 @@ namespace OpenBve {
 				switch (System.IO.Path.GetExtension(FileName).ToLowerInvariant()) {
 					case ".csv":
 					case ".b3d":
-						Result = CsvB3dObjectParser.ReadObject(FileName, Encoding, false, false);
+						Result = CsvB3dObjectParser.ReadObject(FileName, Encoding);
 						break;
 					case ".x":
 						Result = XObjectParser.ReadObject(FileName, Encoding);
@@ -1692,7 +1692,7 @@ namespace OpenBve {
 						Result = Ls3DGrpParser.ReadObject(FileName, Encoding, new Vector3());
 						break;
 					case ".obj":
-						Result = WavefrontObjParser.ReadObject(FileName, Encoding, false, false);
+						Result = WavefrontObjParser.ReadObject(FileName, Encoding);
 						break;
 				default:
 						Interface.AddMessage(MessageType.Error, false, "The file extension is not supported: " + FileName);
@@ -1736,7 +1736,7 @@ namespace OpenBve {
 				switch (System.IO.Path.GetExtension(FileName).ToLowerInvariant()) {
 					case ".csv":
 					case ".b3d":
-						Result = CsvB3dObjectParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
+						Result = CsvB3dObjectParser.ReadObject(FileName, Encoding);
 						break;
 					case ".x":
 						Result = XObjectParser.ReadObject(FileName, Encoding);
@@ -1745,7 +1745,7 @@ namespace OpenBve {
 						Interface.AddMessage(MessageType.Error, false, "Tried to load an animated object even though only static objects are allowed: " + FileName);
 						return null;
 					case ".obj":
-						Result = WavefrontObjParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
+						Result = WavefrontObjParser.ReadObject(FileName, Encoding);
 						break;
 				default:
 						Interface.AddMessage(MessageType.Error, false, "The file extension is not supported: " + FileName);

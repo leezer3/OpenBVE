@@ -28,10 +28,8 @@ namespace OpenBve
 		/// <summary>Loads a Wavefront object from a file.</summary>
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
 		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
-		/// <param name="ForceTextureRepeatX">Whether to force TextureWrapMode.Repeat for referenced textures on the X-axis</param>
-		/// <param name="ForceTextureRepeatY">Whether to force TextureWrapMode.Repeat for referenced textures on the Y-axis</param>
 		/// <returns>The object loaded.</returns>
-		internal static ObjectManager.StaticObject ReadObject(string FileName, Encoding Encoding, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
+		internal static ObjectManager.StaticObject ReadObject(string FileName, Encoding Encoding)
 		{
 			ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
 
@@ -48,7 +46,7 @@ namespace OpenBve
 			int currentMaterial = -1;
 
 			//Read the contents of the file
-			string[] Lines = File.ReadAllLines(FileName);
+			string[] Lines = File.ReadAllLines(FileName, Encoding);
 
 			//Preprocess
 			for (int i = 0; i < Lines.Length; i++)
