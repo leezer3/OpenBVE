@@ -356,7 +356,7 @@ namespace OpenBve {
 		            {
 			            CheckFileExists = true,
 			            Multiselect = true,
-			            Filter = @"All supported object files|*.csv;*.b3d;*.x;*.animated;*.l3dobj;*.l3dgrp;*.obj;*.s|openBVE Objects|*.csv;*.b3d;*.x;*.animated|LokSim 3D Objects|*.l3dobj;*.l3dgrp|Wavefront Objects|*.obj|Microsoft Train Simulator Objects|*.s|All files|*"
+			            Filter = @"All supported object files|*.csv;*.b3d;*.x;*.animated;extensions.cfg;*.l3dobj;*.l3dgrp;*.obj;*.s|openBVE Objects|*.csv;*.b3d;*.x;*.animated;extensions.cfg|LokSim 3D Objects|*.l3dobj;*.l3dgrp|Wavefront Objects|*.obj|Microsoft Train Simulator Objects|*.s|All files|*"
 		            };
 		            if (Dialog.ShowDialog() == DialogResult.OK)
 		            {
