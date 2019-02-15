@@ -706,7 +706,7 @@ namespace OpenBve
 											}
 										}
 										break;
-									case Translations.Command.CameraNoInterior:
+									case Translations.Command.CameraInteriorNoPanel:
 										// camera: interior
 										{
 											MainLoop.SaveCameraSettings();
