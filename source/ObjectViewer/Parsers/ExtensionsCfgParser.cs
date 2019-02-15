@@ -230,6 +230,9 @@ namespace OpenBve
 														case "reversed":
 															carObjectsReversed[n] = b.Equals("true", StringComparison.OrdinalIgnoreCase);
 															break;
+														case "axles":
+															Interface.AddMessage(MessageType.Information, false, "Axle declaration for car " + n + " will be ignored whilst viewing an extensions.cfg in file " + filePath);
+															break;
 														default:
 															Interface.AddMessage(MessageType.Warning, false, "Unsupported key-value pair " + a + " encountered at line " + (i + 1).ToString(culture) + " in file " + filePath);
 															break;
@@ -353,6 +356,19 @@ namespace OpenBve
 								{
 									Interface.AddMessage(MessageType.Error, false, "The car index is expected to be an integer at line " + (i + 1).ToString(culture) + " in file " + filePath);
 								}
+							}
+							else if (lines[i].StartsWith("[coupler", StringComparison.OrdinalIgnoreCase) & lines[i].EndsWith("]", StringComparison.Ordinal))
+							{
+								i++;
+								while (i < lines.Length && !lines[i].StartsWith("[", StringComparison.Ordinal) & !lines[i].EndsWith("]", StringComparison.Ordinal))
+								{
+									/*
+									 * Coupler statments are currently not supported in Object Viewer
+									 */
+									i++;
+								}
+
+								i--;
 							}
 							else
 							{
