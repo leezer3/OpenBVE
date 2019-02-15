@@ -35,7 +35,10 @@ namespace OpenBve
             double timeElapsed = CPreciseTimer.GetElapsedTime();
             DateTime time = DateTime.Now;
             Game.SecondsSinceMidnight = (double)(3600 * time.Hour + 60 * time.Minute + time.Second) + 0.001 * (double)time.Millisecond;
-            ObjectManager.UpdateAnimatedWorldObjects(timeElapsed, false);
+            lock (Program.LockObj)
+            {
+                ObjectManager.UpdateAnimatedWorldObjects(timeElapsed, false);
+            }
             if (Program.ReducedMode)
             {
                 System.Threading.Thread.Sleep(125);

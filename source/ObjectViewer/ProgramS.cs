@@ -52,6 +52,9 @@ namespace OpenBve {
         internal static GraphicsMode currentGraphicsMode;
 
 		internal static OpenBveApi.Hosts.HostInterface CurrentHost;
+
+		internal static Object LockObj = new Object();
+
 		// main
 	    [STAThread]
 	    internal static void Main(string[] args)
@@ -458,6 +461,9 @@ namespace OpenBve {
                 case Key.F8:
                     formOptions.ShowOptions();
                     Application.DoEvents();
+                    break;
+                case Key.F10:
+                    formTrain.ShowTrainSettings();
                     break;
 	            case Key.G:
 	            case Key.C:
