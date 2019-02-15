@@ -1058,9 +1058,18 @@ namespace OpenBve {
 									  "3 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 								int r = 0, g = 0, b = 0;
-								int.TryParse(Arguments[0], out r);
-								int.TryParse(Arguments[1], out g);
-								int.TryParse(Arguments[2], out b);
+								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !int.TryParse(Arguments[0], out r))
+								{
+									Interface.AddMessage(MessageType.Error, false, "Invalid argument R in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !int.TryParse(Arguments[1], out g))
+								{
+									Interface.AddMessage(MessageType.Error, false, "Invalid argument G in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !int.TryParse(Arguments[2], out b))
+								{
+									Interface.AddMessage(MessageType.Error, false, "Invalid argument B in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
 								Color textColor = Color.FromArgb(r, g, b);
 								for (int j = 0; j < Builder.Materials.Length; j++)
 								{
@@ -1088,9 +1097,18 @@ namespace OpenBve {
 									  "3 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 								int r = 0, g = 0, b = 0;
-								int.TryParse(Arguments[0], out r);
-								int.TryParse(Arguments[1], out g);
-								int.TryParse(Arguments[2], out b);
+								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !int.TryParse(Arguments[0], out r))
+								{
+									Interface.AddMessage(MessageType.Error, false, "Invalid argument R in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !int.TryParse(Arguments[1], out g))
+								{
+									Interface.AddMessage(MessageType.Error, false, "Invalid argument G in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !int.TryParse(Arguments[2], out b))
+								{
+									Interface.AddMessage(MessageType.Error, false, "Invalid argument B in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
 								Color textColor = Color.FromArgb(r, g, b);
 								for (int j = 0; j < Builder.Materials.Length; j++)
 								{
