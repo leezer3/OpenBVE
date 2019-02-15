@@ -74,6 +74,8 @@ namespace OpenBveApi.Interface {
 			//Simulation controls
 			/// <summary>Change to the interior (Cab) camera mode</summary>
 			CameraInterior,
+			/// <summary>Change to the interior (Cab) camera mode. However, the panel is not displayed.</summary>
+			CameraInteriorNoPanel,
 			/// <summary>Change to the exterior (Attached to train) camera mode</summary>
 			CameraExterior,
 			/// <summary>Change to the track based camera mode</summary>
