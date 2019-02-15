@@ -196,10 +196,31 @@ namespace OpenBve {
 				            try
 				            {
 #endif
-				UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8, false, false, false);
-				ObjectManager.CreateObject(o, Vector3.Zero,
-					new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
-					0.0);
+				if (String.Compare(System.IO.Path.GetFileName(Files[i]), "extensions.cfg", StringComparison.OrdinalIgnoreCase) == 0)
+				{
+					UnifiedObject[] carObjects;
+					UnifiedObject[] bogieObjects;
+					TrainManager.Train train;
+					ExtensionsCfgParser.ParseExtensionsConfig(Files[i], System.Text.Encoding.UTF8, out carObjects, out bogieObjects, out train, true);
+					double z = 0.0;
+					for (int j = 0; j < carObjects.Length; j++)
+					{
+						ObjectManager.CreateObject(carObjects[j], new Vector3(0.0, 0.0, z),
+						                           new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
+						                           0.0);
+						if (j < train.Cars.Length - 1)
+						{
+							z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2;
+						}
+					}
+				}
+				else
+				{
+					UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8, false, false, false);
+					ObjectManager.CreateObject(o, Vector3.Zero,
+					                           new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
+					                           0.0);
+				}
 #if !DEBUG
 				            }
 				            catch (Exception ex)
@@ -291,10 +312,31 @@ namespace OpenBve {
 #if !DEBUG
 									try {
 										#endif
-	                    UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8, false, false, false);
-	                    ObjectManager.CreateObject(o, Vector3.Zero,
-	                        new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0,
-	                        0.0, 25.0, 0.0);
+		                if (String.Compare(System.IO.Path.GetFileName(Files[i]), "extensions.cfg", StringComparison.OrdinalIgnoreCase) == 0)
+		                {
+		                	UnifiedObject[] carObjects;
+		                	UnifiedObject[] bogieObjects;
+		                	TrainManager.Train train;
+		                	ExtensionsCfgParser.ParseExtensionsConfig(Files[i], System.Text.Encoding.UTF8, out carObjects, out bogieObjects, out train, true);
+		                	double z = 0.0;
+		                	for (int j = 0; j < carObjects.Length; j++)
+		                	{
+		                		ObjectManager.CreateObject(carObjects[j], new Vector3(0.0, 0.0, z),
+		                		                           new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
+		                		                           0.0);
+		                		if (j < train.Cars.Length - 1)
+		                		{
+		                			z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2;
+		                		}
+		                	}
+		                }
+		                else
+		                {
+		                	UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8, false, false, false);
+		                	ObjectManager.CreateObject(o, Vector3.Zero,
+		                	                           new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
+		                	                           0.0);
+		                }
 #if !DEBUG
 									} catch (Exception ex) {
 										Interface.AddMessage(MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + Files[i] + ".");
@@ -335,10 +377,31 @@ namespace OpenBve {
 				            try
 				            {
 #endif
-					            UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8, false, false, false);
-					            ObjectManager.CreateObject(o, Vector3.Zero,
-						            new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
-						            0.0);
+				            if (String.Compare(System.IO.Path.GetFileName(Files[i]), "extensions.cfg", StringComparison.OrdinalIgnoreCase) == 0)
+				            {
+				            	UnifiedObject[] carObjects;
+				            	UnifiedObject[] bogieObjects;
+				            	TrainManager.Train train;
+				            	ExtensionsCfgParser.ParseExtensionsConfig(Files[i], System.Text.Encoding.UTF8, out carObjects, out bogieObjects, out train, true);
+				            	double z = 0.0;
+				            	for (int j = 0; j < carObjects.Length; j++)
+				            	{
+				            		ObjectManager.CreateObject(carObjects[j], new Vector3(0.0, 0.0, z),
+				            		                           new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
+				            		                           0.0);
+				            		if (j < train.Cars.Length - 1)
+				            		{
+				            			z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2;
+				            		}
+				            	}
+				            }
+				            else
+				            {
+				            	UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8, false, false, false);
+				            	ObjectManager.CreateObject(o, Vector3.Zero,
+				            	                           new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
+				            	                           0.0);
+				            }
 #if !DEBUG
 				            }
 				            catch (Exception ex)
