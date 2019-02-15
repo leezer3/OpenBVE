@@ -57,6 +57,10 @@
     </AllowedReferenceRelatedFileExtensions>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NUniversalCharDet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\dependencies\NUniversalCharDet.dll</HintPath>
+    </Reference>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\dependencies\OpenTK.dll</HintPath>
@@ -87,6 +91,7 @@
     <Compile Include="Hosts.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Parsers\AssimpObjParser.cs" />
+    <Compile Include="Parsers\ExtensionsCfgParser.cs" />
     <Compile Include="Parsers\Generic\AssimpXParser.cs" />
     <Compile Include="Parsers\Ls3DGrpParser.cs" />
     <Compile Include="Parsers\Ls3DObjectParser.cs" />
@@ -112,6 +117,7 @@
     <Compile Include="ProgramS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RendererS.cs" />
+    <Compile Include="TextEncoding.cs" />
     <Compile Include="TextureManager.cs" />
     <Compile Include="Timers.cs" />
     <Compile Include="TrainManagerS.cs" />
