@@ -636,72 +636,147 @@ namespace OpenBve
 										break;
 									case Translations.Command.CameraInterior:
 										// camera: interior
-										MainLoop.SaveCameraSettings();
-										bool lookahead = false;
-										if (World.CameraMode != CameraViewMode.InteriorLookAhead & World.CameraRestriction == Camera.RestrictionMode.NotAvailable)
 										{
-											Game.AddMessage(Translations.GetInterfaceString("notification_interior_lookahead"),
-												MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
-												MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
-											lookahead = true;
-										}
-										else
-										{
-											Game.AddMessage(Translations.GetInterfaceString("notification_interior"),
-												MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
-												MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
-										}
-										World.CameraMode = CameraViewMode.Interior;
-										MainLoop.RestoreCameraSettings();
-										bool returnToCab = false;
-										for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
-										{
-											if (j == World.CameraCar)
+											MainLoop.SaveCameraSettings();
+											bool lookahead = false;
+											if (World.CameraMode != CameraViewMode.InteriorLookAhead & World.CameraRestriction == Camera.RestrictionMode.NotAvailable)
 											{
-												if (TrainManager.PlayerTrain.Cars[j].HasInteriorView)
+												Game.AddMessage(Translations.GetInterfaceString("notification_interior_lookahead"),
+												                MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
+												                MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
+												lookahead = true;
+											}
+											else
+											{
+												Game.AddMessage(Translations.GetInterfaceString("notification_interior"),
+												                MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
+												                MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
+											}
+											World.CameraMode = CameraViewMode.Interior;
+											MainLoop.RestoreCameraSettings();
+											bool returnToCab = false;
+											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
+											{
+												if (j == World.CameraCar)
 												{
-													TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Interior);
-													World.CameraRestriction = TrainManager.PlayerTrain.Cars[j].CameraRestrictionMode;
+													if (TrainManager.PlayerTrain.Cars[j].HasInteriorView)
+													{
+														TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Interior);
+														World.CameraRestriction = TrainManager.PlayerTrain.Cars[j].CameraRestrictionMode;
+													}
+													else
+													{
+														TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.NotVisible);
+														returnToCab = true;
+													}
 												}
 												else
 												{
 													TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.NotVisible);
-													returnToCab = true;
 												}
+											}
+											if (returnToCab)
+											{
+												//If our selected car does not have an interior view, we must store this fact, and return to the driver car after the loop has finished
+												World.CameraCar = TrainManager.PlayerTrain.DriverCar;
+												TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(TrainManager.CarSectionType.Interior);
+												World.CameraRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
+											}
+											//Hide bogies
+											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
+											{
+												TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(-1);
+												TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(-1);
+											}
+											World.CameraAlignmentDirection = new World.CameraAlignment();
+											World.CameraAlignmentSpeed = new World.CameraAlignment();
+											Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
+											World.UpdateAbsoluteCamera(TimeElapsed);
+											World.UpdateViewingDistances();
+											if (World.CameraRestriction != Camera.RestrictionMode.NotAvailable)
+											{
+												if (!World.PerformCameraRestrictionTest())
+												{
+													World.InitializeCameraRestriction();
+												}
+											}
+											if (lookahead)
+											{
+												World.CameraMode = CameraViewMode.InteriorLookAhead;
+											}
+										}
+										break;
+									case Translations.Command.CameraNoInterior:
+										// camera: interior
+										{
+											MainLoop.SaveCameraSettings();
+											bool lookahead = false;
+											if (World.CameraMode != CameraViewMode.InteriorLookAhead & World.CameraRestriction == Camera.RestrictionMode.NotAvailable)
+											{
+												Game.AddMessage(Translations.GetInterfaceString("notification_interior_lookahead"),
+												                MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
+												                MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
+												lookahead = true;
 											}
 											else
 											{
-												TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.NotVisible);
+												Game.AddMessage(Translations.GetInterfaceString("notification_interior"),
+												                MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
+												                MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 											}
-										}
-										if (returnToCab)
-										{
-											//If our selected car does not have an interior view, we must store this fact, and return to the driver car after the loop has finished
-											World.CameraCar = TrainManager.PlayerTrain.DriverCar;
-											TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(TrainManager.CarSectionType.Interior);
-											World.CameraRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
-										}
-										//Hide bogies
-										for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
-										{
-											TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(-1);
-											TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(-1);
-										}
-										World.CameraAlignmentDirection = new World.CameraAlignment();
-										World.CameraAlignmentSpeed = new World.CameraAlignment();
-										Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
-										World.UpdateAbsoluteCamera(TimeElapsed);
-										World.UpdateViewingDistances();
-										if (World.CameraRestriction != Camera.RestrictionMode.NotAvailable)
-										{
-											if (!World.PerformCameraRestrictionTest())
+											World.CameraMode = CameraViewMode.Interior;
+											MainLoop.RestoreCameraSettings();
+											bool returnToCab = false;
+											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 											{
-												World.InitializeCameraRestriction();
+												if (j == World.CameraCar)
+												{
+													if (TrainManager.PlayerTrain.Cars[j].HasInteriorView)
+													{
+														TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Interior);
+														World.CameraRestriction = TrainManager.PlayerTrain.Cars[j].CameraRestrictionMode;
+													}
+													else
+													{
+														TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.NotVisible);
+														returnToCab = true;
+													}
+												}
+												else
+												{
+													TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.NotVisible);
+												}
 											}
-										}
-										if (lookahead)
-										{
-											World.CameraMode = CameraViewMode.InteriorLookAhead;
+											if (returnToCab)
+											{
+												//If our selected car does not have an interior view, we must store this fact, and return to the driver car after the loop has finished
+												World.CameraCar = TrainManager.PlayerTrain.DriverCar;
+												TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(TrainManager.CarSectionType.Interior);
+												World.CameraRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
+											}
+											//Hide interior and bogies
+											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
+											{
+												TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.NotVisible);
+												TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(-1);
+												TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(-1);
+											}
+											World.CameraAlignmentDirection = new World.CameraAlignment();
+											World.CameraAlignmentSpeed = new World.CameraAlignment();
+											Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
+											World.UpdateAbsoluteCamera(TimeElapsed);
+											World.UpdateViewingDistances();
+											if (World.CameraRestriction != Camera.RestrictionMode.NotAvailable)
+											{
+												if (!World.PerformCameraRestrictionTest())
+												{
+													World.InitializeCameraRestriction();
+												}
+											}
+											if (lookahead)
+											{
+												World.CameraMode = CameraViewMode.InteriorLookAhead;
+											}
 										}
 										break;
 									case Translations.Command.CameraExterior:

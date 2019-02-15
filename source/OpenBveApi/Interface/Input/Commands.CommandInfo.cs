@@ -130,6 +130,7 @@
 			 
 			//Simulation controls
 			new CommandInfo(Command.CameraInterior, CommandType.Digital, "CAMERA_INTERIOR"),
+			new CommandInfo(Command.CameraNoInterior,CommandType.Digital,"CAMERA_NO_INTERIOR"), 
 			new CommandInfo(Command.CameraExterior, CommandType.Digital, "CAMERA_EXTERIOR"),
 			new CommandInfo(Command.CameraTrack, CommandType.Digital, "CAMERA_TRACK"),
 			new CommandInfo(Command.CameraFlyBy, CommandType.Digital, "CAMERA_FLYBY"),
