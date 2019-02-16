@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -1098,7 +1098,7 @@ namespace OpenBve {
 									//CreateMeshBuilder misinterpreted as UTF
 									//As this character sequence is gibberish, we can assume our file is NOT actually UTF
 									//so re-read with the default ANSI charset
-									if (Command.IndexOf("牃慥整敍桳畂汩敤", StringComparison.Ordinal) != -1 || Command.IndexOf("䵛獥䉨極摬牥", StringComparison.Ordinal) != -1)
+									if (Command.IndexOf("牃慥整敍桳畂汩敤", StringComparison.Ordinal) != -1 || Command.IndexOf("䵛獥䉨極摬牥", StringComparison.Ordinal) != -1 || Command.IndexOf("浛獥扨極摬牥", StringComparison.Ordinal) != -1)
 									{
 										Object = ReadObject(FileName, Encoding.Default);
 										return Object;
