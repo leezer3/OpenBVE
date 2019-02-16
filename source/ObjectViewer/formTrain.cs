@@ -27,7 +27,7 @@ namespace OpenBve
 		private formTrain()
 		{
 			InitializeComponent();
-
+			FormTrainTask = null; //required for the makefile build to function correctly
 			checkBoxEnableTrain.Checked = TrainManager.Trains.Length != 0;
 			tabControlSettings.Enabled = checkBoxEnableTrain.Checked;
 
