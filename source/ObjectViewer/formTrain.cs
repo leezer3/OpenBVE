@@ -22,12 +22,9 @@ namespace OpenBve
 
 		private List<PluginState> PluginStates;
 
-		private static Task FormTrainTask;
-
-		private formTrain()
+		internal formTrain()
 		{
 			InitializeComponent();
-			FormTrainTask = null; //required for the makefile build to function correctly
 			checkBoxEnableTrain.Checked = TrainManager.Trains.Length != 0;
 			tabControlSettings.Enabled = checkBoxEnableTrain.Checked;
 
@@ -100,18 +97,6 @@ namespace OpenBve
 				}
 			}
 			ListPluginStates();
-		}
-
-		internal static void ShowTrainSettings()
-		{
-			if (FormTrainTask == null || FormTrainTask.IsCompleted)
-			{
-				FormTrainTask = Task.Factory.StartNew(() =>
-				{
-					formTrain dialog = new formTrain();
-					dialog.ShowDialog();
-				});
-			}
 		}
 
 		private void checkBoxEnableTrain_Check(object sender, EventArgs e)
