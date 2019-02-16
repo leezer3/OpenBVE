@@ -526,8 +526,7 @@ namespace OpenBve {
                     Application.DoEvents();
                     break;
                 case Key.F10:
-					formTrain trainDialog = new formTrain();
-					trainDialog.ShowDialog();
+                    formTrain.ShowTrainSettings();
                     break;
 	            case Key.G:
 	            case Key.C:
