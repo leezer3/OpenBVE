@@ -767,6 +767,12 @@ namespace OpenBve
 						double d = CenterOfCarPositions[i] - CenterOfCarPositions[i + 1] - 0.5 * (Cars[i].Length + Cars[i + 1].Length);
 						if (d < min)
 						{
+							if (min != max && Cars[i].Sounds.couplerCompressed == false && !Game.MinimalisticSimulation)
+							{
+								Cars[i].Sounds.couplerStretched = false;
+								Sounds.PlayCarSound(Cars[i].Sounds.CouplerCompress, 1.0, 1.0, this, i, false);
+								Cars[i].Sounds.couplerCompressed = true;
+							}
 							double t = min - d + 0.0001;
 							Cars[i].UpdateTrackFollowers(t, false, false);
 							CenterOfCarPositions[i] += t;
@@ -774,6 +780,12 @@ namespace OpenBve
 						}
 						else if (d > max & !Cars[i].Derailed & !Cars[i + 1].Derailed)
 						{
+							if (min != max && Cars[i].Sounds.couplerStretched == false && !Game.MinimalisticSimulation)
+							{
+								Cars[i].Sounds.couplerCompressed = false;
+								Sounds.PlayCarSound(Cars[i].Sounds.CouplerStretch, 1.0, 1.0, this, i, false);
+								Cars[i].Sounds.couplerStretched = true;
+							}
 							double t = d - max + 0.0001;
 							Cars[i].UpdateTrackFollowers(-t, false, false);
 							CenterOfCarPositions[i] -= t;
@@ -788,6 +800,12 @@ namespace OpenBve
 						double d = CenterOfCarPositions[i - 1] - CenterOfCarPositions[i] - 0.5 * (Cars[i].Length + Cars[i - 1].Length);
 						if (d < min)
 						{
+							if (min != max && Cars[i].Sounds.couplerCompressed == false && !Game.MinimalisticSimulation)
+							{
+								Cars[i].Sounds.couplerStretched = false;
+								Sounds.PlayCarSound(Cars[i].Sounds.CouplerCompress, 1.0, 1.0, this, i, false);
+								Cars[i].Sounds.couplerCompressed = true;
+							}
 							double t = min - d + 0.0001;
 							Cars[i].UpdateTrackFollowers(-t, false, false);
 							CenterOfCarPositions[i] -= t;
@@ -795,11 +813,31 @@ namespace OpenBve
 						}
 						else if (d > max & !Cars[i].Derailed & !Cars[i - 1].Derailed)
 						{
+							if (min != max && Cars[i].Sounds.couplerStretched == false &&  !Game.MinimalisticSimulation)
+							{
+								Cars[i].Sounds.couplerCompressed = false;
+								Sounds.PlayCarSound(Cars[i].Sounds.CouplerStretch, 1.0, 1.0, this, i, false);
+								Cars[i].Sounds.couplerStretched = true;
+							}
 							double t = d - max + 0.0001;
 							Cars[i].UpdateTrackFollowers(t, false, false);
-
 							CenterOfCarPositions[i] += t;
 							CouplerCollision[i - 1] = true;
+						}
+					}
+
+					if (Specs.CurrentAverageSpeed == 0.0)
+					{
+						for (int i = 0; i < Cars.Length; i++)
+						{
+							/*
+							 * Failsafe:
+							 * Reset the coupler stretch / compress states if stopped
+							 * This is important due to the fact that we don't simulate unbraked cars
+							 * at present, so compression doesn't always happen
+							 */
+							Cars[i].Sounds.couplerCompressed = false;
+							Cars[i].Sounds.couplerStretched = false;
 						}
 					}
 					// update speeds

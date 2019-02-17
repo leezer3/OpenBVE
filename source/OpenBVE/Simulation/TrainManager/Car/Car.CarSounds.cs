@@ -34,7 +34,12 @@
 			internal CarSound[] Flange;
 			internal double[] FlangeVolume;
 			internal CarSound Halt;
-			
+			/// <summary>Played once when the coupler stretches</summary>
+			internal CarSound CouplerStretch;
+			internal bool couplerStretched;
+			/// <summary>Played once when the coupler compresses</summary>
+			internal CarSound CouplerCompress;
+			internal bool couplerCompressed;
 			internal CarSound Loop;
 			internal CarSound MasterControllerUp;
 			internal CarSound MasterControllerUpFast;
