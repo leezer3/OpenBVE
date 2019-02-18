@@ -810,6 +810,43 @@ namespace OpenBve
 							i++;
 						}
 						i--; break;
+					case "[coupler]":
+						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						{
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+							if (j >= 0)
+							{
+								string a = Lines[i].Substring(0, j).TrimEnd();
+								string b = Lines[i].Substring(j + 1).TrimStart();
+								if (b.Length == 0 || Path.ContainsInvalidChars(b))
+								{
+									Interface.AddMessage(MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								else
+								{
+									switch (a.ToLowerInvariant())
+									{
+										case "compress":
+											for (int c = 0; c < train.Cars.Length; c++)
+											{
+												train.Cars[c].Sounds.CouplerCompress = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, b), front, SoundCfgParser.tinyRadius);
+											}
+											break;
+										case "stretch":
+											for (int c = 0; c < train.Cars.Length; c++)
+											{
+												train.Cars[c].Sounds.CouplerStretch = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, b), front, SoundCfgParser.tinyRadius);
+											}
+											break;
+										default:
+											Interface.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											break;
+									}
+								}
+							}
+							i++;
+						}
+						i--; break;
 				}
 			}
 			for (int i = 0; i < train.Cars.Length; i++)

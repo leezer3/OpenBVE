@@ -481,6 +481,28 @@ namespace OpenBve
 										}
 									}
 									break;
+								case "coupler":
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
+									{
+										Interface.AddMessage(MessageType.Error, false, "An empty list of suspension sounds was defined in in XML file " + fileName);
+										break;
+									}
+									foreach (XmlNode cc in c.ChildNodes)
+									{
+										switch (cc.Name.ToLowerInvariant())
+										{
+											case "compress":
+												ParseNode(cc, out car.Sounds.CouplerCompress, front, SoundCfgParser.smallRadius);
+												break;
+											case "stretch":
+												ParseNode(cc, out car.Sounds.CouplerStretch, front, SoundCfgParser.smallRadius);
+												break;
+											default:
+												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
+												break;
+										}
+									}
+									break;
 							}
 						}
 					}

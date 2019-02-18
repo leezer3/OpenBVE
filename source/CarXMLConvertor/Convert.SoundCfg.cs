@@ -808,6 +808,42 @@ namespace CarXmlConvertor
                         }
                         i--;
                         break;
+                    case "[coupler]":
+	                    newLines.Add("<Coupler>");
+	                    i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+	                    {
+		                    int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+		                    if (j >= 0)
+		                    {
+			                    string a = Lines[i].Substring(0, j).TrimEnd();
+			                    string b = Lines[i].Substring(j + 1).TrimStart();
+			                    if (b.Length == 0 || Path.ContainsInvalidChars(b))
+			                    {
+				                    continue;
+			                    }
+			                    switch (a.ToLowerInvariant())
+			                    {
+				                    case "stretch":
+					                    newLines.Add("<Stretch>");
+					                    newLines.Add("<FileName>" + b + "</FileName>");
+					                    newLines.Add("<Position>"+ front + "</Position>");
+					                    newLines.Add("<Radius>2.0</Radius>");
+					                    newLines.Add("</Stretch>");
+					                    break;
+				                    case "compress":
+					                    newLines.Add("<Compress>");
+					                    newLines.Add("<FileName>" + b + "</FileName>");
+					                    newLines.Add("<Position>"+ front + "</Position>");
+					                    newLines.Add("<Radius>2.0</Radius>");
+					                    newLines.Add("</Compress>");
+					                    break;
+			                    }
+		                    }
+		                    i++;
+	                    }
+	                    i--;
+	                    newLines.Add("</Coupler>");
+	                    break;
                 }
             }
             newLines.Add("</CarSounds>");
