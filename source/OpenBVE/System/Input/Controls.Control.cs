@@ -18,7 +18,9 @@ namespace OpenBve
 	        /// <summary>This control is activated using the RailDriver cab controller</summary>
             RailDriver = 3,
             /// <summary>This control is activated using the Input Device Plugin</summary>
-            InputDevicePlugin = 4
+            InputDevicePlugin = 4,
+            /// <summary>This control is activated using a touch element</summary>
+            Touch = 5
         }
 
         /// <summary>Keyboard modifiers</summary>

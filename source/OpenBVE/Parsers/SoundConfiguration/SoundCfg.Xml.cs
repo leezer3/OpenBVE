@@ -481,12 +481,24 @@ namespace OpenBve
 										}
 									}
 									break;
+								case "touch":
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
+									{
+										Interface.AddMessage(MessageType.Error, false, "An empty list of touch sounds was defined in in XML file " + fileName);
+										break;
+									}
+									if (!isDriverCar)
+									{
+										break;
+									}
+									ParseArrayNode(c, out car.Sounds.Touch, center, SoundCfgParser.mediumRadius);
+									break;
 							}
 						}
 					}
 				}
 				car.Sounds.RunVolume = new double[car.Sounds.Run.Length];
-				car.Sounds.FlangeVolume = new double[car.Sounds.FlangeVolume.Length];
+				car.Sounds.FlangeVolume = new double[car.Sounds.Flange.Length];
 			}
 		}
 

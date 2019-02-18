@@ -323,6 +323,7 @@ namespace OpenBve
 			KeyDown	+= MainLoop.keyDownEvent;
 			KeyUp	+= MainLoop.keyUpEvent;
 			MouseDown	+= MainLoop.mouseDownEvent;
+			MouseUp += MainLoop.mouseUpEvent;
 			MouseMove	+= MainLoop.mouseMoveEvent;
 			MouseWheel  += MainLoop.mouseWheelEvent;
 

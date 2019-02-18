@@ -88,6 +88,7 @@ namespace OpenBve
             DynamicAlpha = new ObjectList();
             OverlayOpaque = new ObjectList();
             OverlayAlpha = new ObjectList();
+            Touch = new ObjectList();
             OptionLighting = true;
             OptionAmbientColor = new Color24(160, 160, 160);
             OptionDiffuseColor = new Color24(160, 160, 160);
