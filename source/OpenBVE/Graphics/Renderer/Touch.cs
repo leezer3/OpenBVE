@@ -15,6 +15,8 @@ namespace OpenBve
 		/// <summary>The list of touch element's faces to be rendered.</summary>
 		private static ObjectList Touch = new ObjectList();
 
+		private static int PrePickedObjectIndex = -1;
+
 		/// <summary>Makes an object visible within the world for selection</summary>
 		/// <param name="ObjectIndex">The object's index</param>
 		private static void ShowObjectSelection(int ObjectIndex)
@@ -107,6 +109,24 @@ namespace OpenBve
 						ObjectList list;
 						switch (listType)
 						{
+							case ObjectListType.StaticOpaque:
+								{
+									int groupIndex = (int)ObjectManager.Objects[Objects[k].ObjectIndex].GroupIndex;
+									list = StaticOpaque[groupIndex].List;
+								}
+								break;
+							case ObjectListType.DynamicOpaque:
+								list = DynamicOpaque;
+								break;
+							case ObjectListType.DynamicAlpha:
+								list = DynamicAlpha;
+								break;
+							case ObjectListType.OverlayOpaque:
+								list = OverlayOpaque;
+								break;
+							case ObjectListType.OverlayAlpha:
+								list = OverlayAlpha;
+								break;
 							case ObjectListType.Touch:
 								list = Touch;
 								break;
@@ -178,10 +198,6 @@ namespace OpenBve
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.LoadMatrix(ref LookAt);
 
-			/*
-			 * Render 2D Cab
-			 * This is actually an animated object generated on the fly and held in memory
-			 */
 			if (LightingEnabled)
 			{
 				GL.Disable(EnableCap.Lighting);
@@ -256,7 +272,7 @@ namespace OpenBve
 				}
 				return PickedObjects;
 			}
-			catch (IndexOutOfRangeException e)
+			catch (IndexOutOfRangeException)
 			{
 				if (Position >= SelectBuffer.Length)
 				{
@@ -275,6 +291,11 @@ namespace OpenBve
 			int Hits = GL.RenderMode(RenderingMode.Render);
 			GL.PopMatrix();
 
+			if (Hits <= 0)
+			{
+				return -1;
+			}
+
 			List<PickedObject> PickedObjects = ParseSelectBuffer(SelectBuffer);
 
 			if (PickedObjects.Any())
@@ -288,7 +309,7 @@ namespace OpenBve
 
 		internal static void TouchCheck(Vector2 Point)
 		{
-			if (World.CameraMode != CameraViewMode.Interior)
+			if (World.CameraMode != CameraViewMode.Interior && World.CameraMode != CameraViewMode.InteriorLookAhead)
 			{
 				return;
 			}
@@ -349,13 +370,15 @@ namespace OpenBve
 							}
 						}
 					}
+
+					PrePickedObjectIndex = PickedObjectIndex;
 				}
 			}
 		}
 
 		internal static void LeaveCheck(Vector2 Point)
 		{
-			if (World.CameraMode != CameraViewMode.Interior)
+			if (World.CameraMode != CameraViewMode.Interior && World.CameraMode != CameraViewMode.InteriorLookAhead)
 			{
 				return;
 			}
@@ -396,6 +419,11 @@ namespace OpenBve
 								OpenBveApi.Math.Vector3 Position = Car.Sounds.Touch[TouchElement.SoundIndex].Position;
 								Sounds.PlaySound(Buffer, 1.0, 1.0, Position, TrainManager.PlayerTrain, TrainManager.PlayerTrain.DriverCar, false);
 							}
+						}
+
+                        // HACK: Normally terminate the command issued once.
+						if (o == PickedObjectIndex || (PickedObjectIndex != PrePickedObjectIndex && o == PrePickedObjectIndex))
+						{
 							for (int i = 0; i < Interface.CurrentControls.Length; i++)
 							{
 								if (Interface.CurrentControls[i].Method != Interface.ControlMethod.Touch)

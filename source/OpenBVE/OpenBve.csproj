@@ -220,6 +220,7 @@
     <Compile Include="Parsers\Object\Generic\WavefrontObjParser.cs" />
     <Compile Include="Parsers\Object\MeshBuilder.cs" />
     <Compile Include="Parsers\Object\MSTS\ShapeParser.cs" />
+    <Compile Include="Parsers\Panel\PanelAnimatedXmlParser.cs" />
     <Compile Include="Parsers\Panel\PanelXmlParser.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.ApplyRouteData.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.CompatibilityObjects.cs" />

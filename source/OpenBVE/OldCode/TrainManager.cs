@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Windows.Forms;
 using OpenBve.Parsers.Panel;
 using OpenBveApi.Interface;
@@ -32,43 +33,77 @@ namespace OpenBve
 				Elements = new ObjectManager.AnimatedObject[] { },
 				Overlay = true
 			};
-			string File = OpenBveApi.Path.CombineFile(TrainPath, "panel.animated");
+			string File = OpenBveApi.Path.CombineFile(TrainPath, "panel.animated.xml");
 			if (System.IO.File.Exists(File))
 			{
 				Program.FileSystem.AppendToLogFile("Loading train panel: " + File);
-				if(System.IO.File.Exists(OpenBveApi.Path.CombineFile(TrainPath, "panel2.cfg")) || System.IO.File.Exists(OpenBveApi.Path.CombineFile(TrainPath, "panel.cfg")))
+				if (System.IO.File.Exists(OpenBveApi.Path.CombineFile(TrainPath, "panel.xml")) || System.IO.File.Exists(OpenBveApi.Path.CombineFile(TrainPath, "panel2.cfg")) || System.IO.File.Exists(OpenBveApi.Path.CombineFile(TrainPath, "panel.cfg")))
 				{
 					Program.FileSystem.AppendToLogFile("INFO: This train contains both a 2D and a 3D panel. The 3D panel will always take precedence");
 				}
-				ObjectManager.AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(File, Encoding);
-				if (a != null)
+				try
 				{
-					//HACK: If a == null , loading our animated object completely failed (Missing objects?). Fallback to trying the panel2.cfg
-					try
-					{
-						for (int i = 0; i < a.Objects.Length; i++)
-						{
-							a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject();
-						}
-						Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements = a.Objects;
-						Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.NotAvailable;
-						World.CameraRestriction = Camera.RestrictionMode.NotAvailable;
-						World.UpdateViewingDistances();
-						return;
-					}
-					catch
-					{
-						var currentError = Translations.GetInterfaceString("errors_critical_file");
-						currentError = currentError.Replace("[file]", "panel.animated");
-						MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-						Program.RestartArguments = " ";
-						Loading.Cancel = true;
-						return;
-					}
+					PanelAnimatedXmlParser.ParsePanelAnimatedXml("panel.animated.xml", Encoding, TrainPath, Train, Train.DriverCar);
 				}
-				Interface.AddMessage(MessageType.Error, false, "The panel.animated file " + File + " failed to load. Falling back to 2D panel.");
-			}
+				catch
+				{
+					var currentError = Translations.GetInterfaceString("errors_critical_file");
+					currentError = currentError.Replace("[file]", "panel.animated.xml");
+					MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					Program.RestartArguments = " ";
+					Loading.Cancel = true;
+					return;
+				}
 
+				if (Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements.Any())
+				{
+					Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.NotAvailable;
+					World.CameraRestriction = Camera.RestrictionMode.NotAvailable;
+					World.UpdateViewingDistances();
+					return;
+				}
+				Interface.AddMessage(MessageType.Error, false, "The panel.animated.xml file " + File + " failed to load. Falling back to 2D panel.");
+			}
+			else
+			{
+				File = OpenBveApi.Path.CombineFile(TrainPath, "panel.animated");
+				if (System.IO.File.Exists(File))
+				{
+					Program.FileSystem.AppendToLogFile("Loading train panel: " + File);
+					if (System.IO.File.Exists(OpenBveApi.Path.CombineFile(TrainPath, "panel.xml")) || System.IO.File.Exists(OpenBveApi.Path.CombineFile(TrainPath, "panel2.cfg")) || System.IO.File.Exists(OpenBveApi.Path.CombineFile(TrainPath, "panel.cfg")))
+					{
+						Program.FileSystem.AppendToLogFile("INFO: This train contains both a 2D and a 3D panel. The 3D panel will always take precedence");
+					}
+					ObjectManager.AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(File, Encoding);
+					if (a != null)
+					{
+						//HACK: If a == null , loading our animated object completely failed (Missing objects?). Fallback to trying the panel2.cfg
+						try
+						{
+							for (int i = 0; i < a.Objects.Length; i++)
+							{
+								a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject();
+							}
+							Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements = a.Objects;
+							Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.NotAvailable;
+							World.CameraRestriction = Camera.RestrictionMode.NotAvailable;
+							World.UpdateViewingDistances();
+							return;
+						}
+						catch
+						{
+							var currentError = Translations.GetInterfaceString("errors_critical_file");
+							currentError = currentError.Replace("[file]", "panel.animated");
+							MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+							Program.RestartArguments = " ";
+							Loading.Cancel = true;
+							return;
+						}
+					}
+					Interface.AddMessage(MessageType.Error, false, "The panel.animated file " + File + " failed to load. Falling back to 2D panel.");
+				}
+			}
+		
 			var PanelXml = false;
 			var Panel2 = false;
 			try

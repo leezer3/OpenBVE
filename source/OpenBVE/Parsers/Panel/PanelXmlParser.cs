@@ -415,7 +415,7 @@ namespace OpenBve.Parsers.Panel
 						{
 							Vector2 Location = new Vector2();
 							Vector2 Size = new Vector2();
-							int JumpScreen = 0;
+							int JumpScreen = GroupIndex - 1;
 							int SoundIndex = -1;
 							Translations.Command Command = Translations.Command.None;
 							int CommandOption = 0;
