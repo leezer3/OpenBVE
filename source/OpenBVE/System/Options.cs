@@ -180,6 +180,8 @@ namespace OpenBve
 			internal string[] EnableInputDevicePlugins;
 
 			internal string CursorFileName;
+			internal bool Panel2ExtendedMode;
+			internal int Panel2ExtendedMinSize;
 
 			internal XParsers CurrentXParser;
 			internal ObjParsers CurrentObjParser;
@@ -273,7 +275,9 @@ namespace OpenBve
 				this.KioskMode = false;
 				this.KioskModeTimer = 300;
 				this.EnableInputDevicePlugins = new string[] { };
-				this.CursorFileName = string.Empty;
+				this.CursorFileName = "nk.png";
+				this.Panel2ExtendedMode = false;
+				this.Panel2ExtendedMinSize = 128;
 				this.CurrentXParser = XParsers.Original; //Set to Michelle's original X parser by default
 				this.CurrentObjParser = ObjParsers.Original; //Set to original Obj parser by default
 			}
@@ -799,6 +803,15 @@ namespace OpenBve
 										case "cursor":
 											Interface.CurrentOptions.CursorFileName = Value;
 											break;
+										case "panel2extended":
+											Interface.CurrentOptions.Panel2ExtendedMode = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											break;
+										case "panel2extendedminsize":
+											{
+												int a;
+												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
+												Interface.CurrentOptions.Panel2ExtendedMinSize = a;
+											} break;
 									}
 									break;
 							}
@@ -1019,6 +1032,8 @@ namespace OpenBve
 			Builder.AppendLine();
 			Builder.AppendLine("[Touch]");
 			Builder.AppendLine("cursor = " + CurrentOptions.CursorFileName);
+			Builder.AppendLine("panel2extended = " + (CurrentOptions.Panel2ExtendedMode ? "true" : "false"));
+			Builder.AppendLine("panel2extendedminsize = " + CurrentOptions.Panel2ExtendedMinSize.ToString(Culture));
 			string File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg");
 			System.IO.File.WriteAllText(File, Builder.ToString(), new System.Text.UTF8Encoding(true));
 		}

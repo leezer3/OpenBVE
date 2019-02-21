@@ -1545,7 +1545,7 @@ namespace OpenBve.Parsers.Panel
 			}
 		}
 
-		private static void CreateTouchElement(TrainManager.ElementsGroup Group, Vector2 Location, Vector2 Size, int ScreenIndex, int SoundIndex, Translations.Command Command, int CommandOption, Vector2 RelativeRotationCenter, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver)
+		internal static void CreateTouchElement(TrainManager.ElementsGroup Group, Vector2 Location, Vector2 Size, int ScreenIndex, int SoundIndex, Translations.Command Command, int CommandOption, Vector2 RelativeRotationCenter, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver)
 		{
 			double WorldWidth, WorldHeight;
 			if (Screen.Width >= Screen.Height)

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 using OpenTK;
 
@@ -34,7 +35,8 @@ namespace OpenBve
 		{
 			if (!Directory.Exists(CursorFolder))
 			{
-				MessageBox.Show(@"The default language files have been moved or deleted.");
+				MessageBox.Show(@"The default cursor images have been moved or deleted.");
+				LoadEmbeddedCursorImages();
 				return;
 			}
 
@@ -48,7 +50,7 @@ namespace OpenBve
 					{
 						Bitmap Image = new Bitmap(Fs);
 						var data = Image.LockBits(new Rectangle(0, 0, Image.Width, Image.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
-						CursorList.Add(new Cursor(Path.GetFileName(File), new MouseCursor(0, 0, data.Width, data.Height, data.Scan0), Image));
+						CursorList.Add(new Cursor(Path.GetFileName(File), new MouseCursor(5, 0, data.Width, data.Height, data.Scan0), Image));
 						Image.UnlockBits(data);
 					}
 				}
@@ -57,6 +59,22 @@ namespace OpenBve
 					// ignored
 				}
 			}
+		}
+
+		private static void LoadEmbeddedCursorImages()
+		{
+			var thisAssembly = Assembly.GetExecutingAssembly();
+			using (var stream = thisAssembly.GetManifestResourceStream("OpenBve.nk.png"))
+			{
+				if (stream != null)
+				{
+					Bitmap Image = new Bitmap(stream);
+					var data = Image.LockBits(new Rectangle(0, 0, Image.Width, Image.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+                    CursorList.Add(new Cursor("nk.png", new MouseCursor(5, 0, data.Width, data.Height, data.Scan0), Image));
+					Image.UnlockBits(data);
+				}
+			}
+			Interface.CurrentOptions.CursorFileName = "nk.png";
 		}
 
 		internal static void ListCursors(ComboBox comboBoxCursor)

@@ -34,9 +34,9 @@ namespace OpenBve {
 		}
 
 
-		private void trackBarTimeAccelerationFactor_ValueChanged(object sender, EventArgs e)
+		private void updownTimeAccelerationFactor_ValueChanged(object sender, EventArgs e)
 		{
-			Interface.CurrentOptions.TimeAccelerationFactor = trackBarTimeAccelerationFactor.Value;
+			Interface.CurrentOptions.TimeAccelerationFactor = (int)updownTimeAccelerationFactor.Value;
 		}
 		
 		// =======

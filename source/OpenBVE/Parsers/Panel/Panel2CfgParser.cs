@@ -1,4 +1,5 @@
 using System;
+using OpenBve.Parsers.Panel;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
@@ -282,6 +283,20 @@ namespace OpenBve {
 					CreateElement(Train.Cars[Car].CarSections[0].Groups[0], 0.0, 0.0, tday.Width, tday.Height, new Vector2(0.5, 0.5), 0.0, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
 				}
 			}
+
+			int GroupIndex = 0;
+
+			if (Interface.CurrentOptions.Panel2ExtendedMode)
+			{
+				GroupIndex++;
+				Array.Resize(ref Train.Cars[Car].CarSections[0].Groups, GroupIndex + 1);
+				Train.Cars[Car].CarSections[0].Groups[GroupIndex] = new TrainManager.ElementsGroup
+				{
+					Elements = new ObjectManager.AnimatedObject[] { },
+					Overlay = true
+				};
+			}
+
 			// parse lines for rest
 			double invfac = Lines.Length == 0 ? Loading.TrainProgressCurrentWeight : Loading.TrainProgressCurrentWeight / (double)Lines.Length;
 			for (int i = 0; i < Lines.Length; i++) {
@@ -377,9 +392,9 @@ namespace OpenBve {
 										});
 										int w = tday.Width;
 										int h = tday.Height;
-										int j = CreateElement(Train.Cars[Car].CarSections[0].Groups[0], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
+										int j = CreateElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
 										string f = GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
-										Train.Cars[Car].CarSections[0].Groups[0].Elements[j].StateFunction = new FunctionScript(Program.CurrentHost, f + " 1 == --", false);
+										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Program.CurrentHost, f + " 1 == --", false);
 									}
 								} break;
 								// needle
@@ -560,10 +575,10 @@ namespace OpenBve {
 										double n = Radius == 0.0 | OriginY == 0.0 ? 1.0 : Radius / OriginY;
 										double nx = n * w;
 										double ny = n * h;
-										int j = CreateElement(Train.Cars[Car].CarSections[0].Groups[0], LocationX - ox * nx, LocationY - oy * ny, nx, ny, new Vector2(ox, oy), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, tday, tnight, Color, false);
-										Train.Cars[Car].CarSections[0].Groups[0].Elements[j].RotateZDirection = Vector3.Backward;
-										Train.Cars[Car].CarSections[0].Groups[0].Elements[j].RotateXDirection = Vector3.Right;
-										Train.Cars[Car].CarSections[0].Groups[0].Elements[j].RotateYDirection = Vector3.Cross(Train.Cars[Car].CarSections[0].Groups[0].Elements[j].RotateZDirection, Train.Cars[Car].CarSections[0].Groups[0].Elements[j].RotateXDirection);
+										int j = CreateElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], LocationX - ox * nx, LocationY - oy * ny, nx, ny, new Vector2(ox, oy), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, tday, tnight, Color, false);
+										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateZDirection = Vector3.Backward;
+										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateXDirection = Vector3.Right;
+										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateYDirection = Vector3.Cross(Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateZDirection, Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateXDirection);
 										string f;
 										switch (Subject.ToLowerInvariant()) {
 											case "hour":
@@ -586,13 +601,13 @@ namespace OpenBve {
 										double a1 = (LastAngle - InitialAngle) / (Maximum - Minimum);
 										f += " " + a1.ToString(Culture) + " * " + a0.ToString(Culture) + " +";
 										if (NaturalFrequency >= 0.0 & DampingRatio >= 0.0) {
-											Train.Cars[Car].CarSections[0].Groups[0].Elements[j].RotateZDamping = new Damping(NaturalFrequency, DampingRatio);
+											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateZDamping = new Damping(NaturalFrequency, DampingRatio);
 										}
-										Train.Cars[Car].CarSections[0].Groups[0].Elements[j].RotateZFunction = new FunctionScript(Program.CurrentHost, f, false);
+										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction = new FunctionScript(Program.CurrentHost, f, false);
 										if (Backstop)
 										{
-											Train.Cars[Car].CarSections[0].Groups[0].Elements[j].RotateZFunction.Minimum = InitialAngle;
-											Train.Cars[Car].CarSections[0].Groups[0].Elements[j].RotateZFunction.Maximum = LastAngle;
+											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction.Minimum = InitialAngle;
+											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction.Maximum = LastAngle;
 										}
 									}
 								} break;
@@ -722,7 +737,7 @@ namespace OpenBve {
 										});
 										int w = tday.Width;
 										int h = tday.Height;
-										int j = CreateElement(Train.Cars[Car].CarSections[0].Groups[0], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
+										int j = CreateElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
 										if (Maximum < Minimum)
 										{
 											Interface.AddMessage(MessageType.Error, false, "Maximum value must be greater than minimum value " + Section + " in " + FileName);
@@ -731,8 +746,8 @@ namespace OpenBve {
 										string tf = GetInfixFunction(Train, Subject, Minimum, Maximum, Width, tday.Width, Section + " in " + FileName);
 										if (tf != String.Empty)
 										{
-											Train.Cars[Car].CarSections[0].Groups[0].Elements[j].TextureShiftXDirection = Direction;
-											Train.Cars[Car].CarSections[0].Groups[0].Elements[j].TextureShiftXFunction = new FunctionScript(Program.CurrentHost, tf, true);
+											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXDirection = Direction;
+											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Program.CurrentHost, tf, true);
 										}
 									}
 								} break;
@@ -894,11 +909,35 @@ namespace OpenBve {
 											}
 											int j = -1;
 											for (int k = 0; k < tday.Length; k++) {
-												int l = CreateElement(Train.Cars[Car].CarSections[0].Groups[0], LocationX, LocationY, (double)wday, (double)Interval, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, tday[k], tnight[k], Color32.White, k != 0);
+												int l = CreateElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], LocationX, LocationY, (double)wday, (double)Interval, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, tday[k], tnight[k], Color32.White, k != 0);
 												if (k == 0) j = l;
 											}
 											string f = GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
-											Train.Cars[Car].CarSections[0].Groups[0].Elements[j].StateFunction = new FunctionScript(Program.CurrentHost, f, false);
+											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Program.CurrentHost, f, false);
+
+											if (Interface.CurrentOptions.Panel2ExtendedMode)
+											{
+												if (wday >= Interface.CurrentOptions.Panel2ExtendedMinSize && Interval >= Interface.CurrentOptions.Panel2ExtendedMinSize)
+												{
+													if (Subject == "power")
+													{
+														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, -1, Translations.Command.PowerDecrease, 0, new Vector2(0.5, 0.5), PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
+														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, -1, Translations.Command.PowerIncrease, 0, new Vector2(0.5, 0.5), PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
+													}
+
+													if (Subject == "brake")
+													{
+														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, -1, Translations.Command.BrakeIncrease, 0, new Vector2(0.5, 0.5), PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
+														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, -1, Translations.Command.BrakeDecrease, 0, new Vector2(0.5, 0.5), PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
+													}
+
+													if (Subject == "reverser")
+													{
+														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, -1, Translations.Command.ReverserForward, 0, new Vector2(0.5, 0.5), PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
+														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, -1, Translations.Command.ReverserBackward, 0, new Vector2(0.5, 0.5), PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
+													}
+												}
+											}
 										}
 									}
 								} break;
@@ -990,21 +1029,21 @@ namespace OpenBve {
 									}
 									if (Radius != 0.0) {
 										// create element
-										int j = CreateElement(Train.Cars[Car].CarSections[0].Groups[0], LocationX - Radius, LocationY - Radius, 2.0 * Radius, 2.0 * Radius, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, null, null, Color, false);
+										int j = CreateElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], LocationX - Radius, LocationY - Radius, 2.0 * Radius, 2.0 * Radius, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, null, null, Color, false);
 										InitialAngle = InitialAngle + Math.PI;
 										LastAngle = LastAngle + Math.PI;
-										double x0 = Train.Cars[Car].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[0].Coordinates.X;
-										double y0 = Train.Cars[Car].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[0].Coordinates.Y;
-										double z0 = Train.Cars[Car].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[0].Coordinates.Z;
-										double x1 = Train.Cars[Car].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[1].Coordinates.X;
-										double y1 = Train.Cars[Car].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[1].Coordinates.Y;
-										double z1 = Train.Cars[Car].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[1].Coordinates.Z;
-										double x2 = Train.Cars[Car].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[2].Coordinates.X;
-										double y2 = Train.Cars[Car].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[2].Coordinates.Y;
-										double z2 = Train.Cars[Car].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[2].Coordinates.Z;
-										double x3 = Train.Cars[Car].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[3].Coordinates.X;
-										double y3 = Train.Cars[Car].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[3].Coordinates.Y;
-										double z3 = Train.Cars[Car].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[3].Coordinates.Z;
+										double x0 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Object.Mesh.Vertices[0].Coordinates.X;
+										double y0 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Object.Mesh.Vertices[0].Coordinates.Y;
+										double z0 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Object.Mesh.Vertices[0].Coordinates.Z;
+										double x1 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Object.Mesh.Vertices[1].Coordinates.X;
+										double y1 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Object.Mesh.Vertices[1].Coordinates.Y;
+										double z1 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Object.Mesh.Vertices[1].Coordinates.Z;
+										double x2 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Object.Mesh.Vertices[2].Coordinates.X;
+										double y2 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Object.Mesh.Vertices[2].Coordinates.Y;
+										double z2 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Object.Mesh.Vertices[2].Coordinates.Z;
+										double x3 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Object.Mesh.Vertices[3].Coordinates.X;
+										double y3 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Object.Mesh.Vertices[3].Coordinates.Y;
+										double z3 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Object.Mesh.Vertices[3].Coordinates.Z;
 										double cx = 0.25 * (x0 + x1 + x2 + x3);
 										double cy = 0.25 * (y0 + y1 + y2 + y3);
 										double cz = 0.25 * (z0 + z1 + z2 + z3);
@@ -1020,11 +1059,11 @@ namespace OpenBve {
 											new int[] { 0, 7, 8 },
 											new int[] { 0, 9, 10 }
 										};
-										Train.Cars[Car].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh = new Mesh(vertices, faces, Color);
-										Train.Cars[Car].CarSections[0].Groups[0].Elements[j].LEDClockwiseWinding = InitialAngle <= LastAngle;
-										Train.Cars[Car].CarSections[0].Groups[0].Elements[j].LEDInitialAngle = InitialAngle;
-										Train.Cars[Car].CarSections[0].Groups[0].Elements[j].LEDLastAngle = LastAngle;
-										Train.Cars[Car].CarSections[0].Groups[0].Elements[j].LEDVectors = new Vector3[] {
+										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Object.Mesh = new Mesh(vertices, faces, Color);
+										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].LEDClockwiseWinding = InitialAngle <= LastAngle;
+										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].LEDInitialAngle = InitialAngle;
+										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].LEDLastAngle = LastAngle;
+										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].LEDVectors = new Vector3[] {
 											new Vector3(x0, y0, z0),
 											new Vector3(x1, y1, z1),
 											new Vector3(x2, y2, z2),
@@ -1042,7 +1081,7 @@ namespace OpenBve {
 											f += " " + s + " * floor " + t + " *";
 										}
 										f += " " + a1.ToString(Culture) + " " + a0.ToString(Culture) + " fma";
-										Train.Cars[Car].CarSections[0].Groups[0].Elements[j].LEDFunction = new FunctionScript(Program.CurrentHost, f, false);
+										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].LEDFunction = new FunctionScript(Program.CurrentHost, f, false);
 									} else {
 										Interface.AddMessage(MessageType.Error, false, "Radius is required to be specified in " + Section + " in " + FileName);
 									}
@@ -1107,9 +1146,9 @@ namespace OpenBve {
 										Interface.AddMessage(MessageType.Error, false, "Height is required to be specified in " + Section + " in " + FileName);
 									}
 									if (Width > 0.0 & Height > 0.0) {
-										int j = CreateElement(Train.Cars[Car].CarSections[0].Groups[0], LocationX, LocationY, Width, Height, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, null, null, Color32.White, false);
-										Train.Cars[Car].CarSections[0].Groups[0].Elements[j].StateFunction = new FunctionScript(Program.CurrentHost, "timetable", false);
-										Timetable.AddObjectForCustomTimetable(Train.Cars[Car].CarSections[0].Groups[0].Elements[j]);
+										int j = CreateElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], LocationX, LocationY, Width, Height, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, null, null, Color32.White, false);
+										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Program.CurrentHost, "timetable", false);
+										Timetable.AddObjectForCustomTimetable(Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j]);
 									}
 								} break;
 						}
