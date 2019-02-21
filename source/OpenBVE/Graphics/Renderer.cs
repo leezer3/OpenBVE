@@ -484,7 +484,7 @@ namespace OpenBve
 		/// <summary> Stores the last bound OpenGL texture</summary>
 		internal static OpenGlTexture LastBoundTexture = null;
 
-		private static void RenderFace(ref ObjectFace Face, double CameraX, double CameraY, double CameraZ)
+		private static void RenderFace(ref ObjectFace Face, double CameraX, double CameraY, double CameraZ, bool IsDebugTouchMode = false)
 		{
 			if (CullEnabled)
 			{
@@ -503,9 +503,9 @@ namespace OpenBve
 				}
 			}
 			int r = (int)ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Material;
-			RenderFace(ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Materials[r], ObjectManager.Objects[Face.ObjectIndex].Mesh.Vertices, Face.Wrap, ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex], CameraX, CameraY, CameraZ);
+			RenderFace(ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Materials[r], ObjectManager.Objects[Face.ObjectIndex].Mesh.Vertices, Face.Wrap, ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex], CameraX, CameraY, CameraZ, IsDebugTouchMode);
 		}
-		private static void RenderFace(ref MeshMaterial Material, VertexTemplate[] Vertices, OpenGlTextureWrapMode wrap, ref MeshFace Face, double CameraX, double CameraY, double CameraZ)
+		private static void RenderFace(ref MeshMaterial Material, VertexTemplate[] Vertices, OpenGlTextureWrapMode wrap, ref MeshFace Face, double CameraX, double CameraY, double CameraZ, bool IsDebugTouchMode = false)
 		{
 			// texture
 			if (Material.DaytimeTexture != null)
@@ -582,23 +582,30 @@ namespace OpenBve
 			}
 			// render daytime polygon
 			int FaceType = Face.Flags & MeshFace.FaceTypeMask;
-			switch (FaceType)
+			if (!IsDebugTouchMode)
 			{
-				case MeshFace.FaceTypeTriangles:
-					GL.Begin(PrimitiveType.Triangles);
-					break;
-				case MeshFace.FaceTypeTriangleStrip:
-					GL.Begin(PrimitiveType.TriangleStrip);
-					break;
-				case MeshFace.FaceTypeQuads:
-					GL.Begin(PrimitiveType.Quads);
-					break;
-				case MeshFace.FaceTypeQuadStrip:
-					GL.Begin(PrimitiveType.QuadStrip);
-					break;
-				default:
-					GL.Begin(PrimitiveType.Polygon);
-					break;
+				switch (FaceType)
+				{
+					case MeshFace.FaceTypeTriangles:
+						GL.Begin(PrimitiveType.Triangles);
+						break;
+					case MeshFace.FaceTypeTriangleStrip:
+						GL.Begin(PrimitiveType.TriangleStrip);
+						break;
+					case MeshFace.FaceTypeQuads:
+						GL.Begin(PrimitiveType.Quads);
+						break;
+					case MeshFace.FaceTypeQuadStrip:
+						GL.Begin(PrimitiveType.QuadStrip);
+						break;
+					default:
+						GL.Begin(PrimitiveType.Polygon);
+						break;
+				}
+			}
+			else
+			{
+				GL.Begin(PrimitiveType.LineLoop);
 			}
 			if (Material.GlowAttenuationData != 0)
 			{

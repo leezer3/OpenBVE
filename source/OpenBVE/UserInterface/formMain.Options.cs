@@ -149,5 +149,11 @@ namespace OpenBve {
 				InputDevicePlugin.CallPluginConfig(this, listviewInputDevice.SelectedIndices[0]);
 			}
 		}
+
+		private void comboboxCursor_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (this.Tag != null) return;
+			Cursors.SelectedCursor(comboboxCursor, pictureboxCursor);
+		}
 	}
 }

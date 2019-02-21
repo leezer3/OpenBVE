@@ -153,6 +153,10 @@ namespace OpenBve {
 				string folder = Program.FileSystem.GetDataFolder("Languages");
 				Translations.LoadLanguageFiles(folder);
 			}
+			{
+				string folder = Program.FileSystem.GetDataFolder("Cursors");
+				Cursors.LoadCursorImages(folder);
+			}
 			Interface.LoadControls(null, out Interface.CurrentControls);
 			{
 				string folder = Program.FileSystem.GetDataFolder("Controls");

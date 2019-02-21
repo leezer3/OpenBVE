@@ -455,6 +455,7 @@ namespace OpenBve {
 			//Load languages last to ensure that everything is populated
 			Translations.CurrentLanguageCode = Interface.CurrentOptions.LanguageCode;
 			Translations.ListLanguages(comboboxLanguages);
+			Cursors.ListCursors(comboboxCursor);
 		}
 
 		

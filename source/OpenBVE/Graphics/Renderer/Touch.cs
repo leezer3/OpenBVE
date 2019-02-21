@@ -17,6 +17,8 @@ namespace OpenBve
 
 		private static int PrePickedObjectIndex = -1;
 
+		internal static bool DebugTouchMode = false;
+
 		/// <summary>Makes an object visible within the world for selection</summary>
 		/// <param name="ObjectIndex">The object's index</param>
 		private static void ShowObjectSelection(int ObjectIndex)
@@ -177,7 +179,7 @@ namespace OpenBve
 		}
 
 		/// <summary>Render scene for selection</summary>
-		private static void RenderSceneSelection()
+		private static void RenderSceneSelection(bool IsDebugTouchMode = false)
 		{
 			// initialize
 			GL.InitNames();
@@ -216,7 +218,7 @@ namespace OpenBve
 			for (int i = 0; i < Touch.FaceCount; i++)
 			{
 				GL.LoadName(PartId);
-				RenderFace(ref Touch.Faces[i], cx, cy, cz);
+				RenderFace(ref Touch.Faces[i], cx, cy, cz, IsDebugTouchMode);
 				PartId++;
 			}
 
@@ -307,8 +309,106 @@ namespace OpenBve
 			return -1;
 		}
 
+		internal static void DebugTouchArea()
+		{
+			if (!Loading.SimulationSetup)
+			{
+				return;
+			}
+			
+			if (World.CameraMode != CameraViewMode.Interior && World.CameraMode != CameraViewMode.InteriorLookAhead)
+			{
+				return;
+			}
+
+			TrainManager.Car Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
+			int add = Car.CarSections[0].CurrentAdditionalGroup + 1;
+			if (add < Car.CarSections[0].Groups.Length)
+			{
+				TrainManager.TouchElement[] TouchElements = Car.CarSections[0].Groups[add].TouchElements;
+
+				if (TouchElements != null)
+				{
+					foreach (var TouchElement in TouchElements)
+					{
+						int o = TouchElement.Element.ObjectIndex;
+						ShowObjectSelection(o);
+					}
+
+					ResetOpenGlState();
+					GL.PushMatrix();
+					
+					UpdateViewport(ViewPortChangeMode.ChangeToCab);
+
+					RenderSceneSelection(true);
+
+					GL.PopMatrix();
+					
+					foreach (var TouchElement in TouchElements)
+					{
+						int o = TouchElement.Element.ObjectIndex;
+						HideObjectSelection(o);
+					}
+				}
+			}
+		}
+
+		internal static bool MoveCheck(Vector2 Point)
+		{
+			if (!Loading.SimulationSetup)
+			{
+				return false;
+			}
+			
+			if (World.CameraMode != CameraViewMode.Interior && World.CameraMode != CameraViewMode.InteriorLookAhead)
+			{
+				return false;
+			}
+
+			TrainManager.Car Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
+			int add = Car.CarSections[0].CurrentAdditionalGroup + 1;
+			if (add < Car.CarSections[0].Groups.Length)
+			{
+				TrainManager.TouchElement[] TouchElements = Car.CarSections[0].Groups[add].TouchElements;
+
+				if (TouchElements != null)
+				{
+					foreach (var TouchElement in TouchElements)
+					{
+						int o = TouchElement.Element.ObjectIndex;
+						ShowObjectSelection(o);
+					}
+
+					int[] SelectBuffer = new int[2048];
+
+					PickPre(SelectBuffer, Point, new Vector2(5));
+
+					RenderSceneSelection();
+
+					int PickedObjectIndex = PickPost(SelectBuffer);
+
+					foreach (var TouchElement in TouchElements)
+					{
+						int o = TouchElement.Element.ObjectIndex;
+						HideObjectSelection(o);
+					}
+
+					if (PickedObjectIndex >= 0)
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
 		internal static void TouchCheck(Vector2 Point)
 		{
+			if (!Loading.SimulationSetup)
+			{
+				return;
+			}
+			
 			if (World.CameraMode != CameraViewMode.Interior && World.CameraMode != CameraViewMode.InteriorLookAhead)
 			{
 				return;
@@ -378,6 +478,11 @@ namespace OpenBve
 
 		internal static void LeaveCheck(Vector2 Point)
 		{
+			if (!Loading.SimulationSetup)
+			{
+				return;
+			}
+
 			if (World.CameraMode != CameraViewMode.Interior && World.CameraMode != CameraViewMode.InteriorLookAhead)
 			{
 				return;
@@ -421,7 +526,7 @@ namespace OpenBve
 							}
 						}
 
-                        // HACK: Normally terminate the command issued once.
+						// HACK: Normally terminate the command issued once.
 						if (o == PickedObjectIndex || (PickedObjectIndex != PrePickedObjectIndex && o == PrePickedObjectIndex))
 						{
 							for (int i = 0; i < Interface.CurrentControls.Length; i++)

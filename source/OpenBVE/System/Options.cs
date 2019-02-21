@@ -179,6 +179,8 @@ namespace OpenBve
 			/// <summary>The list of enable Input Device Plugins</summary>
 			internal string[] EnableInputDevicePlugins;
 
+			internal string CursorFileName;
+
 			internal XParsers CurrentXParser;
 			internal ObjParsers CurrentObjParser;
 
@@ -271,6 +273,7 @@ namespace OpenBve
 				this.KioskMode = false;
 				this.KioskModeTimer = 300;
 				this.EnableInputDevicePlugins = new string[] { };
+				this.CursorFileName = string.Empty;
 				this.CurrentXParser = XParsers.Original; //Set to Michelle's original X parser by default
 				this.CurrentObjParser = ObjParsers.Original; //Set to original Obj parser by default
 			}
@@ -790,6 +793,14 @@ namespace OpenBve
 											}
 									}
 									break;
+								case "touch":
+									switch (Key)
+									{
+										case "cursor":
+											Interface.CurrentOptions.CursorFileName = Value;
+											break;
+									}
+									break;
 							}
 						}
 					}
@@ -1005,6 +1016,9 @@ namespace OpenBve
 			Builder.AppendLine("[Parsers]");
 			Builder.AppendLine("xObject = " + (int)Interface.CurrentOptions.CurrentXParser);
 			Builder.AppendLine("objObject = " + (int)Interface.CurrentOptions.CurrentObjParser);
+			Builder.AppendLine();
+			Builder.AppendLine("[Touch]");
+			Builder.AppendLine("cursor = " + CurrentOptions.CursorFileName);
 			string File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg");
 			System.IO.File.WriteAllText(File, Builder.ToString(), new System.Text.UTF8Encoding(true));
 		}

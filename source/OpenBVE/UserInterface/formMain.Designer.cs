@@ -112,6 +112,9 @@
 			this.numericUpDownKioskTimeout = new System.Windows.Forms.NumericUpDown();
 			this.checkBoxEnableKiosk = new System.Windows.Forms.CheckBox();
 			this.groupBoxAdvancedOptions = new System.Windows.Forms.GroupBox();
+			this.pictureboxCursor = new System.Windows.Forms.PictureBox();
+			this.labelCursor = new System.Windows.Forms.Label();
+			this.comboboxCursor = new System.Windows.Forms.ComboBox();
 			this.checkBoxHacks = new System.Windows.Forms.CheckBox();
 			this.checkBoxTransparencyFix = new System.Windows.Forms.CheckBox();
 			this.checkBoxUnloadTextures = new System.Windows.Forms.CheckBox();
@@ -477,6 +480,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownKioskTimeout)).BeginInit();
 			this.groupBoxAdvancedOptions.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarTimeAccelerationFactor)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureboxCursor)).BeginInit();
 			this.groupBoxPackageOptions.SuspendLayout();
 			this.panelOptionsLeft.SuspendLayout();
 			this.groupboxDisplayMode.SuspendLayout();
@@ -1629,6 +1633,9 @@
 			// 
 			// groupBoxAdvancedOptions
 			// 
+			this.groupBoxAdvancedOptions.Controls.Add(this.pictureboxCursor);
+			this.groupBoxAdvancedOptions.Controls.Add(this.labelCursor);
+			this.groupBoxAdvancedOptions.Controls.Add(this.comboboxCursor);
 			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxHacks);
 			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxTransparencyFix);
 			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxUnloadTextures);
@@ -1644,6 +1651,34 @@
 			this.groupBoxAdvancedOptions.TabIndex = 21;
 			this.groupBoxAdvancedOptions.TabStop = false;
 			this.groupBoxAdvancedOptions.Text = "Advanced Options";
+			// 
+			// pictureboxCursor
+			// 
+			this.pictureboxCursor.Location = new System.Drawing.Point(8, 170);
+			this.pictureboxCursor.Name = "pictureboxCursor";
+			this.pictureboxCursor.Size = new System.Drawing.Size(32, 32);
+			this.pictureboxCursor.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+			this.pictureboxCursor.TabIndex = 16;
+			this.pictureboxCursor.TabStop = false;
+			// 
+			// labelCursor
+			// 
+			this.labelCursor.AutoSize = true;
+			this.labelCursor.Location = new System.Drawing.Point(48, 170);
+			this.labelCursor.Name = "labelCursor";
+			this.labelCursor.Size = new System.Drawing.Size(13, 13);
+			this.labelCursor.TabIndex = 17;
+			this.labelCursor.Text = "Cursor";
+			// 
+			// comboboxCursor
+			// 
+			this.comboboxCursor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboboxCursor.FormattingEnabled = true;
+			this.comboboxCursor.Location = new System.Drawing.Point(48, 183);
+			this.comboboxCursor.Name = "comboboxLanguages";
+			this.comboboxCursor.Size = new System.Drawing.Size(108, 21);
+			this.comboboxCursor.TabIndex = 18;
+			this.comboboxCursor.SelectedIndexChanged += new System.EventHandler(this.comboboxCursor_SelectedIndexChanged);
 			// 
 			// checkBoxHacks
 			// 
@@ -5638,6 +5673,7 @@
 			this.groupBoxAdvancedOptions.ResumeLayout(false);
 			this.groupBoxAdvancedOptions.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarTimeAccelerationFactor)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureboxCursor)).EndInit();
 			this.groupBoxPackageOptions.ResumeLayout(false);
 			this.groupBoxPackageOptions.PerformLayout();
 			this.panelOptionsLeft.ResumeLayout(false);
@@ -6129,6 +6165,9 @@
 		private System.Windows.Forms.Label labelNumberZero;
 		private System.Windows.Forms.Label labelTimeAcceleration;
 		private System.Windows.Forms.TrackBar trackBarTimeAccelerationFactor;
+        private System.Windows.Forms.PictureBox pictureboxCursor;
+		private System.Windows.Forms.Label labelCursor;
+        private System.Windows.Forms.ComboBox comboboxCursor;
 		private System.Windows.Forms.CheckBox checkBoxDisableDisplayLists;
 		private System.Windows.Forms.CheckBox checkBoxLoadInAdvance;
 		private System.Windows.Forms.GroupBox groupBoxRailDriver;
