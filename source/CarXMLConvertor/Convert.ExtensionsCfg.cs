@@ -472,7 +472,7 @@ namespace CarXmlConvertor
 				}
 				else if (System.IO.File.Exists(OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), "panel2.cfg")))
 				{
-					newLines.Add("<InteriorView>panel2.cfg</InteriorView>");
+					newLines.Add("<InteriorView>panel.xml</InteriorView>");
 					newLines.Add("<DriverPosition>" + ConvertSoundCfg.DriverPosition.X + "," + ConvertSoundCfg.DriverPosition.Y + "," + ConvertSoundCfg.DriverPosition.Z + "</DriverPosition>");
 				}
 			}
