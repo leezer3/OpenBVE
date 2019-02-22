@@ -369,6 +369,9 @@ namespace OpenBve
 							case ObjectListType.OverlayAlpha:
 								list = OverlayAlpha;
 								break;
+							case ObjectListType.Touch:
+								list = Touch;
+								break;
 							default:
 								throw new InvalidOperationException();
 						}

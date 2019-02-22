@@ -996,6 +996,7 @@ namespace OpenBve
 					Cars[i].Sounds.SpringL = TrainManager.CarSound.Empty;
 					Cars[i].Sounds.SpringR = TrainManager.CarSound.Empty;
 					Cars[i].Sounds.Plugin = new TrainManager.CarSound[] { };
+					Cars[i].Sounds.Touch = new TrainManager.CarSound[] { };
 				}
 			}
 

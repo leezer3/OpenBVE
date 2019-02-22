@@ -1572,6 +1572,9 @@ namespace OpenBve
 										Renderer.OptionNormals = !Renderer.OptionNormals;
 										Renderer.StaticOpaqueForceUpdate = true;
 										break;
+									case Translations.Command.DebugTouchMode:
+										Renderer.DebugTouchMode = !Renderer.DebugTouchMode;
+										break;
 									case Translations.Command.ShowEvents:
 										Interface.CurrentOptions.ShowEvents = !Interface.CurrentOptions.ShowEvents;
 										break;

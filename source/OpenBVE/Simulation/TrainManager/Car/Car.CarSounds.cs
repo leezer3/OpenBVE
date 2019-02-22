@@ -58,6 +58,7 @@
 			internal CarSound[] RequestStop;
 			internal double FlangePitch;
 			internal double SpringPlayedAngle;
+			internal CarSound[] Touch;
 		}
 	}
 }

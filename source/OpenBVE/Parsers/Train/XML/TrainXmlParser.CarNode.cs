@@ -256,9 +256,15 @@ namespace OpenBve.Parsers.Train
 						if (Car != Train.DriverCar)
 						{
 							Train.Cars[Car].CarSections = new TrainManager.CarSection[1];
-							Train.Cars[Car].CarSections[0] = new TrainManager.CarSection();
-							Train.Cars[Car].CarSections[0].Elements = new ObjectManager.AnimatedObject[] { };
-							Train.Cars[Car].CarSections[0].Overlay = true;
+							Train.Cars[Car].CarSections[0] = new TrainManager.CarSection
+							{
+								Groups = new TrainManager.ElementsGroup[1]
+							};
+							Train.Cars[Car].CarSections[0].Groups[0] = new TrainManager.ElementsGroup
+							{
+								Elements = new ObjectManager.AnimatedObject[] { },
+								Overlay = true
+							};
 						}
 						string cv = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
 						if (!System.IO.File.Exists(cv))
@@ -290,7 +296,7 @@ namespace OpenBve.Parsers.Train
 						{
 							a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject();
 						}
-						Train.Cars[Car].CarSections[0].Elements = a.Objects;
+						Train.Cars[Car].CarSections[0].Groups[0].Elements = a.Objects;
 						Train.Cars[Car].CameraRestrictionMode = Camera.RestrictionMode.NotAvailable;
 					}
 					catch

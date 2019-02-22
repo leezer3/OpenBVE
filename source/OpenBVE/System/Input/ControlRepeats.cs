@@ -25,7 +25,7 @@ namespace OpenBve
 
         /// <summary>Adds a control to be repeated</summary>
         /// <param name="controlIndex">The control index to repeat</param>
-        private static void AddControlRepeat(int controlIndex)
+        internal static void AddControlRepeat(int controlIndex)
         {
             for(int i = 0; i < RepeatControlsUsed; i++)
             {
@@ -45,7 +45,7 @@ namespace OpenBve
 
         /// <summary>Removes a control repeat</summary>
         /// <param name="controlIndex">The control index to stop repeating</param>
-        private static void RemoveControlRepeat(int controlIndex)
+        internal static void RemoveControlRepeat(int controlIndex)
         {
             for (int i = 0; i < RepeatControlsUsed; i++)
             {

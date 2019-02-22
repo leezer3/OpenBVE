@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Globalization;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
+using OpenTK;
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 using ButtonState = OpenTK.Input.ButtonState;
@@ -124,6 +125,21 @@ namespace OpenBve
 				if (Game.CurrentInterface == Game.InterfaceType.Menu)
 				{
 					Game.Menu.ProcessMouseDown(e.X, e.Y);
+				}
+				else if (Game.CurrentInterface == Game.InterfaceType.Normal)
+				{
+					Renderer.TouchCheck(new Vector2(e.X, e.Y));
+				}
+			}
+		}
+
+		internal static void mouseUpEvent(object sender, MouseButtonEventArgs e)
+		{
+			if (e.Button == MouseButton.Left)
+			{
+				if (Game.CurrentInterface == Game.InterfaceType.Normal)
+				{
+					Renderer.LeaveCheck(new Vector2(e.X, e.Y));
 				}
 			}
 		}

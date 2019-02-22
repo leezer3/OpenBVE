@@ -112,13 +112,15 @@
 			this.numericUpDownKioskTimeout = new System.Windows.Forms.NumericUpDown();
 			this.checkBoxEnableKiosk = new System.Windows.Forms.CheckBox();
 			this.groupBoxAdvancedOptions = new System.Windows.Forms.GroupBox();
+			this.pictureboxCursor = new System.Windows.Forms.PictureBox();
+			this.labelCursor = new System.Windows.Forms.Label();
+			this.comboboxCursor = new System.Windows.Forms.ComboBox();
+			this.checkBoxPanel2Extended = new System.Windows.Forms.CheckBox();
 			this.checkBoxHacks = new System.Windows.Forms.CheckBox();
 			this.checkBoxTransparencyFix = new System.Windows.Forms.CheckBox();
 			this.checkBoxUnloadTextures = new System.Windows.Forms.CheckBox();
-			this.labelNumberFive = new System.Windows.Forms.Label();
-			this.labelNumberZero = new System.Windows.Forms.Label();
 			this.labelTimeAcceleration = new System.Windows.Forms.Label();
-			this.trackBarTimeAccelerationFactor = new System.Windows.Forms.TrackBar();
+			this.updownTimeAccelerationFactor = new System.Windows.Forms.NumericUpDown();
 			this.checkBoxDisableDisplayLists = new System.Windows.Forms.CheckBox();
 			this.checkBoxLoadInAdvance = new System.Windows.Forms.CheckBox();
 			this.groupBoxPackageOptions = new System.Windows.Forms.GroupBox();
@@ -476,7 +478,8 @@
 			this.groupBoxKioskMode.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownKioskTimeout)).BeginInit();
 			this.groupBoxAdvancedOptions.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.trackBarTimeAccelerationFactor)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.updownTimeAccelerationFactor)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureboxCursor)).BeginInit();
 			this.groupBoxPackageOptions.SuspendLayout();
 			this.panelOptionsLeft.SuspendLayout();
 			this.groupboxDisplayMode.SuspendLayout();
@@ -1629,13 +1632,15 @@
 			// 
 			// groupBoxAdvancedOptions
 			// 
+			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxPanel2Extended);
+			this.groupBoxAdvancedOptions.Controls.Add(this.pictureboxCursor);
+			this.groupBoxAdvancedOptions.Controls.Add(this.labelCursor);
+			this.groupBoxAdvancedOptions.Controls.Add(this.comboboxCursor);
 			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxHacks);
 			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxTransparencyFix);
 			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxUnloadTextures);
-			this.groupBoxAdvancedOptions.Controls.Add(this.labelNumberFive);
-			this.groupBoxAdvancedOptions.Controls.Add(this.labelNumberZero);
 			this.groupBoxAdvancedOptions.Controls.Add(this.labelTimeAcceleration);
-			this.groupBoxAdvancedOptions.Controls.Add(this.trackBarTimeAccelerationFactor);
+			this.groupBoxAdvancedOptions.Controls.Add(this.updownTimeAccelerationFactor);
 			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxDisableDisplayLists);
 			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxLoadInAdvance);
 			this.groupBoxAdvancedOptions.Location = new System.Drawing.Point(6, 160);
@@ -1644,6 +1649,44 @@
 			this.groupBoxAdvancedOptions.TabIndex = 21;
 			this.groupBoxAdvancedOptions.TabStop = false;
 			this.groupBoxAdvancedOptions.Text = "Advanced Options";
+			// 
+			// checkBoxPanel2Extended
+			// 
+			this.checkBoxPanel2Extended.AutoSize = true;
+			this.checkBoxPanel2Extended.Location = new System.Drawing.Point(8, 183);
+			this.checkBoxPanel2Extended.Name = "checkBoxPanel2Extended";
+			this.checkBoxPanel2Extended.Size = new System.Drawing.Size(203, 17);
+			this.checkBoxPanel2Extended.TabIndex = 17;
+			this.checkBoxPanel2Extended.Text = "Enable Panel2 extend mode";
+			this.checkBoxPanel2Extended.UseVisualStyleBackColor = true;
+			// 
+			// pictureboxCursor
+			// 
+			this.pictureboxCursor.Location = new System.Drawing.Point(8, 145);
+			this.pictureboxCursor.Name = "pictureboxCursor";
+			this.pictureboxCursor.Size = new System.Drawing.Size(32, 32);
+			this.pictureboxCursor.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+			this.pictureboxCursor.TabIndex = 16;
+			this.pictureboxCursor.TabStop = false;
+			// 
+			// labelCursor
+			// 
+			this.labelCursor.AutoSize = true;
+			this.labelCursor.Location = new System.Drawing.Point(48, 145);
+			this.labelCursor.Name = "labelCursor";
+			this.labelCursor.Size = new System.Drawing.Size(13, 13);
+			this.labelCursor.TabIndex = 17;
+			this.labelCursor.Text = "Cursor";
+			// 
+			// comboboxCursor
+			// 
+			this.comboboxCursor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboboxCursor.FormattingEnabled = true;
+			this.comboboxCursor.Location = new System.Drawing.Point(48, 158);
+			this.comboboxCursor.Name = "comboboxLanguages";
+			this.comboboxCursor.Size = new System.Drawing.Size(108, 21);
+			this.comboboxCursor.TabIndex = 18;
+			this.comboboxCursor.SelectedIndexChanged += new System.EventHandler(this.comboboxCursor_SelectedIndexChanged);
 			// 
 			// checkBoxHacks
 			// 
@@ -1676,46 +1719,23 @@
 			this.checkBoxUnloadTextures.UseVisualStyleBackColor = true;
 			this.checkBoxUnloadTextures.CheckedChanged += new System.EventHandler(this.checkBoxUnloadTextures_CheckedChanged);
 			// 
-			// labelNumberFive
-			// 
-			this.labelNumberFive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelNumberFive.AutoSize = true;
-			this.labelNumberFive.Location = new System.Drawing.Point(267, 163);
-			this.labelNumberFive.Name = "labelNumberFive";
-			this.labelNumberFive.Size = new System.Drawing.Size(13, 13);
-			this.labelNumberFive.TabIndex = 12;
-			this.labelNumberFive.Text = "5";
-			// 
-			// labelNumberZero
-			// 
-			this.labelNumberZero.AutoSize = true;
-			this.labelNumberZero.Location = new System.Drawing.Point(186, 163);
-			this.labelNumberZero.Name = "labelNumberZero";
-			this.labelNumberZero.Size = new System.Drawing.Size(13, 13);
-			this.labelNumberZero.TabIndex = 11;
-			this.labelNumberZero.Text = "0";
-			// 
 			// labelTimeAcceleration
 			// 
-			this.labelTimeAcceleration.Location = new System.Drawing.Point(-1, 132);
+			this.labelTimeAcceleration.AutoSize = true;
+			this.labelTimeAcceleration.Location = new System.Drawing.Point(8, 125);
 			this.labelTimeAcceleration.Name = "labelTimeAcceleration";
-			this.labelTimeAcceleration.Size = new System.Drawing.Size(179, 22);
+			this.labelTimeAcceleration.Size = new System.Drawing.Size(179, 17);
 			this.labelTimeAcceleration.TabIndex = 10;
 			this.labelTimeAcceleration.Text = "Accelerated Time Factor:";
-			this.labelTimeAcceleration.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// trackBarTimeAccelerationFactor
+			// updownTimeAccelerationFactor
 			// 
-			this.trackBarTimeAccelerationFactor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.trackBarTimeAccelerationFactor.LargeChange = 1;
-			this.trackBarTimeAccelerationFactor.Location = new System.Drawing.Point(179, 122);
-			this.trackBarTimeAccelerationFactor.Maximum = 5;
-			this.trackBarTimeAccelerationFactor.Name = "trackBarTimeAccelerationFactor";
-			this.trackBarTimeAccelerationFactor.RightToLeft = System.Windows.Forms.RightToLeft.No;
-			this.trackBarTimeAccelerationFactor.Size = new System.Drawing.Size(108, 45);
-			this.trackBarTimeAccelerationFactor.TabIndex = 3;
-			this.trackBarTimeAccelerationFactor.TickStyle = System.Windows.Forms.TickStyle.Both;
+			this.updownTimeAccelerationFactor.Location = new System.Drawing.Point(150, 122);
+			this.updownTimeAccelerationFactor.Name = "updownTimeAccelerationFactor";
+			this.updownTimeAccelerationFactor.Size = new System.Drawing.Size(52, 20);
+			this.updownTimeAccelerationFactor.TabIndex = 3;
+			this.updownTimeAccelerationFactor.Maximum = 5;
+			this.updownTimeAccelerationFactor.ValueChanged += new System.EventHandler(this.updownTimeAccelerationFactor_ValueChanged);
 			// 
 			// checkBoxDisableDisplayLists
 			// 
@@ -5637,7 +5657,8 @@
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownKioskTimeout)).EndInit();
 			this.groupBoxAdvancedOptions.ResumeLayout(false);
 			this.groupBoxAdvancedOptions.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.trackBarTimeAccelerationFactor)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.updownTimeAccelerationFactor)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureboxCursor)).EndInit();
 			this.groupBoxPackageOptions.ResumeLayout(false);
 			this.groupBoxPackageOptions.PerformLayout();
 			this.panelOptionsLeft.ResumeLayout(false);
@@ -6125,10 +6146,12 @@
 		private System.Windows.Forms.CheckBox checkBoxHacks;
 		private System.Windows.Forms.CheckBox checkBoxTransparencyFix;
 		private System.Windows.Forms.CheckBox checkBoxUnloadTextures;
-		private System.Windows.Forms.Label labelNumberFive;
-		private System.Windows.Forms.Label labelNumberZero;
 		private System.Windows.Forms.Label labelTimeAcceleration;
-		private System.Windows.Forms.TrackBar trackBarTimeAccelerationFactor;
+		private System.Windows.Forms.NumericUpDown updownTimeAccelerationFactor;
+        private System.Windows.Forms.PictureBox pictureboxCursor;
+		private System.Windows.Forms.Label labelCursor;
+        private System.Windows.Forms.ComboBox comboboxCursor;
+		private System.Windows.Forms.CheckBox checkBoxPanel2Extended;
 		private System.Windows.Forms.CheckBox checkBoxDisableDisplayLists;
 		private System.Windows.Forms.CheckBox checkBoxLoadInAdvance;
 		private System.Windows.Forms.GroupBox groupBoxRailDriver;

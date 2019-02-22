@@ -93,12 +93,12 @@ namespace OpenBve
 				int cs = CurrentCarSection;
 				if (cs >= 0)
 				{
-					for (int i = 0; i < CarSections[cs].Elements.Length; i++)
+					for (int i = 0; i < CarSections[cs].Groups[0].Elements.Length; i++)
 					{
 						UpdateSectionElement(cs, i, p, d, u, s, CurrentlyVisible, TimeElapsed, ForceUpdate);
 
 						// brightness change
-						int o = CarSections[cs].Elements[i].ObjectIndex;
+						int o = CarSections[cs].Groups[0].Elements[i].ObjectIndex;
 						if (ObjectManager.Objects[o] != null)
 						{
 							for (int j = 0; j < ObjectManager.Objects[o].Mesh.Materials.Length; j++)
@@ -114,29 +114,33 @@ namespace OpenBve
 			{
 				int j = CarSections.Length;
 				Array.Resize(ref CarSections, j + 1);
-				CarSections[j] = new CarSection();
+				CarSections[j] = new CarSection
+				{
+					Groups = new ElementsGroup[1]
+				};
+				CarSections[j].Groups[0] = new ElementsGroup();
 				if (currentObject is ObjectManager.StaticObject)
 				{
 					ObjectManager.StaticObject s = (ObjectManager.StaticObject)currentObject;
-					CarSections[j].Elements = new ObjectManager.AnimatedObject[1];
-					CarSections[j].Elements[0] = new ObjectManager.AnimatedObject
+					CarSections[j].Groups[0].Elements = new ObjectManager.AnimatedObject[1];
+					CarSections[j].Groups[0].Elements[0] = new ObjectManager.AnimatedObject
 					{
 						States = new ObjectManager.AnimatedObjectState[1]
 						
 					};
-					CarSections[j].Elements[0].States[0].Position = Vector3.Zero;
-					CarSections[j].Elements[0].States[0].Object = s;
-					CarSections[j].Elements[0].CurrentState = 0;
-					CarSections[j].Elements[0].ObjectIndex = ObjectManager.CreateDynamicObject();
+					CarSections[j].Groups[0].Elements[0].States[0].Position = Vector3.Zero;
+					CarSections[j].Groups[0].Elements[0].States[0].Object = s;
+					CarSections[j].Groups[0].Elements[0].CurrentState = 0;
+					CarSections[j].Groups[0].Elements[0].ObjectIndex = ObjectManager.CreateDynamicObject();
 				}
 				else if (currentObject is ObjectManager.AnimatedObjectCollection)
 				{
 					ObjectManager.AnimatedObjectCollection a = (ObjectManager.AnimatedObjectCollection)currentObject;
-					CarSections[j].Elements = new ObjectManager.AnimatedObject[a.Objects.Length];
+					CarSections[j].Groups[0].Elements = new ObjectManager.AnimatedObject[a.Objects.Length];
 					for (int h = 0; h < a.Objects.Length; h++)
 					{
-						CarSections[j].Elements[h] = a.Objects[h].Clone();
-						CarSections[j].Elements[h].ObjectIndex = ObjectManager.CreateDynamicObject();
+						CarSections[j].Groups[0].Elements[h] = a.Objects[h].Clone();
+						CarSections[j].Groups[0].Elements[h].ObjectIndex = ObjectManager.CreateDynamicObject();
 					}
 				}
 			}
@@ -151,18 +155,18 @@ namespace OpenBve
 				}
 				for (int i = 0; i < CarSections.Length; i++)
 				{
-					for (int j = 0; j < CarSections[i].Elements.Length; j++)
+					for (int j = 0; j < CarSections[i].Groups[0].Elements.Length; j++)
 					{
-						int o = CarSections[i].Elements[j].ObjectIndex;
+						int o = CarSections[i].Groups[0].Elements[j].ObjectIndex;
 						Renderer.HideObject(o);
 					}
 				}
 				if (SectionIndex >= 0)
 				{
 					CarSections[SectionIndex].Initialize(CurrentlyVisible);
-					for (int j = 0; j < CarSections[SectionIndex].Elements.Length; j++)
+					for (int j = 0; j < CarSections[SectionIndex].Groups[0].Elements.Length; j++)
 					{
-						int o = CarSections[SectionIndex].Elements[j].ObjectIndex;
+						int o = CarSections[SectionIndex].Groups[0].Elements[j].ObjectIndex;
 						Renderer.ShowObject(o, ObjectType.Dynamic);
 					}
 				}
@@ -178,34 +182,34 @@ namespace OpenBve
 					double timeDelta;
 					bool updatefunctions;
 
-					if (CarSections[SectionIndex].Elements[ElementIndex].RefreshRate != 0.0)
+					if (CarSections[SectionIndex].Groups[0].Elements[ElementIndex].RefreshRate != 0.0)
 					{
-						if (CarSections[SectionIndex].Elements[ElementIndex].SecondsSinceLastUpdate >= CarSections[SectionIndex].Elements[ElementIndex].RefreshRate)
+						if (CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate >= CarSections[SectionIndex].Groups[0].Elements[ElementIndex].RefreshRate)
 						{
 							timeDelta =
-								CarSections[SectionIndex].Elements[ElementIndex].SecondsSinceLastUpdate;
-							CarSections[SectionIndex].Elements[ElementIndex].SecondsSinceLastUpdate =
+								CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate;
+							CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate =
 								TimeElapsed;
 							updatefunctions = true;
 						}
 						else
 						{
 							timeDelta = TimeElapsed;
-							CarSections[SectionIndex].Elements[ElementIndex].SecondsSinceLastUpdate += TimeElapsed;
+							CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate += TimeElapsed;
 							updatefunctions = false;
 						}
 					}
 					else
 					{
-						timeDelta = CarSections[SectionIndex].Elements[ElementIndex].SecondsSinceLastUpdate;
-						CarSections[SectionIndex].Elements[ElementIndex].SecondsSinceLastUpdate = TimeElapsed;
+						timeDelta = CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate;
+						CarSections[SectionIndex].Groups[0].Elements[ElementIndex].SecondsSinceLastUpdate = TimeElapsed;
 						updatefunctions = true;
 					}
 					if (ForceUpdate)
 					{
 						updatefunctions = true;
 					}
-					CarSections[SectionIndex].Elements[ElementIndex].Update(true, baseTrain, baseCar.Index, CurrentCarSection, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, CarSections[SectionIndex].Overlay, updatefunctions, Show, timeDelta, true);
+					CarSections[SectionIndex].Groups[0].Elements[ElementIndex].Update(true, baseTrain, baseCar.Index, CurrentCarSection, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, CarSections[SectionIndex].Groups[0].Overlay, updatefunctions, Show, timeDelta, true);
 				}
 			}
 
@@ -251,7 +255,7 @@ namespace OpenBve
 					}
 					// apply pitching
 					if (CurrentCarSection >= 0 &&
-					    CarSections[CurrentCarSection].Overlay)
+						CarSections[CurrentCarSection].Groups[0].Overlay)
 					{
 						double a = baseCar.Specs.CurrentPitchDueToAccelerationAngle;
 						double cosa = Math.Cos(a);

@@ -215,7 +215,8 @@ namespace OpenBve
 			/// <param name="Show"></param>
 			/// <param name="TimeElapsed">The time elapsed since this object was last updated</param>
 			/// <param name="EnableDamping">Whether damping is to be applied for this call</param>
-			internal void Update(bool IsPartOfTrain, TrainManager.Train Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Overlay, bool UpdateFunctions, bool Show, double TimeElapsed, bool EnableDamping)
+            /// <param name="IsTouch">Whether Animated Object belonging to TouchElement class.</param>
+			internal void Update(bool IsPartOfTrain, TrainManager.Train Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Overlay, bool UpdateFunctions, bool Show, double TimeElapsed, bool EnableDamping, bool IsTouch = false)
 			{
 				int s = CurrentState;
 				int i = ObjectIndex;
@@ -787,20 +788,24 @@ namespace OpenBve
 						}
 					}
 					// visibility changed
-					if (Show)
+                    // TouchElement is handled by another function.
+					if (!IsTouch)
 					{
-						if (Overlay)
+						if (Show)
 						{
-							Renderer.ShowObject(i, ObjectType.Overlay);
+							if (Overlay)
+							{
+								Renderer.ShowObject(i, ObjectType.Overlay);
+							}
+							else
+							{
+								Renderer.ShowObject(i, ObjectType.Dynamic);
+							}
 						}
 						else
 						{
-							Renderer.ShowObject(i, ObjectType.Dynamic);
+							Renderer.HideObject(i);
 						}
-					}
-					else
-					{
-						Renderer.HideObject(i);
 					}
 				}
 			}

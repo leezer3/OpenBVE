@@ -106,6 +106,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game\AI\AI.cs" />
@@ -211,6 +212,7 @@
     </Compile>
     <Compile Include="Graphics\Renderer\Structures.cs" />
     <Compile Include="Graphics\Renderer\Objects.cs" />
+    <Compile Include="Graphics\Renderer\Touch.cs" />
     <Compile Include="Graphics\Renderer\ViewportModes.cs" />
     <Compile Include="Parsers\Object\Generic\AssimpObjParser.cs" />
     <Compile Include="Parsers\Object\Generic\AssimpXParser.cs" />
@@ -218,6 +220,8 @@
     <Compile Include="Parsers\Object\Generic\WavefrontObjParser.cs" />
     <Compile Include="Parsers\Object\MeshBuilder.cs" />
     <Compile Include="Parsers\Object\MSTS\ShapeParser.cs" />
+    <Compile Include="Parsers\Panel\PanelAnimatedXmlParser.cs" />
+    <Compile Include="Parsers\Panel\PanelXmlParser.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.ApplyRouteData.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.CompatibilityObjects.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Expression.cs" />
@@ -309,6 +313,7 @@
     <Compile Include="Simulation\TrainManager\Train\Train.Specs.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.States.cs" />
     <Compile Include="Simulation\World\BackgroundManager.cs" />
+    <Compile Include="System\Cursor.cs" />
     <Compile Include="System\Functions\Bve5Shared.cs" />
     <Compile Include="System\Functions\CrashHandler.cs" />
     <Compile Include="System\Functions\FolderBrowserDialog.cs" />
@@ -470,6 +475,15 @@
     </EmbeddedResource>
     <Compile Include="Parsers\Train\TrainDatParser.cs" />
     <Compile Include="Simulation\TrainManager\Train\Handles\Handles.AirBrake.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\assets\Cursors\nk.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\assets\Cursors\Symbols\plus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\assets\Cursors\Symbols\minus.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

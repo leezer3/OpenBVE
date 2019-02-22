@@ -11,6 +11,7 @@ using OpenBveApi.Runtime;
 using OpenBveApi.Interface;
 using OpenTK;
 using OpenTK.Graphics;
+using OpenTK.Input;
 using GL = OpenTK.Graphics.OpenGL.GL;
 using MatrixMode = OpenTK.Graphics.OpenGL.MatrixMode;
 
@@ -147,6 +148,10 @@ namespace OpenBve
 			}
 			Renderer.UpdateLighting();
 			Renderer.RenderScene(TimeElapsed);
+			if (Renderer.DebugTouchMode)
+			{
+				Renderer.DebugTouchArea();
+			}
 			Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
 			Program.currentGameWindow.SwapBuffers();
 			Game.UpdateBlackBox();
@@ -323,6 +328,7 @@ namespace OpenBve
 			KeyDown	+= MainLoop.keyDownEvent;
 			KeyUp	+= MainLoop.keyUpEvent;
 			MouseDown	+= MainLoop.mouseDownEvent;
+			MouseUp += MainLoop.mouseUpEvent;
 			MouseMove	+= MainLoop.mouseMoveEvent;
 			MouseWheel  += MainLoop.mouseWheelEvent;
 
@@ -387,6 +393,39 @@ namespace OpenBve
 			}
 			base.OnClosing(e);
 		}
+
+		protected override void OnMouseMove(MouseMoveEventArgs e)
+		{
+			base.OnMouseMove(e);
+
+			if (Game.CurrentInterface == Game.InterfaceType.Normal)
+			{
+				OpenBve.Cursor.Status Status;
+				if (Renderer.MoveCheck(new Vector2(e.X, e.Y), out Status))
+				{
+					if (Cursors.CurrentCursor != null)
+					{
+						switch (Status)
+						{
+							case OpenBve.Cursor.Status.Default:
+								Cursor = Cursors.CurrentCursor;
+								break;
+							case OpenBve.Cursor.Status.Plus:
+								Cursor = Cursors.CurrentCursorPlus;
+								break;
+							case OpenBve.Cursor.Status.Minus:
+								Cursor = Cursors.CurrentCursorMinus;
+								break;
+						}
+					}
+				}
+				else
+				{
+					Cursor = MouseCursor.Default;
+				}
+			}
+		}
+
 		/// <summary>This method is called once the route and train data have been preprocessed, in order to physically setup the simulation</summary>
 		private void SetupSimulation()
 		{
