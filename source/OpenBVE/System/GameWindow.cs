@@ -400,11 +400,23 @@ namespace OpenBve
 
 			if (Game.CurrentInterface == Game.InterfaceType.Normal)
 			{
-				if (Renderer.MoveCheck(new Vector2(e.X, e.Y)))
+				OpenBve.Cursor.Status Status;
+				if (Renderer.MoveCheck(new Vector2(e.X, e.Y), out Status))
 				{
 					if (Cursors.CurrentCursor != null)
 					{
-						Cursor = Cursors.CurrentCursor;
+						switch (Status)
+						{
+							case OpenBve.Cursor.Status.Default:
+								Cursor = Cursors.CurrentCursor;
+								break;
+							case OpenBve.Cursor.Status.Plus:
+								Cursor = Cursors.CurrentCursorPlus;
+								break;
+							case OpenBve.Cursor.Status.Minus:
+								Cursor = Cursors.CurrentCursorMinus;
+								break;
+						}
 					}
 				}
 				else

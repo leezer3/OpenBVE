@@ -353,17 +353,21 @@ namespace OpenBve
 			}
 		}
 
-		internal static bool MoveCheck(Vector2 Point)
+		internal static bool MoveCheck(Vector2 Point, out Cursor.Status Status)
 		{
 			if (!Loading.SimulationSetup)
 			{
+				Status = Cursor.Status.Default;
 				return false;
 			}
-			
+
 			if (World.CameraMode != CameraViewMode.Interior && World.CameraMode != CameraViewMode.InteriorLookAhead)
 			{
+				Status = Cursor.Status.Default;
 				return false;
 			}
+
+			Status = Cursor.Status.Default;
 
 			TrainManager.Car Car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
 			int add = Car.CarSections[0].CurrentAdditionalGroup + 1;
@@ -391,8 +395,25 @@ namespace OpenBve
 					{
 						int o = TouchElement.Element.ObjectIndex;
 						HideObjectSelection(o);
-					}
 
+						if (o == PickedObjectIndex)
+						{
+							switch (TouchElement.Command)
+							{
+								case Translations.Command.PowerIncrease:
+								case Translations.Command.BrakeIncrease:
+								case Translations.Command.ReverserForward:
+									Status = Cursor.Status.Plus;
+									break;
+								case Translations.Command.PowerDecrease:
+								case Translations.Command.BrakeDecrease:
+								case Translations.Command.ReverserBackward:
+									Status = Cursor.Status.Minus;
+									break;
+							}
+						}
+					}
+					
 					if (PickedObjectIndex >= 0)
 					{
 						return true;
