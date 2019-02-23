@@ -2,8 +2,11 @@
 using OpenBveApi.Math;
 using System.Linq;
 using System;
+using System.Collections.Generic;
 using System.Text;
+using System.Xml.Linq;
 using OpenBve.BrakeSystems;
+using OpenBve.Parsers.Panel;
 using OpenBveApi.Objects;
 using OpenBveApi.Interface;
 
@@ -280,8 +283,32 @@ namespace OpenBve.Parsers.Train
 			//As there is no set order, this needs to be done after the loop
 			if (interiorFile != String.Empty)
 			{
-				
-				if (interiorFile.ToLowerInvariant().EndsWith(".cfg"))
+				if (interiorFile.ToLowerInvariant().EndsWith(".xml"))
+				{
+					XDocument CurrentXML = XDocument.Load(interiorFile, LoadOptions.SetLineInfo);
+
+					// Check for null
+					if (CurrentXML.Root == null)
+					{
+						// We couldn't find any valid XML, so return false
+						throw new System.IO.InvalidDataException();
+					}
+					IEnumerable<XElement> DocumentElements = CurrentXML.Root.Elements("PanelAnimated");
+					if (DocumentElements != null && DocumentElements.Count() != 0)
+					{
+						PanelAnimatedXmlParser.ParsePanelAnimatedXml(interiorFile, Encoding.UTF8, currentPath, Train, Car);
+						Train.Cars[Car].CameraRestrictionMode = Camera.RestrictionMode.NotAvailable;
+						return;
+					}
+					DocumentElements = CurrentXML.Root.Elements("Panel");
+					if (DocumentElements != null  && DocumentElements.Count() != 0)
+					{
+						PanelXmlParser.ParsePanelXml(interiorFile, currentPath, Train, Car);
+						Train.Cars[Car].CameraRestrictionMode = Camera.RestrictionMode.On;
+						return;
+					}
+				}
+				else if (interiorFile.ToLowerInvariant().EndsWith(".cfg"))
 				{
 					//Only supports panel2.cfg format
 					Panel2CfgParser.ParsePanel2Config(System.IO.Path.GetFileName(interiorFile), System.IO.Path.GetDirectoryName(interiorFile), Encoding.UTF8, Train, Car);

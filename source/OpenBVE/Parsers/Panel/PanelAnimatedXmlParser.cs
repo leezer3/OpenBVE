@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using Path = OpenBveApi.Path;
 
 namespace OpenBve.Parsers.Panel
 {
@@ -22,7 +23,12 @@ namespace OpenBve.Parsers.Panel
 		internal static void ParsePanelAnimatedXml(string PanelFile, System.Text.Encoding Encoding, string TrainPath, TrainManager.Train Train, int Car)
 		{
 			// The current XML file to load
-			string FileName = Path.CombineFile(TrainPath, PanelFile);
+			string FileName = PanelFile;
+			if (!File.Exists(FileName))
+			{
+				FileName = Path.CombineFile(TrainPath, PanelFile);
+			}
+			
 			XDocument CurrentXML = XDocument.Load(FileName, LoadOptions.SetLineInfo);
 
 			// Check for null
