@@ -41,7 +41,7 @@ namespace OpenBve.Parsers.Panel
 			IEnumerable<XElement> DocumentElements = CurrentXML.Root.Elements("Panel");
 
 			// Check this file actually contains OpenBVE panel definition elements
-			if (DocumentElements == null)
+			if (DocumentElements == null || !DocumentElements.Any())
 			{
 				// We couldn't find any valid XML, so return false
 				throw new System.IO.InvalidDataException();
