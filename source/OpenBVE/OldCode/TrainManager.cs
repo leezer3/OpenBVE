@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using OpenBve.Parsers.Panel;
 using OpenBveApi.Interface;
 
@@ -33,22 +36,43 @@ namespace OpenBve
 				Elements = new ObjectManager.AnimatedObject[] { },
 				Overlay = true
 			};
-			string File = OpenBveApi.Path.CombineFile(TrainPath, "panel.animated.xml");
+			string File = OpenBveApi.Path.CombineFile(TrainPath, "panel.xml");
 			if (System.IO.File.Exists(File))
 			{
 				Program.FileSystem.AppendToLogFile("Loading train panel: " + File);
-				if (System.IO.File.Exists(OpenBveApi.Path.CombineFile(TrainPath, "panel.xml")) || System.IO.File.Exists(OpenBveApi.Path.CombineFile(TrainPath, "panel2.cfg")) || System.IO.File.Exists(OpenBveApi.Path.CombineFile(TrainPath, "panel.cfg")))
-				{
-					Program.FileSystem.AppendToLogFile("INFO: This train contains both a 2D and a 3D panel. The 3D panel will always take precedence");
-				}
 				try
 				{
-					PanelAnimatedXmlParser.ParsePanelAnimatedXml("panel.animated.xml", Encoding, TrainPath, Train, Train.DriverCar);
+					/*
+					 * First load the XML. We use this to determine
+					 * whether this is a 2D or a 3D animated panel
+					 */
+					XDocument CurrentXML = XDocument.Load(File, LoadOptions.SetLineInfo);
+
+					// Check for null
+					if (CurrentXML.Root != null)
+					{
+
+						IEnumerable<XElement> DocumentElements = CurrentXML.Root.Elements("PanelAnimated");
+						if (DocumentElements != null && DocumentElements.Count() != 0)
+						{
+							PanelAnimatedXmlParser.ParsePanelAnimatedXml("panel.xml", Encoding, TrainPath, Train, Train.DriverCar);
+							Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.NotAvailable;
+							World.CameraRestriction = Camera.RestrictionMode.NotAvailable;
+						}
+
+						DocumentElements = CurrentXML.Root.Elements("Panel");
+						if (DocumentElements != null && DocumentElements.Count() != 0)
+						{
+							PanelXmlParser.ParsePanelXml("panel.xml", TrainPath, Train, Train.DriverCar);
+							Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.On;
+							World.CameraRestriction = Camera.RestrictionMode.On;
+						}
+					}
 				}
 				catch
 				{
 					var currentError = Translations.GetInterfaceString("errors_critical_file");
-					currentError = currentError.Replace("[file]", "panel.animated.xml");
+					currentError = currentError.Replace("[file]", "panel.xml");
 					MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					Program.RestartArguments = " ";
 					Loading.Cancel = true;
@@ -57,12 +81,10 @@ namespace OpenBve
 
 				if (Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements.Any())
 				{
-					Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.NotAvailable;
-					World.CameraRestriction = Camera.RestrictionMode.NotAvailable;
 					World.UpdateViewingDistances();
 					return;
 				}
-				Interface.AddMessage(MessageType.Error, false, "The panel.animated.xml file " + File + " failed to load. Falling back to 2D panel.");
+				Interface.AddMessage(MessageType.Error, false, "The panel.xml file " + File + " failed to load. Falling back to legacy panel.");
 			}
 			else
 			{
@@ -70,7 +92,7 @@ namespace OpenBve
 				if (System.IO.File.Exists(File))
 				{
 					Program.FileSystem.AppendToLogFile("Loading train panel: " + File);
-					if (System.IO.File.Exists(OpenBveApi.Path.CombineFile(TrainPath, "panel.xml")) || System.IO.File.Exists(OpenBveApi.Path.CombineFile(TrainPath, "panel2.cfg")) || System.IO.File.Exists(OpenBveApi.Path.CombineFile(TrainPath, "panel.cfg")))
+					if (System.IO.File.Exists(OpenBveApi.Path.CombineFile(TrainPath, "panel2.cfg")) || System.IO.File.Exists(OpenBveApi.Path.CombineFile(TrainPath, "panel.cfg")))
 					{
 						Program.FileSystem.AppendToLogFile("INFO: This train contains both a 2D and a 3D panel. The 3D panel will always take precedence");
 					}
@@ -104,51 +126,38 @@ namespace OpenBve
 				}
 			}
 		
-			var PanelXml = false;
 			var Panel2 = false;
 			try
 			{
-				File = OpenBveApi.Path.CombineFile(TrainPath, "panel.xml");
+				File = OpenBveApi.Path.CombineFile(TrainPath, "panel2.cfg");
 				if (System.IO.File.Exists(File))
 				{
 					Program.FileSystem.AppendToLogFile("Loading train panel: " + File);
-					PanelXml = true;
-					PanelXmlParser.ParsePanelXml("panel.xml", TrainPath, Train, Train.DriverCar);
+					Panel2 = true;
+					Panel2CfgParser.ParsePanel2Config("panel2.cfg", TrainPath, Encoding, Train, Train.DriverCar);
 					Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.On;
 					World.CameraRestriction = Camera.RestrictionMode.On;
 				}
 				else
 				{
-					File = OpenBveApi.Path.CombineFile(TrainPath, "panel2.cfg");
+					File = OpenBveApi.Path.CombineFile(TrainPath, "panel.cfg");
 					if (System.IO.File.Exists(File))
 					{
 						Program.FileSystem.AppendToLogFile("Loading train panel: " + File);
-						Panel2 = true;
-						Panel2CfgParser.ParsePanel2Config("panel2.cfg", TrainPath, Encoding, Train, Train.DriverCar);
+						PanelCfgParser.ParsePanelConfig(TrainPath, Encoding, Train);
 						Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.On;
 						World.CameraRestriction = Camera.RestrictionMode.On;
 					}
 					else
 					{
-						File = OpenBveApi.Path.CombineFile(TrainPath, "panel.cfg");
-						if (System.IO.File.Exists(File))
-						{
-							Program.FileSystem.AppendToLogFile("Loading train panel: " + File);
-							PanelCfgParser.ParsePanelConfig(TrainPath, Encoding, Train);
-							Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.On;
-							World.CameraRestriction = Camera.RestrictionMode.On;
-						}
-						else
-						{
-							World.CameraRestriction = Camera.RestrictionMode.NotAvailable;
-						}
+						World.CameraRestriction = Camera.RestrictionMode.NotAvailable;
 					}
 				}
 			}
 			catch
 			{
 				var currentError = Translations.GetInterfaceString("errors_critical_file");
-				currentError = currentError.Replace("[file]", PanelXml ? "panel.xml" : (Panel2 ? "panel2.cfg" : "panel.cfg"));
+				currentError = currentError.Replace("[file]",Panel2 ? "panel2.cfg" : "panel.cfg");
 				MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				Program.RestartArguments = " ";
 				Loading.Cancel = true;

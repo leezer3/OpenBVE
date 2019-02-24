@@ -22,7 +22,7 @@ namespace CarXmlConvertor
 			newLines.Add("</Include>");
 			newLines.Add("</PanelAnimated>");
 			newLines.Add("</openBVE>");
-			string fileOut = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "panel.animated.xml");
+			string fileOut = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "panel.xml");
 			try
 			{
                 
