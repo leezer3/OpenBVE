@@ -252,7 +252,7 @@ namespace OpenBve.Parsers.Panel
 			}
 		}
 
-		internal static void CreateTouchElementForExtendedMode(TrainManager.CarSection CarSection)
+		internal static void CreateTouchElementForExtendedMode(TrainManager.CarSection CarSection, TrainManager.Train Train)
 		{
 			Array.Resize(ref CarSection.Groups, 2);
 			CarSection.Groups[1] = new TrainManager.ElementsGroup
@@ -275,12 +275,28 @@ namespace OpenBve.Parsers.Panel
 						switch (Type)
 						{
 							case FunctionType.Power:
-								Commands[0] = Translations.Command.PowerDecrease;
-								Commands[1] = Translations.Command.PowerIncrease;
+								if (Train.Handles.SingleHandle)
+								{
+									Commands[0] = Translations.Command.SingleBrake;
+									Commands[1] = Translations.Command.SinglePower;
+								}
+								else
+								{
+									Commands[0] = Translations.Command.PowerDecrease;
+									Commands[1] = Translations.Command.PowerIncrease;
+								}
 								break;
 							case FunctionType.Brake:
-								Commands[0] = Translations.Command.BrakeIncrease;
-								Commands[1] = Translations.Command.BrakeDecrease;
+								if (Train.Handles.SingleHandle)
+								{
+									Commands[0] = Translations.Command.SingleBrake;
+									Commands[1] = Translations.Command.SinglePower;
+								}
+								else
+								{
+									Commands[0] = Translations.Command.BrakeIncrease;
+									Commands[1] = Translations.Command.BrakeDecrease;
+								}
 								break;
 							case FunctionType.Reverser:
 								Commands[0] = Translations.Command.ReverserForward;
