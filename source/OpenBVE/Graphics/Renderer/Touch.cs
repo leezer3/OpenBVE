@@ -400,11 +400,13 @@ namespace OpenBve
 						{
 							switch (TouchElement.Command)
 							{
+								case Translations.Command.SinglePower:
 								case Translations.Command.PowerIncrease:
 								case Translations.Command.BrakeIncrease:
 								case Translations.Command.ReverserForward:
 									Status = Cursor.Status.Plus;
 									break;
+								case Translations.Command.SingleBrake:
 								case Translations.Command.PowerDecrease:
 								case Translations.Command.BrakeDecrease:
 								case Translations.Command.ReverserBackward:
