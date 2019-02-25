@@ -296,7 +296,7 @@ namespace OpenBve.Parsers.Train
 					IEnumerable<XElement> DocumentElements = CurrentXML.Root.Elements("PanelAnimated");
 					if (DocumentElements != null && DocumentElements.Count() != 0)
 					{
-						PanelAnimatedXmlParser.ParsePanelAnimatedXml(interiorFile, Encoding.UTF8, currentPath, Train, Car);
+						PanelAnimatedXmlParser.ParsePanelAnimatedXml(interiorFile, currentPath, Train, Car);
 						Train.Cars[Car].CameraRestrictionMode = Camera.RestrictionMode.NotAvailable;
 						return;
 					}

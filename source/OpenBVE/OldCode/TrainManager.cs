@@ -37,6 +37,11 @@ namespace OpenBve
 				Overlay = true
 			};
 			string File = OpenBveApi.Path.CombineFile(TrainPath, "panel.xml");
+			if (!System.IO.File.Exists(File))
+			{
+				//Try animated variant too
+				File = OpenBveApi.Path.CombineFile(TrainPath, "panel.animated.xml");
+			}
 			if (System.IO.File.Exists(File))
 			{
 				Program.FileSystem.AppendToLogFile("Loading train panel: " + File);
@@ -53,15 +58,15 @@ namespace OpenBve
 					{
 
 						IEnumerable<XElement> DocumentElements = CurrentXML.Root.Elements("PanelAnimated");
-						if (DocumentElements != null && DocumentElements.Count() != 0)
+						if (DocumentElements.Count() != 0)
 						{
-							PanelAnimatedXmlParser.ParsePanelAnimatedXml("panel.xml", Encoding, TrainPath, Train, Train.DriverCar);
+							PanelAnimatedXmlParser.ParsePanelAnimatedXml("panel.xml", TrainPath, Train, Train.DriverCar);
 							Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.NotAvailable;
 							World.CameraRestriction = Camera.RestrictionMode.NotAvailable;
 						}
 
 						DocumentElements = CurrentXML.Root.Elements("Panel");
-						if (DocumentElements != null && DocumentElements.Count() != 0)
+						if (DocumentElements.Count() != 0)
 						{
 							PanelXmlParser.ParsePanelXml("panel.xml", TrainPath, Train, Train.DriverCar);
 							Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.On;
