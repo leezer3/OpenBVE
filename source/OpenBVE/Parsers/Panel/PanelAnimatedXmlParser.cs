@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using Path = OpenBveApi.Path;
 
 namespace OpenBve.Parsers.Panel
 {
@@ -15,14 +16,18 @@ namespace OpenBve.Parsers.Panel
 	{
 		/// <summary>Parses a openBVE panel.animated.xml file</summary>
 		/// <param name="PanelFile">The relative path of the panel configuration file from the train</param>
-		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
 		/// <param name="TrainPath">The on-disk path to the train</param>
 		/// <param name="Train">The train</param>
 		/// <param name="Car">The car index to add the panel to</param>
-		internal static void ParsePanelAnimatedXml(string PanelFile, System.Text.Encoding Encoding, string TrainPath, TrainManager.Train Train, int Car)
+		internal static void ParsePanelAnimatedXml(string PanelFile, string TrainPath, TrainManager.Train Train, int Car)
 		{
 			// The current XML file to load
-			string FileName = Path.CombineFile(TrainPath, PanelFile);
+			string FileName = PanelFile;
+			if (!File.Exists(FileName))
+			{
+				FileName = Path.CombineFile(TrainPath, PanelFile);
+			}
+			
 			XDocument CurrentXML = XDocument.Load(FileName, LoadOptions.SetLineInfo);
 
 			// Check for null
@@ -43,11 +48,11 @@ namespace OpenBve.Parsers.Panel
 
 			foreach (XElement element in DocumentElements)
 			{
-				ParsePanelAnimatedNode(element, FileName, Encoding, TrainPath, Train, Car, Train.Cars[Car].CarSections[0], 0);
+				ParsePanelAnimatedNode(element, FileName, TrainPath, Train, Car, Train.Cars[Car].CarSections[0], 0);
 			}
 		}
 
-		private static void ParsePanelAnimatedNode(XElement Element, string FileName, System.Text.Encoding Encoding, string TrainPath, TrainManager.Train Train, int Car, TrainManager.CarSection CarSection, int GroupIndex)
+		private static void ParsePanelAnimatedNode(XElement Element, string FileName, string TrainPath, TrainManager.Train Train, int Car, TrainManager.CarSection CarSection, int GroupIndex)
 		{
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 
@@ -100,7 +105,7 @@ namespace OpenBve.Parsers.Panel
 								};
 							}
 
-							ParsePanelAnimatedNode(SectionElement, FileName, Encoding, TrainPath, Train, Car, CarSection, n + 1);
+							ParsePanelAnimatedNode(SectionElement, FileName, TrainPath, Train, Car, CarSection, n + 1);
 						}
 						break;
 					case "touch":
@@ -227,7 +232,8 @@ namespace OpenBve.Parsers.Panel
 											string File = OpenBveApi.Path.CombineFile(TrainPath, Value);
 											if (System.IO.File.Exists(File))
 											{
-												ObjectManager.AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(File, Encoding);
+												System.Text.Encoding e = TextEncoding.GetSystemEncodingFromFile(File);
+												ObjectManager.AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(File, e);
 												if (a != null)
 												{
 													for (int i = 0; i < a.Objects.Length; i++)
