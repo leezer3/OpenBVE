@@ -187,9 +187,6 @@ namespace OpenBve
 			int PartId = 0;
 
 			// set up camera
-			double cx = World.AbsoluteCameraPosition.X;
-			double cy = World.AbsoluteCameraPosition.Y;
-			double cz = World.AbsoluteCameraPosition.Z;
 			double dx = World.AbsoluteCameraDirection.X;
 			double dy = World.AbsoluteCameraDirection.Y;
 			double dz = World.AbsoluteCameraDirection.Z;
@@ -218,7 +215,7 @@ namespace OpenBve
 			for (int i = 0; i < Touch.FaceCount; i++)
 			{
 				GL.LoadName(PartId);
-				RenderFace(ref Touch.Faces[i], cx, cy, cz, IsDebugTouchMode);
+				RenderFace(ref Touch.Faces[i], World.AbsoluteCameraPosition, IsDebugTouchMode);
 				PartId++;
 			}
 

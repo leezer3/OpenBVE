@@ -226,9 +226,6 @@ namespace OpenBve {
 				ReAddObjects();
 			}
 			// setup camera
-			double cx = World.AbsoluteCameraPosition.X;
-			double cy = World.AbsoluteCameraPosition.Y;
-			double cz = World.AbsoluteCameraPosition.Z;
 			double dx = World.AbsoluteCameraDirection.X;
 			double dy = World.AbsoluteCameraDirection.Y;
 			double dz = World.AbsoluteCameraDirection.Z;
@@ -299,10 +296,10 @@ namespace OpenBve {
 			ResetOpenGlState();
             for (int i = 0; i < OpaqueListCount; i++)
             {
-                RenderFace(ref OpaqueList[i], cx, cy, cz);
+                RenderFace(ref OpaqueList[i], World.AbsoluteCameraPosition);
             }
 	        ResetOpenGlState();
-			if(OptionEvents) RenderEvents(cx, cy, cz);
+			if(OptionEvents) RenderEvents(World.AbsoluteCameraPosition);
 			ResetOpenGlState();
             // transparent color list
 			SortPolygons(TransparentColorList, TransparentColorListCount, TransparentColorListDistance, 1, 0.0);
@@ -318,7 +315,7 @@ namespace OpenBve {
 					{
 						if (ObjectManager.Objects[TransparentColorList[i].ObjectIndex].Mesh.Materials[r].Color.A == 255)
 						{
-							RenderFace(ref TransparentColorList[i], cx, cy, cz);
+							RenderFace(ref TransparentColorList[i], World.AbsoluteCameraPosition);
 						}
 					}
 				}
@@ -337,7 +334,7 @@ namespace OpenBve {
 							GL.Disable(EnableCap.AlphaTest);
 							additive = true;
 						}
-						RenderFace(ref TransparentColorList[i], cx, cy, cz);
+						RenderFace(ref TransparentColorList[i], World.AbsoluteCameraPosition);
 					}
 					else
 					{
@@ -346,12 +343,12 @@ namespace OpenBve {
 							SetAlphaFunc(AlphaFunction.Less, 1.0f);
 							additive = false;
 						}
-						RenderFace(ref TransparentColorList[i], cx, cy, cz);
+						RenderFace(ref TransparentColorList[i], World.AbsoluteCameraPosition);
 					}
 				}
 			} else {
 				for (int i = 0; i < TransparentColorListCount; i++) {
-					RenderFace(ref TransparentColorList[i], cx, cy, cz);
+					RenderFace(ref TransparentColorList[i], World.AbsoluteCameraPosition);
 				}
 			}
 	        ResetOpenGlState();
@@ -365,7 +362,7 @@ namespace OpenBve {
 		        SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 		        for (int i = 0; i < AlphaListCount; i++)
 		        {
-			        RenderFace(ref AlphaList[i], cx, cy, cz);
+			        RenderFace(ref AlphaList[i], World.AbsoluteCameraPosition);
 		        }
 	        }
 	        else
@@ -380,7 +377,7 @@ namespace OpenBve {
 			        {
 				        if (ObjectManager.Objects[AlphaList[i].ObjectIndex].Mesh.Materials[r].Color.A == 255)
 				        {
-					        RenderFace(ref AlphaList[i], cx, cy, cz);
+					        RenderFace(ref AlphaList[i], World.AbsoluteCameraPosition);
 				        }
 			        }
 		        }
@@ -399,7 +396,7 @@ namespace OpenBve {
 					        GL.Disable(EnableCap.AlphaTest);
 					        additive = true;
 				        }
-				        RenderFace(ref AlphaList[i], cx, cy, cz);
+				        RenderFace(ref AlphaList[i], World.AbsoluteCameraPosition);
 			        }
 			        else
 			        {
@@ -408,7 +405,7 @@ namespace OpenBve {
 					        SetAlphaFunc(AlphaFunction.Less, 1.0f);
 					        additive = false;
 				        }
-				        RenderFace(ref AlphaList[i], cx, cy, cz);
+				        RenderFace(ref AlphaList[i], World.AbsoluteCameraPosition);
 			        }
 		        }
 	        }
@@ -423,7 +420,7 @@ namespace OpenBve {
 			}
 			SortPolygons(OverlayList, OverlayListCount, OverlayListDistance, 3, TimeElapsed);
 			for (int i = 0; i < OverlayListCount; i++) {
-				RenderFace(ref OverlayList[i], cx, cy, cz);
+				RenderFace(ref OverlayList[i], World.AbsoluteCameraPosition);
 			}
 			// render overlays
 			BlendEnabled = false; GL.Disable(EnableCap.Blend);
@@ -474,7 +471,7 @@ namespace OpenBve {
 
 		// render face
 		private static OpenGlTexture LastBoundTexture = null;
-		private static void RenderFace(ref ObjectFace Face, double CameraX, double CameraY, double CameraZ) {
+		private static void RenderFace(ref ObjectFace Face, Vector3 Camera) {
 			if (CullEnabled) {
 				if (!OptionBackfaceCulling || (ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Flags & MeshFace.Face2Mask) != 0) {
 					GL.Disable(EnableCap.CullFace);
@@ -487,10 +484,10 @@ namespace OpenBve {
 				}
 			}
 			int r = (int)ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Material;
-			RenderFace(ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Materials[r], ObjectManager.Objects[Face.ObjectIndex].Mesh.Vertices, Face.Wrap, ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex], CameraX, CameraY, CameraZ);
+			RenderFace(ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Materials[r], ObjectManager.Objects[Face.ObjectIndex].Mesh.Vertices, Face.Wrap, ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex], Camera);
 		}
 
-		private static void RenderFace(ref MeshMaterial Material, VertexTemplate[] Vertices, OpenGlTextureWrapMode wrap, ref MeshFace Face, double CameraX, double CameraY, double CameraZ)
+		private static void RenderFace(ref MeshMaterial Material, VertexTemplate[] Vertices, OpenGlTextureWrapMode wrap, ref MeshFace Face, Vector3 Camera)
 		{
 			// texture
 			if (Material.DaytimeTexture != null)
@@ -587,7 +584,7 @@ namespace OpenBve {
 			}
 			if (Material.GlowAttenuationData != 0)
 			{
-				float alphafactor = (float)GetDistanceFactor(Vertices, ref Face, Material.GlowAttenuationData, CameraX, CameraY, CameraZ);
+				float alphafactor = (float)Glow.GetDistanceFactor(Vertices, ref Face, Material.GlowAttenuationData, Camera);
 				if (OptionWireframe)
 				{
 					GL.Color4(inv255 * (float)Material.Color.R * factor, inv255 * Material.Color.G * factor, inv255 * (float)Material.Color.B * factor, 1.0f);
@@ -630,7 +627,7 @@ namespace OpenBve {
 							ColoredVertex v = (ColoredVertex) Vertices[Face.Vertices[j].Index];
 							GL.Color3(v.Color.R, v.Color.G, v.Color.B);
 						}
-						GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - CameraZ));
+						GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - Camera.X), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - Camera.Y), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - Camera.Z));
 					}
 				}
 				else
@@ -643,7 +640,7 @@ namespace OpenBve {
 							ColoredVertex v = (ColoredVertex) Vertices[Face.Vertices[j].Index];
 							GL.Color3(v.Color.R, v.Color.G, v.Color.B);
 						}
-						GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - CameraZ));
+						GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - Camera.X), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - Camera.Y), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - Camera.Z));
 					}
 				}
 			}
@@ -659,7 +656,7 @@ namespace OpenBve {
 							ColoredVertex v = (ColoredVertex) Vertices[Face.Vertices[j].Index];
 							GL.Color3(v.Color.R, v.Color.G, v.Color.B);
 						}
-						GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - CameraZ));
+						GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - Camera.X), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - Camera.Y), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - Camera.Z));
 					}
 				}
 				else
@@ -671,7 +668,7 @@ namespace OpenBve {
 							ColoredVertex v = (ColoredVertex) Vertices[Face.Vertices[j].Index];
 							GL.Color3(v.Color.R, v.Color.G, v.Color.B);
 						}
-						GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - CameraZ));
+						GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - Camera.X), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - Camera.Y), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - Camera.Z));
 					}
 				}
 			}
@@ -713,7 +710,7 @@ namespace OpenBve {
 				float alphafactor;
 				if (Material.GlowAttenuationData != 0)
 				{
-					alphafactor = (float)GetDistanceFactor(Vertices, ref Face, Material.GlowAttenuationData, CameraX, CameraY, CameraZ);
+					alphafactor = (float)Glow.GetDistanceFactor(Vertices, ref Face, Material.GlowAttenuationData, Camera);
 					float blend = inv255 * (float)Material.DaytimeNighttimeBlend + 1.0f - OptionLightingResultingAmount;
 					if (blend > 1.0f) blend = 1.0f;
 					alphafactor *= blend;
@@ -748,7 +745,7 @@ namespace OpenBve {
 						ColoredVertex v = (ColoredVertex) Vertices[Face.Vertices[j].Index];
 						GL.Color3(v.Color.R, v.Color.G, v.Color.B);
 					}
-					GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - CameraZ));
+					GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - Camera.X), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - Camera.Y), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - Camera.Z));
 				}
 				GL.End();
 				RestoreAlphaFunc();
@@ -769,8 +766,8 @@ namespace OpenBve {
 				{
 					GL.Begin(PrimitiveType.Lines);
 					GL.Color4(inv255 * (float)Material.Color.R, inv255 * (float)Material.Color.G, inv255 * (float)Material.Color.B, 1.0f);
-					GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - CameraZ));
-					GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X + Face.Vertices[j].Normal.X - CameraX), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y + Face.Vertices[j].Normal.Y - CameraY), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z + Face.Vertices[j].Normal.Z - CameraZ));
+					GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X - Camera.X), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y - Camera.Y), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z - Camera.Z));
+					GL.Vertex3((float)(Vertices[Face.Vertices[j].Index].Coordinates.X + Face.Vertices[j].Normal.X - Camera.X), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Y + Face.Vertices[j].Normal.Y - Camera.Y), (float)(Vertices[Face.Vertices[j].Index].Coordinates.Z + Face.Vertices[j].Normal.Z - Camera.Z));
 					GL.End();
 				}
 			}
@@ -916,7 +913,7 @@ namespace OpenBve {
 		}
 
 		// render events
-		private static void RenderEvents(double CameraX, double CameraY, double CameraZ) {
+		private static void RenderEvents(Vector3 Camera) {
 			if (TrackManager.CurrentTrack.Elements == null) {
 				return;
 			}
@@ -993,7 +990,7 @@ namespace OpenBve {
 							f.WorldPosition.X += dx * f.WorldSide.X + dy * f.WorldUp.X + dz * f.WorldDirection.X;
 							f.WorldPosition.Y += dx * f.WorldSide.Y + dy * f.WorldUp.Y + dz * f.WorldDirection.Y;
 							f.WorldPosition.Z += dx * f.WorldSide.Z + dy * f.WorldUp.Z + dz * f.WorldDirection.Z;
-							RenderCube(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, CameraX, CameraY, CameraZ, t);
+							RenderCube(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, Camera, t);
 						}
 					}
 				}
@@ -1012,7 +1009,7 @@ namespace OpenBve {
 						f.WorldPosition.X += dy * f.WorldUp.X;
 						f.WorldPosition.Y += dy * f.WorldUp.Y;
 						f.WorldPosition.Z += dy * f.WorldUp.Z;
-						RenderCube(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, CameraX, CameraY, CameraZ, StopTexture);
+						RenderCube(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, Camera, StopTexture);
 					}
 				}
 			}
@@ -1030,11 +1027,11 @@ namespace OpenBve {
 					f.WorldPosition.X += dy * f.WorldUp.X;
 					f.WorldPosition.Y += dy * f.WorldUp.Y;
 					f.WorldPosition.Z += dy * f.WorldUp.Z;
-					RenderCube(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, CameraX, CameraY, CameraZ, BufferTexture);
+					RenderCube(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, Camera, BufferTexture);
 				}
 			}
 		}
-		private static void RenderCube(Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, double Size, double CameraX, double CameraY, double CameraZ, Texture TextureIndex)
+		private static void RenderCube(Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, double Size, Vector3 Camera, Texture TextureIndex)
 		{
 			
 			Vector3[] v = new Vector3[8];
@@ -1049,9 +1046,7 @@ namespace OpenBve {
 			for (int i = 0; i < 8; i++)
 			{
 				v[i].Rotate(Direction, Up, Side);
-				v[i].X += Position.X - CameraX;
-				v[i].Y += Position.Y - CameraY;
-				v[i].Z += Position.Z - CameraZ;
+				v[i] += Position - Camera;
 			}
 			int[][] Faces = new int[6][];
 			Faces[0] = new int[] { 0, 1, 2, 3 };
@@ -1622,33 +1617,5 @@ namespace OpenBve {
 				ObjectList[List[i].ObjectListIndex].FaceListIndices[List[i].FaceIndex] = (i << 2) + ListOffset;
 			}
 		}
-
-		// get distance factor
-		private static double GetDistanceFactor(VertexTemplate[] Vertices, ref MeshFace Face, ushort GlowAttenuationData, double CameraX, double CameraY, double CameraZ) {
-			if (Face.Vertices.Length != 0) {
-				GlowAttenuationMode mode; double halfdistance;
-				Glow.SplitAttenuationData(GlowAttenuationData, out mode, out halfdistance);
-				int i = (int)Face.Vertices[0].Index;
-				double dx = Vertices[i].Coordinates.X - CameraX;
-				double dy = Vertices[i].Coordinates.Y - CameraY;
-				double dz = Vertices[i].Coordinates.Z - CameraZ;
-				switch (mode) {
-						case GlowAttenuationMode.DivisionExponent2: {
-							double t = dx * dx + dy * dy + dz * dz;
-							return t / (t + halfdistance * halfdistance);
-						}
-						case GlowAttenuationMode.DivisionExponent4: {
-							double t = dx * dx + dy * dy + dz * dz;
-							t *= t; halfdistance *= halfdistance;
-							return t / (t + halfdistance * halfdistance);
-						}
-					default:
-						return 1.0;
-				}
-			} else {
-				return 1.0;
-			}
-		}
-
 	}
 }
