@@ -77,6 +77,15 @@ namespace OpenBve
 					Interface.CurrentOptions.WindowHeight = result.Height;
 				}
 			}
+
+			if (Interface.CurrentOptions.FullscreenMode)
+			{
+				Program.FileSystem.AppendToLogFile("Initialising full-screen game window of size " + Interface.CurrentOptions.FullscreenWidth + " x " + Interface.CurrentOptions.FullscreenHeight);
+			}
+			else
+			{
+				Program.FileSystem.AppendToLogFile("Initialising game window of size " + Interface.CurrentOptions.WindowWidth + " x " + Interface.CurrentOptions.WindowHeight);
+			}
 			Screen.Initialize();
 			currentResult = result;
 			Program.currentGameWindow.Closing += OpenTKQuit;
