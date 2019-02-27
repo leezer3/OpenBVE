@@ -145,7 +145,10 @@ namespace OpenBve {
 				int lo = value & 0xFF;
 				if (this.Tables[hi] == null || this.Tables[hi].Texture == null)
 				{
-					this.Tables[hi] = new OpenGlFontTable(this.Font, hi << 8);
+					lock (Illustrations.Locker)
+					{
+						this.Tables[hi] = new OpenGlFontTable(this.Font, hi << 8);
+					}
 				}
 				texture = this.Tables[hi].Texture;
 				data = this.Tables[hi].Characters[lo];
