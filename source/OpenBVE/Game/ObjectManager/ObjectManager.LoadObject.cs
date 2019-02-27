@@ -153,7 +153,7 @@ namespace OpenBve
 					Result = AnimatedObjectParser.ReadObject(FileName, Encoding);
 					break;
 				case ".xml":
-					Result = XMLParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
+					Result = XMLParser.ReadObject(FileName, Encoding);
 					break;
 				case ".l3dgrp":
 					Result = Ls3DGrpParser.ReadObject(FileName, Encoding, new Vector3());

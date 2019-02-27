@@ -502,7 +502,7 @@ namespace OpenBve {
 									for (int k = 0; k < StateFiles.Length; k++) {
 										Result.Objects[ObjectCount].States[k].Position = Vector3.Zero;
 										if (StateFiles[k] != null) {
-											Result.Objects[ObjectCount].States[k].Object = ObjectManager.LoadStaticObject(StateFiles[k], Encoding, false, false, false);
+											Result.Objects[ObjectCount].States[k].Object = ObjectManager.LoadStaticObject(StateFiles[k], Encoding, false);
 											if (Result.Objects[ObjectCount].States[k].Object != null) {
 												Result.Objects[ObjectCount].States[k].Object.Dynamic = true;
 											}

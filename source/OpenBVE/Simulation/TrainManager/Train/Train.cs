@@ -29,7 +29,7 @@ namespace OpenBve
 			internal int LastStation;
 			internal int Station;
 
-			internal int Destination = -1;
+			internal int Destination;
 
 			internal TrainStopState StationState;
 			internal double StationArrivalTime;

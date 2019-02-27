@@ -15,6 +15,8 @@ namespace CarXmlConvertor
 			{
 				return;
 			}
+
+			mainForm = form;
 			TabbedList newLines = new TabbedList();
 			newLines.Add("<PanelAnimated>");
 			newLines.Add("<Include>");

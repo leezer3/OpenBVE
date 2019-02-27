@@ -10,11 +10,11 @@ namespace OpenBveApi.FunctionScripting
 	{
 		private readonly HostInterface currentHost;
 		/// <summary>The instructions to perform</summary>
-		public Instructions[] InstructionSet;
+		public readonly Instructions[] InstructionSet;
 		/// <summary>The stack for the script</summary>
-		public double[] Stack;
+		public readonly double[] Stack;
 		/// <summary>All constants used for the script</summary>
-		public double[] Constants;
+		public readonly double[] Constants;
 		/// <summary>The last result returned</summary>
 		public double LastResult;
 		/// <summary>The minimum pinned result or NaN to set no minimum</summary>
