@@ -976,7 +976,7 @@ namespace OpenBve {
 							dx = f.Position.X;
 							dy = f.Position.Y < 0.1 ? 0.1 : f.Position.Y;
 							dz = f.Position.Z;
-							t = SoundTexture;
+							t = f.SoundBuffer == null ? PointSoundTexture : SoundTexture;
 						} else {
 							s = 0.2;
 							dy = 1.0;
