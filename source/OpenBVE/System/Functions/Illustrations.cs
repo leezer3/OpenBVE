@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using OpenBveApi;
 using OpenBveApi.Interface;
@@ -77,7 +77,7 @@ namespace OpenBve {
 		//GDI Plus is not thread-safe
 		//This object should be locked on when drawing a route illustration / gradient profile
 		/// <summary>Holds the current lock for the illustrations drawing functions</summary>
-		public static object Locker =  new Object();
+		public static readonly object Locker =  new Object();
 
 		//
 		// CREATE ROUTE MAP

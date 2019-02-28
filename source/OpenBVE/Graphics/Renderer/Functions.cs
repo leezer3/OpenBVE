@@ -129,12 +129,6 @@ namespace OpenBve
             GL.Disable(EnableCap.Fog);
         }
 
-        /// <summary>De-initialize the renderer, and clear all remaining OpenGL display lists</summary>
-        internal static void Deinitialize()
-        {
-            ClearDisplayLists();
-        }
-
         /// <summary>Determines the maximum Anisotropic filtering level the system supports</summary>
         internal static void DetermineMaxAFLevel()
         {

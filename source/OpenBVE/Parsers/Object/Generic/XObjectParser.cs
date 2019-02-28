@@ -109,9 +109,9 @@ namespace OpenBve {
 
 		// template
 		private class Template {
-			internal string Name;
+			internal readonly string Name;
 			internal string[] Members;
-			internal string Key;
+			internal readonly string Key;
 			internal Template(string Name, string[] Members) {
 				this.Name = Name;
 				this.Members = Members;
@@ -123,7 +123,7 @@ namespace OpenBve {
 				this.Key = Key;
 			}
 		}
-		private static Template[] Templates = new Template[] {
+		private static readonly Template[] Templates = new Template[] {
 			new Template("Mesh", new string[] { "DWORD", "Vector[0]", "DWORD", "MeshFace[2]", "[...]" }),
 			new Template("Vector", new string[] { "float", "float", "float" }),
 			new Template("MeshFace", new string[] { "DWORD", "DWORD[0]" }),
@@ -148,8 +148,8 @@ namespace OpenBve {
 
 		// data
 		private class Structure {
-			internal string Name;
-			internal string Key;
+			internal readonly string Name;
+			internal readonly string Key;
 			internal object[] Data;
 			internal Structure(string Name, object[] Data, string Key)
 			{

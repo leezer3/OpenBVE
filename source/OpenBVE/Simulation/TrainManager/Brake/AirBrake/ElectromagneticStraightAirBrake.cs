@@ -161,8 +161,7 @@ namespace OpenBve.BrakeSystems
 						//Motor is used to brake the train, until not enough deceleration, at which point the air brake is also used
 						double a = motorDeceleration;
 						double pr = targetPressure / brakeCylinder.ServiceMaximumPressure;
-						double b;
-						b = pr * DecelerationAtServiceMaximumPressure(brakeHandle.Actual, currentSpeed);
+						double b = pr * DecelerationAtServiceMaximumPressure(brakeHandle.Actual, currentSpeed);
 
 						double d = b - a;
 						if (d > 0.0)
