@@ -742,17 +742,27 @@ namespace OpenBve {
 												case "unit":
 													if (Arguments.Length >= 1 && Arguments[0].Length > 0) {
 														string a = Arguments[0].ToLowerInvariant();
-														int Unit = 0;
-														if (a == "km/h") {
-															Unit = 0;
-														} else if (a == "mph") {
-															Unit = 1;
-														} else if (a == "m/s") {
-															Unit = 2;
-														} else if (!NumberFormats.TryParseIntVb6(Arguments[0], out Unit)) {
-															Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
-															Unit = 0;
-														} else if (Unit < 0 | Unit > 2) {
+														int Unit;
+														switch (a)
+														{
+															case "km/h":
+																Unit = 0;
+																break;
+															case "mph":
+																Unit = 1;
+																break;
+															case "m/s":
+																Unit = 2;
+																break;
+															default:
+																if (!NumberFormats.TryParseIntVb6(Arguments[0], out Unit))
+																{
+																	Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+																	Unit = 0;
+																}
+																break;
+														}
+														if (Unit < 0 | Unit > 2) {
 															Interface.AddMessage(MessageType.Error, false, "Value must be between 0 and 2 in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															Unit = 0;
 														}
