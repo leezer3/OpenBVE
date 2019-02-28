@@ -36,15 +36,16 @@ namespace OpenBve
 				Elements = new ObjectManager.AnimatedObject[] { },
 				Overlay = true
 			};
-			string File = OpenBveApi.Path.CombineFile(TrainPath, "panel.xml");
+			string File = OpenBveApi.Path.CombineFile(TrainPath, "panel.animated.xml");
 			if (!System.IO.File.Exists(File))
 			{
-				//Try animated variant too
-				File = OpenBveApi.Path.CombineFile(TrainPath, "panel.animated.xml");
+				//Try 2D cab too
+				File = OpenBveApi.Path.CombineFile(TrainPath, "panel.xml");
 			}
 			if (System.IO.File.Exists(File))
 			{
 				Program.FileSystem.AppendToLogFile("Loading train panel: " + File);
+				bool animated = false;
 				try
 				{
 					/*
@@ -58,15 +59,16 @@ namespace OpenBve
 					{
 
 						IEnumerable<XElement> DocumentElements = CurrentXML.Root.Elements("PanelAnimated");
-						if (DocumentElements.Count() != 0)
+						if (DocumentElements.Any())
 						{
-							PanelAnimatedXmlParser.ParsePanelAnimatedXml("panel.xml", TrainPath, Train, Train.DriverCar);
+							PanelAnimatedXmlParser.ParsePanelAnimatedXml("panel.animated.xml", TrainPath, Train, Train.DriverCar);
 							Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.NotAvailable;
 							World.CameraRestriction = Camera.RestrictionMode.NotAvailable;
+							animated = true;
 						}
 
 						DocumentElements = CurrentXML.Root.Elements("Panel");
-						if (DocumentElements.Count() != 0)
+						if (DocumentElements.Any())
 						{
 							PanelXmlParser.ParsePanelXml("panel.xml", TrainPath, Train, Train.DriverCar);
 							Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.On;
@@ -77,7 +79,7 @@ namespace OpenBve
 				catch
 				{
 					var currentError = Translations.GetInterfaceString("errors_critical_file");
-					currentError = currentError.Replace("[file]", "panel.xml");
+					currentError = currentError.Replace("[file]", animated ? "panel.animated.xml" : "panel.xml");
 					MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 					Program.RestartArguments = " ";
 					Loading.Cancel = true;
@@ -89,7 +91,7 @@ namespace OpenBve
 					World.UpdateViewingDistances();
 					return;
 				}
-				Interface.AddMessage(MessageType.Error, false, "The panel.xml file " + File + " failed to load. Falling back to legacy panel.");
+				Interface.AddMessage(MessageType.Error, false, "The " + (animated ? "panel.animated.xml" : "panel.xml") + " file " + File + " failed to load. Falling back to legacy panel.");
 			}
 			else
 			{
