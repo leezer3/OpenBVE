@@ -220,6 +220,7 @@ namespace OpenBve
 			}
 
 			GL.PopName();
+			OptionLighting = true;
 		}
 
 		/// <summary>Function to perform start processing of mouse picking.</summary>
