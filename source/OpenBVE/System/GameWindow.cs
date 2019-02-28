@@ -642,6 +642,19 @@ namespace OpenBve
 					TrainManager.Trains[i].Cars[j].Move(length);
 				}
 			}
+
+			foreach (var Train in TrainManager.OtherTrains)
+			{
+				Train.Initialize();
+
+                foreach (var Car in Train.Cars)
+                {
+                    double length = Train.Cars[0].Length;
+                    Car.Move(-length);
+                    Car.Move(length);
+                }
+			}
+
 			// score
 			Game.CurrentScore.ArrivalStation = PlayerFirstStationIndex + 1;
 			Game.CurrentScore.DepartureStation = PlayerFirstStationIndex;

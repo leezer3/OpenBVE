@@ -1003,7 +1003,9 @@ namespace OpenBve {
 				Result.States = new AnimatedObjectState[this.States.Length];
 				for (int i = 0; i < this.States.Length; i++) {
 					Result.States[i].Position = this.States[i].Position;
-					Result.States[i].Object = this.States[i].Object.Clone();
+					if (this.States[i].Object != null) {
+						Result.States[i].Object = this.States[i].Object.Clone();
+					}
 				}
 				Result.StateFunction = this.StateFunction == null ? null : this.StateFunction.Clone();
 				Result.CurrentState = this.CurrentState;
@@ -1055,6 +1057,9 @@ namespace OpenBve {
 			{
 				for (int i = 0; i < Objects.Length; i++) {
 					for (int j = 0; j < Objects[i].States.Length; j++) {
+						if (Objects[i].States[j].Object == null) {
+							continue;
+						}
 						Objects[i].States[j].Object.OptimizeObject(PreserveVerticies);
 					}
 				}

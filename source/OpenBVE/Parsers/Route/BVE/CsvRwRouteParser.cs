@@ -1572,6 +1572,19 @@ namespace OpenBve {
 										}
 									}
 									break;
+								case "route.othertrainxml":
+									if (!PreviewOnly) {
+										string otherTrainFile = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+										if (!System.IO.File.Exists(otherTrainFile))
+										{
+											Interface.AddMessage(MessageType.Error, true, "Other train XML file " + otherTrainFile + " not found in Track.OtherTrainXML at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+											break;
+										}
+										int n = TrainManager.OtherTrains.Length;
+										Array.Resize(ref TrainManager.OtherTrains, n + 1);
+										TrainManager.OtherTrains[n] = OtherTrainXMLParser.ParseOtherTrainXML(otherTrainFile);
+									}
+                                    break;
 									// train
 								case "train.folder":
 								case "train.file":
@@ -2841,6 +2854,7 @@ namespace OpenBve {
 								case "cycle.rail":
 								case "route.loadingscreen":
 								case "route.displayspeed":
+								case "route.othertrainxml":
 									break;
 									// track
 								case "track.railstart":

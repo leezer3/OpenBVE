@@ -70,7 +70,7 @@ namespace OpenBve
 						if (Visible)
 						{
 							//Calculate the distance travelled
-							double delta = UpdateTrackFollowerScript(false, train, train == null ? 0 : train.DriverCar, SectionIndex, TrackPosition, Position, false, timeDelta);
+							double delta = UpdateTrackFollowerScript(false, train, train == null ? 0 : train.DriverCar, SectionIndex, TrackPosition, Position, true, timeDelta);
 							//Update the front and rear axle track followers
 							FrontAxleFollower.Update((TrackPosition + FrontAxlePosition) + delta, true, true);
 							RearAxleFollower.Update((TrackPosition + RearAxlePosition) + delta, true, true);

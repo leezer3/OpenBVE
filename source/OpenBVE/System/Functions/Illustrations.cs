@@ -96,8 +96,8 @@ namespace OpenBve {
 			double x1 = double.NegativeInfinity, z1 = double.NegativeInfinity;
 			for (int i = n0; i <= n1; i++)
 			{
-				double x = TrackManager.CurrentTrack.Elements[i].WorldPosition.X;
-				double z = TrackManager.CurrentTrack.Elements[i].WorldPosition.Z;
+				double x = TrackManager.Tracks[0].Elements[i].WorldPosition.X;
+				double z = TrackManager.Tracks[0].Elements[i].WorldPosition.Z;
 				if (x < x0) x0 = x;
 				if (x > x1) x1 = x;
 				if (z < z0) z0 = z;
@@ -155,19 +155,19 @@ namespace OpenBve {
 				PointF[] p = new PointF[n];
 				for (int i = 0; i < n; i++)
 				{
-					double x = TrackManager.CurrentTrack.Elements[i+n0].WorldPosition.X;
-					double z = TrackManager.CurrentTrack.Elements[i+n0].WorldPosition.Z;
+					double x = TrackManager.Tracks[0].Elements[i+n0].WorldPosition.X;
+					double z = TrackManager.Tracks[0].Elements[i+n0].WorldPosition.Z;
 					x = ox + (x - x0) * xd;
 					z = oy + (z0 - z) * zd + h;
 					p[i] = new PointF((float)x, (float)z);
 					// ATS / ATC
 					// for each track element, look for a StationStartEvent
-					for (int j = 0; j < TrackManager.CurrentTrack.Elements[i+n0].Events.Length; j++)
+					for (int j = 0; j < TrackManager.Tracks[0].Elements[i+n0].Events.Length; j++)
 					{
-						if (TrackManager.CurrentTrack.Elements[i+n0].Events[j] is TrackManager.StationStartEvent)
+						if (TrackManager.Tracks[0].Elements[i+n0].Events[j] is TrackManager.StationStartEvent)
 						{
 							TrackManager.StationStartEvent e =
-								(TrackManager.StationStartEvent)TrackManager.CurrentTrack.Elements[i+n0].Events[j];
+								(TrackManager.StationStartEvent)TrackManager.Tracks[0].Elements[i+n0].Events[j];
 							// if StationStartEvent found, look for a change in ATS/ATC control;
 							// if there is a change, draw all previous track elements
 							// with colour for the previous control state
@@ -201,15 +201,15 @@ namespace OpenBve {
 			// STATION ICONS
 			for (int i = n0; i <= n1; i++)
 			{
-				for (int j = 0; j < TrackManager.CurrentTrack.Elements[i].Events.Length; j++)
+				for (int j = 0; j < TrackManager.Tracks[0].Elements[i].Events.Length; j++)
 				{
-					if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationStartEvent)
+					if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationStartEvent)
 					{
-						TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.CurrentTrack.Elements[i].Events[j];
+						TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.Tracks[0].Elements[i].Events[j];
 						if (Game.Stations[e.StationIndex].Name != string.Empty)
 						{
-							double x = TrackManager.CurrentTrack.Elements[i].WorldPosition.X;
-							double y = TrackManager.CurrentTrack.Elements[i].WorldPosition.Z;
+							double x = TrackManager.Tracks[0].Elements[i].WorldPosition.X;
+							double y = TrackManager.Tracks[0].Elements[i].WorldPosition.Z;
 							x = ox + (x - x0) * xd;
 							y = oy + (z0 - y) * zd + h;
 							// station circle
@@ -238,22 +238,22 @@ namespace OpenBve {
 				Font f = new Font(FontFamily.GenericSansSerif, wh < 65536.0 ? 9.0f : 10.0f, GraphicsUnit.Pixel);
 				for (int i = n0; i <= n1; i++)
 				{
-					for (int j = 0; j < TrackManager.CurrentTrack.Elements[i].Events.Length; j++)
+					for (int j = 0; j < TrackManager.Tracks[0].Elements[i].Events.Length; j++)
 					{
-						if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationStartEvent)
+						if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationStartEvent)
 						{
-							TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.CurrentTrack.Elements[i].Events[j];
+							TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.Tracks[0].Elements[i].Events[j];
 							if (Game.Stations[e.StationIndex].Name != string.Empty)
 							{
-								double x = TrackManager.CurrentTrack.Elements[i].WorldPosition.X;
-								double y = TrackManager.CurrentTrack.Elements[i].WorldPosition.Z;
+								double x = TrackManager.Tracks[0].Elements[i].WorldPosition.X;
+								double y = TrackManager.Tracks[0].Elements[i].WorldPosition.Z;
 								x = ox + (x - x0) * xd;
 								y = oy + (z0 - y) * zd + h;
 								bool stop = Game.PlayerStopsAtStation(e.StationIndex);
 								string t = Game.Stations[e.StationIndex].Name;
 								SizeF m = g.MeasureString(t, f, Width, StringFormat.GenericDefault);
-								double sx = TrackManager.CurrentTrack.Elements[i].WorldSide.X;
-								double sz = TrackManager.CurrentTrack.Elements[i].WorldSide.Z;
+								double sx = TrackManager.Tracks[0].Elements[i].WorldSide.X;
+								double sz = TrackManager.Tracks[0].Elements[i].WorldSide.Z;
 								double xt, yt;
 								if (Math.Sign(sx) == Math.Sign(sz))
 								{
@@ -359,7 +359,7 @@ namespace OpenBve {
 		/// <param name="inGame"><c>true</c> = bitmap for in-game overlay | <c>false</c> = for standard window.</param>
 		internal static Bitmap CreateRouteGradientProfile(int Width, int Height, bool inGame)
 		{
-			if (TrackManager.CurrentTrack.Elements.Length > 36 && Game.Stations.Length == 0)
+			if (TrackManager.Tracks[0].Elements.Length > 36 && Game.Stations.Length == 0)
 			{
 				// If we have track elements, but no stations, show a specific error message, rather
 				// than the more generic one thrown later
@@ -377,7 +377,7 @@ namespace OpenBve {
 			double y0 = double.PositiveInfinity, y1 = double.NegativeInfinity;
 			for (int i = n0; i <= n1; i++)
 			{
-				double y = TrackManager.CurrentTrack.Elements[i].WorldPosition.Y;
+				double y = TrackManager.Tracks[0].Elements[i].WorldPosition.Y;
 				if (y < y0) y0 = y;
 				if (y > y1) y1 = y;
 			}
@@ -394,8 +394,8 @@ namespace OpenBve {
 			// set total bitmap track position range; used by in-game profile to place
 			// the current position of the trains; as the train positions are known as track positions,
 			// actual track positions are needed here, rather than indices into the track element array.
-			double minX = TrackManager.CurrentTrack.Elements[n0].StartingTrackPosition;
-			double maxX = TrackManager.CurrentTrack.Elements[n1].StartingTrackPosition;
+			double minX = TrackManager.Tracks[0].Elements[n0].StartingTrackPosition;
+			double maxX = TrackManager.Tracks[0].Elements[n1].StartingTrackPosition;
 			double offX = ox * (maxX - minX) / w;
 			lastGradientMinTrack = (int)(minX - offX);
 			lastGradientMaxTrack = (int)(maxX + offX);
@@ -427,7 +427,7 @@ namespace OpenBve {
 				{
 					double x = ox + (double)(i - n0) * nd;
 					double y = oy + (h - 0.5 *
-						(double)(TrackManager.CurrentTrack.Elements[i].WorldPosition.Y - y0) * yd);
+						(double)(TrackManager.Tracks[0].Elements[i].WorldPosition.Y - y0) * yd);
 					p[i -n0 + 1] = new PointF((float)x, (float)y);
 				}
 				p[n + 1] = new PointF((float)(ox + (double)(n - 1) * nd), (float)(oy + h));
@@ -442,11 +442,11 @@ namespace OpenBve {
 				StringFormat m = new StringFormat();
 				for (int i = n0; i <= n1; i++)
 				{
-					for (int j = 0; j < TrackManager.CurrentTrack.Elements[i].Events.Length; j++)
+					for (int j = 0; j < TrackManager.Tracks[0].Elements[i].Events.Length; j++)
 					{
-						if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationStartEvent)
+						if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationStartEvent)
 						{
-							TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.CurrentTrack.Elements[i].Events[j];
+							TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.Tracks[0].Elements[i].Events[j];
 							if (Game.Stations[e.StationIndex].Name != string.Empty)
 							{
 								bool stop = Game.PlayerStopsAtStation(e.StationIndex);
@@ -456,7 +456,7 @@ namespace OpenBve {
 									m.LineAlignment = StringAlignment.Near;
 									double x = ox + (double)(i - n0) * nd;
 									double y = oy + (h - 0.5 *
-										(double)(TrackManager.CurrentTrack.Elements[i].WorldPosition.Y - y0) * yd);
+										(double)(TrackManager.Tracks[0].Elements[i].WorldPosition.Y - y0) * yd);
 									string t = Game.Stations[e.StationIndex].Name;
 									float tx = 0.0f, ty = (float)oy;
 									for (int k = 0; k < t.Length; k++)
@@ -480,7 +480,7 @@ namespace OpenBve {
 									m.LineAlignment = StringAlignment.Near;
 									double x = ox + (double)(i - n0) * nd;
 									double y = oy + (h - 0.5 *
-										(double)(TrackManager.CurrentTrack.Elements[i].WorldPosition.Y - y0) * yd);
+										(double)(TrackManager.Tracks[0].Elements[i].WorldPosition.Y - y0) * yd);
 									g.RotateTransform(-90.0f);
 									g.TranslateTransform((float)x, (float)oy, System.Drawing.Drawing2D.MatrixOrder.Append);
 									g.DrawString(Game.Stations[e.StationIndex].Name, f,
@@ -516,17 +516,17 @@ namespace OpenBve {
 				for (int i = n0; i <= n1; i += k)
 				{
 					double x = ox + (double)(i - n0) * nd;
-					double y = (double)(TrackManager.CurrentTrack.Elements[i].WorldPosition.Y - y0) * yd;
+					double y = (double)(TrackManager.Tracks[0].Elements[i].WorldPosition.Y - y0) * yd;
 					// track offset label
 					if (x < w)
 					{
-						string t = ((int)Math.Round(TrackManager.CurrentTrack.Elements[i].StartingTrackPosition)).ToString(Culture);
+						string t = ((int)Math.Round(TrackManager.Tracks[0].Elements[i].StartingTrackPosition)).ToString(Culture);
 						g.DrawString(t + "m", f, mapColors[mode].actNameText, (float)x, (float)(oy + h + TrackOffY));
 					}
 					// route height at track offset (with measure and vertical line)
 					{
 						y = oy + (h - 0.5 * y) + 2.0f;
-						string t = ((int)Math.Round(Game.RouteInitialElevation + TrackManager.CurrentTrack.Elements[i].WorldPosition.Y)).ToString(Culture);
+						string t = ((int)Math.Round(Game.RouteInitialElevation + TrackManager.Tracks[0].Elements[i].WorldPosition.Y)).ToString(Culture);
 						SizeF s = g.MeasureString(t, fs);
 						if (y < oy + h - (double)s.Width - 10.0)
 						{
@@ -566,14 +566,14 @@ namespace OpenBve {
 		private static void RouteRange(out int n, out int n0, out int n1)
 		{
 			// find first and last track element actually used by stations
-			n	= TrackManager.CurrentTrack.Elements.Length;
+			n	= TrackManager.Tracks[0].Elements.Length;
 			n0	= n - 1;
 			n1	= 0;
-			for (int i = 0; i < TrackManager.CurrentTrack.Elements.Length; i++)
+			for (int i = 0; i < TrackManager.Tracks[0].Elements.Length; i++)
 			{
-				for (int j = 0; j < TrackManager.CurrentTrack.Elements[i].Events.Length; j++)
+				for (int j = 0; j < TrackManager.Tracks[0].Elements[i].Events.Length; j++)
 				{
-					if (TrackManager.CurrentTrack.Elements[i].Events[j] is TrackManager.StationStartEvent)
+					if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationStartEvent)
 					{
 						if (i < n0) n0 = i;
 						if (i > n1) n1 = i;
@@ -586,8 +586,8 @@ namespace OpenBve {
 			n1 += 8;
 			// But not outside of actual track element array!
 			if (n0 < 0) n0 = 0;
-			if (n1 >= TrackManager.CurrentTrack.Elements.Length)
-				n1 = TrackManager.CurrentTrack.Elements.Length - 1;
+			if (n1 >= TrackManager.Tracks[0].Elements.Length)
+				n1 = TrackManager.Tracks[0].Elements.Length - 1;
 			if (n1 <= n0)		// neither a 0-length or 'negative' track!
 				n1 = n0 + 1;
 		}
