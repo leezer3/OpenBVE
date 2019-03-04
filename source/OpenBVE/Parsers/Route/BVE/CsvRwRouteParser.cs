@@ -1584,7 +1584,7 @@ namespace OpenBve {
 										Array.Resize(ref TrainManager.OtherTrains, n + 1);
 										TrainManager.OtherTrains[n] = OtherTrainXMLParser.ParseOtherTrainXML(otherTrainFile);
 									}
-                                    break;
+									break;
 									// train
 								case "train.folder":
 								case "train.file":
@@ -2964,6 +2964,17 @@ namespace OpenBve {
 												}
 											}
 										}
+										double cant = 0.0;
+										if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out cant))
+										{
+											Interface.AddMessage(MessageType.Error, false, "CantInMillimeters is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+											cant = 0.0;
+										}
+										else
+										{
+											cant *= 0.001;
+										}
+										Data.Blocks[BlockIndex].Rails[idx].CurveCant = cant;
 									}
 									break;
 								case "track.railend":

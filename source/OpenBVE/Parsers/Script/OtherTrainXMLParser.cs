@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using OpenBveApi.Interface;
@@ -32,10 +34,7 @@ namespace OpenBve
 				throw new System.IO.InvalidDataException();
 			}
 
-			// In order to make the Animated object function, temporary train data is set.
 			TrainManager.OtherTrain Train = new TrainManager.OtherTrain(TrainManager.TrainState.Pending);
-			string TrainData = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Compatibility", "PreTrain"), "train.dat");
-			TrainDatParser.ParseTrainData(TrainData, System.Text.Encoding.UTF8, Train);
 
 			foreach (XElement Element in DocumentElements)
 			{
@@ -48,9 +47,7 @@ namespace OpenBve
 		private static void ParseOtherTrainNode(XElement Element, string FileName, string Path, TrainManager.OtherTrain Train)
 		{
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			int RailNumber = 0;
-			int NumberOfCars = 0;
-			string ExteriorFile = string.Empty;
+			string TrainDirectory = string.Empty;
 			List<Game.TravelData> Data = new List<Game.TravelData>();
 
 			foreach (XElement SectionElement in Element.Elements())
@@ -62,7 +59,7 @@ namespace OpenBve
 					case "stops":
 						ParseOtherTrainStopNode(SectionElement, FileName, Data);
 						break;
-					case "cars":
+					case "train":
 						foreach (XElement KeyNode in SectionElement.Elements())
 						{
 							string Key = KeyNode.Name.LocalName;
@@ -71,20 +68,12 @@ namespace OpenBve
 
 							switch (Key.ToLowerInvariant())
 							{
-								case "numberofcars":
+								case "directory":
 									{
-										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out NumberOfCars))
+										string Directory = OpenBveApi.Path.CombineDirectory(Path, Value);
+										if (System.IO.Directory.Exists(Directory))
 										{
-											Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
-									}
-									break;
-								case "filename":
-									{
-										string File = OpenBveApi.Path.CombineFile(Path, Value);
-										if (System.IO.File.Exists(File))
-										{
-											ExteriorFile = File;
+											TrainDirectory = Directory;
 										}
 										else
 										{
@@ -92,7 +81,6 @@ namespace OpenBve
 										}
 									}
 									break;
-
 							}
 						}
 						break;
@@ -105,14 +93,6 @@ namespace OpenBve
 
 							switch (Key.ToLowerInvariant())
 							{
-								case "rail":
-									{
-										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out RailNumber))
-										{
-											Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-										}
-										break;
-									}
 								case "appearancetime":
 									if (Value.Length != 0 && !Interface.TryParseTime(Value, out Train.AppearanceTime))
 									{
@@ -143,22 +123,20 @@ namespace OpenBve
 				}
 			}
 
-			if (!Data.Any())
+			if (!Data.Any() || string.IsNullOrEmpty(TrainDirectory))
 			{
 				return;
 			}
 
 			// Initial setting
+			string TrainData = OpenBveApi.Path.CombineFile(TrainDirectory, "train.dat");
+			string ExteriorFile = OpenBveApi.Path.CombineFile(TrainDirectory, "extensions.cfg");
+			TrainDatParser.ParseTrainData(TrainData, TextEncoding.GetSystemEncodingFromFile(TrainData), Train);
+			SoundCfgParser.ParseSoundConfig(TrainDirectory, Encoding.UTF8, Train);
 			Train.AI = new Game.OtherTrainAI(Train, Data);
-			Train.Cars = new TrainManager.Car[NumberOfCars];
-			for (int i = 0; i < NumberOfCars; i++)
-			{
-				Train.Cars[i] = new TrainManager.Car(Train, i);
-			}
-			Train.Couplers = new TrainManager.Coupler[NumberOfCars - 1];
 
-			UnifiedObject[] CarObjects = new UnifiedObject[NumberOfCars];
-			UnifiedObject[] BogieObjects = new UnifiedObject[NumberOfCars * 2];
+			UnifiedObject[] CarObjects = new UnifiedObject[Train.Cars.Length];
+			UnifiedObject[] BogieObjects = new UnifiedObject[Train.Cars.Length * 2];
 
 			ExtensionsCfgParser.ParseExtensionsConfig(System.IO.Path.GetDirectoryName(ExteriorFile), TextEncoding.GetSystemEncodingFromFile(ExteriorFile), ref CarObjects, ref BogieObjects, Train, true);
 
@@ -202,15 +180,85 @@ namespace OpenBve
 				currentBogieObject++;
 			}
 
+			// door open/close speed
 			foreach (var Car in Train.Cars)
 			{
-				Car.ChangeCarSection(TrainManager.CarSectionType.NotVisible);
-				Car.FrontAxle.Follower.TrackIndex = RailNumber;
-				Car.RearAxle.Follower.TrackIndex = RailNumber;
-				Car.FrontBogie.FrontAxle.Follower.TrackIndex = RailNumber;
-				Car.FrontBogie.RearAxle.Follower.TrackIndex = RailNumber;
-				Car.RearBogie.FrontAxle.Follower.TrackIndex = RailNumber;
-				Car.RearBogie.RearAxle.Follower.TrackIndex = RailNumber;
+				if (Car.Specs.DoorOpenFrequency <= 0.0)
+				{
+					if (Car.Doors[0].OpenSound.Buffer != null & Car.Doors[1].OpenSound.Buffer != null)
+					{
+						Sounds.LoadBuffer(Car.Doors[0].OpenSound.Buffer);
+						Sounds.LoadBuffer(Car.Doors[1].OpenSound.Buffer);
+						double a = Car.Doors[0].OpenSound.Buffer.Duration;
+						double b = Car.Doors[1].OpenSound.Buffer.Duration;
+						Car.Specs.DoorOpenFrequency = a + b > 0.0 ? 2.0 / (a + b) : 0.8;
+					}
+					else if (Car.Doors[0].OpenSound.Buffer != null)
+					{
+						Sounds.LoadBuffer(Car.Doors[0].OpenSound.Buffer);
+						double a = Car.Doors[0].OpenSound.Buffer.Duration;
+						Car.Specs.DoorOpenFrequency = a > 0.0 ? 1.0 / a : 0.8;
+					}
+					else if (Car.Doors[1].OpenSound.Buffer != null)
+					{
+						Sounds.LoadBuffer(Car.Doors[0].OpenSound.Buffer);
+						double b = Car.Doors[1].OpenSound.Buffer.Duration;
+						Car.Specs.DoorOpenFrequency = b > 0.0 ? 1.0 / b : 0.8;
+					}
+					else
+					{
+						Car.Specs.DoorOpenFrequency = 0.8;
+					}
+				}
+				if (Car.Specs.DoorCloseFrequency <= 0.0)
+				{
+					if (Car.Doors[0].CloseSound.Buffer != null & Car.Doors[1].CloseSound.Buffer != null)
+					{
+						Sounds.LoadBuffer(Car.Doors[0].CloseSound.Buffer);
+						Sounds.LoadBuffer(Car.Doors[1].CloseSound.Buffer);
+						double a = Car.Doors[0].CloseSound.Buffer.Duration;
+						double b = Car.Doors[1].CloseSound.Buffer.Duration;
+						Car.Specs.DoorCloseFrequency = a + b > 0.0 ? 2.0 / (a + b) : 0.8;
+					}
+					else if (Car.Doors[0].CloseSound.Buffer != null)
+					{
+						Sounds.LoadBuffer(Car.Doors[0].CloseSound.Buffer);
+						double a = Car.Doors[0].CloseSound.Buffer.Duration;
+						Car.Specs.DoorCloseFrequency = a > 0.0 ? 1.0 / a : 0.8;
+					}
+					else if (Car.Doors[1].CloseSound.Buffer != null)
+					{
+						Sounds.LoadBuffer(Car.Doors[0].CloseSound.Buffer);
+						double b = Car.Doors[1].CloseSound.Buffer.Duration;
+						Car.Specs.DoorCloseFrequency = b > 0.0 ? 1.0 / b : 0.8;
+					}
+					else
+					{
+						Car.Specs.DoorCloseFrequency = 0.8;
+					}
+				}
+				const double f = 0.015;
+				const double g = 2.75;
+				Car.Specs.DoorOpenPitch = Math.Exp(f * Math.Tan(g * (Program.RandomNumberGenerator.NextDouble() - 0.5)));
+				Car.Specs.DoorClosePitch = Math.Exp(f * Math.Tan(g * (Program.RandomNumberGenerator.NextDouble() - 0.5)));
+				Car.Specs.DoorOpenFrequency /= Car.Specs.DoorOpenPitch;
+				Car.Specs.DoorCloseFrequency /= Car.Specs.DoorClosePitch;
+				/*
+				 * Remove the following two lines, then the pitch at which doors play
+				 * takes their randomized opening and closing times into account.
+				 * */
+				Car.Specs.DoorOpenPitch = 1.0;
+				Car.Specs.DoorClosePitch = 1.0;
+			}
+
+			foreach (var Car in Train.Cars)
+			{
+				Car.FrontAxle.Follower.TrackIndex = Data[0].RailIndex;
+				Car.RearAxle.Follower.TrackIndex = Data[0].RailIndex;
+				Car.FrontBogie.FrontAxle.Follower.TrackIndex = Data[0].RailIndex;
+				Car.FrontBogie.RearAxle.Follower.TrackIndex = Data[0].RailIndex;
+				Car.RearBogie.FrontAxle.Follower.TrackIndex = Data[0].RailIndex;
+				Car.RearBogie.RearAxle.Follower.TrackIndex = Data[0].RailIndex;
 			}
 
 			Train.PlaceCars(Data[0].StopPosition);
@@ -259,6 +307,43 @@ namespace OpenBve
 											Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										break;
+									case "doors":
+										{
+											int door = 0;
+											bool doorboth = false;
+
+											switch (Value.ToLowerInvariant())
+											{
+												case "l":
+												case "left":
+													door = -1;
+													break;
+												case "r":
+												case "right":
+													door = 1;
+													break;
+												case "n":
+												case "none":
+												case "neither":
+													door = 0;
+													break;
+												case "b":
+												case "both":
+													doorboth = true;
+													break;
+												default:
+													if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out door))
+													{
+														Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+														door = 0;
+													}
+													break;
+											}
+
+											NewData.OpenLeftDoors = door < 0.0 | doorboth;
+											NewData.OpenRightDoors = door > 0.0 | doorboth;
+										}
+										break;
 									case "accelerate":
 										if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Accelerate))
 										{
@@ -282,6 +367,12 @@ namespace OpenBve
 											{
 												NewData.Direction = (Game.TravelDirection) d;
 											}
+										}
+										break;
+									case "rail":
+										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out NewData.RailIndex))
+										{
+											Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										break;
 								}

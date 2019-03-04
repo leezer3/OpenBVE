@@ -16,6 +16,7 @@ namespace OpenBve
 			internal bool RailEnd;
 			internal double RailEndX;
 			internal double RailEndY;
+			internal double CurveCant;
 		}
 		private struct WallDike
 		{

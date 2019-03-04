@@ -152,5 +152,19 @@ namespace OpenBve
 				}
 			}
 		}
+
+		internal static void JumpOtherTrains()
+		{
+			foreach (var Train in OtherTrains)
+			{
+				Train.Dispose();
+				Train.State = TrainState.Pending;
+				Game.OtherTrainAI AI = Train.AI as Game.OtherTrainAI;
+				if (AI != null)
+				{
+					AI.SetupTravelData(Train.AppearanceTime);
+				}
+			}
+		}
 	}
 }

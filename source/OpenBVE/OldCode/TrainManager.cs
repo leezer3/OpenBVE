@@ -16,7 +16,7 @@ namespace OpenBve
 		internal static Train[] Trains = new Train[] { };
 		/// <summary>A reference to the train of the Trains element that corresponds to the player's train.</summary>
 		internal static Train PlayerTrain = null;
-        /// <summary>The list of trains available on other tracks in the simulation.</summary>
+		/// <summary>The list of trains available on other tracks in the simulation.</summary>
 		internal static OtherTrain[] OtherTrains = new OtherTrain[] { };
 
 		/// <summary>Attempts to load and parse the current train's panel configuration file.</summary>

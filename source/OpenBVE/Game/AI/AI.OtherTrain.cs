@@ -19,14 +19,19 @@ namespace OpenBve
 			internal double Decelerate;
 			internal double StopPosition;
 			internal double StopTime;
+			internal bool OpenLeftDoors;
+			internal bool OpenRightDoors;
 			internal double Accelerate;
 			internal double TargetSpeed;
 			internal TravelDirection Direction;
+			internal int RailIndex;
 
 			// Parameters calculated by the SetupTravelData function
 			internal double DecelerationStartPosition;
 			internal double DecelerationStartTime;
 			internal double ArrivalTime;
+			internal double OpeningDoorsEndTime;
+			internal double ClosingDoorsStartTime;
 			internal double DepartureTime;
 			internal double AccelerationEndPosition;
 			internal double AccelerationEndTime;
@@ -41,6 +46,8 @@ namespace OpenBve
 
 			private double TimeLastProcessed;
 			private double CurrentPosition;
+			internal double AppearanceTime;
+			internal double LeaveTime;
 
 			internal OtherTrainAI(TrainManager.OtherTrain train, List<TravelData> data)
 			{
@@ -60,8 +67,8 @@ namespace OpenBve
 				// Initialize
 				if (TimeLastProcessed == 0.0)
 				{
-					SetupTravelData();
-					CheckTravelData();
+					SetupTravelData(SecondsSinceMidnight);
+					CheckTravelData(SecondsSinceMidnight);
 					CurrentPosition = Data[0].StopPosition;
 				}
 
@@ -70,6 +77,21 @@ namespace OpenBve
 				// Calculate the position where the train is at the present time.
 				double DeltaT;
 				double Position = Data[0].StopPosition;
+				int RailIndex = Data[0].RailIndex;
+				bool OpenLeftDoors = false;
+				bool OpenRightDoors = false;
+
+				if (SecondsSinceMidnight >= Data[0].ArrivalTime)
+				{
+					OpenLeftDoors = Data[0].OpenLeftDoors;
+					OpenRightDoors = Data[0].OpenRightDoors;
+				}
+
+				if (SecondsSinceMidnight >= Data[0].ClosingDoorsStartTime)
+				{
+					OpenLeftDoors = false;
+					OpenRightDoors = false;
+				}
 
 				// The start point does not slow down. Acceleration only.
 				if (SecondsSinceMidnight >= Data[0].DepartureTime)
@@ -113,6 +135,18 @@ namespace OpenBve
 						Position += (int)Data[i - 1].Direction * (Data[i - 1].TargetSpeed * DeltaT - 0.5 * Data[i].Decelerate * Math.Pow(DeltaT, 2.0));
 					}
 
+					if (SecondsSinceMidnight >= Data[i].ArrivalTime)
+					{
+						OpenLeftDoors = Data[i].OpenLeftDoors;
+						OpenRightDoors = Data[i].OpenRightDoors;
+					}
+
+					if (SecondsSinceMidnight >= Data[i].ClosingDoorsStartTime)
+					{
+						OpenLeftDoors = false;
+						OpenRightDoors = false;
+					}
+
 					if (SecondsSinceMidnight >= Data[i].DepartureTime)
 					{
 						if (SecondsSinceMidnight < Data[i].AccelerationEndTime)
@@ -124,6 +158,7 @@ namespace OpenBve
 							DeltaT = Data[i].AccelerationEndTime - Data[i].DepartureTime;
 						}
 						Position += (int)Data[i].Direction * (0.5 * Data[i].Accelerate * Math.Pow(DeltaT, 2.0));
+						RailIndex = Data[i].RailIndex;
 					}
 				}
 
@@ -142,22 +177,43 @@ namespace OpenBve
 				}
 				Train.Handles.Reverser.Actual = Train.Handles.Reverser.Driver;
 
+				TrainManager.OpenTrainDoors(Train, OpenLeftDoors, OpenRightDoors);
+				TrainManager.CloseTrainDoors(Train, !OpenLeftDoors, !OpenRightDoors);
+
 				foreach (var Car in Train.Cars)
 				{
+					Car.FrontAxle.Follower.TrackIndex = RailIndex;
+					Car.RearAxle.Follower.TrackIndex = RailIndex;
+					Car.FrontBogie.FrontAxle.Follower.TrackIndex = RailIndex;
+					Car.FrontBogie.RearAxle.Follower.TrackIndex = RailIndex;
+					Car.RearBogie.FrontAxle.Follower.TrackIndex = RailIndex;
+					Car.RearBogie.RearAxle.Follower.TrackIndex = RailIndex;
 					Car.Move(Delta);
-					Car.Specs.CurrentSpeed = Delta / TimeElapsed;
-					Car.Specs.CurrentPerceivedSpeed = Car.Specs.CurrentSpeed;
+					if (TimeElapsed != 0.0)
+					{
+						Car.Specs.CurrentSpeed = Delta / TimeElapsed;
+						Car.Specs.CurrentPerceivedSpeed = Car.Specs.CurrentSpeed;
+						Car.Specs.CurrentAcceleration = Car.Specs.CurrentSpeed / TimeElapsed;
+						Car.Specs.CurrentAccelerationOutput = Car.Specs.CurrentAcceleration;
+					}
+					else
+					{
+						Car.Specs.CurrentSpeed = 0.0;
+						Car.Specs.CurrentPerceivedSpeed = 0.0;
+						Car.Specs.CurrentAcceleration = 0.0;
+						Car.Specs.CurrentAccelerationOutput = 0.0;
+					}
 				}
 
 				// Dispose the train if it is past the leave time of the train
-				if (Train.LeaveTime > Train.AppearanceTime && SecondsSinceMidnight >= Train.LeaveTime)
+				if (LeaveTime > AppearanceTime && SecondsSinceMidnight >= LeaveTime)
 				{
 					Train.Dispose();
 				}
 			}
 
 			/// <summary>Create a train operation plan.</summary>
-			private void SetupTravelData()
+			internal void SetupTravelData(double InitializeTime)
 			{
 				// The start point does not slow down. Acceleration only.
 				double DeltaPosition = 0.0;
@@ -184,11 +240,35 @@ namespace OpenBve
 					Data[i].AccelerationEndPosition = Data[i].StopPosition + (int)Data[i].Direction * DeltaPosition;
 				}
 
+				// Time to operate the door
+				double OpeningDoorsTime = 0.0;
+				double ClosingDoorsTime = 0.0;
+
+				if (Train.Cars[0].Specs.DoorOpenFrequency != 0.0)
+				{
+					OpeningDoorsTime = 1.0 / Train.Cars[0].Specs.DoorOpenFrequency;
+				}
+				if (Train.Cars[0].Specs.DoorCloseFrequency != 0.0)
+				{
+					ClosingDoorsTime = 1.0 / Train.Cars[0].Specs.DoorCloseFrequency;
+				}
+
 				// Delay
-				Data[0].ArrivalTime = SecondsSinceMidnight;
-				Train.AppearanceTime = SecondsSinceMidnight;
-				Train.LeaveTime += SecondsSinceMidnight;
-				Data[0].DepartureTime = Data[0].ArrivalTime + Data[0].StopTime;
+				Data[0].ArrivalTime = InitializeTime;
+				AppearanceTime = InitializeTime;
+				LeaveTime = Train.LeaveTime + InitializeTime;
+
+				Data[0].OpeningDoorsEndTime = Data[0].ArrivalTime;
+				if (Data[0].OpenLeftDoors || Data[0].OpenRightDoors)
+				{
+					Data[0].OpeningDoorsEndTime += OpeningDoorsTime;
+				}
+				Data[0].ClosingDoorsStartTime = Data[0].OpeningDoorsEndTime + Data[0].StopTime;
+				Data[0].DepartureTime = Data[0].ClosingDoorsStartTime;
+				if (Data[0].OpenLeftDoors || Data[0].OpenRightDoors)
+				{
+					Data[0].DepartureTime += ClosingDoorsTime;
+				}
 
 				// The start point does not slow down. Acceleration only.
 				double DeltaT = 0.0;
@@ -213,7 +293,18 @@ namespace OpenBve
 						DeltaT = Data[i - 1].TargetSpeed / Data[i].Decelerate;
 					}
 					Data[i].ArrivalTime = Data[i].DecelerationStartTime + DeltaT;
-					Data[i].DepartureTime = Data[i].ArrivalTime + Data[i].StopTime;
+
+					Data[i].OpeningDoorsEndTime = Data[i].ArrivalTime;
+					if (Data[i].OpenLeftDoors || Data[i].OpenRightDoors)
+					{
+						Data[i].OpeningDoorsEndTime += OpeningDoorsTime;
+					}
+					Data[i].ClosingDoorsStartTime = Data[i].OpeningDoorsEndTime + Data[i].StopTime;
+					Data[i].DepartureTime = Data[i].ClosingDoorsStartTime;
+					if (Data[i].OpenLeftDoors || Data[i].OpenRightDoors)
+					{
+						Data[i].DepartureTime += ClosingDoorsTime;
+					}
 
 					DeltaT = 0.0;
 					if (Data[i].Accelerate != 0.0)
@@ -225,7 +316,7 @@ namespace OpenBve
 			}
 
 			/// <summary>Check whether the travel plan of the train is valid.</summary>
-			private void CheckTravelData()
+			private void CheckTravelData(double InitializeTime)
 			{
 				bool Recalculation = false;
 
@@ -248,7 +339,7 @@ namespace OpenBve
 				// Recreate the operation plan of the train.
 				if (Recalculation)
 				{
-					SetupTravelData();
+					SetupTravelData(InitializeTime);
 				}
 			}
 		}

@@ -647,12 +647,12 @@ namespace OpenBve
 			{
 				Train.Initialize();
 
-                foreach (var Car in Train.Cars)
-                {
-                    double length = Train.Cars[0].Length;
-                    Car.Move(-length);
-                    Car.Move(length);
-                }
+				foreach (var Car in Train.Cars)
+				{
+					double length = Train.Cars[0].Length;
+					Car.Move(-length);
+					Car.Move(length);
+				}
 			}
 
 			// score

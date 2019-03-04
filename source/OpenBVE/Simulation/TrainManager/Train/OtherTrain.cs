@@ -1,4 +1,6 @@
-﻿namespace OpenBve
+﻿using OpenBveApi.Math;
+
+namespace OpenBve
 {
 	public static partial class TrainManager
 	{
@@ -34,6 +36,7 @@
 					Car.FrontBogie.ChangeSection(-1);
 					Car.RearBogie.ChangeSection(-1);
 				}
+				Sounds.StopAllSounds(this);
 			}
 
 			/// <summary>Call this method to update the train</summary>
@@ -53,14 +56,23 @@
 
 						// train is introduced
 						State = TrainState.Available;
-						foreach (var Car in Cars)
+						for (int i = 0; i < Cars.Length; i++)
 						{
-							if (Car.CarSections.Length != 0)
+							if (Cars[i].CarSections.Length != 0)
 							{
-								Car.ChangeCarSection(CarSectionType.Exterior);
+								Cars[i].ChangeCarSection(CarSectionType.Exterior);
 							}
-							Car.FrontBogie.ChangeSection(0);
-							Car.RearBogie.ChangeSection(0);
+							Cars[i].FrontBogie.ChangeSection(0);
+							Cars[i].RearBogie.ChangeSection(0);
+
+							if (Cars[i].Specs.IsMotorCar)
+							{
+								if (Cars[i].Sounds.Loop.Buffer != null)
+								{
+									Vector3 pos = Cars[i].Sounds.Loop.Position;
+									Cars[i].Sounds.Loop.Source = Sounds.PlaySound(Cars[i].Sounds.Loop.Buffer, 1.0, 1.0, pos, this, i, true);
+								}
+							}
 						}
 					}
 				}
@@ -94,6 +106,17 @@
 					//causing exessive acceleration
 					return;
 				}
+
+				// update station and doors
+				UpdateTrainDoors(this, TimeElapsed);
+
+				// Update Run and Motor sounds
+				foreach (var Car in Cars)
+				{
+					Car.UpdateRunSounds(TimeElapsed);
+					Car.UpdateMotorSounds(TimeElapsed);
+				}
+
 				// infrequent updates
 				InternalTimerTimeElapsed += TimeElapsed;
 				if (InternalTimerTimeElapsed > 10.0)
