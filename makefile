@@ -396,7 +396,7 @@ $(DEBUG_DIR)/$(OPEN_BVE_FILE) $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(OPEN_BVE_ROOT)/
 	/reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OPEN_BVE_API_OUT) /reference:$(ASSIMP_OUT) /reference:$(FORMATS_MSTS_OUT) /reference:$(FORMATS_DIRECTX_OUT) \
 	/reference:$(OUTPUT_DIR)/CSScriptLibrary.dll /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/SharpCompress.dll /reference:$(OUTPUT_DIR)/PIEHid32Net.dll \
 	/reference:System.Xml.Linq.dll /reference:System.Core.dll /reference:System.dll \
-	/win32icon:$(ICON) $(addprefix /resource:, $(OPEN_BVE_RESOURCE))
+	/win32icon:$(ICON) $(addprefix /resource:, $(OPEN_BVE_RESOURCE)) /resource:"assets/Cursors/Symbols/plus.png",OpenBve.plus.png  /resource:"assets/Cursors/Symbols/plus.png",OpenBve.minus.png /resource:"assets/Cursors/nk.png",OpenBve.nk.png
 	@echo $(COLOR_GREEN)Adding LBA Flag to executable $(COLOR_CYAN)$(OPEN_BVE_OUT)$(COLOR_END)
 	@mono $(LBAHEADER_OUT) ${OPEN_BVE_OUT} > /dev/null
 	@mono $(LBAHEADER_OUT) ${ROUTE_VIEWER_OUT} > /dev/null
