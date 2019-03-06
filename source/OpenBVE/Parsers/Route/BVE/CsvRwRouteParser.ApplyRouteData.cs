@@ -312,25 +312,31 @@ namespace OpenBve
 				{
 					if (i < Data.Blocks.Length - 1)
 					{
-						bool q = false;
 						for (int j = 0; j < Data.Blocks[i].Rails.Length; j++)
 						{
 							if (Data.Blocks[i].Rails[j].RailStart & Data.Blocks[i + 1].Rails.Length > j)
 							{
-								bool qx = Math.Sign(Data.Blocks[i].Rails[j].RailStartX) != Math.Sign(Data.Blocks[i + 1].Rails[j].RailEndX);
-								bool qy = Data.Blocks[i].Rails[j].RailStartY * Data.Blocks[i + 1].Rails[j].RailEndY <= 0.0;
-								if (qx & qy)
+								bool q = false;
+								for (int k = 0; k < Data.Blocks[i].Rails.Length; k++)
 								{
-									q = true;
-									break;
+									if (Data.Blocks[i].Rails[k].RailStart & Data.Blocks[i + 1].Rails.Length > k)
+									{
+										bool qx = Math.Sign(Data.Blocks[i].Rails[k].RailStartX - Data.Blocks[i].Rails[j].RailStartX) != Math.Sign(Data.Blocks[i + 1].Rails[k].RailEndX - Data.Blocks[i + 1].Rails[j].RailEndX);
+										bool qy = (Data.Blocks[i].Rails[k].RailStartY - Data.Blocks[i].Rails[j].RailStartY) * (Data.Blocks[i + 1].Rails[k].RailEndY - Data.Blocks[i + 1].Rails[j].RailEndY) <= 0.0;
+										if (qx & qy)
+										{
+											q = true;
+											break;
+										}
+									}
+								}
+								if (q)
+								{
+									int m = TrackManager.Tracks[j].Elements[n].Events.Length;
+									Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.Tracks[j].Elements[n].Events, m + 1);
+									TrackManager.Tracks[j].Elements[n].Events[m] = new TrackManager.PointSoundEvent(12.5);
 								}
 							}
-						}
-						if (q)
-						{
-							int m = TrackManager.Tracks[0].Elements[n].Events.Length;
-							Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.Tracks[0].Elements[n].Events, m + 1);
-							TrackManager.Tracks[0].Elements[n].Events[m] = new TrackManager.PointSoundEvent(12.5);
 						}
 					}
 				}
