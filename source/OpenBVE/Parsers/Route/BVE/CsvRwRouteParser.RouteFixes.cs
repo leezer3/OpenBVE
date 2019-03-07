@@ -107,6 +107,14 @@ namespace OpenBve
 					//B1649ﾃｼiﾄ・ﾄｺJﾃｼﾄ佚架・ｹﾃ嘉ｼj.csv
 					Expressions[1441].Text = ".curve 1000;20";
 					break;
+				case "BBB3E085320FDC847A36E80C34A6820EEE4E7A76F9FCDC2F411911B61E0CE222":
+				case "48B0870AEEA7D8779AFF77E06D0C43D01CDC6B1C2A2ED822055CFE84DAC2ABB0":
+				case "72108E9FBA951DEB47E18CFE11F336145E4E7C3DAA0BD0C2F3911B509254D13A":
+					//Amsterdam-Schiphol.rw
+					//Amsterdam-Antwerpen-v3.rw
+					//Amsterdam-Antwerpen (Thalys PBKA).rw
+					Data.IgnorePitchRoll = true;
+					break;
 			}
 		}
 	}
