@@ -512,7 +512,15 @@ namespace OpenBve {
 										else
 										{
 											brakeNotches = 8;
-											Interface.AddMessage(MessageType.Error, false, "NumberOfBrakeNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											if (trainBrakeType != BrakeSystemType.AutomaticAirBrake)
+											{
+												/*
+												 * NumberOfBrakeNotches is ignored when using the auto-air brake
+												 * Whilst this value is invalid, it doesn't actually get used so get
+												 * rid of the pointless error message it generates
+												 */
+												Interface.AddMessage(MessageType.Error, false, "NumberOfBrakeNotches is expected to be positive and non-zero at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											}											
 										}
 										break;
 									case 3:
