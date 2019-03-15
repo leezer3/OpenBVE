@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 using Path = OpenBveApi.Path;
 
@@ -408,6 +409,7 @@ namespace CarXmlConvertor
 
 		internal static void GenerateCarXML(ref TabbedList newLines, int i)
 		{
+			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 			newLines.Add("<Car>");
 			if (CarInfos[i].Length != 0.0)
 			{
@@ -521,6 +523,7 @@ namespace CarXmlConvertor
 		/// <summary>Generates a train.xml file using the values / assumptions contained within the train.dat file</summary>
 		internal static void GenerateDefaultXML()
 		{
+			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 			TabbedList newLines = new TabbedList();
 			newLines.Add("<Train>");
 			for (int i = 0; i < ConvertTrainDat.NumberOfCars; i++)
