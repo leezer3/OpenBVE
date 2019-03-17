@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Net.Mime;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Textures;
@@ -104,28 +105,41 @@ namespace OpenBve
 			DrawRectangle(null, new System.Drawing.Point((int)0, (int)0), new System.Drawing.Size((int)Renderer.ScreenWidth, (int)Renderer.ScreenHeight), null);
 			GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
 			// BACKGROUND IMAGE
-			int bkgHeight, bkgWidth;
+			int bkgHeight = Renderer.ScreenHeight, bkgWidth = Renderer.ScreenWidth;
 			int fontHeight = (int) Fonts.SmallFont.FontSize;
 			int logoBottom;
 			//			int		versionTop;
 			int halfWidth = Renderer.ScreenWidth / 2;
 			bool bkgLoaded = TextureLoadingBkg != null;
-			if (TextureLoadingBkg != null)
+			if (TextureLoadingBkg != null && Textures.LoadTexture(TextureLoadingBkg, OpenGlTextureWrapMode.ClampClamp))
 			{
-				// stretch the background image to fit at least one screen dimension
-				double ratio = (double) TextureLoadingBkg.Width/ (double) TextureLoadingBkg.Height;
-				if ((double) Renderer.ScreenWidth/ratio > Renderer.ScreenHeight) // if screen ratio is shorter than bkg...
+				if (TextureLoadingBkg.Width != Renderer.ScreenWidth && TextureLoadingBkg.Height != Renderer.ScreenHeight)
 				{
-					bkgHeight = Renderer.ScreenHeight; // set height to screen height
-					bkgWidth = (int) (Renderer.ScreenWidth*ratio); // and scale width proprtionally
+					// stretch the background image to fit at least one screen dimension
+					double ratio = (double) TextureLoadingBkg.Width/ (double) TextureLoadingBkg.Height;
+					if ((double) Renderer.ScreenWidth/ratio > Renderer.ScreenHeight) // if screen ratio is shorter than bkg...
+					{
+						bkgHeight = Renderer.ScreenHeight; // set height to screen height
+						bkgWidth = (int) (Renderer.ScreenWidth*ratio); // and scale width proprtionally
+					}
+					else // if screen ratio is wider than bkg...
+					{
+						bkgWidth = Renderer.ScreenWidth; // set width to screen width
+						bkgHeight = (int) (Renderer.ScreenHeight/ratio); // and scale height accordingly
+					}
 				}
-				else // if screen ratio is wider than bkg...
-				{
-					bkgWidth = Renderer.ScreenWidth; // set width to screen width
-					bkgHeight = (int) (Renderer.ScreenHeight/ratio); // and scale height accordingly
-				}
+				
+				
 				// draw the background image down from the top screen edge
-				DrawRectangle(TextureLoadingBkg, new Point((Renderer.ScreenWidth - bkgWidth)/2, 0), new Size(bkgWidth, bkgHeight), Color128.White);
+				try
+				{
+					DrawRectangle(TextureLoadingBkg, new Point((Renderer.ScreenWidth - bkgWidth)/2, 0), new Size(bkgWidth, bkgHeight), Color128.White);
+				}
+				catch
+				{
+					TextureLoadingBkg = null;
+				}
+				
 			}
 			// if the route has no custom loading image, add the openBVE logo
 			// (the route custom image is loaded in OldParsers/CsvRwRouteParser.cs)

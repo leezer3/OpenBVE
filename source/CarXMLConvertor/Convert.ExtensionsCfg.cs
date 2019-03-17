@@ -328,11 +328,11 @@ namespace CarXmlConvertor
 														case "reversed":
 															if (IsOdd)
 															{
-																CarInfos[n].FrontBogie.Reversed = b.Equals("true", StringComparison.OrdinalIgnoreCase);
+																CarInfos[CarIndex].FrontBogie.Reversed = b.Equals("true", StringComparison.OrdinalIgnoreCase);
 															}
 															else
 															{
-																CarInfos[n].RearBogie.Reversed = b.Equals("true", StringComparison.OrdinalIgnoreCase);
+																CarInfos[CarIndex].RearBogie.Reversed = b.Equals("true", StringComparison.OrdinalIgnoreCase);
 															}
 															break;
 													}
