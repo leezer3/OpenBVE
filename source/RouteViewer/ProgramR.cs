@@ -23,7 +23,7 @@ namespace OpenBve {
 	internal static class Program {
 
 		// system
-		internal static bool CurrentlyRunOnMono = false;
+		private static bool CurrentlyRunOnMono = false;
 		internal static FileSystem FileSystem = null;
 
 		internal static bool CpuReducedMode = false;
@@ -49,7 +49,7 @@ namespace OpenBve {
 		internal static GraphicsMode currentGraphicsMode;
 
 		// mouse
-		internal static int MouseButton;
+		private static int MouseButton;
 
 		/// <summary>The host API used by this program.</summary>
 		internal static Host CurrentHost = null;

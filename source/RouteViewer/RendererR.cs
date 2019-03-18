@@ -15,6 +15,7 @@ using OpenTK.Graphics.OpenGL;
 using Vector3 = OpenBveApi.Math.Vector3;
 using Vector2 = OpenBveApi.Math.Vector2;
 using OpenBveApi.Objects;
+using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 
 namespace OpenBve {
@@ -1205,20 +1206,20 @@ namespace OpenBve {
 							t.Append(", [-][-]");
 						}
 						switch (Game.Stations[Program.CurrentStation].StopMode) {
-							case Game.StationStopMode.AllStop:
+							case StationStopMode.AllStop:
 								t.Append(", Stop");
 								break;
-							case Game.StationStopMode.AllPass:
+							case StationStopMode.AllPass:
 								t.Append(", Pass");
 								break;
-							case Game.StationStopMode.PlayerStop:
+							case StationStopMode.PlayerStop:
 								t.Append(", Player stops - others pass");
 								break;
-							case Game.StationStopMode.PlayerPass:
+							case StationStopMode.PlayerPass:
 								t.Append(", Player passes - others stop");
 								break;
 						}
-						if (Game.Stations[Program.CurrentStation].StationType == Game.StationType.ChangeEnds) {
+						if (Game.Stations[Program.CurrentStation].Type == StationType.ChangeEnds) {
 							t.Append(", Change ends");
 						}
 						t.Append(", Ratio=").Append((100.0 * Game.Stations[Program.CurrentStation].PassengerRatio).ToString("0", Culture)).Append("%");

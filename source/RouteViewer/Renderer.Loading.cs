@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Net.Mime;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Textures;
