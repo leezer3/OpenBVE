@@ -82,7 +82,7 @@ namespace OpenBve {
 					foreach (Game.Station selectedStation in Game.Stations)
 					{
 						double stopPosition = -1;
-						int stopIdx = Game.GetStopIndex(s, Train.Cars.Length);
+						int stopIdx = Game.Stations[s].GetStopIndex(Train.Cars.Length);
 						if (selectedStation.Stops.Length != 0)
 						{
 							stopPosition = selectedStation.Stops[stopIdx].TrackPosition;

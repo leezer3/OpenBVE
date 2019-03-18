@@ -28,7 +28,7 @@ namespace OpenBve
 			if (Train.Station >= 0)
 			{
 				int i = Train.Station;
-				int n = Game.GetStopIndex(Train.Station, Train.Cars.Length);
+				int n = Game.Stations[Train.Station].GetStopIndex(Train.Cars.Length);
 				double tf, tb;
 				if (n >= 0)
 				{

@@ -46,7 +46,7 @@ namespace OpenBve
 				}
 			}
 			train.StationState = TrainStopState.Jumping;
-			int stopIndex = Game.GetStopIndex(stationIndex, train.Cars.Length);
+			int stopIndex = Game.Stations[stationIndex].GetStopIndex(train.Cars.Length);
 			if (stopIndex >= 0)
 			{
 				if (train == PlayerTrain)

@@ -498,7 +498,7 @@ namespace OpenBve
 				PlayerFirstStationIndex = os;
 			}
 			{
-				int s = Game.GetStopIndex(PlayerFirstStationIndex, TrainManager.PlayerTrain.Cars.Length);
+				int s = Game.Stations[PlayerFirstStationIndex].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
 				if (s >= 0)
 				{
 					PlayerFirstStationPosition = Game.Stations[PlayerFirstStationIndex].Stops[s].TrackPosition;
@@ -574,7 +574,7 @@ namespace OpenBve
 				if (Game.Stations[i].StopMode == StationStopMode.AllStop | Game.Stations[i].StopMode == StationStopMode.PlayerPass & Game.Stations[i].Stops.Length != 0)
 				{
 					OtherFirstStationIndex = i;
-					int s = Game.GetStopIndex(i, TrainManager.PlayerTrain.Cars.Length);
+					int s = Game.Stations[i].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
 					if (s >= 0)
 					{
 						OtherFirstStationPosition = Game.Stations[i].Stops[s].TrackPosition;

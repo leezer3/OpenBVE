@@ -199,19 +199,21 @@ namespace OpenBve {
 			internal double PassengerRatio;
 			internal int TimetableDaytimeTexture;
 			internal int TimetableNighttimeTexture;
+
+			internal int GetStopIndex(int Cars) {
+				int j = -1;
+				for (int i = Stops.Length - 1; i >= 0; i--) {
+					if (Cars <= Stops[i].Cars | Stops[i].Cars == 0) {
+						j = i;
+					}
+				}
+				if (j == -1) {
+					return Stops.Length - 1;
+				} else return j;
+			}
 		}
 		internal static Station[] Stations = new Station[] { };
-		internal static int GetStopIndex(int StationIndex, int Cars) {
-			int j = -1;
-			for (int i = Stations[StationIndex].Stops.Length - 1; i >= 0; i--) {
-				if (Cars <= Stations[StationIndex].Stops[i].Cars | Stations[StationIndex].Stops[i].Cars == 0) {
-					j = i;
-				}
-			}
-			if (j == -1) {
-				return Stations[StationIndex].Stops.Length - 1;
-			} else return j;
-		}
+		
 
 		// ================================
 

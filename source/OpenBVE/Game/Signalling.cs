@@ -238,7 +238,7 @@ namespace OpenBve
 					{
 						if (train.Station == d)
 						{
-							int c = GetStopIndex(d, train.Cars.Length);
+							int c = Game.Stations[d].GetStopIndex(train.Cars.Length);
 							if (c >= 0)
 							{
 								double p0 = train.Cars[0].FrontAxle.Follower.TrackPosition - train.Cars[0].FrontAxle.Position + 0.5 * train.Cars[0].Length;
