@@ -425,6 +425,24 @@ namespace CarXmlConvertor
 			{
 				newLines.Add("<MotorCar>True</MotorCar>");
 				newLines.Add("<Mass>" + ConvertTrainDat.MotorCarMass + "</Mass>");
+				switch (ConvertTrainDat.ReadhesionDeviceType)
+				{
+					case 0:
+						newLines.Add("<ReadhesionDevice>TypeA</ReadhesionDevice>");
+						break;
+					case 1:
+						newLines.Add("<ReadhesionDevice>TypeB</ReadhesionDevice>");
+						break;
+					case 2:
+						newLines.Add("<ReadhesionDevice>TypeC</ReadhesionDevice>");
+						break;
+					case 3:
+						newLines.Add("<ReadhesionDevice>TypeD</ReadhesionDevice>");
+						break;
+					default:
+						newLines.Add("<ReadhesionDevice>NotFitted</ReadhesionDevice>");
+						break;
+				}
 			}
 			else
 			{

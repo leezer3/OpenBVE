@@ -27,6 +27,7 @@ namespace CarXmlConvertor
 		internal static bool[] MotorCars;
 		internal static int DriverCar = 0;
 		internal static int BrakeType = 0;
+		internal static int ReadhesionDeviceType = 0;
 		private static MainForm mainForm;
 		internal static void Process(MainForm form)
 		{
@@ -182,6 +183,21 @@ namespace CarXmlConvertor
 								}
 							} i++; n++;
 						} i--; break;
+					case "#device":
+						i++;
+						while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal))
+						{
+							double a; if (NumberFormats.TryParseDoubleVb6(Lines[i], out a))
+							{
+								switch (n)
+								{
+									case 5: ReadhesionDeviceType = (int) a; break;
+								}
+							}
+							i++; n++;
+						}
+						i--; 
+						break;
 					default:
 					{
 						i++;
