@@ -156,7 +156,9 @@ namespace OpenBve.Parsers.Train
 						}
 						break;
 					case "reversed":
-						if (c.InnerText.ToLowerInvariant() == "1" || c.InnerText.ToLowerInvariant() == "true")
+						int n;
+						NumberFormats.TryParseIntVb6(Node.InnerText, out n);
+						if (n == 1 || c.InnerText.ToLowerInvariant() == "true")
 						{
 							CarObjectsReversed[Car] = true;
 						}
@@ -188,7 +190,12 @@ namespace OpenBve.Parsers.Train
 										}
 										break;
 									case "reversed":
-										BogieObjectsReversed[Car * 2] = true;
+										int nn;
+										NumberFormats.TryParseIntVb6(Node.InnerText, out nn);
+										if (Node.InnerText.ToLowerInvariant() == "true" || nn == 1)
+										{
+											BogieObjectsReversed[Car * 2] = true;
+										}
 										break;
 								}
 							}
@@ -221,7 +228,12 @@ namespace OpenBve.Parsers.Train
 										}
 										break;
 									case "reversed":
-										BogieObjectsReversed[Car * 2 + 1] = true;
+										int nn;
+										NumberFormats.TryParseIntVb6(Node.InnerText, out nn);
+										if (Node.InnerText.ToLowerInvariant() == "true" || nn == 1)
+										{
+											BogieObjectsReversed[Car * 2 + 1] = true;
+										}
 										break;
 								}
 							}
@@ -256,19 +268,17 @@ namespace OpenBve.Parsers.Train
 							break;
 						}
 						Train.Cars[Car].HasInteriorView = true;
-						if (Car != Train.DriverCar)
+						Train.Cars[Car].CarSections = new TrainManager.CarSection[1];
+						Train.Cars[Car].CarSections[0] = new TrainManager.CarSection
 						{
-							Train.Cars[Car].CarSections = new TrainManager.CarSection[1];
-							Train.Cars[Car].CarSections[0] = new TrainManager.CarSection
-							{
-								Groups = new TrainManager.ElementsGroup[1]
-							};
-							Train.Cars[Car].CarSections[0].Groups[0] = new TrainManager.ElementsGroup
-							{
-								Elements = new ObjectManager.AnimatedObject[] { },
-								Overlay = true
-							};
-						}
+							Groups = new TrainManager.ElementsGroup[1]
+						};
+						Train.Cars[Car].CarSections[0].Groups[0] = new TrainManager.ElementsGroup
+						{
+							Elements = new ObjectManager.AnimatedObject[] { },
+							Overlay = true
+						};
+						
 						string cv = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
 						if (!System.IO.File.Exists(cv))
 						{
