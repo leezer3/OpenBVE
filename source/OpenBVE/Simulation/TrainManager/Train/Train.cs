@@ -22,14 +22,10 @@ namespace OpenBve
 			internal Handles Handles;
 			internal Car[] Cars;
 			internal Coupler[] Couplers;
-			internal int DriverCar;
 			internal TrainSpecs Specs;
 			internal TrainPassengers Passengers;
 			internal int LastStation;
 			internal int Station;
-
-			internal int Destination;
-
 			internal TrainStopState StationState;
 			internal double StationArrivalTime;
 			internal double StationDepartureTime;

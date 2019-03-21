@@ -25,7 +25,6 @@ namespace OpenBve
 			internal Door[] Doors;
 			/// <summary>The car brake for this car</summary>
 			internal CarBrake CarBrake;
-			internal Vector3 Up;
 			/// <summary>The car sections (objects) attached to the car</summary>
 			internal CarSection[] CarSections;
 			/// <summary>The index of the current car section</summary>

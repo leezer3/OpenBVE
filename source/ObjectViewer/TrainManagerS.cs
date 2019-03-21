@@ -156,10 +156,7 @@ namespace OpenBve {
 			internal Axle RearAxle;
 			internal double FrontAxlePosition;
 			internal double RearAxlePosition;
-			internal Vector3 Up;
 			internal int CurrentSection;
-			internal double DriverYaw;
-			internal double DriverPitch;
 			internal CarSpecs Specs;
 			internal bool CurrentlyVisible;
 			internal bool Derailed;
@@ -297,8 +294,6 @@ namespace OpenBve {
 		}
 		internal class Train : AbstractTrain {
 			internal Car[] Cars;
-			internal int Destination;
-			internal int DriverCar;
 			internal TrainSpecs Specs;
 			internal int CurrentSectionIndex;
 		}

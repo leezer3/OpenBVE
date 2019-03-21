@@ -252,14 +252,10 @@ namespace OpenBve {
 			internal Axle RearAxle;
 			internal double FrontAxlePosition;
 			internal double RearAxlePosition;
-			internal Vector3 Up;
 			internal Section[] Sections;
 			internal int CurrentSection;
-			internal double DriverYaw;
-			internal double DriverPitch;
 			internal CarSpecs Specs;
 			internal CarSounds Sounds;
-			internal bool CurrentlyVisible;
 			internal bool Derailed;
 			internal bool Topples;
 			internal CarBrightness Brightness;
@@ -388,17 +384,8 @@ namespace OpenBve {
 			internal AirBrakeHandle Handle;
 		}
 		internal struct TrainSpecs {
-//			internal double TotalMass;
 			internal ReverserHandle CurrentReverser;
 			internal double CurrentAverageSpeed;
-//			internal double CurrentAverageAcceleration;
-//			internal double CurrentAverageJerk;
-//			internal double CurrentAirPressure;
-//			internal double CurrentAirDensity;
-//			internal double CurrentAirTemperature;
-//			internal double CurrentElevation;
-//			internal bool SingleHandle;
-//			internal int PowerNotchReduceSteps;
 			internal int MaximumPowerNotch;
 			internal PowerHandle CurrentPowerNotch;
 			internal int MaximumBrakeNotch;
@@ -410,13 +397,6 @@ namespace OpenBve {
 			internal bool CurrentConstSpeed;
 			internal TrainSafety Safety;
 			internal TrainAirBrake AirBrake;
-//			internal double DelayPowerStart;
-//			internal double DelayPowerStop;
-//			internal double DelayBrakeStart;
-//			internal double DelayBrakeEnd;
-//			internal double DelayServiceBrake;
-//			internal double DelayEmergencyBrake;
-//			internal PassAlarmType PassAlarm;
 		}
 		// train
 		internal enum TrainStopState {
@@ -424,8 +404,6 @@ namespace OpenBve {
 		}
 		internal class Train : AbstractTrain {
 			internal Car[] Cars;
-			internal int Destination;
-			internal int DriverCar;
 			internal TrainSpecs Specs;
 			internal int CurrentSectionIndex;
 		}
