@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
@@ -288,7 +289,7 @@ namespace OpenBve
 				{
 					Array.Resize(ref TrainManager.Trains, 1);
 					TrainManager.Trains[0] = new TrainManager.Train();
-					TrainManager.Trains[0].State = TrainManager.TrainState.Available;
+					TrainManager.Trains[0].State = TrainState.Available;
 					Array.Resize(ref TrainManager.Trains[0].Cars, (int)numericUpDownCars.Value);
 					for (int i = 0; i < TrainManager.Trains[0].Cars.Length; i++)
 					{

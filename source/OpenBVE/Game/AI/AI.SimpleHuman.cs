@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Runtime;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
@@ -620,7 +621,7 @@ namespace OpenBve
 					// trains ahead
 					for (int i = 0; i < TrainManager.Trains.Length; i++)
 					{
-						if (TrainManager.Trains[i] != Train && TrainManager.Trains[i].State == TrainManager.TrainState.Available)
+						if (TrainManager.Trains[i] != Train && TrainManager.Trains[i].State == TrainState.Available)
 						{
 							double pos =
 								TrainManager.Trains[i].Cars[TrainManager.Trains[i].Cars.Length - 1].RearAxle.Follower.TrackPosition -

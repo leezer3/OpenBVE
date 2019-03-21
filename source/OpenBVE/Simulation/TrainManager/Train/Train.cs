@@ -20,7 +20,6 @@ namespace OpenBve
 			internal PluginManager.Plugin Plugin;
 
 			internal Handles Handles;
-			internal TrainState State;
 			internal Car[] Cars;
 			internal Coupler[] Couplers;
 			internal int DriverCar;

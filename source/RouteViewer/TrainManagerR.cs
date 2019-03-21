@@ -247,10 +247,7 @@ namespace OpenBve {
 			internal double FlangePitch;
 			internal double SpringPlayedAngle;
 		}
-		internal struct Car {
-			internal double Width;
-			internal double Height;
-			internal double Length;
+		internal class Car : AbstractCar {
 			internal Axle FrontAxle;
 			internal Axle RearAxle;
 			internal double FrontAxlePosition;
@@ -258,9 +255,6 @@ namespace OpenBve {
 			internal Vector3 Up;
 			internal Section[] Sections;
 			internal int CurrentSection;
-			internal double DriverX;
-			internal double DriverY;
-			internal double DriverZ;
 			internal double DriverYaw;
 			internal double DriverPitch;
 			internal CarSpecs Specs;
@@ -272,26 +266,21 @@ namespace OpenBve {
 
 			internal void CreateWorldCoordinates(Vector3 Car, out Vector3 Position, out Vector3 Direction)
 			{
-				Direction.X = FrontAxle.Follower.WorldPosition.X - RearAxle.Follower.WorldPosition.X;
-				Direction.Y = FrontAxle.Follower.WorldPosition.Y - RearAxle.Follower.WorldPosition.Y;
-				Direction.Z = FrontAxle.Follower.WorldPosition.Z - RearAxle.Follower.WorldPosition.Z;
-				double t = Direction.X * Direction.X + Direction.Y * Direction.Y + Direction.Z * Direction.Z;
+				Direction = FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition;
+				double t = Direction.Norm();
 				if (t != 0.0)
 				{
 					t = 1.0 / Math.Sqrt(t);
 					Direction.X *= t; Direction.Y *= t; Direction.Z *= t;
-					double ux = Up.X;
-					double uy = Up.Y;
-					double uz = Up.Z;
-					double sx = Direction.Z * uy - Direction.Y * uz;
-					double sy = Direction.X * uz - Direction.Z * ux;
-					double sz = Direction.Y * ux - Direction.X * uy;
+					double sx = Direction.Z * Up.Y - Direction.Y * Up.Z;
+					double sy = Direction.X * Up.Z - Direction.Z * Up.X;
+					double sz = Direction.Y * Up.X - Direction.X * Up.Y;
 					double rx = 0.5 * (FrontAxle.Follower.WorldPosition.X + RearAxle.Follower.WorldPosition.X);
 					double ry = 0.5 * (FrontAxle.Follower.WorldPosition.Y + RearAxle.Follower.WorldPosition.Y);
 					double rz = 0.5 * (FrontAxle.Follower.WorldPosition.Z + RearAxle.Follower.WorldPosition.Z);
-					Position.X = rx + sx * Car.X + ux * Car.Y + Direction.X * Car.Z;
-					Position.Y = ry + sy * Car.X + uy * Car.Y + Direction.Y * Car.Z;
-					Position.Z = rz + sz * Car.X + uz * Car.Y + Direction.Z * Car.Z;
+					Position.X = rx + sx * Car.X + Up.X * Car.Y + Direction.X * Car.Z;
+					Position.Y = ry + sy * Car.X + Up.Y * Car.Y + Direction.Y * Car.Z;
+					Position.Z = rz + sz * Car.X + Up.Z * Car.Y + Direction.Z * Car.Z;
 				}
 				else
 				{
@@ -430,38 +419,15 @@ namespace OpenBve {
 //			internal PassAlarmType PassAlarm;
 		}
 		// train
-		internal enum TrainState {
-			Pending = 0, Available = 1, Disposed = 2, Bogus = 3
-		}
 		internal enum TrainStopState {
 			Pending = 0, Boarding = 1, Completed = 2
 		}
 		internal class Train : AbstractTrain {
-			//internal int TrainIndex;
-			internal TrainState State;
-			//internal bool Disposed;
-			//internal bool IsBogusTrain;
 			internal Car[] Cars;
 			internal int Destination;
-			//internal Coupler[] Couplers;
 			internal int DriverCar;
 			internal TrainSpecs Specs;
-			//internal TrainPassengers Passengers;
-			//internal int Station;
-			//internal bool StationFrontCar;
-			//internal bool StationRearCar;
-			//internal TrainStopState StationState;
-			//internal double StationArrivalTime;
-			//internal double StationDepartureTime;
-			//internal bool StationDepartureSoundPlayed;
-			//internal bool StationAdjust;
-			//internal double StationStopDifference;
-			//internal double[] RouteLimits;
-			//internal double CurrentRouteLimit;
-			//internal double CurrentSectionLimit;
 			internal int CurrentSectionIndex;
-			//internal double PretrainAheadTimetable;
-			//internal double InternalTimerTimeElapsed;
 		}
 
 #pragma warning restore 0649
