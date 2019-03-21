@@ -1926,7 +1926,7 @@ namespace OpenBve
             {
                 case ".csv":
                 case ".b3d":
-                    Result = CsvB3dObjectParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
+                    Result = CsvB3dObjectParser.ReadObject(FileName, Encoding);
                     break;
                 case ".x":
 	                if (Interface.CurrentOptions.CurrentXParser > 0)
@@ -1958,7 +1958,7 @@ namespace OpenBve
                     Result = AnimatedObjectParser.ReadObject(FileName, Encoding);
                     break;
                 case ".l3dobj":
-                    Result = Ls3DObjectParser.ReadObject(FileName, Encoding, Rotation);
+                    Result = Ls3DObjectParser.ReadObject(FileName, Rotation);
                     break;
                 case ".l3dgrp":
                     Result = Ls3DGrpParser.ReadObject(FileName, Encoding, Rotation);
@@ -2042,7 +2042,7 @@ namespace OpenBve
             {
                 case ".csv":
                 case ".b3d":
-                    Result = CsvB3dObjectParser.ReadObject(FileName, Encoding, ForceTextureRepeatX, ForceTextureRepeatY);
+                    Result = CsvB3dObjectParser.ReadObject(FileName, Encoding);
                     break;
                 case ".x":
 	                if (Interface.CurrentOptions.CurrentXParser > 0)
@@ -2070,7 +2070,7 @@ namespace OpenBve
 	                }
                     break;
                 case ".l3dobj":
-                    Result = Ls3DObjectParser.ReadObject(FileName, Encoding, new Vector3());
+                    Result = Ls3DObjectParser.ReadObject(FileName, new Vector3());
                     if (Result == null)
                     {
                         return null;

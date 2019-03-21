@@ -39,7 +39,7 @@ namespace OpenBve {
 			// supported floating point format
 			if (Data[8] == 116 & Data[9] == 120 & Data[10] == 116 & Data[11] == 32) {
 				// textual flavor
-				return LoadTextualX(FileName, System.IO.File.ReadAllText(FileName), Encoding);
+				return LoadTextualX(FileName, System.IO.File.ReadAllText(FileName));
 			} else if (Data[8] == 98 & Data[9] == 105 & Data[10] == 110 & Data[11] == 32) {
 				// binary flavor
 				return LoadBinaryX(FileName, Data, 16, FloatingPointSize);
@@ -50,7 +50,7 @@ namespace OpenBve {
 					#endif
 					byte[] Uncompressed = Decompress(Data);
 					string Text = Encoding.GetString(Uncompressed);
-					return LoadTextualX(FileName, Text, Encoding);
+					return LoadTextualX(FileName, Text);
 					#if !DEBUG
 				} catch (Exception ex) {
 					Interface.AddMessage(MessageType.Error, false, "An unexpected error occured (" + ex.Message + ") while attempting to decompress the binary X object file encountered in " + FileName);
@@ -199,7 +199,7 @@ namespace OpenBve {
 		// ================================
 
 		// load textual x
-		private static ObjectManager.StaticObject LoadTextualX(string FileName, string Text, Encoding Encoding) {
+		private static ObjectManager.StaticObject LoadTextualX(string FileName, string Text) {
 			// load
 			string[] Lines = Text.Replace("\u000D\u000A", "\u2028").Split(new char[] { '\u000A', '\u000C', '\u000D', '\u0085', '\u2028', '\u2029' }, StringSplitOptions.None);
 			AlternateStructure = false;

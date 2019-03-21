@@ -20,10 +20,9 @@ namespace OpenBve
     {
 	    /// <summary>Loads a Loksim3D object from a file.</summary>
 	    /// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
-	    /// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
 	    /// <param name="Rotation">A three-dimemsional vector describing the rotation to be applied</param>
 	    /// <returns>The object loaded.</returns>
-	    internal static ObjectManager.StaticObject ReadObject(string FileName, Encoding Encoding, Vector3 Rotation)
+	    internal static ObjectManager.StaticObject ReadObject(string FileName, Vector3 Rotation)
         {
 	        string BaseDir = System.IO.Path.GetDirectoryName(FileName);
 			XmlDocument currentXML = new XmlDocument();

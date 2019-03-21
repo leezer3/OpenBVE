@@ -1685,7 +1685,7 @@ namespace OpenBve {
 						Result = AnimatedObjectParser.ReadObject(FileName, Encoding);
 						break;
 					case ".l3dobj":
-						Result = Ls3DObjectParser.ReadObject(FileName, Encoding, new Vector3());
+						Result = Ls3DObjectParser.ReadObject(FileName, new Vector3());
 						break;
 					case ".l3dgrp":
 						Result = Ls3DGrpParser.ReadObject(FileName, Encoding, new Vector3());
