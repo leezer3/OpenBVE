@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using OpenBveApi;
@@ -10,10 +11,12 @@ namespace OpenBve
 {
 	internal static class ExtensionsCfgParser
 	{
-		internal static void ParseExtensionsConfig(string filePath, Encoding encoding, out UnifiedObject[] carObjects, out UnifiedObject[] bogieObjects, out TrainManager.Train train, bool loadObjects)
+		internal static void ParseExtensionsConfig(string filePath, Encoding encoding, out UnifiedObject[] carObjects, out UnifiedObject[] bogieObjects, out double[] axleLocations, out TrainManager.Train train, bool loadObjects)
 		{
+			CultureInfo Culture = CultureInfo.InvariantCulture;
 			carObjects = new UnifiedObject[] { };
 			bogieObjects = new UnifiedObject[] { };
+			axleLocations = new double[] { };
 			train = new TrainManager.Train();
 
 			if (!System.IO.File.Exists(filePath))
@@ -26,6 +29,7 @@ namespace OpenBve
 			bool[] bogieObjectsReversed = new bool[train.Cars.Length * 2];
 			bool[] carsDefined = new bool[train.Cars.Length];
 			bool[] bogiesDefined = new bool[train.Cars.Length * 2];
+			axleLocations = new double[train.Cars.Length * 2];
 
 			string trainPath = System.IO.Path.GetDirectoryName(filePath);
 			System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
@@ -163,6 +167,7 @@ namespace OpenBve
 											Array.Resize(ref bogieObjectsReversed, (n + 1) * 2);
 											Array.Resize(ref carsDefined, n + 1);
 											Array.Resize(ref bogiesDefined, (n + 1) * 2);
+											Array.Resize(ref axleLocations, (n + 1) * 2);
 										}
 										if (carsDefined[n])
 										{
@@ -231,7 +236,25 @@ namespace OpenBve
 															carObjectsReversed[n] = b.Equals("true", StringComparison.OrdinalIgnoreCase);
 															break;
 														case "axles":
-															Interface.AddMessage(MessageType.Information, false, "Axle declaration for car " + n + " will be ignored whilst viewing an extensions.cfg in file " + filePath);
+															int k = b.IndexOf(',');
+															if (k >= 0) {
+																string c = b.Substring(0, k).TrimEnd();
+																string d = b.Substring(k + 1).TrimStart();
+																double rear, front;
+																if (!double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out rear)) {
+																	Interface.AddMessage(MessageType.Error, false, "Rear is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + filePath);
+																} else if (!double.TryParse(d, System.Globalization.NumberStyles.Float, Culture, out front)) {
+																	Interface.AddMessage(MessageType.Error, false, "Front is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + filePath);
+																} else if (rear >= front) {
+																	Interface.AddMessage(MessageType.Error, false, "Rear is expected to be less than Front in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + filePath);
+																} else {
+																	axleLocations[n] = rear;
+																	axleLocations[n + 1] = front;
+
+																}
+															} else {
+																Interface.AddMessage(MessageType.Error, false, "An argument-separating comma is expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + filePath);
+															}
 															break;
 														default:
 															Interface.AddMessage(MessageType.Warning, false, "Unsupported key-value pair " + a + " encountered at line " + (i + 1).ToString(culture) + " in file " + filePath);
@@ -333,6 +356,9 @@ namespace OpenBve
 														case "reversed":
 															bogieObjectsReversed[n] = b.Equals("true", StringComparison.OrdinalIgnoreCase);
 															break;
+														case "axles":
+															//Axles aren't used in bogie positioning, just in rotation
+															break;
 														default:
 															Interface.AddMessage(MessageType.Warning, false, "Unsupported key-value pair " + a + " encountered at line " + (i + 1).ToString(culture) + " in file " + filePath);
 															break;
@@ -381,7 +407,7 @@ namespace OpenBve
 									 *
 									 * Try again with ASCII instead
 									 */
-									ParseExtensionsConfig(filePath, Encoding.GetEncoding(1252), out carObjects, out bogieObjects, out train, loadObjects);
+									ParseExtensionsConfig(filePath, Encoding.GetEncoding(1252), out carObjects, out bogieObjects, out axleLocations, out train, loadObjects);
 									return;
 								}
 								Interface.AddMessage(MessageType.Error, false, "Invalid statement " + lines[i] + " encountered at line " + (i + 1).ToString(culture) + " in file " + filePath);
