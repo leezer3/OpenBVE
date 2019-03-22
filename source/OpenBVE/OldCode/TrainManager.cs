@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Xml.Linq;
 using OpenBve.Parsers.Panel;
 using OpenBveApi.Interface;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
@@ -547,7 +548,7 @@ namespace OpenBve
 			//for (int i = 0; i < Trains.Length; i++) {
 			System.Threading.Tasks.Parallel.For(0, Trains.Length, i =>
 			{
-				if (Trains[i].State != TrainState.Disposed & Trains[i].State != TrainManager.TrainState.Bogus)
+				if (Trains[i].State != TrainState.Disposed & Trains[i].State != TrainState.Bogus)
 				{
 					for (int j = 0; j < Trains[i].Cars.Length; j++)
 					{

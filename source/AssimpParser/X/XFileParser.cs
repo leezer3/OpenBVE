@@ -227,9 +227,11 @@ namespace AssimpNET.X
 				byte[] blockBytes;
 				while (P + 3 < End)
 				{
+#pragma warning disable CS0219
 					// Read compressed block size after decompression
 					ushort uncompressedBlockSize = BitConverter.ToUInt16(Buffer, P);
 					P += 2;
+#pragma warning restore CS0219
 
 					// Read compressed block size
 					ushort compressedBlockSize = BitConverter.ToUInt16(Buffer, P);

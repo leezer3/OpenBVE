@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interface;
+using OpenBveApi.Trains;
 
 namespace OpenBve {
 	internal static class PluginManager {
@@ -82,7 +83,7 @@ namespace OpenBve {
 					foreach (Game.Station selectedStation in Game.Stations)
 					{
 						double stopPosition = -1;
-						int stopIdx = Game.GetStopIndex(s, Train.Cars.Length);
+						int stopIdx = Game.Stations[s].GetStopIndex(Train.Cars.Length);
 						if (selectedStation.Stops.Length != 0)
 						{
 							stopPosition = selectedStation.Stops[stopIdx].TrackPosition;
@@ -112,7 +113,7 @@ namespace OpenBve {
 				{
 					for (int i = 0; i < TrainManager.Trains.Length; i++)
 					{
-						if (TrainManager.Trains[i] != this.Train & TrainManager.Trains[i].State == TrainManager.TrainState.Available & Train.Cars.Length > 0)
+						if (TrainManager.Trains[i] != this.Train & TrainManager.Trains[i].State == TrainState.Available & Train.Cars.Length > 0)
 						{
 							int c = TrainManager.Trains[i].Cars.Length - 1;
 							double z = TrainManager.Trains[i].Cars[c].RearAxle.Follower.TrackPosition - TrainManager.Trains[i].Cars[c].RearAxle.Position - 0.5 * TrainManager.Trains[i].Cars[c].Length;

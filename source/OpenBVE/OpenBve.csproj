@@ -316,7 +316,6 @@
     <Compile Include="Simulation\TrainManager\Train\Train.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Handles.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Specs.cs" />
-    <Compile Include="Simulation\TrainManager\Train\Train.States.cs" />
     <Compile Include="Simulation\World\BackgroundManager.cs" />
     <Compile Include="System\Cursor.cs" />
     <Compile Include="System\Functions\Bve5Shared.cs" />

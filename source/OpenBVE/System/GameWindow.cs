@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interface;
+using OpenBveApi.Trains;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Input;
@@ -348,7 +349,7 @@ namespace OpenBve
 					Interface.CurrentControls = Interface.CurrentControls.Concat(AddControls).ToArray();
 					foreach (var Train in TrainManager.Trains)
 					{
-						if (Train.State != TrainManager.TrainState.Bogus)
+						if (Train.State != TrainState.Bogus)
 						{
 							if (Train == TrainManager.PlayerTrain)
 							{
@@ -377,7 +378,7 @@ namespace OpenBve
 			}
 			for (int i = 0; i < TrainManager.Trains.Length; i++)
 			{
-				if (TrainManager.Trains[i].State != TrainManager.TrainState.Bogus)
+				if (TrainManager.Trains[i].State != TrainState.Bogus)
 				{
 					PluginManager.UnloadPlugin(TrainManager.Trains[i]);
 				}
@@ -498,7 +499,7 @@ namespace OpenBve
 				PlayerFirstStationIndex = os;
 			}
 			{
-				int s = Game.GetStopIndex(PlayerFirstStationIndex, TrainManager.PlayerTrain.Cars.Length);
+				int s = Game.Stations[PlayerFirstStationIndex].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
 				if (s >= 0)
 				{
 					PlayerFirstStationPosition = Game.Stations[PlayerFirstStationIndex].Stops[s].TrackPosition;
@@ -574,7 +575,7 @@ namespace OpenBve
 				if (Game.Stations[i].StopMode == StationStopMode.AllStop | Game.Stations[i].StopMode == StationStopMode.PlayerPass & Game.Stations[i].Stops.Length != 0)
 				{
 					OtherFirstStationIndex = i;
-					int s = Game.GetStopIndex(i, TrainManager.PlayerTrain.Cars.Length);
+					int s = Game.Stations[i].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
 					if (s >= 0)
 					{
 						OtherFirstStationPosition = Game.Stations[i].Stops[s].TrackPosition;
@@ -686,7 +687,7 @@ namespace OpenBve
 				{
 					p = PlayerFirstStationPosition;
 				}
-				else if (TrainManager.Trains[i].State == TrainManager.TrainState.Bogus)
+				else if (TrainManager.Trains[i].State == TrainState.Bogus)
 				{
 					p = Game.BogusPretrainInstructions[0].TrackPosition;
 					TrainManager.Trains[i].AI = new Game.BogusPretrainAI(TrainManager.Trains[i]);

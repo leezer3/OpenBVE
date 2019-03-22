@@ -2,20 +2,15 @@ using System;
 using OpenBve.BrakeSystems;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
 	public static partial class TrainManager
 	{
 		/// <summary>The base class containing the properties of a train car</summary>
-		internal partial class Car
+		internal partial class Car : AbstractCar
 		{
-			/// <summary>Width in meters</summary>
-			internal double Width;
-			/// <summary>Height in meters</summary>
-			internal double Height;
-			/// <summary>Length in meters</summary>
-			internal double Length;
 			/// <summary>Front axle about which the car pivots</summary>
 			internal Axle FrontAxle;
 			/// <summary>Rear axle about which the car pivots</summary>
@@ -30,7 +25,6 @@ namespace OpenBve
 			internal Door[] Doors;
 			/// <summary>The car brake for this car</summary>
 			internal CarBrake CarBrake;
-			internal Vector3 Up;
 			/// <summary>The car sections (objects) attached to the car</summary>
 			internal CarSection[] CarSections;
 			/// <summary>The index of the current car section</summary>

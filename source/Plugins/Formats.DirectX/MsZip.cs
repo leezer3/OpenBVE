@@ -20,9 +20,11 @@ namespace OpenBve.Formats.DirectX
             // Skip Header
             p += 16;
 
-            // Read file size after decompression excluding header
-            uint uncompressedFinalSize = BitConverter.ToUInt32(Data, p) - 16;
-            p += 4;
+#pragma warning disable CS0219
+			// Read file size after decompression excluding header
+			uint uncompressedFinalSize = BitConverter.ToUInt32(Data, p) - 16;
+			p += 4;
+#pragma warning restore CS0219
 
             // Preparing for decompression
             MemoryStream inputStream = new MemoryStream(Data);

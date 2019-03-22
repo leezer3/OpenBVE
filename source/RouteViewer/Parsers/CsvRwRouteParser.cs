@@ -4126,6 +4126,7 @@ namespace OpenBve {
 									{
 										CurrentStation++;
 										Array.Resize<Game.Station>(ref Game.Stations, CurrentStation + 1);
+										Game.Stations[CurrentStation] = new Game.Station();
 										Game.Stations[CurrentStation].Name = string.Empty;
 										Game.Stations[CurrentStation].StopMode = StationStopMode.AllStop;
 										Game.Stations[CurrentStation].Type = StationType.Normal;
