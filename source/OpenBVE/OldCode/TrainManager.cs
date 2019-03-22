@@ -16,8 +16,8 @@ namespace OpenBve
 		internal static Train[] Trains = new Train[] { };
 		/// <summary>A reference to the train of the Trains element that corresponds to the player's train.</summary>
 		internal static Train PlayerTrain = null;
-		/// <summary>The list of trains available on other tracks in the simulation.</summary>
-		internal static OtherTrain[] OtherTrains = new OtherTrain[] { };
+		/// <summary>The list of TrackFollowingObject available on other tracks in the simulation.</summary>
+		internal static TrackFollowingObject[] TFOs = new TrackFollowingObject[] { };
 
 		/// <summary>Attempts to load and parse the current train's panel configuration file.</summary>
 		/// <param name="TrainPath">The absolute on-disk path to the train folder.</param>
@@ -212,7 +212,7 @@ namespace OpenBve
 				Trains[i].UpdateObjects(TimeElapsed, ForceUpdate);
 			}
 
-			foreach (var Train in OtherTrains)
+			foreach (var Train in TFOs)
 			{
 				Train.UpdateObjects(TimeElapsed, ForceUpdate);
 			}
@@ -232,7 +232,7 @@ namespace OpenBve
 				Trains[i].Update(TimeElapsed);
 			}
 
-			foreach (var Train in OtherTrains)
+			foreach (var Train in TFOs)
 			{
 				Train.Update(TimeElapsed);
 			}
@@ -569,11 +569,11 @@ namespace OpenBve
 				}
 			});
 
-			System.Threading.Tasks.Parallel.For(0, OtherTrains.Length, i =>
+			System.Threading.Tasks.Parallel.For(0, TFOs.Length, i =>
 			{
-				if (OtherTrains[i].State != TrainState.Disposed & OtherTrains[i].State != TrainManager.TrainState.Bogus)
+				if (TFOs[i].State != TrainState.Disposed & TFOs[i].State != TrainManager.TrainState.Bogus)
 				{
-					foreach (var Car in OtherTrains[i].Cars)
+					foreach (var Car in TFOs[i].Cars)
 					{
 						Car.FrontAxle.Follower.UpdateWorldCoordinates(true);
 						Car.FrontBogie.FrontAxle.Follower.UpdateWorldCoordinates(true);

@@ -153,13 +153,13 @@ namespace OpenBve
 			}
 		}
 
-		internal static void JumpOtherTrains()
+		internal static void JumpTFO()
 		{
-			foreach (var Train in OtherTrains)
+			foreach (var Train in TFOs)
 			{
 				Train.Dispose();
 				Train.State = TrainState.Pending;
-				Game.OtherTrainAI AI = Train.AI as Game.OtherTrainAI;
+				Game.TrackFollowingObjectAI AI = Train.AI as Game.TrackFollowingObjectAI;
 				if (AI != null)
 				{
 					AI.SetupTravelData(Train.AppearanceTime);

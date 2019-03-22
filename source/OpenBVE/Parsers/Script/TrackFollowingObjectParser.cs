@@ -10,9 +10,9 @@ using OpenBveApi.Objects;
 
 namespace OpenBve
 {
-	class OtherTrainXMLParser
+	class TrackFollowingObjectParser
 	{
-		internal static TrainManager.OtherTrain ParseOtherTrainXML(string FileName)
+		internal static TrainManager.TrackFollowingObject ParseTrackFollowingObject(string FileName)
 		{
 			// The current XML file to load
 			XDocument CurrentXML = XDocument.Load(FileName, LoadOptions.SetLineInfo);
@@ -25,7 +25,7 @@ namespace OpenBve
 				throw new System.IO.InvalidDataException();
 			}
 
-			IEnumerable<XElement> DocumentElements = CurrentXML.Root.Elements("OtherTrain");
+			IEnumerable<XElement> DocumentElements = CurrentXML.Root.Elements("TrackFollowingObject");
 
 			// Check this file actually contains OpenBVE other train definition elements
 			if (DocumentElements == null || !DocumentElements.Any())
@@ -34,17 +34,17 @@ namespace OpenBve
 				throw new System.IO.InvalidDataException();
 			}
 
-			TrainManager.OtherTrain Train = new TrainManager.OtherTrain(TrainManager.TrainState.Pending);
+			TrainManager.TrackFollowingObject Train = new TrainManager.TrackFollowingObject(TrainManager.TrainState.Pending);
 
 			foreach (XElement Element in DocumentElements)
 			{
-				ParseOtherTrainNode(Element, FileName, Path, Train);
+				ParseTrackFollowingObjectNode(Element, FileName, Path, Train);
 			}
 
 			return Train;
 		}
 
-		private static void ParseOtherTrainNode(XElement Element, string FileName, string Path, TrainManager.OtherTrain Train)
+		private static void ParseTrackFollowingObjectNode(XElement Element, string FileName, string Path, TrainManager.TrackFollowingObject Train)
 		{
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string TrainDirectory = string.Empty;
@@ -57,7 +57,7 @@ namespace OpenBve
 				switch (SectionElement.Name.LocalName.ToLowerInvariant())
 				{
 					case "stops":
-						ParseOtherTrainStopNode(SectionElement, FileName, Data);
+						ParseStopNode(SectionElement, FileName, Data);
 						break;
 					case "train":
 						foreach (XElement KeyNode in SectionElement.Elements())
@@ -133,7 +133,7 @@ namespace OpenBve
 			string ExteriorFile = OpenBveApi.Path.CombineFile(TrainDirectory, "extensions.cfg");
 			TrainDatParser.ParseTrainData(TrainData, TextEncoding.GetSystemEncodingFromFile(TrainData), Train);
 			SoundCfgParser.ParseSoundConfig(TrainDirectory, Encoding.UTF8, Train);
-			Train.AI = new Game.OtherTrainAI(Train, Data);
+			Train.AI = new Game.TrackFollowingObjectAI(Train, Data);
 
 			UnifiedObject[] CarObjects = new UnifiedObject[Train.Cars.Length];
 			UnifiedObject[] BogieObjects = new UnifiedObject[Train.Cars.Length * 2];
@@ -264,7 +264,7 @@ namespace OpenBve
 			Train.PlaceCars(Data[0].StopPosition);
 		}
 
-		private static void ParseOtherTrainStopNode(XElement Element, string FileName, List<Game.TravelData> Data)
+		private static void ParseStopNode(XElement Element, string FileName, List<Game.TravelData> Data)
 		{
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 
@@ -359,13 +359,24 @@ namespace OpenBve
 									case "direction":
 										{
 											int d = 0;
-											if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out d))
+											switch (Value.ToLowerInvariant())
 											{
-												Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+												case "f":
+													d = 1;
+													break;
+												case "r":
+													d = -1;
+													break;
+												default:
+													if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out d))
+													{
+														Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+													}
+													break;
 											}
-											else if (d == 1 || d == -1)
+											if (d == 1 || d == -1)
 											{
-												NewData.Direction = (Game.TravelDirection) d;
+												NewData.Direction = (Game.TravelDirection)d;
 											}
 										}
 										break;

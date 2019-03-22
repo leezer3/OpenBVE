@@ -110,13 +110,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game\AI\AI.cs" />
-    <Compile Include="Game\AI\AI.OtherTrain.cs">
-      <DependentUpon>AI.cs</DependentUpon>
-    </Compile>
     <Compile Include="Game\AI\AI.PreTrain.cs">
       <DependentUpon>AI.cs</DependentUpon>
     </Compile>
     <Compile Include="Game\AI\AI.SimpleHuman.cs">
+      <DependentUpon>AI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Game\AI\AI.TrackFollowingObject.cs">
+      <SubType>Code</SubType>
       <DependentUpon>AI.cs</DependentUpon>
     </Compile>
     <Compile Include="Game\Events\Events.cs" />
@@ -235,7 +236,7 @@
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.RouteFixes.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.SignalData.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Structures.cs" />
-    <Compile Include="Parsers\Script\OtherTrainXMLParser.cs" />
+    <Compile Include="Parsers\Script\TrackFollowingObjectParser.cs" />
     <Compile Include="Parsers\Script\StationXMLParser.cs" />
     <Compile Include="Parsers\Script\DynamicBackgroundParser.cs" />
     <Compile Include="Parsers\Script\DynamicLightParser.cs" />
@@ -309,7 +310,7 @@
     <Compile Include="Simulation\TrainManager\Train\Handles\Handles.Reverser.Positions.cs" />
     <Compile Include="Simulation\TrainManager\Train\Horn.cs" />
     <Compile Include="Simulation\TrainManager\Train\Handles\Handles.LocoBrake.Types.cs" />
-    <Compile Include="Simulation\TrainManager\Train\OtherTrain.cs" />
+    <Compile Include="Simulation\TrainManager\Train\TrackFollowingObject.cs" />
     <Compile Include="Simulation\TrainManager\Train\PassAlarm.cs" />
     <Compile Include="Simulation\TrainManager\Train\StopSkipMode.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.cs" />

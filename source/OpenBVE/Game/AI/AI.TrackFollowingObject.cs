@@ -37,9 +37,9 @@ namespace OpenBve
 			internal double AccelerationEndTime;
 		}
 
-		internal class OtherTrainAI : GeneralAI
+		internal class TrackFollowingObjectAI : GeneralAI
 		{
-			private readonly TrainManager.OtherTrain Train;
+			private readonly TrainManager.TrackFollowingObject Train;
 
 			/// <summary>Travel plan of train</summary>
 			private readonly List<TravelData> Data;
@@ -49,7 +49,7 @@ namespace OpenBve
 			internal double AppearanceTime;
 			internal double LeaveTime;
 
-			internal OtherTrainAI(TrainManager.OtherTrain train, List<TravelData> data)
+			internal TrackFollowingObjectAI(TrainManager.TrackFollowingObject train, List<TravelData> data)
 			{
 				Train = train;
 				Data = data;

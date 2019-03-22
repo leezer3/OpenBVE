@@ -4,7 +4,7 @@ namespace OpenBve
 {
 	public static partial class TrainManager
 	{
-		public class OtherTrain : Train
+		public class TrackFollowingObject : Train
 		{
 			internal double AppearanceTime;
 			internal double AppearanceStartPosition;
@@ -12,7 +12,7 @@ namespace OpenBve
 			internal double LeaveTime;
 			private double InternalTimerTimeElapsed;
 
-			internal OtherTrain(TrainState state) : base(state)
+			internal TrackFollowingObject(TrainState state) : base(state)
 			{
 			}
 

@@ -1572,17 +1572,17 @@ namespace OpenBve {
 										}
 									}
 									break;
-								case "route.othertrainxml":
+								case "route.tfoxml":
 									if (!PreviewOnly) {
-										string otherTrainFile = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
-										if (!System.IO.File.Exists(otherTrainFile))
+										string tfoFile = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+										if (!System.IO.File.Exists(tfoFile))
 										{
-											Interface.AddMessage(MessageType.Error, true, "Other train XML file " + otherTrainFile + " not found in Track.OtherTrainXML at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+											Interface.AddMessage(MessageType.Error, true, "TrackFollowingObject XML file " + tfoFile + " not found in Track.TfoXML at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											break;
 										}
-										int n = TrainManager.OtherTrains.Length;
-										Array.Resize(ref TrainManager.OtherTrains, n + 1);
-										TrainManager.OtherTrains[n] = OtherTrainXMLParser.ParseOtherTrainXML(otherTrainFile);
+										int n = TrainManager.TFOs.Length;
+										Array.Resize(ref TrainManager.TFOs, n + 1);
+										TrainManager.TFOs[n] = TrackFollowingObjectParser.ParseTrackFollowingObject(tfoFile);
 									}
 									break;
 									// train

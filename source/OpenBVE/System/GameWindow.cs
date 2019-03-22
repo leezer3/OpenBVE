@@ -643,7 +643,7 @@ namespace OpenBve
 				}
 			}
 
-			foreach (var Train in TrainManager.OtherTrains)
+			foreach (var Train in TrainManager.TFOs)
 			{
 				Train.Initialize();
 
