@@ -12,6 +12,8 @@ namespace OpenBve
 {
 	class TrackFollowingObjectParser
 	{
+		/// <summary>Parses a track following object</summary>
+		/// <param name="FileName">The XML file to parse</param>
 		internal static TrainManager.TrackFollowingObject ParseTrackFollowingObject(string FileName)
 		{
 			// The current XML file to load
@@ -44,6 +46,11 @@ namespace OpenBve
 			return Train;
 		}
 
+		/// <summary>Parses a base track following object node</summary>
+		/// <param name="Element">The XElement to parse</param>
+		/// <param name="FileName">The filename of the containing XML file</param>
+		/// <param name="Path">The path of the containing XML file</param>
+		/// <param name="Train">The track following object to parse this node into</param>
 		private static void ParseTrackFollowingObjectNode(XElement Element, string FileName, string Path, TrainManager.TrackFollowingObject Train)
 		{
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
@@ -70,14 +77,19 @@ namespace OpenBve
 							{
 								case "directory":
 									{
-										string Directory = OpenBveApi.Path.CombineDirectory(Path, Value);
-										if (System.IO.Directory.Exists(Directory))
+										string trainDirectory = OpenBveApi.Path.CombineDirectory(Path, Value);
+										if (!System.IO.Directory.Exists(trainDirectory))
 										{
-											TrainDirectory = Directory;
+											trainDirectory = OpenBveApi.Path.CombineFile(Program.FileSystem.InitialTrainFolder, Value);
 										}
-										else
+										if (!System.IO.Directory.Exists(trainDirectory))
 										{
-											Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+											trainDirectory = OpenBveApi.Path.CombineFile(Program.FileSystem.TrainInstallationDirectory, Value);
+										}
+
+										if(!System.IO.Directory.Exists(trainDirectory))
+										{
+											Interface.AddMessage(MessageType.Error, false, "Directory was not found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 									}
 									break;
@@ -131,6 +143,11 @@ namespace OpenBve
 			// Initial setting
 			string TrainData = OpenBveApi.Path.CombineFile(TrainDirectory, "train.dat");
 			string ExteriorFile = OpenBveApi.Path.CombineFile(TrainDirectory, "extensions.cfg");
+			if (!System.IO.File.Exists(TrainData) || !System.IO.File.Exists(ExteriorFile))
+			{
+				Interface.AddMessage(MessageType.Error, true, "The supplied train folder in TrackFollowingObject " + FileName + " did not contain a complete set of data.");
+				return;
+			}
 			TrainDatParser.ParseTrainData(TrainData, TextEncoding.GetSystemEncodingFromFile(TrainData), Train);
 			SoundCfgParser.ParseSoundConfig(TrainDirectory, Encoding.UTF8, Train);
 			Train.AI = new Game.TrackFollowingObjectAI(Train, Data);
@@ -264,6 +281,10 @@ namespace OpenBve
 			Train.PlaceCars(Data[0].StopPosition);
 		}
 
+		/// <summary>Parses a train travel stop node</summary>
+		/// <param name="Element">The XElement to parse</param>
+		/// <param name="FileName">The filename of the containing XML file</param>
+		/// <param name="Data">The list of travel data to add this to</param>
 		private static void ParseStopNode(XElement Element, string FileName, List<Game.TravelData> Data)
 		{
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
