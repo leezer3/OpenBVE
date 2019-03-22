@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
@@ -36,7 +37,7 @@ namespace OpenBve
 				throw new System.IO.InvalidDataException();
 			}
 
-			TrainManager.TrackFollowingObject Train = new TrainManager.TrackFollowingObject(TrainManager.TrainState.Pending);
+			TrainManager.TrackFollowingObject Train = new TrainManager.TrackFollowingObject(TrainState.Pending);
 
 			foreach (XElement Element in DocumentElements)
 			{

@@ -572,7 +572,7 @@ namespace OpenBve
 
 			System.Threading.Tasks.Parallel.For(0, TFOs.Length, i =>
 			{
-				if (TFOs[i].State != TrainState.Disposed & TFOs[i].State != TrainManager.TrainState.Bogus)
+				if (TFOs[i].State != TrainState.Disposed & TFOs[i].State != TrainState.Bogus)
 				{
 					foreach (var Car in TFOs[i].Cars)
 					{
