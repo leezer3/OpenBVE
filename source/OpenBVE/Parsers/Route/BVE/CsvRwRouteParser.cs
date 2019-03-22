@@ -1572,6 +1572,19 @@ namespace OpenBve {
 										}
 									}
 									break;
+								case "route.tfoxml":
+									if (!PreviewOnly) {
+										string tfoFile = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+										if (!System.IO.File.Exists(tfoFile))
+										{
+											Interface.AddMessage(MessageType.Error, true, "TrackFollowingObject XML file " + tfoFile + " not found in Track.TfoXML at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+											break;
+										}
+										int n = TrainManager.TFOs.Length;
+										Array.Resize(ref TrainManager.TFOs, n + 1);
+										TrainManager.TFOs[n] = TrackFollowingObjectParser.ParseTrackFollowingObject(tfoFile);
+									}
+									break;
 									// train
 								case "train.folder":
 								case "train.file":
@@ -2841,6 +2854,7 @@ namespace OpenBve {
 								case "cycle.rail":
 								case "route.loadingscreen":
 								case "route.displayspeed":
+								case "route.othertrainxml":
 									break;
 									// track
 								case "track.railstart":
@@ -2950,6 +2964,17 @@ namespace OpenBve {
 												}
 											}
 										}
+										double cant = 0.0;
+										if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], out cant))
+										{
+											Interface.AddMessage(MessageType.Error, false, "CantInMillimeters is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+											cant = 0.0;
+										}
+										else
+										{
+											cant *= 0.001;
+										}
+										Data.Blocks[BlockIndex].Rails[idx].CurveCant = cant;
 									}
 									break;
 								case "track.railend":

@@ -152,5 +152,19 @@ namespace OpenBve
 				}
 			}
 		}
+
+		internal static void JumpTFO()
+		{
+			foreach (var Train in TFOs)
+			{
+				Train.Dispose();
+				Train.State = TrainState.Pending;
+				Game.TrackFollowingObjectAI AI = Train.AI as Game.TrackFollowingObjectAI;
+				if (AI != null)
+				{
+					AI.SetupTravelData(Train.AppearanceTime);
+				}
+			}
+		}
 	}
 }

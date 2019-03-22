@@ -64,7 +64,10 @@ namespace OpenBve {
         /// <param name="ResetLogs">Whether the logs should be reset</param>
 		internal static void Reset(bool ResetLogs) {
 			// track manager
-			TrackManager.CurrentTrack = new TrackManager.Track();
+			for (int i = 0; i < TrackManager.Tracks.Length; i++)
+			{
+				TrackManager.Tracks[i] = new TrackManager.Track();
+			}
 			// train manager
 			TrainManager.Trains = new TrainManager.Train[] { };
 			// game

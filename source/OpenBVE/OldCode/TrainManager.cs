@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using OpenBve.Parsers.Panel;
@@ -17,8 +16,8 @@ namespace OpenBve
 		internal static Train[] Trains = new Train[] { };
 		/// <summary>A reference to the train of the Trains element that corresponds to the player's train.</summary>
 		internal static Train PlayerTrain = null;
-
-
+		/// <summary>The list of TrackFollowingObject available on other tracks in the simulation.</summary>
+		internal static TrackFollowingObject[] TFOs = new TrackFollowingObject[] { };
 
 		/// <summary>Attempts to load and parse the current train's panel configuration file.</summary>
 		/// <param name="TrainPath">The absolute on-disk path to the train folder.</param>
@@ -58,17 +57,17 @@ namespace OpenBve
 					{
 
 						IEnumerable<XElement> DocumentElements = CurrentXML.Root.Elements("PanelAnimated");
-						if (DocumentElements.Count() != 0)
+						if (DocumentElements.Any())
 						{
-							PanelAnimatedXmlParser.ParsePanelAnimatedXml("panel.xml", TrainPath, Train, Train.DriverCar);
+							PanelAnimatedXmlParser.ParsePanelAnimatedXml(System.IO.Path.GetFileName(File), TrainPath, Train, Train.DriverCar);
 							Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.NotAvailable;
 							World.CameraRestriction = Camera.RestrictionMode.NotAvailable;
 						}
 
 						DocumentElements = CurrentXML.Root.Elements("Panel");
-						if (DocumentElements.Count() != 0)
+						if (DocumentElements.Any())
 						{
-							PanelXmlParser.ParsePanelXml("panel.xml", TrainPath, Train, Train.DriverCar);
+							PanelXmlParser.ParsePanelXml(System.IO.Path.GetFileName(File), TrainPath, Train, Train.DriverCar);
 							Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.On;
 							World.CameraRestriction = Camera.RestrictionMode.On;
 						}
@@ -212,6 +211,11 @@ namespace OpenBve
 			{
 				Trains[i].UpdateObjects(TimeElapsed, ForceUpdate);
 			}
+
+			foreach (var Train in TFOs)
+			{
+				Train.UpdateObjects(TimeElapsed, ForceUpdate);
+			}
 		}
 
 		
@@ -227,6 +231,12 @@ namespace OpenBve
 			for (int i = 0; i < Trains.Length; i++) {
 				Trains[i].Update(TimeElapsed);
 			}
+
+			foreach (var Train in TFOs)
+			{
+				Train.Update(TimeElapsed);
+			}
+
 			// detect collision
 			if (!Game.MinimalisticSimulation & Interface.CurrentOptions.Collisions)
 			{
@@ -555,6 +565,30 @@ namespace OpenBve
 						Trains[i].Cars[j].UpdateTopplingCantAndSpring(TimeElapsed);
 						Trains[i].Cars[j].FrontBogie.UpdateTopplingCantAndSpring();
 						Trains[i].Cars[j].RearBogie.UpdateTopplingCantAndSpring();
+					}
+				}
+			});
+
+			System.Threading.Tasks.Parallel.For(0, TFOs.Length, i =>
+			{
+				if (TFOs[i].State != TrainState.Disposed & TFOs[i].State != TrainManager.TrainState.Bogus)
+				{
+					foreach (var Car in TFOs[i].Cars)
+					{
+						Car.FrontAxle.Follower.UpdateWorldCoordinates(true);
+						Car.FrontBogie.FrontAxle.Follower.UpdateWorldCoordinates(true);
+						Car.FrontBogie.RearAxle.Follower.UpdateWorldCoordinates(true);
+						Car.RearAxle.Follower.UpdateWorldCoordinates(true);
+						Car.RearBogie.FrontAxle.Follower.UpdateWorldCoordinates(true);
+						Car.RearBogie.RearAxle.Follower.UpdateWorldCoordinates(true);
+						if (TimeElapsed == 0.0 | TimeElapsed > 0.5)
+						{
+							//Don't update the toppling etc. with excessive or no time
+							continue;
+						}
+						Car.UpdateTopplingCantAndSpring(TimeElapsed);
+						Car.FrontBogie.UpdateTopplingCantAndSpring();
+						Car.RearBogie.UpdateTopplingCantAndSpring();
 					}
 				}
 			});
