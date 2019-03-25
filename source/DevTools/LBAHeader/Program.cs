@@ -8,7 +8,11 @@ namespace LBAHeader
 		static byte[] data;
 		static void Main(string[] args)
 		{
-			string f = args[0];
+			string f = string.Empty;
+			if (args.Length >= 1)
+			{
+				f = args[0];
+			}
 			if (!System.IO.File.Exists(f))
 			{
 				//If we can't find our initial argument, try and locate the openBVE executable in our directory
