@@ -662,6 +662,7 @@ namespace OpenBve
 							TrackManager.Tracks[j].Elements[n].WorldSide = RailTransformation.X;
 							TrackManager.Tracks[j].Elements[n].WorldUp = RailTransformation.Y;
 							TrackManager.Tracks[j].Elements[n].CurveCant = Data.Blocks[i].Rails[j].CurveCant;
+							TrackManager.Tracks[j].Elements[n].AdhesionMultiplier = Data.Blocks[i].AdhesionMultiplier;
 						}
 						if (Data.Structure.RailObjects.ContainsKey(Data.Blocks[i].RailType[j]))
 						{
