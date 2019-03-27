@@ -260,25 +260,37 @@ namespace OpenBve
 				{
 					return;
 				}
+
+				int Index = TrackIndex;
 				if (Direction < 0)
 				{
-					for (int j = Tracks[TrackIndex].Elements[ElementIndex].Events.Length - 1; j >= 0; j--)
+					for (int j = Tracks[Index].Elements[ElementIndex].Events.Length - 1; j >= 0; j--)
 					{
-						if (OldDelta > Tracks[TrackIndex].Elements[ElementIndex].Events[j].TrackPositionDelta & NewDelta <= Tracks[TrackIndex].Elements[ElementIndex].Events[j].TrackPositionDelta)
+						if (Tracks[Index].Elements[ElementIndex].Events.Length == 0)
 						{
-							Tracks[TrackIndex].Elements[ElementIndex].Events[j].TryTrigger(-1, this.TriggerType, this.Train, this.CarIndex);
+							return;
+						}
+						if (OldDelta > Tracks[Index].Elements[ElementIndex].Events[j].TrackPositionDelta & NewDelta <= Tracks[Index].Elements[ElementIndex].Events[j].TrackPositionDelta)
+						{
+							Tracks[Index].Elements[ElementIndex].Events[j].TryTrigger(-1, this.TriggerType, this.Train, this.CarIndex);
 						}
 					}
 				}
 				else if (Direction > 0)
 				{
-					for (int j = 0; j < Tracks[TrackIndex].Elements[ElementIndex].Events.Length; j++)
+					for (int j = 0; j < Tracks[Index].Elements[ElementIndex].Events.Length; j++)
 					{
-						if (OldDelta < Tracks[TrackIndex].Elements[ElementIndex].Events[j].TrackPositionDelta & NewDelta >= Tracks[TrackIndex].Elements[ElementIndex].Events[j].TrackPositionDelta)
+						if (OldDelta < Tracks[Index].Elements[ElementIndex].Events[j].TrackPositionDelta & NewDelta >= Tracks[Index].Elements[ElementIndex].Events[j].TrackPositionDelta)
 						{
-							Tracks[TrackIndex].Elements[ElementIndex].Events[j].TryTrigger(1, this.TriggerType, this.Train, this.CarIndex);
+							Tracks[Index].Elements[ElementIndex].Events[j].TryTrigger(1, this.TriggerType, this.Train, this.CarIndex);
 						}
 					}
+				}
+
+				if (Index != TrackIndex)
+				{
+					//We have swapped tracks, so need to check the events on the new track also
+					CheckEvents(ElementIndex, Direction, OldDelta, NewDelta);
 				}
 			}
 		}
