@@ -256,7 +256,7 @@ namespace OpenBve
 
 			private void CheckEvents(int ElementIndex, int Direction, double OldDelta, double NewDelta)
 			{
-				if (this.TriggerType == EventTriggerType.None)
+				if (this.TriggerType == EventTriggerType.None || Tracks[TrackIndex].Elements[ElementIndex].Events.Length == 0)
 				{
 					return;
 				}
