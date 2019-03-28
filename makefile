@@ -296,6 +296,7 @@ endif
 debian: $(DEBIAN_BUILD_RESULT)
 
 $(MAC_BUILD_RESULT): all-release
+	@rm -rf bin_release/DevTools/
 	@echo $(COLOR_RED)Decompressing $(COLOR_CYAN)installers/mac/MacBundle.tgz$(COLOR_END)
 	# Clear previous Mac build temporary files if they exist
 	@rm -rf mac
@@ -311,10 +312,12 @@ $(MAC_BUILD_RESULT): all-release
 
 
 $(LINUX_BUILD_RESULT): all-release
+	@rm -rf bin_release/DevTools/
 	@echo $(COLOR_RED)Compressing $(COLOR_CYAN)$(LINUX_BUILD_RESULT)$(COLOR_END)
 	@cd $(RELEASE_DIR); zip -qr9Z deflate ../$(LINUX_BUILD_RESULT) *
 
 $(DEBIAN_BUILD_RESULT): all-release
+	@rm -rf bin_release/DevTools/
 	@echo $(COLOR_RED)Copying build into place....$(COLOR_END)
 	@mkdir -p installers/debian/usr/lib/openbve
 #Generate current dpkg control file
