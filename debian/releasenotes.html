@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="SHORTCUT ICON" href="common/favicon.png" />
+<meta name="keywords" content="openBVE,homepage" />
+<title>Release notes</title>
+</head>
+<body style="font-family:sans-serif;font-size:small">
+<table width="100%" cellspacing="0" style="min-width:1090px">
+<tr>
+<td bgcolor="#000000" height="96"><a href="index.html"><img style="border: none;" src="common/homepage_logo.png" alt="Logo" /></a></td>
+<td bgcolor="#000000" width="100%">
+<a href="about/index.html"><img style="border: none;" src="common/button_about.png" alt="About" /></a>
+&nbsp;<a href="screenshots.html"><img style="border: none;" src="common/button_screenshots.png" alt="Screenshots" /></a>
+&nbsp;<a href="use/index.html"><img style="border: none;" src="common/button_using.png" alt="Using" /></a>
+&nbsp;<a href="develop/index.html"><img style="border: none;" src="common/button_developing.png" alt="Developing" /></a>
+&nbsp;<a href="blog/index.html"><img style="border: none;" src="common/button_blog.png" alt="Blog" /></a>
+&nbsp;<a href="http://openbve.freeforums.org"><img style="border: none;" src="common/button_forum.png" alt="Forum" /></a>
+&nbsp;<a href="downloads.html"><img style="border: none;" src="common/button_downloads.png" alt="Download" /></a>
+</td>
+</tr>
+<tr><td bgcolor="#808080" height="16" style="background-image:url(common/gradient_16.png)" colspan="2"></td></tr>
+<tr><td bgcolor="#E0E0E0" height="10" colspan="2"></td></tr>
+<tr><td bgcolor="#E0E0E0" colspan="2"><table cellspacing="15" width="100%"><tr><td>
+<table><tr style="height: 4px;"><td /></tr></table>
+<table cellspacing="0">
+<tr><td bgcolor="#808080" height="4" style="background-image:url(common/gradient_04_inverted.png)">
+</td></tr>
+<tr><td height="24">
+<font color="#0060A0" size="+1"><b>Release notes (v1.2.7)&nbsp;</b></font>
+</td></tr>
+<tr><td bgcolor="#808080" height="4" style="background-image:url(common/gradient_04.png)">
+</td></tr>
+</table><br />
+<table><tr style="height: 4px;"><td /></tr></table>
+Here you can find a summary of changes since the previous 1.2.6 series. If you want to comment on this version of openBVE and the changes that came along with it, please head over to <a href="http&#58;&#47;&#47;openbve.freeforums.org/openbve-version-1-2-7-is-out-t1586.html">this thread</a> on the forum.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<table cellspacing="0" width="100%"><tr><td bgcolor="#808080" height="24" style="background-image:url(common/gradient_24.png)">
+<font color="#FFFFFF"><b>&nbsp;Superelevation (cant)&nbsp;</b></font>
+</td></tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+In previous versions of openBVE, superelevation on curves, also known as cant, was simulated in a rather cheap way by making the car body simply roll around its axis. While this provided for the most noticable effect, namely that the train was slanted on curves, it was not quite realistic due to the way most real curves are laid out.<br /><br />From now on, openBVE assumes that the outer rail on a curve is slightly elevated, hence the term <em>superelevation</em>. This means that the car body does not simply roll around its axis anymore; rather, the outer wheel now actually rises above level. If you observe very closely, you are certainly going to notice this difference.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<table cellspacing="0" width="100%"><tr><td bgcolor="#808080" height="24" style="background-image:url(common/gradient_24.png)">
+<font color="#FFFFFF"><b>&nbsp;Track accuracy&nbsp;</b></font>
+</td></tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+In previous versions of openBVE, poor accuracy of the track would make the car body undergo horizontal and vertical shifts, while the car body itself would remain entirely level. From now on, the level of track accuracy mainly affects the degree to which the car body bounces on the track. This also produces more noticable flange noises.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<table cellspacing="0" width="100%"><tr><td bgcolor="#808080" height="24" style="background-image:url(common/gradient_24.png)">
+<font color="#FFFFFF"><b>&nbsp;Key and joystick button repeats&nbsp;</b></font>
+</td></tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+You can now hold down a key or a joystick button, and the event will fire multiple times until the key or button is released again. This makes operating the power and brake levers more comfortably from now on.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<table cellspacing="0" width="100%"><tr><td bgcolor="#808080" height="24" style="background-image:url(common/gradient_24.png)">
+<font color="#FFFFFF"><b>&nbsp;The fly-by camera&nbsp;</b></font>
+</td></tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+The fly-by camera now always focuses on the front car of a train. In previous versions, the focus would shift from the front car to the rear car on approach of the train. Moreover, the fly-by camera now focuses on the nearest train, not just the player's train. This means that on certain routes, you could stay in a spot and watch multiple trains pass by.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<table cellspacing="0" width="100%"><tr><td bgcolor="#808080" height="24" style="background-image:url(common/gradient_24.png)">
+<font color="#FFFFFF"><b>&nbsp;Translations and Internationalization&nbsp;</b></font>
+</td></tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+Translations for the Catalan and Romanian languages have been added.<br /><br /><table><tr style="height: 4px;"><td /></tr></table>
+<table cellspacing="0" width="100%"><tr><td bgcolor="#808080" height="24" style="background-image:url(common/gradient_24.png)">
+<font color="#FFFFFF"><b>&nbsp;For add-on developers&nbsp;</b></font>
+</td></tr></table>
+<table><tr style="height: 4px;"><td /></tr></table>
+Route developers can now specify outward cant on curves, meaning track that does not slant toward the curve center but away from it. They can now specify cant on straight track, as well. See the documentation for CSV/RW routes for more information, in particular the new <em>Options.CantBehavior</em> and the updated <em>Track.Curve</em> commands.<br /><br />Train developers can now use the custom timetable bitmaps as set up by CSV/RW routes in animated objects, intended to be used in 3D cabs. See the documentation for animated objects for more information, in particular the new <em>TextureOverride</em> parameter in the <em>[Object]</em> section.<br /><br />For those who followed the discussion of a potential change of timetable behavior <a href="http&#58;&#47;&#47;openbve.freeforums.org/bve-4-style-timetables-for-all-trains-t1556.html">over here</a>, it should be noted that while those changes have been incorporated, they are considered experimental, meaning that there is no guarantee that the changes will stay in future versions unless the remaining issues are addressed. This also means that while you can play around with them, you should not make your add-ons depend on those changes quite yet.
+</td></tr></table>
+</td></tr>
+</table>
+</body>
+</html>

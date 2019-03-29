@@ -1,0 +1,23 @@
+#!/usr/bin/make -f
+export DH_VERBOSE=1
+TARGET = $(CURDIR)/debian/openbve
+EXEC_TARGET = $(TARGET)/usr/lib/openbve
+EXEC_PLUGIN_TARGET = $(EXEC_TARGET)/Plugins
+DEBUG_CONFIGURATION=Release
+
+override_dh_auto_build:
+	xbuild /p:TargetFrameworkVersion="v4.5" OpenBVE.sln /p:Configuration=$(DEBUG_CONFIGURATION)
+	rm bin_release/AtsPluginProxy.*
+	
+override_dh_auto_clean:
+	xbuild /t:Clean OpenBVE.sln
+
+override_dh_auto_install:
+	#do most of this stuff in debian/install, maybe with dh-exec
+
+
+override_dh_clideps:
+	dh_clideps -d -r --exclude-moduleref=AtsPluginProxy.dll
+
+%:
+	dh $@ --with cli

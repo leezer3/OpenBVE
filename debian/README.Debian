@@ -1,0 +1,192 @@
+OpenBve is in theory cross-platform in both Source, and Binary
+(compiled) form because it uses CLI/CLR (".Net"/Mono).
+
+This version for Debian/Ubuntu is compiled from source-code and
+includes additional small changes; mainly to add Unix-specific (and
+Debian/Ubuntu packaging-specific) file paths.
+
+OpenBve itself is fairly well designed and abstracts most of the
+file-handling, including functions for case-insensitive filename
+resolution, but out-of-the-box does not provide suitable default
+save/load locations for Unix.
+
+Most of these necessary alternate paths have been incorporated by
+upstream and enabled by the "/fhs" switch.  The rest are explicitly
+patched on top as part of the Debian packaging process.
+
+The source is also patched to remove the artificial restriction of the
+Train/ and Railway/ directories needing to be in the same place.
+Removing this pseudo-requirement allows testing out newly-downloaded
+routes saved in your home-directory with a fully packaged route
+located under /usr/share/games/bve/ --- or vice-versa.
+
+Have fun, and try not to crash!
+
+
+Known bugs/issues with running OpenBVE on Linux/Ubuntu/Debian.
+==============================================================
+
+This list was originally held in 'known-issues.txt'.
+
+Fixed and merged by upstream:
+-----------------------------
+2. If you have texture flashing issues; this is because the C-based
+OpenGL code was receiving pointers to single integers from the
+OpenBVE.  Fixed by passing a array.  Fixed upstream by passing
+components separately.
+
+3. Crashes out whilst trying to promisicously read non-accessible
+directories (eg. '/lost+found' or '~/.dbus').  It is hunting
+for directories containing a valid 'train.dat' description file.
+Kludged for the moment with try{}catch{} to not die.
+
+15. Window manager icon loading was not handled.
+
+5. Non-existant audio; sound should work the first time, but after
+quitting OpenAL complains about uncleaned-up buffers.  You will
+likely need to 'kill -9 pulseaudio', although this may not recover
+the situation.  Something in OpenAL/SDL isn't being cleanly shutdown.
+You may get the occasional sound afterwards on second/third attempts
+but not the full multi-channel surround experience.
+
+6. Captialisation.  The routes have a combination of UPPER, lower, and
+MiXeD cAsE filenames which is a problem on Unix.  The file-loading
+routinues need modifying to search for alterntively cased files if
+the filename as spelt can't be found.
+
+7. The London Undergrond cab 'LT_C69_77' appears in the centre of
+the screen in OpenBVE, meaning that you can't see where you're going.
+As a work-around, you may able to unlock the cam and move yourself up
+a bit to look over the top of the console.  Sort-of-fixed in 0.9.5.5.  
+(Though you will need to unlock the camera and zoom out to see any of 
+the panel).  This is to do with the camera-restriction box algorithm
+used in OpenBVE.
+
+8. The sprites Gauges in cabs displayed are not displayed correctly,
+instead showing a different/stretched part of the overlay with blue
+tinting from the edges of the alpha mask.  Clipping/position broken.
+You will have to rely on the small rectangle OpenBVE overlays
+('EMG/B3/B2/B1/N/P1/P2/P3') instead.
+
+21. 'Security system warning', this refers to signalling system, not
+to the program trying to perform anything naughty!  As extension DLLs
+are not being available on Linux.  Patched to only display a warning
+*if* an 'ats.cfg' was present .  This avoids the Issues dialogue on an
+otherwise error-free route/train.
+
+22. Hidden dot files/folders (those starting with '.') are clutter
+the filemanager.  Patched to skip listing dot-files;  you can
+still type the full name in.  May be worth restricting to only
+!Platform.Windows.
+
+26. British English and flag should be en-GB/GB (not 'en-UK/UK').
+
+21. In full-screen on Linux, the mouse-cursor (pointer) remains visible in
+the centre of the screen.
+
+18. ExitToMainMenu causes a fork() and return (leaving the user at the
+command prompt and daemonising the second instance into the background)
+rather than using exec() or restarting itself.  This crashes OpenBVE.
+It needs openbve to pass "/fhs" back to itself if it was handed it.
+
+4. Trying to write the directory the executable is in; On Unix this is
+likely to be owned by route.  Modified to use the CLR SpecialFolder
+functions and save configuration data in the right places.
+
+16. After selecting an exterior camera view and then switching back to
+the interior camera; the cab/panel overlay appears in a different position.
+
+12. Language Locale not automatically set by default;  patched to  use
+System.Globalization.CultureInfo.CurrentCulture.Name as default, but
+needs refining to cope with 'll_CC' not just 'll' language codes.
+This is done on first-load but then forcifully saved in the options
+even if the user has not manually selected a language (prevents
+future automatic language selection working).
+
+20. No way reset the Train (and camera) to be upright after a crash.  You
+should drive more carefully next time!
+
+29. When running on non-Win32 systems where Win32 plugin loading is not
+attempted, the message given may be the current one.  Repeated patches
+sent to upstream to fix the ordering, but not yet applied.
+
+30. When jumping to a station, the position will overrun by the z-offset
+of the cab in the '#COCKPIT' section of 'train.dat'.
+
+31. When running the 'HighDetail_323_Summer_2002_0931_Rain_Overcast.csv'
+diagram of the Cross City-South route under the AI, the AI will get
+stuck at 2.5 metres before "Station 4" (a signalling-onlynon-station
+after Northfield).  The AI stops outside the allowed tolerance and so
+the signal does not clear and the AI does not attempt to progress any
+closer.  (1.2.1.1 onwards).
+
+32. If mouse-look is in use (click the right mouse button once) and
+Ctrl-f is pressed to switch between windowed and fullscreen, then the
+viewport direction will randomly move; leaving the camera in a number
+of strange directions (eg. upside down, sideways or looking backwards).
+More pronounced with the cab camera restriction disabled (Ctrl-r).
+
+Fixed with outstanding patches:
+-------------------------------
+14. Loading fails if 'Train/' and 'Railway/' do not share a common parent
+directory at some point.  # Disabled the check for 'Train/' as it is
+not actually used later (loading works fine when a Train/ and Railway/
+are in separate locations.
+
+26. On closing, it may go into an infinite loop waiting on a futex
+(100% CPU).  Currently worked around by adding a Watchdog that will
+force the program to exit.
+
+Remaining:
+----------
+1. The binary 'OpenBve.exe' binary compiled by Michelle for MS Windows
+may crash out of the box; hopefully this patched recompile doesn't!
+(Whether this is true depends on the particular release!)...
+
+9. The preview images for trains and route in the file-manager screen
+display random binary data if the preview image isn't found (normally
+from being the incorrect case).  This also applies to flag icons.
+
+10. Crashes if you provide correct  openbve /train=... /route=...
+
+11. Crashes if you provide incorrect openbve /train=... /route=...
+
+13. Pressing "Show issues" during a route with loads of reported issues
+causes 100% CPU.
+
+17. CPU load goes up to 100% is OpenBVE is obscured from view
+(eg. Alt-tab to another program).
+
+19. The program may sometimes display "route not found" or "train not found"
+even when the correct files do exist.  clicking on another route/directory
+and then clicking back works around it, so this is probably a race condition.
+
+22. Excessive re-drawing of the listview boxes causes the interface to lag
+(particularly noticeable when typing in the route selection path box.
+
+23. If the Train/ and Railway/ do not share and immediate common parent
+directory, the external view (may) not be loaded.
+
+24. Route-specific Timetable overlays try to be loaded from
+Train/somewhere/../../Railway/Object/...  rather than directly from
+Railway/Object/...
+nb. "Not a bug", according to upstream, but timetables when driving
+alternative trains (as suggested/encouraged by the documentation/user
+interface) do not work otherwise...
+
+25. After a route is selected in the listview, the circular "busy"
+mouse pointer may stay busy even after loading is completely.  As
+a workaround, move the mouse-pointer out of the listview rectangle
+and back in again.
+
+27. First noticed in 1.0.2.0; alpha shading under bridges and lampposts
+will flicker and may be yellow instead of gray.  Other people have noticed
+similar issues since at least 0.9.3.3:
+http://openbve.freeforums.org/texture-colouration-in-xcs-t445.html
+
+28. First noticed in 1.0.2.0; the formLoading dialogue is not getting 
+Diposed() (closed/destroyed) when the main Game Window opens and
+hangs around in the background without being redrawn.
+
+In-progress:
+------------
