@@ -10,7 +10,7 @@ Homepage: http://openbve-project.net
 
 Package: openbve
 Architecture: all
-Depends: mono-runtime (>= 3.2.8), libmono-corlib4.5-cil (>= 3.2.8), libmono-system-drawing4.0-cil (>= 1.0), libmono-system-windows-forms4.0-cil (>= 1.0), libmono-system4.0-cil (>= 3.2.8), libmono-i18n4.0-all, libopenal1
+Depends: ${cli:Depends}, ${shlibs:Depends}, ${misc:Depends}
 Description: realistic 3D train/railway simulator (main program)
  OpenBVE is a railway train-driving simulator with an emphasis on
  in-cab driving, realistic physics, braking system and train safety
