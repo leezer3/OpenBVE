@@ -9,6 +9,7 @@ override_dh_auto_build:
 	xbuild /p:TargetFrameworkVersion="v4.5" OpenBVE.sln /p:Configuration=$(DEBUG_CONFIGURATION)
 	rm bin_release/AtsPluginProxy.*
 	rm bin_release/Data/Formats/OpenTK.dll
+	mv bin_release openbve
 	
 override_dh_auto_clean:
 	xbuild /t:Clean OpenBVE.sln
@@ -18,7 +19,7 @@ override_dh_auto_install:
 
 
 override_dh_clideps:
-	dh_clideps -d -r --exclude-moduleref=AtsPluginProxy.dll --exclude-moduleref=hid.dll --exclude-moduleref=ole32.Dll --exclude-moduleref=fusion.dll --exclude-moduleref=setupapi.dll --exclude-moduleref=msdmo.dll --exclude-moduleref=dsound.dll --exclude-moduleref=Msacm32.dll --exclude-moduleref=msacm32.dll --exclude-moduleref=ole32.dll --exclude-moduleref=mfplat.dll --exclude-moduleref=mfreadwrite.dll --exclude-moduleref=mf.dll --exclude-moduleref=/System/Library/Frameworks/IOKit.framework/Versions/Current/IOKit  --exclude-moduleref=libdl.dylib --exclude-moduleref=/usr/lib/libobjc.dylib --exclude-moduleref=/System/Library/Frameworks/OpenGL.framework/Versions/Current/OpenGL --exclude-moduleref=/System/Library/Frameworks/Carbon.framework/Versions/Current/Carbon --exclude-moduleref=/System/Library/Frameworks/ApplicationServices.framework/Versions/Current/ApplicationServices --exclude-moduleref=/System/Library/Frameworks/CoreVideo.framework/Versions/Current/CoreVideo --exclude-moduleref=libGLES.dll
+	dh_clideps -d -r --exclude-moduleref=oalinst.exe --exclude-moduleref=AtsPluginProxy.dll --exclude-moduleref=hid.dll --exclude-moduleref=ole32.Dll --exclude-moduleref=fusion.dll --exclude-moduleref=setupapi.dll --exclude-moduleref=msdmo.dll --exclude-moduleref=dsound.dll --exclude-moduleref=Msacm32.dll --exclude-moduleref=msacm32.dll --exclude-moduleref=ole32.dll --exclude-moduleref=mfplat.dll --exclude-moduleref=mfreadwrite.dll --exclude-moduleref=mf.dll --exclude-moduleref=/System/Library/Frameworks/IOKit.framework/Versions/Current/IOKit  --exclude-moduleref=libdl.dylib --exclude-moduleref=/usr/lib/libobjc.dylib --exclude-moduleref=/System/Library/Frameworks/OpenGL.framework/Versions/Current/OpenGL --exclude-moduleref=/System/Library/Frameworks/Carbon.framework/Versions/Current/Carbon --exclude-moduleref=/System/Library/Frameworks/ApplicationServices.framework/Versions/Current/ApplicationServices --exclude-moduleref=/System/Library/Frameworks/CoreVideo.framework/Versions/Current/CoreVideo --exclude-moduleref=libGLES.dll --exclude-moduleref=libEGL.dll --exclude-moduleref=libGLESv2.dll --exclude-moduleref=GLESv1_CM --exclude-moduleref=gbm --exclude-moduleref=libinput --exclude-moduleref=libkms --exclude-moduleref=dl 
 
 %:
 	dh $@ --with cli
