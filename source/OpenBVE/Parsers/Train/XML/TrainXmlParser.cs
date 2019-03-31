@@ -3,6 +3,7 @@ using System.Xml;
 using System.Drawing;
 using System.Linq;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using OpenBveApi.Objects;
 
 namespace OpenBve.Parsers.Train
@@ -39,24 +40,56 @@ namespace OpenBve.Parsers.Train
 			BogieObjectsReversed = new bool[Train.Cars.Length * 2];
 			if (currentXML.DocumentElement != null)
 			{
-				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/Car");
+				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/*[self::Car or self::Coupler]");
 				if (DocumentNodes == null || DocumentNodes.Count == 0)
 				{
 					Interface.AddMessage(MessageType.Error, false, "No car nodes defined in XML file " + fileName);
 					//If we have no appropriate nodes specified, return false and fallback to loading the legacy Sound.cfg file
 					throw new Exception("Empty train.xml file");
 				}
+
+				int carIndex = 0;
 				//Use the index here for easy access to the car count
 				for (int i = 0; i < DocumentNodes.Count; i++)
 				{
-					if (i > Train.Cars.Length)
+					if (carIndex > Train.Cars.Length)
 					{
 						Interface.AddMessage(MessageType.Warning, false, "WARNING: A total of " + DocumentNodes.Count + " cars were specified in XML file " + fileName + " whilst only " + Train.Cars.Length + " were specified in the train.dat file.");
 						break;
 					}
 					if (DocumentNodes[i].ChildNodes.OfType<XmlElement>().Any())
 					{
-						ParseCarNode(DocumentNodes[i], fileName, i, ref Train, ref CarObjects, ref BogieObjects);
+						if (DocumentNodes[i].Name == "Car")
+						{
+							ParseCarNode(DocumentNodes[i], fileName, carIndex, ref Train, ref CarObjects, ref BogieObjects);
+						}
+						else
+						{
+							if (carIndex - 1 > Train.Couplers.Length - 1)
+							{
+								Interface.AddMessage(MessageType.Error, false, "Unexpected extra coupler encountered in XML file " + fileName);
+								continue;
+							}
+							foreach (XmlNode c in DocumentNodes[i].ChildNodes)
+							{
+								switch (c.Name.ToLowerInvariant())
+								{
+									case "minimum":
+										if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Train.Couplers[carIndex - 1].MinimumDistanceBetweenCars))
+										{
+											Interface.AddMessage(MessageType.Error, false, "MinimumDistanceBetweenCars is invalid for coupler " + carIndex + "in XML file " + fileName);
+										}
+										break;
+									case "maximum":
+										if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Train.Couplers[carIndex - 1].MaximumDistanceBetweenCars))
+										{
+											Interface.AddMessage(MessageType.Error, false, "MaximumDistanceBetweenCars is invalid for coupler " + carIndex + "in XML file " + fileName);
+										}
+										break;
+								}
+							}
+						}
+
 					}
 					else if (!String.IsNullOrEmpty(DocumentNodes[i].InnerText))
 					{
@@ -77,11 +110,15 @@ namespace OpenBve.Parsers.Train
 							Interface.AddMessage(MessageType.Error, false, "Failed to load the child Car XML file specified in " + DocumentNodes[i].InnerText);
 						}
 					}
-					if (i == DocumentNodes.Count && i < Train.Cars.Length)
+					if (i == DocumentNodes.Count && carIndex < Train.Cars.Length)
 					{
 						//If this is the case, the number of motor cars is the primary thing which may get confused....
 						//Not a lot to be done about this until a full replacement is built for the train.dat file & we can dump it entirely
 						Interface.AddMessage(MessageType.Warning, false, "WARNING: The number of cars specified in the train.xml file does not match that in the train.dat- Some properties may be invalid.");
+					}
+					if (DocumentNodes[i].Name == "Car")
+					{
+						carIndex++;
 					}
 				}
 				if (Train.Cars[Train.DriverCar].CameraRestrictionMode != Camera.RestrictionMode.NotSpecified)

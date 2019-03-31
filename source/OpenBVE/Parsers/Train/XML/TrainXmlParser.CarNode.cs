@@ -116,6 +116,11 @@ namespace OpenBve.Parsers.Train
 						}
 						break;
 					case "object":
+						if (string.IsNullOrEmpty(c.InnerText))
+						{
+							Interface.AddMessage(MessageType.Warning, false, "Invalid object path for Car " + Car + " in XML file " + fileName);
+							break;
+						}
 						string f = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
 						if (System.IO.File.Exists(f))
 						{
@@ -124,7 +129,7 @@ namespace OpenBve.Parsers.Train
 						break;
 					case "reversed":
 						int n;
-						NumberFormats.TryParseIntVb6(Node.InnerText, out n);
+						NumberFormats.TryParseIntVb6(c.InnerText, out n);
 						if (n == 1 || c.InnerText.ToLowerInvariant() == "true")
 						{
 							CarObjectsReversed[Car] = true;
@@ -150,6 +155,11 @@ namespace OpenBve.Parsers.Train
 										}
 										break;
 									case "object":
+										if (string.IsNullOrEmpty(cc.InnerText))
+										{
+											Interface.AddMessage(MessageType.Warning, false, "Invalid front bogie object path for Car " + Car + " in XML file " + fileName);
+											break;
+										}
 										string fb = OpenBveApi.Path.CombineFile(currentPath, cc.InnerText);
 										if (System.IO.File.Exists(fb))
 										{
@@ -158,8 +168,8 @@ namespace OpenBve.Parsers.Train
 										break;
 									case "reversed":
 										int nn;
-										NumberFormats.TryParseIntVb6(Node.InnerText, out nn);
-										if (Node.InnerText.ToLowerInvariant() == "true" || nn == 1)
+										NumberFormats.TryParseIntVb6(cc.InnerText, out nn);
+										if (cc.InnerText.ToLowerInvariant() == "true" || nn == 1)
 										{
 											BogieObjectsReversed[Car * 2] = true;
 										}
@@ -188,6 +198,11 @@ namespace OpenBve.Parsers.Train
 										}
 										break;
 									case "object":
+										if (string.IsNullOrEmpty(cc.InnerText))
+										{
+											Interface.AddMessage(MessageType.Warning, false, "Invalid rear bogie object path for Car " + Car + " in XML file " + fileName);
+											break;
+										}
 										string fb = OpenBveApi.Path.CombineFile(currentPath, cc.InnerText);
 										if (System.IO.File.Exists(fb))
 										{
@@ -196,8 +211,8 @@ namespace OpenBve.Parsers.Train
 										break;
 									case "reversed":
 										int nn;
-										NumberFormats.TryParseIntVb6(Node.InnerText, out nn);
-										if (Node.InnerText.ToLowerInvariant() == "true" || nn == 1)
+										NumberFormats.TryParseIntVb6(cc.InnerText, out nn);
+										if (cc.InnerText.ToLowerInvariant() == "true" || nn == 1)
 										{
 											BogieObjectsReversed[Car * 2 + 1] = true;
 										}
