@@ -92,6 +92,10 @@ namespace OpenBve
 										{
 											Interface.AddMessage(MessageType.Error, false, "Directory was not found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
+										else
+										{
+											TrainDirectory = trainDirectory;
+										}
 									}
 									break;
 							}

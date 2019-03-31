@@ -220,23 +220,31 @@ namespace OpenBve
 				{
 					for (int j = 0; j < Data.Blocks[i].BrightnessChanges.Length; j++)
 					{
-						int m = TrackManager.Tracks[0].Elements[n].Events.Length;
-						for (int k = 0; k < TrackManager.Tracks.Length; k++)
+						/*
+						 * Legacy brightness: This applies equally to all tracks in a block
+						 */
+						for (int t = 0; t < TrackManager.Tracks.Length; t++)
 						{
-							Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.Tracks[k].Elements[n].Events, m + 1);
+							int m = TrackManager.Tracks[t].Elements[n].Events.Length;
+							Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.Tracks[t].Elements[n].Events, m + 1);
 							double d = Data.Blocks[i].BrightnessChanges[j].TrackPosition - StartingDistance;
-							TrackManager.Tracks[k].Elements[n].Events[m] = new TrackManager.BrightnessChangeEvent(d, Data.Blocks[i].BrightnessChanges[j].Value, CurrentBrightnessValue, Data.Blocks[i].BrightnessChanges[j].TrackPosition - CurrentBrightnessTrackPosition);
-							if (CurrentBrightnessElement >= 0 & CurrentBrightnessEvent >= 0)
+							TrackManager.Tracks[t].Elements[n].Events[m] = new TrackManager.BrightnessChangeEvent(d, Data.Blocks[i].BrightnessChanges[j].Value, CurrentBrightnessValue, Data.Blocks[i].BrightnessChanges[j].TrackPosition - CurrentBrightnessTrackPosition);
+							
+							if (t == 0)
 							{
-								TrackManager.BrightnessChangeEvent bce = (TrackManager.BrightnessChangeEvent)TrackManager.Tracks[k].Elements[CurrentBrightnessElement].Events[CurrentBrightnessEvent];
-								bce.NextBrightness = Data.Blocks[i].BrightnessChanges[j].Value;
-								bce.NextDistance = Data.Blocks[i].BrightnessChanges[j].TrackPosition - CurrentBrightnessTrackPosition;
+								if (CurrentBrightnessElement >= 0 & CurrentBrightnessEvent >= 0)
+								{
+									TrackManager.BrightnessChangeEvent bce = (TrackManager.BrightnessChangeEvent)TrackManager.Tracks[t].Elements[CurrentBrightnessElement].Events[CurrentBrightnessEvent];
+									bce.NextBrightness = Data.Blocks[i].BrightnessChanges[j].Value;
+									bce.NextDistance = Data.Blocks[i].BrightnessChanges[j].TrackPosition - CurrentBrightnessTrackPosition;
+								}
+								CurrentBrightnessElement = n;
+								CurrentBrightnessEvent = m;
+								CurrentBrightnessValue = Data.Blocks[i].BrightnessChanges[j].Value;
+								CurrentBrightnessTrackPosition = Data.Blocks[i].BrightnessChanges[j].TrackPosition;
 							}
 						}
-						CurrentBrightnessElement = n;
-						CurrentBrightnessEvent = m;
-						CurrentBrightnessValue = Data.Blocks[i].BrightnessChanges[j].Value;
-						CurrentBrightnessTrackPosition = Data.Blocks[i].BrightnessChanges[j].TrackPosition;
+						
 					}
 				}
 				// fog
