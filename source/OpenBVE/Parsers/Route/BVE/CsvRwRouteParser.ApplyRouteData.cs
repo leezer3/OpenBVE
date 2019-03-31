@@ -238,13 +238,27 @@ namespace OpenBve
 									bce.NextBrightness = Data.Blocks[i].BrightnessChanges[j].Value;
 									bce.NextDistance = Data.Blocks[i].BrightnessChanges[j].TrackPosition - CurrentBrightnessTrackPosition;
 								}
-								CurrentBrightnessElement = n;
 								CurrentBrightnessEvent = m;
-								CurrentBrightnessValue = Data.Blocks[i].BrightnessChanges[j].Value;
-								CurrentBrightnessTrackPosition = Data.Blocks[i].BrightnessChanges[j].TrackPosition;
+								
+							}
+							else
+							{
+								if (CurrentBrightnessElement >= 0 & CurrentBrightnessEvent >= 0)
+								{
+									for (int e = 0; e < TrackManager.Tracks[t].Elements[CurrentBrightnessElement].Events.Length; e++)
+									{
+										if (!(TrackManager.Tracks[t].Elements[CurrentBrightnessElement].Events[e] is TrackManager.BrightnessChangeEvent))
+											continue;
+										TrackManager.BrightnessChangeEvent bce = (TrackManager.BrightnessChangeEvent)TrackManager.Tracks[t].Elements[CurrentBrightnessElement].Events[e];
+										bce.NextBrightness = Data.Blocks[i].BrightnessChanges[j].Value;
+										bce.NextDistance = Data.Blocks[i].BrightnessChanges[j].TrackPosition - CurrentBrightnessTrackPosition;
+									}
+								}
 							}
 						}
-						
+						CurrentBrightnessElement = n;
+						CurrentBrightnessTrackPosition = Data.Blocks[i].BrightnessChanges[j].TrackPosition;
+						CurrentBrightnessValue = Data.Blocks[i].BrightnessChanges[j].Value;
 					}
 				}
 				// fog
