@@ -36,6 +36,8 @@ namespace CarXmlConvertor
 			if (!System.IO.File.Exists(FileName))
 			{
 				MessageBox.Show("The selected folder does not contain a valid train.dat \r\n Please retry.", "CarXML Convertor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+				mainForm.terminateEarly = true;
+				return;
 			}
 			string[] Lines = System.IO.File.ReadAllLines(FileName);
 			for (int i = 0; i < Lines.Length; i++)

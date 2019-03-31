@@ -26,11 +26,23 @@ namespace CarXmlConvertor
 	    }
 
 	    private bool animatedPanel;
+	    internal bool terminateEarly;
 
         private void process_Click(object sender, EventArgs e)
         {
+	        if (string.IsNullOrEmpty(ConvertTrainDat.FileName) && !string.IsNullOrEmpty(textBox1.Text) && System.IO.Directory.Exists(textBox1.Text))
+	        {
+		        ConvertTrainDat.FileName = Path.CombineFile(textBox1.Text, "train.dat");
+		        ConvertSoundCfg.FileName = Path.CombineFile(textBox1.Text, "sound.cfg");
+		        ConvertPanel2.FileName = Path.CombineFile(textBox1.Text, "panel2.cfg");
+		        ConvertPanelAnimated.FileName = Path.CombineFile(textBox1.Text, "panel.animated");
+		        animatedPanel = System.IO.File.Exists(ConvertPanelAnimated.FileName);
+		        ConvertExtensionsCfg.FileName = Path.CombineFile(textBox1.Text, "extensions.cfg");
+	        }
 	        updateLogBoxText = "Loading parameters from train.dat file " + ConvertTrainDat.FileName + Environment.NewLine;
 	        ConvertTrainDat.Process(this);
+	        if (terminateEarly)
+		        return;
 	        if (!animatedPanel)
 	        {
 		        if (!System.IO.File.Exists(ConvertPanel2.FileName))
