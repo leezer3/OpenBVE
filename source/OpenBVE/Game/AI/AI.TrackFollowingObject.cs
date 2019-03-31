@@ -193,7 +193,14 @@ namespace OpenBve
 					{
 						Car.Specs.CurrentSpeed = Delta / TimeElapsed;
 						Car.Specs.CurrentPerceivedSpeed = Car.Specs.CurrentSpeed;
-						Car.Specs.CurrentAcceleration = Car.Specs.CurrentSpeed / TimeElapsed;
+						if (Car.Specs.CurrentPerceivedSpeed < 0)
+						{
+							Car.Specs.CurrentAcceleration = -(Car.Specs.CurrentSpeed / TimeElapsed);
+						}
+						else
+						{
+							Car.Specs.CurrentAcceleration = Car.Specs.CurrentSpeed / TimeElapsed;
+						}
 						Car.Specs.CurrentAccelerationOutput = Car.Specs.CurrentAcceleration;
 					}
 					else
