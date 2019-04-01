@@ -1,1 +1,4 @@
 openbve usr/lib
+debian/wrappers/openbve usr/games
+debian/wrappers/openbve-objectviewer usr/games
+debian/wrappers/openbve-routeviewer usr/games

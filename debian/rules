@@ -6,6 +6,7 @@ EXEC_PLUGIN_TARGET = $(EXEC_TARGET)/Plugins
 DEBUG_CONFIGURATION=Release
 
 override_dh_auto_build:
+	rm -rf openbve
 	xbuild /p:TargetFrameworkVersion="v4.5" OpenBVE.sln /p:Configuration=$(DEBUG_CONFIGURATION)
 	rm bin_release/AtsPluginProxy.*
 	rm bin_release/Data/Formats/OpenTK.dll
