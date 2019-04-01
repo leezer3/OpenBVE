@@ -1,17 +1,24 @@
 Format: http://dep.debian.net/deps/dep5/
 Upstream-Name: Openbve Stable source
-Upstream-Contact: Michelle Boucquemont <reschanger@gmail.com>
-Source: http://trainsimframework.org/downloads.html (openbve_stable_source.zip)
+Upstream-Contact: Christopher Lees <leezer3@gmail.com>
+Source: https://github.com/leezer3/OpenBVE.git
 
-Comment: From http://trainsimframework.org/credits.html
+Comment: From https://github.com/leezer3/OpenBVE/blob/master/Contributing.md
 Files: *
-Copyright: 2008-2012 Michelle Boucquemont
+Copyright: 2008-2019 
+ Michelle Boucquemont
  Anthony Bowden
  Jens Rügenhagen
+ Christopher Lees
+ Jakub Vanek
+ Maurizo M. Gavioli
+ Connor Fitzgerald
+ Marc Riera
+
 License: openbve-permissive
 
 License: openbve-permissive
- From 'http://trainsimframework.org/index.html', current:
+ From 'http://openbve-project.net', current:
  .
    openBVE is a cross-platform, free-as-in-freedom train simulator
    placed in the public domain. This means that you can make any
@@ -173,46 +180,7 @@ Comment:
  .
    BVEColorado
  ---------------------------------------------------------------------
- .
- Managed content
- .
- In Openbve=1.4.0.0 in-program managed content was introduced, Openbve
- has gone out of their way to ensure that anything to be included in
- the managed content repository is explicitly distributable.  Although
- this does affect Debian/Ubuntu directly, is shows an understanding
- of the problems that can be present without having explicit statements:
- .
-   http://trainsimframework.org/develop/managed/licenses.html
-   Managed add-ons - Accepted licenses
- .
-   All packages that you want to make available under managed content
-   must contain a LICENSE file in the root directory of the
-   package. The LICENSE file must contain either one of the following
-   texts:
- .
-     -----------------------------------------------------------------
-     This add-on is placed under the following license:
- .
-     YOU ARE ALLOWED TO MAKE VERBATIM COPIES OF THIS ADD-ON.
- .
-     There are no terms and no conditions. This applies worldwide and
-     is unlimited in duration. If additional permissions are granted,
-     they are covered in a separate license.
-     -----------------------------------------------------------------
- .
-     -----------------------------------------------------------------
-     THIS ADD-ON IS PLACED IN THE PUBLIC DOMAIN.
- .
-     If this is not legally possible, you are given permission to
-     use the add-on in any way you want (including redistribution
-     and modification). There are no terms and no conditions.
-     This applies worldwide and is unlimited in duration.
-     -----------------------------------------------------------------
- .
- This does not affect plugins packaged /in/ Debian, but is what is
- necessary should a developer wish to make their content available
- from the new in-program managed content downloading system.
-
+ 
 Files: debian/*
 Copyright: 2009-2012 Paul Sladen
 License: permissive
