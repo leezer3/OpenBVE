@@ -115,6 +115,13 @@ namespace OpenBve
 					//Amsterdam-Antwerpen (Thalys PBKA).rw
 					Data.IgnorePitchRoll = true;
 					break;
+				case "FBF4399E04B769BDD416CEB6CC3D3C5EC4803E158997D5D75A76C423B6DA45ED":
+				case "49630A77BE1AB513BD58962795DC38846451A3E44C4E6770DF78EE71C5EF226E":
+					//737 Test Flight-
+					//Arrive Night.csv
+					//Arrive.csv
+					Interface.CurrentOptions.Derailments = false;
+					break;
 			}
 		}
 	}
