@@ -1017,6 +1017,21 @@ namespace OpenBve {
 											}
 										} i++;
 									} i--;
+
+									if (Interface.CurrentOptions.EnableBveTsHacks && trainName == "BOEING-737")
+									{
+										/*
+										 * BVE4 stacks objects within layers in order
+										 * If two overlapping objects are declared in the same
+										 * layer in openBVE, this causes Z-fighting
+										 *
+										 */
+										if (Subject == "sap" || Subject == "bp")
+										{
+											Layer = 4;
+										}
+									}
+
 									if (Radius == 0.0) {
 										Interface.AddMessage(MessageType.Error, false, "Radius is required to be non-zero in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 									}
