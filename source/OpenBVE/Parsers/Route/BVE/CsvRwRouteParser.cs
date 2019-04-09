@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Path = OpenBveApi.Path;
@@ -912,7 +912,28 @@ namespace OpenBve {
 				if (NumberCheck && NumberFormats.TryParseDouble(Expressions[i].Text, UnitFactors, out x)) {
 					x += Expressions[i].TrackPositionOffset;
 					if (x >= 0.0) {
-						a = x;
+						if (Interface.CurrentOptions.EnableBveTsHacks)
+						{
+							switch (System.IO.Path.GetFileName(Expressions[i].File.ToLowerInvariant()))
+							{
+								case "balloch - dumbarton central special nighttime run.csv":
+								case "balloch - dumbarton central summer 2004 morning run.csv":
+									if (x != 0 || a != 4125)
+									{
+										//Misplaced comma in the middle of the line causes this to be interpreted as a track position
+										a = x;
+									}
+									break;
+								default:
+									a = x;
+									break;
+							}
+						}
+						else
+						{
+							a = x;
+						}
+						
 					} else {
 						Interface.AddMessage(MessageType.Error, false, "Negative track position encountered at line " + Expressions[i].Line.ToString(Culture) + ", column " + Expressions[i].Column.ToString(Culture) + " in file " + Expressions[i].File);
 					}
