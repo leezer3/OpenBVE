@@ -4,7 +4,7 @@ matrix:
   include:
 #Nightly builds for upload. Use lowest possible Mono version for compatibility purposes
     - os: linux
-      dist: precise
+      dist: trusty
       mono: 3.2.8
       script: make publish
     - os: osx
@@ -15,7 +15,7 @@ matrix:
 #Test builds
 ##Use makefile##
     - os: linux
-      dist: trusty
+      dist: xenial
       mono: latest
       script: make all-release
     - os: osx
@@ -23,16 +23,16 @@ matrix:
       before_install: if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; brew tap leezer3/sshpass; brew install leezer3/sshpass/sshpass; fi;
       script: make all-release
     - os: linux
-      dist: precise
+      dist: trusty
       mono: 3.2.8
       script: make all-release
 ##Use .sln file##
     - os: linux
-      dist: precise
+      dist: trusty
       mono: latest
       solution: OpenBVE.sln
     - os: linux
-      dist: trusty
+      dist: xenial
       mono: latest
       solution: OpenBVE.sln
     - os: osx
@@ -40,7 +40,7 @@ matrix:
       before_install: if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; brew tap leezer3/sshpass; brew install leezer3/sshpass/sshpass; fi;
       solution: OpenBVE.sln
     - os: linux
-      dist: precise
+      dist: trusty
       mono: 3.2.8
       solution: OpenBVE.sln
  
