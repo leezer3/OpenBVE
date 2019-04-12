@@ -1308,6 +1308,21 @@ namespace OpenBve {
 													Interface.AddMessage(MessageType.Error, false, "Interval " + k.ToString(Culture) + " is greater than 12 hours in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													continue;
 												}
+
+												if (o < 120 && Interface.CurrentOptions.EnableBveTsHacks)
+												{
+													/*
+													 * An AI train follows the same schedule / rules as the player train
+													 * ==>
+													 * x Waiting time before departure at the first station (30s to 1min is 'normal')
+													 * x Time to accelerate to linespeed
+													 * x Time to clear (as a minimum) the protecting signal on station exit
+													 *
+													 * When the runinterval is below ~2minutes, on large numbers of routes, this
+													 * shows up as a train overlapping the player train (bad....)
+													 */
+													o = 120;
+												}
 												intervals.Add(o);
 											}
 											intervals.Sort();
