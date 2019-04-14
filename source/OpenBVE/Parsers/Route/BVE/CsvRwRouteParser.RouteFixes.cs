@@ -122,6 +122,16 @@ namespace OpenBve
 					//Arrive.csv
 					Interface.CurrentOptions.Derailments = false;
 					break;
+				case "471C1CC06E55D1B40E7B992028FA25200E480A37778E51B1B0F36BE475B250AF":
+					//Iiyama 2060-
+					//9001.csv
+					Expressions[434].Text = ".section 0; 103; 104; 105; 106";
+					if (Interface.CurrentOptions.CurrentXParser == Interface.XParsers.Original)
+					{
+						//Various broken stuff with the original parser, either Assimp or new will do
+						Interface.CurrentOptions.CurrentXParser = Interface.XParsers.NewXParser;
+					}
+					break;
 			}
 		}
 	}
