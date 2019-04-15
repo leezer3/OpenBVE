@@ -106,6 +106,9 @@ namespace OpenBve {
 	            }
 	        }
 	        Options.LoadOptions();
+	        var options = new ToolkitOptions();
+	        options.Backend = PlatformBackend.PreferX11;
+	        Toolkit.Init(options);
             Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
 	        Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
 	        Interface.CurrentOptions.AntialiasingLevel = 16;

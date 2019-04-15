@@ -1,0 +1,166 @@
+Braindump, Paul Sladen 2012-01-10
+
+Licensing:
+
+The 'debian/copyright' contains both the short 'public domain' licence
+from upstream, and associated context and discussion that demonstrate
+the wider intent of the upstream licensing.  This has been combined
+and included all together per the advice recieved on #debian-ftp about
+public domain licences being acceptable, but ideally with supporting
+context.
+
+
+Data files:
+
+Content data (Routes and Trains) can be downloaded directly from
+inside Openbve 1.4.0.0 and above, or from those packaged in Debian.
+
+Openbve has been maintained in Ubuntu for a few years; originally the
+only free data-files enabled are the following ones specially cleaned
+and prepared from Anthony Bowden and which install into
+/usr/share/games/bve/*
+
+  http://packages.ubuntu.com/oneiric/bve-route-cross-city-south
+  http://packages.ubuntu.com/oneiric/bve-train-br-class-323
+  http://packages.ubuntu.com/oneiric/bve-train-br-class-323-3dcab
+
+The directory mirrors the _format_ of the files (BVE Train Sim files)
+rather than the _name_ of the libre simulator engine (Openbve).
+
+Preparing new upstream source:
+
+  http://trainsimframework.org/downloads.html
+
+Latest Version number N.N.N.N is displayed on that page.
+The version number is not copied into the .zip paths.
+
+The .zip links do not change and so are to unversioned .zips.
+Unfortunately it's not possible to write a 'watch' rule for this
+particular arrangemet[1].
+
+Note:
+
+  http://trainsimframework.org/common/openbve_stable_source.zip (-> openbve_*.orig.tar.gz)
+  http://trainsimframework.org/common/openbve_stable.zip (-> openbve-data_*+dfsg.orig.tar.gz)
+
+(ie, they 'appear' to be wrong way around.  The reason for this is
+that the data files and icons are only distributed in the precompiled
+distribution, and not also in the source bundle.  However, sometimes
+this is to our advantage as the data files (eg. translations) rev at a
+different rate to the main program.  Both downloads are always
+rebuilt, but you may find after unpacking that one or the other is
+zero-change, and so it's possible to skip re-uploading to the archive).
+
+Rarely does a bump of the program itself introduce a hard Depends: break
+upon the data, but do check, and bump up if it actually breaks.
+
+Changelogs
+
+The Upstream is not distributed in the source package, but needs to be
+pulled from the website.  Since the website might not be up at the point
+of rebuliding the package, this is achieved manually:
+
+  cd debian/
+  ./rules fetch-html
+
+and then this change is committed to revision control as part of the
+Debian patch for later use and reliable rebuilding.
+
+
+DFSGifyng:
+
+The 'openbve_stable.zip' contains pre-compiled '.exe', '.dll' and
+debugging maps that need deleting before creating the upstream
+tarball (for the 'openbve-data' package).
+
+  find -name \*.exe -o -name \*.dll -o -name \*.mdb | xargs rm
+
+Check using 'git status' that you haven't introduced anything non-DFSG
+into the 'upstream' branch when unpacking.
+
+Extra Note: the zip files are created manually by upstream (michelle)
+and sometimes have included off-by-one errors in the pathnames levels.
+Use 'git status' or similar and if there is an obvious typo don't use
+it and it'll just cause churn in the diffs, instead email michelle and
+get it fixed in the upstream tarball (this will help other people too,
+not just yourself when packaging).
+
+Mask file
+
+'Data/mask.bin' is a raw bitmask used along with 'Data/icon.bmp' for
+the Window Manager icon setting:
+
+  Sdl.SDL_WM_SetIcon(bitmap, mask)
+
+The file is (128 bytes) == (1024 bits) == (32 x 32 bits), in the raw bitmask/
+bitarray form designed for sending straight to:
+
+  http://www.libsdl.org/cgi/docwiki.cgi/SDL_WM_SetIcon
+
+  "points to a bitmap with bits set where the corresponding
+  pixel should be visible.  The format of the bitmap is
+  as follows:  Scanlines come in the usual top-down order.
+  Each scanline consists of (width / 8) bytes, rounded up."
+
+The following Python can be used to print the contents in ASCII-art form:
+
+  python -c "import struct; \
+    print ''.join(map(bin,struct.unpack('32I',open('Data/mask.bin') \
+    .read(128)))).replace('0b','\n').replace('0','  ').replace('1','**')"
+
+
+Debug/Release configuration
+
+The Mono xbuild system has a figured arrangement of directories, which
+are different for release and debug builds.  In testing it may be
+necessary to swap between the configurations to add with debugging and
+follow-up with upstream.  This is changable at the top of 'debian/rules':
+
+  #DEBUG_CONFIGURATION=Debug
+  DEBUG_CONFIGURATION=Release
+
+Note that because of the change in directory structure, the resulting
+output files are installed further down the debian/rules file, rather
+than from debian/*.install which does not have the necessary
+flexibility.
+
+
+Commit changelog:
+
+  git checkout -f upstream
+  git commit --author michelle
+
+  import openbve_stable.zip N.N.N.N+dfsg (YYYY-mm-dd)
+
+Main commit message comes from a nicely wordwrapped/plain-text version
+of the upstream changelog at:
+
+  http://trainsimframework.org/changelog.html
+
+this is linked from the site top-level of the site (not downloads).
+
+Debian changelog UNRELEASED entries:
+
+Openbve upstream releases tend to come in bunches of activity.  Quite
+often a second, or third upstream release may become available whilst
+the Debian packaging of the previous version is still under test and
+has not yet been uploaded.
+
+This accounts for a number of the UNRELEASED entries in
+'debian/changelog'.  It's very useful to keep these as it makes
+bisecting and testing/jumping between revisions much easier, even if
+those never actually made it to the Debian/Ubuntu archives because
+they were superseded by the newer version that became available.
+
+
+[1] "watch file syntax, version separate to .zip" (2009-02-17)
+http://www.mail-archive.com/pkg-devscripts@teams.debian.net/msg02553.html
+
+
+Upstream documentation.  The Openbve website includes various pieces
+of documentation only in HTML format that are not included in the
+source bundles.  This are part of the wider project, and so some of
+them (Credits, Changelog, Release information) have been documented
+and added to resulting binary .deb distribution.  Where possible,
+subsets of this HTML information have been manually included in files
+such as 'debian/copyright'.

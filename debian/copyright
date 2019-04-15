@@ -1,0 +1,188 @@
+Format: http://dep.debian.net/deps/dep5/
+Upstream-Name: Openbve Stable source
+Upstream-Contact: Christopher Lees <leezer3@gmail.com>
+Source: https://github.com/leezer3/OpenBVE.git
+
+Comment: From https://github.com/leezer3/OpenBVE/blob/master/Contributing.md
+Files: *
+Copyright: 2008-2019 
+ Michelle Boucquemont
+ Anthony Bowden
+ Jens Rügenhagen
+ Christopher Lees
+ Jakub Vanek
+ Maurizo M. Gavioli
+ Connor Fitzgerald
+ Marc Riera
+
+License: openbve-permissive
+
+License: openbve-permissive
+ From 'http://openbve-project.net', current:
+ .
+   openBVE is a cross-platform, free-as-in-freedom train simulator
+   placed in the public domain. This means that you can make any
+   modifications to it you like and share your modifications with
+   others.
+ .
+ From 'Readme.txt', current:
+ .
+   This program is placed in the public domain. This means that you
+   can make any modifications to it you like and share your
+   modifications with others.
+ .
+ From 'http://trainsimframework.org/index.html', earlier versions:
+ .
+   Dedication to the public
+ .
+   This program, along with all website content, is dedicated to the
+   public. I do not pose any restrictions or requirements on how this
+   material can be used, and explicitly encourage redistribution and
+   modification for any purpose.
+ .
+ From 'Readme.txt', earlier versions:
+ .
+   Dedication to the public
+ .
+   This program is dedicated to the public. I do not pose any
+   restrictions or requirements on how this material can be used, and
+   explicitly encourage redistribution and modification for any
+   purpose.
+Comment:
+ Below are some of the accompanying statements that Openbve and the
+ upstream developers have made regarding how the work can be used,
+ this provides greater insight and context into the wishes of upstream,
+ beyond the simple and permissive "public domain" wording.
+ .
+ It's notable that the intent and appreciation for sharing and
+ openness has always present with upstream, as can be seen from the
+ name "Open...".  Openbve was itself a reaction to "freeware" but
+ non-distributable, and non-fixable programm "BVE Trainsim"
+ (originally called "Boso View Express", 鉄道運転シミュレーション).
+ .
+ Although the intent has been constant, the PD wording has evolved,
+ attempting to remain short.  Upstream have welcomed input where it
+ as been offered on the licence-terminology; as can be seen in the
+ discussion: the upstream preference would be for copyright law to
+ not exist (international treaties dictate otherwise for the moment).
+ .
+ History
+ .
+ In 2008, in preparation for Debian packaging, discussion was started
+ with upstream via the upstream bugtracker/forum, and is copied below
+ for context.  (At the time it was the best introduction to the
+ licence and original intent behind the Openbve project).
+ .
+ More information on the thinking behind the "licence-free" intend has been
+ saved here in this 'debian/copyright' file, the essence of which is: 
+ .
+   Post by michelle on Sat, 14th Feb 2009, 18:00, UTC
+ .
+   I have been approached by some individuals over the time, including
+   from the GNU project and the Ubuntu Foundation (as it appears at
+   least), and was told that they lack a means of "legal security" for
+   reuse without an explicit license. You can read my above post on
+   details about my attitude regarding this matter, but as a start, I
+   have decided to put the following line on the homepage and will also
+   include it in any later release:
+ .
+     " This program, along with all documentation provided, is dedicated
+       to the public. I do not pose any restrictions on how this material
+       can be used, and explicitly encourage redistribution and
+       modification for any purpose. "
+ .
+ Full thread from which the above is taken: 
+ ---------------------------------------------------------------------
+   http://openbve.freeforums.org/licence-t39.html
+   == Licence ==
+ .
+   Post by Sacro on Sat, 26th Apr 2008, 16:39, UTC
+ .
+   Just out of curiosity, what licence applies to OpenBVE? It'd be nice
+   to know if it's GPL or BSD or whatever as I'm quite interested in
+   helping out.
+ .
+   Sacro
+ .
+   == Re: Licence ==
+ .
+   Post by michelle on Sun, 27th Apr 2008, 07:43, UTC
+ .
+   My attitude differs from so called "free software" licenses. I try to
+   explain:
+ .
+   With proprietary software, the developers usually try to restrict what
+   you are allowed to do with the software to the uttermost extreme that
+   is legally possible. This falls under the category of copyright.
+ .
+   Then there is something that is sometimes called green copyright. So
+   called free software falls in this category. As with proprietary
+   software, a license is used to tell users what they are allowed to do
+   and what not. The difference to proprietary software is that so called
+   free software licenses are usually much more permissive, yet the
+   author decides what you are allowed to do and what not. So called free
+   software is usually attributed to derive from "freedom" instead of
+   "free of charge". Still, if the author employs a license telling other
+   people what they can or cannot do, this inherently cannot have
+   anything to do with freedom.
+ .
+   Then there is something called public domain, which I consider to be
+   an inherently good thing as everyone has eventually the same rights as
+   the author. However, releasing a work into the public domain is not
+   legally meaningful in many countries. Also, releasing a work into the
+   public domain (if possible) depends on the generosity of the author,
+   and this decision is made by the author.
+ .
+   My attitude is even one step further: I am opposed to copyright, thus
+   I marked the game with the legally not meaningful phrase of
+   "anti-copyright". It is legally meaningless, because in every country
+   that has some form of copyright, it would require these laws to be
+   abandoned. Still, why do I have this attitude?
+ .
+   With a license, I would be telling other people what they can or
+   cannot do. I am not such a person. I will not make any silly
+   restrictions on how you can use this program, I will not tell you to
+   put my name on any derived work, I will never ever give "permission"
+   for you modify or redistribute the software, because I don't think
+   that it is up to me telling you what you can or can't do. You should
+   make this decision for yourself.
+ .
+   I hope this briefly explained the situation.
+ .
+   User avatar
+   michelle
+ .
+   == Re: Licence ==
+ .
+   Post by michelle on Sat, 14th Feb 2009, 18:00, UTC
+ .
+   I have been approached by some individuals over the time, including
+   from the GNU project and the Ubuntu Foundation (as it appears at
+   least), and was told that they lack a means of "legal security" for
+   reuse without an explicit license. You can read my above post on
+   details about my attitude regarding this matter, but as a start, I
+   have decided to put the following line on the homepage and will also
+   include it in any later release:
+ .
+     " This program, along with all documentation provided, is dedicated
+       to the public. I do not pose any restrictions on how this material
+       can be used, and explicitly encourage redistribution and
+       modification for any purpose. "
+ .
+   michelle
+ .
+   == Re: Licence ==
+ .
+   Way to go Michelle!
+ .
+   Good to hear from another lonely soul out there who gets the true
+   meaning of freedom.
+ .
+   BVEColorado
+ ---------------------------------------------------------------------
+ 
+Files: debian/*
+Copyright: 2009-2012 Paul Sladen
+License: permissive
+ Copying and distribution of this package, with or without
+ modification, are permitted in any medium without royalty.

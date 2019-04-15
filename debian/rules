@@ -1,0 +1,33 @@
+#!/usr/bin/make -f
+export DH_VERBOSE=1
+TARGET = $(CURDIR)/debian/openbve
+EXEC_TARGET = $(TARGET)/usr/lib/openbve
+EXEC_PLUGIN_TARGET = $(EXEC_TARGET)/Plugins
+DEBUG_CONFIGURATION=Release
+
+override_dh_auto_build:
+	# Get rid of any prior build result
+	rm -rf openbve
+	#Build solution
+	xbuild /p:TargetFrameworkVersion="v4.5" OpenBVE.sln /p:Configuration=$(DEBUG_CONFIGURATION)
+	#This is Windows only, so can be removed
+	rm bin_release/AtsPluginProxy.*
+	# As we reference this, it gets copied to this directory too
+	# It can safely be deleted, and the one in the main directory
+	# will be used instead
+	rm bin_release/Data/Formats/OpenTK.dll
+	mv bin_release openbve
+	
+override_dh_auto_clean:
+	xbuild /t:Clean OpenBVE.sln
+
+override_dh_auto_install:
+	#do most of this stuff in debian/install, maybe with dh-exec
+
+
+override_dh_clideps:
+	# All of these are stuff which is picked up from openTK, and we either don't use (e.g. EGL, KVM) or is not relevant on Linux / Debian, so we need to exclude it
+	dh_clideps -d -r --exclude-moduleref=oalinst.exe --exclude-moduleref=AtsPluginProxy.dll --exclude-moduleref=hid.dll --exclude-moduleref=ole32.Dll --exclude-moduleref=fusion.dll --exclude-moduleref=setupapi.dll --exclude-moduleref=msdmo.dll --exclude-moduleref=dsound.dll --exclude-moduleref=Msacm32.dll --exclude-moduleref=msacm32.dll --exclude-moduleref=ole32.dll --exclude-moduleref=mfplat.dll --exclude-moduleref=mfreadwrite.dll --exclude-moduleref=mf.dll --exclude-moduleref=/System/Library/Frameworks/IOKit.framework/Versions/Current/IOKit  --exclude-moduleref=libdl.dylib --exclude-moduleref=/usr/lib/libobjc.dylib --exclude-moduleref=/System/Library/Frameworks/OpenGL.framework/Versions/Current/OpenGL --exclude-moduleref=/System/Library/Frameworks/Carbon.framework/Versions/Current/Carbon --exclude-moduleref=/System/Library/Frameworks/ApplicationServices.framework/Versions/Current/ApplicationServices --exclude-moduleref=/System/Library/Frameworks/CoreVideo.framework/Versions/Current/CoreVideo --exclude-moduleref=libGLES.dll --exclude-moduleref=libEGL.dll --exclude-moduleref=libGLESv2.dll --exclude-moduleref=GLESv1_CM --exclude-moduleref=gbm --exclude-moduleref=libinput --exclude-moduleref=libkms --exclude-moduleref=dl 
+
+%:
+	dh $@ --with cli

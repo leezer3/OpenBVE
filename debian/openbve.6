@@ -1,0 +1,122 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH OPENBVE 6 "1 April 2019" OpenBVE
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH "NAME"
+OpenBVE \- train/railway simulator and game
+.SH "SYNOPSIS"
+\fBopenbve\fR [\fB/route=\fIroute.csv\fR] [\fB/train=\fIdirectory\fR] [\fB/controls\fR|\fB/newgame\fR|\fB/options\fR|\fB/review\fR]
+
+.br
+.SH "DESCRIPTION"
+OpenBVE is a realistic rail simulator.
+
+The driving simulation is restricted to following a pre-determined loaded route, with
+the focus being on the realism of the train driving experience.
+OpenBVE also has an \fIArcade\fR mode where driving style and timetable-keeping
+affect a running score.
+
+The simulator is backwards compatible with existing 'BVE Trainsim'
+route and train datafiles, which are readily available for no cost.  It
+is cross-platform using CLI and Mono.
+
+.br
+.SH "GETTING STARTED"
+To move the train, you need to do the following (with the default keyboard settings):
+
+\fBf\fR Move the \fIreverser\fR to the forwards position.  (Opposite is \fBv\fR).
+.br
+\fB,\fR Release the \fIbrake\fR one notch; will be required 4-8 times before movement.  (Opposite is \fB.\fR).
+.br
+\fBz\fR Increase the \fIregulator\fR (power) one notch; may be required 1-2 times before movement.  (Opposite is \fBq\fR).
+
+The major controls keys are arranged closely together
+\fBq\fR-\fBa\fR-\fBz\fR for power control; \fB,\fR-\fB.\fR (comma and full-stop)
+for braking and \fBf\fR-\fBv\fR for forwards/backwards direction.
+Some electric trains have a combined accelerator+brake with a coast
+(neutral) in the centre.  This is controlled with just the
+\fBq\fR-\fBa\fR-\fBz\fR combination (and
+forwards/backwards). Pressing the \fBa\fR key moves the controller one notch
+closer to the coast/idle positioh, regardless of whether in power or braking mode.
+
+\fBReturn\fR/\fBShift-Return\fR operate the horn.  Keys \fBF1\fR-\fBF5\fR select alternative camera angles.
+\fBC-r\fR unlocks the camera to allow free movement (\fBr\fR to reset).  A large number of other keys exist
+for interacting with complex signalling systems and operating the passenger doors whilst
+in a station.  Most routes have a supplied timetable that can be displayed by pressing \fBC-t\fR.
+
+.SH "LAPTOPS"
+For laptops/notebooks, there is an alternate keyboard mapping (called "Default keyboard
+assignment for Notebooks.controls"), which can be imported
+via the \fICustomise Controls\fR tab.  The basic keys are the same,
+but camera controls are moved off the numeric keypad.
+
+.br
+.SH "OPTIONS"
+.TP
+\fB/controls\fR
+Show Customise Controls screen; keyboard/mouse/joystick selection.
+.TP
+\fB/newgame\fR
+Show Filemanager/route selector screen; choose activity (default).
+.TP
+\fB/options\fR
+Show Options screen; display and quality settings.
+.TP
+\fB/review\fR
+Show Review performance; score and incident log from previous activity.
+.TP
+\fB/route=\fIsomeroute.csv\fR
+Path to the file with the route file ending \fI.csv\fR or \fI.rw\fR which describes the track, scenery and time-table.
+.TP
+\fB/train=\fItrain.dat\fR
+A train/cab.  This should be a path to the directory, which contains the \fItrain.dat\fR description for the locomotive, train or cab.
+
+.SH "DATAFILES"
+Two elements are required, a route, and a train (often just a cab view
+and performance metrics).  These can be selected using the
+filemanager after OpenBVE is started.  Most routes have a
+corresponding recommended train (for instance a particular model of Tube train on the
+London Underground); if this train is located it will be selected by
+default.
+
+.br
+.SH "FILES"
+.TP
+\&~/.config/OpenBve/
+Saved keyboard configuration, display settings and score log.
+.TP
+/usr/share/games/bve/\fBTrain/\fR
+Default location for packaged train directories (containing \fItrain.dat\fR).
+.TP
+/usr/share/games/bve/\fBRailway/Route/\fR
+Default location for packaged railway route \fI.csv\fR files.
+.TP
+/usr/shares/games/openbve/data/
+Data used by OpenBVE to start up.
+
+.br
+.SH "AUTHOR"
+.TP
+OpenBVE was written by Michelle Boucquemont <reschanger@gmail.com> and placed in the public domain.
+.TP
+This manual page was written for Debian/Ubuntu by Paul Sladen <ubuntu@paul.sladen.org>
+
+.br
+.SH "SEE ALSO"
+Website:
+.BR http://trainsimframework.org/
+.br
+

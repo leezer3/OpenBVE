@@ -1,0 +1,115 @@
+Expansion routes and trains
+===========================
+
+The BVE route-designing community is quite extensive, as the original
+Japanese (free as in beer) "BVE Trainsim" has been around since the
+1990s.  The basic route text-based file format has been flexible to
+allow adding extra detail (models and textures) in line with computing
+power increases.
+
+BVE (and OpenBVE) are particularly popular in Britain and Japan; therefore
+the highest-quality BVE routes tend to features real or fictional locations
+in these two countries.
+
+Via the web
+===========
+
+There are several main issues with finding expansion routes/trains:
+
+1.  Virtually all BVE routes are free-as-in-beer;  but come with
+    restrictions preventing distribution, except via the original authors'
+    homepage.
+
+2.  There is no consistent/central download location.  When you do find a forum
+    this may require registering and a new login to get the link.
+
+3.  The downloads are not consistently formatted; They can be '.zip',
+    self-extracting '.exe', MS Windows Installer '.msi' or '.7z'...
+    .msi files can normally be unpacked using Wine's 'msiexec' and
+    then copying the files from ~/.wine/drive_c/somewhere.
+
+4.  Most routes were created on MS Windows, which has case-insensitive
+    filenames.  It may be necessary to rename them to lowercase.
+
+Websites
+========
+
+These websites may be a good starting point for locating additional files:
+
+    http://www.uktrainsim.com/
+    http://www.trainsimcentral.co.uk/ (Birmingham "Cross-City")
+    http://www.bvecornwall.co.uk
+
+This beautiful Italian route is designed for OpenBVE:
+
+    http://fevf.altervista.org/
+
+There are excellent Japanese routes available at:
+
+    http://gri.s60.xrea.com (Joetsu Line)
+    http://ec207.tea-nifty.com/blog/2008/07/atssnp_275b.html (ATS-Sn/P Test Route)
+
+Extracting
+==========
+
+Once you have succeded in finding the promise of a route, or train and
+managed to unpack it sufficiently to get at the actual files. What you
+need to look for are the directories:
+
+(a) For railway routes:
+
+ .../Railway/Route/my-first-route.csv
+
+This will often refer to 'Object/...' stored in directory above, or
+textures/models assumed to be available with the original 'BVE'
+program's default route.  As such you will need to keep this directory
+structure intact.
+
+BTW, you can open the '.csv' file with a text-editor or spreadshet; See below.
+
+(b) For cab and train descriptions;  For an ABC locomotive, this might be:
+
+  .../Train/Abc123/train.dat
+
+Where 'Abc123' is the directory that is loaded with OpenBVE.  The required files
+should be all inside this directory.
+
+Format
+======
+The route file format can only follow a pre-defined journey.  This is
+defined in the '.csv' (Comma Separated Value) file.  Each point of
+interest (model) or change in the track is measured in metres relative
+to the starting point.
+
+The first column is the distance, and remaining columns change what
+happens, or begins or ends at that point.
+
+Multiple parallel tracks are very easily designed in BVE format as they
+are simply defined as a horizontal/vertical offset compared to the first track
+that the train is taking.
+
+Points are modelled (although cannot be taken) by moving a parallel track
+closer the the main track and then stopping it.
+
+If the train is required to "cross over" to the "other line", the
+track the train is on is actually slewed across, with a new empty line
+started straight ahead and an old empty line stopped when train's
+route has moved across.
+
+In addition to the source code, full reverse-engineered documentation
+from analysising the original free-as-in-beer BVE Trainsim program
+is available in English at:
+
+  http://openbve-project.net/develop/
+
+Some documentation of the formats is available in Japanese at:
+
+  http://bvets.net/old/make4/
+  http://bvets.net/old/make/
+
+Author
+======
+This text document written by Paul Sladen <openbve@paul.sladen.org>
+for Debian/Ubuntu and released into the Public Domain.  List of
+suggested download addresses contributed by Anthony Bowden
+<anthony-b@railsimroutes.net>.

@@ -77,54 +77,73 @@ namespace OpenBve
 			System.IO.File.WriteAllText(File, Builder.ToString(), new System.Text.UTF8Encoding(true));
 		}
 
+		private static bool ControlsReset = false;
+
 		/// <summary>Loads the current controls from the controls.cfg file</summary>
 		/// <param name="FileOrNull">An absolute path reference to a saved controls.cfg file, or a null reference to check the default locations</param>
 		/// <param name="Controls">The current controls array</param>
 		internal static void LoadControls(string FileOrNull, out Control[] Controls)
 		{
 			string File;
-			bool ControlsReset = false;
-			if (FileOrNull == null) {
+
+			if (FileOrNull == null)
+			{
 				File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/controls.cfg");
 				if (!System.IO.File.Exists(File))
 				{
 					File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "controls.cfg");
 				}
-				if (!System.IO.File.Exists(File)) {
+
+				if (!System.IO.File.Exists(File))
+				{
 					//Load the default key assignments if the user settings don't exist
 					File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default keyboard assignment.controls");
 					if (!System.IO.File.Exists(File))
 					{
 						MessageBox.Show(Translations.GetInterfaceString("errors_warning") + Environment.NewLine + Translations.GetInterfaceString("errors_controls_missing"),
-												Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+							Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 						Controls = new Control[0];
 						return;
 					}
 				}
-			} else {
+			}
+			else
+			{
 				File = FileOrNull;
 			}
+
 			Controls = new Control[256];
 			int Length = 0;
 			CultureInfo Culture = CultureInfo.InvariantCulture;
-			if (System.IO.File.Exists(File)) {
+			if (System.IO.File.Exists(File))
+			{
 				string[] Lines = System.IO.File.ReadAllLines(File, new System.Text.UTF8Encoding());
-				for (int i = 0; i < Lines.Length; i++) {
+				for (int i = 0; i < Lines.Length; i++)
+				{
 					Lines[i] = Lines[i].Trim();
-					if (Lines[i].Length != 0 && !Lines[i].StartsWith(";", StringComparison.OrdinalIgnoreCase)) {
+					if (Lines[i].Length != 0 && !Lines[i].StartsWith(";", StringComparison.OrdinalIgnoreCase))
+					{
 						string[] Terms = Lines[i].Split(',');
-						for (int j = 0; j < Terms.Length; j++) {
+						for (int j = 0; j < Terms.Length; j++)
+						{
 							Terms[j] = Terms[j].Trim();
 						}
-						if (Terms.Length >= 2) {
-							if (Length >= Controls.Length) {
+
+						if (Terms.Length >= 2)
+						{
+							if (Length >= Controls.Length)
+							{
 								Array.Resize<Control>(ref Controls, Controls.Length << 1);
 							}
+
 							int j;
-							for (j = 0; j < Translations.CommandInfos.Length; j++) {
+							for (j = 0; j < Translations.CommandInfos.Length; j++)
+							{
 								if (string.Compare(Translations.CommandInfos[j].Name, Terms[0], StringComparison.OrdinalIgnoreCase) == 0) break;
 							}
-							if (j == Translations.CommandInfos.Length) {
+
+							if (j == Translations.CommandInfos.Length)
+							{
 								Controls[Length].Command = Translations.Command.None;
 								Controls[Length].InheritedType = Translations.CommandType.Digital;
 								Controls[Length].Method = ControlMethod.Invalid;
@@ -134,7 +153,9 @@ namespace OpenBve
 								Controls[Length].Direction = 0;
 								Controls[Length].Modifier = KeyboardModifier.None;
 								Controls[Length].Option = 0;
-							} else {
+							}
+							else
+							{
 								Controls[Length].Command = Translations.CommandInfos[j].Command;
 								Controls[Length].InheritedType = Translations.CommandInfos[j].Type;
 								string Method = Terms[1].ToLowerInvariant();
@@ -152,7 +173,8 @@ namespace OpenBve
 											MessageBox.Show(Translations.GetInterfaceString("errors_controls_oldversion") + Environment.NewLine + Translations.GetInterfaceString("errors_controls_reset"), Application.ProductName,
 												MessageBoxButtons.OK, MessageBoxIcon.Hand);
 										}
-										var DefaultControls = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"),"Default keyboard assignment.controls");
+
+										var DefaultControls = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Controls"), "Default keyboard assignment.controls");
 										if (System.IO.File.Exists(DefaultControls))
 										{
 											if (ControlsReset == false)
@@ -163,19 +185,21 @@ namespace OpenBve
 											else
 											{
 												MessageBox.Show(Translations.GetInterfaceString("errors_warning") + Environment.NewLine + Translations.GetInterfaceString("errors_controls_default_oldversion"),
-												Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+													Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 												Controls = new Control[0];
 											}
-											
+
 										}
 										else
 										{
 											MessageBox.Show(Translations.GetInterfaceString("errors_warning") + Environment.NewLine + Translations.GetInterfaceString("errors_controls_default_missing"),
 												Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-												Controls = new Control[0];
+											Controls = new Control[0];
 										}
-										continue;
+
+										return;
 									}
+
 									if (Enum.TryParse(Terms[2], true, out CurrentKey))
 									{
 										int Modifiers;
@@ -192,15 +216,18 @@ namespace OpenBve
 											{
 												Controls[Length].Option = Option;
 											}
+
 											Valid = true;
 										}
 									}
 								}
-								
 
-								 else if (Method == "joystick" & Terms.Length >= 4) {
+
+								else if (Method == "joystick" & Terms.Length >= 4)
+								{
 									int Device;
-									if (int.TryParse(Terms[2], NumberStyles.Integer, Culture, out Device)) {
+									if (int.TryParse(Terms[2], NumberStyles.Integer, Culture, out Device))
+									{
 										string Component = Terms[3].ToLowerInvariant();
 										if (Component == "axis" & Terms.Length >= 6)
 										{
@@ -218,9 +245,11 @@ namespace OpenBve
 													Controls[Length].Direction = Direction;
 													Controls[Length].Modifier = KeyboardModifier.None;
 													int Option;
-													if (Terms.Length >= 7 && int.TryParse(Terms[6], NumberStyles.Integer, Culture, out Option)) {
+													if (Terms.Length >= 7 && int.TryParse(Terms[6], NumberStyles.Integer, Culture, out Option))
+													{
 														Controls[Length].Option = Option;
 													}
+
 													Valid = true;
 												}
 											}
@@ -240,9 +269,11 @@ namespace OpenBve
 													Controls[Length].Direction = HatDirection;
 													Controls[Length].Modifier = KeyboardModifier.None;
 													int Option;
-													if (Terms.Length >= 7 && int.TryParse(Terms[6], NumberStyles.Integer, Culture, out Option)) {
+													if (Terms.Length >= 7 && int.TryParse(Terms[6], NumberStyles.Integer, Culture, out Option))
+													{
 														Controls[Length].Option = Option;
 													}
+
 													Valid = true;
 												}
 
@@ -260,18 +291,22 @@ namespace OpenBve
 												Controls[Length].Direction = 0;
 												Controls[Length].Modifier = KeyboardModifier.None;
 												int Option;
-												if (Terms.Length >= 6 && int.TryParse(Terms[5], NumberStyles.Integer, Culture, out Option)) {
+												if (Terms.Length >= 6 && int.TryParse(Terms[5], NumberStyles.Integer, Culture, out Option))
+												{
 													Controls[Length].Option = Option;
 												}
+
 												Valid = true;
 											}
 										}
 
-									}	  
+									}
 								}
-								else if (Method == "raildriver" & Terms.Length >= 4) {
+								else if (Method == "raildriver" & Terms.Length >= 4)
+								{
 									int Device;
-									if (int.TryParse(Terms[2], NumberStyles.Integer, Culture, out Device)) {
+									if (int.TryParse(Terms[2], NumberStyles.Integer, Culture, out Device))
+									{
 										string Component = Terms[3].ToLowerInvariant();
 										if (Component == "axis" & Terms.Length >= 6)
 										{
@@ -289,9 +324,11 @@ namespace OpenBve
 													Controls[Length].Direction = Direction;
 													Controls[Length].Modifier = KeyboardModifier.None;
 													int Option;
-													if (Terms.Length >= 7 && int.TryParse(Terms[6], NumberStyles.Integer, Culture, out Option)) {
+													if (Terms.Length >= 7 && int.TryParse(Terms[6], NumberStyles.Integer, Culture, out Option))
+													{
 														Controls[Length].Option = Option;
 													}
+
 													Valid = true;
 												}
 											}
@@ -308,17 +345,20 @@ namespace OpenBve
 												Controls[Length].Direction = 0;
 												Controls[Length].Modifier = KeyboardModifier.None;
 												int Option;
-												if (Terms.Length >= 6 && int.TryParse(Terms[5], NumberStyles.Integer, Culture, out Option)) {
+												if (Terms.Length >= 6 && int.TryParse(Terms[5], NumberStyles.Integer, Culture, out Option))
+												{
 													Controls[Length].Option = Option;
 												}
+
 												Valid = true;
 											}
 										}
 
-									}	  
+									}
 								}
 
-								if (!Valid) {
+								if (!Valid)
+								{
 									Controls[Length].Method = ControlMethod.Invalid;
 									Controls[Length].Device = -1;
 									Controls[Length].Component = JoystickComponent.Invalid;
@@ -328,13 +368,16 @@ namespace OpenBve
 									Controls[Length].Option = 0;
 								}
 							}
+
 							Length++;
 						}
 					}
 				}
 			}
+
 			Array.Resize<Control>(ref Controls, Length);
 		}
+
 
 		/// <summary>Adds an array of controls to an existing control array</summary>
 		/// <param name="Base">The base control array</param>

@@ -1,0 +1,23 @@
+OpenBve is in theory cross-platform in both Source, and Binary
+(compiled) form because it uses CLI/CLR (".Net"/Mono).
+
+This version for Debian/Ubuntu is compiled from source-code and
+includes additional small changes; mainly to add Unix-specific (and
+Debian/Ubuntu packaging-specific) file paths.
+
+OpenBve itself is fairly well designed and abstracts most of the
+file-handling, including functions for case-insensitive filename
+resolution, but out-of-the-box does not provide suitable default
+save/load locations for Unix.
+
+Most of these necessary alternate paths have been incorporated by
+upstream and enabled by the "/fhs" switch.  The rest are explicitly
+patched on top as part of the Debian packaging process.
+
+The source is also patched to remove the artificial restriction of the
+Train/ and Railway/ directories needing to be in the same place.
+Removing this pseudo-requirement allows testing out newly-downloaded
+routes saved in your home-directory with a fully packaged route
+located under /usr/share/games/bve/ --- or vice-versa.
+
+Have fun, and try not to crash!

@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /usr/bin/cli /usr/lib/openbve/ObjectViewer.exe "$@"
