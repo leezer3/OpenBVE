@@ -1,0 +1,3 @@
+?package(openbve):needs="X11" section="Games/Simulation"\
+  title="OpenBVE" command="/usr/games/openbve"
+

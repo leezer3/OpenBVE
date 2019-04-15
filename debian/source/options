@@ -1,0 +1,4 @@
+tar-ignore = ".git/*"
+tar-ignore = "assets/*"
+tar-ignore = "bin_debug/*"
+tar-ignore = "bin_release/*"

@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=openBVE
+GenericName=Train simulator
+GenericName[de]=Zugsimulation
+Categories=Game;Simulation;
+Comment=Train/railway simulator compatible with 'BVE Trainsim' routes
+Terminal=false
+TryExec=openbve
+Exec=openbve
+Icon=openbve
+StartupNotify=false

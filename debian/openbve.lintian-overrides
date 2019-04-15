@@ -1,0 +1,5 @@
+# 'debian/copyright' contains copies of discussion with upstream about
+# their choice for /not/ using GPL/BSD licences in one of the Comment:
+# sections.  This generates a false-positive when Lintian greps for
+# the string "GPL"
+copyright-should-refer-to-common-license-file-for-gpl
