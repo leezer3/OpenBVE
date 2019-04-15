@@ -16,9 +16,8 @@ namespace OpenBve
 		/// <summary>Loads a collection of animated objects from a file.</summary>
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
 		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
-		/// <param name="LoadMode">The texture load mode.</param>
 		/// <returns>The collection of animated objects.</returns>
-		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode)
+		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding)
 		{
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
@@ -53,7 +52,7 @@ namespace OpenBve
 							{
 								i++;
 								Vector3 position = Vector3.Zero;
-								ObjectManager.UnifiedObject[] obj = new OpenBve.ObjectManager.UnifiedObject[4];
+								UnifiedObject[] obj = new UnifiedObject[4];
 								int objCount = 0;
 								while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)))
 								{
@@ -113,9 +112,9 @@ namespace OpenBve
 												{
 													if (obj.Length == objCount)
 													{
-														Array.Resize<ObjectManager.UnifiedObject>(ref obj, obj.Length << 1);
+														Array.Resize<UnifiedObject>(ref obj, obj.Length << 1);
 													}
-													obj[objCount] = ObjectManager.LoadObject(file, Encoding, LoadMode, false, false, false);
+													obj[objCount] = ObjectManager.LoadObject(file, Encoding, false, false, false);
 													objCount++;
 												}
 												else
@@ -141,11 +140,7 @@ namespace OpenBve
 												Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
 											}
 											ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
-											ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState
-											{
-												Object = s,
-												Position = position
-											};
+											ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState(s, position);
 											a.States = new ObjectManager.AnimatedObjectState[] { aos };
 											Result.Objects[ObjectCount] = a;
 											ObjectCount++;
@@ -205,6 +200,7 @@ namespace OpenBve
 								bool timetableUsed = false;
 								string[] StateFiles = null;
 								string StateFunctionRpn = null;
+								bool StateFunctionIsPostfix = false;
 								int StateFunctionLine = -1;
 								while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)))
 								{
@@ -297,7 +293,7 @@ namespace OpenBve
 													try
 													{
 														StateFunctionLine = i;
-														StateFunctionRpn = FunctionScripts.GetPostfixNotationFromInfixNotation(b);
+														StateFunctionRpn = b;
 													}
 													catch (Exception ex)
 													{
@@ -307,6 +303,7 @@ namespace OpenBve
 													{
 														StateFunctionLine = i;
 														StateFunctionRpn = b;
+														StateFunctionIsPostfix = true;
 													} break;
 												case "translatexdirection":
 												case "translateydirection":
@@ -360,7 +357,7 @@ namespace OpenBve
 															//If we add this to the position instead, this gives a minor speedup
 															break;
 														}
-														Result.Objects[ObjectCount].TranslateXFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
+														Result.Objects[ObjectCount].TranslateXFunction = new FunctionScript(Program.CurrentHost, b, true);
 													}
 													catch (Exception ex)
 													{
@@ -386,7 +383,7 @@ namespace OpenBve
 															//If we add this to the position instead, this gives a minor speedup
 															break;
 														}
-														Result.Objects[ObjectCount].TranslateYFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
+														Result.Objects[ObjectCount].TranslateYFunction = new FunctionScript(Program.CurrentHost, b, true);
 													}
 													catch (Exception ex)
 													{
@@ -412,7 +409,7 @@ namespace OpenBve
 															//If we add this to the position instead, this gives a minor speedup
 															break;
 														}
-														Result.Objects[ObjectCount].TranslateZFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
+														Result.Objects[ObjectCount].TranslateZFunction = new FunctionScript(Program.CurrentHost, b, true);
 													}
 													catch (Exception ex)
 													{
@@ -430,7 +427,7 @@ namespace OpenBve
 												case "trackfollowerfunction":
 													try
 													{
-														Result.Objects[ObjectCount].TrackFollowerFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
+														Result.Objects[ObjectCount].TrackFollowerFunction = new FunctionScript(Program.CurrentHost, b, true);
 													}
 													catch (Exception ex)
 													{
@@ -472,7 +469,7 @@ namespace OpenBve
 												case "translatexfunctionrpn":
 													try
 													{
-														Result.Objects[ObjectCount].TranslateXFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(b);
+														Result.Objects[ObjectCount].TranslateXFunction = new FunctionScript(Program.CurrentHost, b, false);
 													}
 													catch (Exception ex)
 													{
@@ -481,7 +478,7 @@ namespace OpenBve
 												case "translateyfunctionrpn":
 													try
 													{
-														Result.Objects[ObjectCount].TranslateYFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(b);
+														Result.Objects[ObjectCount].TranslateYFunction = new FunctionScript(Program.CurrentHost, b, false);
 													}
 													catch (Exception ex)
 													{
@@ -490,7 +487,7 @@ namespace OpenBve
 												case "translatezfunctionrpn":
 													try
 													{
-														Result.Objects[ObjectCount].TranslateZFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(b);
+														Result.Objects[ObjectCount].TranslateZFunction = new FunctionScript(Program.CurrentHost, b, false);
 													}
 													catch (Exception ex)
 													{
@@ -550,7 +547,7 @@ namespace OpenBve
 															//If we add this to the position instead, this gives a minor speedup
 															StaticXRotation = true;
 														}
-														Result.Objects[ObjectCount].RotateXFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
+														Result.Objects[ObjectCount].RotateXFunction = new FunctionScript(Program.CurrentHost, b, true);
 													}
 													catch (Exception ex)
 													{
@@ -563,7 +560,7 @@ namespace OpenBve
 														{
 															StaticYRotation = true;
 														}
-														Result.Objects[ObjectCount].RotateYFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
+														Result.Objects[ObjectCount].RotateYFunction = new FunctionScript(Program.CurrentHost, b, true);
 													}
 													catch (Exception ex)
 													{
@@ -576,7 +573,7 @@ namespace OpenBve
 														{
 															StaticZRotation = true;
 														}
-														Result.Objects[ObjectCount].RotateZFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
+														Result.Objects[ObjectCount].RotateZFunction = new FunctionScript(Program.CurrentHost, b, true);
 													}
 													catch (Exception ex)
 													{
@@ -585,7 +582,7 @@ namespace OpenBve
 												case "rotatexfunctionrpn":
 													try
 													{
-														Result.Objects[ObjectCount].RotateXFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(b);
+														Result.Objects[ObjectCount].RotateXFunction = new FunctionScript(Program.CurrentHost, b, false);
 													}
 													catch (Exception ex)
 													{
@@ -594,7 +591,7 @@ namespace OpenBve
 												case "rotateyfunctionrpn":
 													try
 													{
-														Result.Objects[ObjectCount].RotateYFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(b);
+														Result.Objects[ObjectCount].RotateYFunction = new FunctionScript(Program.CurrentHost, b, false);
 													}
 													catch (Exception ex)
 													{
@@ -603,7 +600,7 @@ namespace OpenBve
 												case "rotatezfunctionrpn":
 													try
 													{
-														Result.Objects[ObjectCount].RotateZFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(b);
+														Result.Objects[ObjectCount].RotateZFunction = new FunctionScript(Program.CurrentHost, b, false);
 													}
 													catch (Exception ex)
 													{
@@ -690,7 +687,7 @@ namespace OpenBve
 												case "textureshiftxfunction":
 													try
 													{
-														Result.Objects[ObjectCount].TextureShiftXFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
+														Result.Objects[ObjectCount].TextureShiftXFunction = new FunctionScript(Program.CurrentHost, b, true);
 													}
 													catch (Exception ex)
 													{
@@ -699,7 +696,7 @@ namespace OpenBve
 												case "textureshiftyfunction":
 													try
 													{
-														Result.Objects[ObjectCount].TextureShiftYFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
+														Result.Objects[ObjectCount].TextureShiftYFunction = new FunctionScript(Program.CurrentHost, b, true);
 													}
 													catch (Exception ex)
 													{
@@ -708,7 +705,7 @@ namespace OpenBve
 												case "textureshiftxfunctionrpn":
 													try
 													{
-														Result.Objects[ObjectCount].TextureShiftXFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(b);
+														Result.Objects[ObjectCount].TextureShiftXFunction = new FunctionScript(Program.CurrentHost, b, false);
 													}
 													catch (Exception ex)
 													{
@@ -717,7 +714,7 @@ namespace OpenBve
 												case "textureshiftyfunctionrpn":
 													try
 													{
-														Result.Objects[ObjectCount].TextureShiftYFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(b);
+														Result.Objects[ObjectCount].TextureShiftYFunction = new FunctionScript(Program.CurrentHost, b, false);
 													}
 													catch (Exception ex)
 													{
@@ -789,7 +786,7 @@ namespace OpenBve
 									{
 										try
 										{
-											Result.Objects[ObjectCount].StateFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(StateFunctionRpn);
+											Result.Objects[ObjectCount].StateFunction = new FunctionScript(Program.CurrentHost, StateFunctionRpn, !StateFunctionIsPostfix);
 										}
 										catch (Exception ex)
 										{
@@ -806,7 +803,7 @@ namespace OpenBve
 										Result.Objects[ObjectCount].States[k].Position = Vector3.Zero;
 										if (StateFiles[k] != null)
 										{
-											Result.Objects[ObjectCount].States[k].Object = ObjectManager.LoadStaticObject(StateFiles[k], Encoding, LoadMode, false, ForceTextureRepeatX, ForceTextureRepeatY);
+											Result.Objects[ObjectCount].States[k].Object = ObjectManager.LoadStaticObject(StateFiles[k], Encoding, false, ForceTextureRepeatX, ForceTextureRepeatY);
 											if (Result.Objects[ObjectCount].States[k].Object != null)
 											{
 												Result.Objects[ObjectCount].States[k].Object.Dynamic = true;
@@ -1058,7 +1055,7 @@ namespace OpenBve
 															//If we add this to the position instead, this gives a minor speedup
 															break;
 														}
-														Result.Objects[ObjectCount].TranslateXFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
+														Result.Objects[ObjectCount].TranslateXFunction = new FunctionScript(Program.CurrentHost, b, true);
 													}
 													catch (Exception ex)
 													{
@@ -1086,7 +1083,7 @@ namespace OpenBve
 															//If we add this to the position instead, this gives a minor speedup
 															break;
 														}
-														Result.Objects[ObjectCount].TranslateYFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
+														Result.Objects[ObjectCount].TranslateYFunction = new FunctionScript(Program.CurrentHost, b, true);
 													}
 													catch (Exception ex)
 													{
@@ -1114,7 +1111,7 @@ namespace OpenBve
 															//If we add this to the position instead, this gives a minor speedup
 															break;
 														}
-														Result.Objects[ObjectCount].TranslateZFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
+														Result.Objects[ObjectCount].TranslateZFunction = new FunctionScript(Program.CurrentHost, b, true);
 													}
 													catch (Exception ex)
 													{
@@ -1134,7 +1131,7 @@ namespace OpenBve
 												case "trackfollowerfunction":
 													try
 													{
-														TrackFollowerFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
+														TrackFollowerFunction = new FunctionScript(Program.CurrentHost, b, true);
 													}
 													catch (Exception ex)
 													{
@@ -1144,7 +1141,7 @@ namespace OpenBve
 												case "pitchfunction":
 													try
 													{
-														PitchFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
+														PitchFunction = new FunctionScript(Program.CurrentHost, b, true);
 													}
 													catch (Exception ex)
 													{
@@ -1154,7 +1151,7 @@ namespace OpenBve
 												case "volumefunction":
 													try
 													{
-														VolumeFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
+														VolumeFunction = new FunctionScript(Program.CurrentHost, b, true);
 													}
 													catch (Exception ex)
 													{
@@ -1383,7 +1380,7 @@ namespace OpenBve
 								 *
 								 * Try again with ASCII instead
 								 */
-								return ReadObject(FileName, System.Text.Encoding.GetEncoding(1252), LoadMode);
+								return ReadObject(FileName, System.Text.Encoding.GetEncoding(1252));
 							}
 							Interface.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 							return null;
@@ -1394,7 +1391,7 @@ namespace OpenBve
 			return Result;
 		}
 
-		private static void ApplyStaticRotation(ref World.Mesh Mesh, Vector3 RotationDirection, double Angle)
+		private static void ApplyStaticRotation(ref Mesh Mesh, Vector3 RotationDirection, double Angle)
 		{
 			//Update co-ords
 			for (int i = 0; i < Mesh.Vertices.Length; i++)

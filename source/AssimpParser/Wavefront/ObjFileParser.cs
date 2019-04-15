@@ -155,20 +155,22 @@ namespace AssimpNET.Obj
 							if (Buffer[DataIt] == ' ' || Buffer[DataIt] == '\t')
 							{
 								int numComponents = GetNumComponentsInDataDefinition();
-								if (numComponents == 3)
+								switch (numComponents)
 								{
-									// read in vertex definition
-									GetVector3(Model.Vertices);
-								}
-								else if (numComponents == 4)
-								{
-									// read in vertex definition (homogeneous coords)
-									GetHomogeneousVector3(Model.Vertices);
-								}
-								else if (numComponents == 6)
-								{
-									// read vertex and vertex-color
-									GetTwoVectors3(Model.Vertices, Model.VertexColors);
+									case 3:
+										// read in vertex definition
+										GetVector3(Model.Vertices);
+										break;
+									case 4:
+										// read in vertex definition (homogeneous coords)
+										GetHomogeneousVector3(Model.Vertices);
+										break;
+									case 6:
+										// read vertex and vertex-color
+										GetTwoVectors3(Model.Vertices, Model.VertexColors);
+										break;
+									default:
+										throw new Exception(numComponents + " arguments were supplied. A vertex must supply either 3, 4 or 6 arguments.");
 								}
 							}
 							else if (Buffer[DataIt] == 't')
@@ -203,7 +205,7 @@ namespace AssimpNET.Obj
 
 							GetNameNoSpace(DataIt, DataEnd, out name);
 
-							int nextSpace = name.IndexOf(" ");
+							int nextSpace = name.IndexOf(" ", StringComparison.InvariantCulture);
 							if (nextSpace != -1)
 							{
 								name = name.Substring(0, nextSpace);
@@ -221,7 +223,7 @@ namespace AssimpNET.Obj
 
 							GetNameNoSpace(DataIt, DataEnd, out name);
 
-							int nextSpace = name.IndexOf(" ");
+							int nextSpace = name.IndexOf(" ", StringComparison.InvariantCulture);
 							if (nextSpace != -1)
 							{
 								name = name.Substring(0, nextSpace);
@@ -266,101 +268,102 @@ namespace AssimpNET.Obj
 		protected void GetVector(List<Vector3> point3dArray)
 		{
 			int numComponents = GetNumComponentsInDataDefinition();
-			float x, y, z;
+			Vector3 v;
 			string tmp;
-			if (numComponents == 2)
+			switch (numComponents)
 			{
-				CopyNextWord(out tmp);
-				x = float.Parse(tmp);
+				case 2:
+					CopyNextWord(out tmp);
+					v.X = float.Parse(tmp);
 
-				CopyNextWord(out tmp);
-				y = float.Parse(tmp);
+					CopyNextWord(out tmp);
+					v.Y = float.Parse(tmp);
 
-				z = 0.0f;
+					v.Z = 0.0f;
+					break;
+				case 3:
+					CopyNextWord(out tmp);
+					v.X = float.Parse(tmp);
+
+					CopyNextWord(out tmp);
+					v.Y = float.Parse(tmp);
+
+					CopyNextWord(out tmp);
+					v.Z = float.Parse(tmp);
+					break;
+				default:
+					throw new Exception(numComponents + " arguments were supplied. A vector must supply either 2 or 3 arguments.");
 			}
-			else if (numComponents == 3)
-			{
-				CopyNextWord(out tmp);
-				x = float.Parse(tmp);
-
-				CopyNextWord(out tmp);
-				y = float.Parse(tmp);
-
-				CopyNextWord(out tmp);
-				z = float.Parse(tmp);
-			}
-			else
-			{
-				throw new Exception("OBJ: Invalid number of components");
-			}
-			point3dArray.Add(new Vector3(x, y, z));
+			point3dArray.Add(v);
 			DataIt = SkipLine(DataIt, DataEnd, ref Line);
 		}
 
 		protected void GetVector3(List<Vector3> point3dArray)
 		{
-			float x, y, z;
+			Vector3 v;
 			string tmp;
 			CopyNextWord(out tmp);
-			x = float.Parse(tmp);
+			v.X = float.Parse(tmp);
 
 			CopyNextWord(out tmp);
-			y = float.Parse(tmp);
+			v.Y = float.Parse(tmp);
 
 			CopyNextWord(out tmp);
-			z = float.Parse(tmp);
+			v.Z = float.Parse(tmp);
 
-			point3dArray.Add(new Vector3(x, y, z));
+			point3dArray.Add(v);
 			DataIt = SkipLine(DataIt, DataEnd, ref Line);
 		}
 
 		protected void GetHomogeneousVector3(List<Vector3> point3dArray)
 		{
-			float x, y, z, w;
+			Vector3 v;
 			string tmp;
 			CopyNextWord(out tmp);
-			x = float.Parse(tmp);
+			v.X = float.Parse(tmp);
 
 			CopyNextWord(out tmp);
-			y = float.Parse(tmp);
+			v.Y = float.Parse(tmp);
 
 			CopyNextWord(out tmp);
-			z = float.Parse(tmp);
+			v.Z = float.Parse(tmp);
 
 			CopyNextWord(out tmp);
-			w = float.Parse(tmp);
+			float w = float.Parse(tmp);
 
 			Debug.Assert(w != 0);
 
-			point3dArray.Add(new Vector3(x / w, y / w, z / w));
+			v /= w;
+			point3dArray.Add(v);
 			DataIt = SkipLine(DataIt, DataEnd, ref Line);
 		}
 
 		protected void GetTwoVectors3(List<Vector3> point3dArrayA, List<Vector3> point3dArrayB)
 		{
-			float x, y, z;
+			Vector3 a;
 			string tmp;
 			CopyNextWord(out tmp);
-			x = float.Parse(tmp);
+			a.X = float.Parse(tmp);
 
 			CopyNextWord(out tmp);
-			y = float.Parse(tmp);
+			a.Y = float.Parse(tmp);
 
 			CopyNextWord(out tmp);
-			z = float.Parse(tmp);
+			a.Z = float.Parse(tmp);
 
-			point3dArrayA.Add(new Vector3(x, y, z));
+			point3dArrayA.Add(a);
+
+			Vector3 b;
+			CopyNextWord(out tmp);
+			b.X = float.Parse(tmp);
 
 			CopyNextWord(out tmp);
-			x = float.Parse(tmp);
+			b.Y = float.Parse(tmp);
 
 			CopyNextWord(out tmp);
-			y = float.Parse(tmp);
+			b.Z = float.Parse(tmp);
 
-			CopyNextWord(out tmp);
-			z = float.Parse(tmp);
-
-			point3dArrayB.Add(new Vector3(x, y, z));
+			point3dArrayB.Add(b);
 
 			DataIt = SkipLine(DataIt, DataEnd, ref Line);
 		}
@@ -382,10 +385,10 @@ namespace AssimpNET.Obj
 
 			bool vt = vtSize != 0;
 			bool vn = vnSize != 0;
-			int iStep = 0, iPos = 0;
+			int iPos = 0;
 			while (DataIt != DataEnd)
 			{
-				iStep = 1;
+				int iStep = 1;
 
 				if (IsLineEnd(DataIt))
 				{
@@ -701,7 +704,16 @@ namespace AssimpNET.Obj
 				return;
 			}
 
-			absName = Path.Combine(Path.GetDirectoryName(ObjFilePath), matName);
+			string dir = Path.GetDirectoryName(ObjFilePath);
+			if (dir != null)
+			{
+				absName = Path.Combine(dir, matName);
+			}
+			else
+			{
+				Debug.WriteLine("OBJ: no name for material library specified.");
+				return;
+			}
 
 			if (!File.Exists(absName))
 			{

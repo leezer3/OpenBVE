@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Trains;
 using OpenBveApi.World;
 
 namespace OpenBve
@@ -52,7 +53,7 @@ namespace OpenBve
 						double trainDistance = double.MaxValue;
 						for (int j = 0; j < TrainManager.Trains.Length; j++)
 						{
-							if (TrainManager.Trains[j].State == TrainManager.TrainState.Available)
+							if (TrainManager.Trains[j].State == TrainState.Available)
 							{
 								double distance;
 								if (TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition < TrackPosition)
@@ -148,7 +149,7 @@ namespace OpenBve
 				this.lastState = this.Object.CurrentState;
 			}
 
-			internal void Create(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, double TrackPosition, double Brightness)
+			internal void Create(Vector3 objectPosition, Transformation BaseTransformation, Transformation AuxTransformation, int objectSectionIndex, double objectTrackPosition, double Brightness)
 			{
 				int a = AnimatedWorldObjectsUsed;
 				if (a >= AnimatedWorldObjects.Length)
@@ -161,13 +162,13 @@ namespace OpenBve
 				o.ObjectIndex = CreateDynamicObject();
 				AnimatedWorldObjectStateSound currentObject = new AnimatedWorldObjectStateSound
 				{
-					Position = Position,
+					Position = objectPosition,
 					Direction = FinalTransformation.Z,
 					Up = FinalTransformation.Y,
 					Side = FinalTransformation.X,
 					Object = o,
-					SectionIndex = SectionIndex,
-					TrackPosition = TrackPosition,
+					SectionIndex = objectSectionIndex,
+					TrackPosition = objectTrackPosition,
 					Buffers = Buffers,
 					SingleBuffer = SingleBuffer,
 					PlayOnShow = PlayOnShow,
@@ -177,16 +178,7 @@ namespace OpenBve
 				{
 					if (currentObject.Object.States[i].Object == null)
 					{
-						currentObject.Object.States[i].Object = new StaticObject
-						{
-							Mesh =
-								{
-									Faces = new World.MeshFace[] {},
-									Materials = new World.MeshMaterial[] {},
-									Vertices = new VertexTemplate[] {}
-								},
-							RendererIndex = -1
-						};
+						currentObject.Object.States[i].Object = new StaticObject { RendererIndex =  -1 };
 					}
 				}
 				double r = 0.0;
@@ -200,10 +192,7 @@ namespace OpenBve
 					}
 					for (int j = 0; j < currentObject.Object.States[i].Object.Mesh.Vertices.Length; j++)
 					{
-						double x = this.Object.States[i].Object.Mesh.Vertices[j].Coordinates.X;
-						double y = this.Object.States[i].Object.Mesh.Vertices[j].Coordinates.Y;
-						double z = this.Object.States[i].Object.Mesh.Vertices[j].Coordinates.Z;
-						double t = x * x + y * y + z * z;
+						double t = this.Object.States[i].Object.Mesh.Vertices[j].Coordinates.NormSquared();
 						if (t > r) r = t;
 					}
 				}

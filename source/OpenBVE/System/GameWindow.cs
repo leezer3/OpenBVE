@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -9,8 +9,10 @@ using System.Windows.Forms;
 using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interface;
+using OpenBveApi.Trains;
 using OpenTK;
 using OpenTK.Graphics;
+using OpenTK.Input;
 using GL = OpenTK.Graphics.OpenGL.GL;
 using MatrixMode = OpenTK.Graphics.OpenGL.MatrixMode;
 
@@ -147,6 +149,10 @@ namespace OpenBve
 			}
 			Renderer.UpdateLighting();
 			Renderer.RenderScene(TimeElapsed);
+			if (Renderer.DebugTouchMode)
+			{
+				Renderer.DebugTouchArea();
+			}
 			Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
 			Program.currentGameWindow.SwapBuffers();
 			Game.UpdateBlackBox();
@@ -309,6 +315,7 @@ namespace OpenBve
 
 		protected override void OnLoad(EventArgs e)
 		{
+			Program.FileSystem.AppendToLogFile("Game window initialised successfully.");
 			Renderer.DetermineMaxAFLevel();
 			//Initialise the loader thread queues
 			jobs = new Queue<ThreadStart>(10);
@@ -323,6 +330,7 @@ namespace OpenBve
 			KeyDown	+= MainLoop.keyDownEvent;
 			KeyUp	+= MainLoop.keyUpEvent;
 			MouseDown	+= MainLoop.mouseDownEvent;
+			MouseUp += MainLoop.mouseUpEvent;
 			MouseMove	+= MainLoop.mouseMoveEvent;
 			MouseWheel  += MainLoop.mouseWheelEvent;
 
@@ -341,7 +349,7 @@ namespace OpenBve
 					Interface.CurrentControls = Interface.CurrentControls.Concat(AddControls).ToArray();
 					foreach (var Train in TrainManager.Trains)
 					{
-						if (Train.State != TrainManager.TrainState.Bogus)
+						if (Train.State != TrainState.Bogus)
 						{
 							if (Train == TrainManager.PlayerTrain)
 							{
@@ -370,7 +378,7 @@ namespace OpenBve
 			}
 			for (int i = 0; i < TrainManager.Trains.Length; i++)
 			{
-				if (TrainManager.Trains[i].State != TrainManager.TrainState.Bogus)
+				if (TrainManager.Trains[i].State != TrainState.Bogus)
 				{
 					PluginManager.UnloadPlugin(TrainManager.Trains[i]);
 				}
@@ -387,6 +395,39 @@ namespace OpenBve
 			}
 			base.OnClosing(e);
 		}
+
+		protected override void OnMouseMove(MouseMoveEventArgs e)
+		{
+			base.OnMouseMove(e);
+
+			if (Game.CurrentInterface == Game.InterfaceType.Normal)
+			{
+				OpenBve.Cursor.Status Status;
+				if (Renderer.MoveCheck(new Vector2(e.X, e.Y), out Status))
+				{
+					if (Cursors.CurrentCursor != null)
+					{
+						switch (Status)
+						{
+							case OpenBve.Cursor.Status.Default:
+								Cursor = Cursors.CurrentCursor;
+								break;
+							case OpenBve.Cursor.Status.Plus:
+								Cursor = Cursors.CurrentCursorPlus;
+								break;
+							case OpenBve.Cursor.Status.Minus:
+								Cursor = Cursors.CurrentCursorMinus;
+								break;
+						}
+					}
+				}
+				else
+				{
+					Cursor = MouseCursor.Default;
+				}
+			}
+		}
+
 		/// <summary>This method is called once the route and train data have been preprocessed, in order to physically setup the simulation</summary>
 		private void SetupSimulation()
 		{
@@ -394,7 +435,11 @@ namespace OpenBve
 			{
 				Close();
 			}
-			Timetable.CreateTimetable();
+
+			lock (Illustrations.Locker)
+			{
+				Timetable.CreateTimetable();
+			}
 			//Check if any critical errors have occured during the route or train loading
 			for (int i = 0; i < Interface.MessageCount; i++)
 			{
@@ -454,7 +499,7 @@ namespace OpenBve
 				PlayerFirstStationIndex = os;
 			}
 			{
-				int s = Game.GetStopIndex(PlayerFirstStationIndex, TrainManager.PlayerTrain.Cars.Length);
+				int s = Game.Stations[PlayerFirstStationIndex].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
 				if (s >= 0)
 				{
 					PlayerFirstStationPosition = Game.Stations[PlayerFirstStationIndex].Stops[s].TrackPosition;
@@ -530,7 +575,7 @@ namespace OpenBve
 				if (Game.Stations[i].StopMode == StationStopMode.AllStop | Game.Stations[i].StopMode == StationStopMode.PlayerPass & Game.Stations[i].Stops.Length != 0)
 				{
 					OtherFirstStationIndex = i;
-					int s = Game.GetStopIndex(i, TrainManager.PlayerTrain.Cars.Length);
+					int s = Game.Stations[i].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
 					if (s >= 0)
 					{
 						OtherFirstStationPosition = Game.Stations[i].Stops[s].TrackPosition;
@@ -594,10 +639,23 @@ namespace OpenBve
 				for (int j = 0; j < TrainManager.Trains[i].Cars.Length; j++)
 				{
 					double length = TrainManager.Trains[i].Cars[0].Length;
-					TrainManager.Trains[i].Cars[j].Move(-length, 0.01);
-					TrainManager.Trains[i].Cars[j].Move(length, 0.01);
+					TrainManager.Trains[i].Cars[j].Move(-length);
+					TrainManager.Trains[i].Cars[j].Move(length);
 				}
 			}
+
+			foreach (var Train in TrainManager.TFOs)
+			{
+				Train.Initialize();
+
+				foreach (var Car in Train.Cars)
+				{
+					double length = Train.Cars[0].Length;
+					Car.Move(-length);
+					Car.Move(length);
+				}
+			}
+
 			// score
 			Game.CurrentScore.ArrivalStation = PlayerFirstStationIndex + 1;
 			Game.CurrentScore.DepartureStation = PlayerFirstStationIndex;
@@ -629,7 +687,7 @@ namespace OpenBve
 				{
 					p = PlayerFirstStationPosition;
 				}
-				else if (TrainManager.Trains[i].State == TrainManager.TrainState.Bogus)
+				else if (TrainManager.Trains[i].State == TrainState.Bogus)
 				{
 					p = Game.BogusPretrainInstructions[0].TrackPosition;
 					TrainManager.Trains[i].AI = new Game.BogusPretrainAI(TrainManager.Trains[i]);
@@ -640,7 +698,7 @@ namespace OpenBve
 				}
 				for (int j = 0; j < TrainManager.Trains[i].Cars.Length; j++)
 				{
-					TrainManager.Trains[i].Cars[j].Move(p, 0.01);
+					TrainManager.Trains[i].Cars[j].Move(p);
 				}
 			}
 			// timetable
@@ -745,7 +803,7 @@ namespace OpenBve
 					}
 				}
 				string NotFound = null;
-				string Messages = null;
+				string Messages;
 				if (filesNotFound != 0)
 				{
 					NotFound = filesNotFound.ToString() + " file(s) not found";

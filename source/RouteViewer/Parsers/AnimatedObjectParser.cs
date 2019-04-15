@@ -1,8 +1,11 @@
 using System;
+using System.Globalization;
 using OpenBveApi;
+using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Textures;
 
 namespace OpenBve {
 	internal static class AnimatedObjectParser {
@@ -11,9 +14,8 @@ namespace OpenBve {
 		/// <summary>Loads a collection of animated objects from a file.</summary>
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
 		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
-		/// <param name="LoadMode">The texture load mode.</param>
 		/// <returns>The collection of animated objects.</returns>
-		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode) {
+		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
 			{
@@ -44,7 +46,7 @@ namespace OpenBve {
 							{
 								i++;
 								Vector3 position = Vector3.Zero;
-								ObjectManager.UnifiedObject[] obj = new OpenBve.ObjectManager.UnifiedObject[4];
+								UnifiedObject[] obj = new UnifiedObject[4];
 								int objCount = 0;
 								while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 									if (Lines[i].Length != 0) {
@@ -83,9 +85,9 @@ namespace OpenBve {
 												string file = OpenBveApi.Path.CombineFile(Folder, Lines[i]);
 												if (System.IO.File.Exists(file)) {
 													if (obj.Length == objCount) {
-														Array.Resize<ObjectManager.UnifiedObject>(ref obj, obj.Length << 1);
+														Array.Resize<UnifiedObject>(ref obj, obj.Length << 1);
 													}
-													obj[objCount] = ObjectManager.LoadObject(file, Encoding, LoadMode, false, false, false);
+													obj[objCount] = ObjectManager.LoadObject(file, Encoding, false);
 													objCount++;
 												} else {
 													Interface.AddMessage(MessageType.Error, true, "File " + file + " not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -105,9 +107,7 @@ namespace OpenBve {
 												Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
 											}
 											ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
-											ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState();
-											aos.Object = s;
-											aos.Position = position;
+											ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState(s, position);
 											a.States = new ObjectManager.AnimatedObjectState[] { aos };
 											Result.Objects[ObjectCount] = a;
 											ObjectCount++;
@@ -150,9 +150,16 @@ namespace OpenBve {
 								Result.Objects[ObjectCount].RefreshRate = 0.0;
 								Result.Objects[ObjectCount].ObjectIndex = -1;
 								Vector3 Position = Vector3.Zero;
+								double RotateX = 0;
+								bool StaticXRotation = false;
+								double RotateY = 0;
+								bool StaticYRotation = false;
+								double RotateZ = 0;
+								bool StaticZRotation = false;
 								bool timetableUsed = false;
 								string[] StateFiles = null;
 								string StateFunctionRpn = null;
+								bool StateFunctionIsPostfix = false;
 								int StateFunctionLine = -1;
 								while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 									if (Lines[i].Length != 0) {
@@ -217,17 +224,22 @@ namespace OpenBve {
 														}
 													} break;
 												case "statefunction":
-													try {
+													try
+													{
 														StateFunctionLine = i;
-														StateFunctionRpn = FunctionScripts.GetPostfixNotationFromInfixNotation(b);
-													} catch (Exception ex) {
+														StateFunctionRpn = b;
+													}
+													catch (Exception ex)
+													{
 														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "statefunctionrpn":
 													{
 														StateFunctionLine = i;
 														StateFunctionRpn = b;
-													} break;
+														StateFunctionIsPostfix = true;
+													}
+													break;
 												case "translatexdirection":
 												case "translateydirection":
 												case "translatezdirection":
@@ -260,37 +272,37 @@ namespace OpenBve {
 													} break;
 												case "translatexfunction":
 													try {
-														Result.Objects[ObjectCount].TranslateXFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
+														Result.Objects[ObjectCount].TranslateXFunction = new FunctionScript(Program.CurrentHost, b, true);
 													} catch (Exception ex) {
 														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "translateyfunction":
 													try {
-														Result.Objects[ObjectCount].TranslateYFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
+														Result.Objects[ObjectCount].TranslateYFunction = new FunctionScript(Program.CurrentHost, b, true);
 													} catch (Exception ex) {
 														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "translatezfunction":
 													try {
-														Result.Objects[ObjectCount].TranslateZFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
+														Result.Objects[ObjectCount].TranslateZFunction = new FunctionScript(Program.CurrentHost, b, true);
 													} catch (Exception ex) {
 														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "translatexfunctionrpn":
 													try {
-														Result.Objects[ObjectCount].TranslateXFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(b);
+														Result.Objects[ObjectCount].TranslateXFunction = new FunctionScript(Program.CurrentHost, b, false);
 													} catch (Exception ex) {
 														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "translateyfunctionrpn":
 													try {
-														Result.Objects[ObjectCount].TranslateYFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(b);
+														Result.Objects[ObjectCount].TranslateYFunction = new FunctionScript(Program.CurrentHost, b, false);
 													} catch (Exception ex) {
 														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "translatezfunctionrpn":
 													try {
-														Result.Objects[ObjectCount].TranslateZFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(b);
+														Result.Objects[ObjectCount].TranslateZFunction = new FunctionScript(Program.CurrentHost, b, false);
 													} catch (Exception ex) {
 														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
@@ -327,39 +339,71 @@ namespace OpenBve {
 														}
 													} break;
 												case "rotatexfunction":
-													try {
-														Result.Objects[ObjectCount].RotateXFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
-													} catch (Exception ex) {
+													try
+													{
+														if (double.TryParse(b, NumberStyles.Float, Culture, out RotateX))
+														{
+															//A function script must be evaluated every frame, no matter if it is a constant value
+															//If we add this to the position instead, this gives a minor speedup
+															StaticXRotation = true;
+														}
+														Result.Objects[ObjectCount].RotateXFunction = new FunctionScript(Program.CurrentHost, b, true);
+													}
+													catch (Exception ex)
+													{
 														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "rotateyfunction":
-													try {
-														Result.Objects[ObjectCount].RotateYFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
-													} catch (Exception ex) {
+													try
+													{
+														if (double.TryParse(b, NumberStyles.Float, Culture, out RotateY))
+														{
+															StaticYRotation = true;
+														}
+														Result.Objects[ObjectCount].RotateYFunction = new FunctionScript(Program.CurrentHost, b, true);
+													}
+													catch (Exception ex)
+													{
 														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "rotatezfunction":
-													try {
-														Result.Objects[ObjectCount].RotateZFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
-													} catch (Exception ex) {
+													try
+													{
+														if (double.TryParse(b, NumberStyles.Float, Culture, out RotateZ))
+														{
+															StaticZRotation = true;
+														}
+														Result.Objects[ObjectCount].RotateZFunction = new FunctionScript(Program.CurrentHost, b, true);
+													}
+													catch (Exception ex)
+													{
 														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "rotatexfunctionrpn":
-													try {
-														Result.Objects[ObjectCount].RotateXFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(b);
-													} catch (Exception ex) {
+													try
+													{
+														Result.Objects[ObjectCount].RotateXFunction = new FunctionScript(Program.CurrentHost, b, false);
+													}
+													catch (Exception ex)
+													{
 														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "rotateyfunctionrpn":
-													try {
-														Result.Objects[ObjectCount].RotateYFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(b);
-													} catch (Exception ex) {
+													try
+													{
+														Result.Objects[ObjectCount].RotateYFunction = new FunctionScript(Program.CurrentHost, b, false);
+													}
+													catch (Exception ex)
+													{
 														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "rotatezfunctionrpn":
-													try {
-														Result.Objects[ObjectCount].RotateZFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(b);
-													} catch (Exception ex) {
+													try
+													{
+														Result.Objects[ObjectCount].RotateZFunction = new FunctionScript(Program.CurrentHost, b, false);
+													}
+													catch (Exception ex)
+													{
 														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "rotatexdamping":
@@ -420,25 +464,25 @@ namespace OpenBve {
 													} break;
 												case "textureshiftxfunction":
 													try {
-														Result.Objects[ObjectCount].TextureShiftXFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
+														Result.Objects[ObjectCount].TextureShiftXFunction = new FunctionScript(Program.CurrentHost, b, true);
 													} catch (Exception ex) {
 														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "textureshiftyfunction":
 													try {
-														Result.Objects[ObjectCount].TextureShiftYFunction = FunctionScripts.GetFunctionScriptFromInfixNotation(b);
+														Result.Objects[ObjectCount].TextureShiftYFunction = new FunctionScript(Program.CurrentHost, b, true);
 													} catch (Exception ex) {
 														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "textureshiftxfunctionrpn":
 													try {
-														Result.Objects[ObjectCount].TextureShiftXFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(b);
+														Result.Objects[ObjectCount].TextureShiftXFunction = new FunctionScript(Program.CurrentHost, b, false);
 													} catch (Exception ex) {
 														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "textureshiftyfunctionrpn":
 													try {
-														Result.Objects[ObjectCount].TextureShiftYFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(b);
+														Result.Objects[ObjectCount].TextureShiftYFunction = new FunctionScript(Program.CurrentHost, b, false);
 													} catch (Exception ex) {
 														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
@@ -480,19 +524,28 @@ namespace OpenBve {
 									i++;
 								}
 								i--;
-								if (StateFiles != null) {
+								if (StateFiles != null)
+								{
 									// create the object
-									if (timetableUsed) {
-										if (StateFunctionRpn != null) {
+									if (timetableUsed)
+									{
+										if (StateFunctionRpn != null)
+										{
 											StateFunctionRpn = "timetable 0 == " + StateFunctionRpn + " -1 ?";
-										} else {
+										}
+										else
+										{
 											StateFunctionRpn = "timetable";
 										}
 									}
-									if (StateFunctionRpn != null) {
-										try {
-											Result.Objects[ObjectCount].StateFunction = FunctionScripts.GetFunctionScriptFromPostfixNotation(StateFunctionRpn);
-										} catch (Exception ex) {
+									if (StateFunctionRpn != null)
+									{
+										try
+										{
+											Result.Objects[ObjectCount].StateFunction = new FunctionScript(Program.CurrentHost, StateFunctionRpn, !StateFunctionIsPostfix);
+										}
+										catch (Exception ex)
+										{
 											Interface.AddMessage(MessageType.Error, false, ex.Message + " in StateFunction at line " + (StateFunctionLine + 1).ToString(Culture) + " in file " + FileName);
 										}
 									}
@@ -501,21 +554,110 @@ namespace OpenBve {
 									                           Result.Objects[ObjectCount].TextureShiftYFunction != null & Result.Objects[ObjectCount].TextureShiftYDirection.X != 0.0;
 									bool ForceTextureRepeatY = Result.Objects[ObjectCount].TextureShiftXFunction != null & Result.Objects[ObjectCount].TextureShiftXDirection.Y != 0.0 |
 									                           Result.Objects[ObjectCount].TextureShiftYFunction != null & Result.Objects[ObjectCount].TextureShiftYDirection.Y != 0.0;
-									for (int k = 0; k < StateFiles.Length; k++) {
+									for (int k = 0; k < StateFiles.Length; k++)
+									{
 										Result.Objects[ObjectCount].States[k].Position = Vector3.Zero;
-										if (StateFiles[k] != null) {
-											Result.Objects[ObjectCount].States[k].Object = ObjectManager.LoadStaticObject(StateFiles[k], Encoding, LoadMode, false, ForceTextureRepeatX, ForceTextureRepeatY);
-											if (Result.Objects[ObjectCount].States[k].Object != null) {
+										if (StateFiles[k] != null)
+										{
+											Result.Objects[ObjectCount].States[k].Object = ObjectManager.LoadStaticObject(StateFiles[k], Encoding, false);
+											if (Result.Objects[ObjectCount].States[k].Object != null)
+											{
 												Result.Objects[ObjectCount].States[k].Object.Dynamic = true;
+												for (int l = 0; l < Result.Objects[ObjectCount].States[k].Object.Mesh.Materials.Length; l++)
+												{
+													if (ForceTextureRepeatX && ForceTextureRepeatY)
+													{
+														Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = OpenGlTextureWrapMode.RepeatRepeat;
+													}
+													else if (ForceTextureRepeatX)
+													{
+														
+														switch (Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode)
+														{
+															case OpenGlTextureWrapMode.ClampRepeat:
+																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = OpenGlTextureWrapMode.RepeatRepeat;
+																break;
+															case OpenGlTextureWrapMode.ClampClamp:
+																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = OpenGlTextureWrapMode.RepeatClamp;
+																break;
+														}
+													}
+													else if (ForceTextureRepeatY)
+													{
+														
+														switch (Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode)
+														{
+															case OpenGlTextureWrapMode.RepeatClamp:
+																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = OpenGlTextureWrapMode.RepeatRepeat;
+																break;
+															case OpenGlTextureWrapMode.ClampClamp:
+																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = OpenGlTextureWrapMode.ClampRepeat;
+																break;
+														}
+													}
+												}
 											}
-										} else {
+											
+										}
+										else
+										{
 											Result.Objects[ObjectCount].States[k].Object = null;
 										}
-										for (int j = 0; j < Result.Objects[ObjectCount].States.Length; j++) {
-											Result.Objects[ObjectCount].States[j].Position = Position;
-										}
+										
 									}
-								} else {
+									for (int j = 0; j < Result.Objects[ObjectCount].States.Length; j++)
+									{
+
+										//Rotate X
+										if (Result.Objects[ObjectCount].States[j].Object == null)
+										{
+											continue;
+										}
+										//Apply position
+										Result.Objects[ObjectCount].States[j].Position = Position;
+										//Test whether the object contains non static rotation functions
+										//If so, the results may be off so don't optimise
+										if (!StaticXRotation)
+										{
+											if (Result.Objects[ObjectCount].RotateXFunction != null)
+											{
+												continue;
+											}
+										}
+										if (!StaticYRotation)
+										{
+											if (Result.Objects[ObjectCount].RotateYFunction != null)
+											{
+												continue;
+											}
+										}
+										if (!StaticZRotation)
+										{
+											if (Result.Objects[ObjectCount].RotateZFunction != null)
+											{
+												continue;
+											}
+										}
+										if (StaticXRotation)
+										{
+											ApplyStaticRotation(ref Result.Objects[ObjectCount].States[j].Object.Mesh, Result.Objects[ObjectCount].RotateXDirection, RotateX);
+											Result.Objects[ObjectCount].RotateXFunction = null;
+										}
+										if (StaticYRotation)
+										{
+											ApplyStaticRotation(ref Result.Objects[ObjectCount].States[j].Object.Mesh, Result.Objects[ObjectCount].RotateYDirection, RotateY);
+											Result.Objects[ObjectCount].RotateYFunction = null;
+										}
+										if (StaticZRotation)
+										{
+											ApplyStaticRotation(ref Result.Objects[ObjectCount].States[j].Object.Mesh, Result.Objects[ObjectCount].RotateZDirection, RotateZ);
+											Result.Objects[ObjectCount].RotateZFunction = null;
+										}
+										
+									}
+								}
+								else
+								{
 									Result.Objects[ObjectCount].States = new ObjectManager.AnimatedObjectState[] { };
 								}
 								ObjectCount++;
@@ -544,6 +686,24 @@ namespace OpenBve {
 			}
 			Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, ObjectCount);
 			return Result;
+		}
+
+		private static void ApplyStaticRotation(ref Mesh Mesh, Vector3 RotationDirection, double Angle)
+		{
+			//Update co-ords
+			for (int i = 0; i < Mesh.Vertices.Length; i++)
+			{
+				Mesh.Vertices[i].Coordinates.Rotate(RotationDirection, Math.Cos(Angle), Math.Sin(Angle));
+			}
+			//Update normals
+			for (int i = 0; i < Mesh.Faces.Length; i++)
+			{
+				for(int j = 0; j < Mesh.Faces[i].Vertices.Length; j++)
+					if (!Vector3.IsZero(Mesh.Faces[i].Vertices[j].Normal))
+					{
+						Mesh.Faces[i].Vertices[j].Normal.Rotate(RotationDirection, Math.Cos(Angle), Math.Sin(Angle));
+					}
+			}
 		}
 
 	}

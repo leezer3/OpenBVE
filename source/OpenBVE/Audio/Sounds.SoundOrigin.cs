@@ -1,4 +1,4 @@
-﻿#pragma warning disable 0659, 0661
+#pragma warning disable 0659, 0661
 
 namespace OpenBve {
 	internal static partial class Sounds {
@@ -60,7 +60,7 @@ namespace OpenBve {
 		/// <summary>Represents a file or directory where the sound can be loaded from.</summary>
 		internal class PathOrigin : SoundOrigin {
 			// --- members ---
-			internal string Path;
+			internal readonly string Path;
 			// --- constructors ---
 			/// <summary>Creates a new path origin.</summary>
 			/// <param name="path">The path to the sound.</param>
@@ -120,7 +120,7 @@ namespace OpenBve {
 		internal class RawOrigin : SoundOrigin {
 			// --- members ---
 			/// <summary>The sound raw data.</summary>
-			internal OpenBveApi.Sounds.Sound Sound;
+			internal readonly OpenBveApi.Sounds.Sound Sound;
 			// --- constructors ---
 			/// <summary>Creates a new raw data origin.</summary>
 			/// <param name="sound">The sound raw data.</param>

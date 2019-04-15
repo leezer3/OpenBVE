@@ -130,6 +130,7 @@
 			 
 			//Simulation controls
 			new CommandInfo(Command.CameraInterior, CommandType.Digital, "CAMERA_INTERIOR"),
+			new CommandInfo(Command.CameraInteriorNoPanel,CommandType.Digital,"CAMERA_INTERIOR_NOPANEL"), 
 			new CommandInfo(Command.CameraExterior, CommandType.Digital, "CAMERA_EXTERIOR"),
 			new CommandInfo(Command.CameraTrack, CommandType.Digital, "CAMERA_TRACK"),
 			new CommandInfo(Command.CameraFlyBy, CommandType.Digital, "CAMERA_FLYBY"),
@@ -177,6 +178,7 @@
 			new CommandInfo(Command.DebugNormals, CommandType.Digital, "DEBUG_NORMALS"),
 			new CommandInfo(Command.DebugBrakeSystems, CommandType.Digital, "DEBUG_BRAKE"),
 			new CommandInfo(Command.DebugATS, CommandType.Digital, "DEBUG_ATS"),
+			new CommandInfo(Command.DebugTouchMode, CommandType.Digital, "DEBUG_TOUCH_MODE"),
 			new CommandInfo(Command.RouteInformation, CommandType.Digital, "ROUTE_INFORMATION"),
 			new CommandInfo(Command.ShowEvents, CommandType.Digital, "SHOW_EVENTS"),
 		};

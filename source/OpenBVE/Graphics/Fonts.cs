@@ -35,9 +35,9 @@ namespace OpenBve {
 		internal class OpenGlFontTable {
 			// --- members ---
 			/// <summary>The characters stored in this table.</summary>
-			internal OpenGlFontChar[] Characters;
+			internal readonly OpenGlFontChar[] Characters;
 			/// <summary>The texture that stores the characters.</summary>
-			internal Texture Texture;
+			internal readonly Texture Texture;
 			// --- constructors ---
 			/// <summary>Creates a new table of characters.</summary>
 			/// <param name="font">The font.</param>
@@ -120,7 +120,7 @@ namespace OpenBve {
 			/// <summary>The underlying font.</summary>
 			private readonly Font Font;
 			/// <summary>The size of the underlying font in pixels.</summary>
-			internal float FontSize;
+			internal readonly float FontSize;
 			/// <summary>The 4352 tables containing 256 character each to make up 1114112 codepoints.</summary>
 			private readonly OpenGlFontTable[] Tables;
 			// --- constructors ---
@@ -145,7 +145,10 @@ namespace OpenBve {
 				int lo = value & 0xFF;
 				if (this.Tables[hi] == null || this.Tables[hi].Texture == null)
 				{
-					this.Tables[hi] = new OpenGlFontTable(this.Font, hi << 8);
+					lock (Illustrations.Locker)
+					{
+						this.Tables[hi] = new OpenGlFontTable(this.Font, hi << 8);
+					}
 				}
 				texture = this.Tables[hi].Texture;
 				data = this.Tables[hi].Characters[lo];

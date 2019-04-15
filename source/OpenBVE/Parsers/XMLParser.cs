@@ -13,7 +13,7 @@ namespace OpenBve
         //properties than are currently available with the CSV and B3D formats, whilst
         //not requiring backwards incompatible changes
 
-        public static ObjectManager.UnifiedObject ReadObject(string fileName, Encoding encoding,ObjectLoadMode LoadMode,bool ForceTextureRepeatX,bool ForceTextureRepeatY)
+        public static UnifiedObject ReadObject(string fileName, Encoding encoding)
         {
             //The current XML file to load
             XmlDocument currentXML = new XmlDocument();
@@ -32,7 +32,7 @@ namespace OpenBve
                         try
                         {
                             var fn = System.IO.Path.GetDirectoryName(fileName);
-                            var InnerNode = node.SelectSingleNode("filename").InnerText;
+							var InnerNode = node.SelectSingleNode("filename").InnerText;
                             InnerNode = InnerNode.Trim();
                             objectPath = OpenBveApi.Path.CombineFile(fn, InnerNode);
                         }
@@ -48,11 +48,10 @@ namespace OpenBve
                             {
                                 case ".csv":
                                 case ".b3d":
-                                    Object = CsvB3dObjectParser.ReadObject(objectPath, encoding, LoadMode,
-                                        ForceTextureRepeatX, ForceTextureRepeatY);
+                                    Object = CsvB3dObjectParser.ReadObject(objectPath, encoding);
                                     break;
                                 case ".x":
-                                    Object = XObjectParser.ReadObject(objectPath, encoding, LoadMode);
+                                    Object = XObjectParser.ReadObject(objectPath, encoding);
                                     break;
                                 case ".animated":
                                     //Not currently working.

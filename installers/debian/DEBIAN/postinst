@@ -1,0 +1,3 @@
+#!/bin/bash
+
+if which update-menus > /dev/null; then update-menus ; fi

@@ -3,6 +3,7 @@ using System.IO;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using System.Collections.Generic;
+using System.Text;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
@@ -11,65 +12,26 @@ namespace OpenBve
 {
 	internal static class WavefrontObjParser
 	{
-
-		// structures
-		private class Material
-		{
-			internal Color32 Color;
-			internal Color24 EmissiveColor;
-			internal bool EmissiveColorUsed;
-			internal Color24 TransparentColor;
-			internal bool TransparentColorUsed;
-			internal string DaytimeTexture;
-			internal string NighttimeTexture;
-			internal World.MeshMaterialBlendMode BlendMode;
-			internal ushort GlowAttenuationData;
-			internal string Key;
-			internal Material()
-			{
-				this.Color = Color32.White;
-				this.EmissiveColor = Color24.Black;
-				this.EmissiveColorUsed = false;
-				this.TransparentColor = Color24.Black;
-				this.TransparentColorUsed = false;
-				this.DaytimeTexture = null;
-				this.NighttimeTexture = null;
-				this.BlendMode = World.MeshMaterialBlendMode.Normal;
-				this.GlowAttenuationData = 0;
-				this.Key = string.Empty;
-			}
-		}
 		private class MeshBuilder
 		{
-			internal List<VertexTemplate> Vertices;
-			internal List<World.MeshFace> Faces;
+			internal List<Vertex> Vertices;
+			internal List<MeshFace> Faces;
 			internal Material[] Materials;
 			internal MeshBuilder()
 			{
-				this.Vertices = new List<VertexTemplate>();
-				this.Faces = new List<World.MeshFace>();
-				this.Materials = new Material[] { new Material() };
+				this.Vertices = new List<Vertex>();
+				this.Faces = new List<MeshFace>();
+				this.Materials = new Material[] { };
 			}
 		}
 
 		/// <summary>Loads a Wavefront object from a file.</summary>
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
 		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
-		/// <param name="LoadMode">The texture load mode.</param>
-		/// <param name="ForceTextureRepeatX">Whether to force TextureWrapMode.Repeat for referenced textures on the X-axis</param>
-		/// <param name="ForceTextureRepeatY">Whether to force TextureWrapMode.Repeat for referenced textures on the Y-axis</param>
 		/// <returns>The object loaded.</returns>
-		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
+		internal static ObjectManager.StaticObject ReadObject(string FileName, Encoding Encoding)
 		{
-			ObjectManager.StaticObject Object = new ObjectManager.StaticObject
-			{
-				Mesh =
-				{
-					Faces = new World.MeshFace[] { },
-					Materials = new World.MeshMaterial[] { },
-					Vertices = new VertexTemplate[] { }
-				}
-			};
+			ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
 
 			MeshBuilder Builder = new MeshBuilder();
 
@@ -84,7 +46,7 @@ namespace OpenBve
 			int currentMaterial = -1;
 
 			//Read the contents of the file
-			string[] Lines = File.ReadAllLines(FileName);
+			string[] Lines = File.ReadAllLines(FileName, Encoding);
 
 			//Preprocess
 			for (int i = 0; i < Lines.Length; i++)
@@ -165,7 +127,7 @@ namespace OpenBve
 						//Creates a new face
 
 						//Create the temp list to hook out the vertices 
-						List<VertexTemplate> vertices = new List<VertexTemplate>();
+						List<Vertex> vertices = new List<Vertex>();
 						List<Vector3> normals = new List<Vector3>();
 						for (int f = 1; f < Arguments.Count; f++)
 						{
@@ -273,18 +235,18 @@ namespace OpenBve
 							}
 							vertices.Add(newVertex);
 						}
-						World.MeshFaceVertex[] Vertices = new World.MeshFaceVertex[vertices.Count];
+						MeshFaceVertex[] Vertices = new MeshFaceVertex[vertices.Count];
 						for (int k = 0; k < vertices.Count; k++)
 						{
 							Builder.Vertices.Add(vertices[k]);
 							Vertices[k].Index = (ushort)(Builder.Vertices.Count -1);
 							Vertices[k].Normal = normals[k];
 						}
-						Builder.Faces.Add(currentMaterial == -1 ? new World.MeshFace(Vertices, 0) : new World.MeshFace(Vertices, (ushort)currentMaterial));
+						Builder.Faces.Add(currentMaterial == -1 ? new MeshFace(Vertices, 0) : new MeshFace(Vertices, (ushort)currentMaterial));
 						break;
 					case "g":
 						//Starts a new face group and (normally) applies a new texture
-						ApplyMeshBuilder(ref Object, Builder, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+						ApplyMeshBuilder(ref Object, Builder);
 						Builder = new MeshBuilder();
 						break;
 					case "s":
@@ -343,7 +305,7 @@ namespace OpenBve
 						break;
 				}
 			}
-			ApplyMeshBuilder(ref Object, Builder, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+			ApplyMeshBuilder(ref Object, Builder);
 			Object.Mesh.CreateNormals();
 			return Object;
 		}
@@ -395,15 +357,15 @@ namespace OpenBve
 					case "kd":
 						//Equivilant to SetColor
 						double r = 1, g = 1, b = 1;
-						if (!double.TryParse(Arguments[1], out r))
+						if (Arguments.Count >= 2 && !double.TryParse(Arguments[1], out r))
 						{
 							Interface.AddMessage(MessageType.Warning, false, "Invalid Ambient Color R in Material Definition for " + mm.Key);
 						}
-						if (!double.TryParse(Arguments[2], out g))
+						if (Arguments.Count >= 3 && !double.TryParse(Arguments[2], out g))
 						{
 							Interface.AddMessage(MessageType.Warning, false, "Invalid Ambient Color G in Material Definition for " + mm.Key);
 						}
-						if (!double.TryParse(Arguments[3], out b))
+						if (Arguments.Count >= 4 && !double.TryParse(Arguments[3], out b))
 						{
 							Interface.AddMessage(MessageType.Warning, false, "Invalid Ambient Color B in Material Definition for " + mm.Key);
 						}
@@ -421,7 +383,7 @@ namespace OpenBve
 					case "d":
 						//Sets the alpha value for the face
 						double a = 1;
-						if (!double.TryParse(Arguments[1], out a))
+						if (Arguments.Count >= 2 && !double.TryParse(Arguments[1], out a))
 						{
 							Interface.AddMessage(MessageType.Warning, false, "Invalid Alpha in Material Definition for " + mm.Key);
 						}
@@ -453,14 +415,14 @@ namespace OpenBve
 			Materials[Materials.Length - 1] = mm;
 		}
 
-		private static void ApplyMeshBuilder(ref ObjectManager.StaticObject Object, MeshBuilder Builder, ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
+		private static void ApplyMeshBuilder(ref ObjectManager.StaticObject Object, MeshBuilder Builder)
 		{
 			if (Builder.Faces.Count != 0)
 			{
 				int mf = Object.Mesh.Faces.Length;
 				int mm = Object.Mesh.Materials.Length;
 				int mv = Object.Mesh.Vertices.Length;
-				Array.Resize<World.MeshFace>(ref Object.Mesh.Faces, mf + Builder.Faces.Count);
+				Array.Resize<MeshFace>(ref Object.Mesh.Faces, mf + Builder.Faces.Count);
 				if (mm == 0)
 				{
 					if (Object.Mesh.Materials.Length == 0)
@@ -469,17 +431,17 @@ namespace OpenBve
 						 * If the object has no materials defined at all, we need to add one
 						 */
 						Array.Resize(ref Object.Mesh.Materials, 1);
-						Object.Mesh.Materials[0] = new World.MeshMaterial();
+						Object.Mesh.Materials[0] = new MeshMaterial();
 						Object.Mesh.Materials[0].Color = Color32.White;
 						Object.Mesh.Materials[0].Flags = (byte)(0 | 0);
-						Object.Mesh.Materials[0].DaytimeTextureIndex = -1;
-						Object.Mesh.Materials[0].NighttimeTextureIndex = -1;
+						Object.Mesh.Materials[0].DaytimeTexture = null;
+						Object.Mesh.Materials[0].NighttimeTexture = null;
 						mm++;
 					}
 				}
 				if (Builder.Materials.Length > 0)
 				{
-					Array.Resize<World.MeshMaterial>(ref Object.Mesh.Materials, mm + Builder.Materials.Length);
+					Array.Resize<MeshMaterial>(ref Object.Mesh.Materials, mm + Builder.Materials.Length);
 				}
 				else
 				{
@@ -491,7 +453,7 @@ namespace OpenBve
 				Array.Resize<VertexTemplate>(ref Object.Mesh.Vertices, mv + Builder.Vertices.Count);
 				for (int i = 0; i < Builder.Vertices.Count; i++)
 				{
-					Object.Mesh.Vertices[mv + i] = new Vertex((Vertex)Builder.Vertices[i]);
+					Object.Mesh.Vertices[mv + i] = Builder.Vertices[i];
 				}
 				for (int i = 0; i < Builder.Faces.Count; i++)
 				{
@@ -504,62 +466,48 @@ namespace OpenBve
 				}
 				for (int i = 0; i < Builder.Materials.Length; i++)
 				{
-					Object.Mesh.Materials[mm + i].Flags = (byte)((Builder.Materials[i].EmissiveColorUsed ? World.MeshMaterial.EmissiveColorMask : 0) | (Builder.Materials[i].TransparentColorUsed ? World.MeshMaterial.TransparentColorMask : 0));
+					Object.Mesh.Materials[mm + i].Flags = (byte)((Builder.Materials[i].EmissiveColorUsed ? MeshMaterial.EmissiveColorMask : 0) | (Builder.Materials[i].TransparentColorUsed ? MeshMaterial.TransparentColorMask : 0));
 					Object.Mesh.Materials[mm + i].Color = Builder.Materials[i].Color;
 					Object.Mesh.Materials[mm + i].TransparentColor = Builder.Materials[i].TransparentColor;
-					OpenGlTextureWrapMode WrapX, WrapY;
-					if (ForceTextureRepeatX)
-					{
-						WrapX = OpenGlTextureWrapMode.RepeatRepeat;
-					}
-					else
-					{
-						WrapX = OpenGlTextureWrapMode.ClampClamp;
-					}
-					if (ForceTextureRepeatY)
-					{
-						WrapY = OpenGlTextureWrapMode.RepeatRepeat;
-					}
-					else
-					{
-						WrapY = OpenGlTextureWrapMode.ClampClamp;
-					}
-					if (WrapX != OpenGlTextureWrapMode.RepeatRepeat | WrapY != OpenGlTextureWrapMode.RepeatRepeat)
-					{
-						for (int j = 0; j < Builder.Vertices.Count; j++)
-						{
-							if (Builder.Vertices[j].TextureCoordinates.X < 0.0 | Builder.Vertices[j].TextureCoordinates.X > 1.0)
-							{
-								WrapX = OpenGlTextureWrapMode.RepeatRepeat;
-							}
-							if (Builder.Vertices[j].TextureCoordinates.Y < 0.0 | Builder.Vertices[j].TextureCoordinates.Y > 1.0)
-							{
-								WrapY = OpenGlTextureWrapMode.RepeatRepeat;
-							}
-						}
-					}
 					if (Builder.Materials[i].DaytimeTexture != null)
 					{
-						int tday = TextureManager.RegisterTexture(Builder.Materials[i].DaytimeTexture, Builder.Materials[i].TransparentColor, Builder.Materials[i].TransparentColorUsed ? (byte)1 : (byte)0, WrapX, WrapY, LoadMode != ObjectLoadMode.Normal);
-						Object.Mesh.Materials[mm + i].DaytimeTextureIndex = tday;
+						Texture tday;
+						if (Builder.Materials[i].TransparentColorUsed)
+						{
+							Textures.RegisterTexture(Builder.Materials[i].DaytimeTexture, new TextureParameters(null, new Color24(Builder.Materials[i].TransparentColor.R, Builder.Materials[i].TransparentColor.G, Builder.Materials[i].TransparentColor.B)), out tday);
+						}
+						else
+						{
+							Textures.RegisterTexture(Builder.Materials[i].DaytimeTexture, out tday);
+						}
+						Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
 					}
 					else
 					{
-						Object.Mesh.Materials[mm + i].DaytimeTextureIndex = -1;
+						Object.Mesh.Materials[mm + i].DaytimeTexture = null;
 					}
 					Object.Mesh.Materials[mm + i].EmissiveColor = Builder.Materials[i].EmissiveColor;
 					if (Builder.Materials[i].NighttimeTexture != null)
 					{
-						int tnight = TextureManager.RegisterTexture(Builder.Materials[i].NighttimeTexture, Builder.Materials[i].TransparentColor, Builder.Materials[i].TransparentColorUsed ? (byte)1 : (byte)0, WrapX, WrapY, LoadMode != ObjectLoadMode.Normal);
-						Object.Mesh.Materials[mm + i].NighttimeTextureIndex = tnight;
+						Texture tnight;
+						if (Builder.Materials[i].TransparentColorUsed)
+						{
+							Textures.RegisterTexture(Builder.Materials[i].NighttimeTexture, new TextureParameters(null, new Color24(Builder.Materials[i].TransparentColor.R, Builder.Materials[i].TransparentColor.G, Builder.Materials[i].TransparentColor.B)), out tnight);
+						}
+						else
+						{
+							Textures.RegisterTexture(Builder.Materials[i].NighttimeTexture, out tnight);
+						}
+						Object.Mesh.Materials[mm + i].NighttimeTexture = tnight;
 					}
 					else
 					{
-						Object.Mesh.Materials[mm + i].NighttimeTextureIndex = -1;
+						Object.Mesh.Materials[mm + i].NighttimeTexture = null;
 					}
 					Object.Mesh.Materials[mm + i].DaytimeNighttimeBlend = 0;
 					Object.Mesh.Materials[mm + i].BlendMode = Builder.Materials[i].BlendMode;
 					Object.Mesh.Materials[mm + i].GlowAttenuationData = Builder.Materials[i].GlowAttenuationData;
+					Object.Mesh.Materials[mm + i].WrapMode = OpenGlTextureWrapMode.RepeatRepeat;
 				}
 			}
 		}

@@ -203,7 +203,7 @@ namespace OpenBveApi.Interface
 			string[] PluginFiles = System.IO.Directory.GetFiles(PluginsFolder, "*.dll");
 			foreach (var File in PluginFiles)
 			{
-				Assembly Plugin = null;
+				Assembly Plugin;
 				try
 				{
 					Plugin = Assembly.LoadFrom(File);
@@ -212,7 +212,7 @@ namespace OpenBveApi.Interface
 				{
 					continue;
 				}
-				Type[] Types = null;
+				Type[] Types;
 				try
 				{
 					Types = Plugin.GetTypes();

@@ -30,7 +30,7 @@ namespace OpenBve
 			internal double Countdown = -1;
 
 			/// <summary>The current transition alpha level</summary>
-			internal float Alpha = 1.0f;
+			internal float CurrentAlpha = 1.0f;
 
 		}
 
@@ -101,19 +101,19 @@ namespace OpenBve
 					switch (Mode)
 					{
 						case BackgroundTransitionMode.None:
-							Alpha = 1.0f;
+							CurrentAlpha = 1.0f;
 							break;
 						case BackgroundTransitionMode.FadeIn:
-							Alpha = (float)(Countdown / TransitionTime);
+							CurrentAlpha = (float)(Countdown / TransitionTime);
 							break;
 						case BackgroundTransitionMode.FadeOut:
-							Alpha = 1.0f - (float)(Countdown / TransitionTime);
+							CurrentAlpha = 1.0f - (float)(Countdown / TransitionTime);
 							break;
 					}
 				}
 				else
 				{
-					Alpha = 1.0f;
+					CurrentAlpha = 1.0f;
 				}
 			}
 
@@ -195,10 +195,10 @@ namespace OpenBve
 								PreviousBackgroundIndex = CurrentBackgroundIndex;
 								break;
 							case BackgroundTransitionMode.FadeIn:
-								Alpha = 1.0f - (float)(Countdown / Backgrounds[CurrentBackgroundIndex].TransitionTime);
+								CurrentAlpha = 1.0f - (float)(Countdown / Backgrounds[CurrentBackgroundIndex].TransitionTime);
 								break;
 							case BackgroundTransitionMode.FadeOut:
-								Alpha = (float)(Countdown / Backgrounds[CurrentBackgroundIndex].TransitionTime);
+								CurrentAlpha = (float)(Countdown / Backgrounds[CurrentBackgroundIndex].TransitionTime);
 								break;
 						}
 					}
@@ -219,12 +219,12 @@ namespace OpenBve
 						case BackgroundTransitionMode.FadeIn:
 							Renderer.RenderBackground(this.Backgrounds[PreviousBackgroundIndex], 1.0f, Scale);
 							Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-							Renderer.RenderBackground(this.Backgrounds[CurrentBackgroundIndex], this.Alpha, Scale);
+							Renderer.RenderBackground(this.Backgrounds[CurrentBackgroundIndex], this.CurrentAlpha, Scale);
 							break;
 						case BackgroundTransitionMode.FadeOut:
 							Renderer.RenderBackground(this.Backgrounds[CurrentBackgroundIndex], 1.0f, Scale);
 							Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-							Renderer.RenderBackground(this.Backgrounds[PreviousBackgroundIndex], this.Alpha, Scale);
+							Renderer.RenderBackground(this.Backgrounds[PreviousBackgroundIndex], this.CurrentAlpha, Scale);
 							break;
 					}
 				}
@@ -240,8 +240,8 @@ namespace OpenBve
 		{
 			/// <summary>The object used for this background (NOTE: Static objects only)</summary>
 			internal readonly ObjectManager.StaticObject ObjectBackground;
-
-			internal double ClipDistance = 0;
+			/// <summary>The clipping distance required to fully render the object</summary>
+			internal readonly double ClipDistance = 0;
 
 			/// <summary>Creates a new background object</summary>
 			/// <param name="Object">The object to use for the background</param>

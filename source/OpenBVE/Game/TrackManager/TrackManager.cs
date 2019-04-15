@@ -7,8 +7,8 @@ namespace OpenBve
 		/// <summary>Whether sound events are currently suppressed</summary>
 		internal static bool SuppressSoundEvents = false;
 
-		/// <summary>The current in-use track</summary>
-		internal static Track CurrentTrack;
+		/// <summary>The list of tracks available in the simulation.</summary>
+		internal static Track[] Tracks = new Track[] { new Track() };
 
 		/// <summary>Gets the innacuracy (Gauge spread and track bounce) for a given track position and routefile innacuracy value</summary>
 		/// <param name="position">The track position</param>

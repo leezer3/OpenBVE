@@ -8,6 +8,8 @@
 using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using OpenBveApi.Runtime;
+using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 
 namespace OpenBve {
@@ -35,9 +37,9 @@ namespace OpenBve {
 				this.TrackPosition = TrackPosition;
 			}
 		}
-		internal static Fog PreviousFog = new Fog(0.0f, 0.0f, new Color24(128, 128, 128), 0.0);
-		internal static Fog CurrentFog = new Fog(0.0f, 0.0f, new Color24(128, 128, 128), 0.5);
-		internal static Fog NextFog = new Fog(0.0f, 0.0f, new Color24(128, 128, 128), 1.0);
+		internal static Fog PreviousFog = new Fog(0.0f, 0.0f, Color24.Grey, 0.0);
+		internal static Fog CurrentFog = new Fog(0.0f, 0.0f, Color24.Grey, 0.5);
+		internal static Fog NextFog = new Fog(0.0f, 0.0f, Color24.Grey, 1.0);
 		internal static float NoFogStart = 800.0f;
 		internal static float NoFogEnd = 1600.0f;
 
@@ -143,14 +145,14 @@ namespace OpenBve {
 			Stations = new Station[] { };
 			Sections = new Section[] { };
 			BufferTrackPositions = new double[] { };
-			MarkerTextures = new int[] { };
+			MarkerTextures = new Texture[] { };
 			PointsOfInterest = new PointOfInterest[] { };
 			BogusPretrainInstructions = new BogusPretrainInstruction[] { };
 			TrainName = "";
 			TrainStart = TrainStartMode.EmergencyBrakesNoAts;
-			PreviousFog = new Fog(0.0f, 0.0f, new Color24(128, 128, 128), 0.0);
-			CurrentFog = new Fog(0.0f, 0.0f, new Color24(128, 128, 128), 0.5);
-			NextFog = new Fog(0.0f, 0.0f, new Color24(128, 128, 128), 1.0);
+			PreviousFog = new Fog(0.0f, 0.0f, Color24.Grey, 0.0);
+			CurrentFog = new Fog(0.0f, 0.0f, Color24.Grey, 0.5);
+			NextFog = new Fog(0.0f, 0.0f, Color24.Grey, 1.0);
 			NoFogStart = (float)World.BackgroundImageDistance + 200.0f;
 			NoFogEnd = 2.0f * NoFogStart;
 			InfoTotalTriangles = 0;
@@ -188,49 +190,30 @@ namespace OpenBve {
 			Ats = 0,
 			Atc = 1
 		}
-		internal enum StationStopMode {
-			AllStop = 0,
-			AllPass = 1,
-			PlayerStop = 2,
-			PlayerPass = 3
-		}
-		internal enum StationType {
-			Normal = 0,
-			ChangeEnds = 1,
-			Terminal = 2
-		}
-		internal struct Station {
-			internal string Name;
-			internal double ArrivalTime;
+		internal class Station : OpenBveApi.Runtime.Station {
 			internal Sounds.SoundBuffer ArrivalSoundBuffer;
-			internal double DepartureTime;
 			internal Sounds.SoundBuffer DepartureSoundBuffer;
-			internal double StopTime;
 			internal Vector3 SoundOrigin;
-			internal StationStopMode StopMode;
-			internal StationType StationType;
-			internal bool ForceStopSignal;
-			internal bool OpenLeftDoors;
-			internal bool OpenRightDoors;
 			internal SafetySystem SafetySystem;
 			internal StationStop[] Stops;
 			internal double PassengerRatio;
 			internal int TimetableDaytimeTexture;
 			internal int TimetableNighttimeTexture;
-			internal double DefaultTrackPosition;
+
+			internal int GetStopIndex(int Cars) {
+				int j = -1;
+				for (int i = Stops.Length - 1; i >= 0; i--) {
+					if (Cars <= Stops[i].Cars | Stops[i].Cars == 0) {
+						j = i;
+					}
+				}
+				if (j == -1) {
+					return Stops.Length - 1;
+				} else return j;
+			}
 		}
 		internal static Station[] Stations = new Station[] { };
-		internal static int GetStopIndex(int StationIndex, int Cars) {
-			int j = -1;
-			for (int i = Stations[StationIndex].Stops.Length - 1; i >= 0; i--) {
-				if (Cars <= Stations[StationIndex].Stops[i].Cars | Stations[StationIndex].Stops[i].Cars == 0) {
-					j = i;
-				}
-			}
-			if (j == -1) {
-				return Stations[StationIndex].Stops.Length - 1;
-			} else return j;
-		}
+		
 
 		// ================================
 
@@ -312,7 +295,7 @@ namespace OpenBve {
 			if (d >= 0) {
 				// look for train in previous blocks
 				//int l = Sections[SectionIndex].PreviousSection;
-				if (Stations[d].StationType != StationType.Normal) {
+				if (Stations[d].Type != StationType.Normal) {
 					settored = true;
 				}
 			}
@@ -375,20 +358,20 @@ namespace OpenBve {
 		// ================================
 
 		// marker
-		internal static int[] MarkerTextures = new int[] { };
-		internal static void AddMarker(int TextureIndex) {
+		internal static Texture[] MarkerTextures = new Texture[] { };
+		internal static void AddMarker(Texture Texture) {
 			int n = MarkerTextures.Length;
-			Array.Resize<int>(ref MarkerTextures, n + 1);
-			MarkerTextures[n] = TextureIndex;
+			Array.Resize<Texture>(ref MarkerTextures, n + 1);
+			MarkerTextures[n] = Texture;
 		}
-		internal static void RemoveMarker(int TextureIndex) {
+		internal static void RemoveMarker(Texture Texture) {
 			int n = MarkerTextures.Length;
 			for (int i = 0; i < n; i++) {
-				if (MarkerTextures[i] == TextureIndex) {
+				if (MarkerTextures[i] == Texture) {
 					for (int j = i; j < n - 1; j++) {
 						MarkerTextures[j] = MarkerTextures[j + 1];
 					}
-					Array.Resize<int>(ref MarkerTextures, n - 1);
+					Array.Resize<Texture>(ref MarkerTextures, n - 1);
 					break;
 				}
 			}

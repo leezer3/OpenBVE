@@ -49,7 +49,9 @@ namespace OpenBve
 			/// <summary>The face is fully opaque and originates from an object that is part of the cab.</summary>
 			OverlayOpaque = 4,
 			/// <summary>The face is partly transparent and originates from an object that is part of the cab.</summary>
-			OverlayAlpha = 5
+			OverlayAlpha = 5,
+			/// <summary>The face is touch element and originates from an object that is part of the cab.</summary>
+			Touch = 6
 		}
 
 		private struct ObjectListReference

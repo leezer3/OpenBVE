@@ -9,32 +9,25 @@ using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
 using System.Linq;
+using System.Text;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
-using OpenBveApi.Textures;
 
 namespace OpenBve
 {
 	/// <summary>Parses a Loksim3D xml format object</summary>
     internal static class Ls3DObjectParser
     {
-        /// <summary>Loads a Loksim3D object from a file.</summary>
-		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
-		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
-		/// <param name="LoadMode">The texture load mode.</param>
-		/// <param name="ForceTextureRepeatX">Whether to force TextureWrapMode.Repeat for the X-axis</param>
-		/// <param name="ForceTextureRepeatY">Whether to force TextureWrapMode.Repeat for the Y-axis</param>
-		/// <param name="Rotation">A three-dimemsional vector describing the rotation to be applied</param>
-		/// <returns>The object loaded.</returns>
-		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding,ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY, Vector3 Rotation)
+	    /// <summary>Loads a Loksim3D object from a file.</summary>
+	    /// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
+	    /// <param name="Rotation">A three-dimemsional vector describing the rotation to be applied</param>
+	    /// <returns>The object loaded.</returns>
+	    internal static ObjectManager.StaticObject ReadObject(string FileName, Vector3 Rotation)
         {
 	        string BaseDir = System.IO.Path.GetDirectoryName(FileName);
 			XmlDocument currentXML = new XmlDocument();
             //Initialise the object
             ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
-			Object.Mesh.Faces = new World.MeshFace[] { };
-			Object.Mesh.Materials = new World.MeshMaterial[] { };
-			Object.Mesh.Vertices = new VertexTemplate[] { };
             MeshBuilder Builder = new MeshBuilder();
 			Vector3[] Normals = new Vector3[4];
             bool PropertiesFound = false;
@@ -288,10 +281,10 @@ namespace OpenBve
                                                 string[] Verticies = childNode.Attributes["Points"].Value.Split(';');
                                                 int f = Builder.Faces.Length;
                                                 //Add 1 to the length of the face array
-                                                Array.Resize<World.MeshFace>(ref Builder.Faces, f + 1);
-                                                Builder.Faces[f] = new World.MeshFace();
+                                                Array.Resize<MeshFace>(ref Builder.Faces, f + 1);
+                                                Builder.Faces[f] = new MeshFace();
                                                 //Create the vertex array for the face
-                                                Builder.Faces[f].Vertices = new World.MeshFaceVertex[Verticies.Length];
+                                                Builder.Faces[f].Vertices = new MeshFaceVertex[Verticies.Length];
                                                 while (Builder.Vertices.Length > Normals.Length)
                                                 {
                                                     Array.Resize<Vector3>(ref Normals,
@@ -364,7 +357,7 @@ namespace OpenBve
 	                                            if (Face2)
 	                                            {
 													//Add face2 flag if required
-		                                            Builder.Faces[f].Flags = (byte)World.MeshFace.Face2Mask;
+		                                            Builder.Faces[f].Flags = (byte)MeshFace.Face2Mask;
 	                                            }
 											}
 

@@ -1,4 +1,5 @@
 ﻿using OpenBveApi.Math;
+using OpenBveApi.Objects;
 using OpenBveApi.World;
 
 namespace OpenBve
@@ -13,7 +14,7 @@ namespace OpenBve
 			internal AnimatedObject[] Objects;
 			internal WorldObject[] Sounds;
 
-			internal override void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation,
+			public override void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation,
 				int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength,
 				double TrackPosition, double Brightness, bool DuplicateMaterials)
 			{
@@ -60,7 +61,7 @@ namespace OpenBve
 								p.Y += Objects[i].States[0].Position.X * s.Y + Objects[i].States[0].Position.Y * u.Y + Objects[i].States[0].Position.Z * d.Y;
 								p.Z += Objects[i].States[0].Position.X * s.Z + Objects[i].States[0].Position.Y * u.Z + Objects[i].States[0].Position.Z * d.Z;
 								double zOffset = Objects[i].States[0].Position.Z;
-								CreateStaticObject(Objects[i].States[0].Object, p, BaseTransformation, AuxTransformation, AccurateObjectDisposal, zOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness, DuplicateMaterials);
+								CreateStaticObject(Objects[i].States[0].Object, p, BaseTransformation, AuxTransformation, AccurateObjectDisposal, zOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 							}
 							else
 							{
@@ -102,7 +103,7 @@ namespace OpenBve
 				}
 			}
 
-			internal override void OptimizeObject(bool PreserveVerticies)
+			public override void OptimizeObject(bool PreserveVerticies)
 			{
 				for (int i = 0; i < Objects.Length; i++)
 				{

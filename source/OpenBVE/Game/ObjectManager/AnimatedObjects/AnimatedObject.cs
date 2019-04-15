@@ -15,6 +15,12 @@ namespace OpenBve
 		{
 			internal Vector3 Position;
 			internal StaticObject Object;
+
+			internal AnimatedObjectState(StaticObject stateObject, Vector3 position)
+			{
+				Object = stateObject;
+				Position = position;
+			}
 		}
 		internal class AnimatedObject
 		{
@@ -162,13 +168,13 @@ namespace OpenBve
 						
 					}
 					m = States[t].Object.Mesh.Faces.Length;
-					ObjectManager.Objects[i].Mesh.Faces = new World.MeshFace[m];
+					ObjectManager.Objects[i].Mesh.Faces = new MeshFace[m];
 					for (int k = 0; k < m; k++)
 					{
 						ObjectManager.Objects[i].Mesh.Faces[k].Flags = States[t].Object.Mesh.Faces[k].Flags;
 						ObjectManager.Objects[i].Mesh.Faces[k].Material = States[t].Object.Mesh.Faces[k].Material;
 						int o = States[t].Object.Mesh.Faces[k].Vertices.Length;
-						ObjectManager.Objects[i].Mesh.Faces[k].Vertices = new World.MeshFaceVertex[o];
+						ObjectManager.Objects[i].Mesh.Faces[k].Vertices = new MeshFaceVertex[o];
 						for (int h = 0; h < o; h++)
 						{
 							ObjectManager.Objects[i].Mesh.Faces[k].Vertices[h] = States[t].Object.Mesh.Faces[k].Vertices[h];
@@ -178,16 +184,7 @@ namespace OpenBve
 				}
 				else
 				{
-					ObjectManager.Objects[i] = null;
-					ObjectManager.Objects[i] = new StaticObject
-					{
-						Mesh =
-						{
-							Faces = new World.MeshFace[] {},
-							Materials = new World.MeshMaterial[] {},
-							Vertices = new VertexTemplate[] {}
-						}
-					};
+					ObjectManager.Objects[i] = new StaticObject();
 				}
 				CurrentState = StateIndex;
 				if (Show)
@@ -218,7 +215,8 @@ namespace OpenBve
 			/// <param name="Show"></param>
 			/// <param name="TimeElapsed">The time elapsed since this object was last updated</param>
 			/// <param name="EnableDamping">Whether damping is to be applied for this call</param>
-			internal void Update(bool IsPartOfTrain, TrainManager.Train Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Overlay, bool UpdateFunctions, bool Show, double TimeElapsed, bool EnableDamping)
+            /// <param name="IsTouch">Whether Animated Object belonging to TouchElement class.</param>
+			internal void Update(bool IsPartOfTrain, TrainManager.Train Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Overlay, bool UpdateFunctions, bool Show, double TimeElapsed, bool EnableDamping, bool IsTouch = false)
 			{
 				int s = CurrentState;
 				int i = ObjectIndex;
@@ -790,20 +788,24 @@ namespace OpenBve
 						}
 					}
 					// visibility changed
-					if (Show)
+                    // TouchElement is handled by another function.
+					if (!IsTouch)
 					{
-						if (Overlay)
+						if (Show)
 						{
-							Renderer.ShowObject(i, ObjectType.Overlay);
+							if (Overlay)
+							{
+								Renderer.ShowObject(i, ObjectType.Overlay);
+							}
+							else
+							{
+								Renderer.ShowObject(i, ObjectType.Dynamic);
+							}
 						}
 						else
 						{
-							Renderer.ShowObject(i, ObjectType.Dynamic);
+							Renderer.HideObject(i);
 						}
-					}
-					else
-					{
-						Renderer.HideObject(i);
 					}
 				}
 			}
@@ -843,16 +845,7 @@ namespace OpenBve
 					{
 						if (currentObject.Object.States[i].Object == null)
 						{
-							currentObject.Object.States[i].Object = new StaticObject
-							{
-								Mesh =
-								{
-									Faces = new World.MeshFace[] {},
-									Materials = new World.MeshMaterial[] {},
-									Vertices = new VertexTemplate[] {}
-								},
-								RendererIndex = -1
-							};
+							currentObject.Object.States[i].Object = new StaticObject { RendererIndex =  -1 };
 						}
 					}
 					double r = 0.0;
@@ -896,16 +889,7 @@ namespace OpenBve
 					{
 						if (currentObject.Object.States[i].Object == null)
 						{
-							currentObject.Object.States[i].Object = new StaticObject
-							{
-								Mesh =
-								{
-									Faces = new World.MeshFace[] {},
-									Materials = new World.MeshMaterial[] {},
-									Vertices = new VertexTemplate[] {}
-								},
-								RendererIndex = -1
-							};
+							currentObject.Object.States[i].Object = new StaticObject { RendererIndex =  -1 };
 						}
 					}
 					double r = 0.0;

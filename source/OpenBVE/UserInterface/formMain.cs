@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Net;
 using System.Windows.Forms;
@@ -406,7 +405,7 @@ namespace OpenBve {
 			comboboxMotionBlur.Items.AddRange(new object[] { "", "", "", "" });
 			comboboxMotionBlur.SelectedIndex = (int)Interface.CurrentOptions.MotionBlur;
 			trackbarTransparency.Value = (int)Interface.CurrentOptions.TransparencyMode;
-			trackBarTimeAccelerationFactor.Value = Interface.CurrentOptions.TimeAccelerationFactor > trackBarTimeAccelerationFactor.Maximum ? trackBarTimeAccelerationFactor.Maximum : Interface.CurrentOptions.TimeAccelerationFactor;
+			updownTimeAccelerationFactor.Value = Interface.CurrentOptions.TimeAccelerationFactor > updownTimeAccelerationFactor.Maximum ? updownTimeAccelerationFactor.Maximum : Interface.CurrentOptions.TimeAccelerationFactor;
 			checkboxToppling.Checked = Interface.CurrentOptions.Toppling;
 			checkboxCollisions.Checked = Interface.CurrentOptions.Collisions;
 			checkboxDerailments.Checked = Interface.CurrentOptions.Derailments;
@@ -450,12 +449,14 @@ namespace OpenBve {
 			routeWorkerThread.RunWorkerCompleted += routeWorkerThread_completed;
 			Manipulation.ProgressChanged += OnWorkerProgressChanged;
 			Manipulation.ProblemReport += OnWorkerReportsProblem;
-			trackBarTimeAccelerationFactor.ValueChanged += trackBarTimeAccelerationFactor_ValueChanged;
+			updownTimeAccelerationFactor.ValueChanged += updownTimeAccelerationFactor_ValueChanged;
 			comboBoxXparser.SelectedIndex = (int)Interface.CurrentOptions.CurrentXParser;
 			comboBoxObjparser.SelectedIndex = (int)Interface.CurrentOptions.CurrentObjParser;
 			//Load languages last to ensure that everything is populated
 			Translations.CurrentLanguageCode = Interface.CurrentOptions.LanguageCode;
 			Translations.ListLanguages(comboboxLanguages);
+			Cursors.ListCursors(comboboxCursor);
+			checkBoxPanel2Extended.Checked = Interface.CurrentOptions.Panel2ExtendedMode;
 		}
 
 		
@@ -932,6 +933,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.KioskModeTimer = (double)numericUpDownKioskTimeout.Value;
 			Interface.CurrentOptions.CurrentXParser = (Interface.XParsers)comboBoxXparser.SelectedIndex;
 			Interface.CurrentOptions.CurrentObjParser = (Interface.ObjParsers)comboBoxObjparser.SelectedIndex;
+			Interface.CurrentOptions.Panel2ExtendedMode = checkBoxPanel2Extended.Checked;
 			switch (trackBarHUDSize.Value)
 			{
 				case 0:
@@ -1598,6 +1600,7 @@ namespace OpenBve {
 			try
 			{
 				hwResponse = (HttpWebResponse)hwRequest.GetResponse();
+				// ReSharper disable once AssignNullToNotNullAttribute
 				reader = new XmlTextReader(hwResponse.GetResponseStream());
 				reader.MoveToContent();
 				string elementName = "";

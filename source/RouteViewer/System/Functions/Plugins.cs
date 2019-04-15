@@ -110,6 +110,10 @@ namespace OpenBve
 					bool iruntime = false;
 					foreach (Type type in types)
 					{
+						if (type.FullName == null)
+						{
+							continue;
+						}
 						if (type.IsSubclassOf(typeof(OpenBveApi.Textures.TextureInterface)))
 						{
 							plugin.Texture = (OpenBveApi.Textures.TextureInterface)assembly.CreateInstance(type.FullName);

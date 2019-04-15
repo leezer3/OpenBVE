@@ -1,7 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
+using System.Xml.Linq;
+using OpenBve.Parsers.Panel;
 using OpenBveApi.Interface;
-using OpenBveApi.Objects;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
@@ -13,8 +17,8 @@ namespace OpenBve
 		internal static Train[] Trains = new Train[] { };
 		/// <summary>A reference to the train of the Trains element that corresponds to the player's train.</summary>
 		internal static Train PlayerTrain = null;
-
-
+		/// <summary>The list of TrackFollowingObject available on other tracks in the simulation.</summary>
+		internal static TrackFollowingObject[] TFOs = new TrackFollowingObject[] { };
 
 		/// <summary>Attempts to load and parse the current train's panel configuration file.</summary>
 		/// <param name="TrainPath">The absolute on-disk path to the train folder.</param>
@@ -25,41 +29,108 @@ namespace OpenBve
 			Train.Cars[Train.DriverCar].CarSections = new CarSection[1];
 			Train.Cars[Train.DriverCar].CarSections[0] = new CarSection
 			{
+				Groups = new ElementsGroup[1]
+			};
+			Train.Cars[Train.DriverCar].CarSections[0].Groups[0] = new ElementsGroup
+			{
 				Elements = new ObjectManager.AnimatedObject[] { },
 				Overlay = true
 			};
-			string File = OpenBveApi.Path.CombineFile(TrainPath, "panel.animated");
+			string File = OpenBveApi.Path.CombineFile(TrainPath, "panel.xml");
+			if (!System.IO.File.Exists(File))
+			{
+				//Try animated variant too
+				File = OpenBveApi.Path.CombineFile(TrainPath, "panel.animated.xml");
+			}
 			if (System.IO.File.Exists(File))
 			{
 				Program.FileSystem.AppendToLogFile("Loading train panel: " + File);
-				ObjectManager.AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(File, Encoding, ObjectLoadMode.DontAllowUnloadOfTextures);
-				if (a != null)
+				try
 				{
-					//HACK: If a == null , loading our animated object completely failed (Missing objects?). Fallback to trying the panel2.cfg
-					try
+					/*
+					 * First load the XML. We use this to determine
+					 * whether this is a 2D or a 3D animated panel
+					 */
+					XDocument CurrentXML = XDocument.Load(File, LoadOptions.SetLineInfo);
+
+					// Check for null
+					if (CurrentXML.Root != null)
 					{
-						for (int i = 0; i < a.Objects.Length; i++)
+
+						IEnumerable<XElement> DocumentElements = CurrentXML.Root.Elements("PanelAnimated");
+						if (DocumentElements.Any())
 						{
-							a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject();
+							PanelAnimatedXmlParser.ParsePanelAnimatedXml(System.IO.Path.GetFileName(File), TrainPath, Train, Train.DriverCar);
+							Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.NotAvailable;
+							World.CameraRestriction = Camera.RestrictionMode.NotAvailable;
 						}
-						Train.Cars[Train.DriverCar].CarSections[0].Elements = a.Objects;
-						Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.NotAvailable;
-						World.CameraRestriction = Camera.RestrictionMode.NotAvailable;
-						World.UpdateViewingDistances();
-						return;
-					}
-					catch
-					{
-						var currentError = Translations.GetInterfaceString("errors_critical_file");
-						currentError = currentError.Replace("[file]", "panel.animated");
-						MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-						Program.RestartArguments = " ";
-						Loading.Cancel = true;
-						return;
+
+						DocumentElements = CurrentXML.Root.Elements("Panel");
+						if (DocumentElements.Any())
+						{
+							PanelXmlParser.ParsePanelXml(System.IO.Path.GetFileName(File), TrainPath, Train, Train.DriverCar);
+							Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.On;
+							World.CameraRestriction = Camera.RestrictionMode.On;
+						}
 					}
 				}
-			}
+				catch
+				{
+					var currentError = Translations.GetInterfaceString("errors_critical_file");
+					currentError = currentError.Replace("[file]", "panel.xml");
+					MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+					Program.RestartArguments = " ";
+					Loading.Cancel = true;
+					return;
+				}
 
+				if (Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements.Any())
+				{
+					World.UpdateViewingDistances();
+					return;
+				}
+				Interface.AddMessage(MessageType.Error, false, "The panel.xml file " + File + " failed to load. Falling back to legacy panel.");
+			}
+			else
+			{
+				File = OpenBveApi.Path.CombineFile(TrainPath, "panel.animated");
+				if (System.IO.File.Exists(File))
+				{
+					Program.FileSystem.AppendToLogFile("Loading train panel: " + File);
+					if (System.IO.File.Exists(OpenBveApi.Path.CombineFile(TrainPath, "panel2.cfg")) || System.IO.File.Exists(OpenBveApi.Path.CombineFile(TrainPath, "panel.cfg")))
+					{
+						Program.FileSystem.AppendToLogFile("INFO: This train contains both a 2D and a 3D panel. The 3D panel will always take precedence");
+					}
+					ObjectManager.AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(File, Encoding);
+					if (a != null)
+					{
+						//HACK: If a == null , loading our animated object completely failed (Missing objects?). Fallback to trying the panel2.cfg
+						try
+						{
+							for (int i = 0; i < a.Objects.Length; i++)
+							{
+								a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject();
+							}
+							Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements = a.Objects;
+							Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.NotAvailable;
+							World.CameraRestriction = Camera.RestrictionMode.NotAvailable;
+							World.UpdateViewingDistances();
+							return;
+						}
+						catch
+						{
+							var currentError = Translations.GetInterfaceString("errors_critical_file");
+							currentError = currentError.Replace("[file]", "panel.animated");
+							MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
+							Program.RestartArguments = " ";
+							Loading.Cancel = true;
+							return;
+						}
+					}
+					Interface.AddMessage(MessageType.Error, false, "The panel.animated file " + File + " failed to load. Falling back to 2D panel.");
+				}
+			}
+		
 			var Panel2 = false;
 			try
 			{
@@ -91,7 +162,7 @@ namespace OpenBve
 			catch
 			{
 				var currentError = Translations.GetInterfaceString("errors_critical_file");
-				currentError = currentError.Replace("[file]", Panel2 == true ? "panel2.cfg" : "panel.cfg");
+				currentError = currentError.Replace("[file]",Panel2 ? "panel2.cfg" : "panel.cfg");
 				MessageBox.Show(currentError, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				Program.RestartArguments = " ";
 				Loading.Cancel = true;
@@ -141,6 +212,11 @@ namespace OpenBve
 			{
 				Trains[i].UpdateObjects(TimeElapsed, ForceUpdate);
 			}
+
+			foreach (var Train in TFOs)
+			{
+				Train.UpdateObjects(TimeElapsed, ForceUpdate);
+			}
 		}
 
 		
@@ -156,6 +232,12 @@ namespace OpenBve
 			for (int i = 0; i < Trains.Length; i++) {
 				Trains[i].Update(TimeElapsed);
 			}
+
+			foreach (var Train in TFOs)
+			{
+				Train.Update(TimeElapsed);
+			}
+
 			// detect collision
 			if (!Game.MinimalisticSimulation & Interface.CurrentOptions.Collisions)
 			{
@@ -466,7 +548,7 @@ namespace OpenBve
 			//for (int i = 0; i < Trains.Length; i++) {
 			System.Threading.Tasks.Parallel.For(0, Trains.Length, i =>
 			{
-				if (Trains[i].State != TrainState.Disposed & Trains[i].State != TrainManager.TrainState.Bogus)
+				if (Trains[i].State != TrainState.Disposed & Trains[i].State != TrainState.Bogus)
 				{
 					for (int j = 0; j < Trains[i].Cars.Length; j++)
 					{
@@ -484,6 +566,30 @@ namespace OpenBve
 						Trains[i].Cars[j].UpdateTopplingCantAndSpring(TimeElapsed);
 						Trains[i].Cars[j].FrontBogie.UpdateTopplingCantAndSpring();
 						Trains[i].Cars[j].RearBogie.UpdateTopplingCantAndSpring();
+					}
+				}
+			});
+
+			System.Threading.Tasks.Parallel.For(0, TFOs.Length, i =>
+			{
+				if (TFOs[i].State != TrainState.Disposed & TFOs[i].State != TrainState.Bogus)
+				{
+					foreach (var Car in TFOs[i].Cars)
+					{
+						Car.FrontAxle.Follower.UpdateWorldCoordinates(true);
+						Car.FrontBogie.FrontAxle.Follower.UpdateWorldCoordinates(true);
+						Car.FrontBogie.RearAxle.Follower.UpdateWorldCoordinates(true);
+						Car.RearAxle.Follower.UpdateWorldCoordinates(true);
+						Car.RearBogie.FrontAxle.Follower.UpdateWorldCoordinates(true);
+						Car.RearBogie.RearAxle.Follower.UpdateWorldCoordinates(true);
+						if (TimeElapsed == 0.0 | TimeElapsed > 0.5)
+						{
+							//Don't update the toppling etc. with excessive or no time
+							continue;
+						}
+						Car.UpdateTopplingCantAndSpring(TimeElapsed);
+						Car.FrontBogie.UpdateTopplingCantAndSpring();
+						Car.RearBogie.UpdateTopplingCantAndSpring();
 					}
 				}
 			});

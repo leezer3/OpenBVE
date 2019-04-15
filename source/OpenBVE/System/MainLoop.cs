@@ -3,8 +3,8 @@ using System.ComponentModel;
 using System.Globalization;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
-using OpenTK.Input;
 using OpenTK;
+using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 using ButtonState = OpenTK.Input.ButtonState;
 
@@ -77,6 +77,15 @@ namespace OpenBve
 					Interface.CurrentOptions.WindowHeight = result.Height;
 				}
 			}
+
+			if (Interface.CurrentOptions.FullscreenMode)
+			{
+				Program.FileSystem.AppendToLogFile("Initialising full-screen game window of size " + Interface.CurrentOptions.FullscreenWidth + " x " + Interface.CurrentOptions.FullscreenHeight);
+			}
+			else
+			{
+				Program.FileSystem.AppendToLogFile("Initialising game window of size " + Interface.CurrentOptions.WindowWidth + " x " + Interface.CurrentOptions.WindowHeight);
+			}
 			Screen.Initialize();
 			currentResult = result;
 			Program.currentGameWindow.Closing += OpenTKQuit;
@@ -125,6 +134,21 @@ namespace OpenBve
 				if (Game.CurrentInterface == Game.InterfaceType.Menu)
 				{
 					Game.Menu.ProcessMouseDown(e.X, e.Y);
+				}
+				else if (Game.CurrentInterface == Game.InterfaceType.Normal)
+				{
+					Renderer.TouchCheck(new Vector2(e.X, e.Y));
+				}
+			}
+		}
+
+		internal static void mouseUpEvent(object sender, MouseButtonEventArgs e)
+		{
+			if (e.Button == MouseButton.Left)
+			{
+				if (Game.CurrentInterface == Game.InterfaceType.Normal)
+				{
+					Renderer.LeaveCheck(new Vector2(e.X, e.Y));
 				}
 			}
 		}

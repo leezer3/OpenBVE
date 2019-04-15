@@ -64,7 +64,7 @@ namespace OpenBve
 						int j = TrainManager.PlayerTrain.Station;
 						if (j >= 0)
 						{
-							int p = Game.GetStopIndex(j, TrainManager.PlayerTrain.Cars.Length);
+							int p = Game.Stations[j].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
 							if (p >= 0)
 							{
 								if (Math.Abs(TrainManager.PlayerTrain.Specs.CurrentAverageSpeed) < 0.1)
@@ -232,7 +232,7 @@ namespace OpenBve
 								}
 								// position
 								int xc;
-								int p = Game.GetStopIndex(j, TrainManager.PlayerTrain.Cars.Length);
+								int p = Game.Stations[j].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
 								if (p >= 0)
 								{
 									double d = TrainManager.PlayerTrain.StationDistanceToStopPoint;

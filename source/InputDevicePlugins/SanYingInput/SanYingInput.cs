@@ -346,20 +346,42 @@ namespace SanYingInput
 				return;
 			}
 
-			for (int i = 0; i < 16; i++)
+			var isNotchIntermediateEstimated = false;
+
+			// Problem between P1 and P2
+			// https://twitter.com/SanYingOfficial/status/1088429762698129408
+			//
+			// P5 may be output when the notch is between P1 and P2.
+			// This is an unintended output and should be excluded.
+			if (_handlePos == 5)
 			{
-				OnKeyUp(new InputEventArgs(Controls[i]));
+				if (_lastHandlePos == 1)
+				{
+					isNotchIntermediateEstimated = true;
+				}
+				else if (_lastHandlePos == 2)
+				{
+					isNotchIntermediateEstimated = true;
+				}
 			}
 
-			if (_handlePos != _lastHandlePos)
+			if (!isNotchIntermediateEstimated)
 			{
-				if (_handlePos <= 0)
+				for (int i = 0; i < 16; i++)
 				{
-					OnKeyDown(new InputEventArgs(Controls[_handlePos + 9]));
+					OnKeyUp(new InputEventArgs(Controls[i]));
 				}
-				if (_handlePos >= 0)
+
+				if (_handlePos != _lastHandlePos)
 				{
-					OnKeyDown(new InputEventArgs(Controls[_handlePos + 10]));
+					if (_handlePos <= 0)
+					{
+						OnKeyDown(new InputEventArgs(Controls[_handlePos + 9]));
+					}
+					if (_handlePos >= 0)
+					{
+						OnKeyDown(new InputEventArgs(Controls[_handlePos + 10]));
+					}
 				}
 			}
 

@@ -6,6 +6,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Colors;
 using OpenBveApi.Objects;
 using OpenBve.Formats.MsTs;
+using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Textures;
 using SharpCompress.Compressors;
@@ -226,15 +227,7 @@ namespace OpenBve
 
 			internal void Apply(out ObjectManager.StaticObject Object)
 			{
-				Object = new ObjectManager.StaticObject
-				{
-					Mesh =
-					{
-						Faces = new World.MeshFace[] { },
-						Materials = new World.MeshMaterial[] { },
-						Vertices = new VertexTemplate[] { }
-					}
-				};
+				Object = new ObjectManager.StaticObject();
 				if (faces.Count != 0)
 				{
 					int mf = Object.Mesh.Faces.Length;
@@ -250,7 +243,7 @@ namespace OpenBve
 
 					for (int i = 0; i < faces.Count; i++)
 					{
-						Object.Mesh.Faces[i] = new World.MeshFace(faces[i].Vertices);
+						Object.Mesh.Faces[i] = new MeshFace(faces[i].Vertices);
 						Object.Mesh.Faces[i].Material = (ushort)faces[i].Material;
 						for (int k = 0; k < faces[i].Vertices.Length; k++)
 						{
@@ -270,7 +263,7 @@ namespace OpenBve
 						Object.Mesh.Materials[mm + i].Flags = 0;
 						Object.Mesh.Materials[mm + i].Color = materials[i].Color;
 						Object.Mesh.Materials[mm + i].TransparentColor = Color24.Black;
-						Object.Mesh.Materials[mm + i].BlendMode = World.MeshMaterialBlendMode.Normal;
+						Object.Mesh.Materials[mm + i].BlendMode = MeshMaterialBlendMode.Normal;
 						if (materials[i].DaytimeTexture != null)
 						{
 							OpenBveApi.Textures.Texture tday;
@@ -428,11 +421,11 @@ namespace OpenBve
 
 					if (k != 0)
 					{
-						Result.Objects[idx].StateFunction = FunctionScripts.GetFunctionScriptFromInfixNotation("if[cameraDistance <" + shape.LODs[i].viewingDistance + ",if[cameraDistance >" + previousLODs[k] + ",0,-1],-1]");
+						Result.Objects[idx].StateFunction = new FunctionScript(Program.CurrentHost, "if[cameraDistance <" + shape.LODs[i].viewingDistance + ",if[cameraDistance >" + previousLODs[k] + ",0,-1],-1]", true);
 					}
 					else
 					{
-						Result.Objects[idx].StateFunction = FunctionScripts.GetFunctionScriptFromInfixNotation("if[cameraDistance <" + shape.LODs[i].viewingDistance + ",0,-1]");
+						Result.Objects[idx].StateFunction = new FunctionScript(Program.CurrentHost, "if[cameraDistance <" + shape.LODs[i].viewingDistance + ",0,-1]", true);
 					}
 
 					idx++;

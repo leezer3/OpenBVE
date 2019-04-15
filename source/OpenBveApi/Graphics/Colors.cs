@@ -93,6 +93,8 @@ namespace OpenBveApi.Colors {
 		// --- read-only fields ---
 		/// <summary>Represents a black color.</summary>
 		public static readonly Color24 Black = new Color24(0, 0, 0);
+		/// <summary>Represents a grey color.</summary>
+		public static readonly Color24 Grey = new Color24(128, 128, 128);
 		/// <summary>Represents a red color.</summary>
 		public static readonly Color24 Red = new Color24(255, 0, 0);
 		/// <summary>Represents a green color.</summary>
@@ -302,23 +304,14 @@ namespace OpenBveApi.Colors {
 						Color = new Color32((byte)r, (byte)g, (byte)b, 255);
 						return true;
 					}
-					else
-					{
-						Color = new Color32(0, 0, 255, 255);
-						return false;
-					}
-				}
-				else
-				{
-					Color = new Color32(0, 0, 255, 255);
+					Color = Blue;
 					return false;
 				}
-			}
-			else
-			{
-				Color = new Color32(0, 0, 255, 255);
+				Color = Blue;
 				return false;
 			}
+			Color = Blue;
+			return false;
 		}
 
 		/// <summary>Casts a System.Drawing.Color to a Color32</summary>

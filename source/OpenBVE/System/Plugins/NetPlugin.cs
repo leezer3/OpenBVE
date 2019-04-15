@@ -128,7 +128,8 @@ namespace OpenBve {
 			#endif
 		}
 		internal override void EndJump() { }
-		internal override void Elapse(ElapseData data) {
+
+		protected override void Elapse(ElapseData data) {
 			#if !DEBUG
 			try {
 				#endif
@@ -152,7 +153,8 @@ namespace OpenBve {
 			}
 			#endif
 		}
-		internal override void SetReverser(int reverser) {
+
+		protected override void SetReverser(int reverser) {
 			#if !DEBUG
 			try {
 				#endif
@@ -164,7 +166,8 @@ namespace OpenBve {
 			}
 			#endif
 		}
-		internal override void SetPower(int powerNotch) {
+
+		protected override void SetPower(int powerNotch) {
 			#if !DEBUG
 			try {
 				#endif
@@ -176,7 +179,8 @@ namespace OpenBve {
 			}
 			#endif
 		}
-		internal override void SetBrake(int brakeNotch) {
+
+		protected override void SetBrake(int brakeNotch) {
 			#if !DEBUG
 			try {
 				#endif
@@ -236,7 +240,8 @@ namespace OpenBve {
 			}
 			#endif
 		}
-		internal override void SetSignal(SignalData[] signal) {
+
+		protected override void SetSignal(SignalData[] signal) {
 			#if !DEBUG
 			try {
 				#endif
@@ -248,7 +253,8 @@ namespace OpenBve {
 			}
 			#endif
 		}
-		internal override void SetBeacon(BeaconData beacon) {
+
+		protected override void SetBeacon(BeaconData beacon) {
 			#if !DEBUG
 			try {
 				#endif
@@ -260,7 +266,8 @@ namespace OpenBve {
 			}
 			#endif
 		}
-		internal override void PerformAI(AIData data) {
+
+		protected override void PerformAI(AIData data) {
 			#if !DEBUG
 			try {
 				#endif

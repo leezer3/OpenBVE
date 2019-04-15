@@ -13,7 +13,7 @@ namespace OpenBve {
 	internal static class XObjectParser {
 
 		// read object
-		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode) {
+		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding) {
 			byte[] Data = System.IO.File.ReadAllBytes(FileName);
 			if (Data.Length < 16 || Data[0] != 120 | Data[1] != 111 | Data[2] != 102 | Data[3] != 32) {
 				// not an x object
@@ -39,10 +39,10 @@ namespace OpenBve {
 			// supported floating point format
 			if (Data[8] == 116 & Data[9] == 120 & Data[10] == 116 & Data[11] == 32) {
 				// textual flavor
-				return LoadTextualX(FileName, System.IO.File.ReadAllText(FileName), Encoding, LoadMode);
+				return LoadTextualX(FileName, System.IO.File.ReadAllText(FileName), Encoding);
 			} else if (Data[8] == 98 & Data[9] == 105 & Data[10] == 110 & Data[11] == 32) {
 				// binary flavor
-				return LoadBinaryX(FileName, Data, 16, FloatingPointSize, LoadMode);
+				return LoadBinaryX(FileName, Data, 16, FloatingPointSize);
 			} else if (Data[8] == 116 & Data[9] == 122 & Data[10] == 105 & Data[11] == 112) {
 				// compressed textual flavor
 				#if !DEBUG
@@ -50,7 +50,7 @@ namespace OpenBve {
 					#endif
 					byte[] Uncompressed = Decompress(Data);
 					string Text = Encoding.GetString(Uncompressed);
-					return LoadTextualX(FileName, Text, Encoding, LoadMode);
+					return LoadTextualX(FileName, Text, Encoding);
 					#if !DEBUG
 				} catch (Exception ex) {
 					Interface.AddMessage(MessageType.Error, false, "An unexpected error occured (" + ex.Message + ") while attempting to decompress the binary X object file encountered in " + FileName);
@@ -63,7 +63,7 @@ namespace OpenBve {
 				try {
 					#endif
 					byte[] Uncompressed = Decompress(Data);
-					return LoadBinaryX(FileName, Uncompressed, 0, FloatingPointSize, LoadMode);
+					return LoadBinaryX(FileName, Uncompressed, 0, FloatingPointSize);
 					#if !DEBUG
 				} catch (Exception ex) {
 					Interface.AddMessage(MessageType.Error, false, "An unexpected error occured (" + ex.Message + ") while attempting to decompress the binary X object file encountered in " + FileName);
@@ -109,9 +109,9 @@ namespace OpenBve {
 
 		// template
 		private class Template {
-			internal string Name;
+			internal readonly string Name;
 			internal string[] Members;
-			internal string Key;
+			internal readonly string Key;
 			internal Template(string Name, string[] Members) {
 				this.Name = Name;
 				this.Members = Members;
@@ -123,7 +123,7 @@ namespace OpenBve {
 				this.Key = Key;
 			}
 		}
-		private static Template[] Templates = new Template[] {
+		private static readonly Template[] Templates = new Template[] {
 			new Template("Mesh", new string[] { "DWORD", "Vector[0]", "DWORD", "MeshFace[2]", "[...]" }),
 			new Template("Vector", new string[] { "float", "float", "float" }),
 			new Template("MeshFace", new string[] { "DWORD", "DWORD[0]" }),
@@ -148,8 +148,8 @@ namespace OpenBve {
 
 		// data
 		private class Structure {
-			internal string Name;
-			internal string Key;
+			internal readonly string Name;
+			internal readonly string Key;
 			internal object[] Data;
 			internal Structure(string Name, object[] Data, string Key)
 			{
@@ -199,7 +199,7 @@ namespace OpenBve {
 		// ================================
 
 		// load textual x
-		private static ObjectManager.StaticObject LoadTextualX(string FileName, string Text, System.Text.Encoding Encoding, ObjectLoadMode LoadMode) {
+		private static ObjectManager.StaticObject LoadTextualX(string FileName, string Text, System.Text.Encoding Encoding) {
 			// load
 			string[] Lines = Text.Replace("\u000D\u000A", "\u2028").Split(new char[] { '\u000A', '\u000C', '\u000D', '\u0085', '\u2028', '\u2029' }, StringSplitOptions.None);
 			AlternateStructure = false;
@@ -293,7 +293,7 @@ namespace OpenBve {
 			}
 			// process structure
 			ObjectManager.StaticObject Object;
-			if (!ProcessStructure(FileName, Structure, out Object, LoadMode)) {
+			if (!ProcessStructure(FileName, Structure, out Object)) {
 				return null;
 			}
 			return Object;
@@ -873,7 +873,7 @@ namespace OpenBve {
 		// ================================
 
 		// load binary x
-		private static ObjectManager.StaticObject LoadBinaryX(string FileName, byte[] Data, int StartingPosition, int FloatingPointSize, ObjectLoadMode LoadMode) {
+		private static ObjectManager.StaticObject LoadBinaryX(string FileName, byte[] Data, int StartingPosition, int FloatingPointSize) {
 			// parse file
 			AlternateStructure = false;
 			LoadedMaterials = new Structure[] {};
@@ -899,7 +899,7 @@ namespace OpenBve {
 			}
 			// process structure
 			ObjectManager.StaticObject Object;
-			if (!ProcessStructure(FileName, Structure, out Object, LoadMode)) {
+			if (!ProcessStructure(FileName, Structure, out Object)) {
 				return null;
 			} return Object;
 		}
@@ -1312,12 +1312,9 @@ namespace OpenBve {
 		}
 
 		// process structure
-		private static bool ProcessStructure(string FileName, Structure Structure, out ObjectManager.StaticObject Object, ObjectLoadMode LoadMode) {
+		private static bool ProcessStructure(string FileName, Structure Structure, out ObjectManager.StaticObject Object) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			Object = new ObjectManager.StaticObject();
-			Object.Mesh.Faces = new World.MeshFace[] { };
-			Object.Mesh.Materials = new World.MeshMaterial[] { };
-			Object.Mesh.Vertices = new VertexTemplate[] { };
 			// file
 			for (int i = 0; i < Structure.Data.Length; i++) {
 				Structure f = Structure.Data[i] as Structure;
@@ -1329,7 +1326,7 @@ namespace OpenBve {
 					case "Frame Root":
 					case "Frame":
 						//This is just a placeholder around the other templates
-						ProcessStructure(FileName, f, out Object, LoadMode);
+						ProcessStructure(FileName, f, out Object);
 						break;
 					case "Mesh":
 						{
@@ -2218,8 +2215,8 @@ namespace OpenBve {
 							int mf = Object.Mesh.Faces.Length;
 							int mm = Object.Mesh.Materials.Length;
 							int mv = Object.Mesh.Vertices.Length;
-							Array.Resize<World.MeshFace>(ref Object.Mesh.Faces, mf + nFaces);
-							Array.Resize<World.MeshMaterial>(ref Object.Mesh.Materials, mm + Materials.Length);
+							Array.Resize<MeshFace>(ref Object.Mesh.Faces, mf + nFaces);
+							Array.Resize<MeshMaterial>(ref Object.Mesh.Materials, mm + Materials.Length);
 							Array.Resize<VertexTemplate>(ref Object.Mesh.Vertices, mv + Vertices.Length);
 							for (int j = 0; j < Materials.Length; j++)
 							{
@@ -2236,21 +2233,21 @@ namespace OpenBve {
 									Object.Mesh.Materials[mm + j].DaytimeTexture = null;
 									transparent = false;
 								}
-								Object.Mesh.Materials[mm + j].Flags = (byte)((transparent ? World.MeshMaterial.TransparentColorMask : 0) | (emissive ? World.MeshMaterial.EmissiveColorMask : 0));
+								Object.Mesh.Materials[mm + j].Flags = (byte)((transparent ? MeshMaterial.TransparentColorMask : 0) | (emissive ? MeshMaterial.EmissiveColorMask : 0));
 								Object.Mesh.Materials[mm + j].Color = Materials[j].faceColor;
 								Object.Mesh.Materials[mm + j].TransparentColor = Color24.Black;
 								Object.Mesh.Materials[mm + j].EmissiveColor = Materials[j].emissiveColor;
 								Object.Mesh.Materials[mm + j].NighttimeTexture = null;
-								Object.Mesh.Materials[mm + j].BlendMode = World.MeshMaterialBlendMode.Normal;
+								Object.Mesh.Materials[mm + j].BlendMode = MeshMaterialBlendMode.Normal;
 								Object.Mesh.Materials[mm + j].GlowAttenuationData = 0;
 							}
 							for (int j = 0; j < nFaces; j++)
 							{
 								Object.Mesh.Faces[mf + j].Material = (ushort)FaceMaterials[j];
-								Object.Mesh.Faces[mf + j].Vertices = new World.MeshFaceVertex[Faces[j].Length];
+								Object.Mesh.Faces[mf + j].Vertices = new MeshFaceVertex[Faces[j].Length];
 								for (int k = 0; k < Faces[j].Length; k++)
 								{
-									Object.Mesh.Faces[mf + j].Vertices[k] = new World.MeshFaceVertex(mv + Faces[j][k], FaceNormals[j][k]);
+									Object.Mesh.Faces[mf + j].Vertices[k] = new MeshFaceVertex(mv + Faces[j][k], FaceNormals[j][k]);
 								}
 							}
 							for (int j = 0; j < Vertices.Length; j++)

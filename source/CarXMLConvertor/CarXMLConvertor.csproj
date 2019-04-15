@@ -51,6 +51,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Convert.ExtensionsCfg.cs" />
+    <Compile Include="Convert.Panel2.cs" />
+    <Compile Include="Convert.PanelAnimated.cs" />
     <Compile Include="Convert.TrainDat.cs" />
     <Compile Include="mainForm.cs">
       <SubType>Form</SubType>

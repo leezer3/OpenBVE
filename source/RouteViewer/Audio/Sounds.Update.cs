@@ -37,8 +37,7 @@ namespace OpenBve
 			 * */
 			OpenBveApi.Math.Vector3 listenerPosition = World.AbsoluteCameraPosition;
 			OpenBveApi.Math.Orientation3 listenerOrientation = new OpenBveApi.Math.Orientation3(World.AbsoluteCameraSide, World.AbsoluteCameraUp, World.AbsoluteCameraDirection);
-			OpenBveApi.Math.Vector3 listenerVelocity;
-			listenerVelocity = World.CameraAlignmentSpeed.Position;
+			OpenBveApi.Math.Vector3 listenerVelocity = World.CameraAlignmentSpeed.Position;
 			AL.Listener(ALListener3f.Position, 0.0f, 0.0f, 0.0f);
 			AL.Listener(ALListener3f.Velocity, (float)listenerVelocity.X, (float)listenerVelocity.Y, (float)listenerVelocity.Z);
 			var Orientation = new[] { (float)listenerOrientation.Z.X, (float)listenerOrientation.Z.Y, (float)listenerOrientation.Z.Z, -(float)listenerOrientation.Y.X, -(float)listenerOrientation.Y.Y, -(float)listenerOrientation.Y.Z };

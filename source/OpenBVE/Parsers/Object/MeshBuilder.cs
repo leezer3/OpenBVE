@@ -10,7 +10,7 @@ namespace OpenBve
 	internal class MeshBuilder
 	{
 		internal VertexTemplate[] Vertices;
-		internal World.MeshFace[] Faces;
+		internal MeshFace[] Faces;
 		internal Material[] Materials;
 		internal Matrix4D TransformMatrix = Matrix4D.NoTransformation;
 		internal bool isCylinder;
@@ -18,7 +18,7 @@ namespace OpenBve
 		internal MeshBuilder()
 		{
 			this.Vertices = new VertexTemplate[] {};
-			this.Faces = new World.MeshFace[] { };
+			this.Faces = new MeshFace[] { };
 			this.Materials = new Material[] {new Material()};
 		}
 
@@ -36,8 +36,8 @@ namespace OpenBve
 				int mf = Object.Mesh.Faces.Length;
 				int mm = Object.Mesh.Materials.Length;
 				int mv = Object.Mesh.Vertices.Length;
-				Array.Resize<World.MeshFace>(ref Object.Mesh.Faces, mf + Faces.Length);
-				Array.Resize<World.MeshMaterial>(ref Object.Mesh.Materials, mm + Materials.Length);
+				Array.Resize<MeshFace>(ref Object.Mesh.Faces, mf + Faces.Length);
+				Array.Resize<MeshMaterial>(ref Object.Mesh.Materials, mm + Materials.Length);
 				Array.Resize<VertexTemplate>(ref Object.Mesh.Vertices, mv + Vertices.Length);
 				for (int i = 0; i < Vertices.Length; i++)
 				{
@@ -57,7 +57,7 @@ namespace OpenBve
 
 				for (int i = 0; i < Materials.Length; i++)
 				{
-					Object.Mesh.Materials[mm + i].Flags = (byte) ((Materials[i].EmissiveColorUsed ? World.MeshMaterial.EmissiveColorMask : 0) | (Materials[i].TransparentColorUsed ? World.MeshMaterial.TransparentColorMask : 0));
+					Object.Mesh.Materials[mm + i].Flags = (byte) ((Materials[i].EmissiveColorUsed ? MeshMaterial.EmissiveColorMask : 0) | (Materials[i].TransparentColorUsed ? MeshMaterial.TransparentColorMask : 0));
 					Object.Mesh.Materials[mm + i].Color = Materials[i].Color;
 					Object.Mesh.Materials[mm + i].TransparentColor = Materials[i].TransparentColor;
 					if (Materials[i].DaytimeTexture != null || Materials[i].Text != null)
@@ -135,10 +135,11 @@ namespace OpenBve
 		internal string DaytimeTexture;
 		internal string NighttimeTexture;
 		internal string TransparencyTexture;
-		internal World.MeshMaterialBlendMode BlendMode;
+		internal MeshMaterialBlendMode BlendMode;
 		internal OpenGlTextureWrapMode? WrapMode;
 		internal ushort GlowAttenuationData;
 		internal string Text;
+		internal string Key;
 		internal Color TextColor;
 		internal Color BackgroundColor;
 		internal string Font;
@@ -151,7 +152,7 @@ namespace OpenBve
 			this.TransparentColorUsed = false;
 			this.DaytimeTexture = null;
 			this.NighttimeTexture = null;
-			this.BlendMode = World.MeshMaterialBlendMode.Normal;
+			this.BlendMode = MeshMaterialBlendMode.Normal;
 			this.GlowAttenuationData = 0;
 			this.TextColor = System.Drawing.Color.Black;
 			this.BackgroundColor = System.Drawing.Color.White;
@@ -167,7 +168,7 @@ namespace OpenBve
 			this.TransparentColorUsed = false;
 			this.DaytimeTexture = null;
 			this.NighttimeTexture = null;
-			this.BlendMode = World.MeshMaterialBlendMode.Normal;
+			this.BlendMode = MeshMaterialBlendMode.Normal;
 			this.GlowAttenuationData = 0;
 			this.TextColor = System.Drawing.Color.Black;
 			this.BackgroundColor = System.Drawing.Color.White;

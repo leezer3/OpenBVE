@@ -88,6 +88,7 @@ namespace OpenBve
             DynamicAlpha = new ObjectList();
             OverlayOpaque = new ObjectList();
             OverlayAlpha = new ObjectList();
+            Touch = new ObjectList();
             OptionLighting = true;
             OptionAmbientColor = new Color24(160, 160, 160);
             OptionDiffuseColor = new Color24(160, 160, 160);
@@ -126,12 +127,6 @@ namespace OpenBve
             GL.Enable(EnableCap.Blend); BlendEnabled = true;
             GL.Disable(EnableCap.Lighting); LightingEnabled = false;
             GL.Disable(EnableCap.Fog);
-        }
-
-        /// <summary>De-initialize the renderer, and clear all remaining OpenGL display lists</summary>
-        internal static void Deinitialize()
-        {
-            ClearDisplayLists();
         }
 
         /// <summary>Determines the maximum Anisotropic filtering level the system supports</summary>

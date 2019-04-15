@@ -3,6 +3,7 @@ using System.IO;
 using System.Xml;
 using OpenBveApi.Math;
 using System.Linq;
+using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 
@@ -27,7 +28,7 @@ namespace OpenBve
 			}
 		}
 
-		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, Vector3 Rotation)
+		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, Vector3 Rotation)
 		{
 			XmlDocument currentXML = new XmlDocument();
 			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
@@ -111,7 +112,7 @@ namespace OpenBve
 			//Check for null
 			if (currentXML.DocumentElement != null)
 			{
-				ObjectManager.UnifiedObject[] obj = new OpenBve.ObjectManager.UnifiedObject[0];
+				UnifiedObject[] obj = new UnifiedObject[0];
 				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/GRUPPENOBJECT");
 				if (DocumentNodes != null)
 				{
@@ -164,11 +165,11 @@ namespace OpenBve
 														break;
 													case "ShowOn":
 														//Defines when the object should be shown
-														Object.FunctionScript = FunctionScripts.GetPostfixNotationFromInfixNotation(GetAnimatedFunction(attribute.Value, false));
+														Object.FunctionScript = FunctionScriptNotation.GetPostfixNotationFromInfixNotation(GetAnimatedFunction(attribute.Value, false));
 														break;
 													case "HideOn":
 														//Defines when the object should be hidden
-														Object.FunctionScript = FunctionScripts.GetPostfixNotationFromInfixNotation(GetAnimatedFunction(attribute.Value, true));
+														Object.FunctionScript = FunctionScriptNotation.GetPostfixNotationFromInfixNotation(GetAnimatedFunction(attribute.Value, true));
 														break;
 												}
 											}
@@ -189,11 +190,11 @@ namespace OpenBve
 					//If we use multiples, the Z-sorting throws a wobbly
 					ObjectManager.StaticObject staticObject = new ObjectManager.StaticObject
 					{
-						Mesh = new World.Mesh
+						Mesh = new Mesh
 						{
 							Vertices = new VertexTemplate[0],
-							Faces = new World.MeshFace[0],
-							Materials = new World.MeshMaterial[0]
+							Faces = new MeshFace[0],
+							Materials = new MeshMaterial[0]
 						}
 					};
 					for (int i = 0; i < CurrentObjects.Length; i++)
@@ -207,11 +208,11 @@ namespace OpenBve
 						try {
 							if (CurrentObjects[i].Name.ToLowerInvariant().EndsWith(".l3dgrp"))
 							{
-								AnimatedObject = ReadObject(CurrentObjects[i].Name, Encoding, LoadMode, CurrentObjects[i].Rotation);
+								AnimatedObject = ReadObject(CurrentObjects[i].Name, Encoding, CurrentObjects[i].Rotation);
 							}
 							else if (CurrentObjects[i].Name.ToLowerInvariant().EndsWith(".l3dobj"))
 							{
-								Object = Ls3DObjectParser.ReadObject(CurrentObjects[i].Name, LoadMode, CurrentObjects[i].Rotation);
+								Object = Ls3DObjectParser.ReadObject(CurrentObjects[i].Name, CurrentObjects[i].Rotation);
 							}
 							else
 							{
@@ -227,20 +228,15 @@ namespace OpenBve
 							if (!string.IsNullOrEmpty(CurrentObjects[i].FunctionScript))
 							{
 								//If the function script is not empty, this is a new animated object bit
-								Array.Resize<ObjectManager.UnifiedObject>(ref obj, obj.Length + 1);
+								Array.Resize<UnifiedObject>(ref obj, obj.Length + 1);
 								obj[obj.Length - 1] = Object;
 								int aL = Result.Objects.Length;
 								Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, aL + 1);
 								ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
-								ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState
-								{
-									Object = Object,
-									Position = CurrentObjects[i].Position,
-								};
+								ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState(Object, CurrentObjects[i].Position);
 								a.States = new ObjectManager.AnimatedObjectState[] { aos };
 								Result.Objects[aL] = a;
-								Result.Objects[aL].StateFunction =
-									FunctionScripts.GetFunctionScriptFromPostfixNotation(CurrentObjects[i].FunctionScript + " 1 == --");
+								Result.Objects[aL].StateFunction = new FunctionScript(Program.CurrentHost, CurrentObjects[i].FunctionScript + " 1 == --", false);
 							}
 							else
 							{
@@ -279,10 +275,7 @@ namespace OpenBve
 					{
 						Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length + 1);
 						ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
-						ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState
-						{
-							Object = staticObject,
-						};
+						ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState(staticObject, Vector3.Zero);
 						a.States = new ObjectManager.AnimatedObjectState[] { aos };
 						Result.Objects[Result.Objects.Length - 1] = a;
 					}

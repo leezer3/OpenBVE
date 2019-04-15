@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 using Path = OpenBveApi.Path;
 
@@ -26,6 +27,7 @@ namespace CarXmlConvertor
 			{
 				mainForm.updateLogBoxText += "Loading existing extensions.cfg file " + ConvertExtensionsCfg.FileName + Environment.NewLine;
 				CarInfos = new Car[ConvertTrainDat.NumberOfCars];
+				Couplers = new Coupler[ConvertTrainDat.NumberOfCars - 1];
 				ReadExtensionsCfg();
 				GenerateExtensionsCfgXML();
 			}
@@ -46,7 +48,6 @@ namespace CarXmlConvertor
 		private struct Bogie
 		{
 			//Need a second struct to avoid a circular reference
-			internal double Length;
 			internal double FrontAxle;
 			internal double RearAxle;
 			internal bool AxlesDefined;
@@ -54,8 +55,15 @@ namespace CarXmlConvertor
 			internal string Object;
 		}
 
+		private class Coupler
+		{
+			internal double Min = 0.27;
+			internal double Max = 0.33;
+		}
+
 
 		private static Car[] CarInfos;
+		private static Coupler[] Couplers;
 	
 
 		internal static void ReadExtensionsCfg()
@@ -182,14 +190,13 @@ namespace CarXmlConvertor
 									}
 								}
 							}
-							/*
 							else if (Lines[i].StartsWith("[coupler", StringComparison.OrdinalIgnoreCase) & Lines[i].EndsWith("]", StringComparison.Ordinal))
 							{
 								// coupler
 								string t = Lines[i].Substring(8, Lines[i].Length - 9);
 								int n; if (int.TryParse(t, System.Globalization.NumberStyles.Integer, Culture, out n))
 								{
-									if (n >= 0 & n < Train.Couplers.Length)
+									if (n >= 0 & n < Couplers.Length)
 									{
 										i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal) & !Lines[i].EndsWith("]", StringComparison.Ordinal))
 										{
@@ -212,53 +219,26 @@ namespace CarXmlConvertor
 																double min, max;
 																if (!double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out min))
 																{
-																	Interface.AddMessage(Interface.MessageType.Error, false, "Minimum is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																}
 																else if (!double.TryParse(d, System.Globalization.NumberStyles.Float, Culture, out max))
 																{
-																	Interface.AddMessage(Interface.MessageType.Error, false, "Maximum is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-																}
-																else if (min > max)
-																{
-																	Interface.AddMessage(Interface.MessageType.Error, false, "Minimum is expected to be less than Maximum in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																}
 																else
 																{
-																	Train.Couplers[n].MinimumDistanceBetweenCars = min;
-																	Train.Couplers[n].MaximumDistanceBetweenCars = max;
+																	Couplers[n] = new Coupler { Min = min, Max = max };
 																}
-															}
-															else
-															{
-																Interface.AddMessage(Interface.MessageType.Error, false, "An argument-separating comma is expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 														}
 															break;
-														default:
-															Interface.AddMessage(Interface.MessageType.Warning, false, "Unsupported key-value pair " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-															break;
 													}
-												}
-												else
-												{
-													Interface.AddMessage(Interface.MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 												}
 											}
 											i++;
 										}
 										i--;
 									}
-									else
-									{
-										Interface.AddMessage(Interface.MessageType.Error, false, "The coupler index " + t + " does not reference an existing coupler at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									}
-								}
-								else
-								{
-									Interface.AddMessage(Interface.MessageType.Error, false, "The coupler index is expected to be an integer at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 							}
-							*/
 							else if (Lines[i].StartsWith("[bogie", StringComparison.OrdinalIgnoreCase) & Lines[i].EndsWith("]", StringComparison.Ordinal))
 							{
 								// car
@@ -291,11 +271,11 @@ namespace CarXmlConvertor
 																{
 																	if (IsOdd)
 																	{
-																		CarInfos[CarIndex].FrontBogie.Object = b;
+																		CarInfos[CarIndex].RearBogie.Object = b;
 																	}
 																	else
 																	{
-																		CarInfos[CarIndex].RearBogie.Object = b;
+																		CarInfos[CarIndex].FrontBogie.Object = b;
 																	}
 																}
 															}
@@ -311,15 +291,15 @@ namespace CarXmlConvertor
 																{
 																	if (IsOdd)
 																	{
-																		CarInfos[CarIndex].FrontBogie.RearAxle = rear;
-																		CarInfos[CarIndex].FrontBogie.FrontAxle = front;
-																		CarInfos[CarIndex].FrontBogie.AxlesDefined = true;
-																	}
-																	else
-																	{
 																		CarInfos[CarIndex].RearBogie.RearAxle = rear;
 																		CarInfos[CarIndex].RearBogie.FrontAxle = front;
 																		CarInfos[CarIndex].RearBogie.AxlesDefined = true;
+																	}
+																	else
+																	{
+																		CarInfos[CarIndex].FrontBogie.RearAxle = rear;
+																		CarInfos[CarIndex].FrontBogie.FrontAxle = front;
+																		CarInfos[CarIndex].FrontBogie.AxlesDefined = true;
 																	}
 																}
 															}
@@ -327,11 +307,11 @@ namespace CarXmlConvertor
 														case "reversed":
 															if (IsOdd)
 															{
-																CarInfos[n].FrontBogie.Reversed = b.Equals("true", StringComparison.OrdinalIgnoreCase);
+																CarInfos[CarIndex].FrontBogie.Reversed = b.Equals("true", StringComparison.OrdinalIgnoreCase);
 															}
 															else
 															{
-																CarInfos[n].RearBogie.Reversed = b.Equals("true", StringComparison.OrdinalIgnoreCase);
+																CarInfos[CarIndex].RearBogie.Reversed = b.Equals("true", StringComparison.OrdinalIgnoreCase);
 															}
 															break;
 													}
@@ -408,6 +388,7 @@ namespace CarXmlConvertor
 
 		internal static void GenerateCarXML(ref TabbedList newLines, int i)
 		{
+			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 			newLines.Add("<Car>");
 			if (CarInfos[i].Length != 0.0)
 			{
@@ -423,6 +404,24 @@ namespace CarXmlConvertor
 			{
 				newLines.Add("<MotorCar>True</MotorCar>");
 				newLines.Add("<Mass>" + ConvertTrainDat.MotorCarMass + "</Mass>");
+				switch (ConvertTrainDat.ReadhesionDeviceType)
+				{
+					case 0:
+						newLines.Add("<ReadhesionDevice>TypeA</ReadhesionDevice>");
+						break;
+					case 1:
+						newLines.Add("<ReadhesionDevice>TypeB</ReadhesionDevice>");
+						break;
+					case 2:
+						newLines.Add("<ReadhesionDevice>TypeC</ReadhesionDevice>");
+						break;
+					case 3:
+						newLines.Add("<ReadhesionDevice>TypeD</ReadhesionDevice>");
+						break;
+					default:
+						newLines.Add("<ReadhesionDevice>NotFitted</ReadhesionDevice>");
+						break;
+				}
 			}
 			else
 			{
@@ -472,7 +471,7 @@ namespace CarXmlConvertor
 				}
 				else if (System.IO.File.Exists(OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), "panel2.cfg")))
 				{
-					newLines.Add("<InteriorView>panel2.cfg</InteriorView>");
+					newLines.Add("<InteriorView>panel.xml</InteriorView>");
 					newLines.Add("<DriverPosition>" + ConvertSoundCfg.DriverPosition.X + "," + ConvertSoundCfg.DriverPosition.Y + "," + ConvertSoundCfg.DriverPosition.Z + "</DriverPosition>");
 				}
 			}
@@ -516,11 +515,22 @@ namespace CarXmlConvertor
 			newLines.Add("</BrakeCylinder>");
 			newLines.Add("</Brake>");
 			newLines.Add("</Car>");
+			if (i < Couplers.Length)
+			{
+				if (Couplers[i] != null)
+				{
+					newLines.Add("<Coupler>");
+					newLines.Add("<Minimum>" + Couplers[i].Min + "</Minimum>");
+					newLines.Add("<Maximum>" + Couplers[i].Max + "</Maximum>");
+					newLines.Add("</Coupler>");
+				}
+			}
 		}
 
 		/// <summary>Generates a train.xml file using the values / assumptions contained within the train.dat file</summary>
 		internal static void GenerateDefaultXML()
 		{
+			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 			TabbedList newLines = new TabbedList();
 			newLines.Add("<Train>");
 			for (int i = 0; i < ConvertTrainDat.NumberOfCars; i++)

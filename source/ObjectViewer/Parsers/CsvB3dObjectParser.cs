@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Text;
 using OpenBveApi.Math;
 using OpenBveApi.Textures;
 using OpenBveApi;
@@ -21,7 +22,7 @@ namespace OpenBve {
 			internal bool TransparentColorUsed;
 			internal string DaytimeTexture;
 			internal string NighttimeTexture;
-			internal World.MeshMaterialBlendMode BlendMode;
+			internal MeshMaterialBlendMode BlendMode;
 			internal OpenGlTextureWrapMode? WrapMode;
 			internal ushort GlowAttenuationData;
 			internal string Text;
@@ -37,7 +38,7 @@ namespace OpenBve {
 				this.TransparentColorUsed = false;
 				this.DaytimeTexture = null;
 				this.NighttimeTexture = null;
-				this.BlendMode = World.MeshMaterialBlendMode.Normal;
+				this.BlendMode = MeshMaterialBlendMode.Normal;
 				this.GlowAttenuationData = 0;
 				this.TextColor = System.Drawing.Color.Black;
 				this.BackgroundColor = System.Drawing.Color.White;
@@ -64,11 +65,11 @@ namespace OpenBve {
 		}
 		private class MeshBuilder {
 			internal VertexTemplate[] Vertices;
-			internal World.MeshFace[] Faces;
+			internal MeshFace[] Faces;
 			internal Material[] Materials;
 			internal MeshBuilder() {
 				this.Vertices = new VertexTemplate[] { };
-				this.Faces = new World.MeshFace[] { };
+				this.Faces = new MeshFace[] { };
 				this.Materials = new Material[] { new Material() };
 			}
 
@@ -77,8 +78,8 @@ namespace OpenBve {
 				int mf = Object.Mesh.Faces.Length;
 				int mm = Object.Mesh.Materials.Length;
 				int mv = Object.Mesh.Vertices.Length;
-				Array.Resize<World.MeshFace>(ref Object.Mesh.Faces, mf + Faces.Length);
-				Array.Resize<World.MeshMaterial>(ref Object.Mesh.Materials, mm + Materials.Length);
+				Array.Resize<MeshFace>(ref Object.Mesh.Faces, mf + Faces.Length);
+				Array.Resize<MeshMaterial>(ref Object.Mesh.Materials, mm + Materials.Length);
 				Array.Resize<VertexTemplate>(ref Object.Mesh.Vertices, mv + Vertices.Length);
 				for (int i = 0; i < Vertices.Length; i++) {
 					Object.Mesh.Vertices[mv + i] = Vertices[i];
@@ -91,7 +92,7 @@ namespace OpenBve {
 					Object.Mesh.Faces[mf + i].Material += (ushort)mm;
 				}
 				for (int i = 0; i < Materials.Length; i++) {
-					Object.Mesh.Materials[mm + i].Flags = (byte)((Materials[i].EmissiveColorUsed ? World.MeshMaterial.EmissiveColorMask : 0) | (Materials[i].TransparentColorUsed ? World.MeshMaterial.TransparentColorMask : 0));
+					Object.Mesh.Materials[mm + i].Flags = (byte)((Materials[i].EmissiveColorUsed ? MeshMaterial.EmissiveColorMask : 0) | (Materials[i].TransparentColorUsed ? MeshMaterial.TransparentColorMask : 0));
 					Object.Mesh.Materials[mm + i].Color = Materials[i].Color;
 					Object.Mesh.Materials[mm + i].TransparentColor = Materials[i].TransparentColor;
 					if (Materials[i].DaytimeTexture != null || Materials[i].Text != null)
@@ -205,18 +206,12 @@ namespace OpenBve {
 		/// <summary>Loads a CSV or B3D object from a file.</summary>
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
 		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
-		/// <param name="LoadMode">The texture load mode.</param>
-		/// <param name="ForceTextureRepeatX">Whether to force TextureWrapMode.Repeat for the X axis of the texture.</param>
-		/// <param name="ForceTextureRepeatY">Whether to force TextureWrapMode.Repeat for the Y axis of the texture.</param>
 		/// <returns>The object loaded.</returns>
-		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
+		internal static ObjectManager.StaticObject ReadObject(string FileName, Encoding Encoding) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			bool IsB3D = string.Equals(System.IO.Path.GetExtension(FileName), ".b3d", StringComparison.OrdinalIgnoreCase);
 			// initialize object
 			ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
-			Object.Mesh.Faces = new World.MeshFace[] { };
-			Object.Mesh.Materials = new World.MeshMaterial[] { };
-			Object.Mesh.Vertices = new VertexTemplate[] { };
 			// read lines
 			List<string> Lines = System.IO.File.ReadAllLines(FileName, Encoding).ToList();
 			if (!IsB3D)
@@ -465,8 +460,8 @@ namespace OpenBve {
 									}
 									if (q) {
 										int f = Builder.Faces.Length;
-										Array.Resize<World.MeshFace>(ref Builder.Faces, f + 1);
-										Builder.Faces[f] = new World.MeshFace {Vertices = new World.MeshFaceVertex[Arguments.Length]};
+										Array.Resize<MeshFace>(ref Builder.Faces, f + 1);
+										Builder.Faces[f] = new MeshFace {Vertices = new MeshFaceVertex[Arguments.Length]};
 										while (Builder.Vertices.Length > Normals.Length) {
 											Array.Resize<Vector3>(ref Normals, Normals.Length << 1);
 										}
@@ -475,7 +470,7 @@ namespace OpenBve {
 											Builder.Faces[f].Vertices[j].Normal = Normals[a[j]];
 										}
 										if (cmd == "addface2" | cmd == "face2") {
-											Builder.Faces[f].Flags = (byte)World.MeshFace.Face2Mask;
+											Builder.Faces[f].Flags = (byte)MeshFace.Face2Mask;
 										}
 									}
 								}
@@ -551,7 +546,7 @@ namespace OpenBve {
 								}
 								ApplyTranslation(Builder, x, y, z);
 								if (cmd == "translateall") {
-									ApplyTranslation(Object, x, y, z);
+									Object.ApplyTranslation(x, y, z);
 								}
 							} break;
 						case "scale":
@@ -584,51 +579,49 @@ namespace OpenBve {
 								}
 								ApplyScale(Builder, x, y, z);
 								if (cmd == "scaleall") {
-									ApplyScale(Object, x, y, z);
+									Object.ApplyScale(x, y, z);
 								}
 							} break;
 						case "rotate":
 						case "rotateall":
-							{
-								if (Arguments.Length > 4) {
-									Interface.AddMessage(MessageType.Warning, false, "At most 4 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+						{
+							if (Arguments.Length > 4) {
+								Interface.AddMessage(MessageType.Warning, false, "At most 4 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+							}
+							Vector3 r = new Vector3();
+							double a = 0;
+							if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out r.X)) {
+								Interface.AddMessage(MessageType.Error, false, "Invalid argument X in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								r.X = 0.0;
+							}
+							if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out r.Y)) {
+								Interface.AddMessage(MessageType.Error, false, "Invalid argument Y in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								r.Y = 0.0;
+							}
+							if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out r.Z)) {
+								Interface.AddMessage(MessageType.Error, false, "Invalid argument Z in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								r.Z = 0.0;
+							}
+							if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out a)) {
+								Interface.AddMessage(MessageType.Error, false, "Invalid argument Angle in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								a = 0.0;
+							}
+
+							double t = r.NormSquared();
+							if (t == 0.0) {
+								r = Vector3.Right;
+								t = 1.0;
+							}
+							if (a != 0.0) {
+								t = 1.0 / Math.Sqrt(t);
+								r *= t;
+								a *= 0.0174532925199433;
+								ApplyRotation(Builder, r, a);
+								if (cmd == "rotateall") {
+									Object.ApplyRotation(r, a);
 								}
-								double x = 0.0, y = 0.0, z = 0.0, a = 0.0;
-								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out x)) {
-									Interface.AddMessage(MessageType.Error, false, "Invalid argument X in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									x = 0.0;
-								}
-								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out y)) {
-									Interface.AddMessage(MessageType.Error, false, "Invalid argument Y in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									y = 0.0;
-								}
-								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out z)) {
-									Interface.AddMessage(MessageType.Error, false, "Invalid argument Z in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									z = 0.0;
-								}
-								if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out a)) {
-									Interface.AddMessage(MessageType.Error, false, "Invalid argument Angle in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									a = 0.0;
-								}
-								double t = x * x + y * y + z * z;
-								if (t == 0.0) {
-									x = 1.0;
-									y = 0.0;
-									z = 0.0;
-									t = 1.0;
-								}
-								if (a != 0.0) {
-									t = 1.0 / Math.Sqrt(t);
-									x *= t;
-									y *= t;
-									z *= t;
-									a *= 0.0174532925199433;
-									ApplyRotation(Builder,new Vector3(x,y,z), a);
-									if (cmd == "rotateall") {
-										ApplyRotation(Object, new Vector3(x,y,z), a);
-									}
-								}
-							} break;
+							}
+						} break;
 						case "shear":
 						case "shearall":
 							{
@@ -890,19 +883,19 @@ namespace OpenBve {
 								if (Arguments.Length > 3) {
 									Interface.AddMessage(MessageType.Warning, false, "At most 3 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								World.MeshMaterialBlendMode blendmode = World.MeshMaterialBlendMode.Normal;
+								MeshMaterialBlendMode blendmode = MeshMaterialBlendMode.Normal;
 								if (Arguments.Length >= 1 && Arguments[0].Length > 0) {
 									switch (Arguments[0].ToLowerInvariant()) {
 										case "normal":
-											blendmode = World.MeshMaterialBlendMode.Normal;
+											blendmode = MeshMaterialBlendMode.Normal;
 											break;
 										case "additive":
 										case "glow":
-											blendmode = World.MeshMaterialBlendMode.Additive;
+											blendmode = MeshMaterialBlendMode.Additive;
 											break;
 										default:
 											Interface.AddMessage(MessageType.Error, false, "The given BlendMode is not supported in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-											blendmode = World.MeshMaterialBlendMode.Normal;
+											blendmode = MeshMaterialBlendMode.Normal;
 											break;
 									}
 								}
@@ -923,7 +916,7 @@ namespace OpenBve {
 								}
 								for (int j = 0; j < Builder.Materials.Length; j++) {
 									Builder.Materials[j].BlendMode = blendmode;
-									Builder.Materials[j].GlowAttenuationData = World.GetGlowAttenuationData(glowhalfdistance, glowmode);
+									Builder.Materials[j].GlowAttenuationData = Glow.GetAttenuationData(glowhalfdistance, glowmode);
 								}
 							} break;
 						case "setwrapmode":
@@ -1063,9 +1056,18 @@ namespace OpenBve {
 									  "3 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 								int r = 0, g = 0, b = 0;
-								int.TryParse(Arguments[0], out r);
-								int.TryParse(Arguments[1], out g);
-								int.TryParse(Arguments[2], out b);
+								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !int.TryParse(Arguments[0], out r))
+								{
+									Interface.AddMessage(MessageType.Error, false, "Invalid argument R in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !int.TryParse(Arguments[1], out g))
+								{
+									Interface.AddMessage(MessageType.Error, false, "Invalid argument G in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !int.TryParse(Arguments[2], out b))
+								{
+									Interface.AddMessage(MessageType.Error, false, "Invalid argument B in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
 								Color textColor = Color.FromArgb(r, g, b);
 								for (int j = 0; j < Builder.Materials.Length; j++)
 								{
@@ -1093,9 +1095,18 @@ namespace OpenBve {
 									  "3 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 								int r = 0, g = 0, b = 0;
-								int.TryParse(Arguments[0], out r);
-								int.TryParse(Arguments[1], out g);
-								int.TryParse(Arguments[2], out b);
+								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !int.TryParse(Arguments[0], out r))
+								{
+									Interface.AddMessage(MessageType.Error, false, "Invalid argument R in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !int.TryParse(Arguments[1], out g))
+								{
+									Interface.AddMessage(MessageType.Error, false, "Invalid argument G in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !int.TryParse(Arguments[2], out b))
+								{
+									Interface.AddMessage(MessageType.Error, false, "Invalid argument B in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
 								Color textColor = Color.FromArgb(r, g, b);
 								for (int j = 0; j < Builder.Materials.Length; j++)
 								{
@@ -1254,13 +1265,13 @@ namespace OpenBve {
 			Builder.Vertices[v + 6] = new Vertex(new Vector3(-sx, -sy, sz));
 			Builder.Vertices[v + 7] = new Vertex(new Vector3(-sx, sy, sz));
 			int f = Builder.Faces.Length;
-			Array.Resize<World.MeshFace>(ref Builder.Faces, f + 6);
-			Builder.Faces[f + 0].Vertices = new World.MeshFaceVertex[] { new World.MeshFaceVertex(v + 0), new World.MeshFaceVertex(v + 1), new World.MeshFaceVertex(v + 2), new World.MeshFaceVertex(v + 3) };
-			Builder.Faces[f + 1].Vertices = new World.MeshFaceVertex[] { new World.MeshFaceVertex(v + 0), new World.MeshFaceVertex(v + 4), new World.MeshFaceVertex(v + 5), new World.MeshFaceVertex(v + 1) };
-			Builder.Faces[f + 2].Vertices = new World.MeshFaceVertex[] { new World.MeshFaceVertex(v + 0), new World.MeshFaceVertex(v + 3), new World.MeshFaceVertex(v + 7), new World.MeshFaceVertex(v + 4) };
-			Builder.Faces[f + 3].Vertices = new World.MeshFaceVertex[] { new World.MeshFaceVertex(v + 6), new World.MeshFaceVertex(v + 5), new World.MeshFaceVertex(v + 4), new World.MeshFaceVertex(v + 7) };
-			Builder.Faces[f + 4].Vertices = new World.MeshFaceVertex[] { new World.MeshFaceVertex(v + 6), new World.MeshFaceVertex(v + 7), new World.MeshFaceVertex(v + 3), new World.MeshFaceVertex(v + 2) };
-			Builder.Faces[f + 5].Vertices = new World.MeshFaceVertex[] { new World.MeshFaceVertex(v + 6), new World.MeshFaceVertex(v + 2), new World.MeshFaceVertex(v + 1), new World.MeshFaceVertex(v + 5) };
+			Array.Resize<MeshFace>(ref Builder.Faces, f + 6);
+			Builder.Faces[f + 0].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 1), new MeshFaceVertex(v + 2), new MeshFaceVertex(v + 3) };
+			Builder.Faces[f + 1].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 4), new MeshFaceVertex(v + 5), new MeshFaceVertex(v + 1) };
+			Builder.Faces[f + 2].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 3), new MeshFaceVertex(v + 7), new MeshFaceVertex(v + 4) };
+			Builder.Faces[f + 3].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 5), new MeshFaceVertex(v + 4), new MeshFaceVertex(v + 7) };
+			Builder.Faces[f + 4].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 7), new MeshFaceVertex(v + 3), new MeshFaceVertex(v + 2) };
+			Builder.Faces[f + 5].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 2), new MeshFaceVertex(v + 1), new MeshFaceVertex(v + 5) };
 		}
 
 		// create cylinder
@@ -1301,24 +1312,24 @@ namespace OpenBve {
 			}
 			// faces
 			int f = Builder.Faces.Length;
-			Array.Resize<World.MeshFace>(ref Builder.Faces, f + n + m);
+			Array.Resize<MeshFace>(ref Builder.Faces, f + n + m);
 			for (int i = 0; i < n; i++) {
 				Builder.Faces[f + i].Flags = 0;
 				int i0 = (2 * i + 2) % (2 * n);
 				int i1 = (2 * i + 3) % (2 * n);
 				int i2 = 2 * i + 1;
 				int i3 = 2 * i;
-				Builder.Faces[f + i].Vertices = new World.MeshFaceVertex[] { new World.MeshFaceVertex(v + i0, Normals[i0]), new World.MeshFaceVertex(v + i1, Normals[i1]), new World.MeshFaceVertex(v + i2, Normals[i2]), new World.MeshFaceVertex(v + i3, Normals[i3]) };
+				Builder.Faces[f + i].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + i0, Normals[i0]), new MeshFaceVertex(v + i1, Normals[i1]), new MeshFaceVertex(v + i2, Normals[i2]), new MeshFaceVertex(v + i3, Normals[i3]) };
 			}
 			for (int i = 0; i < m; i++) {
-				Builder.Faces[f + n + i].Vertices = new World.MeshFaceVertex[n];
+				Builder.Faces[f + n + i].Vertices = new MeshFaceVertex[n];
 				for (int j = 0; j < n; j++) {
 					if (i == 0 & lowercap) {
 						// lower cap
-						Builder.Faces[f + n + i].Vertices[j] = new World.MeshFaceVertex(v + 2 * j + 1);
+						Builder.Faces[f + n + i].Vertices[j] = new MeshFaceVertex(v + 2 * j + 1);
 					} else {
 						// upper cap
-						Builder.Faces[f + n + i].Vertices[j] = new World.MeshFaceVertex(v + 2 * (n - j - 1));
+						Builder.Faces[f + n + i].Vertices[j] = new MeshFaceVertex(v + 2 * (n - j - 1));
 					}
 				}
 			}
@@ -1330,13 +1341,6 @@ namespace OpenBve {
 				Builder.Vertices[i].Coordinates.X += x;
 				Builder.Vertices[i].Coordinates.Y += y;
 				Builder.Vertices[i].Coordinates.Z += z;
-			}
-		}
-		private static void ApplyTranslation(ObjectManager.StaticObject Object, double x, double y, double z) {
-			for (int i = 0; i < Object.Mesh.Vertices.Length; i++) {
-				Object.Mesh.Vertices[i].Coordinates.X += x;
-				Object.Mesh.Vertices[i].Coordinates.Y += y;
-				Object.Mesh.Vertices[i].Coordinates.Z += z;
 			}
 		}
 
@@ -1373,40 +1377,7 @@ namespace OpenBve {
 				}
 			}
 		}
-		internal static void ApplyScale(ObjectManager.StaticObject Object, double x, double y, double z) {
-			float rx = (float)(1.0 / x);
-			float ry = (float)(1.0 / y);
-			float rz = (float)(1.0 / z);
-			float rx2 = rx * rx;
-			float ry2 = ry * ry;
-			float rz2 = rz * rz;
-			bool reverse = x * y * z < 0.0;
-			for (int j = 0; j < Object.Mesh.Vertices.Length; j++) {
-				Object.Mesh.Vertices[j].Coordinates.X *= x;
-				Object.Mesh.Vertices[j].Coordinates.Y *= y;
-				Object.Mesh.Vertices[j].Coordinates.Z *= z;
-			}
-			for (int j = 0; j < Object.Mesh.Faces.Length; j++) {
-				for (int k = 0; k < Object.Mesh.Faces[j].Vertices.Length; k++) {
-					double nx2 = Object.Mesh.Faces[j].Vertices[k].Normal.X * Object.Mesh.Faces[j].Vertices[k].Normal.X;
-					double ny2 = Object.Mesh.Faces[j].Vertices[k].Normal.Y * Object.Mesh.Faces[j].Vertices[k].Normal.Y;
-					double nz2 = Object.Mesh.Faces[j].Vertices[k].Normal.Z * Object.Mesh.Faces[j].Vertices[k].Normal.Z;
-					double u = nx2 * rx2 + ny2 * ry2 + nz2 * rz2;
-					if (u != 0.0) {
-						u = (float)Math.Sqrt((double)((nx2 + ny2 + nz2) / u));
-						Object.Mesh.Faces[j].Vertices[k].Normal.X *= rx * u;
-						Object.Mesh.Faces[j].Vertices[k].Normal.Y *= ry * u;
-						Object.Mesh.Faces[j].Vertices[k].Normal.Z *= rz * u;
-					}
-				}
-			}
-			if (reverse) {
-				for (int j = 0; j < Object.Mesh.Faces.Length; j++) {
-					Object.Mesh.Faces[j].Flip();
-				}
-			}
-		}
-
+		
 		// apply rotation
 		private static void ApplyRotation(MeshBuilder Builder, Vector3 Rotation, double Angle) {
 			double cosa = Math.Cos(Angle);
@@ -1420,19 +1391,7 @@ namespace OpenBve {
 				}
 			}
 		}
-		private static void ApplyRotation(ObjectManager.StaticObject Object, Vector3 Rotation, double Angle) {
-			double cosa = Math.Cos(Angle);
-			double sina = Math.Sin(Angle);
-			for (int j = 0; j < Object.Mesh.Vertices.Length; j++) {
-				Object.Mesh.Vertices[j].Coordinates.Rotate(Rotation, cosa, sina);
-			}
-			for (int j = 0; j < Object.Mesh.Faces.Length; j++) {
-				for (int k = 0; k < Object.Mesh.Faces[j].Vertices.Length; k++) {
-					Object.Mesh.Faces[j].Vertices[k].Normal.Rotate(Rotation, cosa, sina);
-				}
-			}
-		}
-
+		
 		private static void ApplyMirror(MeshBuilder Builder, bool vX, bool vY, bool vZ, bool nX, bool nY, bool nZ)
 		{
 			for (int i = 0; i < Builder.Vertices.Length; i++)

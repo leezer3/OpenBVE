@@ -1,258 +1,15 @@
-﻿#pragma warning disable 0660 // Defines == or != but does not override Object.Equals
+#pragma warning disable 0660 // Defines == or != but does not override Object.Equals
 #pragma warning disable 0661 // Defines == or != but does not override Object.GetHashCode
 
 using System;
-using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using Vector2 = OpenBveApi.Math.Vector2;
 using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
-using OpenBveApi.Textures;
+using OpenBveApi.Trains;
 
 namespace OpenBve {
-	internal static partial class World {
-		// mesh material
-		/// <summary>Represents material properties.</summary>
-		internal struct MeshMaterial {
-			/// <summary>A bit mask combining constants of the MeshMaterial structure.</summary>
-			internal byte Flags;
-			internal Color32 Color;
-			internal Color24 TransparentColor;
-			internal Color24 EmissiveColor;
-			internal Texture DaytimeTexture;
-			internal Texture NighttimeTexture;
-			/// <summary>A value between 0 (daytime) and 255 (nighttime).</summary>
-			internal byte DaytimeNighttimeBlend;
-			internal MeshMaterialBlendMode BlendMode;
-			/// <summary>A bit mask specifying the glow properties. Use GetGlowAttenuationData to create valid data for this field.</summary>
-			internal ushort GlowAttenuationData;
-			internal const int EmissiveColorMask = 1;
-			internal const int TransparentColorMask = 2;
-			internal OpenGlTextureWrapMode? WrapMode;
-			// operators
-			public static bool operator ==(MeshMaterial A, MeshMaterial B) {
-				if (A.Flags != B.Flags) return false;
-				if (A.Color.R != B.Color.R | A.Color.G != B.Color.G | A.Color.B != B.Color.B | A.Color.A != B.Color.A) return false;
-				if (A.TransparentColor.R != B.TransparentColor.R | A.TransparentColor.G != B.TransparentColor.G | A.TransparentColor.B != B.TransparentColor.B) return false;
-				if (A.EmissiveColor.R != B.EmissiveColor.R | A.EmissiveColor.G != B.EmissiveColor.G | A.EmissiveColor.B != B.EmissiveColor.B) return false;
-				if (A.DaytimeTexture != B.DaytimeTexture) return false;
-				if (A.NighttimeTexture != B.NighttimeTexture) return false;
-				if (A.BlendMode != B.BlendMode) return false;
-				if (A.GlowAttenuationData != B.GlowAttenuationData) return false;
-				if (A.WrapMode != B.WrapMode) return false;
-				return true;
-			}
-			public static bool operator !=(MeshMaterial A, MeshMaterial B) {
-				if (A.Flags != B.Flags) return true;
-				if (A.Color.R != B.Color.R | A.Color.G != B.Color.G | A.Color.B != B.Color.B | A.Color.A != B.Color.A) return true;
-				if (A.TransparentColor.R != B.TransparentColor.R | A.TransparentColor.G != B.TransparentColor.G | A.TransparentColor.B != B.TransparentColor.B) return true;
-				if (A.EmissiveColor.R != B.EmissiveColor.R | A.EmissiveColor.G != B.EmissiveColor.G | A.EmissiveColor.B != B.EmissiveColor.B) return true;
-				if (A.DaytimeTexture != B.DaytimeTexture) return true;
-				if (A.NighttimeTexture != B.NighttimeTexture) return true;
-				if (A.BlendMode != B.BlendMode) return true;
-				if (A.GlowAttenuationData != B.GlowAttenuationData) return true;
-				if (A.WrapMode != B.WrapMode) return true;
-				return false;
-			}
-		}
-		internal enum MeshMaterialBlendMode : byte {
-			Normal = 0,
-			Additive = 1
-		}
-		
-		// mesh face vertex
-		/// <summary>Represents a reference to a vertex and the normal to be used for that vertex.</summary>
-		internal struct MeshFaceVertex {
-			/// <summary>A reference to an element in the Vertex array of the contained Mesh structure.</summary>
-			internal ushort Index;
-			/// <summary>The normal to be used at the vertex.</summary>
-			internal Vector3 Normal;
-			internal MeshFaceVertex(int Index) {
-				this.Index = (ushort)Index;
-				this.Normal = new Vector3(0.0f, 0.0f, 0.0f);
-			}
-			internal MeshFaceVertex(int Index, Vector3 Normal) {
-				this.Index = (ushort)Index;
-				this.Normal = Normal;
-			}
-			// operators
-			public static bool operator ==(MeshFaceVertex A, MeshFaceVertex B) {
-				if (A.Index != B.Index) return false;
-				if (A.Normal.X != B.Normal.X) return false;
-				if (A.Normal.Y != B.Normal.Y) return false;
-				if (A.Normal.Z != B.Normal.Z) return false;
-				return true;
-			}
-			public static bool operator !=(MeshFaceVertex A, MeshFaceVertex B) {
-				if (A.Index != B.Index) return true;
-				if (A.Normal.X != B.Normal.X) return true;
-				if (A.Normal.Y != B.Normal.Y) return true;
-				if (A.Normal.Z != B.Normal.Z) return true;
-				return false;
-			}
-		}
-		
-		// mesh face
-		/// <summary>Represents a face consisting of vertices and material attributes.</summary>
-		internal struct MeshFace {
-			internal MeshFaceVertex[] Vertices;
-			/// <summary>A reference to an element in the Material array of the containing Mesh structure.</summary>
-			internal ushort Material;
-			/// <summary>A bit mask combining constants of the MeshFace structure.</summary>
-			internal byte Flags;
-			internal MeshFace(int[] Vertices) {
-				this.Vertices = new MeshFaceVertex[Vertices.Length];
-				for (int i = 0; i < Vertices.Length; i++) {
-					this.Vertices[i] = new MeshFaceVertex(Vertices[i]);
-				}
-				this.Material = 0;
-				this.Flags = 0;
-			}
-			internal MeshFace(MeshFaceVertex[] verticies, ushort material)
-			{
-				this.Vertices = verticies;
-				this.Material = material;
-				this.Flags = 0;
-			}
-			internal void Flip() {
-				if ((this.Flags & FaceTypeMask) == FaceTypeQuadStrip) {
-					for (int i = 0; i < this.Vertices.Length; i += 2) {
-						MeshFaceVertex x = this.Vertices[i];
-						this.Vertices[i] = this.Vertices[i + 1];
-						this.Vertices[i + 1] = x;
-					}
-				} else {
-					int n = this.Vertices.Length;
-					for (int i = 0; i < (n >> 1); i++) {
-						MeshFaceVertex x = this.Vertices[i];
-						this.Vertices[i] = this.Vertices[n - i - 1];
-						this.Vertices[n - i - 1] = x;
-					}
-				}
-			}
-			internal const int FaceTypeMask = 7;
-			internal const int FaceTypePolygon = 0;
-			internal const int FaceTypeTriangles = 1;
-			internal const int FaceTypeTriangleStrip = 2;
-			internal const int FaceTypeQuads = 3;
-			internal const int FaceTypeQuadStrip = 4;
-			internal const int Face2Mask = 8;
-		}
-		
-		// mesh
-		/// <summary>Represents a mesh consisting of a series of vertices, faces and material properties.</summary>
-		internal struct Mesh {
-			internal VertexTemplate[] Vertices;
-			internal MeshMaterial[] Materials;
-			internal MeshFace[] Faces;
-			internal Vector3[] BoundingBox;
-			/// <summary>Creates a mesh consisting of one face, which is represented by individual vertices, and a color.</summary>
-			/// <param name="Vertices">The vertices that make up one face.</param>
-			/// <param name="Color">The color to be applied on the face.</param>
-			internal Mesh(VertexTemplate[] Vertices, Color32 Color) {
-				this.Vertices = Vertices;
-				this.Materials = new MeshMaterial[1];
-				this.Materials[0].Color = Color;
-				this.Faces = new MeshFace[1];
-				this.Faces[0].Material = 0;
-				this.Faces[0].Vertices = new MeshFaceVertex[Vertices.Length];
-				for (int i = 0; i < Vertices.Length; i++) {
-					this.Faces[0].Vertices[i].Index = (ushort)i;
-				}
-				this.BoundingBox = new Vector3[2];
-			}
-			/// <summary>Creates a mesh consisting of the specified vertices, faces and color.</summary>
-			/// <param name="Vertices">The vertices used.</param>
-			/// <param name="FaceVertices">A list of faces represented by a list of references to vertices.</param>
-			/// <param name="Color">The color to be applied on all of the faces.</param>
-			internal Mesh(VertexTemplate[] Vertices, int[][] FaceVertices, Color32 Color) {
-				this.Vertices = Vertices;
-				this.Materials = new MeshMaterial[1];
-				this.Materials[0].Color = Color;
-				this.Faces = new MeshFace[FaceVertices.Length];
-				for (int i = 0; i < FaceVertices.Length; i++) {
-					this.Faces[i] = new MeshFace(FaceVertices[i]);
-				}
-				this.BoundingBox = new Vector3[2];
-			}
-
-			/// <summary>Creates the normals for all faces within this mesh</summary>
-			internal void CreateNormals()
-			{
-				for (int i = 0; i < Faces.Length; i++)
-				{
-					CreateNormals(i);
-				}
-			}
-
-			/// <summary>Creates the normals for the specified face index</summary>
-			private void CreateNormals(int FaceIndex)
-			{
-				if (Faces[FaceIndex].Vertices.Length >= 3)
-				{
-					int i0 = (int)Faces[FaceIndex].Vertices[0].Index;
-					int i1 = (int)Faces[FaceIndex].Vertices[1].Index;
-					int i2 = (int)Faces[FaceIndex].Vertices[2].Index;
-					double ax = Vertices[i1].Coordinates.X - Vertices[i0].Coordinates.X;
-					double ay = Vertices[i1].Coordinates.Y - Vertices[i0].Coordinates.Y;
-					double az = Vertices[i1].Coordinates.Z - Vertices[i0].Coordinates.Z;
-					double bx = Vertices[i2].Coordinates.X - Vertices[i0].Coordinates.X;
-					double by = Vertices[i2].Coordinates.Y - Vertices[i0].Coordinates.Y;
-					double bz = Vertices[i2].Coordinates.Z - Vertices[i0].Coordinates.Z;
-					double nx = ay * bz - az * by;
-					double ny = az * bx - ax * bz;
-					double nz = ax * by - ay * bx;
-					double t = nx * nx + ny * ny + nz * nz;
-					if (t != 0.0)
-					{
-						t = 1.0 / Math.Sqrt(t);
-						float mx = (float)(nx * t);
-						float my = (float)(ny * t);
-						float mz = (float)(nz * t);
-						for (int j = 0; j < Faces[FaceIndex].Vertices.Length; j++)
-						{
-							if (Vector3.IsZero(Faces[FaceIndex].Vertices[j].Normal))
-							{
-								Faces[FaceIndex].Vertices[j].Normal = new Vector3(mx, my, mz);
-							}
-						}
-					}
-					else
-					{
-						for (int j = 0; j < Faces[FaceIndex].Vertices.Length; j++)
-						{
-							if (Vector3.IsZero(Faces[FaceIndex].Vertices[j].Normal))
-							{
-								Faces[FaceIndex].Vertices[j].Normal = new Vector3(0.0f, 1.0f, 0.0f);
-							}
-						}
-					}
-				}
-			}
-		}
-
-		/// <summary>Creates glow attenuation data from a half distance and a mode. The resulting value can be later passed to SplitGlowAttenuationData in order to reconstruct the parameters.</summary>
-		/// <param name="HalfDistance">The distance at which the glow is at 50% of its full intensity. The value is clamped to the integer range from 1 to 4096. Values less than or equal to 0 disable glow attenuation.</param>
-		/// <param name="Mode">The glow attenuation mode.</param>
-		/// <returns>A System.UInt16 packed with the information about the half distance and glow attenuation mode.</returns>
-		internal static ushort GetGlowAttenuationData(double HalfDistance, GlowAttenuationMode Mode) {
-			if (HalfDistance <= 0.0 | Mode == GlowAttenuationMode.None) return 0;
-			if (HalfDistance < 1.0) {
-				HalfDistance = 1.0;
-			} else if (HalfDistance > 4095.0) {
-				HalfDistance = 4095.0;
-			}
-			return (ushort)((int)Math.Round(HalfDistance) | ((int)Mode << 12));
-		}
-		/// <summary>Recreates the half distance and the glow attenuation mode from a packed System.UInt16 that was created by GetGlowAttenuationData.</summary>
-		/// <param name="Data">The data returned by GetGlowAttenuationData.</param>
-		/// <param name="Mode">The mode of glow attenuation.</param>
-		/// <param name="HalfDistance">The half distance of glow attenuation.</param>
-		internal static void SplitGlowAttenuationData(ushort Data, out GlowAttenuationMode Mode, out double HalfDistance) {
-			Mode = (GlowAttenuationMode)(Data >> 12);
-			HalfDistance = (double)(Data & 4095);
-		}
-
+	internal static class World {
 		// display
 		/// <summary>The current horizontal viewing angle in radians</summary>
 		internal static double HorizontalViewingAngle;
@@ -548,9 +305,7 @@ namespace OpenBve {
 					double rx = -Math.Tan(World.CameraCurrentAlignment.Yaw) - World.CameraCurrentAlignment.Position.X;
 					double ry = -Math.Tan(World.CameraCurrentAlignment.Pitch) - World.CameraCurrentAlignment.Position.Y;
 					double rz = -World.CameraCurrentAlignment.Position.Z;
-					p[j].X += rx * World.AbsoluteCameraSide.X + ry * World.AbsoluteCameraUp.X + rz * World.AbsoluteCameraDirection.X;
-					p[j].Y += rx * World.AbsoluteCameraSide.Y + ry * World.AbsoluteCameraUp.Y + rz * World.AbsoluteCameraDirection.Y;
-					p[j].Z += rx * World.AbsoluteCameraSide.Z + ry * World.AbsoluteCameraUp.Z + rz * World.AbsoluteCameraDirection.Z;
+					p[j] += rx * World.AbsoluteCameraSide + ry * World.AbsoluteCameraUp + rz * World.AbsoluteCameraDirection;
 					// determine screen coordinates
 					double ez = AbsoluteCameraDirection.X * p[j].X + AbsoluteCameraDirection.Y * p[j].Y + AbsoluteCameraDirection.Z * p[j].Z;
 					if (ez == 0.0) return false;
@@ -596,7 +351,7 @@ namespace OpenBve {
 					TrainManager.Train secondBestTrain = null;
 					double secondBestDistanceSquared = double.MaxValue;
 					foreach (TrainManager.Train train in TrainManager.Trains) {
-						if (train.State == TrainManager.TrainState.Available) {
+						if (train.State == TrainState.Available) {
 							double x = 0.5 * (train.Cars[0].FrontAxle.Follower.WorldPosition.X + train.Cars[0].RearAxle.Follower.WorldPosition.X);
 							double y = 0.5 * (train.Cars[0].FrontAxle.Follower.WorldPosition.Y + train.Cars[0].RearAxle.Follower.WorldPosition.Y) + heightFactor * train.Cars[0].Height;
 							double z = 0.5 * (train.Cars[0].FrontAxle.Follower.WorldPosition.Z + train.Cars[0].RearAxle.Follower.WorldPosition.Z);
@@ -648,34 +403,24 @@ namespace OpenBve {
 				}
 				// camera
 				{
-					double dx = World.CameraTrackFollower.WorldDirection.X;
-					double dy = World.CameraTrackFollower.WorldDirection.Y;
-					double dz = World.CameraTrackFollower.WorldDirection.Z;
-					double ux = World.CameraTrackFollower.WorldUp.X;
-					double uy = World.CameraTrackFollower.WorldUp.Y;
-					double uz = World.CameraTrackFollower.WorldUp.Z;
-					double sx = World.CameraTrackFollower.WorldSide.X;
-					double sy = World.CameraTrackFollower.WorldSide.Y;
-					double sz = World.CameraTrackFollower.WorldSide.Z;
+					AbsoluteCameraDirection = new Vector3(CameraTrackFollower.WorldDirection);
 					double ox = World.CameraCurrentAlignment.Position.X;
 					double oy = World.CameraCurrentAlignment.Position.Y;
 					double oz = World.CameraCurrentAlignment.Position.Z;
-					double cx = px + sx * ox + ux * oy + dx * oz;
-					double cy = py + sy * ox + uy * oy + dy * oz;
-					double cz = pz + sz * ox + uz * oy + dz * oz;
+					double cx = px + CameraTrackFollower.WorldSide.X * ox + CameraTrackFollower.WorldUp.X * oy + AbsoluteCameraDirection.X * oz;
+					double cy = py + CameraTrackFollower.WorldSide.Y * ox + CameraTrackFollower.WorldUp.Y * oy + AbsoluteCameraDirection.Y * oz;
+					double cz = pz + CameraTrackFollower.WorldSide.Z * ox + CameraTrackFollower.WorldUp.Z * oy + AbsoluteCameraDirection.Z * oz;
 					AbsoluteCameraPosition = new Vector3(cx, cy, cz);
-					dx = tx - cx;
-					dy = ty - cy;
-					dz = tz - cz;
-					double t = Math.Sqrt(dx * dx + dy * dy + dz * dz);
+					AbsoluteCameraDirection.X = tx - cx;
+					AbsoluteCameraDirection.Y = ty - cy;
+					AbsoluteCameraDirection.Z = tz - cz;
+					double t = AbsoluteCameraDirection.Norm();
 					double ti = 1.0 / t;
-					dx *= ti;
-					dy *= ti;
-					dz *= ti;
-					AbsoluteCameraDirection = new Vector3(dx, dy, dz);
-					AbsoluteCameraSide = new Vector3(dz, 0.0, -dx);
+					AbsoluteCameraDirection *= ti;
+					
+					AbsoluteCameraSide = new Vector3(AbsoluteCameraDirection.Z, 0.0, -AbsoluteCameraDirection.X);
 					AbsoluteCameraSide.Normalize();
-					AbsoluteCameraUp = Vector3.Cross(new Vector3(dx, dy, dz), AbsoluteCameraSide);
+					AbsoluteCameraUp = Vector3.Cross(AbsoluteCameraDirection, AbsoluteCameraSide);
 					UpdateViewingDistances();
 					if (CameraMode == CameraViewMode.FlyByZooming) {
 						// zoom
@@ -737,17 +482,15 @@ namespace OpenBve {
 					TrackManager.TrackFollower f = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].FrontAxle.Follower;
 					f.TriggerType = TrackManager.EventTriggerType.None;
 					f.Update(f.TrackPosition + d, true, false);
-					double rx = f.WorldPosition.X - cF.X + World.CameraTrackFollower.WorldSide.X * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.X + World.CameraTrackFollower.WorldUp.X * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Y + World.CameraTrackFollower.WorldDirection.X * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Z;
-					double ry = f.WorldPosition.Y - cF.Y + World.CameraTrackFollower.WorldSide.Y * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.X + World.CameraTrackFollower.WorldUp.Y * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Y + World.CameraTrackFollower.WorldDirection.Y * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Z;
-					double rz = f.WorldPosition.Z - cF.Z + World.CameraTrackFollower.WorldSide.Z * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.X + World.CameraTrackFollower.WorldUp.Z * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Y + World.CameraTrackFollower.WorldDirection.Z * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Z;
-					World.Normalize(ref rx, ref ry, ref rz);
+					Vector3 r = new Vector3(f.WorldPosition - cF + World.CameraTrackFollower.WorldSide * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.X + World.CameraTrackFollower.WorldUp * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Y + World.CameraTrackFollower.WorldDirection * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Z);
+					r.Normalize();
 					double t = dF.Z * (sF.Y * uF.X - sF.X * uF.Y) + dF.Y * (-sF.Z * uF.X + sF.X * uF.Z) + dF.X * (sF.Z * uF.Y - sF.Y * uF.Z);
 					if (t != 0.0) {
 						t = 1.0 / t;
 
-						double tx = (rz * (-dF.Y * uF.X + dF.X * uF.Y) + ry * (dF.Z * uF.X - dF.X * uF.Z) + rx * (-dF.Z * uF.Y + dF.Y * uF.Z)) * t;
-						double ty = (rz * (dF.Y * sF.X - dF.X * sF.Y) + ry * (-dF.Z * sF.X + dF.X * sF.Z) + rx * (dF.Z * sF.Y - dF.Y * sF.Z)) * t;
-						double tz = (rz * (sF.Y * uF.X - sF.X * uF.Y) + ry * (-sF.Z * uF.X + sF.X * uF.Z) + rx * (sF.Z * uF.Y - sF.Y * uF.Z)) * t;
+						double tx = (r.Z * (-dF.Y * uF.X + dF.X * uF.Y) + r.Y * (dF.Z * uF.X - dF.X * uF.Z) + r.X * (-dF.Z * uF.Y + dF.Y * uF.Z)) * t;
+						double ty = (r.Z * (dF.Y * sF.X - dF.X * sF.Y) + r.Y * (-dF.Z * sF.X + dF.X * sF.Z) + r.X * (dF.Z * sF.Y - dF.Y * sF.Z)) * t;
+						double tz = (r.Z * (sF.Y * uF.X - sF.X * uF.Y) + r.Y * (-sF.Z * uF.X + sF.X * uF.Z) + r.X * (sF.Z * uF.Y - sF.Y * uF.Z)) * t;
 						lookaheadYaw = tx * tz != 0.0 ? Math.Atan2(tx, tz) : 0.0;
 						if (ty < -1.0) {
 							lookaheadPitch = -0.5 * Math.PI;
@@ -771,7 +514,7 @@ namespace OpenBve {
 					if ((World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead) & TrainManager.PlayerTrain != null) {
 						int c = TrainManager.PlayerTrain.DriverCar;
 						if (c >= 0) {
-							if (TrainManager.PlayerTrain.Cars[c].CarSections.Length == 0 || !TrainManager.PlayerTrain.Cars[c].CarSections[0].Overlay) {
+							if (TrainManager.PlayerTrain.Cars[c].CarSections.Length == 0 || !TrainManager.PlayerTrain.Cars[c].CarSections[0].Groups[0].Overlay) {
 								double a = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DriverPitch;
 								double cosa = Math.Cos(-a);
 								double sina = Math.Sin(-a);
@@ -780,9 +523,9 @@ namespace OpenBve {
 							}
 						}
 					}
-					cF.X += sF.X * CameraCurrentAlignment.Position.X + u2.X * CameraCurrentAlignment.Position.Y + d2.X * CameraCurrentAlignment.Position.Z;
-					cF.Y += sF.Y * CameraCurrentAlignment.Position.X + u2.Y * CameraCurrentAlignment.Position.Y + d2.Y * CameraCurrentAlignment.Position.Z;
-					cF.Z += sF.Z * CameraCurrentAlignment.Position.X + u2.Z * CameraCurrentAlignment.Position.Y + d2.Z * CameraCurrentAlignment.Position.Z;
+
+					cF += sF * CameraCurrentAlignment.Position.X + u2 * CameraCurrentAlignment.Position + d2 * CameraCurrentAlignment.Position.Z;
+
 				}
 				// yaw, pitch, roll
 				double headYaw = World.CameraCurrentAlignment.Yaw + lookaheadYaw;
@@ -813,9 +556,7 @@ namespace OpenBve {
 						// body pitch
 						double ry = (Math.Cos(-bodyPitch) - 1.0) * bodyHeight;
 						double rz = Math.Sin(-bodyPitch) * bodyHeight;
-						cF.X += dF.X * rz + uF.X * ry;
-						cF.Y += dF.Y * rz + uF.Y * ry;
-						cF.Z += dF.Z * rz + uF.Z * ry;
+						cF += dF * rz + uF * ry;
 						if (bodyPitch != 0.0) {
 							double cosa = Math.Cos(-bodyPitch);
 							double sina = Math.Sin(-bodyPitch);
@@ -827,9 +568,7 @@ namespace OpenBve {
 						// body roll
 						double rx = Math.Sin(bodyRoll) * bodyHeight;
 						double ry = (Math.Cos(bodyRoll) - 1.0) * bodyHeight;
-						cF.X += sF.X * rx + uF.X * ry;
-						cF.Y += sF.Y * rx + uF.Y * ry;
-						cF.Z += sF.Z * rx + uF.Z * ry;
+						cF += sF * rx + uF * ry;
 						if (bodyRoll != 0.0) {
 							double cosa = Math.Cos(-bodyRoll);
 							double sina = Math.Sin(-bodyRoll);
@@ -841,9 +580,7 @@ namespace OpenBve {
 						// head yaw
 						double rx = Math.Sin(headYaw) * headHeight;
 						double rz = (Math.Cos(headYaw) - 1.0) * headHeight;
-						cF.X += sF.X * rx + dF.X * rz;
-						cF.Y += sF.Y * rx + dF.Y * rz;
-						cF.Z += sF.Z * rx + dF.Z * rz;
+						cF += sF * rx + dF * rz;
 						if (headYaw != 0.0) {
 							double cosa = Math.Cos(headYaw);
 							double sina = Math.Sin(headYaw);
@@ -855,9 +592,7 @@ namespace OpenBve {
 						// head pitch
 						double ry = (Math.Cos(-headPitch) - 1.0) * headHeight;
 						double rz = Math.Sin(-headPitch) * headHeight;
-						cF.X += dF.X * rz + uF.X * ry;
-						cF.Y += dF.Y * rz + uF.Y * ry;
-						cF.Z += dF.Z * rz + uF.Z * ry;
+						cF += dF * rz + uF * ry;
 						if (headPitch != 0.0) {
 							double cosa = Math.Cos(-headPitch);
 							double sina = Math.Sin(-headPitch);
@@ -869,9 +604,7 @@ namespace OpenBve {
 						// head roll
 						double rx = Math.Sin(headRoll) * headHeight;
 						double ry = (Math.Cos(headRoll) - 1.0) * headHeight;
-						cF.X += sF.X * rx + uF.X * ry;
-						cF.Y += sF.Y * rx + uF.Y * ry;
-						cF.Z += sF.Z * rx + uF.Z * ry;
+						cF += sF * rx + uF * ry;
 						if (headRoll != 0.0) {
 							double cosa = Math.Cos(-headRoll);
 							double sina = Math.Sin(-headRoll);
@@ -993,15 +726,6 @@ namespace OpenBve {
 				t = 1.0 / Math.Sqrt(t);
 				x *= t;
 				y *= t;
-			}
-		}
-		internal static void Normalize(ref double x, ref double y, ref double z) {
-			double t = x * x + y * y + z * z;
-			if (t != 0.0) {
-				t = 1.0 / Math.Sqrt(t);
-				x *= t;
-				y *= t;
-				z *= t;
 			}
 		}
 	}

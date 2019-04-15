@@ -44,7 +44,7 @@ namespace OpenBve
 			{
 				var directory = new DirectoryInfo(Program.FileSystem.SettingsFolder);
 				var file = directory.GetFiles("OpenBVE Crash*.log").OrderByDescending(f => f.LastWriteTime).First();
-				Process.Start(Path.Combine(file.DirectoryName,file.Name));
+				Process.Start(file.FullName);
 			}
 			catch
 			{

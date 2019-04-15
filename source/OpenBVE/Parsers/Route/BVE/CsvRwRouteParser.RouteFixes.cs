@@ -107,6 +107,31 @@ namespace OpenBve
 					//B1649ﾃｼiﾄ・ﾄｺJﾃｼﾄ佚架・ｹﾃ嘉ｼj.csv
 					Expressions[1441].Text = ".curve 1000;20";
 					break;
+				case "BBB3E085320FDC847A36E80C34A6820EEE4E7A76F9FCDC2F411911B61E0CE222":
+				case "48B0870AEEA7D8779AFF77E06D0C43D01CDC6B1C2A2ED822055CFE84DAC2ABB0":
+				case "72108E9FBA951DEB47E18CFE11F336145E4E7C3DAA0BD0C2F3911B509254D13A":
+					//Amsterdam-Schiphol.rw
+					//Amsterdam-Antwerpen-v3.rw
+					//Amsterdam-Antwerpen (Thalys PBKA).rw
+					Data.IgnorePitchRoll = true;
+					break;
+				case "FBF4399E04B769BDD416CEB6CC3D3C5EC4803E158997D5D75A76C423B6DA45ED":
+				case "49630A77BE1AB513BD58962795DC38846451A3E44C4E6770DF78EE71C5EF226E":
+					//737 Test Flight-
+					//Arrive Night.csv
+					//Arrive.csv
+					Interface.CurrentOptions.Derailments = false;
+					break;
+				case "471C1CC06E55D1B40E7B992028FA25200E480A37778E51B1B0F36BE475B250AF":
+					//Iiyama 2060-
+					//9001.csv
+					Expressions[434].Text = ".section 0; 103; 104; 105; 106";
+					if (Interface.CurrentOptions.CurrentXParser == Interface.XParsers.Original)
+					{
+						//Various broken stuff with the original parser, either Assimp or new will do
+						Interface.CurrentOptions.CurrentXParser = Interface.XParsers.NewXParser;
+					}
+					break;
 			}
 		}
 	}

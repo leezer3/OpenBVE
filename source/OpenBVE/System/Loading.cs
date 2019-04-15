@@ -7,6 +7,7 @@ using OpenBve.Parsers.Train;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
+using OpenBveApi.Trains;
 
 namespace OpenBve {
 	internal static class Loading {
@@ -221,25 +222,25 @@ namespace OpenBve {
 			{
 				if (k == TrainManager.Trains.Length - 1 & Game.BogusPretrainInstructions.Length != 0)
 				{
-					TrainManager.Trains[k] = new TrainManager.Train(TrainManager.TrainState.Bogus);
+					TrainManager.Trains[k] = new TrainManager.Train(TrainState.Bogus);
 				}
 				else
 				{
-					TrainManager.Trains[k] = new TrainManager.Train(TrainManager.TrainState.Pending);
+					TrainManager.Trains[k] = new TrainManager.Train(TrainState.Pending);
 				}
 				
 			}
 			TrainManager.PlayerTrain = TrainManager.Trains[Game.PrecedingTrainTimeDeltas.Length];
 
-			ObjectManager.UnifiedObject[] CarObjects = null;
-			ObjectManager.UnifiedObject[] BogieObjects = null;
+			UnifiedObject[] CarObjects = null;
+			UnifiedObject[] BogieObjects = null;
 
 			// load trains
 			double TrainProgressMaximum = 0.7 + 0.3 * (double)TrainManager.Trains.Length;
 			for (int k = 0; k < TrainManager.Trains.Length; k++) {
 				//Sleep for 20ms to allow route loading locks to release
 				Thread.Sleep(20);
-				if (TrainManager.Trains[k].State == TrainManager.TrainState.Bogus) {
+				if (TrainManager.Trains[k].State == TrainState.Bogus) {
 					// bogus train
 					string TrainData = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Compatibility", "PreTrain"), "train.dat");
 					TrainDatParser.ParseTrainData(TrainData, System.Text.Encoding.UTF8, TrainManager.Trains[k]);
@@ -331,13 +332,13 @@ namespace OpenBve {
 					Program.FileSystem.AppendToLogFile("Train panel loaded sucessfully.");
 				}
 				// add exterior section
-				if (TrainManager.Trains[k].State != TrainManager.TrainState.Bogus)
+				if (TrainManager.Trains[k].State != TrainState.Bogus)
 				{
 					bool LoadObjects = false;
 					if (CarObjects == null)
 					{
-						CarObjects = new ObjectManager.UnifiedObject[TrainManager.Trains[k].Cars.Length];
-						BogieObjects = new ObjectManager.UnifiedObject[TrainManager.Trains[k].Cars.Length * 2];
+						CarObjects = new UnifiedObject[TrainManager.Trains[k].Cars.Length];
+						BogieObjects = new UnifiedObject[TrainManager.Trains[k].Cars.Length * 2];
 						LoadObjects = true;
 					}
 					string tXml = OpenBveApi.Path.CombineFile(TrainManager.Trains[k].TrainFolder, "train.xml");
@@ -359,7 +360,7 @@ namespace OpenBve {
 						if (CarObjects[i] == null) {
 							// load default exterior object
 							string file = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Compatibility"), "exterior.csv");
-							ObjectManager.StaticObject so = ObjectManager.LoadStaticObject(file, System.Text.Encoding.UTF8, ObjectLoadMode.Normal, false, false, false);
+							ObjectManager.StaticObject so = ObjectManager.LoadStaticObject(file, System.Text.Encoding.UTF8, false, false, false);
 							if (so == null) {
 								CarObjects[i] = null;
 							} else {
@@ -394,7 +395,7 @@ namespace OpenBve {
 				// configure ai / timetable
 				if (TrainManager.Trains[k] == TrainManager.PlayerTrain) {
 					TrainManager.Trains[k].TimetableDelta = 0.0;
-				} else if (TrainManager.Trains[k].State != TrainManager.TrainState.Bogus) {
+				} else if (TrainManager.Trains[k].State != TrainState.Bogus) {
 					TrainManager.Trains[k].AI = new Game.SimpleHumanDriverAI(TrainManager.Trains[k]);
 					TrainManager.Trains[k].TimetableDelta = Game.PrecedingTrainTimeDeltas[k];
 					TrainManager.Trains[k].Specs.DoorOpenMode = TrainManager.DoorMode.Manual;
@@ -412,7 +413,7 @@ namespace OpenBve {
 			}
 			// load plugin
 			for (int i = 0; i < TrainManager.Trains.Length; i++) {
-				if (TrainManager.Trains[i].State != TrainManager.TrainState.Bogus) {
+				if (TrainManager.Trains[i].State != TrainState.Bogus) {
 					if (TrainManager.Trains[i] == TrainManager.PlayerTrain) {
 						if (!PluginManager.LoadCustomPlugin(TrainManager.Trains[i], TrainManager.Trains[i].TrainFolder, CurrentTrainEncoding)) {
 							PluginManager.LoadDefaultPlugin(TrainManager.Trains[i], TrainManager.Trains[i].TrainFolder);

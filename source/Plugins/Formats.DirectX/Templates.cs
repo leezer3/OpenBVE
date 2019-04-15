@@ -1,4 +1,5 @@
-﻿namespace OpenBve.Formats.DirectX
+﻿// ReSharper disable UnusedMember.Global
+namespace OpenBve.Formats.DirectX
 {
 	public enum TemplateID : uint
 	{

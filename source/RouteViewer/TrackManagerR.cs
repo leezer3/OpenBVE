@@ -7,6 +7,7 @@
 
 using System;
 using OpenBveApi.Math;
+using OpenBveApi.Textures;
 
 namespace OpenBve {
     internal static class TrackManager {
@@ -96,36 +97,36 @@ namespace OpenBve {
         }
         // marker start
         internal class MarkerStartEvent : GeneralEvent {
-            internal int TextureIndex;
-            internal MarkerStartEvent(double TrackPositionDelta, int TextureIndex) {
+            internal Texture Texture;
+            internal MarkerStartEvent(double TrackPositionDelta, Texture Texture) {
                 this.TrackPositionDelta = TrackPositionDelta;
                 this.DontTriggerAnymore = false;
-                this.TextureIndex = TextureIndex;
+                this.Texture = Texture;
             }
             internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
                 if (TriggerType == EventTriggerType.Camera) {
                     if (Direction < 0) {
-                        Game.RemoveMarker(this.TextureIndex);
+                        Game.RemoveMarker(this.Texture);
                     } else if (Direction > 0) {
-                        Game.AddMarker(this.TextureIndex);
+                        Game.AddMarker(this.Texture);
                     }
                 }
             }
         }
         // marker end
         internal class MarkerEndEvent : GeneralEvent {
-            internal int TextureIndex;
-            internal MarkerEndEvent(double TrackPositionDelta, int TextureIndex) {
+            internal Texture Texture;
+            internal MarkerEndEvent(double TrackPositionDelta, Texture Texture) {
                 this.TrackPositionDelta = TrackPositionDelta;
                 this.DontTriggerAnymore = false;
-                this.TextureIndex = TextureIndex;
+                this.Texture = Texture;
             }
             internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
                 if (TriggerType == EventTriggerType.Camera) {
                     if (Direction < 0) {
-                        Game.AddMarker(this.TextureIndex);
+                        Game.AddMarker(this.Texture);
                     } else if (Direction > 0) {
-                        Game.RemoveMarker(this.TextureIndex);
+                        Game.RemoveMarker(this.Texture);
                     }
                 }
             }

@@ -1,4 +1,6 @@
-﻿namespace OpenBve
+﻿using OpenBveApi.Objects;
+
+namespace OpenBve
 {
 	/*
 	 * This file contains object related functions used by the CSV & RW route parser
@@ -8,7 +10,7 @@
 		/// <summary>Creates a mirrored copy of the prototype object (Animated objects)</summary>
 		/// <param name="Prototype">The prototype</param>
 		/// <returns>The mirrored copy</returns>
-		private static ObjectManager.UnifiedObject GetMirroredObject(ObjectManager.UnifiedObject Prototype)
+		private static UnifiedObject GetMirroredObject(UnifiedObject Prototype)
 		{
 			if (Prototype is ObjectManager.StaticObject)
 			{
@@ -110,7 +112,6 @@
 						Result.Mesh.Vertices[i].Coordinates.X = FarDistance - x2;
 						if (n < 8)
 						{
-							m = 8;
 							break;
 						}
 					}
@@ -121,7 +122,6 @@
 					else if (m == 5)
 					{
 						Result.Mesh.Vertices[i].Coordinates.X = NearDistance - x6;
-						m = 8;
 						break;
 					}
 					m++;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -69,23 +69,13 @@ namespace OpenBve {
 		/// <summary>Loads a CSV or B3D object from a file.</summary>
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
 		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
-		/// <param name="LoadMode">The texture load mode.</param>
-		/// <param name="ForceTextureRepeatX">Whether to force TextureWrapMode.Repeat for the X axis of the texture.</param>
-		/// <param name="ForceTextureRepeatY">Whether to force TextureWrapMode.Repeat for the Y axis of the texture.</param>
 		/// <returns>The object loaded.</returns>
-		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY) {
+		internal static ObjectManager.StaticObject ReadObject(string FileName, Encoding Encoding) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			bool IsB3D = string.Equals(System.IO.Path.GetExtension(FileName), ".b3d", StringComparison.OrdinalIgnoreCase);
 			// initialize object
-			ObjectManager.StaticObject Object = new ObjectManager.StaticObject
-			{
-				Mesh =
-				{
-					Faces = new World.MeshFace[] {},
-					Materials = new World.MeshMaterial[] {},
-					Vertices = new VertexTemplate[] {}
-				}
-			};
+			ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
+
 			// read lines
 			List<string> Lines = System.IO.File.ReadAllLines(FileName, Encoding).ToList();
 			if (!IsB3D && Interface.CurrentOptions.EnableBveTsHacks)
@@ -333,8 +323,8 @@ namespace OpenBve {
 									}
 									if (q) {
 										int f = Builder.Faces.Length;
-										Array.Resize<World.MeshFace>(ref Builder.Faces, f + 1);
-										Builder.Faces[f] = new World.MeshFace {Vertices = new World.MeshFaceVertex[Arguments.Length]};
+										Array.Resize<MeshFace>(ref Builder.Faces, f + 1);
+										Builder.Faces[f] = new MeshFace {Vertices = new MeshFaceVertex[Arguments.Length]};
 										while (Builder.Vertices.Length > Normals.Length) {
 											Array.Resize<Vector3>(ref Normals, Normals.Length << 1);
 										}
@@ -345,12 +335,12 @@ namespace OpenBve {
 										if (Builder.isCylinder && Interface.CurrentOptions.EnableBveTsHacks && CsvRwRouteParser.CylinderHack)
 										{
 											int l = Builder.Faces[f].Vertices.Length;
-											World.MeshFaceVertex v = Builder.Faces[f].Vertices[l - 1];
+											MeshFaceVertex v = Builder.Faces[f].Vertices[l - 1];
 											Builder.Faces[f].Vertices[l - 1] = Builder.Faces[f].Vertices[l - 2];
 											Builder.Faces[f].Vertices[l - 2] = v;
 										}
 										if (cmd == "addface2" | cmd == "face2") {
-											Builder.Faces[f].Flags = (byte)World.MeshFace.Face2Mask;
+											Builder.Faces[f].Flags = (byte)MeshFace.Face2Mask;
 										}
 									}
 								}
@@ -469,39 +459,37 @@ namespace OpenBve {
 								if (Arguments.Length > 4) {
 									Interface.AddMessage(MessageType.Warning, false, "At most 4 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								double x = 0.0, y = 0.0, z = 0.0, a = 0.0;
-								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out x)) {
+								Vector3 r = new Vector3();
+								double a = 0;
+								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out r.X)) {
 									Interface.AddMessage(MessageType.Error, false, "Invalid argument X in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									x = 0.0;
+									r.X = 0.0;
 								}
-								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out y)) {
+								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out r.Y)) {
 									Interface.AddMessage(MessageType.Error, false, "Invalid argument Y in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									y = 0.0;
+									r.Y = 0.0;
 								}
-								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out z)) {
+								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], out r.Z)) {
 									Interface.AddMessage(MessageType.Error, false, "Invalid argument Z in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-									z = 0.0;
+									r.Z = 0.0;
 								}
 								if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], out a)) {
 									Interface.AddMessage(MessageType.Error, false, "Invalid argument Angle in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									a = 0.0;
 								}
-								double t = x * x + y * y + z * z;
+
+								double t = r.NormSquared();
 								if (t == 0.0) {
-									x = 1.0;
-									y = 0.0;
-									z = 0.0;
+									r = Vector3.Right;
 									t = 1.0;
 								}
 								if (a != 0.0) {
 									t = 1.0 / Math.Sqrt(t);
-									x *= t;
-									y *= t;
-									z *= t;
+									r *= t;
 									a *= 0.0174532925199433;
-									ApplyRotation(Builder, new Vector3(x,y,z), a);
+									ApplyRotation(Builder, r, a);
 									if (cmd == "rotateall") {
-										Object.ApplyRotation(new Vector3(x,y,z), a);
+										Object.ApplyRotation(r, a);
 									}
 								}
 							} break;
@@ -766,19 +754,19 @@ namespace OpenBve {
 								if (Arguments.Length > 3) {
 									Interface.AddMessage(MessageType.Warning, false, "At most 3 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								World.MeshMaterialBlendMode blendmode = World.MeshMaterialBlendMode.Normal;
+								MeshMaterialBlendMode blendmode = MeshMaterialBlendMode.Normal;
 								if (Arguments.Length >= 1 && Arguments[0].Length > 0) {
 									switch (Arguments[0].ToLowerInvariant()) {
 										case "normal":
-											blendmode = World.MeshMaterialBlendMode.Normal;
+											blendmode = MeshMaterialBlendMode.Normal;
 											break;
 										case "additive":
 										case "glow":
-											blendmode = World.MeshMaterialBlendMode.Additive;
+											blendmode = MeshMaterialBlendMode.Additive;
 											break;
 										default:
 											Interface.AddMessage(MessageType.Error, false, "The given BlendMode is not supported in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-											blendmode = World.MeshMaterialBlendMode.Normal;
+											blendmode = MeshMaterialBlendMode.Normal;
 											break;
 									}
 								}
@@ -799,7 +787,7 @@ namespace OpenBve {
 								}
 								for (int j = 0; j < Builder.Materials.Length; j++) {
 									Builder.Materials[j].BlendMode = blendmode;
-									Builder.Materials[j].GlowAttenuationData = World.GetGlowAttenuationData(glowhalfdistance, glowmode);
+									Builder.Materials[j].GlowAttenuationData = Glow.GetAttenuationData(glowhalfdistance, glowmode);
 								}
 							} break;
 						case "setwrapmode":
@@ -956,9 +944,18 @@ namespace OpenBve {
 									  "3 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 								int r = 0, g = 0, b = 0;
-								int.TryParse(Arguments[0], out r);
-								int.TryParse(Arguments[1], out g);
-								int.TryParse(Arguments[2], out b);
+								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !int.TryParse(Arguments[0], out r))
+								{
+									Interface.AddMessage(MessageType.Error, false, "Invalid argument R in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !int.TryParse(Arguments[1], out g))
+								{
+									Interface.AddMessage(MessageType.Error, false, "Invalid argument G in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !int.TryParse(Arguments[2], out b))
+								{
+									Interface.AddMessage(MessageType.Error, false, "Invalid argument B in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
 								Color textColor = Color.FromArgb(r, g, b);
 								for (int j = 0; j < Builder.Materials.Length; j++)
 								{
@@ -986,9 +983,18 @@ namespace OpenBve {
 									  "3 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 								int r = 0, g = 0, b = 0;
-								int.TryParse(Arguments[0], out r);
-								int.TryParse(Arguments[1], out g);
-								int.TryParse(Arguments[2], out b);
+								if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !int.TryParse(Arguments[0], out r))
+								{
+									Interface.AddMessage(MessageType.Error, false, "Invalid argument R in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !int.TryParse(Arguments[1], out g))
+								{
+									Interface.AddMessage(MessageType.Error, false, "Invalid argument G in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
+								if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !int.TryParse(Arguments[2], out b))
+								{
+									Interface.AddMessage(MessageType.Error, false, "Invalid argument B in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
 								Color backgroundColor = Color.FromArgb(r, g, b);
 								for (int j = 0; j < Builder.Materials.Length; j++)
 								{
@@ -1092,9 +1098,9 @@ namespace OpenBve {
 									//CreateMeshBuilder misinterpreted as UTF
 									//As this character sequence is gibberish, we can assume our file is NOT actually UTF
 									//so re-read with the default ANSI charset
-									if (Command.IndexOf("牃慥整敍桳畂汩敤", StringComparison.Ordinal) != -1 || Command.IndexOf("䵛獥䉨極摬牥", StringComparison.Ordinal) != -1)
+									if (Command.IndexOf("牃慥整敍桳畂汩敤", StringComparison.Ordinal) != -1 || Command.IndexOf("䵛獥䉨極摬牥", StringComparison.Ordinal) != -1 || Command.IndexOf("浛獥扨極摬牥", StringComparison.Ordinal) != -1)
 									{
-										Object = ReadObject(FileName, Encoding.Default, LoadMode, ForceTextureRepeatX, ForceTextureRepeatY);
+										Object = ReadObject(FileName, Encoding.Default);
 										return Object;
 									}
 									else
@@ -1164,13 +1170,13 @@ namespace OpenBve {
 			Builder.Vertices[v + 6] = new Vertex(-sx, -sy, sz);
 			Builder.Vertices[v + 7] = new Vertex(-sx, sy, sz);
 			int f = Builder.Faces.Length;
-			Array.Resize<World.MeshFace>(ref Builder.Faces, f + 6);
-			Builder.Faces[f + 0].Vertices = new World.MeshFaceVertex[] { new World.MeshFaceVertex(v + 0), new World.MeshFaceVertex(v + 1), new World.MeshFaceVertex(v + 2), new World.MeshFaceVertex(v + 3) };
-			Builder.Faces[f + 1].Vertices = new World.MeshFaceVertex[] { new World.MeshFaceVertex(v + 0), new World.MeshFaceVertex(v + 4), new World.MeshFaceVertex(v + 5), new World.MeshFaceVertex(v + 1) };
-			Builder.Faces[f + 2].Vertices = new World.MeshFaceVertex[] { new World.MeshFaceVertex(v + 0), new World.MeshFaceVertex(v + 3), new World.MeshFaceVertex(v + 7), new World.MeshFaceVertex(v + 4) };
-			Builder.Faces[f + 3].Vertices = new World.MeshFaceVertex[] { new World.MeshFaceVertex(v + 6), new World.MeshFaceVertex(v + 5), new World.MeshFaceVertex(v + 4), new World.MeshFaceVertex(v + 7) };
-			Builder.Faces[f + 4].Vertices = new World.MeshFaceVertex[] { new World.MeshFaceVertex(v + 6), new World.MeshFaceVertex(v + 7), new World.MeshFaceVertex(v + 3), new World.MeshFaceVertex(v + 2) };
-			Builder.Faces[f + 5].Vertices = new World.MeshFaceVertex[] { new World.MeshFaceVertex(v + 6), new World.MeshFaceVertex(v + 2), new World.MeshFaceVertex(v + 1), new World.MeshFaceVertex(v + 5) };
+			Array.Resize<MeshFace>(ref Builder.Faces, f + 6);
+			Builder.Faces[f + 0].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 1), new MeshFaceVertex(v + 2), new MeshFaceVertex(v + 3) };
+			Builder.Faces[f + 1].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 4), new MeshFaceVertex(v + 5), new MeshFaceVertex(v + 1) };
+			Builder.Faces[f + 2].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 3), new MeshFaceVertex(v + 7), new MeshFaceVertex(v + 4) };
+			Builder.Faces[f + 3].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 5), new MeshFaceVertex(v + 4), new MeshFaceVertex(v + 7) };
+			Builder.Faces[f + 4].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 7), new MeshFaceVertex(v + 3), new MeshFaceVertex(v + 2) };
+			Builder.Faces[f + 5].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 2), new MeshFaceVertex(v + 1), new MeshFaceVertex(v + 5) };
 		}
 
 		// create cylinder
@@ -1211,24 +1217,24 @@ namespace OpenBve {
 			}
 			// faces
 			int f = Builder.Faces.Length;
-			Array.Resize<World.MeshFace>(ref Builder.Faces, f + n + m);
+			Array.Resize<MeshFace>(ref Builder.Faces, f + n + m);
 			for (int i = 0; i < n; i++) {
 				Builder.Faces[f + i].Flags = 0;
 				int i0 = (2 * i + 2) % (2 * n);
 				int i1 = (2 * i + 3) % (2 * n);
 				int i2 = 2 * i + 1;
 				int i3 = 2 * i;
-				Builder.Faces[f + i].Vertices = new World.MeshFaceVertex[] { new World.MeshFaceVertex(v + i0, Normals[i0]), new World.MeshFaceVertex(v + i1, Normals[i1]), new World.MeshFaceVertex(v + i2, Normals[i2]), new World.MeshFaceVertex(v + i3, Normals[i3]) };
+				Builder.Faces[f + i].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + i0, Normals[i0]), new MeshFaceVertex(v + i1, Normals[i1]), new MeshFaceVertex(v + i2, Normals[i2]), new MeshFaceVertex(v + i3, Normals[i3]) };
 			}
 			for (int i = 0; i < m; i++) {
-				Builder.Faces[f + n + i].Vertices = new World.MeshFaceVertex[n];
+				Builder.Faces[f + n + i].Vertices = new MeshFaceVertex[n];
 				for (int j = 0; j < n; j++) {
 					if (i == 0 & lowercap) {
 						// lower cap
-						Builder.Faces[f + n + i].Vertices[j] = new World.MeshFaceVertex(v + 2 * j + 1);
+						Builder.Faces[f + n + i].Vertices[j] = new MeshFaceVertex(v + 2 * j + 1);
 					} else {
 						// upper cap
-						Builder.Faces[f + n + i].Vertices[j] = new World.MeshFaceVertex(v + 2 * (n - j - 1));
+						Builder.Faces[f + n + i].Vertices[j] = new MeshFaceVertex(v + 2 * (n - j - 1));
 					}
 				}
 			}

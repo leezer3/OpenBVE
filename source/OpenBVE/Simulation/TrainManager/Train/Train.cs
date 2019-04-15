@@ -20,17 +20,12 @@ namespace OpenBve
 			internal PluginManager.Plugin Plugin;
 
 			internal Handles Handles;
-			internal TrainState State;
 			internal Car[] Cars;
 			internal Coupler[] Couplers;
-			internal int DriverCar;
 			internal TrainSpecs Specs;
 			internal TrainPassengers Passengers;
 			internal int LastStation;
 			internal int Station;
-
-			internal int Destination = -1;
-
 			internal TrainStopState StationState;
 			internal double StationArrivalTime;
 			internal double StationDepartureTime;
@@ -244,7 +239,7 @@ namespace OpenBve
 				// move cars
 				for (int i = 0; i < Cars.Length; i++)
 				{
-					Cars[i].Move(Cars[i].Specs.CurrentSpeed * TimeElapsed, TimeElapsed);
+					Cars[i].Move(Cars[i].Specs.CurrentSpeed * TimeElapsed);
 					if (State == TrainState.Disposed)
 					{
 						return;
@@ -996,6 +991,7 @@ namespace OpenBve
 					Cars[i].Sounds.SpringL = TrainManager.CarSound.Empty;
 					Cars[i].Sounds.SpringR = TrainManager.CarSound.Empty;
 					Cars[i].Sounds.Plugin = new TrainManager.CarSound[] { };
+					Cars[i].Sounds.Touch = new TrainManager.CarSound[] { };
 				}
 			}
 

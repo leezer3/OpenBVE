@@ -42,7 +42,7 @@ namespace OpenBve
 		/// <param name="Camera">The absolute camera position</param>
 		private static void RenderEvents(Vector3 Camera)
 		{
-			if (Interface.CurrentOptions.ShowEvents == false || TrackManager.CurrentTrack.Elements == null)
+			if (Interface.CurrentOptions.ShowEvents == false || TrackManager.Tracks[0].Elements == null)
 			{
 				return;
 			}
@@ -69,15 +69,15 @@ namespace OpenBve
 			double db = World.ForwardViewingDistance + World.ExtraViewingDistance;
 			bool[] sta = new bool[Game.Stations.Length];
 			// events
-			for (int i = 0; i < TrackManager.CurrentTrack.Elements.Length; i++)
+			for (int i = 0; i < TrackManager.Tracks[0].Elements.Length; i++)
 			{
-				double p = TrackManager.CurrentTrack.Elements[i].StartingTrackPosition;
+				double p = TrackManager.Tracks[0].Elements[i].StartingTrackPosition;
 				double d = p - World.CameraTrackFollower.TrackPosition;
 				if (d >= da & d <= db)
 				{
-					for (int j = 0; j < TrackManager.CurrentTrack.Elements[i].Events.Length; j++)
+					for (int j = 0; j < TrackManager.Tracks[0].Elements[i].Events.Length; j++)
 					{
-						TrackManager.GeneralEvent e = TrackManager.CurrentTrack.Elements[i].Events[j];
+						TrackManager.GeneralEvent e = TrackManager.Tracks[0].Elements[i].Events[j];
 						double dy, dx = 0.0, dz = 0.0;
 						double s; Texture t;
 						if (e is TrackManager.BrightnessChangeEvent)

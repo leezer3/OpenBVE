@@ -18,21 +18,13 @@ namespace OpenBve {
 		internal struct Axle {
 			internal TrackManager.TrackFollower Follower;
 		}
-		internal struct Coupler { }
-		internal struct Section { }
 
 		// cars
 		internal struct Door {
 			internal int Direction;
 			internal double State;
 		}
-		internal struct AccelerationCurve {
-			internal double StageZeroAcceleration;
-			internal double StageOneSpeed;
-			internal double StageOneAcceleration;
-			internal double StageTwoSpeed;
-			internal double StageTwoExponent;
-		}
+		
 		internal enum CarBrakeType {
 			ElectromagneticStraightAirBrake = 0, //電磁直通
 			ElectricCommandBrake = 1, //電気指令式
@@ -114,7 +106,6 @@ namespace OpenBve {
 		}
 		internal struct CarSpecs {
 			internal bool IsMotorCar;
-			internal AccelerationCurve[] AccelerationCurves;
 			internal double AccelerationCurvesMultiplier;
 			internal double BrakeDecelerationAtServiceMaximumPressure;
 			internal double BrakeControlSpeed;
@@ -158,108 +149,15 @@ namespace OpenBve {
 			internal float NextBrightness;
 			internal double NextTrackPosition;
 		}
-		internal struct Horn {
-			internal CarSound Sound;
-			internal bool Loop;
-		}
-		internal struct CarSound {
-			internal int SoundBufferIndex;
-			internal int SoundSourceIndex;
-			internal Vector3 Position;
-		}
-		internal struct MotorSoundTableEntry {
-			internal int SoundBufferIndex;
-			internal float Pitch;
-			internal float Gain;
-		}
-		internal struct MotorSoundTable {
-			internal MotorSoundTableEntry[] Entries;
-			internal int SoundBufferIndex;
-			internal int SoundSourceIndex;
-		}
-		internal struct MotorSound {
-			internal MotorSoundTable[] Tables;
-			internal Vector3 Position;
-			internal double SpeedConversionFactor;
-			internal int SpeedDirection;
-			internal const int MotorP1 = 0;
-			internal const int MotorP2 = 1;
-			internal const int MotorB1 = 2;
-			internal const int MotorB2 = 3;
-		}
-		internal struct CarSounds {
-			internal MotorSound Motor;
-			internal CarSound Adjust;
-			internal CarSound Air;
-			internal CarSound AirHigh;
-			internal CarSound AirZero;
-			internal CarSound Ats;
-			internal CarSound AtsCnt;
-			internal CarSound Brake;
-			internal CarSound BrakeHandleApply;
-			internal CarSound BrakeHandleRelease;
-			internal CarSound BrakeHandleMin;
-			internal CarSound BrakeHandleMax;
-			internal CarSound CpEnd;
-			internal CarSound CpLoop;
-			internal bool CpLoopStarted;
-			internal CarSound CpStart;
-			internal double CpStartTimeStarted;
-			internal CarSound Ding;
-			internal CarSound DoorCloseL;
-			internal CarSound DoorCloseR;
-			internal CarSound DoorOpenL;
-			internal CarSound DoorOpenR;
-			internal CarSound Eb;
-			internal CarSound EmrBrake;
-			internal CarSound[] Flange;
-			internal double[] FlangeVolume;
-			internal CarSound Halt;
-			internal Horn[] Horns;
-			internal CarSound Loop;
-			internal CarSound MasterControllerUp;
-			internal CarSound MasterControllerDown;
-			internal CarSound MasterControllerMin;
-			internal CarSound MasterControllerMax;
-			internal CarSound PilotLampOn;
-			internal CarSound PilotLampOff;
-			internal CarSound PointFrontAxle;
-			internal CarSound PointRearAxle;
-			internal CarSound Rub;
-			internal CarSound ReverserOn;
-			internal CarSound ReverserOff;
-			internal CarSound[] Run;
-			internal double[] RunVolume;
-			internal CarSound SpringL;
-			internal CarSound SpringR;
-			internal CarSound ToAtc;
-			internal CarSound ToAts;
-			internal CarSound[] Plugin;
-			internal int FrontAxleRunIndex;
-			internal int RearAxleRunIndex;
-			internal int FrontAxleFlangeIndex;
-			internal int RearAxleFlangeIndex;
-			internal double FlangePitch;
-			internal double SpringPlayedAngle;
-		}
-		internal struct Car {
-			internal double Width;
-			internal double Height;
-			internal double Length;
+		
+
+		internal class Car : AbstractCar {
 			internal Axle FrontAxle;
 			internal Axle RearAxle;
 			internal double FrontAxlePosition;
 			internal double RearAxlePosition;
-			internal Vector3 Up;
-			internal Section[] Sections;
 			internal int CurrentSection;
-			internal double DriverX;
-			internal double DriverY;
-			internal double DriverZ;
-			internal double DriverYaw;
-			internal double DriverPitch;
 			internal CarSpecs Specs;
-			internal CarSounds Sounds;
 			internal bool CurrentlyVisible;
 			internal bool Derailed;
 			internal bool Topples;
@@ -391,17 +289,11 @@ namespace OpenBve {
 			internal PassAlarmType PassAlarm;
 		}
 		// train
-		internal enum TrainState {
-			Pending = 0, Available = 1, Disposed = 2, Bogus = 3
-		}
 		internal enum TrainStopState {
 			Pending = 0, Boarding = 1, Completed = 2
 		}
 		internal class Train : AbstractTrain {
-			internal TrainState State;
 			internal Car[] Cars;
-			internal int Destination;
-			internal int DriverCar;
 			internal TrainSpecs Specs;
 			internal int CurrentSectionIndex;
 		}

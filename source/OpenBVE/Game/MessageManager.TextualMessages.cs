@@ -213,8 +213,6 @@ namespace OpenBve
 		/// <summary>Defines a marker text (e.g. bridge name) to be displayed in-game</summary>
 		internal class MarkerText : Message
 		{
-			/// <summary>Defines the color of the marker text</summary>
-			internal MessageColor TextColor;
 			/// <summary>The font used for this message</summary>
 			internal Fonts.OpenGlFont Font;
 
@@ -226,7 +224,7 @@ namespace OpenBve
 				this.Timeout = double.PositiveInfinity;
 				this.TriggerOnce = false;
 				this.Direction = MessageDirection.Both;
-				this.TextColor = MessageColor.White;
+				this.Color = MessageColor.White;
 				this.RendererAlpha = 1.0;
 			}
 
@@ -239,7 +237,7 @@ namespace OpenBve
 				this.Timeout = double.PositiveInfinity;
 				this.TriggerOnce = false;
 				this.Direction = MessageDirection.Both;
-				this.TextColor = Color;
+				this.Color = Color;
 				this.RendererAlpha = 1.0;
 			}
 

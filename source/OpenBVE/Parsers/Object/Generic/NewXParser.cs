@@ -12,7 +12,7 @@ namespace OpenBve
 {
 	class NewXParser
 	{
-		internal static ObjectManager.StaticObject ReadObject(string FileName, Encoding Encoding, ObjectLoadMode LoadMode)
+		internal static ObjectManager.StaticObject ReadObject(string FileName, Encoding Encoding)
 		{
 			rootMatrix = Matrix4D.NoTransformation;
 			currentFolder = System.IO.Path.GetDirectoryName(FileName);
@@ -77,7 +77,7 @@ namespace OpenBve
 				}
 				string Content = Builder.ToString();
 				Content = Content.Substring(17).Trim();
-				return LoadTextualX(Content, LoadMode);
+				return LoadTextualX(Content);
 			}
 
 			byte[] newData;
@@ -86,7 +86,7 @@ namespace OpenBve
 				//Uncompressed binary, so skip the header
 				newData = new byte[Data.Length - 16];
 				Array.Copy(Data, 16, newData, 0, Data.Length - 16);
-				return LoadBinaryX(newData, FloatingPointSize, LoadMode);
+				return LoadBinaryX(newData, FloatingPointSize);
 			}
 
 			if (Data[8] == 116 & Data[9] == 122 & Data[10] == 105 & Data[11] == 112)
@@ -94,7 +94,7 @@ namespace OpenBve
 				// compressed textual flavor
 				newData = MSZip.Decompress(Data);
 				string Text = Encoding.GetString(newData);
-				return LoadTextualX(Text, LoadMode);
+				return LoadTextualX(Text);
 			}
 
 			if (Data[8] == 98 & Data[9] == 122 & Data[10] == 105 & Data[11] == 112)
@@ -102,7 +102,7 @@ namespace OpenBve
 				//Compressed binary
 				//16 bytes of header, then 8 bytes of padding, followed by the actual compressed data
 				byte[] Uncompressed = MSZip.Decompress(Data);
-				return LoadBinaryX(Uncompressed, FloatingPointSize, LoadMode);
+				return LoadBinaryX(Uncompressed, FloatingPointSize);
 			}
 
 			// unsupported flavor
@@ -110,13 +110,10 @@ namespace OpenBve
 			return null;
 		}
 		
-		private static ObjectManager.StaticObject LoadTextualX(string Text, ObjectLoadMode LoadMode)
+		private static ObjectManager.StaticObject LoadTextualX(string Text)
 		{
 			Text = Text.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim();
 			ObjectManager.StaticObject obj = new ObjectManager.StaticObject();
-			obj.Mesh.Faces = new World.MeshFace[] { };
-			obj.Mesh.Materials = new World.MeshMaterial[] { };
-			obj.Mesh.Vertices = new VertexTemplate[] { };
 			MeshBuilder builder = new MeshBuilder();
 			Material material = new Material();
 			Block block = new TextualBlock(Text);
@@ -287,8 +284,8 @@ namespace OpenBve
 						{
 							throw new Exception("fVerts must be greater than zero");
 						}
-						builder.Faces[f + i] = new World.MeshFace();
-						builder.Faces[f + i].Vertices = new World.MeshFaceVertex[fVerts];
+						builder.Faces[f + i] = new MeshFace();
+						builder.Faces[f + i].Vertices = new MeshFaceVertex[fVerts];
 						for (int j = 0; j < fVerts; j++)
 						{
 							builder.Faces[f + i].Vertices[j].Index = block.ReadUInt16();
@@ -407,14 +404,11 @@ namespace OpenBve
 			}
 		}
 
-		private static ObjectManager.StaticObject LoadBinaryX(byte[] Data, int FloatingPointSize, ObjectLoadMode LoadMode)
+		private static ObjectManager.StaticObject LoadBinaryX(byte[] Data, int FloatingPointSize)
 		{
 			Block block = new BinaryBlock(Data, FloatingPointSize);
 			block.FloatingPointSize = FloatingPointSize;
 			ObjectManager.StaticObject obj = new ObjectManager.StaticObject();
-			obj.Mesh.Faces = new World.MeshFace[] { };
-			obj.Mesh.Materials = new World.MeshMaterial[] { };
-			obj.Mesh.Vertices = new VertexTemplate[] { };
 			MeshBuilder builder = new MeshBuilder();
 			Material material = new Material();
 			while (block.Position() < block.Length())

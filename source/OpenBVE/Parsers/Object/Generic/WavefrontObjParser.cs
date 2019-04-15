@@ -11,43 +11,15 @@ namespace OpenBve
 {
 	internal static class WavefrontObjParser
 	{
-
-		// structures
-		private class Material
-		{
-			internal Color32 Color;
-			internal Color24 EmissiveColor;
-			internal bool EmissiveColorUsed;
-			internal Color24 TransparentColor;
-			internal bool TransparentColorUsed;
-			internal string DaytimeTexture;
-			internal string NighttimeTexture;
-			internal World.MeshMaterialBlendMode BlendMode;
-			internal ushort GlowAttenuationData;
-			internal string Key;
-			internal Material()
-			{
-				this.Color = Color32.White;
-				this.EmissiveColor = Color24.Black;
-				this.EmissiveColorUsed = false;
-				this.TransparentColor = Color24.Black;
-				this.TransparentColorUsed = false;
-				this.DaytimeTexture = null;
-				this.NighttimeTexture = null;
-				this.BlendMode = World.MeshMaterialBlendMode.Normal;
-				this.GlowAttenuationData = 0;
-				this.Key = string.Empty;
-			}
-		}
 		private class MeshBuilder
 		{
 			internal List<VertexTemplate> Vertices;
-			internal List<World.MeshFace> Faces;
+			internal List<MeshFace> Faces;
 			internal Material[] Materials;
 			internal MeshBuilder()
 			{
 				this.Vertices = new List<VertexTemplate>();
-				this.Faces = new List<World.MeshFace>();
+				this.Faces = new List<MeshFace>();
 				this.Materials = new Material[] { new Material() };
 			}
 		}
@@ -55,21 +27,10 @@ namespace OpenBve
 		/// <summary>Loads a Wavefront object from a file.</summary>
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
 		/// <param name="Encoding">The encoding the file is saved in.</param>
-		/// <param name="LoadMode">The texture load mode.</param>
-		/// <param name="ForceTextureRepeatX">Whether to force TextureWrapMode.Repeat for referenced textures on the X-axis</param>
-		/// <param name="ForceTextureRepeatY">Whether to force TextureWrapMode.Repeat for referenced textures on the Y-axis</param>
 		/// <returns>The object loaded.</returns>
-		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
+		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding)
 		{
-			ObjectManager.StaticObject Object = new ObjectManager.StaticObject
-			{
-				Mesh =
-				{
-					Faces = new World.MeshFace[] { },
-					Materials = new World.MeshMaterial[] { },
-					Vertices = new VertexTemplate[] { }
-				}
-			};
+			ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
 
 			MeshBuilder Builder = new MeshBuilder();
 
@@ -273,14 +234,14 @@ namespace OpenBve
 							}
 							vertices.Add(newVertex);
 						}
-						World.MeshFaceVertex[] Vertices = new World.MeshFaceVertex[vertices.Count];
+						MeshFaceVertex[] Vertices = new MeshFaceVertex[vertices.Count];
 						for (int k = 0; k < vertices.Count; k++)
 						{
 							Builder.Vertices.Add(vertices[k]);
 							Vertices[k].Index = (ushort)(Builder.Vertices.Count -1);
 							Vertices[k].Normal = normals[k];
 						}
-						Builder.Faces.Add(currentMaterial == -1 ? new World.MeshFace(Vertices, 0) : new World.MeshFace(Vertices, (ushort)currentMaterial));
+						Builder.Faces.Add(currentMaterial == -1 ? new MeshFace(Vertices, 0) : new MeshFace(Vertices, (ushort)currentMaterial));
 						break;
 					case "g":
 						//Starts a new face group and (normally) applies a new texture
@@ -395,15 +356,15 @@ namespace OpenBve
 					case "kd":
 						//Equivilant to SetColor
 						double r = 1, g = 1, b = 1;
-						if (!double.TryParse(Arguments[1], out r))
+						if (Arguments.Count >= 2 && !double.TryParse(Arguments[1], out r))
 						{
 							Interface.AddMessage(MessageType.Warning, false, "Invalid Ambient Color R in Material Definition for " + mm.Key);
 						}
-						if (!double.TryParse(Arguments[2], out g))
+						if (Arguments.Count >= 3 && !double.TryParse(Arguments[2], out g))
 						{
 							Interface.AddMessage(MessageType.Warning, false, "Invalid Ambient Color G in Material Definition for " + mm.Key);
 						}
-						if (!double.TryParse(Arguments[3], out b))
+						if (Arguments.Count >= 4 && !double.TryParse(Arguments[3], out b))
 						{
 							Interface.AddMessage(MessageType.Warning, false, "Invalid Ambient Color B in Material Definition for " + mm.Key);
 						}
@@ -421,7 +382,7 @@ namespace OpenBve
 					case "d":
 						//Sets the alpha value for the face
 						double a = 1;
-						if (!double.TryParse(Arguments[1], out a))
+						if (Arguments.Count >= 2 && !double.TryParse(Arguments[1], out a))
 						{
 							Interface.AddMessage(MessageType.Warning, false, "Invalid Alpha in Material Definition for " + mm.Key);
 						}
@@ -460,7 +421,7 @@ namespace OpenBve
 				int mf = Object.Mesh.Faces.Length;
 				int mm = Object.Mesh.Materials.Length;
 				int mv = Object.Mesh.Vertices.Length;
-				Array.Resize<World.MeshFace>(ref Object.Mesh.Faces, mf + Builder.Faces.Count);
+				Array.Resize<MeshFace>(ref Object.Mesh.Faces, mf + Builder.Faces.Count);
 				if (mm == 0)
 				{
 					if (Object.Mesh.Materials.Length == 0)
@@ -469,7 +430,7 @@ namespace OpenBve
 						 * If the object has no materials defined at all, we need to add one
 						 */
 						Array.Resize(ref Object.Mesh.Materials, 1);
-						Object.Mesh.Materials[0] = new World.MeshMaterial();
+						Object.Mesh.Materials[0] = new MeshMaterial();
 						Object.Mesh.Materials[0].Color = Color32.White;
 						Object.Mesh.Materials[0].Flags = (byte)(0 | 0);
 						Object.Mesh.Materials[0].DaytimeTexture = null;
@@ -479,7 +440,7 @@ namespace OpenBve
 				}
 				if (Builder.Materials.Length > 0)
 				{
-					Array.Resize<World.MeshMaterial>(ref Object.Mesh.Materials, mm + Builder.Materials.Length);
+					Array.Resize<MeshMaterial>(ref Object.Mesh.Materials, mm + Builder.Materials.Length);
 				}
 				else
 				{
@@ -504,7 +465,7 @@ namespace OpenBve
 				}
 				for (int i = 0; i < Builder.Materials.Length; i++)
 				{
-					Object.Mesh.Materials[mm + i].Flags = (byte)((Builder.Materials[i].EmissiveColorUsed ? World.MeshMaterial.EmissiveColorMask : 0) | (Builder.Materials[i].TransparentColorUsed ? World.MeshMaterial.TransparentColorMask : 0));
+					Object.Mesh.Materials[mm + i].Flags = (byte)((Builder.Materials[i].EmissiveColorUsed ? MeshMaterial.EmissiveColorMask : 0) | (Builder.Materials[i].TransparentColorUsed ? MeshMaterial.TransparentColorMask : 0));
 					Object.Mesh.Materials[mm + i].Color = Builder.Materials[i].Color;
 					Object.Mesh.Materials[mm + i].TransparentColor = Builder.Materials[i].TransparentColor;
 					if (Builder.Materials[i].DaytimeTexture != null)

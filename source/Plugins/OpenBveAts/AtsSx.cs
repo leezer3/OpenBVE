@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBveApi.Runtime;
 
 namespace Plugin {
@@ -56,10 +56,6 @@ namespace Plugin {
 		
 		/// <summary>The duration of the initialization process.</summary>
 		internal readonly double DurationOfInitialization = 3.0;
-		
-		/// <summary>The duration of the Sx speed check.</summary>
-		internal readonly double DurationOfSpeedCheck = 0.5;
-		
 		
 		// --- constructors ---
 		

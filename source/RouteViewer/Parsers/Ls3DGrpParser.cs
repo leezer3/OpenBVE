@@ -3,6 +3,8 @@ using System.IO;
 using System.Xml;
 using OpenBveApi.Math;
 using System.Linq;
+using System.Text;
+using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 
@@ -22,6 +24,8 @@ namespace OpenBve
 			/// <summary>The FunctionScript attached to the mesh, controlling it's animations</summary>
 			internal string FunctionScript;
 
+			internal bool FixedDynamicVisibility;
+
 			/// <summary>Creates a new GruppenObject</summary>
 			internal GruppenObject()
 			{
@@ -34,9 +38,9 @@ namespace OpenBve
 		/// <summary>Loads a Loksim3D GruppenObject</summary>
 		/// <param name="FileName">The filename to load</param>
 		/// <param name="Encoding">The text encoding of the containing file (Currently ignored, REMOVE??)</param>
-		/// <param name="LoadMode">The object load mode</param>
+		/// <param name="Rotation">A three-dimemsional vector describing the rotation to be applied</param>
 		/// <returns>A new animated object collection, containing the GruppenObject's meshes etc.</returns>
-		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, ObjectLoadMode LoadMode)
+		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, Encoding Encoding, Vector3 Rotation)
 		{
 			XmlDocument currentXML = new XmlDocument();
 			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection();
@@ -45,7 +49,7 @@ namespace OpenBve
 			{
 				currentXML.Load(FileName);
 			}
-			catch (Exception ex)
+			catch(Exception ex)
 			{
 				//The XML is not strictly valid
 				string[] Lines = File.ReadAllLines(FileName);
@@ -111,14 +115,14 @@ namespace OpenBve
 					return null;
 				}
 			}
-
+			
 			string BaseDir = System.IO.Path.GetDirectoryName(FileName);
 
 			GruppenObject[] CurrentObjects = new GruppenObject[0];
 			//Check for null
 			if (currentXML.DocumentElement != null)
 			{
-				ObjectManager.UnifiedObject[] obj = new OpenBve.ObjectManager.UnifiedObject[0];
+				UnifiedObject[] obj = new UnifiedObject[0];
 				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/GRUPPENOBJECT");
 				if (DocumentNodes != null)
 				{
@@ -130,18 +134,21 @@ namespace OpenBve
 							{
 								if (node.Name == "Object" && node.ChildNodes.OfType<XmlElement>().Any())
 								{
-
+									
 									foreach (XmlNode childNode in node.ChildNodes)
 									{
 										if (childNode.Name == "Props" && childNode.Attributes != null)
 										{
-											GruppenObject Object = new GruppenObject();
+											GruppenObject Object = new GruppenObject
+											{
+												Rotation = Rotation
+											};
 											foreach (XmlAttribute attribute in childNode.Attributes)
 											{
 												switch (attribute.Name)
 												{
 													case "Name":
-														string ObjectFile = OpenBveApi.Path.Loksim3D.CombineFile(BaseDir, attribute.Value, Program.FileSystem.LoksimPackageInstallationDirectory);
+														string ObjectFile = OpenBveApi.Path.Loksim3D.CombineFile(BaseDir,attribute.Value, Program.FileSystem.LoksimPackageInstallationDirectory);
 														if (!File.Exists(ObjectFile))
 														{
 															Object.Name = null;
@@ -160,18 +167,35 @@ namespace OpenBve
 														break;
 													case "Rotation":
 														string[] SplitRotation = attribute.Value.Split(';');
-
-														double.TryParse(SplitRotation[0], out Object.Rotation.X);
-														double.TryParse(SplitRotation[1], out Object.Rotation.Y);
-														double.TryParse(SplitRotation[2], out Object.Rotation.Z);
+														Vector3 r;
+														double.TryParse(SplitRotation[0], out r.X);
+														double.TryParse(SplitRotation[1], out r.Y);
+														double.TryParse(SplitRotation[2], out r.Z);
+														Object.Rotation += r;
 														break;
 													case "ShowOn":
 														//Defines when the object should be shown
-														Object.FunctionScript = FunctionScripts.GetPostfixNotationFromInfixNotation(GetAnimatedFunction(attribute.Value, false));
+														Object.FunctionScript = FunctionScriptNotation.GetPostfixNotationFromInfixNotation(GetAnimatedFunction(attribute.Value, false));
 														break;
 													case "HideOn":
 														//Defines when the object should be hidden
-														Object.FunctionScript = FunctionScripts.GetPostfixNotationFromInfixNotation(GetAnimatedFunction(attribute.Value, true));
+														Object.FunctionScript = FunctionScriptNotation.GetPostfixNotationFromInfixNotation(GetAnimatedFunction(attribute.Value, true));
+														break;
+													case "FixedDynamicVisibility":
+														if (attribute.Value.ToLowerInvariant() == "true")
+														{
+															Object.FixedDynamicVisibility = true;
+														}
+														else
+														{
+															Object.FixedDynamicVisibility = false;
+														}
+														break;
+													case "DynamicVisibility":
+														if (Object.FixedDynamicVisibility)
+														{
+															Object.FunctionScript = FunctionScriptNotation.GetPostfixNotationFromInfixNotation(GetDynamicFunction(attribute.Value));
+														}
 														break;
 												}
 											}
@@ -187,33 +211,91 @@ namespace OpenBve
 						}
 					}
 					//We've loaded the XML references, now load the objects into memory
+
+					//Single mesh object, containing all static components of the LS3D object
+					//If we use multiples, the Z-sorting throws a wobbly
+					ObjectManager.StaticObject staticObject = null;
 					for (int i = 0; i < CurrentObjects.Length; i++)
 					{
 						if (CurrentObjects[i] == null || string.IsNullOrEmpty(CurrentObjects[i].Name))
 						{
 							continue;
 						}
-						var Object = Ls3DObjectParser.ReadObject(CurrentObjects[i].Name, LoadMode, CurrentObjects[i].Rotation);
+						ObjectManager.StaticObject Object = null;
+						ObjectManager.AnimatedObjectCollection AnimatedObject = null;
+						try
+						{
+							if(CurrentObjects[i].Name.ToLowerInvariant().EndsWith(".l3dgrp"))
+							{
+								AnimatedObject = ReadObject(CurrentObjects[i].Name, Encoding, CurrentObjects[i].Rotation);
+							}
+							else if(CurrentObjects[i].Name.ToLowerInvariant().EndsWith(".l3dobj"))
+							{
+								//Object = (ObjectManager.StaticObject)ObjectManager.LoadObject(CurrentObjects[i].Name, Encoding, false, false, CurrentObjects[i].Rotation);
+							}
+							else
+							{
+								throw new Exception("Format " + System.IO.Path.GetExtension(CurrentObjects[i].Name) + " is not currently supported by the Loksim3D object parser");
+							}							
+						}
+						catch (Exception ex) {
+							Interface.AddMessage(MessageType.Error, false, ex.Message);
+						}
 						if (Object != null)
 						{
-							Array.Resize<ObjectManager.UnifiedObject>(ref obj, obj.Length + 1);
-							obj[obj.Length - 1] = Object;
-
-							Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length + 1);
-							ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
-							ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState
-							{
-								Object = Object,
-								Position = CurrentObjects[i].Position,
-							};
-							a.States = new ObjectManager.AnimatedObjectState[] { aos };
-							Result.Objects[i] = a;
 							if (!string.IsNullOrEmpty(CurrentObjects[i].FunctionScript))
 							{
-								Result.Objects[i].StateFunction =
-									FunctionScripts.GetFunctionScriptFromPostfixNotation(CurrentObjects[i].FunctionScript + " 1 == --");
+								//If the function script is not empty, this is a new animated object bit
+								Array.Resize<UnifiedObject>(ref obj, obj.Length + 1);
+								obj[obj.Length - 1] = Object;
+								int aL = Result.Objects.Length;
+								Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, aL + 1);
+								ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
+								ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState(Object, CurrentObjects[i].Position);
+								a.States = new ObjectManager.AnimatedObjectState[] { aos };
+								Result.Objects[aL] = a;
+								Result.Objects[aL].StateFunction = new FunctionScript(Program.CurrentHost, CurrentObjects[i].FunctionScript + " 1 == --", false);
+							}
+							else
+							{
+								//Otherwise, join to the main static mesh & update co-ords
+								for (int j = 0; j < Object.Mesh.Vertices.Length; j++)
+								{
+									Object.Mesh.Vertices[j].Coordinates += CurrentObjects[i].Position;
+								}
+								staticObject.JoinObjects(Object);
 							}
 						}
+						else if (AnimatedObject != null)
+						{
+							int rl = Result.Objects.Length;
+							int l = AnimatedObject.Objects.Length;
+							Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length + l);
+							for(int o = rl; o < rl + l; o++)
+							{
+								if (AnimatedObject.Objects[o - rl] != null)
+								{
+									Result.Objects[o] = AnimatedObject.Objects[o - rl].Clone();
+									for(int si = 0; si < Result.Objects[o].States.Length; si++)
+									{
+										Result.Objects[o].States[si].Position += CurrentObjects[i].Position;
+									}
+								}
+								else
+								{
+									Result.Objects[o] = new ObjectManager.AnimatedObject();
+									Result.Objects[o].States = new ObjectManager.AnimatedObjectState[0];
+								}
+							}
+						}
+					}
+					if (staticObject != null)
+					{
+						Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length + 1);
+						ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
+						ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState(staticObject, Vector3.Zero);
+						a.States = new ObjectManager.AnimatedObjectState[] { aos };
+						Result.Objects[Result.Objects.Length -1] = a;
 					}
 				}
 				return Result;
@@ -221,6 +303,59 @@ namespace OpenBve
 			//Didn't find an acceptable XML object
 			//Probably will cause things to throw an absolute wobbly somewhere....
 			return null;
+		}
+
+		private static string GetDynamicFunction(string Value)
+		{
+			string script = string.Empty;
+			Value = Value.Trim();
+			if (Value.Length == 0)
+			{
+				return script;
+			}
+			bool Hidden = Value[0] == '!';
+			int Level = 0;
+			for (int i = 0; i < Value.Length; i++)
+			{
+				if (Value[i] == '(')
+				{
+					Level++;
+				}
+				if (i + 5 < Value.Length)
+				{
+					string s = Value.Substring(i, 5).ToLowerInvariant();
+					if (s == "str::")
+					{
+						string ss = Value.Substring(i + 5, Value.Length - (i + 5));
+						int j = ss.IndexOf(')');
+						if (j != -1)
+						{
+							string sss = ss.Substring(0, j);
+							switch (sss.ToLowerInvariant())
+							{
+								case "tuer_rechts":
+									script += Hidden ? "rightdoors == 0" : "rightdoors != 0";
+									break;
+								case "tuer_links":
+									script += Hidden ? "leftdoors == 0" : "leftdoors != 0";
+									break;
+							}
+						}
+					}
+				}
+				if (Value[i] == ')')
+				{
+					Level--;
+				}
+
+
+			}
+			if (Level != 0)
+			{
+				Interface.AddMessage(MessageType.Warning, false, "Script error in Loksim3D object file....");
+				return String.Empty;
+			}
+			return script;
 		}
 
 		/// <summary>Gets the internal animation function string for the given Loksim3D function</summary>

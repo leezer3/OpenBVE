@@ -1,4 +1,6 @@
 ﻿#pragma warning disable 169, 414 //We don't use a bunch of fields, but keep them in case required later
+// ReSharper disable NotAccessedField.Local
+// ReSharper disable UnusedMember.Local
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -49,13 +51,13 @@ namespace Plugin
 		private ImageTypes ImageType;
 		private int ColorMapLength;
 		private byte ColorMapEntrySize;
-		private List<Color> ColorMap = new List<Color>();
+		private readonly List<Color> ColorMap = new List<Color>();
 
 		//Scan line table
-		private List<int> ScanLineTable = new List<int>();
+		private readonly List<int> ScanLineTable = new List<int>();
 
 		//Color correction table
-		private List<Color> ColorCorrectionTable = new List<Color>();
+		private readonly List<Color> ColorCorrectionTable = new List<Color>();
 
 		//Other
 		private GCHandle ByteArrayHandle;

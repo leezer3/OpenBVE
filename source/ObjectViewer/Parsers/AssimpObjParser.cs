@@ -26,9 +26,6 @@ namespace OpenBve
 				Model model = parser.GetModel();
 
 				ObjectManager.StaticObject obj = new ObjectManager.StaticObject();
-				obj.Mesh.Faces = new World.MeshFace[] { };
-				obj.Mesh.Materials = new World.MeshMaterial[] { };
-				obj.Mesh.Vertices = new VertexTemplate[] { };
 				MeshBuilder builder = new MeshBuilder();
 
 				List<Vertex> allVertices = new List<Vertex>();
@@ -49,7 +46,7 @@ namespace OpenBve
 					allNormals.Add(new Vector3(normal.X, normal.Y, normal.Z));
 				}
 
-				foreach (Mesh mesh in model.Meshes)
+				foreach (AssimpNET.Obj.Mesh mesh in model.Meshes)
 				{
 					foreach (Face face in mesh.Faces)
 					{
@@ -67,8 +64,8 @@ namespace OpenBve
 
 						int f = builder.Faces.Length;
 						Array.Resize(ref builder.Faces, f + 1);
-						builder.Faces[f] = new World.MeshFace();
-						builder.Faces[f].Vertices = new World.MeshFaceVertex[nVerts];
+						builder.Faces[f] = new MeshFace();
+						builder.Faces[f].Vertices = new MeshFaceVertex[nVerts];
 						for (int i = 0; i < nVerts; i++)
 						{
 							builder.Faces[f].Vertices[i].Index = (ushort)i;

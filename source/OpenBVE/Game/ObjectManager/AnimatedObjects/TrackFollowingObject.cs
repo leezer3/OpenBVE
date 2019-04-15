@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
@@ -46,7 +46,7 @@ namespace OpenBve
 						double trainDistance = double.MaxValue;
 						for (int j = 0; j < TrainManager.Trains.Length; j++)
 						{
-							if (TrainManager.Trains[j].State == TrainManager.TrainState.Available)
+							if (TrainManager.Trains[j].State == TrainState.Available)
 							{
 								double distance;
 								if (TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition < TrackPosition)
@@ -71,7 +71,7 @@ namespace OpenBve
 						if (Visible)
 						{
 							//Calculate the distance travelled
-							double delta = UpdateTrackFollowerScript(false, train, train == null ? 0 : train.DriverCar, SectionIndex, TrackPosition, Position, Direction, Up, Side, false, true, true, timeDelta);
+							double delta = UpdateTrackFollowerScript(false, train, train == null ? 0 : train.DriverCar, SectionIndex, TrackPosition, Position, true, timeDelta);
 							//Update the front and rear axle track followers
 							FrontAxleFollower.Update((TrackPosition + FrontAxlePosition) + delta, true, true);
 							RearAxleFollower.Update((TrackPosition + RearAxlePosition) + delta, true, true);
@@ -108,20 +108,15 @@ namespace OpenBve
 			private void UpdateObjectPosition()
 			{
 				//Get vectors
-				Vector3 d = new Vector3();
-				Vector3 u;
-				Vector3 s;
+				Direction = new Vector3(FrontAxleFollower.WorldPosition - RearAxleFollower.WorldPosition);
 				{
-					d.X = FrontAxleFollower.WorldPosition.X - RearAxleFollower.WorldPosition.X;
-					d.Y = FrontAxleFollower.WorldPosition.Y - RearAxleFollower.WorldPosition.Y;
-					d.Z = FrontAxleFollower.WorldPosition.Z - RearAxleFollower.WorldPosition.Z;
-					double t = 1.0 / Math.Sqrt(d.X * d.X + d.Y * d.Y + d.Z * d.Z);
-					d *= t;
-					t = 1.0 / Math.Sqrt(d.X * d.X + d.Z * d.Z);
-					double ex = d.X * t;
-					double ez = d.Z * t;
-					s = new Vector3(ez, 0.0, -ex);
-					u = Vector3.Cross(d, s);
+					double t = 1.0 / Direction.Norm();
+					Direction *= t;
+					t = 1.0 / Math.Sqrt(Direction.X * Direction.X + Direction.Z * Direction.Z);
+					double ex = Direction.X * t;
+					double ez = Direction.Z * t;
+					Side = new Vector3(ez, 0.0, -ex);
+					Up = Vector3.Cross(Direction, Side);
 				}
 
 				// apply position due to cant/toppling
@@ -129,37 +124,29 @@ namespace OpenBve
 					double a = CurrentRollDueToTopplingAngle + CurrentRollDueToCantAngle;
 					double x = Math.Sign(a) * 0.5 * Game.RouteRailGauge * (1.0 - Math.Cos(a));
 					double y = Math.Abs(0.5 * Game.RouteRailGauge * Math.Sin(a));
-					double cx = s.X * x + u.X * y;
-					double cy = s.Y * x + u.Y * y;
-					double cz = s.Z * x + u.Z * y;
-					FrontAxleFollower.WorldPosition.X += cx;
-					FrontAxleFollower.WorldPosition.Y += cy;
-					FrontAxleFollower.WorldPosition.Z += cz;
-					RearAxleFollower.WorldPosition.X += cx;
-					RearAxleFollower.WorldPosition.Y += cy;
-					RearAxleFollower.WorldPosition.Z += cz;
+					Vector3 c = Side * x + Up * y;
+
+					FrontAxleFollower.WorldPosition += c;
+					RearAxleFollower.WorldPosition += c;
 				}
 				// apply rolling
 				{
 					double a = CurrentRollDueToTopplingAngle - CurrentRollDueToCantAngle;
 					double cosa = Math.Cos(a);
 					double sina = Math.Sin(a);
-					s.Rotate(d, cosa, sina);
-					u.Rotate(d, cosa, sina);
-					Up = u;
+					Side.Rotate(Direction, cosa, sina);
+					Up.Rotate(Direction, cosa, sina);
 				}
-				Direction = d;
-				Side = s;
 			}
 
-			private double UpdateTrackFollowerScript(bool IsPartOfTrain, TrainManager.Train Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 WorldPosition, Vector3 Direction, Vector3 Up, Vector3 Side, bool Overlay, bool UpdateFunctions, bool Show, double TimeElapsed)
+			private double UpdateTrackFollowerScript(bool IsPartOfTrain, TrainManager.Train Train, int CarIndex, int currentSectionIndex, double currentTrackPosition, Vector3 WorldPosition, bool UpdateFunctions, double TimeElapsed)
 			{
 				double x = 0.0;
 				if (Object.TrackFollowerFunction != null)
 				{
 					if (UpdateFunctions)
 					{
-						x = Object.TrackFollowerFunction.Perform(Train, CarIndex, WorldPosition, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, Object.CurrentState);
+						x = Object.TrackFollowerFunction.Perform(Train, CarIndex, WorldPosition, currentTrackPosition, currentSectionIndex, IsPartOfTrain, TimeElapsed, Object.CurrentState);
 					}
 					else
 					{

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using OpenBveApi.Interface;
+using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -7,13 +8,13 @@ namespace OpenBve
 	{
 		/// <inheritdoc />
 		/// <summary>Defines a dictionary of objects</summary>
-		private class ObjectDictionary : Dictionary<int, ObjectManager.UnifiedObject>
+		private class ObjectDictionary : Dictionary<int, UnifiedObject>
 		{
 			/// <summary>Adds a new Unified Object to the dictionary</summary>
 			/// <param name="key">The object index</param>
 			/// <param name="unifiedObject">The object</param>
 			/// <param name="Type">The object type</param>
-			internal void Add(int key, ObjectManager.UnifiedObject unifiedObject, string Type)
+			internal void Add(int key, UnifiedObject unifiedObject, string Type)
 			{
 				if (this.ContainsKey(key))
 				{

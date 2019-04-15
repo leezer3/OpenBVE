@@ -448,7 +448,7 @@ namespace OpenBve
 					int s = TrainManager.PlayerTrain.Station;
 					if (s >= 0 && Game.PlayerStopsAtStation(s) && Interface.CurrentOptions.GameMode != Interface.GameMode.Expert)
 					{
-						int c = Game.GetStopIndex(s, TrainManager.PlayerTrain.Cars.Length);
+						int c = Game.Stations[s].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
 						if (c >= 0)
 						{
 							bool cond;
@@ -612,7 +612,7 @@ namespace OpenBve
 					{
 						i = TrainManager.PlayerTrain.LastStation;
 					}
-					int n = Game.GetStopIndex(i, TrainManager.PlayerTrain.Cars.Length);
+					int n = Game.Stations[i].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
 					double p0 = TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition - TrainManager.PlayerTrain.Cars[0].FrontAxle.Position + 0.5 * TrainManager.PlayerTrain.Cars[0].Length;
 					double p1;
 					if (Game.Stations[i].Stops.Length > 0)

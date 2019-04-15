@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 using OpenBveApi.Math;
 using Path = OpenBveApi.Path;
@@ -25,6 +26,7 @@ namespace CarXmlConvertor
 		internal static string FileName;
         internal static void Process(MainForm form)
         {
+	        Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 	        if (!System.IO.File.Exists(FileName))
 	        {
 		        return;

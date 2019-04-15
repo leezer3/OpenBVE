@@ -296,6 +296,7 @@ endif
 debian: $(DEBIAN_BUILD_RESULT)
 
 $(MAC_BUILD_RESULT): all-release
+	@rm -rf bin_release/DevTools/
 	@echo $(COLOR_RED)Decompressing $(COLOR_CYAN)installers/mac/MacBundle.tgz$(COLOR_END)
 	# Clear previous Mac build temporary files if they exist
 	@rm -rf mac
@@ -311,10 +312,12 @@ $(MAC_BUILD_RESULT): all-release
 
 
 $(LINUX_BUILD_RESULT): all-release
+	@rm -rf bin_release/DevTools/
 	@echo $(COLOR_RED)Compressing $(COLOR_CYAN)$(LINUX_BUILD_RESULT)$(COLOR_END)
 	@cd $(RELEASE_DIR); zip -qr9Z deflate ../$(LINUX_BUILD_RESULT) *
 
 $(DEBIAN_BUILD_RESULT): all-release
+	@rm -rf bin_release/DevTools/
 	@echo $(COLOR_RED)Copying build into place....$(COLOR_END)
 	@mkdir -p installers/debian/usr/lib/openbve
 #Generate current dpkg control file
@@ -395,10 +398,11 @@ $(DEBUG_DIR)/$(OPEN_BVE_FILE) $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(OPEN_BVE_ROOT)/
 	$(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs \
 	/reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OPEN_BVE_API_OUT) /reference:$(ASSIMP_OUT) /reference:$(FORMATS_MSTS_OUT) /reference:$(FORMATS_DIRECTX_OUT) \
 	/reference:$(OUTPUT_DIR)/CSScriptLibrary.dll /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/SharpCompress.dll /reference:$(OUTPUT_DIR)/PIEHid32Net.dll \
-	/reference:System.Core.dll /reference:System.dll \
-	/win32icon:$(ICON) $(addprefix /resource:, $(OPEN_BVE_RESOURCE))
+	/reference:System.Xml.Linq.dll /reference:System.Core.dll /reference:System.dll \
+	/win32icon:$(ICON) $(addprefix /resource:, $(OPEN_BVE_RESOURCE)) /resource:"assets/Cursors/Symbols/plus.png",OpenBve.plus.png  /resource:"assets/Cursors/Symbols/plus.png",OpenBve.minus.png /resource:"assets/Cursors/nk.png",OpenBve.nk.png
 	@echo $(COLOR_GREEN)Adding LBA Flag to executable $(COLOR_CYAN)$(OPEN_BVE_OUT)$(COLOR_END)
 	@mono $(LBAHEADER_OUT) ${OPEN_BVE_OUT} > /dev/null
+	@mono $(LBAHEADER_OUT) ${ROUTE_VIEWER_OUT} > /dev/null
 
 
 ##############
@@ -780,7 +784,7 @@ $(RELEASE_DIR)/$(OBJECT_VIEWER_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
 $(DEBUG_DIR)/$(OBJECT_VIEWER_FILE) $(RELEASE_DIR)/$(OBJECT_VIEWER_FILE): $(OBJECT_VIEWER_SRC) $(OBJECT_VIEWER_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OBJECT_VIEWER_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OBJECT_VIEWER_OUT) /target:winexe /main:OpenBve.Program $(OBJECT_VIEWER_SRC) $(ARGS) $(OBJECT_VIEWER_DOC) \
-	/reference:$(OPEN_BVE_API_OUT) /reference:$(ASSIMP_OUT) /reference:$(FORMATS_MSTS_OUT) /reference:$(FORMATS_DIRECTX_OUT) /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OUTPUT_DIR)/SharpCompress.dll /reference:System.Core.dll \
+	/reference:$(OPEN_BVE_API_OUT) /reference:$(ASSIMP_OUT) /reference:$(FORMATS_MSTS_OUT) /reference:$(FORMATS_DIRECTX_OUT) /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OUTPUT_DIR)/SharpCompress.dll /reference:System.Core.dll \
 	/win32icon:$(ICON) $(addprefix /resource:, $(OBJECT_VIEWER_RESOURCE))
 
 ###############

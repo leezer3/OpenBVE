@@ -2,18 +2,16 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
+using OpenBveApi.Textures;
 
-namespace OpenBve
-{
+namespace OpenBve {
 	/// <summary>Provides font support.</summary>
-	internal static class Fonts
-	{
-
+	internal static class Fonts {
+		
 		// --- structures ---
-
+		
 		/// <summary>Represents a single character.</summary>
-		internal struct OpenGlFontChar
-		{
+		internal struct OpenGlFontChar {
 			// --- members ---
 			/// <summary>The texture coordinates that represent the character in the underlying texture.</summary>
 			internal RectangleF TextureCoordinates;
@@ -26,28 +24,27 @@ namespace OpenBve
 			/// <param name="textureCoordinates">The texture coordinates that represent the character in the underlying texture.</param>
 			/// <param name="physicalSize">The physical size of the character.</param>
 			/// <param name="typographicSize">The typographic size of the character.</param>
-			internal OpenGlFontChar(RectangleF textureCoordinates, Size physicalSize, Size typographicSize)
-			{
+			internal OpenGlFontChar(RectangleF textureCoordinates, Size physicalSize, Size typographicSize) {
 				this.TextureCoordinates = textureCoordinates;
 				this.PhysicalSize = physicalSize;
 				this.TypographicSize = typographicSize;
 			}
 		}
-
+		
 		/// <summary>Represents a table of 256 consecutive codepoints rendered into the same texture.</summary>
-		internal class OpenGlFontTable
-		{
+		internal class OpenGlFontTable {
 			// --- members ---
 			/// <summary>The characters stored in this table.</summary>
 			internal OpenGlFontChar[] Characters;
 			/// <summary>The texture that stores the characters.</summary>
-			internal int Texture;
+			internal Texture Texture;
+
+			internal Bitmap b;
 			// --- constructors ---
 			/// <summary>Creates a new table of characters.</summary>
 			/// <param name="font">The font.</param>
 			/// <param name="offset">The offset from codepoint U+0000.</param>
-			internal OpenGlFontTable(Font font, int offset)
-			{
+			internal OpenGlFontTable(Font font, int offset) {
 				/*
 				 * Measure characters.
 				 * */
@@ -56,8 +53,7 @@ namespace OpenBve
 				Bitmap bitmap = new Bitmap(1, 1, PixelFormat.Format32bppArgb);
 				Graphics graphics = Graphics.FromImage(bitmap);
 				graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-				for (int i = 0; i < 256; i++)
-				{
+				for (int i = 0; i < 256; i++) {
 					SizeF physicalSize = graphics.MeasureString(char.ConvertFromUtf32(offset + i), font, int.MaxValue, StringFormat.GenericDefault);
 					SizeF typographicSize = graphics.MeasureString(char.ConvertFromUtf32(offset + i), font, int.MaxValue, StringFormat.GenericTypographic);
 					physicalSizes[i] = new Size((int)Math.Ceiling(physicalSize.Width), (int)Math.Ceiling(physicalSize.Height));
@@ -71,20 +67,15 @@ namespace OpenBve
 				int x = border;
 				int y = border;
 				int lineHeight = 0;
-				for (int i = 0; i < 256; i++)
-				{
-					if (x + physicalSizes[i].Width + border > width)
-					{
+				for (int i = 0; i < 256; i++) {
+					if (x + physicalSizes[i].Width + border > width) {
 						x = border;
 						y += lineHeight;
 						lineHeight = 0;
-					}
-					else
-					{
+					} else {
 						x += physicalSizes[i].Width + 2 * border;
 					}
-					if (physicalSizes[i].Height + border > lineHeight)
-					{
+					if (physicalSizes[i].Height + border > lineHeight) {
 						lineHeight = physicalSizes[i].Height + 2 * border;
 					}
 				}
@@ -103,10 +94,8 @@ namespace OpenBve
 				y = border;
 				lineHeight = 0;
 				this.Characters = new OpenGlFontChar[256];
-				for (int i = 0; i < 256; i++)
-				{
-					if (x + physicalSizes[i].Width + border > width)
-					{
+				for (int i = 0; i < 256; i++) {
+					if (x + physicalSizes[i].Width + border > width) {
 						x = border;
 						y += lineHeight;
 						lineHeight = 0;
@@ -118,19 +107,18 @@ namespace OpenBve
 					float y1 = (float)(y + physicalSizes[i].Height + border) / (float)height;
 					this.Characters[i] = new OpenGlFontChar(new RectangleF(x0, y0, x1 - x0, y1 - y0), new Size(physicalSizes[i].Width + 2 * border, physicalSizes[i].Height + 2 * border), typographicSizes[i]);
 					x += physicalSizes[i].Width + 2 * border;
-					if (physicalSizes[i].Height + border > lineHeight)
-					{
+					if (physicalSizes[i].Height + border > lineHeight) {
 						lineHeight = physicalSizes[i].Height + 2 * border;
 					}
 				}
 				graphics.Dispose();
-				this.Texture = TextureManager.RegisterTexture(bitmap, false);
+				this.Texture = Textures.RegisterTexture(bitmap);
+				b = bitmap;
 			}
 		}
-
+		
 		/// <summary>Represents a font.</summary>
-		internal class OpenGlFont : IDisposable
-		{
+		internal class OpenGlFont :  IDisposable{
 			// --- members ---
 			/// <summary>The underlying font.</summary>
 			private readonly Font Font;
@@ -142,8 +130,7 @@ namespace OpenBve
 			/// <summary>Creates a new font.</summary>
 			/// <param name="family">The font family.</param>
 			/// <param name="size">The size in pixels.</param>
-			internal OpenGlFont(FontFamily family, float size)
-			{
+			internal OpenGlFont(FontFamily family, float size) {
 				this.Font = new Font(family, size, FontStyle.Regular, GraphicsUnit.Pixel);
 				this.FontSize = size;
 				this.Tables = new OpenGlFontTable[4352];
@@ -155,12 +142,11 @@ namespace OpenBve
 			/// <param name="texture">Receives the texture that contains the codepoint.</param>
 			/// <param name="data">Receives the data that describes the codepoint.</param>
 			/// <returns>The number of characters read.</returns>
-			internal int GetCharacterData(string text, int offset, out int texture, out OpenGlFontChar data)
-			{
+			internal int GetCharacterData(string text, int offset, out Texture texture, out OpenGlFontChar data) {
 				int value = char.ConvertToUtf32(text, offset);
 				int hi = value >> 8;
 				int lo = value & 0xFF;
-				if (this.Tables[hi] == null || this.Tables[hi].Texture <= 0)
+				if (this.Tables[hi] == null || this.Tables[hi].Texture == null)
 				{
 					this.Tables[hi] = new OpenGlFontTable(this.Font, hi << 8);
 				}
@@ -192,31 +178,43 @@ namespace OpenBve
 				GC.SuppressFinalize(this);
 			}
 		}
-
-
+		
+		
 		// --- read-only fields ---
+
+		/// <summary>Represents a very small sans serif font.</summary>
+		internal static readonly OpenGlFont VerySmallFont = new OpenGlFont(FontFamily.GenericSansSerif, 9.0f);
+
 		/// <summary>Represents a small sans serif font.</summary>
-		internal static OpenGlFont SmallFont = new OpenGlFont(FontFamily.GenericSansSerif, 12.0f);
+		internal static readonly OpenGlFont SmallFont = new OpenGlFont(FontFamily.GenericSansSerif, 12.0f);
+		
+		/// <summary>Represents a normal-sized sans serif font.</summary>
+		internal static readonly OpenGlFont NormalFont = new OpenGlFont(FontFamily.GenericSansSerif, 16.0f);
 
+		/// <summary>Represents a large sans serif font.</summary>
+		internal static readonly OpenGlFont LargeFont = new OpenGlFont(FontFamily.GenericSansSerif, 21.0f);
 
+		/// <summary>Represents a very large sans serif font.</summary>
+		internal static readonly OpenGlFont VeryLargeFont = new OpenGlFont(FontFamily.GenericSansSerif, 27.0f);
+
+		internal static readonly OpenGlFont EvenLargerFont = new OpenGlFont(FontFamily.GenericSansSerif, 34.0f);
+
+		
 		// --- functions ---
-
+		
 		/// <summary>Rounds the specified value to the next-highest power of two.</summary>
 		/// <param name="value">The value.</param>
 		/// <returns>The value rounded to the next-highest power of two.</returns>
-		private static uint RoundToPowerOfTwo(uint value)
-		{
-			if (value == 0)
-			{
+		private static uint RoundToPowerOfTwo(uint value) {
+			if (value == 0) {
 				throw new ArgumentException();
 			}
 			value -= 1;
-			for (int i = 1; i < sizeof(int) << 3; i <<= 1)
-			{
+			for (int i = 1; i < sizeof(int) << 3; i <<= 1) {
 				value |= value >> i;
 			}
 			return value + 1;
 		}
-
+		
 	}
 }

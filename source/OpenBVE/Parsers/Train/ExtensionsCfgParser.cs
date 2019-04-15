@@ -8,7 +8,7 @@ namespace OpenBve {
 	internal static class ExtensionsCfgParser {
 
 		// parse extensions config
-		internal static void ParseExtensionsConfig(string TrainPath, System.Text.Encoding Encoding, ref ObjectManager.UnifiedObject[] CarObjects, ref ObjectManager.UnifiedObject[] BogieObjects, TrainManager.Train Train, bool LoadObjects)
+		internal static void ParseExtensionsConfig(string TrainPath, System.Text.Encoding Encoding, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, TrainManager.Train Train, bool LoadObjects)
 		{
 			bool[] CarObjectsReversed = new bool[Train.Cars.Length];
 			bool[] BogieObjectsReversed = new bool[Train.Cars.Length * 2];
@@ -78,7 +78,7 @@ namespace OpenBve {
 														if (System.IO.File.Exists(File)) {
 															if (LoadObjects)
 															{
-																CarObjects[n] = ObjectManager.LoadObject(File, Encoding, ObjectLoadMode.Normal, false, false, false);
+																CarObjects[n] = ObjectManager.LoadObject(File, Encoding, false, false, false);
 															}
 														} else {
 															Interface.AddMessage(MessageType.Error, true, "The car object " + File + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -133,7 +133,7 @@ namespace OpenBve {
 																	if (System.IO.File.Exists(File)) {
 																		if (LoadObjects)
 																		{
-																			CarObjects[n] = ObjectManager.LoadObject(File, Encoding, ObjectLoadMode.Normal, false, false, false);
+																			CarObjects[n] = ObjectManager.LoadObject(File, Encoding, false, false, false);
 																		}
 																	} else {
 																		Interface.AddMessage(MessageType.Error, true, "The car object " + File + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -303,7 +303,7 @@ namespace OpenBve {
 																	{
 																		if (LoadObjects)
 																		{
-																			BogieObjects[n] = ObjectManager.LoadObject(File, Encoding, ObjectLoadMode.Normal, false, false, false);
+																			BogieObjects[n] = ObjectManager.LoadObject(File, Encoding, false, false, false);
 																		}
 																	}
 																	else

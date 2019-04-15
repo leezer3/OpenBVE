@@ -35,7 +35,10 @@ namespace OpenBve
             double timeElapsed = CPreciseTimer.GetElapsedTime();
             DateTime time = DateTime.Now;
             Game.SecondsSinceMidnight = (double)(3600 * time.Hour + 60 * time.Minute + time.Second) + 0.001 * (double)time.Millisecond;
-            ObjectManager.UpdateAnimatedWorldObjects(timeElapsed, false);
+            lock (Program.LockObj)
+            {
+                ObjectManager.UpdateAnimatedWorldObjects(timeElapsed, false);
+            }
             if (Program.ReducedMode)
             {
                 System.Threading.Thread.Sleep(125);
@@ -313,8 +316,8 @@ namespace OpenBve
             //         {
             //             try
             //             {
-            //                 ObjectManager.UnifiedObject o = ObjectManager.LoadObject(commandLineArgs[i],
-            //                     System.Text.Encoding.UTF8, ObjectLoadMode.Normal, false, false, false,0,0,0);
+            //                 UnifiedObject o = ObjectManager.LoadObject(commandLineArgs[i],
+            //                     System.Text.Encoding.UTF8, false, false, false,0,0,0);
             //                 ObjectManager.CreateObject(o, new Vector3(0.0, 0.0, 0.0),
             //                     new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true,
             //                     0.0, 0.0, 25.0, 0.0);

@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Linq;
 
 namespace OpenBveApi.Math {
@@ -12,6 +12,21 @@ namespace OpenBveApi.Math {
 		/// <returns>True if parsing succeds, false otherwise</returns>
 		public static bool TryParseDoubleVb6(string Expression, out double Value)
 		{
+			if (Expression.Length == 0)
+			{
+				Value = 0.0;
+				return false;
+			}
+			if (Expression[0] == 65533 || Expression[0] == 8212 || Expression[0] == 8211)
+			{
+				/*
+				 * Handle the use of EM-DASH instead of the minus sign
+				 * 65533: ANSI EM-DASH read as Unicode
+				 *  8212: ANSI EM-DASH read as ANSI
+				 *  8211: Unicode EM-DASH
+				 */
+				Expression = '-' + Expression.Substring(1, Expression.Length - 1);
+			}
 			Expression = TrimInside(Expression);
 			CultureInfo Culture = CultureInfo.InvariantCulture;
 			for (int n = Expression.Length; n > 0; n--)

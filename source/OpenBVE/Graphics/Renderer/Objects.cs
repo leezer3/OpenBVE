@@ -117,7 +117,7 @@ namespace OpenBve
 					{
 						alpha = true;
 					}
-					else if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].BlendMode == World.MeshMaterialBlendMode.Additive)
+					else if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].BlendMode == MeshMaterialBlendMode.Additive)
 					{
 						alpha = true;
 					}
@@ -368,6 +368,9 @@ namespace OpenBve
 								break;
 							case ObjectListType.OverlayAlpha:
 								list = OverlayAlpha;
+								break;
+							case ObjectListType.Touch:
+								list = Touch;
 								break;
 							default:
 								throw new InvalidOperationException();

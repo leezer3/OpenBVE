@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Drawing;
-using System.IO;
 using System.Windows.Forms;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
@@ -36,9 +34,9 @@ namespace OpenBve {
 		}
 
 
-		private void trackBarTimeAccelerationFactor_ValueChanged(object sender, EventArgs e)
+		private void updownTimeAccelerationFactor_ValueChanged(object sender, EventArgs e)
 		{
-			Interface.CurrentOptions.TimeAccelerationFactor = trackBarTimeAccelerationFactor.Value;
+			Interface.CurrentOptions.TimeAccelerationFactor = (int)updownTimeAccelerationFactor.Value;
 		}
 		
 		// =======
@@ -150,6 +148,12 @@ namespace OpenBve {
 			if (listviewInputDevice.SelectedIndices.Count == 1) {
 				InputDevicePlugin.CallPluginConfig(this, listviewInputDevice.SelectedIndices[0]);
 			}
+		}
+
+		private void comboboxCursor_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (this.Tag != null) return;
+			Cursors.SelectedCursor(comboboxCursor, pictureboxCursor);
 		}
 	}
 }

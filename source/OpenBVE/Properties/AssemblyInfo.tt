@@ -41,11 +41,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("<#= major #>.<#= minor #>.<#= build #>.<#= revision #>")]
 [assembly: AssemblyInformationalVersion("<#= major #>.<#= minor #>.<#= build #>.<#= revision #>-<#= UserName #>")]
 [assembly: AssemblyFileVersion("<#= major #>.<#= minor #>.<#= build #>.<#= revision #>")]
-[assembly: CLSCompliant(true)]
+[assembly: CLSCompliant(false)]
 
 namespace OpenBve {
 	internal static partial class Program {
-		internal const bool IsDevelopmentVersion = false;
 		internal const string VersionSuffix = "";
 	}
 }

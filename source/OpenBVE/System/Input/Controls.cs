@@ -23,7 +23,7 @@ namespace OpenBve
 			Builder.AppendLine("; This file is INCOMPATIBLE with versions older than 1.4.4.");
 			Builder.AppendLine();
 			for (int i = 0; i < controlsToSave.Length; i++) {
-				Translations.CommandInfo Info = Translations.TryGetInfo(Translations.CommandInfos, controlsToSave[i].Command);
+				Translations.CommandInfo Info = Translations.CommandInfos.TryGetInfo(controlsToSave[i].Command);
 				Builder.Append(Info.Name + ", ");
 				switch (controlsToSave[i].Method) {
 					case ControlMethod.Keyboard:
@@ -174,7 +174,7 @@ namespace OpenBve
 												Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 												Controls = new Control[0];
 										}
-										return;
+										continue;
 									}
 									if (Enum.TryParse(Terms[2], true, out CurrentKey))
 									{

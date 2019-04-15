@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using OpenBve.BrakeSystems;
 using OpenBveApi;
 using OpenBveApi.Math;
@@ -34,9 +36,15 @@ namespace OpenBve
 
 			// parse configuration file
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
-			for (int i = 0; i < Lines.Length; i++)
+			List<string> Lines = System.IO.File.ReadAllLines(FileName, Encoding).ToList();
+			for (int i = Lines.Count - 1; i >= 0; i--)
 			{
+				/*
+				 * Strip comments and remove empty resulting lines etc.
+				 *
+				 * This fixes an error with some NYCTA content, which has
+				 * a copyright notice instead of the file header specified....
+				 */
 				int j = Lines[i].IndexOf(';');
 				if (j >= 0)
 				{
@@ -46,14 +54,23 @@ namespace OpenBve
 				{
 					Lines[i] = Lines[i].Trim();
 				}
+				if (string.IsNullOrEmpty(Lines[i]))
+				{
+					Lines.RemoveAt(i);
+				}
 			}
-			if (Lines.Length < 1 || string.Compare(Lines[0], "version 1.0", StringComparison.OrdinalIgnoreCase) != 0)
+
+			if (Lines.Count == 0)
+			{
+				Interface.AddMessage(MessageType.Error, false, "Empty sound.cfg encountered in " + FileName + ".");
+			}
+			if (string.Compare(Lines[0], "version 1.0", StringComparison.OrdinalIgnoreCase) != 0)
 			{
 				Interface.AddMessage(MessageType.Error, false, "Invalid file format encountered in " + FileName + ". The first line is expected to be \"Version 1.0\".");
 			}
 			string[] MotorFiles = new string[] { };
-			double invfac = Lines.Length == 0 ? Loading.TrainProgressCurrentWeight : Loading.TrainProgressCurrentWeight / (double)Lines.Length;
-			for (int i = 0; i < Lines.Length; i++)
+			double invfac = Lines.Count == 0 ? Loading.TrainProgressCurrentWeight : Loading.TrainProgressCurrentWeight / (double)Lines.Count;
+			for (int i = 0; i < Lines.Count; i++)
 			{
 				Loading.TrainProgress = Loading.TrainProgressCurrentSum + invfac * (double)i;
 				if ((i & 7) == 0)
@@ -64,7 +81,7 @@ namespace OpenBve
 				switch (Lines[i].ToLowerInvariant())
 				{
 					case "[run]":
-						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
@@ -108,7 +125,7 @@ namespace OpenBve
 						}
 						i--; break;
 					case "[flange]":
-						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
@@ -152,7 +169,7 @@ namespace OpenBve
 						}
 						i--; break;
 					case "[motor]":
-						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
@@ -193,7 +210,7 @@ namespace OpenBve
 						}
 						i--; break;
 					case "[switch]":
-						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
@@ -236,7 +253,7 @@ namespace OpenBve
 						}
 						i--; break;
 					case "[brake]":
-						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
@@ -291,7 +308,7 @@ namespace OpenBve
 						}
 						i--; break;
 					case "[compressor]":
-						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
@@ -331,7 +348,7 @@ namespace OpenBve
 						}
 						i--; break;
 					case "[suspension]":
-						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
@@ -369,7 +386,7 @@ namespace OpenBve
 						i--; break;
 					case "[horn]":
 						i++;
-						while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
@@ -448,7 +465,7 @@ namespace OpenBve
 						}
 						i--; break;
 					case "[door]":
-						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
@@ -497,7 +514,7 @@ namespace OpenBve
 						}
 						i--; break;
 					case "[ats]":
-						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
@@ -541,7 +558,7 @@ namespace OpenBve
 						}
 						i--; break;
 					case "[buzzer]":
-						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
@@ -569,7 +586,7 @@ namespace OpenBve
 						}
 						i--; break;
 					case "[pilot lamp]":
-						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
@@ -600,7 +617,7 @@ namespace OpenBve
 						}
 						i--; break;
 					case "[brake handle]":
-						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
@@ -643,7 +660,7 @@ namespace OpenBve
 						}
 						i--; break;
 					case "[master controller]":
-						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
@@ -686,7 +703,7 @@ namespace OpenBve
 						}
 						i--; break;
 					case "[reverser]":
-						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
@@ -717,7 +734,7 @@ namespace OpenBve
 						}
 						i--; break;
 					case "[breaker]":
-						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
@@ -748,7 +765,7 @@ namespace OpenBve
 						}
 						i--; break;
 					case "[others]":
-						i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						i++; while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
 						{
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)

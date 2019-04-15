@@ -51,7 +51,7 @@ namespace OpenBve
 		/// <summary>Called once a frame to update the messages displayed on-screen</summary>
 		internal static void UpdateMessages()
 		{
-			MessageManager.Update();
+			MessageManager.UpdateMessages();
 			
 		}
 	}

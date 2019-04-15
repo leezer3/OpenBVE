@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Runtime;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
@@ -111,7 +112,7 @@ namespace OpenBve
 			{
 				for (int i = 0; i < this.Trains.Length; i++)
 				{
-					if (this.Trains[i] != train & (this.Trains[i].State == TrainManager.TrainState.Available | this.Trains[i].State == TrainManager.TrainState.Bogus))
+					if (this.Trains[i] != train & (this.Trains[i].State == TrainState.Available | this.Trains[i].State == TrainState.Bogus))
 					{
 						return false;
 					}
@@ -125,7 +126,7 @@ namespace OpenBve
 			{
 				for (int i = 0; i < this.Trains.Length; i++)
 				{
-					if (this.Trains[i].State == TrainManager.TrainState.Available | this.Trains[i].State == TrainManager.TrainState.Bogus)
+					if (this.Trains[i].State == TrainState.Available | this.Trains[i].State == TrainState.Bogus)
 					{
 						return false;
 					}
@@ -140,11 +141,11 @@ namespace OpenBve
 			{
 				for (int i = 0; i < this.Trains.Length; i++)
 				{
-					if (this.Trains[i].State == TrainManager.TrainState.Available)
+					if (this.Trains[i].State == TrainState.Available)
 					{
 						return this.Trains[i];
 					}
-					if (AllowBogusTrain & this.Trains[i].State == TrainManager.TrainState.Bogus)
+					if (AllowBogusTrain & this.Trains[i].State == TrainState.Bogus)
 					{
 						return this.Trains[i];
 					}
@@ -221,7 +222,7 @@ namespace OpenBve
 					double b = -double.MaxValue;
 					for (int i = 0; i < TrainManager.Trains.Length; i++)
 					{
-						if (TrainManager.Trains[i].State == TrainManager.TrainState.Available)
+						if (TrainManager.Trains[i].State == TrainState.Available)
 						{
 							if (TrainManager.Trains[i].TimetableDelta > b)
 							{
@@ -238,7 +239,7 @@ namespace OpenBve
 					{
 						if (train.Station == d)
 						{
-							int c = GetStopIndex(d, train.Cars.Length);
+							int c = Game.Stations[d].GetStopIndex(train.Cars.Length);
 							if (c >= 0)
 							{
 								double p0 = train.Cars[0].FrontAxle.Follower.TrackPosition - train.Cars[0].FrontAxle.Position + 0.5 * train.Cars[0].Length;
