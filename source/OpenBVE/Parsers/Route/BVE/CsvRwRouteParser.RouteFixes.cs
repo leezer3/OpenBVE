@@ -136,6 +136,12 @@ namespace OpenBve
 					//NYCT-L.csv
 					Interface.CurrentOptions.Toppling = false;
 					break;
+				case "B44150CA3636B904E2A0058902CA739DE3F7B24D5D551C7FFD53597F3157FB79":
+					//M4.csv
+					Expressions[206].Text = string.Empty;
+					Expressions[207].Text = string.Empty;
+					Expressions[208].Text = string.Empty;
+					break;
 			}
 		}
 	}
