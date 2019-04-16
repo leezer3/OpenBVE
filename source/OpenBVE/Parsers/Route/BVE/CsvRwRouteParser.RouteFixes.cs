@@ -132,6 +132,10 @@ namespace OpenBve
 						Interface.CurrentOptions.CurrentXParser = Interface.XParsers.NewXParser;
 					}
 					break;
+				case "B97E93C1A21B43CCDA2C504F254E6F8FF099FD51E502E2EE875E6B05FBDE5326":
+					//NYCT-L.csv
+					Interface.CurrentOptions.Toppling = false;
+					break;
 			}
 		}
 	}
