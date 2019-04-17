@@ -479,6 +479,7 @@
     </EmbeddedResource>
     <Compile Include="Parsers\Train\TrainDatParser.cs" />
     <Compile Include="Simulation\TrainManager\Train\Handles\Handles.AirBrake.cs" />
+    <EmbeddedResource Include="..\..\assets\Controls\Default.controls" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\assets\Cursors\nk.png" />
