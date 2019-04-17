@@ -803,7 +803,7 @@ namespace OpenBve
 										Result.Objects[ObjectCount].States[k].Position = Vector3.Zero;
 										if (StateFiles[k] != null)
 										{
-											Result.Objects[ObjectCount].States[k].Object = ObjectManager.LoadStaticObject(StateFiles[k], Encoding, false, ForceTextureRepeatX, ForceTextureRepeatY);
+											Result.Objects[ObjectCount].States[k].Object = ObjectManager.LoadStaticObject(StateFiles[k], Encoding, false);
 											if (Result.Objects[ObjectCount].States[k].Object != null)
 											{
 												Result.Objects[ObjectCount].States[k].Object.Dynamic = true;

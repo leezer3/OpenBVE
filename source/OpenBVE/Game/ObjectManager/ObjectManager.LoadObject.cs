@@ -198,7 +198,7 @@ namespace OpenBve
 			}
 #endif
 		}
-		internal static StaticObject LoadStaticObject(string FileName, System.Text.Encoding Encoding, bool PreserveVertices, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
+		internal static StaticObject LoadStaticObject(string FileName, Encoding Encoding, bool PreserveVertices)
 		{
 			if (String.IsNullOrEmpty(FileName))
 			{
