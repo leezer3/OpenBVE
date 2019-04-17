@@ -3400,6 +3400,7 @@ namespace OpenBve {
 													case 1: aspects = new int[] { 0, 2, 3 }; comp = 4; break;
 													case 2: aspects = new int[] { 0, 2 }; comp = 0; break;
 													case -2: aspects = new int[] { 0, 4 }; comp = 1; break;
+													case -3: aspects = new int[] { 0, 2, 4 }; comp = 2; break; //Undocumented, see https://github.com/leezer3/OpenBVE/issues/336
 													case 3: aspects = new int[] { 0, 2, 4 }; comp = 2; break;
 													case 4: aspects = new int[] { 0, 1, 2, 4 }; comp = 3; break;
 													case -4: aspects = new int[] { 0, 2, 3, 4 }; comp = 4; break;
