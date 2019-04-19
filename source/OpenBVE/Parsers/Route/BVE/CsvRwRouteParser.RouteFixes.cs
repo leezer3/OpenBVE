@@ -142,6 +142,26 @@ namespace OpenBve
 					Expressions[207].Text = string.Empty;
 					Expressions[208].Text = string.Empty;
 					break;
+				case "5E976BA173F3267271746FB161730FFC205FAC85A38DB369BDC2FB25297B05E1":
+					//spaceroute1.csv
+					Data.IgnorePitchRoll = true;
+					Interface.CurrentOptions.Derailments = false;
+					Interface.CurrentOptions.Toppling = false;
+					break;
+				case "64F6EECA5B5976F271DC9686C585026A1A5732E743A1BA1DB6DC57C6672E9F3B":
+				case "FEFAF4332990CDDBC8F563010B539320AD00FB49CC6EFB14546FE30A65752752":
+					//TR_203_A6.rw
+					//TR_3_A5.rw
+					Expressions[803].Text = "Freeobj(0,50,0,0,168.075)";
+					break;
+				case "E734848C90A964904907AB3FCFAB2BE01F352D44B5D3C66A65E9A28AB70B920B":
+					//TR_207_A9.rw
+					Expressions[802].Text = "Freeobj(0,50,0,0,168.075)";
+					break;
+				case "C49103E985BD256ACC38E8373652F9B963F2AA7144FE66CCAC769FDD16053B79":
+					//TR_217_A1.rw
+					Expressions[799].Text = "Freeobj(0,50,0,0,168.075)";
+					break;
 			}
 		}
 	}
