@@ -162,6 +162,22 @@ namespace OpenBve
 					//TR_217_A1.rw
 					Expressions[799].Text = "Freeobj(0,50,0,0,168.075)";
 					break;
+				case "AFC9586954ED7867860EB167A1CE2718D9D49AA9AE4905B2A24E49F49295F07D":
+					//TR_3_A11.csv
+					Expressions[1316].Text = "5025,";
+					break;
+				case "A2FA01331674992B4E1AB935F496590B4CD7D083BF659109C28B0BF603AB93DB":
+					//TR_207_A1.csv
+					Expressions[1329].Text = "5025,";
+					break;
+				case "9EC666169C5B5E1AFFEAD1C7753FD67F54632E51C7FB64450D4B9A0329CFF9F9":
+					//TR_207_A9.csv
+					Expressions[1323].Text = "5025,";
+					break;
+				case "097B3ACC33FA9CB33A9D35023EE24F977657875D9C79DCFE1CC8655A2EEB67CA":
+					//TR_spec_L29.csv
+					Expressions[1318].Text = "5025,";
+					break;
 			}
 		}
 	}
