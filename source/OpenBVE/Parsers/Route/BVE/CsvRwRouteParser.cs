@@ -4794,6 +4794,17 @@ namespace OpenBve {
 								case "track.freeobj":
 									{
 										if (!PreviewOnly) {
+											if (Arguments.Length < 2)
+											{
+												/*
+												 * If no / one arguments are supplied, this previously produced FreeObject 0 dropped on either
+												 * Rail 0 (no arguments) or on the rail specified by the first argument.
+												 *
+												 * BVE4 ignores these, and we should too.
+												 */
+												Interface.AddMessage(MessageType.Error, false, "An insufficient number of arguments was supplied in Track.FreeObj at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+												continue;
+											}
 											int idx = 0, sttype = 0;
 											if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[0], out idx)) {
 												Interface.AddMessage(MessageType.Error, false, "RailIndex is invalid in Track.FreeObj at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
