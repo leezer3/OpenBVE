@@ -8,6 +8,12 @@ declare -r max=4
 declare i=0
 
 function wrap() {
+  mono_version=$(mono --version | awk '/version/ { print $5 }')
+  if [ "$travis_os_name" = "linux" ] & [ "$mono_version" != "3.2.8" ] ;
+    then
+    echo "Wrong Mono version- Not uploading this build"
+    exit
+  fi
   local cmd=$1 ; shift
   retry $cmd "$@"
   local success=$?
