@@ -786,7 +786,15 @@ namespace OpenBve {
 									} m++;
 								} i++; n++;
 							}
-							Array.Resize<TrainManager.MotorSoundTableEntry>(ref Tables[msi].Entries, n);
+
+							if (n != 0)
+							{
+								/*
+								 * Handle duplicated section header:
+								 * If no entries, don't resize
+								 */
+								Array.Resize<TrainManager.MotorSoundTableEntry>(ref Tables[msi].Entries, n);
+							}
 							i--;
 						} break;
 				}
