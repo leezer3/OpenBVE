@@ -9,7 +9,7 @@ declare i=0
 
 function wrap() {
   mono_version=$(mono --version | awk '/version/ { print $5 }')
-  if [ "$travis_os_name" = "linux" ] & [ "$mono_version" != "3.2.8" ] ;
+  if [ "$TRAVIS_OS_NAME" = "linux" ] & [ "$mono_version" != "3.2.8" ] ;
     then
     echo "Wrong Mono version- Not uploading this build"
     exit
