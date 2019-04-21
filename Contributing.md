@@ -11,7 +11,7 @@ This file is a work in progress, and is intended to serve as a general set of gu
 
 #### Code Licencing
 
-The basic licence for openBVE Public Domain.
+The basic licence for openBVE is Public Domain.
 Please only contribute code which is licenced under either Public Domain, or loose permissive licences (e.g. BSD-2 and compatible)
 
 ### Backwards Compatibility
@@ -34,3 +34,4 @@ Please only contribute code which is licenced under either Public Domain, or loo
 - Maurizo M. Gavioli
 - Connor Fitzgerald
 - Marc Riera
+- s520

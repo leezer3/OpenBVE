@@ -29,7 +29,7 @@ These are described fully [here](http://openbve-project.net/packages/).
 
 ### Notes
 
-This build has been tested to compile correctly using VS2013 and MonoDevelop, but should also compile with SharpDevelop.
+This build has been tested to compile correctly using VS2013 onwards and MonoDevelop, but should also compile with SharpDevelop.
 
 Joystick hat support does not function correctly in the current release build of OpenTK (1.1.4). Please compile OpenTK yourself from the most recent source if you wish to use this feature.
 
@@ -42,7 +42,7 @@ Please see the [Contributors File](Contributing.md) for a list of contributors, 
 
 **Project Website**:
 
-http://www.openbve-project.net
+https://openbve-project.net
 
 Project Source Code on GitHub: https://github.com/leezer3/OpenBVE
 
@@ -59,6 +59,7 @@ http://bveworldwide.forumotion.com/f14-the-sim-in-time-general-discussion
 ### License
 
 Michelle intended for this program to be placed in the public domain. This means that you can make any modifications to it you like and share your modifications with others.
+Please also see the following issue for further discussion on the topic: https://github.com/leezer3/OpenBVE/issues/305
 
 **Third-Pary Libraries**
 
