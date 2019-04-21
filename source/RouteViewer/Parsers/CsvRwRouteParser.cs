@@ -4293,20 +4293,20 @@ namespace OpenBve {
 													Interface.AddMessage(MessageType.Error, false, "FormStructureIndex is invalid in Track.Form at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													pf = 0;
 												}
-												if (roof != 0 & (roof < 0 || !Data.Structure.RoofL.ContainsKey(roof)|| !Data.Structure.RoofR.ContainsKey(roof))) {
+												if (roof != 0 & (roof < 0 || (!Data.Structure.RoofL.ContainsKey(roof) && !Data.Structure.RoofR.ContainsKey(roof)))) {
 													Interface.AddMessage(MessageType.Error, false, "RoofStructureIndex " + roof + " references an object not loaded in Track.Form at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												} else {
-													if (pf < 0 | !Data.Structure.FormL.ContainsKey(pf) & !Data.Structure.FormR.ContainsKey(pf)) {
+												} 
+
+												if (pf < 0 | (!Data.Structure.FormL.ContainsKey(pf) & !Data.Structure.FormR.ContainsKey(pf))) {
 														Interface.AddMessage(MessageType.Error, false, "FormStructureIndex " + pf + " references an object not loaded in Track.Form at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-													}
-													int n = Data.Blocks[BlockIndex].Form.Length;
-													Array.Resize<Form>(ref Data.Blocks[BlockIndex].Form, n + 1);
-													Data.Blocks[BlockIndex].Form[n].PrimaryRail = idx1;
-													Data.Blocks[BlockIndex].Form[n].SecondaryRail = idx2;
-													Data.Blocks[BlockIndex].Form[n].FormType = pf;
-													Data.Blocks[BlockIndex].Form[n].RoofType = roof;
 												}
-											}
+												int n = Data.Blocks[BlockIndex].Form.Length;
+												Array.Resize<Form>(ref Data.Blocks[BlockIndex].Form, n + 1);
+												Data.Blocks[BlockIndex].Form[n].PrimaryRail = idx1;
+												Data.Blocks[BlockIndex].Form[n].SecondaryRail = idx2;
+												Data.Blocks[BlockIndex].Form[n].FormType = pf;
+												Data.Blocks[BlockIndex].Form[n].RoofType = roof;
+											}											
 										}
 									} break;
 								case "track.pole":
