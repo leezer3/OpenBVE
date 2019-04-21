@@ -20,6 +20,7 @@ namespace OpenBve {
 				case "rotate":
 				case "translate":
 				case "vertex":
+				case "face":
 					return true;
 				
 			}
@@ -308,6 +309,15 @@ namespace OpenBve {
 									int[] a = new int[Arguments.Length];
 									for (int j = 0; j < Arguments.Length; j++) {
 										if (!NumberFormats.TryParseIntVb6(Arguments[j], out a[j])) {
+											if (Interface.CurrentOptions.EnableBveTsHacks && IsB3D && j == 0 && Arguments[j] == string.Empty)
+											{
+												/*
+												 * Face ,1,2,3
+												 * is interpreted by BVE as Face 0,1,2,3
+												 */
+												a[j] = 0;
+												continue;
+											}
 											Interface.AddMessage(MessageType.Error, false, "v" + j.ToString(Culture) + " is invalid in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											q = false;
 											break;
