@@ -1,8 +1,9 @@
 openbve (1.6.0.0-1) unstable; urgency=low
 
+  * Debian re-upload (Closes: #927278)
   * New upstream stable release (1.6.0.0)
-  * Homepage updated to http://openbve-project.net [Please see
-	the website for a complete changelog]
+  * debian/control
+   - update Homepage: field
 
  -- Christopher Lees <leezer3@gmail.com>  Mon, 15th Apr 2019 12:37:00 +0000
 

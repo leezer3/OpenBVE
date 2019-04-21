@@ -1,12 +1,10 @@
 Source: openbve
-Section: universe/games
 Priority: optional
-Maintainer: leezer3 <leezer3@gmail.com>
-Uploaders: leezer3 <leezer3@gmail.com>
-Build-Depends: debhelper (>= 7.0.50~), cli-common-dev (>= 0.8~)
+Maintainer: Christopher Lees <leezer3@gmail.com>
+Build-Depends: debhelper (>= 10.2.5~), cli-common-dev (>= 0.8~)
 Build-Depends-Indep: mono-devel, mono-xbuild
-Standards-Version: 3.9.4
-Homepage: http://openbve-project.net
+Standards-Version: 4.3.0
+Homepage: https://openbve-project.net
 
 Package: openbve
 Architecture: all
