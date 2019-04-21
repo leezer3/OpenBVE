@@ -308,5 +308,10 @@
 		<Path>Sound\crossing.wav</Path>
 		<Message></Message>
 	</Sound>
+	<Sound>
+		<Name>uchibo\crossing.wav</Name>
+		<Path>Sound\crossing.wav</Path>
+		<Message></Message>
+	</Sound>
   </Compatibility>
 </openBVE>
