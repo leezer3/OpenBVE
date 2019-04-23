@@ -161,6 +161,7 @@ namespace OpenBve
 										if (n >= train.Cars.Length)
 										{
 											Array.Resize(ref train.Cars, n + 1);
+											train.Cars[n] = new TrainManager.Car();
 											Array.Resize(ref carObjects, n + 1);
 											Array.Resize(ref bogieObjects, (n + 1) * 2);
 											Array.Resize(ref carObjectsReversed, n + 1);
