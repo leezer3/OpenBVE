@@ -229,6 +229,7 @@
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.CompatibilityObjects.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Expression.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.ObjectDictionary.cs" />
+    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Preprocess.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.RouteData.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Functions.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Objects.cs" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Math;
 using OpenBveApi.Interface;
+// ReSharper disable NotAccessedVariable
 
 namespace OpenBve
 {
