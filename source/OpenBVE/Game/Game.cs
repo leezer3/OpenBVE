@@ -2,6 +2,7 @@
 using OpenBveApi.Colors;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
+using OpenBve.SignalManager;
 
 namespace OpenBve {
 	internal static partial class Game {

@@ -11,6 +11,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
+using OpenBve.SignalManager;
 
 namespace OpenBve {
 	internal static class Game {
@@ -218,53 +219,7 @@ namespace OpenBve {
 		// ================================
 
 		// sections
-		internal enum SectionType { ValueBased, IndexBased }
-		internal struct SectionAspect {
-			internal int Number;
-			internal double Speed;
-			internal SectionAspect(int Number, double Speed) {
-				this.Number = Number;
-				this.Speed = Speed;
-			}
-		}
-		internal struct Section {
-			internal int PreviousSection;
-			internal int NextSection;
-			internal TrainManager.Train[] Trains;
-			internal const bool TrainReachedStopPoint = false;
-			internal int StationIndex;
-			internal bool Invisible;
-			internal double TrackPosition;
-			internal SectionType Type;
-			internal SectionAspect[] Aspects;
-			internal int CurrentAspect;
-			internal int FreeSections;
-			internal void Enter(TrainManager.Train Train) {
-				int n = this.Trains.Length;
-				for (int i = 0; i < n; i++) {
-					if (this.Trains[i] == Train) return;
-				}
-				Array.Resize<TrainManager.Train>(ref this.Trains, n + 1);
-				this.Trains[n] = Train;
-			}
-			internal void Leave(TrainManager.Train Train) {
-				int n = this.Trains.Length;
-				for (int i = 0; i < n; i++) {
-					if (this.Trains[i] == Train) {
-						for (int j = i; j < n - 1; j++) {
-							this.Trains[j] = this.Trains[j + 1];
-						}
-						Array.Resize<TrainManager.Train>(ref this.Trains, n - 1);
-						return;
-					}
-				}
-			}
-			internal bool Exists(TrainManager.Train Train) {
-				for (int i = 0; i < this.Trains.Length; i++) {
-					if (this.Trains[i] == Train) return true;
-				} return false;
-			}
-		}
+		
 		internal static Section[] Sections = new Section[] { };
 		internal static void UpdateAllSections() {
 			if (Sections.Length != 0) {

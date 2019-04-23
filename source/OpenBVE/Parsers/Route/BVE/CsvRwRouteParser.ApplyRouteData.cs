@@ -7,6 +7,7 @@ using OpenBveApi.World;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.FunctionScripting;
+using OpenBve.SignalManager;
 
 namespace OpenBve
 {
@@ -1336,7 +1337,7 @@ namespace OpenBve
 							for (int k = 0; k < Data.Blocks[i].Sections.Length; k++)
 							{
 								int m = Game.Sections.Length;
-								Array.Resize<Game.Section>(ref Game.Sections, m + 1);
+								Array.Resize <SignalManager.Section>(ref Game.Sections, m + 1);
 								// create associated transponders
 								for (int g = 0; g <= i; g++)
 								{
@@ -1354,7 +1355,7 @@ namespace OpenBve
 								}
 								// create section
 								Game.Sections[m].TrackPosition = Data.Blocks[i].Sections[k].TrackPosition;
-								Game.Sections[m].Aspects = new Game.SectionAspect[Data.Blocks[i].Sections[k].Aspects.Length];
+								Game.Sections[m].Aspects = new SectionAspect[Data.Blocks[i].Sections[k].Aspects.Length];
 								for (int l = 0; l < Data.Blocks[i].Sections[k].Aspects.Length; l++)
 								{
 									Game.Sections[m].Aspects[l].Number = Data.Blocks[i].Sections[k].Aspects[l];

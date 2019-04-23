@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.Collections.Generic;
+using OpenBve.SignalManager;
 using OpenBveApi;
 using OpenBveApi.Math;
 using OpenBveApi.Colors;
@@ -117,7 +118,7 @@ namespace OpenBve {
 			internal int[] Aspects;
 			internal int DepartureStationIndex;
 			internal bool Invisible;
-			internal Game.SectionType Type;
+			internal SectionType Type;
 		}
 		private struct Limit {
 			internal double TrackPosition;
@@ -453,8 +454,8 @@ namespace OpenBve {
 																				ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_4.csv"), Encoding, false)
 																			  });
 				// game data
-				Game.Sections = new Game.Section[1];
-				Game.Sections[0].Aspects = new Game.SectionAspect[] { new Game.SectionAspect(0, 0.0), new Game.SectionAspect(4, double.PositiveInfinity) };
+				Game.Sections = new SignalManager.Section[1];
+				Game.Sections[0].Aspects = new SectionAspect[] { new SectionAspect(0, 0.0), new SectionAspect(4, double.PositiveInfinity) };
 				Game.Sections[0].CurrentAspect = 0;
 				Game.Sections[0].NextSection = -1;
 				Game.Sections[0].PreviousSection = -1;
@@ -3354,7 +3355,7 @@ namespace OpenBve {
 												Array.Resize<Section>(ref Data.Blocks[BlockIndex].Section, n + 1);
 												Data.Blocks[BlockIndex].Section[n].TrackPosition = Data.TrackPosition;
 												Data.Blocks[BlockIndex].Section[n].Aspects = aspects;
-												Data.Blocks[BlockIndex].Section[n].Type = valueBased ? Game.SectionType.ValueBased : Game.SectionType.IndexBased;
+												Data.Blocks[BlockIndex].Section[n].Type = valueBased ? SectionType.ValueBased : SectionType.IndexBased;
 												Data.Blocks[BlockIndex].Section[n].DepartureStationIndex = -1;
 												if (CurrentStation >= 0 && Game.Stations[CurrentStation].ForceStopSignal) {
 													if (CurrentStation >= 0 & CurrentStop >= 0 & !DepartureSignalUsed) {
@@ -3480,7 +3481,7 @@ namespace OpenBve {
 											Data.Blocks[BlockIndex].Section[n].Aspects = aspects;
 											Data.Blocks[BlockIndex].Section[n].DepartureStationIndex = -1;
 											Data.Blocks[BlockIndex].Section[n].Invisible = x == 0.0;
-											Data.Blocks[BlockIndex].Section[n].Type = Game.SectionType.ValueBased;
+											Data.Blocks[BlockIndex].Section[n].Type = SectionType.ValueBased;
 											if (CurrentStation >= 0 && Game.Stations[CurrentStation].ForceStopSignal) {
 												if (CurrentStation >= 0 & CurrentStop >= 0 & !DepartureSignalUsed) {
 													Data.Blocks[BlockIndex].Section[n].DepartureStationIndex = CurrentStation;
@@ -6242,7 +6243,7 @@ namespace OpenBve {
 							// sections
 							for (int k = 0; k < Data.Blocks[i].Section.Length; k++) {
 								int m = Game.Sections.Length;
-								Array.Resize<Game.Section>(ref Game.Sections, m + 1);
+								Array.Resize<SignalManager.Section>(ref Game.Sections, m + 1);
 								// create associated transponders
 								for (int g = 0; g <= i; g++) {
 									for (int l = 0; l < Data.Blocks[g].Transponder.Length; l++) {
@@ -6257,7 +6258,7 @@ namespace OpenBve {
 								}
 								// create section
 								Game.Sections[m].TrackPosition = Data.Blocks[i].Section[k].TrackPosition;
-								Game.Sections[m].Aspects = new Game.SectionAspect[Data.Blocks[i].Section[k].Aspects.Length];
+								Game.Sections[m].Aspects = new SectionAspect[Data.Blocks[i].Section[k].Aspects.Length];
 								for (int l = 0; l < Data.Blocks[i].Section[k].Aspects.Length; l++) {
 									Game.Sections[m].Aspects[l].Number = Data.Blocks[i].Section[k].Aspects[l];
 									if (Data.Blocks[i].Section[k].Aspects[l] >= 0 & Data.Blocks[i].Section[k].Aspects[l] < Data.SignalSpeeds.Length) {

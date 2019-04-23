@@ -8,6 +8,7 @@ using OpenBveApi.Runtime;
 using OpenBveApi.Objects;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
+using OpenBve.SignalManager;
 
 namespace OpenBve {
 	internal partial class CsvRwRouteParser {
@@ -236,9 +237,9 @@ namespace OpenBve {
 							Encoding, false)
 					});
 				// game data
-				Game.Sections = new Game.Section[1];
-				Game.Sections[0].Aspects = new Game.SectionAspect[]
-				{new Game.SectionAspect(0, 0.0), new Game.SectionAspect(4, double.PositiveInfinity)};
+				Game.Sections = new SignalManager.Section[1];
+				Game.Sections[0].Aspects = new SectionAspect[]
+				{new SectionAspect(0, 0.0), new SectionAspect(4, double.PositiveInfinity)};
 				Game.Sections[0].CurrentAspect = 0;
 				Game.Sections[0].NextSection = -1;
 				Game.Sections[0].PreviousSection = -1;
@@ -2602,7 +2603,7 @@ namespace OpenBve {
 												Array.Resize<Section>(ref Data.Blocks[BlockIndex].Sections, n + 1);
 												Data.Blocks[BlockIndex].Sections[n].TrackPosition = Data.TrackPosition;
 												Data.Blocks[BlockIndex].Sections[n].Aspects = aspects;
-												Data.Blocks[BlockIndex].Sections[n].Type = valueBased ? Game.SectionType.ValueBased : Game.SectionType.IndexBased;
+												Data.Blocks[BlockIndex].Sections[n].Type = valueBased ? SectionType.ValueBased : SectionType.IndexBased;
 												Data.Blocks[BlockIndex].Sections[n].DepartureStationIndex = -1;
 												if (CurrentStation >= 0 && Game.Stations[CurrentStation].ForceStopSignal) {
 													if (CurrentStation >= 0 & CurrentStop >= 0 & !DepartureSignalUsed) {
@@ -2728,7 +2729,7 @@ namespace OpenBve {
 											Data.Blocks[BlockIndex].Sections[n].Aspects = aspects;
 											Data.Blocks[BlockIndex].Sections[n].DepartureStationIndex = -1;
 											Data.Blocks[BlockIndex].Sections[n].Invisible = x == 0.0;
-											Data.Blocks[BlockIndex].Sections[n].Type = Game.SectionType.ValueBased;
+											Data.Blocks[BlockIndex].Sections[n].Type = SectionType.ValueBased;
 											if (CurrentStation >= 0 && Game.Stations[CurrentStation].ForceStopSignal) {
 												if (CurrentStation >= 0 & CurrentStop >= 0 & !DepartureSignalUsed) {
 													Data.Blocks[BlockIndex].Sections[n].DepartureStationIndex = CurrentStation;

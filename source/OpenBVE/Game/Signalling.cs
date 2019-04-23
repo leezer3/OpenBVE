@@ -1,159 +1,12 @@
 ﻿using System;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
+using OpenBve.SignalManager;
 
 namespace OpenBve
 {
 	internal static partial class Game
 	{
-		/// <summary>The types of section</summary>
-		internal enum SectionType
-		{
-			/// <summary>A section aspect may have any value</summary>
-			ValueBased, 
-			/// <summary>Section aspect count upwards from zero (0,1,2,3....)</summary>
-			IndexBased
-		}
-
-		/// <summary>A signalling aspect attached to a track section</summary>
-		internal struct SectionAspect
-		{
-			/// <summary>The aspect number</summary>
-			internal int Number;
-			/// <summary>The speed limit associated with this aspect number</summary>
-			internal double Speed;
-
-			/// <summary>Creates a new signalling aspect</summary>
-			/// <param name="Number">The aspect number</param>
-			/// <param name="Speed">The speed limit</param>
-			internal SectionAspect(int Number, double Speed)
-			{
-				this.Number = Number;
-				this.Speed = Speed;
-			}
-		}
-
-		/// <summary>Defines a complete signalling section</summary>
-		public struct Section
-		{
-			/// <summary>The index of the previous section</summary>
-			internal int PreviousSection;
-			/// <summary>The index of the next section</summary>
-			internal int NextSection;
-			/// <summary>Holds a reference to all trains currently within this section</summary>
-			internal TrainManager.Train[] Trains;
-			/// <summary>Whether the primary train within the section has reached the station stop point (For departure signals)</summary>
-			internal bool TrainReachedStopPoint;
-			/// <summary>The index of the station (if applicable)</summary>
-			internal int StationIndex;
-			/// <summary>Whether this is an invisible section</summary>
-			internal bool Invisible;
-			/// <summary>The track position at which this section is placed</summary>
-			internal double TrackPosition;
-			/// <summary>The type of section</summary>
-			internal SectionType Type;
-			/// <summary>The aspects attached to this section</summary>
-			internal SectionAspect[] Aspects;
-			/// <summary>A public read-only variable, which returns the current aspect to external scripts</summary>
-			public int currentAspect { get { return CurrentAspect; } }
-			/// <summary>The current aspect</summary>
-			internal int CurrentAspect;
-			/// <summary>The number of free sections ahead of this section</summary>
-			internal int FreeSections;
-
-			/// <summary>Called when a train enters the section</summary>
-			/// <param name="Train">The train</param>
-			internal void Enter(TrainManager.Train Train)
-			{
-				int n = this.Trains.Length;
-				for (int i = 0; i < n; i++)
-				{
-					if (this.Trains[i] == Train) return;
-				}
-				Array.Resize<TrainManager.Train>(ref this.Trains, n + 1);
-				this.Trains[n] = Train;
-			}
-
-			/// <summary>Called when a train leaves the section</summary>
-			/// <param name="Train">The train</param>
-			internal void Leave(TrainManager.Train Train)
-			{
-				int n = this.Trains.Length;
-				for (int i = 0; i < n; i++)
-				{
-					if (this.Trains[i] == Train)
-					{
-						for (int j = i; j < n - 1; j++)
-						{
-							this.Trains[j] = this.Trains[j + 1];
-						}
-						Array.Resize<TrainManager.Train>(ref this.Trains, n - 1);
-						return;
-					}
-				}
-			}
-
-			/// <summary>Checks whether a train is currently within the section</summary>
-			/// <param name="Train">The train</param>
-			/// <returns>True if the train is within the section, false otherwise</returns>
-			internal bool Exists(TrainManager.Train Train)
-			{
-				for (int i = 0; i < this.Trains.Length; i++)
-				{
-					if (this.Trains[i] == Train)
-						return true;
-				}
-				return false;
-			}
-			/// <summary>Checks whether the section is free, disregarding the specified train.</summary>
-			/// <param name="train">The train to disregard.</param>
-			/// <returns>Whether the section is free, disregarding the specified train.</returns>
-			internal bool IsFree(TrainManager.Train train)
-			{
-				for (int i = 0; i < this.Trains.Length; i++)
-				{
-					if (this.Trains[i] != train & (this.Trains[i].State == TrainState.Available | this.Trains[i].State == TrainState.Bogus))
-					{
-						return false;
-					}
-				}
-				return true;
-			}
-
-			/// <summary>Checks whether the section is free</summary>
-			/// <returns>Whether the section is free</returns>
-			internal bool IsFree()
-			{
-				for (int i = 0; i < this.Trains.Length; i++)
-				{
-					if (this.Trains[i].State == TrainState.Available | this.Trains[i].State == TrainState.Bogus)
-					{
-						return false;
-					}
-				}
-				return true;
-			}
-
-			/// <summary>Gets the first train within the section</summary>
-			/// <param name="AllowBogusTrain">Whether bogus trains are to be allowed</param>
-			/// <returns>The first train within the section, or null if no trains are found</returns>
-			internal TrainManager.Train GetFirstTrain(bool AllowBogusTrain)
-			{
-				for (int i = 0; i < this.Trains.Length; i++)
-				{
-					if (this.Trains[i].State == TrainState.Available)
-					{
-						return this.Trains[i];
-					}
-					if (AllowBogusTrain & this.Trains[i].State == TrainState.Bogus)
-					{
-						return this.Trains[i];
-					}
-				}
-				return null;
-			}
-		}
-
 		/// <summary>Holds all signal sections within the game</summary>
 		public static Section[] Sections = new Section[] { };
 
@@ -205,7 +58,7 @@ namespace OpenBve
 				{
 					if (l >= 0)
 					{
-						train = Sections[l].GetFirstTrain(false);
+						train = (TrainManager.Train)Sections[l].GetFirstTrain(false);
 						if (train != null)
 						{
 							break;

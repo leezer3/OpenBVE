@@ -1,4 +1,5 @@
 ﻿using OpenBveApi.Objects;
+using OpenBve.SignalManager;
 
 namespace OpenBve
 {
@@ -88,7 +89,7 @@ namespace OpenBve
 			internal int[] Aspects;
 			internal int DepartureStationIndex;
 			internal bool Invisible;
-			internal Game.SectionType Type;
+			internal SectionType Type;
 		}
 		private struct Limit
 		{
