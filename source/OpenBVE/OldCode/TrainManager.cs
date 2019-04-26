@@ -112,6 +112,10 @@ namespace OpenBve
 								a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject();
 							}
 							Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements = a.Objects;
+							if (Interface.CurrentOptions.PanelAnimatedExtendedMode)
+							{
+                                PanelAnimatedXmlParser.CreateTouchElementForExtendedMode(Train.Cars[Train.DriverCar].CarSections[0], Train);
+							}
 							Train.Cars[Train.DriverCar].CameraRestrictionMode = Camera.RestrictionMode.NotAvailable;
 							World.CameraRestriction = Camera.RestrictionMode.NotAvailable;
 							World.UpdateViewingDistances();

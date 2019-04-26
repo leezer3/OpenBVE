@@ -5,6 +5,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using OpenBveApi.Colors;
+using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -257,19 +258,156 @@ namespace OpenBve.Parsers.Panel
 			}
 		}
 
+		internal static void CreateTouchElementForExtendedMode(TrainManager.CarSection CarSection, TrainManager.Train Train)
+		{
+			Array.Resize(ref CarSection.Groups, 2);
+			CarSection.Groups[1] = new TrainManager.ElementsGroup
+			{
+				Elements = new ObjectManager.AnimatedObject[] { },
+				Overlay = true
+			};
+			foreach (var Element in CarSection.Groups[0].Elements)
+			{
+				FunctionType Type;
+				if (CheckTouchFunctions(Element, out Type))
+				{
+					if (Element.States != null && Element.States.Any())
+					{
+						Vector3[] Positions = new Vector3[2];
+						Positions[0] = Element.States[0].Position + new Vector3(0.0, 0.0, Interface.CurrentOptions.PanelAnimatedExtendedSize / 2.0);
+						Positions[1] = Element.States[0].Position - new Vector3(0.0, 0.0, Interface.CurrentOptions.PanelAnimatedExtendedSize / 2.0);
+						Vector3 Size = new Vector3(Interface.CurrentOptions.PanelAnimatedExtendedSize, Interface.CurrentOptions.PanelAnimatedExtendedSize, Interface.CurrentOptions.PanelAnimatedExtendedSize / 2.0);
+						Translations.Command[] Commands = new Translations.Command[2];
+						switch (Type)
+						{
+							case FunctionType.Power:
+								if (Train.Handles.SingleHandle)
+								{
+									Commands[0] = Translations.Command.SingleBrake;
+									Commands[1] = Translations.Command.SinglePower;
+								}
+								else
+								{
+									Commands[0] = Translations.Command.PowerDecrease;
+									Commands[1] = Translations.Command.PowerIncrease;
+								}
+								break;
+							case FunctionType.Brake:
+								if (Train.Handles.SingleHandle)
+								{
+									Commands[0] = Translations.Command.SingleBrake;
+									Commands[1] = Translations.Command.SinglePower;
+								}
+								else
+								{
+									Commands[0] = Translations.Command.BrakeIncrease;
+									Commands[1] = Translations.Command.BrakeDecrease;
+								}
+								break;
+							case FunctionType.Reverser:
+								Commands[0] = Translations.Command.ReverserForward;
+								Commands[1] = Translations.Command.ReverserBackward;
+								break;
+						}
+						CreateTouchElement(CarSection.Groups[1], Positions[0], Size, 0, -1, Commands[0], 0);
+						CreateTouchElement(CarSection.Groups[1], Positions[1], Size, 0, -1, Commands[1], 0);
+					}
+				}
+			}
+		}
+
+		private enum FunctionType
+		{
+			None,
+			Power,
+			Brake,
+			Reverser
+		}
+
+		private static bool CheckTouchFunctions(ObjectManager.AnimatedObject Element, out FunctionType Type)
+		{
+			if (CheckTouchFunction(Element.StateFunction, out Type))
+			{
+				return true;
+			}
+			if (CheckTouchFunction(Element.TranslateXFunction, out Type))
+			{
+				return true;
+			}
+			if (CheckTouchFunction(Element.TranslateYFunction, out Type))
+			{
+				return true;
+			}
+			if (CheckTouchFunction(Element.TranslateZFunction, out Type))
+			{
+				return true;
+			}
+			if (CheckTouchFunction(Element.RotateXFunction, out Type))
+			{
+				return true;
+			}
+			if (CheckTouchFunction(Element.RotateYFunction, out Type))
+			{
+				return true;
+			}
+			if (CheckTouchFunction(Element.RotateZFunction, out Type))
+			{
+				return true;
+			}
+			if (CheckTouchFunction(Element.TextureShiftXFunction, out Type))
+			{
+				return true;
+			}
+			if (CheckTouchFunction(Element.TextureShiftYFunction, out Type))
+			{
+				return true;
+			}
+			if (CheckTouchFunction(Element.LEDFunction, out Type))
+			{
+				return true;
+			}
+			Type = FunctionType.None;
+			return false;
+		}
+
+		private static bool CheckTouchFunction(FunctionScript Function, out FunctionType Type)
+		{
+			if (Function != null)
+			{
+				foreach (var Instruction in Function.InstructionSet)
+				{
+					switch (Instruction)
+					{
+						case Instructions.PowerNotch:
+							Type = FunctionType.Power;
+							return true;
+						case Instructions.BrakeNotch:
+						case Instructions.BrakeNotchLinear:
+							Type = FunctionType.Brake;
+							return true;
+						case Instructions.ReverserNotch:
+							Type = FunctionType.Reverser;
+							return true;
+					}
+				}
+			}
+			Type = FunctionType.None;
+			return false;
+		}
+
 		private static void CreateTouchElement(TrainManager.ElementsGroup Group, Vector3 Position, Vector3 Size, int ScreenIndex, int SoundIndex, Translations.Command Command, int CommandOption)
 		{
 			Vertex t0 = new Vertex(Size.X, Size.Y, -Size.Z);
-            Vertex t1 = new Vertex(Size.X, -Size.Y, -Size.Z);
-            Vertex t2 = new Vertex(-Size.X, -Size.Y, -Size.Z);
-            Vertex t3 = new Vertex(-Size.X, Size.Y, -Size.Z);
-            Vertex t4 = new Vertex(Size.X, Size.Y, Size.Z);
-            Vertex t5 = new Vertex(Size.X, -Size.Y, Size.Z);
-            Vertex t6 = new Vertex(-Size.X, -Size.Y, Size.Z);
-            Vertex t7 = new Vertex(-Size.X, Size.Y, Size.Z);
+			Vertex t1 = new Vertex(Size.X, -Size.Y, -Size.Z);
+			Vertex t2 = new Vertex(-Size.X, -Size.Y, -Size.Z);
+			Vertex t3 = new Vertex(-Size.X, Size.Y, -Size.Z);
+			Vertex t4 = new Vertex(Size.X, Size.Y, Size.Z);
+			Vertex t5 = new Vertex(Size.X, -Size.Y, Size.Z);
+			Vertex t6 = new Vertex(-Size.X, -Size.Y, Size.Z);
+			Vertex t7 = new Vertex(-Size.X, Size.Y, Size.Z);
 			ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
 			Object.Mesh.Vertices = new VertexTemplate[] { t0, t1, t2, t3, t4, t5, t6, t7 };
-            Object.Mesh.Faces = new MeshFace[] { new MeshFace(new int[] { 0, 1, 2, 3 }), new MeshFace(new int[] { 0, 4, 5, 1 }), new MeshFace(new int[] { 0, 3, 7, 4 }), new MeshFace(new int[] { 6, 5, 4, 7 }), new MeshFace(new int[] { 6, 7, 3, 2 }), new MeshFace(new int[] { 6, 2, 1, 5 }) };
+			Object.Mesh.Faces = new MeshFace[] { new MeshFace(new int[] { 0, 1, 2, 3 }), new MeshFace(new int[] { 0, 4, 5, 1 }), new MeshFace(new int[] { 0, 3, 7, 4 }), new MeshFace(new int[] { 6, 5, 4, 7 }), new MeshFace(new int[] { 6, 7, 3, 2 }), new MeshFace(new int[] { 6, 2, 1, 5 }) };
 			Object.Mesh.Materials = new MeshMaterial[1];
 			Object.Mesh.Materials[0].Flags = 0;
 			Object.Mesh.Materials[0].Color = Color32.White;

@@ -182,6 +182,8 @@ namespace OpenBve
 			internal string CursorFileName;
 			internal bool Panel2ExtendedMode;
 			internal int Panel2ExtendedMinSize;
+			internal bool PanelAnimatedExtendedMode;
+			internal double PanelAnimatedExtendedSize;
 
 			internal XParsers CurrentXParser;
 			internal ObjParsers CurrentObjParser;
@@ -278,6 +280,8 @@ namespace OpenBve
 				this.CursorFileName = "nk.png";
 				this.Panel2ExtendedMode = false;
 				this.Panel2ExtendedMinSize = 128;
+				this.PanelAnimatedExtendedMode = false;
+				this.PanelAnimatedExtendedSize = 0.050;
 				this.CurrentXParser = XParsers.Original; //Set to Michelle's original X parser by default
 				this.CurrentObjParser = ObjParsers.Original; //Set to original Obj parser by default
 			}
@@ -812,6 +816,15 @@ namespace OpenBve
 												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
 												Interface.CurrentOptions.Panel2ExtendedMinSize = a;
 											} break;
+										case "panelanimatedextended":
+											Interface.CurrentOptions.PanelAnimatedExtendedMode = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											break;
+                                        case "panelanimatedextendedsize":
+											{
+												double a;
+												double.TryParse(Value, NumberStyles.Float, Culture, out a);
+												Interface.CurrentOptions.PanelAnimatedExtendedSize = a;
+											} break;
 									}
 									break;
 							}
@@ -1034,6 +1047,8 @@ namespace OpenBve
 			Builder.AppendLine("cursor = " + CurrentOptions.CursorFileName);
 			Builder.AppendLine("panel2extended = " + (CurrentOptions.Panel2ExtendedMode ? "true" : "false"));
 			Builder.AppendLine("panel2extendedminsize = " + CurrentOptions.Panel2ExtendedMinSize.ToString(Culture));
+			Builder.AppendLine("panelanimatedextended = " + (CurrentOptions.PanelAnimatedExtendedMode ? "true" : "false"));
+			Builder.AppendLine("panelanimatedextendedsize = " + CurrentOptions.PanelAnimatedExtendedSize.ToString(Culture));
 			string File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg");
 			System.IO.File.WriteAllText(File, Builder.ToString(), new System.Text.UTF8Encoding(true));
 		}
