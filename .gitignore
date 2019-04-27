@@ -48,3 +48,5 @@ installers/debian/DEBIAN/control
 debian/openbve/*
 debian/*.log
 debian/*.substvars
+debian/*.debhelper
+debian/debhelper-build-stamp
