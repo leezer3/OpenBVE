@@ -6,6 +6,7 @@ using OpenTK;
 using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
 using OpenBveApi.Interface;
+using OpenBveApi.Sounds;
 
 namespace OpenBve
 {

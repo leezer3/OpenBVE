@@ -30,7 +30,7 @@ namespace OpenBve {
 			/// <param name="path">The on-disk path to the sound to load</param>
 			/// <param name="radius">The radius for this sound</param>
 			internal SoundBuffer(string path, double radius) {
-				this.Origin = new PathOrigin(path);
+				this.Origin = new PathOrigin(path, Program.CurrentHost);
 				this.Radius = radius;
 				this.Loaded = false;
 				this.OpenAlBufferName = 0;

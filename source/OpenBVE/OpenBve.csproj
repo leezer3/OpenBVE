@@ -375,9 +375,6 @@
     <Compile Include="Audio\Sounds.SoundBuffer.cs">
       <DependentUpon>Sounds.cs</DependentUpon>
     </Compile>
-    <Compile Include="Audio\Sounds.SoundOrigin.cs">
-      <DependentUpon>Sounds.cs</DependentUpon>
-    </Compile>
     <Compile Include="Audio\Sounds.SoundModels.cs">
       <DependentUpon>Sounds.cs</DependentUpon>
     </Compile>

@@ -27,7 +27,7 @@ namespace OpenBve
 			/// <param name="radius">The radius of the sound</param>
 			internal SoundBuffer(string path, double radius)
 			{
-				this.Origin = new PathOrigin(path);
+				this.Origin = new PathOrigin(path, Program.CurrentHost);
 				this.Radius = radius;
 				this.Loaded = false;
 				this.OpenAlBufferName = 0;

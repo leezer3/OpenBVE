@@ -100,7 +100,6 @@
     <Compile Include="Audio\Sounds.Convert.cs" />
     <Compile Include="Audio\Sounds.cs" />
     <Compile Include="Audio\Sounds.SoundBuffer.cs" />
-    <Compile Include="Audio\Sounds.SoundOrigin.cs" />
     <Compile Include="Audio\Sounds.SoundSource.cs" />
     <Compile Include="Audio\Sounds.Update.cs" />
     <Compile Include="System\Functions\Plugins.cs" />
