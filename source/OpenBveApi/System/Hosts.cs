@@ -92,6 +92,17 @@ namespace OpenBveApi.Hosts {
 			handle = null;
 			return false;
 		}
+
+		/// <summary>Registers a sound and returns a handle to the sound.</summary>
+		/// <param name="path">The path to the file or folder that contains the sound.</param>
+		/// <param name="radius">The sound radius</param>
+		/// <param name="handle">Receives a handle to the sound.</param>
+		/// <returns>Whether loading the sound was successful.</returns>
+		public virtual bool RegisterSound(string path, double radius, out SoundHandle handle)
+		{
+			handle = null;
+			return false;
+		}
 		
 		/// <summary>Registers a sound and returns a handle to the sound.</summary>
 		/// <param name="sound">The sound data.</param>

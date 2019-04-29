@@ -4017,8 +4017,9 @@ namespace OpenBve {
 												device = 0;
 											}
 										}
-										Sounds.SoundBuffer arrsnd = null;
-										Sounds.SoundBuffer depsnd = null;
+
+										OpenBveApi.Sounds.SoundHandle arrsnd = null;
+										OpenBveApi.Sounds.SoundHandle depsnd = null;
 										if (!PreviewOnly) {
 											if (Arguments.Length >= 8 && Arguments[7].Length > 0) {
 												if (Path.ContainsInvalidChars(Arguments[7])) {
@@ -4028,7 +4029,7 @@ namespace OpenBve {
 													if (!System.IO.File.Exists(f)) {
 														Interface.AddMessage(MessageType.Error, true, "ArrivalSound " + f + " not found in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														arrsnd = Sounds.RegisterBuffer(f, 30.0);
+														Program.CurrentHost.RegisterSound(f, 30.0, out arrsnd);
 													}
 												}
 											}
@@ -4059,7 +4060,7 @@ namespace OpenBve {
 													if (!System.IO.File.Exists(f)) {
 														Interface.AddMessage(MessageType.Error, true, "DepartureSound " + f + " not found in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														depsnd = Sounds.RegisterBuffer(f, 30.0);
+														Program.CurrentHost.RegisterSound(f, 30.0, out depsnd);
 													}
 												}
 											}

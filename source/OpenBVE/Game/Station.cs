@@ -41,9 +41,9 @@ namespace OpenBve
 			/// <summary>The origin vector for the arrival and departure sounds </summary>
 			internal Vector3 SoundOrigin;
 			/// <summary>The sound buffer to be played when the train arrives at this station</summary>
-			internal Sounds.SoundBuffer ArrivalSoundBuffer;
+			internal OpenBveApi.Sounds.SoundHandle ArrivalSoundBuffer;
 			/// <summary>The sound buffer to be played before the doors close pre-departure</summary>
-			internal Sounds.SoundBuffer DepartureSoundBuffer;
+			internal OpenBveApi.Sounds.SoundHandle DepartureSoundBuffer;
 			/// <summary>The safety system in use from this station onwards</summary>
 			internal SafetySystem SafetySystem;
 			/// <summary>The available stop points for this station</summary>

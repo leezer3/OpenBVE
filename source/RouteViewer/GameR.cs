@@ -12,6 +12,7 @@ using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBve.SignalManager;
+using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
 namespace OpenBve {
 	internal static class Game {
@@ -192,8 +193,8 @@ namespace OpenBve {
 			Atc = 1
 		}
 		internal class Station : OpenBveApi.Runtime.Station {
-			internal Sounds.SoundBuffer ArrivalSoundBuffer;
-			internal Sounds.SoundBuffer DepartureSoundBuffer;
+			internal SoundHandle ArrivalSoundBuffer;
+			internal SoundHandle DepartureSoundBuffer;
 			internal Vector3 SoundOrigin;
 			internal SafetySystem SafetySystem;
 			internal StationStop[] Stops;
