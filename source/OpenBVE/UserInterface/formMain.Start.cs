@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
@@ -1017,7 +1017,7 @@ namespace OpenBve
 					case TextEncoding.Encoding.EUC_KR:
 						comboboxTrainEncoding.SelectedIndex = 0;
 						comboboxTrainEncoding.Items[0] = "Korean - 949";
-						Result.TrainEncoding = System.Text.Encoding.GetEncoding(950);
+						Result.TrainEncoding = System.Text.Encoding.GetEncoding(949);
 						break;
 				}
 				int i;
