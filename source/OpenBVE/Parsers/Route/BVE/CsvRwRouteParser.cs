@@ -155,11 +155,11 @@ namespace OpenBve {
 				Data.Signals[6] = new CompatibilitySignalData(new int[] {0, 3, 4}, new ObjectManager.StaticObject[]
 				{
 					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_0.csv"),
-						Encoding, false),
+						System.Text.Encoding.UTF8, false),
 					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_3.csv"),
-						Encoding, false),
+						System.Text.Encoding.UTF8, false),
 					ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_4.csv"),
-						Encoding, false)
+						System.Text.Encoding.UTF8, false)
 				});
 				// compatibility signals
 				Data.CompatibilitySignals = new CompatibilitySignalData[9];
@@ -230,11 +230,11 @@ namespace OpenBve {
 					new ObjectManager.StaticObject[]
 					{
 						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_0.csv"),
-							Encoding, false),
+							System.Text.Encoding.UTF8, false),
 						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_3.csv"),
-							Encoding, false),
+							System.Text.Encoding.UTF8, false),
 						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_4.csv"),
-							Encoding, false)
+							System.Text.Encoding.UTF8, false)
 					});
 				// game data
 				Game.Sections = new SignalManager.Section[1];
@@ -245,7 +245,7 @@ namespace OpenBve {
 				Game.Sections[0].PreviousSection = -1;
 				Game.Sections[0].StationIndex = -1;
 				Game.Sections[0].TrackPosition = 0;
-				Game.Sections[0].Trains = new TrainManager.Train[] {};
+				Game.Sections[0].Trains = new AbstractTrain[] {};
 
 				/*
 				 * These are the speed limits for the default Japanese signal aspects, and in most cases will be overwritten
