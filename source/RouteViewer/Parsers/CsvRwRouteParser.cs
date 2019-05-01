@@ -271,7 +271,7 @@ namespace OpenBve {
 			}
 		}
 		private class AnimatedObjectSignalData : SignalData {
-			internal ObjectManager.AnimatedObjectCollection Objects;
+			internal UnifiedObject Objects;
 		}
 		private struct RouteData {
 			internal double TrackPosition;
@@ -2563,7 +2563,7 @@ namespace OpenBve {
 															UnifiedObject Object = ObjectManager.LoadObject(f, Encoding, false);
 															if (Object is ObjectManager.AnimatedObjectCollection) {
 																AnimatedObjectSignalData Signal = new AnimatedObjectSignalData();
-																Signal.Objects = (ObjectManager.AnimatedObjectCollection)Object;
+																Signal.Objects = Object;
 																Data.SignalData[CommandIndex1] = Signal;
 															} else {
 																Interface.AddMessage(MessageType.Error, true, "GlowFileWithoutExtension " + f + " is not a valid animated object in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);

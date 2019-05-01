@@ -13,17 +13,13 @@ namespace OpenBve
 		/// <param name="FileName">The file to load</param>
 		/// <param name="Encoding">The text endcoding of the base file (Used if the encoding cannot be auto-detected)</param>
 		/// <param name="PreserveVertices">Whether object should be optimized to remove duplicate vertices</param>
-		/// <param name="ForceTextureRepeatX">Whether texture repeat is forced on the X-axis</param>
-		/// <param name="ForceTextureRepeatY">Whether texture repeat is forced on the Y-axis</param>
 		/// <returns>The new object, or a null reference if loading fails</returns>
 		/*
 		 * Notes for refactoring:
 		 *   * Unused vertices must only be preserved in deformable objects (e.g. Crack and Form)
-		 *   * ForceTextureRepeatX / Y is only used for animated objects using the TextureShiftFunction
-		 *   * TODO / BUG: ForceTextureRepeat is only supported by the B3D / CSV parser
 		 *   * TODO / BUG: No detection of actual file contents, which will make all parsers barf
 		 */
-		internal static UnifiedObject LoadObject(string FileName, Encoding Encoding, bool PreserveVertices, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
+		internal static UnifiedObject LoadObject(string FileName, Encoding Encoding, bool PreserveVertices)
 		{
 			if (String.IsNullOrEmpty(FileName))
 			{

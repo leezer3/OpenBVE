@@ -114,7 +114,7 @@ namespace OpenBve
 													{
 														Array.Resize<UnifiedObject>(ref obj, obj.Length << 1);
 													}
-													obj[objCount] = ObjectManager.LoadObject(file, Encoding, false, false, false);
+													obj[objCount] = ObjectManager.LoadObject(file, Encoding, false);
 													objCount++;
 												}
 												else

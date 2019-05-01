@@ -1093,7 +1093,7 @@ namespace OpenBve {
 													{
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														var obj = ObjectManager.LoadObject(f, Encoding, false, false, false);
+														var obj = ObjectManager.LoadObject(f, Encoding, false);
 														if (obj != null)
 														{
 															Data.Structure.RailObjects.Add(CommandIndex1, obj, "RailStructure");
@@ -1118,7 +1118,7 @@ namespace OpenBve {
 													if (!System.IO.File.Exists(f)) {
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														var obj = ObjectManager.LoadObject(f, Encoding, false, false, false);
+														var obj = ObjectManager.LoadObject(f, Encoding, false);
 														if (obj != null)
 														{
 															Data.Structure.Beacon.Add(CommandIndex1, obj, "BeaconStructure");
@@ -1154,7 +1154,7 @@ namespace OpenBve {
 													{
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														Data.Structure.Poles[CommandIndex1][CommandIndex2] = ObjectManager.LoadObject(f, Encoding, false, false, false);
+														Data.Structure.Poles[CommandIndex1][CommandIndex2] = ObjectManager.LoadObject(f, Encoding, false);
 													}
 												}
 											}
@@ -1176,7 +1176,7 @@ namespace OpenBve {
 													{
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														var obj = ObjectManager.LoadObject(f, Encoding, false, false, false);
+														var obj = ObjectManager.LoadObject(f, Encoding, false);
 														if (obj != null)
 														{
 															Data.Structure.Ground.Add(CommandIndex1, obj, "GroundStructure");
@@ -1202,7 +1202,7 @@ namespace OpenBve {
 													{
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														var obj = ObjectManager.LoadObject(f, Encoding, false, false, false);
+														var obj = ObjectManager.LoadObject(f, Encoding, false);
 														if (obj != null)
 														{
 															Data.Structure.WallL.Add(CommandIndex1, obj, "Left WallStructure");
@@ -1228,7 +1228,7 @@ namespace OpenBve {
 													{
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														var obj = ObjectManager.LoadObject(f, Encoding, false, false, false);
+														var obj = ObjectManager.LoadObject(f, Encoding, false);
 														if (obj != null)
 														{
 															Data.Structure.WallR.Add(CommandIndex1, obj, "Right WallStructure");
@@ -1254,7 +1254,7 @@ namespace OpenBve {
 													{
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														var obj = ObjectManager.LoadObject(f, Encoding, false, false, false);
+														var obj = ObjectManager.LoadObject(f, Encoding, false);
 														if (obj != null)
 														{
 															Data.Structure.DikeL.Add(CommandIndex1, obj, "Left DikeStructure");
@@ -1280,7 +1280,7 @@ namespace OpenBve {
 													{
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														var obj = ObjectManager.LoadObject(f, Encoding, false, false, false);
+														var obj = ObjectManager.LoadObject(f, Encoding, false);
 														if (obj != null)
 														{
 															Data.Structure.DikeR.Add(CommandIndex1, obj, "Right DikeStructure");
@@ -1306,7 +1306,7 @@ namespace OpenBve {
 													{
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														var obj = ObjectManager.LoadObject(f, Encoding, false, false, false);
+														var obj = ObjectManager.LoadObject(f, Encoding, false);
 														if (obj != null)
 														{
 															Data.Structure.FormL.Add(CommandIndex1, obj, "Left FormStructure");
@@ -1332,7 +1332,7 @@ namespace OpenBve {
 													{
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														var obj = ObjectManager.LoadObject(f, Encoding, false, false, false);
+														var obj = ObjectManager.LoadObject(f, Encoding, false);
 														if (obj != null)
 														{
 															Data.Structure.FormR.Add(CommandIndex1, obj, "Right FormStructure");
@@ -1420,7 +1420,7 @@ namespace OpenBve {
 														{
 															Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 														} else {
-															var obj = ObjectManager.LoadObject(f, Encoding, false, false, false);
+															var obj = ObjectManager.LoadObject(f, Encoding, false);
 															if (obj != null)
 															{
 																Data.Structure.RoofL.Add(CommandIndex1, obj, "Left RoofStructure");
@@ -1457,7 +1457,7 @@ namespace OpenBve {
 														{
 															Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 														} else {
-															var obj = ObjectManager.LoadObject(f, Encoding, false, false, false);
+															var obj = ObjectManager.LoadObject(f, Encoding, false);
 															if (obj != null)
 															{
 																Data.Structure.RoofR.Add(CommandIndex1, obj, "Right RoofStructure");
@@ -1610,7 +1610,7 @@ namespace OpenBve {
 													{
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " could not be found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														var obj = ObjectManager.LoadObject(f, Encoding, false, false, false);
+														var obj = ObjectManager.LoadObject(f, Encoding, false);
 														if (obj != null)
 														{
 															Data.Structure.FreeObjects.Add(CommandIndex1, obj, "FreeObject");
@@ -1645,10 +1645,10 @@ namespace OpenBve {
 														if (!System.IO.File.Exists(f)) {
 															Interface.AddMessage(MessageType.Error, true, "SignalFileWithoutExtension " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 														} else {
-															UnifiedObject Object = ObjectManager.LoadObject(f, Encoding, false, false, false);
+															UnifiedObject Object = ObjectManager.LoadObject(f, Encoding, false);
 															if (Object is ObjectManager.AnimatedObjectCollection) {
 																AnimatedObjectSignalData Signal = new AnimatedObjectSignalData();
-																Signal.Objects = (ObjectManager.AnimatedObjectCollection)Object;
+																Signal.Objects = Object;
 																Data.Signals[CommandIndex1] = Signal;
 															} else {
 																Interface.AddMessage(MessageType.Error, true, "GlowFileWithoutExtension " + f + " is not a valid animated object in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);

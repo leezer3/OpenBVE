@@ -83,7 +83,7 @@ namespace OpenBve
 										}
 										else
 										{
-											UnifiedObject b = ObjectManager.LoadObject(f, System.Text.Encoding.Default, false, false, false);
+											UnifiedObject b = ObjectManager.LoadObject(f, System.Text.Encoding.Default, false);
 											o = (ObjectManager.StaticObject) b;
 										}
 										break;

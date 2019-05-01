@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Textures;
+﻿using OpenBveApi.Objects;
+using OpenBveApi.Textures;
 
 namespace OpenBve
 {
@@ -39,7 +40,7 @@ namespace OpenBve
 		/// </summary>
 		private class AnimatedObjectSignalData : SignalData
 		{
-			internal ObjectManager.AnimatedObjectCollection Objects;
+			internal UnifiedObject Objects;
 		}
 	}
 }
