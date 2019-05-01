@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.World;
@@ -39,6 +40,18 @@ namespace OpenBve
 		{
 			return CreateStaticObject(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, BlockLength, TrackPosition, 1.0);
 		}
+
+		internal static int CreateStaticObject(UnifiedObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		{
+			StaticObject obj = (StaticObject) Prototype;
+			if (obj == null)
+			{
+				Interface.AddMessage(MessageType.Error, false, "Attempted to use an animated object where only static objects are allowed.");
+				return -1;
+			}
+			return CreateStaticObject(obj, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+		}
+
 		internal static int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
 		{
 			if (Prototype == null)
