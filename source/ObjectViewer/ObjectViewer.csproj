@@ -95,7 +95,6 @@
     <Compile Include="Parsers\Generic\AssimpXParser.cs" />
     <Compile Include="Parsers\Ls3DGrpParser.cs" />
     <Compile Include="Parsers\Ls3DObjectParser.cs" />
-    <Compile Include="Parsers\MeshBuilder.cs" />
     <Compile Include="Parsers\MSTS\ShapeParser.cs" />
     <Compile Include="Parsers\Generic\NewXParser.cs" />
     <Compile Include="Parsers\WavefrontObjParser.cs" />

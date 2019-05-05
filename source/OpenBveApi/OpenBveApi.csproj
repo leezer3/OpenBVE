@@ -82,6 +82,8 @@
     <Compile Include="Math\Matrix4.cs" />
     <Compile Include="Math\Vector4.cs" />
     <Compile Include="Objects\Glow.cs" />
+    <Compile Include="Objects\Helpers\Material.cs" />
+    <Compile Include="Objects\Helpers\MeshBuilder.cs" />
     <Compile Include="Objects\Mesh.cs" />
     <Compile Include="Objects\MeshFace.cs" />
     <Compile Include="Objects\MeshFaceVertex.cs" />
@@ -145,6 +147,7 @@
   <ItemGroup>
     <EmbeddedResource Include="..\..\assets\Languages\en-US.cfg" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">echo Resoloving dependencies
       xcopy /E /Y "$(SolutionDir)dependencies" "$(TargetDir)"

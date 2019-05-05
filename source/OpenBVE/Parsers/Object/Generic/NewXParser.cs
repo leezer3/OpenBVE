@@ -114,7 +114,7 @@ namespace OpenBve
 		{
 			Text = Text.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim();
 			StaticObject obj = new StaticObject(Program.CurrentHost);
-			MeshBuilder builder = new MeshBuilder();
+			MeshBuilder builder = new MeshBuilder(Program.CurrentHost);
 			Material material = new Material();
 			Block block = new TextualBlock(Text);
 			while (block.Position() < block.Length() - 5)
@@ -196,7 +196,7 @@ namespace OpenBve
 					if (builder.Vertices.Length != 0)
 					{
 						builder.Apply(ref obj);
-						builder = new MeshBuilder();
+						builder = new MeshBuilder(Program.CurrentHost);
 					}
 					while (block.Position() < block.Length() - 5)
 					{
@@ -232,7 +232,7 @@ namespace OpenBve
 					if (builder.Vertices.Length != 0)
 					{
 						builder.Apply(ref obj);
-						builder = new MeshBuilder();
+						builder = new MeshBuilder(Program.CurrentHost);
 					}
 					int nVerts = block.ReadUInt16();
 					if (nVerts == 0)
@@ -409,7 +409,7 @@ namespace OpenBve
 			Block block = new BinaryBlock(Data, FloatingPointSize);
 			block.FloatingPointSize = FloatingPointSize;
 			StaticObject obj = new StaticObject(Program.CurrentHost);
-			MeshBuilder builder = new MeshBuilder();
+			MeshBuilder builder = new MeshBuilder(Program.CurrentHost);
 			Material material = new Material();
 			while (block.Position() < block.Length())
 			{

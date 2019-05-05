@@ -26,7 +26,7 @@ namespace OpenBve
 				Model model = parser.GetModel();
 
 				StaticObject obj = new StaticObject(Program.CurrentHost);
-				MeshBuilder builder = new MeshBuilder();
+				MeshBuilder builder = new MeshBuilder(Program.CurrentHost);
 
 				List<Vertex> allVertices = new List<Vertex>();
 				foreach (var vertex in model.Vertices)
@@ -74,7 +74,7 @@ namespace OpenBve
 
 						int m = builder.Materials.Length;
 						Array.Resize(ref builder.Materials, m + 1);
-						builder.Materials[m] = new Material();
+						builder.Materials[m] = new OpenBveApi.Objects.Material();
 						uint materialIndex = mesh.MaterialIndex;
 						if (materialIndex != AssimpNET.Obj.Mesh.NoMaterial)
 						{
@@ -116,7 +116,7 @@ namespace OpenBve
 						}
 
 						builder.Apply(ref obj);
-						builder = new MeshBuilder();
+						builder = new MeshBuilder(Program.CurrentHost);
 					}
 				}
 				obj.Mesh.CreateNormals();

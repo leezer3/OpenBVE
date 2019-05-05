@@ -27,7 +27,7 @@ namespace OpenBve
 				Scene scene = parser.GetImportedData();
 
 				StaticObject obj = new StaticObject(Program.CurrentHost);
-				MeshBuilder builder = new MeshBuilder();
+				MeshBuilder builder = new MeshBuilder(Program.CurrentHost);
 
 				// Global
 				foreach (var mesh in scene.GlobalMeshes)
@@ -80,7 +80,7 @@ namespace OpenBve
 			if (builder.Vertices.Length != 0)
 			{
 				builder.Apply(ref obj);
-				builder = new MeshBuilder();
+				builder = new MeshBuilder(Program.CurrentHost);
 			}
 
 			int nVerts = mesh.Positions.Count;
@@ -125,7 +125,7 @@ namespace OpenBve
 			{
 				int m = builder.Materials.Length;
 				Array.Resize(ref builder.Materials, m + 1);
-				builder.Materials[m] = new Material();
+				builder.Materials[m] = new OpenBveApi.Objects.Material();
 				builder.Materials[m].Color = new Color32((byte)(255 * mesh.Materials[i].Diffuse.R), (byte)(255 * mesh.Materials[i].Diffuse.G), (byte)(255 * mesh.Materials[i].Diffuse.B), (byte)(255 * mesh.Materials[i].Diffuse.A));
 				double mPower = mesh.Materials[i].SpecularExponent; //TODO: Unsure what this does...
 				Color24 mSpecular = new Color24((byte)mesh.Materials[i].Specular.R, (byte)mesh.Materials[i].Specular.G, (byte)mesh.Materials[i].Specular.B);
