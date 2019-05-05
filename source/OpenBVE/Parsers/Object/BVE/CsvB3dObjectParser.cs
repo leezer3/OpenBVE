@@ -96,7 +96,7 @@ namespace OpenBve {
 				}
 			}
 			// parse lines
-			MeshBuilder Builder = new MeshBuilder();
+			MeshBuilder Builder = new MeshBuilder(Program.CurrentHost);
 			Vector3[] Normals = new Vector3[4];
 			bool CommentStarted = false;
 			for (int i = 0; i < Lines.Count; i++) {
@@ -235,7 +235,7 @@ namespace OpenBve {
 									Interface.AddMessage(MessageType.Warning, false, "0 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
 								Builder.Apply(ref Object);
-								Builder = new MeshBuilder();
+								Builder = new MeshBuilder(Program.CurrentHost);
 								Normals = new Vector3[4];
 							} break;
 						case "addvertex":

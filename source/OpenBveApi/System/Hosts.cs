@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Math;
+﻿using System.Drawing;
+using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Sounds;
 using OpenBveApi.Textures;
@@ -73,6 +74,16 @@ namespace OpenBveApi.Hosts {
 		/// <param name="handle">Receives the handle to the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
 		public virtual bool RegisterTexture(Textures.Texture texture, TextureParameters parameters, out Textures.Texture handle) {
+			handle = null;
+			return false;
+		}
+
+		/// <summary>Registers a texture and returns a handle to the texture.</summary>
+		/// <param name="texture">The texture data.</param>
+		/// <param name="parameters">The parameters that specify how to process the texture.</param>
+		/// <param name="handle">Receives the handle to the texture.</param>
+		/// <returns>Whether loading the texture was successful.</returns>
+		public virtual bool RegisterTexture(Bitmap texture, TextureParameters parameters, out Textures.Texture handle) {
 			handle = null;
 			return false;
 		}
