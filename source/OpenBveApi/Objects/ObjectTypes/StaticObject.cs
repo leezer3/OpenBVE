@@ -44,7 +44,7 @@ namespace OpenBveApi.Objects
 		/// <param name="DaytimeTexture">The replacement daytime texture</param>
 		/// <param name="NighttimeTexture">The replacement nighttime texture</param>
 		/// <returns></returns>
-		public StaticObject Clone(Texture DaytimeTexture, Texture NighttimeTexture)
+		public StaticObject Clone(Textures.Texture DaytimeTexture, Textures.Texture NighttimeTexture) //Prefix is required or else MCS barfs
 		{
 			StaticObject Result = new StaticObject(currentHost)
 			{
