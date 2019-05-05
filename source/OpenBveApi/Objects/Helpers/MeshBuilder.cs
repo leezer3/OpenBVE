@@ -76,7 +76,7 @@ namespace OpenBveApi.Objects
 					Object.Mesh.Materials[mm + i].TransparentColor = Materials[i].TransparentColor;
 					if (Materials[i].DaytimeTexture != null || Materials[i].Text != null)
 					{
-						Texture tday;
+						Textures.Texture tday;
 						if (Materials[i].Text != null)
 						{
 							Bitmap bitmap = null;
@@ -112,7 +112,7 @@ namespace OpenBveApi.Objects
 					Object.Mesh.Materials[mm + i].EmissiveColor = Materials[i].EmissiveColor;
 					if (Materials[i].NighttimeTexture != null)
 					{
-						Texture tnight;
+						Textures.Texture tnight;
 						if (Materials[i].TransparentColorUsed)
 						{
 							currentHost.RegisterTexture(Materials[i].NighttimeTexture, new TextureParameters(null, new Color24(Materials[i].TransparentColor.R, Materials[i].TransparentColor.G, Materials[i].TransparentColor.B)), out tnight);
