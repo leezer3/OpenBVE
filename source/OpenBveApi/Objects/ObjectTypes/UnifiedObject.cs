@@ -36,6 +36,12 @@ namespace OpenBveApi.Objects
 
 		/// <summary>Call this method to optimize the object</summary>
 		/// <param name="PreserveVerticies">Whether duplicate verticies are to be preserved (Takes less time)</param>
-		public abstract void OptimizeObject(bool PreserveVerticies);
+		/// <param name="Threshold">The face size threshold for optimization</param>
+		/// <param name="VertexCulling">Whether vertex culling is performed</param>
+		public abstract void OptimizeObject(bool PreserveVerticies, int Threshold, bool VertexCulling);
+
+		/// <summary>Creates a clone of this object</summary>
+		/// <returns>The cloned object</returns>
+		public abstract UnifiedObject Clone();
 	}
 }

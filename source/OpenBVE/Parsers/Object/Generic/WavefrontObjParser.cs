@@ -28,9 +28,9 @@ namespace OpenBve
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
 		/// <param name="Encoding">The encoding the file is saved in.</param>
 		/// <returns>The object loaded.</returns>
-		internal static ObjectManager.StaticObject ReadObject(string FileName, System.Text.Encoding Encoding)
+		internal static StaticObject ReadObject(string FileName, System.Text.Encoding Encoding)
 		{
-			ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
+			StaticObject Object = new StaticObject(Program.CurrentHost);
 
 			MeshBuilder Builder = new MeshBuilder();
 
@@ -414,7 +414,7 @@ namespace OpenBve
 			Materials[Materials.Length - 1] = mm;
 		}
 
-		private static void ApplyMeshBuilder(ref ObjectManager.StaticObject Object, MeshBuilder Builder)
+		private static void ApplyMeshBuilder(ref StaticObject Object, MeshBuilder Builder)
 		{
 			if (Builder.Faces.Count != 0)
 			{

@@ -377,9 +377,9 @@ namespace OpenBve
 					Groups = new ElementsGroup[1]
 				};
 				CarSections[j].Groups[0] = new ElementsGroup();
-				if (currentObject is ObjectManager.StaticObject)
+				if (currentObject is StaticObject)
 				{
-					ObjectManager.StaticObject s = (ObjectManager.StaticObject)currentObject;
+					StaticObject s = (StaticObject)currentObject;
 					CarSections[j].Groups[0].Elements = new ObjectManager.AnimatedObject[1];
 					CarSections[j].Groups[0].Elements[0] = new ObjectManager.AnimatedObject();
 					CarSections[j].Groups[0].Elements[0].States = new ObjectManager.AnimatedObjectState[1];

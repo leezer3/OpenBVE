@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Math;
+﻿using System;
+using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.World;
 
@@ -103,7 +104,7 @@ namespace OpenBve
 				}
 			}
 
-			public override void OptimizeObject(bool PreserveVerticies)
+			public override void OptimizeObject(bool PreserveVerticies, int Threshold, bool VertexCulling)
 			{
 				for (int i = 0; i < Objects.Length; i++)
 				{
@@ -113,9 +114,14 @@ namespace OpenBve
 						{
 							continue;
 						}
-						Objects[i].States[j].Object.OptimizeObject(PreserveVerticies);
+						Objects[i].States[j].Object.OptimizeObject(PreserveVerticies, Threshold, VertexCulling);
 					}
 				}
+			}
+
+			public override UnifiedObject Clone()
+			{
+				throw new NotSupportedException();
 			}
 		}
 	}

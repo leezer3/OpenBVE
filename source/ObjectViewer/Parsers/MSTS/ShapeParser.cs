@@ -225,9 +225,9 @@ namespace OpenBve
 				}
 			}
 
-			internal void Apply(out ObjectManager.StaticObject Object)
+			internal void Apply(out StaticObject Object)
 			{
-				Object = new ObjectManager.StaticObject();
+				Object = new StaticObject(Program.CurrentHost);
 				if (faces.Count != 0)
 				{
 					int mf = Object.Mesh.Faces.Length;

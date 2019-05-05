@@ -96,7 +96,7 @@ namespace OpenBve
 					Result.States[i].Position = this.States[i].Position;
 					if (this.States[i].Object != null)
 					{
-						Result.States[i].Object = this.States[i].Object.Clone();
+						Result.States[i].Object = (StaticObject)this.States[i].Object.Clone();
 					}
 				}
 				Result.TrackFollowerFunction = this.TrackFollowerFunction == null ? null : this.TrackFollowerFunction.Clone();
@@ -184,7 +184,7 @@ namespace OpenBve
 				}
 				else
 				{
-					ObjectManager.Objects[i] = new StaticObject();
+					ObjectManager.Objects[i] = new StaticObject(Program.CurrentHost);
 				}
 				CurrentState = StateIndex;
 				if (Show)
@@ -845,7 +845,7 @@ namespace OpenBve
 					{
 						if (currentObject.Object.States[i].Object == null)
 						{
-							currentObject.Object.States[i].Object = new StaticObject { RendererIndex =  -1 };
+							currentObject.Object.States[i].Object = new StaticObject(Program.CurrentHost) { RendererIndex =  -1 };
 						}
 					}
 					double r = 0.0;
@@ -889,7 +889,7 @@ namespace OpenBve
 					{
 						if (currentObject.Object.States[i].Object == null)
 						{
-							currentObject.Object.States[i].Object = new StaticObject { RendererIndex =  -1 };
+							currentObject.Object.States[i].Object = new StaticObject(Program.CurrentHost) { RendererIndex =  -1 };
 						}
 					}
 					double r = 0.0;

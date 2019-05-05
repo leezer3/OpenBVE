@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 
@@ -239,13 +240,13 @@ namespace OpenBve
 		internal class BackgroundObject : BackgroundHandle
 		{
 			/// <summary>The object used for this background (NOTE: Static objects only)</summary>
-			internal readonly ObjectManager.StaticObject ObjectBackground;
+			internal readonly StaticObject ObjectBackground;
 			/// <summary>The clipping distance required to fully render the object</summary>
 			internal readonly double ClipDistance = 0;
 
 			/// <summary>Creates a new background object</summary>
 			/// <param name="Object">The object to use for the background</param>
-			internal BackgroundObject(ObjectManager.StaticObject Object)
+			internal BackgroundObject(StaticObject Object)
 			{
 				this.ObjectBackground = Object;
 				//As we are using an object based background, calculate the minimum clip distance

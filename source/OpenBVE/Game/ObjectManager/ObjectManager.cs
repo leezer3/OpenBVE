@@ -63,8 +63,8 @@ namespace OpenBve
 			{
 				Array.Resize<StaticObject>(ref Objects, Objects.Length << 1);
 			}
-			Objects[a] = new StaticObject();
-			Objects[a].ApplyData(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+			Objects[a] = new StaticObject(Program.CurrentHost);
+			Objects[a].ApplyData(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness, Interface.CurrentOptions.ViewingDistance);
 			for (int i = 0; i < Prototype.Mesh.Faces.Length; i++)
 			{
 				switch (Prototype.Mesh.Faces[i].Flags & MeshFace.FaceTypeMask)
@@ -98,7 +98,7 @@ namespace OpenBve
 				Array.Resize<StaticObject>(ref Objects, Objects.Length << 1);
 			}
 
-			Objects[a] = new StaticObject { Dynamic = true };
+			Objects[a] = new StaticObject(Program.CurrentHost) { Dynamic = true };
 			ObjectsUsed++;
 			return a;
 		}

@@ -12,7 +12,7 @@ namespace OpenBve
 {
 	class NewXParser
 	{
-		internal static ObjectManager.StaticObject ReadObject(string FileName, Encoding Encoding)
+		internal static StaticObject ReadObject(string FileName, Encoding Encoding)
 		{
 			rootMatrix = Matrix4D.NoTransformation;
 			currentFolder = System.IO.Path.GetDirectoryName(FileName);
@@ -110,10 +110,10 @@ namespace OpenBve
 			return null;
 		}
 		
-		private static ObjectManager.StaticObject LoadTextualX(string Text)
+		private static StaticObject LoadTextualX(string Text)
 		{
 			Text = Text.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim();
-			ObjectManager.StaticObject obj = new ObjectManager.StaticObject();
+			StaticObject obj = new StaticObject(Program.CurrentHost);
 			MeshBuilder builder = new MeshBuilder();
 			Material material = new Material();
 			Block block = new TextualBlock(Text);
@@ -140,7 +140,7 @@ namespace OpenBve
 		private static Matrix4D rootMatrix;
 		private static int currentLevel = 0;
 
-		private static void ParseSubBlock(Block block, ref ObjectManager.StaticObject obj, ref MeshBuilder builder, ref Material material)
+		private static void ParseSubBlock(Block block, ref StaticObject obj, ref MeshBuilder builder, ref Material material)
 		{
 			Block subBlock;
 			switch (block.Token)
@@ -404,11 +404,11 @@ namespace OpenBve
 			}
 		}
 
-		private static ObjectManager.StaticObject LoadBinaryX(byte[] Data, int FloatingPointSize)
+		private static StaticObject LoadBinaryX(byte[] Data, int FloatingPointSize)
 		{
 			Block block = new BinaryBlock(Data, FloatingPointSize);
 			block.FloatingPointSize = FloatingPointSize;
-			ObjectManager.StaticObject obj = new ObjectManager.StaticObject();
+			StaticObject obj = new StaticObject(Program.CurrentHost);
 			MeshBuilder builder = new MeshBuilder();
 			Material material = new Material();
 			while (block.Position() < block.Length())

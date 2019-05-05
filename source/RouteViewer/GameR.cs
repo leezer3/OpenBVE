@@ -12,6 +12,7 @@ using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBve.SignalManager;
+using OpenBveApi.Objects;
 using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
 namespace OpenBve {
@@ -163,7 +164,7 @@ namespace OpenBve {
 			InfoTotalQuadStrip = 0;
 			InfoTotalPolygon = 0;
 			// object manager
-			ObjectManager.Objects = new ObjectManager.StaticObject[16];
+			ObjectManager.Objects = new StaticObject[16];
 			ObjectManager.ObjectsUsed = 0;
 			ObjectManager.ObjectsSortedByStart = new int[] { };
 			ObjectManager.ObjectsSortedByEnd = new int[] { };

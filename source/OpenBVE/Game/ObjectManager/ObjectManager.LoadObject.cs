@@ -184,7 +184,7 @@ namespace OpenBve
 			}
 			if (Result != null)
 			{
-				Result.OptimizeObject(PreserveVertices);
+				Result.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, Interface.CurrentOptions.ObjectOptimizationVertexCulling);
 			}
 			return Result;
 #if !DEBUG
@@ -300,7 +300,7 @@ namespace OpenBve
 			}
 			if (Result != null)
 			{
-				Result.OptimizeObject(PreserveVertices);
+				Result.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, Interface.CurrentOptions.ObjectOptimizationVertexCulling);
 			}
 			return Result;
 #if !DEBUG

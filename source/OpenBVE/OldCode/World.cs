@@ -282,7 +282,7 @@ namespace OpenBve {
 		}
 		/// <summary>Checks whether the camera can move in the selected direction, due to a bounding box.</summary>
 		/// <returns>True if we are able to move the camera, false otherwise</returns>
-		internal static bool PerformBoundingBoxTest(ref ObjectManager.StaticObject bounding, ref Vector3 cameraLocation)
+		internal static bool PerformBoundingBoxTest(ref StaticObject bounding, ref Vector3 cameraLocation)
 		{
 			if (cameraLocation.X < bounding.Mesh.BoundingBox[0].X || cameraLocation.X > bounding.Mesh.BoundingBox[1].X ||
 				cameraLocation.Y < bounding.Mesh.BoundingBox[0].Y || cameraLocation.Y > bounding.Mesh.BoundingBox[1].Y ||

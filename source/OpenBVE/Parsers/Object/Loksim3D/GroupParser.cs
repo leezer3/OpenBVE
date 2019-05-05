@@ -6,6 +6,7 @@ using System.Linq;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
+using OpenTK.Graphics.ES20;
 
 namespace OpenBve
 {
@@ -188,7 +189,7 @@ namespace OpenBve
 
 					//Single mesh object, containing all static components of the LS3D object
 					//If we use multiples, the Z-sorting throws a wobbly
-					ObjectManager.StaticObject staticObject = new ObjectManager.StaticObject
+					StaticObject staticObject = new StaticObject(Program.CurrentHost)
 					{
 						Mesh = new Mesh
 						{
@@ -203,7 +204,7 @@ namespace OpenBve
 						{
 							continue;
 						}
-						ObjectManager.StaticObject Object = null;
+						StaticObject Object = null;
 						ObjectManager.AnimatedObjectCollection AnimatedObject = null;
 						try {
 							if (CurrentObjects[i].Name.ToLowerInvariant().EndsWith(".l3dgrp"))

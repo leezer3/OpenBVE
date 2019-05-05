@@ -13,7 +13,7 @@ namespace OpenBve
 		private static string currentFolder;
 		private static string currentFile;
 
-		internal static ObjectManager.StaticObject ReadObject(string FileName)
+		internal static StaticObject ReadObject(string FileName)
 		{
 			currentFolder = System.IO.Path.GetDirectoryName(FileName);
 			currentFile = FileName;
@@ -25,7 +25,7 @@ namespace OpenBve
 				ObjFileParser parser = new ObjFileParser(System.IO.File.ReadAllLines(currentFile), null, System.IO.Path.GetFileNameWithoutExtension(currentFile), currentFile);
 				Model model = parser.GetModel();
 
-				ObjectManager.StaticObject obj = new ObjectManager.StaticObject();
+				StaticObject obj = new StaticObject(Program.CurrentHost);
 				MeshBuilder builder = new MeshBuilder();
 
 				List<Vertex> allVertices = new List<Vertex>();

@@ -12,9 +12,9 @@ namespace OpenBve
 		/// <returns>The mirrored copy</returns>
 		private static UnifiedObject GetMirroredObject(UnifiedObject Prototype)
 		{
-			if (Prototype is ObjectManager.StaticObject)
+			if (Prototype is StaticObject)
 			{
-				ObjectManager.StaticObject s = (ObjectManager.StaticObject)Prototype;
+				StaticObject s = (StaticObject)Prototype;
 				return GetMirroredStaticObject(s);
 			}
 			if (Prototype is ObjectManager.AnimatedObjectCollection)
@@ -46,9 +46,9 @@ namespace OpenBve
 		/// <summary>Creates a mirrored copy of the prototype object</summary>
 		/// <param name="Prototype">The prototype</param>
 		/// <returns>The mirrored copy</returns>
-		private static ObjectManager.StaticObject GetMirroredStaticObject(ObjectManager.StaticObject Prototype)
+		private static StaticObject GetMirroredStaticObject(StaticObject Prototype)
 		{
-			ObjectManager.StaticObject Result = Prototype.Clone();
+			StaticObject Result = (StaticObject)Prototype.Clone();
 			for (int i = 0; i < Result.Mesh.Vertices.Length; i++)
 			{
 				Result.Mesh.Vertices[i].Coordinates.X = -Result.Mesh.Vertices[i].Coordinates.X;
@@ -69,9 +69,9 @@ namespace OpenBve
 		/// /// <param name="NearDistance">The object's width at the start of the block</param>
 		/// /// <param name="FarDistance">The object's width at the end of the block</param>
 		/// <returns>The transformed copy</returns>
-		private static ObjectManager.StaticObject GetTransformedStaticObject(ObjectManager.StaticObject Prototype, double NearDistance, double FarDistance)
+		private static StaticObject GetTransformedStaticObject(StaticObject Prototype, double NearDistance, double FarDistance)
 		{
-			ObjectManager.StaticObject Result = Prototype.Clone();
+			StaticObject Result = (StaticObject)Prototype.Clone();
 			int n = 0;
 			double x2 = 0.0, x3 = 0.0, x6 = 0.0, x7 = 0.0;
 			for (int i = 0; i < Result.Mesh.Vertices.Length; i++)

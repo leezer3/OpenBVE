@@ -100,8 +100,8 @@ namespace OpenBve {
 								i--;
 								for (int j = 0; j < objCount; j++) {
 									if (obj[j] != null) {
-										if (obj[j] is ObjectManager.StaticObject) {
-											ObjectManager.StaticObject s = (ObjectManager.StaticObject)obj[j];
+										if (obj[j] is StaticObject) {
+											StaticObject s = (StaticObject)obj[j];
 											s.Dynamic = true;
 											if (ObjectCount >= Result.Objects.Length) {
 												Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);

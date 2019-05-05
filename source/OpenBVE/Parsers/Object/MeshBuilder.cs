@@ -22,7 +22,7 @@ namespace OpenBve
 			this.Materials = new Material[] {new Material()};
 		}
 
-		internal void Apply(ref ObjectManager.StaticObject Object)
+		internal void Apply(ref StaticObject Object)
 		{
 			if (TransformMatrix != Matrix4D.NoTransformation)
 			{

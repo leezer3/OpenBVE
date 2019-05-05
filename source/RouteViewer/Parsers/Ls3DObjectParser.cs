@@ -22,12 +22,12 @@ namespace OpenBve
 	    /// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
 	    /// <param name="Rotation">A three-dimemsional vector describing the rotation to be applied</param>
 	    /// <returns>The object loaded.</returns>
-	    internal static ObjectManager.StaticObject ReadObject(string FileName, Vector3 Rotation)
+	    internal static StaticObject ReadObject(string FileName, Vector3 Rotation)
         {
 	        string BaseDir = System.IO.Path.GetDirectoryName(FileName);
 			XmlDocument currentXML = new XmlDocument();
             //Initialise the object
-            ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
+            StaticObject Object = new StaticObject(Program.CurrentHost);
             MeshBuilder Builder = new MeshBuilder();
 			Vector3[] Normals = new Vector3[4];
             bool PropertiesFound = false;
