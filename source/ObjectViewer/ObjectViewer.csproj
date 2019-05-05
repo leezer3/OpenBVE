@@ -103,7 +103,6 @@
     <Compile Include="System\GameWindow.cs" />
     <Compile Include="ObjectManager.cs" />
     <Compile Include="Parsers\AnimatedObjectParser.cs" />
-    <Compile Include="Parsers\CsvB3dObjectParser.cs" />
     <Compile Include="Parsers\Generic\XObjectParser.cs" />
     <Compile Include="Fonts.cs" />
     <Compile Include="formMessages.cs">

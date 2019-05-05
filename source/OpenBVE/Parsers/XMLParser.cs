@@ -44,11 +44,14 @@ namespace OpenBve
                         }
                         if (objectPath != null && System.IO.File.Exists(objectPath))
                         {
+
                             switch (System.IO.Path.GetExtension(objectPath).ToLowerInvariant())
                             {
                                 case ".csv":
                                 case ".b3d":
-                                    Object = CsvB3dObjectParser.ReadObject(objectPath, encoding);
+	                                UnifiedObject obj;
+	                                Program.CurrentHost.LoadObject(objectPath, encoding, out obj);
+	                                Object = (StaticObject) obj;
                                     break;
                                 case ".x":
                                     Object = XObjectParser.ReadObject(objectPath, encoding);

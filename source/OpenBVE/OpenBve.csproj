@@ -448,7 +448,6 @@
     <Compile Include="Parsers\Object\BVE\AnimatedObjectParser.cs" />
     <Compile Include="Parsers\Train\ExtensionsCfgParser.cs" />
     <Compile Include="Parsers\Panel\Panel2CfgParser.cs" />
-    <Compile Include="Parsers\Object\BVE\CsvB3dObjectParser.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.cs" />
     <Compile Include="Parsers\Object\Generic\XObjectParser.cs" />
     <Compile Include="Parsers\Panel\PanelCfgParser.cs" />

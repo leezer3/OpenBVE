@@ -118,7 +118,7 @@ namespace OpenBve
 			{
 				case ".csv":
 				case ".b3d":
-					Result = CsvB3dObjectParser.ReadObject(FileName, Encoding);
+					Program.CurrentHost.LoadObject(FileName, Encoding, out Result);
 					break;
 				case ".x":
 					if (Interface.CurrentOptions.CurrentXParser != Interface.XParsers.Original)
@@ -238,7 +238,9 @@ namespace OpenBve
 			{
 				case ".csv":
 				case ".b3d":
-					Result = CsvB3dObjectParser.ReadObject(FileName, Encoding);
+					UnifiedObject obj;
+					Program.CurrentHost.LoadObject(FileName, Encoding, out obj);
+					Result = (StaticObject)obj;
 					break;
 				case ".x":
 					if (Interface.CurrentOptions.CurrentXParser != Interface.XParsers.Original)

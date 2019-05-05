@@ -762,7 +762,7 @@ namespace OpenBve {
 				switch (System.IO.Path.GetExtension(FileName).ToLowerInvariant()) {
 					case ".csv":
 					case ".b3d":
-						Result = CsvB3dObjectParser.ReadObject(FileName, Encoding);
+						Program.CurrentHost.LoadObject(FileName, Encoding, out Result);
 						break;
 					case ".x":
 						Result = XObjectParser.ReadObject(FileName, Encoding);
@@ -783,7 +783,11 @@ namespace OpenBve {
 						Interface.AddMessage(MessageType.Error, false, "The file extension is not supported: " + FileName);
 						return null;
 				}
-				Result.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, false);
+
+				if (Result != null)
+				{
+					Result.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, false);
+				}
 				return Result;
 				#if !DEBUG
 			} catch (Exception ex) {
@@ -820,7 +824,9 @@ namespace OpenBve {
 				switch (System.IO.Path.GetExtension(FileName).ToLowerInvariant()) {
 					case ".csv":
 					case ".b3d":
-						Result = CsvB3dObjectParser.ReadObject(FileName, Encoding);
+						UnifiedObject obj;
+						Program.CurrentHost.LoadObject(FileName, Encoding, out obj);
+						Result = (StaticObject)obj;
 						break;
 					case ".x":
 						Result = XObjectParser.ReadObject(FileName, Encoding);

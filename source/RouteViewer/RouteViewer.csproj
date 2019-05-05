@@ -86,7 +86,6 @@
     <Compile Include="Options.cs" />
     <Compile Include="ObjectManager.cs" />
     <Compile Include="Parsers\AnimatedObjectParser.cs" />
-    <Compile Include="Parsers\CsvB3dObjectParser.cs" />
     <Compile Include="Parsers\CsvRwRouteParser.cs" />
     <Compile Include="Parsers\Ls3DGrpParser.cs" />
     <Compile Include="Parsers\Ls3DObjectParser.cs" />

@@ -1,6 +1,8 @@
 ﻿using System;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
+using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 
 namespace OpenBve
@@ -126,25 +128,20 @@ namespace OpenBve
 			texture = null;
 			return false;
 		}
-		/*
+		
 		/// <summary>Registers a texture and returns a handle to the texture.</summary>
 		/// <param name="path">The path to the file or folder that contains the texture.</param>
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
 		/// <param name="handle">Receives the handle to the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public override bool RegisterTexture(string path, OpenBveApi.Textures.TextureParameters parameters, out OpenBveApi.Textures.TextureHandle handle)
-		{
-			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path))
-			{
-				Textures.Texture data;
-				if (Textures.RegisterTexture(path, parameters, out data))
-				{
+		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle) {
+			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
+				Texture data;
+				if (Textures.RegisterTexture(path, parameters, out data)) {
 					handle = data;
 					return true;
 				}
-			}
-			else
-			{
+			} else {
 				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
 			}
 			handle = null;
@@ -156,14 +153,12 @@ namespace OpenBve
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
 		/// <param name="handle">Receives the handle to the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public override bool RegisterTexture(OpenBveApi.Textures.Texture texture, OpenBveApi.Textures.TextureParameters parameters, out OpenBveApi.Textures.TextureHandle handle)
-		{
+		public override bool RegisterTexture(Texture texture, TextureParameters parameters, out Texture handle) {
 			texture = texture.ApplyParameters(parameters);
 			handle = Textures.RegisterTexture(texture);
 			return true;
 		}
-		*/
-
+		
 		// --- sound ---
 
 		/// <summary>Loads a sound and returns the sound data.</summary>
@@ -255,6 +250,35 @@ namespace OpenBve
 		{
 			handle = Sounds.RegisterBuffer(sound, 0.0);
 			return true;
+		}
+
+		public override bool LoadObject(string path, System.Text.Encoding Encoding, out UnifiedObject Object)
+		{
+			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
+				for (int i = 0; i < Plugins.LoadedPlugins.Length; i++) {
+					if (Plugins.LoadedPlugins[i].Object != null) {
+						try {
+							if (Plugins.LoadedPlugins[i].Object.CanLoadObject(path)) {
+								try {
+									if (Plugins.LoadedPlugins[i].Object.LoadObject(path, Encoding, out Object)) {
+										return true;
+									}
+									Interface.AddMessage(MessageType.Error, false, "Plugin " + Plugins.LoadedPlugins[i].Title + " returned unsuccessfully at LoadObject");
+								} catch (Exception ex) {
+									Interface.AddMessage(MessageType.Error, false, "Plugin " + Plugins.LoadedPlugins[i].Title + " raised the following exception at LoadObject:" + ex.Message);
+								}
+							}
+						} catch (Exception ex) {
+							Interface.AddMessage(MessageType.Error, false, "Plugin " + Plugins.LoadedPlugins[i].Title + " raised the following exception at CanLoadObject:" + ex.Message);
+						}
+					}
+				}
+				Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
+			} else {
+				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+			}
+			Object = null;
+			return false;
 		}
 
 		public override void ExecuteFunctionScript(OpenBveApi.FunctionScripting.FunctionScript functionScript, AbstractTrain train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState)

@@ -62,6 +62,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssimpParser", "source\Assi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalManager", "source\SignalManager\SignalManager.csproj", "{87838364-8911-46B2-8628-D437C485D9C9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.CsvB3d", "source\Plugins\Object.CsvB3d\Object.CsvB3d.csproj", "{678031C7-6D87-4F5F-9C4A-12F86B76342C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -334,6 +336,18 @@ Global
 		{87838364-8911-46B2-8628-D437C485D9C9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{87838364-8911-46B2-8628-D437C485D9C9}.Release|x86.ActiveCfg = Release|Any CPU
 		{87838364-8911-46B2-8628-D437C485D9C9}.Release|x86.Build.0 = Release|Any CPU
+		{678031C7-6D87-4F5F-9C4A-12F86B76342C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{678031C7-6D87-4F5F-9C4A-12F86B76342C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{678031C7-6D87-4F5F-9C4A-12F86B76342C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{678031C7-6D87-4F5F-9C4A-12F86B76342C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{678031C7-6D87-4F5F-9C4A-12F86B76342C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{678031C7-6D87-4F5F-9C4A-12F86B76342C}.Debug|x86.Build.0 = Debug|Any CPU
+		{678031C7-6D87-4F5F-9C4A-12F86B76342C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{678031C7-6D87-4F5F-9C4A-12F86B76342C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{678031C7-6D87-4F5F-9C4A-12F86B76342C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{678031C7-6D87-4F5F-9C4A-12F86B76342C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{678031C7-6D87-4F5F-9C4A-12F86B76342C}.Release|x86.ActiveCfg = Release|Any CPU
+		{678031C7-6D87-4F5F-9C4A-12F86B76342C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -352,6 +366,7 @@ Global
 		{0C73C749-FCAE-4254-A614-AE1B03AF45C9} = {851ADF1E-4500-4A14-B4AA-C1087A6C537E}
 		{3D833D81-4F14-4A68-B0DE-6469B8CF4E62} = {851ADF1E-4500-4A14-B4AA-C1087A6C537E}
 		{F714A9FA-1C4B-456B-BACF-D6763223A81C} = {16553295-E70F-4596-AA78-848EEA576C4A}
+		{678031C7-6D87-4F5F-9C4A-12F86B76342C} = {16553295-E70F-4596-AA78-848EEA576C4A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50B52A67-69B1-4B19-A59C-FF058FD9EBDF}

@@ -310,6 +310,15 @@ namespace OpenBve {
 			// process non-track namespaces
 			//Check for any special-cased fixes we might need
 			CheckRouteSpecificFixes(FileName, ref Data, ref Expressions);
+			//Apply hack parameters to object loaders
+			for (int i = 0; i < Plugins.LoadedPlugins.Length; i++)
+			{
+				if (Plugins.LoadedPlugins[i].Object != null)
+				{
+					Plugins.LoadedPlugins[i].Object.SetCompatibilityHacks(Interface.CurrentOptions.EnableBveTsHacks, CylinderHack);
+				}
+			}
+
 			for (int j = 0; j < Expressions.Length; j++) {
 				Loading.RouteProgress = (double)j * progressFactor;
 				if ((j & 255) == 0) {

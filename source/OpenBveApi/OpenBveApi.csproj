@@ -89,6 +89,7 @@
     <Compile Include="Objects\MeshFaceVertex.cs" />
     <Compile Include="Objects\MeshMaterial.BlendMode.cs" />
     <Compile Include="Objects\MeshMaterial.cs" />
+    <Compile Include="Objects\ObjectInterface.cs" />
     <Compile Include="Objects\ObjectTypes\StaticObject.cs" />
     <Compile Include="Objects\ObjectTypes\UnifiedObject.cs" />
     <Compile Include="Sounds\Sounds.PathOrigin.cs" />
