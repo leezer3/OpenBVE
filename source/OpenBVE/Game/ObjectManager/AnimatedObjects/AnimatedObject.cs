@@ -96,7 +96,7 @@ namespace OpenBve
 					Result.States[i].Position = this.States[i].Position;
 					if (this.States[i].Object != null)
 					{
-						Result.States[i].Object = this.States[i].Object.Clone();
+						Result.States[i].Object = (StaticObject)this.States[i].Object.Clone();
 					}
 				}
 				Result.TrackFollowerFunction = this.TrackFollowerFunction == null ? null : this.TrackFollowerFunction.Clone();

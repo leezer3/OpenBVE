@@ -103,7 +103,7 @@ namespace OpenBve
 			}
 
 			/// <summary>Creates a clone of this object.</summary>
-			internal StaticObject Clone()
+			public override UnifiedObject Clone()
 			{
 				StaticObject Result = new StaticObject
 				{

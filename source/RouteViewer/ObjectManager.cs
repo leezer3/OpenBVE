@@ -37,7 +37,7 @@ namespace OpenBve {
 			}
 
 			/// <summary>Creates a clone of this object.</summary>
-			internal StaticObject Clone()
+			public override UnifiedObject Clone()
 			{
 				StaticObject Result = new StaticObject
 				{
@@ -1005,7 +1005,7 @@ namespace OpenBve {
 				for (int i = 0; i < this.States.Length; i++) {
 					Result.States[i].Position = this.States[i].Position;
 					if (this.States[i].Object != null) {
-						Result.States[i].Object = this.States[i].Object.Clone();
+						Result.States[i].Object = (StaticObject)this.States[i].Object.Clone();
 					}
 				}
 				Result.StateFunction = this.StateFunction == null ? null : this.StateFunction.Clone();
@@ -1052,6 +1052,11 @@ namespace OpenBve {
 			public override void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
 			{
 				throw new NotImplementedException();
+			}
+
+			public override UnifiedObject Clone()
+			{
+				throw new NotSupportedException();
 			}
 
 			public override void OptimizeObject(bool PreserveVerticies)

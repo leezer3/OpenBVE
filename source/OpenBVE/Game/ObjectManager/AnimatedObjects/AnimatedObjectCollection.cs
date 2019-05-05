@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Math;
+﻿using System;
+using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.World;
 
@@ -116,6 +117,11 @@ namespace OpenBve
 						Objects[i].States[j].Object.OptimizeObject(PreserveVerticies);
 					}
 				}
+			}
+
+			public override UnifiedObject Clone()
+			{
+				throw new NotSupportedException();
 			}
 		}
 	}

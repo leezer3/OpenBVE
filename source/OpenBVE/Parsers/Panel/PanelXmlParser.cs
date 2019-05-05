@@ -1623,7 +1623,7 @@ namespace OpenBve.Parsers.Panel
 			Group.TouchElements[n].Element.States[0].Object = Object;
 			Group.TouchElements[n].Element.CurrentState = 0;
 			Group.TouchElements[n].Element.ObjectIndex = ObjectManager.CreateDynamicObject();
-			ObjectManager.Objects[Group.TouchElements[n].Element.ObjectIndex] = Object.Clone();
+			ObjectManager.Objects[Group.TouchElements[n].Element.ObjectIndex] = (ObjectManager.StaticObject)Object.Clone();
 			int m = Interface.CurrentControls.Length;
 			Array.Resize(ref Interface.CurrentControls, m + 1);
 			Interface.CurrentControls[m].Command = Command;

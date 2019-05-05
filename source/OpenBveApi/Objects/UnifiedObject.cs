@@ -37,5 +37,9 @@ namespace OpenBveApi.Objects
 		/// <summary>Call this method to optimize the object</summary>
 		/// <param name="PreserveVerticies">Whether duplicate verticies are to be preserved (Takes less time)</param>
 		public abstract void OptimizeObject(bool PreserveVerticies);
+
+		/// <summary>Creates a clone of this object</summary>
+		/// <returns>The cloned object</returns>
+		public abstract UnifiedObject Clone();
 	}
 }

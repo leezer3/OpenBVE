@@ -1528,7 +1528,7 @@ namespace OpenBve {
 				Group.Elements[n].States[0].Object = Object;
 				Group.Elements[n].CurrentState = 0;
 				Group.Elements[n].ObjectIndex = ObjectManager.CreateDynamicObject();
-				ObjectManager.Objects[Group.Elements[n].ObjectIndex] = Object.Clone();
+				ObjectManager.Objects[Group.Elements[n].ObjectIndex] = (ObjectManager.StaticObject)Object.Clone();
 				return n;
 			}
 		}

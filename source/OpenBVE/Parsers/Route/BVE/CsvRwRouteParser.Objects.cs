@@ -48,7 +48,7 @@ namespace OpenBve
 		/// <returns>The mirrored copy</returns>
 		private static ObjectManager.StaticObject GetMirroredStaticObject(ObjectManager.StaticObject Prototype)
 		{
-			ObjectManager.StaticObject Result = Prototype.Clone();
+			ObjectManager.StaticObject Result = (ObjectManager.StaticObject)Prototype.Clone();
 			for (int i = 0; i < Result.Mesh.Vertices.Length; i++)
 			{
 				Result.Mesh.Vertices[i].Coordinates.X = -Result.Mesh.Vertices[i].Coordinates.X;
@@ -71,7 +71,7 @@ namespace OpenBve
 		/// <returns>The transformed copy</returns>
 		private static ObjectManager.StaticObject GetTransformedStaticObject(ObjectManager.StaticObject Prototype, double NearDistance, double FarDistance)
 		{
-			ObjectManager.StaticObject Result = Prototype.Clone();
+			ObjectManager.StaticObject Result = (ObjectManager.StaticObject)Prototype.Clone();
 			int n = 0;
 			double x2 = 0.0, x3 = 0.0, x6 = 0.0, x7 = 0.0;
 			for (int i = 0; i < Result.Mesh.Vertices.Length; i++)

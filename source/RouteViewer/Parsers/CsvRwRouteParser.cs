@@ -5053,7 +5053,7 @@ namespace OpenBve {
 		}
 		private static ObjectManager.StaticObject GetMirroredStaticObject(ObjectManager.StaticObject Prototype)
 		{
-			ObjectManager.StaticObject Result = Prototype.Clone();
+			ObjectManager.StaticObject Result = (ObjectManager.StaticObject)Prototype.Clone();
 			for (int i = 0; i < Result.Mesh.Vertices.Length; i++) {
 				Result.Mesh.Vertices[i].Coordinates.X = -Result.Mesh.Vertices[i].Coordinates.X;
 			}
@@ -5069,7 +5069,7 @@ namespace OpenBve {
 		// get transformed object
 		private static ObjectManager.StaticObject GetTransformedStaticObject(ObjectManager.StaticObject Prototype, double NearDistance, double FarDistance)
 		{
-			ObjectManager.StaticObject Result = Prototype.Clone();
+			ObjectManager.StaticObject Result = (ObjectManager.StaticObject)Prototype.Clone();
 			int n = 0;
 			double x2 = 0.0, x3 = 0.0, x6 = 0.0, x7 = 0.0;
 			for (int i = 0; i < Result.Mesh.Vertices.Length; i++) {
@@ -6177,7 +6177,7 @@ namespace OpenBve {
 											aoc.Objects[0].States = new ObjectManager.AnimatedObjectState[csd.Numbers.Length];
 											for (int l = 0; l < csd.Numbers.Length; l++)
 											{
-												aoc.Objects[0].States[l].Object = csd.Objects[l].Clone();
+												aoc.Objects[0].States[l].Object = (ObjectManager.StaticObject)csd.Objects[l].Clone();
 											}
 											string expr = "";
 											for (int l = 0; l < csd.Numbers.Length - 1; l++) {

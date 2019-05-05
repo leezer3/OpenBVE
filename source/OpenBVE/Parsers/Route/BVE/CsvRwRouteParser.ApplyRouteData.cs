@@ -1251,7 +1251,7 @@ namespace OpenBve
 											aoc.Objects[0].States = new ObjectManager.AnimatedObjectState[csd.Numbers.Length];
 											for (int l = 0; l < csd.Numbers.Length; l++)
 											{
-												aoc.Objects[0].States[l].Object = csd.Objects[l].Clone();
+												aoc.Objects[0].States[l].Object = (ObjectManager.StaticObject)csd.Objects[l].Clone();
 											}
 											string expr = "";
 											for (int l = 0; l < csd.Numbers.Length - 1; l++)
