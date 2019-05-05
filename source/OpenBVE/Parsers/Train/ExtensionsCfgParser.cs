@@ -433,8 +433,8 @@ namespace OpenBve {
 								Train.Cars[i].FrontAxle.Position = -Train.Cars[i].RearAxle.Position;
 								Train.Cars[i].RearAxle.Position = -temp;
 							}
-							if (CarObjects[i] is ObjectManager.StaticObject) {
-								ObjectManager.StaticObject obj = (ObjectManager.StaticObject)CarObjects[i];
+							if (CarObjects[i] is StaticObject) {
+								StaticObject obj = (StaticObject)CarObjects[i];
 								obj.ApplyScale(-1.0, 1.0, -1.0);
 							} else if (CarObjects[i] is ObjectManager.AnimatedObjectCollection) {
 								ObjectManager.AnimatedObjectCollection obj = (ObjectManager.AnimatedObjectCollection)CarObjects[i];
@@ -484,9 +484,9 @@ namespace OpenBve {
 									Train.Cars[CarIndex].RearBogie.RearAxle.Position = -temp;
 								}
 							}
-							if (BogieObjects[i] is ObjectManager.StaticObject)
+							if (BogieObjects[i] is StaticObject)
 							{
-								ObjectManager.StaticObject obj = (ObjectManager.StaticObject)BogieObjects[i];
+								StaticObject obj = (StaticObject)BogieObjects[i];
 								obj.ApplyScale(-1.0, 1.0, -1.0);
 							}
 							else if (BogieObjects[i] is ObjectManager.AnimatedObjectCollection)

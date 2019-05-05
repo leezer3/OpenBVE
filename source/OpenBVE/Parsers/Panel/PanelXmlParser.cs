@@ -1589,7 +1589,7 @@ namespace OpenBve.Parsers.Panel
 			Vertex t1 = new Vertex(v[1], new Vector2(0.0f, 0.0f));
 			Vertex t2 = new Vertex(v[2], new Vector2(1.0f, 0.0f));
 			Vertex t3 = new Vertex(v[3], new Vector2(1.0f, 1.0f));
-			ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
+			StaticObject Object = new StaticObject(Program.CurrentHost);
 			Object.Mesh.Vertices = new VertexTemplate[] { t0, t1, t2, t3 };
 			Object.Mesh.Faces = new MeshFace[] { new MeshFace(new int[] { 0, 1, 2, 3 }) };
 			Object.Mesh.Materials = new MeshMaterial[1];
@@ -1623,7 +1623,7 @@ namespace OpenBve.Parsers.Panel
 			Group.TouchElements[n].Element.States[0].Object = Object;
 			Group.TouchElements[n].Element.CurrentState = 0;
 			Group.TouchElements[n].Element.ObjectIndex = ObjectManager.CreateDynamicObject();
-			ObjectManager.Objects[Group.TouchElements[n].Element.ObjectIndex] = (ObjectManager.StaticObject)Object.Clone();
+			ObjectManager.Objects[Group.TouchElements[n].Element.ObjectIndex] = (StaticObject)Object.Clone();
 			int m = Interface.CurrentControls.Length;
 			Array.Resize(ref Interface.CurrentControls, m + 1);
 			Interface.CurrentControls[m].Command = Command;

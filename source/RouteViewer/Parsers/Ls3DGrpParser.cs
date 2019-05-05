@@ -214,14 +214,14 @@ namespace OpenBve
 
 					//Single mesh object, containing all static components of the LS3D object
 					//If we use multiples, the Z-sorting throws a wobbly
-					ObjectManager.StaticObject staticObject = null;
+					StaticObject staticObject = null;
 					for (int i = 0; i < CurrentObjects.Length; i++)
 					{
 						if (CurrentObjects[i] == null || string.IsNullOrEmpty(CurrentObjects[i].Name))
 						{
 							continue;
 						}
-						ObjectManager.StaticObject Object = null;
+						StaticObject Object = null;
 						ObjectManager.AnimatedObjectCollection AnimatedObject = null;
 						try
 						{
@@ -231,7 +231,7 @@ namespace OpenBve
 							}
 							else if(CurrentObjects[i].Name.ToLowerInvariant().EndsWith(".l3dobj"))
 							{
-								//Object = (ObjectManager.StaticObject)ObjectManager.LoadObject(CurrentObjects[i].Name, Encoding, false, false, CurrentObjects[i].Rotation);
+								//Object = (StaticObject)ObjectManager.LoadObject(CurrentObjects[i].Name, Encoding, false, false, CurrentObjects[i].Rotation);
 							}
 							else
 							{

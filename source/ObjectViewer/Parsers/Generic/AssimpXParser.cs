@@ -13,7 +13,7 @@ namespace OpenBve
 		private static string currentFile;
 		private static Matrix4D rootMatrix;
 
-		internal static ObjectManager.StaticObject ReadObject(string FileName)
+		internal static StaticObject ReadObject(string FileName)
 		{
 			currentFolder = System.IO.Path.GetDirectoryName(FileName);
 			currentFile = FileName;
@@ -26,7 +26,7 @@ namespace OpenBve
 				XFileParser parser = new XFileParser(System.IO.File.ReadAllBytes(FileName));
 				Scene scene = parser.GetImportedData();
 
-				ObjectManager.StaticObject obj = new ObjectManager.StaticObject();
+				StaticObject obj = new StaticObject(Program.CurrentHost);
 				MeshBuilder builder = new MeshBuilder();
 
 				// Global
@@ -75,7 +75,7 @@ namespace OpenBve
 #endif
 		}
 
-		private static void  MeshBuilder(ref ObjectManager.StaticObject obj, ref MeshBuilder builder, AssimpNET.X.Mesh mesh)
+		private static void  MeshBuilder(ref StaticObject obj, ref MeshBuilder builder, AssimpNET.X.Mesh mesh)
 		{
 			if (builder.Vertices.Length != 0)
 			{
@@ -186,7 +186,7 @@ namespace OpenBve
 			}
 		}
 
-		private static void ChildrenNode(ref ObjectManager.StaticObject obj, ref MeshBuilder builder, Node child)
+		private static void ChildrenNode(ref StaticObject obj, ref MeshBuilder builder, Node child)
 		{
 			builder.TransformMatrix = ConvertMatrix(child.TrafoMatrix);
 

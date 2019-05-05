@@ -73,7 +73,7 @@ namespace OpenBve {
 				this.Materials = new Material[] { new Material() };
 			}
 
-			internal void Apply(ref ObjectManager.StaticObject Object) {
+			internal void Apply(ref StaticObject Object) {
 			if (Faces.Length != 0) {
 				int mf = Object.Mesh.Faces.Length;
 				int mm = Object.Mesh.Materials.Length;
@@ -207,11 +207,11 @@ namespace OpenBve {
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
 		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
 		/// <returns>The object loaded.</returns>
-		internal static ObjectManager.StaticObject ReadObject(string FileName, Encoding Encoding) {
+		internal static StaticObject ReadObject(string FileName, Encoding Encoding) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			bool IsB3D = string.Equals(System.IO.Path.GetExtension(FileName), ".b3d", StringComparison.OrdinalIgnoreCase);
 			// initialize object
-			ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
+			StaticObject Object = new StaticObject(Program.CurrentHost);
 			// read lines
 			List<string> Lines = System.IO.File.ReadAllLines(FileName, Encoding).ToList();
 			if (!IsB3D)
@@ -1450,7 +1450,7 @@ namespace OpenBve {
 			}
 		}
 
-		private static void ApplyMirror(ObjectManager.StaticObject Object, bool vX, bool vY, bool vZ, bool nX, bool nY, bool nZ)
+		private static void ApplyMirror(StaticObject Object, bool vX, bool vY, bool vZ, bool nX, bool nY, bool nZ)
 		{
 			for (int i = 0; i < Object.Mesh.Vertices.Length; i++)
 			{
@@ -1526,7 +1526,7 @@ namespace OpenBve {
 				}
 			}
 		}
-		private static void ApplyShear(ObjectManager.StaticObject Object, Vector3 d, Vector3 s, double r) {
+		private static void ApplyShear(StaticObject Object, Vector3 d, Vector3 s, double r) {
 			for (int j = 0; j < Object.Mesh.Vertices.Length; j++) {
 				double n = r * (d.X * Object.Mesh.Vertices[j].Coordinates.X + d.Y * Object.Mesh.Vertices[j].Coordinates.Y + d.Z * Object.Mesh.Vertices[j].Coordinates.Z);
 				Object.Mesh.Vertices[j].Coordinates.X += s.X * n;

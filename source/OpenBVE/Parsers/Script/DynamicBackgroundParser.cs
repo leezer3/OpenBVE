@@ -38,7 +38,7 @@ namespace OpenBve
 							//The texture to use (if static)
 							Texture t = null;
 							//The object to use (if object based)
-							ObjectManager.StaticObject o = null;
+							StaticObject o = null;
 							//The transition mode between backgrounds
 							BackgroundManager.BackgroundTransitionMode mode = BackgroundManager.BackgroundTransitionMode.FadeIn;
 							//The number of times the texture is repeated around the viewing frustrum (if appropriate)
@@ -84,7 +84,7 @@ namespace OpenBve
 										else
 										{
 											UnifiedObject b = ObjectManager.LoadObject(f, System.Text.Encoding.Default, false);
-											o = (ObjectManager.StaticObject) b;
+											o = (StaticObject) b;
 										}
 										break;
 									case "repetitions":

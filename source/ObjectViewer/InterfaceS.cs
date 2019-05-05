@@ -9,6 +9,7 @@ using System;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 
 namespace OpenBve {
 
@@ -62,7 +63,7 @@ namespace OpenBve {
 		internal static int InfoTotalPolygon = 0;
 		internal static void Reset() {
 			Renderer.Reset();
-			ObjectManager.Objects = new ObjectManager.StaticObject[16];
+			ObjectManager.Objects = new StaticObject[16];
 			ObjectManager.ObjectsUsed = 0;
 			ObjectManager.ObjectsSortedByStart = new int[] { };
 			ObjectManager.ObjectsSortedByEnd = new int[] { };

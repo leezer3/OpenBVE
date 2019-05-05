@@ -169,6 +169,13 @@ namespace OpenBveApi.Math {
 			}
 		}
 
+		/// <summary>Gets the modulous of two numbers</summary>
+		/// <returns>The modulous</returns>
+		public static double Mod(double a, double b)
+		{
+			return a - b * System.Math.Floor(a / b);
+		}
+
 		private static string TrimInside(string Expression)
 		{
 			System.Text.StringBuilder Builder = new System.Text.StringBuilder(Expression.Length);

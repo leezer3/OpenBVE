@@ -31,7 +31,7 @@ namespace OpenBve
 			/// <param name="key">The object index</param>
 			/// <param name="staticObject">The object</param>
 			/// <param name="Type">The object type</param>
-			internal void Add(int key, ObjectManager.StaticObject staticObject, string Type)
+			internal void Add(int key, StaticObject staticObject, string Type)
 			{
 				if (this.ContainsKey(key))
 				{

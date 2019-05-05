@@ -427,9 +427,9 @@ namespace OpenBve
 					carObjectsCount++;
 					if (carObjectsReversed[i] && loadObjects)
 					{
-						if (carObjects[i] is ObjectManager.StaticObject)
+						if (carObjects[i] is StaticObject)
 						{
-							ObjectManager.StaticObject obj = (ObjectManager.StaticObject)carObjects[i];
+							StaticObject obj = (StaticObject)carObjects[i];
 							obj.ApplyScale(-1.0, 1.0, -1.0);
 						}
 						else if (carObjects[i] is ObjectManager.AnimatedObjectCollection)
@@ -468,9 +468,9 @@ namespace OpenBve
 					bogieObjectsCount++;
 					if (bogieObjectsReversed[i] && loadObjects)
 					{
-						if (bogieObjects[i] is ObjectManager.StaticObject)
+						if (bogieObjects[i] is StaticObject)
 						{
-							ObjectManager.StaticObject obj = (ObjectManager.StaticObject)bogieObjects[i];
+							StaticObject obj = (StaticObject)bogieObjects[i];
 							obj.ApplyScale(-1.0, 1.0, -1.0);
 						}
 						else if (bogieObjects[i] is ObjectManager.AnimatedObjectCollection)
