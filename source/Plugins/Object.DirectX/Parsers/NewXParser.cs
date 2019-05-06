@@ -8,7 +8,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 
-namespace OpenBve 
+namespace Plugin
 {
 	class NewXParser
 	{
@@ -18,21 +18,7 @@ namespace OpenBve
 			currentFolder = System.IO.Path.GetDirectoryName(FileName);
 			currentFile = FileName;
 			byte[] Data = System.IO.File.ReadAllBytes(FileName);
-			if (Data.Length < 16 || Data[0] != 120 | Data[1] != 111 | Data[2] != 102 | Data[3] != 32)
-			{
-				// not an x object
-				Interface.AddMessage(MessageType.Error, false, "Invalid X object file encountered in " + FileName);
-				return null;
-			}
-
-			if (Data[4] != 48 | Data[5] != 51 | Data[6] != 48 | Data[7] != 50 & Data[7] != 51)
-			{
-				// unrecognized version
-				System.Text.ASCIIEncoding Ascii = new System.Text.ASCIIEncoding();
-				string s = new string(Ascii.GetChars(Data, 4, 4));
-				Interface.AddMessage(MessageType.Error, false, "Unsupported X object file version " + s + " encountered in " + FileName);
-			}
-
+			
 			// floating-point format
 			int FloatingPointSize;
 			if (Data[12] == 48 & Data[13] == 48 & Data[14] == 51 & Data[15] == 50)
@@ -45,8 +31,7 @@ namespace OpenBve
 			}
 			else
 			{
-				Interface.AddMessage(MessageType.Error, false, "Unsupported floating point format encountered in X object file " + FileName);
-				return null;
+				throw new NotSupportedException();
 			}
 
 			// supported floating point format
@@ -106,15 +91,15 @@ namespace OpenBve
 			}
 
 			// unsupported flavor
-			Interface.AddMessage(MessageType.Error, false, "Unsupported X object file encountered in " + FileName);
+			Plugin.currentHost.AddMessage(MessageType.Error, false, "Unsupported X object file encountered in " + FileName);
 			return null;
 		}
 		
 		private static StaticObject LoadTextualX(string Text)
 		{
 			Text = Text.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim();
-			StaticObject obj = new StaticObject(Program.CurrentHost);
-			MeshBuilder builder = new MeshBuilder(Program.CurrentHost);
+			StaticObject obj = new StaticObject(Plugin.currentHost);
+			MeshBuilder builder = new MeshBuilder(Plugin.currentHost);
 			Material material = new Material();
 			Block block = new TextualBlock(Text);
 			while (block.Position() < block.Length() - 5)
@@ -196,7 +181,7 @@ namespace OpenBve
 					if (builder.Vertices.Length != 0)
 					{
 						builder.Apply(ref obj);
-						builder = new MeshBuilder(Program.CurrentHost);
+						builder = new MeshBuilder(Plugin.currentHost);
 					}
 					while (block.Position() < block.Length() - 5)
 					{
@@ -232,13 +217,13 @@ namespace OpenBve
 					if (builder.Vertices.Length != 0)
 					{
 						builder.Apply(ref obj);
-						builder = new MeshBuilder(Program.CurrentHost);
+						builder = new MeshBuilder(Plugin.currentHost);
 					}
 					int nVerts = block.ReadUInt16();
 					if (nVerts == 0)
 					{
 						//Some null objects contain an empty mesh
-						Interface.AddMessage(MessageType.Warning, false, "nVertices should be greater than zero in Mesh " + block.Label);
+						Plugin.currentHost.AddMessage(MessageType.Warning, false, "nVertices should be greater than zero in Mesh " + block.Label);
 					}
 					int v = builder.Vertices.Length;
 					Array.Resize(ref builder.Vertices, v + nVerts);
@@ -357,7 +342,7 @@ namespace OpenBve
 					}
 					if (!System.IO.File.Exists(material.DaytimeTexture) && material.DaytimeTexture != null)
 					{
-						Interface.AddMessage(MessageType.Error, true, "Texure " + material.DaytimeTexture + " was not found in file " + currentFile);
+						Plugin.currentHost.AddMessage(MessageType.Error, true, "Texure " + material.DaytimeTexture + " was not found in file " + currentFile);
 						material.DaytimeTexture = null;
 					}
 					break;
@@ -408,8 +393,8 @@ namespace OpenBve
 		{
 			Block block = new BinaryBlock(Data, FloatingPointSize);
 			block.FloatingPointSize = FloatingPointSize;
-			StaticObject obj = new StaticObject(Program.CurrentHost);
-			MeshBuilder builder = new MeshBuilder(Program.CurrentHost);
+			StaticObject obj = new StaticObject(Plugin.currentHost);
+			MeshBuilder builder = new MeshBuilder(Plugin.currentHost);
 			Material material = new Material();
 			while (block.Position() < block.Length())
 			{

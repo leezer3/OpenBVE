@@ -80,7 +80,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using OpenTK.Graphics;
+using OpenBveApi.Colors;
 
 namespace AssimpNET.Obj
 {
@@ -249,7 +249,7 @@ namespace AssimpNET.Obj
 		}
 
 		//  Loads a color definition
-		private void GetColorRGBA(ref Color4 color)
+		private void GetColorRGBA(ref Color128 color)
 		{
 			//Debug.Assert(color != null);
 

@@ -81,7 +81,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using OpenTK;
+using OpenBveApi.Math;
 
 namespace AssimpNET.Obj
 {

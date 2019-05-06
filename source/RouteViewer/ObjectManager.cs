@@ -755,7 +755,7 @@ namespace OpenBve {
 						Program.CurrentHost.LoadObject(FileName, Encoding, out Result);
 						break;
 					case ".x":
-						Result = XObjectParser.ReadObject(FileName, Encoding);
+						Program.CurrentHost.LoadObject(FileName, Encoding, out Result);
 						break;
 					case ".animated":
 						Result = AnimatedObjectParser.ReadObject(FileName, Encoding);
@@ -811,15 +811,16 @@ namespace OpenBve {
 					}
 				}
 				StaticObject Result;
+				UnifiedObject obj;
 				switch (System.IO.Path.GetExtension(FileName).ToLowerInvariant()) {
 					case ".csv":
 					case ".b3d":
-						UnifiedObject obj;
 						Program.CurrentHost.LoadObject(FileName, Encoding, out obj);
 						Result = (StaticObject)obj;
 						break;
 					case ".x":
-						Result = XObjectParser.ReadObject(FileName, Encoding);
+						Program.CurrentHost.LoadObject(FileName, Encoding, out obj);
+						Result = (StaticObject)obj;
 						break;
 					case ".animated":
 						Interface.AddMessage(MessageType.Error, false, "Tried to load an animated object even though only static objects are allowed: " + FileName);

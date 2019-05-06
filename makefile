@@ -100,6 +100,9 @@ OPEN_BVE_ATS_FILE     :=Data/Plugins/OpenBveAts.dll
 OBJECT_CSVB3D_ROOT       :=source/Plugins/Object.CsvB3d
 OBJECT_CSVB3D_FILE       :=Data/Plugins/Object.CsvB3d.dll
 
+OBJECT_DIRECTX_ROOT       :=source/Plugins/Object.DirectX
+OBJECT_DIRECTX_FILE       :=Data/Plugins/Object.DirectX.dll
+
 SOUND_FLAC_ROOT       :=source/Plugins/Sound.Flac
 SOUND_FLAC_FILE       :=Data/Plugins/Sound.Flac.dll
 
@@ -375,6 +378,7 @@ $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(DEFAULT_DISPLAY_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SAN_YING_INPUT_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(OPEN_BVE_ATS_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(OBJECT_CSVB3D_FILE) 
+$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(OBJECT_DIRECTX_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_FLAC_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_RIFFWAVE_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_MP3_FILE) 
@@ -393,6 +397,7 @@ $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(DEFAULT_DISPLAY_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SAN_YING_INPUT_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_ATS_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OBJECT_CSVB3D_FILE) 
+$(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OBJECT_DIRECTX_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SOUND_FLAC_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SOUND_RIFFWAVE_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SOUND_MP3_FILE) 
@@ -614,6 +619,27 @@ $(DEBUG_DIR)/$(OBJECT_CSVB3D_FILE) $(RELEASE_DIR)/$(OBJECT_CSVB3D_FILE): $(OBJEC
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OBJECT_CSVB3D_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OBJECT_CSVB3D_OUT) /target:library $(OBJECT_CSVB3D_SRC) $(ARGS) $(OBJECT_CSVB3D_DOC) \
 	/reference:$(OPEN_BVE_API_OUT) /reference:System.Core.dll /reference:System.dll $(addprefix /resource:, $(OBJECT_CSVB3D_RESOURCE))
+	
+##################
+# Object.DirectX #
+##################
+
+OBJECT_DIRECTX_FOLDERS  := $(shell find $(OBJECT_DIRECTX_ROOT) -type d)
+OBJECT_DIRECTX_SRC      := $(foreach sdir, $(OBJECT_DIRECTX_FOLDERS), $(wildcard $(sdir)/*.cs))
+OBJECT_DIRECTX_DOC      := $(addprefix /doc:, $(foreach sdir, $(OBJECT_DIRECTX_FOLDERS), $(wildcard $(sdir)/*.xml)))
+OBJECT_DIRECTX_RESX     := $(foreach sdir, $(OBJECT_DIRECTX_FOLDERS), $(wildcard $(sdir)/*.resx))
+OBJECT_DIRECTX_RESOURCE := $(addprefix $(OBJECT_DIRECTX_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst $(dir $(OBJECT_DIRECTX_ROOT))%.resx, %.resources, $(OBJECT_DIRECTX_RESX)))))
+OBJECT_DIRECTX_OUT       =$(OUTPUT_DIR)/$(OBJECT_DIRECTX_FILE)
+
+$(call create_resource, $(OBJECT_DIRECTX_RESOURCE), $(OBJECT_DIRECTX_RESX))
+
+$(DEBUG_DIR)/$(OBJECT_DIRECTX_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
+$(RELEASE_DIR)/$(OBJECT_DIRECTX_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
+
+$(DEBUG_DIR)/$(OBJECT_DIRECTX_FILE) $(RELEASE_DIR)/$(OBJECT_DIRECTX_FILE): $(OBJECT_DIRECTX_SRC) $(OBJECT_DIRECTX_RESOURCE)
+	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OBJECT_DIRECTX_OUT)$(COLOR_END)
+	@$(CSC) /out:$(OBJECT_DIRECTX_OUT) /target:library $(OBJECT_DIRECTX_SRC) $(ARGS) $(OBJECT_DIRECTX_DOC) \
+	/reference:$(ASSIMP_OUT) /reference:$(FORMATS_MSTS_OUT) /reference:$(FORMATS_DIRECTX_OUT) /reference:$(OPEN_BVE_API_OUT) /reference:System.Core.dll /reference:System.dll $(addprefix /resource:, $(OBJECT_DIRECTX_RESOURCE))
 
 ##############
 # Sound.Flac #

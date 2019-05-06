@@ -108,6 +108,37 @@ namespace OpenBveApi.Math
 			if (a.Row3 != b.Row3) return true;
 			return false;
 		}
+
+		/// <summary>Multiplies two vectors.</summary>
+		/// <param name="a">The first vector.</param>
+		/// <param name="b">The second vector.</param>
+		/// <returns>The product of the two vectors.</returns>
+		public static Matrix4D operator *(Matrix4D a, Matrix4D b)
+		{
+			return Multiply(a, b);
+		}
+
+		private static Matrix4D Multiply(Matrix4D a, Matrix4D b)
+		{
+			Matrix4D result = new Matrix4D();
+			result.Row0.X = (a.Row0.X * b.Row0.X) + (a.Row0.Y * b.Row1.X) + (a.Row0.Z * b.Row2.X) + (a.Row0.W * b.Row3.X);
+			result.Row0.Y = (a.Row0.X * b.Row0.Y) + (a.Row0.Y * b.Row1.Y) + (a.Row0.Z * b.Row2.Y) + (a.Row0.W * b.Row3.Y);
+			result.Row0.Z = (a.Row0.X * b.Row0.Z) + (a.Row0.Y * b.Row1.Z) + (a.Row0.Z * b.Row2.Z) + (a.Row0.W * b.Row3.Z);
+			result.Row0.W = (a.Row0.X * b.Row0.W) + (a.Row0.Y * b.Row1.W) + (a.Row0.Z * b.Row2.W) + (a.Row0.W * b.Row3.W);
+			result.Row1.X = (a.Row1.X * b.Row0.X) + (a.Row1.Y * b.Row1.X) + (a.Row1.Z * b.Row2.X) + (a.Row1.W * b.Row3.X);
+			result.Row1.Y = (a.Row1.X * b.Row0.Y) + (a.Row1.Y * b.Row1.Y) + (a.Row1.Z * b.Row2.Y) + (a.Row1.W * b.Row3.Y);
+			result.Row1.Z = (a.Row1.X * b.Row0.Z) + (a.Row1.Y * b.Row1.Z) + (a.Row1.Z * b.Row2.Z) + (a.Row1.W * b.Row3.Z);
+			result.Row1.W = (a.Row1.X * b.Row0.W) + (a.Row1.Y * b.Row1.W) + (a.Row1.Z * b.Row2.W) + (a.Row1.W * b.Row3.W);
+			result.Row2.X = (a.Row2.X * b.Row0.X) + (a.Row2.Y * b.Row1.X) + (a.Row2.Z * b.Row2.X) + (a.Row2.W * b.Row3.X);
+			result.Row2.Y = (a.Row2.X * b.Row0.Y) + (a.Row2.Y * b.Row1.Y) + (a.Row2.Z * b.Row2.Y) + (a.Row2.W * b.Row3.Y);
+			result.Row2.Z = (a.Row2.X * b.Row0.Z) + (a.Row2.Y * b.Row1.Z) + (a.Row2.Z * b.Row2.Z) + (a.Row2.W * b.Row3.Z);
+			result.Row2.W = (a.Row2.X * b.Row0.W) + (a.Row2.Y * b.Row1.W) + (a.Row2.Z * b.Row2.W) + (a.Row2.W * b.Row3.W);
+			result.Row3.X = (a.Row3.X * b.Row0.X) + (a.Row3.Y * b.Row1.X) + (a.Row3.Z * b.Row2.X) + (a.Row3.W * b.Row3.X);
+			result.Row3.Y = (a.Row3.X * b.Row0.Y) + (a.Row3.Y * b.Row1.Y) + (a.Row3.Z * b.Row2.Y) + (a.Row3.W * b.Row3.Y);
+			result.Row3.Z = (a.Row3.X * b.Row0.Z) + (a.Row3.Y * b.Row1.Z) + (a.Row3.Z * b.Row2.Z) + (a.Row3.W * b.Row3.Z);
+			result.Row3.W = (a.Row3.X * b.Row0.W) + (a.Row3.Y * b.Row1.W) + (a.Row3.Z * b.Row2.W) + (a.Row3.W * b.Row3.W);
+			return result;
+		}
 		
 
 		/// <summary>Represents a zero matrix</summary>

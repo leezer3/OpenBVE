@@ -9,23 +9,12 @@ using System.Text;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 
-namespace OpenBve {
+namespace Plugin {
 	internal static class XObjectParser {
 
 		// read object
-		internal static StaticObject ReadObject(string FileName, Encoding Encoding) {
+		internal static StaticObject ReadObject(string FileName, System.Text.Encoding Encoding) {
 			byte[] Data = System.IO.File.ReadAllBytes(FileName);
-			if (Data.Length < 16 || Data[0] != 120 | Data[1] != 111 | Data[2] != 102 | Data[3] != 32) {
-				// not an x object
-				Interface.AddMessage(MessageType.Error, false, "Invalid X object file encountered in " + FileName);
-				return null;
-			}
-			if (Data[4] != 48 | Data[5] != 51 | Data[6] != 48 | Data[7] != 50 & Data[7] != 51) {
-				// unrecognized version
-				System.Text.ASCIIEncoding Ascii = new System.Text.ASCIIEncoding();
-				string s = new string(Ascii.GetChars(Data, 4, 4));
-				Interface.AddMessage(MessageType.Error, false, "Unsupported X object file version " + s + " encountered in " + FileName);
-			}
 			// floating-point format
 			int FloatingPointSize;
 			if (Data[12] == 48 & Data[13] == 48 & Data[14] == 51 & Data[15] == 50) {
@@ -33,8 +22,7 @@ namespace OpenBve {
 			} else if (Data[12] == 48 & Data[13] == 48 & Data[14] == 54 & Data[15] == 52) {
 				FloatingPointSize = 64;
 			} else {
-				Interface.AddMessage(MessageType.Error, false, "Unsupported floating point format encountered in X object file " + FileName);
-				return null;
+				throw new NotSupportedException("Invalid floating point format");
 			}
 			// supported floating point format
 			if (Data[8] == 116 & Data[9] == 120 & Data[10] == 116 & Data[11] == 32) {
@@ -45,34 +33,27 @@ namespace OpenBve {
 				return LoadBinaryX(FileName, Data, 16, FloatingPointSize);
 			} else if (Data[8] == 116 & Data[9] == 122 & Data[10] == 105 & Data[11] == 112) {
 				// compressed textual flavor
-				#if !DEBUG
 				try {
-					#endif
 					byte[] Uncompressed = Decompress(Data);
 					string Text = Encoding.GetString(Uncompressed);
 					return LoadTextualX(FileName, Text, Encoding);
-					#if !DEBUG
 				} catch (Exception ex) {
-					Interface.AddMessage(MessageType.Error, false, "An unexpected error occured (" + ex.Message + ") while attempting to decompress the binary X object file encountered in " + FileName);
+					Plugin.currentHost.AddMessage(MessageType.Error, false, "An unexpected error occured (" + ex.Message + ") while attempting to decompress the binary X object file encountered in " + FileName);
 					return null;
 				}
-				#endif
 			} else if (Data[8] == 98 & Data[9] == 122 & Data[10] == 105 & Data[11] == 112) {
 				// compressed binary flavor
-				#if !DEBUG
+
 				try {
-					#endif
 					byte[] Uncompressed = Decompress(Data);
 					return LoadBinaryX(FileName, Uncompressed, 0, FloatingPointSize);
-					#if !DEBUG
 				} catch (Exception ex) {
-					Interface.AddMessage(MessageType.Error, false, "An unexpected error occured (" + ex.Message + ") while attempting to decompress the binary X object file encountered in " + FileName);
+					Plugin.currentHost.AddMessage(MessageType.Error, false, "An unexpected error occured (" + ex.Message + ") while attempting to decompress the binary X object file encountered in " + FileName);
 					return null;
 				}
-				#endif
 			} else {
 				// unsupported flavor
-				Interface.AddMessage(MessageType.Error, false, "Unsupported X object file encountered in " + FileName);
+				Plugin.currentHost.AddMessage(MessageType.Error, false, "Unsupported X object file encountered in " + FileName);
 				return null;
 			}
 		}
@@ -109,9 +90,9 @@ namespace OpenBve {
 
 		// template
 		private class Template {
-			internal string Name;
+			internal readonly string Name;
 			internal string[] Members;
-			internal string Key;
+			internal readonly string Key;
 			internal Template(string Name, string[] Members) {
 				this.Name = Name;
 				this.Members = Members;
@@ -123,7 +104,7 @@ namespace OpenBve {
 				this.Key = Key;
 			}
 		}
-		private static Template[] Templates = new Template[] {
+		private static readonly Template[] Templates = new Template[] {
 			new Template("Mesh", new string[] { "DWORD", "Vector[0]", "DWORD", "MeshFace[2]", "[...]" }),
 			new Template("Vector", new string[] { "float", "float", "float" }),
 			new Template("MeshFace", new string[] { "DWORD", "DWORD[0]" }),
@@ -148,8 +129,8 @@ namespace OpenBve {
 
 		// data
 		private class Structure {
-			internal string Name;
-			internal string Key;
+			internal readonly string Name;
+			internal readonly string Key;
 			internal object[] Data;
 			internal Structure(string Name, object[] Data, string Key)
 			{
@@ -199,7 +180,7 @@ namespace OpenBve {
 		// ================================
 
 		// load textual x
-		private static StaticObject LoadTextualX(string FileName, string Text, Encoding Encoding) {
+		private static StaticObject LoadTextualX(string FileName, string Text, System.Text.Encoding Encoding) {
 			// load
 			string[] Lines = Text.Replace("\u000D\u000A", "\u2028").Split(new char[] { '\u000A', '\u000C', '\u000D', '\u0085', '\u2028', '\u2029' }, StringSplitOptions.None);
 			AlternateStructure = false;
@@ -250,7 +231,7 @@ namespace OpenBve {
 			
 			// strip away header
 			if (Lines.Length == 0 || Lines[0].Length < 16) {
-				Interface.AddMessage(MessageType.Error, false, "The textual X object file is invalid at line 1 in " + FileName);
+				Plugin.currentHost.AddMessage(MessageType.Error, false, "The textual X object file is invalid at line 1 in " + FileName);
 				return null;
 			}
 			Lines[0] = Lines[0].Substring(16);
@@ -408,14 +389,14 @@ namespace OpenBve {
 								i = Position + 1;
 							} else if (Content[Position] == '}') {
 								if (Inline) {
-									Interface.AddMessage(MessageType.Error, false, "Unexpected closing brace encountered in inlined template " + Template.Name + " in textual X object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected closing brace encountered in inlined template " + Template.Name + " in textual X object file " + FileName);
 									return false;
 								} else {
 									Position++;
 									return true;
 								}
 							} else if (Content[Position] == ',') {
-								Interface.AddMessage(MessageType.Error, false, "Unexpected comma encountered in template " + Template.Name + " in textual X object file " + FileName);
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected comma encountered in template " + Template.Name + " in textual X object file " + FileName);
 								return false;
 							} else if (Content[Position] == ';') {
 								if (Inline) {
@@ -429,7 +410,7 @@ namespace OpenBve {
 										i++;
 										continue;
 									}
-									Interface.AddMessage(MessageType.Error, false, "Unexpected semicolon encountered in template " + Template.Name + " in textual X object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected semicolon encountered in template " + Template.Name + " in textual X object file " + FileName);
 									return false;
 								}
 							}
@@ -443,16 +424,16 @@ namespace OpenBve {
 						string z = r.Substring(h + 1, r.Length - h - 1);
 						r = r.Substring(0, h);
 						if (!int.TryParse(z, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out h)) {
-							Interface.AddMessage(MessageType.Error, false, "The internal format description for a template array is invalid in template " + Template.Name + " in textual X object file " + FileName);
+							Plugin.currentHost.AddMessage(MessageType.Error, false, "The internal format description for a template array is invalid in template " + Template.Name + " in textual X object file " + FileName);
 							return false;
 						}
 						if (h < 0 || h >= Structure.Data.Length || !(Structure.Data[h] is int)) {
-							Interface.AddMessage(MessageType.Error, false, "The internal format description for a template array is invalid in template " + Template.Name + " in textual X object file " + FileName);
+							Plugin.currentHost.AddMessage(MessageType.Error, false, "The internal format description for a template array is invalid in template " + Template.Name + " in textual X object file " + FileName);
 							return false;
 						}
 						h = (int)Structure.Data[h];
 					} else {
-						Interface.AddMessage(MessageType.Error, false, "The internal format description for a template array is invalid in template " + Template.Name + " in textual X object file " + FileName);
+						Plugin.currentHost.AddMessage(MessageType.Error, false, "The internal format description for a template array is invalid in template " + Template.Name + " in textual X object file " + FileName);
 						return false;
 					}
 					if (r == "DWORD") {
@@ -465,7 +446,7 @@ namespace OpenBve {
 									Position++;
 									break;
 								} else if (!char.IsWhiteSpace(Content, Position)) {
-									Interface.AddMessage(MessageType.Error, false, "Invalid character encountered while processing an array in template " + Template.Name + " in textual X object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid character encountered while processing an array in template " + Template.Name + " in textual X object file " + FileName);
 									return false;
 								} else {
 									Position++;
@@ -476,30 +457,30 @@ namespace OpenBve {
 							for (int k = 0; k < h; k++) {
 								while (Position < Content.Length) {
 									if (Content[Position] == '{' | Content[Position] == '}' | Content[Position] == '"') {
-										Interface.AddMessage(MessageType.Error, false, "Invalid character encountered while processing a DWORD array in template " + Template.Name + " in textual X object file " + FileName);
+										Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid character encountered while processing a DWORD array in template " + Template.Name + " in textual X object file " + FileName);
 										return false;
 									} else if (Content[Position] == ',') {
 										if (k == h - 1) {
-											Interface.AddMessage(MessageType.Error, false, "Invalid character encountered while processing a DWORD array in template " + Template.Name + " in textual X object file " + FileName);
+											Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid character encountered while processing a DWORD array in template " + Template.Name + " in textual X object file " + FileName);
 											return false;
 										}
 										break;
 									} else if (Content[Position] == ';') {
 										if (k != h - 1) {
-											Interface.AddMessage(MessageType.Error, false, "Invalid character encountered while processing a DWORD array in template " + Template.Name + " in textual X object file " + FileName);
+											Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid character encountered while processing a DWORD array in template " + Template.Name + " in textual X object file " + FileName);
 											return false;
 										}
 										break;
 									} Position++;
 								} if (Position == Content.Length) {
-									Interface.AddMessage(MessageType.Error, false, "DWORD array was not terminated at the end of the file in template " + Template.Name + " in textual X object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "DWORD array was not terminated at the end of the file in template " + Template.Name + " in textual X object file " + FileName);
 									return false;
 								}
 								string s = Content.Substring(i, Position - i);
 								Position++;
 								i = Position;
 								if (!int.TryParse(s, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out o[k])) {
-									Interface.AddMessage(MessageType.Error, false, "DWORD could not be parsed in array in template " + Template.Name + " in textual X object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "DWORD could not be parsed in array in template " + Template.Name + " in textual X object file " + FileName);
 								}
 							}
 						}
@@ -515,7 +496,7 @@ namespace OpenBve {
 									Position++;
 									break;
 								} else if (!char.IsWhiteSpace(Content, Position)) {
-									Interface.AddMessage(MessageType.Error, false, "Invalid character encountered while processing an array in template " + Template.Name + " in textual X object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid character encountered while processing an array in template " + Template.Name + " in textual X object file " + FileName);
 									return false;
 								} else {
 									Position++;
@@ -526,30 +507,30 @@ namespace OpenBve {
 							for (int k = 0; k < h; k++) {
 								while (Position < Content.Length) {
 									if (Content[Position] == '{' | Content[Position] == '}' | Content[Position] == '"') {
-										Interface.AddMessage(MessageType.Error, false, "Invalid character encountered while processing a float array in template " + Template.Name + " in textual X object file " + FileName);
+										Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid character encountered while processing a float array in template " + Template.Name + " in textual X object file " + FileName);
 										return false;
 									} else if (Content[Position] == ',') {
 										if (k == h - 1) {
-											Interface.AddMessage(MessageType.Error, false, "Invalid character encountered while processing a float array in template " + Template.Name + " in textual X object file " + FileName);
+											Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid character encountered while processing a float array in template " + Template.Name + " in textual X object file " + FileName);
 											return false;
 										}
 										break;
 									} else if (Content[Position] == ';') {
 										if (k != h - 1) {
-											Interface.AddMessage(MessageType.Error, false, "Invalid character encountered while processing a float array in template " + Template.Name + " in textual X object file " + FileName);
+											Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid character encountered while processing a float array in template " + Template.Name + " in textual X object file " + FileName);
 											return false;
 										}
 										break;
 									} Position++;
 								} if (Position == Content.Length) {
-									Interface.AddMessage(MessageType.Error, false, "float array was not terminated at the end of the file in template " + Template.Name + " in textual X object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "float array was not terminated at the end of the file in template " + Template.Name + " in textual X object file " + FileName);
 									return false;
 								}
 								string s = Content.Substring(i, Position - i);
 								Position++;
 								i = Position;
 								if (!double.TryParse(s, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out o[k])) {
-									Interface.AddMessage(MessageType.Error, false, "float could not be parsed in array in template " + Template.Name + " in textual X object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "float could not be parsed in array in template " + Template.Name + " in textual X object file " + FileName);
 								}
 							}
 						}
@@ -570,7 +551,7 @@ namespace OpenBve {
 									// Usually found in null objects
 									break;
 								} else if (!char.IsWhiteSpace(Content, Position)) {
-									Interface.AddMessage(MessageType.Error, false, "Invalid character encountered while processing an array in template " + Template.Name + " in textual X object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid character encountered while processing an array in template " + Template.Name + " in textual X object file " + FileName);
 									return false;
 								} else {
 									Position++;
@@ -589,13 +570,13 @@ namespace OpenBve {
 											Position++;
 											break;
 										} else if (!char.IsWhiteSpace(Content, Position)) {
-											Interface.AddMessage(MessageType.Error, false, "Invalid character encountered while processing an array in template " + Template.Name + " in textual X object file " + FileName);
+											Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid character encountered while processing an array in template " + Template.Name + " in textual X object file " + FileName);
 											return false;
 										} else {
 											Position++;
 										}
 									} if (Position == Content.Length) {
-										Interface.AddMessage(MessageType.Error, false, "Array was not continued at the end of the file in template " + Template.Name + " in textual X object file " + FileName);
+										Plugin.currentHost.AddMessage(MessageType.Error, false, "Array was not continued at the end of the file in template " + Template.Name + " in textual X object file " + FileName);
 										return false;
 									}
 								} else {
@@ -605,13 +586,13 @@ namespace OpenBve {
 											Position++;
 											break;
 										} else if (!char.IsWhiteSpace(Content, Position)) {
-											Interface.AddMessage(MessageType.Error, false, "Invalid character encountered while processing an array in template " + Template.Name + " in textual X object file " + FileName);
+											Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid character encountered while processing an array in template " + Template.Name + " in textual X object file " + FileName);
 											return false;
 										} else {
 											Position++;
 										}
 									} if (Position == Content.Length) {
-										Interface.AddMessage(MessageType.Error, false, "Array was not terminated at the end of the file in template " + Template.Name + " in textual X object file " + FileName);
+										Plugin.currentHost.AddMessage(MessageType.Error, false, "Array was not terminated at the end of the file in template " + Template.Name + " in textual X object file " + FileName);
 										return false;
 									}
 								}
@@ -629,12 +610,12 @@ namespace OpenBve {
 						case "DWORD":
 							while (Position < Content.Length) {
 								if (Content[Position] == '{' | Content[Position] == '}' | Content[Position] == ',' | Content[Position] == '"') {
-									Interface.AddMessage(MessageType.Error, false, "Invalid character encountered while processing a DWORD in template " + Template.Name + " in textual X object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid character encountered while processing a DWORD in template " + Template.Name + " in textual X object file " + FileName);
 									return false;
 								} else if (Content[Position] == ';') {
 									string s = Content.Substring(i, Position - i).Trim();
 									int a; if (!int.TryParse(s, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out a)) {
-										Interface.AddMessage(MessageType.Error, false, "DWORD could not be parsed in template " + Template.Name + " in textual X object file " + FileName);
+										Plugin.currentHost.AddMessage(MessageType.Error, false, "DWORD could not be parsed in template " + Template.Name + " in textual X object file " + FileName);
 										return false;
 									}
 									Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
@@ -647,7 +628,7 @@ namespace OpenBve {
 						case "float":
 							while (Position < Content.Length) {
 								if (Content[Position] == '{' | Content[Position] == '}' |  Content[Position] == '"') {
-									Interface.AddMessage(MessageType.Error, false, "Invalid character encountered while processing a DWORD in template " + Template.Name + " in textual X object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid character encountered while processing a DWORD in template " + Template.Name + " in textual X object file " + FileName);
 									return false;
 								} else if (Content[Position] == ';' || Content[Position] == ',') {
 									string s = Content.Substring(i, Position - i).Trim();
@@ -656,7 +637,7 @@ namespace OpenBve {
 										{
 											//Handle omitted entries which are still in a valid format
 											//May break elsewhere, but if so we're no further back anyways
-											Interface.AddMessage(MessageType.Error, false, "float could not be parsed in template " + Template.Name + " in textual X object file " + FileName);
+											Plugin.currentHost.AddMessage(MessageType.Error, false, "float could not be parsed in template " + Template.Name + " in textual X object file " + FileName);
 											return false;
 										}
 										else
@@ -677,13 +658,13 @@ namespace OpenBve {
 									Position++;
 									break;
 								} else if (!char.IsWhiteSpace(Content, Position)) {
-									Interface.AddMessage(MessageType.Error, false, "Invalid character encountered while processing a string in template " + Template.Name + " in textual X object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid character encountered while processing a string in template " + Template.Name + " in textual X object file " + FileName);
 									return false;
 								} else {
 									Position++;
 								}
 							} if (Position >= Content.Length) {
-								Interface.AddMessage(MessageType.Error, false, "Unexpected end of file encountered while processing a string in template " + Template.Name + " in textual X object file " + FileName);
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected end of file encountered while processing a string in template " + Template.Name + " in textual X object file " + FileName);
 								return false;
 							}
 							i = Position;
@@ -695,7 +676,7 @@ namespace OpenBve {
 									Position++;
 								}
 							} if (Position >= Content.Length) {
-								Interface.AddMessage(MessageType.Error, false, "Unexpected end of file encountered while processing a string in template " + Template.Name + " in textual X object file " + FileName);
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected end of file encountered while processing a string in template " + Template.Name + " in textual X object file " + FileName);
 								return false;
 							}
 							string t = Content.Substring(i, Position - i - 1);
@@ -704,13 +685,13 @@ namespace OpenBve {
 									Position++;
 									break;
 								} else if (!char.IsWhiteSpace(Content, Position)) {
-									Interface.AddMessage(MessageType.Error, false, "Invalid character encountered while processing a string in template " + Template.Name + " in textual X object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid character encountered while processing a string in template " + Template.Name + " in textual X object file " + FileName);
 									return false;
 								} else {
 									Position++;
 								}
 							} if (Position >= Content.Length) {
-								Interface.AddMessage(MessageType.Error, false, "Unexpected end of file encountered while processing a string in template " + Template.Name + " in textual X object file " + FileName);
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected end of file encountered while processing a string in template " + Template.Name + " in textual X object file " + FileName);
 								return false;
 							}
 							Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
@@ -731,7 +712,7 @@ namespace OpenBve {
 							i = Position;
 							if (Position >= Content.Length)
 							{
-								Interface.AddMessage(MessageType.Error, false, "Unexpected end of file encountered while processing a string in template " + Template.Name + " in textual X object file " + FileName);
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected end of file encountered while processing a string in template " + Template.Name + " in textual X object file " + FileName);
 								return false;
 							}
 							while (Position <= Content.Length)
@@ -754,7 +735,7 @@ namespace OpenBve {
 							}
 							if (Position >= Content.Length)
 							{
-								Interface.AddMessage(MessageType.Error, false, "Unexpected end of file encountered while processing a string in template " + Template.Name + " in textual X object file " + FileName);
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected end of file encountered while processing a string in template " + Template.Name + " in textual X object file " + FileName);
 								return false;
 							}
 							if (SF == true)
@@ -781,7 +762,7 @@ namespace OpenBve {
 							}
 							if (Position >= Content.Length)
 							{
-								Interface.AddMessage(MessageType.Error, false, "Unexpected end of file encountered while processing a string in template " + Template.Name + " in textual X object file " + FileName);
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected end of file encountered while processing a string in template " + Template.Name + " in textual X object file " + FileName);
 								return false;
 							}
 
@@ -809,13 +790,13 @@ namespace OpenBve {
 										Position++;
 										break;
 									} else if (!char.IsWhiteSpace(Content, Position)) {
-										Interface.AddMessage(MessageType.Error, false, "Invalid character encountered while processing an inlined template in template " + Template.Name + " in textual X object file " + FileName);
+										Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid character encountered while processing an inlined template in template " + Template.Name + " in textual X object file " + FileName);
 										return false;
 									} else {
 										Position++;
 									}
 								} if (Position >= Content.Length) {
-									Interface.AddMessage(MessageType.Error, false, "Unexpected end of file encountered while processing an inlined template in template " + Template.Name + " in textual X object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected end of file encountered while processing an inlined template in template " + Template.Name + " in textual X object file " + FileName);
 									return false;
 								}
 								Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
@@ -843,7 +824,7 @@ namespace OpenBve {
 						}
 						else if (!char.IsWhiteSpace(Content, Position))
 						{
-							Interface.AddMessage(MessageType.Error, false, "Invalid character encountered in template " + Template.Name + " in textual X object file " + FileName);
+							Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid character encountered in template " + Template.Name + " in textual X object file " + FileName);
 							return false;
 						}
 						else
@@ -852,17 +833,17 @@ namespace OpenBve {
 						}
 					} if (Position >= Content.Length)
 					{
-						Interface.AddMessage(MessageType.Error, false, "Unexpected end of file encountered in template " + Template.Name + " in textual X object file " + FileName);
+						Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected end of file encountered in template " + Template.Name + " in textual X object file " + FileName);
 						return false;
 					}
 					return true;
 				}
 			} else {
 				if (q) {
-					Interface.AddMessage(MessageType.Error, false, "Quotation mark not closed at the end of the file in template " + Template.Name + " in textual X object file " + FileName);
+					Plugin.currentHost.AddMessage(MessageType.Error, false, "Quotation mark not closed at the end of the file in template " + Template.Name + " in textual X object file " + FileName);
 					return false;
 				} else if (Template.Name.Length != 0) {
-					Interface.AddMessage(MessageType.Error, false, "Unexpected end of file encountered in template " + Template.Name + " in textual X object file " + FileName);
+					Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected end of file encountered in template " + Template.Name + " in textual X object file " + FileName);
 					return false;
 				} else {
 					return true;
@@ -894,7 +875,7 @@ namespace OpenBve {
 					return null;
 				}
 			} catch (Exception ex) {
-				Interface.AddMessage(MessageType.Error, false, "Unhandled error (" + ex.Message + ") encountered in binary X object file " + FileName);
+				Plugin.currentHost.AddMessage(MessageType.Error, false, "Unhandled error (" + ex.Message + ") encountered in binary X object file " + FileName);
 				return null;
 			}
 			// process structure
@@ -929,9 +910,9 @@ namespace OpenBve {
 					// unknown template
 					int Level = 0;
 					if (Cache.IntegersRemaining != 0) {
-						Interface.AddMessage(MessageType.Error, false, "An integer list was not depleted at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+						Plugin.currentHost.AddMessage(MessageType.Error, false, "An integer list was not depleted at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 					} else if (Cache.FloatsRemaining != 0) {
-						Interface.AddMessage(MessageType.Error, false, "A float list was not depleted at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+						Plugin.currentHost.AddMessage(MessageType.Error, false, "A float list was not depleted at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 					}
 					short Token = Reader.ReadInt16();
 					switch (Token) {
@@ -940,13 +921,13 @@ namespace OpenBve {
 								Level++;
 								int n = Reader.ReadInt32();
 								if (n < 1) {
-									Interface.AddMessage(MessageType.Error, false, "count is invalid in TOKEN_NAME at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "count is invalid in TOKEN_NAME at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 									return false;
 								}
 								Reader.BaseStream.Position += n;
 								Token = Reader.ReadInt16();
 								if (Token != TOKEN_OBRACE) {
-									Interface.AddMessage(MessageType.Error, false, "TOKEN_OBRACE expected at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "TOKEN_OBRACE expected at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 									return false;
 								}
 							} break;
@@ -958,7 +939,7 @@ namespace OpenBve {
 							{
 								int n = Reader.ReadInt32();
 								if (n < 0) {
-									Interface.AddMessage(MessageType.Error, false, "count is invalid in TOKEN_INTEGER_LIST at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "count is invalid in TOKEN_INTEGER_LIST at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 									return false;
 								}
 								Reader.BaseStream.Position += 4 * n;
@@ -967,7 +948,7 @@ namespace OpenBve {
 							{
 								int n = Reader.ReadInt32();
 								if (n < 0) {
-									Interface.AddMessage(MessageType.Error, false, "count is invalid in TOKEN_FLOAT_LIST at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "count is invalid in TOKEN_FLOAT_LIST at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 									return false;
 								}
 								Reader.BaseStream.Position += (FloatingPointSize >> 3) * n;
@@ -976,33 +957,33 @@ namespace OpenBve {
 							{
 								int n = Reader.ReadInt32();
 								if (n < 0) {
-									Interface.AddMessage(MessageType.Error, false, "count is invalid in TOKEN_STRING at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "count is invalid in TOKEN_STRING at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 									return false;
 								}
 								Reader.BaseStream.Position += n;
 								Token = Reader.ReadInt16();
 								if (Token != TOKEN_COMMA & Token != TOKEN_SEMICOLON) {
-									Interface.AddMessage(MessageType.Error, false, "TOKEN_COMMA or TOKEN_SEMICOLON expected at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "TOKEN_COMMA or TOKEN_SEMICOLON expected at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 									return false;
 								}
 							} break;
 						case TOKEN_OBRACE:
-							Interface.AddMessage(MessageType.Error, false, "Unexpected token TOKEN_OBRACE encountered at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+							Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected token TOKEN_OBRACE encountered at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 							return false;
 						case TOKEN_CBRACE:
 							if (Level == 0) return true;
 							Level--;
 							break;
 						default:
-							Interface.AddMessage(MessageType.Error, false, "Unknown token encountered at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+							Plugin.currentHost.AddMessage(MessageType.Error, false, "Unknown token encountered at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 							return false;
 					} m--;
 				} else if (Template.Members[m] == "[...]") {
 					// any template
 					if (Cache.IntegersRemaining != 0) {
-						Interface.AddMessage(MessageType.Error, false, "An integer list was not depleted at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+						Plugin.currentHost.AddMessage(MessageType.Error, false, "An integer list was not depleted at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 					} else if (Cache.FloatsRemaining != 0) {
-						Interface.AddMessage(MessageType.Error, false, "A float list was not depleted at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+						Plugin.currentHost.AddMessage(MessageType.Error, false, "A float list was not depleted at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 					}
 					if (Template.Name.Length == 0 && Reader.BaseStream.Position == Reader.BaseStream.Length) {
 						// end of file
@@ -1013,13 +994,13 @@ namespace OpenBve {
 						case TOKEN_NAME:
 							int n = Reader.ReadInt32();
 							if (n < 1) {
-								Interface.AddMessage(MessageType.Error, false, "count is invalid in TOKEN_NAME at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "count is invalid in TOKEN_NAME at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 								return false;
 							}
 							string Name = new string(Ascii.GetChars(Reader.ReadBytes(n)));
 							Token = Reader.ReadInt16();
 							if (Token != TOKEN_OBRACE) {
-								Interface.AddMessage(MessageType.Error, false, "TOKEN_OBRACE expected at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "TOKEN_OBRACE expected at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 								return false;
 							}
 							Structure o;
@@ -1031,13 +1012,13 @@ namespace OpenBve {
 							break;
 						case TOKEN_CBRACE:
 							if (Template.Name.Length == 0) {
-								Interface.AddMessage(MessageType.Error, false, "Unexpected TOKEN_CBRACE encountered at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected TOKEN_CBRACE encountered at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 								return false;
 							}
 							m++;
 							break;
 						default:
-							Interface.AddMessage(MessageType.Error, false, "TOKEN_NAME or TOKEN_CBRACE expected at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+							Plugin.currentHost.AddMessage(MessageType.Error, false, "TOKEN_NAME or TOKEN_CBRACE expected at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 							return false;
 					} m--;
 				} else if (Template.Members[m].EndsWith("]", StringComparison.Ordinal)) {
@@ -1048,16 +1029,16 @@ namespace OpenBve {
 						string z = r.Substring(h + 1, r.Length - h - 1);
 						r = r.Substring(0, h);
 						if (!int.TryParse(z, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out h)) {
-							Interface.AddMessage(MessageType.Error, false, "The internal format description for a template array is invalid in template " + Template.Name + " in binary X object file " + FileName);
+							Plugin.currentHost.AddMessage(MessageType.Error, false, "The internal format description for a template array is invalid in template " + Template.Name + " in binary X object file " + FileName);
 							return false;
 						}
 						if (h < 0 || h >= Structure.Data.Length || !(Structure.Data[h] is int)) {
-							Interface.AddMessage(MessageType.Error, false, "The internal format description for a template array is invalid in template " + Template.Name + " in binary X object file " + FileName);
+							Plugin.currentHost.AddMessage(MessageType.Error, false, "The internal format description for a template array is invalid in template " + Template.Name + " in binary X object file " + FileName);
 							return false;
 						}
 						h = (int)Structure.Data[h];
 					} else {
-						Interface.AddMessage(MessageType.Error, false, "The internal format description for a template array is invalid in template " + Template.Name + " in binary X object file " + FileName);
+						Plugin.currentHost.AddMessage(MessageType.Error, false, "The internal format description for a template array is invalid in template " + Template.Name + " in binary X object file " + FileName);
 						return false;
 					}
 					if (r == "DWORD") {
@@ -1071,7 +1052,7 @@ namespace OpenBve {
 								o[i] = a;
 							} else if (Cache.FloatsRemaining != 0) {
 								// cannot use cached float
-								Interface.AddMessage(MessageType.Error, false, "A float list was not depleted at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "A float list was not depleted at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 								return false;
 							} else {
 								while (true) {
@@ -1082,7 +1063,7 @@ namespace OpenBve {
 									} else if (Token == TOKEN_INTEGER_LIST) {
 										int n = Reader.ReadInt32();
 										if (n < 0) {
-											Interface.AddMessage(MessageType.Error, false, "count is invalid in TOKEN_INTEGER_LIST at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+											Plugin.currentHost.AddMessage(MessageType.Error, false, "count is invalid in TOKEN_INTEGER_LIST at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 											return false;
 										}
 										if (n != 0) {
@@ -1096,7 +1077,7 @@ namespace OpenBve {
 											break;
 										}
 									} else {
-										Interface.AddMessage(MessageType.Error, false, "TOKEN_INTEGER or TOKEN_INTEGER_LIST expected at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+										Plugin.currentHost.AddMessage(MessageType.Error, false, "TOKEN_INTEGER or TOKEN_INTEGER_LIST expected at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 										return false;
 									}
 								}
@@ -1110,7 +1091,7 @@ namespace OpenBve {
 						for (int i = 0; i < h; i++) {
 							if (Cache.IntegersRemaining != 0) {
 								// cannot use cached integer
-								Interface.AddMessage(MessageType.Error, false, "An integer list was not depleted at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "An integer list was not depleted at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 								return false;
 							} else if (Cache.FloatsRemaining != 0) {
 								// use cached float
@@ -1123,7 +1104,7 @@ namespace OpenBve {
 									if (Token == TOKEN_FLOAT_LIST) {
 										int n = Reader.ReadInt32();
 										if (n < 0) {
-											Interface.AddMessage(MessageType.Error, false, "count is invalid in TOKEN_FLOAT_LIST at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+											Plugin.currentHost.AddMessage(MessageType.Error, false, "count is invalid in TOKEN_FLOAT_LIST at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 											return false;
 										}
 										if (n != 0) {
@@ -1141,7 +1122,7 @@ namespace OpenBve {
 											break;
 										}
 									} else {
-										Interface.AddMessage(MessageType.Error, false, "TOKEN_FLOAT_LIST expected at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+										Plugin.currentHost.AddMessage(MessageType.Error, false, "TOKEN_FLOAT_LIST expected at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 										return false;
 									}
 								}
@@ -1171,7 +1152,7 @@ namespace OpenBve {
 								Structure.Data[Structure.Data.Length - 1] = a;
 							} else if (Cache.FloatsRemaining != 0) {
 								// cannot use cached float
-								Interface.AddMessage(MessageType.Error, false, "A float list was not depleted at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "A float list was not depleted at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 								return false;
 							} else {
 								// read new data
@@ -1185,7 +1166,7 @@ namespace OpenBve {
 									} else if (Token == TOKEN_INTEGER_LIST) {
 										int n = Reader.ReadInt32();
 										if (n < 0) {
-											Interface.AddMessage(MessageType.Error, false, "count is invalid in TOKEN_INTEGER_LIST at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+											Plugin.currentHost.AddMessage(MessageType.Error, false, "count is invalid in TOKEN_INTEGER_LIST at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 											return false;
 										}
 										if (n != 0) {
@@ -1200,7 +1181,7 @@ namespace OpenBve {
 											break;
 										}
 									} else {
-										Interface.AddMessage(MessageType.Error, false, "TOKEN_INTEGER or TOKEN_INTEGER_LIST expected at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+										Plugin.currentHost.AddMessage(MessageType.Error, false, "TOKEN_INTEGER or TOKEN_INTEGER_LIST expected at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 										return false;
 									}
 								}
@@ -1209,7 +1190,7 @@ namespace OpenBve {
 							// float expected
 							if (Cache.IntegersRemaining != 0) {
 								// cannot use cached integer
-								Interface.AddMessage(MessageType.Error, false, "An integer list was not depleted at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "An integer list was not depleted at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 								return false;
 							} else if (Cache.FloatsRemaining != 0) {
 								// use cached float
@@ -1224,7 +1205,7 @@ namespace OpenBve {
 									if (Token == TOKEN_FLOAT_LIST) {
 										int n = Reader.ReadInt32();
 										if (n < 0) {
-											Interface.AddMessage(MessageType.Error, false, "count is invalid in TOKEN_FLOAT_LIST at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+											Plugin.currentHost.AddMessage(MessageType.Error, false, "count is invalid in TOKEN_FLOAT_LIST at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 											return false;
 										}
 										if (n != 0) {
@@ -1243,7 +1224,7 @@ namespace OpenBve {
 											break;
 										}
 									} else {
-										Interface.AddMessage(MessageType.Error, false, "TOKEN_FLOAT_LIST expected at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+										Plugin.currentHost.AddMessage(MessageType.Error, false, "TOKEN_FLOAT_LIST expected at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 										return false;
 									}
 								}
@@ -1252,15 +1233,15 @@ namespace OpenBve {
 							{
 								// string expected
 								if (Cache.IntegersRemaining != 0) {
-									Interface.AddMessage(MessageType.Error, false, "An integer list was not depleted at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "An integer list was not depleted at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 								} else if (Cache.FloatsRemaining != 0) {
-									Interface.AddMessage(MessageType.Error, false, "A float list was not depleted at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "A float list was not depleted at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 								}
 								short Token = Reader.ReadInt16();
 								if (Token == TOKEN_STRING) {
 									int n = Reader.ReadInt32();
 									if (n < 0) {
-										Interface.AddMessage(MessageType.Error, false, "count is invalid in TOKEN_STRING at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+										Plugin.currentHost.AddMessage(MessageType.Error, false, "count is invalid in TOKEN_STRING at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 										return false;
 									}
 									string s = new string(Ascii.GetChars(Reader.ReadBytes(n)));
@@ -1268,11 +1249,11 @@ namespace OpenBve {
 									Structure.Data[Structure.Data.Length - 1] = s;
 									Token = Reader.ReadInt16();
 									if (Token != TOKEN_SEMICOLON) {
-										Interface.AddMessage(MessageType.Error, false, "TOKEN_SEMICOLON expected at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+										Plugin.currentHost.AddMessage(MessageType.Error, false, "TOKEN_SEMICOLON expected at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 										return false;
 									}
 								} else {
-									Interface.AddMessage(MessageType.Error, false, "TOKEN_STRING expected at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "TOKEN_STRING expected at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 									return false;
 								}
 							} break;
@@ -1293,7 +1274,7 @@ namespace OpenBve {
 				if (s != "[???]" & s != "[...]") {
 					int Token = Reader.ReadInt16();
 					if (Token != TOKEN_CBRACE) {
-						Interface.AddMessage(MessageType.Error, false, "TOKEN_CBRACE expected at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
+						Plugin.currentHost.AddMessage(MessageType.Error, false, "TOKEN_CBRACE expected at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 						return false;
 					}
 				}
@@ -1314,12 +1295,12 @@ namespace OpenBve {
 		// process structure
 		private static bool ProcessStructure(string FileName, Structure Structure, out StaticObject Object) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			Object = new StaticObject(Program.CurrentHost);
+			Object = new StaticObject(Plugin.currentHost);
 			// file
 			for (int i = 0; i < Structure.Data.Length; i++) {
 				Structure f = Structure.Data[i] as Structure;
 				if (f == null) {
-					Interface.AddMessage(MessageType.Error, false, "Top-level inlined arguments are invalid in x object file " + FileName);
+					Plugin.currentHost.AddMessage(MessageType.Error, false, "Top-level inlined arguments are invalid in x object file " + FileName);
 					return false;
 				}
 				switch (f.Name) {
@@ -1333,51 +1314,51 @@ namespace OpenBve {
 							// mesh
 							if (f.Data.Length < 4)
 							{
-								Interface.AddMessage(MessageType.Error, false, "Mesh is expected to have at least 4 arguments in x object file " + FileName);
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "Mesh is expected to have at least 4 arguments in x object file " + FileName);
 								return false;
 							}
 							else if (!(f.Data[0] is int))
 							{
-								Interface.AddMessage(MessageType.Error, false, "nVertices is expected to be a DWORD in Mesh in x object file " + FileName);
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "nVertices is expected to be a DWORD in Mesh in x object file " + FileName);
 								return false;
 							}
 							else if (!(f.Data[1] is Structure[]))
 							{
-								Interface.AddMessage(MessageType.Error, false, "vertices[nVertices] is expected to be a Vector array in Mesh in x object file " + FileName);
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "vertices[nVertices] is expected to be a Vector array in Mesh in x object file " + FileName);
 								return false;
 							}
 							else if (!(f.Data[2] is int))
 							{
-								Interface.AddMessage(MessageType.Error, false, "nFaces is expected to be a DWORD in Mesh in x object file " + FileName);
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "nFaces is expected to be a DWORD in Mesh in x object file " + FileName);
 								return false;
 							}
 							else if (!(f.Data[3] is Structure[]))
 							{
-								Interface.AddMessage(MessageType.Error, false, "faces[nFaces] is expected to be a MeshFace array in Mesh in x object file " + FileName);
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "faces[nFaces] is expected to be a MeshFace array in Mesh in x object file " + FileName);
 								return false;
 							}
 							int nVertices = (int)f.Data[0];
 							if (nVertices < 0)
 							{
-								Interface.AddMessage(MessageType.Error, false, "nVertices is expected to be non-negative in Mesh in x object file " + FileName);
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "nVertices is expected to be non-negative in Mesh in x object file " + FileName);
 								return false;
 							}
 							Structure[] vertices = (Structure[])f.Data[1];
 							if (nVertices != vertices.Length)
 							{
-								Interface.AddMessage(MessageType.Error, false, "nVertices does not match with the length of array vertices in Mesh in x object file " + FileName);
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "nVertices does not match with the length of array vertices in Mesh in x object file " + FileName);
 								return false;
 							}
 							int nFaces = (int)f.Data[2];
 							if (nFaces < 0)
 							{
-								Interface.AddMessage(MessageType.Error, false, "nFaces is expected to be non-negative in Mesh in x object file " + FileName);
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "nFaces is expected to be non-negative in Mesh in x object file " + FileName);
 								return false;
 							}
 							Structure[] faces = (Structure[])f.Data[3];
 							if (nFaces != faces.Length)
 							{
-								Interface.AddMessage(MessageType.Error, false, "nFaces does not match with the length of array faces in Mesh in x object file " + FileName);
+								Plugin.currentHost.AddMessage(MessageType.Error, false, "nFaces does not match with the length of array faces in Mesh in x object file " + FileName);
 								return false;
 							}
 							// collect vertices
@@ -1386,27 +1367,27 @@ namespace OpenBve {
 							{
 								if (vertices[j].Name != "Vector")
 								{
-									Interface.AddMessage(MessageType.Error, false, "vertices[" + j.ToString(Culture) + "] is expected to be of template Vertex in Mesh in x object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "vertices[" + j.ToString(Culture) + "] is expected to be of template Vertex in Mesh in x object file " + FileName);
 									return false;
 								}
 								else if (vertices[j].Data.Length != 3)
 								{
-									Interface.AddMessage(MessageType.Error, false, "vertices[" + j.ToString(Culture) + "] is expected to have 3 arguments in Mesh in x object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "vertices[" + j.ToString(Culture) + "] is expected to have 3 arguments in Mesh in x object file " + FileName);
 									return false;
 								}
 								else if (!(vertices[j].Data[0] is double))
 								{
-									Interface.AddMessage(MessageType.Error, false, "x is expected to be a float in vertices[" + j.ToString(Culture) + "] in Mesh in x object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "x is expected to be a float in vertices[" + j.ToString(Culture) + "] in Mesh in x object file " + FileName);
 									return false;
 								}
 								else if (!(vertices[j].Data[1] is double))
 								{
-									Interface.AddMessage(MessageType.Error, false, "y is expected to be a float in vertices[" + j.ToString(Culture) + "] in Mesh in x object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "y is expected to be a float in vertices[" + j.ToString(Culture) + "] in Mesh in x object file " + FileName);
 									return false;
 								}
 								else if (!(vertices[j].Data[2] is double))
 								{
-									Interface.AddMessage(MessageType.Error, false, "z is expected to be a float in vertices[" + j.ToString(Culture) + "] in Mesh in x object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "z is expected to be a float in vertices[" + j.ToString(Culture) + "] in Mesh in x object file " + FileName);
 									return false;
 								}
 								double x = (double)vertices[j].Data[0];
@@ -1426,34 +1407,34 @@ namespace OpenBve {
 							{
 								if (faces[j].Name != "MeshFace")
 								{
-									Interface.AddMessage(MessageType.Error, false, "faces[" + j.ToString(Culture) + "] is expected to be of template MeshFace in Mesh in x object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "faces[" + j.ToString(Culture) + "] is expected to be of template MeshFace in Mesh in x object file " + FileName);
 									return false;
 								}
 								else if (faces[j].Data.Length != 2)
 								{
-									Interface.AddMessage(MessageType.Error, false, "face[" + j.ToString(Culture) + "] is expected to have 2 arguments in Mesh in x object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "face[" + j.ToString(Culture) + "] is expected to have 2 arguments in Mesh in x object file " + FileName);
 									return false;
 								}
 								else if (!(faces[j].Data[0] is int))
 								{
-									Interface.AddMessage(MessageType.Error, false, "nFaceVertexIndices is expected to be a DWORD in face[" + j.ToString(Culture) + "] in Mesh in x object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "nFaceVertexIndices is expected to be a DWORD in face[" + j.ToString(Culture) + "] in Mesh in x object file " + FileName);
 									return false;
 								}
 								else if (!(faces[j].Data[1] is int[]))
 								{
-									Interface.AddMessage(MessageType.Error, false, "faceVertexIndices[nFaceVertexIndices] is expected to be a DWORD array in face[" + j.ToString(Culture) + "] in Mesh in x object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "faceVertexIndices[nFaceVertexIndices] is expected to be a DWORD array in face[" + j.ToString(Culture) + "] in Mesh in x object file " + FileName);
 									return false;
 								}
 								int nFaceVertexIndices = (int)faces[j].Data[0];
 								if (nFaceVertexIndices < 0)
 								{
-									Interface.AddMessage(MessageType.Error, false, "nFaceVertexIndices is expected to be non-negative in MeshFace in Mesh in x object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "nFaceVertexIndices is expected to be non-negative in MeshFace in Mesh in x object file " + FileName);
 									return false;
 								}
 								int[] faceVertexIndices = (int[])faces[j].Data[1];
 								if (nFaceVertexIndices != faceVertexIndices.Length)
 								{
-									Interface.AddMessage(MessageType.Error, false, "nFaceVertexIndices does not match with the length of array faceVertexIndices in face[" + j.ToString(Culture) + "] in Mesh in x object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "nFaceVertexIndices does not match with the length of array faceVertexIndices in face[" + j.ToString(Culture) + "] in Mesh in x object file " + FileName);
 									return false;
 								}
 								Faces[j] = new int[nFaceVertexIndices];
@@ -1462,7 +1443,7 @@ namespace OpenBve {
 								{
 									if (faceVertexIndices[k] < 0 | faceVertexIndices[k] >= nVertices)
 									{
-										Interface.AddMessage(MessageType.Error, false, "faceVertexIndices[" + k.ToString(Culture) + "] does not reference a valid vertex in face[" + j.ToString(Culture) + "] in Mesh in x object file " + FileName);
+										Plugin.currentHost.AddMessage(MessageType.Error, false, "faceVertexIndices[" + k.ToString(Culture) + "] does not reference a valid vertex in face[" + j.ToString(Culture) + "] in Mesh in x object file " + FileName);
 										return false;
 									}
 									Faces[j][k] = faceVertexIndices[k];
@@ -1542,7 +1523,7 @@ namespace OpenBve {
 								Structure g = f.Data[j] as Structure;
 								if (g == null)
 								{
-									Interface.AddMessage(MessageType.Error, false, "Unexpected inlined argument encountered in Mesh in x object file " + FileName);
+									Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected inlined argument encountered in Mesh in x object file " + FileName);
 									return false;
 								}
 								switch (g.Name)
@@ -1552,52 +1533,52 @@ namespace OpenBve {
 											// meshmateriallist
 											if (g.Data.Length < 3)
 											{
-												Interface.AddMessage(MessageType.Error, false, "MeshMaterialList is expected to have at least 3 arguments in Mesh in x object file " + FileName);
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "MeshMaterialList is expected to have at least 3 arguments in Mesh in x object file " + FileName);
 												return false;
 											}
 											else if (!(g.Data[0] is int))
 											{
-												Interface.AddMessage(MessageType.Error, false, "nMaterials is expected to be a DWORD in MeshMaterialList in Mesh in x object file " + FileName);
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "nMaterials is expected to be a DWORD in MeshMaterialList in Mesh in x object file " + FileName);
 												return false;
 											}
 											else if (!(g.Data[1] is int))
 											{
-												Interface.AddMessage(MessageType.Error, false, "nFaceIndexes is expected to be a DWORD in MeshMaterialList in Mesh in x object file " + FileName);
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "nFaceIndexes is expected to be a DWORD in MeshMaterialList in Mesh in x object file " + FileName);
 												return false;
 											}
 											else if (!(g.Data[2] is int[]))
 											{
-												Interface.AddMessage(MessageType.Error, false, "faceIndexes[nFaceIndexes] is expected to be a DWORD array in MeshMaterialList in Mesh in x object file " + FileName);
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "faceIndexes[nFaceIndexes] is expected to be a DWORD array in MeshMaterialList in Mesh in x object file " + FileName);
 												return false;
 											}
 											int nMaterials = (int)g.Data[0];
 											if (nMaterials < 0)
 											{
-												Interface.AddMessage(MessageType.Error, false, "nMaterials is expected to be non-negative in MeshMaterialList in Mesh in x object file " + FileName);
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "nMaterials is expected to be non-negative in MeshMaterialList in Mesh in x object file " + FileName);
 												return false;
 											}
 											int nFaceIndexes = (int)g.Data[1];
 											if (nFaceIndexes < 0)
 											{
-												Interface.AddMessage(MessageType.Error, false, "nFaceIndexes is expected to be non-negative in MeshMaterialList in Mesh in x object file " + FileName);
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "nFaceIndexes is expected to be non-negative in MeshMaterialList in Mesh in x object file " + FileName);
 												return false;
 											}
 											else if (nFaceIndexes > nFaces)
 											{
-												Interface.AddMessage(MessageType.Error, false, "nFaceIndexes does not reference valid faces in MeshMaterialList in Mesh in x object file " + FileName);
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "nFaceIndexes does not reference valid faces in MeshMaterialList in Mesh in x object file " + FileName);
 												return false;
 											}
 											int[] faceIndexes = (int[])g.Data[2];
 											if (nFaceIndexes != faceIndexes.Length)
 											{
-												Interface.AddMessage(MessageType.Error, false, "nFaceIndexes does not match with the length of array faceIndexes in face[" + j.ToString(Culture) + "] in Mesh in x object file " + FileName);
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "nFaceIndexes does not match with the length of array faceIndexes in face[" + j.ToString(Culture) + "] in Mesh in x object file " + FileName);
 												return false;
 											}
 											for (int k = 0; k < nFaceIndexes; k++)
 											{
 												if (faceIndexes[k] < 0 | faceIndexes[k] >= nMaterials)
 												{
-													Interface.AddMessage(MessageType.Error, false, "faceIndexes[" + k.ToString(Culture) + "] does not reference a valid Material template in MeshMaterialList in Mesh in x object file " + FileName);
+													Plugin.currentHost.AddMessage(MessageType.Error, false, "faceIndexes[" + k.ToString(Culture) + "] does not reference a valid Material template in MeshMaterialList in Mesh in x object file " + FileName);
 													return false;
 												}
 											}
@@ -1633,12 +1614,12 @@ namespace OpenBve {
 													Structure h = g.Data[k] as Structure;
 													if (h == null)
 													{
-														Interface.AddMessage(MessageType.Error, false, "Unexpected inlined argument encountered in MeshMaterialList in Mesh in x object file " + FileName);
+														Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected inlined argument encountered in MeshMaterialList in Mesh in x object file " + FileName);
 														return false;
 													}
 													else if (h.Name != "Material")
 													{
-														Interface.AddMessage(MessageType.Error, false, "Material template expected in MeshMaterialList in Mesh in x object file " + FileName);
+														Plugin.currentHost.AddMessage(MessageType.Error, false, "Material template expected in MeshMaterialList in Mesh in x object file " + FileName);
 														return false;
 													}
 													else
@@ -1646,30 +1627,30 @@ namespace OpenBve {
 														// material
 														if (h.Data.Length < 4)
 														{
-															Interface.AddMessage(MessageType.Error, false, "Material is expected to have at least 4 arguments in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "Material is expected to have at least 4 arguments in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															return false;
 														}
 														else if (!(h.Data[0] is Structure))
 														{
-															Interface.AddMessage(MessageType.Error, false, "faceColor is expected to be a ColorRGBA in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "faceColor is expected to be a ColorRGBA in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															return false;
 														}
 														else if (!(h.Data[1] is double))
 														{
-															Interface.AddMessage(MessageType.Error, false, "power is expected to be a float in Material in MeshMaterialList in Mesh in x object file " + FileName);
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "power is expected to be a float in Material in MeshMaterialList in Mesh in x object file " + FileName);
 															return false;
 														}
 														else if (!(h.Data[2] is Structure))
 														{
-															Interface.AddMessage(MessageType.Error, false, "specularColor is expected to be a ColorRGBA in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "specularColor is expected to be a ColorRGBA in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															return false;
 														}
 														else if (!(h.Data[3] is Structure))
 														{
-															Interface.AddMessage(MessageType.Error, false, "emissiveColor is expected to be a ColorRGBA in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "emissiveColor is expected to be a ColorRGBA in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															return false;
 														}
@@ -1680,37 +1661,37 @@ namespace OpenBve {
 														// collect face color
 														if (faceColor.Name != "ColorRGBA")
 														{
-															Interface.AddMessage(MessageType.Error, false, "faceColor is expected to be a ColorRGBA in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "faceColor is expected to be a ColorRGBA in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															return false;
 														}
 														else if (faceColor.Data.Length != 4)
 														{
-															Interface.AddMessage(MessageType.Error, false, "faceColor is expected to have 4 arguments in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "faceColor is expected to have 4 arguments in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															return false;
 														}
 														else if (!(faceColor.Data[0] is double))
 														{
-															Interface.AddMessage(MessageType.Error, false, "red is expected to be a float in faceColor in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "red is expected to be a float in faceColor in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															return false;
 														}
 														else if (!(faceColor.Data[1] is double))
 														{
-															Interface.AddMessage(MessageType.Error, false, "green is expected to be a float in faceColor in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "green is expected to be a float in faceColor in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															return false;
 														}
 														else if (!(faceColor.Data[2] is double))
 														{
-															Interface.AddMessage(MessageType.Error, false, "blue is expected to be a float in faceColor in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "blue is expected to be a float in faceColor in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															return false;
 														}
 														else if (!(faceColor.Data[3] is double))
 														{
-															Interface.AddMessage(MessageType.Error, false, "alpha is expected to be a float in faceColor in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "alpha is expected to be a float in faceColor in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															return false;
 														}
@@ -1720,25 +1701,25 @@ namespace OpenBve {
 														alpha = (double)faceColor.Data[3];
 														if (red < 0.0 | red > 1.0)
 														{
-															Interface.AddMessage(MessageType.Error, false, "red is expected to be in the range from 0.0 to 1.0 in faceColor in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "red is expected to be in the range from 0.0 to 1.0 in faceColor in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															red = red < 0.5 ? 0.0 : 1.0;
 														}
 														if (green < 0.0 | green > 1.0)
 														{
-															Interface.AddMessage(MessageType.Error, false, "green is expected to be in the range from 0.0 to 1.0 in faceColor in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "green is expected to be in the range from 0.0 to 1.0 in faceColor in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															green = green < 0.5 ? 0.0 : 1.0;
 														}
 														if (blue < 0.0 | blue > 1.0)
 														{
-															Interface.AddMessage(MessageType.Error, false, "blue is expected to be in the range from 0.0 to 1.0 in faceColor in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "blue is expected to be in the range from 0.0 to 1.0 in faceColor in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															blue = blue < 0.5 ? 0.0 : 1.0;
 														}
 														if (alpha < 0.0 | alpha > 1.0)
 														{
-															Interface.AddMessage(MessageType.Error, false, "alpha is expected to be in the range from 0.0 to 1.0 in faceColor in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "alpha is expected to be in the range from 0.0 to 1.0 in faceColor in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															alpha = alpha < 0.5 ? 0.0 : 1.0;
 														}
@@ -1747,31 +1728,31 @@ namespace OpenBve {
 														// collect specular color
 														if (specularColor.Name != "ColorRGB")
 														{
-															Interface.AddMessage(MessageType.Error, false, "specularColor is expected to be a ColorRGB in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "specularColor is expected to be a ColorRGB in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															return false;
 														}
 														else if (specularColor.Data.Length != 3)
 														{
-															Interface.AddMessage(MessageType.Error, false, "specularColor is expected to have 3 arguments in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "specularColor is expected to have 3 arguments in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															return false;
 														}
 														else if (!(specularColor.Data[0] is double))
 														{
-															Interface.AddMessage(MessageType.Error, false, "red is expected to be a float in specularColor in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "red is expected to be a float in specularColor in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															return false;
 														}
 														else if (!(specularColor.Data[1] is double))
 														{
-															Interface.AddMessage(MessageType.Error, false, "green is expected to be a float in specularColor in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "green is expected to be a float in specularColor in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															return false;
 														}
 														else if (!(specularColor.Data[2] is double))
 														{
-															Interface.AddMessage(MessageType.Error, false, "blue is expected to be a float in specularColor in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "blue is expected to be a float in specularColor in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															return false;
 														}
@@ -1780,19 +1761,19 @@ namespace OpenBve {
 														blue = (double)specularColor.Data[2];
 														if (red < 0.0 | red > 1.0)
 														{
-															Interface.AddMessage(MessageType.Error, false, "red is expected to be in the range from 0.0 to 1.0 in specularColor in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "red is expected to be in the range from 0.0 to 1.0 in specularColor in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															red = red < 0.5 ? 0.0 : 1.0;
 														}
 														if (green < 0.0 | green > 1.0)
 														{
-															Interface.AddMessage(MessageType.Error, false, "green is expected to be in the range from 0.0 to 1.0 in specularColor in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "green is expected to be in the range from 0.0 to 1.0 in specularColor in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															green = green < 0.5 ? 0.0 : 1.0;
 														}
 														if (blue < 0.0 | blue > 1.0)
 														{
-															Interface.AddMessage(MessageType.Error, false, "blue is expected to be in the range from 0.0 to 1.0 in specularColor in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "blue is expected to be in the range from 0.0 to 1.0 in specularColor in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															blue = blue < 0.5 ? 0.0 : 1.0;
 														}
@@ -1801,31 +1782,31 @@ namespace OpenBve {
 														// collect emissive color
 														if (emissiveColor.Name != "ColorRGB")
 														{
-															Interface.AddMessage(MessageType.Error, false, "emissiveColor is expected to be a ColorRGBA in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "emissiveColor is expected to be a ColorRGBA in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															return false;
 														}
 														else if (emissiveColor.Data.Length != 3)
 														{
-															Interface.AddMessage(MessageType.Error, false, "emissiveColor is expected to have 3 arguments in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "emissiveColor is expected to have 3 arguments in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															return false;
 														}
 														else if (!(emissiveColor.Data[0] is double))
 														{
-															Interface.AddMessage(MessageType.Error, false, "red is expected to be a float in emissiveColor in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "red is expected to be a float in emissiveColor in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															return false;
 														}
 														else if (!(emissiveColor.Data[1] is double))
 														{
-															Interface.AddMessage(MessageType.Error, false, "green is expected to be a float in emissiveColor in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "green is expected to be a float in emissiveColor in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															return false;
 														}
 														else if (!(emissiveColor.Data[2] is double))
 														{
-															Interface.AddMessage(MessageType.Error, false, "blue is expected to be a float in emissiveColor in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "blue is expected to be a float in emissiveColor in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															return false;
 														}
@@ -1834,19 +1815,19 @@ namespace OpenBve {
 														blue = (double)emissiveColor.Data[2];
 														if (red < 0.0 | red > 1.0)
 														{
-															Interface.AddMessage(MessageType.Error, false, "red is expected to be in the range from 0.0 to 1.0 in emissiveColor in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "red is expected to be in the range from 0.0 to 1.0 in emissiveColor in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															red = red < 0.5 ? 0.0 : 1.0;
 														}
 														if (green < 0.0 | green > 1.0)
 														{
-															Interface.AddMessage(MessageType.Error, false, "green is expected to be in the range from 0.0 to 1.0 in emissiveColor in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "green is expected to be in the range from 0.0 to 1.0 in emissiveColor in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															green = green < 0.5 ? 0.0 : 1.0;
 														}
 														if (blue < 0.0 | blue > 1.0)
 														{
-															Interface.AddMessage(MessageType.Error, false, "blue is expected to be in the range from 0.0 to 1.0 in emissiveColor in Material in MeshMaterialList in Mesh in x object file " +
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "blue is expected to be in the range from 0.0 to 1.0 in emissiveColor in Material in MeshMaterialList in Mesh in x object file " +
 																FileName);
 															blue = blue < 0.5 ? 0.0 : 1.0;
 														}
@@ -1858,7 +1839,7 @@ namespace OpenBve {
 															Structure e = h.Data[l] as Structure;
 															if (e == null)
 															{
-																Interface.AddMessage(MessageType.Error, false, "Unexpected inlined argument encountered in Material in MeshMaterialList in Mesh in x object file " +
+																Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected inlined argument encountered in Material in MeshMaterialList in Mesh in x object file " +
 																	FileName);
 																return false;
 															}
@@ -1869,20 +1850,20 @@ namespace OpenBve {
 																		// texturefilename
 																		if (e.Data.Length != 1)
 																		{
-																			Interface.AddMessage(MessageType.Error, false, "filename is expected to have 1 argument in TextureFilename in Material in MeshMaterialList in Mesh in x object file " +
+																			Plugin.currentHost.AddMessage(MessageType.Error, false, "filename is expected to have 1 argument in TextureFilename in Material in MeshMaterialList in Mesh in x object file " +
 																				FileName);
 																			return false;
 																		}
 																		else if (!(e.Data[0] is string))
 																		{
-																			Interface.AddMessage(MessageType.Error, false, "filename is expected to be a string in TextureFilename in Material in MeshMaterialList in Mesh in x object file " +
+																			Plugin.currentHost.AddMessage(MessageType.Error, false, "filename is expected to be a string in TextureFilename in Material in MeshMaterialList in Mesh in x object file " +
 																				FileName);
 																			return false;
 																		}
 																		string filename = (string)e.Data[0];
 																		if (OpenBveApi.Path.ContainsInvalidChars(filename))
 																		{
-																			Interface.AddMessage(MessageType.Error, false, "filename contains illegal characters in TextureFilename in Material in MeshMaterialList in Mesh in x object file " +
+																			Plugin.currentHost.AddMessage(MessageType.Error, false, "filename contains illegal characters in TextureFilename in Material in MeshMaterialList in Mesh in x object file " +
 																				FileName);
 																		}
 																		else
@@ -1894,7 +1875,7 @@ namespace OpenBve {
 																			}
 																			else
 																			{
-																				Interface.AddMessage(MessageType.Error, true, "The texture file " + File + " could not be found in TextureFilename in Material in MeshMaterialList in Mesh in x object file " +
+																				Plugin.currentHost.AddMessage(MessageType.Error, true, "The texture file " + File + " could not be found in TextureFilename in Material in MeshMaterialList in Mesh in x object file " +
 																					FileName);
 																			}
 																		}
@@ -1902,7 +1883,7 @@ namespace OpenBve {
 																	break;
 																default:
 																	// unknown
-																	Interface.AddMessage(MessageType.Warning, false, "Unsupported template " + e.Name + " encountered in MeshMaterialList in Mesh in x object file " +
+																	Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unsupported template " + e.Name + " encountered in MeshMaterialList in Mesh in x object file " +
 																		FileName);
 																	break;
 															}
@@ -1913,7 +1894,7 @@ namespace OpenBve {
 												}
 												if (MaterialIndex != mn + nMaterials)
 												{
-													Interface.AddMessage(MessageType.Error, false, "nMaterials does not match the number of Material templates encountered in Material in MeshMaterialList in Mesh in x object file " +
+													Plugin.currentHost.AddMessage(MessageType.Error, false, "nMaterials does not match the number of Material templates encountered in Material in MeshMaterialList in Mesh in x object file " +
 														FileName);
 													return false;
 												}
@@ -1940,46 +1921,46 @@ namespace OpenBve {
 											// meshtexturecoords
 											if (g.Data.Length != 2)
 											{
-												Interface.AddMessage(MessageType.Error, false, "MeshTextureCoords is expected to have 2 arguments in Mesh in x object file " + FileName);
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "MeshTextureCoords is expected to have 2 arguments in Mesh in x object file " + FileName);
 												return false;
 											}
 											else if (!(g.Data[0] is int))
 											{
-												Interface.AddMessage(MessageType.Error, false, "nTextureCoords is expected to be a DWORD in MeshTextureCoords in Mesh in x object file " + FileName);
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "nTextureCoords is expected to be a DWORD in MeshTextureCoords in Mesh in x object file " + FileName);
 												return false;
 											}
 											else if (!(g.Data[1] is Structure[]))
 											{
-												Interface.AddMessage(MessageType.Error, false, "textureCoords[nTextureCoords] is expected to be a Coords2d array in MeshTextureCoords in Mesh in x object file " + FileName);
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "textureCoords[nTextureCoords] is expected to be a Coords2d array in MeshTextureCoords in Mesh in x object file " + FileName);
 												return false;
 											}
 											int nTextureCoords = (int)g.Data[0];
 											Structure[] textureCoords = (Structure[])g.Data[1];
 											if (nTextureCoords < 0 | nTextureCoords > nVertices)
 											{
-												Interface.AddMessage(MessageType.Error, false, "nTextureCoords does not reference valid vertices in MeshTextureCoords in Mesh in x object file " + FileName);
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "nTextureCoords does not reference valid vertices in MeshTextureCoords in Mesh in x object file " + FileName);
 												return false;
 											}
 											for (int k = 0; k < nTextureCoords; k++)
 											{
 												if (textureCoords[k].Name != "Coords2d")
 												{
-													Interface.AddMessage(MessageType.Error, false, "textureCoords[" + k.ToString(Culture) + "] is expected to be a Coords2d in MeshTextureCoords in Mesh in x object file " + FileName);
+													Plugin.currentHost.AddMessage(MessageType.Error, false, "textureCoords[" + k.ToString(Culture) + "] is expected to be a Coords2d in MeshTextureCoords in Mesh in x object file " + FileName);
 													return false;
 												}
 												else if (textureCoords[k].Data.Length != 2)
 												{
-													Interface.AddMessage(MessageType.Error, false, "textureCoords[" + k.ToString(Culture) + "] is expected to have 2 arguments in MeshTextureCoords in Mesh in x object file " + FileName);
+													Plugin.currentHost.AddMessage(MessageType.Error, false, "textureCoords[" + k.ToString(Culture) + "] is expected to have 2 arguments in MeshTextureCoords in Mesh in x object file " + FileName);
 													return false;
 												}
 												else if (!(textureCoords[k].Data[0] is double))
 												{
-													Interface.AddMessage(MessageType.Error, false, "u is expected to be a float in textureCoords[" + k.ToString(Culture) + "] in MeshTextureCoords in Mesh in x object file " + FileName);
+													Plugin.currentHost.AddMessage(MessageType.Error, false, "u is expected to be a float in textureCoords[" + k.ToString(Culture) + "] in MeshTextureCoords in Mesh in x object file " + FileName);
 													return false;
 												}
 												else if (!(textureCoords[k].Data[1] is double))
 												{
-													Interface.AddMessage(MessageType.Error, false, "v is expected to be a float in textureCoords[" + k.ToString(Culture) + "] in MeshTextureCoords in Mesh in x object file " + FileName);
+													Plugin.currentHost.AddMessage(MessageType.Error, false, "v is expected to be a float in textureCoords[" + k.ToString(Culture) + "] in MeshTextureCoords in Mesh in x object file " + FileName);
 													return false;
 												}
 												double u = (double)textureCoords[k].Data[0];
@@ -1995,17 +1976,17 @@ namespace OpenBve {
 										}
 										if (g.Data.Length != 2)
 										{
-											Interface.AddMessage(MessageType.Error, false, "MeshVertexColors is expected to have 2 arguments in Mesh in x object file " + FileName);
+											Plugin.currentHost.AddMessage(MessageType.Error, false, "MeshVertexColors is expected to have 2 arguments in Mesh in x object file " + FileName);
 											return false;
 										}
 										else if (!(g.Data[0] is int))
 										{
-											Interface.AddMessage(MessageType.Error, false, "nVertexColors is expected to be a DWORD in MeshTextureCoords in Mesh in x object file " + FileName);
+											Plugin.currentHost.AddMessage(MessageType.Error, false, "nVertexColors is expected to be a DWORD in MeshTextureCoords in Mesh in x object file " + FileName);
 											return false;
 										}
 										else if (!(g.Data[1] is Structure[]))
 										{
-											Interface.AddMessage(MessageType.Error, false, "vertexColors[nVertexColors] is expected to be a Structure array in MeshVertexColors in Mesh in x object file " + FileName);
+											Plugin.currentHost.AddMessage(MessageType.Error, false, "vertexColors[nVertexColors] is expected to be a Structure array in MeshVertexColors in Mesh in x object file " + FileName);
 											return false;
 										}
 
@@ -2020,34 +2001,34 @@ namespace OpenBve {
 											int idx = (int)structures[k].Data[0];
 											if (!(structures[k].Data[1] is Structure))
 											{
-												Interface.AddMessage(MessageType.Error, false, "vertexColors[" + idx + "] is expected to be a ColorRGBA array in MeshVertexColors in Mesh in x object file " + FileName);
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "vertexColors[" + idx + "] is expected to be a ColorRGBA array in MeshVertexColors in Mesh in x object file " + FileName);
 												continue;
 											}
 
 											Structure colorStructure = structures[k].Data[1] as Structure;
 											if (colorStructure.Data.Length != 4)
 											{
-												Interface.AddMessage(MessageType.Error, false, "vertexColors[" + idx + "] is expected to have 4 arguments in MeshVertexColors in Mesh in x object file " + FileName);
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "vertexColors[" + idx + "] is expected to have 4 arguments in MeshVertexColors in Mesh in x object file " + FileName);
 												continue;
 											}
 											if (!(colorStructure.Data[0] is double))
 											{
-												Interface.AddMessage(MessageType.Error, false, "R is expected to be a float in MeshVertexColors[" + k.ToString(Culture) + "] in in Mesh in x object file " + FileName);
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "R is expected to be a float in MeshVertexColors[" + k.ToString(Culture) + "] in in Mesh in x object file " + FileName);
 												continue;
 											}
 											if (!(colorStructure.Data[1] is double))
 											{
-												Interface.AddMessage(MessageType.Error, false, "G is expected to be a float in MeshVertexColors[" + k.ToString(Culture) + "] in in Mesh in x object file " + FileName);
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "G is expected to be a float in MeshVertexColors[" + k.ToString(Culture) + "] in in Mesh in x object file " + FileName);
 												continue;
 											}
 											if (!(colorStructure.Data[2] is double))
 											{
-												Interface.AddMessage(MessageType.Error, false, "B is expected to be a float in MeshVertexColors[" + k.ToString(Culture) + "] in in Mesh in x object file " + FileName);
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "B is expected to be a float in MeshVertexColors[" + k.ToString(Culture) + "] in in Mesh in x object file " + FileName);
 												continue;
 											}
 											if (!(colorStructure.Data[3] is double))
 											{
-												Interface.AddMessage(MessageType.Error, false, "A is expected to be a float in MeshVertexColors[" + k.ToString(Culture) + "] in in Mesh in x object file " + FileName);
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "A is expected to be a float in MeshVertexColors[" + k.ToString(Culture) + "] in in Mesh in x object file " + FileName);
 												continue;
 											}
 											
@@ -2062,51 +2043,51 @@ namespace OpenBve {
 											// meshnormals
 											if (g.Data.Length != 4)
 											{
-												Interface.AddMessage(MessageType.Error, false, "MeshNormals is expected to have 4 arguments in Mesh in x object file " + FileName);
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "MeshNormals is expected to have 4 arguments in Mesh in x object file " + FileName);
 												return false;
 											}
 											else if (!(g.Data[0] is int))
 											{
-												Interface.AddMessage(MessageType.Error, false, "nNormals is expected to be a DWORD in MeshNormals in Mesh in x object file " + FileName);
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "nNormals is expected to be a DWORD in MeshNormals in Mesh in x object file " + FileName);
 												return false;
 											}
 											else if (!(g.Data[1] is Structure[]))
 											{
-												Interface.AddMessage(MessageType.Error, false, "normals is expected to be a Vector array in MeshNormals in Mesh in x object file " + FileName);
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "normals is expected to be a Vector array in MeshNormals in Mesh in x object file " + FileName);
 												return false;
 											}
 											else if (!(g.Data[2] is int))
 											{
-												Interface.AddMessage(MessageType.Error, false, "nFaceNormals is expected to be a DWORD in MeshNormals in Mesh in x object file " + FileName);
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "nFaceNormals is expected to be a DWORD in MeshNormals in Mesh in x object file " + FileName);
 												return false;
 											}
 											else if (!(g.Data[3] is Structure[]))
 											{
-												Interface.AddMessage(MessageType.Error, false, "faceNormals is expected to be a MeshFace array in MeshNormals in Mesh in x object file " + FileName);
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "faceNormals is expected to be a MeshFace array in MeshNormals in Mesh in x object file " + FileName);
 												return false;
 											}
 											int nNormals = (int)g.Data[0];
 											if (nNormals < 0)
 											{
-												Interface.AddMessage(MessageType.Error, false, "nNormals is expected to be non-negative in MeshNormals in Mesh in x object file " + FileName);
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "nNormals is expected to be non-negative in MeshNormals in Mesh in x object file " + FileName);
 												return false;
 											}
 											Structure[] normals = (Structure[])g.Data[1];
 											if (nNormals != normals.Length)
 											{
-												Interface.AddMessage(MessageType.Error, false, "nNormals does not match with the length of array normals in MeshNormals in Mesh in x object file " + FileName);
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "nNormals does not match with the length of array normals in MeshNormals in Mesh in x object file " + FileName);
 												return false;
 											}
 											int nFaceNormals = (int)g.Data[2];
 											if (nFaceNormals < 0 | nFaceNormals > nFaces)
 											{
-												Interface.AddMessage(MessageType.Error, false, "nNormals does not reference valid vertices in MeshNormals in Mesh in x object file " + FileName);
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "nNormals does not reference valid vertices in MeshNormals in Mesh in x object file " + FileName);
 												return false;
 											}
 											Structure[] faceNormals = (Structure[])g.Data[3];
 											if (nFaceNormals != faceNormals.Length)
 											{
-												Interface.AddMessage(MessageType.Error, false, "nFaceNormals does not match with the length of array faceNormals in MeshNormals in Mesh in x object file " + FileName);
+												Plugin.currentHost.AddMessage(MessageType.Error, false, "nFaceNormals does not match with the length of array faceNormals in MeshNormals in Mesh in x object file " + FileName);
 												return false;
 											}
 											// collect normals
@@ -2115,27 +2096,27 @@ namespace OpenBve {
 											{
 												if (normals[k].Name != "Vector")
 												{
-													Interface.AddMessage(MessageType.Error, false, "normals[" + k.ToString(Culture) + "] is expected to be of template Vertex in MeshNormals in Mesh in x object file " + FileName);
+													Plugin.currentHost.AddMessage(MessageType.Error, false, "normals[" + k.ToString(Culture) + "] is expected to be of template Vertex in MeshNormals in Mesh in x object file " + FileName);
 													return false;
 												}
 												else if (normals[k].Data.Length != 3)
 												{
-													Interface.AddMessage(MessageType.Error, false, "normals[" + k.ToString(Culture) + "] is expected to have 3 arguments in MeshNormals in Mesh in x object file " + FileName);
+													Plugin.currentHost.AddMessage(MessageType.Error, false, "normals[" + k.ToString(Culture) + "] is expected to have 3 arguments in MeshNormals in Mesh in x object file " + FileName);
 													return false;
 												}
 												else if (!(normals[k].Data[0] is double))
 												{
-													Interface.AddMessage(MessageType.Error, false, "x is expected to be a float in normals[" + k.ToString(Culture) + "] in MeshNormals in Mesh in x object file " + FileName);
+													Plugin.currentHost.AddMessage(MessageType.Error, false, "x is expected to be a float in normals[" + k.ToString(Culture) + "] in MeshNormals in Mesh in x object file " + FileName);
 													return false;
 												}
 												else if (!(normals[k].Data[1] is double))
 												{
-													Interface.AddMessage(MessageType.Error, false, "y is expected to be a float in normals[" + k.ToString(Culture) + " ]in MeshNormals in Mesh in x object file " + FileName);
+													Plugin.currentHost.AddMessage(MessageType.Error, false, "y is expected to be a float in normals[" + k.ToString(Culture) + " ]in MeshNormals in Mesh in x object file " + FileName);
 													return false;
 												}
 												else if (!(normals[k].Data[2] is double))
 												{
-													Interface.AddMessage(MessageType.Error, false, "z is expected to be a float in normals[" + k.ToString(Culture) + "] in MeshNormals in Mesh in x object file " + FileName);
+													Plugin.currentHost.AddMessage(MessageType.Error, false, "z is expected to be a float in normals[" + k.ToString(Culture) + "] in MeshNormals in Mesh in x object file " + FileName);
 													return false;
 												}
 												double x = (double)normals[k].Data[0];
@@ -2149,41 +2130,41 @@ namespace OpenBve {
 											{
 												if (faceNormals[k].Name != "MeshFace")
 												{
-													Interface.AddMessage(MessageType.Error, false, "faceNormals[" + k.ToString(Culture) + "] is expected to be of template MeshFace in MeshNormals in Mesh in x object file " + FileName);
+													Plugin.currentHost.AddMessage(MessageType.Error, false, "faceNormals[" + k.ToString(Culture) + "] is expected to be of template MeshFace in MeshNormals in Mesh in x object file " + FileName);
 													return false;
 												}
 												else if (faceNormals[k].Data.Length != 2)
 												{
-													Interface.AddMessage(MessageType.Error, false, "faceNormals[" + k.ToString(Culture) + "] is expected to have 2 arguments in MeshNormals in Mesh in x object file " + FileName);
+													Plugin.currentHost.AddMessage(MessageType.Error, false, "faceNormals[" + k.ToString(Culture) + "] is expected to have 2 arguments in MeshNormals in Mesh in x object file " + FileName);
 													return false;
 												}
 												else if (!(faceNormals[k].Data[0] is int))
 												{
-													Interface.AddMessage(MessageType.Error, false, "nFaceVertexIndices is expected to be a DWORD in faceNormals[" + k.ToString(Culture) + "] in MeshNormals in Mesh in x object file " + FileName);
+													Plugin.currentHost.AddMessage(MessageType.Error, false, "nFaceVertexIndices is expected to be a DWORD in faceNormals[" + k.ToString(Culture) + "] in MeshNormals in Mesh in x object file " + FileName);
 													return false;
 												}
 												else if (!(faceNormals[k].Data[1] is int[]))
 												{
-													Interface.AddMessage(MessageType.Error, false, "faceVertexIndices[nFaceVertexIndices] is expected to be a DWORD array in faceNormals[" + k.ToString(Culture) + "] in MeshNormals in Mesh in x object file " + FileName);
+													Plugin.currentHost.AddMessage(MessageType.Error, false, "faceVertexIndices[nFaceVertexIndices] is expected to be a DWORD array in faceNormals[" + k.ToString(Culture) + "] in MeshNormals in Mesh in x object file " + FileName);
 													return false;
 												}
 												int nFaceVertexIndices = (int)faceNormals[k].Data[0];
 												if (nFaceVertexIndices < 0 | nFaceVertexIndices > Faces[k].Length)
 												{
-													Interface.AddMessage(MessageType.Error, false, "nFaceVertexIndices does not reference a valid vertex in MeshFace in MeshNormals in Mesh in x object file " + FileName);
+													Plugin.currentHost.AddMessage(MessageType.Error, false, "nFaceVertexIndices does not reference a valid vertex in MeshFace in MeshNormals in Mesh in x object file " + FileName);
 													return false;
 												}
 												int[] faceVertexIndices = (int[])faceNormals[k].Data[1];
 												if (nFaceVertexIndices != faceVertexIndices.Length)
 												{
-													Interface.AddMessage(MessageType.Error, false, "nFaceVertexIndices does not match with the length of array faceVertexIndices in faceNormals[" + k.ToString(Culture) + "] in MeshFace in MeshNormals in Mesh in x object file " + FileName);
+													Plugin.currentHost.AddMessage(MessageType.Error, false, "nFaceVertexIndices does not match with the length of array faceVertexIndices in faceNormals[" + k.ToString(Culture) + "] in MeshFace in MeshNormals in Mesh in x object file " + FileName);
 													return false;
 												}
 												for (int l = 0; l < nFaceVertexIndices; l++)
 												{
 													if (faceVertexIndices[l] < 0 | faceVertexIndices[l] >= nNormals)
 													{
-														Interface.AddMessage(MessageType.Error, false, "faceVertexIndices[" + l.ToString(Culture) + "] does not reference a valid normal in faceNormals[" + k.ToString(Culture) + "] in MeshFace in MeshNormals in Mesh in x object file " + FileName);
+														Plugin.currentHost.AddMessage(MessageType.Error, false, "faceVertexIndices[" + l.ToString(Culture) + "] does not reference a valid normal in faceNormals[" + k.ToString(Culture) + "] in MeshFace in MeshNormals in Mesh in x object file " + FileName);
 														return false;
 													}
 													FaceNormals[k][l] = Normals[faceVertexIndices[l]];
@@ -2193,7 +2174,7 @@ namespace OpenBve {
 										break;
 									default:
 										// unknown
-										Interface.AddMessage(MessageType.Warning, false, "Unsupported template " + g.Name + " encountered in Mesh in x object file " + FileName);
+										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unsupported template " + g.Name + " encountered in Mesh in x object file " + FileName);
 										break;
 
 								}
@@ -2224,8 +2205,7 @@ namespace OpenBve {
 								bool transparent;
 								if (Materials[j].TextureFilename != null)
 								{
-									Textures.RegisterTexture(Materials[j].TextureFilename, new TextureParameters(null, Color24.Black), out Object.Mesh.Materials[mm + j].DaytimeTexture);
-									//Textures.UnloadTexture(Object.Mesh.Materials[mm + j].DaytimeTexture);
+									Plugin.currentHost.RegisterTexture(Materials[j].TextureFilename, new TextureParameters(null, Color24.Black), out Object.Mesh.Materials[mm + j].DaytimeTexture);
 									transparent = true;
 								}
 								else
@@ -2266,7 +2246,7 @@ namespace OpenBve {
 							LoadedMaterials[LoadedMaterials.Length - 1] = f;
 							break;
 						}
-						Interface.AddMessage(MessageType.Warning, false, "Unsupported template " + f.Name + " encountered in x object file " + FileName);
+						Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unsupported template " + f.Name + " encountered in x object file " + FileName);
 						break;
 				}
 			}

@@ -20,6 +20,13 @@
 		{
 		}
 
+		/// <summary>Sets the parser type to use</summary>
+		/// <remarks>The actual type of parserType should be checked by the consumer and ignored if not relevant</remarks>
+		public virtual void SetObjectParser(object parserType)
+		{
+
+		}
+
 		/// <summary>Checks whether the plugin can load the specified object.</summary>
 		/// <param name="path">The path to the file or folder that contains the object.</param>
 		/// <returns>Whether the plugin can load the specified object.</returns>
