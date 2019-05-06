@@ -4,6 +4,7 @@ using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Trains;
 using OpenBveApi.World;
 
 namespace OpenBve
@@ -206,7 +207,7 @@ namespace OpenBve
 			/// <param name="TimeElapsed">The time elapsed since this object was last updated</param>
 			/// <param name="EnableDamping">Whether damping is to be applied for this call</param>
             /// <param name="IsTouch">Whether Animated Object belonging to TouchElement class.</param>
-			internal void Update(bool IsPartOfTrain, TrainManager.Train Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Overlay, bool UpdateFunctions, bool Show, double TimeElapsed, bool EnableDamping, bool IsTouch = false)
+			internal void Update(bool IsPartOfTrain, AbstractTrain Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Overlay, bool UpdateFunctions, bool Show, double TimeElapsed, bool EnableDamping, bool IsTouch = false)
 			{
 				int s = CurrentState;
 				int i = ObjectIndex;

@@ -1,4 +1,5 @@
 ﻿using OpenBveApi.Math;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
@@ -15,7 +16,7 @@ namespace OpenBve
 			/// <param name="SectionIndex"></param>
 			/// <param name="IsPartOfTrain">Whether this object forms part of a train</param>
 			/// <param name="TimeElapsed">The time elapsed since the previous call to this function</param>
-			double ExecuteScript(TrainManager.Train Train, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed);
+			double ExecuteScript(AbstractTrain Train, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed);
 		}
 	}
 }
