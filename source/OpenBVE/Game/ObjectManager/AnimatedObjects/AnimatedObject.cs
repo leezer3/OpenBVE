@@ -850,10 +850,7 @@ namespace OpenBve
 						}
 						for (int j = 0; j < currentObject.Object.States[i].Object.Mesh.Vertices.Length; j++)
 						{
-							double x = States[i].Object.Mesh.Vertices[j].Coordinates.X;
-							double y = States[i].Object.Mesh.Vertices[j].Coordinates.Y;
-							double z = States[i].Object.Mesh.Vertices[j].Coordinates.Z;
-							double t = x * x + y * y + z * z;
+							double t = States[i].Object.Mesh.Vertices[j].Coordinates.Norm();
 							if (t > r) r = t;
 						}
 					}
@@ -894,10 +891,7 @@ namespace OpenBve
 						}
 						for (int j = 0; j < currentObject.Object.States[i].Object.Mesh.Vertices.Length; j++)
 						{
-							double x = States[i].Object.Mesh.Vertices[j].Coordinates.X;
-							double y = States[i].Object.Mesh.Vertices[j].Coordinates.Y;
-							double z = States[i].Object.Mesh.Vertices[j].Coordinates.Z;
-							double t = x * x + y * y + z * z;
+							double t = States[i].Object.Mesh.Vertices[j].Coordinates.Norm();
 							if (t > r) r = t;
 						}
 					}
