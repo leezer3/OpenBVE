@@ -21,17 +21,7 @@ namespace OpenBve {
 		internal static double LastUpdatedTrackPosition = 0.0;
 
 		// animated objects
-		
-		internal struct AnimatedObjectState {
-			internal Vector3 Position;
-			internal StaticObject Object;
 
-			internal AnimatedObjectState(StaticObject stateObject, Vector3 position)
-			{
-				Object = stateObject;
-				Position = position;
-			}
-		}
 		internal class AnimatedObject {
 			// states
 			internal AnimatedObjectState[] States;

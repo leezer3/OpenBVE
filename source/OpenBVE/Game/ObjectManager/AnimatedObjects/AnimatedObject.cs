@@ -11,17 +11,7 @@ namespace OpenBve
 	/// <summary>The ObjectManager is the root class containing functions to load and manage objects within the simulation world</summary>
 	public static partial class ObjectManager
 	{
-		internal struct AnimatedObjectState
-		{
-			internal Vector3 Position;
-			internal StaticObject Object;
-
-			internal AnimatedObjectState(StaticObject stateObject, Vector3 position)
-			{
-				Object = stateObject;
-				Position = position;
-			}
-		}
+		
 		internal class AnimatedObject
 		{
 			// states

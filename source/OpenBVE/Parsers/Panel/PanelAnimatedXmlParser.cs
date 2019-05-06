@@ -291,7 +291,7 @@ namespace OpenBve.Parsers.Panel
 				Command = Command,
 				CommandOption = CommandOption
 			};
-			Group.TouchElements[n].Element.States = new ObjectManager.AnimatedObjectState[1];
+			Group.TouchElements[n].Element.States = new AnimatedObjectState[1];
 			Group.TouchElements[n].Element.States[0].Position = Position;
 			Group.TouchElements[n].Element.States[0].Object = Object;
 			Group.TouchElements[n].Element.CurrentState = 0;

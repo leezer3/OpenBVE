@@ -613,7 +613,7 @@ $(RELEASE_DIR)/$(OBJECT_CSVB3D_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
 $(DEBUG_DIR)/$(OBJECT_CSVB3D_FILE) $(RELEASE_DIR)/$(OBJECT_CSVB3D_FILE): $(OBJECT_CSVB3D_SRC) $(OBJECT_CSVB3D_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OBJECT_CSVB3D_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OBJECT_CSVB3D_OUT) /target:library $(OBJECT_CSVB3D_SRC) $(ARGS) $(OBJECT_CSVB3D_DOC) \
-	/reference:$(OPEN_BVE_API_OUT) $(addprefix /resource:, $(OBJECT_CSVB3D_RESOURCE))
+	/reference:$(OPEN_BVE_API_OUT) /reference:System.Core.dll /reference:System.dll $(addprefix /resource:, $(OBJECT_CSVB3D_RESOURCE))
 
 ##############
 # Sound.Flac #

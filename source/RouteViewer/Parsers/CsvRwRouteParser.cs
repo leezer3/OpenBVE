@@ -6174,7 +6174,7 @@ namespace OpenBve {
 											ObjectManager.AnimatedObjectCollection aoc = new ObjectManager.AnimatedObjectCollection();
 											aoc.Objects = new ObjectManager.AnimatedObject[1];
 											aoc.Objects[0] = new ObjectManager.AnimatedObject();
-											aoc.Objects[0].States = new ObjectManager.AnimatedObjectState[csd.Numbers.Length];
+											aoc.Objects[0].States = new AnimatedObjectState[csd.Numbers.Length];
 											for (int l = 0; l < csd.Numbers.Length; l++)
 											{
 												aoc.Objects[0].States[l].Object = (StaticObject)csd.Objects[l].Clone();
@@ -6204,7 +6204,7 @@ namespace OpenBve {
 											ObjectManager.AnimatedObjectCollection aoc = new ObjectManager.AnimatedObjectCollection();
 											aoc.Objects = new ObjectManager.AnimatedObject[1];
 											aoc.Objects[0] = new ObjectManager.AnimatedObject();
-											aoc.Objects[0].States = new ObjectManager.AnimatedObjectState[zn];
+											aoc.Objects[0].States = new AnimatedObjectState[zn];
 											int zi = 0;
 											string expr = "";
 											for (int l = 0; l < m; l++) {
