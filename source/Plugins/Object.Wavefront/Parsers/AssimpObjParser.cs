@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
@@ -6,7 +6,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using AssimpNET.Obj;
 
-namespace OpenBve
+namespace Plugin
 {
 	class AssimpObjParser
 	{
@@ -25,8 +25,8 @@ namespace OpenBve
 				ObjFileParser parser = new ObjFileParser(System.IO.File.ReadAllLines(currentFile), null, System.IO.Path.GetFileNameWithoutExtension(currentFile), currentFile);
 				Model model = parser.GetModel();
 
-				StaticObject obj = new StaticObject(Program.CurrentHost);
-				MeshBuilder builder = new MeshBuilder(Program.CurrentHost);
+				StaticObject obj = new StaticObject(Plugin.currentHost);
+				MeshBuilder builder = new MeshBuilder(Plugin.currentHost);
 
 				List<Vertex> allVertices = new List<Vertex>();
 				foreach (var vertex in model.Vertices)
@@ -91,7 +91,7 @@ namespace OpenBve
 								builder.Materials[m].DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder, material.Texture);
 								if (!System.IO.File.Exists(builder.Materials[m].DaytimeTexture))
 								{
-									Interface.AddMessage(MessageType.Error, true, "Texure " + builder.Materials[m].DaytimeTexture + " was not found in file " + currentFile);
+									Plugin.currentHost.AddMessage(MessageType.Error, true, "Texure " + builder.Materials[m].DaytimeTexture + " was not found in file " + currentFile);
 									builder.Materials[m].DaytimeTexture = null;
 								}
 							}
@@ -116,7 +116,7 @@ namespace OpenBve
 						}
 
 						builder.Apply(ref obj);
-						builder = new MeshBuilder(Program.CurrentHost);
+						builder = new MeshBuilder(Plugin.currentHost);
 					}
 				}
 				obj.Mesh.CreateNormals();
@@ -125,7 +125,7 @@ namespace OpenBve
 			}
 			catch (Exception e)
 			{
-				Interface.AddMessage(MessageType.Error, false, e.Message + " in " + FileName);
+				Plugin.currentHost.AddMessage(MessageType.Error, false, e.Message + " in " + FileName);
 				return null;
 			}
 #endif

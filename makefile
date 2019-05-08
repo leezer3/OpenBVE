@@ -103,6 +103,9 @@ OBJECT_CSVB3D_FILE       :=Data/Plugins/Object.CsvB3d.dll
 OBJECT_DIRECTX_ROOT       :=source/Plugins/Object.DirectX
 OBJECT_DIRECTX_FILE       :=Data/Plugins/Object.DirectX.dll
 
+OBJECT_WAVEFRONT_ROOT       :=source/Plugins/Object.Wavefront
+OBJECT_WAVEFRONT_FILE       :=Data/Plugins/Object.Wavefront.dll
+
 SOUND_FLAC_ROOT       :=source/Plugins/Sound.Flac
 SOUND_FLAC_FILE       :=Data/Plugins/Sound.Flac.dll
 
@@ -282,6 +285,9 @@ clean:
 	rm -f bin*/Data/Plugins/Texture.BmpGifJpegPngTiff.dll* bin*/Data/Plugins/Texture.BmpGifJpegPngTiff.pdb
 	rm -f bin*/Data/Plugins/Texture.Dds.dll* bin*/Data/Plugins/Texture.Dds.pdb
 	rm -f bin*/Data/Plugins/Texture.Tga.dll* bin*/Data/Plugins/Texture.Tga.pdb
+	rm -f bin*/Data/Plugins/Object.CsvB3d.dll* bin*/Data/Plugins/Object.CsvB3d.pdb
+	rm -f bin*/Data/Plugins/Object.DirectX.dll* bin*/Data/Plugins/Object.DirectX.pdb
+	rm -f bin*/Data/Plugins/Object.Wavefront.dll* bin*/Data/Plugins/Object.Wavefront.pdb
 
 	# Release Files
 	rm -f $(MAC_BUILD_RESULT) $(LINUX_BUILD_RESULT)
@@ -379,6 +385,7 @@ $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SAN_YING_INPUT_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(OPEN_BVE_ATS_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(OBJECT_CSVB3D_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(OBJECT_DIRECTX_FILE) 
+$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(OBJECT_WAVEFRONT_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_FLAC_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_RIFFWAVE_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_MP3_FILE) 
@@ -398,6 +405,7 @@ $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SAN_YING_INPUT_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_ATS_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OBJECT_CSVB3D_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OBJECT_DIRECTX_FILE)
+$(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OBJECT_WAVEFRONT_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SOUND_FLAC_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SOUND_RIFFWAVE_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SOUND_MP3_FILE) 
@@ -639,7 +647,28 @@ $(RELEASE_DIR)/$(OBJECT_DIRECTX_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
 $(DEBUG_DIR)/$(OBJECT_DIRECTX_FILE) $(RELEASE_DIR)/$(OBJECT_DIRECTX_FILE): $(OBJECT_DIRECTX_SRC) $(OBJECT_DIRECTX_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OBJECT_DIRECTX_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OBJECT_DIRECTX_OUT) /target:library $(OBJECT_DIRECTX_SRC) $(ARGS) $(OBJECT_DIRECTX_DOC) \
-	/reference:$(ASSIMP_OUT) /reference:$(FORMATS_MSTS_OUT) /reference:$(FORMATS_DIRECTX_OUT) /reference:$(OPEN_BVE_API_OUT) /reference:System.Core.dll /reference:System.dll $(addprefix /resource:, $(OBJECT_DIRECTX_RESOURCE))
+	/reference:$(ASSIMP_OUT) /reference:$(FORMATS_DIRECTX_OUT) /reference:$(OPEN_BVE_API_OUT) /reference:System.Core.dll /reference:System.dll $(addprefix /resource:, $(OBJECT_DIRECTX_RESOURCE))
+	
+####################
+# Object.Wavefront #
+####################
+
+OBJECT_WAVEFRONT_FOLDERS  := $(shell find $(OBJECT_WAVEFRONT_ROOT) -type d)
+OBJECT_WAVEFRONT_SRC      := $(foreach sdir, $(OBJECT_WAVEFRONT_FOLDERS), $(wildcard $(sdir)/*.cs))
+OBJECT_WAVEFRONT_DOC      := $(addprefix /doc:, $(foreach sdir, $(OBJECT_WAVEFRONT_FOLDERS), $(wildcard $(sdir)/*.xml)))
+OBJECT_WAVEFRONT_RESX     := $(foreach sdir, $(OBJECT_WAVEFRONT_FOLDERS), $(wildcard $(sdir)/*.resx))
+OBJECT_WAVEFRONT_RESOURCE := $(addprefix $(OBJECT_WAVEFRONT_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst $(dir $(OBJECT_WAVEFRONT_ROOT))%.resx, %.resources, $(OBJECT_WAVEFRONT_RESX)))))
+OBJECT_WAVEFRONT_OUT       =$(OUTPUT_DIR)/$(OBJECT_WAVEFRONT_FILE)
+
+$(call create_resource, $(OBJECT_WAVEFRONT_RESOURCE), $(OBJECT_WAVEFRONT_RESX))
+
+$(DEBUG_DIR)/$(OBJECT_WAVEFRONT_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
+$(RELEASE_DIR)/$(OBJECT_WAVEFRONT_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
+
+$(DEBUG_DIR)/$(OBJECT_WAVEFRONT_FILE) $(RELEASE_DIR)/$(OBJECT_WAVEFRONT_FILE): $(OBJECT_WAVEFRONT_SRC) $(OBJECT_WAVEFRONT_RESOURCE)
+	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OBJECT_WAVEFRONT_OUT)$(COLOR_END)
+	@$(CSC) /out:$(OBJECT_WAVEFRONT_OUT) /target:library $(OBJECT_WAVEFRONT_SRC) $(ARGS) $(OBJECT_WAVEFRONT_DOC) \
+	/reference:$(ASSIMP_OUT) /reference:$(OPEN_BVE_API_OUT) /reference:System.Core.dll /reference:System.dll $(addprefix /resource:, $(OBJECT_WAVEFRONT_RESOURCE))
 
 ##############
 # Sound.Flac #

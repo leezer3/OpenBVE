@@ -94,6 +94,7 @@
     <Compile Include="Objects\ObjectTypes\AnimatedObject.AnimatedObjectState.cs" />
     <Compile Include="Objects\ObjectTypes\StaticObject.cs" />
     <Compile Include="Objects\ObjectTypes\UnifiedObject.cs" />
+    <Compile Include="Objects\Parsers\ObjParsers.cs" />
     <Compile Include="Objects\Parsers\XParsers.cs" />
     <Compile Include="Sounds\Sounds.PathOrigin.cs" />
     <Compile Include="Sounds\Sounds.RawOrigin.cs" />

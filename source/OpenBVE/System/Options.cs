@@ -49,14 +49,6 @@ namespace OpenBve
 			Expert = 2,
 		}
 
-		internal enum ObjParsers
-		{
-			/// <summary>Original parser</summary>
-			Original = 0,
-			/// <summary>C# port of Assimp</summary>
-			Assimp = 1
-		}
-
 		internal class Options
 		{
 			/// <summary>The ISO 639-1 code for the current user interface language</summary>

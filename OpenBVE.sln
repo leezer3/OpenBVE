@@ -66,6 +66,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.CsvB3d", "source\Plu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.DirectX", "source\Plugins\Object.DirectX\Object.DirectX.csproj", "{F3C96DBE-12C6-4362-86B0-24371369A3E2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Wavefront", "source\Plugins\Object.Wavefront\Object.Wavefront.csproj", "{ACAFCA35-01B7-479C-AD5F-9BCE0F8A597B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -362,6 +364,18 @@ Global
 		{F3C96DBE-12C6-4362-86B0-24371369A3E2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{F3C96DBE-12C6-4362-86B0-24371369A3E2}.Release|x86.ActiveCfg = Release|Any CPU
 		{F3C96DBE-12C6-4362-86B0-24371369A3E2}.Release|x86.Build.0 = Release|Any CPU
+		{ACAFCA35-01B7-479C-AD5F-9BCE0F8A597B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACAFCA35-01B7-479C-AD5F-9BCE0F8A597B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACAFCA35-01B7-479C-AD5F-9BCE0F8A597B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{ACAFCA35-01B7-479C-AD5F-9BCE0F8A597B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{ACAFCA35-01B7-479C-AD5F-9BCE0F8A597B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{ACAFCA35-01B7-479C-AD5F-9BCE0F8A597B}.Debug|x86.Build.0 = Debug|Any CPU
+		{ACAFCA35-01B7-479C-AD5F-9BCE0F8A597B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACAFCA35-01B7-479C-AD5F-9BCE0F8A597B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACAFCA35-01B7-479C-AD5F-9BCE0F8A597B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{ACAFCA35-01B7-479C-AD5F-9BCE0F8A597B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{ACAFCA35-01B7-479C-AD5F-9BCE0F8A597B}.Release|x86.ActiveCfg = Release|Any CPU
+		{ACAFCA35-01B7-479C-AD5F-9BCE0F8A597B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -382,6 +396,7 @@ Global
 		{F714A9FA-1C4B-456B-BACF-D6763223A81C} = {16553295-E70F-4596-AA78-848EEA576C4A}
 		{678031C7-6D87-4F5F-9C4A-12F86B76342C} = {16553295-E70F-4596-AA78-848EEA576C4A}
 		{F3C96DBE-12C6-4362-86B0-24371369A3E2} = {16553295-E70F-4596-AA78-848EEA576C4A}
+		{ACAFCA35-01B7-479C-AD5F-9BCE0F8A597B} = {16553295-E70F-4596-AA78-848EEA576C4A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50B52A67-69B1-4B19-A59C-FF058FD9EBDF}

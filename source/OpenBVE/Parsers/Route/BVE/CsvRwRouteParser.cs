@@ -318,7 +318,9 @@ namespace OpenBve {
 					if (Plugins.LoadedPlugins[i].Object != null)
 					{
 						Plugins.LoadedPlugins[i].Object.SetCompatibilityHacks(Interface.CurrentOptions.EnableBveTsHacks, CylinderHack);
-						Plugins.LoadedPlugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentXParser); //Remember that this will be ignored if not the X plugin!
+						//Remember that these will be ignored if not the correct plugin
+						Plugins.LoadedPlugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentXParser);
+						Plugins.LoadedPlugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentObjParser);
 					}
 				}
 			}
@@ -494,7 +496,13 @@ namespace OpenBve {
 										}
 										else
 										{
-											Interface.CurrentOptions.CurrentObjParser = (Interface.ObjParsers)parser;
+											for (int i = 0; i < Plugins.LoadedPlugins.Length; i++)
+											{
+												if (Plugins.LoadedPlugins[i].Object != null)
+												{
+													Plugins.LoadedPlugins[i].Object.SetObjectParser((ObjParsers)parser); //Remember that this will be ignored if not the Obj plugin!
+												}
+											}
 										}
 									} break;
 								case "options.unitoflength":

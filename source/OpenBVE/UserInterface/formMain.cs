@@ -933,7 +933,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.KioskMode = checkBoxEnableKiosk.Checked;
 			Interface.CurrentOptions.KioskModeTimer = (double)numericUpDownKioskTimeout.Value;
 			Interface.CurrentOptions.CurrentXParser = (XParsers)comboBoxXparser.SelectedIndex;
-			Interface.CurrentOptions.CurrentObjParser = (Interface.ObjParsers)comboBoxObjparser.SelectedIndex;
+			Interface.CurrentOptions.CurrentObjParser = (ObjParsers)comboBoxObjparser.SelectedIndex;
 			Interface.CurrentOptions.Panel2ExtendedMode = checkBoxPanel2Extended.Checked;
 			switch (trackBarHUDSize.Value)
 			{

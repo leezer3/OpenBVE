@@ -90,12 +90,10 @@
     <Compile Include="FunctionScripts.cs" />
     <Compile Include="Hosts.cs" />
     <Compile Include="Options.cs" />
-    <Compile Include="Parsers\AssimpObjParser.cs" />
     <Compile Include="Parsers\ExtensionsCfgParser.cs" />
     <Compile Include="Parsers\Ls3DGrpParser.cs" />
     <Compile Include="Parsers\Ls3DObjectParser.cs" />
     <Compile Include="Parsers\MSTS\ShapeParser.cs" />
-    <Compile Include="Parsers\WavefrontObjParser.cs" />
     <Compile Include="Plugins.cs" />
     <Compile Include="Renderer.Strings.cs" />
     <Compile Include="System\GameWindow.cs" />

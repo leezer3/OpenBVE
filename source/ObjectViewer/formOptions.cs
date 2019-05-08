@@ -20,8 +20,8 @@ namespace OpenBve
             TransparencyQuality.SelectedIndex = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance ? 0 : 2;
             width.Value = Renderer.ScreenWidth;
             height.Value = Renderer.ScreenHeight;
-            comboBoxNewXParser.SelectedIndex = Interface.CurrentOptions.CurrentXParser;
-            comboBoxNewObjParser.SelectedIndex = Interface.CurrentOptions.CurrentObjParser;
+            comboBoxNewXParser.SelectedIndex = (int)Interface.CurrentOptions.CurrentXParser;
+            comboBoxNewObjParser.SelectedIndex = (int)Interface.CurrentOptions.CurrentObjParser;
         }
 
         internal static DialogResult ShowOptions()
@@ -115,8 +115,16 @@ namespace OpenBve
                     
             }
             Renderer.TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality & Interface.CurrentOptions.Interpolation != OpenBveApi.Graphics.InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != OpenBveApi.Graphics.InterpolationMode.Bilinear;
-            Interface.CurrentOptions.CurrentXParser = comboBoxNewXParser.SelectedIndex;
-            Interface.CurrentOptions.CurrentObjParser = comboBoxNewObjParser.SelectedIndex;
+            Interface.CurrentOptions.CurrentXParser = (XParsers)comboBoxNewXParser.SelectedIndex;
+            Interface.CurrentOptions.CurrentObjParser = (ObjParsers)comboBoxNewObjParser.SelectedIndex;
+            for (int i = 0; i < Plugins.LoadedPlugins.Length; i++)
+            {
+	            if (Plugins.LoadedPlugins[i].Object != null)
+	            {
+					Plugins.LoadedPlugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentXParser);
+					Plugins.LoadedPlugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentObjParser);
+	            }
+            }
             Options.SaveOptions();
             this.Close();
         }

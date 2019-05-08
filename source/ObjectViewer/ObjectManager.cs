@@ -935,11 +935,9 @@ namespace OpenBve
             {
                 case ".csv":
                 case ".b3d":
-	                Program.CurrentHost.LoadObject(FileName, Encoding, out Result);
-                    break;
                 case ".x":
+                case ".obj":
 	                Program.CurrentHost.LoadObject(FileName, Encoding, out Result);
-                    
                     break;
                 case ".animated":
                     Result = AnimatedObjectParser.ReadObject(FileName, Encoding);
@@ -950,24 +948,6 @@ namespace OpenBve
                 case ".l3dgrp":
                     Result = Ls3DGrpParser.ReadObject(FileName, Encoding, Rotation);
                     break;
-	            case ".obj":
-                    if (Interface.CurrentOptions.CurrentObjParser == 1)
-                    {
-                        try
-                        {
-                            Result = AssimpObjParser.ReadObject(FileName);
-                        }
-                        catch (Exception ex)
-                        {
-			                Interface.AddMessage(MessageType.Error, false, "The new Obj parser raised the following exception: " + ex);
-                            Result = WavefrontObjParser.ReadObject(FileName, Encoding);
-                        }
-                    }
-                    else
-                    {
-                        Result = WavefrontObjParser.ReadObject(FileName, Encoding);
-                    }
-		            break;
 				case ".s":
 					Result = MsTsShapeParser.ReadObject(FileName);
 					break;
@@ -1030,10 +1010,8 @@ namespace OpenBve
             {
                 case ".csv":
                 case ".b3d":
-	                Program.CurrentHost.LoadObject(FileName, Encoding, out obj);
-	                Result = (StaticObject)obj;
-                    break;
                 case ".x":
+                case ".obj":
 	                Program.CurrentHost.LoadObject(FileName, Encoding, out obj);
 	                Result = (StaticObject)obj;
                     break;
@@ -1047,24 +1025,6 @@ namespace OpenBve
                 case ".animated":
                     Interface.AddMessage(MessageType.Error, false, "Tried to load an animated object even though only static objects are allowed: " + FileName);
                     return null;
-	            case ".obj":
-                    if (Interface.CurrentOptions.CurrentObjParser == 1)
-                    {
-                        try
-                        {
-                            Result = AssimpObjParser.ReadObject(FileName);
-                        }
-                        catch (Exception ex)
-                        {
-			                Interface.AddMessage(MessageType.Error, false, "The new Obj parser raised the following exception: " + ex);
-                            Result = WavefrontObjParser.ReadObject(FileName, Encoding);
-                        }
-                    }
-                    else
-                    {
-                        Result = WavefrontObjParser.ReadObject(FileName, Encoding);
-                    }
-		            break;
 				default:
                     Interface.AddMessage(MessageType.Error, false, "The file extension is not supported: " + FileName);
                     return null;

@@ -44,7 +44,8 @@ namespace OpenBve {
 				}
 				if (this.Object != null) {
 					this.Object.Load(Program.CurrentHost, Program.FileSystem.GetDataFolder("Compatibility"));
-					this.Object.SetObjectParser(Interface.CurrentOptions.CurrentXParser); //Remember that this will be ignored if not the X plugin!
+					this.Object.SetObjectParser(Interface.CurrentOptions.CurrentXParser);
+					this.Object.SetObjectParser(Interface.CurrentOptions.CurrentObjParser);
 				}
 			}
 			/// <summary>Unloads all interfaces this plugin supports.</summary>

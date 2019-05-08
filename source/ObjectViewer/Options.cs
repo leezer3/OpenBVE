@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Windows.Forms;
 using OpenBveApi.Graphics;
+using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -138,11 +139,11 @@ namespace OpenBve
 											    int p;
 											    if (!int.TryParse(Value, NumberStyles.Integer, Culture, out p) || p < 0 || p > 3)
 											    {
-												    Interface.CurrentOptions.CurrentXParser = 0;
+												    Interface.CurrentOptions.CurrentXParser = XParsers.Original;
 											    }
 											    else
 											    {
-												    Interface.CurrentOptions.CurrentXParser = p;
+												    Interface.CurrentOptions.CurrentXParser = (XParsers)p;
 											    }
 											    break;
                                             }
@@ -151,11 +152,11 @@ namespace OpenBve
 											    int p;
 											    if (!int.TryParse(Value, NumberStyles.Integer, Culture, out p) || p < 0 || p > 2)
 											    {
-												    Interface.CurrentOptions.CurrentObjParser = 0;
+												    Interface.CurrentOptions.CurrentObjParser = ObjParsers.Original;
 											    }
 											    else
 											    {
-												    Interface.CurrentOptions.CurrentObjParser = p;
+												    Interface.CurrentOptions.CurrentObjParser = (ObjParsers)p;
 											    }
 											    break;
                                             }

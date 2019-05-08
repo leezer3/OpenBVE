@@ -118,9 +118,8 @@ namespace OpenBve
 			{
 				case ".csv":
 				case ".b3d":
-					Program.CurrentHost.LoadObject(FileName, Encoding, out Result);
-					break;
 				case ".x":
+				case ".obj":
 					Program.CurrentHost.LoadObject(FileName, Encoding, out Result);
 					break;
 				case ".animated":
@@ -134,24 +133,6 @@ namespace OpenBve
 					break;
 				case ".l3dobj":
 					Result = Ls3DObjectParser.ReadObject(FileName, new Vector3());
-					break;
-				case ".obj":
-					if (Interface.CurrentOptions.CurrentObjParser == Interface.ObjParsers.Assimp)
-					{
-						try
-						{
-							Result = AssimpObjParser.ReadObject(FileName);
-						}
-						catch (Exception ex)
-						{
-							Interface.AddMessage(MessageType.Error, false, "The new Obj parser raised the following exception: " + ex);
-							Result = WavefrontObjParser.ReadObject(FileName, Encoding);
-						}
-					}
-					else
-					{
-						Result = WavefrontObjParser.ReadObject(FileName, Encoding);
-					}
 					break;
 				case ".s":
 					Result = MsTsShapeParser.ReadObject(FileName);
@@ -205,7 +186,7 @@ namespace OpenBve
 					break;
 				}
 			}
-			StaticObject Result;
+			StaticObject Result = null;
 			string e = System.IO.Path.GetExtension(FileName);
 			if (e == null)
 			{
@@ -217,34 +198,14 @@ namespace OpenBve
 			{
 				case ".csv":
 				case ".b3d":
-					Program.CurrentHost.LoadObject(FileName, Encoding, out obj);
-					Result = (StaticObject)obj;
-					break;
 				case ".x":
+				case ".obj":
 					Program.CurrentHost.LoadObject(FileName, Encoding, out obj);
 					Result = (StaticObject)obj;
 					break;
 				case ".animated":
 				case ".s":
 					Interface.AddMessage(MessageType.Error, false, "Tried to load an animated object even though only static objects are allowed: " + FileName);
-					return null;
-				case ".obj":
-					if (Interface.CurrentOptions.CurrentObjParser == Interface.ObjParsers.Assimp)
-					{
-						try
-						{
-							Result = AssimpObjParser.ReadObject(FileName);
-						}
-						catch (Exception ex)
-						{
-							Interface.AddMessage(MessageType.Error, false, "The new Obj parser raised the following exception: " + ex);
-							Result = WavefrontObjParser.ReadObject(FileName, Encoding);
-						}
-					}
-					else
-					{
-						Result = WavefrontObjParser.ReadObject(FileName, Encoding);
-					}
 					break;
 				/*
 				 * This will require implementing a specific static object load function- Leave alone for the moment

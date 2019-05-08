@@ -127,6 +127,11 @@ namespace OpenBveApi.Hosts {
 			return false;
 		}
 
+		/// <summary>Loads an object</summary>
+		/// <param name="Path">The absolute on-disk path to the object</param>
+		/// <param name="Encoding">The detected text encoding</param>
+		/// <param name="Object">The handle to the object</param>
+		/// <returns>Whether loading the object was successful</returns>
 		public virtual bool LoadObject(string Path, System.Text.Encoding Encoding, out UnifiedObject Object)
 		{
 			Object = null;

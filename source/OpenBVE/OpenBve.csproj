@@ -217,7 +217,6 @@
     <Compile Include="Graphics\Renderer\Touch.cs" />
     <Compile Include="Graphics\Renderer\ViewportModes.cs" />
     <Compile Include="Parsers\Object\Generic\AssimpObjParser.cs" />
-    <Compile Include="Parsers\Object\Generic\WavefrontObjParser.cs" />
     <Compile Include="Parsers\Object\MSTS\ShapeParser.cs" />
     <Compile Include="Parsers\Panel\PanelAnimatedXmlParser.cs" />
     <Compile Include="Parsers\Panel\PanelXmlParser.cs" />

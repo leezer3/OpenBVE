@@ -89,7 +89,6 @@
     <Compile Include="Parsers\CsvRwRouteParser.cs" />
     <Compile Include="Parsers\Ls3DGrpParser.cs" />
     <Compile Include="Parsers\Ls3DObjectParser.cs" />
-    <Compile Include="Parsers\WavefrontObjParser.cs" />
     <Compile Include="Renderer.Loading.cs" />
     <Compile Include="Renderer.Primitives.cs" />
     <Compile Include="Renderer.Strings.cs" />
