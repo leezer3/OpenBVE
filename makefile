@@ -466,7 +466,7 @@ $(RELEASE_DIR)/$(ASSIMP_FILE): $(RELEASE_DEPEND)
 $(DEBUG_DIR)/$(ASSIMP_FILE) $(RELEASE_DIR)/$(ASSIMP_FILE): $(ASSIMP_SRC) $(ASSIMP_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(ASSIMP_OUT)$(COLOR_END)
 	@$(CSC) /out:$(ASSIMP_OUT) /target:library $(ASSIMP_SRC) $(ARGS) $(ASSIMP_DOC) \
-	/reference:$(OUTPUT_DIR)/Ionic.Zlib.dll /reference:$(OUTPUT_DIR)/OpenTK.dll \
+	/reference:$(OUTPUT_DIR)/Ionic.Zlib.dll /reference:$(OPEN_BVE_API_OUT) \
 	/reference:System.Core.dll /reference:System.dll \
 	$(addprefix /resource:, $(ASSIMP_RESOURCE))
 

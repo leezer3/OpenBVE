@@ -69,7 +69,7 @@ namespace Plugin
 			}
 			catch (Exception e)
 			{
-				Interface.AddMessage(MessageType.Error, false, e.Message + " in " + FileName);
+				Plugin.currentHost.AddMessage(MessageType.Error, false, e.Message + " in " + FileName);
 				return null;
 			}
 #endif
