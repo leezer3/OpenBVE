@@ -5,6 +5,7 @@ namespace OpenBveApi.Sounds
 	/// <summary>Represents a file or directory where the sound can be loaded from.</summary>
 		public class PathOrigin : SoundOrigin {
 			// --- members ---
+			/// <summary>The absolute on-disk path to the sound file</summary>
 			public readonly string Path;
 
 			private readonly Hosts.HostInterface currentHost;

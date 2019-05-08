@@ -29,7 +29,7 @@ namespace OpenBve {
 		private static bool				customLoadScreen	= false;
 		private static Texture	TextureLoadingBkg	= null;
 		private static Texture	TextureLogo			= null;
-		private static string[]			LogoFileName		= {"logo_256.png", "logo_512.png", "logo_1024.png"};
+		private static readonly string[] LogoFileName = {"logo_256.png", "logo_512.png", "logo_1024.png"};
 
 		//
 		// INIT LOADING RESOURCES

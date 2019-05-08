@@ -16,13 +16,13 @@ namespace OpenBve
 			/// <summary>Rear axle about which the car pivots</summary>
 			internal Axle RearAxle;
 			/// <summary>The front bogie</summary>
-			internal Bogie FrontBogie;
+			internal readonly Bogie FrontBogie;
 			/// <summary>The rear bogie</summary>
-			internal Bogie RearBogie;
+			internal readonly Bogie RearBogie;
 			/// <summary>The horns attached to this car</summary>
 			internal Horn[] Horns;
 			/// <summary>The doors for this car</summary>
-			internal Door[] Doors;
+			internal readonly Door[] Doors;
 			/// <summary>The car brake for this car</summary>
 			internal CarBrake CarBrake;
 			/// <summary>The car sections (objects) attached to the car</summary>

@@ -8,6 +8,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.FunctionScripting;
 using OpenBve.SignalManager;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
@@ -1382,7 +1383,7 @@ namespace OpenBve
 								Game.Sections[m].NextSection = -1;
 								Game.Sections[m].StationIndex = Data.Blocks[i].Sections[k].DepartureStationIndex;
 								Game.Sections[m].Invisible = Data.Blocks[i].Sections[k].Invisible;
-								Game.Sections[m].Trains = new TrainManager.Train[] { };
+								Game.Sections[m].Trains = new AbstractTrain[] { };
 								// create section change event
 								double d = Data.Blocks[i].Sections[k].TrackPosition - StartingDistance;
 								int p = TrackManager.Tracks[0].Elements[n].Events.Length;

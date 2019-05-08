@@ -105,81 +105,79 @@ namespace OpenBve
 				PopulatePackageList(Database.currentDatabase.InstalledRoutes, dataGridViewPackages2, true, false, false);
 				return;
 			}
+
+			List<Package> Dependancies = Database.checkDependsReccomends(currentPackage.Dependancies);
+			if (Dependancies != null)
+			{
+				//We are missing a dependancy
+
+				labelDependancyErrorHeader.Text = Translations.GetInterfaceString("packages_install_dependancies_unmet_header");
+				labelMissingDependanciesText1.Text = Translations.GetInterfaceString("packages_install_dependancies_unmet");
+				PopulatePackageList(Dependancies, dataGridViewDependancies, false, false, false);
+				HidePanels();
+				panelDependancyError.Show();
+				return;
+			}
+			List<Package> Reccomendations = Database.checkDependsReccomends(currentPackage.Reccomendations);
+			if (Reccomendations != null)
+			{
+				//We are missing a reccomendation
+
+				labelDependancyErrorHeader.Text = Translations.GetInterfaceString("packages_install_reccomends_unmet_header");
+				labelMissingDependanciesText1.Text = Translations.GetInterfaceString("packages_install_reccomends_unmet");
+				PopulatePackageList(Reccomendations, dataGridViewDependancies, false, false, false);
+				HidePanels();
+				panelDependancyError.Show();
+				return;
+			}
+			VersionInformation Info;
+			oldPackage = null;
+			switch (currentPackage.PackageType)
+			{
+				case PackageType.Route:
+					Info = Information.CheckVersion(currentPackage, Database.currentDatabase.InstalledRoutes, ref oldPackage);
+					break;
+				case PackageType.Train:
+					Info = Information.CheckVersion(currentPackage, Database.currentDatabase.InstalledTrains, ref oldPackage);
+					break;
+				default:
+					Info = Information.CheckVersion(currentPackage, Database.currentDatabase.InstalledOther, ref oldPackage);
+					break;
+			}
+			if (Info == VersionInformation.NotFound)
+			{
+				panelPackageInstall.Hide();
+				Extract();
+			}
 			else
 			{
-				List<Package> Dependancies = Database.checkDependsReccomends(currentPackage.Dependancies);
-				if (Dependancies != null)
+				switch (Info)
 				{
-					//We are missing a dependancy
-
-					labelDependancyErrorHeader.Text = Translations.GetInterfaceString("packages_install_dependancies_unmet_header");
-					labelMissingDependanciesText1.Text = Translations.GetInterfaceString("packages_install_dependancies_unmet");
-					PopulatePackageList(Dependancies, dataGridViewDependancies, false, false, false);
-					HidePanels();
-					panelDependancyError.Show();
-					return;
-				}
-				List<Package> Reccomendations = Database.checkDependsReccomends(currentPackage.Reccomendations);
-				if (Reccomendations != null)
-				{
-					//We are missing a reccomendation
-
-					labelDependancyErrorHeader.Text = Translations.GetInterfaceString("packages_install_reccomends_unmet_header");
-					labelMissingDependanciesText1.Text = Translations.GetInterfaceString("packages_install_reccomends_unmet");
-					PopulatePackageList(Reccomendations, dataGridViewDependancies, false, false, false);
-					HidePanels();
-					panelDependancyError.Show();
-					return;
-				}
-				VersionInformation Info;
-				oldPackage = null;
-				switch (currentPackage.PackageType)
-				{
-					case PackageType.Route:
-						Info = Information.CheckVersion(currentPackage, Database.currentDatabase.InstalledRoutes, ref oldPackage);
+					case VersionInformation.NewerVersion:
+						labelVersionError.Text = Translations.GetInterfaceString("packages_install_version_new");
+						labelCurrentVersionNumber.Text = oldPackage.PackageVersion.ToString();
 						break;
-					case PackageType.Train:
-						Info = Information.CheckVersion(currentPackage, Database.currentDatabase.InstalledTrains, ref oldPackage);
+					case VersionInformation.SameVersion:
+						labelVersionError.Text = Translations.GetInterfaceString("packages_install_version_same");
+						labelCurrentVersionNumber.Text = currentPackage.PackageVersion.ToString();
 						break;
-					default:
-						Info = Information.CheckVersion(currentPackage, Database.currentDatabase.InstalledOther, ref oldPackage);
+					case VersionInformation.OlderVersion:
+						labelVersionError.Text = Translations.GetInterfaceString("packages_install_version_old");
+						labelCurrentVersionNumber.Text = oldPackage.PackageVersion.ToString();
 						break;
 				}
-				if (Info == VersionInformation.NotFound)
+				labelNewVersionNumber.Text = currentPackage.PackageVersion.ToString();
+				if (currentPackage.Dependancies.Count != 0)
 				{
-					panelPackageInstall.Hide();
-					Extract();
-				}
-				else
-				{
-					switch (Info)
+					List<Package> brokenDependancies = OpenBveApi.Packages.Information.UpgradeDowngradeDependancies(currentPackage,
+						Database.currentDatabase.InstalledRoutes, Database.currentDatabase.InstalledTrains);
+					if (brokenDependancies != null)
 					{
-						case VersionInformation.NewerVersion:
-							labelVersionError.Text = Translations.GetInterfaceString("packages_install_version_new");
-							labelCurrentVersionNumber.Text = oldPackage.PackageVersion.ToString();
-							break;
-						case VersionInformation.SameVersion:
-							labelVersionError.Text = Translations.GetInterfaceString("packages_install_version_same");
-							labelCurrentVersionNumber.Text = currentPackage.PackageVersion.ToString();
-							break;
-						case VersionInformation.OlderVersion:
-							labelVersionError.Text = Translations.GetInterfaceString("packages_install_version_old");
-							labelCurrentVersionNumber.Text = oldPackage.PackageVersion.ToString();
-							break;
+						PopulatePackageList(brokenDependancies, dataGridViewBrokenDependancies, false, false, false);
 					}
-					labelNewVersionNumber.Text = currentPackage.PackageVersion.ToString();
-					if (currentPackage.Dependancies.Count != 0)
-					{
-						List<Package> brokenDependancies = OpenBveApi.Packages.Information.UpgradeDowngradeDependancies(currentPackage,
-							Database.currentDatabase.InstalledRoutes, Database.currentDatabase.InstalledTrains);
-						if (brokenDependancies != null)
-						{
-							PopulatePackageList(brokenDependancies, dataGridViewBrokenDependancies, false, false, false);
-						}
-					}
-					HidePanels();
-					panelVersionError.Show();
 				}
+				HidePanels();
+				panelVersionError.Show();
 			}
 		}
 

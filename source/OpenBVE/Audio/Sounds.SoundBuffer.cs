@@ -70,6 +70,8 @@ namespace OpenBve {
 				this.VolumeFunction = null;
 			}
 
+			/// <summary>Creates a new sound buffer from the specified sound origin</summary>
+			/// <param name="origin">The SoundOrigin describing where to load the sound from</param>
 			internal SoundBuffer(SoundOrigin origin)
 			{
 				this.Origin = origin;

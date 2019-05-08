@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using OpenTK.Audio.OpenAL;
 using OpenBveApi.Runtime;
+using OpenBveApi.Sounds;
 
 
 namespace OpenBve {
