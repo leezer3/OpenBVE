@@ -94,6 +94,7 @@
     <Compile Include="Sounds\Sounds.PathOrigin.cs" />
     <Compile Include="Sounds\Sounds.RawOrigin.cs" />
     <Compile Include="Sounds\Sounds.SoundOrigin.cs" />
+    <Compile Include="Sounds\Sounds.SoundSourceState.cs" />
     <Compile Include="Sounds\Sounds.SoundType.cs" />
     <Compile Include="System\FileSystem.cs" />
     <Compile Include="Graphics\InterpolationModes.cs" />
