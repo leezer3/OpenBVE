@@ -15,6 +15,7 @@ using Vector3 = OpenBveApi.Math.Vector3;
 using OpenBveApi.Objects;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 
 namespace OpenBve
 {
@@ -181,8 +182,15 @@ namespace OpenBve
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.PushMatrix();
             GL.ClearColor(0.67f, 0.67f, 0.67f, 1.0f);
-            var mat = Matrix4d.LookAt(0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0);
-            GL.MultMatrix(ref mat);
+            Matrix4D mat = Matrix4D.LookAt(Vector3.Zero, Vector3.Forward, Vector3.Down);
+            unsafe
+            {
+	            double* matrixPointer = &mat.Row0.X;
+	            {
+		            GL.MultMatrix(matrixPointer);
+	            }
+            }
+
             GL.PopMatrix();
             TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality & Interface.CurrentOptions.Interpolation != InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != InterpolationMode.Bilinear;
         }
@@ -244,8 +252,14 @@ namespace OpenBve
             }
 	        
             // setup camera
-            var mat = Matrix4d.LookAt(0.0, 0.0, 0.0, World.AbsoluteCameraDirection.X, World.AbsoluteCameraDirection.Y, World.AbsoluteCameraDirection.Z, World.AbsoluteCameraUp.X, World.AbsoluteCameraUp.Y, World.AbsoluteCameraUp.Z);
-            GL.MultMatrix(ref mat);
+            Matrix4D mat = Matrix4D.LookAt(Vector3.Zero, World.AbsoluteCameraDirection, World.AbsoluteCameraUp);
+            unsafe
+            {
+	            double* matrixPointer = &mat.Row0.X;
+	            {
+		            GL.MultMatrix(matrixPointer);
+	            }
+            }
             if (OptionLighting)
             {
                 GL.Light(LightName.Light0, LightParameter.Position, new float[] { (float)OptionLightPosition.X, (float)OptionLightPosition.Y, (float)OptionLightPosition.Z, 0.0f });

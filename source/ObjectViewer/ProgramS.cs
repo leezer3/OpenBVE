@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using OpenBveApi.World;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenTK;
 using OpenTK.Graphics;
@@ -146,8 +147,14 @@ namespace OpenBve {
             World.AspectRatio = (double)Renderer.ScreenWidth / (double)Renderer.ScreenHeight;
             World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
             GL.MatrixMode(MatrixMode.Projection);
-            Matrix4d perspective = Matrix4d.CreatePerspectiveFieldOfView(World.VerticalViewingAngle, World.AspectRatio, 0.2, 1000.0);
-            GL.LoadMatrix(ref perspective);
+            Matrix4D perspective = Matrix4D.CreatePerspectiveFieldOfView(World.VerticalViewingAngle, World.AspectRatio, 0.2, 1000.0);
+            unsafe
+            {
+	            double* matrixPointer = &perspective.Row0.X;
+	            {
+		            GL.LoadMatrix(matrixPointer);
+	            }
+            }
             GL.Scale(-1, 1, 1);
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();

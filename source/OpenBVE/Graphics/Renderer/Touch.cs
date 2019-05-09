@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using Vector2 = OpenTK.Vector2;
+using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve
 {
@@ -157,8 +160,14 @@ namespace OpenBve
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();
 			PickMatrix(new Vector2(Point.X, Viewport[3] - Point.Y), Delta, Viewport);
-			Matrix4d perspective = Matrix4d.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.025, 50.0);
-			GL.MultMatrix(ref perspective);
+			Matrix4D perspective = Matrix4D.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.025, 50.0);
+			unsafe
+			{
+				double* matrixPointer = &perspective.Row0.X;
+				{
+					GL.MultMatrix(matrixPointer);
+				}
+			}
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.LoadIdentity();
 		}
@@ -193,9 +202,15 @@ namespace OpenBve
 			double ux = World.AbsoluteCameraUp.X;
 			double uy = World.AbsoluteCameraUp.Y;
 			double uz = World.AbsoluteCameraUp.Z;
-			Matrix4d LookAt = Matrix4d.LookAt(0.0, 0.0, 0.0, dx, dy, dz, ux, uy, uz);
+			Matrix4D LookAt = Matrix4D.LookAt(Vector3.Zero, World.AbsoluteCameraDirection, World.AbsoluteCameraUp);
 			GL.MatrixMode(MatrixMode.Modelview);
-			GL.LoadMatrix(ref LookAt);
+			unsafe
+			{
+				double* matrixPointer = &LookAt.Row0.X;
+				{
+					GL.LoadMatrix(matrixPointer);
+				}
+			}
 
 			if (LightingEnabled)
 			{

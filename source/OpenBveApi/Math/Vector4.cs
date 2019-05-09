@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 
 namespace OpenBveApi.Math
 {
 	/// <summary>Represents a 4-dimensional vector</summary>
+	[StructLayout(LayoutKind.Sequential)]
 	public struct Vector4
 	{
 		/// <summary>The x-coordinate.</summary>

@@ -11,6 +11,7 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.Windows.Forms;
 using OpenBveApi.FileSystem;
+using OpenBveApi.Math;
 using OpenBveApi.Textures;
 using OpenTK;
 using OpenTK.Graphics;
@@ -137,8 +138,14 @@ namespace OpenBve {
 			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();
-			Matrix4d perspective =  Matrix4d.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.2, 1000.0);
-			GL.MultMatrix(ref perspective);
+			Matrix4D perspective = Matrix4D.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.2, 1000.0);
+			unsafe
+			{
+				double* matrixPointer = &perspective.Row0.X;
+				{
+					GL.MultMatrix(matrixPointer);
+				}
+			}
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.LoadIdentity();
 		}

@@ -1,6 +1,6 @@
 ﻿using System;
 using OpenBveApi.Colors;
-using OpenTK;
+using OpenBveApi.Math;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using Vector3 = OpenBveApi.Math.Vector3;
@@ -120,9 +120,15 @@ namespace OpenBve
             GL.Disable(EnableCap.Texture2D); TexturingEnabled = false;
             HUD.LoadHUD();
             InitLoading();
-            Matrix4d lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0);
+            Matrix4D lookat = Matrix4D.LookAt(Vector3.Zero, Vector3.Forward, Vector3.Down);
             GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadMatrix(ref lookat);
+            unsafe
+            {
+	            double* matrixPointer = &lookat.Row0.X;
+	            {
+		            GL.LoadMatrix(matrixPointer);
+	            }
+            }
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
             GL.Enable(EnableCap.Blend); BlendEnabled = true;
             GL.Disable(EnableCap.Lighting); LightingEnabled = false;
@@ -185,15 +191,27 @@ namespace OpenBve
 		    if (CurrentViewPortMode == ViewPortMode.Cab)
 		    {
 
-			    Matrix4d perspective = Matrix4d.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.025, 50.0);
-			    GL.MultMatrix(ref perspective);
+			    Matrix4D perspective = Matrix4D.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.025, 50.0);
+			    unsafe
+			    {
+				    double* matrixPointer = &perspective.Row0.X;
+				    {
+					    GL.MultMatrix(matrixPointer);
+				    }
+			    }
 		    }
 		    else
 		    {
 			    var b = BackgroundManager.CurrentBackground as BackgroundManager.BackgroundObject;
 			    var cd = b != null ? Math.Max(World.BackgroundImageDistance, b.ClipDistance) : World.BackgroundImageDistance;
-			    Matrix4d perspective = Matrix4d.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.5, cd);
-			    GL.MultMatrix(ref perspective);
+			    Matrix4D perspective = Matrix4D.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.5, cd);
+			    unsafe
+			    {
+				    double* matrixPointer = &perspective.Row0.X;
+				    {
+					    GL.MultMatrix(matrixPointer);
+				    }
+			    }
 		    }
 		    GL.MatrixMode(MatrixMode.Modelview);
 		    GL.LoadIdentity();

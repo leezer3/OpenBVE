@@ -10,6 +10,7 @@ using System.Drawing;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Vector3 = OpenBveApi.Math.Vector3;
@@ -159,10 +160,15 @@ namespace OpenBve {
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			GL.PushMatrix();
 			GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-			Matrix4d lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0);
-			//TODO: May be required??
+			Matrix4D mat = Matrix4D.LookAt(Vector3.Zero, Vector3.Forward, Vector3.Down);
 			GL.MatrixMode(MatrixMode.Modelview);
-			GL.LoadMatrix(ref lookat);
+			unsafe
+			{
+				double* matrixPointer = &mat.Row0.X;
+				{
+					GL.LoadMatrix(matrixPointer);
+				}
+			}
 			GL.PopMatrix();
 			TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality& Interface.CurrentOptions.Interpolation != InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != InterpolationMode.Bilinear;
 		}
@@ -233,11 +239,16 @@ namespace OpenBve {
 			double ux = World.AbsoluteCameraUp.X;
 			double uy = World.AbsoluteCameraUp.Y;
 			double uz = World.AbsoluteCameraUp.Z;
-			Matrix4d lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, dx, dy, dz, ux, uy, uz);
 			GL.MatrixMode(MatrixMode.Modelview);
-			//TODO: May be required
-			GL.LoadMatrix(ref lookat);
-			//Glu.gluLookAt(0.0, 0.0, 0.0, dx, dy, dz, ux, uy, uz);
+			Matrix4D mat = Matrix4D.LookAt(Vector3.Zero, World.AbsoluteCameraDirection, World.AbsoluteCameraUp);
+			unsafe
+			{
+				double* matrixPointer = &mat.Row0.X;
+				{
+					GL.LoadMatrix(matrixPointer);
+				}
+			}
+
 			if (OptionLighting) {
 				GL.Light(LightName.Light0, LightParameter.Position, new float[] { (float)OptionLightPosition.X, (float)OptionLightPosition.Y, (float)OptionLightPosition.Z, 0.0f });
 			}

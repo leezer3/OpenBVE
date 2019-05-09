@@ -1,5 +1,6 @@
 ﻿using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
+using OpenBveApi.Math;
 using OpenBveApi.Textures;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -117,15 +118,15 @@ namespace OpenBve
 				LoadTexturesImmediately = LoadTextureImmediatelyMode.Yes;
 			}
 			// set up camera
-			double dx = World.AbsoluteCameraDirection.X;
-			double dy = World.AbsoluteCameraDirection.Y;
-			double dz = World.AbsoluteCameraDirection.Z;
-			double ux = World.AbsoluteCameraUp.X;
-			double uy = World.AbsoluteCameraUp.Y;
-			double uz = World.AbsoluteCameraUp.Z;
-			Matrix4d lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, dx, dy, dz, ux, uy, uz);
+			Matrix4D lookat = Matrix4D.LookAt(Vector3.Zero, World.AbsoluteCameraDirection, World.AbsoluteCameraUp);
 			GL.MatrixMode(MatrixMode.Modelview);
-			GL.LoadMatrix(ref lookat);
+			unsafe
+			{
+				double* matrixPointer = &lookat.Row0.X;
+				{
+					GL.LoadMatrix(matrixPointer);
+				}
+			}
 			GL.Light(LightName.Light0, LightParameter.Position, new float[] { (float)OptionLightPosition.X, (float)OptionLightPosition.Y, (float)OptionLightPosition.Z, 0.0f });
 			// fog
 			double fd = Game.NextFog.TrackPosition - Game.PreviousFog.TrackPosition;
@@ -350,9 +351,15 @@ namespace OpenBve
 			}
 			GL.LoadIdentity();
 			UpdateViewport(ViewPortChangeMode.ChangeToCab);
-			lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, dx, dy, dz, ux, uy, uz);
+			lookat = Matrix4D.LookAt(Vector3.Zero, World.AbsoluteCameraDirection, World.AbsoluteCameraUp);
 			GL.MatrixMode(MatrixMode.Modelview);
-			GL.LoadMatrix(ref lookat);
+			unsafe
+			{
+				double* matrixPointer = &lookat.Row0.X;
+				{
+					GL.LoadMatrix(matrixPointer);
+				}
+			}
 			if (World.CameraRestriction == Camera.RestrictionMode.NotAvailable)
 			{
 				// 3d cab
