@@ -244,13 +244,7 @@ namespace OpenBve
             }
 	        
             // setup camera
-            double dx = World.AbsoluteCameraDirection.X;
-            double dy = World.AbsoluteCameraDirection.Y;
-            double dz = World.AbsoluteCameraDirection.Z;
-            double ux = World.AbsoluteCameraUp.X;
-            double uy = World.AbsoluteCameraUp.Y;
-            double uz = World.AbsoluteCameraUp.Z;
-            var mat = Matrix4d.LookAt(0.0, 0.0, 0.0, dx, dy, dz, ux, uy, uz);
+            var mat = Matrix4d.LookAt(0.0, 0.0, 0.0, World.AbsoluteCameraDirection.X, World.AbsoluteCameraDirection.Y, World.AbsoluteCameraDirection.Z, World.AbsoluteCameraUp.X, World.AbsoluteCameraUp.Y, World.AbsoluteCameraUp.Z);
             GL.MultMatrix(ref mat);
             if (OptionLighting)
             {

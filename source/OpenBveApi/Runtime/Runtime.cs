@@ -694,7 +694,7 @@ namespace OpenBveApi.Runtime {
 		/// <summary>The current interface language code.</summary>
 		private readonly string MyLanguageCode;
 		/// <summary>The current destination code</summary>
-		private int CurrentDestination;
+		private readonly int CurrentDestination;
 		// --- constructors ---
 		/// <summary>Creates a new instance of this class.</summary>
 		/// <param name="vehicle">The state of the train.</param>

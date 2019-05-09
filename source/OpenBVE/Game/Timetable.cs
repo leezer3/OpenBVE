@@ -242,7 +242,6 @@ namespace OpenBve {
 					Font fss = new Font(FontFamily.GenericSansSerif, 9.0f, GraphicsUnit.Pixel);
 					// draw timetable
 					string t;
-					SizeF s;
 					// description
 					float x0 = offsetx + 8;
 					float y0 = 8;
@@ -255,7 +254,7 @@ namespace OpenBve {
 
 					// highest speed
 					t = Translations.GetInterfaceString("timetable_highestspeed");
-					s = g.MeasureString(t, fs);
+					SizeF s = g.MeasureString(t, fs);
 					g.DrawString(t, fs, Brushes.Black, x0, y0);
 					float y0a = y0 + s.Height + 2;
 					float x1 = x0 + s.Width + 4;
