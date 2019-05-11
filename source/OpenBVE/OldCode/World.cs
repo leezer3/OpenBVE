@@ -141,7 +141,7 @@ namespace OpenBve {
 			}
 		}
 		}
-		internal static DriverBody CurrentDriverBody;
+		
 		
 		
 		// mouse grab
@@ -546,10 +546,10 @@ namespace OpenBve {
 				// rotation
 				if (CameraRestriction == Camera.RestrictionMode.NotAvailable & (CameraMode == CameraViewMode.Interior | CameraMode == CameraViewMode.InteriorLookAhead)) {
 					// with body and head
-					bodyPitch += CurrentDriverBody.Pitch;
-					headPitch -= 0.2 * CurrentDriverBody.Pitch;
-					bodyRoll += CurrentDriverBody.Roll;
-					headRoll += 0.2 * CurrentDriverBody.Roll;
+					bodyPitch += TrainManager.PlayerTrain.DriverBody.Pitch;
+					headPitch -= 0.2 * TrainManager.PlayerTrain.DriverBody.Pitch;
+					bodyRoll += TrainManager.PlayerTrain.DriverBody.Roll;
+					headRoll += 0.2 * TrainManager.PlayerTrain.DriverBody.Roll;
 					const double bodyHeight = 0.6;
 					const double headHeight = 0.1;
 					{

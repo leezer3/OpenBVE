@@ -114,7 +114,7 @@ namespace OpenBve
 			}
 			if (World.CameraRestriction == Camera.RestrictionMode.NotAvailable)
 			{
-				World.CurrentDriverBody.Update(TimeElapsed);
+				TrainManager.PlayerTrain.DriverBody.Update(TimeElapsed);
 			}
 			//Check if we are running at an accelerated time factor-
 			//Camera motion speed should be the same whatever the game speed is
@@ -464,7 +464,7 @@ namespace OpenBve
 			}
 			// camera
 			ObjectManager.InitializeVisibility();
-			World.CurrentDriverBody = new World.DriverBody();
+			TrainManager.PlayerTrain.DriverBody = new World.DriverBody();
 			World.CameraTrackFollower.Update(0.0, true, false);
 			World.CameraTrackFollower.Update(-0.1, true, false);
 			World.CameraTrackFollower.Update(0.1, true, false);

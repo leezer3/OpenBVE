@@ -4,6 +4,8 @@ using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
+using OpenBveApi.Sounds;
+using SoundHandle = OpenBveApi.Runtime.SoundHandle;
 
 namespace OpenBve {
 	/// <summary>Represents a .NET assembly plugin.</summary>
@@ -135,7 +137,7 @@ namespace OpenBve {
 				#endif
 				this.Api.Elapse(data);
 				for (int i = 0; i < this.SoundHandlesCount; i++) {
-					if (this.SoundHandles[i].Stopped | this.SoundHandles[i].Source.State == Sounds.SoundSourceState.Stopped) {
+					if (this.SoundHandles[i].Stopped | this.SoundHandles[i].Source.State == SoundSourceState.Stopped) {
 						this.SoundHandles[i].Stop();
 						this.SoundHandles[i].Source.Stop();
 						this.SoundHandles[i] = this.SoundHandles[this.SoundHandlesCount - 1];

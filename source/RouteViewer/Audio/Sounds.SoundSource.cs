@@ -1,40 +1,9 @@
-﻿namespace OpenBve
+﻿using OpenBveApi.Sounds;
+
+namespace OpenBve
 {
 	internal static partial class Sounds
 	{
-
-		/// <summary>Represents the state of a sound source.</summary>
-		internal enum SoundSourceState
-		{
-			/// <summary>The sound will start playing once in audible range. The OpenAL sound name is not yet valid.</summary>
-			PlayPending,
-			/// <summary>The sound is playing and the OpenAL source name is valid.</summary>
-			Playing,
-			/// <summary>The sound will stop playing. The OpenAL sound name is still valid.</summary>
-			StopPending,
-			/// <summary>The sound has stopped and will be removed from the list of sound sources. The OpenAL source name is not valid any longer.</summary>
-			Stopped
-		}
-
-		/// <summary>Represents the different types of sound</summary>
-		internal enum SoundType
-		{
-			/// <summary>The sound source is attached to the car of a train</summary>
-			TrainCar,
-			/// <summary>The sound source is emitted when triggered from a track location</summary>
-			TrackSound,
-			/// <summary>The sound source is ambient</summary>
-			Ambient,
-			/// <summary>The sound source is emitted from a fixed position (Placed via the routefile)</summary>
-			FixedPosition,
-			/// <summary>The sound source is emitted by a static object</summary>
-			StaticObject,
-			/// <summary>The sound source is emitted by an animated object, and may move</summary>
-			AnimatedObject,
-			/// <summary>The sound source is undefined</summary>
-			Undefined
-		}
-
 		/// <summary>Represents a sound source.</summary>
 		internal class SoundSource
 		{

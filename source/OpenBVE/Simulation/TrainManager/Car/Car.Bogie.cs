@@ -31,6 +31,8 @@ namespace OpenBve
 			/// <summary>Holds a reference to the base car</summary>
 			private readonly Car baseCar;
 			/// <summary>Holds a reference to the base train</summary>
+			// We don't want this to be read-only if we ever manage to uncouple cars...
+			// ReSharper disable once FieldCanBeMadeReadOnly.Local
 			private Train baseTrain;
 
 			internal Bogie(Train train, Car car)

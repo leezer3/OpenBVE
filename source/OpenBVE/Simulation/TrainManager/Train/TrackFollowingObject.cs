@@ -6,6 +6,7 @@ namespace OpenBve
 {
 	public static partial class TrainManager
 	{
+		/// <summary>A more advanced type of AnimatedObject, which follows a rail and a travel plan</summary>
 		public class TrackFollowingObject : Train
 		{
 			internal double AppearanceTime;

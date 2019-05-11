@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using OpenTK.Audio.OpenAL;
 using OpenBveApi.Runtime;
+using OpenBveApi.Sounds;
 
 
 namespace OpenBve {
@@ -583,7 +584,6 @@ namespace OpenBve {
 			}
 
 			// Make sure that the source is playing.
-			int sample;
 			int[] states = new int[MicSources.Count];
 
 			for (int i = 0; i < MicSources.Count; i++) {
@@ -591,7 +591,7 @@ namespace OpenBve {
 			}
 
 			// Get the number of buffers that can be recorded.
-			sample = OpenAlMic.AvailableSamples;
+			int sample = OpenAlMic.AvailableSamples;
 
 			for (int i = 0; i < MicSources.Count; i++) {
 				if (listenerPosition.Z < MicSources[i].Position.Z - MicSources[i].BackwardTolerance || listenerPosition.Z > MicSources[i].Position.Z + MicSources[i].ForwardTolerance) {

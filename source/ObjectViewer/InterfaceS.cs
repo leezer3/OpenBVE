@@ -10,6 +10,7 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Trains;
 
 namespace OpenBve {
 
@@ -45,7 +46,7 @@ namespace OpenBve {
 		internal struct Section {
 			internal int PreviousSection;
 			internal int NextSection;
-			internal TrainManager.Train[] Trains;
+			internal AbstractTrain[] Trains;
 			internal bool TrainReachedStopPoint;
 			internal int StationIndex;
 			internal bool Invisible;
@@ -127,13 +128,5 @@ namespace OpenBve {
 		// ================================
 
 #pragma warning restore 0649
-
-		// round to power of two
-		internal static int RoundToPowerOfTwo(int Value) {
-			Value -= 1;
-			for (int i = 1; i < sizeof(int) * 8; i *= 2) {
-				Value = Value | Value >> i;
-			} return Value + 1;
-		}
 	}
 }

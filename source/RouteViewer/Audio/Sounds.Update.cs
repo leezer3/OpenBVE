@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using OpenBveApi.Runtime;
+using OpenBveApi.Sounds;
 using OpenTK.Audio.OpenAL;
 
 
