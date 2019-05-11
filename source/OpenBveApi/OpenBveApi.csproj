@@ -80,6 +80,7 @@
     <Compile Include="Interface\Time.cs" />
     <Compile Include="Interface\Translations\Language.cs" />
     <Compile Include="Math\Matrix4.cs" />
+    <Compile Include="Math\Quaternion.cs" />
     <Compile Include="Math\Vector4.cs" />
     <Compile Include="Objects\Glow.cs" />
     <Compile Include="Objects\Helpers\Material.cs" />
@@ -89,8 +90,12 @@
     <Compile Include="Objects\MeshFaceVertex.cs" />
     <Compile Include="Objects\MeshMaterial.BlendMode.cs" />
     <Compile Include="Objects\MeshMaterial.cs" />
+    <Compile Include="Objects\ObjectInterface.cs" />
+    <Compile Include="Objects\ObjectTypes\AnimatedObject.AnimatedObjectState.cs" />
     <Compile Include="Objects\ObjectTypes\StaticObject.cs" />
     <Compile Include="Objects\ObjectTypes\UnifiedObject.cs" />
+    <Compile Include="Objects\Parsers\ObjParsers.cs" />
+    <Compile Include="Objects\Parsers\XParsers.cs" />
     <Compile Include="Sounds\Sounds.PathOrigin.cs" />
     <Compile Include="Sounds\Sounds.RawOrigin.cs" />
     <Compile Include="Sounds\Sounds.SoundOrigin.cs" />

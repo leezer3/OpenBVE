@@ -1198,7 +1198,7 @@ namespace OpenBve {
 			if (AddStateToLastElement) {
 				int n = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements.Length - 1;
 				int j = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States.Length;
-				Array.Resize<ObjectManager.AnimatedObjectState>(ref Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States, j + 1);
+				Array.Resize<AnimatedObjectState>(ref Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States, j + 1);
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[j].Position = o;
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[j].Object = Object;
 				return n;
@@ -1206,7 +1206,7 @@ namespace OpenBve {
 				int n = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements.Length;
 				Array.Resize<ObjectManager.AnimatedObject>(ref Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements, n + 1);
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n] = new ObjectManager.AnimatedObject();
-				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States = new ObjectManager.AnimatedObjectState[1];
+				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States = new AnimatedObjectState[1];
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[0].Position = o;
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[0].Object = Object;
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].CurrentState = 0;

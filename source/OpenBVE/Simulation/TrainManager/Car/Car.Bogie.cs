@@ -127,7 +127,7 @@ namespace OpenBve
 					CarSections[j].Groups[0].Elements = new ObjectManager.AnimatedObject[1];
 					CarSections[j].Groups[0].Elements[0] = new ObjectManager.AnimatedObject
 					{
-						States = new ObjectManager.AnimatedObjectState[1]
+						States = new AnimatedObjectState[1]
 						
 					};
 					CarSections[j].Groups[0].Elements[0].States[0].Position = Vector3.Zero;

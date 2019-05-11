@@ -140,8 +140,8 @@ namespace OpenBve
 												Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
 											}
 											ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
-											ObjectManager.AnimatedObjectState aos = new ObjectManager.AnimatedObjectState(s, position);
-											a.States = new ObjectManager.AnimatedObjectState[] { aos };
+											AnimatedObjectState aos = new AnimatedObjectState(s, position);
+											a.States = new AnimatedObjectState[] { aos };
 											Result.Objects[ObjectCount] = a;
 											ObjectCount++;
 										}
@@ -177,7 +177,7 @@ namespace OpenBve
 								}
 								Result.Objects[ObjectCount] = new ObjectManager.AnimatedObject
 								{
-									States = new ObjectManager.AnimatedObjectState[] {},
+									States = new AnimatedObjectState[] {},
 									CurrentState = -1,
 									TranslateXDirection = Vector3.Right,
 									TranslateYDirection = Vector3.Down,
@@ -793,7 +793,7 @@ namespace OpenBve
 											Interface.AddMessage(MessageType.Error, false, ex.Message + " in StateFunction at line " + (StateFunctionLine + 1).ToString(Culture) + " in file " + FileName);
 										}
 									}
-									Result.Objects[ObjectCount].States = new ObjectManager.AnimatedObjectState[StateFiles.Length];
+									Result.Objects[ObjectCount].States = new AnimatedObjectState[StateFiles.Length];
 									bool ForceTextureRepeatX = Result.Objects[ObjectCount].TextureShiftXFunction != null & Result.Objects[ObjectCount].TextureShiftXDirection.X != 0.0 |
 									                           Result.Objects[ObjectCount].TextureShiftYFunction != null & Result.Objects[ObjectCount].TextureShiftYDirection.X != 0.0;
 									bool ForceTextureRepeatY = Result.Objects[ObjectCount].TextureShiftXFunction != null & Result.Objects[ObjectCount].TextureShiftXDirection.Y != 0.0 |
@@ -902,7 +902,7 @@ namespace OpenBve
 								}
 								else
 								{
-									Result.Objects[ObjectCount].States = new ObjectManager.AnimatedObjectState[] { };
+									Result.Objects[ObjectCount].States = new AnimatedObjectState[] { };
 								}
 								ObjectCount++;
 							}

@@ -25,6 +25,8 @@ namespace OpenBve
 			internal OpenBveApi.Textures.TextureInterface Texture;
 			/// <summary>The interface to load sounds as exposed by the plugin, or a null reference.</summary>
 			internal OpenBveApi.Sounds.SoundInterface Sound;
+			/// <summary>The interface to load objects as exposed by the plugin, or a null reference.</summary>
+			internal OpenBveApi.Objects.ObjectInterface Object;
 			// --- constructors ---
 			/// <summary>Creates a new instance of this class.</summary>
 			/// <param name="file">The plugin file.</param>
@@ -47,6 +49,10 @@ namespace OpenBve
 				{
 					this.Sound.Load(Program.CurrentHost);
 				}
+				if (this.Object != null)
+				{
+					this.Object.Load(Program.CurrentHost, Program.FileSystem.GetDataFolder("Compatibility"));
+				}
 			}
 			/// <summary>Unloads all interfaces this plugin supports.</summary>
 			internal void Unload()
@@ -58,6 +64,9 @@ namespace OpenBve
 				if (this.Sound != null)
 				{
 					this.Sound.Unload();
+				}
+				if (this.Object != null) {
+					this.Object.Unload();
 				}
 			}
 		}
@@ -122,12 +131,16 @@ namespace OpenBve
 						{
 							plugin.Sound = (OpenBveApi.Sounds.SoundInterface)assembly.CreateInstance(type.FullName);
 						}
+						if (type.IsSubclassOf(typeof(OpenBveApi.Objects.ObjectInterface)))
+						{
+							plugin.Object = (OpenBveApi.Objects.ObjectInterface)assembly.CreateInstance(type.FullName);
+						}
 						if (typeof(OpenBveApi.Runtime.IRuntime).IsAssignableFrom(type))
 						{
 							iruntime = true;
 						}
 					}
-					if (plugin.Texture != null | plugin.Sound != null)
+					if (plugin.Texture != null | plugin.Sound != null | plugin.Object != null)
 					{
 						plugin.Load();
 						list.Add(plugin);

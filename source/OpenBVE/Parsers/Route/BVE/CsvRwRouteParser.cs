@@ -310,6 +310,21 @@ namespace OpenBve {
 			// process non-track namespaces
 			//Check for any special-cased fixes we might need
 			CheckRouteSpecificFixes(FileName, ref Data, ref Expressions);
+			//Apply parameters to object loaders
+			if (!PreviewOnly)
+			{
+				for (int i = 0; i < Plugins.LoadedPlugins.Length; i++)
+				{
+					if (Plugins.LoadedPlugins[i].Object != null)
+					{
+						Plugins.LoadedPlugins[i].Object.SetCompatibilityHacks(Interface.CurrentOptions.EnableBveTsHacks, CylinderHack);
+						//Remember that these will be ignored if not the correct plugin
+						Plugins.LoadedPlugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentXParser);
+						Plugins.LoadedPlugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentObjParser);
+					}
+				}
+			}
+			
 			for (int j = 0; j < Expressions.Length; j++) {
 				Loading.RouteProgress = (double)j * progressFactor;
 				if ((j & 255) == 0) {
@@ -463,7 +478,14 @@ namespace OpenBve {
 									}
 									else
 									{
-										Interface.CurrentOptions.CurrentXParser = (Interface.XParsers)parser;
+										for (int i = 0; i < Plugins.LoadedPlugins.Length; i++)
+										{
+											if (Plugins.LoadedPlugins[i].Object != null)
+											{
+												Plugins.LoadedPlugins[i].Object.SetObjectParser((XParsers)parser); //Remember that this will be ignored if not the X plugin!
+											}
+										}
+
 									}
 								} break;
 								case "options.objparser":
@@ -474,7 +496,13 @@ namespace OpenBve {
 										}
 										else
 										{
-											Interface.CurrentOptions.CurrentObjParser = (Interface.ObjParsers)parser;
+											for (int i = 0; i < Plugins.LoadedPlugins.Length; i++)
+											{
+												if (Plugins.LoadedPlugins[i].Object != null)
+												{
+													Plugins.LoadedPlugins[i].Object.SetObjectParser((ObjParsers)parser); //Remember that this will be ignored if not the Obj plugin!
+												}
+											}
 										}
 									} break;
 								case "options.unitoflength":

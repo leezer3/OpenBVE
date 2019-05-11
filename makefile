@@ -91,11 +91,17 @@ FORMATS_MSTS_FILE     :=Data/Formats/Formats.Msts.dll
 SIGNALMANAGER_ROOT     :=source/SignalManager
 SIGNALMANAGER_FILE     :=SignalManager.dll
 
-FORMATS_DIRECTX_ROOT     :=source/Plugins/Formats.DirectX
-FORMATS_DIRECTX_FILE     :=Data/Formats/Formats.DirectX.dll
-
 OPEN_BVE_ATS_ROOT     :=source/Plugins/OpenBveAts
 OPEN_BVE_ATS_FILE     :=Data/Plugins/OpenBveAts.dll
+
+OBJECT_CSVB3D_ROOT       :=source/Plugins/Object.CsvB3d
+OBJECT_CSVB3D_FILE       :=Data/Plugins/Object.CsvB3d.dll
+
+OBJECT_DIRECTX_ROOT       :=source/Plugins/Object.DirectX
+OBJECT_DIRECTX_FILE       :=Data/Plugins/Object.DirectX.dll
+
+OBJECT_WAVEFRONT_ROOT       :=source/Plugins/Object.Wavefront
+OBJECT_WAVEFRONT_FILE       :=Data/Plugins/Object.Wavefront.dll
 
 SOUND_FLAC_ROOT       :=source/Plugins/Sound.Flac
 SOUND_FLAC_FILE       :=Data/Plugins/Sound.Flac.dll
@@ -179,7 +185,6 @@ all: all-debug
 
 all-debug: print_csc_type
 all-debug: $(DEBUG_DIR)/$(FORMATS_MSTS_FILE)
-all-debug: $(DEBUG_DIR)/$(FORMATS_DIRECTX_FILE)
 all-debug: $(DEBUG_DIR)/$(SIGNALMANAGER_FILE)
 all-debug: $(DEBUG_DIR)/$(OPEN_BVE_FILE)
 all-debug: $(DEBUG_DIR)/$(OBJECT_BENDER_FILE)
@@ -194,7 +199,6 @@ all-release: print_csc_type
 all-release: ARGS := $(RELEASE_ARGS)
 all-release: OUTPUT_DIR := $(RELEASE_DIR)
 all-release: $(RELEASE_DIR)/$(FORMATS_MSTS_FILE)
-all-release: $(RELEASE_DIR)/$(FORMATS_DIRECTX_FILE)
 all-release: $(RELEASE_DIR)/$(SIGNALMANAGER_FILE)
 all-release: $(RELEASE_DIR)/$(OPEN_BVE_FILE)
 all-release: $(RELEASE_DIR)/$(OBJECT_BENDER_FILE)
@@ -276,6 +280,9 @@ clean:
 	rm -f bin*/Data/Plugins/Texture.BmpGifJpegPngTiff.dll* bin*/Data/Plugins/Texture.BmpGifJpegPngTiff.pdb
 	rm -f bin*/Data/Plugins/Texture.Dds.dll* bin*/Data/Plugins/Texture.Dds.pdb
 	rm -f bin*/Data/Plugins/Texture.Tga.dll* bin*/Data/Plugins/Texture.Tga.pdb
+	rm -f bin*/Data/Plugins/Object.CsvB3d.dll* bin*/Data/Plugins/Object.CsvB3d.pdb
+	rm -f bin*/Data/Plugins/Object.DirectX.dll* bin*/Data/Plugins/Object.DirectX.pdb
+	rm -f bin*/Data/Plugins/Object.Wavefront.dll* bin*/Data/Plugins/Object.Wavefront.pdb
 
 	# Release Files
 	rm -f $(MAC_BUILD_RESULT) $(LINUX_BUILD_RESULT)
@@ -371,6 +378,9 @@ $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(ASSIMP_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(DEFAULT_DISPLAY_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SAN_YING_INPUT_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(OPEN_BVE_ATS_FILE) 
+$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(OBJECT_CSVB3D_FILE) 
+$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(OBJECT_DIRECTX_FILE) 
+$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(OBJECT_WAVEFRONT_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_FLAC_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_RIFFWAVE_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_MP3_FILE) 
@@ -380,7 +390,6 @@ $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_DDS_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_TGA_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(LBAHEADER_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(FORMATS_MSTS_FILE)
-$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(FORMATS_DIRECTX_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SIGNALMANAGER_FILE)
 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE) 
@@ -388,6 +397,9 @@ $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(ASSIMP_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(DEFAULT_DISPLAY_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SAN_YING_INPUT_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_ATS_FILE) 
+$(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OBJECT_CSVB3D_FILE) 
+$(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OBJECT_DIRECTX_FILE)
+$(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OBJECT_WAVEFRONT_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SOUND_FLAC_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SOUND_RIFFWAVE_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SOUND_MP3_FILE) 
@@ -397,14 +409,13 @@ $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(TEXTURE_DDS_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(TEXTURE_TGA_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(LBAHEADER_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(FORMATS_MSTS_FILE)
-$(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(FORMATS_DIRECTX_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SIGNALMANAGER_FILE)
 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE) $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs $(patsubst "%", %, $(OPEN_BVE_SRC)) $(OPEN_BVE_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OPEN_BVE_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OPEN_BVE_OUT) /target:winexe /main:OpenBve.Program $(OPEN_BVE_SRC) $(ARGS) $(OPEN_BVE_DOC) \
 	$(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs \
-	/reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OPEN_BVE_API_OUT) /reference:$(ASSIMP_OUT) /reference:$(FORMATS_MSTS_OUT) /reference:$(FORMATS_DIRECTX_OUT) /reference:$(SIGNALMANAGER_OUT) \
+	/reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OPEN_BVE_API_OUT) /reference:$(ASSIMP_OUT) /reference:$(FORMATS_MSTS_OUT) /reference:$(SIGNALMANAGER_OUT) \
 	/reference:$(OUTPUT_DIR)/CSScriptLibrary.dll /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/SharpCompress.dll /reference:$(OUTPUT_DIR)/PIEHid32Net.dll \
 	/reference:System.Xml.Linq.dll /reference:System.Core.dll /reference:System.dll \
 	/win32icon:$(ICON) $(addprefix /resource:, $(OPEN_BVE_RESOURCE)) /resource:"assets/Cursors/Symbols/plus.png",OpenBve.plus.png  /resource:"assets/Cursors/Symbols/plus.png",OpenBve.minus.png /resource:"assets/Cursors/nk.png",OpenBve.nk.png
@@ -456,7 +467,7 @@ $(RELEASE_DIR)/$(ASSIMP_FILE): $(RELEASE_DEPEND)
 $(DEBUG_DIR)/$(ASSIMP_FILE) $(RELEASE_DIR)/$(ASSIMP_FILE): $(ASSIMP_SRC) $(ASSIMP_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(ASSIMP_OUT)$(COLOR_END)
 	@$(CSC) /out:$(ASSIMP_OUT) /target:library $(ASSIMP_SRC) $(ARGS) $(ASSIMP_DOC) \
-	/reference:$(OUTPUT_DIR)/Ionic.Zlib.dll /reference:$(OUTPUT_DIR)/OpenTK.dll \
+	/reference:$(OUTPUT_DIR)/Ionic.Zlib.dll /reference:$(OPEN_BVE_API_OUT) \
 	/reference:System.Core.dll /reference:System.dll \
 	$(addprefix /resource:, $(ASSIMP_RESOURCE))
 
@@ -545,28 +556,6 @@ $(DEBUG_DIR)/$(FORMATS_MSTS_FILE) $(RELEASE_DIR)/$(FORMATS_MSTS_FILE): $(FORMATS
 	/reference:System.Core.dll /reference:System.dll \
 	$(addprefix /resource:, $(FORMATS_MSTS_RESOURCE))
 
-###################
-# Formats.DirectX #
-###################
-
-FORMATS_DIRECTX_FOLDERS  := $(shell find $(FORMATS_DIRECTX_ROOT) -type d)
-FORMATS_DIRECTX_SRC      := $(foreach sdir, $(FORMATS_DIRECTX_FOLDERS), $(wildcard $(sdir)/*.cs))
-FORMATS_DIRECTX_DOC      := $(addprefix /doc:, $(foreach sdir, $(FORMATS_DIRECTX_FOLDERS), $(wildcard $(sdir)/*.xml)))
-FORMATS_DIRECTX_RESX     := $(foreach sdir, $(FORMATS_DIRECTX_FOLDERS), $(wildcard $(sdir)/*.resx))
-FORMATS_DIRECTX_RESOURCE := $(addprefix $(FORMATS_DIRECTX_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst $(dir $(FORMATS_DIRECTX_ROOT))%.resx, %.resources, $(FORMATS_DIRECTX_RESX)))))
-FORMATS_DIRECTX_OUT       =$(OUTPUT_DIR)/$(FORMATS_DIRECTX_FILE)
-
-$(call create_resource, $(FORMATS_DIRECTX_RESOURCE), $(FORMATS_DIRECTX_RESX))
-
-$(DEBUG_DIR)/$(FORMATS_DIRECTX_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
-$(RELEASE_DIR)/$(FORMATS_DIRECTX_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
-
-$(DEBUG_DIR)/$(FORMATS_DIRECTX_FILE) $(RELEASE_DIR)/$(FORMATS_DIRECTX_FILE): $(FORMATS_DIRECTX_SRC) $(FORMATS_DIRECTX_RESOURCE)
-	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(FORMATS_DIRECTX_OUT)$(COLOR_END)
-	@$(CSC) /out:$(FORMATS_DIRECTX_OUT) /target:library $(FORMATS_DIRECTX_SRC) $(ARGS) $(FORMATS_DIRECTX_DOC) \
-	/reference:$(OUTPUT_DIR)/Ionic.Zlib.dll /reference:System.Core.dll /reference:System.dll \
-	$(addprefix /resource:, $(FORMATS_DIRECTX_RESOURCE))
-
 #################
 # SignalManager #
 #################
@@ -588,6 +577,69 @@ $(DEBUG_DIR)/$(SIGNALMANAGER_FILE) $(RELEASE_DIR)/$(SIGNALMANAGER_FILE): $(SIGNA
 	@$(CSC) /out:$(SIGNALMANAGER_OUT) /target:library $(SIGNALMANAGER_SRC) $(ARGS) $(SIGNALMANAGER_DOC) \
 	/reference:$(OPEN_BVE_API_OUT) /reference:System.Core.dll /reference:System.dll \
 	$(addprefix /resource:, $(SIGNALMANAGER_RESOURCE))
+
+#################
+# Object.CsvB3d #
+#################
+
+OBJECT_CSVB3D_FOLDERS  := $(shell find $(OBJECT_CSVB3D_ROOT) -type d)
+OBJECT_CSVB3D_SRC      := $(foreach sdir, $(OBJECT_CSVB3D_FOLDERS), $(wildcard $(sdir)/*.cs))
+OBJECT_CSVB3D_DOC      := $(addprefix /doc:, $(foreach sdir, $(OBJECT_CSVB3D_FOLDERS), $(wildcard $(sdir)/*.xml)))
+OBJECT_CSVB3D_RESX     := $(foreach sdir, $(OBJECT_CSVB3D_FOLDERS), $(wildcard $(sdir)/*.resx))
+OBJECT_CSVB3D_RESOURCE := $(addprefix $(OBJECT_CSVB3D_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst $(dir $(OBJECT_CSVB3D_ROOT))%.resx, %.resources, $(OBJECT_CSVB3D_RESX)))))
+OBJECT_CSVB3D_OUT       =$(OUTPUT_DIR)/$(OBJECT_CSVB3D_FILE)
+
+$(call create_resource, $(OBJECT_CSVB3D_RESOURCE), $(OBJECT_CSVB3D_RESX))
+
+$(DEBUG_DIR)/$(OBJECT_CSVB3D_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
+$(RELEASE_DIR)/$(OBJECT_CSVB3D_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
+
+$(DEBUG_DIR)/$(OBJECT_CSVB3D_FILE) $(RELEASE_DIR)/$(OBJECT_CSVB3D_FILE): $(OBJECT_CSVB3D_SRC) $(OBJECT_CSVB3D_RESOURCE)
+	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OBJECT_CSVB3D_OUT)$(COLOR_END)
+	@$(CSC) /out:$(OBJECT_CSVB3D_OUT) /target:library $(OBJECT_CSVB3D_SRC) $(ARGS) $(OBJECT_CSVB3D_DOC) \
+	/reference:$(OPEN_BVE_API_OUT) /reference:System.Core.dll /reference:System.dll $(addprefix /resource:, $(OBJECT_CSVB3D_RESOURCE))
+	
+##################
+# Object.DirectX #
+##################
+
+OBJECT_DIRECTX_FOLDERS  := $(shell find $(OBJECT_DIRECTX_ROOT) -type d)
+OBJECT_DIRECTX_SRC      := $(foreach sdir, $(OBJECT_DIRECTX_FOLDERS), $(wildcard $(sdir)/*.cs))
+OBJECT_DIRECTX_DOC      := $(addprefix /doc:, $(foreach sdir, $(OBJECT_DIRECTX_FOLDERS), $(wildcard $(sdir)/*.xml)))
+OBJECT_DIRECTX_RESX     := $(foreach sdir, $(OBJECT_DIRECTX_FOLDERS), $(wildcard $(sdir)/*.resx))
+OBJECT_DIRECTX_RESOURCE := $(addprefix $(OBJECT_DIRECTX_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst $(dir $(OBJECT_DIRECTX_ROOT))%.resx, %.resources, $(OBJECT_DIRECTX_RESX)))))
+OBJECT_DIRECTX_OUT       =$(OUTPUT_DIR)/$(OBJECT_DIRECTX_FILE)
+
+$(call create_resource, $(OBJECT_DIRECTX_RESOURCE), $(OBJECT_DIRECTX_RESX))
+
+$(DEBUG_DIR)/$(OBJECT_DIRECTX_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
+$(RELEASE_DIR)/$(OBJECT_DIRECTX_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
+
+$(DEBUG_DIR)/$(OBJECT_DIRECTX_FILE) $(RELEASE_DIR)/$(OBJECT_DIRECTX_FILE): $(OBJECT_DIRECTX_SRC) $(OBJECT_DIRECTX_RESOURCE)
+	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OBJECT_DIRECTX_OUT)$(COLOR_END)
+	@$(CSC) /out:$(OBJECT_DIRECTX_OUT) /target:library $(OBJECT_DIRECTX_SRC) $(ARGS) $(OBJECT_DIRECTX_DOC) \
+	/reference:$(ASSIMP_OUT) /reference:$(OUTPUT_DIR)/Ionic.Zlib.dll /reference:$(OPEN_BVE_API_OUT) /reference:System.Core.dll /reference:System.dll $(addprefix /resource:, $(OBJECT_DIRECTX_RESOURCE))
+	
+####################
+# Object.Wavefront #
+####################
+
+OBJECT_WAVEFRONT_FOLDERS  := $(shell find $(OBJECT_WAVEFRONT_ROOT) -type d)
+OBJECT_WAVEFRONT_SRC      := $(foreach sdir, $(OBJECT_WAVEFRONT_FOLDERS), $(wildcard $(sdir)/*.cs))
+OBJECT_WAVEFRONT_DOC      := $(addprefix /doc:, $(foreach sdir, $(OBJECT_WAVEFRONT_FOLDERS), $(wildcard $(sdir)/*.xml)))
+OBJECT_WAVEFRONT_RESX     := $(foreach sdir, $(OBJECT_WAVEFRONT_FOLDERS), $(wildcard $(sdir)/*.resx))
+OBJECT_WAVEFRONT_RESOURCE := $(addprefix $(OBJECT_WAVEFRONT_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst $(dir $(OBJECT_WAVEFRONT_ROOT))%.resx, %.resources, $(OBJECT_WAVEFRONT_RESX)))))
+OBJECT_WAVEFRONT_OUT       =$(OUTPUT_DIR)/$(OBJECT_WAVEFRONT_FILE)
+
+$(call create_resource, $(OBJECT_WAVEFRONT_RESOURCE), $(OBJECT_WAVEFRONT_RESX))
+
+$(DEBUG_DIR)/$(OBJECT_WAVEFRONT_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
+$(RELEASE_DIR)/$(OBJECT_WAVEFRONT_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
+
+$(DEBUG_DIR)/$(OBJECT_WAVEFRONT_FILE) $(RELEASE_DIR)/$(OBJECT_WAVEFRONT_FILE): $(OBJECT_WAVEFRONT_SRC) $(OBJECT_WAVEFRONT_RESOURCE)
+	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OBJECT_WAVEFRONT_OUT)$(COLOR_END)
+	@$(CSC) /out:$(OBJECT_WAVEFRONT_OUT) /target:library $(OBJECT_WAVEFRONT_SRC) $(ARGS) $(OBJECT_WAVEFRONT_DOC) \
+	/reference:$(ASSIMP_OUT) /reference:$(OPEN_BVE_API_OUT) /reference:System.Core.dll /reference:System.dll $(addprefix /resource:, $(OBJECT_WAVEFRONT_RESOURCE))
 
 ##############
 # Sound.Flac #
@@ -814,7 +866,7 @@ $(RELEASE_DIR)/$(OBJECT_VIEWER_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
 $(DEBUG_DIR)/$(OBJECT_VIEWER_FILE) $(RELEASE_DIR)/$(OBJECT_VIEWER_FILE): $(OBJECT_VIEWER_SRC) $(OBJECT_VIEWER_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OBJECT_VIEWER_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OBJECT_VIEWER_OUT) /target:winexe /main:OpenBve.Program $(OBJECT_VIEWER_SRC) $(ARGS) $(OBJECT_VIEWER_DOC) \
-	/reference:$(OPEN_BVE_API_OUT) /reference:$(ASSIMP_OUT) /reference:$(FORMATS_MSTS_OUT) /reference:$(FORMATS_DIRECTX_OUT) /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OUTPUT_DIR)/SharpCompress.dll /reference:System.Core.dll \
+	/reference:$(OPEN_BVE_API_OUT) /reference:$(ASSIMP_OUT) /reference:$(FORMATS_MSTS_OUT) /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OUTPUT_DIR)/SharpCompress.dll /reference:System.Core.dll \
 	/win32icon:$(ICON) $(addprefix /resource:, $(OBJECT_VIEWER_RESOURCE))
 
 ###############

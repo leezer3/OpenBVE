@@ -5,7 +5,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using AssimpNET.X;
 
-namespace OpenBve
+namespace Plugin
 {
 	class AssimpXParser
 	{
@@ -26,8 +26,8 @@ namespace OpenBve
 				XFileParser parser = new XFileParser(System.IO.File.ReadAllBytes(FileName));
 				Scene scene = parser.GetImportedData();
 
-				StaticObject obj = new StaticObject(Program.CurrentHost);
-				MeshBuilder builder = new MeshBuilder(Program.CurrentHost);
+				StaticObject obj = new StaticObject(Plugin.currentHost);
+				MeshBuilder builder = new MeshBuilder(Plugin.currentHost);
 
 				// Global
 				foreach (var mesh in scene.GlobalMeshes)
@@ -38,7 +38,7 @@ namespace OpenBve
 				if (scene.RootNode != null)
 				{
 					// Root Node
-					if (scene.RootNode.TrafoMatrix != OpenTK.Matrix4.Zero)
+					if (scene.RootNode.TrafoMatrix != Matrix4D.Zero)
 					{
 						rootMatrix = ConvertMatrix(scene.RootNode.TrafoMatrix);
 					}
@@ -69,7 +69,7 @@ namespace OpenBve
 			}
 			catch (Exception e)
 			{
-				Interface.AddMessage(MessageType.Error, false, e.Message + " in " + FileName);
+				Plugin.currentHost.AddMessage(MessageType.Error, false, e.Message + " in " + FileName);
 				return null;
 			}
 #endif
@@ -80,14 +80,14 @@ namespace OpenBve
 			if (builder.Vertices.Length != 0)
 			{
 				builder.Apply(ref obj);
-				builder = new MeshBuilder(Program.CurrentHost);
+				builder = new MeshBuilder(Plugin.currentHost);
 			}
 
 			int nVerts = mesh.Positions.Count;
 			if (nVerts == 0)
 			{
 				//Some null objects contain an empty mesh
-				Interface.AddMessage(MessageType.Warning, false, "nVertices should be greater than zero in Mesh " + mesh.Name);
+				Plugin.currentHost.AddMessage(MessageType.Warning, false, "nVertices should be greater than zero in Mesh " + mesh.Name);
 			}
 			int v = builder.Vertices.Length;
 			Array.Resize(ref builder.Vertices, v + nVerts);
@@ -139,7 +139,7 @@ namespace OpenBve
 					builder.Materials[m].DaytimeTexture = OpenBveApi.Path.CombineFile(currentFolder, mesh.Materials[i].Textures[0].Name);
 					if (!System.IO.File.Exists(builder.Materials[m].DaytimeTexture))
 					{
-						Interface.AddMessage(MessageType.Error, true, "Texure " + builder.Materials[m].DaytimeTexture + " was not found in file " + currentFile);
+						Plugin.currentHost.AddMessage(MessageType.Error, true, "Texure " + builder.Materials[m].DaytimeTexture + " was not found in file " + currentFile);
 						builder.Materials[m].DaytimeTexture = null;
 					}
 				}
@@ -200,7 +200,7 @@ namespace OpenBve
 			}
 		}
 
-		private static Matrix4D ConvertMatrix(OpenTK.Matrix4 matrix)
+		private static Matrix4D ConvertMatrix(Matrix4D matrix)
 		{
 			Vector4 Row0 = new Vector4(matrix.Row0.X, matrix.Row0.Y, matrix.Row0.Z, matrix.Row0.W);
 			Vector4 Row1 = new Vector4(matrix.Row1.X, matrix.Row1.Y, matrix.Row1.Z, matrix.Row1.W);

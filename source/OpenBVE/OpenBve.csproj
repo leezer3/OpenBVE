@@ -217,9 +217,6 @@
     <Compile Include="Graphics\Renderer\Touch.cs" />
     <Compile Include="Graphics\Renderer\ViewportModes.cs" />
     <Compile Include="Parsers\Object\Generic\AssimpObjParser.cs" />
-    <Compile Include="Parsers\Object\Generic\AssimpXParser.cs" />
-    <Compile Include="Parsers\Object\Generic\NewXParser.cs" />
-    <Compile Include="Parsers\Object\Generic\WavefrontObjParser.cs" />
     <Compile Include="Parsers\Object\MSTS\ShapeParser.cs" />
     <Compile Include="Parsers\Panel\PanelAnimatedXmlParser.cs" />
     <Compile Include="Parsers\Panel\PanelXmlParser.cs" />
@@ -448,9 +445,7 @@
     <Compile Include="Parsers\Object\BVE\AnimatedObjectParser.cs" />
     <Compile Include="Parsers\Train\ExtensionsCfgParser.cs" />
     <Compile Include="Parsers\Panel\Panel2CfgParser.cs" />
-    <Compile Include="Parsers\Object\BVE\CsvB3dObjectParser.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.cs" />
-    <Compile Include="Parsers\Object\Generic\XObjectParser.cs" />
     <Compile Include="Parsers\Panel\PanelCfgParser.cs" />
     <Compile Include="System\Host.cs" />
     <Compile Include="System\Input\JoystickManager.cs" />
@@ -520,10 +515,6 @@
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
       <Name>OpenBveApi</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Plugins\Formats.DirectX\Formats.DirectX.csproj">
-      <Project>{b8955ca6-e002-48a6-8fbf-90c2084c3508}</Project>
-      <Name>Formats.DirectX</Name>
     </ProjectReference>
     <ProjectReference Include="..\Plugins\Formats.Msts\Formats.Msts.csproj">
       <Project>{E81B7BD8-A326-47D3-B7EE-E9C7D4D119FA}</Project>

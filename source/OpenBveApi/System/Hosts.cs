@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Sounds;
@@ -125,6 +126,17 @@ namespace OpenBveApi.Hosts {
 			handle = null;
 			return false;
 		}
+
+		/// <summary>Loads an object</summary>
+		/// <param name="Path">The absolute on-disk path to the object</param>
+		/// <param name="Encoding">The detected text encoding</param>
+		/// <param name="Object">The handle to the object</param>
+		/// <returns>Whether loading the object was successful</returns>
+		public virtual bool LoadObject(string Path, System.Text.Encoding Encoding, out UnifiedObject Object)
+		{
+			Object = null;
+			return false;
+		}
 		
 		/// <summary>Executes a function script in the host application</summary>
 		/// <param name="functionScript">The function script to execute</param>
@@ -155,6 +167,12 @@ namespace OpenBveApi.Hosts {
 		{
 			return -1;
 		}
+
+		/// <summary>Adds a log message to the host application.</summary>
+		/// <param name="type">The type of message to be reported.</param>
+		/// <param name="FileNotFound">Whether this message relates to a file not found</param>
+		/// <param name="text">The textual message.</param>
+		public virtual void AddMessage(MessageType type, bool FileNotFound, string text) { }
 	}
 	
 }

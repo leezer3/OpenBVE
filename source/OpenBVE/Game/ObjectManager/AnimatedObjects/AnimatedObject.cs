@@ -4,6 +4,7 @@ using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Trains;
 using OpenBveApi.World;
 
 namespace OpenBve
@@ -11,17 +12,7 @@ namespace OpenBve
 	/// <summary>The ObjectManager is the root class containing functions to load and manage objects within the simulation world</summary>
 	public static partial class ObjectManager
 	{
-		internal struct AnimatedObjectState
-		{
-			internal Vector3 Position;
-			internal StaticObject Object;
-
-			internal AnimatedObjectState(StaticObject stateObject, Vector3 position)
-			{
-				Object = stateObject;
-				Position = position;
-			}
-		}
+		
 		internal class AnimatedObject
 		{
 			// states
@@ -216,7 +207,7 @@ namespace OpenBve
 			/// <param name="TimeElapsed">The time elapsed since this object was last updated</param>
 			/// <param name="EnableDamping">Whether damping is to be applied for this call</param>
             /// <param name="IsTouch">Whether Animated Object belonging to TouchElement class.</param>
-			internal void Update(bool IsPartOfTrain, TrainManager.Train Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Overlay, bool UpdateFunctions, bool Show, double TimeElapsed, bool EnableDamping, bool IsTouch = false)
+			internal void Update(bool IsPartOfTrain, AbstractTrain Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Overlay, bool UpdateFunctions, bool Show, double TimeElapsed, bool EnableDamping, bool IsTouch = false)
 			{
 				int s = CurrentState;
 				int i = ObjectIndex;
@@ -859,10 +850,7 @@ namespace OpenBve
 						}
 						for (int j = 0; j < currentObject.Object.States[i].Object.Mesh.Vertices.Length; j++)
 						{
-							double x = States[i].Object.Mesh.Vertices[j].Coordinates.X;
-							double y = States[i].Object.Mesh.Vertices[j].Coordinates.Y;
-							double z = States[i].Object.Mesh.Vertices[j].Coordinates.Z;
-							double t = x * x + y * y + z * z;
+							double t = States[i].Object.Mesh.Vertices[j].Coordinates.Norm();
 							if (t > r) r = t;
 						}
 					}
@@ -903,10 +891,7 @@ namespace OpenBve
 						}
 						for (int j = 0; j < currentObject.Object.States[i].Object.Mesh.Vertices.Length; j++)
 						{
-							double x = States[i].Object.Mesh.Vertices[j].Coordinates.X;
-							double y = States[i].Object.Mesh.Vertices[j].Coordinates.Y;
-							double z = States[i].Object.Mesh.Vertices[j].Coordinates.Z;
-							double t = x * x + y * y + z * z;
+							double t = States[i].Object.Mesh.Vertices[j].Coordinates.Norm();
 							if (t > r) r = t;
 						}
 					}

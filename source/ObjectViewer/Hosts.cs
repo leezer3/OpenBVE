@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 
@@ -185,6 +186,35 @@ namespace OpenBve {
 			//handle = Sounds.RegisterBuffer(sound, 0.0); // TODO
 			handle = null;
 			return true;
+		}
+
+		public override bool LoadObject(string path, System.Text.Encoding Encoding, out UnifiedObject Object)
+		{
+			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
+				for (int i = 0; i < Plugins.LoadedPlugins.Length; i++) {
+					if (Plugins.LoadedPlugins[i].Object != null) {
+						try {
+							if (Plugins.LoadedPlugins[i].Object.CanLoadObject(path)) {
+								try {
+									if (Plugins.LoadedPlugins[i].Object.LoadObject(path, Encoding, out Object)) {
+										return true;
+									}
+									Interface.AddMessage(MessageType.Error, false, "Plugin " + Plugins.LoadedPlugins[i].Title + " returned unsuccessfully at LoadObject");
+								} catch (Exception ex) {
+									Interface.AddMessage(MessageType.Error, false, "Plugin " + Plugins.LoadedPlugins[i].Title + " raised the following exception at LoadObject:" + ex.Message);
+								}
+							}
+						} catch (Exception ex) {
+							Interface.AddMessage(MessageType.Error, false, "Plugin " + Plugins.LoadedPlugins[i].Title + " raised the following exception at CanLoadObject:" + ex.Message);
+						}
+					}
+				}
+				Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
+			} else {
+				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+			}
+			Object = null;
+			return false;
 		}
 
 		public override void ExecuteFunctionScript(OpenBveApi.FunctionScripting.FunctionScript functionScript, AbstractTrain train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState)

@@ -2,6 +2,7 @@
 using System.Text;
 using System.Globalization;
 using OpenBveApi.Graphics;
+using OpenBveApi.Objects;
 using OpenBveApi.Packages;
 
 namespace OpenBve
@@ -46,24 +47,6 @@ namespace OpenBve
 			Arcade = 0,
 			Normal = 1,
 			Expert = 2,
-		}
-
-		internal enum XParsers
-		{
-			/// <summary>Michelle's original parser</summary>
-			Original = 0,
-			/// <summary>The new X parser</summary>
-			NewXParser = 1,
-			/// <summary>C# port of Assimp</summary>
-			Assimp = 2
-		}
-
-		internal enum ObjParsers
-		{
-			/// <summary>Original parser</summary>
-			Original = 0,
-			/// <summary>C# port of Assimp</summary>
-			Assimp = 1
 		}
 
 		internal class Options

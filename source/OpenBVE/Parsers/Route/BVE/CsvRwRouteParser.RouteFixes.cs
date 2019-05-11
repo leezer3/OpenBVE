@@ -1,4 +1,5 @@
 ﻿using OpenBveApi.Interface;
+using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -126,10 +127,10 @@ namespace OpenBve
 					//Iiyama 2060-
 					//9001.csv
 					Expressions[434].Text = ".section 0; 103; 104; 105; 106";
-					if (Interface.CurrentOptions.CurrentXParser == Interface.XParsers.Original)
+					if (Interface.CurrentOptions.CurrentXParser == XParsers.Original)
 					{
 						//Various broken stuff with the original parser, either Assimp or new will do
-						Interface.CurrentOptions.CurrentXParser = Interface.XParsers.NewXParser;
+						Interface.CurrentOptions.CurrentXParser = XParsers.NewXParser;
 					}
 					break;
 				case "B97E93C1A21B43CCDA2C504F254E6F8FF099FD51E502E2EE875E6B05FBDE5326":

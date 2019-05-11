@@ -1515,7 +1515,7 @@ namespace OpenBve {
 			if (AddStateToLastElement) {
 				int n = Group.Elements.Length - 1;
 				int j = Group.Elements[n].States.Length;
-				Array.Resize<ObjectManager.AnimatedObjectState>(ref Group.Elements[n].States, j + 1);
+				Array.Resize<AnimatedObjectState>(ref Group.Elements[n].States, j + 1);
 				Group.Elements[n].States[j].Position = o;
 				Group.Elements[n].States[j].Object = Object;
 				return n;
@@ -1523,7 +1523,7 @@ namespace OpenBve {
 				int n = Group.Elements.Length;
 				Array.Resize<ObjectManager.AnimatedObject>(ref Group.Elements, n + 1);
 				Group.Elements[n] = new ObjectManager.AnimatedObject();
-				Group.Elements[n].States = new ObjectManager.AnimatedObjectState[1];
+				Group.Elements[n].States = new AnimatedObjectState[1];
 				Group.Elements[n].States[0].Position = o;
 				Group.Elements[n].States[0].Object = Object;
 				Group.Elements[n].CurrentState = 0;

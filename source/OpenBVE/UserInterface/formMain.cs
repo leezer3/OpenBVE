@@ -8,6 +8,7 @@ using OpenBve.UserInterface;
 using OpenBveApi.Graphics;
 using OpenBveApi.Packages;
 using OpenBveApi.Interface;
+using OpenBveApi.Objects;
 using OpenTK.Input;
 using ButtonState = OpenTK.Input.ButtonState;
 using ContentAlignment = System.Drawing.ContentAlignment;
@@ -931,8 +932,8 @@ namespace OpenBve {
 			Interface.CurrentOptions.MainMenuHeight = this.WindowState == FormWindowState.Maximized ? -1 : this.Size.Height;
 			Interface.CurrentOptions.KioskMode = checkBoxEnableKiosk.Checked;
 			Interface.CurrentOptions.KioskModeTimer = (double)numericUpDownKioskTimeout.Value;
-			Interface.CurrentOptions.CurrentXParser = (Interface.XParsers)comboBoxXparser.SelectedIndex;
-			Interface.CurrentOptions.CurrentObjParser = (Interface.ObjParsers)comboBoxObjparser.SelectedIndex;
+			Interface.CurrentOptions.CurrentXParser = (XParsers)comboBoxXparser.SelectedIndex;
+			Interface.CurrentOptions.CurrentObjParser = (ObjParsers)comboBoxObjparser.SelectedIndex;
 			Interface.CurrentOptions.Panel2ExtendedMode = checkBoxPanel2Extended.Checked;
 			switch (trackBarHUDSize.Value)
 			{

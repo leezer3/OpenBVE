@@ -118,32 +118,9 @@ namespace OpenBve
 			{
 				case ".csv":
 				case ".b3d":
-					Result = CsvB3dObjectParser.ReadObject(FileName, Encoding);
-					break;
 				case ".x":
-					if (Interface.CurrentOptions.CurrentXParser != Interface.XParsers.Original)
-					{
-						try
-						{
-							if (Interface.CurrentOptions.CurrentXParser == Interface.XParsers.NewXParser)
-							{
-								Result = NewXParser.ReadObject(FileName, Encoding);
-							}
-							else
-							{
-								Result = AssimpXParser.ReadObject(FileName);
-							}
-						}
-						catch (Exception ex)
-						{
-							Interface.AddMessage(MessageType.Error, false, "The new X parser raised the following exception: " + ex);
-							Result = XObjectParser.ReadObject(FileName, Encoding);
-						}
-					}
-					else
-					{
-						Result = XObjectParser.ReadObject(FileName, Encoding);
-					}
+				case ".obj":
+					Program.CurrentHost.LoadObject(FileName, Encoding, out Result);
 					break;
 				case ".animated":
 					Result = AnimatedObjectParser.ReadObject(FileName, Encoding);
@@ -156,24 +133,6 @@ namespace OpenBve
 					break;
 				case ".l3dobj":
 					Result = Ls3DObjectParser.ReadObject(FileName, new Vector3());
-					break;
-				case ".obj":
-					if (Interface.CurrentOptions.CurrentObjParser == Interface.ObjParsers.Assimp)
-					{
-						try
-						{
-							Result = AssimpObjParser.ReadObject(FileName);
-						}
-						catch (Exception ex)
-						{
-							Interface.AddMessage(MessageType.Error, false, "The new Obj parser raised the following exception: " + ex);
-							Result = WavefrontObjParser.ReadObject(FileName, Encoding);
-						}
-					}
-					else
-					{
-						Result = WavefrontObjParser.ReadObject(FileName, Encoding);
-					}
 					break;
 				case ".s":
 					Result = MsTsShapeParser.ReadObject(FileName);
@@ -227,65 +186,26 @@ namespace OpenBve
 					break;
 				}
 			}
-			StaticObject Result;
+			StaticObject Result = null;
 			string e = System.IO.Path.GetExtension(FileName);
 			if (e == null)
 			{
 				Interface.AddMessage(MessageType.Error, false, "The file " + FileName + " does not have a recognised extension.");
 				return null;
 			}
+			UnifiedObject obj;
 			switch (e.ToLowerInvariant())
 			{
 				case ".csv":
 				case ".b3d":
-					Result = CsvB3dObjectParser.ReadObject(FileName, Encoding);
-					break;
 				case ".x":
-					if (Interface.CurrentOptions.CurrentXParser != Interface.XParsers.Original)
-					{
-						try
-						{
-							if (Interface.CurrentOptions.CurrentXParser == Interface.XParsers.NewXParser)
-							{
-								Result = NewXParser.ReadObject(FileName, Encoding);
-							}
-							else
-							{
-								Result = AssimpXParser.ReadObject(FileName);
-							}
-						}
-						catch (Exception ex)
-						{
-							Interface.AddMessage(MessageType.Error, false, "The new X parser raised the following exception: " + ex);
-							Result = XObjectParser.ReadObject(FileName, Encoding);
-						}
-					}
-					else
-					{
-						Result = XObjectParser.ReadObject(FileName, Encoding);
-					}
+				case ".obj":
+					Program.CurrentHost.LoadObject(FileName, Encoding, out obj);
+					Result = (StaticObject)obj;
 					break;
 				case ".animated":
 				case ".s":
 					Interface.AddMessage(MessageType.Error, false, "Tried to load an animated object even though only static objects are allowed: " + FileName);
-					return null;
-				case ".obj":
-					if (Interface.CurrentOptions.CurrentObjParser == Interface.ObjParsers.Assimp)
-					{
-						try
-						{
-							Result = AssimpObjParser.ReadObject(FileName);
-						}
-						catch (Exception ex)
-						{
-							Interface.AddMessage(MessageType.Error, false, "The new Obj parser raised the following exception: " + ex);
-							Result = WavefrontObjParser.ReadObject(FileName, Encoding);
-						}
-					}
-					else
-					{
-						Result = WavefrontObjParser.ReadObject(FileName, Encoding);
-					}
 					break;
 				/*
 				 * This will require implementing a specific static object load function- Leave alone for the moment

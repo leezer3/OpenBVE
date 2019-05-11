@@ -3,35 +3,34 @@ using System.IO;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using System.Collections.Generic;
-using System.Text;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 
-namespace OpenBve
+namespace Plugin
 {
 	internal static class WavefrontObjParser
 	{
 		private class MeshBuilder
 		{
-			internal List<Vertex> Vertices;
+			internal List<VertexTemplate> Vertices;
 			internal List<MeshFace> Faces;
 			internal Material[] Materials;
 			internal MeshBuilder()
 			{
-				this.Vertices = new List<Vertex>();
+				this.Vertices = new List<VertexTemplate>();
 				this.Faces = new List<MeshFace>();
-				this.Materials = new Material[] { };
+				this.Materials = new Material[] { new Material() };
 			}
 		}
 
 		/// <summary>Loads a Wavefront object from a file.</summary>
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
-		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
+		/// <param name="Encoding">The encoding the file is saved in.</param>
 		/// <returns>The object loaded.</returns>
-		internal static StaticObject ReadObject(string FileName, Encoding Encoding)
+		internal static StaticObject ReadObject(string FileName, System.Text.Encoding Encoding)
 		{
-			StaticObject Object = new StaticObject(Program.CurrentHost);
+			StaticObject Object = new StaticObject(Plugin.currentHost);
 
 			MeshBuilder Builder = new MeshBuilder();
 
@@ -78,15 +77,15 @@ namespace OpenBve
 						Vector3 vertex = new Vector3();
 						if (!double.TryParse(Arguments[1], out vertex.X))
 						{
-							Interface.AddMessage(MessageType.Warning, false, "Invalid X co-ordinate in Vertex at Line " + i);
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid X co-ordinate in Vertex at Line " + i);
 						}
 						if (!double.TryParse(Arguments[2], out vertex.Y))
 						{
-							Interface.AddMessage(MessageType.Warning, false, "Invalid Y co-ordinate in Vertex at Line " + i);
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Y co-ordinate in Vertex at Line " + i);
 						}
 						if (!double.TryParse(Arguments[3], out vertex.Z))
 						{
-							Interface.AddMessage(MessageType.Warning, false, "Invalid Z co-ordinate in Vertex at Line " + i);
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Z co-ordinate in Vertex at Line " + i);
 						}
 						tempVertices.Add(vertex);
 						break;
@@ -95,11 +94,11 @@ namespace OpenBve
 						Vector2 coords = new Vector2();
 						if (!double.TryParse(Arguments[1], out coords.X))
 						{
-							Interface.AddMessage(MessageType.Warning, false, "Invalid X co-ordinate in Texture Co-ordinates at Line " + i);
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid X co-ordinate in Texture Co-ordinates at Line " + i);
 						}
 						if (!double.TryParse(Arguments[2], out coords.Y))
 						{
-							Interface.AddMessage(MessageType.Warning, false, "Invalid X co-ordinate in Texture Co-Ordinates at Line " + i);
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid X co-ordinate in Texture Co-Ordinates at Line " + i);
 						}
 						tempCoords.Add(coords);
 						break;
@@ -107,15 +106,15 @@ namespace OpenBve
 						Vector3 normal = new Vector3();
 						if (!double.TryParse(Arguments[1], out normal.X))
 						{
-							Interface.AddMessage(MessageType.Warning, false, "Invalid X co-ordinate in Vertex Normal at Line " + i);
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid X co-ordinate in Vertex Normal at Line " + i);
 						}
 						if (!double.TryParse(Arguments[2], out normal.Y))
 						{
-							Interface.AddMessage(MessageType.Warning, false, "Invalid Y co-ordinate in Vertex Normal at Line " + i);
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Y co-ordinate in Vertex Normal at Line " + i);
 						}
 						if (!double.TryParse(Arguments[3], out normal.Z))
 						{
-							Interface.AddMessage(MessageType.Warning, false, "Invalid Z co-ordinate in Vertex Normal at Line " + i);
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Z co-ordinate in Vertex Normal at Line " + i);
 						}
 						tempNormals.Add(normal);
 						//Vertex normals
@@ -127,7 +126,7 @@ namespace OpenBve
 						//Creates a new face
 
 						//Create the temp list to hook out the vertices 
-						List<Vertex> vertices = new List<Vertex>();
+						List<VertexTemplate> vertices = new List<VertexTemplate>();
 						List<Vector3> normals = new List<Vector3>();
 						for (int f = 1; f < Arguments.Count; f++)
 						{
@@ -136,7 +135,7 @@ namespace OpenBve
 							int idx;
 							if (!int.TryParse(faceArguments[0], out idx))
 							{
-								Interface.AddMessage(MessageType.Warning, false, "Invalid Vertex index in Face " + f + " at Line " + i);
+								Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Vertex index in Face " + f + " at Line " + i);
 								continue;
 							}
 
@@ -153,7 +152,7 @@ namespace OpenBve
 							}
 							if (currentVertex > tempVertices.Count)
 							{
-								Interface.AddMessage(MessageType.Warning, false, "Vertex index " + idx + " was greater than the available number of vertices in Face " + f + " at Line " + i);
+								Plugin.currentHost.AddMessage(MessageType.Warning, false, "Vertex index " + idx + " was greater than the available number of vertices in Face " + f + " at Line " + i);
 								continue;
 							}
 							newVertex.Coordinates = tempVertices[currentVertex - 1];
@@ -167,7 +166,7 @@ namespace OpenBve
 								{
 									if (!string.IsNullOrEmpty(faceArguments[1]))
 									{
-										Interface.AddMessage(MessageType.Warning, false, "Invalid Texture Co-ordinate index in Face " + f + " at Line " + i);
+										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Texture Co-ordinate index in Face " + f + " at Line " + i);
 									}
 									newVertex.TextureCoordinates = new Vector2();
 								}
@@ -186,7 +185,7 @@ namespace OpenBve
 									}
 									if (currentCoord > tempCoords.Count)
 									{
-										Interface.AddMessage(MessageType.Warning, false, "Texture Co-ordinate index " + currentCoord + " was greater than the available number of texture co-ordinates in Face " + f + " at Line " + i);
+										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Texture Co-ordinate index " + currentCoord + " was greater than the available number of texture co-ordinates in Face " + f + " at Line " + i);
 									}
 									else
 									{
@@ -205,7 +204,7 @@ namespace OpenBve
 								{
 									if (!string.IsNullOrEmpty(faceArguments[2]))
 									{
-										Interface.AddMessage(MessageType.Warning, false, "Invalid Vertex Normal index in Face " + f + " at Line " + i);
+										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Vertex Normal index in Face " + f + " at Line " + i);
 									}
 									normals.Add(new Vector3());
 								}
@@ -224,7 +223,7 @@ namespace OpenBve
 									}
 									if (currentNormal > tempNormals.Count)
 									{
-										Interface.AddMessage(MessageType.Warning, false, "Vertex Normal index " + currentNormal + " was greater than the available number of normals in Face " + f + " at Line " + i);
+										Plugin.currentHost.AddMessage(MessageType.Warning, false, "Vertex Normal index " + currentNormal + " was greater than the available number of normals in Face " + f + " at Line " + i);
 										normals.Add(new Vector3());
 									}
 									else
@@ -295,13 +294,13 @@ namespace OpenBve
 							}
 							if (m == TempMaterials.Length)
 							{
-								Interface.AddMessage(MessageType.Error, true, "Material " + Arguments[1] + " was not found.");
+								Plugin.currentHost.AddMessage(MessageType.Error, true, "Material " + Arguments[1] + " was not found.");
 								currentMaterial = -1;
 							}
 						}
 						break;
 					default:
-						Interface.AddMessage(MessageType.Warning, false, "Unrecognised command " + Arguments[0]);
+						Plugin.currentHost.AddMessage(MessageType.Warning, false, "Unrecognised command " + Arguments[0]);
 						break;
 				}
 			}
@@ -359,15 +358,15 @@ namespace OpenBve
 						double r = 1, g = 1, b = 1;
 						if (Arguments.Count >= 2 && !double.TryParse(Arguments[1], out r))
 						{
-							Interface.AddMessage(MessageType.Warning, false, "Invalid Ambient Color R in Material Definition for " + mm.Key);
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Ambient Color R in Material Definition for " + mm.Key);
 						}
 						if (Arguments.Count >= 3 && !double.TryParse(Arguments[2], out g))
 						{
-							Interface.AddMessage(MessageType.Warning, false, "Invalid Ambient Color G in Material Definition for " + mm.Key);
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Ambient Color G in Material Definition for " + mm.Key);
 						}
 						if (Arguments.Count >= 4 && !double.TryParse(Arguments[3], out b))
 						{
-							Interface.AddMessage(MessageType.Warning, false, "Invalid Ambient Color B in Material Definition for " + mm.Key);
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Ambient Color B in Material Definition for " + mm.Key);
 						}
 						r = 255 * r;
 						g = 255 * g;
@@ -385,7 +384,7 @@ namespace OpenBve
 						double a = 1;
 						if (Arguments.Count >= 2 && !double.TryParse(Arguments[1], out a))
 						{
-							Interface.AddMessage(MessageType.Warning, false, "Invalid Alpha in Material Definition for " + mm.Key);
+							Plugin.currentHost.AddMessage(MessageType.Warning, false, "Invalid Alpha in Material Definition for " + mm.Key);
 						}
 						mm.Color.A = (byte)((1 - a) * 255);
 						break;
@@ -398,7 +397,7 @@ namespace OpenBve
 						}
 						else
 						{
-							Interface.AddMessage(MessageType.Error, true, "Material texture file " + Arguments[Arguments.Count -1] + " was not found.");
+							Plugin.currentHost.AddMessage(MessageType.Error, true, "Material texture file " + Arguments[Arguments.Count -1] + " was not found.");
 						}
 						break;
 					
@@ -453,7 +452,7 @@ namespace OpenBve
 				Array.Resize<VertexTemplate>(ref Object.Mesh.Vertices, mv + Builder.Vertices.Count);
 				for (int i = 0; i < Builder.Vertices.Count; i++)
 				{
-					Object.Mesh.Vertices[mv + i] = Builder.Vertices[i];
+					Object.Mesh.Vertices[mv + i] = new Vertex((Vertex)Builder.Vertices[i]);
 				}
 				for (int i = 0; i < Builder.Faces.Count; i++)
 				{
@@ -474,11 +473,11 @@ namespace OpenBve
 						Texture tday;
 						if (Builder.Materials[i].TransparentColorUsed)
 						{
-							Textures.RegisterTexture(Builder.Materials[i].DaytimeTexture, new TextureParameters(null, new Color24(Builder.Materials[i].TransparentColor.R, Builder.Materials[i].TransparentColor.G, Builder.Materials[i].TransparentColor.B)), out tday);
+							Plugin.currentHost.RegisterTexture(Builder.Materials[i].DaytimeTexture, new TextureParameters(null, new Color24(Builder.Materials[i].TransparentColor.R, Builder.Materials[i].TransparentColor.G, Builder.Materials[i].TransparentColor.B)), out tday);
 						}
 						else
 						{
-							Textures.RegisterTexture(Builder.Materials[i].DaytimeTexture, out tday);
+							Plugin.currentHost.RegisterTexture(Builder.Materials[i].DaytimeTexture, new TextureParameters(null, null), out tday);
 						}
 						Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
 					}
@@ -492,11 +491,11 @@ namespace OpenBve
 						Texture tnight;
 						if (Builder.Materials[i].TransparentColorUsed)
 						{
-							Textures.RegisterTexture(Builder.Materials[i].NighttimeTexture, new TextureParameters(null, new Color24(Builder.Materials[i].TransparentColor.R, Builder.Materials[i].TransparentColor.G, Builder.Materials[i].TransparentColor.B)), out tnight);
+							Plugin.currentHost.RegisterTexture(Builder.Materials[i].NighttimeTexture, new TextureParameters(null, new Color24(Builder.Materials[i].TransparentColor.R, Builder.Materials[i].TransparentColor.G, Builder.Materials[i].TransparentColor.B)), out tnight);
 						}
 						else
 						{
-							Textures.RegisterTexture(Builder.Materials[i].NighttimeTexture, out tnight);
+							Plugin.currentHost.RegisterTexture(Builder.Materials[i].NighttimeTexture, new TextureParameters(null, null), out tnight);
 						}
 						Object.Mesh.Materials[mm + i].NighttimeTexture = tnight;
 					}

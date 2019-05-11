@@ -84,12 +84,15 @@ using System.Text;
 using System.IO;
 using System.Diagnostics;
 using System.Globalization;
-using OpenTK;
-using OpenTK.Graphics;
+using OpenBveApi.Colors;
+using OpenBveApi.Math;
 using ZlibWithDictionary;
-using VectorKey = System.Collections.Generic.KeyValuePair<double, OpenTK.Vector3>;
-using QuatKey = System.Collections.Generic.KeyValuePair<double, OpenTK.Quaternion>;
-using MatrixKey = System.Collections.Generic.KeyValuePair<double, OpenTK.Matrix4>;
+using VectorKey = System.Collections.Generic.KeyValuePair<double, OpenBveApi.Math.Vector3>;
+using QuatKey = System.Collections.Generic.KeyValuePair<double, OpenBveApi.Math.Quaternion>;
+using MatrixKey = System.Collections.Generic.KeyValuePair<double, OpenBveApi.Math.Matrix4D>;
+using Vector2 = OpenBveApi.Math.Vector2;
+using Vector3 = OpenBveApi.Math.Vector3;
+
 
 namespace AssimpNET.X
 {
@@ -480,29 +483,29 @@ namespace AssimpNET.X
 			}
 		}
 
-		protected void ParseDataObjectTransformationMatrix(out Matrix4 matrix)
+		protected void ParseDataObjectTransformationMatrix(out Matrix4D matrix)
 		{
 			// read header, we're not interested if it has a name
 			ReadHeadOfDataObject();
 
 			// read its components
-			matrix = new Matrix4();
-			matrix.M11 = ReadFloat();
-			matrix.M21 = ReadFloat();
-			matrix.M31 = ReadFloat();
-			matrix.M41 = ReadFloat();
-			matrix.M12 = ReadFloat();
-			matrix.M22 = ReadFloat();
-			matrix.M32 = ReadFloat();
-			matrix.M42 = ReadFloat();
-			matrix.M13 = ReadFloat();
-			matrix.M23 = ReadFloat();
-			matrix.M33 = ReadFloat();
-			matrix.M43 = ReadFloat();
-			matrix.M14 = ReadFloat();
-			matrix.M24 = ReadFloat();
-			matrix.M34 = ReadFloat();
-			matrix.M44 = ReadFloat();
+			matrix = new Matrix4D();
+			matrix.Row0.X = ReadFloat();
+			matrix.Row1.X = ReadFloat();
+			matrix.Row2.X = ReadFloat();
+			matrix.Row3.X = ReadFloat();
+			matrix.Row0.Y = ReadFloat();
+			matrix.Row1.Y = ReadFloat();
+			matrix.Row2.Y = ReadFloat();
+			matrix.Row3.Y = ReadFloat();
+			matrix.Row0.Z = ReadFloat();
+			matrix.Row1.Z = ReadFloat();
+			matrix.Row2.Z = ReadFloat();
+			matrix.Row3.Z = ReadFloat();
+			matrix.Row0.W = ReadFloat();
+			matrix.Row1.W = ReadFloat();
+			matrix.Row2.W = ReadFloat();
+			matrix.Row3.W = ReadFloat();
 
 			// trailing symbols
 			CheckForSemicolon();
@@ -627,22 +630,22 @@ namespace AssimpNET.X
 			}
 
 			// read matrix offset
-			bone.OffsetMatrix.M11 = ReadFloat();
-			bone.OffsetMatrix.M21 = ReadFloat();
-			bone.OffsetMatrix.M31 = ReadFloat();
-			bone.OffsetMatrix.M41 = ReadFloat();
-			bone.OffsetMatrix.M12 = ReadFloat();
-			bone.OffsetMatrix.M22 = ReadFloat();
-			bone.OffsetMatrix.M32 = ReadFloat();
-			bone.OffsetMatrix.M42 = ReadFloat();
-			bone.OffsetMatrix.M13 = ReadFloat();
-			bone.OffsetMatrix.M23 = ReadFloat();
-			bone.OffsetMatrix.M33 = ReadFloat();
-			bone.OffsetMatrix.M43 = ReadFloat();
-			bone.OffsetMatrix.M14 = ReadFloat();
-			bone.OffsetMatrix.M24 = ReadFloat();
-			bone.OffsetMatrix.M34 = ReadFloat();
-			bone.OffsetMatrix.M44 = ReadFloat();
+			bone.OffsetMatrix.Row0.X = ReadFloat();
+			bone.OffsetMatrix.Row1.X = ReadFloat();
+			bone.OffsetMatrix.Row2.X = ReadFloat();
+			bone.OffsetMatrix.Row3.X = ReadFloat();
+			bone.OffsetMatrix.Row0.Y = ReadFloat();
+			bone.OffsetMatrix.Row1.Y = ReadFloat();
+			bone.OffsetMatrix.Row2.Y = ReadFloat();
+			bone.OffsetMatrix.Row3.Y = ReadFloat();
+			bone.OffsetMatrix.Row0.Z = ReadFloat();
+			bone.OffsetMatrix.Row1.Z = ReadFloat();
+			bone.OffsetMatrix.Row2.Z = ReadFloat();
+			bone.OffsetMatrix.Row3.Z = ReadFloat();
+			bone.OffsetMatrix.Row0.W = ReadFloat();
+			bone.OffsetMatrix.Row1.W = ReadFloat();
+			bone.OffsetMatrix.Row2.W = ReadFloat();
+			bone.OffsetMatrix.Row3.W = ReadFloat();
 
 			mesh.Bones.Add(bone);
 
@@ -754,7 +757,7 @@ namespace AssimpNET.X
 				ThrowException("Vertex color count does not match vertex count");
 			}
 
-			List<Color4> colors = Enumerable.Repeat(new Color4(0.0f, 0.0f, 0.0f, 1.0f), (int)numColors).ToList();
+			List<Color128> colors = Enumerable.Repeat(new Color128(0.0f, 0.0f, 0.0f, 1.0f), (int)numColors).ToList();
 			for (int a = 0; a < (int)numColors; a++)
 			{
 				uint index = ReadInt();
@@ -1064,23 +1067,23 @@ namespace AssimpNET.X
 							}
 
 							// read matrix
-							Matrix4 matrix = new Matrix4();
-							matrix.M11 = ReadFloat();
-							matrix.M21 = ReadFloat();
-							matrix.M31 = ReadFloat();
-							matrix.M41 = ReadFloat();
-							matrix.M12 = ReadFloat();
-							matrix.M22 = ReadFloat();
-							matrix.M32 = ReadFloat();
-							matrix.M42 = ReadFloat();
-							matrix.M13 = ReadFloat();
-							matrix.M23 = ReadFloat();
-							matrix.M33 = ReadFloat();
-							matrix.M43 = ReadFloat();
-							matrix.M14 = ReadFloat();
-							matrix.M24 = ReadFloat();
-							matrix.M34 = ReadFloat();
-							matrix.M44 = ReadFloat();
+							Matrix4D matrix = new Matrix4D();
+							matrix.Row0.X = ReadFloat();
+							matrix.Row0.Y = ReadFloat();
+							matrix.Row0.Z = ReadFloat();
+							matrix.Row0.W = ReadFloat();
+							matrix.Row1.X = ReadFloat();
+							matrix.Row1.Y = ReadFloat();
+							matrix.Row1.Z = ReadFloat();
+							matrix.Row1.W = ReadFloat();
+							matrix.Row2.X = ReadFloat();
+							matrix.Row2.Y = ReadFloat();
+							matrix.Row2.Z = ReadFloat();
+							matrix.Row2.W = ReadFloat();
+							matrix.Row3.X = ReadFloat();
+							matrix.Row3.Y = ReadFloat();
+							matrix.Row3.Z = ReadFloat();
+							matrix.Row3.W = ReadFloat();
 
 							MatrixKey key = new MatrixKey((double)time, matrix);
 							animBone.TrafoKeys.Add(key);
@@ -1664,9 +1667,9 @@ namespace AssimpNET.X
 			return vector;
 		}
 
-		protected Color4 ReadRGBA()
+		protected Color128 ReadRGBA()
 		{
-			Color4 color;
+			Color128 color;
 			color.R = ReadFloat();
 			color.G = ReadFloat();
 			color.B = ReadFloat();
@@ -1676,9 +1679,9 @@ namespace AssimpNET.X
 			return color;
 		}
 
-		protected Color4 ReadRGB()
+		protected Color128 ReadRGB()
 		{
-			Color4 color;
+			Color128 color;
 			color.R = ReadFloat();
 			color.G = ReadFloat();
 			color.B = ReadFloat();
