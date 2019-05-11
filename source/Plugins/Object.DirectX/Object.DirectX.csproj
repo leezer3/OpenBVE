@@ -33,11 +33,18 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ionic.Zlib">
+      <HintPath>..\..\..\dependencies\Ionic.Zlib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\Block.cs" />
+    <Compile Include="Helpers\MsZip.cs" />
+    <Compile Include="Helpers\Templates.cs" />
+    <Compile Include="Helpers\TokenID.cs" />
     <Compile Include="Parsers\AssimpXParser.cs" />
     <Compile Include="Parsers\NewXParser.cs" />
     <Compile Include="Parsers\XObjectParser.cs" />
@@ -53,11 +60,6 @@
     <ProjectReference Include="..\..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-a564-40a9014dfa5f}</Project>
       <Name>OpenBveApi</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\Formats.DirectX\Formats.DirectX.csproj">
-      <Project>{b8955ca6-e002-48a6-8fbf-90c2084c3508}</Project>
-      <Name>Formats.DirectX</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
