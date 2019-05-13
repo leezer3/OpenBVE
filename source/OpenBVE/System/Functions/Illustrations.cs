@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using OpenBveApi;
 using OpenBveApi.Interface;
+using SignalManager;
 
 namespace OpenBve {
 	internal static class Illustrations {
@@ -171,7 +172,7 @@ namespace OpenBve {
 							// if StationStartEvent found, look for a change in ATS/ATC control;
 							// if there is a change, draw all previous track elements
 							// with colour for the previous control state
-							if (Game.Stations[e.StationIndex].SafetySystem == Game.SafetySystem.Atc)
+							if (Game.Stations[e.StationIndex].SafetySystem == SafetySystem.Atc)
 							{
 								if (!atc)
 								{

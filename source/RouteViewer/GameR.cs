@@ -13,6 +13,7 @@ using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBve.SignalManager;
 using OpenBveApi.Objects;
+using SignalManager;
 using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
 namespace OpenBve {
@@ -188,11 +189,7 @@ namespace OpenBve {
 			internal double BackwardTolerance;
 			internal int Cars;
 		}
-		internal enum SafetySystem {
-			Any = -1,
-			Ats = 0,
-			Atc = 1
-		}
+
 		internal class Station : OpenBveApi.Runtime.Station {
 			internal SoundHandle ArrivalSoundBuffer;
 			internal SoundHandle DepartureSoundBuffer;

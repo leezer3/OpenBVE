@@ -293,15 +293,15 @@ namespace OpenBve
 		{
 			if (train.Plugin != null)
 			{
-				OpenBveApi.Runtime.SignalData[] data = new OpenBveApi.Runtime.SignalData[16];
+				SignalData[] data = new SignalData[16];
 				int count = 0;
 				int start = train.CurrentSectionIndex >= 0 ? train.CurrentSectionIndex : 0;
 				for (int i = start; i < Sections.Length; i++)
 				{
-					OpenBveApi.Runtime.SignalData signal = GetPluginSignal(train, i);
+					SignalData signal = GetPluginSignal(train, i);
 					if (data.Length == count)
 					{
-						Array.Resize<OpenBveApi.Runtime.SignalData>(ref data, data.Length << 1);
+						Array.Resize<SignalData>(ref data, data.Length << 1);
 					}
 					data[count] = signal;
 					count++;
@@ -310,7 +310,7 @@ namespace OpenBve
 						break;
 					}
 				}
-				Array.Resize<OpenBveApi.Runtime.SignalData>(ref data, count);
+				Array.Resize<SignalData>(ref data, count);
 				train.Plugin.UpdateSignals(data);
 			}
 		}

@@ -9,6 +9,7 @@ using OpenBveApi.Objects;
 using OpenBveApi.FunctionScripting;
 using OpenBve.SignalManager;
 using OpenBveApi.Trains;
+using SignalManager;
 
 namespace OpenBve
 {
@@ -1666,7 +1667,7 @@ namespace OpenBve
 							if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationStartEvent)
 							{
 								TrackManager.StationStartEvent station = (TrackManager.StationStartEvent)TrackManager.Tracks[0].Elements[i].Events[j];
-								if (Game.Stations[station.StationIndex].SafetySystem == Game.SafetySystem.Atc)
+								if (Game.Stations[station.StationIndex].SafetySystem == SafetySystem.Atc)
 								{
 									Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.Tracks[0].Elements[i].Events, TrackManager.Tracks[0].Elements[i].Events.Length + 2);
 									TrackManager.Tracks[0].Elements[i].Events[TrackManager.Tracks[0].Elements[i].Events.Length - 2] = new TrackManager.TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcTrackStatus, 0, 0, false);
@@ -1680,7 +1681,7 @@ namespace OpenBve
 							if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationStartEvent)
 							{
 								TrackManager.StationStartEvent station = (TrackManager.StationStartEvent)TrackManager.Tracks[0].Elements[i].Events[j];
-								if (Game.Stations[station.StationIndex].SafetySystem == Game.SafetySystem.Ats)
+								if (Game.Stations[station.StationIndex].SafetySystem == SafetySystem.Ats)
 								{
 									Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.Tracks[0].Elements[i].Events, TrackManager.Tracks[0].Elements[i].Events.Length + 2);
 									TrackManager.Tracks[0].Elements[i].Events[TrackManager.Tracks[0].Elements[i].Events.Length - 2] = new TrackManager.TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcTrackStatus, 2, 0, false);
@@ -1690,13 +1691,13 @@ namespace OpenBve
 							else if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationEndEvent)
 							{
 								TrackManager.StationEndEvent station = (TrackManager.StationEndEvent)TrackManager.Tracks[0].Elements[i].Events[j];
-								if (Game.Stations[station.StationIndex].SafetySystem == Game.SafetySystem.Atc)
+								if (Game.Stations[station.StationIndex].SafetySystem == SafetySystem.Atc)
 								{
 									Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.Tracks[0].Elements[i].Events, TrackManager.Tracks[0].Elements[i].Events.Length + 2);
 									TrackManager.Tracks[0].Elements[i].Events[TrackManager.Tracks[0].Elements[i].Events.Length - 2] = new TrackManager.TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcTrackStatus, 1, 0, false);
 									TrackManager.Tracks[0].Elements[i].Events[TrackManager.Tracks[0].Elements[i].Events.Length - 1] = new TrackManager.TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcTrackStatus, 2, 0, false);
 								}
-								else if (Game.Stations[station.StationIndex].SafetySystem == Game.SafetySystem.Ats)
+								else if (Game.Stations[station.StationIndex].SafetySystem == SafetySystem.Ats)
 								{
 									Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.Tracks[0].Elements[i].Events, TrackManager.Tracks[0].Elements[i].Events.Length + 2);
 									TrackManager.Tracks[0].Elements[i].Events[TrackManager.Tracks[0].Elements[i].Events.Length - 2] = new TrackManager.TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcTrackStatus, 3, 0, false);

@@ -12,6 +12,7 @@ using OpenBveApi.Objects;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
 using OpenBveApi.Runtime;
+using SignalManager;
 
 namespace OpenBve {
 	internal class CsvRwRouteParser {
@@ -4113,7 +4114,7 @@ namespace OpenBve {
 										Game.Stations[CurrentStation].ForceStopSignal = stop == 1;
 										Game.Stations[CurrentStation].OpenLeftDoors = door < 0.0 | doorboth;
 										Game.Stations[CurrentStation].OpenRightDoors = door > 0.0 | doorboth;
-										Game.Stations[CurrentStation].SafetySystem = device == 1 ? Game.SafetySystem.Atc : Game.SafetySystem.Ats;
+										Game.Stations[CurrentStation].SafetySystem = device == 1 ? SafetySystem.Atc : SafetySystem.Ats;
 										Game.Stations[CurrentStation].Stops = new Game.StationStop[] { };
 										Game.Stations[CurrentStation].PassengerRatio = 0.01 * jam;
 										Game.Stations[CurrentStation].TimetableDaytimeTexture = tdt;
@@ -4227,7 +4228,7 @@ namespace OpenBve {
 										Game.Stations[CurrentStation].ForceStopSignal = stop == 1;
 										Game.Stations[CurrentStation].OpenLeftDoors = true;
 										Game.Stations[CurrentStation].OpenRightDoors = true;
-										Game.Stations[CurrentStation].SafetySystem = device == 1 ? Game.SafetySystem.Atc : Game.SafetySystem.Ats;
+										Game.Stations[CurrentStation].SafetySystem = device == 1 ? SafetySystem.Atc : SafetySystem.Ats;
 										Game.Stations[CurrentStation].Stops = new Game.StationStop[] { };
 										Game.Stations[CurrentStation].PassengerRatio = 1.0;
 										Game.Stations[CurrentStation].TimetableDaytimeTexture = -1;

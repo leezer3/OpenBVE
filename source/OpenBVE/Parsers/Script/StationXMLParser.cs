@@ -6,6 +6,7 @@ using System.Linq;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
+using SignalManager;
 
 namespace OpenBve
 {
@@ -154,15 +155,15 @@ namespace OpenBve
 										{
 											case "0":
 											case "ATS":
-												station.SafetySystem = Game.SafetySystem.Ats;
+												station.SafetySystem = SafetySystem.Ats;
 												break;
 											case "1":
 											case "ATC":
-												station.SafetySystem = Game.SafetySystem.Atc;
+												station.SafetySystem = SafetySystem.Atc;
 												break;
 											default:
 												Interface.AddMessage(MessageType.Error, false, "An invalid station safety system was specified in XML file " + fileName);
-												station.SafetySystem = Game.SafetySystem.Ats;
+												station.SafetySystem = SafetySystem.Ats;
 												break;
 										}
 										break;

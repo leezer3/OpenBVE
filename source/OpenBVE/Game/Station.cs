@@ -1,6 +1,7 @@
 ﻿using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
+using SignalManager;
 
 namespace OpenBve
 {
@@ -17,17 +18,6 @@ namespace OpenBve
 			internal double BackwardTolerance;
 			/// <summary>The number of cars this stop point applies to, or 0 for all</summary>
 			internal int Cars;
-		}
-
-		/// <summary>Defines the possible safety system to be used (Only currently applies to the default JA safety systems)</summary>
-		internal enum SafetySystem
-		{
-			/// <summary>Any available safety system should be used (Either that from the previous station if defined or NONE)</summary>
-			Any = -1,
-			/// <summary>ATS should be used- The track is NOT fitted with ATC</summary>
-			Ats = 0,
-			/// <summary>ATC should be used</summary>
-			Atc = 1
 		}
 		
 		internal class Station : OpenBveApi.Runtime.Station
