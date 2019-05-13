@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
 
@@ -55,7 +56,7 @@ namespace OpenBve
 				AnimatedWorldObjectsUsed++;
 			}
 
-			internal override void Update(double TimeElapsed, bool ForceUpdate)
+			public override void Update(double TimeElapsed, bool ForceUpdate)
 			{
 				const double extraRadius = 10.0;
 				const double Radius = 25.0;

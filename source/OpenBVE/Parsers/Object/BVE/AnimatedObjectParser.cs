@@ -23,7 +23,7 @@ namespace OpenBve
 			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
 			{
 				Objects = new ObjectManager.AnimatedObject[4],
-				Sounds = new ObjectManager.WorldObject[4]
+				Sounds = new WorldObject[4]
 			};
 			int ObjectCount = 0;
 			int SoundCount = 0;
@@ -916,7 +916,7 @@ namespace OpenBve
 								i++;
 								if (Result.Sounds.Length >= SoundCount)
 								{
-									Array.Resize<ObjectManager.WorldObject>(ref Result.Sounds, Result.Sounds.Length << 1);
+									Array.Resize<WorldObject>(ref Result.Sounds, Result.Sounds.Length << 1);
 								}
 								Vector3 Position = Vector3.Zero;
 								string fileName = null;

@@ -15,7 +15,7 @@ namespace OpenBve
 			/// <summary>The curve radius at the object's track position</summary>
 			internal double Radius;
 
-			internal override void Update(double TimeElapsed, bool ForceUpdate)
+			public override void Update(double TimeElapsed, bool ForceUpdate)
 			{
 				const double extraRadius = 10.0;
 				double z = Object.TranslateZFunction == null ? 0.0 : Object.TranslateZFunction.LastResult;

@@ -703,17 +703,16 @@ namespace OpenBve
         
 
         // animated world object
-        internal class AnimatedWorldObject
+        internal class AnimatedWorldObject : WorldObject
         {
-            internal Vector3 Position;
-            internal double TrackPosition;
-            internal Vector3 Direction;
-            internal Vector3 Up;
-            internal Vector3 Side;
             internal AnimatedObject Object;
             internal int SectionIndex;
             internal double Radius;
-            internal bool Visible;
+
+            public override void Update(double TimeElapsed, bool ForceUpdate)
+            {
+	            throw new NotImplementedException();
+            }
         }
         internal static AnimatedWorldObject[] AnimatedWorldObjects = new AnimatedWorldObject[4];
         internal static int AnimatedWorldObjectsUsed = 0;
