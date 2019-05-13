@@ -1104,11 +1104,6 @@ namespace OpenBve
             return a;
         }
         
-        private static double Mod(double a, double b)
-        {
-            return a - b * Math.Floor(a / b);
-        }
-
         // create dynamic object
         internal static int CreateDynamicObject()
         {

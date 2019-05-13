@@ -4,7 +4,6 @@ using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
-using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
 
@@ -852,12 +851,17 @@ namespace OpenBve {
 		}
 		internal static int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness) {
 			int a = ObjectsUsed;
-			if (a >= Objects.Length) {
+			if (a >= Objects.Length)
+			{
 				Array.Resize<StaticObject>(ref Objects, Objects.Length << 1);
 			}
-			ApplyStaticObjectData(ref Objects[a], Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
-			for (int i = 0; i < Prototype.Mesh.Faces.Length; i++) {
-				switch (Prototype.Mesh.Faces[i].Flags & MeshFace.FaceTypeMask) {
+
+			Objects[a] = new StaticObject(Program.CurrentHost);
+			Objects[a].ApplyData(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness, 600);
+			for (int i = 0; i < Prototype.Mesh.Faces.Length; i++)
+			{
+				switch (Prototype.Mesh.Faces[i].Flags & MeshFace.FaceTypeMask)
+				{
 					case MeshFace.FaceTypeTriangles:
 						Game.InfoTotalTriangles++;
 						break;
@@ -878,94 +882,7 @@ namespace OpenBve {
 			ObjectsUsed++;
 			return a;
 		}
-		internal static void ApplyStaticObjectData(ref StaticObject Object, StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness) {
-			Object = new StaticObject(Program.CurrentHost);
-			Object.StartingDistance = float.MaxValue;
-			Object.EndingDistance = float.MinValue;
-			// bool brightnesschange = Brightness != 1.0;
-			// vertices
-			Object.Mesh.Vertices = new VertexTemplate[Prototype.Mesh.Vertices.Length];
-			for (int j = 0; j < Prototype.Mesh.Vertices.Length; j++) {
-				if (Prototype.Mesh.Vertices[j] is ColoredVertex)
-				{
-					Object.Mesh.Vertices[j] = new ColoredVertex((ColoredVertex)Prototype.Mesh.Vertices[j]);
-				}
-				else
-				{
-					Object.Mesh.Vertices[j] = new Vertex((Vertex)Prototype.Mesh.Vertices[j]);
-				}
-				if (AccurateObjectDisposal) {
-					Object.Mesh.Vertices[j].Coordinates.Rotate(AuxTransformation);
-					if (Object.Mesh.Vertices[j].Coordinates.Z < Object.StartingDistance) {
-						Object.StartingDistance = (float)Object.Mesh.Vertices[j].Coordinates.Z;
-					}
-					if (Object.Mesh.Vertices[j].Coordinates.Z > Object.EndingDistance) {
-						Object.EndingDistance = (float)Object.Mesh.Vertices[j].Coordinates.Z;
-					}
-					Object.Mesh.Vertices[j].Coordinates = Prototype.Mesh.Vertices[j].Coordinates;
-				}
-				Object.Mesh.Vertices[j].Coordinates.Rotate(AuxTransformation);
-				Object.Mesh.Vertices[j].Coordinates.Rotate(BaseTransformation);
-				Object.Mesh.Vertices[j].Coordinates.X += Position.X;
-				Object.Mesh.Vertices[j].Coordinates.Y += Position.Y;
-				Object.Mesh.Vertices[j].Coordinates.Z += Position.Z;
-			}
-			if (AccurateObjectDisposal) {
-				Object.StartingDistance += (float)AccurateObjectDisposalZOffset;
-				Object.EndingDistance += (float)AccurateObjectDisposalZOffset;
-			}
-			// faces
-			Object.Mesh.Faces = new MeshFace[Prototype.Mesh.Faces.Length];
-			for (int j = 0; j < Prototype.Mesh.Faces.Length; j++) {
-				Object.Mesh.Faces[j].Flags = Prototype.Mesh.Faces[j].Flags;
-				Object.Mesh.Faces[j].Material = Prototype.Mesh.Faces[j].Material;
-				Object.Mesh.Faces[j].Vertices = new MeshFaceVertex[Prototype.Mesh.Faces[j].Vertices.Length];
-				for (int k = 0; k < Prototype.Mesh.Faces[j].Vertices.Length; k++) {
-					Object.Mesh.Faces[j].Vertices[k] = Prototype.Mesh.Faces[j].Vertices[k];
-					double nx = Object.Mesh.Faces[j].Vertices[k].Normal.X;
-					double ny = Object.Mesh.Faces[j].Vertices[k].Normal.Y;
-					double nz = Object.Mesh.Faces[j].Vertices[k].Normal.Z;
-					if (nx * nx + ny * ny + nz * nz != 0.0) {
-						Object.Mesh.Faces[j].Vertices[k].Normal.Rotate(AuxTransformation);
-						Object.Mesh.Faces[j].Vertices[k].Normal.Rotate(BaseTransformation);
-					}
-				}
-			}
-			// materials
-			Object.Mesh.Materials = new MeshMaterial[Prototype.Mesh.Materials.Length];
-			for (int j = 0; j < Prototype.Mesh.Materials.Length; j++) {
-				Object.Mesh.Materials[j] = Prototype.Mesh.Materials[j];
-				Object.Mesh.Materials[j].Color.R = (byte)Math.Round((double)Prototype.Mesh.Materials[j].Color.R * Brightness);
-				Object.Mesh.Materials[j].Color.G = (byte)Math.Round((double)Prototype.Mesh.Materials[j].Color.G * Brightness);
-				Object.Mesh.Materials[j].Color.B = (byte)Math.Round((double)Prototype.Mesh.Materials[j].Color.B * Brightness);
-			}
-			const double minBlockLength = 20.0;
-			if (BlockLength < minBlockLength) {
-				BlockLength = BlockLength * Math.Ceiling(minBlockLength / BlockLength);
-			}
-			if (AccurateObjectDisposal) {
-				Object.StartingDistance += (float)TrackPosition;
-				Object.EndingDistance += (float)TrackPosition;
-				double z = BlockLength * Math.Floor(TrackPosition / BlockLength);
-				StartingDistance = Math.Min(z - BlockLength, (double)Object.StartingDistance);
-				EndingDistance = Math.Max(z + 2.0 * BlockLength, (double)Object.EndingDistance);
-				Object.StartingDistance = (float)(BlockLength * Math.Floor(StartingDistance / BlockLength));
-				Object.EndingDistance = (float)(BlockLength * Math.Ceiling(EndingDistance / BlockLength));
-			} else {
-				Object.StartingDistance = (float)StartingDistance;
-				Object.EndingDistance = (float)EndingDistance;
-			}
-			if (BlockLength != 0.0) {
-				checked {
-					Object.GroupIndex = (short)Mod(Math.Floor(Object.StartingDistance / BlockLength), Math.Ceiling(World.BackgroundImageDistance / BlockLength));
-				}
-			}
-		}
 		
-		private static double Mod(double a, double b) {
-			return a - b * Math.Floor(a / b);
-		}
-
 		// create dynamic object
 		internal static int CreateDynamicObject() {
 			int a = ObjectsUsed;
@@ -977,51 +894,7 @@ namespace OpenBve {
 			ObjectsUsed++;
 			return a;
 		}
-
-		// clone object
-		internal static StaticObject CloneObject(StaticObject Prototype, Texture DaytimeTexture, Texture NighttimeTexture) {
-			if (Prototype == null) return null;
-			StaticObject Result = new StaticObject(Program.CurrentHost);
-			Result.StartingDistance = Prototype.StartingDistance;
-			Result.EndingDistance = Prototype.EndingDistance;
-			Result.Dynamic = Prototype.Dynamic;
-			// vertices
-			Result.Mesh.Vertices = new VertexTemplate[Prototype.Mesh.Vertices.Length];
-			for (int j = 0; j < Prototype.Mesh.Vertices.Length; j++) {
-				if (Result.Mesh.Vertices[j] is ColoredVertex)
-				{
-					Result.Mesh.Vertices[j] = new ColoredVertex((ColoredVertex)Prototype.Mesh.Vertices[j]);
-				}
-				else
-				{
-					Result.Mesh.Vertices[j] = new Vertex((Vertex)Prototype.Mesh.Vertices[j]);
-				}
-
-			}
-			// faces
-			Result.Mesh.Faces = new MeshFace[Prototype.Mesh.Faces.Length];
-			for (int j = 0; j < Prototype.Mesh.Faces.Length; j++) {
-				Result.Mesh.Faces[j].Flags = Prototype.Mesh.Faces[j].Flags;
-				Result.Mesh.Faces[j].Material = Prototype.Mesh.Faces[j].Material;
-				Result.Mesh.Faces[j].Vertices = new MeshFaceVertex[Prototype.Mesh.Faces[j].Vertices.Length];
-				for (int k = 0; k < Prototype.Mesh.Faces[j].Vertices.Length; k++) {
-					Result.Mesh.Faces[j].Vertices[k] = Prototype.Mesh.Faces[j].Vertices[k];
-				}
-			}
-			// materials
-			Result.Mesh.Materials = new MeshMaterial[Prototype.Mesh.Materials.Length];
-			for (int j = 0; j < Prototype.Mesh.Materials.Length; j++) {
-				Result.Mesh.Materials[j] = Prototype.Mesh.Materials[j];
-				if (DaytimeTexture != null) {
-					Result.Mesh.Materials[j].DaytimeTexture = DaytimeTexture;
-				}
-				if (NighttimeTexture != null) {
-					Result.Mesh.Materials[j].NighttimeTexture = NighttimeTexture;
-				}
-			}
-			return Result;
-		}
-
+		
 		// finish creating objects
 		internal static void FinishCreatingObjects() {
 			Array.Resize<StaticObject>(ref Objects, ObjectsUsed);

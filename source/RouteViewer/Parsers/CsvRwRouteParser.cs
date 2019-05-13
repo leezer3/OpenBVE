@@ -6211,15 +6211,15 @@ namespace OpenBve {
 												bool qs = l < b4sd.SignalTextures.Length && b4sd.SignalTextures[l] != null;
 												bool qg = l < b4sd.GlowTextures.Length && b4sd.GlowTextures[l] != null;
 												if (qs & qg) {
-													StaticObject so = ObjectManager.CloneObject(b4sd.BaseObject, b4sd.SignalTextures[l], null);
-													StaticObject go = ObjectManager.CloneObject(b4sd.GlowObject, b4sd.GlowTextures[l], null);
+													StaticObject so = b4sd.BaseObject.Clone(b4sd.SignalTextures[l], null);
+													StaticObject go = b4sd.GlowObject.Clone(b4sd.GlowTextures[l], null);
 													so.JoinObjects(go);
 													aoc.Objects[0].States[zi].Object = so;
 												} else if (qs) {
-													StaticObject so = ObjectManager.CloneObject(b4sd.BaseObject, b4sd.SignalTextures[l], null);
+													StaticObject so = b4sd.BaseObject.Clone(b4sd.SignalTextures[l], null);
 													aoc.Objects[0].States[zi].Object = so;
 												} else if (qg) {
-													StaticObject go = ObjectManager.CloneObject(b4sd.GlowObject, b4sd.GlowTextures[l], null);
+													StaticObject go = b4sd.GlowObject.Clone(b4sd.GlowTextures[l], null);
 													aoc.Objects[0].States[zi].Object = go;
 												}
 												if (qs | qg) {
