@@ -408,7 +408,7 @@ namespace OpenBve
 				case "stopnone":
 				{
 					int s = TrainManager.PlayerTrain.Station;
-					if (s >= 0 && Game.PlayerStopsAtStation(s) && Interface.CurrentOptions.GameMode != Interface.GameMode.Expert)
+					if (s >= 0 && Game.Stations[s].PlayerStops() && Interface.CurrentOptions.GameMode != Interface.GameMode.Expert)
 					{
 						bool cond;
 						if (Command == "stopleft")
@@ -446,7 +446,7 @@ namespace OpenBve
 				case "stopnonetick":
 				{
 					int s = TrainManager.PlayerTrain.Station;
-					if (s >= 0 && Game.PlayerStopsAtStation(s) && Interface.CurrentOptions.GameMode != Interface.GameMode.Expert)
+					if (s >= 0 && Game.Stations[s].PlayerStops() && Interface.CurrentOptions.GameMode != Interface.GameMode.Expert)
 					{
 						int c = Game.Stations[s].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
 						if (c >= 0)
@@ -613,7 +613,7 @@ namespace OpenBve
 						i = TrainManager.PlayerTrain.LastStation;
 					}
 					int n = Game.Stations[i].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
-					double p0 = TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition - TrainManager.PlayerTrain.Cars[0].FrontAxle.Position + 0.5 * TrainManager.PlayerTrain.Cars[0].Length;
+					double p0 = TrainManager.PlayerTrain.FrontCarTrackPosition();
 					double p1;
 					if (Game.Stations[i].Stops.Length > 0)
 					{
@@ -626,7 +626,7 @@ namespace OpenBve
 					double m = p1 - p0;
 					if (OptionDistanceToNextStation == DistanceToNextStationDisplayMode.Km)
 					{
-						if (Game.PlayerStopsAtStation(i))
+						if (Game.Stations[i].PlayerStops())
 						{
 							t = "Stop: ";
 							if (Math.Abs(m) <= 10.0)
@@ -650,7 +650,7 @@ namespace OpenBve
 					else if (OptionDistanceToNextStation == DistanceToNextStationDisplayMode.Mile)
 					{
 						m /= 1609.34;
-						if (Game.PlayerStopsAtStation(i))
+						if (Game.Stations[i].PlayerStops())
 						{
 							t = "Stop: ";
 						}
@@ -665,7 +665,7 @@ namespace OpenBve
 					else
 					{
 						m /= 1609.34;
-						if (Game.PlayerStopsAtStation(i))
+						if (Game.Stations[i].PlayerStops())
 						{
 							t = "Stop: ";
 						}

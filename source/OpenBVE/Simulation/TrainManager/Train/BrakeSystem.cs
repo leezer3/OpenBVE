@@ -316,7 +316,6 @@ namespace OpenBve
 					}
 				}
 			}
-
 		}
 	}
 }

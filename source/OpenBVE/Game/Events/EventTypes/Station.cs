@@ -123,13 +123,13 @@ namespace OpenBve
 						{
 							if (Train == TrainManager.PlayerTrain)
 							{
-								if (Game.PlayerStopsAtStation(StationIndex) & TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Pending)
+								if (Game.Stations[StationIndex].PlayerStops() & TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Pending)
 								{
 									string s = Translations.GetInterfaceString("message_station_passed");
 									s = s.Replace("[name]", Game.Stations[StationIndex].Name);
 									Game.AddMessage(s, MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Orange, Game.SecondsSinceMidnight + 10.0, null);
 								}
-								else if (Game.PlayerStopsAtStation(StationIndex) & TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Boarding)
+								else if (Game.Stations[StationIndex].PlayerStops() & TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Boarding)
 								{
 									string s = Translations.GetInterfaceString("message_station_passed_boarding");
 									s = s.Replace("[name]", Game.Stations[StationIndex].Name);

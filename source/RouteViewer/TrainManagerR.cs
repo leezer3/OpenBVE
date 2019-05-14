@@ -267,7 +267,7 @@ namespace OpenBve {
 				if (t != 0.0)
 				{
 					t = 1.0 / Math.Sqrt(t);
-					Direction.X *= t; Direction.Y *= t; Direction.Z *= t;
+					Direction *= t;
 					double sx = Direction.Z * Up.Y - Direction.Y * Up.Z;
 					double sy = Direction.X * Up.Z - Direction.Z * Up.X;
 					double sz = Direction.Y * Up.X - Direction.X * Up.Y;
@@ -406,6 +406,15 @@ namespace OpenBve {
 			internal Car[] Cars;
 			internal TrainSpecs Specs;
 			internal int CurrentSectionIndex;
+			public override double FrontCarTrackPosition()
+			{
+				return Cars[0].FrontAxle.Follower.TrackPosition - Cars[0].FrontAxlePosition + 0.5 * Cars[0].Length;
+			}
+
+			public override double RearCarTrackPosition()
+			{
+				return Cars[Cars.Length - 1].RearAxle.Follower.TrackPosition - Cars[Cars.Length - 1].RearAxlePosition - 0.5 * Cars[Cars.Length - 1].Length;
+			}
 		}
 
 #pragma warning restore 0649

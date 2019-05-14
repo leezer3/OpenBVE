@@ -662,7 +662,7 @@ namespace OpenBve
 			Game.CurrentScore.Maximum = 0;
 			for (int i = 0; i < Game.Stations.Length; i++)
 			{
-				if (i != PlayerFirstStationIndex & Game.PlayerStopsAtStation(i))
+				if (i != PlayerFirstStationIndex & Game.Stations[i].PlayerStops())
 				{
 					if (i == 0 || Game.Stations[i - 1].Type != StationType.ChangeEnds)
 					{

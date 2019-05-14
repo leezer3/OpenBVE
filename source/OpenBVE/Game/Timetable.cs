@@ -80,7 +80,7 @@ namespace OpenBve {
 
 							Stations[n].Name = Game.Stations[sse.StationIndex].Name;
 							Stations[n].NameJapanese = Game.Stations[sse.StationIndex].Name.IsJapanese();
-							Stations[n].Pass = !Game.PlayerStopsAtStation(sse.StationIndex);
+							Stations[n].Pass = !Game.Stations[sse.StationIndex].PlayerStops();
 							Stations[n].Terminal = Game.Stations[sse.StationIndex].Type != StationType.Normal;
 							double x;
 							if (Game.Stations[sse.StationIndex].ArrivalTime >= 0.0)

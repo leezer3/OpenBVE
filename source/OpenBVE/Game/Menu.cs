@@ -151,7 +151,7 @@ namespace OpenBve
 				{
 					case MenuType.Top:          // top level menu
 						for (i = 0; i < Game.Stations.Length; i++)
-							if (Game.PlayerStopsAtStation(i) & Game.Stations[i].Stops.Length > 0)
+							if (Game.Stations[i].PlayerStops() & Game.Stations[i].Stops.Length > 0)
 							{
 								jump = 1;
 								break;
@@ -177,7 +177,7 @@ namespace OpenBve
 													// count the number of available stations
 						menuItem = 0;
 						for (i = 0; i < Game.Stations.Length; i++)
-							if (Game.PlayerStopsAtStation(i) & Game.Stations[i].Stops.Length > 0)
+							if (Game.Stations[i].PlayerStops() & Game.Stations[i].Stops.Length > 0)
 								menuItem++;
 						// list available stations, selecting the next station as predefined choice
 						jump = 0;                           // no jump found yet
@@ -185,7 +185,7 @@ namespace OpenBve
 						Items[0] = new MenuCommand(Translations.GetInterfaceString("menu_back"), MenuTag.MenuBack, 0);
 						menuItem = 1;
 						for (i = 0; i < Game.Stations.Length; i++)
-							if (Game.PlayerStopsAtStation(i) & Game.Stations[i].Stops.Length > 0)
+							if (Game.Stations[i].PlayerStops() & Game.Stations[i].Stops.Length > 0)
 							{
 								Items[menuItem] = new MenuCommand(Game.Stations[i].Name, MenuTag.JumpToStation, i);
 								// if no preferred jump-to-station found yet and this station is

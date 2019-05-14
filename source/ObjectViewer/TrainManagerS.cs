@@ -296,6 +296,15 @@ namespace OpenBve {
 			internal Car[] Cars;
 			internal TrainSpecs Specs;
 			internal int CurrentSectionIndex;
+			public override double FrontCarTrackPosition()
+			{
+				return Cars[0].FrontAxle.Follower.TrackPosition - Cars[0].FrontAxlePosition + 0.5 * Cars[0].Length;
+			}
+
+			public override double RearCarTrackPosition()
+			{
+				return Cars[Cars.Length - 1].RearAxle.Follower.TrackPosition - Cars[Cars.Length - 1].RearAxlePosition - 0.5 * Cars[Cars.Length - 1].Length;
+			}
 		}
 
 #pragma warning restore 0649

@@ -95,7 +95,7 @@ namespace OpenBve
 							int c = Game.Stations[d].GetStopIndex(train.Cars.Length);
 							if (c >= 0)
 							{
-								double p0 = train.Cars[0].FrontAxle.Follower.TrackPosition - train.Cars[0].FrontAxle.Position + 0.5 * train.Cars[0].Length;
+								double p0 = train.FrontCarTrackPosition();
 								double p1 = Stations[d].Stops[c].TrackPosition - Stations[d].Stops[c].BackwardTolerance;
 								if (p0 >= p1)
 								{
@@ -217,7 +217,7 @@ namespace OpenBve
 		/// <param name="train">The train.</param>
 		/// <param name="section">The absolute section index, referencing Game.Sections[].</param>
 		/// <returns>The signal data.</returns>
-		internal static OpenBveApi.Runtime.SignalData GetPluginSignal(TrainManager.Train train, int section)
+		internal static SignalData GetPluginSignal(AbstractTrain train, int section)
 		{
 			if (Sections[section].Exists(train))
 			{
@@ -273,16 +273,16 @@ namespace OpenBve
 				{
 					aspect = Sections[section].Aspects[Sections[section].CurrentAspect].Number;
 				}
-				double position = train.Cars[0].FrontAxle.Follower.TrackPosition - train.Cars[0].FrontAxle.Position + 0.5 * train.Cars[0].Length;
+				double position = train.FrontCarTrackPosition();
 				double distance = Sections[section].TrackPosition - position;
-				return new OpenBveApi.Runtime.SignalData(aspect, distance);
+				return new SignalData(aspect, distance);
 			}
 			else
 			{
 				int aspect = Sections[section].Aspects[Sections[section].CurrentAspect].Number;
-				double position = train.Cars[0].FrontAxle.Follower.TrackPosition - train.Cars[0].FrontAxle.Position + 0.5 * train.Cars[0].Length;
+				double position = train.FrontCarTrackPosition();
 				double distance = Sections[section].TrackPosition - position;
-				return new OpenBveApi.Runtime.SignalData(aspect, distance);
+				return new SignalData(aspect, distance);
 			}
 		}
 
