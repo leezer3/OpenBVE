@@ -9,6 +9,7 @@ using System;
 using System.Threading;
 using System.Text;
 using System.Windows.Forms;
+using OpenBve.SignalManager;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
@@ -146,8 +147,8 @@ namespace OpenBve {
 			ObjectManager.FinishCreatingObjects();
 			// signals
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
-			if (Game.Sections.Length > 0) {
-				Game.UpdateSection(Game.Sections.Length - 1);
+			if (CurrentRoute.Sections.Length > 0) {
+				Game.UpdateSection(CurrentRoute.Sections.Length - 1);
 			}
 			// starting track position
 			System.Threading.Thread.Sleep(1); if (Cancel) return;

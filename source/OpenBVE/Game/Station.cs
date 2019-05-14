@@ -1,7 +1,7 @@
 ﻿using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
-using SignalManager;
+using OpenBve.SignalManager;
 
 namespace OpenBve
 {

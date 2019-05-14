@@ -13,6 +13,7 @@ using OpenBveApi.Trains;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Input;
+using OpenBve.SignalManager;
 using GL = OpenTK.Graphics.OpenGL.GL;
 using MatrixMode = OpenTK.Graphics.OpenGL.MatrixMode;
 
@@ -250,9 +251,9 @@ namespace OpenBve
 
 				if (TotalTimeElapsedForSectionUpdate >= 1.0)
 				{
-					if (Game.Sections.Length != 0)
+					if (CurrentRoute.Sections.Length != 0)
 					{
-						Game.UpdateSection(Game.Sections.Length - 1);
+						Game.UpdateSection(CurrentRoute.Sections.Length - 1);
 					}
 					TotalTimeElapsedForSectionUpdate = 0.0;
 				}
@@ -632,9 +633,9 @@ namespace OpenBve
 						}
 					}
 				}
-				if (Game.Sections.Length != 0)
+				if (CurrentRoute.Sections.Length != 0)
 				{
-					Game.Sections[0].Enter(TrainManager.Trains[i]);
+					CurrentRoute.Sections[0].Enter(TrainManager.Trains[i]);
 				}
 				for (int j = 0; j < TrainManager.Trains[i].Cars.Length; j++)
 				{
@@ -675,9 +676,9 @@ namespace OpenBve
 				Game.CurrentScore.Maximum = Game.ScoreValueStationArrival;
 			}
 			// signals
-			if (Game.Sections.Length > 0)
+			if (CurrentRoute.Sections.Length > 0)
 			{
-				Game.UpdateSection(Game.Sections.Length - 1);
+				Game.UpdateSection(CurrentRoute.Sections.Length - 1);
 			}
 			// move train in position
 			for (int i = 0; i < TrainManager.Trains.Length; i++)
@@ -722,11 +723,11 @@ namespace OpenBve
 			for (int i = 0; i < TrainManager.Trains.Length; i++)
 			{
 				int s = TrainManager.Trains[i].CurrentSectionIndex;
-				Game.Sections[s].Enter(TrainManager.Trains[i]);
+				CurrentRoute.Sections[s].Enter(TrainManager.Trains[i]);
 			}
-			if (Game.Sections.Length > 0)
+			if (CurrentRoute.Sections.Length > 0)
 			{
-				Game.UpdateSection(Game.Sections.Length - 1);
+				Game.UpdateSection(CurrentRoute.Sections.Length - 1);
 			}
 			// fast-forward until start time
 			{
@@ -744,9 +745,9 @@ namespace OpenBve
 						TotalTimeElapsedForSectionUpdate += v;
 						if (TotalTimeElapsedForSectionUpdate >= 1.0)
 						{
-							if (Game.Sections.Length > 0)
+							if (CurrentRoute.Sections.Length > 0)
 							{
-								Game.UpdateSection(Game.Sections.Length - 1);
+								Game.UpdateSection(CurrentRoute.Sections.Length - 1);
 							}
 							TotalTimeElapsedForSectionUpdate = 0.0;
 						}

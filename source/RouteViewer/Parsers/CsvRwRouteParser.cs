@@ -12,7 +12,6 @@ using OpenBveApi.Objects;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
 using OpenBveApi.Runtime;
-using SignalManager;
 
 namespace OpenBve {
 	internal class CsvRwRouteParser {
@@ -455,14 +454,14 @@ namespace OpenBve {
 																				ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_4.csv"), Encoding, false)
 																			  });
 				// game data
-				Game.Sections = new SignalManager.Section[1];
-				Game.Sections[0].Aspects = new SectionAspect[] { new SectionAspect(0, 0.0), new SectionAspect(4, double.PositiveInfinity) };
-				Game.Sections[0].CurrentAspect = 0;
-				Game.Sections[0].NextSection = -1;
-				Game.Sections[0].PreviousSection = -1;
-				Game.Sections[0].StationIndex = -1;
-				Game.Sections[0].TrackPosition = 0;
-				Game.Sections[0].Trains = new TrainManager.Train[] { };
+				CurrentRoute.Sections = new SignalManager.Section[1];
+				CurrentRoute.Sections[0].Aspects = new SectionAspect[] { new SectionAspect(0, 0.0), new SectionAspect(4, double.PositiveInfinity) };
+				CurrentRoute.Sections[0].CurrentAspect = 0;
+				CurrentRoute.Sections[0].NextSection = -1;
+				CurrentRoute.Sections[0].PreviousSection = -1;
+				CurrentRoute.Sections[0].StationIndex = -1;
+				CurrentRoute.Sections[0].TrackPosition = 0;
+				CurrentRoute.Sections[0].Trains = new TrainManager.Train[] { };
 				// continue
 				Data.SignalSpeeds = new double[] { 0.0, 6.94444444444444, 15.2777777777778, 20.8333333333333, double.PositiveInfinity, double.PositiveInfinity };
 			}
@@ -6244,8 +6243,8 @@ namespace OpenBve {
 							}
 							// sections
 							for (int k = 0; k < Data.Blocks[i].Section.Length; k++) {
-								int m = Game.Sections.Length;
-								Array.Resize<SignalManager.Section>(ref Game.Sections, m + 1);
+								int m = CurrentRoute.Sections.Length;
+								Array.Resize<SignalManager.Section>(ref CurrentRoute.Sections, m + 1);
 								// create associated transponders
 								for (int g = 0; g <= i; g++) {
 									for (int l = 0; l < Data.Blocks[g].Transponder.Length; l++) {
@@ -6259,28 +6258,28 @@ namespace OpenBve {
 									}
 								}
 								// create section
-								Game.Sections[m].TrackPosition = Data.Blocks[i].Section[k].TrackPosition;
-								Game.Sections[m].Aspects = new SectionAspect[Data.Blocks[i].Section[k].Aspects.Length];
+								CurrentRoute.Sections[m].TrackPosition = Data.Blocks[i].Section[k].TrackPosition;
+								CurrentRoute.Sections[m].Aspects = new SectionAspect[Data.Blocks[i].Section[k].Aspects.Length];
 								for (int l = 0; l < Data.Blocks[i].Section[k].Aspects.Length; l++) {
-									Game.Sections[m].Aspects[l].Number = Data.Blocks[i].Section[k].Aspects[l];
+									CurrentRoute.Sections[m].Aspects[l].Number = Data.Blocks[i].Section[k].Aspects[l];
 									if (Data.Blocks[i].Section[k].Aspects[l] >= 0 & Data.Blocks[i].Section[k].Aspects[l] < Data.SignalSpeeds.Length) {
-										Game.Sections[m].Aspects[l].Speed = Data.SignalSpeeds[Data.Blocks[i].Section[k].Aspects[l]];
+										CurrentRoute.Sections[m].Aspects[l].Speed = Data.SignalSpeeds[Data.Blocks[i].Section[k].Aspects[l]];
 									} else {
-										Game.Sections[m].Aspects[l].Speed = double.PositiveInfinity;
+										CurrentRoute.Sections[m].Aspects[l].Speed = double.PositiveInfinity;
 									}
 								}
-								Game.Sections[m].Type = Data.Blocks[i].Section[k].Type;
-								Game.Sections[m].CurrentAspect = -1;
+								CurrentRoute.Sections[m].Type = Data.Blocks[i].Section[k].Type;
+								CurrentRoute.Sections[m].CurrentAspect = -1;
 								if (m > 0) {
-									Game.Sections[m].PreviousSection = m - 1;
-									Game.Sections[m - 1].NextSection = m;
+									CurrentRoute.Sections[m].PreviousSection = m - 1;
+									CurrentRoute.Sections[m - 1].NextSection = m;
 								} else {
-									Game.Sections[m].PreviousSection = -1;
+									CurrentRoute.Sections[m].PreviousSection = -1;
 								}
-								Game.Sections[m].NextSection = -1;
-								Game.Sections[m].StationIndex = Data.Blocks[i].Section[k].DepartureStationIndex;
-								Game.Sections[m].Invisible = Data.Blocks[i].Section[k].Invisible;
-								Game.Sections[m].Trains = new TrainManager.Train[] { };
+								CurrentRoute.Sections[m].NextSection = -1;
+								CurrentRoute.Sections[m].StationIndex = Data.Blocks[i].Section[k].DepartureStationIndex;
+								CurrentRoute.Sections[m].Invisible = Data.Blocks[i].Section[k].Invisible;
+								CurrentRoute.Sections[m].Trains = new TrainManager.Train[] { };
 								// create section change event
 								double d = Data.Blocks[i].Section[k].TrackPosition - StartingDistance;
 								int p = TrackManager.CurrentTrack.Elements[n].Events.Length;
@@ -6291,7 +6290,7 @@ namespace OpenBve {
 							for (int l = 0; l < Data.Blocks[i].Transponder.Length; l++) {
 								if (Data.Blocks[i].Transponder[l].Type != TrackManager.TransponderType.None) {
 									int t = Data.Blocks[i].Transponder[l].Section;
-									if (t >= 0 & t < Game.Sections.Length) {
+									if (t >= 0 & t < CurrentRoute.Sections.Length) {
 										int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
 										Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
 										double dt = Data.Blocks[i].Transponder[l].TrackPosition - StartingDistance;

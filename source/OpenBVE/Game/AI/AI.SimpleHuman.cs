@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
+using OpenBve.SignalManager;
 
 namespace OpenBve
 {
@@ -417,9 +418,9 @@ namespace OpenBve
 									TrackManager.SectionChangeEvent e = (TrackManager.SectionChangeEvent)TrackManager.Tracks[0].Elements[i].Events[j];
 									if (stp + e.TrackPositionDelta > tp)
 									{
-										if (!Game.Sections[e.NextSectionIndex].Invisible & Game.Sections[e.NextSectionIndex].CurrentAspect >= 0)
+										if (!CurrentRoute.Sections[e.NextSectionIndex].Invisible & CurrentRoute.Sections[e.NextSectionIndex].CurrentAspect >= 0)
 										{
-											double elim = Game.Sections[e.NextSectionIndex].Aspects[Game.Sections[e.NextSectionIndex].CurrentAspect].Speed * this.CurrentSpeedFactor;
+											double elim = CurrentRoute.Sections[e.NextSectionIndex].Aspects[CurrentRoute.Sections[e.NextSectionIndex].CurrentAspect].Speed * this.CurrentSpeedFactor;
 											if (elim < spd | spd <= 0.0)
 											{
 												double dist = stp + e.TrackPositionDelta - tp;

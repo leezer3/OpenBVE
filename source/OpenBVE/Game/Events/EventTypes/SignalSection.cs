@@ -1,5 +1,6 @@
 ﻿using OpenBveApi.Colors;
 using OpenBveApi.Interface;
+using OpenBve.SignalManager;
 
 namespace OpenBve
 {
@@ -30,7 +31,7 @@ namespace OpenBve
 						{
 							if (this.NextSectionIndex >= 0)
 							{
-								Game.Sections[this.NextSectionIndex].TrainReachedStopPoint = false;
+								CurrentRoute.Sections[this.NextSectionIndex].TrainReachedStopPoint = false;
 							}
 							UpdateFrontBackward(Train, true);
 						}
@@ -49,7 +50,7 @@ namespace OpenBve
 						{
 							if (this.PreviousSectionIndex >= 0)
 							{
-								Game.Sections[this.PreviousSectionIndex].TrainReachedStopPoint = false;
+								CurrentRoute.Sections[this.PreviousSectionIndex].TrainReachedStopPoint = false;
 							}
 							UpdateRearForward(Train, true);
 						}
@@ -61,12 +62,12 @@ namespace OpenBve
 				// update sections
 				if (this.PreviousSectionIndex >= 0)
 				{
-					Game.Sections[this.PreviousSectionIndex].Enter(Train);
+					CurrentRoute.Sections[this.PreviousSectionIndex].Enter(Train);
 					Game.UpdateSection(this.PreviousSectionIndex);
 				}
 				if (this.NextSectionIndex >= 0)
 				{
-					Game.Sections[this.NextSectionIndex].Leave(Train);
+					CurrentRoute.Sections[this.NextSectionIndex].Leave(Train);
 					Game.UpdateSection(this.NextSectionIndex);
 				}
 				if (UpdateTrain)
@@ -74,7 +75,7 @@ namespace OpenBve
 					// update train
 					if (this.PreviousSectionIndex >= 0)
 					{
-						if (!Game.Sections[this.PreviousSectionIndex].Invisible)
+						if (!CurrentRoute.Sections[this.PreviousSectionIndex].Invisible)
 						{
 							Train.CurrentSectionIndex = this.PreviousSectionIndex;
 						}
@@ -93,11 +94,11 @@ namespace OpenBve
 					// update train
 					if (this.NextSectionIndex >= 0)
 					{
-						if (!Game.Sections[this.NextSectionIndex].Invisible)
+						if (!CurrentRoute.Sections[this.NextSectionIndex].Invisible)
 						{
-							if (Game.Sections[this.NextSectionIndex].CurrentAspect >= 0)
+							if (CurrentRoute.Sections[this.NextSectionIndex].CurrentAspect >= 0)
 							{
-								Train.CurrentSectionLimit = Game.Sections[this.NextSectionIndex].Aspects[Game.Sections[this.NextSectionIndex].CurrentAspect].Speed;
+								Train.CurrentSectionLimit = CurrentRoute.Sections[this.NextSectionIndex].Aspects[CurrentRoute.Sections[this.NextSectionIndex].CurrentAspect].Speed;
 							}
 							else
 							{
@@ -112,7 +113,7 @@ namespace OpenBve
 						Train.CurrentSectionIndex = -1;
 					}
 					// messages
-					if (this.NextSectionIndex < 0 || !Game.Sections[this.NextSectionIndex].Invisible)
+					if (this.NextSectionIndex < 0 || !CurrentRoute.Sections[this.NextSectionIndex].Invisible)
 					{
 						if (Train.CurrentSectionLimit == 0.0 && Game.MinimalisticSimulation == false)
 						{
@@ -129,7 +130,7 @@ namespace OpenBve
 					// update sections
 					if (this.NextSectionIndex >= 0)
 					{
-						Game.Sections[this.NextSectionIndex].Enter(Train);
+						CurrentRoute.Sections[this.NextSectionIndex].Enter(Train);
 						Game.UpdateSection(this.NextSectionIndex);
 					}
 				}
@@ -141,7 +142,7 @@ namespace OpenBve
 					// update sections
 					if (this.PreviousSectionIndex >= 0)
 					{
-						Game.Sections[this.PreviousSectionIndex].Enter(Train);
+						CurrentRoute.Sections[this.PreviousSectionIndex].Enter(Train);
 						Game.UpdateSection(this.PreviousSectionIndex);
 					}
 				}
@@ -153,12 +154,12 @@ namespace OpenBve
 					// update sections
 					if (this.PreviousSectionIndex >= 0)
 					{
-						Game.Sections[this.PreviousSectionIndex].Leave(Train);
+						CurrentRoute.Sections[this.PreviousSectionIndex].Leave(Train);
 						Game.UpdateSection(this.PreviousSectionIndex);
 					}
 					if (this.NextSectionIndex >= 0)
 					{
-						Game.Sections[this.NextSectionIndex].Enter(Train);
+						CurrentRoute.Sections[this.NextSectionIndex].Enter(Train);
 						Game.UpdateSection(this.NextSectionIndex);
 					}
 				}

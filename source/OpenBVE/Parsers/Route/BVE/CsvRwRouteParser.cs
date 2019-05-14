@@ -9,7 +9,6 @@ using OpenBveApi.Objects;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
 using OpenBve.SignalManager;
-using SignalManager;
 
 namespace OpenBve {
 	internal partial class CsvRwRouteParser {
@@ -238,15 +237,15 @@ namespace OpenBve {
 							System.Text.Encoding.UTF8, false)
 					});
 				// game data
-				Game.Sections = new SignalManager.Section[1];
-				Game.Sections[0].Aspects = new SectionAspect[]
+				CurrentRoute.Sections = new SignalManager.Section[1];
+				CurrentRoute.Sections[0].Aspects = new SectionAspect[]
 				{new SectionAspect(0, 0.0), new SectionAspect(4, double.PositiveInfinity)};
-				Game.Sections[0].CurrentAspect = 0;
-				Game.Sections[0].NextSection = -1;
-				Game.Sections[0].PreviousSection = -1;
-				Game.Sections[0].StationIndex = -1;
-				Game.Sections[0].TrackPosition = 0;
-				Game.Sections[0].Trains = new AbstractTrain[] {};
+				CurrentRoute.Sections[0].CurrentAspect = 0;
+				CurrentRoute.Sections[0].NextSection = -1;
+				CurrentRoute.Sections[0].PreviousSection = -1;
+				CurrentRoute.Sections[0].StationIndex = -1;
+				CurrentRoute.Sections[0].TrackPosition = 0;
+				CurrentRoute.Sections[0].Trains = new AbstractTrain[] {};
 
 				/*
 				 * These are the speed limits for the default Japanese signal aspects, and in most cases will be overwritten

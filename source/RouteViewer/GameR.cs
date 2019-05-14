@@ -13,7 +13,6 @@ using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBve.SignalManager;
 using OpenBveApi.Objects;
-using SignalManager;
 using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
 namespace OpenBve {
@@ -147,7 +146,7 @@ namespace OpenBve {
 			RouteSeaLevelAirPressure = 101325.0;
 			RouteSeaLevelAirTemperature = 293.15;
 			Stations = new Station[] { };
-			Sections = new Section[] { };
+			CurrentRoute.Sections = new Section[] { };
 			BufferTrackPositions = new double[] { };
 			MarkerTextures = new Texture[] { };
 			PointsOfInterest = new PointOfInterest[] { };
@@ -219,22 +218,21 @@ namespace OpenBve {
 
 		// sections
 		
-		internal static Section[] Sections = new Section[] { };
 		internal static void UpdateAllSections() {
-			if (Sections.Length != 0) {
-				UpdateSection(Sections.Length - 1);
+			if (CurrentRoute.Sections.Length != 0) {
+				UpdateSection(CurrentRoute.Sections.Length - 1);
 			}
 		}
 		internal static void UpdateSection(int SectionIndex) {
 			// preparations
 			int zeroaspect;
 			bool settored = false;
-			if (Sections[SectionIndex].Type == SectionType.ValueBased) {
+			if (CurrentRoute.Sections[SectionIndex].Type == SectionType.ValueBased) {
 				// value-based
 				zeroaspect = int.MaxValue;
-				for (int i = 0; i < Sections[SectionIndex].Aspects.Length; i++) {
-					if (Sections[SectionIndex].Aspects[i].Number < zeroaspect) {
-						zeroaspect = Sections[SectionIndex].Aspects[i].Number;
+				for (int i = 0; i < CurrentRoute.Sections[SectionIndex].Aspects.Length; i++) {
+					if (CurrentRoute.Sections[SectionIndex].Aspects[i].Number < zeroaspect) {
+						zeroaspect = CurrentRoute.Sections[SectionIndex].Aspects[i].Number;
 					}
 				} 
 				if (zeroaspect == int.MaxValue) {
@@ -245,7 +243,7 @@ namespace OpenBve {
 				zeroaspect = 0;
 			}
 			// hold station departure signal at red
-			int d = Sections[SectionIndex].StationIndex;
+			int d = CurrentRoute.Sections[SectionIndex].StationIndex;
 			if (d >= 0) {
 				// look for train in previous blocks
 				//int l = Sections[SectionIndex].PreviousSection;
@@ -254,55 +252,55 @@ namespace OpenBve {
 				}
 			}
 			// train in block
-			if (Sections[SectionIndex].Trains.Length != 0) {
+			if (CurrentRoute.Sections[SectionIndex].Trains.Length != 0) {
 				settored = true;
 			}
 			// free sections
 			int newaspect = -1;
 			if (settored) {
-				Sections[SectionIndex].FreeSections = 0;
+				CurrentRoute.Sections[SectionIndex].FreeSections = 0;
 				newaspect = zeroaspect;
 			} else {
-				int n = Sections[SectionIndex].NextSection;
+				int n = CurrentRoute.Sections[SectionIndex].NextSection;
 				if (n >= 0) {
-					if (Sections[n].FreeSections == -1) {
-						Sections[SectionIndex].FreeSections = -1;
+					if (CurrentRoute.Sections[n].FreeSections == -1) {
+						CurrentRoute.Sections[SectionIndex].FreeSections = -1;
 					} else {
-						Sections[SectionIndex].FreeSections = Sections[n].FreeSections + 1;
+						CurrentRoute.Sections[SectionIndex].FreeSections = CurrentRoute.Sections[n].FreeSections + 1;
 					}
 				} else {
-					Sections[SectionIndex].FreeSections = -1;
+					CurrentRoute.Sections[SectionIndex].FreeSections = -1;
 				}
 			}
 			// change aspect
 			if (newaspect == -1) {
-				if (Sections[SectionIndex].Type == SectionType.ValueBased) {
+				if (CurrentRoute.Sections[SectionIndex].Type == SectionType.ValueBased) {
 					// value-based
-					int n = Sections[SectionIndex].NextSection;
-					int a = Sections[SectionIndex].Aspects[Sections[SectionIndex].Aspects.Length - 1].Number;
-					if (n >= 0 && Sections[n].CurrentAspect >= 0) {
-						a = Sections[n].Aspects[Sections[n].CurrentAspect].Number;
+					int n = CurrentRoute.Sections[SectionIndex].NextSection;
+					int a = CurrentRoute.Sections[SectionIndex].Aspects[CurrentRoute.Sections[SectionIndex].Aspects.Length - 1].Number;
+					if (n >= 0 && CurrentRoute.Sections[n].CurrentAspect >= 0) {
+						a = CurrentRoute.Sections[n].Aspects[CurrentRoute.Sections[n].CurrentAspect].Number;
 					}
-					for (int i = Sections[SectionIndex].Aspects.Length - 1; i >= 0; i--) {
-						if (Sections[SectionIndex].Aspects[i].Number > a) {
+					for (int i = CurrentRoute.Sections[SectionIndex].Aspects.Length - 1; i >= 0; i--) {
+						if (CurrentRoute.Sections[SectionIndex].Aspects[i].Number > a) {
 							newaspect = i;
 						}
 					} if (newaspect == -1) {
-						newaspect = Sections[SectionIndex].Aspects.Length - 1;
+						newaspect = CurrentRoute.Sections[SectionIndex].Aspects.Length - 1;
 					}
 				} else {
 					// index-based
-					if (Sections[SectionIndex].FreeSections >= 0 & Sections[SectionIndex].FreeSections < Sections[SectionIndex].Aspects.Length) {
-						newaspect = Sections[SectionIndex].FreeSections;
+					if (CurrentRoute.Sections[SectionIndex].FreeSections >= 0 & CurrentRoute.Sections[SectionIndex].FreeSections < CurrentRoute.Sections[SectionIndex].Aspects.Length) {
+						newaspect = CurrentRoute.Sections[SectionIndex].FreeSections;
 					} else {
-						newaspect = Sections[SectionIndex].Aspects.Length - 1;
+						newaspect = CurrentRoute.Sections[SectionIndex].Aspects.Length - 1;
 					}
 				}
 			}
-			Sections[SectionIndex].CurrentAspect = newaspect;
+			CurrentRoute.Sections[SectionIndex].CurrentAspect = newaspect;
 			// update previous section
-			if (Sections[SectionIndex].PreviousSection >= 0) {
-				UpdateSection(Sections[SectionIndex].PreviousSection);
+			if (CurrentRoute.Sections[SectionIndex].PreviousSection >= 0) {
+				UpdateSection(CurrentRoute.Sections[SectionIndex].PreviousSection);
 			}
 		}
 

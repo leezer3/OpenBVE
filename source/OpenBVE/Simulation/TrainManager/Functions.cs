@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Trains;
+using OpenBve.SignalManager;
 
 namespace OpenBve
 {
@@ -104,9 +105,9 @@ namespace OpenBve
 					train.ApplyNotch(0, false, train.Handles.Brake.MaximumNotch, false);
 					train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Service);
 				}
-				if (Game.Sections.Length > 0)
+				if (CurrentRoute.Sections.Length > 0)
 				{
-					Game.UpdateSection(Game.Sections.Length - 1);
+					Game.UpdateSection(CurrentRoute.Sections.Length - 1);
 				}
 				if (train == PlayerTrain)
 				{

@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using OpenBveApi;
 using OpenBveApi.Interface;
-using SignalManager;
+using OpenBve.SignalManager;
 
 namespace OpenBve {
 	internal static class Illustrations {

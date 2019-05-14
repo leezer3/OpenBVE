@@ -1,4 +1,4 @@
-﻿namespace SignalManager
+﻿namespace OpenBve.SignalManager
 {
 	/// <summary>Defines the possible safety system to be used in the upcoming section</summary>
 	/// <remarks>Currently only applies to the default JA safety systems</remarks>

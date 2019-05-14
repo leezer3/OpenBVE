@@ -1,4 +1,6 @@
-﻿namespace OpenBve
+﻿using OpenBve.SignalManager;
+
+namespace OpenBve
 {
 	internal static partial class TrackManager
 	{
@@ -49,20 +51,20 @@
 						{
 							while (true)
 							{
-								if (Game.Sections[s].Exists(Train))
+								if (CurrentRoute.Sections[s].Exists(Train))
 								{
 									s = this.SectionIndex;
 									break;
 								}
-								int a = Game.Sections[s].CurrentAspect;
+								int a = CurrentRoute.Sections[s].CurrentAspect;
 								if (a >= 0)
 								{
-									if (Game.Sections[s].Aspects[a].Number == 0)
+									if (CurrentRoute.Sections[s].Aspects[a].Number == 0)
 									{
 										break;
 									}
 								}
-								s = Game.Sections[s].PreviousSection;
+								s = CurrentRoute.Sections[s].PreviousSection;
 								if (s < 0)
 								{
 									s = this.SectionIndex;

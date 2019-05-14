@@ -6,7 +6,7 @@ using System.Linq;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
-using SignalManager;
+using OpenBve.SignalManager;
 
 namespace OpenBve
 {

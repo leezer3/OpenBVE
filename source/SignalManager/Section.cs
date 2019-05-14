@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 
 namespace OpenBve.SignalManager
@@ -135,6 +136,78 @@ namespace OpenBve.SignalManager
 			}
 
 			return null;
+		}
+
+		/// <summary>Gets the signal data for a plugin.</summary>
+		/// <param name="train">The train.</param>
+		/// <returns>The signal data.</returns>
+		public SignalData GetPluginSignal(AbstractTrain train)
+		{
+			if (Exists(train))
+			{
+				int aspect;
+				if (IsFree(train))
+				{
+					if (Type == SectionType.IndexBased)
+					{
+						if (NextSection != -1)
+						{
+							int value = CurrentRoute.Sections[NextSection].FreeSections;
+							if (value == -1)
+							{
+								value = Aspects.Length - 1;
+							}
+							else
+							{
+								value++;
+								if (value >= Aspects.Length)
+								{
+									value = Aspects.Length - 1;
+								}
+								if (value < 0)
+								{
+									value = 0;
+								}
+							}
+							aspect = Aspects[value].Number;
+						}
+						else
+						{
+							aspect = Aspects[Aspects.Length - 1].Number;
+						}
+					}
+					else
+					{
+						aspect = Aspects[Aspects.Length - 1].Number;
+						if (NextSection != -1)
+						{
+							int value = Aspects[CurrentAspect].Number;
+							for (int i = 0; i < Aspects.Length; i++)
+							{
+								if (Aspects[i].Number > value)
+								{
+									aspect = Aspects[i].Number;
+									break;
+								}
+							}
+						}
+					}
+				}
+				else
+				{
+					aspect = Aspects[CurrentAspect].Number;
+				}
+				double position = train.FrontCarTrackPosition();
+				double distance = TrackPosition - position;
+				return new SignalData(aspect, distance);
+			}
+			else
+			{
+				int aspect = Aspects[CurrentAspect].Number;
+				double position = train.FrontCarTrackPosition();
+				double distance = TrackPosition - position;
+				return new SignalData(aspect, distance);
+			}
 		}
 	}
 }

@@ -4,6 +4,7 @@ using System.Reflection;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
+using OpenBve.SignalManager;
 
 namespace OpenBve {
 	internal static class PluginManager {
@@ -434,12 +435,12 @@ namespace OpenBve {
 				if (sectionIndex == -1) {
 					sectionIndex = this.Train.CurrentSectionIndex + 1;
 					SignalData signal = null;
-					while (sectionIndex < Game.Sections.Length) {
-						signal = Game.GetPluginSignal(this.Train, sectionIndex);
+					while (sectionIndex < CurrentRoute.Sections.Length) {
+						signal = CurrentRoute.Sections[sectionIndex].GetPluginSignal(this.Train);
 						if (signal.Aspect == 0) break;
 						sectionIndex++;
 					}
-					if (sectionIndex < Game.Sections.Length) {
+					if (sectionIndex < CurrentRoute.Sections.Length) {
 						SetBeacon(new BeaconData(type, optional, signal));
 					} else {
 						SetBeacon(new BeaconData(type, optional, new SignalData(-1, double.MaxValue)));
@@ -447,8 +448,8 @@ namespace OpenBve {
 				}
 				if (sectionIndex >= 0) {
 					SignalData signal;
-					if (sectionIndex < Game.Sections.Length) {
-						signal = Game.GetPluginSignal(this.Train, sectionIndex);
+					if (sectionIndex < CurrentRoute.Sections.Length) {
+						signal = CurrentRoute.Sections[sectionIndex].GetPluginSignal(this.Train);
 					} else {
 						signal = new SignalData(0, double.MaxValue);
 					}

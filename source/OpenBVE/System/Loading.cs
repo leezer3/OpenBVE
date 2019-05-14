@@ -8,6 +8,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
+using OpenBve.SignalManager;
 
 namespace OpenBve {
 	internal static class Loading {
@@ -408,8 +409,8 @@ namespace OpenBve {
 			Array.Resize(ref ObjectManager.Objects, ObjectManager.ObjectsUsed);
 			Array.Resize(ref ObjectManager.AnimatedWorldObjects, ObjectManager.AnimatedWorldObjectsUsed);
 			// update sections
-			if (Game.Sections.Length > 0) {
-				Game.UpdateSection(Game.Sections.Length - 1);
+			if (CurrentRoute.Sections.Length > 0) {
+				Game.UpdateSection(CurrentRoute.Sections.Length - 1);
 			}
 			// load plugin
 			for (int i = 0; i < TrainManager.Trains.Length; i++) {

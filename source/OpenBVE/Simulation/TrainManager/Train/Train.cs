@@ -5,6 +5,7 @@ using OpenBveApi.Runtime;
 using OpenBveApi.Math;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
+using OpenBve.SignalManager;
 
 namespace OpenBve
 {
@@ -93,13 +94,13 @@ namespace OpenBve
 				}
 				Sounds.StopAllSounds(this);
 
-				for (int i = 0; i < Game.Sections.Length; i++)
+				for (int i = 0; i < CurrentRoute.Sections.Length; i++)
 				{
-					Game.Sections[i].Leave(this);
+					CurrentRoute.Sections[i].Leave(this);
 				}
-				if (Game.Sections.Length != 0)
+				if (CurrentRoute.Sections.Length != 0)
 				{
-					Game.UpdateSection(Game.Sections.Length - 1);
+					Game.UpdateSection(CurrentRoute.Sections.Length - 1);
 				}
 			}
 
@@ -140,7 +141,7 @@ namespace OpenBve
 						{
 							if (CurrentSectionIndex >= 0)
 							{
-								if (!Game.Sections[CurrentSectionIndex].IsFree())
+								if (!CurrentRoute.Sections[CurrentSectionIndex].IsFree())
 								{
 									introduce = false;
 								}
