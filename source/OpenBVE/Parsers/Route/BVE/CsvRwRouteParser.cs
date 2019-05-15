@@ -1053,6 +1053,9 @@ namespace OpenBve {
 													if (System.IO.File.Exists(f)) {
 														Textures.RegisterTexture(f, out Data.TimetableDaytime[CommandIndex1]);
 													}
+													else {
+														Interface.AddMessage(MessageType.Error, false, "DaytimeTimetable " + CommandIndex1 + " with FileName " + Arguments[0] + " was not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													}
 												}
 											}
 										}
@@ -1081,6 +1084,9 @@ namespace OpenBve {
 													}
 													if (System.IO.File.Exists(f)) {
 														Textures.RegisterTexture(f, out Data.TimetableNighttime[CommandIndex1]);
+													}
+													else {
+														Interface.AddMessage(MessageType.Error, false, "DaytimeTimetable " + CommandIndex1 + " with FileName " + Arguments[0] + " was not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													}
 												}
 											}
