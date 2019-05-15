@@ -134,6 +134,13 @@ namespace OpenBve
 				Result.RefreshRate = this.RefreshRate;
 				Result.SecondsSinceLastUpdate = 0.0;
 				Result.ObjectIndex = -1;
+				for (int i = 0; i < Timetable.CustomObjectsUsed; i++)
+				{
+					if (Timetable.CustomObjects[i] == this)
+					{
+						Timetable.AddObjectForCustomTimetable(Result);
+					}
+				}
 				return Result;
 			}
 
