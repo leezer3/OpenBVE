@@ -102,7 +102,16 @@ namespace OpenBve
 		internal static void LoadControls(string FileOrNull, out Control[] Controls)
 		{
 			string File;
-			string[] Lines = GetLines(Assembly.GetExecutingAssembly().GetManifestResourceStream("OpenBve.Default.controls"));
+			string[] Lines = {};
+			try
+			{
+				//Don't crash horribly if the embedded default controls file is missing (makefile.....)
+				Lines = GetLines(Assembly.GetExecutingAssembly().GetManifestResourceStream("OpenBve.Default.controls"));
+			}
+			catch
+			{
+			}
+			
 			if (FileOrNull == null)
 			{
 				File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/controls.cfg");
