@@ -1,18 +1,9 @@
-﻿namespace OpenBve
+﻿using OpenBve.SignalManager;
+
+namespace OpenBve
 {
 	internal static partial class Game
 	{
-		internal struct BogusPretrainInstruction
-		{
-			/// <summary>The track position at which this instruction is placed</summary>
-			internal double TrackPosition;
-			/// <summary>The time at which the .PreTrain command specifies the bogus train reaches this position</summary>
-			internal double Time;
-		}
-
-		/// <summary>Holds all .PreTrain instructions for the current route (NOTE: Must be in distance and time ascending order)</summary>
-		internal static BogusPretrainInstruction[] BogusPretrainInstructions = new BogusPretrainInstruction[] { };
-
 		/// <summary>Represents the bogus (non-visible) AI train, placed via .PreTrain commands</summary>
 		internal class BogusPretrainAI : GeneralAI
 		{
@@ -35,23 +26,23 @@
 					CurrentInterval = 5.0;
 					double ap = double.MaxValue, at = double.MaxValue;
 					double bp = double.MinValue, bt = double.MinValue;
-					for (int i = 0; i < BogusPretrainInstructions.Length; i++)
+					for (int i = 0; i < CurrentRoute.BogusPretrainInstructions.Length; i++)
 					{
-						if (BogusPretrainInstructions[i].Time < SecondsSinceMidnight | at == double.MaxValue)
+						if (CurrentRoute.BogusPretrainInstructions[i].Time < SecondsSinceMidnight | at == double.MaxValue)
 						{
-							at = BogusPretrainInstructions[i].Time;
-							ap = BogusPretrainInstructions[i].TrackPosition;
+							at = CurrentRoute.BogusPretrainInstructions[i].Time;
+							ap = CurrentRoute.BogusPretrainInstructions[i].TrackPosition;
 						}
 					}
-					for (int i = BogusPretrainInstructions.Length - 1; i >= 0; i--)
+					for (int i = CurrentRoute.BogusPretrainInstructions.Length - 1; i >= 0; i--)
 					{
-						if (BogusPretrainInstructions[i].Time > at | bt == double.MinValue)
+						if (CurrentRoute.BogusPretrainInstructions[i].Time > at | bt == double.MinValue)
 						{
-							bt = BogusPretrainInstructions[i].Time;
-							bp = BogusPretrainInstructions[i].TrackPosition;
+							bt = CurrentRoute.BogusPretrainInstructions[i].Time;
+							bp = CurrentRoute.BogusPretrainInstructions[i].TrackPosition;
 						}
 					}
-					if (at != double.MaxValue & bt != double.MinValue & SecondsSinceMidnight <= BogusPretrainInstructions[BogusPretrainInstructions.Length - 1].Time)
+					if (at != double.MaxValue & bt != double.MinValue & SecondsSinceMidnight <= CurrentRoute.BogusPretrainInstructions[CurrentRoute.BogusPretrainInstructions.Length - 1].Time)
 					{
 						double r = bt - at;
 						if (r > 0.0)

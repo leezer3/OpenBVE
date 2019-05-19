@@ -150,7 +150,7 @@ namespace OpenBve {
 			BufferTrackPositions = new double[] { };
 			MarkerTextures = new Texture[] { };
 			PointsOfInterest = new PointOfInterest[] { };
-			BogusPretrainInstructions = new BogusPretrainInstruction[] { };
+			CurrentRoute.BogusPretrainInstructions = new BogusPretrainInstruction[] { };
 			TrainName = "";
 			TrainStart = TrainStartMode.EmergencyBrakesNoAts;
 			PreviousFog = new Fog(0.0f, 0.0f, Color24.Grey, 0.0);
@@ -328,15 +328,6 @@ namespace OpenBve {
 				}
 			}
 		}
-
-		// ================================
-
-		// bogus pretrain
-		internal struct BogusPretrainInstruction {
-			internal double TrackPosition;
-			internal double Time;
-		}
-		internal static BogusPretrainInstruction[] BogusPretrainInstructions = new BogusPretrainInstruction[] { };
 
 		// ================================
 

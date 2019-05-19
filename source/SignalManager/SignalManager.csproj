@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PreTrain\BogusPreTrainInstruction.cs" />
     <Compile Include="SafetySystems.cs" />
     <Compile Include="Section.cs" />
     <Compile Include="SectionAspect.cs" />

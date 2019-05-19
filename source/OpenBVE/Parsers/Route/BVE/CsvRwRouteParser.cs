@@ -4403,13 +4403,13 @@ namespace OpenBve {
 													Interface.AddMessage(MessageType.Error, false, "Time is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													time = 0.0;
 												}
-												int n = Game.BogusPretrainInstructions.Length;
-												if (n != 0 && Game.BogusPretrainInstructions[n - 1].Time >= time) {
+												int n = CurrentRoute.BogusPretrainInstructions.Length;
+												if (n != 0 && CurrentRoute.BogusPretrainInstructions[n - 1].Time >= time) {
 													Interface.AddMessage(MessageType.Error, false, "Time is expected to be in ascending order between successive " + Command + " commands at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												}
-												Array.Resize<Game.BogusPretrainInstruction>(ref Game.BogusPretrainInstructions, n + 1);
-												Game.BogusPretrainInstructions[n].TrackPosition = Data.TrackPosition;
-												Game.BogusPretrainInstructions[n].Time = time;
+												Array.Resize<BogusPretrainInstruction>(ref CurrentRoute.BogusPretrainInstructions, n + 1);
+												CurrentRoute.BogusPretrainInstructions[n].TrackPosition = Data.TrackPosition;
+												CurrentRoute.BogusPretrainInstructions[n].Time = time;
 											}
 										}
 									} break;

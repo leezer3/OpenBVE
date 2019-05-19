@@ -190,21 +190,21 @@ namespace OpenBve {
 			createIllustrations.Start();
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			Game.CalculateSeaLevelConstants();
-			if (Game.BogusPretrainInstructions.Length != 0) {
-				double t = Game.BogusPretrainInstructions[0].Time;
-				double p = Game.BogusPretrainInstructions[0].TrackPosition;
-				for (int i = 1; i < Game.BogusPretrainInstructions.Length; i++) {
-					if (Game.BogusPretrainInstructions[i].Time > t) {
-						t = Game.BogusPretrainInstructions[i].Time;
+			if (CurrentRoute.BogusPretrainInstructions.Length != 0) {
+				double t = CurrentRoute.BogusPretrainInstructions[0].Time;
+				double p = CurrentRoute.BogusPretrainInstructions[0].TrackPosition;
+				for (int i = 1; i < CurrentRoute.BogusPretrainInstructions.Length; i++) {
+					if (CurrentRoute.BogusPretrainInstructions[i].Time > t) {
+						t = CurrentRoute.BogusPretrainInstructions[i].Time;
 					} else {
 						t += 1.0;
-						Game.BogusPretrainInstructions[i].Time = t;
+						CurrentRoute.BogusPretrainInstructions[i].Time = t;
 					}
-					if (Game.BogusPretrainInstructions[i].TrackPosition > p) {
-						p = Game.BogusPretrainInstructions[i].TrackPosition;
+					if (CurrentRoute.BogusPretrainInstructions[i].TrackPosition > p) {
+						p = CurrentRoute.BogusPretrainInstructions[i].TrackPosition;
 					} else {
 						p += 1.0;
-						Game.BogusPretrainInstructions[i].TrackPosition = p;
+						CurrentRoute.BogusPretrainInstructions[i].TrackPosition = p;
 					}
 				}
 			}
@@ -218,10 +218,10 @@ namespace OpenBve {
 			RouteProgress = 1.0;
 			// initialize trains
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
-			TrainManager.Trains = new TrainManager.Train[Game.PrecedingTrainTimeDeltas.Length + 1 + (Game.BogusPretrainInstructions.Length != 0 ? 1 : 0)];
+			TrainManager.Trains = new TrainManager.Train[Game.PrecedingTrainTimeDeltas.Length + 1 + (CurrentRoute.BogusPretrainInstructions.Length != 0 ? 1 : 0)];
 			for (int k = 0; k < TrainManager.Trains.Length; k++)
 			{
-				if (k == TrainManager.Trains.Length - 1 & Game.BogusPretrainInstructions.Length != 0)
+				if (k == TrainManager.Trains.Length - 1 & CurrentRoute.BogusPretrainInstructions.Length != 0)
 				{
 					TrainManager.Trains[k] = new TrainManager.Train(TrainState.Bogus);
 				}

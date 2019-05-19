@@ -690,7 +690,7 @@ namespace OpenBve
 				}
 				else if (TrainManager.Trains[i].State == TrainState.Bogus)
 				{
-					p = Game.BogusPretrainInstructions[0].TrackPosition;
+					p = CurrentRoute.BogusPretrainInstructions[0].TrackPosition;
 					TrainManager.Trains[i].AI = new Game.BogusPretrainAI(TrainManager.Trains[i]);
 				}
 				else
