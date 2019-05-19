@@ -52,7 +52,6 @@ namespace OpenBve {
 			internal TransparencyMode TransparencyMode;
 			internal SoundRange SoundRange;
 			internal int SoundNumber;
-			internal bool UseSound;
 			internal int ObjectOptimizationBasicThreshold;
 			internal int ObjectOptimizationFullThreshold;
 			internal int SmoothenOutTurns;
@@ -119,13 +118,6 @@ namespace OpenBve {
 			}
 			Value = 0.0;
 			return false;
-		}
-		// round to power of two
-		internal static int RoundToPowerOfTwo(int Value) {
-			Value -= 1;
-			for (int i = 1; i < sizeof(int) * 8; i *= 2) {
-				Value = Value | Value >> i;
-			} return Value + 1;
 		}
 	}
 }

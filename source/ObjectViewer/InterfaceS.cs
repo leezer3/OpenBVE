@@ -43,20 +43,6 @@ namespace OpenBve {
 			internal int Number;
 			internal double Speed;
 		}
-		internal struct Section {
-			internal int PreviousSection;
-			internal int NextSection;
-			internal AbstractTrain[] Trains;
-			internal bool TrainReachedStopPoint;
-			internal int StationIndex;
-			internal bool Invisible;
-			internal double TrackPosition;
-			internal SectionType Type;
-			internal SectionAspect[] Aspects;
-			internal int CurrentAspect;
-			internal int FreeSections;
-		}
-		internal static Section[] Sections = new Section[] { };
 		internal static int InfoTotalTriangles = 0;
 		internal static int InfoTotalTriangleStrip = 0;
 		internal static int InfoTotalQuads = 0;
