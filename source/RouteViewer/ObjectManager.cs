@@ -1,6 +1,5 @@
 using System;
 using System.Text;
-using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -21,48 +20,8 @@ namespace OpenBve {
 
 		// animated objects
 
-		internal class AnimatedObject {
-			// states
-			internal AnimatedObjectState[] States;
-			internal FunctionScript StateFunction;
-			internal int CurrentState;
-			internal Vector3 TranslateXDirection;
-			internal Vector3 TranslateYDirection;
-			internal Vector3 TranslateZDirection;
-			internal FunctionScript TranslateXFunction;
-			internal FunctionScript TranslateYFunction;
-			internal FunctionScript TranslateZFunction;
-			internal Vector3 RotateXDirection;
-			internal Vector3 RotateYDirection;
-			internal Vector3 RotateZDirection;
-			internal FunctionScript RotateXFunction;
-			internal FunctionScript RotateYFunction;
-			internal FunctionScript RotateZFunction;
-			internal Damping RotateXDamping;
-			internal Damping RotateYDamping;
-			internal Damping RotateZDamping;
-			internal Vector2 TextureShiftXDirection;
-			internal Vector2 TextureShiftYDirection;
-			internal FunctionScript TextureShiftXFunction;
-			internal FunctionScript TextureShiftYFunction;
-			internal bool LEDClockwiseWinding;
-			internal double LEDInitialAngle;
-			internal double LEDLastAngle;
-			/// <summary>If LEDFunction is used, an array of five vectors representing the bottom-left, up-left, up-right, bottom-right and center coordinates of the LED square, or a null reference otherwise.</summary>
-			internal Vector3[] LEDVectors;
-			internal FunctionScript LEDFunction;
-			internal double RefreshRate;
-			internal double SecondsSinceLastUpdate;
-			internal int ObjectIndex;
-			// methods
-			internal bool IsFreeOfFunctions() {
-				if (this.StateFunction != null) return false;
-				if (this.TranslateXFunction != null | this.TranslateYFunction != null | this.TranslateZFunction != null) return false;
-				if (this.RotateXFunction != null | this.RotateYFunction != null | this.RotateZFunction != null) return false;
-				if (this.TextureShiftXFunction != null | this.TextureShiftYFunction != null) return false;
-				if (this.LEDFunction != null) return false;
-				return true;
-			}
+		internal class AnimatedObject : AnimatedObjectBase
+		{
 			internal AnimatedObject Clone() {
 				AnimatedObject Result = new AnimatedObject();
 				Result.States = new AnimatedObjectState[this.States.Length];
