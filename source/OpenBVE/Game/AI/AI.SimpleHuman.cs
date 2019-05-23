@@ -58,6 +58,14 @@ namespace OpenBve
 			}
 			private void PerformDefault()
 			{
+				if (Train.Derailed)
+				{
+					if (Train.Handles.EmergencyBrake.Driver != true)
+					{
+						Train.ApplyEmergencyBrake();
+					}
+					return;
+				}
 				// personality
 				double spd = Train.Specs.CurrentAverageSpeed;
 				if (Train.Station >= 0 & Train.StationState == TrainManager.TrainStopState.Boarding)
