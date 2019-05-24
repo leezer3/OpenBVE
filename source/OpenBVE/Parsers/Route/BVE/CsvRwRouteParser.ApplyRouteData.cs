@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
@@ -1293,21 +1293,36 @@ namespace OpenBve
 											{
 												bool qs = l < b4sd.SignalTextures.Length && b4sd.SignalTextures[l] != null;
 												bool qg = l < b4sd.GlowTextures.Length && b4sd.GlowTextures[l] != null;
+												StaticObject so = new StaticObject(Program.CurrentHost);
+												StaticObject go = null;
 												if (qs & qg)
 												{
-													StaticObject so = b4sd.BaseObject.Clone(b4sd.SignalTextures[l], null);
-													StaticObject go = b4sd.GlowObject.Clone(b4sd.GlowTextures[l], null);
+
+													if (b4sd.BaseObject != null)
+													{
+														so = b4sd.BaseObject.Clone(b4sd.SignalTextures[l], null);
+													}
+													if (b4sd.GlowObject != null)
+													{
+														go = b4sd.GlowObject.Clone(b4sd.GlowTextures[l], null);
+													}
 													so.JoinObjects(go);
 													aoc.Objects[0].States[zi].Object = so;
 												}
 												else if (qs)
 												{
-													StaticObject so = b4sd.BaseObject.Clone(b4sd.SignalTextures[l], null);
+													if (b4sd.BaseObject != null)
+													{
+														so = b4sd.BaseObject.Clone(b4sd.SignalTextures[l], null);
+													}
 													aoc.Objects[0].States[zi].Object = so;
 												}
 												else if (qg)
 												{
-													StaticObject go = b4sd.GlowObject.Clone(b4sd.GlowTextures[l], null);
+													if (b4sd.GlowObject != null)
+													{
+														go = b4sd.GlowObject.Clone(b4sd.GlowTextures[l], null);
+													}
 													aoc.Objects[0].States[zi].Object = go;
 												}
 												if (qs | qg)
