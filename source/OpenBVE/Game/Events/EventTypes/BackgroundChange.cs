@@ -1,4 +1,6 @@
-﻿namespace OpenBve
+﻿using OpenBveApi.Routes;
+
+namespace OpenBve
 {
 	internal static partial class TrackManager
 	{
@@ -6,11 +8,11 @@
 		internal class BackgroundChangeEvent : GeneralEvent
 		{
 			/// <summary>The background which applies previously to this point</summary>
-			private readonly BackgroundManager.BackgroundHandle PreviousBackground;
+			private readonly BackgroundHandle PreviousBackground;
 			/// <summary>The background which applies after this point</summary>
-			private readonly BackgroundManager.BackgroundHandle NextBackground;
+			private readonly BackgroundHandle NextBackground;
 
-			internal BackgroundChangeEvent(double TrackPositionDelta, BackgroundManager.BackgroundHandle PreviousBackground, BackgroundManager.BackgroundHandle NextBackground)
+			internal BackgroundChangeEvent(double TrackPositionDelta, BackgroundHandle PreviousBackground, BackgroundHandle NextBackground)
 			{
 				this.TrackPositionDelta = TrackPositionDelta;
 				this.DontTriggerAnymore = false;

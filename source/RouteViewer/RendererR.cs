@@ -15,8 +15,10 @@ using OpenTK.Graphics.OpenGL;
 using Vector3 = OpenBveApi.Math.Vector3;
 using Vector2 = OpenBveApi.Math.Vector2;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
+
 
 namespace OpenBve {
 	internal static partial class Renderer {
@@ -209,10 +211,12 @@ namespace OpenBve {
 			// initialize
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthMask(true);
-			if (OptionWireframe | World.CurrentBackground.Texture == null) {
+			if (OptionWireframe) {
 				GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-			} else {
-				if (Textures.LoadTexture(World.CurrentBackground.Texture, OpenGlTextureWrapMode.RepeatRepeat))
+			} else
+			{
+				World.StaticBackground b = (World.StaticBackground)World.CurrentBackground;
+				if (Textures.LoadTexture(b.Texture, OpenGlTextureWrapMode.RepeatRepeat))
 				{
 					GL.Clear(ClearBufferMask.DepthBufferBit);
 				}
@@ -260,7 +264,7 @@ namespace OpenBve {
 				GL.Disable(EnableCap.Fog); FogEnabled = false;
 			}
 			GL.Disable(EnableCap.DepthTest);
-			RenderBackground(dx, dy, dz, TimeElapsed);
+			RenderBackground(TimeElapsed);
 			// fog
 			if (Game.CurrentFog.Start < Game.CurrentFog.End & Game.CurrentFog.Start < World.BackgroundImageDistance) {
 				if (!FogEnabled) {
@@ -278,7 +282,7 @@ namespace OpenBve {
 			}
 			// render background
 			GL.Disable(EnableCap.DepthTest);
-			RenderBackground(dx, dy, dz, TimeElapsed);
+			RenderBackground(TimeElapsed);
 			// render polygons
 			if (OptionLighting) {
 				if (!LightingEnabled) {
@@ -785,7 +789,7 @@ namespace OpenBve {
 		}
 
 		// render background
-		private static void RenderBackground(double dx, double dy, double dz, double TimeElapsed) {
+		private static void RenderBackground(double TimeElapsed) {
 			// fog
 			const float fogdistance = 600.0f;
 			if (Game.CurrentFog.Start < Game.CurrentFog.End & Game.CurrentFog.Start < fogdistance) {
@@ -811,19 +815,19 @@ namespace OpenBve {
 				if (World.TargetBackgroundCountdown < 0.0) {
 					World.CurrentBackground = World.TargetBackground;
 					World.TargetBackgroundCountdown = -1.0;
-					RenderBackground(World.CurrentBackground, dx, dy, dz, 1.0f);
+					RenderBackground((World.StaticBackground)World.CurrentBackground, 1.0f);
 				} else {
-					RenderBackground(World.CurrentBackground, dx, dy, dz, 1.0f);
+					RenderBackground((World.StaticBackground)World.CurrentBackground, 1.0f);
 					AlphaFuncValue = 0.0f; GL.AlphaFunc(AlphaFuncComparison, AlphaFuncValue);
 					float Alpha = (float)(1.0 - World.TargetBackgroundCountdown / World.TargetBackgroundDefaultCountdown);
-					RenderBackground(World.TargetBackground, dx, dy, dz, Alpha);
+					RenderBackground((World.StaticBackground)World.TargetBackground, Alpha);
 				}
 			} else {
 				// single
-				RenderBackground(World.CurrentBackground, dx, dy, dz, 1.0f);
+				RenderBackground((World.StaticBackground)World.CurrentBackground, 1.0f);
 			}
 		}
-		private static void RenderBackground(World.Background Data, double dx, double dy, double dz, float Alpha) {
+		private static void RenderBackground(World.StaticBackground Data, float Alpha) {
 			if (Data.Texture != null) {
 				if (Textures.LoadTexture(Data.Texture, OpenGlTextureWrapMode.RepeatRepeat)) {
 					if (LightingEnabled) {

@@ -5,6 +5,7 @@ using System.Xml;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 
 namespace OpenBve
@@ -12,7 +13,7 @@ namespace OpenBve
 	class DynamicBackgroundParser
 	{
 		//Parses an XML background definition
-		public static BackgroundManager.BackgroundHandle ReadBackgroundXML(string fileName)
+		public static BackgroundHandle ReadBackgroundXML(string fileName)
 		{
 			List<BackgroundManager.StaticBackground> Backgrounds = new List<BackgroundManager.StaticBackground>();
 			//The current XML file to load
@@ -40,7 +41,7 @@ namespace OpenBve
 							//The object to use (if object based)
 							StaticObject o = null;
 							//The transition mode between backgrounds
-							BackgroundManager.BackgroundTransitionMode mode = BackgroundManager.BackgroundTransitionMode.FadeIn;
+							BackgroundTransitionMode mode = BackgroundTransitionMode.FadeIn;
 							//The number of times the texture is repeated around the viewing frustrum (if appropriate)
 							double repetitions = 6;
 							foreach (XmlNode c in n.ChildNodes)
@@ -53,13 +54,13 @@ namespace OpenBve
 										switch (c.InnerText.ToLowerInvariant())
 										{
 											case "fadein":
-												mode = BackgroundManager.BackgroundTransitionMode.FadeIn;
+												mode = BackgroundTransitionMode.FadeIn;
 												break;
 											case "fadeout":
-												mode = BackgroundManager.BackgroundTransitionMode.FadeOut;
+												mode = BackgroundTransitionMode.FadeOut;
 												break;
 											case "none":
-												mode = BackgroundManager.BackgroundTransitionMode.None;
+												mode = BackgroundTransitionMode.None;
 												break;
 											default:
 												Interface.AddMessage(MessageType.Error, true, c.InnerText +  "is not a valid background fade mode in file " + fileName);

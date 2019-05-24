@@ -98,6 +98,8 @@
     <Compile Include="Objects\ObjectTypes\WorldObject.cs" />
     <Compile Include="Objects\Parsers\ObjParsers.cs" />
     <Compile Include="Objects\Parsers\XParsers.cs" />
+    <Compile Include="Routes\Background.Handle.cs" />
+    <Compile Include="Routes\Background.TransitionModes.cs" />
     <Compile Include="Sounds\Sounds.PathOrigin.cs" />
     <Compile Include="Sounds\Sounds.RawOrigin.cs" />
     <Compile Include="Sounds\Sounds.SoundOrigin.cs" />

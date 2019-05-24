@@ -87,9 +87,8 @@ namespace OpenBve
 		{
 			// initialize
 			ResetOpenGlState();
-			int OpenGlTextureIndex = 0;
 
-			if (OptionWireframe | OpenGlTextureIndex == 0)
+			if (OptionWireframe)
 			{
 				if (Game.CurrentFog.Start < Game.CurrentFog.End)
 				{

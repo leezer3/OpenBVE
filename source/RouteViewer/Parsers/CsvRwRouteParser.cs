@@ -10,6 +10,7 @@ using OpenBveApi.World;
 using OpenBveApi.Textures;
 using OpenBveApi.Objects;
 using OpenBveApi.Interface;
+using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using OpenBveApi.Runtime;
 
@@ -285,7 +286,7 @@ namespace OpenBve {
 			internal CompatibilitySignalData[] CompatibilitySignalData;
 			internal int[] TimetableDaytime;
 			internal int[] TimetableNighttime;
-			internal World.Background[] Backgrounds;
+			internal BackgroundHandle[] Backgrounds;
 			internal double[] SignalSpeeds;
 			internal Block[] Blocks;
 			internal Marker[] Markers;
@@ -370,7 +371,7 @@ namespace OpenBve {
 				Data.Structure.RailCycle = new int[][] { };
                 Data.Structure.Run = new int[] { };
 				Data.Structure.Flange = new int[] { };
-				Data.Backgrounds = new World.Background[] { };
+				Data.Backgrounds = new BackgroundHandle[] { };
 				Data.TimetableDaytime = new int[] { -1, -1, -1, -1 };
 				Data.TimetableNighttime = new int[] { -1, -1, -1, -1 };
 				// signals
@@ -2653,9 +2654,9 @@ namespace OpenBve {
 												} else {
 													if (CommandIndex1 >= Data.Backgrounds.Length) {
 														int a = Data.Backgrounds.Length;
-														Array.Resize<World.Background>(ref Data.Backgrounds, CommandIndex1 + 1);
+														Array.Resize(ref Data.Backgrounds, CommandIndex1 + 1);
 														for (int k = a; k <= CommandIndex1; k++) {
-															Data.Backgrounds[k] = new World.Background(null, 6, false);
+															Data.Backgrounds[k] = new World.StaticBackground(null, 6, false);
 														}
 													}
 													string f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
@@ -2663,7 +2664,15 @@ namespace OpenBve {
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else
 													{
-														Textures.RegisterTexture(f, out Data.Backgrounds[CommandIndex1].Texture);
+														if (Data.Backgrounds[CommandIndex1] is World.StaticBackground)
+														{
+															World.StaticBackground b = Data.Backgrounds[CommandIndex1] as World.StaticBackground;
+															if (b != null)
+															{
+																Textures.RegisterTexture(f, out b.Texture);
+															}
+
+														}
 													}
 												}
 											}
@@ -2680,9 +2689,9 @@ namespace OpenBve {
 											} else {
 												if (CommandIndex1 >= Data.Backgrounds.Length) {
 													int a = Data.Backgrounds.Length;
-													Array.Resize<World.Background>(ref Data.Backgrounds, CommandIndex1 + 1);
+													Array.Resize(ref Data.Backgrounds, CommandIndex1 + 1);
 													for (int k = a; k <= CommandIndex1; k++) {
-														Data.Backgrounds[k] = new World.Background(null, 6, false);
+														Data.Backgrounds[k] = new World.StaticBackground(null, 6, false);
 													}
 												}
 												int x;
@@ -2691,7 +2700,11 @@ namespace OpenBve {
 												} else if (x == 0) {
 													Interface.AddMessage(MessageType.Error, false, "RepetitionCount is expected to be non-zero in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
-													Data.Backgrounds[CommandIndex1].Repetition = x;
+													World.StaticBackground b = Data.Backgrounds[CommandIndex1] as World.StaticBackground;
+													if (b != null)
+													{
+														b.Repetition = x;
+													}
 												}
 											}
 										}
@@ -2707,9 +2720,9 @@ namespace OpenBve {
 											} else {
 												if (CommandIndex1 >= Data.Backgrounds.Length) {
 													int a = Data.Backgrounds.Length;
-													Array.Resize<World.Background>(ref Data.Backgrounds, CommandIndex1 + 1);
+													Array.Resize(ref Data.Backgrounds, CommandIndex1 + 1);
 													for (int k = a; k <= CommandIndex1; k++) {
-														Data.Backgrounds[k] = new World.Background(null, 6, false);
+														Data.Backgrounds[k] = new World.StaticBackground(null, 6, false);
 													}
 												}
 												int aspect;
@@ -2718,7 +2731,11 @@ namespace OpenBve {
 												} else if (aspect != 0 & aspect != 1) {
 													Interface.AddMessage(MessageType.Error, false, "Value is expected to be either 0 or 1 in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
-													Data.Backgrounds[CommandIndex1].KeepAspectRatio = aspect == 1;
+													World.StaticBackground b = Data.Backgrounds[CommandIndex1] as World.StaticBackground;
+													if (b != null)
+													{
+														b.KeepAspectRatio = aspect == 1;
+													}
 												}
 											}
 										}
@@ -4760,7 +4777,10 @@ namespace OpenBve {
 											}
 											if (typ < 0 | typ >= Data.Backgrounds.Length) {
 												Interface.AddMessage(MessageType.Error, false, "BackgroundTextureIndex " + typ + " references a texture not loaded in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-											} else if (Data.Backgrounds[typ].Texture == null) {
+											}
+											World.StaticBackground b = Data.Backgrounds[typ] as World.StaticBackground;
+											if (b.Texture == null)
+											{
 												Interface.AddMessage(MessageType.Error, false, "BackgroundTextureIndex " + typ + " has not been loaded via Texture.Background in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												Data.Blocks[BlockIndex].Background = typ;
@@ -5339,7 +5359,7 @@ namespace OpenBve {
 				if (Data.Blocks[0].Background >= 0 & Data.Blocks[0].Background < Data.Backgrounds.Length) {
 					World.CurrentBackground = Data.Backgrounds[Data.Blocks[0].Background];
 				} else {
-					World.CurrentBackground = new World.Background(null, 6, false);
+					World.CurrentBackground = new World.StaticBackground(null, 6, false);
 				}
 				World.TargetBackground = World.CurrentBackground;
 			}

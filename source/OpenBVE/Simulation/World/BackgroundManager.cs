@@ -2,39 +2,12 @@
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
+using OpenBveApi.Routes;
 
 namespace OpenBve
 {
 	class BackgroundManager
 	{
-		/// <summary>Represents a handle to an abstract background.</summary>
-		internal abstract class BackgroundHandle
-		{
-			/// <summary>Called once a frame to update the current state of the background</summary>
-			/// <param name="ElapsedTime">The total elapsed frame time</param>
-			/// <param name="Target">Whether this is the target background during a transition (Affects alpha rendering)</param>
-			internal abstract void UpdateBackground(double ElapsedTime, bool Target);
-
-			/// <summary>Renders the background with the specified level of alpha and scale</summary>
-			/// <param name="Alpha">The alpha</param>
-			/// <param name="Scale">The scale</param>
-			internal abstract void RenderBackground(float Alpha, float Scale);
-
-			/// <summary>Renders the background with the specified scale</summary>
-			/// <param name="Scale">The scale</param>
-			internal abstract void RenderBackground(float Scale);
-
-			/// <summary>The current transition mode between backgrounds</summary>
-			internal BackgroundTransitionMode Mode;
-
-			/// <summary>The current transition countdown</summary>
-			internal double Countdown = -1;
-
-			/// <summary>The current transition alpha level</summary>
-			internal float CurrentAlpha = 1.0f;
-
-		}
-
 		/// <summary>Represents a static background, using the default viewing frustrum</summary>
 		internal class StaticBackground : BackgroundHandle
 		{
@@ -95,7 +68,7 @@ namespace OpenBve
 				this.Time = Time;
 			}
 
-			internal override void UpdateBackground(double ElapsedTime, bool Target)
+			public override void UpdateBackground(double ElapsedTime, bool Target)
 			{
 				if (Target)
 				{
@@ -118,12 +91,12 @@ namespace OpenBve
 				}
 			}
 
-			internal override void RenderBackground(float Alpha, float Scale)
+			public override void RenderBackground(float Alpha, float Scale)
 			{
 				Renderer.RenderBackground(this, Alpha, Scale);
 			}
 
-			internal override void RenderBackground(float Scale)
+			public override void RenderBackground(float Scale)
 			{
 				Renderer.RenderBackground(this, 1.0f, Scale);
 			}
@@ -147,7 +120,7 @@ namespace OpenBve
 			}
 
 
-			internal override void UpdateBackground(double ElapsedTime, bool Target)
+			public override void UpdateBackground(double ElapsedTime, bool Target)
 			{
 				if (Backgrounds.Length < 2)
 				{
@@ -206,12 +179,12 @@ namespace OpenBve
 				}				
 			}
 
-			internal override void RenderBackground(float Alpha, float Scale)
+			public override void RenderBackground(float Alpha, float Scale)
 			{
 				Renderer.RenderBackground(this.Backgrounds[CurrentBackgroundIndex], Alpha, Scale);
 			}
 
-			internal override void RenderBackground(float Scale)
+			public override void RenderBackground(float Scale)
 			{
 				if (this.CurrentBackgroundIndex != this.PreviousBackgroundIndex)
 				{
@@ -265,31 +238,23 @@ namespace OpenBve
 				}
 			}
 
-			internal override void UpdateBackground(double TimeElapsed, bool Target)
+			public override void UpdateBackground(double TimeElapsed, bool Target)
 			{
 				//No updates required
 			}
 
-			internal override void RenderBackground(float Alpha, float Scale)
+			public override void RenderBackground(float Alpha, float Scale)
 			{
 				Renderer.RenderBackground(this);
 			}
 
-			internal override void RenderBackground(float Scale)
+			public override void RenderBackground(float Scale)
 			{
 				Renderer.RenderBackground(this);
 			}
 		}
 
-		internal enum BackgroundTransitionMode
-		{
-			/// <summary>No transition is performed</summary>
-			None = 0,
-			/// <summary>The new background fades in</summary>
-			FadeIn = 1,
-			/// <summary>The old background fades out</summary>
-			FadeOut = 2
-		}
+		
 
 		/// <summary>The currently displayed background texture</summary>
 		internal static BackgroundHandle CurrentBackground = new StaticBackground(null, 6, false);

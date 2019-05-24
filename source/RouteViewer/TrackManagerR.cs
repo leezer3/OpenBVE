@@ -7,6 +7,7 @@
 
 using System;
 using OpenBveApi.Math;
+using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 
 namespace OpenBve {
@@ -33,9 +34,9 @@ namespace OpenBve {
         }
         // background change
         internal class BackgroundChangeEvent : GeneralEvent {
-            internal World.Background PreviousBackground;
-            internal World.Background NextBackground;
-            internal BackgroundChangeEvent(double TrackPositionDelta, World.Background PreviousBackground, World.Background NextBackground) {
+            internal BackgroundHandle PreviousBackground;
+            internal BackgroundHandle NextBackground;
+            internal BackgroundChangeEvent(double TrackPositionDelta, BackgroundHandle PreviousBackground, BackgroundHandle NextBackground) {
                 this.TrackPositionDelta = TrackPositionDelta;
                 this.DontTriggerAnymore = false;
                 this.PreviousBackground = PreviousBackground;

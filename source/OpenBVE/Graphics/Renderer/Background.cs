@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 
@@ -69,12 +70,12 @@ namespace OpenBve
 			switch (BackgroundManager.TargetBackground.Mode)
 			{
 				//Render, switching on the transition mode
-				case BackgroundManager.BackgroundTransitionMode.FadeIn:
+				case BackgroundTransitionMode.FadeIn:
 					BackgroundManager.CurrentBackground.RenderBackground(1.0f, scale);
 					Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 					BackgroundManager.TargetBackground.RenderBackground(BackgroundManager.TargetBackground.CurrentAlpha, scale);
 					break;
-				case BackgroundManager.BackgroundTransitionMode.FadeOut:
+				case BackgroundTransitionMode.FadeOut:
 					BackgroundManager.TargetBackground.RenderBackground(1.0f, scale);
 					Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 					BackgroundManager.CurrentBackground.RenderBackground(BackgroundManager.TargetBackground.CurrentAlpha, scale);
@@ -236,11 +237,11 @@ namespace OpenBve
 			SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 			switch (Data.Backgrounds[Data.CurrentBackgroundIndex].Mode)
 			{
-				case BackgroundManager.BackgroundTransitionMode.FadeIn:
+				case BackgroundTransitionMode.FadeIn:
 					RenderBackground(Data.Backgrounds[Data.PreviousBackgroundIndex], 1.0f, scale);
 					RenderBackground(Data.Backgrounds[Data.CurrentBackgroundIndex], Data.CurrentAlpha, scale);
 					break;
-				case BackgroundManager.BackgroundTransitionMode.FadeOut:
+				case BackgroundTransitionMode.FadeOut:
 					RenderBackground(Data.Backgrounds[Data.CurrentBackgroundIndex], 1.0f, scale);
 					RenderBackground(Data.Backgrounds[Data.PreviousBackgroundIndex], Data.CurrentAlpha, scale);
 					break;

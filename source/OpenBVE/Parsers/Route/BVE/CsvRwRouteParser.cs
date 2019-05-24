@@ -7,6 +7,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using OpenBveApi.Objects;
 using OpenBveApi.Interface;
+using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using OpenBve.SignalManager;
 
@@ -125,7 +126,7 @@ namespace OpenBve {
 				Data.Structure.RailCycles = new int[][] { };
 				Data.Structure.Run = new int[] {};
 				Data.Structure.Flange = new int[] {};
-				Data.Backgrounds = new BackgroundManager.BackgroundHandle[] {};
+				Data.Backgrounds = new BackgroundHandle[] {};
 				Data.TimetableDaytime = new OpenBveApi.Textures.Texture[] {null, null, null, null};
 				Data.TimetableNighttime = new OpenBveApi.Textures.Texture[] {null, null, null, null};
 				// signals
@@ -1849,7 +1850,7 @@ namespace OpenBve {
 												} else {
 													if (CommandIndex1 >= Data.Backgrounds.Length) {
 														int a = Data.Backgrounds.Length;
-														Array.Resize<BackgroundManager.BackgroundHandle>(ref Data.Backgrounds, CommandIndex1 + 1);
+														Array.Resize(ref Data.Backgrounds, CommandIndex1 + 1);
 														for (int k = a; k <= CommandIndex1; k++) {
 															Data.Backgrounds[k] = new BackgroundManager.StaticBackground(null, 6, false);
 														}
@@ -1875,7 +1876,7 @@ namespace OpenBve {
 														{
 															try
 															{
-																BackgroundManager.BackgroundHandle h = DynamicBackgroundParser.ReadBackgroundXML(f);
+																BackgroundHandle h = DynamicBackgroundParser.ReadBackgroundXML(f);
 																Data.Backgrounds[CommandIndex1] = h;
 															}
 															catch
@@ -1911,7 +1912,7 @@ namespace OpenBve {
 											} else {
 												if (CommandIndex1 >= Data.Backgrounds.Length) {
 													int a = Data.Backgrounds.Length;
-													Array.Resize<BackgroundManager.BackgroundHandle>(ref Data.Backgrounds, CommandIndex1 + 1);
+													Array.Resize(ref Data.Backgrounds, CommandIndex1 + 1);
 													for (int k = a; k <= CommandIndex1; k++) {
 														Data.Backgrounds[k] = new BackgroundManager.StaticBackground(null, 6, false);
 													}
@@ -1942,7 +1943,7 @@ namespace OpenBve {
 											} else {
 												if (CommandIndex1 >= Data.Backgrounds.Length) {
 													int a = Data.Backgrounds.Length;
-													Array.Resize<BackgroundManager.BackgroundHandle>(ref Data.Backgrounds, CommandIndex1 + 1);
+													Array.Resize(ref Data.Backgrounds, CommandIndex1 + 1);
 													for (int k = a; k <= CommandIndex1; k++) {
 														Data.Backgrounds[k] = new BackgroundManager.StaticBackground(null, 6, false);
 													}

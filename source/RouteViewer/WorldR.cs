@@ -7,6 +7,7 @@
 
 using System;
 using OpenBveApi.Math;
+using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 
@@ -22,18 +23,30 @@ namespace OpenBve {
 		internal static double BackwardViewingDistance;
 		internal static double ExtraViewingDistance;
 		internal static double BackgroundImageDistance;
-		internal struct Background {
+		internal class StaticBackground : BackgroundHandle {
 			internal Texture Texture;
 			internal int Repetition;
 			internal bool KeepAspectRatio;
-			internal Background(Texture texture, int Repetition, bool KeepAspectRatio) {
+			internal StaticBackground(Texture texture, int Repetition, bool KeepAspectRatio) {
 				this.Texture = texture;
 				this.Repetition = Repetition;
 				this.KeepAspectRatio = KeepAspectRatio;
 			}
+
+			public override void UpdateBackground(double ElapsedTime, bool Target)
+			{
+			}
+
+			public override void RenderBackground(float Alpha, float Scale)
+			{
+			}
+
+			public override void RenderBackground(float Scale)
+			{
+			}
 		}
-		internal static Background CurrentBackground = new Background(null, 6, false);
-		internal static Background TargetBackground = new Background(null, 6, false);
+		internal static BackgroundHandle CurrentBackground = new StaticBackground(null, 6, false);
+		internal static BackgroundHandle TargetBackground = new StaticBackground(null, 6, false);
 		internal const double TargetBackgroundDefaultCountdown = 0.8;
 		internal static double TargetBackgroundCountdown;
 
