@@ -321,8 +321,6 @@
     <Compile Include="System\Input\InputDevicePlugin.cs" />
     <Compile Include="System\Logging\BlackBox.cs" />
     <Compile Include="System\Logging\Score.cs" />
-    <Compile Include="System\Messages\Message.cs" />
-    <Compile Include="System\Messages\Message.MessageType.cs" />
     <Compile Include="System\Options.cs" />
     <Compile Include="System\Program\CommandLine.cs" />
     <Compile Include="UserInterface\formRaildriverCalibration.cs">
