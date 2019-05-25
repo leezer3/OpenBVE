@@ -13,8 +13,6 @@ namespace OpenBve
 		private static ViewPortMode CurrentViewPortMode = ViewPortMode.Scenery;
 		internal static OutputMode CurrentOutputMode = OutputMode.Default;
 		internal static OutputMode PreviousOutputMode = OutputMode.Default;
-		//Set LoadTextureImmediatelyMode to NotYet for the first frame
-		internal static LoadTextureImmediatelyMode LoadTexturesImmediately = LoadTextureImmediatelyMode.NotYet;
 
 		// the static opaque lists
 		/// <summary>The list of static opaque face groups. Each group contains only objects that are associated the respective group index.</summary>
@@ -111,10 +109,6 @@ namespace OpenBve
 			}
 			GL.PushMatrix();
 			UpdateViewport(ViewPortChangeMode.ChangeToScenery);
-			if (LoadTexturesImmediately == LoadTextureImmediatelyMode.NotYet)
-			{
-				LoadTexturesImmediately = LoadTextureImmediatelyMode.Yes;
-			}
 			// set up camera
 			double dx = World.AbsoluteCameraDirection.X;
 			double dy = World.AbsoluteCameraDirection.Y;
@@ -472,7 +466,6 @@ namespace OpenBve
 			RenderOverlays(TimeElapsed);
 			// finalize rendering
 			GL.PopMatrix();
-			LoadTexturesImmediately = LoadTextureImmediatelyMode.NoLonger;
 		}
 
 		// set alpha func

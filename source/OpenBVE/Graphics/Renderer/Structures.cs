@@ -7,11 +7,6 @@ namespace OpenBve
 {
 	internal static partial class Renderer
 	{
-		/// <summary>
-		/// Defines the behaviour for immediate texture loading
-		/// </summary>
-		internal enum LoadTextureImmediatelyMode { NotYet, Yes, NoLonger }
-		
 		// output mode
 		internal enum OutputMode
 		{
