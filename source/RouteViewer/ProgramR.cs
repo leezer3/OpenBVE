@@ -10,6 +10,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.Windows.Forms;
+using LibRender;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Textures;
 using OpenTK;
@@ -201,15 +202,15 @@ namespace OpenBve {
 				Program.CurrentlyLoading = true;
 				Renderer.RenderScene(0.0);
 				Program.currentGameWindow.SwapBuffers();
-				World.CameraAlignment a = World.CameraCurrentAlignment;
+				CameraAlignment a = World.CameraCurrentAlignment;
 				Textures.UnloadAllTextures();
 				if (Program.LoadRoute())
 				{
 					World.CameraCurrentAlignment = a;
 					TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, -1.0, true, false);
 					TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, a.TrackPosition, true, false);
-					World.CameraAlignmentDirection = new World.CameraAlignment();
-					World.CameraAlignmentSpeed = new World.CameraAlignment();
+					World.CameraAlignmentDirection = new CameraAlignment();
+					World.CameraAlignmentSpeed = new CameraAlignment();
 					ObjectManager.UpdateVisibility(a.TrackPosition, true);
 					ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 				}
@@ -316,14 +317,14 @@ namespace OpenBve {
 							Renderer.TextureLoadingBkg = Textures.RegisterTexture(bitmap, new TextureParameters(null, null));
 							
 						}
-						World.CameraAlignment a = World.CameraCurrentAlignment;
+						CameraAlignment a = World.CameraCurrentAlignment;
 						if (LoadRoute())
 						{
 							World.CameraCurrentAlignment = a;
 							TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, -1.0, true, false);
 							TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, a.TrackPosition, true, false);
-							World.CameraAlignmentDirection = new World.CameraAlignment();
-							World.CameraAlignmentSpeed = new World.CameraAlignment();
+							World.CameraAlignmentDirection = new CameraAlignment();
+							World.CameraAlignmentSpeed = new CameraAlignment();
 							ObjectManager.UpdateVisibility(a.TrackPosition, true);
 							ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 						}
@@ -471,8 +472,8 @@ namespace OpenBve {
 					World.CameraCurrentAlignment.Roll = 0.0;
 					World.CameraCurrentAlignment.Position = new Vector3(0.0, 2.5, 0.0);
 					World.CameraCurrentAlignment.Zoom = 0.0;
-					World.CameraAlignmentDirection = new World.CameraAlignment();
-					World.CameraAlignmentSpeed = new World.CameraAlignment();
+					World.CameraAlignmentDirection = new CameraAlignment();
+					World.CameraAlignmentSpeed = new CameraAlignment();
 					World.VerticalViewingAngle = World.OriginalVerticalViewingAngle;
 					UpdateViewport();
 					World.UpdateAbsoluteCamera(0.0);

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Linq;
+using LibRender;
 using OpenBve.BrakeSystems;
 using OpenBve.Parsers.Panel;
 using OpenBveApi.Objects;
@@ -317,14 +318,14 @@ namespace OpenBve.Parsers.Train
 					if (DocumentElements != null && DocumentElements.Count() != 0)
 					{
 						PanelAnimatedXmlParser.ParsePanelAnimatedXml(interiorFile, currentPath, Train, Car);
-						Train.Cars[Car].CameraRestrictionMode = Camera.RestrictionMode.NotAvailable;
+						Train.Cars[Car].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
 						return;
 					}
 					DocumentElements = CurrentXML.Root.Elements("Panel");
 					if (DocumentElements != null  && DocumentElements.Count() != 0)
 					{
 						PanelXmlParser.ParsePanelXml(interiorFile, currentPath, Train, Car);
-						Train.Cars[Car].CameraRestrictionMode = Camera.RestrictionMode.On;
+						Train.Cars[Car].CameraRestrictionMode = CameraRestrictionMode.On;
 						return;
 					}
 				}
@@ -332,7 +333,7 @@ namespace OpenBve.Parsers.Train
 				{
 					//Only supports panel2.cfg format
 					Panel2CfgParser.ParsePanel2Config(System.IO.Path.GetFileName(interiorFile), System.IO.Path.GetDirectoryName(interiorFile), Encoding.UTF8, Train, Car);
-					Train.Cars[Car].CameraRestrictionMode = Camera.RestrictionMode.On;
+					Train.Cars[Car].CameraRestrictionMode = CameraRestrictionMode.On;
 				}
 				else if (interiorFile.ToLowerInvariant().EndsWith(".animated"))
 				{
@@ -344,7 +345,7 @@ namespace OpenBve.Parsers.Train
 							a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject();
 						}
 						Train.Cars[Car].CarSections[0].Groups[0].Elements = a.Objects;
-						Train.Cars[Car].CameraRestrictionMode = Camera.RestrictionMode.NotAvailable;
+						Train.Cars[Car].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
 					}
 					catch
 					{

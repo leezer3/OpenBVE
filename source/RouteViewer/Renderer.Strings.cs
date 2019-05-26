@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using LibRender;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Textures;
@@ -7,28 +8,6 @@ using OpenTK.Graphics.OpenGL;
 namespace OpenBve {
 	internal static partial class Renderer {
 
-		/// <summary>Measures the size of a string as it would be rendered using the specified font.</summary>
-		/// <param name="font">The font to use.</param>
-		/// <param name="text">The string to render.</param>
-		/// <returns>The size of the string.</returns>
-		internal static Size MeasureString(Fonts.OpenGlFont font, string text) {
-			int width = 0;
-			int height = 0;
-			if (text != null && font != null) {
-				for (int i = 0; i < text.Length; i++) {
-					// ReSharper disable once NotAccessedVariable
-					Texture texture;
-					Fonts.OpenGlFontChar data;
-					i += font.GetCharacterData(text, i, out texture, out data) - 1;
-					width += data.TypographicSize.Width;
-					if (data.TypographicSize.Height > height) {
-						height = data.TypographicSize.Height;
-					}
-				}
-			}
-			return new Size(width, height);
-		}
-
 		/// <summary>Renders a string to the screen.</summary>
 		/// <param name="font">The font to use.</param>
 		/// <param name="text">The string to render.</param>
@@ -36,7 +15,7 @@ namespace OpenBve {
 		/// <param name="alignment">The alignment.</param>
 		/// <param name="color">The color.</param>
 		/// <remarks>This function sets the OpenGL blend function to glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA).</remarks>
-		private static void DrawString(Fonts.OpenGlFont font, string text, Point location, TextAlignment alignment, Color128 color) {
+		private static void DrawString(OpenGlFont font, string text, Point location, TextAlignment alignment, Color128 color) {
 			if (text == null || font == null) {
 				return;
 			}
@@ -49,7 +28,7 @@ namespace OpenBve {
 				int width = 0;
 				for (int i = 0; i < text.Length; i++) {
 					Texture texture;
-					Fonts.OpenGlFontChar data;
+					OpenGlFontChar data;
 					i += font.GetCharacterData(text, i, out texture, out data) - 1;
 					width += data.TypographicSize.Width;
 				}
@@ -66,7 +45,7 @@ namespace OpenBve {
 				int height = 0;
 				for (int i = 0; i < text.Length; i++) {
 					Texture texture;
-					Fonts.OpenGlFontChar data;
+					OpenGlFontChar data;
 					i += font.GetCharacterData(text, i, out texture, out data) - 1;
 					if (data.TypographicSize.Height > height) {
 						height = data.TypographicSize.Height;
@@ -86,7 +65,7 @@ namespace OpenBve {
             GL.Enable(EnableCap.Texture2D);
 			for (int i = 0; i < text.Length; i++) {
 				Texture texture;
-				Fonts.OpenGlFontChar data;
+				OpenGlFontChar data;
 				i += font.GetCharacterData(text, i, out texture, out data) - 1;
 				if (Textures.LoadTexture(texture, OpenGlTextureWrapMode.ClampClamp)) {
                     GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
@@ -144,7 +123,7 @@ namespace OpenBve {
 		/// <param name="color">The color.</param>
 		/// <param name="shadow">Whether to draw a shadow.</param>
 		/// <remarks>This function sets the OpenGL blend function to glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA).</remarks>
-		internal static void DrawString(Fonts.OpenGlFont font, string text, Point location, TextAlignment alignment, Color128 color, bool shadow) {
+		internal static void DrawString(OpenGlFont font, string text, Point location, TextAlignment alignment, Color128 color, bool shadow) {
 			
 			if (shadow) {
 				DrawString(font, text, new Point(location.X - 1, location.Y + 1), alignment, new Color128(0.0f, 0.0f, 0.0f, 0.5f * color.A));

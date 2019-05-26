@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using LibRender;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -488,7 +489,7 @@ namespace OpenBve {
 					ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(Object.RotateZDirection, cosZ, sinZ);
 				}
 				// translate
-				if (Overlay & World.CameraRestriction != World.CameraRestrictionMode.NotAvailable)
+				if (Overlay & World.CameraRestriction != CameraRestrictionMode.NotAvailable)
 				{
 					ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates += Object.States[s].Position - Position;
 					ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(World.AbsoluteCameraDirection, World.AbsoluteCameraUp, World.AbsoluteCameraSide);

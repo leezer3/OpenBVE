@@ -1,4 +1,5 @@
 using System;
+using LibRender;
 using OpenBve.BrakeSystems;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -51,9 +52,9 @@ namespace OpenBve
 			/// <summary>The index of the car within the train</summary>
 			internal readonly int Index;
 			/// <summary>Stores the camera restriction mode for the interior view of this car</summary>
-			internal Camera.RestrictionMode CameraRestrictionMode = Camera.RestrictionMode.NotSpecified;
+			internal CameraRestrictionMode CameraRestrictionMode = CameraRestrictionMode.NotSpecified;
 			/// <summary>Stores the camera interior camera alignment for this car</summary>
-			internal World.CameraAlignment InteriorCamera;
+			internal CameraAlignment InteriorCamera;
 
 			internal bool HasInteriorView = false;
 			
@@ -611,7 +612,7 @@ namespace OpenBve
 			private void UpdateCarSectionElement(int SectionIndex, int GroupIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
 			{
 				Vector3 p;
-				if (CarSections[SectionIndex].Groups[GroupIndex].Overlay & World.CameraRestriction != Camera.RestrictionMode.NotAvailable)
+				if (CarSections[SectionIndex].Groups[GroupIndex].Overlay & World.CameraRestriction != CameraRestrictionMode.NotAvailable)
 				{
 					p = new Vector3(Driver.X, Driver.Y, Driver.Z);
 				}
@@ -652,7 +653,7 @@ namespace OpenBve
 			private void UpdateCarSectionTouchElement(int SectionIndex, int GroupIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
 			{
 				Vector3 p;
-				if (CarSections[SectionIndex].Groups[GroupIndex].Overlay & World.CameraRestriction != Camera.RestrictionMode.NotAvailable)
+				if (CarSections[SectionIndex].Groups[GroupIndex].Overlay & World.CameraRestriction != CameraRestrictionMode.NotAvailable)
 				{
 					p = new Vector3(Driver.X, Driver.Y, Driver.Z);
 				}

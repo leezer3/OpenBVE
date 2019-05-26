@@ -1,4 +1,5 @@
 ﻿using System;
+using LibRender;
 using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
@@ -109,7 +110,7 @@ namespace OpenBve
 							}
 						}
 					}
-					if (Type == ObjectType.Overlay & World.CameraRestriction != Camera.RestrictionMode.NotAvailable)
+					if (Type == ObjectType.Overlay & World.CameraRestriction != CameraRestrictionMode.NotAvailable)
 					{
 						alpha = true;
 					}

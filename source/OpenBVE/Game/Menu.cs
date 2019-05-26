@@ -5,6 +5,7 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;             // for Key
 using System;
 using System.Drawing;
+using LibRender;
 
 namespace OpenBve
 {
@@ -314,7 +315,7 @@ namespace OpenBve
 					{
 						continue;
 					}
-					size = Renderer.MeasureString(Game.Menu.MenuFont, Items[i].Text);
+					size = Game.Menu.MenuFont.MeasureString(Items[i].Text);
 					if (size.Width > Width)
 						Width = size.Width;
 					if (!(Items[i] is MenuCaption) && size.Width > ItemWidth)
@@ -337,7 +338,7 @@ namespace OpenBve
 		// the total line height from the top of an item to the top of the item below (in pixels)
 		private int lineHeight;
 		private SingleMenu[] Menus = { };
-		private Fonts.OpenGlFont menuFont = null;
+		private OpenGlFont menuFont = null;
 		// area occupied by the items of the current menu in screen coordinates
 		private int menuXmin, menuXmax, menuYmin, menuYmax;
 		private int topItemY;           // the top edge of top item
@@ -350,7 +351,7 @@ namespace OpenBve
 				return lineHeight;
 			}
 		}
-		internal Fonts.OpenGlFont MenuFont
+		internal OpenGlFont MenuFont
 		{
 			get
 			{

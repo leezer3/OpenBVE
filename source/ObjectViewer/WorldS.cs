@@ -6,6 +6,7 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
+using LibRender;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 
@@ -21,24 +22,6 @@ namespace OpenBve {
 		internal static double ExtraViewingDistance = 1000.0;
 		internal static double BackgroundImageDistance = 100000.0;
 		
-
-		// relative camera
-		internal struct CameraAlignment {
-			internal Vector3 Position;
-			internal double Yaw;
-			internal double Pitch;
-			internal double Roll;
-			internal double TrackPosition;
-			internal double Zoom;
-			internal CameraAlignment(Vector3 Position, double Yaw, double Pitch, double Roll, double TrackPosition, double Zoom) {
-				this.Position = Position;
-				this.Yaw = Yaw;
-				this.Pitch = Pitch;
-				this.Roll = Roll;
-				this.TrackPosition = TrackPosition;
-				this.Zoom = Zoom;
-			}
-		}
 #pragma warning disable 0649
 		internal static TrackManager.TrackFollower CameraTrackFollower;
 		internal static CameraAlignment CameraCurrentAlignment;
@@ -51,12 +34,6 @@ namespace OpenBve {
 		internal static CameraViewMode CameraMode;
 #pragma warning restore 0649
 
-		// camera restriction
-		internal enum CameraRestrictionMode {
-			NotAvailable = -1,
-			Off = 0,
-			On = 1
-		}
 		internal static CameraRestrictionMode CameraRestriction = CameraRestrictionMode.NotAvailable;
 		
 		// absolute camera

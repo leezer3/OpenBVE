@@ -66,6 +66,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.DirectX", "source\Pl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Wavefront", "source\Plugins\Object.Wavefront\Object.Wavefront.csproj", "{ACAFCA35-01B7-479C-AD5F-9BCE0F8A597B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibRender", "Source\LibRender\LibRender.csproj", "{2072ECD1-C7FF-427C-84DC-063F7C19792E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -362,6 +364,18 @@ Global
 		{ACAFCA35-01B7-479C-AD5F-9BCE0F8A597B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{ACAFCA35-01B7-479C-AD5F-9BCE0F8A597B}.Release|x86.ActiveCfg = Release|Any CPU
 		{ACAFCA35-01B7-479C-AD5F-9BCE0F8A597B}.Release|x86.Build.0 = Release|Any CPU
+		{2072ECD1-C7FF-427C-84DC-063F7C19792E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2072ECD1-C7FF-427C-84DC-063F7C19792E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2072ECD1-C7FF-427C-84DC-063F7C19792E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{2072ECD1-C7FF-427C-84DC-063F7C19792E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{2072ECD1-C7FF-427C-84DC-063F7C19792E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2072ECD1-C7FF-427C-84DC-063F7C19792E}.Debug|x86.Build.0 = Debug|Any CPU
+		{2072ECD1-C7FF-427C-84DC-063F7C19792E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2072ECD1-C7FF-427C-84DC-063F7C19792E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2072ECD1-C7FF-427C-84DC-063F7C19792E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{2072ECD1-C7FF-427C-84DC-063F7C19792E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{2072ECD1-C7FF-427C-84DC-063F7C19792E}.Release|x86.ActiveCfg = Release|Any CPU
+		{2072ECD1-C7FF-427C-84DC-063F7C19792E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Colors;
+﻿using LibRender;
+using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Textures;
 using OpenTK;
@@ -174,7 +175,7 @@ namespace OpenBve
 				{
 					GL.Enable(EnableCap.Lighting); LightingEnabled = true;
 				}
-				if (World.CameraRestriction == Camera.RestrictionMode.NotAvailable)
+				if (World.CameraRestriction == CameraRestrictionMode.NotAvailable)
 				{
 					GL.Light(LightName.Light0, LightParameter.Ambient, new float[] { inv255 * (float)OptionAmbientColor.R, inv255 * (float)OptionAmbientColor.G, inv255 * (float)OptionAmbientColor.B, 1.0f });
 					GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { inv255 * (float)OptionDiffuseColor.R, inv255 * (float)OptionDiffuseColor.G, inv255 * (float)OptionDiffuseColor.B, 1.0f });
@@ -346,7 +347,7 @@ namespace OpenBve
 			lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, dx, dy, dz, ux, uy, uz);
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.LoadMatrix(ref lookat);
-			if (World.CameraRestriction == Camera.RestrictionMode.NotAvailable)
+			if (World.CameraRestriction == CameraRestrictionMode.NotAvailable)
 			{
 				// 3d cab
 				ResetOpenGlState(); // TODO: inserted

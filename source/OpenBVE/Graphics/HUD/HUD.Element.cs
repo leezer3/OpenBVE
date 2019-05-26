@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Colors;
+﻿using LibRender;
+using OpenBveApi.Colors;
 using OpenBveApi.Math;
 
 namespace OpenBve
@@ -24,7 +25,7 @@ namespace OpenBve
 			internal Color32 TextColor;
 			internal Vector2 TextPosition;
 			internal Vector2 TextAlignment;
-			internal Fonts.OpenGlFont Font;
+			internal OpenGlFont Font;
 			internal bool TextShadow;
 			internal string Text;
 			internal float Value1;

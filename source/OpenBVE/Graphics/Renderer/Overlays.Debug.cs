@@ -194,7 +194,7 @@ namespace OpenBve
 					if (Lines[i][0] == '=')
 					{
 						string text = Lines[i].Substring(1);
-						System.Drawing.Size size = MeasureString(Fonts.SmallFont, text);
+						System.Drawing.Size size = Fonts.SmallFont.MeasureString(text);
 						GL.Color4(0.35f, 0.65f, 0.90f, 0.8f);
 						RenderOverlaySolid(x, y, x + size.Width + 6.0f, y + size.Height + 2.0f);
 						DrawString(Fonts.SmallFont, text, new System.Drawing.Point((int)x + 3, (int)y), TextAlignment.TopLeft, Color128.White);
@@ -250,7 +250,7 @@ namespace OpenBve
 					if (Lines[i][0] == '=')
 					{
 						string text = Lines[i].Substring(1);
-						System.Drawing.Size size = MeasureString(Fonts.SmallFont, text);
+						System.Drawing.Size size = Fonts.SmallFont.MeasureString(text);
 						GL.Color4(0.35f, 0.65f, 0.90f, 0.8f);
 						RenderOverlaySolid(x, y, x + size.Width + 6.0f, y + size.Height + 2.0f);
 						DrawString(Fonts.SmallFont, text, new System.Drawing.Point((int)x + 3, (int)y), TextAlignment.TopLeft, Color128.White);

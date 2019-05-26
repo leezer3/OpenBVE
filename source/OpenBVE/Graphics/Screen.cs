@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using LibRender;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -125,7 +126,7 @@ namespace OpenBve
             Height = newHeight;
             if (Loading.Complete)
             {
-                Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
+                Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
                 World.InitializeCameraRestriction();
                 if (Renderer.OptionBackfaceCulling)
                 {
@@ -197,7 +198,7 @@ namespace OpenBve
                 Screen.Height = Interface.CurrentOptions.WindowHeight;
 			}
 			Renderer.InitializeLighting();
-			Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
+			Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
 			Renderer.InitializeMotionBlur();
 			lock (Illustrations.Locker)
 			{

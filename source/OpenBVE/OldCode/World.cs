@@ -2,6 +2,7 @@
 #pragma warning disable 0661 // Defines == or != but does not override Object.GetHashCode
 
 using System;
+using LibRender;
 using OpenBveApi.Math;
 using Vector2 = OpenBveApi.Math.Vector2;
 using OpenBveApi.Objects;
@@ -41,7 +42,7 @@ namespace OpenBve {
 			internal Damping PitchDamping;
 
 			internal void Update(double TimeElapsed) {
-			if (CameraRestriction == Camera.RestrictionMode.NotAvailable) {
+			if (CameraRestriction == CameraRestrictionMode.NotAvailable) {
 				{
 					// pitch
 					double targetY = TrainManager.PlayerTrain.Specs.CurrentAverageAcceleration;
@@ -163,22 +164,7 @@ namespace OpenBve {
 		}
 		
 		// relative camera
-		internal struct CameraAlignment {
-			internal Vector3 Position;
-			internal double Yaw;
-			internal double Pitch;
-			internal double Roll;
-			internal double TrackPosition;
-			internal double Zoom;
-			internal CameraAlignment(Vector3 Position, double Yaw, double Pitch, double Roll, double TrackPosition, double Zoom) {
-				this.Position = Position;
-				this.Yaw = Yaw;
-				this.Pitch = Pitch;
-				this.Roll = Roll;
-				this.TrackPosition = TrackPosition;
-				this.Zoom = Zoom;
-			}
-		}
+		
 		internal static TrackManager.TrackFollower CameraTrackFollower;
 		internal static bool CameraAtWorldEnd;
 		internal static CameraAlignment CameraCurrentAlignment;
@@ -202,7 +188,7 @@ namespace OpenBve {
 		internal static Vector3 CameraRestrictionBottomLeft = new Vector3(-1.0, -1.0, 1.0);
 		internal static Vector3 CameraRestrictionTopRight = new Vector3(1.0, 1.0, 1.0);
 		
-		internal static Camera.RestrictionMode CameraRestriction = Camera.RestrictionMode.NotAvailable;
+		internal static CameraRestrictionMode CameraRestriction = CameraRestrictionMode.NotAvailable;
 
 		// absolute camera
 		internal static Vector3 AbsoluteCameraPosition;
@@ -212,13 +198,13 @@ namespace OpenBve {
 
 		// camera restriction
 		internal static void InitializeCameraRestriction() {
-			if ((CameraMode == CameraViewMode.Interior | CameraMode == CameraViewMode.InteriorLookAhead) & CameraRestriction == Camera.RestrictionMode.On) {
+			if ((CameraMode == CameraViewMode.Interior | CameraMode == CameraViewMode.InteriorLookAhead) & CameraRestriction == CameraRestrictionMode.On) {
 				CameraAlignmentSpeed = new CameraAlignment();
 				UpdateAbsoluteCamera(0.0);
 				if (!PerformCameraRestrictionTest()) {
 					CameraCurrentAlignment = new CameraAlignment();
 					VerticalViewingAngle = OriginalVerticalViewingAngle;
-					Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
+					Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
 					UpdateAbsoluteCamera(0.0);
 					UpdateViewingDistances();
 					if (!PerformCameraRestrictionTest()) {
@@ -248,7 +234,7 @@ namespace OpenBve {
 			}
 		}
 		internal static bool PerformProgressiveAdjustmentForCameraRestriction(ref double Source, double Target, bool Zoom) {
-			if ((CameraMode != CameraViewMode.Interior & CameraMode != CameraViewMode.InteriorLookAhead) | CameraRestriction != Camera.RestrictionMode.On) {
+			if ((CameraMode != CameraViewMode.Interior & CameraMode != CameraViewMode.InteriorLookAhead) | CameraRestriction != CameraRestrictionMode.On) {
 				Source = Target;
 				return true;
 			}
@@ -296,7 +282,7 @@ namespace OpenBve {
 
 		internal static bool PerformCameraRestrictionTest()
 		{
-			if (World.CameraRestriction == Camera.RestrictionMode.On) {
+			if (World.CameraRestriction == CameraRestrictionMode.On) {
 				Vector3[] p = new Vector3[] { CameraRestrictionBottomLeft, CameraRestrictionTopRight };
 				Vector2[] r = new Vector2[2];
 				for (int j = 0; j < 2; j++) {
@@ -436,7 +422,7 @@ namespace OpenBve {
 							zoom = 1.0;
 						}
 						World.VerticalViewingAngle = World.OriginalVerticalViewingAngle / zoom;
-						Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
+						Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
 					}
 				}
 			} else {
@@ -446,7 +432,7 @@ namespace OpenBve {
 					AdjustAlignment(ref World.CameraCurrentAlignment.Position.X, World.CameraAlignmentDirection.Position.X, ref World.CameraAlignmentSpeed.Position.X, TimeElapsed);
 					AdjustAlignment(ref World.CameraCurrentAlignment.Position.Y, World.CameraAlignmentDirection.Position.Y, ref World.CameraAlignmentSpeed.Position.Y, TimeElapsed);
 					AdjustAlignment(ref World.CameraCurrentAlignment.Position.Z, World.CameraAlignmentDirection.Position.Z, ref World.CameraAlignmentSpeed.Position.Z, TimeElapsed);
-					if ((CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead) & CameraRestriction == Camera.RestrictionMode.On) {
+					if ((CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead) & CameraRestriction == CameraRestrictionMode.On) {
 						if (CameraCurrentAlignment.Position.Z > 0.75) {
 							CameraCurrentAlignment.Position.Z = 0.75;
 						}
@@ -544,7 +530,7 @@ namespace OpenBve {
 				double bodyRoll = 0.0;
 				double headRoll = World.CameraCurrentAlignment.Roll;
 				// rotation
-				if (CameraRestriction == Camera.RestrictionMode.NotAvailable & (CameraMode == CameraViewMode.Interior | CameraMode == CameraViewMode.InteriorLookAhead)) {
+				if (CameraRestriction == CameraRestrictionMode.NotAvailable & (CameraMode == CameraViewMode.Interior | CameraMode == CameraViewMode.InteriorLookAhead)) {
 					// with body and head
 					bodyPitch += TrainManager.PlayerTrain.DriverBody.Pitch;
 					headPitch -= 0.2 * TrainManager.PlayerTrain.DriverBody.Pitch;
@@ -677,7 +663,7 @@ namespace OpenBve {
 			World.VerticalViewingAngle = World.OriginalVerticalViewingAngle * Math.Exp(World.CameraCurrentAlignment.Zoom);
 			if (World.VerticalViewingAngle < 0.001) World.VerticalViewingAngle = 0.001;
 			if (World.VerticalViewingAngle > 1.5) World.VerticalViewingAngle = 1.5;
-			Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
+			Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
 		}
 
 		// update viewing distance

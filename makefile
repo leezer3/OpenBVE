@@ -91,6 +91,9 @@ FORMATS_MSTS_FILE     :=Data/Formats/Formats.Msts.dll
 SIGNALMANAGER_ROOT     :=source/SignalManager
 SIGNALMANAGER_FILE     :=SignalManager.dll
 
+LIBRENDER_ROOT     :=source/LibRender
+LIBRENDER_FILE     :=LibRender.dll
+
 OPEN_BVE_ATS_ROOT     :=source/Plugins/OpenBveAts
 OPEN_BVE_ATS_FILE     :=Data/Plugins/OpenBveAts.dll
 
@@ -186,6 +189,7 @@ all: all-debug
 all-debug: print_csc_type
 all-debug: $(DEBUG_DIR)/$(FORMATS_MSTS_FILE)
 all-debug: $(DEBUG_DIR)/$(SIGNALMANAGER_FILE)
+all-debug: $(DEBUG_DIR)/$(LIBRENDER_FILE)
 all-debug: $(DEBUG_DIR)/$(OPEN_BVE_FILE)
 all-debug: $(DEBUG_DIR)/$(OBJECT_BENDER_FILE)
 all-debug: $(DEBUG_DIR)/$(CAR_XML_FILE)
@@ -200,6 +204,7 @@ all-release: ARGS := $(RELEASE_ARGS)
 all-release: OUTPUT_DIR := $(RELEASE_DIR)
 all-release: $(RELEASE_DIR)/$(FORMATS_MSTS_FILE)
 all-release: $(RELEASE_DIR)/$(SIGNALMANAGER_FILE)
+all-release: $(RELEASE_DIR)/$(LIBRENDER_FILE)
 all-release: $(RELEASE_DIR)/$(OPEN_BVE_FILE)
 all-release: $(RELEASE_DIR)/$(OBJECT_BENDER_FILE)
 all-release: $(RELEASE_DIR)/$(CAR_XML_FILE)
@@ -268,6 +273,7 @@ clean:
 	rm -f bin*/OpenBveApi.dll* bin*/OpenBveApi.pdb
 	rm -f bin*/AssimpParser.dll* bin*/AssimpParser.pdb
 	rm -f bin*/SignalManager.dll* bin*/SignalManager.pdb
+	rm -f bin*/LibRender.dll* bin*/LibRender.pdb
 	rm -f bin*/Data/Formats/Formats.Msts.dll* bin*/Data/Formats/Formats.Msts.pdb
 	rm -f bin*/Data/Formats/Formats.DirectX.dll* bin*/Data/Formats/Formats.DirectX.pdb
 	rm -f bin*/Data/InputDevicePlugins/DefaultDisplayPlugin.dll* bin*/Data/InputDevicePlugins/DefaultDisplayPlugin.pdb
@@ -391,6 +397,7 @@ $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_TGA_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(LBAHEADER_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(FORMATS_MSTS_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SIGNALMANAGER_FILE)
+$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(LIBRENDER_FILE)
 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(ASSIMP_FILE) 
@@ -410,12 +417,13 @@ $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(TEXTURE_TGA_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(LBAHEADER_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(FORMATS_MSTS_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SIGNALMANAGER_FILE)
+$(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(LIBRENDER_FILE)
 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE) $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs $(patsubst "%", %, $(OPEN_BVE_SRC)) $(OPEN_BVE_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OPEN_BVE_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OPEN_BVE_OUT) /target:winexe /main:OpenBve.Program $(OPEN_BVE_SRC) $(ARGS) $(OPEN_BVE_DOC) \
 	$(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs \
-	/reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OPEN_BVE_API_OUT) /reference:$(ASSIMP_OUT) /reference:$(FORMATS_MSTS_OUT) /reference:$(SIGNALMANAGER_OUT) \
+	/reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OPEN_BVE_API_OUT) /reference:$(ASSIMP_OUT) /reference:$(FORMATS_MSTS_OUT) /reference:$(SIGNALMANAGER_OUT) /reference:$(LIBRENDER_OUT) \
 	/reference:$(OUTPUT_DIR)/CSScriptLibrary.dll /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/SharpCompress.dll /reference:$(OUTPUT_DIR)/PIEHid32Net.dll \
 	/reference:System.Xml.Linq.dll /reference:System.Core.dll /reference:System.dll \
 	/win32icon:$(ICON) $(addprefix /resource:, $(OPEN_BVE_RESOURCE)) /resource:"assets/Controls/Default.controls",OpenBve.Default.controls /resource:"assets/Cursors/Symbols/plus.png",OpenBve.plus.png  /resource:"assets/Cursors/Symbols/plus.png",OpenBve.minus.png /resource:"assets/Cursors/nk.png",OpenBve.nk.png
@@ -577,6 +585,28 @@ $(DEBUG_DIR)/$(SIGNALMANAGER_FILE) $(RELEASE_DIR)/$(SIGNALMANAGER_FILE): $(SIGNA
 	@$(CSC) /out:$(SIGNALMANAGER_OUT) /target:library $(SIGNALMANAGER_SRC) $(ARGS) $(SIGNALMANAGER_DOC) \
 	/reference:$(OPEN_BVE_API_OUT) /reference:System.Core.dll /reference:System.dll \
 	$(addprefix /resource:, $(SIGNALMANAGER_RESOURCE))
+
+#############
+# LibRender #
+##############
+
+LIBRENDER_FOLDERS  := $(shell find $(LIBRENDER_ROOT) -type d)
+LIBRENDER_SRC      := $(foreach sdir, $(LIBRENDER_FOLDERS), $(wildcard $(sdir)/*.cs))
+LIBRENDER_DOC      := $(addprefix /doc:, $(foreach sdir, $(LIBRENDER_FOLDERS), $(wildcard $(sdir)/*.xml)))
+LIBRENDER_RESX     := $(foreach sdir, $(LIBRENDER_FOLDERS), $(wildcard $(sdir)/*.resx))
+LIBRENDER_RESOURCE := $(addprefix $(LIBRENDER_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst $(dir $(LIBRENDER_ROOT))%.resx, %.resources, $(LIBRENDER_RESX)))))
+LIBRENDER_OUT       =$(OUTPUT_DIR)/$(LIBRENDER_FILE)
+
+$(call create_resource, $(LIBRENDER_RESOURCE), $(LIBRENDER_RESX))
+
+$(DEBUG_DIR)/$(LIBRENDER_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
+$(RELEASE_DIR)/$(LIBRENDER_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
+
+$(DEBUG_DIR)/$(LIBRENDER_FILE) $(RELEASE_DIR)/$(LIBRENDER_FILE): $(LIBRENDER_SRC) $(LIBRENDER_RESOURCE)
+	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(LIBRENDER_OUT)$(COLOR_END)
+	@$(CSC) /out:$(LIBRENDER_OUT) /target:library $(LIBRENDER_SRC) $(ARGS) $(LIBRENDER_DOC) \
+	/reference:$(OPEN_BVE_API_OUT) /reference:System.Core.dll /reference:System.dll \
+	$(addprefix /resource:, $(LIBRENDER_RESOURCE))
 
 #################
 # Object.CsvB3d #
@@ -807,7 +837,7 @@ $(RELEASE_DIR)/$(ROUTE_VIEWER_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
 $(DEBUG_DIR)/$(ROUTE_VIEWER_FILE) $(RELEASE_DIR)/$(ROUTE_VIEWER_FILE): $(ROUTE_VIEWER_SRC) $(ROUTE_VIEWER_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(ROUTE_VIEWER_OUT)$(COLOR_END)
 	@$(CSC) /out:$(ROUTE_VIEWER_OUT) /target:winexe /main:OpenBve.Program $(ROUTE_VIEWER_SRC) $(ARGS) $(ROUTE_VIEWER_DOC) \
-	/reference:$(OPEN_BVE_API_OUT) /reference:$(SIGNALMANAGER_OUT) /reference:$(OUTPUT_DIR)/OpenTK \
+	/reference:$(OPEN_BVE_API_OUT) /reference:$(SIGNALMANAGER_OUT) /reference:$(LIBRENDER_OUT) /reference:$(OUTPUT_DIR)/OpenTK \
 	/reference:System.Core.dll /reference:System.dll \
 	/win32icon:$(ICON) $(addprefix /resource:, $(ROUTE_VIEWER_RESOURCE))
 
@@ -866,7 +896,7 @@ $(RELEASE_DIR)/$(OBJECT_VIEWER_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
 $(DEBUG_DIR)/$(OBJECT_VIEWER_FILE) $(RELEASE_DIR)/$(OBJECT_VIEWER_FILE): $(OBJECT_VIEWER_SRC) $(OBJECT_VIEWER_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OBJECT_VIEWER_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OBJECT_VIEWER_OUT) /target:winexe /main:OpenBve.Program $(OBJECT_VIEWER_SRC) $(ARGS) $(OBJECT_VIEWER_DOC) \
-	/reference:$(OPEN_BVE_API_OUT) /reference:$(SIGNALMANAGER_OUT) /reference:$(ASSIMP_OUT) /reference:$(FORMATS_MSTS_OUT) /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OUTPUT_DIR)/SharpCompress.dll /reference:System.Core.dll \
+	/reference:$(OPEN_BVE_API_OUT) /reference:$(SIGNALMANAGER_OUT) /reference:$(LIBRENDER_OUT) /reference:$(ASSIMP_OUT) /reference:$(FORMATS_MSTS_OUT) /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OUTPUT_DIR)/SharpCompress.dll /reference:System.Core.dll \
 	/win32icon:$(ICON) $(addprefix /resource:, $(OBJECT_VIEWER_RESOURCE))
 
 ###############
