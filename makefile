@@ -588,7 +588,7 @@ $(DEBUG_DIR)/$(SIGNALMANAGER_FILE) $(RELEASE_DIR)/$(SIGNALMANAGER_FILE): $(SIGNA
 
 #############
 # LibRender #
-##############
+#############
 
 LIBRENDER_FOLDERS  := $(shell find $(LIBRENDER_ROOT) -type d)
 LIBRENDER_SRC      := $(foreach sdir, $(LIBRENDER_FOLDERS), $(wildcard $(sdir)/*.cs))

@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -47,7 +49,7 @@
     <Compile Include="Lighting\LightDefinition.cs" />
     <Compile Include="Objects\ObjectFace.cs" />
     <Compile Include="Objects\ObjectListType.cs" />
-    <Compile Include="Output\OutputModes.cs" />
+    <Compile Include="Screen\OutputModes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Text\OpenGlFont.cs" />
     <Compile Include="Text\OpenGlFontChar.cs" />
