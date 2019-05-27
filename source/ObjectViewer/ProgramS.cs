@@ -61,7 +61,7 @@ namespace OpenBve {
 	    {
 			CurrentlyRunOnMono = Type.GetType("Mono.Runtime") != null;
 			CurrentHost = new Host();
-		    
+			LibRender.Renderer.currentHost = CurrentHost;
 	        // file system
 	        FileSystem = FileSystem.FromCommandLineArgs(args);
 	        FileSystem.CreateFileSystem();

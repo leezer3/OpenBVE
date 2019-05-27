@@ -989,7 +989,7 @@ namespace OpenBve {
 							f.WorldPosition.X += dx * f.WorldSide.X + dy * f.WorldUp.X + dz * f.WorldDirection.X;
 							f.WorldPosition.Y += dx * f.WorldSide.Y + dy * f.WorldUp.Y + dz * f.WorldDirection.Y;
 							f.WorldPosition.Z += dx * f.WorldSide.Z + dy * f.WorldUp.Z + dz * f.WorldDirection.Z;
-							RenderCube(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, Camera, t);
+							LibRender.Renderer.DrawCube(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, Camera, t);
 						}
 					}
 				}
@@ -1008,7 +1008,7 @@ namespace OpenBve {
 						f.WorldPosition.X += dy * f.WorldUp.X;
 						f.WorldPosition.Y += dy * f.WorldUp.Y;
 						f.WorldPosition.Z += dy * f.WorldUp.Z;
-						RenderCube(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, Camera, StopTexture);
+						LibRender.Renderer.DrawCube(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, Camera, StopTexture);
 					}
 				}
 			}
@@ -1026,79 +1026,13 @@ namespace OpenBve {
 					f.WorldPosition.X += dy * f.WorldUp.X;
 					f.WorldPosition.Y += dy * f.WorldUp.Y;
 					f.WorldPosition.Z += dy * f.WorldUp.Z;
-					RenderCube(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, Camera, BufferTexture);
+					LibRender.Renderer.DrawCube(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, Camera, BufferTexture);
 				}
 			}
-		}
-		private static void RenderCube(Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, double Size, Vector3 Camera, Texture TextureIndex)
-		{
-			
-			Vector3[] v = new Vector3[8];
-			v[0] = new Vector3(Size, Size, -Size);
-			v[1] = new Vector3(Size, -Size, -Size);
-			v[2] = new Vector3(-Size, -Size, -Size);
-			v[3] = new Vector3(-Size, Size, -Size);
-			v[4] = new Vector3(Size, Size, Size);
-			v[5] = new Vector3(Size, -Size, Size);
-			v[6] = new Vector3(-Size, -Size, Size);
-			v[7] = new Vector3(-Size, Size, Size);
-			for (int i = 0; i < 8; i++)
-			{
-				v[i].Rotate(Direction, Up, Side);
-				v[i] += Position - Camera;
-			}
-			int[][] Faces = new int[6][];
-			Faces[0] = new int[] { 0, 1, 2, 3 };
-			Faces[1] = new int[] { 0, 4, 5, 1 };
-			Faces[2] = new int[] { 0, 3, 7, 4 };
-			Faces[3] = new int[] { 6, 5, 4, 7 };
-			Faces[4] = new int[] { 6, 7, 3, 2 };
-			Faces[5] = new int[] { 6, 2, 1, 5 };
-			if (TextureIndex == null || !Textures.LoadTexture(TextureIndex, OpenGlTextureWrapMode.ClampClamp))
-			{
-				if (TexturingEnabled)
-				{
-					GL.Disable(EnableCap.Texture2D);
-					TexturingEnabled = false;
-				}
-				for (int i = 0; i < 6; i++)
-				{
-					GL.Begin(PrimitiveType.Quads);
-					GL.Color3(1.0, 1.0, 1.0);
-					for (int j = 0; j < 4; j++)
-					{
-						GL.Vertex3(v[Faces[i][j]].X, v[Faces[i][j]].Y, v[Faces[i][j]].Z);
-					}
-					GL.End();
-				}
-				return;
-			}
-			else
-			{
-				TexturingEnabled = true;
-				GL.Enable(EnableCap.Texture2D);
-			}
-			GL.BindTexture(TextureTarget.Texture2D, TextureIndex.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
-			Vector2[][] t = new Vector2[6][];
-				t[0] = new Vector2[] { new Vector2(1.0, 0.0), new Vector2(1.0, 1.0), new Vector2(0.0, 1.0), new Vector2(0.0, 0.0) };
-				t[1] = new Vector2[] { new Vector2(0.0, 0.0), new Vector2(1.0, 0.0), new Vector2(1.0, 1.0), new Vector2(0.0, 1.0) };
-				t[2] = new Vector2[] { new Vector2(1.0, 1.0), new Vector2(0.0, 1.0), new Vector2(0.0, 0.0), new Vector2(1.0, 0.0) };
-				t[3] = new Vector2[] { new Vector2(1.0, 1.0), new Vector2(0.0, 1.0), new Vector2(0.0, 0.0), new Vector2(1.0, 0.0) };
-				t[4] = new Vector2[] { new Vector2(0.0, 1.0), new Vector2(0.0, 0.0), new Vector2(1.0, 0.0), new Vector2(1.0, 1.0) };
-				t[5] = new Vector2[] { new Vector2(0.0, 1.0), new Vector2(0.0, 0.0), new Vector2(1.0, 0.0), new Vector2(1.0, 1.0) };
-			for (int i = 0; i < 6; i++)
-			{
-				GL.Begin(PrimitiveType.Quads);
-				GL.Color3(1.0, 1.0, 1.0);
-				for (int j = 0; j < 4; j++)
-				{
-					GL.TexCoord2(t[i][j].X, t[i][j].Y);
-					GL.Vertex3(v[Faces[i][j]].X, v[Faces[i][j]].Y, v[Faces[i][j]].Z);
-				}
-				GL.End();
-			}
-		}
 
+			TexturingEnabled = true; //Set by the LibRender function
+		}
+		
 		// render overlays
 		private static void RenderOverlays(double TimeElapsed) {
 			// initialize
@@ -1454,6 +1388,7 @@ namespace OpenBve {
                                 Array.Resize(ref AlphaList, AlphaList.Length << 1);
                                 Array.Resize(ref AlphaListDistance, AlphaList.Length);
                             }
+							AlphaList[AlphaListCount] = new ObjectFace();
                             AlphaList[AlphaListCount].ObjectIndex = ObjectIndex;
                             AlphaList[AlphaListCount].FaceIndex = i;
                             AlphaList[AlphaListCount].ObjectListIndex = ObjectListCount;
@@ -1469,6 +1404,7 @@ namespace OpenBve {
                                 Array.Resize(ref TransparentColorList, TransparentColorList.Length << 1);
                                 Array.Resize(ref TransparentColorListDistance, TransparentColorList.Length);
                             }
+							TransparentColorList[TransparentColorListCount] = new ObjectFace();
                             TransparentColorList[TransparentColorListCount].ObjectIndex = ObjectIndex;
                             TransparentColorList[TransparentColorListCount].FaceIndex = i;
                             TransparentColorList[TransparentColorListCount].ObjectListIndex = ObjectListCount;
@@ -1483,6 +1419,7 @@ namespace OpenBve {
                             {
                                 Array.Resize(ref OpaqueList, OpaqueList.Length << 1);
                             }
+							OpaqueList[OpaqueListCount] = new ObjectFace();
                             OpaqueList[OpaqueListCount].ObjectIndex = ObjectIndex;
                             OpaqueList[OpaqueListCount].FaceIndex = i;
                             OpaqueList[OpaqueListCount].ObjectListIndex = ObjectListCount;

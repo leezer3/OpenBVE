@@ -1094,6 +1094,7 @@ namespace OpenBve
                                 Array.Resize(ref AlphaList, AlphaList.Length << 1);
                                 Array.Resize(ref AlphaListDistance, AlphaList.Length);
                             }
+							AlphaList[AlphaListCount] = new ObjectFace();
                             AlphaList[AlphaListCount].ObjectIndex = ObjectIndex;
                             AlphaList[AlphaListCount].FaceIndex = i;
                             AlphaList[AlphaListCount].ObjectListIndex = ObjectListCount;
@@ -1109,6 +1110,7 @@ namespace OpenBve
                                 Array.Resize(ref TransparentColorList, TransparentColorList.Length << 1);
                                 Array.Resize(ref TransparentColorListDistance, TransparentColorList.Length);
                             }
+							TransparentColorList[TransparentColorListCount] = new ObjectFace();
                             TransparentColorList[TransparentColorListCount].ObjectIndex = ObjectIndex;
                             TransparentColorList[TransparentColorListCount].FaceIndex = i;
                             TransparentColorList[TransparentColorListCount].ObjectListIndex = ObjectListCount;
@@ -1123,6 +1125,7 @@ namespace OpenBve
                             {
                                 Array.Resize(ref OpaqueList, OpaqueList.Length << 1);
                             }
+							OpaqueList[OpaqueListCount] = new ObjectFace();
                             OpaqueList[OpaqueListCount].ObjectIndex = ObjectIndex;
                             OpaqueList[OpaqueListCount].FaceIndex = i;
                             OpaqueList[OpaqueListCount].ObjectListIndex = ObjectListCount;
