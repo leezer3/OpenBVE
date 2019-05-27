@@ -1068,19 +1068,19 @@ namespace OpenBve {
 			if (!Program.CurrentlyLoading) {
 				if (ObjectManager.ObjectsUsed == 0) {
 					string[][] Keys = { new string[] { "F7" }, new string[] { "F8" } };
-					RenderKeys(4, 4, 24, Keys);
+					LibRender.Renderer.RenderKeys(4, 4, 24, Fonts.SmallFont, Keys);
 					LibRender.Renderer.DrawString(Fonts.SmallFont, "Open route", new Point(32,4), TextAlignment.TopLeft, Color128.White, true);
 					LibRender.Renderer.DrawString(Fonts.SmallFont, "Display the options window", new Point(32, 24), TextAlignment.TopLeft, Color128.White, true);
 					LibRender.Renderer.DrawString(Fonts.SmallFont, "v" + System.Windows.Forms.Application.ProductVersion, new Point(ScreenWidth - 8, ScreenHeight - 8), TextAlignment.BottomRight, Color128.White);
 				} else if (OptionInterface) {
 					// keys
 					string[][] Keys = { new string[] { "F5" }, new string[] { "F7" }, new string[] { "F8" } };
-					RenderKeys(4, 4, 24, Keys);
+					LibRender.Renderer.RenderKeys(4, 4, 24, Fonts.SmallFont, Keys);
 					LibRender.Renderer.DrawString(Fonts.SmallFont, "Reload route", new Point(32, 4), TextAlignment.TopLeft, Color128.White, true);
 					LibRender.Renderer.DrawString(Fonts.SmallFont, "Open route", new Point(32, 24), TextAlignment.TopLeft, Color128.White, true);
 					LibRender.Renderer.DrawString(Fonts.SmallFont, "Display the options window", new Point(32, 44), TextAlignment.TopLeft, Color128.White, true);
 					Keys = new string[][] { new string[] { "F" }, new string[] { "N" }, new string[] { "E" }, new string[] { "C" }, new string[] { "M" }, new string[] { "I" }};
-					RenderKeys(ScreenWidth - 20, 4, 16, Keys);
+					LibRender.Renderer.RenderKeys(ScreenWidth - 20, 4, 16, Fonts.SmallFont, Keys);
 					LibRender.Renderer.DrawString(Fonts.SmallFont, "Wireframe:", new Point(ScreenWidth -32, 4), TextAlignment.TopRight, Color128.White, true);
 					LibRender.Renderer.DrawString(Fonts.SmallFont, "Normals:", new Point(ScreenWidth - 32, 24), TextAlignment.TopRight, Color128.White, true);
 					LibRender.Renderer.DrawString(Fonts.SmallFont, "Events:", new Point(ScreenWidth - 32, 44), TextAlignment.TopRight, Color128.White, true);
@@ -1089,15 +1089,15 @@ namespace OpenBve {
 					LibRender.Renderer.DrawString(Fonts.SmallFont, "Hide interface:", new Point(ScreenWidth - 32, 104), TextAlignment.TopRight, Color128.White, true);
 					LibRender.Renderer.DrawString(Fonts.SmallFont, (RenderStatsOverlay ? "Hide" : "Show") + " renderer statistics", new Point(ScreenWidth - 32, 124), TextAlignment.TopRight, Color128.White, true);
 					Keys = new string[][] { new string[] { "F10" } };
-					RenderKeys(ScreenWidth - 32, 124, 30, Keys);
+					LibRender.Renderer.RenderKeys(ScreenWidth - 32, 124, 30, Fonts.SmallFont, Keys);
 					Keys = new string[][] { new string[] { null, "W", null }, new string[] { "A", "S", "D" } };
-					RenderKeys(4, ScreenHeight - 40, 16, Keys);
+					LibRender.Renderer.RenderKeys(4, ScreenHeight - 40, 16, Fonts.SmallFont, Keys);
 					Keys = new string[][] { new string[] { null, "↑", null }, new string[] { "←", "↓", "→" } };
-					RenderKeys(0 * ScreenWidth - 48, ScreenHeight - 40, 16, Keys);
+					LibRender.Renderer.RenderKeys(0 * ScreenWidth - 48, ScreenHeight - 40, 16, Fonts.SmallFont, Keys);
 					Keys = new string[][] { new string[] { "P↑" }, new string[] { "P↓" } };
-					RenderKeys((int)(0.5 * ScreenWidth + 32), ScreenHeight - 40, 24, Keys);
+					LibRender.Renderer.RenderKeys((int)(0.5 * ScreenWidth + 32), ScreenHeight - 40, 24, Fonts.SmallFont, Keys);
 					Keys = new string[][] { new string[] { null, "/", "*" }, new string[] { "7", "8", "9" }, new string[] { "4", "5", "6" }, new string[] { "1", "2", "3" }, new string[] { null, "0", "." } };
-					RenderKeys(ScreenWidth - 60, ScreenHeight - 100, 16, Keys);
+					LibRender.Renderer.RenderKeys(ScreenWidth - 60, ScreenHeight - 100, 16, Fonts.SmallFont, Keys);
 					if (Program.JumpToPositionEnabled) {
 						LibRender.Renderer.DrawString(Fonts.SmallFont, "Jump to track position:", new Point(4, 80),TextAlignment.TopLeft, Color128.White, true);
 						double distance;
@@ -1159,7 +1159,7 @@ namespace OpenBve {
 					}
 					if (Interface.MessageCount == 1) {
 						Keys = new string[][] { new string[] { "F9" } };
-						RenderKeys(4, 72, 24, Keys);
+						LibRender.Renderer.RenderKeys(4, 72, 24, Fonts.SmallFont, Keys);
 						if (Interface.LogMessages[0].Type != MessageType.Information)
 						{
 							LibRender.Renderer.DrawString(Fonts.SmallFont, "Display the 1 error message recently generated.", new Point(32, 72), TextAlignment.TopLeft, Color128.Red, true);
@@ -1170,8 +1170,7 @@ namespace OpenBve {
 							LibRender.Renderer.DrawString(Fonts.SmallFont, "Display the 1 message recently generated.", new Point(32, 72), TextAlignment.TopLeft, Color128.White, true);
 						}
 					} else if (Interface.MessageCount > 1) {
-						Keys = new string[][] { new string[] { "F9" } };
-						RenderKeys(4, 72, 24, Keys);
+						LibRender.Renderer.RenderKeys(4, 72, 24, Fonts.SmallFont, new string[][] { new string[] { "F9" } });
 						bool error = false;
 						for (int i = 0; i < Interface.MessageCount; i++)
 						{
@@ -1193,7 +1192,7 @@ namespace OpenBve {
 					}
 					if (RenderStatsOverlay)
 					{
-						RenderKeys(4, ScreenHeight - 126, 116, new string[][] { new string[] { "Renderer Statistics" } });
+						LibRender.Renderer.RenderKeys(4, ScreenHeight - 126, 116, Fonts.SmallFont, new string[][] { new string[] { "Renderer Statistics" } });
 						LibRender.Renderer.DrawString(Fonts.SmallFont, "Total static objects: " + ObjectManager.ObjectsUsed, new Point(4, ScreenHeight - 112), TextAlignment.TopLeft, Color128.White, true);
 						LibRender.Renderer.DrawString(Fonts.SmallFont, "Total animated objects: " + ObjectManager.AnimatedWorldObjectsUsed, new Point(4, ScreenHeight - 100), TextAlignment.TopLeft, Color128.White, true);
 						LibRender.Renderer.DrawString(Fonts.SmallFont, "Current framerate: " + Game.InfoFrameRate.ToString("0.0", Culture) + "fps", new Point(4, ScreenHeight - 88), TextAlignment.TopLeft, Color128.White, true);
@@ -1247,25 +1246,7 @@ namespace OpenBve {
 				return builder.ToString();
 			}
 		}
-
-		// render keys
-		private static void RenderKeys(int Left, int Top, int Width, string[][] Keys) {
-			int py = Top;
-			for (int y = 0; y < Keys.Length; y++) {
-				int px = Left;
-				for (int x = 0; x < Keys[y].Length; x++) {
-					if (Keys[y][x] != null) {
-						LibRender.Renderer.DrawRectangle(null, new Point(px -1, py -1), new Size(Width + 1, 17),  new Color128(0.25f,0.25f, 0.25f,0.5f));
-						LibRender.Renderer.DrawRectangle(null, new Point(px - 1, py - 1), new Size(Width - 1, 15), new Color128(0.75f, 0.75f, 0.75f, 0.5f));
-						LibRender.Renderer.DrawRectangle(null, new Point(px, py), new Size(Width, 16), new Color128(0.5f, 0.5f, 0.5f, 0.5f));
-						LibRender.Renderer.DrawString(Fonts.SmallFont, Keys[y][x], new Point(px -1 + Width /2, py + 7), TextAlignment.CenterMiddle, Color128.White);
-					}
-					px += Width + 4;
-				}
-				py += 20;
-			}
-		}
-
+		
 		// readd objects
 		private static void ReAddObjects() {
 			Object[] List = new Object[ObjectListCount];
