@@ -271,11 +271,11 @@ namespace OpenBve
                     GL.Disable(EnableCap.Lighting);
                 }
                 GL.Color3(1.0, 0.0, 0.0);
-                RenderBox(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), World.AbsoluteCameraPosition);
+                LibRender.Renderer.DrawCube(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), World.AbsoluteCameraPosition, null);
                 GL.Color3(0.0, 1.0, 0.0);
-                RenderBox(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), World.AbsoluteCameraPosition);
+                LibRender.Renderer.DrawCube(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), World.AbsoluteCameraPosition, null);
                 GL.Color3(0.0, 0.0, 1.0);
-                RenderBox(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), World.AbsoluteCameraPosition);
+                LibRender.Renderer.DrawCube(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), World.AbsoluteCameraPosition, null);
                 if (LightingEnabled)
                 {
                     GL.Enable(EnableCap.Lighting);
@@ -421,11 +421,11 @@ namespace OpenBve
                 GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
                 GL.Enable(EnableCap.Blend);
                 GL.Color4(1.0, 0.0, 0.0, 0.2);
-                RenderBox(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), World.AbsoluteCameraPosition);
+                LibRender.Renderer.DrawCube(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), World.AbsoluteCameraPosition, null);
                 GL.Color4(0.0, 1.0, 0.0, 0.2);
-                RenderBox(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), World.AbsoluteCameraPosition);
+                LibRender.Renderer.DrawCube(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), World.AbsoluteCameraPosition, null);
                 GL.Color4(0.0, 0.0, 1.0, 0.2);
-                RenderBox(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), World.AbsoluteCameraPosition);
+                LibRender.Renderer.DrawCube(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), World.AbsoluteCameraPosition, null);
             }
 	        RenderOverlays();
 	        LastBoundTexture = null; //We bind the character texture, so must reset it at the end of the render sequence
@@ -779,48 +779,7 @@ namespace OpenBve
 				}
 			}
 		}
-
-        // render cube
-        private static void RenderBox(Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, Vector3 Size, Vector3 Camera)
-        {
-            if (TexturingEnabled)
-            {
-                GL.Disable(EnableCap.Texture2D);
-                TexturingEnabled = false;
-            }
-            Vector3[] v = new Vector3[8];
-            v[0] = new Vector3(Size.X, Size.Y, -Size.Z);
-            v[1] = new Vector3(Size.X, -Size.Y, -Size.Z);
-            v[2] = new Vector3(-Size.X, -Size.Y, -Size.Z);
-            v[3] = new Vector3(-Size.X, Size.Y, -Size.Z);
-            v[4] = new Vector3(Size.X, Size.Y, Size.Z);
-            v[5] = new Vector3(Size.X, -Size.Y, Size.Z);
-            v[6] = new Vector3(-Size.X, -Size.Y, Size.Z);
-            v[7] = new Vector3(-Size.X, Size.Y, Size.Z);
-            for (int i = 0; i < 8; i++)
-            {
-	            v[i].Rotate(Direction, Up, Side);
-	            v[i] += Position - Camera;
-            }
-            int[][] Faces = new int[6][];
-            Faces[0] = new int[] { 0, 1, 2, 3 };
-            Faces[1] = new int[] { 0, 4, 5, 1 };
-            Faces[2] = new int[] { 0, 3, 7, 4 };
-            Faces[3] = new int[] { 6, 5, 4, 7 };
-            Faces[4] = new int[] { 6, 7, 3, 2 };
-            Faces[5] = new int[] { 6, 2, 1, 5 };
-            for (int i = 0; i < 6; i++)
-            {
-                GL.Begin(PrimitiveType.Quads);
-                for (int j = 0; j < 4; j++)
-                {
-                    GL.Vertex3(v[Faces[i][j]].X, v[Faces[i][j]].Y, v[Faces[i][j]].Z);
-                }
-                GL.End();
-            }
-        }
-
-
+		
         // render overlays
         private static void RenderOverlays()
         {
@@ -841,7 +800,7 @@ namespace OpenBve
                 {
                     string[][] Keys;
                     Keys = new string[][] { new string[] { "F7" }, new string[] { "F8" }, new string[] { "F10" } };
-                    RenderKeys(4.0, 4.0, 20.0, Keys);
+                    LibRender.Renderer.RenderKeys(4, 4, 20, Fonts.SmallFont, Keys);
                     LibRender.Renderer.DrawString(Fonts.SmallFont, "Open one or more objects", new Point(32,4),TextAlignment.TopLeft, TextColor);
                     LibRender.Renderer.DrawString(Fonts.SmallFont, "Display the options window", new Point(32,24),TextAlignment.TopLeft, TextColor);
                     LibRender.Renderer.DrawString(Fonts.SmallFont, "Display the train settings window", new Point(32, 44), TextAlignment.TopLeft, TextColor);
@@ -852,14 +811,14 @@ namespace OpenBve
 	                LibRender.Renderer.DrawString(Fonts.SmallFont, "Position: " + World.AbsoluteCameraPosition.X.ToString("0.00", Culture) + ", " + World.AbsoluteCameraPosition.Y.ToString("0.00", Culture) + ", " + World.AbsoluteCameraPosition.Z.ToString("0.00", Culture), new Point((int)(0.5 * ScreenWidth -88),4),TextAlignment.TopLeft, TextColor);
                     string[][] Keys;
                     Keys = new string[][] { new string[] { "F5" }, new string[] { "F7" }, new string[] { "del" }, new string[] { "F8" }, new string[] { "F10" } };
-                    RenderKeys(4.0, 4.0, 24.0, Keys);
+                    LibRender.Renderer.RenderKeys(4, 4, 24, Fonts.SmallFont, Keys);
                     LibRender.Renderer.DrawString(Fonts.SmallFont, "Reload the currently open objects", new Point(32,4),TextAlignment.TopLeft, TextColor);
                     LibRender.Renderer.DrawString(Fonts.SmallFont, "Open additional objects", new Point(32,24),TextAlignment.TopLeft, TextColor);
                     LibRender.Renderer.DrawString(Fonts.SmallFont, "Clear currently open objects", new Point(32,44),TextAlignment.TopLeft, TextColor);
                     LibRender.Renderer.DrawString(Fonts.SmallFont, "Display the options window", new Point(32,64),TextAlignment.TopLeft, TextColor);
                     LibRender.Renderer.DrawString(Fonts.SmallFont, "Display the train settings window", new Point(32, 84), TextAlignment.TopLeft, TextColor);
 					Keys = new string[][] { new string[] { "F" }, new string[] { "N" }, new string[] { "L" }, new string[] { "G" }, new string[] { "B" }, new string[] { "I" } };
-                    RenderKeys((double)ScreenWidth - 20.0, 4.0, 16.0, Keys);
+                    LibRender.Renderer.RenderKeys(ScreenWidth - 20, 4, 16, Fonts.SmallFont, Keys);
                     LibRender.Renderer.DrawString(Fonts.SmallFont, "Wireframe: " + (Renderer.OptionWireframe ? "on" : "off"), new Point(ScreenWidth - 28,4),TextAlignment.TopRight, TextColor);
                     LibRender.Renderer.DrawString(Fonts.SmallFont, "Normals: " + (Renderer.OptionNormals ? "on" : "off"), new Point(ScreenWidth - 28,24),TextAlignment.TopRight, TextColor);
                     LibRender.Renderer.DrawString(Fonts.SmallFont, "Lighting: " + (Program.LightingTarget == 0 ? "night" : "day"), new Point(ScreenWidth - 28,44),TextAlignment.TopRight, TextColor);
@@ -867,15 +826,14 @@ namespace OpenBve
                     LibRender.Renderer.DrawString(Fonts.SmallFont, "Background: " + GetBackgroundColorName(), new Point(ScreenWidth - 28,84),TextAlignment.TopRight, TextColor);
                     LibRender.Renderer.DrawString(Fonts.SmallFont, "Hide interface", new Point(ScreenWidth - 28,104),TextAlignment.TopRight, TextColor);
                     Keys = new string[][] { new string[] { null, "W", null }, new string[] { "A", "S", "D" } };
-                    RenderKeys(4.0, (double)ScreenHeight - 40.0, 16.0, Keys);
+                    LibRender.Renderer.RenderKeys(4, ScreenHeight - 40, 16, Fonts.SmallFont, Keys);
                     Keys = new string[][] { new string[] { null, "↑", null }, new string[] { "←", "↓", "→" } };
-                    RenderKeys(0.5 * (double)ScreenWidth - 28.0, (double)ScreenHeight - 40.0, 16.0, Keys);
+                    LibRender.Renderer.RenderKeys((int)(0.5 * (double)ScreenWidth - 28), ScreenHeight - 40, 16, Fonts.SmallFont, Keys);
                     Keys = new string[][] { new string[] { null, "8", "9" }, new string[] { "4", "5", "6" }, new string[] { null, "2", "3" } };
-                    RenderKeys((double)ScreenWidth - 60.0, (double)ScreenHeight - 60.0, 16.0, Keys);
+                    LibRender.Renderer.RenderKeys(ScreenWidth - 60, ScreenHeight - 60, 16, Fonts.SmallFont, Keys);
                     if (Interface.MessageCount == 1)
                     {
-                        Keys = new string[][] { new string[] { "F9" } };
-                        RenderKeys(4.0, 112.0, 20.0, Keys);
+	                    LibRender.Renderer.RenderKeys(4, 112, 20, Fonts.SmallFont, new string[][] { new string[] { "F9" } });
 	                    if (Interface.LogMessages[0].Type != MessageType.Information)
 	                    {
 		                    LibRender.Renderer.DrawString(Fonts.SmallFont, "Display the 1 error message recently generated.", new Point(32,112),TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
@@ -889,8 +847,7 @@ namespace OpenBve
                     }
                     else if (Interface.MessageCount > 1)
                     {
-                        Keys = new string[][] { new string[] { "F9" } };
-                        RenderKeys(4.0, 112.0, 20.0, Keys);
+	                    LibRender.Renderer.RenderKeys(4, 112, 20, Fonts.SmallFont, new string[][] { new string[] { "F9" } });
 	                    bool error = false;
 	                    for (int i = 0; i < Interface.MessageCount; i++)
 	                    {
@@ -923,30 +880,6 @@ namespace OpenBve
 	        GL.Ortho(0.0, (double)ScreenWidth, 0.0, (double)ScreenHeight, -1.0, 1.0);
         }
 
-        // render keys
-        private static void RenderKeys(double Left, double Top, double Width, string[][] Keys)
-        {
-            double py = Top;
-            for (int y = 0; y < Keys.Length; y++)
-            {
-                double px = Left;
-                for (int x = 0; x < Keys[y].Length; x++)
-                {
-                    if (Keys[y][x] != null)
-                    {
-                        GL.Color4(0.25, 0.25, 0.25, 0.5);
-                        RenderOverlaySolid(px - 1.0, py - 1.0, px + Width + 1.0, py + 17.0);
-                        GL.Color4(0.75, 0.75, 0.75, 0.5);
-                        RenderOverlaySolid(px - 1.0, py - 1.0, px + Width - 1.0, py + 15.0);
-                        GL.Color4(0.5, 0.5, 0.5, 0.5);
-                        RenderOverlaySolid(px, py, px + Width, py + 16.0);
-                        LibRender.Renderer.DrawString(Fonts.SmallFont, Keys[y][x], new Point((int)(px + 2.0), (int)py), TextAlignment.TopLeft, Color128.White, true);
-                    }
-                    px += Width + 4.0;
-                }
-                py += 20.0;
-            }
-        }
 
         // render overlay solid
         private static void RenderOverlaySolid(double ax, double ay, double bx, double by)
@@ -1094,6 +1027,7 @@ namespace OpenBve
                                 Array.Resize(ref AlphaList, AlphaList.Length << 1);
                                 Array.Resize(ref AlphaListDistance, AlphaList.Length);
                             }
+							AlphaList[AlphaListCount] = new ObjectFace();
                             AlphaList[AlphaListCount].ObjectIndex = ObjectIndex;
                             AlphaList[AlphaListCount].FaceIndex = i;
                             AlphaList[AlphaListCount].ObjectListIndex = ObjectListCount;
@@ -1109,6 +1043,7 @@ namespace OpenBve
                                 Array.Resize(ref TransparentColorList, TransparentColorList.Length << 1);
                                 Array.Resize(ref TransparentColorListDistance, TransparentColorList.Length);
                             }
+							TransparentColorList[TransparentColorListCount] = new ObjectFace();
                             TransparentColorList[TransparentColorListCount].ObjectIndex = ObjectIndex;
                             TransparentColorList[TransparentColorListCount].FaceIndex = i;
                             TransparentColorList[TransparentColorListCount].ObjectListIndex = ObjectListCount;
@@ -1123,6 +1058,7 @@ namespace OpenBve
                             {
                                 Array.Resize(ref OpaqueList, OpaqueList.Length << 1);
                             }
+							OpaqueList[OpaqueListCount] = new ObjectFace();
                             OpaqueList[OpaqueListCount].ObjectIndex = ObjectIndex;
                             OpaqueList[OpaqueListCount].FaceIndex = i;
                             OpaqueList[OpaqueListCount].ObjectListIndex = ObjectListCount;

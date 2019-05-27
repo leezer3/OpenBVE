@@ -7,7 +7,7 @@ namespace LibRender
 {
 	public static partial class Renderer
 	{
-		/// <summary>Draws a rectangle.</summary>
+		/// <summary>Draws a simple 2D rectangle.</summary>
 		/// <param name="texture">The texture, or a null reference.</param>
 		/// <param name="point">The top-left coordinates in pixels.</param>
 		/// <param name="size">The size in pixels.</param>

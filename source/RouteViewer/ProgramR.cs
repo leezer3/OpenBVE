@@ -60,7 +60,7 @@ namespace OpenBve {
 		internal static void Main(string[] args)
 		{
 			CurrentHost = new Host();
-			
+			LibRender.Renderer.currentHost = CurrentHost;
 			commandLineArguments = args;
 			// platform and mono
 			CurrentlyRunOnMono = Type.GetType("Mono.Runtime") != null;
@@ -104,7 +104,6 @@ namespace OpenBve {
 			Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
 			Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
 			// application
-
 			currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntialiasingLevel);
 			currentGameWindow = new RouteViewer(Renderer.ScreenWidth, Renderer.ScreenHeight, currentGraphicsMode, "Route Viewer", GameWindowFlags.Default);
 			currentGameWindow.Visible = true;
