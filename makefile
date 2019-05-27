@@ -605,7 +605,7 @@ $(RELEASE_DIR)/$(LIBRENDER_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
 $(DEBUG_DIR)/$(LIBRENDER_FILE) $(RELEASE_DIR)/$(LIBRENDER_FILE): $(LIBRENDER_SRC) $(LIBRENDER_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(LIBRENDER_OUT)$(COLOR_END)
 	@$(CSC) /out:$(LIBRENDER_OUT) /target:library $(LIBRENDER_SRC) $(ARGS) $(LIBRENDER_DOC) \
-	/reference:$(OPEN_BVE_API_OUT) /reference:System.Core.dll /reference:System.dll \
+	/reference:$(OPEN_BVE_API_OUT) /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:System.Core.dll /reference:System.dll \
 	$(addprefix /resource:, $(LIBRENDER_RESOURCE))
 
 #################
