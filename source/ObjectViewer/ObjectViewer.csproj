@@ -95,7 +95,6 @@
     <Compile Include="Parsers\Ls3DObjectParser.cs" />
     <Compile Include="Parsers\MSTS\ShapeParser.cs" />
     <Compile Include="Plugins.cs" />
-    <Compile Include="Renderer.Strings.cs" />
     <Compile Include="System\GameWindow.cs" />
     <Compile Include="ObjectManager.cs" />
     <Compile Include="Parsers\AnimatedObjectParser.cs" />

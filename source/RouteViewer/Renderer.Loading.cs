@@ -101,7 +101,7 @@ namespace OpenBve
 
 			// fill the screen with background colour
 			GL.Color4(bkgR, bkgG, bkgB, bkgA);
-			DrawRectangle(null, new System.Drawing.Point((int)0, (int)0), new System.Drawing.Size((int)Renderer.ScreenWidth, (int)Renderer.ScreenHeight), null);
+			LibRender.Renderer.DrawRectangle(null, new System.Drawing.Point((int)0, (int)0), new System.Drawing.Size((int)Renderer.ScreenWidth, (int)Renderer.ScreenHeight), null);
 			GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
 			// BACKGROUND IMAGE
 			int bkgHeight = Renderer.ScreenHeight, bkgWidth = Renderer.ScreenWidth;
@@ -132,7 +132,7 @@ namespace OpenBve
 				// draw the background image down from the top screen edge
 				try
 				{
-					DrawRectangle(TextureLoadingBkg, new Point((Renderer.ScreenWidth - bkgWidth)/2, 0), new Size(bkgWidth, bkgHeight), Color128.White);
+					LibRender.Renderer.DrawRectangle(TextureLoadingBkg, new Point((Renderer.ScreenWidth - bkgWidth)/2, 0), new Size(bkgWidth, bkgHeight), Color128.White);
 				}
 				catch
 				{
@@ -146,7 +146,7 @@ namespace OpenBve
 			{
 				// place the centre of the logo at from the screen top
 				int logoTop = (int)(Renderer.ScreenHeight * logoCentreYFactor - TextureLogo.Height / 2.0);
-				DrawRectangle(TextureLogo,new Point((Renderer.ScreenWidth - TextureLogo.Width) / 2, logoTop),new Size(TextureLogo.Width, TextureLogo.Height), Color128.White);
+				LibRender.Renderer.DrawRectangle(TextureLogo,new Point((Renderer.ScreenWidth - TextureLogo.Width) / 2, logoTop),new Size(TextureLogo.Width, TextureLogo.Height), Color128.White);
 			}
 			else
 			{
@@ -177,15 +177,15 @@ namespace OpenBve
 				double percent = 100.0 * routeProgress;
 				string percStr = percent.ToString("0") + "%";
 				// progress frame
-				DrawRectangle(null, new Point(progrMargin - progrBorder, progressTop - progrBorder), new Size(progressWidth + progrBorder * 2, fontHeight + 6), Color128.White);
+				LibRender.Renderer.DrawRectangle(null, new Point(progrMargin - progrBorder, progressTop - progrBorder), new Size(progressWidth + progrBorder * 2, fontHeight + 6), Color128.White);
 				// progress bar
-				DrawRectangle(null, new Point(progrMargin, progressTop), new Size(progressWidth * (int)percent / 100, fontHeight + 4), ColourProgressBar);
+				LibRender.Renderer.DrawRectangle(null, new Point(progrMargin, progressTop), new Size(progressWidth * (int)percent / 100, fontHeight + 4), ColourProgressBar);
 
-				DrawString(Fonts.SmallFont, percStr, new Point(halfWidth, progressTop + 2), TextAlignment.TopMiddle, Color128.Black);
+				LibRender.Renderer.DrawString(Fonts.SmallFont, percStr, new Point(halfWidth, progressTop + 2), TextAlignment.TopMiddle, Color128.Black);
 			}
 
 			string text = "Loading route, please wait.....";
-			DrawString(Fonts.SmallFont, text, new Point(halfWidth, progressTop - fontHeight - 6), TextAlignment.TopMiddle, Color128.White);
+			LibRender.Renderer.DrawString(Fonts.SmallFont, text, new Point(halfWidth, progressTop - fontHeight - 6), TextAlignment.TopMiddle, Color128.White);
 			GL.PopMatrix();
 		}
 

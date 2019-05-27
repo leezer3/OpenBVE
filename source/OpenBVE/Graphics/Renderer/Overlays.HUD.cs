@@ -800,7 +800,7 @@ namespace OpenBve
 					p += Element.TextPosition.X;
 					q += Element.TextPosition.Y;
 					Color128 c = Element.TextColor.CreateTextColor(sc, alpha);
-					DrawString(Element.Font, t, new System.Drawing.Point((int)p, (int)q), TextAlignment.TopLeft, c, Element.TextShadow);
+					LibRender.Renderer.DrawString(Element.Font, t, new System.Drawing.Point((int)p, (int)q), TextAlignment.TopLeft, c, Element.TextShadow);
 				}
 				// overlay
 				if (Element.CenterMiddle.OverlayTexture != null)

@@ -1,13 +1,13 @@
 ﻿using System.Drawing;
-using LibRender;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 
-namespace OpenBve {
-	internal static partial class Renderer {
-
+namespace LibRender
+{
+	public static partial class Renderer
+	{
 		/// <summary>Renders a string to the screen.</summary>
 		/// <param name="font">The font to use.</param>
 		/// <param name="text">The string to render.</param>
@@ -15,7 +15,7 @@ namespace OpenBve {
 		/// <param name="alignment">The alignment.</param>
 		/// <param name="color">The color.</param>
 		/// <remarks>This function sets the OpenGL blend function to glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA).</remarks>
-		private static void DrawString(OpenGlFont font, string text, Point location, TextAlignment alignment, Color128 color) {
+		public static void DrawString(OpenGlFont font, string text, Point location, TextAlignment alignment, Color128 color) {
 			if (text == null || font == null) {
 				return;
 			}
@@ -67,7 +67,7 @@ namespace OpenBve {
 				Texture texture;
 				OpenGlFontChar data;
 				i += font.GetCharacterData(text, i, out texture, out data) - 1;
-				if (Textures.LoadTexture(texture, OpenGlTextureWrapMode.ClampClamp)) {
+				if (currentHost.LoadTexture(texture, OpenGlTextureWrapMode.ClampClamp)) {
                     GL.BindTexture(TextureTarget.Texture2D, texture.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
                     
 					int x = left - (data.PhysicalSize.Width - data.TypographicSize.Width) / 2;
@@ -122,7 +122,7 @@ namespace OpenBve {
 		/// <param name="color">The color.</param>
 		/// <param name="shadow">Whether to draw a shadow.</param>
 		/// <remarks>This function sets the OpenGL blend function to glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA).</remarks>
-		internal static void DrawString(OpenGlFont font, string text, Point location, TextAlignment alignment, Color128 color, bool shadow) {
+		public static void DrawString(OpenGlFont font, string text, Point location, TextAlignment alignment, Color128 color, bool shadow) {
 			if (shadow) {
 				DrawString(font, text, new Point(location.X - 1, location.Y + 1), alignment, new Color128(0.0f, 0.0f, 0.0f, 0.5f * color.A));
 				DrawString(font, text, location, alignment, color);
@@ -130,6 +130,5 @@ namespace OpenBve {
 				DrawString(font, text, location, alignment, color);
 			}
 		}
-		
 	}
 }
