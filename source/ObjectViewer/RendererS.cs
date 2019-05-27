@@ -271,11 +271,11 @@ namespace OpenBve
                     GL.Disable(EnableCap.Lighting);
                 }
                 GL.Color3(1.0, 0.0, 0.0);
-                RenderBox(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), World.AbsoluteCameraPosition);
+                LibRender.Renderer.DrawCube(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), World.AbsoluteCameraPosition, null);
                 GL.Color3(0.0, 1.0, 0.0);
-                RenderBox(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), World.AbsoluteCameraPosition);
+                LibRender.Renderer.DrawCube(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), World.AbsoluteCameraPosition, null);
                 GL.Color3(0.0, 0.0, 1.0);
-                RenderBox(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), World.AbsoluteCameraPosition);
+                LibRender.Renderer.DrawCube(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), World.AbsoluteCameraPosition, null);
                 if (LightingEnabled)
                 {
                     GL.Enable(EnableCap.Lighting);
@@ -421,11 +421,11 @@ namespace OpenBve
                 GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
                 GL.Enable(EnableCap.Blend);
                 GL.Color4(1.0, 0.0, 0.0, 0.2);
-                RenderBox(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), World.AbsoluteCameraPosition);
+                LibRender.Renderer.DrawCube(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), World.AbsoluteCameraPosition, null);
                 GL.Color4(0.0, 1.0, 0.0, 0.2);
-                RenderBox(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), World.AbsoluteCameraPosition);
+                LibRender.Renderer.DrawCube(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), World.AbsoluteCameraPosition, null);
                 GL.Color4(0.0, 0.0, 1.0, 0.2);
-                RenderBox(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), World.AbsoluteCameraPosition);
+                LibRender.Renderer.DrawCube(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), World.AbsoluteCameraPosition, null);
             }
 	        RenderOverlays();
 	        LastBoundTexture = null; //We bind the character texture, so must reset it at the end of the render sequence
@@ -779,48 +779,7 @@ namespace OpenBve
 				}
 			}
 		}
-
-        // render cube
-        private static void RenderBox(Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, Vector3 Size, Vector3 Camera)
-        {
-            if (TexturingEnabled)
-            {
-                GL.Disable(EnableCap.Texture2D);
-                TexturingEnabled = false;
-            }
-            Vector3[] v = new Vector3[8];
-            v[0] = new Vector3(Size.X, Size.Y, -Size.Z);
-            v[1] = new Vector3(Size.X, -Size.Y, -Size.Z);
-            v[2] = new Vector3(-Size.X, -Size.Y, -Size.Z);
-            v[3] = new Vector3(-Size.X, Size.Y, -Size.Z);
-            v[4] = new Vector3(Size.X, Size.Y, Size.Z);
-            v[5] = new Vector3(Size.X, -Size.Y, Size.Z);
-            v[6] = new Vector3(-Size.X, -Size.Y, Size.Z);
-            v[7] = new Vector3(-Size.X, Size.Y, Size.Z);
-            for (int i = 0; i < 8; i++)
-            {
-	            v[i].Rotate(Direction, Up, Side);
-	            v[i] += Position - Camera;
-            }
-            int[][] Faces = new int[6][];
-            Faces[0] = new int[] { 0, 1, 2, 3 };
-            Faces[1] = new int[] { 0, 4, 5, 1 };
-            Faces[2] = new int[] { 0, 3, 7, 4 };
-            Faces[3] = new int[] { 6, 5, 4, 7 };
-            Faces[4] = new int[] { 6, 7, 3, 2 };
-            Faces[5] = new int[] { 6, 2, 1, 5 };
-            for (int i = 0; i < 6; i++)
-            {
-                GL.Begin(PrimitiveType.Quads);
-                for (int j = 0; j < 4; j++)
-                {
-                    GL.Vertex3(v[Faces[i][j]].X, v[Faces[i][j]].Y, v[Faces[i][j]].Z);
-                }
-                GL.End();
-            }
-        }
-
-
+		
         // render overlays
         private static void RenderOverlays()
         {

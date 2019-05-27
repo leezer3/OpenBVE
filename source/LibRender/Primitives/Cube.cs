@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OpenBveApi.Math;
+﻿using OpenBveApi.Math;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 
@@ -20,16 +16,28 @@ namespace LibRender
 		/// <param name="TextureIndex">The texture to apply</param>
 		public static void DrawCube(Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, double Size, Vector3 Camera, Texture TextureIndex)
 		{
-			
+			DrawCube(Position, Direction, Up, Side, new Vector3(Size, Size, Size), Camera, TextureIndex );
+		}
+
+		/// <summary>Draws a 3D cube</summary>
+		/// <param name="Position">The position in world-space</param>
+		/// <param name="Direction">The direction vector</param>
+		/// <param name="Up">The up vector</param>
+		/// <param name="Side">The side vector</param>
+		/// <param name="Size">A 3D vector describing the size of the cube</param>
+		/// <param name="Camera">The camera position</param>
+		/// <param name="TextureIndex">The texture to apply</param>
+		public static void DrawCube(Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, Vector3 Size, Vector3 Camera, Texture TextureIndex)
+		{
 			Vector3[] v = new Vector3[8];
-			v[0] = new Vector3(Size, Size, -Size);
-			v[1] = new Vector3(Size, -Size, -Size);
-			v[2] = new Vector3(-Size, -Size, -Size);
-			v[3] = new Vector3(-Size, Size, -Size);
-			v[4] = new Vector3(Size, Size, Size);
-			v[5] = new Vector3(Size, -Size, Size);
-			v[6] = new Vector3(-Size, -Size, Size);
-			v[7] = new Vector3(-Size, Size, Size);
+			v[0] = new Vector3(Size.X, Size.Y, -Size.Z);
+			v[1] = new Vector3(Size.X, -Size.Y, -Size.Z);
+			v[2] = new Vector3(-Size.X, -Size.Y, -Size.Z);
+			v[3] = new Vector3(-Size.X, Size.Y, -Size.Z);
+			v[4] = new Vector3(Size.X, Size.Y, Size.Z);
+			v[5] = new Vector3(Size.X, -Size.Y, Size.Z);
+			v[6] = new Vector3(-Size.X, -Size.Y, Size.Z);
+			v[7] = new Vector3(-Size.X, Size.Y, Size.Z);
 			for (int i = 0; i < 8; i++)
 			{
 				v[i].Rotate(Direction, Up, Side);
@@ -48,7 +56,6 @@ namespace LibRender
 				for (int i = 0; i < 6; i++)
 				{
 					GL.Begin(PrimitiveType.Quads);
-					GL.Color3(1.0, 1.0, 1.0);
 					for (int j = 0; j < 4; j++)
 					{
 						GL.Vertex3(v[Faces[i][j]].X, v[Faces[i][j]].Y, v[Faces[i][j]].Z);
