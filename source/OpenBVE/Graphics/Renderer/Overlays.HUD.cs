@@ -786,32 +786,29 @@ namespace OpenBve
 				{
 					if (Textures.LoadTexture(Element.CenterMiddle.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
-						float r, g, b, a;
-						CreateBackColor(Element.BackgroundColor, sc, out r, out g, out b, out a);
-						GL.Color4(r, g, b, a * alpha);
+						Color128 c = Element.BackgroundColor.CreateBackColor(sc, alpha);
+						GL.Color4(c.R, c.G, c.B, c.A);
 						RenderOverlayTexture(Element.CenterMiddle.BackgroundTexture, x, y, x + w, y + h);
 					}
 				}
 				{ // text
-					System.Drawing.Size size = MeasureString(Element.Font, t);
+					System.Drawing.Size size = Element.Font.MeasureString(t);
 					float u = size.Width;
 					float v = size.Height;
 					double p = Math.Round(Element.TextAlignment.X < 0 ? x : Element.TextAlignment.X == 0 ? x + 0.5 * (w - u) : x + w - u);
 					double q = Math.Round(Element.TextAlignment.Y < 0 ? y : Element.TextAlignment.Y == 0 ? y + 0.5 * (h - v) : y + h - v);
 					p += Element.TextPosition.X;
 					q += Element.TextPosition.Y;
-					float r, g, b, a;
-					CreateTextColor(Element.TextColor, sc, out r, out g, out b, out a);
-					DrawString(Element.Font, t, new System.Drawing.Point((int)p, (int)q), TextAlignment.TopLeft, new Color128(r, g, b, a * alpha), Element.TextShadow);
+					Color128 c = Element.TextColor.CreateTextColor(sc, alpha);
+					DrawString(Element.Font, t, new System.Drawing.Point((int)p, (int)q), TextAlignment.TopLeft, c, Element.TextShadow);
 				}
 				// overlay
 				if (Element.CenterMiddle.OverlayTexture != null)
 				{
 					if (Textures.LoadTexture(Element.CenterMiddle.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
-						float r, g, b, a;
-						CreateBackColor(Element.OverlayColor, sc, out r, out g, out b, out a);
-						GL.Color4(r, g, b, a * alpha);
+						Color128 c = Element.OverlayColor.CreateBackColor(sc, alpha);
+						GL.Color4(c.R, c.G, c.B, c.A);
 						RenderOverlayTexture(Element.CenterMiddle.OverlayTexture, x, y, x + w, y + h);
 					}
 				}

@@ -9,6 +9,7 @@ using System;
 using System.Threading;
 using System.Text;
 using System.Windows.Forms;
+using LibRender;
 using OpenBve.SignalManager;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -174,7 +175,7 @@ namespace OpenBve {
 			// initialize camera
 			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, -1.0, true, false);
 			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, FirstStationPosition, true, false);
-			World.CameraCurrentAlignment = new World.CameraAlignment(new Vector3(0.0, 2.5, 0.0), 0.0, 0.0, 0.0, FirstStationPosition, 1.0);
+			World.CameraCurrentAlignment = new CameraAlignment(new Vector3(0.0, 2.5, 0.0), 0.0, 0.0, 0.0, FirstStationPosition, 1.0);
 			World.UpdateAbsoluteCamera(0.0);
 			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z);
 		}

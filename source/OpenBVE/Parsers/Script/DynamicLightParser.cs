@@ -3,6 +3,7 @@ using System.Xml;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using System.Linq;
+using LibRender;
 using OpenBveApi.Interface;
 
 namespace OpenBve
@@ -13,7 +14,7 @@ namespace OpenBve
 		public static bool ReadLightingXML(string fileName)
 		{
 			//Prep
-			Renderer.LightDefinitions = new Renderer.LightDefinition[0];
+			Renderer.LightDefinitions = new LightDefinition[0];
 			//The current XML file to load
 			XmlDocument currentXML = new XmlDocument();
 			//Load the object's XML file 
@@ -36,7 +37,7 @@ namespace OpenBve
 				{
 					foreach (XmlNode n in DocumentNodes)
 					{
-						Renderer.LightDefinition currentLight = new Renderer.LightDefinition();
+						LightDefinition currentLight = new LightDefinition();
 						if (n.ChildNodes.OfType<XmlElement>().Any())
 						{
 							bool tf = false, al = false, dl = false, ld = false, cb = false;

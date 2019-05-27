@@ -1,30 +1,12 @@
 ﻿using System;
+using LibRender;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
-using OpenBveApi.Textures;
 
 namespace OpenBve
 {
 	internal static partial class Renderer
 	{
-		/// <summary>
-		/// Defines the behaviour for immediate texture loading
-		/// </summary>
-		internal enum LoadTextureImmediatelyMode { NotYet, Yes, NoLonger }
-		
-		// output mode
-		internal enum OutputMode
-		{
-			/// <summary>Overlays are shown if active</summary>
-			Default = 0,
-			/// <summary>The debug overlay is shown (F10)</summary>
-			Debug = 1,
-			/// <summary>The ATS debug overlay is shown (F10)</summary>
-			DebugATS = 2,
-			/// <summary>No overlays are shown</summary>
-			None = 3
-		}
-
 		// object list
 		private struct Object
 		{
@@ -37,23 +19,7 @@ namespace OpenBve
 		/// The total number of objects in the simulation
 		/// </summary>
 		private static int ObjectCount;
-
-		private enum ObjectListType : byte
-		{
-			/// <summary>The face is fully opaque and originates from an object that is part of the static scenery.</summary>
-			StaticOpaque = 1,
-			/// <summary>The face is fully opaque and originates from an object that is part of the dynamic scenery or of a train exterior.</summary>
-			DynamicOpaque = 2,
-			/// <summary>The face is partly transparent and originates from an object that is part of the scenery or of a train exterior.</summary>
-			DynamicAlpha = 3,
-			/// <summary>The face is fully opaque and originates from an object that is part of the cab.</summary>
-			OverlayOpaque = 4,
-			/// <summary>The face is partly transparent and originates from an object that is part of the cab.</summary>
-			OverlayAlpha = 5,
-			/// <summary>The face is touch element and originates from an object that is part of the cab.</summary>
-			Touch = 6
-		}
-
+		
 		private struct ObjectListReference
 		{
 			/// <summary>The type of list.</summary>
@@ -72,14 +38,7 @@ namespace OpenBve
 			internal Vector3 Upper;
 			internal Vector3 Lower;
 		}
-		private class ObjectFace
-		{
-			internal int ObjectListIndex;
-			internal int ObjectIndex;
-			internal int FaceIndex;
-			internal double Distance;
-			internal OpenGlTextureWrapMode Wrap;
-		}
+		
 		private class ObjectList
 		{
 			internal ObjectFace[] Faces;

@@ -7,6 +7,7 @@
 
 using System;
 using System.Drawing;
+using LibRender;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
@@ -39,13 +40,6 @@ namespace OpenBve {
 		private static Object[] ObjectList = new Object[256];
 		private static int ObjectListCount = 0;
 
-		// face lists
-		private struct ObjectFace {
-			internal int ObjectListIndex;
-			internal int ObjectIndex;
-			internal int FaceIndex;
-			internal OpenGlTextureWrapMode Wrap;
-		}
 		// opaque
 		private static ObjectFace[] OpaqueList = new ObjectFace[256];
 		internal static int OpaqueListCount = 0;

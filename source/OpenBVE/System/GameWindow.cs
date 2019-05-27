@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
+using LibRender;
 using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interface;
@@ -113,7 +114,7 @@ namespace OpenBve
 				//Update the camera position based upon the relative car position
 				TrainManager.PlayerTrain.Cars[World.CameraCar].UpdateCamera();
 			}
-			if (World.CameraRestriction == Camera.RestrictionMode.NotAvailable)
+			if (World.CameraRestriction == CameraRestrictionMode.NotAvailable)
 			{
 				TrainManager.PlayerTrain.DriverBody.Update(TimeElapsed);
 			}
@@ -139,7 +140,7 @@ namespace OpenBve
 				World.CameraSpeed = 0.0;
 			}
 
-			World.CameraAlignmentDirection = new World.CameraAlignment();
+			World.CameraAlignmentDirection = new CameraAlignment();
 			if (MainLoop.Quit != MainLoop.QuitMode.ContinueGame)
 			{
 				Program.currentGameWindow.Exit();
@@ -322,7 +323,7 @@ namespace OpenBve
 			jobs = new Queue<ThreadStart>(10);
 			locks = new Queue<object>(10);
 			Renderer.Initialize();
-			Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
+			Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
 			Renderer.InitializeMotionBlur();
 			Loading.LoadAsynchronously(MainLoop.currentResult.RouteFile, MainLoop.currentResult.RouteEncoding, MainLoop.currentResult.TrainFolder, MainLoop.currentResult.TrainEncoding);
 			LoadingScreenLoop();
@@ -709,7 +710,7 @@ namespace OpenBve
 			}
 
 			// initialize camera
-			if (World.CameraRestriction == Camera.RestrictionMode.NotAvailable)
+			if (World.CameraRestriction == CameraRestrictionMode.NotAvailable)
 			{
 				World.CameraMode = CameraViewMode.InteriorLookAhead;
 			}
@@ -717,8 +718,8 @@ namespace OpenBve
 			TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].UpdateCamera();
 			World.CameraTrackFollower.Update(-1.0, true, false);
 			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z);
-			World.CameraSavedExterior = new World.CameraAlignment(new OpenBveApi.Math.Vector3(-2.5, 1.5, -15.0), 0.3, -0.2, 0.0, PlayerFirstStationPosition, 1.0);
-			World.CameraSavedTrack = new World.CameraAlignment(new OpenBveApi.Math.Vector3(-3.0, 2.5, 0.0), 0.3, 0.0, 0.0, TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition - 10.0, 1.0);
+			World.CameraSavedExterior = new CameraAlignment(new OpenBveApi.Math.Vector3(-2.5, 1.5, -15.0), 0.3, -0.2, 0.0, PlayerFirstStationPosition, 1.0);
+			World.CameraSavedTrack = new CameraAlignment(new OpenBveApi.Math.Vector3(-3.0, 2.5, 0.0), 0.3, 0.0, 0.0, TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition - 10.0, 1.0);
 			// signalling sections
 			for (int i = 0; i < TrainManager.Trains.Length; i++)
 			{
@@ -858,9 +859,9 @@ namespace OpenBve
 						TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
 						TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 					}
-					World.CameraAlignmentDirection = new World.CameraAlignment();
-					World.CameraAlignmentSpeed = new World.CameraAlignment();
-					Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
+					World.CameraAlignmentDirection = new CameraAlignment();
+					World.CameraAlignmentSpeed = new CameraAlignment();
+					Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(0.0);
 					World.UpdateViewingDistances();
 					break;
@@ -880,9 +881,9 @@ namespace OpenBve
 						TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 					}
 
-					World.CameraAlignmentDirection = new World.CameraAlignment();
-					World.CameraAlignmentSpeed = new World.CameraAlignment();
-					Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
+					World.CameraAlignmentDirection = new CameraAlignment();
+					World.CameraAlignmentSpeed = new CameraAlignment();
+					Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(0.0);
 					World.UpdateViewingDistances();
 					break;
@@ -902,9 +903,9 @@ namespace OpenBve
 						TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 					}
 
-					World.CameraAlignmentDirection = new World.CameraAlignment();
-					World.CameraAlignmentSpeed = new World.CameraAlignment();
-					Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
+					World.CameraAlignmentDirection = new CameraAlignment();
+					World.CameraAlignmentSpeed = new CameraAlignment();
+					Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(0.0);
 					World.UpdateViewingDistances();
 					break;
@@ -924,9 +925,9 @@ namespace OpenBve
 						TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 					}
 
-					World.CameraAlignmentDirection = new World.CameraAlignment();
-					World.CameraAlignmentSpeed = new World.CameraAlignment();
-					Renderer.UpdateViewport(Renderer.ViewPortChangeMode.NoChange);
+					World.CameraAlignmentDirection = new CameraAlignment();
+					World.CameraAlignmentSpeed = new CameraAlignment();
+					Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(0.0);
 					World.UpdateViewingDistances();
 					break;

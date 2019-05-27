@@ -1,4 +1,5 @@
 ﻿using System;
+using LibRender;
 using OpenBveApi.Interface;
 
 namespace OpenBve
@@ -78,7 +79,7 @@ namespace OpenBve
                         this.Text = "TEXT";
                         break;
                 }
-                Fonts.OpenGlFont font = Fonts.NormalFont;
+                OpenGlFont font = Fonts.NormalFont;
                 for (int i = 0; i < HUD.CurrentHudElements.Length; i++)
                 {
                     if (HUD.CurrentHudElements[i].Subject.Equals("ats", StringComparison.OrdinalIgnoreCase))
@@ -87,7 +88,7 @@ namespace OpenBve
                         break;
                     }
                 }
-                System.Drawing.Size size = MeasureString(font, this.Text);
+                System.Drawing.Size size = font.MeasureString(this.Text);
                 this.Width = size.Width;
                 this.Height = size.Height;
             }

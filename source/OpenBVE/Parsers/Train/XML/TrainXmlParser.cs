@@ -2,6 +2,7 @@
 using System.Xml;
 using System.Drawing;
 using System.Linq;
+using LibRender;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -121,7 +122,7 @@ namespace OpenBve.Parsers.Train
 						carIndex++;
 					}
 				}
-				if (Train.Cars[Train.DriverCar].CameraRestrictionMode != Camera.RestrictionMode.NotSpecified)
+				if (Train.Cars[Train.DriverCar].CameraRestrictionMode != CameraRestrictionMode.NotSpecified)
 				{
 					World.CameraRestriction = Train.Cars[Train.DriverCar].CameraRestrictionMode;
 					World.UpdateViewingDistances();
@@ -142,7 +143,7 @@ namespace OpenBve.Parsers.Train
 										Train.PowerNotchDescriptions = c.InnerText.Split(';');
 										for (int j = 0; j < Train.PowerNotchDescriptions.Length; j++)
 										{
-											Size s = Renderer.MeasureString(Fonts.NormalFont, Train.PowerNotchDescriptions[j]);
+											Size s = Fonts.NormalFont.MeasureString(Train.PowerNotchDescriptions[j]);
 											if (s.Width > Train.MaxPowerNotchWidth)
 											{
 												Train.MaxPowerNotchWidth = s.Width;
@@ -153,7 +154,7 @@ namespace OpenBve.Parsers.Train
 										Train.BrakeNotchDescriptions = c.InnerText.Split(';');
 										for (int j = 0; j < Train.BrakeNotchDescriptions.Length; j++)
 										{
-											Size s = Renderer.MeasureString(Fonts.NormalFont, Train.BrakeNotchDescriptions[j]);
+											Size s = Fonts.NormalFont.MeasureString(Train.BrakeNotchDescriptions[j]);
 											if (s.Width > Train.MaxBrakeNotchWidth)
 											{
 												Train.MaxBrakeNotchWidth = s.Width;
@@ -164,7 +165,7 @@ namespace OpenBve.Parsers.Train
 										Train.ReverserDescriptions = c.InnerText.Split(';');
 										for (int j = 0; j < Train.ReverserDescriptions.Length; j++)
 										{
-											Size s = Renderer.MeasureString(Fonts.NormalFont, Train.ReverserDescriptions[j]);
+											Size s = Fonts.NormalFont.MeasureString(Train.ReverserDescriptions[j]);
 											if (s.Width > Train.MaxReverserWidth)
 											{
 												Train.MaxReverserWidth = s.Width;

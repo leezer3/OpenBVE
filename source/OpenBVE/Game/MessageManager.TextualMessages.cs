@@ -1,4 +1,5 @@
 ﻿using System;
+using LibRender;
 using OpenBveApi.Colors;
 
 namespace OpenBve
@@ -17,7 +18,7 @@ namespace OpenBve
 			internal MessageDependency Depencency;
 
 			/// <summary>The font used for this message</summary>
-			internal Fonts.OpenGlFont Font;
+			internal OpenGlFont Font;
 
 			internal override void AddMessage()
 			{
@@ -135,7 +136,7 @@ namespace OpenBve
 			/// <summary>Defines the color of the message</summary>
 			internal MessageColor MessageLateColor;
 			/// <summary>The font used for this message</summary>
-			internal Fonts.OpenGlFont Font;
+			internal OpenGlFont Font;
 
 			internal double MessageEarlyTime;
 
@@ -214,7 +215,7 @@ namespace OpenBve
 		internal class MarkerText : Message
 		{
 			/// <summary>The font used for this message</summary>
-			internal Fonts.OpenGlFont Font;
+			internal OpenGlFont Font;
 
 			/// <summary>Creates a marker text</summary>
 			/// <param name="text">The text to be displayed</param>
