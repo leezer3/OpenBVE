@@ -43,7 +43,7 @@ namespace OpenBve
 						t += " - " + (TrainManager.PlayerTrain.Handles.LocoBrake.Actual != 0 ? "L" + TrainManager.PlayerTrain.Handles.LocoBrake.Actual.ToString(Culture) : "N");
 					}
 				}
-				DrawString(Fonts.SmallFont, t, new System.Drawing.Point(2, Screen.Height - 46), TextAlignment.TopLeft, Color128.White, true);
+				LibRender.Renderer.DrawString(Fonts.SmallFont, t, new System.Drawing.Point(2, Screen.Height - 46), TextAlignment.TopLeft, Color128.White, true);
 			}
 			// safety handles
 			{
@@ -74,7 +74,7 @@ namespace OpenBve
 						t += " - " + (TrainManager.PlayerTrain.Handles.LocoBrake.Actual != 0 ? "L" + TrainManager.PlayerTrain.Handles.LocoBrake.Actual.ToString(Culture) : "N");
 					}
 				}
-				DrawString(Fonts.SmallFont, t, new System.Drawing.Point(2, Screen.Height - 32), TextAlignment.TopLeft, Color128.White, true);
+				LibRender.Renderer.DrawString(Fonts.SmallFont, t, new System.Drawing.Point(2, Screen.Height - 32), TextAlignment.TopLeft, Color128.White, true);
 			}
 			// driver handles
 			{
@@ -104,7 +104,7 @@ namespace OpenBve
 						t += " - " + (TrainManager.PlayerTrain.Handles.LocoBrake.Actual != 0 ? "L" + TrainManager.PlayerTrain.Handles.LocoBrake.Actual.ToString(Culture) : "N");
 					}
 				}
-				DrawString(Fonts.SmallFont, t, new System.Drawing.Point(2, Screen.Height - 18), TextAlignment.TopLeft, Color128.White, true);
+				LibRender.Renderer.DrawString(Fonts.SmallFont, t, new System.Drawing.Point(2, Screen.Height - 18), TextAlignment.TopLeft, Color128.White, true);
 			}
 			// debug information
 			int texturesLoaded = Textures.GetNumberOfLoadedTextures();
@@ -197,11 +197,11 @@ namespace OpenBve
 						System.Drawing.Size size = Fonts.SmallFont.MeasureString(text);
 						GL.Color4(0.35f, 0.65f, 0.90f, 0.8f);
 						RenderOverlaySolid(x, y, x + size.Width + 6.0f, y + size.Height + 2.0f);
-						DrawString(Fonts.SmallFont, text, new System.Drawing.Point((int)x + 3, (int)y), TextAlignment.TopLeft, Color128.White);
+						LibRender.Renderer.DrawString(Fonts.SmallFont, text, new System.Drawing.Point((int)x + 3, (int)y), TextAlignment.TopLeft, Color128.White);
 					}
 					else
 					{
-						DrawString(Fonts.SmallFont, Lines[i], new System.Drawing.Point((int)x, (int)y), TextAlignment.TopLeft, Color128.White, true);
+						LibRender.Renderer.DrawString(Fonts.SmallFont, Lines[i], new System.Drawing.Point((int)x, (int)y), TextAlignment.TopLeft, Color128.White, true);
 					}
 					y += 14.0;
 				}
@@ -253,11 +253,11 @@ namespace OpenBve
 						System.Drawing.Size size = Fonts.SmallFont.MeasureString(text);
 						GL.Color4(0.35f, 0.65f, 0.90f, 0.8f);
 						RenderOverlaySolid(x, y, x + size.Width + 6.0f, y + size.Height + 2.0f);
-						DrawString(Fonts.SmallFont, text, new System.Drawing.Point((int)x + 3, (int)y), TextAlignment.TopLeft, Color128.White);
+						LibRender.Renderer.DrawString(Fonts.SmallFont, text, new System.Drawing.Point((int)x + 3, (int)y), TextAlignment.TopLeft, Color128.White);
 					}
 					else
 					{
-						DrawString(Fonts.SmallFont, Lines[i], new System.Drawing.Point((int)x, (int)y), TextAlignment.TopLeft, Color128.White, true);
+						LibRender.Renderer.DrawString(Fonts.SmallFont, Lines[i], new System.Drawing.Point((int)x, (int)y), TextAlignment.TopLeft, Color128.White, true);
 					}
 					y += 14.0;
 					if (y > Screen.Height - 20.0)
@@ -286,7 +286,7 @@ namespace OpenBve
 				{
 					if (!heading[0])
 					{
-						DrawString(Fonts.SmallFont, "Brake pipe", new System.Drawing.Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
+						LibRender.Renderer.DrawString(Fonts.SmallFont, "Brake pipe", new System.Drawing.Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
 						heading[0] = true;
 					}
 					GL.Color3(0.0f, 0.0f, 0.0f);
@@ -301,7 +301,7 @@ namespace OpenBve
 				{
 					if (!heading[1])
 					{
-						DrawString(Fonts.SmallFont, "Auxillary reservoir", new System.Drawing.Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
+						LibRender.Renderer.DrawString(Fonts.SmallFont, "Auxillary reservoir", new System.Drawing.Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
 						heading[1] = true;
 					}
 					GL.Color3(0.0f, 0.0f, 0.0f);
@@ -315,7 +315,7 @@ namespace OpenBve
 				{
 					if (!heading[2])
 					{
-						DrawString(Fonts.SmallFont, "Brake cylinder", new System.Drawing.Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
+						LibRender.Renderer.DrawString(Fonts.SmallFont, "Brake cylinder", new System.Drawing.Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
 						heading[2] = true;
 					}
 					GL.Color3(0.0f, 0.0f, 0.0f);
@@ -330,7 +330,7 @@ namespace OpenBve
 				{
 					if (!heading[3])
 					{
-						DrawString(Fonts.SmallFont, "Main reservoir", new System.Drawing.Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
+						LibRender.Renderer.DrawString(Fonts.SmallFont, "Main reservoir", new System.Drawing.Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
 						heading[3] = true;
 					}
 					GL.Color3(0.0f, 0.0f, 0.0f);
@@ -345,7 +345,7 @@ namespace OpenBve
 				{
 					if (!heading[4])
 					{
-						DrawString(Fonts.SmallFont, "Equalizing reservoir", new System.Drawing.Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
+						LibRender.Renderer.DrawString(Fonts.SmallFont, "Equalizing reservoir", new System.Drawing.Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
 						heading[4] = true;
 					}
 					GL.Color3(0.0f, 0.0f, 0.0f);
@@ -360,7 +360,7 @@ namespace OpenBve
 				{
 					if (!heading[5])
 					{
-						DrawString(Fonts.SmallFont, "Straight air pipe", new System.Drawing.Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
+						LibRender.Renderer.DrawString(Fonts.SmallFont, "Straight air pipe", new System.Drawing.Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
 						heading[5] = true;
 					}
 					GL.Color3(0.0f, 0.0f, 0.0f);

@@ -98,6 +98,11 @@ namespace OpenBve {
 			texture = null;
 			return false;
 		}
+
+		public override bool LoadTexture(Texture Texture, OpenGlTextureWrapMode wrapMode)
+		{
+			return Textures.LoadTexture(Texture, wrapMode);
+		}
 		
 		/// <summary>Registers a texture and returns a handle to the texture.</summary>
 		/// <param name="path">The path to the file or folder that contains the texture.</param>

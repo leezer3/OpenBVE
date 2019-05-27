@@ -179,7 +179,7 @@ namespace OpenBve
 						double q = Math.Round(Element.TextAlignment.Y < 0 ? y : Element.TextAlignment.Y > 0 ? y + lcrh - v : y + 0.5 * (lcrh - v));
 						p += Element.TextPosition.X;
 						q += Element.TextPosition.Y;
-						DrawString(Element.Font, t, new System.Drawing.Point((int)p, (int)q), TextAlignment.TopLeft, tc, Element.TextShadow);
+						LibRender.Renderer.DrawString(Element.Font, t, new System.Drawing.Point((int)p, (int)q), TextAlignment.TopLeft, tc, Element.TextShadow);
 					}
 					// left overlay
 					if (Left.OverlayTexture != null)

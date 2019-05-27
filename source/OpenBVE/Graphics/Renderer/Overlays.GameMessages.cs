@@ -204,7 +204,7 @@ namespace OpenBve
 							: py + 0.5 * (lcrh - v));
 					p += Element.TextPosition.X;
 					q += Element.TextPosition.Y;
-					DrawString(Element.Font, t, new System.Drawing.Point((int)p, (int)q),
+					LibRender.Renderer.DrawString(Element.Font, t, new System.Drawing.Point((int)p, (int)q),
 						TextAlignment.TopLeft, new Color128(tc.R, tc.G, tc.B, tc.A * alpha), Element.TextShadow);
 				}
 				// left overlay

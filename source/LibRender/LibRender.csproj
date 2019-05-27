@@ -33,6 +33,10 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OpenTK, Version=3.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\dependencies\OpenTK.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -45,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Camera\CameraAlignment.cs" />
     <Compile Include="Camera\CameraRestrictionMode.cs" />
+    <Compile Include="Primitives\Rectangle.cs" />
     <Compile Include="Renderer.cs" />
     <Compile Include="Lighting\LightDefinition.cs" />
     <Compile Include="Objects\ObjectFace.cs" />
@@ -54,6 +59,7 @@
     <Compile Include="Text\OpenGlFont.cs" />
     <Compile Include="Text\OpenGlFontChar.cs" />
     <Compile Include="Text\OpenGlFontTable.cs" />
+    <Compile Include="Text\Strings.cs" />
     <Compile Include="Viewport\ViewportChangeModes.cs" />
     <Compile Include="Viewport\ViewportModes.cs" />
   </ItemGroup>

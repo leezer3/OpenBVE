@@ -16,7 +16,7 @@ namespace OpenBve
 		/// <param name="bottom">The bottom co-ordinate</param>
 		internal static void RenderOverlayTexture(Texture texture, double left, double top, double right, double bottom)
 		{
-			DrawRectangle(texture, new System.Drawing.Point((int)left, (int)top), new System.Drawing.Size((int)(right - left), (int)(bottom - top)), null);
+			LibRender.Renderer.DrawRectangle(texture, new System.Drawing.Point((int)left, (int)top), new System.Drawing.Size((int)(right - left), (int)(bottom - top)), null);
 		}
 
 		/// <summary>Renders a solid color rectangular overlay</summary>
@@ -26,7 +26,7 @@ namespace OpenBve
 		/// <param name="bottom">The bottom co-ordinate</param>
 		internal static void RenderOverlaySolid(double left, double top, double right, double bottom)
 		{
-			DrawRectangle(null, new System.Drawing.Point((int)left, (int)top), new System.Drawing.Size((int)(right - left), (int)(bottom - top)), null);
+			LibRender.Renderer.DrawRectangle(null, new System.Drawing.Point((int)left, (int)top), new System.Drawing.Size((int)(right - left), (int)(bottom - top)), null);
 		}
 
 		/// <summary>Calculates the viewing plane size for the given HUD element</summary>

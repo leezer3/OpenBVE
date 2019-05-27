@@ -117,7 +117,7 @@ namespace OpenBve {
 					bkgHeight = (int) (Screen.Width/ratio); // and scale height accordingly
 				}
 				// draw the background image down from the top screen edge
-				DrawRectangle(TextureLoadingBkg, new Point((Screen.Width - bkgWidth)/2, 0), new Size(bkgWidth, bkgHeight),Color128.White);
+				LibRender.Renderer.DrawRectangle(TextureLoadingBkg, new Point((Screen.Width - bkgWidth)/2, 0), new Size(bkgWidth, bkgHeight),Color128.White);
 			}
 			// if the route has no custom loading image, add the openBVE logo
 			// (the route custom image is loaded in OldParsers/CsvRwRouteParser.cs)
@@ -128,7 +128,7 @@ namespace OpenBve {
 					// place the centre of the logo at from the screen top
 					int logoTop = (int) (Screen.Height*logoCentreYFactor - TextureLogo.Height/2.0);
 					logoBottom = logoTop + TextureLogo.Height;
-					DrawRectangle(TextureLogo, new Point((Screen.Width - TextureLogo.Width)/2, logoTop),new Size(TextureLogo.Width, TextureLogo.Height), Color128.White);
+					LibRender.Renderer.DrawRectangle(TextureLogo, new Point((Screen.Width - TextureLogo.Width)/2, logoTop),new Size(TextureLogo.Width, TextureLogo.Height), Color128.White);
 				}
 			}
 			else
@@ -142,7 +142,7 @@ namespace OpenBve {
 			// VERSION NUMBER
 			// place the version above the first division
 			int	versionTop	= logoBottom + blankHeight - fontHeight;
-			DrawString(Fonts.SmallFont, "Version " + typeof(Renderer).Assembly.GetName().Version,
+			LibRender.Renderer.DrawString(Fonts.SmallFont, "Version " + typeof(Renderer).Assembly.GetName().Version,
 				new Point(halfWidth, versionTop), TextAlignment.TopMiddle, Color128.White);
 			// for the moment, do not show any URL; would go right below the first division
 //			DrawString(Fonts.SmallFont, "https://sites.google.com/site/openbvesim/home",
@@ -159,20 +159,20 @@ namespace OpenBve {
 			string	text			= Translations.GetInterfaceString(
 				routeProgress < 1.0 ? "loading_loading_route" :
 				(trainProgress < 1.0 ? "loading_loading_train" : "message_loading") );
-			DrawString(Fonts.SmallFont, text, new Point(halfWidth, progressTop - fontHeight - 6),
+			LibRender.Renderer.DrawString(Fonts.SmallFont, text, new Point(halfWidth, progressTop - fontHeight - 6),
 				TextAlignment.TopMiddle, Color128.White);
 			// sum of route progress and train progress arrives up to 2.0:
 			// => times 50.0 to convert to %
 			double	percent	= 50.0 * (routeProgress + trainProgress);
 			string	percStr	= percent.ToString("0") + "%";
 			// progress frame
-			DrawRectangle(null, new Point(progrMargin-progrBorder, progressTop-progrBorder),
+			LibRender.Renderer.DrawRectangle(null, new Point(progrMargin-progrBorder, progressTop-progrBorder),
 				new Size(progressWidth+progrBorder*2, fontHeight+6), Color128.White);
 			// progress bar
-			DrawRectangle(null, new Point(progrMargin, progressTop),
+			LibRender.Renderer.DrawRectangle(null, new Point(progrMargin, progressTop),
 				new Size(progressWidth * (int)percent / 100, fontHeight+4), ColourProgressBar);
 			// progress percent
-			DrawString(Fonts.SmallFont, percStr, new Point(halfWidth, progressTop),
+			LibRender.Renderer.DrawString(Fonts.SmallFont, percStr, new Point(halfWidth, progressTop),
 				TextAlignment.TopMiddle, Color128.Black);
 			GL.PopMatrix();
 		}

@@ -753,7 +753,7 @@ namespace OpenBve
 					itemLeft + menu.ItemWidth + MenuItemBorderX, menuYmin + em + MenuItemBorderY * 2);
 			}
 			if (menu.TopItem > 0)
-				Renderer.DrawString(MenuFont, "...", new Point(itemX, menuYmin),
+				LibRender.Renderer.DrawString(MenuFont, "...", new Point(itemX, menuYmin),
 					menu.Align, ColourDimmed, false);
 			// draw the items
 			int itemY = topItemY;
@@ -772,14 +772,14 @@ namespace OpenBve
 					Renderer.RenderOverlaySolid(itemLeft - MenuItemBorderX, itemY/*-MenuItemBorderY*/,
 						itemLeft + menu.ItemWidth + MenuItemBorderX, itemY + em + MenuItemBorderY * 2);
 					// draw the text
-					Renderer.DrawString(MenuFont, menu.Items[i].Text, new Point(itemX, itemY),
+					LibRender.Renderer.DrawString(MenuFont, menu.Items[i].Text, new Point(itemX, itemY),
 						menu.Align, ColourHighlight, false);
 				}
 				else if (menu.Items[i] is MenuCaption)
-					Renderer.DrawString(MenuFont, menu.Items[i].Text, new Point(itemX, itemY),
+					LibRender.Renderer.DrawString(MenuFont, menu.Items[i].Text, new Point(itemX, itemY),
 						menu.Align, ColourCaption, false);
 				else
-					Renderer.DrawString(MenuFont, menu.Items[i].Text, new Point(itemX, itemY),
+					LibRender.Renderer.DrawString(MenuFont, menu.Items[i].Text, new Point(itemX, itemY),
 						menu.Align, ColourNormal, false);
 				itemY += lineHeight;
 			}
@@ -793,7 +793,7 @@ namespace OpenBve
 			}
 			// if not at the end of the menu, draw a dimmed ellipsis item at the bottom
 			if (i < menu.Items.Length - 1)
-				Renderer.DrawString(MenuFont, "...", new Point(itemX, itemY),
+				LibRender.Renderer.DrawString(MenuFont, "...", new Point(itemX, itemY),
 					menu.Align, ColourDimmed, false);
 		}
 
