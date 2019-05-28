@@ -60,7 +60,6 @@ namespace OpenBve {
 		internal static bool RenderStatsOverlay = true;
 		
 		// current opengl data
-		private static bool CullEnabled = false;
 		internal static bool TransparentColorDepthSorting = false;
 
 		// textures
@@ -117,21 +116,7 @@ namespace OpenBve {
 
 		// initialize
 		internal static void Initialize() {
-			// opengl
-			
-			GL.ShadeModel(ShadingModel.Flat);
-			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-			GL.ClearColor(0.67f, 0.67f, 0.67f, 0.0f);
-			GL.Enable(EnableCap.DepthTest);
-			GL.Enable(EnableCap.Texture2D); LibRender.Renderer.TexturingEnabled = true;
-			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-			GL.DepthFunc(DepthFunction.Lequal);
-			GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Fastest);
-			GL.Hint(HintTarget.GenerateMipmapHint, HintMode.Nicest);
-			GL.Enable(EnableCap.CullFace); CullEnabled = true;
-			GL.CullFace(CullFaceMode.Front);
-			GL.Disable(EnableCap.Dither);
-			// textures
+			LibRender.Renderer.Initialize();
 			string Folder = OpenBveApi.Path.CombineDirectory(Program.FileSystem.GetDataFolder(), "RouteViewer");
 			Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "background.png"), out BackgroundChangeTexture);
 			Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "brightness.png"), out BrightnessChangeTexture);
@@ -144,15 +129,6 @@ namespace OpenBve {
 			Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "buffer.png"), out BufferTexture);
 			Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "sound.png"), out SoundTexture);
 			Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "switchsound.png"), out PointSoundTexture);
-			// opengl
-			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-			GL.PushMatrix();
-			GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-			Matrix4d lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0);
-			//TODO: May be required??
-			GL.MatrixMode(MatrixMode.Modelview);
-			GL.LoadMatrix(ref lookat);
-			GL.PopMatrix();
 			TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality& Interface.CurrentOptions.Interpolation != InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != InterpolationMode.Bilinear;
 		}
 
@@ -164,7 +140,7 @@ namespace OpenBve {
 				OptionLighting = true;
 			}
 			if (OptionLighting) {
-				GL.CullFace(CullFaceMode.Front); CullEnabled = true;
+				GL.CullFace(CullFaceMode.Front); LibRender.Renderer.CullEnabled = true;
 				GL.Light(LightName.Light0, LightParameter.Ambient, new float[] { inv255 * (float)OptionAmbientColor.R, inv255 * (float)OptionAmbientColor.G, inv255 * (float)OptionAmbientColor.B, 1.0f });
 				GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { inv255 * (float)OptionDiffuseColor.R, inv255 * (float)OptionDiffuseColor.G, inv255 * (float)OptionDiffuseColor.B, 1.0f });
 				GL.LightModel(LightModelParameter.LightModelAmbient, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
@@ -179,19 +155,6 @@ namespace OpenBve {
 				GL.Disable(EnableCap.Lighting); LibRender.Renderer.LightingEnabled = false;
 			}
 			GL.DepthFunc(DepthFunction.Lequal);
-		}
-
-		internal static void ResetOpenGlState()
-		{
-			GL.Enable(EnableCap.CullFace); CullEnabled = true;
-			GL.Disable(EnableCap.Lighting); LibRender.Renderer.LightingEnabled = false;
-			GL.Disable(EnableCap.Texture2D); LibRender.Renderer.TexturingEnabled = false;
-			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-			GL.Disable(EnableCap.Blend); LibRender.Renderer.BlendEnabled = false;
-			GL.Enable(EnableCap.DepthTest);
-			GL.DepthMask(true);
-			GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
-			LibRender.Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.9f);
 		}
 
 		internal static void RenderScene(double TimeElapsed) {
@@ -284,15 +247,15 @@ namespace OpenBve {
 			LibRender.Renderer.BlendEnabled = false; GL.Disable(EnableCap.Blend);
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthMask(true);
-			LastBoundTexture = null;
-			ResetOpenGlState();
+			LibRender.Renderer.LastBoundTexture = null;
+			LibRender.Renderer.ResetOpenGlState();
             for (int i = 0; i < OpaqueListCount; i++)
             {
                 RenderFace(ref OpaqueList[i], World.AbsoluteCameraPosition);
             }
-	        ResetOpenGlState();
+            LibRender.Renderer.ResetOpenGlState();
 			if(OptionEvents) RenderEvents(World.AbsoluteCameraPosition);
-			ResetOpenGlState();
+			LibRender.Renderer.ResetOpenGlState();
             // transparent color list
 			SortPolygons(TransparentColorList, TransparentColorListCount, TransparentColorListDistance, 1, 0.0);
 			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality) {
@@ -343,7 +306,7 @@ namespace OpenBve {
 					RenderFace(ref TransparentColorList[i], World.AbsoluteCameraPosition);
 				}
 			}
-	        ResetOpenGlState();
+			LibRender.Renderer.ResetOpenGlState();
 	        GL.Enable(EnableCap.DepthTest);
 	        GL.DepthMask(true);
 			SortPolygons(AlphaList, AlphaListCount, AlphaListDistance, 2, 0.0);
@@ -430,17 +393,16 @@ namespace OpenBve {
 		
 
 		// render face
-		private static OpenGlTexture LastBoundTexture = null;
 		private static void RenderFace(ref ObjectFace Face, Vector3 Camera) {
-			if (CullEnabled) {
+			if (LibRender.Renderer.CullEnabled) {
 				if (!OptionBackfaceCulling || (ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Flags & MeshFace.Face2Mask) != 0) {
 					GL.Disable(EnableCap.CullFace);
-					CullEnabled = false;
+					LibRender.Renderer.CullEnabled = false;
 				}
 			} else if (OptionBackfaceCulling) {
 				if ((ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Flags & MeshFace.Face2Mask) == 0) {
 					GL.Enable(EnableCap.CullFace);
-					CullEnabled = true;
+					LibRender.Renderer.CullEnabled = true;
 				}
 			}
 			int r = (int)ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Material;
@@ -581,7 +543,7 @@ namespace OpenBve {
 			if (TrackManager.CurrentTrack.Elements == null) {
 				return;
 			}
-			LastBoundTexture = null;
+			LibRender.Renderer.LastBoundTexture = null;
 			if (LibRender.Renderer.LightingEnabled) {
 				GL.Disable(EnableCap.Lighting);
 				LibRender.Renderer.LightingEnabled = false;

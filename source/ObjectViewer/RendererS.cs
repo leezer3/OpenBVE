@@ -58,8 +58,7 @@ namespace OpenBve
         internal static int OverlayListCount = 0;
 
         // current opengl data
-        private static bool CullEnabled = true;
-		internal static bool TransparentColorDepthSorting = false;
+        internal static bool TransparentColorDepthSorting = false;
 
         // options
         internal static bool OptionLighting = true;
@@ -146,30 +145,7 @@ namespace OpenBve
         // initialize
         internal static void Initialize()
         {
-            // opengl
-            GL.ShadeModel(ShadingModel.Smooth);
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-            GL.Enable(EnableCap.DepthTest);
-            if (!LibRender.Renderer.TexturingEnabled)
-            {
-                GL.Enable(EnableCap.Texture2D);
-                LibRender.Renderer.TexturingEnabled = true;
-            }
-            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-            GL.DepthFunc(DepthFunction.Lequal);
-            GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Fastest);
-            GL.Hint(HintTarget.GenerateMipmapHint, HintMode.Nicest);
-            GL.Enable(EnableCap.CullFace); CullEnabled = true;
-            GL.CullFace(CullFaceMode.Front);
-            GL.Disable(EnableCap.Dither);
-            // opengl
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            GL.PushMatrix();
-            GL.ClearColor(0.67f, 0.67f, 0.67f, 1.0f);
-            var mat = Matrix4d.LookAt(0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0);
-            GL.MultMatrix(ref mat);
-            GL.PopMatrix();
+            LibRender.Renderer.Initialize();
             TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality & Interface.CurrentOptions.Interpolation != InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != InterpolationMode.Bilinear;
         }
 
@@ -202,20 +178,7 @@ namespace OpenBve
                 GL.Disable(EnableCap.Lighting); LibRender.Renderer.LightingEnabled = false;
             }
         }
-
-	    internal static void ResetOpenGlState()
-	    {
-		    GL.Enable(EnableCap.CullFace); CullEnabled = true;
-		    GL.Disable(EnableCap.Lighting); LibRender.Renderer.LightingEnabled = false;
-		    GL.Disable(EnableCap.Texture2D); LibRender.Renderer.TexturingEnabled = false;
-		    GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-		    GL.Disable(EnableCap.Blend); LibRender.Renderer.BlendEnabled = false;
-		    GL.Enable(EnableCap.DepthTest);
-		    GL.DepthMask(true);
-		    GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
-		    LibRender.Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.9f);
-	    }
-
+		
         internal static void RenderScene()
         {
 	        // initialize
@@ -274,12 +237,12 @@ namespace OpenBve
                     GL.Enable(EnableCap.Lighting);
                 }
             }
-			ResetOpenGlState();
+            LibRender.Renderer.ResetOpenGlState();
             for (int i = 0; i < OpaqueListCount; i++)
             {
                 RenderFace(ref OpaqueList[i], World.AbsoluteCameraPosition);
             }
-	        ResetOpenGlState();
+            LibRender.Renderer.ResetOpenGlState();
             // transparent color list
 	        SortPolygons(TransparentColorList, TransparentColorListCount, TransparentColorListDistance, 1, 0.0);
 			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality) {
@@ -330,7 +293,7 @@ namespace OpenBve
 					RenderFace(ref TransparentColorList[i], World.AbsoluteCameraPosition);
 				}
 			}
-	        ResetOpenGlState();
+			LibRender.Renderer.ResetOpenGlState();
 			SortPolygons(AlphaList, AlphaListCount, AlphaListDistance, 2, 0.0);
 	        if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
 	        {
@@ -428,12 +391,12 @@ namespace OpenBve
 
         private static void RenderFace(ref ObjectFace Face, Vector3 Camera)
 	    {
-		    if (CullEnabled)
+		    if (LibRender.Renderer.CullEnabled)
 		    {
 			    if (!OptionBackfaceCulling || (ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Flags & MeshFace.Face2Mask) != 0)
 			    {
 				    GL.Disable(EnableCap.CullFace);
-				    CullEnabled = false;
+				    LibRender.Renderer.CullEnabled = false;
 			    }
 		    }
 		    else if (OptionBackfaceCulling)
@@ -441,7 +404,7 @@ namespace OpenBve
 			    if ((ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Flags & MeshFace.Face2Mask) == 0)
 			    {
 				    GL.Enable(EnableCap.CullFace);
-				    CullEnabled = true;
+				    LibRender.Renderer.CullEnabled = true;
 			    }
 		    }
 		    int r = (int)ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Material;

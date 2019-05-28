@@ -30,9 +30,6 @@ namespace OpenBve
 		/// <summary>The list of overlay alpha faces to be rendered.</summary>
 		private static ObjectList OverlayAlpha = new ObjectList();
 
-		// current opengl data
-		private static bool CullEnabled = true;
-
 		// options
 		internal static Color24 OptionAmbientColor = new Color24(160, 160, 160);
 		internal static Color24 OptionDiffuseColor = new Color24(160, 160, 160);
@@ -73,7 +70,7 @@ namespace OpenBve
 		internal static void RenderScene(double TimeElapsed)
 		{
 			// initialize
-			ResetOpenGlState();
+			LibRender.Renderer.ResetOpenGlState();
 
 			if (LibRender.Renderer.OptionWireframe)
 			{
@@ -176,7 +173,7 @@ namespace OpenBve
 			// static opaque
 			if (Interface.CurrentOptions.DisableDisplayLists)
 			{
-				ResetOpenGlState();
+				LibRender.Renderer.ResetOpenGlState();
 				for (int i = 0; i < StaticOpaque.Length; i++)
 				{
 					if (StaticOpaque[i] != null)
@@ -212,7 +209,7 @@ namespace OpenBve
 							{
 								StaticOpaque[i].OpenGlDisplayList = GL.GenLists(1);
 								StaticOpaque[i].OpenGlDisplayListAvailable = true;
-								ResetOpenGlState();
+								LibRender.Renderer.ResetOpenGlState();
 								GL.NewList(StaticOpaque[i].OpenGlDisplayList, ListMode.Compile);
 								for (int j = 0; j < StaticOpaque[i].List.FaceCount; j++)
 								{
@@ -232,7 +229,7 @@ namespace OpenBve
 				{
 					if (StaticOpaque[i] != null && StaticOpaque[i].OpenGlDisplayListAvailable)
 					{
-						ResetOpenGlState();
+						LibRender.Renderer.ResetOpenGlState();
 						GL.PushMatrix();
 						GL.Translate(StaticOpaque[i].WorldPosition.X - World.AbsoluteCameraPosition.X, StaticOpaque[i].WorldPosition.Y - World.AbsoluteCameraPosition.Y, StaticOpaque[i].WorldPosition.Z - World.AbsoluteCameraPosition.Z);
 						GL.CallList(StaticOpaque[i].OpenGlDisplayList);
@@ -251,13 +248,13 @@ namespace OpenBve
 				}
 			}
 			// dynamic opaque
-			ResetOpenGlState();
+			LibRender.Renderer.ResetOpenGlState();
 			for (int i = 0; i < DynamicOpaque.FaceCount; i++)
 			{
 				RenderFace(ref DynamicOpaque.Faces[i], World.AbsoluteCameraPosition);
 			}
 			// dynamic alpha
-			ResetOpenGlState();
+			LibRender.Renderer.ResetOpenGlState();
 			DynamicAlpha.SortPolygons();
 			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
 			{
@@ -338,7 +335,7 @@ namespace OpenBve
 			if (World.CameraRestriction == CameraRestrictionMode.NotAvailable)
 			{
 				// 3d cab
-				ResetOpenGlState(); // TODO: inserted
+				LibRender.Renderer.ResetOpenGlState(); // TODO: inserted
 				GL.DepthMask(true);
 				GL.Enable(EnableCap.DepthTest);
 				GL.Clear(ClearBufferMask.DepthBufferBit);
@@ -461,12 +458,12 @@ namespace OpenBve
 
 		private static void RenderFace(ref ObjectFace Face, Vector3 Camera, bool IsDebugTouchMode = false)
 		{
-			if (CullEnabled)
+			if (LibRender.Renderer.CullEnabled)
 			{
 				if (!OptionBackfaceCulling || (ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Flags & MeshFace.Face2Mask) != 0)
 				{
 					GL.Disable(EnableCap.CullFace);
-					CullEnabled = false;
+					LibRender.Renderer.CullEnabled = false;
 				}
 			}
 			else if (OptionBackfaceCulling)
@@ -474,7 +471,7 @@ namespace OpenBve
 				if ((ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Flags & MeshFace.Face2Mask) == 0)
 				{
 					GL.Enable(EnableCap.CullFace);
-					CullEnabled = true;
+					LibRender.Renderer.CullEnabled = true;
 				}
 			}
 			int r = (int)ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Material;

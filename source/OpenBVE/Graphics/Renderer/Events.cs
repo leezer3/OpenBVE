@@ -52,7 +52,7 @@ namespace OpenBve
 				Init();
 				Initialized = true;
 			}
-			GL.Enable(EnableCap.CullFace); CullEnabled = true;
+			GL.Enable(EnableCap.CullFace); LibRender.Renderer.CullEnabled = true;
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthMask(true);
 			if (LibRender.Renderer.LightingEnabled)

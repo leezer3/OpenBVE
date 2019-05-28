@@ -233,7 +233,7 @@ namespace OpenBve
 			GL.SelectBuffer(SelectBuffer.Length, SelectBuffer);
 			GL.RenderMode(RenderingMode.Select);
 
-			ResetOpenGlState();
+			LibRender.Renderer.ResetOpenGlState();
 			GL.PushMatrix();
 
 			UpdateViewportSelection(Point, Delta);
@@ -334,7 +334,7 @@ namespace OpenBve
 						ShowObjectSelection(o);
 					}
 
-					ResetOpenGlState();
+					LibRender.Renderer.ResetOpenGlState();
 					GL.PushMatrix();
 					
 					UpdateViewport(ViewPortChangeMode.ChangeToCab);
