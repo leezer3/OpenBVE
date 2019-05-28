@@ -198,7 +198,7 @@ namespace OpenBve
 			if (Interface.CurrentOptions.UnloadUnusedTextures)
 			{
 				Renderer.UnloadUnusedTextures(TimeElapsed);
-				Renderer.LastBoundTexture = null;
+				LibRender.Renderer.LastBoundTexture = null;
 			}
 			// finish
 			try
@@ -322,7 +322,9 @@ namespace OpenBve
 			//Initialise the loader thread queues
 			jobs = new Queue<ThreadStart>(10);
 			locks = new Queue<object>(10);
-			Renderer.Initialize();
+			LibRender.Renderer.Initialize();
+			HUD.LoadHUD();
+			Renderer.InitLoading();
 			Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
 			Renderer.InitializeMotionBlur();
 			Loading.LoadAsynchronously(MainLoop.currentResult.RouteFile, MainLoop.currentResult.RouteEncoding, MainLoop.currentResult.TrainFolder, MainLoop.currentResult.TrainEncoding);

@@ -192,12 +192,12 @@ namespace OpenBve
 					{
 						case BackgroundTransitionMode.FadeIn:
 							Renderer.RenderBackground(this.Backgrounds[PreviousBackgroundIndex], 1.0f, Scale);
-							Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
+							LibRender.Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 							Renderer.RenderBackground(this.Backgrounds[CurrentBackgroundIndex], this.CurrentAlpha, Scale);
 							break;
 						case BackgroundTransitionMode.FadeOut:
 							Renderer.RenderBackground(this.Backgrounds[CurrentBackgroundIndex], 1.0f, Scale);
-							Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
+							LibRender.Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 							Renderer.RenderBackground(this.Backgrounds[PreviousBackgroundIndex], this.CurrentAlpha, Scale);
 							break;
 					}

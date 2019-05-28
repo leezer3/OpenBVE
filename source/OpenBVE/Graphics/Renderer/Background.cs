@@ -36,7 +36,7 @@ namespace OpenBve
 				float cr = inv255 * (float)Game.CurrentFog.Color.R;
 				float cg = inv255 * (float)Game.CurrentFog.Color.G;
 				float cb = inv255 * (float)Game.CurrentFog.Color.B;
-				if (!FogEnabled)
+				if (!LibRender.Renderer.FogEnabled)
 				{
 					GL.Fog(FogParameter.FogMode, (int)FogMode.Linear);
 				}
@@ -44,14 +44,14 @@ namespace OpenBve
 				GL.Fog(FogParameter.FogStart, Game.CurrentFog.Start * ratio * scale);
 				GL.Fog(FogParameter.FogEnd, Game.CurrentFog.End * ratio * scale);
 				GL.Fog(FogParameter.FogColor, new float[] { cr, cg, cb, 1.0f });
-				if (!FogEnabled)
+				if (!LibRender.Renderer.FogEnabled)
 				{
-					GL.Enable(EnableCap.Fog); FogEnabled = true;
+					GL.Enable(EnableCap.Fog); LibRender.Renderer.FogEnabled = true;
 				}
 			}
-			else if (FogEnabled)
+			else if (LibRender.Renderer.FogEnabled)
 			{
-				GL.Disable(EnableCap.Fog); FogEnabled = false;
+				GL.Disable(EnableCap.Fog); LibRender.Renderer.FogEnabled = false;
 			}
 			//Update the currently displayed background
 			BackgroundManager.CurrentBackground.UpdateBackground(TimeElapsed, false);
@@ -72,12 +72,12 @@ namespace OpenBve
 				//Render, switching on the transition mode
 				case BackgroundTransitionMode.FadeIn:
 					BackgroundManager.CurrentBackground.RenderBackground(1.0f, scale);
-					Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
+					LibRender.Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 					BackgroundManager.TargetBackground.RenderBackground(BackgroundManager.TargetBackground.CurrentAlpha, scale);
 					break;
 				case BackgroundTransitionMode.FadeOut:
 					BackgroundManager.TargetBackground.RenderBackground(1.0f, scale);
-					Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
+					LibRender.Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 					BackgroundManager.CurrentBackground.RenderBackground(BackgroundManager.TargetBackground.CurrentAlpha, scale);
 					break;
 			}
@@ -99,28 +99,28 @@ namespace OpenBve
 		{
 			if (Data.Texture != null && Textures.LoadTexture(Data.Texture, OpenGlTextureWrapMode.RepeatClamp))
 			{
-				if (LightingEnabled)
+				if (LibRender.Renderer.LightingEnabled)
 				{
 					GL.Disable(EnableCap.Lighting);
-					LightingEnabled = false;
+					LibRender.Renderer.LightingEnabled = false;
 				}
-				if (!TexturingEnabled)
+				if (!LibRender.Renderer.TexturingEnabled)
 				{
 					GL.Enable(EnableCap.Texture2D);
-					TexturingEnabled = true;
+					LibRender.Renderer.TexturingEnabled = true;
 				}
 				if (Alpha == 1.0f)
 				{
-					if (BlendEnabled)
+					if (LibRender.Renderer.BlendEnabled)
 					{
 						GL.Disable(EnableCap.Blend);
-						BlendEnabled = false;
+						LibRender.Renderer.BlendEnabled = false;
 					}
 				}
-				else if (!BlendEnabled)
+				else if (!LibRender.Renderer.BlendEnabled)
 				{
 					GL.Enable(EnableCap.Blend);
-					BlendEnabled = true;
+					LibRender.Renderer.BlendEnabled = true;
 				}
 				GL.BindTexture(TextureTarget.Texture2D, Data.Texture.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp].Name);
 				GL.Color4(1.0f, 1.0f, 1.0f, Alpha);
@@ -201,11 +201,11 @@ namespace OpenBve
 					GL.EndList();
 					GL.CallList(BackgroundDisplayList);
 					GL.Disable(EnableCap.Texture2D);
-					TexturingEnabled = false;
-					if (!BlendEnabled)
+					LibRender.Renderer.TexturingEnabled = false;
+					if (!LibRender.Renderer.BlendEnabled)
 					{
 						GL.Enable(EnableCap.Blend);
-						BlendEnabled = true;
+						LibRender.Renderer.BlendEnabled = true;
 					}
 
 					BackgroundDisplayListAvailable = true;
@@ -214,11 +214,11 @@ namespace OpenBve
 				{
 					GL.CallList(BackgroundDisplayList);
 					GL.Disable(EnableCap.Texture2D);
-					TexturingEnabled = false;
-					if (!BlendEnabled)
+					LibRender.Renderer.TexturingEnabled = false;
+					if (!LibRender.Renderer.BlendEnabled)
 					{
 						GL.Enable(EnableCap.Blend);
-						BlendEnabled = true;
+						LibRender.Renderer.BlendEnabled = true;
 					}
 				}
 			}
@@ -234,7 +234,7 @@ namespace OpenBve
 				RenderBackground(Data.Backgrounds[Data.CurrentBackgroundIndex], 1.0f, scale);
 				return;
 			}
-			SetAlphaFunc(AlphaFunction.Greater, 0.0f);
+			LibRender.Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 			switch (Data.Backgrounds[Data.CurrentBackgroundIndex].Mode)
 			{
 				case BackgroundTransitionMode.FadeIn:
@@ -250,10 +250,10 @@ namespace OpenBve
 
 		internal static void RenderBackground(BackgroundManager.BackgroundObject Object)
 		{
-			if (!TexturingEnabled)
+			if (!LibRender.Renderer.TexturingEnabled)
 			{
 				GL.Enable(EnableCap.Texture2D);
-				TexturingEnabled = true;
+				LibRender.Renderer.TexturingEnabled = true;
 			}
 			int Mat = -1;
 			for (int i = 0; i < Object.ObjectBackground.Mesh.Faces.Length; i++)

@@ -1557,8 +1557,8 @@ namespace OpenBve
 										break;
 									case Translations.Command.DebugWireframe:
 										// option: wireframe
-										Renderer.OptionWireframe = !Renderer.OptionWireframe;
-										if (Renderer.OptionWireframe)
+										LibRender.Renderer.OptionWireframe = !LibRender.Renderer.OptionWireframe;
+										if (LibRender.Renderer.OptionWireframe)
 										{
 											GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
 										}
@@ -1570,7 +1570,7 @@ namespace OpenBve
 										break;
 									case Translations.Command.DebugNormals:
 										// option: normals
-										Renderer.OptionNormals = !Renderer.OptionNormals;
+										LibRender.Renderer.OptionNormals = !LibRender.Renderer.OptionNormals;
 										Renderer.StaticOpaqueForceUpdate = true;
 										break;
 									case Translations.Command.DebugTouchMode:

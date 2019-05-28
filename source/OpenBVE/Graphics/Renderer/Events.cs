@@ -52,18 +52,18 @@ namespace OpenBve
 				Init();
 				Initialized = true;
 			}
-			GL.Enable(EnableCap.CullFace); CullEnabled = true;
+			GL.Enable(EnableCap.CullFace); LibRender.Renderer.CullEnabled = true;
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthMask(true);
-			if (LightingEnabled)
+			if (LibRender.Renderer.LightingEnabled)
 			{
 				GL.Disable(EnableCap.Lighting);
-				LightingEnabled = false;
+				LibRender.Renderer.LightingEnabled = false;
 			}
-			if (AlphaTestEnabled)
+			if (LibRender.Renderer.AlphaTestEnabled)
 			{
 				GL.Disable(EnableCap.AlphaTest);
-				AlphaTestEnabled = false;
+				LibRender.Renderer.AlphaTestEnabled = false;
 			}
 			double da = -World.BackwardViewingDistance - World.ExtraViewingDistance;
 			double db = World.ForwardViewingDistance + World.ExtraViewingDistance;
