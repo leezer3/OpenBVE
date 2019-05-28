@@ -73,15 +73,15 @@ namespace OpenBve
                 }
                 // initialize
                 GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-                if (!BlendEnabled)
+                if (!LibRender.Renderer.BlendEnabled)
                 {
                     GL.Enable(EnableCap.Blend);
-                    BlendEnabled = true;
+                    LibRender.Renderer.BlendEnabled = true;
                 }
-                if (LightingEnabled)
+                if (LibRender.Renderer.LightingEnabled)
                 {
                     GL.Disable(EnableCap.Lighting);
-                    LightingEnabled = false;
+                    LibRender.Renderer.LightingEnabled = false;
                 }
                 GL.MatrixMode(MatrixMode.Projection);
                 GL.PushMatrix();
@@ -90,10 +90,10 @@ namespace OpenBve
                 GL.MatrixMode(MatrixMode.Modelview);
                 GL.PushMatrix();
                 GL.LoadIdentity();
-                if (!TexturingEnabled)
+                if (!LibRender.Renderer.TexturingEnabled)
                 {
                     GL.Enable(EnableCap.Texture2D);
-                    TexturingEnabled = true;
+                    LibRender.Renderer.TexturingEnabled = true;
                 }
                 // render
                 GL.BindTexture(TextureTarget.Texture2D, PixelBufferOpenGlTextureIndex);

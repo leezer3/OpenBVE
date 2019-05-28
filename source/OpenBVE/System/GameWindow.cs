@@ -198,7 +198,7 @@ namespace OpenBve
 			if (Interface.CurrentOptions.UnloadUnusedTextures)
 			{
 				Renderer.UnloadUnusedTextures(TimeElapsed);
-				Renderer.LastBoundTexture = null;
+				LibRender.Renderer.LastBoundTexture = null;
 			}
 			// finish
 			try

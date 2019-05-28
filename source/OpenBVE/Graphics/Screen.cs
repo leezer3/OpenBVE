@@ -157,7 +157,7 @@ namespace OpenBve
 			
 			GL.Disable(EnableCap.Fog);
 			GL.Disable(EnableCap.Lighting);
-			Renderer.LightingEnabled = false;
+			LibRender.Renderer.LightingEnabled = false;
 			if (Fullscreen)
 			{
                 

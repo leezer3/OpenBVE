@@ -80,14 +80,14 @@ namespace OpenBve {
 		internal static void DrawLoadingScreen()
 		{
 			// begin HACK //
-			if (!BlendEnabled) {
+			if (!LibRender.Renderer.BlendEnabled) {
 				GL.Enable(EnableCap.Blend);
 				GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-				BlendEnabled = true;
+				LibRender.Renderer.BlendEnabled = true;
 			}
-			if (LightingEnabled) {
+			if (LibRender.Renderer.LightingEnabled) {
 				GL.Disable(EnableCap.Lighting);
-				LightingEnabled = false;
+				LibRender.Renderer.LightingEnabled = false;
 			}
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			GL.PushMatrix();

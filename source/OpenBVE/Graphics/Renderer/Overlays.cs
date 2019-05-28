@@ -20,7 +20,7 @@ namespace OpenBve
 		{
 			//Initialize openGL
 			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-			GL.Enable(EnableCap.Blend); BlendEnabled = true;
+			GL.Enable(EnableCap.Blend); LibRender.Renderer.BlendEnabled = true;
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.PushMatrix();
 			GL.LoadIdentity();
