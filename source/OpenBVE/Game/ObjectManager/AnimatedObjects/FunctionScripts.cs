@@ -1083,6 +1083,113 @@ namespace OpenBve {
 					case Instructions.TimetableVisible:
 						Function.Stack[s] = Timetable.CurrentTimetable == Timetable.TimetableState.Custom & Timetable.CustomTimetableAvailable ? 0.0 : -1.0;
 						s++; break;
+					case Instructions.DistanceNextStation:
+						if (Train == null)
+						{
+							Function.Stack[s] = 0.0; //Not part of a train, so distance is irrelevant
+						}
+						else
+						{
+							int stationIdx;
+							if (Train.Station >= 0 && Train.StationState != TrainManager.TrainStopState.Completed)
+							{
+								stationIdx = Train.LastStation;
+							}
+							else
+							{
+								stationIdx = Train.LastStation + 1;
+							}
+							if (i > Game.Stations.Length - 1)
+							{
+								i = Train.LastStation;
+							}
+							int n = Game.Stations[i].GetStopIndex(Train.Cars.Length);
+							double p0 = Train.FrontCarTrackPosition();
+							double p1;
+							if (Game.Stations[stationIdx].Stops.Length > 0)
+							{
+								p1 = Game.Stations[stationIdx].Stops[n].TrackPosition;
+							}
+							else
+							{
+								p1 = Game.Stations[stationIdx].DefaultTrackPosition;
+							}
+							Function.Stack[s] = p1 - p0;
+						}
+						s++; break;
+					case Instructions.StopsNextStation:
+						if (Train == null)
+						{
+							Function.Stack[s] = 0.0; //Not part of a train, so we obviously can't stop at a station....
+						}
+						else
+						{
+							int stationIdx;
+							if (Train.Station >= 0 && Train.StationState != TrainManager.TrainStopState.Completed)
+							{
+								stationIdx = Train.LastStation;
+							}
+							else
+							{
+								stationIdx = Train.LastStation + 1;
+							}
+							if (stationIdx > Game.Stations.Length - 1)
+							{
+								Function.Stack[s] = 0.0; //Passed the terminal station, hence cannot stop again
+							}
+							else
+							{
+								Function.Stack[s] = Game.StopsAtStation(stationIdx, Train) ? 1.0 : 0.0;
+							}
+						}
+						s++; break;
+					case Instructions.DistanceStation:
+						if (Train != null)
+						{
+							int stationIdx = (int)Math.Round(Function.Stack[s - 1]); //Station index
+							if (stationIdx > Game.Stations.Length - 1)
+							{
+								Function.Stack[s - 1] = 0.0; //Invalid index
+							}
+							else
+							{
+								int n = Game.Stations[i].GetStopIndex(Train.Cars.Length);
+								double p0 = Train.FrontCarTrackPosition();
+								double p1;
+								if (Game.Stations[stationIdx].Stops.Length > 0)
+								{
+									p1 = Game.Stations[stationIdx].Stops[n].TrackPosition;
+								}
+								else
+								{
+									p1 = Game.Stations[stationIdx].DefaultTrackPosition;
+								}
+								Function.Stack[s - 1] = p1 - p0;
+							}
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						break;
+					case Instructions.StopsStation:
+						if (Train != null)
+						{
+							int stationIdx = (int)Math.Round(Function.Stack[s - 1]); //Station index
+							if (stationIdx > Game.Stations.Length - 1)
+							{
+								Function.Stack[s - 1] = 0.0; //Invalid index
+							}
+							else
+							{
+								Function.Stack[s - 1] = Game.StopsAtStation(stationIdx, Train) ? 1.0 : 0.0;
+							}
+						}
+						else
+						{
+							Function.Stack[s - 1] = 0.0;
+						}
+						break;
 						// sections
 					case Instructions.SectionAspectNumber:
 						if (IsPartOfTrain) {

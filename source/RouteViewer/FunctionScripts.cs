@@ -1097,6 +1097,14 @@ namespace OpenBve {
 					case Instructions.TimetableVisible:
 						Function.Stack[s] = Timetable.CurrentTimetable == Timetable.TimetableState.Custom & Timetable.CustomTimetableAvailable ? 0.0 : -1.0;
 						s++; break;
+					case Instructions.DistanceNextStation:
+					case Instructions.StopsNextStation:
+						Function.Stack[s] = 0.0; //Unsupported in viewers
+						s++; break;
+					case Instructions.DistanceStation:
+					case Instructions.StopsStation:
+						Function.Stack[s - 1] = 0.0; //Unsupported in viewers
+						break;
 						// sections
 					case Instructions.SectionAspectNumber:
 						if (IsPartOfTrain) {

@@ -657,6 +657,24 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.TimetableVisible;
 							n++; s++; if (s >= m) m = s; break;
+						case "distancenextstation":
+							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.DistanceNextStation;
+							n++; s++; if (s >= m) m = s; break;
+						case "stopsnextstation":
+							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.StopsNextStation;
+							n++; s++; if (s >= m) m = s; break;
+						case "distancestationindex":
+							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.DistanceStation;
+							n++; break;
+						case "stopsstationindex":
+							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.StopsStation;
+							n++; break;
 							// sections
 						case "section":
 							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);

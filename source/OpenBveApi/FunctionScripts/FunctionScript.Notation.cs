@@ -295,6 +295,9 @@ namespace OpenBveApi.FunctionScripting
 				case "brakepipe":
 				case "brakecylinder":
 				case "straightairpipe":
+				// station index functions
+				case "distancestation":
+				case "stopsstation":
 					if (n == 1) {
 						return a[0] + " " + f.ToLowerInvariant() + "index";
 					}
