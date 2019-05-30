@@ -94,12 +94,12 @@ namespace OpenBve
 						for (int j = 0; j < Blocks[i].Rails.Length; j++)
 						{
 							Blocks[i].Rails[j].RailStart = Blocks[i - 1].Rails[j].RailStart;
-							Blocks[i].Rails[j].RailStartX = Blocks[i - 1].Rails[j].RailStartX;
-							Blocks[i].Rails[j].RailStartY = Blocks[i - 1].Rails[j].RailStartY;
+							Blocks[i].Rails[j].RailStart.X = Blocks[i - 1].Rails[j].RailStart.X;
+							Blocks[i].Rails[j].RailStart.Y = Blocks[i - 1].Rails[j].RailStart.Y;
 							Blocks[i].Rails[j].RailStartRefreshed = false;
-							Blocks[i].Rails[j].RailEnd = false;
-							Blocks[i].Rails[j].RailEndX = Blocks[i - 1].Rails[j].RailStartX;
-							Blocks[i].Rails[j].RailEndY = Blocks[i - 1].Rails[j].RailStartY;
+							Blocks[i].Rails[j].RailEnded = false;
+							Blocks[i].Rails[j].RailEnd.X = Blocks[i - 1].Rails[j].RailStart.X;
+							Blocks[i].Rails[j].RailEnd.Y = Blocks[i - 1].Rails[j].RailStart.Y;
 						}
 						if (!PreviewOnly)
 						{

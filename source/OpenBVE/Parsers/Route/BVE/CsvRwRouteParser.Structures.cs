@@ -1,5 +1,6 @@
 ﻿using OpenBveApi.Objects;
 using OpenBve.SignalManager;
+using OpenBveApi.Math;
 
 namespace OpenBve
 {
@@ -10,13 +11,11 @@ namespace OpenBve
 	{
 		private struct Rail
 		{
-			internal bool RailStart;
+			internal bool RailStarted;
 			internal bool RailStartRefreshed;
-			internal double RailStartX;
-			internal double RailStartY;
-			internal bool RailEnd;
-			internal double RailEndX;
-			internal double RailEndY;
+			internal Vector2 RailStart;
+			internal bool RailEnded;
+			internal Vector2 RailEnd;
 			internal double CurveCant;
 		}
 		private struct WallDike
@@ -34,10 +33,8 @@ namespace OpenBve
 			internal double TrackPosition;
 			/// <summary>The routefile index of the object</summary>
 			internal int Type;
-			/// <summary>The X position of the object (m)</summary>
-			internal double X;
-			/// <summary>The Y position of the object (m)</summary>
-			internal double Y;
+			/// <summary>The position of the object</summary>
+			internal Vector2 Position;
 			/// <summary>The yaw of the object (radians)</summary>
 			internal double Yaw;
 			/// <summary>The pitch of the object (radians)</summary>
@@ -75,8 +72,7 @@ namespace OpenBve
 			internal int SectionIndex;
 			internal int SignalCompatibilityObjectIndex;
 			internal int SignalObjectIndex;
-			internal double X;
-			internal double Y;
+			internal Vector2 Position;
 			internal double Yaw;
 			internal double Pitch;
 			internal double Roll;
@@ -137,8 +133,7 @@ namespace OpenBve
 			internal double TrackPosition;
 			internal Sounds.SoundBuffer SoundBuffer;
 			internal SoundType Type;
-			internal double X;
-			internal double Y;
+			internal Vector2 Position;
 			//TODO:
 			//This is always set to a constant 15.0 on loading a sound, and never touched again
 			//I presume Michelle intended to have sounds with different radii available
@@ -160,8 +155,7 @@ namespace OpenBve
 			internal int Data;
 			internal int SectionIndex;
 			internal bool ClipToFirstRedSection;
-			internal double X;
-			internal double Y;
+			internal Vector2 Position;
 			internal double Yaw;
 			internal double Pitch;
 			internal double Roll;
@@ -174,8 +168,7 @@ namespace OpenBve
 			internal int BeaconStructureIndex;
 			internal int NextDestination;
 			internal int PreviousDestination;
-			internal double X;
-			internal double Y;
+			internal Vector2 Position;
 			internal double Yaw;
 			internal double Pitch;
 			internal double Roll;
@@ -184,8 +177,7 @@ namespace OpenBve
 		{
 			internal double TrackPosition;
 			internal int RailIndex;
-			internal double X;
-			internal double Y;
+			internal Vector2 Position;
 			internal double Yaw;
 			internal double Pitch;
 			internal double Roll;
