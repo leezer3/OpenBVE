@@ -197,7 +197,7 @@ namespace OpenBve
                 Screen.Width = Interface.CurrentOptions.WindowWidth;
                 Screen.Height = Interface.CurrentOptions.WindowHeight;
 			}
-			Renderer.InitializeLighting();
+			LibRender.Renderer.InitializeLighting();
 			Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
 			Renderer.InitializeMotionBlur();
 			lock (Illustrations.Locker)

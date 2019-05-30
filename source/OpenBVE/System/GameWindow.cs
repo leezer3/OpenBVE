@@ -453,7 +453,7 @@ namespace OpenBve
 					Close();
 				}
 			}
-			Renderer.InitializeLighting();
+			LibRender.Renderer.InitializeLighting();
 			Game.LogRouteName = System.IO.Path.GetFileName(MainLoop.currentResult.RouteFile);
 			Game.LogTrainName = System.IO.Path.GetFileName(MainLoop.currentResult.TrainFolder);
 			Game.LogDateTime = DateTime.Now;

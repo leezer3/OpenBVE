@@ -31,8 +31,7 @@ namespace OpenBve
 		private static ObjectList OverlayAlpha = new ObjectList();
 
 		// options
-		internal static Color24 OptionAmbientColor = new Color24(160, 160, 160);
-		internal static Color24 OptionDiffuseColor = new Color24(160, 160, 160);
+		
 		internal static Vector3 OptionLightPosition = new Vector3(0.223606797749979f, 0.86602540378444f, -0.447213595499958f);
 		internal static bool OptionBackfaceCulling = true;
 
@@ -162,8 +161,8 @@ namespace OpenBve
 				}
 				if (World.CameraRestriction == CameraRestrictionMode.NotAvailable)
 				{
-					GL.Light(LightName.Light0, LightParameter.Ambient, new float[] { inv255 * (float)OptionAmbientColor.R, inv255 * (float)OptionAmbientColor.G, inv255 * (float)OptionAmbientColor.B, 1.0f });
-					GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { inv255 * (float)OptionDiffuseColor.R, inv255 * (float)OptionDiffuseColor.G, inv255 * (float)OptionDiffuseColor.B, 1.0f });
+					GL.Light(LightName.Light0, LightParameter.Ambient, new float[] { inv255 * (float) LibRender.Renderer.OptionAmbientColor.R, inv255 * (float) LibRender.Renderer.OptionAmbientColor.G, inv255 * (float) LibRender.Renderer.OptionAmbientColor.B, 1.0f });
+					GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { inv255 * (float) LibRender.Renderer.OptionDiffuseColor.R, inv255 * (float) LibRender.Renderer.OptionDiffuseColor.G, inv255 * (float) LibRender.Renderer.OptionDiffuseColor.B, 1.0f });
 				}
 			}
 			else if (LibRender.Renderer.LightingEnabled)

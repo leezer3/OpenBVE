@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Camera\CameraAlignment.cs" />
     <Compile Include="Camera\CameraRestrictionMode.cs" />
+    <Compile Include="Lighting\Lighting.cs" />
     <Compile Include="Objects\RenderFace.cs" />
     <Compile Include="Overlays\Keys.cs" />
     <Compile Include="Primitives\Cube.cs" />

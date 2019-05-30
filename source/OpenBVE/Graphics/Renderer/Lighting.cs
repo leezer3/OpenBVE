@@ -7,25 +7,7 @@ namespace OpenBve
 {
 	internal static partial class Renderer
 	{
-		/// <summary>Initializes the lighting</summary>
-		internal static void InitializeLighting()
-		{
-			GL.Light(LightName.Light0, LightParameter.Ambient, new float[] { inv255 * (float)OptionAmbientColor.R, inv255 * (float)OptionAmbientColor.G, inv255 * (float)OptionAmbientColor.B, 1.0f });
-			GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { inv255 * (float)OptionDiffuseColor.R, inv255 * (float)OptionDiffuseColor.G, inv255 * (float)OptionDiffuseColor.B, 1.0f });
-			GL.LightModel(LightModelParameter.LightModelAmbient, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
-			GL.CullFace(CullFaceMode.Front); LibRender.Renderer.CullEnabled = true; // possibly undocumented, but required for correct lighting
-			GL.Enable(EnableCap.Light0);
-			GL.Enable(EnableCap.ColorMaterial);
-			GL.ColorMaterial(MaterialFace.FrontAndBack, ColorMaterialParameter.AmbientAndDiffuse);
-			GL.ShadeModel(ShadingModel.Smooth);
-			float x = (float)OptionAmbientColor.R + (float)OptionAmbientColor.G + (float)OptionAmbientColor.B;
-			float y = (float)OptionDiffuseColor.R + (float)OptionDiffuseColor.G + (float)OptionDiffuseColor.B;
-			if (x < y) x = y;
-			LibRender.Renderer.OptionLightingResultingAmount = 0.00208333333333333f * x;
-			if (LibRender.Renderer.OptionLightingResultingAmount > 1.0f) LibRender.Renderer.OptionLightingResultingAmount = 1.0f;
-			GL.Enable(EnableCap.Lighting); LibRender.Renderer.LightingEnabled = true;
-			GL.DepthFunc(DepthFunction.Lequal);
-		}
+		
 
 		
 		/// <summary>Whether dynamic lighting is currently enabled</summary>
@@ -112,15 +94,15 @@ namespace OpenBve
 				mu = (Time - t1) / (t2 - t1);
 			}
 			//Calculate the final colors and positions
-			OptionDiffuseColor = Color24.CosineInterpolate(LightDefinitions[j].DiffuseColor, LightDefinitions[k].DiffuseColor, mu);
-			OptionAmbientColor = Color24.CosineInterpolate(LightDefinitions[j].AmbientColor, LightDefinitions[k].AmbientColor, mu);
+			LibRender.Renderer.OptionDiffuseColor = Color24.CosineInterpolate(LightDefinitions[j].DiffuseColor, LightDefinitions[k].DiffuseColor, mu);
+			LibRender.Renderer.OptionAmbientColor = Color24.CosineInterpolate(LightDefinitions[j].AmbientColor, LightDefinitions[k].AmbientColor, mu);
 			OptionLightPosition = Vector3.CosineInterpolate(LightDefinitions[j].LightPosition,LightDefinitions[k].LightPosition, mu);
 
 			//Interpolate the cab brightness value
 			var mu2 = (1 - System.Math.Cos(mu * System.Math.PI)) / 2;
 			DynamicCabBrightness = (cb1 * (1 - mu2) + cb2 * mu2);
 			//Reinitialize the lighting model with the new information
-			InitializeLighting();
+			LibRender.Renderer.InitializeLighting();
 			//NOTE: This does not refresh the display lists
 			//If we sit in place with extreme time acceleration (1000x) lighting for faces may appear a little inconsistant
 		}
