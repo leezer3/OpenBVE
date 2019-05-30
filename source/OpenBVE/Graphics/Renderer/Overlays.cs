@@ -69,7 +69,7 @@ namespace OpenBve
 							double y = 8.0;
 							for (int i = 0; i < Game.MarkerTextures.Length; i++)
 							{
-								if (Textures.LoadTexture(Game.MarkerTextures[i], OpenGlTextureWrapMode.ClampClamp))
+								if (Program.CurrentHost.LoadTexture(Game.MarkerTextures[i], OpenGlTextureWrapMode.ClampClamp))
 								{
 									double w = (double)Game.MarkerTextures[i].Width;
 									double h = (double)Game.MarkerTextures[i].Height;
@@ -84,7 +84,7 @@ namespace OpenBve
 						if (Timetable.CurrentTimetable == Timetable.TimetableState.Default)
 						{
 							// default
-							if (Textures.LoadTexture(Timetable.DefaultTimetableTexture, OpenGlTextureWrapMode.ClampClamp))
+							if (Program.CurrentHost.LoadTexture(Timetable.DefaultTimetableTexture, OpenGlTextureWrapMode.ClampClamp))
 							{
 								int w = Timetable.DefaultTimetableTexture.Width;
 								int h = Timetable.DefaultTimetableTexture.Height;
@@ -95,7 +95,7 @@ namespace OpenBve
 						else if (Timetable.CurrentTimetable == Timetable.TimetableState.Custom & Timetable.CustomObjectsUsed == 0)
 					{
 						// custom
-						if (Textures.LoadTexture(Timetable.CurrentCustomTimetableDaytimeTexture, OpenGlTextureWrapMode.ClampClamp))
+						if (Program.CurrentHost.LoadTexture(Timetable.CurrentCustomTimetableDaytimeTexture, OpenGlTextureWrapMode.ClampClamp))
 						{
 							int w = Timetable.CurrentCustomTimetableDaytimeTexture.Width;
 							int h = Timetable.CurrentCustomTimetableDaytimeTexture.Height;
@@ -103,7 +103,7 @@ namespace OpenBve
 							RenderOverlayTexture(Timetable.CurrentCustomTimetableDaytimeTexture, (double) (Screen.Width - w), Timetable.CustomTimetablePosition, (double) Screen.Width, (double) h + Timetable.CustomTimetablePosition);
 						}
 
-						if (Textures.LoadTexture(Timetable.CurrentCustomTimetableDaytimeTexture, OpenGlTextureWrapMode.ClampClamp))
+						if (Program.CurrentHost.LoadTexture(Timetable.CurrentCustomTimetableDaytimeTexture, OpenGlTextureWrapMode.ClampClamp))
 						{
 							int w = Timetable.CurrentCustomTimetableDaytimeTexture.Width;
 							int h = Timetable.CurrentCustomTimetableDaytimeTexture.Height;

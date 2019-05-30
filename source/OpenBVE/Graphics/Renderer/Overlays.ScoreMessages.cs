@@ -138,7 +138,7 @@ namespace OpenBve
 				// left background
 				if (Left.BackgroundTexture != null)
 				{
-					if (Textures.LoadTexture(Left.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
+					if (Program.CurrentHost.LoadTexture(Left.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
 						double u = (double)Left.BackgroundTexture.Width;
 						double v = (double)Left.BackgroundTexture.Height;
@@ -149,7 +149,7 @@ namespace OpenBve
 				// right background
 				if (Right.BackgroundTexture != null)
 				{
-					if (Textures.LoadTexture(Right.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
+					if (Program.CurrentHost.LoadTexture(Right.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
 						double u = (double)Right.BackgroundTexture.Width;
 						double v = (double)Right.BackgroundTexture.Height;
@@ -160,7 +160,7 @@ namespace OpenBve
 				// middle background
 				if (Middle.BackgroundTexture != null)
 				{
-					if (Textures.LoadTexture(Middle.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
+					if (Program.CurrentHost.LoadTexture(Middle.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
 						double v = (double)Middle.BackgroundTexture.Height;
 						GL.Color4(bc.R, bc.G, bc.B, bc.A * alpha);
@@ -180,7 +180,7 @@ namespace OpenBve
 				// left overlay
 				if (Left.OverlayTexture != null)
 				{
-					if (Textures.LoadTexture(Left.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
+					if (Program.CurrentHost.LoadTexture(Left.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
 						double u = (double)Left.OverlayTexture.Width;
 						double v = (double)Left.OverlayTexture.Height;
@@ -191,7 +191,7 @@ namespace OpenBve
 				// right overlay
 				if (Right.OverlayTexture != null)
 				{
-					if (Textures.LoadTexture(Right.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
+					if (Program.CurrentHost.LoadTexture(Right.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
 						double u = (double)Right.OverlayTexture.Width;
 						double v = (double)Right.OverlayTexture.Height;
@@ -202,7 +202,7 @@ namespace OpenBve
 				// middle overlay
 				if (Middle.OverlayTexture != null)
 				{
-					if (Textures.LoadTexture(Middle.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
+					if (Program.CurrentHost.LoadTexture(Middle.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
 						double v = (double)Middle.OverlayTexture.Height;
 						GL.Color4(oc.R, oc.G, oc.B, oc.A * alpha);

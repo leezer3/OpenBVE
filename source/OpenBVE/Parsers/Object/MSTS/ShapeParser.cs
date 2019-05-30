@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using LibRender;
 using OpenBveApi.Math;
 using OpenBveApi.Colors;
 using OpenBveApi.Objects;
@@ -274,7 +275,7 @@ namespace OpenBve
 						if (materials[i].DaytimeTexture != null)
 						{
 							OpenBveApi.Textures.Texture tday;
-							Textures.RegisterTexture(materials[i].DaytimeTexture, out tday);
+							TextureManager.RegisterTexture(materials[i].DaytimeTexture, out tday);
 							Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
 						}
 						else

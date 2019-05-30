@@ -1,4 +1,5 @@
 ﻿using System;
+using LibRender;
 using OpenBve.BrakeSystems;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
@@ -107,8 +108,8 @@ namespace OpenBve
 				LibRender.Renderer.DrawString(Fonts.SmallFont, t, new System.Drawing.Point(2, Screen.Height - 18), TextAlignment.TopLeft, Color128.White, true);
 			}
 			// debug information
-			int texturesLoaded = Textures.GetNumberOfLoadedTextures();
-			int texturesRegistered = Textures.GetNumberOfRegisteredTextures();
+			int texturesLoaded = TextureManager.GetNumberOfLoadedTextures();
+			int texturesRegistered = TextureManager.GetNumberOfRegisteredTextures();
 			int soundBuffersRegistered = Sounds.GetNumberOfLoadedBuffers();
 			int soundBuffersLoaded = Sounds.GetNumberOfLoadedBuffers();
 			int soundSourcesRegistered = Sounds.GetNumberOfRegisteredSources();

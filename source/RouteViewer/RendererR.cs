@@ -116,17 +116,17 @@ namespace OpenBve {
 		internal static void Initialize() {
 			LibRender.Renderer.Initialize();
 			string Folder = OpenBveApi.Path.CombineDirectory(Program.FileSystem.GetDataFolder(), "RouteViewer");
-			Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "background.png"), out BackgroundChangeTexture);
-			Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "brightness.png"), out BrightnessChangeTexture);
-			Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "transponder.png"), out TransponderTexture);
-			Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "section.png"), out SectionTexture);
-			Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "limit.png"), out LimitTexture);
-			Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "station_start.png"), out StationStartTexture);
-			Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "station_end.png"), out StationEndTexture);
-			Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "stop.png"), out StopTexture);
-			Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "buffer.png"), out BufferTexture);
-			Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "sound.png"), out SoundTexture);
-			Textures.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "switchsound.png"), out PointSoundTexture);
+			TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "background.png"), out BackgroundChangeTexture);
+			TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "brightness.png"), out BrightnessChangeTexture);
+			TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "transponder.png"), out TransponderTexture);
+			TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "section.png"), out SectionTexture);
+			TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "limit.png"), out LimitTexture);
+			TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "station_start.png"), out StationStartTexture);
+			TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "station_end.png"), out StationEndTexture);
+			TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "stop.png"), out StopTexture);
+			TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "buffer.png"), out BufferTexture);
+			TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "sound.png"), out SoundTexture);
+			TextureManager.RegisterTexture(OpenBveApi.Path.CombineFile(Folder, "switchsound.png"), out PointSoundTexture);
 			TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality& Interface.CurrentOptions.Interpolation != InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != InterpolationMode.Bilinear;
 		}
 		
@@ -139,7 +139,7 @@ namespace OpenBve {
 			} else
 			{
 				World.StaticBackground b = (World.StaticBackground)World.CurrentBackground;
-				if (Textures.LoadTexture(b.Texture, OpenGlTextureWrapMode.RepeatRepeat))
+				if (Program.CurrentHost.LoadTexture(b.Texture, OpenGlTextureWrapMode.RepeatRepeat))
 				{
 					GL.Clear(ClearBufferMask.DepthBufferBit);
 				}
@@ -423,7 +423,7 @@ namespace OpenBve {
 		}
 		private static void RenderBackground(World.StaticBackground Data, float Alpha) {
 			if (Data.Texture != null) {
-				if (Textures.LoadTexture(Data.Texture, OpenGlTextureWrapMode.RepeatRepeat)) {
+				if (Program.CurrentHost.LoadTexture(Data.Texture, OpenGlTextureWrapMode.RepeatRepeat)) {
 					if (LibRender.Renderer.LightingEnabled) {
 						GL.Disable(EnableCap.Lighting);
 						LibRender.Renderer.LightingEnabled = false;
@@ -655,7 +655,7 @@ namespace OpenBve {
 				int y = 150;
 				for (int i = 0; i < Game.MarkerTextures.Length; i++)
 				{
-					if (Textures.LoadTexture(Game.MarkerTextures[i], OpenGlTextureWrapMode.ClampClamp)) {
+					if (Program.CurrentHost.LoadTexture(Game.MarkerTextures[i], OpenGlTextureWrapMode.ClampClamp)) {
 						int w = Game.MarkerTextures[i].Width;
 						int h = Game.MarkerTextures[i].Height;
 						GL.Color4(1.0, 1.0, 1.0, 1.0);
@@ -938,7 +938,7 @@ namespace OpenBve {
 		                            //Yuck cast, but we need the null, as otherwise requires rewriting the texture indexer
 		                            wrap = (OpenGlTextureWrapMode)ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode;
 	                            }
-	                            Textures.LoadTexture(ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTexture, (OpenGlTextureWrapMode)ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode);
+	                            Program.CurrentHost.LoadTexture(ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTexture, (OpenGlTextureWrapMode)ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode);
                                 if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTexture.Transparency == TextureTransparencyType.Alpha)
                                 {
                                     alpha = true;
@@ -950,7 +950,7 @@ namespace OpenBve {
                             }
                             if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTexture != null)
                             {
-	                            Textures.LoadTexture(ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTexture, (OpenGlTextureWrapMode)ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode);
+	                            Program.CurrentHost.LoadTexture(ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTexture, (OpenGlTextureWrapMode)ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode);
                                 if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTexture.Transparency == TextureTransparencyType.Alpha)
                                 {
                                     alpha = true;

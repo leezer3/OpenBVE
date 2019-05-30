@@ -77,7 +77,7 @@ namespace OpenBve
 						}
 						if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTexture != null)
 						{
-							if (Textures.LoadTexture(ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTexture, wrap))
+							if (Program.CurrentHost.LoadTexture(ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTexture, wrap))
 							{
 								TextureTransparencyType type =
 									ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTexture.Transparency;
@@ -94,7 +94,7 @@ namespace OpenBve
 						}
 						if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTexture != null)
 						{
-							if (Textures.LoadTexture(ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTexture, wrap))
+							if (Program.CurrentHost.LoadTexture(ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTexture, wrap))
 							{
 								TextureTransparencyType type =
 									ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTexture.Transparency;
@@ -392,7 +392,7 @@ namespace OpenBve
 			//Don't unload textures in this case, as it just causes texture bugs
 			if (TimeElapsed > 1000)
 			{
-				foreach (var Texture in Textures.RegisteredTextures)
+				foreach (var Texture in TextureManager.RegisteredTextures)
 				{
 					if (Texture != null)
 					{
@@ -403,18 +403,18 @@ namespace OpenBve
 #endif
 			if (Game.CurrentInterface == Game.InterfaceType.Normal)
 			{
-				foreach (var Texture in Textures.RegisteredTextures)
+				foreach (var Texture in TextureManager.RegisteredTextures)
 				{
 					if (Texture != null && (CPreciseTimer.GetClockTicks() - Texture.LastAccess) > 20000)
 					{
-						Textures.UnloadTexture(Texture);
+						TextureManager.UnloadTexture(Texture);
 					}
 				}
 			}
 			else
 			{
 				//Don't unload textures if we are in a menu/ paused, as they may be required immediately after unpause
-				foreach (var Texture in Textures.RegisteredTextures)
+				foreach (var Texture in TextureManager.RegisteredTextures)
 				{
 					//Texture can be null in certain cases....
 					if (Texture != null)

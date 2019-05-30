@@ -1,4 +1,5 @@
 ﻿using System;
+using LibRender;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve
@@ -23,8 +24,8 @@ namespace OpenBve
 			    GL.DeleteTextures(1, new int[] {PixelBufferOpenGlTextureIndex});
 			    PixelBufferOpenGlTextureIndex = 0;
 		    }
-		    int w = Interface.CurrentOptions.NoTextureResize ? Screen.Width : Textures.RoundUpToPowerOfTwo(Screen.Width);
-		    int h = Interface.CurrentOptions.NoTextureResize ? Screen.Height : Textures.RoundUpToPowerOfTwo(Screen.Height);
+		    int w = Interface.CurrentOptions.NoTextureResize ? Screen.Width : TextureManager.RoundUpToPowerOfTwo(Screen.Width);
+		    int h = Interface.CurrentOptions.NoTextureResize ? Screen.Height : TextureManager.RoundUpToPowerOfTwo(Screen.Height);
 		    PixelBuffer = new byte[4 * w * h];
 		    int[] a = new int[1];
 		    GL.GenTextures(1, a);
@@ -47,8 +48,8 @@ namespace OpenBve
 				 */
 				return;
 			}
-            int w = Interface.CurrentOptions.NoTextureResize ? Screen.Width : Textures.RoundUpToPowerOfTwo(Screen.Width);
-            int h = Interface.CurrentOptions.NoTextureResize ? Screen.Height : Textures.RoundUpToPowerOfTwo(Screen.Height);
+            int w = Interface.CurrentOptions.NoTextureResize ? Screen.Width : TextureManager.RoundUpToPowerOfTwo(Screen.Width);
+            int h = Interface.CurrentOptions.NoTextureResize ? Screen.Height : TextureManager.RoundUpToPowerOfTwo(Screen.Height);
             // render
             if (PixelBufferOpenGlTextureIndex >= 0)
             {

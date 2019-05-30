@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using LibRender;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Textures;
@@ -45,7 +46,7 @@ namespace OpenBve {
 				string backgroundFile = OpenBveApi.Path.CombineFile(Path, "loadingbkg_" + bkgNo + ".png");
 				if (System.IO.File.Exists(backgroundFile))
 				{
-					Textures.RegisterTexture(backgroundFile, out TextureLoadingBkg);
+					TextureManager.RegisterTexture(backgroundFile, out TextureLoadingBkg);
 				}
 			}
 			if (Renderer.TextureLogo == null)
@@ -58,7 +59,7 @@ namespace OpenBve {
 				string logoFile = OpenBveApi.Path.CombineFile(Path, fName);
 				if (System.IO.File.Exists(logoFile))
 				{
-					Textures.RegisterTexture(logoFile, out TextureLogo);
+					TextureManager.RegisterTexture(logoFile, out TextureLogo);
 				}
 			}
 		}
@@ -69,7 +70,7 @@ namespace OpenBve {
 		/// <summary>Sets the loading screen background to a custom image</summary>
 		internal static void SetLoadingBkg(string fileName)
 		{
-			Textures.RegisterTexture(fileName, out TextureLoadingBkg);
+			TextureManager.RegisterTexture(fileName, out TextureLoadingBkg);
 			customLoadScreen = true;
 		}
 

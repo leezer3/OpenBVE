@@ -267,7 +267,7 @@ namespace OpenBve
 						if (materials[i].DaytimeTexture != null)
 						{
 							OpenBveApi.Textures.Texture tday;
-							Textures.RegisterTexture(materials[i].DaytimeTexture, out tday);
+							LibRender.TextureManager.RegisterTexture(materials[i].DaytimeTexture, out tday);
 							Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
 						}
 						else

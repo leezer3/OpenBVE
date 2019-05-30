@@ -22,7 +22,7 @@ namespace OpenBve
 			double w, h;
 			if (Element.CenterMiddle.BackgroundTexture != null)
 			{
-				if (Textures.LoadTexture(Element.CenterMiddle.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
+				if (Program.CurrentHost.LoadTexture(Element.CenterMiddle.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 				{
 					w = (double)Element.CenterMiddle.BackgroundTexture.Width;
 					h = (double)Element.CenterMiddle.BackgroundTexture.Height;
@@ -784,7 +784,7 @@ namespace OpenBve
 				}
 				if (Element.CenterMiddle.BackgroundTexture != null)
 				{
-					if (Textures.LoadTexture(Element.CenterMiddle.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
+					if (Program.CurrentHost.LoadTexture(Element.CenterMiddle.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
 						Color128 c = Element.BackgroundColor.CreateBackColor(sc, alpha);
 						GL.Color4(c.R, c.G, c.B, c.A);
@@ -805,7 +805,7 @@ namespace OpenBve
 				// overlay
 				if (Element.CenterMiddle.OverlayTexture != null)
 				{
-					if (Textures.LoadTexture(Element.CenterMiddle.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
+					if (Program.CurrentHost.LoadTexture(Element.CenterMiddle.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
 						Color128 c = Element.OverlayColor.CreateBackColor(sc, alpha);
 						GL.Color4(c.R, c.G, c.B, c.A);

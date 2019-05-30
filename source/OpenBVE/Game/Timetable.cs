@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using LibRender;
 using OpenBveApi;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
@@ -491,17 +492,17 @@ namespace OpenBve {
 					if (k == 0)
 					{
 						// measures
-						int nw = Textures.RoundUpToPowerOfTwo(w);
+						int nw = TextureManager.RoundUpToPowerOfTwo(w);
 						offsetx = nw - w;
 						w = nw;
 						actualheight = h;
-						h = Textures.RoundUpToPowerOfTwo(h);
+						h = TextureManager.RoundUpToPowerOfTwo(h);
 					}
 					else
 					{
 						// create texture
 						g.Dispose();
-						timetableTexture = Textures.RegisterTexture(b);
+						timetableTexture = TextureManager.RegisterTexture(b);
 					}
 				}
 			}

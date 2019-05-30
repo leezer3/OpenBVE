@@ -111,7 +111,7 @@ namespace OpenBve
 										}
 										else
 										{
-											Textures.RegisterTexture(file, out t);
+											Program.CurrentHost.RegisterTexture(file, new TextureParameters(null, null), out t);
 										}
 										break;
 									case "time":

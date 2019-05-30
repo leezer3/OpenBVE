@@ -97,7 +97,7 @@ namespace OpenBve
 		/// <param name="scale">The scale</param>
 		internal static void RenderBackground(BackgroundManager.StaticBackground Data, float Alpha, float scale)
 		{
-			if (Data.Texture != null && Textures.LoadTexture(Data.Texture, OpenGlTextureWrapMode.RepeatClamp))
+			if (Data.Texture != null && Program.CurrentHost.LoadTexture(Data.Texture, OpenGlTextureWrapMode.RepeatClamp))
 			{
 				if (LibRender.Renderer.LightingEnabled)
 				{
@@ -276,7 +276,7 @@ namespace OpenBve
 
 					if (Object.ObjectBackground.Mesh.Materials[m].DaytimeTexture != null)
 					{
-						Textures.LoadTexture(Object.ObjectBackground.Mesh.Materials[m].DaytimeTexture, wrap);
+						Program.CurrentHost.LoadTexture(Object.ObjectBackground.Mesh.Materials[m].DaytimeTexture, wrap);
 						GL.BindTexture(TextureTarget.Texture2D, Object.ObjectBackground.Mesh.Materials[m].DaytimeTexture.OpenGlTextures[(int) wrap].Name);
 					}
 				}

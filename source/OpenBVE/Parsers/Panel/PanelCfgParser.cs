@@ -1,4 +1,5 @@
 ﻿using System;
+using LibRender;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
@@ -120,10 +121,10 @@ namespace OpenBve {
 					Interface.AddMessage(MessageType.Error, true, "The panel image could not be found in " + FileName);
 				} else {
 					Texture t;
-					Textures.RegisterTexture(PanelBackground, new TextureParameters(null, Color24.Blue), out t);
+					TextureManager.RegisterTexture(PanelBackground, new TextureParameters(null, Color24.Blue), out t);
 					OpenBVEGame.RunInRenderThread(() =>
 					{
-						Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp); 
+						Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp); 
 					});
 					double w = (double)t.Width;
 					double h = (double)t.Height;
@@ -326,10 +327,10 @@ namespace OpenBve {
 									// background
 									if (Background != null) {
 										Texture t;
-										Textures.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out t);
+										TextureManager.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
+											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
@@ -338,10 +339,10 @@ namespace OpenBve {
 									// cover
 									if (Cover != null) {
 										Texture t;
-										Textures.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out t);
+										TextureManager.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
+											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
@@ -354,10 +355,10 @@ namespace OpenBve {
 												string Folder = Program.FileSystem.GetDataFolder("Compatibility");
 												string File = OpenBveApi.Path.CombineFile(Folder, k == 0 ? "needle_pressuregauge_lower.png" : "needle_pressuregauge_upper.png");
 												Texture t;
-												Textures.RegisterTexture(File, out t);
+												TextureManager.RegisterTexture(File, out t);
 												OpenBVEGame.RunInRenderThread(() =>
 												{
-													Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
+													Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 												});
 												double w = (double)t.Width;
 												double h = (double)t.Height;
@@ -562,10 +563,10 @@ namespace OpenBve {
 									if (Background != null) {
 										// background/led
 										Texture t;
-										Textures.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out t);
+										TextureManager.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
+											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
@@ -574,10 +575,10 @@ namespace OpenBve {
 									if (Cover != null) {
 										// cover
 										Texture t;
-										Textures.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out t);
+										TextureManager.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
+											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
@@ -613,10 +614,10 @@ namespace OpenBve {
 												double x = CenterX - 0.5 * h + Math.Sin(a) * AtcRadius;
 												double y = CenterY - 0.5 * h - Math.Cos(a) * AtcRadius + SemiHeight;
 												Texture t;
-												Textures.RegisterTexture(Atc, new TextureParameters(new TextureClipRegion(j * h, 0, h, h), Color24.Blue), out t);
+												TextureManager.RegisterTexture(Atc, new TextureParameters(new TextureClipRegion(j * h, 0, h, h), Color24.Blue), out t);
 												OpenBVEGame.RunInRenderThread(() =>
 												{
-													Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
+													Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 												});
 												if (j == 0) {
 													k = CreateElement(Train, x, y, (double)h, (double)h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 4.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, t, Color32.White, false);
@@ -632,10 +633,10 @@ namespace OpenBve {
 										string Folder = Program.FileSystem.GetDataFolder("Compatibility");
 										string File = OpenBveApi.Path.CombineFile(Folder, "needle_speedometer.png");
 										Texture t;
-										Textures.RegisterTexture(File, out t);
+										TextureManager.RegisterTexture(File, out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
+											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
@@ -804,7 +805,7 @@ namespace OpenBve {
 											int n = h / Height;
 											Texture[] t = new Texture[n];
 											for (int j = 0; j < n; j++) {
-												Textures.RegisterTexture(Number, new TextureParameters(new TextureClipRegion(w - Width, j * Height, Width, Height), Color24.Blue), out t[j]);
+												TextureManager.RegisterTexture(Number, new TextureParameters(new TextureClipRegion(w - Width, j * Height, Width, Height), Color24.Blue), out t[j]);
 												//TextureManager.UseTexture(t[j], TextureManager.UseMode.Normal);
 											}
 											{ // hundreds
@@ -895,12 +896,12 @@ namespace OpenBve {
 									} i--;
 									if (TurnOn != null & TurnOff != null) {
 										Texture t0, t1;
-										Textures.RegisterTexture(TurnOn, new TextureParameters(null, Color24.Blue), out t0);
-										Textures.RegisterTexture(TurnOff, new TextureParameters(null, Color24.Blue), out t1);
+										TextureManager.RegisterTexture(TurnOn, new TextureParameters(null, Color24.Blue), out t0);
+										TextureManager.RegisterTexture(TurnOff, new TextureParameters(null, Color24.Blue), out t1);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t0, OpenGlTextureWrapMode.ClampClamp);
-											Textures.LoadTexture(t1, OpenGlTextureWrapMode.ClampClamp);
+											Program.CurrentHost.LoadTexture(t0, OpenGlTextureWrapMode.ClampClamp);
+											Program.CurrentHost.LoadTexture(t1, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t0.Width;
 										double h = (double)t0.Height;
@@ -985,10 +986,10 @@ namespace OpenBve {
 									} i--;
 									if (Background != null) {
 										Texture t;
-										Textures.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out t);
+										TextureManager.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
+											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
@@ -998,10 +999,10 @@ namespace OpenBve {
 									{ // hour
 										string File = OpenBveApi.Path.CombineFile(Folder, "needle_hour.png");
 										Texture t;
-										Textures.RegisterTexture(File, out t);
+										TextureManager.RegisterTexture(File, out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
+											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
@@ -1015,10 +1016,10 @@ namespace OpenBve {
 									{ // minute
 										string File = OpenBveApi.Path.CombineFile(Folder, "needle_minute.png");
 										Texture t;
-										Textures.RegisterTexture(File, out t);
+										TextureManager.RegisterTexture(File, out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
+											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
@@ -1032,10 +1033,10 @@ namespace OpenBve {
 									{ // second
 										string File = OpenBveApi.Path.CombineFile(Folder, "needle_second.png");
 										Texture t;
-										Textures.RegisterTexture(File, out t);
+										TextureManager.RegisterTexture(File, out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
+											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
@@ -1109,7 +1110,7 @@ namespace OpenBve {
 											for (int j = 0; j < n; j++) {
 												Texture t;
 												TextureClipRegion clip = new TextureClipRegion(j * Width, 0, Width, h);
-												Textures.RegisterTexture(Image, new TextureParameters(clip, Color24.Blue), out t);
+												TextureManager.RegisterTexture(Image, new TextureParameters(clip, Color24.Blue), out t);
 												if (j == 0) {
 													k = CreateElement(Train, CornerX, CornerY + SemiHeight, (double)Width, (double)h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - StackDistance, Train.Cars[Train.DriverCar].Driver, t, Color32.White, false);
 												} else {
