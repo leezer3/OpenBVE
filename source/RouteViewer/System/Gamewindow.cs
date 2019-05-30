@@ -98,7 +98,7 @@ namespace OpenBve
             World.ExtraViewingDistance = 50.0;
 
             Renderer.Initialize();
-            Renderer.InitializeLighting();
+            LibRender.Renderer.InitializeLighting();
             Sounds.Initialize();
             Program.UpdateViewport();
             if (Program.processCommandLineArgs)

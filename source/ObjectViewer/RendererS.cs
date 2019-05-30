@@ -62,8 +62,6 @@ namespace OpenBve
 
         // options
         internal static bool OptionLighting = true;
-        internal static Color24 OptionAmbientColor = new Color24(160, 160, 160);
-        internal static Color24 OptionDiffuseColor = new Color24(159, 159, 159);
         internal static Vector3 OptionLightPosition = new Vector3(0.215920077052065f, 0.875724044222352f, -0.431840154104129f);
         internal static float OptionLightingResultingAmount = 1.0f;
         internal static bool OptionNormals = false;
@@ -135,8 +133,8 @@ namespace OpenBve
             OverlayListDistance = new double[256];
             OverlayListCount = 0;
             OptionLighting = true;
-            OptionAmbientColor = new Color24(160, 160, 160);
-            OptionDiffuseColor = new Color24(160, 160, 160);
+            LibRender.Renderer.OptionAmbientColor = new Color24(160, 160, 160);
+            LibRender.Renderer.OptionDiffuseColor = new Color24(160, 160, 160);
             OptionLightPosition = new Vector3(0.215920077052065f, 0.875724044222352f, -0.431840154104129f);
             OptionLightingResultingAmount = 1.0f;
             GL.Disable(EnableCap.Fog); LibRender.Renderer.FogEnabled = false;
@@ -149,36 +147,6 @@ namespace OpenBve
             TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality & Interface.CurrentOptions.Interpolation != InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != InterpolationMode.Bilinear;
         }
 
-        // initialize lighting
-        internal static void InitializeLighting()
-        {
-            if (OptionAmbientColor.R == 255 & OptionAmbientColor.G == 255 & OptionAmbientColor.B == 255 & OptionDiffuseColor.R == 0 & OptionDiffuseColor.G == 0 & OptionDiffuseColor.B == 0)
-            {
-                OptionLighting = false;
-            }
-            else
-            {
-                OptionLighting = true;
-            }
-            if (OptionLighting)
-            {
-                GL.Light(LightName.Light0, LightParameter.Ambient, new float[] { inv255 * (float)OptionAmbientColor.R, inv255 * (float)OptionAmbientColor.G, inv255 * (float)OptionAmbientColor.B, 1.0f });
-                GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { inv255 * (float)OptionDiffuseColor.R, inv255 * (float)OptionDiffuseColor.G, inv255 * (float)OptionDiffuseColor.B, 1.0f });
-                GL.LightModel(LightModelParameter.LightModelAmbient, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
-                GL.Enable(EnableCap.Lighting); LibRender.Renderer.LightingEnabled = true;
-                GL.Enable(EnableCap.Light0);
-                GL.Enable(EnableCap.ColorMaterial);
-                GL.ColorMaterial(MaterialFace.FrontAndBack, ColorMaterialParameter.AmbientAndDiffuse);
-                GL.ShadeModel(ShadingModel.Smooth);
-                OptionLightingResultingAmount = (float)((int)OptionAmbientColor.R + (int)OptionAmbientColor.G + (int)OptionAmbientColor.B) / 480.0f;
-                if (OptionLightingResultingAmount > 1.0f) OptionLightingResultingAmount = 1.0f;
-            }
-            else
-            {
-                GL.Disable(EnableCap.Lighting); LibRender.Renderer.LightingEnabled = false;
-            }
-        }
-		
         internal static void RenderScene()
         {
 	        // initialize

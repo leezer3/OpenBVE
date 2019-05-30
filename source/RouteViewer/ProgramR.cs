@@ -159,7 +159,7 @@ namespace OpenBve {
 				CurrentRoute = null;
 				result = false;
 			}
-			Renderer.InitializeLighting();
+			LibRender.Renderer.InitializeLighting();
 			ObjectManager.InitializeVisibility();
 			Textures.UnloadAllTextures();
 			return result;

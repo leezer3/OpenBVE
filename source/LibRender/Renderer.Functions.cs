@@ -23,15 +23,15 @@ namespace LibRender
 		    GL.Hint(HintTarget.GenerateMipmapHint, HintMode.Nicest);
 		    GL.Disable(EnableCap.Dither);
 		    GL.CullFace(CullFaceMode.Front);
-		    GL.Enable(EnableCap.CullFace); LibRender.Renderer.CullEnabled = true;
-		    GL.Disable(EnableCap.Lighting); LibRender.Renderer.LightingEnabled = false;
-		    GL.Disable(EnableCap.Texture2D); LibRender.Renderer.TexturingEnabled = false;
+		    GL.Enable(EnableCap.CullFace); CullEnabled = true;
+		    GL.Disable(EnableCap.Lighting); LightingEnabled = false;
+		    GL.Disable(EnableCap.Texture2D); TexturingEnabled = false;
 		    Matrix4d lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0);
 		    GL.MatrixMode(MatrixMode.Modelview);
 		    GL.LoadMatrix(ref lookat);
 		    GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-		    GL.Enable(EnableCap.Blend); LibRender.Renderer.BlendEnabled = true;
-		    GL.Disable(EnableCap.Lighting); LibRender.Renderer.LightingEnabled = false;
+		    GL.Enable(EnableCap.Blend); BlendEnabled = true;
+		    GL.Disable(EnableCap.Lighting); LightingEnabled = false;
 		    GL.Disable(EnableCap.Fog);
 	    }
 

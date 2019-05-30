@@ -274,13 +274,13 @@ namespace OpenBve
             }
             if (updatelight)
             {
-               Renderer.OptionAmbientColor.R = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative * (2.0 - Program.LightingRelative));
-               Renderer.OptionAmbientColor.G = (byte)Math.Round(32.0 + 128.0 * 0.5 * (Program.LightingRelative + Program.LightingRelative * (2.0 - Program.LightingRelative)));
-                Renderer.OptionAmbientColor.B = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative);
-                Renderer.OptionDiffuseColor.R = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative);
-                Renderer.OptionDiffuseColor.G = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative);
-                Renderer.OptionDiffuseColor.B = (byte)Math.Round(32.0 + 128.0 * Math.Sqrt(Program.LightingRelative));
-                Renderer.InitializeLighting();
+				LibRender.Renderer.OptionAmbientColor.R = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative * (2.0 - Program.LightingRelative));
+				LibRender.Renderer.OptionAmbientColor.G = (byte)Math.Round(32.0 + 128.0 * 0.5 * (Program.LightingRelative + Program.LightingRelative * (2.0 - Program.LightingRelative)));
+				LibRender.Renderer.OptionAmbientColor.B = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative);
+				LibRender.Renderer.OptionDiffuseColor.R = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative);
+				LibRender.Renderer.OptionDiffuseColor.G = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative);
+				LibRender.Renderer.OptionDiffuseColor.B = (byte)Math.Round(32.0 + 128.0 * Math.Sqrt(Program.LightingRelative));
+				LibRender.Renderer.InitializeLighting();
             }
             Renderer.RenderScene();
             SwapBuffers();
@@ -303,7 +303,7 @@ namespace OpenBve
 	        FileDrop += Program.DragFile;
             Program.ResetCamera();
             Renderer.Initialize();
-            Renderer.InitializeLighting();
+            LibRender.Renderer.InitializeLighting();
             //SwapBuffers();
             //Fonts.Initialize();
             Program.UpdateViewport();
