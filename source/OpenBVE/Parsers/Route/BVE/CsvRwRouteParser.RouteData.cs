@@ -93,7 +93,7 @@ namespace OpenBve
 						Blocks[i].Rails = new Rail[Blocks[i - 1].Rails.Length];
 						for (int j = 0; j < Blocks[i].Rails.Length; j++)
 						{
-							Blocks[i].Rails[j].RailStart = Blocks[i - 1].Rails[j].RailStart;
+							Blocks[i].Rails[j].RailStarted = Blocks[i - 1].Rails[j].RailStarted;
 							Blocks[i].Rails[j].RailStart.X = Blocks[i - 1].Rails[j].RailStart.X;
 							Blocks[i].Rails[j].RailStart.Y = Blocks[i - 1].Rails[j].RailStart.Y;
 							Blocks[i].Rails[j].RailStartRefreshed = false;
