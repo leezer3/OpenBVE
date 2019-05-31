@@ -42,13 +42,13 @@ namespace OpenBveApi.FunctionScripting
 		/// <summary>Checks whether the specified function will return a constant result</summary>
 		public bool ConstantResult()
 		{
-			if (InstructionSet.Length == 1 && InstructionSet[0] == FunctionScripting.Instructions.SystemConstant)
+			if (InstructionSet.Length == 1 && InstructionSet[0] == Instructions.SystemConstant)
 			{
 				return true;
 			}
 			for (int i = 0; i < InstructionSet.Length; i++)
 			{
-				if ((int) InstructionSet[i] >= (int) FunctionScripting.Instructions.LogicalXor)
+				if ((int) InstructionSet[i] >= (int) Instructions.LogicalXor)
 				{
 					return false;
 				}
