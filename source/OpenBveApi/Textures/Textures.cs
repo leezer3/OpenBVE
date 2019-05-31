@@ -285,5 +285,37 @@ namespace OpenBveApi.Textures {
 
 			throw new NotSupportedException();
 		}
+
+		/// <summary>Inverts the lightness values of a texture used for a glow</summary>
+		public void InvertLightness()
+		{
+			for (int i = 0; i < MyBytes.Length; i += 4)
+			{
+				if (MyBytes[i] != 0 | MyBytes[i + 1] != 0 | MyBytes[i + 2] != 0)
+				{
+					int r = MyBytes[i + 0];
+					int g = MyBytes[i + 1];
+					int b = MyBytes[i + 2];
+					if (g <= r & r <= b | b <= r & r <= g)
+					{
+						MyBytes[i + 0] = (byte)(255 + r - g - b);
+						MyBytes[i + 1] = (byte)(255 - b);
+						MyBytes[i + 2] = (byte)(255 - g);
+					}
+					else if (r <= g & g <= b | b <= g & g <= r)
+					{
+						MyBytes[i + 0] = (byte)(255 - b);
+						MyBytes[i + 1] = (byte)(255 + g - r - b);
+						MyBytes[i + 2] = (byte)(255 - r);
+					}
+					else
+					{
+						MyBytes[i + 0] = (byte)(255 - g);
+						MyBytes[i + 1] = (byte)(255 - r);
+						MyBytes[i + 2] = (byte)(255 + b - r - g);
+					}
+				}
+			}
+		}
 	}
 }

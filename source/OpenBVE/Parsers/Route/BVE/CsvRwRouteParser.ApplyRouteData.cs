@@ -339,15 +339,15 @@ namespace OpenBve
 					{
 						for (int j = 0; j < Data.Blocks[i].Rails.Length; j++)
 						{
-							if (Data.Blocks[i].Rails[j].RailStart & Data.Blocks[i + 1].Rails.Length > j)
+							if (Data.Blocks[i].Rails[j].RailStarted & Data.Blocks[i + 1].Rails.Length > j)
 							{
 								bool q = false;
 								for (int k = 0; k < Data.Blocks[i].Rails.Length; k++)
 								{
-									if (Data.Blocks[i].Rails[k].RailStart & Data.Blocks[i + 1].Rails.Length > k)
+									if (Data.Blocks[i].Rails[k].RailStarted & Data.Blocks[i + 1].Rails.Length > k)
 									{
-										bool qx = Math.Sign(Data.Blocks[i].Rails[k].RailStartX - Data.Blocks[i].Rails[j].RailStartX) != Math.Sign(Data.Blocks[i + 1].Rails[k].RailEndX - Data.Blocks[i + 1].Rails[j].RailEndX);
-										bool qy = (Data.Blocks[i].Rails[k].RailStartY - Data.Blocks[i].Rails[j].RailStartY) * (Data.Blocks[i + 1].Rails[k].RailEndY - Data.Blocks[i + 1].Rails[j].RailEndY) <= 0.0;
+										bool qx = Math.Sign(Data.Blocks[i].Rails[k].RailStart.X - Data.Blocks[i].Rails[j].RailStart.X) != Math.Sign(Data.Blocks[i + 1].Rails[k].RailEnd.X - Data.Blocks[i + 1].Rails[j].RailEnd.X);
+										bool qy = (Data.Blocks[i].Rails[k].RailStart.Y - Data.Blocks[i].Rails[j].RailStart.Y) * (Data.Blocks[i + 1].Rails[k].RailEnd.Y - Data.Blocks[i + 1].Rails[j].RailEnd.Y) <= 0.0;
 										if (qx & qy)
 										{
 											q = true;
@@ -565,8 +565,8 @@ namespace OpenBve
 					{
 						int sttype = Data.Blocks[i].GroundFreeObj[j].Type;
 						double d = Data.Blocks[i].GroundFreeObj[j].TrackPosition - StartingDistance;
-						double dx = Data.Blocks[i].GroundFreeObj[j].X;
-						double dy = Data.Blocks[i].GroundFreeObj[j].Y;
+						double dx = Data.Blocks[i].GroundFreeObj[j].Position.X;
+						double dy = Data.Blocks[i].GroundFreeObj[j].Position.Y;
 						Vector3 wpos = Position + new Vector3(Direction.X * d + Direction.Y * dx, dy - Data.Blocks[i].Height, Direction.Y * d - Direction.X * dx);
 						double tpos = Data.Blocks[i].GroundFreeObj[j].TrackPosition;
 						Data.Structure.FreeObjects[sttype].CreateObject(wpos, GroundTransformation, new Transformation(Data.Blocks[i].GroundFreeObj[j].Yaw, Data.Blocks[i].GroundFreeObj[j].Pitch, Data.Blocks[i].GroundFreeObj[j].Roll), Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos);
@@ -577,7 +577,7 @@ namespace OpenBve
 				{
 					for (int j = 0; j < Data.Blocks[i].Rails.Length; j++)
 					{
-						if (j > 0 && !Data.Blocks[i].Rails[j].RailStart) continue;
+						if (j > 0 && !Data.Blocks[i].Rails[j].RailStarted) continue;
 						// rail
 						Vector3 pos;
 						Transformation RailTransformation;
@@ -593,8 +593,8 @@ namespace OpenBve
 						else
 						{
 							// rails 1-infinity
-							double x = Data.Blocks[i].Rails[j].RailStartX;
-							double y = Data.Blocks[i].Rails[j].RailStartY;
+							double x = Data.Blocks[i].Rails[j].RailStart.X;
+							double y = Data.Blocks[i].Rails[j].RailStart.Y;
 							Vector3 offset = new Vector3(Direction.Y * x, y, -Direction.X * x);
 							pos = Position + offset;
 							double dh;
@@ -657,8 +657,8 @@ namespace OpenBve
 								Transformation GroundTransformation2 = new Transformation(TrackYaw2, 0.0, 0.0);
 								Transformation TrackTransformation2 = new Transformation(TrackYaw2, TrackPitch2, 0.0);
 								 */
-								double x2 = Data.Blocks[i + 1].Rails[j].RailEndX;
-								double y2 = Data.Blocks[i + 1].Rails[j].RailEndY;
+								double x2 = Data.Blocks[i + 1].Rails[j].RailEnd.X;
+								double y2 = Data.Blocks[i + 1].Rails[j].RailEnd.Y;
 								Vector3 offset2 = new Vector3(Direction2.Y * x2, y2, -Direction2.X * x2);
 								Vector3 pos2 = Position2 + offset2;
 								Vector3 r = new Vector3(pos2.X - pos.X, pos2.Y - pos.Y, pos2.Z - pos.Z);
@@ -667,8 +667,8 @@ namespace OpenBve
 								RailTransformation.X = new Vector3(r.Z, 0.0, -r.X);
 								World.Normalize(ref RailTransformation.X.X, ref RailTransformation.X.Z);
 								RailTransformation.Y = Vector3.Cross(RailTransformation.Z, RailTransformation.X);
-								double dx = Data.Blocks[i + 1].Rails[j].RailEndX - Data.Blocks[i].Rails[j].RailStartX;
-								double dy = Data.Blocks[i + 1].Rails[j].RailEndY - Data.Blocks[i].Rails[j].RailStartY;
+								double dx = Data.Blocks[i + 1].Rails[j].RailEnd.X - Data.Blocks[i].Rails[j].RailStart.X;
+								double dy = Data.Blocks[i + 1].Rails[j].RailEnd.Y - Data.Blocks[i].Rails[j].RailStart.Y;
 								planar = Math.Atan(dx / c);
 								dh = dy / c;
 								updown = Math.Atan(dh);
@@ -702,23 +702,23 @@ namespace OpenBve
 							if (Data.Blocks[i].PointsOfInterest[k].RailIndex == j)
 							{
 								double d = Data.Blocks[i].PointsOfInterest[k].TrackPosition - StartingDistance;
-								double x = Data.Blocks[i].PointsOfInterest[k].X;
-								double y = Data.Blocks[i].PointsOfInterest[k].Y;
+								double x = Data.Blocks[i].PointsOfInterest[k].Position.X;
+								double y = Data.Blocks[i].PointsOfInterest[k].Position.Y;
 								int m = Game.PointsOfInterest.Length;
 								Array.Resize<Game.PointOfInterest>(ref Game.PointsOfInterest, m + 1);
 								Game.PointsOfInterest[m].TrackPosition = Data.Blocks[i].PointsOfInterest[k].TrackPosition;
 								if (i < Data.Blocks.Length - 1 && Data.Blocks[i + 1].Rails.Length > j)
 								{
-									double dx = Data.Blocks[i + 1].Rails[j].RailEndX - Data.Blocks[i].Rails[j].RailStartX;
-									double dy = Data.Blocks[i + 1].Rails[j].RailEndY - Data.Blocks[i].Rails[j].RailStartY;
-									dx = Data.Blocks[i].Rails[j].RailStartX + d / Data.BlockInterval * dx;
-									dy = Data.Blocks[i].Rails[j].RailStartY + d / Data.BlockInterval * dy;
+									double dx = Data.Blocks[i + 1].Rails[j].RailEnd.X - Data.Blocks[i].Rails[j].RailStart.X;
+									double dy = Data.Blocks[i + 1].Rails[j].RailEnd.Y - Data.Blocks[i].Rails[j].RailStart.Y;
+									dx = Data.Blocks[i].Rails[j].RailStart.X + d / Data.BlockInterval * dx;
+									dy = Data.Blocks[i].Rails[j].RailStart.Y + d / Data.BlockInterval * dy;
 									Game.PointsOfInterest[m].TrackOffset = new Vector3(x + dx, y + dy, 0.0);
 								}
 								else
 								{
-									double dx = Data.Blocks[i].Rails[j].RailStartX;
-									double dy = Data.Blocks[i].Rails[j].RailStartY;
+									double dx = Data.Blocks[i].Rails[j].RailStart.X;
+									double dy = Data.Blocks[i].Rails[j].RailStart.Y;
 									Game.PointsOfInterest[m].TrackOffset = new Vector3(x + dx, y + dy, 0.0);
 								}
 								Game.PointsOfInterest[m].TrackYaw = Data.Blocks[i].PointsOfInterest[k].Yaw + planar;
@@ -797,8 +797,8 @@ namespace OpenBve
 									{
 										var SoundEvent = Data.Blocks[i].SoundEvents[k];
 										double d = SoundEvent.TrackPosition - StartingDistance;
-										double dx = SoundEvent.X;
-										double dy = SoundEvent.Y;
+										double dx = SoundEvent.Position.X;
+										double dy = SoundEvent.Position.Y;
 										double wa = Math.Atan2(Direction.Y, Direction.X) - planar;
 										Vector3 w = new Vector3(Math.Cos(wa), Math.Tan(updown), Math.Sin(wa));
 										w.Normalize();
@@ -924,17 +924,17 @@ namespace OpenBve
 								else if (Data.Blocks[i].Forms[k].SecondaryRail > 0)
 								{
 									int p = Data.Blocks[i].Forms[k].PrimaryRail;
-									double px0 = p > 0 ? Data.Blocks[i].Rails[p].RailStartX : 0.0;
-									double px1 = p > 0 ? Data.Blocks[i + 1].Rails[p].RailEndX : 0.0;
+									double px0 = p > 0 ? Data.Blocks[i].Rails[p].RailStart.X : 0.0;
+									double px1 = p > 0 ? Data.Blocks[i + 1].Rails[p].RailEnd.X : 0.0;
 									int s = Data.Blocks[i].Forms[k].SecondaryRail;
-									if (s < 0 || s >= Data.Blocks[i].Rails.Length || !Data.Blocks[i].Rails[s].RailStart)
+									if (s < 0 || s >= Data.Blocks[i].Rails.Length || !Data.Blocks[i].Rails[s].RailStarted)
 									{
 										Interface.AddMessage(MessageType.Error, false, "RailIndex2 is out of range in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName);
 									}
 									else
 									{
-										double sx0 = Data.Blocks[i].Rails[s].RailStartX;
-										double sx1 = Data.Blocks[i + 1].Rails[s].RailEndX;
+										double sx0 = Data.Blocks[i].Rails[s].RailStart.X;
+										double sx1 = Data.Blocks[i + 1].Rails[s].RailEnd.X;
 										double d0 = sx0 - px0;
 										double d1 = sx1 - px1;
 										if (d0 < 0.0)
@@ -1024,9 +1024,9 @@ namespace OpenBve
 							if (Data.Blocks[i].Forms[k].SecondaryRail == j)
 							{
 								int p = Data.Blocks[i].Forms[k].PrimaryRail;
-								double px = p > 0 ? Data.Blocks[i].Rails[p].RailStartX : 0.0;
+								double px = p > 0 ? Data.Blocks[i].Rails[p].RailStart.X : 0.0;
 								int s = Data.Blocks[i].Forms[k].SecondaryRail;
-								double sx = Data.Blocks[i].Rails[s].RailStartX;
+								double sx = Data.Blocks[i].Rails[s].RailStart.X;
 								double d = px - sx;
 								if (d < 0.0)
 								{
@@ -1080,17 +1080,17 @@ namespace OpenBve
 							if (Data.Blocks[i].Cracks[k].PrimaryRail == j)
 							{
 								int p = Data.Blocks[i].Cracks[k].PrimaryRail;
-								double px0 = p > 0 ? Data.Blocks[i].Rails[p].RailStartX : 0.0;
-								double px1 = p > 0 ? Data.Blocks[i + 1].Rails[p].RailEndX : 0.0;
+								double px0 = p > 0 ? Data.Blocks[i].Rails[p].RailStart.X : 0.0;
+								double px1 = p > 0 ? Data.Blocks[i + 1].Rails[p].RailEnd.X : 0.0;
 								int s = Data.Blocks[i].Cracks[k].SecondaryRail;
-								if (s < 0 || s >= Data.Blocks[i].Rails.Length || !Data.Blocks[i].Rails[s].RailStart)
+								if (s < 0 || s >= Data.Blocks[i].Rails.Length || !Data.Blocks[i].Rails[s].RailStarted)
 								{
 									Interface.AddMessage(MessageType.Error, false, "RailIndex2 is out of range in Track.Crack at track position " + StartingDistance.ToString(Culture) + " in file " + FileName);
 								}
 								else
 								{
-									double sx0 = Data.Blocks[i].Rails[s].RailStartX;
-									double sx1 = Data.Blocks[i + 1].Rails[s].RailEndX;
+									double sx0 = Data.Blocks[i].Rails[s].RailStart.X;
+									double sx1 = Data.Blocks[i + 1].Rails[s].RailEnd.X;
 									double d0 = sx0 - px0;
 									double d1 = sx1 - px1;
 									if (d0 < 0.0)
@@ -1126,8 +1126,8 @@ namespace OpenBve
 							for (int k = 0; k < Data.Blocks[i].RailFreeObj[j].Length; k++)
 							{
 								int sttype = Data.Blocks[i].RailFreeObj[j][k].Type;
-								double dx = Data.Blocks[i].RailFreeObj[j][k].X;
-								double dy = Data.Blocks[i].RailFreeObj[j][k].Y;
+								double dx = Data.Blocks[i].RailFreeObj[j][k].Position.X;
+								double dy = Data.Blocks[i].RailFreeObj[j][k].Position.Y;
 								double dz = Data.Blocks[i].RailFreeObj[j][k].TrackPosition - StartingDistance;
 								Vector3 wpos = pos;
 								wpos += dx * RailTransformation.X + dy * RailTransformation.Y + dz * RailTransformation.Z;
@@ -1164,8 +1164,8 @@ namespace OpenBve
 								}
 								if (obj != null)
 								{
-									double dx = Data.Blocks[i].Transponders[k].X;
-									double dy = Data.Blocks[i].Transponders[k].Y;
+									double dx = Data.Blocks[i].Transponders[k].Position.X;
+									double dy = Data.Blocks[i].Transponders[k].Position.Y;
 									double dz = Data.Blocks[i].Transponders[k].TrackPosition - StartingDistance;
 									Vector3 wpos = pos;
 									wpos += dx * RailTransformation.X + dy * RailTransformation.Y + dz * RailTransformation.Z;
@@ -1191,8 +1191,8 @@ namespace OpenBve
 								}
 								if (obj != null)
 								{
-									double dx = Data.Blocks[i].DestinationChanges[k].X;
-									double dy = Data.Blocks[i].DestinationChanges[k].Y;
+									double dx = Data.Blocks[i].DestinationChanges[k].Position.X;
+									double dy = Data.Blocks[i].DestinationChanges[k].Position.Y;
 									double dz = Data.Blocks[i].DestinationChanges[k].TrackPosition - StartingDistance;
 									Vector3 wpos = pos;
 									wpos += dx * RailTransformation.X + dy * RailTransformation.Y + dz * RailTransformation.Z;
@@ -1221,7 +1221,7 @@ namespace OpenBve
 								if (Data.Blocks[i].Signals[k].ShowPost)
 								{
 									// post
-									double dx = Data.Blocks[i].Signals[k].X;
+									double dx = Data.Blocks[i].Signals[k].Position.X;
 									Vector3 wpos = pos;
 									wpos += dx * RailTransformation.X + dz * RailTransformation.Z;
 									double tpos = Data.Blocks[i].Signals[k].TrackPosition;
@@ -1231,8 +1231,8 @@ namespace OpenBve
 								if (Data.Blocks[i].Signals[k].ShowObject)
 								{
 									// signal object
-									double dx = Data.Blocks[i].Signals[k].X;
-									double dy = Data.Blocks[i].Signals[k].Y;
+									double dx = Data.Blocks[i].Signals[k].Position.X;
+									double dy = Data.Blocks[i].Signals[k].Position.Y;
 									Vector3 wpos = pos;
 									wpos += dx * RailTransformation.X + dy * RailTransformation.Y + dz * RailTransformation.Z;
 									double tpos = Data.Blocks[i].Signals[k].TrackPosition;

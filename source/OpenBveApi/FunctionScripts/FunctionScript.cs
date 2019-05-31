@@ -42,13 +42,13 @@ namespace OpenBveApi.FunctionScripting
 		/// <summary>Checks whether the specified function will return a constant result</summary>
 		public bool ConstantResult()
 		{
-			if (InstructionSet.Length == 1 && InstructionSet[0] == FunctionScripting.Instructions.SystemConstant)
+			if (InstructionSet.Length == 1 && InstructionSet[0] == Instructions.SystemConstant)
 			{
 				return true;
 			}
 			for (int i = 0; i < InstructionSet.Length; i++)
 			{
-				if ((int) InstructionSet[i] >= (int) FunctionScripting.Instructions.LogicalXor)
+				if ((int) InstructionSet[i] >= (int) Instructions.LogicalXor)
 				{
 					return false;
 				}
@@ -675,6 +675,14 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.StopsStation;
 							n++; break;
+						case "nextstation":
+							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.NextStation;
+							n++; s++; if (s >= m) m = s; break;
+						case "nextstationstop":
+							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.NextStationStop;
+							n++; s++; if (s >= m) m = s; break;
 							// sections
 						case "section":
 							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);

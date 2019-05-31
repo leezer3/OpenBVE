@@ -5187,9 +5187,7 @@ namespace OpenBve {
 											{
 												if (texture.BitsPerPixel == 32)
 												{
-													byte[] bytes = texture.Bytes;
-													InvertLightness(bytes);
-													texture = new Texture(texture.Width, texture.Height, 32, bytes, texture.Palette);
+													texture.InvertLightness();
 												}
 												Textures[j] = TextureManager.RegisterTexture(texture);
 											}
@@ -5206,39 +5204,6 @@ namespace OpenBve {
 				}
 			}
 			return Textures;
-		}
-
-		/// <summary>Inverts the lightness values of a texture used for a glow</summary>
-		/// <param name="bytes">A byte array containing the texture to invert</param>
-		private static void InvertLightness(byte[] bytes)
-		{
-			for (int i = 0; i < bytes.Length; i += 4)
-			{
-				if (bytes[i] != 0 | bytes[i + 1] != 0 | bytes[i + 2] != 0)
-				{
-					int r = bytes[i + 0];
-					int g = bytes[i + 1];
-					int b = bytes[i + 2];
-					if (g <= r & r <= b | b <= r & r <= g)
-					{
-						bytes[i + 0] = (byte)(255 + r - g - b);
-						bytes[i + 1] = (byte)(255 - b);
-						bytes[i + 2] = (byte)(255 - g);
-					}
-					else if (r <= g & g <= b | b <= g & g <= r)
-					{
-						bytes[i + 0] = (byte)(255 - b);
-						bytes[i + 1] = (byte)(255 + g - r - b);
-						bytes[i + 2] = (byte)(255 - r);
-					}
-					else
-					{
-						bytes[i + 0] = (byte)(255 - g);
-						bytes[i + 1] = (byte)(255 - r);
-						bytes[i + 2] = (byte)(255 + b - r - g);
-					}
-				}
-			}
 		}
 
 		// ================================

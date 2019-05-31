@@ -3,7 +3,7 @@
 namespace OpenBveApi.FunctionScripting
 {
 	/// <summary>Contains functions for dealing with function script notation</summary>
-	public class FunctionScriptNotation
+	public static class FunctionScriptNotation
 	{
 		/// <summary>Converts a string formatted in simple function script to postfix notation</summary>
 		/// <param name="Expression">The function script string</param>
@@ -342,8 +342,10 @@ namespace OpenBveApi.FunctionScripting
 									StackLength--;
 									q = false;
 								} else if (StackLength >= 2) {
+									// ReSharper disable once NotAccessedVariable
 									double b;
 									if (double.TryParse(Stack[StackLength - 1], System.Globalization.NumberStyles.Float, Culture, out b)) {
+										// ReSharper disable once NotAccessedVariable
 										double a;
 										if (double.TryParse(Stack[StackLength - 2], System.Globalization.NumberStyles.Float, Culture, out a)) {
 											// a b <>
