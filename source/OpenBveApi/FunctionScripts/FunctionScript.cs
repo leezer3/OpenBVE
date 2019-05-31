@@ -675,6 +675,14 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.StopsStation;
 							n++; break;
+						case "nextstation":
+							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.NextStation;
+							n++; s++; if (s >= m) m = s; break;
+						case "nextstationstop":
+							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.NextStationStop;
+							n++; s++; if (s >= m) m = s; break;
 							// sections
 						case "section":
 							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);

@@ -1190,6 +1190,52 @@ namespace OpenBve {
 							Function.Stack[s - 1] = 0.0;
 						}
 						break;
+					case Instructions.NextStation:
+						if (Train == null)
+						{
+							Function.Stack[s] = 0.0; //Not part of a train, so distance is irrelevant
+						}
+						else
+						{
+							if (Train == null)
+							{
+								Function.Stack[s] = 0.0; //Not part of a train, so distance is irrelevant
+							}
+							else
+							{
+								int stationIdx = Train.LastStation + 1;
+								if (stationIdx > Game.Stations.Length - 1)
+								{
+									stationIdx = Train.LastStation;
+								}
+								Function.Stack[s] = stationIdx;
+							}
+						}
+						s++; break;
+					case Instructions.NextStationStop:
+							if (Train == null)
+							{
+								Function.Stack[s] = 0.0; //Not part of a train, so distance is irrelevant
+							}
+							else
+							{
+								int stationIdx = Train.LastStation + 1;
+								if (stationIdx > Game.Stations.Length - 1)
+								{
+									stationIdx = Train.LastStation;
+								}
+
+								while (stationIdx < Game.Stations.Length - 1)
+								{
+									if (Game.StopsAtStation(stationIdx, Train))
+									{
+										break;
+									}
+									stationIdx++;
+								}
+								Function.Stack[s] = stationIdx;
+							}
+							s++; break;
 						// sections
 					case Instructions.SectionAspectNumber:
 						if (IsPartOfTrain) {

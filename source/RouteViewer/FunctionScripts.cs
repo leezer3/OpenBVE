@@ -1099,6 +1099,8 @@ namespace OpenBve {
 						s++; break;
 					case Instructions.DistanceNextStation:
 					case Instructions.StopsNextStation:
+					case Instructions.NextStation:
+					case Instructions.NextStationStop:
 						Function.Stack[s] = 0.0; //Unsupported in viewers
 						s++; break;
 					case Instructions.DistanceStation:

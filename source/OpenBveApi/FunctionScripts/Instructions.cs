@@ -30,7 +30,7 @@
 		BrakeMainReservoir, BrakeEqualizingReservoir, BrakeBrakePipe, BrakeBrakeCylinder, BrakeStraightAirPipe,
 		BrakeMainReservoirOfCar, BrakeEqualizingReservoirOfCar, BrakeBrakePipeOfCar, BrakeBrakeCylinderOfCar, BrakeStraightAirPipeOfCar,
 		SafetyPluginAvailable, SafetyPluginState,
-		TimetableVisible, DistanceNextStation, StopsNextStation, DistanceStation, StopsStation,
+		TimetableVisible, DistanceNextStation, StopsNextStation, DistanceStation, StopsStation, NextStation, NextStationStop,
 		SectionAspectNumber, CurrentObjectState
 #pragma warning restore CS1591
 			
