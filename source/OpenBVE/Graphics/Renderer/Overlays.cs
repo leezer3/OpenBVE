@@ -69,12 +69,12 @@ namespace OpenBve
 							double y = 8.0;
 							for (int i = 0; i < Game.MarkerTextures.Length; i++)
 							{
-								if (Textures.LoadTexture(Game.MarkerTextures[i], OpenGlTextureWrapMode.ClampClamp))
+								if (Program.CurrentHost.LoadTexture(Game.MarkerTextures[i], OpenGlTextureWrapMode.ClampClamp))
 								{
 									double w = (double)Game.MarkerTextures[i].Width;
 									double h = (double)Game.MarkerTextures[i].Height;
 									GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
-									RenderOverlayTexture(Game.MarkerTextures[i], (double)Screen.Width - w - 8.0, y, (double)Screen.Width - 8.0, y + h);
+									LibRender.Renderer.RenderOverlayTexture(Game.MarkerTextures[i], (double)Screen.Width - w - 8.0, y, (double)Screen.Width - 8.0, y + h);
 									y += h + 8.0;
 								}
 							}
@@ -84,26 +84,26 @@ namespace OpenBve
 						if (Timetable.CurrentTimetable == Timetable.TimetableState.Default)
 						{
 							// default
-							if (Textures.LoadTexture(Timetable.DefaultTimetableTexture, OpenGlTextureWrapMode.ClampClamp))
+							if (Program.CurrentHost.LoadTexture(Timetable.DefaultTimetableTexture, OpenGlTextureWrapMode.ClampClamp))
 							{
 								int w = Timetable.DefaultTimetableTexture.Width;
 								int h = Timetable.DefaultTimetableTexture.Height;
 								GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
-								RenderOverlayTexture(Timetable.DefaultTimetableTexture, (double)(Screen.Width - w), Timetable.DefaultTimetablePosition, (double)Screen.Width, (double)h + Timetable.DefaultTimetablePosition);
+								LibRender.Renderer.RenderOverlayTexture(Timetable.DefaultTimetableTexture, (double)(Screen.Width - w), Timetable.DefaultTimetablePosition, (double)Screen.Width, (double)h + Timetable.DefaultTimetablePosition);
 							}
 						}
 						else if (Timetable.CurrentTimetable == Timetable.TimetableState.Custom & Timetable.CustomObjectsUsed == 0)
 					{
 						// custom
-						if (Textures.LoadTexture(Timetable.CurrentCustomTimetableDaytimeTexture, OpenGlTextureWrapMode.ClampClamp))
+						if (Program.CurrentHost.LoadTexture(Timetable.CurrentCustomTimetableDaytimeTexture, OpenGlTextureWrapMode.ClampClamp))
 						{
 							int w = Timetable.CurrentCustomTimetableDaytimeTexture.Width;
 							int h = Timetable.CurrentCustomTimetableDaytimeTexture.Height;
 							GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
-							RenderOverlayTexture(Timetable.CurrentCustomTimetableDaytimeTexture, (double) (Screen.Width - w), Timetable.CustomTimetablePosition, (double) Screen.Width, (double) h + Timetable.CustomTimetablePosition);
+							LibRender.Renderer.RenderOverlayTexture(Timetable.CurrentCustomTimetableDaytimeTexture, (double) (Screen.Width - w), Timetable.CustomTimetablePosition, (double) Screen.Width, (double) h + Timetable.CustomTimetablePosition);
 						}
 
-						if (Textures.LoadTexture(Timetable.CurrentCustomTimetableDaytimeTexture, OpenGlTextureWrapMode.ClampClamp))
+						if (Program.CurrentHost.LoadTexture(Timetable.CurrentCustomTimetableDaytimeTexture, OpenGlTextureWrapMode.ClampClamp))
 						{
 							int w = Timetable.CurrentCustomTimetableDaytimeTexture.Width;
 							int h = Timetable.CurrentCustomTimetableDaytimeTexture.Height;
@@ -119,7 +119,7 @@ namespace OpenBve
 							}
 
 							GL.Color4(1.0f, 1.0f, 1.0f, alpha);
-							RenderOverlayTexture(Timetable.CurrentCustomTimetableDaytimeTexture, (double) (Screen.Width - w), Timetable.CustomTimetablePosition, (double) Screen.Width, (double) h + Timetable.CustomTimetablePosition);
+							LibRender.Renderer.RenderOverlayTexture(Timetable.CurrentCustomTimetableDaytimeTexture, (double) (Screen.Width - w), Timetable.CustomTimetablePosition, (double) Screen.Width, (double) h + Timetable.CustomTimetablePosition);
 						}
 					}
 					break;
@@ -140,7 +140,7 @@ namespace OpenBve
 			{
 				// pause
 				GL.Color4(0.0f, 0.0f, 0.0f, 0.5f);
-				RenderOverlaySolid(0.0, 0.0, (double)Screen.Width, (double)Screen.Height);
+				LibRender.Renderer.RenderOverlaySolid(0.0, 0.0, (double)Screen.Width, (double)Screen.Height);
 				GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
 				LibRender.Renderer.DrawString(Fonts.VeryLargeFont, "PAUSE", new System.Drawing.Point(Screen.Width / 2, Screen.Height / 2), TextAlignment.CenterMiddle, Color128.White, true);
 			}
@@ -174,7 +174,7 @@ namespace OpenBve
 			if (FadeToBlackDueToChangeEnds > 0.0 & (World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead))
 			{
 				GL.Color4(0.0, 0.0, 0.0, FadeToBlackDueToChangeEnds);
-				RenderOverlaySolid(0.0, 0.0, (double)Screen.Width, (double)Screen.Height);
+				LibRender.Renderer.RenderOverlaySolid(0.0, 0.0, (double)Screen.Width, (double)Screen.Height);
 			}
 			// finalize
 			GL.PopMatrix();

@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Camera\CameraAlignment.cs" />
     <Compile Include="Camera\CameraRestrictionMode.cs" />
+    <Compile Include="Lighting\Lighting.cs" />
     <Compile Include="Objects\RenderFace.cs" />
     <Compile Include="Overlays\Keys.cs" />
     <Compile Include="Primitives\Cube.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Renderer.Functions.cs" />
     <Compile Include="Screen\OutputModes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Textures\TextureManager.cs" />
     <Compile Include="Text\OpenGlFont.cs" />
     <Compile Include="Text\OpenGlFontChar.cs" />
     <Compile Include="Text\OpenGlFontTable.cs" />

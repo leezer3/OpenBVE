@@ -159,9 +159,9 @@ namespace OpenBve {
 				CurrentRoute = null;
 				result = false;
 			}
-			Renderer.InitializeLighting();
+			LibRender.Renderer.InitializeLighting();
 			ObjectManager.InitializeVisibility();
-			Textures.UnloadAllTextures();
+			TextureManager.UnloadAllTextures();
 			return result;
 		}
 
@@ -202,7 +202,7 @@ namespace OpenBve {
 				Renderer.RenderScene(0.0);
 				Program.currentGameWindow.SwapBuffers();
 				CameraAlignment a = World.CameraCurrentAlignment;
-				Textures.UnloadAllTextures();
+				TextureManager.UnloadAllTextures();
 				if (Program.LoadRoute())
 				{
 					World.CameraCurrentAlignment = a;
@@ -313,7 +313,7 @@ namespace OpenBve {
 							GL.ReadPixels(0, 0, Renderer.ScreenWidth, Renderer.ScreenHeight, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bData.Scan0);
 							bitmap.UnlockBits(bData);
 							bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
-							Renderer.TextureLoadingBkg = Textures.RegisterTexture(bitmap, new TextureParameters(null, null));
+							Renderer.TextureLoadingBkg = TextureManager.RegisterTexture(bitmap, new TextureParameters(null, null));
 							
 						}
 						CameraAlignment a = World.CameraCurrentAlignment;
@@ -330,7 +330,7 @@ namespace OpenBve {
 						
 						CurrentlyLoading = false;
 						Renderer.OptionInterface = true;
-						Textures.UnloadTexture(Renderer.TextureLoadingBkg);
+						TextureManager.UnloadTexture(Renderer.TextureLoadingBkg);
 						if (bitmap != null)
 						{
 							bitmap.Dispose();

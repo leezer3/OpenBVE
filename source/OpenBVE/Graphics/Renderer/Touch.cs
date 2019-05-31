@@ -40,7 +40,6 @@ namespace OpenBve
 				Objects[ObjectCount].FaceListReferences = new ObjectListReference[f];
 				for (int i = 0; i < f; i++)
 				{
-					int k = ObjectManager.Objects[ObjectIndex].Mesh.Faces[i].Material;
 					OpenGlTextureWrapMode wrap = OpenGlTextureWrapMode.ClampClamp;
 					if (Touch.FaceCount == Touch.Faces.Length)
 					{

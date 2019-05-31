@@ -8,6 +8,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.FunctionScripting;
 using OpenBve.SignalManager;
+using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 
 namespace OpenBve
@@ -1460,7 +1461,7 @@ namespace OpenBve
 											int o = ObjectManager.CreateStaticObject(CompatibilityObjects.LimitOneDigit, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
 											if (ObjectManager.Objects[o].Mesh.Materials.Length >= 1)
 											{
-												Textures.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), out ObjectManager.Objects[o].Mesh.Materials[0].DaytimeTexture);
+												Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out ObjectManager.Objects[o].Mesh.Materials[0].DaytimeTexture);
 											}
 										}
 										else if (lim < 100.0)
@@ -1471,11 +1472,11 @@ namespace OpenBve
 											int o = ObjectManager.CreateStaticObject(CompatibilityObjects.LimitTwoDigits, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
 											if (ObjectManager.Objects[o].Mesh.Materials.Length >= 1)
 											{
-												Textures.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d1 + ".png"), out ObjectManager.Objects[o].Mesh.Materials[0].DaytimeTexture);
+												Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d1 + ".png"), new TextureParameters(null, null), out ObjectManager.Objects[o].Mesh.Materials[0].DaytimeTexture);
 											}
 											if (ObjectManager.Objects[o].Mesh.Materials.Length >= 2)
 											{
-												Textures.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), out ObjectManager.Objects[o].Mesh.Materials[1].DaytimeTexture);
+												Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out ObjectManager.Objects[o].Mesh.Materials[1].DaytimeTexture);
 											}
 										}
 										else
@@ -1487,15 +1488,15 @@ namespace OpenBve
 											int o = ObjectManager.CreateStaticObject(CompatibilityObjects.LimitThreeDigits, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
 											if (ObjectManager.Objects[o].Mesh.Materials.Length >= 1)
 											{
-												Textures.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d2 + ".png"), out ObjectManager.Objects[o].Mesh.Materials[0].DaytimeTexture);
+												Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d2 + ".png"), new TextureParameters(null, null), out ObjectManager.Objects[o].Mesh.Materials[0].DaytimeTexture);
 											}
 											if (ObjectManager.Objects[o].Mesh.Materials.Length >= 2)
 											{
-												Textures.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d1 + ".png"), out ObjectManager.Objects[o].Mesh.Materials[1].DaytimeTexture);
+												Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d1 + ".png"), new TextureParameters(null, null), out ObjectManager.Objects[o].Mesh.Materials[1].DaytimeTexture);
 											}
 											if (ObjectManager.Objects[o].Mesh.Materials.Length >= 3)
 											{
-												Textures.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), out ObjectManager.Objects[o].Mesh.Materials[2].DaytimeTexture);
+												Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out ObjectManager.Objects[o].Mesh.Materials[2].DaytimeTexture);
 											}
 										}
 									}

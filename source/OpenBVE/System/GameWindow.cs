@@ -317,6 +317,7 @@ namespace OpenBve
 
 		protected override void OnLoad(EventArgs e)
 		{
+			LibRender.Renderer.currentHost = Program.CurrentHost;
 			Program.FileSystem.AppendToLogFile("Game window initialised successfully.");
 			Renderer.DetermineMaxAFLevel();
 			//Initialise the loader thread queues
@@ -387,7 +388,7 @@ namespace OpenBve
 					PluginManager.UnloadPlugin(TrainManager.Trains[i]);
 				}
 			}
-			Textures.UnloadAllTextures();
+			TextureManager.UnloadAllTextures();
 			for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
 			{
 				InputDevicePlugin.CallPluginUnload(i);
@@ -453,7 +454,7 @@ namespace OpenBve
 					Close();
 				}
 			}
-			Renderer.InitializeLighting();
+			LibRender.Renderer.InitializeLighting();
 			Game.LogRouteName = System.IO.Path.GetFileName(MainLoop.currentResult.RouteFile);
 			Game.LogTrainName = System.IO.Path.GetFileName(MainLoop.currentResult.TrainFolder);
 			Game.LogDateTime = DateTime.Now;
@@ -464,7 +465,7 @@ namespace OpenBve
 			}
 			else
 			{
-				Textures.UnloadAllTextures();
+				TextureManager.UnloadAllTextures();
 			}
 			// camera
 			ObjectManager.InitializeVisibility();

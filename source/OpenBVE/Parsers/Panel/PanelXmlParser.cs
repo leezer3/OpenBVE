@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using LibRender;
 using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
@@ -333,7 +334,7 @@ namespace OpenBve.Parsers.Panel
 					else
 					{
 						Texture tday;
-						Textures.RegisterTexture(PanelDaytimeImage, new TextureParameters(null, new Color24(PanelTransparentColor.R, PanelTransparentColor.G, PanelTransparentColor.B)), out tday);
+						TextureManager.RegisterTexture(PanelDaytimeImage, new TextureParameters(null, new Color24(PanelTransparentColor.R, PanelTransparentColor.G, PanelTransparentColor.B)), out tday);
 						Texture tnight = null;
 						if (PanelNighttimeImage != null)
 						{
@@ -343,13 +344,13 @@ namespace OpenBve.Parsers.Panel
 							}
 							else
 							{
-								Textures.RegisterTexture(PanelNighttimeImage, new TextureParameters(null, new Color24(PanelTransparentColor.R, PanelTransparentColor.G, PanelTransparentColor.B)), out tnight);
+								TextureManager.RegisterTexture(PanelNighttimeImage, new TextureParameters(null, new Color24(PanelTransparentColor.R, PanelTransparentColor.G, PanelTransparentColor.B)), out tnight);
 							}
 						}
 						OpenBVEGame.RunInRenderThread(() =>
 						{
-							Textures.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
-							//Textures.LoadTexture(tnight, OpenGlTextureWrapMode.ClampClamp);
+							Program.CurrentHost.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
+							//Program.CurrentHost.LoadTexture(tnight, OpenGlTextureWrapMode.ClampClamp);
 						});
 						Panel2CfgParser.CreateElement(CarSection.Groups[GroupIndex], 0.0, 0.0, tday.Width, tday.Height, new Vector2(0.5, 0.5), OffsetLayer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
 					}
@@ -613,15 +614,15 @@ namespace OpenBve.Parsers.Panel
 							if (DaytimeImage != null)
 							{
 								Texture tday;
-								Textures.RegisterTexture(DaytimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tday);
+								TextureManager.RegisterTexture(DaytimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tday);
 								Texture tnight = null;
 								if (NighttimeImage != null)
 								{
-									Textures.RegisterTexture(NighttimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight);
+									TextureManager.RegisterTexture(NighttimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight);
 								}
 								OpenBVEGame.RunInRenderThread(() =>
 								{
-									Textures.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
+									Program.CurrentHost.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
 								});
 								int w = tday.Width;
 								int h = tday.Height;
@@ -833,19 +834,19 @@ namespace OpenBve.Parsers.Panel
 							if (DaytimeImage != null)
 							{
 								Texture tday;
-								Textures.RegisterTexture(DaytimeImage,
+								TextureManager.RegisterTexture(DaytimeImage,
 								                         new TextureParameters(null,
 								                                 new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tday);
 								Texture tnight = null;
 								if (NighttimeImage != null)
 								{
-									Textures.RegisterTexture(NighttimeImage,
+									TextureManager.RegisterTexture(NighttimeImage,
 									                         new TextureParameters(null,
 									                                 new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight);
 								}
 								OpenBVEGame.RunInRenderThread(() =>
 								{
-									Textures.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
+									Program.CurrentHost.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
 								});
 								double w = (double)tday.Width;
 								double h = (double)tday.Height;
@@ -1038,15 +1039,15 @@ namespace OpenBve.Parsers.Panel
 							if (DaytimeImage != null)
 							{
 								Texture tday;
-								Textures.RegisterTexture(DaytimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tday);
+								TextureManager.RegisterTexture(DaytimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tday);
 								Texture tnight = null;
 								if (NighttimeImage != null)
 								{
-									Textures.RegisterTexture(NighttimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight);
+									TextureManager.RegisterTexture(NighttimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight);
 								}
 								OpenBVEGame.RunInRenderThread(() =>
 								{
-									Textures.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
+									Program.CurrentHost.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
 								});
 								int w = tday.Width;
 								int h = tday.Height;
@@ -1213,7 +1214,7 @@ namespace OpenBve.Parsers.Panel
 									{
 										if ((k + 1) * Interval <= hday)
 										{
-											Textures.RegisterTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, Interval), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tday[k]);
+											TextureManager.RegisterTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, Interval), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tday[k]);
 										}
 										else if (k * Interval >= hday)
 										{
@@ -1222,7 +1223,7 @@ namespace OpenBve.Parsers.Panel
 										}
 										else
 										{
-											Textures.RegisterTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, hday - (k * Interval)), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tday[k]);
+											TextureManager.RegisterTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, hday - (k * Interval)), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tday[k]);
 										}
 									}
 									if (NighttimeImage != null)
@@ -1234,7 +1235,7 @@ namespace OpenBve.Parsers.Panel
 										{
 											if ((k + 1) * Interval <= hnight)
 											{
-												Textures.RegisterTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, Interval), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight[k]);
+												TextureManager.RegisterTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, Interval), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight[k]);
 											}
 											else if (k * Interval > hnight)
 											{
@@ -1242,7 +1243,7 @@ namespace OpenBve.Parsers.Panel
 											}
 											else
 											{
-												Textures.RegisterTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, hnight - (k * Interval)), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight[k]);
+												TextureManager.RegisterTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, hnight - (k * Interval)), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight[k]);
 											}
 										}
 

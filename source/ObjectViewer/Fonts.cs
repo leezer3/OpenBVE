@@ -1,7 +1,5 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using LibRender;
-using OpenBveApi.Textures;
 
 namespace OpenBve {
 	/// <summary>Provides font support.</summary>
@@ -23,23 +21,5 @@ namespace OpenBve {
 		internal static readonly OpenGlFont VeryLargeFont = new OpenGlFont(FontFamily.GenericSansSerif, 27.0f);
 
 		internal static readonly OpenGlFont EvenLargerFont = new OpenGlFont(FontFamily.GenericSansSerif, 34.0f);
-
-		
-		// --- functions ---
-		
-		/// <summary>Rounds the specified value to the next-highest power of two.</summary>
-		/// <param name="value">The value.</param>
-		/// <returns>The value rounded to the next-highest power of two.</returns>
-		private static uint RoundToPowerOfTwo(uint value) {
-			if (value == 0) {
-				throw new ArgumentException();
-			}
-			value -= 1;
-			for (int i = 1; i < sizeof(int) << 3; i <<= 1) {
-				value |= value >> i;
-			}
-			return value + 1;
-		}
-		
 	}
 }

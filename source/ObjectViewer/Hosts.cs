@@ -1,4 +1,5 @@
 ﻿using System;
+using LibRender;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -100,7 +101,7 @@ namespace OpenBve {
 		
 		public override bool LoadTexture(Texture Texture, OpenGlTextureWrapMode wrapMode)
 		{
-			return Textures.LoadTexture(Texture, wrapMode);
+			return TextureManager.LoadTexture(Texture, wrapMode, CPreciseTimer.GetClockTicks(), Interface.CurrentOptions.Interpolation, Interface.CurrentOptions.AnisotropicFilteringLevel);
 		}
 
 		/// <summary>Registers a texture and returns a handle to the texture.</summary>
@@ -111,7 +112,7 @@ namespace OpenBve {
 		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle) {
 			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
 				Texture data;
-				if (Textures.RegisterTexture(path, parameters, out data)) {
+				if (LibRender.TextureManager.RegisterTexture(path, parameters, out data)) {
 					handle = data;
 					return true;
 				}
@@ -129,7 +130,7 @@ namespace OpenBve {
 		/// <returns>Whether loading the texture was successful.</returns>
 		public override bool RegisterTexture(Texture texture, TextureParameters parameters, out Texture handle) {
 			texture = texture.ApplyParameters(parameters);
-			handle = Textures.RegisterTexture(texture);
+			handle = LibRender.TextureManager.RegisterTexture(texture);
 			return true;
 		}
 		

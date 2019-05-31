@@ -123,7 +123,7 @@ namespace OpenBve {
 	        currentGameWindow.Title = "Object Viewer";
 	        currentGameWindow.Run();
 	        // quit
-	        Textures.UnloadAllTextures();
+	        LibRender.TextureManager.UnloadAllTextures();
 
 	    }
 
@@ -193,7 +193,7 @@ namespace OpenBve {
 			ReducedMode = false;
 			LightingRelative = -1.0;
 			Game.Reset();
-			Textures.UnloadAllTextures();
+			LibRender.TextureManager.UnloadAllTextures();
 			//Fonts.Initialize();
 			Interface.ClearMessages();
 			for (int i = 0; i < Files.Length; i++)
@@ -337,7 +337,7 @@ namespace OpenBve {
 	                ReducedMode = false;
 	                LightingRelative = -1.0;
 	                Game.Reset();
-	                Textures.UnloadAllTextures();
+	                LibRender.TextureManager.UnloadAllTextures();
 	                //Fonts.Initialize();
 	                Interface.ClearMessages();
 	                for (int i = 0; i < Files.Length; i++)
@@ -429,7 +429,7 @@ namespace OpenBve {
 			            ReducedMode = false;
 			            LightingRelative = -1.0;
 			            Game.Reset();
-			            Textures.UnloadAllTextures();
+			            LibRender.TextureManager.UnloadAllTextures();
 			            Interface.ClearMessages();
 			            for (int i = 0; i < Files.Length; i++)
 			            {
@@ -527,7 +527,7 @@ namespace OpenBve {
 	                ReducedMode = false;
 	                LightingRelative = -1.0;
 	                Game.Reset();
-	                Textures.UnloadAllTextures();
+	                LibRender.TextureManager.UnloadAllTextures();
 	                //Fonts.Initialize();
 	                Interface.ClearMessages();
 	                Files = new string[] {};

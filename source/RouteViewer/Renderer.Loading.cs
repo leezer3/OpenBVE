@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using LibRender;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Textures;
@@ -46,7 +47,7 @@ namespace OpenBve
 				string file = OpenBveApi.Path.CombineFile(Path, "loadingbkg_" + bkgNo + ".png");
 				if (System.IO.File.Exists(file))
 				{
-					Textures.RegisterTexture(file, out TextureLoadingBkg);
+					TextureManager.RegisterTexture(file, out TextureLoadingBkg);
 				}
 			}
 			
@@ -60,7 +61,7 @@ namespace OpenBve
 			{
 				if (System.IO.File.Exists(fName))
 				{
-					Textures.RegisterTexture(fName, out TextureLogo);
+					TextureManager.RegisterTexture(fName, out TextureLogo);
 				}
 			}
 
@@ -73,7 +74,7 @@ namespace OpenBve
 		/// <summary>Sets the loading screen background to a custom image</summary>
 		internal static void SetLoadingBkg(string fileName)
 		{
-			Textures.RegisterTexture(fileName, out TextureLoadingBkg);
+			TextureManager.RegisterTexture(fileName, out TextureLoadingBkg);
 			customLoadScreen = true;
 		}
 
@@ -101,7 +102,7 @@ namespace OpenBve
 
 			// fill the screen with background colour
 			GL.Color4(bkgR, bkgG, bkgB, bkgA);
-			LibRender.Renderer.DrawRectangle(null, new System.Drawing.Point((int)0, (int)0), new System.Drawing.Size((int)Renderer.ScreenWidth, (int)Renderer.ScreenHeight), null);
+			LibRender.Renderer.DrawRectangle(null, new System.Drawing.Point((int)0, (int)0), new System.Drawing.Size((int)Renderer.ScreenWidth, (int)Renderer.ScreenHeight));
 			GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
 			// BACKGROUND IMAGE
 			int bkgHeight = Renderer.ScreenHeight, bkgWidth = Renderer.ScreenWidth;
@@ -110,7 +111,7 @@ namespace OpenBve
 			//			int		versionTop;
 			int halfWidth = Renderer.ScreenWidth / 2;
 			bool bkgLoaded = TextureLoadingBkg != null;
-			if (TextureLoadingBkg != null && Textures.LoadTexture(TextureLoadingBkg, OpenGlTextureWrapMode.ClampClamp))
+			if (TextureLoadingBkg != null && Program.CurrentHost.LoadTexture(TextureLoadingBkg, OpenGlTextureWrapMode.ClampClamp))
 			{
 				if (TextureLoadingBkg.Width != Renderer.ScreenWidth && TextureLoadingBkg.Height != Renderer.ScreenHeight)
 				{

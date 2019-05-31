@@ -7,12 +7,33 @@ namespace LibRender
 {
 	public static partial class Renderer
 	{
+		/// <summary>Renders an overlay texture</summary>
+		/// <param name="texture">The texture</param>
+		/// <param name="left">The left co-ordinate</param>
+		/// <param name="top">The top co-ordinate</param>
+		/// <param name="right">The right co-ordinate</param>
+		/// <param name="bottom">The bottom co-ordinate</param>
+		public static void RenderOverlayTexture(Texture texture, double left, double top, double right, double bottom)
+		{
+			DrawRectangle(texture, new System.Drawing.Point((int)left, (int)top), new System.Drawing.Size((int)(right - left), (int)(bottom - top)));
+		}
+
+		/// <summary>Renders a solid color rectangular overlay</summary>
+		/// <param name="left">The left co-ordinate</param>
+		/// <param name="top">The top co-ordinate</param>
+		/// <param name="right">The right co-ordinate</param>
+		/// <param name="bottom">The bottom co-ordinate</param>
+		public static void RenderOverlaySolid(double left, double top, double right, double bottom)
+		{
+			DrawRectangle(null, new System.Drawing.Point((int)left, (int)top), new System.Drawing.Size((int)(right - left), (int)(bottom - top)));
+		}
+
 		/// <summary>Draws a simple 2D rectangle.</summary>
 		/// <param name="texture">The texture, or a null reference.</param>
 		/// <param name="point">The top-left coordinates in pixels.</param>
 		/// <param name="size">The size in pixels.</param>
 		/// <param name="color">The color, or a null reference.</param>
-		public static void DrawRectangle(Texture texture, Point point, Size size, Color128? color) {
+		public static void DrawRectangle(Texture texture, Point point, Size size, Color128? color = null) {
 			// TODO: Remove Nullable<T> from color once RenderOverlayTexture and RenderOverlaySolid are fully replaced.
 			if (texture == null || !currentHost.LoadTexture(texture, OpenGlTextureWrapMode.ClampClamp)) {
 				GL.Disable(EnableCap.Texture2D);

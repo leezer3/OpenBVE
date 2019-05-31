@@ -577,7 +577,7 @@ namespace OpenBve
 												double max;
 												if (Timetable.DefaultTimetableTexture != null)
 												{
-													Textures.LoadTexture(Timetable.DefaultTimetableTexture,
+													Program.CurrentHost.LoadTexture(Timetable.DefaultTimetableTexture,
 														OpenGlTextureWrapMode.ClampClamp);
 													max =
 														Math.Min(
@@ -605,7 +605,7 @@ namespace OpenBve
 												double max;
 												if (texture != null)
 												{
-													Textures.LoadTexture(texture,
+													Program.CurrentHost.LoadTexture(texture,
 														OpenGlTextureWrapMode.ClampClamp);
 													max = Math.Min(Screen.Height - texture.Height, 0.0);
 												}

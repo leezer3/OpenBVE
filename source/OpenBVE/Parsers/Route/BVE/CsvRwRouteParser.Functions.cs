@@ -132,12 +132,12 @@ namespace OpenBve
 												{
 													texture.InvertLightness();
 												}
-												Textures[j] = OpenBve.Textures.RegisterTexture(texture);
+												Program.CurrentHost.RegisterTexture(texture, new TextureParameters(null, null), out Textures[j]);
 											}
 										}
 										else
 										{
-											OpenBve.Textures.RegisterTexture(Files[i], new TextureParameters(null, Color24.Black), out Textures[j]);
+											Program.CurrentHost.RegisterTexture(Files[i], new TextureParameters(null, Color24.Black), out Textures[j]);
 										}
 										break;
 								}

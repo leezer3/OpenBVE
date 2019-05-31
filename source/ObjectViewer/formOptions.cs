@@ -92,7 +92,7 @@ namespace OpenBve
                     Program.ReducedMode = false;
                     Program.LightingRelative = -1.0;
                     Game.Reset();
-                    Textures.UnloadAllTextures();
+                    LibRender.TextureManager.UnloadAllTextures();
                     Interface.ClearMessages();
                     for (int i = 0; i < Program.Files.Length; i++)
                     {

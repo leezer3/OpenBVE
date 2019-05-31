@@ -10,6 +10,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using OpenBve.SignalManager;
+using OpenBveApi.Textures;
 
 namespace OpenBve {
 	internal partial class CsvRwRouteParser {
@@ -836,7 +837,7 @@ namespace OpenBve {
 											Interface.AddMessage(MessageType.Error, false, "BlueValue is required to be within the range from 0 to 255 in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											b = b < 0 ? 0 : 255;
 										}
-										Renderer.OptionAmbientColor = new Color24((byte)r, (byte)g, (byte)b);
+										LibRender.Renderer.OptionAmbientColor = new Color24((byte)r, (byte)g, (byte)b);
 									} break;
 								case "route.directionallight":
 									{
@@ -864,7 +865,7 @@ namespace OpenBve {
 											Interface.AddMessage(MessageType.Error, false, "BlueValue is required to be within the range from 0 to 255 in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											b = b < 0 ? 0 : 255;
 										}
-										Renderer.OptionDiffuseColor = new Color24((byte)r, (byte)g, (byte)b);
+										LibRender.Renderer.OptionDiffuseColor = new Color24((byte)r, (byte)g, (byte)b);
 									}
 									break;
 								case "route.lightdirection":
@@ -1052,7 +1053,7 @@ namespace OpenBve {
 														f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
 													}
 													if (System.IO.File.Exists(f)) {
-														Textures.RegisterTexture(f, out Data.TimetableDaytime[CommandIndex1]);
+														Program.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out Data.TimetableDaytime[CommandIndex1]);
 													}
 													else {
 														Interface.AddMessage(MessageType.Error, false, "DaytimeTimetable " + CommandIndex1 + " with FileName " + Arguments[0] + " was not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -1084,7 +1085,7 @@ namespace OpenBve {
 														f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
 													}
 													if (System.IO.File.Exists(f)) {
-														Textures.RegisterTexture(f, out Data.TimetableNighttime[CommandIndex1]);
+														Program.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out Data.TimetableNighttime[CommandIndex1]);
 													}
 													else {
 														Interface.AddMessage(MessageType.Error, false, "DaytimeTimetable " + CommandIndex1 + " with FileName " + Arguments[0] + " was not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -1891,7 +1892,7 @@ namespace OpenBve {
 																BackgroundManager.StaticBackground b = Data.Backgrounds[CommandIndex1] as BackgroundManager.StaticBackground;
 																if (b != null)
 																{
-																	Textures.RegisterTexture(f, out b.Texture);
+																	Program.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out b.Texture);
 																}
 
 															}
@@ -4059,7 +4060,7 @@ namespace OpenBve {
 													else
 													{
 														OpenBveApi.Textures.Texture t;
-														Textures.RegisterTexture(f, new OpenBveApi.Textures.TextureParameters(null, new Color24(64, 64, 64)), out t);
+														Program.CurrentHost.RegisterTexture(f, new OpenBveApi.Textures.TextureParameters(null, new Color24(64, 64, 64)), out t);
 														Data.Markers[n].Message = new MessageManager.MarkerImage(t);
 														
 													}

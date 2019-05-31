@@ -75,7 +75,7 @@ namespace OpenBve
 												}
 												if (System.IO.File.Exists(f))
 												{
-													if (!Textures.RegisterTexture(f, out EarlyTexture))
+													if (!Program.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out EarlyTexture))
 													{
 														Interface.AddMessage(MessageType.Error, false, "Loading MessageEarlyTexture " + f + " failed.");
 													}
@@ -125,7 +125,7 @@ namespace OpenBve
 												}
 												if (System.IO.File.Exists(f))
 												{
-													if (!Textures.RegisterTexture(f, out Texture))
+													if (!Program.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out Texture))
 													{
 														Interface.AddMessage(MessageType.Error, false, "Loading MessageTexture " + f + " failed.");
 													}
@@ -172,7 +172,7 @@ namespace OpenBve
 												}
 												if (System.IO.File.Exists(f))
 												{
-													if (!Textures.RegisterTexture(f, out LateTexture))
+													if (!Program.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out LateTexture))
 													{
 														Interface.AddMessage(MessageType.Error, false, "Loading MessageLateTexture " + f + " failed.");
 													}
