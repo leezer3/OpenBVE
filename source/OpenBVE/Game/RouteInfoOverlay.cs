@@ -79,7 +79,7 @@ namespace OpenBve
 			switch (currentState)
 			{
 			case state.map:
-				LibRender.Renderer.DrawRectangle(mapImage, origin, mapSize, null);
+				LibRender.Renderer.DrawRectangle(mapImage, origin, mapSize);
 				// get current train position
 				int n = TrainManager.Trains.Length;
 				for (int i = 0; i < n; i++)
@@ -98,7 +98,7 @@ namespace OpenBve
 				}
 				break;
 			case state.gradient:
-				LibRender.Renderer.DrawRectangle(gradientImage, origin, gradientSize, null);
+				LibRender.Renderer.DrawRectangle(gradientImage, origin, gradientSize);
 				// get current train position in track
 				int trackPos	= (int)(TrainManager.PlayerTrain.FrontCarTrackPosition());
 				// convert to gradient profile offset

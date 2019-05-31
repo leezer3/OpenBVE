@@ -788,7 +788,7 @@ namespace OpenBve
 					{
 						Color128 c = Element.BackgroundColor.CreateBackColor(sc, alpha);
 						GL.Color4(c.R, c.G, c.B, c.A);
-						RenderOverlayTexture(Element.CenterMiddle.BackgroundTexture, x, y, x + w, y + h);
+						LibRender.Renderer.RenderOverlayTexture(Element.CenterMiddle.BackgroundTexture, x, y, x + w, y + h);
 					}
 				}
 				{ // text
@@ -809,7 +809,7 @@ namespace OpenBve
 					{
 						Color128 c = Element.OverlayColor.CreateBackColor(sc, alpha);
 						GL.Color4(c.R, c.G, c.B, c.A);
-						RenderOverlayTexture(Element.CenterMiddle.OverlayTexture, x, y, x + w, y + h);
+						LibRender.Renderer.RenderOverlayTexture(Element.CenterMiddle.OverlayTexture, x, y, x + w, y + h);
 					}
 				}
 			}

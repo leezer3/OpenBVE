@@ -102,7 +102,7 @@ namespace OpenBve
 
 			// fill the screen with background colour
 			GL.Color4(bkgR, bkgG, bkgB, bkgA);
-			LibRender.Renderer.DrawRectangle(null, new System.Drawing.Point((int)0, (int)0), new System.Drawing.Size((int)Renderer.ScreenWidth, (int)Renderer.ScreenHeight), null);
+			LibRender.Renderer.DrawRectangle(null, new System.Drawing.Point((int)0, (int)0), new System.Drawing.Size((int)Renderer.ScreenWidth, (int)Renderer.ScreenHeight));
 			GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
 			// BACKGROUND IMAGE
 			int bkgHeight = Renderer.ScreenHeight, bkgWidth = Renderer.ScreenWidth;

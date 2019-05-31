@@ -730,7 +730,7 @@ namespace OpenBve
 			SingleMenu menu = Menus[CurrMenu];
 			// overlay background
 			GL.Color4(overlayColor.R, overlayColor.G, overlayColor.B, overlayColor.A);
-			Renderer.RenderOverlaySolid(0.0, 0.0, (double)Screen.Width, (double)Screen.Height);
+			LibRender.Renderer.RenderOverlaySolid(0.0, 0.0, (double)Screen.Width, (double)Screen.Height);
 			GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
 
 			// HORIZONTAL PLACEMENT: centre the menu in the main window
@@ -742,14 +742,14 @@ namespace OpenBve
 
 			// draw the menu background
 			GL.Color4(backgroundColor.R, backgroundColor.G, backgroundColor.B, backgroundColor.A);
-			Renderer.RenderOverlaySolid(menuXmin - MenuBorderX, menuYmin - MenuBorderY,
+			LibRender.Renderer.RenderOverlaySolid(menuXmin - MenuBorderX, menuYmin - MenuBorderY,
 				menuXmax + MenuBorderX, menuYmax + MenuBorderY);
 
 			// if not starting from the top of the menu, draw a dimmed ellipsis item
 			if (menu.Selection == menu.TopItem - 1 && !isCustomisingControl)
 			{
 				GL.Color4(highlightColor.R, highlightColor.G, highlightColor.B, highlightColor.A);
-				Renderer.RenderOverlaySolid(itemLeft - MenuItemBorderX, menuYmin/*-MenuItemBorderY*/,
+				LibRender.Renderer.RenderOverlaySolid(itemLeft - MenuItemBorderX, menuYmin/*-MenuItemBorderY*/,
 					itemLeft + menu.ItemWidth + MenuItemBorderX, menuYmin + em + MenuItemBorderY * 2);
 			}
 			if (menu.TopItem > 0)
@@ -769,7 +769,7 @@ namespace OpenBve
 					// HACK! the highlight rectangle has to be shifted a little down to match
 					// the text body. OpenGL 'feature'?
 					GL.Color4(highlightColor.R, highlightColor.G, highlightColor.B, highlightColor.A);
-					Renderer.RenderOverlaySolid(itemLeft - MenuItemBorderX, itemY/*-MenuItemBorderY*/,
+					LibRender.Renderer.RenderOverlaySolid(itemLeft - MenuItemBorderX, itemY/*-MenuItemBorderY*/,
 						itemLeft + menu.ItemWidth + MenuItemBorderX, itemY + em + MenuItemBorderY * 2);
 					// draw the text
 					LibRender.Renderer.DrawString(MenuFont, menu.Items[i].Text, new Point(itemX, itemY),
@@ -788,7 +788,7 @@ namespace OpenBve
 			if (menu.Selection == menu.TopItem + visibleItems)
 			{
 				GL.Color4(highlightColor.R, highlightColor.G, highlightColor.B, highlightColor.A);
-				Renderer.RenderOverlaySolid(itemLeft - MenuItemBorderX, itemY/*-MenuItemBorderY*/,
+				LibRender.Renderer.RenderOverlaySolid(itemLeft - MenuItemBorderX, itemY/*-MenuItemBorderY*/,
 					itemLeft + menu.ItemWidth + MenuItemBorderX, itemY + em + MenuItemBorderY * 2);
 			}
 			// if not at the end of the menu, draw a dimmed ellipsis item at the bottom

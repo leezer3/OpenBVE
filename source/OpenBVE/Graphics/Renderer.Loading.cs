@@ -94,7 +94,7 @@ namespace OpenBve {
 			GL.PushMatrix();
 			// fill the screen with background colour
 			GL.Color4(bkgR, bkgG, bkgB, bkgA);
-			Renderer.RenderOverlaySolid(0.0, 0.0, (double)Screen.Width, (double)Screen.Height);
+			LibRender.Renderer.RenderOverlaySolid(0.0, 0.0, (double)Screen.Width, (double)Screen.Height);
 			GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
 
 			// BACKGROUND IMAGE

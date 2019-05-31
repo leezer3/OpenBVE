@@ -15,7 +15,7 @@ namespace OpenBve
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			// debug
 			GL.Color4(0.5, 0.5, 0.5, 0.5);
-			RenderOverlaySolid(0.0f, 0.0f, (double)Screen.Width, (double)Screen.Height);
+			LibRender.Renderer.RenderOverlaySolid(0.0f, 0.0f, (double)Screen.Width, (double)Screen.Height);
 			// actual handles
 			{
 				string t = "actual: " + (TrainManager.PlayerTrain.Handles.Reverser.Actual == TrainManager.ReverserPosition.Reverse ? "B" : TrainManager.PlayerTrain.Handles.Reverser.Actual == TrainManager.ReverserPosition.Forwards ? "F" : "N");
@@ -197,7 +197,7 @@ namespace OpenBve
 						string text = Lines[i].Substring(1);
 						System.Drawing.Size size = Fonts.SmallFont.MeasureString(text);
 						GL.Color4(0.35f, 0.65f, 0.90f, 0.8f);
-						RenderOverlaySolid(x, y, x + size.Width + 6.0f, y + size.Height + 2.0f);
+						LibRender.Renderer.RenderOverlaySolid(x, y, x + size.Width + 6.0f, y + size.Height + 2.0f);
 						LibRender.Renderer.DrawString(Fonts.SmallFont, text, new System.Drawing.Point((int)x + 3, (int)y), TextAlignment.TopLeft, Color128.White);
 					}
 					else
@@ -223,7 +223,7 @@ namespace OpenBve
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			// debug
 			GL.Color4(0.5, 0.5, 0.5, 0.5);
-			RenderOverlaySolid(0.0f, 0.0f, (double)Screen.Width, (double)Screen.Height);
+			LibRender.Renderer.RenderOverlaySolid(0.0f, 0.0f, (double)Screen.Width, (double)Screen.Height);
 			string[] Lines;
 			if (TrainManager.PlayerTrain.Plugin.Panel.Length > 0)
 			{
@@ -253,7 +253,7 @@ namespace OpenBve
 						string text = Lines[i].Substring(1);
 						System.Drawing.Size size = Fonts.SmallFont.MeasureString(text);
 						GL.Color4(0.35f, 0.65f, 0.90f, 0.8f);
-						RenderOverlaySolid(x, y, x + size.Width + 6.0f, y + size.Height + 2.0f);
+						LibRender.Renderer.RenderOverlaySolid(x, y, x + size.Width + 6.0f, y + size.Height + 2.0f);
 						LibRender.Renderer.DrawString(Fonts.SmallFont, text, new System.Drawing.Point((int)x + 3, (int)y), TextAlignment.TopLeft, Color128.White);
 					}
 					else
@@ -291,11 +291,11 @@ namespace OpenBve
 						heading[0] = true;
 					}
 					GL.Color3(0.0f, 0.0f, 0.0f);
-					RenderOverlaySolid(x, y, x + w, y + h);
+					LibRender.Renderer.RenderOverlaySolid(x, y, x + w, y + h);
 					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.brakePipe.CurrentPressure;
 					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.brakePipe.NormalPressure;
 					GL.Color3(1.0f, 1.0f, 0.0f);
-					RenderOverlaySolid(x, y, x + r * w, y + h);
+					LibRender.Renderer.RenderOverlaySolid(x, y, x + r * w, y + h);
 				} x += w + 8.0;
 				// auxillary reservoir
 				if (TrainManager.PlayerTrain.Cars[i].CarBrake is AutomaticAirBrake | TrainManager.PlayerTrain.Cars[i].CarBrake is ElectromagneticStraightAirBrake)
@@ -306,11 +306,11 @@ namespace OpenBve
 						heading[1] = true;
 					}
 					GL.Color3(0.0f, 0.0f, 0.0f);
-					RenderOverlaySolid(x, y, x + w, y + h);
+					LibRender.Renderer.RenderOverlaySolid(x, y, x + w, y + h);
 					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.auxiliaryReservoir.CurrentPressure;
 					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.auxiliaryReservoir.MaximumPressure;
 					GL.Color3(0.5f, 0.5f, 0.5f);
-					RenderOverlaySolid(x, y, x + r * w, y + h);
+					LibRender.Renderer.RenderOverlaySolid(x, y, x + r * w, y + h);
 				} x += w + 8.0;
 				// brake cylinder
 				{
@@ -320,11 +320,11 @@ namespace OpenBve
 						heading[2] = true;
 					}
 					GL.Color3(0.0f, 0.0f, 0.0f);
-					RenderOverlaySolid(x, y, x + w, y + h);
+					LibRender.Renderer.RenderOverlaySolid(x, y, x + w, y + h);
 					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.brakeCylinder.CurrentPressure;
 					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.brakeCylinder.EmergencyMaximumPressure;
 					GL.Color3(0.75f, 0.5f, 0.25f);
-					RenderOverlaySolid(x, y, x + r * w, y + h);
+					LibRender.Renderer.RenderOverlaySolid(x, y, x + r * w, y + h);
 				} x += w + 8.0;
 				// main reservoir
 				if (TrainManager.PlayerTrain.Cars[i].CarBrake.brakeType == BrakeType.Main)
@@ -335,11 +335,11 @@ namespace OpenBve
 						heading[3] = true;
 					}
 					GL.Color3(0.0f, 0.0f, 0.0f);
-					RenderOverlaySolid(x, y, x + w, y + h);
+					LibRender.Renderer.RenderOverlaySolid(x, y, x + w, y + h);
 					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.mainReservoir.CurrentPressure;
 					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.mainReservoir.MaximumPressure;
 					GL.Color3(1.0f, 0.0f, 0.0f);
-					RenderOverlaySolid(x, y, x + r * w, y + h);
+					LibRender.Renderer.RenderOverlaySolid(x, y, x + r * w, y + h);
 				} x += w + 8.0;
 				// equalizing reservoir
 				if (TrainManager.PlayerTrain.Cars[i].CarBrake.brakeType == BrakeType.Main)
@@ -350,11 +350,11 @@ namespace OpenBve
 						heading[4] = true;
 					}
 					GL.Color3(0.0f, 0.0f, 0.0f);
-					RenderOverlaySolid(x, y, x + w, y + h);
+					LibRender.Renderer.RenderOverlaySolid(x, y, x + w, y + h);
 					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.equalizingReservoir.CurrentPressure;
 					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.equalizingReservoir.NormalPressure;
 					GL.Color3(0.0f, 0.75f, 0.0f);
-					RenderOverlaySolid(x, y, x + r * w, y + h);
+					LibRender.Renderer.RenderOverlaySolid(x, y, x + r * w, y + h);
 				} x += w + 8.0;
 				// straight air pipe
 				if (TrainManager.PlayerTrain.Cars[i].CarBrake is ElectromagneticStraightAirBrake & TrainManager.PlayerTrain.Cars[i].CarBrake.brakeType == BrakeType.Main)
@@ -365,11 +365,11 @@ namespace OpenBve
 						heading[5] = true;
 					}
 					GL.Color3(0.0f, 0.0f, 0.0f);
-					RenderOverlaySolid(x, y, x + w, y + h);
+					LibRender.Renderer.RenderOverlaySolid(x, y, x + w, y + h);
 					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.straightAirPipe.CurrentPressure;
 					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.brakeCylinder.EmergencyMaximumPressure;
 					GL.Color3(0.0f, 0.75f, 1.0f);
-					RenderOverlaySolid(x, y, x + r * w, y + h);
+					LibRender.Renderer.RenderOverlaySolid(x, y, x + r * w, y + h);
 				} //x += w + 8.0;
 				GL.Color3(0.0f, 0.0f, 0.0f);
 				y += h + 8.0;

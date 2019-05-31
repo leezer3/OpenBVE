@@ -161,7 +161,7 @@ namespace OpenBve
 						double u = (double)Left.BackgroundTexture.Width;
 						double v = (double)Left.BackgroundTexture.Height;
 						GL.Color4(bc.R, bc.G, bc.B, bc.A * alpha);
-						RenderOverlayTexture(Left.BackgroundTexture, px, py, px + u, py + v);
+						LibRender.Renderer.RenderOverlayTexture(Left.BackgroundTexture, px, py, px + u, py + v);
 					}
 				}
 				// right background
@@ -172,7 +172,7 @@ namespace OpenBve
 						double u = (double)Right.BackgroundTexture.Width;
 						double v = (double)Right.BackgroundTexture.Height;
 						GL.Color4(bc.R, bc.G, bc.B, bc.A * alpha);
-						RenderOverlayTexture(Right.BackgroundTexture, px + w - u, py, px + w, py + v);
+						LibRender.Renderer.RenderOverlayTexture(Right.BackgroundTexture, px + w - u, py, px + w, py + v);
 					}
 				}
 				// middle background
@@ -182,7 +182,7 @@ namespace OpenBve
 					{
 						double v = (double)Middle.BackgroundTexture.Height;
 						GL.Color4(bc.R, bc.G, bc.B, bc.A * alpha);
-						RenderOverlayTexture(Middle.BackgroundTexture, px + lw, py, px + w - rw, py + v);
+						LibRender.Renderer.RenderOverlayTexture(Middle.BackgroundTexture, px + lw, py, px + w - rw, py + v);
 					}
 				}
 				{
@@ -215,7 +215,7 @@ namespace OpenBve
 						double u = (double)Left.OverlayTexture.Width;
 						double v = (double)Left.OverlayTexture.Height;
 						GL.Color4(oc.R, oc.G, oc.B, oc.A * alpha);
-						RenderOverlayTexture(Left.OverlayTexture, px, py, px + u, py + v);
+						LibRender.Renderer.RenderOverlayTexture(Left.OverlayTexture, px, py, px + u, py + v);
 					}
 				}
 				// right overlay
@@ -226,7 +226,7 @@ namespace OpenBve
 						double u = (double)Right.OverlayTexture.Width;
 						double v = (double)Right.OverlayTexture.Height;
 						GL.Color4(oc.R, oc.G, oc.B, oc.A * alpha);
-						RenderOverlayTexture(Right.OverlayTexture, px + w - u, py, px + w, py + v);
+						LibRender.Renderer.RenderOverlayTexture(Right.OverlayTexture, px + w - u, py, px + w, py + v);
 					}
 				}
 				// middle overlay
@@ -236,7 +236,7 @@ namespace OpenBve
 					{
 						double v = (double)Middle.OverlayTexture.Height;
 						GL.Color4(oc.R, oc.G, oc.B, oc.A * alpha);
-						RenderOverlayTexture(Middle.OverlayTexture, px + lw, py, px + w - rw, py + v);
+						LibRender.Renderer.RenderOverlayTexture(Middle.OverlayTexture, px + lw, py, px + w - rw, py + v);
 					}
 				}
 

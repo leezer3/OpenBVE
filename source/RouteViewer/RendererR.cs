@@ -14,9 +14,7 @@ using OpenBveApi.Interface;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Vector3 = OpenBveApi.Math.Vector3;
-using Vector2 = OpenBveApi.Math.Vector2;
 using OpenBveApi.Objects;
-using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 
@@ -78,7 +76,6 @@ namespace OpenBve {
 		// options
 		internal static bool OptionLighting = true;
 		internal static Vector3 OptionLightPosition = new Vector3(0.215920077052065f, 0.875724044222352f, -0.431840154104129f);
-		internal static float OptionLightingResultingAmount = 1.0f;
 		internal static bool OptionNormals = false;
 		internal static bool OptionWireframe = false;
 		internal static bool OptionEvents = false;
@@ -108,7 +105,7 @@ namespace OpenBve {
 			LibRender.Renderer.OptionAmbientColor = new Color24(160, 160, 160);
 			LibRender.Renderer.OptionDiffuseColor = new Color24(160, 160, 160);
 			OptionLightPosition = new Vector3(0.215920077052065f, 0.875724044222352f, -0.431840154104129f);
-			OptionLightingResultingAmount = 1.0f;
+			LibRender.Renderer.OptionLightingResultingAmount = 1.0f;
 			GL.Disable(EnableCap.Fog); LibRender.Renderer.FogEnabled = false;
 		}
 
@@ -659,7 +656,7 @@ namespace OpenBve {
 						int w = Game.MarkerTextures[i].Width;
 						int h = Game.MarkerTextures[i].Height;
 						GL.Color4(1.0, 1.0, 1.0, 1.0);
-						LibRender.Renderer.DrawRectangle(Game.MarkerTextures[i], new Point(ScreenWidth - w - 8, y), new Size(w,h), null);
+						LibRender.Renderer.DrawRectangle(Game.MarkerTextures[i], new Point(ScreenWidth - w - 8, y), new Size(w,h));
 						y += h + 8;
 					}
 				}
