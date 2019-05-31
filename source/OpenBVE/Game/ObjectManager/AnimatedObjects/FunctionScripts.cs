@@ -1099,11 +1099,11 @@ namespace OpenBve {
 							{
 								stationIdx = Train.LastStation + 1;
 							}
-							if (i > Game.Stations.Length - 1)
+							if (stationIdx > Game.Stations.Length - 1)
 							{
-								i = Train.LastStation;
+								stationIdx = Train.LastStation;
 							}
-							int n = Game.Stations[i].GetStopIndex(Train.Cars.Length);
+							int n = Game.Stations[stationIdx].GetStopIndex(Train.Cars.Length);
 							double p0 = Train.FrontCarTrackPosition();
 							double p1;
 							if (Game.Stations[stationIdx].Stops.Length > 0)
@@ -1153,7 +1153,7 @@ namespace OpenBve {
 							}
 							else
 							{
-								int n = Game.Stations[i].GetStopIndex(Train.Cars.Length);
+								int n = Game.Stations[stationIdx].GetStopIndex(Train.Cars.Length);
 								double p0 = Train.FrontCarTrackPosition();
 								double p1;
 								if (Game.Stations[stationIdx].Stops.Length > 0)
