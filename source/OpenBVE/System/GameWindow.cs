@@ -149,7 +149,7 @@ namespace OpenBve
 					Environment.Exit(0);
 				}				
 			}
-			Renderer.UpdateLighting();
+			LibRender.Renderer.UpdateLighting(Game.SecondsSinceMidnight);
 			Renderer.RenderScene(TimeElapsed);
 			if (Renderer.DebugTouchMode)
 			{

@@ -813,7 +813,7 @@ namespace OpenBve {
 									} break;
 								case "route.ambientlight":
 									{
-										if (Renderer.DynamicLighting == true)
+										if (LibRender.Renderer.DynamicLighting == true)
 										{
 											Interface.AddMessage(MessageType.Warning, false, "Dynamic lighting is enabled- Route.AmbientLight will be ignored");
 											break;
@@ -841,7 +841,7 @@ namespace OpenBve {
 									} break;
 								case "route.directionallight":
 									{
-										if (Renderer.DynamicLighting == true)
+										if (LibRender.Renderer.DynamicLighting == true)
 										{
 											Interface.AddMessage(MessageType.Warning, false, "Dynamic lighting is enabled- Route.DirectionalLight will be ignored");
 											break;
@@ -870,7 +870,7 @@ namespace OpenBve {
 									break;
 								case "route.lightdirection":
 									{
-										if (Renderer.DynamicLighting == true)
+										if (LibRender.Renderer.DynamicLighting == true)
 										{
 											Interface.AddMessage(MessageType.Warning, false, "Dynamic lighting is enabled- Route.LightDirection will be ignored");
 											break;
@@ -896,7 +896,7 @@ namespace OpenBve {
 									{
 										if (DynamicLightParser.ReadLightingXML(path))
 										{
-											Renderer.DynamicLighting = true;
+											LibRender.Renderer.DynamicLighting = true;
 										}
 										else
 										{

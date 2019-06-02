@@ -107,7 +107,7 @@ namespace OpenBve
 							//Calculate the cab brightness
 							double ccb = Math.Round(255.0 * (double) (1.0 - b));
 							//DNB then must equal the smaller of the cab brightness value & the dynamic brightness value
-							dnb = (byte) Math.Min(Renderer.DynamicCabBrightness, ccb);
+							dnb = (byte) Math.Min(LibRender.Renderer.DynamicCabBrightness, ccb);
 						}
 						int cs = Cars[i].CurrentCarSection;
 						if (cs >= 0 && Cars[i].CarSections.Length > 0 && Cars[i].CarSections.Length >= cs)

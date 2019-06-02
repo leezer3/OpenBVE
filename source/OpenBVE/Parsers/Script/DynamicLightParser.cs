@@ -14,7 +14,7 @@ namespace OpenBve
 		public static bool ReadLightingXML(string fileName)
 		{
 			//Prep
-			Renderer.LightDefinitions = new LightDefinition[0];
+			LibRender.Renderer.LightDefinitions = new LightDefinition[0];
 			//The current XML file to load
 			XmlDocument currentXML = new XmlDocument();
 			//Load the object's XML file 
@@ -175,10 +175,10 @@ namespace OpenBve
 							{
 								//HACK: No way to break out of the first loop and continue with the second, so we've got to use a variable
 								bool Break = false;
-								int l = Renderer.LightDefinitions.Length;
+								int l = LibRender.Renderer.LightDefinitions.Length;
 								for (int i = 0; i > l; i++)
 								{
-									if (Renderer.LightDefinitions[i].Time == currentLight.Time)
+									if (LibRender.Renderer.LightDefinitions[i].Time == currentLight.Time)
 									{
 										Break = true;
 										if (ts == null)
@@ -200,14 +200,14 @@ namespace OpenBve
 								int t = 0;
 								if (l == 1)
 								{
-									t = currentLight.Time > Renderer.LightDefinitions[0].Time ? 1 : 0;
+									t = currentLight.Time > LibRender.Renderer.LightDefinitions[0].Time ? 1 : 0;
 								}
 								else if (l > 1)
 								{
 									for (int i = 1; i < l; i++)
 									{
 										t = i + 1;
-										if (currentLight.Time > Renderer.LightDefinitions[i - 1].Time && currentLight.Time < Renderer.LightDefinitions[i].Time)
+										if (currentLight.Time > LibRender.Renderer.LightDefinitions[i - 1].Time && currentLight.Time < LibRender.Renderer.LightDefinitions[i].Time)
 										{
 											break;
 										}
@@ -215,20 +215,20 @@ namespace OpenBve
 								}
 								//Resize array
 								defined = true;
-								Array.Resize(ref Renderer.LightDefinitions, l + 1);
+								Array.Resize(ref LibRender.Renderer.LightDefinitions, l + 1);
 								if (t == l)
 								{
 									//Straight insert at the end of the array
-									Renderer.LightDefinitions[l] = currentLight;
+									LibRender.Renderer.LightDefinitions[l] = currentLight;
 								}
 								else
 								{
 									for (int u = t; u < l; u++)
 									{
 										//Otherwise, shift all elements to compensate
-										Renderer.LightDefinitions[u + 1] = Renderer.LightDefinitions[u];
+										LibRender.Renderer.LightDefinitions[u + 1] = LibRender.Renderer.LightDefinitions[u];
 									}
-									Renderer.LightDefinitions[t] = currentLight;
+									LibRender.Renderer.LightDefinitions[t] = currentLight;
 								}
 								
 							}

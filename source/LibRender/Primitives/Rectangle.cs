@@ -15,7 +15,7 @@ namespace LibRender
 		/// <param name="bottom">The bottom co-ordinate</param>
 		public static void RenderOverlayTexture(Texture texture, double left, double top, double right, double bottom)
 		{
-			DrawRectangle(texture, new System.Drawing.Point((int)left, (int)top), new System.Drawing.Size((int)(right - left), (int)(bottom - top)));
+			DrawRectangle(texture, new Point((int)left, (int)top), new Size((int)(right - left), (int)(bottom - top)));
 		}
 
 		/// <summary>Renders a solid color rectangular overlay</summary>
@@ -25,7 +25,7 @@ namespace LibRender
 		/// <param name="bottom">The bottom co-ordinate</param>
 		public static void RenderOverlaySolid(double left, double top, double right, double bottom)
 		{
-			DrawRectangle(null, new System.Drawing.Point((int)left, (int)top), new System.Drawing.Size((int)(right - left), (int)(bottom - top)));
+			DrawRectangle(null, new Point((int)left, (int)top), new Size((int)(right - left), (int)(bottom - top)));
 		}
 
 		/// <summary>Draws a simple 2D rectangle.</summary>
