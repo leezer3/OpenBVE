@@ -24,33 +24,30 @@ namespace OpenBve
 			    GL.DeleteTextures(1, new int[] {PixelBufferOpenGlTextureIndex});
 			    PixelBufferOpenGlTextureIndex = 0;
 		    }
-		    int w = Interface.CurrentOptions.NoTextureResize ? Screen.Width : TextureManager.RoundUpToPowerOfTwo(Screen.Width);
-		    int h = Interface.CurrentOptions.NoTextureResize ? Screen.Height : TextureManager.RoundUpToPowerOfTwo(Screen.Height);
-		    PixelBuffer = new byte[4 * w * h];
+		    PixelBuffer = new byte[4 * Screen.Width * Screen.Height];
 		    int[] a = new int[1];
 		    GL.GenTextures(1, a);
 		    GL.BindTexture(TextureTarget.Texture2D, a[0]);
 		    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int) TextureMagFilter.Linear);
-		    GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, w, h, 0, PixelFormat.Rgb,
+		    GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, Screen.Width, Screen.Height, 0, PixelFormat.Rgb,
 			    PixelType.UnsignedByte, PixelBuffer);
 		    PixelBufferOpenGlTextureIndex = a[0];
-		    GL.CopyTexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgb, 0, 0, w, h, 0);
+		    GL.CopyTexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgb, 0, 0, Screen.Width, Screen.Height, 0);
 	    }
 
 	    /// <summary>This function renderers full-screen motion blur if selected</summary>
 		private static void RenderFullscreenMotionBlur()
         {
-			if(Screen.Minimized)
-			{
-				/*
-				 * HACK:
-				 * This breaks if minimized, even if we don't reset the W / H values
-				 */
-				return;
-			}
-            int w = Interface.CurrentOptions.NoTextureResize ? Screen.Width : TextureManager.RoundUpToPowerOfTwo(Screen.Width);
-            int h = Interface.CurrentOptions.NoTextureResize ? Screen.Height : TextureManager.RoundUpToPowerOfTwo(Screen.Height);
-            // render
+	        if (Screen.Minimized)
+	        {
+		        /*
+		         * HACK:
+		         * This breaks if minimized, even if we don't reset the W / H values
+		         */
+		        return;
+	        }
+
+	        // render
             if (PixelBufferOpenGlTextureIndex >= 0)
             {
                 double strength;
@@ -103,11 +100,11 @@ namespace OpenBve
                 GL.TexCoord2(0.0, 0.0);
                 GL.Vertex2(0.0, 0.0);
                 GL.TexCoord2(0.0, 1.0);
-                GL.Vertex2(0.0, (double)h);
+                GL.Vertex2(0.0, (double)Screen.Height);
                 GL.TexCoord2(1.0, 1.0);
-                GL.Vertex2((double)w, (double)h);
+                GL.Vertex2((double)Screen.Width, (double)Screen.Height);
                 GL.TexCoord2(1.0, 0.0);
-                GL.Vertex2((double)w, 0.0);
+                GL.Vertex2((double)Screen.Width, 0.0);
                 GL.End();
                 // finalize
                 GL.PopMatrix();
@@ -118,7 +115,7 @@ namespace OpenBve
             // retrieve buffer
             {
                 GL.BindTexture(TextureTarget.Texture2D, PixelBufferOpenGlTextureIndex);
-                GL.CopyTexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgb8, 0, 0, w, h, 0);
+                GL.CopyTexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgb8, 0, 0, Screen.Width, Screen.Height, 0);
             }
         }
     }

@@ -176,12 +176,7 @@ namespace OpenBve
 			 * Only relevant in developer mode, not saved
 			 */
 			internal bool ShowEvents = false;
-			/*
-			 * Note: Disabling texture resizing may produce artifacts at the edges of textures,
-			 * and may display issues with certain graphics cards.
-			 */
-			/// <summary>Whether textures are to be resized to the power of two rule</summary>
-			internal bool NoTextureResize;
+
 			/// <summary>Whether we are currently in kiosk mode</summary>
 			internal bool KioskMode;
 			/// <summary>The timer before AI controls are enabled in kiosk mode</summary>
@@ -244,7 +239,6 @@ namespace OpenBve
 				this.DisableDisplayLists = false;
 				this.LoadInAdvance = false;
 				this.UnloadUnusedTextures = false;
-				this.NoTextureResize = false;
 				this.ProxyUrl = string.Empty;
 				this.ProxyUserName = string.Empty;
 				this.ProxyPassword = string.Empty;
@@ -436,9 +430,6 @@ namespace OpenBve
 											break;
 										case "unloadtextures":
 											Interface.CurrentOptions.UnloadUnusedTextures = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
-										case "notextureresize":
-											Interface.CurrentOptions.NoTextureResize = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 									} break;
 								case "quality":
@@ -875,7 +866,6 @@ namespace OpenBve
 			Builder.AppendLine("disableDisplayLists = " + (CurrentOptions.DisableDisplayLists ? "true" : "false"));
 			Builder.AppendLine("loadInAdvance = " + (CurrentOptions.LoadInAdvance ? "true" : "false"));
 			Builder.AppendLine("unloadtextures = " + (CurrentOptions.UnloadUnusedTextures ? "true" : "false"));
-			Builder.AppendLine("noTextureResize = " + (CurrentOptions.NoTextureResize ? "true" : "false"));
 			Builder.AppendLine();
 			Builder.AppendLine("[quality]");
 			{
