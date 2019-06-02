@@ -96,7 +96,7 @@ namespace OpenBve
 			//Calculate the final colors and positions
 			LibRender.Renderer.OptionDiffuseColor = Color24.CosineInterpolate(LightDefinitions[j].DiffuseColor, LightDefinitions[k].DiffuseColor, mu);
 			LibRender.Renderer.OptionAmbientColor = Color24.CosineInterpolate(LightDefinitions[j].AmbientColor, LightDefinitions[k].AmbientColor, mu);
-			OptionLightPosition = Vector3.CosineInterpolate(LightDefinitions[j].LightPosition,LightDefinitions[k].LightPosition, mu);
+			LibRender.Renderer.OptionLightPosition = Vector3.CosineInterpolate(LightDefinitions[j].LightPosition,LightDefinitions[k].LightPosition, mu);
 
 			//Interpolate the cab brightness value
 			var mu2 = (1 - System.Math.Cos(mu * System.Math.PI)) / 2;

@@ -62,7 +62,6 @@ namespace OpenBve
 
         // options
         internal static bool OptionLighting = true;
-        internal static Vector3 OptionLightPosition = new Vector3(0.215920077052065f, 0.875724044222352f, -0.431840154104129f);
         internal static float OptionLightingResultingAmount = 1.0f;
         internal static bool OptionNormals = false;
         internal static bool OptionWireframe = false;
@@ -135,7 +134,7 @@ namespace OpenBve
             OptionLighting = true;
             LibRender.Renderer.OptionAmbientColor = new Color24(160, 160, 160);
             LibRender.Renderer.OptionDiffuseColor = new Color24(160, 160, 160);
-            OptionLightPosition = new Vector3(0.215920077052065f, 0.875724044222352f, -0.431840154104129f);
+            LibRender.Renderer.OptionLightPosition = new Vector3(0.215920077052065f, 0.875724044222352f, -0.431840154104129f);
             OptionLightingResultingAmount = 1.0f;
             GL.Disable(EnableCap.Fog); LibRender.Renderer.FogEnabled = false;
         }
@@ -165,7 +164,7 @@ namespace OpenBve
             GL.MultMatrix(ref mat);
             if (OptionLighting)
             {
-                GL.Light(LightName.Light0, LightParameter.Position, new float[] { (float)OptionLightPosition.X, (float)OptionLightPosition.Y, (float)OptionLightPosition.Z, 0.0f });
+                GL.Light(LightName.Light0, LightParameter.Position, new float[] { (float)LibRender.Renderer.OptionLightPosition.X, (float)LibRender.Renderer.OptionLightPosition.Y, (float)LibRender.Renderer.OptionLightPosition.Z, 0.0f });
             }
             // render polygons
             GL.Disable(EnableCap.DepthTest);

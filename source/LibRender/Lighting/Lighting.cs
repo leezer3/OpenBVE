@@ -1,4 +1,5 @@
 ﻿using OpenBveApi.Colors;
+using OpenBveApi.Math;
 using OpenTK.Graphics.OpenGL;
 
 namespace LibRender
@@ -9,6 +10,8 @@ namespace LibRender
 		public static Color24 OptionAmbientColor = new Color24(160, 160, 160);
 		/// <summary>The current diffuse light color</summary>
 		public static Color24 OptionDiffuseColor = new Color24(160, 160, 160);
+		/// <summary>The current ambient light position</summary>
+		public static Vector3 OptionLightPosition = new Vector3(0.223606797749979f, 0.86602540378444f, -0.447213595499958f);
 
 		/// <summary>Initializes the lighting model</summary>
 		public static void InitializeLighting()

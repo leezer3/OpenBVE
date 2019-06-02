@@ -42,7 +42,7 @@ namespace OpenBve
             LibRender.Renderer.OptionLighting = true;
             LibRender.Renderer.OptionAmbientColor = new Color24(160, 160, 160);
             LibRender.Renderer.OptionDiffuseColor = new Color24(160, 160, 160);
-            OptionLightPosition = new Vector3(0.223606797749979f, 0.86602540378444f, -0.447213595499958f);
+            LibRender.Renderer.OptionLightPosition = new Vector3(0.223606797749979f, 0.86602540378444f, -0.447213595499958f);
             LibRender.Renderer.OptionLightingResultingAmount = 1.0f;
             OptionClock = false;
             OptionBrakeSystems = false;

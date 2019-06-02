@@ -30,9 +30,6 @@ namespace OpenBve
 		/// <summary>The list of overlay alpha faces to be rendered.</summary>
 		private static ObjectList OverlayAlpha = new ObjectList();
 
-		// options
-		
-		internal static Vector3 OptionLightPosition = new Vector3(0.223606797749979f, 0.86602540378444f, -0.447213595499958f);
 		internal static bool OptionBackfaceCulling = true;
 
 		// interface options
@@ -104,7 +101,7 @@ namespace OpenBve
 			Matrix4d lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, dx, dy, dz, ux, uy, uz);
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.LoadMatrix(ref lookat);
-			GL.Light(LightName.Light0, LightParameter.Position, new float[] { (float)OptionLightPosition.X, (float)OptionLightPosition.Y, (float)OptionLightPosition.Z, 0.0f });
+			GL.Light(LightName.Light0, LightParameter.Position, new float[] { (float)LibRender.Renderer.OptionLightPosition.X, (float)LibRender.Renderer.OptionLightPosition.Y, (float)LibRender.Renderer.OptionLightPosition.Z, 0.0f });
 			// fog
 			double fd = Game.NextFog.TrackPosition - Game.PreviousFog.TrackPosition;
 			if (fd != 0.0)

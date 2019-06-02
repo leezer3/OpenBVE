@@ -887,7 +887,7 @@ namespace OpenBve {
 										double dx = Math.Cos(theta) * Math.Sin(phi);
 										double dy = -Math.Sin(theta);
 										double dz = Math.Cos(theta) * Math.Cos(phi);
-										Renderer.OptionLightPosition = new Vector3((float)-dx, (float)-dy, (float)-dz);
+										LibRender.Renderer.OptionLightPosition = new Vector3((float)-dx, (float)-dy, (float)-dz);
 									} break;
 								case "route.dynamiclight":
 									//Read the lighting XML file
