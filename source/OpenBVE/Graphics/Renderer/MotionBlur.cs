@@ -14,7 +14,7 @@ namespace OpenBve
 		/// <summary>Intializes motion blur</summary>
 	    internal static void InitializeMotionBlur()
 	    {
-		    if (Interface.CurrentOptions.MotionBlur == Interface.MotionBlurMode.None)
+		    if (Interface.CurrentOptions.MotionBlur == MotionBlurMode.None)
 		    {
 			    return;
 		    }
@@ -53,9 +53,9 @@ namespace OpenBve
                 double strength;
                 switch (Interface.CurrentOptions.MotionBlur)
                 {
-                    case Interface.MotionBlurMode.Low: strength = 0.0025; break;
-                    case Interface.MotionBlurMode.Medium: strength = 0.0040; break;
-                    case Interface.MotionBlurMode.High: strength = 0.0064; break;
+                    case MotionBlurMode.Low: strength = 0.0025; break;
+                    case MotionBlurMode.Medium: strength = 0.0040; break;
+                    case MotionBlurMode.High: strength = 0.0064; break;
                     default: strength = 0.0040; break;
                 }
                 double speed = Math.Abs(World.CameraSpeed);

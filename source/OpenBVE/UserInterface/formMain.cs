@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml;
+using LibRender;
 using OpenBve.UserInterface;
 using OpenBveApi.Graphics;
 using OpenBveApi.Packages;
@@ -908,7 +909,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.AntiAliasingLevel = (int)Math.Round(updownAntiAliasing.Value);
 			Interface.CurrentOptions.TransparencyMode = (TransparencyMode)trackbarTransparency.Value;
 			Interface.CurrentOptions.ViewingDistance = (int)Math.Round(updownDistance.Value);
-			Interface.CurrentOptions.MotionBlur = (Interface.MotionBlurMode)comboboxMotionBlur.SelectedIndex;
+			Interface.CurrentOptions.MotionBlur = (MotionBlurMode)comboboxMotionBlur.SelectedIndex;
 			Interface.CurrentOptions.Toppling = checkboxToppling.Checked;
 			Interface.CurrentOptions.Collisions = checkboxCollisions.Checked;
 			Interface.CurrentOptions.Derailments = checkboxDerailments.Checked;

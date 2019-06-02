@@ -4,23 +4,13 @@ using System.Globalization;
 using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
 using OpenBveApi.Packages;
+using LibRender;
 
 namespace OpenBve
 {
 	internal partial class Interface
 	{
-		/// <summary>Defines the levels of motion blur</summary>
-		internal enum MotionBlurMode
-		{
-			/// <summary>Motion blur is disabled</summary>
-			None = 0,
-			/// <summary>Low motion blur</summary>
-			Low = 1,
-			/// <summary>Medium motion blur</summary>
-			Medium = 2,
-			/// <summary>High motion blur</summary>
-			High = 3
-		}
+		
 
 		/// <summary>Defines the range at which a sound will be loaded</summary>
 		internal enum SoundRange

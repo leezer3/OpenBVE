@@ -312,7 +312,7 @@ namespace OpenBve
 			GL.Disable(EnableCap.DepthTest);
 			GL.DepthMask(false);
 			LibRender.Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-			if (Interface.CurrentOptions.MotionBlur != Interface.MotionBlurMode.None)
+			if (Interface.CurrentOptions.MotionBlur != MotionBlurMode.None)
 			{
 				if (LibRender.Renderer.LightingEnabled)
 				{
