@@ -186,9 +186,7 @@ namespace OpenBve
 				{
 					for (int j = 0; j < currentObject.Object.States[i].Object.Mesh.Materials.Length; j++)
 					{
-						currentObject.Object.States[i].Object.Mesh.Materials[j].Color.R = (byte)Math.Round((double)this.Object.States[i].Object.Mesh.Materials[j].Color.R * Brightness);
-						currentObject.Object.States[i].Object.Mesh.Materials[j].Color.G = (byte)Math.Round((double)this.Object.States[i].Object.Mesh.Materials[j].Color.G * Brightness);
-						currentObject.Object.States[i].Object.Mesh.Materials[j].Color.B = (byte)Math.Round((double)this.Object.States[i].Object.Mesh.Materials[j].Color.B * Brightness);
+						currentObject.Object.States[i].Object.Mesh.Materials[j].Color *= Brightness;
 					}
 					for (int j = 0; j < currentObject.Object.States[i].Object.Mesh.Vertices.Length; j++)
 					{

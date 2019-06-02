@@ -614,9 +614,7 @@ namespace OpenBve {
 			double r = 0.0;
 			for (int i = 0; i < AnimatedWorldObjects[a].Object.States.Length; i++) {
 				for (int j = 0; j < AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Materials.Length; j++) {
-					AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Materials[j].Color.R = (byte)Math.Round((double)Prototype.States[i].Object.Mesh.Materials[j].Color.R * Brightness);
-					AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Materials[j].Color.G = (byte)Math.Round((double)Prototype.States[i].Object.Mesh.Materials[j].Color.G * Brightness);
-					AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Materials[j].Color.B = (byte)Math.Round((double)Prototype.States[i].Object.Mesh.Materials[j].Color.B * Brightness);
+					AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Materials[j].Color *= Brightness;
 				}
 				for (int j = 0; j < AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Vertices.Length; j++) {
 					double x = Prototype.States[i].Object.Mesh.Vertices[j].Coordinates.X;

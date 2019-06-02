@@ -217,6 +217,18 @@ namespace OpenBveApi.Colors {
 			return a.R != b.R | a.G != b.G | a.B != b.B | a.A != b.A;
 		}
 
+		/// <summary>Multiplies a Color32 with a scalar.</summary>
+		/// <param name="a">The Color32.</param>
+		/// <param name="b">The scalar.</param>
+		/// <returns>The product of the Color32 and the scalar.</returns>
+		public static Color32 operator *(Color32 a, double b)
+		{
+			a.R = (byte) System.Math.Round(a.R * b);
+			a.G = (byte) System.Math.Round(a.G * b);
+			a.B = (byte) System.Math.Round(a.B * b);
+			return a;
+		}
+
 		/// <summary>Checks whether two colors are equal.</summary>
 		/// <param name="a">The first color.</param>
 		/// <param name="b">The second color.</param>
