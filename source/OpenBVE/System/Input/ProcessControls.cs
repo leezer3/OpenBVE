@@ -581,7 +581,7 @@ namespace OpenBve
 														OpenGlTextureWrapMode.ClampClamp);
 													max =
 														Math.Min(
-															Screen.Height - Timetable.DefaultTimetableTexture.Height,
+															LibRender.Screen.Height - Timetable.DefaultTimetableTexture.Height,
 															0.0);
 												}
 												else
@@ -607,7 +607,7 @@ namespace OpenBve
 												{
 													Program.CurrentHost.LoadTexture(texture,
 														OpenGlTextureWrapMode.ClampClamp);
-													max = Math.Min(Screen.Height - texture.Height, 0.0);
+													max = Math.Min(LibRender.Screen.Height - texture.Height, 0.0);
 												}
 												else
 												{
@@ -1611,43 +1611,43 @@ namespace OpenBve
 										break;
 									case Translations.Command.MiscInterfaceMode:
 										// option: debug
-										switch (Renderer.CurrentOutputMode)
+										switch (LibRender.Renderer.CurrentOutputMode)
 										{
 											case OutputMode.Default:
-												Renderer.CurrentOutputMode = Interface.CurrentOptions.GameMode ==
+												LibRender.Renderer.CurrentOutputMode = Interface.CurrentOptions.GameMode ==
 																			 Interface.GameMode.Expert
 													? OutputMode.None
 													: OutputMode.Debug;
 												break;
 											case OutputMode.Debug:
-												Renderer.CurrentOutputMode = OutputMode.None;
+												LibRender.Renderer.CurrentOutputMode = OutputMode.None;
 												break;
 											case OutputMode.DebugATS:
-												Renderer.CurrentOutputMode = Renderer.PreviousOutputMode;
+												LibRender.Renderer.CurrentOutputMode = LibRender.Renderer.PreviousOutputMode;
 												break;
 											default:
-												Renderer.CurrentOutputMode = OutputMode.Default;
+												LibRender.Renderer.CurrentOutputMode = OutputMode.Default;
 												break;
 										}
-										Renderer.PreviousOutputMode = Renderer.CurrentOutputMode;
+										LibRender.Renderer.PreviousOutputMode = LibRender.Renderer.CurrentOutputMode;
 										break;
 									case Translations.Command.DebugATS:
-										if (Renderer.CurrentOutputMode == OutputMode.DebugATS)
+										if (LibRender.Renderer.CurrentOutputMode == OutputMode.DebugATS)
 										{
-											Renderer.CurrentOutputMode = Renderer.PreviousOutputMode;
+											LibRender.Renderer.CurrentOutputMode = LibRender.Renderer.PreviousOutputMode;
 										}
 										else
 										{
-											Renderer.PreviousOutputMode = Renderer.CurrentOutputMode;
-											Renderer.CurrentOutputMode = OutputMode.DebugATS;
+											LibRender.Renderer.PreviousOutputMode = LibRender.Renderer.CurrentOutputMode;
+											LibRender.Renderer.CurrentOutputMode = OutputMode.DebugATS;
 										}
 										break;
 									case Translations.Command.MiscBackfaceCulling:
 										// option: backface culling
-										Renderer.OptionBackfaceCulling = !Renderer.OptionBackfaceCulling;
+										LibRender.Renderer.OptionBackfaceCulling = !LibRender.Renderer.OptionBackfaceCulling;
 										Renderer.StaticOpaqueForceUpdate = true;
 										Game.AddMessage(
-											Translations.GetInterfaceString(Renderer.OptionBackfaceCulling
+											Translations.GetInterfaceString(LibRender.Renderer.OptionBackfaceCulling
 												? "notification_backfaceculling_on"
 												: "notification_backfaceculling_off"), MessageManager.MessageDependency.None,
 											Interface.GameMode.Expert, MessageColor.White,

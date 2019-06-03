@@ -394,10 +394,10 @@ namespace OpenBve
 			// choose the text font size according to screen height
 			// the boundaries follow approximately the progression
 			// of font sizes defined in Graphics/Fonts.cs
-			if (Screen.Height <= 512) menuFont = Fonts.SmallFont;
-			else if (Screen.Height <= 680) menuFont = Fonts.NormalFont;
-			else if (Screen.Height <= 890) menuFont = Fonts.LargeFont;
-			else if (Screen.Height <= 1150) menuFont = Fonts.VeryLargeFont;
+			if (LibRender.Screen.Height <= 512) menuFont = Fonts.SmallFont;
+			else if (LibRender.Screen.Height <= 680) menuFont = Fonts.NormalFont;
+			else if (LibRender.Screen.Height <= 890) menuFont = Fonts.LargeFont;
+			else if (LibRender.Screen.Height <= 1150) menuFont = Fonts.VeryLargeFont;
 			else menuFont = Fonts.EvenLargerFont;
 			em = (int)menuFont.FontSize;
 			lineHeight = (int)(em * LineSpacing);
@@ -730,13 +730,13 @@ namespace OpenBve
 			SingleMenu menu = Menus[CurrMenu];
 			// overlay background
 			GL.Color4(overlayColor.R, overlayColor.G, overlayColor.B, overlayColor.A);
-			LibRender.Renderer.RenderOverlaySolid(0.0, 0.0, (double)Screen.Width, (double)Screen.Height);
+			LibRender.Renderer.RenderOverlaySolid(0.0, 0.0, (double)LibRender.Screen.Width, (double)LibRender.Screen.Height);
 			GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
 
 			// HORIZONTAL PLACEMENT: centre the menu in the main window
-			int itemLeft = (Screen.Width - menu.ItemWidth) / 2; // item left edge
+			int itemLeft = (LibRender.Screen.Width - menu.ItemWidth) / 2; // item left edge
 																// if menu alignment is left, left-align items, otherwise centre them in the screen
-			int itemX = (menu.Align & TextAlignment.Left) != 0 ? itemLeft : Screen.Width / 2;
+			int itemX = (menu.Align & TextAlignment.Left) != 0 ? itemLeft : LibRender.Screen.Width / 2;
 
 			int menuBottomItem = menu.TopItem + visibleItems - 1;
 
@@ -811,10 +811,10 @@ namespace OpenBve
 
 			SingleMenu menu = Menus[CurrMenu];
 			// HORIZONTAL PLACEMENT: centre the menu in the main window
-			menuXmin = (Screen.Width - menu.Width) / 2;     // menu left edge (border excluded)
+			menuXmin = (LibRender.Screen.Width - menu.Width) / 2;     // menu left edge (border excluded)
 			menuXmax = menuXmin + menu.Width;               // menu right edge (border excluded)
 															// VERTICAL PLACEMENT: centre the menu in the main window
-			menuYmin = (Screen.Height - menu.Height) / 2;       // menu top edge (border excluded)
+			menuYmin = (LibRender.Screen.Height - menu.Height) / 2;       // menu top edge (border excluded)
 			menuYmax = menuYmin + menu.Height;              // menu bottom edge (border excluded)
 			topItemY = menuYmin;                                // top edge of top item
 																// assume all items fit in the screen
@@ -825,14 +825,14 @@ namespace OpenBve
 			if (menuYmin < MenuBorderY)
 			{
 				// the number of lines which fit in the screen
-				int numOfLines = (Screen.Height - MenuBorderY * 2) / lineHeight;
+				int numOfLines = (LibRender.Screen.Height - MenuBorderY * 2) / lineHeight;
 				visibleItems = numOfLines - 2;                  // at least an empty line at the top and at the bottom
 																// split the menu in chunks of 'visibleItems' items
 																// and display the chunk which contains the currently selected item
 				menu.TopItem = menu.Selection - (menu.Selection % visibleItems);
 				visibleItems = menu.Items.Length - menu.TopItem < visibleItems ?    // in the last chunk,
 					menu.Items.Length - menu.TopItem : visibleItems;                // display remaining items only
-				menuYmin = (Screen.Height - numOfLines * lineHeight) / 2;
+				menuYmin = (LibRender.Screen.Height - numOfLines * lineHeight) / 2;
 				menuYmax = menuYmin + numOfLines * lineHeight;
 				// first menu item is drawn on second line (first line is empty
 				// on first screen and contains an ellipsis on following screens

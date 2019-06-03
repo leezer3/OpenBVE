@@ -23,8 +23,7 @@ namespace OpenBve
     {
 
         // screen (output window)
-        internal static int ScreenWidth = 960;
-        internal static int ScreenHeight = 600;
+        
 
         // first frame behavior
         internal enum LoadTextureImmediatelyMode { NotYet, Yes }
@@ -61,18 +60,13 @@ namespace OpenBve
         internal static bool TransparentColorDepthSorting = false;
 
         // options
-        internal static bool OptionLighting = true;
-        internal static float OptionLightingResultingAmount = 1.0f;
-        internal static bool OptionNormals = false;
-        internal static bool OptionWireframe = false;
-        internal static bool OptionBackfaceCulling = true;
         internal static bool OptionCoordinateSystem = false;
         internal static bool OptionInterface = true;
 
         // background color
         internal static int BackgroundColor = 0;
 	    internal static Color128 TextColor = Color128.White;
-        internal const int MaxBackgroundColor = 4;
+	    internal const int MaxBackgroundColor = 4;
         internal static string GetBackgroundColorName()
         {
             switch (BackgroundColor)
@@ -131,11 +125,11 @@ namespace OpenBve
             OverlayList = new ObjectFace[256];
             OverlayListDistance = new double[256];
             OverlayListCount = 0;
-            OptionLighting = true;
+            LibRender.Renderer.OptionLighting = true;
             LibRender.Renderer.OptionAmbientColor = new Color24(160, 160, 160);
             LibRender.Renderer.OptionDiffuseColor = new Color24(160, 160, 160);
             LibRender.Renderer.OptionLightPosition = new Vector3(0.215920077052065f, 0.875724044222352f, -0.431840154104129f);
-            OptionLightingResultingAmount = 1.0f;
+            LibRender.Renderer.OptionLightingResultingAmount = 1.0f;
             GL.Disable(EnableCap.Fog); LibRender.Renderer.FogEnabled = false;
         }
 
@@ -162,13 +156,13 @@ namespace OpenBve
             // setup camera
             var mat = Matrix4d.LookAt(0.0, 0.0, 0.0, World.AbsoluteCameraDirection.X, World.AbsoluteCameraDirection.Y, World.AbsoluteCameraDirection.Z, World.AbsoluteCameraUp.X, World.AbsoluteCameraUp.Y, World.AbsoluteCameraUp.Z);
             GL.MultMatrix(ref mat);
-            if (OptionLighting)
+            if (LibRender.Renderer.OptionLighting)
             {
                 GL.Light(LightName.Light0, LightParameter.Position, new float[] { (float)LibRender.Renderer.OptionLightPosition.X, (float)LibRender.Renderer.OptionLightPosition.Y, (float)LibRender.Renderer.OptionLightPosition.Z, 0.0f });
             }
             // render polygons
             GL.Disable(EnableCap.DepthTest);
-            if (OptionLighting)
+            if (LibRender.Renderer.OptionLighting)
             {
                 if (!LibRender.Renderer.LightingEnabled)
                 {
@@ -360,13 +354,13 @@ namespace OpenBve
 	    {
 		    if (LibRender.Renderer.CullEnabled)
 		    {
-			    if (!OptionBackfaceCulling || (ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Flags & MeshFace.Face2Mask) != 0)
+			    if (!LibRender.Renderer.OptionBackfaceCulling || (ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Flags & MeshFace.Face2Mask) != 0)
 			    {
 				    GL.Disable(EnableCap.CullFace);
 				    LibRender.Renderer.CullEnabled = false;
 			    }
 		    }
-		    else if (OptionBackfaceCulling)
+		    else if (LibRender.Renderer.OptionBackfaceCulling)
 		    {
 			    if ((ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Flags & MeshFace.Face2Mask) == 0)
 			    {
@@ -386,7 +380,7 @@ namespace OpenBve
 	        GL.MatrixMode(MatrixMode.Projection);
 	        GL.PushMatrix();
 	        GL.LoadIdentity();
-	        GL.Ortho(0.0, (double)ScreenWidth, (double)ScreenHeight, 0.0, -1.0, 1.0);
+	        GL.Ortho(0.0, (double) Screen.Width, (double) Screen.Height, 0.0, -1.0, 1.0);
 	        GL.MatrixMode(MatrixMode.Modelview);
 	        GL.PushMatrix();
 	        GL.LoadIdentity();
@@ -402,11 +396,11 @@ namespace OpenBve
                     LibRender.Renderer.DrawString(Fonts.SmallFont, "Open one or more objects", new Point(32,4),TextAlignment.TopLeft, TextColor);
                     LibRender.Renderer.DrawString(Fonts.SmallFont, "Display the options window", new Point(32,24),TextAlignment.TopLeft, TextColor);
                     LibRender.Renderer.DrawString(Fonts.SmallFont, "Display the train settings window", new Point(32, 44), TextAlignment.TopLeft, TextColor);
-                    LibRender.Renderer.DrawString(Fonts.SmallFont, "v" + System.Windows.Forms.Application.ProductVersion, new Point(ScreenWidth - 8, ScreenHeight - 20), TextAlignment.TopLeft, TextColor);
+                    LibRender.Renderer.DrawString(Fonts.SmallFont, "v" + System.Windows.Forms.Application.ProductVersion, new Point(Screen.Width - 8, Screen.Height - 20), TextAlignment.TopLeft, TextColor);
                 }
                 else
                 {
-	                LibRender.Renderer.DrawString(Fonts.SmallFont, "Position: " + World.AbsoluteCameraPosition.X.ToString("0.00", Culture) + ", " + World.AbsoluteCameraPosition.Y.ToString("0.00", Culture) + ", " + World.AbsoluteCameraPosition.Z.ToString("0.00", Culture), new Point((int)(0.5 * ScreenWidth -88),4),TextAlignment.TopLeft, TextColor);
+	                LibRender.Renderer.DrawString(Fonts.SmallFont, "Position: " + World.AbsoluteCameraPosition.X.ToString("0.00", Culture) + ", " + World.AbsoluteCameraPosition.Y.ToString("0.00", Culture) + ", " + World.AbsoluteCameraPosition.Z.ToString("0.00", Culture), new Point((int)(0.5 * Screen.Width -88),4),TextAlignment.TopLeft, TextColor);
                     string[][] Keys;
                     Keys = new string[][] { new string[] { "F5" }, new string[] { "F7" }, new string[] { "del" }, new string[] { "F8" }, new string[] { "F10" } };
                     LibRender.Renderer.RenderKeys(4, 4, 24, Fonts.SmallFont, Keys);
@@ -416,19 +410,19 @@ namespace OpenBve
                     LibRender.Renderer.DrawString(Fonts.SmallFont, "Display the options window", new Point(32,64),TextAlignment.TopLeft, TextColor);
                     LibRender.Renderer.DrawString(Fonts.SmallFont, "Display the train settings window", new Point(32, 84), TextAlignment.TopLeft, TextColor);
 					Keys = new string[][] { new string[] { "F" }, new string[] { "N" }, new string[] { "L" }, new string[] { "G" }, new string[] { "B" }, new string[] { "I" } };
-                    LibRender.Renderer.RenderKeys(ScreenWidth - 20, 4, 16, Fonts.SmallFont, Keys);
-                    LibRender.Renderer.DrawString(Fonts.SmallFont, "Wireframe: " + (Renderer.OptionWireframe ? "on" : "off"), new Point(ScreenWidth - 28,4),TextAlignment.TopRight, TextColor);
-                    LibRender.Renderer.DrawString(Fonts.SmallFont, "Normals: " + (Renderer.OptionNormals ? "on" : "off"), new Point(ScreenWidth - 28,24),TextAlignment.TopRight, TextColor);
-                    LibRender.Renderer.DrawString(Fonts.SmallFont, "Lighting: " + (Program.LightingTarget == 0 ? "night" : "day"), new Point(ScreenWidth - 28,44),TextAlignment.TopRight, TextColor);
-                    LibRender.Renderer.DrawString(Fonts.SmallFont, "Grid: " + (Renderer.OptionCoordinateSystem ? "on" : "off"), new Point(ScreenWidth - 28,64),TextAlignment.TopRight, TextColor);
-                    LibRender.Renderer.DrawString(Fonts.SmallFont, "Background: " + GetBackgroundColorName(), new Point(ScreenWidth - 28,84),TextAlignment.TopRight, TextColor);
-                    LibRender.Renderer.DrawString(Fonts.SmallFont, "Hide interface", new Point(ScreenWidth - 28,104),TextAlignment.TopRight, TextColor);
+                    LibRender.Renderer.RenderKeys(Screen.Width - 20, 4, 16, Fonts.SmallFont, Keys);
+                    LibRender.Renderer.DrawString(Fonts.SmallFont, "Wireframe: " + (LibRender.Renderer.OptionWireframe ? "on" : "off"), new Point(Screen.Width - 28,4),TextAlignment.TopRight, TextColor);
+                    LibRender.Renderer.DrawString(Fonts.SmallFont, "Normals: " + (LibRender.Renderer.OptionNormals ? "on" : "off"), new Point(Screen.Width - 28,24),TextAlignment.TopRight, TextColor);
+                    LibRender.Renderer.DrawString(Fonts.SmallFont, "Lighting: " + (Program.LightingTarget == 0 ? "night" : "day"), new Point(Screen.Width - 28,44),TextAlignment.TopRight, TextColor);
+                    LibRender.Renderer.DrawString(Fonts.SmallFont, "Grid: " + (Renderer.OptionCoordinateSystem ? "on" : "off"), new Point(Screen.Width - 28,64),TextAlignment.TopRight, TextColor);
+                    LibRender.Renderer.DrawString(Fonts.SmallFont, "Background: " + GetBackgroundColorName(), new Point(Screen.Width - 28,84),TextAlignment.TopRight, TextColor);
+                    LibRender.Renderer.DrawString(Fonts.SmallFont, "Hide interface", new Point(Screen.Width - 28,104),TextAlignment.TopRight, TextColor);
                     Keys = new string[][] { new string[] { null, "W", null }, new string[] { "A", "S", "D" } };
-                    LibRender.Renderer.RenderKeys(4, ScreenHeight - 40, 16, Fonts.SmallFont, Keys);
+                    LibRender.Renderer.RenderKeys(4, Screen.Height - 40, 16, Fonts.SmallFont, Keys);
                     Keys = new string[][] { new string[] { null, "↑", null }, new string[] { "←", "↓", "→" } };
-                    LibRender.Renderer.RenderKeys((int)(0.5 * (double)ScreenWidth - 28), ScreenHeight - 40, 16, Fonts.SmallFont, Keys);
+                    LibRender.Renderer.RenderKeys((int)(0.5 * (double) Screen.Width - 28), Screen.Height - 40, 16, Fonts.SmallFont, Keys);
                     Keys = new string[][] { new string[] { null, "8", "9" }, new string[] { "4", "5", "6" }, new string[] { null, "2", "3" } };
-                    LibRender.Renderer.RenderKeys(ScreenWidth - 60, ScreenHeight - 60, 16, Fonts.SmallFont, Keys);
+                    LibRender.Renderer.RenderKeys(Screen.Width - 60, Screen.Height - 60, 16, Fonts.SmallFont, Keys);
                     if (Interface.MessageCount == 1)
                     {
 	                    LibRender.Renderer.RenderKeys(4, 112, 20, Fonts.SmallFont, new string[][] { new string[] { "F9" } });
@@ -475,7 +469,7 @@ namespace OpenBve
             GL.MatrixMode(MatrixMode.Modelview);
             GL.Disable(EnableCap.Blend);
             GL.Enable(EnableCap.DepthTest);
-	        GL.Ortho(0.0, (double)ScreenWidth, 0.0, (double)ScreenHeight, -1.0, 1.0);
+	        GL.Ortho(0.0, (double) Screen.Width, 0.0, (double) Screen.Height, -1.0, 1.0);
         }
 		
         // readd objects

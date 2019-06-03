@@ -15,8 +15,8 @@ namespace OpenBve
             AnsiotropicLevel.Value = Interface.CurrentOptions.AnisotropicFilteringLevel;
             AntialiasingLevel.Value = Interface.CurrentOptions.AntialiasingLevel;
             TransparencyQuality.SelectedIndex = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance ? 0 : 2;
-            width.Value = Renderer.ScreenWidth;
-            height.Value = Renderer.ScreenHeight;
+            width.Value = LibRender.Screen.Width;
+            height.Value = LibRender.Screen.Height;
 			checkBoxLogo.Checked = Interface.CurrentOptions.LoadingLogo;
 			checkBoxBackgrounds.Checked = Interface.CurrentOptions.LoadingBackground;
 			checkBoxProgressBar.Checked = Interface.CurrentOptions.LoadingProgressBar;
@@ -87,10 +87,10 @@ namespace OpenBve
                     break;
             }
 			//Set width and height
-			if (Renderer.ScreenWidth != width.Value || Renderer.ScreenHeight != height.Value)
+			if (LibRender.Screen.Width != width.Value || LibRender.Screen.Height != height.Value)
 			{
-				Renderer.ScreenWidth = (int)width.Value;
-				Renderer.ScreenHeight = (int)height.Value;
+				LibRender.Screen.Width = (int)width.Value;
+				LibRender.Screen.Height = (int)height.Value;
 				Program.currentGameWindow.Width = (int)width.Value;
 				Program.currentGameWindow.Height = (int)height.Value;
 				Program.UpdateViewport();

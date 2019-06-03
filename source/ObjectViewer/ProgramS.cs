@@ -16,6 +16,7 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using ButtonState = OpenTK.Input.ButtonState;
+using Screen = LibRender.Screen;
 using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve {
@@ -116,7 +117,7 @@ namespace OpenBve {
 	        // initialize camera
 
 	        currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntialiasingLevel);
-	        currentGameWindow = new ObjectViewer(Renderer.ScreenWidth, Renderer.ScreenHeight, currentGraphicsMode,"Object Viewer", GameWindowFlags.Default);
+	        currentGameWindow = new ObjectViewer(Screen.Width, Screen.Height, currentGraphicsMode,"Object Viewer", GameWindowFlags.Default);
 	        currentGameWindow.Visible = true;
 	        currentGameWindow.TargetUpdateFrequency = 0;
 	        currentGameWindow.TargetRenderFrequency = 0;
@@ -142,8 +143,8 @@ namespace OpenBve {
 
 		// update viewport
 		internal static void UpdateViewport() {
-            GL.Viewport(0, 0, Renderer.ScreenWidth, Renderer.ScreenHeight);
-            World.AspectRatio = (double)Renderer.ScreenWidth / (double)Renderer.ScreenHeight;
+            GL.Viewport(0, 0, Screen.Width, Screen.Height);
+            World.AspectRatio = (double)Screen.Width / (double)Screen.Height;
             World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
             GL.MatrixMode(MatrixMode.Projection);
             Matrix4d perspective = Matrix4d.CreatePerspectiveFieldOfView(World.VerticalViewingAngle, World.AspectRatio, 0.2, 1000.0);
@@ -581,8 +582,8 @@ namespace OpenBve {
 	                break;
 	            case Key.F:
 	            case Key.F1:
-	                Renderer.OptionWireframe = !Renderer.OptionWireframe;
-	                if (Renderer.OptionWireframe)
+	                LibRender.Renderer.OptionWireframe = !LibRender.Renderer.OptionWireframe;
+	                if (LibRender.Renderer.OptionWireframe)
 	                {
 	                    GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
 	                }
@@ -593,7 +594,7 @@ namespace OpenBve {
 	                break;
 	            case Key.N:
 	            case Key.F2:
-	                Renderer.OptionNormals = !Renderer.OptionNormals;
+		            LibRender.Renderer.OptionNormals = !LibRender.Renderer.OptionNormals;
 	                break;
 	            case Key.L:
 	            case Key.F3:

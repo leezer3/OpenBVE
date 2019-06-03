@@ -33,8 +33,16 @@ namespace LibRender
 		public static bool OptionLighting = true;
 		/// <summary>Whether normals rendering is enabled in the debug options</summary>
 		public static bool OptionNormals = false;
+		/// <summary>Whether backface culling is enabled</summary>
+		public static bool OptionBackfaceCulling = true;
 		/// <summary>Whether wireframe rendering is enabled in the debug options</summary>
 		public static bool OptionWireframe = false;
+		/// <summary>The current viewport mode</summary>
+		public static ViewPortMode CurrentViewPortMode = ViewPortMode.Scenery;
+		/// <summary>The current debug output mode</summary>
+		public static OutputMode CurrentOutputMode = OutputMode.Default;
+		/// <summary>The previous debug output mode</summary>
+		public static OutputMode PreviousOutputMode = OutputMode.Default;
 		/// <summary>Holds the lock for GDI Plus functions</summary>
 		public static readonly object gdiPlusLock = new object();
 

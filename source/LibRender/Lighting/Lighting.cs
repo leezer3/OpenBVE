@@ -121,7 +121,7 @@ namespace LibRender
 			OptionLightPosition = Vector3.CosineInterpolate(LightDefinitions[j].LightPosition, LightDefinitions[k].LightPosition, mu);
 
 			//Interpolate the cab brightness value
-			var mu2 = (1 - System.Math.Cos(mu * System.Math.PI)) / 2;
+			var mu2 = (1 - Math.Cos(mu * Math.PI)) / 2;
 			DynamicCabBrightness = (cb1 * (1 - mu2) + cb2 * mu2);
 			//Reinitialize the lighting model with the new information
 			InitializeLighting();

@@ -20,18 +20,7 @@ namespace OpenBve
 		/// </summary>
 		private static int ObjectCount;
 		
-		private struct ObjectListReference
-		{
-			/// <summary>The type of list.</summary>
-			internal readonly ObjectListType Type;
-			/// <summary>The index in the specified list.</summary>
-			internal int Index;
-			internal ObjectListReference(ObjectListType type, int index)
-			{
-				this.Type = type;
-				this.Index = index;
-			}
-		}
+		
 
 		private class BoundingBox
 		{

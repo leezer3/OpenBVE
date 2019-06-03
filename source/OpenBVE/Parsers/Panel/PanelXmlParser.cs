@@ -305,7 +305,7 @@ namespace OpenBve.Parsers.Panel
 
 				// camera restriction
 				double WorldWidth, WorldHeight;
-				if (Screen.Width >= Screen.Height)
+				if (LibRender.Screen.Width >= LibRender.Screen.Height)
 				{
 					WorldWidth = 2.0 * Math.Tan(0.5 * World.HorizontalViewingAngle) * EyeDistance;
 					WorldHeight = WorldWidth / World.AspectRatio;
@@ -1554,7 +1554,7 @@ namespace OpenBve.Parsers.Panel
 		internal static void CreateTouchElement(TrainManager.ElementsGroup Group, Vector2 Location, Vector2 Size, int ScreenIndex, int SoundIndex, Translations.Command Command, int CommandOption, Vector2 RelativeRotationCenter, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver)
 		{
 			double WorldWidth, WorldHeight;
-			if (Screen.Width >= Screen.Height)
+			if (LibRender.Screen.Width >= LibRender.Screen.Height)
 			{
 				WorldWidth = 2.0 * Math.Tan(0.5 * World.HorizontalViewingAngle) * EyeDistance;
 				WorldHeight = WorldWidth / World.AspectRatio;

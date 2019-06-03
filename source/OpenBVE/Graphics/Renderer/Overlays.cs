@@ -24,12 +24,12 @@ namespace OpenBve
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.PushMatrix();
 			GL.LoadIdentity();
-			GL.Ortho(0.0, (double)Screen.Width, (double)Screen.Height, 0.0, -1.0, 1.0);
+			GL.Ortho(0.0, (double)LibRender.Screen.Width, (double)LibRender.Screen.Height, 0.0, -1.0, 1.0);
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.PushMatrix();
 			GL.LoadIdentity();
 			//Check which overlays to show
-			switch (CurrentOutputMode)
+			switch (LibRender.Renderer.CurrentOutputMode)
 			{
 				case OutputMode.Default:
 					
@@ -74,7 +74,7 @@ namespace OpenBve
 									double w = (double)Game.MarkerTextures[i].Width;
 									double h = (double)Game.MarkerTextures[i].Height;
 									GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
-									LibRender.Renderer.RenderOverlayTexture(Game.MarkerTextures[i], (double)Screen.Width - w - 8.0, y, (double)Screen.Width - 8.0, y + h);
+									LibRender.Renderer.RenderOverlayTexture(Game.MarkerTextures[i], (double)LibRender.Screen.Width - w - 8.0, y, (double)LibRender.Screen.Width - 8.0, y + h);
 									y += h + 8.0;
 								}
 							}
@@ -89,7 +89,7 @@ namespace OpenBve
 								int w = Timetable.DefaultTimetableTexture.Width;
 								int h = Timetable.DefaultTimetableTexture.Height;
 								GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
-								LibRender.Renderer.RenderOverlayTexture(Timetable.DefaultTimetableTexture, (double)(Screen.Width - w), Timetable.DefaultTimetablePosition, (double)Screen.Width, (double)h + Timetable.DefaultTimetablePosition);
+								LibRender.Renderer.RenderOverlayTexture(Timetable.DefaultTimetableTexture, (double)(LibRender.Screen.Width - w), Timetable.DefaultTimetablePosition, (double)LibRender.Screen.Width, (double)h + Timetable.DefaultTimetablePosition);
 							}
 						}
 						else if (Timetable.CurrentTimetable == Timetable.TimetableState.Custom & Timetable.CustomObjectsUsed == 0)
@@ -100,7 +100,7 @@ namespace OpenBve
 							int w = Timetable.CurrentCustomTimetableDaytimeTexture.Width;
 							int h = Timetable.CurrentCustomTimetableDaytimeTexture.Height;
 							GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
-							LibRender.Renderer.RenderOverlayTexture(Timetable.CurrentCustomTimetableDaytimeTexture, (double) (Screen.Width - w), Timetable.CustomTimetablePosition, (double) Screen.Width, (double) h + Timetable.CustomTimetablePosition);
+							LibRender.Renderer.RenderOverlayTexture(Timetable.CurrentCustomTimetableDaytimeTexture, (double) (LibRender.Screen.Width - w), Timetable.CustomTimetablePosition, (double) LibRender.Screen.Width, (double) h + Timetable.CustomTimetablePosition);
 						}
 
 						if (Program.CurrentHost.LoadTexture(Timetable.CurrentCustomTimetableDaytimeTexture, OpenGlTextureWrapMode.ClampClamp))
@@ -119,7 +119,7 @@ namespace OpenBve
 							}
 
 							GL.Color4(1.0f, 1.0f, 1.0f, alpha);
-							LibRender.Renderer.RenderOverlayTexture(Timetable.CurrentCustomTimetableDaytimeTexture, (double) (Screen.Width - w), Timetable.CustomTimetablePosition, (double) Screen.Width, (double) h + Timetable.CustomTimetablePosition);
+							LibRender.Renderer.RenderOverlayTexture(Timetable.CurrentCustomTimetableDaytimeTexture, (double) (LibRender.Screen.Width - w), Timetable.CustomTimetablePosition, (double) LibRender.Screen.Width, (double) h + Timetable.CustomTimetablePosition);
 						}
 					}
 					break;
@@ -140,9 +140,9 @@ namespace OpenBve
 			{
 				// pause
 				GL.Color4(0.0f, 0.0f, 0.0f, 0.5f);
-				LibRender.Renderer.RenderOverlaySolid(0.0, 0.0, (double)Screen.Width, (double)Screen.Height);
+				LibRender.Renderer.RenderOverlaySolid(0.0, 0.0, (double)LibRender.Screen.Width, (double)LibRender.Screen.Height);
 				GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
-				LibRender.Renderer.DrawString(Fonts.VeryLargeFont, "PAUSE", new System.Drawing.Point(Screen.Width / 2, Screen.Height / 2), TextAlignment.CenterMiddle, Color128.White, true);
+				LibRender.Renderer.DrawString(Fonts.VeryLargeFont, "PAUSE", new System.Drawing.Point(LibRender.Screen.Width / 2, LibRender.Screen.Height / 2), TextAlignment.CenterMiddle, Color128.White, true);
 			}
 			else if (Game.CurrentInterface == Game.InterfaceType.Menu)
 				Game.Menu.Draw();
@@ -174,7 +174,7 @@ namespace OpenBve
 			if (FadeToBlackDueToChangeEnds > 0.0 & (World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead))
 			{
 				GL.Color4(0.0, 0.0, 0.0, FadeToBlackDueToChangeEnds);
-				LibRender.Renderer.RenderOverlaySolid(0.0, 0.0, (double)Screen.Width, (double)Screen.Height);
+				LibRender.Renderer.RenderOverlaySolid(0.0, 0.0, (double)LibRender.Screen.Width, (double)LibRender.Screen.Height);
 			}
 			// finalize
 			GL.PopMatrix();

@@ -105,7 +105,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
 			// application
 			currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntialiasingLevel);
-			currentGameWindow = new RouteViewer(Renderer.ScreenWidth, Renderer.ScreenHeight, currentGraphicsMode, "Route Viewer", GameWindowFlags.Default);
+			currentGameWindow = new RouteViewer(LibRender.Screen.Width, LibRender.Screen.Height, currentGraphicsMode, "Route Viewer", GameWindowFlags.Default);
 			currentGameWindow.Visible = true;
 			currentGameWindow.TargetUpdateFrequency = 0;
 			currentGameWindow.TargetRenderFrequency = 0;
@@ -131,8 +131,8 @@ namespace OpenBve {
 
 		// update viewport
 		internal static void UpdateViewport() {
-			GL.Viewport(0, 0, Renderer.ScreenWidth, Renderer.ScreenHeight);
-			World.AspectRatio = (double)Renderer.ScreenWidth / (double)Renderer.ScreenHeight;
+			GL.Viewport(0, 0, LibRender.Screen.Width, LibRender.Screen.Height);
+			World.AspectRatio = (double)LibRender.Screen.Width / (double)LibRender.Screen.Height;
 			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();
@@ -308,9 +308,9 @@ namespace OpenBve {
 						{
 							Renderer.RenderScene(0.0);
 							currentGameWindow.SwapBuffers();
-							bitmap = new Bitmap(Renderer.ScreenWidth, Renderer.ScreenHeight, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+							bitmap = new Bitmap(LibRender.Screen.Width, LibRender.Screen.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 							BitmapData bData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadWrite, bitmap.PixelFormat);
-							GL.ReadPixels(0, 0, Renderer.ScreenWidth, Renderer.ScreenHeight, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bData.Scan0);
+							GL.ReadPixels(0, 0, LibRender.Screen.Width, LibRender.Screen.Height, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bData.Scan0);
 							bitmap.UnlockBits(bData);
 							bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
 							Renderer.TextureLoadingBkg = TextureManager.RegisterTexture(bitmap, new TextureParameters(null, null));
@@ -480,9 +480,9 @@ namespace OpenBve {
 					CpuReducedMode = false;
 					break;
 				case Key.F:
-					Renderer.OptionWireframe = !Renderer.OptionWireframe;
+					LibRender.Renderer.OptionWireframe = !LibRender.Renderer.OptionWireframe;
 					CpuReducedMode = false;
-					if (Renderer.OptionWireframe)
+					if (LibRender.Renderer.OptionWireframe)
 					{
 						GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
 					}
@@ -492,7 +492,7 @@ namespace OpenBve {
 					}
 					break;
 				case Key.N:
-					Renderer.OptionNormals = !Renderer.OptionNormals;
+					LibRender.Renderer.OptionNormals = !LibRender.Renderer.OptionNormals;
 					CpuReducedMode = false;
 					break;
 				case Key.E:

@@ -89,19 +89,19 @@ namespace OpenBve
 	    {
 		    if (Mode == ViewPortChangeMode.ChangeToCab)
 		    {
-			    CurrentViewPortMode = ViewPortMode.Cab;
+			    LibRender.Renderer.CurrentViewPortMode = ViewPortMode.Cab;
 		    }
 		    else
 		    {
-			    CurrentViewPortMode = ViewPortMode.Scenery;
+			    LibRender.Renderer.CurrentViewPortMode = ViewPortMode.Scenery;
 		    }
 
-		    GL.Viewport(0, 0, Screen.Width, Screen.Height);
-		    World.AspectRatio = (double)Screen.Width / (double)Screen.Height;
+		    GL.Viewport(0, 0, LibRender.Screen.Width, LibRender.Screen.Height);
+		    World.AspectRatio = (double)LibRender.Screen.Width / (double)LibRender.Screen.Height;
 		    World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
 		    GL.MatrixMode(MatrixMode.Projection);
 		    GL.LoadIdentity();
-		    if (CurrentViewPortMode == ViewPortMode.Cab)
+		    if (LibRender.Renderer.CurrentViewPortMode == ViewPortMode.Cab)
 		    {
 
 			    Matrix4d perspective = Matrix4d.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.025, 50.0);

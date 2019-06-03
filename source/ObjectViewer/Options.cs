@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
+using Screen = LibRender.Screen;
 
 namespace OpenBve
 {
@@ -73,7 +74,7 @@ namespace OpenBve
                                                 {
                                                     a = 960;
                                                 }
-                                                Renderer.ScreenWidth = a;
+                                                Screen.Width = a;
                                             } break;
                                         case "windowheight":
                                             {
@@ -82,7 +83,7 @@ namespace OpenBve
                                                 {
                                                     a = 600;
                                                 }
-                                                Renderer.ScreenHeight = a;
+                                                Screen.Height = a;
                                             } break;
                                     } break;
                                 case "quality":
@@ -180,8 +181,8 @@ namespace OpenBve
                 Builder.AppendLine("; Object Viewer specific options file");
                 Builder.AppendLine();
                 Builder.AppendLine("[display]");
-                Builder.AppendLine("windowWidth = " + Renderer.ScreenWidth.ToString(Culture));
-                Builder.AppendLine("windowHeight = " + Renderer.ScreenHeight.ToString(Culture));
+                Builder.AppendLine("windowWidth = " + Screen.Width.ToString(Culture));
+                Builder.AppendLine("windowHeight = " + Screen.Height.ToString(Culture));
                 Builder.AppendLine();
                 Builder.AppendLine("[quality]");
                 {

@@ -53,8 +53,8 @@ namespace OpenBve {
 			{
 				// choose logo size according to screen width
 				string	fName;
-				if (Screen.Width > 2048)		fName	= LogoFileName[2];
-				else if (Screen.Width > 1024)	fName	= LogoFileName[1];
+				if (LibRender.Screen.Width > 2048)		fName	= LogoFileName[2];
+				else if (LibRender.Screen.Width > 1024)	fName	= LogoFileName[1];
 				else							fName	= LogoFileName[0];
 				string logoFile = OpenBveApi.Path.CombineFile(Path, fName);
 				if (System.IO.File.Exists(logoFile))
@@ -94,31 +94,31 @@ namespace OpenBve {
 			GL.PushMatrix();
 			// fill the screen with background colour
 			GL.Color4(bkgR, bkgG, bkgB, bkgA);
-			LibRender.Renderer.RenderOverlaySolid(0.0, 0.0, (double)Screen.Width, (double)Screen.Height);
+			LibRender.Renderer.RenderOverlaySolid(0.0, 0.0, (double)LibRender.Screen.Width, (double)LibRender.Screen.Height);
 			GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
 
 			// BACKGROUND IMAGE
 			int		fontHeight	= (int)Fonts.SmallFont.FontSize;
 			int		logoBottom;
 //			int		versionTop;
-			int		halfWidth	= Screen.Width/2;
+			int		halfWidth	= LibRender.Screen.Width/2;
 			if (TextureLoadingBkg != null)
 			{
 				int bkgHeight, bkgWidth;
 				// stretch the background image to fit at least one screen dimension
 				double ratio = (double) TextureLoadingBkg.Width/(double) TextureLoadingBkg.Height;
-				if (Screen.Width/ratio > Screen.Height) // if screen ratio is shorter than bkg...
+				if (LibRender.Screen.Width/ratio > LibRender.Screen.Height) // if screen ratio is shorter than bkg...
 				{
-					bkgHeight = Screen.Height; // set height to screen height
-					bkgWidth = (int) (Screen.Height*ratio); // and scale width proprtionally
+					bkgHeight = LibRender.Screen.Height; // set height to screen height
+					bkgWidth = (int) (LibRender.Screen.Height*ratio); // and scale width proprtionally
 				}
 				else // if screen ratio is wider than bkg...
 				{
-					bkgWidth = Screen.Width; // set width to screen width
-					bkgHeight = (int) (Screen.Width/ratio); // and scale height accordingly
+					bkgWidth = LibRender.Screen.Width; // set width to screen width
+					bkgHeight = (int) (LibRender.Screen.Width/ratio); // and scale height accordingly
 				}
 				// draw the background image down from the top screen edge
-				LibRender.Renderer.DrawRectangle(TextureLoadingBkg, new Point((Screen.Width - bkgWidth)/2, 0), new Size(bkgWidth, bkgHeight),Color128.White);
+				LibRender.Renderer.DrawRectangle(TextureLoadingBkg, new Point((LibRender.Screen.Width - bkgWidth)/2, 0), new Size(bkgWidth, bkgHeight),Color128.White);
 			}
 			// if the route has no custom loading image, add the openBVE logo
 			// (the route custom image is loaded in OldParsers/CsvRwRouteParser.cs)
@@ -127,18 +127,18 @@ namespace OpenBve {
 				if (TextureLogo != null)
 				{
 					// place the centre of the logo at from the screen top
-					int logoTop = (int) (Screen.Height*logoCentreYFactor - TextureLogo.Height/2.0);
+					int logoTop = (int) (LibRender.Screen.Height*logoCentreYFactor - TextureLogo.Height/2.0);
 					logoBottom = logoTop + TextureLogo.Height;
-					LibRender.Renderer.DrawRectangle(TextureLogo, new Point((Screen.Width - TextureLogo.Width)/2, logoTop),new Size(TextureLogo.Width, TextureLogo.Height), Color128.White);
+					LibRender.Renderer.DrawRectangle(TextureLogo, new Point((LibRender.Screen.Width - TextureLogo.Width)/2, logoTop),new Size(TextureLogo.Width, TextureLogo.Height), Color128.White);
 				}
 			}
 			else
 			{
 					// if custom route image, no logo and leave a conventional black area below the potential logo
 			}
-				logoBottom	= Screen.Height / 2;
+				logoBottom	= LibRender.Screen.Height / 2;
 			// take the height remaining below the logo and divide in 3 horiz. parts
-			int	blankHeight	= (Screen.Height - logoBottom) / 3;
+			int	blankHeight	= (LibRender.Screen.Height - logoBottom) / 3;
 
 			// VERSION NUMBER
 			// place the version above the first division
@@ -152,8 +152,8 @@ namespace OpenBve {
 
 			// PROGRESS MESSAGE AND BAR
 			// place progress bar right below the second division
-			int		progressTop		= Screen.Height - blankHeight;
-			int		progressWidth	= Screen.Width - progrMargin * 2;
+			int		progressTop		= LibRender.Screen.Height - blankHeight;
+			int		progressWidth	= LibRender.Screen.Width - progrMargin * 2;
 			double	routeProgress	= Math.Max(0.0, Math.Min(1.0, Loading.RouteProgress));
 			double	trainProgress	= Math.Max(0.0, Math.Min(1.0, Loading.TrainProgress));
 			// draw progress message right above the second division

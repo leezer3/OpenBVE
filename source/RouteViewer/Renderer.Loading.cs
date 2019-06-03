@@ -53,8 +53,8 @@ namespace OpenBve
 			
 			// choose logo size according to screen width
 			string fName;
-			if (Renderer.ScreenWidth > 2048) fName = LogoFileName[2];
-			else if (Renderer.ScreenWidth > 1024) fName = LogoFileName[1];
+			if (Screen.Width > 2048) fName = LogoFileName[2];
+			else if (Screen.Width > 1024) fName = LogoFileName[1];
 			else fName = LogoFileName[0];
 			fName = OpenBveApi.Path.CombineFile(Path, fName);
 			if (System.IO.File.Exists(fName))
@@ -102,30 +102,30 @@ namespace OpenBve
 
 			// fill the screen with background colour
 			GL.Color4(bkgR, bkgG, bkgB, bkgA);
-			LibRender.Renderer.DrawRectangle(null, new System.Drawing.Point((int)0, (int)0), new System.Drawing.Size((int)Renderer.ScreenWidth, (int)Renderer.ScreenHeight));
+			LibRender.Renderer.DrawRectangle(null, new System.Drawing.Point((int)0, (int)0), new System.Drawing.Size((int)Screen.Width, (int)Screen.Height));
 			GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
 			// BACKGROUND IMAGE
-			int bkgHeight = Renderer.ScreenHeight, bkgWidth = Renderer.ScreenWidth;
+			int bkgHeight = Screen.Height, bkgWidth = Screen.Width;
 			int fontHeight = (int) Fonts.SmallFont.FontSize;
 			int logoBottom;
 			//			int		versionTop;
-			int halfWidth = Renderer.ScreenWidth / 2;
+			int halfWidth = Screen.Width / 2;
 			bool bkgLoaded = TextureLoadingBkg != null;
 			if (TextureLoadingBkg != null && Program.CurrentHost.LoadTexture(TextureLoadingBkg, OpenGlTextureWrapMode.ClampClamp))
 			{
-				if (TextureLoadingBkg.Width != Renderer.ScreenWidth && TextureLoadingBkg.Height != Renderer.ScreenHeight)
+				if (TextureLoadingBkg.Width != Screen.Width && TextureLoadingBkg.Height != Screen.Height)
 				{
 					// stretch the background image to fit at least one screen dimension
 					double ratio = (double) TextureLoadingBkg.Width/ (double) TextureLoadingBkg.Height;
-					if ((double) Renderer.ScreenWidth/ratio > Renderer.ScreenHeight) // if screen ratio is shorter than bkg...
+					if ((double) Screen.Width/ratio > Screen.Height) // if screen ratio is shorter than bkg...
 					{
-						bkgHeight = Renderer.ScreenHeight; // set height to screen height
-						bkgWidth = (int) (Renderer.ScreenWidth*ratio); // and scale width proprtionally
+						bkgHeight = Screen.Height; // set height to screen height
+						bkgWidth = (int) (Screen.Width*ratio); // and scale width proprtionally
 					}
 					else // if screen ratio is wider than bkg...
 					{
-						bkgWidth = Renderer.ScreenWidth; // set width to screen width
-						bkgHeight = (int) (Renderer.ScreenHeight/ratio); // and scale height accordingly
+						bkgWidth = Screen.Width; // set width to screen width
+						bkgHeight = (int) (Screen.Height/ratio); // and scale height accordingly
 					}
 				}
 				
@@ -133,7 +133,7 @@ namespace OpenBve
 				// draw the background image down from the top screen edge
 				try
 				{
-					LibRender.Renderer.DrawRectangle(TextureLoadingBkg, new Point((Renderer.ScreenWidth - bkgWidth)/2, 0), new Size(bkgWidth, bkgHeight), Color128.White);
+					LibRender.Renderer.DrawRectangle(TextureLoadingBkg, new Point((Screen.Width - bkgWidth)/2, 0), new Size(bkgWidth, bkgHeight), Color128.White);
 				}
 				catch
 				{
@@ -146,18 +146,18 @@ namespace OpenBve
 			if (!customLoadScreen && Interface.CurrentOptions.LoadingLogo && TextureLogo != null)
 			{
 				// place the centre of the logo at from the screen top
-				int logoTop = (int)(Renderer.ScreenHeight * logoCentreYFactor - TextureLogo.Height / 2.0);
-				LibRender.Renderer.DrawRectangle(TextureLogo,new Point((Renderer.ScreenWidth - TextureLogo.Width) / 2, logoTop),new Size(TextureLogo.Width, TextureLogo.Height), Color128.White);
+				int logoTop = (int)(Screen.Height * logoCentreYFactor - TextureLogo.Height / 2.0);
+				LibRender.Renderer.DrawRectangle(TextureLogo,new Point((Screen.Width - TextureLogo.Width) / 2, logoTop),new Size(TextureLogo.Width, TextureLogo.Height), Color128.White);
 			}
 			else
 			{
 				// if custom route image, no logo and leave a conventional black area below the potential logo
 			}
-			logoBottom = Renderer.ScreenHeight / 2;
+			logoBottom = Screen.Height / 2;
 			if (!bkgLoaded)				// if the background texture not yet loaded, do nothing else
 				return;
 			// take the height remaining below the logo and divide in 3 horiz. parts
-			int blankHeight = (Renderer.ScreenHeight - logoBottom) / 3;
+			int blankHeight = (Screen.Height - logoBottom) / 3;
 
 			// VERSION NUMBER
 			// place the version above the first division
@@ -169,8 +169,8 @@ namespace OpenBve
 			//				TextAlignment.TopMiddle, Color128.White);
 
 			// place progress bar right below the second division
-			int progressTop = Renderer.ScreenHeight - blankHeight;
-			int progressWidth = Renderer.ScreenWidth - progrMargin * 2;
+			int progressTop = Screen.Height - blankHeight;
+			int progressWidth = Screen.Width - progrMargin * 2;
 			double routeProgress = Math.Max(0.0, Math.Min(1.0, Loading.RouteProgress));
 			if (Interface.CurrentOptions.LoadingProgressBar)
 			{

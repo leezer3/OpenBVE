@@ -22,10 +22,6 @@ using OpenBveApi.Textures;
 namespace OpenBve {
 	internal static partial class Renderer {
 
-		// screen (output window)
-		internal static int ScreenWidth = 960;
-		internal static int ScreenHeight = 600;
-
 		// first frame behavior
 		internal enum LoadTextureImmediatelyMode { NotYet, Yes, NoLonger }
 		internal static LoadTextureImmediatelyMode LoadTexturesImmediately = LoadTextureImmediatelyMode.NotYet;
@@ -74,12 +70,8 @@ namespace OpenBve {
 		private static Texture PointSoundTexture = null;
 
 		// options
-		internal static bool OptionLighting = true;
-		internal static bool OptionNormals = false;
-		internal static bool OptionWireframe = false;
 		internal static bool OptionEvents = false;
 		internal static bool OptionInterface = true;
-		internal static bool OptionBackfaceCulling = true;
 
 		// constants
 		private const float inv255 = 1.0f / 255.0f;
@@ -100,7 +92,7 @@ namespace OpenBve {
 			OverlayList = new ObjectFace[256];
 			OverlayListDistance = new double[256];
 			OverlayListCount = 0;
-			OptionLighting = true;
+			LibRender.Renderer.OptionLighting = true;
 			LibRender.Renderer.OptionAmbientColor = new Color24(160, 160, 160);
 			LibRender.Renderer.OptionDiffuseColor = new Color24(160, 160, 160);
 			LibRender.Renderer.OptionLightPosition = new Vector3(0.215920077052065f, 0.875724044222352f, -0.431840154104129f);
@@ -130,7 +122,7 @@ namespace OpenBve {
 			// initialize
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthMask(true);
-			if (OptionWireframe) {
+			if (LibRender.Renderer.OptionWireframe) {
 				GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			} else
 			{
@@ -161,7 +153,7 @@ namespace OpenBve {
 			//TODO: May be required
 			GL.LoadMatrix(ref lookat);
 			//Glu.gluLookAt(0.0, 0.0, 0.0, dx, dy, dz, ux, uy, uz);
-			if (OptionLighting) {
+			if (LibRender.Renderer.OptionLighting) {
 				GL.Light(LightName.Light0, LightParameter.Position, new float[] { (float)LibRender.Renderer.OptionLightPosition.X, (float)LibRender.Renderer.OptionLightPosition.Y, (float)LibRender.Renderer.OptionLightPosition.Z, 0.0f });
 			}
 			// fog
@@ -203,7 +195,7 @@ namespace OpenBve {
 			GL.Disable(EnableCap.DepthTest);
 			RenderBackground(TimeElapsed);
 			// render polygons
-			if (OptionLighting) {
+			if (LibRender.Renderer.OptionLighting) {
 				if (!LibRender.Renderer.LightingEnabled) {
 					GL.Enable(EnableCap.Lighting);
 					LibRender.Renderer.LightingEnabled = true;
@@ -364,11 +356,11 @@ namespace OpenBve {
 		// render face
 		private static void RenderFace(ref ObjectFace Face, Vector3 Camera) {
 			if (LibRender.Renderer.CullEnabled) {
-				if (!OptionBackfaceCulling || (ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Flags & MeshFace.Face2Mask) != 0) {
+				if (!LibRender.Renderer.OptionBackfaceCulling || (ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Flags & MeshFace.Face2Mask) != 0) {
 					GL.Disable(EnableCap.CullFace);
 					LibRender.Renderer.CullEnabled = false;
 				}
-			} else if (OptionBackfaceCulling) {
+			} else if (LibRender.Renderer.OptionBackfaceCulling) {
 				if ((ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Flags & MeshFace.Face2Mask) == 0) {
 					GL.Enable(EnableCap.CullFace);
 					LibRender.Renderer.CullEnabled = true;
@@ -643,7 +635,7 @@ namespace OpenBve {
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.PushMatrix();
 			GL.LoadIdentity();
-			GL.Ortho(0.0, (double)Renderer.ScreenWidth, (double)Renderer.ScreenHeight, 0.0, -1.0, 1.0);
+			GL.Ortho(0.0, (double)Screen.Width, (double)Screen.Height, 0.0, -1.0, 1.0);
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			// marker
 			if (OptionInterface)
@@ -655,7 +647,7 @@ namespace OpenBve {
 						int w = Game.MarkerTextures[i].Width;
 						int h = Game.MarkerTextures[i].Height;
 						GL.Color4(1.0, 1.0, 1.0, 1.0);
-						LibRender.Renderer.DrawRectangle(Game.MarkerTextures[i], new Point(ScreenWidth - w - 8, y), new Size(w,h));
+						LibRender.Renderer.DrawRectangle(Game.MarkerTextures[i], new Point(Screen.Width - w - 8, y), new Size(w,h));
 						y += h + 8;
 					}
 				}
@@ -667,7 +659,7 @@ namespace OpenBve {
 					LibRender.Renderer.RenderKeys(4, 4, 24, Fonts.SmallFont, Keys);
 					LibRender.Renderer.DrawString(Fonts.SmallFont, "Open route", new Point(32,4), TextAlignment.TopLeft, Color128.White, true);
 					LibRender.Renderer.DrawString(Fonts.SmallFont, "Display the options window", new Point(32, 24), TextAlignment.TopLeft, Color128.White, true);
-					LibRender.Renderer.DrawString(Fonts.SmallFont, "v" + System.Windows.Forms.Application.ProductVersion, new Point(ScreenWidth - 8, ScreenHeight - 8), TextAlignment.BottomRight, Color128.White);
+					LibRender.Renderer.DrawString(Fonts.SmallFont, "v" + System.Windows.Forms.Application.ProductVersion, new Point(Screen.Width - 8, Screen.Height - 8), TextAlignment.BottomRight, Color128.White);
 				} else if (OptionInterface) {
 					// keys
 					string[][] Keys = { new string[] { "F5" }, new string[] { "F7" }, new string[] { "F8" } };
@@ -676,24 +668,24 @@ namespace OpenBve {
 					LibRender.Renderer.DrawString(Fonts.SmallFont, "Open route", new Point(32, 24), TextAlignment.TopLeft, Color128.White, true);
 					LibRender.Renderer.DrawString(Fonts.SmallFont, "Display the options window", new Point(32, 44), TextAlignment.TopLeft, Color128.White, true);
 					Keys = new string[][] { new string[] { "F" }, new string[] { "N" }, new string[] { "E" }, new string[] { "C" }, new string[] { "M" }, new string[] { "I" }};
-					LibRender.Renderer.RenderKeys(ScreenWidth - 20, 4, 16, Fonts.SmallFont, Keys);
-					LibRender.Renderer.DrawString(Fonts.SmallFont, "Wireframe:", new Point(ScreenWidth -32, 4), TextAlignment.TopRight, Color128.White, true);
-					LibRender.Renderer.DrawString(Fonts.SmallFont, "Normals:", new Point(ScreenWidth - 32, 24), TextAlignment.TopRight, Color128.White, true);
-					LibRender.Renderer.DrawString(Fonts.SmallFont, "Events:", new Point(ScreenWidth - 32, 44), TextAlignment.TopRight, Color128.White, true);
-					LibRender.Renderer.DrawString(Fonts.SmallFont, "CPU:", new Point(ScreenWidth - 32, 64), TextAlignment.TopRight, Color128.White, true);
-					LibRender.Renderer.DrawString(Fonts.SmallFont, "Mute:", new Point(ScreenWidth - 32, 84), TextAlignment.TopRight, Color128.White, true);
-					LibRender.Renderer.DrawString(Fonts.SmallFont, "Hide interface:", new Point(ScreenWidth - 32, 104), TextAlignment.TopRight, Color128.White, true);
-					LibRender.Renderer.DrawString(Fonts.SmallFont, (RenderStatsOverlay ? "Hide" : "Show") + " renderer statistics", new Point(ScreenWidth - 32, 124), TextAlignment.TopRight, Color128.White, true);
+					LibRender.Renderer.RenderKeys(Screen.Width - 20, 4, 16, Fonts.SmallFont, Keys);
+					LibRender.Renderer.DrawString(Fonts.SmallFont, "Wireframe:", new Point(Screen.Width -32, 4), TextAlignment.TopRight, Color128.White, true);
+					LibRender.Renderer.DrawString(Fonts.SmallFont, "Normals:", new Point(Screen.Width - 32, 24), TextAlignment.TopRight, Color128.White, true);
+					LibRender.Renderer.DrawString(Fonts.SmallFont, "Events:", new Point(Screen.Width - 32, 44), TextAlignment.TopRight, Color128.White, true);
+					LibRender.Renderer.DrawString(Fonts.SmallFont, "CPU:", new Point(Screen.Width - 32, 64), TextAlignment.TopRight, Color128.White, true);
+					LibRender.Renderer.DrawString(Fonts.SmallFont, "Mute:", new Point(Screen.Width - 32, 84), TextAlignment.TopRight, Color128.White, true);
+					LibRender.Renderer.DrawString(Fonts.SmallFont, "Hide interface:", new Point(Screen.Width - 32, 104), TextAlignment.TopRight, Color128.White, true);
+					LibRender.Renderer.DrawString(Fonts.SmallFont, (RenderStatsOverlay ? "Hide" : "Show") + " renderer statistics", new Point(Screen.Width - 32, 124), TextAlignment.TopRight, Color128.White, true);
 					Keys = new string[][] { new string[] { "F10" } };
-					LibRender.Renderer.RenderKeys(ScreenWidth - 32, 124, 30, Fonts.SmallFont, Keys);
+					LibRender.Renderer.RenderKeys(Screen.Width - 32, 124, 30, Fonts.SmallFont, Keys);
 					Keys = new string[][] { new string[] { null, "W", null }, new string[] { "A", "S", "D" } };
-					LibRender.Renderer.RenderKeys(4, ScreenHeight - 40, 16, Fonts.SmallFont, Keys);
+					LibRender.Renderer.RenderKeys(4, Screen.Height - 40, 16, Fonts.SmallFont, Keys);
 					Keys = new string[][] { new string[] { null, "↑", null }, new string[] { "←", "↓", "→" } };
-					LibRender.Renderer.RenderKeys(0 * ScreenWidth - 48, ScreenHeight - 40, 16, Fonts.SmallFont, Keys);
+					LibRender.Renderer.RenderKeys(0 * Screen.Width - 48, Screen.Height - 40, 16, Fonts.SmallFont, Keys);
 					Keys = new string[][] { new string[] { "P↑" }, new string[] { "P↓" } };
-					LibRender.Renderer.RenderKeys((int)(0.5 * ScreenWidth + 32), ScreenHeight - 40, 24, Fonts.SmallFont, Keys);
+					LibRender.Renderer.RenderKeys((int)(0.5 * Screen.Width + 32), Screen.Height - 40, 24, Fonts.SmallFont, Keys);
 					Keys = new string[][] { new string[] { null, "/", "*" }, new string[] { "7", "8", "9" }, new string[] { "4", "5", "6" }, new string[] { "1", "2", "3" }, new string[] { null, "0", "." } };
-					LibRender.Renderer.RenderKeys(ScreenWidth - 60, ScreenHeight - 100, 16, Fonts.SmallFont, Keys);
+					LibRender.Renderer.RenderKeys(Screen.Width - 60, Screen.Height - 100, 16, Fonts.SmallFont, Keys);
 					if (Program.JumpToPositionEnabled) {
 						LibRender.Renderer.DrawString(Fonts.SmallFont, "Jump to track position:", new Point(4, 80),TextAlignment.TopLeft, Color128.White, true);
 						double distance;
@@ -712,7 +704,7 @@ namespace OpenBve {
 						}
 					}
 					// info
-					double x = 0.5 * (double)ScreenWidth - 256.0;
+					double x = 0.5 * (double) Screen.Width - 256.0;
 					LibRender.Renderer.DrawString(Fonts.SmallFont, "Position: " + GetLengthString(World.CameraCurrentAlignment.TrackPosition) + " (X=" + GetLengthString(World.CameraCurrentAlignment.Position.X) + ", Y=" + GetLengthString(World.CameraCurrentAlignment.Position.Y) + "), Orientation: (Yaw=" + (World.CameraCurrentAlignment.Yaw * 57.2957795130824).ToString("0.00", Culture) + "°, Pitch=" + (World.CameraCurrentAlignment.Pitch * 57.2957795130824).ToString("0.00", Culture) + "°, Roll=" + (World.CameraCurrentAlignment.Roll * 57.2957795130824).ToString("0.00", Culture) + "°)", new Point((int)x, 4), TextAlignment.TopLeft, Color128.White, true);
 					LibRender.Renderer.DrawString(Fonts.SmallFont, "Radius: " + GetLengthString(World.CameraTrackFollower.CurveRadius) + ", Cant: " + (1000.0 * World.CameraTrackFollower.CurveCant).ToString("0", Culture) + " mm, Adhesion=" + (100.0 * World.CameraTrackFollower.AdhesionMultiplier).ToString("0", Culture), new Point((int)x, 20), TextAlignment.TopLeft, Color128.White, true);
 					if (Program.CurrentStation >= 0) {
@@ -788,12 +780,12 @@ namespace OpenBve {
 					}
 					if (RenderStatsOverlay)
 					{
-						LibRender.Renderer.RenderKeys(4, ScreenHeight - 126, 116, Fonts.SmallFont, new string[][] { new string[] { "Renderer Statistics" } });
-						LibRender.Renderer.DrawString(Fonts.SmallFont, "Total static objects: " + ObjectManager.ObjectsUsed, new Point(4, ScreenHeight - 112), TextAlignment.TopLeft, Color128.White, true);
-						LibRender.Renderer.DrawString(Fonts.SmallFont, "Total animated objects: " + ObjectManager.AnimatedWorldObjectsUsed, new Point(4, ScreenHeight - 100), TextAlignment.TopLeft, Color128.White, true);
-						LibRender.Renderer.DrawString(Fonts.SmallFont, "Current framerate: " + Game.InfoFrameRate.ToString("0.0", Culture) + "fps", new Point(4, ScreenHeight - 88), TextAlignment.TopLeft, Color128.White, true);
-						LibRender.Renderer.DrawString(Fonts.SmallFont, "Total opaque faces: " + Game.InfoStaticOpaqueFaceCount, new Point(4, ScreenHeight - 76), TextAlignment.TopLeft, Color128.White, true);
-						LibRender.Renderer.DrawString(Fonts.SmallFont, "Total alpha faces: " + (Renderer.AlphaListCount + Renderer.TransparentColorListCount), new Point(4, ScreenHeight - 64), TextAlignment.TopLeft, Color128.White, true);
+						LibRender.Renderer.RenderKeys(4, Screen.Height - 126, 116, Fonts.SmallFont, new string[][] { new string[] { "Renderer Statistics" } });
+						LibRender.Renderer.DrawString(Fonts.SmallFont, "Total static objects: " + ObjectManager.ObjectsUsed, new Point(4, Screen.Height - 112), TextAlignment.TopLeft, Color128.White, true);
+						LibRender.Renderer.DrawString(Fonts.SmallFont, "Total animated objects: " + ObjectManager.AnimatedWorldObjectsUsed, new Point(4, Screen.Height - 100), TextAlignment.TopLeft, Color128.White, true);
+						LibRender.Renderer.DrawString(Fonts.SmallFont, "Current framerate: " + Game.InfoFrameRate.ToString("0.0", Culture) + "fps", new Point(4, Screen.Height - 88), TextAlignment.TopLeft, Color128.White, true);
+						LibRender.Renderer.DrawString(Fonts.SmallFont, "Total opaque faces: " + Game.InfoStaticOpaqueFaceCount, new Point(4, Screen.Height - 76), TextAlignment.TopLeft, Color128.White, true);
+						LibRender.Renderer.DrawString(Fonts.SmallFont, "Total alpha faces: " + (Renderer.AlphaListCount + Renderer.TransparentColorListCount), new Point(4, Screen.Height - 64), TextAlignment.TopLeft, Color128.White, true);
 					}
 				}
 

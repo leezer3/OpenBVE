@@ -36,8 +36,8 @@ namespace OpenBve
 			{
 				w = 0.0; h = 0.0;
 			}
-			double x = Element.Alignment.X < 0 ? 0.0 : Element.Alignment.X == 0 ? 0.5 * (Screen.Width - w) : Screen.Width - w;
-			double y = Element.Alignment.Y < 0 ? 0.0 : Element.Alignment.Y == 0 ? 0.5 * (Screen.Height - h) : Screen.Height - h;
+			double x = Element.Alignment.X < 0 ? 0.0 : Element.Alignment.X == 0 ? 0.5 * (LibRender.Screen.Width - w) : LibRender.Screen.Width - w;
+			double y = Element.Alignment.Y < 0 ? 0.0 : Element.Alignment.Y == 0 ? 0.5 * (LibRender.Screen.Height - h) : LibRender.Screen.Height - h;
 			x += Element.Position.X;
 			y += Element.Position.Y;
 			// command

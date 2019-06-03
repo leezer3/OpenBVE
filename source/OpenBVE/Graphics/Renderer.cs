@@ -1,5 +1,4 @@
 ﻿using LibRender;
-using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -10,9 +9,7 @@ namespace OpenBve
 {
 	internal static partial class Renderer
 	{
-		private static ViewPortMode CurrentViewPortMode = ViewPortMode.Scenery;
-		internal static OutputMode CurrentOutputMode = OutputMode.Default;
-		internal static OutputMode PreviousOutputMode = OutputMode.Default;
+		
 
 		// the static opaque lists
 		/// <summary>The list of static opaque face groups. Each group contains only objects that are associated the respective group index.</summary>
@@ -30,7 +27,7 @@ namespace OpenBve
 		/// <summary>The list of overlay alpha faces to be rendered.</summary>
 		private static ObjectList OverlayAlpha = new ObjectList();
 
-		internal static bool OptionBackfaceCulling = true;
+		
 
 		// interface options
 		/// <summary>Whether the clock overlay is currently displayed</summary>
@@ -456,13 +453,13 @@ namespace OpenBve
 		{
 			if (LibRender.Renderer.CullEnabled)
 			{
-				if (!OptionBackfaceCulling || (ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Flags & MeshFace.Face2Mask) != 0)
+				if (!LibRender.Renderer.OptionBackfaceCulling || (ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Flags & MeshFace.Face2Mask) != 0)
 				{
 					GL.Disable(EnableCap.CullFace);
 					LibRender.Renderer.CullEnabled = false;
 				}
 			}
-			else if (OptionBackfaceCulling)
+			else if (LibRender.Renderer.OptionBackfaceCulling)
 			{
 				if ((ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Flags & MeshFace.Face2Mask) == 0)
 				{

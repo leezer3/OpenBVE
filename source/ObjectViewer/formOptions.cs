@@ -6,6 +6,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.World;
 using OpenTK.Graphics;
+using Screen = LibRender.Screen;
 
 namespace OpenBve
 {
@@ -18,8 +19,8 @@ namespace OpenBve
             AnsiotropicLevel.Value = Interface.CurrentOptions.AnisotropicFilteringLevel;
             AntialiasingLevel.Value = Interface.CurrentOptions.AntialiasingLevel;
             TransparencyQuality.SelectedIndex = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance ? 0 : 2;
-            width.Value = Renderer.ScreenWidth;
-            height.Value = Renderer.ScreenHeight;
+            width.Value = Screen.Width;
+            height.Value = Screen.Height;
             comboBoxNewXParser.SelectedIndex = (int)Interface.CurrentOptions.CurrentXParser;
             comboBoxNewObjParser.SelectedIndex = (int)Interface.CurrentOptions.CurrentObjParser;
         }
@@ -78,10 +79,10 @@ namespace OpenBve
                     break;
             }
             //Set width and height
-            if (Renderer.ScreenWidth != width.Value || Renderer.ScreenHeight != height.Value)
+            if (Screen.Width != width.Value || Screen.Height != height.Value)
             {
-                Renderer.ScreenWidth = (int) width.Value;
-                Renderer.ScreenHeight = (int) height.Value;
+                Screen.Width = (int) width.Value;
+                Screen.Height = (int) height.Value;
                 Program.currentGameWindow.Width = (int) width.Value;
                 Program.currentGameWindow.Height = (int) height.Value;
                 Program.UpdateViewport();

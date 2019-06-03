@@ -149,10 +149,10 @@ namespace OpenBve
 		/// <param name="Delta">Width and height of picking area in window coordinates</param>
 		private static void UpdateViewportSelection(Vector2 Point, Vector2 Delta)
 		{
-			CurrentViewPortMode = ViewPortMode.Cab;
-			int[] Viewport = new int[] { 0, 0, Screen.Width, Screen.Height };
+			LibRender.Renderer.CurrentViewPortMode = ViewPortMode.Cab;
+			int[] Viewport = new int[] { 0, 0, LibRender.Screen.Width, LibRender.Screen.Height };
 			GL.Viewport(Viewport[0], Viewport[1], Viewport[2], Viewport[3]);
-			World.AspectRatio = (double)Screen.Width / (double)Screen.Height;
+			World.AspectRatio = (double)LibRender.Screen.Width / (double)LibRender.Screen.Height;
 			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();

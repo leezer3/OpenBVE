@@ -308,10 +308,10 @@ namespace OpenBve
 				 * but setting our width / height to zero breaks 
 				 * stuff.....
 				 */
-				Screen.Minimized = true;
+				LibRender.Screen.Minimized = true;
 				return;
 			}
-			Screen.Minimized = false;
+			LibRender.Screen.Minimized = false;
 			Screen.WindowResize(Width,Height);
 		}
 
@@ -942,8 +942,8 @@ namespace OpenBve
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.PushMatrix();
 			GL.LoadIdentity();
-			GL.Ortho(0.0, (double)Screen.Width, (double)Screen.Height, 0.0, -1.0, 1.0);
-			GL.Viewport(0, 0, Screen.Width, Screen.Height);
+			GL.Ortho(0.0, (double)LibRender.Screen.Width, (double)LibRender.Screen.Height, 0.0, -1.0, 1.0);
+			GL.Viewport(0, 0, LibRender.Screen.Width, LibRender.Screen.Height);
 
 			while (!Loading.Complete && !Loading.Cancel)
 			{

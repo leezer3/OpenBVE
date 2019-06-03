@@ -36,7 +36,7 @@ namespace OpenBve {
 			double FullWidth = 480, FullHeight = 440, SemiHeight = 240;
 			double AspectRatio = FullWidth / FullHeight;
 			double WorldWidth, WorldHeight;
-			if (Screen.Width >= Screen.Height) {
+			if (LibRender.Screen.Width >= LibRender.Screen.Height) {
 				WorldWidth = 2.0 * Math.Tan(0.5 * World.HorizontalViewingAngle) * EyeDistance;
 				WorldHeight = WorldWidth / AspectRatio;
 			} else {

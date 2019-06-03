@@ -1,4 +1,5 @@
 ﻿using System;
+using LibRender;
 using OpenTK;
 using OpenTK.Graphics;
 using Vector3 = OpenBveApi.Math.Vector3;
@@ -288,8 +289,8 @@ namespace OpenBve
 
         protected override void OnResize(EventArgs e)
         {
-            Renderer.ScreenWidth = Width;
-            Renderer.ScreenHeight = Height;
+            Screen.Width = Width;
+            Screen.Height = Height;
             Program.UpdateViewport();
         }
 

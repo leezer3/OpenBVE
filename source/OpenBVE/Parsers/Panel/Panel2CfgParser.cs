@@ -245,7 +245,7 @@ namespace OpenBve {
 			}
 			{ // camera restriction
 				double WorldWidth, WorldHeight;
-				if (Screen.Width >= Screen.Height) {
+				if (LibRender.Screen.Width >= LibRender.Screen.Height) {
 					WorldWidth = 2.0 * Math.Tan(0.5 * World.HorizontalViewingAngle) * EyeDistance;
 					WorldHeight = WorldWidth / World.AspectRatio;
 				} else {
@@ -1466,7 +1466,7 @@ namespace OpenBve {
 
 		internal static int CreateElement(TrainManager.ElementsGroup Group, double Left, double Top, double Width, double Height, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelLeft, double PanelRight, double PanelTop, double PanelBottom, Vector2 PanelCenter, Vector2 PanelOrigin, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, Color32 Color, bool AddStateToLastElement) {
 			double WorldWidth, WorldHeight;
-			if (Screen.Width >= Screen.Height) {
+			if (LibRender.Screen.Width >= LibRender.Screen.Height) {
 				WorldWidth = 2.0 * Math.Tan(0.5 * World.HorizontalViewingAngle) * EyeDistance;
 				WorldHeight = WorldWidth / World.AspectRatio;
 			} else {

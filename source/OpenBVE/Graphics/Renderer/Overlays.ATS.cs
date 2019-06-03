@@ -26,8 +26,8 @@ namespace OpenBve
 			int n = CurrentLampCollection.Lamps.Length;
 			double w = (double)CurrentLampCollection.Width + lw + rw;
 			double h = Element.Value2 * n;
-			double x = Element.Alignment.X < 0 ? 0.0 : Element.Alignment.X > 0 ? Screen.Width - w : 0.5 * (Screen.Width - w);
-			double y = Element.Alignment.Y < 0 ? 0.0 : Element.Alignment.Y > 0 ? Screen.Height - h : 0.5 * (Screen.Height - h);
+			double x = Element.Alignment.X < 0 ? 0.0 : Element.Alignment.X > 0 ? LibRender.Screen.Width - w : 0.5 * (LibRender.Screen.Width - w);
+			double y = Element.Alignment.Y < 0 ? 0.0 : Element.Alignment.Y > 0 ? LibRender.Screen.Height - h : 0.5 * (LibRender.Screen.Height - h);
 			x += Element.Position.X;
 			y += Element.Position.Y;
 			for (int j = 0; j < n; j++)

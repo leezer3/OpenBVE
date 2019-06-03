@@ -15,7 +15,7 @@ namespace OpenBve
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			// debug
 			GL.Color4(0.5, 0.5, 0.5, 0.5);
-			LibRender.Renderer.RenderOverlaySolid(0.0f, 0.0f, (double)Screen.Width, (double)Screen.Height);
+			LibRender.Renderer.RenderOverlaySolid(0.0f, 0.0f, (double)LibRender.Screen.Width, (double)LibRender.Screen.Height);
 			// actual handles
 			{
 				string t = "actual: " + (TrainManager.PlayerTrain.Handles.Reverser.Actual == TrainManager.ReverserPosition.Reverse ? "B" : TrainManager.PlayerTrain.Handles.Reverser.Actual == TrainManager.ReverserPosition.Forwards ? "F" : "N");
@@ -44,7 +44,7 @@ namespace OpenBve
 						t += " - " + (TrainManager.PlayerTrain.Handles.LocoBrake.Actual != 0 ? "L" + TrainManager.PlayerTrain.Handles.LocoBrake.Actual.ToString(Culture) : "N");
 					}
 				}
-				LibRender.Renderer.DrawString(Fonts.SmallFont, t, new System.Drawing.Point(2, Screen.Height - 46), TextAlignment.TopLeft, Color128.White, true);
+				LibRender.Renderer.DrawString(Fonts.SmallFont, t, new System.Drawing.Point(2, LibRender.Screen.Height - 46), TextAlignment.TopLeft, Color128.White, true);
 			}
 			// safety handles
 			{
@@ -75,7 +75,7 @@ namespace OpenBve
 						t += " - " + (TrainManager.PlayerTrain.Handles.LocoBrake.Actual != 0 ? "L" + TrainManager.PlayerTrain.Handles.LocoBrake.Actual.ToString(Culture) : "N");
 					}
 				}
-				LibRender.Renderer.DrawString(Fonts.SmallFont, t, new System.Drawing.Point(2, Screen.Height - 32), TextAlignment.TopLeft, Color128.White, true);
+				LibRender.Renderer.DrawString(Fonts.SmallFont, t, new System.Drawing.Point(2, LibRender.Screen.Height - 32), TextAlignment.TopLeft, Color128.White, true);
 			}
 			// driver handles
 			{
@@ -105,7 +105,7 @@ namespace OpenBve
 						t += " - " + (TrainManager.PlayerTrain.Handles.LocoBrake.Actual != 0 ? "L" + TrainManager.PlayerTrain.Handles.LocoBrake.Actual.ToString(Culture) : "N");
 					}
 				}
-				LibRender.Renderer.DrawString(Fonts.SmallFont, t, new System.Drawing.Point(2, Screen.Height - 18), TextAlignment.TopLeft, Color128.White, true);
+				LibRender.Renderer.DrawString(Fonts.SmallFont, t, new System.Drawing.Point(2, LibRender.Screen.Height - 18), TextAlignment.TopLeft, Color128.White, true);
 			}
 			// debug information
 			int texturesLoaded = TextureManager.GetNumberOfLoadedTextures();
@@ -206,7 +206,7 @@ namespace OpenBve
 					}
 					y += 14.0;
 				}
-				else if (y >= (double)Screen.Height - 240.0)
+				else if (y >= (double)LibRender.Screen.Height - 240.0)
 				{
 					x += 280.0;
 					y = 4.0;
@@ -223,7 +223,7 @@ namespace OpenBve
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			// debug
 			GL.Color4(0.5, 0.5, 0.5, 0.5);
-			LibRender.Renderer.RenderOverlaySolid(0.0f, 0.0f, (double)Screen.Width, (double)Screen.Height);
+			LibRender.Renderer.RenderOverlaySolid(0.0f, 0.0f, (double)LibRender.Screen.Width, (double)LibRender.Screen.Height);
 			string[] Lines;
 			if (TrainManager.PlayerTrain.Plugin.Panel.Length > 0)
 			{
@@ -261,7 +261,7 @@ namespace OpenBve
 						LibRender.Renderer.DrawString(Fonts.SmallFont, Lines[i], new System.Drawing.Point((int)x, (int)y), TextAlignment.TopLeft, Color128.White, true);
 					}
 					y += 14.0;
-					if (y > Screen.Height - 20.0)
+					if (y > LibRender.Screen.Height - 20.0)
 					{
 						y = 32.0;
 						x += 80.0;

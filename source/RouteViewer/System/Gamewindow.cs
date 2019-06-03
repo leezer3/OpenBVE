@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
+using LibRender;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -79,8 +80,8 @@ namespace OpenBve
 
         protected override void OnResize(EventArgs e)
         {
-            Renderer.ScreenWidth = Width;
-            Renderer.ScreenHeight = Height;
+            Screen.Width = Width;
+            Screen.Height = Height;
             Program.UpdateViewport();
         }
 
@@ -140,8 +141,8 @@ namespace OpenBve
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.PushMatrix();
 			GL.LoadIdentity();
-			GL.Ortho(0.0, (double)Renderer.ScreenWidth, (double)Renderer.ScreenHeight, 0.0, -1.0, 1.0);
-			GL.Viewport(0, 0, Renderer.ScreenWidth, Renderer.ScreenHeight);
+			GL.Ortho(0.0, (double)Screen.Width, (double)Screen.Height, 0.0, -1.0, 1.0);
+			GL.Viewport(0, 0, Screen.Width, Screen.Height);
 
 			while (!Loading.Complete && !Loading.Cancel)
 			{
