@@ -806,7 +806,6 @@ namespace OpenBve {
 											Texture[] t = new Texture[n];
 											for (int j = 0; j < n; j++) {
 												TextureManager.RegisterTexture(Number, new TextureParameters(new TextureClipRegion(w - Width, j * Height, Width, Height), Color24.Blue), out t[j]);
-												//TextureManager.UseTexture(t[j], TextureManager.UseMode.Normal);
 											}
 											{ // hundreds
 												int k = -1;
