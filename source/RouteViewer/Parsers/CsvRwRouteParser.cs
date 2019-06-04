@@ -1919,8 +1919,8 @@ namespace OpenBve {
 										if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], out phi)) {
 											Interface.AddMessage(MessageType.Error, false, "Phi is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 										}
-										theta *= 0.0174532925199433;
-										phi *= 0.0174532925199433;
+										theta = theta.ToRadians();
+										phi = phi.ToRadians();
 										double dx = Math.Cos(theta) * Math.Sin(phi);
 										double dy = -Math.Sin(theta);
 										double dz = Math.Cos(theta) * Math.Cos(phi);
@@ -3429,9 +3429,9 @@ namespace OpenBve {
 												Data.Blocks[BlockIndex].Signal[n].SignalObjectIndex = objidx;
 												Data.Blocks[BlockIndex].Signal[n].X = x;
 												Data.Blocks[BlockIndex].Signal[n].Y = y < 0.0 ? 4.8 : y;
-												Data.Blocks[BlockIndex].Signal[n].Yaw = 0.0174532925199433 * yaw;
-												Data.Blocks[BlockIndex].Signal[n].Pitch = 0.0174532925199433 * pitch;
-												Data.Blocks[BlockIndex].Signal[n].Roll = 0.0174532925199433 * roll;
+												Data.Blocks[BlockIndex].Signal[n].Yaw = yaw.ToRadians();
+												Data.Blocks[BlockIndex].Signal[n].Pitch = pitch.ToRadians();
+												Data.Blocks[BlockIndex].Signal[n].Roll = roll.ToRadians();
 												Data.Blocks[BlockIndex].Signal[n].ShowObject = true;
 												Data.Blocks[BlockIndex].Signal[n].ShowPost = y < 0.0;
 											} else {
@@ -3515,9 +3515,9 @@ namespace OpenBve {
 											Data.Blocks[BlockIndex].Signal[n].SignalObjectIndex = -1;
 											Data.Blocks[BlockIndex].Signal[n].X = x;
 											Data.Blocks[BlockIndex].Signal[n].Y = y < 0.0 ? 4.8 : y;
-											Data.Blocks[BlockIndex].Signal[n].Yaw = 0.0174532925199433 * yaw;
-											Data.Blocks[BlockIndex].Signal[n].Pitch = 0.0174532925199433 * pitch;
-											Data.Blocks[BlockIndex].Signal[n].Roll = 0.0174532925199433 * roll;
+											Data.Blocks[BlockIndex].Signal[n].Yaw = yaw.ToRadians();
+											Data.Blocks[BlockIndex].Signal[n].Pitch = pitch.ToRadians();
+											Data.Blocks[BlockIndex].Signal[n].Roll = roll.ToRadians();
 											Data.Blocks[BlockIndex].Signal[n].ShowObject = x != 0.0;
 											Data.Blocks[BlockIndex].Signal[n].ShowPost = x != 0.0 & y < 0.0;
 										}
@@ -3555,9 +3555,9 @@ namespace OpenBve {
 											Data.Blocks[BlockIndex].Signal[n].SignalObjectIndex = -1;
 											Data.Blocks[BlockIndex].Signal[n].X = x;
 											Data.Blocks[BlockIndex].Signal[n].Y = y < 0.0 ? 4.8 : y;
-											Data.Blocks[BlockIndex].Signal[n].Yaw = yaw * 0.0174532925199433;
-											Data.Blocks[BlockIndex].Signal[n].Pitch = pitch * 0.0174532925199433;
-											Data.Blocks[BlockIndex].Signal[n].Roll = roll * 0.0174532925199433;
+											Data.Blocks[BlockIndex].Signal[n].Yaw = yaw.ToRadians();
+											Data.Blocks[BlockIndex].Signal[n].Pitch = pitch.ToRadians();
+											Data.Blocks[BlockIndex].Signal[n].Roll = roll.ToRadians();
 											Data.Blocks[BlockIndex].Signal[n].ShowObject = x != 0.0;
 											Data.Blocks[BlockIndex].Signal[n].ShowPost = x != 0.0 & y < 0.0;
 										}
@@ -3651,9 +3651,9 @@ namespace OpenBve {
 												Data.Blocks[BlockIndex].DestinationChanges[n].NextDestination = nextDestination;
 												Data.Blocks[BlockIndex].DestinationChanges[n].X = x;
 												Data.Blocks[BlockIndex].DestinationChanges[n].Y = y;
-												Data.Blocks[BlockIndex].DestinationChanges[n].Yaw = yaw * 0.0174532925199433;
-												Data.Blocks[BlockIndex].DestinationChanges[n].Pitch = pitch * 0.0174532925199433;
-												Data.Blocks[BlockIndex].DestinationChanges[n].Roll = roll * 0.0174532925199433;
+												Data.Blocks[BlockIndex].DestinationChanges[n].Yaw = yaw.ToRadians();
+												Data.Blocks[BlockIndex].DestinationChanges[n].Pitch = pitch.ToRadians();
+												Data.Blocks[BlockIndex].DestinationChanges[n].Roll = roll.ToRadians();
 											}
 										}
 									}
@@ -3730,9 +3730,9 @@ namespace OpenBve {
 												Data.Blocks[BlockIndex].Transponder[n].ShowDefaultObject = false;
 												Data.Blocks[BlockIndex].Transponder[n].X = x;
 												Data.Blocks[BlockIndex].Transponder[n].Y = y;
-												Data.Blocks[BlockIndex].Transponder[n].Yaw = yaw * 0.0174532925199433;
-												Data.Blocks[BlockIndex].Transponder[n].Pitch = pitch * 0.0174532925199433;
-												Data.Blocks[BlockIndex].Transponder[n].Roll = roll * 0.0174532925199433;
+												Data.Blocks[BlockIndex].Transponder[n].Yaw = yaw.ToRadians();
+												Data.Blocks[BlockIndex].Transponder[n].Pitch = pitch.ToRadians();
+												Data.Blocks[BlockIndex].Transponder[n].Roll = roll.ToRadians();
 											}
 										}
 									} break;
@@ -3788,9 +3788,9 @@ namespace OpenBve {
 											Data.Blocks[BlockIndex].Transponder[n].BeaconStructureIndex = -1;
 											Data.Blocks[BlockIndex].Transponder[n].X = x;
 											Data.Blocks[BlockIndex].Transponder[n].Y = y;
-											Data.Blocks[BlockIndex].Transponder[n].Yaw = yaw * 0.0174532925199433;
-											Data.Blocks[BlockIndex].Transponder[n].Pitch = pitch * 0.0174532925199433;
-											Data.Blocks[BlockIndex].Transponder[n].Roll = roll * 0.0174532925199433;
+											Data.Blocks[BlockIndex].Transponder[n].Yaw = yaw.ToRadians();
+											Data.Blocks[BlockIndex].Transponder[n].Pitch = pitch.ToRadians();
+											Data.Blocks[BlockIndex].Transponder[n].Roll = roll.ToRadians();
 											if (type == 2) {
 												Data.Blocks[BlockIndex].Transponder[n].OptionalInteger = CurrentStop >= 0 ? CurrentStop : 0;
 											} else {
@@ -4740,9 +4740,9 @@ namespace OpenBve {
 														Data.Blocks[BlockIndex].GroundFreeObj[n].Type = sttype;
 														Data.Blocks[BlockIndex].GroundFreeObj[n].X = x;
 														Data.Blocks[BlockIndex].GroundFreeObj[n].Y = y;
-														Data.Blocks[BlockIndex].GroundFreeObj[n].Yaw = yaw * 0.0174532925199433;
-														Data.Blocks[BlockIndex].GroundFreeObj[n].Pitch = pitch * 0.0174532925199433;
-														Data.Blocks[BlockIndex].GroundFreeObj[n].Roll = roll * 0.0174532925199433;
+														Data.Blocks[BlockIndex].GroundFreeObj[n].Yaw = yaw.ToRadians();
+														Data.Blocks[BlockIndex].GroundFreeObj[n].Pitch = pitch.ToRadians();
+														Data.Blocks[BlockIndex].GroundFreeObj[n].Roll = roll.ToRadians();
 													} else {
 														if (idx >= Data.Blocks[BlockIndex].RailFreeObj.Length) {
 															Array.Resize<FreeObj[]>(ref Data.Blocks[BlockIndex].RailFreeObj, idx + 1);
@@ -4759,9 +4759,9 @@ namespace OpenBve {
 														Data.Blocks[BlockIndex].RailFreeObj[idx][n].Type = sttype;
 														Data.Blocks[BlockIndex].RailFreeObj[idx][n].X = x;
 														Data.Blocks[BlockIndex].RailFreeObj[idx][n].Y = y;
-														Data.Blocks[BlockIndex].RailFreeObj[idx][n].Yaw = yaw * 0.0174532925199433;
-														Data.Blocks[BlockIndex].RailFreeObj[idx][n].Pitch = pitch * 0.0174532925199433;
-														Data.Blocks[BlockIndex].RailFreeObj[idx][n].Roll = roll * 0.0174532925199433;
+														Data.Blocks[BlockIndex].RailFreeObj[idx][n].Yaw = yaw.ToRadians();
+														Data.Blocks[BlockIndex].RailFreeObj[idx][n].Pitch = pitch.ToRadians();
+														Data.Blocks[BlockIndex].RailFreeObj[idx][n].Roll = roll.ToRadians();
 													}
 												}
 											}
@@ -4922,9 +4922,9 @@ namespace OpenBve {
 											Data.Blocks[BlockIndex].PointsOfInterest[n].RailIndex = idx;
 											Data.Blocks[BlockIndex].PointsOfInterest[n].X = x;
 											Data.Blocks[BlockIndex].PointsOfInterest[n].Y = y;
-											Data.Blocks[BlockIndex].PointsOfInterest[n].Yaw = 0.0174532925199433 * yaw;
-											Data.Blocks[BlockIndex].PointsOfInterest[n].Pitch = 0.0174532925199433 * pitch;
-											Data.Blocks[BlockIndex].PointsOfInterest[n].Roll = 0.0174532925199433 * roll;
+											Data.Blocks[BlockIndex].PointsOfInterest[n].Yaw = yaw.ToRadians();
+											Data.Blocks[BlockIndex].PointsOfInterest[n].Pitch = pitch.ToRadians();
+											Data.Blocks[BlockIndex].PointsOfInterest[n].Roll = roll.ToRadians();
 											Data.Blocks[BlockIndex].PointsOfInterest[n].Text = text;
 										}
 									} break;

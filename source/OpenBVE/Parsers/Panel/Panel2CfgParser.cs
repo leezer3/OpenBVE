@@ -279,7 +279,6 @@ namespace OpenBve {
 					OpenBVEGame.RunInRenderThread(() =>
 					{
 						Program.CurrentHost.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
-						//Program.CurrentHost.LoadTexture(tnight, OpenGlTextureWrapMode.ClampClamp);
 					});
 					CreateElement(Train.Cars[Car].CarSections[0].Groups[0], 0.0, 0.0, tday.Width, tday.Height, new Vector2(0.5, 0.5), 0.0, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
 				}
@@ -593,9 +592,6 @@ namespace OpenBve {
 												f = GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
 												break;
 										}
-										//Convert angles from degrees to radians
-										InitialAngle *= 0.0174532925199433;
-										LastAngle *= 0.0174532925199433;
 										double a0 = (InitialAngle * Maximum - LastAngle * Minimum) / (Maximum - Minimum);
 										double a1 = (LastAngle - InitialAngle) / (Maximum - Minimum);
 										f += " " + a1.ToString(Culture) + " * " + a0.ToString(Culture) + " +";
@@ -605,8 +601,8 @@ namespace OpenBve {
 										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction = new FunctionScript(Program.CurrentHost, f, false);
 										if (Backstop)
 										{
-											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction.Minimum = InitialAngle;
-											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction.Maximum = LastAngle;
+											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction.Minimum = InitialAngle.ToRadians();
+											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction.Maximum = LastAngle.ToRadians();
 										}
 									}
 								} break;
@@ -989,13 +985,13 @@ namespace OpenBve {
 													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out InitialAngle)) {
 														Interface.AddMessage(MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
-														InitialAngle *= 0.0174532925199433;
+														InitialAngle = InitialAngle.ToRadians();
 													} break;
 												case "lastangle":
 													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out LastAngle)) {
 														Interface.AddMessage(MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
-														LastAngle *= 0.0174532925199433;
+														LastAngle = LastAngle.ToRadians();
 													} break;
 												case "minimum":
 													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Minimum)) {

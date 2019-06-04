@@ -497,7 +497,7 @@ namespace Plugin
 								if (a != 0.0) {
 									t = 1.0 / Math.Sqrt(t);
 									r *= t;
-									a *= 0.0174532925199433;
+									a = a.ToRadians();
 									ApplyRotation(Builder, r, a);
 									if (cmd == "rotateall") {
 										Object.ApplyRotation(r, a);

@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using OpenTK;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 
 namespace OpenBve {
 	/// <summary>Provides methods for starting the program, including the Main procedure.</summary>
@@ -304,8 +305,7 @@ namespace OpenBve {
 			// begin HACK //
 			
 			//One degree in radians
-			const double degrees = 0.0174532925199433;
-			World.VerticalViewingAngle = 45.0 * degrees;
+			World.VerticalViewingAngle = 45.0.ToRadians();
 			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
 			World.OriginalVerticalViewingAngle = World.VerticalViewingAngle;
 			World.ExtraViewingDistance = 50.0;

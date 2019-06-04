@@ -316,7 +316,7 @@ namespace OpenBve {
 														Interface.AddMessage(MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														Angle = 0.785398163397449;
 													} else {
-														Angle *= 0.0174532925199433;
+														Angle = Angle.ToRadians();
 													} break;
 											}
 										} i++;
@@ -547,7 +547,7 @@ namespace OpenBve {
 														Interface.AddMessage(MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														Angle = 1.0471975511966;
 													} else {
-														Angle *= 0.0174532925199433;
+														Angle = Angle.ToRadians();
 													} break;
 												case "maximum":
 												case "最大":

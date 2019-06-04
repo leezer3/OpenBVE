@@ -880,9 +880,6 @@ namespace OpenBve.Parsers.Panel
 										f = Panel2CfgParser.GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
 										break;
 								}
-								//Convert angles from degrees to radians
-								InitialAngle *= 0.0174532925199433;
-								LastAngle *= 0.0174532925199433;
 								double a0 = (InitialAngle * Maximum - LastAngle * Minimum) / (Maximum - Minimum);
 								double a1 = (LastAngle - InitialAngle) / (Maximum - Minimum);
 								f += " " + a1.ToString(Culture) + " * " + a0.ToString(Culture) + " +";
@@ -893,8 +890,8 @@ namespace OpenBve.Parsers.Panel
 								CarSection.Groups[GroupIndex].Elements[j].RotateZFunction = new FunctionScript(Program.CurrentHost, f, false);
 								if (Backstop)
 								{
-									CarSection.Groups[GroupIndex].Elements[j].RotateZFunction.Minimum = InitialAngle;
-									CarSection.Groups[GroupIndex].Elements[j].RotateZFunction.Maximum = LastAngle;
+									CarSection.Groups[GroupIndex].Elements[j].RotateZFunction.Minimum = InitialAngle.ToRadians();
+									CarSection.Groups[GroupIndex].Elements[j].RotateZFunction.Maximum = LastAngle.ToRadians();
 								}
 							}
 						}
@@ -1335,7 +1332,7 @@ namespace OpenBve.Parsers.Panel
 										}
 										else
 										{
-											InitialAngle *= 0.0174532925199433;
+											InitialAngle = InitialAngle.ToRadians();
 										}
 										break;
 									case "lastangle":
@@ -1345,7 +1342,7 @@ namespace OpenBve.Parsers.Panel
 										}
 										else
 										{
-											LastAngle *= 0.0174532925199433;
+											LastAngle = LastAngle.ToRadians();
 										}
 										break;
 									case "minimum":

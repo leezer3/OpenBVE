@@ -380,8 +380,7 @@ namespace OpenBve
 
 				if (Rotation.Z != 0.0)
 				{
-					//Convert to radians
-					Rotation.Z *= 0.0174532925199433;
+					Rotation.Z = Rotation.Z.ToRadians();
 					//Apply rotation
 					ApplyRotation(Builder, 1, 0, 0, Rotation.Z);
 				}
@@ -390,16 +389,14 @@ namespace OpenBve
 				if (Rotation.X != 0.0)
                 {
                     //This is actually the Y-Axis rotation
-                    //Convert to radians
-                    Rotation.X *= 0.0174532925199433;
+                    Rotation.X = Rotation.X.ToRadians();
                     //Apply rotation
                     ApplyRotation(Builder, 0, 1, 0, Rotation.X);
                 }
                 if (Rotation.Y != 0.0)
                 {
                     //This is actually the X-Axis rotation
-                    //Convert to radians
-                    Rotation.Y *= 0.0174532925199433;
+                    Rotation.Y = Rotation.Y.ToRadians();
                     //Apply rotation
                     ApplyRotation(Builder, 0, 0, 1, Rotation.Y);
                 }

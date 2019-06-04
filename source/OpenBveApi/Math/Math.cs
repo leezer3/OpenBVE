@@ -4,7 +4,7 @@ using System.Linq;
 namespace OpenBveApi.Math {
 
 	/// <summary>Contains methods required for parsing differently formatted numbers</summary>
-	public class NumberFormats
+	public static class NumberFormats
 	{
 		/// <summary>Parses a double formatted as a Visual Basic 6 string</summary>
 		/// <param name="Expression">The expression to parse</param>
@@ -167,6 +167,12 @@ namespace OpenBveApi.Math {
 					return false;
 				}
 			}
+		}
+
+		/// <summary>Converts a value given in degrees to Radians</summary>
+		public static double ToRadians(this double degrees)
+		{
+			return degrees * 0.0174532925199433;
 		}
 
 		/// <summary>Gets the modulous of two numbers</summary>

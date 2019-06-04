@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using OpenBveApi.World;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenTK;
 using OpenTK.Graphics;
@@ -136,7 +137,7 @@ namespace OpenBve {
 			World.AbsoluteCameraDirection.Normalize();
 			World.AbsoluteCameraSide.Normalize();
 			World.AbsoluteCameraUp = Vector3.Cross(World.AbsoluteCameraDirection, World.AbsoluteCameraSide);
-			World.VerticalViewingAngle = 45.0 * 0.0174532925199433;
+			World.VerticalViewingAngle = 45.0.ToRadians();
 			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
 			World.OriginalVerticalViewingAngle = World.VerticalViewingAngle;
 		}
