@@ -21,7 +21,7 @@ namespace OpenBve
 			internal bool SignedCant;
 			internal bool FogTransitionMode;
 			internal StructureData Structure;
-			internal SignalData[] Signals;
+			internal SignalDictionary Signals;
 			internal CompatibilitySignalData[] CompatibilitySignals;
 			internal Texture[] TimetableDaytime;
 			internal Texture[] TimetableNighttime;

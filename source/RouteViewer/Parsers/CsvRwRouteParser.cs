@@ -57,6 +57,27 @@ namespace OpenBve {
 			}
 		}
 
+		/// <inheritdoc/>
+		/// <summary>Defines a dictionary of signals</summary>
+		private class SignalDictionary : Dictionary<int, SignalData>
+		{
+			/// <summary>Adds a new signal to the dictionary</summary>
+			/// <param name="key">The signal index</param>
+			/// <param name="signal">The signal object</param>
+			internal new void Add(int key, SignalData signal)
+			{
+				if (this.ContainsKey(key))
+				{
+					this[key] = signal;
+					Interface.AddMessage(MessageType.Warning, false, "The Signal with an index of " + key + " has been declared twice: The most recent declaration will be used.");
+				}
+				else
+				{
+					this.Add(key, signal);
+				}
+			}
+		}
+
 		// structures
 		private struct Rail {
 			internal bool RailStart;
@@ -283,7 +304,7 @@ namespace OpenBve {
 			internal bool SignedCant;
 			internal bool FogTransitionMode;
 			internal StructureData Structure;
-			internal SignalData[] SignalData;
+			internal SignalDictionary SignalData;
 			internal CompatibilitySignalData[] CompatibilitySignalData;
 			internal int[] TimetableDaytime;
 			internal int[] TimetableNighttime;
@@ -377,30 +398,30 @@ namespace OpenBve {
 				Data.TimetableNighttime = new int[] { -1, -1, -1, -1 };
 				// signals
 				string SignalFolder = OpenBveApi.Path.CombineDirectory(CompatibilityFolder, "Signals");
-				Data.SignalData = new SignalData[7];
-				Data.SignalData[3] = new CompatibilitySignalData(new int[] { 0, 2, 4 }, new StaticObject[] {
+				Data.SignalData = new SignalDictionary();
+				Data.SignalData.Add(3, new CompatibilitySignalData(new int[] { 0, 2, 4 }, new StaticObject[] {
 																	ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile (SignalFolder, "signal_3_0.csv"), Encoding, false),
 																	ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile (SignalFolder, "signal_3_2.csv"), Encoding, false),
 																	ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile (SignalFolder, "signal_3_4.csv"), Encoding, false)
-																 });
-				Data.SignalData[4] = new CompatibilitySignalData(new int[] { 0, 1, 2, 4 }, new StaticObject[] {
+																 }));
+				Data.SignalData.Add(4, new CompatibilitySignalData(new int[] { 0, 1, 2, 4 }, new StaticObject[] {
 																	ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile (SignalFolder, "signal_4_0.csv"), Encoding, false),
 																	ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile (SignalFolder, "signal_4a_1.csv"), Encoding, false),
 																	ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile (SignalFolder, "signal_4a_2.csv"), Encoding, false),
 																	ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile (SignalFolder, "signal_4a_4.csv"), Encoding, false)
-																 });
-				Data.SignalData[5] = new CompatibilitySignalData(new int[] { 0, 1, 2, 3, 4 }, new StaticObject[] {
+																 }));
+				Data.SignalData.Add(5, new CompatibilitySignalData(new int[] { 0, 1, 2, 3, 4 }, new StaticObject[] {
 																	ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_0.csv"), Encoding, false),
 																	ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5a_1.csv"), Encoding, false),
 																	ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_2.csv"), Encoding, false),
 																	ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_3.csv"), Encoding, false),
 																	ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_4.csv"), Encoding, false)
-																 });
-				Data.SignalData[6] = new CompatibilitySignalData(new int[] { 0, 3, 4 }, new StaticObject[] {
+																 }));
+				Data.SignalData.Add(6, new CompatibilitySignalData(new int[] { 0, 3, 4 }, new StaticObject[] {
 																	ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_0.csv"), Encoding, false),
 																	ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_3.csv"), Encoding, false),
 																	ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_4.csv"), Encoding, false)
-																 });
+																 }));
 				// compatibility signals
 				Data.CompatibilitySignalData = new CompatibilitySignalData[9];
 				Data.CompatibilitySignalData[0] = new CompatibilitySignalData(new int[] { 0, 2 }, new StaticObject[] {
@@ -2548,9 +2569,6 @@ namespace OpenBve {
 											if (Arguments.Length < 1) {
 												Interface.AddMessage(MessageType.Error, false, Command + " is expected to have between 1 and 2 arguments at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
-												if (CommandIndex1 >= Data.SignalData.Length) {
-													Array.Resize<SignalData>(ref Data.SignalData, CommandIndex1 + 1);
-												}
 												if (Arguments[0].EndsWith(".animated", StringComparison.OrdinalIgnoreCase)) {
 													if (Path.ContainsInvalidChars(Arguments[0])) {
 														Interface.AddMessage(MessageType.Error, false, "AnimatedObjectFile contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -3393,7 +3411,7 @@ namespace OpenBve {
 												Interface.AddMessage(MessageType.Error, false, "SignalIndex is invalid in Track.SigF at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												objidx = 0;
 											}
-											if (objidx >= 0 & objidx < Data.SignalData.Length && Data.SignalData[objidx] != null) {
+											if (objidx >= 0 & Data.SignalData.ContainsKey(objidx)) {
 												int section = 0;
 												if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseIntVb6(Arguments[1], out section)) {
 													Interface.AddMessage(MessageType.Error, false, "Section is invalid in Track.SigF at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);

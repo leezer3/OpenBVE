@@ -44,5 +44,26 @@ namespace OpenBve
 				}
 			}
 		}
+
+		/// <inheritdoc/>
+		/// <summary>Defines a dictionary of signals</summary>
+		private class SignalDictionary : Dictionary<int, SignalData>
+		{
+			/// <summary>Adds a new signal to the dictionary</summary>
+			/// <param name="key">The signal index</param>
+			/// <param name="signal">The signal object</param>
+			internal new void Add(int key, SignalData signal)
+			{
+				if (this.ContainsKey(key))
+				{
+					this[key] = signal;
+					Interface.AddMessage(MessageType.Warning, false, "The Signal with an index of " + key + " has been declared twice: The most recent declaration will be used.");
+				}
+				else
+				{
+					this.Add(key, signal);
+				}
+			}
+		}
 	}
 }

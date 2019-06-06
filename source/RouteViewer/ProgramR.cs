@@ -12,6 +12,7 @@ using System.Globalization;
 using System.Windows.Forms;
 using LibRender;
 using OpenBveApi.FileSystem;
+using OpenBveApi.Math;
 using OpenBveApi.Textures;
 using OpenTK;
 using OpenTK.Graphics;
