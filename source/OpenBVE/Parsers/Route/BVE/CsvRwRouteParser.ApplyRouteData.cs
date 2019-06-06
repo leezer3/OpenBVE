@@ -84,7 +84,7 @@ namespace OpenBve
 			// background
 			if (!PreviewOnly)
 			{
-				if (Data.Blocks[0].Background >= 0 & Data.Blocks[0].Background < Data.Backgrounds.Length)
+				if (Data.Blocks[0].Background >= 0 & Data.Backgrounds.ContainsKey(Data.Blocks[0].Background))
 				{
 					BackgroundManager.CurrentBackground = Data.Backgrounds[Data.Blocks[0].Background];
 				}
@@ -200,7 +200,7 @@ namespace OpenBve
 						}
 						else
 						{
-							typ = Data.Backgrounds.Length > 0 ? 0 : -1;
+							typ = Data.Backgrounds.Count > 0 ? 0 : -1;
 							for (int j = i - 1; j >= Data.FirstUsedBlock; j--)
 							{
 								if (Data.Blocks[j].Background >= 0)
@@ -210,7 +210,7 @@ namespace OpenBve
 								}
 							}
 						}
-						if (typ >= 0 & typ < Data.Backgrounds.Length)
+						if (typ >= 0 & Data.Backgrounds.ContainsKey(typ))
 						{
 							int m = TrackManager.Tracks[0].Elements[n].Events.Length;
 							Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.Tracks[0].Elements[n].Events, m + 1);

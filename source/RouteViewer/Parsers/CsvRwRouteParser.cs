@@ -78,6 +78,27 @@ namespace OpenBve {
 			}
 		}
 
+		/// <inheritdoc />
+		/// <summary>Defines a dictionary of backgrounds</summary>
+		private class BackgroundDictionary : Dictionary<int, BackgroundHandle>
+		{
+			/// <summary>Adds a new background to the dictionary</summary>
+			/// <param name="key">The background index</param>
+			/// <param name="handle">The background handle</param>
+			internal new void Add(int key, BackgroundHandle handle)
+			{
+				if (this.ContainsKey(key))
+				{
+					this[key] = handle;
+					Interface.AddMessage(MessageType.Warning, false, "The Background with an index of " + key + " has been declared twice: The most recent declaration will be used.");
+				}
+				else
+				{
+					this.Add(key, handle);
+				}
+			}
+		}
+
 		// structures
 		private struct Rail {
 			internal bool RailStart;
@@ -308,7 +329,7 @@ namespace OpenBve {
 			internal CompatibilitySignalData[] CompatibilitySignalData;
 			internal int[] TimetableDaytime;
 			internal int[] TimetableNighttime;
-			internal BackgroundHandle[] Backgrounds;
+			internal BackgroundDictionary Backgrounds;
 			internal double[] SignalSpeeds;
 			internal Block[] Blocks;
 			internal Marker[] Markers;
@@ -393,7 +414,7 @@ namespace OpenBve {
 				Data.Structure.RailCycle = new int[][] { };
                 Data.Structure.Run = new int[] { };
 				Data.Structure.Flange = new int[] { };
-				Data.Backgrounds = new BackgroundHandle[] { };
+				Data.Backgrounds = new BackgroundDictionary();
 				Data.TimetableDaytime = new int[] { -1, -1, -1, -1 };
 				Data.TimetableNighttime = new int[] { -1, -1, -1, -1 };
 				// signals
@@ -2671,12 +2692,8 @@ namespace OpenBve {
 												if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
-													if (CommandIndex1 >= Data.Backgrounds.Length) {
-														int a = Data.Backgrounds.Length;
-														Array.Resize(ref Data.Backgrounds, CommandIndex1 + 1);
-														for (int k = a; k <= CommandIndex1; k++) {
-															Data.Backgrounds[k] = new World.StaticBackground(null, 6, false);
-														}
+													if (!Data.Backgrounds.ContainsKey(CommandIndex1)) {
+														Data.Backgrounds.Add(CommandIndex1, new World.StaticBackground(null, 6, false));
 													}
 													string f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
 													if (!System.IO.File.Exists(f)) {
@@ -2706,12 +2723,8 @@ namespace OpenBve {
 											} else if (Arguments.Length < 1) {
 												Interface.AddMessage(MessageType.Error, false,  Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
-												if (CommandIndex1 >= Data.Backgrounds.Length) {
-													int a = Data.Backgrounds.Length;
-													Array.Resize(ref Data.Backgrounds, CommandIndex1 + 1);
-													for (int k = a; k <= CommandIndex1; k++) {
-														Data.Backgrounds[k] = new World.StaticBackground(null, 6, false);
-													}
+												if (!Data.Backgrounds.ContainsKey(CommandIndex1)) {
+													Data.Backgrounds.Add(CommandIndex1, new World.StaticBackground(null, 6, false));
 												}
 												int x;
 												if (!NumberFormats.TryParseIntVb6(Arguments[0], out x)) {
@@ -2737,12 +2750,8 @@ namespace OpenBve {
 											} else if (Arguments.Length < 1) {
 												Interface.AddMessage(MessageType.Error, false,  Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
-												if (CommandIndex1 >= Data.Backgrounds.Length) {
-													int a = Data.Backgrounds.Length;
-													Array.Resize(ref Data.Backgrounds, CommandIndex1 + 1);
-													for (int k = a; k <= CommandIndex1; k++) {
-														Data.Backgrounds[k] = new World.StaticBackground(null, 6, false);
-													}
+												if (!Data.Backgrounds.ContainsKey(CommandIndex1)) {
+													Data.Backgrounds.Add(CommandIndex1, new World.StaticBackground(null, 6, false));
 												}
 												int aspect;
 												if (!NumberFormats.TryParseIntVb6(Arguments[0], out aspect)) {
@@ -4794,7 +4803,7 @@ namespace OpenBve {
 												Interface.AddMessage(MessageType.Error, false, "BackgroundTextureIndex is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												typ = 0;
 											}
-											if (typ < 0 | typ >= Data.Backgrounds.Length) {
+											if (typ < 0 | !Data.Backgrounds.ContainsKey(typ)) {
 												Interface.AddMessage(MessageType.Error, false, "BackgroundTextureIndex " + typ + " references a texture not loaded in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											}
 											World.StaticBackground b = Data.Backgrounds[typ] as World.StaticBackground;
@@ -5340,7 +5349,7 @@ namespace OpenBve {
 			}
 			// background
 			if (!PreviewOnly) {
-				if (Data.Blocks[0].Background >= 0 & Data.Blocks[0].Background < Data.Backgrounds.Length) {
+				if (Data.Blocks[0].Background >= 0 & Data.Backgrounds.ContainsKey(Data.Blocks[0].Background)) {
 					World.CurrentBackground = Data.Backgrounds[Data.Blocks[0].Background];
 				} else {
 					World.CurrentBackground = new World.StaticBackground(null, 6, false);
@@ -5420,7 +5429,7 @@ namespace OpenBve {
 						if (i == Data.FirstUsedBlock) {
 							typ = Data.Blocks[i].Background;
 						} else {
-							typ = Data.Backgrounds.Length > 0 ? 0 : -1;
+							typ = Data.Backgrounds.Count > 0 ? 0 : -1;
 							for (int j = i - 1; j >= Data.FirstUsedBlock; j--) {
 								if (Data.Blocks[j].Background >= 0) {
 									typ = Data.Blocks[j].Background;
@@ -5428,7 +5437,7 @@ namespace OpenBve {
 								}
 							}
 						}
-						if (typ >= 0 & typ < Data.Backgrounds.Length) {
+						if (typ >= 0 & Data.Backgrounds.ContainsKey(typ)) {
 							int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
 							Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
 							TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.BackgroundChangeEvent(0.0, Data.Backgrounds[typ], Data.Backgrounds[Data.Blocks[i].Background]);
