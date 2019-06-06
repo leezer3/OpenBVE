@@ -110,7 +110,7 @@ namespace OpenBve
 							}
 						}
 					}
-					if (Type == ObjectType.Overlay & World.CameraRestriction != CameraRestrictionMode.NotAvailable)
+					if (Type == ObjectType.Overlay & Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 					{
 						alpha = true;
 					}

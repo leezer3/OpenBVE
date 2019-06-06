@@ -1,4 +1,5 @@
 ﻿using System;
+using LibRender;
 using OpenBveApi.Objects;
 
 namespace OpenBve
@@ -35,7 +36,7 @@ namespace OpenBve
 			ObjectsSortedByStartPointer = 0;
 			ObjectsSortedByEndPointer = 0;
 			// initial visiblity
-			double p = World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z;
+			double p = World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z;
 			for (int i = 0; i < ObjectsUsed; i++)
 			{
 				if (!Objects[i].Dynamic)
@@ -71,7 +72,7 @@ namespace OpenBve
 		{
 			double d = TrackPosition - LastUpdatedTrackPosition;
 			int n = ObjectsSortedByStart.Length;
-			double p = World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z;
+			double p = World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z;
 			if (d < 0.0)
 			{
 				if (ObjectsSortedByStartPointer >= n) ObjectsSortedByStartPointer = n - 1;

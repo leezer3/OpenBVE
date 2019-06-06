@@ -518,7 +518,7 @@ namespace OpenBve
 				Vector3 p = new Vector3(0.5 * (FrontAxle.Follower.WorldPosition + RearAxle.Follower.WorldPosition));
 				p -= d * (0.5 * (FrontAxle.Position + RearAxle.Position));
 				// determine visibility
-				Vector3 cd = new Vector3(p - World.AbsoluteCameraPosition);
+				Vector3 cd = new Vector3(p - Camera.AbsolutePosition);
 				double dist = cd.NormSquared();
 				double bid = Interface.CurrentOptions.ViewingDistance + Length;
 				CurrentlyVisible = dist < bid * bid;
@@ -612,7 +612,7 @@ namespace OpenBve
 			private void UpdateCarSectionElement(int SectionIndex, int GroupIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
 			{
 				Vector3 p;
-				if (CarSections[SectionIndex].Groups[GroupIndex].Overlay & World.CameraRestriction != CameraRestrictionMode.NotAvailable)
+				if (CarSections[SectionIndex].Groups[GroupIndex].Overlay & Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 				{
 					p = new Vector3(Driver.X, Driver.Y, Driver.Z);
 				}
@@ -653,7 +653,7 @@ namespace OpenBve
 			private void UpdateCarSectionTouchElement(int SectionIndex, int GroupIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
 			{
 				Vector3 p;
-				if (CarSections[SectionIndex].Groups[GroupIndex].Overlay & World.CameraRestriction != CameraRestrictionMode.NotAvailable)
+				if (CarSections[SectionIndex].Groups[GroupIndex].Overlay & Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 				{
 					p = new Vector3(Driver.X, Driver.Y, Driver.Z);
 				}

@@ -683,16 +683,16 @@ namespace OpenBve
 						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(RotateZDirection, cosZ, sinZ);
 					}
 					// translate
-					if (Overlay & World.CameraRestriction != CameraRestrictionMode.NotAvailable)
+					if (Overlay & Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 					{
 						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates += States[s].Position - Position;
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(World.AbsoluteCameraDirection, World.AbsoluteCameraUp, World.AbsoluteCameraSide);
-						double dx = -Math.Tan(World.CameraCurrentAlignment.Yaw) - World.CameraCurrentAlignment.Position.X;
-						double dy = -Math.Tan(World.CameraCurrentAlignment.Pitch) - World.CameraCurrentAlignment.Position.Y;
-						double dz = -World.CameraCurrentAlignment.Position.Z;
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += World.AbsoluteCameraPosition.X + dx * World.AbsoluteCameraSide.X + dy * World.AbsoluteCameraUp.X + dz * World.AbsoluteCameraDirection.X;
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += World.AbsoluteCameraPosition.Y + dx * World.AbsoluteCameraSide.Y + dy * World.AbsoluteCameraUp.Y + dz * World.AbsoluteCameraDirection.Y;
-						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += World.AbsoluteCameraPosition.Z + dx * World.AbsoluteCameraSide.Z + dy * World.AbsoluteCameraUp.Z + dz * World.AbsoluteCameraDirection.Z;
+						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Rotate(Camera.AbsoluteDirection, Camera.AbsoluteUp, Camera.AbsoluteSide);
+						double dx = -Math.Tan(Camera.CurrentAlignment.Yaw) - Camera.CurrentAlignment.Position.X;
+						double dy = -Math.Tan(Camera.CurrentAlignment.Pitch) - Camera.CurrentAlignment.Position.Y;
+						double dz = -Camera.CurrentAlignment.Position.Z;
+						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.X += Camera.AbsolutePosition.X + dx * Camera.AbsoluteSide.X + dy * Camera.AbsoluteUp.X + dz * Camera.AbsoluteDirection.X;
+						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Y += Camera.AbsolutePosition.Y + dx * Camera.AbsoluteSide.Y + dy * Camera.AbsoluteUp.Y + dz * Camera.AbsoluteDirection.Y;
+						ObjectManager.Objects[i].Mesh.Vertices[k].Coordinates.Z += Camera.AbsolutePosition.Z + dx * Camera.AbsoluteSide.Z + dy * Camera.AbsoluteUp.Z + dz * Camera.AbsoluteDirection.Z;
 					}
 					else
 					{

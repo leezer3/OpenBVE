@@ -204,13 +204,13 @@ namespace OpenBve
 
             //Reset the camera when switching between fullscreen and windowed mode
             //Otherwise, if the aspect ratio changes distortion will occur until the view is changed or the camera reset
-            if (World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead)
+            if (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead)
             {
-                World.CameraCurrentAlignment.Position = OpenBveApi.Math.Vector3.Zero;
+                Camera.CurrentAlignment.Position = OpenBveApi.Math.Vector3.Zero;
             }
-            World.CameraCurrentAlignment.Yaw = 0.0;
-            World.CameraCurrentAlignment.Pitch = 0.0;
-            World.CameraCurrentAlignment.Roll = 0.0;
+            Camera.CurrentAlignment.Yaw = 0.0;
+            Camera.CurrentAlignment.Pitch = 0.0;
+            Camera.CurrentAlignment.Roll = 0.0;
 		}
         
 		

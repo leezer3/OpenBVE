@@ -1,4 +1,5 @@
 ﻿using System;
+using LibRender;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
@@ -220,15 +221,15 @@ namespace OpenBve {
 						s++; break;
 					case Instructions.CameraDistance:
 						{
-							double dx = World.AbsoluteCameraPosition.X - Position.X;
-							double dy = World.AbsoluteCameraPosition.Y - Position.Y;
-							double dz = World.AbsoluteCameraPosition.Z - Position.Z;
+							double dx = Camera.AbsolutePosition.X - Position.X;
+							double dy = Camera.AbsolutePosition.Y - Position.Y;
+							double dz = Camera.AbsolutePosition.Z - Position.Z;
 							Function.Stack[s] = Math.Sqrt(dx * dx + dy * dy + dz * dz);
 							s++;
 						} break;
 					case Instructions.CameraView:
 						//Returns whether the camera is in interior or exterior mode
-						if (World.CameraMode == CameraViewMode.Interior)
+						if (Camera.CurrentMode == CameraViewMode.Interior)
 						{
 							Function.Stack[s] = 0;
 						}

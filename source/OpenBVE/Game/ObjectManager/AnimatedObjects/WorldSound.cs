@@ -1,4 +1,5 @@
 ﻿using System;
+using LibRender;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -63,8 +64,8 @@ namespace OpenBve
 
 				double pa = currentTrackPosition + Radius - extraRadius;
 				double pb = currentTrackPosition + Radius + extraRadius;
-				double ta = World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z - World.BackgroundImageDistance - World.ExtraViewingDistance;
-				double tb = World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z + World.BackgroundImageDistance + World.ExtraViewingDistance;
+				double ta = World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z - World.BackgroundImageDistance - World.ExtraViewingDistance;
+				double tb = World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z + World.BackgroundImageDistance + World.ExtraViewingDistance;
 				bool visible = pb >= ta & pa <= tb;
 				if (visible | ForceUpdate)
 				{

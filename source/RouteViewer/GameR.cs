@@ -6,6 +6,7 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
+using LibRender;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
@@ -376,11 +377,11 @@ namespace OpenBve {
 			// process poi
 			if (j >= 0) {
 				TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, t, true, false);
-				World.CameraCurrentAlignment.Position = PointsOfInterest[j].TrackOffset;
-				World.CameraCurrentAlignment.Yaw = PointsOfInterest[j].TrackYaw;
-				World.CameraCurrentAlignment.Pitch = PointsOfInterest[j].TrackPitch;
-				World.CameraCurrentAlignment.Roll = PointsOfInterest[j].TrackRoll;
-				World.CameraCurrentAlignment.TrackPosition = t;
+				Camera.CurrentAlignment.Position = PointsOfInterest[j].TrackOffset;
+				Camera.CurrentAlignment.Yaw = PointsOfInterest[j].TrackYaw;
+				Camera.CurrentAlignment.Pitch = PointsOfInterest[j].TrackPitch;
+				Camera.CurrentAlignment.Roll = PointsOfInterest[j].TrackRoll;
+				Camera.CurrentAlignment.TrackPosition = t;
 				World.UpdateAbsoluteCamera(0.0);
 				return true;
 			} else {

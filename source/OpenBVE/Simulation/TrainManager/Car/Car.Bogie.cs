@@ -1,4 +1,5 @@
 ﻿using System;
+using LibRender;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 
@@ -70,7 +71,7 @@ namespace OpenBve
 				Vector3 p = new Vector3(0.5 * (FrontAxle.Follower.WorldPosition + RearAxle.Follower.WorldPosition));
 				p -= d * (0.5 * (FrontAxle.Position + RearAxle.Position));
 				// determine visibility
-				Vector3 cd = new Vector3(p - World.AbsoluteCameraPosition);
+				Vector3 cd = new Vector3(p - Camera.AbsolutePosition);
 				double dist = cd.NormSquared();
 				double bid = Interface.CurrentOptions.ViewingDistance + Length;
 				CurrentlyVisible = dist < bid * bid;

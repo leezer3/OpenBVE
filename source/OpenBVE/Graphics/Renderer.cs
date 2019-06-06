@@ -90,12 +90,12 @@ namespace OpenBve
 			GL.PushMatrix();
 			UpdateViewport(ViewPortChangeMode.ChangeToScenery);
 			// set up camera
-			double dx = World.AbsoluteCameraDirection.X;
-			double dy = World.AbsoluteCameraDirection.Y;
-			double dz = World.AbsoluteCameraDirection.Z;
-			double ux = World.AbsoluteCameraUp.X;
-			double uy = World.AbsoluteCameraUp.Y;
-			double uz = World.AbsoluteCameraUp.Z;
+			double dx = Camera.AbsoluteDirection.X;
+			double dy = Camera.AbsoluteDirection.Y;
+			double dz = Camera.AbsoluteDirection.Z;
+			double ux = Camera.AbsoluteUp.X;
+			double uy = Camera.AbsoluteUp.Y;
+			double uz = Camera.AbsoluteUp.Z;
 			Matrix4d lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, dx, dy, dz, ux, uy, uz);
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.LoadMatrix(ref lookat);
@@ -123,7 +123,7 @@ namespace OpenBve
 			}
 			GL.Disable(EnableCap.DepthTest);
 			UpdateBackground(TimeElapsed);
-			RenderEvents(World.AbsoluteCameraPosition);
+			RenderEvents(Camera.AbsolutePosition);
 			// fog
 			float aa = Game.CurrentFog.Start;
 			float bb = Game.CurrentFog.End;
@@ -154,7 +154,7 @@ namespace OpenBve
 				{
 					GL.Enable(EnableCap.Lighting); LibRender.Renderer.LightingEnabled = true;
 				}
-				if (World.CameraRestriction == CameraRestrictionMode.NotAvailable)
+				if (Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable)
 				{
 					GL.Light(LightName.Light0, LightParameter.Ambient, new float[] { inv255 * (float) LibRender.Renderer.OptionAmbientColor.R, inv255 * (float) LibRender.Renderer.OptionAmbientColor.G, inv255 * (float) LibRender.Renderer.OptionAmbientColor.B, 1.0f });
 					GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { inv255 * (float) LibRender.Renderer.OptionDiffuseColor.R, inv255 * (float) LibRender.Renderer.OptionDiffuseColor.G, inv255 * (float) LibRender.Renderer.OptionDiffuseColor.B, 1.0f });
@@ -178,7 +178,7 @@ namespace OpenBve
 							{
 								if (StaticOpaque[i].List.Faces[j] != null)
 								{
-									RenderFace(ref StaticOpaque[i].List.Faces[j], World.AbsoluteCameraPosition);
+									RenderFace(ref StaticOpaque[i].List.Faces[j], Camera.AbsolutePosition);
 								}
 							}
 						}
@@ -209,12 +209,12 @@ namespace OpenBve
 								{
 									if (StaticOpaque[i].List.Faces[j] != null)
 									{
-										RenderFace(ref StaticOpaque[i].List.Faces[j], World.AbsoluteCameraPosition);
+										RenderFace(ref StaticOpaque[i].List.Faces[j], Camera.AbsolutePosition);
 									}
 								}
 								GL.EndList();
 							}
-							StaticOpaque[i].WorldPosition = World.AbsoluteCameraPosition;
+							StaticOpaque[i].WorldPosition = Camera.AbsolutePosition;
 						}
 					}
 				}
@@ -225,7 +225,7 @@ namespace OpenBve
 					{
 						LibRender.Renderer.ResetOpenGlState();
 						GL.PushMatrix();
-						GL.Translate(StaticOpaque[i].WorldPosition.X - World.AbsoluteCameraPosition.X, StaticOpaque[i].WorldPosition.Y - World.AbsoluteCameraPosition.Y, StaticOpaque[i].WorldPosition.Z - World.AbsoluteCameraPosition.Z);
+						GL.Translate(StaticOpaque[i].WorldPosition.X - Camera.AbsolutePosition.X, StaticOpaque[i].WorldPosition.Y - Camera.AbsolutePosition.Y, StaticOpaque[i].WorldPosition.Z - Camera.AbsolutePosition.Z);
 						GL.CallList(StaticOpaque[i].OpenGlDisplayList);
 						GL.PopMatrix();
 					}
@@ -245,7 +245,7 @@ namespace OpenBve
 			LibRender.Renderer.ResetOpenGlState();
 			for (int i = 0; i < DynamicOpaque.FaceCount; i++)
 			{
-				RenderFace(ref DynamicOpaque.Faces[i], World.AbsoluteCameraPosition);
+				RenderFace(ref DynamicOpaque.Faces[i], Camera.AbsolutePosition);
 			}
 			// dynamic alpha
 			LibRender.Renderer.ResetOpenGlState();
@@ -257,7 +257,7 @@ namespace OpenBve
 				LibRender.Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 				for (int i = 0; i < DynamicAlpha.FaceCount; i++)
 				{
-					RenderFace(ref DynamicAlpha.Faces[i], World.AbsoluteCameraPosition);
+					RenderFace(ref DynamicAlpha.Faces[i], Camera.AbsolutePosition);
 				}
 			}
 			else
@@ -272,7 +272,7 @@ namespace OpenBve
 					{
 						if (ObjectManager.Objects[DynamicAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].Color.A == 255)
 						{
-							RenderFace(ref DynamicAlpha.Faces[i], World.AbsoluteCameraPosition);
+							RenderFace(ref DynamicAlpha.Faces[i], Camera.AbsolutePosition);
 						}
 					}
 				}
@@ -290,7 +290,7 @@ namespace OpenBve
 							LibRender.Renderer.UnsetAlphaFunc();
 							additive = true;
 						}
-						RenderFace(ref DynamicAlpha.Faces[i], World.AbsoluteCameraPosition);
+						RenderFace(ref DynamicAlpha.Faces[i], Camera.AbsolutePosition);
 					}
 					else
 					{
@@ -299,7 +299,7 @@ namespace OpenBve
 							LibRender.Renderer.SetAlphaFunc(AlphaFunction.Less, 1.0f);
 							additive = false;
 						}
-						RenderFace(ref DynamicAlpha.Faces[i], World.AbsoluteCameraPosition);
+						RenderFace(ref DynamicAlpha.Faces[i], Camera.AbsolutePosition);
 					}
 				}
 			}
@@ -314,7 +314,7 @@ namespace OpenBve
 					GL.Disable(EnableCap.Lighting);
 					LibRender.Renderer.LightingEnabled = false;
 				}
-				LibRender.MotionBlur.RenderFullscreen(Interface.CurrentOptions.MotionBlur, Game.InfoFrameRate, Math.Abs(World.CameraSpeed));
+				LibRender.MotionBlur.RenderFullscreen(Interface.CurrentOptions.MotionBlur, Game.InfoFrameRate, Math.Abs(Camera.CurrentSpeed));
 			}
 			// overlay layer
 			if (LibRender.Renderer.FogEnabled)
@@ -326,7 +326,7 @@ namespace OpenBve
 			lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, dx, dy, dz, ux, uy, uz);
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.LoadMatrix(ref lookat);
-			if (World.CameraRestriction == CameraRestrictionMode.NotAvailable)
+			if (Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable)
 			{
 				// 3d cab
 				LibRender.Renderer.ResetOpenGlState(); // TODO: inserted
@@ -344,7 +344,7 @@ namespace OpenBve
 				LibRender.Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.9f);
 				for (int i = 0; i < OverlayOpaque.FaceCount; i++)
 				{
-					RenderFace(ref OverlayOpaque.Faces[i], World.AbsoluteCameraPosition);
+					RenderFace(ref OverlayOpaque.Faces[i], Camera.AbsolutePosition);
 				}
 				// overlay alpha
 				OverlayAlpha.SortPolygons();
@@ -355,7 +355,7 @@ namespace OpenBve
 					LibRender.Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 					for (int i = 0; i < OverlayAlpha.FaceCount; i++)
 					{
-						RenderFace(ref OverlayAlpha.Faces[i], World.AbsoluteCameraPosition);
+						RenderFace(ref OverlayAlpha.Faces[i], Camera.AbsolutePosition);
 					}
 				}
 				else
@@ -370,7 +370,7 @@ namespace OpenBve
 						{
 							if (ObjectManager.Objects[OverlayAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].Color.A == 255)
 							{
-								RenderFace(ref OverlayAlpha.Faces[i], World.AbsoluteCameraPosition);
+								RenderFace(ref OverlayAlpha.Faces[i], Camera.AbsolutePosition);
 							}
 						}
 					}
@@ -388,7 +388,7 @@ namespace OpenBve
 								LibRender.Renderer.UnsetAlphaFunc();
 								additive = true;
 							}
-							RenderFace(ref OverlayAlpha.Faces[i], World.AbsoluteCameraPosition);
+							RenderFace(ref OverlayAlpha.Faces[i], Camera.AbsolutePosition);
 						}
 						else
 						{
@@ -397,7 +397,7 @@ namespace OpenBve
 								LibRender.Renderer.SetAlphaFunc(AlphaFunction.Less, 1.0f);
 								additive = false;
 							}
-							RenderFace(ref OverlayAlpha.Faces[i], World.AbsoluteCameraPosition);
+							RenderFace(ref OverlayAlpha.Faces[i], Camera.AbsolutePosition);
 						}
 					}
 				}
@@ -423,7 +423,7 @@ namespace OpenBve
 				OverlayAlpha.SortPolygons();
 				for (int i = 0; i < OverlayAlpha.FaceCount; i++)
 				{
-					RenderFace(ref OverlayAlpha.Faces[i], World.AbsoluteCameraPosition);
+					RenderFace(ref OverlayAlpha.Faces[i], Camera.AbsolutePosition);
 				}
 
 			}

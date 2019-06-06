@@ -98,20 +98,20 @@ namespace OpenBve
 
 		    GL.Viewport(0, 0, LibRender.Screen.Width, LibRender.Screen.Height);
 		    LibRender.Screen.AspectRatio = (double)LibRender.Screen.Width / (double)LibRender.Screen.Height;
-		    World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * LibRender.Screen.AspectRatio);
+		    Camera.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * Camera.VerticalViewingAngle) * LibRender.Screen.AspectRatio);
 		    GL.MatrixMode(MatrixMode.Projection);
 		    GL.LoadIdentity();
 		    if (LibRender.Renderer.CurrentViewPortMode == ViewPortMode.Cab)
 		    {
 
-			    Matrix4d perspective = Matrix4d.Perspective(World.VerticalViewingAngle, -LibRender.Screen.AspectRatio, 0.025, 50.0);
+			    Matrix4d perspective = Matrix4d.Perspective(Camera.VerticalViewingAngle, -LibRender.Screen.AspectRatio, 0.025, 50.0);
 			    GL.MultMatrix(ref perspective);
 		    }
 		    else
 		    {
 			    var b = BackgroundManager.CurrentBackground as BackgroundManager.BackgroundObject;
 			    var cd = b != null ? Math.Max(World.BackgroundImageDistance, b.ClipDistance) : World.BackgroundImageDistance;
-			    Matrix4d perspective = Matrix4d.Perspective(World.VerticalViewingAngle, -LibRender.Screen.AspectRatio, 0.5, cd);
+			    Matrix4d perspective = Matrix4d.Perspective(Camera.VerticalViewingAngle, -LibRender.Screen.AspectRatio, 0.5, cd);
 			    GL.MultMatrix(ref perspective);
 		    }
 		    GL.MatrixMode(MatrixMode.Modelview);

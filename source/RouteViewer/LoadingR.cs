@@ -127,7 +127,7 @@ namespace OpenBve {
 			World.CameraTrackFollower = new TrackManager.TrackFollower();
 			World.CameraTrackFollower.Train = null;
 			World.CameraTrackFollower.CarIndex = -1;
-			World.CameraMode = CameraViewMode.Interior;
+			Camera.CurrentMode = CameraViewMode.Interior;
 			// load route
 			bool IsRW = string.Equals(System.IO.Path.GetExtension(CurrentRouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
 			CsvRwRouteParser.ParseRoute(CurrentRouteFile, IsRW, CurrentRouteEncoding, Application.StartupPath, ObjectFolder, SoundFolder, false);
@@ -175,9 +175,9 @@ namespace OpenBve {
 			// initialize camera
 			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, -1.0, true, false);
 			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, FirstStationPosition, true, false);
-			World.CameraCurrentAlignment = new CameraAlignment(new Vector3(0.0, 2.5, 0.0), 0.0, 0.0, 0.0, FirstStationPosition, 1.0);
+			Camera.CurrentAlignment = new CameraAlignment(new Vector3(0.0, 2.5, 0.0), 0.0, 0.0, 0.0, FirstStationPosition, 1.0);
 			World.UpdateAbsoluteCamera(0.0);
-			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z);
+			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z);
 		}
 
 	}

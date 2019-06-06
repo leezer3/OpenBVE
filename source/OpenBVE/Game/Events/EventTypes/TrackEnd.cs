@@ -1,4 +1,6 @@
-﻿namespace OpenBve
+﻿using LibRender;
+
+namespace OpenBve
 {
 	internal static partial class TrackManager
 	{
@@ -23,7 +25,7 @@
 
 				if (TriggerType == EventTriggerType.Camera)
 				{
-					World.CameraAtWorldEnd = !World.CameraAtWorldEnd;
+					Camera.AtWorldEnd = !Camera.AtWorldEnd;
 				}
 			}
 		}

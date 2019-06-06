@@ -29,7 +29,7 @@ namespace OpenBve
 					World.CameraCar = TrainManager.PlayerTrain.DriverCar;
 					MainLoop.SaveCameraSettings();
 					bool lookahead = false;
-					if (World.CameraMode != CameraViewMode.InteriorLookAhead & World.CameraRestriction == CameraRestrictionMode.NotAvailable)
+					if (Camera.CurrentMode != CameraViewMode.InteriorLookAhead & Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable)
 					{
 						Game.AddMessage(Translations.GetInterfaceString("notification_interior_lookahead"),
 							MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
@@ -43,7 +43,7 @@ namespace OpenBve
 							MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 					}
 
-					World.CameraMode = CameraViewMode.Interior;
+					Camera.CurrentMode = CameraViewMode.Interior;
 					MainLoop.RestoreCameraSettings();
 					bool returnToCab = false;
 					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
@@ -53,7 +53,7 @@ namespace OpenBve
 							if (TrainManager.PlayerTrain.Cars[j].HasInteriorView)
 							{
 								TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Interior);
-								World.CameraRestriction = TrainManager.PlayerTrain.Cars[j].CameraRestrictionMode;
+								Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[j].CameraRestrictionMode;
 							}
 							else
 							{
@@ -72,7 +72,7 @@ namespace OpenBve
 						//If our selected car does not have an interior view, we must store this fact, and return to the driver car after the loop has finished
 						World.CameraCar = TrainManager.PlayerTrain.DriverCar;
 						TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(TrainManager.CarSectionType.Interior);
-						World.CameraRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
+						Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
 					}
 
 					//Hide bogies
@@ -82,14 +82,14 @@ namespace OpenBve
 						TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(-1);
 					}
 
-					World.CameraAlignmentDirection = new CameraAlignment();
-					World.CameraAlignmentSpeed = new CameraAlignment();
+					Camera.AlignmentDirection = new CameraAlignment();
+					Camera.AlignmentSpeed = new CameraAlignment();
 					Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(TimeElapsed);
 					World.UpdateViewingDistances();
-					if (World.CameraRestriction != CameraRestrictionMode.NotAvailable)
+					if (Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 					{
-						if (!World.PerformCameraRestrictionTest())
+						if (!Camera.PerformRestrictionTest())
 						{
 							World.InitializeCameraRestriction();
 						}
@@ -97,7 +97,7 @@ namespace OpenBve
 
 					if (lookahead)
 					{
-						World.CameraMode = CameraViewMode.InteriorLookAhead;
+						Camera.CurrentMode = CameraViewMode.InteriorLookAhead;
 					}
 					TrainManager.PlayerTrain.AI = new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain);
 					if (TrainManager.PlayerTrain.Plugin != null && !TrainManager.PlayerTrain.Plugin.SupportsAI)
@@ -359,58 +359,58 @@ namespace OpenBve
 										break;
 									case Translations.Command.CameraMoveForward:
 										// camera move forward
-										if (World.CameraMode == CameraViewMode.Interior |
-											World.CameraMode == CameraViewMode.InteriorLookAhead |
-											World.CameraMode == CameraViewMode.Exterior)
+										if (Camera.CurrentMode == CameraViewMode.Interior |
+											Camera.CurrentMode == CameraViewMode.InteriorLookAhead |
+											Camera.CurrentMode == CameraViewMode.Exterior)
 										{
-											double s = World.CameraMode == CameraViewMode.Interior |
-													   World.CameraMode == CameraViewMode.InteriorLookAhead
-												? World.CameraInteriorTopSpeed
-												: World.CameraExteriorTopSpeed;
-											World.CameraAlignmentDirection.Position.Z = s*
+											double s = Camera.CurrentMode == CameraViewMode.Interior |
+													   Camera.CurrentMode == CameraViewMode.InteriorLookAhead
+												? Camera.InteriorTopSpeed
+												: Camera.ExteriorTopSpeed;
+											Camera.AlignmentDirection.Position.Z = s*
 																						Interface.CurrentControls[i]
 																							.AnalogState;
 										}
 										else
 										{
-											if (World.CameraAtWorldEnd)
+											if (Camera.AtWorldEnd)
 											{
 												//Don't let the camera run off the end of the worldspace
 												break;
 											}
-											World.CameraAlignmentDirection.TrackPosition = World.CameraExteriorTopSpeed*
+											Camera.AlignmentDirection.TrackPosition = Camera.ExteriorTopSpeed*
 																						   Interface.CurrentControls[i]
 																							   .AnalogState;
 										}
 										break;
 									case Translations.Command.CameraMoveBackward:
 										// camera move backward
-										if (World.CameraMode == CameraViewMode.Interior |
-											World.CameraMode == CameraViewMode.InteriorLookAhead |
-											World.CameraMode == CameraViewMode.Exterior)
+										if (Camera.CurrentMode == CameraViewMode.Interior |
+											Camera.CurrentMode == CameraViewMode.InteriorLookAhead |
+											Camera.CurrentMode == CameraViewMode.Exterior)
 										{
-											double s = World.CameraMode == CameraViewMode.Interior |
-													   World.CameraMode == CameraViewMode.InteriorLookAhead
-												? World.CameraInteriorTopSpeed
-												: World.CameraExteriorTopSpeed;
-											World.CameraAlignmentDirection.Position.Z = -s*
+											double s = Camera.CurrentMode == CameraViewMode.Interior |
+													   Camera.CurrentMode == CameraViewMode.InteriorLookAhead
+												? Camera.InteriorTopSpeed
+												: Camera.ExteriorTopSpeed;
+											Camera.AlignmentDirection.Position.Z = -s*
 																						Interface.CurrentControls[i]
 																							.AnalogState;
 										}
 										else
 										{
-											World.CameraAlignmentDirection.TrackPosition =
-												-World.CameraExteriorTopSpeed*Interface.CurrentControls[i].AnalogState;
+											Camera.AlignmentDirection.TrackPosition =
+												-Camera.ExteriorTopSpeed*Interface.CurrentControls[i].AnalogState;
 										}
 										break;
 									case Translations.Command.CameraMoveLeft:
 										// camera move left
 									{
-										double s = World.CameraMode == CameraViewMode.Interior |
-												   World.CameraMode == CameraViewMode.InteriorLookAhead
-											? World.CameraInteriorTopSpeed
-											: World.CameraExteriorTopSpeed;
-										World.CameraAlignmentDirection.Position.X = -s*
+										double s = Camera.CurrentMode == CameraViewMode.Interior |
+												   Camera.CurrentMode == CameraViewMode.InteriorLookAhead
+											? Camera.InteriorTopSpeed
+											: Camera.ExteriorTopSpeed;
+										Camera.AlignmentDirection.Position.X = -s*
 																					Interface.CurrentControls[i]
 																						.AnalogState;
 									}
@@ -418,11 +418,11 @@ namespace OpenBve
 									case Translations.Command.CameraMoveRight:
 										// camera move right
 									{
-										double s = World.CameraMode == CameraViewMode.Interior |
-												   World.CameraMode == CameraViewMode.InteriorLookAhead
-											? World.CameraInteriorTopSpeed
-											: World.CameraExteriorTopSpeed;
-										World.CameraAlignmentDirection.Position.X = s*
+										double s = Camera.CurrentMode == CameraViewMode.Interior |
+												   Camera.CurrentMode == CameraViewMode.InteriorLookAhead
+											? Camera.InteriorTopSpeed
+											: Camera.ExteriorTopSpeed;
+										Camera.AlignmentDirection.Position.X = s*
 																					Interface.CurrentControls[i]
 																						.AnalogState;
 									}
@@ -430,11 +430,11 @@ namespace OpenBve
 									case Translations.Command.CameraMoveUp:
 										// camera move up
 									{
-										double s = World.CameraMode == CameraViewMode.Interior |
-												   World.CameraMode == CameraViewMode.InteriorLookAhead
-											? World.CameraInteriorTopSpeed
-											: World.CameraExteriorTopSpeed;
-										World.CameraAlignmentDirection.Position.Y = s*
+										double s = Camera.CurrentMode == CameraViewMode.Interior |
+												   Camera.CurrentMode == CameraViewMode.InteriorLookAhead
+											? Camera.InteriorTopSpeed
+											: Camera.ExteriorTopSpeed;
+										Camera.AlignmentDirection.Position.Y = s*
 																					Interface.CurrentControls[i]
 																						.AnalogState;
 									}
@@ -442,11 +442,11 @@ namespace OpenBve
 									case Translations.Command.CameraMoveDown:
 										// camera move down
 									{
-										double s = World.CameraMode == CameraViewMode.Interior |
-												   World.CameraMode == CameraViewMode.InteriorLookAhead
-											? World.CameraInteriorTopSpeed
-											: World.CameraExteriorTopSpeed;
-										World.CameraAlignmentDirection.Position.Y = -s*
+										double s = Camera.CurrentMode == CameraViewMode.Interior |
+												   Camera.CurrentMode == CameraViewMode.InteriorLookAhead
+											? Camera.InteriorTopSpeed
+											: Camera.ExteriorTopSpeed;
+										Camera.AlignmentDirection.Position.Y = -s*
 																					Interface.CurrentControls[i]
 																						.AnalogState;
 									}
@@ -454,71 +454,71 @@ namespace OpenBve
 									case Translations.Command.CameraRotateLeft:
 										// camera rotate left
 									{
-										double s = World.CameraMode == CameraViewMode.Interior |
-												   World.CameraMode == CameraViewMode.InteriorLookAhead
-											? World.CameraInteriorTopAngularSpeed
-											: World.CameraExteriorTopAngularSpeed;
-										World.CameraAlignmentDirection.Yaw = -s*Interface.CurrentControls[i].AnalogState;
+										double s = Camera.CurrentMode == CameraViewMode.Interior |
+												   Camera.CurrentMode == CameraViewMode.InteriorLookAhead
+											? Camera.InteriorTopAngularSpeed
+											: Camera.ExteriorTopAngularSpeed;
+										Camera.AlignmentDirection.Yaw = -s*Interface.CurrentControls[i].AnalogState;
 									}
 										break;
 									case Translations.Command.CameraRotateRight:
 										// camera rotate right
 									{
-										double s = World.CameraMode == CameraViewMode.Interior |
-												   World.CameraMode == CameraViewMode.InteriorLookAhead
-											? World.CameraInteriorTopAngularSpeed
-											: World.CameraExteriorTopAngularSpeed;
-										World.CameraAlignmentDirection.Yaw = s*Interface.CurrentControls[i].AnalogState;
+										double s = Camera.CurrentMode == CameraViewMode.Interior |
+												   Camera.CurrentMode == CameraViewMode.InteriorLookAhead
+											? Camera.InteriorTopAngularSpeed
+											: Camera.ExteriorTopAngularSpeed;
+										Camera.AlignmentDirection.Yaw = s*Interface.CurrentControls[i].AnalogState;
 									}
 										break;
 									case Translations.Command.CameraRotateUp:
 										// camera rotate up
 									{
-										double s = World.CameraMode == CameraViewMode.Interior |
-												   World.CameraMode == CameraViewMode.InteriorLookAhead
-											? World.CameraInteriorTopAngularSpeed
-											: World.CameraExteriorTopAngularSpeed;
-										World.CameraAlignmentDirection.Pitch = s*
+										double s = Camera.CurrentMode == CameraViewMode.Interior |
+												   Camera.CurrentMode == CameraViewMode.InteriorLookAhead
+											? Camera.InteriorTopAngularSpeed
+											: Camera.ExteriorTopAngularSpeed;
+										Camera.AlignmentDirection.Pitch = s*
 																			   Interface.CurrentControls[i].AnalogState;
 									}
 										break;
 									case Translations.Command.CameraRotateDown:
 										// camera rotate down
 									{
-										double s = World.CameraMode == CameraViewMode.Interior |
-												   World.CameraMode == CameraViewMode.InteriorLookAhead
-											? World.CameraInteriorTopAngularSpeed
-											: World.CameraExteriorTopAngularSpeed;
-										World.CameraAlignmentDirection.Pitch = -s*
+										double s = Camera.CurrentMode == CameraViewMode.Interior |
+												   Camera.CurrentMode == CameraViewMode.InteriorLookAhead
+											? Camera.InteriorTopAngularSpeed
+											: Camera.ExteriorTopAngularSpeed;
+										Camera.AlignmentDirection.Pitch = -s*
 																			   Interface.CurrentControls[i].AnalogState;
 									}
 										break;
 									case Translations.Command.CameraRotateCCW:
 										// camera rotate ccw
-										if ((World.CameraMode != CameraViewMode.Interior &
-											 World.CameraMode != CameraViewMode.InteriorLookAhead) |
-											World.CameraRestriction != CameraRestrictionMode.On)
+										if ((Camera.CurrentMode != CameraViewMode.Interior &
+											 Camera.CurrentMode != CameraViewMode.InteriorLookAhead) |
+											Camera.CurrentRestriction != CameraRestrictionMode.On)
 										{
-											double s = World.CameraMode == CameraViewMode.Interior |
-													   World.CameraMode == CameraViewMode.InteriorLookAhead
-												? World.CameraInteriorTopAngularSpeed
-												: World.CameraExteriorTopAngularSpeed;
-											World.CameraAlignmentDirection.Roll = -s*
+											double s = Camera.CurrentMode == CameraViewMode.Interior |
+													   Camera.CurrentMode == CameraViewMode.InteriorLookAhead
+												? Camera.InteriorTopAngularSpeed
+												: Camera.ExteriorTopAngularSpeed;
+											Camera.AlignmentDirection.Roll = -s*
 																				  Interface.CurrentControls[i]
 																					  .AnalogState;
 										}
 										break;
 									case Translations.Command.CameraRotateCW:
 										// camera rotate cw
-										if ((World.CameraMode != CameraViewMode.Interior &
-											 World.CameraMode != CameraViewMode.InteriorLookAhead) |
-											World.CameraRestriction != CameraRestrictionMode.On)
+										if ((Camera.CurrentMode != CameraViewMode.Interior &
+											 Camera.CurrentMode != CameraViewMode.InteriorLookAhead) |
+											Camera.CurrentRestriction != CameraRestrictionMode.On)
 										{
-											double s = World.CameraMode == CameraViewMode.Interior |
-													   World.CameraMode == CameraViewMode.InteriorLookAhead
-												? World.CameraInteriorTopAngularSpeed
-												: World.CameraExteriorTopAngularSpeed;
-											World.CameraAlignmentDirection.Roll = s*
+											double s = Camera.CurrentMode == CameraViewMode.Interior |
+													   Camera.CurrentMode == CameraViewMode.InteriorLookAhead
+												? Camera.InteriorTopAngularSpeed
+												: Camera.ExteriorTopAngularSpeed;
+											Camera.AlignmentDirection.Roll = s*
 																				  Interface.CurrentControls[i]
 																					  .AnalogState;
 										}
@@ -527,7 +527,7 @@ namespace OpenBve
 										// camera zoom in
 										if (TimeElapsed > 0.0)
 										{
-											World.CameraAlignmentDirection.Zoom = -World.CameraZoomTopSpeed*
+											Camera.AlignmentDirection.Zoom = -Camera.ZoomTopSpeed*
 																				  Interface.CurrentControls[i]
 																					  .AnalogState;
 										}
@@ -536,7 +536,7 @@ namespace OpenBve
 										// camera zoom out
 										if (TimeElapsed > 0.0)
 										{
-											World.CameraAlignmentDirection.Zoom = World.CameraZoomTopSpeed*
+											Camera.AlignmentDirection.Zoom = Camera.ZoomTopSpeed*
 																				  Interface.CurrentControls[i]
 																					  .AnalogState;
 										}
@@ -640,7 +640,7 @@ namespace OpenBve
 										{
 											MainLoop.SaveCameraSettings();
 											bool lookahead = false;
-											if (World.CameraMode != CameraViewMode.InteriorLookAhead & World.CameraRestriction == CameraRestrictionMode.NotAvailable)
+											if (Camera.CurrentMode != CameraViewMode.InteriorLookAhead & Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable)
 											{
 												Game.AddMessage(Translations.GetInterfaceString("notification_interior_lookahead"),
 												                MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
@@ -653,7 +653,7 @@ namespace OpenBve
 												                MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
 												                MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 											}
-											World.CameraMode = CameraViewMode.Interior;
+											Camera.CurrentMode = CameraViewMode.Interior;
 											MainLoop.RestoreCameraSettings();
 											bool returnToCab = false;
 											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
@@ -663,7 +663,7 @@ namespace OpenBve
 													if (TrainManager.PlayerTrain.Cars[j].HasInteriorView)
 													{
 														TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Interior);
-														World.CameraRestriction = TrainManager.PlayerTrain.Cars[j].CameraRestrictionMode;
+														Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[j].CameraRestrictionMode;
 													}
 													else
 													{
@@ -681,7 +681,7 @@ namespace OpenBve
 												//If our selected car does not have an interior view, we must store this fact, and return to the driver car after the loop has finished
 												World.CameraCar = TrainManager.PlayerTrain.DriverCar;
 												TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(TrainManager.CarSectionType.Interior);
-												World.CameraRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
+												Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
 											}
 											//Hide bogies
 											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
@@ -689,21 +689,21 @@ namespace OpenBve
 												TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(-1);
 												TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(-1);
 											}
-											World.CameraAlignmentDirection = new CameraAlignment();
-											World.CameraAlignmentSpeed = new CameraAlignment();
+											Camera.AlignmentDirection = new CameraAlignment();
+											Camera.AlignmentSpeed = new CameraAlignment();
 											Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
 											World.UpdateAbsoluteCamera(TimeElapsed);
 											World.UpdateViewingDistances();
-											if (World.CameraRestriction != CameraRestrictionMode.NotAvailable)
+											if (Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 											{
-												if (!World.PerformCameraRestrictionTest())
+												if (!Camera.PerformRestrictionTest())
 												{
 													World.InitializeCameraRestriction();
 												}
 											}
 											if (lookahead)
 											{
-												World.CameraMode = CameraViewMode.InteriorLookAhead;
+												Camera.CurrentMode = CameraViewMode.InteriorLookAhead;
 											}
 										}
 										break;
@@ -712,7 +712,7 @@ namespace OpenBve
 										{
 											MainLoop.SaveCameraSettings();
 											bool lookahead = false;
-											if (World.CameraMode != CameraViewMode.InteriorLookAhead & World.CameraRestriction == CameraRestrictionMode.NotAvailable)
+											if (Camera.CurrentMode != CameraViewMode.InteriorLookAhead & Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable)
 											{
 												Game.AddMessage(Translations.GetInterfaceString("notification_interior_lookahead"),
 												                MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
@@ -725,7 +725,7 @@ namespace OpenBve
 												                MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
 												                MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 											}
-											World.CameraMode = CameraViewMode.Interior;
+											Camera.CurrentMode = CameraViewMode.Interior;
 											MainLoop.RestoreCameraSettings();
 											bool returnToCab = false;
 											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
@@ -735,7 +735,7 @@ namespace OpenBve
 													if (TrainManager.PlayerTrain.Cars[j].HasInteriorView)
 													{
 														TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Interior);
-														World.CameraRestriction = TrainManager.PlayerTrain.Cars[j].CameraRestrictionMode;
+														Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[j].CameraRestrictionMode;
 													}
 													else
 													{
@@ -753,7 +753,7 @@ namespace OpenBve
 												//If our selected car does not have an interior view, we must store this fact, and return to the driver car after the loop has finished
 												World.CameraCar = TrainManager.PlayerTrain.DriverCar;
 												TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(TrainManager.CarSectionType.Interior);
-												World.CameraRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
+												Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
 											}
 											//Hide interior and bogies
 											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
@@ -762,21 +762,21 @@ namespace OpenBve
 												TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(-1);
 												TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(-1);
 											}
-											World.CameraAlignmentDirection = new CameraAlignment();
-											World.CameraAlignmentSpeed = new CameraAlignment();
+											Camera.AlignmentDirection = new CameraAlignment();
+											Camera.AlignmentSpeed = new CameraAlignment();
 											Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
 											World.UpdateAbsoluteCamera(TimeElapsed);
 											World.UpdateViewingDistances();
-											if (World.CameraRestriction != CameraRestrictionMode.NotAvailable)
+											if (Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 											{
-												if (!World.PerformCameraRestrictionTest())
+												if (!Camera.PerformRestrictionTest())
 												{
 													World.InitializeCameraRestriction();
 												}
 											}
 											if (lookahead)
 											{
-												World.CameraMode = CameraViewMode.InteriorLookAhead;
+												Camera.CurrentMode = CameraViewMode.InteriorLookAhead;
 											}
 										}
 										break;
@@ -785,7 +785,7 @@ namespace OpenBve
 										Game.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (World.CameraCar + 1), MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
 												MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 										SaveCameraSettings();
-										World.CameraMode = CameraViewMode.Exterior;
+										Camera.CurrentMode = CameraViewMode.Exterior;
 										RestoreCameraSettings();
 										for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 										{
@@ -797,8 +797,8 @@ namespace OpenBve
 											TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
 											TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 										}
-										World.CameraAlignmentDirection = new CameraAlignment();
-										World.CameraAlignmentSpeed = new CameraAlignment();
+										Camera.AlignmentDirection = new CameraAlignment();
+										Camera.AlignmentSpeed = new CameraAlignment();
 										Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
 										World.UpdateAbsoluteCamera(TimeElapsed);
 										World.UpdateViewingDistances();
@@ -810,16 +810,16 @@ namespace OpenBve
 										SaveCameraSettings();
 										if (Interface.CurrentControls[i].Command == Translations.Command.CameraTrack)
 										{
-											World.CameraMode = CameraViewMode.Track;
+											Camera.CurrentMode = CameraViewMode.Track;
 											Game.AddMessage(Translations.GetInterfaceString("notification_track"),
 												MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
 												MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 										}
 										else
 										{
-											if (World.CameraMode == CameraViewMode.FlyBy)
+											if (Camera.CurrentMode == CameraViewMode.FlyBy)
 											{
-												World.CameraMode = CameraViewMode.FlyByZooming;
+												Camera.CurrentMode = CameraViewMode.FlyByZooming;
 												Game.AddMessage(
 													Translations.GetInterfaceString("notification_flybyzooming"),
 													MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
@@ -827,7 +827,7 @@ namespace OpenBve
 											}
 											else
 											{
-												World.CameraMode = CameraViewMode.FlyBy;
+												Camera.CurrentMode = CameraViewMode.FlyBy;
 												Game.AddMessage(
 													Translations.GetInterfaceString("notification_flybynormal"),
 													MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
@@ -845,8 +845,8 @@ namespace OpenBve
 											TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
 											TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 										}
-										World.CameraAlignmentDirection = new CameraAlignment();
-										World.CameraAlignmentSpeed = new CameraAlignment();
+										Camera.AlignmentDirection = new CameraAlignment();
+										Camera.AlignmentSpeed = new CameraAlignment();
 										Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
 										World.UpdateAbsoluteCamera(TimeElapsed);
 										World.UpdateViewingDistances();
@@ -854,7 +854,7 @@ namespace OpenBve
 										break;
 									case Translations.Command.CameraPreviousPOI:
 										//If we are in the exterior train view, shift down one car until we hit the last car
-										if (World.CameraMode == CameraViewMode.Exterior)
+										if (Camera.CurrentMode == CameraViewMode.Exterior)
 										{
 											if (World.CameraCar < TrainManager.PlayerTrain.Cars.Length - 1)
 											{
@@ -867,22 +867,22 @@ namespace OpenBve
 										//Otherwise, check if we can move down to the previous POI
 										if (Game.ApplyPointOfInterest(-1, true))
 										{
-											if (World.CameraMode != CameraViewMode.Track &
-												World.CameraMode != CameraViewMode.FlyBy &
-												World.CameraMode != CameraViewMode.FlyByZooming)
+											if (Camera.CurrentMode != CameraViewMode.Track &
+												Camera.CurrentMode != CameraViewMode.FlyBy &
+												Camera.CurrentMode != CameraViewMode.FlyByZooming)
 											{
-												World.CameraMode = CameraViewMode.Track;
+												Camera.CurrentMode = CameraViewMode.Track;
 												Game.AddMessage(Translations.GetInterfaceString("notification_track"),
 													MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
 													MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 											}
-											double z = World.CameraCurrentAlignment.Position.Z;
-											World.CameraCurrentAlignment.Position =
-												new OpenBveApi.Math.Vector3(World.CameraCurrentAlignment.Position.X,
-													World.CameraCurrentAlignment.Position.Y, 0.0);
-											World.CameraCurrentAlignment.Zoom = 0.0;
-											World.CameraAlignmentDirection = new CameraAlignment();
-											World.CameraAlignmentSpeed = new CameraAlignment();
+											double z = Camera.CurrentAlignment.Position.Z;
+											Camera.CurrentAlignment.Position =
+												new OpenBveApi.Math.Vector3(Camera.CurrentAlignment.Position.X,
+													Camera.CurrentAlignment.Position.Y, 0.0);
+											Camera.CurrentAlignment.Zoom = 0.0;
+											Camera.AlignmentDirection = new CameraAlignment();
+											Camera.AlignmentSpeed = new CameraAlignment();
 											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 											{
 												TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Exterior);
@@ -894,8 +894,8 @@ namespace OpenBve
 												TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 											}
 											World.CameraTrackFollower.Update(World.CameraTrackFollower.TrackPosition + z, true, false);
-											World.CameraCurrentAlignment.TrackPosition = World.CameraTrackFollower.TrackPosition;
-											World.VerticalViewingAngle = World.OriginalVerticalViewingAngle;
+											Camera.CurrentAlignment.TrackPosition = World.CameraTrackFollower.TrackPosition;
+											Camera.VerticalViewingAngle = Camera.OriginalVerticalViewingAngle;
 											Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
 											World.UpdateAbsoluteCamera(TimeElapsed);
 											World.UpdateViewingDistances();
@@ -903,7 +903,7 @@ namespace OpenBve
 										break;
 									case Translations.Command.CameraNextPOI:
 										//If we are in the exterior train view, shift up one car until we hit index 0
-										if (World.CameraMode == CameraViewMode.Exterior)
+										if (Camera.CurrentMode == CameraViewMode.Exterior)
 										{
 											if (World.CameraCar > 0)
 											{
@@ -916,22 +916,22 @@ namespace OpenBve
 										//Otherwise, check if we can move up to the next POI
 										if (Game.ApplyPointOfInterest(1, true))
 										{
-											if (World.CameraMode != CameraViewMode.Track &
-												World.CameraMode != CameraViewMode.FlyBy &
-												World.CameraMode != CameraViewMode.FlyByZooming)
+											if (Camera.CurrentMode != CameraViewMode.Track &
+												Camera.CurrentMode != CameraViewMode.FlyBy &
+												Camera.CurrentMode != CameraViewMode.FlyByZooming)
 											{
-												World.CameraMode = CameraViewMode.Track;
+												Camera.CurrentMode = CameraViewMode.Track;
 												Game.AddMessage(Translations.GetInterfaceString("notification_track"),
 													MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
 													MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 											}
-											double z = World.CameraCurrentAlignment.Position.Z;
-											World.CameraCurrentAlignment.Position =
-												new OpenBveApi.Math.Vector3(World.CameraCurrentAlignment.Position.X,
-													World.CameraCurrentAlignment.Position.Y, 0.0);
-											World.CameraCurrentAlignment.Zoom = 0.0;
-											World.CameraAlignmentDirection = new CameraAlignment();
-											World.CameraAlignmentSpeed = new CameraAlignment();
+											double z = Camera.CurrentAlignment.Position.Z;
+											Camera.CurrentAlignment.Position =
+												new OpenBveApi.Math.Vector3(Camera.CurrentAlignment.Position.X,
+													Camera.CurrentAlignment.Position.Y, 0.0);
+											Camera.CurrentAlignment.Zoom = 0.0;
+											Camera.AlignmentDirection = new CameraAlignment();
+											Camera.AlignmentSpeed = new CameraAlignment();
 											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 											{
 												TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Exterior);
@@ -942,9 +942,9 @@ namespace OpenBve
 												TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 											}
 											World.CameraTrackFollower.Update(World.CameraTrackFollower.TrackPosition + z, true, false);
-											World.CameraCurrentAlignment.TrackPosition =
+											Camera.CurrentAlignment.TrackPosition =
 												World.CameraTrackFollower.TrackPosition;
-											World.VerticalViewingAngle = World.OriginalVerticalViewingAngle;
+											Camera.VerticalViewingAngle = Camera.OriginalVerticalViewingAngle;
 											Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
 											World.UpdateAbsoluteCamera(TimeElapsed);
 											World.UpdateViewingDistances();
@@ -952,23 +952,23 @@ namespace OpenBve
 										break;
 									case Translations.Command.CameraReset:
 										// camera: reset
-										if (World.CameraMode == CameraViewMode.Interior |
-											World.CameraMode == CameraViewMode.InteriorLookAhead)
+										if (Camera.CurrentMode == CameraViewMode.Interior |
+											Camera.CurrentMode == CameraViewMode.InteriorLookAhead)
 										{
-											World.CameraCurrentAlignment.Position = new OpenBveApi.Math.Vector3(0.0, 0.0,
+											Camera.CurrentAlignment.Position = new OpenBveApi.Math.Vector3(0.0, 0.0,
 												0.0);
 										}
-										World.CameraCurrentAlignment.Yaw = 0.0;
-										World.CameraCurrentAlignment.Pitch = 0.0;
-										World.CameraCurrentAlignment.Roll = 0.0;
-										if (World.CameraMode == CameraViewMode.Track)
+										Camera.CurrentAlignment.Yaw = 0.0;
+										Camera.CurrentAlignment.Pitch = 0.0;
+										Camera.CurrentAlignment.Roll = 0.0;
+										if (Camera.CurrentMode == CameraViewMode.Track)
 										{
 											World.CameraTrackFollower.Update(
 												TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition, true,
 												false);
 										}
-										else if (World.CameraMode == CameraViewMode.FlyBy |
-												 World.CameraMode == CameraViewMode.FlyByZooming)
+										else if (Camera.CurrentMode == CameraViewMode.FlyBy |
+												 Camera.CurrentMode == CameraViewMode.FlyByZooming)
 										{
 											if (TrainManager.PlayerTrain.Specs.CurrentAverageSpeed >= 0.0)
 											{
@@ -988,20 +988,20 @@ namespace OpenBve
 														.TrackPosition - d, true, false);
 											}
 										}
-										World.CameraCurrentAlignment.TrackPosition =
+										Camera.CurrentAlignment.TrackPosition =
 											World.CameraTrackFollower.TrackPosition;
-										World.CameraCurrentAlignment.Zoom = 0.0;
-										World.VerticalViewingAngle = World.OriginalVerticalViewingAngle;
-										World.CameraAlignmentDirection = new CameraAlignment();
-										World.CameraAlignmentSpeed = new CameraAlignment();
+										Camera.CurrentAlignment.Zoom = 0.0;
+										Camera.VerticalViewingAngle = Camera.OriginalVerticalViewingAngle;
+										Camera.AlignmentDirection = new CameraAlignment();
+										Camera.AlignmentSpeed = new CameraAlignment();
 										Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
 										World.UpdateAbsoluteCamera(TimeElapsed);
 										World.UpdateViewingDistances();
-										if ((World.CameraMode == CameraViewMode.Interior |
-											 World.CameraMode == CameraViewMode.InteriorLookAhead) &
-											World.CameraRestriction == CameraRestrictionMode.On)
+										if ((Camera.CurrentMode == CameraViewMode.Interior |
+											 Camera.CurrentMode == CameraViewMode.InteriorLookAhead) &
+											Camera.CurrentRestriction == CameraRestrictionMode.On)
 										{
-											if (!World.PerformCameraRestrictionTest())
+											if (!Camera.PerformRestrictionTest())
 											{
 												World.InitializeCameraRestriction();
 											}
@@ -1009,18 +1009,18 @@ namespace OpenBve
 										break;
 									case Translations.Command.CameraRestriction:
 										// camera: restriction
-										if (World.CameraRestriction != CameraRestrictionMode.NotAvailable)
+										if (Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 										{
-											if (World.CameraRestriction == CameraRestrictionMode.Off)
+											if (Camera.CurrentRestriction == CameraRestrictionMode.Off)
 											{
-												World.CameraRestriction = CameraRestrictionMode.On;
+												Camera.CurrentRestriction = CameraRestrictionMode.On;
 											}
 											else
 											{
-												World.CameraRestriction = CameraRestrictionMode.Off;
+												Camera.CurrentRestriction = CameraRestrictionMode.Off;
 											}
 											World.InitializeCameraRestriction();
-											if (World.CameraRestriction == CameraRestrictionMode.Off)
+											if (Camera.CurrentRestriction == CameraRestrictionMode.Off)
 											{
 												Game.AddMessage(
 													Translations.GetInterfaceString("notification_camerarestriction_off"),

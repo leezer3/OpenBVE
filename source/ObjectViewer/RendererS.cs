@@ -154,7 +154,7 @@ namespace OpenBve
             }
 	        
             // setup camera
-            var mat = Matrix4d.LookAt(0.0, 0.0, 0.0, World.AbsoluteCameraDirection.X, World.AbsoluteCameraDirection.Y, World.AbsoluteCameraDirection.Z, World.AbsoluteCameraUp.X, World.AbsoluteCameraUp.Y, World.AbsoluteCameraUp.Z);
+            var mat = Matrix4d.LookAt(0.0, 0.0, 0.0, Camera.AbsoluteDirection.X, Camera.AbsoluteDirection.Y, Camera.AbsoluteDirection.Z, Camera.AbsoluteUp.X, Camera.AbsoluteUp.Y, Camera.AbsoluteUp.Z);
             GL.MultMatrix(ref mat);
             if (LibRender.Renderer.OptionLighting)
             {
@@ -188,11 +188,11 @@ namespace OpenBve
                     GL.Disable(EnableCap.Lighting);
                 }
                 GL.Color3(1.0, 0.0, 0.0);
-                LibRender.Renderer.DrawCube(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), World.AbsoluteCameraPosition, null);
+                LibRender.Renderer.DrawCube(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), Camera.AbsolutePosition, null);
                 GL.Color3(0.0, 1.0, 0.0);
-                LibRender.Renderer.DrawCube(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), World.AbsoluteCameraPosition, null);
+                LibRender.Renderer.DrawCube(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), Camera.AbsolutePosition, null);
                 GL.Color3(0.0, 0.0, 1.0);
-                LibRender.Renderer.DrawCube(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), World.AbsoluteCameraPosition, null);
+                LibRender.Renderer.DrawCube(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), Camera.AbsolutePosition, null);
                 if (LibRender.Renderer.LightingEnabled)
                 {
                     GL.Enable(EnableCap.Lighting);
@@ -201,7 +201,7 @@ namespace OpenBve
             LibRender.Renderer.ResetOpenGlState();
             for (int i = 0; i < OpaqueListCount; i++)
             {
-                RenderFace(ref OpaqueList[i], World.AbsoluteCameraPosition);
+                RenderFace(ref OpaqueList[i], Camera.AbsolutePosition);
             }
             LibRender.Renderer.ResetOpenGlState();
             // transparent color list
@@ -218,7 +218,7 @@ namespace OpenBve
 					{
 						if (ObjectManager.Objects[TransparentColorList[i].ObjectIndex].Mesh.Materials[r].Color.A == 255)
 						{
-							RenderFace(ref TransparentColorList[i], World.AbsoluteCameraPosition);
+							RenderFace(ref TransparentColorList[i], Camera.AbsolutePosition);
 						}
 					}
 				}
@@ -237,7 +237,7 @@ namespace OpenBve
 							GL.Disable(EnableCap.AlphaTest);
 							additive = true;
 						}
-						RenderFace(ref TransparentColorList[i], World.AbsoluteCameraPosition);
+						RenderFace(ref TransparentColorList[i], Camera.AbsolutePosition);
 					}
 					else
 					{
@@ -246,12 +246,12 @@ namespace OpenBve
 							LibRender.Renderer.SetAlphaFunc(AlphaFunction.Less, 1.0f);
 							additive = false;
 						}
-						RenderFace(ref TransparentColorList[i], World.AbsoluteCameraPosition);
+						RenderFace(ref TransparentColorList[i], Camera.AbsolutePosition);
 					}
 				}
 			} else {
 				for (int i = 0; i < TransparentColorListCount; i++) {
-					RenderFace(ref TransparentColorList[i], World.AbsoluteCameraPosition);
+					RenderFace(ref TransparentColorList[i], Camera.AbsolutePosition);
 				}
 			}
 			LibRender.Renderer.ResetOpenGlState();
@@ -263,7 +263,7 @@ namespace OpenBve
 		        LibRender.Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 		        for (int i = 0; i < AlphaListCount; i++)
 		        {
-			        RenderFace(ref AlphaList[i], World.AbsoluteCameraPosition);
+			        RenderFace(ref AlphaList[i], Camera.AbsolutePosition);
 		        }
 	        }
 	        else
@@ -278,7 +278,7 @@ namespace OpenBve
 			        {
 				        if (ObjectManager.Objects[AlphaList[i].ObjectIndex].Mesh.Materials[r].Color.A == 255)
 				        {
-					        RenderFace(ref AlphaList[i], World.AbsoluteCameraPosition);
+					        RenderFace(ref AlphaList[i], Camera.AbsolutePosition);
 				        }
 			        }
 		        }
@@ -297,7 +297,7 @@ namespace OpenBve
 					        GL.Disable(EnableCap.AlphaTest);
 					        additive = true;
 				        }
-				        RenderFace(ref AlphaList[i], World.AbsoluteCameraPosition);
+				        RenderFace(ref AlphaList[i], Camera.AbsolutePosition);
 			        }
 			        else
 			        {
@@ -306,7 +306,7 @@ namespace OpenBve
 					        LibRender.Renderer.SetAlphaFunc(AlphaFunction.Less, 1.0f);
 					        additive = false;
 				        }
-				        RenderFace(ref AlphaList[i], World.AbsoluteCameraPosition);
+				        RenderFace(ref AlphaList[i], Camera.AbsolutePosition);
 			        }
 		        }
 	        }
@@ -320,7 +320,7 @@ namespace OpenBve
             SortPolygons(OverlayList, OverlayListCount, OverlayListDistance, 3, 0.0);
             for (int i = 0; i < OverlayListCount; i++)
             {
-                RenderFace(ref OverlayList[i], World.AbsoluteCameraPosition);
+                RenderFace(ref OverlayList[i], Camera.AbsolutePosition);
             }
 	        
             // render overlays
@@ -338,11 +338,11 @@ namespace OpenBve
                 GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
                 GL.Enable(EnableCap.Blend);
                 GL.Color4(1.0, 0.0, 0.0, 0.2);
-                LibRender.Renderer.DrawCube(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), World.AbsoluteCameraPosition, null);
+                LibRender.Renderer.DrawCube(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), Camera.AbsolutePosition, null);
                 GL.Color4(0.0, 1.0, 0.0, 0.2);
-                LibRender.Renderer.DrawCube(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), World.AbsoluteCameraPosition, null);
+                LibRender.Renderer.DrawCube(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), Camera.AbsolutePosition, null);
                 GL.Color4(0.0, 0.0, 1.0, 0.2);
-                LibRender.Renderer.DrawCube(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), World.AbsoluteCameraPosition, null);
+                LibRender.Renderer.DrawCube(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), Camera.AbsolutePosition, null);
             }
 	        RenderOverlays();
 	        LibRender.Renderer.LastBoundTexture = null; //We bind the character texture, so must reset it at the end of the render sequence
@@ -400,7 +400,7 @@ namespace OpenBve
                 }
                 else
                 {
-	                LibRender.Renderer.DrawString(Fonts.SmallFont, "Position: " + World.AbsoluteCameraPosition.X.ToString("0.00", Culture) + ", " + World.AbsoluteCameraPosition.Y.ToString("0.00", Culture) + ", " + World.AbsoluteCameraPosition.Z.ToString("0.00", Culture), new Point((int)(0.5 * Screen.Width -88),4),TextAlignment.TopLeft, TextColor);
+	                LibRender.Renderer.DrawString(Fonts.SmallFont, "Position: " + Camera.AbsolutePosition.X.ToString("0.00", Culture) + ", " + Camera.AbsolutePosition.Y.ToString("0.00", Culture) + ", " + Camera.AbsolutePosition.Z.ToString("0.00", Culture), new Point((int)(0.5 * Screen.Width -88),4),TextAlignment.TopLeft, TextColor);
                     string[][] Keys;
                     Keys = new string[][] { new string[] { "F5" }, new string[] { "F7" }, new string[] { "del" }, new string[] { "F8" }, new string[] { "F10" } };
                     LibRender.Renderer.RenderKeys(4, 4, 24, Fonts.SmallFont, Keys);
@@ -723,9 +723,9 @@ namespace OpenBve
         private static void SortPolygons(ObjectFace[] List, int ListCount, double[] ListDistance, int ListOffset, double TimeElapsed)
         {
             // calculate distance
-            double cx = World.AbsoluteCameraPosition.X;
-            double cy = World.AbsoluteCameraPosition.Y;
-            double cz = World.AbsoluteCameraPosition.Z;
+            double cx = Camera.AbsolutePosition.X;
+            double cy = Camera.AbsolutePosition.Y;
+            double cz = Camera.AbsolutePosition.Z;
             for (int i = 0; i < ListCount; i++)
             {
                 int o = List[i].ObjectIndex;

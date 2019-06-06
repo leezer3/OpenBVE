@@ -7,6 +7,7 @@
 
 using System;
 using System.Windows.Forms;
+using LibRender;
 using OpenBveApi.World;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
@@ -131,24 +132,24 @@ namespace OpenBve {
 
 	    // reset camera
 	    internal static void ResetCamera() {
-			World.AbsoluteCameraPosition = new Vector3(-5.0, 2.5, -25.0);
-			World.AbsoluteCameraDirection = new Vector3(-World.AbsoluteCameraPosition.X, -World.AbsoluteCameraPosition.Y, -World.AbsoluteCameraPosition.Z);
-			World.AbsoluteCameraSide = new Vector3(-World.AbsoluteCameraPosition.Z, 0.0, World.AbsoluteCameraPosition.X);
-			World.AbsoluteCameraDirection.Normalize();
-			World.AbsoluteCameraSide.Normalize();
-			World.AbsoluteCameraUp = Vector3.Cross(World.AbsoluteCameraDirection, World.AbsoluteCameraSide);
-			World.VerticalViewingAngle = 45.0.ToRadians();
-			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * Screen.AspectRatio);
-			World.OriginalVerticalViewingAngle = World.VerticalViewingAngle;
+			Camera.AbsolutePosition = new Vector3(-5.0, 2.5, -25.0);
+			Camera.AbsoluteDirection = new Vector3(-Camera.AbsolutePosition.X, -Camera.AbsolutePosition.Y, -Camera.AbsolutePosition.Z);
+			Camera.AbsoluteSide = new Vector3(-Camera.AbsolutePosition.Z, 0.0, Camera.AbsolutePosition.X);
+			Camera.AbsoluteDirection.Normalize();
+			Camera.AbsoluteSide.Normalize();
+			Camera.AbsoluteUp = Vector3.Cross(Camera.AbsoluteDirection, Camera.AbsoluteSide);
+			Camera.VerticalViewingAngle = 45.0.ToRadians();
+			Camera.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * Camera.VerticalViewingAngle) * Screen.AspectRatio);
+			Camera.OriginalVerticalViewingAngle = Camera.VerticalViewingAngle;
 		}
 
 		// update viewport
 		internal static void UpdateViewport() {
             GL.Viewport(0, 0, Screen.Width, Screen.Height);
             Screen.AspectRatio = (double)Screen.Width / (double)Screen.Height;
-            World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * Screen.AspectRatio);
+            Camera.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * Camera.VerticalViewingAngle) * Screen.AspectRatio);
             GL.MatrixMode(MatrixMode.Projection);
-            Matrix4d perspective = Matrix4d.CreatePerspectiveFieldOfView(World.VerticalViewingAngle, Screen.AspectRatio, 0.2, 1000.0);
+            Matrix4d perspective = Matrix4d.CreatePerspectiveFieldOfView(Camera.VerticalViewingAngle, Screen.AspectRatio, 0.2, 1000.0);
             GL.LoadMatrix(ref perspective);
             GL.Scale(-1, 1, 1);
             GL.MatrixMode(MatrixMode.Modelview);
@@ -160,17 +161,17 @@ namespace OpenBve {
 			if(e.Delta != 0)
 			{
 				double dx = -0.025 * e.Delta;
-				World.AbsoluteCameraPosition += dx * World.AbsoluteCameraDirection;
+				Camera.AbsolutePosition += dx * Camera.AbsoluteDirection;
 				ReducedMode = false;
 			}
 		}
 
 	    internal static void MouseEvent(object sender, MouseButtonEventArgs e)
 	    {
-            MouseCameraPosition = World.AbsoluteCameraPosition;
-            MouseCameraDirection = World.AbsoluteCameraDirection;
-            MouseCameraUp = World.AbsoluteCameraUp;
-            MouseCameraSide = World.AbsoluteCameraSide;
+            MouseCameraPosition = Camera.AbsolutePosition;
+            MouseCameraDirection = Camera.AbsoluteDirection;
+            MouseCameraUp = Camera.AbsoluteUp;
+            MouseCameraSide = Camera.AbsoluteSide;
 	        if (e.Button == OpenTK.Input.MouseButton.Left)
 	        {
 	            MouseButton = e.Mouse.LeftButton == ButtonState.Pressed ? 1 : 0;
@@ -283,42 +284,42 @@ namespace OpenBve {
 	        {
 	            if (MouseButton == 1)
 	            {
-                    World.AbsoluteCameraDirection = MouseCameraDirection;
-                    World.AbsoluteCameraUp = MouseCameraUp;
-                    World.AbsoluteCameraSide = MouseCameraSide;
+                    Camera.AbsoluteDirection = MouseCameraDirection;
+                    Camera.AbsoluteUp = MouseCameraUp;
+                    Camera.AbsoluteSide = MouseCameraSide;
                     {
                         double dx = 0.0025 * (double)(previousMouseState.X - currentMouseState.X);
                         double cosa = Math.Cos(dx);
                         double sina = Math.Sin(dx);
-						World.AbsoluteCameraDirection.Rotate(Vector3.Down, cosa, sina);
-	                    World.AbsoluteCameraUp.Rotate(Vector3.Down, cosa, sina);
-	                    World.AbsoluteCameraSide.Rotate(Vector3.Down, cosa, sina);
+						Camera.AbsoluteDirection.Rotate(Vector3.Down, cosa, sina);
+	                    Camera.AbsoluteUp.Rotate(Vector3.Down, cosa, sina);
+	                    Camera.AbsoluteSide.Rotate(Vector3.Down, cosa, sina);
                     }
                     {
                         double dy = 0.0025 * (double)(previousMouseState.Y - currentMouseState.Y);
                         double cosa = Math.Cos(dy);
                         double sina = Math.Sin(dy);
-						World.AbsoluteCameraDirection.Rotate(World.AbsoluteCameraSide, cosa, sina);
-	                    World.AbsoluteCameraUp.Rotate(World.AbsoluteCameraSide, cosa, sina);
+						Camera.AbsoluteDirection.Rotate(Camera.AbsoluteSide, cosa, sina);
+	                    Camera.AbsoluteUp.Rotate(Camera.AbsoluteSide, cosa, sina);
                     }
                     ReducedMode = false;
 	            }
 	            else if(MouseButton == 2)
 	            {
-                    World.AbsoluteCameraPosition = MouseCameraPosition;
+                    Camera.AbsolutePosition = MouseCameraPosition;
                     double dx = -0.025 * (double)(currentMouseState.X - previousMouseState.X);
-                    World.AbsoluteCameraPosition += dx * World.AbsoluteCameraSide;
+                    Camera.AbsolutePosition += dx * Camera.AbsoluteSide;
                     double dy = 0.025 * (double)(currentMouseState.Y - previousMouseState.Y);
-                    World.AbsoluteCameraPosition += dy * World.AbsoluteCameraUp;
+                    Camera.AbsolutePosition += dy * Camera.AbsoluteUp;
                     ReducedMode = false;
 	            }
 	            else
 	            {
-                    World.AbsoluteCameraPosition = MouseCameraPosition;
+                    Camera.AbsolutePosition = MouseCameraPosition;
                     double dx = -0.025 * (double)(currentMouseState.X - previousMouseState.X);
-                    World.AbsoluteCameraPosition += dx * World.AbsoluteCameraSide;
+                    Camera.AbsolutePosition += dx * Camera.AbsoluteSide;
                     double dz = -0.025 * (double)(currentMouseState.Y - previousMouseState.Y);
-                    World.AbsoluteCameraPosition += dz * World.AbsoluteCameraDirection;
+                    Camera.AbsolutePosition += dz * Camera.AbsoluteDirection;
                     ReducedMode = false;
 	            }
 	        }

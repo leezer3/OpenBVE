@@ -52,7 +52,7 @@ namespace OpenBve
                 {
                     ReducedModeEnteringTime = 2500;
                 }
-                if (World.CameraAlignmentDirection.Position.X != 0.0 | World.CameraAlignmentDirection.Position.Y != 0.0 | World.CameraAlignmentDirection.Position.Z != 0.0 | World.CameraAlignmentDirection.Pitch != 0.0 | World.CameraAlignmentDirection.Yaw != 0.0 | World.CameraAlignmentDirection.Roll != 0.0 | World.CameraAlignmentDirection.TrackPosition != 0.0 | World.CameraAlignmentDirection.Zoom != 0.0)
+                if (Camera.AlignmentDirection.Position.X != 0.0 | Camera.AlignmentDirection.Position.Y != 0.0 | Camera.AlignmentDirection.Position.Z != 0.0 | Camera.AlignmentDirection.Pitch != 0.0 | Camera.AlignmentDirection.Yaw != 0.0 | Camera.AlignmentDirection.Roll != 0.0 | Camera.AlignmentDirection.TrackPosition != 0.0 | Camera.AlignmentDirection.Zoom != 0.0)
                 {
                     ReducedModeEnteringTime = 2500;
                 }
@@ -71,7 +71,7 @@ namespace OpenBve
             Game.SecondsSinceMidnight = (double)(3600 * d.Hour + 60 * d.Minute + d.Second) + 0.001 * (double)d.Millisecond;
             ObjectManager.UpdateAnimatedWorldObjects(TimeElapsed, false);
             World.UpdateAbsoluteCamera(TimeElapsed);
-            ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + World.CameraCurrentAlignment.Position.Z);
+            ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z);
 			Sounds.Update(TimeElapsed, Sounds.SoundModels.Linear);
             Renderer.RenderScene(TimeElapsed);
             SwapBuffers();

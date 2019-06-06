@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using LibRender;
 using OpenBveApi.Runtime;
 using OpenBveApi.Sounds;
 using OpenTK.Audio.OpenAL;
@@ -36,9 +37,9 @@ namespace OpenBve
 			/*
 			 * Set up the listener
 			 * */
-			OpenBveApi.Math.Vector3 listenerPosition = World.AbsoluteCameraPosition;
-			OpenBveApi.Math.Orientation3 listenerOrientation = new OpenBveApi.Math.Orientation3(World.AbsoluteCameraSide, World.AbsoluteCameraUp, World.AbsoluteCameraDirection);
-			OpenBveApi.Math.Vector3 listenerVelocity = World.CameraAlignmentSpeed.Position;
+			OpenBveApi.Math.Vector3 listenerPosition = Camera.AbsolutePosition;
+			OpenBveApi.Math.Orientation3 listenerOrientation = new OpenBveApi.Math.Orientation3(Camera.AbsoluteSide, Camera.AbsoluteUp, Camera.AbsoluteDirection);
+			OpenBveApi.Math.Vector3 listenerVelocity = Camera.AlignmentSpeed.Position;
 			AL.Listener(ALListener3f.Position, 0.0f, 0.0f, 0.0f);
 			AL.Listener(ALListener3f.Velocity, (float)listenerVelocity.X, (float)listenerVelocity.Y, (float)listenerVelocity.Z);
 			var Orientation = new[] { (float)listenerOrientation.Z.X, (float)listenerOrientation.Z.Y, (float)listenerOrientation.Z.Z, -(float)listenerOrientation.Y.X, -(float)listenerOrientation.Y.Y, -(float)listenerOrientation.Y.Z };
@@ -46,7 +47,7 @@ namespace OpenBve
 			/*
 			 * Set up the atmospheric attributes
 			 * */
-			double elevation = World.AbsoluteCameraPosition.Y + Game.RouteInitialElevation;
+			double elevation = Camera.AbsolutePosition.Y + Game.RouteInitialElevation;
 			double airTemperature = Game.GetAirTemperature(elevation);
 			double airPressure = Game.GetAirPressure(elevation, airTemperature);
 			double speedOfSound = Game.GetSpeedOfSound(airPressure, airTemperature);
@@ -139,7 +140,7 @@ namespace OpenBve
 					{
 						double distance = positionDifference.Norm();
 						double innerRadius = Sources[i].Radius;
-						if (World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead)
+						if (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead)
 						{
 							if (Sources[i].Train != TrainManager.PlayerTrain || Sources[i].Car != TrainManager.PlayerTrain.DriverCar)
 							{
@@ -338,10 +339,10 @@ namespace OpenBve
 			/*
 			 * Set up the listener.
 			 * */
-			OpenBveApi.Math.Vector3 listenerPosition = World.AbsoluteCameraPosition;
-			OpenBveApi.Math.Orientation3 listenerOrientation = new OpenBveApi.Math.Orientation3(World.AbsoluteCameraSide, World.AbsoluteCameraUp, World.AbsoluteCameraDirection);
+			OpenBveApi.Math.Vector3 listenerPosition = Camera.AbsolutePosition;
+			OpenBveApi.Math.Orientation3 listenerOrientation = new OpenBveApi.Math.Orientation3(Camera.AbsoluteSide, Camera.AbsoluteUp, Camera.AbsoluteDirection);
 			OpenBveApi.Math.Vector3 listenerVelocity;
-			if (World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead | World.CameraMode == CameraViewMode.Exterior)
+			if (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead | Camera.CurrentMode == CameraViewMode.Exterior)
 			{
 				TrainManager.Car car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
 				OpenBveApi.Math.Vector3 diff = car.FrontAxle.Follower.WorldPosition - car.RearAxle.Follower.WorldPosition;
@@ -365,7 +366,7 @@ namespace OpenBve
 			/*
 			 * Set up the atmospheric attributes.
 			 * */
-			double elevation = World.AbsoluteCameraPosition.Y + Game.RouteInitialElevation;
+			double elevation = Camera.AbsolutePosition.Y + Game.RouteInitialElevation;
 			double airTemperature = Game.GetAirTemperature(elevation);
 			double airPressure = Game.GetAirPressure(elevation, airTemperature);
 			double speedOfSound = Game.GetSpeedOfSound(airPressure, airTemperature);
@@ -469,7 +470,7 @@ namespace OpenBve
 					OpenBveApi.Math.Vector3 positionDifference = position - listenerPosition;
 					double distance = positionDifference.Norm();
 					double radius = Sources[i].Radius;
-					if (World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead)
+					if (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead)
 					{
 						if (Sources[i].Train != TrainManager.PlayerTrain || Sources[i].Car != TrainManager.PlayerTrain.DriverCar)
 						{

@@ -153,11 +153,11 @@ namespace OpenBve
 			int[] Viewport = new int[] { 0, 0, LibRender.Screen.Width, LibRender.Screen.Height };
 			GL.Viewport(Viewport[0], Viewport[1], Viewport[2], Viewport[3]);
 			LibRender.Screen.AspectRatio = (double)LibRender.Screen.Width / (double)LibRender.Screen.Height;
-			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * LibRender.Screen.AspectRatio);
+			Camera.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * Camera.VerticalViewingAngle) * LibRender.Screen.AspectRatio);
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();
 			PickMatrix(new Vector2(Point.X, Viewport[3] - Point.Y), Delta, Viewport);
-			Matrix4d perspective = Matrix4d.Perspective(World.VerticalViewingAngle, -LibRender.Screen.AspectRatio, 0.025, 50.0);
+			Matrix4d perspective = Matrix4d.Perspective(Camera.VerticalViewingAngle, -LibRender.Screen.AspectRatio, 0.025, 50.0);
 			GL.MultMatrix(ref perspective);
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.LoadIdentity();
@@ -187,12 +187,12 @@ namespace OpenBve
 			int PartId = 0;
 
 			// set up camera
-			double dx = World.AbsoluteCameraDirection.X;
-			double dy = World.AbsoluteCameraDirection.Y;
-			double dz = World.AbsoluteCameraDirection.Z;
-			double ux = World.AbsoluteCameraUp.X;
-			double uy = World.AbsoluteCameraUp.Y;
-			double uz = World.AbsoluteCameraUp.Z;
+			double dx = Camera.AbsoluteDirection.X;
+			double dy = Camera.AbsoluteDirection.Y;
+			double dz = Camera.AbsoluteDirection.Z;
+			double ux = Camera.AbsoluteUp.X;
+			double uy = Camera.AbsoluteUp.Y;
+			double uz = Camera.AbsoluteUp.Z;
 			Matrix4d LookAt = Matrix4d.LookAt(0.0, 0.0, 0.0, dx, dy, dz, ux, uy, uz);
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.LoadMatrix(ref LookAt);
@@ -215,7 +215,7 @@ namespace OpenBve
 			for (int i = 0; i < Touch.FaceCount; i++)
 			{
 				GL.LoadName(PartId);
-				RenderFace(ref Touch.Faces[i], World.AbsoluteCameraPosition, IsDebugTouchMode);
+				RenderFace(ref Touch.Faces[i], Camera.AbsolutePosition, IsDebugTouchMode);
 				PartId++;
 			}
 
@@ -314,7 +314,7 @@ namespace OpenBve
 				return;
 			}
 			
-			if (World.CameraMode != CameraViewMode.Interior && World.CameraMode != CameraViewMode.InteriorLookAhead)
+			if (Camera.CurrentMode != CameraViewMode.Interior && Camera.CurrentMode != CameraViewMode.InteriorLookAhead)
 			{
 				return;
 			}
@@ -359,7 +359,7 @@ namespace OpenBve
 				return false;
 			}
 
-			if (World.CameraMode != CameraViewMode.Interior && World.CameraMode != CameraViewMode.InteriorLookAhead)
+			if (Camera.CurrentMode != CameraViewMode.Interior && Camera.CurrentMode != CameraViewMode.InteriorLookAhead)
 			{
 				Status = Cursor.Status.Default;
 				return false;
@@ -428,7 +428,7 @@ namespace OpenBve
 				return;
 			}
 			
-			if (World.CameraMode != CameraViewMode.Interior && World.CameraMode != CameraViewMode.InteriorLookAhead)
+			if (Camera.CurrentMode != CameraViewMode.Interior && Camera.CurrentMode != CameraViewMode.InteriorLookAhead)
 			{
 				return;
 			}
@@ -502,7 +502,7 @@ namespace OpenBve
 				return;
 			}
 
-			if (World.CameraMode != CameraViewMode.Interior && World.CameraMode != CameraViewMode.InteriorLookAhead)
+			if (Camera.CurrentMode != CameraViewMode.Interior && Camera.CurrentMode != CameraViewMode.InteriorLookAhead)
 			{
 				return;
 			}

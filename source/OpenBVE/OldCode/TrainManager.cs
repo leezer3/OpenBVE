@@ -63,7 +63,7 @@ namespace OpenBve
 						{
 							PanelAnimatedXmlParser.ParsePanelAnimatedXml(System.IO.Path.GetFileName(File), TrainPath, Train, Train.DriverCar);
 							Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
-							World.CameraRestriction = CameraRestrictionMode.NotAvailable;
+							Camera.CurrentRestriction = CameraRestrictionMode.NotAvailable;
 						}
 
 						DocumentElements = CurrentXML.Root.Elements("Panel");
@@ -71,7 +71,7 @@ namespace OpenBve
 						{
 							PanelXmlParser.ParsePanelXml(System.IO.Path.GetFileName(File), TrainPath, Train, Train.DriverCar);
 							Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.On;
-							World.CameraRestriction = CameraRestrictionMode.On;
+							Camera.CurrentRestriction = CameraRestrictionMode.On;
 						}
 					}
 				}
@@ -114,7 +114,7 @@ namespace OpenBve
 							}
 							Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements = a.Objects;
 							Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
-							World.CameraRestriction = CameraRestrictionMode.NotAvailable;
+							Camera.CurrentRestriction = CameraRestrictionMode.NotAvailable;
 							World.UpdateViewingDistances();
 							return;
 						}
@@ -142,7 +142,7 @@ namespace OpenBve
 					Panel2 = true;
 					Panel2CfgParser.ParsePanel2Config("panel2.cfg", TrainPath, Encoding, Train, Train.DriverCar);
 					Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.On;
-					World.CameraRestriction = CameraRestrictionMode.On;
+					Camera.CurrentRestriction = CameraRestrictionMode.On;
 				}
 				else
 				{
@@ -152,11 +152,11 @@ namespace OpenBve
 						Program.FileSystem.AppendToLogFile("Loading train panel: " + File);
 						PanelCfgParser.ParsePanelConfig(TrainPath, Encoding, Train);
 						Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.On;
-						World.CameraRestriction = CameraRestrictionMode.On;
+						Camera.CurrentRestriction = CameraRestrictionMode.On;
 					}
 					else
 					{
-						World.CameraRestriction = CameraRestrictionMode.NotAvailable;
+						Camera.CurrentRestriction = CameraRestrictionMode.NotAvailable;
 					}
 				}
 			}

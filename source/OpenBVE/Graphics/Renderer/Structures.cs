@@ -44,9 +44,9 @@ namespace OpenBve
 			internal void SortPolygons()
 			{
 				// calculate distance
-				double cx = World.AbsoluteCameraPosition.X;
-				double cy = World.AbsoluteCameraPosition.Y;
-				double cz = World.AbsoluteCameraPosition.Z;
+				double cx = Camera.AbsolutePosition.X;
+				double cy = Camera.AbsolutePosition.Y;
+				double cz = Camera.AbsolutePosition.Z;
 				for (int i = 0; i < FaceCount; i++)
 				{
 					int o = Faces[i].ObjectIndex;
