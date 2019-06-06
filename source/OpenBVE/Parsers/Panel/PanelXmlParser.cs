@@ -308,17 +308,17 @@ namespace OpenBve.Parsers.Panel
 				if (LibRender.Screen.Width >= LibRender.Screen.Height)
 				{
 					WorldWidth = 2.0 * Math.Tan(0.5 * World.HorizontalViewingAngle) * EyeDistance;
-					WorldHeight = WorldWidth / World.AspectRatio;
+					WorldHeight = WorldWidth / LibRender.Screen.AspectRatio;
 				}
 				else
 				{
-					WorldHeight = 2.0 * Math.Tan(0.5 * World.VerticalViewingAngle) * EyeDistance / World.AspectRatio;
-					WorldWidth = WorldHeight * World.AspectRatio;
+					WorldHeight = 2.0 * Math.Tan(0.5 * World.VerticalViewingAngle) * EyeDistance / LibRender.Screen.AspectRatio;
+					WorldWidth = WorldHeight * LibRender.Screen.AspectRatio;
 				}
 				double x0 = (PanelLeft - PanelCenter.X) / PanelResolution;
 				double x1 = (PanelRight - PanelCenter.X) / PanelResolution;
-				double y0 = (PanelCenter.Y - PanelBottom) / PanelResolution * World.AspectRatio;
-				double y1 = (PanelCenter.Y - PanelTop) / PanelResolution * World.AspectRatio;
+				double y0 = (PanelCenter.Y - PanelBottom) / PanelResolution * LibRender.Screen.AspectRatio;
+				double y1 = (PanelCenter.Y - PanelTop) / PanelResolution * LibRender.Screen.AspectRatio;
 				World.CameraRestrictionBottomLeft = new Vector3(x0 * WorldWidth, y0 * WorldHeight, EyeDistance);
 				World.CameraRestrictionTopRight = new Vector3(x1 * WorldWidth, y1 * WorldHeight, EyeDistance);
 				Train.Cars[Car].DriverYaw = Math.Atan((PanelCenter.X - PanelOrigin.X) * WorldWidth / PanelResolution);
@@ -1554,21 +1554,21 @@ namespace OpenBve.Parsers.Panel
 			if (LibRender.Screen.Width >= LibRender.Screen.Height)
 			{
 				WorldWidth = 2.0 * Math.Tan(0.5 * World.HorizontalViewingAngle) * EyeDistance;
-				WorldHeight = WorldWidth / World.AspectRatio;
+				WorldHeight = WorldWidth / LibRender.Screen.AspectRatio;
 			}
 			else
 			{
-				WorldHeight = 2.0 * Math.Tan(0.5 * World.VerticalViewingAngle) * EyeDistance / World.AspectRatio;
-				WorldWidth = WorldHeight * World.AspectRatio;
+				WorldHeight = 2.0 * Math.Tan(0.5 * World.VerticalViewingAngle) * EyeDistance / LibRender.Screen.AspectRatio;
+				WorldWidth = WorldHeight * LibRender.Screen.AspectRatio;
 			}
 			double x0 = Location.X / PanelResolution;
 			double x1 = (Location.X + Size.X) / PanelResolution;
-			double y0 = (PanelBottom - Location.Y) / PanelResolution * World.AspectRatio;
-			double y1 = (PanelBottom - (Location.Y + Size.Y)) / PanelResolution * World.AspectRatio;
+			double y0 = (PanelBottom - Location.Y) / PanelResolution * LibRender.Screen.AspectRatio;
+			double y1 = (PanelBottom - (Location.Y + Size.Y)) / PanelResolution * LibRender.Screen.AspectRatio;
 			double xd = 0.5 - PanelCenter.X / PanelResolution;
 			x0 += xd;
 			x1 += xd;
-			double yt = PanelBottom - PanelResolution / World.AspectRatio;
+			double yt = PanelBottom - PanelResolution / LibRender.Screen.AspectRatio;
 			double yd = (PanelCenter.Y - yt) / (PanelBottom - yt) - 0.5;
 			y0 += yd;
 			y1 += yd;

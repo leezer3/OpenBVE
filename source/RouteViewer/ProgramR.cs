@@ -19,6 +19,7 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using ButtonState = OpenTK.Input.ButtonState;
+using Screen = LibRender.Screen;
 using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve {
@@ -126,18 +127,18 @@ namespace OpenBve {
 			World.AbsoluteCameraSide.Normalize();
 			World.AbsoluteCameraUp = Vector3.Cross(World.AbsoluteCameraDirection, World.AbsoluteCameraSide);
 			World.VerticalViewingAngle = 45.0.ToRadians();
-			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
+			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * Screen.AspectRatio);
 			World.OriginalVerticalViewingAngle = World.VerticalViewingAngle;
 		}
 
 		// update viewport
 		internal static void UpdateViewport() {
 			GL.Viewport(0, 0, LibRender.Screen.Width, LibRender.Screen.Height);
-			World.AspectRatio = (double)LibRender.Screen.Width / (double)LibRender.Screen.Height;
-			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
+			Screen.AspectRatio = (double)LibRender.Screen.Width / (double)LibRender.Screen.Height;
+			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * Screen.AspectRatio);
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();
-			Matrix4d perspective =  Matrix4d.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.2, 1000.0);
+			Matrix4d perspective =  Matrix4d.Perspective(World.VerticalViewingAngle, -Screen.AspectRatio, 0.2, 1000.0);
 			GL.MultMatrix(ref perspective);
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.LoadIdentity();

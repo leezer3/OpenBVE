@@ -138,17 +138,17 @@ namespace OpenBve {
 			World.AbsoluteCameraSide.Normalize();
 			World.AbsoluteCameraUp = Vector3.Cross(World.AbsoluteCameraDirection, World.AbsoluteCameraSide);
 			World.VerticalViewingAngle = 45.0.ToRadians();
-			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
+			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * Screen.AspectRatio);
 			World.OriginalVerticalViewingAngle = World.VerticalViewingAngle;
 		}
 
 		// update viewport
 		internal static void UpdateViewport() {
             GL.Viewport(0, 0, Screen.Width, Screen.Height);
-            World.AspectRatio = (double)Screen.Width / (double)Screen.Height;
-            World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
+            Screen.AspectRatio = (double)Screen.Width / (double)Screen.Height;
+            World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * Screen.AspectRatio);
             GL.MatrixMode(MatrixMode.Projection);
-            Matrix4d perspective = Matrix4d.CreatePerspectiveFieldOfView(World.VerticalViewingAngle, World.AspectRatio, 0.2, 1000.0);
+            Matrix4d perspective = Matrix4d.CreatePerspectiveFieldOfView(World.VerticalViewingAngle, Screen.AspectRatio, 0.2, 1000.0);
             GL.LoadMatrix(ref perspective);
             GL.Scale(-1, 1, 1);
             GL.MatrixMode(MatrixMode.Modelview);

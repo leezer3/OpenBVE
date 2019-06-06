@@ -306,7 +306,7 @@ namespace OpenBve {
 			
 			//One degree in radians
 			World.VerticalViewingAngle = 45.0.ToRadians();
-			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
+			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * LibRender.Screen.AspectRatio);
 			World.OriginalVerticalViewingAngle = World.VerticalViewingAngle;
 			World.ExtraViewingDistance = 50.0;
 			World.ForwardViewingDistance = (double)Interface.CurrentOptions.ViewingDistance;

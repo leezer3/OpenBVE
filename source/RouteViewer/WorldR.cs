@@ -19,7 +19,7 @@ namespace OpenBve {
 		internal static double HorizontalViewingAngle;
 		internal static double VerticalViewingAngle;
 		internal static double OriginalVerticalViewingAngle;
-		internal static double AspectRatio;
+		
 		internal static double ForwardViewingDistance;
 		internal static double BackwardViewingDistance;
 		internal static double ExtraViewingDistance;

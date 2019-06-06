@@ -18,8 +18,7 @@ namespace OpenBve {
 		internal static double VerticalViewingAngle;
 		/// <summary>The original vertical viewing angle in radians</summary>
 		internal static double OriginalVerticalViewingAngle;
-		/// <summary>The current aspect ratio</summary>
-		internal static double AspectRatio;
+		
 		/// <summary>The current viewing distance in the forward direction.</summary>
 		internal static double ForwardViewingDistance;
 		/// <summary>The current viewing distance in the backward direction.</summary>

@@ -152,12 +152,12 @@ namespace OpenBve
 			LibRender.Renderer.CurrentViewPortMode = ViewPortMode.Cab;
 			int[] Viewport = new int[] { 0, 0, LibRender.Screen.Width, LibRender.Screen.Height };
 			GL.Viewport(Viewport[0], Viewport[1], Viewport[2], Viewport[3]);
-			World.AspectRatio = (double)LibRender.Screen.Width / (double)LibRender.Screen.Height;
-			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
+			LibRender.Screen.AspectRatio = (double)LibRender.Screen.Width / (double)LibRender.Screen.Height;
+			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * LibRender.Screen.AspectRatio);
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();
 			PickMatrix(new Vector2(Point.X, Viewport[3] - Point.Y), Delta, Viewport);
-			Matrix4d perspective = Matrix4d.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.025, 50.0);
+			Matrix4d perspective = Matrix4d.Perspective(World.VerticalViewingAngle, -LibRender.Screen.AspectRatio, 0.025, 50.0);
 			GL.MultMatrix(ref perspective);
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.LoadIdentity();
