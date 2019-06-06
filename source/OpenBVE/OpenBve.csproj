@@ -187,7 +187,6 @@
     <Compile Include="Graphics\Renderer\Events.cs" />
     <Compile Include="Graphics\Renderer\Functions.cs" />
     <Compile Include="Graphics\Renderer\Lamp.cs" />
-    <Compile Include="Graphics\Renderer\MotionBlur.cs" />
     <Compile Include="Graphics\Renderer\Overlays.cs" />
     <Compile Include="Graphics\Renderer\Overlays.ATS.cs">
       <DependentUpon>Overlays.cs</DependentUpon>

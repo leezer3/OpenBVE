@@ -1,4 +1,5 @@
-﻿using LibRender;
+﻿using System;
+using LibRender;
 using OpenBveApi.Graphics;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -313,7 +314,7 @@ namespace OpenBve
 					GL.Disable(EnableCap.Lighting);
 					LibRender.Renderer.LightingEnabled = false;
 				}
-				RenderFullscreenMotionBlur();
+				LibRender.MotionBlur.RenderFullscreen(Interface.CurrentOptions.MotionBlur, Game.InfoFrameRate, Math.Abs(World.CameraSpeed));
 			}
 			// overlay layer
 			if (LibRender.Renderer.FogEnabled)

@@ -78,6 +78,8 @@
       <Name>OpenBveApi</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="MotionBlur\MotionBlur.cs" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
