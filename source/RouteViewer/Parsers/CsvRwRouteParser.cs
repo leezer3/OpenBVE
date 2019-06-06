@@ -35,7 +35,7 @@ namespace OpenBve {
 				}
 				else
 				{
-					this.Add(key, unifiedObject);
+					base.Add(key, unifiedObject);
 				}
 			}
 
@@ -52,7 +52,33 @@ namespace OpenBve {
 				}
 				else
 				{
-					this.Add(key, staticObject);
+					base.Add(key, staticObject);
+				}
+			}
+
+			internal new void Add(int key, UnifiedObject unifiedObject)
+			{
+				if (this.ContainsKey(key))
+				{
+					this[key] = unifiedObject;
+					Interface.AddMessage(MessageType.Warning, false, "The object with an index of " + key + " has been declared twice: The most recent declaration will be used.");
+				}
+				else
+				{
+					base.Add(key, unifiedObject);
+				}
+			}
+
+			internal void Add(int key, StaticObject staticObject)
+			{
+				if (this.ContainsKey(key))
+				{
+					this[key] = staticObject;
+					Interface.AddMessage(MessageType.Warning, false, "The object with an index of " + key + " has been declared twice: The most recent declaration will be used.");
+				}
+				else
+				{
+					base.Add(key, staticObject);
 				}
 			}
 		}
@@ -73,7 +99,7 @@ namespace OpenBve {
 				}
 				else
 				{
-					this.Add(key, signal);
+					base.Add(key, signal);
 				}
 			}
 		}
@@ -94,7 +120,26 @@ namespace OpenBve {
 				}
 				else
 				{
-					this.Add(key, handle);
+					base.Add(key, handle);
+				}
+			}
+		}
+
+		private class PoleDictionary : Dictionary<int, ObjectDictionary>
+		{
+			/// <summary>Adds a new set of poles to the dictionary</summary>
+			/// <param name="key">The pole index</param>
+			/// <param name="dict">The background handle</param>
+			internal new void Add(int key, ObjectDictionary dict)
+			{
+				if (this.ContainsKey(key))
+				{
+					this[key] = dict;
+					Interface.AddMessage(MessageType.Warning, false, "The Background with an index of " + key + " has been declared twice: The most recent declaration will be used.");
+				}
+				else
+				{
+					base.Add(key, dict);
 				}
 			}
 		}
@@ -276,7 +321,7 @@ namespace OpenBve {
 		private struct StructureData
 		{
 			internal ObjectDictionary RailObjects;
-			internal UnifiedObject[][] Poles;
+			internal PoleDictionary Poles;
 			internal ObjectDictionary Ground;
 			internal ObjectDictionary WallL;
 			internal ObjectDictionary WallR;
@@ -381,17 +426,15 @@ namespace OpenBve {
 				Data.Blocks[0].PointsOfInterest = new PointOfInterest[] { };
 				Data.Markers = new Marker[] { };
 				string PoleFolder = OpenBveApi.Path.CombineDirectory(CompatibilityFolder, "Poles");
-				Data.Structure.Poles = new UnifiedObject[][] {
-					new UnifiedObject[] {
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile (PoleFolder, "pole_1.csv"), Encoding, false)
-					}, new UnifiedObject[] {
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile (PoleFolder, "pole_2.csv"), Encoding, false)
-					}, new UnifiedObject[] {
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile (PoleFolder, "pole_3.csv"), Encoding, false)
-					}, new UnifiedObject[] {
-						ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile (PoleFolder, "pole_4.csv"), Encoding, false)
-					}
-				};
+				Data.Structure.Poles = new PoleDictionary();
+				Data.Structure.Poles.Add(0, new ObjectDictionary());
+				Data.Structure.Poles[0].Add(0, ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(PoleFolder, "pole_1.csv"), System.Text.Encoding.UTF8, false));
+				Data.Structure.Poles.Add(1, new ObjectDictionary());
+				Data.Structure.Poles[1].Add(0, ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(PoleFolder, "pole_2.csv"), System.Text.Encoding.UTF8, false));
+				Data.Structure.Poles.Add(2, new ObjectDictionary());
+				Data.Structure.Poles[2].Add(0, ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(PoleFolder, "pole_3.csv"), System.Text.Encoding.UTF8, false));
+				Data.Structure.Poles.Add(3, new ObjectDictionary());
+				Data.Structure.Poles[3].Add(0, ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(PoleFolder, "pole_4.csv"), System.Text.Encoding.UTF8, false));
 				Data.Structure.RailObjects = new ObjectDictionary();
 				Data.Structure.Ground = new ObjectDictionary();
 				Data.Structure.WallL = new ObjectDictionary();
@@ -2121,19 +2164,14 @@ namespace OpenBve {
 												} else if (Path.ContainsInvalidChars(Arguments[0])) {
 													Interface.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
-													if (CommandIndex1 >= Data.Structure.Poles.Length) {
-														Array.Resize<UnifiedObject[]>(ref Data.Structure.Poles, CommandIndex1 + 1);
-													}
-													if (Data.Structure.Poles[CommandIndex1] == null) {
-														Data.Structure.Poles[CommandIndex1] = new UnifiedObject[CommandIndex2 + 1];
-													} else if (CommandIndex2 >= Data.Structure.Poles[CommandIndex1].Length) {
-														Array.Resize<UnifiedObject>(ref Data.Structure.Poles[CommandIndex1], CommandIndex2 + 1);
-													}
+													if (!Data.Structure.Poles.ContainsKey(CommandIndex1)) {
+														Data.Structure.Poles.Add(CommandIndex1, new ObjectDictionary());
+													} 
 													string f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
 													if (!System.IO.File.Exists(f)) {
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														Data.Structure.Poles[CommandIndex1][CommandIndex2] = ObjectManager.LoadObject(f, Encoding, false);
+														Data.Structure.Poles[CommandIndex1].Add(CommandIndex2, ObjectManager.LoadObject(f, Encoding, false));
 													}
 												}
 											}
@@ -4407,9 +4445,9 @@ namespace OpenBve {
 														sttype = 0;
 													}
 												}
-												if (typ < 0 || typ >= Data.Structure.Poles.Length || Data.Structure.Poles[typ] == null) {
+												if (typ < 0 || !Data.Structure.Poles.ContainsKey(typ) || Data.Structure.Poles[typ] == null) {
 													Interface.AddMessage(MessageType.Error, false, "PoleStructureIndex " + typ + " references an object not loaded in Track.Pole at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-												} else if (sttype < 0 || sttype >= Data.Structure.Poles[typ].Length || Data.Structure.Poles[typ][sttype] == null) {
+												} else if (sttype < 0 || !Data.Structure.Poles[typ].ContainsKey(sttype) || Data.Structure.Poles[typ][sttype] == null) {
 													Interface.AddMessage(MessageType.Error, false, "PoleStructureIndex " + typ + " references an object not loaded in Track.Pole at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													Data.Blocks[BlockIndex].RailPole[idx].Mode = typ;

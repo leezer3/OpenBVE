@@ -24,7 +24,7 @@ namespace OpenBve
 				}
 				else
 				{
-					this.Add(key, unifiedObject);
+					base.Add(key, unifiedObject);
 				}
 			}
 
@@ -41,7 +41,33 @@ namespace OpenBve
 				}
 				else
 				{
-					this.Add(key, staticObject);
+					base.Add(key, staticObject);
+				}
+			}
+
+			internal new void Add(int key, UnifiedObject unifiedObject)
+			{
+				if (this.ContainsKey(key))
+				{
+					this[key] = unifiedObject;
+					Interface.AddMessage(MessageType.Warning, false, "The object with an index of " + key + " has been declared twice: The most recent declaration will be used.");
+				}
+				else
+				{
+					base.Add(key, unifiedObject);
+				}
+			}
+
+			internal void Add(int key, StaticObject staticObject)
+			{
+				if (this.ContainsKey(key))
+				{
+					this[key] = staticObject;
+					Interface.AddMessage(MessageType.Warning, false, "The object with an index of " + key + " has been declared twice: The most recent declaration will be used.");
+				}
+				else
+				{
+					base.Add(key, staticObject);
 				}
 			}
 		}
@@ -62,7 +88,7 @@ namespace OpenBve
 				}
 				else
 				{
-					this.Add(key, signal);
+					base.Add(key, signal);
 				}
 			}
 		}
@@ -83,7 +109,26 @@ namespace OpenBve
 				}
 				else
 				{
-					this.Add(key, handle);
+					base.Add(key, handle);
+				}
+			}
+		}
+
+		private class PoleDictionary : Dictionary<int, ObjectDictionary>
+		{
+			/// <summary>Adds a new set of poles to the dictionary</summary>
+			/// <param name="key">The pole index</param>
+			/// <param name="dict">The background handle</param>
+			internal new void Add(int key, ObjectDictionary dict)
+			{
+				if (this.ContainsKey(key))
+				{
+					this[key] = dict;
+					Interface.AddMessage(MessageType.Warning, false, "The Background with an index of " + key + " has been declared twice: The most recent declaration will be used.");
+				}
+				else
+				{
+					base.Add(key, dict);
 				}
 			}
 		}
