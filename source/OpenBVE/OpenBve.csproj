@@ -305,7 +305,6 @@
     <Compile Include="Simulation\TrainManager\Train\Train.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Handles.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Specs.cs" />
-    <Compile Include="Simulation\World\BackgroundManager.cs" />
     <Compile Include="System\Cursor.cs" />
     <Compile Include="System\Functions\Bve5Shared.cs" />
     <Compile Include="System\Functions\CrashHandler.cs" />
@@ -492,6 +491,10 @@
     <ProjectReference Include="..\AssimpParser\AssimpParser.csproj">
       <Project>{77ccae62-d374-468e-98a0-dd8adb461c10}</Project>
       <Name>AssimpParser</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BackgroundManager\BackgroundManager.csproj">
+      <Project>{878eb203-7005-4202-ad3c-409f65656eec}</Project>
+      <Name>BackgroundManager</Name>
     </ProjectReference>
     <ProjectReference Include="..\DevTools\LBAHeader\LBAHeader.csproj">
       <Project>{e9b64673-65b7-4d77-a4db-4b441a7c9197}</Project>

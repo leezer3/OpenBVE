@@ -91,6 +91,9 @@ FORMATS_MSTS_FILE     :=Data/Formats/Formats.Msts.dll
 SIGNALMANAGER_ROOT     :=source/SignalManager
 SIGNALMANAGER_FILE     :=SignalManager.dll
 
+BACKGROUNDMANAGER_ROOT     :=source/BackgroundManager
+BACKGROUNDMANAGER_FILE     :=BackgroundManager.dll
+
 LIBRENDER_ROOT     :=source/LibRender
 LIBRENDER_FILE     :=LibRender.dll
 
@@ -189,6 +192,7 @@ all: all-debug
 all-debug: print_csc_type
 all-debug: $(DEBUG_DIR)/$(FORMATS_MSTS_FILE)
 all-debug: $(DEBUG_DIR)/$(SIGNALMANAGER_FILE)
+all-debug: $(DEBUG_DIR)/$(BACKGROUNDMANAGER_FILE)
 all-debug: $(DEBUG_DIR)/$(LIBRENDER_FILE)
 all-debug: $(DEBUG_DIR)/$(OPEN_BVE_FILE)
 all-debug: $(DEBUG_DIR)/$(OBJECT_BENDER_FILE)
@@ -204,6 +208,7 @@ all-release: ARGS := $(RELEASE_ARGS)
 all-release: OUTPUT_DIR := $(RELEASE_DIR)
 all-release: $(RELEASE_DIR)/$(FORMATS_MSTS_FILE)
 all-release: $(RELEASE_DIR)/$(SIGNALMANAGER_FILE)
+all-release: $(RELEASE_DIR)/$(BACKGROUNDMANAGER_FILE)
 all-release: $(RELEASE_DIR)/$(LIBRENDER_FILE)
 all-release: $(RELEASE_DIR)/$(OPEN_BVE_FILE)
 all-release: $(RELEASE_DIR)/$(OBJECT_BENDER_FILE)
@@ -273,6 +278,7 @@ clean:
 	rm -f bin*/OpenBveApi.dll* bin*/OpenBveApi.pdb
 	rm -f bin*/AssimpParser.dll* bin*/AssimpParser.pdb
 	rm -f bin*/SignalManager.dll* bin*/SignalManager.pdb
+	rm -f bin*/BackgroundManager.dll* bin*/BackgroundManager.pdb
 	rm -f bin*/LibRender.dll* bin*/LibRender.pdb
 	rm -f bin*/Data/Formats/Formats.Msts.dll* bin*/Data/Formats/Formats.Msts.pdb
 	rm -f bin*/Data/Formats/Formats.DirectX.dll* bin*/Data/Formats/Formats.DirectX.pdb
@@ -397,6 +403,7 @@ $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_TGA_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(LBAHEADER_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(FORMATS_MSTS_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SIGNALMANAGER_FILE)
+$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(BACKGROUNDMANAGER_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(LIBRENDER_FILE)
 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE) 
@@ -417,13 +424,14 @@ $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(TEXTURE_TGA_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(LBAHEADER_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(FORMATS_MSTS_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SIGNALMANAGER_FILE)
+$(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(BACKGROUNDMANAGER_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(LIBRENDER_FILE)
 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE) $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs $(patsubst "%", %, $(OPEN_BVE_SRC)) $(OPEN_BVE_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OPEN_BVE_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OPEN_BVE_OUT) /target:winexe /main:OpenBve.Program $(OPEN_BVE_SRC) $(ARGS) $(OPEN_BVE_DOC) \
 	$(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs \
-	/reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OPEN_BVE_API_OUT) /reference:$(ASSIMP_OUT) /reference:$(FORMATS_MSTS_OUT) /reference:$(SIGNALMANAGER_OUT) /reference:$(LIBRENDER_OUT) \
+	/reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OPEN_BVE_API_OUT) /reference:$(ASSIMP_OUT) /reference:$(FORMATS_MSTS_OUT) /reference:$(SIGNALMANAGER_OUT)  /reference:$(BACKGROUNDMANAGER_OUT) /reference:$(LIBRENDER_OUT) \
 	/reference:$(OUTPUT_DIR)/CSScriptLibrary.dll /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/SharpCompress.dll /reference:$(OUTPUT_DIR)/PIEHid32Net.dll \
 	/reference:System.Xml.Linq.dll /reference:System.Core.dll /reference:System.dll \
 	/win32icon:$(ICON) $(addprefix /resource:, $(OPEN_BVE_RESOURCE)) /resource:"assets/Controls/Default.controls",OpenBve.Default.controls /resource:"assets/Cursors/Symbols/plus.png",OpenBve.plus.png  /resource:"assets/Cursors/Symbols/plus.png",OpenBve.minus.png /resource:"assets/Cursors/nk.png",OpenBve.nk.png
@@ -585,6 +593,28 @@ $(DEBUG_DIR)/$(SIGNALMANAGER_FILE) $(RELEASE_DIR)/$(SIGNALMANAGER_FILE): $(SIGNA
 	@$(CSC) /out:$(SIGNALMANAGER_OUT) /target:library $(SIGNALMANAGER_SRC) $(ARGS) $(SIGNALMANAGER_DOC) \
 	/reference:$(OPEN_BVE_API_OUT) /reference:System.Core.dll /reference:System.dll \
 	$(addprefix /resource:, $(SIGNALMANAGER_RESOURCE))
+	
+#####################
+# BackgroundManager #
+#####################
+
+BACKGROUNDMANAGER_FOLDERS  := $(shell find $(BACKGROUNDMANAGER_ROOT) -type d)
+BACKGROUNDMANAGER_SRC      := $(foreach sdir, $(BACKGROUNDMANAGER_FOLDERS), $(wildcard $(sdir)/*.cs))
+BACKGROUNDMANAGER_DOC      := $(addprefix /doc:, $(foreach sdir, $(BACKGROUNDMANAGER_FOLDERS), $(wildcard $(sdir)/*.xml)))
+BACKGROUNDMANAGER_RESX     := $(foreach sdir, $(BACKGROUNDMANAGER_FOLDERS), $(wildcard $(sdir)/*.resx))
+BACKGROUNDMANAGER_RESOURCE := $(addprefix $(BACKGROUNDMANAGER_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst $(dir $(BACKGROUNDMANAGER_ROOT))%.resx, %.resources, $(BACKGROUNDMANAGER_RESX)))))
+BACKGROUNDMANAGER_OUT       =$(OUTPUT_DIR)/$(BACKGROUNDMANAGER_FILE)
+
+$(call create_resource, $(BACKGROUNDMANAGER_RESOURCE), $(BACKGROUNDMANAGER_RESX))
+
+$(DEBUG_DIR)/$(BACKGROUNDMANAGER_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
+$(RELEASE_DIR)/$(BACKGROUNDMANAGER_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
+
+$(DEBUG_DIR)/$(BACKGROUNDMANAGER_FILE) $(RELEASE_DIR)/$(BACKGROUNDMANAGER_FILE): $(BACKGROUNDMANAGER_SRC) $(BACKGROUNDMANAGER_RESOURCE)
+	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(BACKGROUNDMANAGER_OUT)$(COLOR_END)
+	@$(CSC) /out:$(BACKGROUNDMANAGER_OUT) /target:library $(BACKGROUNDMANAGER_SRC) $(ARGS) $(BACKGROUNDMANAGER_DOC) \
+	/reference:$(OPEN_BVE_API_OUT) /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:System.Core.dll /reference:System.dll \
+	$(addprefix /resource:, $(BACKGROUNDMANAGER_RESOURCE))
 
 #############
 # LibRender #
@@ -837,7 +867,7 @@ $(RELEASE_DIR)/$(ROUTE_VIEWER_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
 $(DEBUG_DIR)/$(ROUTE_VIEWER_FILE) $(RELEASE_DIR)/$(ROUTE_VIEWER_FILE): $(ROUTE_VIEWER_SRC) $(ROUTE_VIEWER_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(ROUTE_VIEWER_OUT)$(COLOR_END)
 	@$(CSC) /out:$(ROUTE_VIEWER_OUT) /target:winexe /main:OpenBve.Program $(ROUTE_VIEWER_SRC) $(ARGS) $(ROUTE_VIEWER_DOC) \
-	/reference:$(OPEN_BVE_API_OUT) /reference:$(SIGNALMANAGER_OUT) /reference:$(LIBRENDER_OUT) /reference:$(OUTPUT_DIR)/OpenTK \
+	/reference:$(OPEN_BVE_API_OUT) /reference:$(SIGNALMANAGER_OUT) /reference:$(BACKGROUNDMANAGER_OUT) /reference:$(LIBRENDER_OUT) /reference:$(OUTPUT_DIR)/OpenTK \
 	/reference:System.Core.dll /reference:System.dll \
 	/win32icon:$(ICON) $(addprefix /resource:, $(ROUTE_VIEWER_RESOURCE))
 

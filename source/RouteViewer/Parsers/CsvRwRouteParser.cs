@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Collections.Generic;
 using LibRender;
+using OpenBve.BackgroundManager;
 using OpenBve.SignalManager;
 using OpenBveApi;
 using OpenBveApi.Math;
@@ -14,6 +15,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using OpenBveApi.Runtime;
+using CurrentRoute = OpenBve.BackgroundManager.CurrentRoute;
 
 namespace OpenBve {
 	internal class CsvRwRouteParser {
@@ -2731,16 +2733,16 @@ namespace OpenBve {
 													Interface.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													if (!Data.Backgrounds.ContainsKey(CommandIndex1)) {
-														Data.Backgrounds.Add(CommandIndex1, new World.StaticBackground(null, 6, false));
+														Data.Backgrounds.Add(CommandIndex1, new StaticBackground(null, 6, false));
 													}
 													string f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
 													if (!System.IO.File.Exists(f)) {
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else
 													{
-														if (Data.Backgrounds[CommandIndex1] is World.StaticBackground)
+														if (Data.Backgrounds[CommandIndex1] is StaticBackground)
 														{
-															World.StaticBackground b = Data.Backgrounds[CommandIndex1] as World.StaticBackground;
+															StaticBackground b = Data.Backgrounds[CommandIndex1] as StaticBackground;
 															if (b != null)
 															{
 																TextureManager.RegisterTexture(f, out b.Texture);
@@ -2762,7 +2764,7 @@ namespace OpenBve {
 												Interface.AddMessage(MessageType.Error, false,  Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (!Data.Backgrounds.ContainsKey(CommandIndex1)) {
-													Data.Backgrounds.Add(CommandIndex1, new World.StaticBackground(null, 6, false));
+													Data.Backgrounds.Add(CommandIndex1, new StaticBackground(null, 6, false));
 												}
 												int x;
 												if (!NumberFormats.TryParseIntVb6(Arguments[0], out x)) {
@@ -2770,7 +2772,7 @@ namespace OpenBve {
 												} else if (x == 0) {
 													Interface.AddMessage(MessageType.Error, false, "RepetitionCount is expected to be non-zero in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
-													World.StaticBackground b = Data.Backgrounds[CommandIndex1] as World.StaticBackground;
+													StaticBackground b = Data.Backgrounds[CommandIndex1] as StaticBackground;
 													if (b != null)
 													{
 														b.Repetition = x;
@@ -2789,7 +2791,7 @@ namespace OpenBve {
 												Interface.AddMessage(MessageType.Error, false,  Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (!Data.Backgrounds.ContainsKey(CommandIndex1)) {
-													Data.Backgrounds.Add(CommandIndex1, new World.StaticBackground(null, 6, false));
+													Data.Backgrounds.Add(CommandIndex1, new StaticBackground(null, 6, false));
 												}
 												int aspect;
 												if (!NumberFormats.TryParseIntVb6(Arguments[0], out aspect)) {
@@ -2797,7 +2799,7 @@ namespace OpenBve {
 												} else if (aspect != 0 & aspect != 1) {
 													Interface.AddMessage(MessageType.Error, false, "Value is expected to be either 0 or 1 in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
-													World.StaticBackground b = Data.Backgrounds[CommandIndex1] as World.StaticBackground;
+													StaticBackground b = Data.Backgrounds[CommandIndex1] as StaticBackground;
 													if (b != null)
 													{
 														b.KeepAspectRatio = aspect == 1;
@@ -4844,7 +4846,7 @@ namespace OpenBve {
 											if (typ < 0 | !Data.Backgrounds.ContainsKey(typ)) {
 												Interface.AddMessage(MessageType.Error, false, "BackgroundTextureIndex " + typ + " references a texture not loaded in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											}
-											World.StaticBackground b = Data.Backgrounds[typ] as World.StaticBackground;
+											StaticBackground b = Data.Backgrounds[typ] as StaticBackground;
 											if (b.Texture == null)
 											{
 												Interface.AddMessage(MessageType.Error, false, "BackgroundTextureIndex " + typ + " has not been loaded via Texture.Background in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -5388,11 +5390,11 @@ namespace OpenBve {
 			// background
 			if (!PreviewOnly) {
 				if (Data.Blocks[0].Background >= 0 & Data.Backgrounds.ContainsKey(Data.Blocks[0].Background)) {
-					World.CurrentBackground = Data.Backgrounds[Data.Blocks[0].Background];
+					CurrentRoute.CurrentBackground = Data.Backgrounds[Data.Blocks[0].Background];
 				} else {
-					World.CurrentBackground = new World.StaticBackground(null, 6, false);
+					CurrentRoute.CurrentBackground = new StaticBackground(null, 6, false);
 				}
-				World.TargetBackground = World.CurrentBackground;
+				CurrentRoute.TargetBackground = CurrentRoute.CurrentBackground;
 			}
 			// brightness
 			int CurrentBrightnessElement = -1;

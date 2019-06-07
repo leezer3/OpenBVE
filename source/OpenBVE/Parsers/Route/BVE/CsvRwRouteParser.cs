@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Path = OpenBveApi.Path;
+using OpenBve.BackgroundManager;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
@@ -1834,7 +1835,7 @@ namespace OpenBve {
 													Interface.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													if (!Data.Backgrounds.ContainsKey(CommandIndex1)) {
-														Data.Backgrounds.Add(CommandIndex1, new BackgroundManager.StaticBackground(null, 6, false));
+														Data.Backgrounds.Add(CommandIndex1, new StaticBackground(null, 6, false));
 													}
 													string f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
 													if (!System.IO.File.Exists(f) && (Arguments[0].ToLowerInvariant() == "back_mt.bmp" || Arguments[0] == "back_mthigh.bmp")) {
@@ -1867,9 +1868,9 @@ namespace OpenBve {
 														}
 														else
 														{
-															if (Data.Backgrounds[CommandIndex1] is BackgroundManager.StaticBackground)
+															if (Data.Backgrounds[CommandIndex1] is StaticBackground)
 															{
-																BackgroundManager.StaticBackground b = Data.Backgrounds[CommandIndex1] as BackgroundManager.StaticBackground;
+																StaticBackground b = Data.Backgrounds[CommandIndex1] as StaticBackground;
 																if (b != null)
 																{
 																	Program.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out b.Texture);
@@ -1892,7 +1893,7 @@ namespace OpenBve {
 												Interface.AddMessage(MessageType.Error, false,  Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (!Data.Backgrounds.ContainsKey(CommandIndex1)) {
-													Data.Backgrounds.Add(CommandIndex1, new BackgroundManager.StaticBackground(null, 6, false));
+													Data.Backgrounds.Add(CommandIndex1, new StaticBackground(null, 6, false));
 												}
 												int x;
 												if (!NumberFormats.TryParseIntVb6(Arguments[0], out x)) {
@@ -1900,7 +1901,7 @@ namespace OpenBve {
 												} else if (x == 0) {
 													Interface.AddMessage(MessageType.Error, false, "RepetitionCount is expected to be non-zero in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
-													BackgroundManager.StaticBackground b = Data.Backgrounds[CommandIndex1] as BackgroundManager.StaticBackground;
+													StaticBackground b = Data.Backgrounds[CommandIndex1] as StaticBackground;
 													if (b != null)
 													{
 														b.Repetition = x;
@@ -1919,7 +1920,7 @@ namespace OpenBve {
 												Interface.AddMessage(MessageType.Error, false,  Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (!Data.Backgrounds.ContainsKey(CommandIndex1)) {
-													Data.Backgrounds.Add(CommandIndex1, new BackgroundManager.StaticBackground(null, 6, false));
+													Data.Backgrounds.Add(CommandIndex1, new StaticBackground(null, 6, false));
 												}
 												int aspect;
 												if (!NumberFormats.TryParseIntVb6(Arguments[0], out aspect)) {
@@ -1927,7 +1928,7 @@ namespace OpenBve {
 												} else if (aspect != 0 & aspect != 1) {
 													Interface.AddMessage(MessageType.Error, false, "Value is expected to be either 0 or 1 in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
-													BackgroundManager.StaticBackground b = Data.Backgrounds[CommandIndex1] as BackgroundManager.StaticBackground;
+													StaticBackground b = Data.Backgrounds[CommandIndex1] as StaticBackground;
 													if (b != null)
 													{
 														b.KeepAspectRatio = aspect == 1;
@@ -4230,8 +4231,8 @@ namespace OpenBve {
 											}
 											if (typ < 0 | !Data.Backgrounds.ContainsKey(typ)) {
 												Interface.AddMessage(MessageType.Error, false, "BackgroundIndex " + typ + " references a background not loaded in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-											} else if (Data.Backgrounds[typ] is BackgroundManager.StaticBackground) {
-												BackgroundManager.StaticBackground b = Data.Backgrounds[typ] as BackgroundManager.StaticBackground;
+											} else if (Data.Backgrounds[typ] is StaticBackground) {
+												StaticBackground b = Data.Backgrounds[typ] as StaticBackground;
 												if (b.Texture == null)
 												{
 													//There's a possibility that this was loaded via a default BVE command rather than XML
@@ -4245,14 +4246,14 @@ namespace OpenBve {
 													{
 														//The initial background for block 0 is always set to zero
 														//This handles the case where background idx #0 is not used
-														b = Data.Backgrounds[0] as BackgroundManager.StaticBackground;
+														b = Data.Backgrounds[0] as StaticBackground;
 														if (b.Texture == null)
 														{
 															Data.Blocks[0].Background = typ;
 														}
 													}
 												}
-											} else if (Data.Backgrounds[typ] is BackgroundManager.DynamicBackground)
+											} else if (Data.Backgrounds[typ] is DynamicBackground)
 											{
 												//File existance checks should already have been made when loading the XML
 												Data.Blocks[BlockIndex].Background = typ;

@@ -127,7 +127,7 @@ namespace OpenBve
 			// fog
 			float aa = Game.CurrentFog.Start;
 			float bb = Game.CurrentFog.End;
-			if (aa < bb & aa < World.BackgroundImageDistance)
+			if (aa < bb & aa < Backgrounds.BackgroundImageDistance)
 			{
 				if (!LibRender.Renderer.FogEnabled)
 				{

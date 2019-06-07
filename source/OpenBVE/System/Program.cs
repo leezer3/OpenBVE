@@ -312,7 +312,7 @@ namespace OpenBve {
 			World.ExtraViewingDistance = 50.0;
 			World.ForwardViewingDistance = (double)Interface.CurrentOptions.ViewingDistance;
 			World.BackwardViewingDistance = 0.0;
-			World.BackgroundImageDistance = (double)Interface.CurrentOptions.ViewingDistance;
+			Backgrounds.BackgroundImageDistance = (double)Interface.CurrentOptions.ViewingDistance;
 			// end HACK //
 			FileSystem.ClearLogFile();
 			return true;

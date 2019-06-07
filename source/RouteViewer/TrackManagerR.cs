@@ -6,6 +6,7 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
+using OpenBve.BackgroundManager;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Textures;
@@ -45,10 +46,10 @@ namespace OpenBve {
             internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
                 if (TriggerType == EventTriggerType.Camera) {
                     if (Direction < 0) {
-                        World.TargetBackground = this.PreviousBackground;
+                        CurrentRoute.TargetBackground = this.PreviousBackground;
                         World.TargetBackgroundCountdown = World.TargetBackgroundDefaultCountdown;
                     } else if (Direction > 0) {
-                        World.TargetBackground = this.NextBackground;
+                        CurrentRoute.TargetBackground = this.NextBackground;
                         World.TargetBackgroundCountdown = World.TargetBackgroundDefaultCountdown;
                     }
                 }

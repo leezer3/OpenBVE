@@ -46,6 +46,6 @@ namespace LibRender
 		/// <summary>Holds the lock for GDI Plus functions</summary>
 		public static readonly object gdiPlusLock = new object();
 
-		private const float inv255 = 1.0f / 255.0f;
+		internal const float inv255 = 1.0f / 255.0f;
     }
 }

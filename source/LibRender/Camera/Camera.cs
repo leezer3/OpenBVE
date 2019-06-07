@@ -51,8 +51,6 @@ namespace LibRender
 		/// <remarks>2D panel</remarks>
 		public static Vector3 RestrictionTopRight = new Vector3(1.0, 1.0, 1.0);
 
-
-
 		/// <summary>Tests whether the camera may move further in the current direction</summary>
 		public static bool PerformRestrictionTest()
 		{
@@ -78,5 +76,7 @@ namespace LibRender
 			}
 			return true;
 		}
+
+
 	}
 }

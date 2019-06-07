@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using OpenBve.BackgroundManager;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
@@ -10,6 +11,7 @@ using OpenBveApi.FunctionScripting;
 using OpenBve.SignalManager;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
+using CurrentRoute = OpenBve.BackgroundManager.CurrentRoute;
 
 namespace OpenBve
 {
@@ -86,13 +88,13 @@ namespace OpenBve
 			{
 				if (Data.Blocks[0].Background >= 0 & Data.Backgrounds.ContainsKey(Data.Blocks[0].Background))
 				{
-					BackgroundManager.CurrentBackground = Data.Backgrounds[Data.Blocks[0].Background];
+					CurrentRoute.CurrentBackground = Data.Backgrounds[Data.Blocks[0].Background];
 				}
 				else
 				{
-					BackgroundManager.CurrentBackground = new BackgroundManager.StaticBackground(null, 6, false);
+					CurrentRoute.CurrentBackground = new StaticBackground(null, 6, false);
 				}
-				BackgroundManager.TargetBackground = BackgroundManager.CurrentBackground;
+				CurrentRoute.TargetBackground = CurrentRoute.CurrentBackground;
 			}
 			// brightness
 			int CurrentBrightnessElement = -1;
