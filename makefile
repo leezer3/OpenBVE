@@ -608,12 +608,15 @@ BACKGROUNDMANAGER_OUT       =$(OUTPUT_DIR)/$(BACKGROUNDMANAGER_FILE)
 $(call create_resource, $(BACKGROUNDMANAGER_RESOURCE), $(BACKGROUNDMANAGER_RESX))
 
 $(DEBUG_DIR)/$(BACKGROUNDMANAGER_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
+$(DEBUG_DIR)/$(BACKGROUNDMANAGER_FILE): $(DEBUG_DIR)/$(LIBRENDER_FILE)
+
 $(RELEASE_DIR)/$(BACKGROUNDMANAGER_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
+$(RELEASE_DIR)/$(BACKGROUNDMANAGER_FILE): $(RELEASE_DIR)/$(LIBRENDER_FILE)
 
 $(DEBUG_DIR)/$(BACKGROUNDMANAGER_FILE) $(RELEASE_DIR)/$(BACKGROUNDMANAGER_FILE): $(BACKGROUNDMANAGER_SRC) $(BACKGROUNDMANAGER_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(BACKGROUNDMANAGER_OUT)$(COLOR_END)
 	@$(CSC) /out:$(BACKGROUNDMANAGER_OUT) /target:library $(BACKGROUNDMANAGER_SRC) $(ARGS) $(BACKGROUNDMANAGER_DOC) \
-	/reference:$(OPEN_BVE_API_OUT) /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:System.Core.dll /reference:System.dll \
+	/reference:$(OPEN_BVE_API_OUT) /reference:$(LIBRENDER_OUT) /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:System.Core.dll /reference:System.dll /reference:Microsoft.CSharp.dll \
 	$(addprefix /resource:, $(BACKGROUNDMANAGER_RESOURCE))
 
 #############
@@ -635,7 +638,7 @@ $(RELEASE_DIR)/$(LIBRENDER_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
 $(DEBUG_DIR)/$(LIBRENDER_FILE) $(RELEASE_DIR)/$(LIBRENDER_FILE): $(LIBRENDER_SRC) $(LIBRENDER_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(LIBRENDER_OUT)$(COLOR_END)
 	@$(CSC) /out:$(LIBRENDER_OUT) /target:library $(LIBRENDER_SRC) $(ARGS) $(LIBRENDER_DOC) \
-	/reference:$(OPEN_BVE_API_OUT) /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:System.Core.dll /reference:System.dll \
+	/reference:$(OPEN_BVE_API_OUT) /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:System.Core.dll /reference:System.dll /reference:Microsoft.CSharp.dll \
 	$(addprefix /resource:, $(LIBRENDER_RESOURCE))
 
 #################
