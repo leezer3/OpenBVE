@@ -1,7 +1,7 @@
 ﻿using System;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
-using OpenBve.SignalManager;
+using OpenBve.RouteManager;
 
 namespace OpenBve
 {

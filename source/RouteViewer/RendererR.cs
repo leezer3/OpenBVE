@@ -8,6 +8,7 @@
 using System;
 using System.Drawing;
 using OpenBve.BackgroundManager;
+using OpenBve.RouteManager;
 using LibRender;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;

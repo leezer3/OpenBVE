@@ -12,6 +12,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
+using OpenBve.RouteManager;
 using OpenBve.SignalManager;
 using OpenBveApi.Objects;
 using SoundHandle = OpenBveApi.Sounds.SoundHandle;

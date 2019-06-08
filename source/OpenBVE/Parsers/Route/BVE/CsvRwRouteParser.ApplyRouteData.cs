@@ -11,7 +11,7 @@ using OpenBveApi.FunctionScripting;
 using OpenBve.SignalManager;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
-using CurrentRoute = OpenBve.BackgroundManager.CurrentRoute;
+using OpenBve.RouteManager;
 
 namespace OpenBve
 {

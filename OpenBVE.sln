@@ -68,8 +68,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Wavefront", "source\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibRender", "source\LibRender\LibRender.csproj", "{2072ECD1-C7FF-427C-84DC-063F7C19792E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgroundManager", "Source\BackgroundManager\BackgroundManager.csproj", "{878EB203-7005-4202-AD3C-409F65656EEC}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -378,18 +376,6 @@ Global
 		{2072ECD1-C7FF-427C-84DC-063F7C19792E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{2072ECD1-C7FF-427C-84DC-063F7C19792E}.Release|x86.ActiveCfg = Release|Any CPU
 		{2072ECD1-C7FF-427C-84DC-063F7C19792E}.Release|x86.Build.0 = Release|Any CPU
-		{878EB203-7005-4202-AD3C-409F65656EEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{878EB203-7005-4202-AD3C-409F65656EEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{878EB203-7005-4202-AD3C-409F65656EEC}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{878EB203-7005-4202-AD3C-409F65656EEC}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{878EB203-7005-4202-AD3C-409F65656EEC}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{878EB203-7005-4202-AD3C-409F65656EEC}.Debug|x86.Build.0 = Debug|Any CPU
-		{878EB203-7005-4202-AD3C-409F65656EEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{878EB203-7005-4202-AD3C-409F65656EEC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{878EB203-7005-4202-AD3C-409F65656EEC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{878EB203-7005-4202-AD3C-409F65656EEC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{878EB203-7005-4202-AD3C-409F65656EEC}.Release|x86.ActiveCfg = Release|Any CPU
-		{878EB203-7005-4202-AD3C-409F65656EEC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

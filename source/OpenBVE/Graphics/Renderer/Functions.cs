@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBve.BackgroundManager;
+using OpenBve.RouteManager;
 using LibRender;
 using OpenBveApi.Colors;
 using OpenTK;

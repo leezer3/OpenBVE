@@ -10,6 +10,7 @@ using OpenBveApi.Objects;
 using OpenBveApi.Interface;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
+using OpenBve.RouteManager;
 using OpenBve.SignalManager;
 using OpenBveApi.Textures;
 

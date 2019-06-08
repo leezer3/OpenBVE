@@ -134,10 +134,6 @@
     <Compile Include="WorldR.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BackgroundManager\BackgroundManager.csproj">
-      <Project>{878eb203-7005-4202-ad3c-409f65656eec}</Project>
-      <Name>BackgroundManager</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DevTools\LBAHeader\LBAHeader.csproj">
       <Project>{e9b64673-65b7-4d77-a4db-4b441a7c9197}</Project>
       <Name>LBAHeader</Name>

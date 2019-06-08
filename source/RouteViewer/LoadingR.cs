@@ -10,8 +10,7 @@ using System.Threading;
 using System.Text;
 using System.Windows.Forms;
 using LibRender;
-using OpenBve.SignalManager;
-using OpenBveApi.Interface;
+using OpenBve.RouteManager;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 

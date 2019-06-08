@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Collections.Generic;
 using LibRender;
 using OpenBve.BackgroundManager;
+using OpenBve.RouteManager;
 using OpenBve.SignalManager;
 using OpenBveApi;
 using OpenBveApi.Math;
@@ -15,7 +16,6 @@ using OpenBveApi.Interface;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using OpenBveApi.Runtime;
-using CurrentRoute = OpenBve.BackgroundManager.CurrentRoute;
 
 namespace OpenBve {
 	internal class CsvRwRouteParser {

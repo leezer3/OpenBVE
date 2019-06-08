@@ -6,7 +6,7 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
-using OpenBve.BackgroundManager;
+using OpenBve.RouteManager;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Textures;
