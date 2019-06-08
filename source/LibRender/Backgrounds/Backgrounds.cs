@@ -160,7 +160,8 @@ namespace LibRender
 				return;
 			}
 			Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-			switch (Data.Backgrounds[Data.CurrentBackgroundIndex].Mode)
+			BackgroundTransitionMode Mode = Data.Backgrounds[Data.CurrentBackgroundIndex].Mode; //Must do this to make the switch work correctly using a dynamic
+			switch (Mode)
 			{
 				case BackgroundTransitionMode.FadeIn:
 					RenderBackground(Data.Backgrounds[Data.PreviousBackgroundIndex], 1.0f, scale);

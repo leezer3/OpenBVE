@@ -583,7 +583,7 @@ $(RELEASE_DIR)/$(ROUTEMANAGER_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
 $(DEBUG_DIR)/$(ROUTEMANAGER_FILE) $(RELEASE_DIR)/$(ROUTEMANAGER_FILE): $(ROUTEMANAGER_SRC) $(ROUTEMANAGER_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(ROUTEMANAGER_OUT)$(COLOR_END)
 	@$(CSC) /out:$(ROUTEMANAGER_OUT) /target:library $(ROUTEMANAGER_SRC) $(ARGS) $(ROUTEMANAGER_DOC) \
-	/reference:$(OPEN_BVE_API_OUT)  /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(LIBRENDER_OUT) /reference:System.Core.dll /reference:System.dll \
+	/reference:$(OPEN_BVE_API_OUT)  /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(LIBRENDER_OUT) /reference:System.Core.dll /reference:System.dll /reference:Microsoft.CSharp.dll \
 	$(addprefix /resource:, $(ROUTEMANAGER_RESOURCE))
 
 #############

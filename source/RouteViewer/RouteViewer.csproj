@@ -146,7 +146,7 @@
       <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
       <Name>OpenBveApi</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SignalManager\RouteManager.csproj">
+    <ProjectReference Include="..\RouteManager\RouteManager.csproj">
       <Project>{87838364-8911-46b2-8628-d437c485d9c9}</Project>
       <Name>RouteManager</Name>
     </ProjectReference>
