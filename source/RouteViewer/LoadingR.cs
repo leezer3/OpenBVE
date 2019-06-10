@@ -11,6 +11,7 @@ using System.Text;
 using System.Windows.Forms;
 using LibRender;
 using OpenBve.RouteManager;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 
