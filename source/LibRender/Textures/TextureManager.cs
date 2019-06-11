@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
-using OpenBveApi.Hosts;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 using InterpolationMode = OpenBveApi.Graphics.InterpolationMode;
@@ -173,11 +172,14 @@ namespace LibRender
 		/// <summary>Loads the specified texture into OpenGL if not already loaded.</summary>
 		/// <param name="handle">The handle to the registered texture.</param>
 		/// <param name="wrap">The texture type indicating the clamp mode.</param>
+		/// <param name="currentTicks">The current system clock-ticks</param>
+		/// <param name="Interpolation">The interpolation mode to use when loading the texture</param>
+		/// <param name="AnisotropicFilteringLevel">The anisotropic filtering level to use when loading the texture</param>
 		/// <returns>Whether loading the texture was successful.</returns>
 		public static bool LoadTexture(Texture handle, OpenGlTextureWrapMode wrap, int currentTicks, InterpolationMode Interpolation, int AnisotropicFilteringLevel)
 		{
 			//Don't try to load a texture to a null handle, this is a seriously bad idea....
-			if (handle == null)
+			if (handle == null || handle.OpenGlTextures == null)
 			{
 				return false;
 			}
