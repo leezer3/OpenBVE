@@ -715,6 +715,10 @@ namespace OpenBve {
 									break;
 								//Sets the route's loading screen texture
 								case "route.loadingscreen":
+									if (PreviewOnly)
+									{
+										continue;
+									}
 									if (Arguments.Length < 1)
 									{
 										Interface.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -732,6 +736,10 @@ namespace OpenBve {
 									break;
 								//Sets a custom unit of speed to to displayed in on-screen messages
 								case "route.displayspeed":
+									if (PreviewOnly)
+									{
+										continue;
+									}
 								   var splitArgument = Arguments[0].Split(',');
 									if (splitArgument.Length != 2)
 									{
@@ -748,6 +756,10 @@ namespace OpenBve {
 									break;
 								//Sets the route's briefing data
 								case "route.briefing":
+									if (PreviewOnly)
+									{
+										continue;
+									}
 									if (Arguments.Length < 1)
 									{
 										Interface.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);

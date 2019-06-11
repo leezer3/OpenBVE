@@ -317,7 +317,6 @@ namespace OpenBve
 
 		protected override void OnLoad(EventArgs e)
 		{
-			LibRender.Renderer.currentHost = Program.CurrentHost;
 			Program.FileSystem.AppendToLogFile("Game window initialised successfully.");
 			Renderer.DetermineMaxAFLevel();
 			//Initialise the loader thread queues
