@@ -159,17 +159,17 @@ namespace OpenBve {
 				GL.Light(LightName.Light0, LightParameter.Position, new float[] { (float)LibRender.Renderer.OptionLightPosition.X, (float)LibRender.Renderer.OptionLightPosition.Y, (float)LibRender.Renderer.OptionLightPosition.Z, 0.0f });
 			}
 			// fog
-			double fd = Game.NextFog.TrackPosition - Game.PreviousFog.TrackPosition;
+			double fd = CurrentRoute.NextFog.TrackPosition - CurrentRoute.PreviousFog.TrackPosition;
 			if (fd != 0.0) {
-				float fr = (float)((World.CameraTrackFollower.TrackPosition - Game.PreviousFog.TrackPosition) / fd);
+				float fr = (float)((World.CameraTrackFollower.TrackPosition - CurrentRoute.PreviousFog.TrackPosition) / fd);
 				float frc = 1.0f - fr;
-				Game.CurrentFog.Start = Game.PreviousFog.Start * frc + Game.NextFog.Start * fr;
-				Game.CurrentFog.End = Game.PreviousFog.End * frc + Game.NextFog.End * fr;
-				Game.CurrentFog.Color.R = (byte)((float)Game.PreviousFog.Color.R * frc + (float)Game.NextFog.Color.R * fr);
-				Game.CurrentFog.Color.G = (byte)((float)Game.PreviousFog.Color.G * frc + (float)Game.NextFog.Color.G * fr);
-				Game.CurrentFog.Color.B = (byte)((float)Game.PreviousFog.Color.B * frc + (float)Game.NextFog.Color.B * fr);
+				CurrentRoute.CurrentFog.Start = CurrentRoute.PreviousFog.Start * frc + CurrentRoute.NextFog.Start * fr;
+				CurrentRoute.CurrentFog.End = CurrentRoute.PreviousFog.End * frc + CurrentRoute.NextFog.End * fr;
+				CurrentRoute.CurrentFog.Color.R = (byte)((float)CurrentRoute.PreviousFog.Color.R * frc + (float)CurrentRoute.NextFog.Color.R * fr);
+				CurrentRoute.CurrentFog.Color.G = (byte)((float)CurrentRoute.PreviousFog.Color.G * frc + (float)CurrentRoute.NextFog.Color.G * fr);
+				CurrentRoute.CurrentFog.Color.B = (byte)((float)CurrentRoute.PreviousFog.Color.B * frc + (float)CurrentRoute.NextFog.Color.B * fr);
 			} else {
-				Game.CurrentFog = Game.PreviousFog;
+				CurrentRoute.CurrentFog = CurrentRoute.PreviousFog;
 				
 			}
 			// render background
@@ -179,17 +179,17 @@ namespace OpenBve {
 			GL.Disable(EnableCap.DepthTest);
 			Backgrounds.RenderBackground(TimeElapsed);
 			// fog
-			if (Game.CurrentFog.Start < Game.CurrentFog.End & Game.CurrentFog.Start < World.BackgroundImageDistance) {
+			if (CurrentRoute.CurrentFog.Start < CurrentRoute.CurrentFog.End & CurrentRoute.CurrentFog.Start < World.BackgroundImageDistance) {
 				if (!LibRender.Renderer.FogEnabled) {
 					GL.Fog(FogParameter.FogMode, (int)FogMode.Linear);
 				}
-				GL.Fog(FogParameter.FogStart, Game.CurrentFog.Start);
-				GL.Fog(FogParameter.FogEnd, Game.CurrentFog.End);
-				GL.Fog(FogParameter.FogColor, new float[] { inv255 * (float)Game.CurrentFog.Color.R, inv255 * (float)Game.CurrentFog.Color.G, inv255 * (float)Game.CurrentFog.Color.B, 1.0f });
+				GL.Fog(FogParameter.FogStart, CurrentRoute.CurrentFog.Start);
+				GL.Fog(FogParameter.FogEnd, CurrentRoute.CurrentFog.End);
+				GL.Fog(FogParameter.FogColor, new float[] { inv255 * (float)CurrentRoute.CurrentFog.Color.R, inv255 * (float)CurrentRoute.CurrentFog.Color.G, inv255 * (float)CurrentRoute.CurrentFog.Color.B, 1.0f });
 				if (!LibRender.Renderer.FogEnabled) {
 					GL.Enable(EnableCap.Fog); LibRender.Renderer.FogEnabled = true;
 				}
-				GL.ClearColor(inv255 * (float)Game.CurrentFog.Color.R, inv255 * (float)Game.CurrentFog.Color.G, inv255 * (float)Game.CurrentFog.Color.B, 1.0f);
+				GL.ClearColor(inv255 * (float)CurrentRoute.CurrentFog.Color.R, inv255 * (float)CurrentRoute.CurrentFog.Color.G, inv255 * (float)CurrentRoute.CurrentFog.Color.B, 1.0f);
 			} else if (LibRender.Renderer.FogEnabled) {
 				GL.Disable(EnableCap.Fog); LibRender.Renderer.FogEnabled = false;
 			}

@@ -57,10 +57,10 @@ namespace OpenBve {
         }
         // fog change
         internal class FogChangeEvent : GeneralEvent {
-            internal Game.Fog PreviousFog;
-            internal Game.Fog CurrentFog;
-            internal Game.Fog NextFog;
-            internal FogChangeEvent(double TrackPositionDelta, Game.Fog PreviousFog, Game.Fog CurrentFog, Game.Fog NextFog) {
+            internal Fog PreviousFog;
+            internal Fog CurrentFog;
+            internal Fog NextFog;
+            internal FogChangeEvent(double TrackPositionDelta, Fog PreviousFog, Fog CurrentFog, Fog NextFog) {
                 this.TrackPositionDelta = TrackPositionDelta;
                 this.DontTriggerAnymore = false;
                 this.PreviousFog = PreviousFog;
@@ -70,11 +70,11 @@ namespace OpenBve {
             internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
                 if (TriggerType == EventTriggerType.Camera) {
                     if (Direction < 0) {
-                        Game.PreviousFog = this.PreviousFog;
-                        Game.NextFog = this.CurrentFog;
+                        CurrentRoute.PreviousFog = this.PreviousFog;
+                        CurrentRoute.NextFog = this.CurrentFog;
                     } else if (Direction > 0) {
-                        Game.PreviousFog = this.CurrentFog;
-                        Game.NextFog = this.NextFog;
+                        CurrentRoute.PreviousFog = this.CurrentFog;
+                        CurrentRoute.NextFog = this.NextFog;
                     }
                 }
             }

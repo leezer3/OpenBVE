@@ -64,8 +64,8 @@ namespace OpenBve {
 			{
 				Data.Blocks[0].Background = 0;
 				Data.Blocks[0].BrightnessChanges = new Brightness[] {};
-				Data.Blocks[0].Fog.Start = Game.NoFogStart;
-				Data.Blocks[0].Fog.End = Game.NoFogEnd;
+				Data.Blocks[0].Fog.Start = CurrentRoute.NoFogStart;
+				Data.Blocks[0].Fog.End = CurrentRoute.NoFogEnd;
 				Data.Blocks[0].Fog.Color = Color24.Grey;
 				Data.Blocks[0].Cycle = new int[] {-1};
 				Data.Blocks[0].RailCycles = new RailCycle[1];
@@ -2556,8 +2556,8 @@ namespace OpenBve {
 												Data.Blocks[BlockIndex].Fog.Start = (float)start;
 												Data.Blocks[BlockIndex].Fog.End = (float)end;
 											} else {
-												Data.Blocks[BlockIndex].Fog.Start = Game.NoFogStart;
-												Data.Blocks[BlockIndex].Fog.End = Game.NoFogEnd;
+												Data.Blocks[BlockIndex].Fog.Start = CurrentRoute.NoFogStart;
+												Data.Blocks[BlockIndex].Fog.End = CurrentRoute.NoFogEnd;
 											}
 											Data.Blocks[BlockIndex].Fog.Color = new Color24((byte)r, (byte)g, (byte)b);
 											Data.Blocks[BlockIndex].FogDefined = true;

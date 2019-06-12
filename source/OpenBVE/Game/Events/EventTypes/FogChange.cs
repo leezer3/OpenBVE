@@ -1,4 +1,6 @@
-﻿namespace OpenBve
+﻿using OpenBve.RouteManager;
+
+namespace OpenBve
 {
 	internal static partial class TrackManager
 	{
@@ -6,13 +8,13 @@
 		internal class FogChangeEvent : GeneralEvent
 		{
 			/// <summary>The fog which applies previously to this point</summary>
-			private readonly Game.Fog PreviousFog;
+			private readonly Fog PreviousFog;
 			/// <summary>The fog which applies after this point</summary>
-			private readonly Game.Fog CurrentFog;
+			private readonly Fog CurrentFog;
 			/// <summary>The next upcoming fog (Used for distance based interpolation)</summary>
-			internal Game.Fog NextFog;
+			internal Fog NextFog;
 
-			internal FogChangeEvent(double TrackPositionDelta, Game.Fog PreviousFog, Game.Fog CurrentFog, Game.Fog NextFog)
+			internal FogChangeEvent(double TrackPositionDelta, Fog PreviousFog, Fog CurrentFog, Fog NextFog)
 			{
 				this.TrackPositionDelta = TrackPositionDelta;
 				this.DontTriggerAnymore = false;
@@ -26,13 +28,13 @@
 				{
 					if (Direction < 0)
 					{
-						Game.PreviousFog = this.PreviousFog;
-						Game.NextFog = this.CurrentFog;
+						CurrentRoute.PreviousFog = this.PreviousFog;
+						CurrentRoute.NextFog = this.CurrentFog;
 					}
 					else if (Direction > 0)
 					{
-						Game.PreviousFog = this.CurrentFog;
-						Game.NextFog = this.NextFog;
+						CurrentRoute.PreviousFog = this.CurrentFog;
+						CurrentRoute.NextFog = this.NextFog;
 					}
 				}
 			}

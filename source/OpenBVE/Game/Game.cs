@@ -19,29 +19,8 @@ namespace OpenBve {
 		/// </summary>
 		internal static bool MinimalisticSimulation = false;
 
-		/// <summary>Defines a region of fog</summary>
-		internal struct Fog {
-			/// <summary>The offset at which the fog starts</summary>
-			internal float Start;
-			/// <summary>The offset at which the fog ends</summary>
-			internal float End;
-			/// <summary>The color of the fog</summary>
-			internal Color24 Color;
-			/// <summary>The track position at which the fog is placed</summary>
-			internal double TrackPosition;
-			/// <summary>Creates a new region of fog</summary>
-			internal Fog(float Start, float End, Color24 Color, double TrackPosition) {
-				this.Start = Start;
-				this.End = End;
-				this.Color = Color;
-				this.TrackPosition = TrackPosition;
-			}
-		}
-		internal static float NoFogStart = 800.0f; // must not be 600 or below
-		internal static float NoFogEnd = 1600.0f;
-		internal static Fog PreviousFog = new Fog(NoFogStart, NoFogEnd, Color24.Grey, 0.0);
-		internal static Fog CurrentFog = new Fog(NoFogStart, NoFogEnd, Color24.Grey, 0.5);
-		internal static Fog NextFog = new Fog(NoFogStart, NoFogEnd, Color24.Grey, 1.0);
+		
+		
 		
 		
 
@@ -95,11 +74,11 @@ namespace OpenBve {
 			CurrentRoute.BogusPretrainInstructions = new BogusPretrainInstruction[] { };
 			TrainName = "";
 			TrainStart = TrainStartMode.EmergencyBrakesNoAts;
-			NoFogStart = (float)Math.Max(1.33333333333333 * Interface.CurrentOptions.ViewingDistance, 800.0);
-			NoFogEnd = (float)Math.Max(2.66666666666667 * Interface.CurrentOptions.ViewingDistance, 1600.0);
-			PreviousFog = new Fog(NoFogStart, NoFogEnd, Color24.Grey, 0.0);
-			CurrentFog = new Fog(NoFogStart, NoFogEnd, Color24.Grey, 0.5);
-			NextFog = new Fog(NoFogStart, NoFogEnd, Color24.Grey, 1.0);
+			CurrentRoute.NoFogStart = (float)Math.Max(1.33333333333333 * Interface.CurrentOptions.ViewingDistance, 800.0);
+			CurrentRoute.NoFogEnd = (float)Math.Max(2.66666666666667 * Interface.CurrentOptions.ViewingDistance, 1600.0);
+			CurrentRoute.PreviousFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, 0.0);
+			CurrentRoute.CurrentFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, 0.5);
+			CurrentRoute.NextFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, 1.0);
 			InfoTotalTriangles = 0;
 			InfoTotalTriangleStrip = 0;
 			InfoTotalQuads = 0;
@@ -210,7 +189,5 @@ namespace OpenBve {
 
 		// buffers
 		internal static double[] BufferTrackPositions = new double[] { };
-
-
 	}
 }
