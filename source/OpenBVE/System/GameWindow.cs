@@ -468,7 +468,7 @@ namespace OpenBve
 			}
 			// camera
 			ObjectManager.InitializeVisibility();
-			TrainManager.PlayerTrain.DriverBody = new World.DriverBody();
+			TrainManager.PlayerTrain.DriverBody = new DriverBody(TrainManager.PlayerTrain);
 			World.CameraTrackFollower.Update(0.0, true, false);
 			World.CameraTrackFollower.Update(-0.1, true, false);
 			World.CameraTrackFollower.Update(0.1, true, false);
