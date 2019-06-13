@@ -592,6 +592,9 @@ namespace OpenBve {
 												f = GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
 												break;
 										}
+
+										InitialAngle = InitialAngle.ToRadians();
+										LastAngle = LastAngle.ToRadians();
 										double a0 = (InitialAngle * Maximum - LastAngle * Minimum) / (Maximum - Minimum);
 										double a1 = (LastAngle - InitialAngle) / (Maximum - Minimum);
 										f += " " + a1.ToString(Culture) + " * " + a0.ToString(Culture) + " +";
@@ -601,8 +604,8 @@ namespace OpenBve {
 										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction = new FunctionScript(Program.CurrentHost, f, false);
 										if (Backstop)
 										{
-											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction.Minimum = InitialAngle.ToRadians();
-											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction.Maximum = LastAngle.ToRadians();
+											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction.Minimum = InitialAngle;
+											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction.Maximum = LastAngle;
 										}
 									}
 								} break;

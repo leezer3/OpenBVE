@@ -317,7 +317,6 @@ namespace OpenBve
 
 		protected override void OnLoad(EventArgs e)
 		{
-			LibRender.Renderer.currentHost = Program.CurrentHost;
 			Program.FileSystem.AppendToLogFile("Game window initialised successfully.");
 			Renderer.DetermineMaxAFLevel();
 			//Initialise the loader thread queues
@@ -469,7 +468,7 @@ namespace OpenBve
 			}
 			// camera
 			ObjectManager.InitializeVisibility();
-			TrainManager.PlayerTrain.DriverBody = new World.DriverBody();
+			TrainManager.PlayerTrain.DriverBody = new DriverBody(TrainManager.PlayerTrain);
 			World.CameraTrackFollower.Update(0.0, true, false);
 			World.CameraTrackFollower.Update(-0.1, true, false);
 			World.CameraTrackFollower.Update(0.1, true, false);

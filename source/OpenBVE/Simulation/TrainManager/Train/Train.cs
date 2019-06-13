@@ -20,7 +20,7 @@ namespace OpenBve
 			/// <summary>The plugin used by this train.</summary>
 			internal PluginManager.Plugin Plugin;
 			/// <summary>The driver body</summary>
-			internal World.DriverBody DriverBody;
+			internal DriverBody DriverBody;
 			internal Handles Handles;
 			internal Car[] Cars;
 			internal Coupler[] Couplers;

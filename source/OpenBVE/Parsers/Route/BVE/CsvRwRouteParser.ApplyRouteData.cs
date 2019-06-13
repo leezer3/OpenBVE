@@ -92,7 +92,22 @@ namespace OpenBve
 				}
 				else
 				{
-					CurrentRoute.CurrentBackground = new StaticBackground(null, 6, false);
+					if (Interface.CurrentOptions.EnableBveTsHacks && Data.Backgrounds.Count == 0)
+					{
+						/*
+						 * If no backgrounds are defined, this causes some interesting render artifacts
+						 */
+						Interface.AddMessage(MessageType.Warning, false, "No backgrounds were defined- Using default background.");
+						string f = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Compatibility"), "Uchibo\\Back_Mt.png");
+						Texture t;
+						Program.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out t);
+						CurrentRoute.CurrentBackground = new StaticBackground(t, 6, false);
+					}
+					else
+					{
+						CurrentRoute.CurrentBackground = new StaticBackground(null, 6, false);
+					}
+					
 				}
 				CurrentRoute.TargetBackground = CurrentRoute.CurrentBackground;
 			}

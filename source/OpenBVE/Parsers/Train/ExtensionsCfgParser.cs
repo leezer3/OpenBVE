@@ -440,6 +440,10 @@ namespace OpenBve {
 								ObjectManager.AnimatedObjectCollection obj = (ObjectManager.AnimatedObjectCollection)CarObjects[i];
 								for (int j = 0; j < obj.Objects.Length; j++) {
 									for (int h = 0; h < obj.Objects[j].States.Length; h++) {
+										if (obj.Objects[j].States[h].Object == null)
+										{
+											continue; //object failed to load?
+										}
 										obj.Objects[j].States[h].Object.ApplyScale(-1.0, 1.0, -1.0);
 										obj.Objects[j].States[h].Position.X *= -1.0;
 										obj.Objects[j].States[h].Position.Z *= -1.0;
@@ -496,6 +500,10 @@ namespace OpenBve {
 								{
 									for (int h = 0; h < obj.Objects[j].States.Length; h++)
 									{
+										if (obj.Objects[j].States[h].Object == null)
+										{
+											continue; //object failed to load?
+										}
 										obj.Objects[j].States[h].Object.ApplyScale(-1.0, 1.0, -1.0);
 										obj.Objects[j].States[h].Position.X *= -1.0;
 										obj.Objects[j].States[h].Position.Z *= -1.0;
