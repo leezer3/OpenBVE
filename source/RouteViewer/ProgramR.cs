@@ -315,8 +315,7 @@ namespace OpenBve {
 							GL.ReadPixels(0, 0, LibRender.Screen.Width, LibRender.Screen.Height, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bData.Scan0);
 							bitmap.UnlockBits(bData);
 							bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
-							Renderer.TextureLoadingBkg = TextureManager.RegisterTexture(bitmap, new TextureParameters(null, null));
-							
+							LoadingScreen.SetLoadingBkg(TextureManager.RegisterTexture(bitmap, new TextureParameters(null, null)));
 						}
 						CameraAlignment a = Camera.CurrentAlignment;
 						if (LoadRoute())
@@ -332,7 +331,6 @@ namespace OpenBve {
 						
 						CurrentlyLoading = false;
 						Renderer.OptionInterface = true;
-						TextureManager.UnloadTexture(Renderer.TextureLoadingBkg);
 						if (bitmap != null)
 						{
 							bitmap.Dispose();

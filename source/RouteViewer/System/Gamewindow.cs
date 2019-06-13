@@ -150,7 +150,7 @@ namespace OpenBve
 				Program.currentGameWindow.ProcessEvents();
 				if (Program.currentGameWindow.IsExiting)
 					Loading.Cancel = true;
-				Renderer.DrawLoadingScreen();
+				LoadingScreen.DrawLoadingScreen(Fonts.SmallFont, Loading.RouteProgress, 1.0);
 				Program.currentGameWindow.SwapBuffers();
 
 				if (Loading.JobAvailable)

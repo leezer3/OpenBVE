@@ -52,6 +52,7 @@
     <Compile Include="Camera\CameraAlignment.cs" />
     <Compile Include="Camera\CameraRestrictionMode.cs" />
     <Compile Include="Lighting\Lighting.cs" />
+    <Compile Include="Loading.cs" />
     <Compile Include="MotionBlur\MotionBlurMode.cs" />
     <Compile Include="Objects\ObjectListReference.cs" />
     <Compile Include="Objects\RenderFace.cs" />

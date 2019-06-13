@@ -324,7 +324,7 @@ namespace OpenBve
 			locks = new Queue<object>(10);
 			LibRender.Renderer.Initialize();
 			HUD.LoadHUD();
-			Renderer.InitLoading();
+			LoadingScreen.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(Renderer).Assembly.GetName().Version.ToString());
 			Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
 			LibRender.MotionBlur.Initialize(Interface.CurrentOptions.MotionBlur);
 			Loading.LoadAsynchronously(MainLoop.currentResult.RouteFile, MainLoop.currentResult.RouteEncoding, MainLoop.currentResult.TrainFolder, MainLoop.currentResult.TrainEncoding);
@@ -950,7 +950,7 @@ namespace OpenBve
 				this.ProcessEvents();
 				if (this.IsExiting)
 					Loading.Cancel = true;
-				Renderer.DrawLoadingScreen();
+				LoadingScreen.DrawLoadingScreen(Fonts.SmallFont, Loading.RouteProgress, Loading.TrainProgress);
 				Program.currentGameWindow.SwapBuffers();
 				
 				if (Loading.JobAvailable)

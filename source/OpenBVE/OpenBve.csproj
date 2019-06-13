@@ -371,9 +371,6 @@
     </Compile>
     <Compile Include="Graphics\Fonts.cs" />
     <Compile Include="Graphics\Renderer.cs" />
-    <Compile Include="Graphics\Renderer.Loading.cs">
-      <DependentUpon>Renderer.cs</DependentUpon>
-    </Compile>
     <Compile Include="Graphics\Screen.cs" />
     <Compile Include="Graphics\Textures.cs" />
     <Compile Include="UserInterface\formImage.cs">
