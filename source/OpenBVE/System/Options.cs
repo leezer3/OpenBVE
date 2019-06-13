@@ -479,8 +479,13 @@ namespace OpenBve
 										case "viewingdistance":
 											{
 												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
-												Interface.CurrentOptions.ViewingDistance = a;
+												if (int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+												{
+													if (a >= 100 && a <= 10000)
+													{
+														Interface.CurrentOptions.ViewingDistance = a;
+													}
+												}
 											} break;
 										case "motionblur":
 											switch (Value.ToLowerInvariant())
