@@ -152,10 +152,9 @@ namespace OpenBve {
 			double uz = Camera.AbsoluteUp.Z;
 			Matrix4d lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, dx, dy, dz, ux, uy, uz);
 			GL.MatrixMode(MatrixMode.Modelview);
-			//TODO: May be required
 			GL.LoadMatrix(ref lookat);
-			//Glu.gluLookAt(0.0, 0.0, 0.0, dx, dy, dz, ux, uy, uz);
-			if (LibRender.Renderer.OptionLighting) {
+			//if (LibRender.Renderer.OptionLighting)
+			{
 				GL.Light(LightName.Light0, LightParameter.Position, new float[] { (float)LibRender.Renderer.OptionLightPosition.X, (float)LibRender.Renderer.OptionLightPosition.Y, (float)LibRender.Renderer.OptionLightPosition.Z, 0.0f });
 			}
 			// fog
@@ -173,13 +172,14 @@ namespace OpenBve {
 				
 			}
 			// render background
+			GL.Enable(EnableCap.DepthTest);
 			if (LibRender.Renderer.FogEnabled) {
 				GL.Disable(EnableCap.Fog); LibRender.Renderer.FogEnabled = false;
 			}
 			GL.Disable(EnableCap.DepthTest);
-			Backgrounds.RenderBackground(TimeElapsed);
+			CurrentRoute.UpdateBackground(TimeElapsed, true); //HACK: Route Viewer does not support time at the minute, so just assume we are paused
 			// fog
-			if (CurrentRoute.CurrentFog.Start < CurrentRoute.CurrentFog.End & CurrentRoute.CurrentFog.Start < World.BackgroundImageDistance) {
+			if (CurrentRoute.CurrentFog.Start < CurrentRoute.CurrentFog.End & CurrentRoute.CurrentFog.Start < Backgrounds.BackgroundImageDistance) {
 				if (!LibRender.Renderer.FogEnabled) {
 					GL.Fog(FogParameter.FogMode, (int)FogMode.Linear);
 				}
@@ -195,7 +195,7 @@ namespace OpenBve {
 			}
 			// render background
 			GL.Disable(EnableCap.DepthTest);
-			Backgrounds.RenderBackground(TimeElapsed);
+			
 			// render polygons
 			if (LibRender.Renderer.OptionLighting) {
 				if (!LibRender.Renderer.LightingEnabled) {

@@ -2745,7 +2745,8 @@ namespace OpenBve {
 															StaticBackground b = Data.Backgrounds[CommandIndex1] as StaticBackground;
 															if (b != null)
 															{
-																TextureManager.RegisterTexture(f, out b.Texture);
+																Program.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out b.Texture);
+
 															}
 
 														}

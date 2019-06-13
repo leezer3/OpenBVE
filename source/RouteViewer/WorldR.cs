@@ -20,7 +20,7 @@ namespace OpenBve {
 		internal static double ForwardViewingDistance;
 		internal static double BackwardViewingDistance;
 		internal static double ExtraViewingDistance;
-		internal static double BackgroundImageDistance;
+		
 		
 		
 		internal const double TargetBackgroundDefaultCountdown = 0.8;
@@ -153,7 +153,7 @@ namespace OpenBve {
 				min = c0 < c1 ? c0 : c1;
 				if (min > 0.0) min = 0.0;
 			}
-			double d = World.BackgroundImageDistance + World.ExtraViewingDistance;
+			double d = Backgrounds.BackgroundImageDistance + World.ExtraViewingDistance;
 			World.ForwardViewingDistance = d * max;
 			World.BackwardViewingDistance = -d * min;
 			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z, true);

@@ -141,7 +141,7 @@ namespace OpenBve {
 			CurrentRoute.PreviousFog = new Fog(0.0f, 0.0f, Color24.Grey, 0.0);
 			CurrentRoute.CurrentFog = new Fog(0.0f, 0.0f, Color24.Grey, 0.5);
 			CurrentRoute.NextFog = new Fog(0.0f, 0.0f, Color24.Grey, 1.0);
-			CurrentRoute.NoFogStart = (float)World.BackgroundImageDistance + 200.0f;
+			CurrentRoute.NoFogStart = (float)Backgrounds.BackgroundImageDistance + 200.0f;
 			CurrentRoute.NoFogEnd = 2.0f * CurrentRoute.NoFogStart;
 			InfoTotalTriangles = 0;
 			InfoTotalTriangleStrip = 0;

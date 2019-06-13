@@ -12,9 +12,9 @@ namespace LibRender
 		/// <summary>The user-selected viewing distance.</summary>
 		public static double BackgroundImageDistance;
 		/// <summary>Whether an openGL display list is available for the current background</summary>
-		internal static bool BackgroundDisplayListAvailable;
+		private static bool BackgroundDisplayListAvailable;
 		/// <summary>The index to the openGL display list</summary>
-		internal static int BackgroundDisplayList;
+		private static int BackgroundDisplayList;
 
 		/// <summary>Renders a static frustrum based background</summary>
 		/// <param name="Data">The background to render</param>

@@ -93,7 +93,7 @@ namespace OpenBve
 			MouseUp += Program.MouseEvent;
 	        FileDrop += Program.FileDrop;
             Program.ResetCamera();
-            World.BackgroundImageDistance = 600.0;
+            Backgrounds.BackgroundImageDistance = 600.0;
             World.ForwardViewingDistance = 600.0;
             World.BackwardViewingDistance = 0.0;
             World.ExtraViewingDistance = 50.0;
