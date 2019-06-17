@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Xml;
+using OpenBve.BackgroundManager;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -15,7 +16,7 @@ namespace OpenBve
 		//Parses an XML background definition
 		public static BackgroundHandle ReadBackgroundXML(string fileName)
 		{
-			List<BackgroundManager.StaticBackground> Backgrounds = new List<BackgroundManager.StaticBackground>();
+			List<StaticBackground> Backgrounds = new List<StaticBackground>();
 			//The current XML file to load
 			XmlDocument currentXML = new XmlDocument();
 			//Load the object's XML file 
@@ -131,13 +132,13 @@ namespace OpenBve
 							//Create background if texture is not null
 							if (t != null && o == null)
 							{
-								Backgrounds.Add(new BackgroundManager.StaticBackground(t, repetitions, false, TransitionTime, mode, DisplayTime));
+								Backgrounds.Add(new StaticBackground(t, repetitions, false, TransitionTime, mode, DisplayTime));
 							}
 							if (t == null && o != null)
 							{
 								//All other parameters are ignored if an object has been defined
 								//TODO: Error message stating they have been ignored
-								return new BackgroundManager.BackgroundObject(o);
+								return new BackgroundObject(o);
 							}
 							
 						}
@@ -151,7 +152,7 @@ namespace OpenBve
 						//Sort list- Not worried about when they start or end, so use simple LINQ
 						Backgrounds = Backgrounds.OrderBy(o => o.Time).ToList();
 						//If more than 2 backgrounds, convert to array and return a new dynamic background
-						return new BackgroundManager.DynamicBackground(Backgrounds.ToArray());
+						return new DynamicBackground(Backgrounds.ToArray());
 					}
 				}
 			}

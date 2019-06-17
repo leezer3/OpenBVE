@@ -1,6 +1,6 @@
 using System;
 using LibRender;
-using OpenBve.SignalManager;
+using OpenBve.RouteManager;
 using OpenBveApi.Math;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Runtime;

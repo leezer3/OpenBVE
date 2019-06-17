@@ -9,8 +9,7 @@ using System;
 using LibRender;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
-using OpenBveApi.Runtime;
-using OpenBveApi.Textures;
+using OpenBve.BackgroundManager;
 
 namespace OpenBve {
 	public static class World {	
@@ -21,31 +20,9 @@ namespace OpenBve {
 		internal static double ForwardViewingDistance;
 		internal static double BackwardViewingDistance;
 		internal static double ExtraViewingDistance;
-		internal static double BackgroundImageDistance;
-		internal class StaticBackground : BackgroundHandle {
-			internal Texture Texture;
-			internal int Repetition;
-			internal bool KeepAspectRatio;
-			internal StaticBackground(Texture texture, int Repetition, bool KeepAspectRatio) {
-				this.Texture = texture;
-				this.Repetition = Repetition;
-				this.KeepAspectRatio = KeepAspectRatio;
-			}
-
-			public override void UpdateBackground(double ElapsedTime, bool Target)
-			{
-			}
-
-			public override void RenderBackground(float Alpha, float Scale)
-			{
-			}
-
-			public override void RenderBackground(float Scale)
-			{
-			}
-		}
-		internal static BackgroundHandle CurrentBackground = new StaticBackground(null, 6, false);
-		internal static BackgroundHandle TargetBackground = new StaticBackground(null, 6, false);
+		
+		
+		
 		internal const double TargetBackgroundDefaultCountdown = 0.8;
 		internal static double TargetBackgroundCountdown;
 
@@ -176,7 +153,7 @@ namespace OpenBve {
 				min = c0 < c1 ? c0 : c1;
 				if (min > 0.0) min = 0.0;
 			}
-			double d = World.BackgroundImageDistance + World.ExtraViewingDistance;
+			double d = Backgrounds.BackgroundImageDistance + World.ExtraViewingDistance;
 			World.ForwardViewingDistance = d * max;
 			World.BackwardViewingDistance = -d * min;
 			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z, true);

@@ -183,7 +183,6 @@
     <Compile Include="Graphics\HUD\HUD.Transitions.cs">
       <DependentUpon>HUD.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\Renderer\Background.cs" />
     <Compile Include="Graphics\Renderer\Events.cs" />
     <Compile Include="Graphics\Renderer\Functions.cs" />
     <Compile Include="Graphics\Renderer\Lamp.cs" />
@@ -306,7 +305,6 @@
     <Compile Include="Simulation\TrainManager\Train\Train.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Handles.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Specs.cs" />
-    <Compile Include="Simulation\World\BackgroundManager.cs" />
     <Compile Include="System\Cursor.cs" />
     <Compile Include="System\Functions\Bve5Shared.cs" />
     <Compile Include="System\Functions\CrashHandler.cs" />
@@ -373,9 +371,6 @@
     </Compile>
     <Compile Include="Graphics\Fonts.cs" />
     <Compile Include="Graphics\Renderer.cs" />
-    <Compile Include="Graphics\Renderer.Loading.cs">
-      <DependentUpon>Renderer.cs</DependentUpon>
-    </Compile>
     <Compile Include="Graphics\Screen.cs" />
     <Compile Include="Graphics\Textures.cs" />
     <Compile Include="UserInterface\formImage.cs">
@@ -511,9 +506,9 @@
       <Name>Formats.Msts</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\SignalManager\SignalManager.csproj">
+    <ProjectReference Include="..\RouteManager\RouteManager.csproj">
       <Project>{87838364-8911-46b2-8628-d437c485d9c9}</Project>
-      <Name>SignalManager</Name>
+      <Name>RouteManager</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

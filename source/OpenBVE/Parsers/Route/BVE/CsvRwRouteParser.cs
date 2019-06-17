@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using LibRender;
 using Path = OpenBveApi.Path;
+using OpenBve.BackgroundManager;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
@@ -9,6 +11,7 @@ using OpenBveApi.Objects;
 using OpenBveApi.Interface;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
+using OpenBve.RouteManager;
 using OpenBve.SignalManager;
 using OpenBveApi.Textures;
 
@@ -62,8 +65,8 @@ namespace OpenBve {
 			{
 				Data.Blocks[0].Background = 0;
 				Data.Blocks[0].BrightnessChanges = new Brightness[] {};
-				Data.Blocks[0].Fog.Start = Game.NoFogStart;
-				Data.Blocks[0].Fog.End = Game.NoFogEnd;
+				Data.Blocks[0].Fog.Start = CurrentRoute.NoFogStart;
+				Data.Blocks[0].Fog.End = CurrentRoute.NoFogEnd;
 				Data.Blocks[0].Fog.Color = Color24.Grey;
 				Data.Blocks[0].Cycle = new int[] {-1};
 				Data.Blocks[0].RailCycles = new RailCycle[1];
@@ -731,7 +734,7 @@ namespace OpenBve {
 										Interface.AddMessage (MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions [j].Line.ToString (Culture) + ", column " + Expressions [j].Column.ToString (Culture) + " in file " + Expressions [j].File);
 									}
 									else
-										Renderer.SetLoadingBkg(f);
+										LoadingScreen.SetLoadingBkg(f);
 									}
 									break;
 								//Sets a custom unit of speed to to displayed in on-screen messages
@@ -1846,7 +1849,7 @@ namespace OpenBve {
 													Interface.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													if (!Data.Backgrounds.ContainsKey(CommandIndex1)) {
-														Data.Backgrounds.Add(CommandIndex1, new BackgroundManager.StaticBackground(null, 6, false));
+														Data.Backgrounds.Add(CommandIndex1, new StaticBackground(null, 6, false));
 													}
 													string f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
 													if (!System.IO.File.Exists(f) && (Arguments[0].ToLowerInvariant() == "back_mt.bmp" || Arguments[0] == "back_mthigh.bmp")) {
@@ -1879,9 +1882,9 @@ namespace OpenBve {
 														}
 														else
 														{
-															if (Data.Backgrounds[CommandIndex1] is BackgroundManager.StaticBackground)
+															if (Data.Backgrounds[CommandIndex1] is StaticBackground)
 															{
-																BackgroundManager.StaticBackground b = Data.Backgrounds[CommandIndex1] as BackgroundManager.StaticBackground;
+																StaticBackground b = Data.Backgrounds[CommandIndex1] as StaticBackground;
 																if (b != null)
 																{
 																	Program.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out b.Texture);
@@ -1904,7 +1907,7 @@ namespace OpenBve {
 												Interface.AddMessage(MessageType.Error, false,  Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (!Data.Backgrounds.ContainsKey(CommandIndex1)) {
-													Data.Backgrounds.Add(CommandIndex1, new BackgroundManager.StaticBackground(null, 6, false));
+													Data.Backgrounds.Add(CommandIndex1, new StaticBackground(null, 6, false));
 												}
 												int x;
 												if (!NumberFormats.TryParseIntVb6(Arguments[0], out x)) {
@@ -1912,7 +1915,7 @@ namespace OpenBve {
 												} else if (x == 0) {
 													Interface.AddMessage(MessageType.Error, false, "RepetitionCount is expected to be non-zero in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
-													BackgroundManager.StaticBackground b = Data.Backgrounds[CommandIndex1] as BackgroundManager.StaticBackground;
+													StaticBackground b = Data.Backgrounds[CommandIndex1] as StaticBackground;
 													if (b != null)
 													{
 														b.Repetition = x;
@@ -1931,7 +1934,7 @@ namespace OpenBve {
 												Interface.AddMessage(MessageType.Error, false,  Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (!Data.Backgrounds.ContainsKey(CommandIndex1)) {
-													Data.Backgrounds.Add(CommandIndex1, new BackgroundManager.StaticBackground(null, 6, false));
+													Data.Backgrounds.Add(CommandIndex1, new StaticBackground(null, 6, false));
 												}
 												int aspect;
 												if (!NumberFormats.TryParseIntVb6(Arguments[0], out aspect)) {
@@ -1939,7 +1942,7 @@ namespace OpenBve {
 												} else if (aspect != 0 & aspect != 1) {
 													Interface.AddMessage(MessageType.Error, false, "Value is expected to be either 0 or 1 in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
-													BackgroundManager.StaticBackground b = Data.Backgrounds[CommandIndex1] as BackgroundManager.StaticBackground;
+													StaticBackground b = Data.Backgrounds[CommandIndex1] as StaticBackground;
 													if (b != null)
 													{
 														b.KeepAspectRatio = aspect == 1;
@@ -2566,8 +2569,8 @@ namespace OpenBve {
 												Data.Blocks[BlockIndex].Fog.Start = (float)start;
 												Data.Blocks[BlockIndex].Fog.End = (float)end;
 											} else {
-												Data.Blocks[BlockIndex].Fog.Start = Game.NoFogStart;
-												Data.Blocks[BlockIndex].Fog.End = Game.NoFogEnd;
+												Data.Blocks[BlockIndex].Fog.Start = CurrentRoute.NoFogStart;
+												Data.Blocks[BlockIndex].Fog.End = CurrentRoute.NoFogEnd;
 											}
 											Data.Blocks[BlockIndex].Fog.Color = new Color24((byte)r, (byte)g, (byte)b);
 											Data.Blocks[BlockIndex].FogDefined = true;
@@ -4242,8 +4245,8 @@ namespace OpenBve {
 											}
 											if (typ < 0 | !Data.Backgrounds.ContainsKey(typ)) {
 												Interface.AddMessage(MessageType.Error, false, "BackgroundIndex " + typ + " references a background not loaded in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-											} else if (Data.Backgrounds[typ] is BackgroundManager.StaticBackground) {
-												BackgroundManager.StaticBackground b = Data.Backgrounds[typ] as BackgroundManager.StaticBackground;
+											} else if (Data.Backgrounds[typ] is StaticBackground) {
+												StaticBackground b = Data.Backgrounds[typ] as StaticBackground;
 												if (b.Texture == null)
 												{
 													//There's a possibility that this was loaded via a default BVE command rather than XML
@@ -4257,14 +4260,14 @@ namespace OpenBve {
 													{
 														//The initial background for block 0 is always set to zero
 														//This handles the case where background idx #0 is not used
-														b = Data.Backgrounds[0] as BackgroundManager.StaticBackground;
+														b = Data.Backgrounds[0] as StaticBackground;
 														if (b.Texture == null)
 														{
 															Data.Blocks[0].Background = typ;
 														}
 													}
 												}
-											} else if (Data.Backgrounds[typ] is BackgroundManager.DynamicBackground)
+											} else if (Data.Backgrounds[typ] is DynamicBackground)
 											{
 												//File existance checks should already have been made when loading the XML
 												Data.Blocks[BlockIndex].Background = typ;

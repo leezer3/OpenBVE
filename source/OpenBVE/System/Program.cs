@@ -151,22 +151,19 @@ namespace OpenBve {
 			}
 			Toolkit.Init(options);
 			// --- load language ---
-			{
-				string folder = Program.FileSystem.GetDataFolder("Languages");
-				Translations.LoadLanguageFiles(folder);
-			}
-			{
-				string folder = Program.FileSystem.GetDataFolder("Cursors");
-				Cursors.LoadCursorImages(folder);
-			}
+			string folder = Program.FileSystem.GetDataFolder("Languages");
+			Translations.LoadLanguageFiles(folder);
+			
+			folder = Program.FileSystem.GetDataFolder("Cursors");
+			Cursors.LoadCursorImages(folder);
+			
 			Interface.LoadControls(null, out Interface.CurrentControls);
-			{
-				string folder = Program.FileSystem.GetDataFolder("Controls");
-				string file = OpenBveApi.Path.CombineFile(folder, "Default keyboard assignment.controls");
-				Interface.Control[] controls;
-				Interface.LoadControls(file, out controls);
-				Interface.AddControls(ref Interface.CurrentControls, controls);
-			}
+			folder = Program.FileSystem.GetDataFolder("Controls");
+			string file = OpenBveApi.Path.CombineFile(folder, "Default keyboard assignment.controls");
+			Interface.Control[] controls;
+			Interface.LoadControls(file, out controls);
+			Interface.AddControls(ref Interface.CurrentControls, controls);
+			
 			InputDevicePlugin.LoadPlugins(Program.FileSystem);
 			
 			// --- check the command-line arguments for route and train ---
@@ -189,13 +186,13 @@ namespace OpenBve {
 				bool isRW = string.Equals(System.IO.Path.GetExtension(result.RouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
 				CsvRwRouteParser.ParseRoute(result.RouteFile, isRW, result.RouteEncoding, null, null, null, true);
 				if (!string.IsNullOrEmpty(Game.TrainName)) {
-					string folder = System.IO.Path.GetDirectoryName(result.RouteFile);
+					folder = System.IO.Path.GetDirectoryName(result.RouteFile);
 					while (true) {
 						string trainFolder = OpenBveApi.Path.CombineDirectory(folder, "Train");
 						if (System.IO.Directory.Exists(trainFolder)) {
 							folder = OpenBveApi.Path.CombineDirectory(trainFolder, Game.TrainName);
 							if (System.IO.Directory.Exists(folder)) {
-								string file = OpenBveApi.Path.CombineFile(folder, "train.dat");
+								file = OpenBveApi.Path.CombineFile(folder, "train.dat");
 								if (System.IO.File.Exists(file)) {
 									result.TrainFolder = folder;
 									result.TrainEncoding = System.Text.Encoding.UTF8;
@@ -312,7 +309,7 @@ namespace OpenBve {
 			World.ExtraViewingDistance = 50.0;
 			World.ForwardViewingDistance = (double)Interface.CurrentOptions.ViewingDistance;
 			World.BackwardViewingDistance = 0.0;
-			World.BackgroundImageDistance = (double)Interface.CurrentOptions.ViewingDistance;
+			Backgrounds.BackgroundImageDistance = (double)Interface.CurrentOptions.ViewingDistance;
 			// end HACK //
 			FileSystem.ClearLogFile();
 			return true;

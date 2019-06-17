@@ -9,7 +9,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
-using OpenBve.SignalManager;
+using OpenBve.RouteManager;
 
 namespace OpenBve {
 	internal static class Loading {

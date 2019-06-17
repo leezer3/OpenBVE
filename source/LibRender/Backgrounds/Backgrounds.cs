@@ -5,122 +5,47 @@ using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 
-namespace OpenBve
+namespace LibRender
 {
-	internal static partial class Renderer
+	public static class Backgrounds
 	{
-
-		/* --------------------------------------------------------------
-		 * This file contains the drawing routines for the background texture
-		 * -------------------------------------------------------------- */
-
+		/// <summary>The user-selected viewing distance.</summary>
+		public static double BackgroundImageDistance;
 		/// <summary>Whether an openGL display list is available for the current background</summary>
-		internal static bool BackgroundDisplayListAvailable;
+		private static bool BackgroundDisplayListAvailable;
 		/// <summary>The index to the openGL display list</summary>
-		internal static int BackgroundDisplayList;
-
-		/// <summary>Updates the currently displayed background</summary>
-		/// <param name="TimeElapsed">The time elapsed since the previous call to this function</param>
-		private static void UpdateBackground(double TimeElapsed)
-		{
-			if (Game.CurrentInterface != Game.InterfaceType.Normal)
-			{
-				//Don't update the transition whilst paused
-				TimeElapsed = 0.0;
-			}
-			const float scale = 0.5f;
-			// fog
-			const float fogdistance = 600.0f;
-			if (Game.CurrentFog.Start < Game.CurrentFog.End & Game.CurrentFog.Start < fogdistance)
-			{
-				float cr = inv255 * (float)Game.CurrentFog.Color.R;
-				float cg = inv255 * (float)Game.CurrentFog.Color.G;
-				float cb = inv255 * (float)Game.CurrentFog.Color.B;
-				if (!LibRender.Renderer.FogEnabled)
-				{
-					GL.Fog(FogParameter.FogMode, (int)FogMode.Linear);
-				}
-				float ratio = (float)World.BackgroundImageDistance / fogdistance;
-				GL.Fog(FogParameter.FogStart, Game.CurrentFog.Start * ratio * scale);
-				GL.Fog(FogParameter.FogEnd, Game.CurrentFog.End * ratio * scale);
-				GL.Fog(FogParameter.FogColor, new float[] { cr, cg, cb, 1.0f });
-				if (!LibRender.Renderer.FogEnabled)
-				{
-					GL.Enable(EnableCap.Fog); LibRender.Renderer.FogEnabled = true;
-				}
-			}
-			else if (LibRender.Renderer.FogEnabled)
-			{
-				GL.Disable(EnableCap.Fog); LibRender.Renderer.FogEnabled = false;
-			}
-			//Update the currently displayed background
-			BackgroundManager.CurrentBackground.UpdateBackground(TimeElapsed, false);
-			if (BackgroundManager.TargetBackground == null || BackgroundManager.TargetBackground == BackgroundManager.CurrentBackground)
-			{
-				//No target background, so call the render function
-				BackgroundManager.CurrentBackground.RenderBackground(scale);
-				return;
-			}
-			//Update the target background
-			if (BackgroundManager.TargetBackground is BackgroundManager.StaticBackground)
-			{
-				BackgroundManager.TargetBackground.Countdown += TimeElapsed;
-			}
-			BackgroundManager.TargetBackground.UpdateBackground(TimeElapsed, true);
-			switch (BackgroundManager.TargetBackground.Mode)
-			{
-				//Render, switching on the transition mode
-				case BackgroundTransitionMode.FadeIn:
-					BackgroundManager.CurrentBackground.RenderBackground(1.0f, scale);
-					LibRender.Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-					BackgroundManager.TargetBackground.RenderBackground(BackgroundManager.TargetBackground.CurrentAlpha, scale);
-					break;
-				case BackgroundTransitionMode.FadeOut:
-					BackgroundManager.TargetBackground.RenderBackground(1.0f, scale);
-					LibRender.Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-					BackgroundManager.CurrentBackground.RenderBackground(BackgroundManager.TargetBackground.CurrentAlpha, scale);
-					break;
-			}
-			//If our target alpha is greater than or equal to 1.0f, the background is fully displayed
-			if (BackgroundManager.TargetBackground.CurrentAlpha >= 1.0f)
-			{
-				//Set the current background to the target & reset target to null
-				BackgroundManager.CurrentBackground = BackgroundManager.TargetBackground;
-				BackgroundManager.TargetBackground = null;
-			}
-			
-		}
+		private static int BackgroundDisplayList;
 
 		/// <summary>Renders a static frustrum based background</summary>
 		/// <param name="Data">The background to render</param>
 		/// <param name="Alpha">The alpha level</param>
 		/// <param name="scale">The scale</param>
-		internal static void RenderBackground(BackgroundManager.StaticBackground Data, float Alpha, float scale)
+		public static void RenderBackground(dynamic Data, float Alpha, float scale)
 		{
-			if (Data.Texture != null && Program.CurrentHost.LoadTexture(Data.Texture, OpenGlTextureWrapMode.RepeatClamp))
+			if (Data.Texture != null && Renderer.currentHost.LoadTexture(Data.Texture, OpenGlTextureWrapMode.RepeatClamp))
 			{
-				if (LibRender.Renderer.LightingEnabled)
+				if (Renderer.LightingEnabled)
 				{
 					GL.Disable(EnableCap.Lighting);
-					LibRender.Renderer.LightingEnabled = false;
+					Renderer.LightingEnabled = false;
 				}
-				if (!LibRender.Renderer.TexturingEnabled)
+				if (!Renderer.TexturingEnabled)
 				{
 					GL.Enable(EnableCap.Texture2D);
-					LibRender.Renderer.TexturingEnabled = true;
+					Renderer.TexturingEnabled = true;
 				}
 				if (Alpha == 1.0f)
 				{
-					if (LibRender.Renderer.BlendEnabled)
+					if (Renderer.BlendEnabled)
 					{
 						GL.Disable(EnableCap.Blend);
-						LibRender.Renderer.BlendEnabled = false;
+						Renderer.BlendEnabled = false;
 					}
 				}
-				else if (!LibRender.Renderer.BlendEnabled)
+				else if (!Renderer.BlendEnabled)
 				{
 					GL.Enable(EnableCap.Blend);
-					LibRender.Renderer.BlendEnabled = true;
+					Renderer.BlendEnabled = true;
 				}
 				GL.BindTexture(TextureTarget.Texture2D, Data.Texture.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp].Name);
 				GL.Color4(1.0f, 1.0f, 1.0f, Alpha);
@@ -134,15 +59,15 @@ namespace OpenBve
 					{
 						int tw = Data.Texture.Width;
 						int th = Data.Texture.Height;
-						double hh = Math.PI * World.BackgroundImageDistance * (double)th /
+						double hh = Math.PI * BackgroundImageDistance * (double)th /
 									((double)tw * (double)Data.Repetition);
 						y0 = (float)(-0.5 * hh);
 						y1 = (float)(1.5 * hh);
 					}
 					else
 					{
-						y0 = (float)(-0.125 * World.BackgroundImageDistance);
-						y1 = (float)(0.375 * World.BackgroundImageDistance);
+						y0 = (float)(-0.125 * BackgroundImageDistance);
+						y1 = (float)(0.375 * BackgroundImageDistance);
 					}
 					const int n = 32;
 					Vector3[] bottom = new Vector3[n];
@@ -156,8 +81,8 @@ namespace OpenBve
 				 * */
 					for (int i = 0; i < n; i++)
 					{
-						float x = (float)(World.BackgroundImageDistance * Math.Cos(angleValue));
-						float z = (float)(World.BackgroundImageDistance * Math.Sin(angleValue));
+						float x = (float)(BackgroundImageDistance * Math.Cos(angleValue));
+						float z = (float)(BackgroundImageDistance * Math.Sin(angleValue));
 						bottom[i] = new Vector3(scale * x, scale * y0, scale * z);
 						top[i] = new Vector3(scale * x, scale * y1, scale * z);
 						angleValue += angleIncrement;
@@ -201,11 +126,11 @@ namespace OpenBve
 					GL.EndList();
 					GL.CallList(BackgroundDisplayList);
 					GL.Disable(EnableCap.Texture2D);
-					LibRender.Renderer.TexturingEnabled = false;
-					if (!LibRender.Renderer.BlendEnabled)
+					Renderer.TexturingEnabled = false;
+					if (!Renderer.BlendEnabled)
 					{
 						GL.Enable(EnableCap.Blend);
-						LibRender.Renderer.BlendEnabled = true;
+						Renderer.BlendEnabled = true;
 					}
 
 					BackgroundDisplayListAvailable = true;
@@ -214,11 +139,11 @@ namespace OpenBve
 				{
 					GL.CallList(BackgroundDisplayList);
 					GL.Disable(EnableCap.Texture2D);
-					LibRender.Renderer.TexturingEnabled = false;
-					if (!LibRender.Renderer.BlendEnabled)
+					Renderer.TexturingEnabled = false;
+					if (!Renderer.BlendEnabled)
 					{
 						GL.Enable(EnableCap.Blend);
-						LibRender.Renderer.BlendEnabled = true;
+						Renderer.BlendEnabled = true;
 					}
 				}
 			}
@@ -227,15 +152,16 @@ namespace OpenBve
 		/// <summary>Renders a dynamic frustrum based background</summary>
 		/// <param name="Data">The background to render</param>
 		/// <param name="scale">The scale</param>
-		internal static void RenderBackground(BackgroundManager.DynamicBackground Data, float scale)
+		public static void RenderBackground(dynamic Data, float scale)
 		{
 			if (Data.PreviousBackgroundIndex == Data.CurrentBackgroundIndex)
 			{
 				RenderBackground(Data.Backgrounds[Data.CurrentBackgroundIndex], 1.0f, scale);
 				return;
 			}
-			LibRender.Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-			switch (Data.Backgrounds[Data.CurrentBackgroundIndex].Mode)
+			Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
+			BackgroundTransitionMode Mode = Data.Backgrounds[Data.CurrentBackgroundIndex].Mode; //Must do this to make the switch work correctly using a dynamic
+			switch (Mode)
 			{
 				case BackgroundTransitionMode.FadeIn:
 					RenderBackground(Data.Backgrounds[Data.PreviousBackgroundIndex], 1.0f, scale);
@@ -248,12 +174,14 @@ namespace OpenBve
 			}
 		}
 
-		internal static void RenderBackground(BackgroundManager.BackgroundObject Object)
+		/// <summary>Renders an object based background</summary>
+		/// <param name="Object">The background object</param>
+		public static void RenderBackground(dynamic Object)
 		{
-			if (!LibRender.Renderer.TexturingEnabled)
+			if (!Renderer.TexturingEnabled)
 			{
 				GL.Enable(EnableCap.Texture2D);
-				LibRender.Renderer.TexturingEnabled = true;
+				Renderer.TexturingEnabled = true;
 			}
 			int Mat = -1;
 			for (int i = 0; i < Object.ObjectBackground.Mesh.Faces.Length; i++)
@@ -276,7 +204,7 @@ namespace OpenBve
 
 					if (Object.ObjectBackground.Mesh.Materials[m].DaytimeTexture != null)
 					{
-						Program.CurrentHost.LoadTexture(Object.ObjectBackground.Mesh.Materials[m].DaytimeTexture, wrap);
+						Renderer.currentHost.LoadTexture(Object.ObjectBackground.Mesh.Materials[m].DaytimeTexture, wrap);
 						GL.BindTexture(TextureTarget.Texture2D, Object.ObjectBackground.Mesh.Materials[m].DaytimeTexture.OpenGlTextures[(int) wrap].Name);
 					}
 				}
@@ -302,7 +230,7 @@ namespace OpenBve
 				
 				for (int j = 0; j < Object.ObjectBackground.Mesh.Faces[i].Vertices.Length; j++)
 				{
-					GL.Color4(inv255 * (float)Object.ObjectBackground.Mesh.Materials[m].Color.R * 1.0f, inv255 * Object.ObjectBackground.Mesh.Materials[m].Color.G * 1.0f, inv255 * (float)Object.ObjectBackground.Mesh.Materials[m].Color.B * 1.0f, inv255 * (float)Object.ObjectBackground.Mesh.Materials[m].Color.A);
+					GL.Color4(Renderer.inv255 * (float)Object.ObjectBackground.Mesh.Materials[m].Color.R * 1.0f, Renderer.inv255 * Object.ObjectBackground.Mesh.Materials[m].Color.G * 1.0f, Renderer.inv255 * (float)Object.ObjectBackground.Mesh.Materials[m].Color.B * 1.0f, Renderer.inv255 * (float)Object.ObjectBackground.Mesh.Materials[m].Color.A);
 					VertexTemplate v = Object.ObjectBackground.Mesh.Vertices[Object.ObjectBackground.Mesh.Faces[i].Vertices[j].Index];
 					if (v is ColoredVertex)
 					{
@@ -317,6 +245,5 @@ namespace OpenBve
 				GL.End();
 			}
 		}
-		
 	}
 }

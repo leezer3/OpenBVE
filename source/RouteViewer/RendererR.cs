@@ -7,6 +7,8 @@
 
 using System;
 using System.Drawing;
+using OpenBve.BackgroundManager;
+using OpenBve.RouteManager;
 using LibRender;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
@@ -126,7 +128,7 @@ namespace OpenBve {
 				GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			} else
 			{
-				World.StaticBackground b = (World.StaticBackground)World.CurrentBackground;
+				StaticBackground b = (StaticBackground)CurrentRoute.CurrentBackground;
 				if (Program.CurrentHost.LoadTexture(b.Texture, OpenGlTextureWrapMode.RepeatRepeat))
 				{
 					GL.Clear(ClearBufferMask.DepthBufferBit);
@@ -150,50 +152,50 @@ namespace OpenBve {
 			double uz = Camera.AbsoluteUp.Z;
 			Matrix4d lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, dx, dy, dz, ux, uy, uz);
 			GL.MatrixMode(MatrixMode.Modelview);
-			//TODO: May be required
 			GL.LoadMatrix(ref lookat);
-			//Glu.gluLookAt(0.0, 0.0, 0.0, dx, dy, dz, ux, uy, uz);
-			if (LibRender.Renderer.OptionLighting) {
+			//if (LibRender.Renderer.OptionLighting)
+			{
 				GL.Light(LightName.Light0, LightParameter.Position, new float[] { (float)LibRender.Renderer.OptionLightPosition.X, (float)LibRender.Renderer.OptionLightPosition.Y, (float)LibRender.Renderer.OptionLightPosition.Z, 0.0f });
 			}
 			// fog
-			double fd = Game.NextFog.TrackPosition - Game.PreviousFog.TrackPosition;
+			double fd = CurrentRoute.NextFog.TrackPosition - CurrentRoute.PreviousFog.TrackPosition;
 			if (fd != 0.0) {
-				float fr = (float)((World.CameraTrackFollower.TrackPosition - Game.PreviousFog.TrackPosition) / fd);
+				float fr = (float)((World.CameraTrackFollower.TrackPosition - CurrentRoute.PreviousFog.TrackPosition) / fd);
 				float frc = 1.0f - fr;
-				Game.CurrentFog.Start = Game.PreviousFog.Start * frc + Game.NextFog.Start * fr;
-				Game.CurrentFog.End = Game.PreviousFog.End * frc + Game.NextFog.End * fr;
-				Game.CurrentFog.Color.R = (byte)((float)Game.PreviousFog.Color.R * frc + (float)Game.NextFog.Color.R * fr);
-				Game.CurrentFog.Color.G = (byte)((float)Game.PreviousFog.Color.G * frc + (float)Game.NextFog.Color.G * fr);
-				Game.CurrentFog.Color.B = (byte)((float)Game.PreviousFog.Color.B * frc + (float)Game.NextFog.Color.B * fr);
+				CurrentRoute.CurrentFog.Start = CurrentRoute.PreviousFog.Start * frc + CurrentRoute.NextFog.Start * fr;
+				CurrentRoute.CurrentFog.End = CurrentRoute.PreviousFog.End * frc + CurrentRoute.NextFog.End * fr;
+				CurrentRoute.CurrentFog.Color.R = (byte)((float)CurrentRoute.PreviousFog.Color.R * frc + (float)CurrentRoute.NextFog.Color.R * fr);
+				CurrentRoute.CurrentFog.Color.G = (byte)((float)CurrentRoute.PreviousFog.Color.G * frc + (float)CurrentRoute.NextFog.Color.G * fr);
+				CurrentRoute.CurrentFog.Color.B = (byte)((float)CurrentRoute.PreviousFog.Color.B * frc + (float)CurrentRoute.NextFog.Color.B * fr);
 			} else {
-				Game.CurrentFog = Game.PreviousFog;
+				CurrentRoute.CurrentFog = CurrentRoute.PreviousFog;
 				
 			}
 			// render background
+			GL.Enable(EnableCap.DepthTest);
 			if (LibRender.Renderer.FogEnabled) {
 				GL.Disable(EnableCap.Fog); LibRender.Renderer.FogEnabled = false;
 			}
 			GL.Disable(EnableCap.DepthTest);
-			RenderBackground(TimeElapsed);
+			CurrentRoute.UpdateBackground(TimeElapsed, true); //HACK: Route Viewer does not support time at the minute, so just assume we are paused
 			// fog
-			if (Game.CurrentFog.Start < Game.CurrentFog.End & Game.CurrentFog.Start < World.BackgroundImageDistance) {
+			if (CurrentRoute.CurrentFog.Start < CurrentRoute.CurrentFog.End & CurrentRoute.CurrentFog.Start < Backgrounds.BackgroundImageDistance) {
 				if (!LibRender.Renderer.FogEnabled) {
 					GL.Fog(FogParameter.FogMode, (int)FogMode.Linear);
 				}
-				GL.Fog(FogParameter.FogStart, Game.CurrentFog.Start);
-				GL.Fog(FogParameter.FogEnd, Game.CurrentFog.End);
-				GL.Fog(FogParameter.FogColor, new float[] { inv255 * (float)Game.CurrentFog.Color.R, inv255 * (float)Game.CurrentFog.Color.G, inv255 * (float)Game.CurrentFog.Color.B, 1.0f });
+				GL.Fog(FogParameter.FogStart, CurrentRoute.CurrentFog.Start);
+				GL.Fog(FogParameter.FogEnd, CurrentRoute.CurrentFog.End);
+				GL.Fog(FogParameter.FogColor, new float[] { inv255 * (float)CurrentRoute.CurrentFog.Color.R, inv255 * (float)CurrentRoute.CurrentFog.Color.G, inv255 * (float)CurrentRoute.CurrentFog.Color.B, 1.0f });
 				if (!LibRender.Renderer.FogEnabled) {
 					GL.Enable(EnableCap.Fog); LibRender.Renderer.FogEnabled = true;
 				}
-				GL.ClearColor(inv255 * (float)Game.CurrentFog.Color.R, inv255 * (float)Game.CurrentFog.Color.G, inv255 * (float)Game.CurrentFog.Color.B, 1.0f);
+				GL.ClearColor(inv255 * (float)CurrentRoute.CurrentFog.Color.R, inv255 * (float)CurrentRoute.CurrentFog.Color.G, inv255 * (float)CurrentRoute.CurrentFog.Color.B, 1.0f);
 			} else if (LibRender.Renderer.FogEnabled) {
 				GL.Disable(EnableCap.Fog); LibRender.Renderer.FogEnabled = false;
 			}
 			// render background
 			GL.Disable(EnableCap.DepthTest);
-			RenderBackground(TimeElapsed);
+			
 			// render polygons
 			if (LibRender.Renderer.OptionLighting) {
 				if (!LibRender.Renderer.LightingEnabled) {
@@ -370,135 +372,6 @@ namespace OpenBve {
 			LibRender.Renderer.RenderFace(ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Materials[r], ObjectManager.Objects[Face.ObjectIndex].Mesh.Vertices, Face.Wrap, ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex], Camera);
 		}
 		
-		// render background
-		private static void RenderBackground(double TimeElapsed) {
-			// fog
-			const float fogdistance = 600.0f;
-			if (Game.CurrentFog.Start < Game.CurrentFog.End & Game.CurrentFog.Start < fogdistance) {
-				float cr = inv255 * (float)Game.CurrentFog.Color.R;
-				float cg = inv255 * (float)Game.CurrentFog.Color.G;
-				float cb = inv255 * (float)Game.CurrentFog.Color.B;
-				if (!LibRender.Renderer.FogEnabled) {
-					GL.Fog(FogParameter.FogMode, (int) FogMode.Linear);
-				}
-				GL.Fog(FogParameter.FogStart, Game.CurrentFog.Start * (float)World.BackgroundImageDistance / fogdistance);
-				GL.Fog(FogParameter.FogEnd, Game.CurrentFog.End * (float)World.BackgroundImageDistance / fogdistance);
-				GL.Fog(FogParameter.FogColor, new float[] { cr, cg, cb, 1.0f });
-				if (!LibRender.Renderer.FogEnabled) {
-					GL.Enable(EnableCap.Fog); LibRender.Renderer.FogEnabled = true;
-				}
-			} else if (LibRender.Renderer.FogEnabled) {
-				GL.Disable(EnableCap.Fog); LibRender.Renderer.FogEnabled = false;
-			}
-			// render
-			if (World.TargetBackgroundCountdown >= 0.0) {
-				// fade
-				World.TargetBackgroundCountdown -= TimeElapsed;
-				if (World.TargetBackgroundCountdown < 0.0) {
-					World.CurrentBackground = World.TargetBackground;
-					World.TargetBackgroundCountdown = -1.0;
-					RenderBackground((World.StaticBackground)World.CurrentBackground, 1.0f);
-				} else {
-					RenderBackground((World.StaticBackground)World.CurrentBackground, 1.0f);
-					LibRender.Renderer.AlphaFuncValue = 0.0f; GL.AlphaFunc(LibRender.Renderer.AlphaFuncComparison, LibRender.Renderer.AlphaFuncValue);
-					float Alpha = (float)(1.0 - World.TargetBackgroundCountdown / World.TargetBackgroundDefaultCountdown);
-					RenderBackground((World.StaticBackground)World.TargetBackground, Alpha);
-				}
-			} else {
-				// single
-				RenderBackground((World.StaticBackground)World.CurrentBackground, 1.0f);
-			}
-		}
-		private static void RenderBackground(World.StaticBackground Data, float Alpha) {
-			if (Data.Texture != null) {
-				if (Program.CurrentHost.LoadTexture(Data.Texture, OpenGlTextureWrapMode.RepeatRepeat)) {
-					if (LibRender.Renderer.LightingEnabled) {
-						GL.Disable(EnableCap.Lighting);
-						LibRender.Renderer.LightingEnabled = false;
-					}
-					if (!LibRender.Renderer.TexturingEnabled) {
-						GL.Enable(EnableCap.Texture2D);
-						LibRender.Renderer.TexturingEnabled = true;
-					}
-					if (Alpha == 1.0f) {
-						if (LibRender.Renderer.BlendEnabled) {
-							GL.Disable(EnableCap.Blend);
-							LibRender.Renderer.BlendEnabled = false;
-						}
-					} else if (!LibRender.Renderer.BlendEnabled) {
-						GL.Enable(EnableCap.Blend);
-						LibRender.Renderer.BlendEnabled = true;
-					}
-					GL.BindTexture(TextureTarget.Texture2D, Data.Texture.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatRepeat].Name);
-					GL.Color4(1.0f, 1.0f, 1.0f, Alpha);
-					float y0, y1;
-					if (Data.KeepAspectRatio) {
-						int tw = Data.Texture.Width;
-						int th = Data.Texture.Height;
-						double hh = Math.PI * World.BackgroundImageDistance * (double)th / ((double)tw * (double)Data.Repetition);
-						y0 = (float)(-0.5 * hh);
-						y1 = (float)(1.5 * hh);
-					} else {
-						y0 = (float)(-0.125 * World.BackgroundImageDistance);
-						y1 = (float)(0.375 * World.BackgroundImageDistance);
-					}
-					const int n = 32;
-					Vector3[] bottom = new Vector3[n];
-					Vector3[] top = new Vector3[n];
-					double angleValue = 2.61799387799149 - 3.14159265358979 / (double)n;
-					double angleIncrement = 6.28318530717958 / (double)n;
-					for (int i = 0; i < n; i++) {
-						float x = (float)(World.BackgroundImageDistance * Math.Cos(angleValue));
-						float z = (float)(World.BackgroundImageDistance * Math.Sin(angleValue));
-						bottom[i] = new Vector3(x, y0, z);
-						top[i] = new Vector3(x, y1, z);
-						angleValue += angleIncrement;
-					}
-					float textureStart = 0.5f * (float)Data.Repetition / (float)n;
-					float textureIncrement = -(float)Data.Repetition / (float)n;
-					double textureX = textureStart;
-					for (int i = 0; i < n; i++) {
-						int j = (i + 1) % n;
-						// side wall
-						GL.Begin(PrimitiveType.Quads);
-						GL.TexCoord2(textureX, 0.005f);
-						GL.Vertex3(top[i].X, top[i].Y, top[i].Z);
-						GL.TexCoord2(textureX, 0.995f);
-						GL.Vertex3(bottom[i].X, bottom[i].Y, bottom[i].Z);
-						GL.TexCoord2(textureX + textureIncrement, 0.995f);
-						GL.Vertex3(bottom[j].X, bottom[j].Y, bottom[j].Z);
-						GL.TexCoord2(textureX + textureIncrement, 0.005f);
-						GL.Vertex3(top[j].X, top[j].Y, top[j].Z);
-						GL.End();
-						// top cap
-						GL.Begin(PrimitiveType.Triangles);
-						GL.TexCoord2(textureX, 0.005f);
-						GL.Vertex3(top[i].X, top[i].Y, top[i].Z);
-						GL.TexCoord2(textureX + textureIncrement, 0.005f);
-						GL.Vertex3(top[j].X, top[j].Y, top[j].Z);
-						GL.TexCoord2(textureX + 0.5 * textureIncrement, 0.1f);
-						GL.Vertex3(0.0f, top[i].Y, 0.0f);
-						// bottom cap
-						GL.TexCoord2(textureX + 0.5 * textureIncrement, 0.9f);
-						GL.Vertex3(0.0f, bottom[i].Y, 0.0f);
-						GL.TexCoord2(textureX + textureIncrement, 0.995f);
-						GL.Vertex3(bottom[j].X, bottom[j].Y, bottom[j].Z);
-						GL.TexCoord2(textureX, 0.995f);
-						GL.Vertex3(bottom[i].X, bottom[i].Y, bottom[i].Z);
-						GL.End();
-						// finish
-						textureX += textureIncrement;
-					}
-					GL.Disable(EnableCap.Texture2D);
-					LibRender.Renderer.TexturingEnabled = false;
-					if (!LibRender.Renderer.BlendEnabled) {
-						GL.Enable(EnableCap.Blend);
-						LibRender.Renderer.BlendEnabled = true;
-					}
-				}
-			}
-		}
-
 		// render events
 		private static void RenderEvents(Vector3 Camera) {
 			if (TrackManager.CurrentTrack.Elements == null) {

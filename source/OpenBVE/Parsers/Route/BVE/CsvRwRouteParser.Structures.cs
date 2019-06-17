@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Objects;
+﻿using OpenBve.RouteManager;
+using OpenBveApi.Objects;
 using OpenBve.SignalManager;
 using OpenBveApi.Math;
 
@@ -191,7 +192,7 @@ namespace OpenBve
 		{
 			internal int Background;
 			internal Brightness[] BrightnessChanges;
-			internal Game.Fog Fog;
+			internal Fog Fog;
 			internal bool FogDefined;
 			internal int[] Cycle;
 			internal RailCycle[] RailCycles;

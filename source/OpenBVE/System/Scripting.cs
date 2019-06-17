@@ -1,7 +1,7 @@
 ﻿using System;
 using LibRender;
 using OpenBveApi.Math;
-using OpenBve.SignalManager;
+using OpenBve.RouteManager;
 
 // ReSharper disable UnusedMember.Global
 

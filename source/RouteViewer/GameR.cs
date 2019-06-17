@@ -12,6 +12,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
+using OpenBve.RouteManager;
 using OpenBve.SignalManager;
 using OpenBveApi.Objects;
 using SoundHandle = OpenBveApi.Sounds.SoundHandle;
@@ -28,24 +29,7 @@ namespace OpenBve {
 		internal static bool MinimalisticSimulation = false;
 		internal static double[] RouteUnitOfLength = new double[] { 1.0 };
 
-		// fog
-		internal struct Fog {
-			internal float Start;
-			internal float End;
-			internal Color24 Color;
-			internal double TrackPosition;
-			internal Fog(float Start, float End, Color24 Color, double TrackPosition) {
-				this.Start = Start;
-				this.End = End;
-				this.Color = Color;
-				this.TrackPosition = TrackPosition;
-			}
-		}
-		internal static Fog PreviousFog = new Fog(0.0f, 0.0f, Color24.Grey, 0.0);
-		internal static Fog CurrentFog = new Fog(0.0f, 0.0f, Color24.Grey, 0.5);
-		internal static Fog NextFog = new Fog(0.0f, 0.0f, Color24.Grey, 1.0);
-		internal static float NoFogStart = 800.0f;
-		internal static float NoFogEnd = 1600.0f;
+		
 
 		// route constants
 		internal static string RouteComment = "";
@@ -154,11 +138,11 @@ namespace OpenBve {
 			CurrentRoute.BogusPretrainInstructions = new BogusPretrainInstruction[] { };
 			TrainName = "";
 			TrainStart = TrainStartMode.EmergencyBrakesNoAts;
-			PreviousFog = new Fog(0.0f, 0.0f, Color24.Grey, 0.0);
-			CurrentFog = new Fog(0.0f, 0.0f, Color24.Grey, 0.5);
-			NextFog = new Fog(0.0f, 0.0f, Color24.Grey, 1.0);
-			NoFogStart = (float)World.BackgroundImageDistance + 200.0f;
-			NoFogEnd = 2.0f * NoFogStart;
+			CurrentRoute.PreviousFog = new Fog(0.0f, 0.0f, Color24.Grey, 0.0);
+			CurrentRoute.CurrentFog = new Fog(0.0f, 0.0f, Color24.Grey, 0.5);
+			CurrentRoute.NextFog = new Fog(0.0f, 0.0f, Color24.Grey, 1.0);
+			CurrentRoute.NoFogStart = (float)Backgrounds.BackgroundImageDistance + 200.0f;
+			CurrentRoute.NoFogEnd = 2.0f * CurrentRoute.NoFogStart;
 			InfoTotalTriangles = 0;
 			InfoTotalTriangleStrip = 0;
 			InfoTotalQuads = 0;
@@ -342,6 +326,7 @@ namespace OpenBve {
 			internal string Text;
 		}
 		internal static PointOfInterest[] PointsOfInterest = new PointOfInterest[] { };
+
 		internal static bool ApplyPointOfInterest(int Value, bool Relative) {
 			double t = 0.0;
 			int j = -1;

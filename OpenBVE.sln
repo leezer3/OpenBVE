@@ -87,7 +87,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Texture.Tga", "source\Plugi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssimpParser", "source\AssimpParser\AssimpParser.csproj", "{77CCAE62-D374-468E-98A0-DD8ADB461C10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalManager", "source\SignalManager\SignalManager.csproj", "{87838364-8911-46B2-8628-D437C485D9C9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RouteManager", "source\RouteManager\RouteManager.csproj", "{87838364-8911-46B2-8628-D437C485D9C9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.CsvB3d", "source\Plugins\Object.CsvB3d\Object.CsvB3d.csproj", "{678031C7-6D87-4F5F-9C4A-12F86B76342C}"
 EndProject

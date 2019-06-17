@@ -5,7 +5,7 @@ using LibRender;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
-using OpenBve.SignalManager;
+using OpenBve.RouteManager;
 
 namespace OpenBve {
 	internal static class PluginManager {

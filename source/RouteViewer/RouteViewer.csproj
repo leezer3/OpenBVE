@@ -89,7 +89,6 @@
     <Compile Include="Parsers\CsvRwRouteParser.cs" />
     <Compile Include="Parsers\Ls3DGrpParser.cs" />
     <Compile Include="Parsers\Ls3DObjectParser.cs" />
-    <Compile Include="Renderer.Loading.cs" />
     <Compile Include="RendererR.cs" />
     <Compile Include="Audio\Sounds.Convert.cs" />
     <Compile Include="Audio\Sounds.cs" />
@@ -146,9 +145,9 @@
       <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
       <Name>OpenBveApi</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SignalManager\SignalManager.csproj">
+    <ProjectReference Include="..\RouteManager\RouteManager.csproj">
       <Project>{87838364-8911-46b2-8628-d437c485d9c9}</Project>
-      <Name>SignalManager</Name>
+      <Name>RouteManager</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

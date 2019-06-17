@@ -3,7 +3,7 @@ using LibRender;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
-using OpenBve.SignalManager;
+using OpenBve.RouteManager;
 
 namespace OpenBve {
 	internal static class FunctionScripts {

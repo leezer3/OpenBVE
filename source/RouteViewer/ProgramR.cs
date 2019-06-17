@@ -12,6 +12,7 @@ using System.Globalization;
 using System.Windows.Forms;
 using LibRender;
 using OpenBveApi.FileSystem;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Textures;
 using OpenTK;
@@ -103,6 +104,8 @@ namespace OpenBve {
 			var options = new ToolkitOptions();
 			options.Backend = PlatformBackend.PreferX11;
 			Toolkit.Init(options);
+			string folder = Program.FileSystem.GetDataFolder("Languages");
+			Translations.LoadLanguageFiles(folder);
 			Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
 			Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
 			// application
@@ -315,8 +318,7 @@ namespace OpenBve {
 							GL.ReadPixels(0, 0, LibRender.Screen.Width, LibRender.Screen.Height, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bData.Scan0);
 							bitmap.UnlockBits(bData);
 							bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
-							Renderer.TextureLoadingBkg = TextureManager.RegisterTexture(bitmap, new TextureParameters(null, null));
-							
+							LoadingScreen.SetLoadingBkg(TextureManager.RegisterTexture(bitmap, new TextureParameters(null, null)));
 						}
 						CameraAlignment a = Camera.CurrentAlignment;
 						if (LoadRoute())
@@ -332,7 +334,6 @@ namespace OpenBve {
 						
 						CurrentlyLoading = false;
 						Renderer.OptionInterface = true;
-						TextureManager.UnloadTexture(Renderer.TextureLoadingBkg);
 						if (bitmap != null)
 						{
 							bitmap.Dispose();

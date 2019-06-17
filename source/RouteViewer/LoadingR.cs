@@ -10,7 +10,7 @@ using System.Threading;
 using System.Text;
 using System.Windows.Forms;
 using LibRender;
-using OpenBve.SignalManager;
+using OpenBve.RouteManager;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
@@ -34,7 +34,7 @@ namespace OpenBve {
 		// load
 		internal static void Load(string RouteFile, Encoding RouteEncoding) {
 			// members
-			Renderer.InitLoading();
+			LoadingScreen.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(Renderer).Assembly.GetName().Version.ToString());
 			RouteProgress = 0.0;
 			TrainProgress = 0.0;
 			TrainProgressCurrentSum = 0.0;

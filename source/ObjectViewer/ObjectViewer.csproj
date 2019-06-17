@@ -146,9 +146,9 @@
       <Name>Formats.Msts</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\SignalManager\SignalManager.csproj">
+    <ProjectReference Include="..\RouteManager\RouteManager.csproj">
       <Project>{87838364-8911-46b2-8628-d437c485d9c9}</Project>
-      <Name>SignalManager</Name>
+      <Name>RouteManager</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

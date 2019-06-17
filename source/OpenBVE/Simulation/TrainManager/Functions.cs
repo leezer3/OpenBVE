@@ -1,6 +1,6 @@
 ﻿using System;
 using OpenBveApi.Trains;
-using OpenBve.SignalManager;
+using OpenBve.RouteManager;
 
 namespace OpenBve
 {

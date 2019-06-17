@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using OpenBve.BackgroundManager;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
@@ -10,6 +11,7 @@ using OpenBveApi.FunctionScripting;
 using OpenBve.SignalManager;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
+using OpenBve.RouteManager;
 
 namespace OpenBve
 {
@@ -86,7 +88,7 @@ namespace OpenBve
 			{
 				if (Data.Blocks[0].Background >= 0 & Data.Backgrounds.ContainsKey(Data.Blocks[0].Background))
 				{
-					BackgroundManager.CurrentBackground = Data.Backgrounds[Data.Blocks[0].Background];
+					CurrentRoute.CurrentBackground = Data.Backgrounds[Data.Blocks[0].Background];
 				}
 				else
 				{
@@ -99,15 +101,15 @@ namespace OpenBve
 						string f = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Compatibility"), "Uchibo\\Back_Mt.png");
 						Texture t;
 						Program.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out t);
-						BackgroundManager.CurrentBackground = new BackgroundManager.StaticBackground(t, 6, false);
+						CurrentRoute.CurrentBackground = new StaticBackground(t, 6, false);
 					}
 					else
 					{
-						BackgroundManager.CurrentBackground = new BackgroundManager.StaticBackground(null, 6, false);
+						CurrentRoute.CurrentBackground = new StaticBackground(null, 6, false);
 					}
 					
 				}
-				BackgroundManager.TargetBackground = BackgroundManager.CurrentBackground;
+				CurrentRoute.TargetBackground = CurrentRoute.CurrentBackground;
 			}
 			// brightness
 			int CurrentBrightnessElement = -1;
@@ -136,8 +138,8 @@ namespace OpenBve
 			int CurrentTrackLength = 0;
 			int PreviousFogElement = -1;
 			int PreviousFogEvent = -1;
-			Game.Fog PreviousFog = new Game.Fog(Game.NoFogStart, Game.NoFogEnd, Color24.Grey, -Data.BlockInterval);
-			Game.Fog CurrentFog = new Game.Fog(Game.NoFogStart, Game.NoFogEnd, Color24.Grey, 0.0);
+			Fog PreviousFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, -Data.BlockInterval);
+			Fog CurrentFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, 0.0);
 			for (int i = Data.FirstUsedBlock; i < Data.Blocks.Length; i++)
 			{
 				if (Data.Blocks[i].Rails.Length > TrackManager.Tracks.Length)
@@ -302,9 +304,9 @@ namespace OpenBve
 							}
 							else
 							{
-								Game.PreviousFog = PreviousFog;
-								Game.CurrentFog = PreviousFog;
-								Game.NextFog = Data.Blocks[i].Fog;
+								CurrentRoute.PreviousFog = PreviousFog;
+								CurrentRoute.CurrentFog = PreviousFog;
+								CurrentRoute.NextFog = Data.Blocks[i].Fog;
 							}
 							PreviousFog = Data.Blocks[i].Fog;
 							PreviousFogElement = n;
@@ -318,9 +320,9 @@ namespace OpenBve
 							//Fog starts at zero position
 							CurrentFog = Data.Blocks[i].Fog;
 							PreviousFog = CurrentFog;
-							Game.PreviousFog = CurrentFog;
-							Game.CurrentFog = CurrentFog;
-							Game.NextFog = CurrentFog;
+							CurrentRoute.PreviousFog = CurrentFog;
+							CurrentRoute.CurrentFog = CurrentFog;
+							CurrentRoute.NextFog = CurrentFog;
 
 
 						}

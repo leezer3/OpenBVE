@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBve.RouteManager;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 

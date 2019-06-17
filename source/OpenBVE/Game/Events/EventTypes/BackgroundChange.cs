@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Routes;
+﻿using OpenBve.RouteManager;
+using OpenBveApi.Routes;
 
 namespace OpenBve
 {
@@ -25,13 +26,13 @@ namespace OpenBve
 				{
 					if (Direction < 0)
 					{
-						BackgroundManager.TargetBackground = this.PreviousBackground;
-						BackgroundManager.TargetBackground.Countdown = 0;
+						CurrentRoute.TargetBackground = this.PreviousBackground;
+						CurrentRoute.TargetBackground.Countdown = 0;
 					}
 					else if (Direction > 0)
 					{
-						BackgroundManager.TargetBackground = this.NextBackground;
-						BackgroundManager.TargetBackground.Countdown = 0;
+						CurrentRoute.TargetBackground = this.NextBackground;
+						CurrentRoute.TargetBackground.Countdown = 0;
 					}
 				}
 			}

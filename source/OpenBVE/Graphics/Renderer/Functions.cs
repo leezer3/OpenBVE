@@ -1,8 +1,9 @@
 ﻿using System;
+using OpenBve.BackgroundManager;
+using OpenBve.RouteManager;
 using LibRender;
 using OpenBveApi.Colors;
 using OpenTK;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using Vector3 = OpenBveApi.Math.Vector3;
 
@@ -109,8 +110,8 @@ namespace OpenBve
 		    }
 		    else
 		    {
-			    var b = BackgroundManager.CurrentBackground as BackgroundManager.BackgroundObject;
-			    var cd = b != null ? Math.Max(World.BackgroundImageDistance, b.ClipDistance) : World.BackgroundImageDistance;
+			    var b = CurrentRoute.CurrentBackground as BackgroundObject;
+			    var cd = b != null ? Math.Max(Backgrounds.BackgroundImageDistance, b.ClipDistance) : Backgrounds.BackgroundImageDistance;
 			    Matrix4d perspective = Matrix4d.Perspective(Camera.VerticalViewingAngle, -LibRender.Screen.AspectRatio, 0.5, cd);
 			    GL.MultMatrix(ref perspective);
 		    }

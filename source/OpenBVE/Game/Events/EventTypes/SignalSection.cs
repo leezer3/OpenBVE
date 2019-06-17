@@ -1,6 +1,6 @@
 ﻿using OpenBveApi.Colors;
 using OpenBveApi.Interface;
-using OpenBve.SignalManager;
+using OpenBve.RouteManager;
 
 namespace OpenBve
 {
