@@ -365,15 +365,7 @@ namespace OpenBve {
 			internal double OptionalFloat;
 			internal int SectionIndex;
 		}
-		internal struct TrainSafety {
-			internal SafetySystem Mode;
-			internal SafetySystem ModeChange;
-			internal SafetyState State;
-			internal TrainPendingTransponder[] PendingTransponders;
-			internal Ats Ats;
-			internal Atc Atc;
-			internal Eb Eb;
-		}
+		
 		// train specs
 		internal enum PassAlarmType {
 			None = 0,
@@ -395,7 +387,6 @@ namespace OpenBve {
 			internal HoldBrakeHandle CurrentHoldBrake;
 			internal bool HasConstSpeed;
 			internal bool CurrentConstSpeed;
-			internal TrainSafety Safety;
 			internal TrainAirBrake AirBrake;
 		}
 		// train

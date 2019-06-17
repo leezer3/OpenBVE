@@ -27,13 +27,6 @@ namespace OpenBve {
 		internal static int[] CustomTextureIndices = null;
 	}
 
-	// --- PluginManager.cs ---
-	internal static class PluginManager {
-		internal static class CurrentPlugin {
-			internal static int[] Panel = new int[] { };
-		}
-	}
-
 	// --- Interface.cs ---
 	internal static class Interface {
 
