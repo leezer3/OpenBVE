@@ -12,6 +12,7 @@ using System.Globalization;
 using System.Windows.Forms;
 using LibRender;
 using OpenBveApi.FileSystem;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Textures;
 using OpenTK;
@@ -103,6 +104,8 @@ namespace OpenBve {
 			var options = new ToolkitOptions();
 			options.Backend = PlatformBackend.PreferX11;
 			Toolkit.Init(options);
+			string folder = Program.FileSystem.GetDataFolder("Languages");
+			Translations.LoadLanguageFiles(folder);
 			Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
 			Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
 			// application
