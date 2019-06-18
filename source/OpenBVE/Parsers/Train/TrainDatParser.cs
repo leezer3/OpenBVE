@@ -1266,7 +1266,7 @@ namespace OpenBve {
 				Train.Cars[DriverCar].HasInteriorView = true;
 			}
 			// couplers
-			Train.Couplers = new TrainManager.Coupler[Cars - 1];
+			Train.Couplers = new Coupler[Cars - 1];
 			for (int i = 0; i < Train.Couplers.Length; i++) {
 				Train.Couplers[i].MinimumDistanceBetweenCars = 0.9 * DistanceBetweenTheCars;
 				Train.Couplers[i].MaximumDistanceBetweenCars = 1.1 * DistanceBetweenTheCars;

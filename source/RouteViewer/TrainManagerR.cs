@@ -20,7 +20,6 @@ namespace OpenBve {
 		internal struct Axle {
 			internal TrackManager.TrackFollower Follower;
 		}
-		internal struct Coupler { }
 		internal struct Section { }
 
 		// cars
