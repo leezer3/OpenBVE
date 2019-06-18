@@ -100,6 +100,8 @@
     <Compile Include="Objects\Parsers\XParsers.cs" />
     <Compile Include="Routes\Background.Handle.cs" />
     <Compile Include="Routes\Background.TransitionModes.cs" />
+    <Compile Include="Routes\Events.cs" />
+    <Compile Include="Routes\Events.TriggerTypes.cs" />
     <Compile Include="Sounds\Sounds.PathOrigin.cs" />
     <Compile Include="Sounds\Sounds.RawOrigin.cs" />
     <Compile Include="Sounds\Sounds.SoundOrigin.cs" />

@@ -425,7 +425,7 @@ $(DEBUG_DIR)/$(OPEN_BVE_FILE) $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(OPEN_BVE_ROOT)/
 	$(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs \
 	/reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OPEN_BVE_API_OUT) /reference:$(ASSIMP_OUT) /reference:$(FORMATS_MSTS_OUT) /reference:$(ROUTEMANAGER_OUT) /reference:$(LIBRENDER_OUT) \
 	/reference:$(OUTPUT_DIR)/CSScriptLibrary.dll /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/SharpCompress.dll /reference:$(OUTPUT_DIR)/PIEHid32Net.dll \
-	/reference:System.Xml.Linq.dll /reference:System.Core.dll /reference:System.dll \
+	/reference:System.Xml.Linq.dll /reference:System.Core.dll /reference:System.dll /reference:Microsoft.CSharp.dll \
 	/win32icon:$(ICON) $(addprefix /resource:, $(OPEN_BVE_RESOURCE)) /resource:"assets/Controls/Default.controls",OpenBve.Default.controls /resource:"assets/Cursors/Symbols/plus.png",OpenBve.plus.png  /resource:"assets/Cursors/Symbols/plus.png",OpenBve.minus.png /resource:"assets/Cursors/nk.png",OpenBve.nk.png
 	@echo $(COLOR_GREEN)Adding LBA Flag to executable $(COLOR_CYAN)$(OPEN_BVE_OUT)$(COLOR_END)
 	@mono $(LBAHEADER_OUT) ${OPEN_BVE_OUT} > /dev/null
@@ -840,7 +840,7 @@ $(DEBUG_DIR)/$(ROUTE_VIEWER_FILE) $(RELEASE_DIR)/$(ROUTE_VIEWER_FILE): $(ROUTE_V
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(ROUTE_VIEWER_OUT)$(COLOR_END)
 	@$(CSC) /out:$(ROUTE_VIEWER_OUT) /target:winexe /main:OpenBve.Program $(ROUTE_VIEWER_SRC) $(ARGS) $(ROUTE_VIEWER_DOC) \
 	/reference:$(OPEN_BVE_API_OUT) /reference:$(ROUTEMANAGER_OUT) /reference:$(LIBRENDER_OUT) /reference:$(OUTPUT_DIR)/OpenTK \
-	/reference:System.Core.dll /reference:System.dll \
+	/reference:System.Core.dll /reference:System.dll  /reference:Microsoft.CSharp.dll \
 	/win32icon:$(ICON) $(addprefix /resource:, $(ROUTE_VIEWER_RESOURCE))
 
 ################

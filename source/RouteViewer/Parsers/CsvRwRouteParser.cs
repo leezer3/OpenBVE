@@ -5460,7 +5460,7 @@ namespace OpenBve {
 				TrackManager.CurrentTrack.Elements[n].WorldSide = new Vector3(Direction.Y, 0.0, -Direction.X);
 				TrackManager.CurrentTrack.Elements[n].WorldUp = Vector3.Cross(TrackManager.CurrentTrack.Elements[n].WorldDirection, TrackManager.CurrentTrack.Elements[n].WorldSide);
 				TrackManager.CurrentTrack.Elements[n].StartingTrackPosition = StartingDistance;
-				TrackManager.CurrentTrack.Elements[n].Events = new TrackManager.GeneralEvent[] { };
+				TrackManager.CurrentTrack.Elements[n].Events = new object[] { };
 				TrackManager.CurrentTrack.Elements[n].AdhesionMultiplier = Data.Blocks[i].AdhesionMultiplier;
 				TrackManager.CurrentTrack.Elements[n].CsvRwAccuracyLevel = Data.Blocks[i].Accuracy;
 				// background
@@ -5480,7 +5480,7 @@ namespace OpenBve {
 						}
 						if (typ >= 0 & Data.Backgrounds.ContainsKey(typ)) {
 							int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
-							Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
+							Array.Resize(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
 							TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.BackgroundChangeEvent(0.0, Data.Backgrounds[typ], Data.Backgrounds[Data.Blocks[i].Background]);
 						}
 					}
@@ -5489,7 +5489,7 @@ namespace OpenBve {
 				if (!PreviewOnly) {
 					for (int j = 0; j < Data.Blocks[i].Brightness.Length; j++) {
 						int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
-						Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
+						Array.Resize(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
 						double d = Data.Blocks[i].Brightness[j].TrackPosition - StartingDistance;
 						TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.BrightnessChangeEvent(d, Data.Blocks[i].Brightness[j].Value, CurrentBrightnessValue, Data.Blocks[i].Brightness[j].TrackPosition - CurrentBrightnessTrackPosition, Data.Blocks[i].Brightness[j].Value, 0.0);
 						if (CurrentBrightnessElement >= 0 & CurrentBrightnessEvent >= 0) {
@@ -5509,7 +5509,7 @@ namespace OpenBve {
 						if (Data.Blocks[i].FogDefined) {
 							Data.Blocks[i].Fog.TrackPosition = StartingDistance;
 							int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
-							Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
+							Array.Resize(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
 							TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.FogChangeEvent(0.0, PreviousFog, Data.Blocks[i].Fog, Data.Blocks[i].Fog);
 							if (PreviousFogElement >= 0 & PreviousFogEvent >= 0) {
 								TrackManager.FogChangeEvent e = (TrackManager.FogChangeEvent)TrackManager.CurrentTrack.Elements[PreviousFogElement].Events[PreviousFogEvent];
@@ -5526,7 +5526,7 @@ namespace OpenBve {
 					} else {
 						Data.Blocks[i].Fog.TrackPosition = StartingDistance + Data.BlockInterval;
 						int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
-						Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
+						Array.Resize(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
 						TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.FogChangeEvent(0.0, PreviousFog, CurrentFog, Data.Blocks[i].Fog);
 						PreviousFog = CurrentFog;
 						CurrentFog = Data.Blocks[i].Fog;
@@ -5538,7 +5538,7 @@ namespace OpenBve {
 					int r = j < Data.Structure.Run.Length ? Data.Structure.Run[j] : 0;
 					int f = j < Data.Structure.Flange.Length ? Data.Structure.Flange[j] : 0;
 					int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
-					Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
+					Array.Resize(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
 					TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.RailSoundsChangeEvent(0.0, CurrentRunIndex, CurrentFlangeIndex, r, f);
 					CurrentRunIndex = r;
 					CurrentFlangeIndex = f;
@@ -5559,7 +5559,7 @@ namespace OpenBve {
 						}
 						if (q) {
 							int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
-							Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
+							Array.Resize(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
 							TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.SoundEvent(0.0, null, false, false, true, Vector3.Zero, 12.5);
 						}
 					}
@@ -5569,7 +5569,7 @@ namespace OpenBve {
 					// station
 					int s = Data.Blocks[i].Station;
 					int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
-					Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
+					Array.Resize(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
 					TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.StationStartEvent(0.0, s);
 					double dx, dy = 3.0;
 					if (Game.Stations[s].OpenLeftDoors & !Game.Stations[s].OpenRightDoors) {
@@ -5590,7 +5590,7 @@ namespace OpenBve {
 								int j = b - Data.FirstUsedBlock;
 								if (j >= 0) {
 									m = TrackManager.CurrentTrack.Elements[j].Events.Length;
-									Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[j].Events, m + 1);
+									Array.Resize(ref TrackManager.CurrentTrack.Elements[j].Events, m + 1);
 									TrackManager.CurrentTrack.Elements[j].Events[m] = new TrackManager.StationPassAlarmEvent(0.0);
 								}
 							}
@@ -5621,7 +5621,7 @@ namespace OpenBve {
 				// limit
 				for (int j = 0; j < Data.Blocks[i].Limit.Length; j++) {
 					int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
-					Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
+					Array.Resize(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
 					double d = Data.Blocks[i].Limit[j].TrackPosition - StartingDistance;
 					TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.LimitChangeEvent(d, CurrentSpeedLimit, Data.Blocks[i].Limit[j].Speed);
 					CurrentSpeedLimit = Data.Blocks[i].Limit[j].Speed;
@@ -5631,14 +5631,14 @@ namespace OpenBve {
 					for (int j = 0; j < Data.Markers.Length; j++) {
 						if (Data.Markers[j].StartingPosition >= StartingDistance & Data.Markers[j].StartingPosition < EndingDistance) {
 							int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
-							Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
+							Array.Resize(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
 							double d = Data.Markers[j].StartingPosition - StartingDistance;
 							Texture t = Data.Markers[j].Texture;
 							TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.MarkerStartEvent(d, t);
 						}
 						if (Data.Markers[j].EndingPosition >= StartingDistance & Data.Markers[j].EndingPosition < EndingDistance) {
 							int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
-							Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
+							Array.Resize(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
 							double d = Data.Markers[j].EndingPosition - StartingDistance;
 							Texture t = Data.Markers[j].Texture;
 							TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.MarkerEndEvent(d, t);
@@ -5650,7 +5650,7 @@ namespace OpenBve {
 					for (int j = 0; j < Data.Blocks[i].Sound.Length; j++) {
 						if (Data.Blocks[i].Sound[j].Type == SoundType.TrainStatic | Data.Blocks[i].Sound[j].Type == SoundType.TrainDynamic) {
 							int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
-							Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
+							Array.Resize(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
 							double d = Data.Blocks[i].Sound[j].TrackPosition - StartingDistance;
 							switch (Data.Blocks[i].Sound[j].Type) {
 								case SoundType.TrainStatic:
@@ -6304,7 +6304,7 @@ namespace OpenBve {
 									for (int l = 0; l < Data.Blocks[g].Transponder.Length; l++) {
 										if (Data.Blocks[g].Transponder[l].Type != TrackManager.TransponderType.None & Data.Blocks[g].Transponder[l].Section == m) {
 											int o = TrackManager.CurrentTrack.Elements[n - i + g].Events.Length;
-											Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n - i + g].Events, o + 1);
+											Array.Resize(ref TrackManager.CurrentTrack.Elements[n - i + g].Events, o + 1);
 											double dt = Data.Blocks[g].Transponder[l].TrackPosition - StartingDistance + (double)(i - g) * Data.BlockInterval;
 											TrackManager.CurrentTrack.Elements[n - i + g].Events[o] = new TrackManager.TransponderEvent(dt, Data.Blocks[g].Transponder[l].Type, Data.Blocks[g].Transponder[l].SwitchSubsystem, Data.Blocks[g].Transponder[l].OptionalInteger, Data.Blocks[g].Transponder[l].OptionalFloat, m);
 											Data.Blocks[g].Transponder[l].Type = TrackManager.TransponderType.None;
@@ -6337,7 +6337,7 @@ namespace OpenBve {
 								// create section change event
 								double d = Data.Blocks[i].Section[k].TrackPosition - StartingDistance;
 								int p = TrackManager.CurrentTrack.Elements[n].Events.Length;
-								Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, p + 1);
+								Array.Resize(ref TrackManager.CurrentTrack.Elements[n].Events, p + 1);
 								TrackManager.CurrentTrack.Elements[n].Events[p] = new TrackManager.SectionChangeEvent(d, m - 1, m);
 							}
 							// transponders introduced after corresponding sections
@@ -6346,7 +6346,7 @@ namespace OpenBve {
 									int t = Data.Blocks[i].Transponder[l].Section;
 									if (t >= 0 & t < CurrentRoute.Sections.Length) {
 										int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
-										Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
+										Array.Resize(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
 										double dt = Data.Blocks[i].Transponder[l].TrackPosition - StartingDistance;
 										TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.TransponderEvent(dt, Data.Blocks[i].Transponder[l].Type, Data.Blocks[i].Transponder[l].SwitchSubsystem, Data.Blocks[i].Transponder[l].OptionalInteger, Data.Blocks[i].Transponder[l].OptionalFloat, t);
 										Data.Blocks[i].Transponder[l].Type = TrackManager.TransponderType.None;
@@ -6447,7 +6447,7 @@ namespace OpenBve {
 						if (Data.Blocks[i].Transponder[j].Type != TrackManager.TransponderType.None) {
 							int n = i - Data.FirstUsedBlock;
 							int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
-							Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
+							Array.Resize(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
 							double d = Data.Blocks[i].Transponder[j].TrackPosition - TrackManager.CurrentTrack.Elements[n].StartingTrackPosition;
 							int s = Data.Blocks[i].Transponder[j].Section;
 							if (s >= 0) s = -1;
@@ -6460,7 +6460,7 @@ namespace OpenBve {
 					{
 						int n = i - Data.FirstUsedBlock;
 						int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
-						Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
+						Array.Resize(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
 						double d = Data.Blocks[i].DestinationChanges[j].TrackPosition - TrackManager.CurrentTrack.Elements[n].StartingTrackPosition;
 						//Destination events not supported in Route Viewer.....
 						//TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.DestinationEvent(d, Data.Blocks[i].DestinationChanges[j].Type, Data.Blocks[i].DestinationChanges[j].NextDestination, Data.Blocks[i].DestinationChanges[j].PreviousDestination, Data.Blocks[i].DestinationChanges[j].TriggerOnce);
@@ -6476,7 +6476,7 @@ namespace OpenBve {
 					if (k >= 0 & k < Data.Blocks.Length) {
 						double d = p - (double)(k + Data.FirstUsedBlock) * (double)Data.BlockInterval;
 						int m = TrackManager.CurrentTrack.Elements[k].Events.Length;
-						Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[k].Events, m + 1);
+						Array.Resize(ref TrackManager.CurrentTrack.Elements[k].Events, m + 1);
 						TrackManager.CurrentTrack.Elements[k].Events[m] = new TrackManager.StationEndEvent(d, i);
 					}
 				}
@@ -6539,7 +6539,7 @@ namespace OpenBve {
 			if (TrackManager.CurrentTrack.Elements.Length != 0) {
 				int n = TrackManager.CurrentTrack.Elements.Length - 1;
 				int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
-				Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
+				Array.Resize(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
 				TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.TrackEndEvent(Data.BlockInterval);
 			}
 			if (!PreviewOnly) {
@@ -6633,7 +6633,7 @@ namespace OpenBve {
 					int q = i / subdivisions;
 					int j = q * subdivisions;
 					TrackManager.CurrentTrack.Elements[i] = TrackManager.CurrentTrack.Elements[j];
-					TrackManager.CurrentTrack.Elements[i].Events = new TrackManager.GeneralEvent[] { };
+					TrackManager.CurrentTrack.Elements[i].Events = new object[] { };
 					TrackManager.CurrentTrack.Elements[i].StartingTrackPosition = midpointsTrackPositions[i];
 					TrackManager.CurrentTrack.Elements[i].WorldPosition = midpointsWorldPositions[i];
 					TrackManager.CurrentTrack.Elements[i].WorldDirection = midpointsWorldDirections[i];
@@ -6844,18 +6844,21 @@ namespace OpenBve {
 			for (int i = 0; i < TrackManager.CurrentTrack.Elements.Length - 1; i++) {
 				double startingTrackPosition = TrackManager.CurrentTrack.Elements[i].StartingTrackPosition;
 				double endingTrackPosition = TrackManager.CurrentTrack.Elements[i + 1].StartingTrackPosition;
-				for (int j = 0; j < TrackManager.CurrentTrack.Elements[i].Events.Length; j++) {
-					double p = startingTrackPosition + TrackManager.CurrentTrack.Elements[i].Events[j].TrackPositionDelta;
+				for (int j = 0; j < TrackManager.CurrentTrack.Elements[i].Events.Length; j++)
+				{
+					dynamic e = TrackManager.CurrentTrack.Elements[i].Events[j];
+					double p = startingTrackPosition + e.TrackPositionDelta;
 					if (p >= endingTrackPosition) {
 						int len = TrackManager.CurrentTrack.Elements[i + 1].Events.Length;
-						Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[i + 1].Events, len + 1);
+						Array.Resize(ref TrackManager.CurrentTrack.Elements[i + 1].Events, len + 1);
 						TrackManager.CurrentTrack.Elements[i + 1].Events[len] = TrackManager.CurrentTrack.Elements[i].Events[j];
-						TrackManager.CurrentTrack.Elements[i + 1].Events[len].TrackPositionDelta += startingTrackPosition - endingTrackPosition;
+						e = TrackManager.CurrentTrack.Elements[i + 1].Events[len];
+						e.TrackPositionDelta += startingTrackPosition - endingTrackPosition;
 						for (int k = j; k < TrackManager.CurrentTrack.Elements[i].Events.Length - 1; k++) {
 							TrackManager.CurrentTrack.Elements[i].Events[k] = TrackManager.CurrentTrack.Elements[i].Events[k + 1];
 						}
 						len = TrackManager.CurrentTrack.Elements[i].Events.Length;
-						Array.Resize<TrackManager.GeneralEvent>(ref TrackManager.CurrentTrack.Elements[i].Events, len - 1);
+						Array.Resize(ref TrackManager.CurrentTrack.Elements[i].Events, len - 1);
 						j--;
 					}
 				}

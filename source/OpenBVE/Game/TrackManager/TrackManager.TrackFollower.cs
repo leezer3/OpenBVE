@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Math;
+using OpenBveApi.Routes;
 
 namespace OpenBve
 {
@@ -266,13 +267,14 @@ namespace OpenBve
 				{
 					for (int j = Tracks[Index].Elements[ElementIndex].Events.Length - 1; j >= 0; j--)
 					{
+						dynamic e = Tracks[Index].Elements[ElementIndex].Events[j];
 						if (Tracks[Index].Elements[ElementIndex].Events.Length == 0)
 						{
 							return;
 						}
-						if (OldDelta > Tracks[Index].Elements[ElementIndex].Events[j].TrackPositionDelta & NewDelta <= Tracks[Index].Elements[ElementIndex].Events[j].TrackPositionDelta)
+						if (OldDelta > e.TrackPositionDelta & NewDelta <= e.TrackPositionDelta)
 						{
-							Tracks[Index].Elements[ElementIndex].Events[j].TryTrigger(-1, this.TriggerType, this.Train, this.CarIndex);
+							e.TryTrigger(-1, this.TriggerType, this.Train, this.CarIndex);
 						}
 					}
 				}
@@ -280,9 +282,10 @@ namespace OpenBve
 				{
 					for (int j = 0; j < Tracks[Index].Elements[ElementIndex].Events.Length; j++)
 					{
-						if (OldDelta < Tracks[Index].Elements[ElementIndex].Events[j].TrackPositionDelta & NewDelta >= Tracks[Index].Elements[ElementIndex].Events[j].TrackPositionDelta)
+						dynamic e = Tracks[Index].Elements[ElementIndex].Events[j];
+						if (OldDelta < e.TrackPositionDelta & NewDelta >= e.TrackPositionDelta)
 						{
-							Tracks[Index].Elements[ElementIndex].Events[j].TryTrigger(1, this.TriggerType, this.Train, this.CarIndex);
+							e.TryTrigger(1, this.TriggerType, this.Train, this.CarIndex);
 						}
 					}
 				}

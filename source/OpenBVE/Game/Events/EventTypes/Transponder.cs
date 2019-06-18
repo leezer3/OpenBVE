@@ -1,4 +1,6 @@
 ﻿using OpenBve.RouteManager;
+using OpenBveApi.Routes;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
@@ -20,7 +22,7 @@ namespace OpenBve
 		}
 
 		/// <summary>Called when a train passes over a transponder attached to the signalling system</summary>
-		internal class TransponderEvent : GeneralEvent
+		internal class TransponderEvent : GeneralEvent<TrainManager.Train>
 		{
 			/// <summary>The type of transponder</summary>
 			internal readonly int Type;
@@ -40,7 +42,7 @@ namespace OpenBve
 				this.SectionIndex = sectionIndex;
 				this.ClipToFirstRedSection = clipToFirstRedSection;
 			}
-			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
 			{
 				if (TriggerType == EventTriggerType.TrainFront)
 				{

@@ -33,7 +33,7 @@ namespace OpenBve
 			internal Vector3 WorldUp;
 			internal Vector3 WorldSide;
 			/// <summary>An array containing all events attached to this element</summary>
-			internal GeneralEvent[] Events;
+			internal object[] Events;
 
 			internal TrackElement(double StartingTrackPosition)
 			{
@@ -48,7 +48,7 @@ namespace OpenBve
 				this.WorldDirection = Vector3.Forward;
 				this.WorldUp = Vector3.Down;
 				this.WorldSide = Vector3.Right;
-				this.Events = new GeneralEvent[] { };
+				this.Events = new object[] { };
 			}
 		}
 	}

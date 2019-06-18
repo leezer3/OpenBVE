@@ -17,6 +17,7 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Vector3 = OpenBveApi.Math.Vector3;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 
@@ -395,7 +396,7 @@ namespace OpenBve {
 				double d = p - World.CameraTrackFollower.TrackPosition;
 				if (d >= da & d <= db) {
 					for (int j = 0; j < TrackManager.CurrentTrack.Elements[i].Events.Length; j++) {
-						TrackManager.GeneralEvent e = TrackManager.CurrentTrack.Elements[i].Events[j];
+						dynamic e = TrackManager.CurrentTrack.Elements[i].Events[j];
 						double dy, dx = 0.0, dz = 0.0;
 						double s; Texture t;
 						if (e is TrackManager.BrightnessChangeEvent) {
@@ -444,7 +445,7 @@ namespace OpenBve {
 						}
 						if (t != null) {
 							TrackManager.TrackFollower f = new TrackManager.TrackFollower();
-							f.TriggerType = TrackManager.EventTriggerType.None;
+							f.TriggerType = EventTriggerType.None;
 							f.TrackPosition = p;
 							TrackManager.UpdateTrackFollower(ref f, p + e.TrackPositionDelta, true, false);
 							f.WorldPosition.X += dx * f.WorldSide.X + dy * f.WorldUp.X + dz * f.WorldDirection.X;
@@ -463,7 +464,7 @@ namespace OpenBve {
 						const double s = 0.2;
 						double p = Game.Stations[i].Stops[j].TrackPosition;
 						TrackManager.TrackFollower f = new TrackManager.TrackFollower();
-						f.TriggerType = TrackManager.EventTriggerType.None;
+						f.TriggerType = EventTriggerType.None;
 						f.TrackPosition = p;
 						TrackManager.UpdateTrackFollower(ref f, p, true, false);
 						f.WorldPosition.X += dy * f.WorldUp.X;
@@ -481,7 +482,7 @@ namespace OpenBve {
 					const double dy = 2.5;
 					const double s = 0.25;
 					TrackManager.TrackFollower f = new TrackManager.TrackFollower();
-					f.TriggerType = TrackManager.EventTriggerType.None;
+					f.TriggerType = EventTriggerType.None;
 					f.TrackPosition = p;
 					TrackManager.UpdateTrackFollower(ref f, p, true, false);
 					f.WorldPosition.X += dy * f.WorldUp.X;

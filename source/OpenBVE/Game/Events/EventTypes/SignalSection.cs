@@ -1,13 +1,14 @@
 ﻿using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBve.RouteManager;
+using OpenBveApi.Routes;
 
 namespace OpenBve
 {
 	internal static partial class TrackManager
 	{
 		/// <summary>Is called when a train changes from one signalling section to another</summary>
-		internal class SectionChangeEvent : GeneralEvent
+		internal class SectionChangeEvent : GeneralEvent<TrainManager.Train>
 		{
 			/// <summary>The index of the previous signalling section</summary>
 			internal readonly int PreviousSectionIndex;
@@ -21,7 +22,7 @@ namespace OpenBve
 				this.PreviousSectionIndex = PreviousSectionIndex;
 				this.NextSectionIndex = NextSectionIndex;
 			}
-			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
 			{
 				if (Train != null)
 				{

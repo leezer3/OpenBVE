@@ -1,11 +1,13 @@
 ﻿using System.Linq;
+using OpenBveApi.Routes;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
 	internal static partial class TrackManager
 	{
 		/// <summary>Is called when a marker or message is added to the in-game display</summary>
-		internal class MarkerStartEvent : GeneralEvent
+		internal class MarkerStartEvent : GeneralEvent<AbstractTrain>
 		{
 			/// <summary>The marker or message to add</summary>
 			private readonly MessageManager.Message Message;
@@ -16,7 +18,7 @@ namespace OpenBve
 				this.DontTriggerAnymore = false;
 				this.Message = message;
 			}
-			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, int CarIndex)
 			{
 				if (Train == TrainManager.PlayerTrain & TriggerType == EventTriggerType.FrontCarFrontAxle)
 				{
@@ -43,7 +45,7 @@ namespace OpenBve
 		}
 		
 		/// <summary>Is calld when a marker or message is removed from the in-game display</summary>
-		internal class MarkerEndEvent : GeneralEvent
+		internal class MarkerEndEvent : GeneralEvent<AbstractTrain>
 		{
 			/// <summary>The marker or message to remove (Note: May have already timed-out)</summary>
 			internal MessageManager.Message Message;
@@ -54,7 +56,7 @@ namespace OpenBve
 				this.DontTriggerAnymore = false;
 				this.Message = message;
 			}
-			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, int CarIndex)
 			{
 				if (Train == TrainManager.PlayerTrain & TriggerType == EventTriggerType.FrontCarFrontAxle)
 				{
