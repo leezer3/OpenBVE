@@ -13,6 +13,7 @@ using LibRender;
 using OpenBve.RouteManager;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 
 namespace OpenBve {
@@ -139,7 +140,7 @@ namespace OpenBve {
 			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, 0.0, true, false);
 			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, 0.1, true, false);
 			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, -0.1, true, false);
-			World.CameraTrackFollower.TriggerType = TrackManager.EventTriggerType.Camera;
+			World.CameraTrackFollower.TriggerType = EventTriggerType.Camera;
 			// default starting time
 			Game.SecondsSinceMidnight = 0.0;
 			Game.StartupTime = 0.0;

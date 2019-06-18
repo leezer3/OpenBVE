@@ -15,6 +15,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Input;
 using OpenBve.RouteManager;
+using OpenBveApi.Routes;
 using GL = OpenTK.Graphics.OpenGL.GL;
 using MatrixMode = OpenTK.Graphics.OpenGL.MatrixMode;
 
@@ -472,7 +473,7 @@ namespace OpenBve
 			World.CameraTrackFollower.Update(0.0, true, false);
 			World.CameraTrackFollower.Update(-0.1, true, false);
 			World.CameraTrackFollower.Update(0.1, true, false);
-			World.CameraTrackFollower.TriggerType = TrackManager.EventTriggerType.Camera;
+			World.CameraTrackFollower.TriggerType = EventTriggerType.Camera;
 			// starting time and track position
 			Game.SecondsSinceMidnight = 0.0;
 			Game.StartupTime = 0.0;

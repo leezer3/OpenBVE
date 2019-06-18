@@ -6,7 +6,7 @@ namespace OpenBve
 	internal static partial class TrackManager
 	{
 		/// <summary>Called when the displayed backgrond image or object should be changed</summary>
-		internal class BackgroundChangeEvent : GeneralEvent
+		internal class BackgroundChangeEvent : GeneralEvent<TrainManager.Train>
 		{
 			/// <summary>The background which applies previously to this point</summary>
 			private readonly BackgroundHandle PreviousBackground;
@@ -20,7 +20,7 @@ namespace OpenBve
 				this.PreviousBackground = PreviousBackground;
 				this.NextBackground = NextBackground;
 			}
-			internal override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
 			{
 				if (TriggerType == EventTriggerType.Camera)
 				{
