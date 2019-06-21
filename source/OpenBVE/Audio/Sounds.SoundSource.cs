@@ -8,7 +8,7 @@ namespace OpenBve {
 		internal class SoundSource {
 			// --- members ---
 			/// <summary>The sound buffer.</summary>
-			internal SoundBuffer Buffer;
+			internal readonly SoundBuffer Buffer;
 			/// <summary>The effective sound radius.</summary>
 			internal double Radius;
 			/// <summary>The pitch change factor.</summary>
@@ -28,7 +28,7 @@ namespace OpenBve {
 			/// <summary>The OpenAL source name. Only valid if the sound is playing.</summary>
 			internal int OpenAlSourceName;
 			/// <summary>The type of sound</summary>
-			internal SoundType Type;
+			internal readonly SoundType Type;
 
 			// --- constructors ---
 			/// <summary>Creates a new sound source.</summary>
@@ -94,6 +94,17 @@ namespace OpenBve {
 			}
 
 			// --- functions ---
+			/// <summary>Checks whether this sound is playing or supposed to be playing.</summary>
+			/// <returns>Whether the sound is playing or supposed to be playing.</returns>
+			internal bool IsPlaying()
+			{
+				if (State == SoundSourceState.PlayPending | State == SoundSourceState.Playing)
+				{
+					return true;
+				}
+				return false;
+			}
+			
 			/// <summary>Stops this sound.</summary>
 			internal void Stop() {
 				if (this.State == SoundSourceState.PlayPending) {

@@ -18,7 +18,7 @@ namespace OpenBve
 			{
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle)
 				{
-					if (Direction > 0)
+					if (Direction > 0) //FIXME: This only works for routes written in the forwards direction
 					{
 						int d = Train.DriverCar;
 						Sounds.SoundBuffer buffer = Train.Cars[d].Sounds.Halt.Buffer;

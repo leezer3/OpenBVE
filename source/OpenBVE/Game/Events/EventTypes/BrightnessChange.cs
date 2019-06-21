@@ -38,7 +38,6 @@ namespace OpenBve
 				{
 					if (Direction < 0)
 					{
-						//Train.Cars[CarIndex].Brightness.NextBrightness = Train.Cars[CarIndex].Brightness.PreviousBrightness;
 						Train.Cars[CarIndex].Brightness.NextBrightness = this.CurrentBrightness;
 						Train.Cars[CarIndex].Brightness.NextTrackPosition = Train.Cars[CarIndex].FrontAxle.Follower.TrackPosition;
 						Train.Cars[CarIndex].Brightness.PreviousBrightness = this.PreviousBrightness;
@@ -46,7 +45,6 @@ namespace OpenBve
 					}
 					else if (Direction > 0)
 					{
-						//Train.Cars[CarIndex].Brightness.PreviousBrightness = Train.Cars[CarIndex].Brightness.NextBrightness;
 						Train.Cars[CarIndex].Brightness.PreviousBrightness = this.CurrentBrightness;
 						Train.Cars[CarIndex].Brightness.PreviousTrackPosition = Train.Cars[CarIndex].FrontAxle.Follower.TrackPosition;
 						Train.Cars[CarIndex].Brightness.NextBrightness = this.NextBrightness;

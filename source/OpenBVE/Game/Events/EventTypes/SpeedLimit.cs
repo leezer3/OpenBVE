@@ -36,7 +36,7 @@ namespace OpenBve
 						int n = Train.RouteLimits.Length;
 						if (n > 0)
 						{
-							Array.Resize<double>(ref Train.RouteLimits, n - 1);
+							Array.Resize(ref Train.RouteLimits, n - 1);
 							Train.CurrentRouteLimit = double.PositiveInfinity;
 							for (int i = 0; i < n - 1; i++)
 							{
@@ -50,7 +50,7 @@ namespace OpenBve
 					else if (TriggerType == EventTriggerType.RearCarRearAxle)
 					{
 						int n = Train.RouteLimits.Length;
-						Array.Resize<double>(ref Train.RouteLimits, n + 1);
+						Array.Resize(ref Train.RouteLimits, n + 1);
 						for (int i = n; i > 0; i--)
 						{
 							Train.RouteLimits[i] = Train.RouteLimits[i - 1];
@@ -63,7 +63,7 @@ namespace OpenBve
 					if (TriggerType == EventTriggerType.FrontCarFrontAxle)
 					{
 						int n = Train.RouteLimits.Length;
-						Array.Resize<double>(ref Train.RouteLimits, n + 1);
+						Array.Resize(ref Train.RouteLimits, n + 1);
 						Train.RouteLimits[n] = this.NextSpeedLimit;
 						if (this.NextSpeedLimit < Train.CurrentRouteLimit)
 						{
@@ -88,7 +88,7 @@ namespace OpenBve
 									Train.CurrentRouteLimit = Train.RouteLimits[i];
 								}
 							}
-							Array.Resize<double>(ref Train.RouteLimits, n - 1);
+							Array.Resize(ref Train.RouteLimits, n - 1);
 						}
 					}
 				}

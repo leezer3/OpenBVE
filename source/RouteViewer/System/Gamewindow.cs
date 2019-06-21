@@ -32,7 +32,7 @@ namespace OpenBve
         protected override void OnRenderFrame(FrameEventArgs e)
         {
 			Program.MouseMovement();
-			Game.InfoFrameRate = RenderFrequency;
+			LibRender.Renderer.FrameRate = RenderFrequency;
             GL.ClearColor(0.75f, 0.75f, 0.75f, 1.0f);
             //Do not do anything whilst loading
             if (currentlyLoading)

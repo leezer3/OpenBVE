@@ -103,9 +103,7 @@ namespace OpenBve
 						else
 						{
 							// straight
-							WorldPosition.X = Tracks[TrackIndex].Elements[i].WorldPosition.X + db * Tracks[TrackIndex].Elements[i].WorldDirection.X;
-							WorldPosition.Y = Tracks[TrackIndex].Elements[i].WorldPosition.Y + db * Tracks[TrackIndex].Elements[i].WorldDirection.Y;
-							WorldPosition.Z = Tracks[TrackIndex].Elements[i].WorldPosition.Z + db * Tracks[TrackIndex].Elements[i].WorldDirection.Z;
+							WorldPosition = Tracks[TrackIndex].Elements[i].WorldPosition + db * Tracks[TrackIndex].Elements[i].WorldDirection;
 							WorldDirection = Tracks[TrackIndex].Elements[i].WorldDirection;
 							WorldUp = Tracks[TrackIndex].Elements[i].WorldUp;
 							WorldSide = Tracks[TrackIndex].Elements[i].WorldSide;
@@ -225,9 +223,7 @@ namespace OpenBve
 					{
 						GetInaccuracies(NewTrackPosition, Tracks[TrackIndex].Elements[i].CsvRwAccuracyLevel, out x, out y, out c);
 					}
-					WorldPosition.X += x * WorldSide.X + y * WorldUp.X;
-					WorldPosition.Y += x * WorldSide.Y + y * WorldUp.Y;
-					WorldPosition.Z += x * WorldSide.Z + y * WorldUp.Z;
+					WorldPosition += x * WorldSide + y * WorldUp;
 					CurveCant += c;
 					CantDueToInaccuracy = c;
 				}

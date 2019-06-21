@@ -678,7 +678,7 @@ namespace OpenBve
 						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
 					} break;
 				case "fps":
-					int fps = (int)Math.Round(Game.InfoFrameRate);
+					int fps = (int)Math.Round(LibRender.Renderer.FrameRate);
 					t = fps.ToString(Culture) + " fps";
 					if (OptionFrameRates)
 					{

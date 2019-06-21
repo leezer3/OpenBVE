@@ -87,7 +87,7 @@ namespace OpenBve
 			//Also avoids running a calculation
 			if (TotalTimeElapsedForInfo >= 0.2)
 			{
-				Game.InfoFrameRate = RenderFrequency;
+				LibRender.Renderer.FrameRate = RenderFrequency;
 				TotalTimeElapsedForInfo = 0.0;
 			}
 			

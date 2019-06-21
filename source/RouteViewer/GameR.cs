@@ -95,8 +95,7 @@ namespace OpenBve {
 		internal static string TrainName = "";
 
 		// information
-		/// <summary>The game's current framerate</summary>
-		internal static double InfoFrameRate = 1.0;
+		
 		/// <summary>The current plugin debug message to be displayed</summary>
 		internal static string InfoDebugString = "";
 		/// <summary>The total number of OpenGL triangles in the current frame</summary>

@@ -339,7 +339,7 @@ namespace OpenBve
 
 		/// <summary>Stops all sounds that are attached to the specified train.</summary>
 		/// <param name="train">The train.</param>
-		internal static void StopAllSounds(TrainManager.Train train)
+		internal static void StopAllSounds(AbstractTrain train)
 		{
 			for (int i = 0; i < SourceCount; i++)
 			{

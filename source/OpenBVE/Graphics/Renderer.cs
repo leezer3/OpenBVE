@@ -312,7 +312,7 @@ namespace OpenBve
 					GL.Disable(EnableCap.Lighting);
 					LibRender.Renderer.LightingEnabled = false;
 				}
-				LibRender.MotionBlur.RenderFullscreen(Interface.CurrentOptions.MotionBlur, Game.InfoFrameRate, Math.Abs(Camera.CurrentSpeed));
+				LibRender.MotionBlur.RenderFullscreen(Interface.CurrentOptions.MotionBlur, LibRender.Renderer.FrameRate, Math.Abs(Camera.CurrentSpeed));
 			}
 			// overlay layer
 			if (LibRender.Renderer.FogEnabled)
