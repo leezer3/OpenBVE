@@ -376,7 +376,6 @@ namespace OpenBve {
 		}
 		internal struct TrainSpecs {
 			internal ReverserHandle CurrentReverser;
-			internal double CurrentAverageSpeed;
 			internal int MaximumPowerNotch;
 			internal PowerHandle CurrentPowerNotch;
 			internal int MaximumBrakeNotch;
@@ -395,7 +394,7 @@ namespace OpenBve {
 		internal class Train : AbstractTrain {
 			internal Car[] Cars;
 			internal TrainSpecs Specs;
-			internal int CurrentSectionIndex;
+
 			public override double FrontCarTrackPosition()
 			{
 				return Cars[0].FrontAxle.Follower.TrackPosition - Cars[0].FrontAxlePosition + 0.5 * Cars[0].Length;

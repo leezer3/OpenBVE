@@ -7,8 +7,6 @@ namespace OpenBve
 	{
 		internal struct TrainSpecs
 		{
-			
-			internal double CurrentAverageSpeed;
 			internal double CurrentAverageAcceleration;
 			internal double CurrentAirPressure;
 			internal double CurrentAirDensity;

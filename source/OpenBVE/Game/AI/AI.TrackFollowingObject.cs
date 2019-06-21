@@ -212,7 +212,7 @@ namespace OpenBve
 					}
 				}
 
-				Train.Specs.CurrentAverageSpeed = Train.Cars[0].Specs.CurrentSpeed;
+				Train.CurrentSpeed = Train.Cars[0].Specs.CurrentSpeed;
 				Train.Specs.CurrentAverageAcceleration = Train.Cars[0].Specs.CurrentAcceleration;
 
 				// Dispose the train if it is past the leave time of the train

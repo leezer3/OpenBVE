@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using OpenBveApi.Sounds;
+using OpenBveApi.Trains;
 using OpenTK;
 using OpenTK.Audio.OpenAL;
 
@@ -275,7 +276,7 @@ namespace OpenBve
 		/// <param name="car">The car in the train the sound is attached to.</param>
 		/// <param name="looped">Whether to play the sound in a loop.</param>
 		/// <returns>The sound source.</returns>
-		internal static SoundSource PlaySound(SoundBuffer buffer, double pitch, double volume, OpenBveApi.Math.Vector3 position, TrainManager.Train train, int car, bool looped)
+		internal static SoundSource PlaySound(SoundBuffer buffer, double pitch, double volume, OpenBveApi.Math.Vector3 position, AbstractTrain train, int car, bool looped)
 		{
 			if (Sources.Length == SourceCount)
 			{
@@ -342,7 +343,7 @@ namespace OpenBve
 		{
 			for (int i = 0; i < SourceCount; i++)
 			{
-				if (Sources[i].Train == train)
+				if (Sources[i].Parent == train)
 				{
 					if (Sources[i].State == SoundSourceState.Playing)
 					{

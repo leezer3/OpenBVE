@@ -120,7 +120,7 @@ namespace OpenBve {
 							if (z >= location & z < bestLocation)
 							{
 								bestLocation = z;
-								bestSpeed = TrainManager.Trains[i].Specs.CurrentAverageSpeed;
+								bestSpeed = TrainManager.Trains[i].CurrentSpeed;
 							}
 						}
 					}

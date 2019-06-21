@@ -61,7 +61,7 @@ namespace OpenBve
 						{
 							if (this.Dynamic)
 							{
-								double spd = Math.Abs(Train.Specs.CurrentAverageSpeed);
+								double spd = Math.Abs(Train.CurrentSpeed);
 								pitch = spd / this.Speed;
 								gain = pitch < 0.5 ? 2.0 * pitch : 1.0;
 								if (pitch < 0.2 | gain < 0.2)
@@ -105,7 +105,7 @@ namespace OpenBve
 					Sounds.SoundBuffer buffer;
 					if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle)
 					{
-						if (Train.Specs.CurrentAverageSpeed <= 0.0) return;
+						if (Train.CurrentSpeed <= 0.0) return;
 						int bufferIndex = Train.Cars[CarIndex].FrontAxle.RunIndex;
 						if (Train.Cars[CarIndex].FrontAxle.PointSounds == null || Train.Cars[CarIndex].FrontAxle.PointSounds.Length == 0)
 						{
@@ -130,7 +130,7 @@ namespace OpenBve
 					}
 					if (buffer != null)
 					{
-						double spd = Math.Abs(Train.Specs.CurrentAverageSpeed);
+						double spd = Math.Abs(Train.CurrentSpeed);
 						double pitch = spd / this.Speed;
 						double gain = pitch < 0.5 ? 2.0 * pitch : 1.0;
 						if (pitch < 0.2 | gain < 0.2)

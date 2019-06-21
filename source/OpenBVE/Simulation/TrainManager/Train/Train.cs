@@ -36,8 +36,7 @@ namespace OpenBve
 			internal double StationDistanceToStopPoint;
 			internal double[] RouteLimits;
 			internal double CurrentRouteLimit;
-			internal double CurrentSectionLimit;
-			internal int CurrentSectionIndex;
+			
 			internal double TimetableDelta;
 			internal Game.GeneralAI AI;
 			private double InternalTimerTimeElapsed;
@@ -83,7 +82,7 @@ namespace OpenBve
 			}
 
 			/// <summary>Disposes of the train</summary>
-			internal void Dispose()
+			public override void Dispose()
 			{
 				State = TrainState.Disposed;
 				for (int i = 0; i < Cars.Length; i++)
@@ -197,7 +196,7 @@ namespace OpenBve
 					UpdatePhysicsAndControls(TimeElapsed);
 					if (Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade)
 					{
-						if (Specs.CurrentAverageSpeed > CurrentRouteLimit)
+						if (CurrentSpeed > CurrentRouteLimit)
 						{
 							Game.AddMessage(Translations.GetInterfaceString("message_route_overspeed"), MessageManager.MessageDependency.RouteLimit, Interface.GameMode.Arcade, MessageColor.Orange, Double.PositiveInfinity, null);
 						}
@@ -205,7 +204,7 @@ namespace OpenBve
 						{
 							Game.AddMessage(Translations.GetInterfaceString("message_signal_stop"), MessageManager.MessageDependency.PassedRedSignal, Interface.GameMode.Normal, MessageColor.Red, double.PositiveInfinity, null);
 						}
-						else if (Specs.CurrentAverageSpeed > CurrentSectionLimit)
+						else if (CurrentSpeed > CurrentSectionLimit)
 						{
 							Game.AddMessage(Translations.GetInterfaceString("message_signal_overspeed"), MessageManager.MessageDependency.SectionLimit, Interface.GameMode.Normal, MessageColor.Orange, Double.PositiveInfinity, null);
 						}
@@ -309,7 +308,7 @@ namespace OpenBve
 				// signals
 				if (CurrentSectionLimit == 0.0)
 				{
-					if (Handles.EmergencyBrake.Driver & Specs.CurrentAverageSpeed > -0.03 & Specs.CurrentAverageSpeed < 0.03)
+					if (Handles.EmergencyBrake.Driver & CurrentSpeed > -0.03 & CurrentSpeed < 0.03)
 					{
 						CurrentSectionLimit = 6.94444444444444;
 						if (this == PlayerTrain)
@@ -836,18 +835,18 @@ namespace OpenBve
 					}
 				}
 				// update average data
-				Specs.CurrentAverageSpeed = 0.0;
+				CurrentSpeed = 0.0;
 				Specs.CurrentAverageAcceleration = 0.0;
 				double invtime = TimeElapsed != 0.0 ? 1.0 / TimeElapsed : 1.0;
 				for (int i = 0; i < Cars.Length; i++)
 				{
 					Cars[i].Specs.CurrentAcceleration = (NewSpeeds[i] - Cars[i].Specs.CurrentSpeed) * invtime;
 					Cars[i].Specs.CurrentSpeed = NewSpeeds[i];
-					Specs.CurrentAverageSpeed += NewSpeeds[i];
+					CurrentSpeed += NewSpeeds[i];
 					Specs.CurrentAverageAcceleration += Cars[i].Specs.CurrentAcceleration;
 				}
 				double invcarlen = 1.0 / (double)Cars.Length;
-				Specs.CurrentAverageSpeed *= invcarlen;
+				CurrentSpeed *= invcarlen;
 				Specs.CurrentAverageAcceleration *= invcarlen;
 			}
 
@@ -909,7 +908,7 @@ namespace OpenBve
 			/// <summary>Call this method to derail a car</summary>
 			/// <param name="CarIndex">The car index to derail</param>
 			/// <param name="ElapsedTime">The elapsed time for this frame (Used for logging)</param>
-			internal void Derail(int CarIndex, double ElapsedTime)
+			public override void Derail(int CarIndex, double ElapsedTime)
 			{
 				this.Cars[CarIndex].Derailed = true;
 				this.Derailed = true;

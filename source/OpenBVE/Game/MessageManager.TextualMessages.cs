@@ -37,7 +37,7 @@ namespace OpenBve
 				{
 					case MessageDependency.RouteLimit:
 					{
-						double spd = Math.Abs(TrainManager.PlayerTrain.Specs.CurrentAverageSpeed);
+						double spd = Math.Abs(TrainManager.PlayerTrain.CurrentSpeed);
 						double lim = TrainManager.PlayerTrain.CurrentRouteLimit;
 						//Get the speed and limit in km/h
 						spd = Math.Round(spd * 3.6);
@@ -59,7 +59,7 @@ namespace OpenBve
 					case MessageDependency.PassedRedSignal:
 					case MessageDependency.SectionLimit:
 					{
-						double spd = Math.Abs(TrainManager.PlayerTrain.Specs.CurrentAverageSpeed);
+						double spd = Math.Abs(TrainManager.PlayerTrain.CurrentSpeed);
 						double lim = TrainManager.PlayerTrain.CurrentSectionLimit;
 						spd = Math.Round(spd * 3.6);
 						lim = Math.Round(lim * 3.6);

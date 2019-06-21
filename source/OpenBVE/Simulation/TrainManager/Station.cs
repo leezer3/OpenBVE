@@ -54,7 +54,7 @@ namespace OpenBve
 						if (Train.Specs.DoorOpenMode != DoorMode.Manual)
 						{
 							//Check that we are not moving
-							if (Math.Abs(Train.Specs.CurrentAverageSpeed) < 0.1 / 3.6 &
+							if (Math.Abs(Train.CurrentSpeed) < 0.1 / 3.6 &
 							    Math.Abs(Train.Specs.CurrentAverageAcceleration) < 0.1 / 3.6)
 							{
 								//Check the interlock state for the doors
@@ -86,7 +86,7 @@ namespace OpenBve
 							}
 						}
 						// detect arrival
-						if (Train.Specs.CurrentAverageSpeed > -0.277777777777778 & Train.Specs.CurrentAverageSpeed < 0.277777777777778)
+						if (Train.CurrentSpeed > -0.277777777777778 & Train.CurrentSpeed < 0.277777777777778)
 						{
 							bool left, right;
 							if (Game.Stations[i].OpenLeftDoors)
@@ -217,7 +217,7 @@ namespace OpenBve
 									}
 								}
 							}
-							else if (Train.Specs.CurrentAverageSpeed > -0.277777777777778 & Train.Specs.CurrentAverageSpeed < 0.277777777777778)
+							else if (Train.CurrentSpeed > -0.277777777777778 & Train.CurrentSpeed < 0.277777777777778)
 							{
 								// correct stop position
 								if (!Train.StationAdjust & (Train.StationDistanceToStopPoint > tb | Train.StationDistanceToStopPoint < -tf))

@@ -1,11 +1,12 @@
 ﻿using OpenBveApi.Routes;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
 	internal static partial class TrackManager
 	{
 		/// <summary>Called when a train passes over a destination change event</summary>
-		internal class DestinationEvent : GeneralEvent<TrainManager.Train>
+		internal class DestinationEvent : GeneralEvent<AbstractTrain>
 		{
 			/// <summary>The destination value to set when passing over this event forwards, or -1 to disable</summary>
 			internal readonly int NextDestination;
@@ -25,7 +26,7 @@ namespace OpenBve
 				this.TriggerOnce = triggerOnce;
 				this.Type = type;
 			}
-			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, int CarIndex)
 			{
 				if (this.Type == -1 && Train == TrainManager.PlayerTrain || this.Type == 1 && Train != TrainManager.PlayerTrain)
 				{

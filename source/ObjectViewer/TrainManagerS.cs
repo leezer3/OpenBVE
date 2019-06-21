@@ -260,7 +260,6 @@ namespace OpenBve {
 		internal struct TrainSpecs {
 			internal double TotalMass;
 			internal ReverserHandle CurrentReverser;
-			internal double CurrentAverageSpeed;
 			internal double CurrentAverageAcceleration;
 			internal double CurrentAverageJerk;
 			internal double CurrentAirPressure;
@@ -295,7 +294,6 @@ namespace OpenBve {
 		internal class Train : AbstractTrain {
 			internal Car[] Cars;
 			internal TrainSpecs Specs;
-			internal int CurrentSectionIndex;
 			public override double FrontCarTrackPosition()
 			{
 				return Cars[0].FrontAxle.Follower.TrackPosition - Cars[0].FrontAxlePosition + 0.5 * Cars[0].Length;

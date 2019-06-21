@@ -970,10 +970,10 @@ namespace OpenBve
 										else if (Camera.CurrentMode == CameraViewMode.FlyBy |
 												 Camera.CurrentMode == CameraViewMode.FlyByZooming)
 										{
-											if (TrainManager.PlayerTrain.Specs.CurrentAverageSpeed >= 0.0)
+											if (TrainManager.PlayerTrain.CurrentSpeed >= 0.0)
 											{
 												double d = 30.0 +
-														   4.0*TrainManager.PlayerTrain.Specs.CurrentAverageSpeed;
+														   4.0*TrainManager.PlayerTrain.CurrentSpeed;
 												World.CameraTrackFollower.Update(
 													TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower
 														.TrackPosition + d, true, false);
@@ -981,7 +981,7 @@ namespace OpenBve
 											else
 											{
 												double d = 30.0 -
-														   4.0*TrainManager.PlayerTrain.Specs.CurrentAverageSpeed;
+														   4.0*TrainManager.PlayerTrain.CurrentSpeed;
 												World.CameraTrackFollower.Update(
 													TrainManager.PlayerTrain.Cars[
 														TrainManager.PlayerTrain.Cars.Length - 1].RearAxle.Follower

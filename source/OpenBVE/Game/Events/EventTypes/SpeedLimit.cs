@@ -69,7 +69,7 @@ namespace OpenBve
 						{
 							Train.CurrentRouteLimit = this.NextSpeedLimit;
 						}
-						if (Train.Specs.CurrentAverageSpeed > this.NextSpeedLimit)
+						if (Train.CurrentSpeed > this.NextSpeedLimit)
 						{
 							Game.AddMessage(Translations.GetInterfaceString("message_route_overspeed"), MessageManager.MessageDependency.RouteLimit, Interface.GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
 						}

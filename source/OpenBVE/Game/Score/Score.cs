@@ -67,7 +67,7 @@ namespace OpenBve
 							int p = Game.Stations[j].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
 							if (p >= 0)
 							{
-								if (Math.Abs(TrainManager.PlayerTrain.Specs.CurrentAverageSpeed) < 0.1)
+								if (Math.Abs(TrainManager.PlayerTrain.CurrentSpeed) < 0.1)
 								{
 									if (leftopen == Stations[j].OpenLeftDoors & rightopen == Stations[j].OpenRightDoors)
 									{
@@ -83,7 +83,7 @@ namespace OpenBve
 					}
 					if (bad)
 					{
-						OpenedDoorsCounter += (Math.Abs(TrainManager.PlayerTrain.Specs.CurrentAverageSpeed) + 0.25) * TimeElapsed;
+						OpenedDoorsCounter += (Math.Abs(TrainManager.PlayerTrain.CurrentSpeed) + 0.25) * TimeElapsed;
 					}
 					else if (OpenedDoorsCounter != 0.0)
 					{
@@ -100,7 +100,7 @@ namespace OpenBve
 				double nr = TrainManager.PlayerTrain.CurrentRouteLimit;
 				double ns = TrainManager.PlayerTrain.CurrentSectionLimit;
 				double n = nr < ns ? nr : ns;
-				double a = Math.Abs(TrainManager.PlayerTrain.Specs.CurrentAverageSpeed) - 0.277777777777778;
+				double a = Math.Abs(TrainManager.PlayerTrain.CurrentSpeed) - 0.277777777777778;
 				if (a > n)
 				{
 					OverspeedCounter += (a - n) * TimeElapsed;
@@ -311,7 +311,7 @@ namespace OpenBve
 						}
 						else
 						{
-							q = TrainManager.PlayerTrain.StationState != TrainManager.TrainStopState.Pending & (TrainManager.PlayerTrain.Specs.CurrentAverageSpeed < -1.5 | TrainManager.PlayerTrain.Specs.CurrentAverageSpeed > 1.5);
+							q = TrainManager.PlayerTrain.StationState != TrainManager.TrainStopState.Pending & (TrainManager.PlayerTrain.CurrentSpeed < -1.5 | TrainManager.PlayerTrain.CurrentSpeed > 1.5);
 						}
 						if (q)
 						{

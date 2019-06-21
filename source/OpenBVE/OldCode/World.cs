@@ -294,8 +294,8 @@ namespace OpenBve {
 				if (Camera.CurrentMode == CameraViewMode.InteriorLookAhead) {
 					// look-ahead
 					double d = 20.0;
-					if (TrainManager.PlayerTrain.Specs.CurrentAverageSpeed > 0.0) {
-						d += 3.0 * (Math.Sqrt(TrainManager.PlayerTrain.Specs.CurrentAverageSpeed * TrainManager.PlayerTrain.Specs.CurrentAverageSpeed + 1.0) - 1.0);
+					if (TrainManager.PlayerTrain.CurrentSpeed > 0.0) {
+						d += 3.0 * (Math.Sqrt(TrainManager.PlayerTrain.CurrentSpeed * TrainManager.PlayerTrain.CurrentSpeed + 1.0) - 1.0);
 					}
 					d -= TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].FrontAxle.Position;
 					TrackManager.TrackFollower f = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].FrontAxle.Follower;
