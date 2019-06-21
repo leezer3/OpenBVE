@@ -149,7 +149,7 @@ namespace OpenBve
 			return Textures;
 		}
 
-		private static string GetChecksum(string file)
+		internal static string GetChecksum(string file)
 		{
 			using (FileStream stream = File.OpenRead(file))
 			{

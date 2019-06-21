@@ -173,6 +173,7 @@ namespace OpenBve {
 		}
 		private static void LoadEverythingThreaded() {
 			Program.FileSystem.AppendToLogFile("Loading route file: " + CurrentRouteFile);
+			Program.FileSystem.AppendToLogFile("INFO: Route file hash " + CsvRwRouteParser.GetChecksum(CurrentRouteFile));
 			string RailwayFolder = GetRailwayFolder(CurrentRouteFile);
 			string ObjectFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Object");
 			string SoundFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Sound");
