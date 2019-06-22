@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -101,11 +101,6 @@ namespace OpenBve
 			Objects[a] = new StaticObject(Program.CurrentHost) { Dynamic = true };
 			ObjectsUsed++;
 			return a;
-		}
-
-		private static double Mod(double a, double b)
-		{
-			return a - b * Math.Floor(a / b);
 		}
 	}
 }

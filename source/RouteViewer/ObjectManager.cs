@@ -617,10 +617,7 @@ namespace OpenBve {
 					AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Materials[j].Color *= Brightness;
 				}
 				for (int j = 0; j < AnimatedWorldObjects[a].Object.States[i].Object.Mesh.Vertices.Length; j++) {
-					double x = Prototype.States[i].Object.Mesh.Vertices[j].Coordinates.X;
-					double y = Prototype.States[i].Object.Mesh.Vertices[j].Coordinates.Y;
-					double z = Prototype.States[i].Object.Mesh.Vertices[j].Coordinates.Z;
-					double t = x * x + y * y + z * z;
+					double t = Prototype.States[i].Object.Mesh.Vertices[j].Coordinates.NormSquared();
 					if (t > r) r = t;
 				}
 			}
