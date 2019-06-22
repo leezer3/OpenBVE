@@ -46,7 +46,7 @@ namespace OpenBve {
 			/// <summary>Whether this plugin can disable time acceleration.</summary>
 			internal static bool DisableTimeAcceleration;
 
-			private List<Station> currentRouteStations;
+			private List<OpenBveApi.Runtime.Station> currentRouteStations;
 			internal bool StationsLoaded;
 			// --- functions ---
 			/// <summary>Called to load and initialize the plugin.</summary>
@@ -80,7 +80,7 @@ namespace OpenBve {
 				{
 					currentRouteStations = new List<Station>();
 					int s = 0;
-					foreach (Game.Station selectedStation in Game.Stations)
+					foreach (RouteStation selectedStation in Game.Stations)
 					{
 						double stopPosition = -1;
 						int stopIdx = Game.Stations[s].GetStopIndex(Train.Cars.Length);

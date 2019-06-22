@@ -295,7 +295,7 @@ namespace OpenBve {
 			string Section = ""; bool SectionAlwaysPrefix = false;
 			int BlockIndex = 0;
 			int BlocksUsed = Data.Blocks.Length;
-			Game.Stations = new Game.Station[] { };
+			Game.Stations = new RouteStation[] { };
 			Data.RequestStops = new StopRequest[] { };
 			int CurrentStation = -1;
 			int CurrentStop = -1;
@@ -3184,8 +3184,8 @@ namespace OpenBve {
 								case "track.sta":
 									{
 										CurrentStation++;
-										Array.Resize<Game.Station>(ref Game.Stations, CurrentStation + 1);
-										Game.Stations[CurrentStation] = new Game.Station();
+										Array.Resize(ref Game.Stations, CurrentStation + 1);
+										Game.Stations[CurrentStation] = new RouteStation();
 										if (Arguments.Length >= 1 && Arguments[0].Length > 0) {
 											Game.Stations[CurrentStation].Name = Arguments[0];
 										}
@@ -3429,7 +3429,7 @@ namespace OpenBve {
 										Game.Stations[CurrentStation].OpenLeftDoors = door < 0.0 | doorboth;
 										Game.Stations[CurrentStation].OpenRightDoors = door > 0.0 | doorboth;
 										Game.Stations[CurrentStation].SafetySystem = device == 1 ? SafetySystem.Atc : SafetySystem.Ats;
-										Game.Stations[CurrentStation].Stops = new Game.StationStop[] { };
+										Game.Stations[CurrentStation].Stops = new StationStop[] { };
 										Game.Stations[CurrentStation].PassengerRatio = 0.01 * jam;
 										Game.Stations[CurrentStation].TimetableDaytimeTexture = tdt;
 										Game.Stations[CurrentStation].TimetableNighttimeTexture = tnt;
@@ -3446,8 +3446,8 @@ namespace OpenBve {
 								case "track.station":
 									{
 										CurrentStation++;
-										Array.Resize<Game.Station>(ref Game.Stations, CurrentStation + 1);
-										Game.Stations[CurrentStation] = new Game.Station();
+										Array.Resize(ref Game.Stations, CurrentStation + 1);
+										Game.Stations[CurrentStation] = new RouteStation();
 										if (Arguments.Length >= 1 && Arguments[0].Length > 0) {
 											Game.Stations[CurrentStation].Name = Arguments[0];
 										}
@@ -3545,7 +3545,7 @@ namespace OpenBve {
 										Game.Stations[CurrentStation].OpenLeftDoors = true;
 										Game.Stations[CurrentStation].OpenRightDoors = true;
 										Game.Stations[CurrentStation].SafetySystem = device == 1 ? SafetySystem.Atc : SafetySystem.Ats;
-										Game.Stations[CurrentStation].Stops = new Game.StationStop[] { };
+										Game.Stations[CurrentStation].Stops = new StationStop[] { };
 										Game.Stations[CurrentStation].PassengerRatio = 1.0;
 										Game.Stations[CurrentStation].TimetableDaytimeTexture = null;
 										Game.Stations[CurrentStation].TimetableNighttimeTexture = null;
@@ -3567,8 +3567,8 @@ namespace OpenBve {
 										break;
 									}
 									CurrentStation++;
-									Array.Resize<Game.Station>(ref Game.Stations, CurrentStation + 1);
-									Game.Stations[CurrentStation] = new Game.Station();
+									Array.Resize(ref Game.Stations, CurrentStation + 1);
+									Game.Stations[CurrentStation] = new RouteStation();
 									StopRequest sr = new StopRequest();
 									sr.TrackPosition = Data.TrackPosition;
 									sr.StationIndex = CurrentStation;

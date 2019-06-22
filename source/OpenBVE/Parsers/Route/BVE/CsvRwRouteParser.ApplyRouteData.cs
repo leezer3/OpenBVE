@@ -428,7 +428,7 @@ namespace OpenBve
 				{
 					int s = Data.Blocks[i].StopPositions[j].Station;
 					int t = Game.Stations[s].Stops.Length;
-					Array.Resize<Game.StationStop>(ref Game.Stations[s].Stops, t + 1);
+					Array.Resize(ref Game.Stations[s].Stops, t + 1);
 					Game.Stations[s].Stops[t].TrackPosition = Data.Blocks[i].StopPositions[j].TrackPosition;
 					Game.Stations[s].Stops[t].ForwardTolerance = Data.Blocks[i].StopPositions[j].ForwardTolerance;
 					Game.Stations[s].Stops[t].BackwardTolerance = Data.Blocks[i].StopPositions[j].BackwardTolerance;

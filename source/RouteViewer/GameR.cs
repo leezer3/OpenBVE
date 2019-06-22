@@ -129,7 +129,7 @@ namespace OpenBve {
 			RouteInitialElevation = 0.0;
 			RouteSeaLevelAirPressure = 101325.0;
 			RouteSeaLevelAirTemperature = 293.15;
-			Stations = new Station[] { };
+			Stations = new RouteStation[] { };
 			CurrentRoute.Sections = new Section[] { };
 			BufferTrackPositions = new double[] { };
 			MarkerTextures = new Texture[] { };
@@ -165,37 +165,7 @@ namespace OpenBve {
 
 		// ================================
 
-		// stations
-		internal struct StationStop {
-			internal double TrackPosition;
-			internal double ForwardTolerance;
-			internal double BackwardTolerance;
-			internal int Cars;
-		}
-
-		internal class Station : OpenBveApi.Runtime.Station {
-			internal SoundHandle ArrivalSoundBuffer;
-			internal SoundHandle DepartureSoundBuffer;
-			internal Vector3 SoundOrigin;
-			internal SafetySystem SafetySystem;
-			internal StationStop[] Stops;
-			internal double PassengerRatio;
-			internal int TimetableDaytimeTexture;
-			internal int TimetableNighttimeTexture;
-
-			internal int GetStopIndex(int Cars) {
-				int j = -1;
-				for (int i = Stops.Length - 1; i >= 0; i--) {
-					if (Cars <= Stops[i].Cars | Stops[i].Cars == 0) {
-						j = i;
-					}
-				}
-				if (j == -1) {
-					return Stops.Length - 1;
-				} else return j;
-			}
-		}
-		internal static Station[] Stations = new Station[] { };
+		internal static RouteStation[] Stations = { };
 		
 
 		// ================================

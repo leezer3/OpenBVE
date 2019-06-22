@@ -374,8 +374,8 @@ namespace OpenBve {
 			internal StructureData Structure;
 			internal SignalDictionary SignalData;
 			internal CompatibilitySignalData[] CompatibilitySignalData;
-			internal int[] TimetableDaytime;
-			internal int[] TimetableNighttime;
+			internal Texture[] TimetableDaytime;
+			internal Texture[] TimetableNighttime;
 			internal BackgroundDictionary Backgrounds;
 			internal double[] SignalSpeeds;
 			internal Block[] Blocks;
@@ -460,8 +460,8 @@ namespace OpenBve {
                 Data.Structure.Run = new int[] { };
 				Data.Structure.Flange = new int[] { };
 				Data.Backgrounds = new BackgroundDictionary();
-				Data.TimetableDaytime = new int[] { -1, -1, -1, -1 };
-				Data.TimetableNighttime = new int[] { -1, -1, -1, -1 };
+				Data.TimetableDaytime = new OpenBveApi.Textures.Texture[] {null, null, null, null};
+				Data.TimetableNighttime = new OpenBveApi.Textures.Texture[] {null, null, null, null};
 				// signals
 				string SignalFolder = OpenBveApi.Path.CombineDirectory(CompatibilityFolder, "Signals");
 				Data.SignalData = new SignalDictionary();
@@ -1575,7 +1575,7 @@ namespace OpenBve {
 			string Section = ""; bool SectionAlwaysPrefix = false;
 			int BlockIndex = 0;
 			int BlocksUsed = Data.Blocks.Length;
-			Game.Stations = new Game.Station[] { };
+			Game.Stations = new RouteStation[] { };
 			int CurrentStation = -1;
 			int CurrentStop = -1;
 			bool DepartureSignalUsed = false;
@@ -3999,8 +3999,8 @@ namespace OpenBve {
 								case "track.sta":
 									{
 										CurrentStation++;
-										Array.Resize<Game.Station>(ref Game.Stations, CurrentStation + 1);
-										Game.Stations[CurrentStation] = new Game.Station();
+										Array.Resize(ref Game.Stations, CurrentStation + 1);
+										Game.Stations[CurrentStation] = new RouteStation();
 										Game.Stations[CurrentStation].Name = string.Empty;
 										Game.Stations[CurrentStation].StopMode = StationStopMode.AllStop;
 										Game.Stations[CurrentStation].Type = StationType.Normal;
@@ -4151,25 +4151,23 @@ namespace OpenBve {
 												}
 											}
 										}
-										int ttidx = -1, tdt = -1, tnt = -1;
-										if (!PreviewOnly) {
+										OpenBveApi.Textures.Texture tdt = null, tnt = null;
+										if (!PreviewOnly)
+										{
+											int ttidx;
 											if (Arguments.Length >= 12 && Arguments[11].Length > 0) {
 												if (!NumberFormats.TryParseIntVb6(Arguments[11], out ttidx)) {
 													ttidx = -1;
 												} else {
 													if (ttidx < 0) {
-														// if (Program.CurrentProgramType == Program.ProgramType.OpenBve) {
-														// 	Interface.AddMessage(MessageType.Error, false, "TimetableIndex is expected to be non-negative in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-														// }
+														Interface.AddMessage(MessageType.Error, false, "TimetableIndex is expected to be non-negative in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 														ttidx = -1;
 													} else if (ttidx >= Data.TimetableDaytime.Length & ttidx >= Data.TimetableNighttime.Length) {
-														// if (Program.CurrentProgramType == Program.ProgramType.OpenBve) {
-														// 	Interface.AddMessage(MessageType.Error, false, "TimetableIndex references textures not loaded in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-														// }
+														Interface.AddMessage(MessageType.Error, false, "TimetableIndex references textures not loaded in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 														ttidx = -1;
 													}
-													tdt = ttidx >= 0 & ttidx < Data.TimetableDaytime.Length ? Data.TimetableDaytime[ttidx] : -1;
-													tnt = ttidx >= 0 & ttidx < Data.TimetableNighttime.Length ? Data.TimetableNighttime[ttidx] : -1;
+													tdt = ttidx >= 0 & ttidx < Data.TimetableDaytime.Length ? Data.TimetableDaytime[ttidx] : null;
+													tnt = ttidx >= 0 & ttidx < Data.TimetableNighttime.Length ? Data.TimetableNighttime[ttidx] : null;
 													ttidx = 0;
 												}
 											} else {
@@ -4183,8 +4181,8 @@ namespace OpenBve {
 													tdt = Data.TimetableDaytime[0];
 													tnt = Data.TimetableNighttime[0];
 												} else {
-													tdt = -1;
-													tnt = -1;
+													tdt = null;
+													tnt = null;
 												}
 											}
 										}
@@ -4200,7 +4198,7 @@ namespace OpenBve {
 										Game.Stations[CurrentStation].OpenLeftDoors = door < 0.0 | doorboth;
 										Game.Stations[CurrentStation].OpenRightDoors = door > 0.0 | doorboth;
 										Game.Stations[CurrentStation].SafetySystem = device == 1 ? SafetySystem.Atc : SafetySystem.Ats;
-										Game.Stations[CurrentStation].Stops = new Game.StationStop[] { };
+										Game.Stations[CurrentStation].Stops = new StationStop[] { };
 										Game.Stations[CurrentStation].PassengerRatio = 0.01 * jam;
 										Game.Stations[CurrentStation].TimetableDaytimeTexture = tdt;
 										Game.Stations[CurrentStation].TimetableNighttimeTexture = tnt;
@@ -4213,8 +4211,8 @@ namespace OpenBve {
 								case "track.station":
 									{
 										CurrentStation++;
-										Array.Resize<Game.Station>(ref Game.Stations, CurrentStation + 1);
-										Game.Stations[CurrentStation] = new Game.Station();
+										Array.Resize(ref Game.Stations, CurrentStation + 1);
+										Game.Stations[CurrentStation] = new RouteStation();
 										Game.Stations[CurrentStation].Name = string.Empty;
 										Game.Stations[CurrentStation].StopMode = StationStopMode.AllStop;
 										Game.Stations[CurrentStation].Type = StationType.Normal;
@@ -4314,10 +4312,10 @@ namespace OpenBve {
 										Game.Stations[CurrentStation].OpenLeftDoors = true;
 										Game.Stations[CurrentStation].OpenRightDoors = true;
 										Game.Stations[CurrentStation].SafetySystem = device == 1 ? SafetySystem.Atc : SafetySystem.Ats;
-										Game.Stations[CurrentStation].Stops = new Game.StationStop[] { };
+										Game.Stations[CurrentStation].Stops = new StationStop[] { };
 										Game.Stations[CurrentStation].PassengerRatio = 1.0;
-										Game.Stations[CurrentStation].TimetableDaytimeTexture = -1;
-										Game.Stations[CurrentStation].TimetableNighttimeTexture = -1;
+										Game.Stations[CurrentStation].TimetableDaytimeTexture = null;
+										Game.Stations[CurrentStation].TimetableNighttimeTexture = null;
 										Game.Stations[CurrentStation].DefaultTrackPosition = Data.TrackPosition;
 										Data.Blocks[BlockIndex].Station = CurrentStation;
 										Data.Blocks[BlockIndex].StationPassAlarm = false;
@@ -5006,21 +5004,21 @@ namespace OpenBve {
 			}
 			if (!PreviewOnly) {
 				// timetable
-				Timetable.CustomTextureIndices = new int[Data.TimetableDaytime.Length + Data.TimetableNighttime.Length];
+				Timetable.CustomTextureIndices = new Texture[Data.TimetableDaytime.Length + Data.TimetableNighttime.Length];
 				int n = 0;
 				for (int i = 0; i < Data.TimetableDaytime.Length; i++) {
-					if (Data.TimetableDaytime[i] >= 0) {
+					if (Data.TimetableDaytime[i] != null) {
 						Timetable.CustomTextureIndices[n] = Data.TimetableDaytime[i];
 						n++;
 					}
 				}
 				for (int i = 0; i < Data.TimetableNighttime.Length; i++) {
-					if (Data.TimetableNighttime[i] >= 0) {
+					if (Data.TimetableNighttime[i] != null) {
 						Timetable.CustomTextureIndices[n] = Data.TimetableNighttime[i];
 						n++;
 					}
 				}
-				Array.Resize<int>(ref Timetable.CustomTextureIndices, n);
+				Array.Resize(ref Timetable.CustomTextureIndices, n);
 			}
 			// blocks
 			Array.Resize<Block>(ref Data.Blocks, BlocksUsed);
@@ -5601,7 +5599,7 @@ namespace OpenBve {
 				for (int j = 0; j < Data.Blocks[i].Stop.Length; j++) {
 					int s = Data.Blocks[i].Stop[j].Station;
 					int t = Game.Stations[s].Stops.Length;
-					Array.Resize<Game.StationStop>(ref Game.Stations[s].Stops, t + 1);
+					Array.Resize(ref Game.Stations[s].Stops, t + 1);
 					Game.Stations[s].Stops[t].TrackPosition = Data.Blocks[i].Stop[j].TrackPosition;
 					Game.Stations[s].Stops[t].ForwardTolerance = Data.Blocks[i].Stop[j].ForwardTolerance;
 					Game.Stations[s].Stops[t].BackwardTolerance = Data.Blocks[i].Stop[j].BackwardTolerance;

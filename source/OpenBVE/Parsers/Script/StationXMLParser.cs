@@ -3,6 +3,7 @@ using System.IO;
 using System.Xml;
 using OpenBveApi.Math;
 using System.Linq;
+using OpenBve.RouteManager;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
@@ -12,11 +13,11 @@ namespace OpenBve
 {
 	class StationXMLParser
 	{
-		public static Game.Station ReadStationXML(string fileName, bool PreviewOnly, Texture[] daytimeTimetableTextures, Texture[] nighttimeTimetableTextures, int CurrentStation, ref bool passAlarm, ref CsvRwRouteParser.StopRequest stopRequest)
+		public static RouteStation ReadStationXML(string fileName, bool PreviewOnly, Texture[] daytimeTimetableTextures, Texture[] nighttimeTimetableTextures, int CurrentStation, ref bool passAlarm, ref CsvRwRouteParser.StopRequest stopRequest)
 		{
-			Game.Station station = new Game.Station
+			RouteStation station = new RouteStation
 			{
-				Stops = new Game.StationStop[] { }
+				Stops = new StationStop[] { }
 			};
 			stopRequest.Early = new TrackManager.RequestStop();
 			stopRequest.OnTime = new TrackManager.RequestStop();

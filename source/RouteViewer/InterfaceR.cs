@@ -10,6 +10,7 @@ using System.Globalization;
 using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
+using OpenBveApi.Textures;
 
 namespace OpenBve {
 
@@ -24,7 +25,7 @@ namespace OpenBve {
 		internal static TimetableState CurrentTimetable = TimetableState.None;
 		internal static bool CustomTimetableAvailable = false;
 		internal static string DefaultTimetableDescription = null;
-		internal static int[] CustomTextureIndices = null;
+		internal static Texture[] CustomTextureIndices = null;
 	}
 
 	// --- Interface.cs ---
