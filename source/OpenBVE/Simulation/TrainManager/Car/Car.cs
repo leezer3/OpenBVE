@@ -784,7 +784,7 @@ namespace OpenBve
 				}
 				// roll due to cant (incorporates shaking)
 				{
-					double cantAngle = Math.Atan(c / Game.RouteRailGauge);
+					double cantAngle = Math.Atan(c / TrackManager.Tracks[FrontAxle.Follower.TrackIndex].RailGauge);
 					Specs.CurrentRollDueToCantAngle = cantAngle + Specs.CurrentRollDueToShakingAngle;
 				}
 				// pitch due to acceleration
@@ -867,7 +867,7 @@ namespace OpenBve
 					double ab = Specs.CurrentRollDueToTopplingAngle + Specs.CurrentRollDueToCantAngle;
 					double h = Specs.CenterOfGravityHeight;
 					double sr = Math.Abs(Specs.CurrentSpeed);
-					double rmax = 2.0 * h * sr * sr / (Game.RouteAccelerationDueToGravity * Game.RouteRailGauge);
+					double rmax = 2.0 * h * sr * sr / (Game.RouteAccelerationDueToGravity * TrackManager.Tracks[FrontAxle.Follower.TrackIndex].RailGauge);
 					double ta;
 					Topples = false;
 					if (Derailed)
@@ -881,7 +881,7 @@ namespace OpenBve
 						{
 							if (r < rmax)
 							{
-								double s0 = Math.Sqrt(r * Game.RouteAccelerationDueToGravity * Game.RouteRailGauge / (2.0 * h));
+								double s0 = Math.Sqrt(r * Game.RouteAccelerationDueToGravity * TrackManager.Tracks[FrontAxle.Follower.TrackIndex].RailGauge / (2.0 * h));
 								const double fac = 0.25; // arbitrary coefficient
 								ta = -fac * (sr - s0) * rs;
 								baseTrain.Topple(Index, TimeElapsed);
@@ -927,8 +927,8 @@ namespace OpenBve
 				// apply position due to cant/toppling
 				{
 					double a = Specs.CurrentRollDueToTopplingAngle + Specs.CurrentRollDueToCantAngle;
-					double x = Math.Sign(a) * 0.5 * Game.RouteRailGauge * (1.0 - Math.Cos(a));
-					double y = Math.Abs(0.5 * Game.RouteRailGauge * Math.Sin(a));
+					double x = Math.Sign(a) * 0.5 * TrackManager.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * (1.0 - Math.Cos(a));
+					double y = Math.Abs(0.5 * TrackManager.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * Math.Sin(a));
 					Vector3 cc = new Vector3(s.X * x + Up.X * y, s.Y * x + Up.Y * y, s.Z * x + Up.Z * y);
 					FrontAxle.Follower.WorldPosition += cc;
 					RearAxle.Follower.WorldPosition += cc;

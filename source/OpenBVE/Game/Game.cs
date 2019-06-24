@@ -57,7 +57,6 @@ namespace OpenBve {
 			RouteComment = "";
 			RouteImage = "";
 			RouteAccelerationDueToGravity = 9.80665;
-			RouteRailGauge = 1.435;
 			RouteInitialAirPressure = 101325.0;
 			RouteInitialAirTemperature = 293.15;
 			RouteInitialElevation = 0.0;

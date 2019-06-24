@@ -35,7 +35,6 @@ namespace OpenBve {
 		internal static string RouteComment = "";
 		internal static string RouteImage = "";
 		internal static double RouteAccelerationDueToGravity = 9.80665;
-		internal static double RouteRailGauge = 1.435;
 		internal static double RouteInitialAirPressure = 101325.0;
 		internal static double RouteInitialAirTemperature = 293.15;
 		internal static double RouteInitialElevation = 0.0;
@@ -123,7 +122,6 @@ namespace OpenBve {
 			RouteComment = "";
 			RouteImage = "";
 			RouteAccelerationDueToGravity = 9.80665;
-			RouteRailGauge = 1.435;
 			RouteInitialAirPressure = 101325.0;
 			RouteInitialAirTemperature = 293.15;
 			RouteInitialElevation = 0.0;

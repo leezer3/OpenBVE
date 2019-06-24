@@ -149,6 +149,10 @@ namespace OpenBve
 			}
 			for (int i = 0; i < TrackManager.Tracks.Length; i++)
 			{
+				if (TrackManager.Tracks[i] == null)
+				{
+					TrackManager.Tracks[i] = new TrackManager.Track();
+				}
 				if (TrackManager.Tracks[i].Elements == null)
 				{
 					TrackManager.Tracks[i].Elements = new TrackManager.TrackElement[256];

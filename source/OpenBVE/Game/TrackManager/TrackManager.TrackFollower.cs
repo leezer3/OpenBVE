@@ -213,15 +213,15 @@ namespace OpenBve
 						}
 						double x1, y1, c1;
 						double x2, y2, c2;
-						GetInaccuracies(NewTrackPosition, Tracks[TrackIndex].Elements[i].CsvRwAccuracyLevel, out x1, out y1, out c1);
-						GetInaccuracies(NewTrackPosition, Tracks[TrackIndex].Elements[i + 1].CsvRwAccuracyLevel, out x2, out y2, out c2);
+						Tracks[TrackIndex].GetInaccuracies(NewTrackPosition, Tracks[TrackIndex].Elements[i].CsvRwAccuracyLevel, out x1, out y1, out c1);
+						Tracks[TrackIndex].GetInaccuracies(NewTrackPosition, Tracks[TrackIndex].Elements[i + 1].CsvRwAccuracyLevel, out x2, out y2, out c2);
 						x = (1.0 - t) * x1 + t * x2;
 						y = (1.0 - t) * y1 + t * y2;
 						c = (1.0 - t) * c1 + t * c2;
 					}
 					else
 					{
-						GetInaccuracies(NewTrackPosition, Tracks[TrackIndex].Elements[i].CsvRwAccuracyLevel, out x, out y, out c);
+						Tracks[TrackIndex].GetInaccuracies(NewTrackPosition, Tracks[TrackIndex].Elements[i].CsvRwAccuracyLevel, out x, out y, out c);
 					}
 					WorldPosition += x * WorldSide + y * WorldUp;
 					CurveCant += c;

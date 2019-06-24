@@ -10,8 +10,6 @@ namespace OpenBve
         internal static string RouteImage = "";
         /// <summary>The acceleration due to gravity for this route in m/s²</summary>
         internal static double RouteAccelerationDueToGravity = 9.80665;
-        /// <summary>The rail gauge of this route in meters.</summary>
-        internal static double RouteRailGauge = 1.435;
         /// <summary>The initial air pressure of this route in kPa</summary>
         /// Represents a pressure of 1 atmosphere
         internal static double RouteInitialAirPressure = 101325.0;
