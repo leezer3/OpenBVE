@@ -401,6 +401,31 @@ namespace OpenBve
 						}
 					}
 					TrainDoorState doorState = GetDoorsState(Train, Game.Stations[i].OpenLeftDoors, Game.Stations[i].OpenRightDoors);
+					if (left | right) 
+					{
+						/*
+						 * Assume that passengers only board at a scheduled stop
+						 * If the player has opened the doors somewhere else (lineside?)
+						 * then passengers should not be boarding
+						 */
+						if(doorState != TrainDoorState.AllClosed && Interface.CurrentOptions.LoadingSway)
+						{
+							// passengers boarding
+							for (int j = 0; j < Train.Cars.Length; j++)
+							{
+								double r = 2.0 * Game.Stations[i].PassengerRatio * TimeElapsed;
+								if (r >= Program.RandomNumberGenerator.NextDouble())
+								{
+									int d =
+										(int) Math.Floor(Program.RandomNumberGenerator.NextDouble() * (double) Train.Cars[j].Doors.Length);
+									if (Train.Cars[j].Doors[d].State == 1.0)
+									{
+										Train.Cars[j].Specs.CurrentRollShakeDirection += (double) Train.Cars[j].Doors[d].Direction;
+									}
+								}
+							}
+						}
+					}
 					if (Train.Specs.DoorCloseMode == DoorMode.Manual || doorState == TrainDoorState.None || doorState == (TrainDoorState.Closed | TrainDoorState.AllClosed))
 					{
 						if (left | right)
@@ -423,23 +448,6 @@ namespace OpenBve
 								else if (Game.Stations[i].Type == StationType.ChangeEnds)
 								{
 									JumpTrain(Train, i + 1);
-								}
-							}
-							if (Interface.CurrentOptions.LoadingSway)
-							{
-								// passengers boarding
-								for (int j = 0; j < Train.Cars.Length; j++)
-								{
-									double r = 2.0 * Game.Stations[i].PassengerRatio * TimeElapsed;
-									if (r >= Program.RandomNumberGenerator.NextDouble())
-									{
-										int d =
-											(int)Math.Floor(Program.RandomNumberGenerator.NextDouble() * (double)Train.Cars[j].Doors.Length);
-										if (Train.Cars[j].Doors[d].State == 1.0)
-										{
-											Train.Cars[j].Specs.CurrentRollShakeDirection += (double)Train.Cars[j].Doors[d].Direction;
-										}
-									}
 								}
 							}
 						}
