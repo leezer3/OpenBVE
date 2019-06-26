@@ -120,25 +120,55 @@ namespace Plugin
 		{
 			using (Mp3FileReader reader = new Mp3FileReader(stream, wf => new Mp3FrameDecompressor(wf)))
 			{
-				int pcmLength = (int)reader.Length;
-				byte[] leftBuffer = new byte[pcmLength / 2];
-				byte[] rightBuffer = new byte[pcmLength / 2];
-				byte[] buffer = new byte[pcmLength];
-				int bytesRead = reader.Read(buffer, 0, pcmLength);
+				byte[] dataBytes = new byte[reader.Length];
 
-				int index = 0;
-				//For simplicity just use let NLayer internally convert into raw 16-bit 2 channel PCM
-				for (int i = 0; i < bytesRead; i += 4)
+				// Convert MP3 to raw 32-bit float n channels PCM.
+				int bytesRead = reader.Read(dataBytes, 0, (int)reader.Length);
+
+				int sampleCount = bytesRead / (reader.WaveFormat.Channels * sizeof(float));
+				byte[] newDataBytes = new byte[sampleCount * reader.WaveFormat.Channels * sizeof(short)];
+				byte[][] buffers = new byte[reader.WaveFormat.Channels][];
+
+				for (int i = 0; i < buffers.Length; i++)
 				{
-					leftBuffer[index] = buffer[i];
-					rightBuffer[index] = buffer[i + 2];
-					index++;
-					leftBuffer[index] = buffer[i + 1];
-					rightBuffer[index] = buffer[i + 3];
-					index++;
+					buffers[i] = new byte[newDataBytes.Length / buffers.Length];
 				}
 
-				return new Sound(44100, 16, new byte[][] { leftBuffer, rightBuffer });
+				// Convert PCM bit depth from 32-bit float to 16-bit integer.
+				using (MemoryStream writeStream = new MemoryStream(newDataBytes))
+				using (BinaryWriter writer = new BinaryWriter(writeStream))
+				{
+					for (int i = 0; i < bytesRead; i += sizeof(float))
+					{
+						float sample = BitConverter.ToSingle(dataBytes, i);
+
+						if (sample < -1.0f)
+						{
+							sample = -1.0f;
+						}
+
+						if (sample > 1.0f)
+						{
+							sample = 1.0f;
+						}
+
+						writer.Write((short)(sample * short.MaxValue));
+					}
+				}
+
+				// Separated for each channel.
+				for (int i = 0; i < sampleCount; i++)
+				{
+					for (int j = 0; j < buffers.Length; j++)
+					{
+						for (int k = 0; k < sizeof(short); k++)
+						{
+							buffers[j][i * sizeof(short) + k] = newDataBytes[i * sizeof(short) * buffers.Length + sizeof(short) * j + k];
+						}
+					}
+				}
+
+				return new Sound(reader.WaveFormat.SampleRate, sizeof(short) * 8, buffers);
 			}
 		}
 
