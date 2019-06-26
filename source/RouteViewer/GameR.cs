@@ -17,8 +17,10 @@ using OpenBve.SignalManager;
 using OpenBveApi.Objects;
 using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
-namespace OpenBve {
-	internal static class Game {
+namespace OpenBve
+{
+	internal static class Game
+	{
 
 		// random numbers
 		internal static readonly Random Generator = new Random();
@@ -29,7 +31,7 @@ namespace OpenBve {
 		internal static bool MinimalisticSimulation = false;
 		internal static double[] RouteUnitOfLength = new double[] { 1.0 };
 
-		
+
 
 		// route constants
 		internal static string RouteComment = "";
@@ -48,40 +50,56 @@ namespace OpenBve {
 		internal const double CoefficientOfStiffness = 144117.325646911;
 
 		// athmospheric functions
-		internal static void CalculateSeaLevelConstants() {
+		internal static void CalculateSeaLevelConstants()
+		{
 			RouteSeaLevelAirTemperature = RouteInitialAirTemperature - TemperatureLapseRate * RouteInitialElevation;
 			double Exponent = RouteAccelerationDueToGravity * MolarMass / (UniversalGasConstant * TemperatureLapseRate);
 			double Base = 1.0 + TemperatureLapseRate * RouteInitialElevation / RouteSeaLevelAirTemperature;
-			if (Base >= 0.0) {
+			if (Base >= 0.0)
+			{
 				RouteSeaLevelAirPressure = RouteInitialAirPressure * Math.Pow(Base, Exponent);
 				if (RouteSeaLevelAirPressure < 0.001) RouteSeaLevelAirPressure = 0.001;
-			} else {
+			}
+			else
+			{
 				RouteSeaLevelAirPressure = 0.001;
 			}
 		}
-		internal static double GetAirTemperature(double Elevation) {
+		internal static double GetAirTemperature(double Elevation)
+		{
 			double x = RouteSeaLevelAirTemperature + TemperatureLapseRate * Elevation;
-			if (x >= 1.0) {
+			if (x >= 1.0)
+			{
 				return x;
-			} else return 1.0;
+			}
+			else return 1.0;
 		}
-		internal static double GetAirDensity(double AirPressure, double AirTemperature) {
+		internal static double GetAirDensity(double AirPressure, double AirTemperature)
+		{
 			double x = AirPressure * MolarMass / (UniversalGasConstant * AirTemperature);
-			if (x >= 0.001) {
+			if (x >= 0.001)
+			{
 				return x;
-			} else return 0.001;
+			}
+			else return 0.001;
 		}
-		internal static double GetAirPressure(double Elevation, double AirTemperature) {
+		internal static double GetAirPressure(double Elevation, double AirTemperature)
+		{
 			double Exponent = -RouteAccelerationDueToGravity * MolarMass / (UniversalGasConstant * TemperatureLapseRate);
 			double Base = 1.0 + TemperatureLapseRate * Elevation / RouteSeaLevelAirTemperature;
-			if (Base >= 0.0) {
+			if (Base >= 0.0)
+			{
 				double x = RouteSeaLevelAirPressure * Math.Pow(Base, Exponent);
-				if (x >= 0.001) {
+				if (x >= 0.001)
+				{
 					return x;
-				} return 0.001;
-			} else return 0.001;
+				}
+				return 0.001;
+			}
+			else return 0.001;
 		}
-		internal static double GetSpeedOfSound(double AirPressure, double AirTemperature) {
+		internal static double GetSpeedOfSound(double AirPressure, double AirTemperature)
+		{
 			double AirDensity = GetAirDensity(AirPressure, AirTemperature);
 			return Math.Sqrt(CoefficientOfStiffness / AirDensity);
 		}
@@ -94,7 +112,7 @@ namespace OpenBve {
 		internal static string TrainName = "";
 
 		// information
-		
+
 		/// <summary>The current plugin debug message to be displayed</summary>
 		internal static string InfoDebugString = "";
 		/// <summary>The total number of OpenGL triangles in the current frame</summary>
@@ -112,7 +130,8 @@ namespace OpenBve {
 
 		// ================================
 
-		internal static void Reset() {
+		internal static void Reset()
+		{
 			// track manager
 			TrackManager.CurrentTrack = new TrackManager.Track();
 			// train manager
@@ -157,101 +176,135 @@ namespace OpenBve {
 			ObjectManager.AnimatedWorldObjectsUsed = 0;
 			// renderer / sound
 			Renderer.Reset();
-			Sounds.StopAllSounds();
+			Program.Sounds.StopAllSounds();
 			GC.Collect();
 		}
 
 		// ================================
 
 		internal static RouteStation[] Stations = { };
-		
+
 
 		// ================================
 
 		// sections
-		
-		internal static void UpdateAllSections() {
-			if (CurrentRoute.Sections.Length != 0) {
+
+		internal static void UpdateAllSections()
+		{
+			if (CurrentRoute.Sections.Length != 0)
+			{
 				UpdateSection(CurrentRoute.Sections.Length - 1);
 			}
 		}
-		internal static void UpdateSection(int SectionIndex) {
+		internal static void UpdateSection(int SectionIndex)
+		{
 			// preparations
 			int zeroaspect;
 			bool settored = false;
-			if (CurrentRoute.Sections[SectionIndex].Type == SectionType.ValueBased) {
+			if (CurrentRoute.Sections[SectionIndex].Type == SectionType.ValueBased)
+			{
 				// value-based
 				zeroaspect = int.MaxValue;
-				for (int i = 0; i < CurrentRoute.Sections[SectionIndex].Aspects.Length; i++) {
-					if (CurrentRoute.Sections[SectionIndex].Aspects[i].Number < zeroaspect) {
+				for (int i = 0; i < CurrentRoute.Sections[SectionIndex].Aspects.Length; i++)
+				{
+					if (CurrentRoute.Sections[SectionIndex].Aspects[i].Number < zeroaspect)
+					{
 						zeroaspect = CurrentRoute.Sections[SectionIndex].Aspects[i].Number;
 					}
-				} 
-				if (zeroaspect == int.MaxValue) {
+				}
+				if (zeroaspect == int.MaxValue)
+				{
 					zeroaspect = -1;
 				}
-			} else {
+			}
+			else
+			{
 				// index-based
 				zeroaspect = 0;
 			}
 			// hold station departure signal at red
 			int d = CurrentRoute.Sections[SectionIndex].StationIndex;
-			if (d >= 0) {
+			if (d >= 0)
+			{
 				// look for train in previous blocks
 				//int l = Sections[SectionIndex].PreviousSection;
-				if (Stations[d].Type != StationType.Normal) {
+				if (Stations[d].Type != StationType.Normal)
+				{
 					settored = true;
 				}
 			}
 			// train in block
-			if (CurrentRoute.Sections[SectionIndex].Trains.Length != 0) {
+			if (CurrentRoute.Sections[SectionIndex].Trains.Length != 0)
+			{
 				settored = true;
 			}
 			// free sections
 			int newaspect = -1;
-			if (settored) {
+			if (settored)
+			{
 				CurrentRoute.Sections[SectionIndex].FreeSections = 0;
 				newaspect = zeroaspect;
-			} else {
+			}
+			else
+			{
 				int n = CurrentRoute.Sections[SectionIndex].NextSection;
-				if (n >= 0) {
-					if (CurrentRoute.Sections[n].FreeSections == -1) {
+				if (n >= 0)
+				{
+					if (CurrentRoute.Sections[n].FreeSections == -1)
+					{
 						CurrentRoute.Sections[SectionIndex].FreeSections = -1;
-					} else {
+					}
+					else
+					{
 						CurrentRoute.Sections[SectionIndex].FreeSections = CurrentRoute.Sections[n].FreeSections + 1;
 					}
-				} else {
+				}
+				else
+				{
 					CurrentRoute.Sections[SectionIndex].FreeSections = -1;
 				}
 			}
 			// change aspect
-			if (newaspect == -1) {
-				if (CurrentRoute.Sections[SectionIndex].Type == SectionType.ValueBased) {
+			if (newaspect == -1)
+			{
+				if (CurrentRoute.Sections[SectionIndex].Type == SectionType.ValueBased)
+				{
 					// value-based
 					int n = CurrentRoute.Sections[SectionIndex].NextSection;
 					int a = CurrentRoute.Sections[SectionIndex].Aspects[CurrentRoute.Sections[SectionIndex].Aspects.Length - 1].Number;
-					if (n >= 0 && CurrentRoute.Sections[n].CurrentAspect >= 0) {
+					if (n >= 0 && CurrentRoute.Sections[n].CurrentAspect >= 0)
+					{
 						a = CurrentRoute.Sections[n].Aspects[CurrentRoute.Sections[n].CurrentAspect].Number;
 					}
-					for (int i = CurrentRoute.Sections[SectionIndex].Aspects.Length - 1; i >= 0; i--) {
-						if (CurrentRoute.Sections[SectionIndex].Aspects[i].Number > a) {
+					for (int i = CurrentRoute.Sections[SectionIndex].Aspects.Length - 1; i >= 0; i--)
+					{
+						if (CurrentRoute.Sections[SectionIndex].Aspects[i].Number > a)
+						{
 							newaspect = i;
 						}
-					} if (newaspect == -1) {
+					}
+					if (newaspect == -1)
+					{
 						newaspect = CurrentRoute.Sections[SectionIndex].Aspects.Length - 1;
 					}
-				} else {
+				}
+				else
+				{
 					// index-based
-					if (CurrentRoute.Sections[SectionIndex].FreeSections >= 0 & CurrentRoute.Sections[SectionIndex].FreeSections < CurrentRoute.Sections[SectionIndex].Aspects.Length) {
+					if (CurrentRoute.Sections[SectionIndex].FreeSections >= 0 & CurrentRoute.Sections[SectionIndex].FreeSections < CurrentRoute.Sections[SectionIndex].Aspects.Length)
+					{
 						newaspect = CurrentRoute.Sections[SectionIndex].FreeSections;
-					} else {
+					}
+					else
+					{
 						newaspect = CurrentRoute.Sections[SectionIndex].Aspects.Length - 1;
 					}
 				}
 			}
 			CurrentRoute.Sections[SectionIndex].CurrentAspect = newaspect;
 			// update previous section
-			if (CurrentRoute.Sections[SectionIndex].PreviousSection >= 0) {
+			if (CurrentRoute.Sections[SectionIndex].PreviousSection >= 0)
+			{
 				UpdateSection(CurrentRoute.Sections[SectionIndex].PreviousSection);
 			}
 		}
@@ -263,16 +316,21 @@ namespace OpenBve {
 
 		// marker
 		internal static Texture[] MarkerTextures = new Texture[] { };
-		internal static void AddMarker(Texture Texture) {
+		internal static void AddMarker(Texture Texture)
+		{
 			int n = MarkerTextures.Length;
 			Array.Resize<Texture>(ref MarkerTextures, n + 1);
 			MarkerTextures[n] = Texture;
 		}
-		internal static void RemoveMarker(Texture Texture) {
+		internal static void RemoveMarker(Texture Texture)
+		{
 			int n = MarkerTextures.Length;
-			for (int i = 0; i < n; i++) {
-				if (MarkerTextures[i] == Texture) {
-					for (int j = i; j < n - 1; j++) {
+			for (int i = 0; i < n; i++)
+			{
+				if (MarkerTextures[i] == Texture)
+				{
+					for (int j = i; j < n - 1; j++)
+					{
 						MarkerTextures[j] = MarkerTextures[j + 1];
 					}
 					Array.Resize<Texture>(ref MarkerTextures, n - 1);
@@ -284,7 +342,8 @@ namespace OpenBve {
 		// ================================
 
 		// points of interest
-		internal struct PointOfInterest {
+		internal struct PointOfInterest
+		{
 			internal double TrackPosition;
 			internal Vector3 TrackOffset;
 			internal double TrackYaw;
@@ -294,40 +353,54 @@ namespace OpenBve {
 		}
 		internal static PointOfInterest[] PointsOfInterest = new PointOfInterest[] { };
 
-		internal static bool ApplyPointOfInterest(int Value, bool Relative) {
+		internal static bool ApplyPointOfInterest(int Value, bool Relative)
+		{
 			double t = 0.0;
 			int j = -1;
-			if (Relative) {
+			if (Relative)
+			{
 				// relative
-				if (Value < 0) {
+				if (Value < 0)
+				{
 					// previous poi
 					t = double.NegativeInfinity;
-					for (int i = 0; i < PointsOfInterest.Length; i++) {
-						if (PointsOfInterest[i].TrackPosition < World.CameraTrackFollower.TrackPosition) {
-							if (PointsOfInterest[i].TrackPosition > t) {
-								t = PointsOfInterest[i].TrackPosition;
-								j = i;
-							}
-						}
-					}
-				} else if (Value > 0) {
-					// next poi
-					t = double.PositiveInfinity;
-					for (int i = 0; i < PointsOfInterest.Length; i++) {
-						if (PointsOfInterest[i].TrackPosition > World.CameraTrackFollower.TrackPosition) {
-							if (PointsOfInterest[i].TrackPosition < t) {
+					for (int i = 0; i < PointsOfInterest.Length; i++)
+					{
+						if (PointsOfInterest[i].TrackPosition < World.CameraTrackFollower.TrackPosition)
+						{
+							if (PointsOfInterest[i].TrackPosition > t)
+							{
 								t = PointsOfInterest[i].TrackPosition;
 								j = i;
 							}
 						}
 					}
 				}
-			} else {
+				else if (Value > 0)
+				{
+					// next poi
+					t = double.PositiveInfinity;
+					for (int i = 0; i < PointsOfInterest.Length; i++)
+					{
+						if (PointsOfInterest[i].TrackPosition > World.CameraTrackFollower.TrackPosition)
+						{
+							if (PointsOfInterest[i].TrackPosition < t)
+							{
+								t = PointsOfInterest[i].TrackPosition;
+								j = i;
+							}
+						}
+					}
+				}
+			}
+			else
+			{
 				// absolute
 				j = Value >= 0 & Value < PointsOfInterest.Length ? Value : -1;
 			}
 			// process poi
-			if (j >= 0) {
+			if (j >= 0)
+			{
 				TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, t, true, false);
 				Camera.CurrentAlignment.Position = PointsOfInterest[j].TrackOffset;
 				Camera.CurrentAlignment.Yaw = PointsOfInterest[j].TrackYaw;
@@ -336,7 +409,9 @@ namespace OpenBve {
 				Camera.CurrentAlignment.TrackPosition = t;
 				World.UpdateAbsoluteCamera(0.0);
 				return true;
-			} else {
+			}
+			else
+			{
 				return false;
 			}
 		}

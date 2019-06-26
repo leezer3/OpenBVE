@@ -39,7 +39,7 @@ namespace OpenBve
 					Car.FrontBogie.ChangeSection(-1);
 					Car.RearBogie.ChangeSection(-1);
 				}
-				Sounds.StopAllSounds(this);
+				Program.Sounds.StopAllSounds(this);
 			}
 
 			/// <summary>Call this method to update the train</summary>
@@ -73,7 +73,7 @@ namespace OpenBve
 								if (Cars[i].Sounds.Loop.Buffer != null)
 								{
 									Vector3 pos = Cars[i].Sounds.Loop.Position;
-									Cars[i].Sounds.Loop.Source = Sounds.PlaySound(Cars[i].Sounds.Loop.Buffer, 1.0, 1.0, pos, this, i, true);
+									Cars[i].Sounds.Loop.Source = Program.Sounds.PlaySound(Cars[i].Sounds.Loop.Buffer, 1.0, 1.0, pos, this, i, true);
 								}
 							}
 						}
@@ -87,14 +87,14 @@ namespace OpenBve
 					{
 						byte dnb;
 						{
-							float b = (float) (Cars[i].Brightness.NextTrackPosition - Cars[i].Brightness.PreviousTrackPosition);
+							float b = (float)(Cars[i].Brightness.NextTrackPosition - Cars[i].Brightness.PreviousTrackPosition);
 
 							//1.0f represents a route brightness value of 255
 							//0.0f represents a route brightness value of 0
 
 							if (b != 0.0f)
 							{
-								b = (float) (Cars[i].FrontAxle.Follower.TrackPosition - Cars[i].Brightness.PreviousTrackPosition) / b;
+								b = (float)(Cars[i].FrontAxle.Follower.TrackPosition - Cars[i].Brightness.PreviousTrackPosition) / b;
 								if (b < 0.0f) b = 0.0f;
 								if (b > 1.0f) b = 1.0f;
 								b = Cars[i].Brightness.PreviousBrightness * (1.0f - b) + Cars[i].Brightness.NextBrightness * b;
@@ -105,9 +105,9 @@ namespace OpenBve
 							}
 
 							//Calculate the cab brightness
-							double ccb = Math.Round(255.0 * (double) (1.0 - b));
+							double ccb = Math.Round(255.0 * (double)(1.0 - b));
 							//DNB then must equal the smaller of the cab brightness value & the dynamic brightness value
-							dnb = (byte) Math.Min(LibRender.Renderer.DynamicCabBrightness, ccb);
+							dnb = (byte)Math.Min(LibRender.Renderer.DynamicCabBrightness, ccb);
 						}
 						int cs = Cars[i].CurrentCarSection;
 						if (cs >= 0 && Cars[i].CarSections.Length > 0 && Cars[i].CarSections.Length >= cs)

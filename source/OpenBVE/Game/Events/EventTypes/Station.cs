@@ -1,6 +1,7 @@
 ﻿using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Routes;
+using SoundManager;
 
 namespace OpenBve
 {
@@ -12,7 +13,7 @@ namespace OpenBve
 			internal StationPassAlarmEvent(double TrackPositionDelta)
 			{
 				this.TrackPositionDelta = TrackPositionDelta;
-				this.DontTriggerAnymore = false;
+				DontTriggerAnymore = false;
 			}
 			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
 			{
@@ -21,25 +22,25 @@ namespace OpenBve
 					if (Direction > 0) //FIXME: This only works for routes written in the forwards direction
 					{
 						int d = Train.DriverCar;
-						Sounds.SoundBuffer buffer = Train.Cars[d].Sounds.Halt.Buffer;
+						SoundsBase.SoundBuffer buffer = Train.Cars[d].Sounds.Halt.Buffer;
 						if (buffer != null)
 						{
 							OpenBveApi.Math.Vector3 pos = Train.Cars[d].Sounds.Halt.Position;
 							if (Train.Specs.PassAlarm == TrainManager.PassAlarmType.Single)
 							{
-								Train.Cars[d].Sounds.Halt.Source = Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, d, false);
+								Train.Cars[d].Sounds.Halt.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, d, false);
 							}
 							else if (Train.Specs.PassAlarm == TrainManager.PassAlarmType.Loop)
 							{
-								Train.Cars[d].Sounds.Halt.Source = Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, d, true);
+								Train.Cars[d].Sounds.Halt.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, d, true);
 							}
 						}
-						this.DontTriggerAnymore = true;
+						DontTriggerAnymore = true;
 					}
 				}
 			}
 		}
-		
+
 		/// <summary>Placed at the start of every station</summary>
 		internal class StationStartEvent : GeneralEvent<TrainManager.Train>
 		{
@@ -49,7 +50,7 @@ namespace OpenBve
 			internal StationStartEvent(double TrackPositionDelta, int StationIndex)
 			{
 				this.TrackPositionDelta = TrackPositionDelta;
-				this.DontTriggerAnymore = false;
+				DontTriggerAnymore = false;
 				this.StationIndex = StationIndex;
 			}
 			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
@@ -77,12 +78,12 @@ namespace OpenBve
 						{
 							Train.StationState = TrainManager.TrainStopState.Pending;
 						}
-						Train.LastStation = this.StationIndex;
+						Train.LastStation = StationIndex;
 					}
 				}
 			}
 		}
-		
+
 		/// <summary>Placed at the end of every station (as defined by the last possible stop point)</summary>
 		internal class StationEndEvent : GeneralEvent<TrainManager.Train>
 		{
@@ -92,7 +93,7 @@ namespace OpenBve
 			internal StationEndEvent(double TrackPositionDelta, int StationIndex)
 			{
 				this.TrackPositionDelta = TrackPositionDelta;
-				this.DontTriggerAnymore = false;
+				DontTriggerAnymore = false;
 				this.StationIndex = StationIndex;
 			}
 			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
@@ -103,7 +104,7 @@ namespace OpenBve
 					{
 						if (Train == TrainManager.PlayerTrain)
 						{
-							Timetable.UpdateCustomTimetable(Game.Stations[this.StationIndex].TimetableDaytimeTexture, Game.Stations[this.StationIndex].TimetableNighttimeTexture);
+							Timetable.UpdateCustomTimetable(Game.Stations[StationIndex].TimetableDaytimeTexture, Game.Stations[StationIndex].TimetableNighttimeTexture);
 						}
 					}
 				}
@@ -111,10 +112,10 @@ namespace OpenBve
 				{
 					if (Direction < 0)
 					{
-						Train.Station = this.StationIndex;
+						Train.Station = StationIndex;
 						if (Train.NextStopSkipped != TrainManager.StopSkipMode.None)
 						{
-							Train.LastStation = this.StationIndex;
+							Train.LastStation = StationIndex;
 						}
 						Train.NextStopSkipped = TrainManager.StopSkipMode.None;
 					}
@@ -142,9 +143,9 @@ namespace OpenBve
 							{
 								Train.StationState = TrainManager.TrainStopState.Pending;
 							}
-							
+
 							int d = Train.DriverCar;
-							Sounds.StopSound(Train.Cars[d].Sounds.Halt.Source);
+							Program.Sounds.StopSound(Train.Cars[d].Sounds.Halt.Source);
 						}
 					}
 				}

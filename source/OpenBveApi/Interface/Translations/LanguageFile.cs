@@ -3,44 +3,54 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace OpenBveApi.Interface {
-	public static partial class Translations {
+namespace OpenBveApi.Interface
+{
+	public static partial class Translations
+	{
 
 		/// <summary>Loads all available language files from the specificed folder</summary>
-        public static void LoadLanguageFiles(string LanguageFolder) {
+		public static void LoadLanguageFiles(string LanguageFolder)
+		{
 			if (!Directory.Exists(LanguageFolder))
 			{
 				MessageBox.Show(@"The default language files have been moved or deleted.");
 				LoadEmbeddedLanguage();
 				return;
 			}
-            try {
-                string[] LanguageFiles = Directory.GetFiles(LanguageFolder, "*.cfg");
-	            if (LanguageFiles.Length == 0)
-	            {
-		            MessageBox.Show(@"No valid language files were found.");
+			try
+			{
+				string[] LanguageFiles = Directory.GetFiles(LanguageFolder, "*.xlf");
+				if (LanguageFiles.Length == 0)
+				{
+					MessageBox.Show(@"No valid language files were found.");
 					LoadEmbeddedLanguage();
-		            return;
-	            }
-                foreach (var File in LanguageFiles) {
-	                try
-	                {
-		                Language l = new Language(File);
-		                AvailableLanguages.Add(l);
-	                }
-	                catch { }
-                }
-            } catch {
-                MessageBox.Show(@"An error occured whilst attempting to load the default language files.");
-	            LoadEmbeddedLanguage();
-            }
-        }
+					return;
+				}
+				foreach (string File in LanguageFiles)
+				{
+					try
+					{
+						using (FileStream stream = new FileStream(File, FileMode.Open, FileAccess.Read))
+						{
+							Language l = new Language(stream, System.IO.Path.GetFileNameWithoutExtension(File));
+							AvailableLanguages.Add(l);
+						}
+					}
+					catch { }
+				}
+			}
+			catch
+			{
+				MessageBox.Show(@"An error occured whilst attempting to load the default language files.");
+				LoadEmbeddedLanguage();
+			}
+		}
 
 		/// <summary>Loads the embedded default language</summary>
 		private static void LoadEmbeddedLanguage()
 		{
-			var thisAssembly = Assembly.GetExecutingAssembly();
-			using (var stream = thisAssembly.GetManifestResourceStream("OpenBveApi.en-US.cfg"))
+			Assembly thisAssembly = Assembly.GetExecutingAssembly();
+			using (Stream stream = thisAssembly.GetManifestResourceStream("OpenBveApi.en-US.xlf"))
 			{
 				Language l = new Language(stream, "en-US");
 				AvailableLanguages.Add(l);
@@ -50,10 +60,11 @@ namespace OpenBveApi.Interface {
 
 		/// <summary>Populates a list of languages in a combobox</summary>
 		/// <param name="comboboxLanguages">The combobox to populate</param>
-        public static void ListLanguages(ComboBox comboboxLanguages) {
-            comboboxLanguages.Items.Clear();
-            //Load all available languages
-	        int idx = -1;
+		public static void ListLanguages(ComboBox comboboxLanguages)
+		{
+			comboboxLanguages.Items.Clear();
+			//Load all available languages
+			int idx = -1;
 			for (int i = 0; i < AvailableLanguages.Count; i++)
 			{
 				comboboxLanguages.Items.Add(AvailableLanguages[i]);
@@ -75,7 +86,7 @@ namespace OpenBveApi.Interface {
 		/// <param name="comboboxLanguages">A reference to the combobox used to select the UI language</param>
 		/// <param name="pictureboxLanguage">A reference to the picturebox in which to display the flag</param>
 		/// <returns>True if we have found and successfully loaded the flag image</returns>
-        public static bool SelectedLanguage(string FlagFolder, ref string CurrentLanguageCodeArgument, ComboBox comboboxLanguages, PictureBox pictureboxLanguage)
+		public static bool SelectedLanguage(string FlagFolder, ref string CurrentLanguageCodeArgument, ComboBox comboboxLanguages, PictureBox pictureboxLanguage)
 		{
 			int i = comboboxLanguages.SelectedIndex;
 			if (i != -1)
@@ -88,27 +99,33 @@ namespace OpenBveApi.Interface {
 				CurrentLanguageCode = l.LanguageCode;
 				CurrentLanguageCodeArgument = l.LanguageCode;
 				string File = Path.CombineFile(FlagFolder, l.Flag);
-				if (!System.IO.File.Exists(File)) {
+				if (!System.IO.File.Exists(File))
+				{
 					File = Path.CombineFile(FlagFolder, "unknown.png");
 				}
-				if (System.IO.File.Exists(File)) {
-					using (var fs = new System.IO.FileStream(File, System.IO.FileMode.Open, System.IO.FileAccess.Read)) {
+				if (System.IO.File.Exists(File))
+				{
+					using (FileStream fs = new System.IO.FileStream(File, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+					{
 						pictureboxLanguage.Image = System.Drawing.Image.FromStream(fs);
 					}
-				} else {
+				}
+				else
+				{
 					pictureboxLanguage.Image = null;
 				}
 				return true;
 			}
-            return false;
-        }
+			return false;
+		}
 
 		/// <summary>Selects a language</summary>
 		/// <param name="CurrentLanguageCodeArgument">The language code to select</param>
 		/// <param name="comboboxLanguages">A reference to the combobox used to select the UI language</param>
 		/// <returns>True if the language was found and selected successfully</returns>
-        public static bool SelectedLanguage(ref string CurrentLanguageCodeArgument, ComboBox comboboxLanguages) {
-            int i = comboboxLanguages.SelectedIndex;
+		public static bool SelectedLanguage(ref string CurrentLanguageCodeArgument, ComboBox comboboxLanguages)
+		{
+			int i = comboboxLanguages.SelectedIndex;
 			if (i != -1)
 			{
 				Language l = comboboxLanguages.Items[i] as Language;
@@ -120,11 +137,11 @@ namespace OpenBveApi.Interface {
 				CurrentLanguageCodeArgument = l.LanguageCode;
 				return true;
 			}
-            return false;
-        }
+			return false;
+		}
 
 		private static readonly List<Language> AvailableLanguages = new List<Language>();
 
-	    
-    }
+
+	}
 }

@@ -26,6 +26,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>None</DebugType>
@@ -37,6 +38,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <DebugSymbols>false</DebugSymbols>
+    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
@@ -61,7 +63,6 @@
       <HintPath>..\..\dependencies\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -91,10 +92,7 @@
     <Compile Include="Parsers\Ls3DGrpParser.cs" />
     <Compile Include="Parsers\Ls3DObjectParser.cs" />
     <Compile Include="RendererR.cs" />
-    <Compile Include="Audio\Sounds.Convert.cs" />
     <Compile Include="Audio\Sounds.cs" />
-    <Compile Include="Audio\Sounds.SoundBuffer.cs" />
-    <Compile Include="Audio\Sounds.SoundSource.cs" />
     <Compile Include="Audio\Sounds.Update.cs" />
     <Compile Include="System\Functions\Plugins.cs" />
     <Compile Include="System\Gamewindow.cs" />
@@ -149,6 +147,10 @@
     <ProjectReference Include="..\RouteManager\RouteManager.csproj">
       <Project>{87838364-8911-46b2-8628-d437c485d9c9}</Project>
       <Name>RouteManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SoundManager\SoundManager.csproj">
+      <Project>{90abfa0c-abca-444e-adef-9a299aed6524}</Project>
+      <Name>SoundManager</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

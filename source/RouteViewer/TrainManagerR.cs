@@ -7,58 +7,74 @@
 
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
+using SoundManager;
 
-namespace OpenBve {
+namespace OpenBve
+{
 	using System;
 
-	internal static class TrainManager {
+	internal static class TrainManager
+	{
 
-// Silence the absurd amount of unused variable warnings
+		// Silence the absurd amount of unused variable warnings
 #pragma warning disable 0649
 
 		// structures
-		internal struct Axle {
+		internal struct Axle
+		{
 			internal TrackManager.TrackFollower Follower;
 		}
-		internal struct Section { }
+		internal struct Section
+		{
+		}
 
 		// cars
-		internal struct Door {
+		internal struct Door
+		{
 			internal int Direction;
 			internal double State;
 		}
-		internal struct AccelerationCurve {
+		internal struct AccelerationCurve
+		{
 			internal double StageZeroAcceleration;
 			internal double StageOneSpeed;
 			internal double StageOneAcceleration;
 			internal double StageTwoSpeed;
 			internal double StageTwoExponent;
 		}
-		internal enum CarBrakeType {
+		internal enum CarBrakeType
+		{
 			ElectromagneticStraightAirBrake = 0,
 			ElectricCommandBrake = 1,
 			AutomaticAirBrake = 2
 		}
-		internal enum EletropneumaticBrakeType {
+		internal enum EletropneumaticBrakeType
+		{
 			None = 0,
 			ClosingElectromagneticValve = 1,
 			DelayFillingControl = 2
 		}
-		internal enum AirBrakeHandleState {
+		internal enum AirBrakeHandleState
+		{
 			Invalid = -1,
 			Release = 0,
 			Lap = 1,
 			Service = 2,
 		}
-		internal struct AirBrakeHandle {
+		internal struct AirBrakeHandle
+		{
 			internal AirBrakeHandleState Driver;
 			internal AirBrakeHandleState Security;
 			internal AirBrakeHandleState Actual;
 			internal AirBrakeHandleState DelayedValue;
 			internal double DelayedTime;
 		}
-		internal enum AirBrakeType { Main, Auxillary }
-		internal struct CarAirBrake {
+		internal enum AirBrakeType
+		{
+			Main, Auxillary
+		}
+		internal struct CarAirBrake
+		{
 			internal AirBrakeType Type;
 			internal bool AirCompressorEnabled;
 			internal double AirCompressorMinimumPressure;
@@ -94,17 +110,20 @@ namespace OpenBve {
 			internal double StraightAirPipeServiceRate;
 			internal double StraightAirPipeEmergencyRate;
 		}
-		internal struct CarHoldBrake {
+		internal struct CarHoldBrake
+		{
 			internal double CurrentAccelerationOutput;
 			internal double NextUpdateTime;
 			internal double UpdateInterval;
 		}
-		internal struct CarConstSpeed {
+		internal struct CarConstSpeed
+		{
 			internal double CurrentAccelerationOutput;
 			internal double NextUpdateTime;
 			internal double UpdateInterval;
 		}
-		internal struct CarReAdhesionDevice {
+		internal struct CarReAdhesionDevice
+		{
 			internal double UpdateInterval;
 			internal double ApplicationFactor;
 			internal double ReleaseInterval;
@@ -113,7 +132,8 @@ namespace OpenBve {
 			internal double NextUpdateTime;
 			internal double TimeStable;
 		}
-		internal struct CarSpecs {
+		internal struct CarSpecs
+		{
 			internal bool IsMotorCar;
 			internal AccelerationCurve[] AccelerationCurves;
 			internal double AccelerationCurvesMultiplier;
@@ -153,35 +173,41 @@ namespace OpenBve {
 			internal double CurrentPitchDueToAccelerationTrackPosition;
 			internal double CurrentPitchDueToAccelerationSpeed;
 		}
-		internal struct CarBrightness {
+		internal struct CarBrightness
+		{
 			internal float PreviousBrightness;
 			internal double PreviousTrackPosition;
 			internal float NextBrightness;
 			internal double NextTrackPosition;
 		}
-		internal struct Horn {
+		internal struct Horn
+		{
 			internal CarSound Sound;
 			internal bool Loop;
 		}
-		internal struct CarSound {
+		internal struct CarSound
+		{
 			/// <summary>The sound buffer to play</summary>
-			internal Sounds.SoundBuffer Buffer;
+			internal SoundsBase.SoundBuffer Buffer;
 			/// <summary>The source of the sound within the car</summary>
-			internal Sounds.SoundSource Source;
+			internal SoundsBase.SoundSource Source;
 			/// <summary>A Vector3 describing the position of the sound source</summary>
 			internal Vector3 Position;
 		}
-		internal struct MotorSoundTableEntry {
+		internal struct MotorSoundTableEntry
+		{
 			internal int SoundBufferIndex;
 			internal float Pitch;
 			internal float Gain;
 		}
-		internal struct MotorSoundTable {
+		internal struct MotorSoundTable
+		{
 			internal MotorSoundTableEntry[] Entries;
 			internal int SoundBufferIndex;
 			internal int SoundSourceIndex;
 		}
-		internal struct MotorSound {
+		internal struct MotorSound
+		{
 			internal MotorSoundTable[] Tables;
 			internal Vector3 Position;
 			internal double SpeedConversionFactor;
@@ -191,7 +217,8 @@ namespace OpenBve {
 			internal const int MotorB1 = 2;
 			internal const int MotorB2 = 3;
 		}
-		internal struct CarSounds {
+		internal struct CarSounds
+		{
 			internal MotorSound Motor;
 			internal CarSound Adjust;
 			internal CarSound Air;
@@ -246,7 +273,8 @@ namespace OpenBve {
 			internal double FlangePitch;
 			internal double SpringPlayedAngle;
 		}
-		internal class Car : AbstractCar {
+		internal class Car : AbstractCar
+		{
 			internal Axle FrontAxle;
 			internal Axle RearAxle;
 			internal double FrontAxlePosition;
@@ -290,38 +318,45 @@ namespace OpenBve {
 		}
 
 		// train
-		internal struct HandleChange {
+		internal struct HandleChange
+		{
 			internal int Value;
 			internal double Time;
 		}
-		internal struct PowerHandle {
+		internal struct PowerHandle
+		{
 			internal int Driver;
 			internal int Security;
 			internal int Actual;
 			internal HandleChange[] DelayedChanges;
 		}
-		internal struct BrakeHandle {
+		internal struct BrakeHandle
+		{
 			internal int Driver;
 			internal int Security;
 			internal int Actual;
 			internal HandleChange[] DelayedChanges;
 		}
-		internal struct EmergencyHandle {
+		internal struct EmergencyHandle
+		{
 			internal bool Driver;
 			internal bool Security;
 			internal bool Actual;
 			internal double ApplicationTime;
 		}
-		internal struct ReverserHandle {
+		internal struct ReverserHandle
+		{
 			internal int Driver;
 			internal int Actual;
 		}
-		internal struct HoldBrakeHandle {
+		internal struct HoldBrakeHandle
+		{
 			internal bool Driver;
 			internal bool Actual;
 		}
 		// train security
-		internal enum SafetyState {
+		internal enum SafetyState
+		{
 			Normal = 0,
 			Initialization = 1,
 			Ringing = 2,
@@ -329,14 +364,16 @@ namespace OpenBve {
 			Pattern = 4,
 			Service = 5
 		}
-		internal enum SafetySystem {
+		internal enum SafetySystem
+		{
 			Plugin = -1,
 			None = 0,
 			AtsSn = 1,
 			AtsP = 2,
 			Atc = 3
 		}
-		internal struct Ats {
+		internal struct Ats
+		{
 			internal double Time;
 			internal bool AtsPAvailable;
 			internal double AtsPDistance;
@@ -345,36 +382,42 @@ namespace OpenBve {
 			internal bool AtsPOverride;
 			internal double AtsPOverrideTime;
 		}
-		internal struct Atc {
+		internal struct Atc
+		{
 			internal bool Available;
 			internal bool Transmitting;
 			internal bool AutomaticSwitch;
 			internal double SpeedRestriction;
 		}
-		internal struct Eb {
+		internal struct Eb
+		{
 			internal bool Available;
 			internal SafetyState BellState;
 			internal double Time;
 			internal bool Reset;
 		}
-		internal struct TrainPendingTransponder {
+		internal struct TrainPendingTransponder
+		{
 			internal TrackManager.TransponderType Type;
 			internal bool SwitchSubsystem;
 			internal int OptionalInteger;
 			internal double OptionalFloat;
 			internal int SectionIndex;
 		}
-		
+
 		// train specs
-		internal enum PassAlarmType {
+		internal enum PassAlarmType
+		{
 			None = 0,
 			Single = 1,
 			Loop = 2
 		}
-		internal struct TrainAirBrake {
+		internal struct TrainAirBrake
+		{
 			internal AirBrakeHandle Handle;
 		}
-		internal struct TrainSpecs {
+		internal struct TrainSpecs
+		{
 			internal ReverserHandle CurrentReverser;
 			internal int MaximumPowerNotch;
 			internal PowerHandle CurrentPowerNotch;
@@ -388,10 +431,12 @@ namespace OpenBve {
 			internal TrainAirBrake AirBrake;
 		}
 		// train
-		internal enum TrainStopState {
+		internal enum TrainStopState
+		{
 			Pending = 0, Boarding = 1, Completed = 2
 		}
-		internal class Train : AbstractTrain {
+		internal class Train : AbstractTrain
+		{
 			internal Car[] Cars;
 			internal TrainSpecs Specs;
 

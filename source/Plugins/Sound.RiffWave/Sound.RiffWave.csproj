@@ -43,16 +43,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <OutputPath>..\..\..\bin_debug\Data\Plugins\</OutputPath>
     <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>..\..\..\bin_release\Data\Plugins\</OutputPath>
     <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Reference Include="NAudio, Version=1.8.4.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\dependencies\NAudio.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NLayer">
+      <HintPath>..\..\..\dependencies\NLayer.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NLayer.NAudioSupport">
+      <HintPath>..\..\..\dependencies\NLayer.NAudioSupport.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />

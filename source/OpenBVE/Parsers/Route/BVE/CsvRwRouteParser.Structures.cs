@@ -1,7 +1,7 @@
 ﻿using OpenBve.RouteManager;
-using OpenBveApi.Objects;
 using OpenBve.SignalManager;
 using OpenBveApi.Math;
+using SoundManager;
 
 namespace OpenBve
 {
@@ -127,12 +127,15 @@ namespace OpenBve
 			internal TrackManager.RequestStop Late;
 			internal bool FullSpeed;
 		}
-		private enum SoundType { World, TrainStatic, TrainDynamic }
+		private enum SoundType
+		{
+			World, TrainStatic, TrainDynamic
+		}
 
 		private struct Sound
 		{
 			internal double TrackPosition;
-			internal Sounds.SoundBuffer SoundBuffer;
+			internal SoundsBase.SoundBuffer SoundBuffer;
 			internal SoundType Type;
 			internal Vector2 Position;
 			//TODO:
@@ -184,10 +187,11 @@ namespace OpenBve
 			internal double Roll;
 			internal string Text;
 		}
-		private struct RailCycle {
-            internal int RailCycleIndex;
-            internal int CurrentCycle;
-        }
+		private struct RailCycle
+		{
+			internal int RailCycleIndex;
+			internal int CurrentCycle;
+		}
 		private class Block
 		{
 			internal int Background;

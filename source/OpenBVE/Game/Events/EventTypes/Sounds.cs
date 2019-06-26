@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
+using SoundManager;
 
 namespace OpenBve
 {
@@ -10,7 +11,7 @@ namespace OpenBve
 		internal class SoundEvent : GeneralEvent<TrainManager.Train>
 		{
 			/// <summary>The sound buffer to play</summary>
-			private readonly Sounds.SoundBuffer SoundBuffer;
+			private readonly SoundsBase.SoundBuffer SoundBuffer;
 			/// <summary>Whether this sound is triggered by the player train only, or all trains</summary>
 			private readonly bool PlayerTrainOnly;
 			/// <summary>Whether this sound should play once, or repeat if triggered again</summary>
@@ -29,10 +30,10 @@ namespace OpenBve
 			/// <param name="Dynamic">Whether this sound is dynamic (Attached to a train)</param>
 			/// <param name="Position">The position of the sound relative to it's track location</param>
 			/// <param name="Speed">The speed in km/h at which this sound is played at it's original pitch (Set to zero to play at original pitch at all times)</param>
-			internal SoundEvent(double TrackPositionDelta, Sounds.SoundBuffer SoundBuffer, bool PlayerTrainOnly, bool Once, bool Dynamic, Vector3 Position, double Speed)
+			internal SoundEvent(double TrackPositionDelta, SoundsBase.SoundBuffer SoundBuffer, bool PlayerTrainOnly, bool Once, bool Dynamic, Vector3 Position, double Speed)
 			{
 				this.TrackPositionDelta = TrackPositionDelta;
-				this.DontTriggerAnymore = false;
+				DontTriggerAnymore = false;
 				this.SoundBuffer = SoundBuffer;
 				this.PlayerTrainOnly = PlayerTrainOnly;
 				this.Once = Once;
@@ -53,16 +54,16 @@ namespace OpenBve
 				{
 					if (!PlayerTrainOnly | Train == TrainManager.PlayerTrain)
 					{
-						Vector3 p = this.Position;
+						Vector3 p = Position;
 						double pitch = 1.0;
 						double gain = 1.0;
-						Sounds.SoundBuffer buffer = this.SoundBuffer;
+						SoundsBase.SoundBuffer buffer = SoundBuffer;
 						if (buffer != null)
 						{
-							if (this.Dynamic)
+							if (Dynamic)
 							{
 								double spd = Math.Abs(Train.CurrentSpeed);
-								pitch = spd / this.Speed;
+								pitch = spd / Speed;
 								gain = pitch < 0.5 ? 2.0 * pitch : 1.0;
 								if (pitch < 0.2 | gain < 0.2)
 								{
@@ -71,10 +72,10 @@ namespace OpenBve
 							}
 							if (buffer != null)
 							{
-								Sounds.PlaySound(buffer, pitch, gain, p, Train, CarIndex, false);
+								Program.Sounds.PlaySound(buffer, pitch, gain, p, Train, CarIndex, false);
 							}
 						}
-						this.DontTriggerAnymore = this.Once;
+						DontTriggerAnymore = Once;
 					}
 				}
 			}
@@ -87,7 +88,7 @@ namespace OpenBve
 			/// <param name="Speed">The speed in km/h at which this sound is played at it's original pitch (Set to zero to play at original pitch at all times)</param>
 			internal PointSoundEvent(double Speed)
 			{
-				this.DontTriggerAnymore = false;
+				DontTriggerAnymore = false;
 				this.Speed = Speed;
 			}
 
@@ -102,7 +103,7 @@ namespace OpenBve
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle | TriggerType == EventTriggerType.OtherCarRearAxle | TriggerType == EventTriggerType.RearCarRearAxle)
 				{
 					Vector3 p;
-					Sounds.SoundBuffer buffer;
+					SoundsBase.SoundBuffer buffer;
 					if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle)
 					{
 						if (Train.CurrentSpeed <= 0.0) return;
@@ -113,7 +114,7 @@ namespace OpenBve
 							return;
 						}
 						if (bufferIndex > Train.Cars[CarIndex].FrontAxle.PointSounds.Length - 1
-						    || Train.Cars[CarIndex].FrontAxle.PointSounds[bufferIndex].Buffer == null)
+							|| Train.Cars[CarIndex].FrontAxle.PointSounds[bufferIndex].Buffer == null)
 						{
 							//If the switch sound does not exist, return zero
 							//Required to handle legacy trains which don't have idx specific run sounds defined
@@ -125,13 +126,13 @@ namespace OpenBve
 					else
 					{
 						return; // HACK: Don't trigger sound for the rear axles
-						//buffer = Train.Cars[CarIndex].RearAxle.PointSounds.Buffer;
-						//p = Train.Cars[CarIndex].RearAxle.PointSounds.Position;
+								//buffer = Train.Cars[CarIndex].RearAxle.PointSounds.Buffer;
+								//p = Train.Cars[CarIndex].RearAxle.PointSounds.Position;
 					}
 					if (buffer != null)
 					{
 						double spd = Math.Abs(Train.CurrentSpeed);
-						double pitch = spd / this.Speed;
+						double pitch = spd / Speed;
 						double gain = pitch < 0.5 ? 2.0 * pitch : 1.0;
 						if (pitch < 0.2 | gain < 0.2)
 						{
@@ -139,10 +140,10 @@ namespace OpenBve
 						}
 						if (buffer != null)
 						{
-							Sounds.PlaySound(buffer, pitch, gain, p, Train, CarIndex, false);
+							Program.Sounds.PlaySound(buffer, pitch, gain, p, Train, CarIndex, false);
 						}
 					}
-					this.DontTriggerAnymore = false;
+					DontTriggerAnymore = false;
 				}
 			}
 		}
@@ -157,7 +158,7 @@ namespace OpenBve
 			internal RailSoundsChangeEvent(double TrackPositionDelta, int PreviousRunIndex, int PreviousFlangeIndex, int NextRunIndex, int NextFlangeIndex)
 			{
 				this.TrackPositionDelta = TrackPositionDelta;
-				this.DontTriggerAnymore = false;
+				DontTriggerAnymore = false;
 				this.PreviousRunIndex = PreviousRunIndex;
 				this.PreviousFlangeIndex = PreviousFlangeIndex;
 				this.NextRunIndex = NextRunIndex;
@@ -174,26 +175,26 @@ namespace OpenBve
 				{
 					if (Direction < 0)
 					{
-						Train.Cars[CarIndex].FrontAxle.RunIndex = this.PreviousRunIndex;
-						Train.Cars[CarIndex].FrontAxle.FlangeIndex = this.PreviousFlangeIndex;
+						Train.Cars[CarIndex].FrontAxle.RunIndex = PreviousRunIndex;
+						Train.Cars[CarIndex].FrontAxle.FlangeIndex = PreviousFlangeIndex;
 					}
 					else if (Direction > 0)
 					{
-						Train.Cars[CarIndex].FrontAxle.RunIndex = this.NextRunIndex;
-						Train.Cars[CarIndex].FrontAxle.FlangeIndex = this.NextFlangeIndex;
+						Train.Cars[CarIndex].FrontAxle.RunIndex = NextRunIndex;
+						Train.Cars[CarIndex].FrontAxle.FlangeIndex = NextFlangeIndex;
 					}
 				}
 				else if (TriggerType == EventTriggerType.RearCarRearAxle | TriggerType == EventTriggerType.OtherCarRearAxle)
 				{
 					if (Direction < 0)
 					{
-						Train.Cars[CarIndex].RearAxle.RunIndex = this.PreviousRunIndex;
-						Train.Cars[CarIndex].RearAxle.FlangeIndex = this.PreviousFlangeIndex;
+						Train.Cars[CarIndex].RearAxle.RunIndex = PreviousRunIndex;
+						Train.Cars[CarIndex].RearAxle.FlangeIndex = PreviousFlangeIndex;
 					}
 					else if (Direction > 0)
 					{
-						Train.Cars[CarIndex].RearAxle.RunIndex = this.NextRunIndex;
-						Train.Cars[CarIndex].RearAxle.FlangeIndex = this.NextFlangeIndex;
+						Train.Cars[CarIndex].RearAxle.RunIndex = NextRunIndex;
+						Train.Cars[CarIndex].RearAxle.FlangeIndex = NextFlangeIndex;
 					}
 				}
 			}

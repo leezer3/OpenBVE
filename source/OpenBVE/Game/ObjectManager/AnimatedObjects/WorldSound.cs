@@ -5,6 +5,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
+using SoundManager;
 
 namespace OpenBve
 {
@@ -15,9 +16,9 @@ namespace OpenBve
 		internal class WorldSound : WorldObject
 		{
 			/// <summary>The sound buffer to play</summary>
-			internal Sounds.SoundBuffer Buffer;
+			internal SoundsBase.SoundBuffer Buffer;
 			/// <summary>The sound source for this file</summary>
-			internal Sounds.SoundSource Source;
+			internal SoundsBase.SoundSource Source;
 			/// <summary>The pitch to play the sound at</summary>
 			internal double currentPitch = 1.0;
 			/// <summary>The volume to play the sound at it's origin</summary>
@@ -38,20 +39,20 @@ namespace OpenBve
 				int a = AnimatedWorldObjectsUsed;
 				if (a >= AnimatedWorldObjects.Length)
 				{
-					Array.Resize<WorldObject>(ref AnimatedWorldObjects, AnimatedWorldObjects.Length << 1);
+					Array.Resize(ref AnimatedWorldObjects, AnimatedWorldObjects.Length << 1);
 				}
 				WorldSound snd = new WorldSound
 				{
-					Buffer = this.Buffer,
+					Buffer = Buffer,
 					//Must clone the vector, not pass the reference
 					Position = new Vector3(position),
-					Follower =  new TrackManager.TrackFollower(),
+					Follower = new TrackManager.TrackFollower(),
 					currentTrackPosition = trackPosition
 				};
 				snd.Follower.Update(trackPosition, true, true);
-				if (this.TrackFollowerFunction != null)
+				if (TrackFollowerFunction != null)
 				{
-					snd.TrackFollowerFunction = this.TrackFollowerFunction.Clone();
+					snd.TrackFollowerFunction = TrackFollowerFunction.Clone();
 				}
 				AnimatedWorldObjects[a] = snd;
 				AnimatedWorldObjectsUsed++;
@@ -80,13 +81,13 @@ namespace OpenBve
 						if (TrainManager.Trains[j].State == TrainState.Available)
 						{
 							double distance;
-							if (TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition < this.Follower.TrackPosition)
+							if (TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition < Follower.TrackPosition)
 							{
-								distance = this.Follower.TrackPosition - TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition;
+								distance = Follower.TrackPosition - TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition;
 							}
-							else if (TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition > this.Follower.TrackPosition)
+							else if (TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition > Follower.TrackPosition)
 							{
-								distance = TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition - this.Follower.TrackPosition;
+								distance = TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition - Follower.TrackPosition;
 							}
 							else
 							{
@@ -99,40 +100,40 @@ namespace OpenBve
 							}
 						}
 					}
-					if (this.TrackFollowerFunction != null)
+					if (TrackFollowerFunction != null)
 					{
 
-						double delta = this.TrackFollowerFunction.Perform(train, train == null ? 0 : train.DriverCar, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
-						this.Follower.Update(this.currentTrackPosition + delta, true, true);
-						this.Follower.UpdateWorldCoordinates(false);
+						double delta = TrackFollowerFunction.Perform(train, train == null ? 0 : train.DriverCar, Position, Follower.TrackPosition, 0, false, TimeElapsed, 0);
+						Follower.Update(currentTrackPosition + delta, true, true);
+						Follower.UpdateWorldCoordinates(false);
 					}
-					if (this.VolumeFunction != null)
+					if (VolumeFunction != null)
 					{
-						this.currentVolume = this.VolumeFunction.Perform(train, train == null ? 0 : train.DriverCar, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
+						currentVolume = VolumeFunction.Perform(train, train == null ? 0 : train.DriverCar, Position, Follower.TrackPosition, 0, false, TimeElapsed, 0);
 					}
-					if (this.PitchFunction != null)
+					if (PitchFunction != null)
 					{
-						this.currentPitch = this.PitchFunction.Perform(train, train == null ? 0 : train.DriverCar, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
+						currentPitch = PitchFunction.Perform(train, train == null ? 0 : train.DriverCar, Position, Follower.TrackPosition, 0, false, TimeElapsed, 0);
 					}
-					if (this.Source != null)
+					if (Source != null)
 					{
-						this.Source.Pitch = this.currentPitch;
-						this.Source.Volume = this.currentVolume;
+						Source.Pitch = currentPitch;
+						Source.Volume = currentVolume;
 					}
 					//Buffer should never be null, but check it anyways
-					if (!Sounds.IsPlaying(Source) && this.Buffer != null)
+					if (!Program.Sounds.IsPlaying(Source) && Buffer != null)
 					{
-						Source = Sounds.PlaySound(Buffer, 1.0, 1.0, Follower.WorldPosition + Position, this, true);
+						Source = Program.Sounds.PlaySound(Buffer, 1.0, 1.0, Follower.WorldPosition + Position, this, true);
 					}
 				}
 				else
 				{
-					if (Sounds.IsPlaying(Source))
+					if (Program.Sounds.IsPlaying(Source))
 					{
-						Sounds.StopSound(Source);
+						Program.Sounds.StopSound(Source);
 					}
 				}
-				
+
 			}
 		}
 	}

@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Xml;
-using OpenBveApi.Math;
 using System.Linq;
+using System.Xml;
 using OpenBve.BrakeSystems;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
+using SoundManager;
 
 namespace OpenBve
 {
-	class SoundXmlParser
+	internal class SoundXmlParser
 	{
 		internal static bool ParseTrain(string fileName, TrainManager.Train train)
 		{
@@ -569,7 +570,7 @@ namespace OpenBve
 		/// <param name="Sound">The car sound</param>
 		/// <param name="Position">The default position of this sound (May be overriden by the node)</param>
 		/// <param name="Radius">The default radius of this sound (May be overriden by the node)</param>
-		private static void ParseNode(XmlNode node, out Sounds.SoundBuffer Sound, ref Vector3 Position, double Radius)
+		private static void ParseNode(XmlNode node, out SoundsBase.SoundBuffer Sound, ref Vector3 Position, double Radius)
 		{
 			string fileName = null;
 			foreach (XmlNode c in node.ChildNodes)
@@ -632,7 +633,7 @@ namespace OpenBve
 				Sound = null;
 				return;
 			}
-			Sound = Sounds.SoundBuffer.TryToLoad(fileName, Radius);
+			Sound = Program.Sounds.TryToLoad(fileName, Radius);
 		}
 
 		/// <summary>Parses a single XML node into a car sound</summary>
@@ -685,7 +686,7 @@ namespace OpenBve
 							Interface.AddMessage(MessageType.Error, false, "Sound radius Z " + Arguments[2] + " in XML node " + node.Name + " is invalid.");
 							z = 0.0;
 						}
-						Position = new Vector3(x,y,z);
+						Position = new Vector3(x, y, z);
 						break;
 					case "radius":
 						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Radius))
@@ -693,7 +694,7 @@ namespace OpenBve
 							Interface.AddMessage(MessageType.Error, false, "The sound radius " + c.InnerText + " in XML node " + node.Name + " is invalid.");
 						}
 						break;
-					
+
 				}
 			}
 			if (fileName == null)
@@ -752,7 +753,7 @@ namespace OpenBve
 					}
 				}
 			}
-			
+
 		}
 	}
 }

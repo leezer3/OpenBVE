@@ -8,6 +8,7 @@ using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using SoundManager;
 
 namespace OpenBve
 {
@@ -313,7 +314,7 @@ namespace OpenBve
 			{
 				return;
 			}
-			
+
 			if (Camera.CurrentMode != CameraViewMode.Interior && Camera.CurrentMode != CameraViewMode.InteriorLookAhead)
 			{
 				return;
@@ -335,13 +336,13 @@ namespace OpenBve
 
 					LibRender.Renderer.ResetOpenGlState();
 					GL.PushMatrix();
-					
+
 					UpdateViewport(ViewPortChangeMode.ChangeToCab);
 
 					RenderSceneSelection(true);
 
 					GL.PopMatrix();
-					
+
 					foreach (var TouchElement in TouchElements)
 					{
 						int o = TouchElement.Element.ObjectIndex;
@@ -411,7 +412,7 @@ namespace OpenBve
 							}
 						}
 					}
-					
+
 					if (PickedObjectIndex >= 0)
 					{
 						return true;
@@ -427,7 +428,7 @@ namespace OpenBve
 			{
 				return;
 			}
-			
+
 			if (Camera.CurrentMode != CameraViewMode.Interior && Camera.CurrentMode != CameraViewMode.InteriorLookAhead)
 			{
 				return;
@@ -539,9 +540,9 @@ namespace OpenBve
 							Car.ChangeCarSection(TrainManager.CarSectionType.Interior);
 							if (TouchElement.SoundIndex >= 0 && TouchElement.SoundIndex < Car.Sounds.Touch.Length)
 							{
-								Sounds.SoundBuffer Buffer = Car.Sounds.Touch[TouchElement.SoundIndex].Buffer;
+								SoundsBase.SoundBuffer Buffer = Car.Sounds.Touch[TouchElement.SoundIndex].Buffer;
 								OpenBveApi.Math.Vector3 Position = Car.Sounds.Touch[TouchElement.SoundIndex].Position;
-								Sounds.PlaySound(Buffer, 1.0, 1.0, Position, TrainManager.PlayerTrain, TrainManager.PlayerTrain.DriverCar, false);
+								Program.Sounds.PlaySound(Buffer, 1.0, 1.0, Position, TrainManager.PlayerTrain, TrainManager.PlayerTrain.DriverCar, false);
 							}
 						}
 

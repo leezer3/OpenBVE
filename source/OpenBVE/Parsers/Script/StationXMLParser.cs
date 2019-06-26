@@ -206,11 +206,11 @@ namespace OpenBve
 											{
 												Interface.AddMessage(MessageType.Error, false, "Arrival sound filename is invalid in XML file " + fileName);
 											}
-											
+
 										}
 										if (File.Exists(arrSound))
 										{
-											station.ArrivalSoundBuffer = Sounds.RegisterBuffer(arrSound, arrRadius);
+											station.ArrivalSoundBuffer = Program.Sounds.RegisterBuffer(arrSound, arrRadius);
 										}
 										else
 										{
@@ -290,7 +290,7 @@ namespace OpenBve
 										}
 										if (File.Exists(depSound))
 										{
-											station.DepartureSoundBuffer = Sounds.RegisterBuffer(depSound, depRadius);
+											station.DepartureSoundBuffer = Program.Sounds.RegisterBuffer(depSound, depRadius);
 										}
 										else
 										{
@@ -303,7 +303,7 @@ namespace OpenBve
 											int ttidx = -1;
 											if (!string.IsNullOrEmpty(c.InnerText))
 											{
-												if(NumberFormats.TryParseIntVb6(c.InnerText, out ttidx))
+												if (NumberFormats.TryParseIntVb6(c.InnerText, out ttidx))
 												{
 													if (ttidx < 0)
 													{
@@ -569,7 +569,7 @@ namespace OpenBve
 																break;
 														}
 													}
-													
+
 													break;
 												case "maxcars":
 													if (!NumberFormats.TryParseIntVb6(cc.InnerText, out stopRequest.MaxNumberOfCars))
@@ -579,11 +579,11 @@ namespace OpenBve
 													break;
 											}
 										}
-										
+
 										break;
 								}
 							}
-							
+
 
 						}
 					}

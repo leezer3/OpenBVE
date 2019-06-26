@@ -91,7 +91,7 @@ namespace OpenBve
 					Cars[i].FrontBogie.ChangeSection(-1);
 					Cars[i].RearBogie.ChangeSection(-1);
 				}
-				Sounds.StopAllSounds(this);
+				Program.Sounds.StopAllSounds(this);
 
 				for (int i = 0; i < CurrentRoute.Sections.Length; i++)
 				{
@@ -103,7 +103,7 @@ namespace OpenBve
 				}
 			}
 
-			
+
 
 			/// <summary>Call this method to update the train</summary>
 			/// <param name="TimeElapsed">The elapsed time this frame</param>
@@ -183,7 +183,7 @@ namespace OpenBve
 									if (Cars[j].Sounds.Loop.Buffer != null)
 									{
 										Vector3 pos = Cars[j].Sounds.Loop.Position;
-										Cars[j].Sounds.Loop.Source = Sounds.PlaySound(Cars[j].Sounds.Loop.Buffer, 1.0, 1.0, pos, this, j, true);
+										Cars[j].Sounds.Loop.Source = Program.Sounds.PlaySound(Cars[j].Sounds.Loop.Buffer, 1.0, 1.0, pos, this, j, true);
 									}
 								}
 							}
@@ -224,7 +224,7 @@ namespace OpenBve
 				}
 			}
 
-			
+
 
 			/// <summary>Updates the physics and controls for this train</summary>
 			/// <param name="TimeElapsed">The time elapsed</param>
@@ -285,11 +285,11 @@ namespace OpenBve
 						// resume
 						if (Cars[DriverCar].Sounds.BreakerResume.Buffer != null)
 						{
-							Sounds.PlaySound(Cars[DriverCar].Sounds.BreakerResume.Buffer, 1.0, 1.0, Cars[DriverCar].Sounds.BreakerResume.Position, this, DriverCar, false);
+							Program.Sounds.PlaySound(Cars[DriverCar].Sounds.BreakerResume.Buffer, 1.0, 1.0, Cars[DriverCar].Sounds.BreakerResume.Position, this, DriverCar, false);
 						}
 						if (Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Buffer != null)
 						{
-							Sounds.PlaySound(Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Buffer, 1.0, 1.0, Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Position, this, DriverCar, false);
+							Program.Sounds.PlaySound(Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Buffer, 1.0, 1.0, Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Position, this, DriverCar, false);
 						}
 						Cars[DriverCar].Sounds.BreakerResumed = true;
 					}
@@ -298,7 +298,7 @@ namespace OpenBve
 						// interrupt
 						if (Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Buffer != null)
 						{
-							Sounds.PlaySound(Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Buffer, 1.0, 1.0, Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Position, this, DriverCar, false);
+							Program.Sounds.PlaySound(Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Buffer, 1.0, 1.0, Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Position, this, DriverCar, false);
 						}
 						Cars[DriverCar].Sounds.BreakerResumed = false;
 					}
@@ -434,7 +434,7 @@ namespace OpenBve
 									// Update constant speed device
 
 									this.Cars[i].Specs.ConstSpeed.Update(ref a, this.Specs.CurrentConstSpeed, this.Handles.Reverser.Actual);
-									
+
 									// finalize
 									if (wheelspin != 0.0) a = 0.0;
 								}

@@ -72,7 +72,7 @@ namespace OpenBve
 						{
 							string Key = KeyNode.Name.LocalName;
 							string Value = KeyNode.Value;
-							int LineNumber = ((IXmlLineInfo) KeyNode).LineNumber;
+							int LineNumber = ((IXmlLineInfo)KeyNode).LineNumber;
 
 							switch (Key.ToLowerInvariant())
 							{
@@ -88,7 +88,7 @@ namespace OpenBve
 											trainDirectory = OpenBveApi.Path.CombineFile(Program.FileSystem.TrainInstallationDirectory, Value);
 										}
 
-										if(!System.IO.Directory.Exists(trainDirectory))
+										if (!System.IO.Directory.Exists(trainDirectory))
 										{
 											Interface.AddMessage(MessageType.Error, false, "Directory was not found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
@@ -106,7 +106,7 @@ namespace OpenBve
 						{
 							string Key = KeyNode.Name.LocalName;
 							string Value = KeyNode.Value;
-							int LineNumber = ((IXmlLineInfo) KeyNode).LineNumber;
+							int LineNumber = ((IXmlLineInfo)KeyNode).LineNumber;
 
 							switch (Key.ToLowerInvariant())
 							{
@@ -209,21 +209,21 @@ namespace OpenBve
 				{
 					if (Car.Doors[0].OpenSound.Buffer != null & Car.Doors[1].OpenSound.Buffer != null)
 					{
-						Sounds.LoadBuffer(Car.Doors[0].OpenSound.Buffer);
-						Sounds.LoadBuffer(Car.Doors[1].OpenSound.Buffer);
+						Program.Sounds.LoadBuffer(Car.Doors[0].OpenSound.Buffer);
+						Program.Sounds.LoadBuffer(Car.Doors[1].OpenSound.Buffer);
 						double a = Car.Doors[0].OpenSound.Buffer.Duration;
 						double b = Car.Doors[1].OpenSound.Buffer.Duration;
 						Car.Specs.DoorOpenFrequency = a + b > 0.0 ? 2.0 / (a + b) : 0.8;
 					}
 					else if (Car.Doors[0].OpenSound.Buffer != null)
 					{
-						Sounds.LoadBuffer(Car.Doors[0].OpenSound.Buffer);
+						Program.Sounds.LoadBuffer(Car.Doors[0].OpenSound.Buffer);
 						double a = Car.Doors[0].OpenSound.Buffer.Duration;
 						Car.Specs.DoorOpenFrequency = a > 0.0 ? 1.0 / a : 0.8;
 					}
 					else if (Car.Doors[1].OpenSound.Buffer != null)
 					{
-						Sounds.LoadBuffer(Car.Doors[0].OpenSound.Buffer);
+						Program.Sounds.LoadBuffer(Car.Doors[0].OpenSound.Buffer);
 						double b = Car.Doors[1].OpenSound.Buffer.Duration;
 						Car.Specs.DoorOpenFrequency = b > 0.0 ? 1.0 / b : 0.8;
 					}
@@ -236,21 +236,21 @@ namespace OpenBve
 				{
 					if (Car.Doors[0].CloseSound.Buffer != null & Car.Doors[1].CloseSound.Buffer != null)
 					{
-						Sounds.LoadBuffer(Car.Doors[0].CloseSound.Buffer);
-						Sounds.LoadBuffer(Car.Doors[1].CloseSound.Buffer);
+						Program.Sounds.LoadBuffer(Car.Doors[0].CloseSound.Buffer);
+						Program.Sounds.LoadBuffer(Car.Doors[1].CloseSound.Buffer);
 						double a = Car.Doors[0].CloseSound.Buffer.Duration;
 						double b = Car.Doors[1].CloseSound.Buffer.Duration;
 						Car.Specs.DoorCloseFrequency = a + b > 0.0 ? 2.0 / (a + b) : 0.8;
 					}
 					else if (Car.Doors[0].CloseSound.Buffer != null)
 					{
-						Sounds.LoadBuffer(Car.Doors[0].CloseSound.Buffer);
+						Program.Sounds.LoadBuffer(Car.Doors[0].CloseSound.Buffer);
 						double a = Car.Doors[0].CloseSound.Buffer.Duration;
 						Car.Specs.DoorCloseFrequency = a > 0.0 ? 1.0 / a : 0.8;
 					}
 					else if (Car.Doors[1].CloseSound.Buffer != null)
 					{
-						Sounds.LoadBuffer(Car.Doors[0].CloseSound.Buffer);
+						Program.Sounds.LoadBuffer(Car.Doors[0].CloseSound.Buffer);
 						double b = Car.Doors[1].CloseSound.Buffer.Duration;
 						Car.Specs.DoorCloseFrequency = b > 0.0 ? 1.0 / b : 0.8;
 					}
@@ -311,7 +311,7 @@ namespace OpenBve
 							{
 								string Key = KeyNode.Name.LocalName;
 								string Value = KeyNode.Value;
-								int LineNumber = ((IXmlLineInfo) KeyNode).LineNumber;
+								int LineNumber = ((IXmlLineInfo)KeyNode).LineNumber;
 
 								switch (Key.ToLowerInvariant())
 								{

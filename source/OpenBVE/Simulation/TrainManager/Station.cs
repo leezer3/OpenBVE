@@ -2,6 +2,7 @@
 using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interface;
+using SoundManager;
 
 namespace OpenBve
 {
@@ -11,9 +12,9 @@ namespace OpenBve
 		internal enum TrainStopState
 		{
 			/// <summary>The stop is still pending</summary>
-			Pending = 0, 
+			Pending = 0,
 			/// <summary>The train is currrently stopped and passengers are boarding</summary>
-			Boarding = 1, 
+			Boarding = 1,
 			/// <summary>The stop has been completed, and the train is preparing to depart</summary>
 			Completed = 2,
 			/// <summary>The train is jumping between stations, and all stops should be ignored</summary>
@@ -55,7 +56,7 @@ namespace OpenBve
 						{
 							//Check that we are not moving
 							if (Math.Abs(Train.CurrentSpeed) < 0.1 / 3.6 &
-							    Math.Abs(Train.Specs.CurrentAverageAcceleration) < 0.1 / 3.6)
+								Math.Abs(Train.Specs.CurrentAverageAcceleration) < 0.1 / 3.6)
 							{
 								//Check the interlock state for the doors
 								switch (Train.Specs.DoorInterlockState)
@@ -125,12 +126,12 @@ namespace OpenBve
 								Train.StationState = TrainStopState.Boarding;
 								Train.StationAdjust = false;
 								Train.Specs.DoorClosureAttempted = false;
-								Sounds.StopSound(Train.Cars[Train.DriverCar].Sounds.Halt.Source);
-								Sounds.SoundBuffer buffer = (Sounds.SoundBuffer)Game.Stations[i].ArrivalSoundBuffer;
+								Program.Sounds.StopSound(Train.Cars[Train.DriverCar].Sounds.Halt.Source);
+								SoundsBase.SoundBuffer buffer = (SoundsBase.SoundBuffer)Game.Stations[i].ArrivalSoundBuffer;
 								if (buffer != null)
 								{
 									OpenBveApi.Math.Vector3 pos = Game.Stations[i].SoundOrigin;
-									Sounds.PlaySound(buffer, 1.0, 1.0, pos, false);
+									Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, false);
 								}
 								Train.StationArrivalTime = Game.SecondsSinceMidnight;
 								Train.StationDepartureTime = Game.Stations[i].DepartureTime - Train.TimetableDelta;
@@ -222,11 +223,11 @@ namespace OpenBve
 								// correct stop position
 								if (!Train.StationAdjust & (Train.StationDistanceToStopPoint > tb | Train.StationDistanceToStopPoint < -tf))
 								{
-									Sounds.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.Adjust.Buffer;
+									SoundsBase.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.Adjust.Buffer;
 									if (buffer != null)
 									{
 										OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.Adjust.Position;
-										Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
+										Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
 									}
 									if (Train == TrainManager.PlayerTrain)
 									{
@@ -321,7 +322,8 @@ namespace OpenBve
 									{
 										left = true; break;
 									}
-								} if (left) break;
+								}
+								if (left) break;
 							}
 						}
 						else
@@ -339,7 +341,8 @@ namespace OpenBve
 									{
 										right = true; break;
 									}
-								} if (right) break;
+								}
+								if (right) break;
 							}
 						}
 						else
@@ -350,13 +353,13 @@ namespace OpenBve
 					// departure sound
 					if (!Train.StationDepartureSoundPlayed)
 					{
-						Sounds.SoundBuffer buffer = (Sounds.SoundBuffer)Game.Stations[i].DepartureSoundBuffer;
+						SoundsBase.SoundBuffer buffer = (SoundsBase.SoundBuffer)Game.Stations[i].DepartureSoundBuffer;
 						if (buffer != null)
 						{
-							double dur = Sounds.GetDuration(buffer);
+							double dur = Program.Sounds.GetDuration(buffer);
 							if (Game.SecondsSinceMidnight >= Train.StationDepartureTime - dur)
 							{
-								Sounds.PlaySound(buffer, 1.0, 1.0, Game.Stations[i].SoundOrigin, false);
+								Program.Sounds.PlaySound(buffer, 1.0, 1.0, Game.Stations[i].SoundOrigin, false);
 								Train.StationDepartureSoundPlayed = true;
 							}
 						}
@@ -450,6 +453,23 @@ namespace OpenBve
 									JumpTrain(Train, i + 1);
 								}
 							}
+							if (Interface.CurrentOptions.LoadingSway)
+							{
+								// passengers boarding
+								for (int j = 0; j < Train.Cars.Length; j++)
+								{
+									double r = 2.0 * Game.Stations[i].PassengerRatio * TimeElapsed;
+									if (r >= Program.RandomNumberGenerator.NextDouble())
+									{
+										int d =
+											(int)Math.Floor(Program.RandomNumberGenerator.NextDouble() * (double)Train.Cars[j].Doors.Length);
+										if (Train.Cars[j].Doors[d].State == 1.0)
+										{
+											Train.Cars[j].Specs.CurrentRollShakeDirection += (double)Train.Cars[j].Doors[d].Direction;
+										}
+									}
+								}
+							}
 						}
 						else
 						{
@@ -468,7 +488,7 @@ namespace OpenBve
 				{
 					Train.StationState = TrainStopState.Pending;
 				}
-				
+
 			}
 			// automatically close doors
 			if (Train.Specs.DoorCloseMode != DoorMode.Manual & Train.Specs.DoorInterlockState != DoorInterlockStates.Locked & !Train.Specs.DoorClosureAttempted)
