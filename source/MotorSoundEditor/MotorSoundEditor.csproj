@@ -95,6 +95,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -105,27 +106,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Icons\copy.png" />
-    <EmbeddedResource Include="Icons\cut.png" />
-    <EmbeddedResource Include="Icons\delete.png" />
-    <EmbeddedResource Include="Icons\draw.png" />
-    <EmbeddedResource Include="Icons\move.png" />
-    <EmbeddedResource Include="Icons\new.png" />
-    <EmbeddedResource Include="Icons\open.png" />
-    <EmbeddedResource Include="Icons\paste.png" />
-    <EmbeddedResource Include="Icons\redo.png" />
-    <EmbeddedResource Include="Icons\ruler.png" />
-    <EmbeddedResource Include="Icons\save.png" />
-    <EmbeddedResource Include="Icons\select.png" />
-    <EmbeddedResource Include="Icons\undo.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Icons\change.png" />
-    <EmbeddedResource Include="Icons\pause.png" />
-    <EmbeddedResource Include="Icons\play.png" />
-    <EmbeddedResource Include="Icons\stop.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
@@ -139,10 +119,67 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Icons\cleanup.png" />
-    <EmbeddedResource Include="Icons\reset.png" />
-    <EmbeddedResource Include="Icons\zoomin.png" />
-    <EmbeddedResource Include="Icons\zoomout.png" />
+    <None Include="Icons\change.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\cleanup.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\copy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\cut.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\draw.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\move.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\new.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\open.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\paste.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\pause.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\play.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\redo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\reset.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\ruler.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\select.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\stop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\undo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\zoomin.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\zoomout.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

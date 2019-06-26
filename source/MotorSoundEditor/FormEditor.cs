@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using MotorSoundEditor.Parsers.Train;
+using MotorSoundEditor.Properties;
 using MotorSoundEditor.Systems;
 using OpenBveApi.Interface;
 using Timer = System.Timers.Timer;
@@ -133,20 +134,20 @@ namespace MotorSoundEditor
 			toolStripButtonUndo.Enabled = false;
 			toolStripButtonRedo.Enabled = false;
 
-			toolStripButtonNew.Image = GetImage("MotorSoundEditor.Icons.new.png");
-			toolStripButtonOpen.Image = GetImage("MotorSoundEditor.Icons.open.png");
-			toolStripButtonSave.Image = GetImage("MotorSoundEditor.Icons.save.png");
-			toolStripButtonUndo.Image = GetImage("MotorSoundEditor.Icons.undo.png");
-			toolStripButtonRedo.Image = GetImage("MotorSoundEditor.Icons.redo.png");
-			toolStripButtonTearingOff.Image = GetImage("MotorSoundEditor.Icons.cut.png");
-			toolStripButtonCopy.Image = GetImage("MotorSoundEditor.Icons.copy.png");
-			toolStripButtonPaste.Image = GetImage("MotorSoundEditor.Icons.paste.png");
-			toolStripButtonDelete.Image = GetImage("MotorSoundEditor.Icons.delete.png");
-			toolStripButtonCleanup.Image = GetImage("MotorSoundEditor.Icons.cleanup.png");
-			toolStripButtonSelect.Image = GetImage("MotorSoundEditor.Icons.select.png");
-			toolStripButtonMove.Image = GetImage("MotorSoundEditor.Icons.move.png");
-			toolStripButtonDot.Image = GetImage("MotorSoundEditor.Icons.draw.png");
-			toolStripButtonLine.Image = GetImage("MotorSoundEditor.Icons.ruler.png");
+			toolStripButtonNew.Image = Resources._new.GetTransparentImage();
+			toolStripButtonOpen.Image = Resources.open.GetTransparentImage();
+			toolStripButtonSave.Image = Resources.save.GetTransparentImage();
+			toolStripButtonUndo.Image = Resources.undo.GetTransparentImage();
+			toolStripButtonRedo.Image = Resources.redo.GetTransparentImage();
+			toolStripButtonTearingOff.Image = Resources.cut.GetTransparentImage();
+			toolStripButtonCopy.Image = Resources.copy.GetTransparentImage();
+			toolStripButtonPaste.Image = Resources.paste.GetTransparentImage();
+			toolStripButtonCleanup.Image = Resources.cleanup.GetTransparentImage();
+			toolStripButtonDelete.Image = Resources.delete.GetTransparentImage();
+			toolStripButtonSelect.Image = Resources.select.GetTransparentImage();
+			toolStripButtonMove.Image = Resources.move.GetTransparentImage();
+			toolStripButtonDot.Image = Resources.draw.GetTransparentImage();
+			toolStripButtonLine.Image = Resources.ruler.GetTransparentImage();
 
 			minVelocity = 0.0f;
 			maxVelocity = 40.0f;
@@ -166,14 +167,14 @@ namespace MotorSoundEditor
 			textBoxMinVolume.Text = minVolume.ToString(CultureInfo.InvariantCulture);
 			textBoxMaxVolume.Text = maxVolume.ToString(CultureInfo.InvariantCulture);
 
-			buttonZoomIn.Image = GetImage("MotorSoundEditor.Icons.zoomin.png");
-			buttonZoomOut.Image = GetImage("MotorSoundEditor.Icons.zoomout.png");
-			buttonReset.Image = GetImage("MotorSoundEditor.Icons.reset.png");
+			buttonZoomIn.Image = Resources.zoomin.GetTransparentImage();
+			buttonZoomOut.Image = Resources.zoomout.GetTransparentImage();
+			buttonReset.Image = Resources.reset.GetTransparentImage();
 
 			textBoxDirectX.Text = textBoxDirectY.Text = 0.0f.ToString(CultureInfo.InvariantCulture);
 
-			buttonDirectDot.Image = GetImage("MotorSoundEditor.Icons.draw.png");
-			buttonDirectMove.Image = GetImage("MotorSoundEditor.Icons.move.png");
+			buttonDirectDot.Image = Resources.draw.GetTransparentImage();
+			buttonDirectMove.Image = Resources.move.GetTransparentImage();
 
 			runIndex = -1;
 			isPlayTrack1 = isPlayTrack2 = true;
@@ -189,10 +190,10 @@ namespace MotorSoundEditor
 			textBoxAreaLeft.Text = startSpeed.ToString(CultureInfo.InvariantCulture);
 			textBoxAreaRight.Text = endSpeed.ToString(CultureInfo.InvariantCulture);
 
-			buttonSwap.Image = GetImage("MotorSoundEditor.Icons.change.png");
-			buttonPlay.Image = GetImage("MotorSoundEditor.Icons.play.png");
-			buttonPause.Image = GetImage("MotorSoundEditor.Icons.pause.png");
-			buttonStop.Image = GetImage("MotorSoundEditor.Icons.stop.png");
+			buttonSwap.Image = Resources.change.GetTransparentImage();
+			buttonPlay.Image = Resources.play.GetTransparentImage();
+			buttonPause.Image = Resources.pause.GetTransparentImage();
+			buttonStop.Image = Resources.stop.GetTransparentImage();
 
 			ActiveControl = pictureBoxDrawArea;
 
