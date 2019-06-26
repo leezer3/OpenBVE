@@ -6,15 +6,16 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Media;
+using System.Reflection;
 using System.Windows.Forms;
 using MotorSoundEditor.Parsers.Train;
 using OpenBveApi.Interface;
 
 namespace MotorSoundEditor
 {
-	internal static class ObservableCollectionExtensions
+	public static class ObservableCollectionExtensions
 	{
-		internal static void RemoveAll<T>(this ObservableCollection<T> collection, Func<T, bool> match)
+		public static void RemoveAll<T>(this ObservableCollection<T> collection, Func<T, bool> match)
 		{
 			for (int i = collection.Count - 1; i >= 0; i--)
 			{
@@ -23,15 +24,6 @@ namespace MotorSoundEditor
 					collection.RemoveAt(i);
 				}
 			}
-		}
-	}
-
-	internal static class ImageExtensions
-	{
-		internal static Bitmap GetTransparentImage(this Bitmap image)
-		{
-			image.MakeTransparent();
-			return image;
 		}
 	}
 
@@ -1355,6 +1347,14 @@ namespace MotorSoundEditor
 			}
 
 			return Color.FromArgb((int)Math.Round(255.0 * r), (int)Math.Round(255.0 * g), (int)Math.Round(255.0 * b));
+		}
+
+		private Bitmap GetImage(string path)
+		{
+			string folder = Program.FileSystem.GetDataFolder("MotorSoundEditor");
+			Bitmap image = new Bitmap(OpenBveApi.Path.CombineFile(folder, path));
+			image.MakeTransparent();
+			return image;
 		}
 
 		private static string GetInterfaceString(string section, string key)
