@@ -757,7 +757,7 @@ $(RELEASE_DIR)/$(SOUND_RIFFWAVE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
 $(DEBUG_DIR)/$(SOUND_RIFFWAVE_FILE) $(RELEASE_DIR)/$(SOUND_RIFFWAVE_FILE): $(SOUND_RIFFWAVE_SRC) $(SOUND_RIFFWAVE_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(SOUND_RIFFWAVE_OUT)$(COLOR_END)
 	@$(CSC) /out:$(SOUND_RIFFWAVE_OUT) /target:library $(SOUND_RIFFWAVE_SRC) $(ARGS) $(SOUND_RIFFWAVE_DOC) \
-	/reference:$(OPEN_BVE_API_OUT)  /reference:$(OUTPUT_DIR)/NAudio.dll /reference:$(OUTPUT_DIR)/NLayer.dll /reference:$(OUTPUT_DIR)/NLayer.NAudioSupport.dll $(addprefix /resource:, $(SOUND_RIFFWAVE_RESOURCE))
+	/reference:$(OPEN_BVE_API_OUT)  /reference:$(OUTPUT_DIR)/NAudio.dll /reference:$(OUTPUT_DIR)/NLayer.dll /reference:$(OUTPUT_DIR)/NLayer.NAudioSupport.dll /reference:System.Core.dll $(addprefix /resource:, $(SOUND_RIFFWAVE_RESOURCE))
 	
 #############
 # Sound.MP3 #
@@ -1006,7 +1006,7 @@ $(RELEASE_DIR)/$(MOTOR_SOUND_EDITOR_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
 
 $(DEBUG_DIR)/$(MOTOR_SOUND_EDITOR_FILE) $(RELEASE_DIR)/$(MOTOR_SOUND_EDITOR_FILE): $(MOTOR_SOUND_EDITOR_SRC) $(MOTOR_SOUND_EDITOR_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(MOTOR_SOUND_EDITOR_OUT)$(COLOR_END)
-	@$(CSC) /out:$(MOTOR_SOUND_EDITOR_OUT) /target:winexe /main:MOTOR_SOUNDEditor.Program $(MOTOR_SOUND_EDITOR_SRC) $(ARGS) $(MOTOR_SOUND_EDITOR_DOC) \
+	@$(CSC) /out:$(MOTOR_SOUND_EDITOR_OUT) /target:winexe /main:MotorSoundEditor.Program $(MOTOR_SOUND_EDITOR_SRC) $(ARGS) $(MOTOR_SOUND_EDITOR_DOC) \
 	/reference:$(OPEN_BVE_API_OUT) /reference:$(SOUNDMANAGER_OUT) /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:System.Core.dll \
 	/win32icon:$(ICON) $(addprefix /resource:, $(MOTOR_SOUND_EDITOR_RESOURCE))
 
