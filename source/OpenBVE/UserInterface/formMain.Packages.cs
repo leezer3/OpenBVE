@@ -960,7 +960,7 @@ namespace OpenBve
 					ImageFile = openPackageFileDialog.FileName;
 					try
 					{
-						pictureBoxPackageImage.Image = Image.FromFile(ImageFile);
+						pictureBoxPackageImage.Image = ImageExtensions.FromFile(ImageFile);
 					}
 					catch
 					{

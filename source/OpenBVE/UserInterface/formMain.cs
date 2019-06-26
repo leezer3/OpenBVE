@@ -1508,7 +1508,7 @@ namespace OpenBve {
 				{
 					try
 					{
-						return Image.FromFile(File);
+						return ImageExtensions.FromFile(File);
 					}
 					catch
 					{
@@ -1542,7 +1542,7 @@ namespace OpenBve {
 					}
 					try
 					{
-						Box.Image = Image.FromFile(File);
+						Box.Image = ImageExtensions.FromFile(File);
 						return;
 					}
 					catch

@@ -16,7 +16,7 @@ namespace OpenBve
 				{
 					try
 					{
-						pictureBoxLogo.Image = Image.FromFile(File);
+						pictureBoxLogo.Image = ImageExtensions.FromFile(File);
 					}
 					catch
 					{
