@@ -9,6 +9,12 @@
 				<trans-unit id="flag">
 					<source>US.png</source>
 				</trans-unit>
+				<trans-unit id="contributors">
+					<source>Unknown</source>
+				</trans-unit>
+				<trans-unit id="last_updated">
+					<source>2019-06-29</source>
+				</trans-unit>
 			</group>
 			<group id="openbve">
 				<group id="program">
@@ -2892,272 +2898,272 @@
 			<group id="motor_sound_editor">
 				<group id="menu_file">
 					<trans-unit id="file">
-						<source>file</source>
+						<source>File</source>
 					</trans-unit>
 					<trans-unit id="new">
-						<source>new</source>
+						<source>New</source>
 					</trans-unit>
 					<trans-unit id="open">
-						<source>open</source>
+						<source>Open...</source>
 					</trans-unit>
 					<trans-unit id="save">
-						<source>save</source>
+						<source>Save</source>
 					</trans-unit>
 					<trans-unit id="save_as">
-						<source>save_as</source>
+						<source>Save as...</source>
 					</trans-unit>
 					<trans-unit id="exit">
-						<source>exit</source>
+						<source>Exit</source>
 					</trans-unit>
 				</group>
 				<group id="menu_edit">
 					<trans-unit id="edit">
-						<source>edit</source>
+						<source>Edit</source>
 					</trans-unit>
 					<trans-unit id="undo">
-						<source>undo</source>
+						<source>Undo</source>
 					</trans-unit>
 					<trans-unit id="redo">
-						<source>redo</source>
+						<source>Redo</source>
 					</trans-unit>
 					<trans-unit id="cut">
-						<source>cut</source>
+						<source>Cut</source>
 					</trans-unit>
 					<trans-unit id="copy">
-						<source>copy</source>
+						<source>Copy</source>
 					</trans-unit>
 					<trans-unit id="paste">
-						<source>paste</source>
+						<source>Paste</source>
 					</trans-unit>
 					<trans-unit id="cleanup">
-						<source>cleanup</source>
+						<source>Cleanup</source>
 					</trans-unit>
 					<trans-unit id="delete">
-						<source>delete</source>
+						<source>Delete</source>
 					</trans-unit>
 				</group>
 				<group id="menu_view">
 					<trans-unit id="view">
-						<source>view</source>
+						<source>View</source>
 					</trans-unit>
 					<trans-unit id="power">
-						<source>power</source>
+						<source>Power</source>
 					</trans-unit>
 					<trans-unit id="brake">
-						<source>brake</source>
+						<source>Brake</source>
 					</trans-unit>
 					<trans-unit id="track">
-						<source>track</source>
+						<source>Track</source>
 					</trans-unit>
 				</group>
 				<group id="menu_input">
 					<trans-unit id="input">
-						<source>input</source>
+						<source>Input</source>
 					</trans-unit>
 					<trans-unit id="pitch">
-						<source>pitch</source>
+						<source>Pitch</source>
 					</trans-unit>
 					<trans-unit id="volume">
-						<source>volume</source>
+						<source>Volume</source>
 					</trans-unit>
 					<trans-unit id="sound_index">
-						<source>sound_index</source>
+						<source>Sound source index</source>
 					</trans-unit>
 					<trans-unit id="sound_index_none">
-						<source>sound_index_none</source>
+						<source>None</source>
 					</trans-unit>
 				</group>
 				<group id="menu_tool">
 					<trans-unit id="tool">
-						<source>tool</source>
+						<source>Tool</source>
 					</trans-unit>
 					<trans-unit id="select">
-						<source>select</source>
+						<source>Select</source>
 					</trans-unit>
 					<trans-unit id="move">
-						<source>move</source>
+						<source>Move</source>
 					</trans-unit>
 					<trans-unit id="dot">
-						<source>dot</source>
+						<source>Dot</source>
 					</trans-unit>
 					<trans-unit id="line">
-						<source>line</source>
+						<source>Line</source>
 					</trans-unit>
 				</group>
 				<group id="view_setting">
 					<trans-unit id="view_setting">
-						<source>view_setting</source>
+						<source>View setting</source>
 					</trans-unit>
 					<trans-unit id="min_velocity">
-						<source>min_velocity</source>
+						<source>x-min(Velocity):</source>
 					</trans-unit>
 					<trans-unit id="max_velocity">
-						<source>max_velocity</source>
+						<source>x-max(Velocity):</source>
 					</trans-unit>
 					<trans-unit id="min_pitch">
-						<source>min_pitch</source>
+						<source>y-min(Pitch):</source>
 					</trans-unit>
 					<trans-unit id="max_pitch">
-						<source>max_pitch</source>
+						<source>y-max(Pitch):</source>
 					</trans-unit>
 					<trans-unit id="min_volume">
-						<source>min_volume</source>
+						<source>y-min(Volume):</source>
 					</trans-unit>
 					<trans-unit id="max_volume">
-						<source>max_volume</source>
+						<source>y-max(Volume):</source>
 					</trans-unit>
 					<trans-unit id="zoom_in">
-						<source>zoom_in</source>
+						<source>Zoom In</source>
 					</trans-unit>
 					<trans-unit id="zoom_out">
-						<source>zoom_out</source>
+						<source>Zoom Out</source>
 					</trans-unit>
 					<trans-unit id="reset">
-						<source>reset</source>
+						<source>Reset</source>
 					</trans-unit>
 				</group>
 				<group id="direct_input">
 					<trans-unit id="direct_input">
-						<source>direct_input</source>
+						<source>Direct input</source>
 					</trans-unit>
 					<trans-unit id="x_coordinate">
-						<source>x_coordinate</source>
+						<source>x coordinate:</source>
 					</trans-unit>
 					<trans-unit id="y_coordinate">
-						<source>y_coordinate</source>
+						<source>y coordinate:</source>
 					</trans-unit>
 					<trans-unit id="dot">
-						<source>dot</source>
+						<source>Dot</source>
 					</trans-unit>
 					<trans-unit id="move">
-						<source>move</source>
+						<source>Move</source>
 					</trans-unit>
 				</group>
 				<group id="play_setting">
 					<trans-unit id="play_setting">
-						<source>play_setting</source>
+						<source>Playback setting</source>
 					</trans-unit>
 					<trans-unit id="source">
-						<source>source</source>
+						<source>Sound source setting</source>
 					</trans-unit>
 					<trans-unit id="source_run">
-						<source>source_run</source>
+						<source>Running sound:</source>
 					</trans-unit>
 					<trans-unit id="source_track">
-						<source>source_track</source>
+						<source>Track</source>
 					</trans-unit>
 					<trans-unit id="area">
-						<source>area</source>
+						<source>Area setting</source>
 					</trans-unit>
 					<trans-unit id="area_loop">
-						<source>area_loop</source>
+						<source>Loop playback</source>
 					</trans-unit>
 					<trans-unit id="area_constant">
-						<source>area_constant</source>
+						<source>Constant speed</source>
 					</trans-unit>
 					<trans-unit id="area_acceleration">
-						<source>area_acceleration</source>
+						<source>Acceleration:</source>
 					</trans-unit>
 					<trans-unit id="area_swap">
-						<source>area_swap</source>
+						<source>Swap</source>
 					</trans-unit>
 					<trans-unit id="play">
-						<source>play</source>
+						<source>Playback</source>
 					</trans-unit>
 					<trans-unit id="pause">
-						<source>pause</source>
+						<source>Pause</source>
 					</trans-unit>
 					<trans-unit id="stop">
-						<source>stop</source>
+						<source>Stop</source>
 					</trans-unit>
 				</group>
 				<group id="status_type">
 					<trans-unit id="status_type">
-						<source>status_type</source>
+						<source>Type:</source>
 					</trans-unit>
 					<trans-unit id="power">
-						<source>power</source>
+						<source>Power</source>
 					</trans-unit>
 					<trans-unit id="brake">
-						<source>brake</source>
+						<source>Brake</source>
 					</trans-unit>
 				</group>
 				<group id="status_track">
 					<trans-unit id="status_track">
-						<source>status_track</source>
+						<source>Track:</source>
 					</trans-unit>
 				</group>
 				<group id="status_mode">
 					<trans-unit id="status_mode">
-						<source>status_mode</source>
+						<source>Mode:</source>
 					</trans-unit>
 					<trans-unit id="pitch">
-						<source>pitch</source>
+						<source>Pitch</source>
 					</trans-unit>
 					<trans-unit id="volume">
-						<source>volume</source>
+						<source>Volume</source>
 					</trans-unit>
 					<trans-unit id="sound_index">
-						<source>sound_index</source>
+						<source>Sound source index</source>
 					</trans-unit>
 				</group>
 				<group id="status_tool">
 					<trans-unit id="status_tool">
-						<source>status_tool</source>
+						<source>Tool:</source>
 					</trans-unit>
 					<trans-unit id="select">
-						<source>select</source>
+						<source>Select</source>
 					</trans-unit>
 					<trans-unit id="move">
-						<source>move</source>
+						<source>Move</source>
 					</trans-unit>
 					<trans-unit id="dot">
-						<source>dot</source>
+						<source>Dot</source>
 					</trans-unit>
 					<trans-unit id="line">
-						<source>line</source>
+						<source>Line</source>
 					</trans-unit>
 				</group>
 				<group id="status_xy">
 					<trans-unit id="velocity">
-						<source>velocity</source>
+						<source>Velocity:</source>
 					</trans-unit>
 					<trans-unit id="pitch">
-						<source>pitch</source>
+						<source>Pitch:</source>
 					</trans-unit>
 					<trans-unit id="volume">
-						<source>volume</source>
+						<source>Volume:</source>
 					</trans-unit>
 				</group>
 				<group id="vertex_info">
 					<trans-unit id="vertex_info">
-						<source>vertex_info</source>
+						<source>Vertex information</source>
 					</trans-unit>
 					<trans-unit id="velocity">
-						<source>velocity</source>
+						<source>Velocity:</source>
 					</trans-unit>
 					<trans-unit id="pitch">
-						<source>pitch</source>
+						<source>Pitch:</source>
 					</trans-unit>
 					<trans-unit id="volume">
-						<source>volume</source>
+						<source>Volume:</source>
 					</trans-unit>
 					<trans-unit id="sound_index">
-						<source>sound_index</source>
+						<source>Sound source index:</source>
 					</trans-unit>
 				</group>
 				<group id="message">
 					<trans-unit id="new">
-						<source>new</source>
+						<source>Do you want to save the current file before creating a new one?</source>
 					</trans-unit>
 					<trans-unit id="open">
-						<source>open</source>
+						<source>Do you want to save the current file before opening another file?</source>
 					</trans-unit>
 					<trans-unit id="exit">
-						<source>exit</source>
+						<source>Do you want to save the current file before closing?</source>
 					</trans-unit>
 					<trans-unit id="vertex_exist">
-						<source>vertex_exist</source>
+						<source>A point already exists at the same x coordinate, do you want to overwrite it?</source>
 					</trans-unit>
 				</group>
 			</group>

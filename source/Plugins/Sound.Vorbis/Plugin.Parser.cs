@@ -17,7 +17,7 @@ namespace Plugin
 				float[] dataFloats = new float[sampleCount * reader.WaveFormat.Channels];
 
 				// Convert Ogg Vorbis to raw 32-bit float n channels PCM.
-				int floatsRead = reader.Read(dataFloats, 0, sampleCount);
+				int floatsRead = reader.Read(dataFloats, 0, sampleCount * reader.WaveFormat.Channels);
 
 				byte[] dataBytes = new byte[floatsRead * sizeof(short)];
 				byte[][] buffers = new byte[reader.WaveFormat.Channels][];

@@ -6,16 +6,16 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Media;
-using System.Reflection;
+using System.Text;
 using System.Windows.Forms;
 using MotorSoundEditor.Parsers.Train;
 using OpenBveApi.Interface;
 
 namespace MotorSoundEditor
 {
-	public static class ObservableCollectionExtensions
+	internal static class ObservableCollectionExtensions
 	{
-		public static void RemoveAll<T>(this ObservableCollection<T> collection, Func<T, bool> match)
+		internal static void RemoveAll<T>(this ObservableCollection<T> collection, Func<T, bool> match)
 		{
 			for (int i = collection.Count - 1; i >= 0; i--)
 			{

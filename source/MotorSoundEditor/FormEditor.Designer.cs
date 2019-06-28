@@ -183,36 +183,36 @@ namespace MotorSoundEditor
             this.toolStripSeparatorSave,
             this.toolStripMenuItemExit});
 			this.toolStripMenuItemFile.Name = "toolStripMenuItemFile";
-			this.toolStripMenuItemFile.Size = new System.Drawing.Size(66, 20);
-			this.toolStripMenuItemFile.Text = "ファイル(&F)";
+			this.toolStripMenuItemFile.Size = new System.Drawing.Size(51, 20);
+			this.toolStripMenuItemFile.Text = "File(&F)";
 			// 
 			// toolStripMenuItemNew
 			// 
 			this.toolStripMenuItemNew.Name = "toolStripMenuItemNew";
 			this.toolStripMenuItemNew.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-			this.toolStripMenuItemNew.Size = new System.Drawing.Size(247, 22);
-			this.toolStripMenuItemNew.Text = "新規作成(&N)";
+			this.toolStripMenuItemNew.Size = new System.Drawing.Size(200, 22);
+			this.toolStripMenuItemNew.Text = "New(&N)";
 			this.toolStripMenuItemNew.Click += new System.EventHandler(this.ToolStripMenuItemNew_Click);
 			// 
 			// toolStripMenuItemOpen
 			// 
 			this.toolStripMenuItemOpen.Name = "toolStripMenuItemOpen";
 			this.toolStripMenuItemOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-			this.toolStripMenuItemOpen.Size = new System.Drawing.Size(247, 22);
-			this.toolStripMenuItemOpen.Text = "開く(&O)...";
+			this.toolStripMenuItemOpen.Size = new System.Drawing.Size(200, 22);
+			this.toolStripMenuItemOpen.Text = "Open...(&O)";
 			this.toolStripMenuItemOpen.Click += new System.EventHandler(this.ToolStripMenuItemOpen_Click);
 			// 
 			// toolStripSeparatorOpen
 			// 
 			this.toolStripSeparatorOpen.Name = "toolStripSeparatorOpen";
-			this.toolStripSeparatorOpen.Size = new System.Drawing.Size(244, 6);
+			this.toolStripSeparatorOpen.Size = new System.Drawing.Size(197, 6);
 			// 
 			// toolStripMenuItemSave
 			// 
 			this.toolStripMenuItemSave.Name = "toolStripMenuItemSave";
 			this.toolStripMenuItemSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-			this.toolStripMenuItemSave.Size = new System.Drawing.Size(247, 22);
-			this.toolStripMenuItemSave.Text = "保存(&S)";
+			this.toolStripMenuItemSave.Size = new System.Drawing.Size(200, 22);
+			this.toolStripMenuItemSave.Text = "Save(&S)";
 			this.toolStripMenuItemSave.Click += new System.EventHandler(this.ToolStripMenuItemSave_Click);
 			// 
 			// toolStripMenuItemSaveAs
@@ -220,21 +220,21 @@ namespace MotorSoundEditor
 			this.toolStripMenuItemSaveAs.Name = "toolStripMenuItemSaveAs";
 			this.toolStripMenuItemSaveAs.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.S)));
-			this.toolStripMenuItemSaveAs.Size = new System.Drawing.Size(247, 22);
-			this.toolStripMenuItemSaveAs.Text = "名前を付けて保存(&A)...";
+			this.toolStripMenuItemSaveAs.Size = new System.Drawing.Size(200, 22);
+			this.toolStripMenuItemSaveAs.Text = "Save as...(&A)";
 			this.toolStripMenuItemSaveAs.Click += new System.EventHandler(this.ToolStripMenuItemSaveAs_Click);
 			// 
 			// toolStripSeparatorSave
 			// 
 			this.toolStripSeparatorSave.Name = "toolStripSeparatorSave";
-			this.toolStripSeparatorSave.Size = new System.Drawing.Size(244, 6);
+			this.toolStripSeparatorSave.Size = new System.Drawing.Size(197, 6);
 			// 
 			// toolStripMenuItemExit
 			// 
 			this.toolStripMenuItemExit.Name = "toolStripMenuItemExit";
 			this.toolStripMenuItemExit.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-			this.toolStripMenuItemExit.Size = new System.Drawing.Size(247, 22);
-			this.toolStripMenuItemExit.Text = "終了(&X)";
+			this.toolStripMenuItemExit.Size = new System.Drawing.Size(200, 22);
+			this.toolStripMenuItemExit.Text = "Exit(&X)";
 			this.toolStripMenuItemExit.Click += new System.EventHandler(this.ToolStripMenuItemExit_Click);
 			// 
 			// toolStripMenuItemEdit
@@ -249,67 +249,67 @@ namespace MotorSoundEditor
             this.toolStripMenuItemCleanup,
             this.toolStripMenuItemDelete});
 			this.toolStripMenuItemEdit.Name = "toolStripMenuItemEdit";
-			this.toolStripMenuItemEdit.Size = new System.Drawing.Size(56, 20);
-			this.toolStripMenuItemEdit.Text = "編集(&E)";
+			this.toolStripMenuItemEdit.Size = new System.Drawing.Size(52, 20);
+			this.toolStripMenuItemEdit.Text = "Edit(&E)";
 			// 
 			// toolStripMenuItemUndo
 			// 
 			this.toolStripMenuItemUndo.Name = "toolStripMenuItemUndo";
 			this.toolStripMenuItemUndo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-			this.toolStripMenuItemUndo.Size = new System.Drawing.Size(166, 22);
-			this.toolStripMenuItemUndo.Text = "元に戻す(&U)";
+			this.toolStripMenuItemUndo.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemUndo.Text = "Undo(&U)";
 			this.toolStripMenuItemUndo.Click += new System.EventHandler(this.ToolStripMenuItemUndo_Click);
 			// 
 			// toolStripMenuItemRedo
 			// 
 			this.toolStripMenuItemRedo.Name = "toolStripMenuItemRedo";
 			this.toolStripMenuItemRedo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-			this.toolStripMenuItemRedo.Size = new System.Drawing.Size(166, 22);
-			this.toolStripMenuItemRedo.Text = "やり直し(&R)";
+			this.toolStripMenuItemRedo.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemRedo.Text = "Redo(&R)";
 			this.toolStripMenuItemRedo.Click += new System.EventHandler(this.ToolStripMenuItemRedo_Click);
 			// 
 			// toolStripSeparatorUndo
 			// 
 			this.toolStripSeparatorUndo.Name = "toolStripSeparatorUndo";
-			this.toolStripSeparatorUndo.Size = new System.Drawing.Size(163, 6);
+			this.toolStripSeparatorUndo.Size = new System.Drawing.Size(177, 6);
 			// 
 			// toolStripMenuItemTearingOff
 			// 
 			this.toolStripMenuItemTearingOff.Name = "toolStripMenuItemTearingOff";
 			this.toolStripMenuItemTearingOff.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-			this.toolStripMenuItemTearingOff.Size = new System.Drawing.Size(166, 22);
-			this.toolStripMenuItemTearingOff.Text = "切り取り(&T)";
+			this.toolStripMenuItemTearingOff.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemTearingOff.Text = "Cut(&T)";
 			this.toolStripMenuItemTearingOff.Click += new System.EventHandler(this.ToolStripMenuItemTearingOff_Click);
 			// 
 			// toolStripMenuItemCopy
 			// 
 			this.toolStripMenuItemCopy.Name = "toolStripMenuItemCopy";
 			this.toolStripMenuItemCopy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-			this.toolStripMenuItemCopy.Size = new System.Drawing.Size(166, 22);
-			this.toolStripMenuItemCopy.Text = "コピー(&C)";
+			this.toolStripMenuItemCopy.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemCopy.Text = "Copy(&C)";
 			this.toolStripMenuItemCopy.Click += new System.EventHandler(this.ToolStripMenuItemCopy_Click);
 			// 
 			// toolStripMenuItemPaste
 			// 
 			this.toolStripMenuItemPaste.Name = "toolStripMenuItemPaste";
 			this.toolStripMenuItemPaste.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-			this.toolStripMenuItemPaste.Size = new System.Drawing.Size(166, 22);
-			this.toolStripMenuItemPaste.Text = "貼り付け(&P)";
+			this.toolStripMenuItemPaste.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemPaste.Text = "Paste(&P)";
 			this.toolStripMenuItemPaste.Click += new System.EventHandler(this.ToolStripMenuItemPaste_Click);
 			// 
 			// toolStripMenuItemCleanup
 			// 
 			this.toolStripMenuItemCleanup.Name = "toolStripMenuItemCleanup";
-			this.toolStripMenuItemCleanup.Size = new System.Drawing.Size(166, 22);
-			this.toolStripMenuItemCleanup.Text = "クリーンアップ";
+			this.toolStripMenuItemCleanup.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemCleanup.Text = "Cleanup";
 			this.toolStripMenuItemCleanup.Click += new System.EventHandler(this.ToolStripMenuItemCleanup_Click);
 			// 
 			// toolStripMenuItemDelete
 			// 
 			this.toolStripMenuItemDelete.Name = "toolStripMenuItemDelete";
 			this.toolStripMenuItemDelete.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-			this.toolStripMenuItemDelete.Size = new System.Drawing.Size(166, 22);
-			this.toolStripMenuItemDelete.Text = "削除(&D)";
+			this.toolStripMenuItemDelete.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemDelete.Text = "Delete(&D)";
 			this.toolStripMenuItemDelete.Click += new System.EventHandler(this.ToolStripMenuItemDelete_Click);
 			// 
 			// toolStripMenuItemView
@@ -318,8 +318,8 @@ namespace MotorSoundEditor
             this.toolStripMenuItemPower,
             this.toolStripMenuItemBrake});
 			this.toolStripMenuItemView.Name = "toolStripMenuItemView";
-			this.toolStripMenuItemView.Size = new System.Drawing.Size(57, 20);
-			this.toolStripMenuItemView.Text = "表示(&V)";
+			this.toolStripMenuItemView.Size = new System.Drawing.Size(58, 20);
+			this.toolStripMenuItemView.Text = "View(&V)";
 			// 
 			// toolStripMenuItemPower
 			// 
@@ -327,21 +327,21 @@ namespace MotorSoundEditor
             this.toolStripMenuItemPowerTrack1,
             this.toolStripMenuItemPowerTrack2});
 			this.toolStripMenuItemPower.Name = "toolStripMenuItemPower";
-			this.toolStripMenuItemPower.Size = new System.Drawing.Size(124, 22);
-			this.toolStripMenuItemPower.Text = "力行(&P)";
+			this.toolStripMenuItemPower.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemPower.Text = "Power(&P)";
 			// 
 			// toolStripMenuItemPowerTrack1
 			// 
 			this.toolStripMenuItemPowerTrack1.Name = "toolStripMenuItemPowerTrack1";
-			this.toolStripMenuItemPowerTrack1.Size = new System.Drawing.Size(121, 22);
-			this.toolStripMenuItemPowerTrack1.Text = "トラック1(&1)";
+			this.toolStripMenuItemPowerTrack1.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemPowerTrack1.Text = "Track1(&1)";
 			this.toolStripMenuItemPowerTrack1.Click += new System.EventHandler(this.ToolStripMenuItemPowerTrack1_Click);
 			// 
 			// toolStripMenuItemPowerTrack2
 			// 
 			this.toolStripMenuItemPowerTrack2.Name = "toolStripMenuItemPowerTrack2";
-			this.toolStripMenuItemPowerTrack2.Size = new System.Drawing.Size(121, 22);
-			this.toolStripMenuItemPowerTrack2.Text = "トラック2(&2)";
+			this.toolStripMenuItemPowerTrack2.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemPowerTrack2.Text = "Track2(&2)";
 			this.toolStripMenuItemPowerTrack2.Click += new System.EventHandler(this.ToolStripMenuItemPowerTrack2_Click);
 			// 
 			// toolStripMenuItemBrake
@@ -350,21 +350,21 @@ namespace MotorSoundEditor
             this.toolStripMenuItemBrakeTrack1,
             this.toolStripMenuItemBrakeTrack2});
 			this.toolStripMenuItemBrake.Name = "toolStripMenuItemBrake";
-			this.toolStripMenuItemBrake.Size = new System.Drawing.Size(124, 22);
-			this.toolStripMenuItemBrake.Text = "ブレーキ(&B)";
+			this.toolStripMenuItemBrake.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemBrake.Text = "Brake(&B)";
 			// 
 			// toolStripMenuItemBrakeTrack1
 			// 
 			this.toolStripMenuItemBrakeTrack1.Name = "toolStripMenuItemBrakeTrack1";
-			this.toolStripMenuItemBrakeTrack1.Size = new System.Drawing.Size(121, 22);
-			this.toolStripMenuItemBrakeTrack1.Text = "トラック1(&1)";
+			this.toolStripMenuItemBrakeTrack1.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemBrakeTrack1.Text = "Track1(&1)";
 			this.toolStripMenuItemBrakeTrack1.Click += new System.EventHandler(this.ToolStripMenuItemBrakeTrack1_Click);
 			// 
 			// toolStripMenuItemBrakeTrack2
 			// 
 			this.toolStripMenuItemBrakeTrack2.Name = "toolStripMenuItemBrakeTrack2";
-			this.toolStripMenuItemBrakeTrack2.Size = new System.Drawing.Size(121, 22);
-			this.toolStripMenuItemBrakeTrack2.Text = "トラック2(&2)";
+			this.toolStripMenuItemBrakeTrack2.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemBrakeTrack2.Text = "Track2(&2)";
 			this.toolStripMenuItemBrakeTrack2.Click += new System.EventHandler(this.ToolStripMenuItemBrakeTrack2_Click);
 			// 
 			// toolStripMenuItemInput
@@ -374,21 +374,21 @@ namespace MotorSoundEditor
             this.toolStripMenuItemVolume,
             this.toolStripMenuItemIndex});
 			this.toolStripMenuItemInput.Name = "toolStripMenuItemInput";
-			this.toolStripMenuItemInput.Size = new System.Drawing.Size(52, 20);
-			this.toolStripMenuItemInput.Text = "入力(I)";
+			this.toolStripMenuItemInput.Size = new System.Drawing.Size(53, 20);
+			this.toolStripMenuItemInput.Text = "Input(I)";
 			// 
 			// toolStripMenuItemPitch
 			// 
 			this.toolStripMenuItemPitch.Name = "toolStripMenuItemPitch";
-			this.toolStripMenuItemPitch.Size = new System.Drawing.Size(157, 22);
-			this.toolStripMenuItemPitch.Text = "音程(&P)";
+			this.toolStripMenuItemPitch.Size = new System.Drawing.Size(181, 22);
+			this.toolStripMenuItemPitch.Text = "Pitch(&P)";
 			this.toolStripMenuItemPitch.Click += new System.EventHandler(this.ToolStripMenuItemPitch_Click);
 			// 
 			// toolStripMenuItemVolume
 			// 
 			this.toolStripMenuItemVolume.Name = "toolStripMenuItemVolume";
-			this.toolStripMenuItemVolume.Size = new System.Drawing.Size(157, 22);
-			this.toolStripMenuItemVolume.Text = "音量(&V)";
+			this.toolStripMenuItemVolume.Size = new System.Drawing.Size(181, 22);
+			this.toolStripMenuItemVolume.Text = "Volume(&V)";
 			this.toolStripMenuItemVolume.Click += new System.EventHandler(this.ToolStripMenuItemVolume_Click);
 			// 
 			// toolStripMenuItemIndex
@@ -396,15 +396,15 @@ namespace MotorSoundEditor
 			this.toolStripMenuItemIndex.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripComboBoxIndex});
 			this.toolStripMenuItemIndex.Name = "toolStripMenuItemIndex";
-			this.toolStripMenuItemIndex.Size = new System.Drawing.Size(157, 22);
-			this.toolStripMenuItemIndex.Text = "音源インデックス(&I)";
+			this.toolStripMenuItemIndex.Size = new System.Drawing.Size(181, 22);
+			this.toolStripMenuItemIndex.Text = "Sound source index(&I)";
 			this.toolStripMenuItemIndex.Click += new System.EventHandler(this.ToolStripMenuItemIndex_Click);
 			// 
 			// toolStripComboBoxIndex
 			// 
 			this.toolStripComboBoxIndex.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.toolStripComboBoxIndex.Items.AddRange(new object[] {
-            "無し",
+            "None",
             "0",
             "1",
             "2",
@@ -432,35 +432,35 @@ namespace MotorSoundEditor
             this.toolStripMenuItemDot,
             this.toolStripMenuItemLine});
 			this.toolStripMenuItemTool.Name = "toolStripMenuItemTool";
-			this.toolStripMenuItemTool.Size = new System.Drawing.Size(61, 20);
-			this.toolStripMenuItemTool.Text = "ツール(&T)";
+			this.toolStripMenuItemTool.Size = new System.Drawing.Size(54, 20);
+			this.toolStripMenuItemTool.Text = "Tool(&T)";
 			// 
 			// toolStripMenuItemSelect
 			// 
 			this.toolStripMenuItemSelect.Name = "toolStripMenuItemSelect";
-			this.toolStripMenuItemSelect.Size = new System.Drawing.Size(111, 22);
-			this.toolStripMenuItemSelect.Text = "選択(&S)";
+			this.toolStripMenuItemSelect.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemSelect.Text = "Select(&S)";
 			this.toolStripMenuItemSelect.Click += new System.EventHandler(this.ToolStripMenuItemSelect_Click);
 			// 
 			// toolStripMenuItemMove
 			// 
 			this.toolStripMenuItemMove.Name = "toolStripMenuItemMove";
-			this.toolStripMenuItemMove.Size = new System.Drawing.Size(111, 22);
-			this.toolStripMenuItemMove.Text = "移動(&M)";
+			this.toolStripMenuItemMove.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemMove.Text = "Move(&M)";
 			this.toolStripMenuItemMove.Click += new System.EventHandler(this.ToolStripMenuItemMove_Click);
 			// 
 			// toolStripMenuItemDot
 			// 
 			this.toolStripMenuItemDot.Name = "toolStripMenuItemDot";
-			this.toolStripMenuItemDot.Size = new System.Drawing.Size(111, 22);
-			this.toolStripMenuItemDot.Text = "点描(&D)";
+			this.toolStripMenuItemDot.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemDot.Text = "Dot(&D)";
 			this.toolStripMenuItemDot.Click += new System.EventHandler(this.ToolStripMenuItemDot_Click);
 			// 
 			// toolStripMenuItemLine
 			// 
 			this.toolStripMenuItemLine.Name = "toolStripMenuItemLine";
-			this.toolStripMenuItemLine.Size = new System.Drawing.Size(111, 22);
-			this.toolStripMenuItemLine.Text = "直線(&L)";
+			this.toolStripMenuItemLine.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemLine.Text = "Move(&L)";
 			this.toolStripMenuItemLine.Click += new System.EventHandler(this.ToolStripMenuItemLine_Click);
 			// 
 			// toolStripComboBoxLanguage
@@ -481,7 +481,7 @@ namespace MotorSoundEditor
             this.toolStripStatusLabelTrack,
             this.toolStripStatusLabelType});
 			this.statusStripStatus.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-			this.statusStripStatus.Location = new System.Drawing.Point(0, 572);
+			this.statusStripStatus.Location = new System.Drawing.Point(0, 596);
 			this.statusStripStatus.Name = "statusStripStatus";
 			this.statusStripStatus.Size = new System.Drawing.Size(800, 22);
 			this.statusStripStatus.TabIndex = 1;
@@ -552,7 +552,7 @@ namespace MotorSoundEditor
 			this.pictureBoxDrawArea.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.pictureBoxDrawArea.Location = new System.Drawing.Point(0, 0);
 			this.pictureBoxDrawArea.Name = "pictureBoxDrawArea";
-			this.pictureBoxDrawArea.Size = new System.Drawing.Size(580, 523);
+			this.pictureBoxDrawArea.Size = new System.Drawing.Size(580, 547);
 			this.pictureBoxDrawArea.TabIndex = 2;
 			this.pictureBoxDrawArea.TabStop = false;
 			this.pictureBoxDrawArea.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PictureBoxDrawArea_MouseDown);
@@ -570,7 +570,7 @@ namespace MotorSoundEditor
 			this.panelSetting.Dock = System.Windows.Forms.DockStyle.Right;
 			this.panelSetting.Location = new System.Drawing.Point(580, 24);
 			this.panelSetting.Name = "panelSetting";
-			this.panelSetting.Size = new System.Drawing.Size(220, 548);
+			this.panelSetting.Size = new System.Drawing.Size(220, 572);
 			this.panelSetting.TabIndex = 3;
 			// 
 			// groupBoxDirect
@@ -588,7 +588,7 @@ namespace MotorSoundEditor
 			this.groupBoxDirect.Size = new System.Drawing.Size(200, 96);
 			this.groupBoxDirect.TabIndex = 2;
 			this.groupBoxDirect.TabStop = false;
-			this.groupBoxDirect.Text = "直接入力";
+			this.groupBoxDirect.Text = "Direct input";
 			// 
 			// buttonDirectDot
 			// 
@@ -596,7 +596,7 @@ namespace MotorSoundEditor
 			this.buttonDirectDot.Name = "buttonDirectDot";
 			this.buttonDirectDot.Size = new System.Drawing.Size(56, 24);
 			this.buttonDirectDot.TabIndex = 22;
-			this.toolTipName.SetToolTip(this.buttonDirectDot, "点描");
+			this.toolTipName.SetToolTip(this.buttonDirectDot, "Dot");
 			this.buttonDirectDot.UseVisualStyleBackColor = true;
 			this.buttonDirectDot.Click += new System.EventHandler(this.ButtonDirectDot_Click);
 			// 
@@ -606,13 +606,13 @@ namespace MotorSoundEditor
 			this.buttonDirectMove.Name = "buttonDirectMove";
 			this.buttonDirectMove.Size = new System.Drawing.Size(56, 24);
 			this.buttonDirectMove.TabIndex = 21;
-			this.toolTipName.SetToolTip(this.buttonDirectMove, "移動");
+			this.toolTipName.SetToolTip(this.buttonDirectMove, "Move");
 			this.buttonDirectMove.UseVisualStyleBackColor = true;
 			this.buttonDirectMove.Click += new System.EventHandler(this.ButtonDirectMove_Click);
 			// 
 			// textBoxDirectY
 			// 
-			this.textBoxDirectY.Location = new System.Drawing.Point(64, 40);
+			this.textBoxDirectY.Location = new System.Drawing.Point(112, 40);
 			this.textBoxDirectY.Name = "textBoxDirectY";
 			this.textBoxDirectY.Size = new System.Drawing.Size(40, 19);
 			this.textBoxDirectY.TabIndex = 19;
@@ -621,14 +621,14 @@ namespace MotorSoundEditor
 			// 
 			this.labelDirectY.Location = new System.Drawing.Point(8, 40);
 			this.labelDirectY.Name = "labelDirectY";
-			this.labelDirectY.Size = new System.Drawing.Size(48, 16);
+			this.labelDirectY.Size = new System.Drawing.Size(96, 16);
 			this.labelDirectY.TabIndex = 18;
-			this.labelDirectY.Text = "y座標:";
+			this.labelDirectY.Text = "y coordinate:";
 			this.labelDirectY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// labelDirectXUnit
 			// 
-			this.labelDirectXUnit.Location = new System.Drawing.Point(112, 16);
+			this.labelDirectXUnit.Location = new System.Drawing.Point(160, 16);
 			this.labelDirectXUnit.Name = "labelDirectXUnit";
 			this.labelDirectXUnit.Size = new System.Drawing.Size(32, 16);
 			this.labelDirectXUnit.TabIndex = 17;
@@ -637,7 +637,7 @@ namespace MotorSoundEditor
 			// 
 			// textBoxDirectX
 			// 
-			this.textBoxDirectX.Location = new System.Drawing.Point(64, 16);
+			this.textBoxDirectX.Location = new System.Drawing.Point(112, 16);
 			this.textBoxDirectX.Name = "textBoxDirectX";
 			this.textBoxDirectX.Size = new System.Drawing.Size(40, 19);
 			this.textBoxDirectX.TabIndex = 16;
@@ -646,9 +646,9 @@ namespace MotorSoundEditor
 			// 
 			this.labelDirectX.Location = new System.Drawing.Point(8, 16);
 			this.labelDirectX.Name = "labelDirectX";
-			this.labelDirectX.Size = new System.Drawing.Size(48, 16);
+			this.labelDirectX.Size = new System.Drawing.Size(96, 16);
 			this.labelDirectX.TabIndex = 15;
-			this.labelDirectX.Text = "x座標:";
+			this.labelDirectX.Text = "x coordinate:";
 			this.labelDirectX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// groupBoxPlay
@@ -661,38 +661,38 @@ namespace MotorSoundEditor
 			this.groupBoxPlay.Controls.Add(this.groupBoxSource);
 			this.groupBoxPlay.Location = new System.Drawing.Point(8, 312);
 			this.groupBoxPlay.Name = "groupBoxPlay";
-			this.groupBoxPlay.Size = new System.Drawing.Size(200, 224);
+			this.groupBoxPlay.Size = new System.Drawing.Size(200, 248);
 			this.groupBoxPlay.TabIndex = 1;
 			this.groupBoxPlay.TabStop = false;
-			this.groupBoxPlay.Text = "再生設定";
+			this.groupBoxPlay.Text = "Playback setting";
 			// 
 			// buttonStop
 			// 
-			this.buttonStop.Location = new System.Drawing.Point(136, 192);
+			this.buttonStop.Location = new System.Drawing.Point(136, 216);
 			this.buttonStop.Name = "buttonStop";
 			this.buttonStop.Size = new System.Drawing.Size(56, 24);
 			this.buttonStop.TabIndex = 4;
-			this.toolTipName.SetToolTip(this.buttonStop, "停止");
+			this.toolTipName.SetToolTip(this.buttonStop, "Stop");
 			this.buttonStop.UseVisualStyleBackColor = true;
 			this.buttonStop.Click += new System.EventHandler(this.ButtonStop_Click);
 			// 
 			// buttonPause
 			// 
-			this.buttonPause.Location = new System.Drawing.Point(72, 192);
+			this.buttonPause.Location = new System.Drawing.Point(72, 216);
 			this.buttonPause.Name = "buttonPause";
 			this.buttonPause.Size = new System.Drawing.Size(56, 24);
 			this.buttonPause.TabIndex = 3;
-			this.toolTipName.SetToolTip(this.buttonPause, "一時停止");
+			this.toolTipName.SetToolTip(this.buttonPause, "Pause");
 			this.buttonPause.UseVisualStyleBackColor = true;
 			this.buttonPause.Click += new System.EventHandler(this.ButtonPause_Click);
 			// 
 			// buttonPlay
 			// 
-			this.buttonPlay.Location = new System.Drawing.Point(8, 192);
+			this.buttonPlay.Location = new System.Drawing.Point(8, 216);
 			this.buttonPlay.Name = "buttonPlay";
 			this.buttonPlay.Size = new System.Drawing.Size(56, 24);
 			this.buttonPlay.TabIndex = 2;
-			this.toolTipName.SetToolTip(this.buttonPlay, "再生");
+			this.toolTipName.SetToolTip(this.buttonPlay, "Playback");
 			this.buttonPlay.UseVisualStyleBackColor = true;
 			this.buttonPlay.Click += new System.EventHandler(this.ButtonPlay_Click);
 			// 
@@ -709,19 +709,19 @@ namespace MotorSoundEditor
 			this.groupBoxArea.Controls.Add(this.textBoxAccel);
 			this.groupBoxArea.Location = new System.Drawing.Point(8, 88);
 			this.groupBoxArea.Name = "groupBoxArea";
-			this.groupBoxArea.Size = new System.Drawing.Size(184, 96);
+			this.groupBoxArea.Size = new System.Drawing.Size(184, 120);
 			this.groupBoxArea.TabIndex = 1;
 			this.groupBoxArea.TabStop = false;
-			this.groupBoxArea.Text = "区間";
+			this.groupBoxArea.Text = "Area setting";
 			// 
 			// checkBoxConstant
 			// 
 			this.checkBoxConstant.AutoSize = true;
-			this.checkBoxConstant.Location = new System.Drawing.Point(96, 16);
+			this.checkBoxConstant.Location = new System.Drawing.Point(8, 40);
 			this.checkBoxConstant.Name = "checkBoxConstant";
-			this.checkBoxConstant.Size = new System.Drawing.Size(72, 16);
+			this.checkBoxConstant.Size = new System.Drawing.Size(104, 16);
 			this.checkBoxConstant.TabIndex = 19;
-			this.checkBoxConstant.Text = "等速運動";
+			this.checkBoxConstant.Text = "Constant speed";
 			this.checkBoxConstant.UseVisualStyleBackColor = true;
 			this.checkBoxConstant.CheckedChanged += new System.EventHandler(this.CheckBoxConstant_CheckedChanged);
 			// 
@@ -730,25 +730,25 @@ namespace MotorSoundEditor
 			this.checkBoxLoop.AutoSize = true;
 			this.checkBoxLoop.Location = new System.Drawing.Point(8, 16);
 			this.checkBoxLoop.Name = "checkBoxLoop";
-			this.checkBoxLoop.Size = new System.Drawing.Size(77, 16);
+			this.checkBoxLoop.Size = new System.Drawing.Size(97, 16);
 			this.checkBoxLoop.TabIndex = 18;
-			this.checkBoxLoop.Text = "ループ再生";
+			this.checkBoxLoop.Text = "Loop playback";
 			this.checkBoxLoop.UseVisualStyleBackColor = true;
 			this.checkBoxLoop.CheckedChanged += new System.EventHandler(this.CheckBoxLoop_CheckedChanged);
 			// 
 			// buttonSwap
 			// 
-			this.buttonSwap.Location = new System.Drawing.Point(56, 64);
+			this.buttonSwap.Location = new System.Drawing.Point(56, 88);
 			this.buttonSwap.Name = "buttonSwap";
 			this.buttonSwap.Size = new System.Drawing.Size(32, 19);
 			this.buttonSwap.TabIndex = 17;
-			this.toolTipName.SetToolTip(this.buttonSwap, "入れ替え");
+			this.toolTipName.SetToolTip(this.buttonSwap, "Swap");
 			this.buttonSwap.UseVisualStyleBackColor = true;
 			this.buttonSwap.Click += new System.EventHandler(this.ButtonSwap_Click);
 			// 
 			// textBoxAreaLeft
 			// 
-			this.textBoxAreaLeft.Location = new System.Drawing.Point(8, 64);
+			this.textBoxAreaLeft.Location = new System.Drawing.Point(8, 88);
 			this.textBoxAreaLeft.Name = "textBoxAreaLeft";
 			this.textBoxAreaLeft.Size = new System.Drawing.Size(40, 19);
 			this.textBoxAreaLeft.TabIndex = 16;
@@ -756,7 +756,7 @@ namespace MotorSoundEditor
 			// 
 			// labelAreaUnit
 			// 
-			this.labelAreaUnit.Location = new System.Drawing.Point(144, 64);
+			this.labelAreaUnit.Location = new System.Drawing.Point(144, 88);
 			this.labelAreaUnit.Name = "labelAreaUnit";
 			this.labelAreaUnit.Size = new System.Drawing.Size(32, 16);
 			this.labelAreaUnit.TabIndex = 15;
@@ -765,7 +765,7 @@ namespace MotorSoundEditor
 			// 
 			// textBoxAreaRight
 			// 
-			this.textBoxAreaRight.Location = new System.Drawing.Point(96, 64);
+			this.textBoxAreaRight.Location = new System.Drawing.Point(96, 88);
 			this.textBoxAreaRight.Name = "textBoxAreaRight";
 			this.textBoxAreaRight.Size = new System.Drawing.Size(40, 19);
 			this.textBoxAreaRight.TabIndex = 3;
@@ -773,16 +773,16 @@ namespace MotorSoundEditor
 			// 
 			// labelAccel
 			// 
-			this.labelAccel.Location = new System.Drawing.Point(8, 40);
+			this.labelAccel.Location = new System.Drawing.Point(8, 64);
 			this.labelAccel.Name = "labelAccel";
-			this.labelAccel.Size = new System.Drawing.Size(64, 16);
+			this.labelAccel.Size = new System.Drawing.Size(72, 16);
 			this.labelAccel.TabIndex = 2;
-			this.labelAccel.Text = "加速度:";
+			this.labelAccel.Text = "Acceleration:";
 			this.labelAccel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// labelAccelUnit
 			// 
-			this.labelAccelUnit.Location = new System.Drawing.Point(128, 40);
+			this.labelAccelUnit.Location = new System.Drawing.Point(128, 64);
 			this.labelAccelUnit.Name = "labelAccelUnit";
 			this.labelAccelUnit.Size = new System.Drawing.Size(44, 16);
 			this.labelAccelUnit.TabIndex = 1;
@@ -791,9 +791,9 @@ namespace MotorSoundEditor
 			// 
 			// textBoxAccel
 			// 
-			this.textBoxAccel.Location = new System.Drawing.Point(80, 40);
+			this.textBoxAccel.Location = new System.Drawing.Point(88, 64);
 			this.textBoxAccel.Name = "textBoxAccel";
-			this.textBoxAccel.Size = new System.Drawing.Size(40, 19);
+			this.textBoxAccel.Size = new System.Drawing.Size(32, 19);
 			this.textBoxAccel.TabIndex = 0;
 			this.textBoxAccel.TextChanged += new System.EventHandler(this.TextBoxAccel_TextChanged);
 			// 
@@ -808,11 +808,11 @@ namespace MotorSoundEditor
 			this.groupBoxSource.Size = new System.Drawing.Size(184, 64);
 			this.groupBoxSource.TabIndex = 0;
 			this.groupBoxSource.TabStop = false;
-			this.groupBoxSource.Text = "音源";
+			this.groupBoxSource.Text = "Sound source setting";
 			// 
 			// textBoxRunIndex
 			// 
-			this.textBoxRunIndex.Location = new System.Drawing.Point(96, 16);
+			this.textBoxRunIndex.Location = new System.Drawing.Point(112, 16);
 			this.textBoxRunIndex.Name = "textBoxRunIndex";
 			this.textBoxRunIndex.Size = new System.Drawing.Size(32, 19);
 			this.textBoxRunIndex.TabIndex = 15;
@@ -822,9 +822,9 @@ namespace MotorSoundEditor
 			// 
 			this.labelRun.Location = new System.Drawing.Point(8, 16);
 			this.labelRun.Name = "labelRun";
-			this.labelRun.Size = new System.Drawing.Size(80, 16);
+			this.labelRun.Size = new System.Drawing.Size(96, 16);
 			this.labelRun.TabIndex = 4;
-			this.labelRun.Text = "走行音:";
+			this.labelRun.Text = "Running sound:";
 			this.labelRun.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// checkBoxTrack2
@@ -832,9 +832,9 @@ namespace MotorSoundEditor
 			this.checkBoxTrack2.AutoSize = true;
 			this.checkBoxTrack2.Location = new System.Drawing.Point(96, 40);
 			this.checkBoxTrack2.Name = "checkBoxTrack2";
-			this.checkBoxTrack2.Size = new System.Drawing.Size(61, 16);
+			this.checkBoxTrack2.Size = new System.Drawing.Size(59, 16);
 			this.checkBoxTrack2.TabIndex = 2;
-			this.checkBoxTrack2.Text = "トラック2";
+			this.checkBoxTrack2.Text = "Track2";
 			this.checkBoxTrack2.UseVisualStyleBackColor = true;
 			this.checkBoxTrack2.CheckedChanged += new System.EventHandler(this.CheckBoxTrack2_CheckedChanged);
 			// 
@@ -843,9 +843,9 @@ namespace MotorSoundEditor
 			this.checkBoxTrack1.AutoSize = true;
 			this.checkBoxTrack1.Location = new System.Drawing.Point(8, 40);
 			this.checkBoxTrack1.Name = "checkBoxTrack1";
-			this.checkBoxTrack1.Size = new System.Drawing.Size(61, 16);
+			this.checkBoxTrack1.Size = new System.Drawing.Size(59, 16);
 			this.checkBoxTrack1.TabIndex = 1;
-			this.checkBoxTrack1.Text = "トラック1";
+			this.checkBoxTrack1.Text = "Track1";
 			this.checkBoxTrack1.UseVisualStyleBackColor = true;
 			this.checkBoxTrack1.CheckedChanged += new System.EventHandler(this.CheckBoxTrack1_CheckedChanged);
 			// 
@@ -874,7 +874,7 @@ namespace MotorSoundEditor
 			this.groupBoxView.Size = new System.Drawing.Size(200, 192);
 			this.groupBoxView.TabIndex = 0;
 			this.groupBoxView.TabStop = false;
-			this.groupBoxView.Text = "表示設定";
+			this.groupBoxView.Text = "View setting";
 			// 
 			// buttonReset
 			// 
@@ -882,7 +882,7 @@ namespace MotorSoundEditor
 			this.buttonReset.Name = "buttonReset";
 			this.buttonReset.Size = new System.Drawing.Size(56, 24);
 			this.buttonReset.TabIndex = 25;
-			this.toolTipName.SetToolTip(this.buttonReset, "リセット");
+			this.toolTipName.SetToolTip(this.buttonReset, "Reset");
 			this.buttonReset.UseVisualStyleBackColor = true;
 			this.buttonReset.Click += new System.EventHandler(this.ButtonReset_Click);
 			// 
@@ -892,7 +892,7 @@ namespace MotorSoundEditor
 			this.buttonZoomOut.Name = "buttonZoomOut";
 			this.buttonZoomOut.Size = new System.Drawing.Size(56, 24);
 			this.buttonZoomOut.TabIndex = 24;
-			this.toolTipName.SetToolTip(this.buttonZoomOut, "縮小");
+			this.toolTipName.SetToolTip(this.buttonZoomOut, "Zoom Out");
 			this.buttonZoomOut.UseVisualStyleBackColor = true;
 			this.buttonZoomOut.Click += new System.EventHandler(this.ButtonZoomOut_Click);
 			// 
@@ -902,7 +902,7 @@ namespace MotorSoundEditor
 			this.buttonZoomIn.Name = "buttonZoomIn";
 			this.buttonZoomIn.Size = new System.Drawing.Size(56, 24);
 			this.buttonZoomIn.TabIndex = 23;
-			this.toolTipName.SetToolTip(this.buttonZoomIn, "拡大");
+			this.toolTipName.SetToolTip(this.buttonZoomIn, "Zoom In");
 			this.buttonZoomIn.UseVisualStyleBackColor = true;
 			this.buttonZoomIn.Click += new System.EventHandler(this.ButtonZoomIn_Click);
 			// 
@@ -912,8 +912,8 @@ namespace MotorSoundEditor
 			this.labelMaxVolume.Name = "labelMaxVolume";
 			this.labelMaxVolume.Size = new System.Drawing.Size(104, 16);
 			this.labelMaxVolume.TabIndex = 14;
-			this.labelMaxVolume.Text = "y軸の最大値(音量):";
-			this.labelMaxVolume.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.labelMaxVolume.Text = "y-max(Volume):";
+			this.labelMaxVolume.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// textBoxMaxVolume
 			// 
@@ -929,8 +929,8 @@ namespace MotorSoundEditor
 			this.labelMinVolume.Name = "labelMinVolume";
 			this.labelMinVolume.Size = new System.Drawing.Size(104, 16);
 			this.labelMinVolume.TabIndex = 12;
-			this.labelMinVolume.Text = "y軸の最小値(音量):";
-			this.labelMinVolume.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.labelMinVolume.Text = "y-min(Volume):";
+			this.labelMinVolume.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// textBoxMinVolume
 			// 
@@ -946,8 +946,8 @@ namespace MotorSoundEditor
 			this.labelMaxPitch.Name = "labelMaxPitch";
 			this.labelMaxPitch.Size = new System.Drawing.Size(104, 16);
 			this.labelMaxPitch.TabIndex = 10;
-			this.labelMaxPitch.Text = "y軸の最大値(音程):";
-			this.labelMaxPitch.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.labelMaxPitch.Text = "y-max(Pitch):";
+			this.labelMaxPitch.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// textBoxMaxPitch
 			// 
@@ -963,8 +963,8 @@ namespace MotorSoundEditor
 			this.labelMinPitch.Name = "labelMinPitch";
 			this.labelMinPitch.Size = new System.Drawing.Size(104, 16);
 			this.labelMinPitch.TabIndex = 8;
-			this.labelMinPitch.Text = "y軸の最小値(音程):";
-			this.labelMinPitch.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.labelMinPitch.Text = "y-min(Pitch):";
+			this.labelMinPitch.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// textBoxMinPitch
 			// 
@@ -997,8 +997,8 @@ namespace MotorSoundEditor
 			this.labelMaxVelocity.Name = "labelMaxVelocity";
 			this.labelMaxVelocity.Size = new System.Drawing.Size(104, 16);
 			this.labelMaxVelocity.TabIndex = 3;
-			this.labelMaxVelocity.Text = "x軸の最大値(速度):";
-			this.labelMaxVelocity.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.labelMaxVelocity.Text = "x-max(Velocity):";
+			this.labelMaxVelocity.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// labelMinVelocityUnit
 			// 
@@ -1023,8 +1023,8 @@ namespace MotorSoundEditor
 			this.labelMinVelocity.Name = "labelMinVelocity";
 			this.labelMinVelocity.Size = new System.Drawing.Size(104, 16);
 			this.labelMinVelocity.TabIndex = 0;
-			this.labelMinVelocity.Text = "x軸の最小値(速度):";
-			this.labelMinVelocity.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.labelMinVelocity.Text = "x-min(Velocity):";
+			this.labelMinVelocity.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// toolStripContainerDrawArea
 			// 
@@ -1032,11 +1032,11 @@ namespace MotorSoundEditor
 			// toolStripContainerDrawArea.ContentPanel
 			// 
 			this.toolStripContainerDrawArea.ContentPanel.Controls.Add(this.pictureBoxDrawArea);
-			this.toolStripContainerDrawArea.ContentPanel.Size = new System.Drawing.Size(580, 523);
+			this.toolStripContainerDrawArea.ContentPanel.Size = new System.Drawing.Size(580, 547);
 			this.toolStripContainerDrawArea.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.toolStripContainerDrawArea.Location = new System.Drawing.Point(0, 24);
 			this.toolStripContainerDrawArea.Name = "toolStripContainerDrawArea";
-			this.toolStripContainerDrawArea.Size = new System.Drawing.Size(580, 548);
+			this.toolStripContainerDrawArea.Size = new System.Drawing.Size(580, 572);
 			this.toolStripContainerDrawArea.TabIndex = 4;
 			this.toolStripContainerDrawArea.Text = "toolStripContainer1";
 			// 
@@ -1077,7 +1077,7 @@ namespace MotorSoundEditor
 			this.toolStripButtonNew.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButtonNew.Name = "toolStripButtonNew";
 			this.toolStripButtonNew.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonNew.Text = "新規作成 (Ctrl+N)";
+			this.toolStripButtonNew.Text = "New (Ctrl+N)";
 			this.toolStripButtonNew.Click += new System.EventHandler(this.ToolStripButtonNew_Click);
 			// 
 			// toolStripButtonOpen
@@ -1087,7 +1087,7 @@ namespace MotorSoundEditor
 			this.toolStripButtonOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButtonOpen.Name = "toolStripButtonOpen";
 			this.toolStripButtonOpen.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonOpen.Text = "開く (Ctrl+O)";
+			this.toolStripButtonOpen.Text = "Open... (Ctrl+O)";
 			this.toolStripButtonOpen.Click += new System.EventHandler(this.ToolStripButtonOpen_Click);
 			// 
 			// toolStripButtonSave
@@ -1097,7 +1097,7 @@ namespace MotorSoundEditor
 			this.toolStripButtonSave.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButtonSave.Name = "toolStripButtonSave";
 			this.toolStripButtonSave.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonSave.Text = "保存 (Ctrl+S)";
+			this.toolStripButtonSave.Text = "Save (Ctrl+S)";
 			this.toolStripButtonSave.Click += new System.EventHandler(this.ToolStripButtonSave_Click);
 			// 
 			// toolStripSeparatorFile
@@ -1112,7 +1112,7 @@ namespace MotorSoundEditor
 			this.toolStripButtonUndo.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButtonUndo.Name = "toolStripButtonUndo";
 			this.toolStripButtonUndo.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonUndo.Text = "元に戻す (Ctrl+Z)";
+			this.toolStripButtonUndo.Text = "Undo (Ctrl+Z)";
 			this.toolStripButtonUndo.Click += new System.EventHandler(this.ToolStripButtonUndo_Click);
 			// 
 			// toolStripButtonRedo
@@ -1122,7 +1122,7 @@ namespace MotorSoundEditor
 			this.toolStripButtonRedo.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButtonRedo.Name = "toolStripButtonRedo";
 			this.toolStripButtonRedo.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonRedo.Text = "やり直し (Ctrl+Y)";
+			this.toolStripButtonRedo.Text = "Redo (Ctrl+Y)";
 			this.toolStripButtonRedo.Click += new System.EventHandler(this.ToolStripButtonRedo_Click);
 			// 
 			// toolStripSeparatorRedo
@@ -1137,7 +1137,7 @@ namespace MotorSoundEditor
 			this.toolStripButtonTearingOff.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButtonTearingOff.Name = "toolStripButtonTearingOff";
 			this.toolStripButtonTearingOff.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonTearingOff.Text = "切り取り (Ctrl+X)";
+			this.toolStripButtonTearingOff.Text = "Cut (Ctrl+X)";
 			this.toolStripButtonTearingOff.Click += new System.EventHandler(this.ToolStripButtonTearingOff_Click);
 			// 
 			// toolStripButtonCopy
@@ -1147,7 +1147,7 @@ namespace MotorSoundEditor
 			this.toolStripButtonCopy.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButtonCopy.Name = "toolStripButtonCopy";
 			this.toolStripButtonCopy.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonCopy.Text = "コピー (Ctrl+C)";
+			this.toolStripButtonCopy.Text = "Copy (Ctrl+C)";
 			this.toolStripButtonCopy.Click += new System.EventHandler(this.ToolStripButtonCopy_Click);
 			// 
 			// toolStripButtonPaste
@@ -1157,7 +1157,7 @@ namespace MotorSoundEditor
 			this.toolStripButtonPaste.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButtonPaste.Name = "toolStripButtonPaste";
 			this.toolStripButtonPaste.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonPaste.Text = "貼り付け (Ctrl+V)";
+			this.toolStripButtonPaste.Text = "Paste (Ctrl+V)";
 			this.toolStripButtonPaste.Click += new System.EventHandler(this.ToolStripButtonPaste_Click);
 			// 
 			// toolStripButtonCleanup
@@ -1167,7 +1167,7 @@ namespace MotorSoundEditor
 			this.toolStripButtonCleanup.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButtonCleanup.Name = "toolStripButtonCleanup";
 			this.toolStripButtonCleanup.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonCleanup.Text = "クリーンアップ";
+			this.toolStripButtonCleanup.Text = "Cleanup";
 			this.toolStripButtonCleanup.Click += new System.EventHandler(this.ToolStripButtonCleanup_Click);
 			// 
 			// toolStripButtonDelete
@@ -1177,7 +1177,7 @@ namespace MotorSoundEditor
 			this.toolStripButtonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButtonDelete.Name = "toolStripButtonDelete";
 			this.toolStripButtonDelete.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonDelete.Text = "削除 (Del)";
+			this.toolStripButtonDelete.Text = "Delete (Del)";
 			this.toolStripButtonDelete.Click += new System.EventHandler(this.ToolStripButtonDelete_Click);
 			// 
 			// toolStripSeparatorEdit
@@ -1192,7 +1192,7 @@ namespace MotorSoundEditor
 			this.toolStripButtonSelect.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButtonSelect.Name = "toolStripButtonSelect";
 			this.toolStripButtonSelect.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonSelect.Text = "選択";
+			this.toolStripButtonSelect.Text = "Select";
 			this.toolStripButtonSelect.Click += new System.EventHandler(this.ToolStripButtonSelect_Click);
 			// 
 			// toolStripButtonMove
@@ -1202,7 +1202,7 @@ namespace MotorSoundEditor
 			this.toolStripButtonMove.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButtonMove.Name = "toolStripButtonMove";
 			this.toolStripButtonMove.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonMove.Text = "移動";
+			this.toolStripButtonMove.Text = "Move";
 			this.toolStripButtonMove.Click += new System.EventHandler(this.ToolStripButtonMove_Click);
 			// 
 			// toolStripButtonDot
@@ -1212,7 +1212,7 @@ namespace MotorSoundEditor
 			this.toolStripButtonDot.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButtonDot.Name = "toolStripButtonDot";
 			this.toolStripButtonDot.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonDot.Text = "点描";
+			this.toolStripButtonDot.Text = "Dot";
 			this.toolStripButtonDot.Click += new System.EventHandler(this.ToolStripButtonDot_Click);
 			// 
 			// toolStripButtonLine
@@ -1222,14 +1222,14 @@ namespace MotorSoundEditor
 			this.toolStripButtonLine.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripButtonLine.Name = "toolStripButtonLine";
 			this.toolStripButtonLine.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonLine.Text = "直線";
+			this.toolStripButtonLine.Text = "Line";
 			this.toolStripButtonLine.Click += new System.EventHandler(this.ToolStripButtonLine_Click);
 			// 
 			// FormEditor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(800, 594);
+			this.ClientSize = new System.Drawing.Size(800, 618);
 			this.Controls.Add(this.toolStripContainerDrawArea);
 			this.Controls.Add(this.panelSetting);
 			this.Controls.Add(this.statusStripStatus);
