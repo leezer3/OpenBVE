@@ -6,7 +6,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Media;
-using System.Text;
 using System.Windows.Forms;
 using MotorSoundEditor.Parsers.Train;
 using OpenBveApi.Interface;

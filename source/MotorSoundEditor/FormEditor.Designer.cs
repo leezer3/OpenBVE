@@ -256,7 +256,7 @@ namespace MotorSoundEditor
 			// 
 			this.toolStripMenuItemUndo.Name = "toolStripMenuItemUndo";
 			this.toolStripMenuItemUndo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-			this.toolStripMenuItemUndo.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemUndo.Size = new System.Drawing.Size(152, 22);
 			this.toolStripMenuItemUndo.Text = "Undo(&U)";
 			this.toolStripMenuItemUndo.Click += new System.EventHandler(this.ToolStripMenuItemUndo_Click);
 			// 
@@ -264,20 +264,20 @@ namespace MotorSoundEditor
 			// 
 			this.toolStripMenuItemRedo.Name = "toolStripMenuItemRedo";
 			this.toolStripMenuItemRedo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-			this.toolStripMenuItemRedo.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemRedo.Size = new System.Drawing.Size(152, 22);
 			this.toolStripMenuItemRedo.Text = "Redo(&R)";
 			this.toolStripMenuItemRedo.Click += new System.EventHandler(this.ToolStripMenuItemRedo_Click);
 			// 
 			// toolStripSeparatorUndo
 			// 
 			this.toolStripSeparatorUndo.Name = "toolStripSeparatorUndo";
-			this.toolStripSeparatorUndo.Size = new System.Drawing.Size(177, 6);
+			this.toolStripSeparatorUndo.Size = new System.Drawing.Size(149, 6);
 			// 
 			// toolStripMenuItemTearingOff
 			// 
 			this.toolStripMenuItemTearingOff.Name = "toolStripMenuItemTearingOff";
 			this.toolStripMenuItemTearingOff.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-			this.toolStripMenuItemTearingOff.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemTearingOff.Size = new System.Drawing.Size(152, 22);
 			this.toolStripMenuItemTearingOff.Text = "Cut(&T)";
 			this.toolStripMenuItemTearingOff.Click += new System.EventHandler(this.ToolStripMenuItemTearingOff_Click);
 			// 
@@ -285,7 +285,7 @@ namespace MotorSoundEditor
 			// 
 			this.toolStripMenuItemCopy.Name = "toolStripMenuItemCopy";
 			this.toolStripMenuItemCopy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-			this.toolStripMenuItemCopy.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemCopy.Size = new System.Drawing.Size(152, 22);
 			this.toolStripMenuItemCopy.Text = "Copy(&C)";
 			this.toolStripMenuItemCopy.Click += new System.EventHandler(this.ToolStripMenuItemCopy_Click);
 			// 
@@ -293,14 +293,14 @@ namespace MotorSoundEditor
 			// 
 			this.toolStripMenuItemPaste.Name = "toolStripMenuItemPaste";
 			this.toolStripMenuItemPaste.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-			this.toolStripMenuItemPaste.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemPaste.Size = new System.Drawing.Size(152, 22);
 			this.toolStripMenuItemPaste.Text = "Paste(&P)";
 			this.toolStripMenuItemPaste.Click += new System.EventHandler(this.ToolStripMenuItemPaste_Click);
 			// 
 			// toolStripMenuItemCleanup
 			// 
 			this.toolStripMenuItemCleanup.Name = "toolStripMenuItemCleanup";
-			this.toolStripMenuItemCleanup.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemCleanup.Size = new System.Drawing.Size(152, 22);
 			this.toolStripMenuItemCleanup.Text = "Cleanup";
 			this.toolStripMenuItemCleanup.Click += new System.EventHandler(this.ToolStripMenuItemCleanup_Click);
 			// 
@@ -308,7 +308,7 @@ namespace MotorSoundEditor
 			// 
 			this.toolStripMenuItemDelete.Name = "toolStripMenuItemDelete";
 			this.toolStripMenuItemDelete.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-			this.toolStripMenuItemDelete.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemDelete.Size = new System.Drawing.Size(152, 22);
 			this.toolStripMenuItemDelete.Text = "Delete(&D)";
 			this.toolStripMenuItemDelete.Click += new System.EventHandler(this.ToolStripMenuItemDelete_Click);
 			// 
@@ -327,20 +327,20 @@ namespace MotorSoundEditor
             this.toolStripMenuItemPowerTrack1,
             this.toolStripMenuItemPowerTrack2});
 			this.toolStripMenuItemPower.Name = "toolStripMenuItemPower";
-			this.toolStripMenuItemPower.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemPower.Size = new System.Drawing.Size(116, 22);
 			this.toolStripMenuItemPower.Text = "Power(&P)";
 			// 
 			// toolStripMenuItemPowerTrack1
 			// 
 			this.toolStripMenuItemPowerTrack1.Name = "toolStripMenuItemPowerTrack1";
-			this.toolStripMenuItemPowerTrack1.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemPowerTrack1.Size = new System.Drawing.Size(119, 22);
 			this.toolStripMenuItemPowerTrack1.Text = "Track1(&1)";
 			this.toolStripMenuItemPowerTrack1.Click += new System.EventHandler(this.ToolStripMenuItemPowerTrack1_Click);
 			// 
 			// toolStripMenuItemPowerTrack2
 			// 
 			this.toolStripMenuItemPowerTrack2.Name = "toolStripMenuItemPowerTrack2";
-			this.toolStripMenuItemPowerTrack2.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemPowerTrack2.Size = new System.Drawing.Size(119, 22);
 			this.toolStripMenuItemPowerTrack2.Text = "Track2(&2)";
 			this.toolStripMenuItemPowerTrack2.Click += new System.EventHandler(this.ToolStripMenuItemPowerTrack2_Click);
 			// 
@@ -350,20 +350,20 @@ namespace MotorSoundEditor
             this.toolStripMenuItemBrakeTrack1,
             this.toolStripMenuItemBrakeTrack2});
 			this.toolStripMenuItemBrake.Name = "toolStripMenuItemBrake";
-			this.toolStripMenuItemBrake.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemBrake.Size = new System.Drawing.Size(116, 22);
 			this.toolStripMenuItemBrake.Text = "Brake(&B)";
 			// 
 			// toolStripMenuItemBrakeTrack1
 			// 
 			this.toolStripMenuItemBrakeTrack1.Name = "toolStripMenuItemBrakeTrack1";
-			this.toolStripMenuItemBrakeTrack1.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemBrakeTrack1.Size = new System.Drawing.Size(119, 22);
 			this.toolStripMenuItemBrakeTrack1.Text = "Track1(&1)";
 			this.toolStripMenuItemBrakeTrack1.Click += new System.EventHandler(this.ToolStripMenuItemBrakeTrack1_Click);
 			// 
 			// toolStripMenuItemBrakeTrack2
 			// 
 			this.toolStripMenuItemBrakeTrack2.Name = "toolStripMenuItemBrakeTrack2";
-			this.toolStripMenuItemBrakeTrack2.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemBrakeTrack2.Size = new System.Drawing.Size(119, 22);
 			this.toolStripMenuItemBrakeTrack2.Text = "Track2(&2)";
 			this.toolStripMenuItemBrakeTrack2.Click += new System.EventHandler(this.ToolStripMenuItemBrakeTrack2_Click);
 			// 
@@ -438,28 +438,28 @@ namespace MotorSoundEditor
 			// toolStripMenuItemSelect
 			// 
 			this.toolStripMenuItemSelect.Name = "toolStripMenuItemSelect";
-			this.toolStripMenuItemSelect.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemSelect.Size = new System.Drawing.Size(117, 22);
 			this.toolStripMenuItemSelect.Text = "Select(&S)";
 			this.toolStripMenuItemSelect.Click += new System.EventHandler(this.ToolStripMenuItemSelect_Click);
 			// 
 			// toolStripMenuItemMove
 			// 
 			this.toolStripMenuItemMove.Name = "toolStripMenuItemMove";
-			this.toolStripMenuItemMove.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemMove.Size = new System.Drawing.Size(117, 22);
 			this.toolStripMenuItemMove.Text = "Move(&M)";
 			this.toolStripMenuItemMove.Click += new System.EventHandler(this.ToolStripMenuItemMove_Click);
 			// 
 			// toolStripMenuItemDot
 			// 
 			this.toolStripMenuItemDot.Name = "toolStripMenuItemDot";
-			this.toolStripMenuItemDot.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemDot.Size = new System.Drawing.Size(117, 22);
 			this.toolStripMenuItemDot.Text = "Dot(&D)";
 			this.toolStripMenuItemDot.Click += new System.EventHandler(this.ToolStripMenuItemDot_Click);
 			// 
 			// toolStripMenuItemLine
 			// 
 			this.toolStripMenuItemLine.Name = "toolStripMenuItemLine";
-			this.toolStripMenuItemLine.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemLine.Size = new System.Drawing.Size(117, 22);
 			this.toolStripMenuItemLine.Text = "Move(&L)";
 			this.toolStripMenuItemLine.Click += new System.EventHandler(this.ToolStripMenuItemLine_Click);
 			// 
@@ -1031,8 +1031,11 @@ namespace MotorSoundEditor
 			// 
 			// toolStripContainerDrawArea.ContentPanel
 			// 
+			this.toolStripContainerDrawArea.ContentPanel.AllowDrop = true;
 			this.toolStripContainerDrawArea.ContentPanel.Controls.Add(this.pictureBoxDrawArea);
 			this.toolStripContainerDrawArea.ContentPanel.Size = new System.Drawing.Size(580, 547);
+			this.toolStripContainerDrawArea.ContentPanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.ToolStripContainerDrawArea_ContentPanel_DragDrop);
+			this.toolStripContainerDrawArea.ContentPanel.DragEnter += new System.Windows.Forms.DragEventHandler(this.ToolStripContainerDrawArea_ContentPanel_DragEnter);
 			this.toolStripContainerDrawArea.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.toolStripContainerDrawArea.Location = new System.Drawing.Point(0, 24);
 			this.toolStripContainerDrawArea.Name = "toolStripContainerDrawArea";

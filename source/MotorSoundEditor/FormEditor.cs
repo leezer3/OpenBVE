@@ -910,6 +910,73 @@ namespace MotorSoundEditor
 			DrawPictureBoxDrawArea();
 		}
 
+		private void ToolStripContainerDrawArea_ContentPanel_DragEnter(object sender, DragEventArgs e)
+		{
+			string newFileName = null;
+
+			if (e.Data.GetDataPresent(DataFormats.FileDrop))
+			{
+				newFileName = ((string[])e.Data.GetData(DataFormats.FileDrop, false)).FirstOrDefault();
+			}
+
+			if (string.IsNullOrEmpty(newFileName) || !newFileName.EndsWith(".dat", StringComparison.InvariantCultureIgnoreCase))
+			{
+				e.Effect = DragDropEffects.None;
+			}
+			else
+			{
+				e.Effect = DragDropEffects.Copy;
+			}
+		}
+
+		private void ToolStripContainerDrawArea_ContentPanel_DragDrop(object sender, DragEventArgs e)
+		{
+
+			switch (MessageBox.Show(GetInterfaceString("message", "open"), GetInterfaceString("menu_file", "open"), MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
+			{
+				case DialogResult.Cancel:
+					return;
+				case DialogResult.Yes:
+					SaveFile();
+					break;
+			}
+
+			try
+			{
+				fileName = ((string[])e.Data.GetData(DataFormats.FileDrop, false)).FirstOrDefault();
+				train = TrainDat.Load(fileName);
+
+				LoadData();
+
+				toolStripMenuItemSave.Enabled = true;
+
+				editState.CurrentSimuState = EditState.SimulationState.Stopped;
+				buttonPause.Enabled = false;
+				buttonStop.Enabled = false;
+			}
+			catch (Exception exception)
+			{
+				MessageBox.Show(exception.Message, GetInterfaceString("menu_file", "open"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+
+				fileName = null;
+				train = null;
+
+				for (int i = 0; i < tracks.Length; i++)
+				{
+					tracks[i] = new Track();
+				}
+
+				toolStripMenuItemSave.Enabled = false;
+
+				editState.CurrentSimuState = EditState.SimulationState.Disable;
+			}
+
+			prevTrackStates.Clear();
+			nextTrackStates.Clear();
+
+			DrawPictureBoxDrawArea();
+		}
+
 		private void PictureBoxDrawArea_MouseEnter(object sender, EventArgs e)
 		{
 			pictureBoxDrawArea.Focus();
