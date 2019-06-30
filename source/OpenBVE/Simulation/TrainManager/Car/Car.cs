@@ -48,6 +48,8 @@ namespace OpenBve
 			internal CarBrightness Brightness;
 			internal double BeaconReceiverPosition;
 			internal TrackManager.TrackFollower BeaconReceiver;
+			/// <summary>Whether loading sway is enabled for this car</summary>
+			internal bool EnableLoadingSway = true;
 			/// <summary>A reference to the base train</summary>
 			private readonly Train baseTrain;
 			/// <summary>The index of the car within the train</summary>

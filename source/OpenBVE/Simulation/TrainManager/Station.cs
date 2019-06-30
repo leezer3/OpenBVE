@@ -414,6 +414,7 @@ namespace OpenBve
 							// passengers boarding
 							for (int j = 0; j < Train.Cars.Length; j++)
 							{
+								if (!Train.Cars[j].EnableLoadingSway) continue;
 								double r = 2.0 * Game.Stations[i].PassengerRatio * TimeElapsed;
 								if (r >= Program.RandomNumberGenerator.NextDouble())
 								{

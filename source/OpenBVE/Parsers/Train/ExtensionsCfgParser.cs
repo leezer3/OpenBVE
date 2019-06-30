@@ -182,6 +182,9 @@ namespace OpenBve {
 															case "reversed":
 																CarObjectsReversed[n] = b.Equals("true", StringComparison.OrdinalIgnoreCase);
 																break;
+															case "loadingsway":
+																Train.Cars[n].EnableLoadingSway = b.Equals("true", StringComparison.OrdinalIgnoreCase);
+																break;
 															default:
 																Interface.AddMessage(MessageType.Warning, false, "Unsupported key-value pair " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																break;

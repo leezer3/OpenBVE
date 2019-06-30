@@ -136,6 +136,18 @@ namespace OpenBve.Parsers.Train
 							CarObjectsReversed[Car] = true;
 						}
 						break;
+					case "loadingsway":
+						int nm;
+						NumberFormats.TryParseIntVb6(c.InnerText, out nm);
+						if (nm == 1 || c.InnerText.ToLowerInvariant() == "true")
+						{
+							Train.Cars[Car].EnableLoadingSway = true;
+						}
+						else
+						{
+							Train.Cars[Car].EnableLoadingSway = false;
+						}
+						break;
 					case "frontbogie":
 						if (c.ChildNodes.OfType<XmlElement>().Any())
 						{

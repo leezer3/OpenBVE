@@ -43,6 +43,7 @@ namespace CarXmlConvertor
 			internal string Object;
 			internal Bogie FrontBogie;
 			internal Bogie RearBogie;
+			internal bool LoadingSway;
 		}
 
 		private struct Bogie
@@ -180,6 +181,9 @@ namespace CarXmlConvertor
 															break;
 														case "reversed":
 															CarInfos[n].Reversed = b.Equals("true", StringComparison.OrdinalIgnoreCase);
+															break;
+														case "loadingsway":
+															CarInfos[n].LoadingSway = b.Equals("true", StringComparison.OrdinalIgnoreCase);
 															break;
 													}
 												}
@@ -443,6 +447,7 @@ namespace CarXmlConvertor
 				newLines.Add("<Object>" + CarInfos[i].Object + "</Object>");
 			}
 			newLines.Add("<Reversed>" + CarInfos[i].Reversed + "</Reversed>");
+			newLines.Add("<LoadingSway>" + CarInfos[i].Reversed + "</LoadingSway>");
 			if (CarInfos[i].FrontBogie.AxlesDefined == true || !string.IsNullOrEmpty(CarInfos[i].FrontBogie.Object))
 			{
 				newLines.Add("<FrontBogie>");
