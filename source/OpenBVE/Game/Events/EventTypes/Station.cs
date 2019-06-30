@@ -13,7 +13,7 @@ namespace OpenBve
 			internal StationPassAlarmEvent(double TrackPositionDelta)
 			{
 				this.TrackPositionDelta = TrackPositionDelta;
-				DontTriggerAnymore = false;
+				this.DontTriggerAnymore = false;
 			}
 			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
 			{
@@ -35,12 +35,12 @@ namespace OpenBve
 								Train.Cars[d].Sounds.Halt.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, d, true);
 							}
 						}
-						DontTriggerAnymore = true;
+						this.DontTriggerAnymore = true;
 					}
 				}
 			}
 		}
-
+		
 		/// <summary>Placed at the start of every station</summary>
 		internal class StationStartEvent : GeneralEvent<TrainManager.Train>
 		{
@@ -50,7 +50,7 @@ namespace OpenBve
 			internal StationStartEvent(double TrackPositionDelta, int StationIndex)
 			{
 				this.TrackPositionDelta = TrackPositionDelta;
-				DontTriggerAnymore = false;
+				this.DontTriggerAnymore = false;
 				this.StationIndex = StationIndex;
 			}
 			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
@@ -78,12 +78,12 @@ namespace OpenBve
 						{
 							Train.StationState = TrainManager.TrainStopState.Pending;
 						}
-						Train.LastStation = StationIndex;
+						Train.LastStation = this.StationIndex;
 					}
 				}
 			}
 		}
-
+		
 		/// <summary>Placed at the end of every station (as defined by the last possible stop point)</summary>
 		internal class StationEndEvent : GeneralEvent<TrainManager.Train>
 		{
@@ -93,7 +93,7 @@ namespace OpenBve
 			internal StationEndEvent(double TrackPositionDelta, int StationIndex)
 			{
 				this.TrackPositionDelta = TrackPositionDelta;
-				DontTriggerAnymore = false;
+				this.DontTriggerAnymore = false;
 				this.StationIndex = StationIndex;
 			}
 			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
@@ -104,7 +104,7 @@ namespace OpenBve
 					{
 						if (Train == TrainManager.PlayerTrain)
 						{
-							Timetable.UpdateCustomTimetable(Game.Stations[StationIndex].TimetableDaytimeTexture, Game.Stations[StationIndex].TimetableNighttimeTexture);
+							Timetable.UpdateCustomTimetable(Game.Stations[this.StationIndex].TimetableDaytimeTexture, Game.Stations[this.StationIndex].TimetableNighttimeTexture);
 						}
 					}
 				}
@@ -112,10 +112,10 @@ namespace OpenBve
 				{
 					if (Direction < 0)
 					{
-						Train.Station = StationIndex;
+						Train.Station = this.StationIndex;
 						if (Train.NextStopSkipped != TrainManager.StopSkipMode.None)
 						{
-							Train.LastStation = StationIndex;
+							Train.LastStation = this.StationIndex;
 						}
 						Train.NextStopSkipped = TrainManager.StopSkipMode.None;
 					}
@@ -143,7 +143,7 @@ namespace OpenBve
 							{
 								Train.StationState = TrainManager.TrainStopState.Pending;
 							}
-
+							
 							int d = Train.DriverCar;
 							Program.Sounds.StopSound(Train.Cars[d].Sounds.Halt.Source);
 						}

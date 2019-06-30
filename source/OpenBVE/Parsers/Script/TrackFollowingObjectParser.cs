@@ -72,7 +72,7 @@ namespace OpenBve
 						{
 							string Key = KeyNode.Name.LocalName;
 							string Value = KeyNode.Value;
-							int LineNumber = ((IXmlLineInfo)KeyNode).LineNumber;
+							int LineNumber = ((IXmlLineInfo) KeyNode).LineNumber;
 
 							switch (Key.ToLowerInvariant())
 							{
@@ -88,7 +88,7 @@ namespace OpenBve
 											trainDirectory = OpenBveApi.Path.CombineFile(Program.FileSystem.TrainInstallationDirectory, Value);
 										}
 
-										if (!System.IO.Directory.Exists(trainDirectory))
+										if(!System.IO.Directory.Exists(trainDirectory))
 										{
 											Interface.AddMessage(MessageType.Error, false, "Directory was not found in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
@@ -106,7 +106,7 @@ namespace OpenBve
 						{
 							string Key = KeyNode.Name.LocalName;
 							string Value = KeyNode.Value;
-							int LineNumber = ((IXmlLineInfo)KeyNode).LineNumber;
+							int LineNumber = ((IXmlLineInfo) KeyNode).LineNumber;
 
 							switch (Key.ToLowerInvariant())
 							{
@@ -311,7 +311,7 @@ namespace OpenBve
 							{
 								string Key = KeyNode.Name.LocalName;
 								string Value = KeyNode.Value;
-								int LineNumber = ((IXmlLineInfo)KeyNode).LineNumber;
+								int LineNumber = ((IXmlLineInfo) KeyNode).LineNumber;
 
 								switch (Key.ToLowerInvariant())
 								{

@@ -14,8 +14,7 @@ using OpenTK.Input;
 using ButtonState = OpenTK.Input.ButtonState;
 using ContentAlignment = System.Drawing.ContentAlignment;
 
-namespace OpenBve
-{
+namespace OpenBve {
 	internal partial class formMain : Form
 	{
 		private formMain()
@@ -26,14 +25,8 @@ namespace OpenBve
 
 		public sealed override string Text
 		{
-			get
-			{
-				return base.Text;
-			}
-			set
-			{
-				base.Text = value;
-			}
+			get { return base.Text; }
+			set { base.Text = value; }
 		}
 
 		// show main dialog
@@ -167,12 +160,12 @@ namespace OpenBve
 			Image Logo = LoadImage(MenuFolder, "logo.png");
 			if (Logo != null) pictureboxLogo.Image = Logo;
 			string flagsFolder = Program.FileSystem.GetDataFolder("Flags");
-			pictureboxRouteImage.ErrorImage = LoadImage(Program.FileSystem.GetDataFolder("Menu"), "error_route.png");
+			pictureboxRouteImage.ErrorImage = LoadImage(Program.FileSystem.GetDataFolder("Menu"),"error_route.png");
 			pictureboxTrainImage.ErrorImage = LoadImage(Program.FileSystem.GetDataFolder("Menu"), "error_train.png");
 			/* 
 			 * TODO: Integrate into packages
 			 */
-#pragma warning disable 0219
+	#pragma warning disable 0219
 			string[] flags = new string[] { };
 			try
 			{
@@ -181,7 +174,7 @@ namespace OpenBve
 			catch (Exception)
 			{
 			}
-#pragma warning restore 0219
+	#pragma warning restore 0219
 			// route selection
 			listviewRouteFiles.SmallImageList = new ImageList { TransparentColor = Color.White };
 			if (ParentIcon != null) listviewRouteFiles.SmallImageList.Images.Add("parent", ParentIcon);
@@ -234,16 +227,14 @@ namespace OpenBve
 			{
 				textboxRouteFolder.Text = Interface.CurrentOptions.RouteFolder;
 			}
-			else
-			{
+			else {
 				textboxRouteFolder.Text = Program.FileSystem.InitialRouteFolder;
 			}
 			if (Interface.CurrentOptions.TrainFolder.Length != 0 && System.IO.Directory.Exists(Interface.CurrentOptions.TrainFolder))
 			{
 				textboxTrainFolder.Text = Interface.CurrentOptions.TrainFolder;
 			}
-			else
-			{
+			else {
 				textboxTrainFolder.Text = Program.FileSystem.InitialTrainFolder;
 			}
 			// encodings
@@ -284,8 +275,7 @@ namespace OpenBve
 				{
 					radiobuttonReview.Enabled = false;
 				}
-				else
-				{
+				else {
 					double ratio = Game.CurrentScore.Maximum == 0 ? 0.0 : (double)Game.CurrentScore.CurrentValue / (double)Game.CurrentScore.Maximum;
 					if (ratio < 0.0) ratio = 0.0;
 					if (ratio > 1.0) ratio = 1.0;
@@ -307,15 +297,13 @@ namespace OpenBve
 						labelRatingColor.BackColor = Color.Gray;
 						labelRatingDescription.Text = Translations.GetInterfaceString("rating_unknown");
 					}
-					else
-					{
+					else {
 						Color[] Colors = { Color.PaleVioletRed, Color.IndianRed, Color.Peru, Color.Goldenrod, Color.DarkKhaki, Color.YellowGreen, Color.MediumSeaGreen, Color.MediumAquamarine, Color.SkyBlue, Color.CornflowerBlue };
 						if (index >= 0 & index < Colors.Length)
 						{
 							labelRatingColor.BackColor = Colors[index];
 						}
-						else
-						{
+						else {
 							labelRatingColor.BackColor = Color.Gray;
 						}
 						labelRatingDescription.Text = Translations.GetInterfaceString("rating_" + index.ToString(Culture));
@@ -346,8 +334,7 @@ namespace OpenBve
 			{
 				radiobuttonFullscreen.Checked = true;
 			}
-			else
-			{
+			else {
 				radiobuttonWindow.Checked = true;
 			}
 			comboboxVSync.Items.Clear();
@@ -383,8 +370,7 @@ namespace OpenBve
 			{
 				comboboxInterpolation.SelectedIndex = (int)Interface.CurrentOptions.Interpolation;
 			}
-			else
-			{
+			else {
 				comboboxInterpolation.SelectedIndex = 3;
 			}
 			comboBoxTimeTableDisplayMode.Items.Clear();
@@ -404,16 +390,14 @@ namespace OpenBve
 				updownAnisotropic.Minimum = (decimal)0;
 				updownAnisotropic.Maximum = (decimal)0;
 			}
-			else
-			{
+			else {
 				updownAnisotropic.Minimum = (decimal)1;
 				updownAnisotropic.Maximum = (decimal)Interface.CurrentOptions.AnisotropicFilteringMaximum;
 				if ((decimal)Interface.CurrentOptions.AnisotropicFilteringLevel >= updownAnisotropic.Minimum & (decimal)Interface.CurrentOptions.AnisotropicFilteringLevel <= updownAnisotropic.Maximum)
 				{
 					updownAnisotropic.Value = (decimal)Interface.CurrentOptions.AnisotropicFilteringLevel;
 				}
-				else
-				{
+				else {
 					updownAnisotropic.Value = updownAnisotropic.Minimum;
 				}
 			}
@@ -477,7 +461,7 @@ namespace OpenBve
 			checkBoxPanel2Extended.Checked = Interface.CurrentOptions.Panel2ExtendedMode;
 		}
 
-
+		
 
 		/// <summary>This function is called to change the display language of the program</summary>
 		private void ApplyLanguage()
@@ -691,8 +675,7 @@ namespace OpenBve
 				{
 					labelRatingDescription.Text = Translations.GetInterfaceString("rating_unknown");
 				}
-				else
-				{
+				else {
 					labelRatingDescription.Text = Translations.GetInterfaceString("rating_" + index.ToString(System.Globalization.CultureInfo.InvariantCulture));
 				}
 			}
@@ -747,7 +730,7 @@ namespace OpenBve
 			checkboxKeyboardCtrl.Text = Translations.GetInterfaceString("controls_selection_keyboard_modifiers_ctrl");
 			//Shift ALT to suit
 			checkboxKeyboardAlt.Location = new Point(checkboxKeyboardCtrl.Location.X + (checkboxKeyboardCtrl.Text.Length + 5) * 5, checkboxKeyboardAlt.Location.Y);
-
+			
 			checkboxKeyboardAlt.Text = Translations.GetInterfaceString("controls_selection_keyboard_modifiers_alt");
 			radiobuttonJoystick.Text = Translations.GetInterfaceString("controls_selection_joystick");
 			labelJoystickAssignmentCaption.Text = Translations.GetInterfaceString("controls_selection_joystick_assignment");
@@ -907,7 +890,7 @@ namespace OpenBve
 			{
 				panelOptionsPage2.Hide();
 			}
-
+			
 
 		}
 
@@ -983,8 +966,7 @@ namespace OpenBve
 						{
 							Array.Resize<string>(ref Interface.CurrentOptions.RecentlyUsedRoutes, i + 1);
 						}
-						else
-						{
+						else {
 							i--;
 						}
 					}
@@ -1010,8 +992,7 @@ namespace OpenBve
 						{
 							Array.Resize<string>(ref Interface.CurrentOptions.RecentlyUsedTrains, i + 1);
 						}
-						else
-						{
+						else {
 							i--;
 						}
 					}
@@ -1088,8 +1069,7 @@ namespace OpenBve
 				for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++)
 				{
 					InputDevicePlugin.PluginInfo Info = InputDevicePlugin.AvailablePluginInfos[i];
-					if (Info.Status != InputDevicePlugin.PluginInfo.PluginStatus.Enable)
-					{
+					if (Info.Status != InputDevicePlugin.PluginInfo.PluginStatus.Enable) {
 						continue;
 					}
 					string PluginPath = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("InputDevicePlugins"), Info.FileName);
@@ -1115,8 +1095,8 @@ namespace OpenBve
 			try
 			{
 #endif
-			Interface.SaveOptions();
-			Program.FileSystem.SaveCurrentFileSystemConfiguration();
+				Interface.SaveOptions();
+				Program.FileSystem.SaveCurrentFileSystemConfiguration();
 #if !DEBUG
 			}
 			catch (Exception ex)
@@ -1128,7 +1108,7 @@ namespace OpenBve
 			try
 			{
 #endif
-			Interface.SaveControls(null, Interface.CurrentControls);
+				Interface.SaveControls(null, Interface.CurrentControls);
 #if !DEBUG
 			}
 			catch (Exception ex)
@@ -1264,7 +1244,7 @@ namespace OpenBve
 			//Update the route/ train displays in case a package has been installed
 			textboxRouteFolder_TextChanged(this, EventArgs.Empty);
 			textboxTrainFolder_TextChanged(this, EventArgs.Empty);
-
+			
 		}
 		private void radiobuttonReview_CheckedChanged(object sender, EventArgs e)
 		{
@@ -1419,7 +1399,7 @@ namespace OpenBve
 			if (currentJoystickStates == null || currentJoystickStates.Length < JoystickManager.AttachedJoysticks.Length)
 			{
 				currentJoystickStates = new JoystickState[JoystickManager.AttachedJoysticks.Length];
-			}
+			}	
 			if (radiobuttonJoystick.Checked && textboxJoystickGrab.Focused && this.Tag == null && listviewControls.SelectedIndices.Count == 1)
 			{
 				int j = listviewControls.SelectedIndices[0];
@@ -1429,82 +1409,82 @@ namespace OpenBve
 					JoystickManager.AttachedJoysticks[k].Poll();
 					bool railDriver = JoystickManager.AttachedJoysticks[k] is JoystickManager.Raildriver;
 					int axes = JoystickManager.AttachedJoysticks[k].AxisCount();
-					for (int i = 0; i < axes; i++)
-					{
-						double a = JoystickManager.AttachedJoysticks[k].GetAxis(i);
-						if (a < -0.75)
+						for (int i = 0; i < axes; i++)
 						{
-							if (railDriver)
+							double a = JoystickManager.AttachedJoysticks[k].GetAxis(i);
+							if (a < -0.75)
 							{
-								if (i == 4)
+								if (railDriver)
 								{
-									//Bail-off lever, starts at negative
-									continue;
+									if (i == 4)
+									{
+										//Bail-off lever, starts at negative
+										continue;
+									}
+								Interface.CurrentControls[j].Method = Interface.ControlMethod.RailDriver;
 								}
-								Interface.CurrentControls[j].Method = Interface.ControlMethod.RailDriver;
+								Interface.CurrentControls[j].Device = k;
+								Interface.CurrentControls[j].Component = Interface.JoystickComponent.Axis;
+								Interface.CurrentControls[j].Element = i;
+								Interface.CurrentControls[j].Direction = -1;
+								radiobuttonJoystick.Focus();
+								UpdateJoystickDetails();
+								UpdateControlListElement(listviewControls.Items[j], j, true);
+								return;
 							}
-							Interface.CurrentControls[j].Device = k;
-							Interface.CurrentControls[j].Component = Interface.JoystickComponent.Axis;
-							Interface.CurrentControls[j].Element = i;
-							Interface.CurrentControls[j].Direction = -1;
-							radiobuttonJoystick.Focus();
-							UpdateJoystickDetails();
-							UpdateControlListElement(listviewControls.Items[j], j, true);
-							return;
-						}
-						if (a > 0.75)
-						{
-							if (railDriver)
+							if (a > 0.75)
 							{
-								Interface.CurrentControls[j].Method = Interface.ControlMethod.RailDriver;
+								if (railDriver)
+								{
+									Interface.CurrentControls[j].Method = Interface.ControlMethod.RailDriver;
+								}
+								Interface.CurrentControls[j].Device = k;
+								Interface.CurrentControls[j].Component = Interface.JoystickComponent.Axis;
+								Interface.CurrentControls[j].Element = i;
+								Interface.CurrentControls[j].Direction = 1;
+								radiobuttonJoystick.Focus();
+								UpdateJoystickDetails();
+								UpdateControlListElement(listviewControls.Items[j], j, true);
+								return;
 							}
-							Interface.CurrentControls[j].Device = k;
-							Interface.CurrentControls[j].Component = Interface.JoystickComponent.Axis;
-							Interface.CurrentControls[j].Element = i;
-							Interface.CurrentControls[j].Direction = 1;
-							radiobuttonJoystick.Focus();
-							UpdateJoystickDetails();
-							UpdateControlListElement(listviewControls.Items[j], j, true);
-							return;
 						}
-					}
-					int buttons = JoystickManager.AttachedJoysticks[k].ButtonCount();
-					for (int i = 0; i < buttons; i++)
-					{
-						if (JoystickManager.AttachedJoysticks[k].GetButton(i) == ButtonState.Pressed)
+						int buttons = JoystickManager.AttachedJoysticks[k].ButtonCount();
+						for (int i = 0; i < buttons; i++)
 						{
-							if (railDriver)
+							if (JoystickManager.AttachedJoysticks[k].GetButton(i) == ButtonState.Pressed)
 							{
-								Interface.CurrentControls[j].Method = Interface.ControlMethod.RailDriver;
+								if (railDriver)
+								{
+									Interface.CurrentControls[j].Method = Interface.ControlMethod.RailDriver;
+								}
+								Interface.CurrentControls[j].Device = k;
+								Interface.CurrentControls[j].Component = Interface.JoystickComponent.Button;
+								Interface.CurrentControls[j].Element = i;
+								Interface.CurrentControls[j].Direction = 1;
+								radiobuttonJoystick.Focus();
+								UpdateJoystickDetails();
+								UpdateControlListElement(listviewControls.Items[j], j, true);
+								return;
 							}
-							Interface.CurrentControls[j].Device = k;
-							Interface.CurrentControls[j].Component = Interface.JoystickComponent.Button;
-							Interface.CurrentControls[j].Element = i;
-							Interface.CurrentControls[j].Direction = 1;
-							radiobuttonJoystick.Focus();
-							UpdateJoystickDetails();
-							UpdateControlListElement(listviewControls.Items[j], j, true);
-							return;
 						}
-					}
-					int hats = JoystickManager.AttachedJoysticks[k].HatCount();
-					for (int i = 0; i < hats; i++)
-					{
-						JoystickHatState hat = JoystickManager.AttachedJoysticks[k].GetHat(i);
-						if (hat.Position != HatPosition.Centered)
+						int hats = JoystickManager.AttachedJoysticks[k].HatCount();
+						for (int i = 0; i < hats; i++)
 						{
-							Interface.CurrentControls[j].Device = k;
-							Interface.CurrentControls[j].Component = Interface.JoystickComponent.Hat;
-							Interface.CurrentControls[j].Element = i;
-							Interface.CurrentControls[j].Direction = (int)hat.Position;
-							radiobuttonJoystick.Focus();
-							UpdateJoystickDetails();
-							UpdateControlListElement(listviewControls.Items[j], j, true);
-							return;
+							JoystickHatState hat = JoystickManager.AttachedJoysticks[k].GetHat(i);
+							if (hat.Position != HatPosition.Centered)
+							{
+								Interface.CurrentControls[j].Device = k;
+								Interface.CurrentControls[j].Component = Interface.JoystickComponent.Hat;
+								Interface.CurrentControls[j].Element = i;
+								Interface.CurrentControls[j].Direction = (int)hat.Position;
+								radiobuttonJoystick.Focus();
+								UpdateJoystickDetails();
+								UpdateControlListElement(listviewControls.Items[j], j, true);
+								return;
+							}
 						}
-					}
-
-
+					
+					
 				}
 			}
 
@@ -1541,7 +1521,7 @@ namespace OpenBve
 				return null;
 			}
 		}
-
+	
 		/// <summary>Attempts to load an image into a picture box using the OpenBVE path resolution API</summary>
 		private void TryLoadImage(PictureBox Box, string File)
 		{

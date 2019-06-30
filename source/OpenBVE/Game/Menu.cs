@@ -134,7 +134,7 @@ namespace OpenBve
 			public readonly int Height = 0;
 			public int Selection;
 			public int TopItem;         // the top displayed menu item
-
+			
 
 			/********************
 				MENU C'TOR
@@ -170,7 +170,7 @@ namespace OpenBve
 						}
 						else
 						{
-							Array.Resize(ref Items, Items.Length - 3);
+							Array.Resize(ref Items, Items.Length -3);
 						}
 						break;
 
@@ -735,7 +735,7 @@ namespace OpenBve
 
 			// HORIZONTAL PLACEMENT: centre the menu in the main window
 			int itemLeft = (LibRender.Screen.Width - menu.ItemWidth) / 2; // item left edge
-																		  // if menu alignment is left, left-align items, otherwise centre them in the screen
+																// if menu alignment is left, left-align items, otherwise centre them in the screen
 			int itemX = (menu.Align & TextAlignment.Left) != 0 ? itemLeft : LibRender.Screen.Width / 2;
 
 			int menuBottomItem = menu.TopItem + visibleItems - 1;

@@ -686,7 +686,7 @@ namespace OpenBve
 							Interface.AddMessage(MessageType.Error, false, "Sound radius Z " + Arguments[2] + " in XML node " + node.Name + " is invalid.");
 							z = 0.0;
 						}
-						Position = new Vector3(x, y, z);
+						Position = new Vector3(x,y,z);
 						break;
 					case "radius":
 						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Radius))
@@ -694,7 +694,7 @@ namespace OpenBve
 							Interface.AddMessage(MessageType.Error, false, "The sound radius " + c.InnerText + " in XML node " + node.Name + " is invalid.");
 						}
 						break;
-
+					
 				}
 			}
 			if (fileName == null)
@@ -753,7 +753,7 @@ namespace OpenBve
 					}
 				}
 			}
-
+			
 		}
 	}
 }

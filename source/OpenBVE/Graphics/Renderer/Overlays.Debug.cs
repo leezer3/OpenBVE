@@ -69,7 +69,7 @@ namespace OpenBve
 				{
 					if (TrainManager.PlayerTrain.Handles.LocoBrake is TrainManager.LocoAirBrakeHandle)
 					{
-						t += " - " + (TrainManager.PlayerTrain.Handles.LocoBrake.Actual == (int)TrainManager.AirBrakeHandleState.Service ? "SRV" : TrainManager.PlayerTrain.Handles.LocoBrake.Actual == (int)TrainManager.AirBrakeHandleState.Lap ? "LAP" : "REL");
+						t += " - " + (TrainManager.PlayerTrain.Handles.LocoBrake.Actual == (int) TrainManager.AirBrakeHandleState.Service ? "SRV" : TrainManager.PlayerTrain.Handles.LocoBrake.Actual == (int) TrainManager.AirBrakeHandleState.Lap ? "LAP" : "REL");
 					}
 					else
 					{
@@ -99,7 +99,7 @@ namespace OpenBve
 				{
 					if (TrainManager.PlayerTrain.Handles.LocoBrake is TrainManager.LocoAirBrakeHandle)
 					{
-						t += " - " + (TrainManager.PlayerTrain.Handles.LocoBrake.Actual == (int)TrainManager.AirBrakeHandleState.Service ? "SRV" : TrainManager.PlayerTrain.Handles.LocoBrake.Actual == (int)TrainManager.AirBrakeHandleState.Lap ? "LAP" : "REL");
+						t += " - " + (TrainManager.PlayerTrain.Handles.LocoBrake.Actual == (int) TrainManager.AirBrakeHandleState.Service ? "SRV" : TrainManager.PlayerTrain.Handles.LocoBrake.Actual == (int) TrainManager.AirBrakeHandleState.Lap ? "LAP" : "REL");
 					}
 					else
 					{
@@ -129,9 +129,9 @@ namespace OpenBve
 			{
 				mass += TrainManager.PlayerTrain.Cars[i].Specs.MassCurrent;
 			}
-			int hours = (int)Game.SecondsSinceMidnight / 3600,
-				remainder = (int)Game.SecondsSinceMidnight % 3600,
-				minutes = remainder / 60,
+			int hours = (int)Game.SecondsSinceMidnight / 3600, 
+				remainder = (int)Game.SecondsSinceMidnight % 3600, 
+				minutes = remainder / 60, 
 				seconds = remainder % 60;
 			string[] Lines = new string[] {
 				"=system",
@@ -233,7 +233,7 @@ namespace OpenBve
 				Lines[1] = "";
 				for (int i = 2; i < TrainManager.PlayerTrain.Plugin.Panel.Length + 2; i++)
 				{
-					Lines[i] = (i - 2).ToString("000") + " : " + TrainManager.PlayerTrain.Plugin.Panel[i - 2];
+					Lines[i] = (i -2).ToString("000") + " : " + TrainManager.PlayerTrain.Plugin.Panel[i - 2];
 				}
 			}
 			else
@@ -241,7 +241,7 @@ namespace OpenBve
 				Lines = new string[3];
 				Lines[0] = "=ATS Plugin Variables";
 				Lines[1] = "";
-				Lines[2] = "No ATS plugin variables set.";
+				Lines[2] = "No ATS plugin variables set."; 
 			}
 			double x = 4.0;
 			double y = 4.0;
@@ -297,8 +297,7 @@ namespace OpenBve
 					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.brakePipe.NormalPressure;
 					GL.Color3(1.0f, 1.0f, 0.0f);
 					LibRender.Renderer.RenderOverlaySolid(x, y, x + r * w, y + h);
-				}
-				x += w + 8.0;
+				} x += w + 8.0;
 				// auxillary reservoir
 				if (TrainManager.PlayerTrain.Cars[i].CarBrake is AutomaticAirBrake | TrainManager.PlayerTrain.Cars[i].CarBrake is ElectromagneticStraightAirBrake)
 				{
@@ -313,8 +312,7 @@ namespace OpenBve
 					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.auxiliaryReservoir.MaximumPressure;
 					GL.Color3(0.5f, 0.5f, 0.5f);
 					LibRender.Renderer.RenderOverlaySolid(x, y, x + r * w, y + h);
-				}
-				x += w + 8.0;
+				} x += w + 8.0;
 				// brake cylinder
 				{
 					if (!heading[2])
@@ -328,8 +326,7 @@ namespace OpenBve
 					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.brakeCylinder.EmergencyMaximumPressure;
 					GL.Color3(0.75f, 0.5f, 0.25f);
 					LibRender.Renderer.RenderOverlaySolid(x, y, x + r * w, y + h);
-				}
-				x += w + 8.0;
+				} x += w + 8.0;
 				// main reservoir
 				if (TrainManager.PlayerTrain.Cars[i].CarBrake.brakeType == BrakeType.Main)
 				{
@@ -344,8 +341,7 @@ namespace OpenBve
 					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.mainReservoir.MaximumPressure;
 					GL.Color3(1.0f, 0.0f, 0.0f);
 					LibRender.Renderer.RenderOverlaySolid(x, y, x + r * w, y + h);
-				}
-				x += w + 8.0;
+				} x += w + 8.0;
 				// equalizing reservoir
 				if (TrainManager.PlayerTrain.Cars[i].CarBrake.brakeType == BrakeType.Main)
 				{
@@ -360,8 +356,7 @@ namespace OpenBve
 					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.equalizingReservoir.NormalPressure;
 					GL.Color3(0.0f, 0.75f, 0.0f);
 					LibRender.Renderer.RenderOverlaySolid(x, y, x + r * w, y + h);
-				}
-				x += w + 8.0;
+				} x += w + 8.0;
 				// straight air pipe
 				if (TrainManager.PlayerTrain.Cars[i].CarBrake is ElectromagneticStraightAirBrake & TrainManager.PlayerTrain.Cars[i].CarBrake.brakeType == BrakeType.Main)
 				{

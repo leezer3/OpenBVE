@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Globalization;
-using System.IO;
 using System.Text;
 using LibRender;
 using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
 using OpenBveApi.Packages;
 using SoundManager;
-using Path = OpenBveApi.Path;
 
 namespace OpenBve
 {
@@ -29,7 +27,7 @@ namespace OpenBve
 		{
 			Arcade = 0,
 			Normal = 1,
-			Expert = 2
+			Expert = 2,
 		}
 
 		internal class Options
@@ -164,10 +162,10 @@ namespace OpenBve
 			internal bool KioskMode;
 			/// <summary>The timer before AI controls are enabled in kiosk mode</summary>
 			internal double KioskModeTimer; //5 minutes by default set in ctor
-											/*
-											 * Note: The following options were (are) used by the Managed Content system, and are currently non-functional
-											 */
-											/// <summary>The proxy URL to use when retrieving content from the internet</summary>
+			/*
+			 * Note: The following options were (are) used by the Managed Content system, and are currently non-functional
+			 */
+			/// <summary>The proxy URL to use when retrieving content from the internet</summary>
 			internal string ProxyUrl;
 			/// <summary>The proxy username to use when retrieving content from the internet</summary>
 			internal string ProxyUserName;
@@ -176,70 +174,70 @@ namespace OpenBve
 			/// <summary>Creates a new instance of the options class with default values set</summary>
 			internal Options()
 			{
-				LanguageCode = "en-US";
-				FullscreenMode = false;
-				VerticalSynchronization = true;
-				WindowWidth = 960;
-				WindowHeight = 600;
-				FullscreenWidth = 1024;
-				FullscreenHeight = 768;
-				FullscreenBits = 32;
-				UserInterfaceFolder = "Default";
-				Interpolation = InterpolationMode.BilinearMipmapped;
-				TransparencyMode = TransparencyMode.Quality;
-				AnisotropicFilteringLevel = 0;
-				AnisotropicFilteringMaximum = 0;
-				AntiAliasingLevel = 0;
-				ViewingDistance = 600;
-				MotionBlur = MotionBlurMode.None;
-				Toppling = true;
-				Collisions = true;
-				Derailments = true;
-				LoadingSway = false;
-				GameMode = GameMode.Normal;
-				BlackBox = false;
-				UseJoysticks = true;
-				JoystickAxisThreshold = 0.0;
-				KeyRepeatDelay = 0.5;
-				KeyRepeatInterval = 0.1;
+				this.LanguageCode = "en-US";
+				this.FullscreenMode = false;
+				this.VerticalSynchronization = true;
+				this.WindowWidth = 960;
+				this.WindowHeight = 600;
+				this.FullscreenWidth = 1024;
+				this.FullscreenHeight = 768;
+				this.FullscreenBits = 32;
+				this.UserInterfaceFolder = "Default";
+				this.Interpolation = InterpolationMode.BilinearMipmapped;
+				this.TransparencyMode = TransparencyMode.Quality;
+				this.AnisotropicFilteringLevel = 0;
+				this.AnisotropicFilteringMaximum = 0;
+				this.AntiAliasingLevel = 0;
+				this.ViewingDistance = 600;
+				this.MotionBlur = MotionBlurMode.None;
+				this.Toppling = true;
+				this.Collisions = true;
+				this.Derailments = true;
+				this.LoadingSway = false;
+				this.GameMode = GameMode.Normal;
+				this.BlackBox = false;
+				this.UseJoysticks = true;
+				this.JoystickAxisThreshold = 0.0;
+				this.KeyRepeatDelay = 0.5;
+				this.KeyRepeatInterval = 0.1;
 				SoundModel = SoundsBase.SoundModels.Inverse;
 				SoundRange = SoundsBase.SoundRange.Low;
-				SoundNumber = 16;
-				ShowWarningMessages = true;
-				ShowErrorMessages = true;
-				ObjectOptimizationBasicThreshold = 10000;
-				ObjectOptimizationFullThreshold = 1000;
-				ObjectOptimizationVertexCulling = false;
-				RouteFolder = "";
-				TrainFolder = "";
-				RecentlyUsedRoutes = new string[] { };
-				RecentlyUsedTrains = new string[] { };
-				RecentlyUsedLimit = 10;
-				RouteEncodings = new TextEncoding.EncodingValue[] { };
-				TrainEncodings = new TextEncoding.EncodingValue[] { };
-				MainMenuWidth = 0;
-				MainMenuHeight = 0;
-				DisableDisplayLists = false;
-				LoadInAdvance = false;
-				UnloadUnusedTextures = false;
-				ProxyUrl = string.Empty;
-				ProxyUserName = string.Empty;
-				ProxyPassword = string.Empty;
-				TimeAccelerationFactor = 5;
-				AllowAxisEB = true;
-				TimeTableStyle = TimeTableMode.Default;
-				packageCompressionType = CompressionType.Zip;
-				RailDriverMPH = true;
-				EnableBveTsHacks = true;
-				OldTransparencyMode = true;
-				KioskMode = false;
-				KioskModeTimer = 300;
-				EnableInputDevicePlugins = new string[] { };
-				CursorFileName = "nk.png";
-				Panel2ExtendedMode = false;
-				Panel2ExtendedMinSize = 128;
-				CurrentXParser = XParsers.Original; //Set to Michelle's original X parser by default
-				CurrentObjParser = ObjParsers.Original; //Set to original Obj parser by default
+				this.SoundNumber = 16;
+				this.ShowWarningMessages = true;
+				this.ShowErrorMessages = true;
+				this.ObjectOptimizationBasicThreshold = 10000;
+				this.ObjectOptimizationFullThreshold = 1000;
+				this.ObjectOptimizationVertexCulling = false;
+				this.RouteFolder = "";
+				this.TrainFolder = "";
+				this.RecentlyUsedRoutes = new string[] { };
+				this.RecentlyUsedTrains = new string[] { };
+				this.RecentlyUsedLimit = 10;
+				this.RouteEncodings = new TextEncoding.EncodingValue[] { };
+				this.TrainEncodings = new TextEncoding.EncodingValue[] { };
+				this.MainMenuWidth = 0;
+				this.MainMenuHeight = 0;
+				this.DisableDisplayLists = false;
+				this.LoadInAdvance = false;
+				this.UnloadUnusedTextures = false;
+				this.ProxyUrl = string.Empty;
+				this.ProxyUserName = string.Empty;
+				this.ProxyPassword = string.Empty;
+				this.TimeAccelerationFactor = 5;
+				this.AllowAxisEB = true;
+				this.TimeTableStyle = TimeTableMode.Default;
+				this.packageCompressionType = CompressionType.Zip;
+				this.RailDriverMPH = true;
+				this.EnableBveTsHacks = true;
+				this.OldTransparencyMode = true;
+				this.KioskMode = false;
+				this.KioskModeTimer = 300;
+				this.EnableInputDevicePlugins = new string[] { };
+				this.CursorFileName = "nk.png";
+				this.Panel2ExtendedMode = false;
+				this.Panel2ExtendedMinSize = 128;
+				this.CurrentXParser = XParsers.Original; //Set to Michelle's original X parser by default
+				this.CurrentObjParser = ObjParsers.Original; //Set to original Obj parser by default
 			}
 		}
 		/// <summary>The current game options</summary>
@@ -247,23 +245,23 @@ namespace OpenBve
 		/// <summary>Loads the options file from disk</summary>
 		internal static void LoadOptions()
 		{
-			string OptionsDir = Path.CombineDirectory(Program.FileSystem.SettingsFolder, "1.5.0");
-			if (!Directory.Exists(OptionsDir))
+			string OptionsDir = OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "1.5.0");
+			if (!System.IO.Directory.Exists(OptionsDir))
 			{
-				Directory.CreateDirectory(OptionsDir);
+				System.IO.Directory.CreateDirectory(OptionsDir);
 			}
 			CurrentOptions = new Options();
 			CultureInfo Culture = CultureInfo.InvariantCulture;
-			string File = Path.CombineFile(OptionsDir, "options.cfg");
+			string File = OpenBveApi.Path.CombineFile(OptionsDir, "options.cfg");
 			if (!System.IO.File.Exists(File))
 			{
 				//Attempt to load and upgrade a prior configuration file
-				File = Path.CombineFile(Program.FileSystem.SettingsFolder, "options.cfg");
+				File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "options.cfg");
 			}
 			if (System.IO.File.Exists(File))
 			{
 				// load options
-				string[] Lines = System.IO.File.ReadAllLines(File, new UTF8Encoding());
+				string[] Lines = System.IO.File.ReadAllLines(File, new System.Text.UTF8Encoding());
 				string Section = "";
 				for (int i = 0; i < Lines.Length; i++)
 				{
@@ -294,35 +292,34 @@ namespace OpenBve
 									switch (Key)
 									{
 										case "code":
-											CurrentOptions.LanguageCode = Value.Length != 0 ? Value : "en-US";
+											Interface.CurrentOptions.LanguageCode = Value.Length != 0 ? Value : "en-US";
 											break;
-									}
-									break;
+									} break;
 								case "interface":
 									switch (Key)
 									{
 										case "folder":
-											CurrentOptions.UserInterfaceFolder = Value.Length != 0 ? Value : "Default";
+											Interface.CurrentOptions.UserInterfaceFolder = Value.Length != 0 ? Value : "Default";
 											break;
 										case "timetablemode":
 											switch (Value.ToLowerInvariant())
 											{
 												case "none":
-													CurrentOptions.TimeTableStyle = TimeTableMode.None;
+													Interface.CurrentOptions.TimeTableStyle = TimeTableMode.None;
 													break;
 												case "default":
-													CurrentOptions.TimeTableStyle = TimeTableMode.Default;
+													Interface.CurrentOptions.TimeTableStyle = TimeTableMode.Default;
 													break;
 												case "autogenerated":
-													CurrentOptions.TimeTableStyle = TimeTableMode.AutoGenerated;
+													Interface.CurrentOptions.TimeTableStyle = TimeTableMode.AutoGenerated;
 													break;
 												case "prefercustom":
-													CurrentOptions.TimeTableStyle = TimeTableMode.PreferCustom;
+													Interface.CurrentOptions.TimeTableStyle = TimeTableMode.PreferCustom;
 													break;
 											}
 											break;
 										case "kioskmode":
-											CurrentOptions.KioskMode = string.Compare(Value, "true", StringComparison.OrdinalIgnoreCase) == 0;
+											Interface.CurrentOptions.KioskMode = string.Compare(Value, "true", StringComparison.OrdinalIgnoreCase) == 0;
 											break;
 										case "kioskmodetimer":
 											double d;
@@ -334,21 +331,20 @@ namespace OpenBve
 											{
 												d = 300;
 											}
-											CurrentOptions.KioskModeTimer = d;
+											Interface.CurrentOptions.KioskModeTimer = d;
 											break;
-									}
-									break;
+									} break;
 								case "display":
 									switch (Key)
 									{
 										case "prefernativebackend":
-											CurrentOptions.PreferNativeBackend = string.Compare(Value, "true", StringComparison.OrdinalIgnoreCase) == 0;
+											Interface.CurrentOptions.PreferNativeBackend = string.Compare(Value, "true", StringComparison.OrdinalIgnoreCase) == 0;
 											break;
 										case "mode":
-											CurrentOptions.FullscreenMode = string.Compare(Value, "fullscreen", StringComparison.OrdinalIgnoreCase) == 0;
+											Interface.CurrentOptions.FullscreenMode = string.Compare(Value, "fullscreen", StringComparison.OrdinalIgnoreCase) == 0;
 											break;
 										case "vsync":
-											CurrentOptions.VerticalSynchronization = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											Interface.CurrentOptions.VerticalSynchronization = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 										case "windowwidth":
 											{
@@ -357,9 +353,8 @@ namespace OpenBve
 												{
 													a = 960;
 												}
-												CurrentOptions.WindowWidth = a;
-											}
-											break;
+												Interface.CurrentOptions.WindowWidth = a;
+											} break;
 										case "windowheight":
 											{
 												int a;
@@ -367,9 +362,8 @@ namespace OpenBve
 												{
 													a = 600;
 												}
-												CurrentOptions.WindowHeight = a;
-											}
-											break;
+												Interface.CurrentOptions.WindowHeight = a;
+											} break;
 										case "fullscreenwidth":
 											{
 												int a;
@@ -377,9 +371,8 @@ namespace OpenBve
 												{
 													a = 1024;
 												}
-												CurrentOptions.FullscreenWidth = a;
-											}
-											break;
+												Interface.CurrentOptions.FullscreenWidth = a;
+											} break;
 										case "fullscreenheight":
 											{
 												int a;
@@ -387,9 +380,8 @@ namespace OpenBve
 												{
 													a = 768;
 												}
-												CurrentOptions.FullscreenHeight = a;
-											}
-											break;
+												Interface.CurrentOptions.FullscreenHeight = a;
+											} break;
 										case "fullscreenbits":
 											{
 												int a;
@@ -397,92 +389,83 @@ namespace OpenBve
 												{
 													a = 32;
 												}
-												CurrentOptions.FullscreenBits = a;
-											}
-											break;
+												Interface.CurrentOptions.FullscreenBits = a;
+											} break;
 										case "mainmenuwidth":
 											{
 												int a;
 												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
-												CurrentOptions.MainMenuWidth = a;
-											}
-											break;
+												Interface.CurrentOptions.MainMenuWidth = a;
+											} break;
 										case "mainmenuheight":
 											{
 												int a;
 												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
-												CurrentOptions.MainMenuHeight = a;
-											}
-											break;
+												Interface.CurrentOptions.MainMenuHeight = a;
+											} break;
 										case "disabledisplaylists":
-											CurrentOptions.DisableDisplayLists = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											Interface.CurrentOptions.DisableDisplayLists = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 										case "loadinadvance":
-											CurrentOptions.LoadInAdvance = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											Interface.CurrentOptions.LoadInAdvance = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 										case "unloadtextures":
-											CurrentOptions.UnloadUnusedTextures = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											Interface.CurrentOptions.UnloadUnusedTextures = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
-									}
-									break;
+									} break;
 								case "quality":
 									switch (Key)
 									{
 										case "interpolation":
 											switch (Value.ToLowerInvariant())
 											{
-												case "nearestneighbor": CurrentOptions.Interpolation = InterpolationMode.NearestNeighbor; break;
-												case "bilinear": CurrentOptions.Interpolation = InterpolationMode.Bilinear; break;
-												case "nearestneighbormipmapped": CurrentOptions.Interpolation = InterpolationMode.NearestNeighborMipmapped; break;
-												case "bilinearmipmapped": CurrentOptions.Interpolation = InterpolationMode.BilinearMipmapped; break;
-												case "trilinearmipmapped": CurrentOptions.Interpolation = InterpolationMode.TrilinearMipmapped; break;
-												case "anisotropicfiltering": CurrentOptions.Interpolation = InterpolationMode.AnisotropicFiltering; break;
-												default: CurrentOptions.Interpolation = InterpolationMode.BilinearMipmapped; break;
-											}
-											break;
+												case "nearestneighbor": Interface.CurrentOptions.Interpolation = InterpolationMode.NearestNeighbor; break;
+												case "bilinear": Interface.CurrentOptions.Interpolation = InterpolationMode.Bilinear; break;
+												case "nearestneighbormipmapped": Interface.CurrentOptions.Interpolation = InterpolationMode.NearestNeighborMipmapped; break;
+												case "bilinearmipmapped": Interface.CurrentOptions.Interpolation = InterpolationMode.BilinearMipmapped; break;
+												case "trilinearmipmapped": Interface.CurrentOptions.Interpolation = InterpolationMode.TrilinearMipmapped; break;
+												case "anisotropicfiltering": Interface.CurrentOptions.Interpolation = InterpolationMode.AnisotropicFiltering; break;
+												default: Interface.CurrentOptions.Interpolation = InterpolationMode.BilinearMipmapped; break;
+											} break;
 										case "anisotropicfilteringlevel":
 											{
 												int a;
 												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
-												CurrentOptions.AnisotropicFilteringLevel = a;
-											}
-											break;
+												Interface.CurrentOptions.AnisotropicFilteringLevel = a;
+											} break;
 										case "anisotropicfilteringmaximum":
 											{
 												int a;
 												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
-												CurrentOptions.AnisotropicFilteringMaximum = a;
-											}
-											break;
+												Interface.CurrentOptions.AnisotropicFilteringMaximum = a;
+											} break;
 										case "antialiasinglevel":
 											{
 												int a;
 												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
-												CurrentOptions.AntiAliasingLevel = a;
-											}
-											break;
+												Interface.CurrentOptions.AntiAliasingLevel = a;
+											} break;
 										case "transparencymode":
 											switch (Value.ToLowerInvariant())
 											{
-												case "sharp": CurrentOptions.TransparencyMode = TransparencyMode.Performance; break;
-												case "smooth": CurrentOptions.TransparencyMode = TransparencyMode.Quality; break;
+												case "sharp": Interface.CurrentOptions.TransparencyMode = TransparencyMode.Performance; break;
+												case "smooth": Interface.CurrentOptions.TransparencyMode = TransparencyMode.Quality; break;
 												default:
 													{
 														int a;
 														if (int.TryParse(Value, NumberStyles.Integer, Culture, out a))
 														{
-															CurrentOptions.TransparencyMode = (TransparencyMode)a;
+															Interface.CurrentOptions.TransparencyMode = (TransparencyMode)a;
 														}
 														else
 														{
-															CurrentOptions.TransparencyMode = TransparencyMode.Quality;
+															Interface.CurrentOptions.TransparencyMode = TransparencyMode.Quality;
 														}
 														break;
 													}
-											}
-											break;
+											} break;
 										case "oldtransparencymode":
-											CurrentOptions.OldTransparencyMode = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											Interface.CurrentOptions.OldTransparencyMode = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 										case "viewingdistance":
 											{
@@ -491,22 +474,19 @@ namespace OpenBve
 												{
 													if (a >= 100 && a <= 10000)
 													{
-														CurrentOptions.ViewingDistance = a;
+														Interface.CurrentOptions.ViewingDistance = a;
 													}
 												}
-											}
-											break;
+											} break;
 										case "motionblur":
 											switch (Value.ToLowerInvariant())
 											{
-												case "low": CurrentOptions.MotionBlur = MotionBlurMode.Low; break;
-												case "medium": CurrentOptions.MotionBlur = MotionBlurMode.Medium; break;
-												case "high": CurrentOptions.MotionBlur = MotionBlurMode.High; break;
-												default: CurrentOptions.MotionBlur = MotionBlurMode.None; break;
-											}
-											break;
-									}
-									break;
+												case "low": Interface.CurrentOptions.MotionBlur = MotionBlurMode.Low; break;
+												case "medium": Interface.CurrentOptions.MotionBlur = MotionBlurMode.Medium; break;
+												case "high": Interface.CurrentOptions.MotionBlur = MotionBlurMode.High; break;
+												default: Interface.CurrentOptions.MotionBlur = MotionBlurMode.None; break;
+											} break;
+									} break;
 								case "objectoptimization":
 									switch (Key)
 									{
@@ -514,50 +494,45 @@ namespace OpenBve
 											{
 												int a;
 												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
-												CurrentOptions.ObjectOptimizationBasicThreshold = a;
-											}
-											break;
+												Interface.CurrentOptions.ObjectOptimizationBasicThreshold = a;
+											} break;
 										case "fullthreshold":
 											{
 												int a;
 												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
-												CurrentOptions.ObjectOptimizationFullThreshold = a;
-											}
-											break;
+												Interface.CurrentOptions.ObjectOptimizationFullThreshold = a;
+											} break;
 										case "vertexCulling":
 											{
-												CurrentOptions.ObjectOptimizationVertexCulling = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											}
-											break;
-									}
-									break;
+												Interface.CurrentOptions.ObjectOptimizationVertexCulling = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											} break;
+									} break;
 								case "simulation":
 									switch (Key)
 									{
 										case "toppling":
-											CurrentOptions.Toppling = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											Interface.CurrentOptions.Toppling = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 										case "collisions":
-											CurrentOptions.Collisions = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											Interface.CurrentOptions.Collisions = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 										case "derailments":
-											CurrentOptions.Derailments = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											Interface.CurrentOptions.Derailments = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 										case "loadingsway":
-											CurrentOptions.LoadingSway = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											Interface.CurrentOptions.LoadingSway = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 										case "blackbox":
-											CurrentOptions.BlackBox = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											Interface.CurrentOptions.BlackBox = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 										case "mode":
 											switch (Value.ToLowerInvariant())
 											{
-												case "arcade": CurrentOptions.GameMode = GameMode.Arcade; break;
-												case "normal": CurrentOptions.GameMode = GameMode.Normal; break;
-												case "expert": CurrentOptions.GameMode = GameMode.Expert; break;
-												default: CurrentOptions.GameMode = GameMode.Normal; break;
-											}
-											break;
+												case "arcade": Interface.CurrentOptions.GameMode = Interface.GameMode.Arcade; break;
+												case "normal": Interface.CurrentOptions.GameMode = Interface.GameMode.Normal; break;
+												case "expert": Interface.CurrentOptions.GameMode = Interface.GameMode.Expert; break;
+												default: Interface.CurrentOptions.GameMode = Interface.GameMode.Normal; break;
+											} break;
 										case "acceleratedtimefactor":
 											int tf;
 											int.TryParse(Value, NumberStyles.Integer, Culture, out tf);
@@ -565,59 +540,46 @@ namespace OpenBve
 											{
 												tf = 5;
 											}
-											CurrentOptions.TimeAccelerationFactor = tf;
+											Interface.CurrentOptions.TimeAccelerationFactor = tf;
 											break;
 										case "enablebvetshacks":
-											CurrentOptions.EnableBveTsHacks = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											Interface.CurrentOptions.EnableBveTsHacks = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 
-									}
-									break;
+									} break;
 								case "controls":
 									switch (Key)
 									{
 										case "usejoysticks":
-											CurrentOptions.UseJoysticks = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											Interface.CurrentOptions.UseJoysticks = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 										case "joystickaxiseb":
-											CurrentOptions.AllowAxisEB = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											Interface.CurrentOptions.AllowAxisEB = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 										case "joystickaxisthreshold":
 											{
 												double a;
 												double.TryParse(Value, NumberStyles.Float, Culture, out a);
-												CurrentOptions.JoystickAxisThreshold = a;
-											}
-											break;
+												Interface.CurrentOptions.JoystickAxisThreshold = a;
+											} break;
 										case "keyrepeatdelay":
 											{
 												int a;
 												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
-												if (a <= 0)
-												{
-													a = 500;
-												}
-
-												CurrentOptions.KeyRepeatDelay = 0.001 * a;
-											}
-											break;
+												if (a <= 0) a = 500;
+												Interface.CurrentOptions.KeyRepeatDelay = 0.001 * (double)a;
+											} break;
 										case "keyrepeatinterval":
 											{
 												int a;
 												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
-												if (a <= 0)
-												{
-													a = 100;
-												}
-
-												CurrentOptions.KeyRepeatInterval = 0.001 * a;
-											}
-											break;
+												if (a <= 0) a = 100;
+												Interface.CurrentOptions.KeyRepeatInterval = 0.001 * (double)a;
+											} break;
 										case "raildrivermph":
-											CurrentOptions.RailDriverMPH = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											Interface.CurrentOptions.RailDriverMPH = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
-									}
-									break;
+									} break;
 								case "sound":
 									switch (Key)
 									{
@@ -641,50 +603,45 @@ namespace OpenBve
 											{
 												int a;
 												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
-												CurrentOptions.SoundNumber = a < 16 ? 16 : a;
-											}
-											break;
-									}
-									break;
+												Interface.CurrentOptions.SoundNumber = a < 16 ? 16 : a;
+											} break;
+									} break;
 								case "verbosity":
 									switch (Key)
 									{
 										case "showwarningmessages":
-											CurrentOptions.ShowWarningMessages = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											Interface.CurrentOptions.ShowWarningMessages = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 										case "showerrormessages":
-											CurrentOptions.ShowErrorMessages = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											Interface.CurrentOptions.ShowErrorMessages = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 										case "debuglog":
 											Program.GenerateDebugLogging = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
-									}
-									break;
+									} break;
 								case "folders":
 									switch (Key)
 									{
 										case "route":
-											CurrentOptions.RouteFolder = Value;
+											Interface.CurrentOptions.RouteFolder = Value;
 											break;
 										case "train":
-											CurrentOptions.TrainFolder = Value;
+											Interface.CurrentOptions.TrainFolder = Value;
 											break;
-									}
-									break;
+									} break;
 								case "proxy":
 									switch (Key)
 									{
 										case "url":
-											CurrentOptions.ProxyUrl = Value;
+											Interface.CurrentOptions.ProxyUrl = Value;
 											break;
 										case "username":
-											CurrentOptions.ProxyUserName = Value;
+											Interface.CurrentOptions.ProxyUserName = Value;
 											break;
 										case "password":
-											CurrentOptions.ProxyPassword = Value;
+											Interface.CurrentOptions.ProxyPassword = Value;
 											break;
-									}
-									break;
+									} break;
 								case "packages":
 									switch (Key)
 									{
@@ -692,89 +649,83 @@ namespace OpenBve
 											switch (Value.ToLowerInvariant())
 											{
 												case "zip":
-													CurrentOptions.packageCompressionType = CompressionType.Zip;
+													Interface.CurrentOptions.packageCompressionType = CompressionType.Zip;
 													break;
 												case "bzip":
-													CurrentOptions.packageCompressionType = CompressionType.BZ2;
+													Interface.CurrentOptions.packageCompressionType = CompressionType.BZ2;
 													break;
 												case "gzip":
-													CurrentOptions.packageCompressionType = CompressionType.TarGZ;
+													Interface.CurrentOptions.packageCompressionType = CompressionType.TarGZ;
 													break;
 											}
 											break;
-									}
-									break;
+									} break;
 								case "recentlyusedroutes":
 									{
-										int n = CurrentOptions.RecentlyUsedRoutes.Length;
-										Array.Resize(ref CurrentOptions.RecentlyUsedRoutes, n + 1);
-										CurrentOptions.RecentlyUsedRoutes[n] = Value;
-									}
-									break;
+										int n = Interface.CurrentOptions.RecentlyUsedRoutes.Length;
+										Array.Resize<string>(ref Interface.CurrentOptions.RecentlyUsedRoutes, n + 1);
+										Interface.CurrentOptions.RecentlyUsedRoutes[n] = Value;
+									} break;
 								case "recentlyusedtrains":
 									{
-										int n = CurrentOptions.RecentlyUsedTrains.Length;
-										Array.Resize(ref CurrentOptions.RecentlyUsedTrains, n + 1);
-										CurrentOptions.RecentlyUsedTrains[n] = Value;
-									}
-									break;
+										int n = Interface.CurrentOptions.RecentlyUsedTrains.Length;
+										Array.Resize<string>(ref Interface.CurrentOptions.RecentlyUsedTrains, n + 1);
+										Interface.CurrentOptions.RecentlyUsedTrains[n] = Value;
+									} break;
 								case "routeencodings":
 									{
 										int a;
 										if (!int.TryParse(Key, NumberStyles.Integer, Culture, out a))
 										{
-											a = Encoding.UTF8.CodePage;
+											a = System.Text.Encoding.UTF8.CodePage;
 										}
 										try
 										{
 #pragma warning disable CS0219
-											//Used to check that the parsed integer is a valid codepage
+//Used to check that the parsed integer is a valid codepage
 											// ReSharper disable once UnusedVariable
 											Encoding e = Encoding.GetEncoding(a);
 #pragma warning restore CS0219
 										}
 										catch
 										{
-											a = Encoding.UTF8.CodePage;
+											a = System.Text.Encoding.UTF8.CodePage;
 										}
-										int n = CurrentOptions.RouteEncodings.Length;
-										Array.Resize(ref CurrentOptions.RouteEncodings, n + 1);
-										CurrentOptions.RouteEncodings[n].Codepage = a;
-										CurrentOptions.RouteEncodings[n].Value = Value;
-									}
-									break;
+										int n = Interface.CurrentOptions.RouteEncodings.Length;
+										Array.Resize<TextEncoding.EncodingValue>(ref Interface.CurrentOptions.RouteEncodings, n + 1);
+										Interface.CurrentOptions.RouteEncodings[n].Codepage = a;
+										Interface.CurrentOptions.RouteEncodings[n].Value = Value;
+									} break;
 								case "trainencodings":
 									{
 										int a;
 										if (!int.TryParse(Key, NumberStyles.Integer, Culture, out a))
 										{
-											a = Encoding.UTF8.CodePage;
+											a = System.Text.Encoding.UTF8.CodePage;
 										}
 										try
 										{
 #pragma warning disable CS0219
-											//Used to check that the parsed integer is a valid codepage
+//Used to check that the parsed integer is a valid codepage
 											// ReSharper disable once UnusedVariable
 											Encoding e = Encoding.GetEncoding(a);
 #pragma warning restore CS0219
 										}
 										catch
 										{
-											a = Encoding.UTF8.CodePage;
+											a = System.Text.Encoding.UTF8.CodePage;
 										}
-										int n = CurrentOptions.TrainEncodings.Length;
-										Array.Resize(ref CurrentOptions.TrainEncodings, n + 1);
-										CurrentOptions.TrainEncodings[n].Codepage = a;
-										CurrentOptions.TrainEncodings[n].Value = Value;
-									}
-									break;
+										int n = Interface.CurrentOptions.TrainEncodings.Length;
+										Array.Resize<TextEncoding.EncodingValue>(ref Interface.CurrentOptions.TrainEncodings, n + 1);
+										Interface.CurrentOptions.TrainEncodings[n].Codepage = a;
+										Interface.CurrentOptions.TrainEncodings[n].Value = Value;
+									} break;
 								case "enableinputdeviceplugins":
 									{
-										int n = CurrentOptions.EnableInputDevicePlugins.Length;
-										Array.Resize(ref CurrentOptions.EnableInputDevicePlugins, n + 1);
-										CurrentOptions.EnableInputDevicePlugins[n] = Value;
-									}
-									break;
+										int n = Interface.CurrentOptions.EnableInputDevicePlugins.Length;
+										Array.Resize<string>(ref Interface.CurrentOptions.EnableInputDevicePlugins, n + 1);
+										Interface.CurrentOptions.EnableInputDevicePlugins[n] = Value;
+									} break;
 								case "parsers":
 									switch (Key)
 									{
@@ -783,11 +734,11 @@ namespace OpenBve
 												int p;
 												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out p) || p < 0 || p > 3)
 												{
-													CurrentOptions.CurrentXParser = XParsers.Original;
+													Interface.CurrentOptions.CurrentXParser = XParsers.Original;
 												}
 												else
 												{
-													CurrentOptions.CurrentXParser = (XParsers)p;
+													Interface.CurrentOptions.CurrentXParser = (XParsers)p;
 												}
 												break;
 											}
@@ -796,11 +747,11 @@ namespace OpenBve
 												int p;
 												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out p) || p < 0 || p > 2)
 												{
-													CurrentOptions.CurrentObjParser = ObjParsers.Original;
+													Interface.CurrentOptions.CurrentObjParser = ObjParsers.Original;
 												}
 												else
 												{
-													CurrentOptions.CurrentObjParser = (ObjParsers)p;
+													Interface.CurrentOptions.CurrentObjParser = (ObjParsers)p;
 												}
 												break;
 											}
@@ -810,18 +761,17 @@ namespace OpenBve
 									switch (Key)
 									{
 										case "cursor":
-											CurrentOptions.CursorFileName = Value;
+											Interface.CurrentOptions.CursorFileName = Value;
 											break;
 										case "panel2extended":
-											CurrentOptions.Panel2ExtendedMode = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											Interface.CurrentOptions.Panel2ExtendedMode = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 										case "panel2extendedminsize":
 											{
 												int a;
 												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
-												CurrentOptions.Panel2ExtendedMinSize = a;
-											}
-											break;
+												Interface.CurrentOptions.Panel2ExtendedMinSize = a;
+											} break;
 									}
 									break;
 							}
@@ -833,12 +783,8 @@ namespace OpenBve
 			{
 				// file not found
 				string Code = CultureInfo.CurrentUICulture.Name;
-				if (string.IsNullOrEmpty(Code))
-				{
-					Code = "en-US";
-				}
-
-				File = Path.CombineFile(Program.FileSystem.GetDataFolder("Languages"), Code + ".cfg");
+				if (string.IsNullOrEmpty(Code)) Code = "en-US";
+				File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Languages"), Code + ".cfg");
 				if (System.IO.File.Exists(File))
 				{
 					CurrentOptions.LanguageCode = Code;
@@ -851,7 +797,7 @@ namespace OpenBve
 						if (i > 0)
 						{
 							Code = Code.Substring(0, i);
-							File = Path.CombineFile(Program.FileSystem.GetDataFolder("Languages"), Code + ".cfg");
+							File = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Languages"), Code + ".cfg");
 							if (System.IO.File.Exists(File))
 							{
 								CurrentOptions.LanguageCode = Code;
@@ -868,7 +814,7 @@ namespace OpenBve
 		internal static void SaveOptions()
 		{
 			CultureInfo Culture = CultureInfo.InvariantCulture;
-			StringBuilder Builder = new StringBuilder();
+			System.Text.StringBuilder Builder = new System.Text.StringBuilder();
 			Builder.AppendLine("; Options");
 			Builder.AppendLine("; =======");
 			Builder.AppendLine("; This file was automatically generated. Please modify only if you know what you're doing.");
@@ -952,9 +898,9 @@ namespace OpenBve
 			Builder.Append("mode = ");
 			switch (CurrentOptions.GameMode)
 			{
-				case GameMode.Arcade: Builder.AppendLine("arcade"); break;
-				case GameMode.Normal: Builder.AppendLine("normal"); break;
-				case GameMode.Expert: Builder.AppendLine("expert"); break;
+				case Interface.GameMode.Arcade: Builder.AppendLine("arcade"); break;
+				case Interface.GameMode.Normal: Builder.AppendLine("normal"); break;
+				case Interface.GameMode.Expert: Builder.AppendLine("expert"); break;
 				default: Builder.AppendLine("normal"); break;
 			}
 			Builder.AppendLine("acceleratedtimefactor = " + CurrentOptions.TimeAccelerationFactor);
@@ -1040,15 +986,15 @@ namespace OpenBve
 			}
 			Builder.AppendLine();
 			Builder.AppendLine("[Parsers]");
-			Builder.AppendLine("xObject = " + (int)CurrentOptions.CurrentXParser);
-			Builder.AppendLine("objObject = " + (int)CurrentOptions.CurrentObjParser);
+			Builder.AppendLine("xObject = " + (int)Interface.CurrentOptions.CurrentXParser);
+			Builder.AppendLine("objObject = " + (int)Interface.CurrentOptions.CurrentObjParser);
 			Builder.AppendLine();
 			Builder.AppendLine("[Touch]");
 			Builder.AppendLine("cursor = " + CurrentOptions.CursorFileName);
 			Builder.AppendLine("panel2extended = " + (CurrentOptions.Panel2ExtendedMode ? "true" : "false"));
 			Builder.AppendLine("panel2extendedminsize = " + CurrentOptions.Panel2ExtendedMinSize.ToString(Culture));
-			string File = Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg");
-			System.IO.File.WriteAllText(File, Builder.ToString(), new UTF8Encoding(true));
+			string File = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "1.5.0/options.cfg");
+			System.IO.File.WriteAllText(File, Builder.ToString(), new System.Text.UTF8Encoding(true));
 		}
 	}
 }

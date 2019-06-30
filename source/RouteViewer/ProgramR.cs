@@ -23,10 +23,8 @@ using ButtonState = OpenTK.Input.ButtonState;
 using Screen = LibRender.Screen;
 using Vector3 = OpenBveApi.Math.Vector3;
 
-namespace OpenBve
-{
-	internal static class Program
-	{
+namespace OpenBve {
+	internal static class Program {
 
 		// system
 		private static bool CurrentlyRunOnMono = false;
@@ -39,13 +37,13 @@ namespace OpenBve
 		internal static int CurrentStation = -1;
 		internal static bool JumpToPositionEnabled = false;
 		internal static string JumpToPositionValue = "";
-		internal static double MinimumJumpToPositionValue = 0;
+		internal static double MinimumJumpToPositionValue =  0;
 		internal static bool processCommandLineArgs;
 		internal static string[] commandLineArguments;
 		internal static bool[] SkipArgs;
 
 		internal static bool SoundError = false;
-
+		
 		// keys
 		private static bool ShiftPressed = false;
 		private static bool ControlPressed = false;
@@ -78,54 +76,36 @@ namespace OpenBve
 			Plugins.LoadPlugins();
 			// command line arguments
 			SkipArgs = new bool[args.Length];
-			if (args.Length != 0)
-			{
+			if (args.Length != 0) {
 				string File = System.IO.Path.Combine(Application.StartupPath, "ObjectViewer.exe");
-				if (System.IO.File.Exists(File))
-				{
+				if (System.IO.File.Exists(File)) {
 					int Skips = 0;
 					System.Text.StringBuilder NewArgs = new System.Text.StringBuilder();
-					for (int i = 0; i < args.Length; i++)
-					{
-						if (args[i] != null && System.IO.File.Exists(args[i]))
-						{
-							if (System.IO.Path.GetExtension(args[i]).Equals(".csv", StringComparison.OrdinalIgnoreCase))
-							{
+					for (int i = 0; i < args.Length; i++) {
+						if (args[i] != null && System.IO.File.Exists(args[i])) {
+							if (System.IO.Path.GetExtension(args[i]).Equals(".csv", StringComparison.OrdinalIgnoreCase)) {
 								string Text = System.IO.File.ReadAllText(args[i], System.Text.Encoding.UTF8);
-								if (Text.Length == 0 || Text.IndexOf("CreateMeshBuilder", StringComparison.OrdinalIgnoreCase) >= 0)
-								{
-									if (NewArgs.Length != 0)
-									{
-										NewArgs.Append(" ");
-									}
-
+								if (Text.Length == 0 || Text.IndexOf("CreateMeshBuilder", StringComparison.OrdinalIgnoreCase) >= 0) {
+									if (NewArgs.Length != 0) NewArgs.Append(" ");
 									NewArgs.Append("\"" + args[i] + "\"");
 									SkipArgs[i] = true;
 									Skips++;
 								}
 							}
-						}
-						else
-						{
+						} else {
 							SkipArgs[i] = true;
 							Skips++;
 						}
 					}
-					if (NewArgs.Length != 0)
-					{
+					if (NewArgs.Length != 0) {
 						System.Diagnostics.Process.Start(File, NewArgs.ToString());
 					}
-					if (Skips == args.Length)
-					{
-						return;
-					}
+					if (Skips == args.Length) return;
 				}
 			}
 			Options.LoadOptions();
-			ToolkitOptions options = new ToolkitOptions
-			{
-				Backend = PlatformBackend.PreferX11
-			};
+			var options = new ToolkitOptions();
+			options.Backend = PlatformBackend.PreferX11;
 			Toolkit.Init(options);
 			string folder = Program.FileSystem.GetDataFolder("Languages");
 			Translations.LoadLanguageFiles(folder);
@@ -133,13 +113,11 @@ namespace OpenBve
 			Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
 			// application
 			currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntialiasingLevel);
-			currentGameWindow = new RouteViewer(LibRender.Screen.Width, LibRender.Screen.Height, currentGraphicsMode, "Route Viewer", GameWindowFlags.Default)
-			{
-				Visible = true,
-				TargetUpdateFrequency = 0,
-				TargetRenderFrequency = 0,
-				Title = "Route Viewer"
-			};
+			currentGameWindow = new RouteViewer(LibRender.Screen.Width, LibRender.Screen.Height, currentGraphicsMode, "Route Viewer", GameWindowFlags.Default);
+			currentGameWindow.Visible = true;
+			currentGameWindow.TargetUpdateFrequency = 0;
+			currentGameWindow.TargetRenderFrequency = 0;
+			currentGameWindow.Title = "Route Viewer";
 			processCommandLineArgs = true;
 			currentGameWindow.Run();
 			//Unload
@@ -147,8 +125,7 @@ namespace OpenBve
 		}
 
 		// reset camera
-		internal static void ResetCamera()
-		{
+		internal static void ResetCamera() {
 			Camera.AbsolutePosition = new Vector3(0.0, 2.5, -5.0);
 			Camera.AbsoluteDirection = new Vector3(-Camera.AbsolutePosition.X, -Camera.AbsolutePosition.Y, -Camera.AbsolutePosition.Z);
 			Camera.AbsoluteSide = new Vector3(-Camera.AbsolutePosition.Z, 0.0, Camera.AbsolutePosition.X);
@@ -161,35 +138,30 @@ namespace OpenBve
 		}
 
 		// update viewport
-		internal static void UpdateViewport()
-		{
+		internal static void UpdateViewport() {
 			GL.Viewport(0, 0, LibRender.Screen.Width, LibRender.Screen.Height);
-			Screen.AspectRatio = Screen.Width / (double)LibRender.Screen.Height;
+			Screen.AspectRatio = (double)LibRender.Screen.Width / (double)LibRender.Screen.Height;
 			Camera.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * Camera.VerticalViewingAngle) * Screen.AspectRatio);
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();
-			Matrix4d perspective = Matrix4d.Perspective(Camera.VerticalViewingAngle, -Screen.AspectRatio, 0.2, 1000.0);
+			Matrix4d perspective =  Matrix4d.Perspective(Camera.VerticalViewingAngle, -Screen.AspectRatio, 0.2, 1000.0);
 			GL.MultMatrix(ref perspective);
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.LoadIdentity();
 		}
 
 		// load route
-		internal static bool LoadRoute()
-		{
-
+		internal static bool LoadRoute() {
+			
 			CurrentStation = -1;
 			Game.Reset();
 			Renderer.Initialize();
 			UpdateViewport();
 			bool result;
-			try
-			{
+			try {
 				Loading.Load(CurrentRoute, System.Text.Encoding.UTF8);
 				result = true;
-			}
-			catch (Exception ex)
-			{
+			} catch (Exception ex) {
 				MessageBox.Show(ex.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				Game.Reset();
 				CurrentRoute = null;
@@ -202,17 +174,12 @@ namespace OpenBve
 		}
 
 		// jump to station
-		private static void JumpToStation(int Direction)
-		{
-			if (Direction < 0)
-			{
-				for (int i = Game.Stations.Length - 1; i >= 0; i--)
-				{
-					if (Game.Stations[i].Stops.Length != 0)
-					{
+		private static void JumpToStation(int Direction) {
+			if (Direction < 0) {
+				for (int i = Game.Stations.Length - 1; i >= 0; i--) {
+					if (Game.Stations[i].Stops.Length != 0) {
 						double p = Game.Stations[i].Stops[Game.Stations[i].Stops.Length - 1].TrackPosition;
-						if (p < World.CameraTrackFollower.TrackPosition - 0.1)
-						{
+						if (p < World.CameraTrackFollower.TrackPosition - 0.1) {
 							TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, p, true, false);
 							Camera.CurrentAlignment.TrackPosition = p;
 							CurrentStation = i;
@@ -220,16 +187,11 @@ namespace OpenBve
 						}
 					}
 				}
-			}
-			else if (Direction > 0)
-			{
-				for (int i = 0; i < Game.Stations.Length; i++)
-				{
-					if (Game.Stations[i].Stops.Length != 0)
-					{
+			} else if (Direction > 0) {
+				for (int i = 0; i < Game.Stations.Length; i++) {
+					if (Game.Stations[i].Stops.Length != 0) {
 						double p = Game.Stations[i].Stops[Game.Stations[i].Stops.Length - 1].TrackPosition;
-						if (p > World.CameraTrackFollower.TrackPosition + 0.1)
-						{
+						if (p > World.CameraTrackFollower.TrackPosition + 0.1) {
 							TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, p, true, false);
 							Camera.CurrentAlignment.TrackPosition = p;
 							CurrentStation = i;
@@ -305,15 +267,15 @@ namespace OpenBve
 				Camera.AlignmentDirection.Position.Y = 0.0;
 				if (MouseButton == 1)
 				{
-					Camera.AlignmentDirection.Yaw = 0.025 * (previousMouseState.X - currentMouseState.X);
-					Camera.AlignmentDirection.Pitch = 0.025 * (previousMouseState.Y - currentMouseState.Y);
+					Camera.AlignmentDirection.Yaw = 0.025 * (double) (previousMouseState.X - currentMouseState.X);
+					Camera.AlignmentDirection.Pitch = 0.025 * (double)(previousMouseState.Y - currentMouseState.Y);
 				}
 				else if (MouseButton == 2)
 				{
-					Camera.AlignmentDirection.Position.X = 0.1 * (previousMouseState.X - currentMouseState.X);
-					Camera.AlignmentDirection.Position.Y = 0.1 * (previousMouseState.Y - currentMouseState.Y);
+					Camera.AlignmentDirection.Position.X = 0.1 * (double)(previousMouseState.X - currentMouseState.X);
+					Camera.AlignmentDirection.Position.Y = 0.1 * (double)(previousMouseState.Y - currentMouseState.Y);
 				}
-
+				
 			}
 		}
 
@@ -372,14 +334,14 @@ namespace OpenBve
 							ObjectManager.UpdateVisibility(a.TrackPosition, true);
 							ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 						}
-
+						
 						CurrentlyLoading = false;
 						Renderer.OptionInterface = true;
 						if (bitmap != null)
 						{
 							bitmap.Dispose();
 						}
-
+						
 					}
 					break;
 				case Key.F7:
@@ -387,11 +349,9 @@ namespace OpenBve
 					{
 						break;
 					}
-					OpenFileDialog Dialog = new OpenFileDialog
-					{
-						CheckFileExists = true,
-						Filter = @"CSV/RW files|*.csv;*.rw|All files|*"
-					};
+					OpenFileDialog Dialog = new OpenFileDialog();
+					Dialog.CheckFileExists = true;
+					Dialog.Filter = @"CSV/RW files|*.csv;*.rw|All files|*";
 					if (Dialog.ShowDialog() == DialogResult.OK)
 					{
 						Application.DoEvents();
@@ -437,62 +397,62 @@ namespace OpenBve
 					break;
 				case Key.A:
 				case Key.Keypad4:
-					Camera.AlignmentDirection.Position.X = -Camera.ExteriorTopSpeed * speedModified;
+					Camera.AlignmentDirection.Position.X = -Camera.ExteriorTopSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.D:
 				case Key.Keypad6:
-					Camera.AlignmentDirection.Position.X = Camera.ExteriorTopSpeed * speedModified;
+					Camera.AlignmentDirection.Position.X = Camera.ExteriorTopSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Keypad2:
-					Camera.AlignmentDirection.Position.Y = -Camera.ExteriorTopSpeed * speedModified;
+					Camera.AlignmentDirection.Position.Y = -Camera.ExteriorTopSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Keypad8:
-					Camera.AlignmentDirection.Position.Y = Camera.ExteriorTopSpeed * speedModified;
+					Camera.AlignmentDirection.Position.Y = Camera.ExteriorTopSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.W:
 				case Key.Keypad9:
-					Camera.AlignmentDirection.TrackPosition = Camera.ExteriorTopSpeed * speedModified;
+					Camera.AlignmentDirection.TrackPosition = Camera.ExteriorTopSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.S:
 				case Key.Keypad3:
-					Camera.AlignmentDirection.TrackPosition = -Camera.ExteriorTopSpeed * speedModified;
+					Camera.AlignmentDirection.TrackPosition = -Camera.ExteriorTopSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Left:
-					Camera.AlignmentDirection.Yaw = -Camera.ExteriorTopAngularSpeed * speedModified;
+					Camera.AlignmentDirection.Yaw = -Camera.ExteriorTopAngularSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Right:
-					Camera.AlignmentDirection.Yaw = Camera.ExteriorTopAngularSpeed * speedModified;
+					Camera.AlignmentDirection.Yaw = Camera.ExteriorTopAngularSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Up:
-					Camera.AlignmentDirection.Pitch = Camera.ExteriorTopAngularSpeed * speedModified;
+					Camera.AlignmentDirection.Pitch = Camera.ExteriorTopAngularSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Down:
-					Camera.AlignmentDirection.Pitch = -Camera.ExteriorTopAngularSpeed * speedModified;
+					Camera.AlignmentDirection.Pitch = -Camera.ExteriorTopAngularSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.KeypadDivide:
-					Camera.AlignmentDirection.Roll = -Camera.ExteriorTopAngularSpeed * speedModified;
+					Camera.AlignmentDirection.Roll = -Camera.ExteriorTopAngularSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.KeypadMultiply:
-					Camera.AlignmentDirection.Roll = Camera.ExteriorTopAngularSpeed * speedModified;
+					Camera.AlignmentDirection.Roll = Camera.ExteriorTopAngularSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Keypad0:
-					Camera.AlignmentDirection.Zoom = Camera.ZoomTopSpeed * speedModified;
+					Camera.AlignmentDirection.Zoom = Camera.ZoomTopSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.KeypadPeriod:
-					Camera.AlignmentDirection.Zoom = -Camera.ZoomTopSpeed * speedModified;
+					Camera.AlignmentDirection.Zoom = -Camera.ZoomTopSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Keypad1:
@@ -634,23 +594,21 @@ namespace OpenBve
 							double value;
 							if (double.TryParse(JumpToPositionValue, NumberStyles.Float, CultureInfo.InvariantCulture,
 								out value))
-							{
 								if (value < TrackManager.CurrentTrack.Elements[TrackManager.CurrentTrack.Elements.Length - 1].StartingTrackPosition + 100 && value > MinimumJumpToPositionValue - 100)
+							{
+								if (direction != 0)
 								{
-									if (direction != 0)
-									{
-										value = World.CameraTrackFollower.TrackPosition + direction * value;
-									}
-									TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, value, true, false);
-									Camera.CurrentAlignment.TrackPosition = value;
-									World.UpdateAbsoluteCamera(0.0);
-									World.UpdateViewingDistances();
+									value = World.CameraTrackFollower.TrackPosition + (double) direction*value;
 								}
+								TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, value, true, false);
+								Camera.CurrentAlignment.TrackPosition = value;
+								World.UpdateAbsoluteCamera(0.0);
+								World.UpdateViewingDistances();
+		                        }
 							}
 						}
-					}
-					JumpToPositionEnabled = false;
-					CpuReducedMode = false;
+						JumpToPositionEnabled = false;
+						CpuReducedMode = false;
 					break;
 				case Key.Escape:
 					JumpToPositionEnabled = false;
@@ -712,13 +670,10 @@ namespace OpenBve
 		}
 
 		// update caption
-		internal static void UpdateCaption()
-		{
-			if (CurrentRoute != null)
-			{
+		internal static void UpdateCaption() {
+			if (CurrentRoute != null) {
 				currentGameWindow.Title = System.IO.Path.GetFileName(CurrentRoute) + " - " + Application.ProductName;
-			}
-			else
+			} else
 			{
 				currentGameWindow.Title = Application.ProductName;
 			}

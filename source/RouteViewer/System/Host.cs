@@ -134,43 +134,37 @@ namespace OpenBve
 		{
 			return TextureManager.LoadTexture(Texture, wrapMode, CPreciseTimer.GetClockTicks(), Interface.CurrentOptions.Interpolation, Interface.CurrentOptions.AnisotropicFilteringLevel);
 		}
-
+		
 		/// <summary>Registers a texture and returns a handle to the texture.</summary>
 		/// <param name="path">The path to the file or folder that contains the texture.</param>
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
 		/// <param name="handle">Receives the handle to the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle)
-		{
-			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path))
-			{
+		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle) {
+			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
 				Texture data;
-				if (TextureManager.RegisterTexture(path, parameters, out data))
-				{
+				if (TextureManager.RegisterTexture(path, parameters, out data)) {
 					handle = data;
 					return true;
 				}
-			}
-			else
-			{
+			} else {
 				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
 			}
 			handle = null;
 			return false;
 		}
-
+		
 		/// <summary>Registers a texture and returns a handle to the texture.</summary>
 		/// <param name="texture">The texture data.</param>
 		/// <param name="parameters">The parameters that specify how to process the texture.</param>
 		/// <param name="handle">Receives the handle to the texture.</param>
 		/// <returns>Whether loading the texture was successful.</returns>
-		public override bool RegisterTexture(Texture texture, TextureParameters parameters, out Texture handle)
-		{
+		public override bool RegisterTexture(Texture texture, TextureParameters parameters, out Texture handle) {
 			texture = texture.ApplyParameters(parameters);
 			handle = TextureManager.RegisterTexture(texture);
 			return true;
 		}
-
+		
 		// --- sound ---
 
 		/// <summary>Loads a sound and returns the sound data.</summary>
@@ -266,40 +260,27 @@ namespace OpenBve
 
 		public override bool LoadObject(string path, System.Text.Encoding Encoding, out UnifiedObject Object)
 		{
-			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path))
-			{
-				for (int i = 0; i < Plugins.LoadedPlugins.Length; i++)
-				{
-					if (Plugins.LoadedPlugins[i].Object != null)
-					{
-						try
-						{
-							if (Plugins.LoadedPlugins[i].Object.CanLoadObject(path))
-							{
-								try
-								{
-									if (Plugins.LoadedPlugins[i].Object.LoadObject(path, Encoding, out Object))
-									{
+			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
+				for (int i = 0; i < Plugins.LoadedPlugins.Length; i++) {
+					if (Plugins.LoadedPlugins[i].Object != null) {
+						try {
+							if (Plugins.LoadedPlugins[i].Object.CanLoadObject(path)) {
+								try {
+									if (Plugins.LoadedPlugins[i].Object.LoadObject(path, Encoding, out Object)) {
 										return true;
 									}
 									Interface.AddMessage(MessageType.Error, false, "Plugin " + Plugins.LoadedPlugins[i].Title + " returned unsuccessfully at LoadObject");
-								}
-								catch (Exception ex)
-								{
+								} catch (Exception ex) {
 									Interface.AddMessage(MessageType.Error, false, "Plugin " + Plugins.LoadedPlugins[i].Title + " raised the following exception at LoadObject:" + ex.Message);
 								}
 							}
-						}
-						catch (Exception ex)
-						{
+						} catch (Exception ex) {
 							Interface.AddMessage(MessageType.Error, false, "Plugin " + Plugins.LoadedPlugins[i].Title + " raised the following exception at CanLoadObject:" + ex.Message);
 						}
 					}
 				}
 				Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
-			}
-			else
-			{
+			} else {
 				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
 			}
 			Object = null;

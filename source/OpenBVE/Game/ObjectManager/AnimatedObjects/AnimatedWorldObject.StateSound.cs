@@ -78,20 +78,20 @@ namespace OpenBve
 							}
 						}
 						Object.Update(false, train, train == null ? 0 : train.DriverCar, SectionIndex, TrackPosition, Position, Direction, Up, Side, false, true, true, timeDelta, true);
-						if (Object.CurrentState != lastState && Loading.SimulationSetup)
+						if (this.Object.CurrentState != this.lastState && Loading.SimulationSetup)
 						{
-							if (SingleBuffer && Buffers[0] != null)
+							if (this.SingleBuffer && this.Buffers[0] != null)
 							{
-								switch (Object.CurrentState)
+								switch (this.Object.CurrentState)
 								{
 									case -1:
-										if (PlayOnHide)
+										if (this.PlayOnHide)
 										{
 											Source = Program.Sounds.PlaySound(Buffers[0], currentPitch, currentVolume, Position, false);
 										}
 										break;
 									case 0:
-										if (PlayOnShow || lastState != -1)
+										if (this.PlayOnShow || this.lastState != -1)
 										{
 											Source = Program.Sounds.PlaySound(Buffers[0], currentPitch, currentVolume, Position, false);
 										}
@@ -103,19 +103,19 @@ namespace OpenBve
 							}
 							else
 							{
-								int bufferIndex = Object.CurrentState + 1;
-								if (bufferIndex < Buffers.Length && Buffers[bufferIndex] != null)
+								int bufferIndex = this.Object.CurrentState + 1;
+								if (bufferIndex < this.Buffers.Length && this.Buffers[bufferIndex] != null)
 								{
 									switch (bufferIndex)
 									{
 										case 0:
-											if (PlayOnHide)
+											if (this.PlayOnHide)
 											{
 												Source = Program.Sounds.PlaySound(Buffers[bufferIndex], currentPitch, currentVolume, Position, false);
 											}
 											break;
 										case 1:
-											if (PlayOnShow || lastState != -1)
+											if (this.PlayOnShow || this.lastState != -1)
 											{
 												Source = Program.Sounds.PlaySound(Buffers[bufferIndex], currentPitch, currentVolume, Position, false);
 											}
@@ -126,7 +126,7 @@ namespace OpenBve
 									}
 								}
 							}
-
+							
 						}
 					}
 					else
@@ -148,7 +148,7 @@ namespace OpenBve
 						Visible = false;
 					}
 				}
-				lastState = Object.CurrentState;
+				this.lastState = this.Object.CurrentState;
 			}
 
 			internal void Create(Vector3 objectPosition, Transformation BaseTransformation, Transformation AuxTransformation, int objectSectionIndex, double objectTrackPosition, double Brightness)
@@ -156,11 +156,11 @@ namespace OpenBve
 				int a = AnimatedWorldObjectsUsed;
 				if (a >= AnimatedWorldObjects.Length)
 				{
-					Array.Resize(ref AnimatedWorldObjects, AnimatedWorldObjects.Length << 1);
+					Array.Resize<WorldObject>(ref AnimatedWorldObjects, AnimatedWorldObjects.Length << 1);
 				}
 				Transformation FinalTransformation = new Transformation(AuxTransformation, BaseTransformation);
 
-				AnimatedObject o = Object.Clone();
+				var o = this.Object.Clone();
 				o.ObjectIndex = CreateDynamicObject();
 				AnimatedWorldObjectStateSound currentObject = new AnimatedWorldObjectStateSound
 				{
@@ -180,7 +180,7 @@ namespace OpenBve
 				{
 					if (currentObject.Object.States[i].Object == null)
 					{
-						currentObject.Object.States[i].Object = new StaticObject(Program.CurrentHost) { RendererIndex = -1 };
+						currentObject.Object.States[i].Object = new StaticObject(Program.CurrentHost) { RendererIndex =  -1 };
 					}
 				}
 				double r = 0.0;
@@ -192,11 +192,8 @@ namespace OpenBve
 					}
 					for (int j = 0; j < currentObject.Object.States[i].Object.Mesh.Vertices.Length; j++)
 					{
-						double t = Object.States[i].Object.Mesh.Vertices[j].Coordinates.NormSquared();
-						if (t > r)
-						{
-							r = t;
-						}
+						double t = this.Object.States[i].Object.Mesh.Vertices[j].Coordinates.NormSquared();
+						if (t > r) r = t;
 					}
 				}
 				currentObject.Radius = Math.Sqrt(r);

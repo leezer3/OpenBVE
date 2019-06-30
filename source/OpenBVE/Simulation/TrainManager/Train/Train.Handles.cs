@@ -161,7 +161,7 @@ namespace OpenBve
 					{
 						buffer = Cars[DriverCar].Sounds.BrakeHandleApply.Buffer;
 					}
-
+					
 					if (buffer != null)
 					{
 						Vector3 pos = Cars[DriverCar].Sounds.BrakeHandleApply.Position;
@@ -373,7 +373,7 @@ namespace OpenBve
 					}
 
 					// apply
-
+					
 					if (Handles.Brake is AirBrakeHandle)
 					{
 						ApplyAirBrakeHandle(AirBrakeHandleState.Service);
@@ -408,7 +408,7 @@ namespace OpenBve
 				{
 					if (RelativeDirection == -1)
 					{
-						if (Handles.Brake.Driver == (int)AirBrakeHandleState.Service)
+						if (Handles.Brake.Driver == (int) AirBrakeHandleState.Service)
 						{
 							ApplyAirBrakeHandle(AirBrakeHandleState.Lap);
 						}
@@ -419,7 +419,7 @@ namespace OpenBve
 					}
 					else if (RelativeDirection == 1)
 					{
-						if (Handles.Brake.Driver == (int)AirBrakeHandleState.Release)
+						if (Handles.Brake.Driver == (int) AirBrakeHandleState.Release)
 						{
 							ApplyAirBrakeHandle(AirBrakeHandleState.Lap);
 						}
@@ -439,7 +439,7 @@ namespace OpenBve
 			{
 				if (Handles.Brake is AirBrakeHandle)
 				{
-					if ((int)newState != Handles.Brake.Driver)
+					if ((int) newState != Handles.Brake.Driver)
 					{
 						// sound when moved to service
 						if (newState == AirBrakeHandleState.Service)
@@ -453,10 +453,10 @@ namespace OpenBve
 						}
 
 						// sound
-						if ((int)newState < (int)Handles.Brake.Driver)
+						if ((int) newState < (int) Handles.Brake.Driver)
 						{
 							// brake release
-							if ((int)newState > 0)
+							if ((int) newState > 0)
 							{
 								// brake release (not min)
 								SoundsBase.SoundBuffer buffer;
@@ -485,7 +485,7 @@ namespace OpenBve
 								}
 							}
 						}
-						else if ((int)newState > (int)Handles.Brake.Driver)
+						else if ((int) newState > (int) Handles.Brake.Driver)
 						{
 							// brake
 							SoundsBase.SoundBuffer buffer;
@@ -505,7 +505,7 @@ namespace OpenBve
 						}
 
 						// apply
-						Handles.Brake.Driver = (int)newState;
+						Handles.Brake.Driver = (int) newState;
 						Game.AddBlackBoxEntry(Game.BlackBoxEventToken.None);
 						// plugin
 						if (Plugin != null)
@@ -523,7 +523,7 @@ namespace OpenBve
 			{
 				if (Handles.LocoBrake is LocoAirBrakeHandle)
 				{
-					if ((int)newState != Handles.LocoBrake.Driver)
+					if ((int) newState != Handles.LocoBrake.Driver)
 					{
 						// sound when moved to service
 						if (newState == AirBrakeHandleState.Service)
@@ -537,10 +537,10 @@ namespace OpenBve
 						}
 
 						// sound
-						if ((int)newState < (int)Handles.Brake.Driver)
+						if ((int) newState < (int) Handles.Brake.Driver)
 						{
 							// brake release
-							if ((int)newState > 0)
+							if ((int) newState > 0)
 							{
 								// brake release (not min)
 								SoundsBase.SoundBuffer buffer;
@@ -569,7 +569,7 @@ namespace OpenBve
 								}
 							}
 						}
-						else if ((int)newState > (int)Handles.LocoBrake.Driver)
+						else if ((int) newState > (int) Handles.LocoBrake.Driver)
 						{
 							// brake
 							SoundsBase.SoundBuffer buffer;
@@ -589,8 +589,8 @@ namespace OpenBve
 						}
 
 						// apply
-						Handles.LocoBrake.Driver = (int)newState;
-						Handles.LocoBrake.Actual = (int)newState; //TODO: FIXME
+						Handles.LocoBrake.Driver = (int) newState;
+						Handles.LocoBrake.Actual = (int) newState; //TODO: FIXME
 						Game.AddBlackBoxEntry(Game.BlackBoxEventToken.None);
 						// plugin
 						if (Plugin != null)

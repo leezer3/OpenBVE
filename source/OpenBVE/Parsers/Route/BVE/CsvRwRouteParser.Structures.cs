@@ -127,10 +127,7 @@ namespace OpenBve
 			internal TrackManager.RequestStop Late;
 			internal bool FullSpeed;
 		}
-		private enum SoundType
-		{
-			World, TrainStatic, TrainDynamic
-		}
+		private enum SoundType { World, TrainStatic, TrainDynamic }
 
 		private struct Sound
 		{
@@ -187,11 +184,10 @@ namespace OpenBve
 			internal double Roll;
 			internal string Text;
 		}
-		private struct RailCycle
-		{
-			internal int RailCycleIndex;
-			internal int CurrentCycle;
-		}
+		private struct RailCycle {
+            internal int RailCycleIndex;
+            internal int CurrentCycle;
+        }
 		private class Block
 		{
 			internal int Background;

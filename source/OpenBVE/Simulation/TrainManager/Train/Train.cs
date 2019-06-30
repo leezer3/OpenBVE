@@ -103,7 +103,7 @@ namespace OpenBve
 				}
 			}
 
-
+			
 
 			/// <summary>Call this method to update the train</summary>
 			/// <param name="TimeElapsed">The elapsed time this frame</param>
@@ -224,7 +224,7 @@ namespace OpenBve
 				}
 			}
 
-
+			
 
 			/// <summary>Updates the physics and controls for this train</summary>
 			/// <param name="TimeElapsed">The time elapsed</param>
@@ -434,7 +434,7 @@ namespace OpenBve
 									// Update constant speed device
 
 									this.Cars[i].Specs.ConstSpeed.Update(ref a, this.Specs.CurrentConstSpeed, this.Handles.Reverser.Actual);
-
+									
 									// finalize
 									if (wheelspin != 0.0) a = 0.0;
 								}

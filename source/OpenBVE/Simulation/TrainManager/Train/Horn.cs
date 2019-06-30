@@ -28,21 +28,21 @@ namespace OpenBve
 			/// <summary>The default constructor</summary>
 			internal Horn()
 			{
-				StartSound = null;
-				LoopSound = null;
-				EndSound = null;
-				Loop = false;
+				this.StartSound = null;
+				this.LoopSound = null;
+				this.EndSound = null;
+				this.Loop = false;
 			}
 
 			internal Horn(SoundsBase.SoundBuffer startSound, SoundsBase.SoundBuffer loopSound, SoundsBase.SoundBuffer endSound, bool loop)
 			{
-				Source = null;
-				StartSound = startSound;
-				LoopSound = loopSound;
-				EndSound = endSound;
-				Loop = loop;
-				StartEndSounds = false;
-				LoopStarted = false;
+				this.Source = null;
+				this.StartSound = startSound;
+				this.LoopSound = loopSound;
+				this.EndSound = endSound;
+				this.Loop = loop;
+				this.StartEndSounds = false;
+				this.LoopStarted = false;
 				SoundPosition = new Vector3();
 			}
 

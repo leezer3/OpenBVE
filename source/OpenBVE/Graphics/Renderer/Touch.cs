@@ -314,7 +314,7 @@ namespace OpenBve
 			{
 				return;
 			}
-
+			
 			if (Camera.CurrentMode != CameraViewMode.Interior && Camera.CurrentMode != CameraViewMode.InteriorLookAhead)
 			{
 				return;
@@ -336,13 +336,13 @@ namespace OpenBve
 
 					LibRender.Renderer.ResetOpenGlState();
 					GL.PushMatrix();
-
+					
 					UpdateViewport(ViewPortChangeMode.ChangeToCab);
 
 					RenderSceneSelection(true);
 
 					GL.PopMatrix();
-
+					
 					foreach (var TouchElement in TouchElements)
 					{
 						int o = TouchElement.Element.ObjectIndex;
@@ -412,7 +412,7 @@ namespace OpenBve
 							}
 						}
 					}
-
+					
 					if (PickedObjectIndex >= 0)
 					{
 						return true;
@@ -428,7 +428,7 @@ namespace OpenBve
 			{
 				return;
 			}
-
+			
 			if (Camera.CurrentMode != CameraViewMode.Interior && Camera.CurrentMode != CameraViewMode.InteriorLookAhead)
 			{
 				return;

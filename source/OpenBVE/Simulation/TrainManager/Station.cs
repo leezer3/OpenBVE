@@ -12,9 +12,9 @@ namespace OpenBve
 		internal enum TrainStopState
 		{
 			/// <summary>The stop is still pending</summary>
-			Pending = 0,
+			Pending = 0, 
 			/// <summary>The train is currrently stopped and passengers are boarding</summary>
-			Boarding = 1,
+			Boarding = 1, 
 			/// <summary>The stop has been completed, and the train is preparing to depart</summary>
 			Completed = 2,
 			/// <summary>The train is jumping between stations, and all stops should be ignored</summary>
@@ -56,7 +56,7 @@ namespace OpenBve
 						{
 							//Check that we are not moving
 							if (Math.Abs(Train.CurrentSpeed) < 0.1 / 3.6 &
-								Math.Abs(Train.Specs.CurrentAverageAcceleration) < 0.1 / 3.6)
+							    Math.Abs(Train.Specs.CurrentAverageAcceleration) < 0.1 / 3.6)
 							{
 								//Check the interlock state for the doors
 								switch (Train.Specs.DoorInterlockState)
@@ -322,8 +322,7 @@ namespace OpenBve
 									{
 										left = true; break;
 									}
-								}
-								if (left) break;
+								} if (left) break;
 							}
 						}
 						else
@@ -341,8 +340,7 @@ namespace OpenBve
 									{
 										right = true; break;
 									}
-								}
-								if (right) break;
+								} if (right) break;
 							}
 						}
 						else
@@ -453,23 +451,6 @@ namespace OpenBve
 									JumpTrain(Train, i + 1);
 								}
 							}
-							if (Interface.CurrentOptions.LoadingSway)
-							{
-								// passengers boarding
-								for (int j = 0; j < Train.Cars.Length; j++)
-								{
-									double r = 2.0 * Game.Stations[i].PassengerRatio * TimeElapsed;
-									if (r >= Program.RandomNumberGenerator.NextDouble())
-									{
-										int d =
-											(int)Math.Floor(Program.RandomNumberGenerator.NextDouble() * (double)Train.Cars[j].Doors.Length);
-										if (Train.Cars[j].Doors[d].State == 1.0)
-										{
-											Train.Cars[j].Specs.CurrentRollShakeDirection += (double)Train.Cars[j].Doors[d].Direction;
-										}
-									}
-								}
-							}
 						}
 						else
 						{
@@ -488,7 +469,7 @@ namespace OpenBve
 				{
 					Train.StationState = TrainStopState.Pending;
 				}
-
+				
 			}
 			// automatically close doors
 			if (Train.Specs.DoorCloseMode != DoorMode.Manual & Train.Specs.DoorInterlockState != DoorInterlockStates.Locked & !Train.Specs.DoorClosureAttempted)

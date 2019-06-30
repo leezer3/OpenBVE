@@ -82,6 +82,11 @@ namespace MotorSoundEditor
 		{
 			timer.Enabled = false;
 
+			if (TrainManager.PlayerTrain == null)
+			{
+				return;
+			}
+
 			double nowElapsedTime = e.SignalTime.GetElapsedTime();
 
 			if (oldElapsedTime == 0)

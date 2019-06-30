@@ -58,7 +58,7 @@ namespace OpenBve
 			internal CameraAlignment InteriorCamera;
 
 			internal bool HasInteriorView = false;
-
+			
 			internal Car(Train train, int index)
 			{
 				baseTrain = train;
@@ -249,7 +249,7 @@ namespace OpenBve
 						SoundsBase.SoundBuffer buffer = Sounds.Run[j].Buffer;
 						if (buffer != null)
 						{
-							Vector3 pos = Sounds.Run[j].Position;
+							OpenBveApi.Math.Vector3 pos = Sounds.Run[j].Position;
 							Sounds.Run[j].Source = Program.Sounds.PlaySound(buffer, pitch, gain, pos, baseTrain, Index, true);
 						}
 					}
@@ -262,7 +262,7 @@ namespace OpenBve
 				{
 					return;
 				}
-				Vector3 pos = Sounds.Motor.Position;
+				OpenBveApi.Math.Vector3 pos = Sounds.Motor.Position;
 				double speed = Math.Abs(Specs.CurrentPerceivedSpeed);
 				int idx = (int)Math.Round(speed * Sounds.Motor.SpeedConversionFactor);
 				int odir = Sounds.Motor.CurrentAccelerationDirection;
@@ -440,7 +440,7 @@ namespace OpenBve
 							ShowObject(CarSections[1]);
 							break;
 						}
-						else if (!this.HasInteriorView && this.CarSections.Length > 0)
+						else if(!this.HasInteriorView && this.CarSections.Length > 0)
 						{
 							this.CurrentCarSection = 0;
 							this.CarSections[0].Initialize(true);
@@ -991,7 +991,7 @@ namespace OpenBve
 					}
 				}
 				// flange sound
-				if (Sounds.Flange != null && Sounds.Flange.Length != 0)
+				if(Sounds.Flange != null && Sounds.Flange.Length != 0)
 				{
 					/*
 					 * This determines the amount of flange noise as a result of the angle at which the

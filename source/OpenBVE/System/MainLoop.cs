@@ -26,7 +26,7 @@ namespace OpenBve
 		internal static bool BlockKeyRepeat;
 		/// <summary>The current simulation time-factor</summary>
 		internal static int TimeFactor = 1;
-
+		
 		internal static formMain.MainDialogResult currentResult;
 		//		internal static formRouteInformation RouteInformationForm;
 		//		internal static Thread RouteInfoThread;
@@ -280,7 +280,7 @@ namespace OpenBve
 						continue;
 				}
 
-
+				
 				switch (Interface.CurrentControls[i].Component)
 				{
 					case Interface.JoystickComponent.Axis:
@@ -455,19 +455,16 @@ namespace OpenBve
 			Camera.VerticalViewingAngle = Camera.OriginalVerticalViewingAngle;
 		}
 
-
+		
 #if DEBUG
 
 		/// <summary>Checks whether an OpenGL error has occured this frame</summary>
 		/// <param name="Location">The location of the caller (The main loop or the loading screen loop)</param>
-		internal static void CheckForOpenGlError(string Location)
-		{
+		internal static void CheckForOpenGlError(string Location) {
 			var error = GL.GetError();
-			if (error != ErrorCode.NoError)
-			{
+			if (error != ErrorCode.NoError) {
 				string message = Location + ": ";
-				switch (error)
-				{
+				switch (error) {
 					case ErrorCode.InvalidEnum:
 						message += "GL_INVALID_ENUM";
 						break;

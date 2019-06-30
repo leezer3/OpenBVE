@@ -18,10 +18,10 @@ namespace OpenBve
 			internal Vector3 Position;
 			private CarSound(SoundsBase.SoundBuffer buffer, SoundsBase.SoundSource source, Vector3 position)
 			{
-				Buffer = buffer;
-				Source = source;
-				Position = position;
-
+				this.Buffer = buffer;
+				this.Source = source;
+				this.Position = position;
+				
 			}
 
 			/// <summary>Defines a default empty sound</summary>
@@ -34,9 +34,9 @@ namespace OpenBve
 			/// <returns>The new car sound, or an empty car sound if load fails</returns>
 			internal CarSound(string FileName, Vector3 Position, double Radius)
 			{
-				this = Empty;
+				this = TrainManager.CarSound.Empty;
 				this.Position = Position;
-				Source = null;
+				this.Source = null;
 				if (FileName != null)
 				{
 					if (File.Exists(FileName))
