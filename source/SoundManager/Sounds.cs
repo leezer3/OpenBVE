@@ -260,7 +260,7 @@ namespace SoundManager
 			{
 				if (sound.BitsPerSample == 8 | sound.BitsPerSample == 16)
 				{
-					byte[] bytes = GetMonoMix(sound);
+					byte[] bytes = sound.GetMonoMix();
 					AL.GenBuffers(1, out buffer.OpenAlBufferName);
 					ALFormat format = sound.BitsPerSample == 8 ? ALFormat.Mono8 : ALFormat.Mono16;
 					AL.BufferData(buffer.OpenAlBufferName, format, bytes, bytes.Length, sound.SampleRate);
