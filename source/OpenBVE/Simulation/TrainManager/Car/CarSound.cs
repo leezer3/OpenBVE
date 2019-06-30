@@ -11,12 +11,12 @@ namespace OpenBve
 		internal struct CarSound
 		{
 			/// <summary>The sound buffer to play</summary>
-			internal readonly SoundsBase.SoundBuffer Buffer;
+			internal readonly SoundBuffer Buffer;
 			/// <summary>The source of the sound within the car</summary>
-			internal SoundsBase.SoundSource Source;
+			internal SoundSource Source;
 			/// <summary>A Vector3 describing the position of the sound source</summary>
 			internal Vector3 Position;
-			private CarSound(SoundsBase.SoundBuffer buffer, SoundsBase.SoundSource source, Vector3 position)
+			private CarSound(SoundBuffer buffer, SoundSource source, Vector3 position)
 			{
 				this.Buffer = buffer;
 				this.Source = source;

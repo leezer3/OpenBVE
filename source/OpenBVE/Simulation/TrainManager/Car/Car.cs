@@ -197,7 +197,7 @@ namespace OpenBve
 					{
 						if (FrontAxle.RunIndex < Sounds.Run.Length)
 						{
-							SoundsBase.SoundBuffer buffer = Sounds.Run[FrontAxle.RunIndex].Buffer;
+							SoundBuffer buffer = Sounds.Run[FrontAxle.RunIndex].Buffer;
 							if (buffer != null)
 							{
 								double duration = Program.Sounds.GetDuration(buffer);
@@ -246,7 +246,7 @@ namespace OpenBve
 					}
 					else if (pitch > 0.02 & gain > 0.01)
 					{
-						SoundsBase.SoundBuffer buffer = Sounds.Run[j].Buffer;
+						SoundBuffer buffer = Sounds.Run[j].Buffer;
 						if (buffer != null)
 						{
 							OpenBveApi.Math.Vector3 pos = Sounds.Run[j].Position;
@@ -301,8 +301,8 @@ namespace OpenBve
 							}
 							if (idx2 >= 0)
 							{
-								SoundsBase.SoundBuffer obuf = Sounds.Motor.Tables[j].Buffer;
-								SoundsBase.SoundBuffer nbuf = Sounds.Motor.Tables[j].Entries[idx2].Buffer;
+								SoundBuffer obuf = Sounds.Motor.Tables[j].Buffer;
+								SoundBuffer nbuf = Sounds.Motor.Tables[j].Entries[idx2].Buffer;
 								double pitch = Sounds.Motor.Tables[j].Entries[idx2].Pitch;
 								double gain = Sounds.Motor.Tables[j].Entries[idx2].Gain;
 								if (ndir == 1)
@@ -965,7 +965,7 @@ namespace OpenBve
 					const double angleTolerance = 0.001;
 					if (diff < -angleTolerance)
 					{
-						SoundsBase.SoundBuffer buffer = Sounds.SpringL.Buffer;
+						SoundBuffer buffer = Sounds.SpringL.Buffer;
 						if (buffer != null)
 						{
 							if (!Program.Sounds.IsPlaying(Sounds.SpringL.Source))
@@ -978,7 +978,7 @@ namespace OpenBve
 					}
 					else if (diff > angleTolerance)
 					{
-						SoundsBase.SoundBuffer buffer = Sounds.SpringR.Buffer;
+						SoundBuffer buffer = Sounds.SpringR.Buffer;
 						if (buffer != null)
 						{
 							if (!Program.Sounds.IsPlaying(Sounds.SpringR.Source))
@@ -1056,7 +1056,7 @@ namespace OpenBve
 						}
 						else if (pitch > 0.02 & gain > 0.01)
 						{
-							SoundsBase.SoundBuffer buffer = Sounds.Flange[i].Buffer;
+							SoundBuffer buffer = Sounds.Flange[i].Buffer;
 							if (buffer != null)
 							{
 								Vector3 pos = Sounds.Flange[i].Position;

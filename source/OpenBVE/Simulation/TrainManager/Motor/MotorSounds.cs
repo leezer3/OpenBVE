@@ -8,7 +8,7 @@ namespace OpenBve
 	{
 		internal struct MotorSoundTableEntry
 		{
-			internal SoundsBase.SoundBuffer Buffer;
+			internal SoundBuffer Buffer;
 			internal int SoundIndex;
 			internal float Pitch;
 			internal float Gain;
@@ -16,8 +16,8 @@ namespace OpenBve
 		internal struct MotorSoundTable
 		{
 			internal MotorSoundTableEntry[] Entries;
-			internal SoundsBase.SoundBuffer Buffer;
-			internal SoundsBase.SoundSource Source;
+			internal SoundBuffer Buffer;
+			internal SoundSource Source;
 		}
 		internal struct MotorSound
 		{

@@ -11,7 +11,7 @@ namespace OpenBve
 		internal class SoundEvent : GeneralEvent<TrainManager.Train>
 		{
 			/// <summary>The sound buffer to play</summary>
-			private readonly SoundsBase.SoundBuffer SoundBuffer;
+			private readonly SoundBuffer SoundBuffer;
 			/// <summary>Whether this sound is triggered by the player train only, or all trains</summary>
 			private readonly bool PlayerTrainOnly;
 			/// <summary>Whether this sound should play once, or repeat if triggered again</summary>
@@ -30,7 +30,7 @@ namespace OpenBve
 			/// <param name="Dynamic">Whether this sound is dynamic (Attached to a train)</param>
 			/// <param name="Position">The position of the sound relative to it's track location</param>
 			/// <param name="Speed">The speed in km/h at which this sound is played at it's original pitch (Set to zero to play at original pitch at all times)</param>
-			internal SoundEvent(double TrackPositionDelta, SoundsBase.SoundBuffer SoundBuffer, bool PlayerTrainOnly, bool Once, bool Dynamic, Vector3 Position, double Speed)
+			internal SoundEvent(double TrackPositionDelta, SoundBuffer SoundBuffer, bool PlayerTrainOnly, bool Once, bool Dynamic, Vector3 Position, double Speed)
 			{
 				this.TrackPositionDelta = TrackPositionDelta;
 				this.DontTriggerAnymore = false;
@@ -57,7 +57,7 @@ namespace OpenBve
 						Vector3 p = this.Position;
 						double pitch = 1.0;
 						double gain = 1.0;
-						SoundsBase.SoundBuffer buffer = SoundBuffer;
+						SoundBuffer buffer = SoundBuffer;
 						if (buffer != null)
 						{
 							if (this.Dynamic)
@@ -103,7 +103,7 @@ namespace OpenBve
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle | TriggerType == EventTriggerType.OtherCarRearAxle | TriggerType == EventTriggerType.RearCarRearAxle)
 				{
 					Vector3 p;
-					SoundsBase.SoundBuffer buffer;
+					SoundBuffer buffer;
 					if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle)
 					{
 						if (Train.CurrentSpeed <= 0.0) return;

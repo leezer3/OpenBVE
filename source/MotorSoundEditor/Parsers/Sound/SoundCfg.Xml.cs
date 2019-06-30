@@ -5,6 +5,7 @@ using System.Xml;
 using MotorSoundEditor.Audio;
 using MotorSoundEditor.Simulation.TrainManager;
 using OpenBveApi.Math;
+using SoundManager;
 
 namespace MotorSoundEditor.Parsers.Sound
 {
@@ -113,7 +114,7 @@ namespace MotorSoundEditor.Parsers.Sound
 		/// <param name="Sound">The car sound</param>
 		/// <param name="Position">The default position of this sound (May be overriden by the node)</param>
 		/// <param name="Radius">The default radius of this sound (May be overriden by the node)</param>
-		private static void ParseNode(XmlNode node, out Sounds.SoundBuffer Sound, ref Vector3 Position, double Radius)
+		private static void ParseNode(XmlNode node, out SoundBuffer Sound, ref Vector3 Position, double Radius)
 		{
 			string fileName = null;
 

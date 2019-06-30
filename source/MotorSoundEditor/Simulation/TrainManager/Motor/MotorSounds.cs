@@ -1,5 +1,6 @@
 ﻿using MotorSoundEditor.Audio;
 using OpenBveApi.Math;
+using SoundManager;
 
 namespace MotorSoundEditor.Simulation.TrainManager
 {
@@ -8,7 +9,7 @@ namespace MotorSoundEditor.Simulation.TrainManager
 	{
 		internal struct MotorSoundTableEntry
 		{
-			internal Sounds.SoundBuffer Buffer;
+			internal SoundBuffer Buffer;
 			internal int SoundIndex;
 			internal float Pitch;
 			internal float Gain;
@@ -17,8 +18,8 @@ namespace MotorSoundEditor.Simulation.TrainManager
 		internal struct MotorSoundTable
 		{
 			internal MotorSoundTableEntry[] Entries;
-			internal Sounds.SoundBuffer Buffer;
-			internal Sounds.SoundSource Source;
+			internal SoundBuffer Buffer;
+			internal SoundSource Source;
 		}
 
 		internal struct MotorSound

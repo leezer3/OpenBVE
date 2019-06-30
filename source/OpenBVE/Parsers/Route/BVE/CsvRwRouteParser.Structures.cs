@@ -132,7 +132,7 @@ namespace OpenBve
 		private struct Sound
 		{
 			internal double TrackPosition;
-			internal SoundsBase.SoundBuffer SoundBuffer;
+			internal SoundBuffer SoundBuffer;
 			internal SoundType Type;
 			internal Vector2 Position;
 			//TODO:

@@ -570,7 +570,7 @@ namespace OpenBve
 		/// <param name="Sound">The car sound</param>
 		/// <param name="Position">The default position of this sound (May be overriden by the node)</param>
 		/// <param name="Radius">The default radius of this sound (May be overriden by the node)</param>
-		private static void ParseNode(XmlNode node, out SoundsBase.SoundBuffer Sound, ref Vector3 Position, double Radius)
+		private static void ParseNode(XmlNode node, out SoundBuffer Sound, ref Vector3 Position, double Radius)
 		{
 			string fileName = null;
 			foreach (XmlNode c in node.ChildNodes)

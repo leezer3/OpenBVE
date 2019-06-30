@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using OpenBveApi.Math;
 using OpenBveApi.Sounds;
 using OpenTK.Audio.OpenAL;
+using SoundManager;
 
 namespace MotorSoundEditor.Audio
 {

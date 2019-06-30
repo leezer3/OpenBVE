@@ -1756,7 +1756,7 @@ namespace OpenBve
 						if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.TransponderEvent)
 						{
 							TrackManager.TransponderEvent transponder = TrackManager.Tracks[0].Elements[i].Events[j] as TrackManager.TransponderEvent;
-							if (transponder.Type == TrackManager.SpecialTransponderTypes.InternalAtsPTemporarySpeedLimit)
+							if (transponder.Type == (int)TrackManager.SpecialTransponderTypes.InternalAtsPTemporarySpeedLimit)
 							{
 								int speed = Math.Min(4095, transponder.Data);
 								int distance = Math.Min(1048575, (int)Math.Round(TrackManager.Tracks[0].Elements[i].StartingTrackPosition + transponder.TrackPositionDelta));

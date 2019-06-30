@@ -40,7 +40,7 @@ namespace OpenBve {
 			internal int AnisotropicFilteringMaximum;
 		    internal int AntialiasingLevel;
 			internal TransparencyMode TransparencyMode;
-			internal SoundsBase.SoundRange SoundRange;
+			internal SoundRange SoundRange;
 			internal int SoundNumber;
 			internal int ObjectOptimizationBasicThreshold;
 			internal int ObjectOptimizationFullThreshold;

@@ -22,7 +22,7 @@ namespace OpenBve
 					if (Direction > 0) //FIXME: This only works for routes written in the forwards direction
 					{
 						int d = Train.DriverCar;
-						SoundsBase.SoundBuffer buffer = Train.Cars[d].Sounds.Halt.Buffer;
+						SoundBuffer buffer = Train.Cars[d].Sounds.Halt.Buffer;
 						if (buffer != null)
 						{
 							OpenBveApi.Math.Vector3 pos = Train.Cars[d].Sounds.Halt.Position;

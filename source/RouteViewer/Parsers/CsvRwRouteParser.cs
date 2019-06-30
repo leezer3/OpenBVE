@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Collections.Generic;
 using LibRender;
+using SoundManager;
 using OpenBve.BackgroundManager;
 using OpenBve.RouteManager;
 using OpenBve.SignalManager;
@@ -237,7 +238,7 @@ namespace OpenBve {
 		private enum SoundType { World, TrainStatic, TrainDynamic }
 		private struct Sound {
 			internal double TrackPosition;
-			internal Sounds.SoundBuffer SoundBuffer;
+			internal SoundBuffer SoundBuffer;
 			internal SoundType Type;
 			internal double X;
 			internal double Y;
@@ -4285,7 +4286,7 @@ namespace OpenBve {
 												device = 0;
 											}
 										}
-										Sounds.SoundBuffer depsnd = null;
+										SoundBuffer depsnd = null;
 										if (!PreviewOnly) {
 											if (Arguments.Length >= 6 && Arguments[5].Length != 0) {
 												if (Path.ContainsInvalidChars(Arguments[5])) {

@@ -20,11 +20,11 @@ namespace OpenBve
 			/// <summary>The curve radius at the object's track position</summary>
 			internal double Radius;
 			/// <summary>The sound buffer array</summary>
-			internal SoundsBase.SoundBuffer[] Buffers;
+			internal SoundBuffer[] Buffers;
 			/// <summary>Whether a single buffer is used</summary>
 			internal bool SingleBuffer;
 			/// <summary>The sound source for this file</summary>
-			internal SoundsBase.SoundSource Source;
+			internal SoundSource Source;
 			/// <summary>The pitch to play the sound at</summary>
 			internal double currentPitch = 1.0;
 			/// <summary>The volume to play the sound at it's origin</summary>

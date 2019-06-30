@@ -73,7 +73,7 @@ namespace OpenBve
             ObjectManager.UpdateAnimatedWorldObjects(TimeElapsed, false);
             World.UpdateAbsoluteCamera(TimeElapsed);
             ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z);
-			Program.Sounds.Update(TimeElapsed, SoundsBase.SoundModels.Linear);
+			Program.Sounds.Update(TimeElapsed, SoundModels.Linear);
             Renderer.RenderScene(TimeElapsed);
             SwapBuffers();
             

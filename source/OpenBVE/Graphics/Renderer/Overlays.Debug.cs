@@ -180,7 +180,7 @@ namespace OpenBve
 				"=sound",
 				"sound buffers: " + soundBuffersLoaded.ToString(Culture) + " / " + soundBuffersRegistered.ToString(Culture),
 				"sound sources: " + soundSourcesPlaying.ToString(Culture) + " / " + soundSourcesRegistered.ToString(Culture),
-				(Interface.CurrentOptions.SoundModel == SoundsBase.SoundModels.Inverse ? "log clamp factor: " + Program.Sounds.LogClampFactor.ToString("0.00") : "outer radius factor: " + Program.Sounds.OuterRadiusFactor.ToString("0.00", Culture)),
+				(Interface.CurrentOptions.SoundModel == SoundModels.Inverse ? "log clamp factor: " + Program.Sounds.LogClampFactor.ToString("0.00") : "outer radius factor: " + Program.Sounds.OuterRadiusFactor.ToString("0.00", Culture)),
 				"",
 				"=debug",
 				"train plugin status: " + (TrainManager.PlayerTrain.Plugin != null ? (TrainManager.PlayerTrain.Plugin.PluginValid ? "ok" : "error") : "n/a"),

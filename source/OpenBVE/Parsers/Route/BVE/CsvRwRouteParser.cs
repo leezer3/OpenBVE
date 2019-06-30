@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using LibRender;
+using SoundManager;
 using Path = OpenBveApi.Path;
 using OpenBve.BackgroundManager;
 using OpenBveApi.Colors;
@@ -3520,7 +3521,7 @@ namespace OpenBve {
 												device = 0;
 											}
 										}
-										Sounds.SoundBuffer depsnd = null;
+										SoundBuffer depsnd = null;
 										if (!PreviewOnly) {
 											if (Arguments.Length >= 6 && Arguments[5].Length != 0) {
 												if (Path.ContainsInvalidChars(Arguments[5])) {

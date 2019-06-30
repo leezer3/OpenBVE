@@ -4,6 +4,7 @@ using LibRender;
 using OpenBveApi.Runtime;
 using OpenBveApi.Sounds;
 using OpenTK.Audio.OpenAL;
+using SoundManager;
 
 
 namespace OpenBve

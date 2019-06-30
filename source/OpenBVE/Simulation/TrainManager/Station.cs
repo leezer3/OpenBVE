@@ -127,7 +127,7 @@ namespace OpenBve
 								Train.StationAdjust = false;
 								Train.Specs.DoorClosureAttempted = false;
 								Program.Sounds.StopSound(Train.Cars[Train.DriverCar].Sounds.Halt.Source);
-								SoundsBase.SoundBuffer buffer = (SoundsBase.SoundBuffer)Game.Stations[i].ArrivalSoundBuffer;
+								SoundBuffer buffer = (SoundBuffer)Game.Stations[i].ArrivalSoundBuffer;
 								if (buffer != null)
 								{
 									OpenBveApi.Math.Vector3 pos = Game.Stations[i].SoundOrigin;
@@ -223,7 +223,7 @@ namespace OpenBve
 								// correct stop position
 								if (!Train.StationAdjust & (Train.StationDistanceToStopPoint > tb | Train.StationDistanceToStopPoint < -tf))
 								{
-									SoundsBase.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.Adjust.Buffer;
+									SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.Adjust.Buffer;
 									if (buffer != null)
 									{
 										OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.Adjust.Position;
@@ -351,7 +351,7 @@ namespace OpenBve
 					// departure sound
 					if (!Train.StationDepartureSoundPlayed)
 					{
-						SoundsBase.SoundBuffer buffer = (SoundsBase.SoundBuffer)Game.Stations[i].DepartureSoundBuffer;
+						SoundBuffer buffer = (SoundBuffer)Game.Stations[i].DepartureSoundBuffer;
 						if (buffer != null)
 						{
 							double dur = Program.Sounds.GetDuration(buffer);

@@ -68,7 +68,7 @@ namespace OpenBve
 						{
 							Cars[CarIndex].CarBrake.airCompressor.Enabled = false;
 							Cars[CarIndex].Sounds.CpLoopStarted = false;
-							SoundsBase.SoundBuffer buffer = Cars[CarIndex].Sounds.CpEnd.Buffer;
+							SoundBuffer buffer = Cars[CarIndex].Sounds.CpEnd.Buffer;
 							if (buffer != null)
 							{
 								OpenBveApi.Math.Vector3 pos = Cars[CarIndex].Sounds.CpEnd.Position;
@@ -87,7 +87,7 @@ namespace OpenBve
 							if (!Cars[CarIndex].Sounds.CpLoopStarted && Game.SecondsSinceMidnight > Cars[CarIndex].Sounds.CpStartTimeStarted + 5.0)
 							{
 								Cars[CarIndex].Sounds.CpLoopStarted = true;
-								SoundsBase.SoundBuffer buffer = Cars[CarIndex].Sounds.CpLoop.Buffer;
+								SoundBuffer buffer = Cars[CarIndex].Sounds.CpLoop.Buffer;
 								if (buffer != null)
 								{
 									OpenBveApi.Math.Vector3 pos = Cars[CarIndex].Sounds.CpLoop.Position;
@@ -102,7 +102,7 @@ namespace OpenBve
 						{
 							Cars[CarIndex].CarBrake.airCompressor.Enabled = true;
 							Cars[CarIndex].Sounds.CpStartTimeStarted = Game.SecondsSinceMidnight;
-							SoundsBase.SoundBuffer buffer = Cars[CarIndex].Sounds.CpStart.Buffer;
+							SoundBuffer buffer = Cars[CarIndex].Sounds.CpStart.Buffer;
 							if (buffer != null)
 							{
 								OpenBveApi.Math.Vector3 pos = Cars[CarIndex].Sounds.CpStart.Position;
@@ -223,7 +223,7 @@ namespace OpenBve
 				{
 					case AirSound.AirZero:
 					{
-						SoundsBase.SoundBuffer buffer = Cars[CarIndex].Sounds.AirZero.Buffer;
+						SoundBuffer buffer = Cars[CarIndex].Sounds.AirZero.Buffer;
 						if (buffer != null)
 						{
 							OpenBveApi.Math.Vector3 pos = Cars[CarIndex].Sounds.AirZero.Position;
@@ -234,7 +234,7 @@ namespace OpenBve
 					}
 					case AirSound.Air:
 					{
-						SoundsBase.SoundBuffer buffer = Cars[CarIndex].Sounds.Air.Buffer;
+						SoundBuffer buffer = Cars[CarIndex].Sounds.Air.Buffer;
 						if (buffer != null)
 						{
 							OpenBveApi.Math.Vector3 pos = Cars[CarIndex].Sounds.Air.Position;
@@ -244,7 +244,7 @@ namespace OpenBve
 					}
 					case AirSound.AirHigh:
 					{
-						SoundsBase.SoundBuffer buffer = Cars[CarIndex].Sounds.AirHigh.Buffer;
+						SoundBuffer buffer = Cars[CarIndex].Sounds.AirHigh.Buffer;
 						if (buffer != null)
 						{
 							OpenBveApi.Math.Vector3 pos = Cars[CarIndex].Sounds.AirHigh.Position;
@@ -279,7 +279,7 @@ namespace OpenBve
 				Cars[CarIndex].Specs.HoldBrake.Update(ref DecelerationDueToMotor, Handles.HoldBrake.Actual);
 				{
 					// rub sound
-					SoundsBase.SoundBuffer buffer = Cars[CarIndex].Sounds.Rub.Buffer;
+					SoundBuffer buffer = Cars[CarIndex].Sounds.Rub.Buffer;
 					if (buffer != null)
 					{
 						double spd = Math.Abs(Cars[CarIndex].Specs.CurrentSpeed);

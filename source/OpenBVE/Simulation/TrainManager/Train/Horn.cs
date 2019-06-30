@@ -9,13 +9,13 @@ namespace OpenBve
 		internal class Horn
 		{
 			/// <summary>The sound source for this horn</summary>
-			internal SoundsBase.SoundSource Source;
+			internal SoundSource Source;
 			/// <summary>The sound buffer to be played once when playback commences</summary>
-			internal SoundsBase.SoundBuffer StartSound;
+			internal SoundBuffer StartSound;
 			/// <summary>The loop sound</summary>
-			internal SoundsBase.SoundBuffer LoopSound;
+			internal SoundBuffer LoopSound;
 			/// <summary>The sound buffer to be played once when playback ends</summary>
-			internal SoundsBase.SoundBuffer EndSound;
+			internal SoundBuffer EndSound;
 			/// <summary>The position of the sound within the train car</summary>
 			internal Vector3 SoundPosition;
 			/// <summary>Whether this horn has start and end sounds, or uses the legacy loop/ stretch method</summary>
@@ -34,7 +34,7 @@ namespace OpenBve
 				this.Loop = false;
 			}
 
-			internal Horn(SoundsBase.SoundBuffer startSound, SoundsBase.SoundBuffer loopSound, SoundsBase.SoundBuffer endSound, bool loop)
+			internal Horn(SoundBuffer startSound, SoundBuffer loopSound, SoundBuffer endSound, bool loop)
 			{
 				this.Source = null;
 				this.StartSound = startSound;

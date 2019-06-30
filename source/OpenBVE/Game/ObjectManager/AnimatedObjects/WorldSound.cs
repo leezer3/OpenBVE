@@ -16,9 +16,9 @@ namespace OpenBve
 		internal class WorldSound : WorldObject
 		{
 			/// <summary>The sound buffer to play</summary>
-			internal SoundsBase.SoundBuffer Buffer;
+			internal SoundBuffer Buffer;
 			/// <summary>The sound source for this file</summary>
-			internal SoundsBase.SoundSource Source;
+			internal SoundSource Source;
 			/// <summary>The pitch to play the sound at</summary>
 			internal double currentPitch = 1.0;
 			/// <summary>The volume to play the sound at it's origin</summary>

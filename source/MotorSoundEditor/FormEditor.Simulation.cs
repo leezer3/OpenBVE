@@ -146,7 +146,7 @@ namespace MotorSoundEditor
 
 			TrainManager.PlayerTrain.Car.UpdateMotorSounds(isPlayTrack1, isPlayTrack2);
 
-			Program.Sounds.Update(deltaTime, SoundsBase.SoundModels.Inverse);
+			Program.Sounds.Update(deltaTime, SoundModels.Inverse);
 
 			oldElapsedTime = nowElapsedTime;
 

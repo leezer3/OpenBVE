@@ -41,7 +41,7 @@ namespace MotorSoundEditor
 			Interface.LoadOptions();
 
 			Sounds = new Sounds();
-			Sounds.Initialize(CurrentHost, SoundsBase.SoundRange.Medium);
+			Sounds.Initialize(CurrentHost, SoundRange.Medium);
 
 			if (!Plugins.LoadPlugins())
 			{

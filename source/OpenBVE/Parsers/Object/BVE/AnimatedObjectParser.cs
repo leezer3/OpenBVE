@@ -6,6 +6,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
+using SoundManager;
 
 namespace OpenBve
 {
@@ -1349,7 +1350,7 @@ namespace OpenBve
 								{
 									ObjectManager.AnimatedWorldObjectStateSound snd = new ObjectManager.AnimatedWorldObjectStateSound();
 									snd.Object = Result.Objects[ObjectCount -1].Clone();
-									snd.Buffers = new Sounds.SoundBuffer[fileNames.Length];
+									snd.Buffers = new SoundBuffer[fileNames.Length];
 									for (int j = 0; j < fileNames.Length; j++)
 									{
 										if (fileNames[j] != null)

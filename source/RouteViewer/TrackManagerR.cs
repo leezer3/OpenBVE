@@ -221,13 +221,13 @@ namespace OpenBve {
         // sound
         internal static bool SuppressSoundEvents = false;
         internal class SoundEvent : GeneralEvent<TrainManager.Train> {
-            internal SoundsBase.SoundBuffer SoundBuffer;
+            internal SoundBuffer SoundBuffer;
             internal bool PlayerTrainOnly;
             internal bool Once;
             internal bool Dynamic;
             internal Vector3 Position;
             internal double Speed;
-            internal SoundEvent(double TrackPositionDelta, SoundsBase.SoundBuffer SoundBuffer, bool PlayerTrainOnly, bool Once, bool Dynamic, Vector3 Position, double Speed) {
+            internal SoundEvent(double TrackPositionDelta, SoundBuffer SoundBuffer, bool PlayerTrainOnly, bool Once, bool Dynamic, Vector3 Position, double Speed) {
                 this.TrackPositionDelta = TrackPositionDelta;
                 this.DontTriggerAnymore = false;
                 this.SoundBuffer = SoundBuffer;

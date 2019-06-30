@@ -75,7 +75,7 @@ namespace MotorSoundEditor.Simulation.TrainManager
 					}
 					else if (pitch > 0.02 & gain > 0.01)
 					{
-						SoundsBase.SoundBuffer buffer = Sounds.Run[j].Buffer;
+						SoundBuffer buffer = Sounds.Run[j].Buffer;
 
 						if (buffer != null)
 						{
@@ -141,8 +141,8 @@ namespace MotorSoundEditor.Simulation.TrainManager
 
 							if (idx2 >= 0)
 							{
-								SoundsBase.SoundBuffer obuf = Sounds.Motor.Tables[j].Buffer;
-								SoundsBase.SoundBuffer nbuf = Sounds.Motor.Tables[j].Entries[idx2].Buffer;
+								SoundBuffer obuf = Sounds.Motor.Tables[j].Buffer;
+								SoundBuffer nbuf = Sounds.Motor.Tables[j].Entries[idx2].Buffer;
 								double pitch = Sounds.Motor.Tables[j].Entries[idx2].Pitch;
 								double gain = Sounds.Motor.Tables[j].Entries[idx2].Gain;
 

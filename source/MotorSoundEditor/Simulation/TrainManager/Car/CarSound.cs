@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using MotorSoundEditor.Audio;
 using OpenBveApi.Math;
+using SoundManager;
 
 namespace MotorSoundEditor.Simulation.TrainManager
 {
@@ -11,15 +12,15 @@ namespace MotorSoundEditor.Simulation.TrainManager
 		internal struct CarSound
 		{
 			/// <summary>The sound buffer to play</summary>
-			internal readonly Sounds.SoundBuffer Buffer;
+			internal readonly SoundBuffer Buffer;
 
 			/// <summary>The source of the sound within the car</summary>
-			internal Sounds.SoundSource Source;
+			internal SoundSource Source;
 
 			/// <summary>A Vector3 describing the position of the sound source</summary>
 			internal Vector3 Position;
 
-			private CarSound(Sounds.SoundBuffer buffer, Sounds.SoundSource source, Vector3 position)
+			private CarSound(SoundBuffer buffer, SoundSource source, Vector3 position)
 			{
 				Buffer = buffer;
 				Source = source;
