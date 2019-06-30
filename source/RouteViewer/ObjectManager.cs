@@ -97,7 +97,7 @@ namespace OpenBve {
 		}
 		internal static void InitializeAnimatedObject(ref AnimatedObject Object, int StateIndex, bool Overlay, bool Show) {
 			int i = Object.ObjectIndex;
-			Renderer.HideObject(i);
+			Renderer.HideObject(ref ObjectManager.Objects[i]);
 			int t = StateIndex;
 			if (t >= 0 && Object.States[t].Object != null) {
 				int m = Object.States[t].Object.Mesh.Vertices.Length;
@@ -538,7 +538,7 @@ namespace OpenBve {
 						Renderer.ShowObject(i, ObjectType.Dynamic);
 					}
 				} else {
-					Renderer.HideObject(i);
+					Renderer.HideObject(ref ObjectManager.Objects[i]);
 				}
 			}
 		}
@@ -669,7 +669,7 @@ namespace OpenBve {
 				} else {
 					AnimatedWorldObjects[i].Object.SecondsSinceLastUpdate += TimeElapsed;
 					if (AnimatedWorldObjects[i].Visible) {
-						Renderer.HideObject(AnimatedWorldObjects[i].Object.ObjectIndex);
+						Renderer.HideObject(ref ObjectManager.Objects[AnimatedWorldObjects[i].Object.ObjectIndex]);
 						AnimatedWorldObjects[i].Visible = false;
 					}
 				}
@@ -914,7 +914,7 @@ namespace OpenBve {
 				while (ObjectsSortedByStartPointer >= 0) {
 					int o = ObjectsSortedByStart[ObjectsSortedByStartPointer];
 					if (Objects[o].StartingDistance > p + World.ForwardViewingDistance) {
-						Renderer.HideObject(o);
+						Renderer.HideObject(ref ObjectManager.Objects[o]);
 						ObjectsSortedByStartPointer--;
 					} else {
 						break;
@@ -939,7 +939,7 @@ namespace OpenBve {
 				while (ObjectsSortedByEndPointer < n) {
 					int o = ObjectsSortedByEnd[ObjectsSortedByEndPointer];
 					if (Objects[o].EndingDistance < p - World.BackwardViewingDistance) {
-						Renderer.HideObject(o);
+						Renderer.HideObject(ref ObjectManager.Objects[o]);
 						ObjectsSortedByEndPointer++;
 					} else {
 						break;

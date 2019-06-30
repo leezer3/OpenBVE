@@ -86,7 +86,7 @@ namespace OpenBve
 			internal void Initialize(int StateIndex, bool Overlay, bool Show)
 			{
 				int i = ObjectIndex;
-				Renderer.HideObject(i);
+				Renderer.HideObject(ref ObjectManager.Objects[i]);
 				int t = StateIndex;
 				if (t >= 0 && States[t].Object != null)
 				{
@@ -741,7 +741,7 @@ namespace OpenBve
 						}
 						else
 						{
-							Renderer.HideObject(i);
+							Renderer.HideObject(ref ObjectManager.Objects[i]);
 						}
 					}
 				}

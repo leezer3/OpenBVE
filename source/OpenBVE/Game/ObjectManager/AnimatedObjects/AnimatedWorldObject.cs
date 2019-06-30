@@ -74,7 +74,7 @@ namespace OpenBve
 					Object.SecondsSinceLastUpdate += TimeElapsed;
 					if (Visible)
 					{
-						Renderer.HideObject(Object.ObjectIndex);
+						Renderer.HideObject(ref ObjectManager.Objects[Object.ObjectIndex]);
 						Visible = false;
 					}
 				}

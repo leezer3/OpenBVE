@@ -83,7 +83,7 @@ namespace OpenBve
 					int o = ObjectsSortedByStart[ObjectsSortedByStartPointer];
 					if (Objects[o].StartingDistance > p + World.ForwardViewingDistance)
 					{
-						Renderer.HideObject(o);
+						Renderer.HideObject(ref ObjectManager.Objects[o]);
 						ObjectsSortedByStartPointer--;
 					}
 					else
@@ -119,7 +119,7 @@ namespace OpenBve
 					int o = ObjectsSortedByEnd[ObjectsSortedByEndPointer];
 					if (Objects[o].EndingDistance < p - World.BackwardViewingDistance)
 					{
-						Renderer.HideObject(o);
+						Renderer.HideObject(ref ObjectManager.Objects[o]);
 						ObjectsSortedByEndPointer++;
 					}
 					else

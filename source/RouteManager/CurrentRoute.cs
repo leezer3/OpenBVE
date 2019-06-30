@@ -19,7 +19,7 @@ namespace OpenBve.RouteManager
 		public static BackgroundHandle CurrentBackground = new StaticBackground(null, 6, false);
 		/// <summary>The new background texture (Currently fading in)</summary>
 		public static BackgroundHandle TargetBackground = new StaticBackground(null, 6, false);
-		/// <summary>The start of a reigon without fog</summary>
+		/// <summary>The start of a region without fog</summary>
 		/// <remarks>Must not be below the viewing distance (e.g. 600m)</remarks>
 		public static float NoFogStart = 800.0f;
 		/// <summary>The end of a reigon without fog</summary>

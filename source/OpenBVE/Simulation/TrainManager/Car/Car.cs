@@ -413,7 +413,7 @@ namespace OpenBve
 						for (int k = 0; k < CarSections[i].Groups[j].Elements.Length; k++)
 						{
 							int o = CarSections[i].Groups[j].Elements[k].ObjectIndex;
-							Renderer.HideObject(o);
+							Renderer.HideObject(ref ObjectManager.Objects[o]);
 						}
 					}
 				}

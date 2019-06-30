@@ -716,7 +716,7 @@ namespace OpenBve {
 				List[i] = ObjectList[i];
 			}
 			for (int i = 0; i < List.Length; i++) {
-				HideObject(List[i].ObjectIndex);
+				HideObject(ref ObjectManager.Objects[List[i].ObjectIndex]);
 			}
 			for (int i = 0; i < List.Length; i++) {
 				ShowObject(List[i].ObjectIndex, List[i].Type);
@@ -878,10 +878,10 @@ namespace OpenBve {
         }
 
         // hide object
-        internal static void HideObject(int ObjectIndex)
+        internal static void HideObject(ref StaticObject Object)
         {
-            if (ObjectManager.Objects[ObjectIndex] == null) return;
-            int k = ObjectManager.Objects[ObjectIndex].RendererIndex - 1;
+            if (Object == null) return;
+            int k = Object.RendererIndex - 1;
             if (k >= 0)
             {
                 // remove faces
@@ -948,7 +948,7 @@ namespace OpenBve {
                     }
                     ObjectManager.Objects[ObjectList[k].ObjectIndex].RendererIndex = k + 1;
                 }
-                ObjectManager.Objects[ObjectIndex].RendererIndex = 0;
+                Object.RendererIndex = 0;
             }
         }
 

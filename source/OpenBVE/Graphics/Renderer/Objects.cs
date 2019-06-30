@@ -19,7 +19,7 @@ namespace OpenBve
 			}
 			for (int i = 0; i < list.Length; i++)
 			{
-				HideObject(list[i].ObjectIndex);
+				HideObject(ref ObjectManager.Objects[list[i].ObjectIndex]);
 			}
 			for (int i = 0; i < list.Length; i++)
 			{
@@ -265,14 +265,14 @@ namespace OpenBve
 		}
 
 		/// <summary>Hides an object within the world</summary>
-		/// <param name="ObjectIndex">The object's index</param>
-		internal static void HideObject(int ObjectIndex)
+		/// <param name="Object">The object to hide</param>
+		internal static void HideObject(ref StaticObject Object)
 		{
-			if (ObjectManager.Objects[ObjectIndex] == null)
+			if (Object == null)
 			{
 				return;
 			}
-			int k = ObjectManager.Objects[ObjectIndex].RendererIndex - 1;
+			int k = Object.RendererIndex - 1;
 			if (k >= 0)
 			{		
 				// remove faces
@@ -381,7 +381,7 @@ namespace OpenBve
 					}
 					ObjectManager.Objects[Objects[k].ObjectIndex].RendererIndex = k + 1;
 				}
-				ObjectManager.Objects[ObjectIndex].RendererIndex = 0;
+				Object.RendererIndex = 0;
 			}
 		}
 

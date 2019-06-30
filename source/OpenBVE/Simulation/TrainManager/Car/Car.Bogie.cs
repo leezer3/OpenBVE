@@ -161,7 +161,7 @@ namespace OpenBve
 					for (int j = 0; j < CarSections[i].Groups[0].Elements.Length; j++)
 					{
 						int o = CarSections[i].Groups[0].Elements[j].ObjectIndex;
-						Renderer.HideObject(o);
+						Renderer.HideObject(ref ObjectManager.Objects[o]);
 					}
 				}
 				if (SectionIndex >= 0)
