@@ -14,6 +14,10 @@
 		/// <summary>The speed limit of the signalling section the train is currently in</summary>
 		/// <remarks>Default units are km/h</remarks>
 		public double CurrentSectionLimit;
+		/// <summary>The route speed limts</summary>
+		public double[] RouteLimits;
+		/// <summary>The current route limit in effect</summary>
+		public double CurrentRouteLimit;
 		/// <summary>The current speed of the train (as an average of all cars)</summary>
 		/// <remarks>Default units are km/h</remarks>
 		public double CurrentSpeed;

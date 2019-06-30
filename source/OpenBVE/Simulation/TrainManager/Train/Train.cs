@@ -34,8 +34,7 @@ namespace OpenBve
 			internal bool StationDepartureSoundPlayed;
 			internal bool StationAdjust;
 			internal double StationDistanceToStopPoint;
-			internal double[] RouteLimits;
-			internal double CurrentRouteLimit;
+			
 			
 			internal double TimetableDelta;
 			internal Game.GeneralAI AI;

@@ -2,13 +2,14 @@
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Routes;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
 	internal static partial class TrackManager
 	{
 		/// <summary>Is called when the speed limit upon the track change</summary>
-		internal class LimitChangeEvent : GeneralEvent<TrainManager.Train>
+		internal class LimitChangeEvent : GeneralEvent<AbstractTrain>
 		{
 			internal readonly double PreviousSpeedLimit;
 			internal readonly double NextSpeedLimit;
@@ -19,7 +20,7 @@ namespace OpenBve
 				this.PreviousSpeedLimit = PreviousSpeedLimit;
 				this.NextSpeedLimit = NextSpeedLimit;
 			}
-			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, int CarIndex)
 			{
 				if (Train == null)
 				{
