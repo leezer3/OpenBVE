@@ -4,6 +4,7 @@ using OpenBve.BrakeSystems;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenTK.Graphics.OpenGL;
+using SoundManager;
 
 namespace OpenBve
 {
@@ -110,10 +111,10 @@ namespace OpenBve
 			// debug information
 			int texturesLoaded = TextureManager.GetNumberOfLoadedTextures();
 			int texturesRegistered = TextureManager.GetNumberOfRegisteredTextures();
-			int soundBuffersRegistered = Sounds.GetNumberOfLoadedBuffers();
-			int soundBuffersLoaded = Sounds.GetNumberOfLoadedBuffers();
-			int soundSourcesRegistered = Sounds.GetNumberOfRegisteredSources();
-			int soundSourcesPlaying = Sounds.GetNumberOfPlayingSources();
+			int soundBuffersRegistered = Program.Sounds.GetNumberOfRegisteredBuffers();
+			int soundBuffersLoaded = Program.Sounds.GetNumberOfLoadedBuffers();
+			int soundSourcesRegistered = Program.Sounds.GetNumberOfRegisteredSources();
+			int soundSourcesPlaying = Program.Sounds.GetNumberOfPlayingSources();
 			int car = 0;
 			for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
 			{
@@ -179,7 +180,7 @@ namespace OpenBve
 				"=sound",
 				"sound buffers: " + soundBuffersLoaded.ToString(Culture) + " / " + soundBuffersRegistered.ToString(Culture),
 				"sound sources: " + soundSourcesPlaying.ToString(Culture) + " / " + soundSourcesRegistered.ToString(Culture),
-				(Interface.CurrentOptions.SoundModel == Sounds.SoundModels.Inverse ? "log clamp factor: " + Sounds.LogClampFactor.ToString("0.00") : "outer radius factor: " + Sounds.OuterRadiusFactor.ToString("0.00", Culture)),
+				(Interface.CurrentOptions.SoundModel == SoundsBase.SoundModels.Inverse ? "log clamp factor: " + Program.Sounds.LogClampFactor.ToString("0.00") : "outer radius factor: " + Program.Sounds.OuterRadiusFactor.ToString("0.00", Culture)),
 				"",
 				"=debug",
 				"train plugin status: " + (TrainManager.PlayerTrain.Plugin != null ? (TrainManager.PlayerTrain.Plugin.PluginValid ? "ok" : "error") : "n/a"),

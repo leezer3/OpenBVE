@@ -1175,7 +1175,7 @@ namespace OpenBve
 								if (fileName != null)
 								{
 									ObjectManager.WorldSound snd = new ObjectManager.WorldSound();
-									snd.Buffer = Sounds.RegisterBuffer(fileName, radius);
+									snd.Buffer = Program.Sounds.RegisterBuffer(fileName, radius);
 									snd.currentPitch = pitch;
 									snd.currentVolume = volume;
 									snd.Position = Position;
@@ -1354,7 +1354,7 @@ namespace OpenBve
 									{
 										if (fileNames[j] != null)
 										{
-											snd.Buffers[j] = Sounds.RegisterBuffer(fileNames[j], radius);
+											snd.Buffers[j] = Program.Sounds.RegisterBuffer(fileNames[j], radius);
 										}
 									}
 									snd.currentPitch = pitch;

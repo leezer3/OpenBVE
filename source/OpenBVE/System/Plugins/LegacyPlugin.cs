@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
+using SoundManager;
 
 namespace OpenBve {
 	/// <summary>Represents a legacy Win32 plugin.</summary>
@@ -275,25 +276,29 @@ namespace OpenBve {
 					if (this.Sound[i] != this.LastSound[i]) {
 						if (this.Sound[i] == SoundInstructions.Stop) {
 							if (i < base.Train.Cars[base.Train.DriverCar].Sounds.Plugin.Length) {
-								Sounds.StopSound(base.Train.Cars[base.Train.DriverCar].Sounds.Plugin[i].Source);
+								Program.Sounds.StopSound(Train.Cars[Train.DriverCar].Sounds.Plugin[i].Source);
 							}
 						} else if (this.Sound[i] > SoundInstructions.Stop & this.Sound[i] <= SoundInstructions.PlayLooping) {
 							if (i < base.Train.Cars[base.Train.DriverCar].Sounds.Plugin.Length) {
-								Sounds.SoundBuffer buffer = base.Train.Cars[base.Train.DriverCar].Sounds.Plugin[i].Buffer;
+								SoundsBase.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.Plugin[i].Buffer;
 								if (buffer != null) {
 									double volume = (double)(this.Sound[i] - SoundInstructions.Stop) / (double)(SoundInstructions.PlayLooping - SoundInstructions.Stop);
-									if (Sounds.IsPlaying(base.Train.Cars[base.Train.DriverCar].Sounds.Plugin[i].Source)) {
-										base.Train.Cars[base.Train.DriverCar].Sounds.Plugin[i].Source.Volume = volume;
-									} else {
-										base.Train.Cars[base.Train.DriverCar].Sounds.Plugin[i].Source = Sounds.PlaySound(buffer, 1.0, volume, base.Train.Cars[base.Train.DriverCar].Sounds.Plugin[i].Position, base.Train, base.Train.DriverCar, true);
+									if (Program.Sounds.IsPlaying(Train.Cars[Train.DriverCar].Sounds.Plugin[i].Source))
+									{
+										Train.Cars[Train.DriverCar].Sounds.Plugin[i].Source.Volume = volume;
+									}
+									else
+									{
+										Train.Cars[Train.DriverCar].Sounds.Plugin[i].Source = Program.Sounds.PlaySound(buffer, 1.0, volume, Train.Cars[Train.DriverCar].Sounds.Plugin[i].Position, Train, Train.DriverCar, true);
 									}
 								}
 							}
 						} else if (this.Sound[i] == SoundInstructions.PlayOnce) {
 							if (i < base.Train.Cars[base.Train.DriverCar].Sounds.Plugin.Length) {
-								Sounds.SoundBuffer buffer = base.Train.Cars[base.Train.DriverCar].Sounds.Plugin[i].Buffer;
-								if (buffer != null) {
-									base.Train.Cars[base.Train.DriverCar].Sounds.Plugin[i].Source = Sounds.PlaySound(buffer, 1.0, 1.0, base.Train.Cars[base.Train.DriverCar].Sounds.Plugin[i].Position, base.Train, base.Train.DriverCar, false);
+								SoundsBase.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.Plugin[i].Buffer;
+								if (buffer != null)
+								{
+									Train.Cars[Train.DriverCar].Sounds.Plugin[i].Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, Train.Cars[Train.DriverCar].Sounds.Plugin[i].Position, Train, Train.DriverCar, false);
 								}
 							}
 							this.Sound[i] = SoundInstructions.Continue;

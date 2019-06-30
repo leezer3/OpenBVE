@@ -157,7 +157,7 @@ namespace OpenBve {
 			ObjectManager.AnimatedWorldObjectsUsed = 0;
 			// renderer / sound
 			Renderer.Reset();
-			Sounds.StopAllSounds();
+			Program.Sounds.StopAllSounds();
 			GC.Collect();
 		}
 

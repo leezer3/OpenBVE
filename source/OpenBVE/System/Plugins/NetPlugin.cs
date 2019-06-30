@@ -5,6 +5,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using OpenBveApi.Sounds;
+using SoundManager;
 using SoundHandle = OpenBveApi.Runtime.SoundHandle;
 
 namespace OpenBve {
@@ -13,8 +14,9 @@ namespace OpenBve {
 		
 		// sound handle
 		internal class SoundHandleEx : SoundHandle {
-			internal readonly Sounds.SoundSource Source;
-			internal SoundHandleEx(double volume, double pitch, Sounds.SoundSource source) {
+			internal readonly SoundsBase.SoundSource Source;
+			internal SoundHandleEx(double volume, double pitch, SoundsBase.SoundSource source)
+			{
 				base.MyVolume = volume;
 				base.MyPitch = pitch;
 				base.MyValid = true;
@@ -322,9 +324,9 @@ namespace OpenBve {
 		internal SoundHandleEx PlaySound(int index, double volume, double pitch, bool looped)
 		{
 			if (index >= 0 && index < this.Train.Cars[this.Train.DriverCar].Sounds.Plugin.Length && this.Train.Cars[this.Train.DriverCar].Sounds.Plugin[index].Buffer != null) {
-				Sounds.SoundBuffer buffer = this.Train.Cars[this.Train.DriverCar].Sounds.Plugin[index].Buffer;
+				SoundsBase.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.Plugin[index].Buffer;
 				OpenBveApi.Math.Vector3 position = this.Train.Cars[this.Train.DriverCar].Sounds.Plugin[index].Position;
-				Sounds.SoundSource source = Sounds.PlaySound(buffer, pitch, volume, position, this.Train, this.Train.DriverCar, looped);
+				SoundsBase.SoundSource source = Program.Sounds.PlaySound(buffer, pitch, volume, position, Train, Train.DriverCar, looped);
 				if (this.SoundHandlesCount == this.SoundHandles.Length) {
 					Array.Resize<SoundHandleEx>(ref this.SoundHandles, this.SoundHandles.Length << 1);
 				}
@@ -346,9 +348,9 @@ namespace OpenBve {
 		{
 			if (index >= 0 && index < this.Train.Cars[this.Train.DriverCar].Sounds.Plugin.Length && this.Train.Cars[this.Train.DriverCar].Sounds.Plugin[index].Buffer != null && CarIndex < this.Train.Cars.Length && CarIndex >= 0)
 			{
-				Sounds.SoundBuffer buffer = this.Train.Cars[this.Train.DriverCar].Sounds.Plugin[index].Buffer;
+				SoundsBase.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.Plugin[index].Buffer;
 				OpenBveApi.Math.Vector3 position = this.Train.Cars[this.Train.DriverCar].Sounds.Plugin[index].Position;
-				Sounds.SoundSource source = Sounds.PlaySound(buffer, pitch, volume, position, this.Train, CarIndex, looped);
+				SoundsBase.SoundSource source = Program.Sounds.PlaySound(buffer, pitch, volume, position, Train, CarIndex, looped);
 				if (this.SoundHandlesCount == this.SoundHandles.Length)
 				{
 					Array.Resize<SoundHandleEx>(ref this.SoundHandles, this.SoundHandles.Length << 1);

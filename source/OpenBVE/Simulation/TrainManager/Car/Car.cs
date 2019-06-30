@@ -4,6 +4,7 @@ using OpenBve.BrakeSystems;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
+using SoundManager;
 
 namespace OpenBve
 {
@@ -196,10 +197,10 @@ namespace OpenBve
 					{
 						if (FrontAxle.RunIndex < Sounds.Run.Length)
 						{
-							Sounds.SoundBuffer buffer = Sounds.Run[FrontAxle.RunIndex].Buffer;
+							SoundsBase.SoundBuffer buffer = Sounds.Run[FrontAxle.RunIndex].Buffer;
 							if (buffer != null)
 							{
-								double duration = OpenBve.Sounds.GetDuration(buffer);
+								double duration = Program.Sounds.GetDuration(buffer);
 								if (duration > 0.0)
 								{
 									double offset = distance > maxDistance ? 25.0 : 300.0;
@@ -231,7 +232,7 @@ namespace OpenBve
 						if (Sounds.RunVolume[j] < 0.0) Sounds.RunVolume[j] = 0.0;
 					}
 					double gain = basegain * Sounds.RunVolume[j];
-					if (OpenBve.Sounds.IsPlaying(Sounds.Run[j].Source))
+					if (Program.Sounds.IsPlaying(Sounds.Run[j].Source))
 					{
 						if (pitch > 0.01 & gain > 0.001)
 						{
@@ -240,16 +241,16 @@ namespace OpenBve
 						}
 						else
 						{
-							OpenBve.Sounds.StopSound(Sounds.Run[j].Source);
+							Program.Sounds.StopSound(Sounds.Run[j].Source);
 						}
 					}
 					else if (pitch > 0.02 & gain > 0.01)
 					{
-						Sounds.SoundBuffer buffer = Sounds.Run[j].Buffer;
+						SoundsBase.SoundBuffer buffer = Sounds.Run[j].Buffer;
 						if (buffer != null)
 						{
 							OpenBveApi.Math.Vector3 pos = Sounds.Run[j].Position;
-							Sounds.Run[j].Source = OpenBve.Sounds.PlaySound(buffer, pitch, gain, pos, baseTrain, Index, true);
+							Sounds.Run[j].Source = Program.Sounds.PlaySound(buffer, pitch, gain, pos, baseTrain, Index, true);
 						}
 					}
 				}
@@ -274,7 +275,7 @@ namespace OpenBve
 					{
 						if (j < Sounds.Motor.Tables.Length)
 						{
-							OpenBve.Sounds.StopSound(Sounds.Motor.Tables[j].Source);
+							Program.Sounds.StopSound(Sounds.Motor.Tables[j].Source);
 							Sounds.Motor.Tables[j].Source = null;
 							Sounds.Motor.Tables[j].Buffer = null;
 						}
@@ -283,7 +284,7 @@ namespace OpenBve
 					{
 						if (k < Sounds.Motor.Tables.Length)
 						{
-							OpenBve.Sounds.StopSound(Sounds.Motor.Tables[k].Source);
+							Program.Sounds.StopSound(Sounds.Motor.Tables[k].Source);
 							Sounds.Motor.Tables[k].Source = null;
 							Sounds.Motor.Tables[k].Buffer = null;
 						}
@@ -300,8 +301,8 @@ namespace OpenBve
 							}
 							if (idx2 >= 0)
 							{
-								Sounds.SoundBuffer obuf = Sounds.Motor.Tables[j].Buffer;
-								Sounds.SoundBuffer nbuf = Sounds.Motor.Tables[j].Entries[idx2].Buffer;
+								SoundsBase.SoundBuffer obuf = Sounds.Motor.Tables[j].Buffer;
+								SoundsBase.SoundBuffer nbuf = Sounds.Motor.Tables[j].Entries[idx2].Buffer;
 								double pitch = Sounds.Motor.Tables[j].Entries[idx2].Pitch;
 								double gain = Sounds.Motor.Tables[j].Entries[idx2].Gain;
 								if (ndir == 1)
@@ -328,10 +329,10 @@ namespace OpenBve
 								}
 								if (obuf != nbuf)
 								{
-									OpenBve.Sounds.StopSound(Sounds.Motor.Tables[j].Source);
+									Program.Sounds.StopSound(Sounds.Motor.Tables[j].Source);
 									if (nbuf != null)
 									{
-										Sounds.Motor.Tables[j].Source = OpenBve.Sounds.PlaySound(nbuf, pitch, gain, pos, baseTrain, Index, true);
+										Sounds.Motor.Tables[j].Source = Program.Sounds.PlaySound(nbuf, pitch, gain, pos, baseTrain, Index, true);
 										Sounds.Motor.Tables[j].Buffer = nbuf;
 									}
 									else
@@ -350,14 +351,14 @@ namespace OpenBve
 								}
 								else
 								{
-									OpenBve.Sounds.StopSound(Sounds.Motor.Tables[j].Source);
+									Program.Sounds.StopSound(Sounds.Motor.Tables[j].Source);
 									Sounds.Motor.Tables[j].Source = null;
 									Sounds.Motor.Tables[j].Buffer = null;
 								}
 							}
 							else
 							{
-								OpenBve.Sounds.StopSound(Sounds.Motor.Tables[j].Source);
+								Program.Sounds.StopSound(Sounds.Motor.Tables[j].Source);
 								Sounds.Motor.Tables[j].Source = null;
 								Sounds.Motor.Tables[j].Buffer = null;
 							}
@@ -964,26 +965,26 @@ namespace OpenBve
 					const double angleTolerance = 0.001;
 					if (diff < -angleTolerance)
 					{
-						Sounds.SoundBuffer buffer = Sounds.SpringL.Buffer;
+						SoundsBase.SoundBuffer buffer = Sounds.SpringL.Buffer;
 						if (buffer != null)
 						{
-							if (!OpenBve.Sounds.IsPlaying(Sounds.SpringL.Source))
+							if (!Program.Sounds.IsPlaying(Sounds.SpringL.Source))
 							{
 								Vector3 pos = Sounds.SpringL.Position;
-								Sounds.SpringL.Source = OpenBve.Sounds.PlaySound(buffer, 1.0, 1.0, pos, baseTrain, Index, false);
+								Sounds.SpringL.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, baseTrain, Index, false);
 							}
 						}
 						Sounds.SpringPlayedAngle = a;
 					}
 					else if (diff > angleTolerance)
 					{
-						Sounds.SoundBuffer buffer = Sounds.SpringR.Buffer;
+						SoundsBase.SoundBuffer buffer = Sounds.SpringR.Buffer;
 						if (buffer != null)
 						{
-							if (!OpenBve.Sounds.IsPlaying(Sounds.SpringR.Source))
+							if (!Program.Sounds.IsPlaying(Sounds.SpringR.Source))
 							{
 								Vector3 pos = Sounds.SpringR.Position;
-								Sounds.SpringR.Source = OpenBve.Sounds.PlaySound(buffer, 1.0, 1.0, pos, baseTrain, Index, false);
+								Sounds.SpringR.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, baseTrain, Index, false);
 							}
 						}
 						Sounds.SpringPlayedAngle = a;
@@ -1041,7 +1042,7 @@ namespace OpenBve
 							if (Sounds.FlangeVolume[i] < 0.0) Sounds.FlangeVolume[i] = 0.0;
 						}
 						double gain = basegain * Sounds.FlangeVolume[i];
-						if (OpenBve.Sounds.IsPlaying(Sounds.Flange[i].Source))
+						if (Program.Sounds.IsPlaying(Sounds.Flange[i].Source))
 						{
 							if (pitch > 0.01 & gain > 0.0001)
 							{
@@ -1055,11 +1056,11 @@ namespace OpenBve
 						}
 						else if (pitch > 0.02 & gain > 0.01)
 						{
-							Sounds.SoundBuffer buffer = Sounds.Flange[i].Buffer;
+							SoundsBase.SoundBuffer buffer = Sounds.Flange[i].Buffer;
 							if (buffer != null)
 							{
 								Vector3 pos = Sounds.Flange[i].Position;
-								Sounds.Flange[i].Source = OpenBve.Sounds.PlaySound(buffer, pitch, gain, pos, baseTrain, Index, true);
+								Sounds.Flange[i].Source = Program.Sounds.PlaySound(buffer, pitch, gain, pos, baseTrain, Index, true);
 							}
 						}
 					}

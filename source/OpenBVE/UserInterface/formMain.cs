@@ -1082,7 +1082,7 @@ namespace OpenBve {
 				Array.Resize<string>(ref a, n);
 				Interface.CurrentOptions.EnableInputDevicePlugins = a;
 			}
-			Sounds.Deinitialize();
+			Program.Sounds.Deinitialize();
 			routeWorkerThread.Dispose();
 			if (!OpenTK.Configuration.RunningOnMacOS)
 			{

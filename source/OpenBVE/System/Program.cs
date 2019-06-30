@@ -52,7 +52,9 @@ namespace OpenBve {
 		public static GameWindow currentGameWindow;
 
 		internal static JoystickManager Joysticks;
-		
+
+		internal static Sounds Sounds;
+
 		// --- functions ---
 		
 		/// <summary>Is executed when the program starts.</summary>
@@ -90,6 +92,8 @@ namespace OpenBve {
 				MessageBox.Show(Translations.GetInterfaceString("errors_filesystem_invalid") + Environment.NewLine + Environment.NewLine + ex.Message, Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return;
 			}
+
+			Sounds = new Sounds();
 
 			//Platform specific startup checks
 			if (CurrentlyRunningOnMono && !CurrentlyRunningOnWindows)

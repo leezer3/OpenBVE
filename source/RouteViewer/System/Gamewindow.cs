@@ -6,6 +6,7 @@ using LibRender;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
+using SoundManager;
 
 namespace OpenBve
 {
@@ -72,7 +73,7 @@ namespace OpenBve
             ObjectManager.UpdateAnimatedWorldObjects(TimeElapsed, false);
             World.UpdateAbsoluteCamera(TimeElapsed);
             ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z);
-			Sounds.Update(TimeElapsed, Sounds.SoundModels.Linear);
+			Program.Sounds.Update(TimeElapsed, SoundsBase.SoundModels.Linear);
             Renderer.RenderScene(TimeElapsed);
             SwapBuffers();
             
@@ -100,7 +101,7 @@ namespace OpenBve
 
             Renderer.Initialize();
             LibRender.Renderer.InitializeLighting();
-            Sounds.Initialize();
+			Program.Sounds.Initialize(Program.CurrentHost, Interface.CurrentOptions.SoundRange);
             Program.UpdateViewport();
             if (Program.processCommandLineArgs)
             {

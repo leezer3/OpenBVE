@@ -91,6 +91,9 @@ FORMATS_MSTS_FILE     :=Data/Formats/Formats.Msts.dll
 ROUTEMANAGER_ROOT     :=source/RouteManager
 ROUTEMANAGER_FILE     :=RouteManager.dll
 
+SOUNDMANAGER_ROOT     :=source/SoundManager
+SOUNDMANAGER_FILE     :=SoundManager.dll
+
 LIBRENDER_ROOT     :=source/LibRender
 LIBRENDER_FILE     :=LibRender.dll
 
@@ -114,6 +117,9 @@ SOUND_RIFFWAVE_FILE   :=Data/Plugins/Sound.RiffWave.dll
 
 SOUND_MP3_ROOT   :=source/Plugins/Sound.MP3
 SOUND_MP3_FILE   :=Data/Plugins/Sound.MP3.dll
+
+SOUND_VORBIS_ROOT   :=source/Plugins/Sound.Vorbis
+SOUND_VORBIS_FILE   :=Data/Plugins/Sound.Vorbis.dll
 
 TEXTURE_ACE_ROOT      :=source/Plugins/Texture.Ace
 TEXTURE_ACE_FILE      :=Data/Plugins/Texture.Ace.dll
@@ -141,6 +147,9 @@ OBJECT_VIEWER_FILE    :=ObjectViewer.exe
 
 TRAIN_EDITOR_ROOT     :=source/TrainEditor
 TRAIN_EDITOR_FILE     :=TrainEditor.exe
+
+MOTOR_SOUND_EDITOR_ROOT     :=source/MotorSoundEditor
+MOTOR_SOUND_EDITOR_FILE     :=MotorSoundEditor.exe
 
 LBAHEADER_ROOT        :=source/DevTools/LBAHeader
 LBAHEADER_FILE        :=DevTools/LBAHeader.exe
@@ -189,6 +198,7 @@ all: all-debug
 all-debug: print_csc_type
 all-debug: $(DEBUG_DIR)/$(FORMATS_MSTS_FILE)
 all-debug: $(DEBUG_DIR)/$(ROUTEMANAGER_FILE)
+all-debug: $(DEBUG_DIR)/$(SOUNDMANAGER_FILE)
 all-debug: $(DEBUG_DIR)/$(LIBRENDER_FILE)
 all-debug: $(DEBUG_DIR)/$(OPEN_BVE_FILE)
 all-debug: $(DEBUG_DIR)/$(OBJECT_BENDER_FILE)
@@ -196,6 +206,7 @@ all-debug: $(DEBUG_DIR)/$(CAR_XML_FILE)
 all-debug: $(DEBUG_DIR)/$(OBJECT_VIEWER_FILE)
 all-debug: $(DEBUG_DIR)/$(ROUTE_VIEWER_FILE)
 all-debug: $(DEBUG_DIR)/$(TRAIN_EDITOR_FILE)
+all-debug: $(DEBUG_DIR)/$(MOTOR_SOUND_EDITOR_FILE)
 all-debug: $(DEBUG_DIR)/$(LBAHEADER_FILE)
 all-debug: copy_depends
 
@@ -204,6 +215,7 @@ all-release: ARGS := $(RELEASE_ARGS)
 all-release: OUTPUT_DIR := $(RELEASE_DIR)
 all-release: $(RELEASE_DIR)/$(FORMATS_MSTS_FILE)
 all-release: $(RELEASE_DIR)/$(ROUTEMANAGER_FILE)
+all-release: $(RELEASE_DIR)/$(SOUNDMANAGER_FILE)
 all-release: $(RELEASE_DIR)/$(LIBRENDER_FILE)
 all-release: $(RELEASE_DIR)/$(OPEN_BVE_FILE)
 all-release: $(RELEASE_DIR)/$(OBJECT_BENDER_FILE)
@@ -211,6 +223,7 @@ all-release: $(RELEASE_DIR)/$(CAR_XML_FILE)
 all-release: $(RELEASE_DIR)/$(OBJECT_VIEWER_FILE)
 all-release: $(RELEASE_DIR)/$(ROUTE_VIEWER_FILE)
 all-release: $(RELEASE_DIR)/$(TRAIN_EDITOR_FILE)
+all-release: $(RELEASE_DIR)/$(MOTOR_SOUND_EDITOR_FILE)
 all-release: $(RELEASE_DIR)/$(LBAHEADER_FILE)
 all-release: copy_release_depends
 
@@ -268,11 +281,13 @@ clean:
 	rm -f bin*/OpenBveObjectValidator.exe* bin*/OpenBveObjectValidator.pdb
 	rm -f bin*/RouteViewer.exe* bin*/RouteViewer.pdb
 	rm -f bin*/TrainEditor.exe* bin*/TrainEditor.pdb
+	rm -f bin*/MotorSoundEditor.exe* bin*/MotorSoundEditor.pdb
 
 	# DLL
 	rm -f bin*/OpenBveApi.dll* bin*/OpenBveApi.pdb
 	rm -f bin*/AssimpParser.dll* bin*/AssimpParser.pdb
 	rm -f bin*/RouteManager.dll* bin*/RouteManager.pdb
+	rm -f bin*/SoundManager.dll* bin*/SoundManager.pdb
 	rm -f bin*/LibRender.dll* bin*/LibRender.pdb
 	rm -f bin*/Data/Formats/Formats.Msts.dll* bin*/Data/Formats/Formats.Msts.pdb
 	rm -f bin*/Data/Formats/Formats.DirectX.dll* bin*/Data/Formats/Formats.DirectX.pdb
@@ -282,6 +297,7 @@ clean:
 	rm -f bin*/Data/Plugins/Sound.Flac.dll* bin*/Data/Plugins/Sound.Flac.pdb
 	rm -f bin*/Data/Plugins/Sound.RiffWave.dll* bin*/Data/Plugins/Sound.RiffWave.pdb
 	rm -f bin*/Data/Plugins/Sound.MP3.dll* bin*/Data/Plugins/Sound.MP3.pdb
+	rm -f bin*/Data/Plugins/Sound.Vorbis.dll* bin*/Data/Plugins/Sound.Vorbis.pdb
 	rm -f bin*/Data/Plugins/Texture.Ace.dll* bin*/Data/Plugins/Texture.Ace.pdb
 	rm -f bin*/Data/Plugins/Texture.BmpGifJpegPngTiff.dll* bin*/Data/Plugins/Texture.BmpGifJpegPngTiff.pdb
 	rm -f bin*/Data/Plugins/Texture.Dds.dll* bin*/Data/Plugins/Texture.Dds.pdb
@@ -390,6 +406,7 @@ $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(OBJECT_WAVEFRONT_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_FLAC_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_RIFFWAVE_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_MP3_FILE) 
+$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUND_VORBIS_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_ACE_FILE) 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_BGJPT_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_DDS_FILE)
@@ -397,6 +414,7 @@ $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(TEXTURE_TGA_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(LBAHEADER_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(FORMATS_MSTS_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(ROUTEMANAGER_FILE)
+$(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(SOUNDMANAGER_FILE)
 $(DEBUG_DIR)/$(OPEN_BVE_FILE): $(DEBUG_DIR)/$(LIBRENDER_FILE)
 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE) 
@@ -410,6 +428,7 @@ $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(OBJECT_WAVEFRONT_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SOUND_FLAC_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SOUND_RIFFWAVE_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SOUND_MP3_FILE) 
+$(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SOUND_VORBIS_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(TEXTURE_ACE_FILE) 
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(TEXTURE_BGJPT_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(TEXTURE_DDS_FILE) 
@@ -417,13 +436,14 @@ $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(TEXTURE_TGA_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(LBAHEADER_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(FORMATS_MSTS_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(ROUTEMANAGER_FILE)
+$(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(SOUNDMANAGER_FILE)
 $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(RELEASE_DIR)/$(LIBRENDER_FILE)
 
 $(DEBUG_DIR)/$(OPEN_BVE_FILE) $(RELEASE_DIR)/$(OPEN_BVE_FILE): $(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs $(patsubst "%", %, $(OPEN_BVE_SRC)) $(OPEN_BVE_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OPEN_BVE_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OPEN_BVE_OUT) /target:winexe /main:OpenBve.Program $(OPEN_BVE_SRC) $(ARGS) $(OPEN_BVE_DOC) \
 	$(OPEN_BVE_ROOT)/Properties/AssemblyInfo.cs \
-	/reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OPEN_BVE_API_OUT) /reference:$(ASSIMP_OUT) /reference:$(FORMATS_MSTS_OUT) /reference:$(ROUTEMANAGER_OUT) /reference:$(LIBRENDER_OUT) \
+	/reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OPEN_BVE_API_OUT) /reference:$(ASSIMP_OUT) /reference:$(FORMATS_MSTS_OUT) /reference:$(ROUTEMANAGER_OUT) /reference:$(SOUNDMANAGER_OUT) /reference:$(LIBRENDER_OUT) \
 	/reference:$(OUTPUT_DIR)/CSScriptLibrary.dll /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/SharpCompress.dll /reference:$(OUTPUT_DIR)/PIEHid32Net.dll \
 	/reference:System.Xml.Linq.dll /reference:System.Core.dll /reference:System.dll /reference:Microsoft.CSharp.dll \
 	/win32icon:$(ICON) $(addprefix /resource:, $(OPEN_BVE_RESOURCE)) /resource:"assets/Controls/Default.controls",OpenBve.Default.controls /resource:"assets/Cursors/Symbols/plus.png",OpenBve.plus.png  /resource:"assets/Cursors/Symbols/plus.png",OpenBve.minus.png /resource:"assets/Cursors/nk.png",OpenBve.nk.png
@@ -452,7 +472,7 @@ $(DEBUG_DIR)/$(OPEN_BVE_API_FILE) $(RELEASE_DIR)/$(OPEN_BVE_API_FILE): $(OPEN_BV
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(OPEN_BVE_API_OUT)$(COLOR_END)
 	@$(CSC) /out:$(OPEN_BVE_API_OUT) /target:library $(OPEN_BVE_API_SRC) $(ARGS) $(OPEN_BVE_API_DOC) \
 	/reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(OUTPUT_DIR)/CSScriptLibrary.dll /reference:$(OUTPUT_DIR)/NUniversalCharDet.dll /reference:$(OUTPUT_DIR)/SharpCompress.dll \
-	/reference:System.Core.dll /reference:System.dll \
+	/reference:System.Xml.Linq.dll /reference:System.Core.dll /reference:System.dll \
 	$(addprefix /resource:, $(OPEN_BVE_API_RESOURCE))
 
 
@@ -588,6 +608,30 @@ $(DEBUG_DIR)/$(ROUTEMANAGER_FILE) $(RELEASE_DIR)/$(ROUTEMANAGER_FILE): $(ROUTEMA
 	/reference:$(OPEN_BVE_API_OUT)  /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:$(LIBRENDER_OUT) /reference:System.Core.dll /reference:System.dll /reference:Microsoft.CSharp.dll \
 	$(addprefix /resource:, $(ROUTEMANAGER_RESOURCE))
 
+################
+# SoundManager #
+################
+
+SOUNDMANAGER_FOLDERS  := $(shell find $(SOUNDMANAGER_ROOT) -type d)
+SOUNDMANAGER_SRC      := $(foreach sdir, $(SOUNDMANAGER_FOLDERS), $(wildcard $(sdir)/*.cs))
+SOUNDMANAGER_DOC      := $(addprefix /doc:, $(foreach sdir, $(SOUNDMANAGER_FOLDERS), $(wildcard $(sdir)/*.xml)))
+SOUNDMANAGER_RESX     := $(foreach sdir, $(SOUNDMANAGER_FOLDERS), $(wildcard $(sdir)/*.resx))
+SOUNDMANAGER_RESOURCE := $(addprefix $(SOUNDMANAGER_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst $(dir $(SOUNDMANAGER_ROOT))%.resx, %.resources, $(SOUNDMANAGER_RESX)))))
+SOUNDMANAGER_OUT       =$(OUTPUT_DIR)/$(SOUNDMANAGER_FILE)
+
+$(call create_resource, $(SOUNDMANAGER_RESOURCE), $(SOUNDMANAGER_RESX))
+
+$(DEBUG_DIR)/$(SOUNDMANAGER_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
+$(RELEASE_DIR)/$(SOUNDMANAGER_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
+$(DEBUG_DIR)/$(SOUNDMANAGER_FILE): $(DEBUG_DIR)/$(LIBRENDER_FILE)
+$(RELEASE_DIR)/$(SOUNDMANAGER_FILE): $(RELEASE_DIR)/$(LIBRENDER_FILE)
+
+$(DEBUG_DIR)/$(SOUNDMANAGER_FILE) $(RELEASE_DIR)/$(SOUNDMANAGER_FILE): $(SOUNDMANAGER_SRC) $(SOUNDMANAGER_RESOURCE)
+	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(SOUNDMANAGER_OUT)$(COLOR_END)
+	@$(CSC) /out:$(SOUNDMANAGER_OUT) /target:library $(SOUNDMANAGER_SRC) $(ARGS) $(SOUNDMANAGER_DOC) \
+	/reference:$(OPEN_BVE_API_OUT)  /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:System.Core.dll /reference:System.dll /reference:Microsoft.CSharp.dll \
+	$(addprefix /resource:, $(SOUNDMANAGER_RESOURCE))
+
 #############
 # LibRender #
 #############
@@ -713,7 +757,7 @@ $(RELEASE_DIR)/$(SOUND_RIFFWAVE_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
 $(DEBUG_DIR)/$(SOUND_RIFFWAVE_FILE) $(RELEASE_DIR)/$(SOUND_RIFFWAVE_FILE): $(SOUND_RIFFWAVE_SRC) $(SOUND_RIFFWAVE_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(SOUND_RIFFWAVE_OUT)$(COLOR_END)
 	@$(CSC) /out:$(SOUND_RIFFWAVE_OUT) /target:library $(SOUND_RIFFWAVE_SRC) $(ARGS) $(SOUND_RIFFWAVE_DOC) \
-	/reference:$(OPEN_BVE_API_OUT)  /reference:$(OUTPUT_DIR)/NAudio.dll $(addprefix /resource:, $(SOUND_RIFFWAVE_RESOURCE))
+	/reference:$(OPEN_BVE_API_OUT)  /reference:$(OUTPUT_DIR)/NAudio.dll /reference:$(OUTPUT_DIR)/NLayer.dll /reference:$(OUTPUT_DIR)/NLayer.NAudioSupport.dll /reference:System.Core.dll $(addprefix /resource:, $(SOUND_RIFFWAVE_RESOURCE))
 	
 #############
 # Sound.MP3 #
@@ -734,7 +778,28 @@ $(RELEASE_DIR)/$(SOUND_MP3_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
 $(DEBUG_DIR)/$(SOUND_MP3_FILE) $(RELEASE_DIR)/$(SOUND_MP3_FILE): $(SOUND_MP3_SRC) $(SOUND_MP3_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(SOUND_MP3_OUT)$(COLOR_END)
 	@$(CSC) /out:$(SOUND_MP3_OUT) /target:library $(SOUND_MP3_SRC) $(ARGS) $(SOUND_MP3_DOC) \
-	/reference:$(OPEN_BVE_API_OUT) /reference:$(OUTPUT_DIR)/NAudio.dll $(addprefix /resource:, $(SOUND_MP3_RESOURCE))
+	/reference:$(OPEN_BVE_API_OUT) /reference:$(OUTPUT_DIR)/NAudio.dll /reference:$(OUTPUT_DIR)/NLayer.dll /reference:$(OUTPUT_DIR)/NLayer.NAudioSupport.dll $(addprefix /resource:, $(SOUND_MP3_RESOURCE))
+
+################
+# Sound.Vorbis #
+################
+
+SOUND_VORBIS_FOLDERS  := $(shell find $(SOUND_VORBIS_ROOT) -type d)
+SOUND_VORBIS_SRC      := $(foreach sdir, $(SOUND_VORBIS_FOLDERS), $(wildcard $(sdir)/*.cs))
+SOUND_VORBIS_DOC      := $(addprefix /doc:, $(foreach sdir, $(SOUND_VORBIS_FOLDERS), $(wildcard $(sdir)/*.xml)))
+SOUND_VORBIS_RESX     := $(foreach sdir, $(SOUND_VORBIS_FOLDERS), $(wildcard $(sdir)/*.resx))
+SOUND_VORBIS_RESOURCE := $(addprefix $(SOUND_VORBIS_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst $(dir $(SOUND_VORBIS_ROOT))%.resx, %.resources, $(SOUND_VORBIS_RESX)))))
+SOUND_VORBIS_OUT       =$(OUTPUT_DIR)/$(SOUND_VORBIS_FILE)
+
+$(call create_resource, $(SOUND_VORBIS_RESOURCE), $(SOUND_VORBIS_RESX))
+
+$(DEBUG_DIR)/$(SOUND_VORBIS_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
+$(RELEASE_DIR)/$(SOUND_VORBIS_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
+
+$(DEBUG_DIR)/$(SOUND_VORBIS_FILE) $(RELEASE_DIR)/$(SOUND_VORBIS_FILE): $(SOUND_VORBIS_SRC) $(SOUND_VORBIS_RESOURCE)
+	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(SOUND_VORBIS_OUT)$(COLOR_END)
+	@$(CSC) /out:$(SOUND_VORBIS_OUT) /target:library $(SOUND_VORBIS_SRC) $(ARGS) $(SOUND_VORBIS_DOC) \
+	/reference:$(OPEN_BVE_API_OUT) /reference:$(OUTPUT_DIR)/NAudio.dll /reference:$(OUTPUT_DIR)/NAudio.Vorbis.dll /reference:$(OUTPUT_DIR)/NVorbis.dll $(addprefix /resource:, $(SOUND_VORBIS_RESOURCE))
 
 ###############
 # Texture.Ace #
@@ -839,7 +904,7 @@ $(RELEASE_DIR)/$(ROUTE_VIEWER_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
 $(DEBUG_DIR)/$(ROUTE_VIEWER_FILE) $(RELEASE_DIR)/$(ROUTE_VIEWER_FILE): $(ROUTE_VIEWER_SRC) $(ROUTE_VIEWER_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(ROUTE_VIEWER_OUT)$(COLOR_END)
 	@$(CSC) /out:$(ROUTE_VIEWER_OUT) /target:winexe /main:OpenBve.Program $(ROUTE_VIEWER_SRC) $(ARGS) $(ROUTE_VIEWER_DOC) \
-	/reference:$(OPEN_BVE_API_OUT) /reference:$(ROUTEMANAGER_OUT) /reference:$(LIBRENDER_OUT) /reference:$(OUTPUT_DIR)/OpenTK \
+	/reference:$(OPEN_BVE_API_OUT) /reference:$(ROUTEMANAGER_OUT) /reference:$(SOUNDMANAGER_OUT) /reference:$(LIBRENDER_OUT) /reference:$(OUTPUT_DIR)/OpenTK.dll \
 	/reference:System.Core.dll /reference:System.dll  /reference:Microsoft.CSharp.dll \
 	/win32icon:$(ICON) $(addprefix /resource:, $(ROUTE_VIEWER_RESOURCE))
 
@@ -922,6 +987,28 @@ $(DEBUG_DIR)/$(TRAIN_EDITOR_FILE) $(RELEASE_DIR)/$(TRAIN_EDITOR_FILE): $(TRAIN_E
 	@$(CSC) /out:$(TRAIN_EDITOR_OUT) /target:winexe /main:TrainEditor.Program $(TRAIN_EDITOR_SRC) $(ARGS) $(TRAIN_EDITOR_DOC) \
 	/reference:$(OPEN_BVE_API_OUT) /reference:System.Core.dll \
 	/win32icon:$(ICON) $(addprefix /resource:, $(TRAIN_EDITOR_RESOURCE))
+
+####################
+# MotorSoundEditor #
+####################
+
+MOTOR_SOUND_EDITOR_FOLDERS  := $(shell find $(MOTOR_SOUND_EDITOR_ROOT) -type d)
+MOTOR_SOUND_EDITOR_SRC      := $(foreach sdir, $(MOTOR_SOUND_EDITOR_FOLDERS), $(wildcard $(sdir)/*.cs))
+MOTOR_SOUND_EDITOR_DOC      := $(addprefix /doc:, $(foreach sdir, $(MOTOR_SOUND_EDITOR_FOLDERS), $(wildcard $(sdir)/*.xml)))
+MOTOR_SOUND_EDITOR_RESX     := $(foreach sdir, $(MOTOR_SOUND_EDITOR_FOLDERS), $(wildcard $(sdir)/*.resx))
+MOTOR_SOUND_EDITOR_RESOURCE := $(addprefix $(MOTOR_SOUND_EDITOR_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst $(dir $(MOTOR_SOUND_EDITOR_ROOT))%.resx, %.resources, $(MOTOR_SOUND_EDITOR_RESX)))))
+MOTOR_SOUND_EDITOR_OUT       =$(OUTPUT_DIR)/$(MOTOR_SOUND_EDITOR_FILE)
+
+$(call create_resource, $(MOTOR_SOUND_EDITOR_RESOURCE), $(MOTOR_SOUND_EDITOR_RESX))
+
+$(DEBUG_DIR)/$(MOTOR_SOUND_EDITOR_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
+$(RELEASE_DIR)/$(MOTOR_SOUND_EDITOR_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
+
+$(DEBUG_DIR)/$(MOTOR_SOUND_EDITOR_FILE) $(RELEASE_DIR)/$(MOTOR_SOUND_EDITOR_FILE): $(MOTOR_SOUND_EDITOR_SRC) $(MOTOR_SOUND_EDITOR_RESOURCE)
+	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(MOTOR_SOUND_EDITOR_OUT)$(COLOR_END)
+	@$(CSC) /out:$(MOTOR_SOUND_EDITOR_OUT) /target:winexe /main:MotorSoundEditor.Program $(MOTOR_SOUND_EDITOR_SRC) $(ARGS) $(MOTOR_SOUND_EDITOR_DOC) \
+	/reference:$(OPEN_BVE_API_OUT) /reference:$(SOUNDMANAGER_OUT) /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:System.Core.dll \
+	/win32icon:$(ICON) $(addprefix /resource:, $(MOTOR_SOUND_EDITOR_RESOURCE))
 
 #############
 # LBAHeader #

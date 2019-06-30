@@ -709,8 +709,8 @@ namespace OpenBve
 					break;
 				case Translations.Command.MiscMute:
 					// mute
-					Sounds.GlobalMute = !Sounds.GlobalMute;
-					Sounds.Update(timeElapsed, Interface.CurrentOptions.SoundModel);
+					Program.Sounds.GlobalMute = !Program.Sounds.GlobalMute;
+					Program.Sounds.Update(timeElapsed, Interface.CurrentOptions.SoundModel);
 					break;
 			}
 		}

@@ -4,6 +4,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
+using SoundManager;
 
 namespace OpenBve
 {
@@ -19,11 +20,11 @@ namespace OpenBve
 			/// <summary>The curve radius at the object's track position</summary>
 			internal double Radius;
 			/// <summary>The sound buffer array</summary>
-			internal Sounds.SoundBuffer[] Buffers;
+			internal SoundsBase.SoundBuffer[] Buffers;
 			/// <summary>Whether a single buffer is used</summary>
 			internal bool SingleBuffer;
 			/// <summary>The sound source for this file</summary>
-			internal Sounds.SoundSource Source;
+			internal SoundsBase.SoundSource Source;
 			/// <summary>The pitch to play the sound at</summary>
 			internal double currentPitch = 1.0;
 			/// <summary>The volume to play the sound at it's origin</summary>
@@ -86,17 +87,17 @@ namespace OpenBve
 									case -1:
 										if (this.PlayOnHide)
 										{
-											this.Source = Sounds.PlaySound(this.Buffers[0], this.currentPitch, this.currentVolume, this.Position, false);
+											Source = Program.Sounds.PlaySound(Buffers[0], currentPitch, currentVolume, Position, false);
 										}
 										break;
 									case 0:
 										if (this.PlayOnShow || this.lastState != -1)
 										{
-											this.Source = Sounds.PlaySound(this.Buffers[0], this.currentPitch, this.currentVolume, this.Position, false);
+											Source = Program.Sounds.PlaySound(Buffers[0], currentPitch, currentVolume, Position, false);
 										}
 										break;
 									default:
-										this.Source = Sounds.PlaySound(this.Buffers[0], this.currentPitch, this.currentVolume, this.Position, false);
+										Source = Program.Sounds.PlaySound(Buffers[0], currentPitch, currentVolume, Position, false);
 										break;
 								}
 							}
@@ -110,17 +111,17 @@ namespace OpenBve
 										case 0:
 											if (this.PlayOnHide)
 											{
-												this.Source = Sounds.PlaySound(this.Buffers[bufferIndex], this.currentPitch, this.currentVolume, this.Position, false);
+												Source = Program.Sounds.PlaySound(Buffers[bufferIndex], currentPitch, currentVolume, Position, false);
 											}
 											break;
 										case 1:
 											if (this.PlayOnShow || this.lastState != -1)
 											{
-												this.Source = Sounds.PlaySound(this.Buffers[bufferIndex], this.currentPitch, this.currentVolume, this.Position, false);
+												Source = Program.Sounds.PlaySound(Buffers[bufferIndex], currentPitch, currentVolume, Position, false);
 											}
 											break;
 										default:
-											this.Source = Sounds.PlaySound(this.Buffers[bufferIndex], this.currentPitch, this.currentVolume, this.Position, false);
+											Source = Program.Sounds.PlaySound(Buffers[bufferIndex], currentPitch, currentVolume, Position, false);
 											break;
 									}
 								}

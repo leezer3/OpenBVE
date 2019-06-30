@@ -1,6 +1,7 @@
 ﻿using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Routes;
+using SoundManager;
 
 namespace OpenBve
 {
@@ -21,17 +22,17 @@ namespace OpenBve
 					if (Direction > 0) //FIXME: This only works for routes written in the forwards direction
 					{
 						int d = Train.DriverCar;
-						Sounds.SoundBuffer buffer = Train.Cars[d].Sounds.Halt.Buffer;
+						SoundsBase.SoundBuffer buffer = Train.Cars[d].Sounds.Halt.Buffer;
 						if (buffer != null)
 						{
 							OpenBveApi.Math.Vector3 pos = Train.Cars[d].Sounds.Halt.Position;
 							if (Train.Specs.PassAlarm == TrainManager.PassAlarmType.Single)
 							{
-								Train.Cars[d].Sounds.Halt.Source = Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, d, false);
+								Train.Cars[d].Sounds.Halt.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, d, false);
 							}
 							else if (Train.Specs.PassAlarm == TrainManager.PassAlarmType.Loop)
 							{
-								Train.Cars[d].Sounds.Halt.Source = Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, d, true);
+								Train.Cars[d].Sounds.Halt.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, d, true);
 							}
 						}
 						this.DontTriggerAnymore = true;
@@ -144,7 +145,7 @@ namespace OpenBve
 							}
 							
 							int d = Train.DriverCar;
-							Sounds.StopSound(Train.Cars[d].Sounds.Halt.Source);
+							Program.Sounds.StopSound(Train.Cars[d].Sounds.Halt.Source);
 						}
 					}
 				}

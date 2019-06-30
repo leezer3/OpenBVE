@@ -156,7 +156,7 @@ namespace OpenBve
 			{
 				Renderer.DebugTouchArea();
 			}
-			Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
+			Program.Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
 			Program.currentGameWindow.SwapBuffers();
 			Game.UpdateBlackBox();
 			// pause/menu

@@ -221,7 +221,7 @@ namespace OpenBve
 		{
 			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path))
 			{
-				 handle = Sounds.RegisterBuffer(path, 0.0);
+				handle = Program.Sounds.RegisterBuffer(path, 0.0);
 			}
 			else
 			{
@@ -240,7 +240,7 @@ namespace OpenBve
 		{
 			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path))
 			{
-				handle = Sounds.RegisterBuffer(path, radius);
+				handle = Program.Sounds.RegisterBuffer(path, radius);
 				return true;
 			}
 			ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
@@ -254,7 +254,7 @@ namespace OpenBve
 		/// <returns>Whether loading the sound was successful.</returns>
 		public override bool RegisterSound(OpenBveApi.Sounds.Sound sound, out OpenBveApi.Sounds.SoundHandle handle)
 		{
-			handle = Sounds.RegisterBuffer(sound, 0.0);
+			handle = Program.Sounds.RegisterBuffer(sound, 0.0);
 			return true;
 		}
 

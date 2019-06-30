@@ -5,6 +5,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
+using SoundManager;
 
 namespace OpenBve
 {
@@ -15,9 +16,9 @@ namespace OpenBve
 		internal class WorldSound : WorldObject
 		{
 			/// <summary>The sound buffer to play</summary>
-			internal Sounds.SoundBuffer Buffer;
+			internal SoundsBase.SoundBuffer Buffer;
 			/// <summary>The sound source for this file</summary>
-			internal Sounds.SoundSource Source;
+			internal SoundsBase.SoundSource Source;
 			/// <summary>The pitch to play the sound at</summary>
 			internal double currentPitch = 1.0;
 			/// <summary>The volume to play the sound at it's origin</summary>
@@ -120,16 +121,16 @@ namespace OpenBve
 						this.Source.Volume = this.currentVolume;
 					}
 					//Buffer should never be null, but check it anyways
-					if (!Sounds.IsPlaying(Source) && this.Buffer != null)
+					if (!Program.Sounds.IsPlaying(Source) && Buffer != null)
 					{
-						Source = Sounds.PlaySound(Buffer, 1.0, 1.0, Follower.WorldPosition + Position, this, true);
+						Source = Program.Sounds.PlaySound(Buffer, 1.0, 1.0, Follower.WorldPosition + Position, this, true);
 					}
 				}
 				else
 				{
-					if (Sounds.IsPlaying(Source))
+					if (Program.Sounds.IsPlaying(Source))
 					{
-						Sounds.StopSound(Source);
+						Program.Sounds.StopSound(Source);
 					}
 				}
 				

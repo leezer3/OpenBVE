@@ -11,6 +11,7 @@ using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Textures;
+using SoundManager;
 
 namespace OpenBve {
 
@@ -32,11 +33,6 @@ namespace OpenBve {
 	internal static class Interface {
 
 		// options
-		internal enum SoundRange {
-			Low = 0,
-			Medium = 1,
-			High = 2
-		}
 #pragma warning disable 0649
 		internal struct Options {
 			internal InterpolationMode Interpolation;
@@ -44,7 +40,7 @@ namespace OpenBve {
 			internal int AnisotropicFilteringMaximum;
 		    internal int AntialiasingLevel;
 			internal TransparencyMode TransparencyMode;
-			internal SoundRange SoundRange;
+			internal SoundsBase.SoundRange SoundRange;
 			internal int SoundNumber;
 			internal int ObjectOptimizationBasicThreshold;
 			internal int ObjectOptimizationFullThreshold;

@@ -46,12 +46,14 @@
     <OutputPath>..\..\bin_debug\</OutputPath>
     <DocumentationFile>..\..\bin_debug\OpenBveApi.xml</DocumentationFile>
     <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <Prefer32Bit>false</Prefer32Bit>
     <OutputPath>..\..\bin_release\</OutputPath>
     <DocumentationFile>..\..\bin_release\OpenBveApi.xml</DocumentationFile>
     <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -66,6 +68,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FunctionScripts\AnimationScripts.cs" />
@@ -159,9 +162,8 @@
     <Compile Include="World\Vertex.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\..\assets\Languages\en-US.cfg" />
+    <EmbeddedResource Include="..\..\assets\Languages\en-US.xlf" />
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup>
     <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">echo Resoloving dependencies
       xcopy /E /Y "$(SolutionDir)dependencies" "$(TargetDir)"

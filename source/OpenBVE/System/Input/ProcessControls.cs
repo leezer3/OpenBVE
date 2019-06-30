@@ -137,8 +137,8 @@ namespace OpenBve
 										Screen.ToggleFullscreen();
 										break;
 									case Translations.Command.MiscMute:
-										Sounds.GlobalMute = !Sounds.GlobalMute;
-										Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
+										Program.Sounds.GlobalMute = !Program.Sounds.GlobalMute;
+										Program.Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
 										break;
 								}
 							}
@@ -1458,7 +1458,7 @@ namespace OpenBve
 										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Doors[1].ButtonPressed = true;
 										break;
 									case Translations.Command.PlayMicSounds:
-										Sounds.IsPlayingMicSounds = !Sounds.IsPlayingMicSounds;
+										Program.Sounds.IsPlayingMicSounds = !Program.Sounds.IsPlayingMicSounds;
 										break;
 //We only want to mark these as obsolete for new users of the API
 #pragma warning disable 618
@@ -1769,8 +1769,8 @@ namespace OpenBve
 										break;
 									case Translations.Command.MiscMute:
 										// mute
-										Sounds.GlobalMute = !Sounds.GlobalMute;
-										Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
+										Program.Sounds.GlobalMute = !Program.Sounds.GlobalMute;
+										Program.Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
 										break;
 								case Translations.Command.RouteInformation:
 // Replaced by RouteInfoOverlay, but not deleted for future reference

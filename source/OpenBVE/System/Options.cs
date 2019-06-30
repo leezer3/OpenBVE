@@ -1,25 +1,16 @@
 ﻿using System;
-using System.Text;
 using System.Globalization;
+using System.Text;
+using LibRender;
 using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
 using OpenBveApi.Packages;
-using LibRender;
+using SoundManager;
 
 namespace OpenBve
 {
 	internal partial class Interface
 	{
-		
-
-		/// <summary>Defines the range at which a sound will be loaded</summary>
-		internal enum SoundRange
-		{
-			Low = 0,
-			Medium = 1,
-			High = 2
-		}
-
 		/// <summary>Defines the possible timetable display modes</summary>
 		internal enum TimeTableMode
 		{
@@ -104,9 +95,9 @@ namespace OpenBve
 			/// <summary>The interval at which a held down key will repeat after the intial delay</summary>
 			internal double KeyRepeatInterval;
 			/// <summary>The current sound model</summary>
-			internal Sounds.SoundModels SoundModel;
+			internal SoundsBase.SoundModels SoundModel;
 			/// <summary>The range outside of which sounds will be inaudible</summary>
-			internal SoundRange SoundRange;
+			internal SoundsBase.SoundRange SoundRange;
 			/// <summary>The maximum number of sounds playing at any one time</summary>
 			internal int SoundNumber;
 			/// <summary>Whether warning messages are to be shown</summary>
@@ -209,8 +200,8 @@ namespace OpenBve
 				this.JoystickAxisThreshold = 0.0;
 				this.KeyRepeatDelay = 0.5;
 				this.KeyRepeatInterval = 0.1;
-				this.SoundModel = Sounds.SoundModels.Inverse;
-				this.SoundRange = SoundRange.Low;
+				SoundModel = SoundsBase.SoundModels.Inverse;
+				SoundRange = SoundsBase.SoundRange.Low;
 				this.SoundNumber = 16;
 				this.ShowWarningMessages = true;
 				this.ShowErrorMessages = true;
@@ -595,17 +586,17 @@ namespace OpenBve
 										case "model":
 											switch (Value.ToLowerInvariant())
 											{
-												case "linear": Interface.CurrentOptions.SoundModel = Sounds.SoundModels.Linear; break;
-												default: Interface.CurrentOptions.SoundModel = Sounds.SoundModels.Inverse; break;
+												case "linear": CurrentOptions.SoundModel = SoundsBase.SoundModels.Linear; break;
+												default: CurrentOptions.SoundModel = SoundsBase.SoundModels.Inverse; break;
 											}
 											break;
 										case "range":
 											switch (Value.ToLowerInvariant())
 											{
-												case "low": Interface.CurrentOptions.SoundRange = SoundRange.Low; break;
-												case "medium": Interface.CurrentOptions.SoundRange = SoundRange.Medium; break;
-												case "high": Interface.CurrentOptions.SoundRange = SoundRange.High; break;
-												default: Interface.CurrentOptions.SoundRange = SoundRange.Low; break;
+												case "low": CurrentOptions.SoundRange = SoundsBase.SoundRange.Low; break;
+												case "medium": CurrentOptions.SoundRange = SoundsBase.SoundRange.Medium; break;
+												case "high": CurrentOptions.SoundRange = SoundsBase.SoundRange.High; break;
+												default: CurrentOptions.SoundRange = SoundsBase.SoundRange.Low; break;
 											}
 											break;
 										case "number":
@@ -932,15 +923,15 @@ namespace OpenBve
 			Builder.Append("model = ");
 			switch (CurrentOptions.SoundModel)
 			{
-				case Sounds.SoundModels.Linear: Builder.AppendLine("linear"); break;
+				case SoundsBase.SoundModels.Linear: Builder.AppendLine("linear"); break;
 				default: Builder.AppendLine("inverse"); break;
 			}
 			Builder.Append("range = ");
 			switch (CurrentOptions.SoundRange)
 			{
-				case SoundRange.Low: Builder.AppendLine("low"); break;
-				case SoundRange.Medium: Builder.AppendLine("medium"); break;
-				case SoundRange.High: Builder.AppendLine("high"); break;
+				case SoundsBase.SoundRange.Low: Builder.AppendLine("low"); break;
+				case SoundsBase.SoundRange.Medium: Builder.AppendLine("medium"); break;
+				case SoundsBase.SoundRange.High: Builder.AppendLine("high"); break;
 				default: Builder.AppendLine("low"); break;
 			}
 			Builder.AppendLine("number = " + CurrentOptions.SoundNumber.ToString(Culture));

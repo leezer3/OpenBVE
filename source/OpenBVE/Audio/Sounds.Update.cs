@@ -1,34 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using LibRender;
-using OpenTK.Audio.OpenAL;
 using OpenBveApi.Runtime;
 using OpenBveApi.Sounds;
+using OpenTK.Audio.OpenAL;
 
 
-namespace OpenBve {
+namespace OpenBve
+{
 	using OpenBveApi.Math;
 
-	internal static partial class Sounds {
+	internal partial class Sounds
+	{
 
 		/// <summary>Updates the sound component. Should be called every frame.</summary>
 		/// <param name="timeElapsed">The time in seconds that elapsed since the last call to this function.</param>
-		/// <param name="model">The sound model.</param>
-		internal static void Update(double timeElapsed, SoundModels model) {
-            //The time elapsed is used to work out the clamp factor
-            //If this is zero, or above 0.5, then this causes sounds bugs
-            //TODO: This is a nasty hack. Store the previous clamp factor in these cases??
-		    if (timeElapsed == 0.0 || timeElapsed > 0.5) return;
-			if (model == SoundModels.Linear) {
-				UpdateLinearModel(timeElapsed);
-			} else {
-				UpdateInverseModel(timeElapsed);
-			}
-		}
-		
-		/// <summary>Updates the sound component. Should be called every frame.</summary>
-		/// <param name="timeElapsed">The time in seconds that elapsed since the last call to this function.</param>
-		private static void UpdateLinearModel(double timeElapsed) {
+		protected override void UpdateLinearModel(double timeElapsed)
+		{
 			/*
 			 * Set up the listener
 			 * */
@@ -271,24 +259,11 @@ namespace OpenBve {
 
 			RecAndPlay(listenerPosition, true, 0.0);
 		}
-		
-		private class SoundSourceAttenuation : IComparable<SoundSourceAttenuation> {
-			internal readonly SoundSource Source;
-			internal double Gain;
-			internal readonly double Distance;
-			internal SoundSourceAttenuation(SoundSource source, double gain, double distance) {
-				this.Source = source;
-				this.Gain = gain;
-				this.Distance = distance;
-			}
-			int IComparable<SoundSourceAttenuation>.CompareTo(SoundSourceAttenuation other) {
-				return other.Gain.CompareTo(this.Gain);
-			}
-		}
-		
+
 		/// <summary>Updates the sound component. Should be called every frame.</summary>
 		/// <param name="timeElapsed">The time in seconds that elapsed since the last call to this function.</param>
-		private static void UpdateInverseModel(double timeElapsed) {
+		protected override void UpdateInverseModel(double timeElapsed)
+		{
 			/*
 			 * Set up the listener.
 			 * */
@@ -566,7 +541,7 @@ namespace OpenBve {
 			RecAndPlay(listenerPosition, false, clampFactor);
 		}
 
-		private static void RecAndPlay(Vector3 listenerPosition, bool IsLinear, double clampFactor) {
+		private void RecAndPlay(Vector3 listenerPosition, bool IsLinear, double clampFactor) {
 			if (OpenAlMic == null) {
 				return;
 			}

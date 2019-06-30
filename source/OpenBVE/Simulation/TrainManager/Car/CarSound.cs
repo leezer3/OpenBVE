@@ -1,4 +1,6 @@
-﻿using OpenBveApi.Math;
+﻿using System.IO;
+using OpenBveApi.Math;
+using SoundManager;
 
 namespace OpenBve
 {
@@ -9,12 +11,12 @@ namespace OpenBve
 		internal struct CarSound
 		{
 			/// <summary>The sound buffer to play</summary>
-			internal readonly Sounds.SoundBuffer Buffer;
+			internal readonly SoundsBase.SoundBuffer Buffer;
 			/// <summary>The source of the sound within the car</summary>
-			internal Sounds.SoundSource Source;
+			internal SoundsBase.SoundSource Source;
 			/// <summary>A Vector3 describing the position of the sound source</summary>
 			internal Vector3 Position;
-			private CarSound(Sounds.SoundBuffer buffer, Sounds.SoundSource source, Vector3 position)
+			private CarSound(SoundsBase.SoundBuffer buffer, SoundsBase.SoundSource source, Vector3 position)
 			{
 				this.Buffer = buffer;
 				this.Source = source;
@@ -37,9 +39,9 @@ namespace OpenBve
 				this.Source = null;
 				if (FileName != null)
 				{
-					if (System.IO.File.Exists(FileName))
+					if (File.Exists(FileName))
 					{
-						this.Buffer = Sounds.RegisterBuffer(FileName, Radius);
+						Buffer = Program.Sounds.RegisterBuffer(FileName, Radius);
 					}
 				}
 			}

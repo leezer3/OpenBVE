@@ -47,6 +47,7 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -60,6 +61,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DocumentationFile>..\..\bin_release\OpenBve.XML</DocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
@@ -351,19 +353,7 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <Compile Include="Game\ObjectManager\ObjectManager.LoadObject.cs" />
-    <Compile Include="Audio\Sounds.Convert.cs">
-      <DependentUpon>Sounds.cs</DependentUpon>
-    </Compile>
     <Compile Include="Audio\Sounds.cs" />
-    <Compile Include="Audio\Sounds.SoundBuffer.cs">
-      <DependentUpon>Sounds.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Audio\Sounds.SoundModels.cs">
-      <DependentUpon>Sounds.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Audio\Sounds.SoundSource.cs">
-      <DependentUpon>Sounds.cs</DependentUpon>
-    </Compile>
     <Compile Include="Audio\Sounds.Update.cs">
       <DependentUpon>Sounds.cs</DependentUpon>
     </Compile>
@@ -507,6 +497,10 @@
     <ProjectReference Include="..\RouteManager\RouteManager.csproj">
       <Project>{87838364-8911-46b2-8628-d437c485d9c9}</Project>
       <Name>RouteManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SoundManager\SoundManager.csproj">
+      <Project>{90abfa0c-abca-444e-adef-9a299aed6524}</Project>
+      <Name>SoundManager</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

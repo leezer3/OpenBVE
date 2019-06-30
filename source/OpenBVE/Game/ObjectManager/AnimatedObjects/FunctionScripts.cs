@@ -1,9 +1,9 @@
 using System;
 using LibRender;
-using OpenBveApi.Math;
-using OpenBveApi.FunctionScripting;
-using OpenBveApi.Runtime;
 using OpenBve.RouteManager;
+using OpenBveApi.FunctionScripting;
+using OpenBveApi.Math;
+using OpenBveApi.Runtime;
 
 namespace OpenBve {
 	internal static class FunctionScripts {
@@ -879,7 +879,7 @@ namespace OpenBve {
 								 * 2 ==> Secondary horn
 								 * 3 ==> Music horn
 								 */
-								if (Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Horns[j].Source))
+								if (Program.Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Horns[j].Source))
 								{
 									Function.Stack[s] = j + 1;
 									break;
@@ -898,7 +898,7 @@ namespace OpenBve {
 					case Instructions.PrimaryKlaxon:
 						if (Train != null)
 						{
-							Function.Stack[s] = Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Horns[0].Source) ? 1.0 : 0.0;
+							Function.Stack[s] = Program.Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Horns[0].Source) ? 1.0 : 0.0;
 						}
 						else
 						{
@@ -908,7 +908,7 @@ namespace OpenBve {
 					case Instructions.SecondaryKlaxon:
 						if (Train != null)
 						{
-							Function.Stack[s] = Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Horns[1].Source) ? 1.0 : 0.0;
+							Function.Stack[s] = Program.Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Horns[1].Source) ? 1.0 : 0.0;
 						}
 						else
 						{
@@ -918,7 +918,7 @@ namespace OpenBve {
 					case Instructions.MusicKlaxon:
 						if (Train != null)
 						{
-							Function.Stack[s] = Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Horns[2].Source) ? 1.0 : 0.0;
+							Function.Stack[s] = Program.Sounds.IsPlaying(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Horns[2].Source) ? 1.0 : 0.0;
 						}
 						else
 						{

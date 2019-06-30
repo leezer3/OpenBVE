@@ -1,0 +1,3836 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file datatype="plaintext" original="en-US.xlf" source-language="en-US" target-language="zh-CN">
+		<body>
+			<group id="language">
+				<trans-unit id="name">
+					<source>English (United States)</source>
+					<target>中文 (大陆简体)</target>
+				</trans-unit>
+				<trans-unit id="flag">
+					<source>US.png</source>
+					<target>CN.png</target>
+				</trans-unit>
+				<trans-unit id="contributors">
+					<source>Unknown</source>
+					<target>Alvin Wong, zbx1425</target>
+					<note from="translator">zbx1425 at BVE Worldwide/百度贴吧zbx14251/zbx1425@126.com</note>
+				</trans-unit>
+				<trans-unit id="last_updated">
+					<source>2016-02-21</source>
+					<target>2017-08-19</target>
+				</trans-unit>
+			</group>
+			<group id="openbve">
+				<group id="program">
+					<trans-unit id="title">
+						<source>openBVE</source>
+						<target>openBVE</target>
+					</trans-unit>
+				</group>
+				<group id="panel">
+					<trans-unit id="start">
+						<source>Start new game</source>
+						<target>开始游戏</target>
+					</trans-unit>
+					<trans-unit id="review">
+						<source>Review last game</source>
+						<target>回看游戏</target>
+					</trans-unit>
+					<trans-unit id="getaddons">
+						<source>Get Add-ons</source>
+						<target>取得扩展</target>
+					</trans-unit>
+					<trans-unit id="controls">
+						<source>Customize controls</source>
+						<target>控制设置</target>
+					</trans-unit>
+					<trans-unit id="options">
+						<source>Options</source>
+						<target>偏好设置</target>
+					</trans-unit>
+					<trans-unit id="homepage">
+						<source>Visit official homepage</source>
+						<target>访问官网</target>
+					</trans-unit>
+					<trans-unit id="updates">
+						<source>Check for updates</source>
+						<target>检查更新</target>
+					</trans-unit>
+					<trans-unit id="updates_invalid">
+						<source>A connection to the server could be established. Unfortunately, the version information could not be retrieved.</source>
+						<target>成功与服务器联机，但不能取得版本。</target>
+					</trans-unit>
+					<trans-unit id="updates_old">
+						<source>You already have the latest version.</source>
+						<target>你已经在使用最新版本。</target>
+					</trans-unit>
+					<trans-unit id="updates_new">
+						<source>The new version [version] ([date]) is available for download on the Official Homepage.</source>
+						<target>新版本 ([version] / [date]) 已在官网可供下载。新的变更有：\r\n\r\n</target>
+					</trans-unit>
+					<trans-unit id="close">
+						<source>Close</source>
+						<target>退出游戏</target>
+					</trans-unit>
+					<trans-unit id="packages">
+						<source>Package Management</source>
+						<target>扩展管理</target>
+					</trans-unit>
+					<trans-unit id="reportbug">
+						<source>Report Problem</source>
+						<target>报告问题</target>
+					</trans-unit>
+					<trans-unit id="about">
+						<source>About</source>
+						<target>关于项目</target>
+					</trans-unit>
+				</group>
+				<group id="mode">
+					<trans-unit id="arcade">
+						<source>Arcade</source>
+						<target>游戏模式(将会计分)</target>
+					</trans-unit>
+					<trans-unit id="normal">
+						<source>Normal</source>
+						<target>正常模式(这个非常好)</target>
+					</trans-unit>
+					<trans-unit id="expert">
+						<source>Expert</source>
+						<target>困难模式(禁用部分功能)</target>
+					</trans-unit>
+					<trans-unit id="unknown">
+						<source>Unknown</source>
+						<target>未知</target>
+					</trans-unit>
+				</group>
+				<group id="errors">
+					<trans-unit id="critical_file">
+						<source>A critical error occured whilst parsing the [file] file</source>
+						<target>在解析文件 [file] 时出现了非常严重的错误。</target>
+					</trans-unit>
+					<trans-unit id="filesystem_invalid">
+						<source>The file system configuration could not be accessed or is invalid due to the following reason:</source>
+						<target>由于以下原因，文件系统配置是非法的，或无法被访问：</target>
+					</trans-unit>
+					<trans-unit id="warning">
+						<source>Warning:</source>
+						<target>【警告】：</target>
+					</trans-unit>
+					<trans-unit id="controls_missing">
+						<source>No control configuration files found.</source>
+						<target>未找到控制配置文件。</target>
+					</trans-unit>
+					<trans-unit id="controls_oldversion">
+						<source>An older key-configuration file was found.</source>
+						<target>键盘配置文件是旧版的。</target>
+					</trans-unit>
+					<trans-unit id="controls_reset">
+						<source>The current key-configuration has been reset to defaults.</source>
+						<target>目前的键盘配置已经被重置到默认。</target>
+					</trans-unit>
+					<trans-unit id="controls_default_oldversion">
+						<source>The default key assingment file is an older version or corrupt.</source>
+						<target>默认的键盘配置文件是旧版的，或已经损坏。</target>
+					</trans-unit>
+					<trans-unit id="controls_default_missing">
+						<source>The default key assignment file does not exist.</source>
+						<target>未找到默认键盘配置文件。</target>
+					</trans-unit>
+					<trans-unit id="controls_ingame">
+						<source>You are currently running on the [platform] backend. Please use the in-game menu to configure any joystick based controls.</source>
+						<target>您目前在使用 [platform] 后台。 请使用游戏中暂停菜单中的设置来配置键盘和摇杆。</target>
+					</trans-unit>
+					<trans-unit id="sound_openal_version">
+						<source>OpenAL 1.1 is required. You seem to have version 1.0.</source>
+						<target>此游戏需要OpenAL 1.1，然而您似乎只有OpenAL 1.0。</target>
+					</trans-unit>
+					<trans-unit id="sound_openal_context">
+						<source>The OpenAL context could not be created.</source>
+						<target>无法创建OpenAL上下文。</target>
+					</trans-unit>
+					<trans-unit id="sound_openal_device">
+						<source>The OpenAL sound device could not be opened.</source>
+						<target>无法启动OpenAL音频设备。</target>
+					</trans-unit>
+					<trans-unit id="fullscreen_switch1">
+						<source>An error occured whilst attempting to switch to fullscreen mode.</source>
+						<target>在试图切换进全屏时出现了问题。</target>
+					</trans-unit>
+					<trans-unit id="fullscreen_switch2">
+						<source>Please check your fullscreen resolution settings.</source>
+						<target>您的全屏分辨率配置有问题，请检查。</target>
+					</trans-unit>
+					<trans-unit id="route_corrupt_withtrack">
+						<source>The selected route is corrupt: \r\n WithTrack section missing.</source>
+						<target>选择的线路文件已损坏： \r\n 一条轨道都没有定义！</target>
+					</trans-unit>
+					<trans-unit id="route_corrupt_nostations">
+						<source>The selected route is corrupt: \r\n No stations defined.</source>
+						<target>选择的线路文件已损坏： \r\n 一个车站都没有定义！</target>
+					</trans-unit>
+					<trans-unit id="route_corrupt_noobjects">
+						<source>The selected route is corrupt: \r\n No objects defined.</source>
+						<target>选择的线路文件已损坏： \r\n 一个物件都没有定义！</target>
+					</trans-unit>
+					<trans-unit id="plugin_failure1">
+						<source>The train plugin [plugin] failed to load.</source>
+						<target>列车安全系统插件 [plugin] 载入失败。</target>
+					</trans-unit>
+					<trans-unit id="plugin_failure2">
+						<source>The built-in ATS/ ATC systems will be used instead, which may cause issues.</source>
+						<target>取而代之，将使用内置的ATS/ATC系统，这可能造成一些问题。</target>
+					</trans-unit>
+					<trans-unit id="package_filename_empty">
+						<source>Attempted to create a package with an empty filename.</source>
+						<target>Attempted to create a package with an empty filename.</target>
+					</trans-unit>
+					<trans-unit id="package_directory_missing">
+						<source>The directory in which you attempted to save the package file does not exist: \r \n</source>
+						<target>The directory in which you attempted to save the package file does not exist: \r \n</target>
+					</trans-unit>
+					<trans-unit id="package_directory_nowrite">
+						<source>No write access available in the directory in which you attempted to save the package file: \r \n</source>
+						<target>No write access available in the directory in which you attempted to save the package file: \r \n</target>
+					</trans-unit>
+					<trans-unit id="package_file_generic">
+						<source>Failed to create the following file: \r \n</source>
+						<target>Failed to create the following file: \r \n</target>
+					</trans-unit>
+				</group>
+				<group id="start">
+					<trans-unit id="title">
+						<source>Start new game</source>
+						<target>开始游戏</target>
+					</trans-unit>
+					<trans-unit id="route">
+						<source>Route</source>
+						<target>线路</target>
+					</trans-unit>
+					<trans-unit id="route_selection">
+						<source>Selection</source>
+						<target>选择</target>
+					</trans-unit>
+					<trans-unit id="route_addons">
+						<source>Add-ons</source>
+						<target>扩展</target>
+					</trans-unit>
+					<trans-unit id="route_browse">
+						<source>Browse manually</source>
+						<target>浏览</target>
+					</trans-unit>
+					<trans-unit id="route_recently">
+						<source>Recently used</source>
+						<target>最近使用的</target>
+					</trans-unit>
+					<trans-unit id="route_details">
+						<source>Details</source>
+						<target>详细信息</target>
+					</trans-unit>
+					<trans-unit id="route_description">
+						<source>Description</source>
+						<target>介绍</target>
+					</trans-unit>
+					<trans-unit id="route_map">
+						<source>Map</source>
+						<target>地图</target>
+					</trans-unit>
+					<trans-unit id="route_gradient">
+						<source>Gradient profile</source>
+						<target>高度图</target>
+					</trans-unit>
+					<trans-unit id="route_settings">
+						<source>Settings</source>
+						<target>设置</target>
+					</trans-unit>
+					<trans-unit id="route_settings_encoding">
+						<source>Encoding:</source>
+						<target>字符编码：</target>
+					</trans-unit>
+					<trans-unit id="route_settings_encoding_preview">
+						<source>Preview:</source>
+						<target>预览：</target>
+					</trans-unit>
+					<trans-unit id="route_processing">
+						<source>Processing route, please wait.....</source>
+						<target>正在加载线路，请稍候……</target>
+					</trans-unit>
+					<trans-unit id="train">
+						<source>Train</source>
+						<target>列车</target>
+					</trans-unit>
+					<trans-unit id="train_selection">
+						<source>Selection</source>
+						<target>选择</target>
+					</trans-unit>
+					<trans-unit id="train_addons">
+						<source>Add-ons</source>
+						<target>扩展</target>
+					</trans-unit>
+					<trans-unit id="train_browse">
+						<source>Browse manually</source>
+						<target>浏览</target>
+					</trans-unit>
+					<trans-unit id="train_recently">
+						<source>Recently used</source>
+						<target>最近使用的</target>
+					</trans-unit>
+					<trans-unit id="train_default">
+						<source>Route default</source>
+						<target>线路默认搭配</target>
+					</trans-unit>
+					<trans-unit id="train_usedefault">
+						<source>Use the train suggested by the route</source>
+						<target>使用线路默认搭配</target>
+					</trans-unit>
+					<trans-unit id="train_details">
+						<source>Details</source>
+						<target>详细信息</target>
+					</trans-unit>
+					<trans-unit id="train_description">
+						<source>Description</source>
+						<target>介绍</target>
+					</trans-unit>
+					<trans-unit id="train_settings">
+						<source>Settings</source>
+						<target>设置</target>
+					</trans-unit>
+					<trans-unit id="train_settings_encoding">
+						<source>Encoding:</source>
+						<target>字符编码：</target>
+					</trans-unit>
+					<trans-unit id="train_settings_encoding_preview">
+						<source>Preview:</source>
+						<target>预览：</target>
+					</trans-unit>
+					<trans-unit id="train_notfound">
+						<source>The default train could not be found:\n\n</source>
+						<target>找不到路线推荐的车辆：\x20</target>
+					</trans-unit>
+					<trans-unit id="train_pluginnotsupported">
+						<source>--- This train uses a safety system plugin which cannot be used on your operating system. The built-in safety systems ATS/ATC will be used instead, which might cause operational problems. ---</source>
+						<target>--- 列车使用的安全系统插件不能用于您的操作系统。取而代之，将使用内置的ATS/ATC系统，这可能造成一些问题。---</target>
+					</trans-unit>
+					<trans-unit id="start">
+						<source>Start</source>
+						<target>开始游戏</target>
+					</trans-unit>
+					<trans-unit id="start_mode">
+						<source>Mode of driving:</source>
+						<target>驾驶模式：</target>
+					</trans-unit>
+					<trans-unit id="start_start">
+						<source>Start</source>
+						<target>启动模拟</target>
+					</trans-unit>
+				</group>
+				<group id="review">
+					<trans-unit id="title">
+						<source>Review last game</source>
+						<target>回看游戏</target>
+					</trans-unit>
+					<trans-unit id="conditions">
+						<source>Conditions</source>
+						<target>模拟信息</target>
+					</trans-unit>
+					<trans-unit id="conditions_route">
+						<source>Route</source>
+						<target>线路</target>
+					</trans-unit>
+					<trans-unit id="conditions_route_file">
+						<source>Route file:</source>
+						<target>线路文件：</target>
+					</trans-unit>
+					<trans-unit id="conditions_train">
+						<source>Train</source>
+						<target>列车</target>
+					</trans-unit>
+					<trans-unit id="conditions_train_folder">
+						<source>Train folder:</source>
+						<target>列车文件夹：</target>
+					</trans-unit>
+					<trans-unit id="conditions_datetime">
+						<source>Date and time</source>
+						<target>日期与时间</target>
+					</trans-unit>
+					<trans-unit id="conditions_datetime_date">
+						<source>Date:</source>
+						<target>日期：</target>
+					</trans-unit>
+					<trans-unit id="conditions_datetime_time">
+						<source>Time:</source>
+						<target>时间：</target>
+					</trans-unit>
+					<trans-unit id="score">
+						<source>Score</source>
+						<target>评价</target>
+					</trans-unit>
+					<trans-unit id="score_rating">
+						<source>Rating</source>
+						<target>评级</target>
+					</trans-unit>
+					<trans-unit id="score_rating_mode">
+						<source>Mode:</source>
+						<target>模式：</target>
+					</trans-unit>
+					<trans-unit id="score_rating_achieved">
+						<source>Achieved:</source>
+						<target>你的分数：</target>
+					</trans-unit>
+					<trans-unit id="score_rating_maximum">
+						<source>Maximum:</source>
+						<target>可取得的最高分：</target>
+					</trans-unit>
+					<trans-unit id="score_rating_ratio">
+						<source>Ratio:</source>
+						<target>百分比：</target>
+					</trans-unit>
+					<trans-unit id="score_log">
+						<source>Log</source>
+						<target>记录</target>
+					</trans-unit>
+					<trans-unit id="score_log_list_time">
+						<source>Time</source>
+						<target>时间</target>
+					</trans-unit>
+					<trans-unit id="score_log_list_position">
+						<source>Position (m)</source>
+						<target>位置 (米)</target>
+					</trans-unit>
+					<trans-unit id="score_log_list_value">
+						<source>Value</source>
+						<target>分数</target>
+					</trans-unit>
+					<trans-unit id="score_log_list_cumulative">
+						<source>Cumulative</source>
+						<target>累计</target>
+					</trans-unit>
+					<trans-unit id="score_log_list_reason">
+						<source>Reason</source>
+						<target>原因</target>
+					</trans-unit>
+					<trans-unit id="score_log_penalties">
+						<source>Show penalties only</source>
+						<target>只显示扣分</target>
+					</trans-unit>
+					<trans-unit id="score_log_export">
+						<source>Export...</source>
+						<target>汇出至...</target>
+					</trans-unit>
+					<trans-unit id="blackbox">
+						<source>Black box</source>
+						<target>操作记录</target>
+					</trans-unit>
+					<trans-unit id="blackbox_format">
+						<source>Format:</source>
+						<target>格式：</target>
+					</trans-unit>
+					<trans-unit id="blackbox_format_csv">
+						<source>Comma-separated value</source>
+						<target>逗号分隔CSV</target>
+					</trans-unit>
+					<trans-unit id="blackbox_format_text">
+						<source>Formatted text</source>
+						<target>精美的表格式TXT</target>
+					</trans-unit>
+					<trans-unit id="blackbox_export">
+						<source>Export...</source>
+						<target>导出</target>
+					</trans-unit>
+				</group>
+				<group id="packages">
+					<trans-unit id="title">
+						<source>Package Management</source>
+						<target>扩展包管理</target>
+					</trans-unit>
+					<trans-unit id="proceed">
+						<source>Proceed...</source>
+						<target>继续……</target>
+					</trans-unit>
+					<trans-unit id="proceed_anyway">
+						<source>Proceed Anyway</source>
+						<target>无论如何，继续！</target>
+					</trans-unit>
+					<trans-unit id="processing">
+						<source>Processing, please wait...</source>
+						<target>正在加载，请稍候……</target>
+					</trans-unit>
+					<trans-unit id="unknown_file">
+						<source>Unknown File...</source>
+						<target>目前还没有在解包文件……</target>
+					</trans-unit>
+					<trans-unit id="shownlist">
+						<source>These are shown in the list below:</source>
+						<target>这些内容将会在下方列表中列出：</target>
+					</trans-unit>
+					<trans-unit id="selection_none">
+						<source>No package selected.</source>
+						<target>没有选择扩展包。</target>
+					</trans-unit>
+					<trans-unit id="selection_none_website">
+						<source>No website provided.</source>
+						<target>没有提供网站地址。</target>
+					</trans-unit>
+					<trans-unit id="list">
+						<source>Installed Packages</source>
+						<target>已经安装的扩展包</target>
+					</trans-unit>
+					<trans-unit id="list_type">
+						<source>Select the type of packages you wish to view:</source>
+						<target>请选择你需要查看的扩展包类型：</target>
+					</trans-unit>
+					<trans-unit id="list_name">
+						<source>Name</source>
+						<target>名称</target>
+					</trans-unit>
+					<trans-unit id="list_version">
+						<source>Version</source>
+						<target>版本</target>
+					</trans-unit>
+					<trans-unit id="list_minimum">
+						<source>Minimum Version</source>
+						<target>最小允许版本</target>
+					</trans-unit>
+					<trans-unit id="list_maximum">
+						<source>Maximum Version</source>
+						<target>最大允许版本</target>
+					</trans-unit>
+					<trans-unit id="list_author">
+						<source>Author</source>
+						<target>作者</target>
+					</trans-unit>
+					<trans-unit id="list_website">
+						<source>Website</source>
+						<target>网站</target>
+					</trans-unit>
+					<trans-unit id="list_packagetype">
+						<source>Type</source>
+						<target>类型</target>
+					</trans-unit>
+					<trans-unit id="install">
+						<source>Install</source>
+						<target>安装</target>
+					</trans-unit>
+					<trans-unit id="install_button">
+						<source>Install Package</source>
+						<target>安装扩展包</target>
+					</trans-unit>
+					<trans-unit id="install_header">
+						<source>Install a Package</source>
+						<target>安装一个扩展包</target>
+					</trans-unit>
+					<trans-unit id="install_invalid">
+						<source>This file does not appear to be a valid openBVE package.</source>
+						<target>这个文件显然不是一个openBVE扩展包。</target>
+					</trans-unit>
+					<trans-unit id="install_version_error">
+						<source>Package Version Error</source>
+						<target>扩展包版本错误</target>
+					</trans-unit>
+					<trans-unit id="install_version_new">
+						<source>The selected package is already installed, and is a newer version.</source>
+						<target>这个扩展包已经被安装了，正在安装一个新一些的版本。</target>
+					</trans-unit>
+					<trans-unit id="install_version_old">
+						<source>The selected package is already installed, and is an older version.</source>
+						<target>这个扩展包已经被安装了，正在安装一个旧一些的版本。</target>
+					</trans-unit>
+					<trans-unit id="install_version_same">
+						<source>The selected package is already installed, and is an identical version.</source>
+						<target>这个扩展包已经被安装了，正在重新安装相同的版本。</target>
+					</trans-unit>
+					<trans-unit id="install_success">
+						<source>Package installation was successful.</source>
+						<target>扩展包已经被成功安装了。</target>
+					</trans-unit>
+					<trans-unit id="install_success_header">
+						<source>Installation Successful</source>
+						<target>安装成功</target>
+					</trans-unit>
+					<trans-unit id="install_success_files">
+						<source>A list of files installed is shown below:</source>
+						<target>安装了下列这些文件：</target>
+					</trans-unit>
+					<trans-unit id="install_failure">
+						<source>Unfortunately, package installation failed.</source>
+						<target>真不幸，扩展包安装失败了。</target>
+					</trans-unit>
+					<trans-unit id="install_failure_header">
+						<source>Package Installation Failed</source>
+						<target>安装失败</target>
+					</trans-unit>
+					<trans-unit id="install_select">
+						<source>Select Package......</source>
+						<target>选择扩展包……</target>
+					</trans-unit>
+					<trans-unit id="install_dependancies_unmet">
+						<source>The current package has unmet dependancies.</source>
+						<target>这个扩展包需要依赖的扩展包还没有被安装。</target>
+					</trans-unit>
+					<trans-unit id="install_dependancies_unmet_header">
+						<source>Dependancy Error</source>
+						<target>依赖关系错误</target>
+					</trans-unit>
+					<trans-unit id="install_dependancies_broken">
+						<source>The following dependancies may be broken by this action:</source>
+						<target>执行这个动作可能会破坏依赖关系。</target>
+					</trans-unit>
+					<trans-unit id="install_reccomends_unmet">
+						<source>The following packages are recommended, but not installed:</source>
+						<target>该扩展包的作者还建议同时安装以下扩展包：</target>
+					</trans-unit>
+					<trans-unit id="install_reccomends_unmet_header">
+						<source>Recommended Packages</source>
+						<target>建议安装的扩展包</target>
+					</trans-unit>
+					<trans-unit id="install_name">
+						<source>Package Name:</source>
+						<target>扩展包名称：</target>
+					</trans-unit>
+					<trans-unit id="install_author">
+						<source>Package Author:</source>
+						<target>扩展包作者：</target>
+					</trans-unit>
+					<trans-unit id="install_version">
+						<source>Package Version:</source>
+						<target>扩展包版本：</target>
+					</trans-unit>
+					<trans-unit id="install_website">
+						<source>Package Website:</source>
+						<target>扩展包网站：</target>
+					</trans-unit>
+					<trans-unit id="install_description">
+						<source>Package Description:</source>
+						<target>扩展包说明：</target>
+					</trans-unit>
+					<trans-unit id="creation_button">
+						<source>Create Package</source>
+						<target>创建扩展包</target>
+					</trans-unit>
+					<trans-unit id="creation_header">
+						<source>Create a Package</source>
+						<target>创建一个扩展包</target>
+					</trans-unit>
+					<trans-unit id="creation_saveas_button">
+						<source>Save As...</source>
+						<target>保存为……</target>
+					</trans-unit>
+					<trans-unit id="creation_saveas_label">
+						<source>Save package as:</source>
+						<target>将最终成果保存到：</target>
+					</trans-unit>
+					<trans-unit id="creation_dependancies">
+						<source>Select Dependancies</source>
+						<target>选择依赖扩展包</target>
+					</trans-unit>
+					<trans-unit id="creation_dependancies_add">
+						<source>Add Dependancy</source>
+						<target>添加依赖</target>
+					</trans-unit>
+					<trans-unit id="creation_dependancies_remove">
+						<source>Remove</source>
+						<target>移除</target>
+					</trans-unit>
+					<trans-unit id="creation_dependancies_nextstep">
+						<source>Package details and dependancies may be assigned in the following steps.</source>
+						<target>你可以在下一步添加扩展包的细节和依赖。</target>
+					</trans-unit>
+					<trans-unit id="creation_reccommends_add">
+						<source>Add Recommendation</source>
+						<target>添加建议</target>
+					</trans-unit>
+					<trans-unit id="creation_clearselection">
+						<source>Clear Selection</source>
+						<target>清除选择</target>
+					</trans-unit>
+					<trans-unit id="creation_additems">
+						<source>Add Item(s)</source>
+						<target>添加项目</target>
+					</trans-unit>
+					<trans-unit id="creation_selecteditems">
+						<source>The following files and folders will be packaged:</source>
+						<target>将打包以下的文件：</target>
+					</trans-unit>
+					<trans-unit id="creation_new_guid">
+						<source>The new package has been assigned the following GUID:</source>
+						<target>这个新扩展包将拥有这一个GUID(标识号)：</target>
+					</trans-unit>
+					<trans-unit id="creation_header">
+						<source>Enter Package Details</source>
+						<target>创建一个扩展包</target>
+					</trans-unit>
+					<trans-unit id="creation_name">
+						<source>Please enter a package name.</source>
+						<target>请输入扩展包名称。</target>
+					</trans-unit>
+					<trans-unit id="creation_author">
+						<source>Please enter a package author.</source>
+						<target>请输入扩展包作者。</target>
+					</trans-unit>
+					<trans-unit id="creation_description">
+						<source>Please enter a package description.</source>
+						<target>请输入扩展包说明。</target>
+					</trans-unit>
+					<trans-unit id="creation_version">
+						<source>Please enter a valid package version number in the following format: \r\n 1.0.0</source>
+						<target>请输入一个有效格式的扩展包版本号： \r\n 例如 1.0.0</target>
+					</trans-unit>
+					<trans-unit id="creation_version_invalid">
+						<source>You have entered an invalid version number. \r\n Please try again.</source>
+						<target>您输入的版本号不合法。 \r\n 请再试试一个正常点儿的。</target>
+					</trans-unit>
+					<trans-unit id="creation_success">
+						<source>Package creation was successful.</source>
+						<target>扩展包创建非常成功。</target>
+					</trans-unit>
+					<trans-unit id="creation_success_header">
+						<source>Package Creation Successful</source>
+						<target>创建成功</target>
+					</trans-unit>
+					<trans-unit id="creation_success_files">
+						<source>The following files were added to your package:</source>
+						<target>以下的文件被打包了：</target>
+					</trans-unit>
+					<trans-unit id="creation_failure">
+						<source>Unfortunately, creation of your package failed.</source>
+						<target>真不幸，你的扩展包创建失败了。</target>
+					</trans-unit>
+					<trans-unit id="creation_failure_header">
+						<source>Package Creation Failed</source>
+						<target>创建失败</target>
+					</trans-unit>
+					<trans-unit id="creation_failure_error">
+						<source>The following error was encountered:</source>
+						<target>遇到了下列错误：</target>
+					</trans-unit>
+					<trans-unit id="creation_proceed">
+						<source>Proceed......</source>
+						<target>继续……</target>
+					</trans-unit>
+					<trans-unit id="creation_invalid_filename">
+						<source>The selected filename is invalid- Please retry.</source>
+						<target>选择的文件名不合法。</target>
+					</trans-unit>
+					<trans-unit id="creation_new_id">
+						<source>The new package has been assigned the following GUID:</source>
+						<target>这个新扩展包将拥有这一个GUID(标识号)：</target>
+					</trans-unit>
+					<trans-unit id="creation_replace_id">
+						<source>Replacing the package with the following GUID:</source>
+						<target>这个扩展包将替代拥有这个GUID(标识号)的扩展包：</target>
+					</trans-unit>
+					<trans-unit id="creation_save">
+						<source>Save Package</source>
+						<target>保存扩展包</target>
+					</trans-unit>
+					<trans-unit id="creation_replace">
+						<source>Is this to replace an existing package?</source>
+						<target>这个扩展包是要替代一个已经存在的扩展包的吗？</target>
+					</trans-unit>
+					<trans-unit id="creation_yes">
+						<source>Yes</source>
+						<target>是的</target>
+					</trans-unit>
+					<trans-unit id="creation_no">
+						<source>No</source>
+						<target>并不是，这个是全新的</target>
+					</trans-unit>
+					<trans-unit id="replace_select">
+						<source>Replace this Package</source>
+						<target>替代这个扩展包</target>
+					</trans-unit>
+					<trans-unit id="replace_choose">
+						<source>Please select the package you wish to replace:</source>
+						<target>请选择你想要让它替代的扩展包：</target>
+					</trans-unit>
+					<trans-unit id="replace_noneavailable">
+						<source>No packages are currently installed.</source>
+						<target>目前没有安装任何扩展包，请先安装你要替代的扩展包。</target>
+					</trans-unit>
+					<trans-unit id="type_route">
+						<source>Route</source>
+						<target>线路</target>
+					</trans-unit>
+					<trans-unit id="type_train">
+						<source>Train</source>
+						<target>列车</target>
+					</trans-unit>
+					<trans-unit id="type_other">
+						<source>Other</source>
+						<target>其他</target>
+					</trans-unit>
+					<trans-unit id="type_select">
+						<source>Please select the package type:</source>
+						<target>请选择扩展包类型：</target>
+					</trans-unit>
+					<trans-unit id="uninstall_failure">
+						<source>Unfortunately, uninstallation of this package failed.</source>
+						<target>真不幸，扩展包卸载失败了。</target>
+					</trans-unit>
+					<trans-unit id="uninstall_failure_header">
+						<source>Uninstallation Failed</source>
+						<target>卸载失败</target>
+					</trans-unit>
+					<trans-unit id="uninstall_success">
+						<source>Uninstallation of this package was successful.</source>
+						<target>成功卸载了这个扩展包。</target>
+					</trans-unit>
+					<trans-unit id="uninstall_success_header">
+						<source>Uninstallation Successful</source>
+						<target>卸载成功</target>
+					</trans-unit>
+					<trans-unit id="uninstall_log">
+						<source>A log is shown below:</source>
+						<target>在卸载过程中执行了下列操作：</target>
+					</trans-unit>
+					<trans-unit id="uninstall_button">
+						<source>Uninstall Package</source>
+						<target>卸载扩展包</target>
+					</trans-unit>
+					<trans-unit id="uninstall_broken">
+						<source>Some existing packages may be broken by this action.</source>
+						<target>执行这个动作可能会破坏依赖关系。</target>
+					</trans-unit>
+					<trans-unit id="uninstall_missing_xml">
+						<source>Unable to uninstall the selected package. \r\n XML file list missing.</source>
+						<target>无法卸载这个扩展包。 \r\n 文件列表缺失。</target>
+					</trans-unit>
+					<trans-unit id="uninstall_database_remove">
+						<source>Do you wish to remove this package from the database?</source>
+						<target>你想要从数据库中移除这个扩展包的信息吗？</target>
+					</trans-unit>
+					<trans-unit id="database_save_error">
+						<source>An error occured whilst saving the package database. \r\n Please check for write permissions.</source>
+						<target>在保存数据库时出现问题。 \r\n 请检查写入权限。</target>
+					</trans-unit>
+					<trans-unit id="version_new">
+						<source>New version:</source>
+						<target>新版本：</target>
+					</trans-unit>
+					<trans-unit id="version_current">
+						<source>Current version:</source>
+						<target>目前版本：</target>
+					</trans-unit>
+					<trans-unit id="success">
+						<source>Finished!</source>
+						<target>完成！</target>
+					</trans-unit>
+					<trans-unit id="selected">
+						<source>Selected Packages</source>
+						<target>选择的扩展包</target>
+					</trans-unit>
+					<trans-unit id="dependancy">
+						<source>Dependancy</source>
+						<target>依赖</target>
+					</trans-unit>
+					<trans-unit id="recommendation">
+						<source>Recommendation</source>
+						<target>建议</target>
+					</trans-unit>
+					<trans-unit id="error_action">
+						<source>Please select the action you wish to take:</source>
+						<target>请选择你想要采取的操作：</target>
+					</trans-unit>
+					<trans-unit id="error_overwrite">
+						<source>Overwrite</source>
+						<target>覆盖</target>
+					</trans-unit>
+					<trans-unit id="error_replace">
+						<source>Replace</source>
+						<target>替换</target>
+					</trans-unit>
+					<trans-unit id="button_next">
+						<source>Next &gt;</source>
+						<target>继续 &gt;</target>
+					</trans-unit>
+					<trans-unit id="button_back">
+						<source>&lt; Back</source>
+						<target>&lt; 退回</target>
+					</trans-unit>
+					<trans-unit id="button_cancel">
+						<source>Cancel</source>
+						<target>取消</target>
+					</trans-unit>
+					<trans-unit id="button_ok">
+						<source>OK</source>
+						<target>确认</target>
+					</trans-unit>
+					<trans-unit id="button_install">
+						<source>Install</source>
+						<target>安装</target>
+					</trans-unit>
+					<trans-unit id="button_create">
+						<source>Create</source>
+						<target>创建</target>
+					</trans-unit>
+					<trans-unit id="button_ignore">
+						<source>Ignore</source>
+						<target>忽略</target>
+					</trans-unit>
+					<trans-unit id="button_abort">
+						<source>Abort</source>
+						<target>停止</target>
+					</trans-unit>
+					<trans-unit id="filename_empty">
+						<source>Attempted to create a package with an empty filename.</source>
+						<target>不能创建没有文件名的包。</target>
+					</trans-unit>
+					<trans-unit id="directory_missing">
+						<source>The directory in which you attempted to save the package file does not exist: \r \n</source>
+						<target>你想要创建包的文件夹不存在： \r \n</target>
+					</trans-unit>
+					<trans-unit id="directory_nowrite">
+						<source>No write access available in the directory in which you attempted to save the package file: \r \n</source>
+						<target>没有对你想要创建包的文件夹的写入权限： \r \n</target>
+					</trans-unit>
+					<trans-unit id="file_generic">
+						<source>Failed to create the following file: \r \n</source>
+						<target>创建文件失败： \r \n</target>
+					</trans-unit>
+				</group>
+				<group id="controls">
+					<trans-unit id="title">
+						<source>Customize controls</source>
+						<target>控制设置</target>
+					</trans-unit>
+					<trans-unit id="list_command">
+						<source>Command</source>
+						<target>命令</target>
+					</trans-unit>
+					<trans-unit id="list_type">
+						<source>Type</source>
+						<target>种类</target>
+					</trans-unit>
+					<trans-unit id="list_type_digital">
+						<source>Digital</source>
+						<target>数字</target>
+					</trans-unit>
+					<trans-unit id="list_type_analoghalf">
+						<source>Analog (half axis)</source>
+						<target>模拟 (半轴)</target>
+					</trans-unit>
+					<trans-unit id="list_type_analogfull">
+						<source>Analog (full axis)</source>
+						<target>模拟 (全轴)</target>
+					</trans-unit>
+					<trans-unit id="list_description">
+						<source>Description</source>
+						<target>描述</target>
+					</trans-unit>
+					<trans-unit id="list_assignment">
+						<source>Assignment</source>
+						<target>按键分派</target>
+					</trans-unit>
+					<trans-unit id="list_option">
+						<source>Command Option</source>
+						<target>Command Option</target>
+					</trans-unit>
+					<trans-unit id="add">
+						<source>Add control</source>
+						<target>增加控制</target>
+					</trans-unit>
+					<trans-unit id="remove">
+						<source>Remove control</source>
+						<target>移除控制</target>
+					</trans-unit>
+					<trans-unit id="import">
+						<source>Import...</source>
+						<target>导入...</target>
+					</trans-unit>
+					<trans-unit id="export">
+						<source>Export...</source>
+						<target>导出...</target>
+					</trans-unit>
+					<trans-unit id="reset">
+						<source>Reset to defaults</source>
+						<target>重置为默认值</target>
+					</trans-unit>
+					<trans-unit id="up">
+						<source>Move up</source>
+						<target>上移</target>
+					</trans-unit>
+					<trans-unit id="down">
+						<source>Move down</source>
+						<target>下移</target>
+					</trans-unit>
+					<trans-unit id="selection">
+						<source>Currently selected command</source>
+						<target>已选择命令</target>
+					</trans-unit>
+					<trans-unit id="selection_command">
+						<source>Command:</source>
+						<target>命令：</target>
+					</trans-unit>
+					<trans-unit id="selection_command_option">
+						<source>Command Option:</source>
+						<target>Command Option:</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard">
+						<source>Keyboard:</source>
+						<target>键盘：</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_assignment_grab">
+						<source>Click here to enable keyboard grab to automatically select the desired key.</source>
+						<target>点击此处自动选择想要的按键。</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_assignment_grabbing">
+						<source>Please press any key...</source>
+						<target>请按下你想要分配的按键！</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_key">
+						<source>Key:</source>
+						<target>按键：</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_modifiers">
+						<source>Modifiers:</source>
+						<target>修饰键：</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_modifiers_shift">
+						<source>Shift</source>
+						<target>Shift</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_modifiers_ctrl">
+						<source>Ctrl</source>
+						<target>Ctrl</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_modifiers_alt">
+						<source>Alt</source>
+						<target>Alt</target>
+					</trans-unit>
+					<trans-unit id="selection_joystick">
+						<source>Joystick:</source>
+						<target>游戏杆：</target>
+					</trans-unit>
+					<trans-unit id="selection_joystick_assignment">
+						<source>Assignment:</source>
+						<target>分派：</target>
+					</trans-unit>
+					<trans-unit id="selection_joystick_assignment_grab">
+						<source>Click here to enable joystick grab to automatically select the desired axis, button or hat.</source>
+						<target>按此以自动选择游戏杆设定。\r\n\r\n不过，请先把游戏杆移到默认位置并松开按钮。</target>
+					</trans-unit>
+					<trans-unit id="selection_joystick_assignment_grab_normal">
+						<source>Press a button or move an axis or hat into the desired direction...</source>
+						<target>按下你选择使用的按钮或将游戏杆移向所选方向...</target>
+					</trans-unit>
+					<trans-unit id="selection_joystick_assignment_grab_fullaxis">
+						<source>Move an axis into the direction of "increase" or "power"...</source>
+						<target>移动游戏杆到选择用作「增加」或「启动牵引」的方向...</target>
+					</trans-unit>
+					<trans-unit id="attached">
+						<source>Attached joysticks</source>
+						<target>已连接游戏杆</target>
+					</trans-unit>
+					<trans-unit id="assignment_keyboard">
+						<source>Keyboard</source>
+						<target>键盘</target>
+					</trans-unit>
+					<trans-unit id="assignment_keyboard_shift">
+						<source>Shift +\x20</source>
+						<target>Shift +\x20</target>
+					</trans-unit>
+					<trans-unit id="assignment_keyboard_ctrl">
+						<source>Ctrl +\x20</source>
+						<target>Ctrl +\x20</target>
+					</trans-unit>
+					<trans-unit id="assignment_keyboard_alt">
+						<source>Alt +\x20</source>
+						<target>Alt +\x20</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick">
+						<source>Joystick [index]</source>
+						<target>游戏杆 [index]</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_axis">
+						<source>axis [index]</source>
+						<target>轴 [index]</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_axis_negative">
+						<source>negative direction</source>
+						<target>反方向</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_axis_positive">
+						<source>positive direction</source>
+						<target>正方向</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_axis_invalid">
+						<source>invalid direction</source>
+						<target>无效方向</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_button">
+						<source>button [index]</source>
+						<target>按钮 [index]</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat">
+						<source>hat [index]</source>
+						<target>帽子 [index]</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_left">
+						<source>left</source>
+						<target>左</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_upleft">
+						<source>up-left</source>
+						<target>左上</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_up">
+						<source>up</source>
+						<target>上</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_upright">
+						<source>up-right</source>
+						<target>右上</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_right">
+						<source>right</source>
+						<target>右</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_downright">
+						<source>down-right</source>
+						<target>右下</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_down">
+						<source>down</source>
+						<target>下</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_downleft">
+						<source>down-left</source>
+						<target>左下</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_invalid">
+						<source>invalid</source>
+						<target>无效</target>
+					</trans-unit>
+					<trans-unit id="assignment_invalid">
+						<source>Not assigned</source>
+						<target>未定义</target>
+					</trans-unit>
+					<trans-unit id="assignment_separator">
+						<source>,\x20</source>
+						<target>、</target>
+					</trans-unit>
+				</group>
+				<group id="raildriver">
+					<trans-unit id="speedunits">
+						<source>LED Display speed units</source>
+						<target>LED Display speed units</target>
+					</trans-unit>
+					<trans-unit id="milesperhour">
+						<source>Miles per Hour (MPH)</source>
+						<target>Miles per Hour (MPH)</target>
+					</trans-unit>
+					<trans-unit id="kilometersperhour">
+						<source>Kilometers per Hour (KPH)</source>
+						<target>Kilometers per Hour (KPH)</target>
+					</trans-unit>
+					<trans-unit id="setcalibration">
+						<source>Set Calibration:</source>
+						<target>Set Calibration:</target>
+					</trans-unit>
+					<trans-unit id="launch">
+						<source>Launch</source>
+						<target>Launch</target>
+					</trans-unit>
+					<trans-unit id="notdetected">
+						<source>No RailDriver conrollers detected.</source>
+						<target>未检测到RailDriver控制器。</target>
+					</trans-unit>
+					<trans-unit id="config_error">
+						<source>Error loading RailDriver calibration file.</source>
+						<target>在加载RailDriver校准配置时出现错误。</target>
+					</trans-unit>
+					<trans-unit id="calibration_start">
+						<source>Please press 'Next' to start calibration.</source>
+						<target>按‘继续’开始校准。</target>
+					</trans-unit>
+					<trans-unit id="calibration_a">
+						<source>Move the reverser lever to the full reverse position and press 'Next'.</source>
+						<target>将换向器移动至完全向后，然后点击‘继续’。</target>
+					</trans-unit>
+					<trans-unit id="calibration_b">
+						<source>Move the reverser lever to the full forward position and press 'Next'.</source>
+						<target>将换向器移动至完全向前，然后点击‘继续’。</target>
+					</trans-unit>
+					<trans-unit id="calibration_c">
+						<source>Move the combined brake / throttle lever to the full power position and press 'Next'.</source>
+						<target>将联控手柄移动到最大牵引，然后点击‘继续’。</target>
+					</trans-unit>
+					<trans-unit id="calibration_d">
+						<source>Move the combined brake / throttle lever to the full brake position and press 'Next'.</source>
+						<target>将联控手柄移动到最大制动，然后点击‘继续’。</target>
+					</trans-unit>
+					<trans-unit id="calibration_e">
+						<source>Move the dynamic brake lever to the release position and press 'Next'.</source>
+						<target>将动态制动手柄移动到缓解，然后点击‘继续’。</target>
+					</trans-unit>
+					<trans-unit id="calibration_f">
+						<source>Move the dynamic brake lever to the emergency position and press 'Next'.</source>
+						<target>将动态制动手柄移动到紧急制动，然后点击‘继续’。</target>
+					</trans-unit>
+					<trans-unit id="calibration_g">
+						<source>Move the independant brake lever to the release position and press 'Next'.</source>
+						<target>将独立制动手柄移动到缓解，然后点击‘继续’。</target>
+					</trans-unit>
+					<trans-unit id="calibration_h">
+						<source>Move the independant brake lever to the full position and press 'Next'.</source>
+						<target>将独立制动手柄移动到最大制动，然后点击‘继续’。</target>
+					</trans-unit>
+					<trans-unit id="calibration_i">
+						<source>Move the bail-off lever to the release position and press 'Next'.</source>
+						<target>将释放手柄移动到缓解，然后点击‘继续’。</target>
+					</trans-unit>
+					<trans-unit id="calibration_j">
+						<source>Move and hold the bail-off lever into the full position and press 'Next'.</source>
+						<target>将释放手柄移动到最大，然后点击‘继续’。</target>
+					</trans-unit>
+					<trans-unit id="calibration_k">
+						<source>Move the wiper switch to OFF and press 'Next'.</source>
+						<target>将雨刮器开关移动到关闭，然后点击‘继续’。</target>
+					</trans-unit>
+					<trans-unit id="calibration_l">
+						<source>Move the wiper switch to FULL and press 'Next'.</source>
+						<target>将雨刮器开关移动到最大，然后点击‘继续’。</target>
+					</trans-unit>
+					<trans-unit id="calibration_m">
+						<source>Move the lights switch to OFF and press 'Next'.</source>
+						<target>将灯光开关移动到关闭，然后点击‘继续’。</target>
+					</trans-unit>
+					<trans-unit id="calibration_n">
+						<source>Move the lights switch to FULL and press 'Next'.</source>
+						<target>将灯光开关移动到最大，然后点击‘继续’。</target>
+					</trans-unit>
+					<trans-unit id="calibration_o">
+						<source>Calibration complete.</source>
+						<target>校准完成。</target>
+					</trans-unit>
+				</group>
+				<group id="options">
+					<trans-unit id="title">
+						<source>Options</source>
+						<target>设置</target>
+					</trans-unit>
+					<trans-unit id="language">
+						<source>Language</source>
+						<target>语言</target>
+					</trans-unit>
+					<trans-unit id="display">
+						<source>Display</source>
+						<target>显示</target>
+					</trans-unit>
+					<trans-unit id="display_mode">
+						<source>Display mode</source>
+						<target>显示模式</target>
+					</trans-unit>
+					<trans-unit id="display_mode_window">
+						<source>Window mode</source>
+						<target>窗口模式</target>
+					</trans-unit>
+					<trans-unit id="display_mode_fullscreen">
+						<source>Fullscreen mode</source>
+						<target>全屏模式</target>
+					</trans-unit>
+					<trans-unit id="display_vsync">
+						<source>Vertical synchronization:</source>
+						<target>垂直同步：</target>
+					</trans-unit>
+					<trans-unit id="display_vsync_off">
+						<source>Disabled</source>
+						<target>停用</target>
+					</trans-unit>
+					<trans-unit id="display_vsync_on">
+						<source>Enabled</source>
+						<target>启用</target>
+					</trans-unit>
+					<trans-unit id="display_window">
+						<source>Window mode</source>
+						<target>窗口模式</target>
+					</trans-unit>
+					<trans-unit id="display_window_width">
+						<source>Width:</source>
+						<target>宽度：</target>
+					</trans-unit>
+					<trans-unit id="display_window_height">
+						<source>Height:</source>
+						<target>高度：</target>
+					</trans-unit>
+					<trans-unit id="display_fullscreen">
+						<source>Fullscreen</source>
+						<target>全屏模式</target>
+					</trans-unit>
+					<trans-unit id="display_fullscreen_width">
+						<source>Width:</source>
+						<target>横向分辨率：</target>
+					</trans-unit>
+					<trans-unit id="display_fullscreen_height">
+						<source>Height:</source>
+						<target>纵向分辨率：</target>
+					</trans-unit>
+					<trans-unit id="display_fullscreen_bits">
+						<source>Bits per pixel:</source>
+						<target>色深：</target>
+					</trans-unit>
+					<trans-unit id="quality">
+						<source>Quality</source>
+						<target>渲染品质</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation">
+						<source>Interpolation</source>
+						<target>材质插补</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode">
+						<source>Mode:</source>
+						<target>模式：</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode_nearest">
+						<source>Nearest neighbor</source>
+						<target>最近相邻</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode_bilinear">
+						<source>Bilinear</source>
+						<target>双线性</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode_nearestmipmap">
+						<source>Nearest neighbor (mipmapping)</source>
+						<target>最近相邻 (Mipmap)</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode_bilinearmipmap">
+						<source>Bilinear (mipmapping)</source>
+						<target>双线性 (Mipmap)</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode_trilinearmipmap">
+						<source>Trilinear (mipmapping)</source>
+						<target>三线性 (Mipmap)</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode_anisotropic">
+						<source>Anisotropic filtering</source>
+						<target>各向异性过滤</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_anisotropic_level">
+						<source>Level of anisotropic filtering:</source>
+						<target>各向异性过滤倍数：</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_antialiasing_level">
+						<source>Level of anti-aliasing:</source>
+						<target>抗锯齿倍数：</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_transparency">
+						<source>Transparency:</source>
+						<target>透明边缘：</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_transparency_sharp">
+						<source>Sharp</source>
+						<target>锐利</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_transparency_smooth">
+						<source>Smooth</source>
+						<target>平滑</target>
+					</trans-unit>
+					<trans-unit id="quality_distance">
+						<source>Distance effects</source>
+						<target>距离视觉效果</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_viewingdistance">
+						<source>Viewing distance:</source>
+						<target>渲染距离：</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_viewingdistance_meters">
+						<source>m</source>
+						<target>米</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_motionblur">
+						<source>Motion blur:</source>
+						<target>运动模糊：</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_motionblur_none">
+						<source>Disabled</source>
+						<target>停用</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_motionblur_low">
+						<source>Low</source>
+						<target>低</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_motionblur_medium">
+						<source>Medium</source>
+						<target>中</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_motionblur_high">
+						<source>High</source>
+						<target>高</target>
+					</trans-unit>
+					<trans-unit id="misc">
+						<source>Miscellaneous</source>
+						<target>其他</target>
+					</trans-unit>
+					<trans-unit id="misc_simulation">
+						<source>Detail of simulation</source>
+						<target>细节模拟</target>
+					</trans-unit>
+					<trans-unit id="misc_simulation_toppling">
+						<source>Toppling</source>
+						<target>晃动</target>
+					</trans-unit>
+					<trans-unit id="misc_simulation_collisions">
+						<source>Collisions</source>
+						<target>碰撞</target>
+					</trans-unit>
+					<trans-unit id="misc_simulation_derailments">
+						<source>Derailments</source>
+						<target>脱轨</target>
+					</trans-unit>
+					<trans-unit id="misc_simulation_blackbox">
+						<source>Enable black box</source>
+						<target>启用数据记录</target>
+					</trans-unit>
+					<trans-unit id="misc_simulation_loadingsway">
+						<source>Enable loading sway</source>
+						<target>模拟乘降晃动</target>
+					</trans-unit>
+					<trans-unit id="misc_controls">
+						<source>Controls</source>
+						<target>控制</target>
+					</trans-unit>
+					<trans-unit id="misc_controls_joysticks">
+						<source>Joysticks enabled</source>
+						<target>启用游戏杆</target>
+					</trans-unit>
+					<trans-unit id="misc_controls_threshold">
+						<source>Joystick threshold:</source>
+						<target>游戏杆门限值：</target>
+					</trans-unit>
+					<trans-unit id="misc_controls_ebaxis">
+						<source>Allow EB on brake axis</source>
+						<target>允许通过拉至制动轴最大来启动紧急制动</target>
+					</trans-unit>
+					<trans-unit id="misc_sound">
+						<source>Sound</source>
+						<target>声音</target>
+					</trans-unit>
+					<trans-unit id="misc_sound_range">
+						<source>Effective range:</source>
+						<target>有效范围：</target>
+					</trans-unit>
+					<trans-unit id="misc_sound_range_low">
+						<source>Low</source>
+						<target>近</target>
+					</trans-unit>
+					<trans-unit id="misc_sound_range_medium">
+						<source>Medium</source>
+						<target>中</target>
+					</trans-unit>
+					<trans-unit id="misc_sound_range_high">
+						<source>High</source>
+						<target>远</target>
+					</trans-unit>
+					<trans-unit id="misc_sound_number">
+						<source>Number of allowed sounds:</source>
+						<target>最大允许同时声音数量：</target>
+					</trans-unit>
+					<trans-unit id="verbosity">
+						<source>Verbosity</source>
+						<target>调试信息</target>
+					</trans-unit>
+					<trans-unit id="verbosity_warningmessages">
+						<source>Show warning messages</source>
+						<target>显示警告</target>
+					</trans-unit>
+					<trans-unit id="verbosity_errormessages">
+						<source>Show error messages</source>
+						<target>显示错误</target>
+					</trans-unit>
+					<trans-unit id="advanced">
+						<source>Advanced Options</source>
+						<target>高级设置</target>
+					</trans-unit>
+					<trans-unit id="advanced_load_advance">
+						<source>Load in advance</source>
+						<target>高级加载</target>
+					</trans-unit>
+					<trans-unit id="advanced_disable_displaylists">
+						<source>Disable OpenGL display lists</source>
+						<target>禁用OpenGL加载列表</target>
+					</trans-unit>
+					<trans-unit id="advanced_timefactor">
+						<source>Accelerated Time Factor</source>
+						<target>加速时间倍数</target>
+					</trans-unit>
+					<trans-unit id="advanced_unload_textures">
+						<source>Unload unused textures</source>
+						<target>不加载未使用的材质</target>
+					</trans-unit>
+					<trans-unit id="other">
+						<source>Other</source>
+						<target>其他</target>
+					</trans-unit>
+					<trans-unit id="other_timetable_mode">
+						<source>Timetable mode:</source>
+						<target>时刻表显示格式</target>
+					</trans-unit>
+					<trans-unit id="other_timetable_mode_none">
+						<source>None</source>
+						<target>无标题</target>
+					</trans-unit>
+					<trans-unit id="other_timetable_mode_default">
+						<source>Default</source>
+						<target>默认</target>
+					</trans-unit>
+					<trans-unit id="other_timetable_mode_autogenerated">
+						<source>Auto-generated timetable</source>
+						<target>自动生成时刻表</target>
+					</trans-unit>
+					<trans-unit id="other_timetable_mode_prefercustom">
+						<source>Prefer custom timetable</source>
+						<target>优先采用自定义时刻表</target>
+					</trans-unit>
+					<trans-unit id="package_choose">
+						<source>Choose...</source>
+						<target>选择……</target>
+					</trans-unit>
+					<trans-unit id="package_route_directory">
+						<source>Route installation directory:</source>
+						<target>线路安装目录：</target>
+					</trans-unit>
+					<trans-unit id="package_train_directory">
+						<source>Train installation directory:</source>
+						<target>列车安装目录：</target>
+					</trans-unit>
+					<trans-unit id="package_other_directory">
+						<source>Other items installation directory:</source>
+						<target>其他安装目录：</target>
+					</trans-unit>
+					<trans-unit id="package_compression">
+						<source>Package compression format:</source>
+						<target>扩展包压缩格式：</target>
+					</trans-unit>
+					<trans-unit id="page_previous">
+						<source>Previous Page...</source>
+						<target>&lt; 上一页</target>
+					</trans-unit>
+					<trans-unit id="page_next">
+						<source>Next Page...</source>
+						<target>下一页 &gt;</target>
+					</trans-unit>
+					<trans-unit id="kiosk_mode">
+						<source>Kiosk Mode</source>
+						<target>Kiosk Mode</target>
+					</trans-unit>
+					<trans-unit id="kiosk_mode_enable">
+						<source>Enable Kiosk Mode</source>
+						<target>Enable Kiosk Mode</target>
+					</trans-unit>
+					<trans-unit id="kiosk_mode_timer">
+						<source>Control Timeout (s)</source>
+						<target>Control Timeout (s)</target>
+					</trans-unit>
+					<trans-unit id="hud_size">
+						<source>HUD Size</source>
+						<target>HUD Size</target>
+					</trans-unit>
+					<trans-unit id="hud_size_small">
+						<source>Small</source>
+						<target>Small</target>
+					</trans-unit>
+					<trans-unit id="hud_size_normal">
+						<source>Normal</source>
+						<target>Normal</target>
+					</trans-unit>
+					<trans-unit id="hud_size_large">
+						<source>Large</source>
+						<target>Large</target>
+					</trans-unit>
+					<trans-unit id="transparencyfix">
+						<source>Attempt to fix transparency issues in older content.</source>
+						<target>Attempt to fix transparency issues in older content.</target>
+					</trans-unit>
+					<trans-unit id="hacks_enable">
+						<source>Enable hacks for buggy older content.</source>
+						<target>Enable hacks for buggy older content.</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin">
+						<source>Input Device Plugin</source>
+						<target>Input Device Plugin</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_warning">
+						<source>WARNING: If you enable Input Device Plugin(s), these may conflict with one or more controls.</source>
+						<target>WARNING: If you enable Input Device Plugin(s), these may conflict with one or more controls.</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_name">
+						<source>Name</source>
+						<target>Name</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_status">
+						<source>Status</source>
+						<target>Status</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_status_failure">
+						<source>Failure</source>
+						<target>Failure</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_status_disable">
+						<source>Disable</source>
+						<target>Disable</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_status_enable">
+						<source>Enable</source>
+						<target>Enable</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_version">
+						<source>Version</source>
+						<target>Version</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_provider">
+						<source>Provider</source>
+						<target>Provider</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_file_name">
+						<source>File Name</source>
+						<target>File Name</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_switch">
+						<source>Enable this Input Device Plugin</source>
+						<target>Enable this Input Device Plugin</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_config">
+						<source>Config</source>
+						<target>Config</target>
+					</trans-unit>
+				</group>
+				<group id="dialog">
+					<trans-unit id="csvfiles">
+						<source>CSV files</source>
+						<target>逗号分隔文件</target>
+					</trans-unit>
+					<trans-unit id="textfiles">
+						<source>Text files</source>
+						<target>文本文件</target>
+					</trans-unit>
+					<trans-unit id="controlsfiles">
+						<source>Controls</source>
+						<target>控制配置文件</target>
+					</trans-unit>
+					<trans-unit id="allfiles">
+						<source>All files</source>
+						<target>所有文件</target>
+					</trans-unit>
+				</group>
+				<group id="log">
+					<trans-unit id="time">
+						<source>Time</source>
+						<target>时间</target>
+					</trans-unit>
+					<trans-unit id="position">
+						<source>Position (m)</source>
+						<target>位置 (米)</target>
+					</trans-unit>
+					<trans-unit id="value">
+						<source>Value</source>
+						<target>分数</target>
+					</trans-unit>
+					<trans-unit id="cumulative">
+						<source>Cumulative</source>
+						<target>累计</target>
+					</trans-unit>
+					<trans-unit id="reason">
+						<source>Reason</source>
+						<target>原因</target>
+					</trans-unit>
+					<trans-unit id="speed">
+						<source>Speed (m/s)</source>
+						<target>速度 (米/秒)</target>
+					</trans-unit>
+					<trans-unit id="acceleration">
+						<source>Acceleration (m/s²)</source>
+						<target>加速 (米/秒²)</target>
+					</trans-unit>
+					<trans-unit id="reverser">
+						<source>Reverser</source>
+						<target>换向器</target>
+					</trans-unit>
+					<trans-unit id="power">
+						<source>Power</source>
+						<target>动力</target>
+					</trans-unit>
+					<trans-unit id="brake">
+						<source>Brake</source>
+						<target>制动</target>
+					</trans-unit>
+					<trans-unit id="event">
+						<source>Event</source>
+						<target>事件</target>
+					</trans-unit>
+					<trans-unit id="route">
+						<source>Route:</source>
+						<target>路线：</target>
+					</trans-unit>
+					<trans-unit id="train">
+						<source>Train:</source>
+						<target>车辆：</target>
+					</trans-unit>
+					<trans-unit id="date">
+						<source>Date:</source>
+						<target>日期：</target>
+					</trans-unit>
+					<trans-unit id="mode">
+						<source>Mode:</source>
+						<target>模式：</target>
+					</trans-unit>
+					<trans-unit id="score">
+						<source>Score:</source>
+						<target>评分：</target>
+					</trans-unit>
+					<trans-unit id="rating">
+						<source>Rating:</source>
+						<target>评级：</target>
+					</trans-unit>
+				</group>
+				<group id="loading">
+					<trans-unit id="loading">
+						<source>Loading</source>
+						<target>载入中</target>
+					</trans-unit>
+					<trans-unit id="loading_route">
+						<source>Loading route...</source>
+						<target>路线载入中...</target>
+					</trans-unit>
+					<trans-unit id="loading_train">
+						<source>Loading train...</source>
+						<target>车辆载入中...</target>
+					</trans-unit>
+					<trans-unit id="almost">
+						<source>Almost ready to start</source>
+						<target>差不多可以开始了</target>
+					</trans-unit>
+					<trans-unit id="almost_filesnotfound">
+						<source>Files not found:</source>
+						<target>找不到文件：</target>
+					</trans-unit>
+					<trans-unit id="almost_help_filesnotfound">
+						<source>Some issues were encountered while loading the route and train.\r\n\r\nAs some files could not be found, the route or train might not appear as intended. Try to redownload the route and train packages in order to ensure that you have a complete distribution.\r\n\r\nThe following list of issues might give additional information. You can still start the route by selecting "Ignore" from below.</source>
+						<target>加载路线和车辆时发生了一些问题。\r\n\r\n因为无法找到部分文件，路线或车辆可能显示不正确。请确认下载的路线及车辆，确保文件完整。\r\n\r\n下列错误报告可以帮助开发者解决问题。你也可以选择‘忽略’开始游戏。</target>
+					</trans-unit>
+					<trans-unit id="almost_help_general">
+						<source>Some issues were encountered while loading the route and train. If you are the route or train developer, it might be worth taking a look at the following list of issues.\r\n\r\nAs a regular user, you can select "Ignore" at this point to start the game.</source>
+						<target>加载路线和车辆时发生了一些问题。如果你是制作者，下列错误报告可能值得一看。\r\n\r\n作为玩家，你可以选择‘忽略’开始游戏。</target>
+					</trans-unit>
+					<trans-unit id="almost_show">
+						<source>Show issues</source>
+						<target>显示问题</target>
+					</trans-unit>
+					<trans-unit id="problems">
+						<source>Problems</source>
+						<target>问题</target>
+					</trans-unit>
+					<trans-unit id="problems_type">
+						<source>Type</source>
+						<target>种类</target>
+					</trans-unit>
+					<trans-unit id="problems_description">
+						<source>Description</source>
+						<target>描述</target>
+					</trans-unit>
+					<trans-unit id="save">
+						<source>Save report...</source>
+						<target>导出报告至...</target>
+					</trans-unit>
+					<trans-unit id="ignore">
+						<source>Ignore</source>
+						<target>忽略</target>
+					</trans-unit>
+					<trans-unit id="cancel">
+						<source>Cancel</source>
+						<target>取消</target>
+					</trans-unit>
+				</group>
+				<group id="timetable">
+					<trans-unit id="highestspeed">
+						<source>Max.\r\nspd.</source>
+						<target>最高\r\n速度</target>
+					</trans-unit>
+					<trans-unit id="drivingtime">
+						<source>Drv.\r\ntime</source>
+						<target>走行\r\n时间</target>
+					</trans-unit>
+					<trans-unit id="stationname">
+						<source>Station name</source>
+						<target>站名</target>
+					</trans-unit>
+					<trans-unit id="arrivaltime">
+						<source>Arrival</source>
+						<target>到达</target>
+					</trans-unit>
+					<trans-unit id="departuretime">
+						<source>Departure</source>
+						<target>出发</target>
+					</trans-unit>
+				</group>
+				<group id="message">
+					<trans-unit id="delimiter">
+						<source>\x20</source>
+						<target>\x20</target>
+					</trans-unit>
+					<trans-unit id="signal_proceed">
+						<source>You may proceed at [speed] [unit] with extreme caution.</source>
+						<target>允许以 [speed]km/h 低速运行。</target>
+					</trans-unit>
+					<trans-unit id="signal_stop">
+						<source>You have passed a stop signal. Please apply the emergency brakes immediately and come to a complete hold.</source>
+						<target>列车已经冒进停止信号，请使用紧急制动立刻停车。</target>
+					</trans-unit>
+					<trans-unit id="signal_overspeed">
+						<source>The signal indicates a speed limit of [limit] [unit]. You are currently traveling at [speed] [unit]. Please slow down.</source>
+						<target>当前速度 [speed]km/h ，超过信号限速 [limit]km/h，请开始减速。</target>
+					</trans-unit>
+					<trans-unit id="route_overspeed">
+						<source>The speed post indicates a speed limit of [limit] [unit]. You are currently traveling at [speed] [unit]. Please slow down.</source>
+						<target>当前速度 [speed]km/h ，超过路段限速 [limit]km/h，请开始减速。</target>
+					</trans-unit>
+					<trans-unit id="station_arrival">
+						<source>You have arrived at [name].</source>
+						<target>列车已停靠 [name]。</target>
+					</trans-unit>
+					<trans-unit id="station_arrival_late">
+						<source>You have arrived at [name] and are [time] late.</source>
+						<target>列车已停靠 [name] ，晚点 [time] 。</target>
+					</trans-unit>
+					<trans-unit id="station_arrival_early">
+						<source>You have arrived at [name] and are [time] early.</source>
+						<target>列车已停靠 [name] ，早点 [time] 。</target>
+					</trans-unit>
+					<trans-unit id="station_overrun">
+						<source>Overrun: [difference] m.</source>
+						<target>过标 [difference] 米。</target>
+					</trans-unit>
+					<trans-unit id="station_underrun">
+						<source>Underrun: [difference] m.</source>
+						<target>欠标 [difference] 米。</target>
+					</trans-unit>
+					<trans-unit id="station_terminal">
+						<source>This is the terminal station.</source>
+						<target>这是终点站。</target>
+					</trans-unit>
+					<trans-unit id="station_deadline">
+						<source>Departure is expected in [time].</source>
+						<target>预计于 [time] 后出发。</target>
+					</trans-unit>
+					<trans-unit id="station_security">
+						<source>Please activate [system].</source>
+						<target>请启动 [system]。</target>
+					</trans-unit>
+					<trans-unit id="station_correct">
+						<source>Please correct your stop position.</source>
+						<target>请重新对标。</target>
+					</trans-unit>
+					<trans-unit id="station_depart_closedoors">
+						<source>Boarding complete. You may close the doors now.</source>
+						<target>可以关闭车门。</target>
+					</trans-unit>
+					<trans-unit id="station_depart">
+						<source>Boarding complete.</source>
+						<target>允许出发。</target>
+					</trans-unit>
+					<trans-unit id="station_passed">
+						<source>You have passed [name] where you should have stopped.</source>
+						<target>你没有在停车站 [name] 停车。</target>
+					</trans-unit>
+					<trans-unit id="station_passed_boarding">
+						<source>You have passed [name] while still boarding. Please come to a complete hold immediately.</source>
+						<target>乘客未完成乘降过程，请返回车站停车。</target>
+					</trans-unit>
+					<trans-unit id="loading">
+						<source>Loading. Please wait...</source>
+						<target>载入中，请稍候...</target>
+					</trans-unit>
+				</group>
+				<group id="notification">
+					<trans-unit id="interior">
+						<source>Interior camera</source>
+						<target>车内视点</target>
+					</trans-unit>
+					<trans-unit id="interior_lookahead">
+						<source>Interior camera (look ahead)</source>
+						<target>车内视点 (向前看)</target>
+					</trans-unit>
+					<trans-unit id="exterior">
+						<source>Exterior camera</source>
+						<target>车外视点</target>
+					</trans-unit>
+					<trans-unit id="track">
+						<source>Track camera</source>
+						<target>轨道视点</target>
+					</trans-unit>
+					<trans-unit id="flybynormal">
+						<source>Fly-by camera (normal)</source>
+						<target>定点观察 (正常)</target>
+					</trans-unit>
+					<trans-unit id="flybyzooming">
+						<source>Fly-by camera (zooming)</source>
+						<target>定点观察 (放大)</target>
+					</trans-unit>
+					<trans-unit id="cpu_normal">
+						<source>CPU: normal</source>
+						<target>处理器利用：正常</target>
+					</trans-unit>
+					<trans-unit id="cpu_low">
+						<source>CPU: low</source>
+						<target>处理器利用：低</target>
+					</trans-unit>
+					<trans-unit id="backfaceculling_on">
+						<source>Backface culling: on</source>
+						<target>背面剔除：启动</target>
+					</trans-unit>
+					<trans-unit id="backfaceculling_off">
+						<source>Backface culling: off</source>
+						<target>背面剔除：关闭</target>
+					</trans-unit>
+					<trans-unit id="notavailableexpert">
+						<source>This feature is not available in Expert mode.</source>
+						<target>你不可以在困难模式中使用这个功能。</target>
+					</trans-unit>
+					<trans-unit id="aiunable">
+						<source>The AI might be unable to fully operate this train.</source>
+						<target>AI可能难以完全正确控制列车。(由于不了解如何使用该车配备的安全系统)</target>
+					</trans-unit>
+					<trans-unit id="camerarestriction_on">
+						<source>Camera restriction: on</source>
+						<target>视点限制：启动</target>
+					</trans-unit>
+					<trans-unit id="camerarestriction_off">
+						<source>Camera restriction: off</source>
+						<target>视点限制：关闭</target>
+					</trans-unit>
+					<trans-unit id="mousegrab_on">
+						<source>Mouse grab: on</source>
+						<target>鼠标抓取：启动</target>
+					</trans-unit>
+					<trans-unit id="mousegrab_off">
+						<source>Mouse grab: off</source>
+						<target>鼠标抓取：关闭</target>
+					</trans-unit>
+				</group>
+				<group id="score">
+					<trans-unit id="overspeed">
+						<source>Overspeed</source>
+						<target>超过限速</target>
+					</trans-unit>
+					<trans-unit id="redsignal">
+						<source>Passed red signal</source>
+						<target>冒进信号</target>
+					</trans-unit>
+					<trans-unit id="toppling">
+						<source>Toppling</source>
+						<target>过度晃动</target>
+					</trans-unit>
+					<trans-unit id="derailed">
+						<source>Derailed</source>
+						<target>列车出轨</target>
+					</trans-unit>
+					<trans-unit id="discomfort">
+						<source>Passenger discomfort</source>
+						<target>暴力操作</target>
+					</trans-unit>
+					<trans-unit id="doors">
+						<source>Doors opened</source>
+						<target>车门开启</target>
+					</trans-unit>
+					<trans-unit id="station_arrived">
+						<source>Arrived at station</source>
+						<target>正确停站</target>
+					</trans-unit>
+					<trans-unit id="station_perfecttime">
+						<source>Perfect time bonus</source>
+						<target>时间奖分</target>
+					</trans-unit>
+					<trans-unit id="station_late">
+						<source>Late</source>
+						<target>列车晚点</target>
+					</trans-unit>
+					<trans-unit id="station_perfectstop">
+						<source>Perfect stop bonus</source>
+						<target>位置奖分</target>
+					</trans-unit>
+					<trans-unit id="station_stop">
+						<source>Stop</source>
+						<target>对标不准</target>
+					</trans-unit>
+					<trans-unit id="station_departure">
+						<source>Premature departure</source>
+						<target>发车过早</target>
+					</trans-unit>
+					<trans-unit id="station_total">
+						<source>Total</source>
+						<target>合计</target>
+					</trans-unit>
+					<trans-unit id="rating">
+						<source>Your rating:</source>
+						<target>你的评级：</target>
+					</trans-unit>
+				</group>
+				<group id="rating">
+					<trans-unit id="0">
+						<source>Abysmal</source>
+						<target>……?!</target>
+					</trans-unit>
+					<trans-unit id="1">
+						<source>Terrible</source>
+						<target>恶劣</target>
+					</trans-unit>
+					<trans-unit id="2">
+						<source>Bad</source>
+						<target>糟糕</target>
+					</trans-unit>
+					<trans-unit id="3">
+						<source>Poor</source>
+						<target>略差</target>
+					</trans-unit>
+					<trans-unit id="4">
+						<source>Fair</source>
+						<target>尚可</target>
+					</trans-unit>
+					<trans-unit id="5">
+						<source>Mediocre</source>
+						<target>一般</target>
+					</trans-unit>
+					<trans-unit id="6">
+						<source>Good</source>
+						<target>不错</target>
+					</trans-unit>
+					<trans-unit id="7">
+						<source>Great</source>
+						<target>颇佳</target>
+					</trans-unit>
+					<trans-unit id="8">
+						<source>Superb</source>
+						<target>良好</target>
+					</trans-unit>
+					<trans-unit id="9">
+						<source>Excellent</source>
+						<target>优秀</target>
+					</trans-unit>
+					<trans-unit id="unknown">
+						<source>Unknown</source>
+						<target>未知</target>
+					</trans-unit>
+				</group>
+				<group id="menu">
+					<trans-unit id="resume">
+						<source>Resume simulation</source>
+						<target>恢复游戏</target>
+					</trans-unit>
+					<trans-unit id="jump">
+						<source>Jump to station</source>
+						<target>切换车站</target>
+					</trans-unit>
+					<trans-unit id="exit">
+						<source>Exit to main menu</source>
+						<target>返回菜单</target>
+					</trans-unit>
+					<trans-unit id="exit_question">
+						<source>Do you really want to exit to the main menu?</source>
+						<target>是否要返回菜单？</target>
+					</trans-unit>
+					<trans-unit id="exit_no">
+						<source>No</source>
+						<target>否</target>
+					</trans-unit>
+					<trans-unit id="exit_yes">
+						<source>Yes</source>
+						<target>是</target>
+					</trans-unit>
+					<trans-unit id="quit">
+						<source>Quit</source>
+						<target>退出游戏</target>
+					</trans-unit>
+					<trans-unit id="quit_question">
+						<source>Do you really want to quit?</source>
+						<target>是否要退出游戏？</target>
+					</trans-unit>
+					<trans-unit id="quit_no">
+						<source>No</source>
+						<target>否</target>
+					</trans-unit>
+					<trans-unit id="quit_yes">
+						<source>Yes</source>
+						<target>是</target>
+					</trans-unit>
+					<trans-unit id="back">
+						<source>← Back</source>
+						<target>← 返回</target>
+					</trans-unit>
+					<trans-unit id="customize_controls">
+						<source>Customise controls</source>
+						<target>设置控制</target>
+					</trans-unit>
+					<trans-unit id="assign">
+						<source>Please press any key or move a joystick axis to set this control...</source>
+						<target>请按压按键或移动摇杆来分配操作。</target>
+					</trans-unit>
+					<trans-unit id="keyboard">
+						<source>Keyboard</source>
+						<target>键盘</target>
+					</trans-unit>
+					<trans-unit id="joystick">
+						<source>Joystick</source>
+						<target>摇杆</target>
+					</trans-unit>
+					<trans-unit id="joystick_notavailable">
+						<source>N/A</source>
+						<target>不可用</target>
+					</trans-unit>
+					<trans-unit id="joystickdirection_positive">
+						<source>Positive</source>
+						<target>正方向</target>
+					</trans-unit>
+					<trans-unit id="joystickdirection_negative">
+						<source>Negative</source>
+						<target>负方向</target>
+					</trans-unit>
+					<trans-unit id="assignment_current">
+						<source>Current assignment:</source>
+						<target>目前分配：</target>
+					</trans-unit>
+				</group>
+				<group id="lamps">
+					<trans-unit id="ats">
+						<source>ATS</source>
+						<target>ATS</target>
+					</trans-unit>
+					<trans-unit id="atsoperation">
+						<source>ATS RUN</source>
+						<target>ATS 触发</target>
+					</trans-unit>
+					<trans-unit id="atsppower">
+						<source>P POWER</source>
+						<target>P 电源</target>
+					</trans-unit>
+					<trans-unit id="atsppattern">
+						<source>PTN APPROACH</source>
+						<target>限速接近</target>
+					</trans-unit>
+					<trans-unit id="atspbrakeoverride">
+						<source>BRAKE RELEASE</source>
+						<target>制动解除</target>
+					</trans-unit>
+					<trans-unit id="atspbrakeoperation">
+						<source>BRAKE APPLY</source>
+						<target>制动触发</target>
+					</trans-unit>
+					<trans-unit id="atsp">
+						<source>ATS-P</source>
+						<target>ATS-P</target>
+					</trans-unit>
+					<trans-unit id="atspfailure">
+						<source>FAILURE</source>
+						<target>故障</target>
+					</trans-unit>
+					<trans-unit id="atc">
+						<source>ATC</source>
+						<target>ATC</target>
+					</trans-unit>
+					<trans-unit id="atcpower">
+						<source>ATC POWER</source>
+						<target>ATC 电源</target>
+					</trans-unit>
+					<trans-unit id="atcuse">
+						<source>ATC SRV</source>
+						<target>ATC 常用</target>
+					</trans-unit>
+					<trans-unit id="atcemergency">
+						<source>ATC EMG</source>
+						<target>ATC 紧急</target>
+					</trans-unit>
+					<trans-unit id="eb">
+						<source>EB</source>
+						<target>警惕</target>
+					</trans-unit>
+					<trans-unit id="constspeed">
+						<source>CONST SPEED</source>
+						<target>定速</target>
+					</trans-unit>
+				</group>
+				<group id="handles">
+					<trans-unit id="forward">
+						<source>F</source>
+						<target>向前</target>
+					</trans-unit>
+					<trans-unit id="neutral">
+						<source>N</source>
+						<target>中位</target>
+					</trans-unit>
+					<trans-unit id="backward">
+						<source>B</source>
+						<target>向后</target>
+					</trans-unit>
+					<trans-unit id="power">
+						<source>P</source>
+						<target>牵引</target>
+					</trans-unit>
+					<trans-unit id="powernull">
+						<source>N</source>
+						<target>零位</target>
+					</trans-unit>
+					<trans-unit id="brake">
+						<source>B</source>
+						<target>制动</target>
+					</trans-unit>
+					<trans-unit id="locobrake">
+						<source>L</source>
+						<target>L</target>
+					</trans-unit>
+					<trans-unit id="brakenull">
+						<source>N</source>
+						<target>缓解</target>
+					</trans-unit>
+					<trans-unit id="release">
+						<source>REL</source>
+						<target>缓解</target>
+					</trans-unit>
+					<trans-unit id="lap">
+						<source>LAP</source>
+						<target>保持</target>
+					</trans-unit>
+					<trans-unit id="service">
+						<source>SRV</source>
+						<target>增压</target>
+					</trans-unit>
+					<trans-unit id="emergency">
+						<source>EMG</source>
+						<target>紧急</target>
+					</trans-unit>
+					<trans-unit id="holdbrake">
+						<source>HLD</source>
+						<target>抑速</target>
+					</trans-unit>
+				</group>
+				<group id="doors">
+					<trans-unit id="left">
+						<source>L</source>
+						<target>左侧</target>
+					</trans-unit>
+					<trans-unit id="right">
+						<source>R</source>
+						<target>右侧</target>
+					</trans-unit>
+				</group>
+				<group id="misc">
+					<trans-unit id="score">
+						<source>Score:\x20</source>
+						<target>得分：</target>
+					</trans-unit>
+				</group>
+				<group id="commands">
+					<trans-unit id="power_increase">
+						<source>Increases power by one notch for trains with two handles</source>
+						<target>[分离手柄]  牵引增加</target>
+					</trans-unit>
+					<trans-unit id="power_decrease">
+						<source>Decreases power by one notch for trains with two handles</source>
+						<target>[分离手柄]  牵引减少</target>
+					</trans-unit>
+					<trans-unit id="power_halfaxis">
+						<source>Controls power for trains with two handles on half of a joystick axis</source>
+						<target>[分离手柄]  半轴手柄控制牵引</target>
+					</trans-unit>
+					<trans-unit id="power_fullaxis">
+						<source>Controls power for trains with two handles on a full joystick axis</source>
+						<target>[分离手柄]  全轴手柄控制牵引</target>
+					</trans-unit>
+					<trans-unit id="brake_decrease">
+						<source>Decreases brake by one notch for trains with two handles</source>
+						<target>[分离手柄]  制动增加</target>
+					</trans-unit>
+					<trans-unit id="brake_increase">
+						<source>Increases brake by one notch for trains with two handles</source>
+						<target>[分离手柄]  制动减少</target>
+					</trans-unit>
+					<trans-unit id="locobrake_decrease">
+						<source>N/A</source>
+						<target>N/A</target>
+					</trans-unit>
+					<trans-unit id="locobrake_increase">
+						<source>N/A</source>
+						<target>N/A</target>
+					</trans-unit>
+					<trans-unit id="brake_halfaxis">
+						<source>Controls brake for trains with two handles on half of a joystick axis</source>
+						<target>[分离手柄]  半轴手柄控制制动</target>
+					</trans-unit>
+					<trans-unit id="brake_fullaxis">
+						<source>Controls brake for trains with two handles on a full joystick axis</source>
+						<target>[分离手柄]  全轴手柄控制制动</target>
+					</trans-unit>
+					<trans-unit id="brake_emergency">
+						<source>Activates emergency brakes for trains with two handles</source>
+						<target>[分离手柄]  紧急制动</target>
+					</trans-unit>
+					<trans-unit id="single_power">
+						<source>Moves handle toward power by one notch for trains with one handle</source>
+						<target>[联控手柄]  向牵引推动</target>
+					</trans-unit>
+					<trans-unit id="single_neutral">
+						<source>Moves handle toward neutral by one notch for trains with one handle</source>
+						<target>[联控手柄]  回中</target>
+					</trans-unit>
+					<trans-unit id="single_brake">
+						<source>Moves handle toward brake by one notch for trains with one handle</source>
+						<target>[联控手柄]  向制动推动</target>
+					</trans-unit>
+					<trans-unit id="single_emergency">
+						<source>Activates emergency brake for trains with one handle</source>
+						<target>[联控手柄]  紧急制动</target>
+					</trans-unit>
+					<trans-unit id="single_fullaxis">
+						<source>Controls power and brake for trains with one handle on a full joystick axis</source>
+						<target>[联控手柄]  全轴手柄控制联控</target>
+					</trans-unit>
+					<trans-unit id="power_any_notch">
+						<source>Adjusts the power notch directly from a command option value.</source>
+						<target>Adjusts the power notch directly from a command option value.</target>
+					</trans-unit>
+					<trans-unit id="brake_any_notch">
+						<source>Adjusts the brake notch directly from a command option value.</source>
+						<target>Adjusts the brake notch directly from a command option value.</target>
+					</trans-unit>
+					<trans-unit id="reverser_any_position">
+						<source>Adjusts the reverser directly from a command option value.</source>
+						<target>Adjusts the reverser directly from a command option value.</target>
+					</trans-unit>
+					<trans-unit id="hold_brake">
+						<source>Hold Brake</source>
+						<target>Hold Brake</target>
+					</trans-unit>
+					<trans-unit id="reverser_forward">
+						<source>Moves reverser forward by one notch</source>
+						<target>换向器向前</target>
+					</trans-unit>
+					<trans-unit id="reverser_backward">
+						<source>Moves reverser backward by one notch</source>
+						<target>换向器向后</target>
+					</trans-unit>
+					<trans-unit id="reverser_fullaxis">
+						<source>Controls reverser on a full joystick axis</source>
+						<target>全轴手柄控制换向器</target>
+					</trans-unit>
+					<trans-unit id="doors_left">
+						<source>Opens or closes the left doors</source>
+						<target>操作左侧车门</target>
+					</trans-unit>
+					<trans-unit id="doors_right">
+						<source>Opens or closes the right doors</source>
+						<target>操作右测车门</target>
+					</trans-unit>
+					<trans-unit id="horn_primary">
+						<source>Plays the primary horn</source>
+						<target>主警笛</target>
+					</trans-unit>
+					<trans-unit id="horn_secondary">
+						<source>Plays the secondary horn</source>
+						<target>次警笛</target>
+					</trans-unit>
+					<trans-unit id="horn_music">
+						<source>Plays or stops the music horn</source>
+						<target>切换音乐警笛</target>
+					</trans-unit>
+					<trans-unit id="device_constspeed">
+						<source>Activates or deactivates the constant speed device</source>
+						<target>切换定速设备</target>
+					</trans-unit>
+					<trans-unit id="security_power">
+						<source>Activates or deactivates the security system on some trains</source>
+						<target>启动或关闭保安系统</target>
+					</trans-unit>
+					<trans-unit id="security_s">
+						<source>The S function of the security system</source>
+						<target>保安系统 S  键</target>
+					</trans-unit>
+					<trans-unit id="security_a1">
+						<source>The A1 function of the security system</source>
+						<target>保安系统 A1 键</target>
+					</trans-unit>
+					<trans-unit id="security_a2">
+						<source>The A2 function of the security system</source>
+						<target>保安系统 A2 键</target>
+					</trans-unit>
+					<trans-unit id="security_b1">
+						<source>The B1 function of the security system</source>
+						<target>保安系统 B1 键</target>
+					</trans-unit>
+					<trans-unit id="security_b2">
+						<source>The B2 function of the security system</source>
+						<target>保安系统 B2 键</target>
+					</trans-unit>
+					<trans-unit id="security_c1">
+						<source>The C1 function of the security system</source>
+						<target>保安系统 C1 键</target>
+					</trans-unit>
+					<trans-unit id="security_c2">
+						<source>The C2 function of the security system</source>
+						<target>保安系统 C2 键</target>
+					</trans-unit>
+					<trans-unit id="security_d">
+						<source>The D function of the security system</source>
+						<target>保安系统 D  键</target>
+					</trans-unit>
+					<trans-unit id="security_e">
+						<source>The E function of the security system</source>
+						<target>保安系统 E  键</target>
+					</trans-unit>
+					<trans-unit id="security_f">
+						<source>The F function of the security system</source>
+						<target>保安系统 F  键</target>
+					</trans-unit>
+					<trans-unit id="security_g">
+						<source>The G function of the security system</source>
+						<target>保安系统 G  键</target>
+					</trans-unit>
+					<trans-unit id="security_h">
+						<source>The H function of the security system</source>
+						<target>保安系统 H  键</target>
+					</trans-unit>
+					<trans-unit id="security_i">
+						<source>The I function of the security system</source>
+						<target>保安系统 I  键</target>
+					</trans-unit>
+					<trans-unit id="security_j">
+						<source>The J function of the security system</source>
+						<target>保安系统 J  键</target>
+					</trans-unit>
+					<trans-unit id="security_k">
+						<source>The K function of the security system</source>
+						<target>保安系统 K  键</target>
+					</trans-unit>
+					<trans-unit id="security_l">
+						<source>The L function of the security system</source>
+						<target>保安系统 L  键</target>
+					</trans-unit>
+					<trans-unit id="security_m">
+						<source>N/A</source>
+						<target>N/A</target>
+					</trans-unit>
+					<trans-unit id="security_n">
+						<source>N/A</source>
+						<target>N/A</target>
+					</trans-unit>
+					<trans-unit id="security_o">
+						<source>N/A</source>
+						<target>N/A</target>
+					</trans-unit>
+					<trans-unit id="security_p">
+						<source>N/A</source>
+						<target>N/A</target>
+					</trans-unit>
+					<trans-unit id="camera_interior">
+						<source>Switches to the train's interior view</source>
+						<target>切换车内视点</target>
+					</trans-unit>
+					<trans-unit id="camera_interior_nopanel">
+						<source>Switches to the train's interior view. However, the panel is not displayed.</source>
+					</trans-unit>
+					<trans-unit id="camera_exterior">
+						<source>Switches to the train's exterior view</source>
+						<target>切换车外视点</target>
+					</trans-unit>
+					<trans-unit id="camera_track">
+						<source>Switches to the track view</source>
+						<target>切换轨道视点</target>
+					</trans-unit>
+					<trans-unit id="camera_flyby">
+						<source>Switches between different fly-by views</source>
+						<target>切换定点观察</target>
+					</trans-unit>
+					<trans-unit id="camera_move_forward">
+						<source>Moves the camera forward</source>
+						<target>向前移动视点</target>
+					</trans-unit>
+					<trans-unit id="camera_move_backward">
+						<source>Moves the camera backward</source>
+						<target>向后移动视点</target>
+					</trans-unit>
+					<trans-unit id="camera_move_left">
+						<source>Moves the camera left</source>
+						<target>向左移动视点</target>
+					</trans-unit>
+					<trans-unit id="camera_move_right">
+						<source>Moves the camera right</source>
+						<target>向右移动视点</target>
+					</trans-unit>
+					<trans-unit id="camera_move_up">
+						<source>Moves the camera up</source>
+						<target>向上移动视点</target>
+					</trans-unit>
+					<trans-unit id="camera_move_down">
+						<source>Moves the camera down</source>
+						<target>向下移动视点</target>
+					</trans-unit>
+					<trans-unit id="camera_rotate_left">
+						<source>Rotates the camera left</source>
+						<target>向左旋转视点</target>
+					</trans-unit>
+					<trans-unit id="camera_rotate_right">
+						<source>Rotates the camera right</source>
+						<target>向右旋转视点</target>
+					</trans-unit>
+					<trans-unit id="camera_rotate_up">
+						<source>Rotates the camera up</source>
+						<target>向上旋转视点</target>
+					</trans-unit>
+					<trans-unit id="camera_rotate_down">
+						<source>Rotates the camera down</source>
+						<target>向下旋转视点</target>
+					</trans-unit>
+					<trans-unit id="camera_rotate_ccw">
+						<source>Rotates the camera counter-clockwise</source>
+						<target>逆时针旋转视点</target>
+					</trans-unit>
+					<trans-unit id="camera_rotate_cw">
+						<source>Rotates the camera clockwise</source>
+						<target>顺时针旋转视点</target>
+					</trans-unit>
+					<trans-unit id="camera_zoom_in">
+						<source>Zooms the camera in</source>
+						<target>拉近视点</target>
+					</trans-unit>
+					<trans-unit id="camera_zoom_out">
+						<source>Zooms the camera out</source>
+						<target>拉远视点</target>
+					</trans-unit>
+					<trans-unit id="camera_poi_previous">
+						<source>Jumps to the previous point of interest in the route.</source>
+						<target>上一个推荐视点</target>
+					</trans-unit>
+					<trans-unit id="camera_poi_next">
+						<source>Jumps to the next point of interest in the route.</source>
+						<target>下一个推荐视点</target>
+					</trans-unit>
+					<trans-unit id="camera_reset">
+						<source>Resets the camera view to default values</source>
+						<target>重设视点</target>
+					</trans-unit>
+					<trans-unit id="camera_restriction">
+						<source>Activates or deactivates interior view camera restriction</source>
+						<target>启动或关闭视点限制</target>
+					</trans-unit>
+					<trans-unit id="timetable_toggle">
+						<source>Toggles through different timetable modes</source>
+						<target>切换时刻表模式</target>
+					</trans-unit>
+					<trans-unit id="timetable_up">
+						<source>Scrolls the timetable up</source>
+						<target>向上卷动时刻表</target>
+					</trans-unit>
+					<trans-unit id="timetable_down">
+						<source>Scrolls the timetable down</source>
+						<target>向下卷动时刻表</target>
+					</trans-unit>
+					<trans-unit id="menu_activate">
+						<source>Displays the in-game menu</source>
+						<target>显示游戏菜单</target>
+					</trans-unit>
+					<trans-unit id="menu_up">
+						<source>Moves the cursor up within the in-game menu</source>
+						<target>游戏菜单光标向上</target>
+					</trans-unit>
+					<trans-unit id="menu_down">
+						<source>Moves the cursor down within the in-game menu</source>
+						<target>游戏菜单光标向上</target>
+					</trans-unit>
+					<trans-unit id="menu_enter">
+						<source>Performs the selected command within the in-game menu</source>
+						<target>游戏菜单确认</target>
+					</trans-unit>
+					<trans-unit id="menu_back">
+						<source>Goes back within the in-game menu</source>
+						<target>游戏菜单返回</target>
+					</trans-unit>
+					<trans-unit id="misc_clock">
+						<source>Shows or hides the clock</source>
+						<target>切换时间显示</target>
+					</trans-unit>
+					<trans-unit id="misc_speed">
+						<source>Toggles through different speed display modes</source>
+						<target>切换速度显示</target>
+					</trans-unit>
+					<trans-unit id="misc_gradient">
+						<source>Toggles through different gradient display modes</source>
+						<target>切换坡度显示</target>
+					</trans-unit>
+					<trans-unit id="misc_dist_next_station">
+						<source>Toggles through different next station remain distance display modes</source>
+						<target>Toggles through different next station remain distance display modes</target>
+					</trans-unit>
+					<trans-unit id="misc_timefactor">
+						<source>Toggles through different time acceleration factors</source>
+						<target>切换时间倍速</target>
+					</trans-unit>
+					<trans-unit id="misc_fps">
+						<source>Shows or hides the frame rate display</source>
+						<target>切换FPS(帧率)显示</target>
+					</trans-unit>
+					<trans-unit id="misc_ai">
+						<source>Activates or deactivates the virtual driver (AI)</source>
+						<target>切换AI驾驶</target>
+					</trans-unit>
+					<trans-unit id="misc_pause">
+						<source>Pauses or resumes the simulation</source>
+						<target>暂停游戏</target>
+					</trans-unit>
+					<trans-unit id="misc_fullscreen">
+						<source>Toggles to or from fullscreen mode</source>
+						<target>切换全屏</target>
+					</trans-unit>
+					<trans-unit id="misc_mute">
+						<source>Mutes sound or resumes playing sounds</source>
+						<target>静音</target>
+					</trans-unit>
+					<trans-unit id="misc_quit">
+						<source>Quits the simulation</source>
+						<target>推出游戏</target>
+					</trans-unit>
+					<trans-unit id="misc_interface">
+						<source>Toggles through different interface modes</source>
+						<target>切换接口模式</target>
+					</trans-unit>
+					<trans-unit id="misc_backface">
+						<source>Activates or deactivates backface culling</source>
+						<target>切换背向面去除</target>
+					</trans-unit>
+					<trans-unit id="misc_cpumode">
+						<source>Switches to or from reduced CPU mode</source>
+						<target>切换低处理器利用模式</target>
+					</trans-unit>
+					<trans-unit id="debug_wireframe">
+						<source>Activates or deactivates wireframe mode</source>
+						<target>切换线框描绘</target>
+					</trans-unit>
+					<trans-unit id="debug_normals">
+						<source>Shows or hides vertex normals</source>
+						<target>切换顶点法线</target>
+					</trans-unit>
+					<trans-unit id="debug_brake">
+						<source>Shows or hides brake system debug output</source>
+						<target>切换制动调试信息</target>
+					</trans-unit>
+					<trans-unit id="debug_ats">
+						<source>Shows or hides plugin debug output</source>
+						<target>Shows or hides plugin debug output</target>
+					</trans-unit>
+					<trans-unit id="debug_touch_mode">
+						<source>Shows or hides the touch range</source>
+					</trans-unit>
+					<trans-unit id="route_information">
+						<source>Shows or hides the route information window</source>
+						<target>切换线路信息</target>
+					</trans-unit>
+					<trans-unit id="show_events">
+						<source>Shows or hides event markers (For developers)</source>
+						<target>Shows or hides event markers (For developers)</target>
+					</trans-unit>
+					<trans-unit id="wiper_speed_up">
+						<source>Increases the speed of the windscreen wipers</source>
+						<target>加快风挡雨刮器刮水速度</target>
+					</trans-unit>
+					<trans-unit id="wiper_speed_down">
+						<source>Decreases the speed of the windscreen wipers</source>
+						<target>减慢风挡雨刮器刮水速度</target>
+					</trans-unit>
+					<trans-unit id="fill_fuel">
+						<source>Fills fuel</source>
+						<target>加注燃油</target>
+					</trans-unit>
+					<trans-unit id="headlights">
+						<source>Toggles the train headlights</source>
+						<target>切换列车前灯</target>
+					</trans-unit>
+					<trans-unit id="live_steam_injector">
+						<source>Activates or deactivates the live steam injector</source>
+						<target>切换流通蒸汽注水器</target>
+					</trans-unit>
+					<trans-unit id="exhaust_steam_injector">
+						<source>Activates or deactivates the exhaust steam injector</source>
+						<target>切换废气注水器</target>
+					</trans-unit>
+					<trans-unit id="increase_cutoff">
+						<source>Increases the cutoff</source>
+						<target>上调进气阀关闭点</target>
+					</trans-unit>
+					<trans-unit id="decrease_cutoff">
+						<source>Decreases the cutoff</source>
+						<target>下调进气阀关闭点</target>
+					</trans-unit>
+					<trans-unit id="blowers">
+						<source>Activates or deactivates the blowers</source>
+						<target>切换送风机</target>
+					</trans-unit>
+					<trans-unit id="engine_start">
+						<source>Starts the engine</source>
+						<target>启动燃油发动机</target>
+					</trans-unit>
+					<trans-unit id="engine_stop">
+						<source>Stops the engine</source>
+						<target>关闭燃油发动机</target>
+					</trans-unit>
+					<trans-unit id="gear_up">
+						<source>Shifts up a gear in a train fitted with a gearbox</source>
+						<target>含变速箱列车加档</target>
+					</trans-unit>
+					<trans-unit id="gear_down">
+						<source>Shifts down a gear in a train fitted with a gearbox</source>
+						<target>含变速箱列车减档</target>
+					</trans-unit>
+					<trans-unit id="raise_pantograph">
+						<source>Raises the pantograph</source>
+						<target>升起集电弓</target>
+					</trans-unit>
+					<trans-unit id="lower_pantograph">
+						<source>Lowers the pantograph</source>
+						<target>降下集电弓</target>
+					</trans-unit>
+					<trans-unit id="main_breaker">
+						<source>Toggles the main breaker</source>
+						<target>切换主断路器</target>
+					</trans-unit>
+				</group>
+				<group id="keys">
+					<trans-unit id="0">
+						<source>0</source>
+						<target>0</target>
+					</trans-unit>
+					<trans-unit id="1">
+						<source>1</source>
+						<target>1</target>
+					</trans-unit>
+					<trans-unit id="2">
+						<source>2</source>
+						<target>2</target>
+					</trans-unit>
+					<trans-unit id="3">
+						<source>3</source>
+						<target>3</target>
+					</trans-unit>
+					<trans-unit id="4">
+						<source>4</source>
+						<target>4</target>
+					</trans-unit>
+					<trans-unit id="5">
+						<source>5</source>
+						<target>5</target>
+					</trans-unit>
+					<trans-unit id="6">
+						<source>6</source>
+						<target>6</target>
+					</trans-unit>
+					<trans-unit id="7">
+						<source>7</source>
+						<target>7</target>
+					</trans-unit>
+					<trans-unit id="8">
+						<source>8</source>
+						<target>8</target>
+					</trans-unit>
+					<trans-unit id="9">
+						<source>9</source>
+						<target>9</target>
+					</trans-unit>
+					<trans-unit id="ampersand">
+						<source>Ampersand</source>
+						<target>&amp;</target>
+					</trans-unit>
+					<trans-unit id="asterisk">
+						<source>Asterisk</source>
+						<target>*</target>
+					</trans-unit>
+					<trans-unit id="at">
+						<source>At</source>
+						<target>@</target>
+					</trans-unit>
+					<trans-unit id="backquote">
+						<source>Backquote</source>
+						<target>`</target>
+					</trans-unit>
+					<trans-unit id="backslash">
+						<source>Backslash</source>
+						<target>\\</target>
+					</trans-unit>
+					<trans-unit id="backspace">
+						<source>Backspace</source>
+						<target>Backspace</target>
+					</trans-unit>
+					<trans-unit id="break">
+						<source>Break</source>
+						<target>Break</target>
+					</trans-unit>
+					<trans-unit id="capslock">
+						<source>Capslock</source>
+						<target>Capslock</target>
+					</trans-unit>
+					<trans-unit id="caret">
+						<source>Caret</source>
+						<target>^</target>
+					</trans-unit>
+					<trans-unit id="clear">
+						<source>Clear</source>
+						<target>Clear</target>
+					</trans-unit>
+					<trans-unit id="colon">
+						<source>Colon</source>
+						<target>:</target>
+					</trans-unit>
+					<trans-unit id="comma">
+						<source>Comma</source>
+						<target>,</target>
+					</trans-unit>
+					<trans-unit id="delete">
+						<source>Delete</source>
+						<target>Delete</target>
+					</trans-unit>
+					<trans-unit id="dollar">
+						<source>Dollar</source>
+						<target>$</target>
+					</trans-unit>
+					<trans-unit id="down">
+						<source>Down</source>
+						<target>↓</target>
+					</trans-unit>
+					<trans-unit id="end">
+						<source>End</source>
+						<target>End</target>
+					</trans-unit>
+					<trans-unit id="enter">
+						<source>Enter</source>
+						<target>Enter</target>
+					</trans-unit>
+					<trans-unit id="equals">
+						<source>Equals</source>
+						<target>=</target>
+					</trans-unit>
+					<trans-unit id="escape">
+						<source>Escape</source>
+						<target>Escape</target>
+					</trans-unit>
+					<trans-unit id="euro">
+						<source>Euro</source>
+						<target>€</target>
+					</trans-unit>
+					<trans-unit id="exclaim">
+						<source>Exclamation</source>
+						<target>!</target>
+					</trans-unit>
+					<trans-unit id="f1">
+						<source>F1</source>
+						<target>F1</target>
+					</trans-unit>
+					<trans-unit id="f2">
+						<source>F2</source>
+						<target>F2</target>
+					</trans-unit>
+					<trans-unit id="f3">
+						<source>F3</source>
+						<target>F3</target>
+					</trans-unit>
+					<trans-unit id="f4">
+						<source>F4</source>
+						<target>F4</target>
+					</trans-unit>
+					<trans-unit id="f5">
+						<source>F5</source>
+						<target>F5</target>
+					</trans-unit>
+					<trans-unit id="f6">
+						<source>F6</source>
+						<target>F6</target>
+					</trans-unit>
+					<trans-unit id="f7">
+						<source>F7</source>
+						<target>F7</target>
+					</trans-unit>
+					<trans-unit id="f8">
+						<source>F8</source>
+						<target>F8</target>
+					</trans-unit>
+					<trans-unit id="f9">
+						<source>F9</source>
+						<target>F9</target>
+					</trans-unit>
+					<trans-unit id="f10">
+						<source>F10</source>
+						<target>F10</target>
+					</trans-unit>
+					<trans-unit id="f11">
+						<source>F11</source>
+						<target>F11</target>
+					</trans-unit>
+					<trans-unit id="f12">
+						<source>F12</source>
+						<target>F12</target>
+					</trans-unit>
+					<trans-unit id="f13">
+						<source>F13</source>
+						<target>F13</target>
+					</trans-unit>
+					<trans-unit id="f14">
+						<source>F14</source>
+						<target>F14</target>
+					</trans-unit>
+					<trans-unit id="f15">
+						<source>F15</source>
+						<target>F15</target>
+					</trans-unit>
+					<trans-unit id="greater">
+						<source>Greater</source>
+						<target>&gt;</target>
+					</trans-unit>
+					<trans-unit id="hash">
+						<source>Hash</source>
+						<target>#</target>
+					</trans-unit>
+					<trans-unit id="help">
+						<source>Help</source>
+						<target>Help</target>
+					</trans-unit>
+					<trans-unit id="home">
+						<source>Home</source>
+						<target>Home</target>
+					</trans-unit>
+					<trans-unit id="insert">
+						<source>Insert</source>
+						<target>Insert</target>
+					</trans-unit>
+					<trans-unit id="kp0">
+						<source>Keypad 0</source>
+						<target>小键盘 0</target>
+					</trans-unit>
+					<trans-unit id="kp1">
+						<source>Keypad 1</source>
+						<target>小键盘 1</target>
+					</trans-unit>
+					<trans-unit id="kp2">
+						<source>Keypad 2</source>
+						<target>小键盘 2</target>
+					</trans-unit>
+					<trans-unit id="kp3">
+						<source>Keypad 3</source>
+						<target>小键盘 3</target>
+					</trans-unit>
+					<trans-unit id="kp4">
+						<source>Keypad 4</source>
+						<target>小键盘 4</target>
+					</trans-unit>
+					<trans-unit id="kp5">
+						<source>Keypad 5</source>
+						<target>小键盘 5</target>
+					</trans-unit>
+					<trans-unit id="kp6">
+						<source>Keypad 6</source>
+						<target>小键盘 6</target>
+					</trans-unit>
+					<trans-unit id="kp7">
+						<source>Keypad 7</source>
+						<target>小键盘 7</target>
+					</trans-unit>
+					<trans-unit id="kp8">
+						<source>Keypad 8</source>
+						<target>小键盘 8</target>
+					</trans-unit>
+					<trans-unit id="kp9">
+						<source>Keypad 9</source>
+						<target>小键盘 9</target>
+					</trans-unit>
+					<trans-unit id="kp_divide">
+						<source>Keypad Divide</source>
+						<target>小键盘 /</target>
+					</trans-unit>
+					<trans-unit id="kp_enter">
+						<source>Keypad Enter</source>
+						<target>小键盘 Enter</target>
+					</trans-unit>
+					<trans-unit id="kp_equals">
+						<source>Keypad Equals</source>
+						<target>小键盘 =</target>
+					</trans-unit>
+					<trans-unit id="kp_minus">
+						<source>Keypad Minus</source>
+						<target>小键盘 -</target>
+					</trans-unit>
+					<trans-unit id="kp_multiply">
+						<source>Keypad Multiply</source>
+						<target>小键盘 *</target>
+					</trans-unit>
+					<trans-unit id="kp_period">
+						<source>Keypad Period</source>
+						<target>小键盘 .</target>
+					</trans-unit>
+					<trans-unit id="kp_plus">
+						<source>Keypad Plus</source>
+						<target>小键盘 +</target>
+					</trans-unit>
+					<trans-unit id="lalt">
+						<source>Left Alt</source>
+						<target>左 Alt</target>
+					</trans-unit>
+					<trans-unit id="lctrl">
+						<source>Left Ctrl</source>
+						<target>左 Ctrl</target>
+					</trans-unit>
+					<trans-unit id="left">
+						<source>Left</source>
+						<target>←</target>
+					</trans-unit>
+					<trans-unit id="leftbracket">
+						<source>Left bracket</source>
+						<target>[</target>
+					</trans-unit>
+					<trans-unit id="leftparen">
+						<source>Left parenthesis</source>
+						<target>(</target>
+					</trans-unit>
+					<trans-unit id="less">
+						<source>Less</source>
+						<target>&lt;</target>
+					</trans-unit>
+					<trans-unit id="lmeta">
+						<source>Left Meta</source>
+						<target>左 Meta</target>
+					</trans-unit>
+					<trans-unit id="lshift">
+						<source>Left Shift</source>
+						<target>左 Shift</target>
+					</trans-unit>
+					<trans-unit id="lsuper">
+						<source>Left Application</source>
+						<target>左 Application</target>
+					</trans-unit>
+					<trans-unit id="menu">
+						<source>Menu</source>
+						<target>Menu</target>
+					</trans-unit>
+					<trans-unit id="minus">
+						<source>Minus</source>
+						<target>-</target>
+					</trans-unit>
+					<trans-unit id="mode">
+						<source>Alt Gr</source>
+						<target>Alt Gr</target>
+					</trans-unit>
+					<trans-unit id="numlock">
+						<source>Numlock</source>
+						<target>Numlock</target>
+					</trans-unit>
+					<trans-unit id="pagedown">
+						<source>Page down</source>
+						<target>Page down</target>
+					</trans-unit>
+					<trans-unit id="pageup">
+						<source>Page up</source>
+						<target>Page up</target>
+					</trans-unit>
+					<trans-unit id="pause">
+						<source>Pause</source>
+						<target>Pause</target>
+					</trans-unit>
+					<trans-unit id="period">
+						<source>Period</source>
+						<target>.</target>
+					</trans-unit>
+					<trans-unit id="plus">
+						<source>Plus</source>
+						<target>+</target>
+					</trans-unit>
+					<trans-unit id="power">
+						<source>Power</source>
+						<target>Power</target>
+					</trans-unit>
+					<trans-unit id="print">
+						<source>Print</source>
+						<target>Print</target>
+					</trans-unit>
+					<trans-unit id="question">
+						<source>Question</source>
+						<target>?</target>
+					</trans-unit>
+					<trans-unit id="quote">
+						<source>Quote</source>
+						<target>'</target>
+					</trans-unit>
+					<trans-unit id="quotedbl">
+						<source>Quote double</source>
+						<target>"</target>
+					</trans-unit>
+					<trans-unit id="ralt">
+						<source>Right Alt</source>
+						<target>右 Alt</target>
+					</trans-unit>
+					<trans-unit id="rctrl">
+						<source>Right Ctrl</source>
+						<target>右 Ctrl</target>
+					</trans-unit>
+					<trans-unit id="return">
+						<source>Return</source>
+						<target>Return</target>
+					</trans-unit>
+					<trans-unit id="right">
+						<source>Right</source>
+						<target>→</target>
+					</trans-unit>
+					<trans-unit id="rightbracket">
+						<source>Right bracket</source>
+						<target>]</target>
+					</trans-unit>
+					<trans-unit id="rightparen">
+						<source>Right parenthesis</source>
+						<target>)</target>
+					</trans-unit>
+					<trans-unit id="rmeta">
+						<source>Right Meta</source>
+						<target>右 Meta</target>
+					</trans-unit>
+					<trans-unit id="rshift">
+						<source>Right Shift</source>
+						<target>右 Shift</target>
+					</trans-unit>
+					<trans-unit id="rsuper">
+						<source>Right Application</source>
+						<target>右 Application</target>
+					</trans-unit>
+					<trans-unit id="scrolllock">
+						<source>Scrolllock</source>
+						<target>Scrolllock</target>
+					</trans-unit>
+					<trans-unit id="semicolon">
+						<source>Semicolon</source>
+						<target>;</target>
+					</trans-unit>
+					<trans-unit id="slash">
+						<source>Slash</source>
+						<target>/</target>
+					</trans-unit>
+					<trans-unit id="space">
+						<source>Space</source>
+						<target>Space</target>
+					</trans-unit>
+					<trans-unit id="sysreq">
+						<source>SysRq</source>
+						<target>SysRq</target>
+					</trans-unit>
+					<trans-unit id="tab">
+						<source>Tab</source>
+						<target>Tab</target>
+					</trans-unit>
+					<trans-unit id="underscore">
+						<source>Underscore</source>
+						<target>_ (下划线)</target>
+					</trans-unit>
+					<trans-unit id="up">
+						<source>Up</source>
+						<target>↑</target>
+					</trans-unit>
+					<trans-unit id="a">
+						<source>A</source>
+						<target>A</target>
+					</trans-unit>
+					<trans-unit id="b">
+						<source>B</source>
+						<target>B</target>
+					</trans-unit>
+					<trans-unit id="c">
+						<source>C</source>
+						<target>C</target>
+					</trans-unit>
+					<trans-unit id="d">
+						<source>D</source>
+						<target>D</target>
+					</trans-unit>
+					<trans-unit id="e">
+						<source>E</source>
+						<target>E</target>
+					</trans-unit>
+					<trans-unit id="f">
+						<source>F</source>
+						<target>F</target>
+					</trans-unit>
+					<trans-unit id="g">
+						<source>G</source>
+						<target>G</target>
+					</trans-unit>
+					<trans-unit id="h">
+						<source>H</source>
+						<target>H</target>
+					</trans-unit>
+					<trans-unit id="i">
+						<source>I</source>
+						<target>I</target>
+					</trans-unit>
+					<trans-unit id="j">
+						<source>J</source>
+						<target>J</target>
+					</trans-unit>
+					<trans-unit id="k">
+						<source>K</source>
+						<target>K</target>
+					</trans-unit>
+					<trans-unit id="l">
+						<source>L</source>
+						<target>L</target>
+					</trans-unit>
+					<trans-unit id="m">
+						<source>M</source>
+						<target>M</target>
+					</trans-unit>
+					<trans-unit id="n">
+						<source>N</source>
+						<target>N</target>
+					</trans-unit>
+					<trans-unit id="o">
+						<source>O</source>
+						<target>O</target>
+					</trans-unit>
+					<trans-unit id="p">
+						<source>P</source>
+						<target>P</target>
+					</trans-unit>
+					<trans-unit id="q">
+						<source>Q</source>
+						<target>Q</target>
+					</trans-unit>
+					<trans-unit id="r">
+						<source>R</source>
+						<target>R</target>
+					</trans-unit>
+					<trans-unit id="s">
+						<source>S</source>
+						<target>S</target>
+					</trans-unit>
+					<trans-unit id="t">
+						<source>T</source>
+						<target>T</target>
+					</trans-unit>
+					<trans-unit id="u">
+						<source>U</source>
+						<target>U</target>
+					</trans-unit>
+					<trans-unit id="v">
+						<source>V</source>
+						<target>V</target>
+					</trans-unit>
+					<trans-unit id="w">
+						<source>W</source>
+						<target>W</target>
+					</trans-unit>
+					<trans-unit id="x">
+						<source>X</source>
+						<target>X</target>
+					</trans-unit>
+					<trans-unit id="y">
+						<source>Y</source>
+						<target>Y</target>
+					</trans-unit>
+					<trans-unit id="z">
+						<source>Z</source>
+						<target>Z</target>
+					</trans-unit>
+				</group>
+			</group>
+			<group id="train_editor">
+				<group id="general">
+					<trans-unit id="new">
+						<source>New</source>
+						<target>New</target>
+					</trans-unit>
+					<trans-unit id="open">
+						<source>Open...</source>
+						<target>Open...</target>
+					</trans-unit>
+					<trans-unit id="save">
+						<source>Save</source>
+						<target>Save</target>
+					</trans-unit>
+					<trans-unit id="save_as">
+						<source>Save as...</source>
+						<target>Save as...</target>
+					</trans-unit>
+					<trans-unit id="close">
+						<source>Close</source>
+						<target>Close</target>
+					</trans-unit>
+					<trans-unit id="new_message">
+						<source>Do you want to save data before creating a new train?</source>
+						<target>Do you want to save data before creating a new train?</target>
+					</trans-unit>
+					<trans-unit id="open_message">
+						<source>Do you want to save data before opening another train?</source>
+						<target>Do you want to save data before opening another train?</target>
+					</trans-unit>
+					<trans-unit id="close_message">
+						<source>Do you want to save data before closing?</source>
+						<target>Do you want to save data before closing?</target>
+					</trans-unit>
+					<trans-unit id="properties_one">
+						<source>Properties (1)</source>
+						<target>Properties (1)</target>
+					</trans-unit>
+					<trans-unit id="properties_two">
+						<source>Properties (2)</source>
+						<target>Properties (2)</target>
+					</trans-unit>
+				</group>
+				<group id="performance">
+					<trans-unit id="performance">
+						<source>Performance</source>
+						<target>Performance</target>
+					</trans-unit>
+					<trans-unit id="deceleration">
+						<source>Deceleration:</source>
+						<target>Deceleration:</target>
+					</trans-unit>
+					<trans-unit id="static_friction">
+						<source>CoefficientOfStaticFriction:</source>
+						<target>CoefficientOfStaticFriction:</target>
+					</trans-unit>
+					<trans-unit id="rolling_resistance">
+						<source>CoefficientOfRollingResistance:</source>
+						<target>CoefficientOfRollingResistance:</target>
+					</trans-unit>
+					<trans-unit id="aerodynamic_drag">
+						<source>AerodynamicDragCoefficient:</source>
+						<target>AerodynamicDragCoefficient:</target>
+					</trans-unit>
+				</group>
+				<group id="delay">
+					<trans-unit id="delay">
+						<source>Delay</source>
+						<target>Delay</target>
+					</trans-unit>
+					<trans-unit id="power_up">
+						<source>DelayPowerUp</source>
+						<target>DelayPowerUp</target>
+					</trans-unit>
+					<trans-unit id="power_down">
+						<source>DelayPowerDown</source>
+						<target>DelayPowerDown</target>
+					</trans-unit>
+					<trans-unit id="brake_up">
+						<source>DelayBrakeUp</source>
+						<target>DelayBrakeUp</target>
+					</trans-unit>
+					<trans-unit id="brake_down">
+						<source>DelayBrakeDown</source>
+						<target>DelayBrakeDown</target>
+					</trans-unit>
+					<trans-unit id="set">
+						<source>Set</source>
+						<target>Set</target>
+					</trans-unit>
+					<trans-unit id="notch">
+						<source>Notch</source>
+						<target>Notch</target>
+					</trans-unit>
+					<trans-unit id="save">
+						<source>Save</source>
+						<target>Save</target>
+					</trans-unit>
+					<trans-unit id="cancel">
+						<source>Cancel</source>
+						<target>Cancel</target>
+					</trans-unit>
+				</group>
+				<group id="move">
+					<trans-unit id="move">
+						<source>Move</source>
+						<target>Move</target>
+					</trans-unit>
+					<trans-unit id="jerk_power_up">
+						<source>JerkPowerUp:</source>
+						<target>JerkPowerUp:</target>
+					</trans-unit>
+					<trans-unit id="jerk_power_down">
+						<source>JerkPowerDown:</source>
+						<target>JerkPowerDown:</target>
+					</trans-unit>
+					<trans-unit id="jerk_brake_up">
+						<source>JerkBrakeUp:</source>
+						<target>JerkBrakeUp:</target>
+					</trans-unit>
+					<trans-unit id="jerk_brake_down">
+						<source>JerkBrakeDown:</source>
+						<target>JerkBrakeDown:</target>
+					</trans-unit>
+					<trans-unit id="brake_cylinder_up">
+						<source>BrakeCylinderUp:</source>
+						<target>BrakeCylinderUp:</target>
+					</trans-unit>
+					<trans-unit id="brake_cylinder_down">
+						<source>BrakeCylinderDown:</source>
+						<target>BrakeCylinderDown:</target>
+					</trans-unit>
+				</group>
+				<group id="brake">
+					<trans-unit id="brake">
+						<source>Brake</source>
+						<target>Brake</target>
+					</trans-unit>
+					<trans-unit id="type">
+						<source>BrakeType:</source>
+						<target>BrakeType:</target>
+					</trans-unit>
+					<trans-unit id="control_system">
+						<source>BrakeControlSystem:</source>
+						<target>BrakeControlSystem:</target>
+					</trans-unit>
+					<trans-unit id="control_speed">
+						<source>BrakeControlSpeed:</source>
+						<target>BrakeControlSpeed:</target>
+					</trans-unit>
+					<trans-unit id="smee">
+						<source>Electromagnetic straight air brake</source>
+						<target>Electromagnetic straight air brake</target>
+					</trans-unit>
+					<trans-unit id="ecb">
+						<source>Electro-pneumatic air brake without brake pipe</source>
+						<target>Electro-pneumatic air brake without brake pipe</target>
+					</trans-unit>
+					<trans-unit id="cl">
+						<source>Air brake with partial release feature</source>
+						<target>Air brake with partial release feature</target>
+					</trans-unit>
+					<trans-unit id="control_system_none">
+						<source>None</source>
+						<target>None</target>
+					</trans-unit>
+					<trans-unit id="lock_out_valve">
+						<source>Closing electromagnetic valve</source>
+						<target>Closing electromagnetic valve</target>
+					</trans-unit>
+					<trans-unit id="delay_including_control">
+						<source>Delay-including control</source>
+						<target>Delay-including control</target>
+					</trans-unit>
+				</group>
+				<group id="pressure">
+					<trans-unit id="pressure">
+						<source>Pressure</source>
+						<target>Pressure</target>
+					</trans-unit>
+					<trans-unit id="brake_cylinder_service_max">
+						<source>BrakeCylinderServiceMaximumPressure:</source>
+						<target>BrakeCylinderServiceMaximumPressure:</target>
+					</trans-unit>
+					<trans-unit id="brake_cylinder_emergency_max">
+						<source>BrakeCylinderEmergencyMaximumPressure:</source>
+						<target>BrakeCylinderEmergencyMaximumPressure:</target>
+					</trans-unit>
+					<trans-unit id="main_reservoir_min">
+						<source>MainReservoirMinimumPressure:</source>
+						<target>MainReservoirMinimumPressure:</target>
+					</trans-unit>
+					<trans-unit id="main_reservoir_max">
+						<source>MainReservoirMaximumPressure:</source>
+						<target>MainReservoirMaximumPressure:</target>
+					</trans-unit>
+					<trans-unit id="brake_pipe_normal">
+						<source>BrakePipeNormalPressure:</source>
+						<target>BrakePipeNormalPressure:</target>
+					</trans-unit>
+				</group>
+				<group id="handle">
+					<trans-unit id="handle">
+						<source>Handle</source>
+						<target>Handle</target>
+					</trans-unit>
+					<trans-unit id="type">
+						<source>HandleType:</source>
+						<target>HandleType:</target>
+					</trans-unit>
+					<trans-unit id="power_notches">
+						<source>PowerNotches:</source>
+						<target>PowerNotches:</target>
+					</trans-unit>
+					<trans-unit id="brake_notches">
+						<source>BrakeNotches:</source>
+						<target>BrakeNotches:</target>
+					</trans-unit>
+					<trans-unit id="driver_power_notches">
+						<source>DriverPowerNotches:</source>
+						<target>DriverPowerNotches:</target>
+					</trans-unit>
+					<trans-unit id="driver_brake_notches">
+						<source>DriverBrakeNotches:</source>
+						<target>DriverBrakeNotches:</target>
+					</trans-unit>
+					<trans-unit id="power_notch_reduce_steps">
+						<source>PowerNotchReduceSteps:</source>
+						<target>PowerNotchReduceSteps:</target>
+					</trans-unit>
+					<trans-unit id="separated">
+						<source>Separated</source>
+						<target>Separated</target>
+					</trans-unit>
+					<trans-unit id="combined">
+						<source>Combined</source>
+						<target>Combined</target>
+					</trans-unit>
+					<trans-unit id="brake_notches_error_message">
+						<source>BrakeNotches must be at least 1 if HoldBrake is set.</source>
+						<target>BrakeNotches must be at least 1 if HoldBrake is set.</target>
+					</trans-unit>
+					<trans-unit id="driver_power_notches_error_message">
+						<source>DriverPowerNotches must be less than or equal to PowerNotches.</source>
+						<target>DriverPowerNotches must be less than or equal to PowerNotches.</target>
+					</trans-unit>
+					<trans-unit id="driver_brake_notches_error_message">
+						<source>DriverBrakeNotches must be less than or equal to BrakeNotches.</source>
+						<target>DriverBrakeNotches must be less than or equal to BrakeNotches.</target>
+					</trans-unit>
+				</group>
+				<group id="cab">
+					<trans-unit id="cab">
+						<source>Cab</source>
+						<target>Cab</target>
+					</trans-unit>
+					<trans-unit id="driver_car">
+						<source>DriverCar:</source>
+						<target>DriverCar:</target>
+					</trans-unit>
+					<trans-unit id="driver_car_error_message">
+						<source>DriverCar must be less than NumberOfMotorCars + NumberOfTrailerCars.</source>
+						<target>DriverCar must be less than NumberOfMotorCars + NumberOfTrailerCars.</target>
+					</trans-unit>
+				</group>
+				<group id="car">
+					<trans-unit id="car">
+						<source>Car</source>
+						<target>Car</target>
+					</trans-unit>
+					<trans-unit id="motor_car_mass">
+						<source>MotorCarMass:</source>
+						<target>MotorCarMass:</target>
+					</trans-unit>
+					<trans-unit id="number_of_motor_cars">
+						<source>NumberOfMotorCars:</source>
+						<target>NumberOfMotorCars:</target>
+					</trans-unit>
+					<trans-unit id="trailer_car_mass">
+						<source>TrailerCarMass:</source>
+						<target>TrailerCarMass:</target>
+					</trans-unit>
+					<trans-unit id="number_of_trailer_cars">
+						<source>NumberOfTrailerCars:</source>
+						<target>NumberOfTrailerCars:</target>
+					</trans-unit>
+					<trans-unit id="length_of_a_car">
+						<source>LengthOfACar:</source>
+						<target>LengthOfACar:</target>
+					</trans-unit>
+					<trans-unit id="front_car_is_motor_car">
+						<source>FrontCarIsMotorCar:</source>
+						<target>FrontCarIsMotorCar:</target>
+					</trans-unit>
+					<trans-unit id="width_of_a_car">
+						<source>WidthOfACar:</source>
+						<target>WidthOfACar:</target>
+					</trans-unit>
+					<trans-unit id="height_of_a_car">
+						<source>HeightOfACar:</source>
+						<target>HeightOfACar:</target>
+					</trans-unit>
+					<trans-unit id="center_of_gravity_height">
+						<source>CenterOfGravityHeight:</source>
+						<target>CenterOfGravityHeight:</target>
+					</trans-unit>
+					<trans-unit id="exposed_frontal_area">
+						<source>ExposedFrontalArea:</source>
+						<target>ExposedFrontalArea:</target>
+					</trans-unit>
+					<trans-unit id="unexposed_frontal_area">
+						<source>UnexposedFrontalArea:</source>
+						<target>UnexposedFrontalArea:</target>
+					</trans-unit>
+					<trans-unit id="number_of_trailer_cars_error_message">
+						<source>NumberOfTrailerCars must be at least 1 if FrontCarIsAMotorCar is not set.</source>
+						<target>NumberOfTrailerCars must be at least 1 if FrontCarIsAMotorCar is not set.</target>
+					</trans-unit>
+				</group>
+				<group id="device">
+					<trans-unit id="device">
+						<source>Device</source>
+						<target>Device</target>
+					</trans-unit>
+					<trans-unit id="const_speed">
+						<source>ConstSpeed:</source>
+						<target>ConstSpeed:</target>
+					</trans-unit>
+					<trans-unit id="hold_brake">
+						<source>HoldBrake:</source>
+						<target>HoldBrake:</target>
+					</trans-unit>
+					<trans-unit id="readhesion_device">
+						<source>ReAdhesionDevice:</source>
+						<target>ReAdhesionDevice:</target>
+					</trans-unit>
+					<trans-unit id="pass_alarm">
+						<source>PassAlarm:</source>
+						<target>PassAlarm:</target>
+					</trans-unit>
+					<trans-unit id="door_open_mode">
+						<source>DoorOpenMode:</source>
+						<target>DoorOpenMode:</target>
+					</trans-unit>
+					<trans-unit id="door_close_mode">
+						<source>DoorCloseMode:</source>
+						<target>DoorCloseMode:</target>
+					</trans-unit>
+					<trans-unit id="door_width">
+						<source>DoorWidth:</source>
+						<target>DoorWidth:</target>
+					</trans-unit>
+					<trans-unit id="door_max_tolerance">
+						<source>DoorMaxTolerance:</source>
+						<target>DoorMaxTolerance:</target>
+					</trans-unit>
+					<trans-unit id="none">
+						<source>None</source>
+						<target>None</target>
+					</trans-unit>
+					<trans-unit id="manual_switching">
+						<source>Manual switching</source>
+						<target>Manual switching</target>
+					</trans-unit>
+					<trans-unit id="automatic_switching">
+						<source>Automatic switching</source>
+						<target>Automatic switching</target>
+					</trans-unit>
+					<trans-unit id="type_a">
+						<source>Type A (instant)</source>
+						<target>Type A (instant)</target>
+					</trans-unit>
+					<trans-unit id="type_b">
+						<source>Type B (slow)</source>
+						<target>Type B (slow)</target>
+					</trans-unit>
+					<trans-unit id="type_c">
+						<source>Type C (medium)</source>
+						<target>Type C (medium)</target>
+					</trans-unit>
+					<trans-unit id="type_d">
+						<source>Type D (fast)</source>
+						<target>Type D (fast)</target>
+					</trans-unit>
+					<trans-unit id="single">
+						<source>Single</source>
+						<target>Single</target>
+					</trans-unit>
+					<trans-unit id="looping">
+						<source>Looping</source>
+						<target>Looping</target>
+					</trans-unit>
+					<trans-unit id="semi_automatic">
+						<source>Semi-automatic</source>
+						<target>Semi-automatic</target>
+					</trans-unit>
+					<trans-unit id="automatic">
+						<source>Automatic</source>
+						<target>Automatic</target>
+					</trans-unit>
+					<trans-unit id="manual">
+						<source>Manual</source>
+						<target>Manual</target>
+					</trans-unit>
+				</group>
+				<group id="acceleration">
+					<trans-unit id="acceleration">
+						<source>Acceleration</source>
+						<target>Acceleration</target>
+					</trans-unit>
+					<trans-unit id="notch">
+						<source>Notch:</source>
+						<target>Notch:</target>
+					</trans-unit>
+					<trans-unit id="data">
+						<source>Data</source>
+						<target>Data</target>
+					</trans-unit>
+					<trans-unit id="preview">
+						<source>Preview</source>
+						<target>Preview</target>
+					</trans-unit>
+					<trans-unit id="subtract_deceleration">
+						<source>Subtract deceleration due to air and rolling resistance</source>
+						<target>Subtract deceleration due to air and rolling resistance</target>
+					</trans-unit>
+					<trans-unit id="max_x">
+						<source>Xmax:</source>
+						<target>Xmax:</target>
+					</trans-unit>
+					<trans-unit id="max_y">
+						<source>Ymax:</source>
+						<target>Ymax:</target>
+					</trans-unit>
+				</group>
+				<group id="motor">
+					<trans-unit id="sound">
+						<source>Motor Sound</source>
+						<target>Motor Sound</target>
+					</trans-unit>
+					<trans-unit id="edit">
+						<source>Edit mode</source>
+						<target>Edit mode</target>
+					</trans-unit>
+					<trans-unit id="sound_index">
+						<source>SoundIndex:</source>
+						<target>SoundIndex:</target>
+					</trans-unit>
+					<trans-unit id="pitch">
+						<source>Pitch</source>
+						<target>Pitch</target>
+					</trans-unit>
+					<trans-unit id="volume">
+						<source>Volume</source>
+						<target>Volume</target>
+					</trans-unit>
+					<trans-unit id="sound_none">
+						<source>None</source>
+						<target>None</target>
+					</trans-unit>
+					<trans-unit id="preview">
+						<source>Preview</source>
+						<target>Preview</target>
+					</trans-unit>
+					<trans-unit id="y_pitch">
+						<source>Ypitch</source>
+						<target>Ypitch</target>
+					</trans-unit>
+					<trans-unit id="y_volume">
+						<source>Yvolume</source>
+						<target>Yvolume</target>
+					</trans-unit>
+					<trans-unit id="min_x">
+						<source>Xmin:</source>
+						<target>Xmin:</target>
+					</trans-unit>
+					<trans-unit id="max_x">
+						<source>Xmax:</source>
+						<target>Xmax:</target>
+					</trans-unit>
+					<trans-unit id="left">
+						<source>Left</source>
+						<target>Left</target>
+					</trans-unit>
+					<trans-unit id="right">
+						<source>Right</source>
+						<target>Right</target>
+					</trans-unit>
+					<trans-unit id="in">
+						<source>In</source>
+						<target>In</target>
+					</trans-unit>
+					<trans-unit id="out">
+						<source>Out</source>
+						<target>Out</target>
+					</trans-unit>
+					<trans-unit id="max_y_pitch">
+						<source>YmaxPitch:</source>
+						<target>YmaxPitch:</target>
+					</trans-unit>
+					<trans-unit id="max_y_volume">
+						<source>YmaxVolume:</source>
+						<target>YmaxVolume:</target>
+					</trans-unit>
+				</group>
+				<group id="extended">
+					<trans-unit id="features">
+						<source>Extended Features</source>
+						<target>Extended Features</target>
+					</trans-unit>
+					<trans-unit id="note">
+						<source>Please note: Features found on this page may require the following minimum version of openBVE:</source>
+						<target>Please note: Features found on this page may require the following minimum version of openBVE:</target>
+					</trans-unit>
+					<trans-unit id="loco_brake">
+						<source>Locomotive Brake</source>
+						<target>Locomotive Brake</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_system_type">
+						<source>BrakeType:</source>
+						<target>BrakeType:</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_notches">
+						<source>Notches:</source>
+						<target>Notches:</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_delay_up">
+						<source>DelayUp:</source>
+						<target>DelayUp:</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_delay_down">
+						<source>DelayDown:</source>
+						<target>DelayDown:</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_type">
+						<source>Type:</source>
+						<target>Type:</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_set">
+						<source>Set</source>
+						<target>Set</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_none">
+						<source>Not fitted</source>
+						<target>Not fitted</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_notched_air_brake">
+						<source>Notched air brake</source>
+						<target>Notched air brake</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_cl">
+						<source>Air brake with partial release</source>
+						<target>Air brake with partial release</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_combined">
+						<source>Combined</source>
+						<target>Combined</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_independant">
+						<source>Independent</source>
+						<target>Independent</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_blocking">
+						<source>Blocking</source>
+						<target>Blocking</target>
+					</trans-unit>
+					<trans-unit id="delay_loco_brake_up">
+						<source>DelayLocoBrakeUp</source>
+						<target>DelayLocoBrakeUp</target>
+					</trans-unit>
+					<trans-unit id="delay_loco_brake_down">
+						<source>DelayLocoBrakeDown</source>
+						<target>DelayLocoBrakeDown</target>
+					</trans-unit>
+					<trans-unit id="misc">
+						<source>Miscellaneous Features</source>
+						<target>Miscellaneous Features</target>
+					</trans-unit>
+					<trans-unit id="misc_eb">
+						<source>Handle behaviour on EB:</source>
+						<target>Handle behaviour on EB:</target>
+					</trans-unit>
+					<trans-unit id="misc_eb_no">
+						<source>No Action</source>
+						<target>No Action</target>
+					</trans-unit>
+					<trans-unit id="misc_eb_power">
+						<source>Return Power to neutral</source>
+						<target>Return Power to neutral</target>
+					</trans-unit>
+					<trans-unit id="misc_eb_reverser">
+						<source>Return Reverser to neutral</source>
+						<target>Return Reverser to neutral</target>
+					</trans-unit>
+					<trans-unit id="misc_eb_power_reverser">
+						<source>Return Power and Reverser to neutral</source>
+						<target>Return Power and Reverser to neutral</target>
+					</trans-unit>
+					<trans-unit id="language">
+						<source>Language</source>
+						<target>Language</target>
+					</trans-unit>
+				</group>
+			</group>
+		</body>
+	</file>
+</xliff>

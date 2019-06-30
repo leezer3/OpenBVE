@@ -3531,7 +3531,7 @@ namespace OpenBve {
 														Interface.AddMessage(MessageType.Error, true, "DepartureSound " + f + " not found in Track.Station at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
 														const double radius = 30.0;
-														depsnd = Sounds.RegisterBuffer(f, radius);
+														depsnd = Program.Sounds.RegisterBuffer(f, radius);
 													}
 												}
 											}
@@ -4302,7 +4302,7 @@ namespace OpenBve {
 														Array.Resize<Sound>(ref Data.Blocks[BlockIndex].SoundEvents, n + 1);
 														Data.Blocks[BlockIndex].SoundEvents[n].TrackPosition = Data.TrackPosition;
 														const double radius = 15.0;
-														Data.Blocks[BlockIndex].SoundEvents[n].SoundBuffer = Sounds.RegisterBuffer(f, radius);
+														Data.Blocks[BlockIndex].SoundEvents[n].SoundBuffer = Program.Sounds.RegisterBuffer(f, radius);
 														Data.Blocks[BlockIndex].SoundEvents[n].Type = speed == 0.0 ? SoundType.TrainStatic : SoundType.TrainDynamic;
 														Data.Blocks[BlockIndex].SoundEvents[n].Speed = speed * Data.UnitOfSpeed;
 													}
@@ -4336,7 +4336,7 @@ namespace OpenBve {
 														Array.Resize<Sound>(ref Data.Blocks[BlockIndex].SoundEvents, n + 1);
 														Data.Blocks[BlockIndex].SoundEvents[n].TrackPosition = Data.TrackPosition;
 														const double radius = 15.0;
-														Data.Blocks[BlockIndex].SoundEvents[n].SoundBuffer = Sounds.RegisterBuffer(f, radius);
+														Data.Blocks[BlockIndex].SoundEvents[n].SoundBuffer = Program.Sounds.RegisterBuffer(f, radius);
 														Data.Blocks[BlockIndex].SoundEvents[n].Type = SoundType.World;
 														Data.Blocks[BlockIndex].SoundEvents[n].Position.X = x;
 														Data.Blocks[BlockIndex].SoundEvents[n].Position.Y = y;

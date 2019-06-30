@@ -2,6 +2,7 @@
 using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interface;
+using SoundManager;
 
 namespace OpenBve
 {
@@ -125,12 +126,12 @@ namespace OpenBve
 								Train.StationState = TrainStopState.Boarding;
 								Train.StationAdjust = false;
 								Train.Specs.DoorClosureAttempted = false;
-								Sounds.StopSound(Train.Cars[Train.DriverCar].Sounds.Halt.Source);
-								Sounds.SoundBuffer buffer = (Sounds.SoundBuffer)Game.Stations[i].ArrivalSoundBuffer;
+								Program.Sounds.StopSound(Train.Cars[Train.DriverCar].Sounds.Halt.Source);
+								SoundsBase.SoundBuffer buffer = (SoundsBase.SoundBuffer)Game.Stations[i].ArrivalSoundBuffer;
 								if (buffer != null)
 								{
 									OpenBveApi.Math.Vector3 pos = Game.Stations[i].SoundOrigin;
-									Sounds.PlaySound(buffer, 1.0, 1.0, pos, false);
+									Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, false);
 								}
 								Train.StationArrivalTime = Game.SecondsSinceMidnight;
 								Train.StationDepartureTime = Game.Stations[i].DepartureTime - Train.TimetableDelta;
@@ -222,11 +223,11 @@ namespace OpenBve
 								// correct stop position
 								if (!Train.StationAdjust & (Train.StationDistanceToStopPoint > tb | Train.StationDistanceToStopPoint < -tf))
 								{
-									Sounds.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.Adjust.Buffer;
+									SoundsBase.SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.Adjust.Buffer;
 									if (buffer != null)
 									{
 										OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.Adjust.Position;
-										Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
+										Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
 									}
 									if (Train == TrainManager.PlayerTrain)
 									{
@@ -350,13 +351,13 @@ namespace OpenBve
 					// departure sound
 					if (!Train.StationDepartureSoundPlayed)
 					{
-						Sounds.SoundBuffer buffer = (Sounds.SoundBuffer)Game.Stations[i].DepartureSoundBuffer;
+						SoundsBase.SoundBuffer buffer = (SoundsBase.SoundBuffer)Game.Stations[i].DepartureSoundBuffer;
 						if (buffer != null)
 						{
-							double dur = Sounds.GetDuration(buffer);
+							double dur = Program.Sounds.GetDuration(buffer);
 							if (Game.SecondsSinceMidnight >= Train.StationDepartureTime - dur)
 							{
-								Sounds.PlaySound(buffer, 1.0, 1.0, Game.Stations[i].SoundOrigin, false);
+								Program.Sounds.PlaySound(buffer, 1.0, 1.0, Game.Stations[i].SoundOrigin, false);
 								Train.StationDepartureSoundPlayed = true;
 							}
 						}

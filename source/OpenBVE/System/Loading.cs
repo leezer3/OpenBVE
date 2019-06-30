@@ -276,17 +276,17 @@ namespace OpenBve {
 					for (int i = 0; i < TrainManager.Trains[k].Cars.Length; i++) {
 						if (TrainManager.Trains[k].Cars[i].Specs.DoorOpenFrequency <= 0.0) {
 							if (TrainManager.Trains[k].Cars[i].Doors[0].OpenSound.Buffer != null & TrainManager.Trains[k].Cars[i].Doors[1].OpenSound.Buffer != null) {
-								Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Doors[0].OpenSound.Buffer);
-								Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Doors[1].OpenSound.Buffer);
+								Program.Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Doors[0].OpenSound.Buffer);
+								Program.Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Doors[1].OpenSound.Buffer);
 								double a = TrainManager.Trains[k].Cars[i].Doors[0].OpenSound.Buffer.Duration;
 								double b = TrainManager.Trains[k].Cars[i].Doors[1].OpenSound.Buffer.Duration;
 								TrainManager.Trains[k].Cars[i].Specs.DoorOpenFrequency = a + b > 0.0 ? 2.0 / (a + b) : 0.8;
 							} else if (TrainManager.Trains[k].Cars[i].Doors[0].OpenSound.Buffer != null) {
-								Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Doors[0].OpenSound.Buffer);
+								Program.Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Doors[0].OpenSound.Buffer);
 								double a = TrainManager.Trains[k].Cars[i].Doors[0].OpenSound.Buffer.Duration;
 								TrainManager.Trains[k].Cars[i].Specs.DoorOpenFrequency = a > 0.0 ? 1.0 / a : 0.8;
 							} else if (TrainManager.Trains[k].Cars[i].Doors[1].OpenSound.Buffer != null) {
-								Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Doors[0].OpenSound.Buffer);
+								Program.Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Doors[0].OpenSound.Buffer);
 								double b = TrainManager.Trains[k].Cars[i].Doors[1].OpenSound.Buffer.Duration;
 								TrainManager.Trains[k].Cars[i].Specs.DoorOpenFrequency = b > 0.0 ? 1.0 / b : 0.8;
 							} else {
@@ -295,17 +295,17 @@ namespace OpenBve {
 						}
 						if (TrainManager.Trains[k].Cars[i].Specs.DoorCloseFrequency <= 0.0) {
 							if (TrainManager.Trains[k].Cars[i].Doors[0].CloseSound.Buffer != null & TrainManager.Trains[k].Cars[i].Doors[1].CloseSound.Buffer != null) {
-								Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Doors[0].CloseSound.Buffer);
-								Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Doors[1].CloseSound.Buffer);
+								Program.Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Doors[0].CloseSound.Buffer);
+								Program.Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Doors[1].CloseSound.Buffer);
 								double a = TrainManager.Trains[k].Cars[i].Doors[0].CloseSound.Buffer.Duration;
 								double b = TrainManager.Trains[k].Cars[i].Doors[1].CloseSound.Buffer.Duration;
 								TrainManager.Trains[k].Cars[i].Specs.DoorCloseFrequency = a + b > 0.0 ? 2.0 / (a + b) : 0.8;
 							} else if (TrainManager.Trains[k].Cars[i].Doors[0].CloseSound.Buffer != null) {
-								Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Doors[0].CloseSound.Buffer);
+								Program.Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Doors[0].CloseSound.Buffer);
 								double a = TrainManager.Trains[k].Cars[i].Doors[0].CloseSound.Buffer.Duration;
 								TrainManager.Trains[k].Cars[i].Specs.DoorCloseFrequency = a > 0.0 ? 1.0 / a : 0.8;
 							} else if (TrainManager.Trains[k].Cars[i].Doors[1].CloseSound.Buffer != null) {
-								Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Doors[0].CloseSound.Buffer);
+								Program.Sounds.LoadBuffer(TrainManager.Trains[k].Cars[i].Doors[0].CloseSound.Buffer);
 								double b = TrainManager.Trains[k].Cars[i].Doors[1].CloseSound.Buffer.Duration;
 								TrainManager.Trains[k].Cars[i].Specs.DoorCloseFrequency = b > 0.0 ? 1.0 / b : 0.8;
 							} else {

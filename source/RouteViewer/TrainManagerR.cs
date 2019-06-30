@@ -7,6 +7,7 @@
 
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
+using SoundManager;
 
 namespace OpenBve {
 	using System;
@@ -165,9 +166,9 @@ namespace OpenBve {
 		}
 		internal struct CarSound {
 			/// <summary>The sound buffer to play</summary>
-			internal Sounds.SoundBuffer Buffer;
+			internal SoundsBase.SoundBuffer Buffer;
 			/// <summary>The source of the sound within the car</summary>
-			internal Sounds.SoundSource Source;
+			internal SoundsBase.SoundSource Source;
 			/// <summary>A Vector3 describing the position of the sound source</summary>
 			internal Vector3 Position;
 		}

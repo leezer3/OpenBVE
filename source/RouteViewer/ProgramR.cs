@@ -58,6 +58,8 @@ namespace OpenBve {
 		/// <summary>The host API used by this program.</summary>
 		internal static Host CurrentHost = null;
 
+		internal static Sounds Sounds;
+
 		// main
 		[STAThread]
 		internal static void Main(string[] args)
@@ -70,6 +72,7 @@ namespace OpenBve {
 			// file system
 			FileSystem = FileSystem.FromCommandLineArgs(args);
 			FileSystem.CreateFileSystem();
+			Sounds = new Sounds();
 			Plugins.LoadPlugins();
 			// command line arguments
 			SkipArgs = new bool[args.Length];

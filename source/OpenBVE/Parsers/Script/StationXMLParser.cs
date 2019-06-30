@@ -210,7 +210,7 @@ namespace OpenBve
 										}
 										if (File.Exists(arrSound))
 										{
-											station.ArrivalSoundBuffer = Sounds.RegisterBuffer(arrSound, arrRadius);
+											station.ArrivalSoundBuffer = Program.Sounds.RegisterBuffer(arrSound, arrRadius);
 										}
 										else
 										{
@@ -290,7 +290,7 @@ namespace OpenBve
 										}
 										if (File.Exists(depSound))
 										{
-											station.DepartureSoundBuffer = Sounds.RegisterBuffer(depSound, depRadius);
+											station.DepartureSoundBuffer = Program.Sounds.RegisterBuffer(depSound, depRadius);
 										}
 										else
 										{

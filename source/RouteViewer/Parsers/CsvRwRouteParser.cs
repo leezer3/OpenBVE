@@ -4295,7 +4295,7 @@ namespace OpenBve {
 													if (!System.IO.File.Exists(f)) {
 														Interface.AddMessage(MessageType.Error, true, "DepartureSound " + f + " not found in Track.Station at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														depsnd = Sounds.RegisterBuffer(f, 30.0);
+														depsnd = Program.Sounds.RegisterBuffer(f, 30.0);
 													}
 												}
 											}
@@ -4875,7 +4875,7 @@ namespace OpenBve {
 														int n = Data.Blocks[BlockIndex].Sound.Length;
 														Array.Resize<Sound>(ref Data.Blocks[BlockIndex].Sound, n + 1);
 														Data.Blocks[BlockIndex].Sound[n].TrackPosition = Data.TrackPosition;
-														Data.Blocks[BlockIndex].Sound[n].SoundBuffer = Sounds.RegisterBuffer(f, 15.0);
+														Data.Blocks[BlockIndex].Sound[n].SoundBuffer = Program.Sounds.RegisterBuffer(f, 15.0);
 														Data.Blocks[BlockIndex].Sound[n].Type = speed == 0.0 ? SoundType.TrainStatic : SoundType.TrainDynamic;
 														Data.Blocks[BlockIndex].Sound[n].Speed = speed * Data.UnitOfSpeed;
 													}
@@ -4909,7 +4909,7 @@ namespace OpenBve {
 														int n = Data.Blocks[BlockIndex].Sound.Length;
 														Array.Resize<Sound>(ref Data.Blocks[BlockIndex].Sound, n + 1);
 														Data.Blocks[BlockIndex].Sound[n].TrackPosition = Data.TrackPosition;
-														Data.Blocks[BlockIndex].Sound[n].SoundBuffer = Sounds.RegisterBuffer(f, radius);
+														Data.Blocks[BlockIndex].Sound[n].SoundBuffer = Program.Sounds.RegisterBuffer(f, radius);
 														Data.Blocks[BlockIndex].Sound[n].Type = SoundType.World;
 														Data.Blocks[BlockIndex].Sound[n].X = x;
 														Data.Blocks[BlockIndex].Sound[n].Y = y;
@@ -5910,7 +5910,7 @@ namespace OpenBve {
 										Vector3 s = new Vector3(Direction.Y, 0.0, -Direction.X);
 										Vector3 u = Vector3.Cross(w, s);
 										Vector3 wpos = pos + new Vector3(s.X * dx + u.X * dy + w.X * d, s.Y * dx + u.Y * dy + w.Y * d, s.Z * dx + u.Z * dy + w.Z * d);
-										Sounds.PlaySound(Data.Blocks[i].Sound[k].SoundBuffer, 1.0, 1.0, wpos, null, -1, true);
+										Program.Sounds.PlaySound(Data.Blocks[i].Sound[k].SoundBuffer, 1.0, 1.0, wpos, null, -1, true);
 									}
 								}
 							}
