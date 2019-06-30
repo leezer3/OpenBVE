@@ -8,11 +8,17 @@ namespace OpenBve
 	internal static partial class Renderer
 	{
 		// object list
-		private struct Object
+		private class Object
 		{
 			internal int ObjectIndex;
 			internal ObjectListReference[] FaceListReferences;
 			internal ObjectType Type;
+
+			internal Object(int objectIndex, ObjectType objectType)
+			{
+				ObjectIndex = objectIndex;
+				Type = objectType;
+			}
 		}
 		private static Object[] Objects = new Object[256];
 		/// <summary>
