@@ -81,11 +81,17 @@ namespace OpenBve
             //Set width and height
             if (Screen.Width != width.Value || Screen.Height != height.Value)
             {
-                Screen.Width = (int) width.Value;
-                Screen.Height = (int) height.Value;
-                Program.currentGameWindow.Width = (int) width.Value;
-                Program.currentGameWindow.Height = (int) height.Value;
-                Program.UpdateViewport();
+	            if (width.Value >= 300)
+	            {
+		            Screen.Width = (int) width.Value;
+		            Program.currentGameWindow.Width = (int) width.Value;
+	            }
+	            if (height.Value >= 300)
+	            {
+		            Screen.Height = (int) height.Value;
+		            Program.currentGameWindow.Height = (int) height.Value;
+	            }
+	            Program.UpdateViewport();
             }
             //Check if interpolation mode or ansiotropic filtering level has changed, and trigger a reload
             if (previousInterpolationMode != Interface.CurrentOptions.Interpolation || previousAnsiotropicLevel != Interface.CurrentOptions.AnisotropicFilteringLevel)

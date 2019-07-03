@@ -89,10 +89,16 @@ namespace OpenBve
 			//Set width and height
 			if (LibRender.Screen.Width != width.Value || LibRender.Screen.Height != height.Value)
 			{
-				LibRender.Screen.Width = (int)width.Value;
-				LibRender.Screen.Height = (int)height.Value;
-				Program.currentGameWindow.Width = (int)width.Value;
-				Program.currentGameWindow.Height = (int)height.Value;
+				if (width.Value >= 300)
+				{
+					LibRender.Screen.Width = (int) width.Value;
+					Program.currentGameWindow.Width = (int)width.Value;
+				}
+				if (height.Value >= 300)
+				{
+					LibRender.Screen.Height = (int) height.Value;
+					Program.currentGameWindow.Height = (int)height.Value;
+				}
 				Program.UpdateViewport();
 			}
 			Renderer.TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality & Interface.CurrentOptions.Interpolation != OpenBveApi.Graphics.InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != OpenBveApi.Graphics.InterpolationMode.Bilinear;

@@ -134,9 +134,19 @@
             0,
             0,
             0});
+			this.width.Minimum = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
 			this.width.Name = "width";
 			this.width.Size = new System.Drawing.Size(120, 20);
 			this.width.TabIndex = 11;
+			this.width.Value = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
 			// 
 			// height
 			// 
@@ -146,9 +156,19 @@
             0,
             0,
             0});
+			this.height.Minimum = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
 			this.height.Name = "height";
 			this.height.Size = new System.Drawing.Size(120, 20);
 			this.height.TabIndex = 12;
+			this.height.Value = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
 			// 
 			// label6
 			// 
@@ -231,38 +251,38 @@
 			this.label9.Size = new System.Drawing.Size(97, 13);
 			this.label9.TabIndex = 20;
 			this.label9.Text = "Use New X Parser:";
-			//
+			// 
 			// comboBoxNewXParser
-			//
+			// 
 			this.comboBoxNewXParser.FormattingEnabled = true;
+			this.comboBoxNewXParser.Items.AddRange(new object[] {
+            "OriginalXParser",
+            "NewXParser",
+            "AssimpXParser"});
 			this.comboBoxNewXParser.Location = new System.Drawing.Point(166, 255);
 			this.comboBoxNewXParser.Name = "comboBoxNewXParser";
-			this.comboBoxNewXParser.Size = new System.Drawing.Size(121, 20);
+			this.comboBoxNewXParser.Size = new System.Drawing.Size(121, 21);
 			this.comboBoxNewXParser.TabIndex = 21;
-			this.comboBoxNewXParser.Items.AddRange(new object[] {
-			"OriginalXParser",
-			"NewXParser",
-			"AssimpXParser"});
 			// 
 			// label10
 			// 
 			this.label10.AutoSize = true;
 			this.label10.Location = new System.Drawing.Point(15, 281);
 			this.label10.Name = "label10";
-			this.label10.Size = new System.Drawing.Size(97, 13);
+			this.label10.Size = new System.Drawing.Size(106, 13);
 			this.label10.TabIndex = 22;
 			this.label10.Text = "Use New Obj Parser:";
-			//
+			// 
 			// comboBoxNewObjParser
-			//
+			// 
 			this.comboBoxNewObjParser.FormattingEnabled = true;
+			this.comboBoxNewObjParser.Items.AddRange(new object[] {
+            "OriginalObjParser",
+            "AssimpObjParser"});
 			this.comboBoxNewObjParser.Location = new System.Drawing.Point(166, 281);
 			this.comboBoxNewObjParser.Name = "comboBoxNewObjParser";
-			this.comboBoxNewObjParser.Size = new System.Drawing.Size(121, 20);
+			this.comboBoxNewObjParser.Size = new System.Drawing.Size(121, 21);
 			this.comboBoxNewObjParser.TabIndex = 23;
-			this.comboBoxNewObjParser.Items.AddRange(new object[] {
-			"OriginalObjParser",
-			"AssimpObjParser"});
 			// 
 			// formOptions
 			// 
