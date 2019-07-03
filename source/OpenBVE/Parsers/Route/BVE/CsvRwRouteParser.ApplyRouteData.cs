@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using OpenBve.BackgroundManager;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
@@ -12,6 +13,7 @@ using OpenBve.SignalManager;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBve.RouteManager;
+using OpenBveApi.Routes;
 
 namespace OpenBve
 {
@@ -103,11 +105,21 @@ namespace OpenBve
 						Program.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out t);
 						CurrentRoute.CurrentBackground = new StaticBackground(t, 6, false);
 					}
+					else if (Data.Backgrounds.Count == 1 && !Data.Backgrounds.ContainsKey(0) && Data.Blocks[0].Background == 0)
+					{
+						/*
+						 * Nasty little variant on the above-
+						 * Zero background is not defined, and the route doesn't start at zero
+						 *
+						 * Don't hide behind the hacks option, as routes can start at a non-zero position with a
+						 * non-zero background quite validly
+						 */
+						CurrentRoute.CurrentBackground = Data.Backgrounds[Data.Backgrounds.ElementAt(0).Key];
+					}
 					else
 					{
 						CurrentRoute.CurrentBackground = new StaticBackground(null, 6, false);
 					}
-					
 				}
 				CurrentRoute.TargetBackground = CurrentRoute.CurrentBackground;
 			}
