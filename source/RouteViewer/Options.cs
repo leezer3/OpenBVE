@@ -70,7 +70,7 @@ namespace OpenBve
 										case "windowwidth":
 											{
 												int a;
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a)) {
+												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a) || a < 300) {
 													a = 960;
 												}
 												LibRender.Screen.Width = a;
@@ -78,7 +78,7 @@ namespace OpenBve
 										case "windowheight":
 											{
 												int a;
-												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a)) {
+												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a) || a < 300) {
 													a = 600;
 												}
 												LibRender.Screen.Height = a;
