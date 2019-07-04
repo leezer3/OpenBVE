@@ -312,10 +312,10 @@ namespace OpenBve
 							Data.Blocks[i].Fog.TrackPosition = StartingDistance;
 							int m = TrackManager.Tracks[0].Elements[n].Events.Length;
 							Array.Resize(ref TrackManager.Tracks[0].Elements[n].Events, m + 1);
-							TrackManager.Tracks[0].Elements[n].Events[m] = new TrackManager.FogChangeEvent(0.0, PreviousFog, Data.Blocks[i].Fog, Data.Blocks[i].Fog);
+							TrackManager.Tracks[0].Elements[n].Events[m] = new FogChangeEvent(0.0, PreviousFog, Data.Blocks[i].Fog, Data.Blocks[i].Fog);
 							if (PreviousFogElement >= 0 & PreviousFogEvent >= 0)
 							{
-								TrackManager.FogChangeEvent e = (TrackManager.FogChangeEvent)TrackManager.Tracks[0].Elements[PreviousFogElement].Events[PreviousFogEvent];
+								FogChangeEvent e = (FogChangeEvent)TrackManager.Tracks[0].Elements[PreviousFogElement].Events[PreviousFogEvent];
 								e.NextFog = Data.Blocks[i].Fog;
 							}
 							else
@@ -347,7 +347,7 @@ namespace OpenBve
 							Data.Blocks[i].Fog.TrackPosition = StartingDistance + Data.BlockInterval;
 							int m = TrackManager.Tracks[0].Elements[n].Events.Length;
 							Array.Resize(ref TrackManager.Tracks[0].Elements[n].Events, m + 1);
-							TrackManager.Tracks[0].Elements[n].Events[m] = new TrackManager.FogChangeEvent(0.0, PreviousFog, CurrentFog, Data.Blocks[i].Fog);
+							TrackManager.Tracks[0].Elements[n].Events[m] = new FogChangeEvent(0.0, PreviousFog, CurrentFog, Data.Blocks[i].Fog);
 							PreviousFog = CurrentFog;
 							CurrentFog = Data.Blocks[i].Fog;
 						}

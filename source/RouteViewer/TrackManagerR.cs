@@ -15,30 +15,6 @@ using SoundManager;
 namespace OpenBve {
     internal static class TrackManager {
 
-        // fog change
-        internal class FogChangeEvent : GeneralEvent<TrainManager.Train> {
-            internal Fog PreviousFog;
-            internal Fog CurrentFog;
-            internal Fog NextFog;
-            internal FogChangeEvent(double TrackPositionDelta, Fog PreviousFog, Fog CurrentFog, Fog NextFog) {
-                this.TrackPositionDelta = TrackPositionDelta;
-                this.DontTriggerAnymore = false;
-                this.PreviousFog = PreviousFog;
-                this.CurrentFog = CurrentFog;
-                this.NextFog = NextFog;
-            }
-            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
-                if (TriggerType == EventTriggerType.Camera) {
-                    if (Direction < 0) {
-                        CurrentRoute.PreviousFog = this.PreviousFog;
-                        CurrentRoute.NextFog = this.CurrentFog;
-                    } else if (Direction > 0) {
-                        CurrentRoute.PreviousFog = this.CurrentFog;
-                        CurrentRoute.NextFog = this.NextFog;
-                    }
-                }
-            }
-        }
         // brightness change
         internal class BrightnessChangeEvent : GeneralEvent<TrainManager.Train> {
             internal float CurrentBrightness;

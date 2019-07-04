@@ -1,4 +1,5 @@
 ﻿using LibRender;
+using OpenBve.RouteManager;
 using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
