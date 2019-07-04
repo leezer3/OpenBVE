@@ -26,7 +26,6 @@ namespace OpenBve
 			internal Coupler[] Couplers;
 			internal TrainSpecs Specs;
 			internal TrainPassengers Passengers;
-			internal int LastStation;
 			internal int Station;
 			internal double StationArrivalTime;
 			internal double StationDepartureTime;
