@@ -44,6 +44,7 @@
     <Compile Include="BackgroundManager\BackgroundObject.cs" />
     <Compile Include="BackgroundManager\DynamicBackground.cs" />
     <Compile Include="BackgroundManager\StaticBackground.cs" />
+    <Compile Include="Events\BackgroundChangeEvent.cs" />
     <Compile Include="Fog.cs" />
     <Compile Include="SignalManager\PreTrain\BogusPreTrainInstruction.cs" />
     <Compile Include="SignalManager\SafetySystems.cs" />

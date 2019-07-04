@@ -5480,7 +5480,7 @@ namespace OpenBve {
 						if (typ >= 0 & Data.Backgrounds.ContainsKey(typ)) {
 							int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
 							Array.Resize(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
-							TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.BackgroundChangeEvent(0.0, Data.Backgrounds[typ], Data.Backgrounds[Data.Blocks[i].Background]);
+							TrackManager.CurrentTrack.Elements[n].Events[m] = new BackgroundChangeEvent(0.0, Data.Backgrounds[typ], Data.Backgrounds[Data.Blocks[i].Background]);
 						}
 					}
 				}

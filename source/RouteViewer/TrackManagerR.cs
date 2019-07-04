@@ -15,28 +15,6 @@ using SoundManager;
 namespace OpenBve {
     internal static class TrackManager {
 
-        // background change
-        internal class BackgroundChangeEvent : GeneralEvent<TrainManager.Train> {
-            internal BackgroundHandle PreviousBackground;
-            internal BackgroundHandle NextBackground;
-            internal BackgroundChangeEvent(double TrackPositionDelta, BackgroundHandle PreviousBackground, BackgroundHandle NextBackground) {
-                this.TrackPositionDelta = TrackPositionDelta;
-                this.DontTriggerAnymore = false;
-                this.PreviousBackground = PreviousBackground;
-                this.NextBackground = NextBackground;
-            }
-            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
-                if (TriggerType == EventTriggerType.Camera) {
-                    if (Direction < 0) {
-                        CurrentRoute.TargetBackground = this.PreviousBackground;
-                        World.TargetBackgroundCountdown = World.TargetBackgroundDefaultCountdown;
-                    } else if (Direction > 0) {
-                        CurrentRoute.TargetBackground = this.NextBackground;
-                        World.TargetBackgroundCountdown = World.TargetBackgroundDefaultCountdown;
-                    }
-                }
-            }
-        }
         // fog change
         internal class FogChangeEvent : GeneralEvent<TrainManager.Train> {
             internal Fog PreviousFog;
