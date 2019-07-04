@@ -542,7 +542,7 @@ namespace OpenBve
 							{
 								SoundBuffer Buffer = Car.Sounds.Touch[TouchElement.SoundIndex].Buffer;
 								OpenBveApi.Math.Vector3 Position = Car.Sounds.Touch[TouchElement.SoundIndex].Position;
-								Program.Sounds.PlaySound(Buffer, 1.0, 1.0, Position, TrainManager.PlayerTrain, TrainManager.PlayerTrain.DriverCar, false);
+								Program.Sounds.PlaySound(Buffer, 1.0, 1.0, Position, TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar], false);
 							}
 						}
 

@@ -60,7 +60,7 @@ namespace OpenBve
 				}
 				for (int h = 0; h < train.Cars.Length; h++)
 				{
-					train.Cars[h].Specs.CurrentSpeed = 0.0;
+					train.Cars[h].CurrentSpeed = 0.0;
 				}
 				double d = Game.Stations[stationIndex].Stops[stopIndex].TrackPosition - train.Cars[0].FrontAxle.Follower.TrackPosition + train.Cars[0].FrontAxle.Position - 0.5 * train.Cars[0].Length;
 				if (train == PlayerTrain)

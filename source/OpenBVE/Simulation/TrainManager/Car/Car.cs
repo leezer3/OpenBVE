@@ -144,7 +144,7 @@ namespace OpenBve
 				BeaconReceiver.Update(b, false, false);
 			}
 
-			internal void CreateWorldCoordinates(Vector3 Car, out Vector3 Position, out Vector3 Direction)
+			public override void CreateWorldCoordinates(Vector3 Car, out Vector3 Position, out Vector3 Direction)
 			{
 				Direction = FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition;
 				double t = Direction.NormSquared();
@@ -176,14 +176,14 @@ namespace OpenBve
 					return;
 				}
 				const double factor = 0.04; // 90 km/h -> m/s -> 1/x
-				double speed = Math.Abs(Specs.CurrentSpeed);
+				double speed = Math.Abs(CurrentSpeed);
 				if (Derailed)
 				{
 					speed = 0.0;
 				}
 				double pitch = speed * factor;
 				double basegain;
-				if (Specs.CurrentSpeed == 0.0)
+				if (CurrentSpeed == 0.0)
 				{
 					if (Index != 0)
 					{
@@ -252,7 +252,7 @@ namespace OpenBve
 						if (buffer != null)
 						{
 							OpenBveApi.Math.Vector3 pos = Sounds.Run[j].Position;
-							Sounds.Run[j].Source = Program.Sounds.PlaySound(buffer, pitch, gain, pos, baseTrain, Index, true);
+							Sounds.Run[j].Source = Program.Sounds.PlaySound(buffer, pitch, gain, pos, this, true);
 						}
 					}
 				}
@@ -321,7 +321,7 @@ namespace OpenBve
 								else if (ndir == -1)
 								{
 									// brake
-									double max = CarBrake.DecelerationAtServiceMaximumPressure(baseTrain.Handles.Brake.Actual, Specs.CurrentSpeed);
+									double max = CarBrake.DecelerationAtServiceMaximumPressure(baseTrain.Handles.Brake.Actual, CurrentSpeed);
 									if (max != 0.0)
 									{
 										double cur = -Specs.CurrentAccelerationOutput;
@@ -334,7 +334,7 @@ namespace OpenBve
 									Program.Sounds.StopSound(Sounds.Motor.Tables[j].Source);
 									if (nbuf != null)
 									{
-										Sounds.Motor.Tables[j].Source = Program.Sounds.PlaySound(nbuf, pitch, gain, pos, baseTrain, Index, true);
+										Sounds.Motor.Tables[j].Source = Program.Sounds.PlaySound(nbuf, pitch, gain, pos, this, true);
 										Sounds.Motor.Tables[j].Buffer = nbuf;
 									}
 									else
@@ -869,7 +869,7 @@ namespace OpenBve
 					double a = Specs.CurrentRollDueToTopplingAngle;
 					double ab = Specs.CurrentRollDueToTopplingAngle + Specs.CurrentRollDueToCantAngle;
 					double h = Specs.CenterOfGravityHeight;
-					double sr = Math.Abs(Specs.CurrentSpeed);
+					double sr = Math.Abs(CurrentSpeed);
 					double rmax = 2.0 * h * sr * sr / (Game.RouteAccelerationDueToGravity * TrackManager.Tracks[FrontAxle.Follower.TrackIndex].RailGauge);
 					double ta;
 					Topples = false;
@@ -973,7 +973,7 @@ namespace OpenBve
 							if (!Program.Sounds.IsPlaying(Sounds.SpringL.Source))
 							{
 								Vector3 pos = Sounds.SpringL.Position;
-								Sounds.SpringL.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, baseTrain, Index, false);
+								Sounds.SpringL.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, false);
 							}
 						}
 						Sounds.SpringPlayedAngle = a;
@@ -986,7 +986,7 @@ namespace OpenBve
 							if (!Program.Sounds.IsPlaying(Sounds.SpringR.Source))
 							{
 								Vector3 pos = Sounds.SpringR.Position;
-								Sounds.SpringR.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, baseTrain, Index, false);
+								Sounds.SpringR.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, false);
 							}
 						}
 						Sounds.SpringPlayedAngle = a;
@@ -1004,7 +1004,7 @@ namespace OpenBve
 					df.Normalize();
 					double b0 = df.X * RearAxle.Follower.WorldSide.X + df.Y * RearAxle.Follower.WorldSide.Y + df.Z * RearAxle.Follower.WorldSide.Z;
 					double b1 = df.X * FrontAxle.Follower.WorldSide.X + df.Y * FrontAxle.Follower.WorldSide.Y + df.Z * FrontAxle.Follower.WorldSide.Z;
-					double spd = Math.Abs(Specs.CurrentSpeed);
+					double spd = Math.Abs(CurrentSpeed);
 					double pitch = 0.5 + 0.04 * spd;
 					double b2 = Math.Abs(b0) + Math.Abs(b1);
 					double basegain = 0.5 * b2 * b2 * spd * spd;
@@ -1062,7 +1062,7 @@ namespace OpenBve
 							if (buffer != null)
 							{
 								Vector3 pos = Sounds.Flange[i].Position;
-								Sounds.Flange[i].Source = Program.Sounds.PlaySound(buffer, pitch, gain, pos, baseTrain, Index, true);
+								Sounds.Flange[i].Source = Program.Sounds.PlaySound(buffer, pitch, gain, pos, this, true);
 							}
 						}
 					}

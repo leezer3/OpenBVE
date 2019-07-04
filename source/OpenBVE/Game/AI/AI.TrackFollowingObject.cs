@@ -191,28 +191,28 @@ namespace OpenBve
 					Car.Move(Delta);
 					if (TimeElapsed != 0.0)
 					{
-						Car.Specs.CurrentSpeed = Delta / TimeElapsed;
-						Car.Specs.CurrentPerceivedSpeed = Car.Specs.CurrentSpeed;
+						Car.CurrentSpeed = Delta / TimeElapsed;
+						Car.Specs.CurrentPerceivedSpeed = Car.CurrentSpeed;
 						if (Car.Specs.CurrentPerceivedSpeed < 0)
 						{
-							Car.Specs.CurrentAcceleration = -(Car.Specs.CurrentSpeed / TimeElapsed);
+							Car.Specs.CurrentAcceleration = -(Car.CurrentSpeed / TimeElapsed);
 						}
 						else
 						{
-							Car.Specs.CurrentAcceleration = Car.Specs.CurrentSpeed / TimeElapsed;
+							Car.Specs.CurrentAcceleration = Car.CurrentSpeed / TimeElapsed;
 						}
 						Car.Specs.CurrentAccelerationOutput = Car.Specs.CurrentAcceleration;
 					}
 					else
 					{
-						Car.Specs.CurrentSpeed = 0.0;
+						Car.CurrentSpeed = 0.0;
 						Car.Specs.CurrentPerceivedSpeed = 0.0;
 						Car.Specs.CurrentAcceleration = 0.0;
 						Car.Specs.CurrentAccelerationOutput = 0.0;
 					}
 				}
 
-				Train.CurrentSpeed = Train.Cars[0].Specs.CurrentSpeed;
+				Train.CurrentSpeed = Train.Cars[0].CurrentSpeed;
 				Train.Specs.CurrentAverageAcceleration = Train.Cars[0].Specs.CurrentAcceleration;
 
 				// Dispose the train if it is past the leave time of the train

@@ -23,8 +23,6 @@ namespace SoundManager
 		public Vector3 Position;
 		/// <summary>The parent object this sound is attached to, or a null reference.</summary>
 		public object Parent;
-		/// <summary>The car this sound is attached to, or a null reference.</summary>
-		public int Car;
 		/// <summary>Whether this sound plays in a loop.</summary>
 		public bool Looped;
 		/// <summary>The current state of the sound. Determines if the OpenAL sound name is valid.</summary>
@@ -42,9 +40,8 @@ namespace SoundManager
 		/// <param name="volume">The volume change factor.</param>
 		/// <param name="position">The position. If a train and car are specified, the position is relative to the car, otherwise absolute.</param>
 		/// <param name="parent">The parent object this sound source is attached to, or a null reference.</param>
-		/// <param name="car">The car this sound source is attached to, or a null reference.</param>
 		/// <param name="looped">Whether this sound source plays in a loop.</param>
-		internal SoundSource(SoundBuffer buffer, double radius, double pitch, double volume, Vector3 position, object parent, int car, bool looped)
+		internal SoundSource(SoundBuffer buffer, double radius, double pitch, double volume, Vector3 position, object parent, bool looped)
 		{
 			Buffer = buffer;
 			Radius = radius;
@@ -52,12 +49,11 @@ namespace SoundManager
 			Volume = volume;
 			Position = position;
 			Parent = parent;
-			Car = car;
 			Looped = looped;
 			State = SoundSourceState.PlayPending;
 			OpenAlSourceName = 0;
 			//Set the sound type to undefined to use Michelle's original processing
-			if (parent is AbstractTrain)
+			if (parent is AbstractCar)
 			{
 				Type = SoundType.TrainCar;
 			}
@@ -80,9 +76,8 @@ namespace SoundManager
 		/// <param name="position">The position. If a train and car are specified, the position is relative to the car, otherwise absolute.</param>
 		/// <param name="train">The train this sound source is attached to, or a null reference.</param>
 		/// <param name="type">The type of sound</param>
-		/// <param name="car">The car this sound source is attached to, or a null reference.</param>
 		/// <param name="looped">Whether this sound source plays in a loop.</param>
-		internal SoundSource(SoundBuffer buffer, double radius, double pitch, double volume, Vector3 position, AbstractTrain train, SoundType type, int car, bool looped)
+		internal SoundSource(SoundBuffer buffer, double radius, double pitch, double volume, Vector3 position, AbstractTrain train, SoundType type, bool looped)
 		{
 			Buffer = buffer;
 			Radius = radius;
@@ -90,7 +85,6 @@ namespace SoundManager
 			Volume = volume;
 			Position = position;
 			Parent = train;
-			Car = car;
 			Looped = looped;
 			State = SoundSourceState.PlayPending;
 			OpenAlSourceName = 0;

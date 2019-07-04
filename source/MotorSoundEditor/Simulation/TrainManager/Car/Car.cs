@@ -80,7 +80,7 @@ namespace MotorSoundEditor.Simulation.TrainManager
 						if (buffer != null)
 						{
 							Vector3 pos = Sounds.Run[j].Position;
-							Sounds.Run[j].Source = Program.Sounds.PlaySound(buffer, pitch, gain, pos, baseTrain, 0, true);
+							Sounds.Run[j].Source = Program.Sounds.PlaySound(buffer, pitch, gain, pos, this, true);
 						}
 					}
 				}
@@ -152,7 +152,7 @@ namespace MotorSoundEditor.Simulation.TrainManager
 
 									if (nbuf != null)
 									{
-										Sounds.Motor.Tables[j].Source = Program.Sounds.PlaySound(nbuf, pitch, gain, pos, baseTrain, 0, true);
+										Sounds.Motor.Tables[j].Source = Program.Sounds.PlaySound(nbuf, pitch, gain, pos, baseTrain, true);
 										Sounds.Motor.Tables[j].Buffer = nbuf;
 									}
 									else

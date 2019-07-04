@@ -9,7 +9,7 @@ namespace OpenBve
 	internal static partial class TrackManager
 	{
 		/// <summary>Called when a generic sound should be played</summary>
-		internal class SoundEvent : GeneralEvent<AbstractTrain>
+		internal class SoundEvent : GeneralEvent<TrainManager.Train>
 		{
 			/// <summary>The sound buffer to play</summary>
 			private readonly SoundBuffer SoundBuffer;
@@ -48,7 +48,7 @@ namespace OpenBve
 			/// <param name="TriggerType">They type of event which triggered this sound</param>
 			/// <param name="Train">The root train which triggered this sound</param>
 			/// <param name="CarIndex">The car index which triggered this sound</param>
-			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
 			{
 				if (SuppressSoundEvents) return;
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle | TriggerType == EventTriggerType.OtherCarRearAxle | TriggerType == EventTriggerType.RearCarRearAxle)
@@ -73,7 +73,7 @@ namespace OpenBve
 							}
 							if (buffer != null)
 							{
-								Program.Sounds.PlaySound(buffer, pitch, gain, p, Train, CarIndex, false);
+								Program.Sounds.PlaySound(buffer, pitch, gain, p, Train.Cars[CarIndex], false);
 							}
 						}
 						this.DontTriggerAnymore = this.Once;
@@ -141,7 +141,7 @@ namespace OpenBve
 						}
 						if (buffer != null)
 						{
-							Program.Sounds.PlaySound(buffer, pitch, gain, p, Train, CarIndex, false);
+							Program.Sounds.PlaySound(buffer, pitch, gain, p, Train.Cars[CarIndex], false);
 						}
 					}
 					this.DontTriggerAnymore = false;

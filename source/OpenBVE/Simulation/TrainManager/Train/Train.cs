@@ -102,8 +102,6 @@ namespace OpenBve
 				}
 			}
 
-			
-
 			/// <summary>Call this method to update the train</summary>
 			/// <param name="TimeElapsed">The elapsed time this frame</param>
 			internal void Update(double TimeElapsed)
@@ -182,7 +180,7 @@ namespace OpenBve
 									if (Cars[j].Sounds.Loop.Buffer != null)
 									{
 										Vector3 pos = Cars[j].Sounds.Loop.Position;
-										Cars[j].Sounds.Loop.Source = Program.Sounds.PlaySound(Cars[j].Sounds.Loop.Buffer, 1.0, 1.0, pos, this, j, true);
+										Cars[j].Sounds.Loop.Source = Program.Sounds.PlaySound(Cars[j].Sounds.Loop.Buffer, 1.0, 1.0, pos, Cars[j], true);
 									}
 								}
 							}
@@ -239,7 +237,7 @@ namespace OpenBve
 				// move cars
 				for (int i = 0; i < Cars.Length; i++)
 				{
-					Cars[i].Move(Cars[i].Specs.CurrentSpeed * TimeElapsed);
+					Cars[i].Move(Cars[i].CurrentSpeed * TimeElapsed);
 					if (State == TrainState.Disposed)
 					{
 						return;
@@ -284,11 +282,11 @@ namespace OpenBve
 						// resume
 						if (Cars[DriverCar].Sounds.BreakerResume.Buffer != null)
 						{
-							Program.Sounds.PlaySound(Cars[DriverCar].Sounds.BreakerResume.Buffer, 1.0, 1.0, Cars[DriverCar].Sounds.BreakerResume.Position, this, DriverCar, false);
+							Program.Sounds.PlaySound(Cars[DriverCar].Sounds.BreakerResume.Buffer, 1.0, 1.0, Cars[DriverCar].Sounds.BreakerResume.Position, Cars[DriverCar], false);
 						}
 						if (Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Buffer != null)
 						{
-							Program.Sounds.PlaySound(Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Buffer, 1.0, 1.0, Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Position, this, DriverCar, false);
+							Program.Sounds.PlaySound(Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Buffer, 1.0, 1.0, Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Position, Cars[DriverCar], false);
 						}
 						Cars[DriverCar].Sounds.BreakerResumed = true;
 					}
@@ -297,7 +295,7 @@ namespace OpenBve
 						// interrupt
 						if (Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Buffer != null)
 						{
-							Program.Sounds.PlaySound(Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Buffer, 1.0, 1.0, Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Position, this, DriverCar, false);
+							Program.Sounds.PlaySound(Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Buffer, 1.0, 1.0, Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Position, Cars[DriverCar], false);
 						}
 						Cars[DriverCar].Sounds.BreakerResumed = false;
 					}
@@ -337,7 +335,7 @@ namespace OpenBve
 					// hold the position of the player's train during startup
 					for (int i = 0; i < Cars.Length; i++)
 					{
-						Cars[i].Specs.CurrentSpeed = 0.0;
+						Cars[i].CurrentSpeed = 0.0;
 						Cars[i].Specs.CurrentAccelerationOutput = 0.0;
 					}
 					return;
@@ -359,7 +357,7 @@ namespace OpenBve
 					// friction
 					double FrictionBrakeAcceleration;
 					{
-						double v = Math.Abs(Cars[i].Specs.CurrentSpeed);
+						double v = Math.Abs(Cars[i].CurrentSpeed);
 						double a = GetResistance(this, i, ref Cars[i].FrontAxle, v);
 						double b = GetResistance(this, i, ref Cars[i].RearAxle, v);
 						FrictionBrakeAcceleration = 0.5 * (a + b);
@@ -379,10 +377,10 @@ namespace OpenBve
 					}
 					else
 					{
-						wheelSlipAccelerationMotorFront = GetCriticalWheelSlipAccelerationForElectricMotor(this, i, Cars[i].FrontAxle.Follower.AdhesionMultiplier, Cars[i].FrontAxle.Follower.WorldUp.Y, Cars[i].Specs.CurrentSpeed);
-						wheelSlipAccelerationMotorRear = GetCriticalWheelSlipAccelerationForElectricMotor(this, i, Cars[i].RearAxle.Follower.AdhesionMultiplier, Cars[i].RearAxle.Follower.WorldUp.Y, Cars[i].Specs.CurrentSpeed);
-						wheelSlipAccelerationBrakeFront = GetCriticalWheelSlipAccelerationForFrictionBrake(this, i, Cars[i].FrontAxle.Follower.AdhesionMultiplier, Cars[i].FrontAxle.Follower.WorldUp.Y, Cars[i].Specs.CurrentSpeed);
-						wheelSlipAccelerationBrakeRear = GetCriticalWheelSlipAccelerationForFrictionBrake(this, i, Cars[i].RearAxle.Follower.AdhesionMultiplier, Cars[i].RearAxle.Follower.WorldUp.Y, Cars[i].Specs.CurrentSpeed);
+						wheelSlipAccelerationMotorFront = GetCriticalWheelSlipAccelerationForElectricMotor(this, i, Cars[i].FrontAxle.Follower.AdhesionMultiplier, Cars[i].FrontAxle.Follower.WorldUp.Y, Cars[i].CurrentSpeed);
+						wheelSlipAccelerationMotorRear = GetCriticalWheelSlipAccelerationForElectricMotor(this, i, Cars[i].RearAxle.Follower.AdhesionMultiplier, Cars[i].RearAxle.Follower.WorldUp.Y, Cars[i].CurrentSpeed);
+						wheelSlipAccelerationBrakeFront = GetCriticalWheelSlipAccelerationForFrictionBrake(this, i, Cars[i].FrontAxle.Follower.AdhesionMultiplier, Cars[i].FrontAxle.Follower.WorldUp.Y, Cars[i].CurrentSpeed);
+						wheelSlipAccelerationBrakeRear = GetCriticalWheelSlipAccelerationForFrictionBrake(this, i, Cars[i].RearAxle.Follower.AdhesionMultiplier, Cars[i].RearAxle.Follower.WorldUp.Y, Cars[i].CurrentSpeed);
 					}
 					if (DecelerationDueToMotor[i] == 0.0)
 					{
@@ -398,7 +396,7 @@ namespace OpenBve
 									{
 										// Load factor is a constant 1.0 for anything prior to BVE5
 										// This will need to be changed when the relevant branch is merged in
-										a = Cars[i].Specs.AccelerationCurves[Handles.Power.Actual - 1].GetAccelerationOutput((double)Handles.Reverser.Actual * Cars[i].Specs.CurrentSpeed, 1.0);
+										a = Cars[i].Specs.AccelerationCurves[Handles.Power.Actual - 1].GetAccelerationOutput((double)Handles.Reverser.Actual * Cars[i].CurrentSpeed, 1.0);
 									}
 									else
 									{
@@ -523,7 +521,7 @@ namespace OpenBve
 						}
 						// brake
 						a = DecelerationDueToBrake[i];
-						if (Cars[i].Specs.CurrentSpeed >= -0.01 & Cars[i].Specs.CurrentSpeed <= 0.01)
+						if (Cars[i].CurrentSpeed >= -0.01 & Cars[i].CurrentSpeed <= 0.01)
 						{
 							double rf = Cars[i].FrontAxle.Follower.WorldDirection.Y;
 							double rr = Cars[i].RearAxle.Follower.WorldDirection.Y;
@@ -594,11 +592,11 @@ namespace OpenBve
 						}
 						else if (wheelspin == 0.0)
 						{
-							target = Cars[i].Specs.CurrentSpeed;
+							target = Cars[i].CurrentSpeed;
 						}
 						else
 						{
-							target = Cars[i].Specs.CurrentSpeed + wheelspin / 2500.0;
+							target = Cars[i].CurrentSpeed + wheelspin / 2500.0;
 						}
 						double diff = target - Cars[i].Specs.CurrentPerceivedSpeed;
 						double rate = (diff < 0.0 ? 5.0 : 1.0) * Game.RouteAccelerationDueToGravity * TimeElapsed;
@@ -617,7 +615,7 @@ namespace OpenBve
 					}
 					// calculate new speed
 					{
-						int d = Math.Sign(Cars[i].Specs.CurrentSpeed);
+						int d = Math.Sign(Cars[i].CurrentSpeed);
 						double a = PowerRollingCouplerAcceleration;
 						double b = FrictionBrakeAcceleration;
 						if (Math.Abs(a) < b)
@@ -631,9 +629,9 @@ namespace OpenBve
 								else
 								{
 									double c = (b - Math.Abs(a)) * TimeElapsed;
-									if (Math.Abs(Cars[i].Specs.CurrentSpeed) > c)
+									if (Math.Abs(Cars[i].CurrentSpeed) > c)
 									{
-										NewSpeeds[i] = Cars[i].Specs.CurrentSpeed - (double)d * c;
+										NewSpeeds[i] = Cars[i].CurrentSpeed - (double)d * c;
 									}
 									else
 									{
@@ -644,9 +642,9 @@ namespace OpenBve
 							else
 							{
 								double c = (Math.Abs(a) + b) * TimeElapsed;
-								if (Math.Abs(Cars[i].Specs.CurrentSpeed) > c)
+								if (Math.Abs(Cars[i].CurrentSpeed) > c)
 								{
-									NewSpeeds[i] = Cars[i].Specs.CurrentSpeed - (double)d * c;
+									NewSpeeds[i] = Cars[i].CurrentSpeed - (double)d * c;
 								}
 								else
 								{
@@ -656,7 +654,7 @@ namespace OpenBve
 						}
 						else
 						{
-							NewSpeeds[i] = Cars[i].Specs.CurrentSpeed + (a - b * (double)d) * TimeElapsed;
+							NewSpeeds[i] = Cars[i].CurrentSpeed + (a - b * (double)d) * TimeElapsed;
 						}
 					}
 				}
@@ -839,8 +837,8 @@ namespace OpenBve
 				double invtime = TimeElapsed != 0.0 ? 1.0 / TimeElapsed : 1.0;
 				for (int i = 0; i < Cars.Length; i++)
 				{
-					Cars[i].Specs.CurrentAcceleration = (NewSpeeds[i] - Cars[i].Specs.CurrentSpeed) * invtime;
-					Cars[i].Specs.CurrentSpeed = NewSpeeds[i];
+					Cars[i].Specs.CurrentAcceleration = (NewSpeeds[i] - Cars[i].CurrentSpeed) * invtime;
+					Cars[i].CurrentSpeed = NewSpeeds[i];
 					CurrentSpeed += NewSpeeds[i];
 					Specs.CurrentAverageAcceleration += Cars[i].Specs.CurrentAcceleration;
 				}
