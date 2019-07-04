@@ -4,6 +4,7 @@ using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBve.RouteManager;
 using OpenBve.SignalManager;
+using OpenBveApi.Routes;
 
 namespace OpenBve {
 	internal static partial class Game {
@@ -47,7 +48,7 @@ namespace OpenBve {
 			// track manager
 			for (int i = 0; i < TrackManager.Tracks.Length; i++)
 			{
-				TrackManager.Tracks[i] = new TrackManager.Track();
+				TrackManager.Tracks[i] = new Track();
 			}
 			// train manager
 			TrainManager.Trains = new TrainManager.Train[] { };

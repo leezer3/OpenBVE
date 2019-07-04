@@ -61,7 +61,7 @@ namespace OpenBve {
 			Data.Blocks[0].StationPassAlarm = false;
 			Data.Blocks[0].Accuracy = 2.0;
 			Data.Blocks[0].AdhesionMultiplier = 1.0;
-			Data.Blocks[0].CurrentTrackState = new TrackManager.TrackElement(0.0);
+			Data.Blocks[0].CurrentTrackState = new TrackElement(0.0);
 			if (!PreviewOnly)
 			{
 				Data.Blocks[0].Background = 0;

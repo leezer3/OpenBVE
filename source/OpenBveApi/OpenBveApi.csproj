@@ -105,6 +105,8 @@
     <Compile Include="Routes\Background.TransitionModes.cs" />
     <Compile Include="Routes\Events.cs" />
     <Compile Include="Routes\Events.TriggerTypes.cs" />
+    <Compile Include="Routes\Track.cs" />
+    <Compile Include="Routes\Track.TrackElement.cs" />
     <Compile Include="Sounds\Sounds.PathOrigin.cs" />
     <Compile Include="Sounds\Sounds.RawOrigin.cs" />
     <Compile Include="Sounds\Sounds.SoundOrigin.cs" />

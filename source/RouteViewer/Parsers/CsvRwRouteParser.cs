@@ -313,7 +313,7 @@ namespace OpenBve {
 			internal Transponder[] Transponder;
 	        internal DestinationEvent[] DestinationChanges;
 			internal PointOfInterest[] PointsOfInterest;
-			internal TrackManager.TrackElement CurrentTrackState;
+			internal TrackElement CurrentTrackState;
 			internal double Pitch;
 			internal double Turn;
 			internal int Station;
@@ -403,7 +403,7 @@ namespace OpenBve {
 			Data.Blocks[0].StationPassAlarm = false;
 			Data.Blocks[0].Accuracy = 2.0;
 			Data.Blocks[0].AdhesionMultiplier = 1.0;
-			Data.Blocks[0].CurrentTrackState = new TrackManager.TrackElement(0.0);
+			Data.Blocks[0].CurrentTrackState = new TrackElement(0.0);
             if (!PreviewOnly) {
                 Data.Blocks[0].Background = 0;
                 Data.Blocks[0].Brightness = new Brightness[] { };
@@ -5413,13 +5413,13 @@ namespace OpenBve {
 			// create objects and track
 			Vector3 Position = Vector3.Zero;
 			Vector2 Direction = new Vector2(0.0, 1.0);
-			TrackManager.CurrentTrack = new TrackManager.Track();
-			TrackManager.CurrentTrack.Elements = new TrackManager.TrackElement[] { };
+			TrackManager.CurrentTrack = new Track();
+			TrackManager.CurrentTrack.Elements = new TrackElement[] { };
 			double CurrentSpeedLimit = double.PositiveInfinity;
 			int CurrentRunIndex = 0;
 			int CurrentFlangeIndex = 0;
 			if (Data.FirstUsedBlock < 0) Data.FirstUsedBlock = 0;
-			TrackManager.CurrentTrack.Elements = new TrackManager.TrackElement[256];
+			TrackManager.CurrentTrack.Elements = new TrackElement[256];
 			int CurrentTrackLength = 0;
 			int PreviousFogElement = -1;
 			int PreviousFogEvent = -1;
@@ -5447,10 +5447,10 @@ namespace OpenBve {
 						}
 					}
 				}
-				TrackManager.TrackElement WorldTrackElement = Data.Blocks[i].CurrentTrackState;
+				TrackElement WorldTrackElement = Data.Blocks[i].CurrentTrackState;
 				int n = CurrentTrackLength;
 				if (n >= TrackManager.CurrentTrack.Elements.Length) {
-					Array.Resize<TrackManager.TrackElement>(ref TrackManager.CurrentTrack.Elements, TrackManager.CurrentTrack.Elements.Length << 1);
+					Array.Resize(ref TrackManager.CurrentTrack.Elements, TrackManager.CurrentTrack.Elements.Length << 1);
 				}
 				CurrentTrackLength++;
 				TrackManager.CurrentTrack.Elements[n] = WorldTrackElement;
@@ -6514,7 +6514,7 @@ namespace OpenBve {
 				}
 			}
 			// finalize
-			Array.Resize<TrackManager.TrackElement>(ref TrackManager.CurrentTrack.Elements, CurrentTrackLength);
+			Array.Resize(ref TrackManager.CurrentTrack.Elements, CurrentTrackLength);
 			for (int i = 0; i < Game.Stations.Length; i++) {
 				if (Game.Stations[i].Stops.Length == 0 & Game.Stations[i].StopMode != StationStopMode.AllPass) {
 					Interface.AddMessage(MessageType.Warning, false, "Station " + Game.Stations[i].Name + " expects trains to stop but does not define stop points at track position " + Game.Stations[i].DefaultTrackPosition.ToString(Culture) + " in file " + FileName);
@@ -6622,7 +6622,7 @@ namespace OpenBve {
 					midpointsCant[i] = follower.CurveCant;
 				}
 			}
-			Array.Resize<TrackManager.TrackElement>(ref TrackManager.CurrentTrack.Elements, newLength);
+			Array.Resize(ref TrackManager.CurrentTrack.Elements, newLength);
 			for (int i = length - 1; i >= 1; i--) {
 				TrackManager.CurrentTrack.Elements[subdivisions * i] = TrackManager.CurrentTrack.Elements[i];
 			}
@@ -6764,7 +6764,7 @@ namespace OpenBve {
 										originalAngle = Math.Acos(value);
 									}
 								}
-								TrackManager.TrackElement originalTrackElement = TrackManager.CurrentTrack.Elements[i];
+								TrackElement originalTrackElement = TrackManager.CurrentTrack.Elements[i];
 								bestT = double.MaxValue;
 								bestJ = 0;
 								for (int j = -1; j <= 1; j++) {
