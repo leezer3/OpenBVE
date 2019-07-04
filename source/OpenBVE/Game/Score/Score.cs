@@ -3,6 +3,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interface;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
@@ -190,7 +191,7 @@ namespace OpenBve
 					int j = TrainManager.PlayerTrain.Station;
 					if (j >= 0 & j < Stations.Length)
 					{
-						if (j >= ArrivalStation & TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Boarding)
+						if (j >= ArrivalStation & TrainManager.PlayerTrain.StationState == TrainStopState.Boarding)
 						{
 							if (j == 0 || Stations[j - 1].Type != StationType.ChangeEnds)
 							{
@@ -307,11 +308,11 @@ namespace OpenBve
 						bool q;
 						if (Stations[j].OpenLeftDoors | Stations[j].OpenRightDoors)
 						{
-							q = TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Completed;
+							q = TrainManager.PlayerTrain.StationState == TrainStopState.Completed;
 						}
 						else
 						{
-							q = TrainManager.PlayerTrain.StationState != TrainManager.TrainStopState.Pending & (TrainManager.PlayerTrain.CurrentSpeed < -1.5 | TrainManager.PlayerTrain.CurrentSpeed > 1.5);
+							q = TrainManager.PlayerTrain.StationState != TrainStopState.Pending & (TrainManager.PlayerTrain.CurrentSpeed < -1.5 | TrainManager.PlayerTrain.CurrentSpeed > 1.5);
 						}
 						if (q)
 						{
