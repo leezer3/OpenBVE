@@ -19,8 +19,8 @@ endif
 
 ifndef HAS_GMCS
 	ifndef HAS_SMCS
-			CSC := mcs
-			CSC_NAME :=mcs
+			CSC := mcs -sdk:4
+			CSC_NAME :=mcs 
 	endif
 endif
 
