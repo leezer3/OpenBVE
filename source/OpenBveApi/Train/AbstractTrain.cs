@@ -5,6 +5,8 @@
 	{
 		/// <summary>The current state of the train</summary>
 		public TrainState State;
+		/// <summary>The current station state</summary>
+		public TrainStopState StationState;
 		/// <summary>The car in which the driver's cab is located</summary>
 		public int DriverCar;
 		/// <summary>The next user-set destination</summary>

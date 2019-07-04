@@ -28,7 +28,6 @@ namespace OpenBve
 			internal TrainPassengers Passengers;
 			internal int LastStation;
 			internal int Station;
-			internal TrainStopState StationState;
 			internal double StationArrivalTime;
 			internal double StationDepartureTime;
 			internal bool StationDepartureSoundPlayed;
