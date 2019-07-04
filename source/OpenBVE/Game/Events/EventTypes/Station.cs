@@ -70,7 +70,7 @@ namespace OpenBve
 					}
 					else if (Direction > 0)
 					{
-						if (Train.Station == StationIndex || Train.NextStopSkipped != TrainManager.StopSkipMode.None)
+						if (Train.Station == StationIndex || Train.NextStopSkipped != StopSkipMode.None)
 						{
 							return;
 						}
@@ -114,11 +114,11 @@ namespace OpenBve
 					if (Direction < 0)
 					{
 						Train.Station = this.StationIndex;
-						if (Train.NextStopSkipped != TrainManager.StopSkipMode.None)
+						if (Train.NextStopSkipped != StopSkipMode.None)
 						{
 							Train.LastStation = this.StationIndex;
 						}
-						Train.NextStopSkipped = TrainManager.StopSkipMode.None;
+						Train.NextStopSkipped = StopSkipMode.None;
 					}
 					else if (Direction > 0)
 					{

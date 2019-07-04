@@ -129,6 +129,7 @@
     <Compile Include="Train\AbstractCar.cs" />
     <Compile Include="Train\AbstractTrain.cs" />
     <Compile Include="Train\Coupler.cs" />
+    <Compile Include="Train\StopSkipMode.cs" />
     <Compile Include="Train\TrainStartMode.cs" />
     <Compile Include="Train\TrainState.cs" />
     <Compile Include="Train\TrainStopState.cs" />

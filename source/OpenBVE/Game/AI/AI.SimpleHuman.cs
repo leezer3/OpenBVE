@@ -381,7 +381,7 @@ namespace OpenBve
 							if (tp + lookahead <= stp) break;
 							for (int j = 0; j < TrackManager.Tracks[0].Elements[i].Events.Length; j++)
 							{
-								if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationStartEvent && Train.NextStopSkipped == TrainManager.StopSkipMode.None)
+								if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationStartEvent && Train.NextStopSkipped == StopSkipMode.None)
 								{
 									TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.Tracks[0].Elements[i].Events[j];
 									if (StopsAtStation(e.StationIndex, Train) & Train.LastStation != e.StationIndex)
@@ -482,7 +482,7 @@ namespace OpenBve
 										}
 									}
 								}
-								else if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationStartEvent && Train.NextStopSkipped == TrainManager.StopSkipMode.None)
+								else if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationStartEvent && Train.NextStopSkipped == StopSkipMode.None)
 								{
 									// station start
 									if (Train.Station == -1)
@@ -511,7 +511,7 @@ namespace OpenBve
 										}
 									}
 								}
-								else if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationStartEvent && Train.NextStopSkipped == TrainManager.StopSkipMode.Decelerate)
+								else if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationStartEvent && Train.NextStopSkipped == StopSkipMode.Decelerate)
 								{
 									// Brakes the train when passing through a request stop, which is not to be passed at linespeed
 									if (Train.Station == -1)
@@ -544,7 +544,7 @@ namespace OpenBve
 										}
 									}
 								}
-								else if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationEndEvent && Train.NextStopSkipped == TrainManager.StopSkipMode.None)
+								else if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationEndEvent && Train.NextStopSkipped == StopSkipMode.None)
 								{
 									// station end
 									if (Train.Station == -1)
