@@ -103,7 +103,7 @@ namespace OpenBve
 				{
 					if (Direction > 0)
 					{
-						if (Train == TrainManager.PlayerTrain)
+						if (Train.IsPlayerTrain())
 						{
 							Timetable.UpdateCustomTimetable(Game.Stations[this.StationIndex].TimetableDaytimeTexture, Game.Stations[this.StationIndex].TimetableNighttimeTexture);
 						}
@@ -124,7 +124,7 @@ namespace OpenBve
 					{
 						if (Train.Station == StationIndex)
 						{
-							if (Train == TrainManager.PlayerTrain)
+							if (Train.IsPlayerTrain())
 							{
 								if (Game.Stations[StationIndex].PlayerStops() & TrainManager.PlayerTrain.StationState == TrainStopState.Pending)
 								{

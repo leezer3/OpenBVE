@@ -66,7 +66,7 @@ namespace OpenBve
 						if (Program.RandomNumberGenerator.Next(0, 100) <= stop.Probability)
 						{
 							//We have hit our probability roll
-							if (Game.Stations[StationIndex].StopMode == StationStopMode.AllRequestStop || (Train == TrainManager.PlayerTrain && Game.Stations[StationIndex].StopMode == StationStopMode.PlayerRequestStop))
+							if (Game.Stations[StationIndex].StopMode == StationStopMode.AllRequestStop || (Train.IsPlayerTrain() && Game.Stations[StationIndex].StopMode == StationStopMode.PlayerRequestStop))
 							{
 
 								//If our train can stop at this station, set it's index accordingly
@@ -90,7 +90,7 @@ namespace OpenBve
 								//Play sound
 								Program.Sounds.PlayCarSound(Train.Cars[Train.DriverCar].Sounds.RequestStop[1], 1.0, 1.0, Train.Cars[Train.DriverCar], false);
 								//If message is not empty, add it
-								if (!string.IsNullOrEmpty(stop.PassMessage) && Train == TrainManager.PlayerTrain)
+								if (!string.IsNullOrEmpty(stop.PassMessage) && Train.IsPlayerTrain())
 								{
 									Game.AddMessage(stop.PassMessage, MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
 								}
@@ -99,7 +99,7 @@ namespace OpenBve
 							//Play sound
 							Program.Sounds.PlayCarSound(Train.Cars[Train.DriverCar].Sounds.RequestStop[0], 1.0, 1.0, Train.Cars[Train.DriverCar], false);
 							//If message is not empty, add it
-							if (!string.IsNullOrEmpty(stop.StopMessage) && Train == TrainManager.PlayerTrain)
+							if (!string.IsNullOrEmpty(stop.StopMessage) && Train.IsPlayerTrain())
 							{
 								Game.AddMessage(stop.StopMessage, MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
 							}
@@ -119,7 +119,7 @@ namespace OpenBve
 							//Play sound
 							Program.Sounds.PlayCarSound(Train.Cars[Train.DriverCar].Sounds.RequestStop[1], 1.0, 1.0, Train.Cars[Train.DriverCar], false);
 							//If message is not empty, add it
-							if (!string.IsNullOrEmpty(stop.PassMessage) && Train == TrainManager.PlayerTrain)
+							if (!string.IsNullOrEmpty(stop.PassMessage) && Train.IsPlayerTrain())
 							{
 								Game.AddMessage(stop.PassMessage, MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
 							}

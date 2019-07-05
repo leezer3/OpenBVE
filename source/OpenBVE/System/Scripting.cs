@@ -652,7 +652,7 @@ namespace OpenBve
             public static bool hasPlugin(TrainManager.Train Train)
             {
                 if (Train == null) return false;
-                if (Train == TrainManager.PlayerTrain && Train.Plugin != null)
+                if (Train.IsPlayerTrain() && Train.Plugin != null)
                 {
                     return TrainManager.PlayerTrain.Plugin.IsDefault;
                 }

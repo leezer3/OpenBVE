@@ -31,7 +31,7 @@ namespace OpenBve
 		/// <param name="stationIndex">The zero-based index of the station</param>
 		internal static void JumpTrain(Train train, int stationIndex)
 		{
-			if (train == PlayerTrain)
+			if (train.IsPlayerTrain())
 			{
 				for (int i = 0; i < ObjectManager.AnimatedWorldObjects.Length; i++)
 				{
@@ -51,7 +51,7 @@ namespace OpenBve
 			int stopIndex = Game.Stations[stationIndex].GetStopIndex(train.Cars.Length);
 			if (stopIndex >= 0)
 			{
-				if (train == PlayerTrain)
+				if (train.IsPlayerTrain())
 				{
 					if (train.Plugin != null)
 					{
@@ -63,7 +63,7 @@ namespace OpenBve
 					train.Cars[h].CurrentSpeed = 0.0;
 				}
 				double d = Game.Stations[stationIndex].Stops[stopIndex].TrackPosition - train.Cars[0].FrontAxle.Follower.TrackPosition + train.Cars[0].FrontAxle.Position - 0.5 * train.Cars[0].Length;
-				if (train == PlayerTrain)
+				if (train.IsPlayerTrain())
 				{
 					TrackManager.SuppressSoundEvents = true;
 				}
@@ -91,7 +91,7 @@ namespace OpenBve
 						break;
 					}
 				}
-				if (train == PlayerTrain)
+				if (train.IsPlayerTrain())
 				{
 					TrainManager.UnderailTrains();
 					TrackManager.SuppressSoundEvents = false;
@@ -109,14 +109,14 @@ namespace OpenBve
 				{
 					Game.UpdateSection(CurrentRoute.Sections.Length - 1);
 				}
-				if (train == PlayerTrain)
+				if (train.IsPlayerTrain())
 				{
 					if (Game.CurrentScore.ArrivalStation <= stationIndex)
 					{
 						Game.CurrentScore.ArrivalStation = stationIndex + 1;
 					}
 				}
-				if (train == PlayerTrain)
+				if (train.IsPlayerTrain())
 				{
 					if (Game.Stations[stationIndex].ArrivalTime >= 0.0)
 					{
@@ -132,7 +132,7 @@ namespace OpenBve
 					train.Cars[i].Doors[0].AnticipatedOpen = Game.Stations[stationIndex].OpenLeftDoors;
 					train.Cars[i].Doors[1].AnticipatedOpen = Game.Stations[stationIndex].OpenRightDoors;
 				}
-				if (train == PlayerTrain)
+				if (train.IsPlayerTrain())
 				{
 					Game.CurrentScore.DepartureStation = stationIndex;
 					Game.CurrentInterface = Game.InterfaceType.Normal;
@@ -140,7 +140,7 @@ namespace OpenBve
 				}
 				ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 				TrainManager.UpdateTrainObjects(0.0, true);
-				if (train == PlayerTrain)
+				if (train.IsPlayerTrain())
 				{
 					if (train.Plugin != null)
 					{
@@ -148,7 +148,7 @@ namespace OpenBve
 					}
 				}
 				train.StationState = TrainStopState.Pending;
-				if (train == PlayerTrain)
+				if (train.IsPlayerTrain())
 				{
 					train.LastStation = stationIndex;
 				}

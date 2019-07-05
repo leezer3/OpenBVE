@@ -100,6 +100,11 @@ namespace OpenBve
 				}
 			}
 
+			public override bool IsPlayerTrain()
+			{
+				return this == PlayerTrain;
+			}
+
 			/// <summary>Call this method to update the train</summary>
 			/// <param name="TimeElapsed">The elapsed time this frame</param>
 			internal void Update(double TimeElapsed)
@@ -107,7 +112,7 @@ namespace OpenBve
 				if (State == TrainState.Pending)
 				{
 					// pending train
-					bool forceIntroduction = this == PlayerTrain && !Game.MinimalisticSimulation;
+					bool forceIntroduction = !IsPlayerTrain() && !Game.MinimalisticSimulation;
 					double time = 0.0;
 					if (!forceIntroduction)
 					{
@@ -149,7 +154,7 @@ namespace OpenBve
 							{
 								if (Cars[j].CarSections.Length != 0)
 								{
-									if (j == this.DriverCar && this == PlayerTrain)
+									if (j == this.DriverCar && IsPlayerTrain())
 									{
 										this.Cars[j].ChangeCarSection(CarSectionType.Interior);
 									}
@@ -163,7 +168,7 @@ namespace OpenBve
 										 * but we have no control over external factors....
 										 */
 										this.Cars[j].ChangeCarSection(CarSectionType.Exterior);
-										if (this == PlayerTrain)
+										if (IsPlayerTrain())
 										{
 											this.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
 
@@ -171,8 +176,8 @@ namespace OpenBve
 									}
 
 								}
-								Cars[j].FrontBogie.ChangeSection(this != PlayerTrain ? 0 : -1);
-								Cars[j].RearBogie.ChangeSection(this != PlayerTrain ? 0 : -1);
+								Cars[j].FrontBogie.ChangeSection(!IsPlayerTrain() ? 0 : -1);
+								Cars[j].RearBogie.ChangeSection(!IsPlayerTrain() ? 0 : -1);
 								if (Cars[j].Specs.IsMotorCar)
 								{
 									if (Cars[j].Sounds.Loop.Buffer != null)
@@ -260,7 +265,7 @@ namespace OpenBve
 				}
 
 				// safety system
-				if (!Game.MinimalisticSimulation | this != PlayerTrain)
+				if (!Game.MinimalisticSimulation | !IsPlayerTrain())
 				{
 					UpdateSafetySystem();
 				}
@@ -306,7 +311,7 @@ namespace OpenBve
 					if (Handles.EmergencyBrake.Driver & CurrentSpeed > -0.03 & CurrentSpeed < 0.03)
 					{
 						CurrentSectionLimit = 6.94444444444444;
-						if (this == PlayerTrain)
+						if (IsPlayerTrain())
 						{
 							string s = Translations.GetInterfaceString("message_signal_proceed");
 							double a = (3.6 * CurrentSectionLimit) * Game.SpeedConversionFactor;
@@ -328,7 +333,7 @@ namespace OpenBve
 
 			private void UpdateSpeeds(double TimeElapsed)
 			{
-				if (Game.MinimalisticSimulation & this == PlayerTrain)
+				if (Game.MinimalisticSimulation & IsPlayerTrain())
 				{
 					// hold the position of the player's train during startup
 					for (int i = 0; i < Cars.Length; i++)

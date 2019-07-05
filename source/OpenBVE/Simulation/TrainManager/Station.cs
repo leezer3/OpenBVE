@@ -129,7 +129,7 @@ namespace OpenBve
 								}
 								Train.Passengers.PassengerRatio = Game.Stations[i].PassengerRatio;
 								UpdateTrainMassFromPassengerRatio(Train);
-								if (Train == PlayerTrain)
+								if (Train.IsPlayerTrain())
 								{
 									double early = 0.0;
 									if (Game.Stations[i].ArrivalTime >= 0.0)
@@ -217,7 +217,7 @@ namespace OpenBve
 										OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.Adjust.Position;
 										Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train.Cars[Train.DriverCar], false);
 									}
-									if (Train == TrainManager.PlayerTrain)
+									if (Train.IsPlayerTrain())
 									{
 										Game.AddMessage(Translations.GetInterfaceString("message_station_correct"), MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Orange, Game.SecondsSinceMidnight + 5.0, null);
 									}
@@ -424,7 +424,7 @@ namespace OpenBve
 							if (Game.SecondsSinceMidnight > Train.StationDepartureTime && (Game.Stations[i].Type != StationType.Terminal || Train != PlayerTrain))
 							{
 								Train.StationState = TrainStopState.Completed;
-								if (Train == PlayerTrain & Game.Stations[i].Type == StationType.Normal)
+								if (Train.IsPlayerTrain() & Game.Stations[i].Type == StationType.Normal)
 								{
 									if (!Game.Stations[i].OpenLeftDoors & !Game.Stations[i].OpenRightDoors | Train.Specs.DoorCloseMode != DoorMode.Manual)
 									{
@@ -444,7 +444,7 @@ namespace OpenBve
 						else
 						{
 							Train.StationState = TrainStopState.Completed;
-							if (Train == PlayerTrain & Game.Stations[i].Type == StationType.Normal)
+							if (Train.IsPlayerTrain() & Game.Stations[i].Type == StationType.Normal)
 							{
 								Game.AddMessage(Translations.GetInterfaceString("message_station_depart"), MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 5.0, null);
 							}

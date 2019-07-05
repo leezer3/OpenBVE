@@ -171,7 +171,7 @@ namespace OpenBve
 				{
 					// door opened or boarding at station
 					this.PowerNotchAtWhichWheelSlipIsObserved = Train.Handles.Power.MaximumNotch + 1;
-					if (Train.Station >= 0 && Stations[Train.Station].Type != StationType.Normal && Stations[Train.Station].Type != StationType.RequestStop && Train == TrainManager.PlayerTrain)
+					if (Train.Station >= 0 && Stations[Train.Station].Type != StationType.Normal && Stations[Train.Station].Type != StationType.RequestStop && Train.IsPlayerTrain())
 					{
 						// player's terminal station
 						if (Train.Plugin == null || Train.Plugin.LastReverser == -2)
@@ -254,7 +254,7 @@ namespace OpenBve
 					}
 					CurrentInterval = 1.0;
 				}
-				else if (Train.Station >= 0 && stopIndex >= 0 && Stations[Train.Station].Type != StationType.Normal && Stations[Train.Station].Type != StationType.RequestStop && Train == TrainManager.PlayerTrain && Train.StationDistanceToStopPoint < Stations[Train.Station].Stops[stopIndex].BackwardTolerance && -Train.StationDistanceToStopPoint < Stations[Train.Station].Stops[stopIndex].ForwardTolerance && Math.Abs(Train.CurrentSpeed) < 0.25)
+				else if (Train.Station >= 0 && stopIndex >= 0 && Stations[Train.Station].Type != StationType.Normal && Stations[Train.Station].Type != StationType.RequestStop && Train.IsPlayerTrain() && Train.StationDistanceToStopPoint < Stations[Train.Station].Stops[stopIndex].BackwardTolerance && -Train.StationDistanceToStopPoint < Stations[Train.Station].Stops[stopIndex].ForwardTolerance && Math.Abs(Train.CurrentSpeed) < 0.25)
 				{
 					// player's terminal station (not boarding any longer)
 					if (Train.Plugin != null || Train.Plugin.LastReverser == -2)
@@ -576,7 +576,7 @@ namespace OpenBve
 								else if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.TrackEndEvent)
 								{
 									// track end
-									if (Train == TrainManager.PlayerTrain)
+									if (Train.IsPlayerTrain())
 									{
 										TrackManager.TrackEndEvent e = (TrackManager.TrackEndEvent)TrackManager.Tracks[0].Elements[i].Events[j];
 										double dist = stp + e.TrackPositionDelta - tp;
@@ -596,7 +596,7 @@ namespace OpenBve
 						}
 					}
 					// buffers ahead
-					if (Train == TrainManager.PlayerTrain)
+					if (Train.IsPlayerTrain())
 					{
 						for (int i = 0; i < BufferTrackPositions.Length; i++)
 						{

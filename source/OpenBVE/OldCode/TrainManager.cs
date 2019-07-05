@@ -458,7 +458,7 @@ namespace OpenBve
 						}
 					}
 					// with buffers
-					if (Trains[i] == PlayerTrain)
+					if (Trains[i].IsPlayerTrain())
 					{
 						double a = Trains[i].Cars[0].FrontAxle.Follower.TrackPosition - Trains[i].Cars[0].FrontAxle.Position +
 								   0.5*Trains[i].Cars[0].Length;

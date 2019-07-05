@@ -53,7 +53,7 @@ namespace OpenBve
 				if (SuppressSoundEvents) return;
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle | TriggerType == EventTriggerType.OtherCarRearAxle | TriggerType == EventTriggerType.RearCarRearAxle)
 				{
-					if (!PlayerTrainOnly | Train == TrainManager.PlayerTrain)
+					if (!PlayerTrainOnly | Train.IsPlayerTrain())
 					{
 						Vector3 p = this.Position;
 						double pitch = 1.0;
