@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Colors;
+﻿using OpenBve.RouteManager;
+using OpenBveApi.Colors;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
@@ -7,15 +8,6 @@ namespace OpenBve
 {
 	internal static partial class TrackManager
 	{
-		/// <summary>Defines a request stop which may be made by a train</summary>
-		internal class RequestStop
-		{
-			internal int Probability;
-			internal double Time = -1;
-			internal string StopMessage;
-			internal string PassMessage;
-		}
-
 		/// <summary>Called when a train passes over the trigger for a request stop</summary>
 		internal class RequestStopEvent : GeneralEvent<TrainManager.Train>
 		{

@@ -54,6 +54,7 @@
     <Compile Include="SignalManager\SectionTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CurrentRoute.cs" />
+    <Compile Include="Stations\RequestStop.cs" />
     <Compile Include="Stations\RouteStation.cs" />
     <Compile Include="Stations\Station.Stop.cs" />
   </ItemGroup>

@@ -19,9 +19,9 @@ namespace OpenBve
 			{
 				Stops = new StationStop[] { }
 			};
-			stopRequest.Early = new TrackManager.RequestStop();
-			stopRequest.OnTime = new TrackManager.RequestStop();
-			stopRequest.Late = new TrackManager.RequestStop();
+			stopRequest.Early = new RequestStop();
+			stopRequest.OnTime = new RequestStop();
+			stopRequest.Late = new RequestStop();
 			stopRequest.OnTime.Probability = 75;
 			//The current XML file to load
 			XmlDocument currentXML = new XmlDocument();
@@ -32,7 +32,7 @@ namespace OpenBve
 			if (currentXML.DocumentElement != null)
 			{
 				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Station");
-				//Check this file actually contains OpenBVE light definition nodes
+				//Check this file actually contains OpenBVE station nodes
 				if (DocumentNodes != null)
 				{
 					foreach (XmlNode n in DocumentNodes)
