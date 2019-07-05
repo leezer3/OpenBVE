@@ -113,7 +113,7 @@ namespace OpenBve
 					double targetX;
 					if (radius != 0.0)
 					{
-						double speed = Train.Cars[c].Specs.CurrentSpeed;
+						double speed = Train.Cars[c].CurrentSpeed;
 						targetX = speed * speed / radius;
 					}
 					else

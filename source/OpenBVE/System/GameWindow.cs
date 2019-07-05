@@ -134,7 +134,7 @@ namespace OpenBve
 			{
 				ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z);
 				int d = TrainManager.PlayerTrain.DriverCar;
-				Camera.CurrentSpeed = TrainManager.PlayerTrain.Cars[d].Specs.CurrentSpeed;
+				Camera.CurrentSpeed = TrainManager.PlayerTrain.Cars[d].CurrentSpeed;
 			}
 			else
 			{

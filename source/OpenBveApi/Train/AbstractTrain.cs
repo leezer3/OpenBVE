@@ -43,5 +43,11 @@
 		public virtual void Dispose()
 		{
 		}
+
+		/// <summary>Stops all sounds from this train</summary>
+		public virtual void StopAllSounds()
+		{
+
+		}
 	}
 }

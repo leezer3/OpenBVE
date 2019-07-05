@@ -215,7 +215,7 @@ namespace OpenBve
 									if (buffer != null)
 									{
 										OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.Adjust.Position;
-										Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
+										Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train.Cars[Train.DriverCar], false);
 									}
 									if (Train == TrainManager.PlayerTrain)
 									{

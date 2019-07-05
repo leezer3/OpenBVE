@@ -5,7 +5,6 @@ using System.Windows.Forms;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Sounds;
-using OpenBveApi.Trains;
 using OpenTK;
 using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
@@ -345,7 +344,7 @@ namespace SoundManager
 			{
 				Array.Resize(ref Sources, Sources.Length << 1);
 			}
-			Sources[SourceCount] = new SoundSource(buffer, buffer.Radius, pitch, volume, position, null, 0, looped);
+			Sources[SourceCount] = new SoundSource(buffer, buffer.Radius, pitch, volume, position, (object) null, looped);
 			SourceCount++;
 			return Sources[SourceCount - 1];
 		}
@@ -354,7 +353,7 @@ namespace SoundManager
 		/// <param name="buffer">The sound buffer.</param>
 		/// <param name="pitch">The pitch change factor.</param>
 		/// <param name="volume">The volume change factor.</param>
-		/// <param name="position">The position. If a train and car are specified, the position is relative to the car, otherwise absolute.</param>
+		/// <param name="position">The position. If a train car is specified, the position is relative to the car, otherwise absolute.</param>
 		/// <param name="parent">The parent object the sound is attached to, or a null reference.</param>
 		/// <param name="looped">Whether to play the sound in a loop.</param>
 		/// <returns>The sound source.</returns>
@@ -364,31 +363,11 @@ namespace SoundManager
 			{
 				Array.Resize(ref Sources, Sources.Length << 1);
 			}
-			Sources[SourceCount] = new SoundSource(buffer, buffer.Radius, pitch, volume, position, parent, 0, looped);
+			Sources[SourceCount] = new SoundSource(buffer, buffer.Radius, pitch, volume, position, parent, looped);
 			SourceCount++;
 			return Sources[SourceCount - 1];
 		}
-
-		/// <summary>Plays a sound.</summary>
-		/// <param name="buffer">The sound buffer.</param>
-		/// <param name="pitch">The pitch change factor.</param>
-		/// <param name="volume">The volume change factor.</param>
-		/// <param name="position">The position. If a train and car are specified, the position is relative to the car, otherwise absolute.</param>
-		/// <param name="train">The train the sound is attached to, or a null reference.</param>
-		/// <param name="car">The car in the train the sound is attached to.</param>
-		/// <param name="looped">Whether to play the sound in a loop.</param>
-		/// <returns>The sound source.</returns>
-		public SoundSource PlaySound(SoundBuffer buffer, double pitch, double volume, OpenBveApi.Math.Vector3 position, object train, int car, bool looped)
-		{
-			if (Sources.Length == SourceCount)
-			{
-				Array.Resize(ref Sources, Sources.Length << 1);
-			}
-			Sources[SourceCount] = new SoundSource(buffer, buffer.Radius, pitch, volume, position, train, car, looped);
-			SourceCount++;
-			return Sources[SourceCount - 1];
-		}
-
+		
 		/// <summary>Register the position to play microphone input.</summary>
 		/// <param name="position">The position.</param>
 		/// <param name="backwardTolerance">allowed tolerance in the backward direction</param>
@@ -429,7 +408,7 @@ namespace SoundManager
 
 		/// <summary>Stops all sounds that are attached to the specified train.</summary>
 		/// <param name="train">The train.</param>
-		public void StopAllSounds(AbstractTrain train)
+		public virtual void StopAllSounds(object train)
 		{
 			for (int i = 0; i < SourceCount; i++)
 			{

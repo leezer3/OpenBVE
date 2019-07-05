@@ -73,7 +73,7 @@ namespace OpenBve
 								if (Cars[i].Sounds.Loop.Buffer != null)
 								{
 									Vector3 pos = Cars[i].Sounds.Loop.Position;
-									Cars[i].Sounds.Loop.Source = Program.Sounds.PlaySound(Cars[i].Sounds.Loop.Buffer, 1.0, 1.0, pos, this, i, true);
+									Cars[i].Sounds.Loop.Source = Program.Sounds.PlaySound(Cars[i].Sounds.Loop.Buffer, 1.0, 1.0, pos, Cars[i], true);
 								}
 							}
 						}

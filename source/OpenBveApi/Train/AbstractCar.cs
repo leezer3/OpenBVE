@@ -13,5 +13,15 @@ namespace OpenBveApi.Trains
 		public double Length;
 		/// <summary>The Up vector</summary>
 		public Vector3 Up;
+		/// <summary>The current speed of this car</summary>
+		/// <remarks>Default units are km/h</remarks>
+		public double CurrentSpeed;
+
+		/// <summary>Creates the in-world co-ordinates for a sound attached to this car</summary>
+		public virtual void CreateWorldCoordinates(Vector3 Car, out Vector3 Position, out Vector3 Direction)
+		{
+			Position = Vector3.Zero;
+			Direction = Vector3.Zero;
+		}
 	}
 }

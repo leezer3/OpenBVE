@@ -5911,7 +5911,7 @@ namespace OpenBve {
 										Vector3 s = new Vector3(Direction.Y, 0.0, -Direction.X);
 										Vector3 u = Vector3.Cross(w, s);
 										Vector3 wpos = pos + new Vector3(s.X * dx + u.X * dy + w.X * d, s.Y * dx + u.Y * dy + w.Y * d, s.Z * dx + u.Z * dy + w.Z * d);
-										Program.Sounds.PlaySound(Data.Blocks[i].Sound[k].SoundBuffer, 1.0, 1.0, wpos, null, -1, true);
+										Program.Sounds.PlaySound(Data.Blocks[i].Sound[k].SoundBuffer, 1.0, 1.0, wpos, null, true);
 									}
 								}
 							}

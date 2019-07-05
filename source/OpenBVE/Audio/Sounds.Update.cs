@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using LibRender;
 using OpenBveApi.Runtime;
 using OpenBveApi.Sounds;
+using OpenBveApi.Trains;
 using OpenTK.Audio.OpenAL;
 using SoundManager;
 
@@ -27,7 +28,7 @@ namespace OpenBve
 			if (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead | Camera.CurrentMode == CameraViewMode.Exterior) {
 				TrainManager.Car car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
 				Vector3 diff = car.FrontAxle.Follower.WorldPosition - car.RearAxle.Follower.WorldPosition;
-				listenerVelocity = car.Specs.CurrentSpeed * Vector3.Normalize(diff) + Camera.AlignmentSpeed.Position;
+				listenerVelocity = car.CurrentSpeed * Vector3.Normalize(diff) + Camera.AlignmentSpeed.Position;
 			} else {
 				listenerVelocity = Camera.AlignmentSpeed.Position;
 			}
@@ -101,9 +102,9 @@ namespace OpenBve
 					switch (Sources[i].Type)
 					{
 						case SoundType.TrainCar:
-							var Train = (TrainManager.Train)Sources[i].Parent;
-							Train.Cars[Sources[i].Car].CreateWorldCoordinates(Sources[i].Position, out position, out direction);
-							velocity = Train.Cars[Sources[i].Car].Specs.CurrentSpeed * direction;
+							var Car = (AbstractCar)Sources[i].Parent;
+							Car.CreateWorldCoordinates(Sources[i].Position, out position, out direction);
+							velocity = Car.CurrentSpeed * direction;
 							break;
 						case SoundType.AnimatedObject:
 							var WorldSound = (ObjectManager.WorldSound)Sources[i].Parent;
@@ -124,8 +125,8 @@ namespace OpenBve
 						double distance = positionDifference.Norm();
 						double innerRadius = Sources[i].Radius;
 						if (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead) {
-							if (Sources[i].Parent != TrainManager.PlayerTrain || Sources[i].Car != TrainManager.PlayerTrain.DriverCar) {
-								innerRadius *= 0.5;
+							if (Sources[i].Parent != TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar]) {
+								innerRadius *= 0.5; 
 							}
 						}
 						double outerRadius = OuterRadiusFactor * innerRadius;
@@ -275,9 +276,9 @@ namespace OpenBve
 				TrainManager.Car car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
 				Vector3 diff = car.FrontAxle.Follower.WorldPosition - car.RearAxle.Follower.WorldPosition;
 				if (diff.IsNullVector()) {
-					listenerVelocity = car.Specs.CurrentSpeed * Vector3.Forward;
+					listenerVelocity = car.CurrentSpeed * Vector3.Forward;
 				} else {
-					listenerVelocity = car.Specs.CurrentSpeed * Vector3.Normalize(diff);
+					listenerVelocity = car.CurrentSpeed * Vector3.Normalize(diff);
 				}
 			} else {
 				listenerVelocity = Vector3.Zero;
@@ -371,8 +372,8 @@ namespace OpenBve
 					{
 						case SoundType.TrainCar:
 							Vector3 direction;
-							var Train = (TrainManager.Train)Sources[i].Parent;
-							Train.Cars[Sources[i].Car].CreateWorldCoordinates(Sources[i].Position, out position, out direction);
+							var Car = (AbstractCar)Sources[i].Parent;
+							Car.CreateWorldCoordinates(Sources[i].Position, out position, out direction);
 							break;
 						case SoundType.AnimatedObject:
 							var WorldSound = (ObjectManager.WorldSound)Sources[i].Parent;
@@ -386,7 +387,7 @@ namespace OpenBve
 					double distance = positionDifference.Norm();
 					double radius = Sources[i].Radius;
 					if (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead) {
-						if (Sources[i].Parent != TrainManager.PlayerTrain || Sources[i].Car != TrainManager.PlayerTrain.DriverCar) {
+						if (Sources[i].Parent != TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar]) {
 							radius *= 0.5;
 						}
 					}
@@ -512,9 +513,9 @@ namespace OpenBve
 					{
 						case SoundType.TrainCar:
 							Vector3 direction;
-							var Train = (TrainManager.Train)source.Parent;
-							Train.Cars[source.Car].CreateWorldCoordinates(source.Position, out position, out direction);
-							velocity = Train.Cars[source.Car].Specs.CurrentSpeed * direction;
+							var Car = (AbstractCar)Sources[i].Parent;
+							Car.CreateWorldCoordinates(source.Position, out position, out direction);
+							velocity = Car.CurrentSpeed * direction;
 							break;
 						case SoundType.AnimatedObject:
 							var WorldSound = (ObjectManager.WorldSound)source.Parent;

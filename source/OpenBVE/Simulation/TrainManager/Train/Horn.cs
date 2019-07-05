@@ -59,16 +59,14 @@ namespace OpenBve
 							if (StartSound != null)
 							{
 								//The start sound is not currently playing, so start it
-								Source = Program.Sounds.PlaySound(StartSound, 1.0, 1.0, SoundPosition,
-									PlayerTrain, PlayerTrain.DriverCar, false);
+								Source = Program.Sounds.PlaySound(StartSound, 1.0, 1.0, SoundPosition, PlayerTrain.Cars[PlayerTrain.DriverCar], false);
 
 								//Set the loop control variable to started
 								LoopStarted = true;
 							}
 							else
 							{
-								Source = Program.Sounds.PlaySound(LoopSound, 1.0, 1.0, SoundPosition,
-									PlayerTrain, PlayerTrain.DriverCar, true);
+								Source = Program.Sounds.PlaySound(LoopSound, 1.0, 1.0, SoundPosition, PlayerTrain.Cars[PlayerTrain.DriverCar], true);
 							}
 						}
 					}
@@ -77,8 +75,7 @@ namespace OpenBve
 						if (!Program.Sounds.IsPlaying(Source))
 						{
 							//Start our loop sound playing if the start sound is finished
-							Source = Program.Sounds.PlaySound(LoopSound, 1.0, 1.0, SoundPosition,
-										PlayerTrain, PlayerTrain.DriverCar, true);
+							Source = Program.Sounds.PlaySound(LoopSound, 1.0, 1.0, SoundPosition, PlayerTrain.Cars[PlayerTrain.DriverCar], true);
 						}
 					}
 				}
@@ -94,7 +91,7 @@ namespace OpenBve
 							{
 								//On the first keydown event, start the sound source playing and trigger the loop control variable
 								Source = Program.Sounds.PlaySound(LoopSound, 1.0, 1.0, SoundPosition,
-										PlayerTrain, PlayerTrain.DriverCar, true);
+										PlayerTrain.Cars[PlayerTrain.DriverCar], true);
 								LoopStarted = true;
 							}
 							else
@@ -112,8 +109,7 @@ namespace OpenBve
 						{
 							if (!LoopStarted)
 							{
-								Source = Program.Sounds.PlaySound(LoopSound, 1.0, 1.0, SoundPosition, PlayerTrain,
-									PlayerTrain.DriverCar, false);
+								Source = Program.Sounds.PlaySound(LoopSound, 1.0, 1.0, SoundPosition, PlayerTrain.Cars[PlayerTrain.DriverCar], false);
 							}
 							LoopStarted = true;
 						}
@@ -145,9 +141,7 @@ namespace OpenBve
 				if (StartEndSounds && !Program.Sounds.IsPlaying(Source) && EndSound != null)
 				{
 					//If our end sound is defined and in use, play once
-					Source = Program.Sounds.PlaySound(EndSound, 1.0, 1.0, SoundPosition,
-										PlayerTrain,
-										PlayerTrain.DriverCar, false);
+					Source = Program.Sounds.PlaySound(EndSound, 1.0, 1.0, SoundPosition, PlayerTrain.Cars[PlayerTrain.DriverCar], false);
 				}
 			}
 		}

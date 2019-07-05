@@ -79,9 +79,9 @@ namespace OpenBve
                 }
                 if (CarIndex > Train.Cars.Length)
                 {
-                    return Train.Cars[0].Specs.CurrentSpeed;
+                    return Train.Cars[0].CurrentSpeed;
                 }
-                return Train.Cars[CarIndex].Specs.CurrentSpeed;
+                return Train.Cars[CarIndex].CurrentSpeed;
             }
 
             /// <summary>Returns the speed of the selected car, accounting for wheelslip and wheel lock</summary>
@@ -128,7 +128,7 @@ namespace OpenBve
                         if (Train.Cars[j].Specs.CurrentAccelerationOutput < 0.0)
                         {
                             return Train.Cars[j].Specs.CurrentAccelerationOutput*
-                                   (double) Math.Sign(Train.Cars[j].Specs.CurrentSpeed);
+                                   (double) Math.Sign(Train.Cars[j].CurrentSpeed);
                         }
                         if (Train.Cars[j].Specs.CurrentAccelerationOutput > 0.0)
                         {
@@ -153,7 +153,7 @@ namespace OpenBve
                     if (Train.Cars[CarIndex].Specs.CurrentAccelerationOutput < 0.0)
                     {
                         return Train.Cars[CarIndex].Specs.CurrentAccelerationOutput*
-                               (double) Math.Sign(Train.Cars[CarIndex].Specs.CurrentSpeed);
+                               (double) Math.Sign(Train.Cars[CarIndex].CurrentSpeed);
                     }
                     if (Train.Cars[CarIndex].Specs.CurrentAccelerationOutput > 0.0)
                     {

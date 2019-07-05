@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using LibRender;
 using OpenBveApi.Runtime;
 using OpenBveApi.Sounds;
+using OpenBveApi.Trains;
 using OpenTK.Audio.OpenAL;
 using SoundManager;
 
@@ -23,7 +24,14 @@ namespace OpenBve
 			 * */
 			Vector3 listenerPosition = Camera.AbsolutePosition;
 			Orientation3 listenerOrientation = new Orientation3(Camera.AbsoluteSide, Camera.AbsoluteUp, Camera.AbsoluteDirection);
-			Vector3 listenerVelocity = Camera.AlignmentSpeed.Position;
+			Vector3 listenerVelocity;
+			if (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead | Camera.CurrentMode == CameraViewMode.Exterior) {
+				TrainManager.Car car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
+				Vector3 diff = car.FrontAxle.Follower.WorldPosition - car.RearAxle.Follower.WorldPosition;
+				listenerVelocity = car.CurrentSpeed * Vector3.Normalize(diff) + Camera.AlignmentSpeed.Position;
+			} else {
+				listenerVelocity = Camera.AlignmentSpeed.Position;
+			}
             AL.Listener(ALListener3f.Position, 0.0f, 0.0f, 0.0f);
             AL.Listener(ALListener3f.Velocity, (float)listenerVelocity.X, (float)listenerVelocity.Y, (float)listenerVelocity.Z);
 		    var Orientation = new[]{(float) listenerOrientation.Z.X, (float) listenerOrientation.Z.Y, (float) listenerOrientation.Z.Z,-(float) listenerOrientation.Y.X, -(float) listenerOrientation.Y.Y, -(float) listenerOrientation.Y.Z};
@@ -94,9 +102,9 @@ namespace OpenBve
 					switch (Sources[i].Type)
 					{
 						case SoundType.TrainCar:
-							var Train = (TrainManager.Train)Sources[i].Parent;
-							Train.Cars[Sources[i].Car].CreateWorldCoordinates(Sources[i].Position, out position, out direction);
-							velocity = Train.Cars[Sources[i].Car].Specs.CurrentSpeed * direction;
+							var Car = (AbstractCar)Sources[i].Parent;
+							Car.CreateWorldCoordinates(Sources[i].Position, out position, out direction);
+							velocity = Car.CurrentSpeed * direction;
 							break;
 						default:
 							position = Sources[i].Position;
@@ -111,8 +119,8 @@ namespace OpenBve
 						double distance = positionDifference.Norm();
 						double innerRadius = Sources[i].Radius;
 						if (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead) {
-							if (Sources[i].Parent != TrainManager.PlayerTrain || Sources[i].Car != TrainManager.PlayerTrain.DriverCar) {
-								innerRadius *= 0.5;
+							if (Sources[i].Parent != TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar]) {
+								innerRadius *= 0.5; 
 							}
 						}
 						double outerRadius = OuterRadiusFactor * innerRadius;
@@ -255,7 +263,18 @@ namespace OpenBve
 			 * */
 			Vector3 listenerPosition = Camera.AbsolutePosition;
 			Orientation3 listenerOrientation = new Orientation3(Camera.AbsoluteSide, Camera.AbsoluteUp, Camera.AbsoluteDirection);
-			Vector3 listenerVelocity = Vector3.Zero;
+			Vector3 listenerVelocity;
+			if (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead | Camera.CurrentMode == CameraViewMode.Exterior) {
+				TrainManager.Car car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
+				Vector3 diff = car.FrontAxle.Follower.WorldPosition - car.RearAxle.Follower.WorldPosition;
+				if (diff.IsNullVector()) {
+					listenerVelocity = car.CurrentSpeed * Vector3.Forward;
+				} else {
+					listenerVelocity = car.CurrentSpeed * Vector3.Normalize(diff);
+				}
+			} else {
+				listenerVelocity = Vector3.Zero;
+			}
 			AL.Listener(ALListener3f.Position, 0.0f, 0.0f, 0.0f);
 			AL.Listener(ALListener3f.Velocity, (float)listenerVelocity.X, (float)listenerVelocity.Y, (float)listenerVelocity.Z);
 		    var Orientation = new float[]{(float) listenerOrientation.Z.X, (float) listenerOrientation.Z.Y, (float) listenerOrientation.Z.Z,-(float) listenerOrientation.Y.X, -(float) listenerOrientation.Y.Y, -(float) listenerOrientation.Y.Z};
@@ -345,8 +364,8 @@ namespace OpenBve
 					{
 						case SoundType.TrainCar:
 							Vector3 direction;
-							var Train = (TrainManager.Train)Sources[i].Parent;
-							Train.Cars[Sources[i].Car].CreateWorldCoordinates(Sources[i].Position, out position, out direction);
+							var Car = (AbstractCar)Sources[i].Parent;
+							Car.CreateWorldCoordinates(Sources[i].Position, out position, out direction);
 							break;
 						default:
 							position = Sources[i].Position;
@@ -356,7 +375,7 @@ namespace OpenBve
 					double distance = positionDifference.Norm();
 					double radius = Sources[i].Radius;
 					if (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead) {
-						if (Sources[i].Parent != TrainManager.PlayerTrain || Sources[i].Car != TrainManager.PlayerTrain.DriverCar) {
+						if (Sources[i].Parent != TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar]) {
 							radius *= 0.5;
 						}
 					}
@@ -442,44 +461,32 @@ namespace OpenBve
 			for (int i = index; i < toBePlayed.Count; i++) {
 				toBePlayed[i].Gain = 0.0;
 			}
-
-			for (int i = 0; i < toBePlayed.Count; i++)
-			{
+			for (int i = 0; i < toBePlayed.Count; i++) {
 				SoundSource source = toBePlayed[i].Source;
 				double gain = toBePlayed[i].Gain - clampFactor * toBePlayed[i].Distance * toBePlayed[i].Distance;
-				if (gain <= 0.0)
-				{
+				if (gain <= 0.0) {
 					/*
 					 * Stop the sound.
 					 * */
-					if (source.State == SoundSourceState.Playing)
-					{
+					if (source.State == SoundSourceState.Playing) {
 						AL.DeleteSources(1, ref source.OpenAlSourceName);
 						source.State = SoundSourceState.PlayPending;
 						source.OpenAlSourceName = 0;
 					}
-
-					if (!source.Looped)
-					{
+					if (!source.Looped) {
 						source.State = SoundSourceState.Stopped;
 						source.OpenAlSourceName = 0;
 					}
-				}
-				else
-				{
+				} else {
 					/*
 					 * Ensure the buffer is loaded, then play the sound.
 					 * */
-					if (source.State != SoundSourceState.Playing)
-					{
+					if (source.State != SoundSourceState.Playing) {
 						LoadBuffer(source.Buffer);
-						if (source.Buffer.Loaded)
-						{
+						if (source.Buffer.Loaded) {
 							AL.GenSources(1, out source.OpenAlSourceName);
 							AL.Source(source.OpenAlSourceName, ALSourcei.Buffer, source.Buffer.OpenAlBufferName);
-						}
-						else
-						{
+						} else {
 							/*
 							 * We cannot play the sound because
 							 * the buffer could not be loaded.
@@ -488,30 +495,27 @@ namespace OpenBve
 							continue;
 						}
 					}
-
 					Vector3 position;
 					Vector3 velocity;
 					switch (source.Type)
 					{
 						case SoundType.TrainCar:
 							Vector3 direction;
-							var Train = (TrainManager.Train) source.Parent;
-							Train.Cars[source.Car].CreateWorldCoordinates(source.Position, out position, out direction);
-							velocity = Train.Cars[source.Car].Specs.CurrentSpeed * direction;
+							var Car = (AbstractCar)Sources[i].Parent;
+							Car.CreateWorldCoordinates(source.Position, out position, out direction);
+							velocity = Car.CurrentSpeed * direction;
 							break;
 						default:
 							position = source.Position;
 							velocity = Vector3.Zero;
 							break;
 					}
-
 					position -= listenerPosition;
-					AL.Source(source.OpenAlSourceName, ALSource3f.Position, (float) position.X, (float) position.Y, (float) position.Z);
-					AL.Source(source.OpenAlSourceName, ALSource3f.Velocity, (float) velocity.X, (float) velocity.Y, (float) velocity.Z);
-					AL.Source(source.OpenAlSourceName, ALSourcef.Pitch, (float) source.Pitch);
-					AL.Source(source.OpenAlSourceName, ALSourcef.Gain, (float) gain);
-					if (source.State != SoundSourceState.Playing)
-					{
+					AL.Source(source.OpenAlSourceName, ALSource3f.Position, (float)position.X, (float)position.Y, (float)position.Z);
+					AL.Source(source.OpenAlSourceName, ALSource3f.Velocity, (float)velocity.X, (float)velocity.Y, (float)velocity.Z);
+					AL.Source(source.OpenAlSourceName, ALSourcef.Pitch, (float)source.Pitch);
+					AL.Source(source.OpenAlSourceName, ALSourcef.Gain, (float)gain);
+					if (source.State != SoundSourceState.Playing) {
 						AL.Source(source.OpenAlSourceName, ALSourceb.Looping, source.Looped);
 						AL.SourcePlay(source.OpenAlSourceName);
 						source.State = SoundSourceState.Playing;

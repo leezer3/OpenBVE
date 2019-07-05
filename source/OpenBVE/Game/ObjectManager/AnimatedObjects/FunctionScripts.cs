@@ -255,7 +255,7 @@ namespace OpenBve {
 						s++; break;
 					case Instructions.TrainSpeed:
 						if (Train != null) {
-							Function.Stack[s] = Train.Cars[CarIndex].Specs.CurrentSpeed;
+							Function.Stack[s] = Train.Cars[CarIndex].CurrentSpeed;
 						} else {
 							Function.Stack[s] = 0.0;
 						}
@@ -265,7 +265,7 @@ namespace OpenBve {
 							int j = (int)Math.Round(Function.Stack[s - 1]);
 							if (j < 0) j += Train.Cars.Length;
 							if (j >= 0 & j < Train.Cars.Length) {
-								Function.Stack[s - 1] = Train.Cars[j].Specs.CurrentSpeed;
+								Function.Stack[s - 1] = Train.Cars[j].CurrentSpeed;
 							} else {
 								Function.Stack[s - 1] = 0.0;
 							}
@@ -320,7 +320,7 @@ namespace OpenBve {
 								if (Train.Cars[j].Specs.IsMotorCar) {
 									// hack: CurrentAccelerationOutput does not distinguish between forward/backward
 									if (Train.Cars[j].Specs.CurrentAccelerationOutput < 0.0) {
-										Function.Stack[s] = Train.Cars[j].Specs.CurrentAccelerationOutput * (double)Math.Sign(Train.Cars[j].Specs.CurrentSpeed);
+										Function.Stack[s] = Train.Cars[j].Specs.CurrentAccelerationOutput * (double)Math.Sign(Train.Cars[j].CurrentSpeed);
 									} else if (Train.Cars[j].Specs.CurrentAccelerationOutput > 0.0) {
 										Function.Stack[s] = Train.Cars[j].Specs.CurrentAccelerationOutput * (double)Train.Handles.Reverser.Actual;
 									} else {
@@ -340,7 +340,7 @@ namespace OpenBve {
 							if (j >= 0 & j < Train.Cars.Length) {
 								// hack: CurrentAccelerationOutput does not distinguish between forward/backward
 								if (Train.Cars[j].Specs.CurrentAccelerationOutput < 0.0) {
-									Function.Stack[s - 1] = Train.Cars[j].Specs.CurrentAccelerationOutput * (double)Math.Sign(Train.Cars[j].Specs.CurrentSpeed);
+									Function.Stack[s - 1] = Train.Cars[j].Specs.CurrentAccelerationOutput * (double)Math.Sign(Train.Cars[j].CurrentSpeed);
 								} else if (Train.Cars[j].Specs.CurrentAccelerationOutput > 0.0) {
 									Function.Stack[s - 1] = Train.Cars[j].Specs.CurrentAccelerationOutput * (double)Train.Handles.Reverser.Actual;
 								} else {

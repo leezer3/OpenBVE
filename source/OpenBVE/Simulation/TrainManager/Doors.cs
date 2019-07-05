@@ -147,7 +147,7 @@ namespace OpenBve
 				if (buffer != null)
 				{
 					OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.PilotLampOn.Position;
-					Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
+					Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train.Cars[Train.DriverCar], false);
 				}
 			}
 			else if (oldState == OpenBveApi.Runtime.DoorStates.None & newState != OpenBveApi.Runtime.DoorStates.None)
@@ -156,7 +156,7 @@ namespace OpenBve
 				if (buffer != null)
 				{
 					OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.PilotLampOff.Position;
-					Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train, Train.DriverCar, false);
+					Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train.Cars[Train.DriverCar], false);
 				}
 			}
 			if (oldState != newState)
@@ -227,7 +227,7 @@ namespace OpenBve
 					if (buffer != null)
 					{
 						OpenBveApi.Math.Vector3 pos = Train.Cars[i].Doors[0].OpenSound.Position;
-						Program.Sounds.PlaySound(buffer, Train.Cars[i].Specs.DoorOpenPitch, 1.0, pos, Train, i, false);
+						Program.Sounds.PlaySound(buffer, Train.Cars[i].Specs.DoorOpenPitch, 1.0, pos, Train.Cars[i], false);
 					}
 					for (int j = 0; j < Train.Cars[i].Doors.Length; j++)
 					{
@@ -246,7 +246,7 @@ namespace OpenBve
 					if (buffer != null)
 					{
 						OpenBveApi.Math.Vector3 pos = Train.Cars[i].Doors[1].OpenSound.Position;
-						Program.Sounds.PlaySound(buffer, Train.Cars[i].Specs.DoorOpenPitch, 1.0, pos, Train, i, false);
+						Program.Sounds.PlaySound(buffer, Train.Cars[i].Specs.DoorOpenPitch, 1.0, pos, Train.Cars[i], false);
 					}
 					for (int j = 0; j < Train.Cars[i].Doors.Length; j++)
 					{
@@ -283,7 +283,7 @@ namespace OpenBve
 				if (buffer != null)
 				{
 					OpenBveApi.Math.Vector3 pos = Train.Cars[CarIndex].Doors[0].OpenSound.Position;
-					Program.Sounds.PlaySound(buffer, Train.Cars[CarIndex].Specs.DoorOpenPitch, 1.0, pos, Train, CarIndex, false);
+					Program.Sounds.PlaySound(buffer, Train.Cars[CarIndex].Specs.DoorOpenPitch, 1.0, pos, Train.Cars[CarIndex], false);
 				}
 				for (int i = 0; i < Train.Cars[CarIndex].Doors.Length; i++)
 				{
@@ -299,7 +299,7 @@ namespace OpenBve
 				if (buffer != null)
 				{
 					OpenBveApi.Math.Vector3 pos = Train.Cars[CarIndex].Doors[1].OpenSound.Position;
-					Program.Sounds.PlaySound(buffer, Train.Cars[CarIndex].Specs.DoorOpenPitch, 1.0, pos, Train, CarIndex, false);
+					Program.Sounds.PlaySound(buffer, Train.Cars[CarIndex].Specs.DoorOpenPitch, 1.0, pos, Train.Cars[CarIndex], false);
 				}
 				for (int i = 0; i < Train.Cars[CarIndex].Doors.Length; i++)
 				{
@@ -347,7 +347,7 @@ namespace OpenBve
 					if (buffer != null)
 					{
 						OpenBveApi.Math.Vector3 pos = Train.Cars[i].Doors[0].CloseSound.Position;
-						Program.Sounds.PlaySound(buffer, Train.Cars[i].Specs.DoorClosePitch, 1.0, pos, Train, i, false);
+						Program.Sounds.PlaySound(buffer, Train.Cars[i].Specs.DoorClosePitch, 1.0, pos, Train.Cars[i], false);
 					}
 				}
 			}
@@ -359,7 +359,7 @@ namespace OpenBve
 					if (buffer != null)
 					{
 						OpenBveApi.Math.Vector3 pos = Train.Cars[i].Doors[1].CloseSound.Position;
-						Program.Sounds.PlaySound(buffer, Train.Cars[i].Specs.DoorClosePitch, 1.0, pos, Train, i, false);
+						Program.Sounds.PlaySound(buffer, Train.Cars[i].Specs.DoorClosePitch, 1.0, pos, Train.Cars[i], false);
 					}
 				}
 			}
