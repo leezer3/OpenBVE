@@ -68,12 +68,16 @@ namespace OpenBve
                     }
                 }
             }
-            DateTime d = DateTime.Now;
-            Game.SecondsSinceMidnight = (double)(3600 * d.Hour + 60 * d.Minute + d.Second) + 0.001 * (double)d.Millisecond;
-            ObjectManager.UpdateAnimatedWorldObjects(TimeElapsed, false);
-            World.UpdateAbsoluteCamera(TimeElapsed);
-            ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z);
-			Program.Sounds.Update(TimeElapsed, SoundModels.Linear);
+
+            if (Program.CurrentRoute != null)
+            {
+	            DateTime d = DateTime.Now;
+	            Game.SecondsSinceMidnight = (double)(3600 * d.Hour + 60 * d.Minute + d.Second) + 0.001 * (double)d.Millisecond;
+	            ObjectManager.UpdateAnimatedWorldObjects(TimeElapsed, false);
+	            World.UpdateAbsoluteCamera(TimeElapsed);
+	            ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z);
+	            Program.Sounds.Update(TimeElapsed, SoundModels.Linear);
+            }
             Renderer.RenderScene(TimeElapsed);
             SwapBuffers();
             

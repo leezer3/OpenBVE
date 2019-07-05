@@ -252,8 +252,6 @@ namespace OpenBve
 				OuterRadiusFactor = OuterRadiusFactorMaximum;
 				OuterRadiusFactorSpeed = 0.0;
 			}
-
-			RecAndPlay(listenerPosition, true, 0.0);
 		}
 
 		/// <summary>Updates the sound component. Should be called every frame.</summary>
@@ -524,109 +522,6 @@ namespace OpenBve
 					}
 				}
 			}
-
-			RecAndPlay(listenerPosition, false, clampFactor);
 		}
-
-		private void RecAndPlay(Vector3 listenerPosition, bool IsLinear, double clampFactor) {
-			if (OpenAlMic == null) {
-				return;
-			}
-
-			// If the microphone sound playback is invalid, stop recording.
-			if (!IsPlayingMicSounds) {
-				if (OpenAlMic.IsRunning) {
-					OpenAlMic.Stop();
-				}
-				return;
-			}
-
-			// Start recording.
-			if (!OpenAlMic.IsRunning) {
-				OpenAlMic.Start();
-			}
-
-			// Make sure that the source is playing.
-			int[] states = new int[MicSources.Count];
-
-			for (int i = 0; i < MicSources.Count; i++) {
-				AL.GetSource(MicSources[i].OpenAlSourceName, ALGetSourcei.BuffersProcessed, out states[i]);
-			}
-
-			// Get the number of buffers that can be recorded.
-			int sample = OpenAlMic.AvailableSamples;
-
-			for (int i = 0; i < MicSources.Count; i++) {
-				if (listenerPosition.Z < MicSources[i].Position.Z - MicSources[i].BackwardTolerance || listenerPosition.Z > MicSources[i].Position.Z + MicSources[i].ForwardTolerance) {
-					continue;
-				}
-
-				// When playback is completed and recording is possible.
-				if (sample > 0 && states[i] == 1) {
-					// Store the recorded data in the buffer.
-					OpenAlMic.ReadSamples(MicStore, sample);
-
-					// Apply the recording data to the buffer.
-					int buffer = AL.GenBuffer();
-					AL.BufferData(buffer, OpenAlMic.SampleFormat, MicStore, MicStore.Length, OpenAlMic.SampleFrequency);
-
-					// Apply buffer to source.
-					AL.SourceQueueBuffer(MicSources[i].OpenAlSourceName, buffer);
-
-					// Delete the buffer where playback has ended.
-					UnloadMicBuffers(MicSources[i].OpenAlSourceName, states[i]);
-
-					Vector3 positionDifference = MicSources[i].Position - listenerPosition;
-					double distance = positionDifference.Norm();
-					double innerRadius = 15.0;
-					double gain = 1.0;
-
-					if (GlobalMute) {
-						gain = 0.0;
-					} else {
-						if (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead) {
-							innerRadius *= 0.5;
-						}
-						if (IsLinear) {
-							double outerRadius = OuterRadiusFactor * innerRadius;
-							if (distance < outerRadius) {
-								if (distance > innerRadius) {
-									gain = (distance - outerRadius) / (innerRadius - outerRadius);
-								}
-								gain = 3.0 * gain * gain - 2.0 * gain * gain * gain;
-							} else {
-								gain = 0.0;
-							}
-							if (gain <= GainThreshold) {
-								gain = 0.0;
-							} else {
-								gain = (gain - GainThreshold) / (1.0 - GainThreshold);
-							}
-						} else {
-							if (distance < 2.0 * innerRadius) {
-								gain = 1.0 - distance * distance * (4.0 * innerRadius - distance) / (16.0 * innerRadius * innerRadius * innerRadius);
-							} else {
-								gain = innerRadius / distance;
-							}
-							if (gain <= 0.0) {
-								gain = 0.0;
-							}
-							gain -= clampFactor * distance * distance;
-							if (gain <= 0.0) {
-								gain = 0.0;
-							}
-						}
-					}
-
-					AL.Source(MicSources[i].OpenAlSourceName, ALSource3f.Position, (float)positionDifference.X, (float)positionDifference.Y, (float)positionDifference.Z);
-					AL.Source(MicSources[i].OpenAlSourceName, ALSourcef.Gain, (float)gain);
-
-					if (AL.GetSourceState(MicSources[i].OpenAlSourceName) != ALSourceState.Playing) {
-						AL.SourcePlay(MicSources[i].OpenAlSourceName);
-					}
-				}
-			}
-		}
-		
 	}
 }

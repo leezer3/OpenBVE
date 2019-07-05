@@ -128,7 +128,7 @@ namespace OpenBve {
 			World.CameraTrackFollower = new TrackManager.TrackFollower();
 			World.CameraTrackFollower.Train = null;
 			World.CameraTrackFollower.CarIndex = -1;
-			Camera.CurrentMode = CameraViewMode.Interior;
+			Camera.CurrentMode = CameraViewMode.Track;
 			// load route
 			bool IsRW = string.Equals(System.IO.Path.GetExtension(CurrentRouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
 			CsvRwRouteParser.ParseRoute(CurrentRouteFile, IsRW, CurrentRouteEncoding, Application.StartupPath, ObjectFolder, SoundFolder, false);
