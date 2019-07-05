@@ -5,7 +5,6 @@ using System.Windows.Forms;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Sounds;
-using OpenBveApi.Trains;
 using OpenTK;
 using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
