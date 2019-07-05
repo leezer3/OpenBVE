@@ -369,25 +369,6 @@ namespace SoundManager
 			return Sources[SourceCount - 1];
 		}
 		
-		/// <summary>Plays a sound.</summary>
-		/// <param name="buffer">The sound buffer.</param>
-		/// <param name="pitch">The pitch change factor.</param>
-		/// <param name="volume">The volume change factor.</param>
-		/// <param name="position">The position. If a train car is specified, the position is relative to the car, otherwise absolute.</param>
-		/// <param name="car">The parent object the sound is attached to, or a null reference.</param>
-		/// <param name="looped">Whether to play the sound in a loop.</param>
-		/// <returns>The sound source.</returns>
-		public SoundSource PlaySound(SoundBuffer buffer, double pitch, double volume, OpenBveApi.Math.Vector3 position, AbstractCar car, bool looped)
-		{
-			if (Sources.Length == SourceCount)
-			{
-				Array.Resize(ref Sources, Sources.Length << 1);
-			}
-			Sources[SourceCount] = new SoundSource(buffer, buffer.Radius, pitch, volume, position, car, looped);
-			SourceCount++;
-			return Sources[SourceCount - 1];
-		}
-
 		/// <summary>Register the position to play microphone input.</summary>
 		/// <param name="position">The position.</param>
 		/// <param name="backwardTolerance">allowed tolerance in the backward direction</param>
