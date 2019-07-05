@@ -1,6 +1,7 @@
 ﻿using System;
 using LibRender;
 using OpenBveApi.Colors;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
@@ -81,7 +82,7 @@ namespace OpenBve
 					case MessageDependency.StationDeparture:
 					{
 						int j = TrainManager.PlayerTrain.Station;
-						if (j >= 0 & TrainManager.PlayerTrain.StationState != TrainManager.TrainStopState.Completed)
+						if (j >= 0 & TrainManager.PlayerTrain.StationState != TrainStopState.Completed)
 						{
 							double d = TrainManager.PlayerTrain.StationDepartureTime - Game.SecondsSinceMidnight + 1.0;
 							if (d < 0.0) d = 0.0;

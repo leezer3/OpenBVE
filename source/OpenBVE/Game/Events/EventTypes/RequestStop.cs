@@ -1,6 +1,7 @@
 ﻿using OpenBveApi.Colors;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
@@ -78,7 +79,7 @@ namespace OpenBve
 
 								//If our train can stop at this station, set it's index accordingly
 								Train.Station = StationIndex;
-								Train.NextStopSkipped = TrainManager.StopSkipMode.None;
+								Train.NextStopSkipped = StopSkipMode.None;
 								//Play sound
 								Program.Sounds.PlayCarSound(Train.Cars[Train.DriverCar].Sounds.RequestStop[0], 1.0, 1.0, Train.Cars[Train.DriverCar], false);
 							}
@@ -88,11 +89,11 @@ namespace OpenBve
 								if (FullSpeed)
 								{
 									//Pass at linespeed, rather than braking as if for stop
-									Train.NextStopSkipped = TrainManager.StopSkipMode.Linespeed;
+									Train.NextStopSkipped = StopSkipMode.Linespeed;
 								}
 								else
 								{
-									Train.NextStopSkipped = TrainManager.StopSkipMode.Decelerate;
+									Train.NextStopSkipped = StopSkipMode.Decelerate;
 								}
 								//Play sound
 								Program.Sounds.PlayCarSound(Train.Cars[Train.DriverCar].Sounds.RequestStop[1], 1.0, 1.0, Train.Cars[Train.DriverCar], false);
@@ -117,11 +118,11 @@ namespace OpenBve
 							if (FullSpeed)
 							{
 								//Pass at linespeed, rather than braking as if for stop
-								Train.NextStopSkipped = TrainManager.StopSkipMode.Linespeed;
+								Train.NextStopSkipped = StopSkipMode.Linespeed;
 							}
 							else
 							{
-								Train.NextStopSkipped = TrainManager.StopSkipMode.Decelerate;
+								Train.NextStopSkipped = StopSkipMode.Decelerate;
 							}
 							//Play sound
 							Program.Sounds.PlayCarSound(Train.Cars[Train.DriverCar].Sounds.RequestStop[1], 1.0, 1.0, Train.Cars[Train.DriverCar], false);

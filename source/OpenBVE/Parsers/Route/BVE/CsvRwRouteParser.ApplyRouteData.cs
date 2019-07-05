@@ -163,11 +163,11 @@ namespace OpenBve
 			{
 				if (TrackManager.Tracks[i] == null)
 				{
-					TrackManager.Tracks[i] = new TrackManager.Track();
+					TrackManager.Tracks[i] = new Track();
 				}
 				if (TrackManager.Tracks[i].Elements == null)
 				{
-					TrackManager.Tracks[i].Elements = new TrackManager.TrackElement[256];
+					TrackManager.Tracks[i].Elements = new TrackElement[256];
 				}
 			}
 			// process blocks
@@ -199,13 +199,13 @@ namespace OpenBve
 						}
 					}
 				}
-				TrackManager.TrackElement WorldTrackElement = Data.Blocks[i].CurrentTrackState;
+				TrackElement WorldTrackElement = Data.Blocks[i].CurrentTrackState;
 				int n = CurrentTrackLength;
 				for (int j = 0; j < TrackManager.Tracks.Length; j++)
 				{
 					if (n >= TrackManager.Tracks[j].Elements.Length)
 					{
-						Array.Resize<TrackManager.TrackElement>(ref TrackManager.Tracks[j].Elements, TrackManager.Tracks[j].Elements.Length << 1);
+						Array.Resize(ref TrackManager.Tracks[j].Elements, TrackManager.Tracks[j].Elements.Length << 1);
 					}
 				}
 				CurrentTrackLength++;
@@ -247,7 +247,7 @@ namespace OpenBve
 						{
 							int m = TrackManager.Tracks[0].Elements[n].Events.Length;
 							Array.Resize(ref TrackManager.Tracks[0].Elements[n].Events, m + 1);
-							TrackManager.Tracks[0].Elements[n].Events[m] = new TrackManager.BackgroundChangeEvent(0.0, Data.Backgrounds[typ], Data.Backgrounds[Data.Blocks[i].Background]);
+							TrackManager.Tracks[0].Elements[n].Events[m] = new BackgroundChangeEvent(0.0, Data.Backgrounds[typ], Data.Backgrounds[Data.Blocks[i].Background]);
 						}
 					}
 				}
@@ -312,10 +312,10 @@ namespace OpenBve
 							Data.Blocks[i].Fog.TrackPosition = StartingDistance;
 							int m = TrackManager.Tracks[0].Elements[n].Events.Length;
 							Array.Resize(ref TrackManager.Tracks[0].Elements[n].Events, m + 1);
-							TrackManager.Tracks[0].Elements[n].Events[m] = new TrackManager.FogChangeEvent(0.0, PreviousFog, Data.Blocks[i].Fog, Data.Blocks[i].Fog);
+							TrackManager.Tracks[0].Elements[n].Events[m] = new FogChangeEvent(0.0, PreviousFog, Data.Blocks[i].Fog, Data.Blocks[i].Fog);
 							if (PreviousFogElement >= 0 & PreviousFogEvent >= 0)
 							{
-								TrackManager.FogChangeEvent e = (TrackManager.FogChangeEvent)TrackManager.Tracks[0].Elements[PreviousFogElement].Events[PreviousFogEvent];
+								FogChangeEvent e = (FogChangeEvent)TrackManager.Tracks[0].Elements[PreviousFogElement].Events[PreviousFogEvent];
 								e.NextFog = Data.Blocks[i].Fog;
 							}
 							else
@@ -347,7 +347,7 @@ namespace OpenBve
 							Data.Blocks[i].Fog.TrackPosition = StartingDistance + Data.BlockInterval;
 							int m = TrackManager.Tracks[0].Elements[n].Events.Length;
 							Array.Resize(ref TrackManager.Tracks[0].Elements[n].Events, m + 1);
-							TrackManager.Tracks[0].Elements[n].Events[m] = new TrackManager.FogChangeEvent(0.0, PreviousFog, CurrentFog, Data.Blocks[i].Fog);
+							TrackManager.Tracks[0].Elements[n].Events[m] = new FogChangeEvent(0.0, PreviousFog, CurrentFog, Data.Blocks[i].Fog);
 							PreviousFog = CurrentFog;
 							CurrentFog = Data.Blocks[i].Fog;
 						}
@@ -1664,7 +1664,7 @@ namespace OpenBve
 			// finalize
 			for (int i = 0; i < TrackManager.Tracks.Length; i++)
 			{
-				Array.Resize<TrackManager.TrackElement>(ref TrackManager.Tracks[i].Elements, CurrentTrackLength);
+				Array.Resize(ref TrackManager.Tracks[i].Elements, CurrentTrackLength);
 			}
 			for (int i = 0; i < Game.Stations.Length; i++)
 			{
@@ -1891,7 +1891,7 @@ namespace OpenBve
 					midpointsCant[i] = follower.CurveCant;
 				}
 			}
-			Array.Resize<TrackManager.TrackElement>(ref TrackManager.Tracks[0].Elements, newLength);
+			Array.Resize(ref TrackManager.Tracks[0].Elements, newLength);
 			for (int i = length - 1; i >= 1; i--)
 			{
 				TrackManager.Tracks[0].Elements[subdivisions * i] = TrackManager.Tracks[0].Elements[i];
@@ -2067,7 +2067,7 @@ namespace OpenBve
 										originalAngle = Math.Acos(value);
 									}
 								}
-								TrackManager.TrackElement originalTrackElement = TrackManager.Tracks[0].Elements[i];
+								TrackElement originalTrackElement = TrackManager.Tracks[0].Elements[i];
 								bestT = double.MaxValue;
 								bestJ = 0;
 								for (int j = -1; j <= 1; j++)

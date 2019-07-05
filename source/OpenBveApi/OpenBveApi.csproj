@@ -105,6 +105,8 @@
     <Compile Include="Routes\Background.TransitionModes.cs" />
     <Compile Include="Routes\Events.cs" />
     <Compile Include="Routes\Events.TriggerTypes.cs" />
+    <Compile Include="Routes\Track.cs" />
+    <Compile Include="Routes\Track.TrackElement.cs" />
     <Compile Include="Sounds\Sounds.PathOrigin.cs" />
     <Compile Include="Sounds\Sounds.RawOrigin.cs" />
     <Compile Include="Sounds\Sounds.SoundOrigin.cs" />
@@ -127,8 +129,10 @@
     <Compile Include="Train\AbstractCar.cs" />
     <Compile Include="Train\AbstractTrain.cs" />
     <Compile Include="Train\Coupler.cs" />
+    <Compile Include="Train\StopSkipMode.cs" />
     <Compile Include="Train\TrainStartMode.cs" />
     <Compile Include="Train\TrainState.cs" />
+    <Compile Include="Train\TrainStopState.cs" />
     <Compile Include="World\Orientation3.cs" />
     <Compile Include="Packages\Packages.cs" />
     <Compile Include="Packages\Packages.Database.cs" />

@@ -1,6 +1,7 @@
 ﻿using OpenBve.RouteManager;
 using OpenBve.SignalManager;
 using OpenBveApi.Math;
+using OpenBveApi.Routes;
 using SoundManager;
 
 namespace OpenBve
@@ -214,7 +215,7 @@ namespace OpenBve
 			internal Transponder[] Transponders;
 			internal DestinationEvent[] DestinationChanges;
 			internal PointOfInterest[] PointsOfInterest;
-			internal TrackManager.TrackElement CurrentTrackState;
+			internal TrackElement CurrentTrackState;
 			internal double Pitch;
 			internal double Turn;
 			internal int Station;

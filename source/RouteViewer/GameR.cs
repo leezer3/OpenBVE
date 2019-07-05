@@ -15,6 +15,7 @@ using OpenBveApi.Trains;
 using OpenBve.RouteManager;
 using OpenBve.SignalManager;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
 namespace OpenBve {
@@ -114,7 +115,7 @@ namespace OpenBve {
 
 		internal static void Reset() {
 			// track manager
-			TrackManager.CurrentTrack = new TrackManager.Track();
+			TrackManager.CurrentTrack = new Track();
 			// train manager
 			TrainManager.Trains = new TrainManager.Train[] { };
 			// game

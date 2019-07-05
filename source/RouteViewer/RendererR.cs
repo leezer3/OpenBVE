@@ -403,7 +403,7 @@ namespace OpenBve {
 							s = 0.15;
 							dy = 4.0;
 							t = BrightnessChangeTexture;
-						} else if (e is TrackManager.BackgroundChangeEvent) {
+						} else if (e is BackgroundChangeEvent) {
 							s = 0.25;
 							dy = 3.5;
 							t = BackgroundChangeTexture;

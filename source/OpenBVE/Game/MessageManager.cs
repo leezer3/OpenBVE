@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
@@ -21,7 +22,7 @@ namespace OpenBve
 		/// <param name="message">The message to add</param>
 		internal static void AddMessage(Message message)
 		{
-			if (TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Jumping)
+			if (TrainManager.PlayerTrain.StationState == TrainStopState.Jumping)
 			{
 				//Ignore messages triggered during a jump
 				return;

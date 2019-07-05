@@ -4,6 +4,7 @@ using OpenBve.RouteManager;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
+using OpenBveApi.Trains;
 
 namespace OpenBve {
 	internal static class FunctionScripts {
@@ -1092,7 +1093,7 @@ namespace OpenBve {
 						else
 						{
 							int stationIdx;
-							if (Train.Station >= 0 && Train.StationState != TrainManager.TrainStopState.Completed)
+							if (Train.Station >= 0 && Train.StationState != TrainStopState.Completed)
 							{
 								stationIdx = Train.LastStation;
 							}
@@ -1126,7 +1127,7 @@ namespace OpenBve {
 						else
 						{
 							int stationIdx;
-							if (Train.Station >= 0 && Train.StationState != TrainManager.TrainStopState.Completed)
+							if (Train.Station >= 0 && Train.StationState != TrainStopState.Completed)
 							{
 								stationIdx = Train.LastStation;
 							}

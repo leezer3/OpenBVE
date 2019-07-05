@@ -389,9 +389,6 @@ namespace OpenBve {
 			internal TrainAirBrake AirBrake;
 		}
 		// train
-		internal enum TrainStopState {
-			Pending = 0, Boarding = 1, Completed = 2
-		}
 		internal class Train : AbstractTrain {
 			internal Car[] Cars;
 			internal TrainSpecs Specs;

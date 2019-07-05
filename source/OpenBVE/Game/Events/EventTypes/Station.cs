@@ -1,6 +1,7 @@
 ﻿using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Routes;
+using OpenBveApi.Trains;
 using SoundManager;
 
 namespace OpenBve
@@ -69,14 +70,14 @@ namespace OpenBve
 					}
 					else if (Direction > 0)
 					{
-						if (Train.Station == StationIndex || Train.NextStopSkipped != TrainManager.StopSkipMode.None)
+						if (Train.Station == StationIndex || Train.NextStopSkipped != StopSkipMode.None)
 						{
 							return;
 						}
 						Train.Station = StationIndex;
-						if (Train.StationState != TrainManager.TrainStopState.Jumping)
+						if (Train.StationState != TrainStopState.Jumping)
 						{
-							Train.StationState = TrainManager.TrainStopState.Pending;
+							Train.StationState = TrainStopState.Pending;
 						}
 						Train.LastStation = this.StationIndex;
 					}
@@ -113,11 +114,11 @@ namespace OpenBve
 					if (Direction < 0)
 					{
 						Train.Station = this.StationIndex;
-						if (Train.NextStopSkipped != TrainManager.StopSkipMode.None)
+						if (Train.NextStopSkipped != StopSkipMode.None)
 						{
 							Train.LastStation = this.StationIndex;
 						}
-						Train.NextStopSkipped = TrainManager.StopSkipMode.None;
+						Train.NextStopSkipped = StopSkipMode.None;
 					}
 					else if (Direction > 0)
 					{
@@ -125,13 +126,13 @@ namespace OpenBve
 						{
 							if (Train == TrainManager.PlayerTrain)
 							{
-								if (Game.Stations[StationIndex].PlayerStops() & TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Pending)
+								if (Game.Stations[StationIndex].PlayerStops() & TrainManager.PlayerTrain.StationState == TrainStopState.Pending)
 								{
 									string s = Translations.GetInterfaceString("message_station_passed");
 									s = s.Replace("[name]", Game.Stations[StationIndex].Name);
 									Game.AddMessage(s, MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Orange, Game.SecondsSinceMidnight + 10.0, null);
 								}
-								else if (Game.Stations[StationIndex].PlayerStops() & TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Boarding)
+								else if (Game.Stations[StationIndex].PlayerStops() & TrainManager.PlayerTrain.StationState == TrainStopState.Boarding)
 								{
 									string s = Translations.GetInterfaceString("message_station_passed_boarding");
 									s = s.Replace("[name]", Game.Stations[StationIndex].Name);
@@ -139,9 +140,9 @@ namespace OpenBve
 								}
 							}
 							Train.Station = -1;
-							if (Train.StationState != TrainManager.TrainStopState.Jumping)
+							if (Train.StationState != TrainStopState.Jumping)
 							{
-								Train.StationState = TrainManager.TrainStopState.Pending;
+								Train.StationState = TrainStopState.Pending;
 							}
 							
 							int d = Train.DriverCar;

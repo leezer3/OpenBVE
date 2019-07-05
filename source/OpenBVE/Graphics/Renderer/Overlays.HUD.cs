@@ -4,6 +4,7 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 using OpenTK.Graphics.OpenGL;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
@@ -423,7 +424,7 @@ namespace OpenBve
 						{
 							cond = !Game.Stations[s].OpenLeftDoors & !Game.Stations[s].OpenRightDoors;
 						}
-						if (TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Pending & cond)
+						if (TrainManager.PlayerTrain.StationState == TrainStopState.Pending & cond)
 						{
 							Element.TransitionState -= speed * TimeElapsed;
 							if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
@@ -464,7 +465,7 @@ namespace OpenBve
 							{
 								cond = !Game.Stations[s].OpenLeftDoors & !Game.Stations[s].OpenRightDoors;
 							}
-							if (TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Pending & cond)
+							if (TrainManager.PlayerTrain.StationState == TrainStopState.Pending & cond)
 							{
 								Element.TransitionState -= speed * TimeElapsed;
 								if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
@@ -600,7 +601,7 @@ namespace OpenBve
 					} break;
 				case "dist_next_station":
 					int i;
-					if (TrainManager.PlayerTrain.Station >= 0 && TrainManager.PlayerTrain.StationState != TrainManager.TrainStopState.Completed)
+					if (TrainManager.PlayerTrain.Station >= 0 && TrainManager.PlayerTrain.StationState != TrainStopState.Completed)
 					{
 					i = TrainManager.PlayerTrain.LastStation;
 					}

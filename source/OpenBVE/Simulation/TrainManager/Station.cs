@@ -2,25 +2,13 @@
 using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interface;
+using OpenBveApi.Trains;
 using SoundManager;
 
 namespace OpenBve
 {
 	public static partial class TrainManager
 	{
-		/// <summary>The possible states for a station stop</summary>
-		internal enum TrainStopState
-		{
-			/// <summary>The stop is still pending</summary>
-			Pending = 0, 
-			/// <summary>The train is currrently stopped and passengers are boarding</summary>
-			Boarding = 1, 
-			/// <summary>The stop has been completed, and the train is preparing to depart</summary>
-			Completed = 2,
-			/// <summary>The train is jumping between stations, and all stops should be ignored</summary>
-			Jumping = 3
-		}
-
 		/// <summary>Is called once a frame to update the station state for the given train</summary>
 		/// <param name="Train">The train</param>
 		/// <param name="TimeElapsed">The frame time elapsed</param>

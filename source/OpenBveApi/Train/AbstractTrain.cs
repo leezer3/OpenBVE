@@ -5,10 +5,14 @@
 	{
 		/// <summary>The current state of the train</summary>
 		public TrainState State;
+		/// <summary>The current station state</summary>
+		public TrainStopState StationState;
 		/// <summary>The car in which the driver's cab is located</summary>
 		public int DriverCar;
 		/// <summary>The next user-set destination</summary>
 		public int Destination;
+		/// <summary>The previous station at which the train called</summary>
+		public int LastStation;
 		/// <summary>The index of the signalling section that the train is currently in</summary>
 		public int CurrentSectionIndex;
 		/// <summary>The speed limit of the signalling section the train is currently in</summary>

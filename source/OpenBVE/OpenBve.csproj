@@ -123,9 +123,7 @@
       <SubType>Code</SubType>
       <DependentUpon>AI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Game\Events\EventTypes\BackgroundChange.cs" />
     <Compile Include="Game\Events\EventTypes\BrightnessChange.cs" />
-    <Compile Include="Game\Events\EventTypes\FogChange.cs" />
     <Compile Include="Game\Events\EventTypes\Markers.cs" />
     <Compile Include="Game\Events\EventTypes\RequestStop.cs" />
     <Compile Include="Game\Events\EventTypes\SignalSection.cs" />
@@ -172,7 +170,6 @@
     <Compile Include="Game\Signalling.cs" />
     <Compile Include="Game\Station.cs" />
     <Compile Include="Game\TrackManager\TrackManager.cs" />
-    <Compile Include="Game\TrackManager\TrackManager.Track.cs" />
     <Compile Include="Game\TrackManager\TrackManager.TrackFollower.cs" />
     <Compile Include="Graphics\HUD\HUD.cs" />
     <Compile Include="Graphics\HUD\HUD.Element.cs">
@@ -301,7 +298,6 @@
     <Compile Include="Simulation\TrainManager\Train\Handles\Handles.LocoBrake.Types.cs" />
     <Compile Include="Simulation\TrainManager\Train\TrackFollowingObject.cs" />
     <Compile Include="Simulation\TrainManager\Train\PassAlarm.cs" />
-    <Compile Include="Simulation\TrainManager\Train\StopSkipMode.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Handles.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Specs.cs" />
