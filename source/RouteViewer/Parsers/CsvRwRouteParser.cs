@@ -5833,7 +5833,7 @@ namespace OpenBve {
 								double x = Data.Blocks[i].PointsOfInterest[k].X;
 								double y = Data.Blocks[i].PointsOfInterest[k].Y;
 								int m = Game.PointsOfInterest.Length;
-								Array.Resize<Game.PointOfInterest>(ref Game.PointsOfInterest, m + 1);
+								Array.Resize(ref Game.PointsOfInterest, m + 1);
 								Game.PointsOfInterest[m].TrackPosition = Data.Blocks[i].PointsOfInterest[k].TrackPosition;
 								if (i < Data.Blocks.Length - 1 && Data.Blocks[i + 1].Rail.Length > j) {
 									double dx = Data.Blocks[i + 1].Rail[j].RailEndX - Data.Blocks[i].Rail[j].RailStartX;
@@ -6482,7 +6482,7 @@ namespace OpenBve {
 			}
 			// create default point of interests
 			if (Game.PointsOfInterest.Length == 0) {
-				Game.PointsOfInterest = new OpenBve.Game.PointOfInterest[Game.Stations.Length];
+				Game.PointsOfInterest = new RouteManager.PointOfInterest[Game.Stations.Length];
 				int n = 0;
 				for (int i = 0; i < Game.Stations.Length; i++) {
 					if (Game.Stations[i].Stops.Length != 0) {
@@ -6497,7 +6497,7 @@ namespace OpenBve {
 						n++;
 					}
 				}
-				Array.Resize<Game.PointOfInterest>(ref Game.PointsOfInterest, n);
+				Array.Resize(ref Game.PointsOfInterest, n);
 			}
 			// convert block-based cant into point-based cant
 			for (int i = CurrentTrackLength - 1; i >= 1; i--) {

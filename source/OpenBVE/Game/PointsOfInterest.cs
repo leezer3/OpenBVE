@@ -1,29 +1,12 @@
 ﻿using System;
 using LibRender;
+using OpenBve.RouteManager;
 using OpenBveApi.Colors;
-using OpenBveApi.Math;
 
 namespace OpenBve
 {
 	internal static partial class Game
 	{
-		/// <summary>Defines a point of interest within the game world</summary>
-		internal struct PointOfInterest
-		{
-			/// <summary>The track position</summary>
-			internal double TrackPosition;
-			/// <summary>The offset from Track 0's position</summary>
-			internal Vector3 TrackOffset;
-			/// <summary>The yaw</summary>
-			internal double TrackYaw;
-			/// <summary>The pitch</summary>
-			internal double TrackPitch;
-			/// <summary>The roll</summary>
-			internal double TrackRoll;
-			/// <summary>The textual message to be displayed when jumping to this point</summary>
-			internal string Text;
-		}
-
 		/// <summary>Holds all points of interest within the game world</summary>
 		internal static PointOfInterest[] PointsOfInterest = new PointOfInterest[] { };
 

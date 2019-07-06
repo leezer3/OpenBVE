@@ -284,15 +284,6 @@ namespace OpenBve {
 
 		// ================================
 
-		// points of interest
-		internal struct PointOfInterest {
-			internal double TrackPosition;
-			internal Vector3 TrackOffset;
-			internal double TrackYaw;
-			internal double TrackPitch;
-			internal double TrackRoll;
-			internal string Text;
-		}
 		internal static PointOfInterest[] PointsOfInterest = new PointOfInterest[] { };
 
 		internal static bool ApplyPointOfInterest(int Value, bool Relative) {
