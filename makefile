@@ -1007,7 +1007,7 @@ $(RELEASE_DIR)/$(SOUND_EDITOR_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
 $(DEBUG_DIR)/$(SOUND_EDITOR_FILE) $(RELEASE_DIR)/$(SOUND_EDITOR_FILE): $(SOUND_EDITOR_SRC) $(SOUND_EDITOR_RESOURCE)
 	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(SOUND_EDITOR_OUT)$(COLOR_END)
 	@$(CSC) /out:$(SOUND_EDITOR_OUT) /target:winexe /main:SoundEditor.Program $(SOUND_EDITOR_SRC) $(ARGS) $(SOUND_EDITOR_DOC) \
-	/reference:$(OPEN_BVE_API_OUT) /reference:$(SOUNDMANAGER_OUT) /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:System.Core.dll /reference:Microsoft.CSharp.dll \
+	/reference:$(OPEN_BVE_API_OUT) /reference:$(SOUNDMANAGER_OUT) /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:System.Core.dll /reference:System.Xml.Linq.dll /reference:Microsoft.CSharp.dll \
 	/win32icon:$(ICON) $(addprefix /resource:, $(SOUND_EDITOR_RESOURCE))
 
 #############
