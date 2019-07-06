@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace OpenBveApi.Interface
@@ -35,6 +36,56 @@ namespace OpenBveApi.Interface
 			/// en-US should always be present in this list
 			internal readonly List<string> FallbackCodes;
 
+			private class XliffFile
+			{
+				internal class Unit
+				{
+					internal string Id;
+					internal string Value;
+
+					internal Unit(XNamespace xmlns, XElement unit, string languageCode)
+					{
+						XElement source = unit.Element(xmlns + "source");
+						XElement target = unit.Element(xmlns + "target");
+
+						if (target == null && languageCode != "en-US")
+						{
+							return;
+						}
+
+						Id = unit.Attribute("id").Value;
+						Value = languageCode != "en-US" ? target.Value : source.Value;
+					}
+				}
+
+				internal class Group
+				{
+					internal string Id;
+					internal Group[] Groups;
+					internal Unit[] Units;
+
+					internal Group(XNamespace xmlns, XElement group, string languageCode)
+					{
+						Id = group.Attribute("id").Value;
+						Groups = group.Elements(xmlns + "group").Select(g => new Group(xmlns, g, languageCode)).ToArray();
+						Units = group.Elements(xmlns + "trans-unit").Select(t => new Unit(xmlns, t, languageCode)).Where(t => !string.IsNullOrEmpty(t.Value)).ToArray();
+					}
+				}
+
+				internal Group[] Groups;
+				internal Unit[] Units;
+
+				internal XliffFile(Stream stream, string languageCode)
+				{
+					XDocument xml = XDocument.Load(stream);
+					XNamespace xmlns = xml.Root.Name.Namespace;
+					XElement body = xml.Root.Element(xmlns + "file").Element(xmlns + "body");
+
+					Groups = body.Elements(xmlns + "group").Select(g => new Group(xmlns, g, languageCode)).ToArray();
+					Units = body.Elements(xmlns + "trans-unit").Select(t => new Unit(xmlns, t, languageCode)).Where(t => !string.IsNullOrEmpty(t.Value)).ToArray();
+				}
+			}
+
 			/// <summary>Creates a new language from a file stream</summary>
 			/// <param name="languageStream">The file stream</param>
 			/// <param name="languageCode">The language code</param>
@@ -43,213 +94,196 @@ namespace OpenBveApi.Interface
 				Name = "Unknown";
 				LanguageCode = languageCode;
 				FallbackCodes = new List<string> { "en-US" };
-				InterfaceStrings = new InterfaceString[16];
 				myCommandInfos = new CommandInfo[CommandInfos.Length];
 				KeyInfos = new KeyInfo[TranslatedKeys.Length];
 				myQuickReferences = new InterfaceQuickReference();
 				Array.Copy(CommandInfos, myCommandInfos, myCommandInfos.Length);
 				Array.Copy(TranslatedKeys, KeyInfos, TranslatedKeys.Length);
 
-				XDocument xml = XDocument.Load(languageStream);
-				XNamespace xmlns = xml.Root.Name.Namespace;
-				XElement body = xml.Root.Element(xmlns + "file").Element(xmlns + "body");
+				string prefix = string.Empty;
+				XliffFile file = new XliffFile(languageStream, languageCode);
+				List<InterfaceString> strings = new List<InterfaceString>();
 
-				int LoadedStringCount = 0;
+				ExportUnits(prefix, file.Units, strings);
 
-				foreach (XElement groupProduct in body.Elements(xmlns + "group"))
+				foreach (XliffFile.Group group in file.Groups)
 				{
-					switch (groupProduct.Attribute("id").Value)
+					ExportGroup(prefix, group, strings);
+				}
+
+				InterfaceString[] groupLanguage = strings.Where(s => s.Name.StartsWith("language_")).ToArray();
+
+				foreach (var interfaceString in groupLanguage)
+				{
+					string key = interfaceString.Name.Split('_')[1];
+
+					switch (key)
 					{
-						case "language":
-							foreach (XElement trans_unit in groupProduct.Elements(xmlns + "trans-unit"))
+						case "name":
+							Name = interfaceString.Text;
+							strings.Remove(interfaceString);
+							break;
+						case "flag":
+							Flag = interfaceString.Text;
+							strings.Remove(interfaceString);
+							break;
+					}
+				}
+
+				InterfaceString[] groupOpenBve = strings.Where(s => s.Name.StartsWith("openbve_")).ToArray();
+
+				foreach (var interfaceString in groupOpenBve)
+				{
+					string section = interfaceString.Name.Split('_')[1];
+					string key = string.Join("_", interfaceString.Name.Split('_').Skip(2));
+
+					switch (section)
+					{
+						case "handles":
+							switch (key)
 							{
-								XElement source = trans_unit.Element(xmlns + "source");
-								XElement target = trans_unit.Element(xmlns + "target");
-
-								if (target == null && LanguageCode != "en-US")
+								case "forward":
+									myQuickReferences.HandleForward = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+								case "neutral":
+									myQuickReferences.HandleNeutral = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+								case "backward":
+									myQuickReferences.HandleBackward = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+								case "power":
+									myQuickReferences.HandlePower = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+								case "powernull":
+									myQuickReferences.HandlePowerNull = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+								case "brake":
+									myQuickReferences.HandleBrake = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+								case "locobrake":
+									myQuickReferences.HandleLocoBrake = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+								case "brakenull":
+									myQuickReferences.HandleBrakeNull = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+								case "release":
+									myQuickReferences.HandleRelease = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+								case "lap":
+									myQuickReferences.HandleLap = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+								case "service":
+									myQuickReferences.HandleService = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+								case "emergency":
+									myQuickReferences.HandleEmergency = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+								case "holdbrake":
+									myQuickReferences.HandleHoldBrake = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+							}
+							break;
+						case "doors":
+							switch (key)
+							{
+								case "left":
+									myQuickReferences.DoorsLeft = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+								case "right":
+									myQuickReferences.DoorsRight = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+							}
+							break;
+						case "misc":
+							switch (key)
+							{
+								case "score":
+									myQuickReferences.Score = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+							}
+							break;
+						case "commands":
+							for (int k = 0; k < myCommandInfos.Length; k++)
+							{
+								if (string.Compare(myCommandInfos[k].Name, key, StringComparison.OrdinalIgnoreCase) == 0)
 								{
-									continue;
-								}
-
-								string key = trans_unit.Attribute("id").Value;
-								string text = LanguageCode != "en-US" ? target.Value : source.Value;
-
-								switch (key)
-								{
-									case "name":
-										Name = text;
-										break;
-									case "flag":
-										Flag = text;
-										break;
+									myCommandInfos[k].Description = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
 								}
 							}
 							break;
-						default:
+						case "keys":
+							for (int k = 0; k < KeyInfos.Length; k++)
 							{
-								string productName = groupProduct.Attribute("id").Value;
-
-								if (productName == "openbve")
+								if (string.Compare(KeyInfos[k].Name, key, StringComparison.OrdinalIgnoreCase) == 0)
 								{
-									foreach (XElement group in groupProduct.Elements(xmlns + "group"))
-									{
-										foreach (XElement trans_unit in group.Elements(xmlns + "trans-unit"))
-										{
-											XElement source = trans_unit.Element(xmlns + "source");
-											XElement target = trans_unit.Element(xmlns + "target");
-
-											if (target == null && LanguageCode != "en-US")
-											{
-												continue;
-											}
-
-											string section = group.Attribute("id").Value;
-											string key = trans_unit.Attribute("id").Value;
-											string text = LanguageCode != "en-US" ? target.Value : source.Value;
-
-											switch (section)
-											{
-												case "handles":
-													switch (key)
-													{
-														case "forward":
-															myQuickReferences.HandleForward = text;
-															break;
-														case "neutral":
-															myQuickReferences.HandleNeutral = text;
-															break;
-														case "backward":
-															myQuickReferences.HandleBackward = text;
-															break;
-														case "power":
-															myQuickReferences.HandlePower = text;
-															break;
-														case "powernull":
-															myQuickReferences.HandlePowerNull = text;
-															break;
-														case "brake":
-															myQuickReferences.HandleBrake = text;
-															break;
-														case "locobrake":
-															myQuickReferences.HandleLocoBrake = text;
-															break;
-														case "brakenull":
-															myQuickReferences.HandleBrakeNull = text;
-															break;
-														case "release":
-															myQuickReferences.HandleRelease = text;
-															break;
-														case "lap":
-															myQuickReferences.HandleLap = text;
-															break;
-														case "service":
-															myQuickReferences.HandleService = text;
-															break;
-														case "emergency":
-															myQuickReferences.HandleEmergency = text;
-															break;
-														case "holdbrake":
-															myQuickReferences.HandleHoldBrake = text;
-															break;
-													}
-													break;
-												case "doors":
-													switch (key)
-													{
-														case "left":
-															myQuickReferences.DoorsLeft = text;
-															break;
-														case "right":
-															myQuickReferences.DoorsRight = text;
-															break;
-													}
-													break;
-												case "misc":
-													switch (key)
-													{
-														case "score":
-															myQuickReferences.Score = text;
-															break;
-													}
-													break;
-												case "commands":
-													for (int k = 0; k < myCommandInfos.Length; k++)
-													{
-														if (string.Compare(myCommandInfos[k].Name, key, StringComparison.OrdinalIgnoreCase) == 0)
-														{
-															myCommandInfos[k].Description = text;
-															break;
-														}
-													}
-													break;
-												case "keys":
-													for (int k = 0; k < KeyInfos.Length; k++)
-													{
-														if (string.Compare(KeyInfos[k].Name, key, StringComparison.OrdinalIgnoreCase) == 0)
-														{
-															KeyInfos[k].Description = text;
-															break;
-														}
-													}
-													break;
-												case "fallback":
-													switch (key)
-													{
-														case "language":
-															FallbackCodes.Add(text);
-															break;
-													}
-													break;
-												default:
-													if (LoadedStringCount >= InterfaceStrings.Length)
-													{
-														Array.Resize(ref InterfaceStrings, InterfaceStrings.Length << 1);
-													}
-
-													InterfaceStrings[LoadedStringCount].Name = string.Format("{0}_{1}", section, key);
-													InterfaceStrings[LoadedStringCount].Text = text;
-													LoadedStringCount++;
-													break;
-											}
-										}
-									}
+									KeyInfos[k].Description = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
 								}
-								else
-								{
-									foreach (XElement group in groupProduct.Elements(xmlns + "group"))
-									{
-										foreach (XElement trans_unit in group.Elements(xmlns + "trans-unit"))
-										{
-											XElement source = trans_unit.Element(xmlns + "source");
-											XElement target = trans_unit.Element(xmlns + "target");
-
-											if (target == null && LanguageCode != "en-US")
-											{
-												continue;
-											}
-
-											string section = group.Attribute("id").Value;
-											string key = trans_unit.Attribute("id").Value;
-											string text = LanguageCode != "en-US" ? target.Value : source.Value;
-
-											if (LoadedStringCount >= InterfaceStrings.Length)
-											{
-												Array.Resize(ref InterfaceStrings, InterfaceStrings.Length << 1);
-											}
-
-											InterfaceStrings[LoadedStringCount].Name = string.Format("{0}_{1}_{2}", productName, section, key);
-											InterfaceStrings[LoadedStringCount].Text = text;
-											LoadedStringCount++;
-										}
-									}
-								}
+							}
+							break;
+						case "fallback":
+							switch (key)
+							{
+								case "language":
+									FallbackCodes.Add(interfaceString.Text);
+									strings.Remove(interfaceString);
+									break;
 							}
 							break;
 					}
 				}
 
-				Array.Resize(ref InterfaceStrings, LoadedStringCount);
+				InterfaceStrings = strings.ToArray();
+
+				for (int i = 0; i < InterfaceStrings.Length; i++)
+				{
+					if (InterfaceStrings[i].Name.StartsWith("openbve_"))
+					{
+						InterfaceStrings[i].Name = InterfaceStrings[i].Name.Replace("openbve_", string.Empty);
+					}
+				}
 			}
+
+			private void ExportUnits(string prefix, XliffFile.Unit[] units, List<InterfaceString> strings)
+			{
+				strings.AddRange(units.Select(u => new InterfaceString
+				{
+					Name = prefix + u.Id,
+					Text = u.Value
+				}));
+			}
+
+			private void ExportGroup(string prefix, XliffFile.Group group, List<InterfaceString> strings)
+			{
+				prefix += group.Id + "_";
+
+				ExportUnits(prefix, group.Units, strings);
+
+				foreach (XliffFile.Group childGroup in group.Groups)
+				{
+					ExportGroup(prefix, childGroup, strings);
+				}
+			}
+
 
 			/// <summary>Always returns the textual name of the language</summary>
 			public override string ToString()

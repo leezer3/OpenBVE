@@ -148,8 +148,8 @@ OBJECT_VIEWER_FILE    :=ObjectViewer.exe
 TRAIN_EDITOR_ROOT     :=source/TrainEditor
 TRAIN_EDITOR_FILE     :=TrainEditor.exe
 
-MOTOR_SOUND_EDITOR_ROOT     :=source/MotorSoundEditor
-MOTOR_SOUND_EDITOR_FILE     :=MotorSoundEditor.exe
+SOUND_EDITOR_ROOT     :=source/SoundEditor
+SOUND_EDITOR_FILE     :=SoundEditor.exe
 
 LBAHEADER_ROOT        :=source/DevTools/LBAHeader
 LBAHEADER_FILE        :=DevTools/LBAHeader.exe
@@ -206,7 +206,7 @@ all-debug: $(DEBUG_DIR)/$(CAR_XML_FILE)
 all-debug: $(DEBUG_DIR)/$(OBJECT_VIEWER_FILE)
 all-debug: $(DEBUG_DIR)/$(ROUTE_VIEWER_FILE)
 all-debug: $(DEBUG_DIR)/$(TRAIN_EDITOR_FILE)
-all-debug: $(DEBUG_DIR)/$(MOTOR_SOUND_EDITOR_FILE)
+all-debug: $(DEBUG_DIR)/$(SOUND_EDITOR_FILE)
 all-debug: $(DEBUG_DIR)/$(LBAHEADER_FILE)
 all-debug: copy_depends
 
@@ -223,7 +223,7 @@ all-release: $(RELEASE_DIR)/$(CAR_XML_FILE)
 all-release: $(RELEASE_DIR)/$(OBJECT_VIEWER_FILE)
 all-release: $(RELEASE_DIR)/$(ROUTE_VIEWER_FILE)
 all-release: $(RELEASE_DIR)/$(TRAIN_EDITOR_FILE)
-all-release: $(RELEASE_DIR)/$(MOTOR_SOUND_EDITOR_FILE)
+all-release: $(RELEASE_DIR)/$(SOUND_EDITOR_FILE)
 all-release: $(RELEASE_DIR)/$(LBAHEADER_FILE)
 all-release: copy_release_depends
 
@@ -281,7 +281,7 @@ clean:
 	rm -f bin*/OpenBveObjectValidator.exe* bin*/OpenBveObjectValidator.pdb
 	rm -f bin*/RouteViewer.exe* bin*/RouteViewer.pdb
 	rm -f bin*/TrainEditor.exe* bin*/TrainEditor.pdb
-	rm -f bin*/MotorSoundEditor.exe* bin*/MotorSoundEditor.pdb
+	rm -f bin*/SoundEditor.exe* bin*/SoundEditor.pdb
 
 	# DLL
 	rm -f bin*/OpenBveApi.dll* bin*/OpenBveApi.pdb
@@ -989,26 +989,26 @@ $(DEBUG_DIR)/$(TRAIN_EDITOR_FILE) $(RELEASE_DIR)/$(TRAIN_EDITOR_FILE): $(TRAIN_E
 	/win32icon:$(ICON) $(addprefix /resource:, $(TRAIN_EDITOR_RESOURCE))
 
 ####################
-# MotorSoundEditor #
+# SoundEditor      #
 ####################
 
-MOTOR_SOUND_EDITOR_FOLDERS  := $(shell find $(MOTOR_SOUND_EDITOR_ROOT) -type d)
-MOTOR_SOUND_EDITOR_SRC      := $(foreach sdir, $(MOTOR_SOUND_EDITOR_FOLDERS), $(wildcard $(sdir)/*.cs))
-MOTOR_SOUND_EDITOR_DOC      := $(addprefix /doc:, $(foreach sdir, $(MOTOR_SOUND_EDITOR_FOLDERS), $(wildcard $(sdir)/*.xml)))
-MOTOR_SOUND_EDITOR_RESX     := $(foreach sdir, $(MOTOR_SOUND_EDITOR_FOLDERS), $(wildcard $(sdir)/*.resx))
-MOTOR_SOUND_EDITOR_RESOURCE := $(addprefix $(MOTOR_SOUND_EDITOR_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst $(dir $(MOTOR_SOUND_EDITOR_ROOT))%.resx, %.resources, $(MOTOR_SOUND_EDITOR_RESX)))))
-MOTOR_SOUND_EDITOR_OUT       =$(OUTPUT_DIR)/$(MOTOR_SOUND_EDITOR_FILE)
+SOUND_EDITOR_FOLDERS  := $(shell find $(SOUND_EDITOR_ROOT) -type d)
+SOUND_EDITOR_SRC      := $(foreach sdir, $(SOUND_EDITOR_FOLDERS), $(wildcard $(sdir)/*.cs))
+SOUND_EDITOR_DOC      := $(addprefix /doc:, $(foreach sdir, $(SOUND_EDITOR_FOLDERS), $(wildcard $(sdir)/*.xml)))
+SOUND_EDITOR_RESX     := $(foreach sdir, $(SOUND_EDITOR_FOLDERS), $(wildcard $(sdir)/*.resx))
+SOUND_EDITOR_RESOURCE := $(addprefix $(SOUND_EDITOR_ROOT)/, $(subst /,., $(subst /./,/, $(patsubst $(dir $(SOUND_EDITOR_ROOT))%.resx, %.resources, $(SOUND_EDITOR_RESX)))))
+SOUND_EDITOR_OUT       =$(OUTPUT_DIR)/$(SOUND_EDITOR_FILE)
 
-$(call create_resource, $(MOTOR_SOUND_EDITOR_RESOURCE), $(MOTOR_SOUND_EDITOR_RESX))
+$(call create_resource, $(SOUND_EDITOR_RESOURCE), $(SOUND_EDITOR_RESX))
 
-$(DEBUG_DIR)/$(MOTOR_SOUND_EDITOR_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
-$(RELEASE_DIR)/$(MOTOR_SOUND_EDITOR_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
+$(DEBUG_DIR)/$(SOUND_EDITOR_FILE): $(DEBUG_DIR)/$(OPEN_BVE_API_FILE)
+$(RELEASE_DIR)/$(SOUND_EDITOR_FILE): $(RELEASE_DIR)/$(OPEN_BVE_API_FILE)
 
-$(DEBUG_DIR)/$(MOTOR_SOUND_EDITOR_FILE) $(RELEASE_DIR)/$(MOTOR_SOUND_EDITOR_FILE): $(MOTOR_SOUND_EDITOR_SRC) $(MOTOR_SOUND_EDITOR_RESOURCE)
-	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(MOTOR_SOUND_EDITOR_OUT)$(COLOR_END)
-	@$(CSC) /out:$(MOTOR_SOUND_EDITOR_OUT) /target:winexe /main:MotorSoundEditor.Program $(MOTOR_SOUND_EDITOR_SRC) $(ARGS) $(MOTOR_SOUND_EDITOR_DOC) \
-	/reference:$(OPEN_BVE_API_OUT) /reference:$(SOUNDMANAGER_OUT) /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:System.Core.dll \
-	/win32icon:$(ICON) $(addprefix /resource:, $(MOTOR_SOUND_EDITOR_RESOURCE))
+$(DEBUG_DIR)/$(SOUND_EDITOR_FILE) $(RELEASE_DIR)/$(SOUND_EDITOR_FILE): $(SOUND_EDITOR_SRC) $(SOUND_EDITOR_RESOURCE)
+	@echo $(COLOR_MAGENTA)Building $(COLOR_CYAN)$(SOUND_EDITOR_OUT)$(COLOR_END)
+	@$(CSC) /out:$(SOUND_EDITOR_OUT) /target:winexe /main:SoundEditor.Program $(SOUND_EDITOR_SRC) $(ARGS) $(SOUND_EDITOR_DOC) \
+	/reference:$(OPEN_BVE_API_OUT) /reference:$(SOUNDMANAGER_OUT) /reference:$(OUTPUT_DIR)/OpenTK.dll /reference:System.Core.dll /reference:Microsoft.CSharp.dll \
+	/win32icon:$(ICON) $(addprefix /resource:, $(SOUND_EDITOR_RESOURCE))
 
 #############
 # LBAHeader #

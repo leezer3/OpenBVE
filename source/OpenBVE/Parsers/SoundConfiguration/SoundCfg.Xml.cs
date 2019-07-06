@@ -343,6 +343,11 @@ namespace OpenBve
 									}
 									break;
 								case "motor":
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
+									{
+										Interface.AddMessage(MessageType.Error, false, string.Format("An empty list of motor sounds was defined in in XML file {0}", fileName));
+										break;
+									}
 									if (!car.Specs.IsMotorCar)
 									{
 										break;
@@ -545,21 +550,43 @@ namespace OpenBve
 		{
 			foreach (XmlNode c in node.ChildNodes)
 			{
-				int idx;
-				if (!NumberFormats.TryParseIntVb6(c.Name, out idx))
+				int idx = -1;
+				if (c.Name.ToLowerInvariant() != "sound")
 				{
-					continue;
+					Interface.AddMessage(MessageType.Error, false, "Invalid array node " + c.Name + " in XML node " + node.Name);
 				}
-				for (int i = 0; i < Tables.Length; i++)
+				else
 				{
-					Tables[i].Buffer = null;
-					Tables[i].Source = null;
-					for (int j = 0; j > Tables[i].Entries.Length; j++)
+					for (int i = 0; i < c.ChildNodes.Count; i++)
 					{
-						if (idx == Tables[i].Entries[j].SoundIndex)
+						if (c.ChildNodes[i].Name.ToLowerInvariant() == "index")
 						{
-							ParseNode(c, out Tables[i].Entries[j].Buffer, ref Position, Radius);
+							if (!NumberFormats.TryParseIntVb6(c.ChildNodes[i].InnerText.ToLowerInvariant(), out idx))
+							{
+								Interface.AddMessage(MessageType.Error, false, "Invalid array index " + c.Name + " in XML node " + node.Name);
+								return;
+							}
+							break;
 						}
+					}
+					if (idx >= 0)
+					{
+						for (int i = 0; i < Tables.Length; i++)
+						{
+							Tables[i].Buffer = null;
+							Tables[i].Source = null;
+							for (int j = 0; j > Tables[i].Entries.Length; j++)
+							{
+								if (idx == Tables[i].Entries[j].SoundIndex)
+								{
+									ParseNode(c, out Tables[i].Entries[j].Buffer, ref Position, Radius);
+								}
+							}
+						}
+					}
+					else
+					{
+						Interface.AddMessage(MessageType.Error, false, "Invalid array index " + c.Name + " in XML node " + node.Name);
 					}
 				}
 			}

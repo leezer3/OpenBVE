@@ -97,7 +97,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Wavefront", "source\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibRender", "source\LibRender\LibRender.csproj", "{2072ECD1-C7FF-427C-84DC-063F7C19792E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotorSoundEditor", "source\MotorSoundEditor\MotorSoundEditor.csproj", "{4AAB04FC-90D6-48C5-BA17-A29C7D36F9F4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoundEditor", "source\SoundEditor\SoundEditor.csproj", "{4AAB04FC-90D6-48C5-BA17-A29C7D36F9F4}"
 	ProjectSection(ProjectDependencies) = postProject
 		{67418D38-1E2E-4944-A1B0-09E00FC2D055} = {67418D38-1E2E-4944-A1B0-09E00FC2D055}
 		{081F5739-33DA-421A-B177-7B548D96646F} = {081F5739-33DA-421A-B177-7B548D96646F}
