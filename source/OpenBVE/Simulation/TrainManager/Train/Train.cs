@@ -299,7 +299,7 @@ namespace OpenBve
 					}
 				}
 				// passengers
-				UpdateTrainPassengers(this, TimeElapsed);
+				Passengers.Update(Specs.CurrentAverageAcceleration, TimeElapsed);
 				// signals
 				if (CurrentSectionLimit == 0.0)
 				{
