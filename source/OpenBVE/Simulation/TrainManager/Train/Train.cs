@@ -350,7 +350,7 @@ namespace OpenBve
 					{
 						double a = Cars[i].FrontAxle.Follower.WorldDirection.Y;
 						double b = Cars[i].RearAxle.Follower.WorldDirection.Y;
-						PowerRollingCouplerAcceleration = -0.5 * (a + b) * Game.RouteAccelerationDueToGravity;
+						PowerRollingCouplerAcceleration = -0.5 * (a + b) * Atmosphere.AccelerationDueToGravity;
 					}
 					// friction
 					double FrictionBrakeAcceleration;
@@ -523,7 +523,7 @@ namespace OpenBve
 						{
 							double rf = Cars[i].FrontAxle.Follower.WorldDirection.Y;
 							double rr = Cars[i].RearAxle.Follower.WorldDirection.Y;
-							double ra = Math.Abs(0.5 * (rf + rr) * Game.RouteAccelerationDueToGravity);
+							double ra = Math.Abs(0.5 * (rf + rr) * Atmosphere.AccelerationDueToGravity);
 							if (a > ra) a = ra;
 						}
 						double factor = Cars[i].Specs.MassEmpty / Cars[i].Specs.MassCurrent;
@@ -546,7 +546,7 @@ namespace OpenBve
 					}
 					else if (Cars[i].Derailed)
 					{
-						FrictionBrakeAcceleration += Game.CoefficientOfGroundFriction * Game.RouteAccelerationDueToGravity;
+						FrictionBrakeAcceleration += Game.CoefficientOfGroundFriction * Atmosphere.AccelerationDueToGravity;
 					}
 					// motor
 					if (Handles.Reverser.Actual != 0)
@@ -597,7 +597,7 @@ namespace OpenBve
 							target = Cars[i].CurrentSpeed + wheelspin / 2500.0;
 						}
 						double diff = target - Cars[i].Specs.CurrentPerceivedSpeed;
-						double rate = (diff < 0.0 ? 5.0 : 1.0) * Game.RouteAccelerationDueToGravity * TimeElapsed;
+						double rate = (diff < 0.0 ? 5.0 : 1.0) * Atmosphere.AccelerationDueToGravity * TimeElapsed;
 						rate *= 1.0 - 0.7 / (diff * diff + 1.0);
 						double factor = rate * rate;
 						factor = 1.0 - factor / (factor + 1000.0);
@@ -852,10 +852,10 @@ namespace OpenBve
 				{
 					h += Cars[i].FrontAxle.Follower.WorldPosition.Y + Cars[i].RearAxle.Follower.WorldPosition.Y;
 				}
-				Specs.CurrentElevation = Game.RouteInitialElevation + h / (2.0 * (double)Cars.Length);
-				Specs.CurrentAirTemperature = Game.GetAirTemperature(Specs.CurrentElevation);
-				Specs.CurrentAirPressure = Game.GetAirPressure(Specs.CurrentElevation, Specs.CurrentAirTemperature);
-				Specs.CurrentAirDensity = Game.GetAirDensity(Specs.CurrentAirPressure, Specs.CurrentAirTemperature);
+				Specs.CurrentElevation = CurrentRoute.InitialElevation + h / (2.0 * (double)Cars.Length);
+				Specs.CurrentAirTemperature = Atmosphere.GetAirTemperature(Specs.CurrentElevation);
+				Specs.CurrentAirPressure = Atmosphere.GetAirPressure(Specs.CurrentElevation, Specs.CurrentAirTemperature);
+				Specs.CurrentAirDensity = Atmosphere.GetAirDensity(Specs.CurrentAirPressure, Specs.CurrentAirTemperature);
 			}
 
 			/// <summary>Updates the safety system for this train</summary>

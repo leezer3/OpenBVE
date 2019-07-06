@@ -8,8 +8,6 @@
 using System;
 using LibRender;
 using OpenBveApi.Math;
-using OpenBveApi.Routes;
-using OpenBve.BackgroundManager;
 
 namespace OpenBve {
 	public static class World {	
@@ -20,11 +18,7 @@ namespace OpenBve {
 		internal static double ForwardViewingDistance;
 		internal static double BackwardViewingDistance;
 		internal static double ExtraViewingDistance;
-		
-		
-		
-		internal const double TargetBackgroundDefaultCountdown = 0.8;
-		internal static double TargetBackgroundCountdown;
+
 
 		internal static TrackManager.TrackFollower CameraTrackFollower;
 

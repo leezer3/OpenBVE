@@ -133,7 +133,7 @@ namespace OpenBve {
 			bool IsRW = string.Equals(System.IO.Path.GetExtension(CurrentRouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
 			CsvRwRouteParser.ParseRoute(CurrentRouteFile, IsRW, CurrentRouteEncoding, Application.StartupPath, ObjectFolder, SoundFolder, false);
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
-			Game.CalculateSeaLevelConstants();
+			Atmosphere.CalculateSeaLevelConstants();
 			RouteProgress = 1.0;
 			// camera
 			ObjectManager.InitializeVisibility();

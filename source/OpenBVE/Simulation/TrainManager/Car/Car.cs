@@ -1,6 +1,7 @@
 using System;
 using LibRender;
 using OpenBve.BrakeSystems;
+using OpenBve.RouteManager;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
@@ -870,7 +871,7 @@ namespace OpenBve
 					double ab = Specs.CurrentRollDueToTopplingAngle + Specs.CurrentRollDueToCantAngle;
 					double h = Specs.CenterOfGravityHeight;
 					double sr = Math.Abs(CurrentSpeed);
-					double rmax = 2.0 * h * sr * sr / (Game.RouteAccelerationDueToGravity * TrackManager.Tracks[FrontAxle.Follower.TrackIndex].RailGauge);
+					double rmax = 2.0 * h * sr * sr / (Atmosphere.AccelerationDueToGravity * TrackManager.Tracks[FrontAxle.Follower.TrackIndex].RailGauge);
 					double ta;
 					Topples = false;
 					if (Derailed)
@@ -884,7 +885,7 @@ namespace OpenBve
 						{
 							if (r < rmax)
 							{
-								double s0 = Math.Sqrt(r * Game.RouteAccelerationDueToGravity * TrackManager.Tracks[FrontAxle.Follower.TrackIndex].RailGauge / (2.0 * h));
+								double s0 = Math.Sqrt(r * Atmosphere.AccelerationDueToGravity * TrackManager.Tracks[FrontAxle.Follower.TrackIndex].RailGauge / (2.0 * h));
 								const double fac = 0.25; // arbitrary coefficient
 								ta = -fac * (sr - s0) * rs;
 								baseTrain.Topple(Index, TimeElapsed);

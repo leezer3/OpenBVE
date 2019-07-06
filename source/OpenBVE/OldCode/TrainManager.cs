@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Xml.Linq;
 using LibRender;
 using OpenBve.Parsers.Panel;
+using OpenBve.RouteManager;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
 
@@ -183,21 +184,21 @@ namespace OpenBve
 				t = Train.Cars[CarIndex].Specs.UnexposedFrontalArea;
 			}
 			double f = t * Train.Cars[CarIndex].Specs.AerodynamicDragCoefficient * Train.Specs.CurrentAirDensity / (2.0 * Train.Cars[CarIndex].Specs.MassCurrent);
-			double a = Game.RouteAccelerationDueToGravity * Train.Cars[CarIndex].Specs.CoefficientOfRollingResistance + f * Speed * Speed;
+			double a = Atmosphere.AccelerationDueToGravity * Train.Cars[CarIndex].Specs.CoefficientOfRollingResistance + f * Speed * Speed;
 			return a;
 		}
 
 		// get critical wheelslip acceleration
 		private static double GetCriticalWheelSlipAccelerationForElectricMotor(Train Train, int CarIndex, double AdhesionMultiplier, double UpY, double Speed)
 		{
-			double NormalForceAcceleration = UpY * Game.RouteAccelerationDueToGravity;
+			double NormalForceAcceleration = UpY * Atmosphere.AccelerationDueToGravity;
 			// TODO: Implement formula that depends on speed here.
 			double coefficient = Train.Cars[CarIndex].Specs.CoefficientOfStaticFriction;
 			return coefficient * AdhesionMultiplier * NormalForceAcceleration;
 		}
 		private static double GetCriticalWheelSlipAccelerationForFrictionBrake(Train Train, int CarIndex, double AdhesionMultiplier, double UpY, double Speed)
 		{
-			double NormalForceAcceleration = UpY * Game.RouteAccelerationDueToGravity;
+			double NormalForceAcceleration = UpY * Atmosphere.AccelerationDueToGravity;
 			// TODO: Implement formula that depends on speed here.
 			double coefficient = Train.Cars[CarIndex].Specs.CoefficientOfStaticFriction;
 			return coefficient * AdhesionMultiplier * NormalForceAcceleration;

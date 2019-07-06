@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using OpenBve.RouteManager;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBve.SignalManager;
@@ -413,7 +414,7 @@ namespace OpenBve {
 
 			// BELOW SEA LEVEL
 			{
-				double y = oy + (h - 0.5 * (double)(-Game.RouteInitialElevation - y0) * yd);
+				double y = oy + (h - 0.5 * (double)(-CurrentRoute.InitialElevation - y0) * yd);
 				double x0 = ox - (double)(0) * nd;
 				double x1 = ox + (double)(n1 - n0) * nd;
 				g.FillRectangle(mapColors[mode].belowSeaFill, (float)x0, (float)y, (float)x1, (float)(oy + h) - (float)y);
@@ -527,7 +528,7 @@ namespace OpenBve {
 					// route height at track offset (with measure and vertical line)
 					{
 						y = oy + (h - 0.5 * y) + 2.0f;
-						string t = ((int)Math.Round(Game.RouteInitialElevation + TrackManager.Tracks[0].Elements[i].WorldPosition.Y)).ToString(Culture);
+						string t = ((int)Math.Round(CurrentRoute.InitialElevation + TrackManager.Tracks[0].Elements[i].WorldPosition.Y)).ToString(Culture);
 						SizeF s = g.MeasureString(t, fs);
 						if (y < oy + h - (double)s.Width - 10.0)
 						{

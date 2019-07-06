@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using LibRender;
+using OpenBve.RouteManager;
 using OpenBveApi.Runtime;
 using OpenBveApi.Sounds;
 using OpenBveApi.Trains;
@@ -39,10 +40,10 @@ namespace OpenBve
 			/*
 			 * Set up the atmospheric attributes
 			 * */
-			double elevation = Camera.AbsolutePosition.Y + Game.RouteInitialElevation;
-			double airTemperature = Game.GetAirTemperature(elevation);
-			double airPressure = Game.GetAirPressure(elevation, airTemperature);
-			double speedOfSound = Game.GetSpeedOfSound(airPressure, airTemperature);
+			double elevation = Camera.AbsolutePosition.Y + CurrentRoute.InitialElevation;
+			double airTemperature = Atmosphere.GetAirTemperature(elevation);
+			double airPressure = Atmosphere.GetAirPressure(elevation, airTemperature);
+			double speedOfSound = Atmosphere.GetSpeedOfSound(airPressure, airTemperature);
 			try {
                 AL.SpeedOfSound((float)speedOfSound);
 			} catch { }
@@ -282,10 +283,10 @@ namespace OpenBve
 			/*
 			 * Set up the atmospheric attributes.
 			 * */
-			double elevation = Camera.AbsolutePosition.Y + Game.RouteInitialElevation;
-			double airTemperature = Game.GetAirTemperature(elevation);
-			double airPressure = Game.GetAirPressure(elevation, airTemperature);
-			double speedOfSound = Game.GetSpeedOfSound(airPressure, airTemperature);
+			double elevation = Camera.AbsolutePosition.Y + CurrentRoute.InitialElevation;
+			double airTemperature = Atmosphere.GetAirTemperature(elevation);
+			double airPressure = Atmosphere.GetAirPressure(elevation, airTemperature);
+			double speedOfSound = Atmosphere.GetSpeedOfSound(airPressure, airTemperature);
 			try {
 				AL.SpeedOfSound((float)speedOfSound);
 			} catch { }

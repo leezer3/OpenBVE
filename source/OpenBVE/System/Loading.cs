@@ -191,7 +191,7 @@ namespace OpenBve {
 			Thread createIllustrations = new Thread(Game.RouteInformation.LoadInformation) {IsBackground = true};
 			createIllustrations.Start();
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
-			Game.CalculateSeaLevelConstants();
+			Atmosphere.CalculateSeaLevelConstants();
 			if (CurrentRoute.BogusPretrainInstructions.Length != 0) {
 				double t = CurrentRoute.BogusPretrainInstructions[0].Time;
 				double p = CurrentRoute.BogusPretrainInstructions[0].TrackPosition;
