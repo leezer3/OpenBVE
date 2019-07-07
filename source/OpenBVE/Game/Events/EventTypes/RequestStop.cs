@@ -54,7 +54,7 @@ namespace OpenBve
 					{
 						stop = OnTime;
 					}
-					if (MaxCars != 0 && Train.Cars.Length > MaxCars)
+					if (MaxCars != 0 && Train.NumberOfCars > MaxCars)
 					{
 						//Check whether our train length is valid for this before doing anything else
 						Program.Sounds.PlayCarSound(Train.Cars[Train.DriverCar].Sounds.RequestStop[2], 1.0, 1.0, Train.Cars[Train.DriverCar], false);

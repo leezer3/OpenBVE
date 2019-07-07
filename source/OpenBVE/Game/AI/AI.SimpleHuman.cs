@@ -159,7 +159,7 @@ namespace OpenBve
 				// do the ai
 				Train.Specs.CurrentConstSpeed = false;
 				Train.ApplyHoldBrake(false);
-				int stopIndex = Train.Station >= 0 ? Game.Stations[Train.Station].GetStopIndex(Train.Cars.Length) : -1;
+				int stopIndex = Train.Station >= 0 ? Game.Stations[Train.Station].GetStopIndex(Train.NumberOfCars) : -1;
 				if (Train.CurrentSectionLimit == 0.0)
 				{
 					// passing red signal
@@ -386,7 +386,7 @@ namespace OpenBve
 									TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.Tracks[0].Elements[i].Events[j];
 									if (StopsAtStation(e.StationIndex, Train) & Train.LastStation != e.StationIndex)
 									{
-										int s = Game.Stations[e.StationIndex].GetStopIndex(Train.Cars.Length);
+										int s = Game.Stations[e.StationIndex].GetStopIndex(Train.NumberOfCars);
 										if (s >= 0)
 										{
 											double dist = Stations[e.StationIndex].Stops[s].TrackPosition - tp;
@@ -490,7 +490,7 @@ namespace OpenBve
 										TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.Tracks[0].Elements[i].Events[j];
 										if (StopsAtStation(e.StationIndex, Train) & Train.LastStation != e.StationIndex)
 										{
-											int s = Game.Stations[e.StationIndex].GetStopIndex(Train.Cars.Length);
+											int s = Game.Stations[e.StationIndex].GetStopIndex(Train.NumberOfCars);
 											if (s >= 0)
 											{
 												double dist = Stations[e.StationIndex].Stops[s].TrackPosition - tp;
@@ -519,7 +519,7 @@ namespace OpenBve
 										TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.Tracks[0].Elements[i].Events[j];
 										if (StopsAtStation(e.StationIndex, Train) & Train.LastStation != e.StationIndex)
 										{
-											int s = Game.Stations[e.StationIndex].GetStopIndex(Train.Cars.Length);
+											int s = Game.Stations[e.StationIndex].GetStopIndex(Train.NumberOfCars);
 											if (s >= 0)
 											{
 												double dist = Stations[e.StationIndex].Stops[s].TrackPosition - tp;
@@ -552,7 +552,7 @@ namespace OpenBve
 										TrackManager.StationEndEvent e = (TrackManager.StationEndEvent)TrackManager.Tracks[0].Elements[i].Events[j];
 										if (StopsAtStation(e.StationIndex, Train) & Train.LastStation != e.StationIndex)
 										{
-											int s = Game.Stations[e.StationIndex].GetStopIndex(Train.Cars.Length);
+											int s = Game.Stations[e.StationIndex].GetStopIndex(Train.NumberOfCars);
 											if (s >= 0)
 											{
 												double dist = Stations[e.StationIndex].Stops[s].TrackPosition - tp;
@@ -676,7 +676,7 @@ namespace OpenBve
 					{
 						if (StopsAtStation(Train.Station, Train))
 						{
-							int s = Game.Stations[Train.Station].GetStopIndex(Train.Cars.Length);
+							int s = Game.Stations[Train.Station].GetStopIndex(Train.NumberOfCars);
 							if (s >= 0)
 							{
 								double dist = Stations[Train.Station].Stops[s].TrackPosition - tp;

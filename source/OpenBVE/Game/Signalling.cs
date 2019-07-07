@@ -90,7 +90,7 @@ namespace OpenBve
 					{
 						if (train.Station == d)
 						{
-							int c = Game.Stations[d].GetStopIndex(train.Cars.Length);
+							int c = Game.Stations[d].GetStopIndex(train.NumberOfCars);
 							if (c >= 0)
 							{
 								double p0 = train.FrontCarTrackPosition();

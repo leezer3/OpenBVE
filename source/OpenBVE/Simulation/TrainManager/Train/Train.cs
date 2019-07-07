@@ -109,6 +109,15 @@ namespace OpenBve
 				}
 			}
 
+			/// <inheritdoc/>
+			public override int NumberOfCars
+			{
+				get
+				{
+					return this.Cars.Length;
+				}
+			}
+
 			/// <summary>Call this method to update the train</summary>
 			/// <param name="TimeElapsed">The elapsed time this frame</param>
 			internal void Update(double TimeElapsed)

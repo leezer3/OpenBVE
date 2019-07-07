@@ -41,6 +41,15 @@
 			}
 		}
 
+		/// <summary>Returns the number of cars in this train</summary>
+		public virtual int NumberOfCars
+		{
+			get
+			{
+				return 0;
+			}
+		}
+
 		/// <summary>Derails a car within the train</summary>
 		/// <param name="CarIndex">The index of the car to derail</param>
 		/// <param name="ElapsedTime">The frame time elapsed</param>
