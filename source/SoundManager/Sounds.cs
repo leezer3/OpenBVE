@@ -344,7 +344,7 @@ namespace SoundManager
 			{
 				Array.Resize(ref Sources, Sources.Length << 1);
 			}
-			Sources[SourceCount] = new SoundSource(buffer, buffer.Radius, pitch, volume, position, (object) null, looped);
+			Sources[SourceCount] = new SoundSource(buffer, buffer.Radius, pitch, volume, position, null, looped);
 			SourceCount++;
 			return Sources[SourceCount - 1];
 		}

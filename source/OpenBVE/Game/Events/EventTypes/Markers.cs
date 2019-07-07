@@ -20,7 +20,7 @@ namespace OpenBve
 			}
 			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, int CarIndex)
 			{
-				if (Train.IsPlayerTrain & TriggerType == EventTriggerType.FrontCarFrontAxle)
+				if (TriggerType == EventTriggerType.FrontCarFrontAxle && Train.IsPlayerTrain)
 				{
 					if (this.Message != null)
 					{
@@ -58,7 +58,7 @@ namespace OpenBve
 			}
 			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, int CarIndex)
 			{
-				if (Train.IsPlayerTrain & TriggerType == EventTriggerType.FrontCarFrontAxle)
+				if (TriggerType == EventTriggerType.FrontCarFrontAxle && Train.IsPlayerTrain)
 				{
 					if (this.Message != null)
 					{

@@ -1064,7 +1064,7 @@ namespace OpenBve {
 						break;
 						// safety
 					case Instructions.SafetyPluginAvailable:
-						if (Train.IsPlayerTrain && Train.Plugin != null) {
+						if (Train != null && Train.IsPlayerTrain && Train.Plugin != null) {
 							Function.Stack[s] = TrainManager.PlayerTrain.Plugin.IsDefault ? 0.0 : 1.0;
 						} else {
 							Function.Stack[s] = 0.0;

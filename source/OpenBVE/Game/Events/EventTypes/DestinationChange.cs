@@ -28,7 +28,7 @@ namespace OpenBve
 			}
 			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, int CarIndex)
 			{
-				if (this.Type == -1 && Train.IsPlayerTrain || this.Type == 1 && !Train.IsPlayerTrain)
+				if (Train == null || this.Type == -1 && Train.IsPlayerTrain || this.Type == 1 && !Train.IsPlayerTrain)
 				{
 					return;
 				}

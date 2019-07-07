@@ -514,7 +514,7 @@ namespace OpenBve
 					{
 						case SoundType.TrainCar:
 							Vector3 direction;
-							var Car = (AbstractCar)Sources[i].Parent;
+							var Car = (AbstractCar)source.Parent;
 							Car.CreateWorldCoordinates(source.Position, out position, out direction);
 							velocity = Car.CurrentSpeed * direction;
 							break;
