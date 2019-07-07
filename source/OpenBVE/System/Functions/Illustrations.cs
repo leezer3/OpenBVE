@@ -511,10 +511,19 @@ namespace OpenBve {
 				int k = TrackOffDist * n / Width;
 				if (k == 0)
 				{
-					//If k is equal to zero, this generally means that the WithTrack section is missing from our routefile
-					//Adding zero to the loop control variable will also produce an infinite loop, so that's a bad idea too
-					throw new Exception(Translations.GetInterfaceString("errors_route_corrupt_withtrack"));
+					if (!inGame)
+					{
+						//If k is equal to zero, this generally means that the WithTrack section is missing from our routefile
+						//Adding zero to the loop control variable will also produce an infinite loop, so that's a bad idea too
+						throw new Exception(Translations.GetInterfaceString("errors_route_corrupt_withtrack"));
+					}
+					/*
+					 * A route with a single station can somehow sometimes work OK in preview but not in-game
+					 * Whilst the routefile is probably broken don't chuck the exception here as it takes down the loader
+					 */
+					k = 1;
 				}
+				
 				for (int i = n0; i <= n1; i += k)
 				{
 					double x = ox + (double)(i - n0) * nd;
