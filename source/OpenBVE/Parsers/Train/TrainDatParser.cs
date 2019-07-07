@@ -1028,7 +1028,7 @@ namespace OpenBve {
 					}
 				}
 
-				if (Train.Cars[i].Specs.IsMotorCar || Train == TrainManager.PlayerTrain && i == Train.DriverCar || trainBrakeType == BrakeSystemType.ElectricCommandBrake)
+				if (Train.Cars[i].Specs.IsMotorCar || Train.IsPlayerTrain && i == Train.DriverCar || trainBrakeType == BrakeSystemType.ElectricCommandBrake)
 				{
 					Train.Cars[i].CarBrake.brakeType = BrakeType.Main;
 				}
@@ -1262,7 +1262,7 @@ namespace OpenBve {
 			Train.Cars[Train.DriverCar].Driver.X = Driver.X;
 			Train.Cars[Train.DriverCar].Driver.Y = Driver.Y;
 			Train.Cars[Train.DriverCar].Driver.Z = 0.5 * CarLength + Driver.Z;
-			if (Train == TrainManager.PlayerTrain)
+			if (Train.IsPlayerTrain)
 			{
 				Train.Cars[DriverCar].HasInteriorView = true;
 			}

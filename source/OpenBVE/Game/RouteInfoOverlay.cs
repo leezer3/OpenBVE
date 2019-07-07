@@ -94,7 +94,7 @@ namespace OpenBve
 					// draw a dot at current train position
 					LibRender.Renderer.DrawRectangle(null, new Point(xPos, zPos),
 							new Size(trainDotDiameter, trainDotDiameter),
-							TrainManager.Trains[i] == TrainManager.PlayerTrain ? playerTrainDotColour : trainDotColour);
+							TrainManager.Trains[i].IsPlayerTrain ? playerTrainDotColour : trainDotColour);
 				}
 				break;
 			case state.gradient:

@@ -115,7 +115,7 @@ namespace OpenBve
 					{
 						t = Stations[d].ArrivalTime;
 					}
-					if (train == TrainManager.PlayerTrain & Stations[d].Type != StationType.Normal & Stations[d].DepartureTime < 0.0)
+					if (train.IsPlayerTrain & Stations[d].Type != StationType.Normal & Stations[d].DepartureTime < 0.0)
 					{
 						settored = true;
 					}

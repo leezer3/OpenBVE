@@ -255,7 +255,7 @@ namespace OpenBve {
 				} else {
 					TrainManager.Trains[k].TrainFolder = CurrentTrainFolder;
 					// real train
-					if (TrainManager.Trains[k] == TrainManager.PlayerTrain)
+					if (TrainManager.Trains[k].IsPlayerTrain)
 					{
 						Program.FileSystem.AppendToLogFile("Loading player train: " + TrainManager.Trains[k].TrainFolder);
 					}
@@ -327,7 +327,7 @@ namespace OpenBve {
 					}
 				}
 				// add panel section
-				if (TrainManager.Trains[k] == TrainManager.PlayerTrain) {	
+				if (TrainManager.Trains[k].IsPlayerTrain) {	
 					TrainProgressCurrentWeight = 0.7 / TrainProgressMaximum;
 					TrainManager.ParsePanelConfig(TrainManager.Trains[k].TrainFolder, CurrentTrainEncoding, TrainManager.Trains[k]);
 					TrainProgressCurrentSum += TrainProgressCurrentWeight;
@@ -396,7 +396,7 @@ namespace OpenBve {
 				TrainManager.Trains[k].PlaceCars(0.0);
 				
 				// configure ai / timetable
-				if (TrainManager.Trains[k] == TrainManager.PlayerTrain) {
+				if (TrainManager.Trains[k].IsPlayerTrain) {
 					TrainManager.Trains[k].TimetableDelta = 0.0;
 				} else if (TrainManager.Trains[k].State != TrainState.Bogus) {
 					TrainManager.Trains[k].AI = new Game.SimpleHumanDriverAI(TrainManager.Trains[k]);
@@ -417,7 +417,7 @@ namespace OpenBve {
 			// load plugin
 			for (int i = 0; i < TrainManager.Trains.Length; i++) {
 				if (TrainManager.Trains[i].State != TrainState.Bogus) {
-					if (TrainManager.Trains[i] == TrainManager.PlayerTrain) {
+					if (TrainManager.Trains[i].IsPlayerTrain) {
 						if (!PluginManager.LoadCustomPlugin(TrainManager.Trains[i], TrainManager.Trains[i].TrainFolder, CurrentTrainEncoding)) {
 							PluginManager.LoadDefaultPlugin(TrainManager.Trains[i], TrainManager.Trains[i].TrainFolder);
 						}

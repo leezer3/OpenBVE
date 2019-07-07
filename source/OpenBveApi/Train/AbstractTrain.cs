@@ -31,6 +31,16 @@
 		/// <summary>Gets the track position of the rear car</summary>
 		public abstract double RearCarTrackPosition();
 
+		/// <summary>Returns true if this is the player driven train</summary>
+		public virtual bool IsPlayerTrain
+		{
+			get
+			{
+				//An abstract train in and of itself cannot be the player train
+				return false;
+			}
+		}
+
 		/// <summary>Derails a car within the train</summary>
 		/// <param name="CarIndex">The index of the car to derail</param>
 		/// <param name="ElapsedTime">The frame time elapsed</param>

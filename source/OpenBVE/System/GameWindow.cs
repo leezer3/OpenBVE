@@ -356,7 +356,7 @@ namespace OpenBve
 					{
 						if (Train.State != TrainState.Bogus)
 						{
-							if (Train == TrainManager.PlayerTrain)
+							if (Train.IsPlayerTrain)
 							{
 								InputDevicePlugin.AvailablePlugins[i].SetMaxNotch(Train.Handles.Power.MaximumDriverNotch, Train.Handles.Brake.MaximumDriverNotch);
 							}
@@ -619,7 +619,7 @@ namespace OpenBve
 			for (int i = 0; i < TrainManager.Trains.Length; i++)
 			{
 				TrainManager.Trains[i].Initialize();
-				int s = TrainManager.Trains[i] == TrainManager.PlayerTrain ? PlayerFirstStationIndex : OtherFirstStationIndex;
+				int s = TrainManager.Trains[i].IsPlayerTrain ? PlayerFirstStationIndex : OtherFirstStationIndex;
 				if (s >= 0)
 				{
 					if (Game.Stations[s].OpenLeftDoors)
@@ -688,7 +688,7 @@ namespace OpenBve
 			for (int i = 0; i < TrainManager.Trains.Length; i++)
 			{
 				double p;
-				if (TrainManager.Trains[i] == TrainManager.PlayerTrain)
+				if (TrainManager.Trains[i].IsPlayerTrain)
 				{
 					p = PlayerFirstStationPosition;
 				}

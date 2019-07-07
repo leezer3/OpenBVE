@@ -16,11 +16,11 @@ namespace OpenBve
 			}
 			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, int CarIndex)
 			{
-				if (TriggerType == EventTriggerType.RearCarRearAxle & Train != TrainManager.PlayerTrain)
+				if (TriggerType == EventTriggerType.RearCarRearAxle & !Train.IsPlayerTrain)
 				{
 					Train.Dispose();
 				}
-				else if (Train == TrainManager.PlayerTrain)
+				else if (Train.IsPlayerTrain)
 				{
 					Train.Derail(CarIndex, 0.0);
 				}

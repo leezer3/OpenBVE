@@ -258,7 +258,7 @@ namespace OpenBve.Parsers.Train
 						Train.Cars[Car].Driver.Z = 0.5 * Train.Cars[Car].Length + driverZ;
 						break;
 					case "interiorview":
-						if (Train != TrainManager.PlayerTrain)
+						if (!Train.IsPlayerTrain)
 						{
 							break;
 						}
