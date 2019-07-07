@@ -5047,8 +5047,13 @@ namespace OpenBve {
 					Data.Blocks[i].RailType = new int[Data.Blocks[i - 1].RailType.Length];
 					if (!PreviewOnly) {
 						for (int j = 0; j < Data.Blocks[i].RailType.Length; j++) {
-							int rc = Data.Blocks[i].RailCycle[j].RailCycleIndex;
-							if (rc != -1 && Data.Structure.RailCycle[rc].Length > 1) {
+							int rc = -1;
+							if (Data.Blocks[i].RailCycle.Length > j)
+							{
+								rc = Data.Blocks[i].RailCycle[j].RailCycleIndex;
+							}
+							if (rc != -1 && Data.Structure.RailCycle.Length > rc && Data.Structure.RailCycle[rc].Length > 1)
+							{
 								int cc = Data.Blocks[i].RailCycle[j].CurrentCycle;
 								if (cc == Data.Structure.RailCycle[rc].Length - 1) {
 									Data.Blocks[i].RailType[j] = Data.Structure.RailCycle[rc][0];
