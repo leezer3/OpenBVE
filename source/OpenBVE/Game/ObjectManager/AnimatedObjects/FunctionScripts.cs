@@ -1101,20 +1101,20 @@ namespace OpenBve {
 							{
 								stationIdx = Train.LastStation + 1;
 							}
-							if (stationIdx > Game.Stations.Length - 1)
+							if (stationIdx > CurrentRoute.Stations.Length - 1)
 							{
 								stationIdx = Train.LastStation;
 							}
-							int n = Game.Stations[stationIdx].GetStopIndex(Train.NumberOfCars);
+							int n = CurrentRoute.Stations[stationIdx].GetStopIndex(Train.NumberOfCars);
 							double p0 = Train.FrontCarTrackPosition();
 							double p1;
-							if (Game.Stations[stationIdx].Stops.Length > 0)
+							if (CurrentRoute.Stations[stationIdx].Stops.Length > 0)
 							{
-								p1 = Game.Stations[stationIdx].Stops[n].TrackPosition;
+								p1 = CurrentRoute.Stations[stationIdx].Stops[n].TrackPosition;
 							}
 							else
 							{
-								p1 = Game.Stations[stationIdx].DefaultTrackPosition;
+								p1 = CurrentRoute.Stations[stationIdx].DefaultTrackPosition;
 							}
 							Function.Stack[s] = p1 - p0;
 						}
@@ -1135,7 +1135,7 @@ namespace OpenBve {
 							{
 								stationIdx = Train.LastStation + 1;
 							}
-							if (stationIdx > Game.Stations.Length - 1)
+							if (stationIdx > CurrentRoute.Stations.Length - 1)
 							{
 								Function.Stack[s] = 0.0; //Passed the terminal station, hence cannot stop again
 							}
@@ -1149,22 +1149,22 @@ namespace OpenBve {
 						if (Train != null)
 						{
 							int stationIdx = (int)Math.Round(Function.Stack[s - 1]); //Station index
-							if (stationIdx > Game.Stations.Length - 1)
+							if (stationIdx > CurrentRoute.Stations.Length - 1)
 							{
 								Function.Stack[s - 1] = 0.0; //Invalid index
 							}
 							else
 							{
-								int n = Game.Stations[stationIdx].GetStopIndex(Train.NumberOfCars);
+								int n = CurrentRoute.Stations[stationIdx].GetStopIndex(Train.NumberOfCars);
 								double p0 = Train.FrontCarTrackPosition();
 								double p1;
-								if (Game.Stations[stationIdx].Stops.Length > 0)
+								if (CurrentRoute.Stations[stationIdx].Stops.Length > 0)
 								{
-									p1 = Game.Stations[stationIdx].Stops[n].TrackPosition;
+									p1 = CurrentRoute.Stations[stationIdx].Stops[n].TrackPosition;
 								}
 								else
 								{
-									p1 = Game.Stations[stationIdx].DefaultTrackPosition;
+									p1 = CurrentRoute.Stations[stationIdx].DefaultTrackPosition;
 								}
 								Function.Stack[s - 1] = p1 - p0;
 							}
@@ -1178,7 +1178,7 @@ namespace OpenBve {
 						if (Train != null)
 						{
 							int stationIdx = (int)Math.Round(Function.Stack[s - 1]); //Station index
-							if (stationIdx > Game.Stations.Length - 1)
+							if (stationIdx > CurrentRoute.Stations.Length - 1)
 							{
 								Function.Stack[s - 1] = 0.0; //Invalid index
 							}
@@ -1206,7 +1206,7 @@ namespace OpenBve {
 							else
 							{
 								int stationIdx = Train.LastStation + 1;
-								if (stationIdx > Game.Stations.Length - 1)
+								if (stationIdx > CurrentRoute.Stations.Length - 1)
 								{
 									stationIdx = Train.LastStation;
 								}
@@ -1222,12 +1222,12 @@ namespace OpenBve {
 							else
 							{
 								int stationIdx = Train.LastStation + 1;
-								if (stationIdx > Game.Stations.Length - 1)
+								if (stationIdx > CurrentRoute.Stations.Length - 1)
 								{
 									stationIdx = Train.LastStation;
 								}
 
-								while (stationIdx < Game.Stations.Length - 1)
+								while (stationIdx < CurrentRoute.Stations.Length - 1)
 								{
 									if (Game.StopsAtStation(stationIdx, Train))
 									{

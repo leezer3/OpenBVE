@@ -176,9 +176,9 @@ namespace OpenBve {
 		// jump to station
 		private static void JumpToStation(int Direction) {
 			if (Direction < 0) {
-				for (int i = Game.Stations.Length - 1; i >= 0; i--) {
-					if (Game.Stations[i].Stops.Length != 0) {
-						double p = Game.Stations[i].Stops[Game.Stations[i].Stops.Length - 1].TrackPosition;
+				for (int i = RouteManager.CurrentRoute.Stations.Length - 1; i >= 0; i--) {
+					if (RouteManager.CurrentRoute.Stations[i].Stops.Length != 0) {
+						double p = RouteManager.CurrentRoute.Stations[i].Stops[RouteManager.CurrentRoute.Stations[i].Stops.Length - 1].TrackPosition;
 						if (p < World.CameraTrackFollower.TrackPosition - 0.1) {
 							TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, p, true, false);
 							Camera.CurrentAlignment.TrackPosition = p;
@@ -188,9 +188,9 @@ namespace OpenBve {
 					}
 				}
 			} else if (Direction > 0) {
-				for (int i = 0; i < Game.Stations.Length; i++) {
-					if (Game.Stations[i].Stops.Length != 0) {
-						double p = Game.Stations[i].Stops[Game.Stations[i].Stops.Length - 1].TrackPosition;
+				for (int i = 0; i < RouteManager.CurrentRoute.Stations.Length; i++) {
+					if (RouteManager.CurrentRoute.Stations[i].Stops.Length != 0) {
+						double p = RouteManager.CurrentRoute.Stations[i].Stops[RouteManager.CurrentRoute.Stations[i].Stops.Length - 1].TrackPosition;
 						if (p > World.CameraTrackFollower.TrackPosition + 0.1) {
 							TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, p, true, false);
 							Camera.CurrentAlignment.TrackPosition = p;

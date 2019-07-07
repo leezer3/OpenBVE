@@ -66,7 +66,7 @@ namespace OpenBve
 						if (Program.RandomNumberGenerator.Next(0, 100) <= stop.Probability)
 						{
 							//We have hit our probability roll
-							if (Game.Stations[StationIndex].StopMode == StationStopMode.AllRequestStop || (Train.IsPlayerTrain && Game.Stations[StationIndex].StopMode == StationStopMode.PlayerRequestStop))
+							if (CurrentRoute.Stations[StationIndex].StopMode == StationStopMode.AllRequestStop || (Train.IsPlayerTrain && CurrentRoute.Stations[StationIndex].StopMode == StationStopMode.PlayerRequestStop))
 							{
 
 								//If our train can stop at this station, set it's index accordingly

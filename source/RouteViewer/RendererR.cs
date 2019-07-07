@@ -389,7 +389,7 @@ namespace OpenBve {
 			}
 			double da = -World.BackwardViewingDistance - World.ExtraViewingDistance;
 			double db = World.ForwardViewingDistance + World.ExtraViewingDistance;
-			bool[] sta = new bool[Game.Stations.Length];
+			bool[] sta = new bool[CurrentRoute.Stations.Length];
 			// events
 			for (int i = 0; i < TrackManager.CurrentTrack.Elements.Length; i++) {
 				double p = TrackManager.CurrentTrack.Elements[i].StartingTrackPosition;
@@ -459,10 +459,10 @@ namespace OpenBve {
 			// stops
 			for (int i = 0; i < sta.Length; i++) {
 				if (sta[i]) {
-					for (int j = 0; j < Game.Stations[i].Stops.Length; j++) {
+					for (int j = 0; j < CurrentRoute.Stations[i].Stops.Length; j++) {
 						const double dy = 1.4;
 						const double s = 0.2;
-						double p = Game.Stations[i].Stops[j].TrackPosition;
+						double p = CurrentRoute.Stations[i].Stops[j].TrackPosition;
 						TrackManager.TrackFollower f = new TrackManager.TrackFollower();
 						f.TriggerType = EventTriggerType.None;
 						f.TrackPosition = p;
@@ -583,23 +583,23 @@ namespace OpenBve {
 					LibRender.Renderer.DrawString(Fonts.SmallFont, "Radius: " + GetLengthString(World.CameraTrackFollower.CurveRadius) + ", Cant: " + (1000.0 * World.CameraTrackFollower.CurveCant).ToString("0", Culture) + " mm, Adhesion=" + (100.0 * World.CameraTrackFollower.AdhesionMultiplier).ToString("0", Culture), new Point((int)x, 20), TextAlignment.TopLeft, Color128.White, true);
 					if (Program.CurrentStation >= 0) {
 						System.Text.StringBuilder t = new System.Text.StringBuilder();
-						t.Append(Game.Stations[Program.CurrentStation].Name);
-						if (Game.Stations[Program.CurrentStation].ArrivalTime >= 0.0) {
-							t.Append(", Arrival: " + GetTime(Game.Stations[Program.CurrentStation].ArrivalTime));
+						t.Append(CurrentRoute.Stations[Program.CurrentStation].Name);
+						if (CurrentRoute.Stations[Program.CurrentStation].ArrivalTime >= 0.0) {
+							t.Append(", Arrival: " + GetTime(CurrentRoute.Stations[Program.CurrentStation].ArrivalTime));
 						}
-						if (Game.Stations[Program.CurrentStation].DepartureTime >= 0.0) {
-							t.Append(", Departure: " + GetTime(Game.Stations[Program.CurrentStation].DepartureTime));
+						if (CurrentRoute.Stations[Program.CurrentStation].DepartureTime >= 0.0) {
+							t.Append(", Departure: " + GetTime(CurrentRoute.Stations[Program.CurrentStation].DepartureTime));
 						}
-						if (Game.Stations[Program.CurrentStation].OpenLeftDoors & Game.Stations[Program.CurrentStation].OpenRightDoors) {
+						if (CurrentRoute.Stations[Program.CurrentStation].OpenLeftDoors & CurrentRoute.Stations[Program.CurrentStation].OpenRightDoors) {
 							t.Append(", [L][R]");
-						} else if (Game.Stations[Program.CurrentStation].OpenLeftDoors) {
+						} else if (CurrentRoute.Stations[Program.CurrentStation].OpenLeftDoors) {
 							t.Append(", [L][-]");
-						} else if (Game.Stations[Program.CurrentStation].OpenRightDoors) {
+						} else if (CurrentRoute.Stations[Program.CurrentStation].OpenRightDoors) {
 							t.Append(", [-][R]");
 						} else {
 							t.Append(", [-][-]");
 						}
-						switch (Game.Stations[Program.CurrentStation].StopMode) {
+						switch (CurrentRoute.Stations[Program.CurrentStation].StopMode) {
 							case StationStopMode.AllStop:
 								t.Append(", Stop");
 								break;
@@ -613,10 +613,10 @@ namespace OpenBve {
 								t.Append(", Player passes - others stop");
 								break;
 						}
-						if (Game.Stations[Program.CurrentStation].Type == StationType.ChangeEnds) {
+						if (CurrentRoute.Stations[Program.CurrentStation].Type == StationType.ChangeEnds) {
 							t.Append(", Change ends");
 						}
-						t.Append(", Ratio=").Append((100.0 * Game.Stations[Program.CurrentStation].PassengerRatio).ToString("0", Culture)).Append("%");
+						t.Append(", Ratio=").Append((100.0 * CurrentRoute.Stations[Program.CurrentStation].PassengerRatio).ToString("0", Culture)).Append("%");
 						LibRender.Renderer.DrawString(Fonts.SmallFont, t.ToString(), new Point((int)x, 36), TextAlignment.TopLeft, Color128.White, true);
 					}
 					if (Interface.MessageCount == 1) {

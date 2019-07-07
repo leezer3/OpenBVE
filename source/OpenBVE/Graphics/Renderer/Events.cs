@@ -70,7 +70,7 @@ namespace OpenBve
 			}
 			double da = -World.BackwardViewingDistance - World.ExtraViewingDistance;
 			double db = World.ForwardViewingDistance + World.ExtraViewingDistance;
-			bool[] sta = new bool[Game.Stations.Length];
+			bool[] sta = new bool[CurrentRoute.Stations.Length];
 			// events
 			for (int i = 0; i < TrackManager.Tracks[0].Elements.Length; i++)
 			{
@@ -171,11 +171,11 @@ namespace OpenBve
 			{
 				if (sta[i])
 				{
-					for (int j = 0; j < Game.Stations[i].Stops.Length; j++)
+					for (int j = 0; j < CurrentRoute.Stations[i].Stops.Length; j++)
 					{
 						const double dy = 1.4;
 						const double s = 0.2;
-						double p = Game.Stations[i].Stops[j].TrackPosition;
+						double p = CurrentRoute.Stations[i].Stops[j].TrackPosition;
 						TrackManager.TrackFollower f = new TrackManager.TrackFollower();
 						f.TriggerType = EventTriggerType.None;
 						f.TrackPosition = p;

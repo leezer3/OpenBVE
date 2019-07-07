@@ -481,16 +481,16 @@ namespace OpenBve
 			double PlayerFirstStationPosition;
 			int os = -1;
 			bool f = false;
-			for (int i = 0; i < Game.Stations.Length; i++)
+			for (int i = 0; i < CurrentRoute.Stations.Length; i++)
 			{
 				if (!String.IsNullOrEmpty(Game.InitialStationName))
 				{
-					if (Game.InitialStationName.ToLowerInvariant() == Game.Stations[i].Name.ToLowerInvariant())
+					if (Game.InitialStationName.ToLowerInvariant() == CurrentRoute.Stations[i].Name.ToLowerInvariant())
 					{
 						PlayerFirstStationIndex = i;
 					}
 				}
-				if (Game.Stations[i].StopMode == StationStopMode.AllStop | Game.Stations[i].StopMode == StationStopMode.PlayerStop & Game.Stations[i].Stops.Length != 0)
+				if (CurrentRoute.Stations[i].StopMode == StationStopMode.AllStop | CurrentRoute.Stations[i].StopMode == StationStopMode.PlayerStop & CurrentRoute.Stations[i].Stops.Length != 0)
 				{
 					if (f == false)
 					{
@@ -504,10 +504,10 @@ namespace OpenBve
 				PlayerFirstStationIndex = os;
 			}
 			{
-				int s = Game.Stations[PlayerFirstStationIndex].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
+				int s = CurrentRoute.Stations[PlayerFirstStationIndex].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
 				if (s >= 0)
 				{
-					PlayerFirstStationPosition = Game.Stations[PlayerFirstStationIndex].Stops[s].TrackPosition;
+					PlayerFirstStationPosition = CurrentRoute.Stations[PlayerFirstStationIndex].Stops[s].TrackPosition;
 
 					double TrainLength = 0.0;
 					for (int c = 0; c < TrainManager.PlayerTrain.Cars.Length; c++)
@@ -529,11 +529,11 @@ namespace OpenBve
 							//Update the station stop location
 							if (s >= 0)
 							{
-								Game.Stations[PlayerFirstStationIndex].Stops[s].TrackPosition = PlayerFirstStationPosition;
+								CurrentRoute.Stations[PlayerFirstStationIndex].Stops[s].TrackPosition = PlayerFirstStationPosition;
 							}
 							else
 							{
-								Game.Stations[PlayerFirstStationIndex].DefaultTrackPosition = PlayerFirstStationPosition;
+								CurrentRoute.Stations[PlayerFirstStationIndex].DefaultTrackPosition = PlayerFirstStationPosition;
 							}
 							break;
 						}
@@ -541,7 +541,7 @@ namespace OpenBve
 				}
 				else
 				{
-					PlayerFirstStationPosition = Game.Stations[PlayerFirstStationIndex].DefaultTrackPosition;
+					PlayerFirstStationPosition = CurrentRoute.Stations[PlayerFirstStationIndex].DefaultTrackPosition;
 				}
 				if (Game.InitialStationTime != -1)
 				{
@@ -550,59 +550,59 @@ namespace OpenBve
 				}
 				else
 				{
-					if (Game.Stations[PlayerFirstStationIndex].ArrivalTime < 0.0)
+					if (CurrentRoute.Stations[PlayerFirstStationIndex].ArrivalTime < 0.0)
 					{
-						if (Game.Stations[PlayerFirstStationIndex].DepartureTime < 0.0)
+						if (CurrentRoute.Stations[PlayerFirstStationIndex].DepartureTime < 0.0)
 						{
 							Game.SecondsSinceMidnight = 0.0;
 							Game.StartupTime = 0.0;
 						}
 						else
 						{
-							Game.SecondsSinceMidnight = Game.Stations[PlayerFirstStationIndex].DepartureTime -
-							                            Game.Stations[PlayerFirstStationIndex].StopTime;
-							Game.StartupTime = Game.Stations[PlayerFirstStationIndex].DepartureTime -
-							                   Game.Stations[PlayerFirstStationIndex].StopTime;
+							Game.SecondsSinceMidnight = CurrentRoute.Stations[PlayerFirstStationIndex].DepartureTime -
+							                            CurrentRoute.Stations[PlayerFirstStationIndex].StopTime;
+							Game.StartupTime = CurrentRoute.Stations[PlayerFirstStationIndex].DepartureTime -
+							                   CurrentRoute.Stations[PlayerFirstStationIndex].StopTime;
 						}
 					}
 					else
 					{
-						Game.SecondsSinceMidnight = Game.Stations[PlayerFirstStationIndex].ArrivalTime;
-						Game.StartupTime = Game.Stations[PlayerFirstStationIndex].ArrivalTime;
+						Game.SecondsSinceMidnight = CurrentRoute.Stations[PlayerFirstStationIndex].ArrivalTime;
+						Game.StartupTime = CurrentRoute.Stations[PlayerFirstStationIndex].ArrivalTime;
 					}
 				}
 			}
 			int OtherFirstStationIndex = -1;
 			double OtherFirstStationPosition = 0.0;
 			double OtherFirstStationTime = 0.0;
-			for (int i = 0; i < Game.Stations.Length; i++)
+			for (int i = 0; i < CurrentRoute.Stations.Length; i++)
 			{
-				if (Game.Stations[i].StopMode == StationStopMode.AllStop | Game.Stations[i].StopMode == StationStopMode.PlayerPass & Game.Stations[i].Stops.Length != 0)
+				if (CurrentRoute.Stations[i].StopMode == StationStopMode.AllStop | CurrentRoute.Stations[i].StopMode == StationStopMode.PlayerPass & CurrentRoute.Stations[i].Stops.Length != 0)
 				{
 					OtherFirstStationIndex = i;
-					int s = Game.Stations[i].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
+					int s = CurrentRoute.Stations[i].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
 					if (s >= 0)
 					{
-						OtherFirstStationPosition = Game.Stations[i].Stops[s].TrackPosition;
+						OtherFirstStationPosition = CurrentRoute.Stations[i].Stops[s].TrackPosition;
 					}
 					else
 					{
-						OtherFirstStationPosition = Game.Stations[i].DefaultTrackPosition;
+						OtherFirstStationPosition = CurrentRoute.Stations[i].DefaultTrackPosition;
 					}
-					if (Game.Stations[i].ArrivalTime < 0.0)
+					if (CurrentRoute.Stations[i].ArrivalTime < 0.0)
 					{
-						if (Game.Stations[i].DepartureTime < 0.0)
+						if (CurrentRoute.Stations[i].DepartureTime < 0.0)
 						{
 							OtherFirstStationTime = 0.0;
 						}
 						else
 						{
-							OtherFirstStationTime = Game.Stations[i].DepartureTime - Game.Stations[i].StopTime;
+							OtherFirstStationTime = CurrentRoute.Stations[i].DepartureTime - CurrentRoute.Stations[i].StopTime;
 						}
 					}
 					else
 					{
-						OtherFirstStationTime = Game.Stations[i].ArrivalTime;
+						OtherFirstStationTime = CurrentRoute.Stations[i].ArrivalTime;
 					}
 					break;
 				}
@@ -622,14 +622,14 @@ namespace OpenBve
 				int s = TrainManager.Trains[i].IsPlayerTrain ? PlayerFirstStationIndex : OtherFirstStationIndex;
 				if (s >= 0)
 				{
-					if (Game.Stations[s].OpenLeftDoors)
+					if (CurrentRoute.Stations[s].OpenLeftDoors)
 					{
 						for (int j = 0; j < TrainManager.Trains[i].Cars.Length; j++)
 						{
 							TrainManager.Trains[i].Cars[j].Doors[0].AnticipatedOpen = true;
 						}
 					}
-					if (Game.Stations[s].OpenRightDoors)
+					if (CurrentRoute.Stations[s].OpenRightDoors)
 					{
 						for (int j = 0; j < TrainManager.Trains[i].Cars.Length; j++)
 						{
@@ -665,11 +665,11 @@ namespace OpenBve
 			Game.CurrentScore.ArrivalStation = PlayerFirstStationIndex + 1;
 			Game.CurrentScore.DepartureStation = PlayerFirstStationIndex;
 			Game.CurrentScore.Maximum = 0;
-			for (int i = 0; i < Game.Stations.Length; i++)
+			for (int i = 0; i < CurrentRoute.Stations.Length; i++)
 			{
-				if (i != PlayerFirstStationIndex & Game.Stations[i].PlayerStops())
+				if (i != PlayerFirstStationIndex & CurrentRoute.Stations[i].PlayerStops())
 				{
-					if (i == 0 || Game.Stations[i - 1].Type != StationType.ChangeEnds)
+					if (i == 0 || CurrentRoute.Stations[i - 1].Type != StationType.ChangeEnds)
 					{
 						Game.CurrentScore.Maximum += Game.ScoreValueStationArrival;
 					}
@@ -769,7 +769,7 @@ namespace OpenBve
 			// timetable
 			if (TrainManager.PlayerTrain.Station >= 0)
 			{
-				Timetable.UpdateCustomTimetable(Game.Stations[TrainManager.PlayerTrain.Station].TimetableDaytimeTexture, Game.Stations[TrainManager.PlayerTrain.Station].TimetableNighttimeTexture);
+				Timetable.UpdateCustomTimetable(CurrentRoute.Stations[TrainManager.PlayerTrain.Station].TimetableDaytimeTexture, CurrentRoute.Stations[TrainManager.PlayerTrain.Station].TimetableNighttimeTexture);
 				if (Timetable.CustomObjectsUsed != 0 & Timetable.CustomTimetableAvailable && Interface.CurrentOptions.TimeTableStyle != Interface.TimeTableMode.AutoGenerated && Interface.CurrentOptions.TimeTableStyle != Interface.TimeTableMode.None)
 				{
 					Timetable.CurrentTimetable = Timetable.TimetableState.Custom;

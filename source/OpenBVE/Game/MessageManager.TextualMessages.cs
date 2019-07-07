@@ -1,5 +1,6 @@
 ﻿using System;
 using LibRender;
+using OpenBve.RouteManager;
 using OpenBveApi.Colors;
 using OpenBveApi.Trains;
 
@@ -91,7 +92,7 @@ namespace OpenBve
 							System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 							string t = a.Hours.ToString("00", Culture) + ":" + a.Minutes.ToString("00", Culture) + ":" + a.Seconds.ToString("00", Culture);
 							s = s.Replace("[time]", t);
-							s = s.Replace("[name]", Game.Stations[j].Name);
+							s = s.Replace("[name]", CurrentRoute.Stations[j].Name);
 							MessageToDisplay = s;
 							if (d > 0.0) remove = false;
 						}

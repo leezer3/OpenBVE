@@ -48,7 +48,7 @@ namespace OpenBve
 				}
 			}
 			train.StationState = TrainStopState.Jumping;
-			int stopIndex = Game.Stations[stationIndex].GetStopIndex(train.NumberOfCars);
+			int stopIndex = CurrentRoute.Stations[stationIndex].GetStopIndex(train.NumberOfCars);
 			if (stopIndex >= 0)
 			{
 				if (train.IsPlayerTrain)
@@ -62,7 +62,7 @@ namespace OpenBve
 				{
 					train.Cars[h].CurrentSpeed = 0.0;
 				}
-				double d = Game.Stations[stationIndex].Stops[stopIndex].TrackPosition - train.Cars[0].FrontAxle.Follower.TrackPosition + train.Cars[0].FrontAxle.Position - 0.5 * train.Cars[0].Length;
+				double d = CurrentRoute.Stations[stationIndex].Stops[stopIndex].TrackPosition - train.Cars[0].FrontAxle.Follower.TrackPosition + train.Cars[0].FrontAxle.Position - 0.5 * train.Cars[0].Length;
 				if (train.IsPlayerTrain)
 				{
 					TrackManager.SuppressSoundEvents = true;
@@ -118,19 +118,19 @@ namespace OpenBve
 				}
 				if (train.IsPlayerTrain)
 				{
-					if (Game.Stations[stationIndex].ArrivalTime >= 0.0)
+					if (CurrentRoute.Stations[stationIndex].ArrivalTime >= 0.0)
 					{
-						Game.SecondsSinceMidnight = Game.Stations[stationIndex].ArrivalTime;
+						Game.SecondsSinceMidnight = CurrentRoute.Stations[stationIndex].ArrivalTime;
 					}
-					else if (Game.Stations[stationIndex].DepartureTime >= 0.0)
+					else if (CurrentRoute.Stations[stationIndex].DepartureTime >= 0.0)
 					{
-						Game.SecondsSinceMidnight = Game.Stations[stationIndex].DepartureTime - Game.Stations[stationIndex].StopTime;
+						Game.SecondsSinceMidnight = CurrentRoute.Stations[stationIndex].DepartureTime - CurrentRoute.Stations[stationIndex].StopTime;
 					}
 				}
 				for (int i = 0; i < train.Cars.Length; i++)
 				{
-					train.Cars[i].Doors[0].AnticipatedOpen = Game.Stations[stationIndex].OpenLeftDoors;
-					train.Cars[i].Doors[1].AnticipatedOpen = Game.Stations[stationIndex].OpenRightDoors;
+					train.Cars[i].Doors[0].AnticipatedOpen = CurrentRoute.Stations[stationIndex].OpenLeftDoors;
+					train.Cars[i].Doors[1].AnticipatedOpen = CurrentRoute.Stations[stationIndex].OpenRightDoors;
 				}
 				if (train.IsPlayerTrain)
 				{

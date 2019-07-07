@@ -6,6 +6,7 @@ using OpenTK.Input;             // for Key
 using System;
 using System.Drawing;
 using LibRender;
+using OpenBve.RouteManager;
 
 namespace OpenBve
 {
@@ -151,8 +152,8 @@ namespace OpenBve
 				switch (menuType)
 				{
 					case MenuType.Top:          // top level menu
-						for (i = 0; i < Game.Stations.Length; i++)
-							if (Game.Stations[i].PlayerStops() & Game.Stations[i].Stops.Length > 0)
+						for (i = 0; i < CurrentRoute.Stations.Length; i++)
+							if (CurrentRoute.Stations[i].PlayerStops() & CurrentRoute.Stations[i].Stops.Length > 0)
 							{
 								jump = 1;
 								break;
@@ -177,18 +178,18 @@ namespace OpenBve
 					case MenuType.JumpToStation:    // list of stations to jump to
 													// count the number of available stations
 						menuItem = 0;
-						for (i = 0; i < Game.Stations.Length; i++)
-							if (Game.Stations[i].PlayerStops() & Game.Stations[i].Stops.Length > 0)
+						for (i = 0; i < CurrentRoute.Stations.Length; i++)
+							if (CurrentRoute.Stations[i].PlayerStops() & CurrentRoute.Stations[i].Stops.Length > 0)
 								menuItem++;
 						// list available stations, selecting the next station as predefined choice
 						jump = 0;                           // no jump found yet
 						Items = new MenuEntry[menuItem + 1];
 						Items[0] = new MenuCommand(Translations.GetInterfaceString("menu_back"), MenuTag.MenuBack, 0);
 						menuItem = 1;
-						for (i = 0; i < Game.Stations.Length; i++)
-							if (Game.Stations[i].PlayerStops() & Game.Stations[i].Stops.Length > 0)
+						for (i = 0; i < CurrentRoute.Stations.Length; i++)
+							if (CurrentRoute.Stations[i].PlayerStops() & CurrentRoute.Stations[i].Stops.Length > 0)
 							{
-								Items[menuItem] = new MenuCommand(Game.Stations[i].Name, MenuTag.JumpToStation, i);
+								Items[menuItem] = new MenuCommand(CurrentRoute.Stations[i].Name, MenuTag.JumpToStation, i);
 								// if no preferred jump-to-station found yet and this station is
 								// after the last station the user stopped at, select this item
 								if (jump == 0 && i > TrainManager.PlayerTrain.LastStation)

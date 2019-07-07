@@ -156,18 +156,18 @@ namespace OpenBve {
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			// int FirstStationIndex = -1;
 			double FirstStationPosition = 0.0;
-			for (int i = 0; i < Game.Stations.Length; i++) {
-				if (Game.Stations[i].Stops.Length != 0) {
+			for (int i = 0; i < CurrentRoute.Stations.Length; i++) {
+				if (CurrentRoute.Stations[i].Stops.Length != 0) {
 					// FirstStationIndex = i;
-					FirstStationPosition = Game.Stations[i].Stops[Game.Stations[i].Stops.Length - 1].TrackPosition;
-					if (Game.Stations[i].ArrivalTime < 0.0) {
-						if (Game.Stations[i].DepartureTime < 0.0) {
+					FirstStationPosition = CurrentRoute.Stations[i].Stops[CurrentRoute.Stations[i].Stops.Length - 1].TrackPosition;
+					if (CurrentRoute.Stations[i].ArrivalTime < 0.0) {
+						if (CurrentRoute.Stations[i].DepartureTime < 0.0) {
 							Game.SecondsSinceMidnight = 0.0;
 						} else {
-							Game.SecondsSinceMidnight = Game.Stations[i].DepartureTime - Game.Stations[i].StopTime;
+							Game.SecondsSinceMidnight = CurrentRoute.Stations[i].DepartureTime - CurrentRoute.Stations[i].StopTime;
 						}
 					} else {
-						Game.SecondsSinceMidnight = Game.Stations[i].ArrivalTime;
+						Game.SecondsSinceMidnight = CurrentRoute.Stations[i].ArrivalTime;
 					}
 					Game.StartupTime = Game.SecondsSinceMidnight;
 					break;

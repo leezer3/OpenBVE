@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBve.RouteManager;
 using SoundManager;
 
 namespace OpenBve
@@ -175,11 +176,11 @@ namespace OpenBve
 		/// <param name="ForwardsTolerance">The forwards tolerance for this stop point</param>
 		internal static void AttemptToOpenDoors(Train Train, int StationIndex, double BackwardsTolerance, double ForwardsTolerance)
 		{
-			if ((GetDoorsState(Train, Game.Stations[StationIndex].OpenLeftDoors, Game.Stations[StationIndex].OpenRightDoors) & TrainDoorState.AllOpened) == 0)
+			if ((GetDoorsState(Train, CurrentRoute.Stations[StationIndex].OpenLeftDoors, CurrentRoute.Stations[StationIndex].OpenRightDoors) & TrainDoorState.AllOpened) == 0)
 			{
 					if (Train.StationDistanceToStopPoint < BackwardsTolerance & -Train.StationDistanceToStopPoint < ForwardsTolerance)
 					{
-						OpenTrainDoors(Train, Game.Stations[StationIndex].OpenLeftDoors, Game.Stations[StationIndex].OpenRightDoors);
+						OpenTrainDoors(Train, CurrentRoute.Stations[StationIndex].OpenLeftDoors, CurrentRoute.Stations[StationIndex].OpenRightDoors);
 					}
 				
 			}

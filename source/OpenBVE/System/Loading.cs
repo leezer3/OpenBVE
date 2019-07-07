@@ -211,7 +211,7 @@ namespace OpenBve {
 				}
 			}
 
-			if (Game.Stations.Length == 1)
+			if (CurrentRoute.Stations.Length == 1)
 			{
 				//Log the fact that only a single station is present, as this is probably not right
 				Program.FileSystem.AppendToLogFile("The processed route file only contains a single station.");

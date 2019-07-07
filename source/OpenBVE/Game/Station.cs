@@ -5,8 +5,6 @@ namespace OpenBve
 {
 	internal static partial class Game
 	{
-		internal static RouteStation[] Stations = { };
-
 		/// <summary>The name of the initial station on game startup, if set via command-line arguments</summary>
 		internal static string InitialStationName;
 		/// <summary>The start time at the initial station, if set via command-line arguments</summary>
@@ -17,9 +15,9 @@ namespace OpenBve
 		{
 			if (Train.IsPlayerTrain)
 			{
-				return Stations[StationIndex].StopMode == StationStopMode.AllStop | Stations[StationIndex].StopMode == StationStopMode.PlayerStop | Stations[StationIndex].StopMode == StationStopMode.PlayerRequestStop | Stations[StationIndex].StopMode == StationStopMode.AllRequestStop;
+				return CurrentRoute.Stations[StationIndex].StopMode == StationStopMode.AllStop | CurrentRoute.Stations[StationIndex].StopMode == StationStopMode.PlayerStop | CurrentRoute.Stations[StationIndex].StopMode == StationStopMode.PlayerRequestStop | CurrentRoute.Stations[StationIndex].StopMode == StationStopMode.AllRequestStop;
 			}
-			return Stations[StationIndex].StopMode == StationStopMode.AllStop | Stations[StationIndex].StopMode == StationStopMode.PlayerPass | Stations[StationIndex].StopMode == StationStopMode.AllRequestStop;
+			return CurrentRoute.Stations[StationIndex].StopMode == StationStopMode.AllStop | CurrentRoute.Stations[StationIndex].StopMode == StationStopMode.PlayerPass | CurrentRoute.Stations[StationIndex].StopMode == StationStopMode.AllRequestStop;
 		}
 	}
 }

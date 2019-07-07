@@ -407,11 +407,11 @@ namespace OpenBve
 					Array.Resize(ref TrackManager.Tracks[0].Elements[n].Events, m + 1);
 					TrackManager.Tracks[0].Elements[n].Events[m] = new TrackManager.StationStartEvent(0.0, s);
 					double dx, dy = 3.0;
-					if (Game.Stations[s].OpenLeftDoors & !Game.Stations[s].OpenRightDoors)
+					if (CurrentRoute.Stations[s].OpenLeftDoors & !CurrentRoute.Stations[s].OpenRightDoors)
 					{
 						dx = -5.0;
 					}
-					else if (!Game.Stations[s].OpenLeftDoors & Game.Stations[s].OpenRightDoors)
+					else if (!CurrentRoute.Stations[s].OpenLeftDoors & CurrentRoute.Stations[s].OpenRightDoors)
 					{
 						dx = 5.0;
 					}
@@ -419,7 +419,7 @@ namespace OpenBve
 					{
 						dx = 0.0;
 					}
-					Game.Stations[s].SoundOrigin = Position + dx * TrackManager.Tracks[0].Elements[n].WorldSide + dy * TrackManager.Tracks[0].Elements[n].WorldUp;
+					CurrentRoute.Stations[s].SoundOrigin = Position + dx * TrackManager.Tracks[0].Elements[n].WorldSide + dy * TrackManager.Tracks[0].Elements[n].WorldUp;
 					// passalarm
 					if (!PreviewOnly)
 					{
@@ -443,18 +443,18 @@ namespace OpenBve
 				for (int j = 0; j < Data.Blocks[i].StopPositions.Length; j++)
 				{
 					int s = Data.Blocks[i].StopPositions[j].Station;
-					int t = Game.Stations[s].Stops.Length;
-					Array.Resize(ref Game.Stations[s].Stops, t + 1);
-					Game.Stations[s].Stops[t].TrackPosition = Data.Blocks[i].StopPositions[j].TrackPosition;
-					Game.Stations[s].Stops[t].ForwardTolerance = Data.Blocks[i].StopPositions[j].ForwardTolerance;
-					Game.Stations[s].Stops[t].BackwardTolerance = Data.Blocks[i].StopPositions[j].BackwardTolerance;
-					Game.Stations[s].Stops[t].Cars = Data.Blocks[i].StopPositions[j].Cars;
+					int t = CurrentRoute.Stations[s].Stops.Length;
+					Array.Resize(ref CurrentRoute.Stations[s].Stops, t + 1);
+					CurrentRoute.Stations[s].Stops[t].TrackPosition = Data.Blocks[i].StopPositions[j].TrackPosition;
+					CurrentRoute.Stations[s].Stops[t].ForwardTolerance = Data.Blocks[i].StopPositions[j].ForwardTolerance;
+					CurrentRoute.Stations[s].Stops[t].BackwardTolerance = Data.Blocks[i].StopPositions[j].BackwardTolerance;
+					CurrentRoute.Stations[s].Stops[t].Cars = Data.Blocks[i].StopPositions[j].Cars;
 					double dx, dy = 2.0;
-					if (Game.Stations[s].OpenLeftDoors & !Game.Stations[s].OpenRightDoors)
+					if (CurrentRoute.Stations[s].OpenLeftDoors & !CurrentRoute.Stations[s].OpenRightDoors)
 					{
 						dx = -5.0;
 					}
-					else if (!Game.Stations[s].OpenLeftDoors & Game.Stations[s].OpenRightDoors)
+					else if (!CurrentRoute.Stations[s].OpenLeftDoors & CurrentRoute.Stations[s].OpenRightDoors)
 					{
 						dx = 5.0;
 					}
@@ -463,7 +463,7 @@ namespace OpenBve
 						dx = 0.0;
 					}
 
-					Game.Stations[s].SoundOrigin = Position + dx * TrackManager.Tracks[0].Elements[n].WorldSide + dy * TrackManager.Tracks[0].Elements[n].WorldUp;
+					CurrentRoute.Stations[s].SoundOrigin = Position + dx * TrackManager.Tracks[0].Elements[n].WorldSide + dy * TrackManager.Tracks[0].Elements[n].WorldUp;
 				}
 				// limit
 				for (int j = 0; j < Data.Blocks[i].Limits.Length; j++)
@@ -1595,12 +1595,12 @@ namespace OpenBve
 				}
 			}
 			// insert station end events
-			for (int i = 0; i < Game.Stations.Length; i++)
+			for (int i = 0; i < CurrentRoute.Stations.Length; i++)
 			{
-				int j = Game.Stations[i].Stops.Length - 1;
+				int j = CurrentRoute.Stations[i].Stops.Length - 1;
 				if (j >= 0)
 				{
-					double p = Game.Stations[i].Stops[j].TrackPosition + Game.Stations[i].Stops[j].ForwardTolerance + Data.BlockInterval;
+					double p = CurrentRoute.Stations[i].Stops[j].TrackPosition + CurrentRoute.Stations[i].Stops[j].ForwardTolerance + Data.BlockInterval;
 					int k = (int)Math.Floor(p / (double)Data.BlockInterval) - Data.FirstUsedBlock;
 					if (k >= 0 & k < Data.Blocks.Length)
 					{
@@ -1614,20 +1614,20 @@ namespace OpenBve
 			// create default point of interests
 			if (Game.PointsOfInterest.Length == 0)
 			{
-				Game.PointsOfInterest = new RouteManager.PointOfInterest[Game.Stations.Length];
+				Game.PointsOfInterest = new RouteManager.PointOfInterest[CurrentRoute.Stations.Length];
 				int n = 0;
-				for (int i = 0; i < Game.Stations.Length; i++)
+				for (int i = 0; i < CurrentRoute.Stations.Length; i++)
 				{
-					if (Game.Stations[i].Stops.Length != 0)
+					if (CurrentRoute.Stations[i].Stops.Length != 0)
 					{
-						Game.PointsOfInterest[n].Text = Game.Stations[i].Name;
-						Game.PointsOfInterest[n].TrackPosition = Game.Stations[i].Stops[0].TrackPosition;
+						Game.PointsOfInterest[n].Text = CurrentRoute.Stations[i].Name;
+						Game.PointsOfInterest[n].TrackPosition = CurrentRoute.Stations[i].Stops[0].TrackPosition;
 						Game.PointsOfInterest[n].TrackOffset = new Vector3(0.0, 2.8, 0.0);
-						if (Game.Stations[i].OpenLeftDoors & !Game.Stations[i].OpenRightDoors)
+						if (CurrentRoute.Stations[i].OpenLeftDoors & !CurrentRoute.Stations[i].OpenRightDoors)
 						{
 							Game.PointsOfInterest[n].TrackOffset.X = -2.5;
 						}
-						else if (!Game.Stations[i].OpenLeftDoors & Game.Stations[i].OpenRightDoors)
+						else if (!CurrentRoute.Stations[i].OpenLeftDoors & CurrentRoute.Stations[i].OpenRightDoors)
 						{
 							Game.PointsOfInterest[n].TrackOffset.X = 2.5;
 						}
@@ -1666,33 +1666,33 @@ namespace OpenBve
 			{
 				Array.Resize(ref TrackManager.Tracks[i].Elements, CurrentTrackLength);
 			}
-			for (int i = 0; i < Game.Stations.Length; i++)
+			for (int i = 0; i < CurrentRoute.Stations.Length; i++)
 			{
-				if (Game.Stations[i].Stops.Length == 0 & Game.Stations[i].StopMode != StationStopMode.AllPass)
+				if (CurrentRoute.Stations[i].Stops.Length == 0 & CurrentRoute.Stations[i].StopMode != StationStopMode.AllPass)
 				{
-					Interface.AddMessage(MessageType.Warning, false, "Station " + Game.Stations[i].Name + " expects trains to stop but does not define stop points at track position " + Game.Stations[i].DefaultTrackPosition.ToString(Culture) + " in file " + FileName);
-					Game.Stations[i].StopMode = StationStopMode.AllPass;
+					Interface.AddMessage(MessageType.Warning, false, "Station " + CurrentRoute.Stations[i].Name + " expects trains to stop but does not define stop points at track position " + CurrentRoute.Stations[i].DefaultTrackPosition.ToString(Culture) + " in file " + FileName);
+					CurrentRoute.Stations[i].StopMode = StationStopMode.AllPass;
 				}
-				if (Game.Stations[i].Type == StationType.ChangeEnds)
+				if (CurrentRoute.Stations[i].Type == StationType.ChangeEnds)
 				{
-					if (i < Game.Stations.Length - 1)
+					if (i < CurrentRoute.Stations.Length - 1)
 					{
-						if (Game.Stations[i + 1].StopMode != StationStopMode.AllStop)
+						if (CurrentRoute.Stations[i + 1].StopMode != StationStopMode.AllStop)
 						{
-							Interface.AddMessage(MessageType.Warning, false, "Station " + Game.Stations[i].Name + " is marked as \"change ends\" but the subsequent station does not expect all trains to stop in file " + FileName);
-							Game.Stations[i + 1].StopMode = StationStopMode.AllStop;
+							Interface.AddMessage(MessageType.Warning, false, "Station " + CurrentRoute.Stations[i].Name + " is marked as \"change ends\" but the subsequent station does not expect all trains to stop in file " + FileName);
+							CurrentRoute.Stations[i + 1].StopMode = StationStopMode.AllStop;
 						}
 					}
 					else
 					{
-						Interface.AddMessage(MessageType.Warning, false, "Station " + Game.Stations[i].Name + " is marked as \"change ends\" but there is no subsequent station defined in file " + FileName);
-						Game.Stations[i].Type = StationType.Terminal;
+						Interface.AddMessage(MessageType.Warning, false, "Station " + CurrentRoute.Stations[i].Name + " is marked as \"change ends\" but there is no subsequent station defined in file " + FileName);
+						CurrentRoute.Stations[i].Type = StationType.Terminal;
 					}
 				}
 			}
-			if (Game.Stations.Length != 0)
+			if (CurrentRoute.Stations.Length != 0)
 			{
-				Game.Stations[Game.Stations.Length - 1].Type = StationType.Terminal;
+				CurrentRoute.Stations[CurrentRoute.Stations.Length - 1].Type = StationType.Terminal;
 			}
 			if (TrackManager.Tracks[0].Elements.Length != 0)
 			{
@@ -1715,7 +1715,7 @@ namespace OpenBve
 							if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationStartEvent)
 							{
 								TrackManager.StationStartEvent station = (TrackManager.StationStartEvent)TrackManager.Tracks[0].Elements[i].Events[j];
-								if (Game.Stations[station.StationIndex].SafetySystem == SafetySystem.Atc)
+								if (CurrentRoute.Stations[station.StationIndex].SafetySystem == SafetySystem.Atc)
 								{
 									Array.Resize(ref TrackManager.Tracks[0].Elements[i].Events, TrackManager.Tracks[0].Elements[i].Events.Length + 2);
 									TrackManager.Tracks[0].Elements[i].Events[TrackManager.Tracks[0].Elements[i].Events.Length - 2] = new TrackManager.TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcTrackStatus, 0, 0, false);
@@ -1729,7 +1729,7 @@ namespace OpenBve
 							if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationStartEvent)
 							{
 								TrackManager.StationStartEvent station = (TrackManager.StationStartEvent)TrackManager.Tracks[0].Elements[i].Events[j];
-								if (Game.Stations[station.StationIndex].SafetySystem == SafetySystem.Ats)
+								if (CurrentRoute.Stations[station.StationIndex].SafetySystem == SafetySystem.Ats)
 								{
 									Array.Resize(ref TrackManager.Tracks[0].Elements[i].Events, TrackManager.Tracks[0].Elements[i].Events.Length + 2);
 									TrackManager.Tracks[0].Elements[i].Events[TrackManager.Tracks[0].Elements[i].Events.Length - 2] = new TrackManager.TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcTrackStatus, 2, 0, false);
@@ -1739,13 +1739,13 @@ namespace OpenBve
 							else if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationEndEvent)
 							{
 								TrackManager.StationEndEvent station = (TrackManager.StationEndEvent)TrackManager.Tracks[0].Elements[i].Events[j];
-								if (Game.Stations[station.StationIndex].SafetySystem == SafetySystem.Atc)
+								if (CurrentRoute.Stations[station.StationIndex].SafetySystem == SafetySystem.Atc)
 								{
 									Array.Resize(ref TrackManager.Tracks[0].Elements[i].Events, TrackManager.Tracks[0].Elements[i].Events.Length + 2);
 									TrackManager.Tracks[0].Elements[i].Events[TrackManager.Tracks[0].Elements[i].Events.Length - 2] = new TrackManager.TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcTrackStatus, 1, 0, false);
 									TrackManager.Tracks[0].Elements[i].Events[TrackManager.Tracks[0].Elements[i].Events.Length - 1] = new TrackManager.TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcTrackStatus, 2, 0, false);
 								}
-								else if (Game.Stations[station.StationIndex].SafetySystem == SafetySystem.Ats)
+								else if (CurrentRoute.Stations[station.StationIndex].SafetySystem == SafetySystem.Ats)
 								{
 									Array.Resize(ref TrackManager.Tracks[0].Elements[i].Events, TrackManager.Tracks[0].Elements[i].Events.Length + 2);
 									TrackManager.Tracks[0].Elements[i].Events[TrackManager.Tracks[0].Elements[i].Events.Length - 2] = new TrackManager.TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcTrackStatus, 3, 0, false);

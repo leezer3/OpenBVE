@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using LibRender;
+using OpenBve.RouteManager;
 using OpenBveApi;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
@@ -70,7 +71,7 @@ namespace OpenBve {
 					for (int j = 0; j < TrackManager.Tracks[0].Elements[i].Events.Length; j++)
 					{
 						TrackManager.StationStartEvent sse = TrackManager.Tracks[0].Elements[i].Events[j] as TrackManager.StationStartEvent;
-						if (sse != null && Game.Stations[sse.StationIndex].Name != string.Empty)
+						if (sse != null && CurrentRoute.Stations[sse.StationIndex].Name != string.Empty)
 						{
 							if (Limit == -1.0) Limit = LastLimit;
 							// update station
@@ -79,14 +80,14 @@ namespace OpenBve {
 								Array.Resize<Station>(ref Stations, Stations.Length << 1);
 							}
 
-							Stations[n].Name = Game.Stations[sse.StationIndex].Name;
-							Stations[n].NameJapanese = Game.Stations[sse.StationIndex].Name.IsJapanese();
-							Stations[n].Pass = !Game.Stations[sse.StationIndex].PlayerStops();
-							Stations[n].Terminal = Game.Stations[sse.StationIndex].Type != StationType.Normal;
+							Stations[n].Name = CurrentRoute.Stations[sse.StationIndex].Name;
+							Stations[n].NameJapanese = CurrentRoute.Stations[sse.StationIndex].Name.IsJapanese();
+							Stations[n].Pass = !CurrentRoute.Stations[sse.StationIndex].PlayerStops();
+							Stations[n].Terminal = CurrentRoute.Stations[sse.StationIndex].Type != StationType.Normal;
 							double x;
-							if (Game.Stations[sse.StationIndex].ArrivalTime >= 0.0)
+							if (CurrentRoute.Stations[sse.StationIndex].ArrivalTime >= 0.0)
 							{
-								x = Game.Stations[sse.StationIndex].ArrivalTime;
+								x = CurrentRoute.Stations[sse.StationIndex].ArrivalTime;
 								x -= 86400.0 * Math.Floor(x / 86400.0);
 								int hours = (int) Math.Floor(x / 3600.0);
 								x -= 3600.0 * (double) hours;
@@ -105,9 +106,9 @@ namespace OpenBve {
 								Stations[n].Arrival.Second = "";
 							}
 
-							if (Game.Stations[sse.StationIndex].DepartureTime >= 0.0)
+							if (CurrentRoute.Stations[sse.StationIndex].DepartureTime >= 0.0)
 							{
-								x = Game.Stations[sse.StationIndex].DepartureTime;
+								x = CurrentRoute.Stations[sse.StationIndex].DepartureTime;
 								x -= 86400.0 * Math.Floor(x / 86400.0);
 								int hours = (int) Math.Floor(x / 3600.0);
 								x -= 3600.0 * (double) hours;
@@ -141,13 +142,13 @@ namespace OpenBve {
 								// time
 								if (LastTime >= 0.0)
 								{
-									if (Game.Stations[sse.StationIndex].ArrivalTime >= 0.0)
+									if (CurrentRoute.Stations[sse.StationIndex].ArrivalTime >= 0.0)
 									{
-										x = Game.Stations[sse.StationIndex].ArrivalTime;
+										x = CurrentRoute.Stations[sse.StationIndex].ArrivalTime;
 									}
-									else if (Game.Stations[sse.StationIndex].DepartureTime >= 0.0)
+									else if (CurrentRoute.Stations[sse.StationIndex].DepartureTime >= 0.0)
 									{
-										x = Game.Stations[sse.StationIndex].DepartureTime;
+										x = CurrentRoute.Stations[sse.StationIndex].DepartureTime;
 									}
 									else x = -1.0;
 
@@ -179,13 +180,13 @@ namespace OpenBve {
 							}
 
 							// update last data
-							if (Game.Stations[sse.StationIndex].DepartureTime >= 0.0)
+							if (CurrentRoute.Stations[sse.StationIndex].DepartureTime >= 0.0)
 							{
-								LastTime = Game.Stations[sse.StationIndex].DepartureTime;
+								LastTime = CurrentRoute.Stations[sse.StationIndex].DepartureTime;
 							}
-							else if (Game.Stations[sse.StationIndex].ArrivalTime >= 0.0)
+							else if (CurrentRoute.Stations[sse.StationIndex].ArrivalTime >= 0.0)
 							{
-								LastTime = Game.Stations[sse.StationIndex].ArrivalTime;
+								LastTime = CurrentRoute.Stations[sse.StationIndex].ArrivalTime;
 							}
 							else
 							{

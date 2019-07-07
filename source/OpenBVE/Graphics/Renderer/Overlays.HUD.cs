@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBve.RouteManager;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Textures;
@@ -409,20 +410,20 @@ namespace OpenBve
 				case "stopnone":
 				{
 					int s = TrainManager.PlayerTrain.Station;
-					if (s >= 0 && Game.Stations[s].PlayerStops() && Interface.CurrentOptions.GameMode != Interface.GameMode.Expert)
+					if (s >= 0 && CurrentRoute.Stations[s].PlayerStops() && Interface.CurrentOptions.GameMode != Interface.GameMode.Expert)
 					{
 						bool cond;
 						if (Command == "stopleft")
 						{
-							cond = Game.Stations[s].OpenLeftDoors;
+							cond = CurrentRoute.Stations[s].OpenLeftDoors;
 						}
 						else if (Command == "stopright")
 						{
-							cond = Game.Stations[s].OpenRightDoors;
+							cond = CurrentRoute.Stations[s].OpenRightDoors;
 						}
 						else
 						{
-							cond = !Game.Stations[s].OpenLeftDoors & !Game.Stations[s].OpenRightDoors;
+							cond = !CurrentRoute.Stations[s].OpenLeftDoors & !CurrentRoute.Stations[s].OpenRightDoors;
 						}
 						if (TrainManager.PlayerTrain.StationState == TrainStopState.Pending & cond)
 						{
@@ -447,23 +448,23 @@ namespace OpenBve
 				case "stopnonetick":
 				{
 					int s = TrainManager.PlayerTrain.Station;
-					if (s >= 0 && Game.Stations[s].PlayerStops() && Interface.CurrentOptions.GameMode != Interface.GameMode.Expert)
+					if (s >= 0 && CurrentRoute.Stations[s].PlayerStops() && Interface.CurrentOptions.GameMode != Interface.GameMode.Expert)
 					{
-						int c = Game.Stations[s].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
+						int c = CurrentRoute.Stations[s].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
 						if (c >= 0)
 						{
 							bool cond;
 							if (Command == "stoplefttick")
 							{
-								cond = Game.Stations[s].OpenLeftDoors;
+								cond = CurrentRoute.Stations[s].OpenLeftDoors;
 							}
 							else if (Command == "stoprighttick")
 							{
-								cond = Game.Stations[s].OpenRightDoors;
+								cond = CurrentRoute.Stations[s].OpenRightDoors;
 							}
 							else
 							{
-								cond = !Game.Stations[s].OpenLeftDoors & !Game.Stations[s].OpenRightDoors;
+								cond = !CurrentRoute.Stations[s].OpenLeftDoors & !CurrentRoute.Stations[s].OpenRightDoors;
 							}
 							if (TrainManager.PlayerTrain.StationState == TrainStopState.Pending & cond)
 							{
@@ -479,11 +480,11 @@ namespace OpenBve
 							double r;
 							if (d > 0.0)
 							{
-								r = d / Game.Stations[s].Stops[c].BackwardTolerance;
+								r = d / CurrentRoute.Stations[s].Stops[c].BackwardTolerance;
 							}
 							else
 							{
-								r = d / Game.Stations[s].Stops[c].ForwardTolerance;
+								r = d / CurrentRoute.Stations[s].Stops[c].ForwardTolerance;
 							}
 							if (r < -1.0) r = -1.0;
 							if (r > 1.0) r = 1.0;
@@ -609,25 +610,25 @@ namespace OpenBve
 					{
 						i = TrainManager.PlayerTrain.LastStation + 1;
 					}
-					if (i > Game.Stations.Length - 1)
+					if (i > CurrentRoute.Stations.Length - 1)
 					{
 						i = TrainManager.PlayerTrain.LastStation;
 					}
-					int n = Game.Stations[i].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
+					int n = CurrentRoute.Stations[i].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
 					double p0 = TrainManager.PlayerTrain.FrontCarTrackPosition();
 					double p1;
-					if (Game.Stations[i].Stops.Length > 0)
+					if (CurrentRoute.Stations[i].Stops.Length > 0)
 					{
-						p1 = Game.Stations[i].Stops[n].TrackPosition;
+						p1 = CurrentRoute.Stations[i].Stops[n].TrackPosition;
 					}
 					else
 					{
-						p1 = Game.Stations[i].DefaultTrackPosition;
+						p1 = CurrentRoute.Stations[i].DefaultTrackPosition;
 					}
 					double m = p1 - p0;
 					if (OptionDistanceToNextStation == DistanceToNextStationDisplayMode.Km)
 					{
-						if (Game.Stations[i].PlayerStops())
+						if (CurrentRoute.Stations[i].PlayerStops())
 						{
 							t = "Stop: ";
 							if (Math.Abs(m) <= 10.0)
@@ -651,7 +652,7 @@ namespace OpenBve
 					else if (OptionDistanceToNextStation == DistanceToNextStationDisplayMode.Mile)
 					{
 						m /= 1609.34;
-						if (Game.Stations[i].PlayerStops())
+						if (CurrentRoute.Stations[i].PlayerStops())
 						{
 							t = "Stop: ";
 						}
@@ -666,7 +667,7 @@ namespace OpenBve
 					else
 					{
 						m /= 1609.34;
-						if (Game.Stations[i].PlayerStops())
+						if (CurrentRoute.Stations[i].PlayerStops())
 						{
 							t = "Stop: ";
 						}

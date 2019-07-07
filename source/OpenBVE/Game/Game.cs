@@ -63,7 +63,7 @@ namespace OpenBve {
 			CurrentRoute.InitialElevation = 0.0;
 			Atmosphere.SeaLevelAirPressure = 101325.0;
 			Atmosphere.SeaLevelAirTemperature = 293.15;
-			Stations = new RouteStation[] { };
+			CurrentRoute.Stations = new RouteStation[] { };
 			CurrentRoute.Sections = new Section[] { };
 			BufferTrackPositions = new double[] { };
 			//Messages = new Message[] { };

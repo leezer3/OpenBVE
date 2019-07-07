@@ -26,7 +26,7 @@ namespace OpenBve
 			internal Coupler[] Couplers;
 			internal TrainSpecs Specs;
 			internal TrainPassengers Passengers;
-			internal int Station;
+			
 			internal double StationArrivalTime;
 			internal double StationDepartureTime;
 			internal bool StationDepartureSoundPlayed;
@@ -34,7 +34,7 @@ namespace OpenBve
 			internal double StationDistanceToStopPoint;
 			
 			
-			internal double TimetableDelta;
+			
 			internal Game.GeneralAI AI;
 			private double InternalTimerTimeElapsed;
 			internal bool Derailed;
@@ -129,17 +129,17 @@ namespace OpenBve
 					double time = 0.0;
 					if (!forceIntroduction)
 					{
-						for (int i = 0; i < Game.Stations.Length; i++)
+						for (int i = 0; i < CurrentRoute.Stations.Length; i++)
 						{
-							if (Game.Stations[i].StopMode == StationStopMode.AllStop | Game.Stations[i].StopMode == StationStopMode.PlayerPass)
+							if (CurrentRoute.Stations[i].StopMode == StationStopMode.AllStop | CurrentRoute.Stations[i].StopMode == StationStopMode.PlayerPass)
 							{
-								if (Game.Stations[i].ArrivalTime >= 0.0)
+								if (CurrentRoute.Stations[i].ArrivalTime >= 0.0)
 								{
-									time = Game.Stations[i].ArrivalTime;
+									time = CurrentRoute.Stations[i].ArrivalTime;
 								}
-								else if (Game.Stations[i].DepartureTime >= 0.0)
+								else if (CurrentRoute.Stations[i].DepartureTime >= 0.0)
 								{
-									time = Game.Stations[i].DepartureTime - Game.Stations[i].StopTime;
+									time = CurrentRoute.Stations[i].DepartureTime - CurrentRoute.Stations[i].StopTime;
 								}
 								break;
 							}

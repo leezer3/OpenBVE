@@ -79,7 +79,7 @@ namespace OpenBve {
 			CurrentRoute.InitialElevation = 0.0;
 			Atmosphere.SeaLevelAirPressure = 101325.0;
 			Atmosphere.SeaLevelAirTemperature = 293.15;
-			Stations = new RouteStation[] { };
+			CurrentRoute.Stations = new RouteStation[] { };
 			CurrentRoute.Sections = new Section[] { };
 			BufferTrackPositions = new double[] { };
 			MarkerTextures = new Texture[] { };
@@ -115,7 +115,7 @@ namespace OpenBve {
 
 		// ================================
 
-		internal static RouteStation[] Stations = { };
+		
 		
 
 		// ================================
@@ -151,7 +151,7 @@ namespace OpenBve {
 			if (d >= 0) {
 				// look for train in previous blocks
 				//int l = Sections[SectionIndex].PreviousSection;
-				if (Stations[d].Type != StationType.Normal) {
+				if (CurrentRoute.Stations[d].Type != StationType.Normal) {
 					settored = true;
 				}
 			}

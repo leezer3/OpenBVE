@@ -173,7 +173,7 @@ namespace OpenBve {
 							// if StationStartEvent found, look for a change in ATS/ATC control;
 							// if there is a change, draw all previous track elements
 							// with colour for the previous control state
-							if (Game.Stations[e.StationIndex].SafetySystem == SafetySystem.Atc)
+							if (CurrentRoute.Stations[e.StationIndex].SafetySystem == SafetySystem.Atc)
 							{
 								if (!atc)
 								{
@@ -208,7 +208,7 @@ namespace OpenBve {
 					if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationStartEvent)
 					{
 						TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.Tracks[0].Elements[i].Events[j];
-						if (Game.Stations[e.StationIndex].Name != string.Empty)
+						if (CurrentRoute.Stations[e.StationIndex].Name != string.Empty)
 						{
 							double x = TrackManager.Tracks[0].Elements[i].WorldPosition.X;
 							double y = TrackManager.Tracks[0].Elements[i].WorldPosition.Z;
@@ -217,7 +217,7 @@ namespace OpenBve {
 							// station circle
 							RectangleF r = new RectangleF((float)x - StationRadius, (float)y - StationRadius,
 								StationDiameter, StationDiameter);
-							bool q = Game.Stations[e.StationIndex].PlayerStops();
+							bool q = CurrentRoute.Stations[e.StationIndex].PlayerStops();
 							g.FillEllipse(q ? mapColors[mode].actStatnFill : mapColors[mode].inactStatnFill, r);
 							g.DrawEllipse(q ? mapColors[mode].actStatnBrdr : mapColors[mode].inactStatnBrdr, r);
 							// adjust bitmap occupied area
@@ -245,14 +245,14 @@ namespace OpenBve {
 						if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationStartEvent)
 						{
 							TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.Tracks[0].Elements[i].Events[j];
-							if (Game.Stations[e.StationIndex].Name != string.Empty)
+							if (CurrentRoute.Stations[e.StationIndex].Name != string.Empty)
 							{
 								double x = TrackManager.Tracks[0].Elements[i].WorldPosition.X;
 								double y = TrackManager.Tracks[0].Elements[i].WorldPosition.Z;
 								x = ox + (x - x0) * xd;
 								y = oy + (z0 - y) * zd + h;
-								bool stop = Game.Stations[e.StationIndex].PlayerStops();
-								string t = Game.Stations[e.StationIndex].Name;
+								bool stop = CurrentRoute.Stations[e.StationIndex].PlayerStops();
+								string t = CurrentRoute.Stations[e.StationIndex].Name;
 								SizeF m = g.MeasureString(t, f, Width, StringFormat.GenericDefault);
 								double sx = TrackManager.Tracks[0].Elements[i].WorldSide.X;
 								double sz = TrackManager.Tracks[0].Elements[i].WorldSide.Z;
@@ -361,7 +361,7 @@ namespace OpenBve {
 		/// <param name="inGame"><c>true</c> = bitmap for in-game overlay | <c>false</c> = for standard window.</param>
 		internal static Bitmap CreateRouteGradientProfile(int Width, int Height, bool inGame)
 		{
-			if (TrackManager.Tracks[0].Elements.Length > 36 && Game.Stations.Length == 0)
+			if (TrackManager.Tracks[0].Elements.Length > 36 && CurrentRoute.Stations.Length == 0)
 			{
 				// If we have track elements, but no stations, show a specific error message, rather
 				// than the more generic one thrown later
@@ -449,17 +449,17 @@ namespace OpenBve {
 						if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationStartEvent)
 						{
 							TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.Tracks[0].Elements[i].Events[j];
-							if (Game.Stations[e.StationIndex].Name != string.Empty)
+							if (CurrentRoute.Stations[e.StationIndex].Name != string.Empty)
 							{
-								bool stop = Game.Stations[e.StationIndex].PlayerStops();
-								if (Game.Stations[e.StationIndex].Name.IsJapanese())
+								bool stop = CurrentRoute.Stations[e.StationIndex].PlayerStops();
+								if (CurrentRoute.Stations[e.StationIndex].Name.IsJapanese())
 								{
 									m.Alignment = StringAlignment.Near;
 									m.LineAlignment = StringAlignment.Near;
 									double x = ox + (double)(i - n0) * nd;
 									double y = oy + (h - 0.5 *
 										(double)(TrackManager.Tracks[0].Elements[i].WorldPosition.Y - y0) * yd);
-									string t = Game.Stations[e.StationIndex].Name;
+									string t = CurrentRoute.Stations[e.StationIndex].Name;
 									float tx = 0.0f, ty = (float)oy;
 									for (int k = 0; k < t.Length; k++)
 									{
@@ -485,11 +485,11 @@ namespace OpenBve {
 										(double)(TrackManager.Tracks[0].Elements[i].WorldPosition.Y - y0) * yd);
 									g.RotateTransform(-90.0f);
 									g.TranslateTransform((float)x, (float)oy, System.Drawing.Drawing2D.MatrixOrder.Append);
-									g.DrawString(Game.Stations[e.StationIndex].Name, f,
+									g.DrawString(CurrentRoute.Stations[e.StationIndex].Name, f,
 										stop ? mapColors[mode].actNameText : mapColors[mode].inactNameText,
 										new PointF(0.0f, -5.0f), m);
 									g.ResetTransform();
-									SizeF s = g.MeasureString(Game.Stations[e.StationIndex].Name, f);
+									SizeF s = g.MeasureString(CurrentRoute.Stations[e.StationIndex].Name, f);
 									g.DrawLine(stop ? mapColors[mode].actNameBrdr : mapColors[mode].inactNameBrdr,
 										new PointF((float)x, (float)(oy + s.Width + 4)), new PointF((float)x, (float)y));
 								}

@@ -51,12 +51,12 @@ namespace OpenBve
 			{
 				// look for train in previous blocks
 				int l = CurrentRoute.Sections[SectionIndex].PreviousSection;
-				TrainManager.Train train = null;
+				AbstractTrain train = null;
 				while (true)
 				{
 					if (l >= 0)
 					{
-						train = (TrainManager.Train) CurrentRoute.Sections[l].GetFirstTrain(false);
+						train = CurrentRoute.Sections[l].GetFirstTrain(false);
 						if (train != null)
 						{
 							break;
@@ -90,11 +90,11 @@ namespace OpenBve
 					{
 						if (train.Station == d)
 						{
-							int c = Game.Stations[d].GetStopIndex(train.NumberOfCars);
+							int c = CurrentRoute.Stations[d].GetStopIndex(train.NumberOfCars);
 							if (c >= 0)
 							{
 								double p0 = train.FrontCarTrackPosition();
-								double p1 = Stations[d].Stops[c].TrackPosition - Stations[d].Stops[c].BackwardTolerance;
+								double p1 = CurrentRoute.Stations[d].Stops[c].TrackPosition - CurrentRoute.Stations[d].Stops[c].BackwardTolerance;
 								if (p0 >= p1)
 								{
 									CurrentRoute.Sections[SectionIndex].TrainReachedStopPoint = true;
@@ -107,15 +107,15 @@ namespace OpenBve
 						}
 					}
 					double t = -15.0;
-					if (Stations[d].DepartureTime >= 0.0)
+					if (CurrentRoute.Stations[d].DepartureTime >= 0.0)
 					{
-						t = Stations[d].DepartureTime - 15.0;
+						t = CurrentRoute.Stations[d].DepartureTime - 15.0;
 					}
-					else if (Stations[d].ArrivalTime >= 0.0)
+					else if (CurrentRoute.Stations[d].ArrivalTime >= 0.0)
 					{
-						t = Stations[d].ArrivalTime;
+						t = CurrentRoute.Stations[d].ArrivalTime;
 					}
-					if (train.IsPlayerTrain & Stations[d].Type != StationType.Normal & Stations[d].DepartureTime < 0.0)
+					if (train.IsPlayerTrain & CurrentRoute.Stations[d].Type != StationType.Normal & CurrentRoute.Stations[d].DepartureTime < 0.0)
 					{
 						settored = true;
 					}
@@ -128,7 +128,7 @@ namespace OpenBve
 						settored = true;
 					}
 				}
-				else if (Stations[d].Type != StationType.Normal)
+				else if (CurrentRoute.Stations[d].Type != StationType.Normal)
 				{
 					settored = true;
 				}

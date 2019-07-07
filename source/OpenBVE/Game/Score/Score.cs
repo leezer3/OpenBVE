@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBve.RouteManager;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
@@ -65,12 +66,12 @@ namespace OpenBve
 						int j = TrainManager.PlayerTrain.Station;
 						if (j >= 0)
 						{
-							int p = Game.Stations[j].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
+							int p = CurrentRoute.Stations[j].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
 							if (p >= 0)
 							{
 								if (Math.Abs(TrainManager.PlayerTrain.CurrentSpeed) < 0.1)
 								{
-									if (leftopen == Stations[j].OpenLeftDoors & rightopen == Stations[j].OpenRightDoors)
+									if (leftopen == CurrentRoute.Stations[j].OpenLeftDoors & rightopen == CurrentRoute.Stations[j].OpenRightDoors)
 									{
 										bad = false;
 									}
@@ -189,11 +190,11 @@ namespace OpenBve
 				// arrival
 				{
 					int j = TrainManager.PlayerTrain.Station;
-					if (j >= 0 & j < Stations.Length)
+					if (j >= 0 & j < CurrentRoute.Stations.Length)
 					{
 						if (j >= ArrivalStation & TrainManager.PlayerTrain.StationState == TrainStopState.Boarding)
 						{
-							if (j == 0 || Stations[j - 1].Type != StationType.ChangeEnds)
+							if (j == 0 || CurrentRoute.Stations[j - 1].Type != StationType.ChangeEnds)
 							{
 								// arrival
 								int xa = ScoreValueStationArrival;
@@ -204,9 +205,9 @@ namespace OpenBve
 								}
 								// early/late
 								int xb;
-								if (Stations[j].ArrivalTime >= 0)
+								if (CurrentRoute.Stations[j].ArrivalTime >= 0)
 								{
-									double d = SecondsSinceMidnight - Stations[j].ArrivalTime;
+									double d = SecondsSinceMidnight - CurrentRoute.Stations[j].ArrivalTime;
 									if (d >= -5.0 & d <= 0.0)
 									{
 										xb = ScoreValueStationPerfectTime;
@@ -233,19 +234,19 @@ namespace OpenBve
 								}
 								// position
 								int xc;
-								int p = Game.Stations[j].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
+								int p = CurrentRoute.Stations[j].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
 								if (p >= 0)
 								{
 									double d = TrainManager.PlayerTrain.StationDistanceToStopPoint;
 									double r;
 									if (d >= 0)
 									{
-										double t = Stations[j].Stops[p].BackwardTolerance;
+										double t = CurrentRoute.Stations[j].Stops[p].BackwardTolerance;
 										r = (Math.Sqrt(d * d + 1.0) - 1.0) / (Math.Sqrt(t * t + 1.0) - 1.0);
 									}
 									else
 									{
-										double t = Stations[j].Stops[p].ForwardTolerance;
+										double t = CurrentRoute.Stations[j].Stops[p].ForwardTolerance;
 										r = (Math.Sqrt(d * d + 1.0) - 1.0) / (Math.Sqrt(t * t + 1.0) - 1.0);
 									}
 									if (r < 0.01)
@@ -281,7 +282,7 @@ namespace OpenBve
 								// evaluation
 								if (Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade)
 								{
-									if (Stations[j].Type == StationType.Terminal)
+									if (CurrentRoute.Stations[j].Type == StationType.Terminal)
 									{
 										double y = (double)this.CurrentValue / (double)Maximum;
 										if (y < 0.0) y = 0.0;
@@ -303,10 +304,10 @@ namespace OpenBve
 				// departure
 				{
 					int j = TrainManager.PlayerTrain.Station;
-					if (j >= 0 & j < Stations.Length & j == DepartureStation)
+					if (j >= 0 & j < CurrentRoute.Stations.Length & j == DepartureStation)
 					{
 						bool q;
-						if (Stations[j].OpenLeftDoors | Stations[j].OpenRightDoors)
+						if (CurrentRoute.Stations[j].OpenLeftDoors | CurrentRoute.Stations[j].OpenRightDoors)
 						{
 							q = TrainManager.PlayerTrain.StationState == TrainStopState.Completed;
 						}
