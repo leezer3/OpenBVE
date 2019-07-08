@@ -107,6 +107,7 @@ namespace OpenBveApi.Interface
 											string key = trans_unit.Attribute("id").Value;
 											string text = LanguageCode != "en-US" ? target.Value : source.Value;
 											text = text.Replace("\\n", Environment.NewLine);
+											text = text.Replace("\\x20", " ");
 											switch (section)
 											{
 												case "handles":
@@ -232,6 +233,7 @@ namespace OpenBveApi.Interface
 											string key = trans_unit.Attribute("id").Value;
 											string text = LanguageCode != "en-US" ? target.Value : source.Value;
 											text = text.Replace("\\n", Environment.NewLine);
+											text = text.Replace("\\x20", " ");
 											if (LoadedStringCount >= InterfaceStrings.Length)
 											{
 												Array.Resize(ref InterfaceStrings, InterfaceStrings.Length << 1);
