@@ -106,7 +106,7 @@ namespace OpenBveApi.Interface
 											string section = group.Attribute("id").Value;
 											string key = trans_unit.Attribute("id").Value;
 											string text = LanguageCode != "en-US" ? target.Value : source.Value;
-
+											text = text.Replace("\\n", Environment.NewLine);
 											switch (section)
 											{
 												case "handles":
@@ -231,7 +231,7 @@ namespace OpenBveApi.Interface
 											string section = group.Attribute("id").Value;
 											string key = trans_unit.Attribute("id").Value;
 											string text = LanguageCode != "en-US" ? target.Value : source.Value;
-
+											text = text.Replace("\\n", Environment.NewLine);
 											if (LoadedStringCount >= InterfaceStrings.Length)
 											{
 												Array.Resize(ref InterfaceStrings, InterfaceStrings.Length << 1);
