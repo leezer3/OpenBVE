@@ -159,6 +159,19 @@ namespace OpenBve
 								}
 							}
 						}
+
+						if (this == PlayerTrain && Loading.SimulationSetup)
+						{
+							/* Loading has finished, but we still have an AI train in the current section
+							 * This may be caused by an iffy RunInterval value, or simply by having no sections							 *
+							 *
+							 * We must introduce the player's train as otherwise the cab and loop sounds are missing
+							 * NOTE: In this case, the signalling cannot prevent the player from colliding with
+							 * the AI train
+							 */
+
+							introduce = true;
+						}
 						if (introduce)
 						{
 							// train is introduced
