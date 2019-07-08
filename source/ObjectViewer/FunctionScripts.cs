@@ -658,7 +658,7 @@ namespace OpenBve {
 									}
 								}
 							}
-							Function.Stack[s] = q ? 1.0 : 0.0;
+							Function.Stack[s - 1] = q ? 1.0 : 0.0;
 						} else {
 							Function.Stack[s - 1] = 0.0;
 						}
@@ -690,7 +690,7 @@ namespace OpenBve {
 									}
 								}
 							}
-							Function.Stack[s] = q ? 1.0 : 0.0;
+							Function.Stack[s - 1] = q ? 1.0 : 0.0;
 						} else {
 							Function.Stack[s - 1] = 0.0;
 						}
