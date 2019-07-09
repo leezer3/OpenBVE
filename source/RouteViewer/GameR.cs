@@ -52,7 +52,7 @@ namespace OpenBve {
 
 		internal static void Reset() {
 			// track manager
-			TrackManager.CurrentTrack = new Track();
+			TrackManager.Tracks = new Track[] { new Track() };
 			// train manager
 			TrainManager.Trains = new TrainManager.Train[] { };
 			// game
