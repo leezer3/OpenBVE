@@ -83,7 +83,7 @@ namespace OpenBve {
 			CurrentRoute.Sections = new Section[] { };
 			BufferTrackPositions = new double[] { };
 			MarkerTextures = new Texture[] { };
-			PointsOfInterest = new PointOfInterest[] { };
+			CurrentRoute.PointsOfInterest = new PointOfInterest[] { };
 			CurrentRoute.BogusPretrainInstructions = new BogusPretrainInstruction[] { };
 			TrainName = "";
 			TrainStart = TrainStartMode.EmergencyBrakesNoAts;
@@ -215,6 +215,7 @@ namespace OpenBve {
 
 		// marker
 		internal static Texture[] MarkerTextures = new Texture[] { };
+
 		internal static void AddMarker(Texture Texture) {
 			int n = MarkerTextures.Length;
 			Array.Resize<Texture>(ref MarkerTextures, n + 1);
@@ -235,7 +236,7 @@ namespace OpenBve {
 
 		// ================================
 
-		internal static PointOfInterest[] PointsOfInterest = new PointOfInterest[] { };
+		
 
 		internal static bool ApplyPointOfInterest(int Value, bool Relative) {
 			double t = 0.0;
@@ -245,10 +246,10 @@ namespace OpenBve {
 				if (Value < 0) {
 					// previous poi
 					t = double.NegativeInfinity;
-					for (int i = 0; i < PointsOfInterest.Length; i++) {
-						if (PointsOfInterest[i].TrackPosition < World.CameraTrackFollower.TrackPosition) {
-							if (PointsOfInterest[i].TrackPosition > t) {
-								t = PointsOfInterest[i].TrackPosition;
+					for (int i = 0; i < CurrentRoute.PointsOfInterest.Length; i++) {
+						if (CurrentRoute.PointsOfInterest[i].TrackPosition < World.CameraTrackFollower.TrackPosition) {
+							if (CurrentRoute.PointsOfInterest[i].TrackPosition > t) {
+								t = CurrentRoute.PointsOfInterest[i].TrackPosition;
 								j = i;
 							}
 						}
@@ -256,10 +257,10 @@ namespace OpenBve {
 				} else if (Value > 0) {
 					// next poi
 					t = double.PositiveInfinity;
-					for (int i = 0; i < PointsOfInterest.Length; i++) {
-						if (PointsOfInterest[i].TrackPosition > World.CameraTrackFollower.TrackPosition) {
-							if (PointsOfInterest[i].TrackPosition < t) {
-								t = PointsOfInterest[i].TrackPosition;
+					for (int i = 0; i < CurrentRoute.PointsOfInterest.Length; i++) {
+						if (CurrentRoute.PointsOfInterest[i].TrackPosition > World.CameraTrackFollower.TrackPosition) {
+							if (CurrentRoute.PointsOfInterest[i].TrackPosition < t) {
+								t = CurrentRoute.PointsOfInterest[i].TrackPosition;
 								j = i;
 							}
 						}
@@ -267,15 +268,15 @@ namespace OpenBve {
 				}
 			} else {
 				// absolute
-				j = Value >= 0 & Value < PointsOfInterest.Length ? Value : -1;
+				j = Value >= 0 & Value < CurrentRoute.PointsOfInterest.Length ? Value : -1;
 			}
 			// process poi
 			if (j >= 0) {
 				TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, t, true, false);
-				Camera.CurrentAlignment.Position = PointsOfInterest[j].TrackOffset;
-				Camera.CurrentAlignment.Yaw = PointsOfInterest[j].TrackYaw;
-				Camera.CurrentAlignment.Pitch = PointsOfInterest[j].TrackPitch;
-				Camera.CurrentAlignment.Roll = PointsOfInterest[j].TrackRoll;
+				Camera.CurrentAlignment.Position = CurrentRoute.PointsOfInterest[j].TrackOffset;
+				Camera.CurrentAlignment.Yaw = CurrentRoute.PointsOfInterest[j].TrackYaw;
+				Camera.CurrentAlignment.Pitch = CurrentRoute.PointsOfInterest[j].TrackPitch;
+				Camera.CurrentAlignment.Roll = CurrentRoute.PointsOfInterest[j].TrackRoll;
 				Camera.CurrentAlignment.TrackPosition = t;
 				World.UpdateAbsoluteCamera(0.0);
 				return true;

@@ -16,7 +16,9 @@ namespace OpenBve.RouteManager
 		public static RouteStation[] Stations = { };
 		/// <summary>Holds all .PreTrain instructions for the current route</summary>
 		/// <remarks>Must be in distance and time ascending order</remarks>
-		public static BogusPretrainInstruction[] BogusPretrainInstructions = new BogusPretrainInstruction[] { };
+		public static BogusPretrainInstruction[] BogusPretrainInstructions = { };
+		/// <summary>Holds all points of interest within the game world</summary>
+		public static PointOfInterest[] PointsOfInterest = { };
 		/// <summary>The currently displayed background texture</summary>
 		public static BackgroundHandle CurrentBackground = new StaticBackground(null, 6, false);
 		/// <summary>The new background texture (Currently fading in)</summary>

@@ -68,7 +68,7 @@ namespace OpenBve {
 			BufferTrackPositions = new double[] { };
 			//Messages = new Message[] { };
 			MarkerTextures = new Texture[] { };
-			PointsOfInterest = new PointOfInterest[] { };
+			CurrentRoute.PointsOfInterest = new PointOfInterest[] { };
 			PrecedingTrainTimeDeltas = new double[] { };
 			PrecedingTrainSpeedLimit = double.PositiveInfinity;
 			CurrentRoute.BogusPretrainInstructions = new BogusPretrainInstruction[] { };

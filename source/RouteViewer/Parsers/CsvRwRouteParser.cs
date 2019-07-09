@@ -5837,24 +5837,24 @@ namespace OpenBve {
 								double d = Data.Blocks[i].PointsOfInterest[k].TrackPosition - StartingDistance;
 								double x = Data.Blocks[i].PointsOfInterest[k].X;
 								double y = Data.Blocks[i].PointsOfInterest[k].Y;
-								int m = Game.PointsOfInterest.Length;
-								Array.Resize(ref Game.PointsOfInterest, m + 1);
-								Game.PointsOfInterest[m].TrackPosition = Data.Blocks[i].PointsOfInterest[k].TrackPosition;
+								int m = CurrentRoute.PointsOfInterest.Length;
+								Array.Resize(ref CurrentRoute.PointsOfInterest, m + 1);
+								CurrentRoute.PointsOfInterest[m].TrackPosition = Data.Blocks[i].PointsOfInterest[k].TrackPosition;
 								if (i < Data.Blocks.Length - 1 && Data.Blocks[i + 1].Rail.Length > j) {
 									double dx = Data.Blocks[i + 1].Rail[j].RailEndX - Data.Blocks[i].Rail[j].RailStartX;
 									double dy = Data.Blocks[i + 1].Rail[j].RailEndY - Data.Blocks[i].Rail[j].RailStartY;
 									dx = Data.Blocks[i].Rail[j].RailStartX + d / Data.BlockInterval * dx;
 									dy = Data.Blocks[i].Rail[j].RailStartY + d / Data.BlockInterval * dy;
-									Game.PointsOfInterest[m].TrackOffset = new Vector3(x + dx, y + dy, 0.0);
+									CurrentRoute.PointsOfInterest[m].TrackOffset = new Vector3(x + dx, y + dy, 0.0);
 								} else {
 									double dx = Data.Blocks[i].Rail[j].RailStartX;
 									double dy = Data.Blocks[i].Rail[j].RailStartY;
-									Game.PointsOfInterest[m].TrackOffset = new Vector3(x + dx, y + dy, 0.0);
+									CurrentRoute.PointsOfInterest[m].TrackOffset = new Vector3(x + dx, y + dy, 0.0);
 								}
-								Game.PointsOfInterest[m].TrackYaw = Data.Blocks[i].PointsOfInterest[k].Yaw + planar;
-								Game.PointsOfInterest[m].TrackPitch = Data.Blocks[i].PointsOfInterest[k].Pitch + updown;
-								Game.PointsOfInterest[m].TrackRoll = Data.Blocks[i].PointsOfInterest[k].Roll;
-								Game.PointsOfInterest[m].Text = Data.Blocks[i].PointsOfInterest[k].Text;
+								CurrentRoute.PointsOfInterest[m].TrackYaw = Data.Blocks[i].PointsOfInterest[k].Yaw + planar;
+								CurrentRoute.PointsOfInterest[m].TrackPitch = Data.Blocks[i].PointsOfInterest[k].Pitch + updown;
+								CurrentRoute.PointsOfInterest[m].TrackRoll = Data.Blocks[i].PointsOfInterest[k].Roll;
+								CurrentRoute.PointsOfInterest[m].Text = Data.Blocks[i].PointsOfInterest[k].Text;
 							}
 						}
 						// poles
@@ -6486,23 +6486,23 @@ namespace OpenBve {
 				}
 			}
 			// create default point of interests
-			if (Game.PointsOfInterest.Length == 0) {
-				Game.PointsOfInterest = new RouteManager.PointOfInterest[CurrentRoute.Stations.Length];
+			if (CurrentRoute.PointsOfInterest.Length == 0) {
+				CurrentRoute.PointsOfInterest = new RouteManager.PointOfInterest[CurrentRoute.Stations.Length];
 				int n = 0;
 				for (int i = 0; i < CurrentRoute.Stations.Length; i++) {
 					if (CurrentRoute.Stations[i].Stops.Length != 0) {
-						Game.PointsOfInterest[n].Text = CurrentRoute.Stations[i].Name;
-						Game.PointsOfInterest[n].TrackPosition = CurrentRoute.Stations[i].Stops[0].TrackPosition;
-						Game.PointsOfInterest[n].TrackOffset = new Vector3(0.0, 2.8, 0.0);
+						CurrentRoute.PointsOfInterest[n].Text = CurrentRoute.Stations[i].Name;
+						CurrentRoute.PointsOfInterest[n].TrackPosition = CurrentRoute.Stations[i].Stops[0].TrackPosition;
+						CurrentRoute.PointsOfInterest[n].TrackOffset = new Vector3(0.0, 2.8, 0.0);
 						if (CurrentRoute.Stations[i].OpenLeftDoors & !CurrentRoute.Stations[i].OpenRightDoors) {
-							Game.PointsOfInterest[n].TrackOffset.X = -2.5;
+							CurrentRoute.PointsOfInterest[n].TrackOffset.X = -2.5;
 						} else if (!CurrentRoute.Stations[i].OpenLeftDoors & CurrentRoute.Stations[i].OpenRightDoors) {
-							Game.PointsOfInterest[n].TrackOffset.X = 2.5;
+							CurrentRoute.PointsOfInterest[n].TrackOffset.X = 2.5;
 						}
 						n++;
 					}
 				}
-				Array.Resize(ref Game.PointsOfInterest, n);
+				Array.Resize(ref CurrentRoute.PointsOfInterest, n);
 			}
 			// convert block-based cant into point-based cant
 			for (int i = CurrentTrackLength - 1; i >= 1; i--) {

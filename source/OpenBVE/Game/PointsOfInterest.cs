@@ -7,9 +7,6 @@ namespace OpenBve
 {
 	internal static partial class Game
 	{
-		/// <summary>Holds all points of interest within the game world</summary>
-		internal static PointOfInterest[] PointsOfInterest = new PointOfInterest[] { };
-
 		/// <summary>Moves the camera to a point of interest</summary>
 		/// <param name="Value">The value of the jump to perform:
 		/// -1= Previous POI
@@ -28,13 +25,13 @@ namespace OpenBve
 				{
 					// previous poi
 					t = double.NegativeInfinity;
-					for (int i = 0; i < PointsOfInterest.Length; i++)
+					for (int i = 0; i < CurrentRoute.PointsOfInterest.Length; i++)
 					{
-						if (PointsOfInterest[i].TrackPosition < World.CameraTrackFollower.TrackPosition)
+						if (CurrentRoute.PointsOfInterest[i].TrackPosition < World.CameraTrackFollower.TrackPosition)
 						{
-							if (PointsOfInterest[i].TrackPosition > t)
+							if (CurrentRoute.PointsOfInterest[i].TrackPosition > t)
 							{
-								t = PointsOfInterest[i].TrackPosition;
+								t = CurrentRoute.PointsOfInterest[i].TrackPosition;
 								j = i;
 							}
 						}
@@ -44,13 +41,13 @@ namespace OpenBve
 				{
 					// next poi
 					t = double.PositiveInfinity;
-					for (int i = 0; i < PointsOfInterest.Length; i++)
+					for (int i = 0; i < CurrentRoute.PointsOfInterest.Length; i++)
 					{
-						if (PointsOfInterest[i].TrackPosition > World.CameraTrackFollower.TrackPosition)
+						if (CurrentRoute.PointsOfInterest[i].TrackPosition > World.CameraTrackFollower.TrackPosition)
 						{
-							if (PointsOfInterest[i].TrackPosition < t)
+							if (CurrentRoute.PointsOfInterest[i].TrackPosition < t)
 							{
-								t = PointsOfInterest[i].TrackPosition;
+								t = CurrentRoute.PointsOfInterest[i].TrackPosition;
 								j = i;
 							}
 						}
@@ -60,21 +57,21 @@ namespace OpenBve
 			else
 			{
 				// absolute
-				j = Value >= 0 & Value < PointsOfInterest.Length ? Value : -1;
+				j = Value >= 0 & Value < CurrentRoute.PointsOfInterest.Length ? Value : -1;
 			}
 			// process poi
 			if (j < 0) return false;
 			World.CameraTrackFollower.Update(t, true, false);
-			Camera.CurrentAlignment.Position = PointsOfInterest[j].TrackOffset;
-			Camera.CurrentAlignment.Yaw = PointsOfInterest[j].TrackYaw;
-			Camera.CurrentAlignment.Pitch = PointsOfInterest[j].TrackPitch;
-			Camera.CurrentAlignment.Roll = PointsOfInterest[j].TrackRoll;
+			Camera.CurrentAlignment.Position = CurrentRoute.PointsOfInterest[j].TrackOffset;
+			Camera.CurrentAlignment.Yaw = CurrentRoute.PointsOfInterest[j].TrackYaw;
+			Camera.CurrentAlignment.Pitch = CurrentRoute.PointsOfInterest[j].TrackPitch;
+			Camera.CurrentAlignment.Roll = CurrentRoute.PointsOfInterest[j].TrackRoll;
 			Camera.CurrentAlignment.TrackPosition = t;
 			World.UpdateAbsoluteCamera(0.0);
-			if (PointsOfInterest[j].Text != null)
+			if (CurrentRoute.PointsOfInterest[j].Text != null)
 			{
-				double n = 3.0 + 0.5 * Math.Sqrt((double)PointsOfInterest[j].Text.Length);
-				Game.AddMessage(PointsOfInterest[j].Text, MessageManager.MessageDependency.PointOfInterest, Interface.GameMode.Expert, MessageColor.White, Game.SecondsSinceMidnight + n, null);
+				double n = 3.0 + 0.5 * Math.Sqrt((double) CurrentRoute.PointsOfInterest[j].Text.Length);
+				Game.AddMessage(CurrentRoute.PointsOfInterest[j].Text, MessageManager.MessageDependency.PointOfInterest, Interface.GameMode.Expert, MessageColor.White, Game.SecondsSinceMidnight + n, null);
 			}
 			return true;
 		}
