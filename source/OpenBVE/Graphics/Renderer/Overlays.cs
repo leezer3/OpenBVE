@@ -69,14 +69,14 @@ namespace OpenBve
 						if (Interface.CurrentOptions.GameMode != Interface.GameMode.Expert)
 						{
 							double y = 8.0;
-							for (int i = 0; i < Game.MarkerTextures.Length; i++)
+							for (int i = 0; i < CurrentRoute.MarkerTextures.Length; i++)
 							{
-								if (Program.CurrentHost.LoadTexture(Game.MarkerTextures[i], OpenGlTextureWrapMode.ClampClamp))
+								if (Program.CurrentHost.LoadTexture(CurrentRoute.MarkerTextures[i], OpenGlTextureWrapMode.ClampClamp))
 								{
-									double w = (double)Game.MarkerTextures[i].Width;
-									double h = (double)Game.MarkerTextures[i].Height;
+									double w = (double)CurrentRoute.MarkerTextures[i].Width;
+									double h = (double)CurrentRoute.MarkerTextures[i].Height;
 									GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
-									LibRender.Renderer.RenderOverlayTexture(Game.MarkerTextures[i], (double)LibRender.Screen.Width - w - 8.0, y, (double)LibRender.Screen.Width - 8.0, y + h);
+									LibRender.Renderer.RenderOverlayTexture(CurrentRoute.MarkerTextures[i], (double)LibRender.Screen.Width - w - 8.0, y, (double)LibRender.Screen.Width - 8.0, y + h);
 									y += h + 8.0;
 								}
 							}

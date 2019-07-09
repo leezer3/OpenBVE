@@ -82,7 +82,7 @@ namespace OpenBve {
 			CurrentRoute.Stations = new RouteStation[] { };
 			CurrentRoute.Sections = new Section[] { };
 			BufferTrackPositions = new double[] { };
-			MarkerTextures = new Texture[] { };
+			CurrentRoute.MarkerTextures = new Texture[] { };
 			CurrentRoute.PointsOfInterest = new PointOfInterest[] { };
 			CurrentRoute.BogusPretrainInstructions = new BogusPretrainInstruction[] { };
 			TrainName = "";
@@ -214,21 +214,21 @@ namespace OpenBve {
 		// ================================
 
 		// marker
-		internal static Texture[] MarkerTextures = new Texture[] { };
+		
 
 		internal static void AddMarker(Texture Texture) {
-			int n = MarkerTextures.Length;
-			Array.Resize<Texture>(ref MarkerTextures, n + 1);
-			MarkerTextures[n] = Texture;
+			int n = CurrentRoute.MarkerTextures.Length;
+			Array.Resize<Texture>(ref CurrentRoute.MarkerTextures, n + 1);
+			CurrentRoute.MarkerTextures[n] = Texture;
 		}
 		internal static void RemoveMarker(Texture Texture) {
-			int n = MarkerTextures.Length;
+			int n = CurrentRoute.MarkerTextures.Length;
 			for (int i = 0; i < n; i++) {
-				if (MarkerTextures[i] == Texture) {
+				if (CurrentRoute.MarkerTextures[i] == Texture) {
 					for (int j = i; j < n - 1; j++) {
-						MarkerTextures[j] = MarkerTextures[j + 1];
+						CurrentRoute.MarkerTextures[j] = CurrentRoute.MarkerTextures[j + 1];
 					}
-					Array.Resize<Texture>(ref MarkerTextures, n - 1);
+					Array.Resize<Texture>(ref CurrentRoute.MarkerTextures, n - 1);
 					break;
 				}
 			}
