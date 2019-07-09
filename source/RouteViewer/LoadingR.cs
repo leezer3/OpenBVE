@@ -137,9 +137,9 @@ namespace OpenBve {
 			RouteProgress = 1.0;
 			// camera
 			ObjectManager.InitializeVisibility();
-			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, 0.0, true, false);
-			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, 0.1, true, false);
-			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, -0.1, true, false);
+			World.CameraTrackFollower.UpdateAbsolute( 0.0, true, false);
+			World.CameraTrackFollower.UpdateAbsolute(0.1, true, false);
+			World.CameraTrackFollower.UpdateAbsolute(-0.1, true, false);
 			World.CameraTrackFollower.TriggerType = EventTriggerType.Camera;
 			// default starting time
 			Game.SecondsSinceMidnight = 0.0;
@@ -174,8 +174,8 @@ namespace OpenBve {
 				}
 			}
 			// initialize camera
-			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, -1.0, true, false);
-			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, FirstStationPosition, true, false);
+			World.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
+			World.CameraTrackFollower.UpdateAbsolute(FirstStationPosition, true, false);
 			Camera.CurrentAlignment = new CameraAlignment(new Vector3(0.0, 2.5, 0.0), 0.0, 0.0, 0.0, FirstStationPosition, 1.0);
 			World.UpdateAbsoluteCamera(0.0);
 			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z);

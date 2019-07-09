@@ -113,72 +113,131 @@ namespace OpenBve {
 			internal EventTriggerType TriggerType;
 			internal TrainManager.Train Train;
 			internal int CarIndex;
-		}
-		internal static void UpdateTrackFollower(ref TrackFollower Follower, double NewTrackPosition, bool UpdateWorldCoordinates, bool AddTrackInaccurary) {
-			if (CurrentTrack.Elements == null || CurrentTrack.Elements.Length == 0) return;
-			int i = Follower.LastTrackElement;
-			while (i >= 0 && NewTrackPosition < CurrentTrack.Elements[i].StartingTrackPosition) {
-				double ta = Follower.TrackPosition - CurrentTrack.Elements[i].StartingTrackPosition;
-				double tb = -0.01;
-				CheckEvents(ref Follower, i, -1, ta, tb);
-				i--;
-			}
-			if (i >= 0) {
-				while (i < CurrentTrack.Elements.Length - 1) {
-					if (NewTrackPosition < CurrentTrack.Elements[i + 1].StartingTrackPosition) break;
-					double ta = Follower.TrackPosition - CurrentTrack.Elements[i].StartingTrackPosition;
-					double tb = CurrentTrack.Elements[i + 1].StartingTrackPosition - CurrentTrack.Elements[i].StartingTrackPosition + 0.01;
-					CheckEvents(ref Follower, i, 1, ta, tb);
-					i++;
+
+			internal void UpdateAbsolute(double NewTrackPosition, bool UpdateWorldCoordinates, bool AddTrackInaccurary) {
+				if (CurrentTrack.Elements == null || CurrentTrack.Elements.Length == 0) return;
+				int i = LastTrackElement;
+				while (i >= 0 && NewTrackPosition < CurrentTrack.Elements[i].StartingTrackPosition) {
+					double ta = TrackPosition - CurrentTrack.Elements[i].StartingTrackPosition;
+					double tb = -0.01;
+					CheckEvents(i, -1, ta, tb);
+					i--;
 				}
-			} else {
-				i = 0;
-			}
-			double da = Follower.TrackPosition - CurrentTrack.Elements[i].StartingTrackPosition;
-			double db = NewTrackPosition - CurrentTrack.Elements[i].StartingTrackPosition;
-			// track
-			if (UpdateWorldCoordinates) {
-				if (db != 0.0) {
-					if (CurrentTrack.Elements[i].CurveRadius != 0.0) {
-						// curve
-						double r = CurrentTrack.Elements[i].CurveRadius;
-						double p = CurrentTrack.Elements[i].WorldDirection.Y / Math.Sqrt(CurrentTrack.Elements[i].WorldDirection.X * CurrentTrack.Elements[i].WorldDirection.X + CurrentTrack.Elements[i].WorldDirection.Z * CurrentTrack.Elements[i].WorldDirection.Z);
-						double s = db / Math.Sqrt(1.0 + p * p);
-						double h = s * p;
-						double b = s / Math.Abs(r);
-						double f = 2.0 * r * r * (1.0 - Math.Cos(b));
-						double c = (double)Math.Sign(db) * Math.Sqrt(f >= 0.0 ? f : 0.0);
-						double a = 0.5 * (double)Math.Sign(r) * b;
-						Vector3 D = new Vector3(CurrentTrack.Elements[i].WorldDirection.X, 0.0, CurrentTrack.Elements[i].WorldDirection.Z);
-						D.Normalize();
-						double cosa = Math.Cos(a);
-						double sina = Math.Sin(a);
-						D.Rotate(Vector3.Down, cosa, sina);
-						Follower.WorldPosition.X = CurrentTrack.Elements[i].WorldPosition.X + c * D.X;
-						Follower.WorldPosition.Y = CurrentTrack.Elements[i].WorldPosition.Y + h;
-						Follower.WorldPosition.Z = CurrentTrack.Elements[i].WorldPosition.Z + c * D.Z;
-						D.Rotate(Vector3.Down, cosa, sina);
-						Follower.WorldDirection.X = D.X;
-						Follower.WorldDirection.Y = p;
-						Follower.WorldDirection.Z = D.Z;
-						Follower.WorldDirection.Normalize();
-						double cos2a = Math.Cos(2.0 * a);
-						double sin2a = Math.Sin(2.0 * a);
-						Follower.WorldSide = CurrentTrack.Elements[i].WorldSide;
-						Follower.WorldSide.Rotate(Vector3.Down, cos2a, sin2a);
-						Follower.WorldUp = Vector3.Cross(Follower.WorldDirection, Follower.WorldSide);
-						Follower.CurveRadius = CurrentTrack.Elements[i].CurveRadius;
-					} else {
-						// straight
-						Follower.WorldPosition.X = CurrentTrack.Elements[i].WorldPosition.X + db * CurrentTrack.Elements[i].WorldDirection.X;
-						Follower.WorldPosition.Y = CurrentTrack.Elements[i].WorldPosition.Y + db * CurrentTrack.Elements[i].WorldDirection.Y;
-						Follower.WorldPosition.Z = CurrentTrack.Elements[i].WorldPosition.Z + db * CurrentTrack.Elements[i].WorldDirection.Z;
-						Follower.WorldDirection = CurrentTrack.Elements[i].WorldDirection;
-						Follower.WorldUp = CurrentTrack.Elements[i].WorldUp;
-						Follower.WorldSide = CurrentTrack.Elements[i].WorldSide;
-						Follower.CurveRadius = 0.0;
+				if (i >= 0) {
+					while (i < CurrentTrack.Elements.Length - 1) {
+						if (NewTrackPosition < CurrentTrack.Elements[i + 1].StartingTrackPosition) break;
+						double ta = TrackPosition - CurrentTrack.Elements[i].StartingTrackPosition;
+						double tb = CurrentTrack.Elements[i + 1].StartingTrackPosition - CurrentTrack.Elements[i].StartingTrackPosition + 0.01;
+						CheckEvents(i, 1, ta, tb);
+						i++;
 					}
-					// cant
+				} else {
+					i = 0;
+				}
+				double da = TrackPosition - CurrentTrack.Elements[i].StartingTrackPosition;
+				double db = NewTrackPosition - CurrentTrack.Elements[i].StartingTrackPosition;
+				// track
+				if (UpdateWorldCoordinates) {
+					if (db != 0.0) {
+						if (CurrentTrack.Elements[i].CurveRadius != 0.0) {
+							// curve
+							double r = CurrentTrack.Elements[i].CurveRadius;
+							double p = CurrentTrack.Elements[i].WorldDirection.Y / Math.Sqrt(CurrentTrack.Elements[i].WorldDirection.X * CurrentTrack.Elements[i].WorldDirection.X + CurrentTrack.Elements[i].WorldDirection.Z * CurrentTrack.Elements[i].WorldDirection.Z);
+							double s = db / Math.Sqrt(1.0 + p * p);
+							double h = s * p;
+							double b = s / Math.Abs(r);
+							double f = 2.0 * r * r * (1.0 - Math.Cos(b));
+							double c = (double)Math.Sign(db) * Math.Sqrt(f >= 0.0 ? f : 0.0);
+							double a = 0.5 * (double)Math.Sign(r) * b;
+							Vector3 D = new Vector3(CurrentTrack.Elements[i].WorldDirection.X, 0.0, CurrentTrack.Elements[i].WorldDirection.Z);
+							D.Normalize();
+							double cosa = Math.Cos(a);
+							double sina = Math.Sin(a);
+							D.Rotate(Vector3.Down, cosa, sina);
+							WorldPosition.X = CurrentTrack.Elements[i].WorldPosition.X + c * D.X;
+							WorldPosition.Y = CurrentTrack.Elements[i].WorldPosition.Y + h;
+							WorldPosition.Z = CurrentTrack.Elements[i].WorldPosition.Z + c * D.Z;
+							D.Rotate(Vector3.Down, cosa, sina);
+							WorldDirection.X = D.X;
+							WorldDirection.Y = p;
+							WorldDirection.Z = D.Z;
+							WorldDirection.Normalize();
+							double cos2a = Math.Cos(2.0 * a);
+							double sin2a = Math.Sin(2.0 * a);
+							WorldSide = CurrentTrack.Elements[i].WorldSide;
+							WorldSide.Rotate(Vector3.Down, cos2a, sin2a);
+							WorldUp = Vector3.Cross(WorldDirection, WorldSide);
+							CurveRadius = CurrentTrack.Elements[i].CurveRadius;
+						} else {
+							// straight
+							WorldPosition.X = CurrentTrack.Elements[i].WorldPosition.X + db * CurrentTrack.Elements[i].WorldDirection.X;
+							WorldPosition.Y = CurrentTrack.Elements[i].WorldPosition.Y + db * CurrentTrack.Elements[i].WorldDirection.Y;
+							WorldPosition.Z = CurrentTrack.Elements[i].WorldPosition.Z + db * CurrentTrack.Elements[i].WorldDirection.Z;
+							WorldDirection = CurrentTrack.Elements[i].WorldDirection;
+							WorldUp = CurrentTrack.Elements[i].WorldUp;
+							WorldSide = CurrentTrack.Elements[i].WorldSide;
+							CurveRadius = 0.0;
+						}
+						// cant
+						if (i < CurrentTrack.Elements.Length - 1) {
+							double t = db / (CurrentTrack.Elements[i + 1].StartingTrackPosition - CurrentTrack.Elements[i].StartingTrackPosition);
+							if (t < 0.0) {
+								t = 0.0;
+							} else if (t > 1.0) {
+								t = 1.0;
+							}
+							double t2 = t * t;
+							double t3 = t2 * t;
+							CurveCant =
+								(2.0 * t3 - 3.0 * t2 + 1.0) * CurrentTrack.Elements[i].CurveCant +
+								(t3 - 2.0 * t2 + t) * CurrentTrack.Elements[i].CurveCantTangent +
+								(-2.0 * t3 + 3.0 * t2) * CurrentTrack.Elements[i + 1].CurveCant +
+								(t3 - t2) * CurrentTrack.Elements[i + 1].CurveCantTangent;
+						} else {
+							CurveCant = CurrentTrack.Elements[i].CurveCant;
+						}
+					} else {
+						WorldPosition = CurrentTrack.Elements[i].WorldPosition;
+						WorldDirection = CurrentTrack.Elements[i].WorldDirection;
+						WorldUp = CurrentTrack.Elements[i].WorldUp;
+						WorldSide = CurrentTrack.Elements[i].WorldSide;
+						CurveRadius = CurrentTrack.Elements[i].CurveRadius;
+						CurveCant = CurrentTrack.Elements[i].CurveCant;
+					}
+				} else {
+					if (db != 0.0) {
+						if (CurrentTrack.Elements[i].CurveRadius != 0.0) {
+							CurveRadius = CurrentTrack.Elements[i].CurveRadius;
+						} else {
+							CurveRadius = 0.0;
+						}
+						if (i < CurrentTrack.Elements.Length - 1) {
+							double t = db / (CurrentTrack.Elements[i + 1].StartingTrackPosition - CurrentTrack.Elements[i].StartingTrackPosition);
+							if (t < 0.0) {
+								t = 0.0;
+							} else if (t > 1.0) {
+								t = 1.0;
+							}
+							double t2 = t * t;
+							double t3 = t2 * t;
+							CurveCant =
+								(2.0 * t3 - 3.0 * t2 + 1.0) * CurrentTrack.Elements[i].CurveCant +
+								(t3 - 2.0 * t2 + t) * CurrentTrack.Elements[i].CurveCantTangent +
+								(-2.0 * t3 + 3.0 * t2) * CurrentTrack.Elements[i + 1].CurveCant +
+								(t3 - t2) * CurrentTrack.Elements[i + 1].CurveCantTangent;
+						} else {
+							CurveCant = CurrentTrack.Elements[i].CurveCant;
+						}
+					} else {
+						CurveRadius = CurrentTrack.Elements[i].CurveRadius;
+						CurveCant = CurrentTrack.Elements[i].CurveCant;
+					}
+				}
+				AdhesionMultiplier = CurrentTrack.Elements[i].AdhesionMultiplier;
+				Pitch = CurrentTrack.Elements[i].Pitch * 1000;
+				// inaccuracy
+				if (AddTrackInaccurary) {
+					double x, y, c;
 					if (i < CurrentTrack.Elements.Length - 1) {
 						double t = db / (CurrentTrack.Elements[i + 1].StartingTrackPosition - CurrentTrack.Elements[i].StartingTrackPosition);
 						if (t < 0.0) {
@@ -186,110 +245,53 @@ namespace OpenBve {
 						} else if (t > 1.0) {
 							t = 1.0;
 						}
-						double t2 = t * t;
-						double t3 = t2 * t;
-						Follower.CurveCant =
-							(2.0 * t3 - 3.0 * t2 + 1.0) * CurrentTrack.Elements[i].CurveCant +
-							(t3 - 2.0 * t2 + t) * CurrentTrack.Elements[i].CurveCantTangent +
-							(-2.0 * t3 + 3.0 * t2) * CurrentTrack.Elements[i + 1].CurveCant +
-							(t3 - t2) * CurrentTrack.Elements[i + 1].CurveCantTangent;
+						double x1, y1, c1;
+						double x2, y2, c2;
+						CurrentTrack.GetInaccuracies(NewTrackPosition, CurrentTrack.Elements[i].CsvRwAccuracyLevel, out x1, out y1, out c1);
+						CurrentTrack.GetInaccuracies(NewTrackPosition, CurrentTrack.Elements[i + 1].CsvRwAccuracyLevel, out x2, out y2, out c2);
+						x = (1.0 - t) * x1 + t * x2;
+						y = (1.0 - t) * y1 + t * y2;
+						c = (1.0 - t) * c1 + t * c2;
 					} else {
-						Follower.CurveCant = CurrentTrack.Elements[i].CurveCant;
+						CurrentTrack.GetInaccuracies(NewTrackPosition, CurrentTrack.Elements[i].CsvRwAccuracyLevel, out x, out y, out c);
 					}
+					WorldPosition.X += x * WorldSide.X + y * WorldUp.X;
+					WorldPosition.Y += x * WorldSide.Y + y * WorldUp.Y;
+					WorldPosition.Z += x * WorldSide.Z + y * WorldUp.Z;
+					CurveCant += c;
+					CantDueToInaccuracy = c;
 				} else {
-					Follower.WorldPosition = CurrentTrack.Elements[i].WorldPosition;
-					Follower.WorldDirection = CurrentTrack.Elements[i].WorldDirection;
-					Follower.WorldUp = CurrentTrack.Elements[i].WorldUp;
-					Follower.WorldSide = CurrentTrack.Elements[i].WorldSide;
-					Follower.CurveRadius = CurrentTrack.Elements[i].CurveRadius;
-					Follower.CurveCant = CurrentTrack.Elements[i].CurveCant;
+					CantDueToInaccuracy = 0.0;
 				}
-			} else {
-				if (db != 0.0) {
-					if (CurrentTrack.Elements[i].CurveRadius != 0.0) {
-						Follower.CurveRadius = CurrentTrack.Elements[i].CurveRadius;
-					} else {
-						Follower.CurveRadius = 0.0;
-					}
-					if (i < CurrentTrack.Elements.Length - 1) {
-						double t = db / (CurrentTrack.Elements[i + 1].StartingTrackPosition - CurrentTrack.Elements[i].StartingTrackPosition);
-						if (t < 0.0) {
-							t = 0.0;
-						} else if (t > 1.0) {
-							t = 1.0;
+				// events
+				CheckEvents(i, Math.Sign(db - da), da, db);
+				// finish
+				TrackPosition = NewTrackPosition;
+				LastTrackElement = i;
+			}
+			private void CheckEvents(int ElementIndex, int Direction, double OldDelta, double NewDelta) {
+				if (Direction < 0) {
+					for (int j = 0; j < CurrentTrack.Elements[ElementIndex].Events.Length; j++)
+					{
+						dynamic e = CurrentTrack.Elements[ElementIndex].Events[j];
+						if (OldDelta > e.TrackPositionDelta & NewDelta <= e.TrackPositionDelta) {
+							e.TryTrigger(-1, TriggerType, Train, CarIndex);
 						}
-						double t2 = t * t;
-						double t3 = t2 * t;
-						Follower.CurveCant =
-							(2.0 * t3 - 3.0 * t2 + 1.0) * CurrentTrack.Elements[i].CurveCant +
-							(t3 - 2.0 * t2 + t) * CurrentTrack.Elements[i].CurveCantTangent +
-							(-2.0 * t3 + 3.0 * t2) * CurrentTrack.Elements[i + 1].CurveCant +
-							(t3 - t2) * CurrentTrack.Elements[i + 1].CurveCantTangent;
-					} else {
-						Follower.CurveCant = CurrentTrack.Elements[i].CurveCant;
 					}
-				} else {
-					Follower.CurveRadius = CurrentTrack.Elements[i].CurveRadius;
-					Follower.CurveCant = CurrentTrack.Elements[i].CurveCant;
+				} else if (Direction > 0) {
+					for (int j = 0; j < CurrentTrack.Elements[ElementIndex].Events.Length; j++)
+					{
+						dynamic e = CurrentTrack.Elements[ElementIndex].Events[j];
+						if (OldDelta < e.TrackPositionDelta & NewDelta >= e.TrackPositionDelta) {
+							e.TryTrigger(1, TriggerType, Train, CarIndex);
+						}
+					}
 				}
 			}
-			Follower.AdhesionMultiplier = CurrentTrack.Elements[i].AdhesionMultiplier;
-			Follower.Pitch = CurrentTrack.Elements[i].Pitch * 1000;
-			// inaccuracy
-			if (AddTrackInaccurary) {
-				double x, y, c;
-				if (i < CurrentTrack.Elements.Length - 1) {
-					double t = db / (CurrentTrack.Elements[i + 1].StartingTrackPosition - CurrentTrack.Elements[i].StartingTrackPosition);
-					if (t < 0.0) {
-						t = 0.0;
-					} else if (t > 1.0) {
-						t = 1.0;
-					}
-					double x1, y1, c1;
-					double x2, y2, c2;
-					CurrentTrack.GetInaccuracies(NewTrackPosition, CurrentTrack.Elements[i].CsvRwAccuracyLevel, out x1, out y1, out c1);
-					CurrentTrack.GetInaccuracies(NewTrackPosition, CurrentTrack.Elements[i + 1].CsvRwAccuracyLevel, out x2, out y2, out c2);
-					x = (1.0 - t) * x1 + t * x2;
-					y = (1.0 - t) * y1 + t * y2;
-					c = (1.0 - t) * c1 + t * c2;
-				} else {
-					CurrentTrack.GetInaccuracies(NewTrackPosition, CurrentTrack.Elements[i].CsvRwAccuracyLevel, out x, out y, out c);
-				}
-				Follower.WorldPosition.X += x * Follower.WorldSide.X + y * Follower.WorldUp.X;
-				Follower.WorldPosition.Y += x * Follower.WorldSide.Y + y * Follower.WorldUp.Y;
-				Follower.WorldPosition.Z += x * Follower.WorldSide.Z + y * Follower.WorldUp.Z;
-				Follower.CurveCant += c;
-				Follower.CantDueToInaccuracy = c;
-			} else {
-				Follower.CantDueToInaccuracy = 0.0;
-			}
-			// events
-			CheckEvents(ref Follower, i, Math.Sign(db - da), da, db);
-			// finish
-			Follower.TrackPosition = NewTrackPosition;
-			Follower.LastTrackElement = i;
 		}
 		
+		
 		// check events
-        private static void CheckEvents(ref TrackFollower Follower, int ElementIndex, int Direction, double OldDelta, double NewDelta) {
-            if (Direction < 0) {
-                for (int j = 0; j < CurrentTrack.Elements[ElementIndex].Events.Length; j++)
-                {
-	                dynamic e = CurrentTrack.Elements[ElementIndex].Events[j];
-                    if (OldDelta > e.TrackPositionDelta & NewDelta <= e.TrackPositionDelta) {
-                        e.TryTrigger(-1, Follower.TriggerType, Follower.Train, Follower.Train != null ? Follower.Train.Cars[Follower.CarIndex] : null);
-                    }
-                }
-            } else if (Direction > 0) {
-                for (int j = 0; j < CurrentTrack.Elements[ElementIndex].Events.Length; j++)
-                {
-	                dynamic e = CurrentTrack.Elements[ElementIndex].Events[j];
-                    if (OldDelta < e.TrackPositionDelta & NewDelta >= e.TrackPositionDelta) {
-                        e.TryTrigger(1, Follower.TriggerType, Follower.Train, Follower.Train != null ? Follower.Train.Cars[Follower.CarIndex] : null);
-                    }
-                }
-            }
-        }
-
+        
     }
 }

@@ -49,7 +49,7 @@ namespace OpenBve
 					Follower =  new TrackManager.TrackFollower(),
 					currentTrackPosition = trackPosition
 				};
-				snd.Follower.Update(trackPosition, true, true);
+				snd.Follower.UpdateAbsolute(trackPosition, true, true);
 				if (this.TrackFollowerFunction != null)
 				{
 					snd.TrackFollowerFunction = this.TrackFollowerFunction.Clone();
@@ -104,7 +104,7 @@ namespace OpenBve
 					{
 
 						double delta = this.TrackFollowerFunction.Perform(train, train == null ? 0 : train.DriverCar, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
-						this.Follower.Update(this.currentTrackPosition + delta, true, true);
+						this.Follower.UpdateAbsolute(this.currentTrackPosition + delta, true, true);
 						this.Follower.UpdateWorldCoordinates(false);
 					}
 					if (this.VolumeFunction != null)

@@ -1878,8 +1878,8 @@ namespace OpenBve
 					TrackManager.TrackFollower follower = new TrackManager.TrackFollower();
 					double r = (double)m / (double)subdivisions;
 					double p = (1.0 - r) * TrackManager.Tracks[0].Elements[q].StartingTrackPosition + r * TrackManager.Tracks[0].Elements[q + 1].StartingTrackPosition;
-					follower.Update(-1.0, true, false);
-					follower.Update(p, true, false);
+					follower.UpdateAbsolute(-1.0, true, false);
+					follower.UpdateAbsolute(p, true, false);
 					midpointsTrackPositions[i] = p;
 					midpointsWorldPositions[i] = follower.WorldPosition;
 					midpointsWorldDirections[i] = follower.WorldDirection;
@@ -1921,7 +1921,7 @@ namespace OpenBve
 					if (m == 0)
 					{
 						double p = 0.00000001 * TrackManager.Tracks[0].Elements[i - 1].StartingTrackPosition + 0.99999999 * TrackManager.Tracks[0].Elements[i].StartingTrackPosition;
-						follower.Update(p, true, false);
+						follower.UpdateAbsolute(p, true, false);
 						Vector3 d1 = TrackManager.Tracks[0].Elements[i].WorldDirection;
 						Vector3 d2 = follower.WorldDirection;
 						Vector3 d = d1 - d2;
@@ -1998,8 +1998,8 @@ namespace OpenBve
 							TrackManager.TrackFollower follower = new TrackManager.TrackFollower();
 							TrackManager.Tracks[0].Elements[i - 1].CurveRadius = r;
 							double p = 0.00000001 * TrackManager.Tracks[0].Elements[i - 1].StartingTrackPosition + 0.99999999 * TrackManager.Tracks[0].Elements[i].StartingTrackPosition;
-							follower.Update(p - 1.0, true, false);
-							follower.Update(p, true, false);
+							follower.UpdateAbsolute(p - 1.0, true, false);
+							follower.UpdateAbsolute(p, true, false);
 							TrackManager.Tracks[0].Elements[i].CurveRadius = r;
 							TrackManager.Tracks[0].Elements[i].WorldPosition = follower.WorldPosition;
 							TrackManager.Tracks[0].Elements[i].WorldDirection = follower.WorldDirection;
@@ -2007,8 +2007,8 @@ namespace OpenBve
 							TrackManager.Tracks[0].Elements[i].WorldSide = follower.WorldSide;
 							// iterate to shorten track element length
 							p = 0.00000001 * TrackManager.Tracks[0].Elements[i].StartingTrackPosition + 0.99999999 * TrackManager.Tracks[0].Elements[i + 1].StartingTrackPosition;
-							follower.Update(p - 1.0, true, false);
-							follower.Update(p, true, false);
+							follower.UpdateAbsolute(p - 1.0, true, false);
+							follower.UpdateAbsolute(p, true, false);
 							Vector3 d = TrackManager.Tracks[0].Elements[i + 1].WorldPosition - follower.WorldPosition;
 							double bestT = d.NormSquared();
 							int bestJ = 0;
@@ -2016,7 +2016,7 @@ namespace OpenBve
 							double a = 1.0 / (double)n * (TrackManager.Tracks[0].Elements[i + 1].StartingTrackPosition - TrackManager.Tracks[0].Elements[i].StartingTrackPosition);
 							for (int j = 1; j < n - 1; j++)
 							{
-								follower.Update(TrackManager.Tracks[0].Elements[i + 1].StartingTrackPosition - (double)j * a, true, false);
+								follower.UpdateAbsolute(TrackManager.Tracks[0].Elements[i + 1].StartingTrackPosition - (double)j * a, true, false);
 								d = TrackManager.Tracks[0].Elements[i + 1].WorldPosition - follower.WorldPosition;
 								double t = d.NormSquared();
 								if (t < bestT)
@@ -2037,8 +2037,8 @@ namespace OpenBve
 							totalShortage += s;
 							// introduce turn to compensate for curve
 							p = 0.00000001 * TrackManager.Tracks[0].Elements[i].StartingTrackPosition + 0.99999999 * TrackManager.Tracks[0].Elements[i + 1].StartingTrackPosition;
-							follower.Update(p - 1.0, true, false);
-							follower.Update(p, true, false);
+							follower.UpdateAbsolute(p - 1.0, true, false);
+							follower.UpdateAbsolute(p, true, false);
 							Vector3 AB = TrackManager.Tracks[0].Elements[i + 1].WorldPosition - follower.WorldPosition;
 							Vector3 AC = TrackManager.Tracks[0].Elements[i + 1].WorldPosition - TrackManager.Tracks[0].Elements[i].WorldPosition;
 							Vector3 BC = follower.WorldPosition - TrackManager.Tracks[0].Elements[i].WorldPosition;
@@ -2077,8 +2077,8 @@ namespace OpenBve
 									TrackManager.Tracks[0].Elements[i].WorldUp.Rotate(Vector3.Down, cosg, sing);
 									TrackManager.Tracks[0].Elements[i].WorldSide.Rotate(Vector3.Down, cosg, sing);
 									p = 0.00000001 * TrackManager.Tracks[0].Elements[i].StartingTrackPosition + 0.99999999 * TrackManager.Tracks[0].Elements[i + 1].StartingTrackPosition;
-									follower.Update(p - 1.0, true, false);
-									follower.Update(p, true, false);
+									follower.UpdateAbsolute(p - 1.0, true, false);
+									follower.UpdateAbsolute(p, true, false);
 									d = TrackManager.Tracks[0].Elements[i + 1].WorldPosition - follower.WorldPosition;
 									double t = d.NormSquared();
 									if (t < bestT)
@@ -2098,8 +2098,8 @@ namespace OpenBve
 								}
 								// iterate again to further shorten track element length
 								p = 0.00000001 * TrackManager.Tracks[0].Elements[i].StartingTrackPosition + 0.99999999 * TrackManager.Tracks[0].Elements[i + 1].StartingTrackPosition;
-								follower.Update(p - 1.0, true, false);
-								follower.Update(p, true, false);
+								follower.UpdateAbsolute(p - 1.0, true, false);
+								follower.UpdateAbsolute(p, true, false);
 								d = TrackManager.Tracks[0].Elements[i + 1].WorldPosition - follower.WorldPosition;
 								bestT = d.NormSquared();
 								bestJ = 0;
@@ -2107,7 +2107,7 @@ namespace OpenBve
 								a = 1.0 / (double)n * (TrackManager.Tracks[0].Elements[i + 1].StartingTrackPosition - TrackManager.Tracks[0].Elements[i].StartingTrackPosition);
 								for (int j = 1; j < n - 1; j++)
 								{
-									follower.Update(TrackManager.Tracks[0].Elements[i + 1].StartingTrackPosition - (double)j * a, true, false);
+									follower.UpdateAbsolute(TrackManager.Tracks[0].Elements[i + 1].StartingTrackPosition - (double)j * a, true, false);
 									d = TrackManager.Tracks[0].Elements[i + 1].WorldPosition - follower.WorldPosition;
 									double t = d.NormSquared();
 									if (t < bestT)
@@ -2129,8 +2129,8 @@ namespace OpenBve
 							}
 							// compensate for height difference
 							p = 0.00000001 * TrackManager.Tracks[0].Elements[i].StartingTrackPosition + 0.99999999 * TrackManager.Tracks[0].Elements[i + 1].StartingTrackPosition;
-							follower.Update(p - 1.0, true, false);
-							follower.Update(p, true, false);
+							follower.UpdateAbsolute(p - 1.0, true, false);
+							follower.UpdateAbsolute(p, true, false);
 							Vector3 d1 = TrackManager.Tracks[0].Elements[i + 1].WorldPosition - TrackManager.Tracks[0].Elements[i].WorldPosition;
 							double a1 = Math.Atan(d1.Y / Math.Sqrt(d1.X * d1.X + d1.Z * d1.Z));
 							Vector3 d2 = follower.WorldPosition - TrackManager.Tracks[0].Elements[i].WorldPosition;

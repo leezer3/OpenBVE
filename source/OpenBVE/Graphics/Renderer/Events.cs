@@ -156,7 +156,7 @@ namespace OpenBve
 							TrackManager.TrackFollower f = new TrackManager.TrackFollower();
 							f.TriggerType = EventTriggerType.None;
 							f.TrackPosition = p;
-							f.Update(p + e.TrackPositionDelta, true, false);
+							f.UpdateAbsolute(p + e.TrackPositionDelta, true, false);
 							f.WorldPosition.X += dx * f.WorldSide.X + dy * f.WorldUp.X + dz * f.WorldDirection.X;
 							f.WorldPosition.Y += dx * f.WorldSide.Y + dy * f.WorldUp.Y + dz * f.WorldDirection.Y;
 							f.WorldPosition.Z += dx * f.WorldSide.Z + dy * f.WorldUp.Z + dz * f.WorldDirection.Z;
@@ -178,7 +178,7 @@ namespace OpenBve
 						TrackManager.TrackFollower f = new TrackManager.TrackFollower();
 						f.TriggerType = EventTriggerType.None;
 						f.TrackPosition = p;
-						f.Update(p, true, false);
+						f.UpdateAbsolute(p, true, false);
 						f.WorldPosition.X += dy * f.WorldUp.X;
 						f.WorldPosition.Y += dy * f.WorldUp.Y;
 						f.WorldPosition.Z += dy * f.WorldUp.Z;
@@ -198,7 +198,7 @@ namespace OpenBve
 					TrackManager.TrackFollower f = new TrackManager.TrackFollower();
 					f.TriggerType = EventTriggerType.None;
 					f.TrackPosition = p;
-					f.Update(p, true, false);
+					f.UpdateAbsolute(p, true, false);
 					f.WorldPosition.X += dy * f.WorldUp.X;
 					f.WorldPosition.Y += dy * f.WorldUp.Y;
 					f.WorldPosition.Z += dy * f.WorldUp.Z;

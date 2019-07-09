@@ -28,14 +28,23 @@ namespace OpenBve
 
 			internal void UpdateWorldCoordinates(bool AddTrackInaccuracy)
 			{
-				Update(this.TrackPosition, true, AddTrackInaccuracy);
+				UpdateAbsolute(this.TrackPosition, true, AddTrackInaccuracy);
 			}
 
-			/// <summary>Call this method to update a single track follower</summary>
-			/// <param name="NewTrackPosition">The new track position of the follower</param>
+			/// <summary>Call this method to update a single track follower on a relative basis</summary>
+			/// <param name="RelativeTrackPosition">The new absolute track position of the follower</param>
 			/// <param name="UpdateWorldCoordinates">Whether to update the world co-ordinates</param>
-			/// <param name="AddTrackInaccurary">Whether to add track innacuracy</param>
-			internal void Update(double NewTrackPosition, bool UpdateWorldCoordinates, bool AddTrackInaccurary)
+			/// <param name="AddTrackInaccuracy">Whether to add track innacuracy</param>
+			internal void UpdateRelative(double RelativeTrackPosition, bool UpdateWorldCoordinates, bool AddTrackInaccuracy)
+			{
+				UpdateAbsolute(TrackPosition + RelativeTrackPosition, UpdateWorldCoordinates, AddTrackInaccuracy);
+			}
+
+			/// <summary>Call this method to update a single track follower on an absolute basis</summary>
+			/// <param name="NewTrackPosition">The new absolute track position of the follower</param>
+			/// <param name="UpdateWorldCoordinates">Whether to update the world co-ordinates</param>
+			/// <param name="AddTrackInaccuracy">Whether to add track innacuracy</param>
+			internal void UpdateAbsolute(double NewTrackPosition, bool UpdateWorldCoordinates, bool AddTrackInaccuracy)
 			{
 				if (TrackIndex >= Tracks.Length || Tracks[TrackIndex].Elements.Length == 0) return;
 				int i = LastTrackElement;
@@ -197,7 +206,7 @@ namespace OpenBve
 				//Mutliply this by 1000 to get the original value
 				Pitch = Tracks[TrackIndex].Elements[i].Pitch * 1000;
 				// inaccuracy
-				if (AddTrackInaccurary)
+				if (AddTrackInaccuracy)
 				{
 					double x, y, c;
 					if (i < Tracks[TrackIndex].Elements.Length - 1)

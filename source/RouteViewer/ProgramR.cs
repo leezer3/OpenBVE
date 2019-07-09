@@ -180,7 +180,7 @@ namespace OpenBve {
 					if (RouteManager.CurrentRoute.Stations[i].Stops.Length != 0) {
 						double p = RouteManager.CurrentRoute.Stations[i].Stops[RouteManager.CurrentRoute.Stations[i].Stops.Length - 1].TrackPosition;
 						if (p < World.CameraTrackFollower.TrackPosition - 0.1) {
-							TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, p, true, false);
+							World.CameraTrackFollower.UpdateAbsolute(p, true, false);
 							Camera.CurrentAlignment.TrackPosition = p;
 							CurrentStation = i;
 							break;
@@ -192,7 +192,7 @@ namespace OpenBve {
 					if (RouteManager.CurrentRoute.Stations[i].Stops.Length != 0) {
 						double p = RouteManager.CurrentRoute.Stations[i].Stops[RouteManager.CurrentRoute.Stations[i].Stops.Length - 1].TrackPosition;
 						if (p > World.CameraTrackFollower.TrackPosition + 0.1) {
-							TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, p, true, false);
+							World.CameraTrackFollower.UpdateAbsolute(p, true, false);
 							Camera.CurrentAlignment.TrackPosition = p;
 							CurrentStation = i;
 							break;
@@ -214,8 +214,8 @@ namespace OpenBve {
 				if (Program.LoadRoute())
 				{
 					Camera.CurrentAlignment = a;
-					TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, -1.0, true, false);
-					TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, a.TrackPosition, true, false);
+					World.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
+					World.CameraTrackFollower.UpdateAbsolute(a.TrackPosition, true, false);
 					Camera.AlignmentDirection = new CameraAlignment();
 					Camera.AlignmentSpeed = new CameraAlignment();
 					ObjectManager.UpdateVisibility(a.TrackPosition, true);
@@ -327,8 +327,8 @@ namespace OpenBve {
 						if (LoadRoute())
 						{
 							Camera.CurrentAlignment = a;
-							TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, -1.0, true, false);
-							TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, a.TrackPosition, true, false);
+							World.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
+							World.CameraTrackFollower.UpdateAbsolute(a.TrackPosition, true, false);
 							Camera.AlignmentDirection = new CameraAlignment();
 							Camera.AlignmentSpeed = new CameraAlignment();
 							ObjectManager.UpdateVisibility(a.TrackPosition, true);
@@ -592,7 +592,7 @@ namespace OpenBve {
 								{
 									value = World.CameraTrackFollower.TrackPosition + (double) direction*value;
 								}
-								TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, value, true, false);
+								World.CameraTrackFollower.UpdateAbsolute(value, true, false);
 								Camera.CurrentAlignment.TrackPosition = value;
 								World.UpdateAbsoluteCamera(0.0);
 								World.UpdateViewingDistances();

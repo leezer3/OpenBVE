@@ -231,7 +231,7 @@ namespace OpenBve {
 			}
 			// process poi
 			if (j >= 0) {
-				TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, t, true, false);
+				World.CameraTrackFollower.UpdateAbsolute(t, true, false);
 				Camera.CurrentAlignment.Position = CurrentRoute.PointsOfInterest[j].TrackOffset;
 				Camera.CurrentAlignment.Yaw = CurrentRoute.PointsOfInterest[j].TrackYaw;
 				Camera.CurrentAlignment.Pitch = CurrentRoute.PointsOfInterest[j].TrackPitch;

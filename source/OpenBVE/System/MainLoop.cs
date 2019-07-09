@@ -447,7 +447,7 @@ namespace OpenBve
 				case CameraViewMode.FlyBy:
 				case CameraViewMode.FlyByZooming:
 					Camera.CurrentAlignment = World.CameraSavedTrack;
-					World.CameraTrackFollower.Update(World.CameraSavedTrack.TrackPosition, true, false);
+					World.CameraTrackFollower.UpdateAbsolute(World.CameraSavedTrack.TrackPosition, true, false);
 					Camera.CurrentAlignment.TrackPosition = World.CameraTrackFollower.TrackPosition;
 					break;
 			}
