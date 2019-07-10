@@ -418,11 +418,11 @@ namespace OpenBve {
 			for (int i = 0; i < TrainManager.Trains.Length; i++) {
 				if (TrainManager.Trains[i].State != TrainState.Bogus) {
 					if (TrainManager.Trains[i].IsPlayerTrain) {
-						if (!PluginManager.LoadCustomPlugin(TrainManager.Trains[i], TrainManager.Trains[i].TrainFolder, CurrentTrainEncoding)) {
-							PluginManager.LoadDefaultPlugin(TrainManager.Trains[i], TrainManager.Trains[i].TrainFolder);
+						if (!TrainManager.Trains[i].LoadCustomPlugin(TrainManager.Trains[i].TrainFolder, CurrentTrainEncoding)) {
+							TrainManager.Trains[i].LoadDefaultPlugin( TrainManager.Trains[i].TrainFolder);
 						}
 					} else {
-						PluginManager.LoadDefaultPlugin(TrainManager.Trains[i], TrainManager.Trains[i].TrainFolder);
+						TrainManager.Trains[i].LoadDefaultPlugin(TrainManager.Trains[i].TrainFolder);
 					}
 				}
 			}

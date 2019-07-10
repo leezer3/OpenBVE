@@ -294,6 +294,7 @@
     <Compile Include="Simulation\TrainManager\Train\Handles\Handles.Reverser.Positions.cs" />
     <Compile Include="Simulation\TrainManager\Train\Horn.cs" />
     <Compile Include="Simulation\TrainManager\Train\Handles\Handles.LocoBrake.Types.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Plugin.cs" />
     <Compile Include="Simulation\TrainManager\Train\TrackFollowingObject.cs" />
     <Compile Include="Simulation\TrainManager\Train\PassAlarm.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.cs" />

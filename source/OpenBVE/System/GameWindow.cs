@@ -385,7 +385,7 @@ namespace OpenBve
 			{
 				if (TrainManager.Trains[i].State != TrainState.Bogus)
 				{
-					PluginManager.UnloadPlugin(TrainManager.Trains[i]);
+					TrainManager.Trains[i].UnloadPlugin();
 				}
 			}
 			TextureManager.UnloadAllTextures();
