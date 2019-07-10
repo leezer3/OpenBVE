@@ -1590,7 +1590,7 @@ namespace OpenBve
 						int m = TrackManager.Tracks[0].Elements[n].Events.Length;
 						Array.Resize(ref TrackManager.Tracks[0].Elements[n].Events, m + 1);
 						double d = Data.Blocks[i].DestinationChanges[j].TrackPosition - TrackManager.Tracks[0].Elements[n].StartingTrackPosition;
-						TrackManager.Tracks[0].Elements[n].Events[m] = new TrackManager.DestinationEvent(d, Data.Blocks[i].DestinationChanges[j].Type, Data.Blocks[i].DestinationChanges[j].NextDestination, Data.Blocks[i].DestinationChanges[j].PreviousDestination, Data.Blocks[i].DestinationChanges[j].TriggerOnce);
+						TrackManager.Tracks[0].Elements[n].Events[m] = new RouteManager.DestinationEvent(d, Data.Blocks[i].DestinationChanges[j].Type, Data.Blocks[i].DestinationChanges[j].NextDestination, Data.Blocks[i].DestinationChanges[j].PreviousDestination, Data.Blocks[i].DestinationChanges[j].TriggerOnce);
 					}
 				}
 			}
