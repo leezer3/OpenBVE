@@ -210,15 +210,6 @@ namespace OpenBve {
             }
             public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) { }
         }
-        // track end
-        internal class TrackEndEvent : GeneralEvent<TrainManager.Train> {
-            internal TrackEndEvent(double TrackPositionDelta) {
-                this.TrackPositionDelta = TrackPositionDelta;
-                this.DontTriggerAnymore = false;
-            }
-            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) { }
-        }
-
         // ================================
 		
         internal static Track CurrentTrack;

@@ -573,12 +573,12 @@ namespace OpenBve
 										}
 									}
 								}
-								else if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.TrackEndEvent)
+								else if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackEndEvent)
 								{
 									// track end
 									if (Train.IsPlayerTrain)
 									{
-										TrackManager.TrackEndEvent e = (TrackManager.TrackEndEvent)TrackManager.Tracks[0].Elements[i].Events[j];
+										TrackEndEvent e = (TrackEndEvent)TrackManager.Tracks[0].Elements[i].Events[j];
 										double dist = stp + e.TrackPositionDelta - tp;
 										double edec;
 										if (dist >= 15.0)

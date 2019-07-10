@@ -6544,7 +6544,7 @@ namespace OpenBve {
 				int n = TrackManager.CurrentTrack.Elements.Length - 1;
 				int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
 				Array.Resize(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
-				TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.TrackEndEvent(Data.BlockInterval);
+				TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackEndEvent(Data.BlockInterval);
 			}
 			if (!PreviewOnly) {
 				ComputeCantTangents();

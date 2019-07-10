@@ -48,6 +48,7 @@
     <Compile Include="Events\BackgroundChange.cs" />
     <Compile Include="Events\DestinationChange.cs" />
     <Compile Include="Events\FogChange.cs" />
+    <Compile Include="Events\TrackEnd.cs" />
     <Compile Include="Fog.cs" />
     <Compile Include="PointOfInterest.cs" />
     <Compile Include="SignalManager\PreTrain\BogusPreTrainInstruction.cs" />

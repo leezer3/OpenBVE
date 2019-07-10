@@ -1699,7 +1699,7 @@ namespace OpenBve
 				int n = TrackManager.Tracks[0].Elements.Length - 1;
 				int m = TrackManager.Tracks[0].Elements[n].Events.Length;
 				Array.Resize(ref TrackManager.Tracks[0].Elements[n].Events, m + 1);
-				TrackManager.Tracks[0].Elements[n].Events[m] = new TrackManager.TrackEndEvent(Data.BlockInterval);
+				TrackManager.Tracks[0].Elements[n].Events[m] = new TrackEndEvent(Data.BlockInterval);
 			}
 			// insert compatibility beacons
 			if (!PreviewOnly)
