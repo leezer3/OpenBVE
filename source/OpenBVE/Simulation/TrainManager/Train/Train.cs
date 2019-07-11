@@ -37,7 +37,7 @@ namespace OpenBve
 			internal Game.GeneralAI AI;
 			private double InternalTimerTimeElapsed;
 			internal bool Derailed;
-			internal StopSkipMode NextStopSkipped = StopSkipMode.None;
+			
 			internal string[] PowerNotchDescriptions;
 			internal string[] LocoBrakeNotchDescriptions;
 			internal string[] BrakeNotchDescriptions;
@@ -207,8 +207,7 @@ namespace OpenBve
 								{
 									if (Cars[j].Sounds.Loop.Buffer != null)
 									{
-										Vector3 pos = Cars[j].Sounds.Loop.Position;
-										Cars[j].Sounds.Loop.Source = Program.Sounds.PlaySound(Cars[j].Sounds.Loop.Buffer, 1.0, 1.0, pos, Cars[j], true);
+										Cars[j].Sounds.Loop.Source = Program.Sounds.PlaySound(Cars[j].Sounds.Loop.Buffer, 1.0, 1.0, Cars[j].Sounds.Loop.Position, Cars[j], true);
 									}
 								}
 							}

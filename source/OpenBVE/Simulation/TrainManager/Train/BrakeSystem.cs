@@ -71,8 +71,7 @@ namespace OpenBve
 							SoundBuffer buffer = Cars[CarIndex].Sounds.CpEnd.Buffer;
 							if (buffer != null)
 							{
-								OpenBveApi.Math.Vector3 pos = Cars[CarIndex].Sounds.CpEnd.Position;
-								Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[CarIndex], false);
+								Program.Sounds.PlaySound(buffer, 1.0, 1.0, Cars[CarIndex].Sounds.CpEnd.Position, Cars[CarIndex], false);
 							}
 
 							buffer = Cars[CarIndex].Sounds.CpLoop.Buffer;
@@ -90,8 +89,7 @@ namespace OpenBve
 								SoundBuffer buffer = Cars[CarIndex].Sounds.CpLoop.Buffer;
 								if (buffer != null)
 								{
-									OpenBveApi.Math.Vector3 pos = Cars[CarIndex].Sounds.CpLoop.Position;
-									Cars[CarIndex].Sounds.CpLoop.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[CarIndex], true);
+									Cars[CarIndex].Sounds.CpLoop.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, Cars[CarIndex].Sounds.CpLoop.Position, Cars[CarIndex], true);
 								}
 							}
 						}
@@ -105,8 +103,7 @@ namespace OpenBve
 							SoundBuffer buffer = Cars[CarIndex].Sounds.CpStart.Buffer;
 							if (buffer != null)
 							{
-								OpenBveApi.Math.Vector3 pos = Cars[CarIndex].Sounds.CpStart.Position;
-								Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[CarIndex], false);
+								Program.Sounds.PlaySound(buffer, 1.0, 1.0, Cars[CarIndex].Sounds.CpStart.Position, Cars[CarIndex], false);
 							}
 						}
 					}
@@ -218,7 +215,6 @@ namespace OpenBve
 					Cars[CarIndex].CarBrake.Update(TimeElapsed, Cars[DriverCar].CurrentSpeed, Handles.Brake, out DecelerationDueToBrake);
 				}
 
-
 				switch (Cars[CarIndex].CarBrake.airSound)
 				{
 					case AirSound.AirZero:
@@ -226,8 +222,7 @@ namespace OpenBve
 						SoundBuffer buffer = Cars[CarIndex].Sounds.AirZero.Buffer;
 						if (buffer != null)
 						{
-							OpenBveApi.Math.Vector3 pos = Cars[CarIndex].Sounds.AirZero.Position;
-							Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[CarIndex], false);
+							Program.Sounds.PlaySound(buffer, 1.0, 1.0, Cars[CarIndex].Sounds.AirZero.Position, Cars[CarIndex], false);
 						}
 
 						break;
@@ -237,8 +232,7 @@ namespace OpenBve
 						SoundBuffer buffer = Cars[CarIndex].Sounds.Air.Buffer;
 						if (buffer != null)
 						{
-							OpenBveApi.Math.Vector3 pos = Cars[CarIndex].Sounds.Air.Position;
-							Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[CarIndex], false);
+							Program.Sounds.PlaySound(buffer, 1.0, 1.0, Cars[CarIndex].Sounds.Air.Position, Cars[CarIndex], false);
 						}
 						break;
 					}
@@ -247,8 +241,7 @@ namespace OpenBve
 						SoundBuffer buffer = Cars[CarIndex].Sounds.AirHigh.Buffer;
 						if (buffer != null)
 						{
-							OpenBveApi.Math.Vector3 pos = Cars[CarIndex].Sounds.AirHigh.Position;
-							Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[CarIndex], false);
+							Program.Sounds.PlaySound(buffer, 1.0, 1.0, Cars[CarIndex].Sounds.AirHigh.Position, Cars[CarIndex], false);
 						}
 						break;
 					}
@@ -311,8 +304,7 @@ namespace OpenBve
 						}
 						else if (pitch > 0.02 & gain > 0.01)
 						{
-							OpenBveApi.Math.Vector3 pos = Cars[CarIndex].Sounds.Rub.Position;
-							Cars[CarIndex].Sounds.Rub.Source = Program.Sounds.PlaySound(buffer, pitch, gain, pos, Cars[CarIndex], true);
+							Cars[CarIndex].Sounds.Rub.Source = Program.Sounds.PlaySound(buffer, pitch, gain, Cars[CarIndex].Sounds.Rub.Position, Cars[CarIndex], true);
 						}
 					}
 				}

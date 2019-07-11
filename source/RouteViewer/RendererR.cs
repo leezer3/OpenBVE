@@ -448,9 +448,7 @@ namespace OpenBve {
 							f.TriggerType = EventTriggerType.None;
 							f.TrackPosition = p;
 							TrackManager.UpdateTrackFollower(ref f, p + e.TrackPositionDelta, true, false);
-							f.WorldPosition.X += dx * f.WorldSide.X + dy * f.WorldUp.X + dz * f.WorldDirection.X;
-							f.WorldPosition.Y += dx * f.WorldSide.Y + dy * f.WorldUp.Y + dz * f.WorldDirection.Y;
-							f.WorldPosition.Z += dx * f.WorldSide.Z + dy * f.WorldUp.Z + dz * f.WorldDirection.Z;
+							f.WorldPosition += dx * f.WorldSide + dy * f.WorldUp + dz * f.WorldDirection;
 							LibRender.Renderer.DrawCube(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, Camera, t);
 						}
 					}
@@ -467,9 +465,7 @@ namespace OpenBve {
 						f.TriggerType = EventTriggerType.None;
 						f.TrackPosition = p;
 						TrackManager.UpdateTrackFollower(ref f, p, true, false);
-						f.WorldPosition.X += dy * f.WorldUp.X;
-						f.WorldPosition.Y += dy * f.WorldUp.Y;
-						f.WorldPosition.Z += dy * f.WorldUp.Z;
+						f.WorldPosition += dy * f.WorldUp;
 						LibRender.Renderer.DrawCube(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, Camera, StopTexture);
 					}
 				}
@@ -485,9 +481,7 @@ namespace OpenBve {
 					f.TriggerType = EventTriggerType.None;
 					f.TrackPosition = p;
 					TrackManager.UpdateTrackFollower(ref f, p, true, false);
-					f.WorldPosition.X += dy * f.WorldUp.X;
-					f.WorldPosition.Y += dy * f.WorldUp.Y;
-					f.WorldPosition.Z += dy * f.WorldUp.Z;
+					f.WorldPosition += dy * f.WorldUp;
 					LibRender.Renderer.DrawCube(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, Camera, BufferTexture);
 				}
 			}

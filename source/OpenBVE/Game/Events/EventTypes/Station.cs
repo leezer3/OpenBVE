@@ -27,14 +27,13 @@ namespace OpenBve
 						SoundBuffer buffer = Train.Cars[d].Sounds.Halt.Buffer;
 						if (buffer != null)
 						{
-							OpenBveApi.Math.Vector3 pos = Train.Cars[d].Sounds.Halt.Position;
 							if (Train.Specs.PassAlarm == TrainManager.PassAlarmType.Single)
 							{
-								Train.Cars[d].Sounds.Halt.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train.Cars[d], false);
+								Train.Cars[d].Sounds.Halt.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, Train.Cars[d].Sounds.Halt.Position, Train.Cars[d], false);
 							}
 							else if (Train.Specs.PassAlarm == TrainManager.PassAlarmType.Loop)
 							{
-								Train.Cars[d].Sounds.Halt.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train.Cars[d], true);
+								Train.Cars[d].Sounds.Halt.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, Train.Cars[d].Sounds.Halt.Position, Train.Cars[d], true);
 							}
 						}
 						this.DontTriggerAnymore = true;

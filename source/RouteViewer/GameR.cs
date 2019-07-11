@@ -16,7 +16,6 @@ using OpenBve.RouteManager;
 using OpenBve.SignalManager;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
-using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
 namespace OpenBve {
 	internal static class Game {
@@ -35,8 +34,6 @@ namespace OpenBve {
 		// route constants
 		internal static string RouteComment = "";
 		internal static string RouteImage = "";
-		internal const double CriticalCollisionSpeedDifference = 8.0;
-		internal const double BrakePipeLeakRate = 500000.0;
 		
 		// game constants
 		internal static double[] PrecedingTrainTimeDeltas;

@@ -252,8 +252,7 @@ namespace OpenBve
 						SoundBuffer buffer = Sounds.Run[j].Buffer;
 						if (buffer != null)
 						{
-							OpenBveApi.Math.Vector3 pos = Sounds.Run[j].Position;
-							Sounds.Run[j].Source = Program.Sounds.PlaySound(buffer, pitch, gain, pos, this, true);
+							Sounds.Run[j].Source = Program.Sounds.PlaySound(buffer, pitch, gain, Sounds.Run[j].Position, this, true);
 						}
 					}
 				}
@@ -265,7 +264,6 @@ namespace OpenBve
 				{
 					return;
 				}
-				OpenBveApi.Math.Vector3 pos = Sounds.Motor.Position;
 				double speed = Math.Abs(Specs.CurrentPerceivedSpeed);
 				int idx = (int)Math.Round(speed * Sounds.Motor.SpeedConversionFactor);
 				int odir = Sounds.Motor.CurrentAccelerationDirection;
@@ -335,7 +333,7 @@ namespace OpenBve
 									Program.Sounds.StopSound(Sounds.Motor.Tables[j].Source);
 									if (nbuf != null)
 									{
-										Sounds.Motor.Tables[j].Source = Program.Sounds.PlaySound(nbuf, pitch, gain, pos, this, true);
+										Sounds.Motor.Tables[j].Source = Program.Sounds.PlaySound(nbuf, pitch, gain, Sounds.Motor.Position, this, true);
 										Sounds.Motor.Tables[j].Buffer = nbuf;
 									}
 									else
@@ -796,23 +794,23 @@ namespace OpenBve
 					for (int i = 0; i < 3; i++)
 					{
 						double a, v, j;
-						if (i == 0)
+						switch (i)
 						{
-							a = Specs.CurrentAcceleration;
-							v = Specs.CurrentPitchDueToAccelerationFastValue;
-							j = 1.8;
-						}
-						else if (i == 1)
-						{
-							a = Specs.CurrentPitchDueToAccelerationFastValue;
-							v = Specs.CurrentPitchDueToAccelerationMediumValue;
-							j = 1.2;
-						}
-						else
-						{
-							a = Specs.CurrentPitchDueToAccelerationFastValue;
-							v = Specs.CurrentPitchDueToAccelerationSlowValue;
-							j = 1.0;
+							case 0:
+								a = Specs.CurrentAcceleration;
+								v = Specs.CurrentPitchDueToAccelerationFastValue;
+								j = 1.8;
+								break;
+							case 1:
+								a = Specs.CurrentPitchDueToAccelerationFastValue;
+								v = Specs.CurrentPitchDueToAccelerationMediumValue;
+								j = 1.2;
+								break;
+							default:
+								a = Specs.CurrentPitchDueToAccelerationFastValue;
+								v = Specs.CurrentPitchDueToAccelerationSlowValue;
+								j = 1.0;
+								break;
 						}
 						double da = a - v;
 						if (da < 0.0)
@@ -825,17 +823,17 @@ namespace OpenBve
 							v += j * TimeElapsed;
 							if (v > a) v = a;
 						}
-						if (i == 0)
+						switch (i)
 						{
-							Specs.CurrentPitchDueToAccelerationFastValue = v;
-						}
-						else if (i == 1)
-						{
-							Specs.CurrentPitchDueToAccelerationMediumValue = v;
-						}
-						else
-						{
-							Specs.CurrentPitchDueToAccelerationSlowValue = v;
+							case 0:
+								Specs.CurrentPitchDueToAccelerationFastValue = v;
+								break;
+							case 1:
+								Specs.CurrentPitchDueToAccelerationMediumValue = v;
+								break;
+							default:
+								Specs.CurrentPitchDueToAccelerationSlowValue = v;
+								break;
 						}
 					}
 					{

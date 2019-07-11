@@ -7,6 +7,8 @@
 		public TrainState State;
 		/// <summary>The current station state</summary>
 		public TrainStopState StationState;
+		/// <summary>Defines whether the next stop is skipped</summary>
+		public StopSkipMode NextStopSkipped = StopSkipMode.None;
 		/// <summary>The car in which the driver's cab is located</summary>
 		public int DriverCar;
 		/// <summary>The next user-set destination</summary>
