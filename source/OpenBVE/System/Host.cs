@@ -19,7 +19,11 @@ namespace OpenBve {
 		public override void ReportProblem(OpenBveApi.Hosts.ProblemType type, string text) {
 			Interface.AddMessage(MessageType.Error, false, text);
 		}
-		
+
+		public override void AddMessage(MessageType type, bool FileNotFound, string text)
+		{
+			Interface.AddMessage(type, FileNotFound, text);
+		}
 		
 		// --- texture ---
 		
