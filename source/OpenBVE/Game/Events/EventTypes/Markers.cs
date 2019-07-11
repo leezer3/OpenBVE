@@ -48,7 +48,7 @@ namespace OpenBve
 		internal class MarkerEndEvent : GeneralEvent<AbstractTrain>
 		{
 			/// <summary>The marker or message to remove (Note: May have already timed-out)</summary>
-			internal MessageManager.Message Message;
+			internal readonly MessageManager.Message Message;
 
 			internal MarkerEndEvent(double trackPositionDelta, MessageManager.Message message)
 			{

@@ -46,6 +46,8 @@ namespace OpenBve
 			internal int MaxPowerNotchWidth = 48;
 			/// <summary>The max width used in px for the brake notch HUD string</summary>
 			internal int MaxBrakeNotchWidth = 48;
+			/// <summary>The max width used in px for the loco brake notch HUD string</summary>
+			internal int MaxLocoBrakeNotchWidth = 48;
 			/// <summary>The max width used in px for the reverser HUD string</summary>
 			internal int MaxReverserWidth = 48;
 			/// <summary>The absolute on-disk path to the train's folder</summary>

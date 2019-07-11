@@ -96,13 +96,14 @@ namespace OpenBve
 					 * The sound is to be played or is already playing.
 					 * Calculate the sound gain.
 					 * */
-					Vector3 direction;
+					
 					Vector3 position;
 					Vector3 velocity;
 
 					switch (Sources[i].Type)
 					{
 						case SoundType.TrainCar:
+							Vector3 direction; //only relevant for moving objects
 							var Car = (AbstractCar)Sources[i].Parent;
 							Car.CreateWorldCoordinates(Sources[i].Position, out position, out direction);
 							velocity = Car.CurrentSpeed * direction;

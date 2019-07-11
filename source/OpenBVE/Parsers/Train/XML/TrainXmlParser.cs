@@ -161,6 +161,17 @@ namespace OpenBve.Parsers.Train
 											}
 										}
 										break;
+									case "locobrake":
+										Train.LocoBrakeNotchDescriptions = c.InnerText.Split(';');
+										for (int j = 0; j < Train.LocoBrakeNotchDescriptions.Length; j++)
+										{
+											Size s = Fonts.NormalFont.MeasureString(Train.LocoBrakeNotchDescriptions[j]);
+											if (s.Width > Train.MaxLocoBrakeNotchWidth)
+											{
+												Train.MaxLocoBrakeNotchWidth = s.Width;
+											}
+										}
+										break;
 									case "reverser":
 										Train.ReverserDescriptions = c.InnerText.Split(';');
 										for (int j = 0; j < Train.ReverserDescriptions.Length; j++)

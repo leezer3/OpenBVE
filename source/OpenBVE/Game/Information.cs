@@ -33,8 +33,8 @@
 		/// <summary>Holds a reference to the previous interface type of the game</summary>
 		internal static InterfaceType PreviousInterface = InterfaceType.Normal;
 		/// <summary>The in-game menu system</summary>
-		internal static Menu				Menu				= Menu.Instance;
+		internal static readonly Menu Menu = Menu.Instance;
 		/// <summary>The in-game overlay with route info drawings</summary>
-		internal static RouteInfoOverlay	routeInfoOverlay	= new RouteInfoOverlay();
+		internal static readonly RouteInfoOverlay routeInfoOverlay = new RouteInfoOverlay();
     }
 }

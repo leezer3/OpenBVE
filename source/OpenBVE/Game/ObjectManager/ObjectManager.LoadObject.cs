@@ -193,13 +193,13 @@ namespace OpenBve
 				Interface.AddMessage(MessageType.Error, false, "The file " + FileName + " does not have a recognised extension.");
 				return null;
 			}
-			UnifiedObject obj;
 			switch (e.ToLowerInvariant())
 			{
 				case ".csv":
 				case ".b3d":
 				case ".x":
 				case ".obj":
+					UnifiedObject obj;
 					Program.CurrentHost.LoadObject(FileName, Encoding, out obj);
 					Result = (StaticObject)obj;
 					break;
