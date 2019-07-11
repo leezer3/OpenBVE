@@ -874,6 +874,16 @@ namespace Plugin
 													tday = Path.CombineFile(CompatibilityFolder, s);
 													hackFound = true;
 												}
+
+												if (Arguments[0].StartsWith("swiss1/", StringComparison.InvariantCultureIgnoreCase))
+												{
+													Arguments[0] = Arguments[0].Substring(7);
+													tday = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+													if (System.IO.File.Exists(tday))
+													{
+														hackFound = true;
+													}
+												}
 											}
 											if (!hackFound)
 											{
