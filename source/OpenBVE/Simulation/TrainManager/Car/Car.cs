@@ -428,7 +428,7 @@ namespace OpenBve
 						{
 							this.CurrentCarSection = 0;
 							this.CarSections[0].Initialize(true);
-							ShowObject(CarSections[0]);
+							CarSections[0].Show();
 							break;
 						}
 						this.CurrentCarSection = -1;
@@ -438,14 +438,14 @@ namespace OpenBve
 						{
 							this.CurrentCarSection = 1;
 							this.CarSections[1].Initialize(true);
-							ShowObject(CarSections[1]);
+							CarSections[1].Show();
 							break;
 						}
 						else if(!this.HasInteriorView && this.CarSections.Length > 0)
 						{
 							this.CurrentCarSection = 0;
 							this.CarSections[0].Initialize(true);
-							ShowObject(CarSections[0]);
+							CarSections[0].Show();
 							break;
 						}
 						this.CurrentCarSection = -1;
@@ -455,43 +455,7 @@ namespace OpenBve
 				//This stops objects from spinning if the last position before they were hidden is different
 				baseTrain.Cars[Index].UpdateObjects(0.0, true, false);
 			}
-
-			private void ShowObject(CarSection Section)
-			{
-				if (Section.Groups.Length > 0)
-				{
-					for (int i = 0; i < Section.Groups[0].Elements.Length; i++)
-					{
-						int o = Section.Groups[0].Elements[i].ObjectIndex;
-						if (Section.Groups[0].Overlay)
-						{
-							Renderer.ShowObject(o, ObjectType.Overlay);
-						}
-						else
-						{
-							Renderer.ShowObject(o, ObjectType.Dynamic);
-						}
-					}
-				}
-
-				int add = Section.CurrentAdditionalGroup + 1;
-				if (add < Section.Groups.Length)
-				{
-					for (int i = 0; i < Section.Groups[add].Elements.Length; i++)
-					{
-						int o = Section.Groups[add].Elements[i].ObjectIndex;
-						if (Section.Groups[add].Overlay)
-						{
-							Renderer.ShowObject(o, ObjectType.Overlay);
-						}
-						else
-						{
-							Renderer.ShowObject(o, ObjectType.Dynamic);
-						}
-					}
-				}
-			}
-
+			
 			/// <summary>Updates the currently displayed objects for this car</summary>
 			/// <param name="TimeElapsed">The time elapsed</param>
 			/// <param name="ForceUpdate">Whether this is a forced update</param>
@@ -971,8 +935,7 @@ namespace OpenBve
 						{
 							if (!Program.Sounds.IsPlaying(Sounds.SpringL.Source))
 							{
-								Vector3 pos = Sounds.SpringL.Position;
-								Sounds.SpringL.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, false);
+								Sounds.SpringL.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, Sounds.SpringL.Position, this, false);
 							}
 						}
 						Sounds.SpringPlayedAngle = a;
@@ -984,8 +947,7 @@ namespace OpenBve
 						{
 							if (!Program.Sounds.IsPlaying(Sounds.SpringR.Source))
 							{
-								Vector3 pos = Sounds.SpringR.Position;
-								Sounds.SpringR.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, false);
+								Sounds.SpringR.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, Sounds.SpringR.Position, this, false);
 							}
 						}
 						Sounds.SpringPlayedAngle = a;
@@ -1060,8 +1022,7 @@ namespace OpenBve
 							SoundBuffer buffer = Sounds.Flange[i].Buffer;
 							if (buffer != null)
 							{
-								Vector3 pos = Sounds.Flange[i].Position;
-								Sounds.Flange[i].Source = Program.Sounds.PlaySound(buffer, pitch, gain, pos, this, true);
+								Sounds.Flange[i].Source = Program.Sounds.PlaySound(buffer, pitch, gain, Sounds.Flange[i].Position, this, true);
 							}
 						}
 					}

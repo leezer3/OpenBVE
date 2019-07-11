@@ -55,7 +55,6 @@ namespace OpenBve
 				{
 					if (!PlayerTrainOnly | Train.IsPlayerTrain)
 					{
-						Vector3 p = this.Position;
 						double pitch = 1.0;
 						double gain = 1.0;
 						SoundBuffer buffer = SoundBuffer;
@@ -73,7 +72,7 @@ namespace OpenBve
 							}
 							if (buffer != null)
 							{
-								Program.Sounds.PlaySound(buffer, pitch, gain, p, Train.Cars[CarIndex], false);
+								Program.Sounds.PlaySound(buffer, pitch, gain, Position, Train.Cars[CarIndex], false);
 							}
 						}
 						this.DontTriggerAnymore = this.Once;

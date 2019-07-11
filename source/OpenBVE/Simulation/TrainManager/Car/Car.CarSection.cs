@@ -1,5 +1,6 @@
 ﻿using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -44,6 +45,42 @@ namespace OpenBve
 				for (int i = 0; i < Groups.Length; i++)
 				{
 					Groups[i].Initialize(CurrentlyVisible);
+				}
+			}
+
+			internal void Show()
+			{
+				if (Groups.Length > 0)
+				{
+					for (int i = 0; i < Groups[0].Elements.Length; i++)
+					{
+						int o = Groups[0].Elements[i].ObjectIndex;
+						if (Groups[0].Overlay)
+						{
+							Renderer.ShowObject(o, ObjectType.Overlay);
+						}
+						else
+						{
+							Renderer.ShowObject(o, ObjectType.Dynamic);
+						}
+					}
+				}
+
+				int add = CurrentAdditionalGroup + 1;
+				if (add < Groups.Length)
+				{
+					for (int i = 0; i < Groups[add].Elements.Length; i++)
+					{
+						int o = Groups[add].Elements[i].ObjectIndex;
+						if (Groups[add].Overlay)
+						{
+							Renderer.ShowObject(o, ObjectType.Overlay);
+						}
+						else
+						{
+							Renderer.ShowObject(o, ObjectType.Dynamic);
+						}
+					}
 				}
 			}
 		}

@@ -260,7 +260,7 @@ namespace OpenBve {
 			internal bool Topples;
 			internal CarBrightness Brightness;
 
-			internal void CreateWorldCoordinates(Vector3 Car, out Vector3 Position, out Vector3 Direction)
+			public override void CreateWorldCoordinates(Vector3 Car, out Vector3 Position, out Vector3 Direction)
 			{
 				Direction = FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition;
 				double t = Direction.Norm();
