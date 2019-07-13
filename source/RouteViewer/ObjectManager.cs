@@ -805,6 +805,10 @@ namespace OpenBve {
 			return CreateStaticObject(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, BlockLength, TrackPosition, 1.0);
 		}
 		internal static int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness) {
+			if (Prototype == null)
+			{
+				return -1;
+			}
 			int a = ObjectsUsed;
 			if (a >= Objects.Length)
 			{

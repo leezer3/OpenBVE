@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using LibRender;
 using OpenBveApi.Interface;
@@ -96,6 +96,7 @@ namespace OpenBve
 			        {
 				        for (int j = 0; j < Objects[i].States.Length; j++)
 				        {
+					        if (Objects[i].States[j].Object == null) continue;
 					        Objects[i].States[j].Object.OptimizeObject(PreserveVerticies, Threshold, VertexCulling);
 				        }
 			        }
@@ -1026,6 +1027,10 @@ namespace OpenBve
 
         internal static int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
         {
+	        if (Prototype == null)
+	        {
+		        return -1;
+	        }
             int a = ObjectsUsed;
             if (a >= Objects.Length)
             {

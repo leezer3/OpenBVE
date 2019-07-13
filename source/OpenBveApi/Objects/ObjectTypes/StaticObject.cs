@@ -375,6 +375,7 @@ namespace OpenBveApi.Objects
 		/// <summary>Applies world data to create a transformed model</summary>
 		public void ApplyData(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double startingDistance, double endingDistance, double BlockLength, double TrackPosition, double Brightness, double ViewingDistance)
 		{
+			if (Prototype == null) return;
 			StartingDistance = float.MaxValue;
 			EndingDistance = float.MinValue;
 			Mesh.Vertices = new VertexTemplate[Prototype.Mesh.Vertices.Length];
