@@ -31,7 +31,7 @@ namespace OpenBve
 						}
 						else if (Direction > 0)
 						{
-							if (this.Message.Trains != null && !this.Message.Trains.Contains(new System.IO.DirectoryInfo(Game.RouteInformation.TrainFolder).Name))
+							if (this.Message.Trains != null && !this.Message.Trains.Contains(new System.IO.DirectoryInfo(Train.TrainFolder).Name))
 							{
 								//Our train is NOT in the list of trains which this message triggers for
 								return;
@@ -65,7 +65,7 @@ namespace OpenBve
 					{
 						if (Direction < 0)
 						{
-							if (this.Message.Trains != null && !this.Message.Trains.Contains(new System.IO.DirectoryInfo(Game.RouteInformation.TrainFolder).Name))
+							if (this.Message.Trains != null && !this.Message.Trains.Contains(new System.IO.DirectoryInfo(Train.TrainFolder).Name))
 							{
 								//Our train is NOT in the list of trains which this message triggers for
 								return;

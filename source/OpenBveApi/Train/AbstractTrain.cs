@@ -33,6 +33,8 @@
 		/// <summary>The timetable delta from the player train</summary>
 		/// <remarks>Is negative for earlier trains, or negative for later trains</remarks>
 		public double TimetableDelta;
+		/// <summary>A string storing the absolute on-disk path to the current train folder</summary>
+		public string TrainFolder;
 		/// <summary>Gets the track position of the front car</summary>
 		public abstract double FrontCarTrackPosition();
 
