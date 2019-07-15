@@ -13,7 +13,7 @@ namespace OpenBve
 			internal AnimatedObject Object;
 			/// <summary>The signalling section the object refers to (Only relevant for objects placed using Track.Sig</summary>
 			internal int SectionIndex;
-			/// <summary>The curve radius at the object's track position</summary>
+			/// <summary>The absolute radius of the 3D object</summary>
 			internal double Radius;
 
 			public override void Update(double TimeElapsed, bool ForceUpdate)
