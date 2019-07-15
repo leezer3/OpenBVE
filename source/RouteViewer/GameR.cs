@@ -46,18 +46,7 @@ namespace OpenBve {
 		
 		/// <summary>The current plugin debug message to be displayed</summary>
 		internal static string InfoDebugString = "";
-		/// <summary>The total number of OpenGL triangles in the current frame</summary>
-		internal static int InfoTotalTriangles = 0;
-		/// <summary>The total number of OpenGL triangle strips in the current frame</summary>
-		internal static int InfoTotalTriangleStrip = 0;
-		/// <summary>The total number of OpenGL quad strips in the current frame</summary>
-		internal static int InfoTotalQuadStrip = 0;
-		/// <summary>The total number of OpenGL quads in the current frame</summary>
-		internal static int InfoTotalQuads = 0;
-		/// <summary>The total number of OpenGL polygons in the current frame</summary>
-		internal static int InfoTotalPolygon = 0;
-		/// <summary>The total number of static opaque faces in the current frame</summary>
-		internal static int InfoStaticOpaqueFaceCount = 0;
+		
 
 		// ================================
 
@@ -89,11 +78,11 @@ namespace OpenBve {
 			CurrentRoute.NextFog = new Fog(0.0f, 0.0f, Color24.Grey, 1.0);
 			CurrentRoute.NoFogStart = (float)Backgrounds.BackgroundImageDistance + 200.0f;
 			CurrentRoute.NoFogEnd = 2.0f * CurrentRoute.NoFogStart;
-			InfoTotalTriangles = 0;
-			InfoTotalTriangleStrip = 0;
-			InfoTotalQuads = 0;
-			InfoTotalQuadStrip = 0;
-			InfoTotalPolygon = 0;
+			LibRender.Renderer.InfoTotalTriangles = 0;
+			LibRender.Renderer.InfoTotalTriangleStrip = 0;
+			LibRender.Renderer.InfoTotalQuads = 0;
+			LibRender.Renderer.InfoTotalQuadStrip = 0;
+			LibRender.Renderer.InfoTotalPolygon = 0;
 			// object manager
 			ObjectManager.Objects = new StaticObject[16];
 			ObjectManager.ObjectsUsed = 0;

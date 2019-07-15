@@ -70,19 +70,19 @@ namespace OpenBve
 				switch (Prototype.Mesh.Faces[i].Flags & MeshFace.FaceTypeMask)
 				{
 					case MeshFace.FaceTypeTriangles:
-						Game.InfoTotalTriangles++;
+						LibRender.Renderer.InfoTotalTriangles++;
 						break;
 					case MeshFace.FaceTypeTriangleStrip:
-						Game.InfoTotalTriangleStrip++;
+						LibRender.Renderer.InfoTotalTriangleStrip++;
 						break;
 					case MeshFace.FaceTypeQuads:
-						Game.InfoTotalQuads++;
+						LibRender.Renderer.InfoTotalQuads++;
 						break;
 					case MeshFace.FaceTypeQuadStrip:
-						Game.InfoTotalQuadStrip++;
+						LibRender.Renderer.InfoTotalQuadStrip++;
 						break;
 					case MeshFace.FaceTypePolygon:
-						Game.InfoTotalPolygon++;
+						LibRender.Renderer.InfoTotalPolygon++;
 						break;
 				}
 			}

@@ -193,7 +193,7 @@ namespace OpenBve
 
 						StaticOpaque[groupIndex].Update = true;
 						Objects[ObjectCount].FaceListReferences[i] = new ObjectListReference(listType, newIndex);
-						Game.InfoStaticOpaqueFaceCount++;
+						LibRender.Renderer.InfoStaticOpaqueFaceCount++;
 
 						/*
 						 * Check if the given object has a bounding box, and insert it to the end of the list of bounding boxes if required
@@ -305,7 +305,7 @@ namespace OpenBve
 							list.FaceCount = count;
 						}
 						StaticOpaque[groupIndex].Update = true;
-						Game.InfoStaticOpaqueFaceCount--;
+						LibRender.Renderer.InfoStaticOpaqueFaceCount--;
 					}
 					else
 					{

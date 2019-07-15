@@ -79,12 +79,12 @@ namespace OpenBve {
 			CurrentRoute.PreviousFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, 0.0);
 			CurrentRoute.CurrentFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, 0.5);
 			CurrentRoute.NextFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, 1.0);
-			InfoTotalTriangles = 0;
-			InfoTotalTriangleStrip = 0;
-			InfoTotalQuads = 0;
-			InfoTotalQuadStrip = 0;
-			InfoTotalPolygon = 0;
-			InfoStaticOpaqueFaceCount = 0;
+			LibRender.Renderer.InfoTotalTriangles = 0;
+			LibRender.Renderer.InfoTotalTriangleStrip = 0;
+			LibRender.Renderer.InfoTotalQuads = 0;
+			LibRender.Renderer.InfoTotalQuadStrip = 0;
+			LibRender.Renderer.InfoTotalPolygon = 0;
+			LibRender.Renderer.InfoStaticOpaqueFaceCount = 0;
 			if (ResetLogs) {
 				LogRouteName = "";
 				LogTrainName = "";

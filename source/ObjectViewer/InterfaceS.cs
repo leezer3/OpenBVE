@@ -1,4 +1,4 @@
-﻿// ╔══════════════════════════════════════════════════════════════╗
+// ╔══════════════════════════════════════════════════════════════╗
 // ║ Interface.cs and TrainManager.cs for the Structure Viewer    ║
 // ╠══════════════════════════════════════════════════════════════╣
 // ║ This file cannot be used in the openBVE main program.        ║
@@ -43,11 +43,7 @@ namespace OpenBve {
 			internal int Number;
 			internal double Speed;
 		}
-		internal static int InfoTotalTriangles = 0;
-		internal static int InfoTotalTriangleStrip = 0;
-		internal static int InfoTotalQuads = 0;
-		internal static int InfoTotalQuadStrip = 0;
-		internal static int InfoTotalPolygon = 0;
+		
 		internal static void Reset() {
 			Renderer.Reset();
 			ObjectManager.Objects = new StaticObject[16];

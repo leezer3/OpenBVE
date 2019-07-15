@@ -1,4 +1,4 @@
-﻿using OpenBveApi.Hosts;
+using OpenBveApi.Hosts;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 
@@ -47,6 +47,18 @@ namespace LibRender
 		public static double FrameRate = 1.0;
 		/// <summary>Holds the lock for GDI Plus functions</summary>
 		public static readonly object gdiPlusLock = new object();
+		/// <summary>The total number of OpenGL triangles in the current frame</summary>
+		public static int InfoTotalTriangles = 0;
+		/// <summary>The total number of OpenGL triangle strips in the current frame</summary>
+		public static int InfoTotalTriangleStrip = 0;
+		/// <summary>The total number of OpenGL quad strips in the current frame</summary>
+		public static int InfoTotalQuadStrip = 0;
+		/// <summary>The total number of OpenGL quads in the current frame</summary>
+		public static int InfoTotalQuads = 0;
+		/// <summary>The total number of OpenGL polygons in the current frame</summary>
+		public static int InfoTotalPolygon = 0;
+		/// <summary>The total number of static opaque faces in the current frame</summary>
+		public static int InfoStaticOpaqueFaceCount = 0;
 
 		internal const float inv255 = 1.0f / 255.0f;
     }
