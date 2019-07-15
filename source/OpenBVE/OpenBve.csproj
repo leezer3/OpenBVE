@@ -124,7 +124,6 @@
       <DependentUpon>AI.cs</DependentUpon>
     </Compile>
     <Compile Include="Game\Events\EventTypes\BrightnessChange.cs" />
-    <Compile Include="Game\Events\EventTypes\Markers.cs" />
     <Compile Include="Game\Events\EventTypes\RequestStop.cs" />
     <Compile Include="Game\Events\EventTypes\SignalSection.cs" />
     <Compile Include="Game\Events\EventTypes\Sounds.cs" />

@@ -181,6 +181,16 @@ namespace OpenBveApi.Hosts {
 		/// <param name="FileNotFound">Whether this message relates to a file not found</param>
 		/// <param name="text">The textual message.</param>
 		public virtual void AddMessage(MessageType type, bool FileNotFound, string text) { }
+
+		/// <summary>Adds a message to the in-game display</summary>
+		/// <param name="AbstractMesage">The message to add</param>
+		public virtual void AddMessage(object AbstractMesage)
+		{
+			/*
+			 * Using object as a parameter type allows us to keep the messages out the API...
+			 */
+
+		}
 	}
 	
 }

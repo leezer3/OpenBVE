@@ -486,7 +486,7 @@ namespace OpenBve
 							double d = Data.Markers[j].StartingPosition - StartingDistance;
 							if (Data.Markers[j].Message != null)
 							{
-								TrackManager.Tracks[0].Elements[n].Events[m] = new TrackManager.MarkerStartEvent(d, Data.Markers[j].Message);
+								TrackManager.Tracks[0].Elements[n].Events[m] = new MarkerStartEvent(d, Data.Markers[j].Message, Program.CurrentHost);
 							}
 						}
 						if (Data.Markers[j].EndingPosition >= StartingDistance & Data.Markers[j].EndingPosition < EndingDistance)
@@ -496,7 +496,7 @@ namespace OpenBve
 							double d = Data.Markers[j].EndingPosition - StartingDistance;
 							if (Data.Markers[j].Message != null)
 							{
-								TrackManager.Tracks[0].Elements[n].Events[m] = new TrackManager.MarkerEndEvent(d, Data.Markers[j].Message);
+								TrackManager.Tracks[0].Elements[n].Events[m] = new MarkerEndEvent(d, Data.Markers[j].Message, Program.CurrentHost);
 							}
 						}
 					}

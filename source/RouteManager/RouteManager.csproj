@@ -48,6 +48,8 @@
     <Compile Include="Events\BackgroundChange.cs" />
     <Compile Include="Events\DestinationChange.cs" />
     <Compile Include="Events\FogChange.cs" />
+    <Compile Include="Events\MarkerEnd.cs" />
+    <Compile Include="Events\MarkerStart.cs" />
     <Compile Include="Events\TrackEnd.cs" />
     <Compile Include="Fog.cs" />
     <Compile Include="MessageManager\AbstractMessage.cs" />
