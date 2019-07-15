@@ -133,9 +133,6 @@
     <Compile Include="Game\Events\EventTypes\Transponder.cs" />
     <Compile Include="Game\Markers.cs" />
     <Compile Include="Game\MessageManager.cs" />
-    <Compile Include="Game\MessageManager.Message.cs">
-      <DependentUpon>MessageManager.cs</DependentUpon>
-    </Compile>
     <Compile Include="Game\MessageManager.ImageMessage.cs">
       <DependentUpon>MessageManager.cs</DependentUpon>
     </Compile>

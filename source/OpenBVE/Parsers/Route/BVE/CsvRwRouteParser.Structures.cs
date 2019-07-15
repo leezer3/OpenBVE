@@ -115,7 +115,7 @@ namespace OpenBve
 		{
 			internal double StartingPosition;
 			internal double EndingPosition;
-			internal MessageManager.Message Message;
+			internal AbstractMessage Message;
 		}
 
 		internal struct StopRequest

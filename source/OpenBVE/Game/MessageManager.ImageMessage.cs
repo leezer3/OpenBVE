@@ -1,11 +1,12 @@
-﻿using OpenBveApi.Textures;
+﻿using OpenBve.RouteManager;
+using OpenBveApi.Textures;
 
 namespace OpenBve
 {
 	partial class MessageManager
 	{
 		/// <summary>Defines an image based message to be displayed in-game</summary>
-		internal class TextureMessage : Message
+		internal class TextureMessage : AbstractMessage
 		{
 			/// <summary>The message texture to be displayed if early</summary>
 			internal Texture MessageEarlyTexture;
@@ -30,7 +31,7 @@ namespace OpenBve
 				this.Direction = MessageDirection.Forwards;
 			}
 
-			internal override void AddMessage()
+			public override void AddMessage()
 			{
 				QueueForRemoval = false;
 				ImageMessages.Add(this);
@@ -59,7 +60,7 @@ namespace OpenBve
 				}
 			}
 
-			internal override void Update()
+			public override void Update()
 			{
 				if (QueueForRemoval == true)
 				{
@@ -80,7 +81,7 @@ namespace OpenBve
 		}
 
 		/// <summary>Defines a legacy marker image, displayed between two points on a route</summary>
-		internal class MarkerImage : Message
+		internal class MarkerImage : AbstractMessage
 		{
 			/// <summary>The texture to be displayed</summary>
 			private readonly Texture Texture;
@@ -90,14 +91,14 @@ namespace OpenBve
 				this.Texture = texture;
 			}
 
-			internal override void AddMessage()
+			public override void AddMessage()
 			{
 				QueueForRemoval = false;
 				ImageMessages.Add(this);
 				Game.AddMarker(this.Texture);
 			}
 
-			internal override void Update()
+			public override void Update()
 			{
 				if (QueueForRemoval == true)
 				{

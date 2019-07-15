@@ -1,26 +1,19 @@
 ﻿using System.Collections.Generic;
 using OpenBveApi.Trains;
+using OpenBve.RouteManager;
 
 namespace OpenBve
 {
 	partial class MessageManager
 	{
 		/// <summary>Contains the current textual messages</summary>
-		internal static readonly List<Message> TextualMessages = new List<Message>();
+		internal static readonly List<AbstractMessage> TextualMessages = new List<AbstractMessage>();
 		/// <summary>Contains the current image based messages</summary>
-		internal static readonly List<Message> ImageMessages = new List<Message>();
-
-		/// <summary>Defines the directions in which a message may trigger</summary>
-		internal enum MessageDirection
-		{
-			Forwards = 0,
-			Backwards = 1,
-			Both = 2
-		}
-
+		internal static readonly List<AbstractMessage> ImageMessages = new List<AbstractMessage>();
+		
 		/// <summary>Adds a message to the in-game display</summary>
 		/// <param name="message">The message to add</param>
-		internal static void AddMessage(Message message)
+		internal static void AddMessage(AbstractMessage message)
 		{
 			if (TrainManager.PlayerTrain.StationState == TrainStopState.Jumping)
 			{

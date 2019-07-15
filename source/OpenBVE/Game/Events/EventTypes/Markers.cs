@@ -1,4 +1,5 @@
-﻿using System.Linq;
+using System.Linq;
+using OpenBve.RouteManager;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 
@@ -10,9 +11,9 @@ namespace OpenBve
 		internal class MarkerStartEvent : GeneralEvent<AbstractTrain>
 		{
 			/// <summary>The marker or message to add</summary>
-			private readonly MessageManager.Message Message;
+			private readonly AbstractMessage Message;
 
-			internal MarkerStartEvent(double trackPositionDelta, MessageManager.Message message)
+			internal MarkerStartEvent(double trackPositionDelta, AbstractMessage message)
 			{
 				this.TrackPositionDelta = trackPositionDelta;
 				this.DontTriggerAnymore = false;
@@ -48,9 +49,9 @@ namespace OpenBve
 		internal class MarkerEndEvent : GeneralEvent<AbstractTrain>
 		{
 			/// <summary>The marker or message to remove (Note: May have already timed-out)</summary>
-			internal readonly MessageManager.Message Message;
+			internal readonly AbstractMessage Message;
 
-			internal MarkerEndEvent(double trackPositionDelta, MessageManager.Message message)
+			internal MarkerEndEvent(double trackPositionDelta, AbstractMessage message)
 			{
 				this.TrackPositionDelta = trackPositionDelta;
 				this.DontTriggerAnymore = false;
