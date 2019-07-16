@@ -205,10 +205,6 @@ namespace OpenBve
 				}
 				QueueForRemoval = false;
 			}
-
-			public override void Update()
-			{
-			}
 		}
 
 
@@ -252,10 +248,6 @@ namespace OpenBve
 					return;
 				}
 				Triggered = true;
-			}
-
-			public override void Update()
-			{
 			}
 		}
 	}

@@ -38,7 +38,11 @@ namespace OpenBve.RouteManager
 		public bool QueueForRemoval;
 		/// <summary>The function called when the message is added</summary>
 		public abstract void AddMessage();
+
 		/// <summary>Called once a frame to update the message</summary>
-		public abstract void Update();
+		public virtual void Update()
+		{
+
+		}
 	}
 }
