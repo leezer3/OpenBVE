@@ -7,6 +7,7 @@ using System;
 using System.Drawing;
 using LibRender;
 using OpenBve.RouteManager;
+using OpenBveApi;
 
 namespace OpenBve
 {
@@ -689,7 +690,7 @@ namespace OpenBve
 							case MenuTag.ExitToMainMenu:        // BACK TO MAIN MENU
 								Reset();
 								Program.RestartArguments =
-									Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade ? "/review" : "";
+									Interface.CurrentOptions.GameMode == GameMode.Arcade ? "/review" : "";
 								MainLoop.Quit = MainLoop.QuitMode.ExitToMenu;
 								break;
 							case MenuTag.Control:               // CONTROL CUSTOMIZATION

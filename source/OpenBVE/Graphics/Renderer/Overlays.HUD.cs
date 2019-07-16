@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBve.RouteManager;
+using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Textures;
@@ -410,7 +411,7 @@ namespace OpenBve
 				case "stopnone":
 				{
 					int s = TrainManager.PlayerTrain.Station;
-					if (s >= 0 && CurrentRoute.Stations[s].PlayerStops() && Interface.CurrentOptions.GameMode != Interface.GameMode.Expert)
+					if (s >= 0 && CurrentRoute.Stations[s].PlayerStops() && Interface.CurrentOptions.GameMode != GameMode.Expert)
 					{
 						bool cond;
 						if (Command == "stopleft")
@@ -448,7 +449,7 @@ namespace OpenBve
 				case "stopnonetick":
 				{
 					int s = TrainManager.PlayerTrain.Station;
-					if (s >= 0 && CurrentRoute.Stations[s].PlayerStops() && Interface.CurrentOptions.GameMode != Interface.GameMode.Expert)
+					if (s >= 0 && CurrentRoute.Stations[s].PlayerStops() && Interface.CurrentOptions.GameMode != GameMode.Expert)
 					{
 						int c = CurrentRoute.Stations[s].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
 						if (c >= 0)
@@ -705,7 +706,7 @@ namespace OpenBve
 						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
 					} break;
 				case "score":
-					if (Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade)
+					if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
 					{
 						t = Game.CurrentScore.CurrentValue.ToString(Culture) + " / " + Game.CurrentScore.Maximum.ToString(Culture);
 						if (Game.CurrentScore.CurrentValue < 0)

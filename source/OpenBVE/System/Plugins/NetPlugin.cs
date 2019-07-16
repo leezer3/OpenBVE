@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using OpenBve.RouteManager;
+using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -291,7 +292,7 @@ namespace OpenBve {
 		/// <param name="Time">The time in seconds for which to display the message</param>
 		internal void AddInterfaceMessage(string Message, MessageColor Color, double Time)
 		{
-			Game.AddMessage(Message, MessageDependency.Plugin, Interface.GameMode.Expert, Color, Game.SecondsSinceMidnight + Time, null);
+			Game.AddMessage(Message, MessageDependency.Plugin, GameMode.Expert, Color, Game.SecondsSinceMidnight + Time, null);
 		}
 
 		/// <summary>May be called from a .Net plugin, in order to add a score to the post-game log</summary>

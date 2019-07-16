@@ -1,4 +1,5 @@
 ﻿using OpenBve.RouteManager;
+using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
@@ -92,7 +93,7 @@ namespace OpenBve
 								//If message is not empty, add it
 								if (!string.IsNullOrEmpty(stop.PassMessage) && Train.IsPlayerTrain)
 								{
-									Game.AddMessage(stop.PassMessage, MessageDependency.None, Interface.GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
+									Game.AddMessage(stop.PassMessage, MessageDependency.None, GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
 								}
 								return;
 							}
@@ -101,7 +102,7 @@ namespace OpenBve
 							//If message is not empty, add it
 							if (!string.IsNullOrEmpty(stop.StopMessage) && Train.IsPlayerTrain)
 							{
-								Game.AddMessage(stop.StopMessage, MessageDependency.None, Interface.GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
+								Game.AddMessage(stop.StopMessage, MessageDependency.None, GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
 							}
 						}
 						else
@@ -121,7 +122,7 @@ namespace OpenBve
 							//If message is not empty, add it
 							if (!string.IsNullOrEmpty(stop.PassMessage) && Train.IsPlayerTrain)
 							{
-								Game.AddMessage(stop.PassMessage, MessageDependency.None, Interface.GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
+								Game.AddMessage(stop.PassMessage, MessageDependency.None, GameMode.Normal, MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
 							}
 						}
 					}

@@ -1,6 +1,7 @@
 ﻿using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBve.RouteManager;
+using OpenBveApi;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 
@@ -119,11 +120,11 @@ namespace OpenBve
 					{
 						if (Train.CurrentSectionLimit == 0.0 && Game.MinimalisticSimulation == false)
 						{
-							Game.AddMessage(Translations.GetInterfaceString("message_signal_stop"), MessageDependency.PassedRedSignal, Interface.GameMode.Normal, MessageColor.Red, double.PositiveInfinity, null);
+							Game.AddMessage(Translations.GetInterfaceString("message_signal_stop"), MessageDependency.PassedRedSignal, GameMode.Normal, MessageColor.Red, double.PositiveInfinity, null);
 						}
 						else if (Train.CurrentSpeed > Train.CurrentSectionLimit)
 						{
-							Game.AddMessage(Translations.GetInterfaceString("message_signal_overspeed"), MessageDependency.SectionLimit, Interface.GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
+							Game.AddMessage(Translations.GetInterfaceString("message_signal_overspeed"), MessageDependency.SectionLimit, GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
 						}
 					}
 				}

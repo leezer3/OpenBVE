@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Xml;
 using LibRender;
 using OpenBve.UserInterface;
+using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Packages;
 using OpenBveApi.Interface;
@@ -268,7 +269,7 @@ namespace OpenBve {
 			// modes
 			comboboxMode.Items.Clear();
 			comboboxMode.Items.AddRange(new object[] { "", "", "" });
-			comboboxMode.SelectedIndex = Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade ? 0 : Interface.CurrentOptions.GameMode == Interface.GameMode.Expert ? 2 : 1;
+			comboboxMode.SelectedIndex = Interface.CurrentOptions.GameMode == GameMode.Arcade ? 0 : Interface.CurrentOptions.GameMode == GameMode.Expert ? 2 : 1;
 			// review last game
 			{
 				if (Game.LogRouteName.Length == 0 | Game.LogTrainName.Length == 0)
@@ -287,9 +288,9 @@ namespace OpenBve {
 					labelReviewTimeValue.Text = Game.LogDateTime.ToString("HH:mm:ss", Culture);
 					switch (Interface.CurrentOptions.GameMode)
 					{
-						case Interface.GameMode.Arcade: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_arcade"); break;
-						case Interface.GameMode.Normal: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_normal"); break;
-						case Interface.GameMode.Expert: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_expert"); break;
+						case GameMode.Arcade: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_arcade"); break;
+						case GameMode.Normal: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_normal"); break;
+						case GameMode.Expert: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_expert"); break;
 						default: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_unknown"); break;
 					}
 					if (Game.CurrentScore.Maximum == 0)
@@ -660,9 +661,9 @@ namespace OpenBve {
 			labelRatingModeCaption.Text = Translations.GetInterfaceString("review_score_rating_mode");
 			switch (Interface.CurrentOptions.GameMode)
 			{
-				case Interface.GameMode.Arcade: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_arcade"); break;
-				case Interface.GameMode.Normal: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_normal"); break;
-				case Interface.GameMode.Expert: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_expert"); break;
+				case GameMode.Arcade: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_arcade"); break;
+				case GameMode.Normal: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_normal"); break;
+				case GameMode.Expert: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_expert"); break;
 				default: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_unkown"); break;
 			}
 			{
@@ -918,7 +919,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.OldTransparencyMode = checkBoxTransparencyFix.Checked;
 			Interface.CurrentOptions.EnableBveTsHacks = checkBoxHacks.Checked;
 			Interface.CurrentOptions.DisableDisplayLists = checkBoxDisableDisplayLists.Checked;
-			Interface.CurrentOptions.GameMode = (Interface.GameMode)comboboxMode.SelectedIndex;
+			Interface.CurrentOptions.GameMode = (GameMode)comboboxMode.SelectedIndex;
 			Interface.CurrentOptions.BlackBox = checkboxBlackBox.Checked;
 			Interface.CurrentOptions.LoadingSway = checkBoxLoadingSway.Checked;
 			Interface.CurrentOptions.UseJoysticks = checkboxJoysticksUsed.Checked;

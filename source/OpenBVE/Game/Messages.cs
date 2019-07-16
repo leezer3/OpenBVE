@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBve.RouteManager;
+using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 
@@ -22,7 +23,7 @@ namespace OpenBve
 		/// <param name="Color">The color of the message text</param>
 		/// <param name="Timeout">The time this message will display for</param>
 		/// <param name="key">The textual key identifiying this message</param>
-		internal static void AddMessage(string Text, MessageDependency Depencency, Interface.GameMode Mode, MessageColor Color, double Timeout, string key)
+		internal static void AddMessage(string Text, MessageDependency Depencency, GameMode Mode, MessageColor Color, double Timeout, string key)
 		{
 			
 			

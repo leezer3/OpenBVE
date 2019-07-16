@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBve.RouteManager;
+using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
@@ -272,7 +273,7 @@ namespace OpenBve
 									xc = 0;
 								}
 								// sum
-								if (Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade)
+								if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
 								{
 									int xs = xa + xb + xc;
 									AddScore("", 10.0);
@@ -280,7 +281,7 @@ namespace OpenBve
 									AddScore(" ", 10.0);
 								}
 								// evaluation
-								if (Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade)
+								if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
 								{
 									if (CurrentRoute.Stations[j].Type == StationType.Terminal)
 									{
@@ -363,7 +364,7 @@ namespace OpenBve
 			/// <param name="Count">Whether this should be counted as a unique event (NOTE: Scheduled stops are the only case which are not)</param>
 			private void AddScore(int Value, ScoreTextToken TextToken, double Duration, bool Count = true)
 			{
-				if (Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade)
+				if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
 				{
 					int n = ScoreMessages.Length;
 					Array.Resize<ScoreMessage>(ref ScoreMessages, n + 1);
@@ -404,7 +405,7 @@ namespace OpenBve
 			/// <param name="Duration">The duration of the score event (e.g. overspeed)</param>
 			private void AddScore(string Text, double Duration)
 			{
-				if (Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade)
+				if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
 				{
 					int n = ScoreMessages.Length;
 					Array.Resize<ScoreMessage>(ref ScoreMessages, n + 1);
@@ -422,7 +423,7 @@ namespace OpenBve
 		/// <param name="TimeElapsed">The frame time elapsed</param>
 		internal static void UpdateScoreMessages(double TimeElapsed)
 		{
-			if (Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade)
+			if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
 			{
 				for (int i = 0; i < ScoreMessages.Length; i++)
 				{

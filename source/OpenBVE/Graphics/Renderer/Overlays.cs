@@ -1,6 +1,7 @@
 ﻿using System;
 using LibRender;
 using OpenBve.RouteManager;
+using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Runtime;
@@ -66,7 +67,7 @@ namespace OpenBve
 							}
 						}
 						//Marker textures
-						if (Interface.CurrentOptions.GameMode != Interface.GameMode.Expert)
+						if (Interface.CurrentOptions.GameMode != GameMode.Expert)
 						{
 							double y = 8.0;
 							for (int i = 0; i < LibRender.Renderer.MarkerTextures.Length; i++)
@@ -133,7 +134,7 @@ namespace OpenBve
 					break;
 			}
 			// air brake debug output
-			if (Interface.CurrentOptions.GameMode != Interface.GameMode.Expert & OptionBrakeSystems)
+			if (Interface.CurrentOptions.GameMode != GameMode.Expert & OptionBrakeSystems)
 			{
 				RenderBrakeSystemDebug();
 			}

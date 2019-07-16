@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Text;
 using LibRender;
+using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
 using OpenBveApi.Packages;
@@ -23,12 +24,7 @@ namespace OpenBve
 			/// <summary>The auto-generated timetable will be displayed only if no custom timetable is available</summary>
 			PreferCustom = 3
 		}
-		internal enum GameMode
-		{
-			Arcade = 0,
-			Normal = 1,
-			Expert = 2,
-		}
+		
 
 		internal class Options
 		{
@@ -528,10 +524,10 @@ namespace OpenBve
 										case "mode":
 											switch (Value.ToLowerInvariant())
 											{
-												case "arcade": Interface.CurrentOptions.GameMode = Interface.GameMode.Arcade; break;
-												case "normal": Interface.CurrentOptions.GameMode = Interface.GameMode.Normal; break;
-												case "expert": Interface.CurrentOptions.GameMode = Interface.GameMode.Expert; break;
-												default: Interface.CurrentOptions.GameMode = Interface.GameMode.Normal; break;
+												case "arcade": Interface.CurrentOptions.GameMode = GameMode.Arcade; break;
+												case "normal": Interface.CurrentOptions.GameMode = GameMode.Normal; break;
+												case "expert": Interface.CurrentOptions.GameMode = GameMode.Expert; break;
+												default: Interface.CurrentOptions.GameMode = GameMode.Normal; break;
 											} break;
 										case "acceleratedtimefactor":
 											int tf;
@@ -898,9 +894,9 @@ namespace OpenBve
 			Builder.Append("mode = ");
 			switch (CurrentOptions.GameMode)
 			{
-				case Interface.GameMode.Arcade: Builder.AppendLine("arcade"); break;
-				case Interface.GameMode.Normal: Builder.AppendLine("normal"); break;
-				case Interface.GameMode.Expert: Builder.AppendLine("expert"); break;
+				case GameMode.Arcade: Builder.AppendLine("arcade"); break;
+				case GameMode.Normal: Builder.AppendLine("normal"); break;
+				case GameMode.Expert: Builder.AppendLine("expert"); break;
 				default: Builder.AppendLine("normal"); break;
 			}
 			Builder.AppendLine("acceleratedtimefactor = " + CurrentOptions.TimeAccelerationFactor);
