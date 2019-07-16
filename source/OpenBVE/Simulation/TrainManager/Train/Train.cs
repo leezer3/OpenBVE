@@ -222,15 +222,15 @@ namespace OpenBve
 					{
 						if (CurrentSpeed > CurrentRouteLimit)
 						{
-							Game.AddMessage(Translations.GetInterfaceString("message_route_overspeed"), MessageManager.MessageDependency.RouteLimit, Interface.GameMode.Arcade, MessageColor.Orange, Double.PositiveInfinity, null);
+							Game.AddMessage(Translations.GetInterfaceString("message_route_overspeed"), MessageDependency.RouteLimit, Interface.GameMode.Arcade, MessageColor.Orange, Double.PositiveInfinity, null);
 						}
 						if (CurrentSectionLimit == 0.0)
 						{
-							Game.AddMessage(Translations.GetInterfaceString("message_signal_stop"), MessageManager.MessageDependency.PassedRedSignal, Interface.GameMode.Normal, MessageColor.Red, double.PositiveInfinity, null);
+							Game.AddMessage(Translations.GetInterfaceString("message_signal_stop"), MessageDependency.PassedRedSignal, Interface.GameMode.Normal, MessageColor.Red, double.PositiveInfinity, null);
 						}
 						else if (CurrentSpeed > CurrentSectionLimit)
 						{
-							Game.AddMessage(Translations.GetInterfaceString("message_signal_overspeed"), MessageManager.MessageDependency.SectionLimit, Interface.GameMode.Normal, MessageColor.Orange, Double.PositiveInfinity, null);
+							Game.AddMessage(Translations.GetInterfaceString("message_signal_overspeed"), MessageDependency.SectionLimit, Interface.GameMode.Normal, MessageColor.Orange, Double.PositiveInfinity, null);
 						}
 					}
 					if (AI != null)
@@ -341,7 +341,7 @@ namespace OpenBve
 							double a = (3.6 * CurrentSectionLimit) * Game.SpeedConversionFactor;
 							s = s.Replace("[speed]", a.ToString("0", CultureInfo.InvariantCulture));
 							s = s.Replace("[unit]", Game.UnitOfSpeed);
-							Game.AddMessage(s, MessageManager.MessageDependency.None, Interface.GameMode.Normal, MessageColor.Red, Game.SecondsSinceMidnight + 5.0, null);
+							Game.AddMessage(s, MessageDependency.None, Interface.GameMode.Normal, MessageColor.Red, Game.SecondsSinceMidnight + 5.0, null);
 						}
 					}
 				}

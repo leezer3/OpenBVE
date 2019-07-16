@@ -4004,7 +4004,7 @@ namespace OpenBve {
 													Data.Markers[n].EndingPosition = end;
 													if (Command.ToLowerInvariant() == "track.textmarker")
 													{
-														Data.Markers[n].Message = new MessageManager.MarkerText(Arguments[0]);
+														Data.Markers[n].Message = new MarkerText(Arguments[0]);
 														if (Arguments.Length >= 3)
 														{
 															switch (Arguments[2].ToLowerInvariant())
@@ -4052,7 +4052,7 @@ namespace OpenBve {
 													{
 														OpenBveApi.Textures.Texture t;
 														Program.CurrentHost.RegisterTexture(f, new OpenBveApi.Textures.TextureParameters(null, new Color24(64, 64, 64)), out t);
-														Data.Markers[n].Message = new MessageManager.MarkerImage(t);
+														Data.Markers[n].Message = new MarkerImage(t);
 														
 													}
 													

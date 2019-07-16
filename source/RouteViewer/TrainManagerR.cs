@@ -410,6 +410,14 @@ namespace OpenBve {
 			{
 				return Cars[Cars.Length - 1].RearAxle.Follower.TrackPosition - Cars[Cars.Length - 1].RearAxlePosition - 0.5 * Cars[Cars.Length - 1].Length;
 			}
+
+			public override bool IsPlayerTrain
+			{
+				get
+				{
+					return true;
+				}
+			}
 		}
 
 #pragma warning restore 0649

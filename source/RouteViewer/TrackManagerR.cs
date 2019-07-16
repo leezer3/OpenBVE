@@ -6,10 +6,8 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
-using OpenBve.RouteManager;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
-using OpenBveApi.Textures;
 using SoundManager;
 
 namespace OpenBve {
@@ -33,42 +31,7 @@ namespace OpenBve {
             }
             public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) { }
         }
-        // marker start
-        internal class MarkerStartEvent : GeneralEvent<TrainManager.Train> {
-            internal Texture Texture;
-            internal MarkerStartEvent(double TrackPositionDelta, Texture Texture) {
-                this.TrackPositionDelta = TrackPositionDelta;
-                this.DontTriggerAnymore = false;
-                this.Texture = Texture;
-            }
-            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
-                if (TriggerType == EventTriggerType.Camera) {
-                    if (Direction < 0) {
-                        Game.RemoveMarker(this.Texture);
-                    } else if (Direction > 0) {
-                        Game.AddMarker(this.Texture);
-                    }
-                }
-            }
-        }
-        // marker end
-        internal class MarkerEndEvent : GeneralEvent<TrainManager.Train> {
-            internal Texture Texture;
-            internal MarkerEndEvent(double TrackPositionDelta, Texture Texture) {
-                this.TrackPositionDelta = TrackPositionDelta;
-                this.DontTriggerAnymore = false;
-                this.Texture = Texture;
-            }
-            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
-                if (TriggerType == EventTriggerType.Camera) {
-                    if (Direction < 0) {
-                        Game.AddMarker(this.Texture);
-                    } else if (Direction > 0) {
-                        Game.RemoveMarker(this.Texture);
-                    }
-                }
-            }
-        }
+        
         // station pass alarm
         internal class StationPassAlarmEvent : GeneralEvent<TrainManager.Train> {
             internal StationPassAlarmEvent(double TrackPositionDelta) {

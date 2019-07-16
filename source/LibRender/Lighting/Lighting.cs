@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 
 namespace LibRender

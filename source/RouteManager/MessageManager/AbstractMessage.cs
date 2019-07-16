@@ -37,7 +37,8 @@ namespace OpenBve.RouteManager
 		/// NOTE: May be called either by a track based beacon or by timeout
 		public bool QueueForRemoval;
 		/// <summary>The function called when the message is added</summary>
-		public abstract void AddMessage();
+		/// <param name="currentTime">The current in-game time</param>
+		public abstract void AddMessage(double currentTime);
 
 		/// <summary>Called once a frame to update the message</summary>
 		public virtual void Update()

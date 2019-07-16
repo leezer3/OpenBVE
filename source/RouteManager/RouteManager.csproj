@@ -39,6 +39,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Atmosphere.cs" />
@@ -53,7 +54,12 @@
     <Compile Include="Events\TrackEnd.cs" />
     <Compile Include="Fog.cs" />
     <Compile Include="MessageManager\AbstractMessage.cs" />
+    <Compile Include="MessageManager\MessageDependancy.cs" />
     <Compile Include="MessageManager\MessageDirection.cs" />
+    <Compile Include="MessageManager\MessageTypes\GeneralMessage.cs" />
+    <Compile Include="MessageManager\MessageTypes\MarkerImage.cs" />
+    <Compile Include="MessageManager\MessageTypes\MarkerText.cs" />
+    <Compile Include="MessageManager\MessageTypes\TextureMessage.cs" />
     <Compile Include="PointOfInterest.cs" />
     <Compile Include="SignalManager\PreTrain\BogusPreTrainInstruction.cs" />
     <Compile Include="SignalManager\SafetySystems.cs" />

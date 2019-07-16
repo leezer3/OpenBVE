@@ -1,5 +1,7 @@
 ﻿using System;
 using LibRender;
+using OpenBve.RouteManager;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -25,6 +27,11 @@ namespace OpenBve
 		public override void AddMessage(MessageType type, bool FileNotFound, string text)
 		{
 			Interface.AddMessage(type, FileNotFound, text);
+		}
+
+		public override void AddMessage(object Message)
+		{
+			MessageManager.AddMessage((AbstractMessage)Message);
 		}
 
 		// --- texture ---
@@ -296,5 +303,8 @@ namespace OpenBve
 			FunctionScripts.ExecuteFunctionScript(functionScript, (TrainManager.Train)train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 		}
 
+		public Host() : base(HostApplication.RouteViewer)
+		{
+		}
 	}
 }

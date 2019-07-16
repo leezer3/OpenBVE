@@ -1,7 +1,6 @@
 ﻿using System;
 using LibRender;
 using OpenBve.RouteManager;
-using OpenBveApi.Colors;
 using OpenBveApi.Trains;
 
 namespace OpenBve
@@ -22,7 +21,7 @@ namespace OpenBve
 			/// <summary>The font used for this message</summary>
 			internal OpenGlFont Font;
 
-			public override void AddMessage()
+			public override void AddMessage(double currentTime)
 			{
 				//HACK: No way of changing this at the minute....
 				Font = Fonts.SmallFont;
@@ -122,133 +121,10 @@ namespace OpenBve
 			}
 		}
 
-		/// <summary>Defines a textual message to be displayed in-game</summary>
-		internal class GeneralMessage : AbstractMessage
-		{
-			/// <summary>The message text to be displayed if early</summary>
-			internal string MessageEarlyText;
-			/// <summary>The message text to be displayed if on-time</summary>
-			internal string MessageOnTimeText;
-			/// <summary>The message text to be displayed if late</summary>
-			internal string MessageLateText;
-			/// <summary>Defines the color of the message</summary>
-			internal MessageColor MessageEarlyColor;
-
-			internal MessageColor MessageColor;
-			/// <summary>Defines the color of the message</summary>
-			internal MessageColor MessageLateColor;
-			/// <summary>The font used for this message</summary>
-			internal OpenGlFont Font;
-
-			internal double MessageEarlyTime;
-
-			internal double MessageLateTime;
-
-			/// <summary>Creates a general textual message</summary>
-			internal GeneralMessage()
-			{
-				this.Timeout = double.PositiveInfinity;
-				this.TriggerOnce = true;
-				this.Direction = MessageDirection.Forwards;
-				this.MessageColor = MessageColor.White;
-				this.MessageEarlyColor = MessageColor.White;
-				this.MessageLateColor = MessageColor.White;
-				this.Font = Fonts.SmallFont;
-			}
-
-			public override void AddMessage()
-			{
-				if (TriggerOnce && Triggered)
-				{
-					return;
-				}
-				Triggered = true;
-				if (Game.SecondsSinceMidnight <= MessageEarlyTime)
-				{
-					//We are early
-					if (MessageEarlyText == null)
-					{
-						QueueForRemoval = true;
-						return;
-					}
-					MessageToDisplay = MessageEarlyText;
-					Color = MessageEarlyColor;
-
-				}
-				else if (Game.SecondsSinceMidnight >= MessageLateTime)
-				{
-					//Late
-					if (MessageLateText == null)
-					{
-						QueueForRemoval = true;
-						return;
-					}
-					MessageToDisplay = MessageLateText;
-					Color = MessageLateColor;
-
-				}
-				else
-				{
-					//On time
-					if (MessageOnTimeText == null)
-					{
-						QueueForRemoval = true;
-						return;
-					}
-					MessageToDisplay = MessageOnTimeText;
-					Color = MessageColor;
-
-				}
-				if (this.Timeout != double.PositiveInfinity)
-				{
-					this.Timeout += Game.SecondsSinceMidnight;
-				}
-				QueueForRemoval = false;
-			}
-		}
+		
 
 
 
-		/// <summary>Defines a marker text (e.g. bridge name) to be displayed in-game</summary>
-		internal class MarkerText : AbstractMessage
-		{
-			/// <summary>The font used for this message</summary>
-			internal OpenGlFont Font;
-
-			/// <summary>Creates a marker text</summary>
-			/// <param name="text">The text to be displayed</param>
-			internal MarkerText(string text)
-			{
-				this.MessageToDisplay = text;
-				this.Timeout = double.PositiveInfinity;
-				this.TriggerOnce = false;
-				this.Direction = MessageDirection.Both;
-				this.Color = MessageColor.White;
-				this.RendererAlpha = 1.0;
-			}
-
-			/// <summary>Creates a marker text</summary>
-			/// <param name="text">The text to be displayed</param>
-			/// <param name="Color">The color of the text</param>
-			internal MarkerText(string text, MessageColor Color)
-			{
-				this.MessageToDisplay = text;
-				this.Timeout = double.PositiveInfinity;
-				this.TriggerOnce = false;
-				this.Direction = MessageDirection.Both;
-				this.Color = Color;
-				this.RendererAlpha = 1.0;
-			}
-
-			public override void AddMessage()
-			{
-				QueueForRemoval = false;
-				if (TriggerOnce && Triggered)
-				{
-					return;
-				}
-				Triggered = true;
-			}
-		}
+		
 	}
 }

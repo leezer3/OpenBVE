@@ -51,5 +51,9 @@ namespace MotorSoundEditor.Systems
 			sound = null;
 			return false;
 		}
+
+		public Host() : base(HostApplication.MotorSoundEditor)
+		{
+		}
 	}
 }

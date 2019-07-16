@@ -22,7 +22,7 @@ namespace OpenBve.RouteManager
 		}
 		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, int CarIndex)
 		{
-			if (TriggerType == EventTriggerType.FrontCarFrontAxle && Train.IsPlayerTrain)
+			if (TriggerType == EventTriggerType.FrontCarFrontAxle && Train.IsPlayerTrain || TriggerType == EventTriggerType.Camera && currentHost.Application == HostApplication.RouteViewer) 
 			{
 				if (this.Message != null)
 				{

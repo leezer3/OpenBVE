@@ -81,6 +81,7 @@
       <DependentUpon>formOptions.cs</DependentUpon>
     </Compile>
     <Compile Include="FunctionScripts.cs" />
+    <Compile Include="Game\MessageManager.cs" />
     <Compile Include="LoadingR.cs" />
     <Compile Include="Fonts.cs" />
     <Compile Include="GameR.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Parsers\CsvRwRouteParser.cs" />
     <Compile Include="Parsers\Ls3DGrpParser.cs" />
     <Compile Include="Parsers\Ls3DObjectParser.cs" />
+    <Compile Include="Parsers\Script\MarkerScriptParser.cs" />
     <Compile Include="RendererR.cs" />
     <Compile Include="Audio\Sounds.cs" />
     <Compile Include="Audio\Sounds.Update.cs" />

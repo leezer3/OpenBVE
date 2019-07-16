@@ -119,11 +119,11 @@ namespace OpenBve
 					{
 						if (Train.CurrentSectionLimit == 0.0 && Game.MinimalisticSimulation == false)
 						{
-							Game.AddMessage(Translations.GetInterfaceString("message_signal_stop"), MessageManager.MessageDependency.PassedRedSignal, Interface.GameMode.Normal, MessageColor.Red, double.PositiveInfinity, null);
+							Game.AddMessage(Translations.GetInterfaceString("message_signal_stop"), MessageDependency.PassedRedSignal, Interface.GameMode.Normal, MessageColor.Red, double.PositiveInfinity, null);
 						}
 						else if (Train.CurrentSpeed > Train.CurrentSectionLimit)
 						{
-							Game.AddMessage(Translations.GetInterfaceString("message_signal_overspeed"), MessageManager.MessageDependency.SectionLimit, Interface.GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
+							Game.AddMessage(Translations.GetInterfaceString("message_signal_overspeed"), MessageDependency.SectionLimit, Interface.GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
 						}
 					}
 				}

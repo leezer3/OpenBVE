@@ -1,6 +1,7 @@
 ﻿using System;
 using LibRender;
 using OpenBve.RouteManager;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -265,6 +266,9 @@ namespace OpenBve {
 			return ObjectManager.CreateStaticObject(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 		}
 
-		
+
+		public Host() : base(HostApplication.OpenBve)
+		{
+		}
 	}
 }

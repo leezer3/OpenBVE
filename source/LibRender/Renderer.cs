@@ -43,6 +43,8 @@ namespace LibRender
 		public static OutputMode CurrentOutputMode = OutputMode.Default;
 		/// <summary>The previous debug output mode</summary>
 		public static OutputMode PreviousOutputMode = OutputMode.Default;
+		/// <summary>Holds the array of marker textures currently displayed in-game</summary>
+		public static Texture[] MarkerTextures = { };
 		/// <summary>The game's current framerate</summary>
 		public static double FrameRate = 1.0;
 		/// <summary>Holds the lock for GDI Plus functions</summary>

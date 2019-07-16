@@ -230,10 +230,11 @@ namespace OpenBve {
 			internal double TrackPosition;
 			internal float Value;
 		}
-		private struct Marker {
+
+		internal struct Marker {
 			internal double StartingPosition;
 			internal double EndingPosition;
-			internal Texture Texture;
+			internal AbstractMessage Message;
 		}
 		private enum SoundType { World, TrainStatic, TrainDynamic }
 		private struct Sound {
@@ -4646,17 +4647,33 @@ namespace OpenBve {
 										}
 									} break;
 								case "track.marker":
+								case "track.textmarker":
 									{
-										if (!PreviewOnly) {
+										if (!PreviewOnly)
+										{
 											if (Arguments.Length < 1) {
 												Interface.AddMessage(MessageType.Error, false, "Track.Marker is expected to have at least one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else if (Path.ContainsInvalidChars(Arguments[0])) {
 												Interface.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												string f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
-												if (!System.IO.File.Exists(f)) {
+												if (!System.IO.File.Exists(f) && Command.ToLowerInvariant() == "track.marker")
+												{
 													Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in Track.Marker at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
+													if (System.IO.File.Exists(f) && f.ToLowerInvariant().EndsWith(".xml"))
+													{
+														Marker m = new Marker();
+														m.StartingPosition = Data.TrackPosition;
+														if (MarkerScriptParser.ReadMarkerXML(f, ref m))
+														{
+															int nn = Data.Markers.Length;
+															Array.Resize<Marker>(ref Data.Markers, nn + 1);
+															Data.Markers[nn] = m;
+														}
+
+														break;
+													}
 													double dist = Data.BlockInterval;
 													if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out dist)) {
 														Interface.AddMessage(MessageType.Error, false, "Distance is invalid in Track.Marker at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -4677,7 +4694,60 @@ namespace OpenBve {
 													Array.Resize<Marker>(ref Data.Markers, n + 1);
 													Data.Markers[n].StartingPosition = start;
 													Data.Markers[n].EndingPosition = end;
-													TextureManager.RegisterTexture(f, out Data.Markers[n].Texture);
+													if (Command.ToLowerInvariant() == "track.textmarker")
+													{
+														Data.Markers[n].Message = new MarkerText(Arguments[0]);
+														if (Arguments.Length >= 3)
+														{
+															switch (Arguments[2].ToLowerInvariant())
+															{
+																case "black":
+																case "1":
+																	Data.Markers[n].Message.Color = MessageColor.Black;
+																	break;
+																case "gray":
+																case "2":
+																	Data.Markers[n].Message.Color = MessageColor.Gray;
+																	break;
+																case "white":
+																case "3":
+																	Data.Markers[n].Message.Color = MessageColor.White;
+																	break;
+																case "red":
+																case "4":
+																	Data.Markers[n].Message.Color = MessageColor.Red;
+																	break;
+																case "orange":
+																case "5":
+																	Data.Markers[n].Message.Color = MessageColor.Orange;
+																	break;
+																case "green":
+																case "6":
+																	Data.Markers[n].Message.Color = MessageColor.Green;
+																	break;
+																case "blue":
+																case "7":
+																	Data.Markers[n].Message.Color = MessageColor.Blue;
+																	break;
+																case "magenta":
+																case "8":
+																	Data.Markers[n].Message.Color = MessageColor.Magenta;
+																	break;
+																default:
+																	Interface.AddMessage(MessageType.Error, false, "MessageColor is invalid in Track.TextMarker at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+																	//Default message color is set to white
+																	break;
+															}
+														}
+													}
+													else
+													{
+														OpenBveApi.Textures.Texture t;
+														Program.CurrentHost.RegisterTexture(f, new OpenBveApi.Textures.TextureParameters(null, new Color24(64, 64, 64)), out t);
+														Data.Markers[n].Message = new MarkerImage(t);
+														
+													}
+													
 												}
 											}
 										}
@@ -5631,21 +5701,29 @@ namespace OpenBve {
 					CurrentSpeedLimit = Data.Blocks[i].Limit[j].Speed;
 				}
 				// marker
-				if (!PreviewOnly) {
-					for (int j = 0; j < Data.Markers.Length; j++) {
-						if (Data.Markers[j].StartingPosition >= StartingDistance & Data.Markers[j].StartingPosition < EndingDistance) {
+				if (!PreviewOnly)
+				{
+					for (int j = 0; j < Data.Markers.Length; j++)
+					{
+						if (Data.Markers[j].StartingPosition >= StartingDistance & Data.Markers[j].StartingPosition < EndingDistance)
+						{
 							int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
 							Array.Resize(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
 							double d = Data.Markers[j].StartingPosition - StartingDistance;
-							Texture t = Data.Markers[j].Texture;
-							TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.MarkerStartEvent(d, t);
+							if (Data.Markers[j].Message != null)
+							{
+								TrackManager.CurrentTrack.Elements[n].Events[m] = new MarkerStartEvent(d, Data.Markers[j].Message, Program.CurrentHost);
+							}
 						}
-						if (Data.Markers[j].EndingPosition >= StartingDistance & Data.Markers[j].EndingPosition < EndingDistance) {
+						if (Data.Markers[j].EndingPosition >= StartingDistance & Data.Markers[j].EndingPosition < EndingDistance)
+						{
 							int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
 							Array.Resize(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
 							double d = Data.Markers[j].EndingPosition - StartingDistance;
-							Texture t = Data.Markers[j].Texture;
-							TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.MarkerEndEvent(d, t);
+							if (Data.Markers[j].Message != null)
+							{
+								TrackManager.CurrentTrack.Elements[n].Events[m] = new MarkerEndEvent(d, Data.Markers[j].Message, Program.CurrentHost);
+							}
 						}
 					}
 				}

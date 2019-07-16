@@ -3,7 +3,6 @@ using OpenBve.BackgroundManager;
 using OpenBve.SignalManager;
 using OpenBveApi.Colors;
 using OpenBveApi.Routes;
-using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve.RouteManager
@@ -20,8 +19,6 @@ namespace OpenBve.RouteManager
 		public static BogusPretrainInstruction[] BogusPretrainInstructions = { };
 		/// <summary>Holds all points of interest within the game world</summary>
 		public static PointOfInterest[] PointsOfInterest = { };
-		/// <summary>Holds the array of marker textures currently displayed in-game</summary>
-		public static Texture[] MarkerTextures = { };
 		/// <summary>The currently displayed background texture</summary>
 		public static BackgroundHandle CurrentBackground = new StaticBackground(null, 6, false);
 		/// <summary>The new background texture (Currently fading in)</summary>

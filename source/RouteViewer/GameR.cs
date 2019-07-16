@@ -68,7 +68,7 @@ namespace OpenBve {
 			CurrentRoute.Stations = new RouteStation[] { };
 			CurrentRoute.Sections = new Section[] { };
 			BufferTrackPositions = new double[] { };
-			CurrentRoute.MarkerTextures = new Texture[] { };
+			LibRender.Renderer.MarkerTextures = new Texture[] { };
 			CurrentRoute.PointsOfInterest = new PointOfInterest[] { };
 			CurrentRoute.BogusPretrainInstructions = new BogusPretrainInstruction[] { };
 			TrainName = "";
@@ -196,33 +196,6 @@ namespace OpenBve {
 
 		// buffers
 		internal static double[] BufferTrackPositions = new double[] { };
-
-		// ================================
-
-		// marker
-		
-
-		internal static void AddMarker(Texture Texture) {
-			int n = CurrentRoute.MarkerTextures.Length;
-			Array.Resize<Texture>(ref CurrentRoute.MarkerTextures, n + 1);
-			CurrentRoute.MarkerTextures[n] = Texture;
-		}
-		internal static void RemoveMarker(Texture Texture) {
-			int n = CurrentRoute.MarkerTextures.Length;
-			for (int i = 0; i < n; i++) {
-				if (CurrentRoute.MarkerTextures[i] == Texture) {
-					for (int j = i; j < n - 1; j++) {
-						CurrentRoute.MarkerTextures[j] = CurrentRoute.MarkerTextures[j + 1];
-					}
-					Array.Resize<Texture>(ref CurrentRoute.MarkerTextures, n - 1);
-					break;
-				}
-			}
-		}
-
-		// ================================
-
-		
 
 		internal static bool ApplyPointOfInterest(int Value, bool Relative) {
 			double t = 0.0;

@@ -1,5 +1,6 @@
 using System;
 using LibRender;
+using OpenBve.RouteManager;
 using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
@@ -32,14 +33,14 @@ namespace OpenBve
 					if (Camera.CurrentMode != CameraViewMode.InteriorLookAhead & Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable)
 					{
 						Game.AddMessage(Translations.GetInterfaceString("notification_interior_lookahead"),
-							MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
+							MessageDependency.CameraView, Interface.GameMode.Expert,
 							MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 						lookahead = true;
 					}
 					else
 					{
 						Game.AddMessage(Translations.GetInterfaceString("notification_interior"),
-							MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
+							MessageDependency.CameraView, Interface.GameMode.Expert,
 							MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 					}
 
@@ -102,7 +103,7 @@ namespace OpenBve
 					TrainManager.PlayerTrain.AI = new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain);
 					if (TrainManager.PlayerTrain.Plugin != null && !TrainManager.PlayerTrain.Plugin.SupportsAI)
 					{
-						Game.AddMessage(Translations.GetInterfaceString("notification_aiunable"), MessageManager.MessageDependency.None, Interface.GameMode.Expert, MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
+						Game.AddMessage(Translations.GetInterfaceString("notification_aiunable"), MessageDependency.None, Interface.GameMode.Expert, MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
 					}
 
 				}
@@ -643,14 +644,14 @@ namespace OpenBve
 											if (Camera.CurrentMode != CameraViewMode.InteriorLookAhead & Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable)
 											{
 												Game.AddMessage(Translations.GetInterfaceString("notification_interior_lookahead"),
-												                MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
+												                MessageDependency.CameraView, Interface.GameMode.Expert,
 												                MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 												lookahead = true;
 											}
 											else
 											{
 												Game.AddMessage(Translations.GetInterfaceString("notification_interior"),
-												                MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
+												                MessageDependency.CameraView, Interface.GameMode.Expert,
 												                MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 											}
 											Camera.CurrentMode = CameraViewMode.Interior;
@@ -715,14 +716,14 @@ namespace OpenBve
 											if (Camera.CurrentMode != CameraViewMode.InteriorLookAhead & Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable)
 											{
 												Game.AddMessage(Translations.GetInterfaceString("notification_interior_lookahead"),
-												                MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
+												                MessageDependency.CameraView, Interface.GameMode.Expert,
 												                MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 												lookahead = true;
 											}
 											else
 											{
 												Game.AddMessage(Translations.GetInterfaceString("notification_interior"),
-												                MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
+												                MessageDependency.CameraView, Interface.GameMode.Expert,
 												                MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 											}
 											Camera.CurrentMode = CameraViewMode.Interior;
@@ -782,7 +783,7 @@ namespace OpenBve
 										break;
 									case Translations.Command.CameraExterior:
 										// camera: exterior
-										Game.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (World.CameraCar + 1), MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
+										Game.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (World.CameraCar + 1), MessageDependency.CameraView, Interface.GameMode.Expert,
 												MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 										SaveCameraSettings();
 										Camera.CurrentMode = CameraViewMode.Exterior;
@@ -812,7 +813,7 @@ namespace OpenBve
 										{
 											Camera.CurrentMode = CameraViewMode.Track;
 											Game.AddMessage(Translations.GetInterfaceString("notification_track"),
-												MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
+												MessageDependency.CameraView, Interface.GameMode.Expert,
 												MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 										}
 										else
@@ -822,7 +823,7 @@ namespace OpenBve
 												Camera.CurrentMode = CameraViewMode.FlyByZooming;
 												Game.AddMessage(
 													Translations.GetInterfaceString("notification_flybyzooming"),
-													MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
+													MessageDependency.CameraView, Interface.GameMode.Expert,
 													MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 											}
 											else
@@ -830,7 +831,7 @@ namespace OpenBve
 												Camera.CurrentMode = CameraViewMode.FlyBy;
 												Game.AddMessage(
 													Translations.GetInterfaceString("notification_flybynormal"),
-													MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
+													MessageDependency.CameraView, Interface.GameMode.Expert,
 													MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 											}
 										}
@@ -859,7 +860,7 @@ namespace OpenBve
 											if (World.CameraCar < TrainManager.PlayerTrain.Cars.Length - 1)
 											{
 												World.CameraCar++;
-												Game.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (World.CameraCar + 1), MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
+												Game.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (World.CameraCar + 1), MessageDependency.CameraView, Interface.GameMode.Expert,
 												MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 											}
 											return;
@@ -873,7 +874,7 @@ namespace OpenBve
 											{
 												Camera.CurrentMode = CameraViewMode.Track;
 												Game.AddMessage(Translations.GetInterfaceString("notification_track"),
-													MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
+													MessageDependency.CameraView, Interface.GameMode.Expert,
 													MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 											}
 											double z = Camera.CurrentAlignment.Position.Z;
@@ -908,7 +909,7 @@ namespace OpenBve
 											if (World.CameraCar > 0)
 											{
 												World.CameraCar--;
-												Game.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (World.CameraCar + 1), MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
+												Game.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (World.CameraCar + 1), MessageDependency.CameraView, Interface.GameMode.Expert,
 												MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 											}
 											return;
@@ -922,7 +923,7 @@ namespace OpenBve
 											{
 												Camera.CurrentMode = CameraViewMode.Track;
 												Game.AddMessage(Translations.GetInterfaceString("notification_track"),
-													MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
+													MessageDependency.CameraView, Interface.GameMode.Expert,
 													MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 											}
 											double z = Camera.CurrentAlignment.Position.Z;
@@ -1024,14 +1025,14 @@ namespace OpenBve
 											{
 												Game.AddMessage(
 													Translations.GetInterfaceString("notification_camerarestriction_off"),
-													MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
+													MessageDependency.CameraView, Interface.GameMode.Expert,
 													MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 											}
 											else
 											{
 												Game.AddMessage(
 													Translations.GetInterfaceString("notification_camerarestriction_on"),
-													MessageManager.MessageDependency.CameraView, Interface.GameMode.Expert,
+													MessageDependency.CameraView, Interface.GameMode.Expert,
 													MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 											}
 										}
@@ -1585,7 +1586,7 @@ namespace OpenBve
 										{
 											Game.AddMessage(
 												Translations.GetInterfaceString("notification_notavailableexpert"),
-												MessageManager.MessageDependency.None, Interface.GameMode.Expert,
+												MessageDependency.None, Interface.GameMode.Expert,
 												MessageColor.White, Game.SecondsSinceMidnight + 5.0, null);
 										}
 										else
@@ -1599,7 +1600,7 @@ namespace OpenBve
 												{
 													Game.AddMessage(
 														Translations.GetInterfaceString("notification_aiunable"),
-														MessageManager.MessageDependency.None, Interface.GameMode.Expert,
+														MessageDependency.None, Interface.GameMode.Expert,
 														MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
 												}
 											}
@@ -1649,7 +1650,7 @@ namespace OpenBve
 										Game.AddMessage(
 											Translations.GetInterfaceString(LibRender.Renderer.OptionBackfaceCulling
 												? "notification_backfaceculling_on"
-												: "notification_backfaceculling_off"), MessageManager.MessageDependency.None,
+												: "notification_backfaceculling_off"), MessageDependency.None,
 											Interface.GameMode.Expert, MessageColor.White,
 											Game.SecondsSinceMidnight + 2.0, null);
 										break;
@@ -1659,7 +1660,7 @@ namespace OpenBve
 										Game.AddMessage(
 											Translations.GetInterfaceString(LimitFramerate
 												? "notification_cpu_low"
-												: "notification_cpu_normal"), MessageManager.MessageDependency.None,
+												: "notification_cpu_normal"), MessageDependency.None,
 											Interface.GameMode.Expert, MessageColor.White,
 											Game.SecondsSinceMidnight + 2.0, null);
 										break;
@@ -1669,7 +1670,7 @@ namespace OpenBve
 										{
 											Game.AddMessage(
 												Translations.GetInterfaceString("notification_notavailableexpert"),
-												MessageManager.MessageDependency.None, Interface.GameMode.Expert,
+												MessageDependency.None, Interface.GameMode.Expert,
 												MessageColor.White, Game.SecondsSinceMidnight + 5.0, null);
 										}
 										else
@@ -1697,7 +1698,7 @@ namespace OpenBve
 											{
 												Game.AddMessage(
 													Translations.GetInterfaceString("notification_notavailableexpert"),
-													MessageManager.MessageDependency.None, Interface.GameMode.Expert,
+													MessageDependency.None, Interface.GameMode.Expert,
 													MessageColor.White,
 													Game.SecondsSinceMidnight + 5.0, null);
 											}
@@ -1709,7 +1710,7 @@ namespace OpenBve
 												Game.AddMessage(
 													TimeFactor.ToString(
 														System.Globalization.CultureInfo.InvariantCulture) + "x",
-													MessageManager.MessageDependency.None, Interface.GameMode.Expert,
+													MessageDependency.None, Interface.GameMode.Expert,
 													MessageColor.White,
 													Game.SecondsSinceMidnight + 5.0*(double) TimeFactor, null);
 											}
@@ -1721,7 +1722,7 @@ namespace OpenBve
 										{
 											Game.AddMessage(
 												Translations.GetInterfaceString("notification_notavailableexpert"),
-												MessageManager.MessageDependency.None, Interface.GameMode.Expert,
+												MessageDependency.None, Interface.GameMode.Expert,
 												MessageColor.White, Game.SecondsSinceMidnight + 5.0, null);
 										}
 										else
@@ -1736,7 +1737,7 @@ namespace OpenBve
 										{
 											Game.AddMessage(
 												Translations.GetInterfaceString("notification_notavailableexpert"),
-												MessageManager.MessageDependency.None, Interface.GameMode.Expert,
+												MessageDependency.None, Interface.GameMode.Expert,
 												MessageColor.White, Game.SecondsSinceMidnight + 5.0, null);
 										}
 										else
@@ -1750,7 +1751,7 @@ namespace OpenBve
 										{
 											Game.AddMessage(
 												Translations.GetInterfaceString("notification_notavailableexpert"),
-												MessageManager.MessageDependency.None, Interface.GameMode.Expert,
+												MessageDependency.None, Interface.GameMode.Expert,
 												MessageColor.White, Game.SecondsSinceMidnight + 5.0, null);
 										}
 										else

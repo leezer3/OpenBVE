@@ -29,9 +29,30 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Indicates an unexpected exception.</summary>
 		UnexpectedException = 6
 	}
+	/// <summary>The host application</summary>
+	public enum HostApplication
+	{
+		/// <summary>The main game</summary>
+		OpenBve = 0,
+		/// <summary>Route Viewer</summary>
+		RouteViewer = 1,
+		/// <summary>Object Viewer</summary>
+		ObjectViewer = 2,
+		/// <summary>The motor sound editor</summary>
+		MotorSoundEditor = 3
+	}
 	
 	/// <summary>Represents the host application and functionality it exposes.</summary>
 	public abstract class HostInterface {
+
+		/// <summary>The base host interface constructor</summary>
+		protected HostInterface(HostApplication host)
+		{
+			Application = host;
+		}
+
+		/// <summary></summary>
+		public readonly HostApplication Application;
 
 		/// <summary>Reports a problem to the host application.</summary>
 		/// <param name="type">The type of problem that is reported.</param>

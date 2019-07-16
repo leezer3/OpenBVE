@@ -509,13 +509,13 @@ namespace OpenBve {
 			if (OptionInterface)
 			{
 				int y = 150;
-				for (int i = 0; i < CurrentRoute.MarkerTextures.Length; i++)
+				for (int i = 0; i < LibRender.Renderer.MarkerTextures.Length; i++)
 				{
-					if (Program.CurrentHost.LoadTexture(CurrentRoute.MarkerTextures[i], OpenGlTextureWrapMode.ClampClamp)) {
-						int w = CurrentRoute.MarkerTextures[i].Width;
-						int h = CurrentRoute.MarkerTextures[i].Height;
+					if (Program.CurrentHost.LoadTexture(LibRender.Renderer.MarkerTextures[i], OpenGlTextureWrapMode.ClampClamp)) {
+						int w = LibRender.Renderer.MarkerTextures[i].Width;
+						int h = LibRender.Renderer.MarkerTextures[i].Height;
 						GL.Color4(1.0, 1.0, 1.0, 1.0);
-						LibRender.Renderer.DrawRectangle(CurrentRoute.MarkerTextures[i], new Point(Screen.Width - w - 8, y), new Size(w,h));
+						LibRender.Renderer.DrawRectangle(LibRender.Renderer.MarkerTextures[i], new Point(Screen.Width - w - 8, y), new Size(w,h));
 						y += h + 8;
 					}
 				}

@@ -79,6 +79,7 @@ namespace OpenBve
 	            Program.Sounds.Update(TimeElapsed, SoundModels.Linear);
             }
             Renderer.RenderScene(TimeElapsed);
+            MessageManager.UpdateMessages();
             SwapBuffers();
             
         }
