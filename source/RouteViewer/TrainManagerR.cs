@@ -164,14 +164,7 @@ namespace OpenBve {
 			internal CarSound Sound;
 			internal bool Loop;
 		}
-		internal struct CarSound {
-			/// <summary>The sound buffer to play</summary>
-			internal SoundBuffer Buffer;
-			/// <summary>The source of the sound within the car</summary>
-			internal SoundSource Source;
-			/// <summary>A Vector3 describing the position of the sound source</summary>
-			internal Vector3 Position;
-		}
+		
 		internal struct MotorSoundTableEntry {
 			internal int SoundBufferIndex;
 			internal float Pitch;

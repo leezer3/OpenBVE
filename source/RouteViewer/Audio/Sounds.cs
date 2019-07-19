@@ -13,7 +13,7 @@ namespace OpenBve
 		/// <param name="car">The train car sound is attached to.</param>
 		/// <param name="looped">Whether to play the sound in a loop.</param>
 		/// <returns>The sound source.</returns>
-		internal void PlayCarSound(TrainManager.CarSound sound, double pitch, double volume, AbstractCar car, bool looped)
+		internal void PlayCarSound(CarSound sound, double pitch, double volume, AbstractCar car, bool looped)
 		{
 			if (sound.Buffer == null)
 			{

@@ -43,6 +43,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Sounds.CarSound.cs" />
     <Compile Include="Sounds.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sounds.Options.cs" />

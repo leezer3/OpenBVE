@@ -179,6 +179,10 @@ namespace SoundManager
 		/// <returns>The handle to the sound buffer.</returns>
 		public SoundBuffer RegisterBuffer(string path, double radius)
 		{
+			if (!File.Exists(path))
+			{
+				return null;
+			}
 			for (int i = 0; i < BufferCount; i++)
 			{
 				if (!(Buffers[i].Origin is PathOrigin))

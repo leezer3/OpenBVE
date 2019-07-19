@@ -641,7 +641,7 @@ namespace OpenBve
 		/// <param name="Sound">The car sound</param>
 		/// <param name="Position">The default position of this sound (May be overriden by the node)</param>
 		/// <param name="Radius">The default radius of this sound (May be overriden by the node)</param>
-		private static void ParseNode(XmlNode node, out TrainManager.CarSound Sound, Vector3 Position, double Radius)
+		private static void ParseNode(XmlNode node, out CarSound Sound, Vector3 Position, double Radius)
 		{
 			string fileName = null;
 			foreach (XmlNode c in node.ChildNodes)
@@ -656,7 +656,7 @@ namespace OpenBve
 							{
 								//Valid path, but the file does not exist
 								Interface.AddMessage(MessageType.Error, false, "The sound path " + c.InnerText + " in XML node " + node.Name + " does not exist.");
-								Sound = TrainManager.CarSound.Empty;
+								Sound = new CarSound();
 								return;
 							}
 						}
@@ -664,7 +664,7 @@ namespace OpenBve
 						{
 							//Probably invalid filename characters
 							Interface.AddMessage(MessageType.Error, false, "The sound path " + c.InnerText + " in XML node " + node.Name + " is invalid.");
-							Sound = TrainManager.CarSound.Empty;
+							Sound = new CarSound();
 							return;
 						}
 						break;
@@ -701,10 +701,10 @@ namespace OpenBve
 			{
 				//No valid filename node specified
 				Interface.AddMessage(MessageType.Error, false, "XML node " + node.Name + " does not point to a valid sound file.");
-				Sound = TrainManager.CarSound.Empty;
+				Sound = new CarSound();
 				return;
 			}
-			Sound = new TrainManager.CarSound(fileName, Position, Radius);
+			Sound = new CarSound(Program.Sounds.RegisterBuffer(fileName,Radius), Position);
 		}
 
 		/// <summary>Parses an XML node containing a list of sounds into a car sound array</summary>
@@ -712,9 +712,9 @@ namespace OpenBve
 		/// <param name="Sounds">The car sound array</param>
 		/// <param name="Position">The default position of the sound (May be overriden by any node)</param>
 		/// <param name="Radius">The default radius of the sound (May be overriden by any node)</param>
-		private static void ParseArrayNode(XmlNode node, out TrainManager.CarSound[] Sounds, Vector3 Position, double Radius)
+		private static void ParseArrayNode(XmlNode node, out CarSound[] Sounds, Vector3 Position, double Radius)
 		{
-			Sounds = new TrainManager.CarSound[0];
+			Sounds = new CarSound[0];
 			foreach (XmlNode c in node.ChildNodes)
 			{
 				int idx = -1;
@@ -742,7 +742,7 @@ namespace OpenBve
 						Array.Resize(ref Sounds, idx + 1);
 						while (l < Sounds.Length)
 						{
-							Sounds[l] = TrainManager.CarSound.Empty;
+							Sounds[l] = new CarSound();
 							l++;
 						}
 						ParseNode(c, out Sounds[idx], Position, Radius);

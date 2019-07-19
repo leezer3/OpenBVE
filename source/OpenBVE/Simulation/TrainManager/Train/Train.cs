@@ -9,6 +9,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Trains;
 using OpenBve.RouteManager;
 using OpenBveApi;
+using SoundManager;
 
 namespace OpenBve
 {
@@ -976,30 +977,30 @@ namespace OpenBve
 				// initialize
 				for (int i = 0; i < Cars.Length; i++)
 				{
-					Cars[i].Sounds.Run = new TrainManager.CarSound[] { };
-					Cars[i].Sounds.Flange = new TrainManager.CarSound[] { };
-					Cars[i].Sounds.Adjust = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.Air = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.AirHigh = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.AirZero = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.Brake = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.BrakeHandleApply = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.BrakeHandleMin = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.BrakeHandleMax = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.BrakeHandleRelease = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.BreakerResume = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.BreakerResumeOrInterrupt = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.CpEnd = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.CpLoop = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.CpStart = TrainManager.CarSound.Empty;
-					Cars[i].Doors[0].CloseSound = TrainManager.CarSound.Empty;
-					Cars[i].Doors[1].CloseSound = TrainManager.CarSound.Empty;
-					Cars[i].Doors[0].OpenSound = TrainManager.CarSound.Empty;
-					Cars[i].Doors[1].OpenSound = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.EmrBrake = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.Flange = new TrainManager.CarSound[] { };
+					Cars[i].Sounds.Run = new CarSound[] { };
+					Cars[i].Sounds.Flange = new CarSound[] { };
+					Cars[i].Sounds.Adjust = new CarSound();
+					Cars[i].Sounds.Air = new CarSound();
+					Cars[i].Sounds.AirHigh = new CarSound();
+					Cars[i].Sounds.AirZero = new CarSound();
+					Cars[i].Sounds.Brake = new CarSound();
+					Cars[i].Sounds.BrakeHandleApply = new CarSound();
+					Cars[i].Sounds.BrakeHandleMin = new CarSound();
+					Cars[i].Sounds.BrakeHandleMax = new CarSound();
+					Cars[i].Sounds.BrakeHandleRelease = new CarSound();
+					Cars[i].Sounds.BreakerResume = new CarSound();
+					Cars[i].Sounds.BreakerResumeOrInterrupt = new CarSound();
+					Cars[i].Sounds.CpEnd = new CarSound();
+					Cars[i].Sounds.CpLoop = new CarSound();
+					Cars[i].Sounds.CpStart = new CarSound();
+					Cars[i].Doors[0].CloseSound = new CarSound();
+					Cars[i].Doors[1].CloseSound = new CarSound();
+					Cars[i].Doors[0].OpenSound = new CarSound();
+					Cars[i].Doors[1].OpenSound = new CarSound();
+					Cars[i].Sounds.EmrBrake = new CarSound();
+					Cars[i].Sounds.Flange = new CarSound[] { };
 					Cars[i].Sounds.FlangeVolume = new double[] { };
-					Cars[i].Sounds.Halt = TrainManager.CarSound.Empty;
+					Cars[i].Sounds.Halt = new CarSound();
 					Cars[i].Horns = new TrainManager.Horn[]
 					{
 						new TrainManager.Horn(),
@@ -1009,30 +1010,30 @@ namespace OpenBve
 					Cars[i].Sounds.RequestStop = new CarSound[]
 					{
 						//Stop
-						CarSound.Empty,
+						new CarSound(),
 						//Pass
-						CarSound.Empty,
+						new CarSound(),
 						//Ignored
-						CarSound.Empty
+						new CarSound()
 					};
-					Cars[i].Sounds.Loop = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.MasterControllerUp = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.MasterControllerDown = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.MasterControllerMin = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.MasterControllerMax = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.PilotLampOn = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.PilotLampOff = TrainManager.CarSound.Empty;
-					Cars[i].FrontAxle.PointSounds = new TrainManager.CarSound[] { };
-					Cars[i].RearAxle.PointSounds = new TrainManager.CarSound[] { };
-					Cars[i].Sounds.ReverserOn = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.ReverserOff = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.Rub = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.Run = new TrainManager.CarSound[] { };
+					Cars[i].Sounds.Loop = new CarSound();
+					Cars[i].Sounds.MasterControllerUp = new CarSound();
+					Cars[i].Sounds.MasterControllerDown = new CarSound();
+					Cars[i].Sounds.MasterControllerMin = new CarSound();
+					Cars[i].Sounds.MasterControllerMax = new CarSound();
+					Cars[i].Sounds.PilotLampOn = new CarSound();
+					Cars[i].Sounds.PilotLampOff = new CarSound();
+					Cars[i].FrontAxle.PointSounds = new CarSound[] { };
+					Cars[i].RearAxle.PointSounds = new CarSound[] { };
+					Cars[i].Sounds.ReverserOn = new CarSound();
+					Cars[i].Sounds.ReverserOff = new CarSound();
+					Cars[i].Sounds.Rub = new CarSound();
+					Cars[i].Sounds.Run = new CarSound[] { };
 					Cars[i].Sounds.RunVolume = new double[] { };
-					Cars[i].Sounds.SpringL = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.SpringR = TrainManager.CarSound.Empty;
-					Cars[i].Sounds.Plugin = new TrainManager.CarSound[] { };
-					Cars[i].Sounds.Touch = new TrainManager.CarSound[] { };
+					Cars[i].Sounds.SpringL = new CarSound();
+					Cars[i].Sounds.SpringR = new CarSound();
+					Cars[i].Sounds.Plugin = new CarSound[] { };
+					Cars[i].Sounds.Touch = new CarSound[] { };
 				}
 			}
 
