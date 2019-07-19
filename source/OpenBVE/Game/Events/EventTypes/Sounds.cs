@@ -9,7 +9,7 @@ namespace OpenBve
 	internal static partial class TrackManager
 	{
 		/// <summary>Called when a generic sound should be played</summary>
-		internal class SoundEvent : GeneralEvent<TrainManager.Train>
+		internal class SoundEvent : GeneralEvent<AbstractTrain, AbstractCar>
 		{
 			/// <summary>The sound buffer to play</summary>
 			private readonly SoundBuffer SoundBuffer;
@@ -17,6 +17,7 @@ namespace OpenBve
 			private readonly bool PlayerTrainOnly;
 			/// <summary>Whether this sound should play once, or repeat if triggered again</summary>
 			private readonly bool Once;
+			/// <summary>Whether the sound pitch is affected by the speed of the train</summary>
 			private readonly bool Dynamic;
 			/// <summary>The 3D position of the sound within the world</summary>
 			internal Vector3 Position;
@@ -47,8 +48,8 @@ namespace OpenBve
 			/// <param name="Direction">The direction of travel- 1 for forwards, and -1 for backwards</param>
 			/// <param name="TriggerType">They type of event which triggered this sound</param>
 			/// <param name="Train">The root train which triggered this sound</param>
-			/// <param name="CarIndex">The car index which triggered this sound</param>
-			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
+			/// <param name="Car">The car which triggered this sound</param>
+			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
 			{
 				if (SuppressSoundEvents) return;
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle | TriggerType == EventTriggerType.OtherCarRearAxle | TriggerType == EventTriggerType.RearCarRearAxle)
@@ -72,7 +73,7 @@ namespace OpenBve
 							}
 							if (buffer != null)
 							{
-								Program.Sounds.PlaySound(buffer, pitch, gain, Position, Train.Cars[CarIndex], false);
+								Program.Sounds.PlaySound(buffer, pitch, gain, Position, Car, false);
 							}
 						}
 						this.DontTriggerAnymore = this.Once;
@@ -81,7 +82,7 @@ namespace OpenBve
 			}
 		}
 
-		internal class PointSoundEvent : GeneralEvent<TrainManager.Train>
+		internal class PointSoundEvent : GeneralEvent<AbstractTrain, TrainManager.Car>
 		{
 			private readonly double Speed;
 
@@ -96,8 +97,8 @@ namespace OpenBve
 			/// <param name="Direction">The direction of travel- 1 for forwards, and -1 for backwards</param>
 			/// <param name="TriggerType">They type of event which triggered this sound</param>
 			/// <param name="Train">The root train which triggered this sound</param>
-			/// <param name="CarIndex">The car index which triggered this sound</param>
-			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
+			/// <param name="Car">The car which triggered this sound</param>
+			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, TrainManager.Car Car)
 			{
 				if (SuppressSoundEvents) return;
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle | TriggerType == EventTriggerType.OtherCarRearAxle | TriggerType == EventTriggerType.RearCarRearAxle)
@@ -107,21 +108,21 @@ namespace OpenBve
 					if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle)
 					{
 						if (Train.CurrentSpeed <= 0.0) return;
-						int bufferIndex = Train.Cars[CarIndex].FrontAxle.RunIndex;
-						if (Train.Cars[CarIndex].FrontAxle.PointSounds == null || Train.Cars[CarIndex].FrontAxle.PointSounds.Length == 0)
+						int bufferIndex = Car.FrontAxle.RunIndex;
+						if (Car.FrontAxle.PointSounds == null || Car.FrontAxle.PointSounds.Length == 0)
 						{
 							//No point sounds defined at all
 							return;
 						}
-						if (bufferIndex > Train.Cars[CarIndex].FrontAxle.PointSounds.Length - 1
-						    || Train.Cars[CarIndex].FrontAxle.PointSounds[bufferIndex].Buffer == null)
+						if (bufferIndex > Car.FrontAxle.PointSounds.Length - 1
+						    || Car.FrontAxle.PointSounds[bufferIndex].Buffer == null)
 						{
 							//If the switch sound does not exist, return zero
 							//Required to handle legacy trains which don't have idx specific run sounds defined
 							bufferIndex = 0;
 						}
-						buffer = Train.Cars[CarIndex].FrontAxle.PointSounds[bufferIndex].Buffer;
-						p = Train.Cars[CarIndex].FrontAxle.PointSounds[bufferIndex].Position;
+						buffer = Car.FrontAxle.PointSounds[bufferIndex].Buffer;
+						p = Car.FrontAxle.PointSounds[bufferIndex].Position;
 					}
 					else
 					{
@@ -140,7 +141,7 @@ namespace OpenBve
 						}
 						if (buffer != null)
 						{
-							Program.Sounds.PlaySound(buffer, pitch, gain, p, Train.Cars[CarIndex], false);
+							Program.Sounds.PlaySound(buffer, pitch, gain, p, Car, false);
 						}
 					}
 					this.DontTriggerAnymore = false;
@@ -149,7 +150,7 @@ namespace OpenBve
 		}
 
 		/// <summary>Called when the rail played for a train should be changed</summary>
-		internal class RailSoundsChangeEvent : GeneralEvent<TrainManager.Train>
+		internal class RailSoundsChangeEvent : GeneralEvent<AbstractTrain, TrainManager.Car>
 		{
 			private readonly int PreviousRunIndex;
 			private readonly int PreviousFlangeIndex;
@@ -168,33 +169,33 @@ namespace OpenBve
 			/// <param name="Direction">The direction of travel- 1 for forwards, and -1 for backwards</param>
 			/// <param name="TriggerType">They type of event which triggered this sound</param>
 			/// <param name="Train">The root train which triggered this sound</param>
-			/// <param name="CarIndex">The car index which triggered this sound</param>
-			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
+			/// <param name="Car">The car which triggered this sound</param>
+			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, TrainManager.Car Car)
 			{
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle)
 				{
 					if (Direction < 0)
 					{
-						Train.Cars[CarIndex].FrontAxle.RunIndex = this.PreviousRunIndex;
-						Train.Cars[CarIndex].FrontAxle.FlangeIndex = this.PreviousFlangeIndex;
+						Car.FrontAxle.RunIndex = this.PreviousRunIndex;
+						Car.FrontAxle.FlangeIndex = this.PreviousFlangeIndex;
 					}
 					else if (Direction > 0)
 					{
-						Train.Cars[CarIndex].FrontAxle.RunIndex = this.NextRunIndex;
-						Train.Cars[CarIndex].FrontAxle.FlangeIndex = this.NextFlangeIndex;
+						Car.FrontAxle.RunIndex = this.NextRunIndex;
+						Car.FrontAxle.FlangeIndex = this.NextFlangeIndex;
 					}
 				}
 				else if (TriggerType == EventTriggerType.RearCarRearAxle | TriggerType == EventTriggerType.OtherCarRearAxle)
 				{
 					if (Direction < 0)
 					{
-						Train.Cars[CarIndex].RearAxle.RunIndex = this.PreviousRunIndex;
-						Train.Cars[CarIndex].RearAxle.FlangeIndex = this.PreviousFlangeIndex;
+						Car.RearAxle.RunIndex = this.PreviousRunIndex;
+						Car.RearAxle.FlangeIndex = this.PreviousFlangeIndex;
 					}
 					else if (Direction > 0)
 					{
-						Train.Cars[CarIndex].RearAxle.RunIndex = this.NextRunIndex;
-						Train.Cars[CarIndex].RearAxle.FlangeIndex = this.NextFlangeIndex;
+						Car.RearAxle.RunIndex = this.NextRunIndex;
+						Car.RearAxle.FlangeIndex = this.NextFlangeIndex;
 					}
 				}
 			}

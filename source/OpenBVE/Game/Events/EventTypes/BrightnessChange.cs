@@ -1,11 +1,12 @@
 ﻿using OpenBveApi.Routes;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
 	internal static partial class TrackManager
 	{
 		/// <summary>Called when the cab brightness (lighting conditions) should be changed</summary>
-		internal class BrightnessChangeEvent : GeneralEvent<TrainManager.Train>
+		internal class BrightnessChangeEvent : GeneralEvent<AbstractTrain, TrainManager.Car>
 		{
 			/// <summary>The brightness to be applied from this point</summary>
 			internal readonly float CurrentBrightness;
@@ -32,23 +33,23 @@ namespace OpenBve
 				this.NextBrightness = CurrentBrightness;
 				this.NextDistance = 0.0;
 			}
-			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, TrainManager.Car Car)
 			{
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle)
 				{
 					if (Direction < 0)
 					{
-						Train.Cars[CarIndex].Brightness.NextBrightness = this.CurrentBrightness;
-						Train.Cars[CarIndex].Brightness.NextTrackPosition = Train.Cars[CarIndex].FrontAxle.Follower.TrackPosition;
-						Train.Cars[CarIndex].Brightness.PreviousBrightness = this.PreviousBrightness;
-						Train.Cars[CarIndex].Brightness.PreviousTrackPosition = Train.Cars[CarIndex].FrontAxle.Follower.TrackPosition - this.PreviousDistance;
+						Car.Brightness.NextBrightness = this.CurrentBrightness;
+						Car.Brightness.NextTrackPosition = Car.FrontAxle.Follower.TrackPosition;
+						Car.Brightness.PreviousBrightness = this.PreviousBrightness;
+						Car.Brightness.PreviousTrackPosition = Car.FrontAxle.Follower.TrackPosition - this.PreviousDistance;
 					}
 					else if (Direction > 0)
 					{
-						Train.Cars[CarIndex].Brightness.PreviousBrightness = this.CurrentBrightness;
-						Train.Cars[CarIndex].Brightness.PreviousTrackPosition = Train.Cars[CarIndex].FrontAxle.Follower.TrackPosition;
-						Train.Cars[CarIndex].Brightness.NextBrightness = this.NextBrightness;
-						Train.Cars[CarIndex].Brightness.NextTrackPosition = Train.Cars[CarIndex].FrontAxle.Follower.TrackPosition + this.NextDistance;
+						Car.Brightness.PreviousBrightness = this.CurrentBrightness;
+						Car.Brightness.PreviousTrackPosition = Car.FrontAxle.Follower.TrackPosition;
+						Car.Brightness.NextBrightness = this.NextBrightness;
+						Car.Brightness.NextTrackPosition = Car.FrontAxle.Follower.TrackPosition + this.NextDistance;
 					}
 				}
 			}

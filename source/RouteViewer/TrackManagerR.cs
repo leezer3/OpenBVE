@@ -8,13 +8,14 @@
 using System;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
+using OpenBveApi.Trains;
 using SoundManager;
 
 namespace OpenBve {
     internal static class TrackManager {
 
         // brightness change
-        internal class BrightnessChangeEvent : GeneralEvent<TrainManager.Train> {
+        internal class BrightnessChangeEvent : GeneralEvent<TrainManager.Train, AbstractCar> {
             internal float CurrentBrightness;
             internal float PreviousBrightness;
             internal double PreviousDistance;
@@ -29,26 +30,26 @@ namespace OpenBve {
                 this.NextBrightness = NextBrightness;
                 this.NextDistance = NextDistance;
             }
-            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) { }
+            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) { }
         }
         
         // station pass alarm
-        internal class StationPassAlarmEvent : GeneralEvent<TrainManager.Train> {
+        internal class StationPassAlarmEvent : GeneralEvent<TrainManager.Train, AbstractCar> {
             internal StationPassAlarmEvent(double TrackPositionDelta) {
                 this.TrackPositionDelta = TrackPositionDelta;
                 this.DontTriggerAnymore = false;
             }
-            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) { }
+            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) { }
         }
         // station start
-        internal class StationStartEvent : GeneralEvent<TrainManager.Train> {
+        internal class StationStartEvent : GeneralEvent<TrainManager.Train, AbstractCar> {
             internal int StationIndex;
             internal StationStartEvent(double TrackPositionDelta, int StationIndex) {
                 this.TrackPositionDelta = TrackPositionDelta;
                 this.DontTriggerAnymore = false;
                 this.StationIndex = StationIndex;
             }
-            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
+            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) {
                 if (TriggerType == EventTriggerType.Camera) {
                     if (Direction < 0) {
                         if (Program.CurrentStation == this.StationIndex) {
@@ -61,14 +62,14 @@ namespace OpenBve {
             }
         }
         // station end
-        internal class StationEndEvent : GeneralEvent<TrainManager.Train> {
+        internal class StationEndEvent : GeneralEvent<TrainManager.Train, AbstractCar> {
             internal int StationIndex;
             internal StationEndEvent(double TrackPositionDelta, int StationIndex) {
                 this.TrackPositionDelta = TrackPositionDelta;
                 this.DontTriggerAnymore = false;
                 this.StationIndex = StationIndex;
             }
-            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) {
+            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) {
                 if (TriggerType == EventTriggerType.Camera) {
                     if (Direction < 0) {
                         Program.CurrentStation = this.StationIndex;
@@ -81,7 +82,7 @@ namespace OpenBve {
             }
         }
         // section change
-        internal class SectionChangeEvent : GeneralEvent<TrainManager.Train> {
+        internal class SectionChangeEvent : GeneralEvent<TrainManager.Train, AbstractCar> {
             internal int PreviousSectionIndex;
             internal int NextSectionIndex;
             internal SectionChangeEvent(double TrackPositionDelta, int PreviousSectionIndex, int NextSectionIndex) {
@@ -90,7 +91,7 @@ namespace OpenBve {
                 this.PreviousSectionIndex = PreviousSectionIndex;
                 this.NextSectionIndex = NextSectionIndex;
             }
-            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) { }
+            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) { }
         }
         // transponder
 		internal enum TransponderType {
@@ -106,7 +107,7 @@ namespace OpenBve {
         internal enum TransponderSpecialSection {
             NextRedSection = -2,
         }
-        internal class TransponderEvent : GeneralEvent<TrainManager.Train> {
+        internal class TransponderEvent : GeneralEvent<TrainManager.Train, AbstractCar> {
             internal TransponderType Type;
             internal bool SwitchSubsystem;
             internal int OptionalInteger;
@@ -121,10 +122,10 @@ namespace OpenBve {
                 this.OptionalFloat = OptionalFloat;
                 this.SectionIndex = SectionIndex;
             }
-            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) { }
+            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) { }
         }
         // limit change
-        internal class LimitChangeEvent : GeneralEvent<TrainManager.Train> {
+        internal class LimitChangeEvent : GeneralEvent<TrainManager.Train, AbstractCar> {
             internal double PreviousSpeedLimit;
             internal double NextSpeedLimit;
             internal LimitChangeEvent(double TrackPositionDelta, double PreviousSpeedLimit, double NextSpeedLimit) {
@@ -133,11 +134,11 @@ namespace OpenBve {
                 this.PreviousSpeedLimit = PreviousSpeedLimit;
                 this.NextSpeedLimit = NextSpeedLimit;
             }
-            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) { }
+            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) { }
         }
         // sound
         internal static bool SuppressSoundEvents = false;
-        internal class SoundEvent : GeneralEvent<TrainManager.Train> {
+        internal class SoundEvent : GeneralEvent<TrainManager.Train, AbstractCar> {
             internal SoundBuffer SoundBuffer;
             internal bool PlayerTrainOnly;
             internal bool Once;
@@ -154,11 +155,11 @@ namespace OpenBve {
                 this.Position = Position;
                 this.Speed = Speed;
             }
-            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) { }
+            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) { }
             internal const int SoundIndexTrainPoint = -2;
         }
         // rail sounds change
-        internal class RailSoundsChangeEvent : GeneralEvent<TrainManager.Train> {
+        internal class RailSoundsChangeEvent : GeneralEvent<TrainManager.Train, AbstractCar> {
             internal int PreviousRunIndex;
             internal int PreviousFlangeIndex;
             internal int NextRunIndex;
@@ -171,7 +172,7 @@ namespace OpenBve {
                 this.NextRunIndex = NextRunIndex;
                 this.NextFlangeIndex = NextFlangeIndex;
             }
-            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex) { }
+            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) { }
         }
         // ================================
 		
@@ -357,7 +358,7 @@ namespace OpenBve {
                 {
 	                dynamic e = CurrentTrack.Elements[ElementIndex].Events[j];
                     if (OldDelta > e.TrackPositionDelta & NewDelta <= e.TrackPositionDelta) {
-                        e.TryTrigger(-1, Follower.TriggerType, Follower.Train, Follower.CarIndex);
+                        e.TryTrigger(-1, Follower.TriggerType, Follower.Train, Follower.Train != null ? Follower.Train.Cars[Follower.CarIndex] : null);
                     }
                 }
             } else if (Direction > 0) {
@@ -365,7 +366,7 @@ namespace OpenBve {
                 {
 	                dynamic e = CurrentTrack.Elements[ElementIndex].Events[j];
                     if (OldDelta < e.TrackPositionDelta & NewDelta >= e.TrackPositionDelta) {
-                        e.TryTrigger(1, Follower.TriggerType, Follower.Train, Follower.CarIndex);
+                        e.TryTrigger(1, Follower.TriggerType, Follower.Train, Follower.Train != null ? Follower.Train.Cars[Follower.CarIndex] : null);
                     }
                 }
             }

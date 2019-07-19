@@ -11,7 +11,7 @@ namespace OpenBve
 	internal static partial class TrackManager
 	{
 		/// <summary>Is called when the speed limit upon the track change</summary>
-		internal class LimitChangeEvent : GeneralEvent<AbstractTrain>
+		internal class LimitChangeEvent : GeneralEvent<AbstractTrain, AbstractCar>
 		{
 			internal readonly double PreviousSpeedLimit;
 			internal readonly double NextSpeedLimit;
@@ -22,7 +22,7 @@ namespace OpenBve
 				this.PreviousSpeedLimit = PreviousSpeedLimit;
 				this.NextSpeedLimit = NextSpeedLimit;
 			}
-			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
 			{
 				if (Train == null)
 				{

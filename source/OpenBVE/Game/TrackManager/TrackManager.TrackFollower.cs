@@ -270,7 +270,7 @@ namespace OpenBve
 						}
 						if (OldDelta > e.TrackPositionDelta & NewDelta <= e.TrackPositionDelta)
 						{
-							e.TryTrigger(-1, this.TriggerType, this.Train, this.CarIndex);
+							e.TryTrigger(-1, this.TriggerType, this.Train, this.Train != null ? this.Train.Cars[CarIndex] : null);
 						}
 					}
 				}
@@ -281,7 +281,7 @@ namespace OpenBve
 						dynamic e = Tracks[Index].Elements[ElementIndex].Events[j];
 						if (OldDelta < e.TrackPositionDelta & NewDelta >= e.TrackPositionDelta)
 						{
-							e.TryTrigger(1, this.TriggerType, this.Train, this.CarIndex);
+							e.TryTrigger(1, this.TriggerType, this.Train, this.Train != null ? this.Train.Cars[CarIndex] : null);
 						}
 					}
 				}

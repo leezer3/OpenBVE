@@ -10,7 +10,7 @@ namespace OpenBve
 	internal static partial class TrackManager
 	{
 		/// <summary>Is called when a train changes from one signalling section to another</summary>
-		internal class SectionChangeEvent : GeneralEvent<AbstractTrain>
+		internal class SectionChangeEvent : GeneralEvent<AbstractTrain, AbstractCar>
 		{
 			/// <summary>The index of the previous signalling section</summary>
 			internal readonly int PreviousSectionIndex;
@@ -24,7 +24,7 @@ namespace OpenBve
 				this.PreviousSectionIndex = PreviousSectionIndex;
 				this.NextSectionIndex = NextSectionIndex;
 			}
-			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
 			{
 				if (Train != null)
 				{

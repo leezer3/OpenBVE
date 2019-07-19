@@ -68,6 +68,14 @@
 
 		}
 
+		/// <summary>Derails a car within the train</summary>
+		/// <param name="Car">The car to derail</param>
+		/// <param name="ElapsedTime">The frame time elapsed</param>
+		public virtual void Derail(AbstractCar Car, double ElapsedTime)
+		{
+
+		}
+
 		/// <summary>Disposes of the train and releases all resources</summary>
 		public virtual void Dispose()
 		{

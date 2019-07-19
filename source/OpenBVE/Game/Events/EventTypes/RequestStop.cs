@@ -10,7 +10,7 @@ namespace OpenBve
 	internal static partial class TrackManager
 	{
 		/// <summary>Called when a train passes over the trigger for a request stop</summary>
-		internal class RequestStopEvent : GeneralEvent<TrainManager.Train>
+		internal class RequestStopEvent : GeneralEvent<TrainManager.Train, AbstractCar>
 		{
 			/// <summary>The index of the station which this applies to</summary>
 			private readonly int StationIndex;
@@ -34,7 +34,7 @@ namespace OpenBve
 				this.Late = late;
 				this.MaxCars = maxCars;
 			}
-			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car)
 			{
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle)
 				{

@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Colors;
+﻿using OpenBveApi;
+using OpenBveApi.Colors;
 using OpenBveApi.Math;
 
 namespace OpenBve.RouteManager
@@ -9,6 +10,8 @@ namespace OpenBve.RouteManager
 		/// <summary>The object to be rendered</summary>
 		/// NOTE: May be either a textual string, or a texture depending on the type
 		public object MessageToDisplay;
+		/// <summary>The highest game mode in which this message will display</summary>
+		public GameMode Mode = GameMode.Expert;
 		/// <summary>The track position at which this message is placed</summary>
 		public double TrackPosition;
 		/// <summary>The timeout in seconds for this message</summary>

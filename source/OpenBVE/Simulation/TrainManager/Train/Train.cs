@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Linq;
 using OpenBve.BrakeSystems;
 using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
@@ -940,6 +941,20 @@ namespace OpenBve
 				if (Program.GenerateDebugLogging)
 				{
 					Program.FileSystem.AppendToLogFile("Train " + Array.IndexOf(TrainManager.Trains, this) + ", Car " + CarIndex + " derailed. Current simulation time: " + Game.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
+				}
+			}
+
+			public override void Derail(AbstractCar Car, double ElapsedTime)
+			{
+				if (this.Cars.Contains(Car))
+				{
+					var c = Car as TrainManager.Car;
+					c.Derailed = true;
+					this.Derailed = true;
+					if (Program.GenerateDebugLogging)
+					{
+						Program.FileSystem.AppendToLogFile("Train " + Array.IndexOf(TrainManager.Trains, this) + ", Car " + c.Index + " derailed. Current simulation time: " + Game.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
+					}
 				}
 			}
 

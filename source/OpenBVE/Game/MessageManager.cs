@@ -15,7 +15,7 @@ namespace OpenBve
 		/// <param name="message">The message to add</param>
 		internal static void AddMessage(AbstractMessage message)
 		{
-			if (TrainManager.PlayerTrain.StationState == TrainStopState.Jumping)
+			if (TrainManager.PlayerTrain.StationState == TrainStopState.Jumping || message.Mode < Interface.CurrentOptions.GameMode)
 			{
 				//Ignore messages triggered during a jump
 				return;

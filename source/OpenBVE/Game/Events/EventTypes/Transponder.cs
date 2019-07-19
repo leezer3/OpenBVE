@@ -22,7 +22,7 @@ namespace OpenBve
 		}
 
 		/// <summary>Called when a train passes over a transponder attached to the signalling system</summary>
-		internal class TransponderEvent : GeneralEvent<TrainManager.Train>
+		internal class TransponderEvent : GeneralEvent<TrainManager.Train, AbstractCar>
 		{
 			/// <summary>The type of transponder</summary>
 			internal readonly int Type;
@@ -42,7 +42,7 @@ namespace OpenBve
 				this.SectionIndex = sectionIndex;
 				this.ClipToFirstRedSection = clipToFirstRedSection;
 			}
-			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car)
 			{
 				if (TriggerType == EventTriggerType.TrainFront)
 				{

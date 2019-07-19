@@ -11,14 +11,14 @@ namespace OpenBve
 	internal static partial class TrackManager
 	{
 		/// <summary>Is called when a train passes a station with the Pass Alarm enabled without stopping</summary>
-		internal class StationPassAlarmEvent : GeneralEvent<TrainManager.Train>
+		internal class StationPassAlarmEvent : GeneralEvent<TrainManager.Train, AbstractCar>
 		{
 			internal StationPassAlarmEvent(double TrackPositionDelta)
 			{
 				this.TrackPositionDelta = TrackPositionDelta;
 				this.DontTriggerAnymore = false;
 			}
-			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car)
 			{
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle)
 				{
@@ -44,7 +44,7 @@ namespace OpenBve
 		}
 		
 		/// <summary>Placed at the start of every station</summary>
-		internal class StationStartEvent : GeneralEvent<TrainManager.Train>
+		internal class StationStartEvent : GeneralEvent<TrainManager.Train, AbstractCar>
 		{
 			/// <summary>The index of the station this event describes</summary>
 			internal readonly int StationIndex;
@@ -55,7 +55,7 @@ namespace OpenBve
 				this.DontTriggerAnymore = false;
 				this.StationIndex = StationIndex;
 			}
-			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car)
 			{
 				if (TriggerType == EventTriggerType.TrainFront)
 				{
@@ -87,7 +87,7 @@ namespace OpenBve
 		}
 		
 		/// <summary>Placed at the end of every station (as defined by the last possible stop point)</summary>
-		internal class StationEndEvent : GeneralEvent<TrainManager.Train>
+		internal class StationEndEvent : GeneralEvent<TrainManager.Train, AbstractCar>
 		{
 			/// <summary>The index of the station this event describes</summary>
 			internal readonly int StationIndex;
@@ -98,7 +98,7 @@ namespace OpenBve
 				this.DontTriggerAnymore = false;
 				this.StationIndex = StationIndex;
 			}
-			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, int CarIndex)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car)
 			{
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle)
 				{
