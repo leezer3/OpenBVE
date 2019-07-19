@@ -5,7 +5,7 @@ matrix:
 #Nightly builds for upload. Use lowest possible Mono version for compatibility purposes
     - os: linux
       dist: trusty
-      mono: 3.2.8
+      mono: 4.6.2
       script: make publish
     - os: osx
       mono: latest
@@ -24,7 +24,7 @@ matrix:
       script: make all-release
     - os: linux
       dist: trusty
-      mono: 3.2.8
+      mono: 4.6.2
       script: make all-release
 ##Use .sln file##
     - os: linux
@@ -41,7 +41,7 @@ matrix:
       solution: OpenBVE.sln
     - os: linux
       dist: trusty
-      mono: 3.2.8
+      mono: 4.6.2
       solution: OpenBVE.sln
  
 after_success:
