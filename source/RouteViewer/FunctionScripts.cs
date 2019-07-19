@@ -214,6 +214,7 @@ namespace OpenBve {
 						s--; break;
 					case Instructions.CurrentObjectState:
 						Function.Stack[s] = CurrentState;
+						s++;
 						break;
 						// time/camera
 					case Instructions.TimeSecondsSinceMidnight:
