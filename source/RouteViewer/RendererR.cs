@@ -1,4 +1,4 @@
-﻿// ╔═════════════════════════════════════════════════════════════╗
+// ╔═════════════════════════════════════════════════════════════╗
 // ║ Renderer.cs for the Route Viewer                            ║
 // ╠═════════════════════════════════════════════════════════════╣
 // ║ This file cannot be used in the openBVE main program.       ║
@@ -863,6 +863,7 @@ namespace OpenBve {
 	                        OpaqueList[OpaqueListCount].Wrap = wrap;
                             ObjectList[ObjectListCount].FaceListIndices[i] = OpaqueListCount << 2;
                             OpaqueListCount++;
+                            LibRender.Renderer.InfoStaticOpaqueFaceCount++;
                         }
                     }
                 }
@@ -890,6 +891,7 @@ namespace OpenBve {
                             OpaqueList[hi] = OpaqueList[OpaqueListCount - 1];
                             OpaqueListCount--;
                             ObjectList[OpaqueList[hi].ObjectListIndex].FaceListIndices[OpaqueList[hi].FaceIndex] = h;
+                            LibRender.Renderer.InfoStaticOpaqueFaceCount--;
                             break;
                         case 1:
                             // transparent color
