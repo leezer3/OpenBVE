@@ -382,6 +382,24 @@ namespace SoundManager
 		}
 
 		/// <summary>Stops the specified sound source.</summary>
+		/// <param name="sound">The sound source, or a null reference.</param>
+		public void StopSound(CarSound sound)
+		{
+			if (sound != null)
+			{
+				if (sound.Source != null)
+				{
+					if (sound.Source.State == SoundSourceState.Playing)
+					{
+						AL.DeleteSources(1, ref sound.Source.OpenAlSourceName);
+						sound.Source.OpenAlSourceName = 0;
+					}
+					sound.Source.State = SoundSourceState.Stopped;
+				}
+			}
+		}
+
+		/// <summary>Stops the specified sound source.</summary>
 		/// <param name="source">The sound source, or a null reference.</param>
 		public void StopSound(SoundSource source)
 		{

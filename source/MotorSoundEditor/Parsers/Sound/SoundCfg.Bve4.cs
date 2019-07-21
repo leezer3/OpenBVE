@@ -7,6 +7,7 @@ using System.Text;
 using MotorSoundEditor.Audio;
 using MotorSoundEditor.Simulation.TrainManager;
 using OpenBveApi.Math;
+using SoundManager;
 
 namespace MotorSoundEditor.Parsers.Sound
 {
@@ -86,11 +87,11 @@ namespace MotorSoundEditor.Parsers.Sound
 
 												for (int h = n; h < k; h++)
 												{
-													car.Sounds.Run[h] = TrainManager.CarSound.Empty;
+													car.Sounds.Run[h] = new CarSound();
 												}
 											}
 
-											car.Sounds.Run[k] = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, b), center, SoundCfgParser.mediumRadius);
+											car.Sounds.Run[k] = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center);
 										}
 									}
 								}

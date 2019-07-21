@@ -77,7 +77,6 @@
     <Compile Include="Simulation\TrainManager\Car\Car.CarSounds.cs" />
     <Compile Include="Simulation\TrainManager\Car\Car.cs" />
     <Compile Include="Simulation\TrainManager\Car\Car.Specs.cs" />
-    <Compile Include="Simulation\TrainManager\Car\CarSound.cs" />
     <Compile Include="Simulation\TrainManager\Motor\MotorSounds.cs" />
     <Compile Include="Simulation\TrainManager\TrainManager.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.cs" />

@@ -77,7 +77,7 @@ namespace OpenBve
 							buffer = Cars[CarIndex].Sounds.CpLoop.Buffer;
 							if (buffer != null)
 							{
-								Program.Sounds.StopSound(Cars[CarIndex].Sounds.CpLoop.Source);
+								Program.Sounds.StopSound(Cars[CarIndex].Sounds.CpLoop);
 							}
 						}
 						else
@@ -299,7 +299,7 @@ namespace OpenBve
 							}
 							else
 							{
-								Program.Sounds.StopSound(Cars[CarIndex].Sounds.Rub.Source);
+								Program.Sounds.StopSound(Cars[CarIndex].Sounds.Rub);
 							}
 						}
 						else if (pitch > 0.02 & gain > 0.01)

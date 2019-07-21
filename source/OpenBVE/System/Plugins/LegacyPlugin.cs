@@ -276,7 +276,7 @@ namespace OpenBve {
 					if (this.Sound[i] != this.LastSound[i]) {
 						if (this.Sound[i] == SoundInstructions.Stop) {
 							if (i < base.Train.Cars[base.Train.DriverCar].Sounds.Plugin.Length) {
-								Program.Sounds.StopSound(Train.Cars[Train.DriverCar].Sounds.Plugin[i].Source);
+								Program.Sounds.StopSound(Train.Cars[Train.DriverCar].Sounds.Plugin[i]);
 							}
 						} else if (this.Sound[i] > SoundInstructions.Stop & this.Sound[i] <= SoundInstructions.PlayLooping) {
 							if (i < base.Train.Cars[base.Train.DriverCar].Sounds.Plugin.Length) {

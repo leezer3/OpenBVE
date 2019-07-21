@@ -867,7 +867,7 @@ namespace MotorSoundEditor
 			{
 				CreateCar(fileName, TrackToMotor(tracks[(int)EditState.ViewMode.Power1]), TrackToMotor(tracks[(int)EditState.ViewMode.Power2]), TrackToMotor(tracks[(int)EditState.ViewMode.Brake1]), TrackToMotor(tracks[(int)EditState.ViewMode.Brake2]));
 			}
-			catch (Exception exception)
+			catch
 			{
 				editState.CurrentSimuState = EditState.SimulationState.Disable;
 				return;

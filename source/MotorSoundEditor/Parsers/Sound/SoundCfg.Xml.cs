@@ -185,7 +185,7 @@ namespace MotorSoundEditor.Parsers.Sound
 		/// <param name="Sound">The car sound</param>
 		/// <param name="Position">The default position of this sound (May be overriden by the node)</param>
 		/// <param name="Radius">The default radius of this sound (May be overriden by the node)</param>
-		private static void ParseNode(XmlNode node, out TrainManager.CarSound Sound, Vector3 Position, double Radius)
+		private static void ParseNode(XmlNode node, out CarSound Sound, Vector3 Position, double Radius)
 		{
 			string fileName = null;
 
@@ -201,14 +201,14 @@ namespace MotorSoundEditor.Parsers.Sound
 							if (!File.Exists(fileName))
 							{
 								//Valid path, but the file does not exist
-								Sound = TrainManager.CarSound.Empty;
+								Sound = new CarSound();
 								return;
 							}
 						}
 						catch
 						{
 							//Probably invalid filename characters
-							Sound = TrainManager.CarSound.Empty;
+							Sound = new CarSound();
 							return;
 						}
 						break;
@@ -245,11 +245,11 @@ namespace MotorSoundEditor.Parsers.Sound
 			if (fileName == null)
 			{
 				//No valid filename node specified
-				Sound = TrainManager.CarSound.Empty;
+				Sound = new CarSound();
 				return;
 			}
 
-			Sound = new TrainManager.CarSound(fileName, Position, Radius);
+			Sound = new CarSound(Program.Sounds.RegisterBuffer(fileName, Radius), Position);
 		}
 
 		/// <summary>Parses an XML node containing a list of sounds into a car sound array</summary>
@@ -257,9 +257,9 @@ namespace MotorSoundEditor.Parsers.Sound
 		/// <param name="Sounds">The car sound array</param>
 		/// <param name="Position">The default position of the sound (May be overriden by any node)</param>
 		/// <param name="Radius">The default radius of the sound (May be overriden by any node)</param>
-		private static void ParseArrayNode(XmlNode node, out TrainManager.CarSound[] Sounds, Vector3 Position, double Radius)
+		private static void ParseArrayNode(XmlNode node, out CarSound[] Sounds, Vector3 Position, double Radius)
 		{
-			Sounds = new TrainManager.CarSound[0];
+			Sounds = new CarSound[0];
 
 			foreach (XmlNode c in node.ChildNodes)
 			{
@@ -285,7 +285,7 @@ namespace MotorSoundEditor.Parsers.Sound
 
 						while (l < Sounds.Length)
 						{
-							Sounds[l] = TrainManager.CarSound.Empty;
+							Sounds[l] = new CarSound();
 							l++;
 						}
 

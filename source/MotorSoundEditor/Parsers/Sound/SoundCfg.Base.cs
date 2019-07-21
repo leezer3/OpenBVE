@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using MotorSoundEditor.Simulation.TrainManager;
 using OpenBveApi.Math;
+using SoundManager;
 
 namespace MotorSoundEditor.Parsers.Sound
 {
@@ -48,10 +49,10 @@ namespace MotorSoundEditor.Parsers.Sound
 		/// <param name="Position">The position the sound is to be emitted from within the car</param>
 		/// <param name="Radius">The sound radius</param>
 		/// <returns>The new car sound array</returns>
-		internal static TrainManager.CarSound[] TryLoadSoundArray(string Folder, string FileStart, string FileEnd, Vector3 Position, double Radius)
+		internal static CarSound[] TryLoadSoundArray(string Folder, string FileStart, string FileEnd, Vector3 Position, double Radius)
 		{
 			CultureInfo Culture = CultureInfo.InvariantCulture;
-			TrainManager.CarSound[] Sounds = { };
+			CarSound[] Sounds = { };
 
 			if (!Directory.Exists(Folder))
 			{
@@ -89,12 +90,11 @@ namespace MotorSoundEditor.Parsers.Sound
 
 									for (int j = m; j < n; j++)
 									{
-										Sounds[j] = TrainManager.CarSound.Empty;
-										Sounds[j].Source = null;
+										Sounds[j] = new CarSound();
 									}
 								}
 
-								Sounds[n] = new TrainManager.CarSound(file, Position, Radius);
+								Sounds[n] = new CarSound(Program.Sounds.RegisterBuffer(file, Radius), Position);
 							}
 						}
 					}

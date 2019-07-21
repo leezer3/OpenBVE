@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using MotorSoundEditor.Simulation.TrainManager;
 using OpenBveApi.Math;
+using SoundManager;
 
 namespace MotorSoundEditor.Parsers.Sound
 {
@@ -30,7 +31,7 @@ namespace MotorSoundEditor.Parsers.Sound
 
 					if (idx >= 0)
 					{
-						TrainManager.CarSound snd = new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, "Motor" + idx.ToString(Culture) + ".wav"), center, SoundCfgParser.mediumRadius);
+						CarSound snd = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Motor" + idx.ToString(Culture) + ".wav"), SoundCfgParser.mediumRadius), center);
 						car.Sounds.Motor.Tables[j].Entries[k].Buffer = snd.Buffer;
 					}
 				}

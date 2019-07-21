@@ -147,7 +147,7 @@ namespace OpenBve
 							}
 							
 							int d = Train.DriverCar;
-							Program.Sounds.StopSound(Train.Cars[d].Sounds.Halt.Source);
+							Program.Sounds.StopSound(Train.Cars[d].Sounds.Halt);
 						}
 					}
 				}
