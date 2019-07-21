@@ -699,7 +699,7 @@ namespace OpenBve {
 										{
 											int b = (int)Math.Round(a);
 											if (b >= 0 & b <= 2) {
-												Train.Specs.PassAlarm = (TrainManager.PassAlarmType)b;
+												Train.SafetySystems.PassAlarm.Type = (TrainManager.PassAlarmType)b;
 											} else {
 												Interface.AddMessage(MessageType.Error, false, "PassAlarm is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											} break;

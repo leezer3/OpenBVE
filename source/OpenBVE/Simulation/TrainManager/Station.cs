@@ -49,7 +49,7 @@ namespace OpenBve
 							    Math.Abs(Train.Specs.CurrentAverageAcceleration) < 0.1 / 3.6)
 							{
 								//Check the interlock state for the doors
-								switch (Train.Specs.DoorInterlockState)
+								switch (Train.SafetySystems.DoorInterlockState)
 								{
 									case DoorInterlockStates.Unlocked:
 										if (CurrentRoute.Stations[i].OpenLeftDoors || CurrentRoute.Stations[i].OpenRightDoors)
@@ -116,7 +116,7 @@ namespace OpenBve
 								Train.StationState = TrainStopState.Boarding;
 								Train.StationAdjust = false;
 								Train.Specs.DoorClosureAttempted = false;
-								Program.Sounds.StopSound(Train.Cars[Train.DriverCar].Sounds.Halt);
+								Program.Sounds.StopSound(Train.SafetySystems.PassAlarm.Source);
 								SoundBuffer buffer = (SoundBuffer)CurrentRoute.Stations[i].ArrivalSoundBuffer;
 								if (buffer != null)
 								{
@@ -244,7 +244,7 @@ namespace OpenBve
 							if (Train.Specs.DoorCloseMode != DoorMode.Manual & CurrentRoute.Stations[i].Type == StationType.Normal)
 							{
 								//Check the interlock state for the doors
-								switch (Train.Specs.DoorInterlockState)
+								switch (Train.SafetySystems.DoorInterlockState)
 								{
 									case DoorInterlockStates.Unlocked:
 										AttemptToCloseDoors(Train);
@@ -266,7 +266,7 @@ namespace OpenBve
 										break;
 								}
 
-								if (Train.Specs.DoorInterlockState != DoorInterlockStates.Locked & Train.Specs.DoorClosureAttempted)
+								if (Train.SafetySystems.DoorInterlockState != DoorInterlockStates.Locked & Train.Specs.DoorClosureAttempted)
 								{
 									if (CurrentRoute.Stations[i].OpenLeftDoors && !Train.Cars[j].Doors[0].AnticipatedReopen && Program.RandomNumberGenerator.NextDouble() < CurrentRoute.Stations[i].ReopenDoor)
 									{
@@ -463,7 +463,7 @@ namespace OpenBve
 				
 			}
 			// automatically close doors
-			if (Train.Specs.DoorCloseMode != DoorMode.Manual & Train.Specs.DoorInterlockState != DoorInterlockStates.Locked & !Train.Specs.DoorClosureAttempted)
+			if (Train.Specs.DoorCloseMode != DoorMode.Manual & Train.SafetySystems.DoorInterlockState != DoorInterlockStates.Locked & !Train.Specs.DoorClosureAttempted)
 			{
 				if (Train.Station == -1 | Train.StationState == TrainStopState.Completed)
 				{

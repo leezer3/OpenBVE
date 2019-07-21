@@ -290,7 +290,7 @@ namespace OpenBve
 										case "emergency":
 											for (int c = 0; c < train.Cars.Length; c++)
 											{
-												train.Cars[c].Sounds.EmrBrake = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center);
+												train.Handles.EmergencyBrake.ApplicationSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center);
 											}
 											break;
 										case "bp decomp":
@@ -720,10 +720,10 @@ namespace OpenBve
 									switch (a.ToLowerInvariant())
 									{
 										case "on":
-											train.Cars[train.DriverCar].Sounds.ReverserOn = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
+											train.Handles.Reverser.EngageSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
 											break;
 										case "off":
-											train.Cars[train.DriverCar].Sounds.ReverserOff = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
+											train.Handles.Reverser.ReleaseSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
 											break;
 										default:
 											Interface.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -799,7 +799,7 @@ namespace OpenBve
 										case "halt":
 											for (int c = 0; c < train.Cars.Length; c++)
 											{
-												train.Cars[c].Sounds.Halt = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
+												train.SafetySystems.PassAlarm.Sound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
 											}
 											break;
 										default:

@@ -283,16 +283,16 @@ namespace OpenBve
 					// sound
 					if (a == 0 & r != 0)
 					{
-						SoundBuffer buffer = Cars[DriverCar].Sounds.ReverserOn.Buffer;
+						SoundBuffer buffer = Handles.Reverser.EngageSound.Buffer;
 						if (buffer == null) return;
-						Vector3 pos = Cars[DriverCar].Sounds.ReverserOn.Position;
+						Vector3 pos = Handles.Reverser.EngageSound.Position;
 						Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 					}
 					else if (a != 0 & r == 0)
 					{
-						SoundBuffer buffer = Cars[DriverCar].Sounds.ReverserOff.Buffer;
+						SoundBuffer buffer = Handles.Reverser.ReleaseSound.Buffer;
 						if (buffer == null) return;
-						Vector3 pos = Cars[DriverCar].Sounds.ReverserOff.Position;
+						Vector3 pos = Handles.Reverser.ReleaseSound.Position;
 						Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 					}
 				}
@@ -313,10 +313,10 @@ namespace OpenBve
 
 					for (int i = 0; i < Cars.Length; i++)
 					{
-						buffer = Cars[DriverCar].Sounds.EmrBrake.Buffer;
+						buffer = Handles.EmergencyBrake.ApplicationSound.Buffer;
 						if (buffer != null)
 						{
-							Vector3 pos = Cars[i].Sounds.EmrBrake.Position;
+							Vector3 pos = Handles.EmergencyBrake.ApplicationSound.Position;
 							Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 						}
 					}

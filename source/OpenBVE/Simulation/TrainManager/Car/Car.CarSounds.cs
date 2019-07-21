@@ -32,11 +32,10 @@ namespace OpenBve
 			internal bool CpLoopStarted;
 			internal CarSound CpStart;
 			internal double CpStartTimeStarted;
-			internal CarSound EmrBrake;
+			
 			internal CarSound[] Flange;
 			internal double[] FlangeVolume;
-			internal CarSound Halt;
-			
+
 			internal CarSound Loop;
 			internal CarSound MasterControllerUp;
 			internal CarSound MasterControllerUpFast;
@@ -49,8 +48,7 @@ namespace OpenBve
 			/// <summary>Played once when the first door opens</summary>
 			internal CarSound PilotLampOff;
 			internal CarSound Rub;
-			internal CarSound ReverserOn;
-			internal CarSound ReverserOff;
+			
 			internal CarSound[] Run;
 			internal double[] RunVolume;
 			internal double RunNextReasynchronizationPosition;

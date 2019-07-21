@@ -21,7 +21,7 @@ namespace OpenBve
 			// load sounds for driver's car
 			train.Cars[train.DriverCar].Sounds.Adjust = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Adjust.wav"), SoundCfgParser.tinyRadius), panel);
 			train.Cars[train.DriverCar].Sounds.Brake = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Brake.wav"), SoundCfgParser.smallRadius), center);
-			train.Cars[train.DriverCar].Sounds.Halt = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Halt.wav"), SoundCfgParser.tinyRadius), cab);
+			train.SafetySystems.PassAlarm.Sound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Halt.wav"), SoundCfgParser.tinyRadius), cab);
 			train.Cars[train.DriverCar].Horns[0].LoopSound = Program.Sounds.TryToLoad(OpenBveApi.Path.CombineFile(trainFolder, "Klaxon0.wav"), SoundCfgParser.smallRadius);
 			train.Cars[train.DriverCar].Horns[0].Loop = false;
 			train.Cars[train.DriverCar].Horns[0].SoundPosition = front;
@@ -74,7 +74,7 @@ namespace OpenBve
 				{
 					train.Cars[i].Doors[1].OpenSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "DoorOpn.wav"), SoundCfgParser.smallRadius), right);
 				}
-				train.Cars[i].Sounds.EmrBrake = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "EmrBrake.wav"), SoundCfgParser.mediumRadius), center);
+				train.Handles.EmergencyBrake.ApplicationSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "EmrBrake.wav"), SoundCfgParser.mediumRadius), center);
 				train.Cars[i].Sounds.Flange = SoundCfgParser.TryLoadSoundArray(trainFolder, "Flange", ".wav", center, SoundCfgParser.mediumRadius);
 				train.Cars[i].Sounds.FlangeVolume = new double[train.Cars[i].Sounds.Flange.Length];
 				train.Cars[i].Sounds.Loop = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Loop.wav"), SoundCfgParser.mediumRadius), center);

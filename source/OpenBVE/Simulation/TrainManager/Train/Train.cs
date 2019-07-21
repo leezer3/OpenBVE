@@ -19,6 +19,8 @@ namespace OpenBve
 		/// <summary>The root class for a train within the simulation</summary>
 		public partial class Train : AbstractTrain
 		{
+			/// <summary>Holds the safety systems for the train</summary>
+			internal SafetySystems SafetySystems;
 			/// <summary>The plugin used by this train.</summary>
 			internal PluginManager.Plugin Plugin;
 			/// <summary>The driver body</summary>
@@ -63,7 +65,7 @@ namespace OpenBve
 				CurrentRouteLimit = double.PositiveInfinity;
 				CurrentSectionLimit = double.PositiveInfinity;
 				Cars = new TrainManager.Car[] { };
-				Specs.PassAlarm = PassAlarmType.None;
+				SafetySystems.PassAlarm = new PassAlarm();
 				Specs.DoorOpenMode = DoorMode.AutomaticManualOverride;
 				Specs.DoorCloseMode = DoorMode.AutomaticManualOverride;
 				Specs.DoorWidth = 1000.0;
@@ -999,10 +1001,8 @@ namespace OpenBve
 					Cars[i].Doors[1].CloseSound = new CarSound();
 					Cars[i].Doors[0].OpenSound = new CarSound();
 					Cars[i].Doors[1].OpenSound = new CarSound();
-					Cars[i].Sounds.EmrBrake = new CarSound();
 					Cars[i].Sounds.Flange = new CarSound[] { };
 					Cars[i].Sounds.FlangeVolume = new double[] { };
-					Cars[i].Sounds.Halt = new CarSound();
 					Cars[i].Sounds.MasterControllerDown = new CarSound();
 					Cars[i].Sounds.MasterControllerDownFast = new CarSound();
 					Cars[i].Sounds.MasterControllerUp = new CarSound();
@@ -1031,8 +1031,6 @@ namespace OpenBve
 					Cars[i].Sounds.PilotLampOff = new CarSound();
 					Cars[i].FrontAxle.PointSounds = new CarSound[] { };
 					Cars[i].RearAxle.PointSounds = new CarSound[] { };
-					Cars[i].Sounds.ReverserOn = new CarSound();
-					Cars[i].Sounds.ReverserOff = new CarSound();
 					Cars[i].Sounds.Rub = new CarSound();
 					Cars[i].Sounds.Run = new CarSound[] { };
 					Cars[i].Sounds.RunVolume = new double[] { };

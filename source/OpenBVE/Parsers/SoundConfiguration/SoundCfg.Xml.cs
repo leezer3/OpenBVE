@@ -16,7 +16,7 @@ namespace OpenBve
 			{
 				try
 				{
-					Parse(fileName, ref train.Cars[i], i == train.DriverCar);
+					Parse(fileName, ref train, ref train.Cars[i], i == train.DriverCar);
 				}
 				catch
 				{
@@ -27,7 +27,7 @@ namespace OpenBve
 		}
 
 		private static string currentPath;
-		internal static void Parse(string fileName, ref TrainManager.Car car, bool isDriverCar)
+		internal static void Parse(string fileName, ref TrainManager.Train Train, ref TrainManager.Car car, bool isDriverCar)
 		{
 			//3D center of the car
 			Vector3 center = Vector3.Zero;
@@ -101,7 +101,7 @@ namespace OpenBve
 												break;
 											case "emergency":
 												//Apply EB
-												ParseNode(cc, out car.Sounds.EmrBrake, center, SoundCfgParser.smallRadius);
+												ParseNode(cc, out Train.Handles.EmergencyBrake.ApplicationSound, center, SoundCfgParser.smallRadius);
 												break;
 											case "application":
 												//Standard application
@@ -409,10 +409,10 @@ namespace OpenBve
 										switch (cc.Name.ToLowerInvariant())
 										{
 											case "on":
-												ParseNode(cc, out car.Sounds.ReverserOn, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Reverser.EngageSound, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "off":
-												ParseNode(cc, out car.Sounds.ReverserOff, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Reverser.ReleaseSound, panel, SoundCfgParser.tinyRadius);
 												break;
 											default:
 												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
