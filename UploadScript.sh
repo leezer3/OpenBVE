@@ -12,7 +12,7 @@ function wrap() {
   if [ "$TRAVIS_OS_NAME" = "linux" ] ;
     then
 	echo "Linux worker"
-	if [ "$mono_version" != "3.2.8" ] ;
+	if [ "$mono_version" != "4.6.2" ] ;
 		then
 		echo "Wrong Mono version- Not uploading this build"
 		exit
