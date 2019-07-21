@@ -13,6 +13,17 @@ namespace OpenBveApi.Objects
 		/// <summary>A bit mask combining constants of the MeshFace structure.</summary>
 		public byte Flags;
 
+		/// <summary>Returns a representation of the face in string format</summary>
+		public override string ToString()
+		{
+			string s = string.Empty;
+			for (int i = 0; i < Vertices.Length; i++)
+			{
+				s += Vertices[i].Index + ",";
+			}
+			return s;
+		}
+
 		/// <summary>Creates a new MeshFace using the specified vertex indicies and the default material</summary>
 		/// <param name="Vertices">The vertex indicies</param>
 		public MeshFace(int[] Vertices)
