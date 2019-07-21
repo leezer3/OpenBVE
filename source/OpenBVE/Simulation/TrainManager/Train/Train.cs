@@ -994,9 +994,6 @@ namespace OpenBve
 					Cars[i].Sounds.BrakeHandleReleaseFast = new CarSound();
 					Cars[i].Sounds.BreakerResume = new CarSound();
 					Cars[i].Sounds.BreakerResumeOrInterrupt = new CarSound();
-					Cars[i].Sounds.CpEnd = new CarSound();
-					Cars[i].Sounds.CpLoop = new CarSound();
-					Cars[i].Sounds.CpStart = new CarSound();
 					Cars[i].Doors[0].CloseSound = new CarSound();
 					Cars[i].Doors[1].CloseSound = new CarSound();
 					Cars[i].Doors[0].OpenSound = new CarSound();

@@ -68,16 +68,16 @@ namespace OpenBve
 						{
 							Cars[CarIndex].CarBrake.airCompressor.Enabled = false;
 							Cars[CarIndex].Sounds.CpLoopStarted = false;
-							SoundBuffer buffer = Cars[CarIndex].Sounds.CpEnd.Buffer;
+							SoundBuffer buffer = Cars[CarIndex].CarBrake.airCompressor.EndSound.Buffer;
 							if (buffer != null)
 							{
-								Program.Sounds.PlaySound(buffer, 1.0, 1.0, Cars[CarIndex].Sounds.CpEnd.Position, Cars[CarIndex], false);
+								Program.Sounds.PlaySound(buffer, 1.0, 1.0, Cars[CarIndex].CarBrake.airCompressor.EndSound.Position, Cars[CarIndex], false);
 							}
 
-							buffer = Cars[CarIndex].Sounds.CpLoop.Buffer;
+							buffer = Cars[CarIndex].CarBrake.airCompressor.LoopSound.Buffer;
 							if (buffer != null)
 							{
-								Program.Sounds.StopSound(Cars[CarIndex].Sounds.CpLoop);
+								Program.Sounds.StopSound(Cars[CarIndex].CarBrake.airCompressor.LoopSound.Source);
 							}
 						}
 						else
@@ -86,10 +86,10 @@ namespace OpenBve
 							if (!Cars[CarIndex].Sounds.CpLoopStarted && Game.SecondsSinceMidnight > Cars[CarIndex].Sounds.CpStartTimeStarted + 5.0)
 							{
 								Cars[CarIndex].Sounds.CpLoopStarted = true;
-								SoundBuffer buffer = Cars[CarIndex].Sounds.CpLoop.Buffer;
+								SoundBuffer buffer = Cars[CarIndex].CarBrake.airCompressor.LoopSound.Buffer;
 								if (buffer != null)
 								{
-									Cars[CarIndex].Sounds.CpLoop.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, Cars[CarIndex].Sounds.CpLoop.Position, Cars[CarIndex], true);
+									Cars[CarIndex].CarBrake.airCompressor.LoopSound.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, Cars[CarIndex].CarBrake.airCompressor.LoopSound.Position, Cars[CarIndex], true);
 								}
 							}
 						}
@@ -100,10 +100,10 @@ namespace OpenBve
 						{
 							Cars[CarIndex].CarBrake.airCompressor.Enabled = true;
 							Cars[CarIndex].Sounds.CpStartTimeStarted = Game.SecondsSinceMidnight;
-							SoundBuffer buffer = Cars[CarIndex].Sounds.CpStart.Buffer;
+							SoundBuffer buffer = Cars[CarIndex].CarBrake.airCompressor.StartSound.Buffer;
 							if (buffer != null)
 							{
-								Program.Sounds.PlaySound(buffer, 1.0, 1.0, Cars[CarIndex].Sounds.CpStart.Position, Cars[CarIndex], false);
+								Program.Sounds.PlaySound(buffer, 1.0, 1.0, Cars[CarIndex].CarBrake.airCompressor.StartSound.Position, Cars[CarIndex], false);
 							}
 						}
 					}
