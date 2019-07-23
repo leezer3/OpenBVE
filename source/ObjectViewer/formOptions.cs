@@ -108,8 +108,7 @@ namespace OpenBve
 #endif
                         UnifiedObject o = ObjectManager.LoadObject(Program.Files[i], System.Text.Encoding.UTF8, false, false, false);
                         ObjectManager.CreateObject(o, Vector3.Zero,
-                            new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0,
-                            0.0, 25.0, 0.0);
+                            new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0, 0.0);
 #if !DEBUG
 									} catch (Exception ex) {
 										Interface.AddMessage(MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + Program.Files[i] + ".");

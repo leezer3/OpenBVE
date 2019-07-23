@@ -5794,7 +5794,7 @@ namespace OpenBve {
 				double TrackPitch = Math.Atan(Data.Blocks[i].Pitch);
 				Transformation GroundTransformation = new Transformation(TrackYaw, 0.0, 0.0);
 				Transformation TrackTransformation = new Transformation(TrackYaw, TrackPitch, 0.0);
-				Transformation NullTransformation = new Transformation(0.0, 0.0, 0.0);
+				Transformation NullTransformation = new Transformation();
 				// ground
 				if (!PreviewOnly) {
 					int cb = (int)Math.Floor((double)i + 0.001);
@@ -5822,7 +5822,7 @@ namespace OpenBve {
 						if (j > 0 && !Data.Blocks[i].Rail[j].RailStart) continue;
 						// rail
 						Vector3 pos;
-						Transformation RailTransformation;
+						Transformation RailTransformation = new Transformation();
 						double planar, updown;
 						if (j == 0) {
 							// rail 0
