@@ -254,7 +254,6 @@ namespace CarXmlConvertor
 									int CarIndex = n / 2;
 									if (n >= 0 & n < ConvertTrainDat.NumberOfCars * 2)
 									{
-										bool DefinedAxles = false;
 										i++;
 										while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal) & !Lines[i].EndsWith("]", StringComparison.Ordinal))
 										{
