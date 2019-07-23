@@ -5,14 +5,6 @@ namespace OpenBve
 {
 	class TextEncoding
 	{
-		/// <summary>Represents a text encoding</summary>
-		internal struct EncodingValue
-		{
-			/// <summary>The system codepage for this text encoding</summary>
-			internal int Codepage;
-			/// <summary>The textual name for this text encoding</summary>
-			internal string Value;
-		}
 		/// <summary>The understood character encodings</summary>
 		internal enum Encoding
 		{
