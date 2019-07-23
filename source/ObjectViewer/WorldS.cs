@@ -12,11 +12,6 @@ using OpenBveApi.Math;
 namespace OpenBve {
 	public static class World {
 		// display
-		
-		
-		internal static double ForwardViewingDistance = 100000.0;
-		internal static double BackwardViewingDistance = 100000.0;
-		internal static double ExtraViewingDistance = 1000.0;
 		internal static double BackgroundImageDistance = 100000.0;
 		
 #pragma warning disable 0649
@@ -148,9 +143,9 @@ namespace OpenBve {
 				min = c0 < c1 ? c0 : c1;
 				if (min > 0.0) min = 0.0;
 			}
-			double d = World.BackgroundImageDistance + World.ExtraViewingDistance;
-			World.ForwardViewingDistance = d * max;
-			World.BackwardViewingDistance = -d * min;
+			double d = World.BackgroundImageDistance + Camera.ExtraViewingDistance;
+			Camera.ForwardViewingDistance = d * max;
+			Camera.BackwardViewingDistance = -d * min;
 			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z, true);
 		}
 	}

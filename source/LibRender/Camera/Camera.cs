@@ -6,6 +6,12 @@ namespace LibRender
 {
 	public static class Camera
 	{
+		/// <summary>The current viewing distance in the forward direction.</summary>
+		public static double ForwardViewingDistance;
+		/// <summary>The current viewing distance in the backward direction.</summary>
+		public static double BackwardViewingDistance;
+		/// <summary>The extra viewing distance used for determining visibility of animated objects.</summary>
+		public static double ExtraViewingDistance;
 		/// <summary>Whether the camera has reached the end of the world</summary>
 		public static bool AtWorldEnd;
 		/// <summary>The current horizontal viewing angle in radians</summary>

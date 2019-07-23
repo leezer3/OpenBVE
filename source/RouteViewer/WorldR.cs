@@ -11,15 +11,6 @@ using OpenBveApi.Math;
 
 namespace OpenBve {
 	public static class World {	
-
-		// display
-		
-		
-		internal static double ForwardViewingDistance;
-		internal static double BackwardViewingDistance;
-		internal static double ExtraViewingDistance;
-
-
 		internal static TrackManager.TrackFollower CameraTrackFollower;
 
 		// camera restriction
@@ -147,9 +138,9 @@ namespace OpenBve {
 				min = c0 < c1 ? c0 : c1;
 				if (min > 0.0) min = 0.0;
 			}
-			double d = Backgrounds.BackgroundImageDistance + World.ExtraViewingDistance;
-			World.ForwardViewingDistance = d * max;
-			World.BackwardViewingDistance = -d * min;
+			double d = Backgrounds.BackgroundImageDistance + Camera.ExtraViewingDistance;
+			Camera.ForwardViewingDistance = d * max;
+			Camera.BackwardViewingDistance = -d * min;
 			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z, true);
 		}
 

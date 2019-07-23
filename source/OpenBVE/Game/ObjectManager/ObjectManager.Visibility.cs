@@ -41,7 +41,7 @@ namespace OpenBve
 			{
 				if (!Objects[i].Dynamic)
 				{
-					if (Objects[i].StartingDistance <= p + World.ForwardViewingDistance & Objects[i].EndingDistance >= p - World.BackwardViewingDistance)
+					if (Objects[i].StartingDistance <= p + Camera.ForwardViewingDistance & Objects[i].EndingDistance >= p - Camera.BackwardViewingDistance)
 					{
 						Renderer.ShowObject(i, ObjectType.Static);
 					}
@@ -81,7 +81,7 @@ namespace OpenBve
 				while (ObjectsSortedByStartPointer >= 0)
 				{
 					int o = ObjectsSortedByStart[ObjectsSortedByStartPointer];
-					if (Objects[o].StartingDistance > p + World.ForwardViewingDistance)
+					if (Objects[o].StartingDistance > p + Camera.ForwardViewingDistance)
 					{
 						Renderer.HideObject(ref ObjectManager.Objects[o]);
 						ObjectsSortedByStartPointer--;
@@ -95,9 +95,9 @@ namespace OpenBve
 				while (ObjectsSortedByEndPointer >= 0)
 				{
 					int o = ObjectsSortedByEnd[ObjectsSortedByEndPointer];
-					if (Objects[o].EndingDistance >= p - World.BackwardViewingDistance)
+					if (Objects[o].EndingDistance >= p - Camera.BackwardViewingDistance)
 					{
-						if (Objects[o].StartingDistance <= p + World.ForwardViewingDistance)
+						if (Objects[o].StartingDistance <= p + Camera.ForwardViewingDistance)
 						{
 							Renderer.ShowObject(o, ObjectType.Static);
 						}
@@ -117,7 +117,7 @@ namespace OpenBve
 				while (ObjectsSortedByEndPointer < n)
 				{
 					int o = ObjectsSortedByEnd[ObjectsSortedByEndPointer];
-					if (Objects[o].EndingDistance < p - World.BackwardViewingDistance)
+					if (Objects[o].EndingDistance < p - Camera.BackwardViewingDistance)
 					{
 						Renderer.HideObject(ref ObjectManager.Objects[o]);
 						ObjectsSortedByEndPointer++;
@@ -131,9 +131,9 @@ namespace OpenBve
 				while (ObjectsSortedByStartPointer < n)
 				{
 					int o = ObjectsSortedByStart[ObjectsSortedByStartPointer];
-					if (Objects[o].StartingDistance <= p + World.ForwardViewingDistance)
+					if (Objects[o].StartingDistance <= p + Camera.ForwardViewingDistance)
 					{
-						if (Objects[o].EndingDistance >= p - World.BackwardViewingDistance)
+						if (Objects[o].EndingDistance >= p - Camera.BackwardViewingDistance)
 						{
 							Renderer.ShowObject(o, ObjectType.Static);
 						}

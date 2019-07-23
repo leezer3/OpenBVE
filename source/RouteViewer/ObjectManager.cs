@@ -633,8 +633,8 @@ namespace OpenBve {
 				double z = AnimatedWorldObjects[i].Object.TranslateZFunction == null ? 0.0 : AnimatedWorldObjects[i].Object.TranslateZFunction.LastResult;
 				double pa = AnimatedWorldObjects[i].TrackPosition + z - AnimatedWorldObjects[i].Radius - extraRadius;
 				double pb = AnimatedWorldObjects[i].TrackPosition + z + AnimatedWorldObjects[i].Radius + extraRadius;
-				double ta = World.CameraTrackFollower.TrackPosition - Backgrounds.BackgroundImageDistance - World.ExtraViewingDistance;
-				double tb = World.CameraTrackFollower.TrackPosition + Backgrounds.BackgroundImageDistance + World.ExtraViewingDistance;
+				double ta = World.CameraTrackFollower.TrackPosition - Backgrounds.BackgroundImageDistance - Camera.ExtraViewingDistance;
+				double tb = World.CameraTrackFollower.TrackPosition + Backgrounds.BackgroundImageDistance + Camera.ExtraViewingDistance;
 				bool visible = pb >= ta & pa <= tb;
 				if (visible | ForceUpdate) {
 					if (AnimatedWorldObjects[i].Object.SecondsSinceLastUpdate >= AnimatedWorldObjects[i].Object.RefreshRate | ForceUpdate) {
@@ -889,7 +889,7 @@ namespace OpenBve {
 			double p = World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z;
 			for (int i = 0; i < ObjectsUsed; i++) {
 				if (!Objects[i].Dynamic) {
-					if (Objects[i].StartingDistance <= p + World.ForwardViewingDistance & Objects[i].EndingDistance >= p - World.BackwardViewingDistance) {
+					if (Objects[i].StartingDistance <= p + Camera.ForwardViewingDistance & Objects[i].EndingDistance >= p - Camera.BackwardViewingDistance) {
 						Renderer.ShowObject(i, ObjectType.Static);
 					}
 				}
@@ -917,7 +917,7 @@ namespace OpenBve {
 				// dispose
 				while (ObjectsSortedByStartPointer >= 0) {
 					int o = ObjectsSortedByStart[ObjectsSortedByStartPointer];
-					if (Objects[o].StartingDistance > p + World.ForwardViewingDistance) {
+					if (Objects[o].StartingDistance > p + Camera.ForwardViewingDistance) {
 						Renderer.HideObject(ref ObjectManager.Objects[o]);
 						ObjectsSortedByStartPointer--;
 					} else {
@@ -927,8 +927,8 @@ namespace OpenBve {
 				// introduce
 				while (ObjectsSortedByEndPointer >= 0) {
 					int o = ObjectsSortedByEnd[ObjectsSortedByEndPointer];
-					if (Objects[o].EndingDistance >= p - World.BackwardViewingDistance) {
-						if (Objects[o].StartingDistance <= p + World.ForwardViewingDistance) {
+					if (Objects[o].EndingDistance >= p - Camera.BackwardViewingDistance) {
+						if (Objects[o].StartingDistance <= p + Camera.ForwardViewingDistance) {
 							Renderer.ShowObject(o, ObjectType.Static);
 						}
 						ObjectsSortedByEndPointer--;
@@ -942,7 +942,7 @@ namespace OpenBve {
 				// dispose
 				while (ObjectsSortedByEndPointer < n) {
 					int o = ObjectsSortedByEnd[ObjectsSortedByEndPointer];
-					if (Objects[o].EndingDistance < p - World.BackwardViewingDistance) {
+					if (Objects[o].EndingDistance < p - Camera.BackwardViewingDistance) {
 						Renderer.HideObject(ref ObjectManager.Objects[o]);
 						ObjectsSortedByEndPointer++;
 					} else {
@@ -952,8 +952,8 @@ namespace OpenBve {
 				// introduce
 				while (ObjectsSortedByStartPointer < n) {
 					int o = ObjectsSortedByStart[ObjectsSortedByStartPointer];
-					if (Objects[o].StartingDistance <= p + World.ForwardViewingDistance) {
-						if (Objects[o].EndingDistance >= p - World.BackwardViewingDistance) {
+					if (Objects[o].StartingDistance <= p + Camera.ForwardViewingDistance) {
+						if (Objects[o].EndingDistance >= p - Camera.BackwardViewingDistance) {
 							Renderer.ShowObject(o, ObjectType.Static);
 						}
 						ObjectsSortedByStartPointer++;

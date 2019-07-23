@@ -80,7 +80,10 @@ namespace Plugin
 						{
 							AssimpNET.Obj.Material material = model.MaterialMap[model.MaterialLib[(int)materialIndex]];
 							builder.Materials[m].Color = new Color32((byte)(255 * material.Diffuse.R), (byte)(255 * material.Diffuse.G), (byte)(255 * material.Diffuse.B), (byte)(255 * material.Diffuse.A));
+#pragma warning disable 0219
+							//Current openBVE renderer does not support specular color
 							Color24 mSpecular = new Color24((byte)material.Specular.R, (byte)material.Specular.G, (byte)material.Specular.B);
+#pragma warning restore 0219
 							builder.Materials[m].EmissiveColor = new Color24((byte)(255 * material.Emissive.R), (byte)(255 * material.Emissive.G), (byte)(255 * material.Emissive.B));
 							builder.Materials[m].EmissiveColorUsed = true; //TODO: Check exact behaviour
 							builder.Materials[m].TransparentColor = new Color24((byte)(255 * material.Transparent.R), (byte)(255 * material.Transparent.G), (byte)(255 * material.Transparent.B));

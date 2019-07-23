@@ -68,8 +68,8 @@ namespace OpenBve
 				GL.Disable(EnableCap.AlphaTest);
 				LibRender.Renderer.AlphaTestEnabled = false;
 			}
-			double da = -World.BackwardViewingDistance - World.ExtraViewingDistance;
-			double db = World.ForwardViewingDistance + World.ExtraViewingDistance;
+			double da = -LibRender.Camera.BackwardViewingDistance - LibRender.Camera.ExtraViewingDistance;
+			double db = LibRender.Camera.ForwardViewingDistance + LibRender.Camera.ExtraViewingDistance;
 			bool[] sta = new bool[CurrentRoute.Stations.Length];
 			// events
 			for (int i = 0; i < TrackManager.Tracks[0].Elements.Length; i++)

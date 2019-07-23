@@ -100,9 +100,9 @@ namespace OpenBve
 	        FileDrop += Program.FileDrop;
             Program.ResetCamera();
             Backgrounds.BackgroundImageDistance = 600.0;
-            World.ForwardViewingDistance = 600.0;
-            World.BackwardViewingDistance = 0.0;
-            World.ExtraViewingDistance = 50.0;
+            Camera.ForwardViewingDistance = 600.0;
+            Camera.BackwardViewingDistance = 0.0;
+            Camera.ExtraViewingDistance = 50.0;
 
             Renderer.Initialize();
             LibRender.Renderer.InitializeLighting();

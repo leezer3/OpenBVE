@@ -42,8 +42,8 @@ namespace OpenBve
 				double z = Object.TranslateZFunction == null ? 0.0 : Object.TranslateZFunction.LastResult;
 				double pa = TrackPosition + z - Radius - extraRadius;
 				double pb = TrackPosition + z + Radius + extraRadius;
-				double ta = World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z - Backgrounds.BackgroundImageDistance - World.ExtraViewingDistance;
-				double tb = World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z + Backgrounds.BackgroundImageDistance + World.ExtraViewingDistance;
+				double ta = World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z - Backgrounds.BackgroundImageDistance - Camera.ExtraViewingDistance;
+				double tb = World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z + Backgrounds.BackgroundImageDistance + Camera.ExtraViewingDistance;
 				bool visible = pb >= ta & pa <= tb;
 				if (visible | ForceUpdate)
 				{

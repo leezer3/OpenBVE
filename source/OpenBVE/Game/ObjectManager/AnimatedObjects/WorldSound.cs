@@ -65,8 +65,8 @@ namespace OpenBve
 
 				double pa = currentTrackPosition + Radius - extraRadius;
 				double pb = currentTrackPosition + Radius + extraRadius;
-				double ta = World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z - Backgrounds.BackgroundImageDistance - World.ExtraViewingDistance;
-				double tb = World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z + Backgrounds.BackgroundImageDistance + World.ExtraViewingDistance;
+				double ta = World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z - Backgrounds.BackgroundImageDistance - Camera.ExtraViewingDistance;
+				double tb = World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z + Backgrounds.BackgroundImageDistance + Camera.ExtraViewingDistance;
 				bool visible = pb >= ta & pa <= tb;
 				if (visible | ForceUpdate)
 				{

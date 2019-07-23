@@ -779,8 +779,8 @@ namespace OpenBve
                 double z = AnimatedWorldObjects[i].Object.TranslateZFunction == null ? 0.0 : AnimatedWorldObjects[i].Object.TranslateZFunction.LastResult;
                 double pa = AnimatedWorldObjects[i].TrackPosition + z - AnimatedWorldObjects[i].Radius - extraRadius;
                 double pb = AnimatedWorldObjects[i].TrackPosition + z + AnimatedWorldObjects[i].Radius + extraRadius;
-                double ta = World.CameraTrackFollower.TrackPosition - World.BackgroundImageDistance - World.ExtraViewingDistance;
-                double tb = World.CameraTrackFollower.TrackPosition + World.BackgroundImageDistance + World.ExtraViewingDistance;
+                double ta = World.CameraTrackFollower.TrackPosition - World.BackgroundImageDistance - Camera.ExtraViewingDistance;
+                double tb = World.CameraTrackFollower.TrackPosition + World.BackgroundImageDistance + Camera.ExtraViewingDistance;
                 bool visible = pb >= ta & pa <= tb;
                 if (visible | ForceUpdate)
                 {
@@ -1119,7 +1119,7 @@ namespace OpenBve
             {
                 if (Objects[i] != null && !Objects[i].Dynamic)
                 {
-                    if (Objects[i].StartingDistance <= p + World.ForwardViewingDistance & Objects[i].EndingDistance >= p - World.BackwardViewingDistance)
+                    if (Objects[i].StartingDistance <= p + Camera.ForwardViewingDistance & Objects[i].EndingDistance >= p - Camera.BackwardViewingDistance)
                     {
                         Renderer.ShowObject(i, ObjectType.Static);
                     }
@@ -1155,7 +1155,7 @@ namespace OpenBve
                 while (ObjectsSortedByStartPointer >= 0)
                 {
                     int o = ObjectsSortedByStart[ObjectsSortedByStartPointer];
-                    if (Objects[o].StartingDistance > p + World.ForwardViewingDistance)
+                    if (Objects[o].StartingDistance > p + Camera.ForwardViewingDistance)
                     {
                         Renderer.HideObject(ref ObjectManager.Objects[o]);
                         ObjectsSortedByStartPointer--;
@@ -1169,9 +1169,9 @@ namespace OpenBve
                 while (ObjectsSortedByEndPointer >= 0)
                 {
                     int o = ObjectsSortedByEnd[ObjectsSortedByEndPointer];
-                    if (Objects[o].EndingDistance >= p - World.BackwardViewingDistance)
+                    if (Objects[o].EndingDistance >= p - Camera.BackwardViewingDistance)
                     {
-                        if (Objects[o].StartingDistance <= p + World.ForwardViewingDistance)
+                        if (Objects[o].StartingDistance <= p + Camera.ForwardViewingDistance)
                         {
                             Renderer.ShowObject(o, ObjectType.Static);
                         }
@@ -1191,7 +1191,7 @@ namespace OpenBve
                 while (ObjectsSortedByEndPointer < n)
                 {
                     int o = ObjectsSortedByEnd[ObjectsSortedByEndPointer];
-                    if (Objects[o].EndingDistance < p - World.BackwardViewingDistance)
+                    if (Objects[o].EndingDistance < p - Camera.BackwardViewingDistance)
                     {
                         Renderer.HideObject(ref ObjectManager.Objects[o]);
                         ObjectsSortedByEndPointer++;
@@ -1205,9 +1205,9 @@ namespace OpenBve
                 while (ObjectsSortedByStartPointer < n)
                 {
                     int o = ObjectsSortedByStart[ObjectsSortedByStartPointer];
-                    if (Objects[o].StartingDistance <= p + World.ForwardViewingDistance)
+                    if (Objects[o].StartingDistance <= p + Camera.ForwardViewingDistance)
                     {
-                        if (Objects[o].EndingDistance >= p - World.BackwardViewingDistance)
+                        if (Objects[o].EndingDistance >= p - Camera.BackwardViewingDistance)
                         {
                             Renderer.ShowObject(o, ObjectType.Static);
                         }

@@ -305,14 +305,12 @@ namespace OpenBve {
 			
 			Joysticks.RefreshJoysticks();
 			// begin HACK //
-			
-			//One degree in radians
 			Camera.VerticalViewingAngle = 45.0.ToRadians();
 			Camera.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * Camera.VerticalViewingAngle) * LibRender.Screen.AspectRatio);
 			Camera.OriginalVerticalViewingAngle = Camera.VerticalViewingAngle;
-			World.ExtraViewingDistance = 50.0;
-			World.ForwardViewingDistance = (double)Interface.CurrentOptions.ViewingDistance;
-			World.BackwardViewingDistance = 0.0;
+			Camera.ExtraViewingDistance = 50.0;
+			Camera.ForwardViewingDistance = (double)Interface.CurrentOptions.ViewingDistance;
+			Camera.BackwardViewingDistance = 0.0;
 			Backgrounds.BackgroundImageDistance = (double)Interface.CurrentOptions.ViewingDistance;
 			// end HACK //
 			FileSystem.ClearLogFile();

@@ -15,12 +15,7 @@ namespace OpenBve {
 		// display
 		
 		
-		/// <summary>The current viewing distance in the forward direction.</summary>
-		internal static double ForwardViewingDistance;
-		/// <summary>The current viewing distance in the backward direction.</summary>
-		internal static double BackwardViewingDistance;
-		/// <summary>The extra viewing distance used for determining visibility of animated objects.</summary>
-		internal static double ExtraViewingDistance;
+		
 		
 		
 
@@ -528,9 +523,9 @@ namespace OpenBve {
 				min = c0 < c1 ? c0 : c1;
 				if (min > 0.0) min = 0.0;
 			}
-			double d = Backgrounds.BackgroundImageDistance + World.ExtraViewingDistance;
-			World.ForwardViewingDistance = d * max;
-			World.BackwardViewingDistance = -d * min;
+			double d = Backgrounds.BackgroundImageDistance + Camera.ExtraViewingDistance;
+			Camera.ForwardViewingDistance = d * max;
+			Camera.BackwardViewingDistance = -d * min;
 			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z, true);
 		}
 
