@@ -82,6 +82,20 @@ namespace LibRender
             }
         }
 
+		/// <summary>Toggles wireframe rendering</summary>
+		public static void ToggleWireFrame()
+		{
+			OptionWireframe = !OptionWireframe;
+			if (OptionWireframe)
+			{
+				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+			}
+			else
+			{
+				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+			}
+		}
+
         
     }
 }

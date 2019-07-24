@@ -1558,16 +1558,7 @@ namespace OpenBve
 										}
 										break;
 									case Translations.Command.DebugWireframe:
-										// option: wireframe
-										LibRender.Renderer.OptionWireframe = !LibRender.Renderer.OptionWireframe;
-										if (LibRender.Renderer.OptionWireframe)
-										{
-											GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
-										}
-										else
-										{
-											GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-										}
+										LibRender.Renderer.ToggleWireFrame();
 										Renderer.StaticOpaqueForceUpdate = true;
 										break;
 									case Translations.Command.DebugNormals:

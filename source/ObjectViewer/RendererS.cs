@@ -21,10 +21,6 @@ namespace OpenBve
 {
     internal static partial class Renderer
     {
-
-        // screen (output window)
-        
-
         // first frame behavior
         internal enum LoadTextureImmediatelyMode { NotYet, Yes }
         internal static LoadTextureImmediatelyMode LoadTexturesImmediately = LoadTextureImmediatelyMode.NotYet;
@@ -104,9 +100,6 @@ namespace OpenBve
         {
             GL.ClearColor((float)red / 255.0f, (float)green / 255.0f, (float)blue / 255.0f, 1.0f);
         }
-
-        // constants
-        private const float inv255 = 1.0f / 255.0f;
 
         // reset
         internal static void Reset()
@@ -205,7 +198,7 @@ namespace OpenBve
             }
             LibRender.Renderer.ResetOpenGlState();
             // transparent color list
-	        SortPolygons(TransparentColorList, TransparentColorListCount, TransparentColorListDistance, 1, 0.0);
+	        SortPolygons(TransparentColorList, TransparentColorListCount, TransparentColorListDistance, 1);
 			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality) {
 				
 				GL.Disable(EnableCap.Blend); LibRender.Renderer.BlendEnabled = false;
@@ -255,7 +248,7 @@ namespace OpenBve
 				}
 			}
 			LibRender.Renderer.ResetOpenGlState();
-			SortPolygons(AlphaList, AlphaListCount, AlphaListDistance, 2, 0.0);
+			SortPolygons(AlphaList, AlphaListCount, AlphaListDistance, 2);
 	        if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
 	        {
 		        GL.Enable(EnableCap.Blend); LibRender.Renderer.BlendEnabled = true;
@@ -317,7 +310,7 @@ namespace OpenBve
             {
                 GL.Disable(EnableCap.Fog); LibRender.Renderer.FogEnabled = false;
             }
-            SortPolygons(OverlayList, OverlayListCount, OverlayListDistance, 3, 0.0);
+            SortPolygons(OverlayList, OverlayListCount, OverlayListDistance, 3);
             for (int i = 0; i < OverlayListCount; i++)
             {
                 RenderFace(ref OverlayList[i], Camera.AbsolutePosition);
@@ -720,8 +713,8 @@ namespace OpenBve
         }
 
         // sort polygons
-        private static void SortPolygons(ObjectFace[] List, int ListCount, double[] ListDistance, int ListOffset, double TimeElapsed)
-        {
+        private static void SortPolygons(ObjectFace[] List, int ListCount, double[] ListDistance, int ListOffset)
+		{
             // calculate distance
             double cx = Camera.AbsolutePosition.X;
             double cy = Camera.AbsolutePosition.Y;

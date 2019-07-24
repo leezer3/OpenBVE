@@ -486,16 +486,8 @@ namespace OpenBve {
 					CpuReducedMode = false;
 					break;
 				case Key.F:
-					LibRender.Renderer.OptionWireframe = !LibRender.Renderer.OptionWireframe;
+					LibRender.Renderer.ToggleWireFrame();
 					CpuReducedMode = false;
-					if (LibRender.Renderer.OptionWireframe)
-					{
-						GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
-					}
-					else
-					{
-						GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-					}
 					break;
 				case Key.N:
 					LibRender.Renderer.OptionNormals = !LibRender.Renderer.OptionNormals;

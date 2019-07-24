@@ -341,7 +341,6 @@ namespace OpenBve {
 	                LightingRelative = -1.0;
 	                Game.Reset();
 	                LibRender.TextureManager.UnloadAllTextures();
-	                //Fonts.Initialize();
 	                Interface.ClearMessages();
 	                for (int i = 0; i < Files.Length; i++)
 	                {
@@ -531,7 +530,6 @@ namespace OpenBve {
 	                LightingRelative = -1.0;
 	                Game.Reset();
 	                LibRender.TextureManager.UnloadAllTextures();
-	                //Fonts.Initialize();
 	                Interface.ClearMessages();
 	                Files = new string[] {};
 	                break;
@@ -584,15 +582,7 @@ namespace OpenBve {
 	                break;
 	            case Key.F:
 	            case Key.F1:
-	                LibRender.Renderer.OptionWireframe = !LibRender.Renderer.OptionWireframe;
-	                if (LibRender.Renderer.OptionWireframe)
-	                {
-	                    GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
-	                }
-	                else
-	                {
-	                    GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-	                }
+					LibRender.Renderer.ToggleWireFrame();
 	                break;
 	            case Key.N:
 	            case Key.F2:
