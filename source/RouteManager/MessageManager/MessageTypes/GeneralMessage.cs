@@ -1,11 +1,12 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using LibRender;
 using OpenBveApi.Colors;
 
 namespace OpenBve.RouteManager
 {
 	/// <summary>Defines a textual message to be displayed in-game</summary>
-		public class GeneralMessage : AbstractMessage
+		public class GeneralMessage : AbstractMessage, IDisposable
 		{
 			/// <summary>The message text to be displayed if early</summary>
 			public string MessageEarlyText;
@@ -87,5 +88,19 @@ namespace OpenBve.RouteManager
 				}
 				QueueForRemoval = false;
 			}
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		private void Dispose(bool currentlyDisposing)
+		{
+			if(currentlyDisposing)
+			{
+				Font.Dispose();
+			}
+		}
 		}
 }

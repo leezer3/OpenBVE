@@ -83,7 +83,7 @@ namespace OpenBve.Formats.MsTs
 	}
 
 	/// <inheritdoc />
-	public class BinaryBlock : Block
+	public class BinaryBlock : Block , IDisposable
 	{
 		private readonly BinaryReader myReader;
 		private readonly MemoryStream myStream;
@@ -207,6 +207,21 @@ namespace OpenBve.Formats.MsTs
 		public override long Position()
 		{
 			return myStream.Position;
+		}
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		private void Dispose(bool currentlyDisposing)
+		{
+			if(currentlyDisposing)
+			{
+				myReader.Dispose();
+				myStream.Dispose();
+			}
 		}
 	}
 

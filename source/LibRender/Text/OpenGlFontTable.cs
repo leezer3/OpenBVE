@@ -7,7 +7,7 @@ using OpenBveApi.Textures;
 namespace LibRender
 {
 	/// <summary>Represents a table of 256 consecutive codepoints rendered into the same texture.</summary>
-	public class OpenGlFontTable
+	public class OpenGlFontTable : IDisposable
 	{
 		// --- members ---
 		/// <summary>The characters stored in this table.</summary>
@@ -126,6 +126,20 @@ namespace LibRender
 			}
 
 			return value + 1;
+		}
+		
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		private void Dispose(bool currentlyDisposing)
+		{
+			if(currentlyDisposing)
+			{
+				bitmap.Dispose();
+			}
 		}
 	}
 }

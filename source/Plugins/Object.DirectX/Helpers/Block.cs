@@ -498,16 +498,16 @@ namespace OpenBve.Formats.DirectX
 		}
 	}
 
-	public class BinaryBlock : Block
+	public class BinaryBlock : Block, IDisposable
 	{
 		private readonly BinaryReader myReader;
 		private readonly MemoryStream myStream;
 
 		private int currentLevel = 0;
 
-		private List<int> cachedIntegers = new List<int>();
-		private List<double> cachedFloats = new List<double>();
-		private List<string> cachedStrings = new List<string>();
+		private readonly List<int> cachedIntegers = new List<int>();
+		private readonly List<double> cachedFloats = new List<double>();
+		private readonly List<string> cachedStrings = new List<string>();
 
 		public BinaryBlock(byte[] bytes, TemplateID token)
 		{
@@ -887,6 +887,20 @@ namespace OpenBve.Formats.DirectX
 					return "array";
 			}
 			return string.Empty;
+		}
+
+		public void Dispose()
+		{
+			Dispose(true);
+		}
+
+		private void Dispose(bool currentlyDisposing)
+		{
+			if(currentlyDisposing)
+			{
+				myReader.Dispose();
+				myStream.Dispose();
+			}
 		}
 	}
 }
