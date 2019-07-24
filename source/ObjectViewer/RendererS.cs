@@ -52,9 +52,6 @@ namespace OpenBve
         private static double[] OverlayListDistance = new double[256];
         internal static int OverlayListCount = 0;
 
-        // current opengl data
-        internal static bool TransparentColorDepthSorting = false;
-
         // options
         internal static bool OptionCoordinateSystem = false;
         internal static bool OptionInterface = true;
@@ -130,7 +127,6 @@ namespace OpenBve
         internal static void Initialize()
         {
             LibRender.Renderer.Initialize();
-            TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality & Interface.CurrentOptions.Interpolation != InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != InterpolationMode.Bilinear;
         }
 
         internal static void RenderScene()

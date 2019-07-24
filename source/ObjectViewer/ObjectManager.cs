@@ -11,8 +11,7 @@ namespace OpenBve
 {
     internal static class ObjectManager
     {
-
-        // static objects
+		// static objects
         internal static StaticObject[] Objects = new StaticObject[16];
         internal static int ObjectsUsed;
         internal static int[] ObjectsSortedByStart = new int[] { };
