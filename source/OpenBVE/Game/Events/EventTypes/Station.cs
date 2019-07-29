@@ -134,7 +134,7 @@ namespace OpenBve
 								Train.StationState = TrainStopState.Pending;
 							}
 
-							Program.Sounds.StopSound(Train.SafetySystems.PassAlarm.Sound);
+							Train.SafetySystems.PassAlarm.Halt();
 						}
 					}
 				}

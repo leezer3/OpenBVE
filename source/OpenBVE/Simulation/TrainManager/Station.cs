@@ -116,7 +116,7 @@ namespace OpenBve
 								Train.StationState = TrainStopState.Boarding;
 								Train.StationAdjust = false;
 								Train.Specs.DoorClosureAttempted = false;
-								Program.Sounds.StopSound(Train.SafetySystems.PassAlarm.Source);
+								Train.SafetySystems.PassAlarm.Halt();
 								SoundBuffer buffer = (SoundBuffer)CurrentRoute.Stations[i].ArrivalSoundBuffer;
 								if (buffer != null)
 								{

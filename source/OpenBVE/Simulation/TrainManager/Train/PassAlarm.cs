@@ -5,21 +5,14 @@ namespace OpenBve
 	/// <summary>The TrainManager is the root class containing functions to load and manage trains within the simulation world.</summary>
 	public static partial class TrainManager
 	{
-		internal struct PassAlarm
+		internal class PassAlarm
 		{
+			/// <summary>Holds the reference to the base train</summary>
 			private readonly TrainManager.Train baseTrain;
-
+			/// <summary>The type of pass alarm</summary>
 			internal PassAlarmType Type;
-
+			/// <summary>The sound played when this alarm is triggered</summary>
 			internal CarSound Sound;
-
-			internal SoundSource Source
-			{
-				get
-				{
-					return Sound.Source;
-				}
-			}
 
 			public PassAlarm(Train baseTrain)
 			{
@@ -27,7 +20,7 @@ namespace OpenBve
 				this.Type = PassAlarmType.None;
 				this.Sound = new CarSound();
 			}
-
+			/// <summary>Triggers the pass alarm</summary>
 			internal void Trigger()
 			{
 				SoundBuffer buffer = Sound.Buffer;
@@ -42,6 +35,14 @@ namespace OpenBve
 							Sound.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, Sound.Position, baseTrain.Cars[baseTrain.DriverCar], true);
 							break;
 					}
+				}
+			}
+			/// <summary>Halts the pass alarm</summary>
+			internal void Halt()
+			{
+				if (Sound != null)
+				{
+					Sound.Source.Stop();
 				}
 			}
 		}
