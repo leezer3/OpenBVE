@@ -27,10 +27,6 @@ namespace OpenBve
 			/// <summary>Whether the power handle is being moved continuously</summary>
 			internal bool PowerHandleFast;
 			internal bool BreakerResumed;
-			
-			internal bool CpLoopStarted;
-			internal double CpStartTimeStarted;
-			
 			internal CarSound[] Flange;
 			internal double[] FlangeVolume;
 

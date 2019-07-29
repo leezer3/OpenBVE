@@ -67,7 +67,7 @@ namespace OpenBve
 						if (Cars[CarIndex].CarBrake.mainReservoir.CurrentPressure > Cars[CarIndex].CarBrake.mainReservoir.MaximumPressure)
 						{
 							Cars[CarIndex].CarBrake.airCompressor.Enabled = false;
-							Cars[CarIndex].Sounds.CpLoopStarted = false;
+							Cars[CarIndex].CarBrake.airCompressor.LoopStarted = false;
 							SoundBuffer buffer = Cars[CarIndex].CarBrake.airCompressor.EndSound.Buffer;
 							if (buffer != null)
 							{
@@ -83,9 +83,9 @@ namespace OpenBve
 						else
 						{
 							Cars[CarIndex].CarBrake.mainReservoir.CurrentPressure += Cars[CarIndex].CarBrake.airCompressor.Rate * TimeElapsed;
-							if (!Cars[CarIndex].Sounds.CpLoopStarted && Game.SecondsSinceMidnight > Cars[CarIndex].Sounds.CpStartTimeStarted + 5.0)
+							if (!Cars[CarIndex].CarBrake.airCompressor.LoopStarted && Game.SecondsSinceMidnight > Cars[CarIndex].CarBrake.airCompressor.TimeStarted + 5.0)
 							{
-								Cars[CarIndex].Sounds.CpLoopStarted = true;
+								Cars[CarIndex].CarBrake.airCompressor.LoopStarted = true;
 								SoundBuffer buffer = Cars[CarIndex].CarBrake.airCompressor.LoopSound.Buffer;
 								if (buffer != null)
 								{
@@ -99,7 +99,7 @@ namespace OpenBve
 						if (Cars[CarIndex].CarBrake.mainReservoir.CurrentPressure < Cars[CarIndex].CarBrake.mainReservoir.MinimumPressure)
 						{
 							Cars[CarIndex].CarBrake.airCompressor.Enabled = true;
-							Cars[CarIndex].Sounds.CpStartTimeStarted = Game.SecondsSinceMidnight;
+							Cars[CarIndex].CarBrake.airCompressor.TimeStarted = Game.SecondsSinceMidnight;
 							SoundBuffer buffer = Cars[CarIndex].CarBrake.airCompressor.StartSound.Buffer;
 							if (buffer != null)
 							{

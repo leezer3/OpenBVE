@@ -16,7 +16,10 @@ namespace OpenBve.BrakeSystems
 		internal CarSound LoopSound;
 		/// <summary>The sound played when the compressor loop stops</summary>
 		internal CarSound EndSound;
-		
+		/// <summary>Whether the sound loop has started</summary>
+		internal bool LoopStarted;
+		/// <summary>Stores the time at which the compressor started</summary>
+		internal double TimeStarted;
 
 		internal Compressor(double rate)
 		{
