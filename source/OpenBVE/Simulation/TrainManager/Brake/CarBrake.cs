@@ -1,4 +1,6 @@
-﻿namespace OpenBve.BrakeSystems
+﻿using SoundManager;
+
+namespace OpenBve.BrakeSystems
 {
 	abstract class CarBrake
 	{
@@ -38,8 +40,14 @@
 		/// <summary>The current deceleration provided by the electric motor</summary>
 		internal double motorDeceleration;
 
-		/// <summary>The index of the air sound currently playing</summary>
-		internal AirSound airSound;
+		/// <summary>The air sound currently playing</summary>
+		internal CarSound airSound;
+		/// <summary>Played when the pressure in the brake cylinder is decreased from a non-high to a non-zero value</summary>
+		internal CarSound Air;
+		/// <summary>Played when the pressure in the brake cylinder is decreased from a high value</summary>
+		internal CarSound AirHigh;
+		/// <summary>Played when the pressure in the brake cylinder is decreased to zero</summary>
+		internal CarSound AirZero;
 
 		internal TrainManager.AccelerationCurve[] decelerationCurves;
 

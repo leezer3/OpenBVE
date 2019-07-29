@@ -982,9 +982,9 @@ namespace OpenBve
 					Cars[i].Sounds.Run = new CarSound[] { };
 					Cars[i].Sounds.Flange = new CarSound[] { };
 					Cars[i].Sounds.Adjust = new CarSound();
-					Cars[i].Sounds.Air = new CarSound();
-					Cars[i].Sounds.AirHigh = new CarSound();
-					Cars[i].Sounds.AirZero = new CarSound();
+					Cars[i].CarBrake.Air = new CarSound();
+					Cars[i].CarBrake.AirHigh = new CarSound();
+					Cars[i].CarBrake.AirZero = new CarSound();
 					Cars[i].Sounds.Brake = new CarSound();
 					Cars[i].Sounds.BrakeHandleApply = new CarSound();
 					Cars[i].Sounds.BrakeHandleApplyFast = new CarSound();

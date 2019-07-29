@@ -89,15 +89,15 @@ namespace OpenBve
 										{
 											case "releasehigh":
 												//Release brakes from high pressure
-												ParseNode(cc, out car.Sounds.AirHigh, center, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.CarBrake.AirHigh, center, SoundCfgParser.smallRadius);
 												break;
 											case "release":
 												//Release brakes from normal pressure
-												ParseNode(cc, out car.Sounds.Air, center, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.CarBrake.Air, center, SoundCfgParser.smallRadius);
 												break;
 											case "releasefull":
 												//Release brakes from full pressure
-												ParseNode(cc, out car.Sounds.AirZero, center, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.CarBrake.AirZero, center, SoundCfgParser.smallRadius);
 												break;
 											case "emergency":
 												//Apply EB

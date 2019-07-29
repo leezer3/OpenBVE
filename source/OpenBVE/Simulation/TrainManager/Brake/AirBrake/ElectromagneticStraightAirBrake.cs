@@ -17,7 +17,7 @@ namespace OpenBve.BrakeSystems
 
 		internal override void Update(double TimeElapsed, double currentSpeed, TrainManager.AbstractHandle brakeHandle, out double deceleration)
 		{
-			airSound = AirSound.None;
+			airSound = null;
 			if (emergencyHandle.Actual == true)
 			{
 				if (brakeType == BrakeType.Main)
@@ -193,7 +193,7 @@ namespace OpenBve.BrakeSystems
 				if (r > 0.0 & brakeCylinder.CurrentPressure < brakeCylinder.SoundPlayedForPressure)
 				{
 					brakeCylinder.SoundPlayedForPressure = targetPressure;
-					airSound = targetPressure < Tolerance ? AirSound.AirZero : brakeCylinder.CurrentPressure > m - Tolerance ? AirSound.AirHigh : AirSound.Air;
+					airSound = targetPressure < Tolerance ? AirZero : brakeCylinder.CurrentPressure > m - Tolerance ? AirHigh : Air;
 				}
 
 				// pressure change

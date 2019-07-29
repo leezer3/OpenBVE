@@ -234,7 +234,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Simulation\TrainManager\Brake\AirBrake\AirSound.cs" />
     <Compile Include="Simulation\TrainManager\Brake\AirBrake\AutomaticAirBrake.cs" />
     <Compile Include="Simulation\TrainManager\Brake\CarBrake.BrakeType.cs" />
     <Compile Include="Simulation\TrainManager\Brake\AirBrake\Components\AirCompressor.cs" />

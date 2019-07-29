@@ -215,35 +215,12 @@ namespace OpenBve
 					Cars[CarIndex].CarBrake.Update(TimeElapsed, Cars[DriverCar].CurrentSpeed, Handles.Brake, out DecelerationDueToBrake);
 				}
 
-				switch (Cars[CarIndex].CarBrake.airSound)
+				if(Cars[CarIndex].CarBrake.airSound != null)
 				{
-					case AirSound.AirZero:
+					SoundBuffer buffer = Cars[CarIndex].CarBrake.airSound.Buffer;
+					if (buffer != null)
 					{
-						SoundBuffer buffer = Cars[CarIndex].Sounds.AirZero.Buffer;
-						if (buffer != null)
-						{
-							Program.Sounds.PlaySound(buffer, 1.0, 1.0, Cars[CarIndex].Sounds.AirZero.Position, Cars[CarIndex], false);
-						}
-
-						break;
-					}
-					case AirSound.Air:
-					{
-						SoundBuffer buffer = Cars[CarIndex].Sounds.Air.Buffer;
-						if (buffer != null)
-						{
-							Program.Sounds.PlaySound(buffer, 1.0, 1.0, Cars[CarIndex].Sounds.Air.Position, Cars[CarIndex], false);
-						}
-						break;
-					}
-					case AirSound.AirHigh:
-					{
-						SoundBuffer buffer = Cars[CarIndex].Sounds.AirHigh.Buffer;
-						if (buffer != null)
-						{
-							Program.Sounds.PlaySound(buffer, 1.0, 1.0, Cars[CarIndex].Sounds.AirHigh.Position, Cars[CarIndex], false);
-						}
-						break;
+						Program.Sounds.PlaySound(buffer, 1.0, 1.0, Cars[CarIndex].CarBrake.airSound.Position, Cars[CarIndex], false);
 					}
 				}
 

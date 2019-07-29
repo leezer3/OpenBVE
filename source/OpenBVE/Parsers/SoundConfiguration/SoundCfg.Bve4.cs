@@ -272,19 +272,19 @@ namespace OpenBve
 										case "bc release high":
 											for (int c = 0; c < train.Cars.Length; c++)
 											{
-												train.Cars[c].Sounds.AirHigh = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), center);
+												train.Cars[c].CarBrake.AirHigh = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), center);
 											}
 											break;
 										case "bc release":
 											for (int c = 0; c < train.Cars.Length; c++)
 											{
-												train.Cars[c].Sounds.Air = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), center);
+												train.Cars[c].CarBrake.Air = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), center);
 											}
 											break;
 										case "bc release full":
 											for (int c = 0; c < train.Cars.Length; c++)
 											{
-												train.Cars[c].Sounds.AirZero = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), center);
+												train.Cars[c].CarBrake.AirZero = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), center);
 											}
 											break;
 										case "emergency":

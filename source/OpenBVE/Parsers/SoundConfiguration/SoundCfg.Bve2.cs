@@ -42,9 +42,9 @@ namespace OpenBve
 			{
 				Vector3 frontaxle = new Vector3(0.0, 0.0, train.Cars[i].FrontAxle.Position);
 				Vector3 rearaxle = new Vector3(0.0, 0.0, train.Cars[i].RearAxle.Position);
-				train.Cars[i].Sounds.Air = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Air.wav"), SoundCfgParser.smallRadius), center);
-				train.Cars[i].Sounds.AirHigh = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "AirHigh.wav"), SoundCfgParser.smallRadius), center);
-				train.Cars[i].Sounds.AirZero = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "AirZero.wav"), SoundCfgParser.smallRadius), center);
+				train.Cars[i].CarBrake.Air = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Air.wav"), SoundCfgParser.smallRadius), center);
+				train.Cars[i].CarBrake.AirHigh = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "AirHigh.wav"), SoundCfgParser.smallRadius), center);
+				train.Cars[i].CarBrake.AirZero = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "AirZero.wav"), SoundCfgParser.smallRadius), center);
 				if (train.Cars[i].CarBrake.brakeType == BrakeType.Main)
 				{
 					train.Cars[i].CarBrake.airCompressor.EndSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "CpEnd.wav"), SoundCfgParser.mediumRadius), center);
