@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Threading;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 using SoundManager;
@@ -148,6 +149,8 @@ namespace OpenBve {
 		// --- functions ---
 		internal override bool Load(VehicleSpecs specs, InitializationModes mode) {
 			int result;
+			bool retry = true;
+			retryLoad:
 			try {
 				result = Win32LoadDLL(this.PluginFile, this.PluginFile);
 			} catch (Exception ex) {
@@ -155,6 +158,16 @@ namespace OpenBve {
 				throw;
 			}
 			if (result == 0) {
+				if (retry)
+				{
+					/*
+					 * Win32 plugin loading is unreliable on some systems
+					 * Unable to reproduce this, but let's try a sleep & single retry attempt
+					 */
+					Thread.Sleep(100);
+					retry = false;
+					goto retryLoad;
+				}
 				int errorCode = Marshal.GetLastWin32Error();
 				string errorMessage = new Win32Exception(errorCode).Message;
 				Interface.AddMessage(MessageType.Error, true,
