@@ -103,6 +103,10 @@ namespace OpenBve
 												//Apply EB
 												ParseNode(cc, out Train.Handles.EmergencyBrake.ApplicationSound, center, SoundCfgParser.smallRadius);
 												break;
+											case "emergencyrelease":
+												//Release EB
+												ParseNode(cc, out Train.Handles.EmergencyBrake.ReleaseSound, center, SoundCfgParser.smallRadius);
+												break;
 											case "application":
 												//Standard application
 												ParseNode(cc, out car.Sounds.Brake, center, SoundCfgParser.smallRadius);

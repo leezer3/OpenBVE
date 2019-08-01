@@ -365,7 +365,16 @@ namespace OpenBve
 				if (Handles.EmergencyBrake.Driver)
 				{
 					// sound
-					SoundBuffer buffer = Handles.Brake.Decrease.Buffer; //BUG: No EB release sound
+					SoundBuffer buffer;
+					if (Handles.EmergencyBrake.ReleaseSound != null)
+					{
+						buffer = Handles.EmergencyBrake.ReleaseSound.Buffer;
+					}
+					else
+					{
+						buffer = Handles.Brake.Decrease.Buffer;
+					}
+					
 					if (buffer != null)
 					{
 						Vector3 pos = Handles.Brake.Decrease.Position;

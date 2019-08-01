@@ -288,10 +288,10 @@ namespace OpenBve
 											}
 											break;
 										case "emergency":
-											for (int c = 0; c < train.Cars.Length; c++)
-											{
-												train.Handles.EmergencyBrake.ApplicationSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center);
-											}
+											train.Handles.EmergencyBrake.ApplicationSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center);
+											break;
+										case "emergencyrelease":
+											train.Handles.EmergencyBrake.ReleaseSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center);
 											break;
 										case "bp decomp":
 											for (int c = 0; c < train.Cars.Length; c++)
