@@ -30,5 +30,11 @@ namespace SoundManager
 			this.Source = null;
 			this.Buffer = null;
 		}
+
+		/// <summary>Unconditionally stops the playing sound</summary>
+		public void Stop()
+		{
+			Source.Stop();
+		}
 	}
 }

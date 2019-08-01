@@ -42,7 +42,7 @@ namespace OpenBve
 			{
 				if (Sound != null)
 				{
-					Sound.Source.Stop();
+					Sound.Stop();
 				}
 			}
 		}

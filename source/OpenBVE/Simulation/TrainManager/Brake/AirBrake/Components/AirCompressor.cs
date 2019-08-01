@@ -53,7 +53,7 @@ namespace OpenBve.BrakeSystems
 					buffer = LoopSound.Buffer;
 					if (buffer != null)
 					{
-						Program.Sounds.StopSound(LoopSound.Source);
+						LoopSound.Stop();
 					}
 				}
 				else
