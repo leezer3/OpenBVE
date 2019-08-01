@@ -128,24 +128,24 @@ namespace OpenBve
 										switch (cc.Name.ToLowerInvariant())
 										{
 											case "apply":
-												ParseNode(cc, out car.Sounds.BrakeHandleApply, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Brake.Increase, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "applyfast":
-												ParseNode(cc, out car.Sounds.BrakeHandleApplyFast, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Brake.IncreaseFast, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "release":
-												ParseNode(cc, out car.Sounds.BrakeHandleRelease, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Brake.Decrease, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "releasefast":
-												ParseNode(cc, out car.Sounds.BrakeHandleReleaseFast, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Brake.DecreaseFast, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "min":
 											case "minimum":
-												ParseNode(cc, out car.Sounds.BrakeHandleMin, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Brake.Min, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "max":
 											case "maximum":
-												ParseNode(cc, out car.Sounds.BrakeHandleMax, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Brake.Max, panel, SoundCfgParser.tinyRadius);
 												break;
 											default:
 												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
@@ -314,27 +314,27 @@ namespace OpenBve
 										{
 											case "up":
 											case "increase":
-												ParseNode(cc, out car.Sounds.MasterControllerUp, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Power.Increase, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "upfast":
 											case "increasefast":
-												ParseNode(cc, out car.Sounds.MasterControllerUpFast, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Power.IncreaseFast, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "down":
 											case "decrease":
-												ParseNode(cc, out car.Sounds.MasterControllerDown, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Power.Decrease, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "downfast":
 											case "decreasefast":
-												ParseNode(cc, out car.Sounds.MasterControllerDownFast, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Power.DecreaseFast, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "min":
 											case "minimum":
-												ParseNode(cc, out car.Sounds.MasterControllerMin, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Power.Min, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "max":
 											case "maximum":
-												ParseNode(cc, out car.Sounds.MasterControllerMax, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Power.Max, panel, SoundCfgParser.tinyRadius);
 												break;
 											default:
 												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
