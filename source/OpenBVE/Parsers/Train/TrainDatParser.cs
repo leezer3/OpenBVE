@@ -1036,8 +1036,8 @@ namespace OpenBve {
 				{
 					Train.Cars[i].CarBrake.brakeType = BrakeType.Auxiliary;
 				}
-				Train.Cars[i].CarBrake.airCompressor = new Compressor(5000.0);
 				Train.Cars[i].CarBrake.mainReservoir = new MainReservoir(MainReservoirMinimumPressure, MainReservoirMaximumPressure, 0.01, (trainBrakeType == BrakeSystemType.AutomaticAirBrake ? 0.25 : 0.075) / Cars);
+				Train.Cars[i].CarBrake.airCompressor = new Compressor(5000.0, Train.Cars[i].CarBrake.mainReservoir, Train.Cars[i]);
 				Train.Cars[i].CarBrake.equalizingReservoir = new EqualizingReservoir(50000.0, 250000.0, 200000.0);
 				Train.Cars[i].CarBrake.equalizingReservoir.NormalPressure = 1.005 * OperatingPressure;
 				
