@@ -181,6 +181,7 @@
 			new CommandInfo(Command.DebugTouchMode, CommandType.Digital, "DEBUG_TOUCH_MODE"),
 			new CommandInfo(Command.RouteInformation, CommandType.Digital, "ROUTE_INFORMATION"),
 			new CommandInfo(Command.ShowEvents, CommandType.Digital, "SHOW_EVENTS"),
+			new CommandInfo(Command.RailDriverSpeedUnits, CommandType.Digital, "RAILDRIVER_SPEED_UNITS"),
 		};
 	}
 }

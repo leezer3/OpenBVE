@@ -1907,6 +1907,9 @@ namespace OpenBve
 											TrainManager.PlayerTrain.Plugin.KeyUp(VirtualKeys.RightDoors);
 										}
 										break;
+									case Translations.Command.RailDriverSpeedUnits:
+										Interface.CurrentOptions.RailDriverMPH = !Interface.CurrentOptions.RailDriverMPH;
+										break;
 								}
 							}
 						}

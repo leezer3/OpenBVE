@@ -2029,6 +2029,9 @@
 					<trans-unit id="main_breaker">
 						<source>Toggles the main breaker</source>
 					</trans-unit>
+					<trans-unit id="raildriver_speed_units">
+						<source>Toggles the RailDriver speed display units.</source>
+					</trans-unit>
 				</group>
 				<group id="keys">
 					<trans-unit id="0">
