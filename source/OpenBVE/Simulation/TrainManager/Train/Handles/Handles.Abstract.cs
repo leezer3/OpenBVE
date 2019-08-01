@@ -23,6 +23,8 @@ namespace OpenBve
 
 			internal HandleChange[] DelayedChanges;
 
+			internal bool ContinuousMovement;
+
 			internal abstract void Update();
 		}
 		/// <summary>Represents an abstract handle with a set number of notches</summary>

@@ -19,10 +19,6 @@ namespace OpenBve
 			internal CarSound BrakeHandleMax;
 			internal CarSound BreakerResume;
 			internal CarSound BreakerResumeOrInterrupt;
-			/// <summary>Whether the brake handle is being moved continuously</summary>
-			internal bool BrakeHandleFast;
-			/// <summary>Whether the power handle is being moved continuously</summary>
-			internal bool PowerHandleFast;
 			internal bool BreakerResumed;
 			internal CarSound[] Flange;
 			internal double[] FlangeVolume;
