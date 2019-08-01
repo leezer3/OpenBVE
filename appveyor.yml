@@ -22,6 +22,7 @@ install:
 
 before_build:
   - cmd: cd C:\projects\OpenBVE
+  - cmd: nuget restore OpenBVE.sln
 
 build:
   project: C:\projects\OpenBVE\OpenBVE.sln

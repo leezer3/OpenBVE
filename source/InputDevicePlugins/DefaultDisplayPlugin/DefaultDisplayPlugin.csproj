@@ -65,10 +65,14 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="AfterBuild">
-    <ItemGroup>
-      <Assembly Include="$(TargetDir)$(TargetName).*" />
-    </ItemGroup>
-    <Move SourceFiles="@(Assembly)" DestinationFolder="$(TargetDir)Data\InputDevicePlugins\" />
-  </Target>
+  <PropertyGroup>
+	  <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
+		  mkdir $(TargetDir)Data\InputDevicePlugins\
+		  move /Y $(TargetDir)$(TargetName).* $(TargetDir)Data\InputDevicePlugins\
+	  </PostBuildEvent>
+	  <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
+		  mkdir -p $(TargetDir)Data/InputDevicePlugins/
+		  mv -f $(TargetDir)$(TargetName).* $(TargetDir)Data/InputDevicePlugins/
+	  </PostBuildEvent>
+  </PropertyGroup>
 </Project>

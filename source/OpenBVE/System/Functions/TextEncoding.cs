@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using Mozilla.NUniversalCharDet;
+using Ude;
 
 namespace OpenBve
 {
@@ -100,10 +100,10 @@ namespace OpenBve
 					if (Data[0] == 0xFF & Data[1] == 0xFE & Data[2] == 0x00 & Data[3] == 0x00) return Encoding.Utf32Le;
 				}
 
-				UniversalDetector Det = new UniversalDetector(null);
-				Det.HandleData(Data, 0, Data.Length);
+				CharsetDetector Det = new CharsetDetector();
+				Det.Feed(Data, 0, Data.Length);
 				Det.DataEnd();
-				switch (Det.GetDetectedCharset())
+				switch (Det.Charset)
 				{
 					case "SHIFT_JIS":
 						return Encoding.Shift_JIS;

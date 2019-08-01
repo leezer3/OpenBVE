@@ -171,10 +171,13 @@
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <Target Name="BeforeBuild">
-    <ItemGroup>
-      <Dependencies Include="$(SolutionDir)dependencies\**\*.*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(Dependencies)" DestinationFolder="$(TargetDir)" />
-  </Target>
+  <PropertyGroup>
+	  <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">
+		  echo Resoloving dependencies
+		  xcopy /E /Y "$(SolutionDir)dependencies" "$(TargetDir)"
+	  </PreBuildEvent>
+	  <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">
+		  cp -r "$(SolutionDir)dependencies/." "$(TargetDir)"
+	  </PreBuildEvent>
+  </PropertyGroup>
 </Project>
