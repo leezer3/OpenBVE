@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using CSScriptLibrary;
 using LibRender;
 using OpenBveApi.FunctionScripting;
@@ -197,7 +198,7 @@ namespace OpenBve
 						try
 						{
 							CSScript.GlobalSettings.TargetFramework = "v4.0";
-							TranslateXAnimationScript = CSScript.LoadCodeFrom(TranslateXScriptFile)
+							TranslateXAnimationScript = CSScript.LoadCode(File.ReadAllText(TranslateXScriptFile))
 								.CreateObject("OpenBVEScript")
 								.AlignToInterface<AnimationScript>(true);
 						}
@@ -243,7 +244,7 @@ namespace OpenBve
 						try
 						{
 							CSScript.GlobalSettings.TargetFramework = "v4.0";
-							TranslateYAnimationScript = CSScript.LoadCodeFrom(TranslateYScriptFile)
+							TranslateYAnimationScript = CSScript.LoadCode(File.ReadAllText(TranslateYScriptFile))
 								.CreateObject("OpenBVEScript")
 								.AlignToInterface<AnimationScript>(true);
 						}
@@ -288,7 +289,7 @@ namespace OpenBve
 						try
 						{
 							CSScript.GlobalSettings.TargetFramework = "v4.0";
-							TranslateZAnimationScript = CSScript.LoadCodeFrom(TranslateZScriptFile)
+							TranslateZAnimationScript = CSScript.LoadCode(File.ReadAllText(TranslateZScriptFile))
 								.CreateObject("OpenBVEScript")
 								.AlignToInterface<AnimationScript>(true);
 						}

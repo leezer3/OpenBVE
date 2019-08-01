@@ -50,3 +50,6 @@ debian/*.log
 debian/*.substvars
 debian/*.debhelper
 debian/debhelper-build-stamp
+
+# NuGet Packages
+**/[Pp]ackages/*

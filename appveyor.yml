@@ -3,7 +3,6 @@ version: '1.5.3.2-{build}'
 image: 
   - Visual Studio 2017
   - Visual Studio 2015
-  - Visual Studio 2013
 
 skip_commits:
   message: /\[ci skip\]/
