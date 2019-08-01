@@ -1028,7 +1028,7 @@ namespace OpenBve
 					Cars[i].Sounds.PilotLampOff = new CarSound();
 					Cars[i].FrontAxle.PointSounds = new CarSound[] { };
 					Cars[i].RearAxle.PointSounds = new CarSound[] { };
-					Cars[i].Sounds.Rub = new CarSound();
+					Cars[i].CarBrake.Rub = new CarSound();
 					Cars[i].Sounds.Run = new CarSound[] { };
 					Cars[i].Sounds.RunVolume = new double[] { };
 					Cars[i].Sounds.SpringL = new CarSound();

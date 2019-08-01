@@ -430,7 +430,7 @@ namespace OpenBve
 									break;
 								case "shoe":
 								case "rub":
-									ParseNode(c, out car.Sounds.Rub, center, SoundCfgParser.mediumRadius);
+									ParseNode(c, out car.CarBrake.Rub, center, SoundCfgParser.mediumRadius);
 									break;
 								case "suspension":
 								case "spring":

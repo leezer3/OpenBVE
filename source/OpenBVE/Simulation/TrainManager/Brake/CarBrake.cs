@@ -48,6 +48,8 @@ namespace OpenBve.BrakeSystems
 		internal CarSound AirHigh;
 		/// <summary>Played when the pressure in the brake cylinder is decreased to zero</summary>
 		internal CarSound AirZero;
+		/// <summary>Played when the brake shoe rubs against the wheels</summary>
+		internal CarSound Rub;
 
 		internal TrainManager.AccelerationCurve[] decelerationCurves;
 

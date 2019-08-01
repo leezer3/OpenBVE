@@ -793,7 +793,7 @@ namespace OpenBve
 										case "shoe":
 											for (int c = 0; c < train.Cars.Length; c++)
 											{
-												train.Cars[c].Sounds.Rub = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center);
+												train.Cars[c].CarBrake.Rub = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center);
 											}
 											break;
 										case "halt":

@@ -86,7 +86,7 @@ namespace OpenBve
 				{
 					new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Point.wav"), SoundCfgParser.smallRadius), rearaxle)
 				};
-				train.Cars[i].Sounds.Rub = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Rub.wav"), SoundCfgParser.mediumRadius), center);
+				train.Cars[i].CarBrake.Rub = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Rub.wav"), SoundCfgParser.mediumRadius), center);
 				train.Cars[i].Sounds.Run = SoundCfgParser.TryLoadSoundArray(trainFolder, "Run", ".wav", center, SoundCfgParser.mediumRadius);
 				train.Cars[i].Sounds.RunVolume = new double[train.Cars[i].Sounds.Run.Length];
 				train.Cars[i].Sounds.SpringL = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "SpringL.wav"), SoundCfgParser.smallRadius), left);

@@ -38,7 +38,7 @@ namespace OpenBve
 			internal CarSound PilotLampOn;
 			/// <summary>Played once when the first door opens</summary>
 			internal CarSound PilotLampOff;
-			internal CarSound Rub;
+			
 			
 			internal CarSound[] Run;
 			internal double[] RunVolume;
