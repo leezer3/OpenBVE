@@ -769,6 +769,20 @@ namespace OpenBve {
 							Function.Stack[s] = 0.0;
 						}
 						s++; break;
+					case Instructions.PilotLamp:
+						if (Train != null) {
+							if (Train.SafetySystems.PilotLamp.Lit)
+							{
+								Function.Stack[s] = 1.0;
+							}
+							else
+							{
+								Function.Stack[s] = 0.0;
+							}
+						} else {
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
 						// handles
 					case Instructions.ReverserNotch:
 						if (Train != null) {

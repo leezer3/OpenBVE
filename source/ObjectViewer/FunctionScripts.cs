@@ -696,6 +696,10 @@ namespace OpenBve {
 							Function.Stack[s - 1] = 0.0;
 						}
 						break;
+					case Instructions.PilotLamp:
+						//Not currently supported in viewers
+						Function.Stack[s] = 0.0;
+						s++; break;
 						// handles
 					case Instructions.ReverserNotch:
 						if (Train != null) {

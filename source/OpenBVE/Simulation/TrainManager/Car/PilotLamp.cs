@@ -16,6 +16,8 @@ namespace OpenBve
 			private readonly AbstractCar baseCar;
 			/// <summary>The previous state of the train doors</summary>
 			private DoorStates oldState;
+			/// <summary>Whether the pilot lamp is currently lit</summary>
+			internal bool Lit;
 
 			internal PilotLamp(AbstractCar car)
 			{
@@ -29,6 +31,7 @@ namespace OpenBve
 			{
 				if (oldState != DoorStates.None & newState == DoorStates.None)
 				{
+					Lit = true;
 					SoundBuffer buffer = OnSound.Buffer;
 					if (buffer != null)
 					{
@@ -37,6 +40,7 @@ namespace OpenBve
 				}
 				else if (oldState == DoorStates.None & newState != DoorStates.None)
 				{
+					Lit = false;
 					SoundBuffer buffer = OffSound.Buffer;
 					if (buffer != null)
 					{
