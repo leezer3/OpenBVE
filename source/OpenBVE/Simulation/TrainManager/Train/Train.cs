@@ -66,6 +66,7 @@ namespace OpenBve
 				CurrentSectionLimit = double.PositiveInfinity;
 				Cars = new TrainManager.Car[] { };
 				SafetySystems.PassAlarm = new PassAlarm(this);
+				SafetySystems.PilotLamp = new PilotLamp(Cars[DriverCar]);
 				Specs.DoorOpenMode = DoorMode.AutomaticManualOverride;
 				Specs.DoorCloseMode = DoorMode.AutomaticManualOverride;
 				Specs.DoorWidth = 1000.0;
@@ -1010,8 +1011,6 @@ namespace OpenBve
 						new CarSound()
 					};
 					Cars[i].Sounds.Loop = new CarSound();
-					Cars[i].Sounds.PilotLampOn = new CarSound();
-					Cars[i].Sounds.PilotLampOff = new CarSound();
 					Cars[i].FrontAxle.PointSounds = new CarSound[] { };
 					Cars[i].RearAxle.PointSounds = new CarSound[] { };
 					Cars[i].CarBrake.Rub = new CarSound();

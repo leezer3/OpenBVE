@@ -18,12 +18,6 @@ namespace OpenBve
 			internal double[] FlangeVolume;
 
 			internal CarSound Loop;
-			/// <summary>Played once when all doors are closed</summary>
-			internal CarSound PilotLampOn;
-			/// <summary>Played once when the first door opens</summary>
-			internal CarSound PilotLampOff;
-			
-			
 			internal CarSound[] Run;
 			internal double[] RunVolume;
 			internal double RunNextReasynchronizationPosition;

@@ -35,8 +35,7 @@ namespace OpenBve
 			train.Cars[train.DriverCar].Horns[2].LoopSound = Program.Sounds.TryToLoad(OpenBveApi.Path.CombineFile(trainFolder, "Klaxon2.wav"), SoundCfgParser.mediumRadius);
 			train.Cars[train.DriverCar].Horns[2].Loop = true;
 			train.Cars[train.DriverCar].Horns[2].SoundPosition = front;
-			train.Cars[train.DriverCar].Sounds.PilotLampOn = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Leave.wav"), SoundCfgParser.tinyRadius), cab);
-			train.Cars[train.DriverCar].Sounds.PilotLampOff = new CarSound();
+			train.SafetySystems.PilotLamp.OnSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Leave.wav"), SoundCfgParser.tinyRadius), cab);
 			// load sounds for all cars
 			for (int i = 0; i < train.Cars.Length; i++)
 			{
