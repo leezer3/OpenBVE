@@ -1,4 +1,5 @@
-﻿using SoundManager;
+﻿using OpenBveApi.Trains;
+using SoundManager;
 
 namespace OpenBve
 {
@@ -8,31 +9,35 @@ namespace OpenBve
 		internal class PassAlarm
 		{
 			/// <summary>Holds the reference to the base train</summary>
-			private readonly TrainManager.Train baseTrain;
+			private readonly AbstractCar baseCar;
 			/// <summary>The type of pass alarm</summary>
 			internal PassAlarmType Type;
 			/// <summary>The sound played when this alarm is triggered</summary>
 			internal CarSound Sound;
+			/// <summary>Whether the pass alarm light is currently lit</summary>
+			internal bool Lit;
 
-			public PassAlarm(Train baseTrain)
+			public PassAlarm(AbstractCar Car)
 			{
-				this.baseTrain = baseTrain;
+				this.baseCar = Car;
 				this.Type = PassAlarmType.None;
 				this.Sound = new CarSound();
+				this.Lit = false;
 			}
 			/// <summary>Triggers the pass alarm</summary>
 			internal void Trigger()
 			{
+				Lit = true;
 				SoundBuffer buffer = Sound.Buffer;
 				if (buffer != null)
 				{
 					switch (Type)
 					{
 						case PassAlarmType.Single:
-							Sound.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, Sound.Position, baseTrain.Cars[baseTrain.DriverCar], false);
+							Sound.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, Sound.Position, baseCar, false);
 							break;
 						case PassAlarmType.Loop:
-							Sound.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, Sound.Position, baseTrain.Cars[baseTrain.DriverCar], true);
+							Sound.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, Sound.Position, baseCar, true);
 							break;
 					}
 				}
@@ -40,6 +45,7 @@ namespace OpenBve
 			/// <summary>Halts the pass alarm</summary>
 			internal void Halt()
 			{
+				Lit = false;
 				if (Sound != null)
 				{
 					Sound.Stop();

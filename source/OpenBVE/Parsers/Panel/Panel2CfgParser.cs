@@ -1187,6 +1187,7 @@ namespace OpenBve {
 			switch(Subject.ToLowerInvariant())
 			{
 				case "pilotlamp":
+				case "passalarm":
 					return Subject.ToLowerInvariant();
 				case "acc":
 					return "if[acceleration < " + Maximum + ", if[acceleration > " + Minimum + ", acceleration " + " * " + range + ", 0]," + ftc + "]";

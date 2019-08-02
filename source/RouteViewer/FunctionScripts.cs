@@ -700,7 +700,11 @@ namespace OpenBve {
 						//Not currently supported in viewers
 						Function.Stack[s] = 0.0;
 						s++; break;
-						// handles
+					case Instructions.PassAlarm:
+						//Not currently supported in viewers
+						Function.Stack[s] = 0.0;
+						s++; break;
+					// handles
 					case Instructions.ReverserNotch:
 						if (Train != null) {
 							Function.Stack[s] = (double)Train.Specs.CurrentReverser.Driver;
