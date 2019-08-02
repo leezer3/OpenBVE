@@ -34,7 +34,6 @@ namespace OpenBve
 			internal double StationArrivalTime;
 			internal double StationDepartureTime;
 			internal bool StationDepartureSoundPlayed;
-			internal bool StationAdjust;
 			internal double StationDistanceToStopPoint;
 			
 			
@@ -67,6 +66,7 @@ namespace OpenBve
 				Cars = new TrainManager.Car[] { };
 				SafetySystems.PassAlarm = new PassAlarm(Cars[DriverCar]);
 				SafetySystems.PilotLamp = new PilotLamp(Cars[DriverCar]);
+				SafetySystems.StationAdjust = new StationAdjustAlarm(this);
 				Specs.DoorOpenMode = DoorMode.AutomaticManualOverride;
 				Specs.DoorCloseMode = DoorMode.AutomaticManualOverride;
 				Specs.DoorWidth = 1000.0;
@@ -982,7 +982,6 @@ namespace OpenBve
 				{
 					Cars[i].Sounds.Run = new CarSound[] { };
 					Cars[i].Sounds.Flange = new CarSound[] { };
-					Cars[i].Sounds.Adjust = new CarSound();
 					Cars[i].CarBrake.Air = new CarSound();
 					Cars[i].CarBrake.AirHigh = new CarSound();
 					Cars[i].CarBrake.AirZero = new CarSound();

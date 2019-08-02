@@ -9,7 +9,7 @@ namespace OpenBve
 		internal struct CarSounds
 		{
 			internal MotorSound Motor;
-			internal CarSound Adjust;
+			
 			internal CarSound Brake;
 			internal CarSound BreakerResume;
 			internal CarSound BreakerResumeOrInterrupt;

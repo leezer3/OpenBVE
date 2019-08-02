@@ -8,6 +8,8 @@ namespace OpenBve
 		internal TrainManager.PassAlarm PassAlarm;
 		/// <summary>The PilotLamp</summary>
 		internal TrainManager.PilotLamp PilotLamp;
+		/// <summary>The station adjust alarm</summary>
+		internal StationAdjustAlarm StationAdjust;
 
 		internal DoorInterlockStates DoorInterlockState;
 	}

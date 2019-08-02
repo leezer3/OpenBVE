@@ -797,6 +797,20 @@ namespace OpenBve {
 							Function.Stack[s] = 0.0;
 						}
 						s++; break;
+					case Instructions.StationAdjustAlarm:
+						if (Train != null) {
+							if (Train.SafetySystems.StationAdjust.Lit)
+							{
+								Function.Stack[s] = 1.0;
+							}
+							else
+							{
+								Function.Stack[s] = 0.0;
+							}
+						} else {
+							Function.Stack[s] = 0.0;
+						}
+						s++; break;
 						// handles
 					case Instructions.ReverserNotch:
 						if (Train != null) {

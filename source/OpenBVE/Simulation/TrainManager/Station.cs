@@ -114,7 +114,7 @@ namespace OpenBve
 							{
 								// arrival
 								Train.StationState = TrainStopState.Boarding;
-								Train.StationAdjust = false;
+								Train.SafetySystems.StationAdjust.Lit = false;
 								Train.Specs.DoorClosureAttempted = false;
 								Train.SafetySystems.PassAlarm.Halt();
 								SoundBuffer buffer = (SoundBuffer)CurrentRoute.Stations[i].ArrivalSoundBuffer;
@@ -208,27 +208,9 @@ namespace OpenBve
 									}
 								}
 							}
-							else if (Train.CurrentSpeed > -0.277777777777778 & Train.CurrentSpeed < 0.277777777777778)
-							{
-								// correct stop position
-								if (!Train.StationAdjust & (Train.StationDistanceToStopPoint > tb | Train.StationDistanceToStopPoint < -tf))
-								{
-									SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.Adjust.Buffer;
-									if (buffer != null)
-									{
-										OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.Adjust.Position;
-										Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train.Cars[Train.DriverCar], false);
-									}
-									if (Train.IsPlayerTrain)
-									{
-										Game.AddMessage(Translations.GetInterfaceString("message_station_correct"), MessageDependency.None, GameMode.Normal, MessageColor.Orange, Game.SecondsSinceMidnight + 5.0, null);
-									}
-									Train.StationAdjust = true;
-								}
-							}
 							else
 							{
-								Train.StationAdjust = false;
+								Train.SafetySystems.StationAdjust.Update(tb, tf);
 							}
 						}
 					}

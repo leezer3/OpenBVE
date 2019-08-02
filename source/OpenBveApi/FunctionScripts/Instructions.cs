@@ -29,7 +29,7 @@
 		HasAirBrake, HoldBrake, HasHoldBrake, ConstSpeed, HasConstSpeed,
 		BrakeMainReservoir, BrakeEqualizingReservoir, BrakeBrakePipe, BrakeBrakeCylinder, BrakeStraightAirPipe,
 		BrakeMainReservoirOfCar, BrakeEqualizingReservoirOfCar, BrakeBrakePipeOfCar, BrakeBrakeCylinderOfCar, BrakeStraightAirPipeOfCar,
-		SafetyPluginAvailable, SafetyPluginState, PassAlarm,
+		SafetyPluginAvailable, SafetyPluginState, PassAlarm, StationAdjustAlarm,
 		TimetableVisible, DistanceNextStation, StopsNextStation, DistanceStation, StopsStation, NextStation, NextStationStop,
 		SectionAspectNumber, CurrentObjectState
 #pragma warning restore CS1591

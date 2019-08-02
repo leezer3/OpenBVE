@@ -188,7 +188,7 @@ namespace OpenBve
 									{
 										break;
 									}
-									ParseNode(c, out car.Sounds.Adjust, panel, SoundCfgParser.tinyRadius);
+									ParseNode(c, out Train.SafetySystems.StationAdjust.AdjustAlarm, panel, SoundCfgParser.tinyRadius);
 									break;
 								case "compressor":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
