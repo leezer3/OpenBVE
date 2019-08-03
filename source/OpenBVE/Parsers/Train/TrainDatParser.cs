@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Windows.Forms;
 using OpenBve.BrakeSystems;
+using OpenBve.SafetySystems;
 using OpenBveApi.Math;
 using OpenBveApi.Interface;
 using OpenBveApi.Routes;
@@ -699,7 +700,7 @@ namespace OpenBve {
 										{
 											int b = (int)Math.Round(a);
 											if (b >= 0 & b <= 2) {
-												Train.SafetySystems.PassAlarm.Type = (TrainManager.PassAlarmType)b;
+												Train.SafetySystems.PassAlarm.Type = (PassAlarmType)b;
 											} else {
 												Interface.AddMessage(MessageType.Error, false, "PassAlarm is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											} break;

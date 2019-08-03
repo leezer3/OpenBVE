@@ -4,7 +4,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using SoundManager;
 
-namespace OpenBve
+namespace OpenBve.SafetySystems
 {
 	class StationAdjustAlarm
 	{

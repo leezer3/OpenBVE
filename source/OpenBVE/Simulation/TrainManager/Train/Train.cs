@@ -8,6 +8,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
 using OpenBve.RouteManager;
+using OpenBve.SafetySystems;
 using OpenBveApi;
 using SoundManager;
 
@@ -20,7 +21,7 @@ namespace OpenBve
 		public partial class Train : AbstractTrain
 		{
 			/// <summary>Holds the safety systems for the train</summary>
-			internal SafetySystems SafetySystems;
+			internal TrainSafetySystems SafetySystems;
 			/// <summary>The plugin used by this train.</summary>
 			internal PluginManager.Plugin Plugin;
 			/// <summary>The driver body</summary>

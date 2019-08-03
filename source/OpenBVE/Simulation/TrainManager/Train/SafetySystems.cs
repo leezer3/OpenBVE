@@ -1,13 +1,14 @@
-﻿using OpenBveApi.Runtime;
+﻿using OpenBve.SafetySystems;
+using OpenBveApi.Runtime;
 
 namespace OpenBve
 {
-	internal struct SafetySystems
+	internal struct TrainSafetySystems
 	{
 		/// <summary>The PassAlarm</summary>
-		internal TrainManager.PassAlarm PassAlarm;
+		internal PassAlarm PassAlarm;
 		/// <summary>The PilotLamp</summary>
-		internal TrainManager.PilotLamp PilotLamp;
+		internal PilotLamp PilotLamp;
 		/// <summary>The station adjust alarm</summary>
 		internal StationAdjustAlarm StationAdjust;
 
