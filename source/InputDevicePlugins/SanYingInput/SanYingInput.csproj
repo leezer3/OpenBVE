@@ -37,9 +37,9 @@
     <LangVersion>6</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK, Version=3.0.1.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\OpenTK.3.0.1\lib\net20\OpenTK.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="OpenTK, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\OpenTK.3.1.0\lib\net20\OpenTK.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -84,11 +84,11 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-	  <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
+    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
 		  mkdir $(TargetDir)Data\InputDevicePlugins\
 		  move /Y $(TargetDir)$(TargetName).* $(TargetDir)Data\InputDevicePlugins\
 	  </PostBuildEvent>
-	  <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
+    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
 		  mkdir -p $(TargetDir)Data/InputDevicePlugins/
 		  mv -f $(TargetDir)$(TargetName).* $(TargetDir)Data/InputDevicePlugins/
 	  </PostBuildEvent>

@@ -56,8 +56,8 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Reference Include="OpenTK, Version=3.0.1.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\OpenTK.3.0.1\lib\net20\OpenTK.dll</HintPath>
+    <Reference Include="OpenTK, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\OpenTK.3.1.0\lib\net20\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="SharpCompress, Version=0.23.0.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SharpCompress.0.23.0\lib\net45\SharpCompress.dll</HintPath>
@@ -168,15 +168,17 @@
     <EmbeddedResource Include="..\..\assets\Languages\en-US.xlf" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="OpenTK.dll.config" />
+    <None Include="OpenTK.dll.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>
-	  <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">
+    <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">
 		  echo Resoloving dependencies
 		  xcopy /E /Y "$(SolutionDir)dependencies" "$(TargetDir)"
 	  </PreBuildEvent>
-	  <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">
+    <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">
 		  cp -r "$(SolutionDir)dependencies/." "$(TargetDir)"
 	  </PreBuildEvent>
   </PropertyGroup>
