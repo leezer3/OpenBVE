@@ -199,7 +199,15 @@ namespace SoundManager
 			{
 				Array.Resize(ref Buffers, Buffers.Length << 1);
 			}
-			Buffers[BufferCount] = new SoundBuffer(CurrentHost, path, radius);
+
+			try
+			{
+				Buffers[BufferCount] = new SoundBuffer(CurrentHost, path, radius);
+			}
+			catch
+			{
+				return null;
+			}
 			BufferCount++;
 			return Buffers[BufferCount - 1];
 		}
@@ -214,7 +222,15 @@ namespace SoundManager
 			{
 				Array.Resize(ref Buffers, Buffers.Length << 1);
 			}
-			Buffers[BufferCount] = new SoundBuffer(data, radius);
+
+			try
+			{
+				Buffers[BufferCount] = new SoundBuffer(data, radius);
+			}
+			catch
+			{
+				return null;
+			}
 			BufferCount++;
 			return Buffers[BufferCount - 1];
 		}
