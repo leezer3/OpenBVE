@@ -179,6 +179,11 @@ namespace OpenBve
 								{
 									case Translations.Command.PowerHalfAxis:
 									case Translations.Command.PowerFullAxis:
+										if (TrainManager.PlayerTrain.AI != null)
+										{
+											//If AI is enabled, it fights with the axis....
+											return;
+										}
 										// power half/full-axis
 										if (!TrainManager.PlayerTrain.Handles.SingleHandle)
 										{
@@ -194,6 +199,11 @@ namespace OpenBve
 										break;
 									case Translations.Command.BrakeHalfAxis:
 									case Translations.Command.BrakeFullAxis:
+										if (TrainManager.PlayerTrain.AI != null)
+										{
+											//If AI is enabled, it fights with the axis....
+											return;
+										}
 										// brake half/full-axis
 										if (!TrainManager.PlayerTrain.Handles.SingleHandle)
 										{
@@ -285,6 +295,11 @@ namespace OpenBve
 										}
 										break;
 									case Translations.Command.SingleFullAxis:
+										if (TrainManager.PlayerTrain.AI != null)
+										{
+											//If AI is enabled, it fights with the axis....
+											return;
+										}
 										// single full axis
 										if (TrainManager.PlayerTrain.Handles.SingleHandle)
 										{
@@ -352,12 +367,15 @@ namespace OpenBve
 										}
 										break;
 									case Translations.Command.ReverserFullAxis:
+										if (TrainManager.PlayerTrain.AI != null)
+										{
+											//If AI is enabled, it fights with the axis....
+											return;
+										}
 										// reverser full axis
-									{
-										double a = Interface.CurrentControls[i].AnalogState;
-										int r = (int) Math.Round(a);
+										double als = Interface.CurrentControls[i].AnalogState;
+										int r = (int) Math.Round(als);
 										TrainManager.PlayerTrain.ApplyReverser(r, false);
-									}
 										break;
 									case Translations.Command.CameraMoveForward:
 										// camera move forward
