@@ -8,16 +8,16 @@ namespace OpenBve.SafetySystems
 		/// <summary>Holds the reference to the base train</summary>
 		private readonly AbstractCar baseCar;
 		/// <summary>The type of pass alarm</summary>
-		internal PassAlarmType Type;
+		private readonly PassAlarmType Type;
 		/// <summary>The sound played when this alarm is triggered</summary>
 		internal CarSound Sound;
 		/// <summary>Whether the pass alarm light is currently lit</summary>
 		internal bool Lit;
 
-		public PassAlarm(AbstractCar Car)
+		public PassAlarm(PassAlarmType type, AbstractCar Car)
 		{
 			this.baseCar = Car;
-			this.Type = PassAlarmType.None;
+			this.Type = type;
 			this.Sound = new CarSound();
 			this.Lit = false;
 		}

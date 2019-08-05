@@ -65,9 +65,7 @@ namespace OpenBve
 				CurrentRouteLimit = double.PositiveInfinity;
 				CurrentSectionLimit = double.PositiveInfinity;
 				Cars = new TrainManager.Car[] { };
-				SafetySystems.PassAlarm = new PassAlarm(Cars[DriverCar]);
-				SafetySystems.PilotLamp = new PilotLamp(Cars[DriverCar]);
-				SafetySystems.StationAdjust = new StationAdjustAlarm(this);
+				
 				Specs.DoorOpenMode = DoorMode.AutomaticManualOverride;
 				Specs.DoorCloseMode = DoorMode.AutomaticManualOverride;
 				Specs.DoorWidth = 1000.0;

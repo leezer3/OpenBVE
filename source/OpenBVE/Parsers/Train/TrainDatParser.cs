@@ -128,7 +128,7 @@ namespace OpenBve {
 			double CarUnexposedFrontalArea = 0.2 * CarWidth * CarHeight;
 			bool FrontCarIsMotorCar = true;
 			TrainManager.ReadhesionDeviceType ReAdhesionDevice = TrainManager.ReadhesionDeviceType.TypeA;
-			
+			PassAlarmType passAlarm = PassAlarmType.None;
 			Train.Handles.EmergencyBrake = new TrainManager.EmergencyHandle();
 			Train.Handles.HasLocoBrake = false;
 			double[] powerDelayUp = { }, powerDelayDown = { }, brakeDelayUp = { }, brakeDelayDown = { }, locoBrakeDelayUp = { }, locoBrakeDelayDown = { };
@@ -700,7 +700,7 @@ namespace OpenBve {
 										{
 											int b = (int)Math.Round(a);
 											if (b >= 0 & b <= 2) {
-												Train.SafetySystems.PassAlarm.Type = (PassAlarmType)b;
+												passAlarm = (PassAlarmType)b;
 											} else {
 												Interface.AddMessage(MessageType.Error, false, "PassAlarm is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											} break;
@@ -1070,7 +1070,9 @@ namespace OpenBve {
 				Train.Handles.SingleHandle = false;
 				Train.Handles.HasHoldBrake = false;
 			}
-
+			Train.SafetySystems.PassAlarm = new PassAlarm(passAlarm, Train.Cars[DriverCar]);
+			Train.SafetySystems.PilotLamp = new PilotLamp(Train.Cars[DriverCar]);
+			Train.SafetySystems.StationAdjust = new StationAdjustAlarm(Train);
 			switch (Game.TrainStart)
 			{
 				// starting mode
