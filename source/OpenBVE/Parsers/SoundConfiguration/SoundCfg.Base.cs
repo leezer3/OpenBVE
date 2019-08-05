@@ -19,16 +19,19 @@ namespace OpenBve
 			{
 				if (SoundXmlParser.ParseTrain(FileName, Train))
 				{
+					Program.FileSystem.AppendToLogFile("Loading sound.xml file: " + FileName);
 					return;
 				}
 			}
 			FileName = OpenBveApi.Path.CombineFile(TrainPath, "sound.cfg");
 			if (System.IO.File.Exists(FileName))
 			{
+				Program.FileSystem.AppendToLogFile("Loading sound.cfg file: " + FileName);
 				BVE4SoundParser.Parse(FileName, TrainPath, Encoding, Train);
 			}
 			else
 			{
+				Program.FileSystem.AppendToLogFile("Loading default BVE2 sounds.");
 				BVE2SoundParser.Parse(TrainPath, Train);
 			}
 		}
