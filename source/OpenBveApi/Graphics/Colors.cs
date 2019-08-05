@@ -118,7 +118,7 @@ namespace OpenBveApi.Colors {
 		public static bool TryParseHexColor(string Expression, out Color24 Color)
 		{
 			Color = Blue;
-			if (Expression.StartsWith("#"))
+			if (Expression.StartsWith("#", StringComparison.InvariantCultureIgnoreCase))
 			{
 				string a = Expression.Substring(1).TrimStart();
 				int x; if (int.TryParse(a, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out x))
@@ -303,7 +303,7 @@ namespace OpenBveApi.Colors {
 		/// <returns>True if the parse succeds, false if it does not</returns>
 		public static bool TryParseHexColor(string Expression, out Color32 Color)
 		{
-			if (Expression.StartsWith("#"))
+			if (Expression.StartsWith("#", StringComparison.InvariantCultureIgnoreCase))
 			{
 				string a = Expression.Substring(1).TrimStart();
 				int x; if (Int32.TryParse(a, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out x))
