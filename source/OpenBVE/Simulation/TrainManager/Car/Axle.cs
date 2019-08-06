@@ -14,6 +14,8 @@ namespace OpenBve
 			internal CarSound[] PointSounds;
 			internal int FlangeIndex;
 			internal int RunIndex;
+			/// <summary>Stores whether the point sound has been triggered</summary>
+			internal bool PointSoundTriggered;
 		}
 	}
 }

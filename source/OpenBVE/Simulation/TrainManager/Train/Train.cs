@@ -8,6 +8,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Trains;
 using OpenBve.RouteManager;
 using OpenBveApi;
+using OpenBveApi.Math;
 using SoundManager;
 
 namespace OpenBve
@@ -246,6 +247,45 @@ namespace OpenBve
 					if (AI != null)
 					{
 						AI.Trigger(TimeElapsed);
+					}
+				}
+				//Trigger point sounds if appropriate
+				for (int i = 0; i < Cars.Length; i++)
+				{
+					Vector3 p = Vector3.Zero;
+					SoundBuffer buffer = null;
+					if (Cars[i].FrontAxle.PointSoundTriggered)
+					{
+						Cars[i].FrontAxle.PointSoundTriggered = false;
+						int bufferIndex = Cars[i].FrontAxle.RunIndex;
+						if (Cars[i].FrontAxle.PointSounds == null || Cars[i].FrontAxle.PointSounds.Length == 0)
+						{
+							//No point sounds defined at all
+							continue;
+						}
+						if (bufferIndex > Cars[i].FrontAxle.PointSounds.Length - 1
+						    || Cars[i].FrontAxle.PointSounds[bufferIndex].Buffer == null)
+						{
+							//If the switch sound does not exist, return zero
+							//Required to handle legacy trains which don't have idx specific run sounds defined
+							bufferIndex = 0;
+						}
+						buffer = Cars[i].FrontAxle.PointSounds[bufferIndex].Buffer;
+						p = Cars[i].FrontAxle.PointSounds[bufferIndex].Position;
+					}
+					if (buffer != null)
+					{
+						double spd = Math.Abs(CurrentSpeed);
+						double pitch = spd / 12.5;
+						double gain = pitch < 0.5 ? 2.0 * pitch : 1.0;
+						if (pitch < 0.2 | gain < 0.2)
+						{
+							buffer = null;
+						}
+						if (buffer != null)
+						{
+							Program.Sounds.PlaySound(buffer, pitch, gain, p, Cars[i], false);
+						}
 					}
 				}
 			}

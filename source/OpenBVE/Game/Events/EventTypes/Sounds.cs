@@ -25,8 +25,7 @@ namespace OpenBve
 			private readonly double Speed;
 
 			/// <param name="TrackPositionDelta">The delta position of the sound within a track block.</param>
-			/// <param name="SoundBuffer">The sound buffer to play. 
-			/// HACK: Set to a null reference to indicate the train point sound.</param>
+			/// <param name="SoundBuffer">The sound buffer to play.</param>
 			/// <param name="PlayerTrainOnly">Defines whether this sound is played for the player's train only, or for player and AI trains</param>
 			/// <param name="Once">Defines whether this sound repeats looped, or plays once</param>
 			/// <param name="Dynamic">Whether this sound is dynamic (Attached to a train)</param>
@@ -84,13 +83,9 @@ namespace OpenBve
 
 		internal class PointSoundEvent : GeneralEvent<AbstractTrain, TrainManager.Car>
 		{
-			private readonly double Speed;
-
-			/// <param name="Speed">The speed in km/h at which this sound is played at it's original pitch (Set to zero to play at original pitch at all times)</param>
-			internal PointSoundEvent(double Speed)
+			internal PointSoundEvent()
 			{
 				this.DontTriggerAnymore = false;
-				this.Speed = Speed;
 			}
 
 			/// <summary>Triggers the playback of a sound</summary>
@@ -101,50 +96,18 @@ namespace OpenBve
 			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, TrainManager.Car Car)
 			{
 				if (SuppressSoundEvents) return;
-				if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle | TriggerType == EventTriggerType.OtherCarRearAxle | TriggerType == EventTriggerType.RearCarRearAxle)
+				switch (TriggerType)
 				{
-					Vector3 p;
-					SoundBuffer buffer;
-					if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle)
-					{
-						if (Train.CurrentSpeed <= 0.0) return;
-						int bufferIndex = Car.FrontAxle.RunIndex;
-						if (Car.FrontAxle.PointSounds == null || Car.FrontAxle.PointSounds.Length == 0)
-						{
-							//No point sounds defined at all
-							return;
-						}
-						if (bufferIndex > Car.FrontAxle.PointSounds.Length - 1
-						    || Car.FrontAxle.PointSounds[bufferIndex].Buffer == null)
-						{
-							//If the switch sound does not exist, return zero
-							//Required to handle legacy trains which don't have idx specific run sounds defined
-							bufferIndex = 0;
-						}
-						buffer = Car.FrontAxle.PointSounds[bufferIndex].Buffer;
-						p = Car.FrontAxle.PointSounds[bufferIndex].Position;
-					}
-					else
-					{
-						return; // HACK: Don't trigger sound for the rear axles
-						//buffer = Train.Cars[CarIndex].RearAxle.PointSounds.Buffer;
-						//p = Train.Cars[CarIndex].RearAxle.PointSounds.Position;
-					}
-					if (buffer != null)
-					{
-						double spd = Math.Abs(Train.CurrentSpeed);
-						double pitch = spd / this.Speed;
-						double gain = pitch < 0.5 ? 2.0 * pitch : 1.0;
-						if (pitch < 0.2 | gain < 0.2)
-						{
-							buffer = null;
-						}
-						if (buffer != null)
-						{
-							Program.Sounds.PlaySound(buffer, pitch, gain, p, Car, false);
-						}
-					}
-					this.DontTriggerAnymore = false;
+					case EventTriggerType.FrontCarFrontAxle:
+					case EventTriggerType.OtherCarFrontAxle:
+						Car.FrontAxle.PointSoundTriggered = true;
+						DontTriggerAnymore = false;
+						break;
+					case EventTriggerType.OtherCarRearAxle:
+					case EventTriggerType.RearCarRearAxle:
+						Car.RearAxle.PointSoundTriggered = true;
+						DontTriggerAnymore = false;
+						break;
 				}
 			}
 		}

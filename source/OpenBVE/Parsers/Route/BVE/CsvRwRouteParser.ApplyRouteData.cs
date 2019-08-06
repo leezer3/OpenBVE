@@ -392,7 +392,7 @@ namespace OpenBve
 								{
 									int m = TrackManager.Tracks[j].Elements[n].Events.Length;
 									Array.Resize(ref TrackManager.Tracks[j].Elements[n].Events, m + 1);
-									TrackManager.Tracks[j].Elements[n].Events[m] = new TrackManager.PointSoundEvent(12.5);
+									TrackManager.Tracks[j].Elements[n].Events[m] = new TrackManager.PointSoundEvent();
 								}
 							}
 						}
