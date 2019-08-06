@@ -2133,7 +2133,7 @@ namespace OpenBve {
 							}
 						}
 						// handle indices
-						int CommandIndex1 = 0, CommandIndex2 = 0;
+						int CommandIndex1, CommandIndex2;
 						if (Command != null && Command.EndsWith(")")) {
 							for (int k = Command.Length - 2; k >= 0; k--) {
 								if (Command[k] == '(') {

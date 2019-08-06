@@ -3,7 +3,6 @@ using OpenBve.RouteManager;
 using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
-using Vector2 = OpenBveApi.Math.Vector2;
 using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve

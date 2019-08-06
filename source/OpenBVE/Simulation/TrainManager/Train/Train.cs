@@ -4,7 +4,6 @@ using System.Linq;
 using OpenBve.BrakeSystems;
 using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
-using OpenBveApi.Math;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
 using OpenBve.RouteManager;

@@ -6,7 +6,6 @@ using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
-using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve
 {

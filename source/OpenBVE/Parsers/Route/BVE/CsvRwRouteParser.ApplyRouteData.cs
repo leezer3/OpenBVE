@@ -630,7 +630,6 @@ namespace OpenBve
 							double y = Data.Blocks[i].Rails[j].RailStart.Y;
 							Vector3 offset = new Vector3(Direction.Y * x, y, -Direction.X * x);
 							pos = Position + offset;
-							double dh;
 							if (i < Data.Blocks.Length - 1 && Data.Blocks[i + 1].Rails.Length > j)
 							{
 								// take orientation of upcoming block into account
@@ -703,13 +702,11 @@ namespace OpenBve
 								double dx = Data.Blocks[i + 1].Rails[j].RailEnd.X - Data.Blocks[i].Rails[j].RailStart.X;
 								double dy = Data.Blocks[i + 1].Rails[j].RailEnd.Y - Data.Blocks[i].Rails[j].RailStart.Y;
 								planar = Math.Atan(dx / c);
-								dh = dy / c;
-								updown = Math.Atan(dh);
+								updown = Math.Atan(dy / c);
 							}
 							else
 							{
 								planar = 0.0;
-								dh = 0.0;
 								updown = 0.0;
 								RailTransformation = new Transformation(TrackTransformation, 0.0, 0.0, 0.0);
 							}

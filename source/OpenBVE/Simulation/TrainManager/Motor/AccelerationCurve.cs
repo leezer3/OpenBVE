@@ -59,7 +59,7 @@ namespace OpenBve
 
 		internal class BveDecelerationCurve : AccelerationCurve
 		{
-			private double MaxDecelerationOutput;
+			private readonly double MaxDecelerationOutput;
 			internal override double GetAccelerationOutput(double Speed, double Loading)
 			{
 				return this.MaxDecelerationOutput;

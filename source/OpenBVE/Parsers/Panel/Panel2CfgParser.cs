@@ -1321,7 +1321,6 @@ namespace OpenBve {
 								Suffix = " ~ " + t0 + " >= <> " + t1 + " * floor 10 mod 10 ?";
 							}
 							Subject = Subject.Substring(0, i);
-							i--;
 						}
 					}
 				}
