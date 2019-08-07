@@ -245,7 +245,6 @@
     <Compile Include="Simulation\TrainManager\Brake\BrakeSystemType.cs" />
     <Compile Include="Simulation\TrainManager\Brake\CarBrake.cs" />
     <Compile Include="Simulation\TrainManager\Brake\ElectropnuematicBrakeType.cs" />
-    <Compile Include="Simulation\TrainManager\Car\Car.Brightness.cs" />
     <Compile Include="Simulation\TrainManager\Car\ConstantSpeedDevice.cs" />
     <Compile Include="Simulation\TrainManager\Car\HoldBrake.cs" />
     <Compile Include="Simulation\TrainManager\Train\SafetySystems\PilotLamp.cs" />

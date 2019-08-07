@@ -983,7 +983,7 @@ namespace OpenBve
 										if (Camera.CurrentMode == CameraViewMode.Track)
 										{
 											World.CameraTrackFollower.Update(
-												TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition, true,
+												TrainManager.PlayerTrain.Cars[0].TrackPosition, true,
 												false);
 										}
 										else if (Camera.CurrentMode == CameraViewMode.FlyBy |

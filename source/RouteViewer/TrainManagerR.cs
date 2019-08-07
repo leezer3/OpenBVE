@@ -154,12 +154,6 @@ namespace OpenBve {
 			internal double CurrentPitchDueToAccelerationTrackPosition;
 			internal double CurrentPitchDueToAccelerationSpeed;
 		}
-		internal struct CarBrightness {
-			internal float PreviousBrightness;
-			internal double PreviousTrackPosition;
-			internal float NextBrightness;
-			internal double NextTrackPosition;
-		}
 		internal struct Horn {
 			internal CarSound Sound;
 			internal bool Loop;
@@ -251,7 +245,6 @@ namespace OpenBve {
 			internal CarSounds Sounds;
 			internal bool Derailed;
 			internal bool Topples;
-			internal CarBrightness Brightness;
 
 			public override void CreateWorldCoordinates(Vector3 Car, out Vector3 Position, out Vector3 Direction)
 			{

@@ -394,7 +394,7 @@ namespace OpenBve
 					}
 					ScoreLogs[ScoreLogCount].Value = Value;
 					ScoreLogs[ScoreLogCount].TextToken = TextToken;
-					ScoreLogs[ScoreLogCount].Position = TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition;
+					ScoreLogs[ScoreLogCount].Position = TrainManager.PlayerTrain.Cars[0].TrackPosition;
 					ScoreLogs[ScoreLogCount].Time = SecondsSinceMidnight;
 					ScoreLogCount++;
 				}

@@ -46,7 +46,7 @@ namespace OpenBve
 			internal bool Derailed;
 			/// <summary>Whether currently toppled over</summary>
 			internal bool Topples;
-			internal CarBrightness Brightness;
+			
 			internal double BeaconReceiverPosition;
 			internal TrackManager.TrackFollower BeaconReceiver;
 			/// <summary>Whether loading sway is enabled for this car</summary>
@@ -168,6 +168,15 @@ namespace OpenBve
 					Position = FrontAxle.Follower.WorldPosition;
 					Direction = Vector3.Down;
 				}
+			}
+
+			public override double TrackPosition
+			{
+				get
+				{
+					return FrontAxle.Follower.TrackPosition;
+				}
+				
 			}
 
 			internal void UpdateRunSounds(double TimeElapsed)

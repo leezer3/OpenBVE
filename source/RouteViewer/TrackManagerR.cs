@@ -14,25 +14,6 @@ using SoundManager;
 namespace OpenBve {
     internal static class TrackManager {
 
-        // brightness change
-        internal class BrightnessChangeEvent : GeneralEvent<TrainManager.Train, AbstractCar> {
-            internal float CurrentBrightness;
-            internal float PreviousBrightness;
-            internal double PreviousDistance;
-            internal float NextBrightness;
-            internal double NextDistance;
-            internal BrightnessChangeEvent(double TrackPositionDelta, float CurrentBrightness, float PreviousBrightness, double PreviousDistance, float NextBrightness, double NextDistance) {
-                this.TrackPositionDelta = TrackPositionDelta;
-                this.DontTriggerAnymore = false;
-                this.CurrentBrightness = CurrentBrightness;
-                this.PreviousBrightness = PreviousBrightness;
-                this.PreviousDistance = PreviousDistance;
-                this.NextBrightness = NextBrightness;
-                this.NextDistance = NextDistance;
-            }
-            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) { }
-        }
-        
         // station pass alarm
         internal class StationPassAlarmEvent : GeneralEvent<TrainManager.Train, AbstractCar> {
             internal StationPassAlarmEvent(double TrackPositionDelta) {

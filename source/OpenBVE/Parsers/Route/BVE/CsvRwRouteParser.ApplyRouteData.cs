@@ -264,13 +264,13 @@ namespace OpenBve
 							int m = TrackManager.Tracks[t].Elements[n].Events.Length;
 							Array.Resize(ref TrackManager.Tracks[t].Elements[n].Events, m + 1);
 							double d = Data.Blocks[i].BrightnessChanges[j].TrackPosition - StartingDistance;
-							TrackManager.Tracks[t].Elements[n].Events[m] = new TrackManager.BrightnessChangeEvent(d, Data.Blocks[i].BrightnessChanges[j].Value, CurrentBrightnessValue, Data.Blocks[i].BrightnessChanges[j].TrackPosition - CurrentBrightnessTrackPosition);
+							TrackManager.Tracks[t].Elements[n].Events[m] = new BrightnessChangeEvent(d, Data.Blocks[i].BrightnessChanges[j].Value, CurrentBrightnessValue, Data.Blocks[i].BrightnessChanges[j].TrackPosition - CurrentBrightnessTrackPosition);
 							
 							if (t == 0)
 							{
 								if (CurrentBrightnessElement >= 0 & CurrentBrightnessEvent >= 0)
 								{
-									TrackManager.BrightnessChangeEvent bce = (TrackManager.BrightnessChangeEvent)TrackManager.Tracks[t].Elements[CurrentBrightnessElement].Events[CurrentBrightnessEvent];
+									BrightnessChangeEvent bce = (BrightnessChangeEvent)TrackManager.Tracks[t].Elements[CurrentBrightnessElement].Events[CurrentBrightnessEvent];
 									bce.NextBrightness = Data.Blocks[i].BrightnessChanges[j].Value;
 									bce.NextDistance = Data.Blocks[i].BrightnessChanges[j].TrackPosition - CurrentBrightnessTrackPosition;
 								}
@@ -283,9 +283,9 @@ namespace OpenBve
 								{
 									for (int e = 0; e < TrackManager.Tracks[t].Elements[CurrentBrightnessElement].Events.Length; e++)
 									{
-										if (!(TrackManager.Tracks[t].Elements[CurrentBrightnessElement].Events[e] is TrackManager.BrightnessChangeEvent))
+										if (!(TrackManager.Tracks[t].Elements[CurrentBrightnessElement].Events[e] is BrightnessChangeEvent))
 											continue;
-										TrackManager.BrightnessChangeEvent bce = (TrackManager.BrightnessChangeEvent)TrackManager.Tracks[t].Elements[CurrentBrightnessElement].Events[e];
+										BrightnessChangeEvent bce = (BrightnessChangeEvent)TrackManager.Tracks[t].Elements[CurrentBrightnessElement].Events[e];
 										bce.NextBrightness = Data.Blocks[i].BrightnessChanges[j].Value;
 										bce.NextDistance = Data.Blocks[i].BrightnessChanges[j].TrackPosition - CurrentBrightnessTrackPosition;
 									}

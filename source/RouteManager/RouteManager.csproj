@@ -51,6 +51,7 @@
     <Compile Include="BackgroundManager\DynamicBackground.cs" />
     <Compile Include="BackgroundManager\StaticBackground.cs" />
     <Compile Include="Events\BackgroundChange.cs" />
+    <Compile Include="Events\BrightnessChange.cs" />
     <Compile Include="Events\DestinationChange.cs" />
     <Compile Include="Events\FogChange.cs" />
     <Compile Include="Events\MarkerEnd.cs" />

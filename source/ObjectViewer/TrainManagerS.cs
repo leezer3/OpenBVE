@@ -143,13 +143,6 @@ namespace OpenBve {
 			internal double CurrentPitchDueToAccelerationTrackPosition;
 			internal double CurrentPitchDueToAccelerationSpeed;
 		}
-		internal struct CarBrightness {
-			internal float PreviousBrightness;
-			internal double PreviousTrackPosition;
-			internal float NextBrightness;
-			internal double NextTrackPosition;
-		}
-		
 
 		internal class Car : AbstractCar {
 			internal Axle FrontAxle;
@@ -161,7 +154,6 @@ namespace OpenBve {
 			internal bool CurrentlyVisible;
 			internal bool Derailed;
 			internal bool Topples;
-			internal CarBrightness Brightness;
 		}
 
 		// train

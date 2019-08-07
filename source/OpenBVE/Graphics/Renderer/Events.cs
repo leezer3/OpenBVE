@@ -82,7 +82,7 @@ namespace OpenBve
 						dynamic e = TrackManager.Tracks[0].Elements[i].Events[j];
 						double dy, dx = 0.0, dz = 0.0;
 						double s; Texture t;
-						if (e is TrackManager.BrightnessChangeEvent)
+						if (e is BrightnessChangeEvent)
 						{
 							s = 0.15;
 							dy = 4.0;

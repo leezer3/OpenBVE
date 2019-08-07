@@ -146,7 +146,7 @@ namespace OpenBve {
 					Array.Resize<BlackBoxEntry>(ref BlackBoxEntries, BlackBoxEntries.Length << 1);
 				}
 				BlackBoxEntries[BlackBoxEntryCount].Time = SecondsSinceMidnight;
-				BlackBoxEntries[BlackBoxEntryCount].Position = TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition;
+				BlackBoxEntries[BlackBoxEntryCount].Position = TrainManager.PlayerTrain.Cars[0].TrackPosition;
 				BlackBoxEntries[BlackBoxEntryCount].Speed = (float)TrainManager.PlayerTrain.CurrentSpeed;
 				BlackBoxEntries[BlackBoxEntryCount].Acceleration = (float)TrainManager.PlayerTrain.Specs.CurrentAverageAcceleration;
 				BlackBoxEntries[BlackBoxEntryCount].ReverserDriver = (short)TrainManager.PlayerTrain.Handles.Reverser.Driver;
