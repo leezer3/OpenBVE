@@ -18,10 +18,9 @@ namespace OpenBve
 			internal bool HasConstSpeed;
 			internal bool CurrentConstSpeed;
 			
-			internal PassAlarmType PassAlarm;
 			internal DoorMode DoorOpenMode;
 			internal DoorMode DoorCloseMode;
-			internal DoorInterlockStates DoorInterlockState;
+			
 			internal bool DoorClosureAttempted;
 			internal double DoorWidth;
 			internal double DoorMaxTolerance;

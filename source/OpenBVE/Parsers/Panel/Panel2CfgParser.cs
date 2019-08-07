@@ -1186,6 +1186,10 @@ namespace OpenBve {
 			double range = ftc / ((Maximum + mp) - (Minimum + mp));
 			switch(Subject.ToLowerInvariant())
 			{
+				case "pilotlamp":
+				case "passalarm":
+				case "stationadjustalarm":
+					return Subject.ToLowerInvariant();
 				case "acc":
 					return "if[acceleration < " + Maximum + ", if[acceleration > " + Minimum + ", acceleration " + " * " + range + ", 0]," + ftc + "]";
 				case "motor":

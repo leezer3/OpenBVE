@@ -141,25 +141,7 @@ namespace OpenBve
 					}
 				}
 			}
-
-			if (oldState != OpenBveApi.Runtime.DoorStates.None & newState == OpenBveApi.Runtime.DoorStates.None)
-			{
-				SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.PilotLampOn.Buffer;
-				if (buffer != null)
-				{
-					OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.PilotLampOn.Position;
-					Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train.Cars[Train.DriverCar], false);
-				}
-			}
-			else if (oldState == OpenBveApi.Runtime.DoorStates.None & newState != OpenBveApi.Runtime.DoorStates.None)
-			{
-				SoundBuffer buffer = Train.Cars[Train.DriverCar].Sounds.PilotLampOff.Buffer;
-				if (buffer != null)
-				{
-					OpenBveApi.Math.Vector3 pos = Train.Cars[Train.DriverCar].Sounds.PilotLampOff.Position;
-					Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Train.Cars[Train.DriverCar], false);
-				}
-			}
+			Train.SafetySystems.PilotLamp.Update(newState);
 			if (oldState != newState)
 			{
 				if (Train.Plugin != null)

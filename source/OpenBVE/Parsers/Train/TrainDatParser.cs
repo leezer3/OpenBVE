@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Windows.Forms;
 using OpenBve.BrakeSystems;
+using OpenBve.SafetySystems;
 using OpenBveApi.Math;
 using OpenBveApi.Interface;
 using OpenBveApi.Routes;
@@ -127,7 +128,7 @@ namespace OpenBve {
 			double CarUnexposedFrontalArea = 0.2 * CarWidth * CarHeight;
 			bool FrontCarIsMotorCar = true;
 			TrainManager.ReadhesionDeviceType ReAdhesionDevice = TrainManager.ReadhesionDeviceType.TypeA;
-			
+			PassAlarmType passAlarm = PassAlarmType.None;
 			Train.Handles.EmergencyBrake = new TrainManager.EmergencyHandle();
 			Train.Handles.HasLocoBrake = false;
 			double[] powerDelayUp = { }, powerDelayDown = { }, brakeDelayUp = { }, brakeDelayDown = { }, locoBrakeDelayUp = { }, locoBrakeDelayDown = { };
@@ -699,7 +700,7 @@ namespace OpenBve {
 										{
 											int b = (int)Math.Round(a);
 											if (b >= 0 & b <= 2) {
-												Train.Specs.PassAlarm = (TrainManager.PassAlarmType)b;
+												passAlarm = (PassAlarmType)b;
 											} else {
 												Interface.AddMessage(MessageType.Error, false, "PassAlarm is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											} break;
@@ -1036,8 +1037,8 @@ namespace OpenBve {
 				{
 					Train.Cars[i].CarBrake.brakeType = BrakeType.Auxiliary;
 				}
-				Train.Cars[i].CarBrake.airCompressor = new Compressor(5000.0);
 				Train.Cars[i].CarBrake.mainReservoir = new MainReservoir(MainReservoirMinimumPressure, MainReservoirMaximumPressure, 0.01, (trainBrakeType == BrakeSystemType.AutomaticAirBrake ? 0.25 : 0.075) / Cars);
+				Train.Cars[i].CarBrake.airCompressor = new Compressor(5000.0, Train.Cars[i].CarBrake.mainReservoir, Train.Cars[i]);
 				Train.Cars[i].CarBrake.equalizingReservoir = new EqualizingReservoir(50000.0, 250000.0, 200000.0);
 				Train.Cars[i].CarBrake.equalizingReservoir.NormalPressure = 1.005 * OperatingPressure;
 				
@@ -1069,7 +1070,9 @@ namespace OpenBve {
 				Train.Handles.SingleHandle = false;
 				Train.Handles.HasHoldBrake = false;
 			}
-
+			Train.SafetySystems.PassAlarm = new PassAlarm(passAlarm, Train.Cars[DriverCar]);
+			Train.SafetySystems.PilotLamp = new PilotLamp(Train.Cars[DriverCar]);
+			Train.SafetySystems.StationAdjust = new StationAdjustAlarm(Train);
 			switch (Game.TrainStart)
 			{
 				// starting mode

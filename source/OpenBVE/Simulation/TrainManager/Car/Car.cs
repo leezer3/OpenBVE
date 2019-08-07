@@ -1014,7 +1014,7 @@ namespace OpenBve
 							}
 							else
 							{
-								Sounds.Flange[i].Source.Stop();
+								Sounds.Flange[i].Stop();
 							}
 						}
 						else if (pitch > 0.02 & gain > 0.01)

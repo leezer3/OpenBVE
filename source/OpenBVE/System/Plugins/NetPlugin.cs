@@ -24,6 +24,12 @@ namespace OpenBve {
 				base.MyValid = true;
 				this.Source = source;
 			}
+
+			internal new void Stop()
+			{
+				base.MyValid = false;
+				Source.Stop();
+			}
 		}
 		
 		// --- members ---
@@ -143,7 +149,6 @@ namespace OpenBve {
 				for (int i = 0; i < this.SoundHandlesCount; i++) {
 					if (this.SoundHandles[i].Stopped | this.SoundHandles[i].Source.State == SoundSourceState.Stopped) {
 						this.SoundHandles[i].Stop();
-						this.SoundHandles[i].Source.Stop();
 						this.SoundHandles[i] = this.SoundHandles[this.SoundHandlesCount - 1];
 						this.SoundHandlesCount--;
 						i--;

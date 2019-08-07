@@ -16,7 +16,7 @@ namespace OpenBve
 			{
 				try
 				{
-					Parse(fileName, ref train.Cars[i], i == train.DriverCar);
+					Parse(fileName, ref train, ref train.Cars[i], i == train.DriverCar);
 				}
 				catch
 				{
@@ -27,7 +27,7 @@ namespace OpenBve
 		}
 
 		private static string currentPath;
-		internal static void Parse(string fileName, ref TrainManager.Car car, bool isDriverCar)
+		internal static void Parse(string fileName, ref TrainManager.Train Train, ref TrainManager.Car car, bool isDriverCar)
 		{
 			//3D center of the car
 			Vector3 center = Vector3.Zero;
@@ -89,19 +89,23 @@ namespace OpenBve
 										{
 											case "releasehigh":
 												//Release brakes from high pressure
-												ParseNode(cc, out car.Sounds.AirHigh, center, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.CarBrake.AirHigh, center, SoundCfgParser.smallRadius);
 												break;
 											case "release":
 												//Release brakes from normal pressure
-												ParseNode(cc, out car.Sounds.Air, center, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.CarBrake.Air, center, SoundCfgParser.smallRadius);
 												break;
 											case "releasefull":
 												//Release brakes from full pressure
-												ParseNode(cc, out car.Sounds.AirZero, center, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.CarBrake.AirZero, center, SoundCfgParser.smallRadius);
 												break;
 											case "emergency":
 												//Apply EB
-												ParseNode(cc, out car.Sounds.EmrBrake, center, SoundCfgParser.smallRadius);
+												ParseNode(cc, out Train.Handles.EmergencyBrake.ApplicationSound, center, SoundCfgParser.smallRadius);
+												break;
+											case "emergencyrelease":
+												//Release EB
+												ParseNode(cc, out Train.Handles.EmergencyBrake.ReleaseSound, center, SoundCfgParser.smallRadius);
 												break;
 											case "application":
 												//Standard application
@@ -128,24 +132,24 @@ namespace OpenBve
 										switch (cc.Name.ToLowerInvariant())
 										{
 											case "apply":
-												ParseNode(cc, out car.Sounds.BrakeHandleApply, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Brake.Increase, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "applyfast":
-												ParseNode(cc, out car.Sounds.BrakeHandleApplyFast, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Brake.IncreaseFast, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "release":
-												ParseNode(cc, out car.Sounds.BrakeHandleRelease, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Brake.Decrease, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "releasefast":
-												ParseNode(cc, out car.Sounds.BrakeHandleReleaseFast, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Brake.DecreaseFast, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "min":
 											case "minimum":
-												ParseNode(cc, out car.Sounds.BrakeHandleMin, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Brake.Min, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "max":
 											case "maximum":
-												ParseNode(cc, out car.Sounds.BrakeHandleMax, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Brake.Max, panel, SoundCfgParser.tinyRadius);
 												break;
 											default:
 												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
@@ -184,7 +188,7 @@ namespace OpenBve
 									{
 										break;
 									}
-									ParseNode(c, out car.Sounds.Adjust, panel, SoundCfgParser.tinyRadius);
+									ParseNode(c, out Train.SafetySystems.StationAdjust.AdjustAlarm, panel, SoundCfgParser.tinyRadius);
 									break;
 								case "compressor":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
@@ -203,17 +207,17 @@ namespace OpenBve
 											case "attack":
 											case "start":
 												//Compressor starting sound
-												ParseNode(cc, out car.Sounds.CpStart, center, SoundCfgParser.mediumRadius);
+												ParseNode(cc, out car.CarBrake.airCompressor.StartSound, center, SoundCfgParser.mediumRadius);
 												break;
 											case "loop":
 												//Compressor loop sound
-												ParseNode(cc, out car.Sounds.CpLoop, center, SoundCfgParser.mediumRadius);
+												ParseNode(cc, out car.CarBrake.airCompressor.LoopSound, center, SoundCfgParser.mediumRadius);
 												break;
 											case "release":
 											case "stop":
 											case "end":
 												//Compressor end sound
-												ParseNode(cc, out car.Sounds.CpEnd, center, SoundCfgParser.mediumRadius);
+												ParseNode(cc, out car.CarBrake.airCompressor.EndSound, center, SoundCfgParser.mediumRadius);
 												break;
 											default:
 												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
@@ -314,27 +318,27 @@ namespace OpenBve
 										{
 											case "up":
 											case "increase":
-												ParseNode(cc, out car.Sounds.MasterControllerUp, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Power.Increase, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "upfast":
 											case "increasefast":
-												ParseNode(cc, out car.Sounds.MasterControllerUpFast, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Power.IncreaseFast, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "down":
 											case "decrease":
-												ParseNode(cc, out car.Sounds.MasterControllerDown, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Power.Decrease, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "downfast":
 											case "decreasefast":
-												ParseNode(cc, out car.Sounds.MasterControllerDownFast, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Power.DecreaseFast, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "min":
 											case "minimum":
-												ParseNode(cc, out car.Sounds.MasterControllerMin, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Power.Min, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "max":
 											case "maximum":
-												ParseNode(cc, out car.Sounds.MasterControllerMax, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Power.Max, panel, SoundCfgParser.tinyRadius);
 												break;
 											default:
 												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
@@ -364,10 +368,10 @@ namespace OpenBve
 										switch (cc.Name.ToLowerInvariant())
 										{
 											case "on":
-												ParseNode(cc, out car.Sounds.PilotLampOn, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.SafetySystems.PilotLamp.OnSound, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "off":
-												ParseNode(cc, out car.Sounds.PilotLampOff, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.SafetySystems.PilotLamp.OffSound, panel, SoundCfgParser.tinyRadius);
 												break;
 											default:
 												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
@@ -409,10 +413,10 @@ namespace OpenBve
 										switch (cc.Name.ToLowerInvariant())
 										{
 											case "on":
-												ParseNode(cc, out car.Sounds.ReverserOn, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Reverser.EngageSound, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "off":
-												ParseNode(cc, out car.Sounds.ReverserOff, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Reverser.ReleaseSound, panel, SoundCfgParser.tinyRadius);
 												break;
 											default:
 												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
@@ -430,7 +434,7 @@ namespace OpenBve
 									break;
 								case "shoe":
 								case "rub":
-									ParseNode(c, out car.Sounds.Rub, center, SoundCfgParser.mediumRadius);
+									ParseNode(c, out car.CarBrake.Rub, center, SoundCfgParser.mediumRadius);
 									break;
 								case "suspension":
 								case "spring":

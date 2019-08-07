@@ -1,4 +1,6 @@
-﻿namespace OpenBve
+﻿using SoundManager;
+
+namespace OpenBve
 {
 	public static partial class TrainManager
 	{
@@ -9,8 +11,19 @@
 			internal bool Actual;
 			internal bool Driver;
 			internal double ApplicationTime;
+			/// <summary>The sound played when the emergency brake is applied</summary>
+			internal CarSound ApplicationSound;
+			/// <summary>The sound played when the emergency brake is released</summary>
+			/*
+			 * NOTE:	This sound is deliberately not initialised by default.
+			 *			If uninitialised, the sim will fall back to the previous behaviour
+			 *			of using the Brake release sound when EB is released.
+			 */
+			internal CarSound ReleaseSound;
 			/// <summary>The behaviour of the other handles when the EB handle is activated</summary>
 			internal EbHandleBehaviour OtherHandlesBehaviour = EbHandleBehaviour.NoAction;
+
+			
 
 			internal void Update()
 			{

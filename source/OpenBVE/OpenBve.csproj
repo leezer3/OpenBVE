@@ -233,7 +233,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Simulation\TrainManager\Brake\AirBrake\AirSound.cs" />
     <Compile Include="Simulation\TrainManager\Brake\AirBrake\AutomaticAirBrake.cs" />
     <Compile Include="Simulation\TrainManager\Brake\CarBrake.BrakeType.cs" />
     <Compile Include="Simulation\TrainManager\Brake\AirBrake\Components\AirCompressor.cs" />
@@ -249,6 +248,7 @@
     <Compile Include="Simulation\TrainManager\Car\Car.Brightness.cs" />
     <Compile Include="Simulation\TrainManager\Car\ConstantSpeedDevice.cs" />
     <Compile Include="Simulation\TrainManager\Car\HoldBrake.cs" />
+    <Compile Include="Simulation\TrainManager\Train\SafetySystems\PilotLamp.cs" />
     <Compile Include="Simulation\TrainManager\Car\ReadhesionDevice.cs" />
     <Compile Include="Simulation\TrainManager\Car\ReadhesionDevice.Types.cs" />
     <Compile Include="Simulation\TrainManager\Doors.DoorMode.cs" />
@@ -281,8 +281,10 @@
     <Compile Include="Simulation\TrainManager\Train\Horn.cs" />
     <Compile Include="Simulation\TrainManager\Train\Handles\Handles.LocoBrake.Types.cs" />
     <Compile Include="Simulation\TrainManager\Train\Plugin.cs" />
+    <Compile Include="Simulation\TrainManager\Train\SafetySystems.cs" />
+    <Compile Include="Simulation\TrainManager\Train\SafetySystems\StationAdjustAlarm.cs" />
     <Compile Include="Simulation\TrainManager\Train\TrackFollowingObject.cs" />
-    <Compile Include="Simulation\TrainManager\Train\PassAlarm.cs" />
+    <Compile Include="Simulation\TrainManager\Train\SafetySystems\PassAlarm.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Handles.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Specs.cs" />

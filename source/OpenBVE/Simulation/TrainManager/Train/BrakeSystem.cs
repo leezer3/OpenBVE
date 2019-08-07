@@ -62,51 +62,7 @@ namespace OpenBve
 				// air compressor
 				if (Cars[CarIndex].CarBrake.brakeType == BrakeType.Main)
 				{
-					if (Cars[CarIndex].CarBrake.airCompressor.Enabled)
-					{
-						if (Cars[CarIndex].CarBrake.mainReservoir.CurrentPressure > Cars[CarIndex].CarBrake.mainReservoir.MaximumPressure)
-						{
-							Cars[CarIndex].CarBrake.airCompressor.Enabled = false;
-							Cars[CarIndex].Sounds.CpLoopStarted = false;
-							SoundBuffer buffer = Cars[CarIndex].Sounds.CpEnd.Buffer;
-							if (buffer != null)
-							{
-								Program.Sounds.PlaySound(buffer, 1.0, 1.0, Cars[CarIndex].Sounds.CpEnd.Position, Cars[CarIndex], false);
-							}
-
-							buffer = Cars[CarIndex].Sounds.CpLoop.Buffer;
-							if (buffer != null)
-							{
-								Program.Sounds.StopSound(Cars[CarIndex].Sounds.CpLoop);
-							}
-						}
-						else
-						{
-							Cars[CarIndex].CarBrake.mainReservoir.CurrentPressure += Cars[CarIndex].CarBrake.airCompressor.Rate * TimeElapsed;
-							if (!Cars[CarIndex].Sounds.CpLoopStarted && Game.SecondsSinceMidnight > Cars[CarIndex].Sounds.CpStartTimeStarted + 5.0)
-							{
-								Cars[CarIndex].Sounds.CpLoopStarted = true;
-								SoundBuffer buffer = Cars[CarIndex].Sounds.CpLoop.Buffer;
-								if (buffer != null)
-								{
-									Cars[CarIndex].Sounds.CpLoop.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, Cars[CarIndex].Sounds.CpLoop.Position, Cars[CarIndex], true);
-								}
-							}
-						}
-					}
-					else
-					{
-						if (Cars[CarIndex].CarBrake.mainReservoir.CurrentPressure < Cars[CarIndex].CarBrake.mainReservoir.MinimumPressure)
-						{
-							Cars[CarIndex].CarBrake.airCompressor.Enabled = true;
-							Cars[CarIndex].Sounds.CpStartTimeStarted = Game.SecondsSinceMidnight;
-							SoundBuffer buffer = Cars[CarIndex].Sounds.CpStart.Buffer;
-							if (buffer != null)
-							{
-								Program.Sounds.PlaySound(buffer, 1.0, 1.0, Cars[CarIndex].Sounds.CpStart.Position, Cars[CarIndex], false);
-							}
-						}
-					}
+					Cars[CarIndex].CarBrake.airCompressor.Update(TimeElapsed);
 				}
 
 				if (CarIndex == DriverCar && Handles.HasLocoBrake)
@@ -215,35 +171,12 @@ namespace OpenBve
 					Cars[CarIndex].CarBrake.Update(TimeElapsed, Cars[DriverCar].CurrentSpeed, Handles.Brake, out DecelerationDueToBrake);
 				}
 
-				switch (Cars[CarIndex].CarBrake.airSound)
+				if(Cars[CarIndex].CarBrake.airSound != null)
 				{
-					case AirSound.AirZero:
+					SoundBuffer buffer = Cars[CarIndex].CarBrake.airSound.Buffer;
+					if (buffer != null)
 					{
-						SoundBuffer buffer = Cars[CarIndex].Sounds.AirZero.Buffer;
-						if (buffer != null)
-						{
-							Program.Sounds.PlaySound(buffer, 1.0, 1.0, Cars[CarIndex].Sounds.AirZero.Position, Cars[CarIndex], false);
-						}
-
-						break;
-					}
-					case AirSound.Air:
-					{
-						SoundBuffer buffer = Cars[CarIndex].Sounds.Air.Buffer;
-						if (buffer != null)
-						{
-							Program.Sounds.PlaySound(buffer, 1.0, 1.0, Cars[CarIndex].Sounds.Air.Position, Cars[CarIndex], false);
-						}
-						break;
-					}
-					case AirSound.AirHigh:
-					{
-						SoundBuffer buffer = Cars[CarIndex].Sounds.AirHigh.Buffer;
-						if (buffer != null)
-						{
-							Program.Sounds.PlaySound(buffer, 1.0, 1.0, Cars[CarIndex].Sounds.AirHigh.Position, Cars[CarIndex], false);
-						}
-						break;
+						Program.Sounds.PlaySound(buffer, 1.0, 1.0, Cars[CarIndex].CarBrake.airSound.Position, Cars[CarIndex], false);
 					}
 				}
 
@@ -272,7 +205,7 @@ namespace OpenBve
 				Cars[CarIndex].Specs.HoldBrake.Update(ref DecelerationDueToMotor, Handles.HoldBrake.Actual);
 				{
 					// rub sound
-					SoundBuffer buffer = Cars[CarIndex].Sounds.Rub.Buffer;
+					SoundBuffer buffer = Cars[CarIndex].CarBrake.Rub.Buffer;
 					if (buffer != null)
 					{
 						double spd = Math.Abs(Cars[CarIndex].CurrentSpeed);
@@ -290,21 +223,21 @@ namespace OpenBve
 							gain *= 1.0 / (fadefactor * t * t + 1.0);
 						}
 
-						if (Program.Sounds.IsPlaying(Cars[CarIndex].Sounds.Rub.Source))
+						if (Program.Sounds.IsPlaying(Cars[CarIndex].CarBrake.Rub.Source))
 						{
 							if (pitch > 0.01 & gain > 0.001)
 							{
-								Cars[CarIndex].Sounds.Rub.Source.Pitch = pitch;
-								Cars[CarIndex].Sounds.Rub.Source.Volume = gain;
+								Cars[CarIndex].CarBrake.Rub.Source.Pitch = pitch;
+								Cars[CarIndex].CarBrake.Rub.Source.Volume = gain;
 							}
 							else
 							{
-								Program.Sounds.StopSound(Cars[CarIndex].Sounds.Rub);
+								Program.Sounds.StopSound(Cars[CarIndex].CarBrake.Rub);
 							}
 						}
 						else if (pitch > 0.02 & gain > 0.01)
 						{
-							Cars[CarIndex].Sounds.Rub.Source = Program.Sounds.PlaySound(buffer, pitch, gain, Cars[CarIndex].Sounds.Rub.Position, Cars[CarIndex], true);
+							Cars[CarIndex].CarBrake.Rub.Source = Program.Sounds.PlaySound(buffer, pitch, gain, Cars[CarIndex].CarBrake.Rub.Position, Cars[CarIndex], true);
 						}
 					}
 				}

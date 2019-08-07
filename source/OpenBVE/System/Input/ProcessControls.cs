@@ -1086,7 +1086,7 @@ namespace OpenBve
 												}
 											}
 										}
-										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.PowerHandleFast = true;
+										TrainManager.PlayerTrain.Handles.Power.ContinuousMovement = true;
 										break;
 									case Translations.Command.SingleNeutral:
 										// single neutral
@@ -1096,7 +1096,7 @@ namespace OpenBve
 											if (p > 0)
 											{
 												TrainManager.PlayerTrain.ApplyNotch(-1, true, 0, true);
-												TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.PowerHandleFast = true;
+												TrainManager.PlayerTrain.Handles.Power.ContinuousMovement = true;
 											}
 											else
 											{
@@ -1118,7 +1118,7 @@ namespace OpenBve
 												{
 													TrainManager.PlayerTrain.ApplyNotch(0, true, -1, true);
 												}
-												TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.BrakeHandleFast = true;
+												TrainManager.PlayerTrain.Handles.Brake.ContinuousMovement = true;
 											}
 										}
 										break;
@@ -1147,7 +1147,7 @@ namespace OpenBve
 											}
 										}
 										//Set the brake handle fast movement bool at the end of the call in order to not catch it on the first movement
-										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.BrakeHandleFast = true;
+										TrainManager.PlayerTrain.Handles.Brake.ContinuousMovement = true;
 										break;
 									case Translations.Command.SingleEmergency:
 										// single emergency
@@ -1166,7 +1166,7 @@ namespace OpenBve
 												TrainManager.PlayerTrain.ApplyNotch(1, true, 0, true);
 											}
 										}
-										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.PowerHandleFast = true;
+										TrainManager.PlayerTrain.Handles.Power.ContinuousMovement = true;
 										break;
 									case Translations.Command.PowerDecrease:
 										// power decrease
@@ -1178,7 +1178,7 @@ namespace OpenBve
 												TrainManager.PlayerTrain.ApplyNotch(-1, true, 0, true);
 											}
 										}
-										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.PowerHandleFast = true;
+										TrainManager.PlayerTrain.Handles.Power.ContinuousMovement = true;
 										break;
 									case Translations.Command.BrakeIncrease:
 										// brake increase
@@ -1224,7 +1224,7 @@ namespace OpenBve
 												}
 											}
 										}
-										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.BrakeHandleFast = true;
+										TrainManager.PlayerTrain.Handles.Brake.ContinuousMovement = true;
 										break;
 									case Translations.Command.BrakeDecrease:
 										// brake decrease
@@ -1281,7 +1281,7 @@ namespace OpenBve
 												}
 											}
 										}
-										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.BrakeHandleFast = true;
+										TrainManager.PlayerTrain.Handles.Brake.ContinuousMovement = true;
 										break;
 									case Translations.Command.LocoBrakeIncrease:
 										if (TrainManager.PlayerTrain.Handles.LocoBrake is TrainManager.LocoAirBrakeHandle)
@@ -1423,8 +1423,8 @@ namespace OpenBve
 											 TrainManager.TrainDoorState.Opened) == 0)
 										{
 											if (TrainManager.PlayerTrain.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic
-												& (TrainManager.PlayerTrain.Specs.DoorInterlockState == DoorInterlockStates.Unlocked
-												   | TrainManager.PlayerTrain.Specs.DoorInterlockState == DoorInterlockStates.Left))
+												& (TrainManager.PlayerTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked
+												   | TrainManager.PlayerTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Left))
 											{
 												TrainManager.OpenTrainDoors(TrainManager.PlayerTrain, true, false);
 											}
@@ -1432,8 +1432,8 @@ namespace OpenBve
 										else
 										{
 											if (TrainManager.PlayerTrain.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic
-												& (TrainManager.PlayerTrain.Specs.DoorInterlockState == DoorInterlockStates.Unlocked
-												   | TrainManager.PlayerTrain.Specs.DoorInterlockState == DoorInterlockStates.Left))
+												& (TrainManager.PlayerTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked
+												   | TrainManager.PlayerTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Left))
 											{
 												TrainManager.CloseTrainDoors(TrainManager.PlayerTrain, true, false);
 											}
@@ -1455,8 +1455,8 @@ namespace OpenBve
 											 TrainManager.TrainDoorState.Opened) == 0)
 										{
 											if (TrainManager.PlayerTrain.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic
-												& (TrainManager.PlayerTrain.Specs.DoorInterlockState == DoorInterlockStates.Unlocked
-												   | TrainManager.PlayerTrain.Specs.DoorInterlockState == DoorInterlockStates.Right))
+												& (TrainManager.PlayerTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked
+												   | TrainManager.PlayerTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Right))
 											{
 												TrainManager.OpenTrainDoors(TrainManager.PlayerTrain, false, true);
 											}
@@ -1464,8 +1464,8 @@ namespace OpenBve
 										else
 										{
 											if (TrainManager.PlayerTrain.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic
-												& (TrainManager.PlayerTrain.Specs.DoorInterlockState == DoorInterlockStates.Unlocked
-												   | TrainManager.PlayerTrain.Specs.DoorInterlockState == DoorInterlockStates.Right))
+												& (TrainManager.PlayerTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked
+												   | TrainManager.PlayerTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Right))
 											{
 												TrainManager.CloseTrainDoors(TrainManager.PlayerTrain, false, true);
 											}
@@ -1835,16 +1835,16 @@ namespace OpenBve
 									case Translations.Command.SingleBrake:
 									case Translations.Command.BrakeIncrease:
 									case Translations.Command.BrakeDecrease:
-										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.BrakeHandleFast = false;
+										TrainManager.PlayerTrain.Handles.Brake.ContinuousMovement = false;
 										break;
 									case Translations.Command.SinglePower:
 									case Translations.Command.PowerIncrease:
 									case Translations.Command.PowerDecrease:
-										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.PowerHandleFast = false;
+										TrainManager.PlayerTrain.Handles.Power.ContinuousMovement = false;
 										break;
 									case Translations.Command.SingleNeutral:
-										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.BrakeHandleFast = false;
-										TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Sounds.PowerHandleFast = false;
+										TrainManager.PlayerTrain.Handles.Brake.ContinuousMovement = false;
+										TrainManager.PlayerTrain.Handles.Power.ContinuousMovement = false;
 										break;
 
 									/*

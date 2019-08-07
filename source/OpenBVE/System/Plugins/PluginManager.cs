@@ -139,12 +139,12 @@ namespace OpenBve {
 				double totalTime = Game.SecondsSinceMidnight;
 				double elapsedTime = Game.SecondsSinceMidnight - LastTime;
 
-				ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, this.Train.Specs.DoorInterlockState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, Camera.CurrentMode, Translations.CurrentLanguageCode, this.Train.Destination);
+				ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, this.Train.SafetySystems.DoorInterlockState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, Camera.CurrentMode, Translations.CurrentLanguageCode, this.Train.Destination);
 				ElapseData inputDevicePluginData = data;
 				LastTime = Game.SecondsSinceMidnight;
 				Elapse(data);
 				this.PluginMessage = data.DebugMessage;
-				this.Train.Specs.DoorInterlockState = data.DoorInterlockState;
+				this.Train.SafetySystems.DoorInterlockState = data.DoorInterlockState;
 				DisableTimeAcceleration = data.DisableTimeAcceleration;
 				for (int i = 0; i < InputDevicePlugin.AvailablePluginInfos.Count; i++) {
 					if (InputDevicePlugin.AvailablePluginInfos[i].Status == InputDevicePlugin.PluginInfo.PluginStatus.Enable) {
