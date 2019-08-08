@@ -24,6 +24,17 @@ namespace OpenBve.RouteManager
 			this.SectionIndex = sectionIndex;
 			this.ClipToFirstRedSection = clipToFirstRedSection;
 		}
+
+		public TransponderEvent(double trackPositionDelta, TransponderTypes type, int data, int sectionIndex, bool clipToFirstRedSection)
+		{
+			this.TrackPositionDelta = trackPositionDelta;
+			this.DontTriggerAnymore = false;
+			this.Type = (int)type;
+			this.Data = data;
+			this.SectionIndex = sectionIndex;
+			this.ClipToFirstRedSection = clipToFirstRedSection;
+		}
+
 		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
 		{
 			if (TriggerType == EventTriggerType.TrainFront)

@@ -3096,10 +3096,10 @@ namespace OpenBve {
 											Array.Resize<Transponder>(ref Data.Blocks[BlockIndex].Transponders, n + 1);
 											Data.Blocks[BlockIndex].Transponders[n].TrackPosition = Data.TrackPosition;
 											if (type == 0) {
-												Data.Blocks[BlockIndex].Transponders[n].Type = TrackManager.SpecialTransponderTypes.InternalAtsPTemporarySpeedLimit;
+												Data.Blocks[BlockIndex].Transponders[n].Type = (int)TransponderTypes.InternalAtsPTemporarySpeedLimit;
 												Data.Blocks[BlockIndex].Transponders[n].Data = speed == 0.0 ? int.MaxValue : (int)Math.Round(speed * Data.UnitOfSpeed * 3.6);
 											} else {
-												Data.Blocks[BlockIndex].Transponders[n].Type = TrackManager.SpecialTransponderTypes.AtsPPermanentSpeedLimit;
+												Data.Blocks[BlockIndex].Transponders[n].Type = (int)TransponderTypes.AtsPPermanentSpeedLimit;
 												Data.Blocks[BlockIndex].Transponders[n].Data = speed == 0.0 ? int.MaxValue : (int)Math.Round(speed * Data.UnitOfSpeed * 3.6);
 											}
 											Data.Blocks[BlockIndex].Transponders[n].SectionIndex = -1;
@@ -3117,7 +3117,7 @@ namespace OpenBve {
 											int n = Data.Blocks[BlockIndex].Transponders.Length;
 											Array.Resize<Transponder>(ref Data.Blocks[BlockIndex].Transponders, n + 1);
 											Data.Blocks[BlockIndex].Transponders[n].TrackPosition = Data.TrackPosition;
-											Data.Blocks[BlockIndex].Transponders[n].Type = TrackManager.SpecialTransponderTypes.AtsPPermanentSpeedLimit;
+											Data.Blocks[BlockIndex].Transponders[n].Type = (int)TransponderTypes.AtsPPermanentSpeedLimit;
 											Data.Blocks[BlockIndex].Transponders[n].Data = speed == 0.0 ? int.MaxValue : (int)Math.Round(speed * Data.UnitOfSpeed * 3.6);
 											Data.Blocks[BlockIndex].Transponders[n].SectionIndex = -1;
 											Data.Blocks[BlockIndex].Transponders[n].BeaconStructureIndex = -1;
