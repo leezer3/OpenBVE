@@ -471,7 +471,7 @@ namespace OpenBve
 					int m = TrackManager.Tracks[0].Elements[n].Events.Length;
 					Array.Resize(ref TrackManager.Tracks[0].Elements[n].Events, m + 1);
 					double d = Data.Blocks[i].Limits[j].TrackPosition - StartingDistance;
-					TrackManager.Tracks[0].Elements[n].Events[m] = new TrackManager.LimitChangeEvent(d, CurrentSpeedLimit, Data.Blocks[i].Limits[j].Speed);
+					TrackManager.Tracks[0].Elements[n].Events[m] = new LimitChangeEvent(d, CurrentSpeedLimit, Data.Blocks[i].Limits[j].Speed);
 					CurrentSpeedLimit = Data.Blocks[i].Limits[j].Speed;
 				}
 				// marker
@@ -1750,9 +1750,9 @@ namespace OpenBve
 									atc = false;
 								}
 							}
-							else if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.LimitChangeEvent)
+							else if (TrackManager.Tracks[0].Elements[i].Events[j] is LimitChangeEvent)
 							{
-								TrackManager.LimitChangeEvent limit = (TrackManager.LimitChangeEvent)TrackManager.Tracks[0].Elements[i].Events[j];
+								LimitChangeEvent limit = (LimitChangeEvent)TrackManager.Tracks[0].Elements[i].Events[j];
 								int speed = (int)Math.Round(Math.Min(4095.0, 3.6 * limit.NextSpeedLimit));
 								int distance = Math.Min(1048575, (int)Math.Round(TrackManager.Tracks[0].Elements[i].StartingTrackPosition + limit.TrackPositionDelta));
 								unchecked

@@ -411,10 +411,10 @@ namespace OpenBve
 							if (tp + lookahead <= stp) break;
 							for (int j = 0; j < TrackManager.Tracks[currentTrack].Elements[i].Events.Length; j++)
 							{
-								if (TrackManager.Tracks[currentTrack].Elements[i].Events[j] is TrackManager.LimitChangeEvent)
+								if (TrackManager.Tracks[currentTrack].Elements[i].Events[j] is LimitChangeEvent)
 								{
 									// speed limit
-									TrackManager.LimitChangeEvent e = (TrackManager.LimitChangeEvent)TrackManager.Tracks[currentTrack].Elements[i].Events[j];
+									LimitChangeEvent e = (LimitChangeEvent)TrackManager.Tracks[currentTrack].Elements[i].Events[j];
 									if (e.NextSpeedLimit < spd)
 									{
 										double dist = stp + e.TrackPositionDelta - tp;

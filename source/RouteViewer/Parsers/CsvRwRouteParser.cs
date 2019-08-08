@@ -5697,7 +5697,7 @@ namespace OpenBve {
 					int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
 					Array.Resize(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
 					double d = Data.Blocks[i].Limit[j].TrackPosition - StartingDistance;
-					TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.LimitChangeEvent(d, CurrentSpeedLimit, Data.Blocks[i].Limit[j].Speed);
+					TrackManager.CurrentTrack.Elements[n].Events[m] = new LimitChangeEvent(d, CurrentSpeedLimit, Data.Blocks[i].Limit[j].Speed);
 					CurrentSpeedLimit = Data.Blocks[i].Limit[j].Speed;
 				}
 				// marker

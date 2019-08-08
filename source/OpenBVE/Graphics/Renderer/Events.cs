@@ -110,7 +110,7 @@ namespace OpenBve
 							TrackManager.StationEndEvent f = (TrackManager.StationEndEvent)e;
 							sta[f.StationIndex] = true;
 						}
-						else if (e is TrackManager.LimitChangeEvent)
+						else if (e is LimitChangeEvent)
 						{
 							s = 0.2;
 							dy = 1.1;

@@ -200,7 +200,7 @@ namespace OpenBve {
 
 						if (n >= 1)
 						{
-							TrackManager.LimitChangeEvent lce = TrackManager.Tracks[0].Elements[i].Events[j] as TrackManager.LimitChangeEvent;
+							LimitChangeEvent lce = TrackManager.Tracks[0].Elements[i].Events[j] as LimitChangeEvent;
 							if (lce != null)
 							{
 								if (lce.NextSpeedLimit != double.PositiveInfinity & lce.NextSpeedLimit > Limit) Limit = lce.NextSpeedLimit;

@@ -56,6 +56,8 @@ namespace OpenBve
 			/// <summary>The max width used in px for the reverser HUD string</summary>
 			internal int MaxReverserWidth = 48;
 
+			private double previousRouteLimit = 0.0;
+
 			internal Train(TrainState state)
 			{
 				State = state;
@@ -223,12 +225,21 @@ namespace OpenBve
 				{
 					// available train
 					UpdatePhysicsAndControls(TimeElapsed);
+					if (CurrentSpeed > CurrentRouteLimit)
+					{
+						if (previousRouteLimit != CurrentRouteLimit || Interface.CurrentOptions.GameMode == GameMode.Arcade)
+						{
+							/*
+							 * HACK: If the limit has changed, or we are in arcade mode, notify the player
+							 *       This conforms to the original behaviour, but doesn't need to raise the message from the event.
+							 */
+							 Game.AddMessage(Translations.GetInterfaceString("message_route_overspeed"), MessageDependency.RouteLimit, GameMode.Normal, MessageColor.Orange, Double.PositiveInfinity, null);
+						}
+						
+					}
+					previousRouteLimit = CurrentRouteLimit;
 					if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
 					{
-						if (CurrentSpeed > CurrentRouteLimit)
-						{
-							Game.AddMessage(Translations.GetInterfaceString("message_route_overspeed"), MessageDependency.RouteLimit, GameMode.Arcade, MessageColor.Orange, Double.PositiveInfinity, null);
-						}
 						if (CurrentSectionLimit == 0.0)
 						{
 							Game.AddMessage(Translations.GetInterfaceString("message_signal_stop"), MessageDependency.PassedRedSignal, GameMode.Normal, MessageColor.Red, double.PositiveInfinity, null);

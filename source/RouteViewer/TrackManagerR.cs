@@ -105,18 +105,7 @@ namespace OpenBve {
             }
             public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) { }
         }
-        // limit change
-        internal class LimitChangeEvent : GeneralEvent<TrainManager.Train, AbstractCar> {
-            internal double PreviousSpeedLimit;
-            internal double NextSpeedLimit;
-            internal LimitChangeEvent(double TrackPositionDelta, double PreviousSpeedLimit, double NextSpeedLimit) {
-                this.TrackPositionDelta = TrackPositionDelta;
-                this.DontTriggerAnymore = false;
-                this.PreviousSpeedLimit = PreviousSpeedLimit;
-                this.NextSpeedLimit = NextSpeedLimit;
-            }
-            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) { }
-        }
+        
         // sound
         internal static bool SuppressSoundEvents = false;
         internal class SoundEvent : GeneralEvent<TrainManager.Train, AbstractCar> {
