@@ -74,38 +74,7 @@ namespace OpenBve {
             }
             public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) { }
         }
-        // transponder
-		internal enum TransponderType {
-			None = -1,
-			SLong = 0,
-			SN = 1,
-			AccidentalDeparture = 2,
-			AtsPPatternOrigin = 3,
-			AtsPImmediateStop = 4,
-			AtsPTemporarySpeedRestriction = -2,
-			AtsPPermanentSpeedRestriction = -3
-		}
-        internal enum TransponderSpecialSection {
-            NextRedSection = -2,
-        }
-        internal class TransponderEvent : GeneralEvent<TrainManager.Train, AbstractCar> {
-            internal TransponderType Type;
-            internal bool SwitchSubsystem;
-            internal int OptionalInteger;
-            internal double OptionalFloat;
-            internal int SectionIndex;
-            internal TransponderEvent(double TrackPositionDelta, TransponderType Type, bool SwitchSubsystem, int OptionalInteger, double OptionalFloat, int SectionIndex) {
-                this.TrackPositionDelta = TrackPositionDelta;
-                this.DontTriggerAnymore = false;
-                this.Type = Type;
-                this.SwitchSubsystem = SwitchSubsystem;
-                this.OptionalInteger = OptionalInteger;
-                this.OptionalFloat = OptionalFloat;
-                this.SectionIndex = SectionIndex;
-            }
-            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) { }
-        }
-        
+    
         // sound
         internal static bool SuppressSoundEvents = false;
         internal class SoundEvent : GeneralEvent<TrainManager.Train, AbstractCar> {

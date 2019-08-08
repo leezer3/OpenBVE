@@ -124,6 +124,14 @@ namespace OpenBve
 				}
 			}
 
+			public override void UpdateBeacon(int transponderType, int sectionIndex, int optional)
+			{
+				if (Plugin != null)
+				{
+					Plugin.UpdateBeacon(transponderType, sectionIndex, optional);
+				}
+			}
+
 			/// <summary>Call this method to update the train</summary>
 			/// <param name="TimeElapsed">The elapsed time this frame</param>
 			internal void Update(double TimeElapsed)

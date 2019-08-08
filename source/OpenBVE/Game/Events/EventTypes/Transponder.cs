@@ -21,66 +21,6 @@ namespace OpenBve
 			internal const int InternalAtsPTemporarySpeedLimit = -16777201;
 		}
 
-		/// <summary>Called when a train passes over a transponder attached to the signalling system</summary>
-		internal class TransponderEvent : GeneralEvent<TrainManager.Train, AbstractCar>
-		{
-			/// <summary>The type of transponder</summary>
-			internal readonly int Type;
-			/// <summary>An optional data parameter passed to plugins recieving this event</summary>
-			internal readonly int Data;
-			/// <summary>The index of the section this is attached to</summary>
-			private readonly int SectionIndex;
-			/// <summary>Whether the section index this transponder returns is that of the first red section ahead of the train</summary>
-			private readonly bool ClipToFirstRedSection;
-
-			internal TransponderEvent(double trackPositionDelta, int type, int data, int sectionIndex, bool clipToFirstRedSection)
-			{
-				this.TrackPositionDelta = trackPositionDelta;
-				this.DontTriggerAnymore = false;
-				this.Type = type;
-				this.Data = data;
-				this.SectionIndex = sectionIndex;
-				this.ClipToFirstRedSection = clipToFirstRedSection;
-			}
-			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car)
-			{
-				if (TriggerType == EventTriggerType.TrainFront)
-				{
-					int s = this.SectionIndex;
-					if (this.ClipToFirstRedSection)
-					{
-						if (s >= 0)
-						{
-							while (true)
-							{
-								if (CurrentRoute.Sections[s].Exists(Train))
-								{
-									s = this.SectionIndex;
-									break;
-								}
-								int a = CurrentRoute.Sections[s].CurrentAspect;
-								if (a >= 0)
-								{
-									if (CurrentRoute.Sections[s].Aspects[a].Number == 0)
-									{
-										break;
-									}
-								}
-								s = CurrentRoute.Sections[s].PreviousSection;
-								if (s < 0)
-								{
-									s = this.SectionIndex;
-									break;
-								}
-							}
-						}
-					}
-					if (Train.Plugin != null)
-					{
-						Train.Plugin.UpdateBeacon((int)this.Type, s, this.Data);
-					}
-				}
-			}
-		}
+		
 	}
 }

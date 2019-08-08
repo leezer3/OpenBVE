@@ -1395,7 +1395,7 @@ namespace OpenBve
 											int o = TrackManager.Tracks[0].Elements[n - i + g].Events.Length;
 											Array.Resize(ref TrackManager.Tracks[0].Elements[n - i + g].Events, o + 1);
 											double dt = Data.Blocks[g].Transponders[l].TrackPosition - StartingDistance + (double)(i - g) * Data.BlockInterval;
-											TrackManager.Tracks[0].Elements[n - i + g].Events[o] = new TrackManager.TransponderEvent(dt, Data.Blocks[g].Transponders[l].Type, Data.Blocks[g].Transponders[l].Data, m, Data.Blocks[g].Transponders[l].ClipToFirstRedSection);
+											TrackManager.Tracks[0].Elements[n - i + g].Events[o] = new TransponderEvent(dt, Data.Blocks[g].Transponders[l].Type, Data.Blocks[g].Transponders[l].Data, m, Data.Blocks[g].Transponders[l].ClipToFirstRedSection);
 											Data.Blocks[g].Transponders[l].Type = -1;
 										}
 									}
@@ -1447,7 +1447,7 @@ namespace OpenBve
 										int m = TrackManager.Tracks[0].Elements[n].Events.Length;
 										Array.Resize(ref TrackManager.Tracks[0].Elements[n].Events, m + 1);
 										double dt = Data.Blocks[i].Transponders[l].TrackPosition - StartingDistance;
-										TrackManager.Tracks[0].Elements[n].Events[m] = new TrackManager.TransponderEvent(dt, Data.Blocks[i].Transponders[l].Type, Data.Blocks[i].Transponders[l].Data, t, Data.Blocks[i].Transponders[l].ClipToFirstRedSection);
+										TrackManager.Tracks[0].Elements[n].Events[m] = new TransponderEvent(dt, Data.Blocks[i].Transponders[l].Type, Data.Blocks[i].Transponders[l].Data, t, Data.Blocks[i].Transponders[l].ClipToFirstRedSection);
 										Data.Blocks[i].Transponders[l].Type = -1;
 									}
 								}
@@ -1576,7 +1576,7 @@ namespace OpenBve
 							double d = Data.Blocks[i].Transponders[j].TrackPosition - TrackManager.Tracks[0].Elements[n].StartingTrackPosition;
 							int s = Data.Blocks[i].Transponders[j].SectionIndex;
 							if (s >= 0) s = -1;
-							TrackManager.Tracks[0].Elements[n].Events[m] = new TrackManager.TransponderEvent(d, Data.Blocks[i].Transponders[j].Type, Data.Blocks[i].Transponders[j].Data, s, Data.Blocks[i].Transponders[j].ClipToFirstRedSection);
+							TrackManager.Tracks[0].Elements[n].Events[m] = new TransponderEvent(d, Data.Blocks[i].Transponders[j].Type, Data.Blocks[i].Transponders[j].Data, s, Data.Blocks[i].Transponders[j].ClipToFirstRedSection);
 							Data.Blocks[i].Transponders[j].Type = -1;
 						}
 					}
@@ -1701,7 +1701,7 @@ namespace OpenBve
 			// insert compatibility beacons
 			if (!PreviewOnly)
 			{
-				List<TrackManager.TransponderEvent> transponders = new List<TrackManager.TransponderEvent>();
+				List<TransponderEvent> transponders = new List<TransponderEvent>();
 				bool atc = false;
 				for (int i = 0; i < TrackManager.Tracks[0].Elements.Length; i++)
 				{
@@ -1715,8 +1715,8 @@ namespace OpenBve
 								if (CurrentRoute.Stations[station.StationIndex].SafetySystem == SafetySystem.Atc)
 								{
 									Array.Resize(ref TrackManager.Tracks[0].Elements[i].Events, TrackManager.Tracks[0].Elements[i].Events.Length + 2);
-									TrackManager.Tracks[0].Elements[i].Events[TrackManager.Tracks[0].Elements[i].Events.Length - 2] = new TrackManager.TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcTrackStatus, 0, 0, false);
-									TrackManager.Tracks[0].Elements[i].Events[TrackManager.Tracks[0].Elements[i].Events.Length - 1] = new TrackManager.TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcTrackStatus, 1, 0, false);
+									TrackManager.Tracks[0].Elements[i].Events[TrackManager.Tracks[0].Elements[i].Events.Length - 2] = new TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcTrackStatus, 0, 0, false);
+									TrackManager.Tracks[0].Elements[i].Events[TrackManager.Tracks[0].Elements[i].Events.Length - 1] = new TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcTrackStatus, 1, 0, false);
 									atc = true;
 								}
 							}
@@ -1729,8 +1729,8 @@ namespace OpenBve
 								if (CurrentRoute.Stations[station.StationIndex].SafetySystem == SafetySystem.Ats)
 								{
 									Array.Resize(ref TrackManager.Tracks[0].Elements[i].Events, TrackManager.Tracks[0].Elements[i].Events.Length + 2);
-									TrackManager.Tracks[0].Elements[i].Events[TrackManager.Tracks[0].Elements[i].Events.Length - 2] = new TrackManager.TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcTrackStatus, 2, 0, false);
-									TrackManager.Tracks[0].Elements[i].Events[TrackManager.Tracks[0].Elements[i].Events.Length - 1] = new TrackManager.TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcTrackStatus, 3, 0, false);
+									TrackManager.Tracks[0].Elements[i].Events[TrackManager.Tracks[0].Elements[i].Events.Length - 2] = new TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcTrackStatus, 2, 0, false);
+									TrackManager.Tracks[0].Elements[i].Events[TrackManager.Tracks[0].Elements[i].Events.Length - 1] = new TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcTrackStatus, 3, 0, false);
 								}
 							}
 							else if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationEndEvent)
@@ -1739,14 +1739,14 @@ namespace OpenBve
 								if (CurrentRoute.Stations[station.StationIndex].SafetySystem == SafetySystem.Atc)
 								{
 									Array.Resize(ref TrackManager.Tracks[0].Elements[i].Events, TrackManager.Tracks[0].Elements[i].Events.Length + 2);
-									TrackManager.Tracks[0].Elements[i].Events[TrackManager.Tracks[0].Elements[i].Events.Length - 2] = new TrackManager.TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcTrackStatus, 1, 0, false);
-									TrackManager.Tracks[0].Elements[i].Events[TrackManager.Tracks[0].Elements[i].Events.Length - 1] = new TrackManager.TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcTrackStatus, 2, 0, false);
+									TrackManager.Tracks[0].Elements[i].Events[TrackManager.Tracks[0].Elements[i].Events.Length - 2] = new TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcTrackStatus, 1, 0, false);
+									TrackManager.Tracks[0].Elements[i].Events[TrackManager.Tracks[0].Elements[i].Events.Length - 1] = new TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcTrackStatus, 2, 0, false);
 								}
 								else if (CurrentRoute.Stations[station.StationIndex].SafetySystem == SafetySystem.Ats)
 								{
 									Array.Resize(ref TrackManager.Tracks[0].Elements[i].Events, TrackManager.Tracks[0].Elements[i].Events.Length + 2);
-									TrackManager.Tracks[0].Elements[i].Events[TrackManager.Tracks[0].Elements[i].Events.Length - 2] = new TrackManager.TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcTrackStatus, 3, 0, false);
-									TrackManager.Tracks[0].Elements[i].Events[TrackManager.Tracks[0].Elements[i].Events.Length - 1] = new TrackManager.TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcTrackStatus, 0, 0, false);
+									TrackManager.Tracks[0].Elements[i].Events[TrackManager.Tracks[0].Elements[i].Events.Length - 2] = new TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcTrackStatus, 3, 0, false);
+									TrackManager.Tracks[0].Elements[i].Events[TrackManager.Tracks[0].Elements[i].Events.Length - 1] = new TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcTrackStatus, 0, 0, false);
 									atc = false;
 								}
 							}
@@ -1758,13 +1758,13 @@ namespace OpenBve
 								unchecked
 								{
 									int value = (int)((uint)speed | ((uint)distance << 12));
-									transponders.Add(new TrackManager.TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcSpeedLimit, value, 0, false));
+									transponders.Add(new TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtcSpeedLimit, value, 0, false));
 								}
 							}
 						}
-						if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.TransponderEvent)
+						if (TrackManager.Tracks[0].Elements[i].Events[j] is TransponderEvent)
 						{
-							TrackManager.TransponderEvent transponder = TrackManager.Tracks[0].Elements[i].Events[j] as TrackManager.TransponderEvent;
+							TransponderEvent transponder = TrackManager.Tracks[0].Elements[i].Events[j] as TransponderEvent;
 							if (transponder.Type == (int)TrackManager.SpecialTransponderTypes.InternalAtsPTemporarySpeedLimit)
 							{
 								int speed = Math.Min(4095, transponder.Data);
@@ -1772,7 +1772,7 @@ namespace OpenBve
 								unchecked
 								{
 									int value = (int)((uint)speed | ((uint)distance << 12));
-									transponders.Add(new TrackManager.TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtsPTemporarySpeedLimit, value, 0, false));
+									transponders.Add(new TransponderEvent(0.0, TrackManager.SpecialTransponderTypes.AtsPTemporarySpeedLimit, value, 0, false));
 								}
 							}
 						}

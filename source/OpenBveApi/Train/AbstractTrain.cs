@@ -86,5 +86,11 @@
 		{
 
 		}
+
+		/// <summary>Updates the safety systems on this train with data recieved from a beacon</summary>
+		public virtual void UpdateBeacon(int transponderType, int sectionIndex, int optional)
+		{
+
+		}
 	}
 }

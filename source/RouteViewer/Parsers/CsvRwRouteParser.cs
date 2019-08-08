@@ -246,17 +246,16 @@ namespace OpenBve {
 			internal double Radius;
 			internal double Speed;
 		}
-		private struct Transponder {
+		private struct Transponder
+		{
 			internal double TrackPosition;
-			internal TrackManager.TransponderType Type;
+			internal int Type;
 			internal bool ShowDefaultObject;
-			internal bool SwitchSubsystem;
 			internal int BeaconStructureIndex;
-			internal int OptionalInteger;
-			internal double OptionalFloat;
-			internal int Section;
-			internal double X;
-			internal double Y;
+			internal int Data;
+			internal int SectionIndex;
+			internal bool ClipToFirstRedSection;
+			internal Vector2 Position;
 			internal double Yaw;
 			internal double Pitch;
 			internal double Roll;
@@ -6382,14 +6381,17 @@ namespace OpenBve {
 								int m = CurrentRoute.Sections.Length;
 								Array.Resize<SignalManager.Section>(ref CurrentRoute.Sections, m + 1);
 								// create associated transponders
-								for (int g = 0; g <= i; g++) {
-									for (int l = 0; l < Data.Blocks[g].Transponder.Length; l++) {
-										if (Data.Blocks[g].Transponder[l].Type != TrackManager.TransponderType.None & Data.Blocks[g].Transponder[l].Section == m) {
-											int o = TrackManager.CurrentTrack.Elements[n - i + g].Events.Length;
-											Array.Resize(ref TrackManager.CurrentTrack.Elements[n - i + g].Events, o + 1);
+								for (int g = 0; g <= i; g++)
+								{
+									for (int l = 0; l < Data.Blocks[g].Transponder.Length; l++)
+									{
+										if (Data.Blocks[g].Transponder[l].Type != -1 & Data.Blocks[g].Transponder[l].SectionIndex == m)
+										{
+											int o = TrackManager.Tracks[0].Elements[n - i + g].Events.Length;
+											Array.Resize(ref TrackManager.Tracks[0].Elements[n - i + g].Events, o + 1);
 											double dt = Data.Blocks[g].Transponder[l].TrackPosition - StartingDistance + (double)(i - g) * Data.BlockInterval;
-											TrackManager.CurrentTrack.Elements[n - i + g].Events[o] = new TrackManager.TransponderEvent(dt, Data.Blocks[g].Transponder[l].Type, Data.Blocks[g].Transponder[l].SwitchSubsystem, Data.Blocks[g].Transponder[l].OptionalInteger, Data.Blocks[g].Transponder[l].OptionalFloat, m);
-											Data.Blocks[g].Transponder[l].Type = TrackManager.TransponderType.None;
+											TrackManager.Tracks[0].Elements[n - i + g].Events[o] = new TransponderEvent(dt, Data.Blocks[g].Transponder[l].Type, Data.Blocks[g].Transponder[l].Data, m, Data.Blocks[g].Transponder[l].ClipToFirstRedSection);
+											Data.Blocks[g].Transponder[l].Type = -1;
 										}
 									}
 								}

@@ -58,6 +58,7 @@
     <Compile Include="Events\MarkerStart.cs" />
     <Compile Include="Events\SpeedLimit.cs" />
     <Compile Include="Events\TrackEnd.cs" />
+    <Compile Include="Events\Transponder.cs" />
     <Compile Include="Fog.cs" />
     <Compile Include="MessageManager\AbstractMessage.cs" />
     <Compile Include="MessageManager\MessageDependancy.cs" />
