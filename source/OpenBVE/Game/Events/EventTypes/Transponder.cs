@@ -20,7 +20,5 @@ namespace OpenBve
 			/// <summary>For internal use inside the CSV/RW parser only.</summary>
 			internal const int InternalAtsPTemporarySpeedLimit = -16777201;
 		}
-
-		
 	}
 }

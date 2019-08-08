@@ -344,13 +344,6 @@ namespace OpenBve {
 			internal double Time;
 			internal bool Reset;
 		}
-		internal struct TrainPendingTransponder {
-			internal TrackManager.TransponderType Type;
-			internal bool SwitchSubsystem;
-			internal int OptionalInteger;
-			internal double OptionalFloat;
-			internal int SectionIndex;
-		}
 		
 		// train specs
 		internal enum PassAlarmType {

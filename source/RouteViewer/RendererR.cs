@@ -427,7 +427,7 @@ namespace OpenBve {
 							s = 0.2;
 							dy = 0.8;
 							t = SectionTexture;
-						} else if (e is TrackManager.TransponderEvent) {
+						} else if (e is TransponderEvent) {
 							s = 0.15;
 							dy = 0.4;
 							t = TransponderTexture;
