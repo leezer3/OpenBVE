@@ -329,7 +329,7 @@ namespace OpenBve
 				{
 					foreach (var TouchElement in TouchElements)
 					{
-						int o = TouchElement.Element.ObjectIndex;
+						int o = TouchElement.Element.internalObject.ObjectIndex;
 						ShowObjectSelection(o);
 					}
 
@@ -344,7 +344,7 @@ namespace OpenBve
 					
 					foreach (var TouchElement in TouchElements)
 					{
-						HideObjectSelection(ref ObjectManager.Objects[TouchElement.Element.ObjectIndex]);
+						HideObjectSelection(ref ObjectManager.Objects[TouchElement.Element.internalObject.ObjectIndex]);
 					}
 				}
 			}
@@ -376,7 +376,7 @@ namespace OpenBve
 				{
 					foreach (var TouchElement in TouchElements)
 					{
-						int o = TouchElement.Element.ObjectIndex;
+						int o = TouchElement.Element.internalObject.ObjectIndex;
 						ShowObjectSelection(o);
 					}
 
@@ -390,9 +390,9 @@ namespace OpenBve
 
 					foreach (var TouchElement in TouchElements)
 					{
-						HideObjectSelection(ref ObjectManager.Objects[TouchElement.Element.ObjectIndex]);
+						HideObjectSelection(ref ObjectManager.Objects[TouchElement.Element.internalObject.ObjectIndex]);
 
-						if (TouchElement.Element.ObjectIndex == PickedObjectIndex)
+						if (TouchElement.Element.internalObject.ObjectIndex == PickedObjectIndex)
 						{
 							switch (TouchElement.Command)
 							{
@@ -441,7 +441,7 @@ namespace OpenBve
 				{
 					foreach (var TouchElement in TouchElements)
 					{
-						int o = TouchElement.Element.ObjectIndex;
+						int o = TouchElement.Element.internalObject.ObjectIndex;
 						ShowObjectSelection(o);
 					}
 
@@ -455,8 +455,8 @@ namespace OpenBve
 
 					foreach (var TouchElement in TouchElements)
 					{
-						HideObjectSelection(ref ObjectManager.Objects[TouchElement.Element.ObjectIndex]);
-						if (TouchElement.Element.ObjectIndex == PickedObjectIndex)
+						HideObjectSelection(ref ObjectManager.Objects[TouchElement.Element.internalObject.ObjectIndex]);
+						if (TouchElement.Element.internalObject.ObjectIndex == PickedObjectIndex)
 						{
 							for (int i = 0; i < Interface.CurrentControls.Length; i++)
 							{
@@ -514,7 +514,7 @@ namespace OpenBve
 				{
 					foreach (var TouchElement in TouchElements)
 					{
-						int o = TouchElement.Element.ObjectIndex;
+						int o = TouchElement.Element.internalObject.ObjectIndex;
 						ShowObjectSelection(o);
 					}
 
@@ -528,8 +528,8 @@ namespace OpenBve
 
 					foreach (var TouchElement in TouchElements)
 					{
-						HideObjectSelection(ref ObjectManager.Objects[TouchElement.Element.ObjectIndex]);
-						if (TouchElement.Element.ObjectIndex == PickedObjectIndex)
+						HideObjectSelection(ref ObjectManager.Objects[TouchElement.Element.internalObject.ObjectIndex]);
+						if (TouchElement.Element.internalObject.ObjectIndex == PickedObjectIndex)
 						{
 							Car.CarSections[0].CurrentAdditionalGroup = TouchElement.JumpScreenIndex;
 							Car.ChangeCarSection(TrainManager.CarSectionType.Interior);
@@ -542,7 +542,7 @@ namespace OpenBve
 						}
 
 						// HACK: Normally terminate the command issued once.
-						if (TouchElement.Element.ObjectIndex == PickedObjectIndex || (PickedObjectIndex != PrePickedObjectIndex && TouchElement.Element.ObjectIndex == PrePickedObjectIndex))
+						if (TouchElement.Element.internalObject.ObjectIndex == PickedObjectIndex || (PickedObjectIndex != PrePickedObjectIndex && TouchElement.Element.internalObject.ObjectIndex == PrePickedObjectIndex))
 						{
 							for (int i = 0; i < Interface.CurrentControls.Length; i++)
 							{

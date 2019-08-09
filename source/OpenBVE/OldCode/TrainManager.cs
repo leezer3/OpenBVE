@@ -111,7 +111,7 @@ namespace OpenBve
 						{
 							for (int i = 0; i < a.Objects.Length; i++)
 							{
-								a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject(ref a.Objects[i].internalObject);
+								ObjectManager.CreateDynamicObject(ref a.Objects[i].internalObject);
 							}
 							Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements = a.Objects;
 							Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;

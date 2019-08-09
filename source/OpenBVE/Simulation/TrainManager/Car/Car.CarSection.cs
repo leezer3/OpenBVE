@@ -53,14 +53,13 @@ namespace OpenBve
 				{
 					for (int i = 0; i < Groups[0].Elements.Length; i++)
 					{
-						int o = Groups[0].Elements[i].ObjectIndex;
 						if (Groups[0].Overlay)
 						{
-							Renderer.ShowObject(o, ObjectType.Overlay);
+							Renderer.ShowObject(Groups[0].Elements[i].internalObject, ObjectType.Overlay);
 						}
 						else
 						{
-							Renderer.ShowObject(o, ObjectType.Dynamic);
+							Renderer.ShowObject(Groups[0].Elements[i].internalObject, ObjectType.Dynamic);
 						}
 					}
 				}
@@ -70,14 +69,13 @@ namespace OpenBve
 				{
 					for (int i = 0; i < Groups[add].Elements.Length; i++)
 					{
-						int o = Groups[add].Elements[i].ObjectIndex;
 						if (Groups[add].Overlay)
 						{
-							Renderer.ShowObject(o, ObjectType.Overlay);
+							Renderer.ShowObject(Groups[add].Elements[i].internalObject, ObjectType.Overlay);
 						}
 						else
 						{
-							Renderer.ShowObject(o, ObjectType.Dynamic);
+							Renderer.ShowObject(Groups[add].Elements[i].internalObject, ObjectType.Dynamic);
 						}
 					}
 				}

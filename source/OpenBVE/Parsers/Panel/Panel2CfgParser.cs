@@ -1529,7 +1529,7 @@ namespace OpenBve {
 				Group.Elements[n].States[0].Object = Object;
 				Group.Elements[n].CurrentState = 0;
 				Group.Elements[n].internalObject = (StaticObject)Object.Clone();
-				Group.Elements[n].ObjectIndex = ObjectManager.CreateDynamicObject(ref Group.Elements[n].internalObject);
+				ObjectManager.CreateDynamicObject(ref Group.Elements[n].internalObject);
 				return n;
 			}
 		}

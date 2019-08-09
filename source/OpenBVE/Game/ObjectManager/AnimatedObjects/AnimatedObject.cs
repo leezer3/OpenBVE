@@ -79,7 +79,6 @@ namespace OpenBve
 				Result.LEDFunction = this.LEDFunction == null ? null : this.LEDFunction.Clone();
 				Result.RefreshRate = this.RefreshRate;
 				Result.SecondsSinceLastUpdate = 0.0;
-				Result.ObjectIndex = -1;
 				for (int i = 0; i < Timetable.CustomObjectsUsed; i++)
 				{
 					if (Timetable.CustomObjects[i] == this)
@@ -92,7 +91,6 @@ namespace OpenBve
 
 			internal void Initialize(int StateIndex, bool Overlay, bool Show)
 			{
-				int i = ObjectIndex;
 				Renderer.HideObject(ref internalObject);
 				int t = StateIndex;
 				if (t >= 0 && States[t].Object != null)
@@ -135,11 +133,11 @@ namespace OpenBve
 				{
 					if (Overlay)
 					{
-						Renderer.ShowObject(i, ObjectType.Overlay);
+						Renderer.ShowObject(internalObject, ObjectType.Overlay);
 					}
 					else
 					{
-						Renderer.ShowObject(i, ObjectType.Dynamic);
+						Renderer.ShowObject(internalObject, ObjectType.Dynamic);
 					}
 				}
 			}
@@ -738,11 +736,11 @@ namespace OpenBve
 						{
 							if (Overlay)
 							{
-								Renderer.ShowObject(ObjectIndex, ObjectType.Overlay);
+								Renderer.ShowObject(internalObject, ObjectType.Overlay);
 							}
 							else
 							{
-								Renderer.ShowObject(ObjectIndex, ObjectType.Dynamic);
+								Renderer.ShowObject(internalObject, ObjectType.Dynamic);
 							}
 						}
 						else
@@ -766,7 +764,7 @@ namespace OpenBve
 				if (TrackFollowerFunction != null)
 				{
 					var o = this.Clone();
-					o.ObjectIndex = currentHost.CreateDynamicObject(ref internalObject);
+					currentHost.CreateDynamicObject(ref internalObject);
 					TrackFollowingObject currentObject = new TrackFollowingObject
 					{
 						Position = Position,
@@ -812,7 +810,7 @@ namespace OpenBve
 				else
 				{
 					var o = this.Clone();
-					o.ObjectIndex = currentHost.CreateDynamicObject(ref o.internalObject);
+					currentHost.CreateDynamicObject(ref o.internalObject);
 					AnimatedWorldObject currentObject = new AnimatedWorldObject
 					{
 						Position = Position,

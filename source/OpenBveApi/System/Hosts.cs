@@ -201,9 +201,9 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Creates a dynamic object</summary>
 		/// <param name="internalObject">The internal static object to be updated</param>
 		/// <returns>The index of the dynamic object</returns>
-		public virtual int CreateDynamicObject(ref StaticObject internalObject)
+		public virtual void CreateDynamicObject(ref StaticObject internalObject)
 		{
-			return -1;
+			
 		}
 
 		/// <summary>Adds a log message to the host application.</summary>

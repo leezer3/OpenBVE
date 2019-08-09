@@ -135,7 +135,7 @@ namespace OpenBve
 					}
 					if (!Visible)
 					{
-						Renderer.ShowObject(Object.ObjectIndex, ObjectType.Dynamic);
+						Renderer.ShowObject(Object.internalObject, ObjectType.Dynamic);
 						Visible = true;
 					}
 				}
@@ -144,7 +144,7 @@ namespace OpenBve
 					Object.SecondsSinceLastUpdate += TimeElapsed;
 					if (Visible)
 					{
-						Renderer.HideObject(ref ObjectManager.Objects[Object.ObjectIndex]);
+						Renderer.HideObject(ref Object.internalObject);
 						Visible = false;
 					}
 				}
@@ -161,7 +161,7 @@ namespace OpenBve
 				Transformation FinalTransformation = new Transformation(AuxTransformation, BaseTransformation);
 
 				var o = this.Object.Clone();
-				o.ObjectIndex = CreateDynamicObject(ref o.internalObject);
+				CreateDynamicObject(ref o.internalObject);
 				AnimatedWorldObjectStateSound currentObject = new AnimatedWorldObjectStateSound
 				{
 					Position = objectPosition,

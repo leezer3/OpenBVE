@@ -73,9 +73,7 @@ namespace OpenBveApi.Objects
 		public double RefreshRate;
 		/// <summary>The time since the last update of this object</summary>
 		public double SecondsSinceLastUpdate;
-		/// <summary>The object index</summary>
-		public int ObjectIndex;
-
+		
 		//This section holds script files executed by CS-Script
 		/// <summary>The absolute path to the script file to be evaluated when TranslateXScript is called</summary>
 		public string TranslateXScriptFile;

@@ -101,12 +101,11 @@ namespace OpenBve
 						UpdateSectionElement(cs, i, p, d, u, s, CurrentlyVisible, TimeElapsed, ForceUpdate);
 
 						// brightness change
-						int o = CarSections[cs].Groups[0].Elements[i].ObjectIndex;
-						if (ObjectManager.Objects[o] != null)
+						if (CarSections[cs].Groups[0].Elements[i].internalObject != null)
 						{
-							for (int j = 0; j < ObjectManager.Objects[o].Mesh.Materials.Length; j++)
+							for (int j = 0; j < CarSections[cs].Groups[0].Elements[i].internalObject.Mesh.Materials.Length; j++)
 							{
-								ObjectManager.Objects[o].Mesh.Materials[j].DaytimeNighttimeBlend = dnb;
+								CarSections[cs].Groups[0].Elements[i].internalObject.Mesh.Materials[j].DaytimeNighttimeBlend = dnb;
 							}
 						}
 					}
@@ -134,7 +133,7 @@ namespace OpenBve
 					CarSections[j].Groups[0].Elements[0].States[0].Position = Vector3.Zero;
 					CarSections[j].Groups[0].Elements[0].States[0].Object = s;
 					CarSections[j].Groups[0].Elements[0].CurrentState = 0;
-					CarSections[j].Groups[0].Elements[0].ObjectIndex = ObjectManager.CreateDynamicObject(ref CarSections[j].Groups[0].Elements[0].internalObject);
+					ObjectManager.CreateDynamicObject(ref CarSections[j].Groups[0].Elements[0].internalObject);
 				}
 				else if (currentObject is ObjectManager.AnimatedObjectCollection)
 				{
@@ -143,7 +142,7 @@ namespace OpenBve
 					for (int h = 0; h < a.Objects.Length; h++)
 					{
 						CarSections[j].Groups[0].Elements[h] = a.Objects[h].Clone();
-						CarSections[j].Groups[0].Elements[h].ObjectIndex = ObjectManager.CreateDynamicObject(ref CarSections[j].Groups[0].Elements[h].internalObject);
+						ObjectManager.CreateDynamicObject(ref CarSections[j].Groups[0].Elements[h].internalObject);
 					}
 				}
 			}
@@ -160,8 +159,7 @@ namespace OpenBve
 				{
 					for (int j = 0; j < CarSections[i].Groups[0].Elements.Length; j++)
 					{
-						int o = CarSections[i].Groups[0].Elements[j].ObjectIndex;
-						Renderer.HideObject(ref ObjectManager.Objects[o]);
+						Renderer.HideObject(ref CarSections[i].Groups[0].Elements[j].internalObject);
 					}
 				}
 				if (SectionIndex >= 0)
@@ -169,8 +167,7 @@ namespace OpenBve
 					CarSections[SectionIndex].Initialize(CurrentlyVisible);
 					for (int j = 0; j < CarSections[SectionIndex].Groups[0].Elements.Length; j++)
 					{
-						int o = CarSections[SectionIndex].Groups[0].Elements[j].ObjectIndex;
-						Renderer.ShowObject(o, ObjectType.Dynamic);
+						Renderer.ShowObject(CarSections[SectionIndex].Groups[0].Elements[j].internalObject, ObjectType.Dynamic);
 					}
 				}
 				CurrentCarSection = SectionIndex;

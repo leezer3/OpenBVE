@@ -43,7 +43,7 @@ namespace OpenBve
 				{
 					if (Objects[i].StartingDistance <= p + Camera.ForwardViewingDistance & Objects[i].EndingDistance >= p - Camera.BackwardViewingDistance)
 					{
-						Renderer.ShowObject(i, ObjectType.Static);
+						Renderer.ShowObject(Objects[i], ObjectType.Static);
 					}
 				}
 			}
@@ -99,7 +99,7 @@ namespace OpenBve
 					{
 						if (Objects[o].StartingDistance <= p + Camera.ForwardViewingDistance)
 						{
-							Renderer.ShowObject(o, ObjectType.Static);
+							Renderer.ShowObject(Objects[o], ObjectType.Static);
 						}
 						ObjectsSortedByEndPointer--;
 					}
@@ -135,7 +135,7 @@ namespace OpenBve
 					{
 						if (Objects[o].EndingDistance >= p - Camera.BackwardViewingDistance)
 						{
-							Renderer.ShowObject(o, ObjectType.Static);
+							Renderer.ShowObject(Objects[o], ObjectType.Static);
 						}
 						ObjectsSortedByStartPointer++;
 					}

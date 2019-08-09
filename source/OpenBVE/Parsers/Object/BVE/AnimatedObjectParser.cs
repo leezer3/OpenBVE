@@ -189,7 +189,6 @@ namespace OpenBve
 									TextureShiftXDirection = new Vector2(1.0, 0.0),
 									TextureShiftYDirection = new Vector2(0.0, 1.0),
 									RefreshRate = 0.0,
-									ObjectIndex = -1
 								};
 								Vector3 Position = Vector3.Zero;
 								double RotateX = 0;

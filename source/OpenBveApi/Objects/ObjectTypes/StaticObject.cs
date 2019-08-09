@@ -25,6 +25,8 @@ namespace OpenBveApi.Objects
 		public string Author;
 		/// <summary> Stores the copyright information for this object.</summary>
 		public string Copyright;
+		/// <summary>Stores the index to the object in the ObjectManager array</summary>
+		public int ObjectIndex;
 
 		private readonly Hosts.HostInterface currentHost;
 

@@ -65,7 +65,7 @@ namespace OpenBve
 					}
 					if (!Visible)
 					{
-						Renderer.ShowObject(Object.ObjectIndex, ObjectType.Dynamic);
+						Renderer.ShowObject(Object.internalObject, ObjectType.Dynamic);
 						Visible = true;
 					}
 				}
@@ -74,7 +74,7 @@ namespace OpenBve
 					Object.SecondsSinceLastUpdate += TimeElapsed;
 					if (Visible)
 					{
-						Renderer.HideObject(ref ObjectManager.Objects[Object.ObjectIndex]);
+						Renderer.HideObject(ref Object.internalObject);
 						Visible = false;
 					}
 				}

@@ -266,9 +266,9 @@ namespace OpenBve {
 			return ObjectManager.CreateStaticObject(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 		}
 
-		public override int CreateDynamicObject(ref StaticObject internalObject)
+		public override void CreateDynamicObject(ref StaticObject internalObject)
 		{
-			return ObjectManager.CreateDynamicObject(ref internalObject);
+			ObjectManager.CreateDynamicObject(ref internalObject);
 		}
 
 		public Host() : base(HostApplication.OpenBve)

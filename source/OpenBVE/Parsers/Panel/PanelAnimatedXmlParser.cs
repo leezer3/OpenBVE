@@ -238,7 +238,7 @@ namespace OpenBve.Parsers.Panel
 												{
 													for (int i = 0; i < a.Objects.Length; i++)
 													{
-														a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject(ref a.Objects[i].internalObject);
+														ObjectManager.CreateDynamicObject(ref a.Objects[i].internalObject);
 													}
 													CarSection.Groups[GroupIndex].Elements = a.Objects;
 												}
@@ -296,7 +296,7 @@ namespace OpenBve.Parsers.Panel
 			Group.TouchElements[n].Element.States[0].Object = Object;
 			Group.TouchElements[n].Element.CurrentState = 0;
 			Group.TouchElements[n].Element.internalObject = (StaticObject) Object.Clone();
-			Group.TouchElements[n].Element.ObjectIndex = ObjectManager.CreateDynamicObject(ref Group.TouchElements[n].Element.internalObject);
+			ObjectManager.CreateDynamicObject(ref Group.TouchElements[n].Element.internalObject);
 			int m = Interface.CurrentControls.Length;
 			Array.Resize(ref Interface.CurrentControls, m + 1);
 			Interface.CurrentControls[m].Command = Command;

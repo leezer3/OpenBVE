@@ -86,6 +86,8 @@ namespace OpenBve
 						break;
 				}
 			}
+
+			Objects[a].ObjectIndex = a;
 			ObjectsUsed++;
 			return a;
 		}
@@ -103,7 +105,7 @@ namespace OpenBve
 			return a;
 		}
 
-		internal static int CreateDynamicObject(ref StaticObject internalObject)
+		internal static void CreateDynamicObject(ref StaticObject internalObject)
 		{
 			int a = ObjectsUsed;
 			if (a >= Objects.Length)
@@ -116,18 +118,19 @@ namespace OpenBve
 				
 				Objects[a] = new StaticObject(Program.CurrentHost)
 				{
-					Dynamic = true
+					Dynamic = true,
+					ObjectIndex = a
 				};
 				internalObject = Objects[a];
 				ObjectsUsed++;
-				return a;
+				return;
 			}
 			else
 			{
 				Objects[a] = internalObject;
 				internalObject.Dynamic = true;
+				internalObject.ObjectIndex = a;
 				ObjectsUsed++;
-				return a;
 			}
 		}
 	}

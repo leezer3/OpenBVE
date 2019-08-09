@@ -1212,7 +1212,7 @@ namespace OpenBve {
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[0].Object = Object;
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].CurrentState = 0;
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].internalObject = (StaticObject) Object.Clone();
-				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].ObjectIndex = ObjectManager.CreateDynamicObject(ref Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].internalObject);
+				ObjectManager.CreateDynamicObject(ref Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].internalObject);
 				return n;
 			}
 		}
