@@ -161,7 +161,7 @@ namespace OpenBve
 				Transformation FinalTransformation = new Transformation(AuxTransformation, BaseTransformation);
 
 				var o = this.Object.Clone();
-				o.ObjectIndex = CreateDynamicObject();
+				o.ObjectIndex = CreateDynamicObject(ref o.internalObject);
 				AnimatedWorldObjectStateSound currentObject = new AnimatedWorldObjectStateSound
 				{
 					Position = objectPosition,

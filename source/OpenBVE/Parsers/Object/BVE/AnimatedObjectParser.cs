@@ -140,7 +140,7 @@ namespace OpenBve
 											{
 												Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
 											}
-											ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
+											ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject(Program.CurrentHost);
 											AnimatedObjectState aos = new AnimatedObjectState(s, position);
 											a.States = new AnimatedObjectState[] { aos };
 											Result.Objects[ObjectCount] = a;
@@ -176,7 +176,7 @@ namespace OpenBve
 								{
 									Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
 								}
-								Result.Objects[ObjectCount] = new ObjectManager.AnimatedObject
+								Result.Objects[ObjectCount] = new ObjectManager.AnimatedObject(Program.CurrentHost)
 								{
 									States = new AnimatedObjectState[] {},
 									CurrentState = -1,

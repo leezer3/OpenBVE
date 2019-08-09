@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using LibRender;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -1205,13 +1206,13 @@ namespace OpenBve {
 			} else {
 				int n = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements.Length;
 				Array.Resize<ObjectManager.AnimatedObject>(ref Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements, n + 1);
-				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n] = new ObjectManager.AnimatedObject();
+				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n] = new ObjectManager.AnimatedObject(Program.CurrentHost);
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States = new AnimatedObjectState[1];
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[0].Position = o;
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[0].Object = Object;
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].CurrentState = 0;
-				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].ObjectIndex = ObjectManager.CreateDynamicObject();
-				ObjectManager.Objects[Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].ObjectIndex] = (StaticObject)Object.Clone();
+				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].internalObject = (StaticObject) Object.Clone();
+				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].ObjectIndex = ObjectManager.CreateDynamicObject(ref Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].internalObject);
 				return n;
 			}
 		}

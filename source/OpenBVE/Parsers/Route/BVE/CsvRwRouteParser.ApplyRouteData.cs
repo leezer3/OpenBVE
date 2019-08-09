@@ -1279,7 +1279,7 @@ namespace OpenBve
 											double brightness = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
 											ObjectManager.AnimatedObjectCollection aoc = new ObjectManager.AnimatedObjectCollection();
 											aoc.Objects = new ObjectManager.AnimatedObject[1];
-											aoc.Objects[0] = new ObjectManager.AnimatedObject();
+											aoc.Objects[0] = new ObjectManager.AnimatedObject(Program.CurrentHost);
 											aoc.Objects[0].States = new AnimatedObjectState[csd.Numbers.Length];
 											for (int l = 0; l < csd.Numbers.Length; l++)
 											{
@@ -1316,7 +1316,7 @@ namespace OpenBve
 											}
 											ObjectManager.AnimatedObjectCollection aoc = new ObjectManager.AnimatedObjectCollection();
 											aoc.Objects = new ObjectManager.AnimatedObject[1];
-											aoc.Objects[0] = new ObjectManager.AnimatedObject();
+											aoc.Objects[0] = new ObjectManager.AnimatedObject(Program.CurrentHost);
 											aoc.Objects[0].States = new AnimatedObjectState[zn];
 											int zi = 0;
 											string expr = "";

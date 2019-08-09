@@ -102,5 +102,33 @@ namespace OpenBve
 			ObjectsUsed++;
 			return a;
 		}
+
+		internal static int CreateDynamicObject(ref StaticObject internalObject)
+		{
+			int a = ObjectsUsed;
+			if (a >= Objects.Length)
+			{
+				Array.Resize<StaticObject>(ref Objects, Objects.Length << 1);
+			}
+
+			if (internalObject == null)
+			{
+				
+				Objects[a] = new StaticObject(Program.CurrentHost)
+				{
+					Dynamic = true
+				};
+				internalObject = Objects[a];
+				ObjectsUsed++;
+				return a;
+			}
+			else
+			{
+				Objects[a] = internalObject;
+				internalObject.Dynamic = true;
+				ObjectsUsed++;
+				return a;
+			}
+		}
 	}
 }

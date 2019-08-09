@@ -1,4 +1,5 @@
-﻿using OpenBveApi.FunctionScripting;
+using OpenBveApi.FunctionScripting;
+using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 
 namespace OpenBveApi.Objects
@@ -94,6 +95,11 @@ namespace OpenBveApi.Objects
 		public double FrontAxlePosition = 1;
 		/// <summary>The rear axle position if TrackFollowerFunction is used</summary>
 		public double RearAxlePosition = -1;
+		/// <summary>Holds a reference to the internal static object used for display</summary>
+		/// <remarks>This is a fully transformed deep copy of the current state</remarks>
+		public StaticObject internalObject;
+		/// <summary>Holds a reference to the host interface of the current application</summary>
+		public Hosts.HostInterface currentHost;
 
 		/// <summary>Checks whether this object contains any functions</summary>
 		public bool IsFreeOfFunctions()
@@ -108,7 +114,5 @@ namespace OpenBveApi.Objects
 			if (this.TrackFollowerFunction != null) return false;
 			return true;
 		}
-
-		
 	}
 }

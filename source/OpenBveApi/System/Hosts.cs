@@ -2,10 +2,11 @@
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
-using OpenBveApi.Sounds;
+using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
+using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
 namespace OpenBveApi.Hosts {
 
@@ -193,6 +194,14 @@ namespace OpenBveApi.Hosts {
 		/// <param name="Brightness">The brightness value at this track position</param>
 		/// <returns>The index to the created object, or -1 if this call fails</returns>
 		public virtual int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		{
+			return -1;
+		}
+
+		/// <summary>Creates a dynamic object</summary>
+		/// <param name="internalObject">The internal static object to be updated</param>
+		/// <returns>The index of the dynamic object</returns>
+		public virtual int CreateDynamicObject(ref StaticObject internalObject)
 		{
 			return -1;
 		}

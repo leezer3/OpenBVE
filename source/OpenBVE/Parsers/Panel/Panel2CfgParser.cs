@@ -1523,13 +1523,13 @@ namespace OpenBve {
 			} else {
 				int n = Group.Elements.Length;
 				Array.Resize<ObjectManager.AnimatedObject>(ref Group.Elements, n + 1);
-				Group.Elements[n] = new ObjectManager.AnimatedObject();
+				Group.Elements[n] = new ObjectManager.AnimatedObject(Program.CurrentHost);
 				Group.Elements[n].States = new AnimatedObjectState[1];
 				Group.Elements[n].States[0].Position = o;
 				Group.Elements[n].States[0].Object = Object;
 				Group.Elements[n].CurrentState = 0;
-				Group.Elements[n].ObjectIndex = ObjectManager.CreateDynamicObject();
-				ObjectManager.Objects[Group.Elements[n].ObjectIndex] = (StaticObject)Object.Clone();
+				Group.Elements[n].internalObject = (StaticObject)Object.Clone();
+				Group.Elements[n].ObjectIndex = ObjectManager.CreateDynamicObject(ref Group.Elements[n].internalObject);
 				return n;
 			}
 		}
