@@ -713,24 +713,24 @@ namespace OpenBve {
 				HideObject(ref ObjectManager.Objects[List[i].ObjectIndex]);
 			}
 			for (int i = 0; i < List.Length; i++) {
-				ShowObject(List[i].ObjectIndex, List[i].Type);
+				ShowObject(ObjectManager.Objects[List[i].ObjectIndex], List[i].Type);
 			}
 		}
 
 		// show object
-		internal static void ShowObject(int ObjectIndex, ObjectType Type)
+		internal static void ShowObject(StaticObject objectToShow, ObjectType Type)
         {
             bool Overlay = Type == ObjectType.Overlay;
-            if (ObjectManager.Objects[ObjectIndex] == null) return;
-            if (ObjectManager.Objects[ObjectIndex].RendererIndex == 0)
+            if (objectToShow == null) return;
+            if (objectToShow.RendererIndex == 0)
             {
                 if (ObjectListCount >= ObjectList.Length)
                 {
                     Array.Resize<Object>(ref ObjectList, ObjectList.Length << 1);
                 }
-                ObjectList[ObjectListCount].ObjectIndex = ObjectIndex;
+                ObjectList[ObjectListCount].ObjectIndex = objectToShow.ObjectIndex;
                 ObjectList[ObjectListCount].Type = Type;
-                int f = ObjectManager.Objects[ObjectIndex].Mesh.Faces.Length;
+                int f = objectToShow.Mesh.Faces.Length;
                 ObjectList[ObjectListCount].FaceListIndices = new int[f];
                 for (int i = 0; i < f; i++)
                 {
@@ -742,7 +742,7 @@ namespace OpenBve {
                             Array.Resize(ref OverlayList, OverlayList.Length << 1);
                             Array.Resize(ref OverlayListDistance, OverlayList.Length);
                         }
-                        OverlayList[OverlayListCount].ObjectIndex = ObjectIndex;
+                        OverlayList[OverlayListCount].ObjectIndex = objectToShow.ObjectIndex;
                         OverlayList[OverlayListCount].FaceIndex = i;
                         OverlayList[OverlayListCount].ObjectListIndex = ObjectListCount;
                         ObjectList[ObjectListCount].FaceListIndices[i] = (OverlayListCount << 2) + 3;
@@ -750,68 +750,68 @@ namespace OpenBve {
                     }
                     else
                     {
-                        int k = ObjectManager.Objects[ObjectIndex].Mesh.Faces[i].Material;
+                        int k = objectToShow.Mesh.Faces[i].Material;
 	                    OpenGlTextureWrapMode wrap = OpenGlTextureWrapMode.ClampClamp;
                         bool transparentcolor = false, alpha = false;
-                        if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].Color.A != 255)
+                        if (objectToShow.Mesh.Materials[k].Color.A != 255)
                         {
                             alpha = true;
                         }
-                        else if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].BlendMode == MeshMaterialBlendMode.Additive)
+                        else if (objectToShow.Mesh.Materials[k].BlendMode == MeshMaterialBlendMode.Additive)
                         {
                             alpha = true;
                         }
-                        else if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].GlowAttenuationData != 0)
+                        else if (objectToShow.Mesh.Materials[k].GlowAttenuationData != 0)
                         {
                             alpha = true;
                         }
                         else
                         {
-                            if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTexture != null)
+                            if (objectToShow.Mesh.Materials[k].DaytimeTexture != null)
                             {
-	                            if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode == null)
+	                            if (objectToShow.Mesh.Materials[k].WrapMode == null)
 	                            {
 		                            
 		                            // If the object does not have a stored wrapping mode, determine it now
-		                            for (int v = 0; v < ObjectManager.Objects[ObjectIndex].Mesh.Vertices.Length; v++)
+		                            for (int v = 0; v < objectToShow.Mesh.Vertices.Length; v++)
 		                            {
-			                            if (ObjectManager.Objects[ObjectIndex].Mesh.Vertices[v].TextureCoordinates.X < 0.0f |
-			                                ObjectManager.Objects[ObjectIndex].Mesh.Vertices[v].TextureCoordinates.X > 1.0f)
+			                            if (objectToShow.Mesh.Vertices[v].TextureCoordinates.X < 0.0f |
+			                                objectToShow.Mesh.Vertices[v].TextureCoordinates.X > 1.0f)
 			                            {
 				                            wrap |= OpenGlTextureWrapMode.RepeatClamp;
 			                            }
-			                            if (ObjectManager.Objects[ObjectIndex].Mesh.Vertices[v].TextureCoordinates.Y < 0.0f |
-			                                ObjectManager.Objects[ObjectIndex].Mesh.Vertices[v].TextureCoordinates.Y > 1.0f)
+			                            if (objectToShow.Mesh.Vertices[v].TextureCoordinates.Y < 0.0f |
+			                                objectToShow.Mesh.Vertices[v].TextureCoordinates.Y > 1.0f)
 			                            {
 				                            wrap |= OpenGlTextureWrapMode.ClampRepeat;
 			                            }
 		                            }
 
-		                            ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode = wrap;
+		                            objectToShow.Mesh.Materials[k].WrapMode = wrap;
 	                            }
 	                            else
 	                            {
 		                            //Yuck cast, but we need the null, as otherwise requires rewriting the texture indexer
-		                            wrap = (OpenGlTextureWrapMode)ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode;
+		                            wrap = (OpenGlTextureWrapMode)objectToShow.Mesh.Materials[k].WrapMode;
 	                            }
-	                            Program.CurrentHost.LoadTexture(ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTexture, (OpenGlTextureWrapMode)ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode);
-                                if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTexture.Transparency == TextureTransparencyType.Alpha)
+	                            Program.CurrentHost.LoadTexture(objectToShow.Mesh.Materials[k].DaytimeTexture, (OpenGlTextureWrapMode)objectToShow.Mesh.Materials[k].WrapMode);
+                                if (objectToShow.Mesh.Materials[k].DaytimeTexture.Transparency == TextureTransparencyType.Alpha)
                                 {
                                     alpha = true;
                                 }
-                                else if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].DaytimeTexture.Transparency == TextureTransparencyType.Partial)
+                                else if (objectToShow.Mesh.Materials[k].DaytimeTexture.Transparency == TextureTransparencyType.Partial)
                                 {
 									transparentcolor = true;
                                 }
                             }
-                            if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTexture != null)
+                            if (objectToShow.Mesh.Materials[k].NighttimeTexture != null)
                             {
-	                            Program.CurrentHost.LoadTexture(ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTexture, (OpenGlTextureWrapMode)ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].WrapMode);
-                                if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTexture.Transparency == TextureTransparencyType.Alpha)
+	                            Program.CurrentHost.LoadTexture(objectToShow.Mesh.Materials[k].NighttimeTexture, (OpenGlTextureWrapMode)objectToShow.Mesh.Materials[k].WrapMode);
+                                if (objectToShow.Mesh.Materials[k].NighttimeTexture.Transparency == TextureTransparencyType.Alpha)
                                 {
                                     alpha = true;
                                 }
-                                else if (ObjectManager.Objects[ObjectIndex].Mesh.Materials[k].NighttimeTexture.Transparency == TextureTransparencyType.Partial)
+                                else if (objectToShow.Mesh.Materials[k].NighttimeTexture.Transparency == TextureTransparencyType.Partial)
                                 {
                                     transparentcolor = true;
                                 }
@@ -826,7 +826,7 @@ namespace OpenBve {
                                 Array.Resize(ref AlphaListDistance, AlphaList.Length);
                             }
 							AlphaList[AlphaListCount] = new ObjectFace();
-                            AlphaList[AlphaListCount].ObjectIndex = ObjectIndex;
+                            AlphaList[AlphaListCount].ObjectIndex = objectToShow.ObjectIndex;
                             AlphaList[AlphaListCount].FaceIndex = i;
                             AlphaList[AlphaListCount].ObjectListIndex = ObjectListCount;
 	                        AlphaList[AlphaListCount].Wrap = wrap;
@@ -842,7 +842,7 @@ namespace OpenBve {
                                 Array.Resize(ref TransparentColorListDistance, TransparentColorList.Length);
                             }
 							TransparentColorList[TransparentColorListCount] = new ObjectFace();
-                            TransparentColorList[TransparentColorListCount].ObjectIndex = ObjectIndex;
+                            TransparentColorList[TransparentColorListCount].ObjectIndex = objectToShow.ObjectIndex;
                             TransparentColorList[TransparentColorListCount].FaceIndex = i;
                             TransparentColorList[TransparentColorListCount].ObjectListIndex = ObjectListCount;
 	                        TransparentColorList[TransparentColorListCount].Wrap = wrap;
@@ -857,7 +857,7 @@ namespace OpenBve {
                                 Array.Resize(ref OpaqueList, OpaqueList.Length << 1);
                             }
 							OpaqueList[OpaqueListCount] = new ObjectFace();
-                            OpaqueList[OpaqueListCount].ObjectIndex = ObjectIndex;
+                            OpaqueList[OpaqueListCount].ObjectIndex = objectToShow.ObjectIndex;
                             OpaqueList[OpaqueListCount].FaceIndex = i;
                             OpaqueList[OpaqueListCount].ObjectListIndex = ObjectListCount;
 	                        OpaqueList[OpaqueListCount].Wrap = wrap;
@@ -867,7 +867,7 @@ namespace OpenBve {
                         }
                     }
                 }
-                ObjectManager.Objects[ObjectIndex].RendererIndex = ObjectListCount + 1;
+                objectToShow.RendererIndex = ObjectListCount + 1;
                 ObjectListCount++;
             }
         }

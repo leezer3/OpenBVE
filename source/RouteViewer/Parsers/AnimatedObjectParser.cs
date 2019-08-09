@@ -106,7 +106,7 @@ namespace OpenBve {
 											if (ObjectCount >= Result.Objects.Length) {
 												Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
 											}
-											ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
+											ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject(Program.CurrentHost);
 											AnimatedObjectState aos = new AnimatedObjectState(s, position);
 											a.States = new AnimatedObjectState[] { aos };
 											Result.Objects[ObjectCount] = a;
@@ -136,7 +136,7 @@ namespace OpenBve {
 								if (Result.Objects.Length == ObjectCount) {
 									Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
 								}
-								Result.Objects[ObjectCount] = new ObjectManager.AnimatedObject();
+								Result.Objects[ObjectCount] = new ObjectManager.AnimatedObject(Program.CurrentHost);
 								Result.Objects[ObjectCount].States = new AnimatedObjectState[] { };
 								Result.Objects[ObjectCount].CurrentState = -1;
 								Result.Objects[ObjectCount].TranslateXDirection = Vector3.Right;
@@ -148,7 +148,6 @@ namespace OpenBve {
 								Result.Objects[ObjectCount].TextureShiftXDirection = new Vector2(1.0, 0.0);
 								Result.Objects[ObjectCount].TextureShiftYDirection = new Vector2(0.0, 1.0);
 								Result.Objects[ObjectCount].RefreshRate = 0.0;
-								Result.Objects[ObjectCount].ObjectIndex = -1;
 								Vector3 Position = Vector3.Zero;
 								double RotateX = 0;
 								bool StaticXRotation = false;
