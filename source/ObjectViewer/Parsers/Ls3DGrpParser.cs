@@ -250,7 +250,7 @@ namespace OpenBve
 								obj[obj.Length - 1] = Object;
 								int aL = Result.Objects.Length;
 								Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, aL + 1);
-								ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
+								ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject(Program.CurrentHost);
 								AnimatedObjectState aos = new AnimatedObjectState(Object, CurrentObjects[i].Position);
 								a.States = new AnimatedObjectState[] { aos };
 								Result.Objects[aL] = a;
@@ -283,7 +283,7 @@ namespace OpenBve
 								}
 								else
 								{
-									Result.Objects[o] = new ObjectManager.AnimatedObject();
+									Result.Objects[o] = new ObjectManager.AnimatedObject(Program.CurrentHost);
 									Result.Objects[o].States = new AnimatedObjectState[0];
 								}
 							}
@@ -292,7 +292,7 @@ namespace OpenBve
 					if (staticObject != null)
 					{
 						Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length + 1);
-						ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
+						ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject(Program.CurrentHost);
 						AnimatedObjectState aos = new AnimatedObjectState(staticObject, Vector3.Zero);
 						a.States = new AnimatedObjectState[] { aos };
 						Result.Objects[Result.Objects.Length -1] = a;

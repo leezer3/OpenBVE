@@ -400,7 +400,7 @@ namespace OpenBve
 			{
 				for (int j = 0; j < shape.LODs[i].subObjects.Count; j++)
 				{
-					Result.Objects[idx] = new ObjectManager.AnimatedObject();
+					Result.Objects[idx] = new ObjectManager.AnimatedObject(Program.CurrentHost);
 					Result.Objects[idx].States = new AnimatedObjectState[1];
 					AnimatedObjectState aos = new AnimatedObjectState();
 					shape.LODs[i].subObjects[j].Apply(out aos.Object);

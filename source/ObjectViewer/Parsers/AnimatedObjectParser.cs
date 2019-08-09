@@ -107,7 +107,7 @@ namespace OpenBve
 											if (ObjectCount >= Result.Objects.Length) {
 												Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
 											}
-											ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
+											ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject(Program.CurrentHost);
 											AnimatedObjectState aos = new AnimatedObjectState(s, position);
 										    a.States = new AnimatedObjectState[] { aos };
 											Result.Objects[ObjectCount] = a;
@@ -137,7 +137,7 @@ namespace OpenBve
 								if (Result.Objects.Length == ObjectCount) {
 									Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
 								}
-							    Result.Objects[ObjectCount] = new ObjectManager.AnimatedObject
+							    Result.Objects[ObjectCount] = new ObjectManager.AnimatedObject(Program.CurrentHost)
 							    {
 							        States = new AnimatedObjectState[] {},
 							        CurrentState = -1,
@@ -150,7 +150,6 @@ namespace OpenBve
 							        TextureShiftXDirection = new Vector2(1.0, 0.0),
 							        TextureShiftYDirection = new Vector2(0.0, 1.0),
 							        RefreshRate = 0.0,
-							        ObjectIndex = -1
 							    };
 							    Vector3 Position = Vector3.Zero;
 								bool timetableUsed = false;
