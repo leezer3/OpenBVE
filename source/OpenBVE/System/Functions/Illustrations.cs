@@ -166,10 +166,10 @@ namespace OpenBve {
 					// for each track element, look for a StationStartEvent
 					for (int j = 0; j < TrackManager.Tracks[0].Elements[i+n0].Events.Length; j++)
 					{
-						if (TrackManager.Tracks[0].Elements[i+n0].Events[j] is TrackManager.StationStartEvent)
+						if (TrackManager.Tracks[0].Elements[i+n0].Events[j] is StationStartEvent)
 						{
-							TrackManager.StationStartEvent e =
-								(TrackManager.StationStartEvent)TrackManager.Tracks[0].Elements[i+n0].Events[j];
+							StationStartEvent e =
+								(StationStartEvent)TrackManager.Tracks[0].Elements[i+n0].Events[j];
 							// if StationStartEvent found, look for a change in ATS/ATC control;
 							// if there is a change, draw all previous track elements
 							// with colour for the previous control state
@@ -205,9 +205,9 @@ namespace OpenBve {
 			{
 				for (int j = 0; j < TrackManager.Tracks[0].Elements[i].Events.Length; j++)
 				{
-					if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationStartEvent)
+					if (TrackManager.Tracks[0].Elements[i].Events[j] is StationStartEvent)
 					{
-						TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.Tracks[0].Elements[i].Events[j];
+						StationStartEvent e = (StationStartEvent)TrackManager.Tracks[0].Elements[i].Events[j];
 						if (CurrentRoute.Stations[e.StationIndex].Name != string.Empty)
 						{
 							double x = TrackManager.Tracks[0].Elements[i].WorldPosition.X;
@@ -242,9 +242,9 @@ namespace OpenBve {
 				{
 					for (int j = 0; j < TrackManager.Tracks[0].Elements[i].Events.Length; j++)
 					{
-						if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationStartEvent)
+						if (TrackManager.Tracks[0].Elements[i].Events[j] is StationStartEvent)
 						{
-							TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.Tracks[0].Elements[i].Events[j];
+							StationStartEvent e = (StationStartEvent)TrackManager.Tracks[0].Elements[i].Events[j];
 							if (CurrentRoute.Stations[e.StationIndex].Name != string.Empty)
 							{
 								double x = TrackManager.Tracks[0].Elements[i].WorldPosition.X;
@@ -446,9 +446,9 @@ namespace OpenBve {
 				{
 					for (int j = 0; j < TrackManager.Tracks[0].Elements[i].Events.Length; j++)
 					{
-						if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationStartEvent)
+						if (TrackManager.Tracks[0].Elements[i].Events[j] is StationStartEvent)
 						{
-							TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.Tracks[0].Elements[i].Events[j];
+							StationStartEvent e = (StationStartEvent)TrackManager.Tracks[0].Elements[i].Events[j];
 							if (CurrentRoute.Stations[e.StationIndex].Name != string.Empty)
 							{
 								bool stop = CurrentRoute.Stations[e.StationIndex].PlayerStops();
@@ -584,7 +584,7 @@ namespace OpenBve {
 			{
 				for (int j = 0; j < TrackManager.Tracks[0].Elements[i].Events.Length; j++)
 				{
-					if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationStartEvent)
+					if (TrackManager.Tracks[0].Elements[i].Events[j] is StationStartEvent)
 					{
 						if (i < n0) n0 = i;
 						if (i > n1) n1 = i;

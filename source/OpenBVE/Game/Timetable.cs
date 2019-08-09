@@ -70,7 +70,7 @@ namespace OpenBve {
 				{
 					for (int j = 0; j < TrackManager.Tracks[0].Elements[i].Events.Length; j++)
 					{
-						TrackManager.StationStartEvent sse = TrackManager.Tracks[0].Elements[i].Events[j] as TrackManager.StationStartEvent;
+						StationStartEvent sse = TrackManager.Tracks[0].Elements[i].Events[j] as StationStartEvent;
 						if (sse != null && CurrentRoute.Stations[sse.StationIndex].Name != string.Empty)
 						{
 							if (Limit == -1.0) Limit = LastLimit;

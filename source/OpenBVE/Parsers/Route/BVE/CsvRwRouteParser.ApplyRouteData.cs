@@ -405,7 +405,7 @@ namespace OpenBve
 					int s = Data.Blocks[i].Station;
 					int m = TrackManager.Tracks[0].Elements[n].Events.Length;
 					Array.Resize(ref TrackManager.Tracks[0].Elements[n].Events, m + 1);
-					TrackManager.Tracks[0].Elements[n].Events[m] = new TrackManager.StationStartEvent(0.0, s);
+					TrackManager.Tracks[0].Elements[n].Events[m] = new StationStartEvent(0.0, s);
 					double dx, dy = 3.0;
 					if (CurrentRoute.Stations[s].OpenLeftDoors & !CurrentRoute.Stations[s].OpenRightDoors)
 					{
@@ -1709,9 +1709,9 @@ namespace OpenBve
 					{
 						if (!atc)
 						{
-							if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationStartEvent)
+							if (TrackManager.Tracks[0].Elements[i].Events[j] is StationStartEvent)
 							{
-								TrackManager.StationStartEvent station = (TrackManager.StationStartEvent)TrackManager.Tracks[0].Elements[i].Events[j];
+								StationStartEvent station = (StationStartEvent)TrackManager.Tracks[0].Elements[i].Events[j];
 								if (CurrentRoute.Stations[station.StationIndex].SafetySystem == SafetySystem.Atc)
 								{
 									Array.Resize(ref TrackManager.Tracks[0].Elements[i].Events, TrackManager.Tracks[0].Elements[i].Events.Length + 2);
@@ -1723,9 +1723,9 @@ namespace OpenBve
 						}
 						else
 						{
-							if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationStartEvent)
+							if (TrackManager.Tracks[0].Elements[i].Events[j] is StationStartEvent)
 							{
-								TrackManager.StationStartEvent station = (TrackManager.StationStartEvent)TrackManager.Tracks[0].Elements[i].Events[j];
+								StationStartEvent station = (StationStartEvent)TrackManager.Tracks[0].Elements[i].Events[j];
 								if (CurrentRoute.Stations[station.StationIndex].SafetySystem == SafetySystem.Ats)
 								{
 									Array.Resize(ref TrackManager.Tracks[0].Elements[i].Events, TrackManager.Tracks[0].Elements[i].Events.Length + 2);

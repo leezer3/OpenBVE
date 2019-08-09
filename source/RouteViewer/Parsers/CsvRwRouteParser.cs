@@ -5643,7 +5643,7 @@ namespace OpenBve {
 					int s = Data.Blocks[i].Station;
 					int m = TrackManager.CurrentTrack.Elements[n].Events.Length;
 					Array.Resize(ref TrackManager.CurrentTrack.Elements[n].Events, m + 1);
-					TrackManager.CurrentTrack.Elements[n].Events[m] = new TrackManager.StationStartEvent(0.0, s);
+					TrackManager.CurrentTrack.Elements[n].Events[m] = new StationStartEvent(0.0, s);
 					double dx, dy = 3.0;
 					if (CurrentRoute.Stations[s].OpenLeftDoors & !CurrentRoute.Stations[s].OpenRightDoors) {
 						dx = -5.0;

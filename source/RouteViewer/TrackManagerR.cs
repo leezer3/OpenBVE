@@ -22,26 +22,6 @@ namespace OpenBve {
             }
             public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) { }
         }
-        // station start
-        internal class StationStartEvent : GeneralEvent<TrainManager.Train, AbstractCar> {
-            internal int StationIndex;
-            internal StationStartEvent(double TrackPositionDelta, int StationIndex) {
-                this.TrackPositionDelta = TrackPositionDelta;
-                this.DontTriggerAnymore = false;
-                this.StationIndex = StationIndex;
-            }
-            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) {
-                if (TriggerType == EventTriggerType.Camera) {
-                    if (Direction < 0) {
-                        if (Program.CurrentStation == this.StationIndex) {
-                            Program.CurrentStation = -1;
-                        }
-                    } else if (Direction > 0) {
-                        Program.CurrentStation = this.StationIndex;
-                    }
-                }
-            }
-        }
         // station end
         internal class StationEndEvent : GeneralEvent<TrainManager.Train, AbstractCar> {
             internal int StationIndex;

@@ -382,9 +382,9 @@ namespace OpenBve
 							if (tp + lookahead <= stp) break;
 							for (int j = 0; j < TrackManager.Tracks[currentTrack].Elements[i].Events.Length; j++)
 							{
-								if (TrackManager.Tracks[currentTrack].Elements[i].Events[j] is TrackManager.StationStartEvent && Train.NextStopSkipped == StopSkipMode.None)
+								if (TrackManager.Tracks[currentTrack].Elements[i].Events[j] is StationStartEvent && Train.NextStopSkipped == StopSkipMode.None)
 								{
-									TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.Tracks[currentTrack].Elements[i].Events[j];
+									StationStartEvent e = (StationStartEvent)TrackManager.Tracks[currentTrack].Elements[i].Events[j];
 									if (StopsAtStation(e.StationIndex, Train) & Train.LastStation != e.StationIndex)
 									{
 										int s = CurrentRoute.Stations[e.StationIndex].GetStopIndex(Train.NumberOfCars);
@@ -484,12 +484,12 @@ namespace OpenBve
 										}
 									}
 								}
-								else if (TrackManager.Tracks[currentTrack].Elements[i].Events[j] is TrackManager.StationStartEvent && Train.NextStopSkipped == StopSkipMode.None)
+								else if (TrackManager.Tracks[currentTrack].Elements[i].Events[j] is StationStartEvent && Train.NextStopSkipped == StopSkipMode.None)
 								{
 									// station start
 									if (Train.Station == -1)
 									{
-										TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.Tracks[currentTrack].Elements[i].Events[j];
+										StationStartEvent e = (StationStartEvent)TrackManager.Tracks[currentTrack].Elements[i].Events[j];
 										if (StopsAtStation(e.StationIndex, Train) & Train.LastStation != e.StationIndex)
 										{
 											int s = CurrentRoute.Stations[e.StationIndex].GetStopIndex(Train.NumberOfCars);
@@ -513,12 +513,12 @@ namespace OpenBve
 										}
 									}
 								}
-								else if (TrackManager.Tracks[currentTrack].Elements[i].Events[j] is TrackManager.StationStartEvent && Train.NextStopSkipped == StopSkipMode.Decelerate)
+								else if (TrackManager.Tracks[currentTrack].Elements[i].Events[j] is StationStartEvent && Train.NextStopSkipped == StopSkipMode.Decelerate)
 								{
 									// Brakes the train when passing through a request stop, which is not to be passed at linespeed
 									if (Train.Station == -1)
 									{
-										TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.Tracks[currentTrack].Elements[i].Events[j];
+										StationStartEvent e = (StationStartEvent)TrackManager.Tracks[currentTrack].Elements[i].Events[j];
 										if (StopsAtStation(e.StationIndex, Train) & Train.LastStation != e.StationIndex)
 										{
 											int s = CurrentRoute.Stations[e.StationIndex].GetStopIndex(Train.NumberOfCars);

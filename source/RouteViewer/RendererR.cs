@@ -407,11 +407,11 @@ namespace OpenBve {
 							s = 0.25;
 							dy = 3.5;
 							t = BackgroundChangeTexture;
-						} else if (e is TrackManager.StationStartEvent) {
+						} else if (e is StationStartEvent) {
 							s = 0.25;
 							dy = 1.6;
 							t = StationStartTexture;
-							TrackManager.StationStartEvent f = (TrackManager.StationStartEvent)e;
+							StationStartEvent f = (StationStartEvent)e;
 							sta[f.StationIndex] = true;
 						} else if (e is TrackManager.StationEndEvent) {
 							s = 0.25;
