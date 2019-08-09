@@ -271,6 +271,16 @@ namespace OpenBve {
 			ObjectManager.CreateDynamicObject(ref internalObject);
 		}
 
+		public override void ShowObject(StaticObject objectToShow, ObjectType objectType)
+		{
+			Renderer.ShowObject(objectToShow, objectType);
+		}
+
+		public override void HideObject(ref StaticObject objectToHide)
+		{
+			Renderer.HideObject(ref objectToHide);
+		}
+
 		public Host() : base(HostApplication.OpenBve)
 		{
 		}

@@ -112,5 +112,61 @@ namespace OpenBveApi.Objects
 			if (this.TrackFollowerFunction != null) return false;
 			return true;
 		}
+		/// <summary>Initialises the object</summary>
+		/// <param name="StateIndex">The state to show</param>
+		/// <param name="Overlay">Whether this object is in overlay mode</param>
+		/// <param name="Show">Whether the object should be shown immediately on initialisation</param>
+		public void Initialize(int StateIndex, bool Overlay, bool Show)
+		{
+			currentHost.HideObject(ref internalObject);
+			int t = StateIndex;
+			if (t >= 0 && States[t].Object != null)
+			{
+				int m = States[t].Object.Mesh.Vertices.Length;
+				internalObject.Mesh.Vertices = new VertexTemplate[m];
+				for (int k = 0; k < m; k++)
+				{
+					if (States[t].Object.Mesh.Vertices[k] is ColoredVertex)
+					{
+						internalObject.Mesh.Vertices[k] = new ColoredVertex((ColoredVertex)States[t].Object.Mesh.Vertices[k]);
+					}
+					else
+					{
+						internalObject.Mesh.Vertices[k] = new Vertex((Vertex)States[t].Object.Mesh.Vertices[k]);
+					}
+						
+				}
+				m = States[t].Object.Mesh.Faces.Length;
+				internalObject.Mesh.Faces = new MeshFace[m];
+				for (int k = 0; k < m; k++)
+				{
+					internalObject.Mesh.Faces[k].Flags = States[t].Object.Mesh.Faces[k].Flags;
+					internalObject.Mesh.Faces[k].Material = States[t].Object.Mesh.Faces[k].Material;
+					int o = States[t].Object.Mesh.Faces[k].Vertices.Length;
+					internalObject.Mesh.Faces[k].Vertices = new MeshFaceVertex[o];
+					for (int h = 0; h < o; h++)
+					{
+						internalObject.Mesh.Faces[k].Vertices[h] = States[t].Object.Mesh.Faces[k].Vertices[h];
+					}
+				}
+				internalObject.Mesh.Materials = States[t].Object.Mesh.Materials;
+			}
+			else
+			{
+				internalObject = new StaticObject(currentHost);
+			}
+			CurrentState = StateIndex;
+			if (Show)
+			{
+				if (Overlay)
+				{
+					currentHost.ShowObject(internalObject, ObjectType.Overlay);
+				}
+				else
+				{
+					currentHost.ShowObject(internalObject, ObjectType.Dynamic);
+				}
+			}
+		}
 	}
 }

@@ -88,60 +88,7 @@ namespace OpenBve
 				}
 				return Result;
 			}
-
-			internal void Initialize(int StateIndex, bool Overlay, bool Show)
-			{
-				Renderer.HideObject(ref internalObject);
-				int t = StateIndex;
-				if (t >= 0 && States[t].Object != null)
-				{
-					int m = States[t].Object.Mesh.Vertices.Length;
-					internalObject.Mesh.Vertices = new VertexTemplate[m];
-					for (int k = 0; k < m; k++)
-					{
-						if (States[t].Object.Mesh.Vertices[k] is ColoredVertex)
-						{
-							internalObject.Mesh.Vertices[k] = new ColoredVertex((ColoredVertex)States[t].Object.Mesh.Vertices[k]);
-						}
-						else
-						{
-							internalObject.Mesh.Vertices[k] = new Vertex((Vertex)States[t].Object.Mesh.Vertices[k]);
-						}
-						
-					}
-					m = States[t].Object.Mesh.Faces.Length;
-					internalObject.Mesh.Faces = new MeshFace[m];
-					for (int k = 0; k < m; k++)
-					{
-						internalObject.Mesh.Faces[k].Flags = States[t].Object.Mesh.Faces[k].Flags;
-						internalObject.Mesh.Faces[k].Material = States[t].Object.Mesh.Faces[k].Material;
-						int o = States[t].Object.Mesh.Faces[k].Vertices.Length;
-						internalObject.Mesh.Faces[k].Vertices = new MeshFaceVertex[o];
-						for (int h = 0; h < o; h++)
-						{
-							internalObject.Mesh.Faces[k].Vertices[h] = States[t].Object.Mesh.Faces[k].Vertices[h];
-						}
-					}
-					internalObject.Mesh.Materials = States[t].Object.Mesh.Materials;
-				}
-				else
-				{
-					internalObject = new StaticObject(currentHost);
-				}
-				CurrentState = StateIndex;
-				if (Show)
-				{
-					if (Overlay)
-					{
-						Renderer.ShowObject(internalObject, ObjectType.Overlay);
-					}
-					else
-					{
-						Renderer.ShowObject(internalObject, ObjectType.Dynamic);
-					}
-				}
-			}
-
+			
 			/// <summary> Updates the position and state of the animated object</summary>
 			/// <param name="IsPartOfTrain">Whether this object forms part of a train</param>
 			/// <param name="Train">The train, or a null reference otherwise</param>
@@ -736,16 +683,16 @@ namespace OpenBve
 						{
 							if (Overlay)
 							{
-								Renderer.ShowObject(internalObject, ObjectType.Overlay);
+								currentHost.ShowObject(internalObject, ObjectType.Overlay);
 							}
 							else
 							{
-								Renderer.ShowObject(internalObject, ObjectType.Dynamic);
+								currentHost.ShowObject(internalObject, ObjectType.Dynamic);
 							}
 						}
 						else
 						{
-							Renderer.HideObject(ref internalObject);
+							currentHost.HideObject(ref internalObject);
 						}
 					}
 				}

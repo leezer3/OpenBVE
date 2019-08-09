@@ -206,6 +206,21 @@ namespace OpenBveApi.Hosts {
 			
 		}
 
+		/// <summary>Shows an object in the base renderer</summary>
+		/// <param name="objectToShow">The reference to the object to show</param>
+		/// <param name="objectType">The object type</param>
+		public virtual void ShowObject(StaticObject objectToShow, ObjectType objectType)
+		{
+
+		}
+
+		/// <summary>Hides an object in the base renderer</summary>
+		/// <param name="objectToHide">The reference to the object to hide</param>
+		public virtual void HideObject(ref StaticObject objectToHide)
+		{
+
+		}
+
 		/// <summary>Adds a log message to the host application.</summary>
 		/// <param name="type">The type of message to be reported.</param>
 		/// <param name="FileNotFound">Whether this message relates to a file not found</param>
