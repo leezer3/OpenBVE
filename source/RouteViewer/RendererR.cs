@@ -375,7 +375,7 @@ namespace OpenBve {
 		
 		// render events
 		private static void RenderEvents(Vector3 Camera) {
-			if (TrackManager.Tracks[0].Elements == null) {
+			if (CurrentRoute.Tracks[0].Elements == null) {
 				return;
 			}
 			LibRender.Renderer.LastBoundTexture = null;
@@ -391,12 +391,12 @@ namespace OpenBve {
 			double db = LibRender.Camera.ForwardViewingDistance + LibRender.Camera.ExtraViewingDistance;
 			bool[] sta = new bool[CurrentRoute.Stations.Length];
 			// events
-			for (int i = 0; i < TrackManager.Tracks[0].Elements.Length; i++) {
-				double p = TrackManager.Tracks[0].Elements[i].StartingTrackPosition;
+			for (int i = 0; i < CurrentRoute.Tracks[0].Elements.Length; i++) {
+				double p = CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition;
 				double d = p - World.CameraTrackFollower.TrackPosition;
 				if (d >= da & d <= db) {
-					for (int j = 0; j < TrackManager.Tracks[0].Elements[i].Events.Length; j++) {
-						dynamic e = TrackManager.Tracks[0].Elements[i].Events[j];
+					for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Length; j++) {
+						dynamic e = CurrentRoute.Tracks[0].Elements[i].Events[j];
 						double dy, dx = 0.0, dz = 0.0;
 						double s; Texture t;
 						if (e is BrightnessChangeEvent) {
@@ -565,7 +565,7 @@ namespace OpenBve {
 							}
 							else
 							{
-								LibRender.Renderer.DrawString(Fonts.SmallFont, (Environment.TickCount % 1000 <= 500 ? Program.JumpToPositionValue + "_" : Program.JumpToPositionValue), new Point(4, 100), TextAlignment.TopLeft, distance > TrackManager.Tracks[0].Elements[TrackManager.Tracks[0].Elements.Length - 1].StartingTrackPosition + 100
+								LibRender.Renderer.DrawString(Fonts.SmallFont, (Environment.TickCount % 1000 <= 500 ? Program.JumpToPositionValue + "_" : Program.JumpToPositionValue), new Point(4, 100), TextAlignment.TopLeft, distance > CurrentRoute.Tracks[0].Elements[CurrentRoute.Tracks[0].Elements.Length - 1].StartingTrackPosition + 100
 								? Color128.Red : Color128.Yellow, true);
 							}
 							

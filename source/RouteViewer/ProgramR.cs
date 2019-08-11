@@ -586,7 +586,7 @@ namespace OpenBve {
 							double value;
 							if (double.TryParse(JumpToPositionValue, NumberStyles.Float, CultureInfo.InvariantCulture,
 								out value))
-								if (value < TrackManager.Tracks[0].Elements[TrackManager.Tracks[0].Elements.Length - 1].StartingTrackPosition + 100 && value > MinimumJumpToPositionValue - 100)
+								if (value < RouteManager.CurrentRoute.Tracks[0].Elements[RouteManager.CurrentRoute.Tracks[0].Elements.Length - 1].StartingTrackPosition + 100 && value > MinimumJumpToPositionValue - 100)
 							{
 								if (direction != 0)
 								{

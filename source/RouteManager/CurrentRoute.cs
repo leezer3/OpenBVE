@@ -10,6 +10,8 @@ namespace OpenBve.RouteManager
 	/// <summary>The current route</summary>
 	public static class CurrentRoute
 	{
+		/// <summary>The list of tracks available in the simulation.</summary>
+		public static Track[] Tracks = new Track[] { new Track() };
 		/// <summary>Holds all signal sections within the current route</summary>
 		public static Section[] Sections = { };
 		/// <summary>Holds all stations within the current route</summary>

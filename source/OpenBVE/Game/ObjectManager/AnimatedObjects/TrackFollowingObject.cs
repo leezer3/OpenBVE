@@ -1,5 +1,6 @@
 ﻿using System;
 using LibRender;
+using OpenBve.RouteManager;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
@@ -123,8 +124,8 @@ namespace OpenBve
 				// apply position due to cant/toppling
 				{
 					double a = CurrentRollDueToTopplingAngle + CurrentRollDueToCantAngle;
-					double x = Math.Sign(a) * 0.5 * TrackManager.Tracks[FrontAxleFollower.TrackIndex].RailGauge * (1.0 - Math.Cos(a));
-					double y = Math.Abs(0.5 * TrackManager.Tracks[FrontAxleFollower.TrackIndex].RailGauge * Math.Sin(a));
+					double x = Math.Sign(a) * 0.5 * CurrentRoute.Tracks[FrontAxleFollower.TrackIndex].RailGauge * (1.0 - Math.Cos(a));
+					double y = Math.Abs(0.5 * CurrentRoute.Tracks[FrontAxleFollower.TrackIndex].RailGauge * Math.Sin(a));
 					Vector3 c = Side * x + Up * y;
 
 					FrontAxleFollower.WorldPosition += c;
