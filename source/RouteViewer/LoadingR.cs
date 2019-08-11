@@ -149,8 +149,10 @@ namespace OpenBve {
 			ObjectManager.FinishCreatingObjects();
 			// signals
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
+			// ReSharper disable once CoVariantArrayConversion
+			CurrentRoute.Trains = TrainManager.Trains;
 			if (CurrentRoute.Sections.Length > 0) {
-				Game.UpdateSection(CurrentRoute.Sections.Length - 1);
+				CurrentRoute.Sections[CurrentRoute.Sections.Length - 1].Update(Game.SecondsSinceMidnight);
 			}
 			// starting track position
 			System.Threading.Thread.Sleep(1); if (Cancel) return;

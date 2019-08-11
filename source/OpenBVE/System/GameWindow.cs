@@ -256,7 +256,7 @@ namespace OpenBve
 				{
 					if (CurrentRoute.Sections.Length != 0)
 					{
-						Game.UpdateSection(CurrentRoute.Sections.Length - 1);
+						Game.UpdateAllSections();
 					}
 					TotalTimeElapsedForSectionUpdate = 0.0;
 				}
@@ -683,7 +683,7 @@ namespace OpenBve
 			// signals
 			if (CurrentRoute.Sections.Length > 0)
 			{
-				Game.UpdateSection(CurrentRoute.Sections.Length - 1);
+				Game.UpdateAllSections();
 			}
 			// move train in position
 			for (int i = 0; i < TrainManager.Trains.Length; i++)
@@ -732,7 +732,7 @@ namespace OpenBve
 			}
 			if (CurrentRoute.Sections.Length > 0)
 			{
-				Game.UpdateSection(CurrentRoute.Sections.Length - 1);
+				Game.UpdateAllSections();
 			}
 			// fast-forward until start time
 			{
@@ -752,7 +752,7 @@ namespace OpenBve
 						{
 							if (CurrentRoute.Sections.Length > 0)
 							{
-								Game.UpdateSection(CurrentRoute.Sections.Length - 1);
+								Game.UpdateAllSections();
 							}
 							TotalTimeElapsedForSectionUpdate = 0.0;
 						}
