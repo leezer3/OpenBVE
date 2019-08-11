@@ -37,7 +37,7 @@ namespace OpenBve {
 			double tr = Camera.CurrentAlignment.TrackPosition;
 			AdjustAlignment(ref Camera.CurrentAlignment.TrackPosition, Camera.AlignmentDirection.TrackPosition, ref Camera.AlignmentSpeed.TrackPosition, TimeElapsed);
 			if (tr != Camera.CurrentAlignment.TrackPosition) {
-				TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, Camera.CurrentAlignment.TrackPosition, true, false);
+				World.CameraTrackFollower.UpdateAbsolute(Camera.CurrentAlignment.TrackPosition, true, false);
 				q = true;
 			}
 			if (q) {

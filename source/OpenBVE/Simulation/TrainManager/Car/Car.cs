@@ -81,17 +81,17 @@ namespace OpenBve
 			{
 				if (baseTrain.State != TrainState.Disposed)
 				{
-					FrontAxle.Follower.Update(FrontAxle.Follower.TrackPosition + Delta, true, true);
-					FrontBogie.FrontAxle.Follower.Update(FrontBogie.FrontAxle.Follower.TrackPosition + Delta, true, true);
-					FrontBogie.RearAxle.Follower.Update(FrontBogie.RearAxle.Follower.TrackPosition + Delta, true, true);
+					FrontAxle.Follower.UpdateRelative(Delta, true, true);
+					FrontBogie.FrontAxle.Follower.UpdateRelative(Delta, true, true);
+					FrontBogie.RearAxle.Follower.UpdateRelative(Delta, true, true);
 					if (baseTrain.State != TrainState.Disposed)
 					{
-						RearAxle.Follower.Update(RearAxle.Follower.TrackPosition + Delta, true, true);
-						RearBogie.FrontAxle.Follower.Update(RearBogie.FrontAxle.Follower.TrackPosition + Delta, true, true);
-						RearBogie.RearAxle.Follower.Update(RearBogie.RearAxle.Follower.TrackPosition + Delta, true, true);
+						RearAxle.Follower.UpdateRelative(Delta, true, true);
+						RearBogie.FrontAxle.Follower.UpdateRelative(Delta, true, true);
+						RearBogie.RearAxle.Follower.UpdateRelative(Delta, true, true);
 						if (baseTrain.State != TrainState.Disposed)
 						{
-							BeaconReceiver.Update(BeaconReceiver.TrackPosition + Delta, true, true);
+							BeaconReceiver.UpdateRelative(Delta, true, true);
 						}
 					}
 				}
@@ -104,15 +104,15 @@ namespace OpenBve
 			internal void UpdateTrackFollowers(double NewTrackPosition, bool UpdateWorldCoordinates, bool AddTrackInaccurary)
 			{
 				//Car axles
-				FrontAxle.Follower.Update(FrontAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
-				RearAxle.Follower.Update(RearAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
+				FrontAxle.Follower.UpdateRelative(NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
+				RearAxle.Follower.UpdateRelative(NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
 				//Front bogie axles
-				FrontBogie.FrontAxle.Follower.Update(FrontBogie.FrontAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
-				FrontBogie.RearAxle.Follower.Update(FrontBogie.RearAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
+				FrontBogie.FrontAxle.Follower.UpdateRelative(NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
+				FrontBogie.RearAxle.Follower.UpdateRelative(NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
 				//Rear bogie axles
 
-				RearBogie.FrontAxle.Follower.Update(RearBogie.FrontAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
-				RearBogie.RearAxle.Follower.Update(RearBogie.RearAxle.Follower.TrackPosition + NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
+				RearBogie.FrontAxle.Follower.UpdateRelative(NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
+				RearBogie.RearAxle.Follower.UpdateRelative(NewTrackPosition, UpdateWorldCoordinates, AddTrackInaccurary);
 			}
 
 			/// <summary>Initializes the car</summary>
@@ -139,10 +139,10 @@ namespace OpenBve
 			{
 				double s = 0.5 * (FrontAxle.Follower.TrackPosition + RearAxle.Follower.TrackPosition);
 				double d = 0.5 * (FrontAxle.Follower.TrackPosition - RearAxle.Follower.TrackPosition);
-				FrontAxle.Follower.Update(s + d, false, false);
-				RearAxle.Follower.Update(s - d, false, false);
+				FrontAxle.Follower.UpdateAbsolute(s + d, false, false);
+				RearAxle.Follower.UpdateAbsolute(s - d, false, false);
 				double b = FrontAxle.Follower.TrackPosition - FrontAxle.Position + BeaconReceiverPosition;
-				BeaconReceiver.Update(b, false, false);
+				BeaconReceiver.UpdateAbsolute(b, false, false);
 			}
 
 			public override void CreateWorldCoordinates(Vector3 Car, out Vector3 Position, out Vector3 Direction)
@@ -759,7 +759,7 @@ namespace OpenBve
 				}
 				// roll due to cant (incorporates shaking)
 				{
-					double cantAngle = Math.Atan(c / TrackManager.Tracks[FrontAxle.Follower.TrackIndex].RailGauge);
+					double cantAngle = Math.Atan(c / CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge);
 					Specs.CurrentRollDueToCantAngle = cantAngle + Specs.CurrentRollDueToShakingAngle;
 				}
 				// pitch due to acceleration
@@ -842,7 +842,7 @@ namespace OpenBve
 					double ab = Specs.CurrentRollDueToTopplingAngle + Specs.CurrentRollDueToCantAngle;
 					double h = Specs.CenterOfGravityHeight;
 					double sr = Math.Abs(CurrentSpeed);
-					double rmax = 2.0 * h * sr * sr / (Atmosphere.AccelerationDueToGravity * TrackManager.Tracks[FrontAxle.Follower.TrackIndex].RailGauge);
+					double rmax = 2.0 * h * sr * sr / (Atmosphere.AccelerationDueToGravity * CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge);
 					double ta;
 					Topples = false;
 					if (Derailed)
@@ -856,7 +856,7 @@ namespace OpenBve
 						{
 							if (r < rmax)
 							{
-								double s0 = Math.Sqrt(r * Atmosphere.AccelerationDueToGravity * TrackManager.Tracks[FrontAxle.Follower.TrackIndex].RailGauge / (2.0 * h));
+								double s0 = Math.Sqrt(r * Atmosphere.AccelerationDueToGravity * CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge / (2.0 * h));
 								const double fac = 0.25; // arbitrary coefficient
 								ta = -fac * (sr - s0) * rs;
 								baseTrain.Topple(Index, TimeElapsed);
@@ -902,8 +902,8 @@ namespace OpenBve
 				// apply position due to cant/toppling
 				{
 					double a = Specs.CurrentRollDueToTopplingAngle + Specs.CurrentRollDueToCantAngle;
-					double x = Math.Sign(a) * 0.5 * TrackManager.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * (1.0 - Math.Cos(a));
-					double y = Math.Abs(0.5 * TrackManager.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * Math.Sin(a));
+					double x = Math.Sign(a) * 0.5 * CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * (1.0 - Math.Cos(a));
+					double y = Math.Abs(0.5 * CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * Math.Sin(a));
 					Vector3 cc = new Vector3(s.X * x + Up.X * y, s.Y * x + Up.Y * y, s.Z * x + Up.Z * y);
 					FrontAxle.Follower.WorldPosition += cc;
 					RearAxle.Follower.WorldPosition += cc;
@@ -1078,7 +1078,7 @@ namespace OpenBve
 				World.CameraTrackFollower.WorldSide = new Vector3(sx, sy, sz);
 				double f = (Driver.Z - RearAxle.Position) / (FrontAxle.Position - RearAxle.Position);
 				double tp = (1.0 - f) * RearAxle.Follower.TrackPosition + f * FrontAxle.Follower.TrackPosition;
-				World.CameraTrackFollower.Update(tp, false, false);
+				World.CameraTrackFollower.UpdateAbsolute(tp, false, false);
 			}
 		}
 	}

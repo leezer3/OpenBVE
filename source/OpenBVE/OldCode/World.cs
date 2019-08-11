@@ -163,7 +163,7 @@ namespace OpenBve {
 				double tr = Camera.CurrentAlignment.TrackPosition;
 				AdjustAlignment(ref Camera.CurrentAlignment.TrackPosition, Camera.AlignmentDirection.TrackPosition, ref Camera.AlignmentSpeed.TrackPosition, TimeElapsed);
 				if (tr != Camera.CurrentAlignment.TrackPosition) {
-					World.CameraTrackFollower.Update(Camera.CurrentAlignment.TrackPosition, true, false);
+					World.CameraTrackFollower.UpdateAbsolute(Camera.CurrentAlignment.TrackPosition, true, false);
 					UpdateViewingDistances();
 				}
 				// position to focus on
@@ -272,7 +272,7 @@ namespace OpenBve {
 					double tr = Camera.CurrentAlignment.TrackPosition;
 					AdjustAlignment(ref Camera.CurrentAlignment.TrackPosition, Camera.AlignmentDirection.TrackPosition, ref Camera.AlignmentSpeed.TrackPosition, TimeElapsed);
 					if (tr != Camera.CurrentAlignment.TrackPosition) {
-						World.CameraTrackFollower.Update(Camera.CurrentAlignment.TrackPosition, true, false);
+						World.CameraTrackFollower.UpdateAbsolute(Camera.CurrentAlignment.TrackPosition, true, false);
 						q = true;
 					}
 					if (q) {
@@ -295,7 +295,7 @@ namespace OpenBve {
 					d -= TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].FrontAxle.Position;
 					TrackManager.TrackFollower f = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].FrontAxle.Follower;
 					f.TriggerType = EventTriggerType.None;
-					f.Update(f.TrackPosition + d, true, false);
+					f.UpdateRelative(d, true, false);
 					Vector3 r = new Vector3(f.WorldPosition - cF + World.CameraTrackFollower.WorldSide * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.X + World.CameraTrackFollower.WorldUp * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Y + World.CameraTrackFollower.WorldDirection * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Driver.Z);
 					r.Normalize();
 					double t = dF.Z * (sF.Y * uF.X - sF.X * uF.Y) + dF.Y * (-sF.Z * uF.X + sF.X * uF.Z) + dF.X * (sF.Z * uF.Y - sF.Y * uF.Z);
