@@ -110,7 +110,7 @@ namespace OpenBve
 							}
 						}
 					}
-					if (Type == ObjectType.Overlay & Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
+					if (Type == ObjectType.Overlay & CameraProperties.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 					{
 						alpha = true;
 					}
@@ -332,7 +332,10 @@ namespace OpenBve
 								throw new InvalidOperationException();
 						}
 						int listIndex = Objects[k].FaceListReferences[i].Index;
-						list.Faces[listIndex] = list.Faces[list.FaceCount - 1];
+						if (list.FaceCount > 0)
+						{
+							list.Faces[listIndex] = list.Faces[list.FaceCount - 1];
+						}
 						Objects[list.Faces[listIndex].ObjectListIndex].FaceListReferences[list.Faces[listIndex].FaceIndex].Index = listIndex;
 						list.FaceCount--;
 					}

@@ -9,6 +9,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
+using static LibRender.CameraProperties;
 
 namespace OpenBve
 {
@@ -638,9 +639,9 @@ namespace OpenBve
 					{
 						internalObject.Mesh.Vertices[k].Coordinates += States[s].Position - Position;
 						internalObject.Mesh.Vertices[k].Coordinates.Rotate(Camera.AbsoluteDirection, Camera.AbsoluteUp, Camera.AbsoluteSide);
-						double dx = -Math.Tan(Camera.CurrentAlignment.Yaw) - Camera.CurrentAlignment.Position.X;
-						double dy = -Math.Tan(Camera.CurrentAlignment.Pitch) - Camera.CurrentAlignment.Position.Y;
-						double dz = -Camera.CurrentAlignment.Position.Z;
+						double dx = -Math.Tan(Camera.Alignment.Yaw) - Camera.Alignment.Position.X;
+						double dy = -Math.Tan(Camera.Alignment.Pitch) - Camera.Alignment.Position.Y;
+						double dz = -Camera.Alignment.Position.Z;
 						internalObject.Mesh.Vertices[k].Coordinates.X += Camera.AbsolutePosition.X + dx * Camera.AbsoluteSide.X + dy * Camera.AbsoluteUp.X + dz * Camera.AbsoluteDirection.X;
 						internalObject.Mesh.Vertices[k].Coordinates.Y += Camera.AbsolutePosition.Y + dx * Camera.AbsoluteSide.Y + dy * Camera.AbsoluteUp.Y + dz * Camera.AbsoluteDirection.Y;
 						internalObject.Mesh.Vertices[k].Coordinates.Z += Camera.AbsolutePosition.Z + dx * Camera.AbsoluteSide.Z + dy * Camera.AbsoluteUp.Z + dz * Camera.AbsoluteDirection.Z;

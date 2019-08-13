@@ -16,6 +16,7 @@ using Vector3 = OpenBveApi.Math.Vector3;
 using OpenBveApi.Objects;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
+using static LibRender.CameraProperties;
 
 namespace OpenBve
 {

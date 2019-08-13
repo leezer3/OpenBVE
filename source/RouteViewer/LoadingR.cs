@@ -11,10 +11,10 @@ using System.Text;
 using System.Windows.Forms;
 using LibRender;
 using OpenBve.RouteManager;
-using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
+using static LibRender.CameraProperties;
 
 namespace OpenBve {
 	internal static class Loading {
@@ -63,7 +63,7 @@ namespace OpenBve {
 					Folder = Info.FullName;
 				}
 			} catch { }
-			//If the Route, Object and Sound folders exist, but are not in a railway folder.....
+			//If the Route, Object and Sound folders exist, but are not in a railway folder...
 			try
 			{
 				string Folder = System.IO.Path.GetDirectoryName(RouteFile);
@@ -176,9 +176,9 @@ namespace OpenBve {
 			// initialize camera
 			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, -1.0, true, false);
 			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, FirstStationPosition, true, false);
-			Camera.CurrentAlignment = new CameraAlignment(new Vector3(0.0, 2.5, 0.0), 0.0, 0.0, 0.0, FirstStationPosition, 1.0);
+			Camera.Alignment = new CameraAlignment(new Vector3(0.0, 2.5, 0.0), 0.0, 0.0, 0.0, FirstStationPosition, 1.0);
 			World.UpdateAbsoluteCamera(0.0);
-			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z);
+			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z);
 		}
 
 	}

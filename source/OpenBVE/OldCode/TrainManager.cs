@@ -8,6 +8,7 @@ using OpenBve.Parsers.Panel;
 using OpenBve.RouteManager;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
+using static LibRender.CameraProperties;
 
 namespace OpenBve
 {

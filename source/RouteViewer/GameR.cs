@@ -8,7 +8,6 @@
 using System;
 using LibRender;
 using OpenBveApi.Colors;
-using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
@@ -16,6 +15,7 @@ using OpenBve.RouteManager;
 using OpenBve.SignalManager;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
+using static LibRender.CameraProperties;
 
 namespace OpenBve {
 	internal static class Game {
@@ -232,11 +232,11 @@ namespace OpenBve {
 			// process poi
 			if (j >= 0) {
 				TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, t, true, false);
-				Camera.CurrentAlignment.Position = CurrentRoute.PointsOfInterest[j].TrackOffset;
-				Camera.CurrentAlignment.Yaw = CurrentRoute.PointsOfInterest[j].TrackYaw;
-				Camera.CurrentAlignment.Pitch = CurrentRoute.PointsOfInterest[j].TrackPitch;
-				Camera.CurrentAlignment.Roll = CurrentRoute.PointsOfInterest[j].TrackRoll;
-				Camera.CurrentAlignment.TrackPosition = t;
+				Camera.Alignment.Position = CurrentRoute.PointsOfInterest[j].TrackOffset;
+				Camera.Alignment.Yaw = CurrentRoute.PointsOfInterest[j].TrackYaw;
+				Camera.Alignment.Pitch = CurrentRoute.PointsOfInterest[j].TrackPitch;
+				Camera.Alignment.Roll = CurrentRoute.PointsOfInterest[j].TrackRoll;
+				Camera.Alignment.TrackPosition = t;
 				World.UpdateAbsoluteCamera(0.0);
 				return true;
 			} else {

@@ -20,6 +20,7 @@ using OpenTK.Input;
 using ButtonState = OpenTK.Input.ButtonState;
 using Screen = LibRender.Screen;
 using Vector3 = OpenBveApi.Math.Vector3;
+using static LibRender.CameraProperties;
 
 namespace OpenBve {
 	internal static class Program {

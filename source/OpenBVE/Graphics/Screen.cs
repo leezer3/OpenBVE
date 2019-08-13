@@ -7,7 +7,7 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
-
+using static LibRender.CameraProperties;
 
 namespace OpenBve
 {
@@ -206,11 +206,11 @@ namespace OpenBve
             //Otherwise, if the aspect ratio changes distortion will occur until the view is changed or the camera reset
             if (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead)
             {
-                Camera.CurrentAlignment.Position = OpenBveApi.Math.Vector3.Zero;
+                Camera.Alignment.Position = OpenBveApi.Math.Vector3.Zero;
             }
-            Camera.CurrentAlignment.Yaw = 0.0;
-            Camera.CurrentAlignment.Pitch = 0.0;
-            Camera.CurrentAlignment.Roll = 0.0;
+            Camera.Alignment.Yaw = 0.0;
+            Camera.Alignment.Pitch = 0.0;
+            Camera.Alignment.Roll = 0.0;
 		}
         
 		

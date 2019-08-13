@@ -6,6 +6,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
+using static LibRender.CameraProperties;
 
 namespace OpenBve
 {
@@ -384,8 +385,8 @@ namespace OpenBve
 										{
 											double s = Camera.CurrentMode == CameraViewMode.Interior |
 													   Camera.CurrentMode == CameraViewMode.InteriorLookAhead
-												? Camera.InteriorTopSpeed
-												: Camera.ExteriorTopSpeed;
+												? InteriorTopSpeed
+												: ExteriorTopSpeed;
 											Camera.AlignmentDirection.Position.Z = s*
 																						Interface.CurrentControls[i]
 																							.AnalogState;
@@ -397,7 +398,7 @@ namespace OpenBve
 												//Don't let the camera run off the end of the worldspace
 												break;
 											}
-											Camera.AlignmentDirection.TrackPosition = Camera.ExteriorTopSpeed*
+											Camera.AlignmentDirection.TrackPosition = ExteriorTopSpeed*
 																						   Interface.CurrentControls[i]
 																							   .AnalogState;
 										}
@@ -410,8 +411,8 @@ namespace OpenBve
 										{
 											double s = Camera.CurrentMode == CameraViewMode.Interior |
 													   Camera.CurrentMode == CameraViewMode.InteriorLookAhead
-												? Camera.InteriorTopSpeed
-												: Camera.ExteriorTopSpeed;
+												? InteriorTopSpeed
+												: ExteriorTopSpeed;
 											Camera.AlignmentDirection.Position.Z = -s*
 																						Interface.CurrentControls[i]
 																							.AnalogState;
@@ -419,7 +420,7 @@ namespace OpenBve
 										else
 										{
 											Camera.AlignmentDirection.TrackPosition =
-												-Camera.ExteriorTopSpeed*Interface.CurrentControls[i].AnalogState;
+												-ExteriorTopSpeed*Interface.CurrentControls[i].AnalogState;
 										}
 										break;
 									case Translations.Command.CameraMoveLeft:
@@ -427,8 +428,8 @@ namespace OpenBve
 									{
 										double s = Camera.CurrentMode == CameraViewMode.Interior |
 												   Camera.CurrentMode == CameraViewMode.InteriorLookAhead
-											? Camera.InteriorTopSpeed
-											: Camera.ExteriorTopSpeed;
+											? InteriorTopSpeed
+											: ExteriorTopSpeed;
 										Camera.AlignmentDirection.Position.X = -s*
 																					Interface.CurrentControls[i]
 																						.AnalogState;
@@ -439,8 +440,8 @@ namespace OpenBve
 									{
 										double s = Camera.CurrentMode == CameraViewMode.Interior |
 												   Camera.CurrentMode == CameraViewMode.InteriorLookAhead
-											? Camera.InteriorTopSpeed
-											: Camera.ExteriorTopSpeed;
+											? InteriorTopSpeed
+											: ExteriorTopSpeed;
 										Camera.AlignmentDirection.Position.X = s*
 																					Interface.CurrentControls[i]
 																						.AnalogState;
@@ -451,8 +452,8 @@ namespace OpenBve
 									{
 										double s = Camera.CurrentMode == CameraViewMode.Interior |
 												   Camera.CurrentMode == CameraViewMode.InteriorLookAhead
-											? Camera.InteriorTopSpeed
-											: Camera.ExteriorTopSpeed;
+											? InteriorTopSpeed
+											: ExteriorTopSpeed;
 										Camera.AlignmentDirection.Position.Y = s*
 																					Interface.CurrentControls[i]
 																						.AnalogState;
@@ -463,8 +464,8 @@ namespace OpenBve
 									{
 										double s = Camera.CurrentMode == CameraViewMode.Interior |
 												   Camera.CurrentMode == CameraViewMode.InteriorLookAhead
-											? Camera.InteriorTopSpeed
-											: Camera.ExteriorTopSpeed;
+											? InteriorTopSpeed
+											: ExteriorTopSpeed;
 										Camera.AlignmentDirection.Position.Y = -s*
 																					Interface.CurrentControls[i]
 																						.AnalogState;
@@ -475,8 +476,8 @@ namespace OpenBve
 									{
 										double s = Camera.CurrentMode == CameraViewMode.Interior |
 												   Camera.CurrentMode == CameraViewMode.InteriorLookAhead
-											? Camera.InteriorTopAngularSpeed
-											: Camera.ExteriorTopAngularSpeed;
+											? InteriorTopAngularSpeed
+											: ExteriorTopAngularSpeed;
 										Camera.AlignmentDirection.Yaw = -s*Interface.CurrentControls[i].AnalogState;
 									}
 										break;
@@ -485,8 +486,8 @@ namespace OpenBve
 									{
 										double s = Camera.CurrentMode == CameraViewMode.Interior |
 												   Camera.CurrentMode == CameraViewMode.InteriorLookAhead
-											? Camera.InteriorTopAngularSpeed
-											: Camera.ExteriorTopAngularSpeed;
+											? InteriorTopAngularSpeed
+											: ExteriorTopAngularSpeed;
 										Camera.AlignmentDirection.Yaw = s*Interface.CurrentControls[i].AnalogState;
 									}
 										break;
@@ -495,8 +496,8 @@ namespace OpenBve
 									{
 										double s = Camera.CurrentMode == CameraViewMode.Interior |
 												   Camera.CurrentMode == CameraViewMode.InteriorLookAhead
-											? Camera.InteriorTopAngularSpeed
-											: Camera.ExteriorTopAngularSpeed;
+											? InteriorTopAngularSpeed
+											: ExteriorTopAngularSpeed;
 										Camera.AlignmentDirection.Pitch = s*
 																			   Interface.CurrentControls[i].AnalogState;
 									}
@@ -506,8 +507,8 @@ namespace OpenBve
 									{
 										double s = Camera.CurrentMode == CameraViewMode.Interior |
 												   Camera.CurrentMode == CameraViewMode.InteriorLookAhead
-											? Camera.InteriorTopAngularSpeed
-											: Camera.ExteriorTopAngularSpeed;
+											? InteriorTopAngularSpeed
+											: ExteriorTopAngularSpeed;
 										Camera.AlignmentDirection.Pitch = -s*
 																			   Interface.CurrentControls[i].AnalogState;
 									}
@@ -520,8 +521,8 @@ namespace OpenBve
 										{
 											double s = Camera.CurrentMode == CameraViewMode.Interior |
 													   Camera.CurrentMode == CameraViewMode.InteriorLookAhead
-												? Camera.InteriorTopAngularSpeed
-												: Camera.ExteriorTopAngularSpeed;
+												? InteriorTopAngularSpeed
+												: ExteriorTopAngularSpeed;
 											Camera.AlignmentDirection.Roll = -s*
 																				  Interface.CurrentControls[i]
 																					  .AnalogState;
@@ -535,8 +536,8 @@ namespace OpenBve
 										{
 											double s = Camera.CurrentMode == CameraViewMode.Interior |
 													   Camera.CurrentMode == CameraViewMode.InteriorLookAhead
-												? Camera.InteriorTopAngularSpeed
-												: Camera.ExteriorTopAngularSpeed;
+												? InteriorTopAngularSpeed
+												: ExteriorTopAngularSpeed;
 											Camera.AlignmentDirection.Roll = s*
 																				  Interface.CurrentControls[i]
 																					  .AnalogState;
@@ -546,7 +547,7 @@ namespace OpenBve
 										// camera zoom in
 										if (TimeElapsed > 0.0)
 										{
-											Camera.AlignmentDirection.Zoom = -Camera.ZoomTopSpeed*
+											Camera.AlignmentDirection.Zoom = -ZoomTopSpeed*
 																				  Interface.CurrentControls[i]
 																					  .AnalogState;
 										}
@@ -555,7 +556,7 @@ namespace OpenBve
 										// camera zoom out
 										if (TimeElapsed > 0.0)
 										{
-											Camera.AlignmentDirection.Zoom = Camera.ZoomTopSpeed*
+											Camera.AlignmentDirection.Zoom = ZoomTopSpeed*
 																				  Interface.CurrentControls[i]
 																					  .AnalogState;
 										}
@@ -895,11 +896,11 @@ namespace OpenBve
 													MessageDependency.CameraView, GameMode.Expert,
 													MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 											}
-											double z = Camera.CurrentAlignment.Position.Z;
-											Camera.CurrentAlignment.Position =
-												new OpenBveApi.Math.Vector3(Camera.CurrentAlignment.Position.X,
-													Camera.CurrentAlignment.Position.Y, 0.0);
-											Camera.CurrentAlignment.Zoom = 0.0;
+											double z = Camera.Alignment.Position.Z;
+											Camera.Alignment.Position =
+												new OpenBveApi.Math.Vector3(Camera.Alignment.Position.X,
+													Camera.Alignment.Position.Y, 0.0);
+											Camera.Alignment.Zoom = 0.0;
 											Camera.AlignmentDirection = new CameraAlignment();
 											Camera.AlignmentSpeed = new CameraAlignment();
 											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
@@ -913,7 +914,7 @@ namespace OpenBve
 												TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 											}
 											World.CameraTrackFollower.Update(World.CameraTrackFollower.TrackPosition + z, true, false);
-											Camera.CurrentAlignment.TrackPosition = World.CameraTrackFollower.TrackPosition;
+											Camera.Alignment.TrackPosition = World.CameraTrackFollower.TrackPosition;
 											Camera.VerticalViewingAngle = Camera.OriginalVerticalViewingAngle;
 											Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
 											World.UpdateAbsoluteCamera(TimeElapsed);
@@ -944,11 +945,11 @@ namespace OpenBve
 													MessageDependency.CameraView, GameMode.Expert,
 													MessageColor.White, Game.SecondsSinceMidnight + 2.0, null);
 											}
-											double z = Camera.CurrentAlignment.Position.Z;
-											Camera.CurrentAlignment.Position =
-												new OpenBveApi.Math.Vector3(Camera.CurrentAlignment.Position.X,
-													Camera.CurrentAlignment.Position.Y, 0.0);
-											Camera.CurrentAlignment.Zoom = 0.0;
+											double z = Camera.Alignment.Position.Z;
+											Camera.Alignment.Position =
+												new OpenBveApi.Math.Vector3(Camera.Alignment.Position.X,
+													Camera.Alignment.Position.Y, 0.0);
+											Camera.Alignment.Zoom = 0.0;
 											Camera.AlignmentDirection = new CameraAlignment();
 											Camera.AlignmentSpeed = new CameraAlignment();
 											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
@@ -961,7 +962,7 @@ namespace OpenBve
 												TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 											}
 											World.CameraTrackFollower.Update(World.CameraTrackFollower.TrackPosition + z, true, false);
-											Camera.CurrentAlignment.TrackPosition =
+											Camera.Alignment.TrackPosition =
 												World.CameraTrackFollower.TrackPosition;
 											Camera.VerticalViewingAngle = Camera.OriginalVerticalViewingAngle;
 											Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
@@ -974,12 +975,12 @@ namespace OpenBve
 										if (Camera.CurrentMode == CameraViewMode.Interior |
 											Camera.CurrentMode == CameraViewMode.InteriorLookAhead)
 										{
-											Camera.CurrentAlignment.Position = new OpenBveApi.Math.Vector3(0.0, 0.0,
+											Camera.Alignment.Position = new OpenBveApi.Math.Vector3(0.0, 0.0,
 												0.0);
 										}
-										Camera.CurrentAlignment.Yaw = 0.0;
-										Camera.CurrentAlignment.Pitch = 0.0;
-										Camera.CurrentAlignment.Roll = 0.0;
+										Camera.Alignment.Yaw = 0.0;
+										Camera.Alignment.Pitch = 0.0;
+										Camera.Alignment.Roll = 0.0;
 										if (Camera.CurrentMode == CameraViewMode.Track)
 										{
 											World.CameraTrackFollower.Update(
@@ -1007,9 +1008,9 @@ namespace OpenBve
 														.TrackPosition - d, true, false);
 											}
 										}
-										Camera.CurrentAlignment.TrackPosition =
+										Camera.Alignment.TrackPosition =
 											World.CameraTrackFollower.TrackPosition;
-										Camera.CurrentAlignment.Zoom = 0.0;
+										Camera.Alignment.Zoom = 0.0;
 										Camera.VerticalViewingAngle = Camera.OriginalVerticalViewingAngle;
 										Camera.AlignmentDirection = new CameraAlignment();
 										Camera.AlignmentSpeed = new CameraAlignment();

@@ -1,4 +1,4 @@
-﻿using LibRender;
+﻿using static LibRender.CameraProperties;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 

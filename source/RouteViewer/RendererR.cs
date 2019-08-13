@@ -20,7 +20,7 @@ using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
-
+using static LibRender.CameraProperties;
 
 namespace OpenBve {
 	internal static partial class Renderer {
@@ -387,8 +387,8 @@ namespace OpenBve {
 				GL.Disable(EnableCap.AlphaTest);
 				LibRender.Renderer.AlphaTestEnabled = false;
 			}
-			double da = -LibRender.Camera.BackwardViewingDistance - LibRender.Camera.ExtraViewingDistance;
-			double db = LibRender.Camera.ForwardViewingDistance + LibRender.Camera.ExtraViewingDistance;
+			double da = -CameraProperties.Camera.BackwardViewingDistance - CameraProperties.Camera.ExtraViewingDistance;
+			double db = CameraProperties.Camera.ForwardViewingDistance + CameraProperties.Camera.ExtraViewingDistance;
 			bool[] sta = new bool[CurrentRoute.Stations.Length];
 			// events
 			for (int i = 0; i < TrackManager.CurrentTrack.Elements.Length; i++) {
@@ -573,7 +573,7 @@ namespace OpenBve {
 					}
 					// info
 					double x = 0.5 * (double) Screen.Width - 256.0;
-					LibRender.Renderer.DrawString(Fonts.SmallFont, "Position: " + GetLengthString(Camera.CurrentAlignment.TrackPosition) + " (X=" + GetLengthString(Camera.CurrentAlignment.Position.X) + ", Y=" + GetLengthString(Camera.CurrentAlignment.Position.Y) + "), Orientation: (Yaw=" + (Camera.CurrentAlignment.Yaw * 57.2957795130824).ToString("0.00", Culture) + "°, Pitch=" + (Camera.CurrentAlignment.Pitch * 57.2957795130824).ToString("0.00", Culture) + "°, Roll=" + (Camera.CurrentAlignment.Roll * 57.2957795130824).ToString("0.00", Culture) + "°)", new Point((int)x, 4), TextAlignment.TopLeft, Color128.White, true);
+					LibRender.Renderer.DrawString(Fonts.SmallFont, "Position: " + GetLengthString(Camera.Alignment.TrackPosition) + " (X=" + GetLengthString(Camera.Alignment.Position.X) + ", Y=" + GetLengthString(Camera.Alignment.Position.Y) + "), Orientation: (Yaw=" + (Camera.Alignment.Yaw * 57.2957795130824).ToString("0.00", Culture) + "°, Pitch=" + (Camera.Alignment.Pitch * 57.2957795130824).ToString("0.00", Culture) + "°, Roll=" + (Camera.Alignment.Roll * 57.2957795130824).ToString("0.00", Culture) + "°)", new Point((int)x, 4), TextAlignment.TopLeft, Color128.White, true);
 					LibRender.Renderer.DrawString(Fonts.SmallFont, "Radius: " + GetLengthString(World.CameraTrackFollower.CurveRadius) + ", Cant: " + (1000.0 * World.CameraTrackFollower.CurveCant).ToString("0", Culture) + " mm, Adhesion=" + (100.0 * World.CameraTrackFollower.AdhesionMultiplier).ToString("0", Culture), new Point((int)x, 20), TextAlignment.TopLeft, Color128.White, true);
 					if (Program.CurrentStation >= 0) {
 						System.Text.StringBuilder t = new System.Text.StringBuilder();

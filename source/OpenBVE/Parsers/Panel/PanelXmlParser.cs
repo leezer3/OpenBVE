@@ -12,6 +12,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using Path = OpenBveApi.Path;
+using static LibRender.CameraProperties;
 
 namespace OpenBve.Parsers.Panel
 {

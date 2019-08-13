@@ -24,7 +24,7 @@ namespace OpenBve
 
 		internal void Update(double TimeElapsed)
 		{
-			if (Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable)
+			if (CameraProperties.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable)
 			{
 				{
 					// pitch

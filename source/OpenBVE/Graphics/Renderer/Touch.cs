@@ -9,6 +9,7 @@ using OpenBveApi.Textures;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using SoundManager;
+using static LibRender.CameraProperties;
 
 namespace OpenBve
 {

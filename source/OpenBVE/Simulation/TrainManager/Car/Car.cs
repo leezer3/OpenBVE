@@ -1,5 +1,5 @@
 using System;
-using System.Windows.Forms;
+using static LibRender.CameraProperties;
 using LibRender;
 using OpenBve.BrakeSystems;
 using OpenBve.RouteManager;

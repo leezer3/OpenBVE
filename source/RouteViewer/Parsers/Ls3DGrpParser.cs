@@ -89,7 +89,7 @@ namespace OpenBve
 				try
 				{
 					//Horrible hack: Write out our string array to a new memory stream, then load from this stream
-					//Why can't XmlDocument.Load() just take a string array......
+					//Why can't XmlDocument.Load() just take a string array...
 					using (var stream = new MemoryStream())
 					{
 						var sw = new StreamWriter(stream);
@@ -301,7 +301,7 @@ namespace OpenBve
 				return Result;
 			}
 			//Didn't find an acceptable XML object
-			//Probably will cause things to throw an absolute wobbly somewhere....
+			//Probably will cause things to throw an absolute wobbly somewhere..
 			return null;
 		}
 
@@ -352,7 +352,7 @@ namespace OpenBve
 			}
 			if (Level != 0)
 			{
-				Interface.AddMessage(MessageType.Warning, false, "Script error in Loksim3D object file....");
+				Interface.AddMessage(MessageType.Warning, false, "Script error in Loksim3D object file..");
 				return String.Empty;
 			}
 			return script;

@@ -7,6 +7,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
+using static LibRender.CameraProperties;
 
 namespace OpenBve {
 	internal static class ObjectManager {
@@ -454,9 +455,9 @@ namespace OpenBve {
 				{
 					Object.internalObject.Mesh.Vertices[k].Coordinates += Object.States[s].Position - Position;
 					Object.internalObject.Mesh.Vertices[k].Coordinates.Rotate(Camera.AbsoluteDirection, Camera.AbsoluteUp, Camera.AbsoluteSide);
-					double dx = -Math.Tan(Camera.CurrentAlignment.Yaw) - Camera.CurrentAlignment.Position.X;
-					double dy = -Math.Tan(Camera.CurrentAlignment.Pitch) - Camera.CurrentAlignment.Position.Y;
-					double dz = -Camera.CurrentAlignment.Position.Z;
+					double dx = -Math.Tan(Camera.Alignment.Yaw) - Camera.Alignment.Position.X;
+					double dy = -Math.Tan(Camera.Alignment.Pitch) - Camera.Alignment.Position.Y;
+					double dz = -Camera.Alignment.Position.Z;
 					Object.internalObject.Mesh.Vertices[k].Coordinates.X += Camera.AbsolutePosition.X + dx * Camera.AbsoluteSide.X + dy * Camera.AbsoluteUp.X + dz * Camera.AbsoluteDirection.X;
 					Object.internalObject.Mesh.Vertices[k].Coordinates.Y += Camera.AbsolutePosition.Y + dx * Camera.AbsoluteSide.Y + dy * Camera.AbsoluteUp.Y + dz * Camera.AbsoluteDirection.Y;
 					Object.internalObject.Mesh.Vertices[k].Coordinates.Z += Camera.AbsolutePosition.Z + dx * Camera.AbsoluteSide.Z + dy * Camera.AbsoluteUp.Z + dz * Camera.AbsoluteDirection.Z;
@@ -866,7 +867,7 @@ namespace OpenBve {
 			ObjectsSortedByStartPointer = 0;
 			ObjectsSortedByEndPointer = 0;
 			// initial visiblity
-			double p = World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z;
+			double p = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
 			for (int i = 0; i < ObjectsUsed; i++) {
 				if (!Objects[i].Dynamic) {
 					if (Objects[i].StartingDistance <= p + Camera.ForwardViewingDistance & Objects[i].EndingDistance >= p - Camera.BackwardViewingDistance) {
@@ -890,7 +891,7 @@ namespace OpenBve {
 		internal static void UpdateVisibility(double TrackPosition) {
 			double d = TrackPosition - LastUpdatedTrackPosition;
 			int n = ObjectsSortedByStart.Length;
-			double p = World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z;
+			double p = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
 			if (d < 0.0) {
 				if (ObjectsSortedByStartPointer >= n) ObjectsSortedByStartPointer = n - 1;
 				if (ObjectsSortedByEndPointer >= n) ObjectsSortedByEndPointer = n - 1;

@@ -7,6 +7,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
+using static LibRender.CameraProperties;
 
 namespace OpenBve
 {
@@ -555,9 +556,9 @@ namespace OpenBve
 	            {
 		            Object.internalObject.Mesh.Vertices[k].Coordinates += Object.States[s].Position - Position;
 		            Object.internalObject.Mesh.Vertices[k].Coordinates.Rotate(Camera.AbsoluteDirection, Camera.AbsoluteUp, Camera.AbsoluteSide);
-		            double dx = -Math.Tan(Camera.CurrentAlignment.Yaw) - Camera.CurrentAlignment.Position.X;
-		            double dy = -Math.Tan(Camera.CurrentAlignment.Pitch) - Camera.CurrentAlignment.Position.Y;
-		            double dz = -Camera.CurrentAlignment.Position.Z;
+		            double dx = -Math.Tan(Camera.Alignment.Yaw) - Camera.Alignment.Position.X;
+		            double dy = -Math.Tan(Camera.Alignment.Pitch) - Camera.Alignment.Position.Y;
+		            double dz = -Camera.Alignment.Position.Z;
 		            Object.internalObject.Mesh.Vertices[k].Coordinates += Camera.AbsolutePosition + dx * Camera.AbsoluteSide + dy * Camera.AbsoluteUp + dz * Camera.AbsoluteDirection;
 	            }
 	            else
@@ -1082,7 +1083,7 @@ namespace OpenBve
             ObjectsSortedByStartPointer = 0;
             ObjectsSortedByEndPointer = 0;
             // initial visiblity
-            double p = World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z;
+            double p = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
             for (int i = 0; i < ObjectsUsed; i++)
             {
                 if (Objects[i] != null && !Objects[i].Dynamic)
@@ -1114,7 +1115,7 @@ namespace OpenBve
         {
             double d = TrackPosition - LastUpdatedTrackPosition;
             int n = ObjectsSortedByStart.Length;
-            double p = World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z;
+            double p = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
             if (d < 0.0)
             {
                 if (ObjectsSortedByStartPointer >= n) ObjectsSortedByStartPointer = n - 1;

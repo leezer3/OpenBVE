@@ -8,6 +8,7 @@
 using System;
 using LibRender;
 using OpenBveApi.Math;
+using static LibRender.CameraProperties;
 
 namespace OpenBve {
 	public static class World {	
@@ -22,22 +23,22 @@ namespace OpenBve {
 		// update absolute camera
 		internal static void UpdateAbsoluteCamera(double TimeElapsed) {
 			// zoom
-			double zm = Camera.CurrentAlignment.Zoom;
-			AdjustAlignment(ref Camera.CurrentAlignment.Zoom, Camera.AlignmentDirection.Zoom, ref Camera.AlignmentSpeed.Zoom, TimeElapsed, Camera.AlignmentSpeed.Zoom != 0.0);
-			if (zm != Camera.CurrentAlignment.Zoom) {
+			double zm = Camera.Alignment.Zoom;
+			AdjustAlignment(ref Camera.Alignment.Zoom, Camera.AlignmentDirection.Zoom, ref Camera.AlignmentSpeed.Zoom, TimeElapsed, Camera.AlignmentSpeed.Zoom != 0.0);
+			if (zm != Camera.Alignment.Zoom) {
 				ApplyZoom();
 			}
 			// current alignment
-			AdjustAlignment(ref Camera.CurrentAlignment.Position.X, Camera.AlignmentDirection.Position.X, ref Camera.AlignmentSpeed.Position.X, TimeElapsed);
-			AdjustAlignment(ref Camera.CurrentAlignment.Position.Y, Camera.AlignmentDirection.Position.Y, ref Camera.AlignmentSpeed.Position.Y, TimeElapsed);
+			AdjustAlignment(ref Camera.Alignment.Position.X, Camera.AlignmentDirection.Position.X, ref Camera.AlignmentSpeed.Position.X, TimeElapsed);
+			AdjustAlignment(ref Camera.Alignment.Position.Y, Camera.AlignmentDirection.Position.Y, ref Camera.AlignmentSpeed.Position.Y, TimeElapsed);
 			bool q = Camera.AlignmentSpeed.Yaw != 0.0 | Camera.AlignmentSpeed.Pitch != 0.0 | Camera.AlignmentSpeed.Roll != 0.0;
-			AdjustAlignment(ref Camera.CurrentAlignment.Yaw, Camera.AlignmentDirection.Yaw, ref Camera.AlignmentSpeed.Yaw, TimeElapsed);
-			AdjustAlignment(ref Camera.CurrentAlignment.Pitch, Camera.AlignmentDirection.Pitch, ref Camera.AlignmentSpeed.Pitch, TimeElapsed);
-			AdjustAlignment(ref Camera.CurrentAlignment.Roll, Camera.AlignmentDirection.Roll, ref Camera.AlignmentSpeed.Roll, TimeElapsed);
-			double tr = Camera.CurrentAlignment.TrackPosition;
-			AdjustAlignment(ref Camera.CurrentAlignment.TrackPosition, Camera.AlignmentDirection.TrackPosition, ref Camera.AlignmentSpeed.TrackPosition, TimeElapsed);
-			if (tr != Camera.CurrentAlignment.TrackPosition) {
-				TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, Camera.CurrentAlignment.TrackPosition, true, false);
+			AdjustAlignment(ref Camera.Alignment.Yaw, Camera.AlignmentDirection.Yaw, ref Camera.AlignmentSpeed.Yaw, TimeElapsed);
+			AdjustAlignment(ref Camera.Alignment.Pitch, Camera.AlignmentDirection.Pitch, ref Camera.AlignmentSpeed.Pitch, TimeElapsed);
+			AdjustAlignment(ref Camera.Alignment.Roll, Camera.AlignmentDirection.Roll, ref Camera.AlignmentSpeed.Roll, TimeElapsed);
+			double tr = Camera.Alignment.TrackPosition;
+			AdjustAlignment(ref Camera.Alignment.TrackPosition, Camera.AlignmentDirection.TrackPosition, ref Camera.AlignmentSpeed.TrackPosition, TimeElapsed);
+			if (tr != Camera.Alignment.TrackPosition) {
+				TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, Camera.Alignment.TrackPosition, true, false);
 				q = true;
 			}
 			if (q) {
@@ -46,28 +47,28 @@ namespace OpenBve {
 			Vector3 dF = new Vector3(CameraTrackFollower.WorldDirection);
 			Vector3 uF = new Vector3(CameraTrackFollower.WorldUp);
 			Vector3 sF = new Vector3(CameraTrackFollower.WorldSide);
-			Vector3 pF = new Vector3(Camera.CurrentAlignment.Position);
+			Vector3 pF = new Vector3(Camera.Alignment.Position);
 			Vector3 dx2 = new Vector3(dF);
 			Vector3 ux2 = new Vector3(uF);
 			double cx = World.CameraTrackFollower.WorldPosition.X + sF.X * pF.X + ux2.X * pF.Y + dx2.X * pF.Z;
 			double cy = World.CameraTrackFollower.WorldPosition.Y + sF.Y * pF.X + ux2.Y * pF.Y + dx2.Y * pF.Z;
 			double cz = World.CameraTrackFollower.WorldPosition.Z + sF.Z * pF.X + ux2.Z * pF.Y + dx2.Z * pF.Z;
-			if (Camera.CurrentAlignment.Yaw != 0.0) {
-				double cosa = Math.Cos(Camera.CurrentAlignment.Yaw);
-				double sina = Math.Sin(Camera.CurrentAlignment.Yaw);
+			if (Camera.Alignment.Yaw != 0.0) {
+				double cosa = Math.Cos(Camera.Alignment.Yaw);
+				double sina = Math.Sin(Camera.Alignment.Yaw);
 				dF.Rotate(uF, cosa, sina);
 				sF.Rotate(uF, cosa, sina);
 			}
-			double p = Camera.CurrentAlignment.Pitch;
+			double p = Camera.Alignment.Pitch;
 			if (p != 0.0) {
 				double cosa = Math.Cos(-p);
 				double sina = Math.Sin(-p);
 				dF.Rotate(sF, cosa, sina);
 				uF.Rotate(sF, cosa, sina);
 			}
-			if (Camera.CurrentAlignment.Roll != 0.0) {
-				double cosa = Math.Cos(-Camera.CurrentAlignment.Roll);
-				double sina = Math.Sin(-Camera.CurrentAlignment.Roll);
+			if (Camera.Alignment.Roll != 0.0) {
+				double cosa = Math.Cos(-Camera.Alignment.Roll);
+				double sina = Math.Sin(-Camera.Alignment.Roll);
 				uF.Rotate(dF, cosa, sina);
 				sF.Rotate(dF, cosa, sina);
 			}
@@ -103,7 +104,7 @@ namespace OpenBve {
 			}
 		}
 		private static void ApplyZoom() {
-			Camera.VerticalViewingAngle = Camera.OriginalVerticalViewingAngle * Math.Exp(Camera.CurrentAlignment.Zoom);
+			Camera.VerticalViewingAngle = Camera.OriginalVerticalViewingAngle * Math.Exp(Camera.Alignment.Zoom);
 			if (Camera.VerticalViewingAngle < 0.001) Camera.VerticalViewingAngle = 0.001;
 			if (Camera.VerticalViewingAngle > 1.5) Camera.VerticalViewingAngle = 1.5;
 			Program.UpdateViewport();
@@ -141,7 +142,7 @@ namespace OpenBve {
 			double d = Backgrounds.BackgroundImageDistance + Camera.ExtraViewingDistance;
 			Camera.ForwardViewingDistance = d * max;
 			Camera.BackwardViewingDistance = -d * min;
-			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z, true);
+			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z, true);
 		}
 
 		// normalize

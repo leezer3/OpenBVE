@@ -8,6 +8,7 @@ using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 using OpenBveApi.FunctionScripting;
+using static LibRender.CameraProperties;
 
 namespace OpenBve {
 	internal static class PanelCfgParser {

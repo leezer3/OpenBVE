@@ -664,7 +664,7 @@ namespace OpenBve {
 							break;
 						case "[sound]":
 						case "[statechangesound]":
-							//Only show the sound nag once per route, otherwise this could cause spam...
+							//Only show the sound nag once per route, otherwise this could cause spam..
 							if (!Program.SoundError)
 							{
 								Interface.AddMessage(MessageType.Information, false, "Animated objects containing sounds are only supported in openBVE v1.5.2.4+");

@@ -8,6 +8,7 @@ using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenTK.Graphics.OpenGL;
+using static LibRender.CameraProperties;
 
 namespace OpenBve
 {

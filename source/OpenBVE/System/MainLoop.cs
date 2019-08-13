@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Globalization;
-using LibRender;
+using static LibRender.CameraProperties;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 using OpenTK;
@@ -418,15 +418,15 @@ namespace OpenBve
 			{
 				case CameraViewMode.Interior:
 				case CameraViewMode.InteriorLookAhead:
-					TrainManager.PlayerTrain.Cars[World.CameraCar].InteriorCamera = Camera.CurrentAlignment;
+					TrainManager.PlayerTrain.Cars[World.CameraCar].InteriorCamera = Camera.Alignment;
 					break;
 				case CameraViewMode.Exterior:
-					World.CameraSavedExterior = Camera.CurrentAlignment;
+					World.CameraSavedExterior = Camera.Alignment;
 					break;
 				case CameraViewMode.Track:
 				case CameraViewMode.FlyBy:
 				case CameraViewMode.FlyByZooming:
-					World.CameraSavedTrack = Camera.CurrentAlignment;
+					World.CameraSavedTrack = Camera.Alignment;
 					break;
 			}
 		}
@@ -438,20 +438,20 @@ namespace OpenBve
 			{
 				case CameraViewMode.Interior:
 				case CameraViewMode.InteriorLookAhead:
-					Camera.CurrentAlignment = TrainManager.PlayerTrain.Cars[World.CameraCar].InteriorCamera;
+					Camera.Alignment = TrainManager.PlayerTrain.Cars[World.CameraCar].InteriorCamera;
 					break;
 				case CameraViewMode.Exterior:
-					Camera.CurrentAlignment = World.CameraSavedExterior;
+					Camera.Alignment = World.CameraSavedExterior;
 					break;
 				case CameraViewMode.Track:
 				case CameraViewMode.FlyBy:
 				case CameraViewMode.FlyByZooming:
-					Camera.CurrentAlignment = World.CameraSavedTrack;
+					Camera.Alignment = World.CameraSavedTrack;
 					World.CameraTrackFollower.Update(World.CameraSavedTrack.TrackPosition, true, false);
-					Camera.CurrentAlignment.TrackPosition = World.CameraTrackFollower.TrackPosition;
+					Camera.Alignment.TrackPosition = World.CameraTrackFollower.TrackPosition;
 					break;
 			}
-			Camera.CurrentAlignment.Zoom = 0.0;
+			Camera.Alignment.Zoom = 0.0;
 			Camera.VerticalViewingAngle = Camera.OriginalVerticalViewingAngle;
 		}
 
