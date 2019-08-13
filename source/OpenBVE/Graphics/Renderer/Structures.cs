@@ -49,6 +49,10 @@ namespace OpenBve
 			/// <summary>Sorts the polgons contained within this ObjectList, near to far</summary>
 			internal void SortPolygons()
 			{
+				if (Faces == null || FaceCount <= 0)
+				{
+					return;
+				}
 				// calculate distance
 				double cx = Camera.AbsolutePosition.X;
 				double cy = Camera.AbsolutePosition.Y;
