@@ -95,7 +95,11 @@ namespace OpenBve
 					int listIndex = Objects[k].FaceListReferences[i].Index;
 					list.Faces[listIndex] = list.Faces[list.FaceCount - 1];
 					Objects[list.Faces[listIndex].ObjectListIndex].FaceListReferences[list.Faces[listIndex].FaceIndex].Index = listIndex;
-					list.FaceCount--;
+					if (list.FaceCount > 0)
+					{
+						list.FaceCount--;
+					}
+					
 				}
 				// remove object
 				if (k == ObjectCount - 1)

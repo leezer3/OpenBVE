@@ -1202,7 +1202,7 @@ namespace OpenBve {
 				int j = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States.Length;
 				Array.Resize<AnimatedObjectState>(ref Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States, j + 1);
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[j].Position = o;
-				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[j].Object = Object;
+				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[j].Object = (StaticObject)Object.Clone();
 				return n;
 			} else {
 				int n = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements.Length;

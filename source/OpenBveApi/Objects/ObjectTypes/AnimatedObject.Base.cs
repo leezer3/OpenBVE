@@ -153,7 +153,16 @@ namespace OpenBveApi.Objects
 			}
 			else
 			{
-				internalObject = new StaticObject(currentHost);
+				/* Must internally reset the object, not create a new one.
+				 * This allows the reference to keep pointing to the same place
+				 */
+				internalObject.Mesh = new Mesh
+				{
+					Faces = new MeshFace[] { },
+					Materials = new MeshMaterial[] { },
+					Vertices = new VertexTemplate[] { }
+				};
+
 			}
 			CurrentState = StateIndex;
 			if (Show)

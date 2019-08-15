@@ -337,13 +337,20 @@ namespace OpenBve
 							list.Faces[listIndex] = list.Faces[list.FaceCount - 1];
 						}
 						Objects[list.Faces[listIndex].ObjectListIndex].FaceListReferences[list.Faces[listIndex].FaceIndex].Index = listIndex;
-						list.FaceCount--;
+						if (list.FaceCount > 0)
+						{
+							list.FaceCount--;
+						}
 					}
 				}
 				// remove object
 				if (k == ObjectCount - 1)
 				{
 					ObjectCount--;
+				}
+				else if (ObjectCount == 0)
+				{
+					return; //Outside the world?
 				}
 				else
 				{
@@ -380,6 +387,10 @@ namespace OpenBve
 								throw new InvalidOperationException();
 						}
 						int listIndex = Objects[k].FaceListReferences[i].Index;
+						if (list.Faces[listIndex] == null)
+						{
+							continue;
+						}
 						list.Faces[listIndex].ObjectListIndex = k;
 					}
 					ObjectManager.Objects[Objects[k].ObjectIndex].RendererIndex = k + 1;
