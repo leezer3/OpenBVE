@@ -36,18 +36,18 @@ namespace OpenBve
 							{
 								CurrentRoute.Sections[this.NextSectionIndex].TrainReachedStopPoint = false;
 							}
-							UpdateFrontBackward(Train, true);
+							UpdateFrontBackward(Train);
 						}
 						else if (Direction > 0)
 						{
-							UpdateFrontForward(Train, true, true);
+							UpdateFrontForward(Train);
 						}
 					}
 					else if (TriggerType == EventTriggerType.RearCarRearAxle)
 					{
 						if (Direction < 0)
 						{
-							UpdateRearBackward(Train, true);
+							UpdateRearBackward(Train);
 						}
 						else if (Direction > 0)
 						{
@@ -55,12 +55,12 @@ namespace OpenBve
 							{
 								CurrentRoute.Sections[this.PreviousSectionIndex].TrainReachedStopPoint = false;
 							}
-							UpdateRearForward(Train, true);
+							UpdateRearForward(Train);
 						}
 					}
 				}
 			}
-			private void UpdateFrontBackward(AbstractTrain Train, bool UpdateTrain)
+			private void UpdateFrontBackward(AbstractTrain Train)
 			{
 				// update sections
 				if (this.PreviousSectionIndex >= 0)
@@ -73,98 +73,83 @@ namespace OpenBve
 					CurrentRoute.Sections[this.NextSectionIndex].Leave(Train);
 					CurrentRoute.Sections[this.NextSectionIndex].Update(Game.SecondsSinceMidnight);
 				}
-				if (UpdateTrain)
+				// update train
+				if (this.PreviousSectionIndex >= 0)
 				{
-					// update train
-					if (this.PreviousSectionIndex >= 0)
+					if (!CurrentRoute.Sections[this.PreviousSectionIndex].Invisible)
 					{
-						if (!CurrentRoute.Sections[this.PreviousSectionIndex].Invisible)
-						{
-							Train.CurrentSectionIndex = this.PreviousSectionIndex;
-						}
+						Train.CurrentSectionIndex = this.PreviousSectionIndex;
 					}
-					else
-					{
-						Train.CurrentSectionLimit = double.PositiveInfinity;
-						Train.CurrentSectionIndex = -1;
-					}
+				}
+				else
+				{
+					Train.CurrentSectionLimit = double.PositiveInfinity;
+					Train.CurrentSectionIndex = -1;
 				}
 			}
-			private void UpdateFrontForward(AbstractTrain Train, bool UpdateTrain, bool UpdateSection)
+			private void UpdateFrontForward(AbstractTrain Train)
 			{
-				if (UpdateTrain)
+				// update train
+				if (this.NextSectionIndex >= 0)
 				{
-					// update train
-					if (this.NextSectionIndex >= 0)
+					if (!CurrentRoute.Sections[this.NextSectionIndex].Invisible)
 					{
-						if (!CurrentRoute.Sections[this.NextSectionIndex].Invisible)
+						if (CurrentRoute.Sections[this.NextSectionIndex].CurrentAspect >= 0)
 						{
-							if (CurrentRoute.Sections[this.NextSectionIndex].CurrentAspect >= 0)
-							{
-								Train.CurrentSectionLimit = CurrentRoute.Sections[this.NextSectionIndex].Aspects[CurrentRoute.Sections[this.NextSectionIndex].CurrentAspect].Speed;
-							}
-							else
-							{
-								Train.CurrentSectionLimit = double.PositiveInfinity;
-							}
-							Train.CurrentSectionIndex = this.NextSectionIndex;
+							Train.CurrentSectionLimit = CurrentRoute.Sections[this.NextSectionIndex].Aspects[CurrentRoute.Sections[this.NextSectionIndex].CurrentAspect].Speed;
 						}
-					}
-					else
-					{
-						Train.CurrentSectionLimit = double.PositiveInfinity;
-						Train.CurrentSectionIndex = -1;
-					}
-					// messages
-					if (this.NextSectionIndex < 0 || !CurrentRoute.Sections[this.NextSectionIndex].Invisible)
-					{
-						if (Train.CurrentSectionLimit == 0.0 && Game.MinimalisticSimulation == false)
+						else
 						{
-							Game.AddMessage(Translations.GetInterfaceString("message_signal_stop"), MessageDependency.PassedRedSignal, GameMode.Normal, MessageColor.Red, double.PositiveInfinity, null);
+							Train.CurrentSectionLimit = double.PositiveInfinity;
 						}
-						else if (Train.CurrentSpeed > Train.CurrentSectionLimit)
-						{
-							Game.AddMessage(Translations.GetInterfaceString("message_signal_overspeed"), MessageDependency.SectionLimit, GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
-						}
+						Train.CurrentSectionIndex = this.NextSectionIndex;
 					}
 				}
-				if (UpdateSection)
+				else
 				{
-					// update sections
-					if (this.NextSectionIndex >= 0)
+					Train.CurrentSectionLimit = double.PositiveInfinity;
+					Train.CurrentSectionIndex = -1;
+				}
+				// messages
+				if (this.NextSectionIndex < 0 || !CurrentRoute.Sections[this.NextSectionIndex].Invisible)
+				{
+					if (Train.CurrentSectionLimit == 0.0 && Game.MinimalisticSimulation == false)
 					{
-						CurrentRoute.Sections[this.NextSectionIndex].Enter(Train);
-						CurrentRoute.Sections[this.NextSectionIndex].Update(Game.SecondsSinceMidnight);
+						Game.AddMessage(Translations.GetInterfaceString("message_signal_stop"), MessageDependency.PassedRedSignal, GameMode.Normal, MessageColor.Red, double.PositiveInfinity, null);
 					}
+					else if (Train.CurrentSpeed > Train.CurrentSectionLimit)
+					{
+						Game.AddMessage(Translations.GetInterfaceString("message_signal_overspeed"), MessageDependency.SectionLimit, GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
+					}
+				}
+				// update sections
+				if (this.NextSectionIndex >= 0)
+				{
+					CurrentRoute.Sections[this.NextSectionIndex].Enter(Train);
+					CurrentRoute.Sections[this.NextSectionIndex].Update(Game.SecondsSinceMidnight);
 				}
 			}
-			private void UpdateRearBackward(AbstractTrain Train, bool UpdateSection)
+			private void UpdateRearBackward(AbstractTrain Train)
 			{
-				if (UpdateSection)
+				// update sections
+				if (this.PreviousSectionIndex >= 0)
 				{
-					// update sections
-					if (this.PreviousSectionIndex >= 0)
-					{
-						CurrentRoute.Sections[this.PreviousSectionIndex].Enter(Train);
-						CurrentRoute.Sections[this.PreviousSectionIndex].Update(Game.SecondsSinceMidnight);
-					}
+					CurrentRoute.Sections[this.PreviousSectionIndex].Enter(Train);
+					CurrentRoute.Sections[this.PreviousSectionIndex].Update(Game.SecondsSinceMidnight);
 				}
 			}
-			private void UpdateRearForward(AbstractTrain Train, bool UpdateSection)
+			private void UpdateRearForward(AbstractTrain Train)
 			{
-				if (UpdateSection)
+				// update sections
+				if (this.PreviousSectionIndex >= 0)
 				{
-					// update sections
-					if (this.PreviousSectionIndex >= 0)
-					{
-						CurrentRoute.Sections[this.PreviousSectionIndex].Leave(Train);
-						CurrentRoute.Sections[this.PreviousSectionIndex].Update(Game.SecondsSinceMidnight);
-					}
-					if (this.NextSectionIndex >= 0)
-					{
-						CurrentRoute.Sections[this.NextSectionIndex].Enter(Train);
-						CurrentRoute.Sections[this.NextSectionIndex].Update(Game.SecondsSinceMidnight);
-					}
+					CurrentRoute.Sections[this.PreviousSectionIndex].Leave(Train);
+					CurrentRoute.Sections[this.PreviousSectionIndex].Update(Game.SecondsSinceMidnight);
+				}
+				if (this.NextSectionIndex >= 0)
+				{
+					CurrentRoute.Sections[this.NextSectionIndex].Enter(Train);
+					CurrentRoute.Sections[this.NextSectionIndex].Update(Game.SecondsSinceMidnight);
 				}
 			}
 		}
