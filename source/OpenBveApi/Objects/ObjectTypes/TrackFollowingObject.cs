@@ -5,29 +5,35 @@ using OpenBveApi.Trains;
 
 namespace OpenBveApi.Objects
 {
+	/// <summary>A container object for an animated object which follows a track</summary>
 	public class TrackFollowingObject : WorldObject
 	{
+		/// <summary>Holds a reference to the host application</summary>
 		private readonly HostInterface currentHost;
-		/// <summary>The actual animated object</summary>
-		public AnimatedObject Object;
 		/// <summary>The signalling section the object refers to (Only relevant for objects placed using Track.Sig</summary>
 		public int SectionIndex;
-
+		/// <summary>The front axle follower</summary>
 		public TrackFollower FrontAxleFollower;
+		/// <summary>The rear axle follower</summary>
 		public TrackFollower RearAxleFollower;
+		/// <summary>The front axle position relative to the center of the object</summary>
 		public double FrontAxlePosition;
+		/// <summary>The rear axle position relative to the center of the object</summary>
 		public double RearAxlePosition;
-#pragma warning disable 0649
+#pragma warning disable 0649, 1591
 //TODO: Track following objects currently do not take into account toppling or cant, reserved for future use
 		public double CurrentRollDueToTopplingAngle;
 		public double CurrentRollDueToCantAngle;
-#pragma warning restore 0649       
+#pragma warning restore 0649, 1591
 
+		/// <summary>Creates a new Track Following Object</summary>
+		/// <param name="Host">The host application</param>
 		public TrackFollowingObject(HostInterface Host)
 		{
 			currentHost = Host;
 		}
 
+		/// <inheritdoc/>
 		public override void Update(AbstractTrain NearestTrain, double TimeElapsed, bool ForceUpdate, bool Visible)
 		{
 
