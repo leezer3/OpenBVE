@@ -4,7 +4,7 @@ using OpenBveApi.Trains;
 namespace OpenBve.RouteManager
 {
 	/// <summary>Is called when the in-game fog should be changed</summary>
-	public class FogChangeEvent : GeneralEvent<AbstractTrain, AbstractCar>
+	public class FogChangeEvent : GeneralEvent
 	{
 		/// <summary>The fog which applies previously to this point</summary>
 		private readonly Fog PreviousFog;

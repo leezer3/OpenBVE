@@ -4,7 +4,7 @@ using OpenBveApi.Trains;
 namespace OpenBve.RouteManager
 {
 	/// <summary>Called when the displayed backgrond image or object should be changed</summary>
-	public class BackgroundChangeEvent : GeneralEvent<AbstractTrain, AbstractCar>
+	public class BackgroundChangeEvent : GeneralEvent
 	{
 		/// <summary>The background which applies previously to this point</summary>
 		private readonly BackgroundHandle PreviousBackground;

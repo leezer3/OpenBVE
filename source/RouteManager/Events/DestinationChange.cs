@@ -4,7 +4,7 @@ using OpenBveApi.Trains;
 namespace OpenBve.RouteManager
 {
 	/// <summary>Called when a train passes over a destination change event</summary>
-	public class DestinationEvent : GeneralEvent<AbstractTrain, AbstractCar>
+	public class DestinationEvent : GeneralEvent
 	{
 		/// <summary>The destination value to set when passing over this event forwards, or -1 to disable</summary>
 		public readonly int NextDestination;

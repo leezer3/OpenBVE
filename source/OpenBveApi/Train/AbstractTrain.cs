@@ -1,4 +1,6 @@
-﻿namespace OpenBveApi.Trains
+﻿using OpenBveApi.Routes;
+
+namespace OpenBveApi.Trains
 {
 	/// <summary>An abstract train</summary>
 	public abstract class AbstractTrain
@@ -87,6 +89,12 @@
 
 		}
 
+		/// <summary>Is called when the train changes from one signalling section to another</summary>
+		public virtual void SectionChange()
+		{
+
+		}
+
 		/// <summary>Updates the safety systems on this train with data recieved from a beacon</summary>
 		public virtual void UpdateBeacon(int transponderType, int sectionIndex, int optional)
 		{
@@ -105,6 +113,13 @@
 		/// <param name="stationIndex">The station index</param>
 		/// <param name="direction">The direction of travel</param>
 		public virtual void LeaveStation(int stationIndex, int direction)
+		{
+
+		}
+
+		/// <summary>Called when a request stop is triggered</summary>
+		/// <param name="stopRequest">The stop request to evaluate</param>
+		public virtual void RequestStop(RequestStop stopRequest)
 		{
 
 		}

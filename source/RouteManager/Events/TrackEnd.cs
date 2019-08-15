@@ -5,7 +5,7 @@ using OpenBveApi.Trains;
 namespace OpenBve.RouteManager
 {
 	/// <summary>This event is placed at the end of the track</summary>
-	public class TrackEndEvent : GeneralEvent<AbstractTrain, AbstractCar>
+	public class TrackEndEvent : GeneralEvent
 	{
 		public TrackEndEvent(double TrackPositionDelta)
 		{

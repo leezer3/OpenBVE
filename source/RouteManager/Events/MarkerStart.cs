@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Text;
 using OpenBveApi.Hosts;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
@@ -7,7 +6,7 @@ using OpenBveApi.Trains;
 namespace OpenBve.RouteManager
 {
 	/// <summary>Is called when a marker or message is added to the in-game display</summary>
-	public class MarkerStartEvent : GeneralEvent<AbstractTrain, AbstractCar>
+	public class MarkerStartEvent : GeneralEvent
 	{
 		/// <summary>The marker or message to add</summary>
 		private readonly AbstractMessage Message;

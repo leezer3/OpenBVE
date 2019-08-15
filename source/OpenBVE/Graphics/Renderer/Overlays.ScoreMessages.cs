@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBve.RouteManager;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Textures;
@@ -47,7 +48,7 @@ namespace OpenBve
 				bool preserve = false;
 				if ((Element.Transition & HUD.Transition.Move) != 0)
 				{
-					if (Game.SecondsSinceMidnight < Game.ScoreMessages[j].Timeout)
+					if (CurrentRoute.SecondsSinceMidnight < Game.ScoreMessages[j].Timeout)
 					{
 						if (Game.ScoreMessages[j].RendererAlpha == 0.0)
 						{
@@ -108,7 +109,7 @@ namespace OpenBve
 				}
 				if ((Element.Transition & HUD.Transition.Fade) != 0)
 				{
-					if (Game.SecondsSinceMidnight >= Game.ScoreMessages[j].Timeout)
+					if (CurrentRoute.SecondsSinceMidnight >= Game.ScoreMessages[j].Timeout)
 					{
 						Game.ScoreMessages[j].RendererAlpha -= TimeElapsed;
 						if (Game.ScoreMessages[j].RendererAlpha < 0.0) Game.ScoreMessages[j].RendererAlpha = 0.0;
@@ -120,7 +121,7 @@ namespace OpenBve
 						preserve = true;
 					}
 				}
-				else if (Game.SecondsSinceMidnight > Game.ScoreMessages[j].Timeout)
+				else if (CurrentRoute.SecondsSinceMidnight > Game.ScoreMessages[j].Timeout)
 				{
 					if (Math.Abs(Game.ScoreMessages[j].RendererPosition.X - tx) < 0.1 & Math.Abs(Game.ScoreMessages[j].RendererPosition.Y - ty) < 0.1)
 					{

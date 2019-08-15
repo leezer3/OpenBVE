@@ -4,7 +4,7 @@ using OpenBveApi.Trains;
 namespace OpenBve.RouteManager
 {
 	/// <summary>Called when a train passes over a transponder attached to the signalling system</summary>
-	public class TransponderEvent : GeneralEvent<AbstractTrain, AbstractCar>
+	public class TransponderEvent : GeneralEvent
 	{
 		/// <summary>The type of transponder</summary>
 		public readonly int Type;

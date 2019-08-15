@@ -8,6 +8,7 @@ using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 using OpenBve.SignalManager;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {

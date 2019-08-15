@@ -689,7 +689,7 @@ namespace OpenBve
             /// <returns>Returns the number of seconds elapsed since midnight on the first day</returns>
             public static double time()
             {
-                return Game.SecondsSinceMidnight;
+                return CurrentRoute.SecondsSinceMidnight;
             }
 
             /// <summary>Gets the camera distance in meters from the current object </summary>

@@ -5534,7 +5534,7 @@ namespace OpenBve {
 				CurrentRoute.Tracks[0].Elements[n].WorldSide = new Vector3(Direction.Y, 0.0, -Direction.X);
 				CurrentRoute.Tracks[0].Elements[n].WorldUp = Vector3.Cross(CurrentRoute.Tracks[0].Elements[n].WorldDirection, CurrentRoute.Tracks[0].Elements[n].WorldSide);
 				CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition = StartingDistance;
-				CurrentRoute.Tracks[0].Elements[n].Events = new object[] { };
+				CurrentRoute.Tracks[0].Elements[n].Events = new GeneralEvent[] { };
 				CurrentRoute.Tracks[0].Elements[n].AdhesionMultiplier = Data.Blocks[i].AdhesionMultiplier;
 				CurrentRoute.Tracks[0].Elements[n].CsvRwAccuracyLevel = Data.Blocks[i].Accuracy;
 				// background
@@ -6458,7 +6458,7 @@ namespace OpenBve {
 								double d = Data.Blocks[i].Section[k].TrackPosition - StartingDistance;
 								int p = CurrentRoute.Tracks[0].Elements[n].Events.Length;
 								Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, p + 1);
-								CurrentRoute.Tracks[0].Elements[n].Events[p] = new TrackManager.SectionChangeEvent(d, m - 1, m);
+								CurrentRoute.Tracks[0].Elements[n].Events[p] = new SectionChangeEvent(d, m - 1, m);
 							}
 							// transponders introduced after corresponding sections
 							for (int l = 0; l < Data.Blocks[i].Transponders.Length; l++)
@@ -6736,7 +6736,7 @@ namespace OpenBve {
 				int m = i % subdivisions;
 				if (m != 0) {
 					int q = i / subdivisions;
-					TrackManager.TrackFollower follower = new TrackManager.TrackFollower();
+					TrackFollower follower = new TrackFollower(CurrentRoute.Tracks);
 					double r = (double)m / (double)subdivisions;
 					double p = (1.0 - r) * CurrentRoute.Tracks[0].Elements[q].StartingTrackPosition + r * CurrentRoute.Tracks[0].Elements[q + 1].StartingTrackPosition;
 					follower.UpdateAbsolute(-1.0, true, false);
@@ -6759,7 +6759,7 @@ namespace OpenBve {
 					int q = i / subdivisions;
 					int j = q * subdivisions;
 					CurrentRoute.Tracks[0].Elements[i] = CurrentRoute.Tracks[0].Elements[j];
-					CurrentRoute.Tracks[0].Elements[i].Events = new object[] { };
+					CurrentRoute.Tracks[0].Elements[i].Events = new GeneralEvent[] { };
 					CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition = midpointsTrackPositions[i];
 					CurrentRoute.Tracks[0].Elements[i].WorldPosition = midpointsWorldPositions[i];
 					CurrentRoute.Tracks[0].Elements[i].WorldDirection = midpointsWorldDirections[i];
@@ -6772,7 +6772,7 @@ namespace OpenBve {
 			// find turns
 			bool[] isTurn = new bool[CurrentRoute.Tracks[0].Elements.Length];
 			{
-				TrackManager.TrackFollower follower = new TrackManager.TrackFollower();
+				TrackFollower follower = new TrackFollower(CurrentRoute.Tracks);
 				for (int i = 1; i < CurrentRoute.Tracks[0].Elements.Length - 1; i++) {
 					int m = i % subdivisions;
 					if (m == 0) {
@@ -6831,7 +6831,7 @@ namespace OpenBve {
 						}
 						if (r * r > 1.0) {
 							// apply radius
-							TrackManager.TrackFollower follower = new TrackManager.TrackFollower();
+							TrackFollower follower = new TrackFollower(CurrentRoute.Tracks);
 							CurrentRoute.Tracks[0].Elements[i - 1].CurveRadius = r;
 							double p = 0.00000001 * CurrentRoute.Tracks[0].Elements[i - 1].StartingTrackPosition + 0.99999999 * CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition;
 							follower.UpdateAbsolute(p - 1.0, true, false);

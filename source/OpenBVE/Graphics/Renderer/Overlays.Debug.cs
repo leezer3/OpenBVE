@@ -130,8 +130,8 @@ namespace OpenBve
 			{
 				mass += TrainManager.PlayerTrain.Cars[i].Specs.MassCurrent;
 			}
-			int hours = (int)Game.SecondsSinceMidnight / 3600, 
-				remainder = (int)Game.SecondsSinceMidnight % 3600, 
+			int hours = (int)CurrentRoute.SecondsSinceMidnight / 3600, 
+				remainder = (int)CurrentRoute.SecondsSinceMidnight % 3600, 
 				minutes = remainder / 60, 
 				seconds = remainder % 60;
 			string[] Lines = new string[] {

@@ -506,7 +506,7 @@ namespace OpenBve
 				} break;
 				case "clock":
 				{
-					int hours = (int)Math.Floor(Game.SecondsSinceMidnight);
+					int hours = (int)Math.Floor(CurrentRoute.SecondsSinceMidnight);
 					int seconds = hours % 60; hours /= 60;
 					int minutes = hours % 60; hours /= 60;
 					hours %= 24;

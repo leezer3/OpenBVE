@@ -10,6 +10,7 @@ using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using OpenBve.RouteManager;
+using OpenBveApi.Routes;
 
 namespace OpenBve {
 	internal static class Loading {
@@ -181,7 +182,6 @@ namespace OpenBve {
 			Game.Reset(true);
 			Game.MinimalisticSimulation = true;
 			// screen
-			World.CameraTrackFollower = new TrackManager.TrackFollower{ Train = null, CarIndex = -1 };
 			CameraProperties.Camera.CurrentMode = CameraViewMode.Interior;
 			//First, check the format of the route file
 			//RW routes were written for BVE1 / 2, and have a different command syntax
@@ -210,7 +210,7 @@ namespace OpenBve {
 					}
 				}
 			}
-
+			World.CameraTrackFollower = new TrackFollower(CurrentRoute.Tracks) { Train = null, Car = null };
 			if (CurrentRoute.Stations.Length == 1)
 			{
 				//Log the fact that only a single station is present, as this is probably not right

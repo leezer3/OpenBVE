@@ -124,6 +124,20 @@ namespace OpenBve
 				}
 			}
 
+			/// <inheritdoc/>
+			public override void SectionChange()
+			{
+				if (CurrentSectionLimit == 0.0 && Game.MinimalisticSimulation == false)
+				{
+					Game.AddMessage(Translations.GetInterfaceString("message_signal_stop"), MessageDependency.PassedRedSignal, GameMode.Normal, MessageColor.Red, double.PositiveInfinity, null);
+				}
+				else if (CurrentSpeed > CurrentSectionLimit)
+				{
+					Game.AddMessage(Translations.GetInterfaceString("message_signal_overspeed"), MessageDependency.SectionLimit, GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
+				}
+			}
+
+			/// <inheritdoc/>
 			public override void UpdateBeacon(int transponderType, int sectionIndex, int optional)
 			{
 				if (Plugin != null)
@@ -160,7 +174,7 @@ namespace OpenBve
 						}
 						time -= TimetableDelta;
 					}
-					if (Game.SecondsSinceMidnight >= time | forceIntroduction)
+					if (CurrentRoute.SecondsSinceMidnight >= time | forceIntroduction)
 					{
 						bool introduce = true;
 						if (!forceIntroduction)
@@ -404,7 +418,7 @@ namespace OpenBve
 							double a = (3.6 * CurrentSectionLimit) * Game.SpeedConversionFactor;
 							s = s.Replace("[speed]", a.ToString("0", CultureInfo.InvariantCulture));
 							s = s.Replace("[unit]", Game.UnitOfSpeed);
-							Game.AddMessage(s, MessageDependency.None, GameMode.Normal, MessageColor.Red, Game.SecondsSinceMidnight + 5.0, null);
+							Game.AddMessage(s, MessageDependency.None, GameMode.Normal, MessageColor.Red, CurrentRoute.SecondsSinceMidnight + 5.0, null);
 						}
 					}
 				}
@@ -1001,10 +1015,11 @@ namespace OpenBve
 				this.Derailed = true;
 				if (Program.GenerateDebugLogging)
 				{
-					Program.FileSystem.AppendToLogFile("Train " + Array.IndexOf(TrainManager.Trains, this) + ", Car " + CarIndex + " derailed. Current simulation time: " + Game.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
+					Program.FileSystem.AppendToLogFile("Train " + Array.IndexOf(TrainManager.Trains, this) + ", Car " + CarIndex + " derailed. Current simulation time: " + CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
 				}
 			}
 
+			/// <inheritdoc/>
 			public override void Derail(AbstractCar Car, double ElapsedTime)
 			{
 				if (this.Cars.Contains(Car))
@@ -1014,7 +1029,7 @@ namespace OpenBve
 					this.Derailed = true;
 					if (Program.GenerateDebugLogging)
 					{
-						Program.FileSystem.AppendToLogFile("Train " + Array.IndexOf(TrainManager.Trains, this) + ", Car " + c.Index + " derailed. Current simulation time: " + Game.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
+						Program.FileSystem.AppendToLogFile("Train " + Array.IndexOf(TrainManager.Trains, this) + ", Car " + c.Index + " derailed. Current simulation time: " + CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
 					}
 				}
 			}
@@ -1027,7 +1042,7 @@ namespace OpenBve
 				this.Cars[CarIndex].Topples = true;
 				if (Program.GenerateDebugLogging)
 				{
-					Program.FileSystem.AppendToLogFile("Train " + Array.IndexOf(TrainManager.Trains, this) + ", Car " + CarIndex + " toppled. Current simulation time: " + Game.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
+					Program.FileSystem.AppendToLogFile("Train " + Array.IndexOf(TrainManager.Trains, this) + ", Car " + CarIndex + " toppled. Current simulation time: " + CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
 				}
 			}
 
@@ -1105,11 +1120,13 @@ namespace OpenBve
 				}
 			}
 
+			/// <inheritdoc/>
 			public override double FrontCarTrackPosition()
 			{
 				return Cars[0].FrontAxle.Follower.TrackPosition - Cars[0].FrontAxle.Position + 0.5 * Cars[0].Length;
 			}
 
+			/// <inheritdoc/>
 			public override double RearCarTrackPosition()
 			{
 				return Cars[Cars.Length - 1].RearAxle.Follower.TrackPosition - Cars[Cars.Length - 1].RearAxle.Position - 0.5 * Cars[Cars.Length - 1].Length;

@@ -3,7 +3,7 @@
 namespace OpenBveApi.Routes
 {
 	/// <summary>The general event is the abstract event type which all events must inherit from</summary>
-	public abstract class GeneralEvent<T, TT> where T : AbstractTrain where TT : AbstractCar
+	public abstract class GeneralEvent
 	{
 		/// <summary>The delta track position that this event is placed at</summary>
 		public double TrackPositionDelta;
@@ -17,7 +17,7 @@ namespace OpenBveApi.Routes
 		/// <param name="TriggerType">The trigger type (Car axle, camera follower etc.)</param>
 		/// <param name="Train">The train, or a null reference</param>
 		/// <param name="Car">The car, or a null reference</param>
-		public abstract void Trigger(int Direction, EventTriggerType TriggerType, T Train, TT Car);
+		public abstract void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car);
 
 		/// <summary>This method is called to attempt to trigger an event</summary>
 		/// <param name="Direction">The direction:
@@ -26,7 +26,7 @@ namespace OpenBveApi.Routes
 		/// <param name="TriggerType">The trigger type (Car axle, camera follower etc.)</param>
 		/// <param name="Train">The train, or a null reference</param>
 		/// <param name="Car">The car, or a null reference</param>
-		public void TryTrigger(int Direction, EventTriggerType TriggerType, T Train, TT Car)
+		public void TryTrigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
 		{
 			if (!DontTriggerAnymore)
 			{

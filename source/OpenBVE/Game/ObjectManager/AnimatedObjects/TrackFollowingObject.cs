@@ -3,6 +3,7 @@ using LibRender;
 using OpenBve.RouteManager;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using static LibRender.CameraProperties;
 
@@ -20,8 +21,8 @@ namespace OpenBve
 			/// <summary>The curve radius at the object's track position</summary>
 			internal double Radius;
 
-			internal TrackManager.TrackFollower FrontAxleFollower;
-			internal TrackManager.TrackFollower RearAxleFollower;
+			internal TrackFollower FrontAxleFollower;
+			internal TrackFollower RearAxleFollower;
 			internal double FrontAxlePosition;
 			internal double RearAxlePosition;
 #pragma warning disable 0649

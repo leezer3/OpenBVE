@@ -6,7 +6,7 @@ using OpenBveApi.Trains;
 namespace OpenBve.RouteManager
 {
 	/// <summary>Is calld when a marker or message is removed from the in-game display</summary>
-	public class MarkerEndEvent : GeneralEvent<AbstractTrain, AbstractCar>
+	public class MarkerEndEvent : GeneralEvent
 	{
 		/// <summary>The marker or message to remove (Note: May have already timed-out)</summary>
 		private readonly AbstractMessage Message;

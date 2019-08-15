@@ -208,7 +208,7 @@ namespace OpenBve
 								int xb;
 								if (CurrentRoute.Stations[j].ArrivalTime >= 0)
 								{
-									double d = SecondsSinceMidnight - CurrentRoute.Stations[j].ArrivalTime;
+									double d = CurrentRoute.SecondsSinceMidnight - CurrentRoute.Stations[j].ArrivalTime;
 									if (d >= -5.0 & d <= 0.0)
 									{
 										xb = ScoreValueStationPerfectTime;
@@ -318,7 +318,7 @@ namespace OpenBve
 						}
 						if (q)
 						{
-							double r = TrainManager.PlayerTrain.StationDepartureTime - SecondsSinceMidnight;
+							double r = TrainManager.PlayerTrain.StationDepartureTime - CurrentRoute.SecondsSinceMidnight;
 							if (r > 0.0)
 							{
 								int x = (int)Math.Ceiling(ScoreFactorStationDeparture * r);
@@ -370,7 +370,7 @@ namespace OpenBve
 					Array.Resize<ScoreMessage>(ref ScoreMessages, n + 1);
 					ScoreMessages[n].Value = Value;
 					ScoreMessages[n].Text = Interface.GetScoreText(TextToken) + ": " + Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
-					ScoreMessages[n].Timeout = SecondsSinceMidnight + Duration;
+					ScoreMessages[n].Timeout = CurrentRoute.SecondsSinceMidnight + Duration;
 					ScoreMessages[n].RendererPosition = new Vector2(0.0, 0.0);
 					ScoreMessages[n].RendererAlpha = 0.0;
 					if (Value < 0.0)
@@ -395,7 +395,7 @@ namespace OpenBve
 					ScoreLogs[ScoreLogCount].Value = Value;
 					ScoreLogs[ScoreLogCount].TextToken = TextToken;
 					ScoreLogs[ScoreLogCount].Position = TrainManager.PlayerTrain.Cars[0].TrackPosition;
-					ScoreLogs[ScoreLogCount].Time = SecondsSinceMidnight;
+					ScoreLogs[ScoreLogCount].Time = CurrentRoute.SecondsSinceMidnight;
 					ScoreLogCount++;
 				}
 			}
@@ -411,7 +411,7 @@ namespace OpenBve
 					Array.Resize<ScoreMessage>(ref ScoreMessages, n + 1);
 					ScoreMessages[n].Value = 0;
 					ScoreMessages[n].Text = Text.Length != 0 ? Text : "══════════";
-					ScoreMessages[n].Timeout = SecondsSinceMidnight + Duration;
+					ScoreMessages[n].Timeout = CurrentRoute.SecondsSinceMidnight + Duration;
 					ScoreMessages[n].RendererPosition = new Vector2(0.0, 0.0);
 					ScoreMessages[n].RendererAlpha = 0.0;
 					ScoreMessages[n].Color = MessageColor.White;
@@ -427,7 +427,7 @@ namespace OpenBve
 			{
 				for (int i = 0; i < ScoreMessages.Length; i++)
 				{
-					if (SecondsSinceMidnight >= ScoreMessages[i].Timeout & ScoreMessages[i].RendererAlpha == 0.0)
+					if (CurrentRoute.SecondsSinceMidnight >= ScoreMessages[i].Timeout & ScoreMessages[i].RendererAlpha == 0.0)
 					{
 						for (int j = i; j < ScoreMessages.Length - 1; j++)
 						{

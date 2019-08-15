@@ -153,7 +153,7 @@ namespace OpenBve
 					Environment.Exit(0);
 				}				
 			}
-			LibRender.Renderer.UpdateLighting(Game.SecondsSinceMidnight);
+			LibRender.Renderer.UpdateLighting(CurrentRoute.SecondsSinceMidnight);
 			Renderer.RenderScene(TimeElapsed);
 			if (Renderer.DebugTouchMode)
 			{
@@ -218,7 +218,7 @@ namespace OpenBve
 			// timer
 			double RealTimeElapsed;
 			double TimeElapsed;
-			if (Game.SecondsSinceMidnight >= Game.StartupTime)
+			if (CurrentRoute.SecondsSinceMidnight >= Game.StartupTime)
 			{
 				
 				RealTimeElapsed = CPreciseTimer.GetElapsedTime();
@@ -235,7 +235,7 @@ namespace OpenBve
 			else
 			{
 				RealTimeElapsed = 0.0;
-				TimeElapsed = Game.StartupTime - Game.SecondsSinceMidnight;
+				TimeElapsed = Game.StartupTime - CurrentRoute.SecondsSinceMidnight;
 			}
 
 			//We only want to update the simulation if we aren't in a menu
@@ -270,7 +270,7 @@ namespace OpenBve
 					const double chunkTime = 1.0/2.0;
 					if (TimeElapsed <= chunkTime)
 					{
-						Game.SecondsSinceMidnight += TimeElapsed;
+						CurrentRoute.SecondsSinceMidnight += TimeElapsed;
 						TrainManager.UpdateTrains(TimeElapsed);
 					}
 					else
@@ -280,7 +280,7 @@ namespace OpenBve
 						double time = TimeElapsed/(double) chunks;
 						for (int i = 0; i < chunks; i++)
 						{
-							Game.SecondsSinceMidnight += time;
+							CurrentRoute.SecondsSinceMidnight += time;
 							TrainManager.UpdateTrains(time);
 						}
 					}
@@ -478,7 +478,7 @@ namespace OpenBve
 			World.CameraTrackFollower.UpdateAbsolute(0.1, true, false);
 			World.CameraTrackFollower.TriggerType = EventTriggerType.Camera;
 			// starting time and track position
-			Game.SecondsSinceMidnight = 0.0;
+			CurrentRoute.SecondsSinceMidnight = 0.0;
 			Game.StartupTime = 0.0;
 			int PlayerFirstStationIndex = -1;
 			double PlayerFirstStationPosition;
@@ -548,7 +548,7 @@ namespace OpenBve
 				}
 				if (Game.InitialStationTime != -1)
 				{
-					Game.SecondsSinceMidnight = Game.InitialStationTime;
+					CurrentRoute.SecondsSinceMidnight = Game.InitialStationTime;
 					Game.StartupTime = Game.InitialStationTime;
 				}
 				else
@@ -557,12 +557,12 @@ namespace OpenBve
 					{
 						if (CurrentRoute.Stations[PlayerFirstStationIndex].DepartureTime < 0.0)
 						{
-							Game.SecondsSinceMidnight = 0.0;
+							CurrentRoute.SecondsSinceMidnight = 0.0;
 							Game.StartupTime = 0.0;
 						}
 						else
 						{
-							Game.SecondsSinceMidnight = CurrentRoute.Stations[PlayerFirstStationIndex].DepartureTime -
+							CurrentRoute.SecondsSinceMidnight = CurrentRoute.Stations[PlayerFirstStationIndex].DepartureTime -
 							                            CurrentRoute.Stations[PlayerFirstStationIndex].StopTime;
 							Game.StartupTime = CurrentRoute.Stations[PlayerFirstStationIndex].DepartureTime -
 							                   CurrentRoute.Stations[PlayerFirstStationIndex].StopTime;
@@ -570,7 +570,7 @@ namespace OpenBve
 					}
 					else
 					{
-						Game.SecondsSinceMidnight = CurrentRoute.Stations[PlayerFirstStationIndex].ArrivalTime;
+						CurrentRoute.SecondsSinceMidnight = CurrentRoute.Stations[PlayerFirstStationIndex].ArrivalTime;
 						Game.StartupTime = CurrentRoute.Stations[PlayerFirstStationIndex].ArrivalTime;
 					}
 				}
@@ -613,9 +613,9 @@ namespace OpenBve
 			if (Game.PrecedingTrainTimeDeltas.Length != 0)
 			{
 				OtherFirstStationTime -= Game.PrecedingTrainTimeDeltas[Game.PrecedingTrainTimeDeltas.Length - 1];
-				if (OtherFirstStationTime < Game.SecondsSinceMidnight)
+				if (OtherFirstStationTime < CurrentRoute.SecondsSinceMidnight)
 				{
-					Game.SecondsSinceMidnight = OtherFirstStationTime;
+					CurrentRoute.SecondsSinceMidnight = OtherFirstStationTime;
 				}
 			}
 			// initialize trains
@@ -740,13 +740,13 @@ namespace OpenBve
 			{
 				Game.MinimalisticSimulation = true;
 				const double w = 0.25;
-				double u = Game.StartupTime - Game.SecondsSinceMidnight;
+				double u = Game.StartupTime - CurrentRoute.SecondsSinceMidnight;
 				if (u > 0)
 				{
 					while (true)
 					{
 						double v = u < w ? u : w; u -= v;
-						Game.SecondsSinceMidnight += v;
+						CurrentRoute.SecondsSinceMidnight += v;
 						TrainManager.UpdateTrains(v);
 						if (u <= 0.0) break;
 						TotalTimeElapsedForSectionUpdate += v;
@@ -785,7 +785,7 @@ namespace OpenBve
 				if (TrainManager.PlayerTrain.Plugin != null && !TrainManager.PlayerTrain.Plugin.SupportsAI)
 				{
 					Game.AddMessage(Translations.GetInterfaceString("notification_aiunable"),MessageDependency.None, GameMode.Expert,
-						OpenBveApi.Colors.MessageColor.White, Game.SecondsSinceMidnight + 10.0, null);
+						OpenBveApi.Colors.MessageColor.White, CurrentRoute.SecondsSinceMidnight + 10.0, null);
 				}
 			}
 			
@@ -815,23 +815,23 @@ namespace OpenBve
 				if (filesNotFound != 0)
 				{
 					NotFound = filesNotFound.ToString() + " file(s) not found";
-					Game.AddMessage(NotFound, MessageDependency.None, GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + 10.0, null);
+					Game.AddMessage(NotFound, MessageDependency.None, GameMode.Expert, MessageColor.Magenta, CurrentRoute.SecondsSinceMidnight + 10.0, null);
 					
 				}
 				if (errors != 0 & warnings != 0)
 				{
 					Messages = errors.ToString() + " error(s), " + warnings.ToString() + " warning(s)";
-					Game.AddMessage(Messages, MessageDependency.None, GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + 10.0, null);
+					Game.AddMessage(Messages, MessageDependency.None, GameMode.Expert, MessageColor.Magenta, CurrentRoute.SecondsSinceMidnight + 10.0, null);
 				}
 				else if (errors != 0)
 				{
 					Messages = errors.ToString() + " error(s)";
-					Game.AddMessage(Messages, MessageDependency.None, GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + 10.0, null);
+					Game.AddMessage(Messages, MessageDependency.None, GameMode.Expert, MessageColor.Magenta, CurrentRoute.SecondsSinceMidnight + 10.0, null);
 				}
 				else
 				{
 					Messages = warnings.ToString() + " warning(s)";
-					Game.AddMessage(Messages, MessageDependency.None, GameMode.Expert, MessageColor.Magenta, Game.SecondsSinceMidnight + 10.0, null);
+					Game.AddMessage(Messages, MessageDependency.None, GameMode.Expert, MessageColor.Magenta, CurrentRoute.SecondsSinceMidnight + 10.0, null);
 				}
 				Game.RouteInformation.FilesNotFound = NotFound;
 				Game.RouteInformation.ErrorsAndWarnings = Messages;
@@ -839,8 +839,8 @@ namespace OpenBve
 				//This must be done after the simulation has init, as otherwise the timeout doesn't work
 				if (Loading.PluginError != null)
 				{
-					Game.AddMessage(Loading.PluginError, MessageDependency.None, GameMode.Expert, OpenBveApi.Colors.MessageColor.Red, Game.SecondsSinceMidnight + 5.0, null);
-					Game.AddMessage(Translations.GetInterfaceString("errors_plugin_failure2"), MessageDependency.None, GameMode.Expert, OpenBveApi.Colors.MessageColor.Red, Game.SecondsSinceMidnight + 5.0, null);
+					Game.AddMessage(Loading.PluginError, MessageDependency.None, GameMode.Expert, OpenBveApi.Colors.MessageColor.Red, CurrentRoute.SecondsSinceMidnight + 5.0, null);
+					Game.AddMessage(Translations.GetInterfaceString("errors_plugin_failure2"), MessageDependency.None, GameMode.Expert, OpenBveApi.Colors.MessageColor.Red, CurrentRoute.SecondsSinceMidnight + 5.0, null);
 				}
 			}
 			loadComplete = true;

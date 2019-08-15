@@ -2,6 +2,7 @@
 using OpenBve.SignalManager;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
+using OpenBveApi.Trains;
 using SoundManager;
 
 namespace OpenBve

@@ -4,7 +4,7 @@ using OpenBveApi.Trains;
 namespace OpenBve.RouteManager
 {
 	/// <summary>Called when the cab brightness (lighting conditions) should be changed</summary>
-		public class BrightnessChangeEvent : GeneralEvent<AbstractTrain, AbstractCar>
+		public class BrightnessChangeEvent : GeneralEvent
 		{
 			/// <summary>The brightness to be applied from this point</summary>
 			public readonly float CurrentBrightness;

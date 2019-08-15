@@ -4,7 +4,7 @@ using OpenBveApi.Trains;
 namespace OpenBve.RouteManager
 {
 	/// <summary>Placed at the start of every station</summary>
-	public class StationStartEvent : GeneralEvent<AbstractTrain, AbstractCar>
+	public class StationStartEvent : GeneralEvent
 	{
 		/// <summary>The index of the station this event describes</summary>
 		public readonly int StationIndex;

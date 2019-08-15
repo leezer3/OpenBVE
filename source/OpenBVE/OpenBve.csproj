@@ -122,8 +122,6 @@
       <SubType>Code</SubType>
       <DependentUpon>AI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Game\Events\EventTypes\RequestStop.cs" />
-    <Compile Include="Game\Events\EventTypes\SignalSection.cs" />
     <Compile Include="Game\Events\EventTypes\Sounds.cs" />
     <Compile Include="Game\Events\EventTypes\Station.cs" />
     <Compile Include="Game\MessageManager.cs" />
@@ -153,7 +151,6 @@
     <Compile Include="Game\Signalling.cs" />
     <Compile Include="Game\Station.cs" />
     <Compile Include="Game\TrackManager\TrackManager.cs" />
-    <Compile Include="Game\TrackManager\TrackManager.TrackFollower.cs" />
     <Compile Include="Graphics\HUD\HUD.cs" />
     <Compile Include="Graphics\HUD\HUD.Element.cs">
       <DependentUpon>HUD.cs</DependentUpon>
@@ -283,6 +280,7 @@
     <Compile Include="Simulation\TrainManager\Train\SafetySystems\PassAlarm.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Handles.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Train.RequestStop.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Specs.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Station.cs" />
     <Compile Include="System\Cursor.cs" />

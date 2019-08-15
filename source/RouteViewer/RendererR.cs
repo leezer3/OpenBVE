@@ -423,7 +423,7 @@ namespace OpenBve {
 							s = 0.2;
 							dy = 1.1;
 							t = LimitTexture;
-						} else if (e is TrackManager.SectionChangeEvent) {
+						} else if (e is SectionChangeEvent) {
 							s = 0.2;
 							dy = 0.8;
 							t = SectionTexture;
@@ -444,7 +444,7 @@ namespace OpenBve {
 							t = null;
 						}
 						if (t != null) {
-							TrackManager.TrackFollower f = new TrackManager.TrackFollower();
+							TrackFollower f = new TrackFollower(CurrentRoute.Tracks);
 							f.TriggerType = EventTriggerType.None;
 							f.TrackPosition = p;
 							f.UpdateAbsolute(p + e.TrackPositionDelta, true, false);
@@ -461,7 +461,7 @@ namespace OpenBve {
 						const double dy = 1.4;
 						const double s = 0.2;
 						double p = CurrentRoute.Stations[i].Stops[j].TrackPosition;
-						TrackManager.TrackFollower f = new TrackManager.TrackFollower();
+						TrackFollower f = new TrackFollower(CurrentRoute.Tracks);
 						f.TriggerType = EventTriggerType.None;
 						f.TrackPosition = p;
 						f.UpdateAbsolute(p, true, false);
@@ -477,7 +477,7 @@ namespace OpenBve {
 				if (d >= da & d <= db) {
 					const double dy = 2.5;
 					const double s = 0.25;
-					TrackManager.TrackFollower f = new TrackManager.TrackFollower();
+					TrackFollower f = new TrackFollower(CurrentRoute.Tracks);
 					f.TriggerType = EventTriggerType.None;
 					f.TrackPosition = p;
 					f.UpdateAbsolute(p, true, false);

@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBve.RouteManager;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
 
@@ -49,7 +50,7 @@ namespace OpenBve
 				if (State == TrainState.Pending)
 				{
 					// pending train
-					if (Game.SecondsSinceMidnight >= AppearanceTime)
+					if (CurrentRoute.SecondsSinceMidnight >= AppearanceTime)
 					{
 						double PlayerTrainTrackPosition = PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition + 0.5 * PlayerTrain.Cars[0].Length - PlayerTrain.Cars[0].FrontAxle.Position;
 						if (PlayerTrainTrackPosition < AppearanceStartPosition || (PlayerTrainTrackPosition > AppearanceEndPosition && AppearanceEndPosition > AppearanceStartPosition))

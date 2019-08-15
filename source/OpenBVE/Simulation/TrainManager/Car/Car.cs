@@ -6,6 +6,7 @@ using OpenBve.RouteManager;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using SoundManager;
 
@@ -50,7 +51,7 @@ namespace OpenBve
 			internal bool Topples;
 			
 			internal double BeaconReceiverPosition;
-			internal TrackManager.TrackFollower BeaconReceiver;
+			internal TrackFollower BeaconReceiver;
 			/// <summary>Whether loading sway is enabled for this car</summary>
 			internal bool EnableLoadingSway = true;
 			/// <summary>A reference to the base train</summary>
@@ -69,12 +70,13 @@ namespace OpenBve
 				baseTrain = train;
 				Index = index;
 				CarSections = new CarSection[] { };
-				FrontAxle.Follower.Train = train;
-				RearAxle.Follower.Train = train;
-				BeaconReceiver.Train = train;
+				FrontAxle.Follower = new TrackFollower(CurrentRoute.Tracks, train, this);
+				RearAxle.Follower = new TrackFollower(CurrentRoute.Tracks, train, this);
+				BeaconReceiver = new TrackFollower(CurrentRoute.Tracks, train);
 				FrontBogie = new Bogie(train, this);
 				RearBogie = new Bogie(train, this);
 				Doors = new Door[2];
+				
 			}
 
 			/// <summary>Moves the car</summary>
