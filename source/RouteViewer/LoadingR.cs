@@ -11,6 +11,7 @@ using System.Text;
 using System.Windows.Forms;
 using LibRender;
 using OpenBve.RouteManager;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
@@ -87,15 +88,11 @@ namespace OpenBve {
 
 		// load threaded
 		private static void LoadThreaded() {
-			#if DEBUG
-			LoadEverythingThreaded();
-			#else
 			try {
 				LoadEverythingThreaded();
 			} catch (Exception ex) {
 				Interface.AddMessage(MessageType.Critical, false, "The route and train loader encountered the following critical error: " + ex.Message);
 			}
-			#endif
 			Complete = true;
 		}
 
