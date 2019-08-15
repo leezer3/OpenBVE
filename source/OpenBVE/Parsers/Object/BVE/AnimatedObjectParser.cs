@@ -23,7 +23,7 @@ namespace OpenBve
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
 			{
-				Objects = new ObjectManager.AnimatedObject[4],
+				Objects = new AnimatedObject[4],
 				Sounds = new WorldObject[4]
 			};
 			int ObjectCount = 0;
@@ -138,9 +138,9 @@ namespace OpenBve
 											s.Dynamic = true;
 											if (ObjectCount >= Result.Objects.Length)
 											{
-												Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
+												Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
 											}
-											ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject(Program.CurrentHost);
+											AnimatedObject a = new AnimatedObject(Program.CurrentHost);
 											AnimatedObjectState aos = new AnimatedObjectState(s, position);
 											a.States = new AnimatedObjectState[] { aos };
 											Result.Objects[ObjectCount] = a;
@@ -153,7 +153,7 @@ namespace OpenBve
 											{
 												if (ObjectCount >= Result.Objects.Length)
 												{
-													Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
+													Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
 												}
 												for (int h = 0; h < a.Objects[k].States.Length; h++)
 												{
@@ -174,9 +174,9 @@ namespace OpenBve
 								i++;
 								if (Result.Objects.Length == ObjectCount)
 								{
-									Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
+									Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
 								}
-								Result.Objects[ObjectCount] = new ObjectManager.AnimatedObject(Program.CurrentHost)
+								Result.Objects[ObjectCount] = new AnimatedObject(Program.CurrentHost)
 								{
 									States = new AnimatedObjectState[] {},
 									CurrentState = -1,
@@ -1195,7 +1195,7 @@ namespace OpenBve
 								i++;
 								if (Result.Sounds.Length == SoundCount)
 								{
-									Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Sounds.Length << 1);
+									Array.Resize(ref Result.Objects, Result.Sounds.Length << 1);
 								}
 								Vector3 Position = Vector3.Zero;
 								string[] fileNames = new string[0];
@@ -1387,7 +1387,7 @@ namespace OpenBve
 					}
 				}
 			}
-			Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, ObjectCount);
+			Array.Resize(ref Result.Objects, ObjectCount);
 			return Result;
 		}
 

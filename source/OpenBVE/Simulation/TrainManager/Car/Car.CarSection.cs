@@ -8,7 +8,7 @@ namespace OpenBve
 	{
 		internal class TouchElement
 		{
-			internal ObjectManager.AnimatedObject Element;
+			internal AnimatedObject Element;
 			internal int JumpScreenIndex;
 			internal int SoundIndex;
 			internal Translations.Command Command;
@@ -17,7 +17,7 @@ namespace OpenBve
 
 		internal class ElementsGroup
 		{
-			internal ObjectManager.AnimatedObject[] Elements;
+			internal AnimatedObject[] Elements;
 			internal bool Overlay;
 			internal TouchElement[] TouchElements;
 

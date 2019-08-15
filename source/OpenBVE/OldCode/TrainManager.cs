@@ -8,6 +8,7 @@ using OpenBve.Parsers.Panel;
 using OpenBve.RouteManager;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
+using OpenBveApi.Objects;
 using OpenBveApi.Trains;
 using static LibRender.CameraProperties;
 
@@ -37,7 +38,7 @@ namespace OpenBve
 			};
 			Train.Cars[Train.DriverCar].CarSections[0].Groups[0] = new ElementsGroup
 			{
-				Elements = new ObjectManager.AnimatedObject[] { },
+				Elements = new AnimatedObject[] { },
 				Overlay = true
 			};
 			string File = OpenBveApi.Path.CombineFile(TrainPath, "panel.xml");

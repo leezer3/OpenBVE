@@ -293,7 +293,7 @@ namespace OpenBve {
 				Array.Resize(ref Train.Cars[Car].CarSections[0].Groups, GroupIndex + 1);
 				Train.Cars[Car].CarSections[0].Groups[GroupIndex] = new TrainManager.ElementsGroup
 				{
-					Elements = new ObjectManager.AnimatedObject[] { },
+					Elements = new AnimatedObject[] { },
 					Overlay = true
 				};
 			}
@@ -1524,8 +1524,8 @@ namespace OpenBve {
 				return n;
 			} else {
 				int n = Group.Elements.Length;
-				Array.Resize<ObjectManager.AnimatedObject>(ref Group.Elements, n + 1);
-				Group.Elements[n] = new ObjectManager.AnimatedObject(Program.CurrentHost);
+				Array.Resize(ref Group.Elements, n + 1);
+				Group.Elements[n] = new AnimatedObject(Program.CurrentHost);
 				Group.Elements[n].States = new AnimatedObjectState[1];
 				Group.Elements[n].States[0].Position = o;
 				Group.Elements[n].States[0].Object = Object;

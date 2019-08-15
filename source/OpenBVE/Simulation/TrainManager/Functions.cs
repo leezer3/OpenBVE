@@ -35,7 +35,7 @@ namespace OpenBve
 			{
 				for (int i = 0; i < ObjectManager.AnimatedWorldObjects.Length; i++)
 				{
-					var obj = ObjectManager.AnimatedWorldObjects[i] as ObjectManager.TrackFollowingObject;
+					var obj = ObjectManager.AnimatedWorldObjects[i] as OpenBveApi.Objects.TrackFollowingObject;
 					if (obj != null)
 					{
 						//Track followers should be reset if we jump between stations

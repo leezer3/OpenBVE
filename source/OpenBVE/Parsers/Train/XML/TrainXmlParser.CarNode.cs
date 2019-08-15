@@ -271,7 +271,7 @@ namespace OpenBve.Parsers.Train
 						};
 						Train.Cars[Car].CarSections[0].Groups[0] = new TrainManager.ElementsGroup
 						{
-							Elements = new ObjectManager.AnimatedObject[] { },
+							Elements = new AnimatedObject[] { },
 							Overlay = true
 						};
 						

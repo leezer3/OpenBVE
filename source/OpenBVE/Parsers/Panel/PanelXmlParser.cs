@@ -409,7 +409,7 @@ namespace OpenBve.Parsers.Panel
 								Array.Resize(ref CarSection.Groups, n + 2);
 								CarSection.Groups[n + 1] = new TrainManager.ElementsGroup
 								{
-									Elements = new ObjectManager.AnimatedObject[] { },
+									Elements = new AnimatedObject[] { },
 									Overlay = true
 								};
 							}
@@ -1611,7 +1611,7 @@ namespace OpenBve.Parsers.Panel
 			Array.Resize(ref Group.TouchElements, n + 1);
 			Group.TouchElements[n] = new TrainManager.TouchElement
 			{
-				Element = new ObjectManager.AnimatedObject(Program.CurrentHost),
+				Element = new AnimatedObject(Program.CurrentHost),
 				JumpScreenIndex = ScreenIndex,
 				SoundIndex = SoundIndex,
 				Command = Command,

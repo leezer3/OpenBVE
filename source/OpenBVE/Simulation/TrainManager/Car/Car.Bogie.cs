@@ -128,8 +128,8 @@ namespace OpenBve
 				if (currentObject is StaticObject)
 				{
 					StaticObject s = (StaticObject)currentObject;
-					CarSections[j].Groups[0].Elements = new ObjectManager.AnimatedObject[1];
-					CarSections[j].Groups[0].Elements[0] = new ObjectManager.AnimatedObject(Program.CurrentHost)
+					CarSections[j].Groups[0].Elements = new AnimatedObject[1];
+					CarSections[j].Groups[0].Elements[0] = new AnimatedObject(Program.CurrentHost)
 					{
 						States = new AnimatedObjectState[1]
 						
@@ -142,7 +142,7 @@ namespace OpenBve
 				else if (currentObject is ObjectManager.AnimatedObjectCollection)
 				{
 					ObjectManager.AnimatedObjectCollection a = (ObjectManager.AnimatedObjectCollection)currentObject;
-					CarSections[j].Groups[0].Elements = new ObjectManager.AnimatedObject[a.Objects.Length];
+					CarSections[j].Groups[0].Elements = new AnimatedObject[a.Objects.Length];
 					for (int h = 0; h < a.Objects.Length; h++)
 					{
 						CarSections[j].Groups[0].Elements[h] = a.Objects[h].Clone();

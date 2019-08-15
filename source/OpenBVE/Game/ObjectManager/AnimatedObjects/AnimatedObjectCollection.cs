@@ -66,7 +66,7 @@ namespace OpenBve
 							}
 							else
 							{
-								Objects[i].CreateObject(Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition, Brightness);
+								Objects[i].CreateObject(ref AnimatedWorldObjects, ref AnimatedWorldObjectsUsed, Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition, Brightness);
 							}
 						}
 					}
@@ -77,7 +77,7 @@ namespace OpenBve
 					{
 						if (Objects[i].States.Length != 0)
 						{
-							Objects[i].CreateObject(Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition, Brightness);
+							Objects[i].CreateObject(ref AnimatedWorldObjects, ref AnimatedWorldObjectsUsed, Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition, Brightness);
 						}
 					}
 				}

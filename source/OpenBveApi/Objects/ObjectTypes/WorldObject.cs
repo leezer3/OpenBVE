@@ -20,6 +20,8 @@ namespace OpenBveApi.Objects
 		public Vector3 Side;
 		/// <summary>The radius of the object</summary>
 		public double Radius;
+		/// <summary>The actual animated object</summary>
+		public AnimatedObject Object;
 
 		/// <summary>Updates the object</summary>
 		/// <param name="NearestTrain">The nearest train to this object</param>

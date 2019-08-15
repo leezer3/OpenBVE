@@ -305,7 +305,7 @@ namespace OpenBve
 			MsTsShape shape = new MsTsShape();
 			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
 			{
-				Objects = new ObjectManager.AnimatedObject[4]
+				Objects = new AnimatedObject[4]
 			};
 
 			currentFolder = Path.GetDirectoryName(fileName);
@@ -408,7 +408,7 @@ namespace OpenBve
 			{
 				for (int j = 0; j < shape.LODs[i].subObjects.Count; j++)
 				{
-					Result.Objects[idx] = new ObjectManager.AnimatedObject(Program.CurrentHost);
+					Result.Objects[idx] = new AnimatedObject(Program.CurrentHost);
 					Result.Objects[idx].States = new AnimatedObjectState[1];
 					AnimatedObjectState aos = new AnimatedObjectState(null, Vector3.Zero);
 					shape.LODs[i].subObjects[j].Apply(out aos.Object);

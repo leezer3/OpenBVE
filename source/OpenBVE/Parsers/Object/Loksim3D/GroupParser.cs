@@ -34,7 +34,7 @@ namespace OpenBve
 			XmlDocument currentXML = new XmlDocument();
 			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
 			{
-				Objects = new ObjectManager.AnimatedObject[0]
+				Objects = new AnimatedObject[0]
 			};
 			try
 			{
@@ -232,8 +232,8 @@ namespace OpenBve
 								Array.Resize<UnifiedObject>(ref obj, obj.Length + 1);
 								obj[obj.Length - 1] = Object;
 								int aL = Result.Objects.Length;
-								Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, aL + 1);
-								ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject(Program.CurrentHost);
+								Array.Resize(ref Result.Objects, aL + 1);
+								AnimatedObject a = new AnimatedObject(Program.CurrentHost);
 								AnimatedObjectState aos = new AnimatedObjectState(Object, CurrentObjects[i].Position);
 								a.States = new AnimatedObjectState[] { aos };
 								Result.Objects[aL] = a;
@@ -253,7 +253,7 @@ namespace OpenBve
 						{
 							int rl = Result.Objects.Length;
 							int l = AnimatedObject.Objects.Length;
-							Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length + l);
+							Array.Resize(ref Result.Objects, Result.Objects.Length + l);
 							for (int o = rl; o < rl + l; o++)
 							{
 								if (AnimatedObject.Objects[o - rl] != null)
@@ -266,7 +266,7 @@ namespace OpenBve
 								}
 								else
 								{
-									Result.Objects[o] = new ObjectManager.AnimatedObject(Program.CurrentHost);
+									Result.Objects[o] = new AnimatedObject(Program.CurrentHost);
 									Result.Objects[o].States = new AnimatedObjectState[0];
 								}
 							}
@@ -274,8 +274,8 @@ namespace OpenBve
 					}
 					if (staticObject != null)
 					{
-						Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length + 1);
-						ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject(Program.CurrentHost);
+						Array.Resize(ref Result.Objects, Result.Objects.Length + 1);
+						AnimatedObject a = new AnimatedObject(Program.CurrentHost);
 						AnimatedObjectState aos = new AnimatedObjectState(staticObject, Vector3.Zero);
 						a.States = new AnimatedObjectState[] { aos };
 						Result.Objects[Result.Objects.Length - 1] = a;

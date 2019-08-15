@@ -22,7 +22,7 @@ namespace OpenBve
 				ObjectManager.AnimatedObjectCollection a = (ObjectManager.AnimatedObjectCollection)Prototype;
 				ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
 				{
-					Objects = new ObjectManager.AnimatedObject[a.Objects.Length]
+					Objects = new AnimatedObject[a.Objects.Length]
 				};
 				for (int i = 0; i < a.Objects.Length; i++)
 				{
