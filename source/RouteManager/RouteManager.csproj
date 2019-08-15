@@ -56,6 +56,7 @@
     <Compile Include="Events\FogChange.cs" />
     <Compile Include="Events\MarkerEnd.cs" />
     <Compile Include="Events\MarkerStart.cs" />
+    <Compile Include="Events\RequestStop.cs" />
     <Compile Include="Events\SignalSection.cs" />
     <Compile Include="Events\SpeedLimit.cs" />
     <Compile Include="Events\Station.cs" />
@@ -78,7 +79,6 @@
     <Compile Include="SignalManager\SectionTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CurrentRoute.cs" />
-    <Compile Include="Stations\RequestStop.cs" />
     <Compile Include="Stations\RouteStation.cs" />
     <Compile Include="Stations\Station.Stop.cs" />
   </ItemGroup>

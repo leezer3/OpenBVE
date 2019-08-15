@@ -501,6 +501,20 @@ namespace OpenBve
 						}
 					}
 				}
+				// request stops
+				if (!PreviewOnly)
+				{
+					for (int j = 0; j < Data.RequestStops.Length; j++)
+					{
+						if (Data.RequestStops[j].TrackPosition >= StartingDistance & Data.RequestStops[j].TrackPosition < EndingDistance)
+						{
+							int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
+							Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
+							CurrentRoute.Tracks[0].Elements[n].Events[m] = new RequestStopEvent(Data.RequestStops[j].StationIndex, Data.RequestStops[j].MaxNumberOfCars, Data.RequestStops[j].FullSpeed, Data.RequestStops[j].OnTime , Data.RequestStops[j].Early, Data.RequestStops[j].Late);
+						}
+						
+					}
+				}
 				// sound
 				if (!PreviewOnly)
 				{

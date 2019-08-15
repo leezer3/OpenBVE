@@ -116,5 +116,12 @@ namespace OpenBveApi.Trains
 		{
 
 		}
+
+		/// <summary>Called when a request stop is triggered</summary>
+		/// <param name="stopRequest">The stop request to evaluate</param>
+		public virtual void RequestStop(RequestStop stopRequest)
+		{
+
+		}
 	}
 }
