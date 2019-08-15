@@ -100,10 +100,12 @@
     <Compile Include="Objects\ObjectTypes\AnimatedObject.AnimatedObjectState.cs" />
     <Compile Include="Objects\ObjectTypes\AnimatedObject.Base.cs" />
     <Compile Include="Objects\ObjectTypes\AnimatedWorldObject.cs" />
+    <Compile Include="Objects\ObjectTypes\AnimatedWorldObject.StateSound.cs" />
     <Compile Include="Objects\ObjectTypes\StaticObject.cs" />
     <Compile Include="Objects\ObjectTypes\TrackFollowingObject.cs" />
     <Compile Include="Objects\ObjectTypes\UnifiedObject.cs" />
     <Compile Include="Objects\ObjectTypes\WorldObject.cs" />
+    <Compile Include="Objects\ObjectTypes\WorldSound.cs" />
     <Compile Include="Objects\Parsers\ObjParsers.cs" />
     <Compile Include="Objects\Parsers\XParsers.cs" />
     <Compile Include="Routes\Background.Handle.cs" />

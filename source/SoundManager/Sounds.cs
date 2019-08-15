@@ -377,15 +377,43 @@ namespace SoundManager
 		/// <param name="parent">The parent object the sound is attached to, or a null reference.</param>
 		/// <param name="looped">Whether to play the sound in a loop.</param>
 		/// <returns>The sound source.</returns>
-		public SoundSource PlaySound(SoundBuffer buffer, double pitch, double volume, OpenBveApi.Math.Vector3 position, object parent, bool looped)
+		public SoundSource PlaySound(SoundHandle buffer, double pitch, double volume, OpenBveApi.Math.Vector3 position, object parent, bool looped)
 		{
-			if (Sources.Length == SourceCount)
+			if (buffer is SoundBuffer)
 			{
-				Array.Resize(ref Sources, Sources.Length << 1);
+				SoundBuffer b = buffer as SoundBuffer;
+				if (Sources.Length == SourceCount)
+				{
+					Array.Resize(ref Sources, Sources.Length << 1);
+				}
+				Sources[SourceCount] = new SoundSource(b, b.Radius, pitch, volume, position, parent, looped);
+				SourceCount++;
+				return Sources[SourceCount - 1];
 			}
-			Sources[SourceCount] = new SoundSource(buffer, buffer.Radius, pitch, volume, position, parent, looped);
-			SourceCount++;
-			return Sources[SourceCount - 1];
+			throw new NotSupportedException();
+		}
+
+		/// <summary>Plays a sound.</summary>
+		/// <param name="buffer">The sound buffer.</param>
+		/// <param name="pitch">The pitch change factor.</param>
+		/// <param name="volume">The volume change factor.</param>
+		/// <param name="position">The position. If a train car is specified, the position is relative to the car, otherwise absolute.</param>
+		/// <param name="looped">Whether to play the sound in a loop.</param>
+		/// <returns>The sound source.</returns>
+		public SoundSource PlaySound(SoundHandle buffer, double pitch, double volume, OpenBveApi.Math.Vector3 position, bool looped)
+		{
+			if (buffer is SoundBuffer)
+			{
+				SoundBuffer b = buffer as SoundBuffer;
+				if (Sources.Length == SourceCount)
+				{
+					Array.Resize(ref Sources, Sources.Length << 1);
+				}
+				Sources[SourceCount] = new SoundSource(b, b.Radius, pitch, volume, position, null, looped);
+				SourceCount++;
+				return Sources[SourceCount - 1];
+			}
+			throw new NotSupportedException();
 		}
 		
 		/// <summary>Register the position to play microphone input.</summary>
@@ -416,9 +444,10 @@ namespace SoundManager
 		}
 
 		/// <summary>Stops the specified sound source.</summary>
-		/// <param name="source">The sound source, or a null reference.</param>
-		public void StopSound(SoundSource source)
+		/// <param name="Source">The sound source, or a null reference.</param>
+		public void StopSound(object Source)
 		{
+			SoundSource source = Source as SoundSource;
 			if (source != null)
 			{
 				if (source.State == SoundSourceState.Playing)
@@ -466,10 +495,11 @@ namespace SoundManager
 		// --- tests ---
 
 		/// <summary>Checks whether the specified sound is playing or supposed to be playing.</summary>
-		/// <param name="source">The sound source, or a null reference.</param>
+		/// <param name="Source">The sound source, or a null reference.</param>
 		/// <returns>Whether the sound is playing or supposed to be playing.</returns>
-		public bool IsPlaying(SoundSource source)
+		public bool IsPlaying(object Source)
 		{
+			SoundSource source = Source as SoundSource;
 			if (source != null)
 			{
 				if (source.State == SoundSourceState.PlayPending | source.State == SoundSourceState.Playing)

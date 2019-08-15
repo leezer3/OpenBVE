@@ -1174,7 +1174,7 @@ namespace OpenBve
 								i--;
 								if (fileName != null)
 								{
-									ObjectManager.WorldSound snd = new ObjectManager.WorldSound();
+									WorldSound snd = new WorldSound(Program.CurrentHost);
 									snd.Buffer = Program.Sounds.RegisterBuffer(fileName, radius);
 									snd.currentPitch = pitch;
 									snd.currentVolume = volume;
@@ -1347,7 +1347,7 @@ namespace OpenBve
 								i--;
 								if (fileNames.Length != 0 && ObjectCount > 0)
 								{
-									ObjectManager.AnimatedWorldObjectStateSound snd = new ObjectManager.AnimatedWorldObjectStateSound();
+									AnimatedWorldObjectStateSound snd = new AnimatedWorldObjectStateSound(Program.CurrentHost);
 									snd.Object = Result.Objects[ObjectCount -1].Clone();
 									snd.Buffers = new SoundBuffer[fileNames.Length];
 									for (int j = 0; j < fileNames.Length; j++)

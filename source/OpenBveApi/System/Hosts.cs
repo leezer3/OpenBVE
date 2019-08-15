@@ -236,6 +236,40 @@ namespace OpenBveApi.Hosts {
 			 */
 
 		}
+
+		/// <summary>Checks whether the specified sound source is playing</summary>
+		public virtual bool SoundIsPlaying(object SoundSource)
+		{
+			return false;
+		}
+
+		/// <summary>Plays a sound.</summary>
+		/// <param name="buffer">The sound buffer.</param>
+		/// <param name="pitch">The pitch change factor.</param>
+		/// <param name="volume">The volume change factor.</param>
+		/// <param name="position">The position. If a train car is specified, the position is relative to the car, otherwise absolute.</param>
+		/// <param name="parent">The parent object the sound is attached to, or a null reference.</param>
+		/// <param name="looped">Whether to play the sound in a loop.</param>
+		/// <returns>The sound source.</returns>
+		public virtual object PlaySound(SoundHandle buffer, double pitch, double volume, OpenBveApi.Math.Vector3 position, object parent, bool looped)
+		{
+			return null;
+		}
+
+		/// <summary>Stops a playing sound source</summary>
+		public virtual void StopSound(object SoundSource)
+		{
+
+		}
+
+		/// <summary>Returns whether the simulation is currently in progress</summary>
+		public virtual bool SimulationSetup
+		{
+			get
+			{
+				return false;
+			}
+		}
 	}
 	
 }

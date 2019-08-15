@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBve.RouteManager;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.World;
@@ -94,12 +95,12 @@ namespace OpenBve
 					var snd = this.Sounds[i] as WorldSound;
 					if (snd != null)
 					{
-						snd.CreateSound(Sounds[i].Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition);
+						snd.CreateSound(ref AnimatedWorldObjects, ref AnimatedWorldObjectsUsed, CurrentRoute.Tracks, Sounds[i].Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition);
 					}
 					var snd2 = this.Sounds[i] as AnimatedWorldObjectStateSound;
 					if (snd2 != null)
 					{
-						snd2.Create(Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition, Brightness);
+						snd2.Create(ref AnimatedWorldObjects, ref AnimatedWorldObjectsUsed, Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition, Brightness);
 					}
 				}
 			}
