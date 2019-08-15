@@ -28,7 +28,7 @@ namespace OpenBveApi.Routes
 		/// <summary>The side vector</summary>
 		public Vector3 WorldSide;
 		/// <summary>An array containing all events attached to this element</summary>
-		public object[] Events;
+		public GeneralEvent[] Events;
 
 		/// <summary>Creates a new track element</summary>
 		/// <param name="StartingTrackPosition">The starting position (relative to zero)</param>
@@ -45,7 +45,7 @@ namespace OpenBveApi.Routes
 			this.WorldDirection = Vector3.Forward;
 			this.WorldUp = Vector3.Down;
 			this.WorldSide = Vector3.Right;
-			this.Events = new object[] { };
+			this.Events = new GeneralEvent[] { };
 		}
 	}
 }

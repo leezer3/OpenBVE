@@ -1164,8 +1164,8 @@ namespace OpenBve {
 				Train.Cars[i].RearAxle.Follower.TriggerType = i == Cars - 1 ? EventTriggerType.RearCarRearAxle : EventTriggerType.OtherCarRearAxle;
 				Train.Cars[i].BeaconReceiver.TriggerType = i == 0 ? EventTriggerType.TrainFront : EventTriggerType.None;
 				Train.Cars[i].BeaconReceiverPosition = 0.5 * CarLength;
-				Train.Cars[i].FrontAxle.Follower.CarIndex = i;
-				Train.Cars[i].RearAxle.Follower.CarIndex = i;
+				Train.Cars[i].FrontAxle.Follower.Car = Train.Cars[i];
+				Train.Cars[i].RearAxle.Follower.Car = Train.Cars[i];
 				Train.Cars[i].FrontAxle.Position = AxleDistance;
 				Train.Cars[i].RearAxle.Position = -AxleDistance;
 				Train.Cars[i].Specs.JerkPowerUp = JerkPowerUp;

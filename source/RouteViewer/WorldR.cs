@@ -7,11 +7,14 @@
 
 using System;
 using LibRender;
+using OpenBve.RouteManager;
 using OpenBveApi.Math;
+using OpenBveApi.Routes;
 
 namespace OpenBve {
-	public static class World {	
-		internal static TrackManager.TrackFollower CameraTrackFollower;
+	public static class World
+	{
+		internal static TrackFollower CameraTrackFollower = new TrackFollower(CurrentRoute.Tracks);
 
 		// camera restriction
 		

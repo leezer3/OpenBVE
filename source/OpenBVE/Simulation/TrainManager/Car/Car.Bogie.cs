@@ -3,6 +3,7 @@ using LibRender;
 using OpenBve.RouteManager;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 
 namespace OpenBve
 {
@@ -42,6 +43,8 @@ namespace OpenBve
 				baseTrain = train;
 				baseCar = car;
 				CarSections = new CarSection[] { };
+				FrontAxle.Follower = new TrackFollower(CurrentRoute.Tracks, train, car);
+				RearAxle.Follower = new TrackFollower(CurrentRoute.Tracks, train, car);
 			}
 
 			internal void UpdateObjects(double TimeElapsed, bool ForceUpdate)

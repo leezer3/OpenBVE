@@ -1,8 +1,10 @@
 ﻿using System;
 using LibRender;
+using OpenBve.RouteManager;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
 using SoundManager;
@@ -26,7 +28,7 @@ namespace OpenBve
 			/// <summary>The track position</summary>
 			internal double currentTrackPosition = 0;
 			/// <summary>The track follower used to hold/ move the sound</summary>
-			internal TrackManager.TrackFollower Follower;
+			internal TrackFollower Follower;
 			/// <summary>The function script controlling the sound's movement along the track, or a null reference</summary>
 			internal FunctionScript TrackFollowerFunction;
 			/// <summary>The function script controlling the sound's volume, or a null reference</summary>
@@ -46,7 +48,7 @@ namespace OpenBve
 					Buffer = this.Buffer,
 					//Must clone the vector, not pass the reference
 					Position = new Vector3(position),
-					Follower =  new TrackManager.TrackFollower(),
+					Follower =  new TrackFollower(CurrentRoute.Tracks),
 					currentTrackPosition = trackPosition
 				};
 				snd.Follower.UpdateAbsolute(trackPosition, true, true);

@@ -1,4 +1,5 @@
-﻿using SoundManager;
+﻿using OpenBveApi.Routes;
+using SoundManager;
 
 namespace OpenBve
 {
@@ -8,7 +9,7 @@ namespace OpenBve
 		// axle
 		internal struct Axle
 		{
-			internal TrackManager.TrackFollower Follower;
+			internal TrackFollower Follower;
 			internal bool CurrentWheelSlip;
 			internal double Position;
 			internal CarSound[] PointSounds;
