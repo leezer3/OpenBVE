@@ -37,7 +37,7 @@ namespace OpenBve
 
 			private int lastState;
 
-			public override void Update(double TimeElapsed, bool ForceUpdate)
+			public override void Update(AbstractTrain NearestTrain, double TimeElapsed, bool ForceUpdate)
 			{
 				const double extraRadius = 10.0;
 				double z = Object.TranslateZFunction == null ? 0.0 : Object.TranslateZFunction.LastResult;
@@ -52,33 +52,7 @@ namespace OpenBve
 					{
 						double timeDelta = Object.SecondsSinceLastUpdate + TimeElapsed;
 						Object.SecondsSinceLastUpdate = 0.0;
-						TrainManager.Train train = null;
-						double trainDistance = double.MaxValue;
-						for (int j = 0; j < TrainManager.Trains.Length; j++)
-						{
-							if (TrainManager.Trains[j].State == TrainState.Available)
-							{
-								double distance;
-								if (TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition < TrackPosition)
-								{
-									distance = TrackPosition - TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition;
-								}
-								else if (TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition > TrackPosition)
-								{
-									distance = TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition - TrackPosition;
-								}
-								else
-								{
-									distance = 0;
-								}
-								if (distance < trainDistance)
-								{
-									train = TrainManager.Trains[j];
-									trainDistance = distance;
-								}
-							}
-						}
-						Object.Update(false, train, train == null ? 0 : train.DriverCar, SectionIndex, TrackPosition, Position, Direction, Up, Side, true, true, timeDelta, true);
+						Object.Update(false, NearestTrain, NearestTrain == null ? 0 : NearestTrain.DriverCar, SectionIndex, TrackPosition, Position, Direction, Up, Side, true, true, timeDelta, true);
 						if (this.Object.CurrentState != this.lastState && Loading.SimulationSetup)
 						{
 							if (this.SingleBuffer && this.Buffers[0] != null)

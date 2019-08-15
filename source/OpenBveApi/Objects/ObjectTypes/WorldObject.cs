@@ -1,4 +1,5 @@
 ﻿using OpenBveApi.Math;
+using OpenBveApi.Trains;
 
 namespace OpenBveApi.Objects
 {
@@ -19,8 +20,9 @@ namespace OpenBveApi.Objects
 		public Vector3 Side;
 
 		/// <summary>Updates the object</summary>
+		/// <param name="NearestTrain">The nearest train to this object</param>
 		/// <param name="TimeElapsed">The time elapsed in milliseconds</param>
 		/// <param name="ForceUpdate">Whether this is a forced update (e.g. Change of viewpoint) or periodic</param>
-		public abstract void Update(double TimeElapsed, bool ForceUpdate);
+		public abstract void Update(AbstractTrain NearestTrain, double TimeElapsed, bool ForceUpdate);
 	}
 }

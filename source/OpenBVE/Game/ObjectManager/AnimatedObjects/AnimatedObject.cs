@@ -103,7 +103,7 @@ namespace OpenBve
 				{
 					var o = this.Clone();
 					currentHost.CreateDynamicObject(ref internalObject);
-					TrackFollowingObject currentObject = new TrackFollowingObject
+					TrackFollowingObject currentObject = new TrackFollowingObject(currentHost)
 					{
 						Position = Position,
 						Direction = FinalTransformation.Z,

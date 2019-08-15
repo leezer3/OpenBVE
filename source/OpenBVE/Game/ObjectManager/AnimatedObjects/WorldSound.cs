@@ -61,7 +61,7 @@ namespace OpenBve
 				AnimatedWorldObjectsUsed++;
 			}
 
-			public override void Update(double TimeElapsed, bool ForceUpdate)
+			public override void Update(AbstractTrain NearestTrain, double TimeElapsed, bool ForceUpdate)
 			{
 				const double extraRadius = 10.0;
 				const double Radius = 25.0;
@@ -77,46 +77,21 @@ namespace OpenBve
 					{
 						return;
 					}
-					TrainManager.Train train = null;
-					double trainDistance = double.MaxValue;
-					for (int j = 0; j < TrainManager.Trains.Length; j++)
-					{
-						if (TrainManager.Trains[j].State == TrainState.Available)
-						{
-							double distance;
-							if (TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition < this.Follower.TrackPosition)
-							{
-								distance = this.Follower.TrackPosition - TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition;
-							}
-							else if (TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition > this.Follower.TrackPosition)
-							{
-								distance = TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition - this.Follower.TrackPosition;
-							}
-							else
-							{
-								distance = 0;
-							}
-							if (distance < trainDistance)
-							{
-								train = TrainManager.Trains[j];
-								trainDistance = distance;
-							}
-						}
-					}
+					
 					if (this.TrackFollowerFunction != null)
 					{
 
-						double delta = this.TrackFollowerFunction.Perform(train, train == null ? 0 : train.DriverCar, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
+						double delta = this.TrackFollowerFunction.Perform(NearestTrain, NearestTrain == null ? 0 : NearestTrain.DriverCar, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
 						this.Follower.UpdateAbsolute(this.currentTrackPosition + delta, true, true);
 						this.Follower.UpdateWorldCoordinates(false);
 					}
 					if (this.VolumeFunction != null)
 					{
-						this.currentVolume = this.VolumeFunction.Perform(train, train == null ? 0 : train.DriverCar, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
+						this.currentVolume = this.VolumeFunction.Perform(NearestTrain, NearestTrain == null ? 0 : NearestTrain.DriverCar, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
 					}
 					if (this.PitchFunction != null)
 					{
-						this.currentPitch = this.PitchFunction.Perform(train, train == null ? 0 : train.DriverCar, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
+						this.currentPitch = this.PitchFunction.Perform(NearestTrain, NearestTrain == null ? 0 : NearestTrain.DriverCar, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
 					}
 					if (this.Source != null)
 					{

@@ -1,6 +1,7 @@
 using System;
 using LibRender;
 using OpenBve.RouteManager;
+using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
@@ -14,6 +15,7 @@ namespace OpenBve
 	{
 		internal class TrackFollowingObject : WorldObject
 		{
+			private readonly HostInterface currentHost;
 			/// <summary>The actual animated object</summary>
 			internal AnimatedObject Object;
 			/// <summary>The signalling section the object refers to (Only relevant for objects placed using Track.Sig</summary>
@@ -31,7 +33,12 @@ namespace OpenBve
 			internal double CurrentRollDueToCantAngle;
 #pragma warning restore 0649       
 
-			public override void Update(double TimeElapsed, bool ForceUpdate)
+			internal TrackFollowingObject(HostInterface Host)
+			{
+				currentHost = Host;
+			}
+
+			public override void Update(AbstractTrain NearestTrain, double TimeElapsed, bool ForceUpdate)
 			{
 				const double extraRadius = 10.0;
 				double z = Object.TranslateZFunction == null ? 0.0 : Object.TranslateZFunction.LastResult;
@@ -46,36 +53,11 @@ namespace OpenBve
 					{
 						double timeDelta = Object.SecondsSinceLastUpdate + TimeElapsed;
 						Object.SecondsSinceLastUpdate = 0.0;
-						TrainManager.Train train = null;
-						double trainDistance = double.MaxValue;
-						for (int j = 0; j < TrainManager.Trains.Length; j++)
-						{
-							if (TrainManager.Trains[j].State == TrainState.Available)
-							{
-								double distance;
-								if (TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition < TrackPosition)
-								{
-									distance = TrackPosition - TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition;
-								}
-								else if (TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition > TrackPosition)
-								{
-									distance = TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition - TrackPosition;
-								}
-								else
-								{
-									distance = 0;
-								}
-								if (distance < trainDistance)
-								{
-									train = TrainManager.Trains[j];
-									trainDistance = distance;
-								}
-							}
-						}
+
 						if (Visible)
 						{
 							//Calculate the distance travelled
-							double delta = UpdateTrackFollowerScript(false, train, train == null ? 0 : train.DriverCar, SectionIndex, TrackPosition, Position, true, timeDelta);
+							double delta = UpdateTrackFollowerScript(false, NearestTrain, NearestTrain == null ? 0 : NearestTrain.DriverCar, SectionIndex, TrackPosition, Position, true, timeDelta);
 							//Update the front and rear axle track followers
 							FrontAxleFollower.UpdateAbsolute((TrackPosition + FrontAxlePosition) + delta, true, true);
 							RearAxleFollower.UpdateAbsolute((TrackPosition + RearAxlePosition) + delta, true, true);
@@ -85,7 +67,7 @@ namespace OpenBve
 							UpdateObjectPosition();
 						}
 						//Update the actual animated object- This must be done last in case the user has used Translation or Rotation
-						Object.Update(false, train, train == null ? 0 : train.DriverCar, SectionIndex, FrontAxleFollower.TrackPosition, FrontAxleFollower.WorldPosition, Direction, Up, Side, true, true, timeDelta, true);
+						Object.Update(false, NearestTrain, NearestTrain == null ? 0 : NearestTrain.DriverCar, SectionIndex, FrontAxleFollower.TrackPosition, FrontAxleFollower.WorldPosition, Direction, Up, Side, true, true, timeDelta, true);
 					}
 					else
 					{
@@ -93,7 +75,7 @@ namespace OpenBve
 					}
 					if (!Visible)
 					{
-						Renderer.ShowObject(Object.internalObject, ObjectType.Dynamic);
+						currentHost.ShowObject(Object.internalObject, ObjectType.Dynamic);
 						Visible = true;
 					}
 				}
@@ -102,7 +84,7 @@ namespace OpenBve
 					Object.SecondsSinceLastUpdate += TimeElapsed;
 					if (Visible)
 					{
-						Renderer.HideObject(ref Object.internalObject);
+						currentHost.HideObject(ref Object.internalObject);
 						Visible = false;
 					}
 				}
@@ -126,8 +108,8 @@ namespace OpenBve
 				// apply position due to cant/toppling
 				{
 					double a = CurrentRollDueToTopplingAngle + CurrentRollDueToCantAngle;
-					double x = Math.Sign(a) * 0.5 * CurrentRoute.Tracks[FrontAxleFollower.TrackIndex].RailGauge * (1.0 - Math.Cos(a));
-					double y = Math.Abs(0.5 * CurrentRoute.Tracks[FrontAxleFollower.TrackIndex].RailGauge * Math.Sin(a));
+					double x = Math.Sign(a) * 0.5 * FrontAxleFollower.RailGauge * (1.0 - Math.Cos(a));
+					double y = Math.Abs(0.5 * FrontAxleFollower.RailGauge * Math.Sin(a));
 					Vector3 c = Side * x + Up * y;
 
 					FrontAxleFollower.WorldPosition += c;
@@ -143,7 +125,7 @@ namespace OpenBve
 				}
 			}
 
-			private double UpdateTrackFollowerScript(bool IsPartOfTrain, TrainManager.Train Train, int CarIndex, int currentSectionIndex, double currentTrackPosition, Vector3 WorldPosition, bool UpdateFunctions, double TimeElapsed)
+			private double UpdateTrackFollowerScript(bool IsPartOfTrain, AbstractTrain Train, int CarIndex, int currentSectionIndex, double currentTrackPosition, Vector3 WorldPosition, bool UpdateFunctions, double TimeElapsed)
 			{
 				double x = 0.0;
 				if (Object.TrackFollowerFunction != null)

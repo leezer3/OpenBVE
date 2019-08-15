@@ -2,6 +2,7 @@ using System;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Trains;
 using OpenBveApi.World;
 
 namespace OpenBve
@@ -32,7 +33,34 @@ namespace OpenBve
 		{
 			for (int i = 0; i < AnimatedWorldObjectsUsed; i++)
 			{
-				AnimatedWorldObjects[i].Update(TimeElapsed, ForceUpdate);
+				//Find the closest train
+				double trainDistance = double.MaxValue;
+				TrainManager.Train train = null;
+				for (int j = 0; j < TrainManager.Trains.Length; j++)
+				{
+					if (TrainManager.Trains[j].State == TrainState.Available)
+					{
+						double distance;
+						if (TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition < AnimatedWorldObjects[i].TrackPosition)
+						{
+							distance = AnimatedWorldObjects[i].TrackPosition - TrainManager.Trains[j].Cars[0].TrackPosition;
+						}
+						else if (TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition > AnimatedWorldObjects[i].TrackPosition)
+						{
+							distance = TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition - AnimatedWorldObjects[i].TrackPosition;
+						}
+						else
+						{
+							distance = 0;
+						}
+						if (distance < trainDistance)
+						{
+							train = TrainManager.Trains[j];
+							trainDistance = distance;
+						}
+					}
+				}
+				AnimatedWorldObjects[i].Update(train, TimeElapsed, ForceUpdate);
 			}
 		}
 
