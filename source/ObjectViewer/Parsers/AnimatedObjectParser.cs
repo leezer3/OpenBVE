@@ -20,7 +20,7 @@ namespace OpenBve
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 		    ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
 		    {
-		        Objects = new ObjectManager.AnimatedObject[4]
+		        Objects = new AnimatedObject[4]
 		    };
 		    int ObjectCount = 0;
 			// load file
@@ -105,9 +105,9 @@ namespace OpenBve
 											StaticObject s = (StaticObject)obj[j];
 											s.Dynamic = true;
 											if (ObjectCount >= Result.Objects.Length) {
-												Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
+												Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
 											}
-											ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject(Program.CurrentHost);
+											AnimatedObject a = new AnimatedObject(Program.CurrentHost);
 											AnimatedObjectState aos = new AnimatedObjectState(s, position);
 										    a.States = new AnimatedObjectState[] { aos };
 											Result.Objects[ObjectCount] = a;
@@ -116,7 +116,7 @@ namespace OpenBve
 											ObjectManager.AnimatedObjectCollection a = (ObjectManager.AnimatedObjectCollection)obj[j];
 											for (int k = 0; k < a.Objects.Length; k++) {
 												if (ObjectCount >= Result.Objects.Length) {
-													Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
+													Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
 												}
 												for (int h = 0; h < a.Objects[k].States.Length; h++) {
 													a.Objects[k].States[h].Position.X += position.X;
@@ -135,9 +135,9 @@ namespace OpenBve
 							{
 								i++;
 								if (Result.Objects.Length == ObjectCount) {
-									Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
+									Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
 								}
-							    Result.Objects[ObjectCount] = new ObjectManager.AnimatedObject(Program.CurrentHost)
+							    Result.Objects[ObjectCount] = new AnimatedObject(Program.CurrentHost)
 							    {
 							        States = new AnimatedObjectState[] {},
 							        CurrentState = -1,
@@ -572,7 +572,7 @@ namespace OpenBve
 					}
 				}
 			}
-			Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, ObjectCount);
+			Array.Resize(ref Result.Objects, ObjectCount);
 			return Result;
 		}
 

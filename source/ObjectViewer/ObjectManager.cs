@@ -22,65 +22,7 @@ namespace OpenBve
         internal static int ObjectsSortedByStartPointer = 0;
         internal static int ObjectsSortedByEndPointer = 0;
         internal static double LastUpdatedTrackPosition = 0.0;
-
-        internal class AnimatedObject : AnimatedObjectBase
-        {
-	        internal AnimatedObject(HostInterface Host)
-	        {
-		        currentHost = Host;
-	        }
-
-            internal AnimatedObject Clone()
-            {
-                AnimatedObject Result = new AnimatedObject(currentHost);
-                Result.States = new AnimatedObjectState[this.States.Length];
-                for (int i = 0; i < this.States.Length; i++)
-                {
-                    Result.States[i].Position = this.States[i].Position;
-                    Result.States[i].Object = (StaticObject)this.States[i].Object.Clone();
-                }
-                Result.StateFunction = this.StateFunction == null ? null : this.StateFunction.Clone();
-                Result.CurrentState = this.CurrentState;
-                Result.TranslateZDirection = this.TranslateZDirection;
-                Result.TranslateYDirection = this.TranslateYDirection;
-                Result.TranslateXDirection = this.TranslateXDirection;
-                Result.TranslateXFunction = this.TranslateXFunction == null ? null : this.TranslateXFunction.Clone();
-                Result.TranslateYFunction = this.TranslateYFunction == null ? null : this.TranslateYFunction.Clone();
-                Result.TranslateZFunction = this.TranslateZFunction == null ? null : this.TranslateZFunction.Clone();
-                Result.RotateXDirection = this.RotateXDirection;
-                Result.RotateYDirection = this.RotateYDirection;
-                Result.RotateZDirection = this.RotateZDirection;
-                Result.RotateXFunction = this.RotateXFunction == null ? null : this.RotateXFunction.Clone();
-                Result.RotateXDamping = this.RotateXDamping == null ? null : this.RotateXDamping.Clone();
-                Result.RotateYFunction = this.RotateYFunction == null ? null : this.RotateYFunction.Clone();
-                Result.RotateYDamping = this.RotateYDamping == null ? null : this.RotateYDamping.Clone();
-                Result.RotateZFunction = this.RotateZFunction == null ? null : this.RotateZFunction.Clone();
-                Result.RotateZDamping = this.RotateZDamping == null ? null : this.RotateZDamping.Clone();
-                Result.TextureShiftXDirection = this.TextureShiftXDirection;
-                Result.TextureShiftYDirection = this.TextureShiftYDirection;
-                Result.TextureShiftXFunction = this.TextureShiftXFunction == null ? null : this.TextureShiftXFunction.Clone();
-                Result.TextureShiftYFunction = this.TextureShiftYFunction == null ? null : this.TextureShiftYFunction.Clone();
-                Result.LEDClockwiseWinding = this.LEDClockwiseWinding;
-                Result.LEDInitialAngle = this.LEDInitialAngle;
-                Result.LEDLastAngle = this.LEDLastAngle;
-                if (this.LEDVectors != null)
-                {
-                    Result.LEDVectors = new Vector3[this.LEDVectors.Length];
-                    for (int i = 0; i < this.LEDVectors.Length; i++)
-                    {
-                        Result.LEDVectors[i] = this.LEDVectors[i];
-                    }
-                }
-                else
-                {
-                    Result.LEDVectors = null;
-                }
-                Result.LEDFunction = this.LEDFunction == null ? null : this.LEDFunction.Clone();
-                Result.RefreshRate = this.RefreshRate;
-                Result.SecondsSinceLastUpdate = 0.0;
-                return Result;
-            }
-        }
+		
         internal class AnimatedObjectCollection : UnifiedObject
         {
             internal AnimatedObject[] Objects;
@@ -110,18 +52,7 @@ namespace OpenBve
 			}
         }
 		
-        // animated world object
-        internal class AnimatedWorldObject : WorldObject
-        {
-            internal AnimatedObject Object;
-            internal int SectionIndex;
-            internal double Radius;
-
-            public override void Update(AbstractTrain NearestTrain, double TimeElapsed, bool ForceUpdate, bool Visible)
-            {
-	            throw new NotImplementedException();
-            }
-        }
+       
         internal static AnimatedWorldObject[] AnimatedWorldObjects = new AnimatedWorldObject[4];
         internal static int AnimatedWorldObjectsUsed = 0;
         internal static void CreateAnimatedWorldObjects(AnimatedObject[] Prototypes, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
@@ -185,7 +116,7 @@ namespace OpenBve
                 Array.Resize<AnimatedWorldObject>(ref AnimatedWorldObjects, AnimatedWorldObjects.Length << 1);
             }
             Transformation FinalTransformation = new Transformation(BaseTransformation, AuxTransformation);
-            AnimatedWorldObjects[a] = new AnimatedWorldObject();
+            AnimatedWorldObjects[a] = new AnimatedWorldObject(Program.CurrentHost);
             AnimatedWorldObjects[a].Position = Position;
             AnimatedWorldObjects[a].Direction = FinalTransformation.Z;
             AnimatedWorldObjects[a].Up = FinalTransformation.Y;
@@ -224,68 +155,46 @@ namespace OpenBve
         internal static void UpdateAnimatedWorldObjects(double TimeElapsed, bool ForceUpdate)
         {
             for (int i = 0; i < AnimatedWorldObjectsUsed; i++)
-            {
-                const double extraRadius = 10.0;
-                double z = AnimatedWorldObjects[i].Object.TranslateZFunction == null ? 0.0 : AnimatedWorldObjects[i].Object.TranslateZFunction.LastResult;
-                double pa = AnimatedWorldObjects[i].TrackPosition + z - AnimatedWorldObjects[i].Radius - extraRadius;
-                double pb = AnimatedWorldObjects[i].TrackPosition + z + AnimatedWorldObjects[i].Radius + extraRadius;
-                double ta = World.CameraTrackFollower.TrackPosition - World.BackgroundImageDistance - Camera.ExtraViewingDistance;
-                double tb = World.CameraTrackFollower.TrackPosition + World.BackgroundImageDistance + Camera.ExtraViewingDistance;
-                bool visible = pb >= ta & pa <= tb;
-                if (visible | ForceUpdate)
-                {
-                    if (AnimatedWorldObjects[i].Object.SecondsSinceLastUpdate >= AnimatedWorldObjects[i].Object.RefreshRate | ForceUpdate)
-                    {
-                        double timeDelta = AnimatedWorldObjects[i].Object.SecondsSinceLastUpdate + TimeElapsed;
-                        AnimatedWorldObjects[i].Object.SecondsSinceLastUpdate = 0.0;
-                        TrainManager.Train train = null;
-                        double trainDistance = double.MaxValue;
-                        for (int j = 0; j < TrainManager.Trains.Length; j++)
-                        {
-                            if (TrainManager.Trains[j].State == TrainState.Available)
-                            {
-                                double distance;
-                                if (TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition < AnimatedWorldObjects[i].TrackPosition)
-                                {
-                                    distance = AnimatedWorldObjects[i].TrackPosition - TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition;
-                                }
-                                else if (TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition > AnimatedWorldObjects[i].TrackPosition)
-                                {
-                                    distance = TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition - AnimatedWorldObjects[i].TrackPosition;
-                                }
-                                else
-                                {
-                                    distance = 0;
-                                }
-                                if (distance < trainDistance)
-                                {
-                                    train = TrainManager.Trains[j];
-                                    trainDistance = distance;
-                                }
-                            }
-                        }
-                        AnimatedWorldObjects[i].Object.Update(false, train, train == null ? 0 : train.DriverCar, AnimatedWorldObjects[i].SectionIndex, AnimatedWorldObjects[i].TrackPosition, AnimatedWorldObjects[i].Position, AnimatedWorldObjects[i].Direction, AnimatedWorldObjects[i].Up, AnimatedWorldObjects[i].Side, true, true, timeDelta, true);
-                    }
-                    else
-                    {
-                        AnimatedWorldObjects[i].Object.SecondsSinceLastUpdate += TimeElapsed;
-                    }
-                    if (!AnimatedWorldObjects[i].Visible)
-                    {
-                        Renderer.ShowObject(AnimatedWorldObjects[i].Object.internalObject, ObjectType.Dynamic);
-                        AnimatedWorldObjects[i].Visible = true;
-                    }
-                }
-                else
-                {
-                    AnimatedWorldObjects[i].Object.SecondsSinceLastUpdate += TimeElapsed;
-                    if (AnimatedWorldObjects[i].Visible)
-                    {
-                        Renderer.HideObject(ref AnimatedWorldObjects[i].Object.internalObject);
-                        AnimatedWorldObjects[i].Visible = false;
-                    }
-                }
-            }
+			{
+				TrainManager.Train train = null;
+				const double extraRadius = 10.0;
+				double z = AnimatedWorldObjects[i].Object.TranslateZFunction == null ? 0.0 : AnimatedWorldObjects[i].Object.TranslateZFunction.LastResult;
+				double pa = AnimatedWorldObjects[i].TrackPosition + z - AnimatedWorldObjects[i].Radius - extraRadius;
+				double pb = AnimatedWorldObjects[i].TrackPosition + z + AnimatedWorldObjects[i].Radius + extraRadius;
+				double ta = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z - Backgrounds.BackgroundImageDistance - Camera.ExtraViewingDistance;
+				double tb = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z + Backgrounds.BackgroundImageDistance + Camera.ExtraViewingDistance;
+				bool visible = pb >= ta & pa <= tb;
+				if (visible | ForceUpdate)
+				{
+					//Find the closest train
+					double trainDistance = double.MaxValue;
+					for (int j = 0; j < TrainManager.Trains.Length; j++)
+					{
+						if (TrainManager.Trains[j].State == TrainState.Available)
+						{
+							double distance;
+							if (TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition < AnimatedWorldObjects[i].TrackPosition)
+							{
+								distance = AnimatedWorldObjects[i].TrackPosition - TrainManager.Trains[j].Cars[0].TrackPosition;
+							}
+							else if (TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition > AnimatedWorldObjects[i].TrackPosition)
+							{
+								distance = TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition - AnimatedWorldObjects[i].TrackPosition;
+							}
+							else
+							{
+								distance = 0;
+							}
+							if (distance < trainDistance)
+							{
+								train = TrainManager.Trains[j];
+								trainDistance = distance;
+							}
+						}
+					}
+				}
+				AnimatedWorldObjects[i].Update(train, TimeElapsed, ForceUpdate, visible);
+			}
         }
 
         // load object
