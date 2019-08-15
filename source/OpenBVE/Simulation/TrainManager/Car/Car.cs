@@ -3,6 +3,7 @@ using static LibRender.CameraProperties;
 using LibRender;
 using OpenBve.BrakeSystems;
 using OpenBve.RouteManager;
+using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;

@@ -3,6 +3,7 @@
 
 using System;
 using LibRender;
+using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using Vector2 = OpenBveApi.Math.Vector2;
 using OpenBveApi.Objects;

@@ -3,6 +3,7 @@ using LibRender;
 using OpenBve.RouteManager;
 using OpenBveApi;
 using OpenBveApi.Colors;
+using OpenBveApi.Graphics;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;

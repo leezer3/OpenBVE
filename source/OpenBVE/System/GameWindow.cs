@@ -15,6 +15,7 @@ using OpenTK.Graphics;
 using OpenTK.Input;
 using OpenBve.RouteManager;
 using OpenBveApi;
+using OpenBveApi.Graphics;
 using OpenBveApi.Routes;
 using GL = OpenTK.Graphics.OpenGL.GL;
 using MatrixMode = OpenTK.Graphics.OpenGL.MatrixMode;

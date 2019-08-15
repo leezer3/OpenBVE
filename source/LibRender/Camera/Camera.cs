@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 

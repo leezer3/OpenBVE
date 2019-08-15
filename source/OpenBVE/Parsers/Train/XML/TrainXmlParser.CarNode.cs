@@ -8,6 +8,7 @@ using System.Xml.Linq;
 using LibRender;
 using OpenBve.BrakeSystems;
 using OpenBve.Parsers.Panel;
+using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
 using OpenBveApi.Interface;
 

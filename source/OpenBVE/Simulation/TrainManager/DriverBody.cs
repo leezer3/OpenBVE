@@ -1,5 +1,6 @@
 ﻿using System;
 using LibRender;
+using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
 
 namespace OpenBve

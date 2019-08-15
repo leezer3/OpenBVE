@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using LibRender;
 using OpenBve.Parsers.Panel;
 using OpenBve.RouteManager;
+using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
 using static LibRender.CameraProperties;

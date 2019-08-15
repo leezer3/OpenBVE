@@ -1,4 +1,4 @@
-﻿namespace LibRender
+﻿namespace OpenBveApi.Graphics
 {
 	/// <summary>Describes the different possible camera restriction modes</summary>
 	public enum CameraRestrictionMode

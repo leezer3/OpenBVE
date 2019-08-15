@@ -56,6 +56,10 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <Reference Include="CSScriptLibrary, Version=3.29.0.0, Culture=neutral, PublicKeyToken=70fcc3d18c749033, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CS-Script.lib.3.29.0\lib\CSScriptLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="OpenTK, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>..\..\packages\OpenTK.3.1.0\lib\net20\OpenTK.dll</HintPath>
     </Reference>
@@ -73,6 +77,7 @@
     <Compile Include="FunctionScripts\FunctionScript.cs" />
     <Compile Include="FunctionScripts\FunctionScript.Notation.cs" />
     <Compile Include="FunctionScripts\Instructions.cs" />
+    <Compile Include="Graphics\Camera.RestrictionModes.cs" />
     <Compile Include="Graphics\Colors.cs">
     </Compile>
     <Compile Include="Interface\Input\InputDevice.cs" />

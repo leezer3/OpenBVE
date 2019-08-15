@@ -3,6 +3,7 @@ using System.Xml;
 using System.Drawing;
 using System.Linq;
 using LibRender;
+using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
