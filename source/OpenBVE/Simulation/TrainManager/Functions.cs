@@ -120,11 +120,11 @@ namespace OpenBve
 				{
 					if (CurrentRoute.Stations[stationIndex].ArrivalTime >= 0.0)
 					{
-						Game.SecondsSinceMidnight = CurrentRoute.Stations[stationIndex].ArrivalTime;
+						CurrentRoute.SecondsSinceMidnight = CurrentRoute.Stations[stationIndex].ArrivalTime;
 					}
 					else if (CurrentRoute.Stations[stationIndex].DepartureTime >= 0.0)
 					{
-						Game.SecondsSinceMidnight = CurrentRoute.Stations[stationIndex].DepartureTime - CurrentRoute.Stations[stationIndex].StopTime;
+						CurrentRoute.SecondsSinceMidnight = CurrentRoute.Stations[stationIndex].DepartureTime - CurrentRoute.Stations[stationIndex].StopTime;
 					}
 				}
 				for (int i = 0; i < train.Cars.Length; i++)

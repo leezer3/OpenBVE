@@ -4,7 +4,7 @@ using OpenBveApi.Trains;
 namespace OpenBve.RouteManager
 {
 	/// <summary>Is called when a train changes from one signalling section to another</summary>
-		public class SectionChangeEvent : GeneralEvent<AbstractTrain, AbstractCar>
+		public class SectionChangeEvent : GeneralEvent
 		{
 			/// <summary>The index of the previous signalling section</summary>
 			public readonly int PreviousSectionIndex;
@@ -18,7 +18,7 @@ namespace OpenBve.RouteManager
 				this.PreviousSectionIndex = PreviousSectionIndex;
 				this.NextSectionIndex = NextSectionIndex;
 			}
-			public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
 			{
 				if (Train != null)
 				{
@@ -30,18 +30,18 @@ namespace OpenBve.RouteManager
 							{
 								CurrentRoute.Sections[this.NextSectionIndex].TrainReachedStopPoint = false;
 							}
-							UpdateFrontBackward(Train, currentTime);
+							UpdateFrontBackward(Train, CurrentRoute.SecondsSinceMidnight);
 						}
 						else if (Direction > 0)
 						{
-							UpdateFrontForward(Train, currentTime);
+							UpdateFrontForward(Train, CurrentRoute.SecondsSinceMidnight);
 						}
 					}
 					else if (TriggerType == EventTriggerType.RearCarRearAxle)
 					{
 						if (Direction < 0)
 						{
-							UpdateRearBackward(Train, currentTime);
+							UpdateRearBackward(Train, CurrentRoute.SecondsSinceMidnight);
 						}
 						else if (Direction > 0)
 						{
@@ -49,7 +49,7 @@ namespace OpenBve.RouteManager
 							{
 								CurrentRoute.Sections[this.PreviousSectionIndex].TrainReachedStopPoint = false;
 							}
-							UpdateRearForward(Train, currentTime);
+							UpdateRearForward(Train, CurrentRoute.SecondsSinceMidnight);
 						}
 					}
 				}

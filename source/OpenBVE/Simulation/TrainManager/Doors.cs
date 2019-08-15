@@ -172,7 +172,7 @@ namespace OpenBve
 		/// <param name="Train">The train</param>
 		internal static void AttemptToCloseDoors(Train Train)
 		{
-			if (Game.SecondsSinceMidnight >= Train.StationDepartureTime - 1.0 / Train.Cars[Train.DriverCar].Specs.DoorCloseFrequency)
+			if (CurrentRoute.SecondsSinceMidnight >= Train.StationDepartureTime - 1.0 / Train.Cars[Train.DriverCar].Specs.DoorCloseFrequency)
 			{
 				if ((GetDoorsState(Train, true, true) & TrainDoorState.AllClosed) == 0)
 				{

@@ -41,6 +41,8 @@ namespace OpenBve.RouteManager
 		public static Fog NextFog = new Fog(NoFogStart, NoFogEnd, Color24.Grey, 1.0);
 		/// <summary>The initial elevation in meters</summary>
 		public static double InitialElevation = 0.0;
+		/// <summary>The current in game time, expressed as the number of seconds since midnight on the first day</summary>
+		public static double SecondsSinceMidnight = 0.0;
 
 		/// <summary>Updates the currently displayed background</summary>
 		/// <param name="TimeElapsed">The time elapsed since the previous call to this function</param>

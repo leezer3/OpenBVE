@@ -29,7 +29,7 @@ namespace OpenBve
 						return;
 					}
 				}
-				message.AddMessage(Game.SecondsSinceMidnight);
+				message.AddMessage(CurrentRoute.SecondsSinceMidnight);
 				ImageMessages.Add(message);
 				return;
 			}
@@ -89,7 +89,7 @@ namespace OpenBve
 
 			}
 			//Prep: May be needed to trigger text replacement etc.
-			message.AddMessage(Game.SecondsSinceMidnight);
+			message.AddMessage(CurrentRoute.SecondsSinceMidnight);
 			if (m != null)
 			{
 				//This is a game-message: Add to the end of the list

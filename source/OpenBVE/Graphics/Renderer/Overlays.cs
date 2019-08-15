@@ -152,7 +152,7 @@ namespace OpenBve
 			//Fade to black on change ends
 			if (TrainManager.PlayerTrain.Station >= 0 && CurrentRoute.Stations[TrainManager.PlayerTrain.Station].Type == StationType.ChangeEnds && TrainManager.PlayerTrain.StationState == TrainStopState.Boarding)
 			{
-				double time = TrainManager.PlayerTrain.StationDepartureTime - Game.SecondsSinceMidnight;
+				double time = TrainManager.PlayerTrain.StationDepartureTime - CurrentRoute.SecondsSinceMidnight;
 				if (time < 1.0)
 				{
 					FadeToBlackDueToChangeEnds = Math.Max(0.0, 1.0 - time);

@@ -4,7 +4,7 @@ using OpenBveApi.Trains;
 namespace OpenBve.RouteManager
 {
 	/// <summary>Placed at the start of every station</summary>
-	public class StationStartEvent : GeneralEvent<AbstractTrain, AbstractCar>
+	public class StationStartEvent : GeneralEvent
 	{
 		/// <summary>The index of the station this event describes</summary>
 		public readonly int StationIndex;
@@ -15,7 +15,7 @@ namespace OpenBve.RouteManager
 			this.DontTriggerAnymore = false;
 			this.StationIndex = StationIndex;
 		}
-		public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
 		{
 			if (TriggerType == EventTriggerType.TrainFront)
 			{

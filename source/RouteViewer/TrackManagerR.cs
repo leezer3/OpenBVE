@@ -16,22 +16,22 @@ namespace OpenBve {
     internal static class TrackManager {
 		
 	    // station pass alarm
-        internal class StationPassAlarmEvent : GeneralEvent<TrainManager.Train, AbstractCar> {
+        internal class StationPassAlarmEvent : GeneralEvent {
             internal StationPassAlarmEvent(double TrackPositionDelta) {
                 this.TrackPositionDelta = TrackPositionDelta;
                 this.DontTriggerAnymore = false;
             }
-            public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) { }
+            public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car) { }
         }
         // station end
-        internal class StationEndEvent : GeneralEvent<TrainManager.Train, AbstractCar> {
+        internal class StationEndEvent : GeneralEvent {
             internal int StationIndex;
             internal StationEndEvent(double TrackPositionDelta, int StationIndex) {
                 this.TrackPositionDelta = TrackPositionDelta;
                 this.DontTriggerAnymore = false;
                 this.StationIndex = StationIndex;
             }
-            public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) {
+            public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car) {
                 if (TriggerType == EventTriggerType.Camera) {
                     if (Direction < 0) {
                         Program.CurrentStation = this.StationIndex;
@@ -46,7 +46,7 @@ namespace OpenBve {
 
         // sound
         internal static bool SuppressSoundEvents = false;
-        internal class SoundEvent : GeneralEvent<TrainManager.Train, AbstractCar> {
+        internal class SoundEvent : GeneralEvent {
             internal SoundBuffer SoundBuffer;
             internal bool PlayerTrainOnly;
             internal bool Once;
@@ -63,11 +63,11 @@ namespace OpenBve {
                 this.Position = Position;
                 this.Speed = Speed;
             }
-            public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) { }
+            public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car) { }
             internal const int SoundIndexTrainPoint = -2;
         }
         // rail sounds change
-        internal class RailSoundsChangeEvent : GeneralEvent<TrainManager.Train, AbstractCar> {
+        internal class RailSoundsChangeEvent : GeneralEvent {
             internal int PreviousRunIndex;
             internal int PreviousFlangeIndex;
             internal int NextRunIndex;
@@ -80,7 +80,7 @@ namespace OpenBve {
                 this.NextRunIndex = NextRunIndex;
                 this.NextFlangeIndex = NextFlangeIndex;
             }
-            public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) { }
+            public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car) { }
         }
         // ================================
 

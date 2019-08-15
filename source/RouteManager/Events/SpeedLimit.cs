@@ -5,7 +5,7 @@ using OpenBveApi.Trains;
 namespace OpenBve.RouteManager
 {
 	/// <summary>Is called when the speed limit upon the track change</summary>
-	public class LimitChangeEvent : GeneralEvent<AbstractTrain, AbstractCar>
+	public class LimitChangeEvent : GeneralEvent
 	{
 		public readonly double PreviousSpeedLimit;
 		public readonly double NextSpeedLimit;
@@ -18,7 +18,7 @@ namespace OpenBve.RouteManager
 			this.NextSpeedLimit = NextSpeedLimit;
 		}
 
-		public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
 		{
 			if (Train == null)
 			{

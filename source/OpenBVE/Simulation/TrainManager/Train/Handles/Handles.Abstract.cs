@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBve.RouteManager;
 using SoundManager;
 
 namespace OpenBve
@@ -69,7 +70,7 @@ namespace OpenBve
 				int n = DelayedChanges.Length;
 				Array.Resize<HandleChange>(ref DelayedChanges, n + 1);
 				DelayedChanges[n].Value = Value;
-				DelayedChanges[n].Time = Game.SecondsSinceMidnight + Delay;
+				DelayedChanges[n].Time = CurrentRoute.SecondsSinceMidnight + Delay;
 			}
 			/// <summary>Removes a specified number of delayed changes</summary>
 			/// <param name="Count">The number of changes to remove</param>

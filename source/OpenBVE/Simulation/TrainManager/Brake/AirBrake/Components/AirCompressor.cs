@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Trains;
+﻿using OpenBve.RouteManager;
+using OpenBveApi.Trains;
 using SoundManager;
 
 namespace OpenBve.BrakeSystems
@@ -59,7 +60,7 @@ namespace OpenBve.BrakeSystems
 				else
 				{
 					mainReservoir.CurrentPressure += Rate * TimeElapsed;
-					if (!LoopStarted && Game.SecondsSinceMidnight > TimeStarted + 5.0)
+					if (!LoopStarted && CurrentRoute.SecondsSinceMidnight > TimeStarted + 5.0)
 					{
 						LoopStarted = true;
 						SoundBuffer buffer = LoopSound.Buffer;
@@ -75,7 +76,7 @@ namespace OpenBve.BrakeSystems
 				if (mainReservoir.CurrentPressure < mainReservoir.MinimumPressure)
 				{
 					Enabled = true;
-					TimeStarted = Game.SecondsSinceMidnight;
+					TimeStarted = CurrentRoute.SecondsSinceMidnight;
 					SoundBuffer buffer = StartSound.Buffer;
 					if (buffer != null)
 					{

@@ -4,7 +4,7 @@ using OpenBveApi.Trains;
 namespace OpenBve.RouteManager
 {
 	/// <summary>Called when the cab brightness (lighting conditions) should be changed</summary>
-		public class BrightnessChangeEvent : GeneralEvent<AbstractTrain, AbstractCar>
+		public class BrightnessChangeEvent : GeneralEvent
 		{
 			/// <summary>The brightness to be applied from this point</summary>
 			public readonly float CurrentBrightness;
@@ -31,7 +31,7 @@ namespace OpenBve.RouteManager
 				this.NextBrightness = CurrentBrightness;
 				this.NextDistance = 0.0;
 			}
-			public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
 			{
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle)
 				{

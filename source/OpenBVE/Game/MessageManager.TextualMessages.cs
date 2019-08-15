@@ -32,7 +32,7 @@ namespace OpenBve
 			public override void Update()
 			{
 				//If our message timeout is greater than or equal to the current time, queue it for removal
-				bool remove = Game.SecondsSinceMidnight >= Timeout;
+				bool remove = CurrentRoute.SecondsSinceMidnight >= Timeout;
 
 				switch (Depencency)
 				{
@@ -84,7 +84,7 @@ namespace OpenBve
 						int j = TrainManager.PlayerTrain.Station;
 						if (j >= 0 & TrainManager.PlayerTrain.StationState != TrainStopState.Completed)
 						{
-							double d = TrainManager.PlayerTrain.StationDepartureTime - Game.SecondsSinceMidnight + 1.0;
+							double d = TrainManager.PlayerTrain.StationDepartureTime - CurrentRoute.SecondsSinceMidnight + 1.0;
 							if (d < 0.0) d = 0.0;
 							string s = InternalText;
 							TimeSpan a = TimeSpan.FromSeconds(d);
@@ -109,11 +109,11 @@ namespace OpenBve
 				{
 					if (Timeout == double.PositiveInfinity)
 					{
-						Timeout = Game.SecondsSinceMidnight - 1.0;
+						Timeout = CurrentRoute.SecondsSinceMidnight - 1.0;
 					}
 					//Remove the message if it has completely faded out
 					//NOTE: The fadeout is done in the renderer itself...
-					if (Game.SecondsSinceMidnight >= Timeout & RendererAlpha == 0.0)
+					if (CurrentRoute.SecondsSinceMidnight >= Timeout & RendererAlpha == 0.0)
 					{
 						QueueForRemoval = true;
 					}

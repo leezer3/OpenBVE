@@ -136,12 +136,12 @@ namespace OpenBve {
 				/*
 				 * Update the plugin.
 				 * */
-				double totalTime = Game.SecondsSinceMidnight;
-				double elapsedTime = Game.SecondsSinceMidnight - LastTime;
+				double totalTime = CurrentRoute.SecondsSinceMidnight;
+				double elapsedTime = CurrentRoute.SecondsSinceMidnight - LastTime;
 
 				ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, this.Train.SafetySystems.DoorInterlockState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, Camera.CurrentMode, Translations.CurrentLanguageCode, this.Train.Destination);
 				ElapseData inputDevicePluginData = data;
-				LastTime = Game.SecondsSinceMidnight;
+				LastTime = CurrentRoute.SecondsSinceMidnight;
 				Elapse(data);
 				this.PluginMessage = data.DebugMessage;
 				this.Train.SafetySystems.DoorInterlockState = data.DoorInterlockState;

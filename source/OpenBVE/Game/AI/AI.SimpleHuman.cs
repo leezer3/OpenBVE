@@ -81,10 +81,10 @@ namespace OpenBve
 						else if (CurrentRoute.Stations[Train.Station].DepartureTime >= 0.0)
 						{
 							time = CurrentRoute.Stations[Train.Station].DepartureTime - Train.TimetableDelta;
-							if (time > SecondsSinceMidnight)
+							if (time > CurrentRoute.SecondsSinceMidnight)
 							{
 								time -= CurrentRoute.Stations[Train.Station].StopTime;
-								if (time > SecondsSinceMidnight)
+								if (time > CurrentRoute.SecondsSinceMidnight)
 								{
 									time = double.MinValue;
 								}
@@ -100,7 +100,7 @@ namespace OpenBve
 							const double largeChangeFactor = 0.0025;
 							const double smallThreshold = 15.0;
 							const double smallChange = 0.05;
-							double diff = SecondsSinceMidnight - time;
+							double diff = CurrentRoute.SecondsSinceMidnight - time;
 							if (diff < -largeThreshold)
 							{
 								/* The AI is too fast. Decrease the preferred speed. */
@@ -863,13 +863,13 @@ namespace OpenBve
 			}
 			internal override void Trigger(double TimeElapsed)
 			{
-				if (TimeLastProcessed > SecondsSinceMidnight)
+				if (TimeLastProcessed > CurrentRoute.SecondsSinceMidnight)
 				{
-					TimeLastProcessed = SecondsSinceMidnight;
+					TimeLastProcessed = CurrentRoute.SecondsSinceMidnight;
 				}
-				else if (SecondsSinceMidnight - TimeLastProcessed >= CurrentInterval)
+				else if (CurrentRoute.SecondsSinceMidnight - TimeLastProcessed >= CurrentInterval)
 				{
-					TimeLastProcessed = SecondsSinceMidnight;
+					TimeLastProcessed = CurrentRoute.SecondsSinceMidnight;
 					if (Train.Plugin != null && Train.Plugin.SupportsAI)
 					{
 						if (PerformPlugin() != AIResponse.None)

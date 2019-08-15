@@ -11,7 +11,7 @@ namespace OpenBve
 		{
 			if (CurrentRoute.Sections.Length != 0)
 			{
-				CurrentRoute.Sections[CurrentRoute.Sections.Length - 1].Update(SecondsSinceMidnight);
+				CurrentRoute.Sections[CurrentRoute.Sections.Length - 1].Update(CurrentRoute.SecondsSinceMidnight);
 			}
 		}
 

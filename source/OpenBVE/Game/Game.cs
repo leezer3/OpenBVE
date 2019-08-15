@@ -10,8 +10,7 @@ namespace OpenBve {
 	internal static partial class Game {
 
 		// date and time
-        /// <summary>The current in game time, expressed as the number of seconds since midnight on the first day</summary>
-		internal static double SecondsSinceMidnight = 0.0;
+        
         /// <summary>The time at which the current game started, expressed as the number of seconds since midnight on the first day</summary>
 		internal static double StartupTime = 0.0;
 		/// <summary>Whether the game is in minimal simulation mode: 
@@ -135,9 +134,9 @@ namespace OpenBve {
 		internal static int BlackBoxEntryCount = 0;
 		private static double BlackBoxNextUpdate = 0.0;
 		internal static void UpdateBlackBox() {
-			if (SecondsSinceMidnight >= BlackBoxNextUpdate) {
+			if (CurrentRoute.SecondsSinceMidnight >= BlackBoxNextUpdate) {
 				AddBlackBoxEntry(BlackBoxEventToken.None);
-				BlackBoxNextUpdate = SecondsSinceMidnight + 1.0;
+				BlackBoxNextUpdate = CurrentRoute.SecondsSinceMidnight + 1.0;
 			}
 		}
 		internal static void AddBlackBoxEntry(BlackBoxEventToken EventToken) {
@@ -145,7 +144,7 @@ namespace OpenBve {
 				if (BlackBoxEntryCount >= BlackBoxEntries.Length) {
 					Array.Resize<BlackBoxEntry>(ref BlackBoxEntries, BlackBoxEntries.Length << 1);
 				}
-				BlackBoxEntries[BlackBoxEntryCount].Time = SecondsSinceMidnight;
+				BlackBoxEntries[BlackBoxEntryCount].Time = CurrentRoute.SecondsSinceMidnight;
 				BlackBoxEntries[BlackBoxEntryCount].Position = TrainManager.PlayerTrain.Cars[0].TrackPosition;
 				BlackBoxEntries[BlackBoxEntryCount].Speed = (float)TrainManager.PlayerTrain.CurrentSpeed;
 				BlackBoxEntries[BlackBoxEntryCount].Acceleration = (float)TrainManager.PlayerTrain.Specs.CurrentAverageAcceleration;

@@ -5,14 +5,14 @@ using OpenBveApi.Trains;
 namespace OpenBve.RouteManager
 {
 	/// <summary>This event is placed at the end of the track</summary>
-	public class TrackEndEvent : GeneralEvent<AbstractTrain, AbstractCar>
+	public class TrackEndEvent : GeneralEvent
 	{
 		public TrackEndEvent(double TrackPositionDelta)
 		{
 			this.TrackPositionDelta = TrackPositionDelta;
 			this.DontTriggerAnymore = false;
 		}
-		public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
 		{
 			if (Train == null)
 			{

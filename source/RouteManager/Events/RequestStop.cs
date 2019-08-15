@@ -4,7 +4,7 @@ using OpenBveApi.Trains;
 namespace OpenBve.RouteManager
 {
 	/// <summary>Called when a train passes over the trigger for a request stop</summary>
-	public class RequestStopEvent : GeneralEvent<AbstractTrain, AbstractCar>
+	public class RequestStopEvent : GeneralEvent
 	{
 		/// <summary>The index of the station which this applies to</summary>
 		private readonly int StationIndex;
@@ -29,20 +29,20 @@ namespace OpenBve.RouteManager
 			this.MaxCars = maxCars;
 		}
 
-		public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
 		{
 			if (TriggerType == EventTriggerType.FrontCarFrontAxle)
 			{
 				RequestStop stop; //Temp probability value
-				if (Early.Time != -1 && currentTime < Early.Time)
+				if (Early.Time != -1 && CurrentRoute.SecondsSinceMidnight < Early.Time)
 				{
 					stop = Early;
 				}
-				else if (Early.Time != -1 && currentTime > Early.Time && Late.Time != -1 && currentTime < Late.Time)
+				else if (Early.Time != -1 && CurrentRoute.SecondsSinceMidnight > Early.Time && Late.Time != -1 && CurrentRoute.SecondsSinceMidnight < Late.Time)
 				{
 					stop = OnTime;
 				}
-				else if (Late.Time != -1 && currentTime > Late.Time)
+				else if (Late.Time != -1 && CurrentRoute.SecondsSinceMidnight > Late.Time)
 				{
 					stop = Late;
 				}

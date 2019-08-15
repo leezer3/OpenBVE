@@ -174,7 +174,7 @@ namespace OpenBve
 						}
 						time -= TimetableDelta;
 					}
-					if (Game.SecondsSinceMidnight >= time | forceIntroduction)
+					if (CurrentRoute.SecondsSinceMidnight >= time | forceIntroduction)
 					{
 						bool introduce = true;
 						if (!forceIntroduction)
@@ -418,7 +418,7 @@ namespace OpenBve
 							double a = (3.6 * CurrentSectionLimit) * Game.SpeedConversionFactor;
 							s = s.Replace("[speed]", a.ToString("0", CultureInfo.InvariantCulture));
 							s = s.Replace("[unit]", Game.UnitOfSpeed);
-							Game.AddMessage(s, MessageDependency.None, GameMode.Normal, MessageColor.Red, Game.SecondsSinceMidnight + 5.0, null);
+							Game.AddMessage(s, MessageDependency.None, GameMode.Normal, MessageColor.Red, CurrentRoute.SecondsSinceMidnight + 5.0, null);
 						}
 					}
 				}
@@ -1015,7 +1015,7 @@ namespace OpenBve
 				this.Derailed = true;
 				if (Program.GenerateDebugLogging)
 				{
-					Program.FileSystem.AppendToLogFile("Train " + Array.IndexOf(TrainManager.Trains, this) + ", Car " + CarIndex + " derailed. Current simulation time: " + Game.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
+					Program.FileSystem.AppendToLogFile("Train " + Array.IndexOf(TrainManager.Trains, this) + ", Car " + CarIndex + " derailed. Current simulation time: " + CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
 				}
 			}
 
@@ -1029,7 +1029,7 @@ namespace OpenBve
 					this.Derailed = true;
 					if (Program.GenerateDebugLogging)
 					{
-						Program.FileSystem.AppendToLogFile("Train " + Array.IndexOf(TrainManager.Trains, this) + ", Car " + c.Index + " derailed. Current simulation time: " + Game.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
+						Program.FileSystem.AppendToLogFile("Train " + Array.IndexOf(TrainManager.Trains, this) + ", Car " + c.Index + " derailed. Current simulation time: " + CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
 					}
 				}
 			}
@@ -1042,7 +1042,7 @@ namespace OpenBve
 				this.Cars[CarIndex].Topples = true;
 				if (Program.GenerateDebugLogging)
 				{
-					Program.FileSystem.AppendToLogFile("Train " + Array.IndexOf(TrainManager.Trains, this) + ", Car " + CarIndex + " toppled. Current simulation time: " + Game.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
+					Program.FileSystem.AppendToLogFile("Train " + Array.IndexOf(TrainManager.Trains, this) + ", Car " + CarIndex + " toppled. Current simulation time: " + CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
 				}
 			}
 

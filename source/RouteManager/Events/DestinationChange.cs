@@ -4,7 +4,7 @@ using OpenBveApi.Trains;
 namespace OpenBve.RouteManager
 {
 	/// <summary>Called when a train passes over a destination change event</summary>
-	public class DestinationEvent : GeneralEvent<AbstractTrain, AbstractCar>
+	public class DestinationEvent : GeneralEvent
 	{
 		/// <summary>The destination value to set when passing over this event forwards, or -1 to disable</summary>
 		public readonly int NextDestination;
@@ -24,7 +24,7 @@ namespace OpenBve.RouteManager
 			this.TriggerOnce = triggerOnce;
 			this.Type = type;
 		}
-		public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
 		{
 			if (Train == null || this.Type == -1 && Train.IsPlayerTrain || this.Type == 1 && !Train.IsPlayerTrain)
 			{

@@ -218,7 +218,7 @@ namespace OpenBve {
 						break;
 						// time/camera
 					case Instructions.TimeSecondsSinceMidnight:
-						Function.Stack[s] = Game.SecondsSinceMidnight;
+						Function.Stack[s] = CurrentRoute.SecondsSinceMidnight;
 						s++; break;
 					case Instructions.CameraDistance:
 						{
