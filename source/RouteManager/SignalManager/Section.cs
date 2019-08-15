@@ -39,6 +39,196 @@ namespace OpenBve.SignalManager
 		/// <summary>The number of free sections ahead of this section</summary>
 		public int FreeSections;
 
+		/// <summary>Updates the specified signal section</summary>
+		/// <param name="secondsSinceMidnight">The in-game time in seconds since midnight</param>
+		public void Update(double secondsSinceMidnight)
+		{
+			// preparations
+			int zeroaspect;
+			bool settored = false;
+			if (Type == SectionType.ValueBased)
+			{
+				// value-based
+				zeroaspect = 0;
+				for (int i = 1; i < Aspects.Length; i++)
+				{
+					if (Aspects[i].Number < Aspects[zeroaspect].Number)
+					{
+						zeroaspect = i;
+					}
+				}
+			}
+			else
+			{
+				// index-based
+				zeroaspect = 0;
+			}
+			// hold station departure signal at red
+			int d = StationIndex;
+			if (d >= 0)
+			{
+				// look for train in previous blocks
+				int l = PreviousSection;
+				AbstractTrain train = null;
+				while (true)
+				{
+					if (l >= 0)
+					{
+						train = CurrentRoute.Sections[l].GetFirstTrain(false);
+						if (train != null)
+						{
+							break;
+						}
+						l = CurrentRoute.Sections[l].PreviousSection;
+					}
+					else
+					{
+						break;
+					}
+				}
+				if (train == null)
+				{
+					double b = -double.MaxValue;
+					for (int i = 0; i < CurrentRoute.Trains.Length; i++)
+					{
+						if (CurrentRoute.Trains[i].State == TrainState.Available)
+						{
+							if (CurrentRoute.Trains[i].TimetableDelta > b)
+							{
+								b = CurrentRoute.Trains[i].TimetableDelta;
+								train = CurrentRoute.Trains[i];
+							}
+						}
+					}
+				}
+				// set to red where applicable
+				if (train != null)
+				{
+					if (!TrainReachedStopPoint)
+					{
+						if (train.Station == d)
+						{
+							int c = CurrentRoute.Stations[d].GetStopIndex(train.NumberOfCars);
+							if (c >= 0)
+							{
+								double p0 = train.FrontCarTrackPosition();
+								double p1 = CurrentRoute.Stations[d].Stops[c].TrackPosition - CurrentRoute.Stations[d].Stops[c].BackwardTolerance;
+								if (p0 >= p1)
+								{
+									TrainReachedStopPoint = true;
+								}
+							}
+							else
+							{
+								TrainReachedStopPoint = true;
+							}
+						}
+					}
+					double t = -15.0;
+					if (CurrentRoute.Stations[d].DepartureTime >= 0.0)
+					{
+						t = CurrentRoute.Stations[d].DepartureTime - 15.0;
+					}
+					else if (CurrentRoute.Stations[d].ArrivalTime >= 0.0)
+					{
+						t = CurrentRoute.Stations[d].ArrivalTime;
+					}
+					if (train.IsPlayerTrain & CurrentRoute.Stations[d].Type != StationType.Normal & CurrentRoute.Stations[d].DepartureTime < 0.0)
+					{
+						settored = true;
+					}
+					else if (t >= 0.0 & secondsSinceMidnight < t - train.TimetableDelta)
+					{
+						settored = true;
+					}
+					else if (!TrainReachedStopPoint)
+					{
+						settored = true;
+					}
+				}
+				else if (CurrentRoute.Stations[d].Type != StationType.Normal)
+				{
+					settored = true;
+				}
+			}
+			// train in block
+			if (!IsFree())
+			{
+				settored = true;
+			}
+			// free sections
+			int newaspect = -1;
+			if (settored)
+			{
+				FreeSections = 0;
+				newaspect = zeroaspect;
+			}
+			else
+			{
+				int n = NextSection;
+				if (n >= 0)
+				{
+					if (CurrentRoute.Sections[n].FreeSections == -1)
+					{
+						FreeSections = -1;
+					}
+					else
+					{
+						FreeSections = CurrentRoute.Sections[n].FreeSections + 1;
+					}
+				}
+				else
+				{
+					FreeSections = -1;
+				}
+			}
+			// change aspect
+			if (newaspect == -1)
+			{
+				if (Type == SectionType.ValueBased)
+				{
+					// value-based
+					int n = NextSection;
+					int a = Aspects[Aspects.Length - 1].Number;
+					if (n >= 0 && CurrentRoute.Sections[n].CurrentAspect >= 0)
+					{
+
+						a = CurrentRoute.Sections[n].Aspects[CurrentRoute.Sections[n].CurrentAspect].Number;
+					}
+					for (int i = Aspects.Length - 1; i >= 0; i--)
+					{
+						if (Aspects[i].Number > a)
+						{
+							newaspect = i;
+						}
+					}
+					if (newaspect == -1)
+					{
+						newaspect = Aspects.Length - 1;
+					}
+				}
+				else
+				{
+					// index-based
+					if (FreeSections >= 0 & FreeSections < Aspects.Length)
+					{
+						newaspect = FreeSections;
+					}
+					else
+					{
+						newaspect = Aspects.Length - 1;
+					}
+				}
+			}
+			// apply new aspect
+			CurrentAspect = newaspect;
+			// update previous section
+			if (PreviousSection >= 0 && PreviousSection < CurrentRoute.Sections.Length)
+			{
+				CurrentRoute.Sections[PreviousSection].Update(secondsSinceMidnight);
+			}
+		}
+
 		/// <summary>Called when a train enters the section</summary>
 		/// <param name="Train">The train</param>
 		public void Enter(AbstractTrain Train)

@@ -14,12 +14,6 @@ namespace OpenBve {
 	public static class World {	
 		internal static TrackManager.TrackFollower CameraTrackFollower;
 
-		// camera restriction
-		
-
-		// absolute camera
-		
-
 		// update absolute camera
 		internal static void UpdateAbsoluteCamera(double TimeElapsed) {
 			// zoom
@@ -38,7 +32,7 @@ namespace OpenBve {
 			double tr = Camera.Alignment.TrackPosition;
 			AdjustAlignment(ref Camera.Alignment.TrackPosition, Camera.AlignmentDirection.TrackPosition, ref Camera.AlignmentSpeed.TrackPosition, TimeElapsed);
 			if (tr != Camera.Alignment.TrackPosition) {
-				TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, Camera.Alignment.TrackPosition, true, false);
+				World.CameraTrackFollower.UpdateAbsolute(Camera.Alignment.TrackPosition, true, false);
 				q = true;
 			}
 			if (q) {

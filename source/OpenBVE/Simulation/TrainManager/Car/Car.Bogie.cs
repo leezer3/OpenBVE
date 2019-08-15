@@ -1,5 +1,6 @@
 ﻿using System;
 using static LibRender.CameraProperties;
+using OpenBve.RouteManager;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 
@@ -238,8 +239,8 @@ namespace OpenBve
 					{
 						double a = baseCar.Specs.CurrentRollDueToTopplingAngle +
 						           baseCar.Specs.CurrentRollDueToCantAngle;
-						double x = Math.Sign(a) * 0.5 * TrackManager.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * (1.0 - Math.Cos(a));
-						double y = Math.Abs(0.5 * TrackManager.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * Math.Sin(a));
+						double x = Math.Sign(a) * 0.5 * CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * (1.0 - Math.Cos(a));
+						double y = Math.Abs(0.5 * CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * Math.Sin(a));
 						Vector3 c = new Vector3(s.X * x + Up.X * y, s.Y * x + Up.Y * y, s.Z * x + Up.Z * y);
 						FrontAxle.Follower.WorldPosition += c;
 						RearAxle.Follower.WorldPosition += c;

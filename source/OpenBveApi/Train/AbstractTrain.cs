@@ -92,5 +92,21 @@
 		{
 
 		}
+
+		/// <summary>Is called when the train enters a station</summary>
+		/// <param name="stationIndex">The index of the station</param>
+		/// <param name="direction">The direction of travel</param>
+		public virtual void EnterStation(int stationIndex, int direction)
+		{
+
+		}
+
+		/// <summary>Is called when the train leaves a station</summary>
+		/// <param name="stationIndex">The station index</param>
+		/// <param name="direction">The direction of travel</param>
+		public virtual void LeaveStation(int stationIndex, int direction)
+		{
+
+		}
 	}
 }

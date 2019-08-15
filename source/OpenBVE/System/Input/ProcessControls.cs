@@ -914,7 +914,7 @@ namespace OpenBve
 												TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
 												TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 											}
-											World.CameraTrackFollower.Update(World.CameraTrackFollower.TrackPosition + z, true, false);
+											World.CameraTrackFollower.UpdateRelative(z, true, false);
 											Camera.Alignment.TrackPosition = World.CameraTrackFollower.TrackPosition;
 											Camera.VerticalViewingAngle = Camera.OriginalVerticalViewingAngle;
 											Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
@@ -962,7 +962,7 @@ namespace OpenBve
 												TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
 												TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 											}
-											World.CameraTrackFollower.Update(World.CameraTrackFollower.TrackPosition + z, true, false);
+											World.CameraTrackFollower.UpdateRelative(z, true, false);
 											Camera.Alignment.TrackPosition =
 												World.CameraTrackFollower.TrackPosition;
 											Camera.VerticalViewingAngle = Camera.OriginalVerticalViewingAngle;
@@ -984,7 +984,7 @@ namespace OpenBve
 										Camera.Alignment.Roll = 0.0;
 										if (Camera.CurrentMode == CameraViewMode.Track)
 										{
-											World.CameraTrackFollower.Update(
+											World.CameraTrackFollower.UpdateAbsolute(
 												TrainManager.PlayerTrain.Cars[0].TrackPosition, true,
 												false);
 										}
@@ -995,7 +995,7 @@ namespace OpenBve
 											{
 												double d = 30.0 +
 														   4.0*TrainManager.PlayerTrain.CurrentSpeed;
-												World.CameraTrackFollower.Update(
+												World.CameraTrackFollower.UpdateAbsolute(
 													TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower
 														.TrackPosition + d, true, false);
 											}
@@ -1003,7 +1003,7 @@ namespace OpenBve
 											{
 												double d = 30.0 -
 														   4.0*TrainManager.PlayerTrain.CurrentSpeed;
-												World.CameraTrackFollower.Update(
+												World.CameraTrackFollower.UpdateAbsolute(
 													TrainManager.PlayerTrain.Cars[
 														TrainManager.PlayerTrain.Cars.Length - 1].RearAxle.Follower
 														.TrackPosition - d, true, false);

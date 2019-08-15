@@ -66,12 +66,12 @@ namespace OpenBve
 				if (this.PreviousSectionIndex >= 0)
 				{
 					CurrentRoute.Sections[this.PreviousSectionIndex].Enter(Train);
-					Game.UpdateSection(this.PreviousSectionIndex);
+					CurrentRoute.Sections[this.PreviousSectionIndex].Update(Game.SecondsSinceMidnight);
 				}
 				if (this.NextSectionIndex >= 0)
 				{
 					CurrentRoute.Sections[this.NextSectionIndex].Leave(Train);
-					Game.UpdateSection(this.NextSectionIndex);
+					CurrentRoute.Sections[this.NextSectionIndex].Update(Game.SecondsSinceMidnight);
 				}
 				if (UpdateTrain)
 				{
@@ -134,7 +134,7 @@ namespace OpenBve
 					if (this.NextSectionIndex >= 0)
 					{
 						CurrentRoute.Sections[this.NextSectionIndex].Enter(Train);
-						Game.UpdateSection(this.NextSectionIndex);
+						CurrentRoute.Sections[this.NextSectionIndex].Update(Game.SecondsSinceMidnight);
 					}
 				}
 			}
@@ -146,7 +146,7 @@ namespace OpenBve
 					if (this.PreviousSectionIndex >= 0)
 					{
 						CurrentRoute.Sections[this.PreviousSectionIndex].Enter(Train);
-						Game.UpdateSection(this.PreviousSectionIndex);
+						CurrentRoute.Sections[this.PreviousSectionIndex].Update(Game.SecondsSinceMidnight);
 					}
 				}
 			}
@@ -158,12 +158,12 @@ namespace OpenBve
 					if (this.PreviousSectionIndex >= 0)
 					{
 						CurrentRoute.Sections[this.PreviousSectionIndex].Leave(Train);
-						Game.UpdateSection(this.PreviousSectionIndex);
+						CurrentRoute.Sections[this.PreviousSectionIndex].Update(Game.SecondsSinceMidnight);
 					}
 					if (this.NextSectionIndex >= 0)
 					{
 						CurrentRoute.Sections[this.NextSectionIndex].Enter(Train);
-						Game.UpdateSection(this.NextSectionIndex);
+						CurrentRoute.Sections[this.NextSectionIndex].Update(Game.SecondsSinceMidnight);
 					}
 				}
 			}

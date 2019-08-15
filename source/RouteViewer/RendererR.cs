@@ -375,7 +375,7 @@ namespace OpenBve {
 		
 		// render events
 		private static void RenderEvents(Vector3 Camera) {
-			if (TrackManager.CurrentTrack.Elements == null) {
+			if (CurrentRoute.Tracks[0].Elements == null) {
 				return;
 			}
 			LibRender.Renderer.LastBoundTexture = null;
@@ -391,12 +391,12 @@ namespace OpenBve {
 			double db = CameraProperties.Camera.ForwardViewingDistance + CameraProperties.Camera.ExtraViewingDistance;
 			bool[] sta = new bool[CurrentRoute.Stations.Length];
 			// events
-			for (int i = 0; i < TrackManager.CurrentTrack.Elements.Length; i++) {
-				double p = TrackManager.CurrentTrack.Elements[i].StartingTrackPosition;
+			for (int i = 0; i < CurrentRoute.Tracks[0].Elements.Length; i++) {
+				double p = CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition;
 				double d = p - World.CameraTrackFollower.TrackPosition;
 				if (d >= da & d <= db) {
-					for (int j = 0; j < TrackManager.CurrentTrack.Elements[i].Events.Length; j++) {
-						dynamic e = TrackManager.CurrentTrack.Elements[i].Events[j];
+					for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Length; j++) {
+						dynamic e = CurrentRoute.Tracks[0].Elements[i].Events[j];
 						double dy, dx = 0.0, dz = 0.0;
 						double s; Texture t;
 						if (e is BrightnessChangeEvent) {
@@ -407,11 +407,11 @@ namespace OpenBve {
 							s = 0.25;
 							dy = 3.5;
 							t = BackgroundChangeTexture;
-						} else if (e is TrackManager.StationStartEvent) {
+						} else if (e is StationStartEvent) {
 							s = 0.25;
 							dy = 1.6;
 							t = StationStartTexture;
-							TrackManager.StationStartEvent f = (TrackManager.StationStartEvent)e;
+							StationStartEvent f = (StationStartEvent)e;
 							sta[f.StationIndex] = true;
 						} else if (e is TrackManager.StationEndEvent) {
 							s = 0.25;
@@ -447,7 +447,7 @@ namespace OpenBve {
 							TrackManager.TrackFollower f = new TrackManager.TrackFollower();
 							f.TriggerType = EventTriggerType.None;
 							f.TrackPosition = p;
-							TrackManager.UpdateTrackFollower(ref f, p + e.TrackPositionDelta, true, false);
+							f.UpdateAbsolute(p + e.TrackPositionDelta, true, false);
 							f.WorldPosition += dx * f.WorldSide + dy * f.WorldUp + dz * f.WorldDirection;
 							LibRender.Renderer.DrawCube(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, Camera, t);
 						}
@@ -464,7 +464,7 @@ namespace OpenBve {
 						TrackManager.TrackFollower f = new TrackManager.TrackFollower();
 						f.TriggerType = EventTriggerType.None;
 						f.TrackPosition = p;
-						TrackManager.UpdateTrackFollower(ref f, p, true, false);
+						f.UpdateAbsolute(p, true, false);
 						f.WorldPosition += dy * f.WorldUp;
 						LibRender.Renderer.DrawCube(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, Camera, StopTexture);
 					}
@@ -480,7 +480,7 @@ namespace OpenBve {
 					TrackManager.TrackFollower f = new TrackManager.TrackFollower();
 					f.TriggerType = EventTriggerType.None;
 					f.TrackPosition = p;
-					TrackManager.UpdateTrackFollower(ref f, p, true, false);
+					f.UpdateAbsolute(p, true, false);
 					f.WorldPosition += dy * f.WorldUp;
 					LibRender.Renderer.DrawCube(f.WorldPosition, f.WorldDirection, f.WorldUp, f.WorldSide, s, Camera, BufferTexture);
 				}
@@ -565,7 +565,7 @@ namespace OpenBve {
 							}
 							else
 							{
-								LibRender.Renderer.DrawString(Fonts.SmallFont, (Environment.TickCount % 1000 <= 500 ? Program.JumpToPositionValue + "_" : Program.JumpToPositionValue), new Point(4, 100), TextAlignment.TopLeft, distance > TrackManager.CurrentTrack.Elements[TrackManager.CurrentTrack.Elements.Length - 1].StartingTrackPosition + 100
+								LibRender.Renderer.DrawString(Fonts.SmallFont, (Environment.TickCount % 1000 <= 500 ? Program.JumpToPositionValue + "_" : Program.JumpToPositionValue), new Point(4, 100), TextAlignment.TopLeft, distance > CurrentRoute.Tracks[0].Elements[CurrentRoute.Tracks[0].Elements.Length - 1].StartingTrackPosition + 100
 								? Color128.Red : Color128.Yellow, true);
 							}
 							

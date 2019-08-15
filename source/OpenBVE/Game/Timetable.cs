@@ -66,11 +66,11 @@ namespace OpenBve {
 				double Limit = -1.0, LastLimit = 6.94444444444444;
 				int LastArrivalHours = -1, LastDepartureHours = -1;
 				double LastTime = -1.0;
-				for (int i = 0; i < TrackManager.Tracks[0].Elements.Length; i++)
+				for (int i = 0; i < CurrentRoute.Tracks[0].Elements.Length; i++)
 				{
-					for (int j = 0; j < TrackManager.Tracks[0].Elements[i].Events.Length; j++)
+					for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Length; j++)
 					{
-						TrackManager.StationStartEvent sse = TrackManager.Tracks[0].Elements[i].Events[j] as TrackManager.StationStartEvent;
+						StationStartEvent sse = CurrentRoute.Tracks[0].Elements[i].Events[j] as StationStartEvent;
 						if (sse != null && CurrentRoute.Stations[sse.StationIndex].Name != string.Empty)
 						{
 							if (Limit == -1.0) Limit = LastLimit;
@@ -200,7 +200,7 @@ namespace OpenBve {
 
 						if (n >= 1)
 						{
-							LimitChangeEvent lce = TrackManager.Tracks[0].Elements[i].Events[j] as LimitChangeEvent;
+							LimitChangeEvent lce = CurrentRoute.Tracks[0].Elements[i].Events[j] as LimitChangeEvent;
 							if (lce != null)
 							{
 								if (lce.NextSpeedLimit != double.PositiveInfinity & lce.NextSpeedLimit > Limit) Limit = lce.NextSpeedLimit;

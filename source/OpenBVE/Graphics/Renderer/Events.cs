@@ -44,7 +44,7 @@ namespace OpenBve
 		/// <param name="Camera">The absolute camera position</param>
 		private static void RenderEvents(Vector3 Camera)
 		{
-			if (Interface.CurrentOptions.ShowEvents == false || TrackManager.Tracks[0].Elements == null)
+			if (Interface.CurrentOptions.ShowEvents == false || CurrentRoute.Tracks[0].Elements == null)
 			{
 				return;
 			}
@@ -71,15 +71,15 @@ namespace OpenBve
 			double db = CameraProperties.Camera.ForwardViewingDistance + CameraProperties.Camera.ExtraViewingDistance;
 			bool[] sta = new bool[CurrentRoute.Stations.Length];
 			// events
-			for (int i = 0; i < TrackManager.Tracks[0].Elements.Length; i++)
+			for (int i = 0; i < CurrentRoute.Tracks[0].Elements.Length; i++)
 			{
-				double p = TrackManager.Tracks[0].Elements[i].StartingTrackPosition;
+				double p = CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition;
 				double d = p - World.CameraTrackFollower.TrackPosition;
 				if (d >= da & d <= db)
 				{
-					for (int j = 0; j < TrackManager.Tracks[0].Elements[i].Events.Length; j++)
+					for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Length; j++)
 					{
-						dynamic e = TrackManager.Tracks[0].Elements[i].Events[j];
+						dynamic e = CurrentRoute.Tracks[0].Elements[i].Events[j];
 						double dy, dx = 0.0, dz = 0.0;
 						double s; Texture t;
 						if (e is BrightnessChangeEvent)
@@ -94,12 +94,12 @@ namespace OpenBve
 							dy = 3.5;
 							t = BackgroundChangeTexture;
 						}
-						else if (e is TrackManager.StationStartEvent)
+						else if (e is StationStartEvent)
 						{
 							s = 0.25;
 							dy = 1.6;
 							t = StationStartTexture;
-							TrackManager.StationStartEvent f = (TrackManager.StationStartEvent)e;
+							StationStartEvent f = (StationStartEvent)e;
 							sta[f.StationIndex] = true;
 						}
 						else if (e is TrackManager.StationEndEvent)
@@ -156,7 +156,7 @@ namespace OpenBve
 							TrackManager.TrackFollower f = new TrackManager.TrackFollower();
 							f.TriggerType = EventTriggerType.None;
 							f.TrackPosition = p;
-							f.Update(p + e.TrackPositionDelta, true, false);
+							f.UpdateAbsolute(p + e.TrackPositionDelta, true, false);
 							f.WorldPosition.X += dx * f.WorldSide.X + dy * f.WorldUp.X + dz * f.WorldDirection.X;
 							f.WorldPosition.Y += dx * f.WorldSide.Y + dy * f.WorldUp.Y + dz * f.WorldDirection.Y;
 							f.WorldPosition.Z += dx * f.WorldSide.Z + dy * f.WorldUp.Z + dz * f.WorldDirection.Z;
@@ -178,7 +178,7 @@ namespace OpenBve
 						TrackManager.TrackFollower f = new TrackManager.TrackFollower();
 						f.TriggerType = EventTriggerType.None;
 						f.TrackPosition = p;
-						f.Update(p, true, false);
+						f.UpdateAbsolute(p, true, false);
 						f.WorldPosition.X += dy * f.WorldUp.X;
 						f.WorldPosition.Y += dy * f.WorldUp.Y;
 						f.WorldPosition.Z += dy * f.WorldUp.Z;
@@ -198,7 +198,7 @@ namespace OpenBve
 					TrackManager.TrackFollower f = new TrackManager.TrackFollower();
 					f.TriggerType = EventTriggerType.None;
 					f.TrackPosition = p;
-					f.Update(p, true, false);
+					f.UpdateAbsolute(p, true, false);
 					f.WorldPosition.X += dy * f.WorldUp.X;
 					f.WorldPosition.Y += dy * f.WorldUp.Y;
 					f.WorldPosition.Z += dy * f.WorldUp.Z;

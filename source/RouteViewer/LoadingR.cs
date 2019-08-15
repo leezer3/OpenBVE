@@ -134,9 +134,9 @@ namespace OpenBve {
 			RouteProgress = 1.0;
 			// camera
 			ObjectManager.InitializeVisibility();
-			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, 0.0, true, false);
-			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, 0.1, true, false);
-			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, -0.1, true, false);
+			World.CameraTrackFollower.UpdateAbsolute( 0.0, true, false);
+			World.CameraTrackFollower.UpdateAbsolute(0.1, true, false);
+			World.CameraTrackFollower.UpdateAbsolute(-0.1, true, false);
 			World.CameraTrackFollower.TriggerType = EventTriggerType.Camera;
 			// default starting time
 			Game.SecondsSinceMidnight = 0.0;
@@ -146,8 +146,10 @@ namespace OpenBve {
 			ObjectManager.FinishCreatingObjects();
 			// signals
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
+			// ReSharper disable once CoVariantArrayConversion
+			CurrentRoute.Trains = TrainManager.Trains;
 			if (CurrentRoute.Sections.Length > 0) {
-				Game.UpdateSection(CurrentRoute.Sections.Length - 1);
+				CurrentRoute.Sections[CurrentRoute.Sections.Length - 1].Update(Game.SecondsSinceMidnight);
 			}
 			// starting track position
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
@@ -171,8 +173,8 @@ namespace OpenBve {
 				}
 			}
 			// initialize camera
-			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, -1.0, true, false);
-			TrackManager.UpdateTrackFollower(ref World.CameraTrackFollower, FirstStationPosition, true, false);
+			World.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
+			World.CameraTrackFollower.UpdateAbsolute(FirstStationPosition, true, false);
 			Camera.Alignment = new CameraAlignment(new Vector3(0.0, 2.5, 0.0), 0.0, 0.0, 0.0, FirstStationPosition, 1.0);
 			World.UpdateAbsoluteCamera(0.0);
 			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z);

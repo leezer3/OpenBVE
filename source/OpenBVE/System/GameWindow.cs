@@ -258,7 +258,7 @@ namespace OpenBve
 				{
 					if (CurrentRoute.Sections.Length != 0)
 					{
-						Game.UpdateSection(CurrentRoute.Sections.Length - 1);
+						Game.UpdateAllSections();
 					}
 					TotalTimeElapsedForSectionUpdate = 0.0;
 				}
@@ -473,9 +473,9 @@ namespace OpenBve
 			// camera
 			ObjectManager.InitializeVisibility();
 			TrainManager.PlayerTrain.DriverBody = new DriverBody(TrainManager.PlayerTrain);
-			World.CameraTrackFollower.Update(0.0, true, false);
-			World.CameraTrackFollower.Update(-0.1, true, false);
-			World.CameraTrackFollower.Update(0.1, true, false);
+			World.CameraTrackFollower.UpdateAbsolute(0.0, true, false);
+			World.CameraTrackFollower.UpdateAbsolute(-0.1, true, false);
+			World.CameraTrackFollower.UpdateAbsolute(0.1, true, false);
 			World.CameraTrackFollower.TriggerType = EventTriggerType.Camera;
 			// starting time and track position
 			Game.SecondsSinceMidnight = 0.0;
@@ -685,7 +685,7 @@ namespace OpenBve
 			// signals
 			if (CurrentRoute.Sections.Length > 0)
 			{
-				Game.UpdateSection(CurrentRoute.Sections.Length - 1);
+				Game.UpdateAllSections();
 			}
 			// move train in position
 			for (int i = 0; i < TrainManager.Trains.Length; i++)
@@ -722,7 +722,7 @@ namespace OpenBve
 			}
 			//Place the initial camera in the driver car
 			TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].UpdateCamera();
-			World.CameraTrackFollower.Update(-1.0, true, false);
+			World.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
 			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z);
 			World.CameraSavedExterior = new CameraAlignment(new OpenBveApi.Math.Vector3(-2.5, 1.5, -15.0), 0.3, -0.2, 0.0, PlayerFirstStationPosition, 1.0);
 			World.CameraSavedTrack = new CameraAlignment(new OpenBveApi.Math.Vector3(-3.0, 2.5, 0.0), 0.3, 0.0, 0.0, TrainManager.PlayerTrain.Cars[0].TrackPosition - 10.0, 1.0);
@@ -734,7 +734,7 @@ namespace OpenBve
 			}
 			if (CurrentRoute.Sections.Length > 0)
 			{
-				Game.UpdateSection(CurrentRoute.Sections.Length - 1);
+				Game.UpdateAllSections();
 			}
 			// fast-forward until start time
 			{
@@ -754,7 +754,7 @@ namespace OpenBve
 						{
 							if (CurrentRoute.Sections.Length > 0)
 							{
-								Game.UpdateSection(CurrentRoute.Sections.Length - 1);
+								Game.UpdateAllSections();
 							}
 							TotalTimeElapsedForSectionUpdate = 0.0;
 						}

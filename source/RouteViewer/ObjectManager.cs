@@ -336,7 +336,11 @@ namespace OpenBve {
 						Interface.AddMessage(MessageType.Error, false, "The file extension is not supported: " + FileName);
 						return null;
 				}
-				Result.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, false);
+
+				if (Result != null)
+				{
+					Result.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, false);
+				}
 				return Result;
 				#if !DEBUG
 			} catch (Exception ex) {

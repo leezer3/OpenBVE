@@ -405,6 +405,13 @@ namespace OpenBve {
 					TrainManager.Trains[k].Specs.DoorCloseMode = TrainManager.DoorMode.Manual;
 				}
 			}
+			/*
+			 * HACK: Store the TrainManager.Trains reference in the RouteManager also
+			 *		 Note that this may change when the TrainManager is separated from the lump
+			 *       Remember not to modify via this ref
+			 */
+			// ReSharper disable once CoVariantArrayConversion
+			CurrentRoute.Trains = TrainManager.Trains;
 			TrainProgress = 1.0;
 			// finished created objects
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
@@ -412,7 +419,7 @@ namespace OpenBve {
 			Array.Resize(ref ObjectManager.AnimatedWorldObjects, ObjectManager.AnimatedWorldObjectsUsed);
 			// update sections
 			if (CurrentRoute.Sections.Length > 0) {
-				Game.UpdateSection(CurrentRoute.Sections.Length - 1);
+				Game.UpdateAllSections();
 			}
 			// load plugin
 			for (int i = 0; i < TrainManager.Trains.Length; i++) {

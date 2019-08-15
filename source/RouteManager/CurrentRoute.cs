@@ -3,6 +3,7 @@ using OpenBve.BackgroundManager;
 using OpenBve.SignalManager;
 using OpenBveApi.Colors;
 using OpenBveApi.Routes;
+using OpenBveApi.Trains;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve.RouteManager
@@ -10,6 +11,10 @@ namespace OpenBve.RouteManager
 	/// <summary>The current route</summary>
 	public static class CurrentRoute
 	{
+		/// <summary>The list of tracks available in the simulation.</summary>
+		public static Track[] Tracks = { new Track() };
+		/// <summary>Holds a reference to the base TrainManager.Trains array</summary>
+		public static AbstractTrain[] Trains;
 		/// <summary>Holds all signal sections within the current route</summary>
 		public static Section[] Sections = { };
 		/// <summary>Holds all stations within the current route</summary>

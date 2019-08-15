@@ -57,6 +57,7 @@
     <Compile Include="Events\MarkerEnd.cs" />
     <Compile Include="Events\MarkerStart.cs" />
     <Compile Include="Events\SpeedLimit.cs" />
+    <Compile Include="Events\Station.cs" />
     <Compile Include="Events\TrackEnd.cs" />
     <Compile Include="Events\Transponder.cs" />
     <Compile Include="Events\Transponder.Types.cs" />

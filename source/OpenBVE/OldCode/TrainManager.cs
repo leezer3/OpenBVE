@@ -268,24 +268,21 @@ namespace OpenBve
 										int k = Trains[i].Cars.Length - 1;
 										if (Trains[i].Cars[k].CurrentSpeed < Trains[j].Cars[0].CurrentSpeed)
 										{
-											double v = Trains[j].Cars[0].CurrentSpeed -
-													   Trains[i].Cars[k].CurrentSpeed;
+											double v = Trains[j].Cars[0].CurrentSpeed - Trains[i].Cars[k].CurrentSpeed;
 											double s = (Trains[i].Cars[k].CurrentSpeed*Trains[i].Cars[k].Specs.MassCurrent +
 														Trains[j].Cars[0].CurrentSpeed*Trains[j].Cars[0].Specs.MassCurrent)/
 													   (Trains[i].Cars[k].Specs.MassCurrent + Trains[j].Cars[0].Specs.MassCurrent);
 											Trains[i].Cars[k].CurrentSpeed = s;
 											Trains[j].Cars[0].CurrentSpeed = s;
 											double e = 0.5*(c - b) + 0.0001;
-											Trains[i].Cars[k].FrontAxle.Follower.Update(Trains[i].Cars[k].FrontAxle.Follower.TrackPosition + e, false, false);
-											Trains[i].Cars[k].RearAxle.Follower.Update(Trains[i].Cars[k].RearAxle.Follower.TrackPosition + e, false, false);
-											Trains[j].Cars[0].FrontAxle.Follower.Update(Trains[j].Cars[0].FrontAxle.Follower.TrackPosition - e, false, false);
+											Trains[i].Cars[k].FrontAxle.Follower.UpdateRelative(e, false, false);
+											Trains[i].Cars[k].RearAxle.Follower.UpdateRelative(e, false, false);
+											Trains[j].Cars[0].FrontAxle.Follower.UpdateRelative(-e, false, false);
 
-											Trains[j].Cars[0].RearAxle.Follower.Update(Trains[j].Cars[0].RearAxle.Follower.TrackPosition - e, false, false);
+											Trains[j].Cars[0].RearAxle.Follower.UpdateRelative(-e, false, false);
 											if (Interface.CurrentOptions.Derailments)
 											{
-												double f = 2.0/
-														   (Trains[i].Cars[k].Specs.MassCurrent +
-															Trains[j].Cars[0].Specs.MassCurrent);
+												double f = 2.0/ (Trains[i].Cars[k].Specs.MassCurrent + Trains[j].Cars[0].Specs.MassCurrent);
 												double fi = Trains[j].Cars[0].Specs.MassCurrent*f;
 												double fj = Trains[i].Cars[k].Specs.MassCurrent*f;
 												double vi = v*fi;
@@ -306,13 +303,11 @@ namespace OpenBve
 												if (d < 0.0)
 												{
 													d -= 0.0001;
-													Trains[i].Cars[h].FrontAxle.Follower.Update(Trains[i].Cars[h].FrontAxle.Follower.TrackPosition - d, false, false);
-													Trains[i].Cars[h].RearAxle.Follower.Update(Trains[i].Cars[h].RearAxle.Follower.TrackPosition - d, false, false);
+													Trains[i].Cars[h].FrontAxle.Follower.UpdateRelative(-d, false, false);
+													Trains[i].Cars[h].RearAxle.Follower.UpdateRelative(-d, false, false);
 													if (Interface.CurrentOptions.Derailments)
 													{
-														double f = 2.0/
-																   (Trains[i].Cars[h + 1].Specs.MassCurrent +
-																	Trains[i].Cars[h].Specs.MassCurrent);
+														double f = 2.0/ (Trains[i].Cars[h + 1].Specs.MassCurrent + Trains[i].Cars[h].Specs.MassCurrent);
 														double fi = Trains[i].Cars[h + 1].Specs.MassCurrent*f;
 														double fj = Trains[i].Cars[h].Specs.MassCurrent*f;
 														double vi = v*fi;
@@ -337,13 +332,11 @@ namespace OpenBve
 												if (d < 0.0)
 												{
 													d -= 0.0001;
-													Trains[j].Cars[h].FrontAxle.Follower.Update(Trains[j].Cars[h].FrontAxle.Follower.TrackPosition + d, false, false);
-													Trains[j].Cars[h].RearAxle.Follower.Update(Trains[j].Cars[h].RearAxle.Follower.TrackPosition + d, false, false);
+													Trains[j].Cars[h].FrontAxle.Follower.UpdateRelative(d, false, false);
+													Trains[j].Cars[h].RearAxle.Follower.UpdateRelative(d, false, false);
 													if (Interface.CurrentOptions.Derailments)
 													{
-														double f = 2.0/
-																   (Trains[j].Cars[h - 1].Specs.MassCurrent +
-																	Trains[j].Cars[h].Specs.MassCurrent);
+														double f = 2.0/ (Trains[j].Cars[h - 1].Specs.MassCurrent + Trains[j].Cars[h].Specs.MassCurrent);
 														double fi = Trains[j].Cars[h - 1].Specs.MassCurrent*f;
 														double fj = Trains[j].Cars[h].Specs.MassCurrent*f;
 														double vi = v*fi;
@@ -373,15 +366,13 @@ namespace OpenBve
 											Trains[i].Cars[0].CurrentSpeed = s;
 											Trains[j].Cars[k].CurrentSpeed = s;
 											double e = 0.5*(a - d) + 0.0001;
-											Trains[i].Cars[0].FrontAxle.Follower.Update(Trains[i].Cars[0].FrontAxle.Follower.TrackPosition - e, false, false);
-											Trains[i].Cars[0].RearAxle.Follower.Update(Trains[i].Cars[0].RearAxle.Follower.TrackPosition - e, false, false);
-											Trains[j].Cars[k].FrontAxle.Follower.Update(Trains[j].Cars[k].FrontAxle.Follower.TrackPosition + e, false, false);
-											Trains[j].Cars[k].RearAxle.Follower.Update(Trains[j].Cars[k].RearAxle.Follower.TrackPosition + e, false, false);
+											Trains[i].Cars[0].FrontAxle.Follower.UpdateRelative(-e, false, false);
+											Trains[i].Cars[0].RearAxle.Follower.UpdateRelative(-e, false, false);
+											Trains[j].Cars[k].FrontAxle.Follower.UpdateRelative(e, false, false);
+											Trains[j].Cars[k].RearAxle.Follower.UpdateRelative(e, false, false);
 											if (Interface.CurrentOptions.Derailments)
 											{
-												double f = 2.0/
-														   (Trains[i].Cars[0].Specs.MassCurrent +
-															Trains[j].Cars[k].Specs.MassCurrent);
+												double f = 2.0/ (Trains[i].Cars[0].Specs.MassCurrent + Trains[j].Cars[k].Specs.MassCurrent);
 												double fi = Trains[j].Cars[k].Specs.MassCurrent*f;
 												double fj = Trains[i].Cars[0].Specs.MassCurrent*f;
 												double vi = v*fi;
@@ -402,13 +393,11 @@ namespace OpenBve
 												if (d < 0.0)
 												{
 													d -= 0.0001;
-													Trains[i].Cars[h].FrontAxle.Follower.Update(Trains[i].Cars[h].FrontAxle.Follower.TrackPosition + d, false, false);
-													Trains[i].Cars[h].RearAxle.Follower.Update(Trains[i].Cars[h].RearAxle.Follower.TrackPosition + d, false, false);
+													Trains[i].Cars[h].FrontAxle.Follower.UpdateRelative(d, false, false);
+													Trains[i].Cars[h].RearAxle.Follower.UpdateRelative(d, false, false);
 													if (Interface.CurrentOptions.Derailments)
 													{
-														double f = 2.0/
-																   (Trains[i].Cars[h - 1].Specs.MassCurrent +
-																	Trains[i].Cars[h].Specs.MassCurrent);
+														double f = 2.0/ (Trains[i].Cars[h - 1].Specs.MassCurrent + Trains[i].Cars[h].Specs.MassCurrent);
 														double fi = Trains[i].Cars[h - 1].Specs.MassCurrent*f;
 														double fj = Trains[i].Cars[h].Specs.MassCurrent*f;
 														double vi = v*fi;
@@ -433,13 +422,11 @@ namespace OpenBve
 												if (d < 0.0)
 												{
 													d -= 0.0001;
-													Trains[j].Cars[h].FrontAxle.Follower.Update(Trains[j].Cars[h].FrontAxle.Follower.TrackPosition - d, false, false);
-													Trains[j].Cars[h].RearAxle.Follower.Update(Trains[j].Cars[h].RearAxle.Follower.TrackPosition - d, false, false);
+													Trains[j].Cars[h].FrontAxle.Follower.UpdateRelative(-d, false, false);
+													Trains[j].Cars[h].RearAxle.Follower.UpdateRelative(-d, false, false);
 													if (Interface.CurrentOptions.Derailments)
 													{
-														double f = 2.0/
-																   (Trains[j].Cars[h + 1].Specs.MassCurrent +
-																	Trains[j].Cars[h].Specs.MassCurrent);
+														double f = 2.0/ (Trains[j].Cars[h + 1].Specs.MassCurrent + Trains[j].Cars[h].Specs.MassCurrent);
 														double fi = Trains[j].Cars[h + 1].Specs.MassCurrent*f;
 														double fj = Trains[j].Cars[h].Specs.MassCurrent*f;
 														double vi = v*fi;
