@@ -31,7 +31,7 @@ namespace OpenBve.RouteManager
 				this.NextBrightness = CurrentBrightness;
 				this.NextDistance = 0.0;
 			}
-			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+			public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
 			{
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle)
 				{

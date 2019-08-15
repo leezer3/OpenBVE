@@ -12,7 +12,7 @@ namespace OpenBve.RouteManager
 			this.TrackPositionDelta = TrackPositionDelta;
 			this.DontTriggerAnymore = false;
 		}
-		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+		public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
 		{
 			if (Train == null)
 			{

@@ -14,7 +14,7 @@ namespace OpenBve
 				this.TrackPositionDelta = TrackPositionDelta;
 				this.DontTriggerAnymore = false;
 			}
-			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car)
+			public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car)
 			{
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle)
 				{
@@ -39,7 +39,7 @@ namespace OpenBve
 				this.DontTriggerAnymore = false;
 				this.StationIndex = StationIndex;
 			}
-			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+			public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
 			{
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle)
 				{

@@ -48,7 +48,7 @@ namespace OpenBve
 			/// <param name="TriggerType">They type of event which triggered this sound</param>
 			/// <param name="Train">The root train which triggered this sound</param>
 			/// <param name="Car">The car which triggered this sound</param>
-			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+			public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
 			{
 				if (SuppressSoundEvents) return;
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle | TriggerType == EventTriggerType.OtherCarRearAxle | TriggerType == EventTriggerType.RearCarRearAxle)
@@ -93,7 +93,7 @@ namespace OpenBve
 			/// <param name="TriggerType">They type of event which triggered this sound</param>
 			/// <param name="Train">The root train which triggered this sound</param>
 			/// <param name="Car">The car which triggered this sound</param>
-			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, TrainManager.Car Car)
+			public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, AbstractTrain Train, TrainManager.Car Car)
 			{
 				if (SuppressSoundEvents) return;
 				switch (TriggerType)
@@ -133,7 +133,7 @@ namespace OpenBve
 			/// <param name="TriggerType">They type of event which triggered this sound</param>
 			/// <param name="Train">The root train which triggered this sound</param>
 			/// <param name="Car">The car which triggered this sound</param>
-			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, TrainManager.Car Car)
+			public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, AbstractTrain Train, TrainManager.Car Car)
 			{
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle)
 				{

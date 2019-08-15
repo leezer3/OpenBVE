@@ -124,6 +124,20 @@ namespace OpenBve
 				}
 			}
 
+			/// <inheritdoc/>
+			public override void SectionChange()
+			{
+				if (CurrentSectionLimit == 0.0 && Game.MinimalisticSimulation == false)
+				{
+					Game.AddMessage(Translations.GetInterfaceString("message_signal_stop"), MessageDependency.PassedRedSignal, GameMode.Normal, MessageColor.Red, double.PositiveInfinity, null);
+				}
+				else if (CurrentSpeed > CurrentSectionLimit)
+				{
+					Game.AddMessage(Translations.GetInterfaceString("message_signal_overspeed"), MessageDependency.SectionLimit, GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
+				}
+			}
+
+			/// <inheritdoc/>
 			public override void UpdateBeacon(int transponderType, int sectionIndex, int optional)
 			{
 				if (Plugin != null)
@@ -1005,6 +1019,7 @@ namespace OpenBve
 				}
 			}
 
+			/// <inheritdoc/>
 			public override void Derail(AbstractCar Car, double ElapsedTime)
 			{
 				if (this.Cars.Contains(Car))
@@ -1105,11 +1120,13 @@ namespace OpenBve
 				}
 			}
 
+			/// <inheritdoc/>
 			public override double FrontCarTrackPosition()
 			{
 				return Cars[0].FrontAxle.Follower.TrackPosition - Cars[0].FrontAxle.Position + 0.5 * Cars[0].Length;
 			}
 
+			/// <inheritdoc/>
 			public override double RearCarTrackPosition()
 			{
 				return Cars[Cars.Length - 1].RearAxle.Follower.TrackPosition - Cars[Cars.Length - 1].RearAxle.Position - 0.5 * Cars[Cars.Length - 1].Length;

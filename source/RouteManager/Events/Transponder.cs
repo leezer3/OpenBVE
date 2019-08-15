@@ -35,7 +35,7 @@ namespace OpenBve.RouteManager
 			this.ClipToFirstRedSection = clipToFirstRedSection;
 		}
 
-		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+		public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
 		{
 			if (TriggerType == EventTriggerType.TrainFront)
 			{

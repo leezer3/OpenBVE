@@ -21,7 +21,7 @@ namespace OpenBve.RouteManager
 			this.CurrentFog = CurrentFog;
 			this.NextFog = NextFog;
 		}
-		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+		public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
 		{
 			if (TriggerType == EventTriggerType.Camera)
 			{

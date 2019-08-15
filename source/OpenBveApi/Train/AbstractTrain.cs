@@ -1,4 +1,6 @@
-﻿namespace OpenBveApi.Trains
+﻿using OpenBveApi.Routes;
+
+namespace OpenBveApi.Trains
 {
 	/// <summary>An abstract train</summary>
 	public abstract class AbstractTrain
@@ -83,6 +85,12 @@
 
 		/// <summary>Stops all sounds from this train</summary>
 		public virtual void StopAllSounds()
+		{
+
+		}
+
+		/// <summary>Is called when the train changes from one signalling section to another</summary>
+		public virtual void SectionChange()
 		{
 
 		}

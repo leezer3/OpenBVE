@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Text;
 using OpenBveApi.Hosts;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
@@ -21,7 +20,7 @@ namespace OpenBve.RouteManager
 			this.Message = message;
 			this.currentHost = Host;
 		}
-		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+		public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
 		{
 			if (TriggerType == EventTriggerType.FrontCarFrontAxle && Train.IsPlayerTrain || TriggerType == EventTriggerType.Camera && currentHost.Application == HostApplication.RouteViewer) 
 			{

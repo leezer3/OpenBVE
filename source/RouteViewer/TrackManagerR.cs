@@ -21,7 +21,7 @@ namespace OpenBve {
                 this.TrackPositionDelta = TrackPositionDelta;
                 this.DontTriggerAnymore = false;
             }
-            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) { }
+            public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) { }
         }
         // station end
         internal class StationEndEvent : GeneralEvent<TrainManager.Train, AbstractCar> {
@@ -31,7 +31,7 @@ namespace OpenBve {
                 this.DontTriggerAnymore = false;
                 this.StationIndex = StationIndex;
             }
-            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) {
+            public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) {
                 if (TriggerType == EventTriggerType.Camera) {
                     if (Direction < 0) {
                         Program.CurrentStation = this.StationIndex;
@@ -43,19 +43,7 @@ namespace OpenBve {
                 }
             }
         }
-        // section change
-        internal class SectionChangeEvent : GeneralEvent<TrainManager.Train, AbstractCar> {
-            internal int PreviousSectionIndex;
-            internal int NextSectionIndex;
-            internal SectionChangeEvent(double TrackPositionDelta, int PreviousSectionIndex, int NextSectionIndex) {
-                this.TrackPositionDelta = TrackPositionDelta;
-                this.DontTriggerAnymore = false;
-                this.PreviousSectionIndex = PreviousSectionIndex;
-                this.NextSectionIndex = NextSectionIndex;
-            }
-            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) { }
-        }
-    
+
         // sound
         internal static bool SuppressSoundEvents = false;
         internal class SoundEvent : GeneralEvent<TrainManager.Train, AbstractCar> {
@@ -75,7 +63,7 @@ namespace OpenBve {
                 this.Position = Position;
                 this.Speed = Speed;
             }
-            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) { }
+            public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) { }
             internal const int SoundIndexTrainPoint = -2;
         }
         // rail sounds change
@@ -92,7 +80,7 @@ namespace OpenBve {
                 this.NextRunIndex = NextRunIndex;
                 this.NextFlangeIndex = NextFlangeIndex;
             }
-            public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) { }
+            public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car) { }
         }
         // ================================
 

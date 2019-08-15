@@ -11,26 +11,28 @@ namespace OpenBveApi.Routes
 		public bool DontTriggerAnymore;
 
 		/// <summary>The unconditional event trigger function</summary>
+		/// <param name="currentTime">The in-game time in seconds since minight</param>
 		/// <param name="Direction">The direction:
 		///  1 - Forwards
 		/// -1 - Reverse</param>
 		/// <param name="TriggerType">The trigger type (Car axle, camera follower etc.)</param>
 		/// <param name="Train">The train, or a null reference</param>
 		/// <param name="Car">The car, or a null reference</param>
-		public abstract void Trigger(int Direction, EventTriggerType TriggerType, T Train, TT Car);
+		public abstract void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, T Train, TT Car);
 
 		/// <summary>This method is called to attempt to trigger an event</summary>
+		/// <param name="currentTime">The in-game time in seconds since midnight</param>
 		/// <param name="Direction">The direction:
 		///  1 - Forwards
 		/// -1 - Reverse</param>
 		/// <param name="TriggerType">The trigger type (Car axle, camera follower etc.)</param>
 		/// <param name="Train">The train, or a null reference</param>
 		/// <param name="Car">The car, or a null reference</param>
-		public void TryTrigger(int Direction, EventTriggerType TriggerType, T Train, TT Car)
+		public void TryTrigger(double currentTime, int Direction, EventTriggerType TriggerType, T Train, TT Car)
 		{
 			if (!DontTriggerAnymore)
 			{
-				Trigger(Direction, TriggerType, Train, Car);
+				Trigger(currentTime, Direction, TriggerType, Train, Car);
 			}
 		}
 	}

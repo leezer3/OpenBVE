@@ -24,7 +24,7 @@ namespace OpenBve.RouteManager
 			this.TriggerOnce = triggerOnce;
 			this.Type = type;
 		}
-		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+		public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
 		{
 			if (Train == null || this.Type == -1 && Train.IsPlayerTrain || this.Type == 1 && !Train.IsPlayerTrain)
 			{

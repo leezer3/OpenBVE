@@ -34,7 +34,7 @@ namespace OpenBve
 				this.Late = late;
 				this.MaxCars = maxCars;
 			}
-			public override void Trigger(int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car)
+			public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, TrainManager.Train Train, AbstractCar Car)
 			{
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle)
 				{

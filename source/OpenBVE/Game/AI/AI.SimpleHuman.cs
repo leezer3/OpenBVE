@@ -422,10 +422,10 @@ namespace OpenBve
 										if (edec > dec) dec = edec;
 									}
 								}
-								else if (CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is TrackManager.SectionChangeEvent)
+								else if (CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is SectionChangeEvent)
 								{
 									// section
-									TrackManager.SectionChangeEvent e = (TrackManager.SectionChangeEvent)CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
+									SectionChangeEvent e = (SectionChangeEvent)CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
 									if (stp + e.TrackPositionDelta > tp)
 									{
 										if (!CurrentRoute.Sections[e.NextSectionIndex].Invisible & CurrentRoute.Sections[e.NextSectionIndex].CurrentAspect >= 0)

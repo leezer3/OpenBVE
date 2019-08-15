@@ -12,6 +12,7 @@ namespace OpenBve
 		/// <summary>The root class for a train within the simulation</summary>
 		public partial class Train
 		{
+			/// <inheritdoc/>
 			public override void EnterStation(int stationIndex, int direction)
 			{
 				if (direction < 0)
@@ -39,6 +40,7 @@ namespace OpenBve
 				}
 			}
 
+			/// <inheritdoc/>
 			public override void LeaveStation(int stationIndex, int direction)
 			{
 				if (direction < 0)

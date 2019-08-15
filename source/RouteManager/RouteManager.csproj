@@ -56,6 +56,7 @@
     <Compile Include="Events\FogChange.cs" />
     <Compile Include="Events\MarkerEnd.cs" />
     <Compile Include="Events\MarkerStart.cs" />
+    <Compile Include="Events\SignalSection.cs" />
     <Compile Include="Events\SpeedLimit.cs" />
     <Compile Include="Events\Station.cs" />
     <Compile Include="Events\TrackEnd.cs" />

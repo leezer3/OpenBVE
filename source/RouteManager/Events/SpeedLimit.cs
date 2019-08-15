@@ -18,7 +18,7 @@ namespace OpenBve.RouteManager
 			this.NextSpeedLimit = NextSpeedLimit;
 		}
 
-		public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
+		public override void Trigger(double currentTime, int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
 		{
 			if (Train == null)
 			{

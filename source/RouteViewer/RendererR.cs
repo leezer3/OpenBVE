@@ -423,7 +423,7 @@ namespace OpenBve {
 							s = 0.2;
 							dy = 1.1;
 							t = LimitTexture;
-						} else if (e is TrackManager.SectionChangeEvent) {
+						} else if (e is SectionChangeEvent) {
 							s = 0.2;
 							dy = 0.8;
 							t = SectionTexture;

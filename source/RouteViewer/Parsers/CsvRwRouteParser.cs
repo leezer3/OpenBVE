@@ -6458,7 +6458,7 @@ namespace OpenBve {
 								double d = Data.Blocks[i].Section[k].TrackPosition - StartingDistance;
 								int p = CurrentRoute.Tracks[0].Elements[n].Events.Length;
 								Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, p + 1);
-								CurrentRoute.Tracks[0].Elements[n].Events[p] = new TrackManager.SectionChangeEvent(d, m - 1, m);
+								CurrentRoute.Tracks[0].Elements[n].Events[p] = new SectionChangeEvent(d, m - 1, m);
 							}
 							// transponders introduced after corresponding sections
 							for (int l = 0; l < Data.Blocks[i].Transponders.Length; l++)
