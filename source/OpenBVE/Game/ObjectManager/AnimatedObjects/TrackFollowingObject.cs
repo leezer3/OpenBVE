@@ -20,8 +20,6 @@ namespace OpenBve
 			internal AnimatedObject Object;
 			/// <summary>The signalling section the object refers to (Only relevant for objects placed using Track.Sig</summary>
 			internal int SectionIndex;
-			/// <summary>The curve radius at the object's track position</summary>
-			internal double Radius;
 
 			internal TrackFollower FrontAxleFollower;
 			internal TrackFollower RearAxleFollower;
@@ -38,23 +36,17 @@ namespace OpenBve
 				currentHost = Host;
 			}
 
-			public override void Update(AbstractTrain NearestTrain, double TimeElapsed, bool ForceUpdate)
+			public override void Update(AbstractTrain NearestTrain, double TimeElapsed, bool ForceUpdate, bool Visible)
 			{
-				const double extraRadius = 10.0;
-				double z = Object.TranslateZFunction == null ? 0.0 : Object.TranslateZFunction.LastResult;
-				double pa = TrackPosition + z - Radius - extraRadius;
-				double pb = TrackPosition + z + Radius + extraRadius;
-				double ta = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z - Backgrounds.BackgroundImageDistance - Camera.ExtraViewingDistance;
-				double tb = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z + Backgrounds.BackgroundImageDistance + Camera.ExtraViewingDistance;
-				bool visible = pb >= ta & pa <= tb;
-				if (visible | ForceUpdate)
+				
+				if (Visible | ForceUpdate)
 				{
 					if (Object.SecondsSinceLastUpdate >= Object.RefreshRate | ForceUpdate)
 					{
 						double timeDelta = Object.SecondsSinceLastUpdate + TimeElapsed;
 						Object.SecondsSinceLastUpdate = 0.0;
 
-						if (Visible)
+						if (base.Visible)
 						{
 							//Calculate the distance travelled
 							double delta = UpdateTrackFollowerScript(false, NearestTrain, NearestTrain == null ? 0 : NearestTrain.DriverCar, SectionIndex, TrackPosition, Position, true, timeDelta);
@@ -73,19 +65,19 @@ namespace OpenBve
 					{
 						Object.SecondsSinceLastUpdate += TimeElapsed;
 					}
-					if (!Visible)
+					if (!base.Visible)
 					{
 						currentHost.ShowObject(Object.internalObject, ObjectType.Dynamic);
-						Visible = true;
+						base.Visible = true;
 					}
 				}
 				else
 				{
 					Object.SecondsSinceLastUpdate += TimeElapsed;
-					if (Visible)
+					if (base.Visible)
 					{
 						currentHost.HideObject(ref Object.internalObject);
-						Visible = false;
+						base.Visible = false;
 					}
 				}
 			}

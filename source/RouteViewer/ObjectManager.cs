@@ -109,7 +109,7 @@ namespace OpenBve {
 			internal int SectionIndex;
 			internal double Radius;
 
-			public override void Update(AbstractTrain NearestTrain, double TimeElapsed, bool ForceUpdate)
+			public override void Update(AbstractTrain NearestTrain, double TimeElapsed, bool ForceUpdate, bool Visible)
 			{
 				throw new NotImplementedException();
 			}

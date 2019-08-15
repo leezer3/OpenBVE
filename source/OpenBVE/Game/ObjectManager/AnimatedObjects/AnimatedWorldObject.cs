@@ -1,7 +1,5 @@
-using LibRender;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
-using static LibRender.CameraProperties;
 
 namespace OpenBve
 {
@@ -14,19 +12,10 @@ namespace OpenBve
 			internal AnimatedObject Object;
 			/// <summary>The signalling section the object refers to (Only relevant for objects placed using Track.Sig</summary>
 			internal int SectionIndex;
-			/// <summary>The absolute radius of the 3D object</summary>
-			internal double Radius;
 
-			public override void Update(AbstractTrain NearestTrain, double TimeElapsed, bool ForceUpdate)
+			public override void Update(AbstractTrain NearestTrain, double TimeElapsed, bool ForceUpdate, bool Visible)
 			{
-				const double extraRadius = 10.0;
-				double z = Object.TranslateZFunction == null ? 0.0 : Object.TranslateZFunction.LastResult;
-				double pa = TrackPosition + z - Radius - extraRadius;
-				double pb = TrackPosition + z + Radius + extraRadius;
-				double ta = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z - Backgrounds.BackgroundImageDistance - Camera.ExtraViewingDistance;
-				double tb = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z + Backgrounds.BackgroundImageDistance + Camera.ExtraViewingDistance;
-				bool visible = pb >= ta & pa <= tb;
-				if (visible | ForceUpdate)
+				if (Visible | ForceUpdate)
 				{
 					if (Object.SecondsSinceLastUpdate >= Object.RefreshRate | ForceUpdate)
 					{
@@ -38,19 +27,19 @@ namespace OpenBve
 					{
 						Object.SecondsSinceLastUpdate += TimeElapsed;
 					}
-					if (!Visible)
+					if (!base.Visible)
 					{
 						Renderer.ShowObject(Object.internalObject, ObjectType.Dynamic);
-						Visible = true;
+						base.Visible = true;
 					}
 				}
 				else
 				{
 					Object.SecondsSinceLastUpdate += TimeElapsed;
-					if (Visible)
+					if (base.Visible)
 					{
 						Renderer.HideObject(ref Object.internalObject);
-						Visible = false;
+						base.Visible = false;
 					}
 				}
 			}

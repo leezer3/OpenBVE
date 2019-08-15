@@ -1,9 +1,11 @@
 using System;
+using LibRender;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
+using static LibRender.CameraProperties;
 
 namespace OpenBve
 {
@@ -60,7 +62,14 @@ namespace OpenBve
 						}
 					}
 				}
-				AnimatedWorldObjects[i].Update(train, TimeElapsed, ForceUpdate);
+				const double extraRadius = 10.0;
+				double z = AnimatedWorldObjects[i].Object.TranslateZFunction == null ? 0.0 : Object.TranslateZFunction.LastResult;
+				double pa = AnimatedWorldObjects[i].TrackPosition + z - AnimatedWorldObjects[i].Radius - extraRadius;
+				double pb = AnimatedWorldObjects[i].TrackPosition + z + AnimatedWorldObjects[i].Radius + extraRadius;
+				double ta = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z - Backgrounds.BackgroundImageDistance - Camera.ExtraViewingDistance;
+				double tb = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z + Backgrounds.BackgroundImageDistance + Camera.ExtraViewingDistance;
+				bool visible = pb >= ta & pa <= tb;
+				AnimatedWorldObjects[i].Update(train, TimeElapsed, ForceUpdate, visible);
 			}
 		}
 

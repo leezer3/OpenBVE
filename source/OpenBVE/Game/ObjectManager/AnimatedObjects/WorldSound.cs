@@ -37,6 +37,11 @@ namespace OpenBve
 			/// <summary>The function script controlling the sound's pitch, or a null reference</summary>
 			internal FunctionScript PitchFunction;
 
+			internal WorldSound()
+			{
+				Radius = 25.0;
+			}
+
 			internal void CreateSound(Vector3 position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, double trackPosition)
 			{
 				int a = AnimatedWorldObjectsUsed;
@@ -61,17 +66,9 @@ namespace OpenBve
 				AnimatedWorldObjectsUsed++;
 			}
 
-			public override void Update(AbstractTrain NearestTrain, double TimeElapsed, bool ForceUpdate)
+			public override void Update(AbstractTrain NearestTrain, double TimeElapsed, bool ForceUpdate, bool Visible)
 			{
-				const double extraRadius = 10.0;
-				const double Radius = 25.0;
-
-				double pa = currentTrackPosition + Radius - extraRadius;
-				double pb = currentTrackPosition + Radius + extraRadius;
-				double ta = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z - Backgrounds.BackgroundImageDistance - Camera.ExtraViewingDistance;
-				double tb = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z + Backgrounds.BackgroundImageDistance + Camera.ExtraViewingDistance;
-				bool visible = pb >= ta & pa <= tb;
-				if (visible | ForceUpdate)
+				if (Visible | ForceUpdate)
 				{
 					if (Game.MinimalisticSimulation || TimeElapsed > 0.05)
 					{
