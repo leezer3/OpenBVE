@@ -9,7 +9,6 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
-using static LibRender.CameraProperties;
 
 namespace OpenBve
 {
@@ -89,7 +88,7 @@ namespace OpenBve
 				}
 				return Result;
 			}
-			
+
 			/// <summary> Updates the position and state of the animated object</summary>
 			/// <param name="IsPartOfTrain">Whether this object forms part of a train</param>
 			/// <param name="Train">The train, or a null reference otherwise</param>
@@ -100,13 +99,13 @@ namespace OpenBve
 			/// <param name="Direction"></param>
 			/// <param name="Up"></param>
 			/// <param name="Side"></param>
-			/// <param name="Overlay">Whether this object should be overlaid over the other objects on-screen (Forms part of the cab etc.)</param>
 			/// <param name="UpdateFunctions">Whether the functions associated with this object should be re-evaluated</param>
 			/// <param name="Show"></param>
 			/// <param name="TimeElapsed">The time elapsed since this object was last updated</param>
 			/// <param name="EnableDamping">Whether damping is to be applied for this call</param>
-            /// <param name="IsTouch">Whether Animated Object belonging to TouchElement class.</param>
-			internal void Update(bool IsPartOfTrain, AbstractTrain Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Overlay, bool UpdateFunctions, bool Show, double TimeElapsed, bool EnableDamping, bool IsTouch = false)
+			/// <param name="IsTouch">Whether Animated Object belonging to TouchElement class.</param>
+			/// <param name="Camera"></param>
+			internal void Update(bool IsPartOfTrain, AbstractTrain Train, int CarIndex, int SectionIndex, double TrackPosition, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool UpdateFunctions, bool Show, double TimeElapsed, bool EnableDamping, bool IsTouch = false, dynamic Camera = null)
 			{
 				int s = CurrentState;
 				// state change
@@ -118,7 +117,7 @@ namespace OpenBve
 					if (si < 0 | si >= sn) si = -1;
 					if (s != si)
 					{
-						Initialize(si, Overlay, Show);
+						Initialize(si, Camera != null, Show);
 						s = si;
 					}
 				}
@@ -635,10 +634,14 @@ namespace OpenBve
 						internalObject.Mesh.Vertices[k].Coordinates.Rotate(RotateZDirection, cosZ, sinZ);
 					}
 					// translate
-					if (Overlay & Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
+					if (Camera != null && Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 					{
+
 						internalObject.Mesh.Vertices[k].Coordinates += States[s].Position - Position;
-						internalObject.Mesh.Vertices[k].Coordinates.Rotate(Camera.AbsoluteDirection, Camera.AbsoluteUp, Camera.AbsoluteSide);
+						/*
+						 * HACK: No idea why, but when using dynamic here, we MUST cast the parameters to Vector3 as otherwise it breaks....
+						 */
+						internalObject.Mesh.Vertices[k].Coordinates.Rotate((Vector3) Camera.AbsoluteDirection, (Vector3) Camera.AbsoluteUp, (Vector3) Camera.AbsoluteSide);
 						double dx = -Math.Tan(Camera.Alignment.Yaw) - Camera.Alignment.Position.X;
 						double dy = -Math.Tan(Camera.Alignment.Pitch) - Camera.Alignment.Position.Y;
 						double dz = -Camera.Alignment.Position.Z;
@@ -682,7 +685,7 @@ namespace OpenBve
 					{
 						if (Show)
 						{
-							if (Overlay)
+							if (Camera != null)
 							{
 								currentHost.ShowObject(internalObject, ObjectType.Overlay);
 							}

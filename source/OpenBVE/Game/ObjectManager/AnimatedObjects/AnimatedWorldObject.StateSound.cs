@@ -78,7 +78,7 @@ namespace OpenBve
 								}
 							}
 						}
-						Object.Update(false, train, train == null ? 0 : train.DriverCar, SectionIndex, TrackPosition, Position, Direction, Up, Side, false, true, true, timeDelta, true);
+						Object.Update(false, train, train == null ? 0 : train.DriverCar, SectionIndex, TrackPosition, Position, Direction, Up, Side, true, true, timeDelta, true);
 						if (this.Object.CurrentState != this.lastState && Loading.SimulationSetup)
 						{
 							if (this.SingleBuffer && this.Buffers[0] != null)

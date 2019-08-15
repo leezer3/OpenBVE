@@ -83,7 +83,7 @@ namespace OpenBve
 							UpdateObjectPosition();
 						}
 						//Update the actual animated object- This must be done last in case the user has used Translation or Rotation
-						Object.Update(false, train, train == null ? 0 : train.DriverCar, SectionIndex, FrontAxleFollower.TrackPosition, FrontAxleFollower.WorldPosition, Direction, Up, Side, false, true, true, timeDelta, true);
+						Object.Update(false, train, train == null ? 0 : train.DriverCar, SectionIndex, FrontAxleFollower.TrackPosition, FrontAxleFollower.WorldPosition, Direction, Up, Side, true, true, timeDelta, true);
 					}
 					else
 					{
