@@ -5196,7 +5196,7 @@ namespace OpenBve {
 			} else if (Prototype is ObjectManager.AnimatedObjectCollection) {
 				ObjectManager.AnimatedObjectCollection a = (ObjectManager.AnimatedObjectCollection)Prototype;
 				ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection();
-				Result.Objects = new ObjectManager.AnimatedObject[a.Objects.Length];
+				Result.Objects = new AnimatedObject[a.Objects.Length];
 				for (int i = 0; i < a.Objects.Length; i++) {
 					Result.Objects[i] = a.Objects[i].Clone();
 					for (int j = 0; j < a.Objects[i].States.Length; j++) {
@@ -6343,8 +6343,8 @@ namespace OpenBve {
 										if (csd.Numbers.Length != 0) {
 											double brightness = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
 											ObjectManager.AnimatedObjectCollection aoc = new ObjectManager.AnimatedObjectCollection();
-											aoc.Objects = new ObjectManager.AnimatedObject[1];
-											aoc.Objects[0] = new ObjectManager.AnimatedObject(Program.CurrentHost);
+											aoc.Objects = new AnimatedObject[1];
+											aoc.Objects[0] = new AnimatedObject(Program.CurrentHost);
 											aoc.Objects[0].States = new AnimatedObjectState[csd.Numbers.Length];
 											for (int l = 0; l < csd.Numbers.Length; l++)
 											{
@@ -6373,8 +6373,8 @@ namespace OpenBve {
 												}
 											}
 											ObjectManager.AnimatedObjectCollection aoc = new ObjectManager.AnimatedObjectCollection();
-											aoc.Objects = new ObjectManager.AnimatedObject[1];
-											aoc.Objects[0] = new ObjectManager.AnimatedObject(Program.CurrentHost);
+											aoc.Objects = new AnimatedObject[1];
+											aoc.Objects[0] = new AnimatedObject(Program.CurrentHost);
 											aoc.Objects[0].States = new AnimatedObjectState[zn];
 											int zi = 0;
 											string expr = "";

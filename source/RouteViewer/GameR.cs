@@ -91,7 +91,7 @@ namespace OpenBve {
 			ObjectManager.ObjectsSortedByStartPointer = 0;
 			ObjectManager.ObjectsSortedByEndPointer = 0;
 			ObjectManager.LastUpdatedTrackPosition = 0.0;
-			ObjectManager.AnimatedWorldObjects = new ObjectManager.AnimatedWorldObject[4];
+			ObjectManager.AnimatedWorldObjects = new AnimatedWorldObject[4];
 			ObjectManager.AnimatedWorldObjectsUsed = 0;
 			// renderer / sound
 			Renderer.Reset();
