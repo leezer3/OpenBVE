@@ -6,6 +6,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
+using OpenBve.RouteManager;
 
 namespace OpenBve {
 	internal static class AnimatedObjectParser {
@@ -15,9 +16,9 @@ namespace OpenBve {
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
 		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
 		/// <returns>The collection of animated objects.</returns>
-		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding) {
+		internal static AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
+			AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost, CurrentRoute.Tracks)
 			{
 				Objects = new AnimatedObject[4]
 			};
@@ -111,8 +112,8 @@ namespace OpenBve {
 											a.States = new AnimatedObjectState[] { aos };
 											Result.Objects[ObjectCount] = a;
 											ObjectCount++;
-										} else if (obj[j] is ObjectManager.AnimatedObjectCollection) {
-											ObjectManager.AnimatedObjectCollection a = (ObjectManager.AnimatedObjectCollection)obj[j];
+										} else if (obj[j] is AnimatedObjectCollection) {
+											AnimatedObjectCollection a = (AnimatedObjectCollection)obj[j];
 											for (int k = 0; k < a.Objects.Length; k++) {
 												if (ObjectCount >= Result.Objects.Length) {
 													Array.Resize(ref Result.Objects, Result.Objects.Length << 1);

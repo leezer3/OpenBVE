@@ -1685,7 +1685,7 @@ namespace OpenBve {
 															Interface.AddMessage(MessageType.Error, true, "SignalFileWithoutExtension " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 														} else {
 															UnifiedObject Object = ObjectManager.LoadObject(f, Encoding, false);
-															if (Object is ObjectManager.AnimatedObjectCollection) {
+															if (Object is AnimatedObjectCollection) {
 																AnimatedObjectSignalData Signal = new AnimatedObjectSignalData();
 																Signal.Objects = Object;
 																Data.Signals[CommandIndex1] = Signal;

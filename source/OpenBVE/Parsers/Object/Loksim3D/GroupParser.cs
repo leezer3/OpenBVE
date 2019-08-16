@@ -3,6 +3,7 @@ using System.IO;
 using System.Xml;
 using OpenBveApi.Math;
 using System.Linq;
+using OpenBve.RouteManager;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -29,10 +30,10 @@ namespace OpenBve
 			}
 		}
 
-		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, Vector3 Rotation)
+		internal static AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, Vector3 Rotation)
 		{
 			XmlDocument currentXML = new XmlDocument();
-			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
+			AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost, CurrentRoute.Tracks)
 			{
 				Objects = new AnimatedObject[0]
 			};
@@ -205,7 +206,7 @@ namespace OpenBve
 							continue;
 						}
 						StaticObject Object = null;
-						ObjectManager.AnimatedObjectCollection AnimatedObject = null;
+						AnimatedObjectCollection AnimatedObject = null;
 						try {
 							if (CurrentObjects[i].Name.ToLowerInvariant().EndsWith(".l3dgrp"))
 							{

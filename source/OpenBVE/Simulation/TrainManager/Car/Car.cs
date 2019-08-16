@@ -404,9 +404,9 @@ namespace OpenBve
 					CarSections[j].Groups[0].Elements[0].CurrentState = 0;
 					ObjectManager.CreateDynamicObject(ref CarSections[j].Groups[0].Elements[0].internalObject);
 				}
-				else if (currentObject is ObjectManager.AnimatedObjectCollection)
+				else if (currentObject is AnimatedObjectCollection)
 				{
-					ObjectManager.AnimatedObjectCollection a = (ObjectManager.AnimatedObjectCollection)currentObject;
+					AnimatedObjectCollection a = (AnimatedObjectCollection)currentObject;
 					CarSections[j].Groups[0].Elements = new AnimatedObject[a.Objects.Length];
 					for (int h = 0; h < a.Objects.Length; h++)
 					{

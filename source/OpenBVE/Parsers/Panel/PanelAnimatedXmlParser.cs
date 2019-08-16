@@ -233,7 +233,7 @@ namespace OpenBve.Parsers.Panel
 											if (System.IO.File.Exists(File))
 											{
 												System.Text.Encoding e = TextEncoding.GetSystemEncodingFromFile(File);
-												ObjectManager.AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(File, e);
+												AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(File, e);
 												if (a != null)
 												{
 													for (int i = 0; i < a.Objects.Length; i++)

@@ -2643,7 +2643,7 @@ namespace OpenBve {
 															Interface.AddMessage(MessageType.Error, true, "SignalFileWithoutExtension " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 														} else {
 															UnifiedObject Object = ObjectManager.LoadObject(f, Encoding, false);
-															if (Object is ObjectManager.AnimatedObjectCollection) {
+															if (Object is AnimatedObjectCollection) {
 																AnimatedObjectSignalData Signal = new AnimatedObjectSignalData();
 																Signal.Objects = Object;
 																Data.SignalData[CommandIndex1] = Signal;
@@ -5193,9 +5193,9 @@ namespace OpenBve {
 			if (Prototype is StaticObject) {
 				StaticObject s = (StaticObject)Prototype;
 				return GetMirroredStaticObject(s);
-			} else if (Prototype is ObjectManager.AnimatedObjectCollection) {
-				ObjectManager.AnimatedObjectCollection a = (ObjectManager.AnimatedObjectCollection)Prototype;
-				ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection();
+			} else if (Prototype is AnimatedObjectCollection) {
+				AnimatedObjectCollection a = (AnimatedObjectCollection)Prototype;
+				AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost, CurrentRoute.Tracks);
 				Result.Objects = new AnimatedObject[a.Objects.Length];
 				for (int i = 0; i < a.Objects.Length; i++) {
 					Result.Objects[i] = a.Objects[i].Clone();
@@ -6342,7 +6342,7 @@ namespace OpenBve {
 										CompatibilitySignalData csd = (CompatibilitySignalData)sd;
 										if (csd.Numbers.Length != 0) {
 											double brightness = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
-											ObjectManager.AnimatedObjectCollection aoc = new ObjectManager.AnimatedObjectCollection();
+											AnimatedObjectCollection aoc = new AnimatedObjectCollection(Program.CurrentHost, CurrentRoute.Tracks);
 											aoc.Objects = new AnimatedObject[1];
 											aoc.Objects[0] = new AnimatedObject(Program.CurrentHost);
 											aoc.Objects[0].States = new AnimatedObjectState[csd.Numbers.Length];
@@ -6372,7 +6372,7 @@ namespace OpenBve {
 													zn++;
 												}
 											}
-											ObjectManager.AnimatedObjectCollection aoc = new ObjectManager.AnimatedObjectCollection();
+											AnimatedObjectCollection aoc = new AnimatedObjectCollection(Program.CurrentHost, CurrentRoute.Tracks);
 											aoc.Objects = new AnimatedObject[1];
 											aoc.Objects[0] = new AnimatedObject(Program.CurrentHost);
 											aoc.Objects[0].States = new AnimatedObjectState[zn];

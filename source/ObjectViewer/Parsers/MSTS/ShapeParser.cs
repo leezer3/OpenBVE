@@ -292,10 +292,10 @@ namespace OpenBve
 
 		private static string currentFolder;
 
-		internal static ObjectManager.AnimatedObjectCollection ReadObject(string fileName)
+		internal static AnimatedObjectCollection ReadObject(string fileName)
 		{
 			MsTsShape shape = new MsTsShape();
-			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
+			AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost, null)
 			{
 				Objects = new AnimatedObject[4]
 			};

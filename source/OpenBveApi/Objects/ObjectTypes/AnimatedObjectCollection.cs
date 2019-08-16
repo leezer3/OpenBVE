@@ -1,20 +1,27 @@
 ﻿using System;
-using OpenBve.RouteManager;
+using OpenBveApi.Hosts;
 using OpenBveApi.Math;
-using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using OpenBveApi.World;
 
-namespace OpenBve
+namespace OpenBveApi.Objects
 {
-	/// <summary>The ObjectManager is the root class containing functions to load and manage objects within the simulation world</summary>
-	public static partial class ObjectManager
-	{
-		/// <summary>The AnimatedObjectCollection is a simple container class containing one or more animated objects</summary>
-		internal class AnimatedObjectCollection : UnifiedObject
+	/// <summary>The AnimatedObjectCollection is a simple container class containing one or more animated objects</summary>
+		public class AnimatedObjectCollection : UnifiedObject
 		{
+
+			private readonly HostInterface currentHost;
+
+			private Track[] Tracks;
 			/// <summary>The objects that this collection contains</summary>
-			internal AnimatedObject[] Objects;
-			internal WorldObject[] Sounds;
+			public AnimatedObject[] Objects;
+			public WorldObject[] Sounds;
+
+			public AnimatedObjectCollection(HostInterface Host, Track[] tracks)
+			{
+				currentHost = Host;
+				Tracks = tracks;
+			}
 
 			public override void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation,
 				int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength,
@@ -59,15 +66,13 @@ namespace OpenBve
 								Vector3 s = t.X;
 								Vector3 u = t.Y;
 								Vector3 d = t.Z;
-								p.X += Objects[i].States[0].Position.X * s.X + Objects[i].States[0].Position.Y * u.X + Objects[i].States[0].Position.Z * d.X;
-								p.Y += Objects[i].States[0].Position.X * s.Y + Objects[i].States[0].Position.Y * u.Y + Objects[i].States[0].Position.Z * d.Y;
-								p.Z += Objects[i].States[0].Position.X * s.Z + Objects[i].States[0].Position.Y * u.Z + Objects[i].States[0].Position.Z * d.Z;
+								p += Objects[i].States[0].Position * s + Objects[i].States[0].Position * u + Objects[i].States[0].Position * d;
 								double zOffset = Objects[i].States[0].Position.Z;
-								CreateStaticObject(Objects[i].States[0].Object, p, BaseTransformation, AuxTransformation, AccurateObjectDisposal, zOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+								currentHost.CreateStaticObject(Objects[i].States[0].Object, p, BaseTransformation, AuxTransformation, AccurateObjectDisposal, zOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 							}
 							else
 							{
-								Objects[i].CreateObject(ref AnimatedWorldObjects, ref AnimatedWorldObjectsUsed, Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition, Brightness);
+								Objects[i].CreateObject(Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition, Brightness);
 							}
 						}
 					}
@@ -78,7 +83,7 @@ namespace OpenBve
 					{
 						if (Objects[i].States.Length != 0)
 						{
-							Objects[i].CreateObject(ref AnimatedWorldObjects, ref AnimatedWorldObjectsUsed, Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition, Brightness);
+							Objects[i].CreateObject(Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition, Brightness);
 						}
 					}
 				}
@@ -95,12 +100,12 @@ namespace OpenBve
 					var snd = this.Sounds[i] as WorldSound;
 					if (snd != null)
 					{
-						snd.CreateSound(ref AnimatedWorldObjects, ref AnimatedWorldObjectsUsed, CurrentRoute.Tracks, Sounds[i].Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition);
+						snd.CreateSound(Tracks, Sounds[i].Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition);
 					}
 					var snd2 = this.Sounds[i] as AnimatedWorldObjectStateSound;
 					if (snd2 != null)
 					{
-						snd2.Create(ref AnimatedWorldObjects, ref AnimatedWorldObjectsUsed, Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition, Brightness);
+						snd2.Create(Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition, Brightness);
 					}
 				}
 			}
@@ -125,5 +130,4 @@ namespace OpenBve
 				throw new NotSupportedException();
 			}
 		}
-	}
 }

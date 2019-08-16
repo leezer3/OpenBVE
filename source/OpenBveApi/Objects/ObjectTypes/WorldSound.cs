@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Remoting.Services;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
@@ -13,6 +14,8 @@ namespace OpenBveApi.Objects
 	{
 		/// <summary>Stores a reference to the current host</summary>
 		private readonly Hosts.HostInterface currentHost;
+
+		private Track[] Tracks;
 		/// <summary>The sound buffer to play</summary>
 		public SoundHandle Buffer;
 		/// <summary>The sound source for this file</summary>
@@ -38,14 +41,10 @@ namespace OpenBveApi.Objects
 			currentHost = Host;
 		}
 
-		public void CreateSound(ref WorldObject[] AnimatedWorldObjects, ref int AnimatedWorldObjectsUsed, Track[] Tracks, Vector3 position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, double trackPosition)
+		public void CreateSound(Track[] Tracks, Vector3 position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, double trackPosition)
 		{
-			int a = AnimatedWorldObjectsUsed;
-			if (a >= AnimatedWorldObjects.Length)
-			{
-				Array.Resize<WorldObject>(ref AnimatedWorldObjects, AnimatedWorldObjects.Length << 1);
-			}
-
+			int a = currentHost.AnimatedWorldObjectsUsed;
+			
 			WorldSound snd = new WorldSound(currentHost)
 			{
 				Buffer = this.Buffer,
@@ -60,8 +59,8 @@ namespace OpenBveApi.Objects
 				snd.TrackFollowerFunction = this.TrackFollowerFunction.Clone();
 			}
 
-			AnimatedWorldObjects[a] = snd;
-			AnimatedWorldObjectsUsed++;
+			currentHost.AnimatedWorldObjects[a] = snd;
+			currentHost.AnimatedWorldObjectsUsed++;
 		}
 
 		public override void Update(AbstractTrain NearestTrain, double TimeElapsed, bool ForceUpdate, bool Visible)

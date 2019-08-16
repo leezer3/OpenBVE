@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Objects;
+﻿using OpenBve.RouteManager;
+using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -17,10 +18,10 @@ namespace OpenBve
 				StaticObject s = (StaticObject)Prototype;
 				return GetMirroredStaticObject(s);
 			}
-			if (Prototype is ObjectManager.AnimatedObjectCollection)
+			if (Prototype is AnimatedObjectCollection)
 			{
-				ObjectManager.AnimatedObjectCollection a = (ObjectManager.AnimatedObjectCollection)Prototype;
-				ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
+				AnimatedObjectCollection a = (AnimatedObjectCollection)Prototype;
+				AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost, CurrentRoute.Tracks)
 				{
 					Objects = new AnimatedObject[a.Objects.Length]
 				};

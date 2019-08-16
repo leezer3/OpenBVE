@@ -125,14 +125,9 @@ namespace OpenBveApi.Objects
 			this.lastState = this.Object.CurrentState;
 		}
 
-		public void Create(ref WorldObject[] AnimatedWorldObjects, ref int AnimatedWorldObjectsUsed, Vector3 objectPosition, Transformation BaseTransformation, Transformation AuxTransformation, int objectSectionIndex, double objectTrackPosition, double Brightness)
+		public void Create(Vector3 objectPosition, Transformation BaseTransformation, Transformation AuxTransformation, int objectSectionIndex, double objectTrackPosition, double Brightness)
 		{
-			int a = AnimatedWorldObjectsUsed;
-			if (a >= AnimatedWorldObjects.Length)
-			{
-				Array.Resize<WorldObject>(ref AnimatedWorldObjects, AnimatedWorldObjects.Length << 1);
-			}
-
+			int a = currentHost.AnimatedWorldObjectsUsed;
 			Transformation FinalTransformation = new Transformation(AuxTransformation, BaseTransformation);
 
 			var o = this.Object.Clone();
@@ -177,8 +172,8 @@ namespace OpenBveApi.Objects
 			currentObject.Radius = System.Math.Sqrt(r);
 			currentObject.Visible = false;
 			currentObject.Object.Initialize(0, false, false);
-			AnimatedWorldObjects[a] = currentObject;
-			AnimatedWorldObjectsUsed++;
+			currentHost.AnimatedWorldObjects[a] = currentObject;
+			currentHost.AnimatedWorldObjectsUsed++;
 		}
 	}
 }

@@ -350,7 +350,7 @@ namespace OpenBve.Parsers.Train
 				}
 				else if (interiorFile.ToLowerInvariant().EndsWith(".animated"))
 				{
-					ObjectManager.AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(interiorFile, Encoding.UTF8);
+					AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(interiorFile, Encoding.UTF8);
 					try
 					{
 						for (int i = 0; i < a.Objects.Length; i++)

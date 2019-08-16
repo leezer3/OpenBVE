@@ -926,14 +926,10 @@ namespace OpenBveApi.Objects
 			}
 		}
 
-		public void CreateObject(ref WorldObject[] AnimatedWorldObjects, ref int AnimatedWorldObjectsUsed, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, double TrackPosition, double Brightness)
+		public void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, double TrackPosition, double Brightness)
 		{
-			int a = AnimatedWorldObjectsUsed;
-			if (a >= AnimatedWorldObjects.Length)
-			{
-				Array.Resize<WorldObject>(ref AnimatedWorldObjects, AnimatedWorldObjects.Length << 1);
-			}
 
+			int a = currentHost.AnimatedWorldObjectsUsed;
 			Transformation FinalTransformation = new Transformation(AuxTransformation, BaseTransformation);
 
 			//Place track followers if required
@@ -984,7 +980,7 @@ namespace OpenBveApi.Objects
 				currentObject.Radius = System.Math.Sqrt(r);
 				currentObject.Visible = false;
 				currentObject.Object.Initialize(0, false, false);
-				AnimatedWorldObjects[a] = currentObject;
+				currentHost.AnimatedWorldObjects[a] = currentObject;
 			}
 			else
 			{
@@ -1026,10 +1022,10 @@ namespace OpenBveApi.Objects
 				currentObject.Radius = System.Math.Sqrt(r);
 				currentObject.Visible = false;
 				currentObject.Object.Initialize(0, false, false);
-				AnimatedWorldObjects[a] = currentObject;
+				currentHost.AnimatedWorldObjects[a] = currentObject;
 			}
 
-			AnimatedWorldObjectsUsed++;
+			currentHost.AnimatedWorldObjectsUsed++;
 		}
 	}
 }

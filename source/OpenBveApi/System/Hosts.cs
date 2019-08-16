@@ -270,6 +270,32 @@ namespace OpenBveApi.Hosts {
 				return false;
 			}
 		}
+
+		/// <summary>Returns the number of animated world objects used</summary>
+		public virtual int AnimatedWorldObjectsUsed
+		{
+			get
+			{
+				return 0;
+			}
+			set
+			{
+
+			}
+		}
+
+		/// <summary>Returns the array of animated world objects from the host</summary>
+		public virtual WorldObject[] AnimatedWorldObjects
+		{
+			get
+			{
+				return null;
+			}
+			set
+			{
+
+			}
+		}
 	}
 	
 }

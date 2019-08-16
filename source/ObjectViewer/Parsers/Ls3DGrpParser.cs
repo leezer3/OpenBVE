@@ -40,10 +40,10 @@ namespace OpenBve
 		/// <param name="Encoding">The text encoding of the containing file (Currently ignored, REMOVE??)</param>
 		/// <param name="Rotation">A three-dimemsional vector describing the rotation to be applied</param>
 		/// <returns>A new animated object collection, containing the GruppenObject's meshes etc.</returns>
-		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, Encoding Encoding, Vector3 Rotation)
+		internal static AnimatedObjectCollection ReadObject(string FileName, Encoding Encoding, Vector3 Rotation)
 		{
 			XmlDocument currentXML = new XmlDocument();
-			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection();
+			AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost, null);
 			Result.Objects = new AnimatedObject[0];
 			try
 			{
@@ -222,7 +222,7 @@ namespace OpenBve
 							continue;
 						}
 						StaticObject Object = null;
-						ObjectManager.AnimatedObjectCollection AnimatedObject = null;
+						AnimatedObjectCollection AnimatedObject = null;
 						try
 						{
 							if(CurrentObjects[i].Name.ToLowerInvariant().EndsWith(".l3dgrp"))
