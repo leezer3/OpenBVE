@@ -12,17 +12,20 @@ namespace OpenBveApi.Objects
 
 			private readonly HostInterface currentHost;
 
-			private Track[] Tracks;
+			private readonly Track[] Tracks;
 			/// <summary>The objects that this collection contains</summary>
 			public AnimatedObject[] Objects;
+			/// <summary>The sounds that this collection contains</summary>
 			public WorldObject[] Sounds;
 
+			/// <summary>Creates a new AnimatedObjectCollection</summary>
 			public AnimatedObjectCollection(HostInterface Host, Track[] tracks)
 			{
 				currentHost = Host;
 				Tracks = tracks;
 			}
 
+			/// <inheritdoc/>
 			public override void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation,
 				int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength,
 				double TrackPosition, double Brightness, bool DuplicateMaterials)
@@ -110,6 +113,7 @@ namespace OpenBveApi.Objects
 				}
 			}
 
+			/// <inheritdoc/>
 			public override void OptimizeObject(bool PreserveVerticies, int Threshold, bool VertexCulling)
 			{
 				for (int i = 0; i < Objects.Length; i++)
@@ -125,6 +129,7 @@ namespace OpenBveApi.Objects
 				}
 			}
 
+			/// <inheritdoc/>
 			public override UnifiedObject Clone()
 			{
 				throw new NotSupportedException();

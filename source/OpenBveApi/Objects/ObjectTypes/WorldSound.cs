@@ -1,6 +1,4 @@
-﻿using System;
-using System.Runtime.Remoting.Services;
-using OpenBveApi.FunctionScripting;
+﻿using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Sounds;
@@ -14,10 +12,8 @@ namespace OpenBveApi.Objects
 	{
 		/// <summary>Stores a reference to the current host</summary>
 		private readonly Hosts.HostInterface currentHost;
-
-		private Track[] Tracks;
 		/// <summary>The sound buffer to play</summary>
-		public SoundHandle Buffer;
+		public readonly SoundHandle Buffer;
 		/// <summary>The sound source for this file</summary>
 		public dynamic Source;
 		/// <summary>The pitch to play the sound at</summary>
@@ -35,19 +31,27 @@ namespace OpenBveApi.Objects
 		/// <summary>The function script controlling the sound's pitch, or a null reference</summary>
 		public FunctionScript PitchFunction;
 
-		public WorldSound(Hosts.HostInterface Host)
+		/// <summary>Creates a new WorldSound</summary>
+		public WorldSound(Hosts.HostInterface Host, SoundHandle buffer)
 		{
 			Radius = 25.0;
 			currentHost = Host;
+			Buffer = buffer;
 		}
 
+		/// <summary>Creates the animated object within the game world</summary>
+		/// <param name="Tracks">The host track list</param>
+		/// <param name="position">The absolute position</param>
+		/// <param name="BaseTransformation">The base transformation (Rail 0)</param>
+		/// <param name="AuxTransformation">The auxilary transformation (Placed rail)</param>
+		/// <param name="SectionIndex">The index of the section if placed using a SigF command</param>
+		/// <param name="trackPosition">The absolute track position</param>
 		public void CreateSound(Track[] Tracks, Vector3 position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, double trackPosition)
 		{
 			int a = currentHost.AnimatedWorldObjectsUsed;
 			
-			WorldSound snd = new WorldSound(currentHost)
+			WorldSound snd = new WorldSound(currentHost, this.Buffer)
 			{
-				Buffer = this.Buffer,
 				//Must clone the vector, not pass the reference
 				Position = new Vector3(position),
 				Follower = new TrackFollower(Tracks),
@@ -63,6 +67,7 @@ namespace OpenBveApi.Objects
 			currentHost.AnimatedWorldObjectsUsed++;
 		}
 
+		/// <inheritdoc/>
 		public override void Update(AbstractTrain NearestTrain, double TimeElapsed, bool ForceUpdate, bool Visible)
 		{
 			if (Visible | ForceUpdate)

@@ -125,7 +125,14 @@ namespace OpenBveApi.Objects
 			this.lastState = this.Object.CurrentState;
 		}
 
-		public void Create(Vector3 objectPosition, Transformation BaseTransformation, Transformation AuxTransformation, int objectSectionIndex, double objectTrackPosition, double Brightness)
+		/// <summary>Creates the animated object within the game world</summary>
+		/// <param name="Position">The absolute position</param>
+		/// <param name="BaseTransformation">The base transformation (Rail 0)</param>
+		/// <param name="AuxTransformation">The auxilary transformation (Placed rail)</param>
+		/// <param name="SectionIndex">The index of the section if placed using a SigF command</param>
+		/// <param name="TrackPosition">The absolute track position</param>
+		/// <param name="Brightness">The brightness value at the track position</param>
+		public void Create(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, double TrackPosition, double Brightness)
 		{
 			int a = currentHost.AnimatedWorldObjectsUsed;
 			Transformation FinalTransformation = new Transformation(AuxTransformation, BaseTransformation);
@@ -134,13 +141,13 @@ namespace OpenBveApi.Objects
 			currentHost.CreateDynamicObject(ref o.internalObject);
 			AnimatedWorldObjectStateSound currentObject = new AnimatedWorldObjectStateSound(currentHost)
 			{
-				Position = objectPosition,
+				Position = Position,
 				Direction = FinalTransformation.Z,
 				Up = FinalTransformation.Y,
 				Side = FinalTransformation.X,
 				Object = o,
-				SectionIndex = objectSectionIndex,
-				TrackPosition = objectTrackPosition,
+				SectionIndex = SectionIndex,
+				TrackPosition = TrackPosition,
 				Buffers = Buffers,
 				SingleBuffer = SingleBuffer,
 				PlayOnShow = PlayOnShow,

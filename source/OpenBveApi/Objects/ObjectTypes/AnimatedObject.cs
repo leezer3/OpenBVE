@@ -106,6 +106,7 @@ namespace OpenBveApi.Objects
 		/// <summary>Holds a reference to the host interface of the current application</summary>
 		public readonly HostInterface currentHost;
 
+		/// <summary>Creates a new animated object</summary>
 		public AnimatedObject(HostInterface host)
 		{
 			currentHost = host;
@@ -864,9 +865,7 @@ namespace OpenBveApi.Objects
 					double dx = -System.Math.Tan(Camera.Alignment.Yaw) - Camera.Alignment.Position.X;
 					double dy = -System.Math.Tan(Camera.Alignment.Pitch) - Camera.Alignment.Position.Y;
 					double dz = -Camera.Alignment.Position.Z;
-					internalObject.Mesh.Vertices[k].Coordinates.X += Camera.AbsolutePosition.X + dx * Camera.AbsoluteSide.X + dy * Camera.AbsoluteUp.X + dz * Camera.AbsoluteDirection.X;
-					internalObject.Mesh.Vertices[k].Coordinates.Y += Camera.AbsolutePosition.Y + dx * Camera.AbsoluteSide.Y + dy * Camera.AbsoluteUp.Y + dz * Camera.AbsoluteDirection.Y;
-					internalObject.Mesh.Vertices[k].Coordinates.Z += Camera.AbsolutePosition.Z + dx * Camera.AbsoluteSide.Z + dy * Camera.AbsoluteUp.Z + dz * Camera.AbsoluteDirection.Z;
+					internalObject.Mesh.Vertices[k].Coordinates += Camera.AbsolutePosition + dx * Camera.AbsoluteSide + dy * Camera.AbsoluteUp + dz * Camera.AbsoluteDirection;
 				}
 				else
 				{
@@ -926,6 +925,13 @@ namespace OpenBveApi.Objects
 			}
 		}
 
+		/// <summary>Creates the animated object within the game world</summary>
+		/// <param name="Position">The absolute position</param>
+		/// <param name="BaseTransformation">The base transformation (Rail 0)</param>
+		/// <param name="AuxTransformation">The auxilary transformation (Placed rail)</param>
+		/// <param name="SectionIndex">The index of the section if placed using a SigF command</param>
+		/// <param name="TrackPosition">The absolute track position</param>
+		/// <param name="Brightness">The brightness value at the track position</param>
 		public void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, double TrackPosition, double Brightness)
 		{
 
