@@ -10,11 +10,11 @@ namespace OpenBveApi.FunctionScripting
 		public static string GetPostfixNotationFromFunctionNotation(string Expression) {
 			int i = Expression.IndexOf('[');
 			if (i >= 0) {
-				if (!Expression.EndsWith("]")) {
+				if (!Expression.EndsWith("]", StringComparison.InvariantCultureIgnoreCase)) {
 					throw new System.IO.InvalidDataException("Missing closing bracket encountered in " + Expression);
 				}
 			} else {
-				if (Expression.EndsWith("]")) {
+				if (Expression.EndsWith("]", StringComparison.InvariantCultureIgnoreCase)) {
 					throw new System.IO.InvalidDataException("Unexpected closing bracket encountered in " + Expression);
 				}
 				// ReSharper disable once NotAccessedVariable

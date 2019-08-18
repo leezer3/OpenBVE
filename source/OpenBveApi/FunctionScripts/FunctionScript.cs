@@ -714,9 +714,9 @@ namespace OpenBveApi.FunctionScripting
 			if (s != 1) {
 				throw new System.InvalidOperationException("There must be exactly one argument left on the stack at the end in function script " + Expression);
 			}
-			Array.Resize<Instructions>(ref InstructionSet, n);
-			Array.Resize<double>(ref Stack, m);
-			Array.Resize<double>(ref Constants, c);
+			Array.Resize(ref InstructionSet, n);
+			Array.Resize(ref Stack, m);
+			Array.Resize(ref Constants, c);
 		}
 		
 
