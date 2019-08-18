@@ -16,6 +16,7 @@
 			public string Description;
 			/// <summary>Whether to enable command options</summary>
 			public readonly bool EnableOption;
+
 			internal CommandInfo(Command Command, CommandType Type, string Name)
 			{
 				this.Command = Command;
@@ -24,6 +25,7 @@
 				this.Description = "N/A";
 				this.EnableOption = false;
 			}
+
 			internal CommandInfo(Command Command, CommandType Type, string Name, bool EnableOption)
 			{
 				this.Command = Command;
@@ -31,6 +33,78 @@
 				this.Name = Name;
 				this.Description = "N/A";
 				this.EnableOption = EnableOption;
+			}
+
+			/// <summary>Checks whether the two specified CommandInfo instances are equal</summary>
+			/// <remarks>This ignores the translated command description</remarks>
+			public static bool operator ==(CommandInfo a, CommandInfo b)
+			{
+				if (a.Command != b.Command)
+				{
+					return false;
+				}
+				if (a.Name != b.Name)
+				{
+					return false;
+				}
+				if (a.EnableOption != b.EnableOption)
+				{
+					return false;
+				}
+				return true;
+			}
+
+			/// <summary>Checks whether the two specified CommandInfo instances are NOT equal</summary>
+			/// <remarks>This ignores the translated command description</remarks>
+			public static bool operator !=(CommandInfo a, CommandInfo b)
+			{
+				if (a.Command == b.Command)
+				{
+					return false;
+				}
+				if (a.Name == b.Name)
+				{
+					return false;
+				}
+				if (a.EnableOption == b.EnableOption)
+				{
+					return false;
+				}
+				return true;
+			}
+
+			/// <summary>Returns whether this CommandInfo instance is equal to the specified object</summary>
+			/// <remarks>This ignores the translated command description</remarks>
+			public override bool Equals(object obj)
+			{
+				if (obj is CommandInfo)
+				{
+					CommandInfo newCommandInfo = (CommandInfo) obj;
+					return newCommandInfo.Equals(this);
+				}
+				return false;
+
+			}
+
+			/// <summary>Returns whether this CommandInfo instance is equal to the specified CommandInfo</summary>
+			/// <remarks>This ignores the translated command description</remarks>
+			public bool Equals(CommandInfo other)
+			{
+				return Command == other.Command && Type == other.Type && Name == other.Name && EnableOption == other.EnableOption;
+			}
+
+			/// <summary>Gets the HashCode for this CommandInfo instance</summary>
+			/// <remarks>This ignores the translated command description</remarks>
+			public override int GetHashCode()
+			{
+				unchecked
+				{
+					var hashCode = (int) Command;
+					hashCode = (hashCode * 397) ^ (int) Type;
+					hashCode = (hashCode * 397) ^ (Name != null ? Name.GetHashCode() : 0);
+					hashCode = (hashCode * 397) ^ EnableOption.GetHashCode();
+					return hashCode;
+				}
 			}
 		}
 
