@@ -130,5 +130,29 @@ namespace OpenBveApi.Objects
 			{
 				throw new NotSupportedException();
 			}
+
+			/// <summary>Creates a mirrored clone of this object</summary>
+			public override UnifiedObject Mirror()
+			{
+				AnimatedObjectCollection Result = new AnimatedObjectCollection(currentHost)
+				{
+					Objects = new AnimatedObject[Objects.Length]
+				};
+				for (int i = 0; i < Objects.Length; i++)
+				{
+					Result.Objects[i] = Objects[i].Clone();
+					for (int j = 0; j < Objects[i].States.Length; j++)
+					{
+						Result.Objects[i].States[j].Object = (StaticObject)Result.Objects[i].States[j].Object.Mirror();
+					}
+					Result.Objects[i].TranslateXDirection.X *= -1.0;
+					Result.Objects[i].TranslateYDirection.X *= -1.0;
+					Result.Objects[i].TranslateZDirection.X *= -1.0;
+					Result.Objects[i].RotateXDirection.X *= -1.0;
+					Result.Objects[i].RotateYDirection.X *= -1.0;
+					Result.Objects[i].RotateZDirection.X *= -1.0;
+				}
+				return Result;
+			}
 		}
 }

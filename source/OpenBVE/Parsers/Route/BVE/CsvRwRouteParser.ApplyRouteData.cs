@@ -786,7 +786,7 @@ namespace OpenBve
 									}
 									else
 									{
-										UnifiedObject Pole = GetMirroredObject(Data.Structure.Poles[0][Data.Blocks[i].RailPole[j].Type]);
+										UnifiedObject Pole = Data.Structure.Poles[0][Data.Blocks[i].RailPole[j].Type].Mirror();
 										Pole.CreateObject(pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 									}
 								}

@@ -153,6 +153,25 @@ namespace OpenBveApi.Objects
 			return Result;
 		}
 
+		/// <summary>Creates a mirrored clone of this object</summary>
+		public override UnifiedObject Mirror()
+		{
+			StaticObject Result = (StaticObject)this.Clone();
+			for (int i = 0; i < Result.Mesh.Vertices.Length; i++)
+			{
+				Result.Mesh.Vertices[i].Coordinates.X = -Result.Mesh.Vertices[i].Coordinates.X;
+			}
+			for (int i = 0; i < Result.Mesh.Faces.Length; i++)
+			{
+				for (int k = 0; k < Result.Mesh.Faces[i].Vertices.Length; k++)
+				{
+					Result.Mesh.Faces[i].Vertices[k].Normal.X = -Result.Mesh.Faces[i].Vertices[k].Normal.X;
+				}
+				Result.Mesh.Faces[i].Flip();
+			}
+			return Result;
+		}
+
 		/// <summary>Joins two static objects</summary>
 		/// <param name="Add">The static object to join</param>
 		public void JoinObjects(StaticObject Add)

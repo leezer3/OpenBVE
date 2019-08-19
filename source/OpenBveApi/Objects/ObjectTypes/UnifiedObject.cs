@@ -43,5 +43,9 @@ namespace OpenBveApi.Objects
 		/// <summary>Creates a clone of this object</summary>
 		/// <returns>The cloned object</returns>
 		public abstract UnifiedObject Clone();
+
+		/// <summary>Creates a mirrored clone of this object</summary>
+		/// <returns>The mirrored clone</returns>
+		public abstract UnifiedObject Mirror();
 	}
 }
