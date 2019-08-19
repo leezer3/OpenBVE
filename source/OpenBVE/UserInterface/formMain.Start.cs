@@ -1115,7 +1115,11 @@ namespace OpenBve
 					if (System.IO.Directory.Exists(TrainFolder)) {
 						try {
 							Folder = OpenBveApi.Path.CombineDirectory(TrainFolder, Game.TrainName);
-						} catch {
+						} catch (Exception ex) {
+							if (ex is ArgumentException)
+							{
+								break; // Invalid character in path causes infinite recursion
+							}
 							Folder = null;
 						}
 						if (Folder != null) {
