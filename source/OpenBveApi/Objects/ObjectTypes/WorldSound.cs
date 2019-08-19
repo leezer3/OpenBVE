@@ -40,13 +40,12 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <summary>Creates the animated object within the game world</summary>
-		/// <param name="Tracks">The host track list</param>
 		/// <param name="position">The absolute position</param>
 		/// <param name="BaseTransformation">The base transformation (Rail 0)</param>
 		/// <param name="AuxTransformation">The auxilary transformation (Placed rail)</param>
 		/// <param name="SectionIndex">The index of the section if placed using a SigF command</param>
 		/// <param name="trackPosition">The absolute track position</param>
-		public void CreateSound(Track[] Tracks, Vector3 position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, double trackPosition)
+		public void CreateSound(Vector3 position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, double trackPosition)
 		{
 			int a = currentHost.AnimatedWorldObjectsUsed;
 			
@@ -54,7 +53,7 @@ namespace OpenBveApi.Objects
 			{
 				//Must clone the vector, not pass the reference
 				Position = new Vector3(position),
-				Follower = new TrackFollower(Tracks),
+				Follower = new TrackFollower(currentHost.Tracks),
 				currentTrackPosition = trackPosition
 			};
 			snd.Follower.UpdateAbsolute(trackPosition, true, true);

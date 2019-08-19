@@ -2,6 +2,7 @@
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
@@ -286,6 +287,19 @@ namespace OpenBveApi.Hosts {
 
 		/// <summary>Returns the array of animated world objects from the host</summary>
 		public virtual WorldObject[] AnimatedWorldObjects
+		{
+			get
+			{
+				return null;
+			}
+			set
+			{
+
+			}
+		}
+
+		/// <summary>Gets or sets the tracks array within the host application</summary>
+		public virtual Track[] Tracks
 		{
 			get
 			{

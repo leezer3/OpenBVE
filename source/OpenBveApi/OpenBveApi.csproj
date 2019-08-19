@@ -98,7 +98,7 @@
     <Compile Include="Objects\MeshMaterial.cs" />
     <Compile Include="Objects\ObjectInterface.cs" />
     <Compile Include="Objects\ObjectTypes\AnimatedObject.AnimatedObjectState.cs" />
-    <Compile Include="Objects\ObjectTypes\AnimatedObject.Base.cs" />
+    <Compile Include="Objects\ObjectTypes\AnimatedObject.cs" />
     <Compile Include="Objects\ObjectTypes\AnimatedObjectCollection.cs" />
     <Compile Include="Objects\ObjectTypes\AnimatedWorldObject.cs" />
     <Compile Include="Objects\ObjectTypes\AnimatedWorldObject.StateSound.cs" />

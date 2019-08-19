@@ -6,7 +6,6 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
-using OpenBve.RouteManager;
 
 namespace OpenBve {
 	internal static class AnimatedObjectParser {
@@ -18,7 +17,7 @@ namespace OpenBve {
 		/// <returns>The collection of animated objects.</returns>
 		internal static AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost, CurrentRoute.Tracks)
+			AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost)
 			{
 				Objects = new AnimatedObject[4]
 			};

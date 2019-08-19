@@ -7,7 +7,6 @@ using OpenBveApi.Math;
 using OpenBveApi.Colors;
 using OpenBveApi.Objects;
 using OpenBve.Formats.MsTs;
-using OpenBve.RouteManager;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using SharpCompress.Compressors;
@@ -304,7 +303,7 @@ namespace OpenBve
 		internal static AnimatedObjectCollection ReadObject(string fileName)
 		{
 			MsTsShape shape = new MsTsShape();
-			AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost, CurrentRoute.Tracks)
+			AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost)
 			{
 				Objects = new AnimatedObject[4]
 			};

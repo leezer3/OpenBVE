@@ -5195,7 +5195,7 @@ namespace OpenBve {
 				return GetMirroredStaticObject(s);
 			} else if (Prototype is AnimatedObjectCollection) {
 				AnimatedObjectCollection a = (AnimatedObjectCollection)Prototype;
-				AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost, CurrentRoute.Tracks);
+				AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost);
 				Result.Objects = new AnimatedObject[a.Objects.Length];
 				for (int i = 0; i < a.Objects.Length; i++) {
 					Result.Objects[i] = a.Objects[i].Clone();
@@ -6342,7 +6342,7 @@ namespace OpenBve {
 										CompatibilitySignalData csd = (CompatibilitySignalData)sd;
 										if (csd.Numbers.Length != 0) {
 											double brightness = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
-											AnimatedObjectCollection aoc = new AnimatedObjectCollection(Program.CurrentHost, CurrentRoute.Tracks);
+											AnimatedObjectCollection aoc = new AnimatedObjectCollection(Program.CurrentHost);
 											aoc.Objects = new AnimatedObject[1];
 											aoc.Objects[0] = new AnimatedObject(Program.CurrentHost);
 											aoc.Objects[0].States = new AnimatedObjectState[csd.Numbers.Length];
@@ -6372,7 +6372,7 @@ namespace OpenBve {
 													zn++;
 												}
 											}
-											AnimatedObjectCollection aoc = new AnimatedObjectCollection(Program.CurrentHost, CurrentRoute.Tracks);
+											AnimatedObjectCollection aoc = new AnimatedObjectCollection(Program.CurrentHost);
 											aoc.Objects = new AnimatedObject[1];
 											aoc.Objects[0] = new AnimatedObject(Program.CurrentHost);
 											aoc.Objects[0].States = new AnimatedObjectState[zn];

@@ -18,7 +18,7 @@ namespace OpenBve
 		/// <returns>The collection of animated objects.</returns>
 		internal static AnimatedObjectCollection ReadObject(string FileName, Encoding Encoding) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-		    AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost, null)
+		    AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost)
 		    {
 		        Objects = new AnimatedObject[4]
 		    };

@@ -1,7 +1,6 @@
 ﻿using System;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
-using OpenBveApi.Routes;
 using OpenBveApi.World;
 
 namespace OpenBveApi.Objects
@@ -11,18 +10,15 @@ namespace OpenBveApi.Objects
 		{
 
 			private readonly HostInterface currentHost;
-
-			private readonly Track[] Tracks;
 			/// <summary>The objects that this collection contains</summary>
 			public AnimatedObject[] Objects;
 			/// <summary>The sounds that this collection contains</summary>
 			public WorldObject[] Sounds;
 
 			/// <summary>Creates a new AnimatedObjectCollection</summary>
-			public AnimatedObjectCollection(HostInterface Host, Track[] tracks)
+			public AnimatedObjectCollection(HostInterface Host)
 			{
 				currentHost = Host;
-				Tracks = tracks;
 			}
 
 			/// <inheritdoc/>
@@ -103,7 +99,7 @@ namespace OpenBveApi.Objects
 					var snd = this.Sounds[i] as WorldSound;
 					if (snd != null)
 					{
-						snd.CreateSound(Tracks, Sounds[i].Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition);
+						snd.CreateSound(Sounds[i].Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition);
 					}
 					var snd2 = this.Sounds[i] as AnimatedWorldObjectStateSound;
 					if (snd2 != null)

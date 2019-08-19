@@ -1291,7 +1291,7 @@ namespace OpenBve
 										if (csd.Numbers.Length != 0)
 										{
 											double brightness = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
-											AnimatedObjectCollection aoc = new AnimatedObjectCollection(Program.CurrentHost, CurrentRoute.Tracks);
+											AnimatedObjectCollection aoc = new AnimatedObjectCollection(Program.CurrentHost);
 											aoc.Objects = new AnimatedObject[1];
 											aoc.Objects[0] = new AnimatedObject(Program.CurrentHost);
 											aoc.Objects[0].States = new AnimatedObjectState[csd.Numbers.Length];
@@ -1328,7 +1328,7 @@ namespace OpenBve
 													zn++;
 												}
 											}
-											AnimatedObjectCollection aoc = new AnimatedObjectCollection(Program.CurrentHost, CurrentRoute.Tracks);
+											AnimatedObjectCollection aoc = new AnimatedObjectCollection(Program.CurrentHost);
 											aoc.Objects = new AnimatedObject[1];
 											aoc.Objects[0] = new AnimatedObject(Program.CurrentHost);
 											aoc.Objects[0].States = new AnimatedObjectState[zn];

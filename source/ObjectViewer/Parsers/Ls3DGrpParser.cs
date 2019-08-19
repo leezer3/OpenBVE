@@ -43,7 +43,7 @@ namespace OpenBve
 		internal static AnimatedObjectCollection ReadObject(string FileName, Encoding Encoding, Vector3 Rotation)
 		{
 			XmlDocument currentXML = new XmlDocument();
-			AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost, null);
+			AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost);
 			Result.Objects = new AnimatedObject[0];
 			try
 			{

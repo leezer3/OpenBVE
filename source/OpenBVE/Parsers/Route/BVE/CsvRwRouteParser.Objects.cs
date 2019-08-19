@@ -1,5 +1,4 @@
-﻿using OpenBve.RouteManager;
-using OpenBveApi.Objects;
+﻿using OpenBveApi.Objects;
 
 namespace OpenBve
 {
@@ -21,7 +20,7 @@ namespace OpenBve
 			if (Prototype is AnimatedObjectCollection)
 			{
 				AnimatedObjectCollection a = (AnimatedObjectCollection)Prototype;
-				AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost, CurrentRoute.Tracks)
+				AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost)
 				{
 					Objects = new AnimatedObject[a.Objects.Length]
 				};

@@ -4,7 +4,6 @@ using System.Xml;
 using OpenBveApi.Math;
 using System.Linq;
 using System.Text;
-using OpenBve.RouteManager;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -44,7 +43,7 @@ namespace OpenBve
 		internal static AnimatedObjectCollection ReadObject(string FileName, Encoding Encoding, Vector3 Rotation)
 		{
 			XmlDocument currentXML = new XmlDocument();
-			AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost, CurrentRoute.Tracks);
+			AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost);
 			Result.Objects = new AnimatedObject[0];
 			try
 			{

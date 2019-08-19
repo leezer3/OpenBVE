@@ -5,6 +5,7 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using OpenBveApi.Sounds;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
@@ -336,6 +337,18 @@ namespace OpenBve {
 			set
 			{
 				ObjectManager.AnimatedWorldObjects = value;
+			}
+		}
+
+		public override Track[] Tracks
+		{
+			get
+			{
+				return CurrentRoute.Tracks;
+			}
+			set
+			{
+				CurrentRoute.Tracks = value;
 			}
 		}
 

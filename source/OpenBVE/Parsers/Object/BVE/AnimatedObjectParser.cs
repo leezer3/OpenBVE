@@ -1,6 +1,5 @@
 using System;
 using System.Globalization;
-using OpenBve.RouteManager;
 using OpenBveApi;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
@@ -22,7 +21,7 @@ namespace OpenBve
 		internal static AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding)
 		{
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost, CurrentRoute.Tracks)
+			AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost)
 			{
 				Objects = new AnimatedObject[4],
 				Sounds = new WorldObject[4]

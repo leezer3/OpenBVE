@@ -295,7 +295,7 @@ namespace OpenBve
 		internal static AnimatedObjectCollection ReadObject(string fileName)
 		{
 			MsTsShape shape = new MsTsShape();
-			AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost, null)
+			AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost)
 			{
 				Objects = new AnimatedObject[4]
 			};
