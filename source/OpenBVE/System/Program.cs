@@ -195,7 +195,17 @@ namespace OpenBve {
 					while (true) {
 						string trainFolder = OpenBveApi.Path.CombineDirectory(folder, "Train");
 						if (System.IO.Directory.Exists(trainFolder)) {
-							folder = OpenBveApi.Path.CombineDirectory(trainFolder, Game.TrainName);
+							try
+							{
+								folder = OpenBveApi.Path.CombineDirectory(trainFolder, Game.TrainName);
+							}
+							catch (Exception ex)
+							{
+								if (ex is ArgumentException)
+								{
+									break;
+								}
+							}
 							if (System.IO.Directory.Exists(folder)) {
 								file = OpenBveApi.Path.CombineFile(folder, "train.dat");
 								if (System.IO.File.Exists(file)) {
