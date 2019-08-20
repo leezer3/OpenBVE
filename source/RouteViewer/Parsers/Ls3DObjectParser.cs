@@ -132,7 +132,7 @@ namespace OpenBve
 	                                            case "TransTexture":
 		                                            if (string.IsNullOrEmpty(attribute.Value))
 		                                            {
-			                                            //Empty....
+			                                            //Empty..
 			                                            continue;
 		                                            }
 		                                            transtex = OpenBveApi.Path.Loksim3D.CombineFile(BaseDir, attribute.Value, Program.FileSystem.LoksimPackageInstallationDirectory);

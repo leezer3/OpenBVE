@@ -6,8 +6,11 @@ using System.Xml.Linq;
 using LibRender;
 using OpenBve.Parsers.Panel;
 using OpenBve.RouteManager;
+using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
+using OpenBveApi.Objects;
 using OpenBveApi.Trains;
+using static LibRender.CameraProperties;
 
 namespace OpenBve
 {
@@ -35,7 +38,7 @@ namespace OpenBve
 			};
 			Train.Cars[Train.DriverCar].CarSections[0].Groups[0] = new ElementsGroup
 			{
-				Elements = new ObjectManager.AnimatedObject[] { },
+				Elements = new AnimatedObject[] { },
 				Overlay = true
 			};
 			string File = OpenBveApi.Path.CombineFile(TrainPath, "panel.xml");
@@ -103,7 +106,7 @@ namespace OpenBve
 					{
 						Program.FileSystem.AppendToLogFile("INFO: This train contains both a 2D and a 3D panel. The 3D panel will always take precedence");
 					}
-					ObjectManager.AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(File, Encoding);
+					AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(File, Encoding);
 					if (a != null)
 					{
 						//HACK: If a == null , loading our animated object completely failed (Missing objects?). Fallback to trying the panel2.cfg
@@ -111,7 +114,7 @@ namespace OpenBve
 						{
 							for (int i = 0; i < a.Objects.Length; i++)
 							{
-								a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject();
+								ObjectManager.CreateDynamicObject(ref a.Objects[i].internalObject);
 							}
 							Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements = a.Objects;
 							Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;

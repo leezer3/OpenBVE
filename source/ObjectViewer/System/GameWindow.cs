@@ -3,6 +3,7 @@ using LibRender;
 using OpenTK;
 using OpenTK.Graphics;
 using Vector3 = OpenBveApi.Math.Vector3;
+using static LibRender.CameraProperties;
 
 namespace OpenBve
 {

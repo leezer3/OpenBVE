@@ -117,12 +117,11 @@ namespace OpenBve
 							{
 								for (int k = 0; k < Cars[i].CarSections[cs].Groups[0].Elements.Length; k++)
 								{
-									int o = Cars[i].CarSections[cs].Groups[0].Elements[k].ObjectIndex;
-									if (ObjectManager.Objects[o] != null)
+									if (Cars[i].CarSections[cs].Groups[0].Elements[k].internalObject != null)
 									{
-										for (int j = 0; j < ObjectManager.Objects[o].Mesh.Materials.Length; j++)
+										for (int j = 0; j < Cars[i].CarSections[cs].Groups[0].Elements[k].internalObject.Mesh.Materials.Length; j++)
 										{
-											ObjectManager.Objects[o].Mesh.Materials[j].DaytimeNighttimeBlend = dnb;
+											Cars[i].CarSections[cs].Groups[0].Elements[k].internalObject.Mesh.Materials[j].DaytimeNighttimeBlend = dnb;
 										}
 									}
 								}

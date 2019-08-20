@@ -3,6 +3,7 @@ using System.Xml;
 using System.Drawing;
 using System.Linq;
 using LibRender;
+using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -124,7 +125,7 @@ namespace OpenBve.Parsers.Train
 				}
 				if (Train.Cars[Train.DriverCar].CameraRestrictionMode != CameraRestrictionMode.NotSpecified)
 				{
-					Camera.CurrentRestriction = Train.Cars[Train.DriverCar].CameraRestrictionMode;
+					CameraProperties.Camera.CurrentRestriction = Train.Cars[Train.DriverCar].CameraRestrictionMode;
 					World.UpdateViewingDistances();
 				}
 				DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/NotchDescriptions");
@@ -206,9 +207,9 @@ namespace OpenBve.Parsers.Train
 								StaticObject obj = (StaticObject)CarObjects[i];
 								obj.ApplyScale(-1.0, 1.0, -1.0);
 							}
-							else if (CarObjects[i] is ObjectManager.AnimatedObjectCollection)
+							else if (CarObjects[i] is AnimatedObjectCollection)
 							{
-								ObjectManager.AnimatedObjectCollection obj = (ObjectManager.AnimatedObjectCollection)CarObjects[i];
+								AnimatedObjectCollection obj = (AnimatedObjectCollection)CarObjects[i];
 								for (int j = 0; j < obj.Objects.Length; j++)
 								{
 									for (int h = 0; h < obj.Objects[j].States.Length; h++)
@@ -264,9 +265,9 @@ namespace OpenBve.Parsers.Train
 								StaticObject obj = (StaticObject)BogieObjects[i];
 								obj.ApplyScale(-1.0, 1.0, -1.0);
 							}
-							else if (BogieObjects[i] is ObjectManager.AnimatedObjectCollection)
+							else if (BogieObjects[i] is AnimatedObjectCollection)
 							{
-								ObjectManager.AnimatedObjectCollection obj = (ObjectManager.AnimatedObjectCollection)BogieObjects[i];
+								AnimatedObjectCollection obj = (AnimatedObjectCollection)BogieObjects[i];
 								for (int j = 0; j < obj.Objects.Length; j++)
 								{
 									for (int h = 0; h < obj.Objects[j].States.Length; h++)

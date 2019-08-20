@@ -7,63 +7,6 @@ namespace OpenBve
 	 */
 	internal partial class CsvRwRouteParser
 	{
-		/// <summary>Creates a mirrored copy of the prototype object (Animated objects)</summary>
-		/// <param name="Prototype">The prototype</param>
-		/// <returns>The mirrored copy</returns>
-		private static UnifiedObject GetMirroredObject(UnifiedObject Prototype)
-		{
-			if (Prototype is StaticObject)
-			{
-				StaticObject s = (StaticObject)Prototype;
-				return GetMirroredStaticObject(s);
-			}
-			if (Prototype is ObjectManager.AnimatedObjectCollection)
-			{
-				ObjectManager.AnimatedObjectCollection a = (ObjectManager.AnimatedObjectCollection)Prototype;
-				ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
-				{
-					Objects = new ObjectManager.AnimatedObject[a.Objects.Length]
-				};
-				for (int i = 0; i < a.Objects.Length; i++)
-				{
-					Result.Objects[i] = a.Objects[i].Clone();
-					for (int j = 0; j < a.Objects[i].States.Length; j++)
-					{
-						Result.Objects[i].States[j].Object = GetMirroredStaticObject(a.Objects[i].States[j].Object);
-					}
-					Result.Objects[i].TranslateXDirection.X *= -1.0;
-					Result.Objects[i].TranslateYDirection.X *= -1.0;
-					Result.Objects[i].TranslateZDirection.X *= -1.0;
-					Result.Objects[i].RotateXDirection.X *= -1.0;
-					Result.Objects[i].RotateYDirection.X *= -1.0;
-					Result.Objects[i].RotateZDirection.X *= -1.0;
-				}
-				return Result;
-			}
-			return null;
-		}
-
-		/// <summary>Creates a mirrored copy of the prototype object</summary>
-		/// <param name="Prototype">The prototype</param>
-		/// <returns>The mirrored copy</returns>
-		private static StaticObject GetMirroredStaticObject(StaticObject Prototype)
-		{
-			StaticObject Result = (StaticObject)Prototype.Clone();
-			for (int i = 0; i < Result.Mesh.Vertices.Length; i++)
-			{
-				Result.Mesh.Vertices[i].Coordinates.X = -Result.Mesh.Vertices[i].Coordinates.X;
-			}
-			for (int i = 0; i < Result.Mesh.Faces.Length; i++)
-			{
-				for (int k = 0; k < Result.Mesh.Faces[i].Vertices.Length; k++)
-				{
-					Result.Mesh.Faces[i].Vertices[k].Normal.X = -Result.Mesh.Faces[i].Vertices[k].Normal.X;
-				}
-				Result.Mesh.Faces[i].Flip();
-			}
-			return Result;
-		}
-
 		/// <summary>Creates a transformed copy of the provided prototype object (e.g. Platform top, roof etc.)</summary>
 		/// <param name="Prototype">The prototype</param>
 		/// /// <param name="NearDistance">The object's width at the start of the block</param>

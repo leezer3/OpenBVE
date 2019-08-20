@@ -129,12 +129,6 @@
       <DependentUpon>MessageManager.cs</DependentUpon>
     </Compile>
     <Compile Include="Game\Messages.cs" />
-    <Compile Include="Game\ObjectManager\AnimatedObjects\AnimatedObject.cs" />
-    <Compile Include="Game\ObjectManager\AnimatedObjects\AnimatedObjectCollection.cs" />
-    <Compile Include="Game\ObjectManager\AnimatedObjects\AnimatedWorldObject.cs" />
-    <Compile Include="Game\ObjectManager\AnimatedObjects\AnimatedWorldObject.StateSound.cs" />
-    <Compile Include="Game\ObjectManager\AnimatedObjects\TrackFollowingObject.cs" />
-    <Compile Include="Game\ObjectManager\AnimatedObjects\WorldSound.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.Visibility.cs" />
     <Compile Include="Game\PointsOfInterest.cs" />

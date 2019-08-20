@@ -15,11 +15,11 @@ namespace OpenBve {
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
 		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
 		/// <returns>The collection of animated objects.</returns>
-		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding) {
+		internal static AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
+			AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost)
 			{
-				Objects = new ObjectManager.AnimatedObject[4]
+				Objects = new AnimatedObject[4]
 			};
 			int ObjectCount = 0;
 			// load file
@@ -104,18 +104,18 @@ namespace OpenBve {
 											StaticObject s = (StaticObject)obj[j];
 											s.Dynamic = true;
 											if (ObjectCount >= Result.Objects.Length) {
-												Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
+												Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
 											}
-											ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
+											AnimatedObject a = new AnimatedObject(Program.CurrentHost);
 											AnimatedObjectState aos = new AnimatedObjectState(s, position);
 											a.States = new AnimatedObjectState[] { aos };
 											Result.Objects[ObjectCount] = a;
 											ObjectCount++;
-										} else if (obj[j] is ObjectManager.AnimatedObjectCollection) {
-											ObjectManager.AnimatedObjectCollection a = (ObjectManager.AnimatedObjectCollection)obj[j];
+										} else if (obj[j] is AnimatedObjectCollection) {
+											AnimatedObjectCollection a = (AnimatedObjectCollection)obj[j];
 											for (int k = 0; k < a.Objects.Length; k++) {
 												if (ObjectCount >= Result.Objects.Length) {
-													Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
+													Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
 												}
 												for (int h = 0; h < a.Objects[k].States.Length; h++) {
 													a.Objects[k].States[h].Position.X += position.X;
@@ -134,9 +134,9 @@ namespace OpenBve {
 							{
 								i++;
 								if (Result.Objects.Length == ObjectCount) {
-									Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
+									Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
 								}
-								Result.Objects[ObjectCount] = new ObjectManager.AnimatedObject();
+								Result.Objects[ObjectCount] = new AnimatedObject(Program.CurrentHost);
 								Result.Objects[ObjectCount].States = new AnimatedObjectState[] { };
 								Result.Objects[ObjectCount].CurrentState = -1;
 								Result.Objects[ObjectCount].TranslateXDirection = Vector3.Right;
@@ -148,7 +148,6 @@ namespace OpenBve {
 								Result.Objects[ObjectCount].TextureShiftXDirection = new Vector2(1.0, 0.0);
 								Result.Objects[ObjectCount].TextureShiftYDirection = new Vector2(0.0, 1.0);
 								Result.Objects[ObjectCount].RefreshRate = 0.0;
-								Result.Objects[ObjectCount].ObjectIndex = -1;
 								Vector3 Position = Vector3.Zero;
 								double RotateX = 0;
 								bool StaticXRotation = false;
@@ -665,7 +664,7 @@ namespace OpenBve {
 							break;
 						case "[sound]":
 						case "[statechangesound]":
-							//Only show the sound nag once per route, otherwise this could cause spam...
+							//Only show the sound nag once per route, otherwise this could cause spam..
 							if (!Program.SoundError)
 							{
 								Interface.AddMessage(MessageType.Information, false, "Animated objects containing sounds are only supported in openBVE v1.5.2.4+");
@@ -684,7 +683,7 @@ namespace OpenBve {
 					}
 				}
 			}
-			Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, ObjectCount);
+			Array.Resize(ref Result.Objects, ObjectCount);
 			return Result;
 		}
 

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using LibRender;
+using static LibRender.CameraProperties;
 using OpenBve.RouteManager;
 using OpenBveApi.Runtime;
 using OpenBveApi.Sounds;

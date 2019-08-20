@@ -1,8 +1,11 @@
 using System;
+using LibRender;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Trains;
 using OpenBveApi.World;
+using static LibRender.CameraProperties;
 
 namespace OpenBve
 {
@@ -32,7 +35,44 @@ namespace OpenBve
 		{
 			for (int i = 0; i < AnimatedWorldObjectsUsed; i++)
 			{
-				AnimatedWorldObjects[i].Update(TimeElapsed, ForceUpdate);
+				TrainManager.Train train = null;
+				const double extraRadius = 10.0;
+				double z = AnimatedWorldObjects[i].Object.TranslateZFunction == null ? 0.0 : AnimatedWorldObjects[i].Object.TranslateZFunction.LastResult;
+				double pa = AnimatedWorldObjects[i].TrackPosition + z - AnimatedWorldObjects[i].Radius - extraRadius;
+				double pb = AnimatedWorldObjects[i].TrackPosition + z + AnimatedWorldObjects[i].Radius + extraRadius;
+				double ta = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z - Backgrounds.BackgroundImageDistance - Camera.ExtraViewingDistance;
+				double tb = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z + Backgrounds.BackgroundImageDistance + Camera.ExtraViewingDistance;
+				bool visible = pb >= ta & pa <= tb;
+				if (visible | ForceUpdate)
+				{
+					//Find the closest train
+					double trainDistance = double.MaxValue;
+					for (int j = 0; j < TrainManager.Trains.Length; j++)
+					{
+						if (TrainManager.Trains[j].State == TrainState.Available)
+						{
+							double distance;
+							if (TrainManager.Trains[j].Cars[0].FrontAxle.Follower.TrackPosition < AnimatedWorldObjects[i].TrackPosition)
+							{
+								distance = AnimatedWorldObjects[i].TrackPosition - TrainManager.Trains[j].Cars[0].TrackPosition;
+							}
+							else if (TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition > AnimatedWorldObjects[i].TrackPosition)
+							{
+								distance = TrainManager.Trains[j].Cars[TrainManager.Trains[j].Cars.Length - 1].RearAxle.Follower.TrackPosition - AnimatedWorldObjects[i].TrackPosition;
+							}
+							else
+							{
+								distance = 0;
+							}
+							if (distance < trainDistance)
+							{
+								train = TrainManager.Trains[j];
+								trainDistance = distance;
+							}
+						}
+					}
+				}
+				AnimatedWorldObjects[i].Update(train, TimeElapsed, ForceUpdate, visible);
 			}
 		}
 
@@ -86,11 +126,14 @@ namespace OpenBve
 						break;
 				}
 			}
+
+			Objects[a].ObjectIndex = a;
 			ObjectsUsed++;
 			return a;
 		}
 
-		internal static int CreateDynamicObject()
+
+		internal static void CreateDynamicObject(ref StaticObject internalObject)
 		{
 			int a = ObjectsUsed;
 			if (a >= Objects.Length)
@@ -98,9 +141,25 @@ namespace OpenBve
 				Array.Resize<StaticObject>(ref Objects, Objects.Length << 1);
 			}
 
-			Objects[a] = new StaticObject(Program.CurrentHost) { Dynamic = true };
-			ObjectsUsed++;
-			return a;
+			if (internalObject == null)
+			{
+				
+				Objects[a] = new StaticObject(Program.CurrentHost)
+				{
+					Dynamic = true,
+					ObjectIndex = a
+				};
+				internalObject = Objects[a];
+				ObjectsUsed++;
+				return;
+			}
+			else
+			{
+				Objects[a] = internalObject;
+				internalObject.Dynamic = true;
+				internalObject.ObjectIndex = a;
+				ObjectsUsed++;
+			}
 		}
 	}
 }

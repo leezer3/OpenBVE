@@ -8,7 +8,6 @@
 using System;
 using LibRender;
 using OpenBveApi.Colors;
-using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
@@ -16,6 +15,7 @@ using OpenBve.RouteManager;
 using OpenBve.SignalManager;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
+using static LibRender.CameraProperties;
 
 namespace OpenBve {
 	internal static class Game {
@@ -91,7 +91,7 @@ namespace OpenBve {
 			ObjectManager.ObjectsSortedByStartPointer = 0;
 			ObjectManager.ObjectsSortedByEndPointer = 0;
 			ObjectManager.LastUpdatedTrackPosition = 0.0;
-			ObjectManager.AnimatedWorldObjects = new ObjectManager.AnimatedWorldObject[4];
+			ObjectManager.AnimatedWorldObjects = new AnimatedWorldObject[4];
 			ObjectManager.AnimatedWorldObjectsUsed = 0;
 			// renderer / sound
 			Renderer.Reset();
@@ -152,11 +152,11 @@ namespace OpenBve {
 			// process poi
 			if (j >= 0) {
 				World.CameraTrackFollower.UpdateAbsolute(t, true, false);
-				Camera.CurrentAlignment.Position = CurrentRoute.PointsOfInterest[j].TrackOffset;
-				Camera.CurrentAlignment.Yaw = CurrentRoute.PointsOfInterest[j].TrackYaw;
-				Camera.CurrentAlignment.Pitch = CurrentRoute.PointsOfInterest[j].TrackPitch;
-				Camera.CurrentAlignment.Roll = CurrentRoute.PointsOfInterest[j].TrackRoll;
-				Camera.CurrentAlignment.TrackPosition = t;
+				Camera.Alignment.Position = CurrentRoute.PointsOfInterest[j].TrackOffset;
+				Camera.Alignment.Yaw = CurrentRoute.PointsOfInterest[j].TrackYaw;
+				Camera.Alignment.Pitch = CurrentRoute.PointsOfInterest[j].TrackPitch;
+				Camera.Alignment.Roll = CurrentRoute.PointsOfInterest[j].TrackRoll;
+				Camera.Alignment.TrackPosition = t;
 				World.UpdateAbsoluteCamera(0.0);
 				return true;
 			} else {

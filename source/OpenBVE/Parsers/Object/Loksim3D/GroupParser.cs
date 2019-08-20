@@ -6,7 +6,6 @@ using System.Linq;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
-using OpenTK.Graphics.ES20;
 
 namespace OpenBve
 {
@@ -29,12 +28,12 @@ namespace OpenBve
 			}
 		}
 
-		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, Vector3 Rotation)
+		internal static AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding, Vector3 Rotation)
 		{
 			XmlDocument currentXML = new XmlDocument();
-			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
+			AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost)
 			{
-				Objects = new ObjectManager.AnimatedObject[0]
+				Objects = new AnimatedObject[0]
 			};
 			try
 			{
@@ -205,7 +204,7 @@ namespace OpenBve
 							continue;
 						}
 						StaticObject Object = null;
-						ObjectManager.AnimatedObjectCollection AnimatedObject = null;
+						AnimatedObjectCollection AnimatedObject = null;
 						try {
 							if (CurrentObjects[i].Name.ToLowerInvariant().EndsWith(".l3dgrp"))
 							{
@@ -232,8 +231,8 @@ namespace OpenBve
 								Array.Resize<UnifiedObject>(ref obj, obj.Length + 1);
 								obj[obj.Length - 1] = Object;
 								int aL = Result.Objects.Length;
-								Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, aL + 1);
-								ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
+								Array.Resize(ref Result.Objects, aL + 1);
+								AnimatedObject a = new AnimatedObject(Program.CurrentHost);
 								AnimatedObjectState aos = new AnimatedObjectState(Object, CurrentObjects[i].Position);
 								a.States = new AnimatedObjectState[] { aos };
 								Result.Objects[aL] = a;
@@ -253,7 +252,7 @@ namespace OpenBve
 						{
 							int rl = Result.Objects.Length;
 							int l = AnimatedObject.Objects.Length;
-							Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length + l);
+							Array.Resize(ref Result.Objects, Result.Objects.Length + l);
 							for (int o = rl; o < rl + l; o++)
 							{
 								if (AnimatedObject.Objects[o - rl] != null)
@@ -266,7 +265,7 @@ namespace OpenBve
 								}
 								else
 								{
-									Result.Objects[o] = new ObjectManager.AnimatedObject();
+									Result.Objects[o] = new AnimatedObject(Program.CurrentHost);
 									Result.Objects[o].States = new AnimatedObjectState[0];
 								}
 							}
@@ -274,8 +273,8 @@ namespace OpenBve
 					}
 					if (staticObject != null)
 					{
-						Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length + 1);
-						ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
+						Array.Resize(ref Result.Objects, Result.Objects.Length + 1);
+						AnimatedObject a = new AnimatedObject(Program.CurrentHost);
 						AnimatedObjectState aos = new AnimatedObjectState(staticObject, Vector3.Zero);
 						a.States = new AnimatedObjectState[] { aos };
 						Result.Objects[Result.Objects.Length - 1] = a;

@@ -5,6 +5,7 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 
@@ -301,6 +302,67 @@ namespace OpenBve
 		public override void ExecuteFunctionScript(OpenBveApi.FunctionScripting.FunctionScript functionScript, AbstractTrain train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState)
 		{
 			FunctionScripts.ExecuteFunctionScript(functionScript, (TrainManager.Train)train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+		}
+
+		public override void CreateDynamicObject(ref StaticObject internalObject)
+		{
+			ObjectManager.CreateDynamicObject(ref internalObject);
+		}
+
+		public override void ShowObject(StaticObject objectToShow, ObjectType objectType)
+		{
+			Renderer.ShowObject(objectToShow, objectType);
+		}
+
+		public override void HideObject(ref StaticObject objectToHide)
+		{
+			Renderer.HideObject(ref objectToHide);
+		}
+
+		public override int AnimatedWorldObjectsUsed
+		{
+			get
+			{
+				return ObjectManager.AnimatedWorldObjectsUsed;
+			}
+			set
+			{
+				int a = ObjectManager.AnimatedWorldObjectsUsed;
+				if (ObjectManager.AnimatedWorldObjects.Length -1 == a)
+				{
+					/*
+					 * HACK: We cannot resize an array via an accessor property
+					 *       With this in mind, resize it via the indexer instead
+					 */
+					Array.Resize(ref ObjectManager.AnimatedWorldObjects, ObjectManager.AnimatedWorldObjects.Length << 1);
+				}
+
+				ObjectManager.AnimatedWorldObjectsUsed = value;
+			}
+		}
+
+		public override WorldObject[] AnimatedWorldObjects
+		{
+			get
+			{
+				return ObjectManager.AnimatedWorldObjects;
+			}
+			set
+			{
+				ObjectManager.AnimatedWorldObjects = value;
+			}
+		}
+
+		public override Track[] Tracks
+		{
+			get
+			{
+				return CurrentRoute.Tracks;
+			}
+			set
+			{
+				CurrentRoute.Tracks = value;
+			}
 		}
 
 		public Host() : base(HostApplication.RouteViewer)

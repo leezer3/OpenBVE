@@ -6,6 +6,7 @@ using OpenBveApi;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
+using OpenBveApi.Objects;
 
 namespace OpenBve {
 	internal static class Timetable {
@@ -16,7 +17,7 @@ namespace OpenBve {
 		internal static double DefaultTimetablePosition = 0.0;
 		
 		// members (custom timetable)
-		internal static ObjectManager.AnimatedObject[] CustomObjects = new ObjectManager.AnimatedObject[16];
+		internal static AnimatedObject[] CustomObjects = new AnimatedObject[16];
 		internal static int CustomObjectsUsed;
 		internal static bool CustomTimetableAvailable;
 		internal static Texture CurrentCustomTimetableDaytimeTexture;
@@ -546,9 +547,9 @@ namespace OpenBve {
 		}
 		
 		// add object for custom timetable
-		internal static void AddObjectForCustomTimetable(ObjectManager.AnimatedObject obj) {
+		internal static void AddObjectForCustomTimetable(AnimatedObject obj) {
 			if (CustomObjectsUsed >= CustomObjects.Length) {
-				Array.Resize<ObjectManager.AnimatedObject>(ref CustomObjects, CustomObjects.Length << 1);
+				Array.Resize(ref CustomObjects, CustomObjects.Length << 1);
 			}
 			CustomObjects[CustomObjectsUsed] = obj;
 			CustomObjectsUsed++;

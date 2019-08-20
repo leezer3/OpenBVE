@@ -100,7 +100,7 @@ namespace OpenBve.Parsers.Panel
 								Array.Resize(ref CarSection.Groups, n + 2);
 								CarSection.Groups[n + 1] = new TrainManager.ElementsGroup
 								{
-									Elements = new ObjectManager.AnimatedObject[] { },
+									Elements = new AnimatedObject[] { },
 									Overlay = true
 								};
 							}
@@ -233,12 +233,12 @@ namespace OpenBve.Parsers.Panel
 											if (System.IO.File.Exists(File))
 											{
 												System.Text.Encoding e = TextEncoding.GetSystemEncodingFromFile(File);
-												ObjectManager.AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(File, e);
+												AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(File, e);
 												if (a != null)
 												{
 													for (int i = 0; i < a.Objects.Length; i++)
 													{
-														a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject();
+														ObjectManager.CreateDynamicObject(ref a.Objects[i].internalObject);
 													}
 													CarSection.Groups[GroupIndex].Elements = a.Objects;
 												}
@@ -285,7 +285,7 @@ namespace OpenBve.Parsers.Panel
 			Array.Resize(ref Group.TouchElements, n + 1);
 			Group.TouchElements[n] = new TrainManager.TouchElement
 			{
-				Element = new ObjectManager.AnimatedObject(),
+				Element = new AnimatedObject(Program.CurrentHost),
 				JumpScreenIndex = ScreenIndex,
 				SoundIndex = SoundIndex,
 				Command = Command,
@@ -295,8 +295,8 @@ namespace OpenBve.Parsers.Panel
 			Group.TouchElements[n].Element.States[0].Position = Position;
 			Group.TouchElements[n].Element.States[0].Object = Object;
 			Group.TouchElements[n].Element.CurrentState = 0;
-			Group.TouchElements[n].Element.ObjectIndex = ObjectManager.CreateDynamicObject();
-			ObjectManager.Objects[Group.TouchElements[n].Element.ObjectIndex] = (StaticObject)Object.Clone();
+			Group.TouchElements[n].Element.internalObject = (StaticObject) Object.Clone();
+			ObjectManager.CreateDynamicObject(ref Group.TouchElements[n].Element.internalObject);
 			int m = Interface.CurrentControls.Length;
 			Array.Resize(ref Interface.CurrentControls, m + 1);
 			Interface.CurrentControls[m].Command = Command;

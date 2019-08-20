@@ -18,12 +18,12 @@ namespace OpenBve
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
 		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
 		/// <returns>The collection of animated objects.</returns>
-		internal static ObjectManager.AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding)
+		internal static AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding)
 		{
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection
+			AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost)
 			{
-				Objects = new ObjectManager.AnimatedObject[4],
+				Objects = new AnimatedObject[4],
 				Sounds = new WorldObject[4]
 			};
 			int ObjectCount = 0;
@@ -138,22 +138,22 @@ namespace OpenBve
 											s.Dynamic = true;
 											if (ObjectCount >= Result.Objects.Length)
 											{
-												Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
+												Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
 											}
-											ObjectManager.AnimatedObject a = new ObjectManager.AnimatedObject();
+											AnimatedObject a = new AnimatedObject(Program.CurrentHost);
 											AnimatedObjectState aos = new AnimatedObjectState(s, position);
 											a.States = new AnimatedObjectState[] { aos };
 											Result.Objects[ObjectCount] = a;
 											ObjectCount++;
 										}
-										else if (obj[j] is ObjectManager.AnimatedObjectCollection)
+										else if (obj[j] is AnimatedObjectCollection)
 										{
-											ObjectManager.AnimatedObjectCollection a = (ObjectManager.AnimatedObjectCollection)obj[j];
+											AnimatedObjectCollection a = (AnimatedObjectCollection)obj[j];
 											for (int k = 0; k < a.Objects.Length; k++)
 											{
 												if (ObjectCount >= Result.Objects.Length)
 												{
-													Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
+													Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
 												}
 												for (int h = 0; h < a.Objects[k].States.Length; h++)
 												{
@@ -174,9 +174,9 @@ namespace OpenBve
 								i++;
 								if (Result.Objects.Length == ObjectCount)
 								{
-									Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Objects.Length << 1);
+									Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
 								}
-								Result.Objects[ObjectCount] = new ObjectManager.AnimatedObject
+								Result.Objects[ObjectCount] = new AnimatedObject(Program.CurrentHost)
 								{
 									States = new AnimatedObjectState[] {},
 									CurrentState = -1,
@@ -189,7 +189,6 @@ namespace OpenBve
 									TextureShiftXDirection = new Vector2(1.0, 0.0),
 									TextureShiftYDirection = new Vector2(0.0, 1.0),
 									RefreshRate = 0.0,
-									ObjectIndex = -1
 								};
 								Vector3 Position = Vector3.Zero;
 								double RotateX = 0;
@@ -1175,8 +1174,7 @@ namespace OpenBve
 								i--;
 								if (fileName != null)
 								{
-									ObjectManager.WorldSound snd = new ObjectManager.WorldSound();
-									snd.Buffer = Program.Sounds.RegisterBuffer(fileName, radius);
+									WorldSound snd = new WorldSound(Program.CurrentHost, Program.Sounds.RegisterBuffer(fileName, radius));
 									snd.currentPitch = pitch;
 									snd.currentVolume = volume;
 									snd.Position = Position;
@@ -1196,7 +1194,7 @@ namespace OpenBve
 								i++;
 								if (Result.Sounds.Length == SoundCount)
 								{
-									Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, Result.Sounds.Length << 1);
+									Array.Resize(ref Result.Objects, Result.Sounds.Length << 1);
 								}
 								Vector3 Position = Vector3.Zero;
 								string[] fileNames = new string[0];
@@ -1348,7 +1346,7 @@ namespace OpenBve
 								i--;
 								if (fileNames.Length != 0 && ObjectCount > 0)
 								{
-									ObjectManager.AnimatedWorldObjectStateSound snd = new ObjectManager.AnimatedWorldObjectStateSound();
+									AnimatedWorldObjectStateSound snd = new AnimatedWorldObjectStateSound(Program.CurrentHost);
 									snd.Object = Result.Objects[ObjectCount -1].Clone();
 									snd.Buffers = new SoundBuffer[fileNames.Length];
 									for (int j = 0; j < fileNames.Length; j++)
@@ -1388,7 +1386,7 @@ namespace OpenBve
 					}
 				}
 			}
-			Array.Resize<ObjectManager.AnimatedObject>(ref Result.Objects, ObjectCount);
+			Array.Resize(ref Result.Objects, ObjectCount);
 			return Result;
 		}
 

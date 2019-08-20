@@ -182,8 +182,7 @@ namespace OpenBve {
 			Game.Reset(true);
 			Game.MinimalisticSimulation = true;
 			// screen
-			
-			Camera.CurrentMode = CameraViewMode.Interior;
+			CameraProperties.Camera.CurrentMode = CameraViewMode.Interior;
 			//First, check the format of the route file
 			//RW routes were written for BVE1 / 2, and have a different command syntax
 			bool IsRW = CsvRwRouteParser.isRWFile(CurrentRouteFile);

@@ -786,7 +786,7 @@ namespace OpenBve
 									}
 									else
 									{
-										UnifiedObject Pole = GetMirroredObject(Data.Structure.Poles[0][Data.Blocks[i].RailPole[j].Type]);
+										UnifiedObject Pole = Data.Structure.Poles[0][Data.Blocks[i].RailPole[j].Type].Mirror();
 										Pole.CreateObject(pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 									}
 								}
@@ -1291,9 +1291,9 @@ namespace OpenBve
 										if (csd.Numbers.Length != 0)
 										{
 											double brightness = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
-											ObjectManager.AnimatedObjectCollection aoc = new ObjectManager.AnimatedObjectCollection();
-											aoc.Objects = new ObjectManager.AnimatedObject[1];
-											aoc.Objects[0] = new ObjectManager.AnimatedObject();
+											AnimatedObjectCollection aoc = new AnimatedObjectCollection(Program.CurrentHost);
+											aoc.Objects = new AnimatedObject[1];
+											aoc.Objects[0] = new AnimatedObject(Program.CurrentHost);
 											aoc.Objects[0].States = new AnimatedObjectState[csd.Numbers.Length];
 											for (int l = 0; l < csd.Numbers.Length; l++)
 											{
@@ -1328,9 +1328,9 @@ namespace OpenBve
 													zn++;
 												}
 											}
-											ObjectManager.AnimatedObjectCollection aoc = new ObjectManager.AnimatedObjectCollection();
-											aoc.Objects = new ObjectManager.AnimatedObject[1];
-											aoc.Objects[0] = new ObjectManager.AnimatedObject();
+											AnimatedObjectCollection aoc = new AnimatedObjectCollection(Program.CurrentHost);
+											aoc.Objects = new AnimatedObject[1];
+											aoc.Objects[0] = new AnimatedObject(Program.CurrentHost);
 											aoc.Objects[0].States = new AnimatedObjectState[zn];
 											int zi = 0;
 											string expr = "";

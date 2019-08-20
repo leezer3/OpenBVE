@@ -1,5 +1,5 @@
 using System;
-using LibRender;
+using static LibRender.CameraProperties;
 using OpenBve.RouteManager;
 using OpenBveApi.Math;
 using OpenBveApi.FunctionScripting;
@@ -800,7 +800,7 @@ namespace OpenBve {
 						}
 						s++; break;
 					case Instructions.Klaxon:
-						//Object Viewer doesn't actually have a sound player, so we can't test against it, thus return zero....
+						//Object Viewer doesn't actually have a sound player, so we can't test against it, thus return zero..
 						Function.Stack[s] = 0.0;
 						s++; break;
 					case Instructions.HasAirBrake:

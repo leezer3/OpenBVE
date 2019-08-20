@@ -439,8 +439,8 @@ namespace OpenBve {
 							if (CarObjects[i] is StaticObject) {
 								StaticObject obj = (StaticObject)CarObjects[i];
 								obj.ApplyScale(-1.0, 1.0, -1.0);
-							} else if (CarObjects[i] is ObjectManager.AnimatedObjectCollection) {
-								ObjectManager.AnimatedObjectCollection obj = (ObjectManager.AnimatedObjectCollection)CarObjects[i];
+							} else if (CarObjects[i] is AnimatedObjectCollection) {
+								AnimatedObjectCollection obj = (AnimatedObjectCollection)CarObjects[i];
 								for (int j = 0; j < obj.Objects.Length; j++) {
 									for (int h = 0; h < obj.Objects[j].States.Length; h++) {
 										if (obj.Objects[j].States[h].Object == null)
@@ -496,9 +496,9 @@ namespace OpenBve {
 								StaticObject obj = (StaticObject)BogieObjects[i];
 								obj.ApplyScale(-1.0, 1.0, -1.0);
 							}
-							else if (BogieObjects[i] is ObjectManager.AnimatedObjectCollection)
+							else if (BogieObjects[i] is AnimatedObjectCollection)
 							{
-								ObjectManager.AnimatedObjectCollection obj = (ObjectManager.AnimatedObjectCollection)BogieObjects[i];
+								AnimatedObjectCollection obj = (AnimatedObjectCollection)BogieObjects[i];
 								for (int j = 0; j < obj.Objects.Length; j++)
 								{
 									for (int h = 0; h < obj.Objects[j].States.Length; h++)

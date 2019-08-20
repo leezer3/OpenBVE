@@ -2,6 +2,7 @@
 using LibRender;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using static LibRender.CameraProperties;
 
 namespace OpenBve
 {

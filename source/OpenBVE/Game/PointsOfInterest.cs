@@ -1,5 +1,5 @@
 ﻿using System;
-using LibRender;
+using static LibRender.CameraProperties;
 using OpenBve.RouteManager;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -63,11 +63,11 @@ namespace OpenBve
 			// process poi
 			if (j < 0) return false;
 			World.CameraTrackFollower.UpdateAbsolute(t, true, false);
-			Camera.CurrentAlignment.Position = CurrentRoute.PointsOfInterest[j].TrackOffset;
-			Camera.CurrentAlignment.Yaw = CurrentRoute.PointsOfInterest[j].TrackYaw;
-			Camera.CurrentAlignment.Pitch = CurrentRoute.PointsOfInterest[j].TrackPitch;
-			Camera.CurrentAlignment.Roll = CurrentRoute.PointsOfInterest[j].TrackRoll;
-			Camera.CurrentAlignment.TrackPosition = t;
+			Camera.Alignment.Position = CurrentRoute.PointsOfInterest[j].TrackOffset;
+			Camera.Alignment.Yaw = CurrentRoute.PointsOfInterest[j].TrackYaw;
+			Camera.Alignment.Pitch = CurrentRoute.PointsOfInterest[j].TrackPitch;
+			Camera.Alignment.Roll = CurrentRoute.PointsOfInterest[j].TrackRoll;
+			Camera.Alignment.TrackPosition = t;
 			World.UpdateAbsoluteCamera(0.0);
 			if (CurrentRoute.PointsOfInterest[j].Text != null)
 			{

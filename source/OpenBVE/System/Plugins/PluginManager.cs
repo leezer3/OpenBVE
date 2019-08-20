@@ -139,7 +139,7 @@ namespace OpenBve {
 				double totalTime = CurrentRoute.SecondsSinceMidnight;
 				double elapsedTime = CurrentRoute.SecondsSinceMidnight - LastTime;
 
-				ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, this.Train.SafetySystems.DoorInterlockState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, Camera.CurrentMode, Translations.CurrentLanguageCode, this.Train.Destination);
+				ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, this.Train.SafetySystems.DoorInterlockState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, CameraProperties.Camera.CurrentMode, Translations.CurrentLanguageCode, this.Train.Destination);
 				ElapseData inputDevicePluginData = data;
 				LastTime = CurrentRoute.SecondsSinceMidnight;
 				Elapse(data);

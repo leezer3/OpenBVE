@@ -5,6 +5,8 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
+using OpenBveApi.Sounds;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
@@ -266,6 +268,89 @@ namespace OpenBve {
 			return ObjectManager.CreateStaticObject(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 		}
 
+		public override void CreateDynamicObject(ref StaticObject internalObject)
+		{
+			ObjectManager.CreateDynamicObject(ref internalObject);
+		}
+
+		public override void ShowObject(StaticObject objectToShow, ObjectType objectType)
+		{
+			Renderer.ShowObject(objectToShow, objectType);
+		}
+
+		public override void HideObject(ref StaticObject objectToHide)
+		{
+			Renderer.HideObject(ref objectToHide);
+		}
+
+		public override bool SoundIsPlaying(object SoundSource)
+		{
+			return Program.Sounds.IsPlaying(SoundSource);
+		}
+
+		public override object PlaySound(SoundHandle buffer, double pitch, double volume, Vector3 position, object parent, bool looped)
+		{
+			return Program.Sounds.PlaySound(buffer, pitch, volume, position, parent, looped);
+		}
+
+		public override void StopSound(object SoundSource)
+		{
+			Program.Sounds.StopSound(SoundSource);
+		}
+
+		public override bool SimulationSetup
+		{
+			get
+			{
+				return Loading.SimulationSetup;
+			}
+		}
+
+		public override int AnimatedWorldObjectsUsed
+		{
+			get
+			{
+				return ObjectManager.AnimatedWorldObjectsUsed;
+			}
+			set
+			{
+				int a = ObjectManager.AnimatedWorldObjectsUsed;
+				if (ObjectManager.AnimatedWorldObjects.Length -1 == a)
+				{
+					/*
+					 * HACK: We cannot resize an array via an accessor property
+					 *       With this in mind, resize it via the indexer instead
+					 */
+					Array.Resize(ref ObjectManager.AnimatedWorldObjects, ObjectManager.AnimatedWorldObjects.Length << 1);
+				}
+
+				ObjectManager.AnimatedWorldObjectsUsed = value;
+			}
+		}
+
+		public override WorldObject[] AnimatedWorldObjects
+		{
+			get
+			{
+				return ObjectManager.AnimatedWorldObjects;
+			}
+			set
+			{
+				ObjectManager.AnimatedWorldObjects = value;
+			}
+		}
+
+		public override Track[] Tracks
+		{
+			get
+			{
+				return CurrentRoute.Tracks;
+			}
+			set
+			{
+				CurrentRoute.Tracks = value;
+			}
+		}
 
 		public Host() : base(HostApplication.OpenBve)
 		{

@@ -1,5 +1,5 @@
 ﻿using System;
-using LibRender;
+using static LibRender.CameraProperties;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;

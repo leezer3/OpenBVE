@@ -1,5 +1,5 @@
 ﻿using System;
-using LibRender;
+using static LibRender.CameraProperties;
 using OpenBve.RouteManager;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -105,12 +105,11 @@ namespace OpenBve
 						UpdateSectionElement(cs, i, p, d, u, s, CurrentlyVisible, TimeElapsed, ForceUpdate);
 
 						// brightness change
-						int o = CarSections[cs].Groups[0].Elements[i].ObjectIndex;
-						if (ObjectManager.Objects[o] != null)
+						if (CarSections[cs].Groups[0].Elements[i].internalObject != null)
 						{
-							for (int j = 0; j < ObjectManager.Objects[o].Mesh.Materials.Length; j++)
+							for (int j = 0; j < CarSections[cs].Groups[0].Elements[i].internalObject.Mesh.Materials.Length; j++)
 							{
-								ObjectManager.Objects[o].Mesh.Materials[j].DaytimeNighttimeBlend = dnb;
+								CarSections[cs].Groups[0].Elements[i].internalObject.Mesh.Materials[j].DaytimeNighttimeBlend = dnb;
 							}
 						}
 					}
@@ -129,8 +128,8 @@ namespace OpenBve
 				if (currentObject is StaticObject)
 				{
 					StaticObject s = (StaticObject)currentObject;
-					CarSections[j].Groups[0].Elements = new ObjectManager.AnimatedObject[1];
-					CarSections[j].Groups[0].Elements[0] = new ObjectManager.AnimatedObject
+					CarSections[j].Groups[0].Elements = new AnimatedObject[1];
+					CarSections[j].Groups[0].Elements[0] = new AnimatedObject(Program.CurrentHost)
 					{
 						States = new AnimatedObjectState[1]
 						
@@ -138,16 +137,16 @@ namespace OpenBve
 					CarSections[j].Groups[0].Elements[0].States[0].Position = Vector3.Zero;
 					CarSections[j].Groups[0].Elements[0].States[0].Object = s;
 					CarSections[j].Groups[0].Elements[0].CurrentState = 0;
-					CarSections[j].Groups[0].Elements[0].ObjectIndex = ObjectManager.CreateDynamicObject();
+					ObjectManager.CreateDynamicObject(ref CarSections[j].Groups[0].Elements[0].internalObject);
 				}
-				else if (currentObject is ObjectManager.AnimatedObjectCollection)
+				else if (currentObject is AnimatedObjectCollection)
 				{
-					ObjectManager.AnimatedObjectCollection a = (ObjectManager.AnimatedObjectCollection)currentObject;
-					CarSections[j].Groups[0].Elements = new ObjectManager.AnimatedObject[a.Objects.Length];
+					AnimatedObjectCollection a = (AnimatedObjectCollection)currentObject;
+					CarSections[j].Groups[0].Elements = new AnimatedObject[a.Objects.Length];
 					for (int h = 0; h < a.Objects.Length; h++)
 					{
 						CarSections[j].Groups[0].Elements[h] = a.Objects[h].Clone();
-						CarSections[j].Groups[0].Elements[h].ObjectIndex = ObjectManager.CreateDynamicObject();
+						ObjectManager.CreateDynamicObject(ref CarSections[j].Groups[0].Elements[h].internalObject);
 					}
 				}
 			}
@@ -164,8 +163,7 @@ namespace OpenBve
 				{
 					for (int j = 0; j < CarSections[i].Groups[0].Elements.Length; j++)
 					{
-						int o = CarSections[i].Groups[0].Elements[j].ObjectIndex;
-						Renderer.HideObject(ref ObjectManager.Objects[o]);
+						Renderer.HideObject(ref CarSections[i].Groups[0].Elements[j].internalObject);
 					}
 				}
 				if (SectionIndex >= 0)
@@ -173,8 +171,7 @@ namespace OpenBve
 					CarSections[SectionIndex].Initialize(CurrentlyVisible);
 					for (int j = 0; j < CarSections[SectionIndex].Groups[0].Elements.Length; j++)
 					{
-						int o = CarSections[SectionIndex].Groups[0].Elements[j].ObjectIndex;
-						Renderer.ShowObject(o, ObjectType.Dynamic);
+						Renderer.ShowObject(CarSections[SectionIndex].Groups[0].Elements[j].internalObject, ObjectType.Dynamic);
 					}
 				}
 				CurrentCarSection = SectionIndex;
@@ -216,7 +213,7 @@ namespace OpenBve
 					{
 						updatefunctions = true;
 					}
-					CarSections[SectionIndex].Groups[0].Elements[ElementIndex].Update(true, baseTrain, baseCar.Index, CurrentCarSection, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, CarSections[SectionIndex].Groups[0].Overlay, updatefunctions, Show, timeDelta, true);
+					CarSections[SectionIndex].Groups[0].Elements[ElementIndex].Update(true, baseTrain, baseCar.Index, CurrentCarSection, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, true,  false, Camera);
 				}
 			}
 

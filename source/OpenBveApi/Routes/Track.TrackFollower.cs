@@ -49,6 +49,15 @@ namespace OpenBveApi.Routes
 			Car = car;
 		}
 
+		/// <summary>Gets the rail gauge for the track this is following</summary>
+		public double RailGauge
+		{
+			get
+			{
+				return Tracks[TrackIndex].RailGauge;
+			}
+		}
+
 		/// <summary>Updates the World Coordinates</summary>
 		/// <param name="AddTrackInaccuracy"></param>
 		public void UpdateWorldCoordinates(bool AddTrackInaccuracy)

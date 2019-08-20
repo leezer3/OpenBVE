@@ -15,6 +15,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
+using static LibRender.CameraProperties;
 
 namespace OpenBve {
 	internal static class Loading {
@@ -63,7 +64,7 @@ namespace OpenBve {
 					Folder = Info.FullName;
 				}
 			} catch { }
-			//If the Route, Object and Sound folders exist, but are not in a railway folder.....
+			//If the Route, Object and Sound folders exist, but are not in a railway folder...
 			try
 			{
 				string Folder = System.IO.Path.GetDirectoryName(RouteFile);
@@ -87,15 +88,11 @@ namespace OpenBve {
 
 		// load threaded
 		private static void LoadThreaded() {
-			#if DEBUG
-			LoadEverythingThreaded();
-			#else
 			try {
 				LoadEverythingThreaded();
 			} catch (Exception ex) {
 				Interface.AddMessage(MessageType.Critical, false, "The route and train loader encountered the following critical error: " + ex.Message);
 			}
-			#endif
 			Complete = true;
 		}
 
@@ -177,9 +174,9 @@ namespace OpenBve {
 			// initialize camera
 			World.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
 			World.CameraTrackFollower.UpdateAbsolute(FirstStationPosition, true, false);
-			Camera.CurrentAlignment = new CameraAlignment(new Vector3(0.0, 2.5, 0.0), 0.0, 0.0, 0.0, FirstStationPosition, 1.0);
+			Camera.Alignment = new CameraAlignment(new Vector3(0.0, 2.5, 0.0), 0.0, 0.0, 0.0, FirstStationPosition, 1.0);
 			World.UpdateAbsoluteCamera(0.0);
-			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z);
+			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z);
 		}
 
 	}

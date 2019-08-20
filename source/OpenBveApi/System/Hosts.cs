@@ -2,10 +2,12 @@
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
-using OpenBveApi.Sounds;
+using OpenBveApi.Routes;
+using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
+using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
 namespace OpenBveApi.Hosts {
 
@@ -197,6 +199,29 @@ namespace OpenBveApi.Hosts {
 			return -1;
 		}
 
+		/// <summary>Creates a dynamic object</summary>
+		/// <param name="internalObject">The internal static object to be updated</param>
+		/// <returns>The index of the dynamic object</returns>
+		public virtual void CreateDynamicObject(ref StaticObject internalObject)
+		{
+			
+		}
+
+		/// <summary>Shows an object in the base renderer</summary>
+		/// <param name="objectToShow">The reference to the object to show</param>
+		/// <param name="objectType">The object type</param>
+		public virtual void ShowObject(StaticObject objectToShow, ObjectType objectType)
+		{
+
+		}
+
+		/// <summary>Hides an object in the base renderer</summary>
+		/// <param name="objectToHide">The reference to the object to hide</param>
+		public virtual void HideObject(ref StaticObject objectToHide)
+		{
+
+		}
+
 		/// <summary>Adds a log message to the host application.</summary>
 		/// <param name="type">The type of message to be reported.</param>
 		/// <param name="FileNotFound">Whether this message relates to a file not found</param>
@@ -211,6 +236,79 @@ namespace OpenBveApi.Hosts {
 			 * Using object as a parameter type allows us to keep the messages out the API...
 			 */
 
+		}
+
+		/// <summary>Checks whether the specified sound source is playing</summary>
+		public virtual bool SoundIsPlaying(object SoundSource)
+		{
+			return false;
+		}
+
+		/// <summary>Plays a sound.</summary>
+		/// <param name="buffer">The sound buffer.</param>
+		/// <param name="pitch">The pitch change factor.</param>
+		/// <param name="volume">The volume change factor.</param>
+		/// <param name="position">The position. If a train car is specified, the position is relative to the car, otherwise absolute.</param>
+		/// <param name="parent">The parent object the sound is attached to, or a null reference.</param>
+		/// <param name="looped">Whether to play the sound in a loop.</param>
+		/// <returns>The sound source.</returns>
+		public virtual object PlaySound(SoundHandle buffer, double pitch, double volume, OpenBveApi.Math.Vector3 position, object parent, bool looped)
+		{
+			return null;
+		}
+
+		/// <summary>Stops a playing sound source</summary>
+		public virtual void StopSound(object SoundSource)
+		{
+
+		}
+
+		/// <summary>Returns whether the simulation is currently in progress</summary>
+		public virtual bool SimulationSetup
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		/// <summary>Returns the number of animated world objects used</summary>
+		public virtual int AnimatedWorldObjectsUsed
+		{
+			get
+			{
+				return 0;
+			}
+			set
+			{
+
+			}
+		}
+
+		/// <summary>Returns the array of animated world objects from the host</summary>
+		public virtual WorldObject[] AnimatedWorldObjects
+		{
+			get
+			{
+				return null;
+			}
+			set
+			{
+
+			}
+		}
+
+		/// <summary>Gets or sets the tracks array within the host application</summary>
+		public virtual Track[] Tracks
+		{
+			get
+			{
+				return null;
+			}
+			set
+			{
+
+			}
 		}
 	}
 	

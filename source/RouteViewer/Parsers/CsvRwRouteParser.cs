@@ -2643,7 +2643,7 @@ namespace OpenBve {
 															Interface.AddMessage(MessageType.Error, true, "SignalFileWithoutExtension " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 														} else {
 															UnifiedObject Object = ObjectManager.LoadObject(f, Encoding, false);
-															if (Object is ObjectManager.AnimatedObjectCollection) {
+															if (Object is AnimatedObjectCollection) {
 																AnimatedObjectSignalData Signal = new AnimatedObjectSignalData();
 																Signal.Objects = Object;
 																Data.SignalData[CommandIndex1] = Signal;
@@ -5187,48 +5187,7 @@ namespace OpenBve {
 				BlocksUsed = ToIndex + 1;
 			}
 		}
-
-		// get mirrored object
-		private static UnifiedObject GetMirroredObject(UnifiedObject Prototype) {
-			if (Prototype is StaticObject) {
-				StaticObject s = (StaticObject)Prototype;
-				return GetMirroredStaticObject(s);
-			} else if (Prototype is ObjectManager.AnimatedObjectCollection) {
-				ObjectManager.AnimatedObjectCollection a = (ObjectManager.AnimatedObjectCollection)Prototype;
-				ObjectManager.AnimatedObjectCollection Result = new ObjectManager.AnimatedObjectCollection();
-				Result.Objects = new ObjectManager.AnimatedObject[a.Objects.Length];
-				for (int i = 0; i < a.Objects.Length; i++) {
-					Result.Objects[i] = a.Objects[i].Clone();
-					for (int j = 0; j < a.Objects[i].States.Length; j++) {
-						Result.Objects[i].States[j].Object = GetMirroredStaticObject(a.Objects[i].States[j].Object);
-					}
-					Result.Objects[i].TranslateXDirection.X *= -1.0;
-					Result.Objects[i].TranslateYDirection.X *= -1.0;
-					Result.Objects[i].TranslateZDirection.X *= -1.0;
-					Result.Objects[i].RotateXDirection.X *= -1.0;
-					Result.Objects[i].RotateYDirection.X *= -1.0;
-					Result.Objects[i].RotateZDirection.X *= -1.0;
-				}
-				return Result;
-			} else {
-				return null;
-			}
-		}
-		private static StaticObject GetMirroredStaticObject(StaticObject Prototype)
-		{
-			StaticObject Result = (StaticObject)Prototype.Clone();
-			for (int i = 0; i < Result.Mesh.Vertices.Length; i++) {
-				Result.Mesh.Vertices[i].Coordinates.X = -Result.Mesh.Vertices[i].Coordinates.X;
-			}
-			for (int i = 0; i < Result.Mesh.Faces.Length; i++) {
-				for (int k = 0; k < Result.Mesh.Faces[i].Vertices.Length; k++) {
-					Result.Mesh.Faces[i].Vertices[k].Normal.X = -Result.Mesh.Faces[i].Vertices[k].Normal.X;
-				}
-				Result.Mesh.Faces[i].Flip();
-			}
-			return Result;
-		}
-
+		
 		// get transformed object
 		private static StaticObject GetTransformedStaticObject(StaticObject Prototype, double NearDistance, double FarDistance)
 		{
@@ -5972,7 +5931,7 @@ namespace OpenBve {
 									if (Data.Blocks[i].RailPole[j].Location <= 0.0) {
 										ObjectManager.CreateObject(Data.Structure.Poles[0][Data.Blocks[i].RailPole[j].Type], pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 									} else {
-										UnifiedObject Pole = GetMirroredObject(Data.Structure.Poles[0][Data.Blocks[i].RailPole[j].Type]);
+										UnifiedObject Pole = Data.Structure.Poles[0][Data.Blocks[i].RailPole[j].Type].Mirror();
 										ObjectManager.CreateObject(Pole, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 									}
 								} else {
@@ -6342,9 +6301,9 @@ namespace OpenBve {
 										CompatibilitySignalData csd = (CompatibilitySignalData)sd;
 										if (csd.Numbers.Length != 0) {
 											double brightness = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
-											ObjectManager.AnimatedObjectCollection aoc = new ObjectManager.AnimatedObjectCollection();
-											aoc.Objects = new ObjectManager.AnimatedObject[1];
-											aoc.Objects[0] = new ObjectManager.AnimatedObject();
+											AnimatedObjectCollection aoc = new AnimatedObjectCollection(Program.CurrentHost);
+											aoc.Objects = new AnimatedObject[1];
+											aoc.Objects[0] = new AnimatedObject(Program.CurrentHost);
 											aoc.Objects[0].States = new AnimatedObjectState[csd.Numbers.Length];
 											for (int l = 0; l < csd.Numbers.Length; l++)
 											{
@@ -6372,9 +6331,9 @@ namespace OpenBve {
 													zn++;
 												}
 											}
-											ObjectManager.AnimatedObjectCollection aoc = new ObjectManager.AnimatedObjectCollection();
-											aoc.Objects = new ObjectManager.AnimatedObject[1];
-											aoc.Objects[0] = new ObjectManager.AnimatedObject();
+											AnimatedObjectCollection aoc = new AnimatedObjectCollection(Program.CurrentHost);
+											aoc.Objects = new AnimatedObject[1];
+											aoc.Objects[0] = new AnimatedObject(Program.CurrentHost);
 											aoc.Objects[0].States = new AnimatedObjectState[zn];
 											int zi = 0;
 											string expr = "";

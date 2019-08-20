@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using LibRender;
+using static LibRender.CameraProperties;
 using OpenBve.RouteManager;
+using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
 using OpenBveApi.Sounds;
 using OpenBveApi.Trains;
 using OpenTK.Audio.OpenAL;
 using SoundManager;
-
 
 namespace OpenBve
 {
@@ -109,7 +109,7 @@ namespace OpenBve
 							velocity = Car.CurrentSpeed * direction;
 							break;
 						case SoundType.AnimatedObject:
-							var WorldSound = (ObjectManager.WorldSound)Sources[i].Parent;
+							var WorldSound = (WorldSound)Sources[i].Parent;
 							//TODO: Calculate speed...
 							position = WorldSound.Follower.WorldPosition + WorldSound.Position;
 							velocity = Vector3.Zero;
@@ -378,7 +378,7 @@ namespace OpenBve
 							Car.CreateWorldCoordinates(Sources[i].Position, out position, out direction);
 							break;
 						case SoundType.AnimatedObject:
-							var WorldSound = (ObjectManager.WorldSound)Sources[i].Parent;
+							var WorldSound = (WorldSound)Sources[i].Parent;
 							position = WorldSound.Follower.WorldPosition + WorldSound.Position;
 							break;
 						default:
@@ -520,7 +520,7 @@ namespace OpenBve
 							velocity = Car.CurrentSpeed * direction;
 							break;
 						case SoundType.AnimatedObject:
-							var WorldSound = (ObjectManager.WorldSound)source.Parent;
+							var WorldSound = (WorldSound)source.Parent;
 							position = WorldSound.Follower.WorldPosition + WorldSound.Position;
 							velocity = Vector3.Zero;
 							break;

@@ -22,6 +22,7 @@ using OpenTK.Input;
 using ButtonState = OpenTK.Input.ButtonState;
 using Screen = LibRender.Screen;
 using Vector3 = OpenBveApi.Math.Vector3;
+using static LibRender.CameraProperties;
 
 namespace OpenBve {
 	internal static class Program {
@@ -181,7 +182,7 @@ namespace OpenBve {
 						double p = RouteManager.CurrentRoute.Stations[i].Stops[RouteManager.CurrentRoute.Stations[i].Stops.Length - 1].TrackPosition;
 						if (p < World.CameraTrackFollower.TrackPosition - 0.1) {
 							World.CameraTrackFollower.UpdateAbsolute(p, true, false);
-							Camera.CurrentAlignment.TrackPosition = p;
+							Camera.Alignment.TrackPosition = p;
 							CurrentStation = i;
 							break;
 						}
@@ -193,7 +194,7 @@ namespace OpenBve {
 						double p = RouteManager.CurrentRoute.Stations[i].Stops[RouteManager.CurrentRoute.Stations[i].Stops.Length - 1].TrackPosition;
 						if (p > World.CameraTrackFollower.TrackPosition + 0.1) {
 							World.CameraTrackFollower.UpdateAbsolute(p, true, false);
-							Camera.CurrentAlignment.TrackPosition = p;
+							Camera.Alignment.TrackPosition = p;
 							CurrentStation = i;
 							break;
 						}
@@ -209,11 +210,11 @@ namespace OpenBve {
 				Program.CurrentlyLoading = true;
 				Renderer.RenderScene(0.0);
 				Program.currentGameWindow.SwapBuffers();
-				CameraAlignment a = Camera.CurrentAlignment;
+				CameraAlignment a = Camera.Alignment;
 				TextureManager.UnloadAllTextures();
 				if (Program.LoadRoute())
 				{
-					Camera.CurrentAlignment = a;
+					Camera.Alignment = a;
 					World.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
 					World.CameraTrackFollower.UpdateAbsolute(a.TrackPosition, true, false);
 					Camera.AlignmentDirection = new CameraAlignment();
@@ -323,10 +324,10 @@ namespace OpenBve {
 							bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
 							LoadingScreen.SetLoadingBkg(TextureManager.RegisterTexture(bitmap, new TextureParameters(null, null)));
 						}
-						CameraAlignment a = Camera.CurrentAlignment;
+						CameraAlignment a = Camera.Alignment;
 						if (LoadRoute())
 						{
-							Camera.CurrentAlignment = a;
+							Camera.Alignment = a;
 							World.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
 							World.CameraTrackFollower.UpdateAbsolute(a.TrackPosition, true, false);
 							Camera.AlignmentDirection = new CameraAlignment();
@@ -376,7 +377,7 @@ namespace OpenBve {
 				case Key.F8:
 					if (Program.CurrentlyLoading == true)
 					{
-						//Don't allow the user to update the settings during loading, bad idea....
+						//Don't allow the user to update the settings during loading, bad idea..
 						break;
 					}
 					if (formOptions.ShowOptions() == DialogResult.OK)
@@ -397,62 +398,62 @@ namespace OpenBve {
 					break;
 				case Key.A:
 				case Key.Keypad4:
-					Camera.AlignmentDirection.Position.X = -Camera.ExteriorTopSpeed*speedModified;
+					Camera.AlignmentDirection.Position.X = -ExteriorTopSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.D:
 				case Key.Keypad6:
-					Camera.AlignmentDirection.Position.X = Camera.ExteriorTopSpeed*speedModified;
+					Camera.AlignmentDirection.Position.X = ExteriorTopSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Keypad2:
-					Camera.AlignmentDirection.Position.Y = -Camera.ExteriorTopSpeed*speedModified;
+					Camera.AlignmentDirection.Position.Y = -ExteriorTopSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Keypad8:
-					Camera.AlignmentDirection.Position.Y = Camera.ExteriorTopSpeed*speedModified;
+					Camera.AlignmentDirection.Position.Y = ExteriorTopSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.W:
 				case Key.Keypad9:
-					Camera.AlignmentDirection.TrackPosition = Camera.ExteriorTopSpeed*speedModified;
+					Camera.AlignmentDirection.TrackPosition = ExteriorTopSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.S:
 				case Key.Keypad3:
-					Camera.AlignmentDirection.TrackPosition = -Camera.ExteriorTopSpeed*speedModified;
+					Camera.AlignmentDirection.TrackPosition = -ExteriorTopSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Left:
-					Camera.AlignmentDirection.Yaw = -Camera.ExteriorTopAngularSpeed*speedModified;
+					Camera.AlignmentDirection.Yaw = -ExteriorTopAngularSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Right:
-					Camera.AlignmentDirection.Yaw = Camera.ExteriorTopAngularSpeed*speedModified;
+					Camera.AlignmentDirection.Yaw = ExteriorTopAngularSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Up:
-					Camera.AlignmentDirection.Pitch = Camera.ExteriorTopAngularSpeed*speedModified;
+					Camera.AlignmentDirection.Pitch = ExteriorTopAngularSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Down:
-					Camera.AlignmentDirection.Pitch = -Camera.ExteriorTopAngularSpeed*speedModified;
+					Camera.AlignmentDirection.Pitch = -ExteriorTopAngularSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.KeypadDivide:
-					Camera.AlignmentDirection.Roll = -Camera.ExteriorTopAngularSpeed*speedModified;
+					Camera.AlignmentDirection.Roll = -ExteriorTopAngularSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.KeypadMultiply:
-					Camera.AlignmentDirection.Roll = Camera.ExteriorTopAngularSpeed*speedModified;
+					Camera.AlignmentDirection.Roll = ExteriorTopAngularSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Keypad0:
-					Camera.AlignmentDirection.Zoom = Camera.ZoomTopSpeed*speedModified;
+					Camera.AlignmentDirection.Zoom = ZoomTopSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.KeypadPeriod:
-					Camera.AlignmentDirection.Zoom = -Camera.ZoomTopSpeed*speedModified;
+					Camera.AlignmentDirection.Zoom = -ZoomTopSpeed*speedModified;
 					CpuReducedMode = false;
 					break;
 				case Key.Keypad1:
@@ -472,11 +473,11 @@ namespace OpenBve {
 					CpuReducedMode = false;
 					break;
 				case Key.Keypad5:
-					Camera.CurrentAlignment.Yaw = 0.0;
-					Camera.CurrentAlignment.Pitch = 0.0;
-					Camera.CurrentAlignment.Roll = 0.0;
-					Camera.CurrentAlignment.Position = new Vector3(0.0, 2.5, 0.0);
-					Camera.CurrentAlignment.Zoom = 0.0;
+					Camera.Alignment.Yaw = 0.0;
+					Camera.Alignment.Pitch = 0.0;
+					Camera.Alignment.Roll = 0.0;
+					Camera.Alignment.Position = new Vector3(0.0, 2.5, 0.0);
+					Camera.Alignment.Zoom = 0.0;
 					Camera.AlignmentDirection = new CameraAlignment();
 					Camera.AlignmentSpeed = new CameraAlignment();
 					Camera.VerticalViewingAngle = Camera.OriginalVerticalViewingAngle;
@@ -593,7 +594,7 @@ namespace OpenBve {
 									value = World.CameraTrackFollower.TrackPosition + (double) direction*value;
 								}
 								World.CameraTrackFollower.UpdateAbsolute(value, true, false);
-								Camera.CurrentAlignment.TrackPosition = value;
+								Camera.Alignment.TrackPosition = value;
 								World.UpdateAbsoluteCamera(0.0);
 								World.UpdateViewingDistances();
 		                        }

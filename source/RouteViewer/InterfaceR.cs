@@ -10,6 +10,7 @@ using System.Globalization;
 using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
+using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using SoundManager;
 
@@ -17,7 +18,7 @@ namespace OpenBve {
 
 	// --- TimeTable.cs ---
 	internal static class Timetable {
-		internal static void AddObjectForCustomTimetable(ObjectManager.AnimatedObject obj) { }
+		internal static void AddObjectForCustomTimetable(AnimatedObject obj) { }
 		internal enum TimetableState {
 			None = 0,
 			Custom = 1,

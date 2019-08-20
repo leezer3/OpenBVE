@@ -1,20 +1,27 @@
 ﻿using System;
+using OpenBveApi.Hosts;
 using OpenBveApi.Math;
-using OpenBveApi.Objects;
 using OpenBveApi.World;
 
-namespace OpenBve
+namespace OpenBveApi.Objects
 {
-	/// <summary>The ObjectManager is the root class containing functions to load and manage objects within the simulation world</summary>
-	public static partial class ObjectManager
-	{
-		/// <summary>The AnimatedObjectCollection is a simple container class containing one or more animated objects</summary>
-		internal class AnimatedObjectCollection : UnifiedObject
+	/// <summary>The AnimatedObjectCollection is a simple container class containing one or more animated objects</summary>
+		public class AnimatedObjectCollection : UnifiedObject
 		{
-			/// <summary>The objects that this collection contains</summary>
-			internal AnimatedObject[] Objects;
-			internal WorldObject[] Sounds;
 
+			private readonly HostInterface currentHost;
+			/// <summary>The objects that this collection contains</summary>
+			public AnimatedObject[] Objects;
+			/// <summary>The sounds that this collection contains</summary>
+			public WorldObject[] Sounds;
+
+			/// <summary>Creates a new AnimatedObjectCollection</summary>
+			public AnimatedObjectCollection(HostInterface Host)
+			{
+				currentHost = Host;
+			}
+
+			/// <inheritdoc/>
 			public override void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation,
 				int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength,
 				double TrackPosition, double Brightness, bool DuplicateMaterials)
@@ -58,11 +65,9 @@ namespace OpenBve
 								Vector3 s = t.X;
 								Vector3 u = t.Y;
 								Vector3 d = t.Z;
-								p.X += Objects[i].States[0].Position.X * s.X + Objects[i].States[0].Position.Y * u.X + Objects[i].States[0].Position.Z * d.X;
-								p.Y += Objects[i].States[0].Position.X * s.Y + Objects[i].States[0].Position.Y * u.Y + Objects[i].States[0].Position.Z * d.Y;
-								p.Z += Objects[i].States[0].Position.X * s.Z + Objects[i].States[0].Position.Y * u.Z + Objects[i].States[0].Position.Z * d.Z;
+								p += Objects[i].States[0].Position * s + Objects[i].States[0].Position * u + Objects[i].States[0].Position * d;
 								double zOffset = Objects[i].States[0].Position.Z;
-								CreateStaticObject(Objects[i].States[0].Object, p, BaseTransformation, AuxTransformation, AccurateObjectDisposal, zOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+								currentHost.CreateStaticObject(Objects[i].States[0].Object, p, BaseTransformation, AuxTransformation, AccurateObjectDisposal, zOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 							}
 							else
 							{
@@ -104,6 +109,7 @@ namespace OpenBve
 				}
 			}
 
+			/// <inheritdoc/>
 			public override void OptimizeObject(bool PreserveVerticies, int Threshold, bool VertexCulling)
 			{
 				for (int i = 0; i < Objects.Length; i++)
@@ -119,10 +125,34 @@ namespace OpenBve
 				}
 			}
 
+			/// <inheritdoc/>
 			public override UnifiedObject Clone()
 			{
 				throw new NotSupportedException();
 			}
+
+			/// <summary>Creates a mirrored clone of this object</summary>
+			public override UnifiedObject Mirror()
+			{
+				AnimatedObjectCollection Result = new AnimatedObjectCollection(currentHost)
+				{
+					Objects = new AnimatedObject[Objects.Length]
+				};
+				for (int i = 0; i < Objects.Length; i++)
+				{
+					Result.Objects[i] = Objects[i].Clone();
+					for (int j = 0; j < Objects[i].States.Length; j++)
+					{
+						Result.Objects[i].States[j].Object = (StaticObject)Result.Objects[i].States[j].Object.Mirror();
+					}
+					Result.Objects[i].TranslateXDirection.X *= -1.0;
+					Result.Objects[i].TranslateYDirection.X *= -1.0;
+					Result.Objects[i].TranslateZDirection.X *= -1.0;
+					Result.Objects[i].RotateXDirection.X *= -1.0;
+					Result.Objects[i].RotateYDirection.X *= -1.0;
+					Result.Objects[i].RotateZDirection.X *= -1.0;
+				}
+				return Result;
+			}
 		}
-	}
 }

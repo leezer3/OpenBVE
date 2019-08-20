@@ -8,6 +8,7 @@ using System.Xml.Linq;
 using LibRender;
 using OpenBve.BrakeSystems;
 using OpenBve.Parsers.Panel;
+using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
 using OpenBveApi.Interface;
 
@@ -270,7 +271,7 @@ namespace OpenBve.Parsers.Train
 						};
 						Train.Cars[Car].CarSections[0].Groups[0] = new TrainManager.ElementsGroup
 						{
-							Elements = new ObjectManager.AnimatedObject[] { },
+							Elements = new AnimatedObject[] { },
 							Overlay = true
 						};
 						
@@ -349,12 +350,12 @@ namespace OpenBve.Parsers.Train
 				}
 				else if (interiorFile.ToLowerInvariant().EndsWith(".animated"))
 				{
-					ObjectManager.AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(interiorFile, Encoding.UTF8);
+					AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(interiorFile, Encoding.UTF8);
 					try
 					{
 						for (int i = 0; i < a.Objects.Length; i++)
 						{
-							a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject();
+							ObjectManager.CreateDynamicObject(ref a.Objects[i].internalObject);
 						}
 						Train.Cars[Car].CarSections[0].Groups[0].Elements = a.Objects;
 						Train.Cars[Car].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;

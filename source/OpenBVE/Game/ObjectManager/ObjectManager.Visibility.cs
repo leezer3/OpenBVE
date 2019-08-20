@@ -1,5 +1,5 @@
 ﻿using System;
-using LibRender;
+using static LibRender.CameraProperties;
 using OpenBveApi.Objects;
 
 namespace OpenBve
@@ -36,14 +36,14 @@ namespace OpenBve
 			ObjectsSortedByStartPointer = 0;
 			ObjectsSortedByEndPointer = 0;
 			// initial visiblity
-			double p = World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z;
+			double p = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
 			for (int i = 0; i < ObjectsUsed; i++)
 			{
 				if (!Objects[i].Dynamic)
 				{
 					if (Objects[i].StartingDistance <= p + Camera.ForwardViewingDistance & Objects[i].EndingDistance >= p - Camera.BackwardViewingDistance)
 					{
-						Renderer.ShowObject(i, ObjectType.Static);
+						Renderer.ShowObject(Objects[i], ObjectType.Static);
 					}
 				}
 			}
@@ -72,7 +72,7 @@ namespace OpenBve
 		{
 			double d = TrackPosition - LastUpdatedTrackPosition;
 			int n = ObjectsSortedByStart.Length;
-			double p = World.CameraTrackFollower.TrackPosition + Camera.CurrentAlignment.Position.Z;
+			double p = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
 			if (d < 0.0)
 			{
 				if (ObjectsSortedByStartPointer >= n) ObjectsSortedByStartPointer = n - 1;
@@ -99,7 +99,7 @@ namespace OpenBve
 					{
 						if (Objects[o].StartingDistance <= p + Camera.ForwardViewingDistance)
 						{
-							Renderer.ShowObject(o, ObjectType.Static);
+							Renderer.ShowObject(Objects[o], ObjectType.Static);
 						}
 						ObjectsSortedByEndPointer--;
 					}
@@ -135,7 +135,7 @@ namespace OpenBve
 					{
 						if (Objects[o].EndingDistance >= p - Camera.BackwardViewingDistance)
 						{
-							Renderer.ShowObject(o, ObjectType.Static);
+							Renderer.ShowObject(Objects[o], ObjectType.Static);
 						}
 						ObjectsSortedByStartPointer++;
 					}
