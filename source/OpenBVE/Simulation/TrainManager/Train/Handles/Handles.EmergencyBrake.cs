@@ -24,7 +24,10 @@ namespace OpenBve
 			/// <summary>The behaviour of the other handles when the EB handle is activated</summary>
 			internal EbHandleBehaviour OtherHandlesBehaviour = EbHandleBehaviour.NoAction;
 
-			
+			internal EmergencyHandle()
+			{
+				ApplicationSound = new CarSound();
+			}
 
 			internal void Update()
 			{
