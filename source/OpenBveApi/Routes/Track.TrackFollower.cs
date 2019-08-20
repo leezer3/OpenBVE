@@ -41,12 +41,39 @@ namespace OpenBveApi.Routes
 		/// <summary>Stores a reference to the CurrentRoute.Tracks array</summary>
 		private readonly Track[] Tracks;
 
+		public TrackFollower Clone()
+		{
+			TrackFollower t = new TrackFollower(Tracks, Train, Car);
+			t.LastTrackElement = LastTrackElement;
+			t.TrackPosition = TrackPosition;
+			t.WorldPosition = new Vector3(WorldPosition);
+			t.WorldDirection = new Vector3(WorldDirection);
+			t.WorldUp = new Vector3(WorldUp);
+			t.WorldSide = new Vector3(WorldSide);
+			t.TriggerType = TriggerType;
+			return t;
+		}
+
 		/// <summary>Creates a new TrackFollower</summary>
 		public TrackFollower(Track[] tracks, AbstractTrain train = null, AbstractCar car = null)
 		{
 			Tracks = tracks;
 			Train = train;
 			Car = car;
+			LastTrackElement = 0;
+			TrackPosition = 0;
+			WorldPosition = new Vector3();
+			WorldDirection = new Vector3();
+			WorldUp = new Vector3();
+			WorldSide = new Vector3();
+			Pitch = 0;
+			CurveRadius = 0;
+			CurveCant = 0;
+			Odometer = 0;
+			CantDueToInaccuracy = 0;
+			AdhesionMultiplier = 0;
+			TriggerType = EventTriggerType.None;
+			TrackIndex = 0;
 		}
 
 		/// <summary>Gets the rail gauge for the track this is following</summary>
