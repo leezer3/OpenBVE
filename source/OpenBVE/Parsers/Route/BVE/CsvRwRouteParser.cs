@@ -34,13 +34,17 @@ namespace OpenBve {
 			ObjectPath = objectPath;
 			SoundPath = soundPath;
 			TrainPath = trainPath;
-			for (int i = 0; i < Plugins.LoadedPlugins.Length; i++)
+			if (!PreviewOnly)
 			{
-				if (Plugins.LoadedPlugins[i].Object != null)
+				for (int i = 0; i < Plugins.LoadedPlugins.Length; i++)
 				{
-					Plugins.LoadedPlugins[i].Object.SetObjectParser(SoundPath); //HACK: Pass out the sound folder path to those plugins which consume it
+					if (Plugins.LoadedPlugins[i].Object != null)
+					{
+						Plugins.LoadedPlugins[i].Object.SetObjectParser(SoundPath); //HACK: Pass out the sound folder path to those plugins which consume it
+					}
 				}
 			}
+			
 			freeObjCount = 0;
 			railtypeCount = 0;
 			Game.UnitOfSpeed = "km/h";
