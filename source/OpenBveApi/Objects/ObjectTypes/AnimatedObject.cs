@@ -103,7 +103,9 @@ namespace OpenBveApi.Objects
 		/// <remarks>This is a fully transformed deep copy of the current state</remarks>
 		public StaticObject internalObject;
 		/// <summary>Holds a reference to the host interface of the current application</summary>
-		public readonly HostInterface currentHost;
+		private readonly HostInterface currentHost;
+		/// <summary>Whether this object uses the Timetable texture</summary>
+		public bool isTimeTableObject;
 
 		/// <summary>Creates a new animated object</summary>
 		public AnimatedObject(HostInterface host)
@@ -169,14 +171,12 @@ namespace OpenBveApi.Objects
 			Result.LEDFunction = this.LEDFunction == null ? null : this.LEDFunction.Clone();
 			Result.RefreshRate = this.RefreshRate;
 			Result.SecondsSinceLastUpdate = 0.0;
-			//for (int i = 0; i < Timetable.CustomObjectsUsed; i++)
-			//{
-			//	if (Timetable.CustomObjects[i] == this)
-			//	{
-			//		Timetable.AddObjectForCustomTimetable(Result);
-			//	}
-			//}
+			if (isTimeTableObject)
+			{
+				Result.isTimeTableObject = true;
+				currentHost.AddObjectForCustomTimeTable(this);
 
+			}
 			return Result;
 		}
 

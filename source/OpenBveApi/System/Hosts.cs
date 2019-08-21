@@ -207,6 +207,12 @@ namespace OpenBveApi.Hosts {
 			
 		}
 
+		/// <summary>Adds an object with a custom timetable texture</summary>
+		public virtual void AddObjectForCustomTimeTable(AnimatedObject animatedObject)
+		{
+
+		}
+
 		/// <summary>Shows an object in the base renderer</summary>
 		/// <param name="objectToShow">The reference to the object to show</param>
 		/// <param name="objectType">The object type</param>

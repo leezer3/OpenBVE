@@ -273,6 +273,11 @@ namespace OpenBve {
 			ObjectManager.CreateDynamicObject(ref internalObject);
 		}
 
+		public override void AddObjectForCustomTimeTable(AnimatedObject animatedObject)
+		{
+			Timetable.AddObjectForCustomTimetable(animatedObject);
+		}
+
 		public override void ShowObject(StaticObject objectToShow, ObjectType objectType)
 		{
 			Renderer.ShowObject(objectToShow, objectType);
