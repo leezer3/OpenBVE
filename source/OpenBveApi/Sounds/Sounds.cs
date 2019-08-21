@@ -176,7 +176,7 @@ namespace OpenBveApi.Sounds {
 						for (int i = 0; i < MyBytes.Length; i++)
 						{
 							samples[i] = new float[MyBytes[i].Length >> 1];
-							for (int j = 0; j < MyBytes[i].Length; j += 2)
+							for (int j = 0; j + 1 < MyBytes[i].Length; j += 2)
 							{
 								short value = (short)(ushort)(MyBytes[i][j] | (MyBytes[i][j + 1] << 8));
 								samples[i][j >> 1] = value / (value < 0 ? 32768.0f : 32767.0f);
