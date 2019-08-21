@@ -111,9 +111,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sound.Vorbis", "source\Plug
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Animated", "source\Plugins\Object.Animated\Object.Animated.csproj", "{F59F8030-A470-471E-AFBF-6E7816DCD11B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.LokSim", "Source\Plugins\Object.LokSim\Object.LokSim.csproj", "{7AE7D277-EFD8-4325-80ED-CAE7CDB94505}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.LokSim", "source\Plugins\Object.LokSim\Object.LokSim.csproj", "{7AE7D277-EFD8-4325-80ED-CAE7CDB94505}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Msts", "Source\Plugins\Object.Msts\Object.Msts.csproj", "{D7561922-31A6-46DE-801F-C3C519B4B9C3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Msts", "source\Plugins\Object.Msts\Object.Msts.csproj", "{D7561922-31A6-46DE-801F-C3C519B4B9C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
