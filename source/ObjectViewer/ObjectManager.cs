@@ -125,10 +125,8 @@ namespace OpenBve
                 case ".b3d":
                 case ".x":
                 case ".obj":
-	                Program.CurrentHost.LoadObject(FileName, Encoding, out Result);
-                    break;
                 case ".animated":
-                    Result = AnimatedObjectParser.ReadObject(FileName, Encoding);
+	                Program.CurrentHost.LoadObject(FileName, Encoding, out Result);
                     break;
                 case ".l3dobj":
                     Result = Ls3DObjectParser.ReadObject(FileName, Rotation);

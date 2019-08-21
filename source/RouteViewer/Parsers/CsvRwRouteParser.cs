@@ -388,6 +388,13 @@ namespace OpenBve {
 		internal static void ParseRoute(string FileName, bool IsRW, System.Text.Encoding Encoding, string TrainPath, string ObjectPath, string SoundPath, bool PreviewOnly) {
 			// initialize data
 			string CompatibilityFolder = Program.FileSystem.GetDataFolder("Compatibility");
+			for (int i = 0; i < Plugins.LoadedPlugins.Length; i++)
+			{
+				if (Plugins.LoadedPlugins[i].Object != null)
+				{
+					Plugins.LoadedPlugins[i].Object.SetObjectParser(SoundPath); //HACK: Pass out the sound folder path to those plugins which consume it
+				}
+			}
 			RouteData Data = new RouteData();
 			Data.BlockInterval = 25.0;
 			Data.AccurateObjectDisposal = false;

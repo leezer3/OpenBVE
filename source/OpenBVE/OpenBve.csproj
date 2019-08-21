@@ -383,7 +383,6 @@
     <Compile Include="Game\Timetable.cs" />
     <Compile Include="OldCode\TrainManager.cs" />
     <Compile Include="OldCode\World.cs" />
-    <Compile Include="Parsers\Object\BVE\AnimatedObjectParser.cs" />
     <Compile Include="Parsers\Train\ExtensionsCfgParser.cs" />
     <Compile Include="Parsers\Panel\Panel2CfgParser.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.cs" />
@@ -486,7 +485,9 @@
       <LastGenOutput>AssemblyInfo.cs</LastGenOutput>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Parsers\Object\BVE\" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- AUTOMATICALLY TRANSLATE TEXT TEMPLATES -->
   <!-- Optionally make the import portable across VS versions -->

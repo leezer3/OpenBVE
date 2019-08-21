@@ -106,7 +106,10 @@ namespace OpenBve
 					{
 						Program.FileSystem.AppendToLogFile("INFO: This train contains both a 2D and a 3D panel. The 3D panel will always take precedence");
 					}
-					AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(File, Encoding);
+
+					UnifiedObject currentObject;
+					Program.CurrentHost.LoadObject(File, Encoding, out currentObject);
+					var a = currentObject as AnimatedObjectCollection;
 					if (a != null)
 					{
 						//HACK: If a == null , loading our animated object completely failed (Missing objects?). Fallback to trying the panel2.cfg

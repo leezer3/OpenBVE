@@ -1,19 +1,16 @@
-using System;
+﻿using System;
 using System.Globalization;
-using OpenBveApi;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Sounds;
 using OpenBveApi.Textures;
-using SoundManager;
 
-namespace OpenBve
+namespace Plugin
 {
-	internal static class AnimatedObjectParser
+	public partial class Plugin
 	{
-
-		// parse animated object config
 		/// <summary>Loads a collection of animated objects from a file.</summary>
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
 		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
@@ -21,7 +18,7 @@ namespace OpenBve
 		internal static AnimatedObjectCollection ReadObject(string FileName, System.Text.Encoding Encoding)
 		{
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost)
+			AnimatedObjectCollection Result = new AnimatedObjectCollection(currentHost)
 			{
 				Objects = new AnimatedObject[4],
 				Sounds = new WorldObject[4]
@@ -41,7 +38,7 @@ namespace OpenBve
 			}
 			if (rpnUsed)
 			{
-				Interface.AddMessage(MessageType.Error, false, "An animated object file contains RPN functions. These were never meant to be used directly, only for debugging. They won't be supported indefinately. Please get rid of them in file " + FileName);
+				currentHost.AddMessage(MessageType.Error, false, "An animated object file contains RPN functions. These were never meant to be used directly, only for debugging. They won't be supported indefinately. Please get rid of them in file " + FileName);
 			}
 			for (int i = 0; i < Lines.Length; i++)
 			{
@@ -74,15 +71,15 @@ namespace OpenBve
 															double x, y, z;
 															if (!double.TryParse(s[0], System.Globalization.NumberStyles.Float, Culture, out x))
 															{
-																Interface.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else if (!double.TryParse(s[1], System.Globalization.NumberStyles.Float, Culture, out y))
 															{
-																Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else if (!double.TryParse(s[2], System.Globalization.NumberStyles.Float, Culture, out z))
 															{
-																Interface.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else
 															{
@@ -91,20 +88,20 @@ namespace OpenBve
 														}
 														else
 														{
-															Interface.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 														}
 													} break;
 												default:
-													Interface.AddMessage(MessageType.Error, false, "The attribute " + a + " is not supported at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													currentHost.AddMessage(MessageType.Error, false, "The attribute " + a + " is not supported at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													break;
 											}
 										}
 										else
 										{
 											string Folder = System.IO.Path.GetDirectoryName(FileName);
-											if (Path.ContainsInvalidChars(Lines[i]))
+											if (OpenBveApi.Path.ContainsInvalidChars(Lines[i]))
 											{
-												Interface.AddMessage(MessageType.Error, false, Lines[i] + " contains illegal characters at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+												currentHost.AddMessage(MessageType.Error, false, Lines[i] + " contains illegal characters at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											}
 											else
 											{
@@ -115,12 +112,12 @@ namespace OpenBve
 													{
 														Array.Resize<UnifiedObject>(ref obj, obj.Length << 1);
 													}
-													obj[objCount] = ObjectManager.LoadObject(file, Encoding, false);
+													currentHost.LoadObject(file, Encoding, out obj[objCount]);
 													objCount++;
 												}
 												else
 												{
-													Interface.AddMessage(MessageType.Error, true, "File " + file + " not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													currentHost.AddMessage(MessageType.Error, true, "File " + file + " not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 												}
 											}
 										}
@@ -140,7 +137,7 @@ namespace OpenBve
 											{
 												Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
 											}
-											AnimatedObject a = new AnimatedObject(Program.CurrentHost);
+											AnimatedObject a = new AnimatedObject(currentHost);
 											AnimatedObjectState aos = new AnimatedObjectState(s, position);
 											a.States = new AnimatedObjectState[] { aos };
 											Result.Objects[ObjectCount] = a;
@@ -176,7 +173,7 @@ namespace OpenBve
 								{
 									Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
 								}
-								Result.Objects[ObjectCount] = new AnimatedObject(Program.CurrentHost)
+								Result.Objects[ObjectCount] = new AnimatedObject(currentHost)
 								{
 									States = new AnimatedObjectState[] {},
 									CurrentState = -1,
@@ -222,15 +219,15 @@ namespace OpenBve
 															double x, y, z;
 															if (!double.TryParse(s[0], System.Globalization.NumberStyles.Float, Culture, out x))
 															{
-																Interface.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else if (!double.TryParse(s[1], System.Globalization.NumberStyles.Float, Culture, out y))
 															{
-																Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else if (!double.TryParse(s[2], System.Globalization.NumberStyles.Float, Culture, out z))
 															{
-																Interface.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else
 															{
@@ -239,7 +236,7 @@ namespace OpenBve
 														}
 														else
 														{
-															Interface.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 														}
 													} break;
 												case "states":
@@ -255,12 +252,12 @@ namespace OpenBve
 																s[k] = s[k].Trim();
 																if (s[k].Length == 0)
 																{
-																	Interface.AddMessage(MessageType.Error, false, "File" + k.ToString(Culture) + " is an empty string - did you mean something else? - in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																	currentHost.AddMessage(MessageType.Error, false, "File" + k.ToString(Culture) + " is an empty string - did you mean something else? - in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																	StateFiles[k] = null;
 																}
-																else if (Path.ContainsInvalidChars(s[k]))
+																else if (OpenBveApi.Path.ContainsInvalidChars(s[k]))
 																{
-																	Interface.AddMessage(MessageType.Error, false, "File" + k.ToString(Culture) + " contains illegal characters in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																	currentHost.AddMessage(MessageType.Error, false, "File" + k.ToString(Culture) + " contains illegal characters in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																	StateFiles[k] = null;
 																}
 																else
@@ -268,7 +265,7 @@ namespace OpenBve
 																	StateFiles[k] = OpenBveApi.Path.CombineFile(Folder, s[k]);
 																	if (!System.IO.File.Exists(StateFiles[k]))
 																	{
-																		Interface.AddMessage(MessageType.Error, true, "File " + StateFiles[k] + " not found in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																		currentHost.AddMessage(MessageType.Error, true, "File " + StateFiles[k] + " not found in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																		StateFiles[k] = null;
 																	}
 																}
@@ -279,13 +276,13 @@ namespace OpenBve
 															}
 															if (NullObject == true)
 															{
-																Interface.AddMessage(MessageType.Error, false, "None of the specified files were found in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "None of the specified files were found in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																return null;
 															}
 														}
 														else
 														{
-															Interface.AddMessage(MessageType.Error, false, "At least one argument is expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "At least one argument is expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															return null;
 														}
 													} break;
@@ -297,7 +294,7 @@ namespace OpenBve
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "statefunctionrpn":
 													{
@@ -315,15 +312,15 @@ namespace OpenBve
 															double x, y, z;
 															if (!double.TryParse(s[0], System.Globalization.NumberStyles.Float, Culture, out x))
 															{
-																Interface.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else if (!double.TryParse(s[1], System.Globalization.NumberStyles.Float, Culture, out y))
 															{
-																Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else if (!double.TryParse(s[2], System.Globalization.NumberStyles.Float, Culture, out z))
 															{
-																Interface.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else
 															{
@@ -343,7 +340,7 @@ namespace OpenBve
 														}
 														else
 														{
-															Interface.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 														}
 													} break;
 												case "translatexfunction":
@@ -357,11 +354,11 @@ namespace OpenBve
 															//If we add this to the position instead, this gives a minor speedup
 															break;
 														}
-														Result.Objects[ObjectCount].TranslateXFunction = new FunctionScript(Program.CurrentHost, b, true);
+														Result.Objects[ObjectCount].TranslateXFunction = new FunctionScript(currentHost, b, true);
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "translatexscript":
 													try
@@ -370,7 +367,7 @@ namespace OpenBve
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "translateyfunction":
 													try
@@ -383,11 +380,11 @@ namespace OpenBve
 															//If we add this to the position instead, this gives a minor speedup
 															break;
 														}
-														Result.Objects[ObjectCount].TranslateYFunction = new FunctionScript(Program.CurrentHost, b, true);
+														Result.Objects[ObjectCount].TranslateYFunction = new FunctionScript(currentHost, b, true);
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "translateyscript":
 													try
@@ -396,7 +393,7 @@ namespace OpenBve
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "translatezfunction":
 													try
@@ -409,11 +406,11 @@ namespace OpenBve
 															//If we add this to the position instead, this gives a minor speedup
 															break;
 														}
-														Result.Objects[ObjectCount].TranslateZFunction = new FunctionScript(Program.CurrentHost, b, true);
+														Result.Objects[ObjectCount].TranslateZFunction = new FunctionScript(currentHost, b, true);
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "translatezscript":
 													try
@@ -422,16 +419,16 @@ namespace OpenBve
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "trackfollowerfunction":
 													try
 													{
-														Result.Objects[ObjectCount].TrackFollowerFunction = new FunctionScript(Program.CurrentHost, b, true);
+														Result.Objects[ObjectCount].TrackFollowerFunction = new FunctionScript(currentHost, b, true);
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "axles":
 													try
@@ -448,17 +445,17 @@ namespace OpenBve
 														}
 														else if (FrontAxlePosition < RearAxlePosition)
 														{
-															Interface.AddMessage(MessageType.Error, false,"Rear is expected to be less than Front in " + a + " at line " + (i + 1).ToString(Culture) + " in file " +FileName);
+															currentHost.AddMessage(MessageType.Error, false,"Rear is expected to be less than Front in " + a + " at line " + (i + 1).ToString(Culture) + " in file " +FileName);
 														}
 														else
 														{
-															Interface.AddMessage(MessageType.Error, false, "Rear must not equal Front in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Rear must not equal Front in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 														}
 
 													}
 													catch(Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													}
 													break;
 													/*
@@ -469,29 +466,29 @@ namespace OpenBve
 												case "translatexfunctionrpn":
 													try
 													{
-														Result.Objects[ObjectCount].TranslateXFunction = new FunctionScript(Program.CurrentHost, b, false);
+														Result.Objects[ObjectCount].TranslateXFunction = new FunctionScript(currentHost, b, false);
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "translateyfunctionrpn":
 													try
 													{
-														Result.Objects[ObjectCount].TranslateYFunction = new FunctionScript(Program.CurrentHost, b, false);
+														Result.Objects[ObjectCount].TranslateYFunction = new FunctionScript(currentHost, b, false);
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "translatezfunctionrpn":
 													try
 													{
-														Result.Objects[ObjectCount].TranslateZFunction = new FunctionScript(Program.CurrentHost, b, false);
+														Result.Objects[ObjectCount].TranslateZFunction = new FunctionScript(currentHost, b, false);
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "rotatexdirection":
 												case "rotateydirection":
@@ -503,19 +500,19 @@ namespace OpenBve
 															double x, y, z;
 															if (!double.TryParse(s[0], System.Globalization.NumberStyles.Float, Culture, out x))
 															{
-																Interface.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else if (!double.TryParse(s[1], System.Globalization.NumberStyles.Float, Culture, out y))
 															{
-																Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else if (!double.TryParse(s[2], System.Globalization.NumberStyles.Float, Culture, out z))
 															{
-																Interface.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else if (x == 0.0 & y == 0.0 & z == 0.0)
 															{
-																Interface.AddMessage(MessageType.Error, false, "The direction indicated by X, Y and Z is expected to be non-zero in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "The direction indicated by X, Y and Z is expected to be non-zero in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else
 															{
@@ -535,7 +532,7 @@ namespace OpenBve
 														}
 														else
 														{
-															Interface.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 														}
 													} break;
 												case "rotatexfunction":
@@ -547,11 +544,11 @@ namespace OpenBve
 															//If we add this to the position instead, this gives a minor speedup
 															StaticXRotation = true;
 														}
-														Result.Objects[ObjectCount].RotateXFunction = new FunctionScript(Program.CurrentHost, b, true);
+														Result.Objects[ObjectCount].RotateXFunction = new FunctionScript(currentHost, b, true);
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "rotateyfunction":
 													try
@@ -560,11 +557,11 @@ namespace OpenBve
 														{
 															StaticYRotation = true;
 														}
-														Result.Objects[ObjectCount].RotateYFunction = new FunctionScript(Program.CurrentHost, b, true);
+														Result.Objects[ObjectCount].RotateYFunction = new FunctionScript(currentHost, b, true);
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "rotatezfunction":
 													try
@@ -573,38 +570,38 @@ namespace OpenBve
 														{
 															StaticZRotation = true;
 														}
-														Result.Objects[ObjectCount].RotateZFunction = new FunctionScript(Program.CurrentHost, b, true);
+														Result.Objects[ObjectCount].RotateZFunction = new FunctionScript(currentHost, b, true);
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "rotatexfunctionrpn":
 													try
 													{
-														Result.Objects[ObjectCount].RotateXFunction = new FunctionScript(Program.CurrentHost, b, false);
+														Result.Objects[ObjectCount].RotateXFunction = new FunctionScript(currentHost, b, false);
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "rotateyfunctionrpn":
 													try
 													{
-														Result.Objects[ObjectCount].RotateYFunction = new FunctionScript(Program.CurrentHost, b, false);
+														Result.Objects[ObjectCount].RotateYFunction = new FunctionScript(currentHost, b, false);
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "rotatezfunctionrpn":
 													try
 													{
-														Result.Objects[ObjectCount].RotateZFunction = new FunctionScript(Program.CurrentHost, b, false);
+														Result.Objects[ObjectCount].RotateZFunction = new FunctionScript(currentHost, b, false);
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "rotatexdamping":
 												case "rotateydamping":
@@ -616,19 +613,19 @@ namespace OpenBve
 															double nf, dr;
 															if (!double.TryParse(s[0], System.Globalization.NumberStyles.Float, Culture, out nf))
 															{
-																Interface.AddMessage(MessageType.Error, false, "NaturalFrequency is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "NaturalFrequency is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else if (!double.TryParse(s[1], System.Globalization.NumberStyles.Float, Culture, out dr))
 															{
-																Interface.AddMessage(MessageType.Error, false, "DampingRatio is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "DampingRatio is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else if (nf <= 0.0)
 															{
-																Interface.AddMessage(MessageType.Error, false, "NaturalFrequency is expected to be positive in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "NaturalFrequency is expected to be positive in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else if (dr <= 0.0)
 															{
-																Interface.AddMessage(MessageType.Error, false, "DampingRatio is expected to be positive in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "DampingRatio is expected to be positive in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else
 															{
@@ -648,7 +645,7 @@ namespace OpenBve
 														}
 														else
 														{
-															Interface.AddMessage(MessageType.Error, false, "Exactly 2 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Exactly 2 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 														}
 													} break;
 												case "textureshiftxdirection":
@@ -660,11 +657,11 @@ namespace OpenBve
 															double x, y;
 															if (!double.TryParse(s[0], System.Globalization.NumberStyles.Float, Culture, out x))
 															{
-																Interface.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else if (!double.TryParse(s[1], System.Globalization.NumberStyles.Float, Culture, out y))
 															{
-																Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else
 															{
@@ -681,44 +678,44 @@ namespace OpenBve
 														}
 														else
 														{
-															Interface.AddMessage(MessageType.Error, false, "Exactly 2 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Exactly 2 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 														}
 													} break;
 												case "textureshiftxfunction":
 													try
 													{
-														Result.Objects[ObjectCount].TextureShiftXFunction = new FunctionScript(Program.CurrentHost, b, true);
+														Result.Objects[ObjectCount].TextureShiftXFunction = new FunctionScript(currentHost, b, true);
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "textureshiftyfunction":
 													try
 													{
-														Result.Objects[ObjectCount].TextureShiftYFunction = new FunctionScript(Program.CurrentHost, b, true);
+														Result.Objects[ObjectCount].TextureShiftYFunction = new FunctionScript(currentHost, b, true);
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "textureshiftxfunctionrpn":
 													try
 													{
-														Result.Objects[ObjectCount].TextureShiftXFunction = new FunctionScript(Program.CurrentHost, b, false);
+														Result.Objects[ObjectCount].TextureShiftXFunction = new FunctionScript(currentHost, b, false);
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "textureshiftyfunctionrpn":
 													try
 													{
-														Result.Objects[ObjectCount].TextureShiftYFunction = new FunctionScript(Program.CurrentHost, b, false);
+														Result.Objects[ObjectCount].TextureShiftYFunction = new FunctionScript(currentHost, b, false);
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													} break;
 												case "textureoverride":
 													switch (b.ToLowerInvariant())
@@ -728,12 +725,12 @@ namespace OpenBve
 														case "timetable":
 															if (!timetableUsed)
 															{
-																Timetable.AddObjectForCustomTimetable(Result.Objects[ObjectCount]);
+																currentHost.AddObjectForCustomTimeTable(Result.Objects[ObjectCount]);
 																timetableUsed = true;
 															}
 															break;
 														default:
-															Interface.AddMessage(MessageType.Error, false, "Unrecognized value in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Unrecognized value in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															break;
 													}
 													break;
@@ -742,11 +739,11 @@ namespace OpenBve
 														double r;
 														if (!double.TryParse(b, System.Globalization.NumberStyles.Float, Culture, out r))
 														{
-															Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Value is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 														}
 														else if (r < 0.0)
 														{
-															Interface.AddMessage(MessageType.Error, false, "Value is expected to be non-negative in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Value is expected to be non-negative in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 														}
 														else
 														{
@@ -754,13 +751,13 @@ namespace OpenBve
 														}
 													} break;
 												default:
-													Interface.AddMessage(MessageType.Error, false, "The attribute " + a + " is not supported at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													currentHost.AddMessage(MessageType.Error, false, "The attribute " + a + " is not supported at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													break;
 											}
 										}
 										else
 										{
-											Interface.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											currentHost.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											return null;
 										}
 									}
@@ -786,11 +783,11 @@ namespace OpenBve
 									{
 										try
 										{
-											Result.Objects[ObjectCount].StateFunction = new FunctionScript(Program.CurrentHost, StateFunctionRpn, !StateFunctionIsPostfix);
+											Result.Objects[ObjectCount].StateFunction = new FunctionScript(currentHost, StateFunctionRpn, !StateFunctionIsPostfix);
 										}
 										catch (Exception ex)
 										{
-											Interface.AddMessage(MessageType.Error, false, ex.Message + " in StateFunction at line " + (StateFunctionLine + 1).ToString(Culture) + " in file " + FileName);
+											currentHost.AddMessage(MessageType.Error, false, ex.Message + " in StateFunction at line " + (StateFunctionLine + 1).ToString(Culture) + " in file " + FileName);
 										}
 									}
 									Result.Objects[ObjectCount].States = new AnimatedObjectState[StateFiles.Length];
@@ -803,7 +800,17 @@ namespace OpenBve
 										Result.Objects[ObjectCount].States[k].Position = Vector3.Zero;
 										if (StateFiles[k] != null)
 										{
-											Result.Objects[ObjectCount].States[k].Object = ObjectManager.LoadStaticObject(StateFiles[k], Encoding, false);
+											UnifiedObject currentObject;
+											currentHost.LoadObject(StateFiles[k], Encoding, out currentObject);
+											if (currentObject is StaticObject)
+											{
+												Result.Objects[ObjectCount].States[k].Object = (StaticObject) currentObject;
+											}
+											else
+											{
+												currentHost.AddMessage(MessageType.Error, false, "Attempted to load the animated object " + StateFiles[k] + " where only static objects are allowed at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+												continue;
+											}
 											if (Result.Objects[ObjectCount].States[k].Object != null)
 											{
 												Result.Objects[ObjectCount].States[k].Object.Dynamic = true;
@@ -939,15 +946,15 @@ namespace OpenBve
 															double x, y, z;
 															if (!double.TryParse(s[0], System.Globalization.NumberStyles.Float, Culture, out x))
 															{
-																Interface.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else if (!double.TryParse(s[1], System.Globalization.NumberStyles.Float, Culture, out y))
 															{
-																Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else if (!double.TryParse(s[2], System.Globalization.NumberStyles.Float, Culture, out z))
 															{
-																Interface.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else
 															{
@@ -956,7 +963,7 @@ namespace OpenBve
 														}
 														else
 														{
-															Interface.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 														}
 													}
 													break;
@@ -966,10 +973,10 @@ namespace OpenBve
 														fileName = OpenBveApi.Path.CombineFile(Folder, b);
 														if (!System.IO.File.Exists(fileName))
 														{
-															fileName = OpenBveApi.Path.CombineFile(CsvRwRouteParser.SoundPath, b);
+															fileName = OpenBveApi.Path.CombineFile(currentSoundFolder, b);
 															if (!System.IO.File.Exists(fileName))
 															{
-																Interface.AddMessage(MessageType.Error, false, "Sound file " + b + " was not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "Sound file " + b + " was not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																fileName = null;
 															}
 														}
@@ -979,7 +986,7 @@ namespace OpenBve
 													{
 														if (!Double.TryParse(b, out radius))
 														{
-															Interface.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															radius = 30.0;
 														}
 													}
@@ -988,7 +995,7 @@ namespace OpenBve
 													{
 														if (!Double.TryParse(b, out pitch))
 														{
-															Interface.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															pitch = 1.0;
 														}
 													}
@@ -997,7 +1004,7 @@ namespace OpenBve
 													{
 														if (!Double.TryParse(b, out volume))
 														{
-															Interface.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															volume = 1.0;
 														}
 													}
@@ -1012,15 +1019,15 @@ namespace OpenBve
 															double x, y, z;
 															if (!double.TryParse(s[0], System.Globalization.NumberStyles.Float, Culture, out x))
 															{
-																Interface.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else if (!double.TryParse(s[1], System.Globalization.NumberStyles.Float, Culture, out y))
 															{
-																Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else if (!double.TryParse(s[2], System.Globalization.NumberStyles.Float, Culture, out z))
 															{
-																Interface.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else
 															{
@@ -1040,7 +1047,7 @@ namespace OpenBve
 														}
 														else
 														{
-															Interface.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 														}
 													}
 													break;
@@ -1055,11 +1062,11 @@ namespace OpenBve
 															//If we add this to the position instead, this gives a minor speedup
 															break;
 														}
-														Result.Objects[ObjectCount].TranslateXFunction = new FunctionScript(Program.CurrentHost, b, true);
+														Result.Objects[ObjectCount].TranslateXFunction = new FunctionScript(currentHost, b, true);
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													}
 													break;
 												case "translatexscript":
@@ -1069,7 +1076,7 @@ namespace OpenBve
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													}
 													break;
 												case "translateyfunction":
@@ -1083,11 +1090,11 @@ namespace OpenBve
 															//If we add this to the position instead, this gives a minor speedup
 															break;
 														}
-														Result.Objects[ObjectCount].TranslateYFunction = new FunctionScript(Program.CurrentHost, b, true);
+														Result.Objects[ObjectCount].TranslateYFunction = new FunctionScript(currentHost, b, true);
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													}
 													break;
 												case "translateyscript":
@@ -1097,7 +1104,7 @@ namespace OpenBve
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													}
 													break;
 												case "translatezfunction":
@@ -1111,11 +1118,11 @@ namespace OpenBve
 															//If we add this to the position instead, this gives a minor speedup
 															break;
 														}
-														Result.Objects[ObjectCount].TranslateZFunction = new FunctionScript(Program.CurrentHost, b, true);
+														Result.Objects[ObjectCount].TranslateZFunction = new FunctionScript(currentHost, b, true);
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													}
 													break;
 												case "translatezscript":
@@ -1125,47 +1132,47 @@ namespace OpenBve
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													}
 													break;
 												case "trackfollowerfunction":
 													try
 													{
-														TrackFollowerFunction = new FunctionScript(Program.CurrentHost, b, true);
+														TrackFollowerFunction = new FunctionScript(currentHost, b, true);
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													}
 													break;
 												case "pitchfunction":
 													try
 													{
-														PitchFunction = new FunctionScript(Program.CurrentHost, b, true);
+														PitchFunction = new FunctionScript(currentHost, b, true);
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													}
 													break;
 												case "volumefunction":
 													try
 													{
-														VolumeFunction = new FunctionScript(Program.CurrentHost, b, true);
+														VolumeFunction = new FunctionScript(currentHost, b, true);
 													}
 													catch (Exception ex)
 													{
-														Interface.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													}
 													break;
 												default:
-													Interface.AddMessage(MessageType.Error, false, "The attribute " + a + " is not supported at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													currentHost.AddMessage(MessageType.Error, false, "The attribute " + a + " is not supported at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													break;
 											}
 										}
 										else
 										{
-											Interface.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											currentHost.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											return null;
 										}
 									}
@@ -1174,7 +1181,9 @@ namespace OpenBve
 								i--;
 								if (fileName != null)
 								{
-									WorldSound snd = new WorldSound(Program.CurrentHost, Program.Sounds.RegisterBuffer(fileName, radius));
+									SoundHandle currentSound;
+									currentHost.RegisterSound(fileName, radius, out currentSound);
+									WorldSound snd = new WorldSound(currentHost, currentSound);
 									snd.currentPitch = pitch;
 									snd.currentVolume = volume;
 									snd.Position = Position;
@@ -1217,15 +1226,15 @@ namespace OpenBve
 															double x, y, z;
 															if (!double.TryParse(s[0], System.Globalization.NumberStyles.Float, Culture, out x))
 															{
-																Interface.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "X is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else if (!double.TryParse(s[1], System.Globalization.NumberStyles.Float, Culture, out y))
 															{
-																Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else if (!double.TryParse(s[2], System.Globalization.NumberStyles.Float, Culture, out z))
 															{
-																Interface.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "Z is invalid in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															}
 															else
 															{
@@ -1234,7 +1243,7 @@ namespace OpenBve
 														}
 														else
 														{
-															Interface.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Exactly 3 arguments are expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 														}
 													}
 													break;
@@ -1245,10 +1254,10 @@ namespace OpenBve
 														fileNames = new string[] {OpenBveApi.Path.CombineFile(Folder, b)};
 														if (!System.IO.File.Exists(fileNames[0]))
 														{
-															fileNames[0] = OpenBveApi.Path.CombineFile(CsvRwRouteParser.SoundPath, b);
+															fileNames[0] = OpenBveApi.Path.CombineFile(currentSoundFolder, b);
 															if (!System.IO.File.Exists(fileNames[0]))
 															{
-																Interface.AddMessage(MessageType.Error, false, "Sound file " + b + " was not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																currentHost.AddMessage(MessageType.Error, false, "Sound file " + b + " was not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																fileNames[0] = null;
 															}
 														}
@@ -1268,10 +1277,10 @@ namespace OpenBve
 															fileNames[k] = OpenBveApi.Path.CombineFile(Folder, splitFiles[k].Trim());
 															if (!System.IO.File.Exists(fileNames[k]))
 															{
-																fileNames[k] = OpenBveApi.Path.CombineFile(CsvRwRouteParser.SoundPath, b);
+																fileNames[k] = OpenBveApi.Path.CombineFile(currentSoundFolder, b);
 																if (!System.IO.File.Exists(fileNames[k]))
 																{
-																	Interface.AddMessage(MessageType.Error, false, "Sound file " + b + " was not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																	currentHost.AddMessage(MessageType.Error, false, "Sound file " + b + " was not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																	fileNames[k] = null;
 																}
 															}
@@ -1283,7 +1292,7 @@ namespace OpenBve
 													{
 														if (!Double.TryParse(b, out radius))
 														{
-															Interface.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															radius = 30.0;
 														}
 													}
@@ -1292,7 +1301,7 @@ namespace OpenBve
 													{
 														if (!Double.TryParse(b, out pitch))
 														{
-															Interface.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															pitch = 1.0;
 														}
 													}
@@ -1301,7 +1310,7 @@ namespace OpenBve
 													{
 														if (!Double.TryParse(b, out volume))
 														{
-															Interface.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+															currentHost.AddMessage(MessageType.Error, false, "Sound radius " + b + " was invalid at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 															volume = 1.0;
 														}
 													}
@@ -1331,13 +1340,13 @@ namespace OpenBve
 													}
 													break;
 												default:
-													Interface.AddMessage(MessageType.Error, false, "The attribute " + a + " is not supported at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+													currentHost.AddMessage(MessageType.Error, false, "The attribute " + a + " is not supported at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 													break;
 											}
 										}
 										else
 										{
-											Interface.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+											currentHost.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											return null;
 										}
 									}
@@ -1346,14 +1355,14 @@ namespace OpenBve
 								i--;
 								if (fileNames.Length != 0 && ObjectCount > 0)
 								{
-									AnimatedWorldObjectStateSound snd = new AnimatedWorldObjectStateSound(Program.CurrentHost);
+									AnimatedWorldObjectStateSound snd = new AnimatedWorldObjectStateSound(currentHost);
 									snd.Object = Result.Objects[ObjectCount -1].Clone();
-									snd.Buffers = new SoundBuffer[fileNames.Length];
+									snd.Buffers = new SoundHandle[fileNames.Length];
 									for (int j = 0; j < fileNames.Length; j++)
 									{
 										if (fileNames[j] != null)
 										{
-											snd.Buffers[j] = Program.Sounds.RegisterBuffer(fileNames[j], radius);
+											currentHost.RegisterSound(fileNames[j], radius, out snd.Buffers[j]);
 										}
 									}
 									snd.currentPitch = pitch;
@@ -1381,7 +1390,7 @@ namespace OpenBve
 								 */
 								return ReadObject(FileName, System.Text.Encoding.GetEncoding(1252));
 							}
-							Interface.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+							currentHost.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 							return null;
 					}
 				}
@@ -1389,7 +1398,6 @@ namespace OpenBve
 			Array.Resize(ref Result.Objects, ObjectCount);
 			return Result;
 		}
-
 		private static void ApplyStaticRotation(ref Mesh Mesh, Vector3 RotationDirection, double Angle)
 		{
 			//Update co-ords

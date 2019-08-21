@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29001.49
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.779
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{16553295-E70F-4596-AA78-848EEA576C4A}"
 EndProject
@@ -108,6 +108,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoundManager", "source\SoundManager\SoundManager.csproj", "{90ABFA0C-ABCA-444E-ADEF-9A299AED6524}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sound.Vorbis", "source\Plugins\Sound.Vorbis\Sound.Vorbis.csproj", "{B520B1D7-3889-4C88-9E0F-CB96802D5CD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Animated", "source\Plugins\Object.Animated\Object.Animated.csproj", "{F59F8030-A470-471E-AFBF-6E7816DCD11B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -455,6 +457,18 @@ Global
 		{B520B1D7-3889-4C88-9E0F-CB96802D5CD1}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B520B1D7-3889-4C88-9E0F-CB96802D5CD1}.Release|x86.ActiveCfg = Release|Any CPU
 		{B520B1D7-3889-4C88-9E0F-CB96802D5CD1}.Release|x86.Build.0 = Release|Any CPU
+		{F59F8030-A470-471E-AFBF-6E7816DCD11B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F59F8030-A470-471E-AFBF-6E7816DCD11B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F59F8030-A470-471E-AFBF-6E7816DCD11B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{F59F8030-A470-471E-AFBF-6E7816DCD11B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{F59F8030-A470-471E-AFBF-6E7816DCD11B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F59F8030-A470-471E-AFBF-6E7816DCD11B}.Debug|x86.Build.0 = Debug|Any CPU
+		{F59F8030-A470-471E-AFBF-6E7816DCD11B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F59F8030-A470-471E-AFBF-6E7816DCD11B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F59F8030-A470-471E-AFBF-6E7816DCD11B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F59F8030-A470-471E-AFBF-6E7816DCD11B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{F59F8030-A470-471E-AFBF-6E7816DCD11B}.Release|x86.ActiveCfg = Release|Any CPU
+		{F59F8030-A470-471E-AFBF-6E7816DCD11B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -477,6 +491,7 @@ Global
 		{F3C96DBE-12C6-4362-86B0-24371369A3E2} = {16553295-E70F-4596-AA78-848EEA576C4A}
 		{ACAFCA35-01B7-479C-AD5F-9BCE0F8A597B} = {16553295-E70F-4596-AA78-848EEA576C4A}
 		{B520B1D7-3889-4C88-9E0F-CB96802D5CD1} = {16553295-E70F-4596-AA78-848EEA576C4A}
+		{F59F8030-A470-471E-AFBF-6E7816DCD11B} = {16553295-E70F-4596-AA78-848EEA576C4A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50B52A67-69B1-4B19-A59C-FF058FD9EBDF}

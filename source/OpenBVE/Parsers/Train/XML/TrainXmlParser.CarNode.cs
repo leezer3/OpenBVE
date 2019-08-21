@@ -350,21 +350,28 @@ namespace OpenBve.Parsers.Train
 				}
 				else if (interiorFile.ToLowerInvariant().EndsWith(".animated"))
 				{
-					AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(interiorFile, Encoding.UTF8);
-					try
+					
+					UnifiedObject currentObject;
+					Program.CurrentHost.LoadObject(interiorFile, Encoding.UTF8, out currentObject);
+					var a = currentObject as AnimatedObjectCollection;
+					if (a != null)
 					{
-						for (int i = 0; i < a.Objects.Length; i++)
+						try
 						{
-							ObjectManager.CreateDynamicObject(ref a.Objects[i].internalObject);
+							for (int i = 0; i < a.Objects.Length; i++)
+							{
+								ObjectManager.CreateDynamicObject(ref a.Objects[i].internalObject);
+							}
+							Train.Cars[Car].CarSections[0].Groups[0].Elements = a.Objects;
+							Train.Cars[Car].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
 						}
-						Train.Cars[Car].CarSections[0].Groups[0].Elements = a.Objects;
-						Train.Cars[Car].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
+						catch
+						{
+							Program.RestartArguments = " ";
+							Loading.Cancel = true;
+						}
 					}
-					catch
-					{
-						Program.RestartArguments = " ";
-						Loading.Cancel = true;
-					}
+
 				}
 				else
 				{

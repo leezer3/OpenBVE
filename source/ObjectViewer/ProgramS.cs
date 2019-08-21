@@ -446,48 +446,50 @@ namespace OpenBve {
 #endif
 				            if (String.Compare(System.IO.Path.GetFileName(Files[i]), "extensions.cfg", StringComparison.OrdinalIgnoreCase) == 0)
 				            {
-				            	UnifiedObject[] carObjects;
-				            	UnifiedObject[] bogieObjects;
-								double[] axleLocations;
-								TrainManager.Train train;
-				            	ExtensionsCfgParser.ParseExtensionsConfig(Files[i], System.Text.Encoding.UTF8, out carObjects, out bogieObjects, out axleLocations, out train, true);
-				                if (axleLocations.Length == 0)
-				                {
-					                axleLocations = new double[train.Cars.Length * 2];
-					                for (int j = 0; j < train.Cars.Length; j++)
-					                {
-						                double ap = train.Cars.Length * 0.4;
-						                axleLocations[j] = ap;
-						                j++;
-						                axleLocations[j] = -ap;
-					                }
-				                }
-				            	double z = 0.0;
-				            	for (int j = 0; j < carObjects.Length; j++)
-				            	{
-				            		ObjectManager.CreateObject(carObjects[j], new Vector3(0.0, 0.0, z),
-				            		                           new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0,
-				            		                           0.0);
-				            		if (j < train.Cars.Length - 1)
-				            		{
-				            			z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2;
-				            		}
-				            	}
-								z = 0.0;
-				                for (int j = 0; j < bogieObjects.Length; j++)
-				                {
-					                ObjectManager.CreateObject(bogieObjects[j], new Vector3(0.0, 0.0, z + axleLocations[j]),
-						                new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0,
-						                0.0);
-					                j++;
-					                ObjectManager.CreateObject(bogieObjects[j], new Vector3(0.0, 0.0, z - axleLocations[j]),
-						                new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0,
-						                0.0);
-					                if (j < train.Cars.Length - 1)
-					                {
-						                z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2;
-					                }
-				                }
+					            UnifiedObject[] carObjects;
+					            UnifiedObject[] bogieObjects;
+					            TrainManager.Train train;
+					            double[] axleLocations;
+					            ExtensionsCfgParser.ParseExtensionsConfig(Files[i], System.Text.Encoding.UTF8, out carObjects, out bogieObjects, out axleLocations, out train, true);
+					            if (axleLocations.Length == 0)
+					            {
+						            axleLocations = new double[train.Cars.Length * 2];
+						            for (int j = 0; j < train.Cars.Length; j++)
+						            {
+							            double ap = train.Cars.Length * 0.4;
+							            axleLocations[j] = ap;
+							            j++;
+							            axleLocations[j] = -ap;
+						            }
+					            }
+					            double z = 0.0;
+					            for (int j = 0; j < carObjects.Length; j++)
+					            {
+						            ObjectManager.CreateObject(carObjects[j], new Vector3(0.0, 0.0, z),
+							            new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0,
+							            0.0);
+						            if (j < train.Cars.Length - 1)
+						            {
+							            z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2;
+						            }
+					            }
+					            z = 0.0;
+					            int trainCar = 0;
+					            for (int j = 0; j < bogieObjects.Length; j++)
+					            {
+						            ObjectManager.CreateObject(bogieObjects[j], new Vector3(0.0, 0.0, z + axleLocations[j]),
+							            new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0,
+							            0.0);
+						            j++;
+						            ObjectManager.CreateObject(bogieObjects[j], new Vector3(0.0, 0.0, z + axleLocations[j]),
+							            new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0,
+							            0.0);
+						            if (trainCar < train.Cars.Length - 1)
+						            {
+							            z -= (train.Cars[trainCar].Length + train.Cars[trainCar + 1].Length) / 2;
+						            }
+						            trainCar++;
+					            }
 				            }
 				            else
 				            {

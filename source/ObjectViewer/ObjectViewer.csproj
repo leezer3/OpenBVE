@@ -98,7 +98,6 @@
     <Compile Include="Plugins.cs" />
     <Compile Include="System\GameWindow.cs" />
     <Compile Include="ObjectManager.cs" />
-    <Compile Include="Parsers\AnimatedObjectParser.cs" />
     <Compile Include="Fonts.cs" />
     <Compile Include="formMessages.cs">
       <SubType>Form</SubType>

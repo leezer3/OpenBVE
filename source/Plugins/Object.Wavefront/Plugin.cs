@@ -24,33 +24,11 @@ namespace Plugin
 
 	    public override bool CanLoadObject(string path)
 	    {
-		    byte[] Data = System.IO.File.ReadAllBytes(path);
-		    if (Data.Length < 16 || Data[0] != 120 | Data[1] != 111 | Data[2] != 102 | Data[3] != 32)
+		    if (path.EndsWith(".obj", StringComparison.InvariantCultureIgnoreCase))
 		    {
-			    // not an x object
-			    return false;
+			    return true;
 		    }
-
-		    if (Data[4] != 48 | Data[5] != 51 | Data[6] != 48 | Data[7] != 50 & Data[7] != 51)
-		    {
-			    // unrecognized version
-			    return false;
-		    }
-
-		    // floating-point format
-		    if (Data[12] == 48 & Data[13] == 48 & Data[14] == 51 & Data[15] == 50)
-		    {
-				//32-bit FP
-		    }
-		    else if (Data[12] == 48 & Data[13] == 48 & Data[14] == 54 & Data[15] == 52)
-		    {
-				//64-bit FP
-		    }
-		    else
-		    {
-			    return false;
-		    }
-		    return true;
+		    return false;
 	    }
 
 	    public override bool LoadObject(string path, System.Text.Encoding Encoding, out UnifiedObject unifiedObject)

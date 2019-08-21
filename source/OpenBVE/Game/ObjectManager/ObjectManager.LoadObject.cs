@@ -123,7 +123,7 @@ namespace OpenBve
 					Program.CurrentHost.LoadObject(FileName, Encoding, out Result);
 					break;
 				case ".animated":
-					Result = AnimatedObjectParser.ReadObject(FileName, Encoding);
+					Program.CurrentHost.LoadObject(FileName, Encoding, out Result);
 					break;
 				case ".xml":
 					Result = XMLParser.ReadObject(FileName, Encoding);
