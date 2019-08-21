@@ -103,6 +103,7 @@ namespace OpenBve {
 					case ".animated":
 					case ".l3dobj":
 					case ".l3dgrp":
+					case ".s":
 						Program.CurrentHost.LoadObject(FileName, Encoding, out Result);
 						break;
 					default:
@@ -156,6 +157,7 @@ namespace OpenBve {
 					case ".animated":
 					case ".l3dobj":
 					case ".l3dgrp":
+					case ".s":
 						Program.CurrentHost.LoadObject(FileName, Encoding, out obj);
 						if (obj is AnimatedObjectCollection)
 						{

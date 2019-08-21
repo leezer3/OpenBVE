@@ -113,6 +113,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Animated", "source\P
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.LokSim", "Source\Plugins\Object.LokSim\Object.LokSim.csproj", "{7AE7D277-EFD8-4325-80ED-CAE7CDB94505}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Msts", "Source\Plugins\Object.Msts\Object.Msts.csproj", "{D7561922-31A6-46DE-801F-C3C519B4B9C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -483,6 +485,18 @@ Global
 		{7AE7D277-EFD8-4325-80ED-CAE7CDB94505}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{7AE7D277-EFD8-4325-80ED-CAE7CDB94505}.Release|x86.ActiveCfg = Release|Any CPU
 		{7AE7D277-EFD8-4325-80ED-CAE7CDB94505}.Release|x86.Build.0 = Release|Any CPU
+		{D7561922-31A6-46DE-801F-C3C519B4B9C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7561922-31A6-46DE-801F-C3C519B4B9C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7561922-31A6-46DE-801F-C3C519B4B9C3}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D7561922-31A6-46DE-801F-C3C519B4B9C3}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D7561922-31A6-46DE-801F-C3C519B4B9C3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D7561922-31A6-46DE-801F-C3C519B4B9C3}.Debug|x86.Build.0 = Debug|Any CPU
+		{D7561922-31A6-46DE-801F-C3C519B4B9C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7561922-31A6-46DE-801F-C3C519B4B9C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7561922-31A6-46DE-801F-C3C519B4B9C3}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{D7561922-31A6-46DE-801F-C3C519B4B9C3}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{D7561922-31A6-46DE-801F-C3C519B4B9C3}.Release|x86.ActiveCfg = Release|Any CPU
+		{D7561922-31A6-46DE-801F-C3C519B4B9C3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -507,6 +521,7 @@ Global
 		{B520B1D7-3889-4C88-9E0F-CB96802D5CD1} = {16553295-E70F-4596-AA78-848EEA576C4A}
 		{F59F8030-A470-471E-AFBF-6E7816DCD11B} = {16553295-E70F-4596-AA78-848EEA576C4A}
 		{7AE7D277-EFD8-4325-80ED-CAE7CDB94505} = {16553295-E70F-4596-AA78-848EEA576C4A}
+		{D7561922-31A6-46DE-801F-C3C519B4B9C3} = {16553295-E70F-4596-AA78-848EEA576C4A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50B52A67-69B1-4B19-A59C-FF058FD9EBDF}

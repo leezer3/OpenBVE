@@ -14,13 +14,13 @@ using SharpCompress.Compressors.Deflate;
 
 // Stop ReSharper complaining about unused stuff:
 // We need to load this sequentially anyway, and
-// hopefully this will be used un a later build
+// hopefully this will be used in a later build
 
 // ReSharper disable NotAccessedField.Local
 // ReSharper disable RedundantAssignment
 // ReSharper disable UnusedVariable
 #pragma warning disable 0219
-namespace OpenBve
+namespace Plugin
 {
 	class MsTsShapeParser
 	{
@@ -227,7 +227,15 @@ namespace OpenBve
 
 			internal void Apply(out StaticObject Object)
 			{
-				Object = new StaticObject(Program.CurrentHost);
+				Object = new StaticObject(Plugin.currentHost)
+				{
+					Mesh =
+					{
+						Faces = new MeshFace[] { },
+						Materials = new MeshMaterial[] { },
+						Vertices = new VertexTemplate[] { }
+					}
+				};
 				if (faces.Count != 0)
 				{
 					int mf = Object.Mesh.Faces.Length;
@@ -267,7 +275,7 @@ namespace OpenBve
 						if (materials[i].DaytimeTexture != null)
 						{
 							OpenBveApi.Textures.Texture tday;
-							LibRender.TextureManager.RegisterTexture(materials[i].DaytimeTexture, out tday);
+							Plugin.currentHost.RegisterTexture(materials[i].DaytimeTexture, new TextureParameters(null, null), out tday);
 							Object.Mesh.Materials[mm + i].DaytimeTexture = tday;
 						}
 						else
@@ -295,7 +303,7 @@ namespace OpenBve
 		internal static AnimatedObjectCollection ReadObject(string fileName)
 		{
 			MsTsShape shape = new MsTsShape();
-			AnimatedObjectCollection Result = new AnimatedObjectCollection(Program.CurrentHost)
+			AnimatedObjectCollection Result = new AnimatedObjectCollection(Plugin.currentHost)
 			{
 				Objects = new AnimatedObject[4]
 			};
@@ -400,9 +408,9 @@ namespace OpenBve
 			{
 				for (int j = 0; j < shape.LODs[i].subObjects.Count; j++)
 				{
-					Result.Objects[idx] = new AnimatedObject(Program.CurrentHost);
+					Result.Objects[idx] = new AnimatedObject(Plugin.currentHost);
 					Result.Objects[idx].States = new AnimatedObjectState[1];
-					AnimatedObjectState aos = new AnimatedObjectState();
+					AnimatedObjectState aos = new AnimatedObjectState(null, Vector3.Zero);
 					shape.LODs[i].subObjects[j].Apply(out aos.Object);
 					aos.Position = new Vector3(0, 0, 0);
 					Result.Objects[idx].States[0] = aos;
@@ -421,11 +429,11 @@ namespace OpenBve
 
 					if (k != 0)
 					{
-						Result.Objects[idx].StateFunction = new FunctionScript(Program.CurrentHost, "if[cameraDistance <" + shape.LODs[i].viewingDistance + ",if[cameraDistance >" + previousLODs[k] + ",0,-1],-1]", true);
+						Result.Objects[idx].StateFunction = new FunctionScript(Plugin.currentHost, "if[cameraDistance <" + shape.LODs[i].viewingDistance + ",if[cameraDistance >" + previousLODs[k] + ",0,-1],-1]", true);
 					}
 					else
 					{
-						Result.Objects[idx].StateFunction = new FunctionScript(Program.CurrentHost, "if[cameraDistance <" + shape.LODs[i].viewingDistance + ",0,-1]", true);
+						Result.Objects[idx].StateFunction = new FunctionScript(Plugin.currentHost, "if[cameraDistance <" + shape.LODs[i].viewingDistance + ",0,-1]", true);
 					}
 
 					idx++;
@@ -867,13 +875,13 @@ namespace OpenBve
 									txF = OpenBveApi.Path.CombineFile(currentFolder, shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName);
 									if (!File.Exists(txF))
 									{
-										Interface.AddMessage(MessageType.Warning, true, "Texture file " + shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + " was not found.");
+										Plugin.currentHost.AddMessage(MessageType.Warning, true, "Texture file " + shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + " was not found.");
 										txF = null;
 									}
 								}
 								catch
 								{
-									Interface.AddMessage(MessageType.Warning, true, "Texture file path " + shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + " was invalid.");
+									Plugin.currentHost.AddMessage(MessageType.Warning, true, "Texture file path " + shape.textures[shape.prim_states[shape.currentPrimitiveState].Textures[0]].fileName + " was invalid.");
 								}
 								currentLOD.subObjects[currentLOD.subObjects.Count - 1].materials.Add(new Material(txF));
 								break;

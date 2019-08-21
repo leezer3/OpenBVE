@@ -128,12 +128,10 @@ namespace OpenBve
                 case ".animated":
                 case ".l3dobj":
                 case ".l3dgrp":
+                case ".s":
 	                Program.CurrentHost.LoadObject(FileName, Encoding, out Result);
                     break;
-                case ".s":
-					Result = MsTsShapeParser.ReadObject(FileName);
-					break;
-					default:
+                default:
                     Interface.AddMessage(MessageType.Error, false, "The file extension is not supported: " + FileName);
                     return null;
             }
@@ -197,6 +195,7 @@ namespace OpenBve
                 case ".l3dobj":
                 case ".l3dgrp":
                 case ".animated":
+                case ".s":
 	                Program.CurrentHost.LoadObject(FileName, Encoding, out obj);
 	                if (obj is AnimatedObjectCollection)
 	                {
