@@ -11,7 +11,7 @@ using System.Linq;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 
-namespace OpenBve
+namespace Plugin
 {
 	/// <summary>Parses a Loksim3D xml format object</summary>
 	internal static class Ls3DObjectParser
@@ -25,8 +25,8 @@ namespace OpenBve
 			string BaseDir = System.IO.Path.GetDirectoryName(FileName);
 			XmlDocument currentXML = new XmlDocument();
 			//Initialise the object
-			StaticObject Object = new StaticObject(Program.CurrentHost);
-			MeshBuilder Builder = new MeshBuilder(Program.CurrentHost);
+			StaticObject Object = new StaticObject(Plugin.currentHost);
+			MeshBuilder Builder = new MeshBuilder(Plugin.currentHost);
 			Vector3[] Normals = new Vector3[4];
 			bool PropertiesFound = false;
 
@@ -57,7 +57,7 @@ namespace OpenBve
 			}
 			else
 			{
-				Interface.AddMessage(MessageType.Error, false, "Loksim3D object " + FileName + " does not exist.");
+				Plugin.currentHost.AddMessage(MessageType.Error, false, "Loksim3D object " + FileName + " does not exist.");
 				return null;
 			}
 			//Check for null
@@ -89,10 +89,10 @@ namespace OpenBve
 												//Sets the texture
 												//Loksim3D objects only support daytime textures
 												case "Texture":
-													tday = OpenBveApi.Path.Loksim3D.CombineFile(BaseDir, attribute.Value, Program.FileSystem.LoksimPackageInstallationDirectory);
+													tday = OpenBveApi.Path.Loksim3D.CombineFile(BaseDir, attribute.Value, Plugin.LoksimPackageFolder);
 													if (!File.Exists(tday))
 													{
-														Interface.AddMessage(MessageType.Warning, true, "Ls3d Texture file " + attribute.Value + " not found.");
+														Plugin.currentHost.AddMessage(MessageType.Warning, true, "Ls3d Texture file " + attribute.Value + " not found.");
 														break;
 													}
 													try
@@ -107,7 +107,7 @@ namespace OpenBve
 													}
 													catch
 													{
-														Interface.AddMessage(MessageType.Error, true,
+														Plugin.currentHost.AddMessage(MessageType.Error, true,
 															"An error occured loading daytime texture " + tday +
 															" in file " + FileName);
 														tday = null;
@@ -133,10 +133,10 @@ namespace OpenBve
 														//Empty....
 														continue;
 													}
-													transtex = OpenBveApi.Path.Loksim3D.CombineFile(BaseDir, attribute.Value, Program.FileSystem.LoksimPackageInstallationDirectory);
+													transtex = OpenBveApi.Path.Loksim3D.CombineFile(BaseDir, attribute.Value, Plugin.LoksimPackageFolder);
 													if (!File.Exists(transtex))
 													{
-														Interface.AddMessage(MessageType.Error, true, "AlphaTexture " + transtex + " could not be found in file " + FileName);
+														Plugin.currentHost.AddMessage(MessageType.Error, true, "AlphaTexture " + transtex + " could not be found in file " + FileName);
 														transtex = null;
 													}												
 													break;
@@ -171,7 +171,7 @@ namespace OpenBve
 															//TODO: (Low priority) Check what happens in Loksim itself when an image uses the Alpha channel, but doesn't actually specify type 5
 															break;
 														default:
-															Interface.AddMessage(MessageType.Error, false, "Unrecognised transparency type " + attribute.Value + " detected in " + attribute.Name + " in Loksim3D object file " + FileName);
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "Unrecognised transparency type " + attribute.Value + " detected in " + attribute.Name + " in Loksim3D object file " + FileName);
 															break;
 													}
 													break;
@@ -219,15 +219,15 @@ namespace OpenBve
 														string[] NormalPoints = attribute.Value.Split(';');
 														if (!double.TryParse(NormalPoints[0], out nx))
 														{
-															Interface.AddMessage(MessageType.Error, false, "Invalid argument nX in " + attribute.Name + " in Loksim3D object file " + FileName);
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid argument nX in " + attribute.Name + " in Loksim3D object file " + FileName);
 														}
 														if (!double.TryParse(NormalPoints[1], out ny))
 														{
-															Interface.AddMessage(MessageType.Error, false, "Invalid argument nY in " + attribute.Name + " in Loksim3D object file " + FileName);
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid argument nY in " + attribute.Name + " in Loksim3D object file " + FileName);
 														}
 														if (!double.TryParse(NormalPoints[2], out nz))
 														{
-															Interface.AddMessage(MessageType.Error, false, "Invalid argument nZ in " + attribute.Name + " in Loksim3D object file " + FileName);
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid argument nZ in " + attribute.Name + " in Loksim3D object file " + FileName);
 														}
 														break;
 													//Sets the vertex 3D co-ordinates
@@ -235,15 +235,15 @@ namespace OpenBve
 														string[] VertexPoints = attribute.Value.Split(';');
 														if (!double.TryParse(VertexPoints[0], out vx))
 														{
-															Interface.AddMessage(MessageType.Error, false, "Invalid argument vX in " + attribute.Name + " in Loksim3D object file " + FileName);
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid argument vX in " + attribute.Name + " in Loksim3D object file " + FileName);
 														}
 														if (!double.TryParse(VertexPoints[1], out vy))
 														{
-															Interface.AddMessage(MessageType.Error, false, "Invalid argument yY in " + attribute.Name + " in Loksim3D object file " + FileName);
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid argument yY in " + attribute.Name + " in Loksim3D object file " + FileName);
 														}
 														if (!double.TryParse(VertexPoints[2], out vz))
 														{
-															Interface.AddMessage(MessageType.Error, false, "Invalid argument vZ in " + attribute.Name + " in Loksim3D object file " + FileName);
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid argument vZ in " + attribute.Name + " in Loksim3D object file " + FileName);
 														}
 														break;
 												}
@@ -298,7 +298,7 @@ namespace OpenBve
 													int currentVertex;
 													if (!int.TryParse(Verticies[j], out currentVertex))
 													{
-														Interface.AddMessage(MessageType.Error, false, Verticies[j] + " does not parse to a valid Vertex in " + node.Name + " in Loksim3D object file " + FileName);
+														Plugin.currentHost.AddMessage(MessageType.Error, false, Verticies[j] + " does not parse to a valid Vertex in " + node.Name + " in Loksim3D object file " + FileName);
 														continue;
 													}
 													//Add one to the actual vertex array
@@ -320,12 +320,12 @@ namespace OpenBve
 														string[] splitCoords = TextureCoords[j].Split(',');
 														if (!float.TryParse(splitCoords[0], out OpenBVEWidth))
 														{
-															Interface.AddMessage(MessageType.Error, false, "Invalid texture width specified in " + node.Name + " in Loksim3D object file " + FileName);
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid texture width specified in " + node.Name + " in Loksim3D object file " + FileName);
 															continue;
 														}
 														if (!float.TryParse(splitCoords[1], out OpenBVEHeight))
 														{
-															Interface.AddMessage(MessageType.Error, false, "Invalid texture height specified in " + node.Name + " in Loksim3D object file " + FileName);
+															Plugin.currentHost.AddMessage(MessageType.Error, false, "Invalid texture height specified in " + node.Name + " in Loksim3D object file " + FileName);
 															continue;
 														}
 														if (OpenBVEWidth <= smallestX && OpenBVEHeight <= smallestY)

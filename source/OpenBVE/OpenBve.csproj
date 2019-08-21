@@ -200,8 +200,6 @@
     <Compile Include="Parsers\Script\DynamicBackgroundParser.cs" />
     <Compile Include="Parsers\Script\DynamicLightParser.cs" />
     <Compile Include="Parsers\Script\MarkerScriptParser.cs" />
-    <Compile Include="Parsers\Object\Loksim3D\GroupParser.cs" />
-    <Compile Include="Parsers\Object\Loksim3D\ObjectParser.cs" />
     <Compile Include="Parsers\SoundConfiguration\SoundCfg.Ats.cs" />
     <Compile Include="Parsers\SoundConfiguration\SoundCfg.Base.cs" />
     <Compile Include="Parsers\SoundConfiguration\SoundCfg.Bve2.cs" />
@@ -485,9 +483,7 @@
       <LastGenOutput>AssemblyInfo.cs</LastGenOutput>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Parsers\Object\BVE\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- AUTOMATICALLY TRANSLATE TEXT TEMPLATES -->
   <!-- Optionally make the import portable across VS versions -->

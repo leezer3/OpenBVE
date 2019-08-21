@@ -120,19 +120,13 @@ namespace OpenBve
 				case ".b3d":
 				case ".x":
 				case ".obj":
-					Program.CurrentHost.LoadObject(FileName, Encoding, out Result);
-					break;
 				case ".animated":
+				case ".l3dgrp":
+				case ".l3dobj":
 					Program.CurrentHost.LoadObject(FileName, Encoding, out Result);
 					break;
 				case ".xml":
 					Result = XMLParser.ReadObject(FileName, Encoding);
-					break;
-				case ".l3dgrp":
-					Result = Ls3DGrpParser.ReadObject(FileName, Encoding, new Vector3());
-					break;
-				case ".l3dobj":
-					Result = Ls3DObjectParser.ReadObject(FileName, new Vector3());
 					break;
 				case ".s":
 					Result = MsTsShapeParser.ReadObject(FileName);
@@ -199,11 +193,19 @@ namespace OpenBve
 				case ".b3d":
 				case ".x":
 				case ".obj":
+				case ".l3dgrp":
+				case ".l3dobj":
+				case ".animated":
 					UnifiedObject obj;
 					Program.CurrentHost.LoadObject(FileName, Encoding, out obj);
+					if (obj is AnimatedObjectCollection)
+					{
+						Interface.AddMessage(MessageType.Error, false, "Tried to load an animated object even though only static objects are allowed: " + FileName);
+						return null;
+					}
 					Result = (StaticObject)obj;
 					break;
-				case ".animated":
+				
 				case ".s":
 					Interface.AddMessage(MessageType.Error, false, "Tried to load an animated object even though only static objects are allowed: " + FileName);
 					break;

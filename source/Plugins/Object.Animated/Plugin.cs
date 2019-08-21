@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Objects;
 
@@ -11,7 +12,7 @@ namespace Plugin
 
 		private static string currentSoundFolder;
 
-		public override void Load(HostInterface host, string compatibilityFolder)
+		public override void Load(HostInterface host, FileSystem fileSystem)
 		{
 			currentHost = host;
 		}

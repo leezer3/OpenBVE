@@ -5,8 +5,8 @@
 	{
 		/// <summary>Called when the plugin is loaded.</summary>
 		/// <param name="host">The host that loaded the plugin.</param>
-		/// <param name="compatibilityFolder">The absolute on-disk path to the folder containing compatibility data</param>
-		public virtual void Load(Hosts.HostInterface host, string compatibilityFolder)
+		/// <param name="fileSystem">The program filesystem object</param>
+		public virtual void Load(Hosts.HostInterface host, FileSystem.FileSystem fileSystem)
 		{
 		}
 		

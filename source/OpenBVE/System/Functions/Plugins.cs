@@ -43,7 +43,7 @@ namespace OpenBve {
 					this.Sound.Load(Program.CurrentHost);
 				}
 				if (this.Object != null) {
-					this.Object.Load(Program.CurrentHost, Program.FileSystem.GetDataFolder("Compatibility"));
+					this.Object.Load(Program.CurrentHost, Program.FileSystem);
 					this.Object.SetObjectParser(Interface.CurrentOptions.CurrentXParser);
 					this.Object.SetObjectParser(Interface.CurrentOptions.CurrentObjParser);
 				}

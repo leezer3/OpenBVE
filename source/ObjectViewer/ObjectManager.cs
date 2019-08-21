@@ -126,15 +126,11 @@ namespace OpenBve
                 case ".x":
                 case ".obj":
                 case ".animated":
+                case ".l3dobj":
+                case ".l3dgrp":
 	                Program.CurrentHost.LoadObject(FileName, Encoding, out Result);
                     break;
-                case ".l3dobj":
-                    Result = Ls3DObjectParser.ReadObject(FileName, Rotation);
-                    break;
-                case ".l3dgrp":
-                    Result = Ls3DGrpParser.ReadObject(FileName, Encoding, Rotation);
-                    break;
-				case ".s":
+                case ".s":
 					Result = MsTsShapeParser.ReadObject(FileName);
 					break;
 					default:
@@ -198,20 +194,18 @@ namespace OpenBve
                 case ".b3d":
                 case ".x":
                 case ".obj":
+                case ".l3dobj":
+                case ".l3dgrp":
+                case ".animated":
 	                Program.CurrentHost.LoadObject(FileName, Encoding, out obj);
+	                if (obj is AnimatedObjectCollection)
+	                {
+		                Interface.AddMessage(MessageType.Error, false, "Tried to load an animated object even though only static objects are allowed: " + FileName);
+		                return null;
+	                }
 	                Result = (StaticObject)obj;
                     break;
-                case ".l3dobj":
-                    Result = Ls3DObjectParser.ReadObject(FileName, new Vector3());
-                    if (Result == null)
-                    {
-                        return null;
-                    }
-                    break;
-                case ".animated":
-                    Interface.AddMessage(MessageType.Error, false, "Tried to load an animated object even though only static objects are allowed: " + FileName);
-                    return null;
-				default:
+                default:
                     Interface.AddMessage(MessageType.Error, false, "The file extension is not supported: " + FileName);
                     return null;
             }

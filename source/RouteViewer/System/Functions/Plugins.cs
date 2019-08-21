@@ -51,7 +51,7 @@ namespace OpenBve
 				}
 				if (this.Object != null)
 				{
-					this.Object.Load(Program.CurrentHost, Program.FileSystem.GetDataFolder("Compatibility"));
+					this.Object.Load(Program.CurrentHost, Program.FileSystem);
 				}
 			}
 			/// <summary>Unloads all interfaces this plugin supports.</summary>

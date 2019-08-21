@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -10,7 +11,7 @@ namespace Plugin
 	    internal static HostInterface currentHost;
 	    private static ObjParsers currentObjParser = ObjParsers.Original;
 
-	    public override void Load(HostInterface host, string compatibilityFolder) {
+	    public override void Load(HostInterface host, FileSystem fileSystem) {
 		    currentHost = host;
 	    }
 		

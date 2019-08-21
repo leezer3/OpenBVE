@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Hosts;
+﻿using OpenBveApi.FileSystem;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 
@@ -11,9 +12,9 @@ namespace Plugin
 	    private static bool BveTsHacks = false;
 	    private static string CompatibilityFolder;
 
-	    public override void Load(HostInterface host, string compatibilityFolder) {
+	    public override void Load(HostInterface host, FileSystem fileSystem) {
 		    currentHost = host;
-		    CompatibilityFolder = compatibilityFolder;
+		    CompatibilityFolder = fileSystem.GetDataFolder("Compatibility");
 	    }
 
 	    public override void SetCompatibilityHacks(bool EnableBveTsHacks, bool EnableCylinderHack)

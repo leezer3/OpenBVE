@@ -90,8 +90,6 @@
     <Compile Include="Options.cs" />
     <Compile Include="ObjectManager.cs" />
     <Compile Include="Parsers\CsvRwRouteParser.cs" />
-    <Compile Include="Parsers\Ls3DGrpParser.cs" />
-    <Compile Include="Parsers\Ls3DObjectParser.cs" />
     <Compile Include="Parsers\Script\MarkerScriptParser.cs" />
     <Compile Include="RendererR.cs" />
     <Compile Include="Audio\Sounds.cs" />
