@@ -236,19 +236,21 @@ namespace OpenBve {
 						}
 					}
 					z = 0.0;
+					int trainCar = 0;
 					for (int j = 0; j < bogieObjects.Length; j++)
 					{
 						ObjectManager.CreateObject(bogieObjects[j], new Vector3(0.0, 0.0, z + axleLocations[j]),
 							new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0,
 							0.0);
 						j++;
-						ObjectManager.CreateObject(bogieObjects[j], new Vector3(0.0, 0.0, z - axleLocations[j]),
+						ObjectManager.CreateObject(bogieObjects[j], new Vector3(0.0, 0.0, z + axleLocations[j]),
 							new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0,
 							0.0);
-						if (j < train.Cars.Length - 1)
+						if (trainCar < train.Cars.Length - 1)
 						{
-							z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2;
+							z -= (train.Cars[trainCar].Length + train.Cars[trainCar + 1].Length) / 2;
 						}
+						trainCar++;
 					}
 				}
 				else
@@ -367,7 +369,7 @@ namespace OpenBve {
 			                    }
 		                    }
 		                	double z = 0.0;
-		                	for (int j = 0; j < carObjects.Length; j++)
+		                    for (int j = 0; j < carObjects.Length; j++)
 		                	{
 		                		ObjectManager.CreateObject(carObjects[j], new Vector3(0.0, 0.0, z),
 		                		                           new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0,
@@ -378,19 +380,21 @@ namespace OpenBve {
 		                		}
 		                	}
 		                    z = 0.0;
+		                    int trainCar = 0;
 		                    for (int j = 0; j < bogieObjects.Length; j++)
 		                    {
 			                    ObjectManager.CreateObject(bogieObjects[j], new Vector3(0.0, 0.0, z + axleLocations[j]),
 				                    new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0,
 				                    0.0);
 			                    j++;
-			                    ObjectManager.CreateObject(bogieObjects[j], new Vector3(0.0, 0.0, z - axleLocations[j]),
+			                    ObjectManager.CreateObject(bogieObjects[j], new Vector3(0.0, 0.0, z + axleLocations[j]),
 				                    new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0,
 				                    0.0);
-			                    if (j < train.Cars.Length - 1)
+			                    if (trainCar < train.Cars.Length - 1)
 			                    {
-				                    z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2;
+				                    z -= (train.Cars[trainCar].Length + train.Cars[trainCar + 1].Length) / 2;
 			                    }
+								trainCar++;
 		                    }
 		                }
 		                else

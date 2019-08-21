@@ -249,8 +249,17 @@ namespace OpenBve
 																} else if (rear >= front) {
 																	Interface.AddMessage(MessageType.Error, false, "Rear is expected to be less than Front in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + filePath);
 																} else {
-																	axleLocations[n] = rear;
-																	axleLocations[n + 1] = front;
+																	if (n == 0)
+																	{
+																		axleLocations[n] = rear;
+																		axleLocations[n + 1] = front;
+																	}
+																	else
+																	{
+																		axleLocations[n * 2] = rear;
+																		axleLocations[n * 2 + 1] = front;
+																	}
+																	
 
 																}
 															} else {
