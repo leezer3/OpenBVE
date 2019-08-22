@@ -65,7 +65,7 @@ namespace OpenBveApi.Objects
 								Vector3 s = t.X;
 								Vector3 u = t.Y;
 								Vector3 d = t.Z;
-								p += Objects[i].States[0].Position * s + Objects[i].States[0].Position * u + Objects[i].States[0].Position * d;
+								p += Objects[i].States[0].Position.X * s + Objects[i].States[0].Position.Y * u + Objects[i].States[0].Position.Z * d;
 								double zOffset = Objects[i].States[0].Position.Z;
 								currentHost.CreateStaticObject(Objects[i].States[0].Object, p, BaseTransformation, AuxTransformation, AccurateObjectDisposal, zOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 							}
