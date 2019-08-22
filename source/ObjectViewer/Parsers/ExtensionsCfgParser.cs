@@ -120,7 +120,7 @@ namespace OpenBve
 													{
 														if (loadObjects)
 														{
-															carObjects[n] = ObjectManager.LoadObject(file, encoding, false, false, false);
+															carObjects[n] = ObjectManager.LoadObject(file, encoding, false);
 														}
 													}
 													else
@@ -204,7 +204,7 @@ namespace OpenBve
 																{
 																	if (loadObjects)
 																	{
-																		carObjects[n] = ObjectManager.LoadObject(file, encoding, false, false, false);
+																		carObjects[n] = ObjectManager.LoadObject(file, encoding, false);
 																	}
 																}
 																else
@@ -349,7 +349,7 @@ namespace OpenBve
 																{
 																	if (loadObjects)
 																	{
-																		bogieObjects[n] = ObjectManager.LoadObject(file, encoding, false, false, false);
+																		bogieObjects[n] = ObjectManager.LoadObject(file, encoding, false);
 																	}
 																}
 																else

@@ -1,8 +1,6 @@
 using System;
 using System.Text;
 using LibRender;
-using OpenBveApi.Graphics;
-using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -70,14 +68,8 @@ namespace OpenBve
 				AnimatedWorldObjects[i].Update(train, TimeElapsed, ForceUpdate, visible);
 			}
         }
-
-        // load object
-		internal static UnifiedObject LoadObject(string FileName, Encoding Encoding, bool PreserveVertices, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
-		{
-			return LoadObject(FileName, Encoding, PreserveVertices, ForceTextureRepeatX, ForceTextureRepeatY, new Vector3());
-		}
-
-		internal static UnifiedObject LoadObject(string FileName, Encoding Encoding, bool PreserveVertices, bool ForceTextureRepeatX, bool ForceTextureRepeatY, Vector3 Rotation)
+		
+		internal static UnifiedObject LoadObject(string FileName, Encoding Encoding, bool PreserveVertices)
         {
 			if (FileName == null)
 			{
@@ -140,75 +132,6 @@ namespace OpenBve
 	        {
 		        Result.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, false);
 	        }
-            return Result;
-#if !DEBUG
-			} catch (Exception ex) {
-				Interface.AddMessage(MessageType.Error, true, "An unexpected error occured (" + ex.Message + ") while attempting to load the file " + FileName);
-				return null;
-			}
-#endif
-        }
-        internal static StaticObject LoadStaticObject(string FileName, Encoding Encoding, bool PreserveVertices, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
-        {
-#if !DEBUG
-			try {
-#endif
-            if (!System.IO.Path.HasExtension(FileName))
-            {
-                while (true)
-                {
-                    string f;
-                    f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".x");
-                    if (System.IO.File.Exists(f))
-                    {
-                        FileName = f;
-                        break;
-                    }
-                    f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".csv");
-                    if (System.IO.File.Exists(f))
-                    {
-                        FileName = f;
-                        break;
-                    }
-                    f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".b3d");
-                    if (System.IO.File.Exists(f))
-                    {
-                        FileName = f;
-                    }
-                    break;
-                }
-            }
-            StaticObject Result;
-            string e = System.IO.Path.GetExtension(FileName);
-            if (e == null)
-            {
-	            Interface.AddMessage(MessageType.Error, false, "The file " + FileName + " does not have a recognised extension.");
-	            return null;
-            }
-            UnifiedObject obj;
-            switch (e.ToLowerInvariant())
-            {
-                case ".csv":
-                case ".b3d":
-                case ".x":
-                case ".obj":
-                case ".l3dobj":
-                case ".l3dgrp":
-                case ".animated":
-                case ".s":
-	                Program.CurrentHost.LoadObject(FileName, Encoding, out obj);
-	                if (obj is AnimatedObjectCollection)
-	                {
-		                Interface.AddMessage(MessageType.Error, false, "Tried to load an animated object even though only static objects are allowed: " + FileName);
-		                return null;
-	                }
-	                Result = (StaticObject)obj;
-                    break;
-                default:
-                    Interface.AddMessage(MessageType.Error, false, "The file extension is not supported: " + FileName);
-                    return null;
-            }
-            Result.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, false);
             return Result;
 #if !DEBUG
 			} catch (Exception ex) {

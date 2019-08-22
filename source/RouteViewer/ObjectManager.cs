@@ -1,8 +1,6 @@
 using System;
 using System.Text;
 using LibRender;
-using OpenBveApi.Graphics;
-using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
