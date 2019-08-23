@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.779
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29209.62
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{16553295-E70F-4596-AA78-848EEA576C4A}"
 EndProject
@@ -97,14 +97,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Wavefront", "source\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibRender", "source\LibRender\LibRender.csproj", "{2072ECD1-C7FF-427C-84DC-063F7C19792E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotorSoundEditor", "source\MotorSoundEditor\MotorSoundEditor.csproj", "{4AAB04FC-90D6-48C5-BA17-A29C7D36F9F4}"
-	ProjectSection(ProjectDependencies) = postProject
-		{67418D38-1E2E-4944-A1B0-09E00FC2D055} = {67418D38-1E2E-4944-A1B0-09E00FC2D055}
-		{081F5739-33DA-421A-B177-7B548D96646F} = {081F5739-33DA-421A-B177-7B548D96646F}
-		{A2FC4D71-1ED9-40D4-B746-FE6AB3C7D55E} = {A2FC4D71-1ED9-40D4-B746-FE6AB3C7D55E}
-		{B520B1D7-3889-4C88-9E0F-CB96802D5CD1} = {B520B1D7-3889-4C88-9E0F-CB96802D5CD1}
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoundManager", "source\SoundManager\SoundManager.csproj", "{90ABFA0C-ABCA-444E-ADEF-9A299AED6524}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sound.Vorbis", "source\Plugins\Sound.Vorbis\Sound.Vorbis.csproj", "{B520B1D7-3889-4C88-9E0F-CB96802D5CD1}"
@@ -114,6 +106,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.LokSim", "source\Plugins\Object.LokSim\Object.LokSim.csproj", "{7AE7D277-EFD8-4325-80ED-CAE7CDB94505}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Msts", "source\Plugins\Object.Msts\Object.Msts.csproj", "{D7561922-31A6-46DE-801F-C3C519B4B9C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainEditor2", "source\TrainEditor2\TrainEditor2.csproj", "{0AE1C682-A15E-4880-925E-10F9EFD1CD49}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -425,18 +419,6 @@ Global
 		{2072ECD1-C7FF-427C-84DC-063F7C19792E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{2072ECD1-C7FF-427C-84DC-063F7C19792E}.Release|x86.ActiveCfg = Release|Any CPU
 		{2072ECD1-C7FF-427C-84DC-063F7C19792E}.Release|x86.Build.0 = Release|Any CPU
-		{4AAB04FC-90D6-48C5-BA17-A29C7D36F9F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4AAB04FC-90D6-48C5-BA17-A29C7D36F9F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4AAB04FC-90D6-48C5-BA17-A29C7D36F9F4}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{4AAB04FC-90D6-48C5-BA17-A29C7D36F9F4}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{4AAB04FC-90D6-48C5-BA17-A29C7D36F9F4}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{4AAB04FC-90D6-48C5-BA17-A29C7D36F9F4}.Debug|x86.Build.0 = Debug|Any CPU
-		{4AAB04FC-90D6-48C5-BA17-A29C7D36F9F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4AAB04FC-90D6-48C5-BA17-A29C7D36F9F4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4AAB04FC-90D6-48C5-BA17-A29C7D36F9F4}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{4AAB04FC-90D6-48C5-BA17-A29C7D36F9F4}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{4AAB04FC-90D6-48C5-BA17-A29C7D36F9F4}.Release|x86.ActiveCfg = Release|Any CPU
-		{4AAB04FC-90D6-48C5-BA17-A29C7D36F9F4}.Release|x86.Build.0 = Release|Any CPU
 		{90ABFA0C-ABCA-444E-ADEF-9A299AED6524}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{90ABFA0C-ABCA-444E-ADEF-9A299AED6524}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90ABFA0C-ABCA-444E-ADEF-9A299AED6524}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -497,6 +479,18 @@ Global
 		{D7561922-31A6-46DE-801F-C3C519B4B9C3}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D7561922-31A6-46DE-801F-C3C519B4B9C3}.Release|x86.ActiveCfg = Release|Any CPU
 		{D7561922-31A6-46DE-801F-C3C519B4B9C3}.Release|x86.Build.0 = Release|Any CPU
+		{0AE1C682-A15E-4880-925E-10F9EFD1CD49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AE1C682-A15E-4880-925E-10F9EFD1CD49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AE1C682-A15E-4880-925E-10F9EFD1CD49}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{0AE1C682-A15E-4880-925E-10F9EFD1CD49}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{0AE1C682-A15E-4880-925E-10F9EFD1CD49}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0AE1C682-A15E-4880-925E-10F9EFD1CD49}.Debug|x86.Build.0 = Debug|Any CPU
+		{0AE1C682-A15E-4880-925E-10F9EFD1CD49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AE1C682-A15E-4880-925E-10F9EFD1CD49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AE1C682-A15E-4880-925E-10F9EFD1CD49}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{0AE1C682-A15E-4880-925E-10F9EFD1CD49}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{0AE1C682-A15E-4880-925E-10F9EFD1CD49}.Release|x86.ActiveCfg = Release|Any CPU
+		{0AE1C682-A15E-4880-925E-10F9EFD1CD49}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

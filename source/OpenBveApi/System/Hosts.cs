@@ -40,8 +40,8 @@ namespace OpenBveApi.Hosts {
 		RouteViewer = 1,
 		/// <summary>Object Viewer</summary>
 		ObjectViewer = 2,
-		/// <summary>The motor sound editor</summary>
-		MotorSoundEditor = 3
+		/// <summary>Train Editor</summary>
+		TrainEditor = 3
 	}
 	
 	/// <summary>Represents the host application and functionality it exposes.</summary>

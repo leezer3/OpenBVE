@@ -3830,355 +3830,1556 @@
 					</trans-unit>
 				</group>
 			</group>
-			<group id="motor_sound_editor">
-				<group id="menu_file">
-					<trans-unit id="file">
-						<source>File</source>
-						<target>ファイル</target>
+			<group id="train_editor2">
+				<group id="menu">
+					<group id="file">
+						<trans-unit id="name">
+							<source>File</source>
+							<target>ファイル</target>
+						</trans-unit>
+						<trans-unit id="new">
+							<source>New</source>
+							<target>新規作成</target>
+						</trans-unit>
+						<trans-unit id="open">
+							<source>Open...</source>
+							<target>開く...</target>
+						</trans-unit>
+						<trans-unit id="save">
+							<source>Save</source>
+							<target>保存</target>
+						</trans-unit>
+						<trans-unit id="save_as">
+							<source>Save as...</source>
+							<target>名前を付けて保存...</target>
+						</trans-unit>
+						<trans-unit id="import">
+							<source>Import...</source>
+							<target>インポート</target>
+						</trans-unit>
+						<trans-unit id="export">
+							<source>Export...</source>
+							<target>エクスポート</target>
+						</trans-unit>
+						<trans-unit id="exit">
+							<source>Exit</source>
+							<target>終了</target>
+						</trans-unit>
+					</group>
+					<trans-unit id="language">
+						<source>Language</source>
+						<target>言語</target>
 					</trans-unit>
-					<trans-unit id="new">
-						<source>New</source>
-						<target>新規作成</target>
+					<group id="message">
+						<trans-unit id="new">
+							<source>Do you want to save the current file before creating a new one?</source>
+							<target>新しい車両データを作成する前に現在のデータを保存しますか?</target>
+						</trans-unit>
+						<trans-unit id="open">
+							<source>Do you want to save the current file before opening another file?</source>
+							<target>別の車両データを開く前に現在のデータを保存しますか?</target>
+						</trans-unit>
+						<trans-unit id="import">
+							<source>Do you want to save the current file before import files?</source>
+						</trans-unit>
+						<trans-unit id="exit">
+							<source>Do you want to save the current file before closing?</source>
+							<target>閉じる前に現在のデータを保存しますか?</target>
+						</trans-unit>
+					</group>
+				</group>
+				<group id="navigation">
+					<trans-unit id="up">
+						<source>Up</source>
+						<target>上へ</target>
+					</trans-unit>
+					<trans-unit id="down">
+						<source>Down</source>
+						<target>下へ</target>
+					</trans-unit>
+					<trans-unit id="add">
+						<source>Add</source>
+						<target>追加</target>
+					</trans-unit>
+					<trans-unit id="remove">
+						<source>Remove</source>
+						<target>削除</target>
+					</trans-unit>
+					<trans-unit id="copy">
+						<source>Copy</source>
+						<target>複製</target>
+					</trans-unit>
+					<trans-unit id="apply">
+						<source>Apply</source>
+						<target>適用</target>
+					</trans-unit>
+					<trans-unit id="set">
+						<source>Set...</source>
+						<target>設定...</target>
 					</trans-unit>
 					<trans-unit id="open">
 						<source>Open...</source>
 						<target>開く...</target>
 					</trans-unit>
-					<trans-unit id="save">
-						<source>Save</source>
-						<target>保存</target>
+				</group>
+				<group id="tree_cars">
+					<trans-unit id="train">
+						<source>Train</source>
+						<target>列車</target>
 					</trans-unit>
-					<trans-unit id="save_as">
-						<source>Save as...</source>
-						<target>名前を付けて保存...</target>
+					<trans-unit id="general">
+						<source>General</source>
+						<target>全般</target>
 					</trans-unit>
-					<trans-unit id="exit">
-						<source>Exit</source>
-						<target>終了</target>
+					<trans-unit id="cars">
+						<source>Cars</source>
+						<target>車両</target>
+					</trans-unit>
+					<trans-unit id="couplers">
+						<source>Couplers</source>
+						<target>連結器</target>
 					</trans-unit>
 				</group>
-				<group id="menu_edit">
-					<trans-unit id="edit">
-						<source>Edit</source>
-						<target>編集</target>
+				<group id="general_settings">
+					<trans-unit id="name">
+						<source>General settings</source>
+						<target>全般設定</target>
 					</trans-unit>
-					<trans-unit id="undo">
-						<source>Undo</source>
-						<target>元に戻す</target>
-					</trans-unit>
-					<trans-unit id="redo">
-						<source>Redo</source>
-						<target>やり直す</target>
-					</trans-unit>
-					<trans-unit id="cut">
-						<source>Cut</source>
-						<target>切り取り</target>
-					</trans-unit>
-					<trans-unit id="copy">
-						<source>Copy</source>
-						<target>コピー</target>
-					</trans-unit>
-					<trans-unit id="paste">
-						<source>Paste</source>
-						<target>貼り付け</target>
-					</trans-unit>
-					<trans-unit id="cleanup">
-						<source>Cleanup</source>
-						<target>クリーンアップ</target>
-					</trans-unit>
-					<trans-unit id="delete">
-						<source>Delete</source>
-						<target>削除</target>
-					</trans-unit>
+					<group id="handle">
+						<trans-unit id="name">
+							<source>Handle</source>
+							<target>ハンドル</target>
+						</trans-unit>
+						<group id="handle_type">
+							<trans-unit id="name">
+								<source>HandleType</source>
+								<target>ハンドルの種類</target>
+							</trans-unit>
+							<trans-unit id="separated">
+								<source>Separated</source>
+								<target>ツーハンドル</target>
+							</trans-unit>
+							<trans-unit id="combined">
+								<source>Combined</source>
+								<target>ワンハンドル</target>
+							</trans-unit>
+						</group>
+						<trans-unit id="power_notches">
+							<source>PowerNotches</source>
+							<target>力行ノッチ段数</target>
+						</trans-unit>
+						<trans-unit id="brake_notches">
+							<source>BrakeNotches</source>
+							<target>ブレーキノッチ段数</target>
+						</trans-unit>
+						<trans-unit id="power_notch_reduce_steps">
+							<source>PowerNotchReduceSteps</source>
+							<target>戻しノッチ段数</target>
+						</trans-unit>
+						<trans-unit id="driver_power_notches">
+							<source>DriverPowerNotches</source>
+							<target>運転者が扱える力行ノッチ段数</target>
+						</trans-unit>
+						<trans-unit id="driver_brake_notches">
+							<source>DriverBrakeNotches</source>
+							<target>運転者が扱えるブレーキノッチ段数</target>
+						</trans-unit>
+						<group id="eb_handle_behaviour">
+							<trans-unit id="name">
+								<source>EbHandleBehaviour</source>
+								<target>EB動作時のハンドルの挙動</target>
+							</trans-unit>
+							<trans-unit id="no">
+								<source>No action</source>
+								<target>何もしない</target>
+							</trans-unit>
+							<trans-unit id="power">
+								<source>Return power to neutral</source>
+								<target>マスコンを"切"位置に戻す</target>
+							</trans-unit>
+							<trans-unit id="reverser">
+								<source>Return reverser to neutral</source>
+								<target>レバーサを"切"位置に戻す</target>
+							</trans-unit>
+							<trans-unit id="power_reverser">
+								<source>Return power and reverser to neutral</source>
+								<target>マスコンとレバーサを"切"位置に戻す</target>
+							</trans-unit>
+						</group>
+						<group id="loco_brake_handle_type">
+							<trans-unit id="name">
+								<source>LocoBrakeHandleType</source>
+								<target>機関車のブレーキハンドルの種類</target>
+							</trans-unit>
+							<trans-unit id="combined">
+								<source>Combined</source>
+								<target>複合(効きが強い方優先)</target>
+							</trans-unit>
+							<trans-unit id="independent">
+								<source>Independent</source>
+								<target>単弁自弁独立型</target>
+							</trans-unit>
+							<trans-unit id="blocking">
+								<source>Blocking</source>
+								<target>客車からは遮断</target>
+							</trans-unit>
+						</group>
+						<trans-unit id="loco_brake_notches">
+							<source>LocoBrakeNotches</source>
+							<target>機関車のブレーキノッチ段数</target>
+						</trans-unit>
+					</group>
+					<group id="cab">
+						<trans-unit id="name">
+							<source>Cab</source>
+							<target>運転室</target>
+						</trans-unit>
+						<trans-unit id="x">
+							<source>X</source>
+							<target>X</target>
+						</trans-unit>
+						<trans-unit id="y">
+							<source>Y</source>
+							<target>Y</target>
+						</trans-unit>
+						<trans-unit id="z">
+							<source>Z</source>
+							<target>Z</target>
+						</trans-unit>
+						<trans-unit id="driver_car">
+							<source>DriverCar</source>
+							<target>運転台付き車両</target>
+						</trans-unit>
+					</group>
+					<group id="device">
+						<trans-unit id="name">
+							<source>Device</source>
+							<target>装置</target>
+						</trans-unit>
+						<group id="ats">
+							<trans-unit id="name">
+								<source>Ats</source>
+								<target>Ats</target>
+							</trans-unit>
+							<trans-unit id="none">
+								<source>None</source>
+								<target>無し</target>
+							</trans-unit>
+							<trans-unit id="ats_sn">
+								<source>ATS-SN</source>
+								<target>ATS-SN</target>
+							</trans-unit>
+							<trans-unit id="ats_sn_ats_p">
+								<source>ATS-SN / ATS-P</source>
+								<target>ATS-SN / ATS-P</target>
+							</trans-unit>
+						</group>
+						<group id="atc">
+							<trans-unit id="name">
+								<source>Atc</source>
+								<target>Atc</target>
+							</trans-unit>
+							<trans-unit id="none">
+								<source>None</source>
+								<target>無し</target>
+							</trans-unit>
+							<trans-unit id="manual">
+								<source>Manual switching</source>
+								<target>手動切替</target>
+							</trans-unit>
+							<trans-unit id="automatic">
+								<source>Automatic switching</source>
+								<target>自動切替</target>
+							</trans-unit>
+						</group>
+						<trans-unit id="eb">
+							<source>Eb</source>
+							<target>Eb</target>
+						</trans-unit>
+						<trans-unit id="const_speed">
+							<source>ConstSpeed</source>
+							<target>定速</target>
+						</trans-unit>
+						<trans-unit id="hold_brake">
+							<source>HoldBrake</source>
+							<target>抑速</target>
+						</trans-unit>
+						<group id="re_adhesion_device">
+							<trans-unit id="name">
+								<source>ReAdhesionDevice</source>
+								<target>再粘着装置</target>
+							</trans-unit>
+							<trans-unit id="none">
+								<source>None</source>
+								<target>無し</target>
+							</trans-unit>
+							<trans-unit id="type_a">
+								<source>Type A (instant)</source>
+								<target>タイプA (直流電動機向け)</target>
+							</trans-unit>
+							<trans-unit id="type_b">
+								<source>Type B (slow)</source>
+								<target>タイプB (反応:遅い/衝撃:小)</target>
+							</trans-unit>
+							<trans-unit id="type_c">
+								<source>Type C (medium)</source>
+								<target>タイプC (反応:普通/衝撃:中)</target>
+							</trans-unit>
+							<trans-unit id="type_d">
+								<source>Type D (fast)</source>
+								<target>タイプD (反応:速い/衝撃:大)</target>
+							</trans-unit>
+						</group>
+						<group id="pass_alarm">
+							<trans-unit id="name">
+								<source>PassAlarm</source>
+								<target>誤通過防止アラーム</target>
+							</trans-unit>
+							<trans-unit id="none">
+								<source>None</source>
+								<target>無し</target>
+							</trans-unit>
+							<trans-unit id="single">
+								<source>Single</source>
+								<target>一回発音</target>
+							</trans-unit>
+							<trans-unit id="looping">
+								<source>Looping</source>
+								<target>連続発音</target>
+							</trans-unit>
+						</group>
+						<group id="door_mode">
+							<trans-unit id="open">
+								<source>DoorOpenMode</source>
+								<target>ドア開モード</target>
+							</trans-unit>
+							<trans-unit id="close">
+								<source>DoorCloseMode</source>
+								<target>ドア閉モード</target>
+							</trans-unit>
+							<trans-unit id="semi_automatic">
+								<source>Semi-automatic</source>
+								<target>半自動</target>
+							</trans-unit>
+							<trans-unit id="automatic">
+								<source>Automatic</source>
+								<target>自動</target>
+							</trans-unit>
+							<trans-unit id="manual">
+								<source>Manual</source>
+								<target>手動</target>
+							</trans-unit>
+						</group>
+						<trans-unit id="door_width">
+							<source>DoorWidth</source>
+							<target>ドアの幅</target>
+						</trans-unit>
+						<trans-unit id="door_max_tolerance">
+							<source>DoorMaxTolerance</source>
+							<target>干渉物の最小幅</target>
+						</trans-unit>
+					</group>
 				</group>
-				<group id="menu_view">
-					<trans-unit id="view">
-						<source>View</source>
-						<target>表示</target>
+				<group id="car_settings">
+					<trans-unit id="name">
+						<source>Car settings</source>
+						<target>車両設定</target>
 					</trans-unit>
-					<trans-unit id="power">
-						<source>Power</source>
-						<target>力行</target>
-					</trans-unit>
-					<trans-unit id="brake">
-						<source>Brake</source>
-						<target>ブレーキ</target>
-					</trans-unit>
-					<trans-unit id="track">
-						<source>Track</source>
-						<target>トラック</target>
-					</trans-unit>
+					<group id="general">
+						<trans-unit id="name">
+							<source>General</source>
+							<target>全般</target>
+						</trans-unit>
+						<trans-unit id="is_motor_car">
+							<source>IsMotorCar</source>
+							<target>電動車かどうか</target>
+						</trans-unit>
+						<trans-unit id="mass">
+							<source>Mass</source>
+							<target>質量</target>
+						</trans-unit>
+						<trans-unit id="length">
+							<source>Length</source>
+							<target>車体長</target>
+						</trans-unit>
+						<trans-unit id="width">
+							<source>Width</source>
+							<target>車体幅</target>
+						</trans-unit>
+						<trans-unit id="height">
+							<source>Height</source>
+							<target>車高</target>
+						</trans-unit>
+						<trans-unit id="center_of_gravity_height">
+							<source>CenterOfGravityHeight</source>
+							<target>重心の高さ</target>
+						</trans-unit>
+						<trans-unit id="exposed_frontal_area">
+							<source>ExposedFrontalArea</source>
+							<target>先頭車の先頭部の表面積</target>
+						</trans-unit>
+						<trans-unit id="unexposed_frontal_area">
+							<source>UnexposedFrontalArea</source>
+							<target>付随車の妻面の表面積</target>
+						</trans-unit>
+						<trans-unit id="defined_axles">
+							<source>DefinedAxles</source>
+						</trans-unit>
+						<group id="axles">
+							<trans-unit id="name">
+								<source>Axles</source>
+							</trans-unit>
+							<trans-unit id="front">
+								<source>FrontAxle</source>
+							</trans-unit>
+							<trans-unit id="rear">
+								<source>RearAxle</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="front_bogie">
+							<source>FrontBogie</source>
+						</trans-unit>
+						<trans-unit id="rear_bogie">
+							<source>RearBogie</source>
+						</trans-unit>
+						<trans-unit id="loading_sway">
+							<source>LoadingSway</source>
+						</trans-unit>
+						<trans-unit id="reversed">
+							<source>Reversed</source>
+						</trans-unit>
+						<trans-unit id="object">
+							<source>Object</source>
+						</trans-unit>
+					</group>
+					<group id="performance">
+						<trans-unit id="name">
+							<source>Performance</source>
+							<target>性能</target>
+						</trans-unit>
+						<trans-unit id="deceleration">
+							<source>Deceleration</source>
+							<target>減速度</target>
+						</trans-unit>
+						<trans-unit id="static_friction">
+							<source>CoefficientOfStaticFriction</source>
+							<target>静止摩擦係数</target>
+						</trans-unit>
+						<trans-unit id="rolling_resistance">
+							<source>CoefficientOfRollingResistance</source>
+							<target>転がり抵抗係数</target>
+						</trans-unit>
+						<trans-unit id="aerodynamic_drag">
+							<source>AerodynamicDragCoefficient</source>
+							<target>空気抵抗係数</target>
+						</trans-unit>
+					</group>
+					<group id="move">
+						<trans-unit id="name">
+							<source>Move</source>
+							<target>ジャーク制御</target>
+						</trans-unit>
+						<trans-unit id="jerk_power_up">
+							<source>JerkPowerUp</source>
+							<target>力行入</target>
+						</trans-unit>
+						<trans-unit id="jerk_power_down">
+							<source>JerkPowerDown</source>
+							<target>力行切</target>
+						</trans-unit>
+						<trans-unit id="jerk_brake_up">
+							<source>JerkBrakeUp</source>
+							<target>電制込</target>
+						</trans-unit>
+						<trans-unit id="jerk_brake_down">
+							<source>JerkBrakeDown</source>
+							<target>電制緩</target>
+						</trans-unit>
+						<trans-unit id="brake_cylinder_up">
+							<source>BrakeCylinderUp</source>
+							<target>空制込</target>
+						</trans-unit>
+						<trans-unit id="brake_cylinder_down">
+							<source>BrakeCylinderDown</source>
+							<target>空制緩</target>
+						</trans-unit>
+					</group>
+					<group id="brake">
+						<trans-unit id="name">
+							<source>Brake</source>
+							<target>ブレーキ</target>
+						</trans-unit>
+						<group id="brake_type">
+							<trans-unit id="name">
+								<source>BrakeType</source>
+								<target>ブレーキ方式</target>
+							</trans-unit>
+							<trans-unit id="smee">
+								<source>Electromagnetic straight air brake</source>
+								<target>電磁直通</target>
+							</trans-unit>
+							<trans-unit id="ecb">
+								<source>Electro-pneumatic air brake without brake pipe</source>
+								<target>電気指令</target>
+							</trans-unit>
+							<trans-unit id="cl">
+								<source>Air brake with partial release feature</source>
+								<target>自動空気</target>
+							</trans-unit>
+						</group>
+						<group id="loco_brake_type">
+							<trans-unit id="name">
+								<source>LocoBrakeType</source>
+								<target>機関車のブレーキ方式</target>
+							</trans-unit>
+							<trans-unit id="none">
+								<source>Not fitted</source>
+								<target>未搭載車</target>
+							</trans-unit>
+							<trans-unit id="notched_air_brake">
+								<source>Notched air brake</source>
+								<target>ノッチ式ブレーキ</target>
+							</trans-unit>
+							<trans-unit id="cl">
+								<source>Air brake with partial release</source>
+								<target>自動空気ブレーキ</target>
+							</trans-unit>
+						</group>
+						<group id="brake_control_system">
+							<trans-unit id="name">
+								<source>BrakeControlSystem</source>
+								<target>ブレーキ制御方式</target>
+							</trans-unit>
+							<trans-unit id="none">
+								<source>None</source>
+								<target>無し</target>
+							</trans-unit>
+							<trans-unit id="lock_out_valve">
+								<source>Closing electromagnetic valve</source>
+								<target>締切電磁弁</target>
+							</trans-unit>
+							<trans-unit id="delay_including_control">
+								<source>Delay-including control</source>
+								<target>遅れ込め制御</target>
+							</trans-unit>
+						</group>
+						<trans-unit id="brake_control_speed">
+							<source>BrakeControlSpeed</source>
+							<target>電制速度</target>
+						</trans-unit>
+					</group>
+					<group id="pressure">
+						<trans-unit id="name">
+							<source>Pressure</source>
+							<target>圧力</target>
+						</trans-unit>
+						<trans-unit id="brake_cylinder_service_max">
+							<source>BrakeCylinderServiceMaximumPressure</source>
+							<target>ブレーキシリンダ圧力(常用最大)</target>
+						</trans-unit>
+						<trans-unit id="brake_cylinder_emergency_max">
+							<source>BrakeCylinderEmergencyMaximumPressure</source>
+							<target>ブレーキシリンダ圧力(非常)</target>
+						</trans-unit>
+						<trans-unit id="main_reservoir_min">
+							<source>MainReservoirMinimumPressure</source>
+							<target>元空気ダメ圧力(下限)</target>
+						</trans-unit>
+						<trans-unit id="main_reservoir_max">
+							<source>MainReservoirMaximumPressure</source>
+							<target>元空気ダメ圧力(上限)</target>
+						</trans-unit>
+						<trans-unit id="brake_pipe_normal">
+							<source>BrakePipeNormalPressure</source>
+							<target>直通管圧力</target>
+						</trans-unit>
+					</group>
+					<group id="delay">
+						<trans-unit id="name">
+							<source>Delay</source>
+							<target>遅れ時間</target>
+						</trans-unit>
+						<trans-unit id="power_up">
+							<source>PowerUp</source>
+							<target>力行入</target>
+						</trans-unit>
+						<trans-unit id="power_down">
+							<source>PowerDown</source>
+							<target>力行切</target>
+						</trans-unit>
+						<trans-unit id="brake_up">
+							<source>BrakeUp</source>
+							<target>制動込</target>
+						</trans-unit>
+						<trans-unit id="brake_down">
+							<source>BrakeDown</source>
+							<target>制動緩</target>
+						</trans-unit>
+						<trans-unit id="loco_brake_up">
+							<source>LocoBrakeUp</source>
+							<target>機関車の制動込</target>
+						</trans-unit>
+						<trans-unit id="loco_brake_down">
+							<source>LocoBrakeDown</source>
+							<target>機関車の制動緩</target>
+						</trans-unit>
+						<trans-unit id="notch">
+							<source>Notch</source>
+							<target>ノッチ</target>
+						</trans-unit>
+						<trans-unit id="value">
+							<source>Value</source>
+							<target>値</target>
+						</trans-unit>
+					</group>
 				</group>
-				<group id="menu_input">
-					<trans-unit id="input">
-						<source>Input</source>
-						<target>入力</target>
+				<group id="acceleration_settings">
+					<trans-unit id="name">
+						<source>Acceleration settings</source>
+						<target>加速度設定</target>
 					</trans-unit>
-					<trans-unit id="pitch">
-						<source>Pitch</source>
-						<target>音程</target>
+					<trans-unit id="notch">
+						<source>Notch</source>
+						<target>ノッチ</target>
 					</trans-unit>
-					<trans-unit id="volume">
-						<source>Volume</source>
-						<target>音量</target>
-					</trans-unit>
-					<trans-unit id="sound_index">
-						<source>Sound source index</source>
-						<target>音源インデックス</target>
-					</trans-unit>
-					<trans-unit id="sound_index_none">
-						<source>None</source>
-						<target>無し</target>
-					</trans-unit>
+					<group id="parameter">
+						<trans-unit id="name">
+							<source>Parameter</source>
+							<target>パラメータ</target>
+						</trans-unit>
+						<trans-unit id="a0">
+							<source>a0</source>
+							<target>a0</target>
+						</trans-unit>
+						<trans-unit id="a1">
+							<source>a1</source>
+							<target>a1</target>
+						</trans-unit>
+						<trans-unit id="v1">
+							<source>v1</source>
+							<target>v1</target>
+						</trans-unit>
+						<trans-unit id="v2">
+							<source>v2</source>
+							<target>v2</target>
+						</trans-unit>
+						<trans-unit id="e">
+							<source>e (2.0)</source>
+							<target>e (2.0)</target>
+						</trans-unit>
+					</group>
+					<group id="preview">
+						<trans-unit id="name">
+							<source>Preview</source>
+							<target>プレビュー</target>
+						</trans-unit>
+						<trans-unit id="subtract_deceleration">
+							<source>Subtract deceleration due to air and rolling resistance</source>
+							<target>走行抵抗を引く</target>
+						</trans-unit>
+						<trans-unit id="x">
+							<source>X</source>
+							<target>X</target>
+						</trans-unit>
+						<trans-unit id="y">
+							<source>Y</source>
+							<target>Y</target>
+						</trans-unit>
+						<trans-unit id="x_min">
+							<source>x-min</source>
+							<target>x軸の最小値</target>
+						</trans-unit>
+						<trans-unit id="x_max">
+							<source>x-max</source>
+							<target>x軸の最大値</target>
+						</trans-unit>
+						<trans-unit id="y_min">
+							<source>y-min</source>
+							<target>y軸の最小値</target>
+						</trans-unit>
+						<trans-unit id="y_max">
+							<source>y-max</source>
+							<target>y軸の最大値</target>
+						</trans-unit>
+						<trans-unit id="zoom_in">
+							<source>Zoom In</source>
+							<target>拡大</target>
+						</trans-unit>
+						<trans-unit id="zoom_out">
+							<source>Zoom Out</source>
+							<target>縮小</target>
+						</trans-unit>
+						<trans-unit id="reset">
+							<source>Reset</source>
+							<target>リセット</target>
+						</trans-unit>
+					</group>
 				</group>
-				<group id="menu_tool">
-					<trans-unit id="tool">
-						<source>Tool</source>
-						<target>ツール</target>
+				<group id="motor_sound_settings">
+					<trans-unit id="name">
+						<source>Motor sound settings</source>
+						<target>モーター音設定</target>
 					</trans-unit>
-					<trans-unit id="select">
-						<source>Select</source>
-						<target>選択</target>
-					</trans-unit>
-					<trans-unit id="move">
-						<source>Move</source>
-						<target>移動</target>
-					</trans-unit>
-					<trans-unit id="dot">
-						<source>Dot</source>
-						<target>点描</target>
-					</trans-unit>
-					<trans-unit id="line">
-						<source>Line</source>
-						<target>直線</target>
-					</trans-unit>
+					<group id="menu">
+						<group id="edit">
+							<trans-unit id="name">
+								<source>Edit</source>
+								<target>編集</target>
+							</trans-unit>
+							<trans-unit id="undo">
+								<source>Undo</source>
+								<target>元に戻す</target>
+							</trans-unit>
+							<trans-unit id="redo">
+								<source>Redo</source>
+								<target>やり直す</target>
+							</trans-unit>
+							<trans-unit id="cut">
+								<source>Cut</source>
+								<target>切り取り</target>
+							</trans-unit>
+							<trans-unit id="copy">
+								<source>Copy</source>
+								<target>コピー</target>
+							</trans-unit>
+							<trans-unit id="paste">
+								<source>Paste</source>
+								<target>貼り付け</target>
+							</trans-unit>
+							<trans-unit id="cleanup">
+								<source>Cleanup</source>
+								<target>クリーンアップ</target>
+							</trans-unit>
+							<trans-unit id="delete">
+								<source>Delete</source>
+								<target>削除</target>
+							</trans-unit>
+						</group>
+						<group id="view">
+							<trans-unit id="name">
+								<source>View</source>
+								<target>表示</target>
+							</trans-unit>
+							<trans-unit id="power">
+								<source>Power</source>
+								<target>力行</target>
+							</trans-unit>
+							<trans-unit id="brake">
+								<source>Brake</source>
+								<target>ブレーキ</target>
+							</trans-unit>
+							<trans-unit id="track">
+								<source>Track</source>
+								<target>トラック</target>
+							</trans-unit>
+						</group>
+						<group id="input">
+							<trans-unit id="name">
+								<source>Input</source>
+								<target>入力</target>
+							</trans-unit>
+							<trans-unit id="pitch">
+								<source>Pitch</source>
+								<target>音程</target>
+							</trans-unit>
+							<trans-unit id="volume">
+								<source>Volume</source>
+								<target>音量</target>
+							</trans-unit>
+							<trans-unit id="sound_index">
+								<source>Sound source index</source>
+								<target>音源インデックス</target>
+							</trans-unit>
+							<trans-unit id="sound_index_none">
+								<source>None</source>
+								<target>無し</target>
+							</trans-unit>
+						</group>
+						<group id="tool">
+							<trans-unit id="name">
+								<source>Tool</source>
+								<target>ツール</target>
+							</trans-unit>
+							<trans-unit id="select">
+								<source>Select</source>
+								<target>選択</target>
+							</trans-unit>
+							<trans-unit id="move">
+								<source>Move</source>
+								<target>移動</target>
+							</trans-unit>
+							<trans-unit id="dot">
+								<source>Dot</source>
+								<target>点描</target>
+							</trans-unit>
+							<trans-unit id="line">
+								<source>Line</source>
+								<target>直線</target>
+							</trans-unit>
+						</group>
+					</group>
+					<group id="view_setting">
+						<trans-unit id="name">
+							<source>View setting</source>
+							<target>表示設定</target>
+						</trans-unit>
+						<trans-unit id="min_velocity">
+							<source>x-min(Velocity)</source>
+							<target>x軸の最小値(速度)</target>
+						</trans-unit>
+						<trans-unit id="max_velocity">
+							<source>x-max(Velocity)</source>
+							<target>x軸の最大値(速度)</target>
+						</trans-unit>
+						<trans-unit id="min_pitch">
+							<source>y-min(Pitch)</source>
+							<target>y軸の最小値(音程)</target>
+						</trans-unit>
+						<trans-unit id="max_pitch">
+							<source>y-max(Pitch)</source>
+							<target>y軸の最大値(音程)</target>
+						</trans-unit>
+						<trans-unit id="min_volume">
+							<source>y-min(Volume)</source>
+							<target>y軸の最小値(音量)</target>
+						</trans-unit>
+						<trans-unit id="max_volume">
+							<source>y-max(Volume)</source>
+							<target>y軸の最大値(音量)</target>
+						</trans-unit>
+						<trans-unit id="zoom_in">
+							<source>Zoom In</source>
+							<target>拡大</target>
+						</trans-unit>
+						<trans-unit id="zoom_out">
+							<source>Zoom Out</source>
+							<target>縮小</target>
+						</trans-unit>
+						<trans-unit id="reset">
+							<source>Reset</source>
+							<target>リセット</target>
+						</trans-unit>
+					</group>
+					<group id="direct_input">
+						<trans-unit id="name">
+							<source>Direct input</source>
+							<target>直接入力</target>
+						</trans-unit>
+						<trans-unit id="x">
+							<source>x coordinate</source>
+							<target>x座標</target>
+						</trans-unit>
+						<trans-unit id="y">
+							<source>y coordinate</source>
+							<target>y座標</target>
+						</trans-unit>
+						<trans-unit id="dot">
+							<source>Dot</source>
+							<target>点描</target>
+						</trans-unit>
+						<trans-unit id="move">
+							<source>Move</source>
+							<target>移動</target>
+						</trans-unit>
+					</group>
+					<group id="play_setting">
+						<trans-unit id="name">
+							<source>Playback setting</source>
+							<target>再生設定</target>
+						</trans-unit>
+						<group id="source">
+							<trans-unit id="name">
+								<source>Sound source setting</source>
+								<target>音源設定</target>
+							</trans-unit>
+							<trans-unit id="run">
+								<source>Running sound</source>
+								<target>走行音</target>
+							</trans-unit>
+							<trans-unit id="track">
+								<source>Track</source>
+								<target>トラック</target>
+							</trans-unit>
+						</group>
+						<group id="area">
+							<trans-unit id="name">
+								<source>Area setting</source>
+								<target>区間設定</target>
+							</trans-unit>
+							<trans-unit id="loop">
+								<source>Loop playback</source>
+								<target>ループ再生</target>
+							</trans-unit>
+							<trans-unit id="constant">
+								<source>Constant speed</source>
+								<target>等速運動</target>
+							</trans-unit>
+							<trans-unit id="acceleration">
+								<source>Acceleration:</source>
+								<target>加速度</target>
+							</trans-unit>
+							<trans-unit id="swap">
+								<source>Swap</source>
+								<target>入れ替え</target>
+							</trans-unit>
+						</group>
+						<trans-unit id="play">
+							<source>Playback</source>
+							<target>再生</target>
+						</trans-unit>
+						<trans-unit id="pause">
+							<source>Pause</source>
+							<target>一時停止</target>
+						</trans-unit>
+						<trans-unit id="stop">
+							<source>Stop</source>
+							<target>停止</target>
+						</trans-unit>
+					</group>
+					<group id="vertex_info">
+						<trans-unit id="name">
+							<source>Vertex information</source>
+							<target>頂点情報</target>
+						</trans-unit>
+						<trans-unit id="velocity">
+							<source>Velocity</source>
+							<target>速度</target>
+						</trans-unit>
+						<trans-unit id="pitch">
+							<source>Pitch</source>
+							<target>音程</target>
+						</trans-unit>
+						<trans-unit id="volume">
+							<source>Volume</source>
+							<target>音量</target>
+						</trans-unit>
+						<trans-unit id="sound_index">
+							<source>Sound source index</source>
+							<target>音源インデックス</target>
+						</trans-unit>
+					</group>
+					<group id="status">
+						<group id="type">
+							<trans-unit id="name">
+								<source>Type</source>
+								<target>タイプ</target>
+							</trans-unit>
+							<trans-unit id="power">
+								<source>Power</source>
+								<target>力行</target>
+							</trans-unit>
+							<trans-unit id="brake">
+								<source>Brake</source>
+								<target>ブレーキ</target>
+							</trans-unit>
+						</group>
+						<group id="track">
+							<trans-unit id="name">
+								<source>Track</source>
+								<target>トラック</target>
+							</trans-unit>
+						</group>
+						<group id="mode">
+							<trans-unit id="name">
+								<source>Mode</source>
+								<target>モード</target>
+							</trans-unit>
+							<trans-unit id="pitch">
+								<source>Pitch</source>
+								<target>音程</target>
+							</trans-unit>
+							<trans-unit id="volume">
+								<source>Volume</source>
+								<target>音量</target>
+							</trans-unit>
+							<trans-unit id="sound_index">
+								<source>Sound source index</source>
+								<target>音源インデックス</target>
+							</trans-unit>
+						</group>
+						<group id="tool">
+							<trans-unit id="name">
+								<source>Tool</source>
+								<target>ツール</target>
+							</trans-unit>
+							<trans-unit id="select">
+								<source>Select</source>
+								<target>選択</target>
+							</trans-unit>
+							<trans-unit id="move">
+								<source>Move</source>
+								<target>移動</target>
+							</trans-unit>
+							<trans-unit id="dot">
+								<source>Dot</source>
+								<target>点描</target>
+							</trans-unit>
+							<trans-unit id="line">
+								<source>Line</source>
+								<target>直線</target>
+							</trans-unit>
+						</group>
+						<group id="xy">
+							<trans-unit id="velocity">
+								<source>Velocity</source>
+								<target>速度</target>
+							</trans-unit>
+							<trans-unit id="pitch">
+								<source>Pitch</source>
+								<target>音程</target>
+							</trans-unit>
+							<trans-unit id="volume">
+								<source>Volume</source>
+								<target>音量</target>
+							</trans-unit>
+						</group>
+					</group>
+					<group id="message">
+						<trans-unit id="vertex_exist">
+							<source>A point already exists at the same x coordinate, do you want to overwrite it?</source>
+							<target>既に同じx座標に点が存在しますが、上書きしますか?</target>
+						</trans-unit>
+					</group>
 				</group>
-				<group id="view_setting">
-					<trans-unit id="view_setting">
-						<source>View setting</source>
-						<target>表示設定</target>
+				<group id="coupler_settings">
+					<trans-unit id="name">
+						<source>Coupler settings</source>
+						<target>連結器設定</target>
 					</trans-unit>
-					<trans-unit id="min_velocity">
-						<source>x-min(Velocity):</source>
-						<target>x軸の最小値(速度):</target>
-					</trans-unit>
-					<trans-unit id="max_velocity">
-						<source>x-max(Velocity):</source>
-						<target>x軸の最大値(速度):</target>
-					</trans-unit>
-					<trans-unit id="min_pitch">
-						<source>y-min(Pitch):</source>
-						<target>y軸の最小値(音程):</target>
-					</trans-unit>
-					<trans-unit id="max_pitch">
-						<source>y-max(Pitch):</source>
-						<target>y軸の最大値(音程):</target>
-					</trans-unit>
-					<trans-unit id="min_volume">
-						<source>y-min(Volume):</source>
-						<target>y軸の最小値(音量):</target>
-					</trans-unit>
-					<trans-unit id="max_volume">
-						<source>y-max(Volume):</source>
-						<target>y軸の最大値(音量):</target>
-					</trans-unit>
-					<trans-unit id="zoom_in">
-						<source>Zoom In</source>
-						<target>拡大</target>
-					</trans-unit>
-					<trans-unit id="zoom_out">
-						<source>Zoom Out</source>
-						<target>縮小</target>
-					</trans-unit>
-					<trans-unit id="reset">
-						<source>Reset</source>
-						<target>リセット</target>
-					</trans-unit>
+					<group id="general">
+						<trans-unit id="name">
+							<source>General</source>
+							<target>全般</target>
+						</trans-unit>
+						<trans-unit id="min">
+							<source>Min</source>
+							<target>最小</target>
+						</trans-unit>
+						<trans-unit id="max">
+							<source>Max</source>
+							<target>最大</target>
+						</trans-unit>
+					</group>
 				</group>
-				<group id="direct_input">
-					<trans-unit id="direct_input">
-						<source>Direct input</source>
-						<target>直接入力</target>
+				<group id="panel_settings">
+					<trans-unit id="name">
+						<source>Panel settings</source>
+						<target>パネル設定</target>
 					</trans-unit>
-					<trans-unit id="x_coordinate">
-						<source>x coordinate:</source>
-						<target>x座標:</target>
-					</trans-unit>
-					<trans-unit id="y_coordinate">
-						<source>y coordinate:</source>
-						<target>y座標:</target>
-					</trans-unit>
-					<trans-unit id="dot">
-						<source>Dot</source>
-						<target>点描</target>
-					</trans-unit>
-					<trans-unit id="move">
-						<source>Move</source>
-						<target>移動</target>
-					</trans-unit>
+					<group id="this">
+						<trans-unit id="name">
+							<source>This</source>
+						</trans-unit>
+						<trans-unit id="resolution">
+							<source>Resolution</source>
+						</trans-unit>
+						<trans-unit id="left">
+							<source>Left</source>
+						</trans-unit>
+						<trans-unit id="right">
+							<source>Right</source>
+						</trans-unit>
+						<trans-unit id="top">
+							<source>Top</source>
+						</trans-unit>
+						<trans-unit id="bottom">
+							<source>Bottom</source>
+						</trans-unit>
+						<trans-unit id="daytime_image">
+							<source>DaytimeImage</source>
+						</trans-unit>
+						<trans-unit id="nighttime_image">
+							<source>NighttimeImage</source>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+							<source>TransparentColor</source>
+						</trans-unit>
+						<group id="center">
+							<trans-unit id="name">
+								<source>Center</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<group id="origin">
+							<trans-unit id="name">
+								<source>Origin</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+					</group>
+					<group id="screen">
+						<trans-unit id="name">
+							<source>Screen</source>
+						</trans-unit>
+						<trans-unit id="number">
+							<source>Number</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
+					</group>
+					<group id="pilot_lamp">
+						<trans-unit id="name">
+							<source>PilotLamp</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="daytime_image">
+							<source>DaytimeImage</source>
+						</trans-unit>
+						<trans-unit id="nighttime_image">
+							<source>NighttimeImage</source>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+							<source>TransparentColor</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
+					</group>
+					<group id="needle">
+						<trans-unit id="name">
+							<source>Needle</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="defined_radius">
+							<source>DefinedRadius</source>
+						</trans-unit>
+						<trans-unit id="radius">
+							<source>Radius</source>
+						</trans-unit>
+						<trans-unit id="daytime_image">
+							<source>DaytimeImage</source>
+						</trans-unit>
+						<trans-unit id="nighttime_image">
+							<source>NighttimeImage</source>
+						</trans-unit>
+						<trans-unit id="color">
+							<source>Color</source>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+							<source>TransparentColor</source>
+						</trans-unit>
+						<trans-unit id="defined_origin">
+							<source>DefinedOrigin</source>
+						</trans-unit>
+						<group id="origin">
+							<trans-unit id="name">
+								<source>Origin</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="initial_angle">
+							<source>InitialAngle</source>
+						</trans-unit>
+						<trans-unit id="last_angle">
+							<source>LastAngle</source>
+						</trans-unit>
+						<trans-unit id="minimum">
+							<source>Minimum</source>
+						</trans-unit>
+						<trans-unit id="maximum">
+							<source>Maximum</source>
+						</trans-unit>
+						<trans-unit id="defined_natural_freq">
+							<source>DefinedNaturalFreq</source>
+						</trans-unit>
+						<trans-unit id="natural_freq">
+							<source>NaturalFreq</source>
+						</trans-unit>
+						<trans-unit id="defined_damping_ratio">
+							<source>DefiedDampingRatio</source>
+						</trans-unit>
+						<trans-unit id="damping_ratio">
+							<source>DampingRatio</source>
+						</trans-unit>
+						<trans-unit id="backstop">
+							<source>Backstop</source>
+						</trans-unit>
+						<trans-unit id="smoothed">
+							<source>smoothed</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
+					</group>
+					<group id="digital_number">
+						<trans-unit id="name">
+							<source>DigitalNumber</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="daytime_image">
+							<source>DaytimeImage</source>
+						</trans-unit>
+						<trans-unit id="nighttime_image">
+							<source>NighttimeImage</source>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+							<source>TransparentColor</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
+						<trans-unit id="interval">
+							<source>Interval</source>
+						</trans-unit>
+					</group>
+					<group id="digital_gauge">
+						<trans-unit id="name">
+							<source>DigitalGauge</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="radius">
+							<source>Radius</source>
+						</trans-unit>
+						<trans-unit id="color">
+							<source>Color</source>
+						</trans-unit>
+						<trans-unit id="initial_angle">
+							<source>InitialAngle</source>
+						</trans-unit>
+						<trans-unit id="last_angle">
+							<source>LastAngle</source>
+						</trans-unit>
+						<trans-unit id="minimum">
+							<source>Minimum</source>
+						</trans-unit>
+						<trans-unit id="maximum">
+							<source>Maximum</source>
+						</trans-unit>
+						<trans-unit id="step">
+							<source>Step</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
+					</group>
+					<group id="linear_gauge">
+						<trans-unit id="name">
+							<source>LinearGauge</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="daytime_image">
+							<source>DaytimeImage</source>
+						</trans-unit>
+						<trans-unit id="nighttime_image">
+							<source>NighttimeImage</source>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+							<source>TransparentColor</source>
+						</trans-unit>
+						<trans-unit id="minimum">
+							<source>Minimum</source>
+						</trans-unit>
+						<trans-unit id="maximum">
+							<source>Maximum</source>
+						</trans-unit>
+						<group id="direction">
+							<trans-unit id="name">
+								<source>Direction</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="width">
+							<source>Width</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
+					</group>
+					<group id="timetable">
+						<trans-unit id="name">
+							<source>Timetable</source>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="height">
+							<source>Height</source>
+						</trans-unit>
+						<trans-unit id="width">
+							<source>Width</source>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+							<source>TransparentColor</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
+					</group>
+					<group id="touch">
+						<trans-unit id="name">
+							<source>Touch</source>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<group id="size">
+							<trans-unit id="name">
+								<source>Size</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="jump_screen">
+							<source>JumpScreen</source>
+						</trans-unit>
+						<trans-unit id="sound_index">
+							<source>SoundIndex</source>
+						</trans-unit>
+						<trans-unit id="command">
+							<source>Command</source>
+						</trans-unit>
+						<trans-unit id="command_option">
+							<source>CommandOption</source>
+						</trans-unit>
+					</group>
 				</group>
-				<group id="play_setting">
-					<trans-unit id="play_setting">
-						<source>Playback setting</source>
-						<target>再生設定</target>
+				<group id="sound_settings">
+					<trans-unit id="name">
+						<source>Sound settings</source>
+						<target>サウンド設定</target>
 					</trans-unit>
-					<trans-unit id="source">
-						<source>Sound source setting</source>
-						<target>音源設定</target>
+					<trans-unit id="key">
+						<source>Key</source>
+						<target>キー</target>
 					</trans-unit>
-					<trans-unit id="source_run">
-						<source>Running sound:</source>
-						<target>走行音:</target>
+					<trans-unit id="filename">
+						<source>Filename</source>
+						<target>ファイル名</target>
 					</trans-unit>
-					<trans-unit id="source_track">
-						<source>Track</source>
-						<target>トラック</target>
+					<trans-unit id="position">
+						<source>Position</source>
+						<target>位置</target>
 					</trans-unit>
-					<trans-unit id="area">
-						<source>Area setting</source>
-						<target>区間設定</target>
+					<trans-unit id="radius">
+						<source>Radius</source>
 					</trans-unit>
-					<trans-unit id="area_loop">
-						<source>Loop playback</source>
-						<target>ループ再生</target>
-					</trans-unit>
-					<trans-unit id="area_constant">
-						<source>Constant speed</source>
-						<target>等速運動</target>
-					</trans-unit>
-					<trans-unit id="area_acceleration">
-						<source>Acceleration:</source>
-						<target>加速度:</target>
-					</trans-unit>
-					<trans-unit id="area_swap">
-						<source>Swap</source>
-						<target>入れ替え</target>
-					</trans-unit>
-					<trans-unit id="play">
-						<source>Playback</source>
-						<target>再生</target>
-					</trans-unit>
-					<trans-unit id="pause">
-						<source>Pause</source>
-						<target>一時停止</target>
-					</trans-unit>
-					<trans-unit id="stop">
-						<source>Stop</source>
-						<target>停止</target>
-					</trans-unit>
+					<group id="edit_entry">
+						<trans-unit id="name">
+							<source>Edit entry</source>
+							<target>エントリー編集</target>
+						</trans-unit>
+						<group id="section">
+							<trans-unit id="name">
+								<source>Section select</source>
+								<target>セクション選択</target>
+							</trans-unit>
+						</group>
+						<group id="key">
+							<trans-unit id="name">
+								<source>Key type select</source>
+								<target>キー選択</target>
+							</trans-unit>
+						</group>
+						<group id="value">
+							<trans-unit id="name">
+								<source>Input value</source>
+								<target>値入力</target>
+							</trans-unit>
+							<trans-unit id="filename">
+								<source>Filename</source>
+								<target>ファイル名</target>
+							</trans-unit>
+							<trans-unit id="radius">
+								<source>Radius</source>
+							</trans-unit>
+							<trans-unit id="position">
+								<source>Position setting</source>
+								<target>位置設定</target>
+							</trans-unit>
+							<group id="position">
+								<trans-unit id="name">
+									<source>Position</source>
+									<target>位置</target>
+								</trans-unit>
+								<trans-unit id="x">
+									<source>x coordinate</source>
+									<target>x座標</target>
+								</trans-unit>
+								<trans-unit id="y">
+									<source>y coordinate</source>
+									<target>y座標</target>
+								</trans-unit>
+								<trans-unit id="z">
+									<source>z coordinate</source>
+									<target>z座標</target>
+								</trans-unit>
+							</group>
+						</group>
+					</group>
+					<group id="message">
+						<trans-unit id="empty_filename">
+							<source>File name has not been entered.</source>
+							<target>ファイル名は空欄にできません。</target>
+						</trans-unit>
+						<trans-unit id="key_exist">
+							<source>The specified key is already set.</source>
+							<target>指定したキーは既に設定されています。</target>
+						</trans-unit>
+					</group>
 				</group>
-				<group id="status_type">
-					<trans-unit id="status_type">
-						<source>Type:</source>
-						<target>タイプ:</target>
+				<group id="status">
+					<trans-unit id="name">
+						<source>Status</source>
+						<target>ステータス</target>
 					</trans-unit>
-					<trans-unit id="power">
-						<source>Power</source>
-						<target>力行</target>
+					<group id="menu">
+						<trans-unit id="error">
+							<source>Error</source>
+							<target>エラー</target>
+						</trans-unit>
+						<trans-unit id="warning">
+							<source>Warning</source>
+							<target>警告</target>
+						</trans-unit>
+						<trans-unit id="info">
+							<source>Information</source>
+							<target>情報</target>
+						</trans-unit>
+						<trans-unit id="clear">
+							<source>Clear</source>
+							<target>クリア</target>
+						</trans-unit>
+					</group>
+					<trans-unit id="level">
+						<source>Level</source>
+						<target>レベル</target>
 					</trans-unit>
-					<trans-unit id="brake">
-						<source>Brake</source>
-						<target>ブレーキ</target>
-					</trans-unit>
-				</group>
-				<group id="status_track">
-					<trans-unit id="status_track">
-						<source>Track:</source>
-						<target>トラック:</target>
-					</trans-unit>
-				</group>
-				<group id="status_mode">
-					<trans-unit id="status_mode">
-						<source>Mode:</source>
-						<target>モード:</target>
-					</trans-unit>
-					<trans-unit id="pitch">
-						<source>Pitch</source>
-						<target>音程</target>
-					</trans-unit>
-					<trans-unit id="volume">
-						<source>Volume</source>
-						<target>音量</target>
-					</trans-unit>
-					<trans-unit id="sound_index">
-						<source>Sound source index</source>
-						<target>音源インデックス</target>
-					</trans-unit>
-				</group>
-				<group id="status_tool">
-					<trans-unit id="status_tool">
-						<source>Tool:</source>
-						<target>ツール:</target>
-					</trans-unit>
-					<trans-unit id="select">
-						<source>Select</source>
-						<target>選択</target>
-					</trans-unit>
-					<trans-unit id="move">
-						<source>Move</source>
-						<target>移動</target>
-					</trans-unit>
-					<trans-unit id="dot">
-						<source>Dot</source>
-						<target>点描</target>
-					</trans-unit>
-					<trans-unit id="line">
-						<source>Line</source>
-						<target>直線</target>
-					</trans-unit>
-				</group>
-				<group id="status_xy">
-					<trans-unit id="velocity">
-						<source>Velocity:</source>
-						<target>速度:</target>
-					</trans-unit>
-					<trans-unit id="pitch">
-						<source>Pitch:</source>
-						<target>音程:</target>
-					</trans-unit>
-					<trans-unit id="volume">
-						<source>Volume:</source>
-						<target>音量:</target>
-					</trans-unit>
-				</group>
-				<group id="vertex_info">
-					<trans-unit id="vertex_info">
-						<source>Vertex information</source>
-						<target>頂点情報</target>
-					</trans-unit>
-					<trans-unit id="velocity">
-						<source>Velocity:</source>
-						<target>速度:</target>
-					</trans-unit>
-					<trans-unit id="pitch">
-						<source>Pitch:</source>
-						<target>音程:</target>
-					</trans-unit>
-					<trans-unit id="volume">
-						<source>Volume:</source>
-						<target>音量:</target>
-					</trans-unit>
-					<trans-unit id="sound_index">
-						<source>Sound source index:</source>
-						<target>音源インデックス:</target>
+					<trans-unit id="description">
+						<source>Description</source>
+						<target>説明</target>
 					</trans-unit>
 				</group>
 				<group id="message">
-					<trans-unit id="new">
-						<source>Do you want to save the current file before creating a new one?</source>
-						<target>新しい車両データを作成する前に現在のデータを保存しますか?</target>
+					<trans-unit id="error">
+						<source>Error</source>
+						<target>エラー</target>
 					</trans-unit>
-					<trans-unit id="open">
-						<source>Do you want to save the current file before opening another file?</source>
-						<target>別の車両データを開く前に現在のデータを保存しますか?</target>
+					<trans-unit id="warning">
+						<source>Warning</source>
+						<target>警告</target>
 					</trans-unit>
-					<trans-unit id="exit">
-						<source>Do you want to save the current file before closing?</source>
-						<target>閉じる前に現在のデータを保存しますか?</target>
+					<trans-unit id="info">
+						<source>Information</source>
+						<target>情報</target>
 					</trans-unit>
-					<trans-unit id="vertex_exist">
-						<source>A point already exists at the same x coordinate, do you want to overwrite it?</source>
-						<target>既に同じx座標に点が存在しますが、上書きしますか?</target>
+					<trans-unit id="positive">
+						<source>positive</source>
+					</trans-unit>
+					<trans-unit id="non_negative">
+						<source>non-negative</source>
+					</trans-unit>
+					<trans-unit id="invalid_float">
+						<source>{0} must be a {1}floating-point number.</source>
+					</trans-unit>
+					<trans-unit id="invalid_color">
+						<source>invalid_color</source>
+						<target>{0}は16進数色を表していません。</target>
 					</trans-unit>
 				</group>
 			</group>

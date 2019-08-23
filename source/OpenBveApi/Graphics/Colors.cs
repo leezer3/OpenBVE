@@ -137,12 +137,34 @@ namespace OpenBveApi.Colors {
 			return false;
 		}
 
+		public static Color24 ParseHexColor(string Expression)
+		{
+			Color24 color;
+
+			if (!TryParseHexColor(Expression, out color))
+			{
+				throw new FormatException();
+			}
+
+			return color;
+		}
+
 		/// <summary>Casts a System.Drawing.Color to a Color24, discarding the alpha component</summary>
 		/// <param name="c">The System.Drawing.Color</param>
 		/// <returns>The new Color24</returns>
 		public static implicit operator Color24(System.Drawing.Color c)
 		{
 			return new Color24(c.R, c.G, c.B);
+		}
+
+		public static implicit operator System.Drawing.Color(Color24 c)
+		{
+			return System.Drawing.Color.FromArgb(c.R, c.G, c.B);
+		}
+
+		public override string ToString()
+		{
+			return string.Format("#{0}", BitConverter.ToString(new byte[] { R, G, B }).Replace("-", string.Empty));
 		}
 	}
 	
