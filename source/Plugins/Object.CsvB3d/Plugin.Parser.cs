@@ -72,7 +72,7 @@ namespace Plugin
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
 		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
 		/// <returns>The object loaded.</returns>
-		internal static StaticObject ReadObject(string FileName, Encoding Encoding) {
+		private static StaticObject ReadObject(string FileName, Encoding Encoding) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			bool IsB3D = string.Equals(System.IO.Path.GetExtension(FileName), ".b3d", StringComparison.OrdinalIgnoreCase);
 			// initialize object
@@ -1401,7 +1401,7 @@ namespace Plugin
 
 		/// <summary>Checks whether the specified System.Text.Encoding is Unicode</summary>
 		/// <param name="Encoding">The Encoding</param>
-		internal static bool IsUtf(System.Text.Encoding Encoding)
+		private static bool IsUtf(System.Text.Encoding Encoding)
 		{
 			switch (Encoding.WindowsCodePage)
 			{

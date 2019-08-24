@@ -63,7 +63,7 @@ namespace SanYingInput
 		/// <summary>
 		/// Dictionary that stores the relations with the position of the notch and bit flag.
 		/// </summary>
-		private static Dictionary<uint, int> _bitPatternMap = new Dictionary<uint, int>();
+		private static readonly Dictionary<uint, int> _bitPatternMap = new Dictionary<uint, int>();
 
 		/// <summary>
 		/// Static constructer

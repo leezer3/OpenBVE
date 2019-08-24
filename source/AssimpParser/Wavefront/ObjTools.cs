@@ -383,8 +383,6 @@ namespace AssimpNET.Obj
 
 		protected int ConvertToInt(int position)
 		{
-			int i = 0;
-
 			bool inv = (Buffer[position] == '-');
 			if (inv || Buffer[position] == '+')
 			{
@@ -410,7 +408,7 @@ namespace AssimpNET.Obj
 				}
 			}
 
-			i = int.Parse(tmp);
+			int i = int.Parse(tmp);
 
 			if (inv)
 			{

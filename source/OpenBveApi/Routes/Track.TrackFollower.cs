@@ -41,6 +41,7 @@ namespace OpenBveApi.Routes
 		/// <summary>Stores a reference to the CurrentRoute.Tracks array</summary>
 		private readonly Track[] Tracks;
 
+		/// <summary>Clones the TrackFollower</summary>
 		public TrackFollower Clone()
 		{
 			TrackFollower t = new TrackFollower(Tracks, Train, Car);

@@ -13,9 +13,9 @@ namespace OpenBveApi.Objects
 		/// <summary>The signalling section the object refers to (Only relevant for objects placed using Track.Sig</summary>
 		public int SectionIndex;
 		/// <summary>The front axle follower</summary>
-		public TrackFollower FrontAxleFollower;
+		public readonly TrackFollower FrontAxleFollower;
 		/// <summary>The rear axle follower</summary>
-		public TrackFollower RearAxleFollower;
+		public readonly TrackFollower RearAxleFollower;
 		/// <summary>The front axle position relative to the center of the object</summary>
 		public double FrontAxlePosition;
 		/// <summary>The rear axle position relative to the center of the object</summary>
@@ -31,13 +31,15 @@ namespace OpenBveApi.Objects
 		public TrackFollowingObject(HostInterface Host)
 		{
 			currentHost = Host;
+			FrontAxleFollower = new TrackFollower(currentHost.Tracks);
+			RearAxleFollower = new TrackFollower(currentHost.Tracks);
 		}
 
 		/// <inheritdoc/>
-		public override void Update(AbstractTrain NearestTrain, double TimeElapsed, bool ForceUpdate, bool Visible)
+		public override void Update(AbstractTrain NearestTrain, double TimeElapsed, bool ForceUpdate, bool CurrentlyVisible)
 		{
 
-			if (Visible | ForceUpdate)
+			if (CurrentlyVisible | ForceUpdate)
 			{
 				if (Object.SecondsSinceLastUpdate >= Object.RefreshRate | ForceUpdate)
 				{

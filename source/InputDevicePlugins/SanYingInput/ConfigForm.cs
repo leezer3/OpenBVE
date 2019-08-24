@@ -469,8 +469,8 @@ namespace SanYingInput
 					}
 				}
 
-				var notchPositionString = string.Empty;
-				var reverserPositionString = string.Empty;
+				string notchPositionString;
+				string reverserPositionString;
 
 				if (_notchPosition > 0)
 				{
