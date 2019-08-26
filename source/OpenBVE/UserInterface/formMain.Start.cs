@@ -914,6 +914,7 @@ namespace OpenBve
 							comboboxRouteEncoding.Items[0] = "(SHIFT_JIS)";
 							Result.RouteEncoding = System.Text.Encoding.GetEncoding(932);
 							break;
+						case TextEncoding.Encoding.ASCII:
 						case TextEncoding.Encoding.Windows1252:
 							panelRouteEncoding.Enabled = false;
 							comboboxRouteEncoding.SelectedIndex = 0;
@@ -931,6 +932,12 @@ namespace OpenBve
 							comboboxRouteEncoding.SelectedIndex = 0;
 							comboboxRouteEncoding.Items[0] = "Korean - 949";
 							Result.RouteEncoding = System.Text.Encoding.GetEncoding(949);
+							break;
+						case TextEncoding.Encoding.OEM866:
+							panelRouteEncoding.Enabled = false;
+							comboboxRouteEncoding.SelectedIndex = 0;
+							comboboxRouteEncoding.Items[0] = "Legacy Cyrillic - 866";
+							Result.RouteEncoding = System.Text.Encoding.GetEncoding(866);
 							break;
 					}
 					panelRouteEncoding.Enabled = true;
@@ -1004,6 +1011,7 @@ namespace OpenBve
 						comboboxTrainEncoding.Items[0] = "(SHIFT_JIS)";
 						Result.TrainEncoding = System.Text.Encoding.GetEncoding(932);
 						break;
+					case TextEncoding.Encoding.ASCII:
 					case TextEncoding.Encoding.Windows1252:
 						comboboxTrainEncoding.SelectedIndex = 0;
 						comboboxTrainEncoding.Items[0] = "Western European (Windows) 1252";

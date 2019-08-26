@@ -97,6 +97,7 @@ namespace OpenBve
 					case TextEncoding.Encoding.Shift_JIS:
 						Encoding = System.Text.Encoding.GetEncoding(932);
 						break;
+					case TextEncoding.Encoding.ASCII:
 					case TextEncoding.Encoding.Windows1252:
 						Encoding = System.Text.Encoding.GetEncoding(1252);
 						break;
@@ -105,6 +106,9 @@ namespace OpenBve
 						break;
 					case TextEncoding.Encoding.EUC_KR:
 						Encoding = System.Text.Encoding.GetEncoding(949);
+						break;
+					case TextEncoding.Encoding.OEM866:
+						Encoding = System.Text.Encoding.GetEncoding(866);
 						break;
 				}
 			}

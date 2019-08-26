@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using OpenBveApi.Math;
 
 namespace OpenBve
@@ -49,6 +49,7 @@ namespace OpenBve
 								case TextEncoding.Encoding.Shift_JIS:
 									Result.RouteEncoding = System.Text.Encoding.GetEncoding(932);
 									break;
+								case TextEncoding.Encoding.ASCII:
 								case TextEncoding.Encoding.Windows1252:
 									Result.RouteEncoding = System.Text.Encoding.GetEncoding(1252);
 									break;
@@ -57,6 +58,9 @@ namespace OpenBve
 									break;
 								case TextEncoding.Encoding.EUC_KR:
 									Result.RouteEncoding = System.Text.Encoding.GetEncoding(949);
+									break;
+								case TextEncoding.Encoding.OEM866:
+									Result.RouteEncoding = System.Text.Encoding.GetEncoding(866);
 									break;
 								default:
 									Result.RouteEncoding = Encoding.Default;
@@ -85,6 +89,7 @@ namespace OpenBve
 								case TextEncoding.Encoding.Shift_JIS:
 									Result.TrainEncoding = System.Text.Encoding.GetEncoding(932);
 									break;
+								case TextEncoding.Encoding.ASCII:
 								case TextEncoding.Encoding.Windows1252:
 									Result.TrainEncoding = System.Text.Encoding.GetEncoding(1252);
 									break;
@@ -93,6 +98,9 @@ namespace OpenBve
 									break;
 								case TextEncoding.Encoding.EUC_KR:
 									Result.TrainEncoding = System.Text.Encoding.GetEncoding(949);
+									break;
+								case TextEncoding.Encoding.OEM866:
+									Result.TrainEncoding = System.Text.Encoding.GetEncoding(866);
 									break;
 								default:
 									Result.TrainEncoding = Encoding.Default;
