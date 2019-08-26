@@ -103,8 +103,13 @@ namespace OpenBve
 				CharsetDetector Det = new CharsetDetector();
 				Det.Feed(Data, 0, Data.Length);
 				Det.DataEnd();
-				switch (Det.Charset)
+				if (Det.Charset == null)
 				{
+					return Encoding.Unknown;
+				}
+				switch (Det.Charset.ToUpperInvariant())
+				{
+					case "SHIFT-JIS":
 					case "SHIFT_JIS":
 						return Encoding.Shift_JIS;
 					case "UTF-8":

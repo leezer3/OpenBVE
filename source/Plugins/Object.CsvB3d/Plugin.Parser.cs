@@ -860,7 +860,15 @@ namespace Plugin
 									if (Path.ContainsInvalidChars(Arguments[0])) {
 										currentHost.AddMessage(MessageType.Error, false, "DaytimeTexture contains illegal characters in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									} else {
-										tday = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+										try
+										{
+											tday = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+										}
+										catch
+										{
+											tday = null;
+										}
+										
 										if (!System.IO.File.Exists(tday))
 										{
 											bool hackFound = false;
@@ -900,12 +908,30 @@ namespace Plugin
 									} else {
 										if (Path.ContainsInvalidChars(Arguments[1])) {
 											currentHost.AddMessage(MessageType.Error, false, "NighttimeTexture contains illegal characters in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-										} else {
-											tnight = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[1]);
-											if (!System.IO.File.Exists(tnight)) {
+										} else
+										{
+											bool ignoreAsInvalid = false;
+											try
+											{
+												tnight = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[1]);
+											}
+											catch
+											{
+												tnight = null;
+												switch (Arguments[1])
+												{
+													case ".":
+														// Meguro route - Misplaced period in several platform objects
+														ignoreAsInvalid = true;
+														break;
+												}
+											}
+											
+											if (!System.IO.File.Exists(tnight) && !ignoreAsInvalid) {
 												currentHost.AddMessage(MessageType.Error, true, "The NighttimeTexture " + tnight + " could not be found in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 												tnight = null;
 											}
+											
 										}
 									}
 								}
