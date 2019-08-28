@@ -365,7 +365,8 @@ namespace LibRender
 		/// <param name="width">The new width.</param>
 		/// <param name="height">The new height.</param>
 		/// <returns>The resize texture, or the original if already of the specified size.</returns>
-		/// <exception cref="System.NotSupportedException">The bits per pixel in the texture is not supported.</exception>
+		/// <exception cref="System.NotSupportedException">The bits per pixel in the source texture is not supported.</exception>
+		/// <exception cref="System.OverflowException">The resized texture would exceed the maximum possible size.</exception>
 		public static Texture Resize(Texture texture, int width, int height)
 		{
 			if (width == texture.Width && height == texture.Height)
@@ -394,7 +395,17 @@ namespace LibRender
 				 * Convert the bitmap into a texture.
 				 * */
 			data = scaledBitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, scaledBitmap.PixelFormat);
-			byte[] bytes = new byte[4 * width * height];
+			int newSize;
+			try
+			{
+				newSize = checked(4 * width * height);
+			}
+			catch (OverflowException)
+			{
+				throw new OverflowException("The resized texture would exceed the maximum possible size.");
+			}
+				
+			byte[] bytes = new byte[newSize];
 			Marshal.Copy(data.Scan0, bytes, 0, bytes.Length);
 			scaledBitmap.UnlockBits(data);
 			scaledBitmap.Dispose();
