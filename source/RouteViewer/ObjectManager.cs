@@ -234,7 +234,6 @@ namespace OpenBve {
 						break;
 				}
 			}
-			Objects[a].ObjectIndex = a;
 			ObjectsUsed++;
 			return a;
 		}
@@ -254,7 +253,6 @@ namespace OpenBve {
 				Objects[a] = new StaticObject(Program.CurrentHost)
 				{
 					Dynamic = true,
-					ObjectIndex = a
 				};
 				internalObject = Objects[a];
 				ObjectsUsed++;
@@ -264,7 +262,6 @@ namespace OpenBve {
 			{
 				Objects[a] = internalObject;
 				internalObject.Dynamic = true;
-				internalObject.ObjectIndex = a;
 				ObjectsUsed++;
 			}
 		}

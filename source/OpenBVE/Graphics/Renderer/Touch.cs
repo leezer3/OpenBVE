@@ -23,21 +23,21 @@ namespace OpenBve
 		internal static bool DebugTouchMode = false;
 
 		/// <summary>Makes an object visible within the world for selection</summary>
-		/// <param name="ObjectIndex">The object's index</param>
-		private static void ShowObjectSelection(int ObjectIndex)
+		/// <param name="ObjectToShow">The object's index</param>
+		private static void ShowObjectSelection(StaticObject ObjectToShow)
 		{
-			if (ObjectManager.Objects[ObjectIndex] == null)
+			if (ObjectToShow == null)
 			{
 				return;
 			}
-			if (ObjectManager.Objects[ObjectIndex].RendererIndex == 0)
+			if (ObjectToShow.RendererIndex == 0)
 			{
 				if (LibRender.Renderer.ObjectCount >= LibRender.Renderer.Objects.Length)
 				{
 					Array.Resize(ref LibRender.Renderer.Objects, LibRender.Renderer.Objects.Length << 1);
 				}
-				LibRender.Renderer.Objects[LibRender.Renderer.ObjectCount] = new RendererObject(ObjectManager.Objects[ObjectIndex], ObjectType.Overlay);
-				int f = ObjectManager.Objects[ObjectIndex].Mesh.Faces.Length;
+				LibRender.Renderer.Objects[LibRender.Renderer.ObjectCount] = new RendererObject(ObjectToShow, ObjectType.Overlay);
+				int f = ObjectToShow.Mesh.Faces.Length;
 				LibRender.Renderer.Objects[LibRender.Renderer.ObjectCount].FaceListReferences = new ObjectListReference[f];
 				for (int i = 0; i < f; i++)
 				{
@@ -49,7 +49,7 @@ namespace OpenBve
 					Touch.Faces[Touch.FaceCount] = new ObjectFace
 					{
 						ObjectListIndex = LibRender.Renderer.ObjectCount,
-						ObjectReference = ObjectManager.Objects[ObjectIndex],
+						ObjectReference = ObjectToShow,
 						FaceIndex = i,
 						Wrap = wrap
 					};
@@ -59,7 +59,7 @@ namespace OpenBve
 					LibRender.Renderer.Objects[LibRender.Renderer.ObjectCount].FaceListReferences[i] = new ObjectListReference(ObjectListType.Touch, Touch.FaceCount);
 					Touch.FaceCount++;
 				}
-				ObjectManager.Objects[ObjectIndex].RendererIndex = LibRender.Renderer.ObjectCount + 1;
+				ObjectToShow.RendererIndex = LibRender.Renderer.ObjectCount + 1;
 				LibRender.Renderer.ObjectCount++;
 			}
 		}
@@ -334,8 +334,7 @@ namespace OpenBve
 				{
 					foreach (var TouchElement in TouchElements)
 					{
-						int o = TouchElement.Element.internalObject.ObjectIndex;
-						ShowObjectSelection(o);
+						ShowObjectSelection(TouchElement.Element.internalObject);
 					}
 
 					LibRender.Renderer.ResetOpenGlState();
@@ -349,7 +348,7 @@ namespace OpenBve
 					
 					foreach (var TouchElement in TouchElements)
 					{
-						HideObjectSelection(ref ObjectManager.Objects[TouchElement.Element.internalObject.ObjectIndex]);
+						HideObjectSelection(ref TouchElement.Element.internalObject);
 					}
 				}
 			}
@@ -381,8 +380,7 @@ namespace OpenBve
 				{
 					foreach (var TouchElement in TouchElements)
 					{
-						int o = TouchElement.Element.internalObject.ObjectIndex;
-						ShowObjectSelection(o);
+						ShowObjectSelection(TouchElement.Element.internalObject);
 					}
 
 					int[] SelectBuffer = new int[2048];
@@ -395,7 +393,7 @@ namespace OpenBve
 
 					foreach (var TouchElement in TouchElements)
 					{
-						HideObjectSelection(ref ObjectManager.Objects[TouchElement.Element.internalObject.ObjectIndex]);
+						HideObjectSelection(ref TouchElement.Element.internalObject);
 
 						if (TouchElement.Element.internalObject == PickedObjectIndex)
 						{
@@ -446,8 +444,7 @@ namespace OpenBve
 				{
 					foreach (var TouchElement in TouchElements)
 					{
-						int o = TouchElement.Element.internalObject.ObjectIndex;
-						ShowObjectSelection(o);
+						ShowObjectSelection(TouchElement.Element.internalObject);
 					}
 
 					int[] SelectBuffer = new int[2048];
@@ -460,7 +457,7 @@ namespace OpenBve
 
 					foreach (var TouchElement in TouchElements)
 					{
-						HideObjectSelection(ref ObjectManager.Objects[TouchElement.Element.internalObject.ObjectIndex]);
+						HideObjectSelection(ref TouchElement.Element.internalObject);
 						if (TouchElement.Element.internalObject == PickedObjectIndex)
 						{
 							for (int i = 0; i < Interface.CurrentControls.Length; i++)
@@ -519,8 +516,7 @@ namespace OpenBve
 				{
 					foreach (var TouchElement in TouchElements)
 					{
-						int o = TouchElement.Element.internalObject.ObjectIndex;
-						ShowObjectSelection(o);
+						ShowObjectSelection(TouchElement.Element.internalObject);
 					}
 
 					int[] SelectBuffer = new int[2048];
@@ -533,7 +529,7 @@ namespace OpenBve
 
 					foreach (var TouchElement in TouchElements)
 					{
-						HideObjectSelection(ref ObjectManager.Objects[TouchElement.Element.internalObject.ObjectIndex]);
+						HideObjectSelection(ref TouchElement.Element.internalObject);
 						if (TouchElement.Element.internalObject == PickedObjectIndex)
 						{
 							Car.CarSections[0].CurrentAdditionalGroup = TouchElement.JumpScreenIndex;
