@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Globalization;
+using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 
 namespace TrainEditor2.Extensions
@@ -20,7 +21,8 @@ namespace TrainEditor2.Extensions
 		{
 			Any,
 			Positive,
-			NonNegative
+			NonNegative,
+			NonZero
 		}
 
 		internal static bool TryParse(string text, NumberRange range, out double result)
@@ -36,6 +38,9 @@ namespace TrainEditor2.Extensions
 						break;
 					case NumberRange.NonNegative:
 						error = result < 0.0;
+						break;
+					case NumberRange.NonZero:
+						error = result == 0.0;
 						break;
 					default:
 						error = false;
@@ -64,6 +69,9 @@ namespace TrainEditor2.Extensions
 					case NumberRange.NonNegative:
 						prefix = $"{GetInterfaceString("message", "non_negative")} ";
 						break;
+					case NumberRange.NonZero:
+						prefix = $"{GetInterfaceString("message", "non_zero")} ";
+						break;
 					default:
 						prefix = string.Empty;
 						break;
@@ -75,6 +83,23 @@ namespace TrainEditor2.Extensions
 
 			message = null;
 			return true;
+		}
+
+		internal static bool TryParse(string text, out Color24 result, out string message)
+		{
+			if (!Color24.TryParseHexColor(text, out result))
+			{
+				message = string.Format(GetInterfaceString("message", "invalid_color"), "This");
+				return false;
+			}
+
+			message = null;
+			return true;
+		}
+
+		internal static double ToDegrees(this double radians)
+		{
+			return radians * (180.0 / Math.PI);
 		}
 
 		internal static void ZoomIn(ref double min, ref double max)
@@ -235,7 +260,7 @@ namespace TrainEditor2.Extensions
 
 		internal static void AddRange<T>(this ObservableCollection<T> collection, IEnumerable<T> addCollection)
 		{
-			foreach (var add in addCollection)
+			foreach (T add in addCollection)
 			{
 				collection.Add(add);
 			}

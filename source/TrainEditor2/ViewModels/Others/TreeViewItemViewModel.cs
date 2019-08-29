@@ -50,6 +50,7 @@ namespace TrainEditor2.ViewModels.Others
 
 			new[]
 				{
+					Children.CollectionChangedAsObservable().OfType<object>(),
 					Children.ObserveElementObservableProperty(x => x.Title).OfType<object>(),
 					Children.ObserveElementObservableProperty(x => x.Tag).OfType<object>(),
 					Children.ObserveElementProperty(x => x.Children).OfType<object>()

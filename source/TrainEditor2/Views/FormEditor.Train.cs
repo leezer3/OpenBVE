@@ -23,7 +23,7 @@ namespace TrainEditor2.Views
 
 			x.Cars
 				.CollectionChangedAsObservable()
-				.ToReactiveProperty()
+				.ToReadOnlyReactivePropertySlim()
 				.Subscribe(_ =>
 				{
 					int index = comboBoxDriverCar.SelectedIndex;

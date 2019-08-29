@@ -124,12 +124,12 @@ namespace TrainEditor2.Models
 
 		internal void CreateItem()
 		{
-			item = new TreeViewItemModel { Title = Utilities.GetInterfaceString("tree_cars", "train") };
-			item.Children.Add(new TreeViewItemModel { Title = Utilities.GetInterfaceString("tree_cars", "general") });
-			item.Children.Add(new TreeViewItemModel { Title = Utilities.GetInterfaceString("tree_cars", "cars") });
-			item.Children.Add(new TreeViewItemModel { Title = Utilities.GetInterfaceString("tree_cars", "couplers") });
-			item.Children[1].Children = new ObservableCollection<TreeViewItemModel>(Train.Cars.Select((x, i) => new TreeViewItemModel { Title = i.ToString(culture), Tag = x }));
-			item.Children[2].Children = new ObservableCollection<TreeViewItemModel>(Train.Couplers.Select((x, i) => new TreeViewItemModel { Title = i.ToString(culture), Tag = x }));
+			item = new TreeViewItemModel(null) { Title = Utilities.GetInterfaceString("tree_cars", "train") };
+			item.Children.Add(new TreeViewItemModel(Item) { Title = Utilities.GetInterfaceString("tree_cars", "general") });
+			item.Children.Add(new TreeViewItemModel(Item) { Title = Utilities.GetInterfaceString("tree_cars", "cars") });
+			item.Children.Add(new TreeViewItemModel(Item) { Title = Utilities.GetInterfaceString("tree_cars", "couplers") });
+			item.Children[1].Children = new ObservableCollection<TreeViewItemModel>(Train.Cars.Select((x, i) => new TreeViewItemModel(Item.Children[1]) { Title = i.ToString(culture), Tag = x }));
+			item.Children[2].Children = new ObservableCollection<TreeViewItemModel>(Train.Couplers.Select((x, i) => new TreeViewItemModel(Item.Children[2]) { Title = i.ToString(culture), Tag = x }));
 			OnPropertyChanged(new PropertyChangedEventArgs(nameof(Item)));
 		}
 
@@ -202,8 +202,8 @@ namespace TrainEditor2.Models
 			Train.ApplyBrakeNotchesToCar();
 			Train.ApplyLocoBrakeNotchesToCar();
 
-			Item.Children[1].Children.Add(new TreeViewItemModel { Title = (Train.Cars.Count - 1).ToString(culture), Tag = Train.Cars.Last() });
-			Item.Children[2].Children.Add(new TreeViewItemModel { Title = (Train.Couplers.Count - 1).ToString(culture), Tag = Train.Couplers.Last() });
+			Item.Children[1].Children.Add(new TreeViewItemModel(Item.Children[1]) { Title = (Train.Cars.Count - 1).ToString(culture), Tag = Train.Cars.Last() });
+			Item.Children[2].Children.Add(new TreeViewItemModel(Item.Children[2]) { Title = (Train.Couplers.Count - 1).ToString(culture), Tag = Train.Couplers.Last() });
 			SelectedItem = Item.Children[1].Children.Last();
 		}
 
@@ -226,8 +226,8 @@ namespace TrainEditor2.Models
 			Train.Cars.Add((Car)((Car)SelectedItem.Tag).Clone());
 			Train.Couplers.Add(new Coupler());
 
-			Item.Children[1].Children.Add(new TreeViewItemModel { Title = (Train.Cars.Count - 1).ToString(culture), Tag = Train.Cars.Last() });
-			Item.Children[2].Children.Add(new TreeViewItemModel { Title = (Train.Couplers.Count - 1).ToString(culture), Tag = Train.Couplers.Last() });
+			Item.Children[1].Children.Add(new TreeViewItemModel(Item.Children[1]) { Title = (Train.Cars.Count - 1).ToString(culture), Tag = Train.Cars.Last() });
+			Item.Children[2].Children.Add(new TreeViewItemModel(Item.Children[2]) { Title = (Train.Couplers.Count - 1).ToString(culture), Tag = Train.Couplers.Last() });
 			SelectedItem = Item.Children[1].Children.Last();
 		}
 

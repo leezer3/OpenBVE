@@ -56,6 +56,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Reactive, Version=4.1.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Reactive.4.1.6\lib\net46\System.Reactive.dll</HintPath>
     </Reference>
@@ -87,6 +88,8 @@
     <Compile Include="Models\Dialogs\BaseDialog.cs" />
     <Compile Include="Models\Dialogs\MessageBox.cs" />
     <Compile Include="Models\Others\InputEventModel.cs" />
+    <Compile Include="Models\Others\ListViewColumnHeaderModel.cs" />
+    <Compile Include="Models\Others\ListViewItemModel.cs" />
     <Compile Include="Models\Others\ToolTipModel.cs" />
     <Compile Include="Models\Others\TreeViewItemModel.cs" />
     <Compile Include="Models\Panels\DigitalGaugeElement.cs" />
@@ -123,8 +126,22 @@
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\BaseDialogViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\MessageBoxViewModel.cs" />
+    <Compile Include="ViewModels\Others\ListViewColumnHeaderViewModel.cs" />
+    <Compile Include="ViewModels\Others\ListViewItemViewModel.cs" />
     <Compile Include="ViewModels\Others\ToolTipViewModel.cs" />
     <Compile Include="ViewModels\Others\TreeViewItemViewModel.cs" />
+    <Compile Include="ViewModels\Panels\DigitalGaugeElementViewModel.cs" />
+    <Compile Include="ViewModels\Panels\DigitalNumberElementViewModel.cs" />
+    <Compile Include="ViewModels\Panels\LinearGaugeElementViewModel.cs" />
+    <Compile Include="ViewModels\Panels\NeedleElementViewModel.cs" />
+    <Compile Include="ViewModels\Panels\PanelElementViewModel.cs" />
+    <Compile Include="ViewModels\Panels\PanelViewModel.cs" />
+    <Compile Include="ViewModels\Panels\PilotLampElementViewModel.cs" />
+    <Compile Include="ViewModels\Panels\ScreenViewModel.cs" />
+    <Compile Include="ViewModels\Panels\SubjectViewModel.cs" />
+    <Compile Include="ViewModels\Panels\ThisViewModel.cs" />
+    <Compile Include="ViewModels\Panels\TimetableElementViewModel.cs" />
+    <Compile Include="ViewModels\Panels\TouchElementViewModel.cs" />
     <Compile Include="ViewModels\Trains\AccelerationViewModel.cs" />
     <Compile Include="ViewModels\Trains\BrakeViewModel.cs" />
     <Compile Include="ViewModels\Trains\CabViewModel.cs" />
@@ -176,10 +193,19 @@
     <Compile Include="Views\FormEditor.Device.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\FormEditor.DigitalGauge.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.DigitalNumber.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\FormEditor.Functions.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\FormEditor.Handle.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.LinearGauge.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\FormEditor.MessageBox.cs">
@@ -191,17 +217,44 @@
     <Compile Include="Views\FormEditor.Move.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\FormEditor.Needle.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.Panel.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\FormEditor.Performance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.PilotLamp.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\FormEditor.Pressure.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\FormEditor.Screen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.This.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.Timetable.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\FormEditor.ToolTip.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.Touch.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\FormEditor.Train.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormSubject.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormSubject.Designer.cs">
+      <DependentUpon>FormSubject.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -220,6 +273,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\FormEditor.resx">
       <DependentUpon>FormEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\FormSubject.resx">
+      <DependentUpon>FormSubject.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />

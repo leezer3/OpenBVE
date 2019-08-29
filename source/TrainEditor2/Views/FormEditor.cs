@@ -11,7 +11,6 @@ using OpenBveApi.Interface;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
-using TrainEditor2.Models.Others;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.Systems;
 using TrainEditor2.ViewModels;
@@ -43,7 +42,62 @@ namespace TrainEditor2.Views
 				treeViewCars.Nodes.Clear();
 				treeViewCars.Nodes.Add(value);
 				treeViewCars.ExpandAll();
+				treeViewCars.SelectedNode = treeViewCars.Nodes
+					.OfType<TreeNode>()
+					.Select(y => SearchTreeNode(app.SelectedItem.Value, y))
+					.FirstOrDefault(y => y != null);
 				app.SelectedItem.ForceNotify();
+			}
+		}
+
+		private TreeNode TreeViewPanelTopNode
+		{
+			get
+			{
+				if (treeViewPanel.Nodes.Count == 0)
+				{
+					treeViewPanel.Nodes.Add(new TreeNode());
+				}
+
+				return treeViewPanel.Nodes[0];
+			}
+			// ReSharper disable once UnusedMember.Local
+			set
+			{
+				treeViewPanel.Nodes.Clear();
+				treeViewPanel.Nodes.Add(value);
+				treeViewPanel.ExpandAll();
+				treeViewPanel.SelectedNode = treeViewPanel.Nodes
+					.OfType<TreeNode>()
+					.Select(z => SearchTreeNode(app.Panel.Value.SelectedTreeItem.Value, z))
+					.FirstOrDefault(z => z != null);
+				app.Panel.Value.SelectedTreeItem.ForceNotify();
+			}
+		}
+
+		private ListViewItem ListViewPanelSelectedItem
+		{
+			get
+			{
+				if (listViewPanel.SelectedItems.Count == 1)
+				{
+					return listViewPanel.SelectedItems[0];
+				}
+
+				return null;
+			}
+			// ReSharper disable once UnusedMember.Local
+			set
+			{
+				foreach (ListViewItem item in listViewPanel.Items.OfType<ListViewItem>().Where(x => x.Selected))
+				{
+					item.Selected = false;
+				}
+
+				if (value != null)
+				{
+					value.Selected = true;
+				}
 			}
 		}
 
@@ -52,6 +106,7 @@ namespace TrainEditor2.Views
 			disposable = new CompositeDisposable();
 			CompositeDisposable messageDisposable = new CompositeDisposable();
 			CompositeDisposable trainDisposable = new CompositeDisposable();
+			CompositeDisposable panelDisposable = new CompositeDisposable();
 
 			app = new AppViewModel();
 
@@ -82,6 +137,16 @@ namespace TrainEditor2.Views
 					trainDisposable = new CompositeDisposable();
 
 					BindToTrain(x).AddTo(trainDisposable);
+				})
+				.AddTo(disposable);
+
+			app.Panel
+				.Subscribe(x =>
+				{
+					panelDisposable.Dispose();
+					panelDisposable = new CompositeDisposable();
+
+					BindToPanel(x).AddTo(panelDisposable);
 				})
 				.AddTo(disposable);
 
@@ -185,6 +250,7 @@ namespace TrainEditor2.Views
 
 			messageDisposable.AddTo(disposable);
 			trainDisposable.AddTo(disposable);
+			panelDisposable.AddTo(disposable);
 		}
 
 		private void FormEditor_Load(object sender, EventArgs e)
@@ -198,6 +264,15 @@ namespace TrainEditor2.Views
 				comboBox.DrawMode = DrawMode.OwnerDrawFixed;
 				comboBox.DrawItem += ToolStripComboBoxIndex_DrawItem;
 			}
+
+			comboBoxTouchCommand.Items
+				.AddRange(
+					Enum.GetValues(typeof(Translations.Command))
+						.OfType<Translations.Command>()
+						.Select(c => Translations.CommandInfos.TryGetInfo(c).Name)
+						.OfType<object>()
+						.ToArray()
+				);
 
 			Translations.CurrentLanguageCode = Interface.CurrentOptions.LanguageCode;
 			string folder = Program.FileSystem.GetDataFolder("Languages");
@@ -337,6 +412,11 @@ namespace TrainEditor2.Views
 			}
 		}
 
+		private void ButtonObjectOpen_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog(textBoxObject);
+		}
+
 		private void PictureBoxAccel_MouseEnter(object sender, EventArgs e)
 		{
 			pictureBoxAccel.Focus();
@@ -400,6 +480,136 @@ namespace TrainEditor2.Views
 			MotorCarViewModel car = app.Train.Value.SelectedCar.Value as MotorCarViewModel;
 
 			car?.Motor.Value.MouseUp.Execute();
+		}
+
+		private void ButtonThisDaytimeImageOpen_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog(textBoxThisDaytimeImage);
+		}
+
+		private void ButtonThisNighttimeImageOpen_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog(textBoxThisNighttimeImage);
+		}
+
+		private void ButtonThisTransparentColorSet_Click(object sender, EventArgs e)
+		{
+			OpenColorDialog(textBoxThisTransparentColor);
+		}
+
+		private void ButtonPilotLampSubjectSet_Click(object sender, EventArgs e)
+		{
+			using (FormSubject form = new FormSubject(app.Panel.Value.SelectedPilotLamp.Value.Subject.Value))
+			{
+				form.ShowDialog(this);
+			}
+		}
+
+		private void ButtonPilotLampDaytimeImageOpen_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog(textBoxPilotLampDaytimeImage);
+		}
+
+		private void ButtonPilotLampNighttimeImageOpen_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog(textBoxPilotLampNighttimeImage);
+		}
+
+		private void ButtonPilotLampTransparentColorSet_Click(object sender, EventArgs e)
+		{
+			OpenColorDialog(textBoxPilotLampTransparentColor);
+		}
+
+		private void ButtonNeedleSubjectSet_Click(object sender, EventArgs e)
+		{
+			using (FormSubject form = new FormSubject(app.Panel.Value.SelectedNeedle.Value.Subject.Value))
+			{
+				form.ShowDialog(this);
+			}
+		}
+
+		private void ButtonNeedleDaytimeImageOpen_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog(textBoxNeedleDaytimeImage);
+		}
+
+		private void ButtonNeedleNighttimeImageOpen_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog(textBoxNeedleNighttimeImage);
+		}
+
+		private void ButtonNeedleColorSet_Click(object sender, EventArgs e)
+		{
+			OpenColorDialog(textBoxNeedleColor);
+		}
+
+		private void ButtonNeedleTransparentColorSet_Click(object sender, EventArgs e)
+		{
+			OpenColorDialog(textBoxNeedleTransparentColor);
+		}
+
+		private void ButtonDigitalNumberSubjectSet_Click(object sender, EventArgs e)
+		{
+			using (FormSubject form = new FormSubject(app.Panel.Value.SelectedDigitalNumber.Value.Subject.Value))
+			{
+				form.ShowDialog(this);
+			}
+		}
+
+		private void ButtonDigitalNumberDaytimeImageOpen_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog(textBoxDigitalNumberDaytimeImage);
+		}
+
+		private void ButtonDigitalNumberNighttimeImageOpen_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog(textBoxDigitalNumberNighttimeImage);
+		}
+
+		private void ButtonDigitalNumberTransparentColorSet_Click(object sender, EventArgs e)
+		{
+			OpenColorDialog(textBoxDigitalNumberTransparentColor);
+		}
+
+		private void ButtonDigitalGaugeSubjectSet_Click(object sender, EventArgs e)
+		{
+			using (FormSubject form = new FormSubject(app.Panel.Value.SelectedDigitalGauge.Value.Subject.Value))
+			{
+				form.ShowDialog(this);
+			}
+		}
+
+		private void ButtonDigitalGaugeColorSet_Click(object sender, EventArgs e)
+		{
+			OpenColorDialog(textBoxDigitalGaugeColor);
+		}
+
+		private void ButtonLinearGaugeSubjectSet_Click(object sender, EventArgs e)
+		{
+			using (FormSubject form = new FormSubject(app.Panel.Value.SelectedLinearGauge.Value.Subject.Value))
+			{
+				form.ShowDialog(this);
+			}
+		}
+
+		private void ButtonLinearGaugeDaytimeImageOpen_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog(textBoxLinearGaugeDaytimeImage);
+		}
+
+		private void ButtonLinearGaugeNighttimeImageOpen_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog(textBoxLinearGaugeNighttimeImage);
+		}
+
+		private void ButtonLinearGaugeTransparentColorSet_Click(object sender, EventArgs e)
+		{
+			OpenColorDialog(textBoxLinearGaugeTransparentColor);
+		}
+
+		private void ButtonTimetableTransparentColorSet_Click(object sender, EventArgs e)
+		{
+			OpenColorDialog(textBoxTimetableTransparentColor);
 		}
 	}
 }

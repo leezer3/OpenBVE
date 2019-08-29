@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+using OpenBveApi.Colors;
 using TrainEditor2.Models.Others;
 using TrainEditor2.ViewModels.Others;
 using TrainEditor2.ViewModels.Trains;
@@ -17,6 +18,24 @@ namespace TrainEditor2.Views
 		private TreeNode SearchTreeNode(TreeViewItemViewModel item, TreeNode node)
 		{
 			return node.Tag == item ? node : node.Nodes.OfType<TreeNode>().Select(x => SearchTreeNode(item, x)).FirstOrDefault(x => x != null);
+		}
+
+		private ColumnHeader ListViewColumnHeaderViewModelToColumnHeader(ListViewColumnHeaderViewModel column)
+		{
+			return new ColumnHeader { Text = column.Text.Value, Tag = column };
+		}
+
+		private ListViewItem ListViewItemViewModelToListViewItem(ListViewItemViewModel item)
+		{
+			return new ListViewItem(item.Texts.ToArray()) { Tag = item };
+		}
+
+		private void UpdateListViewItem(ListViewItem item, ListViewItemViewModel viewModel)
+		{
+			for (int i = 0; i < viewModel.Texts.Count; i++)
+			{
+				item.SubItems[i].Text = viewModel.Texts[i];
+			}
 		}
 
 		private InputEventModel.EventArgs MouseEventArgsToModel(MouseEventArgs e)
@@ -133,6 +152,23 @@ namespace TrainEditor2.Views
 				}
 
 				textBox.Text = dialog.FileName;
+			}
+		}
+
+		private void OpenColorDialog(TextBox textBox)
+		{
+			using (ColorDialog dialog = new ColorDialog())
+			{
+				Color24 nowColor;
+				Color24.TryParseHexColor(textBox.Text, out nowColor);
+				dialog.Color = nowColor;
+
+				if (dialog.ShowDialog() != DialogResult.OK)
+				{
+					return;
+				}
+
+				textBox.Text = ((Color24)dialog.Color).ToString();
 			}
 		}
 	}

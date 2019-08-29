@@ -8,6 +8,11 @@ namespace TrainEditor2.Models.Others
 		private string title;
 		private object tag;
 
+		internal TreeViewItemModel Parent
+		{
+			get;
+		}
+
 		internal string Title
 		{
 			get
@@ -34,8 +39,9 @@ namespace TrainEditor2.Models.Others
 
 		internal ObservableCollection<TreeViewItemModel> Children;
 
-		internal TreeViewItemModel()
+		internal TreeViewItemModel(TreeViewItemModel parent)
 		{
+			Parent = parent;
 			Children = new ObservableCollection<TreeViewItemModel>();
 		}
 	}

@@ -2106,6 +2106,7 @@ namespace TrainEditor2.Views
 			this.buttonObjectOpen.TabIndex = 3;
 			this.buttonObjectOpen.Text = "Open...";
 			this.buttonObjectOpen.UseVisualStyleBackColor = true;
+			this.buttonObjectOpen.Click += new System.EventHandler(this.ButtonObjectOpen_Click);
 			// 
 			// labelExposedFrontalAreaUnit
 			// 
@@ -3926,6 +3927,7 @@ namespace TrainEditor2.Views
 			this.buttonThisTransparentColorSet.TabIndex = 36;
 			this.buttonThisTransparentColorSet.Text = "Set...";
 			this.buttonThisTransparentColorSet.UseVisualStyleBackColor = true;
+			this.buttonThisTransparentColorSet.Click += new System.EventHandler(this.ButtonThisTransparentColorSet_Click);
 			// 
 			// buttonThisNighttimeImageOpen
 			// 
@@ -3935,6 +3937,7 @@ namespace TrainEditor2.Views
 			this.buttonThisNighttimeImageOpen.TabIndex = 35;
 			this.buttonThisNighttimeImageOpen.Text = "Open...";
 			this.buttonThisNighttimeImageOpen.UseVisualStyleBackColor = true;
+			this.buttonThisNighttimeImageOpen.Click += new System.EventHandler(this.ButtonThisNighttimeImageOpen_Click);
 			// 
 			// buttonThisDaytimeImageOpen
 			// 
@@ -3944,6 +3947,7 @@ namespace TrainEditor2.Views
 			this.buttonThisDaytimeImageOpen.TabIndex = 34;
 			this.buttonThisDaytimeImageOpen.Text = "Open...";
 			this.buttonThisDaytimeImageOpen.UseVisualStyleBackColor = true;
+			this.buttonThisDaytimeImageOpen.Click += new System.EventHandler(this.ButtonThisDaytimeImageOpen_Click);
 			// 
 			// groupBoxThisOrigin
 			// 
@@ -4240,6 +4244,7 @@ namespace TrainEditor2.Views
 			this.buttonPilotLampTransparentColorSet.TabIndex = 49;
 			this.buttonPilotLampTransparentColorSet.Text = "Set...";
 			this.buttonPilotLampTransparentColorSet.UseVisualStyleBackColor = true;
+			this.buttonPilotLampTransparentColorSet.Click += new System.EventHandler(this.ButtonPilotLampTransparentColorSet_Click);
 			// 
 			// numericUpDownPilotLampLayer
 			// 
@@ -4301,6 +4306,7 @@ namespace TrainEditor2.Views
 			this.buttonPilotLampSubjectSet.TabIndex = 47;
 			this.buttonPilotLampSubjectSet.Text = "Set...";
 			this.buttonPilotLampSubjectSet.UseVisualStyleBackColor = true;
+			this.buttonPilotLampSubjectSet.Click += new System.EventHandler(this.ButtonPilotLampSubjectSet_Click);
 			// 
 			// labelPilotLampSubject
 			// 
@@ -4328,6 +4334,7 @@ namespace TrainEditor2.Views
 			this.buttonPilotLampNighttimeImageOpen.TabIndex = 43;
 			this.buttonPilotLampNighttimeImageOpen.Text = "Open...";
 			this.buttonPilotLampNighttimeImageOpen.UseVisualStyleBackColor = true;
+			this.buttonPilotLampNighttimeImageOpen.Click += new System.EventHandler(this.ButtonPilotLampNighttimeImageOpen_Click);
 			// 
 			// buttonPilotLampDaytimeImageOpen
 			// 
@@ -4337,6 +4344,7 @@ namespace TrainEditor2.Views
 			this.buttonPilotLampDaytimeImageOpen.TabIndex = 42;
 			this.buttonPilotLampDaytimeImageOpen.Text = "Open...";
 			this.buttonPilotLampDaytimeImageOpen.UseVisualStyleBackColor = true;
+			this.buttonPilotLampDaytimeImageOpen.Click += new System.EventHandler(this.ButtonPilotLampDaytimeImageOpen_Click);
 			// 
 			// textBoxPilotLampTransparentColor
 			// 
@@ -4481,6 +4489,7 @@ namespace TrainEditor2.Views
 			this.buttonNeedleTransparentColorSet.TabIndex = 89;
 			this.buttonNeedleTransparentColorSet.Text = "Set...";
 			this.buttonNeedleTransparentColorSet.UseVisualStyleBackColor = true;
+			this.buttonNeedleTransparentColorSet.Click += new System.EventHandler(this.ButtonNeedleTransparentColorSet_Click);
 			// 
 			// buttonNeedleColorSet
 			// 
@@ -4490,6 +4499,7 @@ namespace TrainEditor2.Views
 			this.buttonNeedleColorSet.TabIndex = 88;
 			this.buttonNeedleColorSet.Text = "Set...";
 			this.buttonNeedleColorSet.UseVisualStyleBackColor = true;
+			this.buttonNeedleColorSet.Click += new System.EventHandler(this.ButtonNeedleColorSet_Click);
 			// 
 			// checkBoxNeedleDefinedOrigin
 			// 
@@ -4792,6 +4802,7 @@ namespace TrainEditor2.Views
 			this.buttonNeedleSubjectSet.TabIndex = 60;
 			this.buttonNeedleSubjectSet.Text = "Set...";
 			this.buttonNeedleSubjectSet.UseVisualStyleBackColor = true;
+			this.buttonNeedleSubjectSet.Click += new System.EventHandler(this.ButtonNeedleSubjectSet_Click);
 			// 
 			// labelNeedleSubject
 			// 
@@ -4819,6 +4830,7 @@ namespace TrainEditor2.Views
 			this.buttonNeedleNighttimeImageOpen.TabIndex = 56;
 			this.buttonNeedleNighttimeImageOpen.Text = "Open...";
 			this.buttonNeedleNighttimeImageOpen.UseVisualStyleBackColor = true;
+			this.buttonNeedleNighttimeImageOpen.Click += new System.EventHandler(this.ButtonNeedleNighttimeImageOpen_Click);
 			// 
 			// buttonNeedleDaytimeImageOpen
 			// 
@@ -4828,6 +4840,7 @@ namespace TrainEditor2.Views
 			this.buttonNeedleDaytimeImageOpen.TabIndex = 55;
 			this.buttonNeedleDaytimeImageOpen.Text = "Open...";
 			this.buttonNeedleDaytimeImageOpen.UseVisualStyleBackColor = true;
+			this.buttonNeedleDaytimeImageOpen.Click += new System.EventHandler(this.ButtonNeedleDaytimeImageOpen_Click);
 			// 
 			// textBoxNeedleTransparentColor
 			// 
@@ -4910,6 +4923,7 @@ namespace TrainEditor2.Views
 			this.buttonDigitalNumberTransparentColorSet.TabIndex = 86;
 			this.buttonDigitalNumberTransparentColorSet.Text = "Set...";
 			this.buttonDigitalNumberTransparentColorSet.UseVisualStyleBackColor = true;
+			this.buttonDigitalNumberTransparentColorSet.Click += new System.EventHandler(this.ButtonDigitalNumberTransparentColorSet_Click);
 			// 
 			// numericUpDownDigitalNumberLayer
 			// 
@@ -4987,6 +5001,7 @@ namespace TrainEditor2.Views
 			this.buttonDigitalNumberSubjectSet.TabIndex = 60;
 			this.buttonDigitalNumberSubjectSet.Text = "Set...";
 			this.buttonDigitalNumberSubjectSet.UseVisualStyleBackColor = true;
+			this.buttonDigitalNumberSubjectSet.Click += new System.EventHandler(this.ButtonDigitalNumberSubjectSet_Click);
 			// 
 			// labelDigitalNumberSubject
 			// 
@@ -5014,6 +5029,7 @@ namespace TrainEditor2.Views
 			this.buttonDigitalNumberNighttimeImageOpen.TabIndex = 56;
 			this.buttonDigitalNumberNighttimeImageOpen.Text = "Open...";
 			this.buttonDigitalNumberNighttimeImageOpen.UseVisualStyleBackColor = true;
+			this.buttonDigitalNumberNighttimeImageOpen.Click += new System.EventHandler(this.ButtonDigitalNumberNighttimeImageOpen_Click);
 			// 
 			// buttonDigitalNumberDaytimeImageOpen
 			// 
@@ -5023,6 +5039,7 @@ namespace TrainEditor2.Views
 			this.buttonDigitalNumberDaytimeImageOpen.TabIndex = 55;
 			this.buttonDigitalNumberDaytimeImageOpen.Text = "Open...";
 			this.buttonDigitalNumberDaytimeImageOpen.UseVisualStyleBackColor = true;
+			this.buttonDigitalNumberDaytimeImageOpen.Click += new System.EventHandler(this.ButtonDigitalNumberDaytimeImageOpen_Click);
 			// 
 			// textBoxDigitalNumberTransparentColor
 			// 
@@ -5109,6 +5126,7 @@ namespace TrainEditor2.Views
 			this.buttonDigitalGaugeColorSet.TabIndex = 88;
 			this.buttonDigitalGaugeColorSet.Text = "Set...";
 			this.buttonDigitalGaugeColorSet.UseVisualStyleBackColor = true;
+			this.buttonDigitalGaugeColorSet.Click += new System.EventHandler(this.ButtonDigitalGaugeColorSet_Click);
 			// 
 			// numericUpDownDigitalGaugeLayer
 			// 
@@ -5291,6 +5309,7 @@ namespace TrainEditor2.Views
 			this.buttonDigitalGaugeSubjectSet.TabIndex = 65;
 			this.buttonDigitalGaugeSubjectSet.Text = "Set...";
 			this.buttonDigitalGaugeSubjectSet.UseVisualStyleBackColor = true;
+			this.buttonDigitalGaugeSubjectSet.Click += new System.EventHandler(this.ButtonDigitalGaugeSubjectSet_Click);
 			// 
 			// labelDigitalGaugeSubject
 			// 
@@ -5339,6 +5358,7 @@ namespace TrainEditor2.Views
 			this.buttonLinearGaugeTransparentColorSet.TabIndex = 105;
 			this.buttonLinearGaugeTransparentColorSet.Text = "Set...";
 			this.buttonLinearGaugeTransparentColorSet.UseVisualStyleBackColor = true;
+			this.buttonLinearGaugeTransparentColorSet.Click += new System.EventHandler(this.ButtonLinearGaugeTransparentColorSet_Click);
 			// 
 			// buttonLinearGaugeNighttimeImageOpen
 			// 
@@ -5348,6 +5368,7 @@ namespace TrainEditor2.Views
 			this.buttonLinearGaugeNighttimeImageOpen.TabIndex = 104;
 			this.buttonLinearGaugeNighttimeImageOpen.Text = "Open...";
 			this.buttonLinearGaugeNighttimeImageOpen.UseVisualStyleBackColor = true;
+			this.buttonLinearGaugeNighttimeImageOpen.Click += new System.EventHandler(this.ButtonLinearGaugeNighttimeImageOpen_Click);
 			// 
 			// buttonLinearGaugeDaytimeImageOpen
 			// 
@@ -5357,6 +5378,7 @@ namespace TrainEditor2.Views
 			this.buttonLinearGaugeDaytimeImageOpen.TabIndex = 103;
 			this.buttonLinearGaugeDaytimeImageOpen.Text = "Open...";
 			this.buttonLinearGaugeDaytimeImageOpen.UseVisualStyleBackColor = true;
+			this.buttonLinearGaugeDaytimeImageOpen.Click += new System.EventHandler(this.ButtonLinearGaugeDaytimeImageOpen_Click);
 			// 
 			// textBoxLinearGaugeTransparentColor
 			// 
@@ -5588,6 +5610,7 @@ namespace TrainEditor2.Views
 			this.buttonLinearGaugeSubjectSet.TabIndex = 86;
 			this.buttonLinearGaugeSubjectSet.Text = "Set...";
 			this.buttonLinearGaugeSubjectSet.UseVisualStyleBackColor = true;
+			this.buttonLinearGaugeSubjectSet.Click += new System.EventHandler(this.ButtonLinearGaugeSubjectSet_Click);
 			// 
 			// labelLinearGaugeSubject
 			// 
@@ -5625,6 +5648,7 @@ namespace TrainEditor2.Views
 			this.buttonTimetableTransparentColorSet.TabIndex = 106;
 			this.buttonTimetableTransparentColorSet.Text = "Set...";
 			this.buttonTimetableTransparentColorSet.UseVisualStyleBackColor = true;
+			this.buttonTimetableTransparentColorSet.Click += new System.EventHandler(this.ButtonTimetableTransparentColorSet_Click);
 			// 
 			// numericUpDownTimetableLayer
 			// 
@@ -5756,6 +5780,7 @@ namespace TrainEditor2.Views
 			// 
 			// comboBoxTouchCommand
 			// 
+			this.comboBoxTouchCommand.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboBoxTouchCommand.FormattingEnabled = true;
 			this.comboBoxTouchCommand.Location = new System.Drawing.Point(136, 216);
 			this.comboBoxTouchCommand.Name = "comboBoxTouchCommand";

@@ -8,6 +8,7 @@ using TrainEditor2.Models;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.ViewModels.Dialogs;
 using TrainEditor2.ViewModels.Others;
+using TrainEditor2.ViewModels.Panels;
 using TrainEditor2.ViewModels.Trains;
 
 namespace TrainEditor2.ViewModels
@@ -30,6 +31,11 @@ namespace TrainEditor2.ViewModels
 		}
 
 		internal ReadOnlyReactivePropertySlim<TrainViewModel> Train
+		{
+			get;
+		}
+
+		internal ReadOnlyReactivePropertySlim<PanelViewModel> Panel
 		{
 			get;
 		}
@@ -120,6 +126,13 @@ namespace TrainEditor2.ViewModels
 				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 
+			Panel = app
+				.ObserveProperty(x => x.Panel)
+				.Do(_ => Panel?.Value.Dispose())
+				.Select(x => new PanelViewModel(x))
+				.ToReadOnlyReactivePropertySlim()
+				.AddTo(disposable);
+
 			Item = app
 				.ObserveProperty(x => x.Item)
 				.Do(_ => Item?.Value.Dispose())
@@ -133,7 +146,6 @@ namespace TrainEditor2.ViewModels
 					itemDisposable = new CompositeDisposable();
 
 					x.PropertyChangedAsObservable()
-						.ToReadOnlyReactivePropertySlim(mode: ReactivePropertyMode.None)
 						.Subscribe(_ => Item.ForceNotify())
 						.AddTo(itemDisposable);
 				})
