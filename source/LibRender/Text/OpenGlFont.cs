@@ -5,7 +5,7 @@ using OpenBveApi.Textures;
 namespace LibRender
 {
 	/// <summary>Represents a font.</summary>
-	public class OpenGlFont : IDisposable
+	public sealed class OpenGlFont : IDisposable
 	{
 		// --- members ---
 		/// <summary>The underlying font.</summary>
@@ -74,7 +74,7 @@ namespace LibRender
 
 		private bool disposed = false;
 
-		protected virtual void Dispose(bool disposing)
+		private void Dispose(bool disposing)
 		{
 			if (!disposed)
 			{

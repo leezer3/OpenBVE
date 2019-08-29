@@ -9,7 +9,7 @@ namespace LibRender
 	    /// <remarks>Must be static to avoid re-allocating the array memory every frame</remarks>
 	    private static byte[] PixelBuffer = null;
 	    /// <summary>The OpenGL texture index from which the blurred image is rendered</summary>
-	    public static int PixelBufferOpenGlTextureIndex = 0;
+	    private static int PixelBufferOpenGlTextureIndex = 0;
 
 	    /// <summary>Intializes motion blur</summary>
 	    public static void Initialize(MotionBlurMode mode)

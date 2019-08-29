@@ -10,7 +10,7 @@ namespace OpenBveApi.Objects
 	public class AnimatedWorldObjectStateSound : WorldObject
 	{
 		/// <summary>Holds a reference to the host application</summary>
-		private Hosts.HostInterface currentHost;
+		private readonly Hosts.HostInterface currentHost;
 		/// <summary>The signalling section the object refers to (Only relevant for objects placed using Track.Sig</summary>
 		public int SectionIndex;
 		/// <summary>The sound buffer array</summary>
@@ -37,9 +37,9 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <inheritdoc/>
-		public override void Update(AbstractTrain NearestTrain, double TimeElapsed, bool ForceUpdate, bool Visible)
+		public override void Update(AbstractTrain NearestTrain, double TimeElapsed, bool ForceUpdate, bool CurrentlyVisible)
 		{
-			if (Visible | ForceUpdate)
+			if (CurrentlyVisible | ForceUpdate)
 			{
 				if (Object.SecondsSinceLastUpdate >= Object.RefreshRate | ForceUpdate)
 				{

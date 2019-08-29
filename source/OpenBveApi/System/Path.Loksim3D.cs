@@ -53,7 +53,7 @@ namespace OpenBveApi
 						{
 							//Recurse upwards and try to see if we can find this directory
 							d = d.Parent;
-							if (d.ToString().ToLowerInvariant() == splitPath[0].ToLowerInvariant())
+							if (d.Parent != null && d.ToString().ToLowerInvariant() == splitPath[0].ToLowerInvariant())
 							{
 								d = d.Parent;
 								file = Path.CombineFile(d.FullName, relative);

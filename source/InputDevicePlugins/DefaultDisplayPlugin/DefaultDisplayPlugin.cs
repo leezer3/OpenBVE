@@ -186,7 +186,6 @@ namespace DefaultDisplayPlugin
 			if (System.IO.File.Exists(configFile))
 			{
 				// load options
-				CultureInfo Culture = CultureInfo.InvariantCulture;
 				string[] Lines = System.IO.File.ReadAllLines(configFile, new System.Text.UTF8Encoding());
 				string Section = "";
 				for (int i = 0; i < Lines.Length; i++)

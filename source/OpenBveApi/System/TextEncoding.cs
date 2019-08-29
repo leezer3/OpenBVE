@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Ude;
+﻿using Ude;
 
 namespace OpenBveApi
 {
@@ -42,14 +41,23 @@ namespace OpenBveApi
 			/// <summary>SHIFT_JIS</summary>
 			Shift_JIS = 7,
 
+			/// <summary>Basic ASCII</summary>
+			ASCII,
+
 			/// <summary>Windows-1252 (Legacy Microsoft)</summary>
 			Windows1252,
+
+			/// <summary>Windows-1255 (Legacy Microsoft Hebrew)</summary>
+			Windows1255,
 
 			/// <summary>BIG5</summary>
 			Big5,
 
 			/// <summary>Legacy Korean</summary>
-			EUC_KR
+			EUC_KR,
+
+			/// <summary>Legacy Cyrillic</summary>
+			OEM866			
 		}
 
 		/// <summary>Gets the character endcoding of a file</summary>
@@ -96,7 +104,7 @@ namespace OpenBveApi
 
 			try
 			{
-				FileInfo fInfo = new FileInfo(File);
+				System.IO.FileInfo fInfo = new System.IO.FileInfo(File);
 				byte[] Data = System.IO.File.ReadAllBytes(File);
 
 				if (Data.Length >= 3)
@@ -142,16 +150,35 @@ namespace OpenBveApi
 				Det.Feed(Data, 0, Data.Length);
 				Det.DataEnd();
 
-				switch (Det.Charset)
+				if (Det.Charset == null)
 				{
+					return Encoding.Unknown;
+				}
+				
+				switch (Det.Charset.ToUpperInvariant())
+				{
+					case "SHIFT-JIS":
 					case "SHIFT_JIS":
 						return Encoding.Shift_JIS;
 					case "UTF-8":
 						return Encoding.Utf8;
 					case "UTF-7":
 						return Encoding.Utf7;
+					case "WINDOWS-1251":
+						if (System.IO.Path.GetFileName(File).ToLowerInvariant() == "585tc1.csv" && fInfo.Length == 37302)
+						{
+							return Encoding.Shift_JIS;
+						}
+						return Encoding.Windows1252;
 					case "WINDOWS-1252":
 						return Encoding.Windows1252;
+					case "WINDOWS-1255":
+						if (System.IO.Path.GetFileName(File).ToLowerInvariant() == "xdbetulasmall.csv" && fInfo.Length == 406)
+						{
+							//Hungarian birch tree; Actually loads OK with 1255, but use the correct one
+							return Encoding.Windows1252;
+						}
+						return Encoding.Big5;
 					case "BIG5":
 						if (System.IO.Path.GetFileName(File).ToLowerInvariant() == "stoklosy.b3d" && fInfo.Length == 18256)
 						{
@@ -161,6 +188,32 @@ namespace OpenBveApi
 						return Encoding.Big5;
 					case "EUC-KR":
 						return Encoding.EUC_KR;
+					case "ASCII":
+						return Encoding.ASCII;
+					case "IBM866":
+						return Encoding.OEM866;
+					case "X-MAC-CYRILLIC":
+						if (System.IO.Path.GetFileName(File).ToLowerInvariant() == "exit01.csv" && fInfo.Length == 752)
+						{
+							//hira2
+							return Encoding.Shift_JIS;
+						}
+						break;
+					case "GB18030":
+						//Extended new Chinese charset
+						if (System.IO.Path.GetFileName(File).ToLowerInvariant() == "people6.b3d" && fInfo.Length == 377)
+						{
+							//Polish Warsaw metro object file uses diacritics in filenames
+							return Encoding.Windows1252;
+						}
+						break;
+					case "EUC-JP":
+						if (System.IO.Path.GetFileName(File).ToLowerInvariant() == "xsara.b3d" && fInfo.Length == 3429)
+						{
+							//Uses an odd character in the comments, ASCII works just fine
+							return Encoding.ASCII;
+						}
+						break;
 				}
 
 				Det.Reset();

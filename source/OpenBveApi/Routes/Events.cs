@@ -8,7 +8,7 @@ namespace OpenBveApi.Routes
 		/// <summary>The delta track position that this event is placed at</summary>
 		public double TrackPositionDelta;
 		/// <summary>Whether this event should trigger once for the specified train, or multiple times</summary>
-		public bool DontTriggerAnymore;
+		protected bool DontTriggerAnymore;
 
 		/// <summary>The unconditional event trigger function</summary>
 		/// <param name="Direction">The direction:

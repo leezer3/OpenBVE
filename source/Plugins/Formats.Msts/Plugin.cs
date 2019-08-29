@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+// ReSharper disable UnusedMember.Global
 
 namespace OpenBve.Formats.MsTs
 {
@@ -82,7 +83,7 @@ namespace OpenBve.Formats.MsTs
 		public abstract Block ReadSubBlock();
 	}
 
-	/// <inheritdoc />
+	/// <inheritdoc cref="Block" />
 	public class BinaryBlock : Block , IDisposable
 	{
 		private readonly BinaryReader myReader;

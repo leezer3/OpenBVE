@@ -72,7 +72,7 @@ namespace Plugin
 		/// <param name="FileName">The text file to load the animated object from. Must be an absolute file name.</param>
 		/// <param name="Encoding">The encoding the file is saved in. If the file uses a byte order mark, the encoding indicated by the byte order mark is used and the Encoding parameter is ignored.</param>
 		/// <returns>The object loaded.</returns>
-		internal static StaticObject ReadObject(string FileName, Encoding Encoding) {
+		private static StaticObject ReadObject(string FileName, Encoding Encoding) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			bool IsB3D = string.Equals(System.IO.Path.GetExtension(FileName), ".b3d", StringComparison.OrdinalIgnoreCase);
 			// initialize object
@@ -860,7 +860,15 @@ namespace Plugin
 									if (Path.ContainsInvalidChars(Arguments[0])) {
 										currentHost.AddMessage(MessageType.Error, false, "DaytimeTexture contains illegal characters in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 									} else {
-										tday = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+										try
+										{
+											tday = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+										}
+										catch
+										{
+											tday = null;
+										}
+										
 										if (!System.IO.File.Exists(tday))
 										{
 											bool hackFound = false;
@@ -900,12 +908,30 @@ namespace Plugin
 									} else {
 										if (Path.ContainsInvalidChars(Arguments[1])) {
 											currentHost.AddMessage(MessageType.Error, false, "NighttimeTexture contains illegal characters in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-										} else {
-											tnight = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[1]);
-											if (!System.IO.File.Exists(tnight)) {
+										} else
+										{
+											bool ignoreAsInvalid = false;
+											try
+											{
+												tnight = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[1]);
+											}
+											catch
+											{
+												tnight = null;
+												switch (Arguments[1])
+												{
+													case ".":
+														// Meguro route - Misplaced period in several platform objects
+														ignoreAsInvalid = true;
+														break;
+												}
+											}
+											
+											if (!System.IO.File.Exists(tnight) && !ignoreAsInvalid) {
 												currentHost.AddMessage(MessageType.Error, true, "The NighttimeTexture " + tnight + " could not be found in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 												tnight = null;
 											}
+											
 										}
 									}
 								}
@@ -1401,7 +1427,7 @@ namespace Plugin
 
 		/// <summary>Checks whether the specified System.Text.Encoding is Unicode</summary>
 		/// <param name="Encoding">The Encoding</param>
-		internal static bool IsUtf(System.Text.Encoding Encoding)
+		private static bool IsUtf(System.Text.Encoding Encoding)
 		{
 			switch (Encoding.WindowsCodePage)
 			{

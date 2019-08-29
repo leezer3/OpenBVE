@@ -3,6 +3,12 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+// ReSharper disable PossibleNullReferenceException
+// ReSharper disable AssignNullToNotNullAttribute
+/*
+ * According to MSDN these could only be caused by calling GetExecutingAssembly from unmanaged code
+ * We never do this, and it's not worth the mess of null-checking in what is essentially an internal library
+ */
 
 namespace OpenBveApi.FileSystem {
 	/// <summary>Represents the program's organization of files and folders.</summary>

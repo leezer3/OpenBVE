@@ -74,7 +74,7 @@ namespace OpenBveApi.Colors {
 			{
 				return false;
 			}
-			return this.Equals((Color24)obj);
+			return Equals(this, (Color24)obj);
 		}
 
 		/// <summary>Returns the hashcode for this instance.</summary>
@@ -269,7 +269,7 @@ namespace OpenBveApi.Colors {
 			{
 				return false;
 			}
-			return this.Equals((Color32)obj);
+			return Equals(this, (Color32)obj);
 		}
 
 		/// <summary>Returns the hashcode for this instance.</summary>
@@ -513,7 +513,7 @@ namespace OpenBveApi.Colors {
 			{
 				return false;
 			}
-			return this.Equals((Color96)obj);
+			return Equals(this, (Color96)obj);
 		}
 
 		/// <summary>Returns the hashcode for this instance.</summary>
@@ -637,7 +637,7 @@ namespace OpenBveApi.Colors {
 			{
 				return false;
 			}
-			return this.Equals((Color128)obj);
+			return Equals(this, (Color128)obj);
 		}
 
 		/// <summary>Returns the hashcode for this instance.</summary>

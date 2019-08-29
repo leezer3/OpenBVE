@@ -67,9 +67,9 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <inheritdoc/>
-		public override void Update(AbstractTrain NearestTrain, double TimeElapsed, bool ForceUpdate, bool Visible)
+		public override void Update(AbstractTrain NearestTrain, double TimeElapsed, bool ForceUpdate, bool CurrentlyVisible)
 		{
-			if (Visible | ForceUpdate)
+			if (CurrentlyVisible | ForceUpdate)
 			{
 				if (TimeElapsed > 0.05)
 				{
