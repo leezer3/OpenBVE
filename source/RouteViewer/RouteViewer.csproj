@@ -83,6 +83,7 @@
     </Compile>
     <Compile Include="FunctionScripts.cs" />
     <Compile Include="Game\MessageManager.cs" />
+    <Compile Include="Graphics\Structures.cs" />
     <Compile Include="LoadingR.cs" />
     <Compile Include="Fonts.cs" />
     <Compile Include="GameR.cs" />

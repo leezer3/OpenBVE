@@ -8,6 +8,7 @@
 using System;
 using System.Drawing;
 using LibRender;
+using OpenBve.RouteManager;
 using OpenBveApi.Colors;
 using OpenBveApi.Textures;
 using OpenTK;
@@ -26,33 +27,22 @@ namespace OpenBve
         internal enum LoadTextureImmediatelyMode { NotYet, Yes }
         internal static LoadTextureImmediatelyMode LoadTexturesImmediately = LoadTextureImmediatelyMode.NotYet;
 
-        // object list
-        
-        private struct Object
-        {
-            internal int ObjectIndex;
-            internal int[] FaceListIndices;
-            internal ObjectType Type;
-        }
-        private static Object[] ObjectList = new Object[256];
-        private static int ObjectListCount = 0;
+        // the static opaque lists
+        /// <summary>The list of static opaque face groups. Each group contains only objects that are associated the respective group index.</summary>
+        private static ObjectGroup[] StaticOpaque = new ObjectGroup[] { };
+        /// <summary>Whether to enforce updating all display lists.</summary>
+        internal static bool StaticOpaqueForceUpdate = true;
 
-        // opaque
-        private static ObjectFace[] OpaqueList = new ObjectFace[256];
-        internal static int OpaqueListCount = 0;
-        // transparent color
-        private static ObjectFace[] TransparentColorList = new ObjectFace[256];
-        private static double[] TransparentColorListDistance = new double[256];
-        internal static int TransparentColorListCount = 0;
-        // alpha
-        private static ObjectFace[] AlphaList = new ObjectFace[256];
-        private static double[] AlphaListDistance = new double[256];
-        internal static int AlphaListCount = 0;
-        // overlay
-        private static ObjectFace[] OverlayList = new ObjectFace[256];
-        private static double[] OverlayListDistance = new double[256];
-        internal static int OverlayListCount = 0;
-
+        // all other lists
+        /// <summary>The list of dynamic opaque faces to be rendered.</summary>
+        private static ObjectList DynamicOpaque = new ObjectList();
+        /// <summary>The list of dynamic alpha faces to be rendered.</summary>
+        private static ObjectList DynamicAlpha = new ObjectList();
+        /// <summary>The list of overlay opaque faces to be rendered.</summary>
+        private static ObjectList OverlayOpaque = new ObjectList();
+        /// <summary>The list of overlay alpha faces to be rendered.</summary>
+        private static ObjectList OverlayAlpha = new ObjectList();
+       
         // options
         internal static bool OptionCoordinateSystem = false;
         internal static bool OptionInterface = true;
@@ -103,19 +93,14 @@ namespace OpenBve
         internal static void Reset()
         {
             LoadTexturesImmediately = LoadTextureImmediatelyMode.NotYet;
-            ObjectList = new Object[256];
-            ObjectListCount = 0;
-            OpaqueList = new ObjectFace[256];
-            OpaqueListCount = 0;
-            TransparentColorList = new ObjectFace[256];
-            TransparentColorListDistance = new double[256];
-            TransparentColorListCount = 0;
-            AlphaList = new ObjectFace[256];
-            AlphaListDistance = new double[256];
-            AlphaListCount = 0;
-            OverlayList = new ObjectFace[256];
-            OverlayListDistance = new double[256];
-            OverlayListCount = 0;
+            Objects = new RendererObject[256];
+            ObjectCount = 0;
+            StaticOpaque = new ObjectGroup[] { };
+            StaticOpaqueForceUpdate = true;
+            DynamicOpaque = new ObjectList();
+            DynamicAlpha = new ObjectList();
+            OverlayOpaque = new ObjectList();
+            OverlayAlpha = new ObjectList();
             LibRender.Renderer.OptionLighting = true;
             LibRender.Renderer.OptionAmbientColor = new Color24(160, 160, 160);
             LibRender.Renderer.OptionDiffuseColor = new Color24(160, 160, 160);
@@ -189,26 +174,96 @@ namespace OpenBve
                 }
             }
             LibRender.Renderer.ResetOpenGlState();
-            for (int i = 0; i < OpaqueListCount; i++)
-            {
-                RenderFace(ref OpaqueList[i], Camera.AbsolutePosition);
-            }
-            LibRender.Renderer.ResetOpenGlState();
-            // transparent color list
-	        SortPolygons(TransparentColorList, TransparentColorListCount, TransparentColorListDistance, 1);
-			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality) {
-				
+            // render background
+
+			GL.Disable(EnableCap.DepthTest);
+
+			for (int i = 0; i < StaticOpaque.Length; i++)
+			{
+				if (StaticOpaque[i] != null)
+				{
+					if (StaticOpaque[i].Update | StaticOpaqueForceUpdate)
+					{
+						StaticOpaque[i].Update = false;
+						if (StaticOpaque[i].OpenGlDisplayListAvailable)
+						{
+							GL.DeleteLists(StaticOpaque[i].OpenGlDisplayList, 1);
+							StaticOpaque[i].OpenGlDisplayListAvailable = false;
+						}
+						if (StaticOpaque[i].List.FaceCount != 0)
+						{
+							StaticOpaque[i].OpenGlDisplayList = GL.GenLists(1);
+							StaticOpaque[i].OpenGlDisplayListAvailable = true;
+							LibRender.Renderer.ResetOpenGlState();
+							GL.NewList(StaticOpaque[i].OpenGlDisplayList, ListMode.Compile);
+							for (int j = 0; j < StaticOpaque[i].List.FaceCount; j++)
+							{
+								if (StaticOpaque[i].List.Faces[j] != null)
+								{
+									RenderFace(ref StaticOpaque[i].List.Faces[j], Camera.AbsolutePosition);
+								}
+							}
+							GL.EndList();
+						}
+						StaticOpaque[i].WorldPosition = Camera.AbsolutePosition;
+					}
+				}
+			}
+			StaticOpaqueForceUpdate = false;
+			for (int i = 0; i < StaticOpaque.Length; i++)
+			{
+				if (StaticOpaque[i] != null && StaticOpaque[i].OpenGlDisplayListAvailable)
+				{
+					LibRender.Renderer.ResetOpenGlState();
+					GL.PushMatrix();
+					GL.Translate(StaticOpaque[i].WorldPosition.X - Camera.AbsolutePosition.X, StaticOpaque[i].WorldPosition.Y - Camera.AbsolutePosition.Y, StaticOpaque[i].WorldPosition.Z - Camera.AbsolutePosition.Z);
+					GL.CallList(StaticOpaque[i].OpenGlDisplayList);
+					GL.PopMatrix();
+				}
+			}
+			//Update bounding box positions now we've rendered the objects
+			int currentBox = 0;
+			for (int i = 0; i < StaticOpaque.Length; i++)
+			{
+			if (StaticOpaque[i] != null)
+				{
+					currentBox++;
+					
+				}
+			}
+
+			// dynamic opaque
+			LibRender.Renderer.ResetOpenGlState();
+			for (int i = 0; i < DynamicOpaque.FaceCount; i++)
+			{
+				RenderFace(ref DynamicOpaque.Faces[i], Camera.AbsolutePosition);
+			}
+			// dynamic alpha
+			LibRender.Renderer.ResetOpenGlState();
+			DynamicAlpha.SortPolygons();
+			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
+			{
+				GL.Enable(EnableCap.Blend); LibRender.Renderer.BlendEnabled = true;
+				GL.DepthMask(false);
+				LibRender.Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
+				for (int i = 0; i < DynamicAlpha.FaceCount; i++)
+				{
+					RenderFace(ref DynamicAlpha.Faces[i], Camera.AbsolutePosition);
+				}
+			}
+			else
+			{
 				GL.Disable(EnableCap.Blend); LibRender.Renderer.BlendEnabled = false;
 				LibRender.Renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 				GL.DepthMask(true);
-				for (int i = 0; i < TransparentColorListCount; i++)
+				for (int i = 0; i < DynamicAlpha.FaceCount; i++)
 				{
-					int r = (int)ObjectManager.Objects[TransparentColorList[i].ObjectIndex].Mesh.Faces[TransparentColorList[i].FaceIndex].Material;
-					if (ObjectManager.Objects[TransparentColorList[i].ObjectIndex].Mesh.Materials[r].BlendMode == MeshMaterialBlendMode.Normal & ObjectManager.Objects[TransparentColorList[i].ObjectIndex].Mesh.Materials[r].GlowAttenuationData == 0)
+					int r = (int)ObjectManager.Objects[DynamicAlpha.Faces[i].ObjectIndex].Mesh.Faces[DynamicAlpha.Faces[i].FaceIndex].Material;
+					if (ObjectManager.Objects[DynamicAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].BlendMode == MeshMaterialBlendMode.Normal & ObjectManager.Objects[DynamicAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].GlowAttenuationData == 0)
 					{
-						if (ObjectManager.Objects[TransparentColorList[i].ObjectIndex].Mesh.Materials[r].Color.A == 255)
+						if (ObjectManager.Objects[DynamicAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].Color.A == 255)
 						{
-							RenderFace(ref TransparentColorList[i], Camera.AbsolutePosition);
+							RenderFace(ref DynamicAlpha.Faces[i], Camera.AbsolutePosition);
 						}
 					}
 				}
@@ -216,18 +271,17 @@ namespace OpenBve
 				LibRender.Renderer.SetAlphaFunc(AlphaFunction.Less, 1.0f);
 				GL.DepthMask(false);
 				bool additive = false;
-				for (int i = 0; i < TransparentColorListCount; i++)
+				for (int i = 0; i < DynamicAlpha.FaceCount; i++)
 				{
-					int r = (int)ObjectManager.Objects[TransparentColorList[i].ObjectIndex].Mesh.Faces[TransparentColorList[i].FaceIndex].Material;
-					if (ObjectManager.Objects[TransparentColorList[i].ObjectIndex].Mesh.Materials[r].BlendMode == MeshMaterialBlendMode.Additive)
+					int r = (int)ObjectManager.Objects[DynamicAlpha.Faces[i].ObjectIndex].Mesh.Faces[DynamicAlpha.Faces[i].FaceIndex].Material;
+					if (ObjectManager.Objects[DynamicAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].BlendMode == MeshMaterialBlendMode.Additive)
 					{
 						if (!additive)
 						{
-							LibRender.Renderer.AlphaTestEnabled = false;
-							GL.Disable(EnableCap.AlphaTest);
+							LibRender.Renderer.UnsetAlphaFunc();
 							additive = true;
 						}
-						RenderFace(ref TransparentColorList[i], Camera.AbsolutePosition);
+						RenderFace(ref DynamicAlpha.Faces[i], Camera.AbsolutePosition);
 					}
 					else
 					{
@@ -236,82 +290,10 @@ namespace OpenBve
 							LibRender.Renderer.SetAlphaFunc(AlphaFunction.Less, 1.0f);
 							additive = false;
 						}
-						RenderFace(ref TransparentColorList[i], Camera.AbsolutePosition);
+						RenderFace(ref DynamicAlpha.Faces[i], Camera.AbsolutePosition);
 					}
 				}
-			} else {
-				for (int i = 0; i < TransparentColorListCount; i++) {
-					RenderFace(ref TransparentColorList[i], Camera.AbsolutePosition);
-				}
 			}
-			LibRender.Renderer.ResetOpenGlState();
-			SortPolygons(AlphaList, AlphaListCount, AlphaListDistance, 2);
-	        if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
-	        {
-		        GL.Enable(EnableCap.Blend); LibRender.Renderer.BlendEnabled = true;
-		        GL.DepthMask(false);
-		        LibRender.Renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
-		        for (int i = 0; i < AlphaListCount; i++)
-		        {
-			        RenderFace(ref AlphaList[i], Camera.AbsolutePosition);
-		        }
-	        }
-	        else
-	        {
-		        GL.Disable(EnableCap.Blend); LibRender.Renderer.BlendEnabled = false;
-		        LibRender.Renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
-		        GL.DepthMask(true);
-		        for (int i = 0; i < AlphaListCount; i++)
-		        {
-			        int r = (int)ObjectManager.Objects[AlphaList[i].ObjectIndex].Mesh.Faces[AlphaList[i].FaceIndex].Material;
-			        if (ObjectManager.Objects[AlphaList[i].ObjectIndex].Mesh.Materials[r].BlendMode == MeshMaterialBlendMode.Normal & ObjectManager.Objects[AlphaList[i].ObjectIndex].Mesh.Materials[r].GlowAttenuationData == 0)
-			        {
-				        if (ObjectManager.Objects[AlphaList[i].ObjectIndex].Mesh.Materials[r].Color.A == 255)
-				        {
-					        RenderFace(ref AlphaList[i], Camera.AbsolutePosition);
-				        }
-			        }
-		        }
-		        GL.Enable(EnableCap.Blend); LibRender.Renderer.BlendEnabled = true;
-		        LibRender.Renderer.SetAlphaFunc(AlphaFunction.Less, 1.0f);
-		        GL.DepthMask(false);
-		        bool additive = false;
-		        for (int i = 0; i < AlphaListCount; i++)
-		        {
-			        int r = (int)ObjectManager.Objects[AlphaList[i].ObjectIndex].Mesh.Faces[AlphaList[i].FaceIndex].Material;
-			        if (ObjectManager.Objects[AlphaList[i].ObjectIndex].Mesh.Materials[r].BlendMode == MeshMaterialBlendMode.Additive)
-			        {
-				        if (!additive)
-				        {
-					        LibRender.Renderer.AlphaTestEnabled = false;
-					        GL.Disable(EnableCap.AlphaTest);
-					        additive = true;
-				        }
-				        RenderFace(ref AlphaList[i], Camera.AbsolutePosition);
-			        }
-			        else
-			        {
-				        if (additive)
-				        {
-					        LibRender.Renderer.SetAlphaFunc(AlphaFunction.Less, 1.0f);
-					        additive = false;
-				        }
-				        RenderFace(ref AlphaList[i], Camera.AbsolutePosition);
-			        }
-		        }
-	        }
-            // overlay list
-            GL.Disable(EnableCap.DepthTest);
-            GL.DepthMask(false);
-            if (LibRender.Renderer.FogEnabled)
-            {
-                GL.Disable(EnableCap.Fog); LibRender.Renderer.FogEnabled = false;
-            }
-            SortPolygons(OverlayList, OverlayListCount, OverlayListDistance, 3);
-            for (int i = 0; i < OverlayListCount; i++)
-            {
-                RenderFace(ref OverlayList[i], Camera.AbsolutePosition);
-            }
 	        
             // render overlays
             LibRender.Renderer.BlendEnabled = false; GL.Disable(EnableCap.Blend);
@@ -465,298 +447,398 @@ namespace OpenBve
         // readd objects
         private static void ReAddObjects()
         {
-            Object[] List = new Object[ObjectListCount];
-            for (int i = 0; i < ObjectListCount; i++)
-            {
-                List[i] = ObjectList[i];
-            }
-            for (int i = 0; i < List.Length; i++)
-            {
-                HideObject(ref ObjectManager.Objects[List[i].ObjectIndex]);
-            }
-            for (int i = 0; i < List.Length; i++)
-            {
-                ShowObject(ObjectManager.Objects[List[i].ObjectIndex], List[i].Type);
-            }
+	        RendererObject[] list = new RendererObject[ObjectCount];
+	        for (int i = 0; i < ObjectCount; i++)
+	        {
+		        list[i] = Objects[i];
+	        }
+	        for (int i = 0; i < list.Length; i++)
+	        {
+		        HideObject(ref ObjectManager.Objects[list[i].ObjectIndex]);
+	        }
+	        for (int i = 0; i < list.Length; i++)
+	        {
+		        ShowObject(ObjectManager.Objects[list[i].ObjectIndex], list[i].Type);
+	        }
         }
 
-		// show object
-        internal static void ShowObject(StaticObject objectToShow, ObjectType Type)
-        {
-            bool Overlay = Type == ObjectType.Overlay;
-            if (objectToShow == null) return;
-            if (objectToShow.RendererIndex == 0)
-            {
-                if (ObjectListCount >= ObjectList.Length)
-                {
-                    Array.Resize<Object>(ref ObjectList, ObjectList.Length << 1);
-                }
-                ObjectList[ObjectListCount].ObjectIndex = objectToShow.ObjectIndex;
-                ObjectList[ObjectListCount].Type = Type;
-                int f = objectToShow.Mesh.Faces.Length;
-                ObjectList[ObjectListCount].FaceListIndices = new int[f];
-                for (int i = 0; i < f; i++)
-                {
-                    if (Overlay)
-                    {
-                        // overlay
-                        if (OverlayListCount >= OverlayList.Length)
-                        {
-                            Array.Resize(ref OverlayList, OverlayList.Length << 1);
-                            Array.Resize(ref OverlayListDistance, OverlayList.Length);
-                        }
-                        OverlayList[OverlayListCount].ObjectIndex = objectToShow.ObjectIndex;
-                        OverlayList[OverlayListCount].FaceIndex = i;
-                        OverlayList[OverlayListCount].ObjectListIndex = ObjectListCount;
-                        ObjectList[ObjectListCount].FaceListIndices[i] = (OverlayListCount << 2) + 3;
-                        OverlayListCount++;
-                    }
-                    else
-                    {
-                        int k = objectToShow.Mesh.Faces[i].Material;
-	                    OpenGlTextureWrapMode wrap = OpenGlTextureWrapMode.ClampClamp;
-                        bool transparentcolor = false, alpha = false;
-                        if (objectToShow.Mesh.Materials[k].Color.A != 255)
-                        {
-                            alpha = true;
-                        }
-                        else if (objectToShow.Mesh.Materials[k].BlendMode == MeshMaterialBlendMode.Additive)
-                        {
-                            alpha = true;
-                        }
-                        else if (objectToShow.Mesh.Materials[k].GlowAttenuationData != 0)
-                        {
-                            alpha = true;
-                        }
-                        else
-                        {
-                            if (objectToShow.Mesh.Materials[k].DaytimeTexture != null)
-                            {
-	                            if (objectToShow.Mesh.Materials[k].WrapMode == null)
-	                            {
-		                            
-		                            // If the object does not have a stored wrapping mode, determine it now
-		                            for (int v = 0; v < objectToShow.Mesh.Vertices.Length; v++)
-		                            {
-			                            if (objectToShow.Mesh.Vertices[v].TextureCoordinates.X < 0.0f |
-			                                objectToShow.Mesh.Vertices[v].TextureCoordinates.X > 1.0f)
-			                            {
-				                            wrap |= OpenGlTextureWrapMode.RepeatClamp;
-			                            }
-			                            if (objectToShow.Mesh.Vertices[v].TextureCoordinates.Y < 0.0f |
-			                                objectToShow.Mesh.Vertices[v].TextureCoordinates.Y > 1.0f)
-			                            {
-				                            wrap |= OpenGlTextureWrapMode.ClampRepeat;
-			                            }
-		                            }
-
-		                            objectToShow.Mesh.Materials[k].WrapMode = wrap;
-	                            }
-	                            else
-	                            {
-		                            //Yuck cast, but we need the null, as otherwise requires rewriting the texture indexer
-		                            wrap = (OpenGlTextureWrapMode)objectToShow.Mesh.Materials[k].WrapMode;
-	                            }
-	                            Program.CurrentHost.LoadTexture(objectToShow.Mesh.Materials[k].DaytimeTexture, (OpenGlTextureWrapMode)objectToShow.Mesh.Materials[k].WrapMode);
-                                if (objectToShow.Mesh.Materials[k].DaytimeTexture.Transparency == TextureTransparencyType.Alpha)
-                                {
-                                    alpha = true;
-                                }
-                                else if (objectToShow.Mesh.Materials[k].DaytimeTexture.Transparency == TextureTransparencyType.Partial)
-                                {
-                                    transparentcolor = true;
-                                }
-                            }
-                            if (objectToShow.Mesh.Materials[k].NighttimeTexture != null)
-                            {
-	                            Program.CurrentHost.LoadTexture(objectToShow.Mesh.Materials[k].NighttimeTexture, (OpenGlTextureWrapMode)objectToShow.Mesh.Materials[k].WrapMode);
-                                if (objectToShow.Mesh.Materials[k].NighttimeTexture.Transparency == TextureTransparencyType.Alpha)
-                                {
-                                    alpha = true;
-                                }
-                                else if (objectToShow.Mesh.Materials[k].NighttimeTexture.Transparency == TextureTransparencyType.Partial)
-                                {
-                                    transparentcolor = true;
-                                }
-                            }
-                        }
-                        if (alpha)
-                        {
-                            // alpha
-                            if (AlphaListCount >= AlphaList.Length)
-                            {
-                                Array.Resize(ref AlphaList, AlphaList.Length << 1);
-                                Array.Resize(ref AlphaListDistance, AlphaList.Length);
-                            }
-							AlphaList[AlphaListCount] = new ObjectFace();
-                            AlphaList[AlphaListCount].ObjectIndex = objectToShow.ObjectIndex;
-                            AlphaList[AlphaListCount].FaceIndex = i;
-                            AlphaList[AlphaListCount].ObjectListIndex = ObjectListCount;
-	                        AlphaList[AlphaListCount].Wrap = wrap;
-                            ObjectList[ObjectListCount].FaceListIndices[i] = (AlphaListCount << 2) + 2;
-                            AlphaListCount++;
-                        }
-                        else if (transparentcolor)
-                        {
-                            // transparent color
-                            if (TransparentColorListCount >= TransparentColorList.Length)
-                            {
-                                Array.Resize(ref TransparentColorList, TransparentColorList.Length << 1);
-                                Array.Resize(ref TransparentColorListDistance, TransparentColorList.Length);
-                            }
-							TransparentColorList[TransparentColorListCount] = new ObjectFace();
-                            TransparentColorList[TransparentColorListCount].ObjectIndex = objectToShow.ObjectIndex;
-                            TransparentColorList[TransparentColorListCount].FaceIndex = i;
-                            TransparentColorList[TransparentColorListCount].ObjectListIndex = ObjectListCount;
-	                        TransparentColorList[TransparentColorListCount].Wrap = wrap;
-                            ObjectList[ObjectListCount].FaceListIndices[i] = (TransparentColorListCount << 2) + 1;
-                            TransparentColorListCount++;
-                        }
-                        else
-                        {
-                            // opaque
-                            if (OpaqueListCount >= OpaqueList.Length)
-                            {
-                                Array.Resize(ref OpaqueList, OpaqueList.Length << 1);
-                            }
-							OpaqueList[OpaqueListCount] = new ObjectFace();
-                            OpaqueList[OpaqueListCount].ObjectIndex = objectToShow.ObjectIndex;
-                            OpaqueList[OpaqueListCount].FaceIndex = i;
-                            OpaqueList[OpaqueListCount].ObjectListIndex = ObjectListCount;
-	                        OpaqueList[OpaqueListCount].Wrap = wrap;
-                            ObjectList[ObjectListCount].FaceListIndices[i] = OpaqueListCount << 2;
-                            OpaqueListCount++;
-                        }
-                    }
-                }
-                objectToShow.RendererIndex = ObjectListCount + 1;
-                ObjectListCount++;
-            }
-        }
-
-        // hide object
-        internal static void HideObject(ref StaticObject Object)
-        {
-            if (Object == null) return;
-            int k = Object.RendererIndex - 1;
-            if (k >= 0)
-            {
-                // remove faces
-                for (int i = 0; i < ObjectList[k].FaceListIndices.Length; i++)
-                {
-                    int h = ObjectList[k].FaceListIndices[i];
-                    int hi = h >> 2;
-                    switch (h & 3)
-                    {
-                        case 0:
-                            // opaque
-                            OpaqueList[hi] = OpaqueList[OpaqueListCount - 1];
-                            OpaqueListCount--;
-                            ObjectList[OpaqueList[hi].ObjectListIndex].FaceListIndices[OpaqueList[hi].FaceIndex] = h;
-                            break;
-                        case 1:
-                            // transparent color
-                            TransparentColorList[hi] = TransparentColorList[TransparentColorListCount - 1];
-                            TransparentColorListCount--;
-                            ObjectList[TransparentColorList[hi].ObjectListIndex].FaceListIndices[TransparentColorList[hi].FaceIndex] = h;
-                            break;
-                        case 2:
-                            // alpha
-                            AlphaList[hi] = AlphaList[AlphaListCount - 1];
-                            AlphaListCount--;
-                            ObjectList[AlphaList[hi].ObjectListIndex].FaceListIndices[AlphaList[hi].FaceIndex] = h;
-                            break;
-                        case 3:
-                            // overlay
-                            OverlayList[hi] = OverlayList[OverlayListCount - 1];
-                            OverlayListCount--;
-                            ObjectList[OverlayList[hi].ObjectListIndex].FaceListIndices[OverlayList[hi].FaceIndex] = h;
-                            break;
-                    }
-                }
-                // remove object
-                if (k == ObjectListCount - 1)
-                {
-                    ObjectListCount--;
-                }
-                else
-                {
-                    ObjectList[k] = ObjectList[ObjectListCount - 1];
-                    ObjectListCount--;
-                    for (int i = 0; i < ObjectList[k].FaceListIndices.Length; i++)
-                    {
-                        int h = ObjectList[k].FaceListIndices[i];
-                        int hi = h >> 2;
-                        switch (h & 3)
-                        {
-                            case 0:
-                                OpaqueList[hi].ObjectListIndex = k;
-                                break;
-                            case 1:
-                                TransparentColorList[hi].ObjectListIndex = k;
-                                break;
-                            case 2:
-                                AlphaList[hi].ObjectListIndex = k;
-                                break;
-                            case 3:
-                                OverlayList[hi].ObjectListIndex = k;
-                                break;
-                        }
-                    }
-                    ObjectManager.Objects[ObjectList[k].ObjectIndex].RendererIndex = k + 1;
-                }
-                Object.RendererIndex = 0;
-            }
-        }
-
-        // sort polygons
-        private static void SortPolygons(ObjectFace[] List, int ListCount, double[] ListDistance, int ListOffset)
+		/// <summary>Makes an object visible within the world</summary>
+		/// <param name="objectToShow">The object to show</param>
+		/// <param name="Type">Whether this is a static or dynamic object</param>
+		internal static void ShowObject(StaticObject objectToShow, ObjectType Type)
 		{
-            // calculate distance
-            double cx = Camera.AbsolutePosition.X;
-            double cy = Camera.AbsolutePosition.Y;
-            double cz = Camera.AbsolutePosition.Z;
-            for (int i = 0; i < ListCount; i++)
-            {
-                int o = List[i].ObjectIndex;
-                int f = List[i].FaceIndex;
-                if (ObjectManager.Objects[o].Mesh.Faces[f].Vertices.Length >= 3)
-                {
-                    int v0 = ObjectManager.Objects[o].Mesh.Faces[f].Vertices[0].Index;
-                    int v1 = ObjectManager.Objects[o].Mesh.Faces[f].Vertices[1].Index;
-                    int v2 = ObjectManager.Objects[o].Mesh.Faces[f].Vertices[2].Index;
-                    double v0x = ObjectManager.Objects[o].Mesh.Vertices[v0].Coordinates.X;
-                    double v0y = ObjectManager.Objects[o].Mesh.Vertices[v0].Coordinates.Y;
-                    double v0z = ObjectManager.Objects[o].Mesh.Vertices[v0].Coordinates.Z;
-                    double v1x = ObjectManager.Objects[o].Mesh.Vertices[v1].Coordinates.X;
-                    double v1y = ObjectManager.Objects[o].Mesh.Vertices[v1].Coordinates.Y;
-                    double v1z = ObjectManager.Objects[o].Mesh.Vertices[v1].Coordinates.Z;
-                    double v2x = ObjectManager.Objects[o].Mesh.Vertices[v2].Coordinates.X;
-                    double v2y = ObjectManager.Objects[o].Mesh.Vertices[v2].Coordinates.Y;
-                    double v2z = ObjectManager.Objects[o].Mesh.Vertices[v2].Coordinates.Z;
-                    double w1x = v1x - v0x, w1y = v1y - v0y, w1z = v1z - v0z;
-                    double w2x = v2x - v0x, w2y = v2y - v0y, w2z = v2z - v0z;
-                    double dx = -w1z * w2y + w1y * w2z;
-                    double dy = w1z * w2x - w1x * w2z;
-                    double dz = -w1y * w2x + w1x * w2y;
-                    double t = dx * dx + dy * dy + dz * dz;
-                    if (t != 0.0)
-                    {
-                        t = 1.0 / Math.Sqrt(t);
-                        dx *= t; dy *= t; dz *= t;
-                        double w0x = v0x - cx, w0y = v0y - cy, w0z = v0z - cz;
-                        t = dx * w0x + dy * w0y + dz * w0z;
-                        ListDistance[i] = -t * t;
-                    }
-                }
-            }
-            // sort
-            Array.Sort<double, ObjectFace>(ListDistance, List, 0, ListCount);
-            // update object list
-            for (int i = 0; i < ListCount; i++)
-            {
-                ObjectList[List[i].ObjectListIndex].FaceListIndices[List[i].FaceIndex] = (i << 2) + ListOffset;
-            }
-        }
+			if (objectToShow == null)
+			{
+				return;
+			}
+			if (objectToShow.RendererIndex == 0)
+			{
+				if (ObjectCount >= Objects.Length)
+				{
+					Array.Resize<RendererObject>(ref Objects, Objects.Length << 1);
+				}
+
+				Objects[ObjectCount] = new RendererObject(objectToShow.ObjectIndex, Type);
+				int f = objectToShow.Mesh.Faces.Length;
+				Objects[ObjectCount].FaceListReferences = new ObjectListReference[f];
+				for (int i = 0; i < f; i++)
+				{
+					bool alpha = false;
+					int k = objectToShow.Mesh.Faces[i].Material;
+					OpenGlTextureWrapMode wrap = OpenGlTextureWrapMode.ClampClamp;
+					if (objectToShow.Mesh.Materials[k].DaytimeTexture != null | objectToShow.Mesh.Materials[k].NighttimeTexture != null)
+					{
+						if (objectToShow.Mesh.Materials[k].WrapMode == null)
+						{
+							// If the object does not have a stored wrapping mode, determine it now
+							for (int v = 0; v < objectToShow.Mesh.Vertices.Length; v++)
+							{
+								if (objectToShow.Mesh.Vertices[v].TextureCoordinates.X < 0.0f |
+								    objectToShow.Mesh.Vertices[v].TextureCoordinates.X > 1.0f)
+								{
+									wrap |= OpenGlTextureWrapMode.RepeatClamp;
+								}
+								if (objectToShow.Mesh.Vertices[v].TextureCoordinates.Y < 0.0f |
+								    objectToShow.Mesh.Vertices[v].TextureCoordinates.Y > 1.0f)
+								{
+									wrap |= OpenGlTextureWrapMode.ClampRepeat;
+								}
+							}							
+						}
+						else
+						{
+							//Yuck cast, but we need the null, as otherwise requires rewriting the texture indexer
+							wrap = (OpenGlTextureWrapMode)objectToShow.Mesh.Materials[k].WrapMode;
+						}
+						if (objectToShow.Mesh.Materials[k].DaytimeTexture != null)
+						{
+							if (Program.CurrentHost.LoadTexture(objectToShow.Mesh.Materials[k].DaytimeTexture, wrap))
+							{
+								TextureTransparencyType type =
+									objectToShow.Mesh.Materials[k].DaytimeTexture.Transparency;
+								if (type == TextureTransparencyType.Alpha)
+								{
+									alpha = true;
+								}
+								else if (type == TextureTransparencyType.Partial &&
+								         Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality)
+								{
+									alpha = true;
+								}
+							}
+						}
+						if (objectToShow.Mesh.Materials[k].NighttimeTexture != null)
+						{
+							if (Program.CurrentHost.LoadTexture(objectToShow.Mesh.Materials[k].NighttimeTexture, wrap))
+							{
+								TextureTransparencyType type =
+									objectToShow.Mesh.Materials[k].NighttimeTexture.Transparency;
+								if (type == TextureTransparencyType.Alpha)
+								{
+									alpha = true;
+								}
+								else if (type == TextureTransparencyType.Partial &
+								         Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality)
+								{
+									alpha = true;
+								}
+							}
+						}
+					}
+					if (Type == ObjectType.Overlay & CameraProperties.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
+					{
+						alpha = true;
+					}
+					else if (objectToShow.Mesh.Materials[k].Color.A != 255)
+					{
+						alpha = true;
+					}
+					else if (objectToShow.Mesh.Materials[k].BlendMode == MeshMaterialBlendMode.Additive)
+					{
+						alpha = true;
+					}
+					else if (objectToShow.Mesh.Materials[k].GlowAttenuationData != 0)
+					{
+						alpha = true;
+					}
+					ObjectListType listType;
+					switch (Type)
+					{
+						case ObjectType.Static:
+							listType = alpha ? ObjectListType.DynamicAlpha : ObjectListType.StaticOpaque;
+							break;
+						case ObjectType.Dynamic:
+							listType = alpha ? ObjectListType.DynamicAlpha : ObjectListType.DynamicOpaque;
+							break;
+						case ObjectType.Overlay:
+							listType = alpha ? ObjectListType.OverlayAlpha : ObjectListType.OverlayOpaque;
+							break;
+						default:
+							throw new InvalidOperationException();
+					}
+					if (listType == ObjectListType.StaticOpaque)
+					{
+						/*
+						 * For the static opaque list, insert the face into
+						 * the first vacant position in the matching group's list.
+						 * */
+						int groupIndex = (int)objectToShow.GroupIndex;
+						if (groupIndex >= StaticOpaque.Length)
+						{
+							if (StaticOpaque.Length == 0)
+							{
+								StaticOpaque = new ObjectGroup[16];
+							}
+							while (groupIndex >= StaticOpaque.Length)
+							{
+								Array.Resize<ObjectGroup>(ref StaticOpaque, StaticOpaque.Length << 1);
+							}
+						}
+						if (StaticOpaque[groupIndex] == null)
+						{
+							StaticOpaque[groupIndex] = new ObjectGroup();
+						}
+						ObjectList list = StaticOpaque[groupIndex].List;
+						int newIndex = list.FaceCount;
+						for (int j = 0; j < list.FaceCount; j++)
+						{
+							if (list.Faces[j] == null)
+							{
+								newIndex = j;
+								break;
+							}
+						}
+						if (newIndex == list.FaceCount)
+						{
+							if (list.FaceCount == list.Faces.Length)
+							{
+								Array.Resize<ObjectFace>(ref list.Faces, list.Faces.Length << 1);
+							}
+							list.FaceCount++;
+						}
+						list.Faces[newIndex] = new ObjectFace
+						{
+							ObjectListIndex = ObjectCount,
+							ObjectIndex = objectToShow.ObjectIndex,
+							FaceIndex = i,
+							Wrap = wrap
+						};
+
+						// HACK: Let's store the wrapping mode.
+
+						StaticOpaque[groupIndex].Update = true;
+						Objects[ObjectCount].FaceListReferences[i] = new ObjectListReference(listType, newIndex);
+						LibRender.Renderer.InfoStaticOpaqueFaceCount++;
+
+						/*
+						 * Check if the given object has a bounding box, and insert it to the end of the list of bounding boxes if required
+						 */
+						if (objectToShow.Mesh.BoundingBox != null)
+						{
+							int Index = list.BoundingBoxes.Length;
+							for (int j = 0; j < list.BoundingBoxes.Length; j++)
+							{
+								if (list.Faces[j] == null)
+								{
+									Index = j;
+									break;
+								}
+							}
+							if (Index == list.BoundingBoxes.Length)
+							{
+								Array.Resize<BoundingBox>(ref list.BoundingBoxes, list.BoundingBoxes.Length << 1);
+							}
+							list.BoundingBoxes[Index].Upper = objectToShow.Mesh.BoundingBox[0];
+							list.BoundingBoxes[Index].Lower = objectToShow.Mesh.BoundingBox[1];
+						}
+					}
+					else
+					{
+						/*
+						 * For all other lists, insert the face at the end of the list.
+						 * */
+						ObjectList list;
+						switch (listType)
+						{
+							case ObjectListType.DynamicOpaque:
+								list = DynamicOpaque;
+								break;
+							case ObjectListType.DynamicAlpha:
+								list = DynamicAlpha;
+								break;
+							case ObjectListType.OverlayOpaque:
+								list = OverlayOpaque;
+								break;
+							case ObjectListType.OverlayAlpha:
+								list = OverlayAlpha;
+								break;
+							default:
+								throw new InvalidOperationException();
+						}
+						if (list.FaceCount == list.Faces.Length)
+						{
+							Array.Resize<ObjectFace>(ref list.Faces, list.Faces.Length << 1);
+						}
+						list.Faces[list.FaceCount] = new ObjectFace
+						{
+							ObjectListIndex = ObjectCount,
+							ObjectIndex = objectToShow.ObjectIndex,
+							FaceIndex = i,
+							Wrap = wrap
+						};
+
+						// HACK: Let's store the wrapping mode.
+
+						Objects[ObjectCount].FaceListReferences[i] = new ObjectListReference(listType, list.FaceCount);
+						list.FaceCount++;
+					}
+
+				}
+				objectToShow.RendererIndex = ObjectCount + 1;
+				ObjectCount++;
+			}
+		}
+
+		/// <summary>Hides an object within the world</summary>
+		/// <param name="Object">The object to hide</param>
+		internal static void HideObject(ref StaticObject Object)
+		{
+			if (Object == null)
+			{
+				return;
+			}
+
+			int k = Object.RendererIndex - 1;
+			if (k >= 0)
+			{
+				// remove faces
+				for (int i = 0; i < Objects[k].FaceListReferences.Length; i++)
+				{
+					ObjectListType listType = Objects[k].FaceListReferences[i].Type;
+					if (listType == ObjectListType.StaticOpaque)
+					{
+						/*
+						 * For static opaque faces, set the face to be removed
+						 * to a null reference. If there are null entries at
+						 * the end of the list, update the number of faces used
+						 * accordingly.
+						 * */
+						int groupIndex = (int) ObjectManager.Objects[Objects[k].ObjectIndex].GroupIndex;
+						ObjectList list = StaticOpaque[groupIndex].List;
+						int listIndex = Objects[k].FaceListReferences[i].Index;
+						list.Faces[listIndex] = null;
+						if (listIndex == list.FaceCount - 1)
+						{
+							int count = 0;
+							for (int j = list.FaceCount - 2; j >= 0; j--)
+							{
+								if (list.Faces[j] != null)
+								{
+									count = j + 1;
+									break;
+								}
+							}
+
+							list.FaceCount = count;
+						}
+
+						StaticOpaque[groupIndex].Update = true;
+						LibRender.Renderer.InfoStaticOpaqueFaceCount--;
+					}
+					else
+					{
+						/*
+						 * For all other kinds of faces, move the last face into place
+						 * of the face to be removed and decrement the face counter.
+						 * */
+						ObjectList list;
+						switch (listType)
+						{
+							case ObjectListType.DynamicOpaque:
+								list = DynamicOpaque;
+								break;
+							case ObjectListType.DynamicAlpha:
+								list = DynamicAlpha;
+								break;
+							case ObjectListType.OverlayOpaque:
+								list = OverlayOpaque;
+								break;
+							case ObjectListType.OverlayAlpha:
+								list = OverlayAlpha;
+								break;
+							default:
+								throw new InvalidOperationException();
+						}
+
+						int listIndex = Objects[k].FaceListReferences[i].Index;
+						if (list.FaceCount > 0)
+						{
+							list.Faces[listIndex] = list.Faces[list.FaceCount - 1];
+						}
+
+						Objects[list.Faces[listIndex].ObjectListIndex].FaceListReferences[list.Faces[listIndex].FaceIndex].Index = listIndex;
+						if (list.FaceCount > 0)
+						{
+							list.FaceCount--;
+						}
+					}
+				}
+
+				// remove object
+				if (k == ObjectCount - 1)
+				{
+					ObjectCount--;
+				}
+				else if (ObjectCount == 0)
+				{
+					return; //Outside the world?
+				}
+				else
+				{
+					Objects[k] = Objects[ObjectCount - 1];
+					ObjectCount--;
+					for (int i = 0; i < Objects[k].FaceListReferences.Length; i++)
+					{
+						ObjectListType listType = Objects[k].FaceListReferences[i].Type;
+						ObjectList list;
+						switch (listType)
+						{
+							case ObjectListType.StaticOpaque:
+							{
+								int groupIndex = (int) ObjectManager.Objects[Objects[k].ObjectIndex].GroupIndex;
+								list = StaticOpaque[groupIndex].List;
+							}
+								break;
+							case ObjectListType.DynamicOpaque:
+								list = DynamicOpaque;
+								break;
+							case ObjectListType.DynamicAlpha:
+								list = DynamicAlpha;
+								break;
+							case ObjectListType.OverlayOpaque:
+								list = OverlayOpaque;
+								break;
+							case ObjectListType.OverlayAlpha:
+								list = OverlayAlpha;
+								break;
+							default:
+								throw new InvalidOperationException();
+						}
+
+						int listIndex = Objects[k].FaceListReferences[i].Index;
+						if (list.Faces[listIndex] == null)
+						{
+							continue;
+						}
+
+						list.Faces[listIndex].ObjectListIndex = k;
+					}
+
+					ObjectManager.Objects[Objects[k].ObjectIndex].RendererIndex = k + 1;
+				}
+
+				Object.RendererIndex = 0;
+			}
+		}
     }
 }

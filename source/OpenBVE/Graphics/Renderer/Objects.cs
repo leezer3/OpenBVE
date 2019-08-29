@@ -12,7 +12,7 @@ namespace OpenBve
 		/// <summary>Re-adds all objects within the world, for example after a screen resolution change</summary>
 		internal static void ReAddObjects()
 		{
-			Object[] list = new Object[ObjectCount];
+			RendererObject[] list = new RendererObject[ObjectCount];
 			for (int i = 0; i < ObjectCount; i++)
 			{
 				list[i] = Objects[i];
@@ -40,10 +40,10 @@ namespace OpenBve
 			{
 				if (ObjectCount >= Objects.Length)
 				{
-					Array.Resize<Object>(ref Objects, Objects.Length << 1);
+					Array.Resize<RendererObject>(ref Objects, Objects.Length << 1);
 				}
 
-				Objects[ObjectCount] = new Object(objectToShow.ObjectIndex, Type);
+				Objects[ObjectCount] = new RendererObject(objectToShow.ObjectIndex, Type);
 				int f = objectToShow.Mesh.Faces.Length;
 				Objects[ObjectCount].FaceListReferences = new ObjectListReference[f];
 				for (int i = 0; i < f; i++)

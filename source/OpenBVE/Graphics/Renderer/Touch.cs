@@ -36,7 +36,7 @@ namespace OpenBve
 				{
 					Array.Resize(ref Objects, Objects.Length << 1);
 				}
-				Objects[ObjectCount] = new Object(ObjectIndex, ObjectType.Overlay);
+				Objects[ObjectCount] = new RendererObject(ObjectIndex, ObjectType.Overlay);
 				int f = ObjectManager.Objects[ObjectIndex].Mesh.Faces.Length;
 				Objects[ObjectCount].FaceListReferences = new ObjectListReference[f];
 				for (int i = 0; i < f; i++)

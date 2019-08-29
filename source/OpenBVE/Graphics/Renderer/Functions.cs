@@ -32,7 +32,7 @@ namespace OpenBve
         /// <summary>Resets the state of the renderer</summary>
         internal static void Reset()
         {
-	        Objects = new Object[256];
+	        Objects = new RendererObject[256];
             ObjectCount = 0;
             StaticOpaque = new ObjectGroup[] { };
             StaticOpaqueForceUpdate = true;
