@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Textures;
+﻿using OpenBveApi.Objects;
+using OpenBveApi.Textures;
 
 namespace LibRender
 {
@@ -7,8 +8,8 @@ namespace LibRender
 	{
 		/// <summary>The openGL display list index</summary>
 		public int ObjectListIndex;
-		/// <summary>The object index in the ObjectManager</summary>
-		public int ObjectIndex;
+		/// <summary>Holds a reference to the object in the ObjectManager array</summary>
+		public StaticObject ObjectReference;
 		/// <summary>The face index within the object</summary>
 		public int FaceIndex;
 		/// <summary>The distance</summary>

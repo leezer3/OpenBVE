@@ -266,10 +266,10 @@ namespace OpenBve
 				GL.DepthMask(true);
 				for (int i = 0; i < DynamicAlpha.FaceCount; i++)
 				{
-					int r = (int)ObjectManager.Objects[DynamicAlpha.Faces[i].ObjectIndex].Mesh.Faces[DynamicAlpha.Faces[i].FaceIndex].Material;
-					if (ObjectManager.Objects[DynamicAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].BlendMode == MeshMaterialBlendMode.Normal & ObjectManager.Objects[DynamicAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].GlowAttenuationData == 0)
+					int r = (int)DynamicAlpha.Faces[i].ObjectReference.Mesh.Faces[DynamicAlpha.Faces[i].FaceIndex].Material;
+					if (DynamicAlpha.Faces[i].ObjectReference.Mesh.Materials[r].BlendMode == MeshMaterialBlendMode.Normal & DynamicAlpha.Faces[i].ObjectReference.Mesh.Materials[r].GlowAttenuationData == 0)
 					{
-						if (ObjectManager.Objects[DynamicAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].Color.A == 255)
+						if (DynamicAlpha.Faces[i].ObjectReference.Mesh.Materials[r].Color.A == 255)
 						{
 							RenderFace(ref DynamicAlpha.Faces[i], Camera.AbsolutePosition);
 						}
@@ -281,8 +281,8 @@ namespace OpenBve
 				bool additive = false;
 				for (int i = 0; i < DynamicAlpha.FaceCount; i++)
 				{
-					int r = (int)ObjectManager.Objects[DynamicAlpha.Faces[i].ObjectIndex].Mesh.Faces[DynamicAlpha.Faces[i].FaceIndex].Material;
-					if (ObjectManager.Objects[DynamicAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].BlendMode == MeshMaterialBlendMode.Additive)
+					int r = (int)DynamicAlpha.Faces[i].ObjectReference.Mesh.Faces[DynamicAlpha.Faces[i].FaceIndex].Material;
+					if (DynamicAlpha.Faces[i].ObjectReference.Mesh.Materials[r].BlendMode == MeshMaterialBlendMode.Additive)
 					{
 						if (!additive)
 						{
@@ -364,10 +364,10 @@ namespace OpenBve
 					GL.DepthMask(true);
 					for (int i = 0; i < OverlayAlpha.FaceCount; i++)
 					{
-						int r = (int)ObjectManager.Objects[OverlayAlpha.Faces[i].ObjectIndex].Mesh.Faces[OverlayAlpha.Faces[i].FaceIndex].Material;
-						if (ObjectManager.Objects[OverlayAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].BlendMode == MeshMaterialBlendMode.Normal & ObjectManager.Objects[OverlayAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].GlowAttenuationData == 0)
+						int r = (int)OverlayAlpha.Faces[i].ObjectReference.Mesh.Faces[OverlayAlpha.Faces[i].FaceIndex].Material;
+						if (OverlayAlpha.Faces[i].ObjectReference.Mesh.Materials[r].BlendMode == MeshMaterialBlendMode.Normal & OverlayAlpha.Faces[i].ObjectReference.Mesh.Materials[r].GlowAttenuationData == 0)
 						{
-							if (ObjectManager.Objects[OverlayAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].Color.A == 255)
+							if (OverlayAlpha.Faces[i].ObjectReference.Mesh.Materials[r].Color.A == 255)
 							{
 								RenderFace(ref OverlayAlpha.Faces[i], Camera.AbsolutePosition);
 							}
@@ -379,8 +379,8 @@ namespace OpenBve
 					bool additive = false;
 					for (int i = 0; i < OverlayAlpha.FaceCount; i++)
 					{
-						int r = (int)ObjectManager.Objects[OverlayAlpha.Faces[i].ObjectIndex].Mesh.Faces[OverlayAlpha.Faces[i].FaceIndex].Material;
-						if (ObjectManager.Objects[OverlayAlpha.Faces[i].ObjectIndex].Mesh.Materials[r].BlendMode == MeshMaterialBlendMode.Additive)
+						int r = (int)OverlayAlpha.Faces[i].ObjectReference.Mesh.Faces[OverlayAlpha.Faces[i].FaceIndex].Material;
+						if (OverlayAlpha.Faces[i].ObjectReference.Mesh.Materials[r].BlendMode == MeshMaterialBlendMode.Additive)
 						{
 							if (!additive)
 							{
@@ -453,7 +453,7 @@ namespace OpenBve
 		{
 			if (LibRender.Renderer.CullEnabled)
 			{
-				if (!LibRender.Renderer.OptionBackfaceCulling || (ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Flags & MeshFace.Face2Mask) != 0)
+				if (!LibRender.Renderer.OptionBackfaceCulling || (Face.ObjectReference.Mesh.Faces[Face.FaceIndex].Flags & MeshFace.Face2Mask) != 0)
 				{
 					GL.Disable(EnableCap.CullFace);
 					LibRender.Renderer.CullEnabled = false;
@@ -461,14 +461,14 @@ namespace OpenBve
 			}
 			else if (LibRender.Renderer.OptionBackfaceCulling)
 			{
-				if ((ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Flags & MeshFace.Face2Mask) == 0)
+				if ((Face.ObjectReference.Mesh.Faces[Face.FaceIndex].Flags & MeshFace.Face2Mask) == 0)
 				{
 					GL.Enable(EnableCap.CullFace);
 					LibRender.Renderer.CullEnabled = true;
 				}
 			}
-			int r = (int)ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex].Material;
-			LibRender.Renderer.RenderFace(ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Materials[r], ObjectManager.Objects[Face.ObjectIndex].Mesh.Vertices, Face.Wrap, ref ObjectManager.Objects[Face.ObjectIndex].Mesh.Faces[Face.FaceIndex], Camera, IsDebugTouchMode);
+			int r = (int)Face.ObjectReference.Mesh.Faces[Face.FaceIndex].Material;
+			LibRender.Renderer.RenderFace(ref Face.ObjectReference.Mesh.Materials[r], Face.ObjectReference.Mesh.Vertices, Face.Wrap, ref Face.ObjectReference.Mesh.Faces[Face.FaceIndex], Camera, IsDebugTouchMode);
 		}
 		
 		

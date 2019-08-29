@@ -184,7 +184,7 @@ namespace OpenBve
 						list.Faces[newIndex] = new ObjectFace
 						{
 							ObjectListIndex = LibRender.Renderer.ObjectCount,
-							ObjectIndex = objectToShow.ObjectIndex,
+							ObjectReference = objectToShow,
 							FaceIndex = i,
 							Wrap = wrap
 						};
@@ -247,7 +247,7 @@ namespace OpenBve
 						list.Faces[list.FaceCount] = new ObjectFace
 						{
 							ObjectListIndex = LibRender.Renderer.ObjectCount,
-							ObjectIndex = objectToShow.ObjectIndex,
+							ObjectReference = objectToShow,
 							FaceIndex = i,
 							Wrap = wrap
 						};

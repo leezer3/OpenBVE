@@ -48,11 +48,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Backgrounds\Backgrounds.cs" />
+    <Compile Include="Camera\BoundingBox.cs" />
     <Compile Include="Camera\Camera.cs" />
     <Compile Include="Camera\CameraAlignment.cs" />
     <Compile Include="Lighting\Lighting.cs" />
     <Compile Include="Loading.cs" />
     <Compile Include="MotionBlur\MotionBlurMode.cs" />
+    <Compile Include="Objects\ObjectGroup.cs" />
+    <Compile Include="Objects\ObjectList.cs" />
     <Compile Include="Objects\ObjectListReference.cs" />
     <Compile Include="Objects\RendererObject.cs" />
     <Compile Include="Objects\RenderFace.cs" />

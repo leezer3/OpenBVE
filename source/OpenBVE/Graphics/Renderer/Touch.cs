@@ -18,7 +18,7 @@ namespace OpenBve
 		/// <summary>The list of touch element's faces to be rendered.</summary>
 		private static ObjectList Touch = new ObjectList();
 
-		private static int PrePickedObjectIndex = -1;
+		private static StaticObject PrePickedObjectIndex = null;
 
 		internal static bool DebugTouchMode = false;
 
@@ -49,7 +49,7 @@ namespace OpenBve
 					Touch.Faces[Touch.FaceCount] = new ObjectFace
 					{
 						ObjectListIndex = LibRender.Renderer.ObjectCount,
-						ObjectIndex = ObjectIndex,
+						ObjectReference = ObjectManager.Objects[ObjectIndex],
 						FaceIndex = i,
 						Wrap = wrap
 					};
@@ -291,14 +291,14 @@ namespace OpenBve
 		/// <summary>Function to perform the end processing of mouse picking.</summary>
 		/// <param name="SelectBuffer">Selection buffer</param>
 		/// <returns>The object index of the object hit in the shallowest place.</returns>
-		private static int PickPost(int[] SelectBuffer)
+		private static StaticObject PickPost(int[] SelectBuffer)
 		{
 			int Hits = GL.RenderMode(RenderingMode.Render);
 			GL.PopMatrix();
 
 			if (Hits <= 0)
 			{
-				return -1;
+				return null;
 			}
 
 			List<PickedObject> PickedObjects = ParseSelectBuffer(SelectBuffer);
@@ -306,10 +306,10 @@ namespace OpenBve
 			if (PickedObjects.Any())
 			{
 				PickedObjects = PickedObjects.OrderBy(x => x.MinDepth).ToList();
-				return Touch.Faces[PickedObjects[0].Names[0]].ObjectIndex;
+				return Touch.Faces[PickedObjects[0].Names[0]].ObjectReference;
 			}
 
-			return -1;
+			return null;
 		}
 
 		internal static void DebugTouchArea()
@@ -391,13 +391,13 @@ namespace OpenBve
 
 					RenderSceneSelection();
 
-					int PickedObjectIndex = PickPost(SelectBuffer);
+					StaticObject PickedObjectIndex = PickPost(SelectBuffer);
 
 					foreach (var TouchElement in TouchElements)
 					{
 						HideObjectSelection(ref ObjectManager.Objects[TouchElement.Element.internalObject.ObjectIndex]);
 
-						if (TouchElement.Element.internalObject.ObjectIndex == PickedObjectIndex)
+						if (TouchElement.Element.internalObject == PickedObjectIndex)
 						{
 							switch (TouchElement.Command)
 							{
@@ -415,7 +415,7 @@ namespace OpenBve
 						}
 					}
 					
-					if (PickedObjectIndex >= 0)
+					if (PickedObjectIndex != null)
 					{
 						return true;
 					}
@@ -456,12 +456,12 @@ namespace OpenBve
 
 					RenderSceneSelection();
 
-					int PickedObjectIndex = PickPost(SelectBuffer);
+					StaticObject PickedObjectIndex = PickPost(SelectBuffer);
 
 					foreach (var TouchElement in TouchElements)
 					{
 						HideObjectSelection(ref ObjectManager.Objects[TouchElement.Element.internalObject.ObjectIndex]);
-						if (TouchElement.Element.internalObject.ObjectIndex == PickedObjectIndex)
+						if (TouchElement.Element.internalObject == PickedObjectIndex)
 						{
 							for (int i = 0; i < Interface.CurrentControls.Length; i++)
 							{
@@ -529,12 +529,12 @@ namespace OpenBve
 
 					RenderSceneSelection();
 
-					int PickedObjectIndex = PickPost(SelectBuffer);
+					StaticObject PickedObjectIndex = PickPost(SelectBuffer);
 
 					foreach (var TouchElement in TouchElements)
 					{
 						HideObjectSelection(ref ObjectManager.Objects[TouchElement.Element.internalObject.ObjectIndex]);
-						if (TouchElement.Element.internalObject.ObjectIndex == PickedObjectIndex)
+						if (TouchElement.Element.internalObject == PickedObjectIndex)
 						{
 							Car.CarSections[0].CurrentAdditionalGroup = TouchElement.JumpScreenIndex;
 							Car.ChangeCarSection(TrainManager.CarSectionType.Interior);
@@ -547,7 +547,7 @@ namespace OpenBve
 						}
 
 						// HACK: Normally terminate the command issued once.
-						if (TouchElement.Element.internalObject.ObjectIndex == PickedObjectIndex || (PickedObjectIndex != PrePickedObjectIndex && TouchElement.Element.internalObject.ObjectIndex == PrePickedObjectIndex))
+						if (TouchElement.Element.internalObject == PickedObjectIndex || (PickedObjectIndex != PrePickedObjectIndex && TouchElement.Element.internalObject == PrePickedObjectIndex))
 						{
 							for (int i = 0; i < Interface.CurrentControls.Length; i++)
 							{

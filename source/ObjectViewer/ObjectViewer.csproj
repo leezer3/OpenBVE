@@ -89,7 +89,6 @@
       <DependentUpon>formTrain.cs</DependentUpon>
     </Compile>
     <Compile Include="FunctionScripts.cs" />
-    <Compile Include="Graphics\Structures.cs" />
     <Compile Include="Hosts.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Parsers\ExtensionsCfgParser.cs" />

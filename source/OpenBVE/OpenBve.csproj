@@ -177,7 +177,6 @@
     <Compile Include="Graphics\Renderer\Overlays.ScoreMessages.cs">
       <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\Renderer\Structures.cs" />
     <Compile Include="Graphics\Renderer\Objects.cs" />
     <Compile Include="Graphics\Renderer\Touch.cs" />
     <Compile Include="Parsers\Panel\PanelAnimatedXmlParser.cs" />
