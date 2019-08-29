@@ -7,13 +7,6 @@ namespace OpenBve
 {
 	internal static partial class Renderer
 	{
-		// object list
-		private static RendererObject[] Objects = new RendererObject[256];
-		/// <summary>
-		/// The total number of objects in the simulation
-		/// </summary>
-		private static int ObjectCount;
-		
 		private class BoundingBox
 		{
 			internal Vector3 Upper;
@@ -89,7 +82,7 @@ namespace OpenBve
 				// update objects
 				for (int i = 0; i < FaceCount; i++)
 				{
-					Objects[Faces[i].ObjectListIndex].FaceListReferences[Faces[i].FaceIndex].Index = i;
+					LibRender.Renderer.Objects[Faces[i].ObjectListIndex].FaceListReferences[Faces[i].FaceIndex].Index = i;
 				}
 			}
 		}

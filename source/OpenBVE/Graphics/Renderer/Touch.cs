@@ -32,13 +32,13 @@ namespace OpenBve
 			}
 			if (ObjectManager.Objects[ObjectIndex].RendererIndex == 0)
 			{
-				if (ObjectCount >= Objects.Length)
+				if (LibRender.Renderer.ObjectCount >= LibRender.Renderer.Objects.Length)
 				{
-					Array.Resize(ref Objects, Objects.Length << 1);
+					Array.Resize(ref LibRender.Renderer.Objects, LibRender.Renderer.Objects.Length << 1);
 				}
-				Objects[ObjectCount] = new RendererObject(ObjectIndex, ObjectType.Overlay);
+				LibRender.Renderer.Objects[LibRender.Renderer.ObjectCount] = new RendererObject(ObjectManager.Objects[ObjectIndex], ObjectType.Overlay);
 				int f = ObjectManager.Objects[ObjectIndex].Mesh.Faces.Length;
-				Objects[ObjectCount].FaceListReferences = new ObjectListReference[f];
+				LibRender.Renderer.Objects[LibRender.Renderer.ObjectCount].FaceListReferences = new ObjectListReference[f];
 				for (int i = 0; i < f; i++)
 				{
 					OpenGlTextureWrapMode wrap = OpenGlTextureWrapMode.ClampClamp;
@@ -48,7 +48,7 @@ namespace OpenBve
 					}
 					Touch.Faces[Touch.FaceCount] = new ObjectFace
 					{
-						ObjectListIndex = ObjectCount,
+						ObjectListIndex = LibRender.Renderer.ObjectCount,
 						ObjectIndex = ObjectIndex,
 						FaceIndex = i,
 						Wrap = wrap
@@ -56,11 +56,11 @@ namespace OpenBve
 
 					// HACK: Let's store the wrapping mode.
 
-					Objects[ObjectCount].FaceListReferences[i] = new ObjectListReference(ObjectListType.Touch, Touch.FaceCount);
+					LibRender.Renderer.Objects[LibRender.Renderer.ObjectCount].FaceListReferences[i] = new ObjectListReference(ObjectListType.Touch, Touch.FaceCount);
 					Touch.FaceCount++;
 				}
-				ObjectManager.Objects[ObjectIndex].RendererIndex = ObjectCount + 1;
-				ObjectCount++;
+				ObjectManager.Objects[ObjectIndex].RendererIndex = LibRender.Renderer.ObjectCount + 1;
+				LibRender.Renderer.ObjectCount++;
 			}
 		}
 
@@ -76,9 +76,9 @@ namespace OpenBve
 			if (k >= 0)
 			{
 				// remove faces
-				for (int i = 0; i < Objects[k].FaceListReferences.Length; i++)
+				for (int i = 0; i < LibRender.Renderer.Objects[k].FaceListReferences.Length; i++)
 				{
-					ObjectListType listType = Objects[k].FaceListReferences[i].Type;
+					ObjectListType listType = LibRender.Renderer.Objects[k].FaceListReferences[i].Type;
 					/*
 					 * For all other kinds of faces, move the last face into place
 					 * of the face to be removed and decrement the face counter.
@@ -92,9 +92,9 @@ namespace OpenBve
 						default:
 							throw new InvalidOperationException();
 					}
-					int listIndex = Objects[k].FaceListReferences[i].Index;
+					int listIndex = LibRender.Renderer.Objects[k].FaceListReferences[i].Index;
 					list.Faces[listIndex] = list.Faces[list.FaceCount - 1];
-					Objects[list.Faces[listIndex].ObjectListIndex].FaceListReferences[list.Faces[listIndex].FaceIndex].Index = listIndex;
+					LibRender.Renderer.Objects[list.Faces[listIndex].ObjectListIndex].FaceListReferences[list.Faces[listIndex].FaceIndex].Index = listIndex;
 					if (list.FaceCount > 0)
 					{
 						list.FaceCount--;
@@ -102,23 +102,23 @@ namespace OpenBve
 					
 				}
 				// remove object
-				if (k == ObjectCount - 1)
+				if (k == LibRender.Renderer.ObjectCount - 1)
 				{
-					ObjectCount--;
+					LibRender.Renderer.ObjectCount--;
 				}
 				else
 				{
-					Objects[k] = Objects[ObjectCount - 1];
-					ObjectCount--;
-					for (int i = 0; i < Objects[k].FaceListReferences.Length; i++)
+					LibRender.Renderer.Objects[k] = LibRender.Renderer.Objects[LibRender.Renderer.ObjectCount - 1];
+					LibRender.Renderer.ObjectCount--;
+					for (int i = 0; i < LibRender.Renderer.Objects[k].FaceListReferences.Length; i++)
 					{
-						ObjectListType listType = Objects[k].FaceListReferences[i].Type;
+						ObjectListType listType = LibRender.Renderer.Objects[k].FaceListReferences[i].Type;
 						ObjectList list;
 						switch (listType)
 						{
 							case ObjectListType.StaticOpaque:
 								{
-									int groupIndex = (int)ObjectManager.Objects[Objects[k].ObjectIndex].GroupIndex;
+									int groupIndex = (int)LibRender.Renderer.Objects[k].InternalObject.GroupIndex;
 									list = StaticOpaque[groupIndex].List;
 								}
 								break;
@@ -140,10 +140,10 @@ namespace OpenBve
 							default:
 								throw new InvalidOperationException();
 						}
-						int listIndex = Objects[k].FaceListReferences[i].Index;
+						int listIndex = LibRender.Renderer.Objects[k].FaceListReferences[i].Index;
 						list.Faces[listIndex].ObjectListIndex = k;
 					}
-					ObjectManager.Objects[Objects[k].ObjectIndex].RendererIndex = k + 1;
+					LibRender.Renderer.Objects[k].InternalObject.RendererIndex = k + 1;
 				}
 				ObjectIndex.RendererIndex = 0;
 			}

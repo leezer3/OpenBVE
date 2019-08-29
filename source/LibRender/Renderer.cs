@@ -61,6 +61,10 @@ namespace LibRender
 		public static int InfoTotalPolygon = 0;
 		/// <summary>The total number of static opaque faces in the current frame</summary>
 		public static int InfoStaticOpaqueFaceCount = 0;
+		/// <summary>The list of all objects currently shown by the renderer</summary>
+		public static RendererObject[] Objects = new RendererObject[256];
+		/// <summary>The total number of objects in the simulation</summary>
+		public static int ObjectCount;
 
 		internal const float inv255 = 1.0f / 255.0f;
     }
