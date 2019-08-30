@@ -21,6 +21,11 @@ namespace TrainEditor2.ViewModels.Others
 			get;
 		}
 
+		internal ReadOnlyReactivePropertySlim<int> ImageIndex
+		{
+			get;
+		}
+
 		internal ListViewItemViewModel(ListViewItemModel item)
 		{
 			Model = item;
@@ -29,6 +34,11 @@ namespace TrainEditor2.ViewModels.Others
 
 			Tag = item
 				.ObserveProperty(x => x.Tag)
+				.ToReadOnlyReactivePropertySlim()
+				.AddTo(disposable);
+
+			ImageIndex = item
+				.ObserveProperty(x => x.ImageIndex)
 				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 		}

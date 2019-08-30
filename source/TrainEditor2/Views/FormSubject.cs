@@ -88,6 +88,11 @@ namespace TrainEditor2.Views
 				.AddTo(disposable);
 		}
 
+		private void FormSubject_Load(object sender, EventArgs e)
+		{
+			Icon = FormEditor.GetIcon();
+		}
+
 		private void ButtonOK_Click(object sender, EventArgs e)
 		{
 			Close();

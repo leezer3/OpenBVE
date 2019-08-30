@@ -2,10 +2,13 @@
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using OpenBveApi.Interface;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
+using Reactive.Bindings.Notifiers;
 using TrainEditor2.Models;
 using TrainEditor2.Models.Trains;
+using TrainEditor2.Systems;
 using TrainEditor2.ViewModels.Dialogs;
 using TrainEditor2.ViewModels.Others;
 using TrainEditor2.ViewModels.Panels;
@@ -56,6 +59,31 @@ namespace TrainEditor2.ViewModels
 			get;
 		}
 
+		internal BooleanNotifier IsVisibleInfo
+		{
+			get;
+		}
+
+		internal BooleanNotifier IsVisibleWarning
+		{
+			get;
+		}
+
+		internal BooleanNotifier IsVisibleError
+		{
+			get;
+		}
+
+		internal BooleanNotifier IsVisibleCritical
+		{
+			get;
+		}
+
+		internal ReadOnlyReactiveCollection<ListViewItemViewModel> VisibleLogMessages
+		{
+			get;
+		}
+
 		internal ReactiveCommand CreateNewFileCommand
 		{
 			get;
@@ -97,6 +125,16 @@ namespace TrainEditor2.ViewModels
 		}
 
 		internal ReactiveCommand ChangeCarClass
+		{
+			get;
+		}
+
+		internal ReactiveCommand<MessageType> ChangeVisibleLogMessages
+		{
+			get;
+		}
+
+		internal ReactiveCommand ClearLogMessages
 		{
 			get;
 		}
@@ -172,6 +210,57 @@ namespace TrainEditor2.ViewModels
 				)
 				.AddTo(disposable);
 
+			IsVisibleInfo = new BooleanNotifier();
+
+			IsVisibleWarning = new BooleanNotifier();
+
+			IsVisibleError = new BooleanNotifier();
+
+			IsVisibleCritical = new BooleanNotifier();
+
+			VisibleLogMessages = app.VisibleLogMessages
+				.ToReadOnlyReactiveCollection(x => new ListViewItemViewModel(x))
+				.AddTo(disposable);
+
+			Interface.LogMessages
+				.ObserveAddChanged()
+				.Where(x =>
+				{
+					BooleanNotifier notifier;
+
+					switch (x.Type)
+					{
+						case MessageType.Information:
+							notifier = IsVisibleInfo;
+							break;
+						case MessageType.Warning:
+							notifier = IsVisibleWarning;
+							break;
+						case MessageType.Error:
+							notifier = IsVisibleError;
+							break;
+						case MessageType.Critical:
+							notifier = IsVisibleCritical;
+							break;
+						default:
+							throw new ArgumentOutOfRangeException();
+					}
+
+					return notifier.Value;
+				})
+				.Subscribe(app.AddLogMessage)
+				.AddTo(disposable);
+
+			Interface.LogMessages
+				.ObserveRemoveChanged()
+				.Subscribe(app.RemoveLogMessage)
+				.AddTo(disposable);
+
+			Interface.LogMessages
+				.ObserveResetChanged()
+				.Subscribe(_ => app.ResetLogMessages())
+				.AddTo(disposable);
+
 			CreateNewFileCommand = new ReactiveCommand();
 			CreateNewFileCommand.Subscribe(() => app.CreateNewFile()).AddTo(disposable);
 
@@ -233,6 +322,39 @@ namespace TrainEditor2.ViewModels
 
 			ChangeCarClass
 				.Subscribe(() => app.ChangeCarClass(app.Train.Cars.IndexOf((Car)SelectedItem.Value.Tag.Value)))
+				.AddTo(disposable);
+
+			ChangeVisibleLogMessages = new ReactiveCommand<MessageType>()
+				.WithSubscribe(x =>
+				{
+					BooleanNotifier notifier;
+
+					switch (x)
+					{
+						case MessageType.Information:
+							notifier = IsVisibleInfo;
+							break;
+						case MessageType.Warning:
+							notifier = IsVisibleWarning;
+							break;
+						case MessageType.Error:
+							notifier = IsVisibleError;
+							break;
+						case MessageType.Critical:
+							notifier = IsVisibleCritical;
+							break;
+						default:
+							throw new ArgumentOutOfRangeException(nameof(x), x, null);
+					}
+
+					app.ChangeVisibleLogMessages(x, !notifier.Value);
+
+					notifier.SwitchValue();
+				})
+				.AddTo(disposable);
+
+			ClearLogMessages = new ReactiveCommand()
+				.WithSubscribe(Interface.LogMessages.Clear)
 				.AddTo(disposable);
 
 			itemDisposable.AddTo(disposable);

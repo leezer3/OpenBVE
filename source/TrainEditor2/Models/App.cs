@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using OpenBveApi.Interface;
 using Prism.Mvvm;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Dialogs;
@@ -125,6 +126,8 @@ namespace TrainEditor2.Models
 			}
 		}
 
+		internal ObservableCollection<ListViewItemModel> VisibleLogMessages;
+
 		internal App()
 		{
 			culture = CultureInfo.InvariantCulture;
@@ -132,6 +135,8 @@ namespace TrainEditor2.Models
 			CurrentLanguageCode = "en-US";
 
 			MessageBox = new MessageBox();
+
+			VisibleLogMessages = new ObservableCollection<ListViewItemModel>();
 
 			CreateNewFile();
 		}
@@ -283,6 +288,49 @@ namespace TrainEditor2.Models
 			}
 
 			Item.Children[1].Children[carIndex].Tag = Train.Cars[carIndex];
+		}
+
+		internal void AddLogMessage(LogMessage message)
+		{
+			VisibleLogMessages
+				.Add(new ListViewItemModel
+				{
+					Texts = new ObservableCollection<string>(new[] { message.Type.ToString(), message.Text }),
+					ImageIndex = (int)message.Type,
+					Tag = message
+				});
+		}
+
+		internal void RemoveLogMessage(LogMessage message)
+		{
+			VisibleLogMessages.RemoveAll(x => x.Tag == message);
+		}
+
+		internal void ResetLogMessages()
+		{
+			VisibleLogMessages.RemoveAll(_ => true);
+		}
+
+		internal void ChangeVisibleLogMessages(MessageType type, bool visible)
+		{
+			if (visible)
+			{
+				VisibleLogMessages
+					.AddRange(
+						Interface.LogMessages
+							.Where(x => x.Type == type)
+							.Select(x => new ListViewItemModel
+							{
+								Texts = new ObservableCollection<string>(new[] { x.Type.ToString(), x.Text }),
+								ImageIndex = (int)x.Type,
+								Tag = x
+							})
+					);
+			}
+			else
+			{
+				VisibleLogMessages.RemoveAll(x => ((LogMessage)x.Tag).Type == type);
+			}
 		}
 	}
 }

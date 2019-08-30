@@ -107,6 +107,11 @@ namespace TrainEditor2.Views
 			groupBoxEntry.Enabled = listViewDelay.SelectedIndices.Count == 1;
 		}
 
+		private void FormDelay_Load(object sender, EventArgs e)
+		{
+			Icon = FormEditor.GetIcon();
+		}
+
 		private void ListViewDelay_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			groupBoxEntry.Enabled = listViewDelay.SelectedIndices.Count == 1;

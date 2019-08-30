@@ -207,6 +207,7 @@
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Name = "FormBogie";
 			this.Text = "Bogie";
+			this.Load += new System.EventHandler(this.FormBogie_Load);
 			this.groupBoxAxles.ResumeLayout(false);
 			this.groupBoxAxles.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();

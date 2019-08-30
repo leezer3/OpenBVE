@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using OpenBveApi.Colors;
@@ -27,7 +28,7 @@ namespace TrainEditor2.Views
 
 		private ListViewItem ListViewItemViewModelToListViewItem(ListViewItemViewModel item)
 		{
-			return new ListViewItem(item.Texts.ToArray()) { Tag = item };
+			return new ListViewItem(item.Texts.ToArray()) { ImageIndex = item.ImageIndex.Value, Tag = item };
 		}
 
 		private void UpdateListViewItem(ListViewItem item, ListViewItemViewModel viewModel)
@@ -170,6 +171,19 @@ namespace TrainEditor2.Views
 
 				textBox.Text = ((Color24)dialog.Color).ToString();
 			}
+		}
+
+		internal static Icon GetIcon()
+		{
+			return new Icon(OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder(), "icon.ico"));
+		}
+
+		private Bitmap GetImage(string path)
+		{
+			string folder = Program.FileSystem.GetDataFolder("TrainEditor2");
+			Bitmap image = new Bitmap(OpenBveApi.Path.CombineFile(folder, path));
+			image.MakeTransparent();
+			return image;
 		}
 	}
 }

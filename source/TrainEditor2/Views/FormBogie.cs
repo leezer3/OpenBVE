@@ -108,6 +108,11 @@ namespace TrainEditor2.Views
 				.AddTo(disposable);
 		}
 
+		private void FormBogie_Load(object sender, EventArgs e)
+		{
+			Icon = FormEditor.GetIcon();
+		}
+
 		private void ButtonOpen_Click(object sender, EventArgs e)
 		{
 			FormEditor.OpenFileDialog(textBoxObject);

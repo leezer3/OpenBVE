@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 
@@ -264,6 +265,21 @@ namespace TrainEditor2.Extensions
 			{
 				collection.Add(add);
 			}
+		}
+
+		internal static string MakeRelativePath(string baseFile, string targetFile)
+		{
+			if (string.IsNullOrEmpty(baseFile) || string.IsNullOrEmpty(targetFile))
+			{
+				return string.Empty;
+			}
+
+			Uri basePathUri = new Uri($@"{Path.GetDirectoryName(baseFile)}\".Replace("%", "%25"));
+			Uri targetPathUri = new Uri(targetFile.Replace("%", "%25"));
+
+			string relativePath = basePathUri.MakeRelativeUri(targetPathUri).ToString();
+
+			return Uri.UnescapeDataString(relativePath).Replace("%25", "%");
 		}
 	}
 }

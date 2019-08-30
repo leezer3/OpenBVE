@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -17,7 +18,7 @@ namespace TrainEditor2.Extensions
 
 	internal static class StringValueAttributeExtensions
 	{
-		internal static string GetStringValue(this Enum value, int index = 0)
+		internal static IEnumerable<string> GetStringValues(this Enum value)
 		{
 			Type type = value.GetType();
 
@@ -32,10 +33,7 @@ namespace TrainEditor2.Extensions
 
 			if (attributes.Any())
 			{
-				if (index < attributes[0].Values.Length)
-				{
-					return attributes[0].Values[index];
-				}
+				return attributes[0].Values;
 			}
 
 			return null;

@@ -8,6 +8,7 @@ using System.Reactive.Linq;
 using System.Security.Permissions;
 using System.Windows.Forms;
 using OpenBveApi.Interface;
+using Reactive.Bindings;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -300,6 +301,102 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(disposable);
 
+			app.SelectedItem
+				.BindTo(
+					tabControlEditor,
+					x => x.SelectedTab,
+					BindingMode.OneWay,
+					_ =>
+					{
+						TabPage tabPage;
+
+						if (tabControlEditor.SelectedTab.Enabled)
+						{
+							tabPage = tabControlEditor.SelectedTab;
+						}
+						else
+						{
+							tabPage = tabControlEditor.TabPages.OfType<TabPage>().FirstOrDefault(x => x.Enabled);
+						}
+
+						return tabPage;
+					}
+				)
+				.AddTo(disposable);
+
+			app.IsVisibleInfo
+				.ToReadOnlyReactivePropertySlim()
+				.BindTo(
+					toolStripMenuItemInfo,
+					x => x.Checked
+				)
+				.AddTo(disposable);
+
+			app.IsVisibleInfo
+				.ToReadOnlyReactivePropertySlim()
+				.BindTo(
+					toolStripMenuItemInfo,
+					x => x.BackColor,
+					x => x ? SystemColors.GradientActiveCaption : SystemColors.Control
+				)
+				.AddTo(disposable);
+
+			app.IsVisibleWarning
+				.ToReadOnlyReactivePropertySlim()
+				.BindTo(
+					toolStripMenuItemWarning,
+					x => x.Checked
+				)
+				.AddTo(disposable);
+
+			app.IsVisibleWarning
+				.ToReadOnlyReactivePropertySlim()
+				.BindTo(
+					toolStripMenuItemWarning,
+					x => x.BackColor,
+					x => x ? SystemColors.GradientActiveCaption : SystemColors.Control
+				)
+				.AddTo(disposable);
+
+			app.IsVisibleError
+				.ToReadOnlyReactivePropertySlim()
+				.BindTo(
+					toolStripMenuItemError,
+					x => x.Checked
+				)
+				.AddTo(disposable);
+
+			app.IsVisibleError
+				.ToReadOnlyReactivePropertySlim()
+				.BindTo(
+					toolStripMenuItemError,
+					x => x.BackColor,
+					x => x ? SystemColors.GradientActiveCaption : SystemColors.Control
+				)
+				.AddTo(disposable);
+
+			app.VisibleLogMessages
+				.ObserveAddChanged()
+				.Subscribe(y =>
+				{
+					listViewStatus.Items.Add(ListViewItemViewModelToListViewItem(y));
+					listViewStatus.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+				})
+				.AddTo(disposable);
+
+			app.VisibleLogMessages
+				.ObserveRemoveChanged()
+				.Subscribe(y =>
+				{
+					foreach (ListViewItem item in listViewStatus.Items.OfType<ListViewItem>().Where(z => z.Tag == y).ToArray())
+					{
+						listViewStatus.Items.Remove(item);
+					}
+
+					listViewStatus.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+				})
+				.AddTo(disposable);
+
 			app.CreateNewFileCommand.BindToButton(toolStripMenuItemNew).AddTo(disposable);
 
 			new[] { app.UpCarCommand, app.UpCouplerCommand }.BindToButton(buttonCarsUp).AddTo(disposable);
@@ -309,6 +406,12 @@ namespace TrainEditor2.Views
 			app.RemoveCarCommand.BindToButton(buttonCarsRemove).AddTo(disposable);
 
 			app.ChangeCarClass.BindToCheckBox(checkBoxIsMotorCar).AddTo(disposable);
+
+			app.ChangeVisibleLogMessages.BindToButton(MessageType.Information, toolStripMenuItemInfo).AddTo(disposable);
+			app.ChangeVisibleLogMessages.BindToButton(MessageType.Warning, toolStripMenuItemWarning).AddTo(disposable);
+			app.ChangeVisibleLogMessages.BindToButton(MessageType.Error, toolStripMenuItemError).AddTo(disposable);
+			app.ChangeVisibleLogMessages.BindToButton(MessageType.Critical, toolStripMenuItemError).AddTo(disposable);
+			app.ClearLogMessages.BindToButton(toolStripMenuItemClear).AddTo(disposable);
 
 			messageDisposable.AddTo(disposable);
 			trainDisposable.AddTo(disposable);
@@ -336,6 +439,57 @@ namespace TrainEditor2.Views
 						.OfType<object>()
 						.ToArray()
 				);
+
+			Icon = GetIcon();
+
+			toolStripMenuItemError.Image = Bitmap.FromHicon(SystemIcons.Error.Handle);
+			toolStripMenuItemWarning.Image = Bitmap.FromHicon(SystemIcons.Warning.Handle);
+			toolStripMenuItemInfo.Image = Bitmap.FromHicon(SystemIcons.Information.Handle);
+
+			listViewStatus.SmallImageList = new ImageList();
+			listViewStatus.SmallImageList.Images.AddRange(new Image[]
+			{
+				Bitmap.FromHicon(SystemIcons.Information.Handle),
+				Bitmap.FromHicon(SystemIcons.Warning.Handle),
+				Bitmap.FromHicon(SystemIcons.Error.Handle),
+				Bitmap.FromHicon(SystemIcons.Error.Handle)
+			});
+
+			toolStripMenuItemNew.Image = GetImage("new.png");
+			toolStripMenuItemOpen.Image = GetImage("open.png");
+			toolStripMenuItemSave.Image = GetImage("save.png");
+
+			toolStripButtonUndo.Image = GetImage("undo.png");
+			toolStripButtonRedo.Image = GetImage("redo.png");
+			toolStripButtonTearingOff.Image = GetImage("cut.png");
+			toolStripButtonCopy.Image = GetImage("copy.png");
+			toolStripButtonPaste.Image = GetImage("paste.png");
+			toolStripButtonDelete.Image = GetImage("delete.png");
+			toolStripButtonCleanup.Image = GetImage("cleanup.png");
+			toolStripButtonSelect.Image = GetImage("select.png");
+			toolStripButtonMove.Image = GetImage("move.png");
+			toolStripButtonDot.Image = GetImage("draw.png");
+			toolStripButtonLine.Image = GetImage("ruler.png");
+
+			buttonAccelZoomIn.Image = GetImage("zoomin.png");
+			buttonAccelZoomOut.Image = GetImage("zoomout.png");
+			buttonAccelReset.Image = GetImage("reset.png");
+
+			buttonMotorZoomIn.Image = GetImage("zoomin.png");
+			buttonMotorZoomOut.Image = GetImage("zoomout.png");
+			buttonMotorReset.Image = GetImage("reset.png");
+
+			buttonDirectDot.Image = GetImage("draw.png");
+			buttonDirectMove.Image = GetImage("move.png");
+
+			buttonMotorSwap.Image = GetImage("change.png");
+			buttonPlay.Image = GetImage("play.png");
+			buttonPause.Image = GetImage("pause.png");
+			buttonStop.Image = GetImage("stop.png");
+
+			toolStripMenuItemError.PerformClick();
+			toolStripMenuItemWarning.PerformClick();
+			toolStripMenuItemInfo.PerformClick();
 
 			Translations.CurrentLanguageCode = Interface.CurrentOptions.LanguageCode;
 			string folder = Program.FileSystem.GetDataFolder("Languages");

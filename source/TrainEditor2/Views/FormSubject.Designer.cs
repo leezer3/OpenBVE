@@ -153,6 +153,7 @@
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Name = "FormSubject";
 			this.Text = "Subject";
+			this.Load += new System.EventHandler(this.FormSubject_Load);
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBaseOption)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownSuffixOption)).EndInit();
 			this.ResumeLayout(false);

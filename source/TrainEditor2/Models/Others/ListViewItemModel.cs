@@ -6,6 +6,7 @@ namespace TrainEditor2.Models.Others
 	internal class ListViewItemModel : BindableBase
 	{
 		private object tag;
+		private int imageIndex;
 
 		internal ObservableCollection<string> Texts;
 
@@ -21,9 +22,22 @@ namespace TrainEditor2.Models.Others
 			}
 		}
 
+		internal int ImageIndex
+		{
+			get
+			{
+				return imageIndex;
+			}
+			set
+			{
+				SetProperty(ref imageIndex, value);
+			}
+		}
+
 		internal ListViewItemModel()
 		{
 			Texts = new ObservableCollection<string>();
+			ImageIndex = -1;
 		}
 	}
 }

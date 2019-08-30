@@ -200,7 +200,7 @@ namespace TrainEditor2.Views
 
 			comboBoxSoundKey.Enabled = true;
 			comboBoxSoundKey.Items.Clear();
-			comboBoxSoundKey.Items.AddRange(Enum.GetValues(typeof(U)).OfType<Enum>().Select(x => x.GetStringValue()).OfType<object>().ToArray());
+			comboBoxSoundKey.Items.AddRange(Enum.GetValues(typeof(U)).OfType<Enum>().Select(x => x.GetStringValues().First()).OfType<object>().ToArray());
 
 			element.Key
 				.BindTo(

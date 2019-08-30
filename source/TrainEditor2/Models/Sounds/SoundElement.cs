@@ -6,13 +6,13 @@ namespace TrainEditor2.Models.Sounds
 {
 	internal enum BrakeKey
 	{
-		[StringValue("BcReleaseHigh", "ReleaseHigh")]
+		[StringValue("Bc Release High", "ReleaseHigh")]
 		BcReleaseHigh,
 
-		[StringValue("BcRelease", "Release")]
+		[StringValue("Bc Release", "Release")]
 		BcRelease,
 
-		[StringValue("BcReleaseFull", "ReleaseFull")]
+		[StringValue("Bc Release Full", "ReleaseFull")]
 		BcReleaseFull,
 
 		[StringValue("Emergency")]
@@ -36,10 +36,10 @@ namespace TrainEditor2.Models.Sounds
 		[StringValue("ReleaseFast")]
 		ReleaseFast,
 
-		[StringValue("Min")]
+		[StringValue("Min", "Minimum")]
 		Min,
 
-		[StringValue("Max")]
+		[StringValue("Max", "Maximum")]
 		Max
 	}
 
@@ -60,28 +60,28 @@ namespace TrainEditor2.Models.Sounds
 
 	internal enum CompressorKey
 	{
-		[StringValue("Attack")]
+		[StringValue("Attack", "Start")]
 		Attack,
 
 		[StringValue("Loop")]
 		Loop,
 
-		[StringValue("Release")]
+		[StringValue("Release", "Stop", "End")]
 		Release
 	}
 
 	internal enum DoorKey
 	{
-		[StringValue("Open Left", "OpenLeft")]
+		[StringValue("Open Left", "OpenLeft", "LeftOpen")]
 		OpenLeft,
 
-		[StringValue("Close Left", "CloseLeft")]
+		[StringValue("Close Left", "CloseLeft", "LeftClose")]
 		CloseLeft,
 
-		[StringValue("Open Right", "OpenRight")]
+		[StringValue("Open Right", "OpenRight", "RightOpen")]
 		OpenRight,
 
-		[StringValue("Close Right", "CloseRight")]
+		[StringValue("Close Right", "CloseRight", "RightClose")]
 		CloseRight
 	}
 
@@ -93,28 +93,28 @@ namespace TrainEditor2.Models.Sounds
 		[StringValue("Loop")]
 		Loop,
 
-		[StringValue("End")]
+		[StringValue("End", "Release", "Stop")]
 		End
 	}
 
 	internal enum MasterControllerKey
 	{
-		[StringValue("Up")]
+		[StringValue("Up", "Increase")]
 		Up,
 
-		[StringValue("UpFast")]
+		[StringValue("UpFast", "IncreaseFast")]
 		UpFast,
 
-		[StringValue("Down")]
+		[StringValue("Down", "Decrease")]
 		Down,
 
-		[StringValue("DownFast")]
+		[StringValue("DownFast", "DecreaseFast")]
 		DownFast,
 
-		[StringValue("Min")]
+		[StringValue("Min", "Minimum")]
 		Min,
 
-		[StringValue("Max")]
+		[StringValue("Max", "Maximum")]
 		Max
 	}
 

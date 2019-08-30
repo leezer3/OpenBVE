@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
     <LangVersion>6</LangVersion>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>..\..\assets\icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Xaml.Behaviors, Version=1.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Xaml.Behaviors.Wpf.1.0.1\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
@@ -75,6 +78,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +89,20 @@
     <Compile Include="Extensions\ObservableDictionary.cs" />
     <Compile Include="Extensions\StringValueAttribute.cs" />
     <Compile Include="Extensions\Utilities.cs" />
+    <Compile Include="IO\IntermediateFile\Writer.cs" />
+    <Compile Include="IO\Panels\Bve4\Parser.cs" />
+    <Compile Include="IO\Panels\Bve4\Writer.cs" />
+    <Compile Include="IO\Panels\Xml\Parser.cs" />
+    <Compile Include="IO\Panels\Xml\Writer.cs" />
+    <Compile Include="IO\Sounds\Bve2\Parser.cs" />
+    <Compile Include="IO\Sounds\Bve4\Parser.cs" />
+    <Compile Include="IO\Sounds\Bve4\Writer.cs" />
+    <Compile Include="IO\Sounds\Xml\Parser.cs" />
+    <Compile Include="IO\Sounds\Xml\Writer.cs" />
+    <Compile Include="IO\Trains\ExtensionsCfg\Parser.cs" />
+    <Compile Include="IO\Trains\ExtensionsCfg\Writer.cs" />
+    <Compile Include="IO\Trains\TrainDat\Parser.cs" />
+    <Compile Include="IO\Trains\TrainDat\Writer.cs" />
     <Compile Include="Models\App.cs" />
     <Compile Include="Models\Dialogs\BaseDialog.cs" />
     <Compile Include="Models\Dialogs\MessageBox.cs" />

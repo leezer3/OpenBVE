@@ -147,6 +147,7 @@
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Name = "FormDelay";
 			this.Text = "Delay";
+			this.Load += new System.EventHandler(this.FormDelay_Load);
 			this.groupBoxEntry.ResumeLayout(false);
 			this.groupBoxEntry.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
