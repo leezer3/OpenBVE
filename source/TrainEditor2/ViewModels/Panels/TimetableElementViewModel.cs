@@ -40,7 +40,7 @@ namespace TrainEditor2.ViewModels.Panels
 					double result;
 					string message;
 
-					Utilities.TryParse(x, Utilities.NumberRange.Positive, out result, out message);
+					Utilities.TryParse(x, NumberRange.Positive, out result, out message);
 
 					return message;
 				})
@@ -58,7 +58,7 @@ namespace TrainEditor2.ViewModels.Panels
 					double result;
 					string message;
 
-					Utilities.TryParse(x, Utilities.NumberRange.Positive, out result, out message);
+					Utilities.TryParse(x, NumberRange.Positive, out result, out message);
 
 					return message;
 				})

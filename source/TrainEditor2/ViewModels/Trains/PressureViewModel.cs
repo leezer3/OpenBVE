@@ -69,7 +69,7 @@ namespace TrainEditor2.ViewModels.Trains
 					double result;
 					string message;
 
-					Utilities.TryParse(x, Utilities.NumberRange.Positive, out result, out message);
+					Utilities.TryParse(x, NumberRange.Positive, out result, out message);
 
 					return message;
 				})
@@ -87,7 +87,7 @@ namespace TrainEditor2.ViewModels.Trains
 					double result;
 					string message;
 
-					Utilities.TryParse(x, Utilities.NumberRange.Positive, out result, out message);
+					Utilities.TryParse(x, NumberRange.Positive, out result, out message);
 
 					return message;
 				})
@@ -105,7 +105,7 @@ namespace TrainEditor2.ViewModels.Trains
 					double result;
 					string message;
 
-					Utilities.TryParse(x, Utilities.NumberRange.Positive, out result, out message);
+					Utilities.TryParse(x, NumberRange.Positive, out result, out message);
 
 					return message;
 				})
@@ -117,11 +117,11 @@ namespace TrainEditor2.ViewModels.Trains
 					double service;
 					string message;
 
-					if (Utilities.TryParse(x, Utilities.NumberRange.Positive, out service, out message))
+					if (Utilities.TryParse(x, NumberRange.Positive, out service, out message))
 					{
 						double emergency;
 
-						if (Utilities.TryParse(BrakeCylinderEmergencyMaximumPressure.Value, Utilities.NumberRange.Positive, out emergency) && service > emergency)
+						if (Utilities.TryParse(BrakeCylinderEmergencyMaximumPressure.Value, NumberRange.Positive, out emergency) && service > emergency)
 						{
 							return "The BrakeCylinderEmergencyMaximumPressure is required to be greater than or equal to BrakeCylinderServiceMaximumPressure.";
 						}
@@ -144,11 +144,11 @@ namespace TrainEditor2.ViewModels.Trains
 					double emergency;
 					string message;
 
-					if (Utilities.TryParse(x, Utilities.NumberRange.Positive, out emergency, out message))
+					if (Utilities.TryParse(x, NumberRange.Positive, out emergency, out message))
 					{
 						double service;
 
-						if (Utilities.TryParse(BrakeCylinderServiceMaximumPressure.Value, Utilities.NumberRange.Positive, out service) && emergency < service)
+						if (Utilities.TryParse(BrakeCylinderServiceMaximumPressure.Value, NumberRange.Positive, out service) && emergency < service)
 						{
 							return "The BrakeCylinderEmergencyMaximumPressure is required to be greater than or equal to BrakeCylinderServiceMaximumPressure.";
 						}

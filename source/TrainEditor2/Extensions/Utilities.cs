@@ -8,6 +8,14 @@ using OpenBveApi.Interface;
 
 namespace TrainEditor2.Extensions
 {
+	internal enum NumberRange
+	{
+		Any,
+		Positive,
+		NonNegative,
+		NonZero
+	}
+
 	internal static class Utilities
 	{
 		internal const double HueFactor = 0.785398163397448;
@@ -15,14 +23,6 @@ namespace TrainEditor2.Extensions
 		internal static string GetInterfaceString(params string[] ids)
 		{
 			return Translations.GetInterfaceString($"train_editor2_{string.Join("_", ids)}");
-		}
-
-		internal enum NumberRange
-		{
-			Any,
-			Positive,
-			NonNegative,
-			NonZero
 		}
 
 		internal static bool TryParse(string text, NumberRange range, out double result)

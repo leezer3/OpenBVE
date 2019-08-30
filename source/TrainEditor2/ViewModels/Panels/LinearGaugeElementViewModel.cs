@@ -104,7 +104,7 @@ namespace TrainEditor2.ViewModels.Panels
 					double result;
 					string message;
 
-					Utilities.TryParse(x, Utilities.NumberRange.Any, out result, out message);
+					Utilities.TryParse(x, NumberRange.Any, out result, out message);
 
 					return message;
 				})
@@ -122,7 +122,7 @@ namespace TrainEditor2.ViewModels.Panels
 					double result;
 					string message;
 
-					Utilities.TryParse(x, Utilities.NumberRange.Any, out result, out message);
+					Utilities.TryParse(x, NumberRange.Any, out result, out message);
 
 					return message;
 				})

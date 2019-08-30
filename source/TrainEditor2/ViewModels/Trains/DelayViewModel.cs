@@ -36,7 +36,7 @@ namespace TrainEditor2.ViewModels.Trains
 						double result;
 						string message;
 
-						Utilities.TryParse(x, Utilities.NumberRange.NonNegative, out result, out message);
+						Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
 
 						return message;
 					})
@@ -54,7 +54,7 @@ namespace TrainEditor2.ViewModels.Trains
 						double result;
 						string message;
 
-						Utilities.TryParse(x, Utilities.NumberRange.NonNegative, out result, out message);
+						Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
 
 						return message;
 					})

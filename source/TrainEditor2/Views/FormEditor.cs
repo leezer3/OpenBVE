@@ -101,12 +101,64 @@ namespace TrainEditor2.Views
 			}
 		}
 
+		private TreeNode TreeViewSoundTopNode
+		{
+			get
+			{
+				if (treeViewSound.Nodes.Count == 0)
+				{
+					treeViewSound.Nodes.Add(new TreeNode());
+				}
+
+				return treeViewSound.Nodes[0];
+			}
+			// ReSharper disable once UnusedMember.Local
+			set
+			{
+				treeViewSound.Nodes.Clear();
+				treeViewSound.Nodes.Add(value);
+				treeViewSound.ExpandAll();
+				treeViewSound.SelectedNode = treeViewSound.Nodes
+					.OfType<TreeNode>()
+					.Select(z => SearchTreeNode(app.Sound.Value.SelectedTreeItem.Value, z))
+					.FirstOrDefault(z => z != null);
+				app.Sound.Value.SelectedTreeItem.ForceNotify();
+			}
+		}
+
+		private ListViewItem ListViewSoundSelectedItem
+		{
+			get
+			{
+				if (listViewSound.SelectedItems.Count == 1)
+				{
+					return listViewSound.SelectedItems[0];
+				}
+
+				return null;
+			}
+			// ReSharper disable once UnusedMember.Local
+			set
+			{
+				foreach (ListViewItem item in listViewSound.Items.OfType<ListViewItem>().Where(x => x.Selected))
+				{
+					item.Selected = false;
+				}
+
+				if (value != null)
+				{
+					value.Selected = true;
+				}
+			}
+		}
+
 		public FormEditor()
 		{
 			disposable = new CompositeDisposable();
 			CompositeDisposable messageDisposable = new CompositeDisposable();
 			CompositeDisposable trainDisposable = new CompositeDisposable();
 			CompositeDisposable panelDisposable = new CompositeDisposable();
+			CompositeDisposable soundDisposable = new CompositeDisposable();
 
 			app = new AppViewModel();
 
@@ -147,6 +199,16 @@ namespace TrainEditor2.Views
 					panelDisposable = new CompositeDisposable();
 
 					BindToPanel(x).AddTo(panelDisposable);
+				})
+				.AddTo(disposable);
+
+			app.Sound
+				.Subscribe(x =>
+				{
+					soundDisposable.Dispose();
+					soundDisposable = new CompositeDisposable();
+
+					BindToSound(x).AddTo(soundDisposable);
 				})
 				.AddTo(disposable);
 
@@ -251,6 +313,7 @@ namespace TrainEditor2.Views
 			messageDisposable.AddTo(disposable);
 			trainDisposable.AddTo(disposable);
 			panelDisposable.AddTo(disposable);
+			soundDisposable.AddTo(disposable);
 		}
 
 		private void FormEditor_Load(object sender, EventArgs e)
@@ -610,6 +673,11 @@ namespace TrainEditor2.Views
 		private void ButtonTimetableTransparentColorSet_Click(object sender, EventArgs e)
 		{
 			OpenColorDialog(textBoxTimetableTransparentColor);
+		}
+
+		private void ButtonSoundFileNameOpen_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog(textBoxSoundFileName);
 		}
 	}
 }

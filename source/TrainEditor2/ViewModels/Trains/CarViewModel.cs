@@ -82,11 +82,11 @@ namespace TrainEditor2.ViewModels.Trains
 						double front;
 						string message;
 
-						if (Utilities.TryParse(x, Utilities.NumberRange.Any, out front, out message))
+						if (Utilities.TryParse(x, NumberRange.Any, out front, out message))
 						{
 							double rear;
 
-							if (DefinedAxles.Value && Utilities.TryParse(RearAxle.Value, Utilities.NumberRange.Any, out rear) && front <= rear)
+							if (DefinedAxles.Value && Utilities.TryParse(RearAxle.Value, NumberRange.Any, out rear) && front <= rear)
 							{
 								message = "RearAxleはFrontAxle未満でなければなりません。";
 							}
@@ -108,11 +108,11 @@ namespace TrainEditor2.ViewModels.Trains
 						double rear;
 						string message;
 
-						if (Utilities.TryParse(x, Utilities.NumberRange.Any, out rear, out message))
+						if (Utilities.TryParse(x, NumberRange.Any, out rear, out message))
 						{
 							double front;
 
-							if (DefinedAxles.Value && Utilities.TryParse(FrontAxle.Value, Utilities.NumberRange.Any, out front) && rear >= front)
+							if (DefinedAxles.Value && Utilities.TryParse(FrontAxle.Value, NumberRange.Any, out front) && rear >= front)
 							{
 								message = "RearAxleはFrontAxle未満でなければなりません。";
 							}
@@ -254,7 +254,7 @@ namespace TrainEditor2.ViewModels.Trains
 					double result;
 					string message;
 
-					Utilities.TryParse(x, Utilities.NumberRange.Positive, out result, out message);
+					Utilities.TryParse(x, NumberRange.Positive, out result, out message);
 
 					return message;
 				})
@@ -272,7 +272,7 @@ namespace TrainEditor2.ViewModels.Trains
 					double result;
 					string message;
 
-					Utilities.TryParse(x, Utilities.NumberRange.Positive, out result, out message);
+					Utilities.TryParse(x, NumberRange.Positive, out result, out message);
 
 					return message;
 				})
@@ -290,7 +290,7 @@ namespace TrainEditor2.ViewModels.Trains
 					double result;
 					string message;
 
-					Utilities.TryParse(x, Utilities.NumberRange.Positive, out result, out message);
+					Utilities.TryParse(x, NumberRange.Positive, out result, out message);
 
 					return message;
 				})
@@ -308,7 +308,7 @@ namespace TrainEditor2.ViewModels.Trains
 					double result;
 					string message;
 
-					Utilities.TryParse(x, Utilities.NumberRange.Positive, out result, out message);
+					Utilities.TryParse(x, NumberRange.Positive, out result, out message);
 
 					return message;
 				})
@@ -326,7 +326,7 @@ namespace TrainEditor2.ViewModels.Trains
 					double result;
 					string message;
 
-					Utilities.TryParse(x, Utilities.NumberRange.Any, out result, out message);
+					Utilities.TryParse(x, NumberRange.Any, out result, out message);
 
 					return message;
 				})
@@ -380,7 +380,7 @@ namespace TrainEditor2.ViewModels.Trains
 					double result;
 					string message;
 
-					Utilities.TryParse(x, Utilities.NumberRange.Positive, out result, out message);
+					Utilities.TryParse(x, NumberRange.Positive, out result, out message);
 
 					return message;
 				})
@@ -398,7 +398,7 @@ namespace TrainEditor2.ViewModels.Trains
 					double result;
 					string message;
 
-					Utilities.TryParse(x, Utilities.NumberRange.Positive, out result, out message);
+					Utilities.TryParse(x, NumberRange.Positive, out result, out message);
 
 					return message;
 				})
@@ -462,11 +462,11 @@ namespace TrainEditor2.ViewModels.Trains
 					double front;
 					string message;
 
-					if (Utilities.TryParse(x, Utilities.NumberRange.Any, out front, out message))
+					if (Utilities.TryParse(x, NumberRange.Any, out front, out message))
 					{
 						double rear;
 
-						if (DefinedAxles.Value && Utilities.TryParse(RearAxle.Value, Utilities.NumberRange.Any, out rear) && front <= rear)
+						if (DefinedAxles.Value && Utilities.TryParse(RearAxle.Value, NumberRange.Any, out rear) && front <= rear)
 						{
 							message = "RearAxleはFrontAxle未満でなければなりません。";
 						}
@@ -488,11 +488,11 @@ namespace TrainEditor2.ViewModels.Trains
 					double rear;
 					string message;
 
-					if (Utilities.TryParse(x, Utilities.NumberRange.Any, out rear, out message))
+					if (Utilities.TryParse(x, NumberRange.Any, out rear, out message))
 					{
 						double front;
 
-						if (DefinedAxles.Value && Utilities.TryParse(FrontAxle.Value, Utilities.NumberRange.Any, out front) && rear >= front)
+						if (DefinedAxles.Value && Utilities.TryParse(FrontAxle.Value, NumberRange.Any, out front) && rear >= front)
 						{
 							message = "RearAxleはFrontAxle未満でなければなりません。";
 						}

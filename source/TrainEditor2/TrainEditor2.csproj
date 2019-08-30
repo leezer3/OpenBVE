@@ -83,6 +83,7 @@
     <Compile Include="Extensions\Binders.cs" />
     <Compile Include="Extensions\CollectionBasedDictionary.cs" />
     <Compile Include="Extensions\ObservableDictionary.cs" />
+    <Compile Include="Extensions\StringValueAttribute.cs" />
     <Compile Include="Extensions\Utilities.cs" />
     <Compile Include="Models\App.cs" />
     <Compile Include="Models\Dialogs\BaseDialog.cs" />
@@ -104,6 +105,8 @@
     <Compile Include="Models\Panels\This.cs" />
     <Compile Include="Models\Panels\TimetableElement.cs" />
     <Compile Include="Models\Panels\TouchElement.cs" />
+    <Compile Include="Models\Sounds\Sound.cs" />
+    <Compile Include="Models\Sounds\SoundElement.cs" />
     <Compile Include="Models\Trains\Acceleration.cs" />
     <Compile Include="Models\Trains\Brake.cs" />
     <Compile Include="Models\Trains\Cab.cs" />
@@ -142,6 +145,8 @@
     <Compile Include="ViewModels\Panels\ThisViewModel.cs" />
     <Compile Include="ViewModels\Panels\TimetableElementViewModel.cs" />
     <Compile Include="ViewModels\Panels\TouchElementViewModel.cs" />
+    <Compile Include="ViewModels\Sounds\SoundElementViewModel.cs" />
+    <Compile Include="ViewModels\Sounds\SoundViewModel.cs" />
     <Compile Include="ViewModels\Trains\AccelerationViewModel.cs" />
     <Compile Include="ViewModels\Trains\BrakeViewModel.cs" />
     <Compile Include="ViewModels\Trains\CabViewModel.cs" />
@@ -233,6 +238,12 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\FormEditor.Screen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.Sound.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.SoundElement.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\FormEditor.This.cs">

@@ -575,16 +575,12 @@ namespace TrainEditor2.Views
 			this.labelTouchLocationX = new System.Windows.Forms.Label();
 			this.tabPageSound = new System.Windows.Forms.TabPage();
 			this.panelSoundSetting = new System.Windows.Forms.Panel();
+			this.splitContainerSound = new System.Windows.Forms.SplitContainer();
+			this.treeViewSound = new System.Windows.Forms.TreeView();
 			this.listViewSound = new System.Windows.Forms.ListView();
-			this.columnHeaderKey = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-			this.columnHeaderFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-			this.columnHeaderPosition = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-			this.columnHeaderRadius = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.panelSoundSettingEdit = new System.Windows.Forms.Panel();
 			this.groupBoxSoundEntry = new System.Windows.Forms.GroupBox();
 			this.buttonSoundApply = new System.Windows.Forms.Button();
-			this.groupBoxSoundSection = new System.Windows.Forms.GroupBox();
-			this.comboBoxSoundSection = new System.Windows.Forms.ComboBox();
 			this.buttonSoundRemove = new System.Windows.Forms.Button();
 			this.groupBoxSoundKey = new System.Windows.Forms.GroupBox();
 			this.numericUpDownSoundKeyIndex = new System.Windows.Forms.NumericUpDown();
@@ -729,9 +725,12 @@ namespace TrainEditor2.Views
 			this.groupBoxTouchLocation.SuspendLayout();
 			this.tabPageSound.SuspendLayout();
 			this.panelSoundSetting.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainerSound)).BeginInit();
+			this.splitContainerSound.Panel1.SuspendLayout();
+			this.splitContainerSound.Panel2.SuspendLayout();
+			this.splitContainerSound.SuspendLayout();
 			this.panelSoundSettingEdit.SuspendLayout();
 			this.groupBoxSoundEntry.SuspendLayout();
-			this.groupBoxSoundSection.SuspendLayout();
 			this.groupBoxSoundKey.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownSoundKeyIndex)).BeginInit();
 			this.groupBoxSoundValue.SuspendLayout();
@@ -5957,7 +5956,7 @@ namespace TrainEditor2.Views
 			// 
 			// panelSoundSetting
 			// 
-			this.panelSoundSetting.Controls.Add(this.listViewSound);
+			this.panelSoundSetting.Controls.Add(this.splitContainerSound);
 			this.panelSoundSetting.Controls.Add(this.panelSoundSettingEdit);
 			this.panelSoundSetting.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panelSoundSetting.Location = new System.Drawing.Point(3, 3);
@@ -5965,39 +5964,44 @@ namespace TrainEditor2.Views
 			this.panelSoundSetting.Size = new System.Drawing.Size(786, 664);
 			this.panelSoundSetting.TabIndex = 0;
 			// 
+			// splitContainerSound
+			// 
+			this.splitContainerSound.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainerSound.Location = new System.Drawing.Point(0, 0);
+			this.splitContainerSound.Name = "splitContainerSound";
+			// 
+			// splitContainerSound.Panel1
+			// 
+			this.splitContainerSound.Panel1.Controls.Add(this.treeViewSound);
+			// 
+			// splitContainerSound.Panel2
+			// 
+			this.splitContainerSound.Panel2.Controls.Add(this.listViewSound);
+			this.splitContainerSound.Size = new System.Drawing.Size(570, 664);
+			this.splitContainerSound.SplitterDistance = 190;
+			this.splitContainerSound.TabIndex = 2;
+			// 
+			// treeViewSound
+			// 
+			this.treeViewSound.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.treeViewSound.HideSelection = false;
+			this.treeViewSound.Location = new System.Drawing.Point(0, 0);
+			this.treeViewSound.Name = "treeViewSound";
+			this.treeViewSound.Size = new System.Drawing.Size(190, 664);
+			this.treeViewSound.TabIndex = 0;
+			// 
 			// listViewSound
 			// 
-			this.listViewSound.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeaderKey,
-            this.columnHeaderFileName,
-            this.columnHeaderPosition,
-            this.columnHeaderRadius});
 			this.listViewSound.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.listViewSound.FullRowSelect = true;
 			this.listViewSound.HideSelection = false;
 			this.listViewSound.Location = new System.Drawing.Point(0, 0);
 			this.listViewSound.MultiSelect = false;
 			this.listViewSound.Name = "listViewSound";
-			this.listViewSound.Size = new System.Drawing.Size(570, 664);
+			this.listViewSound.Size = new System.Drawing.Size(376, 664);
 			this.listViewSound.TabIndex = 0;
 			this.listViewSound.UseCompatibleStateImageBehavior = false;
 			this.listViewSound.View = System.Windows.Forms.View.Details;
-			// 
-			// columnHeaderKey
-			// 
-			this.columnHeaderKey.Text = "Key";
-			// 
-			// columnHeaderFileName
-			// 
-			this.columnHeaderFileName.Text = "Filename";
-			// 
-			// columnHeaderPosition
-			// 
-			this.columnHeaderPosition.Text = "Position";
-			// 
-			// columnHeaderRadius
-			// 
-			this.columnHeaderRadius.Text = "Radius";
 			// 
 			// panelSoundSettingEdit
 			// 
@@ -6012,49 +6016,29 @@ namespace TrainEditor2.Views
 			// 
 			this.groupBoxSoundEntry.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBoxSoundEntry.Controls.Add(this.buttonSoundApply);
-			this.groupBoxSoundEntry.Controls.Add(this.groupBoxSoundSection);
 			this.groupBoxSoundEntry.Controls.Add(this.buttonSoundRemove);
 			this.groupBoxSoundEntry.Controls.Add(this.groupBoxSoundKey);
 			this.groupBoxSoundEntry.Controls.Add(this.buttonSoundAdd);
 			this.groupBoxSoundEntry.Controls.Add(this.groupBoxSoundValue);
-			this.groupBoxSoundEntry.Location = new System.Drawing.Point(8, 264);
+			this.groupBoxSoundEntry.Location = new System.Drawing.Point(8, 320);
 			this.groupBoxSoundEntry.Name = "groupBoxSoundEntry";
-			this.groupBoxSoundEntry.Size = new System.Drawing.Size(200, 392);
+			this.groupBoxSoundEntry.Size = new System.Drawing.Size(200, 336);
 			this.groupBoxSoundEntry.TabIndex = 6;
 			this.groupBoxSoundEntry.TabStop = false;
 			this.groupBoxSoundEntry.Text = "Edit entry";
 			// 
 			// buttonSoundApply
 			// 
-			this.buttonSoundApply.Location = new System.Drawing.Point(136, 360);
+			this.buttonSoundApply.Location = new System.Drawing.Point(136, 304);
 			this.buttonSoundApply.Name = "buttonSoundApply";
 			this.buttonSoundApply.Size = new System.Drawing.Size(56, 24);
 			this.buttonSoundApply.TabIndex = 5;
 			this.buttonSoundApply.Text = "Apply";
 			this.buttonSoundApply.UseVisualStyleBackColor = true;
 			// 
-			// groupBoxSoundSection
-			// 
-			this.groupBoxSoundSection.Controls.Add(this.comboBoxSoundSection);
-			this.groupBoxSoundSection.Location = new System.Drawing.Point(8, 16);
-			this.groupBoxSoundSection.Name = "groupBoxSoundSection";
-			this.groupBoxSoundSection.Size = new System.Drawing.Size(184, 48);
-			this.groupBoxSoundSection.TabIndex = 0;
-			this.groupBoxSoundSection.TabStop = false;
-			this.groupBoxSoundSection.Text = "Section select";
-			// 
-			// comboBoxSoundSection
-			// 
-			this.comboBoxSoundSection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxSoundSection.FormattingEnabled = true;
-			this.comboBoxSoundSection.Location = new System.Drawing.Point(8, 16);
-			this.comboBoxSoundSection.Name = "comboBoxSoundSection";
-			this.comboBoxSoundSection.Size = new System.Drawing.Size(120, 20);
-			this.comboBoxSoundSection.TabIndex = 0;
-			// 
 			// buttonSoundRemove
 			// 
-			this.buttonSoundRemove.Location = new System.Drawing.Point(72, 360);
+			this.buttonSoundRemove.Location = new System.Drawing.Point(72, 304);
 			this.buttonSoundRemove.Name = "buttonSoundRemove";
 			this.buttonSoundRemove.Size = new System.Drawing.Size(56, 24);
 			this.buttonSoundRemove.TabIndex = 4;
@@ -6065,7 +6049,7 @@ namespace TrainEditor2.Views
 			// 
 			this.groupBoxSoundKey.Controls.Add(this.numericUpDownSoundKeyIndex);
 			this.groupBoxSoundKey.Controls.Add(this.comboBoxSoundKey);
-			this.groupBoxSoundKey.Location = new System.Drawing.Point(8, 72);
+			this.groupBoxSoundKey.Location = new System.Drawing.Point(8, 16);
 			this.groupBoxSoundKey.Name = "groupBoxSoundKey";
 			this.groupBoxSoundKey.Size = new System.Drawing.Size(184, 48);
 			this.groupBoxSoundKey.TabIndex = 1;
@@ -6090,7 +6074,7 @@ namespace TrainEditor2.Views
 			// 
 			// buttonSoundAdd
 			// 
-			this.buttonSoundAdd.Location = new System.Drawing.Point(8, 360);
+			this.buttonSoundAdd.Location = new System.Drawing.Point(8, 304);
 			this.buttonSoundAdd.Name = "buttonSoundAdd";
 			this.buttonSoundAdd.Size = new System.Drawing.Size(56, 24);
 			this.buttonSoundAdd.TabIndex = 3;
@@ -6106,7 +6090,7 @@ namespace TrainEditor2.Views
 			this.groupBoxSoundValue.Controls.Add(this.labelSoundFileName);
 			this.groupBoxSoundValue.Controls.Add(this.buttonSoundFileNameOpen);
 			this.groupBoxSoundValue.Controls.Add(this.textBoxSoundFileName);
-			this.groupBoxSoundValue.Location = new System.Drawing.Point(8, 128);
+			this.groupBoxSoundValue.Location = new System.Drawing.Point(8, 72);
 			this.groupBoxSoundValue.Name = "groupBoxSoundValue";
 			this.groupBoxSoundValue.Size = new System.Drawing.Size(184, 224);
 			this.groupBoxSoundValue.TabIndex = 2;
@@ -6248,6 +6232,7 @@ namespace TrainEditor2.Views
 			this.buttonSoundFileNameOpen.TabIndex = 1;
 			this.buttonSoundFileNameOpen.Text = "Open...";
 			this.buttonSoundFileNameOpen.UseVisualStyleBackColor = true;
+			this.buttonSoundFileNameOpen.Click += new System.EventHandler(this.ButtonSoundFileNameOpen_Click);
 			// 
 			// textBoxSoundFileName
 			// 
@@ -6669,9 +6654,12 @@ namespace TrainEditor2.Views
 			this.groupBoxTouchLocation.PerformLayout();
 			this.tabPageSound.ResumeLayout(false);
 			this.panelSoundSetting.ResumeLayout(false);
+			this.splitContainerSound.Panel1.ResumeLayout(false);
+			this.splitContainerSound.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainerSound)).EndInit();
+			this.splitContainerSound.ResumeLayout(false);
 			this.panelSoundSettingEdit.ResumeLayout(false);
 			this.groupBoxSoundEntry.ResumeLayout(false);
-			this.groupBoxSoundSection.ResumeLayout(false);
 			this.groupBoxSoundKey.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownSoundKeyIndex)).EndInit();
 			this.groupBoxSoundValue.ResumeLayout(false);
@@ -7189,15 +7177,9 @@ namespace TrainEditor2.Views
 		private System.Windows.Forms.TabPage tabPageSound;
 		private System.Windows.Forms.Panel panelSoundSetting;
 		private System.Windows.Forms.ListView listViewSound;
-		private System.Windows.Forms.ColumnHeader columnHeaderKey;
-		private System.Windows.Forms.ColumnHeader columnHeaderFileName;
-		private System.Windows.Forms.ColumnHeader columnHeaderPosition;
-		private System.Windows.Forms.ColumnHeader columnHeaderRadius;
 		private System.Windows.Forms.Panel panelSoundSettingEdit;
 		private System.Windows.Forms.GroupBox groupBoxSoundEntry;
 		private System.Windows.Forms.Button buttonSoundApply;
-		private System.Windows.Forms.GroupBox groupBoxSoundSection;
-		private System.Windows.Forms.ComboBox comboBoxSoundSection;
 		private System.Windows.Forms.Button buttonSoundRemove;
 		private System.Windows.Forms.GroupBox groupBoxSoundKey;
 		private System.Windows.Forms.NumericUpDown numericUpDownSoundKeyIndex;
@@ -7301,5 +7283,7 @@ namespace TrainEditor2.Views
 		private System.Windows.Forms.TextBox textBoxBrakePipeNormalPressure;
 		private System.Windows.Forms.Label labelBrakePipeNormalPressure;
 		private System.Windows.Forms.ErrorProvider errorProvider;
+		private SplitContainer splitContainerSound;
+		private TreeView treeViewSound;
 	}
 }

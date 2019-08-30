@@ -54,11 +54,11 @@ namespace TrainEditor2.ViewModels.Trains
 					double min;
 					string message;
 
-					if (Utilities.TryParse(x, Utilities.NumberRange.Any, out min, out message))
+					if (Utilities.TryParse(x, NumberRange.Any, out min, out message))
 					{
 						double max;
 
-						if (Utilities.TryParse(Max.Value, Utilities.NumberRange.Any, out max) && min > max)
+						if (Utilities.TryParse(Max.Value, NumberRange.Any, out max) && min > max)
 						{
 							message = "MaxはMin以上でなければなりません。";
 						}
@@ -80,11 +80,11 @@ namespace TrainEditor2.ViewModels.Trains
 					double max;
 					string message;
 
-					if (Utilities.TryParse(x, Utilities.NumberRange.Any, out max, out message))
+					if (Utilities.TryParse(x, NumberRange.Any, out max, out message))
 					{
 						double min;
 
-						if (Utilities.TryParse(Min.Value, Utilities.NumberRange.Any, out min) && max < min)
+						if (Utilities.TryParse(Min.Value, NumberRange.Any, out min) && max < min)
 						{
 							message = "MaxはMin以上でなければなりません。";
 						}

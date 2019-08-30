@@ -71,6 +71,7 @@ namespace TrainEditor2.Models.Panels
 
 		internal ObservableCollection<Screen> Screens;
 		internal ObservableCollection<PanelElement> PanelElements;
+
 		internal ObservableCollection<ListViewColumnHeaderModel> ListColumns;
 		internal ObservableCollection<ListViewItemModel> ListItems;
 
@@ -92,11 +93,12 @@ namespace TrainEditor2.Models.Panels
 		public object Clone()
 		{
 			Panel panel = (Panel)MemberwiseClone();
+
 			panel.Screens = new ObservableCollection<Screen>(Screens.Select(s => (Screen)s.Clone()));
 			panel.PanelElements = new ObservableCollection<PanelElement>(PanelElements.Select(e => (PanelElement)e.Clone()));
 
-			ListColumns = new ObservableCollection<ListViewColumnHeaderModel>();
-			ListItems = new ObservableCollection<ListViewItemModel>();
+			panel.ListColumns = new ObservableCollection<ListViewColumnHeaderModel>();
+			panel.ListItems = new ObservableCollection<ListViewItemModel>();
 
 			panel.CreateTreeItem();
 			panel.SelectedTreeItem = panel.TreeItem;

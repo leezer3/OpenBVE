@@ -55,7 +55,7 @@ namespace TrainEditor2.ViewModels.Trains
 						double result;
 						string message;
 
-						Utilities.TryParse(x, Utilities.NumberRange.Positive, out result, out message);
+						Utilities.TryParse(x, NumberRange.Positive, out result, out message);
 
 						return message;
 					})
@@ -73,7 +73,7 @@ namespace TrainEditor2.ViewModels.Trains
 						double result;
 						string message;
 
-						Utilities.TryParse(x, Utilities.NumberRange.Positive, out result, out message);
+						Utilities.TryParse(x, NumberRange.Positive, out result, out message);
 
 						return message;
 					})
@@ -91,7 +91,7 @@ namespace TrainEditor2.ViewModels.Trains
 						double result;
 						string message;
 
-						Utilities.TryParse(x, Utilities.NumberRange.Positive, out result, out message);
+						Utilities.TryParse(x, NumberRange.Positive, out result, out message);
 
 						return message;
 					})
@@ -109,7 +109,7 @@ namespace TrainEditor2.ViewModels.Trains
 						double result;
 						string message;
 
-						Utilities.TryParse(x, Utilities.NumberRange.Positive, out result, out message);
+						Utilities.TryParse(x, NumberRange.Positive, out result, out message);
 
 						return message;
 					})
@@ -127,7 +127,7 @@ namespace TrainEditor2.ViewModels.Trains
 						double result;
 						string message;
 
-						Utilities.TryParse(x, Utilities.NumberRange.Positive, out result, out message);
+						Utilities.TryParse(x, NumberRange.Positive, out result, out message);
 
 						return message;
 					})
@@ -380,11 +380,11 @@ namespace TrainEditor2.ViewModels.Trains
 					double min;
 					string message;
 
-					if (Utilities.TryParse(x, Utilities.NumberRange.NonNegative, out min, out message))
+					if (Utilities.TryParse(x, NumberRange.NonNegative, out min, out message))
 					{
 						double max;
 
-						if (Utilities.TryParse(MaxVelocity.Value, Utilities.NumberRange.NonNegative, out max) && min >= max)
+						if (Utilities.TryParse(MaxVelocity.Value, NumberRange.NonNegative, out max) && min >= max)
 						{
 							message = "MinはMax未満でなければなりません。";
 						}
@@ -407,11 +407,11 @@ namespace TrainEditor2.ViewModels.Trains
 					double max;
 					string message;
 
-					if (Utilities.TryParse(x, Utilities.NumberRange.NonNegative, out max, out message))
+					if (Utilities.TryParse(x, NumberRange.NonNegative, out max, out message))
 					{
 						double min;
 
-						if (Utilities.TryParse(MinVelocity.Value, Utilities.NumberRange.NonNegative, out min) && max <= min)
+						if (Utilities.TryParse(MinVelocity.Value, NumberRange.NonNegative, out min) && max <= min)
 						{
 							message = "MinはMax未満でなければなりません。";
 						}
@@ -434,11 +434,11 @@ namespace TrainEditor2.ViewModels.Trains
 					double min;
 					string message;
 
-					if (Utilities.TryParse(x, Utilities.NumberRange.NonNegative, out min, out message))
+					if (Utilities.TryParse(x, NumberRange.NonNegative, out min, out message))
 					{
 						double max;
 
-						if (Utilities.TryParse(MaxAcceleration.Value, Utilities.NumberRange.NonNegative, out max) && min >= max)
+						if (Utilities.TryParse(MaxAcceleration.Value, NumberRange.NonNegative, out max) && min >= max)
 						{
 							message = "MinはMax未満でなければなりません。";
 						}
@@ -461,11 +461,11 @@ namespace TrainEditor2.ViewModels.Trains
 					double max;
 					string message;
 
-					if (Utilities.TryParse(x, Utilities.NumberRange.NonNegative, out max, out message))
+					if (Utilities.TryParse(x, NumberRange.NonNegative, out max, out message))
 					{
 						double min;
 
-						if (Utilities.TryParse(MinAcceleration.Value, Utilities.NumberRange.NonNegative, out min) && max <= min)
+						if (Utilities.TryParse(MinAcceleration.Value, NumberRange.NonNegative, out min) && max <= min)
 						{
 							message = "MinはMax未満でなければなりません。";
 						}

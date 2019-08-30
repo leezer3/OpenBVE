@@ -432,10 +432,10 @@ namespace TrainEditor2.ViewModels.Trains
 					switch (CurrentToolMode.Value)
 					{
 						case Motor.ToolMode.Move:
-							Utilities.TryParse(x, Utilities.NumberRange.Any, out result, out message);
+							Utilities.TryParse(x, NumberRange.Any, out result, out message);
 							break;
 						case Motor.ToolMode.Dot:
-							Utilities.TryParse(x, Utilities.NumberRange.NonNegative, out result, out message);
+							Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
 							break;
 						default:
 							message = null;
@@ -454,10 +454,10 @@ namespace TrainEditor2.ViewModels.Trains
 					switch (CurrentToolMode.Value)
 					{
 						case Motor.ToolMode.Move:
-							Utilities.TryParse(x, Utilities.NumberRange.Any, out result, out message);
+							Utilities.TryParse(x, NumberRange.Any, out result, out message);
 							break;
 						case Motor.ToolMode.Dot:
-							Utilities.TryParse(x, Utilities.NumberRange.NonNegative, out result, out message);
+							Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
 							break;
 						default:
 							message = null;
@@ -648,11 +648,11 @@ namespace TrainEditor2.ViewModels.Trains
 					double min;
 					string message;
 
-					if (Utilities.TryParse(x, Utilities.NumberRange.NonNegative, out min, out message))
+					if (Utilities.TryParse(x, NumberRange.NonNegative, out min, out message))
 					{
 						double max;
 
-						if (Utilities.TryParse(MaxVelocity.Value, Utilities.NumberRange.NonNegative, out max) && min >= max)
+						if (Utilities.TryParse(MaxVelocity.Value, NumberRange.NonNegative, out max) && min >= max)
 						{
 							message = "MinはMax未満でなければなりません。";
 						}
@@ -675,11 +675,11 @@ namespace TrainEditor2.ViewModels.Trains
 					double max;
 					string message;
 
-					if (Utilities.TryParse(x, Utilities.NumberRange.NonNegative, out max, out message))
+					if (Utilities.TryParse(x, NumberRange.NonNegative, out max, out message))
 					{
 						double min;
 
-						if (Utilities.TryParse(MinVelocity.Value, Utilities.NumberRange.NonNegative, out min) && max <= min)
+						if (Utilities.TryParse(MinVelocity.Value, NumberRange.NonNegative, out min) && max <= min)
 						{
 							message = "MinはMax未満でなければなりません。";
 						}
@@ -702,11 +702,11 @@ namespace TrainEditor2.ViewModels.Trains
 					double min;
 					string message;
 
-					if (Utilities.TryParse(x, Utilities.NumberRange.NonNegative, out min, out message))
+					if (Utilities.TryParse(x, NumberRange.NonNegative, out min, out message))
 					{
 						double max;
 
-						if (Utilities.TryParse(MaxPitch.Value, Utilities.NumberRange.NonNegative, out max) && min >= max)
+						if (Utilities.TryParse(MaxPitch.Value, NumberRange.NonNegative, out max) && min >= max)
 						{
 							message = "MinはMax未満でなければなりません。";
 						}
@@ -729,11 +729,11 @@ namespace TrainEditor2.ViewModels.Trains
 					double max;
 					string message;
 
-					if (Utilities.TryParse(x, Utilities.NumberRange.NonNegative, out max, out message))
+					if (Utilities.TryParse(x, NumberRange.NonNegative, out max, out message))
 					{
 						double min;
 
-						if (Utilities.TryParse(MinPitch.Value, Utilities.NumberRange.NonNegative, out min) && max <= min)
+						if (Utilities.TryParse(MinPitch.Value, NumberRange.NonNegative, out min) && max <= min)
 						{
 							message = "MinはMax未満でなければなりません。";
 						}
@@ -756,11 +756,11 @@ namespace TrainEditor2.ViewModels.Trains
 					double min;
 					string message;
 
-					if (Utilities.TryParse(x, Utilities.NumberRange.NonNegative, out min, out message))
+					if (Utilities.TryParse(x, NumberRange.NonNegative, out min, out message))
 					{
 						double max;
 
-						if (Utilities.TryParse(MaxVolume.Value, Utilities.NumberRange.NonNegative, out max) && min >= max)
+						if (Utilities.TryParse(MaxVolume.Value, NumberRange.NonNegative, out max) && min >= max)
 						{
 							message = "MinはMax未満でなければなりません。";
 						}
@@ -783,11 +783,11 @@ namespace TrainEditor2.ViewModels.Trains
 					double max;
 					string message;
 
-					if (Utilities.TryParse(x, Utilities.NumberRange.NonNegative, out max, out message))
+					if (Utilities.TryParse(x, NumberRange.NonNegative, out max, out message))
 					{
 						double min;
 
-						if (Utilities.TryParse(MinVolume.Value, Utilities.NumberRange.NonNegative, out min) && max <= min)
+						if (Utilities.TryParse(MinVolume.Value, NumberRange.NonNegative, out min) && max <= min)
 						{
 							message = "MinはMax未満でなければなりません。";
 						}

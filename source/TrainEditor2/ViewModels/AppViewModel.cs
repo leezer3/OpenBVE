@@ -9,6 +9,7 @@ using TrainEditor2.Models.Trains;
 using TrainEditor2.ViewModels.Dialogs;
 using TrainEditor2.ViewModels.Others;
 using TrainEditor2.ViewModels.Panels;
+using TrainEditor2.ViewModels.Sounds;
 using TrainEditor2.ViewModels.Trains;
 
 namespace TrainEditor2.ViewModels
@@ -36,6 +37,11 @@ namespace TrainEditor2.ViewModels
 		}
 
 		internal ReadOnlyReactivePropertySlim<PanelViewModel> Panel
+		{
+			get;
+		}
+
+		internal ReadOnlyReactivePropertySlim<SoundViewModel> Sound
 		{
 			get;
 		}
@@ -130,6 +136,13 @@ namespace TrainEditor2.ViewModels
 				.ObserveProperty(x => x.Panel)
 				.Do(_ => Panel?.Value.Dispose())
 				.Select(x => new PanelViewModel(x))
+				.ToReadOnlyReactivePropertySlim()
+				.AddTo(disposable);
+
+			Sound = app
+				.ObserveProperty(x => x.Sound)
+				.Do(_ => Sound?.Value.Dispose())
+				.Select(x => new SoundViewModel(x))
 				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 

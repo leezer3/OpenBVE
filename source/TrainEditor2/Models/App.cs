@@ -7,6 +7,7 @@ using TrainEditor2.Extensions;
 using TrainEditor2.Models.Dialogs;
 using TrainEditor2.Models.Others;
 using TrainEditor2.Models.Panels;
+using TrainEditor2.Models.Sounds;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.Systems;
 
@@ -21,6 +22,7 @@ namespace TrainEditor2.Models
 
 		private Train train;
 		private Panel panel;
+		private Sound sound;
 
 		private MessageBox messageBox;
 
@@ -72,6 +74,18 @@ namespace TrainEditor2.Models
 			set
 			{
 				SetProperty(ref panel, value);
+			}
+		}
+
+		internal Sound Sound
+		{
+			get
+			{
+				return sound;
+			}
+			set
+			{
+				SetProperty(ref sound, value);
 			}
 		}
 
@@ -135,7 +149,7 @@ namespace TrainEditor2.Models
 
 		internal void CreateNewFile()
 		{
-			if (Train != null || Panel != null)
+			if (Train != null || Panel != null || Sound != null)
 			{
 				MessageBox = new MessageBox
 				{
@@ -161,6 +175,8 @@ namespace TrainEditor2.Models
 			OnPropertyChanged(new PropertyChangedEventArgs(nameof(Train)));
 
 			Panel = new Panel();
+
+			Sound = new Sound();
 
 			CreateItem();
 
