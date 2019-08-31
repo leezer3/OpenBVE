@@ -4,9 +4,12 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using OpenBveApi.Math;
 using Prism.Mvvm;
+using SoundManager;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Others;
+using TrainEditor2.Simulation.TrainManager;
 
 namespace TrainEditor2.Models.Sounds
 {
@@ -310,6 +313,57 @@ namespace TrainEditor2.Models.Sounds
 			ListItems.Remove(SelectedListItem);
 
 			SelectedListItem = null;
+		}
+
+		internal void ApplySounds(TrainManager.Car car)
+		{
+			car.InitializeCarSounds();
+
+			//Default sound positions and radii
+			double mediumRadius = 10.0;
+
+			//3D center of the car
+			Vector3 center = Vector3.Zero;
+
+			// run sound
+			foreach (var element in SoundElements.OfType<RunElement>())
+			{
+				int n = car.Sounds.Run.Length;
+
+				if (element.Key >= n)
+				{
+					Array.Resize(ref car.Sounds.Run, element.Key + 1);
+
+					for (int h = n; h < element.Key; h++)
+					{
+						car.Sounds.Run[h] = new CarSound();
+					}
+				}
+
+				car.Sounds.Run[element.Key] = new CarSound(Program.SoundApi.RegisterBuffer(element.FilePath, mediumRadius), center);
+			}
+
+			car.Sounds.RunVolume = new double[car.Sounds.Run.Length];
+
+
+			// motor sound
+			car.Sounds.Motor.Position = center;
+
+			for (int i = 0; i < car.Sounds.Motor.Tables.Length; i++)
+			{
+				car.Sounds.Motor.Tables[i].Buffer = null;
+				car.Sounds.Motor.Tables[i].Source = null;
+
+				for (int j = 0; j < car.Sounds.Motor.Tables[i].Entries.Length; j++)
+				{
+					MotorElement element = SoundElements.OfType<MotorElement>().FirstOrDefault(x => x.Key == car.Sounds.Motor.Tables[i].Entries[j].SoundIndex);
+
+					if (element !=null)
+					{
+						car.Sounds.Motor.Tables[i].Entries[j].Buffer = Program.SoundApi.RegisterBuffer(element.FilePath, mediumRadius);
+					}
+				}
+			}
 		}
 	}
 }

@@ -50,16 +50,16 @@
       <HintPath>..\..\packages\Prism.Core.7.2.0.1367\lib\net45\Prism.dll</HintPath>
     </Reference>
     <Reference Include="ReactiveProperty, Version=5.5.0.0, Culture=neutral, PublicKeyToken=910d1732782c71cb, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\dependencies\ReactiveProperty.dll</HintPath>
+      <HintPath>..\..\packages\ReactiveProperty.6.1.2\lib\net461\ReactiveProperty.dll</HintPath>
     </Reference>
     <Reference Include="ReactiveProperty.NET46, Version=5.5.0.0, Culture=neutral, PublicKeyToken=3d1fed915120cbde, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\dependencies\ReactiveProperty.NET46.dll</HintPath>
+      <HintPath>..\..\packages\ReactiveProperty.6.1.2\lib\net461\ReactiveProperty.NET46.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.ComponentModel.Annotations.4.5.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Reactive, Version=4.1.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Reactive.4.1.6\lib\net46\System.Reactive.dll</HintPath>
     </Reference>
@@ -138,10 +138,17 @@
     <Compile Include="Models\Trains\Handle.cs" />
     <Compile Include="Models\Trains\Motor.cs" />
     <Compile Include="Models\Trains\Motor.Functions.cs" />
+    <Compile Include="Models\Trains\Motor.Simulation.cs" />
     <Compile Include="Models\Trains\Move.cs" />
     <Compile Include="Models\Trains\Performance.cs" />
     <Compile Include="Models\Trains\Pressure.cs" />
     <Compile Include="Models\Trains\Train.cs" />
+    <Compile Include="Simulation\TrainManager\Car\Car.CarSounds.cs" />
+    <Compile Include="Simulation\TrainManager\Car\Car.cs" />
+    <Compile Include="Simulation\TrainManager\Car\Car.Specs.cs" />
+    <Compile Include="Simulation\TrainManager\Motor\MotorSounds.cs" />
+    <Compile Include="Simulation\TrainManager\TrainManager.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Train.cs" />
     <Compile Include="Systems\Functions\Plugins.cs" />
     <Compile Include="Systems\Host.cs" />
     <Compile Include="Systems\Interface.cs" />

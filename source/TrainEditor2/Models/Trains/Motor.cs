@@ -4,10 +4,12 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Timers;
 using Prism.Mvvm;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Dialogs;
 using TrainEditor2.Models.Others;
+using TrainEditor2.Simulation.TrainManager;
 
 //using TrainEditor2.Simulation.TrainManager;
 
@@ -421,22 +423,22 @@ namespace TrainEditor2.Models.Trains
 				return entries;
 			}
 
-			//internal static TrainManager.MotorSoundTable EntriesToMotorSoundTable(Entry[] entries)
-			//{
-			//	TrainManager.MotorSoundTable table = new TrainManager.MotorSoundTable
-			//	{
-			//		Entries = new TrainManager.MotorSoundTableEntry[entries.Length]
-			//	};
+			internal static TrainManager.MotorSoundTable EntriesToMotorSoundTable(Entry[] entries)
+			{
+				TrainManager.MotorSoundTable table = new TrainManager.MotorSoundTable
+				{
+					Entries = new TrainManager.MotorSoundTableEntry[entries.Length]
+				};
 
-			//	for (int i = 0; i < entries.Length; i++)
-			//	{
-			//		table.Entries[i].Pitch = (float)(0.01 * entries[i].Pitch);
-			//		table.Entries[i].Gain = (float)Math.Pow(0.0078125 * entries[i].Volume, 0.25);
-			//		table.Entries[i].SoundIndex = entries[i].SoundIndex;
-			//	}
+				for (int i = 0; i < entries.Length; i++)
+				{
+					table.Entries[i].Pitch = (float)(0.01 * entries[i].Pitch);
+					table.Entries[i].Gain = (float)Math.Pow(0.0078125 * entries[i].Volume, 0.25);
+					table.Entries[i].SoundIndex = entries[i].SoundIndex;
+				}
 
-			//	return table;
-			//}
+				return table;
+			}
 		}
 
 		internal enum TrackInfo
@@ -570,7 +572,16 @@ namespace TrainEditor2.Models.Trains
 		private Vertex hoveredVertexPitch;
 		private Vertex hoveredVertexVolume;
 
-		private readonly double nowSpeed;
+		private int runIndex;
+		private bool isPlayTrack1;
+		private bool isPlayTrack2;
+		private bool isLoop;
+		private bool isConstant;
+		private double acceleration;
+		private double startSpeed;
+		private double endSpeed;
+
+		private double nowSpeed;
 
 		private int imageWidth;
 		private int imageHeight;
@@ -832,6 +843,102 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
+		internal int RunIndex
+		{
+			get
+			{
+				return runIndex;
+			}
+			set
+			{
+				SetProperty(ref runIndex, value);
+			}
+		}
+
+		internal bool IsPlayTrack1
+		{
+			get
+			{
+				return isPlayTrack1;
+			}
+			set
+			{
+				SetProperty(ref isPlayTrack1, value);
+			}
+		}
+
+		internal bool IsPlayTrack2
+		{
+			get
+			{
+				return isPlayTrack2;
+			}
+			set
+			{
+				SetProperty(ref isPlayTrack2, value);
+			}
+		}
+
+		internal bool IsLoop
+		{
+			get
+			{
+				return isLoop;
+			}
+			set
+			{
+				SetProperty(ref isLoop, value);
+			}
+		}
+
+		internal bool IsConstant
+		{
+			get
+			{
+				return isConstant;
+			}
+			set
+			{
+				SetProperty(ref isConstant, value);
+			}
+		}
+
+		internal double Acceleration
+		{
+			get
+			{
+				return acceleration;
+			}
+			set
+			{
+				SetProperty(ref acceleration, value);
+			}
+		}
+
+		internal double StartSpeed
+		{
+			get
+			{
+				return startSpeed;
+			}
+			set
+			{
+				SetProperty(ref startSpeed, value);
+			}
+		}
+
+		internal double EndSpeed
+		{
+			get
+			{
+				return endSpeed;
+			}
+			set
+			{
+				SetProperty(ref endSpeed, value);
+			}
+		}
+
 		internal int ImageWidth
 		{
 			get
@@ -898,6 +1005,12 @@ namespace TrainEditor2.Models.Trains
 
 			MinVolume = 0.0;
 			MaxVolume = 256.0;
+
+			RunIndex = -1;
+			IsPlayTrack1 = IsPlayTrack2 = true;
+			Acceleration = 2.6;
+			StartSpeed = 0.0;
+			EndSpeed = 160.0;
 
 			ImageWidth = 568;
 			ImageHeight = 593;
