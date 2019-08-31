@@ -157,6 +157,8 @@ namespace TrainEditor2.Views
 		{
 			disposable = new CompositeDisposable();
 			CompositeDisposable messageDisposable = new CompositeDisposable();
+			CompositeDisposable openFileDialogDisposable = new CompositeDisposable();
+			CompositeDisposable saveFileDialogDisposable = new CompositeDisposable();
 			CompositeDisposable trainDisposable = new CompositeDisposable();
 			CompositeDisposable panelDisposable = new CompositeDisposable();
 			CompositeDisposable soundDisposable = new CompositeDisposable();
@@ -180,6 +182,26 @@ namespace TrainEditor2.Views
 					messageDisposable = new CompositeDisposable();
 
 					BindToMessageBox(x).AddTo(messageDisposable);
+				})
+				.AddTo(disposable);
+
+			app.OpenFileDialog
+				.Subscribe(x =>
+				{
+					openFileDialogDisposable.Dispose();
+					openFileDialogDisposable = new CompositeDisposable();
+
+					BindToOpenFileDialog(x).AddTo(openFileDialogDisposable);
+				})
+				.AddTo(disposable);
+
+			app.SaveFileDialog
+				.Subscribe(x =>
+				{
+					saveFileDialogDisposable.Dispose();
+					saveFileDialogDisposable = new CompositeDisposable();
+
+					BindToSaveFileDialog(x).AddTo(saveFileDialogDisposable);
 				})
 				.AddTo(disposable);
 
@@ -397,13 +419,16 @@ namespace TrainEditor2.Views
 				})
 				.AddTo(disposable);
 
-			app.CreateNewFileCommand.BindToButton(toolStripMenuItemNew).AddTo(disposable);
+			app.CreateNewFile.BindToButton(toolStripMenuItemNew).AddTo(disposable);
+			app.OpenFile.BindToButton(toolStripMenuItemOpen).AddTo(disposable);
+			app.SaveFile.BindToButton(toolStripMenuItemSave).AddTo(disposable);
+			app.SaveAsFile.BindToButton(toolStripMenuItemSaveAs).AddTo(disposable);
 
-			new[] { app.UpCarCommand, app.UpCouplerCommand }.BindToButton(buttonCarsUp).AddTo(disposable);
-			new[] { app.DownCarCommand, app.DownCouplerCommand }.BindToButton(buttonCarsDown).AddTo(disposable);
-			app.AddCarCommand.BindToButton(buttonCarsAdd).AddTo(disposable);
-			app.CopyCarCommand.BindToButton(buttonCarsCopy).AddTo(disposable);
-			app.RemoveCarCommand.BindToButton(buttonCarsRemove).AddTo(disposable);
+			new[] { app.UpCar, app.UpCoupler }.BindToButton(buttonCarsUp).AddTo(disposable);
+			new[] { app.DownCar, app.DownCoupler }.BindToButton(buttonCarsDown).AddTo(disposable);
+			app.AddCar.BindToButton(buttonCarsAdd).AddTo(disposable);
+			app.CopyCar.BindToButton(buttonCarsCopy).AddTo(disposable);
+			app.RemoveCar.BindToButton(buttonCarsRemove).AddTo(disposable);
 
 			app.ChangeCarClass.BindToCheckBox(checkBoxIsMotorCar).AddTo(disposable);
 
@@ -414,6 +439,8 @@ namespace TrainEditor2.Views
 			app.ClearLogMessages.BindToButton(toolStripMenuItemClear).AddTo(disposable);
 
 			messageDisposable.AddTo(disposable);
+			openFileDialogDisposable.AddTo(disposable);
+			saveFileDialogDisposable.AddTo(disposable);
 			trainDisposable.AddTo(disposable);
 			panelDisposable.AddTo(disposable);
 			soundDisposable.AddTo(disposable);
@@ -832,6 +859,22 @@ namespace TrainEditor2.Views
 		private void ButtonSoundFileNameOpen_Click(object sender, EventArgs e)
 		{
 			OpenFileDialog(textBoxSoundFileName);
+		}
+
+		private void ToolStripMenuItemImport_Click(object sender, EventArgs e)
+		{
+			using (FormImport form = new FormImport(app))
+			{
+				form.ShowDialog(this);
+			}
+		}
+
+		private void ToolStripMenuItemExport_Click(object sender, EventArgs e)
+		{
+			using (FormExport form = new FormExport(app))
+			{
+				form.ShowDialog(this);
+			}
 		}
 	}
 }

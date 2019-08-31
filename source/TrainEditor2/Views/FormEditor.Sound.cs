@@ -20,6 +20,8 @@ namespace TrainEditor2.Views
 			CompositeDisposable listItemDisposable = new CompositeDisposable();
 			CompositeDisposable elementDisposable = new CompositeDisposable();
 
+			listViewSound.Items.Clear();
+
 			x.TreeItem
 				.BindTo(
 					this,

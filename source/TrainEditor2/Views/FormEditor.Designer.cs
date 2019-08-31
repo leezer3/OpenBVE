@@ -6473,12 +6473,14 @@ namespace TrainEditor2.Views
 			this.toolStripMenuItemImport.Name = "toolStripMenuItemImport";
 			this.toolStripMenuItemImport.Size = new System.Drawing.Size(200, 22);
 			this.toolStripMenuItemImport.Text = "Import...";
+			this.toolStripMenuItemImport.Click += new System.EventHandler(this.ToolStripMenuItemImport_Click);
 			// 
 			// toolStripMenuItemExport
 			// 
 			this.toolStripMenuItemExport.Name = "toolStripMenuItemExport";
 			this.toolStripMenuItemExport.Size = new System.Drawing.Size(200, 22);
 			this.toolStripMenuItemExport.Text = "Export...";
+			this.toolStripMenuItemExport.Click += new System.EventHandler(this.ToolStripMenuItemExport_Click);
 			// 
 			// toolStripSeparatorExport
 			// 

@@ -504,8 +504,8 @@ namespace TrainEditor2.IO.IntermediateFile
 			WriteArraySoundNode(soundsNode, "Run", sound.SoundElements.OfType<RunElement>());
 			WriteArraySoundNode(soundsNode, "Flange", sound.SoundElements.OfType<FlangeElement>());
 			WriteArraySoundNode(soundsNode, "Motor", sound.SoundElements.OfType<MotorElement>());
-			WriteArraySoundNode(soundsNode, "PointFrontAxle", sound.SoundElements.OfType<FrontSwitchElement>());
-			WriteArraySoundNode(soundsNode, "PointRearAxle", sound.SoundElements.OfType<RearSwitchElement>());
+			WriteArraySoundNode(soundsNode, "FrontSwitch", sound.SoundElements.OfType<FrontSwitchElement>());
+			WriteArraySoundNode(soundsNode, "RearSwitch", sound.SoundElements.OfType<RearSwitchElement>());
 			WriteArraySoundNode(soundsNode, "Brake", sound.SoundElements.OfType<BrakeElement>());
 			WriteArraySoundNode(soundsNode, "Compressor", sound.SoundElements.OfType<CompressorElement>());
 			WriteArraySoundNode(soundsNode, "Suspension", sound.SoundElements.OfType<SuspensionElement>());
@@ -527,11 +527,6 @@ namespace TrainEditor2.IO.IntermediateFile
 
 		private static void WriteSoundNode(XElement parent, string nodeName, SoundElement element)
 		{
-			if (string.IsNullOrEmpty(element.FilePath))
-			{
-				return;
-			}
-
 			parent.Add(new XElement(nodeName,
 				new XElement("Key", element.Key),
 				new XElement("FilePath", element.FilePath),

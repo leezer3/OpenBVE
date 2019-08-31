@@ -89,6 +89,7 @@
     <Compile Include="Extensions\ObservableDictionary.cs" />
     <Compile Include="Extensions\StringValueAttribute.cs" />
     <Compile Include="Extensions\Utilities.cs" />
+    <Compile Include="IO\IntermediateFile\Parser.cs" />
     <Compile Include="IO\IntermediateFile\Writer.cs" />
     <Compile Include="IO\Panels\Bve4\Parser.cs" />
     <Compile Include="IO\Panels\Bve4\Writer.cs" />
@@ -106,6 +107,8 @@
     <Compile Include="Models\App.cs" />
     <Compile Include="Models\Dialogs\BaseDialog.cs" />
     <Compile Include="Models\Dialogs\MessageBox.cs" />
+    <Compile Include="Models\Dialogs\OpenFileDialog.cs" />
+    <Compile Include="Models\Dialogs\SaveFileDialog.cs" />
     <Compile Include="Models\Others\InputEventModel.cs" />
     <Compile Include="Models\Others\ListViewColumnHeaderModel.cs" />
     <Compile Include="Models\Others\ListViewItemModel.cs" />
@@ -147,6 +150,8 @@
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\BaseDialogViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\MessageBoxViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\OpenFileDialogViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\SaveFileDialogViewModel.cs" />
     <Compile Include="ViewModels\Others\ListViewColumnHeaderViewModel.cs" />
     <Compile Include="ViewModels\Others\ListViewItemViewModel.cs" />
     <Compile Include="ViewModels\Others\ToolTipViewModel.cs" />
@@ -243,6 +248,9 @@
     <Compile Include="Views\FormEditor.Needle.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\FormEditor.OpenFileDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\FormEditor.Panel.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -253,6 +261,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\FormEditor.Pressure.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.SaveFileDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\FormEditor.Screen.cs">
@@ -279,6 +290,18 @@
     <Compile Include="Views\FormEditor.Train.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\FormExport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormExport.Designer.cs">
+      <DependentUpon>FormExport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormImport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormImport.Designer.cs">
+      <DependentUpon>FormImport.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\FormSubject.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -302,6 +325,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\FormEditor.resx">
       <DependentUpon>FormEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\FormExport.resx">
+      <DependentUpon>FormExport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\FormImport.resx">
+      <DependentUpon>FormImport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\FormSubject.resx">
       <DependentUpon>FormSubject.cs</DependentUpon>

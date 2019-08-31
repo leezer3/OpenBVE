@@ -1,10 +1,20 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Media;
 using OpenBveApi.Interface;
 using Prism.Mvvm;
 using TrainEditor2.Extensions;
+using TrainEditor2.IO.IntermediateFile;
+using TrainEditor2.IO.Panels.Bve4;
+using TrainEditor2.IO.Panels.Xml;
+using TrainEditor2.IO.Sounds.Bve2;
+using TrainEditor2.IO.Sounds.Bve4;
+using TrainEditor2.IO.Sounds.Xml;
+using TrainEditor2.IO.Trains.ExtensionsCfg;
+using TrainEditor2.IO.Trains.TrainDat;
 using TrainEditor2.Models.Dialogs;
 using TrainEditor2.Models.Others;
 using TrainEditor2.Models.Panels;
@@ -16,6 +26,24 @@ namespace TrainEditor2.Models
 {
 	internal class App : BindableBase
 	{
+		internal enum TrainFileType
+		{
+			OldFormat
+		}
+
+		internal enum PanelFileType
+		{
+			Panel2Cfg,
+			PanelXml
+		}
+
+		internal enum SoundFileType
+		{
+			NoSettingFile,
+			SoundCfg,
+			SoundXml
+		}
+
 		private readonly CultureInfo culture;
 
 		private string saveLocation;
@@ -26,6 +54,26 @@ namespace TrainEditor2.Models
 		private Sound sound;
 
 		private MessageBox messageBox;
+		private OpenFileDialog openFileDialog;
+		private SaveFileDialog saveFileDialog;
+
+		private TrainFileType currentTrainFileType;
+		private PanelFileType currentPanelFileType;
+		private SoundFileType currentSoundFileType;
+
+		private string trainDatImportLocation;
+		private string trainDatExportLocation;
+		private string extensionsCfgImportLocation;
+		private string extensionsCfgExportLocation;
+		private string panel2CfgImportLocation;
+		private string panel2CfgExportLocation;
+		private string panelXmlImportLocation;
+		private string panelXmlExportLocation;
+		private string trainFolderImportLocation;
+		private string soundCfgImportLocation;
+		private string soundCfgExportLocation;
+		private string soundXmlImportLocation;
+		private string soundXmlExportLocation;
 
 		private TreeViewItemModel item;
 		private TreeViewItemModel selectedItem;
@@ -102,6 +150,222 @@ namespace TrainEditor2.Models
 			}
 		}
 
+		internal OpenFileDialog OpenFileDialog
+		{
+			get
+			{
+				return openFileDialog;
+			}
+			set
+			{
+				SetProperty(ref openFileDialog, value);
+			}
+		}
+
+		internal SaveFileDialog SaveFileDialog
+		{
+			get
+			{
+				return saveFileDialog;
+			}
+			set
+			{
+				SetProperty(ref saveFileDialog, value);
+			}
+		}
+
+		internal TrainFileType CurrentTrainFileType
+		{
+			get
+			{
+				return currentTrainFileType;
+			}
+			set
+			{
+				SetProperty(ref currentTrainFileType, value);
+			}
+		}
+
+		internal PanelFileType CurrentPanelFileType
+		{
+			get
+			{
+				return currentPanelFileType;
+			}
+			set
+			{
+				SetProperty(ref currentPanelFileType, value);
+			}
+		}
+
+		internal SoundFileType CurrentSoundFileType
+		{
+			get
+			{
+				return currentSoundFileType;
+			}
+			set
+			{
+				SetProperty(ref currentSoundFileType, value);
+			}
+		}
+
+		internal string TrainDatImportLocation
+		{
+			get
+			{
+				return trainDatImportLocation;
+			}
+			set
+			{
+				SetProperty(ref trainDatImportLocation, value);
+			}
+		}
+
+		internal string TrainDatExportLocation
+		{
+			get
+			{
+				return trainDatExportLocation;
+			}
+			set
+			{
+				SetProperty(ref trainDatExportLocation, value);
+			}
+		}
+
+		internal string ExtensionsCfgImportLocation
+		{
+			get
+			{
+				return extensionsCfgImportLocation;
+			}
+			set
+			{
+				SetProperty(ref extensionsCfgImportLocation, value);
+			}
+		}
+
+		internal string ExtensionsCfgExportLocation
+		{
+			get
+			{
+				return extensionsCfgExportLocation;
+			}
+			set
+			{
+				SetProperty(ref extensionsCfgExportLocation, value);
+			}
+		}
+
+		internal string Panel2CfgImportLocation
+		{
+			get
+			{
+				return panel2CfgImportLocation;
+			}
+			set
+			{
+				SetProperty(ref panel2CfgImportLocation, value);
+			}
+		}
+
+		internal string Panel2CfgExportLocation
+		{
+			get
+			{
+				return panel2CfgExportLocation;
+			}
+			set
+			{
+				SetProperty(ref panel2CfgExportLocation, value);
+			}
+		}
+
+		internal string PanelXmlImportLocation
+		{
+			get
+			{
+				return panelXmlImportLocation;
+			}
+			set
+			{
+				SetProperty(ref panelXmlImportLocation, value);
+			}
+		}
+
+		internal string PanelXmlExportLocation
+		{
+			get
+			{
+				return panelXmlExportLocation;
+			}
+			set
+			{
+				SetProperty(ref panelXmlExportLocation, value);
+			}
+		}
+
+		internal string TrainFolderImportLocation
+		{
+			get
+			{
+				return trainFolderImportLocation;
+			}
+			set
+			{
+				SetProperty(ref trainFolderImportLocation, value);
+			}
+		}
+
+		internal string SoundCfgImportLocation
+		{
+			get
+			{
+				return soundCfgImportLocation;
+			}
+			set
+			{
+				SetProperty(ref soundCfgImportLocation, value);
+			}
+		}
+
+		internal string SoundCfgExportLocation
+		{
+			get
+			{
+				return soundCfgExportLocation;
+			}
+			set
+			{
+				SetProperty(ref soundCfgExportLocation, value);
+			}
+		}
+
+		internal string SoundXmlImportLocation
+		{
+			get
+			{
+				return soundXmlImportLocation;
+			}
+			set
+			{
+				SetProperty(ref soundXmlImportLocation, value);
+			}
+		}
+
+		internal string SoundXmlExportLocation
+		{
+			get
+			{
+				return soundXmlExportLocation;
+			}
+			set
+			{
+				SetProperty(ref soundXmlExportLocation, value);
+			}
+		}
+
 		internal TreeViewItemModel Item
 		{
 			get
@@ -135,6 +399,8 @@ namespace TrainEditor2.Models
 			CurrentLanguageCode = "en-US";
 
 			MessageBox = new MessageBox();
+			OpenFileDialog = new OpenFileDialog();
+			SaveFileDialog = new SaveFileDialog();
 
 			VisibleLogMessages = new ObservableCollection<ListViewItemModel>();
 
@@ -160,18 +426,23 @@ namespace TrainEditor2.Models
 				{
 					Title = Utilities.GetInterfaceString("menu", "file", "new"),
 					Icon = BaseDialog.DialogIcon.Question,
-					Button = BaseDialog.DialogButton.YesNo,
+					Button = BaseDialog.DialogButton.YesNoCancel,
 					Text = Utilities.GetInterfaceString("menu", "message", "new"),
 					IsOpen = true
 				};
 
-				if (MessageBox.DialogResult != true)
+				if (MessageBox.DialogResult == null)
 				{
 					return;
 				}
 
-				//SaveFile();
+				if (MessageBox.DialogResult == true)
+				{
+					SaveFile();
+				}
 			}
+
+			Interface.LogMessages.Clear();
 
 			SaveLocation = string.Empty;
 
@@ -184,8 +455,264 @@ namespace TrainEditor2.Models
 			Sound = new Sound();
 
 			CreateItem();
+		}
+
+		internal void OpenFile()
+		{
+			MessageBox = new MessageBox
+			{
+				Title = Utilities.GetInterfaceString("menu", "file", "open"),
+				Icon = BaseDialog.DialogIcon.Question,
+				Button = BaseDialog.DialogButton.YesNoCancel,
+				Text = Utilities.GetInterfaceString("menu", "message", "open"),
+				IsOpen = true
+			};
+
+			if (MessageBox.DialogResult == null)
+			{
+				return;
+			}
+
+			if (MessageBox.DialogResult == true)
+			{
+				SaveFile();
+			}
 
 			Interface.LogMessages.Clear();
+
+			OpenFileDialog = new OpenFileDialog
+			{
+				Filter = @"Intermediate files (*.te)|*.te|All files (*.*)|*",
+				CheckFileExists = true,
+				IsOpen = true
+			};
+
+			if (OpenFileDialog.DialogResult != true)
+			{
+				return;
+			}
+
+			SaveLocation = OpenFileDialog.FileName;
+
+			try
+			{
+				IntermediateFile.Parse(SaveLocation, out train, out panel, out sound);
+
+				OnPropertyChanged(new PropertyChangedEventArgs(nameof(Train)));
+				OnPropertyChanged(new PropertyChangedEventArgs(nameof(Panel)));
+				OnPropertyChanged(new PropertyChangedEventArgs(nameof(Sound)));
+
+				CreateItem();
+			}
+			catch (Exception e)
+			{
+				MessageBox = new MessageBox
+				{
+					Title = Utilities.GetInterfaceString("menu", "file", "open"),
+					Icon = BaseDialog.DialogIcon.Error,
+					Button = BaseDialog.DialogButton.Ok,
+					Text = e.Message,
+					IsOpen = true
+				};
+
+				SaveLocation = string.Empty;
+
+				train = null;
+				panel = null;
+				sound = null;
+
+				CreateNewFile();
+			}
+		}
+
+		internal void SaveFile()
+		{
+			if (string.IsNullOrEmpty(SaveLocation))
+			{
+				SaveAsFile();
+				return;
+			}
+
+			try
+			{
+				IntermediateFile.Write(saveLocation, Train, Panel, Sound);
+
+				SystemSounds.Asterisk.Play();
+			}
+			catch (Exception e)
+			{
+				MessageBox = new MessageBox
+				{
+					Title = Utilities.GetInterfaceString("menu", "file", "save"),
+					Icon = BaseDialog.DialogIcon.Error,
+					Button = BaseDialog.DialogButton.Ok,
+					Text = e.Message,
+					IsOpen = true
+				};
+			}
+		}
+
+		internal void SaveAsFile()
+		{
+			SaveFileDialog = new SaveFileDialog
+			{
+				Filter = @"Intermediate files (*.te)|*.te|All files (*.*)|*",
+				OverwritePrompt = true,
+				IsOpen = true
+			};
+
+			if (SaveFileDialog.DialogResult != true)
+			{
+				return;
+			}
+
+			SaveLocation = SaveFileDialog.FileName;
+
+			try
+			{
+				IntermediateFile.Write(saveLocation, Train, Panel, Sound);
+			}
+			catch (Exception e)
+			{
+				MessageBox = new MessageBox
+				{
+					Title = Utilities.GetInterfaceString("menu", "file", "save_as"),
+					Icon = BaseDialog.DialogIcon.Error,
+					Button = BaseDialog.DialogButton.Ok,
+					Text = e.Message,
+					IsOpen = true
+				};
+
+				SaveLocation = string.Empty;
+			}
+		}
+
+		internal void ImportFiles()
+		{
+			switch (CurrentTrainFileType)
+			{
+				case TrainFileType.OldFormat:
+					if (!string.IsNullOrEmpty(TrainDatImportLocation))
+					{
+						TrainDat.Parse(TrainDatImportLocation, out train);
+						OnPropertyChanged(new PropertyChangedEventArgs(nameof(Train)));
+
+						CreateItem();
+					}
+
+					if (!string.IsNullOrEmpty(ExtensionsCfgImportLocation))
+					{
+						ExtensionsCfg.Parse(ExtensionsCfgImportLocation, Train);
+					}
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+
+			switch (CurrentPanelFileType)
+			{
+				case PanelFileType.Panel2Cfg:
+					if (!string.IsNullOrEmpty(Panel2CfgImportLocation))
+					{
+						PanelCfgBve4.Parse(Panel2CfgImportLocation, out panel);
+						OnPropertyChanged(new PropertyChangedEventArgs(nameof(Panel)));
+					}
+					break;
+				case PanelFileType.PanelXml:
+					if (!string.IsNullOrEmpty(PanelXmlImportLocation))
+					{
+						PanelCfgXml.Parse(PanelXmlImportLocation, out panel);
+						OnPropertyChanged(new PropertyChangedEventArgs(nameof(Panel)));
+					}
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+
+			switch (CurrentSoundFileType)
+			{
+				case SoundFileType.NoSettingFile:
+					if (!string.IsNullOrEmpty(TrainFolderImportLocation))
+					{
+						SoundCfgBve2.Parse(TrainFolderImportLocation, out sound);
+						OnPropertyChanged(new PropertyChangedEventArgs(nameof(Sound)));
+					}
+					break;
+				case SoundFileType.SoundCfg:
+					if (!string.IsNullOrEmpty(SoundCfgImportLocation))
+					{
+						SoundCfgBve4.Parse(SoundCfgImportLocation, out sound);
+						OnPropertyChanged(new PropertyChangedEventArgs(nameof(Sound)));
+					}
+					break;
+				case SoundFileType.SoundXml:
+					if (!string.IsNullOrEmpty(SoundXmlImportLocation))
+					{
+						SoundCfgXml.Parse(SoundXmlImportLocation, out sound);
+						OnPropertyChanged(new PropertyChangedEventArgs(nameof(Sound)));
+					}
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+		}
+
+		internal void ExportFiles()
+		{
+			switch (CurrentTrainFileType)
+			{
+				case TrainFileType.OldFormat:
+					if (!string.IsNullOrEmpty(TrainDatExportLocation))
+					{
+						TrainDat.Write(TrainDatExportLocation, Train);
+					}
+
+					if (!string.IsNullOrEmpty(ExtensionsCfgExportLocation))
+					{
+						ExtensionsCfg.Write(ExtensionsCfgExportLocation, Train);
+					}
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+
+			switch (CurrentPanelFileType)
+			{
+				case PanelFileType.Panel2Cfg:
+					if (!string.IsNullOrEmpty(Panel2CfgExportLocation))
+					{
+						PanelCfgBve4.Write(Panel2CfgExportLocation, Panel);
+					}
+					break;
+				case PanelFileType.PanelXml:
+					if (!string.IsNullOrEmpty(PanelXmlExportLocation))
+					{
+						PanelCfgXml.Write(PanelXmlExportLocation, Panel);
+					}
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+
+			switch (CurrentSoundFileType)
+			{
+				case SoundFileType.NoSettingFile:
+					break;
+				case SoundFileType.SoundCfg:
+					if (!string.IsNullOrEmpty(SoundCfgExportLocation))
+					{
+						SoundCfgBve4.Write(SoundCfgExportLocation, Sound);
+					}
+					break;
+				case SoundFileType.SoundXml:
+					if (!string.IsNullOrEmpty(SoundXmlExportLocation))
+					{
+						SoundCfgXml.Write(SoundXmlExportLocation, Sound);
+					}
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
 		}
 
 		private void RenameTreeViewItem(ObservableCollection<TreeViewItemModel> items)

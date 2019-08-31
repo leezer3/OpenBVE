@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -30,6 +31,96 @@ namespace TrainEditor2.ViewModels
 		}
 
 		internal ReadOnlyReactivePropertySlim<MessageBoxViewModel> MessageBox
+		{
+			get;
+		}
+
+		internal ReadOnlyReactivePropertySlim<OpenFileDialogViewModel> OpenFileDialog
+		{
+			get;
+		}
+
+		internal ReadOnlyReactivePropertySlim<SaveFileDialogViewModel> SaveFileDialog
+		{
+			get;
+		}
+
+		internal ReactiveProperty<App.TrainFileType> CurrentTrainFileType
+		{
+			get;
+		}
+
+		internal ReactiveProperty<App.PanelFileType> CurrentPanelFileType
+		{
+			get;
+		}
+
+		internal ReactiveProperty<App.SoundFileType> CurrentSoundFileType
+		{
+			get;
+		}
+
+		internal ReactiveProperty<string> TrainDatImportLocation
+		{
+			get;
+		}
+
+		internal ReactiveProperty<string> TrainDatExportLocation
+		{
+			get;
+		}
+
+		internal ReactiveProperty<string> ExtensionsCfgImportLocation
+		{
+			get;
+		}
+
+		internal ReactiveProperty<string> ExtensionsCfgExportLocation
+		{
+			get;
+		}
+
+		internal ReactiveProperty<string> Panel2CfgImportLocation
+		{
+			get;
+		}
+
+		internal ReactiveProperty<string> Panel2CfgExportLocation
+		{
+			get;
+		}
+
+		internal ReactiveProperty<string> PanelXmlImportLocation
+		{
+			get;
+		}
+
+		internal ReactiveProperty<string> PanelXmlExportLocation
+		{
+			get;
+		}
+
+		internal ReactiveProperty<string> TrainFolderImportLocation
+		{
+			get;
+		}
+
+		internal ReactiveProperty<string> SoundCfgImportLocation
+		{
+			get;
+		}
+
+		internal ReactiveProperty<string> SoundCfgExportLocation
+		{
+			get;
+		}
+
+		internal ReactiveProperty<string> SoundXmlImportLocation
+		{
+			get;
+		}
+
+		internal ReactiveProperty<string> SoundXmlExportLocation
 		{
 			get;
 		}
@@ -84,42 +175,67 @@ namespace TrainEditor2.ViewModels
 			get;
 		}
 
-		internal ReactiveCommand CreateNewFileCommand
+		internal ReactiveCommand CreateNewFile
 		{
 			get;
 		}
 
-		internal ReactiveCommand UpCarCommand
+		internal ReactiveCommand OpenFile
 		{
 			get;
 		}
 
-		internal ReactiveCommand DownCarCommand
+		internal ReactiveCommand SaveFile
 		{
 			get;
 		}
 
-		internal ReactiveCommand AddCarCommand
+		internal ReactiveCommand SaveAsFile
 		{
 			get;
 		}
 
-		internal ReactiveCommand RemoveCarCommand
+		internal ReactiveCommand ImportFiles
 		{
 			get;
 		}
 
-		internal ReactiveCommand CopyCarCommand
+		internal ReactiveCommand ExportFiles
 		{
 			get;
 		}
 
-		internal ReactiveCommand UpCouplerCommand
+		internal ReactiveCommand UpCar
 		{
 			get;
 		}
 
-		internal ReactiveCommand DownCouplerCommand
+		internal ReactiveCommand DownCar
+		{
+			get;
+		}
+
+		internal ReactiveCommand AddCar
+		{
+			get;
+		}
+
+		internal ReactiveCommand RemoveCar
+		{
+			get;
+		}
+
+		internal ReactiveCommand CopyCar
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpCoupler
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownCoupler
 		{
 			get;
 		}
@@ -161,6 +277,136 @@ namespace TrainEditor2.ViewModels
 				.Do(_ => MessageBox?.Value.Dispose())
 				.Select(x => new MessageBoxViewModel(x))
 				.ToReadOnlyReactivePropertySlim()
+				.AddTo(disposable);
+
+			OpenFileDialog = app
+				.ObserveProperty(x => x.OpenFileDialog)
+				.Do(_ => OpenFileDialog?.Value.Dispose())
+				.Select(x => new OpenFileDialogViewModel(x))
+				.ToReadOnlyReactivePropertySlim()
+				.AddTo(disposable);
+
+			SaveFileDialog = app
+				.ObserveProperty(x => x.SaveFileDialog)
+				.Do(_ => SaveFileDialog?.Value.Dispose())
+				.Select(x => new SaveFileDialogViewModel(x))
+				.ToReadOnlyReactivePropertySlim()
+				.AddTo(disposable);
+
+			CurrentTrainFileType = app
+				.ToReactivePropertyAsSynchronized(x => x.CurrentTrainFileType)
+				.AddTo(disposable);
+
+			CurrentPanelFileType = app
+				.ToReactivePropertyAsSynchronized(x => x.CurrentPanelFileType)
+				.AddTo(disposable);
+
+			CurrentSoundFileType = app
+				.ToReactivePropertyAsSynchronized(x => x.CurrentSoundFileType)
+				.AddTo(disposable);
+
+			TrainDatImportLocation = app
+				.ToReactivePropertyAsSynchronized(
+					x => x.TrainDatImportLocation,
+					ignoreValidationErrorValue: true
+				)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && !File.Exists(x) ? @"指定されたファイルは存在しません。" : null)
+				.AddTo(disposable);
+
+			TrainDatExportLocation = app
+				.ToReactivePropertyAsSynchronized(
+					x => x.TrainDatExportLocation,
+					ignoreValidationErrorValue: true
+				)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && x.IndexOfAny(Path.GetInvalidPathChars()) >= 0 ? @"ファイル名に使用できない文字が使われています。" : null)
+				.AddTo(disposable);
+
+			ExtensionsCfgImportLocation = app
+				.ToReactivePropertyAsSynchronized(
+					x => x.ExtensionsCfgImportLocation,
+					ignoreValidationErrorValue: true
+				)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && !File.Exists(x) ? @"指定されたファイルは存在しません。" : null)
+				.AddTo(disposable);
+
+			ExtensionsCfgExportLocation = app
+				.ToReactivePropertyAsSynchronized(
+					x => x.ExtensionsCfgExportLocation,
+					ignoreValidationErrorValue: true
+				)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && x.IndexOfAny(Path.GetInvalidPathChars()) >= 0 ? @"ファイル名に使用できない文字が使われています。" : null)
+				.AddTo(disposable);
+
+			Panel2CfgImportLocation = app
+				.ToReactivePropertyAsSynchronized(
+					x => x.Panel2CfgImportLocation,
+					ignoreValidationErrorValue: true
+				)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && !File.Exists(x) ? @"指定されたファイルは存在しません。" : null)
+				.AddTo(disposable);
+
+			Panel2CfgExportLocation = app
+				.ToReactivePropertyAsSynchronized(
+					x => x.Panel2CfgExportLocation,
+					ignoreValidationErrorValue: true
+				)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && x.IndexOfAny(Path.GetInvalidPathChars()) >= 0 ? @"ファイル名に使用できない文字が使われています。" : null)
+				.AddTo(disposable);
+
+			PanelXmlImportLocation = app
+				.ToReactivePropertyAsSynchronized(
+					x => x.PanelXmlImportLocation,
+					ignoreValidationErrorValue: true
+				)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && !File.Exists(x) ? @"指定されたファイルは存在しません。" : null)
+				.AddTo(disposable);
+
+			PanelXmlExportLocation = app
+				.ToReactivePropertyAsSynchronized(
+					x => x.PanelXmlExportLocation,
+					ignoreValidationErrorValue: true
+				)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && x.IndexOfAny(Path.GetInvalidPathChars()) >= 0 ? @"ファイル名に使用できない文字が使われています。" : null)
+				.AddTo(disposable);
+
+			TrainFolderImportLocation = app
+				.ToReactivePropertyAsSynchronized(
+					x => x.TrainFolderImportLocation,
+					ignoreValidationErrorValue: true
+				)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && !Directory.Exists(x) ? @"指定されたフォルダは存在しません。" : null)
+				.AddTo(disposable);
+
+			SoundCfgImportLocation = app
+				.ToReactivePropertyAsSynchronized(
+					x => x.SoundCfgImportLocation,
+					ignoreValidationErrorValue: true
+				)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && !File.Exists(x) ? @"指定されたファイルは存在しません。" : null)
+				.AddTo(disposable);
+
+			SoundCfgExportLocation = app
+				.ToReactivePropertyAsSynchronized(
+					x => x.SoundCfgExportLocation,
+					ignoreValidationErrorValue: true
+				)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && x.IndexOfAny(Path.GetInvalidPathChars()) >= 0 ? @"ファイル名に使用できない文字が使われています。" : null)
+				.AddTo(disposable);
+
+			SoundXmlImportLocation = app
+				.ToReactivePropertyAsSynchronized(
+					x => x.SoundXmlImportLocation,
+					ignoreValidationErrorValue: true
+				)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && !File.Exists(x) ? @"指定されたファイルは存在しません。" : null)
+				.AddTo(disposable);
+
+			SoundXmlExportLocation = app
+				.ToReactivePropertyAsSynchronized(
+					x => x.SoundXmlExportLocation,
+					ignoreValidationErrorValue: true
+				)
+				.SetValidateNotifyError(x => !string.IsNullOrEmpty(x) && x.IndexOfAny(Path.GetInvalidPathChars()) >= 0 ? @"ファイル名に使用できない文字が使われています。" : null)
 				.AddTo(disposable);
 
 			Train = app
@@ -261,67 +507,101 @@ namespace TrainEditor2.ViewModels
 				.Subscribe(_ => app.ResetLogMessages())
 				.AddTo(disposable);
 
-			CreateNewFileCommand = new ReactiveCommand();
-			CreateNewFileCommand.Subscribe(() => app.CreateNewFile()).AddTo(disposable);
-
-			UpCarCommand = SelectedItem
-				.Select(x => Item.Value.Children[1].Children.IndexOf(x) > 0)
-				.ToReactiveCommand()
+			CreateNewFile = new ReactiveCommand()
+				.WithSubscribe(app.CreateNewFile)
 				.AddTo(disposable);
 
-			UpCarCommand.Subscribe(() => app.UpCar()).AddTo(disposable);
+			OpenFile = new ReactiveCommand()
+				.WithSubscribe(app.OpenFile)
+				.AddTo(disposable);
 
-			DownCarCommand = SelectedItem
+			SaveFile = SaveLocation
+				.Select(x => !string.IsNullOrEmpty(x))
+				.ToReactiveCommand()
+				.WithSubscribe(app.SaveFile)
+				.AddTo(disposable);
+
+			SaveAsFile = new ReactiveCommand()
+				.WithSubscribe(app.SaveAsFile)
+				.AddTo(disposable);
+
+			ImportFiles = new[]
+				{
+					TrainDatImportLocation.ObserveHasErrors,
+					ExtensionsCfgImportLocation.ObserveHasErrors,
+					Panel2CfgImportLocation.ObserveHasErrors,
+					PanelXmlImportLocation.ObserveHasErrors,
+					TrainFolderImportLocation.ObserveHasErrors,
+					SoundCfgImportLocation.ObserveHasErrors,
+					SoundXmlImportLocation.ObserveHasErrors
+				}
+				.CombineLatestValuesAreAllFalse()
+				.ToReactiveCommand()
+				.WithSubscribe(app.ImportFiles)
+				.AddTo(disposable);
+
+			ExportFiles = new[]
+				{
+					TrainDatExportLocation.ObserveHasErrors,
+					ExtensionsCfgExportLocation.ObserveHasErrors,
+					Panel2CfgExportLocation.ObserveHasErrors,
+					PanelXmlExportLocation.ObserveHasErrors,
+					SoundCfgExportLocation.ObserveHasErrors,
+					SoundXmlExportLocation.ObserveHasErrors
+				}
+				.CombineLatestValuesAreAllFalse()
+				.ToReactiveCommand()
+				.WithSubscribe(app.ExportFiles)
+				.AddTo(disposable);
+
+			UpCar = SelectedItem
+				.Select(x => Item.Value.Children[1].Children.IndexOf(x) > 0)
+				.ToReactiveCommand()
+				.WithSubscribe(app.UpCar)
+				.AddTo(disposable);
+
+			DownCar = SelectedItem
 				.Select(x => Item.Value.Children[1].Children.IndexOf(x))
 				.Select(x => x >= 0 && x < Item.Value.Children[1].Children.Count - 1)
 				.ToReactiveCommand()
+				.WithSubscribe(app.DownCar)
 				.AddTo(disposable);
 
-			DownCarCommand.Subscribe(() => app.DownCar()).AddTo(disposable);
-
-			AddCarCommand = SelectedItem
+			AddCar = SelectedItem
 				.Select(x => x == Item.Value.Children[1] || Item.Value.Children[1].Children.Contains(x))
 				.ToReactiveCommand()
+				.WithSubscribe(app.AddCar)
 				.AddTo(disposable);
 
-			AddCarCommand.Subscribe(() => app.AddCar()).AddTo(disposable);
-
-			RemoveCarCommand = SelectedItem
+			RemoveCar = SelectedItem
 				.Select(x => Item.Value.Children[1].Children.Contains(x) && Item.Value.Children[1].Children.Where(y => y != x).Any(y => y.Tag.Value is MotorCar))
 				.ToReactiveCommand()
+				.WithSubscribe(app.RemoveCar)
 				.AddTo(disposable);
 
-			RemoveCarCommand.Subscribe(() => app.RemoveCar()).AddTo(disposable);
-
-			CopyCarCommand = SelectedItem
+			CopyCar = SelectedItem
 				.Select(x => Item.Value.Children[1].Children.Contains(x))
 				.ToReactiveCommand()
+				.WithSubscribe(app.CopyCar)
 				.AddTo(disposable);
 
-			CopyCarCommand.Subscribe(() => app.CopyCar()).AddTo(disposable);
-
-			UpCouplerCommand = SelectedItem
+			UpCoupler = SelectedItem
 				.Select(x => Item.Value.Children[2].Children.IndexOf(x) > 0)
 				.ToReactiveCommand()
+				.WithSubscribe(app.UpCoupler)
 				.AddTo(disposable);
 
-			UpCouplerCommand.Subscribe(() => app.UpCoupler()).AddTo(disposable);
-
-			DownCouplerCommand = SelectedItem
+			DownCoupler = SelectedItem
 				.Select(x => Item.Value.Children[2].Children.IndexOf(x))
 				.Select(x => x >= 0 && x < Item.Value.Children[2].Children.Count - 1)
 				.ToReactiveCommand()
+				.WithSubscribe(app.DownCoupler)
 				.AddTo(disposable);
-
-			DownCouplerCommand.Subscribe(() => app.DownCoupler()).AddTo(disposable);
 
 			ChangeCarClass = SelectedItem
 				.Select(x => x?.Tag.Value is TrailerCar || Item.Value.Children[1].Children.Count(y => y?.Tag.Value is MotorCar) > 1)
 				.ToReactiveCommand()
-				.AddTo(disposable);
-
-			ChangeCarClass
-				.Subscribe(() => app.ChangeCarClass(app.Train.Cars.IndexOf((Car)SelectedItem.Value.Tag.Value)))
+				.WithSubscribe(() => app.ChangeCarClass(app.Train.Cars.IndexOf((Car)SelectedItem.Value.Tag.Value)))
 				.AddTo(disposable);
 
 			ChangeVisibleLogMessages = new ReactiveCommand<MessageType>()

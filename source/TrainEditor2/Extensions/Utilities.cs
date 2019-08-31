@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 
@@ -248,18 +249,15 @@ namespace TrainEditor2.Extensions
 			return Color.FromArgb((int)Math.Round(255.0 * r), (int)Math.Round(255.0 * g), (int)Math.Round(255.0 * b));
 		}
 
-		internal static void RemoveAll<T>(this ObservableCollection<T> collection, Func<T, bool> match)
+		internal static void RemoveAll<T>(this ICollection<T> collection, Func<T, bool> match)
 		{
-			for (int i = collection.Count - 1; i >= 0; i--)
+			foreach (var item in collection.Where(match).ToArray())
 			{
-				if (match(collection[i]))
-				{
-					collection.RemoveAt(i);
-				}
+				collection.Remove(item);
 			}
 		}
 
-		internal static void AddRange<T>(this ObservableCollection<T> collection, IEnumerable<T> addCollection)
+		internal static void AddRange<T>(this ICollection<T> collection, IEnumerable<T> addCollection)
 		{
 			foreach (T add in addCollection)
 			{

@@ -27,6 +27,8 @@ namespace TrainEditor2.Views
 			CompositeDisposable timetableDisposable = new CompositeDisposable();
 			CompositeDisposable touchDisposable = new CompositeDisposable();
 
+			listViewPanel.Items.Clear();
+
 			x.TreeItem
 				.BindTo(
 					this,
