@@ -258,7 +258,7 @@ namespace TrainEditor2.IO.Sounds.Xml
 				}
 			}
 
-			sound.SoundElements = new ObservableCollection<SoundElement>(sound.SoundElements.GroupBy(x => x.Key).Select(x => x.First()));
+			sound.SoundElements = new ObservableCollection<SoundElement>(sound.SoundElements.GroupBy(x => new { Type = x.GetType(), x.Key }).Select(x => x.First()));
 		}
 
 		private static void ParseNode(string basePath, XElement parentNode, SoundElement element)

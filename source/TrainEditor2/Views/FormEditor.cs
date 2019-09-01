@@ -156,6 +156,7 @@ namespace TrainEditor2.Views
 		public FormEditor()
 		{
 			disposable = new CompositeDisposable();
+
 			CompositeDisposable messageDisposable = new CompositeDisposable();
 			CompositeDisposable openFileDialogDisposable = new CompositeDisposable();
 			CompositeDisposable saveFileDialogDisposable = new CompositeDisposable();
@@ -397,6 +398,17 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(disposable);
 
+			Interface.LogMessages
+				.CollectionChangedAsObservable()
+				.Subscribe(_ =>
+				{
+					tabPageStatus.Text = $@"{Utilities.GetInterfaceString("status", "name")} ({Interface.LogMessages.Count})";
+					toolStripMenuItemError.Text = $@"{Interface.LogMessages.Count(m => m.Type == MessageType.Error || m.Type == MessageType.Critical)} {Utilities.GetInterfaceString("status", "menu", "error")}";
+					toolStripMenuItemWarning.Text = $@"{Interface.LogMessages.Count(m => m.Type == MessageType.Warning)} {Utilities.GetInterfaceString("status", "menu", "warning")}";
+					toolStripMenuItemInfo.Text = $@"{Interface.LogMessages.Count(m => m.Type == MessageType.Information)} {Utilities.GetInterfaceString("status", "menu", "info")}";
+				})
+				.AddTo(disposable);
+
 			app.VisibleLogMessages
 				.ObserveAddChanged()
 				.Subscribe(y =>
@@ -522,6 +534,11 @@ namespace TrainEditor2.Views
 			string folder = Program.FileSystem.GetDataFolder("Languages");
 			Translations.LoadLanguageFiles(folder);
 			Translations.ListLanguages(toolStripComboBoxLanguage.ComboBox);
+
+			if (app.CurrentLanguageCode.Value == "en-US")
+			{
+				app.CurrentLanguageCode.ForceNotify();
+			}
 		}
 
 		[UIPermission(SecurityAction.Demand, Window = UIPermissionWindow.AllWindows)]
@@ -602,6 +619,49 @@ namespace TrainEditor2.Views
 		private void FormEditor_KeyUp(object sender, KeyEventArgs e)
 		{
 			ModifierKeysDownUp(e);
+		}
+
+		private void FormEditor_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			switch (MessageBox.Show(Utilities.GetInterfaceString("menu", "message", "exit"), Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
+			{
+				case DialogResult.Cancel:
+					e.Cancel = true;
+					return;
+				case DialogResult.Yes:
+					if (app.SaveFile.CanExecute())
+					{
+						app.SaveFile.Execute();
+					}
+					else
+					{
+						app.SaveAsFile.Execute();
+					}
+					break;
+			}
+
+			Interface.CurrentOptions.LanguageCode = app.CurrentLanguageCode.Value;
+		}
+
+		private void ToolStripMenuItemImport_Click(object sender, EventArgs e)
+		{
+			using (FormImport form = new FormImport(app))
+			{
+				form.ShowDialog(this);
+			}
+		}
+
+		private void ToolStripMenuItemExport_Click(object sender, EventArgs e)
+		{
+			using (FormExport form = new FormExport(app))
+			{
+				form.ShowDialog(this);
+			}
+		}
+
+		private void ToolStripMenuItemExit_Click(object sender, EventArgs e)
+		{
+			Close();
 		}
 
 		private void ToolStripComboBoxLanguage_SelectedIndexChanged(object sender, EventArgs e)
@@ -859,22 +919,6 @@ namespace TrainEditor2.Views
 		private void ButtonSoundFileNameOpen_Click(object sender, EventArgs e)
 		{
 			OpenFileDialog(textBoxSoundFileName);
-		}
-
-		private void ToolStripMenuItemImport_Click(object sender, EventArgs e)
-		{
-			using (FormImport form = new FormImport(app))
-			{
-				form.ShowDialog(this);
-			}
-		}
-
-		private void ToolStripMenuItemExport_Click(object sender, EventArgs e)
-		{
-			using (FormExport form = new FormExport(app))
-			{
-				form.ShowDialog(this);
-			}
 		}
 	}
 }

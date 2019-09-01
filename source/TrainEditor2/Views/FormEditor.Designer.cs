@@ -351,7 +351,6 @@ namespace TrainEditor2.Views
 			this.listViewPanel = new System.Windows.Forms.ListView();
 			this.panelPanelNavi = new System.Windows.Forms.Panel();
 			this.panelPanelNaviCmd = new System.Windows.Forms.Panel();
-			this.buttonPanelApply = new System.Windows.Forms.Button();
 			this.buttonPanelCopy = new System.Windows.Forms.Button();
 			this.buttonPanelAdd = new System.Windows.Forms.Button();
 			this.buttonPanelRemove = new System.Windows.Forms.Button();
@@ -580,7 +579,6 @@ namespace TrainEditor2.Views
 			this.listViewSound = new System.Windows.Forms.ListView();
 			this.panelSoundSettingEdit = new System.Windows.Forms.Panel();
 			this.groupBoxSoundEntry = new System.Windows.Forms.GroupBox();
-			this.buttonSoundApply = new System.Windows.Forms.Button();
 			this.buttonSoundRemove = new System.Windows.Forms.Button();
 			this.groupBoxSoundKey = new System.Windows.Forms.GroupBox();
 			this.numericUpDownSoundKeyIndex = new System.Windows.Forms.NumericUpDown();
@@ -616,7 +614,6 @@ namespace TrainEditor2.Views
 			this.treeViewCars = new System.Windows.Forms.TreeView();
 			this.panelCarsNavi = new System.Windows.Forms.Panel();
 			this.buttonCarsCopy = new System.Windows.Forms.Button();
-			this.buttonCarsApply = new System.Windows.Forms.Button();
 			this.buttonCarsRemove = new System.Windows.Forms.Button();
 			this.buttonCarsAdd = new System.Windows.Forms.Button();
 			this.buttonCarsUp = new System.Windows.Forms.Button();
@@ -3822,7 +3819,6 @@ namespace TrainEditor2.Views
 			// 
 			// panelPanelNaviCmd
 			// 
-			this.panelPanelNaviCmd.Controls.Add(this.buttonPanelApply);
 			this.panelPanelNaviCmd.Controls.Add(this.buttonPanelCopy);
 			this.panelPanelNaviCmd.Controls.Add(this.buttonPanelAdd);
 			this.panelPanelNaviCmd.Controls.Add(this.buttonPanelRemove);
@@ -3831,15 +3827,6 @@ namespace TrainEditor2.Views
 			this.panelPanelNaviCmd.Name = "panelPanelNaviCmd";
 			this.panelPanelNaviCmd.Size = new System.Drawing.Size(135, 72);
 			this.panelPanelNaviCmd.TabIndex = 7;
-			// 
-			// buttonPanelApply
-			// 
-			this.buttonPanelApply.Location = new System.Drawing.Point(72, 40);
-			this.buttonPanelApply.Name = "buttonPanelApply";
-			this.buttonPanelApply.Size = new System.Drawing.Size(56, 24);
-			this.buttonPanelApply.TabIndex = 3;
-			this.buttonPanelApply.Text = "Apply";
-			this.buttonPanelApply.UseVisualStyleBackColor = true;
 			// 
 			// buttonPanelCopy
 			// 
@@ -6015,7 +6002,6 @@ namespace TrainEditor2.Views
 			// groupBoxSoundEntry
 			// 
 			this.groupBoxSoundEntry.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.groupBoxSoundEntry.Controls.Add(this.buttonSoundApply);
 			this.groupBoxSoundEntry.Controls.Add(this.buttonSoundRemove);
 			this.groupBoxSoundEntry.Controls.Add(this.groupBoxSoundKey);
 			this.groupBoxSoundEntry.Controls.Add(this.buttonSoundAdd);
@@ -6026,15 +6012,6 @@ namespace TrainEditor2.Views
 			this.groupBoxSoundEntry.TabIndex = 6;
 			this.groupBoxSoundEntry.TabStop = false;
 			this.groupBoxSoundEntry.Text = "Edit entry";
-			// 
-			// buttonSoundApply
-			// 
-			this.buttonSoundApply.Location = new System.Drawing.Point(136, 304);
-			this.buttonSoundApply.Name = "buttonSoundApply";
-			this.buttonSoundApply.Size = new System.Drawing.Size(56, 24);
-			this.buttonSoundApply.TabIndex = 5;
-			this.buttonSoundApply.Text = "Apply";
-			this.buttonSoundApply.UseVisualStyleBackColor = true;
 			// 
 			// buttonSoundRemove
 			// 
@@ -6335,7 +6312,6 @@ namespace TrainEditor2.Views
 			// panelCarsNavi
 			// 
 			this.panelCarsNavi.Controls.Add(this.buttonCarsCopy);
-			this.panelCarsNavi.Controls.Add(this.buttonCarsApply);
 			this.panelCarsNavi.Controls.Add(this.buttonCarsRemove);
 			this.panelCarsNavi.Controls.Add(this.buttonCarsAdd);
 			this.panelCarsNavi.Controls.Add(this.buttonCarsUp);
@@ -6354,15 +6330,6 @@ namespace TrainEditor2.Views
 			this.buttonCarsCopy.TabIndex = 5;
 			this.buttonCarsCopy.Text = "Copy";
 			this.buttonCarsCopy.UseVisualStyleBackColor = true;
-			// 
-			// buttonCarsApply
-			// 
-			this.buttonCarsApply.Location = new System.Drawing.Point(136, 40);
-			this.buttonCarsApply.Name = "buttonCarsApply";
-			this.buttonCarsApply.Size = new System.Drawing.Size(56, 24);
-			this.buttonCarsApply.TabIndex = 4;
-			this.buttonCarsApply.Text = "Apply";
-			this.buttonCarsApply.UseVisualStyleBackColor = true;
 			// 
 			// buttonCarsRemove
 			// 
@@ -6493,6 +6460,7 @@ namespace TrainEditor2.Views
 			this.toolStripMenuItemExit.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
 			this.toolStripMenuItemExit.Size = new System.Drawing.Size(200, 22);
 			this.toolStripMenuItemExit.Text = "Exit(&X)";
+			this.toolStripMenuItemExit.Click += new System.EventHandler(this.ToolStripMenuItemExit_Click);
 			// 
 			// toolStripComboBoxLanguage
 			// 
@@ -6525,6 +6493,7 @@ namespace TrainEditor2.Views
 			this.MainMenuStrip = this.menuStripMenu;
 			this.Name = "FormEditor";
 			this.Text = "FormEditor";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormEditor_FormClosing);
 			this.Load += new System.EventHandler(this.FormEditor_Load);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormEditor_KeyDown);
 			this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FormEditor_KeyUp);
@@ -6970,7 +6939,6 @@ namespace TrainEditor2.Views
 		private System.Windows.Forms.ListView listViewPanel;
 		private System.Windows.Forms.Panel panelPanelNavi;
 		private System.Windows.Forms.Button buttonPanelAdd;
-		private System.Windows.Forms.Button buttonPanelApply;
 		private System.Windows.Forms.Button buttonPanelRemove;
 		private System.Windows.Forms.TabControl tabControlPanel;
 		private System.Windows.Forms.TabPage tabPageThis;
@@ -7181,7 +7149,6 @@ namespace TrainEditor2.Views
 		private System.Windows.Forms.ListView listViewSound;
 		private System.Windows.Forms.Panel panelSoundSettingEdit;
 		private System.Windows.Forms.GroupBox groupBoxSoundEntry;
-		private System.Windows.Forms.Button buttonSoundApply;
 		private System.Windows.Forms.Button buttonSoundRemove;
 		private System.Windows.Forms.GroupBox groupBoxSoundKey;
 		private System.Windows.Forms.NumericUpDown numericUpDownSoundKeyIndex;
@@ -7217,7 +7184,6 @@ namespace TrainEditor2.Views
 		private System.Windows.Forms.TreeView treeViewCars;
 		private System.Windows.Forms.Panel panelCarsNavi;
 		private System.Windows.Forms.Button buttonCarsCopy;
-		private System.Windows.Forms.Button buttonCarsApply;
 		private System.Windows.Forms.Button buttonCarsRemove;
 		private System.Windows.Forms.Button buttonCarsAdd;
 		private System.Windows.Forms.Button buttonCarsUp;

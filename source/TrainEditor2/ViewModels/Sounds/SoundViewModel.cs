@@ -6,6 +6,7 @@ using System.Reactive.Linq;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Models.Sounds;
+using TrainEditor2.Simulation.TrainManager;
 using TrainEditor2.ViewModels.Others;
 
 namespace TrainEditor2.ViewModels.Sounds
@@ -371,6 +372,47 @@ namespace TrainEditor2.ViewModels.Sounds
 		{
 			CompositeDisposable treeItemDisposable = new CompositeDisposable();
 			CompositeDisposable listItemDisposable = new CompositeDisposable();
+
+			TrainManager.RunSounds = sound.SoundElements.OfType<RunElement>().ToList();
+			TrainManager.MotorSounds = sound.SoundElements.OfType<MotorElement>().ToList();
+
+			sound.SoundElements
+				.ObserveAddChanged()
+				.Subscribe(x =>
+				{
+					RunElement run = x as RunElement;
+					MotorElement motor = x as MotorElement;
+
+					if (run != null)
+					{
+						TrainManager.RunSounds.Add(run);
+					}
+
+					if (motor != null)
+					{
+						TrainManager.MotorSounds.Add(motor);
+					}
+				})
+				.AddTo(disposable);
+
+			sound.SoundElements
+				.ObserveRemoveChanged()
+				.Subscribe(x =>
+				{
+					RunElement run = x as RunElement;
+					MotorElement motor = x as MotorElement;
+
+					if (run != null)
+					{
+						TrainManager.RunSounds.Remove(run);
+					}
+
+					if (motor != null)
+					{
+						TrainManager.MotorSounds.Remove(motor);
+					}
+				})
+				.AddTo(disposable);
 
 			TreeItem = sound
 				.ObserveProperty(x => x.TreeItem)

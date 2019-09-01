@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Timers;
 using Prism.Mvvm;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Dialogs;
@@ -581,6 +580,8 @@ namespace TrainEditor2.Models.Trains
 		private double startSpeed;
 		private double endSpeed;
 
+		private DateTime startTime;
+		private double oldElapsedTime;
 		private double nowSpeed;
 
 		private int imageWidth;
@@ -1006,6 +1007,7 @@ namespace TrainEditor2.Models.Trains
 			MinVolume = 0.0;
 			MaxVolume = 256.0;
 
+			CurrentSimState = SimulationState.Stopped;
 			RunIndex = -1;
 			IsPlayTrack1 = IsPlayTrack2 = true;
 			Acceleration = 2.6;

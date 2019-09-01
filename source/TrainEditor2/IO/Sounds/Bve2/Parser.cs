@@ -48,7 +48,7 @@ namespace TrainEditor2.IO.Sounds.Bve2
 			CheckFile<SuspensionElement, SuspensionKey>(sound.SoundElements, trainFolder, "SpringR.wav", SuspensionKey.Right);
 			CheckFiles<MotorElement>(sound.SoundElements, trainFolder, "Motor", ".wav");
 
-			sound.SoundElements = new ObservableCollection<SoundElement>(sound.SoundElements.GroupBy(x => x.Key).Select(x => x.First()));
+			sound.SoundElements = new ObservableCollection<SoundElement>(sound.SoundElements.GroupBy(x => new { Type = x.GetType(), x.Key }).Select(x => x.First()));
 		}
 
 		private static void CheckFile<T, U>(ICollection<SoundElement> elements, string trainFolder, string fileName, U key) where T : SoundElement<U>, new()

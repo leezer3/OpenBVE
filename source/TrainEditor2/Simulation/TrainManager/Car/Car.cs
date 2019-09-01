@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using OpenBveApi.Math;
 using SoundManager;
+using TrainEditor2.Models.Sounds;
 
 namespace TrainEditor2.Simulation.TrainManager
 {
@@ -186,6 +188,57 @@ namespace TrainEditor2.Simulation.TrainManager
 				}
 
 				Sounds.Motor.CurrentAccelerationDirection = ndir;
+			}
+
+			internal void ApplySounds()
+			{
+				InitializeCarSounds();
+
+				//Default sound positions and radii
+				double mediumRadius = 10.0;
+
+				//3D center of the car
+				Vector3 center = Vector3.Zero;
+
+				// run sound
+				foreach (var element in RunSounds)
+				{
+					int n = Sounds.Run.Length;
+
+					if (element.Key >= n)
+					{
+						Array.Resize(ref Sounds.Run, element.Key + 1);
+
+						for (int h = n; h < element.Key; h++)
+						{
+							Sounds.Run[h] = new CarSound();
+						}
+					}
+
+					Sounds.Run[element.Key] = new CarSound(Program.SoundApi.RegisterBuffer(element.FilePath, mediumRadius), center);
+				}
+
+				Sounds.RunVolume = new double[Sounds.Run.Length];
+
+
+				// motor sound
+				Sounds.Motor.Position = center;
+
+				for (int i = 0; i < Sounds.Motor.Tables.Length; i++)
+				{
+					Sounds.Motor.Tables[i].Buffer = null;
+					Sounds.Motor.Tables[i].Source = null;
+
+					for (int j = 0; j < Sounds.Motor.Tables[i].Entries.Length; j++)
+					{
+						MotorElement element = MotorSounds.FirstOrDefault(x => x.Key == Sounds.Motor.Tables[i].Entries[j].SoundIndex);
+
+						if (element != null)
+						{
+							Sounds.Motor.Tables[i].Entries[j].Buffer = Program.SoundApi.RegisterBuffer(element.FilePath, mediumRadius);
+						}
+					}
+				}
 			}
 		}
 	}

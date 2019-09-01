@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using Reactive.Bindings;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
@@ -73,13 +72,15 @@ namespace TrainEditor2.Views
 				.AddTo(trainDisposable);
 
 			x.SelectedCar
-				.Where(y => y != null)
 				.Subscribe(y =>
 				{
 					carDisposable.Dispose();
 					carDisposable = new CompositeDisposable();
 
-					BindToCar(y).AddTo(carDisposable);
+					if (y != null)
+					{
+						BindToCar(y).AddTo(carDisposable);
+					}
 				})
 				.AddTo(trainDisposable);
 
@@ -93,13 +94,15 @@ namespace TrainEditor2.Views
 				.AddTo(trainDisposable);
 
 			x.SelectedCoupler
-				.Where(y => y != null)
 				.Subscribe(y =>
 				{
 					couplerDisposable.Dispose();
 					couplerDisposable = new CompositeDisposable();
 
-					BindToCoupler(y).AddTo(couplerDisposable);
+					if (y != null)
+					{
+						BindToCoupler(y).AddTo(couplerDisposable);
+					}
 				})
 				.AddTo(trainDisposable);
 

@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
@@ -105,7 +106,47 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
-		private ReadOnlyReactivePropertySlim<bool> StoppedSim
+		internal ReadOnlyReactivePropertySlim<bool> StoppedSim
+		{
+			get;
+		}
+
+		internal ReactiveProperty<int> RunIndex
+		{
+			get;
+		}
+
+		internal ReactiveProperty<bool> IsPlayTrack1
+		{
+			get;
+		}
+
+		internal ReactiveProperty<bool> IsPlayTrack2
+		{
+			get;
+		}
+
+		internal ReactiveProperty<bool> IsLoop
+		{
+			get;
+		}
+
+		internal ReactiveProperty<bool> IsConstant
+		{
+			get;
+		}
+
+		internal ReactiveProperty<string> Acceleration
+		{
+			get;
+		}
+
+		internal ReactiveProperty<string> StartSpeed
+		{
+			get;
+		}
+
+		internal ReactiveProperty<string> EndSpeed
 		{
 			get;
 		}
@@ -246,6 +287,31 @@ namespace TrainEditor2.ViewModels.Trains
 		}
 
 		internal ReactiveCommand DirectMove
+		{
+			get;
+		}
+
+		internal ReactiveCommand SwapSpeed
+		{
+			get;
+		}
+
+		internal ReactiveTimer SimulationTimer
+		{
+			get;
+		}
+
+		internal ReactiveCommand StartSimulation
+		{
+			get;
+		}
+
+		internal ReactiveCommand PauseSimulation
+		{
+			get;
+		}
+
+		internal ReactiveCommand StopSimulation
 		{
 			get;
 		}
@@ -414,6 +480,80 @@ namespace TrainEditor2.ViewModels.Trains
 				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 
+			RunIndex = motor
+				.ToReactivePropertyAsSynchronized(x => x.RunIndex)
+				.AddTo(disposable);
+
+			IsPlayTrack1 = motor
+				.ToReactivePropertyAsSynchronized(x => x.IsPlayTrack1)
+				.AddTo(disposable);
+
+			IsPlayTrack2 = motor
+				.ToReactivePropertyAsSynchronized(x => x.IsPlayTrack2)
+				.AddTo(disposable);
+
+			IsLoop = motor
+				.ToReactivePropertyAsSynchronized(x => x.IsLoop)
+				.AddTo(disposable);
+
+			IsConstant = motor
+				.ToReactivePropertyAsSynchronized(x => x.IsConstant)
+				.AddTo(disposable);
+
+			Acceleration = motor
+				.ToReactivePropertyAsSynchronized(
+					x => x.Acceleration,
+					x => x.ToString(culture),
+					double.Parse,
+					ignoreValidationErrorValue: true
+				)
+				.SetValidateNotifyError(x =>
+				{
+					double result;
+					string message;
+
+					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
+
+					return message;
+				})
+				.AddTo(disposable);
+
+			StartSpeed = motor
+				.ToReactivePropertyAsSynchronized(
+					x => x.StartSpeed,
+					x => x.ToString(culture),
+					double.Parse,
+					ignoreValidationErrorValue: true
+				)
+				.SetValidateNotifyError(x =>
+				{
+					double result;
+					string message;
+
+					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
+
+					return message;
+				})
+				.AddTo(disposable);
+
+			EndSpeed = motor
+				.ToReactivePropertyAsSynchronized(
+					x => x.EndSpeed,
+					x => x.ToString(culture),
+					double.Parse,
+					ignoreValidationErrorValue: true
+				)
+				.SetValidateNotifyError(x =>
+				{
+					double result;
+					string message;
+
+					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
+
+					return message;
+				})
+				.AddTo(disposable);
+
 			EnabledDirect = new[]
 				{
 					CurrentInputMode.Select(x => x != Motor.InputMode.SoundIndex),
@@ -443,7 +583,8 @@ namespace TrainEditor2.ViewModels.Trains
 					}
 
 					return message;
-				});
+				})
+				.AddTo(disposable);
 
 			DirectY = new ReactiveProperty<string>(0.0.ToString(culture))
 				.SetValidateNotifyError(x =>
@@ -465,7 +606,8 @@ namespace TrainEditor2.ViewModels.Trains
 					}
 
 					return message;
-				});
+				})
+				.AddTo(disposable);
 
 			CurrentToolMode
 				.Subscribe(_ =>
@@ -500,11 +642,9 @@ namespace TrainEditor2.ViewModels.Trains
 				.ToReactiveProperty()
 				.AddTo(disposable);
 
-			ChangeSelectedTrack = new ReactiveCommand<Motor.TrackInfo>();
-			ChangeSelectedTrack.Subscribe(x => motor.SelectedTrackInfo = x).AddTo(disposable);
+			ChangeSelectedTrack = new ReactiveCommand<Motor.TrackInfo>().WithSubscribe(x => motor.SelectedTrackInfo = x).AddTo(disposable);
 
-			ChangeInputMode = new ReactiveCommand<Motor.InputMode>();
-			ChangeInputMode.Subscribe(x => motor.CurrentInputMode = x).AddTo(disposable);
+			ChangeInputMode = new ReactiveCommand<Motor.InputMode>().WithSubscribe(x => motor.CurrentInputMode = x).AddTo(disposable);
 
 			ChangeToolMode = new[]
 				{
@@ -513,30 +653,22 @@ namespace TrainEditor2.ViewModels.Trains
 				}
 				.CombineLatestValuesAreAllTrue()
 				.ToReactiveCommand<Motor.ToolMode>()
+				.WithSubscribe(x => motor.CurrentToolMode = x)
 				.AddTo(disposable);
 
-			ChangeToolMode.Subscribe(x => motor.CurrentToolMode = x).AddTo(disposable);
+			ZoomIn = new ReactiveCommand().WithSubscribe(motor.ZoomIn).AddTo(disposable);
 
-			ZoomIn = new ReactiveCommand();
-			ZoomIn.Subscribe(motor.ZoomIn).AddTo(disposable);
+			ZoomOut = new ReactiveCommand().WithSubscribe(motor.ZoomOut).AddTo(disposable);
 
-			ZoomOut = new ReactiveCommand();
-			ZoomOut.Subscribe(motor.ZoomOut).AddTo(disposable);
+			Reset = new ReactiveCommand().WithSubscribe(motor.Reset).AddTo(disposable);
 
-			Reset = new ReactiveCommand();
-			Reset.Subscribe(motor.Reset).AddTo(disposable);
+			MoveLeft = new ReactiveCommand().WithSubscribe(motor.MoveLeft).AddTo(disposable);
 
-			MoveLeft = new ReactiveCommand();
-			MoveLeft.Subscribe(motor.MoveLeft).AddTo(disposable);
+			MoveRight = new ReactiveCommand().WithSubscribe(motor.MoveRight).AddTo(disposable);
 
-			MoveRight = new ReactiveCommand();
-			MoveRight.Subscribe(motor.MoveRight).AddTo(disposable);
+			MoveBottom = new ReactiveCommand().WithSubscribe(motor.MoveBottom).AddTo(disposable);
 
-			MoveBottom = new ReactiveCommand();
-			MoveBottom.Subscribe(motor.MoveBottom).AddTo(disposable);
-
-			MoveTop = new ReactiveCommand();
-			MoveTop.Subscribe(motor.MoveTop).AddTo(disposable);
+			MoveTop = new ReactiveCommand().WithSubscribe(motor.MoveTop).AddTo(disposable);
 
 			Undo = new[]
 				{
@@ -551,9 +683,8 @@ namespace TrainEditor2.ViewModels.Trains
 				}
 				.CombineLatestValuesAreAllTrue()
 				.ToReactiveCommand(false)
+				.WithSubscribe(motor.Undo)
 				.AddTo(disposable);
-
-			Undo.Subscribe(motor.Undo).AddTo(disposable);
 
 			Redo = new[]
 				{
@@ -568,21 +699,18 @@ namespace TrainEditor2.ViewModels.Trains
 				}
 				.CombineLatestValuesAreAllTrue()
 				.ToReactiveCommand(false)
+				.WithSubscribe(motor.Redo)
 				.AddTo(disposable);
-
-			Redo.Subscribe(motor.Redo).AddTo(disposable);
 
 			TearingOff = StoppedSim
 				.ToReactiveCommand()
+				.WithSubscribe(motor.TearingOff)
 				.AddTo(disposable);
-
-			TearingOff.Subscribe(motor.TearingOff).AddTo(disposable);
 
 			Copy = StoppedSim
 				.ToReactiveCommand()
+				.WithSubscribe(motor.Copy)
 				.AddTo(disposable);
-
-			Copy.Subscribe(motor.Copy).AddTo(disposable);
 
 			Paste = new[]
 				{
@@ -591,30 +719,24 @@ namespace TrainEditor2.ViewModels.Trains
 				}
 				.CombineLatestValuesAreAllTrue()
 				.ToReactiveCommand()
+				.WithSubscribe(motor.Paste)
 				.AddTo(disposable);
-
-			Paste.Subscribe(motor.Paste).AddTo(disposable);
 
 			Cleanup = StoppedSim
 				.ToReactiveCommand()
+				.WithSubscribe(motor.Cleanup)
 				.AddTo(disposable);
-
-			Cleanup.Subscribe(motor.Cleanup).AddTo(disposable);
 
 			Delete = StoppedSim
 				.ToReactiveCommand()
+				.WithSubscribe(motor.Delete)
 				.AddTo(disposable);
 
-			Delete.Subscribe(motor.Delete).AddTo(disposable);
+			MouseDown = new ReactiveCommand<InputEventModel.EventArgs>().WithSubscribe(motor.MouseDown).AddTo(disposable);
 
-			MouseDown = new ReactiveCommand<InputEventModel.EventArgs>();
-			MouseDown.Subscribe(motor.MouseDown).AddTo(disposable);
+			MouseMove = new ReactiveCommand<InputEventModel.EventArgs>().WithSubscribe(motor.MouseMove).AddTo(disposable);
 
-			MouseMove = new ReactiveCommand<InputEventModel.EventArgs>();
-			MouseMove.Subscribe(motor.MouseMove).AddTo(disposable);
-
-			MouseUp = new ReactiveCommand();
-			MouseUp.Subscribe(motor.MouseUp).AddTo(disposable);
+			MouseUp = new ReactiveCommand().WithSubscribe(motor.MouseUp).AddTo(disposable);
 
 			DirectDot = new[]
 				{
@@ -625,9 +747,8 @@ namespace TrainEditor2.ViewModels.Trains
 				}
 				.CombineLatestValuesAreAllTrue()
 				.ToReactiveCommand()
+				.WithSubscribe(() => motor.DirectDot(double.Parse(DirectX.Value), double.Parse(DirectY.Value)))
 				.AddTo(disposable);
-
-			DirectDot.Subscribe(() => motor.DirectDot(double.Parse(DirectX.Value), double.Parse(DirectY.Value))).AddTo(disposable);
 
 			DirectMove = new[]
 				{
@@ -638,9 +759,65 @@ namespace TrainEditor2.ViewModels.Trains
 				}
 				.CombineLatestValuesAreAllTrue()
 				.ToReactiveCommand()
+				.WithSubscribe(() => motor.DirectMove(double.Parse(DirectX.Value), double.Parse(DirectY.Value)))
 				.AddTo(disposable);
 
-			DirectMove.Subscribe(() => motor.DirectMove(double.Parse(DirectX.Value), double.Parse(DirectY.Value))).AddTo(disposable);
+			SwapSpeed = StoppedSim
+				.ToReactiveCommand()
+				.WithSubscribe(() =>
+				{
+					string tmp = StartSpeed.Value;
+					StartSpeed.Value = EndSpeed.Value;
+					EndSpeed.Value = tmp;
+				})
+				.AddTo(disposable);
+
+			SimulationTimer = new ReactiveTimer(TimeSpan.FromMilliseconds(1000.0 / 60.0));
+
+			SimulationTimer
+				.Subscribe(_ =>
+				{
+					motor.RunSimulation();
+					motor.DrawSimulation();
+				})
+				.AddTo(disposable);
+
+			motor.ObserveProperty(x => x.CurrentSimState)
+				.ToReadOnlyReactivePropertySlim()
+				.Subscribe(x =>
+				{
+					switch (x)
+					{
+						case Motor.SimulationState.Started:
+							SimulationTimer.Start();
+							break;
+						default:
+							SimulationTimer.Stop();
+							break;
+					}
+				})
+				.AddTo(disposable);
+
+				StartSimulation = motor
+				.ObserveProperty(x => x.CurrentSimState)
+				.Select(x => x == Motor.SimulationState.Paused || x == Motor.SimulationState.Stopped)
+				.ToReactiveCommand()
+				.WithSubscribe(motor.StartSimulation)
+				.AddTo(disposable);
+
+			PauseSimulation = motor
+				.ObserveProperty(x => x.CurrentSimState)
+				.Select(x => x == Motor.SimulationState.Started)
+				.ToReactiveCommand()
+				.WithSubscribe(motor.PauseSimulation)
+				.AddTo(disposable);
+
+			StopSimulation = motor
+				.ObserveProperty(x => x.CurrentSimState)
+				.Select(x => x == Motor.SimulationState.Paused || x == Motor.SimulationState.Started)
+				.ToReactiveCommand()
+				.WithSubscribe(motor.StopSimulation)
+				.AddTo(disposable);
 
 			MinVelocity
 				.SetValidateNotifyError(x =>

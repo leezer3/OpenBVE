@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Windows.Forms;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -496,6 +495,197 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(motorDisposable);
 
+			z.StoppedSim
+				.BindTo(
+					toolStripMenuItemFile,
+					w => w.Enabled
+				)
+				.AddTo(motorDisposable);
+
+			z.StoppedSim
+				.BindTo(
+					panelCars,
+					w => w.Enabled
+				)
+				.AddTo(motorDisposable);
+
+			z.StoppedSim
+				.BindTo(
+					groupBoxArea,
+					w => w.Enabled
+				)
+				.AddTo(motorDisposable);
+
+			z.StoppedSim
+				.BindTo(
+					tabPageCar,
+					w => w.Enabled
+				)
+				.AddTo(motorDisposable);
+
+			z.StoppedSim
+				.BindTo(
+					tabPageAccel,
+					w => w.Enabled
+				)
+				.AddTo(motorDisposable);
+
+			z.RunIndex
+				.BindTo(
+					numericUpDownRunIndex,
+					w => w.Value,
+					BindingMode.TwoWay,
+					null,
+					w => (int)w,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => numericUpDownRunIndex.ValueChanged += h,
+							h => numericUpDownRunIndex.ValueChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(motorDisposable);
+
+			z.IsPlayTrack1
+				.BindTo(
+					checkBoxTrack1,
+					w => w.Checked,
+					BindingMode.TwoWay,
+					null,
+					null,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => checkBoxTrack1.CheckedChanged += h,
+							h => checkBoxTrack1.CheckedChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(motorDisposable);
+
+			z.IsPlayTrack2
+				.BindTo(
+					checkBoxTrack2,
+					w => w.Checked,
+					BindingMode.TwoWay,
+					null,
+					null,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => checkBoxTrack2.CheckedChanged += h,
+							h => checkBoxTrack2.CheckedChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(motorDisposable);
+
+			z.IsLoop
+				.BindTo(
+					checkBoxMotorLoop,
+					w => w.Checked,
+					BindingMode.TwoWay,
+					null,
+					null,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => checkBoxMotorLoop.CheckedChanged += h,
+							h => checkBoxMotorLoop.CheckedChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(motorDisposable);
+
+			z.IsLoop
+				.BindTo(
+					checkBoxMotorConstant,
+					w => w.Enabled
+				)
+				.AddTo(motorDisposable);
+
+			z.IsConstant
+				.BindTo(
+					checkBoxMotorConstant,
+					w => w.Checked,
+					BindingMode.TwoWay,
+					null,
+					null,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => checkBoxMotorConstant.CheckedChanged += h,
+							h => checkBoxMotorConstant.CheckedChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(motorDisposable);
+
+			z.IsConstant
+				.BindTo(
+					checkBoxMotorLoop,
+					w => w.Enabled,
+					BindingMode.OneWay,
+					w => !w
+				)
+				.AddTo(motorDisposable);
+
+			z.Acceleration
+				.BindTo(
+					textBoxMotorAccel,
+					w => w.Text,
+					BindingMode.TwoWay,
+					null,
+					null,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => textBoxMotorAccel.TextChanged += h,
+							h => textBoxMotorAccel.TextChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(motorDisposable);
+
+			z.Acceleration
+				.BindToErrorProvider(errorProvider, textBoxMotorAccel)
+				.AddTo(motorDisposable);
+
+			z.StartSpeed
+				.BindTo(
+					textBoxMotorAreaLeft,
+					w => w.Text,
+					BindingMode.TwoWay,
+					null,
+					null,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => textBoxMotorAreaLeft.TextChanged += h,
+							h => textBoxMotorAreaLeft.TextChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(motorDisposable);
+
+			z.StartSpeed
+				.BindToErrorProvider(errorProvider, textBoxMotorAreaLeft)
+				.AddTo(motorDisposable);
+
+			z.EndSpeed
+				.BindTo(
+					textBoxMotorAreaRight,
+					w => w.Text,
+					BindingMode.TwoWay,
+					null,
+					null,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => textBoxMotorAreaRight.TextChanged += h,
+							h => textBoxMotorAreaRight.TextChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(motorDisposable);
+
+			z.EndSpeed
+				.BindToErrorProvider(errorProvider, textBoxMotorAreaRight)
+				.AddTo(motorDisposable);
+
 			z.EnabledDirect
 				.BindTo(
 					groupBoxDirect,
@@ -583,7 +773,15 @@ namespace TrainEditor2.Views
 				.Subscribe(x =>
 				{
 					pictureBoxDrawArea.Image = x;
-					pictureBoxDrawArea.Refresh();
+
+					if (InvokeRequired)
+					{
+						Invoke(new Action(pictureBoxDrawArea.Refresh));
+					}
+					else
+					{
+						pictureBoxDrawArea.Refresh();
+					}
 				})
 				.AddTo(motorDisposable);
 
@@ -628,6 +826,11 @@ namespace TrainEditor2.Views
 
 			z.DirectDot.BindToButton(buttonDirectDot).AddTo(motorDisposable);
 			z.DirectMove.BindToButton(buttonDirectMove).AddTo(motorDisposable);
+
+			z.SwapSpeed.BindToButton(buttonMotorSwap).AddTo(motorDisposable);
+			z.StartSimulation.BindToButton(buttonPlay).AddTo(motorDisposable);
+			z.PauseSimulation.BindToButton(buttonPause).AddTo(motorDisposable);
+			z.StopSimulation.BindToButton(buttonStop).AddTo(motorDisposable);
 
 			messageDisposable.AddTo(motorDisposable);
 			toolTipVertexPitchDisposable.AddTo(motorDisposable);
