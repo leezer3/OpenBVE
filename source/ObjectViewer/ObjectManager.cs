@@ -33,8 +33,8 @@ namespace OpenBve
 				double z = AnimatedWorldObjects[i].Object.TranslateZFunction == null ? 0.0 : AnimatedWorldObjects[i].Object.TranslateZFunction.LastResult;
 				double pa = AnimatedWorldObjects[i].TrackPosition + z - AnimatedWorldObjects[i].Radius - extraRadius;
 				double pb = AnimatedWorldObjects[i].TrackPosition + z + AnimatedWorldObjects[i].Radius + extraRadius;
-				double ta = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z - Backgrounds.BackgroundImageDistance - Camera.ExtraViewingDistance;
-				double tb = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z + Backgrounds.BackgroundImageDistance + Camera.ExtraViewingDistance;
+				double ta = Camera.Alignment.Position.Z - Backgrounds.BackgroundImageDistance - Camera.ExtraViewingDistance;
+				double tb = Camera.Alignment.Position.Z + Backgrounds.BackgroundImageDistance + Camera.ExtraViewingDistance;
 				bool visible = pb >= ta & pa <= tb;
 				if (visible | ForceUpdate)
 				{
@@ -275,7 +275,7 @@ namespace OpenBve
             ObjectsSortedByStartPointer = 0;
             ObjectsSortedByEndPointer = 0;
             // initial visiblity
-            double p = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
+            double p = Camera.Alignment.Position.Z;
             for (int i = 0; i < ObjectsUsed; i++)
             {
                 if (Objects[i] != null && !Objects[i].Dynamic)
@@ -307,7 +307,7 @@ namespace OpenBve
         {
             double d = TrackPosition - LastUpdatedTrackPosition;
             int n = ObjectsSortedByStart.Length;
-            double p = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
+            double p = Camera.Alignment.Position.Z;
             if (d < 0.0)
             {
                 if (ObjectsSortedByStartPointer >= n) ObjectsSortedByStartPointer = n - 1;

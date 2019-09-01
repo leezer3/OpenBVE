@@ -58,22 +58,6 @@ namespace OpenBve {
 		}
 	}
 	
-	// --- TrackManager.cs ---
-	internal static class TrackManager {
-		internal struct TrackFollower {
-			internal double TrackPosition;
-			internal Vector3 WorldPosition;
-			internal Vector3 WorldDirection;
-			internal Vector3 WorldUp;
-			internal Vector3 WorldSide;
-            internal double CurveRadius;
-            internal double CurveCant;
-			internal double Pitch;
-            internal double CantDueToInaccuracy;
-		}
-		internal static void UpdateTrackFollower(ref TrackFollower Follower, double NewTrackPosition, bool UpdateWorldCoordinates, bool AddTrackInaccurary) { }
-	}
-
 	// --- Interface.cs ---
 	internal static class Interface {
 

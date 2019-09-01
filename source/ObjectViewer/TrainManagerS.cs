@@ -6,6 +6,7 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using OpenBveApi.Math;
+using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 
 namespace OpenBve {
@@ -16,7 +17,7 @@ namespace OpenBve {
 
 		// structures
 		internal struct Axle {
-			internal TrackManager.TrackFollower Follower;
+			internal TrackFollower Follower;
 		}
 
 		// cars

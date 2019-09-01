@@ -110,7 +110,6 @@
     <Compile Include="TextureManager.cs" />
     <Compile Include="Timers.cs" />
     <Compile Include="TrainManagerS.cs" />
-    <Compile Include="WorldS.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="formMessages.resx">
