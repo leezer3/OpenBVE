@@ -670,7 +670,7 @@ namespace TrainEditor2.Views
 
 			if (Translations.SelectedLanguage(ref currentLanguageCode, toolStripComboBoxLanguage.ComboBox))
 			{
-				//ApplyLanguage();
+				ApplyLanguage();
 			}
 
 			app.CurrentLanguageCode.Value = currentLanguageCode;

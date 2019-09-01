@@ -185,5 +185,9 @@ namespace TrainEditor2.Views
 			image.MakeTransparent();
 			return image;
 		}
+
+		private void ApplyLanguage()
+		{
+		}
 	}
 }

@@ -81,7 +81,7 @@ namespace TrainEditor2.Simulation.TrainManager
 						if (buffer != null)
 						{
 							Vector3 pos = Sounds.Run[j].Position;
-							Sounds.Run[j].Source = Program.SoundApi.PlaySound(buffer, pitch, gain, pos, this, true);
+							Sounds.Run[j].Source = Program.SoundApi.PlaySound(buffer, pitch, gain, pos, baseTrain, true);
 						}
 					}
 				}

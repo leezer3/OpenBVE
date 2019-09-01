@@ -67,6 +67,11 @@ namespace TrainEditor2.Models.Trains
 
 		internal void RunSimulation()
 		{
+			if (TrainManager.PlayerTrain == null)
+			{
+				return;
+			}
+
 			double nowElapsedTime = (DateTime.Now - startTime).TotalSeconds;
 
 			if (oldElapsedTime == 0.0)
