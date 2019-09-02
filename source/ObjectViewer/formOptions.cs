@@ -17,7 +17,7 @@ namespace OpenBve
             InitializeComponent();
             InterpolationMode.SelectedIndex = (int) Interface.CurrentOptions.Interpolation;
             AnsiotropicLevel.Value = Interface.CurrentOptions.AnisotropicFilteringLevel;
-            AntialiasingLevel.Value = Interface.CurrentOptions.AntialiasingLevel;
+            AntialiasingLevel.Value = Interface.CurrentOptions.AntiAliasingLevel;
             TransparencyQuality.SelectedIndex = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance ? 0 : 2;
             width.Value = Screen.Width;
             height.Value = Screen.Height;
@@ -35,7 +35,7 @@ namespace OpenBve
         private void button1_Click(object sender, EventArgs e)
         {
             InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
-            int previousAntialasingLevel = Interface.CurrentOptions.AntialiasingLevel;
+            int previousAntialasingLevel = Interface.CurrentOptions.AntiAliasingLevel;
             int previousAnsiotropicLevel = Interface.CurrentOptions.AnisotropicFilteringLevel;
 
             //Interpolation mode
@@ -63,10 +63,10 @@ namespace OpenBve
             //Ansiotropic filtering level
             Interface.CurrentOptions.AnisotropicFilteringLevel = (int) AnsiotropicLevel.Value;
             //Antialiasing level
-            Interface.CurrentOptions.AntialiasingLevel = (int)AntialiasingLevel.Value;
-            if (Interface.CurrentOptions.AntialiasingLevel != previousAntialasingLevel)
+            Interface.CurrentOptions.AntiAliasingLevel = (int)AntialiasingLevel.Value;
+            if (Interface.CurrentOptions.AntiAliasingLevel != previousAntialasingLevel)
             {
-                Program.currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntialiasingLevel);
+                Program.currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
             }
             //Transparency quality
             switch (TransparencyQuality.SelectedIndex)

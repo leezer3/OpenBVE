@@ -55,11 +55,11 @@ namespace OpenBve
 					{
 						if (Groups[0].Overlay)
 						{
-							Renderer.ShowObject(Groups[0].Elements[i].internalObject, ObjectType.Overlay);
+							Program.CurrentHost.ShowObject(Groups[0].Elements[i].internalObject, ObjectType.Overlay);
 						}
 						else
 						{
-							Renderer.ShowObject(Groups[0].Elements[i].internalObject, ObjectType.Dynamic);
+							Program.CurrentHost.ShowObject(Groups[0].Elements[i].internalObject, ObjectType.Dynamic);
 						}
 					}
 				}
@@ -71,11 +71,11 @@ namespace OpenBve
 					{
 						if (Groups[add].Overlay)
 						{
-							Renderer.ShowObject(Groups[add].Elements[i].internalObject, ObjectType.Overlay);
+							Program.CurrentHost.ShowObject(Groups[add].Elements[i].internalObject, ObjectType.Overlay);
 						}
 						else
 						{
-							Renderer.ShowObject(Groups[add].Elements[i].internalObject, ObjectType.Dynamic);
+							Program.CurrentHost.ShowObject(Groups[add].Elements[i].internalObject, ObjectType.Dynamic);
 						}
 					}
 				}

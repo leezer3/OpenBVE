@@ -1,5 +1,7 @@
-﻿using OpenTK;
+﻿using OpenBveApi.Colors;
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace LibRender
 {
@@ -96,6 +98,22 @@ namespace LibRender
 			}
 		}
 
-        
+		/// <summary>Resets the renderer to the default state</summary>
+		public static void Reset()
+		{
+			Objects = new RendererObject[256];
+			ObjectCount = 0;
+			StaticOpaque = new ObjectGroup[] { };
+			DynamicOpaque = new ObjectList();
+			DynamicAlpha = new ObjectList();
+			OverlayOpaque = new ObjectList();
+			OverlayAlpha = new ObjectList();
+			OptionLighting = true;
+			OptionAmbientColor = new Color24(160, 160, 160);
+			OptionDiffuseColor = new Color24(160, 160, 160);
+			OptionLightPosition = new Vector3(0.215920077052065f, 0.875724044222352f, -0.431840154104129f);
+			OptionLightingResultingAmount = 1.0f;
+			GL.Disable(EnableCap.Fog); FogEnabled = false;
+		}
     }
 }

@@ -107,7 +107,7 @@ namespace OpenBve
 
             Renderer.Initialize();
             LibRender.Renderer.InitializeLighting();
-			Program.Sounds.Initialize(Program.CurrentHost, Interface.CurrentOptions.SoundRange);
+			Program.Sounds.Initialize(Program.CurrentHost, SoundRange.Low);
             Program.UpdateViewport();
             if (Program.processCommandLineArgs)
             {

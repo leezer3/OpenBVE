@@ -10,6 +10,7 @@ namespace OpenBve
     {
         internal static void LoadOptions()
         {
+			Interface.CurrentOptions = new Interface.Options();
             string optionsFolder = OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "1.5.0");
             if (!System.IO.Directory.Exists(optionsFolder))
             {
@@ -106,7 +107,7 @@ namespace OpenBve
 											{
 												int a;
 												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
-												Interface.CurrentOptions.AntialiasingLevel = a;
+												Interface.CurrentOptions.AntiAliasingLevel = a;
 											} break;
 										case "transparencymode":
 											switch (Value.ToLowerInvariant()) {
@@ -197,7 +198,7 @@ namespace OpenBve
                     Builder.AppendLine("interpolation = " + t);
                 }
                 Builder.AppendLine("anisotropicfilteringlevel = " + Interface.CurrentOptions.AnisotropicFilteringLevel.ToString(Culture));
-                Builder.AppendLine("antialiasinglevel = " + Interface.CurrentOptions.AntialiasingLevel.ToString(Culture));
+                Builder.AppendLine("antialiasinglevel = " + Interface.CurrentOptions.AntiAliasingLevel.ToString(Culture));
                 Builder.AppendLine("transparencyMode = " + ((int)Interface.CurrentOptions.TransparencyMode).ToString(Culture));
                 Builder.AppendLine();
                 Builder.AppendLine("[loading]");

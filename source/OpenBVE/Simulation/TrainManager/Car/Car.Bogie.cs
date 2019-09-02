@@ -163,7 +163,7 @@ namespace OpenBve
 				{
 					for (int j = 0; j < CarSections[i].Groups[0].Elements.Length; j++)
 					{
-						Renderer.HideObject(ref CarSections[i].Groups[0].Elements[j].internalObject);
+						LibRender.Renderer.HideObject(ref CarSections[i].Groups[0].Elements[j].internalObject);
 					}
 				}
 				if (SectionIndex >= 0)
@@ -171,7 +171,7 @@ namespace OpenBve
 					CarSections[SectionIndex].Initialize(CurrentlyVisible);
 					for (int j = 0; j < CarSections[SectionIndex].Groups[0].Elements.Length; j++)
 					{
-						Renderer.ShowObject(CarSections[SectionIndex].Groups[0].Elements[j].internalObject, ObjectType.Dynamic);
+						Program.CurrentHost.ShowObject(CarSections[SectionIndex].Groups[0].Elements[j].internalObject, ObjectType.Dynamic);
 					}
 				}
 				CurrentCarSection = SectionIndex;

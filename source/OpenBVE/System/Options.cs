@@ -26,50 +26,17 @@ namespace OpenBve
 		}
 		
 
-		internal class Options
+		internal class Options : BaseOptions
 		{
-			/// <summary>The ISO 639-1 code for the current user interface language</summary>
-			internal string LanguageCode;
-			/// <summary>Whether the program is to be run in full-screen mode</summary>
-			internal bool FullscreenMode;
-			/// <summary>Whether the program is to be rendered using vertical syncronisation</summary>
-			internal bool VerticalSynchronization;
-			/// <summary>The screen width (Windowed Mode)</summary>
-			internal int WindowWidth;
-			/// <summary>The screen height (Windowed Mode)</summary>
-			internal int WindowHeight;
-			/// <summary>The screen width (Fullscreen Mode)</summary>
-			internal int FullscreenWidth;
-			/// <summary>The screen height (Fullscreen Mode)</summary>
-			internal int FullscreenHeight;
-			/// <summary>The number of bits per pixel (Only relevant in fullscreen mode)</summary>
-			internal int FullscreenBits;
 			/// <summary>The on disk folder in which user interface components are stored</summary>
 			internal string UserInterfaceFolder;
-			/// <summary>The current pixel interpolation mode </summary>
-			internal InterpolationMode Interpolation;
-			/// <summary>The current transparency quality mode</summary>
-			internal TransparencyMode TransparencyMode;
-			/// <summary>The level of anisotropic filtering to be applied</summary>
-			internal int AnisotropicFilteringLevel;
-			/// <summary>The maximum level of anisotropic filtering supported by the system</summary>
-			internal int AnisotropicFilteringMaximum;
 			/// <summary>The accelerated time factor (1x to 5x)</summary>
 			internal int TimeAccelerationFactor;
-			/// <summary>The level of antialiasing to be applied</summary>
-			internal int AntiAliasingLevel;
 			/// <summary>The viewing distance in meters</summary>
 			internal int ViewingDistance;
 			/// <summary>The current type of motion blur</summary>
 			internal MotionBlurMode MotionBlur;
-			/*
-			 * Note: Object optimisation takes time whilst loading, but may increase the render performance of an
-			 * object by checking for duplicate vertices etc.
-			 */
-			/// <summary>The minimum number of vertices for basic optimisation to be performed on an object</summary>
-			internal int ObjectOptimizationBasicThreshold;
-			/// <summary>The minimum number of verticies for full optimisation to be performed on an object</summary>
-			internal int ObjectOptimizationFullThreshold;
+			
 			/// <summary>Whether duplicate verticies are culled during loading</summary>
 			internal bool ObjectOptimizationVertexCulling;
 			/// <summary>Whether toppling is enabled</summary>
@@ -94,8 +61,6 @@ namespace OpenBve
 			internal SoundModels SoundModel;
 			/// <summary>The range outside of which sounds will be inaudible</summary>
 			internal SoundRange SoundRange;
-			/// <summary>The maximum number of sounds playing at any one time</summary>
-			internal int SoundNumber;
 			/// <summary>Whether warning messages are to be shown</summary>
 			internal bool ShowWarningMessages;
 			/// <summary>Whether error messages are to be shown</summary>
@@ -143,8 +108,7 @@ namespace OpenBve
 			internal bool Panel2ExtendedMode;
 			internal int Panel2ExtendedMinSize;
 
-			internal XParsers CurrentXParser;
-			internal ObjParsers CurrentObjParser;
+			
 
 			internal TimeTableMode TimeTableStyle;
 

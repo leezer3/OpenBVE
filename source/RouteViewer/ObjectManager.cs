@@ -302,7 +302,7 @@ namespace OpenBve {
 			for (int i = 0; i < ObjectsUsed; i++) {
 				if (!Objects[i].Dynamic) {
 					if (Objects[i].StartingDistance <= p + Camera.ForwardViewingDistance & Objects[i].EndingDistance >= p - Camera.BackwardViewingDistance) {
-						Renderer.ShowObject(ObjectManager.Objects[i], ObjectType.Static);
+						LibRender.Renderer.ShowObject(ObjectManager.Objects[i], ObjectType.Static);
 					}
 				}
 			}
@@ -330,7 +330,7 @@ namespace OpenBve {
 				while (ObjectsSortedByStartPointer >= 0) {
 					int o = ObjectsSortedByStart[ObjectsSortedByStartPointer];
 					if (Objects[o].StartingDistance > p + Camera.ForwardViewingDistance) {
-						Renderer.HideObject(ref Objects[o]);
+						LibRender.Renderer.HideObject(ref Objects[o]);
 						ObjectsSortedByStartPointer--;
 					} else {
 						break;
@@ -341,7 +341,7 @@ namespace OpenBve {
 					int o = ObjectsSortedByEnd[ObjectsSortedByEndPointer];
 					if (Objects[o].EndingDistance >= p - Camera.BackwardViewingDistance) {
 						if (Objects[o].StartingDistance <= p + Camera.ForwardViewingDistance) {
-							Renderer.ShowObject(Objects[o], ObjectType.Static);
+							LibRender.Renderer.ShowObject(Objects[o], ObjectType.Static);
 						}
 						ObjectsSortedByEndPointer--;
 					} else {
@@ -355,7 +355,7 @@ namespace OpenBve {
 				while (ObjectsSortedByEndPointer < n) {
 					int o = ObjectsSortedByEnd[ObjectsSortedByEndPointer];
 					if (Objects[o].EndingDistance < p - Camera.BackwardViewingDistance) {
-						Renderer.HideObject(ref ObjectManager.Objects[o]);
+						LibRender.Renderer.HideObject(ref ObjectManager.Objects[o]);
 						ObjectsSortedByEndPointer++;
 					} else {
 						break;
@@ -366,7 +366,7 @@ namespace OpenBve {
 					int o = ObjectsSortedByStart[ObjectsSortedByStartPointer];
 					if (Objects[o].StartingDistance <= p + Camera.ForwardViewingDistance) {
 						if (Objects[o].EndingDistance >= p - Camera.BackwardViewingDistance) {
-							Renderer.ShowObject(Objects[o], ObjectType.Static);
+							LibRender.Renderer.ShowObject(Objects[o], ObjectType.Static);
 						}
 						ObjectsSortedByStartPointer++;
 					} else {

@@ -6,11 +6,11 @@
 // ╚══════════════════════════════════════════════════════════════╝
 
 using System;
+using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
-using OpenBveApi.Trains;
 
 namespace OpenBve {
 
@@ -77,18 +77,12 @@ namespace OpenBve {
 			MessageCount = 0;
 		}
 
-		// ================================
-		internal struct Options {
-			internal InterpolationMode Interpolation;
-            internal TransparencyMode TransparencyMode;
-			internal int AnisotropicFilteringLevel;
-			internal int AnisotropicFilteringMaximum;
-		    internal int AntialiasingLevel;
-			internal int ObjectOptimizationBasicThreshold;
-			internal int ObjectOptimizationFullThreshold;
-			internal XParsers CurrentXParser;
-			internal ObjParsers CurrentObjParser;
+		/// <summary>Holds the program specific options</summary>
+		internal class Options : BaseOptions
+		{
 		}
+
+		/// <summary>The current options in use</summary>
 		internal static Options CurrentOptions;
 
 		// ================================

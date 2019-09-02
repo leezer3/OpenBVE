@@ -1,3 +1,4 @@
+using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
@@ -8,6 +9,8 @@ namespace LibRender
     {
 		/// <summary>The callback to the host application</summary>
 	    public static HostInterface currentHost;
+		/// <summary>Holds a reference to the current options</summary>
+		public static BaseOptions currentOptions;
 		/// <summary>A reference to the last texture bound by openGL</summary>
 		public static OpenGlTexture LastBoundTexture;
 		/// <summary>The current AlphaFunc comparison</summary>
@@ -65,7 +68,18 @@ namespace LibRender
 		public static RendererObject[] Objects = new RendererObject[256];
 		/// <summary>The total number of objects in the simulation</summary>
 		public static int ObjectCount;
-
+		/// <summary>The list of static opaque face groups. Each group contains only objects that are associated the respective group index.</summary>
+		public static ObjectGroup[] StaticOpaque = new ObjectGroup[] { };
+		/// <summary>The list of dynamic opaque faces to be rendered.</summary>
+		public static ObjectList DynamicOpaque = new ObjectList();
+		/// <summary>The list of dynamic alpha faces to be rendered.</summary>
+		public static ObjectList DynamicAlpha = new ObjectList();
+		/// <summary>The list of overlay opaque faces to be rendered.</summary>
+		public static ObjectList OverlayOpaque = new ObjectList();
+		/// <summary>The list of overlay alpha faces to be rendered.</summary>
+		public static ObjectList OverlayAlpha = new ObjectList();
+		/// <summary>The list of touch element's faces to be rendered.</summary>
+		public static ObjectList Touch = new ObjectList();
 		internal const float inv255 = 1.0f / 255.0f;
     }
 }

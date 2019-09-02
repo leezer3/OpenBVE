@@ -12,6 +12,7 @@ namespace OpenBve
     {
         internal static void LoadOptions()
         {
+			Interface.CurrentOptions = new Interface.Options();
             string optionsFolder = OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "1.5.0");
             if (!System.IO.Directory.Exists(optionsFolder))
             {
@@ -110,7 +111,7 @@ namespace OpenBve
                                             {
                                                 int a;
                                                 int.TryParse(Value, NumberStyles.Integer, Culture, out a);
-                                                Interface.CurrentOptions.AntialiasingLevel = a;
+                                                Interface.CurrentOptions.AntiAliasingLevel = a;
                                             } break;
                                         case "transparencymode":
                                             switch (Value.ToLowerInvariant())
@@ -137,29 +138,19 @@ namespace OpenBve
 									{
 										case "xobject":
                                             {
-											    int p;
-											    if (!int.TryParse(Value, NumberStyles.Integer, Culture, out p) || p < 0 || p > 3)
+											    if (!Enum.TryParse(Value, out Interface.CurrentOptions.CurrentXParser))
 											    {
 												    Interface.CurrentOptions.CurrentXParser = XParsers.Original;
-											    }
-											    else
-											    {
-												    Interface.CurrentOptions.CurrentXParser = (XParsers)p;
 											    }
 											    break;
                                             }
 										case "objobject":
                                             {
-											    int p;
-											    if (!int.TryParse(Value, NumberStyles.Integer, Culture, out p) || p < 0 || p > 2)
+	                                            if (!Enum.TryParse(Value, out Interface.CurrentOptions.CurrentObjParser))
 											    {
 												    Interface.CurrentOptions.CurrentObjParser = ObjParsers.Original;
 											    }
-											    else
-											    {
-												    Interface.CurrentOptions.CurrentObjParser = (ObjParsers)p;
-											    }
-											    break;
+	                                            break;
                                             }
 									} break;
                             }
@@ -199,7 +190,7 @@ namespace OpenBve
                     Builder.AppendLine("interpolation = " + t);
                 }
                 Builder.AppendLine("anisotropicfilteringlevel = " + Interface.CurrentOptions.AnisotropicFilteringLevel.ToString(Culture));
-                Builder.AppendLine("antialiasinglevel = " + Interface.CurrentOptions.AntialiasingLevel.ToString(Culture));
+                Builder.AppendLine("antialiasinglevel = " + Interface.CurrentOptions.AntiAliasingLevel.ToString(Culture));
                 Builder.AppendLine("transparencyMode = " + ((int)Interface.CurrentOptions.TransparencyMode).ToString(Culture));
                 Builder.AppendLine();
                 Builder.AppendLine("[Parsers]");

@@ -43,7 +43,7 @@ namespace OpenBve
 				{
 					if (Objects[i].StartingDistance <= p + Camera.ForwardViewingDistance & Objects[i].EndingDistance >= p - Camera.BackwardViewingDistance)
 					{
-						Renderer.ShowObject(Objects[i], ObjectType.Static);
+						LibRender.Renderer.ShowObject(Objects[i], ObjectType.Static);
 					}
 				}
 			}
@@ -83,7 +83,7 @@ namespace OpenBve
 					int o = ObjectsSortedByStart[ObjectsSortedByStartPointer];
 					if (Objects[o].StartingDistance > p + Camera.ForwardViewingDistance)
 					{
-						Renderer.HideObject(ref ObjectManager.Objects[o]);
+						LibRender.Renderer.HideObject(ref ObjectManager.Objects[o]);
 						ObjectsSortedByStartPointer--;
 					}
 					else
@@ -99,7 +99,7 @@ namespace OpenBve
 					{
 						if (Objects[o].StartingDistance <= p + Camera.ForwardViewingDistance)
 						{
-							Renderer.ShowObject(Objects[o], ObjectType.Static);
+							LibRender.Renderer.ShowObject(Objects[o], ObjectType.Static);
 						}
 						ObjectsSortedByEndPointer--;
 					}
@@ -119,7 +119,7 @@ namespace OpenBve
 					int o = ObjectsSortedByEnd[ObjectsSortedByEndPointer];
 					if (Objects[o].EndingDistance < p - Camera.BackwardViewingDistance)
 					{
-						Renderer.HideObject(ref ObjectManager.Objects[o]);
+						LibRender.Renderer.HideObject(ref ObjectManager.Objects[o]);
 						ObjectsSortedByEndPointer++;
 					}
 					else
@@ -135,7 +135,7 @@ namespace OpenBve
 					{
 						if (Objects[o].EndingDistance >= p - Camera.BackwardViewingDistance)
 						{
-							Renderer.ShowObject(Objects[o], ObjectType.Static);
+							LibRender.Renderer.ShowObject(Objects[o], ObjectType.Static);
 						}
 						ObjectsSortedByStartPointer++;
 					}

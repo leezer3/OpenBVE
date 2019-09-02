@@ -121,7 +121,7 @@ namespace OpenBve
                 {
                     GL.Disable(EnableCap.CullFace);
                 }
-                Renderer.ReAddObjects();
+                LibRender.Renderer.ReAddObjects();
             }
 			else
 			{
@@ -199,7 +199,7 @@ namespace OpenBve
 			{
 				GL.Disable(EnableCap.CullFace);
 			}
-			Renderer.ReAddObjects();
+			LibRender.Renderer.ReAddObjects();
 			// end HACK //
 
             //Reset the camera when switching between fullscreen and windowed mode

@@ -68,6 +68,7 @@
     <Compile Include="Objects\ObjectFace.cs" />
     <Compile Include="Objects\ObjectListType.cs" />
     <Compile Include="Renderer.Functions.cs" />
+    <Compile Include="Renderer.Objects.cs" />
     <Compile Include="Screen\OutputModes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Screen\Screen.cs" />

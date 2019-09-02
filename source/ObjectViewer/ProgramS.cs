@@ -64,9 +64,11 @@ namespace OpenBve {
 	    {
 			CurrentlyRunOnMono = Type.GetType("Mono.Runtime") != null;
 			CurrentHost = new Host();
-			LibRender.Renderer.currentHost = CurrentHost;
-	        // file system
+			// file system
 	        FileSystem = FileSystem.FromCommandLineArgs(args);
+	        Options.LoadOptions();
+	        LibRender.Renderer.currentHost = CurrentHost;
+	        LibRender.Renderer.currentOptions = Interface.CurrentOptions;
 	        FileSystem.CreateFileSystem();
 		    Plugins.LoadPlugins();
 	        // command line arguments
@@ -108,17 +110,17 @@ namespace OpenBve {
 	                if (Skips == args.Length) return;
 	            }
 	        }
-	        Options.LoadOptions();
+			
 	        var options = new ToolkitOptions();
 	        options.Backend = PlatformBackend.PreferX11;
 	        Toolkit.Init(options);
             Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
 	        Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
-	        Interface.CurrentOptions.AntialiasingLevel = 16;
+	        Interface.CurrentOptions.AntiAliasingLevel = 16;
 	        Interface.CurrentOptions.AnisotropicFilteringLevel = 16;
 	        // initialize camera
 
-	        currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntialiasingLevel);
+	        currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntiAliasingLevel);
 	        currentGameWindow = new ObjectViewer(Screen.Width, Screen.Height, currentGraphicsMode,"Object Viewer", GameWindowFlags.Default);
 	        currentGameWindow.Visible = true;
 	        currentGameWindow.TargetUpdateFrequency = 0;

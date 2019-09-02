@@ -426,7 +426,7 @@ namespace OpenBve
 					{
 						for (int k = 0; k < CarSections[i].Groups[j].Elements.Length; k++)
 						{
-							Renderer.HideObject(ref CarSections[i].Groups[j].Elements[k].internalObject);
+							LibRender.Renderer.HideObject(ref CarSections[i].Groups[j].Elements[k].internalObject);
 						}
 					}
 				}

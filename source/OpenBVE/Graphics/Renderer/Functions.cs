@@ -15,14 +15,14 @@ namespace OpenBve
         /// <summary>Clears all currently registered OpenGL display lists</summary>
         internal static void ClearDisplayLists()
         {
-            for (int i = 0; i < StaticOpaque.Length; i++)
+            for (int i = 0; i < LibRender.Renderer.StaticOpaque.Length; i++)
             {
-                if (StaticOpaque[i] != null)
+                if (LibRender.Renderer.StaticOpaque[i] != null)
                 {
-                    if (StaticOpaque[i].OpenGlDisplayListAvailable)
+                    if (LibRender.Renderer.StaticOpaque[i].OpenGlDisplayListAvailable)
                     {
-                        GL.DeleteLists(StaticOpaque[i].OpenGlDisplayList, 1);
-                        StaticOpaque[i].OpenGlDisplayListAvailable = false;
+                        GL.DeleteLists(LibRender.Renderer.StaticOpaque[i].OpenGlDisplayList, 1);
+                        LibRender.Renderer.StaticOpaque[i].OpenGlDisplayListAvailable = false;
                     }
                 }
             }
@@ -32,20 +32,9 @@ namespace OpenBve
         /// <summary>Resets the state of the renderer</summary>
         internal static void Reset()
         {
-	        LibRender.Renderer.Objects = new RendererObject[256];
-	        LibRender.Renderer.ObjectCount = 0;
-            StaticOpaque = new ObjectGroup[] { };
+	        LibRender.Renderer.Reset();
             StaticOpaqueForceUpdate = true;
-            DynamicOpaque = new ObjectList();
-            DynamicAlpha = new ObjectList();
-            OverlayOpaque = new ObjectList();
-            OverlayAlpha = new ObjectList();
-            Touch = new ObjectList();
-            LibRender.Renderer.OptionLighting = true;
-            LibRender.Renderer.OptionAmbientColor = new Color24(160, 160, 160);
-            LibRender.Renderer.OptionDiffuseColor = new Color24(160, 160, 160);
-            LibRender.Renderer.OptionLightPosition = new Vector3(0.223606797749979f, 0.86602540378444f, -0.447213595499958f);
-            LibRender.Renderer.OptionLightingResultingAmount = 1.0f;
+            LibRender.Renderer.Touch = new ObjectList();
             OptionClock = false;
             OptionBrakeSystems = false;
         }

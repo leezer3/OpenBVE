@@ -105,6 +105,7 @@ namespace OpenBve {
 				}
 			}
 			Options.LoadOptions();
+			LibRender.Renderer.currentOptions = Interface.CurrentOptions;
 			var options = new ToolkitOptions();
 			options.Backend = PlatformBackend.PreferX11;
 			Toolkit.Init(options);
@@ -113,7 +114,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
 			Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
 			// application
-			currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntialiasingLevel);
+			currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
 			currentGameWindow = new RouteViewer(LibRender.Screen.Width, LibRender.Screen.Height, currentGraphicsMode, "Route Viewer", GameWindowFlags.Default);
 			currentGameWindow.Visible = true;
 			currentGameWindow.TargetUpdateFrequency = 0;

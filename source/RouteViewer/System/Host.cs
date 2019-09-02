@@ -317,12 +317,12 @@ namespace OpenBve
 
 		public override void ShowObject(StaticObject objectToShow, ObjectType objectType)
 		{
-			Renderer.ShowObject(objectToShow, objectType);
+			LibRender.Renderer.ShowObject(objectToShow, objectType);
 		}
 
 		public override void HideObject(ref StaticObject objectToHide)
 		{
-			Renderer.HideObject(ref objectToHide);
+			LibRender.Renderer.HideObject(ref objectToHide);
 		}
 
 		public override int AnimatedWorldObjectsUsed

@@ -15,8 +15,7 @@ namespace OpenBve
 {
 	internal static partial class Renderer
 	{
-		/// <summary>The list of touch element's faces to be rendered.</summary>
-		private static ObjectList Touch = new ObjectList();
+		
 
 		private static StaticObject PrePickedObjectIndex = null;
 
@@ -42,11 +41,12 @@ namespace OpenBve
 				for (int i = 0; i < f; i++)
 				{
 					OpenGlTextureWrapMode wrap = OpenGlTextureWrapMode.ClampClamp;
-					if (Touch.FaceCount == Touch.Faces.Length)
+					if (LibRender.Renderer.Touch.FaceCount == LibRender.Renderer.Touch.Faces.Length)
 					{
-						Array.Resize(ref Touch.Faces, Touch.Faces.Length << 1);
+						Array.Resize(ref LibRender.Renderer.Touch.Faces, LibRender.Renderer.Touch.Faces.Length << 1);
 					}
-					Touch.Faces[Touch.FaceCount] = new ObjectFace
+
+					LibRender.Renderer.Touch.Faces[LibRender.Renderer.Touch.FaceCount] = new ObjectFace
 					{
 						ObjectListIndex = LibRender.Renderer.ObjectCount,
 						ObjectReference = ObjectToShow,
@@ -56,8 +56,8 @@ namespace OpenBve
 
 					// HACK: Let's store the wrapping mode.
 
-					LibRender.Renderer.Objects[LibRender.Renderer.ObjectCount].FaceListReferences[i] = new ObjectListReference(ObjectListType.Touch, Touch.FaceCount);
-					Touch.FaceCount++;
+					LibRender.Renderer.Objects[LibRender.Renderer.ObjectCount].FaceListReferences[i] = new ObjectListReference(ObjectListType.Touch, LibRender.Renderer.Touch.FaceCount);
+					LibRender.Renderer.Touch.FaceCount++;
 				}
 				ObjectToShow.RendererIndex = LibRender.Renderer.ObjectCount + 1;
 				LibRender.Renderer.ObjectCount++;
@@ -87,7 +87,7 @@ namespace OpenBve
 					switch (listType)
 					{
 						case ObjectListType.Touch:
-							list = Touch;
+							list = LibRender.Renderer.Touch;
 							break;
 						default:
 							throw new InvalidOperationException();
@@ -119,23 +119,23 @@ namespace OpenBve
 							case ObjectListType.StaticOpaque:
 								{
 									int groupIndex = (int)LibRender.Renderer.Objects[k].InternalObject.GroupIndex;
-									list = StaticOpaque[groupIndex].List;
+									list = LibRender.Renderer.StaticOpaque[groupIndex].List;
 								}
 								break;
 							case ObjectListType.DynamicOpaque:
-								list = DynamicOpaque;
+								list = LibRender.Renderer.DynamicOpaque;
 								break;
 							case ObjectListType.DynamicAlpha:
-								list = DynamicAlpha;
+								list = LibRender.Renderer.DynamicAlpha;
 								break;
 							case ObjectListType.OverlayOpaque:
-								list = OverlayOpaque;
+								list = LibRender.Renderer.OverlayOpaque;
 								break;
 							case ObjectListType.OverlayAlpha:
-								list = OverlayAlpha;
+								list = LibRender.Renderer.OverlayAlpha;
 								break;
 							case ObjectListType.Touch:
-								list = Touch;
+								list = LibRender.Renderer.Touch;
 								break;
 							default:
 								throw new InvalidOperationException();
@@ -216,11 +216,11 @@ namespace OpenBve
 			GL.DepthMask(false);
 			GL.Disable(EnableCap.DepthTest);
 			LibRender.Renderer.UnsetAlphaFunc();
-			Touch.SortPolygons();
-			for (int i = 0; i < Touch.FaceCount; i++)
+			LibRender.Renderer.Touch.SortPolygons();
+			for (int i = 0; i < LibRender.Renderer.Touch.FaceCount; i++)
 			{
 				GL.LoadName(PartId);
-				RenderFace(ref Touch.Faces[i], Camera.AbsolutePosition, IsDebugTouchMode);
+				RenderFace(ref LibRender.Renderer.Touch.Faces[i], Camera.AbsolutePosition, IsDebugTouchMode);
 				PartId++;
 			}
 
@@ -306,7 +306,7 @@ namespace OpenBve
 			if (PickedObjects.Any())
 			{
 				PickedObjects = PickedObjects.OrderBy(x => x.MinDepth).ToList();
-				return Touch.Faces[PickedObjects[0].Names[0]].ObjectReference;
+				return LibRender.Renderer.Touch.Faces[PickedObjects[0].Names[0]].ObjectReference;
 			}
 
 			return null;

@@ -46,6 +46,7 @@ namespace OpenBve
 		internal static void StartLoopEx(formMain.MainDialogResult result)
 		{
 			LibRender.Renderer.currentHost = Program.CurrentHost;
+			LibRender.Renderer.currentOptions = Interface.CurrentOptions;
 			Program.Sounds.Initialize(Program.CurrentHost, Interface.CurrentOptions.SoundRange);
 			//Process extra command line arguments supplied
 			if (result.InitialStation != null)
