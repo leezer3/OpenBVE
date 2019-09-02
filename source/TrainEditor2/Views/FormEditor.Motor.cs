@@ -183,7 +183,7 @@ namespace TrainEditor2.Views
 				.BindTo(
 					toolStripStatusLabelX,
 					w => w.Text,
-					w => $"Velocity: {w.ToString("0.00", culture)} km/h"
+					w => $"{Utilities.GetInterfaceString("motor_sound_settings", "status", "xy", "velocity")}: {w.ToString("0.00", culture)} km/h"
 				)
 				.AddTo(motorDisposable);
 
@@ -191,7 +191,7 @@ namespace TrainEditor2.Views
 				.BindTo(
 					toolStripStatusLabelY,
 					w => w.Text,
-					w => z.CurrentInputMode.Value == Motor.InputMode.Pitch ? $"Pitch: {w.ToString("0.00", culture)} " : toolStripStatusLabelY.Text
+					w => z.CurrentInputMode.Value == Motor.InputMode.Pitch ? $"{Utilities.GetInterfaceString("motor_sound_settings", "status", "xy", "pitch")}: {w.ToString("0.00", culture)} " : toolStripStatusLabelY.Text
 				)
 				.AddTo(motorDisposable);
 
@@ -199,7 +199,7 @@ namespace TrainEditor2.Views
 				.BindTo(
 					toolStripStatusLabelY,
 					w => w.Text,
-					w => z.CurrentInputMode.Value == Motor.InputMode.Volume ? $"Volume: {w.ToString("0.00", culture)} " : toolStripStatusLabelY.Text
+					w => z.CurrentInputMode.Value == Motor.InputMode.Volume ? $"{Utilities.GetInterfaceString("motor_sound_settings", "status", "xy", "volume")}: {w.ToString("0.00", culture)} " : toolStripStatusLabelY.Text
 				)
 				.AddTo(motorDisposable);
 
@@ -241,9 +241,9 @@ namespace TrainEditor2.Views
 					w => w.Text,
 					w =>
 					{
-						string type = "Type:";
-						string power = "Power";
-						string brake = "Brake";
+						string type = $"{Utilities.GetInterfaceString("motor_sound_settings", "status", "type", "name")}:";
+						string power = Utilities.GetInterfaceString("motor_sound_settings", "status", "type", "power");
+						string brake = Utilities.GetInterfaceString("motor_sound_settings", "status", "type", "brake");
 
 						return $"{type} {(w == Motor.TrackInfo.Power1 || w == Motor.TrackInfo.Power2 ? power : brake)}";
 					}
@@ -256,7 +256,7 @@ namespace TrainEditor2.Views
 					w => w.Text,
 					w =>
 					{
-						string track = "Track:";
+						string track = $"{Utilities.GetInterfaceString("motor_sound_settings", "status", "track", "name")}:";
 
 						return $"{track} {(w == Motor.TrackInfo.Power1 || w == Motor.TrackInfo.Brake1 ? 1 : 2)}";
 					}
@@ -325,19 +325,19 @@ namespace TrainEditor2.Views
 					w => w.Text,
 					w =>
 					{
-						string mode = "Mode:";
+						string mode = $"{Utilities.GetInterfaceString("motor_sound_settings", "status", "mode", "name")}:";
 						string text;
 
 						switch (w)
 						{
 							case Motor.InputMode.Pitch:
-								text = $"{mode} Pitch";
+								text = $"{mode} {Utilities.GetInterfaceString("motor_sound_settings", "status", "mode", "pitch")}";
 								break;
 							case Motor.InputMode.Volume:
-								text = $"{mode} Volume";
+								text = $"{mode} {Utilities.GetInterfaceString("motor_sound_settings", "status", "mode", "volume")}";
 								break;
 							case Motor.InputMode.SoundIndex:
-								text = $"{mode} Sound source index({z.SelectedSoundIndex.Value})";
+								text = $"{mode} {Utilities.GetInterfaceString("motor_sound_settings", "status", "mode", "sound_index")}({z.SelectedSoundIndex.Value})";
 								break;
 							default:
 								throw new ArgumentOutOfRangeException(nameof(w), w, null);
@@ -386,12 +386,12 @@ namespace TrainEditor2.Views
 					BindingMode.OneWay,
 					w =>
 					{
-						string mode = "Mode:";
+						string mode = $"{Utilities.GetInterfaceString("motor_sound_settings", "status", "mode", "name")}:";
 						string text = toolStripStatusLabelMode.Text;
 
 						if (z.CurrentInputMode.Value == Motor.InputMode.SoundIndex)
 						{
-							text = $"{mode} Sound source index({w})";
+							text = $"{mode} {Utilities.GetInterfaceString("motor_sound_settings", "status", "mode", "sound_index")}({w})";
 						}
 
 						return text;
@@ -469,22 +469,22 @@ namespace TrainEditor2.Views
 					w => w.Text,
 					w =>
 					{
-						string tool = "Tool:";
+						string tool = $"{Utilities.GetInterfaceString("motor_sound_settings", "status", "tool", "name")}:";
 						string text;
 
 						switch (w)
 						{
 							case Motor.ToolMode.Select:
-								text = $"{tool} Select";
+								text = $"{tool} {Utilities.GetInterfaceString("motor_sound_settings", "status", "tool", "select")}";
 								break;
 							case Motor.ToolMode.Move:
-								text = $"{tool} Move";
+								text = $"{tool} {Utilities.GetInterfaceString("motor_sound_settings", "status", "tool", "move")}";
 								break;
 							case Motor.ToolMode.Dot:
-								text = $"{tool} Dot";
+								text = $"{tool} {Utilities.GetInterfaceString("motor_sound_settings", "status", "tool", "dot")}";
 								break;
 							case Motor.ToolMode.Line:
-								text = $"{tool} Line";
+								text = $"{tool} {Utilities.GetInterfaceString("motor_sound_settings", "status", "tool", "line")}";
 								break;
 							default:
 								throw new ArgumentOutOfRangeException(nameof(w), w, null);

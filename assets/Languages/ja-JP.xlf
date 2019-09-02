@@ -3879,9 +3879,6 @@
 							<source>Do you want to save the current file before opening another file?</source>
 							<target>別の車両データを開く前に現在のデータを保存しますか?</target>
 						</trans-unit>
-						<trans-unit id="import">
-							<source>Do you want to save the current file before import files?</source>
-						</trans-unit>
 						<trans-unit id="exit">
 							<source>Do you want to save the current file before closing?</source>
 							<target>閉じる前に現在のデータを保存しますか?</target>
@@ -3908,10 +3905,6 @@
 					<trans-unit id="copy">
 						<source>Copy</source>
 						<target>複製</target>
-					</trans-unit>
-					<trans-unit id="apply">
-						<source>Apply</source>
-						<target>適用</target>
 					</trans-unit>
 					<trans-unit id="set">
 						<source>Set...</source>
@@ -4399,29 +4392,17 @@
 							<source>Delay</source>
 							<target>遅れ時間</target>
 						</trans-unit>
-						<trans-unit id="power_up">
-							<source>PowerUp</source>
-							<target>力行入</target>
+						<trans-unit id="power">
+							<source>Power</source>
+							<target>力行</target>
 						</trans-unit>
-						<trans-unit id="power_down">
-							<source>PowerDown</source>
-							<target>力行切</target>
+						<trans-unit id="brake">
+							<source>Brake</source>
+							<target>制動</target>
 						</trans-unit>
-						<trans-unit id="brake_up">
-							<source>BrakeUp</source>
-							<target>制動込</target>
-						</trans-unit>
-						<trans-unit id="brake_down">
-							<source>BrakeDown</source>
-							<target>制動緩</target>
-						</trans-unit>
-						<trans-unit id="loco_brake_up">
-							<source>LocoBrakeUp</source>
-							<target>機関車の制動込</target>
-						</trans-unit>
-						<trans-unit id="loco_brake_down">
-							<source>LocoBrakeDown</source>
-							<target>機関車の制動緩</target>
+						<trans-unit id="loco_brake">
+							<source>LocoBrake</source>
+							<target>機関車の制動</target>
 						</trans-unit>
 						<trans-unit id="notch">
 							<source>Notch</source>
@@ -5374,8 +5355,11 @@
 					<trans-unit id="non_negative">
 						<source>non-negative</source>
 					</trans-unit>
+					<trans-unit id="non_zero">
+						<source>non-zero</source>
+					</trans-unit>
 					<trans-unit id="invalid_float">
-						<source>{0} must be a {1}floating-point number.</source>
+						<source>This value must be a {0}floating-point number.</source>
 					</trans-unit>
 					<trans-unit id="invalid_color">
 						<source>invalid_color</source>

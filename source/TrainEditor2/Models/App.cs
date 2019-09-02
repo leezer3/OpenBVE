@@ -817,12 +817,28 @@ namespace TrainEditor2.Models
 			Item.Children[1].Children[carIndex].Tag = Train.Cars[carIndex];
 		}
 
+		private string GetMessageTypeString(MessageType type)
+		{
+			switch (type)
+			{
+				case MessageType.Information:
+					return Utilities.GetInterfaceString("message", "info");
+				case MessageType.Warning:
+					return Utilities.GetInterfaceString("message", "warning");
+				case MessageType.Error:
+				case MessageType.Critical:
+					return Utilities.GetInterfaceString("message", "error");
+				default:
+					throw new ArgumentOutOfRangeException(nameof(type), type, null);
+			}
+		}
+
 		internal void AddLogMessage(LogMessage message)
 		{
 			VisibleLogMessages
 				.Add(new ListViewItemModel
 				{
-					Texts = new ObservableCollection<string>(new[] { message.Type.ToString(), message.Text }),
+					Texts = new ObservableCollection<string>(new[] { GetMessageTypeString(message.Type), message.Text }),
 					ImageIndex = (int)message.Type,
 					Tag = message
 				});
@@ -848,7 +864,7 @@ namespace TrainEditor2.Models
 							.Where(x => x.Type == type)
 							.Select(x => new ListViewItemModel
 							{
-								Texts = new ObservableCollection<string>(new[] { x.Type.ToString(), x.Text }),
+								Texts = new ObservableCollection<string>(new[] { GetMessageTypeString(x.Type), x.Text }),
 								ImageIndex = (int)x.Type,
 								Tag = x
 							})

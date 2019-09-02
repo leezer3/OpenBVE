@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -79,7 +78,7 @@ namespace TrainEditor2.Extensions
 						break;
 				}
 
-				message = string.Format(GetInterfaceString("message", "invalid_float"), "This", prefix);
+				message = string.Format(GetInterfaceString("message", "invalid_float"), prefix);
 				return false;
 			}
 
@@ -251,7 +250,7 @@ namespace TrainEditor2.Extensions
 
 		internal static void RemoveAll<T>(this ICollection<T> collection, Func<T, bool> match)
 		{
-			foreach (var item in collection.Where(match).ToArray())
+			foreach (T item in collection.Where(match).ToArray())
 			{
 				collection.Remove(item);
 			}

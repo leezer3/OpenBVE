@@ -485,21 +485,21 @@ namespace TrainEditor2.Models.Trains
 					Area area = SelectedTrack.SoundIndices.FirstOrDefault(a => a.LeftX <= newHoveredVertex.X && a.RightX >= newHoveredVertex.X);
 
 					StringBuilder builder = new StringBuilder();
-					builder.AppendLine($"Velocity: {newHoveredVertex.X.ToString("0.00", culture)} km/h");
+					builder.AppendLine($"{Utilities.GetInterfaceString("motor_sound_settings", "vertex_info", "velocity")}: {newHoveredVertex.X.ToString("0.00", culture)} km/h");
 
 					switch (inputMode)
 					{
 						case InputMode.Pitch:
-							builder.AppendLine($"Pitch: {newHoveredVertex.Y.ToString("0.00", culture)}");
+							builder.AppendLine($"{Utilities.GetInterfaceString("motor_sound_settings", "vertex_info", "pitch")}: {newHoveredVertex.Y.ToString("0.00", culture)}");
 							break;
 						case InputMode.Volume:
-							builder.AppendLine($"Volume: {newHoveredVertex.Y.ToString("0.00", culture)}");
+							builder.AppendLine($"{Utilities.GetInterfaceString("motor_sound_settings", "vertex_info", "volume")}: {newHoveredVertex.Y.ToString("0.00", culture)}");
 							break;
 					}
 
-					builder.AppendLine($"Sound source index {area?.Index ?? -1}");
+					builder.AppendLine($"{Utilities.GetInterfaceString("motor_sound_settings", "vertex_info", "sound_index")}: {area?.Index ?? -1}");
 
-					toolTipVertex.Title = "Vertex information";
+					toolTipVertex.Title = Utilities.GetInterfaceString("motor_sound_settings", "vertex_info", "name");
 					toolTipVertex.Icon = ToolTipModel.ToolTipIcon.Information;
 					toolTipVertex.Text = builder.ToString();
 					toolTipVertex.X = VelocityToX(newHoveredVertex.X) + 10.0;

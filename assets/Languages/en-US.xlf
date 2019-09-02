@@ -2936,9 +2936,6 @@
 						<trans-unit id="open">
 							<source>Do you want to save the current file before opening another file?</source>
 						</trans-unit>
-						<trans-unit id="import">
-							<source>Do you want to save the current file before import files?</source>
-						</trans-unit>
 						<trans-unit id="exit">
 							<source>Do you want to save the current file before closing?</source>
 						</trans-unit>
@@ -2959,9 +2956,6 @@
 					</trans-unit>
 					<trans-unit id="copy">
 						<source>Copy</source>
-					</trans-unit>
-					<trans-unit id="apply">
-						<source>Apply</source>
 					</trans-unit>
 					<trans-unit id="set">
 						<source>Set...</source>
@@ -3346,23 +3340,14 @@
 						<trans-unit id="name">
 							<source>Delay</source>
 						</trans-unit>
-						<trans-unit id="power_up">
-							<source>PowerUp</source>
+						<trans-unit id="power">
+							<source>Power</source>
 						</trans-unit>
-						<trans-unit id="power_down">
-							<source>PowerDown</source>
+						<trans-unit id="brake">
+							<source>Brake</source>
 						</trans-unit>
-						<trans-unit id="brake_up">
-							<source>BrakeUp</source>
-						</trans-unit>
-						<trans-unit id="brake_down">
-							<source>BrakeDown</source>
-						</trans-unit>
-						<trans-unit id="loco_brake_up">
-							<source>LocoBrakeUp</source>
-						</trans-unit>
-						<trans-unit id="loco_brake_down">
-							<source>LocoBrakeDown</source>
+						<trans-unit id="loco_brake">
+							<source>LocoBrake</source>
 						</trans-unit>
 						<trans-unit id="notch">
 							<source>Notch</source>
@@ -4191,8 +4176,11 @@
 					<trans-unit id="non_negative">
 						<source>non-negative</source>
 					</trans-unit>
+					<trans-unit id="non_zero">
+						<source>non-zero</source>
+					</trans-unit>
 					<trans-unit id="invalid_float">
-						<source>{0} must be a {1}floating-point number.</source>
+						<source>This value must be a {0}floating-point number.</source>
 					</trans-unit>
 					<trans-unit id="invalid_color">
 						<source>invalid_color</source>

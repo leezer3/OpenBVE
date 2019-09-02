@@ -35,6 +35,13 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(disposable);
 
+			bogie.DefinedAxles
+				.BindTo(
+					groupBoxAxles,
+					x => x.Enabled
+				)
+				.AddTo(disposable);
+
 			bogie.FrontAxle
 				.BindTo(
 					textBoxFrontAxle,
@@ -111,6 +118,14 @@ namespace TrainEditor2.Views
 		private void FormBogie_Load(object sender, EventArgs e)
 		{
 			Icon = FormEditor.GetIcon();
+
+			labelDefinedAxles.Text = $@"{Utilities.GetInterfaceString("car_settings", "general", "defined_axles")}:";
+			groupBoxAxles.Text = Utilities.GetInterfaceString("car_settings", "general", "axles", "name");
+			labelFrontAxle.Text = $@"{Utilities.GetInterfaceString("car_settings", "general", "axles", "front")}:";
+			labelRearAxle.Text = $@"{Utilities.GetInterfaceString("car_settings", "general", "axles", "rear")}:";
+			labelReversed.Text = $@"{Utilities.GetInterfaceString("car_settings", "general", "reversed")}:";
+			labelObject.Text = $@"{Utilities.GetInterfaceString("car_settings", "general", "object")}:";
+			buttonOpen.Text = Utilities.GetInterfaceString("navigation", "open");
 		}
 
 		private void ButtonOpen_Click(object sender, EventArgs e)
