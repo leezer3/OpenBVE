@@ -229,7 +229,7 @@ namespace OpenBve {
 						}
 					}
 				}
-				Game.Reset(false);
+				Game.Reset(false, false);
 			}
 			// --- show the main menu if necessary ---
 			if (result.RouteFile == null | result.TrainFolder == null) {

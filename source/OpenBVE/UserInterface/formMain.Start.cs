@@ -736,7 +736,7 @@ namespace OpenBve
 			{
 				return;
 			}
-			Game.Reset(false);
+			Game.Reset(false, false);
 			bool IsRW = string.Equals(System.IO.Path.GetExtension(Result.RouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
 			CsvRwRouteParser.ParseRoute(Result.RouteFile, IsRW, Result.RouteEncoding, null, null, null, true);
 			

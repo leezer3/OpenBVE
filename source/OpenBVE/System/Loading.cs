@@ -179,7 +179,7 @@ namespace OpenBve {
 			string ObjectFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Object");
 			string SoundFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Sound");
 			// reset
-			Game.Reset(true);
+			Game.Reset(true, true);
 			Game.MinimalisticSimulation = true;
 			// screen
 			CameraProperties.Camera.CurrentMode = CameraViewMode.Interior;

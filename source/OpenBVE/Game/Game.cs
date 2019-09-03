@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
@@ -41,9 +41,10 @@ namespace OpenBve {
 
 		// ================================
 
-        /// <summary>Call this function to reset the game</summary>
-        /// <param name="ResetLogs">Whether the logs should be reset</param>
-		internal static void Reset(bool ResetLogs) {
+		/// <summary>Call this function to reset the game</summary>
+		/// <param name="ResetLogs">Whether the logs should be reset</param>
+		/// <param name="ResetRenderer">Whether the renderer should be reset</param>
+		internal static void Reset(bool ResetLogs, bool ResetRenderer) {
 			// track manager
 			for (int i = 0; i < CurrentRoute.Tracks.Length; i++)
 			{
@@ -78,12 +79,6 @@ namespace OpenBve {
 			CurrentRoute.PreviousFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, 0.0);
 			CurrentRoute.CurrentFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, 0.5);
 			CurrentRoute.NextFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, 1.0);
-			LibRender.Renderer.InfoTotalTriangles = 0;
-			LibRender.Renderer.InfoTotalTriangleStrip = 0;
-			LibRender.Renderer.InfoTotalQuads = 0;
-			LibRender.Renderer.InfoTotalQuadStrip = 0;
-			LibRender.Renderer.InfoTotalPolygon = 0;
-			LibRender.Renderer.InfoStaticOpaqueFaceCount = 0;
 			if (ResetLogs) {
 				LogRouteName = "";
 				LogTrainName = "";
@@ -97,7 +92,17 @@ namespace OpenBve {
 				BlackBoxNextUpdate = 0.0;
 			}
 			// renderer
-			Renderer.Reset();
+			if (ResetRenderer)
+			{
+				LibRender.Renderer.InfoTotalTriangles = 0;
+				LibRender.Renderer.InfoTotalTriangleStrip = 0;
+				LibRender.Renderer.InfoTotalQuads = 0;
+				LibRender.Renderer.InfoTotalQuadStrip = 0;
+				LibRender.Renderer.InfoTotalPolygon = 0;
+				LibRender.Renderer.InfoStaticOpaqueFaceCount = 0;
+				Renderer.Reset();
+			}
+			
 		}
 
 		// ================================
