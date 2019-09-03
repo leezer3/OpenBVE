@@ -33,7 +33,7 @@ namespace OpenBve
                         {
                             var fn = System.IO.Path.GetDirectoryName(fileName);
 							var InnerNode = node.SelectSingleNode("filename").InnerText;
-                            InnerNode = InnerNode.Trim();
+                            InnerNode = InnerNode.Trim(new char[] {' '});
                             objectPath = OpenBveApi.Path.CombineFile(fn, InnerNode);
                         }
                         catch (Exception)
@@ -66,7 +66,7 @@ namespace OpenBve
                                 var BoundingBoxUpper = node.SelectSingleNode("boundingboxupper").InnerText;
                                 var BoundingBoxLower = node.SelectSingleNode("boundingboxlower").InnerText;
                                 Object.Mesh.BoundingBox = new Vector3[2];
-                                var splitStrings = BoundingBoxUpper.Split(',');
+                                var splitStrings = BoundingBoxUpper.Split(new char[] { ',' });
                                 if (splitStrings.Length != 3)
                                 {
                                     //Throw exception, as this isn't a valid 3D point
@@ -75,7 +75,7 @@ namespace OpenBve
                                 Object.Mesh.BoundingBox[0].X = Double.Parse(splitStrings[0]);
                                 Object.Mesh.BoundingBox[0].Y = Double.Parse(splitStrings[1]);
                                 Object.Mesh.BoundingBox[0].Z = Double.Parse(splitStrings[2]);
-                                splitStrings = BoundingBoxLower.Split(',');
+                                splitStrings = BoundingBoxLower.Split(new char[] { ',' });
                                 if (splitStrings.Length != 3)
                                 {
                                     //Throw exception, as this isn't a valid 3D point
@@ -94,13 +94,13 @@ namespace OpenBve
                             if (selectSingleNode != null)
                             {
                                 //Attempt to load author information from XML
-								Object.Author = selectSingleNode.InnerText.Trim();
+								Object.Author = selectSingleNode.InnerText.Trim(new char[] {' '});
                             }
                             selectSingleNode = node.SelectSingleNode("copyright");
                             if (selectSingleNode != null)
                             {
                                 //Attempt to load copyright information from XML
-                                Object.Copyright = selectSingleNode.InnerText.Trim();
+                                Object.Copyright = selectSingleNode.InnerText.Trim(new char[] {' '});
                             }
                             return Object;
                         }

@@ -86,7 +86,7 @@ namespace Plugin
 						s = Encoding.ASCII.GetString(newBytes);
 					}
 
-					s = s.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim();
+					s = s.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim(new char[] {' '});
 					if (s.StartsWith("shape", StringComparison.InvariantCultureIgnoreCase))
 					{
 						return true;

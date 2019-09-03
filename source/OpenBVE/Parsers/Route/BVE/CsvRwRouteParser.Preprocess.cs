@@ -23,8 +23,9 @@ namespace OpenBve
 								Level--;
 								break;
 							case ';':
-								if (Level == 0) {
-									Lines[i] = Lines[i].Substring(0, j).TrimEnd();
+								if (Level == 0)
+								{
+									Lines[i] = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
 									j = Lines[i].Length;
 								}
 								break;
@@ -50,7 +51,7 @@ namespace OpenBve
 						Lines[i].StartsWith("$")
 					) {
 						AllowRwRouteDescription = false;
-						Game.RouteComment = Game.RouteComment.Trim();
+						Game.RouteComment = Game.RouteComment.Trim(new char[] {' '});
 					} else {
 						if (Game.RouteComment.Length != 0) {
 							Game.RouteComment += "\n";
@@ -111,7 +112,7 @@ namespace OpenBve
 								break;
 							case ',':
 								if (Level == 0 & !IsRW) {
-									string t = Lines[i].Substring(a, j - a).Trim();
+									string t = Lines[i].Substring(a, j - a).Trim(new char[] {' '});
 									if (t.Length > 0 && !t.StartsWith(";")) {
 										Expressions[e] = new Expression
 										{
@@ -153,7 +154,7 @@ namespace OpenBve
 									}
 								}
 								if (Level == 0 & IsRW) {
-									string t = Lines[i].Substring(a, j - a).Trim();
+									string t = Lines[i].Substring(a, j - a).Trim(new char[] {' '});
 									if (t.Length > 0 && !t.StartsWith(";")) {
 										Expressions[e] = new Expression
 										{
@@ -172,7 +173,7 @@ namespace OpenBve
 						}
 					}
 					if (Lines[i].Length - a > 0) {
-						string t = Lines[i].Substring(a).Trim();
+						string t = Lines[i].Substring(a).Trim(new char[] {' '});
 						if (t.Length > 0 && !t.StartsWith(";")) {
 							Expressions[e] = new Expression
 							{
@@ -209,8 +210,9 @@ namespace OpenBve
 								break;
 							}
 						}
-						if (k <= Expressions[i].Text.Length) {
-							string t = Expressions[i].Text.Substring(j, k - j).TrimEnd();
+						if (k <= Expressions[i].Text.Length)
+						{
+							string t = Expressions[i].Text.Substring(j, k - j).TrimEnd(new char[] {' '});
 							int l = 1, h;
 							for (h = k + 1; h < Expressions[i].Text.Length; h++) {
 								switch (Expressions[i].Text[h]) {
@@ -236,7 +238,7 @@ namespace OpenBve
 								Interface.AddMessage(MessageType.Error, false, "Invalid parenthesis structure in " + t + Epilog);
 								break;
 							}
-							string s = Expressions[i].Text.Substring(k + 1, h - k - 1).Trim();
+							string s = Expressions[i].Text.Substring(k + 1, h - k - 1).Trim(new char[] {' '});
 							switch (t.ToLowerInvariant()) {
 								case "$if":
 									if (j != 0) {
@@ -338,9 +340,9 @@ namespace OpenBve
 										continueWithNextExpression = true;
 										break;
 									}
-									string[] args = s.Split(';');
+									string[] args = s.Split(new char[] { ';' });
 									for (int ia = 0; ia < args.Length; ia++) {
-										args[ia] = args[ia].Trim();
+										args[ia] = args[ia].Trim(new char[] {' '});
 									}
 									int count = (args.Length + 1) / 2;
 									string[] files = new string[count];
@@ -351,9 +353,10 @@ namespace OpenBve
 										string file;
 										double offset;
 										int colon = args[2 * ia].IndexOf(':');
-										if (colon >= 0) {
-											file = args[2 * ia].Substring(0, colon).TrimEnd();
-											string value = args[2 * ia].Substring(colon + 1).TrimStart();
+										if (colon >= 0)
+										{
+											file = args[2 * ia].Substring(0, colon).TrimEnd(new char[] {' '});
+											string value = args[2 * ia].Substring(colon + 1).TrimStart(new char[] {' '});
 											if (!double.TryParse(value, NumberStyles.Float, Culture, out offset)) {
 												continueWithNextExpression = true;
 												Interface.AddMessage(MessageType.Error, false, "The track position offset " + value + " is invalid in " + t + Epilog);
@@ -488,9 +491,10 @@ namespace OpenBve
 								case "$rnd":
 									{
 										int m = s.IndexOf(";", StringComparison.Ordinal);
-										if (m >= 0) {
-											string s1 = s.Substring(0, m).TrimEnd();
-											string s2 = s.Substring(m + 1).TrimStart();
+										if (m >= 0)
+										{
+											string s1 = s.Substring(0, m).TrimEnd(new char[] {' '});
+											string s2 = s.Substring(m + 1).TrimStart(new char[] {' '});
 											int x; if (NumberFormats.TryParseIntVb6(s1, out x)) {
 												int y; if (NumberFormats.TryParseIntVb6(s2, out y)) {
 													int z = x + (int)Math.Floor(Program.RandomNumberGenerator.NextDouble() * (double)(y - x + 1));
@@ -543,7 +547,7 @@ namespace OpenBve
 													while (x >= Subs.Length) {
 														Array.Resize<string>(ref Subs, Subs.Length << 1);
 													}
-													Subs[x] = Expressions[i].Text.Substring(m + 1, n - m - 1).Trim();
+													Subs[x] = Expressions[i].Text.Substring(m + 1, n - m - 1).Trim(new char[] {' '});
 													Expressions[i].Text = Expressions[i].Text.Substring(0, j) + Expressions[i].Text.Substring(n);
 												} else {
 													continueWithNextExpression = true;
@@ -582,7 +586,7 @@ namespace OpenBve
 			{
 				int length = Expressions.Length;
 				for (int i = 0; i < length; i++) {
-					Expressions[i].Text = Expressions[i].Text.Trim();
+					Expressions[i].Text = Expressions[i].Text.Trim(new char[] {' '});
 					if (Expressions[i].Text.Length != 0) {
 						if (Expressions[i].Text[0] == ';') {
 							for (int j = i; j < length - 1; j++) {
@@ -615,7 +619,7 @@ namespace OpenBve
 				if (IsRW) {
 					// only check for track positions in the railway section for RW routes
 					if (Expressions[i].Text.StartsWith("[", StringComparison.Ordinal) & Expressions[i].Text.EndsWith("]", StringComparison.Ordinal)) {
-						string s = Expressions[i].Text.Substring(1, Expressions[i].Text.Length - 2).Trim();
+						string s = Expressions[i].Text.Substring(1, Expressions[i].Text.Length - 2).Trim(new char[] {' '});
 						if (string.Compare(s, "Railway", StringComparison.OrdinalIgnoreCase) == 0) {
 							NumberCheck = true;
 						} else {

@@ -36,9 +36,9 @@ namespace OpenBve {
 			for (int i = 0; i < Lines.Length; i++) {
 				int j = Lines[i].IndexOf(';');
 				if (j >= 0) {
-					Lines[i] = Lines[i].Substring(0, j).Trim();
+					Lines[i] = Lines[i].Substring(0, j).Trim(new char[] {' '});
 				} else {
-					Lines[i] = Lines[i].Trim();
+					Lines[i] = Lines[i].Trim(new char[] {' '});
 				}
 			}
 			TrainDatFormats currentFormat = TrainDatFormats.openBVE;
@@ -161,7 +161,7 @@ namespace OpenBve {
 							while (true) {
 								int j = t.IndexOf(',');
 								if (j == -1) break;
-								string s = t.Substring(0, j).Trim();
+								string s = t.Substring(0, j).Trim(new char[] {' '});
 								t = t.Substring(j + 1);
 								double a; if (NumberFormats.TryParseDoubleVb6(s, out a)) {
 									switch (m) {
@@ -259,7 +259,7 @@ namespace OpenBve {
 									case 0:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											powerDelayUp = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
+											powerDelayUp = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										}
 										else
 										{
@@ -270,7 +270,7 @@ namespace OpenBve {
 									case 1:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											powerDelayDown = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
+											powerDelayDown = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										}
 										else
 										{
@@ -281,7 +281,7 @@ namespace OpenBve {
 									case 2:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											brakeDelayUp = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
+											brakeDelayUp = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										}
 										else
 										{
@@ -292,7 +292,7 @@ namespace OpenBve {
 									case 3:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											brakeDelayDown = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
+											brakeDelayDown = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										}
 										else
 										{
@@ -302,7 +302,7 @@ namespace OpenBve {
 									case 4:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											locoBrakeDelayUp = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
+											locoBrakeDelayUp = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										}
 										else
 										{
@@ -312,7 +312,7 @@ namespace OpenBve {
 									case 5:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											locoBrakeDelayDown = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
+											locoBrakeDelayDown = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										}
 										else
 										{
@@ -768,7 +768,7 @@ namespace OpenBve {
 								while (true) {
 									int j = t.IndexOf(',');
 									if (j == -1) break;
-									string s = t.Substring(0, j).Trim();
+									string s = t.Substring(0, j).Trim(new char[] {' '});
 									t = t.Substring(j + 1);
 									double a;
 									if (NumberFormats.TryParseDoubleVb6(s, out a)) {

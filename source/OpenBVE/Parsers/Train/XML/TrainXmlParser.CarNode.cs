@@ -236,7 +236,7 @@ namespace OpenBve.Parsers.Train
 						}
 						break;
 					case "driverposition":
-						string[] splitText = c.InnerText.Split(',');
+						string[] splitText = c.InnerText.Split(new char[] { ',' });
 						if (splitText.Length != 3)
 						{
 							Interface.AddMessage(MessageType.Warning, false, "Driver position must have three arguments for Car " + Car + " in XML file " + fileName);

@@ -51,9 +51,9 @@ namespace OpenBve {
 				for (int i = 0; i < Lines.Length; i++) {
 					int j = Lines[i].IndexOf(';');
 					if (j >= 0) {
-						Lines[i] = Lines[i].Substring(0, j).Trim();
+						Lines[i] = Lines[i].Substring(0, j).Trim(new char[] {' '});
 					} else {
-						Lines[i] = Lines[i].Trim();
+						Lines[i] = Lines[i].Trim(new char[] {' '});
 					}
 				}
 				for (int i = 0; i < Lines.Length; i++) {
@@ -65,9 +65,10 @@ namespace OpenBve {
 								while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal) & !Lines[i].EndsWith("]", StringComparison.Ordinal)) {
 									if (Lines[i].Length != 0) {
 										int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-										if (j >= 0) {
-											string a = Lines[i].Substring(0, j).TrimEnd();
-											string b = Lines[i].Substring(j + 1).TrimStart();
+										if (j >= 0)
+										{
+											string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
+											string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
 											int n;
 											if (int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out n)) {
 												if (n >= 0 & n < Train.Cars.Length) {
@@ -116,9 +117,10 @@ namespace OpenBve {
 											while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal) & !Lines[i].EndsWith("]", StringComparison.Ordinal)) {
 												if (Lines[i].Length != 0) {
 													int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-													if (j >= 0) {
-														string a = Lines[i].Substring(0, j).TrimEnd();
-														string b = Lines[i].Substring(j + 1).TrimStart();
+													if (j >= 0)
+													{
+														string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
+														string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
 														switch (a.ToLowerInvariant()) {
 															case "object":
 																if (string.IsNullOrEmpty(b))
@@ -159,9 +161,10 @@ namespace OpenBve {
 															case "axles":
 																{
 																	int k = b.IndexOf(',');
-																	if (k >= 0) {
-																		string c = b.Substring(0, k).TrimEnd();
-																		string d = b.Substring(k + 1).TrimStart();
+																	if (k >= 0)
+																	{
+																		string c = b.Substring(0, k).TrimEnd(new char[] {' '});
+																		string d = b.Substring(k + 1).TrimStart(new char[] {' '});
 																		double rear, front;
 																		if (!double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out rear)) {
 																			Interface.AddMessage(MessageType.Error, false, "Rear is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -215,16 +218,18 @@ namespace OpenBve {
 											i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal) & !Lines[i].EndsWith("]", StringComparison.Ordinal)) {
 												if (Lines[i].Length != 0) {
 													int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-													if (j >= 0) {
-														string a = Lines[i].Substring(0, j).TrimEnd();
-														string b = Lines[i].Substring(j + 1).TrimStart();
+													if (j >= 0)
+													{
+														string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
+														string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
 														switch (a.ToLowerInvariant()) {
 															case "distances":
 																{
 																	int k = b.IndexOf(',');
-																	if (k >= 0) {
-																		string c = b.Substring(0, k).TrimEnd();
-																		string d = b.Substring(k + 1).TrimStart();
+																	if (k >= 0)
+																	{
+																		string c = b.Substring(0, k).TrimEnd(new char[] {' '});
+																		string d = b.Substring(k + 1).TrimStart(new char[] {' '});
 																		double min, max;
 																		if (!double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out min)) {
 																			Interface.AddMessage(MessageType.Error, false, "Minimum is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -285,8 +290,8 @@ namespace OpenBve {
 													int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 													if (j >= 0)
 													{
-														string a = Lines[i].Substring(0, j).TrimEnd();
-														string b = Lines[i].Substring(j + 1).TrimStart();
+														string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
+														string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
 														switch (a.ToLowerInvariant())
 														{
 															case "object":
@@ -325,8 +330,8 @@ namespace OpenBve {
 																	int k = b.IndexOf(',');
 																	if (k >= 0)
 																	{
-																		string c = b.Substring(0, k).TrimEnd();
-																		string d = b.Substring(k + 1).TrimStart();
+																		string c = b.Substring(0, k).TrimEnd(new char[] {' '});
+																		string d = b.Substring(k + 1).TrimStart(new char[] {' '});
 																		double rear, front;
 																		if (!double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out rear))
 																		{

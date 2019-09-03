@@ -122,7 +122,7 @@ namespace OpenBveApi.FileSystem {
 						int equals = line.IndexOf('=');
 						if (equals >= 0)
 						{
-							string key = line.Substring(0, equals).Trim().ToLowerInvariant();
+							string key = line.Substring(0, equals).Trim(new char[] {' '}).ToLowerInvariant();
 							switch (key)
 							{
 								case "data":
@@ -250,8 +250,8 @@ namespace OpenBveApi.FileSystem {
 					int equals = line.IndexOf('=');
 					if (equals >= 0)
 					{
-						string key = line.Substring(0, equals).Trim().ToLowerInvariant();
-						string value = line.Substring(equals + 1).Trim();
+						string key = line.Substring(0, equals).Trim(new char[] {' '}).ToLowerInvariant();
+						string value = line.Substring(equals + 1).Trim(new char[] {' '});
 						switch (key)
 						{
 							case "data":
@@ -269,10 +269,10 @@ namespace OpenBveApi.FileSystem {
 								}
 								break;
 							case "managedcontent":
-								system.ManagedContentFolders = value.Split(',');
+								system.ManagedContentFolders = value.Split(new char[] { ',' });
 								for (int i = 0; i < system.ManagedContentFolders.Length; i++)
 								{
-									system.ManagedContentFolders[i] = GetAbsolutePath(system.ManagedContentFolders[i].Trim(), true);
+									system.ManagedContentFolders[i] = GetAbsolutePath(system.ManagedContentFolders[i].Trim(new char[] {' '}), true);
 								}
 								break;
 							case "version":

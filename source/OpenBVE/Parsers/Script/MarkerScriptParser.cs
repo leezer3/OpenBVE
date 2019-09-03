@@ -209,7 +209,7 @@ namespace OpenBve
 									}
 									break;
 								case "trains":
-									Trains = c.InnerText.Split(';');
+									Trains = c.InnerText.Split(new char[] { ';' });
 									break;
 							}
 

@@ -41,11 +41,11 @@ namespace MotorSoundEditor.Parsers.Sound
 
 				if (j >= 0)
 				{
-					Lines[i] = Lines[i].Substring(0, j).Trim();
+					Lines[i] = Lines[i].Substring(0, j).Trim(new char[] {' '});
 				}
 				else
 				{
-					Lines[i] = Lines[i].Trim();
+					Lines[i] = Lines[i].Trim(new char[] {' '});
 				}
 
 				if (string.IsNullOrEmpty(Lines[i]))
@@ -69,8 +69,8 @@ namespace MotorSoundEditor.Parsers.Sound
 
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd();
-								string b = Lines[i].Substring(j + 1).TrimStart();
+								string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
+								string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
 								int k;
 
 								if (int.TryParse(a, NumberStyles.Integer, Culture, out k))
@@ -111,8 +111,8 @@ namespace MotorSoundEditor.Parsers.Sound
 
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd();
-								string b = Lines[i].Substring(j + 1).TrimStart();
+								string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
+								string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
 								int k;
 
 								if (int.TryParse(a, NumberStyles.Integer, Culture, out k))

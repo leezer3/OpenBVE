@@ -510,7 +510,7 @@ namespace AssimpNET.Obj
 				// skip newmtl and all following white spaces
 				name = token[1];
 			}
-			name = name.Trim();
+			name = name.Trim(new char[] {' '});
 
 			Material tmp;
 			if (!Model.MaterialMap.TryGetValue(name, out tmp))
