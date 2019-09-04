@@ -167,7 +167,7 @@ namespace MotorSoundEditor.Systems.Functions
 				return false;
 			}
 
-			string message = builder.ToString().Trim();
+			string message = builder.ToString().Trim(new char[] {' '});
 
 			if (message.Length != 0)
 			{
@@ -201,7 +201,7 @@ namespace MotorSoundEditor.Systems.Functions
 				LoadedPlugins = null;
 			}
 
-			string message = builder.ToString().Trim();
+			string message = builder.ToString().Trim(new char[] {' '});
 
 			if (message.Length != 0)
 			{

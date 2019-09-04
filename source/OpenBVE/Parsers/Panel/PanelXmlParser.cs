@@ -189,8 +189,8 @@ namespace OpenBve.Parsers.Panel
 											int k = Value.IndexOf(',');
 											if (k >= 0)
 											{
-												string a = Value.Substring(0, k).TrimEnd();
-												string b = Value.Substring(k + 1).TrimStart();
+												string a = Value.Substring(0, k).TrimEnd(new char[] {' '});
+												string b = Value.Substring(k + 1).TrimStart(new char[] {' '});
 												if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out PanelCenter.X))
 												{
 													Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -268,8 +268,8 @@ namespace OpenBve.Parsers.Panel
 											int k = Value.IndexOf(',');
 											if (k >= 0)
 											{
-												string a = Value.Substring(0, k).TrimEnd();
-												string b = Value.Substring(k + 1).TrimStart();
+												string a = Value.Substring(0, k).TrimEnd(new char[] {' '});
+												string b = Value.Substring(k + 1).TrimStart(new char[] {' '});
 												if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out PanelOrigin.X))
 												{
 													Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -440,8 +440,8 @@ namespace OpenBve.Parsers.Panel
 											int k = Value.IndexOf(',');
 											if (k >= 0)
 											{
-												string a = Value.Substring(0, k).TrimEnd();
-												string b = Value.Substring(k + 1).TrimStart();
+												string a = Value.Substring(0, k).TrimEnd(new char[] {' '});
+												string b = Value.Substring(k + 1).TrimStart(new char[] {' '});
 												if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out Location.X))
 												{
 													Interface.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -462,8 +462,8 @@ namespace OpenBve.Parsers.Panel
 											int k = Value.IndexOf(',');
 											if (k >= 0)
 											{
-												string a = Value.Substring(0, k).TrimEnd();
-												string b = Value.Substring(k + 1).TrimStart();
+												string a = Value.Substring(0, k).TrimEnd(new char[] {' '});
+												string b = Value.Substring(k + 1).TrimStart(new char[] {' '});
 												if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out Size.X))
 												{
 													Interface.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -545,8 +545,8 @@ namespace OpenBve.Parsers.Panel
 										int k = Value.IndexOf(',');
 										if (k >= 0)
 										{
-											string a = Value.Substring(0, k).TrimEnd();
-											string b = Value.Substring(k + 1).TrimStart();
+											string a = Value.Substring(0, k).TrimEnd(new char[] {' '});
+											string b = Value.Substring(k + 1).TrimStart(new char[] {' '});
 											if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX))
 											{
 												Interface.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -664,8 +664,8 @@ namespace OpenBve.Parsers.Panel
 											int k = Value.IndexOf(',');
 											if (k >= 0)
 											{
-												string a = Value.Substring(0, k).TrimEnd();
-												string b = Value.Substring(k + 1).TrimStart();
+												string a = Value.Substring(0, k).TrimEnd(new char[] {' '});
+												string b = Value.Substring(k + 1).TrimStart(new char[] {' '});
 												if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX))
 												{
 													Interface.AddMessage(MessageType.Error, false, "CenterX is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -741,8 +741,8 @@ namespace OpenBve.Parsers.Panel
 											int k = Value.IndexOf(',');
 											if (k >= 0)
 											{
-												string a = Value.Substring(0, k).TrimEnd();
-												string b = Value.Substring(k + 1).TrimStart();
+												string a = Value.Substring(0, k).TrimEnd(new char[] {' '});
+												string b = Value.Substring(k + 1).TrimStart(new char[] {' '});
 												if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out OriginX))
 												{
 													Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -923,8 +923,8 @@ namespace OpenBve.Parsers.Panel
 										int k = Value.IndexOf(',');
 										if (k >= 0)
 										{
-											string a = Value.Substring(0, k).TrimEnd();
-											string b = Value.Substring(k + 1).TrimStart();
+											string a = Value.Substring(0, k).TrimEnd(new char[] {' '});
+											string b = Value.Substring(k + 1).TrimStart(new char[] {' '});
 											if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX))
 											{
 												Interface.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -959,7 +959,7 @@ namespace OpenBve.Parsers.Panel
 										break;
 									case "direction":
 										{
-											string[] s = Value.Split(',');
+											string[] s = Value.Split(new char[] { ',' });
 											if (s.Length == 2)
 											{
 												double x, y;
@@ -1088,8 +1088,8 @@ namespace OpenBve.Parsers.Panel
 										int k = Value.IndexOf(',');
 										if (k >= 0)
 										{
-											string a = Value.Substring(0, k).TrimEnd();
-											string b = Value.Substring(k + 1).TrimStart();
+											string a = Value.Substring(0, k).TrimEnd(new char[] {' '});
+											string b = Value.Substring(k + 1).TrimStart(new char[] {' '});
 											if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX))
 											{
 												Interface.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -1293,8 +1293,8 @@ namespace OpenBve.Parsers.Panel
 										int k = Value.IndexOf(',');
 										if (k >= 0)
 										{
-											string a = Value.Substring(0, k).TrimEnd();
-											string b = Value.Substring(k + 1).TrimStart();
+											string a = Value.Substring(0, k).TrimEnd(new char[] {' '});
+											string b = Value.Substring(k + 1).TrimStart(new char[] {' '});
 											if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX))
 											{
 												Interface.AddMessage(MessageType.Error, false, "CenterX is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
@@ -1475,8 +1475,8 @@ namespace OpenBve.Parsers.Panel
 										int k = Value.IndexOf(',');
 										if (k >= 0)
 										{
-											string a = Value.Substring(0, k).TrimEnd();
-											string b = Value.Substring(k + 1).TrimStart();
+											string a = Value.Substring(0, k).TrimEnd(new char[] {' '});
+											string b = Value.Substring(k + 1).TrimStart(new char[] {' '});
 											if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX))
 											{
 												Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);

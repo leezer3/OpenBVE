@@ -328,7 +328,7 @@ namespace AssimpNET.Obj
 			tokens = new List<string>();
 
 			// Skip delimiters at beginning.
-			int lastPos = str.IndexOf(str.FirstOrDefault(ch => !delimiters.Contains(ch)));
+			int lastPos = str.IndexOf(str.FirstOrDefault(ch => !delimiters.Contains(ch.ToString())));
 
 			if (lastPos < 0)
 			{
@@ -336,7 +336,7 @@ namespace AssimpNET.Obj
 			}
 
 			// Find first "non-delimiter".
-			int pos = str.IndexOf(str.FirstOrDefault(ch => delimiters.Contains(ch)), lastPos);
+			int pos = str.IndexOf(str.FirstOrDefault(ch => delimiters.Contains(ch.ToString())), lastPos);
 
 			if (pos < 0)
 			{
@@ -354,7 +354,7 @@ namespace AssimpNET.Obj
 
 				// Skip delimiters.  Note the "not_of"
 				tmp = str.Substring(pos);
-				lastPos = tmp.IndexOf(tmp.FirstOrDefault(ch => !delimiters.Contains(ch)));
+				lastPos = tmp.IndexOf(tmp.FirstOrDefault(ch => !delimiters.Contains(ch.ToString())));
 
 				if (lastPos < 0)
 				{
@@ -364,7 +364,7 @@ namespace AssimpNET.Obj
 
 				// Find next "non-delimiter"
 				tmp = str.Substring(lastPos);
-				pos = tmp.IndexOf(tmp.FirstOrDefault(ch => delimiters.Contains(ch)));
+				pos = tmp.IndexOf(tmp.FirstOrDefault(ch => delimiters.Contains(ch.ToString())));
 
 				if (pos < 0)
 				{

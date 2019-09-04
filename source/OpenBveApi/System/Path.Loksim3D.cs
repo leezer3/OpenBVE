@@ -22,7 +22,7 @@ namespace OpenBveApi
 				{
 					string file = Path.CombineFile(absolute, relative);
 					//Trim
-					relative = relative.Trim();
+					relative = relative.Trim(new char[] {' '});
 					//Make all path separators conform
 					relative = relative.Replace('/', '\\');
 					

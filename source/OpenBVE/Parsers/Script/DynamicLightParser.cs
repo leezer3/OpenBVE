@@ -44,12 +44,12 @@ namespace OpenBve
 							string ts = null;
 							foreach (XmlNode c in n.ChildNodes)
 							{
-								string[] Arguments = c.InnerText.Split(',');
+								string[] Arguments = c.InnerText.Split(new char[] { ',' });
 								switch (c.Name.ToLowerInvariant())
 								{
 									case "cablighting":
 										double b;
-										if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(), out b))
+										if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(new char[] {' '}), out b))
 										{
 											cb = true;
 										}
@@ -63,7 +63,7 @@ namespace OpenBve
 										break;
 									case "time":
 										double t;
-										if (Interface.TryParseTime(Arguments[0].Trim(), out t))
+										if (Interface.TryParseTime(Arguments[0].Trim(new char[] {' '}), out t))
 										{
 											currentLight.Time = (int)t;
 											tf = true;
@@ -79,7 +79,7 @@ namespace OpenBve
 										if (Arguments.Length == 3)
 										{
 											double R, G, B;
-											if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(), out R) && NumberFormats.TryParseDoubleVb6(Arguments[1].Trim(), out G) && NumberFormats.TryParseDoubleVb6(Arguments[2].Trim(), out B))
+											if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(new char[] {' '}), out R) && NumberFormats.TryParseDoubleVb6(Arguments[1].Trim(new char[] {' '}), out G) && NumberFormats.TryParseDoubleVb6(Arguments[2].Trim(new char[] {' '}), out B))
 											{
 												currentLight.AmbientColor = new Color24((byte)R,(byte)G,(byte)B);
 												al = true;
@@ -106,7 +106,7 @@ namespace OpenBve
 										if (Arguments.Length == 3)
 										{
 											double R, G, B;
-											if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(), out R) && NumberFormats.TryParseDoubleVb6(Arguments[1].Trim(), out G) && NumberFormats.TryParseDoubleVb6(Arguments[2].Trim(), out B))
+											if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(new char[] {' '}), out R) && NumberFormats.TryParseDoubleVb6(Arguments[1].Trim(new char[] {' '}), out G) && NumberFormats.TryParseDoubleVb6(Arguments[2].Trim(new char[] {' '}), out B))
 											{
 												currentLight.DiffuseColor = new Color24((byte)R, (byte)G, (byte)B);
 												dl = true;
@@ -134,7 +134,7 @@ namespace OpenBve
 										if (Arguments.Length == 3)
 										{
 											double X, Y, Z;
-											if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(), out X) && NumberFormats.TryParseDoubleVb6(Arguments[1].Trim(), out Y) && NumberFormats.TryParseDoubleVb6(Arguments[2].Trim(), out Z))
+											if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(new char[] {' '}), out X) && NumberFormats.TryParseDoubleVb6(Arguments[1].Trim(new char[] {' '}), out Y) && NumberFormats.TryParseDoubleVb6(Arguments[2].Trim(new char[] {' '}), out Z))
 											{
 												currentLight.LightPosition = new Vector3(X, Y, Z);
 												ld = true;
@@ -153,7 +153,7 @@ namespace OpenBve
 										if (Arguments.Length == 2)
 										{
 											double theta, phi;
-											if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(), out theta) && NumberFormats.TryParseDoubleVb6(Arguments[1].Trim(), out phi))
+											if (NumberFormats.TryParseDoubleVb6(Arguments[0].Trim(new char[] {' '}), out theta) && NumberFormats.TryParseDoubleVb6(Arguments[1].Trim(new char[] {' '}), out phi))
 											{
 												currentLight.LightPosition = new Vector3(Math.Cos(theta) * Math.Sin(phi), -Math.Sin(theta), Math.Cos(theta) * Math.Cos(phi));
 												ld = true;

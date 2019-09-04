@@ -52,7 +52,7 @@ namespace Plugin
 						}
 					}
 					//Convert runs of whitespace to single
-					var list = Lines[i].Split(' ').Where(s => !string.IsNullOrWhiteSpace(s));
+					var list = Lines[i].Split(new char[] {' '}).Where(s => !string.IsNullOrWhiteSpace(s));
 					Lines[i] = string.Join(" ", list);
 				}
 				StringBuilder Builder = new StringBuilder();
@@ -61,7 +61,7 @@ namespace Plugin
 					Builder.Append(" ");
 				}
 				string Content = Builder.ToString();
-				Content = Content.Substring(17).Trim();
+				Content = Content.Substring(17).Trim(new char[] {' '});
 				return LoadTextualX(Content);
 			}
 
@@ -97,7 +97,7 @@ namespace Plugin
 		
 		private static StaticObject LoadTextualX(string Text)
 		{
-			Text = Text.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim();
+			Text = Text.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " ").Trim(new char[] {' '});
 			StaticObject obj = new StaticObject(Plugin.currentHost);
 			MeshBuilder builder = new MeshBuilder(Plugin.currentHost);
 			Material material = new Material();

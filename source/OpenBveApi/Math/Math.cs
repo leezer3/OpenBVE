@@ -103,13 +103,13 @@ namespace OpenBveApi.Math {
 			}
 			else
 			{
-				string[] parameters = Expression.Split(':');
+				string[] parameters = Expression.Split(new char[] {':'});
 				if (parameters.Length <= UnitFactors.Length)
 				{
 					Value = 0.0;
 					for (int i = 0; i < parameters.Length; i++)
 					{
-						if (double.TryParse(parameters[i].Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out a))
+						if (double.TryParse(parameters[i].Trim(new char[] {' '}), NumberStyles.Float, CultureInfo.InvariantCulture, out a))
 						{
 							int j = i + UnitFactors.Length - parameters.Length;
 							Value += a * UnitFactors[j];
@@ -144,13 +144,13 @@ namespace OpenBveApi.Math {
 			}
 			else
 			{
-				string[] parameters = Expression.Split(':');
+				string[] parameters = Expression.Split(new char[] {':'});
 				Value = 0.0;
 				if (parameters.Length <= UnitFactors.Length)
 				{
 					for (int i = 0; i < parameters.Length; i++)
 					{
-						if (TryParseDoubleVb6(parameters[i].Trim(), out a))
+						if (TryParseDoubleVb6(parameters[i].Trim(new char[] {' '}), out a))
 						{
 							int j = i + UnitFactors.Length - parameters.Length;
 							Value += a * UnitFactors[j];

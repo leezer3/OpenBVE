@@ -43,7 +43,7 @@ namespace OpenBve
 							foreach (XmlNode c in n.ChildNodes)
 							{
 
-								//string[] Arguments = c.InnerText.Split(',');
+								//string[] Arguments = c.InnerText.Split(new char[] { ',' });
 								switch (c.Name.ToLowerInvariant())
 								{
 									case "name":

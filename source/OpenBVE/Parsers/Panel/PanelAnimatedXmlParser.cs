@@ -128,7 +128,7 @@ namespace OpenBve.Parsers.Panel
 								{
 									case "position":
 										{
-											string[] s = Value.Split(',');
+											string[] s = Value.Split(new char[] { ',' });
 											if (s.Length == 3)
 											{
 												if (s[0].Length != 0 && !NumberFormats.TryParseDoubleVb6(s[0], out Position.X))
@@ -152,7 +152,7 @@ namespace OpenBve.Parsers.Panel
 										break;
 									case "size":
 										{
-											string[] s = Value.Split(',');
+											string[] s = Value.Split(new char[] { ',' });
 											if (s.Length == 3)
 											{
 												if (s[0].Length != 0 && !NumberFormats.TryParseDoubleVb6(s[0], out Size.X))

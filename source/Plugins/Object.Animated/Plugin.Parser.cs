@@ -32,7 +32,7 @@ namespace Plugin
 			{
 				int j = Lines[i].IndexOf(';');
 				//Trim out comments
-				Lines[i] = j >= 0 ? Lines[i].Substring(0, j).Trim() : Lines[i].Trim();
+				Lines[i] = j >= 0 ? Lines[i].Substring(0, j).Trim(new char[] {' '}) : Lines[i].Trim(new char[] {' '});
 				//Test whether RPN functions have been used
 				rpnUsed = Lines[i].IndexOf("functionrpn", StringComparison.OrdinalIgnoreCase) >= 0;
 			}
@@ -59,13 +59,13 @@ namespace Plugin
 										int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 										if (j > 0)
 										{
-											string a = Lines[i].Substring(0, j).TrimEnd();
-											string b = Lines[i].Substring(j + 1).TrimStart();
+											string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
+											string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
 											switch (a.ToLowerInvariant())
 											{
 												case "position":
 													{
-														string[] s = b.Split(',');
+														string[] s = b.Split(new char[] { ',' });
 														if (s.Length == 3)
 														{
 															double x, y, z;
@@ -207,13 +207,13 @@ namespace Plugin
 										int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 										if (j > 0)
 										{
-											string a = Lines[i].Substring(0, j).TrimEnd();
-											string b = Lines[i].Substring(j + 1).TrimStart();
+											string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
+											string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
 											switch (a.ToLowerInvariant())
 											{
 												case "position":
 													{
-														string[] s = b.Split(',');
+														string[] s = b.Split(new char[] { ',' });
 														if (s.Length == 3)
 														{
 															double x, y, z;
@@ -241,7 +241,7 @@ namespace Plugin
 													} break;
 												case "states":
 													{
-														string[] s = b.Split(',');
+														string[] s = b.Split(new char[] { ',' });
 														if (s.Length >= 1)
 														{
 															Folder = System.IO.Path.GetDirectoryName(FileName);
@@ -249,7 +249,7 @@ namespace Plugin
 															bool NullObject = true;
 															for (int k = 0; k < s.Length; k++)
 															{
-																s[k] = s[k].Trim();
+																s[k] = s[k].Trim(new char[] {' '});
 																if (s[k].Length == 0)
 																{
 																	currentHost.AddMessage(MessageType.Error, false, "File" + k.ToString(Culture) + " is an empty string - did you mean something else? - in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -306,7 +306,7 @@ namespace Plugin
 												case "translateydirection":
 												case "translatezdirection":
 													{
-														string[] s = b.Split(',');
+														string[] s = b.Split(new char[] { ',' });
 														if (s.Length == 3)
 														{
 															double x, y, z;
@@ -435,7 +435,7 @@ namespace Plugin
 													{
 														double FrontAxlePosition;
 														double RearAxlePosition;
-														var splitValue = b.Split(',');
+														var splitValue = b.Split(new char[] { ',' });
 														Double.TryParse(splitValue[0], out FrontAxlePosition);
 														Double.TryParse(splitValue[1], out RearAxlePosition);
 														if (FrontAxlePosition > RearAxlePosition)
@@ -494,7 +494,7 @@ namespace Plugin
 												case "rotateydirection":
 												case "rotatezdirection":
 													{
-														string[] s = b.Split(',');
+														string[] s = b.Split(new char[] { ',' });
 														if (s.Length == 3)
 														{
 															double x, y, z;
@@ -607,7 +607,7 @@ namespace Plugin
 												case "rotateydamping":
 												case "rotatezdamping":
 													{
-														string[] s = b.Split(',');
+														string[] s = b.Split(new char[] { ',' });
 														if (s.Length == 2)
 														{
 															double nf, dr;
@@ -651,7 +651,7 @@ namespace Plugin
 												case "textureshiftxdirection":
 												case "textureshiftydirection":
 													{
-														string[] s = b.Split(',');
+														string[] s = b.Split(new char[] { ',' });
 														if (s.Length == 2)
 														{
 															double x, y;
@@ -934,13 +934,13 @@ namespace Plugin
 										int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 										if (j > 0)
 										{
-											string a = Lines[i].Substring(0, j).TrimEnd();
-											string b = Lines[i].Substring(j + 1).TrimStart();
+											string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
+											string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
 											switch (a.ToLowerInvariant())
 											{
 												case "position":
 													{
-														string[] s = b.Split(',');
+														string[] s = b.Split(new char[] { ',' });
 														if (s.Length == 3)
 														{
 															double x, y, z;
@@ -1013,7 +1013,7 @@ namespace Plugin
 												case "translateydirection":
 												case "translatezdirection":
 													{
-														string[] s = b.Split(',');
+														string[] s = b.Split(new char[] { ',' });
 														if (s.Length == 3)
 														{
 															double x, y, z;
@@ -1214,13 +1214,13 @@ namespace Plugin
 										int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 										if (j > 0)
 										{
-											string a = Lines[i].Substring(0, j).TrimEnd();
-											string b = Lines[i].Substring(j + 1).TrimStart();
+											string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
+											string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
 											switch (a.ToLowerInvariant())
 											{
 												case "position":
 													{
-														string[] s = b.Split(',');
+														string[] s = b.Split(new char[] { ',' });
 														if (s.Length == 3)
 														{
 															double x, y, z;
@@ -1266,15 +1266,15 @@ namespace Plugin
 												case "filenames":
 													{
 														string Folder = System.IO.Path.GetDirectoryName(FileName);
-														string[] splitFiles = b.Split(',');
+														string[] splitFiles = b.Split(new char[] { ',' });
 														fileNames = new string[splitFiles.Length];
 														for (int k = 0; k < splitFiles.Length; k++)
 														{
-															if (splitFiles[k].Trim().Length == 0)
+															if (splitFiles[k].Trim(new char[] {' '}).Length == 0)
 															{
 																continue;
 															}
-															fileNames[k] = OpenBveApi.Path.CombineFile(Folder, splitFiles[k].Trim());
+															fileNames[k] = OpenBveApi.Path.CombineFile(Folder, splitFiles[k].Trim(new char[] {' '}));
 															if (!System.IO.File.Exists(fileNames[k]))
 															{
 																fileNames[k] = OpenBveApi.Path.CombineFile(currentSoundFolder, b);

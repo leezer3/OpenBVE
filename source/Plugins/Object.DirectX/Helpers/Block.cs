@@ -127,7 +127,7 @@ namespace OpenBve.Formats.DirectX
 			int ws = s.IndexOf(' ');
 			if (ws != -1)
 			{
-				Label = s.Substring(ws, s.Length - ws).Trim();
+				Label = s.Substring(ws, s.Length - ws).Trim(new char[] {' '});
 				s = s.Substring(0, ws);
 			}
 
@@ -161,7 +161,7 @@ namespace OpenBve.Formats.DirectX
 				if (myText[currentPosition] == '{')
 				{
 					int l = currentPosition - startPosition;
-					s = myText.Substring(startPosition, l).Trim();
+					s = myText.Substring(startPosition, l).Trim(new char[] {' '});
 					currentPosition++;
 					break;
 				}
@@ -183,7 +183,7 @@ namespace OpenBve.Formats.DirectX
 			if (ws != -1)
 			{
 				//The block has the optional label
-				Label = s.Substring(ws, s.Length - ws).Trim();
+				Label = s.Substring(ws, s.Length - ws).Trim(new char[] {' '});
 				s = s.Substring(0, ws);
 			}
 
@@ -210,7 +210,7 @@ namespace OpenBve.Formats.DirectX
 					currentPosition++;
 					if (level == 0)
 					{
-						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(), currentToken);
+						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] {' '}), currentToken);
 					}
 
 					level--;
@@ -239,7 +239,7 @@ namespace OpenBve.Formats.DirectX
 				if (myText[currentPosition] == '{')
 				{
 					int l = currentPosition - startPosition;
-					s = myText.Substring(startPosition, l).Trim();
+					s = myText.Substring(startPosition, l).Trim(new char[] {' '});
 					currentPosition++;
 					break;
 				}
@@ -256,7 +256,7 @@ namespace OpenBve.Formats.DirectX
 			if (ws != -1)
 			{
 				//The block has the optional label
-				Label = s.Substring(ws, s.Length - ws).Trim();
+				Label = s.Substring(ws, s.Length - ws).Trim(new char[] {' '});
 				s = s.Substring(0, ws);
 			}
 
@@ -283,7 +283,7 @@ namespace OpenBve.Formats.DirectX
 					currentPosition++;
 					if (level == 0)
 					{
-						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(), currentToken);
+						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] {' '}), currentToken);
 					}
 
 					level--;
@@ -312,7 +312,7 @@ namespace OpenBve.Formats.DirectX
 				if (myText[currentPosition] == '{')
 				{
 					int l = currentPosition - startPosition;
-					s = myText.Substring(startPosition, l).Trim();
+					s = myText.Substring(startPosition, l).Trim(new char[] {' '});
 					currentPosition++;
 					break;
 				}
@@ -334,8 +334,8 @@ namespace OpenBve.Formats.DirectX
 			if (ws != -1)
 			{
 				//The block has the optional label
-				Label = s.Substring(ws, s.Length - ws).Trim();
-				s = s.Substring(0, ws).Trim();
+				Label = s.Substring(ws, s.Length - ws).Trim(new char[] {' '});
+				s = s.Substring(0, ws).Trim(new char[] {' '});
 			}
 
 			if (!Enum.TryParse(s, true, out currentToken))
@@ -356,7 +356,7 @@ namespace OpenBve.Formats.DirectX
 					currentPosition++;
 					if (level == 0)
 					{
-						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(), currentToken);
+						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] {' '}), currentToken);
 					}
 
 					level--;
@@ -460,7 +460,7 @@ namespace OpenBve.Formats.DirectX
 				currentPosition++;
 				if (l > 0)
 				{
-					return myText.Substring(startPosition, l).Trim();
+					return myText.Substring(startPosition, l).Trim(new char[] {' '});
 				}
 			}
 			else if (myText[currentPosition] == '<')
@@ -477,7 +477,7 @@ namespace OpenBve.Formats.DirectX
 				currentPosition++;
 				if (l > 0)
 				{
-					return myText.Substring(startPosition, l).Trim();
+					return myText.Substring(startPosition, l).Trim(new char[] {' '});
 				}
 			}
 			else
@@ -490,7 +490,7 @@ namespace OpenBve.Formats.DirectX
 				int l = currentPosition - startPosition;
 				if (l > 0)
 				{
-					return myText.Substring(startPosition, l).Trim();
+					return myText.Substring(startPosition, l).Trim(new char[] {' '});
 				}
 			}
 

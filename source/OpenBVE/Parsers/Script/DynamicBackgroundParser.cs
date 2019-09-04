@@ -48,7 +48,7 @@ namespace OpenBve
 							foreach (XmlNode c in n.ChildNodes)
 							{
 								
-								string[] Arguments = c.InnerText.Split(',');
+								string[] Arguments = c.InnerText.Split(new char[] { ',' });
 								switch (c.Name.ToLowerInvariant())
 								{
 									case "mode":
@@ -116,7 +116,7 @@ namespace OpenBve
 										}
 										break;
 									case "time":
-										if (!Interface.TryParseTime(Arguments[0].Trim(), out DisplayTime))
+										if (!Interface.TryParseTime(Arguments[0].Trim(new char[] {' '}), out DisplayTime))
 										{
 											Interface.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid time in file " + fileName);
 										}
