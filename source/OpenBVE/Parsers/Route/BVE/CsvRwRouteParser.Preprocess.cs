@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 
