@@ -8,11 +8,13 @@ declare -r max=4
 declare i=0
 
 function wrap() {
+  echo "Checking whether this build should be uploaded..."
   mono_version=$(mono --version | awk '/version/ { print $5 }')
   if [ "$TRAVIS_OS_NAME" = "linux" ] ;
     then
 	echo "Linux worker"
-	if [ "$mono_version" != "5.20.1" ] ;
+	split_version=(`echo $mono_version | tr '.' ' '`)
+	if [ ${split_version[0]} != "5" ] || [ ${split_version[1]} != "20" ] ;
 		then
 		echo "Wrong Mono version- Not uploading this build"
 		exit
