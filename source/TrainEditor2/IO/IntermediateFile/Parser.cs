@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -18,7 +19,10 @@ namespace TrainEditor2.IO.IntermediateFile
 		internal static void Parse(string fileName, out Train train, out Panel panel, out Sound sound)
 		{
 			XDocument xml = XDocument.Load(fileName);
-
+			if (xml.XPathSelectElement("/openBVE") != null)
+			{
+				throw new InvalidDataException();
+			}
 			train = ParseTrainNode(xml.XPathSelectElement("/TrainEditor/Train"));
 			panel = ParsePanelNode(xml.XPathSelectElement("/TrainEditor/Panel"));
 			sound = ParseSoundsNode(xml.XPathSelectElement("/TrainEditor/Sounds"));

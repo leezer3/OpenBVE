@@ -2,8 +2,10 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Media;
+using System.Xml;
 using OpenBveApi.Interface;
 using Prism.Mvvm;
 using TrainEditor2.Extensions;
@@ -506,14 +508,36 @@ namespace TrainEditor2.Models
 			}
 			catch (Exception e)
 			{
-				MessageBox = new MessageBox
+				if (e is XmlException && SaveLocation.ToLowerInvariant().EndsWith(".dat") || e is InvalidDataException)
 				{
-					Title = Utilities.GetInterfaceString("menu", "file", "open"),
-					Icon = BaseDialog.DialogIcon.Error,
-					Button = BaseDialog.DialogButton.Ok,
-					Text = e.Message,
-					IsOpen = true
-				};
+					/* At the minute, we need to use the import function to get existing trains into TrainEditor2
+					 * Detect this is actually an existing train format and show a more useful error message
+					 */
+					MessageBox = new MessageBox
+					{
+						Title = Utilities.GetInterfaceString("menu", "file", "open"),
+						Icon = BaseDialog.DialogIcon.Error,
+						Button = BaseDialog.DialogButton.Ok,
+						Text = Utilities.GetInterfaceString("menu", "file", "wrongtype"),
+						IsOpen = true
+					};
+					
+				}
+				else
+				{
+					/* Generic error message-
+					 * This isn't a file we recognise
+					 */
+					MessageBox = new MessageBox
+					{
+						Title = Utilities.GetInterfaceString("menu", "file", "open"),
+						Icon = BaseDialog.DialogIcon.Error,
+						Button = BaseDialog.DialogButton.Ok,
+						Text = e.Message,
+						IsOpen = true
+					};
+				}
+				
 
 				SaveLocation = string.Empty;
 

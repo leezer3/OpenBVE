@@ -2925,6 +2925,9 @@
 						<trans-unit id="exit">
 							<source>Exit</source>
 						</trans-unit>
+						<trans-unit id="wrongtype">
+							<source>You have attempted to open a train. \n\n  These cannot be opened directly- \n\n Please use the import function to import this train into TrainEditor2.</source>
+						</trans-unit>
 					</group>
 					<trans-unit id="language">
 						<source>Language</source>
