@@ -1,7 +1,7 @@
 ﻿namespace OpenBveApi.Trains
 {
 	/// <summary>A coupling between two cars</summary>
-	public struct Coupler
+	public class AbstractCoupler
 	{
 		/*
 		 * NOTE:

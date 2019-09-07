@@ -34,11 +34,15 @@ namespace OpenBve
 			internal new void Dispose()
 			{
 				State = TrainState.Disposed;
-				foreach (var Car in Cars)
+				for (int i = 0; i < Cars.Length; i++)
 				{
-					Car.ChangeCarSection(CarSectionType.NotVisible);
-					Car.FrontBogie.ChangeSection(-1);
-					Car.RearBogie.ChangeSection(-1);
+					Cars[i].ChangeCarSection(CarSectionType.NotVisible);
+					Cars[i].FrontBogie.ChangeSection(-1);
+					Cars[i].RearBogie.ChangeSection(-1);
+					if (i != 0)
+					{
+						Couplers[i].ChangeSection(-1);
+					}
 				}
 				Program.Sounds.StopAllSounds(this);
 			}
@@ -68,6 +72,10 @@ namespace OpenBve
 							}
 							Cars[i].FrontBogie.ChangeSection(0);
 							Cars[i].RearBogie.ChangeSection(0);
+							if (i != 0)
+							{
+								Couplers[i -1].ChangeSection(0);
+							}
 
 							if (Cars[i].Specs.IsMotorCar)
 							{

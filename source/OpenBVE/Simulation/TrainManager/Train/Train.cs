@@ -93,6 +93,10 @@ namespace OpenBve
 					Cars[i].ChangeCarSection(CarSectionType.NotVisible);
 					Cars[i].FrontBogie.ChangeSection(-1);
 					Cars[i].RearBogie.ChangeSection(-1);
+					if (i != 0)
+					{
+						Couplers[i -1].ChangeSection(-1);
+					}
 				}
 				Program.Sounds.StopAllSounds(this);
 
@@ -232,6 +236,11 @@ namespace OpenBve
 								}
 								Cars[j].FrontBogie.ChangeSection(!IsPlayerTrain ? 0 : -1);
 								Cars[j].RearBogie.ChangeSection(!IsPlayerTrain ? 0 : -1);
+								if (j != 0)
+								{
+									Couplers[j -1].ChangeSection(!IsPlayerTrain ? 0 : -1);
+								}
+								
 								if (Cars[j].Specs.IsMotorCar)
 								{
 									if (Cars[j].Sounds.Loop.Buffer != null)
@@ -987,6 +996,10 @@ namespace OpenBve
 						Cars[i].UpdateObjects(TimeElapsed, ForceUpdate, true);
 						Cars[i].FrontBogie.UpdateObjects(TimeElapsed, ForceUpdate);
 						Cars[i].RearBogie.UpdateObjects(TimeElapsed, ForceUpdate);
+						if (i != 0)
+						{
+							Couplers[i - 1].UpdateObjects(TimeElapsed, ForceUpdate);
+						}
 					}
 				}
 			}

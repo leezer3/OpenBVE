@@ -237,6 +237,7 @@ namespace OpenBve {
 
 			UnifiedObject[] CarObjects = null;
 			UnifiedObject[] BogieObjects = null;
+			UnifiedObject[] CouplerObjects = null;
 
 			// load trains
 			double TrainProgressMaximum = 0.7 + 0.3 * (double)TrainManager.Trains.Length;
@@ -342,16 +343,17 @@ namespace OpenBve {
 					{
 						CarObjects = new UnifiedObject[TrainManager.Trains[k].Cars.Length];
 						BogieObjects = new UnifiedObject[TrainManager.Trains[k].Cars.Length * 2];
+						CouplerObjects = new UnifiedObject[TrainManager.Trains[k].Cars.Length - 1];
 						LoadObjects = true;
 					}
 					string tXml = OpenBveApi.Path.CombineFile(TrainManager.Trains[k].TrainFolder, "train.xml");
 					if (System.IO.File.Exists(tXml))
 					{
-						TrainXmlParser.Parse(tXml, TrainManager.Trains[k], ref CarObjects, ref BogieObjects);
+						TrainXmlParser.Parse(tXml, TrainManager.Trains[k], ref CarObjects, ref BogieObjects, ref CouplerObjects);
 					}
 					else
 					{
-						ExtensionsCfgParser.ParseExtensionsConfig(TrainManager.Trains[k].TrainFolder, CurrentTrainEncoding, ref CarObjects, ref BogieObjects, TrainManager.Trains[k], LoadObjects);
+						ExtensionsCfgParser.ParseExtensionsConfig(TrainManager.Trains[k].TrainFolder, CurrentTrainEncoding, ref CarObjects, ref BogieObjects, ref CouplerObjects, TrainManager.Trains[k], LoadObjects);
 					}
 					World.CameraCar = TrainManager.Trains[k].DriverCar;
 					System.Threading.Thread.Sleep(1); if (Cancel) return;
@@ -378,7 +380,11 @@ namespace OpenBve {
 							// add object
 							TrainManager.Trains[k].Cars[i].LoadCarSections(CarObjects[i]);
 						}
-						
+
+						if (i != 0 && CouplerObjects[i - 1] != null)
+						{
+							TrainManager.Trains[k].Couplers[i -1].LoadCarSections(CouplerObjects[i - 1]);
+						}
 						//Load bogie objects
 						if (BogieObjects[currentBogieObject] != null)
 						{
