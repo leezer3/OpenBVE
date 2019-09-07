@@ -98,7 +98,7 @@ namespace OpenBve
 				{
 					if (a.Length > Name.Length)
 					{
-						string b = a.Substring(Name.Length).TrimStart(new char[] {' '});
+						string b = a.Substring(Name.Length).TrimStart(new char[] { });
 						int j; if (int.TryParse(b, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out j))
 						{
 							if (j >= 0)

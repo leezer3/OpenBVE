@@ -122,9 +122,9 @@ namespace Plugin {
 			for (int i = 0; i < lines.Length; i++) {
 				int semicolon = lines[i].IndexOf(';');
 				if (semicolon >= 0) {
-					lines[i] = lines[i].Substring(0, semicolon).Trim(new char[] {' '});
+					lines[i] = lines[i].Substring(0, semicolon).Trim(new char[] { });
 				} else {
-					lines[i] = lines[i].Trim(new char[] {' '});
+					lines[i] = lines[i].Trim(new char[] { });
 				}
 			}
 			for (int i = 0; i < lines.Length; i++) {

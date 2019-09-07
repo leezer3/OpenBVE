@@ -27,11 +27,11 @@ namespace OpenBve
 					int j = Lines[i].IndexOf(';');
 					if (j >= 0)
 					{
-						Lines[i] = Lines[i].Substring(0, j).Trim(new char[] {' '});
+						Lines[i] = Lines[i].Substring(0, j).Trim(new char[] { });
 					}
 					else
 					{
-						Lines[i] = Lines[i].Trim(new char[] {' '});
+						Lines[i] = Lines[i].Trim(new char[] { });
 					}
 					if (Lines[i].Length != 0)
 					{
@@ -56,11 +56,11 @@ namespace OpenBve
 								j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 								if (j >= 0)
 								{
-									string Command = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
+									string Command = Lines[i].Substring(0, j).TrimEnd(new char[] { });
 									string[] Arguments = Lines[i].Substring(j + 1).TrimStart().Split(new char[] {','}, StringSplitOptions.None);
 									for (j = 0; j < Arguments.Length; j++)
 									{
-										Arguments[j] = Arguments[j].Trim(new char[] {' '});
+										Arguments[j] = Arguments[j].Trim(new char[] { });
 									}
 									switch (Command.ToLowerInvariant())
 									{

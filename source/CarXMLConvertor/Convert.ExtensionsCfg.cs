@@ -75,11 +75,11 @@ namespace CarXmlConvertor
 				int j = Lines[i].IndexOf(';');
 				if (j >= 0)
 				{
-					Lines[i] = Lines[i].Substring(0, j).Trim(new char[] {' '});
+					Lines[i] = Lines[i].Substring(0, j).Trim(new char[] { });
 				}
 				else
 				{
-					Lines[i] = Lines[i].Trim(new char[] {' '});
+					Lines[i] = Lines[i].Trim(new char[] { });
 				}
 			}
 			for (int i = 0; i < Lines.Length; i++)
@@ -98,8 +98,8 @@ namespace CarXmlConvertor
 									int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 									if (j >= 0)
 									{
-										string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
-										string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
+										string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+										string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 										int n;
 										if (int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out n))
 										{
@@ -138,8 +138,8 @@ namespace CarXmlConvertor
 												int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 												if (j >= 0)
 												{
-													string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
-													string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
+													string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+													string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 													switch (a.ToLowerInvariant())
 													{
 														case "object":
@@ -168,8 +168,8 @@ namespace CarXmlConvertor
 														int k = b.IndexOf(',');
 															if (k >= 0)
 															{
-																string c = b.Substring(0, k).TrimEnd(new char[] {' '});
-																string d = b.Substring(k + 1).TrimStart(new char[] {' '});
+																string c = b.Substring(0, k).TrimEnd(new char[] { });
+																string d = b.Substring(k + 1).TrimStart(new char[] { });
 																double rear, front;
 																if (double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out rear) && double.TryParse(d, System.Globalization.NumberStyles.Float, Culture, out front))
 																{
@@ -209,8 +209,8 @@ namespace CarXmlConvertor
 												int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 												if (j >= 0)
 												{
-													string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
-													string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
+													string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+													string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 													switch (a.ToLowerInvariant())
 													{
 														case "distances":
@@ -218,8 +218,8 @@ namespace CarXmlConvertor
 															int k = b.IndexOf(',');
 															if (k >= 0)
 															{
-																string c = b.Substring(0, k).TrimEnd(new char[] {' '});
-																string d = b.Substring(k + 1).TrimStart(new char[] {' '});
+																string c = b.Substring(0, k).TrimEnd(new char[] { });
+																string d = b.Substring(k + 1).TrimStart(new char[] { });
 																double min, max;
 																if (!double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out min))
 																{
@@ -262,8 +262,8 @@ namespace CarXmlConvertor
 												int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 												if (j >= 0)
 												{
-													string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
-													string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
+													string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+													string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 													switch (a.ToLowerInvariant())
 													{
 														case "object":
@@ -287,8 +287,8 @@ namespace CarXmlConvertor
 															int k = b.IndexOf(',');
 															if (k >= 0)
 															{
-																string c = b.Substring(0, k).TrimEnd(new char[] {' '});
-																string d = b.Substring(k + 1).TrimStart(new char[] {' '});
+																string c = b.Substring(0, k).TrimEnd(new char[] { });
+																string d = b.Substring(k + 1).TrimStart(new char[] { });
 																double rear, front;
 																if (double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out rear) && double.TryParse(d, System.Globalization.NumberStyles.Float, Culture, out front))
 																{

@@ -304,11 +304,11 @@ namespace Plugin
 
 		private static string GetAnimatedFunction(string Value, bool Hidden)
 		{
-			string[] splitStrings = Value.Split(new char[] {' '});
+			string[] splitStrings = Value.Split(new char[] { });
 			string script = string.Empty;
 			for (int i = 0; i < splitStrings.Length; i++)
 			{
-				splitStrings[i] = splitStrings[i].Trim(new char[] {' '}).ToLowerInvariant();
+				splitStrings[i] = splitStrings[i].Trim(new char[] { }).ToLowerInvariant();
 				if (i % 2 == 0)
 				{
 					if (splitStrings[i].StartsWith("spitzenlicht1-an"))

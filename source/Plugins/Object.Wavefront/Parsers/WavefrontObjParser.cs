@@ -60,7 +60,7 @@ namespace Plugin
 				List<string> Arguments = new List<string>(Lines[i].Split(new char[] { ' ', '\t' }, StringSplitOptions.None));
 				for (int j = Arguments.Count -1; j >= 0; j--)
 				{
-					Arguments[j] = Arguments[j].Trim(new char[] {' '});
+					Arguments[j] = Arguments[j].Trim(new char[] { });
 					if (Arguments[j] == string.Empty)
 					{
 						Arguments.RemoveAt(j);
@@ -327,7 +327,7 @@ namespace Plugin
 				List<string> Arguments = new List<string>(Lines[i].Split(new char[] { ' ', '\t' }, StringSplitOptions.None));
 				for (int j = Arguments.Count - 1; j >= 0; j--)
 				{
-					Arguments[j] = Arguments[j].Trim(new char[] {' '});
+					Arguments[j] = Arguments[j].Trim(new char[] { });
 					if (Arguments[j] == string.Empty)
 					{
 						Arguments.RemoveAt(j);

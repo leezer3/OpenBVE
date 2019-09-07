@@ -161,7 +161,7 @@ namespace TrainEditor2.Systems.Functions
 				return false;
 			}
 
-			string message = builder.ToString().Trim(new char[] {' '});
+			string message = builder.ToString().Trim(new char[] { });
 
 			if (message.Length != 0)
 			{
@@ -195,7 +195,7 @@ namespace TrainEditor2.Systems.Functions
 				LoadedPlugins = null;
 			}
 
-			string message = builder.ToString().Trim(new char[] {' '});
+			string message = builder.ToString().Trim(new char[] { });
 
 			if (message.Length != 0)
 			{

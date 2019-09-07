@@ -49,11 +49,11 @@ namespace OpenBve
 				int j = Lines[i].IndexOf(';');
 				if (j >= 0)
 				{
-					Lines[i] = Lines[i].Substring(0, j).Trim(new char[] {' '});
+					Lines[i] = Lines[i].Substring(0, j).Trim(new char[] { });
 				}
 				else
 				{
-					Lines[i] = Lines[i].Trim(new char[] {' '});
+					Lines[i] = Lines[i].Trim(new char[] { });
 				}
 				if (string.IsNullOrEmpty(Lines[i]))
 				{
@@ -87,8 +87,8 @@ namespace OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
+								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 								int k;
 								if (!int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out k))
 								{
@@ -131,8 +131,8 @@ namespace OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
+								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 								int k;
 								if (!int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out k))
 								{
@@ -175,8 +175,8 @@ namespace OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
+								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 								int k;
 								if (!int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out k))
 								{
@@ -216,8 +216,8 @@ namespace OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
+								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 								int runIndex;
 								if (b.Length == 0 || Path.ContainsInvalidChars(b))
 								{
@@ -259,8 +259,8 @@ namespace OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
+								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 								if (b.Length == 0 || Path.ContainsInvalidChars(b))
 								{
 									Interface.AddMessage(MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -314,8 +314,8 @@ namespace OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
+								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 								if (b.Length == 0 || Path.ContainsInvalidChars(b))
 								{
 									Interface.AddMessage(MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -354,8 +354,8 @@ namespace OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
+								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 								if (b.Length == 0 || Path.ContainsInvalidChars(b))
 								{
 									Interface.AddMessage(MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -392,8 +392,8 @@ namespace OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
+								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 								if (b.Length == 0 || Path.ContainsInvalidChars(b))
 								{
 									Interface.AddMessage(MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -471,8 +471,8 @@ namespace OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
+								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 								if (b.Length == 0 || Path.ContainsInvalidChars(b))
 								{
 									Interface.AddMessage(MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -520,8 +520,8 @@ namespace OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
+								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 								if (b.Length == 0 || Path.ContainsInvalidChars(b))
 								{
 									Interface.AddMessage(MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -564,8 +564,8 @@ namespace OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
+								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 								if (b.Length == 0 || Path.ContainsInvalidChars(b))
 								{
 									Interface.AddMessage(MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -592,8 +592,8 @@ namespace OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
+								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 								if (b.Length == 0 || Path.ContainsInvalidChars(b))
 								{
 									Interface.AddMessage(MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -623,8 +623,8 @@ namespace OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
+								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 								if (b.Length == 0 || Path.ContainsInvalidChars(b))
 								{
 									Interface.AddMessage(MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -666,8 +666,8 @@ namespace OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
+								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 								if (b.Length == 0 || Path.ContainsInvalidChars(b))
 								{
 									Interface.AddMessage(MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -709,8 +709,8 @@ namespace OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
+								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 								if (b.Length == 0 || Path.ContainsInvalidChars(b))
 								{
 									Interface.AddMessage(MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -740,8 +740,8 @@ namespace OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
+								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 								if (b.Length == 0 || Path.ContainsInvalidChars(b))
 								{
 									Interface.AddMessage(MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -771,8 +771,8 @@ namespace OpenBve
 							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 							if (j >= 0)
 							{
-								string a = Lines[i].Substring(0, j).TrimEnd(new char[] {' '});
-								string b = Lines[i].Substring(j + 1).TrimStart(new char[] {' '});
+								string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+								string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 								if (b.Length == 0 || Path.ContainsInvalidChars(b))
 								{
 									Interface.AddMessage(MessageType.Error, false, "FileName contains illegal characters or is empty at line " + (i + 1).ToString(Culture) + " in file " + FileName);

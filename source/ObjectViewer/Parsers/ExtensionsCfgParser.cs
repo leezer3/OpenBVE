@@ -68,11 +68,11 @@ namespace OpenBve
 				int j = lines[i].IndexOf(';');
 				if (j >= 0)
 				{
-					lines[i] = lines[i].Substring(0, j).Trim(new char[] {' '});
+					lines[i] = lines[i].Substring(0, j).Trim(new char[] { });
 				}
 				else
 				{
-					lines[i] = lines[i].Trim(new char[] {' '});
+					lines[i] = lines[i].Trim(new char[] { });
 				}
 			}
 
@@ -92,8 +92,8 @@ namespace OpenBve
 									int j = lines[i].IndexOf("=", StringComparison.Ordinal);
 									if (j >= 0)
 									{
-										string a = lines[i].Substring(0, j).TrimEnd(new char[] {' '});
-										string b = lines[i].Substring(j + 1).TrimStart(new char[] {' '});
+										string a = lines[i].Substring(0, j).TrimEnd(new char[] { });
+										string b = lines[i].Substring(j + 1).TrimStart(new char[] { });
 										int n;
 										if (int.TryParse(a, System.Globalization.NumberStyles.Integer, culture, out n))
 										{
@@ -185,8 +185,8 @@ namespace OpenBve
 												int j = lines[i].IndexOf("=", StringComparison.Ordinal);
 												if (j >= 0)
 												{
-													string a = lines[i].Substring(0, j).TrimEnd(new char[] {' '});
-													string b = lines[i].Substring(j + 1).TrimStart(new char[] {' '});
+													string a = lines[i].Substring(0, j).TrimEnd(new char[] { });
+													string b = lines[i].Substring(j + 1).TrimStart(new char[] { });
 													switch (a.ToLowerInvariant())
 													{
 														case "object":
@@ -242,8 +242,8 @@ namespace OpenBve
 															int k = b.IndexOf(',');
 															if (k >= 0)
 															{
-																string c = b.Substring(0, k).TrimEnd(new char[] {' '});
-																string d = b.Substring(k + 1).TrimStart(new char[] {' '});
+																string c = b.Substring(0, k).TrimEnd(new char[] { });
+																string d = b.Substring(k + 1).TrimStart(new char[] { });
 																double rear, front;
 																if (!double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out rear)) {
 																	Interface.AddMessage(MessageType.Error, false, "Rear is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + filePath);
@@ -342,8 +342,8 @@ namespace OpenBve
 												int j = lines[i].IndexOf("=", StringComparison.Ordinal);
 												if (j >= 0)
 												{
-													string a = lines[i].Substring(0, j).TrimEnd(new char[] {' '});
-													string b = lines[i].Substring(j + 1).TrimStart(new char[] {' '});
+													string a = lines[i].Substring(0, j).TrimEnd(new char[] { });
+													string b = lines[i].Substring(j + 1).TrimStart(new char[] { });
 													switch (a.ToLowerInvariant())
 													{
 														case "object":

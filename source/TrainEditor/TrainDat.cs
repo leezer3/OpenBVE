@@ -346,9 +346,9 @@ namespace TrainEditor {
 			for (int i = 0; i < Lines.Length; i++) {
 				int j = Lines[i].IndexOf(';');
 				if (j >= 0) {
-					Lines[i] = Lines[i].Substring(0, j).Trim(new char[] {' '});
+					Lines[i] = Lines[i].Substring(0, j).Trim(new char[] { });
 				} else {
-					Lines[i] = Lines[i].Trim(new char[] {' '});
+					Lines[i] = Lines[i].Trim(new char[] { });
 				}
 			}
 			bool ver1220000 = false;
@@ -403,7 +403,7 @@ namespace TrainEditor {
 							while (true) {
 								int j = u.IndexOf(',');
 								if (j == -1) break;
-								string s = u.Substring(0, j).Trim(new char[] {' '});
+								string s = u.Substring(0, j).Trim(new char[] { });
 								u = u.Substring(j + 1);
 								double a; if (double.TryParse(s, System.Globalization.NumberStyles.Float, Culture, out a)) {
 									switch (m) {
@@ -737,7 +737,7 @@ namespace TrainEditor {
 								while (true) {
 									int j = u.IndexOf(',');
 									if (j == -1) break;
-									string s = u.Substring(0, j).Trim(new char[] {' '});
+									string s = u.Substring(0, j).Trim(new char[] { });
 									u = u.Substring(j + 1);
 									double a; if (double.TryParse(s, System.Globalization.NumberStyles.Float, Culture, out a)) {
 										int b = (int)Math.Round(a);

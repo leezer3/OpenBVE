@@ -340,7 +340,7 @@ namespace OpenBve {
 					if (Loading.Cancel) return;
 				}
 				if (Expressions[j].Text.StartsWith("[") & Expressions[j].Text.EndsWith("]")) {
-					Section = Expressions[j].Text.Substring(1, Expressions[j].Text.Length - 2).Trim(new char[] {' '});
+					Section = Expressions[j].Text.Substring(1, Expressions[j].Text.Length - 2).Trim(new char[] { });
 					if (string.Compare(Section, "object", StringComparison.OrdinalIgnoreCase) == 0) {
 						Section = "Structure";
 					} else if (string.Compare(Section, "railway", StringComparison.OrdinalIgnoreCase) == 0) {
@@ -374,15 +374,15 @@ namespace OpenBve {
 							int a = 0, h = 0;
 							for (int k = 0; k < ArgumentSequence.Length; k++) {
 								if (IsRW & ArgumentSequence[k] == ',') {
-									Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim(new char[] {' '});
+									Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim(new char[] { });
 									a = k + 1; h++;
 								} else if (ArgumentSequence[k] == ';') {
-									Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim(new char[] {' '});
+									Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim(new char[] { });
 									a = k + 1; h++;
 								}
 							}
 							if (ArgumentSequence.Length - a > 0) {
-								Arguments[h] = ArgumentSequence.Substring(a).Trim(new char[] {' '});
+								Arguments[h] = ArgumentSequence.Substring(a).Trim(new char[] { });
 								h++;
 							}
 							Array.Resize<string>(ref Arguments, h);
@@ -406,45 +406,45 @@ namespace OpenBve {
 							Command = Command.Replace(".Void", "");
 							if (Command.StartsWith("structure", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".load", StringComparison.OrdinalIgnoreCase))
 							{
-								Command = Command.Substring(0, Command.Length - 5).TrimEnd(new char[] {' '});
+								Command = Command.Substring(0, Command.Length - 5).TrimEnd(new char[] { });
 							} else if (Command.StartsWith("texture.background", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".load", StringComparison.OrdinalIgnoreCase))
 							{
-								Command = Command.Substring(0, Command.Length - 5).TrimEnd(new char[] {' '});
+								Command = Command.Substring(0, Command.Length - 5).TrimEnd(new char[] { });
 							} else if (Command.StartsWith("texture.background", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".x", StringComparison.OrdinalIgnoreCase))
 							{
-								Command = "texture.background.x" + Command.Substring(18, Command.Length - 20).TrimEnd(new char[] {' '});
+								Command = "texture.background.x" + Command.Substring(18, Command.Length - 20).TrimEnd(new char[] { });
 							} else if (Command.StartsWith("texture.background", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".aspect", StringComparison.OrdinalIgnoreCase))
 							{
-								Command = "texture.background.aspect" + Command.Substring(18, Command.Length - 25).TrimEnd(new char[] {' '});
+								Command = "texture.background.aspect" + Command.Substring(18, Command.Length - 25).TrimEnd(new char[] { });
 							} else if (Command.StartsWith("structure.back", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".x", StringComparison.OrdinalIgnoreCase))
 							{
-								Command = "texture.background.x" + Command.Substring(14, Command.Length - 16).TrimEnd(new char[] {' '});
+								Command = "texture.background.x" + Command.Substring(14, Command.Length - 16).TrimEnd(new char[] { });
 							} else if (Command.StartsWith("structure.back", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".aspect", StringComparison.OrdinalIgnoreCase))
 							{
-								Command = "texture.background.aspect" + Command.Substring(14, Command.Length - 21).TrimEnd(new char[] {' '});
+								Command = "texture.background.aspect" + Command.Substring(14, Command.Length - 21).TrimEnd(new char[] { });
 							} else if (Command.StartsWith("cycle", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".params", StringComparison.OrdinalIgnoreCase))
 							{
-								Command = Command.Substring(0, Command.Length - 7).TrimEnd(new char[] {' '});
+								Command = Command.Substring(0, Command.Length - 7).TrimEnd(new char[] { });
 							} else if (Command.StartsWith("signal", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".load", StringComparison.OrdinalIgnoreCase))
 							{
-								Command = Command.Substring(0, Command.Length - 5).TrimEnd(new char[] {' '});
+								Command = Command.Substring(0, Command.Length - 5).TrimEnd(new char[] { });
 							} else if (Command.StartsWith("train.run", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".set", StringComparison.OrdinalIgnoreCase))
 							{
-								Command = Command.Substring(0, Command.Length - 4).TrimEnd(new char[] {' '});
+								Command = Command.Substring(0, Command.Length - 4).TrimEnd(new char[] { });
 							} else if (Command.StartsWith("train.flange", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".set", StringComparison.OrdinalIgnoreCase))
 							{
-								Command = Command.Substring(0, Command.Length - 4).TrimEnd(new char[] {' '});
+								Command = Command.Substring(0, Command.Length - 4).TrimEnd(new char[] { });
 							} else if (Command.StartsWith("train.timetable", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".day.load", StringComparison.OrdinalIgnoreCase)) {
-								Command = "train.timetable.day" + Command.Substring(15, Command.Length - 24).Trim(new char[] {' '});
+								Command = "train.timetable.day" + Command.Substring(15, Command.Length - 24).Trim(new char[] { });
 							} else if (Command.StartsWith("train.timetable", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".night.load", StringComparison.OrdinalIgnoreCase)) {
-								Command = "train.timetable.night" + Command.Substring(15, Command.Length - 26).Trim(new char[] {' '});
+								Command = "train.timetable.night" + Command.Substring(15, Command.Length - 26).Trim(new char[] { });
 							} else if (Command.StartsWith("train.timetable", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".day", StringComparison.OrdinalIgnoreCase)) {
-								Command = "train.timetable.day" + Command.Substring(15, Command.Length - 19).Trim(new char[] {' '});
+								Command = "train.timetable.day" + Command.Substring(15, Command.Length - 19).Trim(new char[] { });
 							} else if (Command.StartsWith("train.timetable", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".night", StringComparison.OrdinalIgnoreCase)) {
-								Command = "train.timetable.night" + Command.Substring(15, Command.Length - 21).Trim(new char[] {' '});
+								Command = "train.timetable.night" + Command.Substring(15, Command.Length - 21).Trim(new char[] { });
 							} else if (Command.StartsWith("route.signal", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".set", StringComparison.OrdinalIgnoreCase))
 							{
-								Command = Command.Substring(0, Command.Length - 4).TrimEnd(new char[] {' '});
+								Command = Command.Substring(0, Command.Length - 4).TrimEnd(new char[] { });
 							}
 						}
 						// handle indices
@@ -453,13 +453,13 @@ namespace OpenBve {
 							for (int k = Command.Length - 2; k >= 0; k--) {
 								if (Command[k] == '(')
 								{
-									string Indices = Command.Substring(k + 1, Command.Length - k - 2).TrimStart(new char[] {' '});
-									Command = Command.Substring(0, k).TrimEnd(new char[] {' '});
+									string Indices = Command.Substring(k + 1, Command.Length - k - 2).TrimStart(new char[] { });
+									Command = Command.Substring(0, k).TrimEnd(new char[] { });
 									int h = Indices.IndexOf(";", StringComparison.Ordinal);
 									if (h >= 0)
 									{
-										string a = Indices.Substring(0, h).TrimEnd(new char[] {' '});
-										string b = Indices.Substring(h + 1).TrimStart(new char[] {' '});
+										string a = Indices.Substring(0, h).TrimEnd(new char[] { });
+										string b = Indices.Substring(h + 1).TrimStart(new char[] { });
 										if (a.Length > 0 && !NumberFormats.TryParseIntVb6(a, out CommandIndex1)) {
 											Interface.AddMessage(MessageType.Error, false, "Invalid first index appeared at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File + ".");
 											Command = null;
@@ -2042,11 +2042,11 @@ namespace OpenBve {
 				{
 					if (Expressions[j].Text.EndsWith("_"))
 					{
-						Expressions[j].Text = Expressions[j].Text.Substring(0, Expressions[j].Text.Length - 1).Trim(new char[] {' '});
+						Expressions[j].Text = Expressions[j].Text.Substring(0, Expressions[j].Text.Length - 1).Trim(new char[] { });
 					}
 				}
 				if (Expressions[j].Text.StartsWith("[") & Expressions[j].Text.EndsWith("]")) {
-					Section = Expressions[j].Text.Substring(1, Expressions[j].Text.Length - 2).Trim(new char[] {' '});
+					Section = Expressions[j].Text.Substring(1, Expressions[j].Text.Length - 2).Trim(new char[] { });
 					if (string.Compare(Section, "object", StringComparison.OrdinalIgnoreCase) == 0) {
 						Section = "Structure";
 					} else if (string.Compare(Section, "railway", StringComparison.OrdinalIgnoreCase) == 0) {
@@ -2094,15 +2094,15 @@ namespace OpenBve {
 							int a = 0, h = 0;
 							for (int k = 0; k < ArgumentSequence.Length; k++) {
 								if (IsRW & ArgumentSequence[k] == ',') {
-									Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim(new char[] {' '});
+									Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim(new char[] { });
 									a = k + 1; h++;
 								} else if (ArgumentSequence[k] == ';') {
-									Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim(new char[] {' '});
+									Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim(new char[] { });
 									a = k + 1; h++;
 								}
 							}
 							if (ArgumentSequence.Length - a > 0) {
-								Arguments[h] = ArgumentSequence.Substring(a).Trim(new char[] {' '});
+								Arguments[h] = ArgumentSequence.Substring(a).Trim(new char[] { });
 								h++;
 							}
 							Array.Resize<string>(ref Arguments, h);
@@ -2126,45 +2126,45 @@ namespace OpenBve {
 							Command = Command.Replace(".Void", "");
 							if (Command.StartsWith("structure", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".load", StringComparison.OrdinalIgnoreCase))
 							{
-								Command = Command.Substring(0, Command.Length - 5).TrimEnd(new char[] {' '});
+								Command = Command.Substring(0, Command.Length - 5).TrimEnd(new char[] { });
 							} else if (Command.StartsWith("texture.background", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".load", StringComparison.OrdinalIgnoreCase))
 							{
-								Command = Command.Substring(0, Command.Length - 5).TrimEnd(new char[] {' '});
+								Command = Command.Substring(0, Command.Length - 5).TrimEnd(new char[] { });
 							} else if (Command.StartsWith("texture.background", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".x", StringComparison.OrdinalIgnoreCase))
 							{
-								Command = "texture.background.x" + Command.Substring(18, Command.Length - 20).TrimEnd(new char[] {' '});
+								Command = "texture.background.x" + Command.Substring(18, Command.Length - 20).TrimEnd(new char[] { });
 							} else if (Command.StartsWith("texture.background", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".aspect", StringComparison.OrdinalIgnoreCase))
 							{
-								Command = "texture.background.aspect" + Command.Substring(18, Command.Length - 25).TrimEnd(new char[] {' '});
+								Command = "texture.background.aspect" + Command.Substring(18, Command.Length - 25).TrimEnd(new char[] { });
 							} else if (Command.StartsWith("structure.back", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".x", StringComparison.OrdinalIgnoreCase))
 							{
-								Command = "texture.background.x" + Command.Substring(14, Command.Length - 16).TrimEnd(new char[] {' '});
+								Command = "texture.background.x" + Command.Substring(14, Command.Length - 16).TrimEnd(new char[] { });
 							} else if (Command.StartsWith("structure.back", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".aspect", StringComparison.OrdinalIgnoreCase))
 							{
-								Command = "texture.background.aspect" + Command.Substring(14, Command.Length - 21).TrimEnd(new char[] {' '});
+								Command = "texture.background.aspect" + Command.Substring(14, Command.Length - 21).TrimEnd(new char[] { });
 							} else if (Command.StartsWith("cycle", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".params", StringComparison.OrdinalIgnoreCase))
 							{
-								Command = Command.Substring(0, Command.Length - 7).TrimEnd(new char[] {' '});
+								Command = Command.Substring(0, Command.Length - 7).TrimEnd(new char[] { });
 							} else if (Command.StartsWith("signal", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".load", StringComparison.OrdinalIgnoreCase))
 							{
-								Command = Command.Substring(0, Command.Length - 5).TrimEnd(new char[] {' '});
+								Command = Command.Substring(0, Command.Length - 5).TrimEnd(new char[] { });
 							} else if (Command.StartsWith("train.run", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".set", StringComparison.OrdinalIgnoreCase))
 							{
-								Command = Command.Substring(0, Command.Length - 4).TrimEnd(new char[] {' '});
+								Command = Command.Substring(0, Command.Length - 4).TrimEnd(new char[] { });
 							} else if (Command.StartsWith("train.flange", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".set", StringComparison.OrdinalIgnoreCase))
 							{
-								Command = Command.Substring(0, Command.Length - 4).TrimEnd(new char[] {' '});
+								Command = Command.Substring(0, Command.Length - 4).TrimEnd(new char[] { });
 							} else if (Command.StartsWith("train.timetable", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".day.load", StringComparison.OrdinalIgnoreCase)) {
-								Command = "train.timetable.day" + Command.Substring(15, Command.Length - 24).Trim(new char[] {' '});
+								Command = "train.timetable.day" + Command.Substring(15, Command.Length - 24).Trim(new char[] { });
 							} else if (Command.StartsWith("train.timetable", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".night.load", StringComparison.OrdinalIgnoreCase)) {
-								Command = "train.timetable.night" + Command.Substring(15, Command.Length - 26).Trim(new char[] {' '});
+								Command = "train.timetable.night" + Command.Substring(15, Command.Length - 26).Trim(new char[] { });
 							} else if (Command.StartsWith("train.timetable", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".day", StringComparison.OrdinalIgnoreCase)) {
-								Command = "train.timetable.day" + Command.Substring(15, Command.Length - 19).Trim(new char[] {' '});
+								Command = "train.timetable.day" + Command.Substring(15, Command.Length - 19).Trim(new char[] { });
 							} else if (Command.StartsWith("train.timetable", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".night", StringComparison.OrdinalIgnoreCase)) {
-								Command = "train.timetable.night" + Command.Substring(15, Command.Length - 21).Trim(new char[] {' '});
+								Command = "train.timetable.night" + Command.Substring(15, Command.Length - 21).Trim(new char[] { });
 							} else if (Command.StartsWith("route.signal", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".set", StringComparison.OrdinalIgnoreCase))
 							{
-								Command = Command.Substring(0, Command.Length - 4).TrimEnd(new char[] {' '});
+								Command = Command.Substring(0, Command.Length - 4).TrimEnd(new char[] { });
 							}
 						}
 						// handle indices
@@ -2173,13 +2173,13 @@ namespace OpenBve {
 							for (int k = Command.Length - 2; k >= 0; k--) {
 								if (Command[k] == '(')
 								{
-									string Indices = Command.Substring(k + 1, Command.Length - k - 2).TrimStart(new char[] {' '});
-									Command = Command.Substring(0, k).TrimEnd(new char[] {' '});
+									string Indices = Command.Substring(k + 1, Command.Length - k - 2).TrimStart(new char[] { });
+									Command = Command.Substring(0, k).TrimEnd(new char[] { });
 									int h = Indices.IndexOf(";", StringComparison.Ordinal);
 									if (h >= 0)
 									{
-										string a = Indices.Substring(0, h).TrimEnd(new char[] {' '});
-										string b = Indices.Substring(h + 1).TrimStart(new char[] {' '});
+										string a = Indices.Substring(0, h).TrimEnd(new char[] { });
+										string b = Indices.Substring(h + 1).TrimStart(new char[] { });
 										if (a.Length > 0 && !NumberFormats.TryParseIntVb6(a, out CommandIndex1)) {
 											Interface.AddMessage(MessageType.Error, false, "Invalid first index appeared at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File + ".");
 											Command = null;
@@ -3790,7 +3790,7 @@ namespace OpenBve {
 											}
 											int dir = 0;
 											if (Arguments.Length >= 2 && Arguments[1].Length > 0) {
-												switch (Arguments[1].ToUpperInvariant().Trim(new char[] {' '}))
+												switch (Arguments[1].ToUpperInvariant().Trim(new char[] { }))
 												{
 													case "L":
 													case "-1":
@@ -3898,7 +3898,7 @@ namespace OpenBve {
 											int dir = 0;
 											if (Arguments.Length >= 2 && Arguments[1].Length > 0)
 											{
-												switch (Arguments[1].ToUpperInvariant().Trim(new char[] {' '}))
+												switch (Arguments[1].ToUpperInvariant().Trim(new char[] { }))
 												{
 													case "L":
 													case "-1":

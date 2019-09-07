@@ -264,14 +264,14 @@ namespace OpenBve
 										}
 										break;
 									case "path":
-											string f = OpenBveApi.Path.CombineFile(d, c.InnerText.Trim(new char[] {' '}));
+											string f = OpenBveApi.Path.CombineFile(d, c.InnerText.Trim(new char[] { }));
 											if (System.IO.File.Exists(f))
 											{
 												o.ReplacementPath = f;
 											}
 										break;
 									case "message":
-										o.Message = c.InnerText.Trim(new char[] {' '});
+										o.Message = c.InnerText.Trim(new char[] { });
 										break;
 									default:
 										Interface.AddMessage(MessageType.Warning, false, "Unexpected entry " + c.Name + " found in compatability object XML " + fileName);
@@ -318,14 +318,14 @@ namespace OpenBve
 											}
 											break;
 										case "path":
-											string f = OpenBveApi.Path.CombineFile(d, c.InnerText.Trim(new char[] {' '}));
+											string f = OpenBveApi.Path.CombineFile(d, c.InnerText.Trim(new char[] { }));
 											if (System.IO.File.Exists(f))
 											{
 												o.ReplacementPath = f;
 											}
 											break;
 										case "message":
-											o.Message = c.InnerText.Trim(new char[] {' '});
+											o.Message = c.InnerText.Trim(new char[] { });
 											break;
 										default:
 											Interface.AddMessage(MessageType.Warning, false,
@@ -360,7 +360,7 @@ namespace OpenBve
 									switch (c.Name.ToLowerInvariant())
 									{
 										case "filename":
-											var f = c.InnerText.Trim(new char[] {' '});
+											var f = c.InnerText.Trim(new char[] { });
 											if (!System.IO.File.Exists(f))
 											{
 												try

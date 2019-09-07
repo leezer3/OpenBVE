@@ -33,7 +33,7 @@ namespace OpenBve
                         {
                             var fn = System.IO.Path.GetDirectoryName(fileName);
 							var InnerNode = node.SelectSingleNode("filename").InnerText;
-                            InnerNode = InnerNode.Trim(new char[] {' '});
+                            InnerNode = InnerNode.Trim(new char[] { });
                             objectPath = OpenBveApi.Path.CombineFile(fn, InnerNode);
                         }
                         catch (Exception)
@@ -94,13 +94,13 @@ namespace OpenBve
                             if (selectSingleNode != null)
                             {
                                 //Attempt to load author information from XML
-								Object.Author = selectSingleNode.InnerText.Trim(new char[] {' '});
+								Object.Author = selectSingleNode.InnerText.Trim(new char[] { });
                             }
                             selectSingleNode = node.SelectSingleNode("copyright");
                             if (selectSingleNode != null)
                             {
                                 //Attempt to load copyright information from XML
-                                Object.Copyright = selectSingleNode.InnerText.Trim(new char[] {' '});
+                                Object.Copyright = selectSingleNode.InnerText.Trim(new char[] { });
                             }
                             return Object;
                         }

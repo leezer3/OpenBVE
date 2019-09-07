@@ -36,9 +36,9 @@ namespace OpenBve {
 			for (int i = 0; i < Lines.Length; i++) {
 				int j = Lines[i].IndexOf(';');
 				if (j >= 0) {
-					Lines[i] = Lines[i].Substring(0, j).Trim(new char[] {' '});
+					Lines[i] = Lines[i].Substring(0, j).Trim(new char[] { });
 				} else {
-					Lines[i] = Lines[i].Trim(new char[] {' '});
+					Lines[i] = Lines[i].Trim(new char[] { });
 				}
 			}
 			TrainDatFormats currentFormat = TrainDatFormats.openBVE;
@@ -161,7 +161,7 @@ namespace OpenBve {
 							while (true) {
 								int j = t.IndexOf(',');
 								if (j == -1) break;
-								string s = t.Substring(0, j).Trim(new char[] {' '});
+								string s = t.Substring(0, j).Trim(new char[] { });
 								t = t.Substring(j + 1);
 								double a; if (NumberFormats.TryParseDoubleVb6(s, out a)) {
 									switch (m) {
@@ -768,7 +768,7 @@ namespace OpenBve {
 								while (true) {
 									int j = t.IndexOf(',');
 									if (j == -1) break;
-									string s = t.Substring(0, j).Trim(new char[] {' '});
+									string s = t.Substring(0, j).Trim(new char[] { });
 									t = t.Substring(j + 1);
 									double a;
 									if (NumberFormats.TryParseDoubleVb6(s, out a)) {

@@ -116,7 +116,7 @@ namespace OpenBve
 										}
 										break;
 									case "time":
-										if (!Interface.TryParseTime(Arguments[0].Trim(new char[] {' '}), out DisplayTime))
+										if (!Interface.TryParseTime(Arguments[0].Trim(new char[] { }), out DisplayTime))
 										{
 											Interface.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid time in file " + fileName);
 										}

@@ -47,10 +47,10 @@ namespace ObjectBender {
 					int semicolon = lines[i].IndexOf(';');
 					if (semicolon >= 0) {
 						comments = lines[i].Substring(semicolon + 1);
-						lines[i] = lines[i].Substring(0, semicolon).Trim(new char[] {' '});
+						lines[i] = lines[i].Substring(0, semicolon).Trim(new char[] { });
 					} else {
 						comments = string.Empty;
-						lines[i] = lines[i].Trim(new char[] {' '});
+						lines[i] = lines[i].Trim(new char[] { });
 					}
 					cells[i] = lines[i].Split(new char[] { ',' });
 					if (isB3d & cells[i].Length != 0) {
@@ -71,7 +71,7 @@ namespace ObjectBender {
 						}
 					}
 					for (int j = 0; j < cells[i].Length; j++) {
-						cells[i][j] = cells[i][j].Trim(new char[] {' '});
+						cells[i][j] = cells[i][j].Trim(new char[] { });
 					}
 					int n = 0;
 					for (int j = cells[i].Length - 1; j >= 0; j--) {
@@ -92,12 +92,12 @@ namespace ObjectBender {
 								j++;
 								while (j < comments.Length) {
 									if (comments[j] == '}') {
-										string command = comments.Substring(start, j - start).Trim(new char[] {' '});
+										string command = comments.Substring(start, j - start).Trim(new char[] { });
 										int equals = command.IndexOf('=');
 										if (equals >= 0)
 										{
-											string arg = command.Substring(equals + 1).TrimStart(new char[] {' '});
-											command = command.Substring(0, equals).TrimEnd(new char[] {' '});
+											string arg = command.Substring(equals + 1).TrimStart(new char[] { });
+											command = command.Substring(0, equals).TrimEnd(new char[] { });
 											switch (command.ToLowerInvariant()) {
 												case "x":
 													if (!double.TryParse(arg, NumberStyles.Float, culture, out dx)) {

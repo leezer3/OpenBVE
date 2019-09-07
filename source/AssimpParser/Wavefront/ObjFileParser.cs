@@ -599,7 +599,7 @@ namespace AssimpNET.Obj
 			bool skip = false;
 
 			string name = Buffer.Substring(start, DataIt - start);
-			name = name.Trim(new char[] {' '});
+			name = name.Trim(new char[] { });
 			if (name.Length == 0)
 			{
 				skip = true;

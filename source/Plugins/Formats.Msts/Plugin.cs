@@ -254,7 +254,7 @@ namespace OpenBve.Formats.MsTs
 			if (ws != -1)
 			{
 				//The block has the optional label
-				Label = s.Substring(ws, s.Length - ws).Trim(new char[] {' '});
+				Label = s.Substring(ws, s.Length - ws).Trim(new char[] { });
 				s = s.Substring(0, ws);
 			}
 
@@ -281,7 +281,7 @@ namespace OpenBve.Formats.MsTs
 				if (myText[currentPosition] == '(')
 				{
 					int l = currentPosition - startPosition;
-					s = myText.Substring(startPosition, l).Trim(new char[] {' '});
+					s = myText.Substring(startPosition, l).Trim(new char[] { });
 					currentPosition++;
 					break;
 				}
@@ -294,7 +294,7 @@ namespace OpenBve.Formats.MsTs
 			if (ws != -1)
 			{
 				//The block has the optional label
-				Label = s.Substring(ws, s.Length - ws).Trim(new char[] {' '});
+				Label = s.Substring(ws, s.Length - ws).Trim(new char[] { });
 				s = s.Substring(0, ws);
 			}
 
@@ -321,7 +321,7 @@ namespace OpenBve.Formats.MsTs
 					currentPosition++;
 					if (level == 0)
 					{
-						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] {' '}), newToken);
+						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), newToken);
 					}
 
 					level--;
@@ -343,7 +343,7 @@ namespace OpenBve.Formats.MsTs
 				if (myText[currentPosition] == '(')
 				{
 					int l = currentPosition - startPosition;
-					s = myText.Substring(startPosition, l).Trim(new char[] {' '});
+					s = myText.Substring(startPosition, l).Trim(new char[] { });
 					currentPosition++;
 					break;
 				}
@@ -356,7 +356,7 @@ namespace OpenBve.Formats.MsTs
 			if (ws != -1)
 			{
 				//The block has the optional label
-				Label = s.Substring(ws, s.Length - ws).Trim(new char[] {' '});
+				Label = s.Substring(ws, s.Length - ws).Trim(new char[] { });
 				s = s.Substring(0, ws);
 			}
 
@@ -383,7 +383,7 @@ namespace OpenBve.Formats.MsTs
 					currentPosition++;
 					if (level == 0)
 					{
-						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] {' '}), currentToken);
+						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), currentToken);
 					}
 
 					level--;
@@ -405,7 +405,7 @@ namespace OpenBve.Formats.MsTs
 				if (myText[currentPosition] == '(')
 				{
 					int l = currentPosition - startPosition;
-					s = myText.Substring(startPosition, l).Trim(new char[] {' '});
+					s = myText.Substring(startPosition, l).Trim(new char[] { });
 					currentPosition++;
 					break;
 				}
@@ -423,7 +423,7 @@ namespace OpenBve.Formats.MsTs
 			if (ws != -1)
 			{
 				//The block has the optional label
-				Label = s.Substring(ws, s.Length - ws).Trim(new char[] {' '});
+				Label = s.Substring(ws, s.Length - ws).Trim(new char[] { });
 				s = s.Substring(0, ws);
 			}
 
@@ -445,7 +445,7 @@ namespace OpenBve.Formats.MsTs
 					currentPosition++;
 					if (level == 0)
 					{
-						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] {' '}), currentToken);
+						return new TextualBlock(myText.Substring(startPosition, currentPosition - startPosition).Trim(new char[] { }), currentToken);
 					}
 
 					level--;
@@ -620,7 +620,7 @@ namespace OpenBve.Formats.MsTs
 				currentPosition++;
 				if (l > 0)
 				{
-					return myText.Substring(startPosition, l).Trim(new char[] {' '});
+					return myText.Substring(startPosition, l).Trim(new char[] { });
 				}
 			}
 			else
@@ -633,7 +633,7 @@ namespace OpenBve.Formats.MsTs
 				int l = currentPosition - startPosition;
 				if (l > 0)
 				{
-					return myText.Substring(startPosition, l).Trim(new char[] {' '});
+					return myText.Substring(startPosition, l).Trim(new char[] { });
 				}
 			}
 

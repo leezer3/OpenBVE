@@ -17,7 +17,7 @@ namespace Plugin
 	{
 		private static bool IsCommand(string Text)
 		{
-			switch (Text.Trim(new char[] {' '}).ToLowerInvariant())
+			switch (Text.Trim(new char[] { }).ToLowerInvariant())
 			{
 				case "rotate":
 				case "translate":
@@ -160,7 +160,7 @@ namespace Plugin
 				// collect arguments
 				string[] Arguments = Lines[i].Split(new char[] { ',' }, StringSplitOptions.None);
 				for (int j = 0; j < Arguments.Length; j++) {
-					Arguments[j] = Arguments[j].Trim(new char[] {' '});
+					Arguments[j] = Arguments[j].Trim(new char[] { });
 				}
 				{
 					// remove unused arguments at the end of the chain
@@ -177,8 +177,8 @@ namespace Plugin
 					int j = Arguments[0].IndexOf(' ');
 					if (j >= 0)
 					{
-						Command = Arguments[0].Substring(0, j).TrimEnd(new char[] {' '});
-						Arguments[0] = Arguments[0].Substring(j + 1).TrimStart(new char[] {' '});
+						Command = Arguments[0].Substring(0, j).TrimEnd(new char[] { });
+						Arguments[0] = Arguments[0].Substring(j + 1).TrimStart(new char[] { });
 					} else {
 						Command = Arguments[0];
 						bool resetArguments = true;
@@ -222,7 +222,8 @@ namespace Plugin
 					Command = null;
 				}
 				// parse terms
-				if (Command != null) {
+				if (Command != null)
+				{
 					string cmd = Command.ToLowerInvariant();
 					switch(cmd) {
 						case "createmeshbuilder":

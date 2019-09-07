@@ -109,7 +109,7 @@ namespace OpenBveApi.Math {
 					Value = 0.0;
 					for (int i = 0; i < parameters.Length; i++)
 					{
-						if (double.TryParse(parameters[i].Trim(new char[] {' '}), NumberStyles.Float, CultureInfo.InvariantCulture, out a))
+						if (double.TryParse(parameters[i].Trim(new char[] { }), NumberStyles.Float, CultureInfo.InvariantCulture, out a))
 						{
 							int j = i + UnitFactors.Length - parameters.Length;
 							Value += a * UnitFactors[j];
@@ -150,7 +150,7 @@ namespace OpenBveApi.Math {
 				{
 					for (int i = 0; i < parameters.Length; i++)
 					{
-						if (TryParseDoubleVb6(parameters[i].Trim(new char[] {' '}), out a))
+						if (TryParseDoubleVb6(parameters[i].Trim(new char[] { }), out a))
 						{
 							int j = i + UnitFactors.Length - parameters.Length;
 							Value += a * UnitFactors[j];
