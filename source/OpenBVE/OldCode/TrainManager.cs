@@ -303,7 +303,7 @@ namespace OpenBve
 													Trains[i].Cars[h + 1].FrontAxle.Position + 0.5*Trains[i].Cars[h + 1].Length;
 												b = Trains[i].Cars[h].RearAxle.Follower.TrackPosition -
 													Trains[i].Cars[h].RearAxle.Position - 0.5*Trains[i].Cars[h].Length;
-												d = b - a - Trains[i].Couplers[h].MinimumDistanceBetweenCars;
+												d = b - a - Trains[i].Cars[h].Coupler.MinimumDistanceBetweenCars;
 												if (d < 0.0)
 												{
 													d -= 0.0001;
@@ -332,7 +332,7 @@ namespace OpenBve
 													Trains[j].Cars[h - 1].RearAxle.Position - 0.5*Trains[j].Cars[h - 1].Length;
 												b = Trains[j].Cars[h].FrontAxle.Follower.TrackPosition -
 													Trains[j].Cars[h].FrontAxle.Position + 0.5*Trains[j].Cars[h].Length;
-												d = a - b - Trains[j].Couplers[h - 1].MinimumDistanceBetweenCars;
+												d = a - b - Trains[j].Cars[h - 1].Coupler.MinimumDistanceBetweenCars;
 												if (d < 0.0)
 												{
 													d -= 0.0001;
@@ -393,7 +393,7 @@ namespace OpenBve
 													Trains[i].Cars[h - 1].RearAxle.Position - 0.5*Trains[i].Cars[h - 1].Length;
 												b = Trains[i].Cars[h].FrontAxle.Follower.TrackPosition -
 													Trains[i].Cars[h].FrontAxle.Position + 0.5*Trains[i].Cars[h].Length;
-												d = a - b - Trains[i].Couplers[h - 1].MinimumDistanceBetweenCars;
+												d = a - b - Trains[i].Cars[h - 1].Coupler.MinimumDistanceBetweenCars;
 												if (d < 0.0)
 												{
 													d -= 0.0001;
@@ -422,7 +422,7 @@ namespace OpenBve
 													Trains[j].Cars[h + 1].FrontAxle.Position + 0.5*Trains[j].Cars[h + 1].Length;
 												b = Trains[j].Cars[h].RearAxle.Follower.TrackPosition -
 													Trains[j].Cars[h].RearAxle.Position - 0.5*Trains[j].Cars[h].Length;
-												d = b - a - Trains[j].Couplers[h].MinimumDistanceBetweenCars;
+												d = b - a - Trains[j].Cars[h].Coupler.MinimumDistanceBetweenCars;
 												if (d < 0.0)
 												{
 													d -= 0.0001;
@@ -482,7 +482,7 @@ namespace OpenBve
 											Trains[i].Cars[h - 1].RearAxle.Position - 0.5*Trains[i].Cars[h - 1].Length;
 										b = Trains[i].Cars[h].FrontAxle.Follower.TrackPosition -
 											Trains[i].Cars[h].FrontAxle.Position + 0.5*Trains[i].Cars[h].Length;
-										double d = a - b - Trains[i].Couplers[h - 1].MinimumDistanceBetweenCars;
+										double d = a - b - Trains[i].Cars[h - 1].Coupler.MinimumDistanceBetweenCars;
 										if (d < 0.0)
 										{
 											d -= 0.0001;
@@ -514,7 +514,7 @@ namespace OpenBve
 											Trains[i].Cars[h + 1].FrontAxle.Position + 0.5*Trains[i].Cars[h + 1].Length;
 										b = Trains[i].Cars[h].RearAxle.Follower.TrackPosition -
 											Trains[i].Cars[h].RearAxle.Position - 0.5*Trains[i].Cars[h].Length;
-										double d = b - a - Trains[i].Couplers[h].MinimumDistanceBetweenCars;
+										double d = b - a - Trains[i].Cars[h].Coupler.MinimumDistanceBetweenCars;
 										if (d < 0.0)
 										{
 											d -= 0.0001;

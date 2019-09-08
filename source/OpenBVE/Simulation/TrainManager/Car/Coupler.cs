@@ -11,36 +11,40 @@ namespace OpenBve
 	{
 		internal class Coupler : AbstractCoupler
 		{
+			/// <summary>The car sections to display</summary>
 			internal CarSection[] CarSections;
-
+			/// <summary>The currently displayed car section</summary>
 			internal int CurrentCarSection;
+			/// <summary>The base car which the coupling is attached to</summary>
+			/// <remarks>This is the FRONT car when travelling in the notional forwards direction</remarks>
+			internal Car baseCar;
+			/// <summary>The connected car</summary>
+			/// <remarks>This is the REAR car when travelling in the notional forwards direction</remarks>
+			internal Car connectedCar;
 
-			internal Car FrontCar;
+			internal AbstractTrain baseTrain;
 
-			internal Car RearCar;
-
-			internal Train baseTrain;
-
-			internal Coupler(double minimumDistance, double maximumDistance, Car frontCar, Car rearCar)
+			internal Coupler(double minimumDistance, double maximumDistance, Car frontCar, Car rearCar, Train train)
 			{
 				MinimumDistanceBetweenCars = minimumDistance;
 				MaximumDistanceBetweenCars = maximumDistance;
-				FrontCar = frontCar;
-				RearCar = rearCar;
+				baseCar = frontCar;
+				connectedCar = rearCar;
 				CarSections = new CarSection[] { };
+				baseTrain = train;
 			}
 
 			internal void UpdateObjects(double TimeElapsed, bool ForceUpdate)
 			{
 				// calculate positions and directions for section element update
-				Vector3 d = new Vector3(FrontCar.RearAxle.Follower.WorldPosition - RearCar.FrontAxle.Follower.WorldPosition);
+				Vector3 d = new Vector3(baseCar.RearAxle.Follower.WorldPosition - connectedCar.FrontAxle.Follower.WorldPosition);
 				Vector3 u, s;
 				double t = d.NormSquared();
 				if (t != 0.0)
 				{
 					t = 1.0 / Math.Sqrt(t);
 					d *= t;
-					u = new Vector3((FrontCar.Up + RearCar.Up) * 0.5);
+					u = new Vector3((baseCar.Up + connectedCar.Up) * 0.5);
 					s.X = d.Z * u.Y - d.Y * u.Z;
 					s.Y = d.X * u.Z - d.Z * u.X;
 					s.Z = d.Y * u.X - d.X * u.Y;
@@ -51,30 +55,30 @@ namespace OpenBve
 					s = Vector3.Right;
 				}
 
-				Vector3 p = new Vector3(0.5 * (FrontCar.RearAxle.Follower.WorldPosition + RearCar.FrontAxle.Follower.WorldPosition));
+				Vector3 p = new Vector3(0.5 * (baseCar.RearAxle.Follower.WorldPosition + connectedCar.FrontAxle.Follower.WorldPosition));
 				// determine visibility
 				Vector3 cd = new Vector3(p - Camera.AbsolutePosition);
 				double dist = cd.NormSquared();
-				double bid = Interface.CurrentOptions.ViewingDistance + FrontCar.Length;
+				double bid = Interface.CurrentOptions.ViewingDistance + baseCar.Length;
 				bool CurrentlyVisible = dist < bid * bid;
 				// Updates the brightness value
 				byte dnb;
 				{
-					float b = (float) (FrontCar.Brightness.NextTrackPosition - FrontCar.Brightness.PreviousTrackPosition);
+					float b = (float) (baseCar.Brightness.NextTrackPosition - baseCar.Brightness.PreviousTrackPosition);
 
 					//1.0f represents a route brightness value of 255
 					//0.0f represents a route brightness value of 0
 
 					if (b != 0.0f)
 					{
-						b = (float) (FrontCar.RearAxle.Follower.TrackPosition - FrontCar.Brightness.PreviousTrackPosition) / b;
+						b = (float) (baseCar.RearAxle.Follower.TrackPosition - baseCar.Brightness.PreviousTrackPosition) / b;
 						if (b < 0.0f) b = 0.0f;
 						if (b > 1.0f) b = 1.0f;
-						b = FrontCar.Brightness.PreviousBrightness * (1.0f - b) + FrontCar.Brightness.NextBrightness * b;
+						b = baseCar.Brightness.PreviousBrightness * (1.0f - b) + baseCar.Brightness.NextBrightness * b;
 					}
 					else
 					{
-						b = FrontCar.Brightness.PreviousBrightness;
+						b = baseCar.Brightness.PreviousBrightness;
 					}
 
 					//Calculate the cab brightness
@@ -122,7 +126,7 @@ namespace OpenBve
 				}
 				if (SectionIndex >= 0)
 				{
-					CarSections[SectionIndex].Initialize(FrontCar.CurrentlyVisible);
+					CarSections[SectionIndex].Initialize(baseCar.CurrentlyVisible);
 					for (int j = 0; j < CarSections[SectionIndex].Groups[0].Elements.Length; j++)
 					{
 						Program.CurrentHost.ShowObject(CarSections[SectionIndex].Groups[0].Elements[j].internalObject, ObjectType.Dynamic);
@@ -166,7 +170,7 @@ namespace OpenBve
 					{
 						updatefunctions = true;
 					}
-					CarSections[SectionIndex].Groups[0].Elements[ElementIndex].Update(true, baseTrain, FrontCar.Index, CurrentCarSection, (FrontCar.RearAxle.Follower.TrackPosition + RearCar.FrontAxle.Follower.TrackPosition) * 0.5, p, Direction, Up, Side, updatefunctions, Show, timeDelta, true);
+					CarSections[SectionIndex].Groups[0].Elements[ElementIndex].Update(true, baseTrain, baseCar.Index, CurrentCarSection, (baseCar.RearAxle.Follower.TrackPosition + connectedCar.FrontAxle.Follower.TrackPosition) * 0.5, p, Direction, Up, Side, updatefunctions, Show, timeDelta, true);
 				}
 			}
 

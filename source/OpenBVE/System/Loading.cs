@@ -343,7 +343,7 @@ namespace OpenBve {
 					{
 						CarObjects = new UnifiedObject[TrainManager.Trains[k].Cars.Length];
 						BogieObjects = new UnifiedObject[TrainManager.Trains[k].Cars.Length * 2];
-						CouplerObjects = new UnifiedObject[TrainManager.Trains[k].Cars.Length - 1];
+						CouplerObjects = new UnifiedObject[TrainManager.Trains[k].Cars.Length];
 						LoadObjects = true;
 					}
 					string tXml = OpenBveApi.Path.CombineFile(TrainManager.Trains[k].TrainFolder, "train.xml");
@@ -381,9 +381,9 @@ namespace OpenBve {
 							TrainManager.Trains[k].Cars[i].LoadCarSections(CarObjects[i]);
 						}
 
-						if (i != 0 && CouplerObjects[i - 1] != null)
+						if (CouplerObjects[i] != null)
 						{
-							TrainManager.Trains[k].Couplers[i -1].LoadCarSections(CouplerObjects[i - 1]);
+							TrainManager.Trains[k].Cars[i].Coupler.LoadCarSections(CouplerObjects[i]);
 						}
 						//Load bogie objects
 						if (BogieObjects[currentBogieObject] != null)

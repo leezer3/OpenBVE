@@ -37,7 +37,7 @@ namespace OpenBve
 			// We don't want this to be read-only if we ever manage to uncouple cars...
 			// ReSharper disable once FieldCanBeMadeReadOnly.Local
 			private Train baseTrain;
-
+			
 			internal Bogie(Train train, Car car)
 			{
 				baseTrain = train;

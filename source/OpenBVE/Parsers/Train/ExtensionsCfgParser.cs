@@ -214,7 +214,7 @@ namespace OpenBve {
 									// coupler
 									string t = Lines[i].Substring(8, Lines[i].Length - 9);
 									int n; if (int.TryParse(t, System.Globalization.NumberStyles.Integer, Culture, out n)) {
-										if (n >= 0 & n < Train.Couplers.Length) {
+										if (n >= 0 & n < Train.Cars.Length -1) {
 											i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal) & !Lines[i].EndsWith("]", StringComparison.Ordinal)) {
 												if (Lines[i].Length != 0) {
 													int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
@@ -238,8 +238,8 @@ namespace OpenBve {
 																		} else if (min > max) {
 																			Interface.AddMessage(MessageType.Error, false, "Minimum is expected to be less than Maximum in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																		} else {
-																			Train.Couplers[n].MinimumDistanceBetweenCars = min;
-																			Train.Couplers[n].MaximumDistanceBetweenCars = max;
+																			Train.Cars[n].Coupler.MinimumDistanceBetweenCars = min;
+																			Train.Cars[n].Coupler.MaximumDistanceBetweenCars = max;
 																		}
 																	} else {
 																		Interface.AddMessage(MessageType.Error, false, "An argument-separating comma is expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);

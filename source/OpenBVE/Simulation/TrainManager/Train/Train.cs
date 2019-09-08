@@ -28,7 +28,6 @@ namespace OpenBve
 			internal DriverBody DriverBody;
 			internal Handles Handles;
 			internal Car[] Cars;
-			internal Coupler[] Couplers;
 			internal TrainSpecs Specs;
 			internal TrainPassengers Passengers;
 			
@@ -93,10 +92,7 @@ namespace OpenBve
 					Cars[i].ChangeCarSection(CarSectionType.NotVisible);
 					Cars[i].FrontBogie.ChangeSection(-1);
 					Cars[i].RearBogie.ChangeSection(-1);
-					if (i != 0)
-					{
-						Couplers[i -1].ChangeSection(-1);
-					}
+					Cars[i].Coupler.ChangeSection(-1);
 				}
 				Program.Sounds.StopAllSounds(this);
 
@@ -236,10 +232,7 @@ namespace OpenBve
 								}
 								Cars[j].FrontBogie.ChangeSection(!IsPlayerTrain ? 0 : -1);
 								Cars[j].RearBogie.ChangeSection(!IsPlayerTrain ? 0 : -1);
-								if (j != 0)
-								{
-									Couplers[j -1].ChangeSection(!IsPlayerTrain ? 0 : -1);
-								}
+								Cars[j].Coupler.ChangeSection(!IsPlayerTrain ? 0 : -1);
 								
 								if (Cars[j].Specs.IsMotorCar)
 								{
@@ -821,7 +814,7 @@ namespace OpenBve
 						}
 					}
 					// coupler
-					bool[] CouplerCollision = new bool[Couplers.Length];
+					bool[] CouplerCollision = new bool[Cars.Length - 1];
 					int cf, cr;
 					if (s >= 0)
 					{
@@ -830,8 +823,8 @@ namespace OpenBve
 						{
 							int t = p; p = s; s = t;
 						}
-						double min = Couplers[p].MinimumDistanceBetweenCars;
-						double max = Couplers[p].MaximumDistanceBetweenCars;
+						double min = Cars[p].Coupler.MinimumDistanceBetweenCars;
+						double max = Cars[p].Coupler.MaximumDistanceBetweenCars;
 						double d = CenterOfCarPositions[p] - CenterOfCarPositions[s] - 0.5 * (Cars[p].Length + Cars[s].Length);
 						if (d < min)
 						{
@@ -868,8 +861,8 @@ namespace OpenBve
 					// front cars
 					for (int i = cf - 1; i >= 0; i--)
 					{
-						double min = Couplers[i].MinimumDistanceBetweenCars;
-						double max = Couplers[i].MaximumDistanceBetweenCars;
+						double min = Cars[i].Coupler.MinimumDistanceBetweenCars;
+						double max = Cars[i].Coupler.MaximumDistanceBetweenCars;
 						double d = CenterOfCarPositions[i] - CenterOfCarPositions[i + 1] - 0.5 * (Cars[i].Length + Cars[i + 1].Length);
 						if (d < min)
 						{
@@ -889,8 +882,8 @@ namespace OpenBve
 					// rear cars
 					for (int i = cr + 1; i < Cars.Length; i++)
 					{
-						double min = Couplers[i - 1].MinimumDistanceBetweenCars;
-						double max = Couplers[i - 1].MaximumDistanceBetweenCars;
+						double min = Cars[i - 1].Coupler.MinimumDistanceBetweenCars;
+						double max = Cars[i - 1].Coupler.MaximumDistanceBetweenCars;
 						double d = CenterOfCarPositions[i - 1] - CenterOfCarPositions[i] - 0.5 * (Cars[i].Length + Cars[i - 1].Length);
 						if (d < min)
 						{
@@ -909,12 +902,12 @@ namespace OpenBve
 						}
 					}
 					// update speeds
-					for (int i = 0; i < Couplers.Length; i++)
+					for (int i = 0; i < Cars.Length - 1; i++)
 					{
 						if (CouplerCollision[i])
 						{
 							int j;
-							for (j = i + 1; j < Couplers.Length; j++)
+							for (j = i + 1; j < Cars.Length - 1; j++)
 							{
 								if (!CouplerCollision[j])
 								{
@@ -996,10 +989,7 @@ namespace OpenBve
 						Cars[i].UpdateObjects(TimeElapsed, ForceUpdate, true);
 						Cars[i].FrontBogie.UpdateObjects(TimeElapsed, ForceUpdate);
 						Cars[i].RearBogie.UpdateObjects(TimeElapsed, ForceUpdate);
-						if (i != 0)
-						{
-							Couplers[i - 1].UpdateObjects(TimeElapsed, ForceUpdate);
-						}
+						Cars[i].Coupler.UpdateObjects(TimeElapsed, ForceUpdate);
 					}
 				}
 			}
@@ -1128,7 +1118,7 @@ namespace OpenBve
 					TrackPosition -= Cars[i].Length;
 					if (i < Cars.Length - 1)
 					{
-						TrackPosition -= 0.5 * (Couplers[i].MinimumDistanceBetweenCars + Couplers[i].MaximumDistanceBetweenCars);
+						TrackPosition -= 0.5 * (Cars[i].Coupler.MinimumDistanceBetweenCars + Cars[i].Coupler.MaximumDistanceBetweenCars);
 					}
 				}
 			}
