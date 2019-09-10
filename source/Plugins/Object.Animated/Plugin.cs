@@ -28,6 +28,10 @@ namespace Plugin
 
 		public override bool CanLoadObject(string path)
 		{
+			if (string.IsNullOrEmpty(path))
+			{
+				return false;
+			}
 			if (path.ToLowerInvariant().EndsWith(".animated", StringComparison.InvariantCultureIgnoreCase))
 			{
 				return true;
