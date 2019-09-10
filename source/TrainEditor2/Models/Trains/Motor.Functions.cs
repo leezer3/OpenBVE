@@ -1064,10 +1064,10 @@ namespace TrainEditor2.Models.Trains
 			GL.ClearColor(Color.Black);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-			Matrix4d projPitch = Matrix4d.CreateOrthographic(MaxVelocity - MinVelocity, MaxPitch - MinPitch, double.Epsilon, 1.0);
-			Matrix4d projVolume = Matrix4d.CreateOrthographic(MaxVelocity - MinVelocity, MaxVolume - MinVolume, double.Epsilon, 1.0);
-			Matrix4d lookPitch = Matrix4d.LookAt(new Vector3d((MinVelocity + MaxVelocity) / 2.0, (MinPitch + MaxPitch) / 2.0, double.Epsilon), new Vector3d((MinVelocity + MaxVelocity) / 2.0, (MinPitch + MaxPitch) / 2.0, 0.0), Vector3d.UnitY);
-			Matrix4d lookVolume = Matrix4d.LookAt(new Vector3d((MinVelocity + MaxVelocity) / 2.0, (MinVolume + MaxVolume) / 2.0, double.Epsilon), new Vector3d((MinVelocity + MaxVelocity) / 2.0, (MinVolume + MaxVolume) / 2.0, 0.0), Vector3d.UnitY);
+			Matrix4d projPitch = Matrix4d.CreateOrthographic(MaxVelocity - MinVelocity, MaxPitch - MinPitch, float.Epsilon, 1.0);
+			Matrix4d projVolume = Matrix4d.CreateOrthographic(MaxVelocity - MinVelocity, MaxVolume - MinVolume, float.Epsilon, 1.0);
+			Matrix4d lookPitch = Matrix4d.LookAt(new Vector3d((MinVelocity + MaxVelocity) / 2.0, (MinPitch + MaxPitch) / 2.0, float.Epsilon), new Vector3d((MinVelocity + MaxVelocity) / 2.0, (MinPitch + MaxPitch) / 2.0, 0.0), Vector3d.UnitY);
+			Matrix4d lookVolume = Matrix4d.LookAt(new Vector3d((MinVelocity + MaxVelocity) / 2.0, (MinVolume + MaxVolume) / 2.0, float.Epsilon), new Vector3d((MinVelocity + MaxVelocity) / 2.0, (MinVolume + MaxVolume) / 2.0, 0.0), Vector3d.UnitY);
 
 			//Font font = new Font("MS UI Gothic", 7.0f);
 			//Pen grayPen = new Pen(Color.DimGray);
