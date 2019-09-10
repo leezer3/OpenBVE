@@ -521,7 +521,7 @@ namespace TrainEditor2.Models
 						Text = Utilities.GetInterfaceString("menu", "file", "wrongtype"),
 						IsOpen = true
 					};
-					
+
 				}
 				else
 				{
@@ -537,7 +537,7 @@ namespace TrainEditor2.Models
 						IsOpen = true
 					};
 				}
-				
+
 
 				SaveLocation = string.Empty;
 
@@ -613,129 +613,171 @@ namespace TrainEditor2.Models
 
 		internal void ImportFiles()
 		{
-			switch (CurrentTrainFileType)
+			try
 			{
-				case TrainFileType.OldFormat:
-					if (!string.IsNullOrEmpty(TrainDatImportLocation))
-					{
-						TrainDat.Parse(TrainDatImportLocation, out train);
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(Train)));
+				switch (CurrentTrainFileType)
+				{
+					case TrainFileType.OldFormat:
+						if (!string.IsNullOrEmpty(TrainDatImportLocation))
+						{
+							TrainDat.Parse(TrainDatImportLocation, out train);
+							OnPropertyChanged(new PropertyChangedEventArgs(nameof(Train)));
 
-						CreateItem();
-					}
+							CreateItem();
+						}
 
-					if (!string.IsNullOrEmpty(ExtensionsCfgImportLocation))
-					{
-						ExtensionsCfg.Parse(ExtensionsCfgImportLocation, Train);
-					}
-					break;
-				default:
-					throw new ArgumentOutOfRangeException();
+						if (!string.IsNullOrEmpty(ExtensionsCfgImportLocation))
+						{
+							ExtensionsCfg.Parse(ExtensionsCfgImportLocation, Train);
+						}
+						break;
+					default:
+						throw new ArgumentOutOfRangeException();
+				}
+			}
+			catch (Exception e)
+			{
+				Interface.AddMessage(MessageType.Error, false, e.Message);
 			}
 
-			switch (CurrentPanelFileType)
+			try
 			{
-				case PanelFileType.Panel2Cfg:
-					if (!string.IsNullOrEmpty(Panel2CfgImportLocation))
-					{
-						PanelCfgBve4.Parse(Panel2CfgImportLocation, out panel);
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(Panel)));
-					}
-					break;
-				case PanelFileType.PanelXml:
-					if (!string.IsNullOrEmpty(PanelXmlImportLocation))
-					{
-						PanelCfgXml.Parse(PanelXmlImportLocation, out panel);
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(Panel)));
-					}
-					break;
-				default:
-					throw new ArgumentOutOfRangeException();
+				switch (CurrentPanelFileType)
+				{
+					case PanelFileType.Panel2Cfg:
+						if (!string.IsNullOrEmpty(Panel2CfgImportLocation))
+						{
+							PanelCfgBve4.Parse(Panel2CfgImportLocation, out panel);
+							OnPropertyChanged(new PropertyChangedEventArgs(nameof(Panel)));
+						}
+						break;
+					case PanelFileType.PanelXml:
+						if (!string.IsNullOrEmpty(PanelXmlImportLocation))
+						{
+							PanelCfgXml.Parse(PanelXmlImportLocation, out panel);
+							OnPropertyChanged(new PropertyChangedEventArgs(nameof(Panel)));
+						}
+						break;
+					default:
+						throw new ArgumentOutOfRangeException();
+				}
+			}
+			catch (Exception e)
+			{
+				Interface.AddMessage(MessageType.Error, false, e.Message);
 			}
 
-			switch (CurrentSoundFileType)
+			try
 			{
-				case SoundFileType.NoSettingFile:
-					if (!string.IsNullOrEmpty(TrainFolderImportLocation))
-					{
-						SoundCfgBve2.Parse(TrainFolderImportLocation, out sound);
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(Sound)));
-					}
-					break;
-				case SoundFileType.SoundCfg:
-					if (!string.IsNullOrEmpty(SoundCfgImportLocation))
-					{
-						SoundCfgBve4.Parse(SoundCfgImportLocation, out sound);
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(Sound)));
-					}
-					break;
-				case SoundFileType.SoundXml:
-					if (!string.IsNullOrEmpty(SoundXmlImportLocation))
-					{
-						SoundCfgXml.Parse(SoundXmlImportLocation, out sound);
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(Sound)));
-					}
-					break;
-				default:
-					throw new ArgumentOutOfRangeException();
+				switch (CurrentSoundFileType)
+				{
+					case SoundFileType.NoSettingFile:
+						if (!string.IsNullOrEmpty(TrainFolderImportLocation))
+						{
+							SoundCfgBve2.Parse(TrainFolderImportLocation, out sound);
+							OnPropertyChanged(new PropertyChangedEventArgs(nameof(Sound)));
+						}
+						break;
+					case SoundFileType.SoundCfg:
+						if (!string.IsNullOrEmpty(SoundCfgImportLocation))
+						{
+							SoundCfgBve4.Parse(SoundCfgImportLocation, out sound);
+							OnPropertyChanged(new PropertyChangedEventArgs(nameof(Sound)));
+						}
+						break;
+					case SoundFileType.SoundXml:
+						if (!string.IsNullOrEmpty(SoundXmlImportLocation))
+						{
+							SoundCfgXml.Parse(SoundXmlImportLocation, out sound);
+							OnPropertyChanged(new PropertyChangedEventArgs(nameof(Sound)));
+						}
+						break;
+					default:
+						throw new ArgumentOutOfRangeException();
+				}
+			}
+			catch (Exception e)
+			{
+				Interface.AddMessage(MessageType.Error, false, e.Message);
 			}
 		}
 
 		internal void ExportFiles()
 		{
-			switch (CurrentTrainFileType)
+			try
 			{
-				case TrainFileType.OldFormat:
-					if (!string.IsNullOrEmpty(TrainDatExportLocation))
-					{
-						TrainDat.Write(TrainDatExportLocation, Train);
-					}
+				switch (CurrentTrainFileType)
+				{
+					case TrainFileType.OldFormat:
+						if (!string.IsNullOrEmpty(TrainDatExportLocation))
+						{
+							TrainDat.Write(TrainDatExportLocation, Train);
+						}
 
-					if (!string.IsNullOrEmpty(ExtensionsCfgExportLocation))
-					{
-						ExtensionsCfg.Write(ExtensionsCfgExportLocation, Train);
-					}
-					break;
-				default:
-					throw new ArgumentOutOfRangeException();
+						if (!string.IsNullOrEmpty(ExtensionsCfgExportLocation))
+						{
+							ExtensionsCfg.Write(ExtensionsCfgExportLocation, Train);
+						}
+						break;
+					default:
+						throw new ArgumentOutOfRangeException();
+				}
+			}
+			catch (Exception e)
+			{
+				Interface.AddMessage(MessageType.Error, false, e.Message);
 			}
 
-			switch (CurrentPanelFileType)
+			try
 			{
-				case PanelFileType.Panel2Cfg:
-					if (!string.IsNullOrEmpty(Panel2CfgExportLocation))
-					{
-						PanelCfgBve4.Write(Panel2CfgExportLocation, Panel);
-					}
-					break;
-				case PanelFileType.PanelXml:
-					if (!string.IsNullOrEmpty(PanelXmlExportLocation))
-					{
-						PanelCfgXml.Write(PanelXmlExportLocation, Panel);
-					}
-					break;
-				default:
-					throw new ArgumentOutOfRangeException();
+				switch (CurrentPanelFileType)
+				{
+					case PanelFileType.Panel2Cfg:
+						if (!string.IsNullOrEmpty(Panel2CfgExportLocation))
+						{
+							PanelCfgBve4.Write(Panel2CfgExportLocation, Panel);
+						}
+						break;
+					case PanelFileType.PanelXml:
+						if (!string.IsNullOrEmpty(PanelXmlExportLocation))
+						{
+							PanelCfgXml.Write(PanelXmlExportLocation, Panel);
+						}
+						break;
+					default:
+						throw new ArgumentOutOfRangeException();
+				}
+			}
+			catch (Exception e)
+			{
+				Interface.AddMessage(MessageType.Error, false, e.Message);
 			}
 
-			switch (CurrentSoundFileType)
+			try
 			{
-				case SoundFileType.NoSettingFile:
-					break;
-				case SoundFileType.SoundCfg:
-					if (!string.IsNullOrEmpty(SoundCfgExportLocation))
-					{
-						SoundCfgBve4.Write(SoundCfgExportLocation, Sound);
-					}
-					break;
-				case SoundFileType.SoundXml:
-					if (!string.IsNullOrEmpty(SoundXmlExportLocation))
-					{
-						SoundCfgXml.Write(SoundXmlExportLocation, Sound);
-					}
-					break;
-				default:
-					throw new ArgumentOutOfRangeException();
+				switch (CurrentSoundFileType)
+				{
+					case SoundFileType.NoSettingFile:
+						break;
+					case SoundFileType.SoundCfg:
+						if (!string.IsNullOrEmpty(SoundCfgExportLocation))
+						{
+							SoundCfgBve4.Write(SoundCfgExportLocation, Sound);
+						}
+						break;
+					case SoundFileType.SoundXml:
+						if (!string.IsNullOrEmpty(SoundXmlExportLocation))
+						{
+							SoundCfgXml.Write(SoundXmlExportLocation, Sound);
+						}
+						break;
+					default:
+						throw new ArgumentOutOfRangeException();
+				}
+			}
+			catch (Exception e)
+			{
+				Interface.AddMessage(MessageType.Error, false, e.Message);
 			}
 		}
 

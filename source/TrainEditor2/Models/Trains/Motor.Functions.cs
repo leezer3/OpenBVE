@@ -5,11 +5,15 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using LibRender;
+using OpenBveApi.Colors;
+using OpenBveApi.Graphics;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Dialogs;
 using TrainEditor2.Models.Others;
+using TrainEditor2.Systems;
 
 namespace TrainEditor2.Models.Trains
 {
@@ -1066,12 +1070,9 @@ namespace TrainEditor2.Models.Trains
 
 			Matrix4d projPitch = Matrix4d.CreateOrthographic(MaxVelocity - MinVelocity, MaxPitch - MinPitch, float.Epsilon, 1.0);
 			Matrix4d projVolume = Matrix4d.CreateOrthographic(MaxVelocity - MinVelocity, MaxVolume - MinVolume, float.Epsilon, 1.0);
+			Matrix4d projString = Matrix4d.CreateOrthographicOffCenter(0.0, GlControlWidth, GlControlHeight, 0.0, -1.0, 1.0);
 			Matrix4d lookPitch = Matrix4d.LookAt(new Vector3d((MinVelocity + MaxVelocity) / 2.0, (MinPitch + MaxPitch) / 2.0, float.Epsilon), new Vector3d((MinVelocity + MaxVelocity) / 2.0, (MinPitch + MaxPitch) / 2.0, 0.0), Vector3d.UnitY);
 			Matrix4d lookVolume = Matrix4d.LookAt(new Vector3d((MinVelocity + MaxVelocity) / 2.0, (MinVolume + MaxVolume) / 2.0, float.Epsilon), new Vector3d((MinVelocity + MaxVelocity) / 2.0, (MinVolume + MaxVolume) / 2.0, 0.0), Vector3d.UnitY);
-
-			//Font font = new Font("MS UI Gothic", 7.0f);
-			//Pen grayPen = new Pen(Color.DimGray);
-			//Brush grayBrush = Brushes.DimGray;
 
 			// vertical grid
 			{
@@ -1088,10 +1089,22 @@ namespace TrainEditor2.Models.Trains
 					GL.Color4(Color.DimGray);
 					GL.Vertex2(v, 0.0);
 					GL.Vertex2(v, float.MaxValue);
-					//g.DrawString(v.ToString("0", culture), font, grayBrush, new PointF(x, 1.0f));
 				}
 
 				GL.End();
+
+				GL.MatrixMode(MatrixMode.Projection);
+				GL.LoadMatrix(ref projString);
+
+				GL.MatrixMode(MatrixMode.Modelview);
+				GL.LoadIdentity();
+
+				for (double v = 0.0; v < MaxVelocity; v += 10.0)
+				{
+					Renderer.DrawString(Fonts.VerySmallFont, v.ToString("0", culture), new Point((int)VelocityToX(v) + 1, 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
+				}
+
+				GL.Disable(EnableCap.Texture2D);
 			}
 
 			// horizontal grid
@@ -1111,10 +1124,22 @@ namespace TrainEditor2.Models.Trains
 						GL.Color4(Color.DimGray);
 						GL.Vertex2(MinVelocity, p);
 						GL.Vertex2(MaxVelocity, p);
-						//g.DrawString(p.ToString("0", culture), font, grayBrush, new PointF(1.0f, y));
 					}
 
 					GL.End();
+
+					GL.MatrixMode(MatrixMode.Projection);
+					GL.LoadMatrix(ref projString);
+
+					GL.MatrixMode(MatrixMode.Modelview);
+					GL.LoadIdentity();
+
+					for (double p = 0.0; p < MaxPitch; p += 100.0)
+					{
+						Renderer.DrawString(Fonts.VerySmallFont, p.ToString("0", culture), new Point(1, (int)PitchToY(p) + 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
+					}
+
+					GL.Disable(EnableCap.Texture2D);
 					break;
 				case InputMode.Volume:
 					GL.MatrixMode(MatrixMode.Projection);
@@ -1130,10 +1155,22 @@ namespace TrainEditor2.Models.Trains
 						GL.Color4(Color.DimGray);
 						GL.Vertex2(MinVelocity, v);
 						GL.Vertex2(MaxVelocity, v);
-						//g.DrawString(v.ToString("0", culture), font, grayBrush, new PointF(1.0f, y));
 					}
 
 					GL.End();
+
+					GL.MatrixMode(MatrixMode.Projection);
+					GL.LoadMatrix(ref projString);
+
+					GL.MatrixMode(MatrixMode.Modelview);
+					GL.LoadIdentity();
+
+					for (double v = 0.0; v < MaxVolume; v += 128.0)
+					{
+						Renderer.DrawString(Fonts.VerySmallFont, v.ToString("0", culture), new Point(1, (int)VolumeToY(v) + 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
+					}
+
+					GL.Disable(EnableCap.Texture2D);
 					break;
 			}
 

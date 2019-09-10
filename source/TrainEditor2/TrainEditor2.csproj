@@ -154,6 +154,7 @@
     <Compile Include="Simulation\TrainManager\Motor\MotorSounds.cs" />
     <Compile Include="Simulation\TrainManager\TrainManager.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.cs" />
+    <Compile Include="Systems\Fonts.cs" />
     <Compile Include="Systems\Functions\Plugins.cs" />
     <Compile Include="Systems\Host.cs" />
     <Compile Include="Systems\Interface.cs" />
@@ -364,6 +365,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LibRender\LibRender.csproj">
+      <Project>{2072ecd1-c7ff-427c-84dc-063f7c19792e}</Project>
+      <Name>LibRender</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-a564-40a9014dfa5f}</Project>
       <Name>OpenBveApi</Name>

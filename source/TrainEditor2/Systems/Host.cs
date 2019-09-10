@@ -1,7 +1,10 @@
 ﻿using System;
 using System.IO;
+using LibRender;
+using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Sounds;
+using OpenBveApi.Textures;
 using TrainEditor2.Systems.Functions;
 
 namespace TrainEditor2.Systems
@@ -10,6 +13,13 @@ namespace TrainEditor2.Systems
 	internal class Host : HostInterface
 	{
 		public Host() : base(HostApplication.TrainEditor) { }
+
+		// --- texture ---
+
+		public override bool LoadTexture(Texture Texture, OpenGlTextureWrapMode wrapMode)
+		{
+			return TextureManager.LoadTexture(Texture, wrapMode, Environment.TickCount, InterpolationMode.BilinearMipmapped, 16);
+		}
 
 		// --- sound ---
 
