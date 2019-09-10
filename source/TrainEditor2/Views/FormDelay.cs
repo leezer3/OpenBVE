@@ -47,14 +47,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(disposable);
 
-			CompositeDisposable entryDisposable = null;
+			CompositeDisposable entryDisposable = new CompositeDisposable().AddTo(disposable);
 
 			SelectedEntry
 				.Where(x => x != null)
 				.Subscribe(x =>
 				{
-					entryDisposable?.Dispose();
-					entryDisposable = new CompositeDisposable();
+					entryDisposable.Dispose();
+					entryDisposable = new CompositeDisposable().AddTo(disposable);
 
 					x.Up.BindTo(
 							textBoxUp,

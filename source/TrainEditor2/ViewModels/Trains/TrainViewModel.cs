@@ -31,7 +31,7 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
-		internal ReactivePropertySlim<CarViewModel> SelectedCar
+		internal ReadOnlyReactivePropertySlim<CarViewModel> SelectedCar
 		{
 			get;
 		}
@@ -41,15 +41,13 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
-		internal ReactivePropertySlim<CouplerViewModel> SelectedCoupler
+		internal ReadOnlyReactivePropertySlim<CouplerViewModel> SelectedCoupler
 		{
 			get;
 		}
 
 		internal TrainViewModel(Train train, App app)
 		{
-			CompositeDisposable selectedItemDisposable = new CompositeDisposable();
-
 			Handle = train
 				.ObserveProperty(x => x.Handle)
 				.Do(_ => Handle?.Value.Dispose())
@@ -93,32 +91,23 @@ namespace TrainEditor2.ViewModels.Trains
 				})
 				.AddTo(disposable);
 
-			SelectedCar = new ReactivePropertySlim<CarViewModel>();
-
 			Couplers = train.Couplers
 				.ToReadOnlyReactiveCollection(x => new CouplerViewModel(x))
 				.AddTo(disposable);
 
-			SelectedCoupler = new ReactivePropertySlim<CouplerViewModel>();
-
-			app.ObserveProperty(x => x.SelectedItem)
-				.Subscribe(x =>
-				{
-					selectedItemDisposable.Dispose();
-					selectedItemDisposable = new CompositeDisposable();
-
-					x?.PropertyChangedAsObservable()
-						.ToReadOnlyReactivePropertySlim(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe)
-						.Subscribe(_ =>
-						{
-							SelectedCar.Value = Cars.FirstOrDefault(y => y.Model == x.Tag);
-							SelectedCoupler.Value = Couplers.FirstOrDefault(y => y.Model == x.Tag);
-						})
-						.AddTo(selectedItemDisposable);
-				})
+			SelectedCar = app
+				.ObserveProperty(x => x.SelectedItem)
+				.Where(x => x != null)
+				.Select(x => Cars.FirstOrDefault(y => y.Model == x.Tag))
+				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 
-			selectedItemDisposable.AddTo(disposable);
+			SelectedCoupler = app
+				.ObserveProperty(x => x.SelectedItem)
+				.Where(x => x != null)
+				.Select(x => Couplers.FirstOrDefault(y => y.Model == x.Tag))
+				.ToReadOnlyReactivePropertySlim()
+				.AddTo(disposable);
 		}
 	}
 }

@@ -881,6 +881,7 @@ namespace TrainEditor2.Models
 			}
 
 			Item.Children[1].Children[carIndex].Tag = Train.Cars[carIndex];
+			OnPropertyChanged(new PropertyChangedEventArgs(nameof(SelectedItem)));
 		}
 
 		private string GetMessageTypeString(MessageType type)

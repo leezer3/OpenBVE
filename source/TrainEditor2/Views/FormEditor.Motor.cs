@@ -15,9 +15,9 @@ namespace TrainEditor2.Views
 		private IDisposable BindToMotor(MotorViewModel z)
 		{
 			CompositeDisposable motorDisposable = new CompositeDisposable();
-			CompositeDisposable messageDisposable = new CompositeDisposable();
-			CompositeDisposable toolTipVertexPitchDisposable = new CompositeDisposable();
-			CompositeDisposable toolTipVertexVolumeDisposable = new CompositeDisposable();
+			CompositeDisposable messageDisposable = new CompositeDisposable().AddTo(motorDisposable);
+			CompositeDisposable toolTipVertexPitchDisposable = new CompositeDisposable().AddTo(motorDisposable);
+			CompositeDisposable toolTipVertexVolumeDisposable = new CompositeDisposable().AddTo(motorDisposable);
 
 			CultureInfo culture = CultureInfo.InvariantCulture;
 
@@ -25,7 +25,7 @@ namespace TrainEditor2.Views
 				.Subscribe(w =>
 				{
 					messageDisposable.Dispose();
-					messageDisposable = new CompositeDisposable();
+					messageDisposable = new CompositeDisposable().AddTo(motorDisposable);
 
 					BindToMessageBox(w).AddTo(messageDisposable);
 				})
@@ -35,7 +35,7 @@ namespace TrainEditor2.Views
 				.Subscribe(w =>
 				{
 					toolTipVertexPitchDisposable.Dispose();
-					toolTipVertexPitchDisposable = new CompositeDisposable();
+					toolTipVertexPitchDisposable = new CompositeDisposable().AddTo(motorDisposable);
 
 					BindToToolTip(w, glControlMotor).AddTo(toolTipVertexPitchDisposable);
 				})
@@ -45,7 +45,7 @@ namespace TrainEditor2.Views
 				.Subscribe(w =>
 				{
 					toolTipVertexVolumeDisposable.Dispose();
-					toolTipVertexVolumeDisposable = new CompositeDisposable();
+					toolTipVertexVolumeDisposable = new CompositeDisposable().AddTo(motorDisposable);
 
 					BindToToolTip(w, glControlMotor).AddTo(toolTipVertexVolumeDisposable);
 				})
@@ -820,10 +820,6 @@ namespace TrainEditor2.Views
 			z.StartSimulation.BindToButton(buttonPlay).AddTo(motorDisposable);
 			z.PauseSimulation.BindToButton(buttonPause).AddTo(motorDisposable);
 			z.StopSimulation.BindToButton(buttonStop).AddTo(motorDisposable);
-
-			messageDisposable.AddTo(motorDisposable);
-			toolTipVertexPitchDisposable.AddTo(motorDisposable);
-			toolTipVertexVolumeDisposable.AddTo(motorDisposable);
 
 			return motorDisposable;
 		}

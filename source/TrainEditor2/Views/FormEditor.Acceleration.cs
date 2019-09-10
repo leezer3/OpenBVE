@@ -13,7 +13,7 @@ namespace TrainEditor2.Views
 		private IDisposable BindToAcceleration(AccelerationViewModel z)
 		{
 			CompositeDisposable accelerationDisposable = new CompositeDisposable();
-			CompositeDisposable entryDisposable = new CompositeDisposable();
+			CompositeDisposable entryDisposable = new CompositeDisposable().AddTo(accelerationDisposable);
 
 			z.SelectedEntryIndex
 				.BindTo(
@@ -39,7 +39,7 @@ namespace TrainEditor2.Views
 				.Subscribe(x =>
 				{
 					entryDisposable.Dispose();
-					entryDisposable = new CompositeDisposable();
+					entryDisposable = new CompositeDisposable().AddTo(accelerationDisposable);
 
 					x.A0.BindTo(
 							textBoxAccelA0,
@@ -290,8 +290,6 @@ namespace TrainEditor2.Views
 			z.ZoomIn.BindToButton(buttonAccelZoomIn).AddTo(accelerationDisposable);
 			z.ZoomOut.BindToButton(buttonAccelZoomOut).AddTo(accelerationDisposable);
 			z.Reset.BindToButton(buttonAccelReset).AddTo(accelerationDisposable);
-
-			entryDisposable.AddTo(accelerationDisposable);
 
 			return accelerationDisposable;
 		}
