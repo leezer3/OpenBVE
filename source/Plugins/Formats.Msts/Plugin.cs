@@ -119,7 +119,7 @@ namespace OpenBve.Formats.MsTs
 			KujuTokenID currentToken = (KujuTokenID) myReader.ReadUInt16();
 			if (currentToken != newToken)
 			{
-				throw new Exception("Expected the " + newToken + " token, got " + currentToken);
+				throw new InvalidDataException("Expected the " + newToken + " token, got " + currentToken);
 			}
 
 			myReader.ReadUInt16();
@@ -133,7 +133,7 @@ namespace OpenBve.Formats.MsTs
 			KujuTokenID currentToken = (KujuTokenID) myReader.ReadUInt16();
 			if (!validTokens.Contains(currentToken))
 			{
-				throw new Exception("Expected one of the following tokens: " + validTokens + ", got " + currentToken);
+				throw new InvalidDataException("Expected one of the following tokens: " + validTokens + ", got " + currentToken);
 			}
 
 			myReader.ReadUInt16();
@@ -246,7 +246,7 @@ namespace OpenBve.Formats.MsTs
 
 			if (currentPosition == 0)
 			{
-				throw new Exception("Token " + token + " was not found.");
+				throw new InvalidDataException("Token " + token + " was not found.");
 			}
 
 			string s = myText.Substring(0, currentPosition);
@@ -261,12 +261,12 @@ namespace OpenBve.Formats.MsTs
 			KujuTokenID currentToken;
 			if (!Enum.TryParse(s, true, out currentToken))
 			{
-				throw new Exception("Invalid token " + s);
+				throw new InvalidDataException("Invalid token " + s);
 			}
 
 			if (currentToken != Token)
 			{
-				throw new Exception("Expected the " + Token + " token, got " + currentToken);
+				throw new InvalidDataException("Expected the " + Token + " token, got " + currentToken);
 			}
 
 			currentPosition++;
@@ -300,12 +300,12 @@ namespace OpenBve.Formats.MsTs
 
 			if (!Enum.TryParse(s, true, out currentToken))
 			{
-				throw new Exception("Unrecognised token " + s);
+				throw new InvalidDataException("Unrecognised token " + s);
 			}
 
 			if (newToken != currentToken)
 			{
-				throw new Exception("Expected the " + newToken + " token, got " + currentToken);
+				throw new InvalidDataException("Expected the " + newToken + " token, got " + currentToken);
 			}
 
 			int level = 0;
@@ -331,7 +331,7 @@ namespace OpenBve.Formats.MsTs
 				currentPosition++;
 			}
 
-			throw new Exception("Unexpected end of block in " + Token);
+			throw new InvalidDataException("Unexpected end of block in " + Token);
 		}
 
 		public override Block ReadSubBlock(KujuTokenID[] validTokens)
@@ -362,12 +362,12 @@ namespace OpenBve.Formats.MsTs
 
 			if (!Enum.TryParse(s, true, out currentToken))
 			{
-				throw new Exception("Unrecognised token " + s);
+				throw new InvalidDataException("Unrecognised token " + s);
 			}
 
 			if (!validTokens.Contains(currentToken))
 			{
-				throw new Exception("Expected one of the following tokens: " + validTokens + " , got " + currentToken);
+				throw new InvalidDataException("Expected one of the following tokens: " + validTokens + " , got " + currentToken);
 			}
 
 			int level = 0;
@@ -393,7 +393,7 @@ namespace OpenBve.Formats.MsTs
 				currentPosition++;
 			}
 
-			throw new Exception("Unexpected end of block in " + Token);
+			throw new InvalidDataException("Unexpected end of block in " + Token);
 		}
 
 		public override Block ReadSubBlock()
@@ -415,7 +415,7 @@ namespace OpenBve.Formats.MsTs
 
 			if (string.IsNullOrWhiteSpace(s))
 			{
-				throw new Exception();
+				throw new InvalidDataException("Empty sub-block");
 			}
 
 			KujuTokenID currentToken;
@@ -429,7 +429,7 @@ namespace OpenBve.Formats.MsTs
 
 			if (!Enum.TryParse(s, true, out currentToken))
 			{
-				throw new Exception("Unrecognised token " + s);
+				throw new InvalidDataException("Unrecognised token " + s);
 			}
 			
 			int level = 0;
@@ -455,7 +455,7 @@ namespace OpenBve.Formats.MsTs
 				currentPosition++;
 			}
 
-			throw new Exception("Unexpected end of block in " + Token);
+			throw new InvalidDataException("Unexpected end of block in " + Token);
 		}
 
 
@@ -480,7 +480,7 @@ namespace OpenBve.Formats.MsTs
 				return (ushort) val;
 			}
 
-			throw new Exception("Unable to parse " + s + " to a valid integer in block " + Token);
+			throw new InvalidDataException("Unable to parse " + s + " to a valid integer in block " + Token);
 		}
 
 		public override uint ReadUInt32()
@@ -502,7 +502,7 @@ namespace OpenBve.Formats.MsTs
 				return val;
 			}
 
-			throw new Exception("Unable to parse " + s + " to a valid integer in block " + Token);
+			throw new InvalidDataException("Unable to parse " + s + " to a valid integer in block " + Token);
 		}
 
 		public override int ReadInt32()
@@ -525,7 +525,7 @@ namespace OpenBve.Formats.MsTs
 				return val;
 			}
 
-			throw new Exception("Unable to parse " + s + " to a valid integer in block " + Token);
+			throw new InvalidDataException("Unable to parse " + s + " to a valid integer in block " + Token);
 		}
 
 		public override int ReadInt16()
@@ -547,7 +547,7 @@ namespace OpenBve.Formats.MsTs
 				return (ushort) val;
 			}
 
-			throw new Exception("Unable to parse " + s + " to a valid integer in block " + Token);
+			throw new InvalidDataException("Unable to parse " + s + " to a valid integer in block " + Token);
 		}
 
 		public override float ReadSingle()
@@ -565,7 +565,7 @@ namespace OpenBve.Formats.MsTs
 				return val;
 			}
 
-			throw new Exception("Unable to parse " + s + " to a valid single in block " + Token);
+			throw new InvalidDataException("Unable to parse " + s + " to a valid single in block " + Token);
 		}
 
 		public override void Skip(int length)

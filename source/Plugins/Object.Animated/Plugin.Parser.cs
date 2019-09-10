@@ -287,21 +287,14 @@ namespace Plugin
 														}
 													} break;
 												case "statefunction":
-													try
-													{
-														StateFunctionLine = i;
-														StateFunctionRpn = b;
-													}
-													catch (Exception ex)
-													{
-														currentHost.AddMessage(MessageType.Error, false, ex.Message + " in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
-													} break;
+													StateFunctionLine = i;
+													StateFunctionRpn = b;
+													break;
 												case "statefunctionrpn":
-													{
-														StateFunctionLine = i;
-														StateFunctionRpn = b;
-														StateFunctionIsPostfix = true;
-													} break;
+													StateFunctionLine = i;
+													StateFunctionRpn = b;
+													StateFunctionIsPostfix = true;
+													break;
 												case "translatexdirection":
 												case "translateydirection":
 												case "translatezdirection":
@@ -436,8 +429,14 @@ namespace Plugin
 														double FrontAxlePosition;
 														double RearAxlePosition;
 														var splitValue = b.Split(new char[] { ',' });
-														Double.TryParse(splitValue[0], out FrontAxlePosition);
-														Double.TryParse(splitValue[1], out RearAxlePosition);
+														if (!double.TryParse(splitValue[0], out FrontAxlePosition))
+														{
+															currentHost.AddMessage(MessageType.Error, false,"Invalid FrontAxlePosition in " + a + " at line " + (i + 1).ToString(Culture) + " in file " +FileName);
+														}
+														if(!double.TryParse(splitValue[1], out RearAxlePosition))
+														{
+															currentHost.AddMessage(MessageType.Error, false,"Invalid RearAxlePosition in " + a + " at line " + (i + 1).ToString(Culture) + " in file " +FileName);
+														}
 														if (FrontAxlePosition > RearAxlePosition)
 														{
 															Result.Objects[ObjectCount].FrontAxlePosition = FrontAxlePosition;

@@ -79,6 +79,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 
 namespace AssimpNET.Obj
@@ -248,7 +250,7 @@ namespace AssimpNET.Obj
 		{
 			string tmp;
 			CopyNextWord(out tmp);
-			result = float.Parse(tmp);
+			result = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 		}
 
 		protected int GetNextToken(int tmp, int end)
@@ -391,7 +393,7 @@ namespace AssimpNET.Obj
 
 			if (!char.IsDigit(Buffer[position]))
 			{
-				throw new Exception("Cannot parse string as real number: does not start with digit or decimal point followed by digit.");
+				throw new InvalidDataException("Cannot parse string as real number: does not start with digit or decimal point followed by digit.");
 			}
 
 			string tmp = string.Empty;
@@ -408,7 +410,7 @@ namespace AssimpNET.Obj
 				}
 			}
 
-			int i = int.Parse(tmp);
+			int i = int.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 
 			if (inv)
 			{

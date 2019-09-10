@@ -114,7 +114,7 @@ namespace AssimpNET.Obj
 	//! \struct Object
 	//! \brief  Stores all objects of an obj-file object definition
 	// ------------------------------------------------------------------------------------------------
-	public class Object
+	public class WavefrontObject
 	{
 		enum ObjectType
 		{
@@ -129,7 +129,7 @@ namespace AssimpNET.Obj
 		Matrix4D Transformation;
 #pragma warning restore 169
 		//! All sub-objects referenced by this object
-		List<Object> SubObjects = new List<Object>();
+		List<WavefrontObject> SubObjects = new List<WavefrontObject>();
 		/// Assigned meshes
 		public List<uint> Meshes = new List<uint>();
 	}
@@ -243,9 +243,9 @@ namespace AssimpNET.Obj
 		//! Model name
 		public string ModelName = string.Empty;
 		//! List ob assigned objects
-		public List<Object> Objects = new List<Object>();
+		public List<WavefrontObject> Objects = new List<WavefrontObject>();
 		//! Pointer to current object
-		public Object Current = null;
+		public WavefrontObject Current = null;
 		//! Pointer to current material
 		public Material CurrentMaterial = null;
 		//! Pointer to default material

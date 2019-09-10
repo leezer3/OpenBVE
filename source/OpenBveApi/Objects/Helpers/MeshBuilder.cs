@@ -137,5 +137,161 @@ namespace OpenBveApi.Objects
 			}
 		}
 
+		/// <summary>Translates the MeshBuilder by the given values</summary>
+		public void ApplyTranslation(double x, double y, double z)
+		{
+			for (int i = 0; i < Vertices.Length; i++)
+			{
+				Vertices[i].Coordinates.X += x;
+				Vertices[i].Coordinates.Y += y;
+				Vertices[i].Coordinates.Z += z;
+			}
+		}
+
+		/// <summary>Scales the MeshBuilder by the given values</summary>
+		public void ApplyScale(double x, double y, double z)
+		{
+			float rx = (float) (1.0 / x);
+			float ry = (float) (1.0 / y);
+			float rz = (float) (1.0 / z);
+			float rx2 = rx * rx;
+			float ry2 = ry * ry;
+			float rz2 = rz * rz;
+			for (int i = 0; i < Vertices.Length; i++)
+			{
+				Vertices[i].Coordinates.X *= x;
+				Vertices[i].Coordinates.Y *= y;
+				Vertices[i].Coordinates.Z *= z;
+			}
+
+			for (int i = 0; i < Faces.Length; i++)
+			{
+				for (int j = 0; j < Faces[i].Vertices.Length; j++)
+				{
+					double nx2 = Faces[i].Vertices[j].Normal.X * Faces[i].Vertices[j].Normal.X;
+					double ny2 = Faces[i].Vertices[j].Normal.Y * Faces[i].Vertices[j].Normal.Y;
+					double nz2 = Faces[i].Vertices[j].Normal.Z * Faces[i].Vertices[j].Normal.Z;
+					double u = nx2 * rx2 + ny2 * ry2 + nz2 * rz2;
+					if (u != 0.0)
+					{
+						u = (float) System.Math.Sqrt((double) ((nx2 + ny2 + nz2) / u));
+						Faces[i].Vertices[j].Normal.X *= rx * u;
+						Faces[i].Vertices[j].Normal.Y *= ry * u;
+						Faces[i].Vertices[j].Normal.Z *= rz * u;
+					}
+				}
+			}
+
+			if (x * y * z < 0.0)
+			{
+				for (int i = 0; i < Faces.Length; i++)
+				{
+					Faces[i].Flip();
+				}
+			}
+		}
+
+		/// <summary>Rotates the MeshBuilder along the Rotation vector using the given angle</summary>
+		public void ApplyRotation(Vector3 Rotation, double Angle)
+		{
+			double cosa = System.Math.Cos(Angle);
+			double sina = System.Math.Sin(Angle);
+			for (int i = 0; i < Vertices.Length; i++)
+			{
+				Vertices[i].Coordinates.Rotate(Rotation, cosa, sina);
+			}
+
+			for (int i = 0; i < Faces.Length; i++)
+			{
+				for (int j = 0; j < Faces[i].Vertices.Length; j++)
+				{
+					Faces[i].Vertices[j].Normal.Rotate(Rotation, cosa, sina);
+				}
+			}
+		}
+
+		/// <summary>Mirrors the MeshBuilder using the given parameters</summary>
+		public void ApplyMirror(bool vX, bool vY, bool vZ, bool nX, bool nY, bool nZ)
+		{
+			for (int i = 0; i < Vertices.Length; i++)
+			{
+				if (vX)
+				{
+					Vertices[i].Coordinates.X *= -1;
+				}
+				if (vY)
+				{
+					Vertices[i].Coordinates.Y *= -1;
+				}
+				if (vZ)
+				{
+					Vertices[i].Coordinates.Z *= -1;
+				}
+			}
+			for (int i = 0; i < Faces.Length; i++)
+			{
+				for (int j = 0; j < Faces[i].Vertices.Length; j++)
+				{
+					if (nX)
+					{
+						Faces[i].Vertices[j].Normal.X *= -1;
+					}
+					if (nY)
+					{
+						Faces[i].Vertices[j].Normal.Y *= -1;
+					}
+					if (nZ)
+					{
+						Faces[i].Vertices[j].Normal.X *= -1;
+					}
+				}
+			}
+			int numFlips = 0;
+			if (vX)
+			{
+				numFlips++;
+			}
+			if (vY)
+			{
+				numFlips++;
+			}
+			if (vZ)
+			{
+				numFlips++;
+			}
+
+			if (numFlips % 2 != 0)
+			{
+				for (int i = 0; i < Faces.Length; i++)
+				{
+					Array.Reverse(Faces[i].Vertices);
+				}
+			}
+		}
+
+		/// <summary>Shears the MeshBuilder along the given vectors</summary>
+		public void ApplyShear(Vector3 d, Vector3 s, double r)
+		{
+			for (int j = 0; j < Vertices.Length; j++)
+			{
+				double n = r * (d.X * Vertices[j].Coordinates.X + d.Y * Vertices[j].Coordinates.Y + d.Z * Vertices[j].Coordinates.Z);
+				Vertices[j].Coordinates.X += s.X * n;
+				Vertices[j].Coordinates.Y += s.Y * n;
+				Vertices[j].Coordinates.Z += s.Z * n;
+			}
+
+			for (int j = 0; j < Faces.Length; j++)
+			{
+				for (int k = 0; k < Faces[j].Vertices.Length; k++)
+				{
+					if (Faces[j].Vertices[k].Normal.X != 0.0f | Faces[j].Vertices[k].Normal.Y != 0.0f | Faces[j].Vertices[k].Normal.Z != 0.0f)
+					{
+						double n = r * (s.X * Faces[j].Vertices[k].Normal.X + s.Y * Faces[j].Vertices[k].Normal.Y + s.Z * Faces[j].Vertices[k].Normal.Z);
+						Faces[j].Vertices[k].Normal -= d * n;
+						Faces[j].Vertices[k].Normal.Normalize();
+					}
+				}
+			}
+		}
 	}
 }

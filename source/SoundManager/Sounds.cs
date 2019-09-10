@@ -464,6 +464,10 @@ namespace SoundManager
 		{
 			for (int i = 0; i < SourceCount; i++)
 			{
+				if (Sources[i] == null)
+				{
+					continue;
+				}
 				if (Sources[i].State == SoundSourceState.Playing)
 				{
 					AL.DeleteSources(1, ref Sources[i].OpenAlSourceName);
@@ -479,6 +483,10 @@ namespace SoundManager
 		{
 			for (int i = 0; i < SourceCount; i++)
 			{
+				if (Sources[i] == null)
+				{
+					continue;
+				}
 				if (Sources[i].Parent == train)
 				{
 					if (Sources[i].State == SoundSourceState.Playing)
@@ -573,6 +581,10 @@ namespace SoundManager
 			int count = 0;
 			for (int i = 0; i < SourceCount; i++)
 			{
+				if (Sources[i] == null)
+				{
+					continue;
+				}
 				if (Sources[i].State == SoundSourceState.Playing)
 				{
 					count++;

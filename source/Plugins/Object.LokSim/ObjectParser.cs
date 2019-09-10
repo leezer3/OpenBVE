@@ -380,7 +380,7 @@ namespace Plugin
 				{
 					Rotation.Z = Rotation.Z.ToRadians();
 					//Apply rotation
-					ApplyRotation(Builder, Vector3.Right, Rotation.Z);
+					Builder.ApplyRotation(Vector3.Right, Rotation.Z);
 				}
 
 
@@ -389,14 +389,14 @@ namespace Plugin
 					//This is actually the Y-Axis rotation
 					Rotation.X = Rotation.X.ToRadians();
 					//Apply rotation
-					ApplyRotation(Builder, Vector3.Down, Rotation.X);
+					Builder.ApplyRotation(Vector3.Down, Rotation.X);
 				}
 				if (Rotation.Y != 0.0)
 				{
 					//This is actually the X-Axis rotation
 					Rotation.Y = Rotation.Y.ToRadians();
 					//Apply rotation
-					ApplyRotation(Builder, Vector3.Forward, Rotation.Y);
+					Builder.ApplyRotation(Vector3.Forward, Rotation.Y);
 				}
 
 
@@ -516,23 +516,6 @@ namespace Plugin
 			Alpha.UnlockBits(bmp2Data);
 			Output.UnlockBits(bmp3Data);
 			return Output;
-		}
-
-		private static void ApplyRotation(MeshBuilder Builder, Vector3 Rotation, double a)
-		{
-			double cosa = Math.Cos(a);
-			double sina = Math.Sin(a);
-			for (int i = 0; i < Builder.Vertices.Length; i++)
-			{
-				Builder.Vertices[i].Coordinates.Rotate(Rotation, cosa, sina);
-			}
-			for (int i = 0; i < Builder.Faces.Length; i++)
-			{
-				for (int j = 0; j < Builder.Faces[i].Vertices.Length; j++)
-				{
-					Builder.Faces[i].Vertices[j].Normal.Rotate(Rotation, cosa, sina);
-				}
-			}
 		}
 	}
 }
