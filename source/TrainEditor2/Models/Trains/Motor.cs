@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using OpenTK;
 using Prism.Mvvm;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Dialogs;
@@ -501,7 +501,7 @@ namespace TrainEditor2.Models.Trains
 
 		internal class SelectedRange
 		{
-			internal RectangleF Range
+			internal Box2d Range
 			{
 				get;
 				private set;
@@ -519,7 +519,7 @@ namespace TrainEditor2.Models.Trains
 				private set;
 			}
 
-			private SelectedRange(RectangleF range, Vertex[] selectedVertices, Line[] selectedLines)
+			private SelectedRange(Box2d range, Vertex[] selectedVertices, Line[] selectedLines)
 			{
 				Range = range;
 				SelectedVertices = selectedVertices;
@@ -533,7 +533,7 @@ namespace TrainEditor2.Models.Trains
 				Vertex[] selectedVertices = vertices.Values.Where(v => conditionVertex(v)).ToArray();
 				Line[] selectedLines = lines.Where(l => selectedVertices.Any(v => v.X == vertices[l.LeftID].X) && selectedVertices.Any(v => v.X == vertices[l.RightID].X)).ToArray();
 
-				return new SelectedRange(new RectangleF((float)leftX, (float)topY, (float)(rightX - leftX), (float)(topY - bottomY)), selectedVertices, selectedLines);
+				return new SelectedRange(new Box2d(leftX, topY, rightX, bottomY), selectedVertices, selectedLines);
 			}
 		}
 
@@ -584,9 +584,9 @@ namespace TrainEditor2.Models.Trains
 		private double oldElapsedTime;
 		private double nowSpeed;
 
-		private int imageWidth;
-		private int imageHeight;
-		private Bitmap image;
+		private int glControlWidth;
+		private int glControlHeight;
+		private bool isRefreshGlControl;
 
 		internal ObservableCollection<Track> Tracks;
 		internal ObservableCollection<TrackState> PrevTrackStates;
@@ -940,39 +940,39 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal int ImageWidth
+		internal int GlControlWidth
 		{
 			get
 			{
-				return imageWidth;
+				return glControlWidth;
 			}
 			set
 			{
-				SetProperty(ref imageWidth, value);
+				SetProperty(ref glControlWidth, value);
 			}
 		}
 
-		internal int ImageHeight
+		internal int GlControlHeight
 		{
 			get
 			{
-				return imageHeight;
+				return glControlHeight;
 			}
 			set
 			{
-				SetProperty(ref imageHeight, value);
+				SetProperty(ref glControlHeight, value);
 			}
 		}
 
-		internal Bitmap Image
+		internal bool IsRefreshGlControl
 		{
 			get
 			{
-				return image;
+				return isRefreshGlControl;
 			}
 			set
 			{
-				SetProperty(ref image, value);
+				SetProperty(ref isRefreshGlControl, value);
 			}
 		}
 
@@ -1014,9 +1014,8 @@ namespace TrainEditor2.Models.Trains
 			StartSpeed = 0.0;
 			EndSpeed = 160.0;
 
-			ImageWidth = 568;
-			ImageHeight = 593;
-			Image = new Bitmap(ImageWidth, ImageHeight);
+			GlControlWidth = 568;
+			GlControlHeight = 593;
 		}
 
 		public object Clone()
@@ -1030,7 +1029,6 @@ namespace TrainEditor2.Models.Trains
 			motor.Tracks = new ObservableCollection<Track>(Tracks.Select(x => (Track)x.Clone()));
 			motor.PrevTrackStates = new ObservableCollection<TrackState>(PrevTrackStates.Select(x => (TrackState)x.Clone()));
 			motor.NextTrackStates = new ObservableCollection<TrackState>(NextTrackStates.Select(x => (TrackState)x.Clone()));
-			motor.Image = (Bitmap)Image.Clone();
 			return motor;
 		}
 	}

@@ -19,7 +19,7 @@ namespace TrainEditor2.Views
 			CompositeDisposable toolTipVertexPitchDisposable = new CompositeDisposable();
 			CompositeDisposable toolTipVertexVolumeDisposable = new CompositeDisposable();
 
-			var culture = CultureInfo.InvariantCulture;
+			CultureInfo culture = CultureInfo.InvariantCulture;
 
 			z.MessageBox
 				.Subscribe(w =>
@@ -37,7 +37,7 @@ namespace TrainEditor2.Views
 					toolTipVertexPitchDisposable.Dispose();
 					toolTipVertexPitchDisposable = new CompositeDisposable();
 
-					BindToToolTip(w, pictureBoxDrawArea).AddTo(toolTipVertexPitchDisposable);
+					BindToToolTip(w, glControlMotor).AddTo(toolTipVertexPitchDisposable);
 				})
 				.AddTo(motorDisposable);
 
@@ -47,13 +47,13 @@ namespace TrainEditor2.Views
 					toolTipVertexVolumeDisposable.Dispose();
 					toolTipVertexVolumeDisposable = new CompositeDisposable();
 
-					BindToToolTip(w, pictureBoxDrawArea).AddTo(toolTipVertexVolumeDisposable);
+					BindToToolTip(w, glControlMotor).AddTo(toolTipVertexVolumeDisposable);
 				})
 				.AddTo(motorDisposable);
 
 			z.CurrentCursorType
 				.BindTo(
-					pictureBoxDrawArea,
+					glControlMotor,
 					w => w.Cursor,
 					CursorTypeToCursor
 				)
@@ -362,7 +362,7 @@ namespace TrainEditor2.Views
 					w => w != Motor.InputMode.SoundIndex
 				)
 				.AddTo(motorDisposable);
-			
+
 			z.SelectedSoundIndex
 				.BindTo(
 					toolStripComboBoxIndex,
@@ -733,9 +733,9 @@ namespace TrainEditor2.Views
 				.BindToErrorProvider(errorProvider, textBoxDirectY)
 				.AddTo(motorDisposable);
 
-			z.ImageWidth
+			z.GlControlWidth
 				.BindTo(
-					pictureBoxDrawArea,
+					glControlMotor,
 					w => w.Width,
 					BindingMode.OneWayToSource,
 					null,
@@ -749,11 +749,11 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(motorDisposable);
 
-			z.ImageWidth.Value = pictureBoxDrawArea.Width;
+			z.GlControlWidth.Value = glControlMotor.Width;
 
-			z.ImageHeight
+			z.GlControlHeight
 				.BindTo(
-					pictureBoxDrawArea,
+					glControlMotor,
 					w => w.Height,
 					BindingMode.OneWayToSource,
 					null,
@@ -767,22 +767,11 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(motorDisposable);
 
-			z.ImageHeight.Value = pictureBoxDrawArea.Height;
+			z.GlControlHeight.Value = glControlMotor.Height;
 
-			z.Image
-				.Subscribe(x =>
-				{
-					pictureBoxDrawArea.Image = x;
-
-					if (InvokeRequired)
-					{
-						Invoke(new Action(pictureBoxDrawArea.Refresh));
-					}
-					else
-					{
-						pictureBoxDrawArea.Refresh();
-					}
-				})
+			z.IsRefreshGlControl
+				.Where(x => x)
+				.Subscribe(_ => glControlMotor.Invalidate())
 				.AddTo(motorDisposable);
 
 			z.Undo.BindToButton(toolStripMenuItemUndo).AddTo(motorDisposable);

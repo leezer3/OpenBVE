@@ -1012,16 +1012,16 @@ namespace TrainEditor2.IO.Trains.TrainDat
 				car.CenterOfGravityHeight = centerOfGravityHeight;
 				car.ExposedFrontalArea = exposedFrontalArea;
 				car.UnexposedFrontalArea = unexposedFrontalArea;
-				car.Performance = performance;
-				car.Delay = delay;
-				car.Move = move;
-				car.Brake = brake;
-				car.Pressure = pressure;
+				car.Performance = (Performance)performance.Clone();
+				car.Delay = (Delay)delay.Clone();
+				car.Move = (Move)move.Clone();
+				car.Brake = (Brake)brake.Clone();
+				car.Pressure = (Pressure)pressure.Clone();
 
 				if (isMotorCar)
 				{
-					((MotorCar)car).Acceleration = acceleration;
-					((MotorCar)car).Motor = motor;
+					((MotorCar)car).Acceleration = (Acceleration)acceleration.Clone();
+					((MotorCar)car).Motor = (Motor)motor.Clone();
 				}
 
 				train.Cars.Add(car);

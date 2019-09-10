@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
@@ -166,17 +164,17 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
-		internal ReactiveProperty<int> ImageWidth
+		internal ReactiveProperty<int> GlControlWidth
 		{
 			get;
 		}
 
-		internal ReactiveProperty<int> ImageHeight
+		internal ReactiveProperty<int> GlControlHeight
 		{
 			get;
 		}
 
-		internal ReactiveProperty<Bitmap> Image
+		internal ReactiveProperty<bool> IsRefreshGlControl
 		{
 			get;
 		}
@@ -316,6 +314,11 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
+		internal ReactiveCommand DrawGlControl
+		{
+			get;
+		}
+
 		internal MotorViewModel(Motor motor)
 		{
 			CultureInfo culture = CultureInfo.InvariantCulture;
@@ -359,7 +362,7 @@ namespace TrainEditor2.ViewModels.Trains
 				)
 				.AddTo(disposable);
 
-			MinVelocity.Subscribe(_ => motor.DrawImage()).AddTo(disposable);
+			MinVelocity.Subscribe(_ => motor.IsRefreshGlControl = true).AddTo(disposable);
 
 			MaxVelocity = motor
 				.ToReactivePropertyAsSynchronized(
@@ -370,7 +373,7 @@ namespace TrainEditor2.ViewModels.Trains
 				)
 				.AddTo(disposable);
 
-			MaxVelocity.Subscribe(_ => motor.DrawImage()).AddTo(disposable);
+			MaxVelocity.Subscribe(_ => motor.IsRefreshGlControl = true).AddTo(disposable);
 
 			MinPitch = motor
 				.ToReactivePropertyAsSynchronized(
@@ -381,7 +384,7 @@ namespace TrainEditor2.ViewModels.Trains
 				)
 				.AddTo(disposable);
 
-			MinPitch.Subscribe(_ => motor.DrawImage()).AddTo(disposable);
+			MinPitch.Subscribe(_ => motor.IsRefreshGlControl = true).AddTo(disposable);
 
 			MaxPitch = motor
 				.ToReactivePropertyAsSynchronized(
@@ -392,7 +395,7 @@ namespace TrainEditor2.ViewModels.Trains
 				)
 				.AddTo(disposable);
 
-			MaxPitch.Subscribe(_ => motor.DrawImage()).AddTo(disposable);
+			MaxPitch.Subscribe(_ => motor.IsRefreshGlControl = true).AddTo(disposable);
 
 			MinVolume = motor
 				.ToReactivePropertyAsSynchronized(
@@ -403,7 +406,7 @@ namespace TrainEditor2.ViewModels.Trains
 				)
 				.AddTo(disposable);
 
-			MinVolume.Subscribe(_ => motor.DrawImage()).AddTo(disposable);
+			MinVolume.Subscribe(_ => motor.IsRefreshGlControl = true).AddTo(disposable);
 
 			MaxVolume = motor
 				.ToReactivePropertyAsSynchronized(
@@ -414,7 +417,7 @@ namespace TrainEditor2.ViewModels.Trains
 				)
 				.AddTo(disposable);
 
-			MaxVolume.Subscribe(_ => motor.DrawImage()).AddTo(disposable);
+			MaxVolume.Subscribe(_ => motor.IsRefreshGlControl = true).AddTo(disposable);
 
 			NowVelocity = motor
 				.ObserveProperty(x => x.NowVelocity)
@@ -440,7 +443,7 @@ namespace TrainEditor2.ViewModels.Trains
 				.Subscribe(_ =>
 				{
 					motor.ResetSelect();
-					motor.DrawImage();
+					motor.IsRefreshGlControl = true;
 				})
 				.AddTo(disposable);
 
@@ -453,7 +456,7 @@ namespace TrainEditor2.ViewModels.Trains
 				.Subscribe(_ =>
 				{
 					motor.ResetSelect();
-					motor.DrawImage();
+					motor.IsRefreshGlControl = true;
 				})
 				.AddTo(disposable);
 
@@ -470,7 +473,7 @@ namespace TrainEditor2.ViewModels.Trains
 				.Subscribe(_ =>
 				{
 					motor.ResetSelect();
-					motor.DrawImage();
+					motor.IsRefreshGlControl = true;
 				})
 				.AddTo(disposable);
 
@@ -617,29 +620,28 @@ namespace TrainEditor2.ViewModels.Trains
 				})
 				.AddTo(disposable);
 
-			ImageWidth = motor
+			GlControlWidth = motor
 				.ToReactivePropertyAsSynchronized(
-					x => x.ImageWidth,
+					x => x.GlControlWidth,
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x => x <= 0 ? string.Empty : null)
 				.AddTo(disposable);
 
-			ImageWidth.Subscribe(_ => motor.DrawImage()).AddTo(disposable);
+			GlControlWidth.Subscribe(_ => motor.IsRefreshGlControl = true).AddTo(disposable);
 
-			ImageHeight = motor
+			GlControlHeight = motor
 				.ToReactivePropertyAsSynchronized(
-					x => x.ImageHeight,
+					x => x.GlControlHeight,
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x => x <= 0 ? string.Empty : null)
 				.AddTo(disposable);
 
-			ImageHeight.Subscribe(_ => motor.DrawImage()).AddTo(disposable);
+			GlControlHeight.Subscribe(_ => motor.IsRefreshGlControl = true).AddTo(disposable);
 
-			Image = motor
-				.ObserveProperty(x => x.Image)
-				.ToReactiveProperty()
+			IsRefreshGlControl = motor
+				.ToReactivePropertyAsSynchronized(x => x.IsRefreshGlControl)
 				.AddTo(disposable);
 
 			ChangeSelectedTrack = new ReactiveCommand<Motor.TrackInfo>().WithSubscribe(x => motor.SelectedTrackInfo = x).AddTo(disposable);
@@ -772,13 +774,14 @@ namespace TrainEditor2.ViewModels.Trains
 				})
 				.AddTo(disposable);
 
-			SimulationTimer = new ReactiveTimer(TimeSpan.FromMilliseconds(1000.0 / 60.0));
+			SimulationTimer = new ReactiveTimer(TimeSpan.FromMilliseconds(1000.0 / 30.0));
 
 			SimulationTimer
 				.Subscribe(_ =>
 				{
-					motor.RunSimulation();
-					motor.DrawSimulation();
+					SimulationTimer.Stop();
+					Observable.Start(motor.RunSimulation, UIDispatcherScheduler.Default).Wait();
+					SimulationTimer.Start(TimeSpan.FromMilliseconds(1000.0 / 30.0));
 				})
 				.AddTo(disposable);
 
@@ -798,7 +801,7 @@ namespace TrainEditor2.ViewModels.Trains
 				})
 				.AddTo(disposable);
 
-				StartSimulation = motor
+			StartSimulation = motor
 				.ObserveProperty(x => x.CurrentSimState)
 				.Select(x => x == Motor.SimulationState.Paused || x == Motor.SimulationState.Stopped)
 				.ToReactiveCommand()
@@ -817,6 +820,10 @@ namespace TrainEditor2.ViewModels.Trains
 				.Select(x => x == Motor.SimulationState.Paused || x == Motor.SimulationState.Started)
 				.ToReactiveCommand()
 				.WithSubscribe(motor.StopSimulation)
+				.AddTo(disposable);
+
+			DrawGlControl = new ReactiveCommand()
+				.WithSubscribe(motor.DrawGlControl)
 				.AddTo(disposable);
 
 			MinVelocity
