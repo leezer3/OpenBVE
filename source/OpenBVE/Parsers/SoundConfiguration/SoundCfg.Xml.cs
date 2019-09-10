@@ -579,7 +579,7 @@ namespace OpenBve
 						{
 							Tables[i].Buffer = null;
 							Tables[i].Source = null;
-							for (int j = 0; j > Tables[i].Entries.Length; j++)
+							for (int j = 0; j < Tables[i].Entries.Length; j++)
 							{
 								if (idx == Tables[i].Entries[j].SoundIndex)
 								{
