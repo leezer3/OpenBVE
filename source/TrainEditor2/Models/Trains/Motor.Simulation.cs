@@ -52,7 +52,7 @@ namespace TrainEditor2.Models.Trains
 			DisposeCar();
 			CurrentSimState = SimulationState.Stopped;
 
-			DrawImage();
+			IsRefreshGlControl = true;
 		}
 
 		private void CreateCar()
@@ -126,6 +126,8 @@ namespace TrainEditor2.Models.Trains
 			Program.SoundApi.Update(deltaTime, SoundModels.Inverse);
 
 			oldElapsedTime = nowElapsedTime;
+
+			DrawSimulation();
 		}
 
 		internal void DrawSimulation()
@@ -147,6 +149,8 @@ namespace TrainEditor2.Models.Trains
 
 					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVelocity)));
 					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVelocity)));
+
+					return;
 				}
 			}
 			else
@@ -164,10 +168,12 @@ namespace TrainEditor2.Models.Trains
 
 					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVelocity)));
 					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVelocity)));
+
+					return;
 				}
 			}
 
-			DrawImage();
+			IsRefreshGlControl = true;
 		}
 
 		private void DisposeCar()

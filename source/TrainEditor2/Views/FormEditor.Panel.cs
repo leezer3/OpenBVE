@@ -16,16 +16,16 @@ namespace TrainEditor2.Views
 		private IDisposable BindToPanel(PanelViewModel x)
 		{
 			CompositeDisposable panelDisposable = new CompositeDisposable();
-			CompositeDisposable listItemDisposable = new CompositeDisposable();
-			CompositeDisposable thisDisposable = new CompositeDisposable();
-			CompositeDisposable screenDisposable = new CompositeDisposable();
-			CompositeDisposable pilotLampDisposable = new CompositeDisposable();
-			CompositeDisposable needleDisposable = new CompositeDisposable();
-			CompositeDisposable digitalNumberDisposable = new CompositeDisposable();
-			CompositeDisposable digitalGaugeDisposable = new CompositeDisposable();
-			CompositeDisposable linearGaugeDisposable = new CompositeDisposable();
-			CompositeDisposable timetableDisposable = new CompositeDisposable();
-			CompositeDisposable touchDisposable = new CompositeDisposable();
+			CompositeDisposable listItemDisposable = new CompositeDisposable().AddTo(panelDisposable);
+			CompositeDisposable thisDisposable = new CompositeDisposable().AddTo(panelDisposable);
+			CompositeDisposable screenDisposable = new CompositeDisposable().AddTo(panelDisposable);
+			CompositeDisposable pilotLampDisposable = new CompositeDisposable().AddTo(panelDisposable);
+			CompositeDisposable needleDisposable = new CompositeDisposable().AddTo(panelDisposable);
+			CompositeDisposable digitalNumberDisposable = new CompositeDisposable().AddTo(panelDisposable);
+			CompositeDisposable digitalGaugeDisposable = new CompositeDisposable().AddTo(panelDisposable);
+			CompositeDisposable linearGaugeDisposable = new CompositeDisposable().AddTo(panelDisposable);
+			CompositeDisposable timetableDisposable = new CompositeDisposable().AddTo(panelDisposable);
+			CompositeDisposable touchDisposable = new CompositeDisposable().AddTo(panelDisposable);
 
 			listViewPanel.Items.Clear();
 
@@ -148,7 +148,7 @@ namespace TrainEditor2.Views
 				.Subscribe(y =>
 				{
 					listItemDisposable.Dispose();
-					listItemDisposable = new CompositeDisposable();
+					listItemDisposable = new CompositeDisposable().AddTo(panelDisposable);
 
 					y.Texts
 						.ObserveReplaceChanged()
@@ -165,7 +165,7 @@ namespace TrainEditor2.Views
 				.Subscribe(y =>
 				{
 					thisDisposable.Dispose();
-					thisDisposable = new CompositeDisposable();
+					thisDisposable = new CompositeDisposable().AddTo(panelDisposable);
 
 					BindToThis(y).AddTo(thisDisposable);
 				})
@@ -192,7 +192,7 @@ namespace TrainEditor2.Views
 				.Subscribe(y =>
 				{
 					screenDisposable.Dispose();
-					screenDisposable = new CompositeDisposable();
+					screenDisposable = new CompositeDisposable().AddTo(panelDisposable);
 
 					BindToScreen(y).AddTo(screenDisposable);
 				})
@@ -219,7 +219,7 @@ namespace TrainEditor2.Views
 				.Subscribe(y =>
 				{
 					pilotLampDisposable.Dispose();
-					pilotLampDisposable = new CompositeDisposable();
+					pilotLampDisposable = new CompositeDisposable().AddTo(panelDisposable);
 
 					BindToPilotLamp(y).AddTo(pilotLampDisposable);
 				})
@@ -246,7 +246,7 @@ namespace TrainEditor2.Views
 				.Subscribe(y =>
 				{
 					needleDisposable.Dispose();
-					needleDisposable = new CompositeDisposable();
+					needleDisposable = new CompositeDisposable().AddTo(panelDisposable);
 
 					BindToNeedle(y).AddTo(needleDisposable);
 				})
@@ -273,7 +273,7 @@ namespace TrainEditor2.Views
 				.Subscribe(y =>
 				{
 					digitalNumberDisposable.Dispose();
-					digitalNumberDisposable = new CompositeDisposable();
+					digitalNumberDisposable = new CompositeDisposable().AddTo(panelDisposable);
 
 					BindToDigitalNumber(y).AddTo(digitalNumberDisposable);
 				})
@@ -300,7 +300,7 @@ namespace TrainEditor2.Views
 				.Subscribe(y =>
 				{
 					digitalGaugeDisposable.Dispose();
-					digitalGaugeDisposable = new CompositeDisposable();
+					digitalGaugeDisposable = new CompositeDisposable().AddTo(panelDisposable);
 
 					BindToDigitalGauge(y).AddTo(digitalGaugeDisposable);
 				})
@@ -327,7 +327,7 @@ namespace TrainEditor2.Views
 				.Subscribe(y =>
 				{
 					linearGaugeDisposable.Dispose();
-					linearGaugeDisposable = new CompositeDisposable();
+					linearGaugeDisposable = new CompositeDisposable().AddTo(panelDisposable);
 
 					BindToLinearGauge(y).AddTo(linearGaugeDisposable);
 				})
@@ -354,7 +354,7 @@ namespace TrainEditor2.Views
 				.Subscribe(y =>
 				{
 					timetableDisposable.Dispose();
-					timetableDisposable = new CompositeDisposable();
+					timetableDisposable = new CompositeDisposable().AddTo(panelDisposable);
 
 					BindToTimetable(y).AddTo(timetableDisposable);
 				})
@@ -381,7 +381,7 @@ namespace TrainEditor2.Views
 				.Subscribe(y =>
 				{
 					touchDisposable.Dispose();
-					touchDisposable = new CompositeDisposable();
+					touchDisposable = new CompositeDisposable().AddTo(panelDisposable);
 
 					BindToTouch(y).AddTo(touchDisposable);
 				})
@@ -398,17 +398,6 @@ namespace TrainEditor2.Views
 			new[] { x.RemoveScreen, x.RemovePilotLamp, x.RemoveNeedle, x.RemoveDigitalNumber, x.RemoveDigitalGauge, x.RemoveLinearGauge, x.RemoveTimetable, x.RemoveTouch }
 				.BindToButton(buttonPanelRemove)
 				.AddTo(panelDisposable);
-
-			listItemDisposable.AddTo(panelDisposable);
-			thisDisposable.AddTo(panelDisposable);
-			screenDisposable.AddTo(panelDisposable);
-			pilotLampDisposable.AddTo(panelDisposable);
-			needleDisposable.AddTo(panelDisposable);
-			digitalNumberDisposable.AddTo(panelDisposable);
-			digitalGaugeDisposable.AddTo(panelDisposable);
-			linearGaugeDisposable.AddTo(panelDisposable);
-			timetableDisposable.AddTo(panelDisposable);
-			touchDisposable.AddTo(panelDisposable);
 
 			return panelDisposable;
 		}

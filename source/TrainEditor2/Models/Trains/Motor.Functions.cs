@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Text;
 using System.Linq;
 using System.Text;
+using LibRender;
+using OpenBveApi.Colors;
+using OpenBveApi.Graphics;
+using OpenTK;
+using OpenTK.Graphics.OpenGL;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Dialogs;
 using TrainEditor2.Models.Others;
+using TrainEditor2.Systems;
 
 namespace TrainEditor2.Models.Trains
 {
@@ -17,38 +21,38 @@ namespace TrainEditor2.Models.Trains
 	{
 		private double XtoVelocity(double x)
 		{
-			double factorVelocity = ImageWidth / (MaxVelocity - MinVelocity);
+			double factorVelocity = GlControlWidth / (MaxVelocity - MinVelocity);
 			return MinVelocity + x / factorVelocity;
 		}
 
 		private double YtoPitch(double y)
 		{
-			double factorPitch = -ImageHeight / (MaxPitch - MinPitch);
-			return MinPitch + (y - ImageHeight) / factorPitch;
+			double factorPitch = -GlControlHeight / (MaxPitch - MinPitch);
+			return MinPitch + (y - GlControlHeight) / factorPitch;
 		}
 
 		private double YtoVolume(double y)
 		{
-			double factorVolume = -ImageHeight / (MaxVolume - MinVolume);
-			return MinVolume + (y - ImageHeight) / factorVolume;
+			double factorVolume = -GlControlHeight / (MaxVolume - MinVolume);
+			return MinVolume + (y - GlControlHeight) / factorVolume;
 		}
 
 		private double VelocityToX(double v)
 		{
-			double factorVelocity = ImageWidth / (MaxVelocity - MinVelocity);
+			double factorVelocity = GlControlWidth / (MaxVelocity - MinVelocity);
 			return (v - MinVelocity) * factorVelocity;
 		}
 
 		private double PitchToY(double p)
 		{
-			double factorPitch = -ImageHeight / (MaxPitch - MinPitch);
-			return ImageHeight + (p - MinPitch) * factorPitch;
+			double factorPitch = -GlControlHeight / (MaxPitch - MinPitch);
+			return GlControlHeight + (p - MinPitch) * factorPitch;
 		}
 
 		private double VolumeToY(double v)
 		{
-			double factorVolume = -ImageHeight / (MaxVolume - MinVolume);
-			return ImageHeight + (v - MinVolume) * factorVolume;
+			double factorVolume = -GlControlHeight / (MaxVolume - MinVolume);
+			return GlControlHeight + (v - MinVolume) * factorVolume;
 		}
 
 		internal void ZoomIn()
@@ -184,7 +188,7 @@ namespace TrainEditor2.Models.Trains
 			SelectedTrack = (Track)prev.Track.Clone();
 			PrevTrackStates.Remove(prev);
 
-			DrawImage();
+			IsRefreshGlControl = true;
 		}
 
 		internal void Redo()
@@ -194,7 +198,7 @@ namespace TrainEditor2.Models.Trains
 			SelectedTrack = (Track)next.Track.Clone();
 			NextTrackStates.Remove(next);
 
-			DrawImage();
+			IsRefreshGlControl = true;
 		}
 
 		internal void TearingOff()
@@ -204,7 +208,7 @@ namespace TrainEditor2.Models.Trains
 			Copy();
 			SelectedTrack = new Track();
 
-			DrawImage();
+			IsRefreshGlControl = true;
 		}
 
 		internal void Copy()
@@ -218,7 +222,7 @@ namespace TrainEditor2.Models.Trains
 			NextTrackStates.RemoveAll(x => x.Info == SelectedTrackInfo);
 			SelectedTrack = (Track)CopyTrack.Clone();
 
-			DrawImage();
+			IsRefreshGlControl = true;
 		}
 
 		internal void Cleanup()
@@ -256,7 +260,7 @@ namespace TrainEditor2.Models.Trains
 				Tracks[(int)SelectedTrackInfo].VolumeVertices.Remove(targetID);
 			}
 
-			DrawImage();
+			IsRefreshGlControl = true;
 		}
 
 		private void DeleteDotLine(VertexLibrary vertices, ObservableCollection<Line> lines)
@@ -298,7 +302,7 @@ namespace TrainEditor2.Models.Trains
 					break;
 			}
 
-			DrawImage();
+			IsRefreshGlControl = true;
 		}
 
 		internal void DirectDot(double x, double y)
@@ -433,9 +437,9 @@ namespace TrainEditor2.Models.Trains
 					double deltaX = e.X - lastMousePosX;
 					double deltaY = e.Y - lastMousePosY;
 
-					double factorVelocity = ImageWidth / (maxVelocity - minVelocity);
-					double factorPitch = -ImageHeight / (maxPitch - minPitch);
-					double factorVolume = -ImageHeight / (maxVolume - minVolume);
+					double factorVelocity = GlControlWidth / (maxVelocity - minVelocity);
+					double factorPitch = -GlControlHeight / (maxPitch - minPitch);
+					double factorVolume = -GlControlHeight / (maxVolume - minVolume);
 
 					double deltaVelocity = 0.2 * Math.Round(5.0 * deltaX / factorVelocity);
 					double deltaPitch = 0.01 * Math.Round(100.0 * deltaY / factorPitch);
@@ -467,7 +471,7 @@ namespace TrainEditor2.Models.Trains
 						lastMousePosY = e.Y;
 					}
 
-					DrawImage();
+					IsRefreshGlControl = true;
 				}
 			}
 		}
@@ -518,7 +522,7 @@ namespace TrainEditor2.Models.Trains
 				}
 				else
 				{
-					toolTipVertex.IsOpen=false;
+					toolTipVertex.IsOpen = false;
 				}
 
 				hoveredVertex = newHoveredVertex;
@@ -675,7 +679,7 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			DrawImage();
+			IsRefreshGlControl = true;
 		}
 
 		internal void DirectMove(double x, double y)
@@ -814,7 +818,7 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			DrawImage();
+			IsRefreshGlControl = true;
 		}
 
 		private void MoveDot(VertexLibrary vertices, double deltaX, double deltaY)
@@ -875,7 +879,7 @@ namespace TrainEditor2.Models.Trains
 					vertex.Y += deltaY;
 				}
 
-				DrawImage();
+				IsRefreshGlControl = true;
 			}
 		}
 
@@ -902,7 +906,7 @@ namespace TrainEditor2.Models.Trains
 			NextTrackStates.RemoveAll(s => s.Info == SelectedTrackInfo);
 			vertices.Add(new Vertex(x, y));
 
-			DrawImage();
+			IsRefreshGlControl = true;
 		}
 
 		private bool IsDrawLine(VertexLibrary vertices, ObservableCollection<Line> lines, double x, double y)
@@ -992,63 +996,198 @@ namespace TrainEditor2.Models.Trains
 					selectVertex.Value.IsOrigin = true;
 				}
 
-				DrawImage();
+				IsRefreshGlControl = true;
 			}
 		}
 
-		internal void DrawImage()
+		private void DrawPolyLine(Matrix4d proj, Matrix4d look, Vector2d p1, Vector2d p2, double lineWidth, Color color)
 		{
-			Bitmap newImage = new Bitmap(ImageWidth, ImageHeight);
+			Matrix4d inv = Matrix4d.Invert(look) * Matrix4d.Invert(proj);
+			Vector2d line = new Vector2d((inv.M11 + inv.M12) * lineWidth / 2.0, (inv.M21 + inv.M22) * lineWidth / 2.0) / 100.0;
 
-			Graphics g = Graphics.FromImage(newImage);
+			double rad = Math.Atan2(p2.Y - p1.Y, p2.X - p1.X);
 
+			double p1x1 = p1.X + Math.Cos(rad + Math.PI / 2.0) * line.X;
+			double p1y1 = p1.Y + Math.Sin(rad + Math.PI / 2.0) * line.Y;
+
+			double p1x2 = p1.X + Math.Cos(rad - Math.PI / 2.0) * line.X;
+			double p1y2 = p1.Y + Math.Sin(rad - Math.PI / 2.0) * line.Y;
+
+			double p2x1 = p2.X + Math.Cos(rad + Math.PI / 2.0) * line.X;
+			double p2y1 = p2.Y + Math.Sin(rad + Math.PI / 2.0) * line.Y;
+
+			double p2x2 = p2.X + Math.Cos(rad - Math.PI / 2.0) * line.X;
+			double p2y2 = p2.Y + Math.Sin(rad - Math.PI / 2.0) * line.Y;
+
+			GL.Begin(PrimitiveType.TriangleStrip);
+			GL.Color4(color);
+			GL.Vertex2(p1x1, p1y1);
+			GL.Vertex2(p1x2, p1y2);
+			GL.Vertex2(p2x1, p2y1);
+			GL.Vertex2(p2x2, p2y2);
+			GL.End();
+		}
+
+		private void DrawPolyDashLine(Matrix4d proj, Matrix4d look, Box2d box, double lineWidth, double dashLength, Color color)
+		{
+			Matrix4d inv = Matrix4d.Invert(look) * Matrix4d.Invert(proj);
+			Vector2d dash = new Vector2d((inv.M11 + inv.M12) * dashLength, (inv.M21 + inv.M22) * dashLength) / 100.0;
+
+			for (double i = box.Left; i + dash.X < box.Right; i += dash.X * 2)
+			{
+				DrawPolyLine(proj, look, new Vector2d(i, box.Bottom), new Vector2d(i + dash.X, box.Bottom), lineWidth, color);
+			}
+
+			for (double i = box.Bottom; i + dash.Y < box.Top; i += dash.Y * 2)
+			{
+				DrawPolyLine(proj, look, new Vector2d(box.Right, i), new Vector2d(box.Right, i + dash.Y), lineWidth, color);
+			}
+
+			for (double i = box.Left; i + dash.X < box.Right; i += dash.X * 2)
+			{
+				DrawPolyLine(proj, look, new Vector2d(i, box.Top), new Vector2d(i + dash.X, box.Top), lineWidth, color);
+			}
+
+			for (double i = box.Bottom; i + dash.Y < box.Top; i += dash.Y * 2)
+			{
+				DrawPolyLine(proj, look, new Vector2d(box.Left, i), new Vector2d(box.Left, i + dash.Y), lineWidth, color);
+			}
+		}
+
+		internal void DrawGlControl()
+		{
 			// prepare
-			g.CompositingQuality = CompositingQuality.HighQuality;
-			g.InterpolationMode = InterpolationMode.High;
-			g.SmoothingMode = SmoothingMode.AntiAlias;
-			g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-			g.Clear(Color.Black);
+			GL.Enable(EnableCap.PointSmooth);
+			GL.Enable(EnableCap.PolygonSmooth);
+			GL.Hint(HintTarget.PointSmoothHint, HintMode.Nicest);
+			GL.Hint(HintTarget.PolygonSmoothHint, HintMode.Nicest);
+			GL.Enable(EnableCap.Blend);
+			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
-			Font font = new Font("MS UI Gothic", 7.0f);
-			Pen grayPen = new Pen(Color.DimGray);
-			Brush grayBrush = Brushes.DimGray;
+			GL.Viewport(0, 0, GlControlWidth, GlControlHeight);
+			GL.ClearColor(Color.Black);
+			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+			Matrix4d projPitch = Matrix4d.CreateOrthographic(MaxVelocity - MinVelocity, MaxPitch - MinPitch, float.Epsilon, 1.0);
+			Matrix4d projVolume = Matrix4d.CreateOrthographic(MaxVelocity - MinVelocity, MaxVolume - MinVolume, float.Epsilon, 1.0);
+			Matrix4d projString = Matrix4d.CreateOrthographicOffCenter(0.0, GlControlWidth, GlControlHeight, 0.0, -1.0, 1.0);
+			Matrix4d lookPitch = Matrix4d.LookAt(new Vector3d((MinVelocity + MaxVelocity) / 2.0, (MinPitch + MaxPitch) / 2.0, float.Epsilon), new Vector3d((MinVelocity + MaxVelocity) / 2.0, (MinPitch + MaxPitch) / 2.0, 0.0), Vector3d.UnitY);
+			Matrix4d lookVolume = Matrix4d.LookAt(new Vector3d((MinVelocity + MaxVelocity) / 2.0, (MinVolume + MaxVolume) / 2.0, float.Epsilon), new Vector3d((MinVelocity + MaxVelocity) / 2.0, (MinVolume + MaxVolume) / 2.0, 0.0), Vector3d.UnitY);
 
 			// vertical grid
-			for (double v = 0.0; v < MaxVelocity; v += 10.0)
 			{
-				float x = (float)VelocityToX(v);
-				g.DrawLine(grayPen, new PointF(x, 0.0f), new PointF(x, ImageHeight));
-				g.DrawString(v.ToString("0", culture), font, grayBrush, new PointF(x, 1.0f));
+				GL.MatrixMode(MatrixMode.Projection);
+				GL.LoadMatrix(ref projPitch);
+
+				GL.MatrixMode(MatrixMode.Modelview);
+				GL.LoadMatrix(ref lookPitch);
+
+				GL.Begin(PrimitiveType.Lines);
+
+				for (double v = 0.0; v < MaxVelocity; v += 10.0)
+				{
+					GL.Color4(Color.DimGray);
+					GL.Vertex2(v, 0.0);
+					GL.Vertex2(v, float.MaxValue);
+				}
+
+				GL.End();
+
+				GL.MatrixMode(MatrixMode.Projection);
+				GL.LoadMatrix(ref projString);
+
+				GL.MatrixMode(MatrixMode.Modelview);
+				GL.LoadIdentity();
+
+				for (double v = 0.0; v < MaxVelocity; v += 10.0)
+				{
+					Renderer.DrawString(Fonts.VerySmallFont, v.ToString("0", culture), new Point((int)VelocityToX(v) + 1, 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
+				}
+
+				GL.Disable(EnableCap.Texture2D);
 			}
 
 			// horizontal grid
 			switch (CurrentInputMode)
 			{
 				case InputMode.Pitch:
-					for (float p = 0.0f; p < MaxPitch; p += 100.0f)
+					GL.MatrixMode(MatrixMode.Projection);
+					GL.LoadMatrix(ref projPitch);
+
+					GL.MatrixMode(MatrixMode.Modelview);
+					GL.LoadMatrix(ref lookPitch);
+
+					GL.Begin(PrimitiveType.Lines);
+
+					for (double p = 0.0; p < MaxPitch; p += 100.0)
 					{
-						float y = (float)PitchToY(p);
-						g.DrawLine(grayPen, new PointF(0.0f, y), new PointF(ImageWidth, y));
-						g.DrawString(p.ToString("0", culture), font, grayBrush, new PointF(1.0f, y));
+						GL.Color4(Color.DimGray);
+						GL.Vertex2(MinVelocity, p);
+						GL.Vertex2(MaxVelocity, p);
 					}
+
+					GL.End();
+
+					GL.MatrixMode(MatrixMode.Projection);
+					GL.LoadMatrix(ref projString);
+
+					GL.MatrixMode(MatrixMode.Modelview);
+					GL.LoadIdentity();
+
+					for (double p = 0.0; p < MaxPitch; p += 100.0)
+					{
+						Renderer.DrawString(Fonts.VerySmallFont, p.ToString("0", culture), new Point(1, (int)PitchToY(p) + 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
+					}
+
+					GL.Disable(EnableCap.Texture2D);
 					break;
 				case InputMode.Volume:
-					for (float v = 0.0f; v < MaxVolume; v += 128.0f)
+					GL.MatrixMode(MatrixMode.Projection);
+					GL.LoadMatrix(ref projVolume);
+
+					GL.MatrixMode(MatrixMode.Modelview);
+					GL.LoadMatrix(ref lookVolume);
+
+					GL.Begin(PrimitiveType.Lines);
+
+					for (double v = 0.0; v < MaxVolume; v += 128.0)
 					{
-						float y = (float)VolumeToY(v);
-						g.DrawLine(grayPen, new PointF(0.0f, y), new PointF(ImageWidth, y));
-						g.DrawString(v.ToString("0", culture), font, grayBrush, new PointF(1.0f, y));
+						GL.Color4(Color.DimGray);
+						GL.Vertex2(MinVelocity, v);
+						GL.Vertex2(MaxVelocity, v);
 					}
+
+					GL.End();
+
+					GL.MatrixMode(MatrixMode.Projection);
+					GL.LoadMatrix(ref projString);
+
+					GL.MatrixMode(MatrixMode.Modelview);
+					GL.LoadIdentity();
+
+					for (double v = 0.0; v < MaxVolume; v += 128.0)
+					{
+						Renderer.DrawString(Fonts.VerySmallFont, v.ToString("0", culture), new Point(1, (int)VolumeToY(v) + 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
+					}
+
+					GL.Disable(EnableCap.Texture2D);
 					break;
 			}
 
 			// dot
-			if (CurrentInputMode == InputMode.Pitch || CurrentInputMode == InputMode.SoundIndex)
+			if (CurrentInputMode != InputMode.Volume)
 			{
+				GL.MatrixMode(MatrixMode.Projection);
+				GL.LoadMatrix(ref projPitch);
+
+				GL.MatrixMode(MatrixMode.Modelview);
+				GL.LoadMatrix(ref lookPitch);
+
+				GL.PointSize(11.0f);
+				GL.Begin(PrimitiveType.Points);
+
 				foreach (Vertex vertex in SelectedTrack.PitchVertices.Values)
 				{
-					float x = (float)VelocityToX(vertex.X);
-					float y = (float)PitchToY(vertex.Y);
 					Area area = SelectedTrack.SoundIndices.FirstOrDefault(a => a.LeftX <= vertex.X && vertex.X <= a.RightX);
 					Color c;
 
@@ -1070,16 +1209,26 @@ namespace TrainEditor2.Models.Trains
 						}
 					}
 
-					g.DrawRectangle(new Pen(c, 3.0f), x - 3.0f, y - 3.0f, 7.0f, 7.0f);
+					GL.Color4(c);
+					GL.Vertex2(vertex.X, vertex.Y);
 				}
+
+				GL.End();
 			}
 
-			if (CurrentInputMode == InputMode.Volume || CurrentInputMode == InputMode.SoundIndex)
+			if (CurrentInputMode != InputMode.Pitch)
 			{
+				GL.MatrixMode(MatrixMode.Projection);
+				GL.LoadMatrix(ref projVolume);
+
+				GL.MatrixMode(MatrixMode.Modelview);
+				GL.LoadMatrix(ref lookVolume);
+
+				GL.PointSize(9.0f);
+				GL.Begin(PrimitiveType.Points);
+
 				foreach (Vertex vertex in SelectedTrack.VolumeVertices.Values)
 				{
-					float x = (float)VelocityToX(vertex.X);
-					float y = (float)VolumeToY(vertex.Y);
 					Area area = SelectedTrack.SoundIndices.FirstOrDefault(a => a.LeftX <= vertex.X && vertex.X <= a.RightX);
 					Color c;
 
@@ -1101,13 +1250,22 @@ namespace TrainEditor2.Models.Trains
 						}
 					}
 
-					g.DrawRectangle(new Pen(c, 2.0f), x - 2.0f, y - 2.0f, 5.0f, 5.0f);
+					GL.Color4(c);
+					GL.Vertex2(vertex.X, vertex.Y);
 				}
+
+				GL.End();
 			}
 
 			// line
-			if (CurrentInputMode == InputMode.Pitch || CurrentInputMode == InputMode.SoundIndex)
+			if (CurrentInputMode != InputMode.Volume)
 			{
+				GL.MatrixMode(MatrixMode.Projection);
+				GL.LoadMatrix(ref projPitch);
+
+				GL.MatrixMode(MatrixMode.Modelview);
+				GL.LoadMatrix(ref lookPitch);
+
 				foreach (Line line in SelectedTrack.PitchLines)
 				{
 					Vertex left = SelectedTrack.PitchVertices[line.LeftID];
@@ -1116,12 +1274,6 @@ namespace TrainEditor2.Models.Trains
 					Func<double, double> f = x => left.Y + (right.Y - left.Y) / (right.X - left.X) * (x - left.X);
 
 					{
-						float leftX = (float)VelocityToX(left.X);
-						float leftY = (float)PitchToY(left.Y);
-
-						float rightX = (float)VelocityToX(right.X);
-						float rightY = (float)PitchToY(right.Y);
-
 						Color c;
 
 						if (line.Selected)
@@ -1133,7 +1285,7 @@ namespace TrainEditor2.Models.Trains
 							c = Color.FromArgb((int)Math.Round(Color.Silver.R * 0.6), (int)Math.Round(Color.Silver.G * 0.6), (int)Math.Round(Color.Silver.B * 0.6));
 						}
 
-						g.DrawLine(new Pen(c, 3.0f), leftX, leftY, rightX, rightY);
+						DrawPolyLine(projPitch, lookPitch, new Vector2d(left.X, left.Y), new Vector2d(right.X, right.Y), 1.5, c);
 					}
 
 					foreach (Area area in SelectedTrack.SoundIndices)
@@ -1143,33 +1295,25 @@ namespace TrainEditor2.Models.Trains
 							continue;
 						}
 
-						float leftX = (float)VelocityToX(left.X);
-						float leftY = (float)PitchToY(left.Y);
-
-						float rightX = (float)VelocityToX(right.X);
-						float rightY = (float)PitchToY(right.Y);
-
-						if (left.X < area.LeftX)
-						{
-							leftX = (float)VelocityToX(area.LeftX);
-							leftY = (float)PitchToY(f(area.LeftX));
-						}
-
-						if (right.X > area.RightX)
-						{
-							rightX = (float)VelocityToX(area.RightX);
-							rightY = (float)PitchToY(f(area.RightX));
-						}
-
 						double hue = Utilities.HueFactor * area.Index;
 						hue -= Math.Floor(hue);
-						g.DrawLine(new Pen(Utilities.GetColor(hue, line.Selected), 3.0f), leftX, leftY, rightX, rightY);
+
+						Vector2d p1 = new Vector2d(left.X < area.LeftX ? area.LeftX : left.X, left.X < area.LeftX ? f(area.LeftX) : left.Y);
+						Vector2d p2 = new Vector2d(right.X > area.RightX ? area.RightX : right.X, right.X > area.RightX ? f(area.RightX) : right.Y);
+
+						DrawPolyLine(projPitch, lookPitch, p1, p2, 1.5, Utilities.GetColor(hue, line.Selected));
 					}
 				}
 			}
 
-			if (CurrentInputMode == InputMode.Volume || CurrentInputMode == InputMode.SoundIndex)
+			if (CurrentInputMode != InputMode.Pitch)
 			{
+				GL.MatrixMode(MatrixMode.Projection);
+				GL.LoadMatrix(ref projVolume);
+
+				GL.MatrixMode(MatrixMode.Modelview);
+				GL.LoadMatrix(ref lookVolume);
+
 				foreach (Line line in SelectedTrack.VolumeLines)
 				{
 					Vertex left = SelectedTrack.VolumeVertices[line.LeftID];
@@ -1178,12 +1322,6 @@ namespace TrainEditor2.Models.Trains
 					Func<double, double> f = x => left.Y + (right.Y - left.Y) / (right.X - left.X) * (x - left.X);
 
 					{
-						float leftX = (float)VelocityToX(left.X);
-						float leftY = (float)VolumeToY(left.Y);
-
-						float rightX = (float)VelocityToX(right.X);
-						float rightY = (float)VolumeToY(right.Y);
-
 						Color c;
 
 						if (line.Selected)
@@ -1195,7 +1333,7 @@ namespace TrainEditor2.Models.Trains
 							c = Color.FromArgb((int)Math.Round(Color.Silver.R * 0.6), (int)Math.Round(Color.Silver.G * 0.6), (int)Math.Round(Color.Silver.B * 0.6));
 						}
 
-						g.DrawLine(new Pen(c, 2.0f), leftX, leftY, rightX, rightY);
+						DrawPolyLine(projVolume, lookVolume, new Vector2d(left.X, left.Y), new Vector2d(right.X, right.Y), 1.0, c);
 					}
 
 					foreach (Area area in SelectedTrack.SoundIndices)
@@ -1205,27 +1343,13 @@ namespace TrainEditor2.Models.Trains
 							continue;
 						}
 
-						float leftX = (float)VelocityToX(left.X);
-						float leftY = (float)VolumeToY(left.Y);
-
-						float rightX = (float)VelocityToX(right.X);
-						float rightY = (float)VolumeToY(right.Y);
-
-						if (left.X < area.LeftX)
-						{
-							leftX = (float)VelocityToX(area.LeftX);
-							leftY = (float)VolumeToY(f(area.LeftX));
-						}
-
-						if (right.X > area.RightX)
-						{
-							rightX = (float)VelocityToX(area.RightX);
-							rightY = (float)VolumeToY(f(area.RightX));
-						}
-
 						double hue = Utilities.HueFactor * area.Index;
 						hue -= Math.Floor(hue);
-						g.DrawLine(new Pen(Utilities.GetColor(hue, line.Selected), 2.0f), leftX, leftY, rightX, rightY);
+
+						Vector2d p1 = new Vector2d(left.X < area.LeftX ? area.LeftX : left.X, left.X < area.LeftX ? f(area.LeftX) : left.Y);
+						Vector2d p2 = new Vector2d(right.X > area.RightX ? area.RightX : right.X, right.X > area.RightX ? f(area.RightX) : right.Y);
+
+						DrawPolyLine(projVolume, lookVolume, p1, p2, 1.0, Utilities.GetColor(hue, line.Selected));
 					}
 				}
 			}
@@ -1244,11 +1368,14 @@ namespace TrainEditor2.Models.Trains
 					areas = SelectedTrack.SoundIndices;
 				}
 
+				GL.MatrixMode(MatrixMode.Projection);
+				GL.LoadMatrix(ref projPitch);
+
+				GL.MatrixMode(MatrixMode.Modelview);
+				GL.LoadMatrix(ref lookPitch);
+
 				foreach (Area area in areas)
 				{
-					float leftX = (float)VelocityToX(area.LeftX);
-					float rightX = (float)VelocityToX(area.RightX);
-
 					Color c;
 
 					if (area.Index >= 0)
@@ -1262,25 +1389,28 @@ namespace TrainEditor2.Models.Trains
 						c = Color.Silver;
 					}
 
-					g.FillRectangle(new SolidBrush(Color.FromArgb(32, c)), leftX, 0.0f, rightX - leftX, ImageHeight);
+					GL.Begin(PrimitiveType.TriangleStrip);
+
+					GL.Color4(Color.FromArgb(64, c));
+					GL.Vertex2(area.LeftX, 0.0);
+					GL.Vertex2(area.RightX, 0.0);
+					GL.Vertex2(area.LeftX, float.MaxValue);
+					GL.Vertex2(area.RightX, float.MaxValue);
+
+					GL.End();
 				}
 			}
 
 			// selected range
 			if (selectedRange != null)
 			{
-				Pen pen = new Pen(Color.DimGray, 3.0f)
-				{
-					DashStyle = DashStyle.Dash
-				};
-
 				switch (CurrentInputMode)
 				{
 					case InputMode.Pitch:
-						g.DrawRectangle(pen, (float)VelocityToX(selectedRange.Range.X), (float)PitchToY(selectedRange.Range.Y), (float)(VelocityToX(selectedRange.Range.Right) - VelocityToX(selectedRange.Range.Left)), (float)(PitchToY(selectedRange.Range.Top) - PitchToY(selectedRange.Range.Bottom)));
+						DrawPolyDashLine(projPitch, lookPitch, selectedRange.Range, 2.0, 4.0, Color.DimGray);
 						break;
 					case InputMode.Volume:
-						g.DrawRectangle(pen, (float)VelocityToX(selectedRange.Range.X), (float)VolumeToY(selectedRange.Range.Y), (float)(VelocityToX(selectedRange.Range.Right) - VelocityToX(selectedRange.Range.Left)), (float)(VolumeToY(selectedRange.Range.Top) - VolumeToY(selectedRange.Range.Bottom)));
+						DrawPolyDashLine(projVolume, lookVolume, selectedRange.Range, 2.0, 4.0, Color.DimGray);
 						break;
 				}
 			}
@@ -1288,11 +1418,23 @@ namespace TrainEditor2.Models.Trains
 			// simulation speed
 			if (CurrentSimState == SimulationState.Started || CurrentSimState == SimulationState.Paused)
 			{
-				float x = (float)VelocityToX(nowSpeed);
-				g.DrawLine(new Pen(Color.White, 3.0f), new PointF(x, 0.0f), new PointF(x, ImageHeight));
+				GL.MatrixMode(MatrixMode.Projection);
+				GL.LoadMatrix(ref projPitch);
+
+				GL.MatrixMode(MatrixMode.Modelview);
+				GL.LoadMatrix(ref lookPitch);
+
+				GL.LineWidth(3.0f);
+				GL.Begin(PrimitiveType.Lines);
+
+				GL.Color4(Color.White);
+				GL.Vertex2(new Vector2((float)nowSpeed, 0.0f));
+				GL.Vertex2(new Vector2((float)nowSpeed, float.MaxValue));
+
+				GL.End();
 			}
 
-			Image = newImage;
+			IsRefreshGlControl = false;
 		}
 	}
 }

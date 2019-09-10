@@ -242,7 +242,6 @@ namespace TrainEditor2.Views
 			this.tabPageMotor = new System.Windows.Forms.TabPage();
 			this.panelMotorSound = new System.Windows.Forms.Panel();
 			this.toolStripContainerDrawArea = new System.Windows.Forms.ToolStripContainer();
-			this.pictureBoxDrawArea = new System.Windows.Forms.PictureBox();
 			this.toolStripToolBar = new System.Windows.Forms.ToolStrip();
 			this.toolStripButtonUndo = new System.Windows.Forms.ToolStripButton();
 			this.toolStripButtonRedo = new System.Windows.Forms.ToolStripButton();
@@ -633,6 +632,7 @@ namespace TrainEditor2.Views
 			this.toolStripComboBoxLanguage = new System.Windows.Forms.ToolStripComboBox();
 			this.toolStripStatusLabelLanguage = new System.Windows.Forms.ToolStripStatusLabel();
 			this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+			this.glControlMotor = new OpenTK.GLControl();
 			this.tabControlEditor.SuspendLayout();
 			this.tabPageTrain.SuspendLayout();
 			this.groupBoxDevice.SuspendLayout();
@@ -663,7 +663,6 @@ namespace TrainEditor2.Views
 			this.toolStripContainerDrawArea.ContentPanel.SuspendLayout();
 			this.toolStripContainerDrawArea.TopToolStripPanel.SuspendLayout();
 			this.toolStripContainerDrawArea.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBoxDrawArea)).BeginInit();
 			this.toolStripToolBar.SuspendLayout();
 			this.panelMotorSetting.SuspendLayout();
 			this.groupBoxDirect.SuspendLayout();
@@ -2788,7 +2787,7 @@ namespace TrainEditor2.Views
 			// 
 			// toolStripContainerDrawArea.ContentPanel
 			// 
-			this.toolStripContainerDrawArea.ContentPanel.Controls.Add(this.pictureBoxDrawArea);
+			this.toolStripContainerDrawArea.ContentPanel.Controls.Add(this.glControlMotor);
 			this.toolStripContainerDrawArea.ContentPanel.Size = new System.Drawing.Size(568, 593);
 			this.toolStripContainerDrawArea.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.toolStripContainerDrawArea.Location = new System.Drawing.Point(0, 24);
@@ -2800,19 +2799,6 @@ namespace TrainEditor2.Views
 			// toolStripContainerDrawArea.TopToolStripPanel
 			// 
 			this.toolStripContainerDrawArea.TopToolStripPanel.Controls.Add(this.toolStripToolBar);
-			// 
-			// pictureBoxDrawArea
-			// 
-			this.pictureBoxDrawArea.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.pictureBoxDrawArea.Location = new System.Drawing.Point(0, 0);
-			this.pictureBoxDrawArea.Name = "pictureBoxDrawArea";
-			this.pictureBoxDrawArea.Size = new System.Drawing.Size(568, 593);
-			this.pictureBoxDrawArea.TabIndex = 2;
-			this.pictureBoxDrawArea.TabStop = false;
-			this.pictureBoxDrawArea.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PictureBoxDrawArea_MouseDown);
-			this.pictureBoxDrawArea.MouseEnter += new System.EventHandler(this.PictureBoxDrawArea_MouseEnter);
-			this.pictureBoxDrawArea.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PictureBoxDrawArea_MouseMove);
-			this.pictureBoxDrawArea.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PictureBoxDrawArea_MouseUp);
 			// 
 			// toolStripToolBar
 			// 
@@ -6481,6 +6467,23 @@ namespace TrainEditor2.Views
 			// 
 			this.errorProvider.ContainerControl = this;
 			// 
+			// glControlMotor
+			// 
+			this.glControlMotor.BackColor = System.Drawing.Color.Black;
+			this.glControlMotor.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.glControlMotor.Location = new System.Drawing.Point(0, 0);
+			this.glControlMotor.Name = "glControlMotor";
+			this.glControlMotor.Size = new System.Drawing.Size(568, 593);
+			this.glControlMotor.TabIndex = 0;
+			this.glControlMotor.VSync = false;
+			this.glControlMotor.Paint += new System.Windows.Forms.PaintEventHandler(this.GlControlMotor_Paint);
+			this.glControlMotor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GlControlMotor_KeyDown);
+			this.glControlMotor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.GlControlMotor_MouseDown);
+			this.glControlMotor.MouseEnter += new System.EventHandler(this.GlControlMotor_MouseEnter);
+			this.glControlMotor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.GlControlMotor_MouseMove);
+			this.glControlMotor.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GlControlMotor_MouseUp);
+			this.glControlMotor.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.GlControlMotor_PreviewKeyDown);
+			// 
 			// FormEditor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -6540,7 +6543,6 @@ namespace TrainEditor2.Views
 			this.toolStripContainerDrawArea.TopToolStripPanel.PerformLayout();
 			this.toolStripContainerDrawArea.ResumeLayout(false);
 			this.toolStripContainerDrawArea.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBoxDrawArea)).EndInit();
 			this.toolStripToolBar.ResumeLayout(false);
 			this.toolStripToolBar.PerformLayout();
 			this.panelMotorSetting.ResumeLayout(false);
@@ -6858,7 +6860,6 @@ namespace TrainEditor2.Views
 		private System.Windows.Forms.TabPage tabPageMotor;
 		private System.Windows.Forms.Panel panelMotorSound;
 		private System.Windows.Forms.ToolStripContainer toolStripContainerDrawArea;
-		private System.Windows.Forms.PictureBox pictureBoxDrawArea;
 		private System.Windows.Forms.ToolStrip toolStripToolBar;
 		private System.Windows.Forms.ToolStripButton toolStripButtonUndo;
 		private System.Windows.Forms.ToolStripButton toolStripButtonRedo;
@@ -7253,5 +7254,6 @@ namespace TrainEditor2.Views
 		private System.Windows.Forms.ErrorProvider errorProvider;
 		private SplitContainer splitContainerSound;
 		private TreeView treeViewSound;
+		private OpenTK.GLControl glControlMotor;
 	}
 }

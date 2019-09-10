@@ -8,6 +8,7 @@ using System.Reactive.Linq;
 using System.Security.Permissions;
 using System.Windows.Forms;
 using OpenBveApi.Interface;
+using OpenTK.Graphics.OpenGL;
 using Reactive.Bindings;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
@@ -155,14 +156,16 @@ namespace TrainEditor2.Views
 
 		public FormEditor()
 		{
+			UIDispatcherScheduler.Initialize();
+
 			disposable = new CompositeDisposable();
 
-			CompositeDisposable messageDisposable = new CompositeDisposable();
-			CompositeDisposable openFileDialogDisposable = new CompositeDisposable();
-			CompositeDisposable saveFileDialogDisposable = new CompositeDisposable();
-			CompositeDisposable trainDisposable = new CompositeDisposable();
-			CompositeDisposable panelDisposable = new CompositeDisposable();
-			CompositeDisposable soundDisposable = new CompositeDisposable();
+			CompositeDisposable messageDisposable = new CompositeDisposable().AddTo(disposable);
+			CompositeDisposable openFileDialogDisposable = new CompositeDisposable().AddTo(disposable);
+			CompositeDisposable saveFileDialogDisposable = new CompositeDisposable().AddTo(disposable);
+			CompositeDisposable trainDisposable = new CompositeDisposable().AddTo(disposable);
+			CompositeDisposable panelDisposable = new CompositeDisposable().AddTo(disposable);
+			CompositeDisposable soundDisposable = new CompositeDisposable().AddTo(disposable);
 
 			app = new AppViewModel();
 
@@ -180,7 +183,7 @@ namespace TrainEditor2.Views
 				.Subscribe(x =>
 				{
 					messageDisposable.Dispose();
-					messageDisposable = new CompositeDisposable();
+					messageDisposable = new CompositeDisposable().AddTo(disposable);
 
 					BindToMessageBox(x).AddTo(messageDisposable);
 				})
@@ -190,7 +193,7 @@ namespace TrainEditor2.Views
 				.Subscribe(x =>
 				{
 					openFileDialogDisposable.Dispose();
-					openFileDialogDisposable = new CompositeDisposable();
+					openFileDialogDisposable = new CompositeDisposable().AddTo(disposable);
 
 					BindToOpenFileDialog(x).AddTo(openFileDialogDisposable);
 				})
@@ -200,7 +203,7 @@ namespace TrainEditor2.Views
 				.Subscribe(x =>
 				{
 					saveFileDialogDisposable.Dispose();
-					saveFileDialogDisposable = new CompositeDisposable();
+					saveFileDialogDisposable = new CompositeDisposable().AddTo(disposable);
 
 					BindToSaveFileDialog(x).AddTo(saveFileDialogDisposable);
 				})
@@ -210,7 +213,7 @@ namespace TrainEditor2.Views
 				.Subscribe(x =>
 				{
 					trainDisposable.Dispose();
-					trainDisposable = new CompositeDisposable();
+					trainDisposable = new CompositeDisposable().AddTo(disposable);
 
 					BindToTrain(x).AddTo(trainDisposable);
 				})
@@ -220,7 +223,7 @@ namespace TrainEditor2.Views
 				.Subscribe(x =>
 				{
 					panelDisposable.Dispose();
-					panelDisposable = new CompositeDisposable();
+					panelDisposable = new CompositeDisposable().AddTo(disposable);
 
 					BindToPanel(x).AddTo(panelDisposable);
 				})
@@ -230,7 +233,7 @@ namespace TrainEditor2.Views
 				.Subscribe(x =>
 				{
 					soundDisposable.Dispose();
-					soundDisposable = new CompositeDisposable();
+					soundDisposable = new CompositeDisposable().AddTo(disposable);
 
 					BindToSound(x).AddTo(soundDisposable);
 				})
@@ -449,13 +452,6 @@ namespace TrainEditor2.Views
 			app.ChangeVisibleLogMessages.BindToButton(MessageType.Error, toolStripMenuItemError).AddTo(disposable);
 			app.ChangeVisibleLogMessages.BindToButton(MessageType.Critical, toolStripMenuItemError).AddTo(disposable);
 			app.ClearLogMessages.BindToButton(toolStripMenuItemClear).AddTo(disposable);
-
-			messageDisposable.AddTo(disposable);
-			openFileDialogDisposable.AddTo(disposable);
-			saveFileDialogDisposable.AddTo(disposable);
-			trainDisposable.AddTo(disposable);
-			panelDisposable.AddTo(disposable);
-			soundDisposable.AddTo(disposable);
 		}
 
 		private void FormEditor_Load(object sender, EventArgs e)
@@ -555,12 +551,6 @@ namespace TrainEditor2.Views
 					car?.Acceleration.Value.MoveLeft.Execute();
 					ret = true;
 				}
-
-				if (pictureBoxDrawArea.Focused)
-				{
-					car?.Motor.Value.MoveLeft.Execute();
-					ret = true;
-				}
 			}
 
 			if (keyData == Keys.Right)
@@ -568,12 +558,6 @@ namespace TrainEditor2.Views
 				if (pictureBoxAccel.Focused)
 				{
 					car?.Acceleration.Value.MoveRight.Execute();
-					ret = true;
-				}
-
-				if (pictureBoxDrawArea.Focused)
-				{
-					car?.Motor.Value.MoveRight.Execute();
 					ret = true;
 				}
 			}
@@ -585,12 +569,6 @@ namespace TrainEditor2.Views
 					car?.Acceleration.Value.MoveBottom.Execute();
 					ret = true;
 				}
-
-				if (pictureBoxDrawArea.Focused)
-				{
-					car?.Motor.Value.MoveBottom.Execute();
-					ret = true;
-				}
 			}
 
 			if (keyData == Keys.Up)
@@ -598,12 +576,6 @@ namespace TrainEditor2.Views
 				if (pictureBoxAccel.Focused)
 				{
 					car?.Acceleration.Value.MoveTop.Execute();
-					ret = true;
-				}
-
-				if (pictureBoxDrawArea.Focused)
-				{
-					car?.Motor.Value.MoveTop.Execute();
 					ret = true;
 				}
 			}
@@ -760,30 +732,83 @@ namespace TrainEditor2.Views
 			e.Graphics.DrawString(toolStripComboBoxIndex.Items[e.Index].ToString(), e.Font, new SolidBrush(e.ForeColor), e.Bounds.X + e.Bounds.Height + 10, e.Bounds.Y);
 		}
 
-		private void PictureBoxDrawArea_MouseEnter(object sender, EventArgs e)
+		private void GlControlMotor_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
 		{
-			pictureBoxDrawArea.Focus();
+			switch (e.KeyCode)
+			{
+				case Keys.Up:
+				case Keys.Left:
+				case Keys.Right:
+				case Keys.Down:
+					e.IsInputKey = true;
+					break;
+			}
 		}
 
-		private void PictureBoxDrawArea_MouseDown(object sender, MouseEventArgs e)
+		private void GlControlMotor_KeyDown(object sender, KeyEventArgs e)
+		{
+			MotorCarViewModel car = app.Train.Value.SelectedCar.Value as MotorCarViewModel;
+
+			switch (e.KeyCode)
+			{
+				case Keys.Left:
+					car?.Motor.Value.MoveLeft.Execute();
+					break;
+				case Keys.Right:
+					car?.Motor.Value.MoveRight.Execute();
+					break;
+				case Keys.Down:
+					car?.Motor.Value.MoveBottom.Execute();
+					break;
+				case Keys.Up:
+					car?.Motor.Value.MoveTop.Execute();
+					break;
+			}
+		}
+
+		private void GlControlMotor_MouseEnter(object sender, EventArgs e)
+		{
+			glControlMotor.Focus();
+		}
+
+		private void GlControlMotor_MouseDown(object sender, MouseEventArgs e)
 		{
 			MotorCarViewModel car = app.Train.Value.SelectedCar.Value as MotorCarViewModel;
 
 			car?.Motor.Value.MouseDown.Execute(MouseEventArgsToModel(e));
 		}
 
-		private void PictureBoxDrawArea_MouseMove(object sender, MouseEventArgs e)
+		private void GlControlMotor_MouseMove(object sender, MouseEventArgs e)
 		{
 			MotorCarViewModel car = app.Train.Value.SelectedCar.Value as MotorCarViewModel;
 
 			car?.Motor.Value.MouseMove.Execute(MouseEventArgsToModel(e));
 		}
 
-		private void PictureBoxDrawArea_MouseUp(object sender, MouseEventArgs e)
+		private void GlControlMotor_MouseUp(object sender, MouseEventArgs e)
 		{
 			MotorCarViewModel car = app.Train.Value.SelectedCar.Value as MotorCarViewModel;
 
 			car?.Motor.Value.MouseUp.Execute();
+		}
+
+		private void GlControlMotor_Paint(object sender, PaintEventArgs e)
+		{
+			MotorCarViewModel car = app.Train.Value.SelectedCar.Value as MotorCarViewModel;
+
+			glControlMotor.MakeCurrent();
+
+			if (car != null)
+			{
+				car.Motor.Value.DrawGlControl.Execute();
+			}
+			else
+			{
+				GL.ClearColor(Color.Black);
+				GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+			}
+
+			glControlMotor.SwapBuffers();
 		}
 
 		private void ButtonThisDaytimeImageOpen_Click(object sender, EventArgs e)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reactive.Concurrency;
 using System.Windows.Forms;
+using LibRender;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
 using Reactive.Bindings;
@@ -44,6 +45,8 @@ namespace TrainEditor2
 			}
 
 			Interface.LoadOptions();
+
+			Renderer.currentHost = CurrentHost;
 
 			SoundApi = new SoundApi();
 			SoundApi.Initialize(CurrentHost, SoundRange.Medium);

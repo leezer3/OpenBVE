@@ -119,7 +119,7 @@ namespace TrainEditor2.Views
 		{
 			MotorCarViewModel car = app.Train.Value.SelectedCar.Value as MotorCarViewModel;
 
-			if (pictureBoxDrawArea.Focused)
+			if (glControlMotor.Focused)
 			{
 				if (car != null)
 				{

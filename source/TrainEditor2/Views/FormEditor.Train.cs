@@ -14,11 +14,11 @@ namespace TrainEditor2.Views
 		{
 			CompositeDisposable trainDisposable = new CompositeDisposable();
 
-			CompositeDisposable handleDisposable = new CompositeDisposable();
-			CompositeDisposable deviceDisposable = new CompositeDisposable();
-			CompositeDisposable cabDisposable = new CompositeDisposable();
-			CompositeDisposable carDisposable = new CompositeDisposable();
-			CompositeDisposable couplerDisposable = new CompositeDisposable();
+			CompositeDisposable handleDisposable = new CompositeDisposable().AddTo(trainDisposable);
+			CompositeDisposable deviceDisposable = new CompositeDisposable().AddTo(trainDisposable);
+			CompositeDisposable cabDisposable = new CompositeDisposable().AddTo(trainDisposable);
+			CompositeDisposable carDisposable = new CompositeDisposable().AddTo(trainDisposable);
+			CompositeDisposable couplerDisposable = new CompositeDisposable().AddTo(trainDisposable);
 
 			x.Cars
 				.CollectionChangedAsObservable()
@@ -45,7 +45,7 @@ namespace TrainEditor2.Views
 				.Subscribe(y =>
 				{
 					handleDisposable.Dispose();
-					handleDisposable = new CompositeDisposable();
+					handleDisposable = new CompositeDisposable().AddTo(trainDisposable);
 
 					BindToHandle(y).AddTo(handleDisposable);
 				})
@@ -55,7 +55,7 @@ namespace TrainEditor2.Views
 				.Subscribe(y =>
 				{
 					deviceDisposable.Dispose();
-					deviceDisposable = new CompositeDisposable();
+					deviceDisposable = new CompositeDisposable().AddTo(trainDisposable);
 
 					BindToDevice(y).AddTo(deviceDisposable);
 				})
@@ -65,7 +65,7 @@ namespace TrainEditor2.Views
 				.Subscribe(y =>
 				{
 					cabDisposable.Dispose();
-					cabDisposable = new CompositeDisposable();
+					cabDisposable = new CompositeDisposable().AddTo(trainDisposable);
 
 					BindToCab(y).AddTo(cabDisposable);
 				})
@@ -75,7 +75,7 @@ namespace TrainEditor2.Views
 				.Subscribe(y =>
 				{
 					carDisposable.Dispose();
-					carDisposable = new CompositeDisposable();
+					carDisposable = new CompositeDisposable().AddTo(trainDisposable);
 
 					if (y != null)
 					{
@@ -88,7 +88,6 @@ namespace TrainEditor2.Views
 				.BindTo(
 					checkBoxIsMotorCar,
 					y => y.Checked,
-					BindingMode.OneWay,
 					y => y is MotorCarViewModel
 				)
 				.AddTo(trainDisposable);
@@ -97,7 +96,7 @@ namespace TrainEditor2.Views
 				.Subscribe(y =>
 				{
 					couplerDisposable.Dispose();
-					couplerDisposable = new CompositeDisposable();
+					couplerDisposable = new CompositeDisposable().AddTo(trainDisposable);
 
 					if (y != null)
 					{
@@ -105,12 +104,6 @@ namespace TrainEditor2.Views
 					}
 				})
 				.AddTo(trainDisposable);
-
-			handleDisposable.AddTo(trainDisposable);
-			deviceDisposable.AddTo(trainDisposable);
-			cabDisposable.AddTo(trainDisposable);
-			carDisposable.AddTo(trainDisposable);
-			couplerDisposable.AddTo(trainDisposable);
 
 			return trainDisposable;
 		}

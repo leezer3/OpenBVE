@@ -15,17 +15,17 @@ namespace TrainEditor2.Views
 		private IDisposable BindToMotor(MotorViewModel z)
 		{
 			CompositeDisposable motorDisposable = new CompositeDisposable();
-			CompositeDisposable messageDisposable = new CompositeDisposable();
-			CompositeDisposable toolTipVertexPitchDisposable = new CompositeDisposable();
-			CompositeDisposable toolTipVertexVolumeDisposable = new CompositeDisposable();
+			CompositeDisposable messageDisposable = new CompositeDisposable().AddTo(motorDisposable);
+			CompositeDisposable toolTipVertexPitchDisposable = new CompositeDisposable().AddTo(motorDisposable);
+			CompositeDisposable toolTipVertexVolumeDisposable = new CompositeDisposable().AddTo(motorDisposable);
 
-			var culture = CultureInfo.InvariantCulture;
+			CultureInfo culture = CultureInfo.InvariantCulture;
 
 			z.MessageBox
 				.Subscribe(w =>
 				{
 					messageDisposable.Dispose();
-					messageDisposable = new CompositeDisposable();
+					messageDisposable = new CompositeDisposable().AddTo(motorDisposable);
 
 					BindToMessageBox(w).AddTo(messageDisposable);
 				})
@@ -35,9 +35,9 @@ namespace TrainEditor2.Views
 				.Subscribe(w =>
 				{
 					toolTipVertexPitchDisposable.Dispose();
-					toolTipVertexPitchDisposable = new CompositeDisposable();
+					toolTipVertexPitchDisposable = new CompositeDisposable().AddTo(motorDisposable);
 
-					BindToToolTip(w, pictureBoxDrawArea).AddTo(toolTipVertexPitchDisposable);
+					BindToToolTip(w, glControlMotor).AddTo(toolTipVertexPitchDisposable);
 				})
 				.AddTo(motorDisposable);
 
@@ -45,15 +45,15 @@ namespace TrainEditor2.Views
 				.Subscribe(w =>
 				{
 					toolTipVertexVolumeDisposable.Dispose();
-					toolTipVertexVolumeDisposable = new CompositeDisposable();
+					toolTipVertexVolumeDisposable = new CompositeDisposable().AddTo(motorDisposable);
 
-					BindToToolTip(w, pictureBoxDrawArea).AddTo(toolTipVertexVolumeDisposable);
+					BindToToolTip(w, glControlMotor).AddTo(toolTipVertexVolumeDisposable);
 				})
 				.AddTo(motorDisposable);
 
 			z.CurrentCursorType
 				.BindTo(
-					pictureBoxDrawArea,
+					glControlMotor,
 					w => w.Cursor,
 					CursorTypeToCursor
 				)
@@ -362,7 +362,7 @@ namespace TrainEditor2.Views
 					w => w != Motor.InputMode.SoundIndex
 				)
 				.AddTo(motorDisposable);
-			
+
 			z.SelectedSoundIndex
 				.BindTo(
 					toolStripComboBoxIndex,
@@ -733,9 +733,9 @@ namespace TrainEditor2.Views
 				.BindToErrorProvider(errorProvider, textBoxDirectY)
 				.AddTo(motorDisposable);
 
-			z.ImageWidth
+			z.GlControlWidth
 				.BindTo(
-					pictureBoxDrawArea,
+					glControlMotor,
 					w => w.Width,
 					BindingMode.OneWayToSource,
 					null,
@@ -749,11 +749,11 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(motorDisposable);
 
-			z.ImageWidth.Value = pictureBoxDrawArea.Width;
+			z.GlControlWidth.Value = glControlMotor.Width;
 
-			z.ImageHeight
+			z.GlControlHeight
 				.BindTo(
-					pictureBoxDrawArea,
+					glControlMotor,
 					w => w.Height,
 					BindingMode.OneWayToSource,
 					null,
@@ -767,22 +767,11 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(motorDisposable);
 
-			z.ImageHeight.Value = pictureBoxDrawArea.Height;
+			z.GlControlHeight.Value = glControlMotor.Height;
 
-			z.Image
-				.Subscribe(x =>
-				{
-					pictureBoxDrawArea.Image = x;
-
-					if (InvokeRequired)
-					{
-						Invoke(new Action(pictureBoxDrawArea.Refresh));
-					}
-					else
-					{
-						pictureBoxDrawArea.Refresh();
-					}
-				})
+			z.IsRefreshGlControl
+				.Where(x => x)
+				.Subscribe(_ => glControlMotor.Invalidate())
 				.AddTo(motorDisposable);
 
 			z.Undo.BindToButton(toolStripMenuItemUndo).AddTo(motorDisposable);
@@ -831,10 +820,6 @@ namespace TrainEditor2.Views
 			z.StartSimulation.BindToButton(buttonPlay).AddTo(motorDisposable);
 			z.PauseSimulation.BindToButton(buttonPause).AddTo(motorDisposable);
 			z.StopSimulation.BindToButton(buttonStop).AddTo(motorDisposable);
-
-			messageDisposable.AddTo(motorDisposable);
-			toolTipVertexPitchDisposable.AddTo(motorDisposable);
-			toolTipVertexVolumeDisposable.AddTo(motorDisposable);
 
 			return motorDisposable;
 		}

@@ -14,12 +14,12 @@ namespace TrainEditor2.Views
 		{
 			CompositeDisposable carDisposable = new CompositeDisposable();
 
-			CompositeDisposable performanceDisposable = new CompositeDisposable();
-			CompositeDisposable moveDisposable = new CompositeDisposable();
-			CompositeDisposable brakeDisposable = new CompositeDisposable();
-			CompositeDisposable pressureDisposable = new CompositeDisposable();
-			CompositeDisposable accelerationDisposable = new CompositeDisposable();
-			CompositeDisposable motorDisposable = new CompositeDisposable();
+			CompositeDisposable performanceDisposable = new CompositeDisposable().AddTo(carDisposable);
+			CompositeDisposable moveDisposable = new CompositeDisposable().AddTo(carDisposable);
+			CompositeDisposable brakeDisposable = new CompositeDisposable().AddTo(carDisposable);
+			CompositeDisposable pressureDisposable = new CompositeDisposable().AddTo(carDisposable);
+			CompositeDisposable accelerationDisposable = new CompositeDisposable().AddTo(carDisposable);
+			CompositeDisposable motorDisposable = new CompositeDisposable().AddTo(carDisposable);
 
 			y.Mass
 				.BindTo(
@@ -228,7 +228,7 @@ namespace TrainEditor2.Views
 				.Subscribe(z =>
 				{
 					performanceDisposable.Dispose();
-					performanceDisposable = new CompositeDisposable();
+					performanceDisposable = new CompositeDisposable().AddTo(carDisposable);
 
 					BindToPerformance(z).AddTo(performanceDisposable);
 				})
@@ -238,7 +238,7 @@ namespace TrainEditor2.Views
 				.Subscribe(z =>
 				{
 					moveDisposable.Dispose();
-					moveDisposable = new CompositeDisposable();
+					moveDisposable = new CompositeDisposable().AddTo(carDisposable);
 
 					BindToMove(z).AddTo(moveDisposable);
 				})
@@ -248,7 +248,7 @@ namespace TrainEditor2.Views
 				.Subscribe(z =>
 				{
 					brakeDisposable.Dispose();
-					brakeDisposable = new CompositeDisposable();
+					brakeDisposable = new CompositeDisposable().AddTo(carDisposable);
 
 					BindToBrake(z).AddTo(brakeDisposable);
 				})
@@ -258,7 +258,7 @@ namespace TrainEditor2.Views
 				.Subscribe(z =>
 				{
 					pressureDisposable.Dispose();
-					pressureDisposable = new CompositeDisposable();
+					pressureDisposable = new CompositeDisposable().AddTo(carDisposable);
 
 					BindToPressure(z).AddTo(pressureDisposable);
 				})
@@ -318,7 +318,7 @@ namespace TrainEditor2.Views
 				.Subscribe(z =>
 				{
 					accelerationDisposable.Dispose();
-					accelerationDisposable = new CompositeDisposable();
+					accelerationDisposable = new CompositeDisposable().AddTo(carDisposable);
 
 					BindToAcceleration(z).AddTo(accelerationDisposable);
 				})
@@ -328,18 +328,11 @@ namespace TrainEditor2.Views
 				.Subscribe(z =>
 				{
 					motorDisposable.Dispose();
-					motorDisposable = new CompositeDisposable();
+					motorDisposable = new CompositeDisposable().AddTo(carDisposable);
 
 					BindToMotor(z).AddTo(motorDisposable);
 				})
 				.AddTo(carDisposable);
-
-			performanceDisposable.AddTo(carDisposable);
-			moveDisposable.AddTo(carDisposable);
-			brakeDisposable.AddTo(carDisposable);
-			pressureDisposable.AddTo(carDisposable);
-			accelerationDisposable.AddTo(carDisposable);
-			motorDisposable.AddTo(carDisposable);
 
 			return carDisposable;
 		}

@@ -329,7 +329,7 @@ namespace TrainEditor2.IO.Sounds.Xml
 				else
 				{
 					int idx;
-					XElement indexNode = childNode.Element("index");
+					XElement indexNode = childNode.Element("Index");
 
 					if (indexNode == null)
 					{
