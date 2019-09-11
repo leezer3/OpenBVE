@@ -15,7 +15,7 @@ namespace OpenBveApi.Objects
 		public MeshFace[] Faces;
 		/// <summary>The materials present</summary>
 		public Material[] Materials;
-		/// <summary>The transform matric to be applied</summary>
+		/// <summary>The transform matrix to be applied</summary>
 		public Matrix4D TransformMatrix = Matrix4D.NoTransformation;
 		/// <summary>
 		/// Whether this was created using the Cylinder command in a B3D / CSV</summary>

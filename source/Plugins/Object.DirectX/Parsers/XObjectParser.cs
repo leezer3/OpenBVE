@@ -34,7 +34,7 @@ namespace Plugin {
 			} else if (Data[8] == 116 & Data[9] == 122 & Data[10] == 105 & Data[11] == 112) {
 				// compressed textual flavor
 				try {
-					byte[] Uncompressed = Decompress(Data);
+					byte[] Uncompressed = MSZip.Decompress(Data);
 					string Text = Encoding.GetString(Uncompressed);
 					return LoadTextualX(FileName, Text, Encoding);
 				} catch (Exception ex) {
@@ -45,7 +45,7 @@ namespace Plugin {
 				// compressed binary flavor
 
 				try {
-					byte[] Uncompressed = Decompress(Data);
+					byte[] Uncompressed = MSZip.Decompress(Data);
 					return LoadBinaryX(FileName, Uncompressed, 0, FloatingPointSize);
 				} catch (Exception ex) {
 					Plugin.currentHost.AddMessage(MessageType.Error, false, "An unexpected error occured (" + ex.Message + ") while attempting to decompress the binary X object file encountered in " + FileName);
@@ -58,33 +58,7 @@ namespace Plugin {
 			}
 		}
 
-		// ================================
-
-		// decompress
-		private static byte[] Decompress(byte[] Data) {
-			byte[] Target;
-			using (MemoryStream InputStream = new MemoryStream(Data)) {
-				InputStream.Position = 26;
-				using (DeflateStream Deflate = new DeflateStream(InputStream, CompressionMode.Decompress, true)) {
-					using (MemoryStream OutputStream = new MemoryStream()) {
-						byte[] Buffer = new byte[4096];
-						while (true) {
-							int Count = Deflate.Read(Buffer, 0, Buffer.Length);
-							if (Count != 0) {
-								OutputStream.Write(Buffer, 0, Count);
-							}
-							if (Count != Buffer.Length) {
-								break;
-							}
-						}
-						Target = new byte[OutputStream.Length];
-						OutputStream.Position = 0;
-						OutputStream.Read(Target, 0, Target.Length);
-					}
-				}
-			}
-			return Target;
-		}
+		
 
 		// ================================
 
