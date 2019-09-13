@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Reactive.Bindings.Binding;
@@ -53,6 +53,24 @@ namespace TrainEditor2.Views
 			y.Max
 				.BindToErrorProvider(errorProvider, textBoxCouplerMax)
 				.AddTo(couplerDisposable);
+
+			y.Object
+				.BindTo(
+					textBoxCouplerObject,
+					z => z.Text,
+					BindingMode.TwoWay,
+					null,
+					null,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => textBoxCouplerObject.TextChanged += h,
+							h => textBoxCouplerObject.TextChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(couplerDisposable);
+
+			
 
 			return couplerDisposable;
 		}

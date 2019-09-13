@@ -920,5 +920,10 @@ namespace TrainEditor2.Views
 		{
 			OpenFileDialog(textBoxSoundFileName);
 		}
+
+		private void buttonCouplerObject_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog(textBoxCouplerObject);
+		}
 	}
 }

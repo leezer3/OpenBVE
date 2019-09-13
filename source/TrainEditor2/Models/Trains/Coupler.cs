@@ -7,6 +7,7 @@ namespace TrainEditor2.Models.Trains
 	{
 		private double min;
 		private double max;
+		private string exteriorObject;
 
 		internal double Min
 		{
@@ -32,10 +33,23 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
+		internal string Object
+		{
+			get
+			{
+				return exteriorObject;
+			}
+			set
+			{
+				SetProperty(ref exteriorObject, value);
+			}
+		}
+
 		internal Coupler()
 		{
 			Min = 0.27;
 			Max = 0.33;
+			Object = string.Empty;
 		}
 
 		public object Clone()

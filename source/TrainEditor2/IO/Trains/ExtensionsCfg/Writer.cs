@@ -20,7 +20,7 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 
 			for (int i = 0; i < train.Couplers.Count; i++)
 			{
-				WriteCouplerNode(builder, i, train.Couplers[i]);
+				WriteCouplerNode(fileName, builder, i, train.Couplers[i]);
 			}
 
 			File.WriteAllText(fileName, builder.ToString(), new UTF8Encoding(true));
@@ -56,10 +56,11 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 			WriteKey(builder, "Reversed", bogie.Reversed.ToString());
 		}
 
-		private static void WriteCouplerNode(StringBuilder builder, int couplerIndex, Coupler coupler)
+		private static void WriteCouplerNode(string fileName, StringBuilder builder, int couplerIndex, Coupler coupler)
 		{
 			builder.AppendLine($"[Coupler{couplerIndex.ToString(CultureInfo.InvariantCulture)}]");
 			WriteKey(builder, "Distances", coupler.Min, coupler.Max);
+			WriteKey(builder, "Object", Utilities.MakeRelativePath(fileName, coupler.Object));
 		}
 
 		private static void WriteKey(StringBuilder builder, string key, params string[] values)
