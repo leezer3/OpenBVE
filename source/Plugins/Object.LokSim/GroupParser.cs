@@ -150,17 +150,17 @@ namespace Plugin
 														}
 														break;
 													case "Position":
-														string[] SplitPosition = attribute.Value.Split(';');
-														double.TryParse(SplitPosition[0], out Object.Position.X);
-														double.TryParse(SplitPosition[1], out Object.Position.Y);
-														double.TryParse(SplitPosition[2], out Object.Position.Z);
+														if (!Vector3.TryParse(attribute.Value, ';', out Object.Position))
+														{
+															Plugin.currentHost.AddMessage(MessageType.Warning, true, "Invalid position vector " + attribute.Value + " supplied in Ls3d object file.");
+														}
 														break;
 													case "Rotation":
-														string[] SplitRotation = attribute.Value.Split(';');
 														Vector3 r;
-														double.TryParse(SplitRotation[0], out r.X);
-														double.TryParse(SplitRotation[1], out r.Y);
-														double.TryParse(SplitRotation[2], out r.Z);
+														if (!Vector3.TryParse(attribute.Value, ';', out r))
+														{
+															Plugin.currentHost.AddMessage(MessageType.Warning, true, "Invalid rotation vector " + attribute.Value + " supplied in Ls3d object file.");
+														}
 														Object.Rotation += r;
 														break;
 													case "ShowOn":

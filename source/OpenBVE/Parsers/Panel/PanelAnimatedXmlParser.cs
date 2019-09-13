@@ -128,51 +128,15 @@ namespace OpenBve.Parsers.Panel
 								switch (Key.ToLowerInvariant())
 								{
 									case "position":
+										if (!Vector3.TryParse(KeyNode.Value, ',', out Position))
 										{
-											string[] s = Value.Split(new char[] { ',' });
-											if (s.Length == 3)
-											{
-												if (s[0].Length != 0 && !NumberFormats.TryParseDoubleVb6(s[0], out Position.X))
-												{
-													Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-												if (s[1].Length != 0 && !NumberFormats.TryParseDoubleVb6(s[1], out Position.Y))
-												{
-													Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-												if (s[2].Length != 0 && !NumberFormats.TryParseDoubleVb6(s[2], out Position.Z))
-												{
-													Interface.AddMessage(MessageType.Error, false, "Z is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-											}
-											else
-											{
-												Interface.AddMessage(MessageType.Error, false, "Three arguments are expected in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-											}
+											Interface.AddMessage(MessageType.Error, false, "Position is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										break;
 									case "size":
+										if (!Vector3.TryParse(KeyNode.Value, ',', out Size))
 										{
-											string[] s = Value.Split(new char[] { ',' });
-											if (s.Length == 3)
-											{
-												if (s[0].Length != 0 && !NumberFormats.TryParseDoubleVb6(s[0], out Size.X))
-												{
-													Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-												if (s[1].Length != 0 && !NumberFormats.TryParseDoubleVb6(s[1], out Size.Y))
-												{
-													Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-												if (s[2].Length != 0 && !NumberFormats.TryParseDoubleVb6(s[2], out Size.Z))
-												{
-													Interface.AddMessage(MessageType.Error, false, "Z is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-											}
-											else
-											{
-												Interface.AddMessage(MessageType.Error, false, "Three arguments are expected in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-											}
+											Interface.AddMessage(MessageType.Error, false, "Size is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										break;
 									case "jumpscreen":
