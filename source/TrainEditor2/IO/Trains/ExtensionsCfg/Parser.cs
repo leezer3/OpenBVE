@@ -289,6 +289,29 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 																}
 															}
 															break;
+														case "object":
+															if (string.IsNullOrEmpty(b))
+															{
+																Interface.AddMessage(MessageType.Error, true, $"An empty coupler object was supplied at line {(i + 1).ToString(culture)} in file {fileName}");
+															}
+															else if (Path.ContainsInvalidChars(b))
+															{
+																Interface.AddMessage(MessageType.Error, false, $"File contains illegal characters at line {(i + 1).ToString(culture)} in file {fileName}");
+															}
+															else
+															{
+																string file = Path.CombineFile(System.IO.Path.GetDirectoryName(fileName), b);
+
+																if (File.Exists(file))
+																{
+																	train.Couplers[n].Object = file;
+																}
+																else
+																{
+																	Interface.AddMessage(MessageType.Error, true, $"The coupler object {file} does not exist at line {(i + 1).ToString(culture)} in file {fileName}");
+																}
+															}
+															break;
 														default:
 															Interface.AddMessage(MessageType.Warning, false, $"Unsupported key-value pair {a} encountered at line {(i + 1).ToString(culture)} in file {fileName}");
 															break;

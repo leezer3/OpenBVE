@@ -8,7 +8,7 @@ namespace OpenBve {
 	internal static class ExtensionsCfgParser {
 
 		// parse extensions config
-		internal static void ParseExtensionsConfig(string TrainPath, System.Text.Encoding Encoding, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, TrainManager.Train Train, bool LoadObjects)
+		internal static void ParseExtensionsConfig(string TrainPath, System.Text.Encoding Encoding, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, ref UnifiedObject[] CouplerObjects, TrainManager.Train Train, bool LoadObjects)
 		{
 			bool[] CarObjectsReversed = new bool[Train.Cars.Length];
 			bool[] BogieObjectsReversed = new bool[Train.Cars.Length * 2];
@@ -214,7 +214,7 @@ namespace OpenBve {
 									// coupler
 									string t = Lines[i].Substring(8, Lines[i].Length - 9);
 									int n; if (int.TryParse(t, System.Globalization.NumberStyles.Integer, Culture, out n)) {
-										if (n >= 0 & n < Train.Couplers.Length) {
+										if (n >= 0 & n < Train.Cars.Length -1) {
 											i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal) & !Lines[i].EndsWith("]", StringComparison.Ordinal)) {
 												if (Lines[i].Length != 0) {
 													int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
@@ -238,13 +238,33 @@ namespace OpenBve {
 																		} else if (min > max) {
 																			Interface.AddMessage(MessageType.Error, false, "Minimum is expected to be less than Maximum in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																		} else {
-																			Train.Couplers[n].MinimumDistanceBetweenCars = min;
-																			Train.Couplers[n].MaximumDistanceBetweenCars = max;
+																			Train.Cars[n].Coupler.MinimumDistanceBetweenCars = min;
+																			Train.Cars[n].Coupler.MaximumDistanceBetweenCars = max;
 																		}
 																	} else {
 																		Interface.AddMessage(MessageType.Error, false, "An argument-separating comma is expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																	}
 																} break;
+															case "object":
+																if (string.IsNullOrEmpty(b))
+																{
+																	Interface.AddMessage(MessageType.Error, true, "An empty coupler object was supplied at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																	break;
+																}
+																if (Path.ContainsInvalidChars(b)) {
+																	Interface.AddMessage(MessageType.Error, false, "File contains illegal characters at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																} else {
+																	string File = OpenBveApi.Path.CombineFile(TrainPath, b);
+																	if (System.IO.File.Exists(File)) {
+																		if (LoadObjects)
+																		{
+																			CouplerObjects[n] = ObjectManager.LoadObject(File, Encoding, false);
+																		}
+																	} else {
+																		Interface.AddMessage(MessageType.Error, true, "The coupler object " + File + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																	}
+																}
+																break;
 															default:
 																Interface.AddMessage(MessageType.Warning, false, "Unsupported key-value pair " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																break;
@@ -419,7 +439,7 @@ namespace OpenBve {
 										 *
 										 * Try again with ASCII instead
 										 */
-										ParseExtensionsConfig(TrainPath, Encoding.GetEncoding(1252), ref CarObjects, ref BogieObjects, Train, LoadObjects);
+										ParseExtensionsConfig(TrainPath, Encoding.GetEncoding(1252), ref CarObjects, ref BogieObjects, ref CouplerObjects, Train, LoadObjects);
 										return;
 									}
 									Interface.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);

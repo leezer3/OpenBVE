@@ -160,8 +160,8 @@ namespace OpenBve
 
 			UnifiedObject[] CarObjects = new UnifiedObject[Train.Cars.Length];
 			UnifiedObject[] BogieObjects = new UnifiedObject[Train.Cars.Length * 2];
-
-			ExtensionsCfgParser.ParseExtensionsConfig(System.IO.Path.GetDirectoryName(ExteriorFile), TextEncoding.GetSystemEncodingFromFile(ExteriorFile), ref CarObjects, ref BogieObjects, Train, true);
+			UnifiedObject[] CouplerObjects = new UnifiedObject[Train.Cars.Length - 1];
+			ExtensionsCfgParser.ParseExtensionsConfig(System.IO.Path.GetDirectoryName(ExteriorFile), TextEncoding.GetSystemEncodingFromFile(ExteriorFile), ref CarObjects, ref BogieObjects, ref CouplerObjects, Train, true);
 
 			int currentBogieObject = 0;
 			for (int i = 0; i < Train.Cars.Length; i++)

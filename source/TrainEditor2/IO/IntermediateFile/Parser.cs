@@ -271,7 +271,8 @@ namespace TrainEditor2.IO.IntermediateFile
 			return new Coupler
 			{
 				Min = (double)parent.Element("Min"),
-				Max = (double)parent.Element("Max")
+				Max = (double)parent.Element("Max"),
+				Object = (string)parent.Element("Object")
 			};
 		}
 

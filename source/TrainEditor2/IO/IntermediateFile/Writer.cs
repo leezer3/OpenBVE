@@ -277,7 +277,8 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			parent.Add(new XElement("Coupler",
 				new XElement("Min", coupler.Min),
-				new XElement("Max", coupler.Max)
+				new XElement("Max", coupler.Max),
+			new XElement("Object", coupler.Object)
 				));
 		}
 

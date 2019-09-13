@@ -49,6 +49,8 @@ namespace OpenBve
 			internal bool Derailed;
 			/// <summary>Whether currently toppled over</summary>
 			internal bool Topples;
+			/// <summary>The coupler between cars</summary>
+			internal Coupler Coupler;
 			
 			internal double BeaconReceiverPosition;
 			internal TrackFollower BeaconReceiver;

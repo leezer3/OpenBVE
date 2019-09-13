@@ -25,6 +25,11 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
+		internal ReactiveProperty<string> Object
+		{
+			get;
+		}
+
 		internal CouplerViewModel(Coupler coupler)
 		{
 			CultureInfo culture = CultureInfo.InvariantCulture;
@@ -47,6 +52,10 @@ namespace TrainEditor2.ViewModels.Trains
 					double.Parse,
 					ignoreValidationErrorValue: true
 				)
+				.AddTo(disposable);
+
+			Object = coupler
+				.ToReactivePropertyAsSynchronized(x => x.Object)
 				.AddTo(disposable);
 
 			Min.SetValidateNotifyError(x =>

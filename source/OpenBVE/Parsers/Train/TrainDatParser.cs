@@ -1156,10 +1156,12 @@ namespace OpenBve {
 			// apply other attributes for all cars
 			double AxleDistance = 0.4 * CarLength;
 			for (int i = 0; i < Cars; i++) {
+				Train.Cars[i].Coupler = new TrainManager.Coupler(0.9 * DistanceBetweenTheCars, 1.1 * DistanceBetweenTheCars, Train.Cars[i / 2], Train.Cars[(i / 2) + 1], Train);
 				Train.Cars[i].CurrentCarSection = -1;
 				Train.Cars[i].ChangeCarSection(TrainManager.CarSectionType.NotVisible);
 				Train.Cars[i].FrontBogie.ChangeSection(-1);
 				Train.Cars[i].RearBogie.ChangeSection(-1);
+				Train.Cars[i].Coupler.ChangeSection(-1);
 				Train.Cars[i].FrontAxle.Follower.TriggerType = i == 0 ? EventTriggerType.FrontCarFrontAxle : EventTriggerType.OtherCarFrontAxle;
 				Train.Cars[i].RearAxle.Follower.TriggerType = i == Cars - 1 ? EventTriggerType.RearCarRearAxle : EventTriggerType.OtherCarRearAxle;
 				Train.Cars[i].BeaconReceiver.TriggerType = i == 0 ? EventTriggerType.TrainFront : EventTriggerType.None;
@@ -1269,12 +1271,7 @@ namespace OpenBve {
 			{
 				Train.Cars[DriverCar].HasInteriorView = true;
 			}
-			// couplers
-			Train.Couplers = new Coupler[Cars - 1];
-			for (int i = 0; i < Train.Couplers.Length; i++) {
-				Train.Couplers[i].MinimumDistanceBetweenCars = 0.9 * DistanceBetweenTheCars;
-				Train.Couplers[i].MaximumDistanceBetweenCars = 1.1 * DistanceBetweenTheCars;
-			}
+			
 			// finish
 			
 		}
