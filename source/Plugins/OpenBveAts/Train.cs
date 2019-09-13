@@ -61,16 +61,16 @@ namespace Plugin {
 		// --- panel and sound ---
 		
 		/// <summary>The panel variables.</summary>
-		internal int[] Panel;
+		internal readonly int[] Panel;
 
 		/// <summary>The sounds used on this train.</summary>
-		internal Sounds Sounds;
+		internal readonly Sounds Sounds;
 		
 		
 		// --- AI ---
 		
 		/// <summary>The AI component that drives the train.</summary>
-		internal AI AI;
+		internal readonly AI AI;
 		
 		
 		// --- devices ---

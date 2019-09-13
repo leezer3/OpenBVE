@@ -307,22 +307,6 @@ namespace Plugin
             }
         }
 
-        private bool Check16BitComponents(DdsHeader header)
-        {
-            if (header.pixelFormat.rgbbitcount != 32)
-                return false;
-            // a2b10g10r10 format
-            if (header.pixelFormat.rbitmask == 0x3FF00000 && header.pixelFormat.gbitmask == 0x000FFC00 && header.pixelFormat.bbitmask == 0x000003FF
-                && header.pixelFormat.alphabitmask == 0xC0000000)
-                return true;
-            // a2r10g10b10 format
-            else if (header.pixelFormat.rbitmask == 0x000003FF && header.pixelFormat.gbitmask == 0x000FFC00 && header.pixelFormat.bbitmask == 0x3FF00000
-                && header.pixelFormat.alphabitmask == 0xC0000000)
-                return true;
-
-            return false;
-        }
-
         private void CorrectPremult(uint pixnum, ref byte[] buffer)
         {
             for (uint i = 0; i < pixnum; i++)
@@ -1440,7 +1424,7 @@ namespace Plugin
             int height = (int)header.height;
             int depth = (int)header.depth;
 
-            if (Check16BitComponents(header))
+            if (header.Check16BitComponents())
                 return DecompressARGB16(header, data, pixelFormat);
 
             int sizeOfData = (int)((header.width * header.pixelFormat.rgbbitcount / 8) * header.height * header.depth);
@@ -1671,6 +1655,27 @@ namespace Plugin
             }
             public ddscapsstruct ddscaps;
             public uint texturestage;
+
+            internal bool Check16BitComponents()
+            {
+	            if (pixelFormat.rgbbitcount != 32)
+	            {
+		            return false;
+	            }
+	            if (pixelFormat.rbitmask == 0x3FF00000 && pixelFormat.gbitmask == 0x000FFC00 && pixelFormat.bbitmask == 0x000003FF
+	                && pixelFormat.alphabitmask == 0xC0000000)
+	            {
+		            // a2b10g10r10 format
+		            return true;
+	            }
+	            if (pixelFormat.rbitmask == 0x000003FF && pixelFormat.gbitmask == 0x000FFC00 && pixelFormat.bbitmask == 0x3FF00000
+	                && pixelFormat.alphabitmask == 0xC0000000)
+	            {
+		            // a2r10g10b10 format
+		            return true;
+	            }
+	            return false;
+            }
         }
 
         private const int DDSD_CAPS = 0x00000001;
