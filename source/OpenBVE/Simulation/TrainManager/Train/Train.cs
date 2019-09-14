@@ -353,6 +353,12 @@ namespace OpenBve
 				UpdateTrainStation(this, TimeElapsed);
 				UpdateTrainDoors(this, TimeElapsed);
 				// delayed handles
+				if (Plugin == null)
+				{
+					Handles.Power.Safety = Handles.Power.Driver;
+					Handles.Brake.Safety = Handles.Brake.Driver;
+					Handles.EmergencyBrake.Safety = Handles.EmergencyBrake.Driver;
+				}
 				Handles.Power.Update();
 				Handles.Brake.Update();
 				Handles.Brake.Update();
