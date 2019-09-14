@@ -175,17 +175,19 @@ namespace OpenBve
 			MainLoop.ProcessControls(TimeElapsed);
 			for (int i = 0; i < JoystickManager.AttachedJoysticks.Length; i++)
 			{
-				var railDriver = JoystickManager.AttachedJoysticks[i] as JoystickManager.Raildriver;
-				if (railDriver != null)
+				bool railDriver = (JoystickManager.AttachedJoysticks[i] is RailDriver32Bit || JoystickManager.AttachedJoysticks[i] is RailDriver64Bit);
+				
+				if (railDriver == true)
 				{
 					if (Interface.CurrentOptions.RailDriverMPH)
 					{
-						railDriver.SetDisplay((int)(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs
+
+						JoystickManager.AttachedJoysticks[i].SetDisplay((int)(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs
 							                             .CurrentPerceivedSpeed * 2.23694));
 					}
 					else
 					{
-						railDriver.SetDisplay((int)(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs
+						JoystickManager.AttachedJoysticks[i].SetDisplay((int)(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Specs
 							                             .CurrentPerceivedSpeed * 3.6));
 					}
 				}

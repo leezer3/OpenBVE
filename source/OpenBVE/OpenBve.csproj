@@ -94,8 +94,12 @@
     <Reference Include="OpenTK, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>..\..\packages\OpenTK.3.1.0\lib\net20\OpenTK.dll</HintPath>
     </Reference>
-    <Reference Include="PIEHid32Net">
+    <Reference Include="PIEHid32Net, Version=2.2.4.21348, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\dependencies\PIEHid32Net.dll</HintPath>
+    </Reference>
+    <Reference Include="PIEHid64Net">
+      <HintPath>..\..\dependencies\PIEHid64Net.dll</HintPath>
     </Reference>
     <Reference Include="SharpCompress, Version=0.24.0.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SharpCompress.0.24.0\lib\net45\SharpCompress.dll</HintPath>
@@ -279,6 +283,9 @@
     <Compile Include="System\Input\Controls.Control.cs" />
     <Compile Include="System\Input\Controls.cs" />
     <Compile Include="System\Input\InputDevicePlugin.cs" />
+    <Compile Include="System\Input\JoystickManager\AbstractJoystick.cs" />
+    <Compile Include="System\Input\JoystickManager\RailDriver32Bit.cs" />
+    <Compile Include="System\Input\JoystickManager\RailDriver64Bit.cs" />
     <Compile Include="System\Logging\BlackBox.cs" />
     <Compile Include="System\Logging\Score.cs" />
     <Compile Include="System\Options.cs" />
@@ -385,9 +392,6 @@
     <Compile Include="Parsers\Panel\PanelCfgParser.cs" />
     <Compile Include="System\Host.cs" />
     <Compile Include="System\Input\JoystickManager.cs" />
-    <Compile Include="System\Input\JoystickManager.RailDriver.cs">
-      <DependentUpon>JoystickManager.cs</DependentUpon>
-    </Compile>
     <Compile Include="System\Input\JoystickManager.StandardJoystick.cs">
       <DependentUpon>JoystickManager.cs</DependentUpon>
     </Compile>

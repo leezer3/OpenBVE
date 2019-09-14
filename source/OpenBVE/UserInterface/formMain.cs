@@ -1408,7 +1408,7 @@ namespace OpenBve {
 				for (int k = 0; k < JoystickManager.AttachedJoysticks.Length; k++)
 				{
 					JoystickManager.AttachedJoysticks[k].Poll();
-					bool railDriver = JoystickManager.AttachedJoysticks[k] is JoystickManager.Raildriver;
+					bool railDriver = (JoystickManager.AttachedJoysticks[k] is RailDriver32Bit || JoystickManager.AttachedJoysticks[k] is RailDriver64Bit);
 					int axes = JoystickManager.AttachedJoysticks[k].AxisCount();
 						for (int i = 0; i < axes; i++)
 						{

@@ -262,7 +262,7 @@ namespace OpenBve
 				switch (Interface.CurrentControls[i].Method)
 				{
 					case Interface.ControlMethod.Joystick:
-						if (JoystickManager.AttachedJoysticks.Length == 0 || !Joystick.GetCapabilities(Interface.CurrentControls[i].Device).IsConnected)
+						if (JoystickManager.AttachedJoysticks.Length == 0 || !OpenTK.Input.Joystick.GetCapabilities(Interface.CurrentControls[i].Device).IsConnected)
 						{
 							//Not currently connected
 							continue;

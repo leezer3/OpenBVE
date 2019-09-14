@@ -4,35 +4,8 @@ using PIEHid32Net;
 
 namespace OpenBve {
 	/// <summary>Provides functions for dealing with joysticks.</summary>
-	internal partial class JoystickManager : PIEDataHandler, PIEErrorHandler
+	internal partial class JoystickManager 
 	{
-
-		/// <summary>Represents a joystick.</summary>
-		internal abstract class Joystick
-		{
-			// --- members ---
-			/// <summary>The textual representation of the joystick.</summary>
-			internal string Name;
-			/// <summary>The handle to the joystick.</summary>
-			internal int Handle;
-
-			internal byte[] currentState = new byte[15];
-
-			internal abstract ButtonState GetButton(int button);
-
-			internal abstract double GetAxis(int axis);
-
-			internal abstract JoystickHatState GetHat(int Hat);
-
-			internal abstract int AxisCount();
-
-			internal abstract int ButtonCount();
-
-			internal abstract int HatCount();
-
-			internal abstract void Poll();
-		}
-
 		internal JoystickManager()
 		{
 			if (!Program.CurrentlyRunningOnWindows)
@@ -42,7 +15,15 @@ namespace OpenBve {
 
 			try
 			{
-				devices = PIEDevice.EnumeratePIE();
+				if (IntPtr.Size == 4)
+				{
+					Win32PIEDevices = PIEHid32Net.PIEDevice.EnumeratePIE();
+				}
+				else
+				{
+					Win64PIEDevices = PIEHid64Net.PIEDevice.EnumeratePIE();
+				}
+				
 			}
 			catch
 			{
@@ -54,7 +35,12 @@ namespace OpenBve {
 		internal static Joystick[] AttachedJoysticks = new Joystick[] { };
 
 		/// <summary>Holds all raildrivers and other PI Engineering controllers attached to the computer</summary>
-		internal static PIEDevice[] devices;
+		/// <remarks>32-bit</remarks>
+		internal static PIEHid32Net.PIEDevice[] Win32PIEDevices;
+
+		/// <summary>Holds all raildrivers and other PI Engineering controllers attached to the computer</summary>
+		/// <remarks>32-bit</remarks>
+		internal static PIEHid64Net.PIEDevice[] Win64PIEDevices;
 
 		private bool RailDriverInit = false;
 
@@ -114,50 +100,92 @@ namespace OpenBve {
 					}
 				}
 			}
-			if (!Program.CurrentlyRunningOnWindows || devices == null || RailDriverInit == true)
+			if (!Program.CurrentlyRunningOnWindows || RailDriverInit == true)
 			{
 				return;
 			}
+
+			if ((IntPtr.Size == 4 && Win32PIEDevices == null) || (IntPtr.Size != 4 && Win64PIEDevices == null))
+			{
+				return;
+			}
+
 			//Enumerate all PI Engineering devices
 			RailDriverInit = true;
-			for (int i = 0; i < devices.Length; i++)
+			if (IntPtr.Size == 4)
 			{
-				if (devices[i].HidUsagePage == 0xc)
+				for (int i = 0; i < Win32PIEDevices.Length; i++)
 				{
-					switch (devices[i].Pid)
+					if (Win32PIEDevices[i].HidUsagePage == 0xc)
 					{
-						case 210:
-							//Raildriver controller
-							Raildriver newJoystick = new Raildriver
-							{
-								Name = "RailDriver Desktop Cab Controller",
-								Handle = i,
-								wData = new byte[]
+						switch (Win32PIEDevices[i].Pid)
+						{
+							case 210:
+								//Raildriver controller
+								RailDriver32Bit newJoystick = new RailDriver32Bit(i);
+								bool alreadyFound = false;
+								for (int j = 0; j < AttachedJoysticks.Length; j++)
 								{
-									0,134,0,0,0,0,0,0,0
+									if (AttachedJoysticks[j] is RailDriver32Bit && AttachedJoysticks[j].Handle == newJoystick.Handle)
+									{
+										alreadyFound = true;
+										break;
+									}
 								}
-							};
-							bool alreadyFound = false;
-							for (int j = 0; j < AttachedJoysticks.Length; j++)
-							{
-								if (AttachedJoysticks[j] is Raildriver && AttachedJoysticks[j].Handle == newJoystick.Handle)
-								{
-									alreadyFound = true;
-								}
-							}
-							if (!alreadyFound)
-							{
-								int l = AttachedJoysticks.Length;
-								Array.Resize(ref AttachedJoysticks, AttachedJoysticks.Length + 1);
-								AttachedJoysticks[l] = newJoystick;
-								devices[i].SetupInterface();
-								devices[i].SetDataCallback(this);
-								devices[i].SetErrorCallback(this);
-								RailDriverIndex = l;
-							}
-							break;
-					}
 
+								if (!alreadyFound)
+								{
+									int l = AttachedJoysticks.Length;
+									Array.Resize(ref AttachedJoysticks, AttachedJoysticks.Length + 1);
+									AttachedJoysticks[l] = newJoystick;
+									Win32PIEDevices[i].SetupInterface();
+									Win32PIEDevices[i].SetDataCallback(newJoystick);
+									Win32PIEDevices[i].SetErrorCallback(newJoystick);
+									RailDriverIndex = l;
+								}
+
+								break;
+						}
+
+					}
+				}
+			}
+			else
+			{
+				for (int i = 0; i < Win64PIEDevices.Length; i++)
+				{
+					if (Win64PIEDevices[i].HidUsagePage == 0xc)
+					{
+						switch (Win64PIEDevices[i].Pid)
+						{
+							case 210:
+								//Raildriver controller
+								RailDriver64Bit newJoystick = new RailDriver64Bit(i);
+								bool alreadyFound = false;
+								for (int j = 0; j < AttachedJoysticks.Length; j++)
+								{
+									if (AttachedJoysticks[j] is RailDriver64Bit && AttachedJoysticks[j].Handle == newJoystick.Handle)
+									{
+										alreadyFound = true;
+										break;
+									}
+								}
+
+								if (!alreadyFound)
+								{
+									int l = AttachedJoysticks.Length;
+									Array.Resize(ref AttachedJoysticks, AttachedJoysticks.Length + 1);
+									AttachedJoysticks[l] = newJoystick;
+									Win64PIEDevices[i].SetupInterface();
+									Win64PIEDevices[i].SetDataCallback(newJoystick);
+									Win64PIEDevices[i].SetErrorCallback(newJoystick);
+									RailDriverIndex = l;
+								}
+
+								break;
+						}
+
+					}
 				}
 			}
 
@@ -188,6 +216,13 @@ namespace OpenBve {
 				return AttachedJoysticks[Device].GetHat(Hat);
 			}
 			return new JoystickHatState();
+		}
+
+
+
+		public void HandlePIEHidError(PIEDevice sourceDevices, long error)
+		{
+			//Don't care
 		}
 	}
 }

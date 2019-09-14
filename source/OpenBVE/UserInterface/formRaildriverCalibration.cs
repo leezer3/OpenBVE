@@ -16,7 +16,7 @@ namespace OpenBve.UserInterface
 			pictureBox1.Image = main;
 			buttonCalibrationPrevious.Enabled = false;
 			labelCalibrationText.Text = Translations.GetInterfaceString("raildriver_calibration_start");
-			if (JoystickManager.devices.Length == 0)
+			if (JoystickManager.Win32PIEDevices.Length == 0)
 			{
 				MessageBox.Show(Translations.GetInterfaceString("raildriver_notdetected"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
 				Load += (s, e) => Close();
@@ -24,7 +24,7 @@ namespace OpenBve.UserInterface
 			}
 			for (int i = 0; i < JoystickManager.AttachedJoysticks.Length; i++)
 			{
-				if (JoystickManager.AttachedJoysticks[i] is JoystickManager.Raildriver)
+				if (JoystickManager.AttachedJoysticks[i] is RailDriver32Bit || JoystickManager.AttachedJoysticks[i] is RailDriver64Bit)
 				{
 					joystickIDX = i;
 				}
@@ -37,7 +37,49 @@ namespace OpenBve.UserInterface
 		{
 			if (joystickIDX != -1)
 			{
-				var j = JoystickManager.AttachedJoysticks[joystickIDX] as JoystickManager.Raildriver;
+				if (IntPtr.Size == 4)
+				{
+					var j = JoystickManager.AttachedJoysticks[joystickIDX] as RailDriver32Bit;
+					if (j == null)
+					{
+						return;
+					}
+					for (int i = 0; i < j.Calibration.Length; i++)
+					{
+						if (j.Calibration[i].Maximum < j.Calibration[i].Minimum)
+						{
+							//If calibration min and max are reversed flip them
+							int t = j.Calibration[i].Maximum;
+							j.Calibration[i].Maximum = j.Calibration[i].Minimum;
+							j.Calibration[i].Minimum = t;
+						}
+						if (j.Calibration[i].Maximum == j.Calibration[i].Minimum)
+						{
+							//If calibration values are identical, reset to defaults
+							j.Calibration[i].Minimum = 0;
+							j.Calibration[i].Maximum = 255;
+						}
+						//Bounds check values (This should never happen, but check anyways)
+						if (j.Calibration[i].Minimum < 0)
+						{
+							j.Calibration[i].Minimum = 0;
+						}
+						if (j.Calibration[i].Maximum > 255)
+						{
+							j.Calibration[i].Maximum = 255;
+						}
+						if (j.Calibration[i].Maximum - j.Calibration[i].Minimum < 10)
+						{
+							//If calibration values are within 10 of each other, something is not right....
+							j.Calibration[i].Minimum = 0;
+							j.Calibration[i].Maximum = 255;
+						}
+					}
+				}
+			}
+			else
+			{
+				var j = JoystickManager.AttachedJoysticks[joystickIDX] as RailDriver64Bit;
 				if (j == null)
 				{
 					return;
@@ -86,44 +128,91 @@ namespace OpenBve.UserInterface
 
 		private void buttonCalibrationNext_Click(object sender, EventArgs e)
 		{
-			var j = JoystickManager.AttachedJoysticks[joystickIDX] as JoystickManager.Raildriver;
-			if (j == null)
+			if (IntPtr.Size == 4)
 			{
-				return;
-			}
-			if (calibrationStage > 14)
-			{
-				j.SaveCalibration(OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "RailDriver.xml"));
-				Close();
-				return;
-			}
-			if (calibrationStage != 0)
-			{
-				int axis = (calibrationStage + 1 )/ 2;
-				
-				if (calibrationStage % 2 != 0)
+				var j = JoystickManager.AttachedJoysticks[joystickIDX] as RailDriver32Bit;
+				if (j == null)
 				{
-					if (axis < 5)
+					return;
+				}
+				if (calibrationStage > 14)
+				{
+					j.SaveCalibration(OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "RailDriver.xml"));
+					Close();
+					return;
+				}
+
+				if (calibrationStage != 0)
+				{
+					int axis = (calibrationStage + 1) / 2;
+
+					if (calibrationStage % 2 != 0)
 					{
-						j.Calibration[axis - 1].Maximum = j.currentState[axis];
+						if (axis < 5)
+						{
+							j.Calibration[axis - 1].Maximum = j.currentState[axis];
+						}
+						else
+						{
+							j.Calibration[axis - 1].Minimum = j.currentState[axis];
+						}
 					}
 					else
 					{
-						j.Calibration[axis - 1].Minimum = j.currentState[axis];
-					}
-				}
-				else
-				{
-					if (axis < 5)
-					{
-						j.Calibration[axis - 1].Minimum = j.currentState[axis];
-					}
-					else
-					{
-						j.Calibration[axis - 1].Maximum = j.currentState[axis];
+						if (axis < 5)
+						{
+							j.Calibration[axis - 1].Minimum = j.currentState[axis];
+						}
+						else
+						{
+							j.Calibration[axis - 1].Maximum = j.currentState[axis];
+						}
 					}
 				}
 			}
+			else
+			{
+				var j = JoystickManager.AttachedJoysticks[joystickIDX] as RailDriver64Bit;
+				if (j == null)
+				{
+					return;
+				}
+				if (calibrationStage > 14)
+				{
+					j.SaveCalibration(OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "RailDriver.xml"));
+					Close();
+					return;
+				}
+
+				if (calibrationStage != 0)
+				{
+					int axis = (calibrationStage + 1) / 2;
+
+					if (calibrationStage % 2 != 0)
+					{
+						if (axis < 5)
+						{
+							j.Calibration[axis - 1].Maximum = j.currentState[axis];
+						}
+						else
+						{
+							j.Calibration[axis - 1].Minimum = j.currentState[axis];
+						}
+					}
+					else
+					{
+						if (axis < 5)
+						{
+							j.Calibration[axis - 1].Minimum = j.currentState[axis];
+						}
+						else
+						{
+							j.Calibration[axis - 1].Maximum = j.currentState[axis];
+						}
+					}
+				}
+			}
+
 			buttonCalibrationPrevious.Enabled = true;
 			calibrationStage++;
 			paintImage();

@@ -495,7 +495,7 @@ namespace OpenBve
 		{
 			if (isCustomisingControl && CustomControlIdx < Interface.CurrentControls.Length)
 			{
-				if (JoystickManager.AttachedJoysticks[device] is JoystickManager.Raildriver)
+				if (JoystickManager.AttachedJoysticks[device] is RailDriver32Bit || JoystickManager.AttachedJoysticks[device] is RailDriver64Bit)
 				{
 					Interface.CurrentControls[CustomControlIdx].Method = Interface.ControlMethod.RailDriver;
 				}

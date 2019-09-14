@@ -109,7 +109,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object.Msts", "source\Plugi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainEditor2", "source\TrainEditor2\TrainEditor2.csproj", "{0AE1C682-A15E-4880-925E-10F9EFD1CD49}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinPluginProxy", "Source\WinPluginProxy\WinPluginProxy.csproj", "{D50FC56F-A40D-4EA3-BE95-2355B047CAE0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinPluginProxy", "source\WinPluginProxy\WinPluginProxy.csproj", "{D50FC56F-A40D-4EA3-BE95-2355B047CAE0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
