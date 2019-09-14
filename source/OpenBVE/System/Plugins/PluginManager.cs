@@ -142,7 +142,7 @@ namespace OpenBve {
 				ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, this.Train.SafetySystems.DoorInterlockState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, CameraProperties.Camera.CurrentMode, Translations.CurrentLanguageCode, this.Train.Destination);
 				ElapseData inputDevicePluginData = data;
 				LastTime = CurrentRoute.SecondsSinceMidnight;
-				Elapse(data);
+				Elapse(ref data);
 				this.PluginMessage = data.DebugMessage;
 				this.Train.SafetySystems.DoorInterlockState = data.DoorInterlockState;
 				DisableTimeAcceleration = data.DisableTimeAcceleration;
@@ -331,7 +331,7 @@ namespace OpenBve {
 			/// <summary>Called every frame to update the plugin.</summary>
 			/// <param name="data">The data passed to the plugin on Elapse.</param>
 			/// <remarks>This function should not be called directly. Call UpdatePlugin instead.</remarks>
-			protected abstract void Elapse(ElapseData data);
+			protected abstract void Elapse(ref ElapseData data);
 			/// <summary>Called to update the reverser. This invokes a call to SetReverser only if a change actually occured.</summary>
 			internal void UpdateReverser() {
 				int reverser = (int)this.Train.Handles.Reverser.Driver;

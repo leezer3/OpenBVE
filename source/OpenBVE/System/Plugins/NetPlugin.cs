@@ -141,7 +141,7 @@ namespace OpenBve {
 		}
 		internal override void EndJump() { }
 
-		protected override void Elapse(ElapseData data) {
+		protected override void Elapse(ref ElapseData data) {
 			#if !DEBUG
 			try {
 				#endif

@@ -212,7 +212,26 @@ namespace OpenBve
 				if (!Program.CurrentlyRunningOnWindows | IntPtr.Size != 4)
 				{
 					Interface.AddMessage(MessageType.Warning, false, "The train plugin " + pluginTitle + " can only be used on 32-bit Microsoft Windows or compatible.");
-					return false;
+					if (Program.CurrentlyRunningOnWindows && IntPtr.Size != 4)
+					{
+						//We can't load the plugin directly on x64 Windows, so use the proxy interface
+						Plugin = new ProxyPlugin(pluginFile, this);
+						if (Plugin.Load(specs, mode))
+						{
+							return true;
+						}
+
+						Plugin = null;
+						Interface.AddMessage(MessageType.Error, false, "The train plugin " + pluginTitle + " failed to load.");
+						return false;
+					}
+
+					if (!Program.CurrentlyRunningOnWindows)
+					{
+						//WINE doesn't seem to like the WCF proxy :(
+						Interface.AddMessage(MessageType.Warning, false, "The train plugin " + pluginTitle + " can only be used on Microsoft Windows or compatible.");
+						return false;
+					}
 				}
 
 				if (Program.CurrentlyRunningOnWindows && !System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\AtsPluginProxy.dll"))
@@ -248,8 +267,12 @@ namespace OpenBve
 			}
 
 			/// <summary>Unloads the currently loaded plugin, if any.</summary>
-			internal void UnloadPlugin()
+			internal void UnloadPlugin(bool force = false)
 			{
+				if (force == true)
+				{
+					Plugin = null;
+				}
 				if (Plugin != null)
 				{
 					Plugin.Unload();

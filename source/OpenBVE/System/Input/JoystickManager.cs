@@ -39,7 +39,15 @@ namespace OpenBve {
 			{
 				return;
 			}
-			devices = PIEDevice.EnumeratePIE();
+
+			try
+			{
+				devices = PIEDevice.EnumeratePIE();
+			}
+			catch
+			{
+			}
+			
 		}
 
 		/// <summary>Holds all joysticks currently attached to the computer.</summary>

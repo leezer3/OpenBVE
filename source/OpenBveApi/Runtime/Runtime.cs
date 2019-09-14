@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using OpenBveApi.Colors;
+// ReSharper disable ValueParameterNotUsed
 
 namespace OpenBveApi.Runtime {
 	
@@ -228,54 +230,72 @@ namespace OpenBveApi.Runtime {
 	}
 	
 	/// <summary>Represents the specification of the train.</summary>
+	[DataContract]
 	public class VehicleSpecs {
 		// --- members ---
 		/// <summary>The number of power notches the train has.</summary>
+		[DataMember]
 		private readonly int MyPowerNotches;
 		/// <summary>The type of brake the train uses.</summary>
+		[DataMember]
 		private readonly BrakeTypes MyBrakeType;
 		/// <summary>Whether the train has a hold brake.</summary>
+		[DataMember]
 		private readonly bool MyHasHoldBrake;
 		/// <summary>Whether the train has a hold brake.</summary>
+		[DataMember]
 		private readonly bool MyHasLocoBrake;
 		/// <summary>The number of brake notches the train has, including the hold brake, but excluding the emergency brake.</summary>
+		[DataMember]
 		private readonly int MyBrakeNotches;
 		/// <summary>The number of cars the train has.</summary>
+		[DataMember]
 		private readonly int MyCars;
 		// --- properties ---
 		/// <summary>Gets the number of power notches the train has.</summary>
+		[DataMember]
 		public int PowerNotches {
 			get {
 				return this.MyPowerNotches;
 			}
+			private set { }
 		}
 		/// <summary>Gets the type of brake the train uses.</summary>
+		[DataMember]
 		public BrakeTypes BrakeType {
 			get {
 				return this.MyBrakeType;
 			}
+			private set { }
 		}
 		/// <summary>Gets the number of brake notches the train has, including the hold brake, but excluding the emergency brake.</summary>
+		[DataMember]
 		public int BrakeNotches {
 			get {
 				return this.MyBrakeNotches;
 			}
+			private set { }
 		}
 		/// <summary>Gets whether the train has a hold brake.</summary>
+		[DataMember]
 		public bool HasHoldBrake {
 			get {
 				return this.MyHasHoldBrake;
 			}
+			private set { }
 		}
 
 		/// <summary>Gets whether the train has a hold brake.</summary>
+		[DataMember]
 		public bool HasLocoBrake {
 			get {
 				return this.MyHasLocoBrake;
 			}
+			private set { }
 		}
 		/// <summary>Gets the index of the brake notch that corresponds to B1 or LAP.</summary>
 		/// <remarks>For trains without a hold brake, this returns 1. For trains with a hold brake, this returns 2.</remarks>
+		[DataMember]
 		public int AtsNotch {
 			get
 			{
@@ -284,18 +304,23 @@ namespace OpenBveApi.Runtime {
 				}
 				return 1;
 			}
+			private set { }
 		}
 		/// <summary>Gets the index of the brake notch that corresponds to 70% of the available brake notches.</summary>
+		[DataMember]
 		public int B67Notch {
 			get {
 				return (int)System.Math.Round(0.7 * this.MyBrakeNotches);
 			}
+			private set { }
 		}
 		/// <summary>Gets the number of cars the train has.</summary>
+		[DataMember]
 		public int Cars {
 			get {
 				return this.MyCars;
 			}
+			private set { }
 		}
 		// --- constructors ---
 		/// <summary>Creates a new instance of this class.</summary>
@@ -343,32 +368,40 @@ namespace OpenBveApi.Runtime {
 		OffEmergency = 1
 	}
 
-	
+
 	// --- elapse ---
 
 	/// <summary>Represents a speed.</summary>
+	[DataContract]
 	public class Speed {
 		// --- members ---
 		/// <summary>The speed in meters per second.</summary>
+		[DataMember]
 		private readonly double MyValue;
 		// --- properties ---
 		/// <summary>Gets the speed in meters per second.</summary>
+		[DataMember]
 		public double MetersPerSecond {
 			get {
 				return this.MyValue;
 			}
+			private set { }
 		}
 		/// <summary>Gets the speed in kilometes per hour.</summary>
+		[DataMember]
 		public double KilometersPerHour {
 			get {
 				return 3.6 * this.MyValue;
 			}
+			private set { }
 		}
 		/// <summary>Gets the speed in miles per hour.</summary>
+		[DataMember]
 		public double MilesPerHour {
 			get {
 				return 2.236936 * this.MyValue;
 			}
+			private set { }
 		}
 		// --- constructors ---
 		/// <summary>Creates a new instance of this class.</summary>
@@ -377,24 +410,30 @@ namespace OpenBveApi.Runtime {
 			this.MyValue = value;
 		}
 	}
-	
+
 	/// <summary>Represents a time.</summary>
+	[DataContract]
 	public class Time {
 		// --- members ---
 		/// <summary>The time in seconds.</summary>
+		[DataMember]
 		private readonly double MyValue;
 		// --- properties ---
 		/// <summary>Gets the time in seconds.</summary>
+		[DataMember]
 		public double Seconds {
 			get {
 				return this.MyValue;
 			}
+			private set { }
 		}
 		/// <summary>Gets the time in milliseconds.</summary>
+		[DataMember]
 		public double Milliseconds {
 			get {
 				return 1000.0 * this.MyValue;
 			}
+			private set { }
 		}
 		// --- constructors ---
 		/// <summary>Creates a new instance of this class.</summary>
@@ -405,93 +444,126 @@ namespace OpenBveApi.Runtime {
 	}
 
 	/// <summary>Represents the current state of the train.</summary>
+	[DataContract]
 	public class VehicleState {
 		// --- members ---
 		/// <summary>The location of the front of the train, in meters.</summary>
+		[DataMember]
 		private readonly double MyLocation;
 		/// <summary>The speed of the train.</summary>
+		[DataMember]
 		private readonly Speed MySpeed;
 		/// <summary>The pressure in the brake cylinder, in pascal.</summary>
+		[DataMember]
 		private readonly double MyBcPressure;
 		/// <summary>The pressure in the main reservoir, in pascal.</summary>
+		[DataMember]
 		private readonly double MyMrPressure;
 		/// <summary>The pressure in the emergency reservoir, in pascal.</summary>
+		[DataMember]
 		private readonly double MyErPressure;
 		/// <summary>The pressure in the brake pipe, in pascal.</summary>
+		[DataMember]
 		private readonly double MyBpPressure;
 		/// <summary>The pressure in the straight air pipe, in pascal.</summary>
+		[DataMember]
 		private readonly double MySapPressure;
-		
+		/// <summary>The curve radius at the current track position in meters</summary>
+		[DataMember]
 		private readonly double MyRadius;
+		/// <summary>The curve cant at the current track position in millimeters</summary>
+		[DataMember]
 		private readonly double MyCant;
+		/// <summary>The OpenBVE pitch value at the current track position</summary>
+		[DataMember]
 		private readonly double MyPitch;
-		
+
 		// --- properties ---
 		/// <summary>Gets the location of the front of the train, in meters.</summary>
+		[DataMember]
 		public double Location {
 			get {
 				return this.MyLocation;
 			}
+			private set { }
 		}
 		/// <summary>Gets the speed of the train.</summary>
+		[DataMember]
 		public Speed Speed {
 			get {
 				return this.MySpeed;
 			}
+			private set { }
 		}
 		/// <summary>Gets the pressure in the brake cylinder, in pascal.</summary>
+		[DataMember]
 		public double BcPressure {
 			get {
 				return this.MyBcPressure;
 			}
+			private set { }
 		}
 		/// <summary>Gets the pressure in the main reservoir, in pascal.</summary>
+		[DataMember]
 		public double MrPressure {
 			get {
 				return this.MyMrPressure;
 			}
+			private set { }
 		}
 		/// <summary>Gets the pressure in the emergency reservoir, in pascal.</summary>
+		[DataMember]
 		public double ErPressure {
 			get {
 				return this.MyErPressure;
 			}
+			private set { }
 		}
 		/// <summary>Gets the pressure in the brake pipe, in pascal.</summary>
+		[DataMember]
 		public double BpPressure {
 			get {
 				return this.MyBpPressure;
 			}
+			private set { }
 		}
 		/// <summary>Gets the pressure in the straight air pipe, in pascal.</summary>
+		[DataMember]
 		public double SapPressure {
 			get {
 				return this.MySapPressure;
 			}
+			private set { }
 		}
 		/// <summary>Gets the curve radius at the front axle of the driver's car in m.</summary>
+		[DataMember]
 		public double Radius
 		{
 			get
 			{
 				return this.MyRadius;
 			}
+			private set { }
 		}
 		/// <summary>Gets the curve cant at the front axle of the driver's car in mm.</summary>
+		[DataMember]
 		public double Cant
 		{
 			get
 			{
 				return this.MyCant;
 			}
+			private set { }
 		}
 		/// <summary>Gets the track pitch value at the front axle of the driver's car.</summary>
+		[DataMember]
 		public double Pitch
 		{
 			get
 			{
 				return this.MyPitch;
 			}
+			private set { }
 		}
 		// --- constructors ---
 		/// <summary>Creates a new instance of this class.</summary>
@@ -541,34 +613,44 @@ namespace OpenBveApi.Runtime {
 			this.MySapPressure = sapPressure;
 		}
 	}
-	
+
 	/// <summary>Represents the current state of the preceding train.</summary>
+	[DataContract]
 	public class PrecedingVehicleState {
 		// --- members ---
 		/// <summary>The location of the back of the preceding train, in meters.</summary>
+		[DataMember]
 		private readonly double MyLocation;
 		/// <summary>The distance from the front of the current train to the back of the preceding train, in meters.</summary>
+		[DataMember]
 		private readonly double MyDistance;
 		/// <summary>The current speed of the preceding train.</summary>
+		[DataMember]
 		private readonly Speed MySpeed;
 		// --- properties ---
 		/// <summary>Gets the location of the back of the preceding train, in meters.</summary>
+		[DataMember]
 		public double Location {
 			get {
 				return this.MyLocation;
 			}
+			private set { }
 		}
 		/// <summary>Gets the distance from the front of the current train to the back of the preceding train, in meters.</summary>
+		[DataMember]
 		public double Distance {
 			get {
 				return this.MyDistance;
 			}
+			private set { }
 		}
 		/// <summary>Gets the speed of the preceding train.</summary>
+		[DataMember]
 		public Speed Speed {
 			get {
 				return this.MySpeed;
 			}
+			private set { }
 		}
 		// --- constructors ---
 		/// <summary>Creates a new instance of this class.</summary>
@@ -581,22 +663,29 @@ namespace OpenBveApi.Runtime {
 			this.MySpeed = speed;
 		}
 	}
-	
+
 	/// <summary>Represents the handles of the cab.</summary>
+	[DataContract]
 	public class Handles {
 		// --- members ---
 		/// <summary>The reverser position.</summary>
+		[DataMember]
 		private int MyReverser;
 		/// <summary>The power notch.</summary>
+		[DataMember]
 		private int MyPowerNotch;
 		/// <summary>The brake notch.</summary>
+		[DataMember]
 		private int MyBrakeNotch;
 		/// <summary>The loco brake notch.</summary>
+		[DataMember]
 		private int MyLocoBrakeNotch;
 		/// <summary>Whether the const speed system is enabled.</summary>
+		[DataMember]
 		private bool MyConstSpeed;
 		// --- properties ---
 		/// <summary>Gets or sets the reverser position.</summary>
+		[DataMember]
 		public int Reverser {
 			get {
 				return this.MyReverser;
@@ -606,6 +695,7 @@ namespace OpenBveApi.Runtime {
 			}
 		}
 		/// <summary>Gets or sets the power notch.</summary>
+		[DataMember]
 		public int PowerNotch {
 			get {
 				return this.MyPowerNotch;
@@ -615,6 +705,7 @@ namespace OpenBveApi.Runtime {
 			}
 		}
 		/// <summary>Gets or sets the brake notch.</summary>
+		[DataMember]
 		public int BrakeNotch {
 			get {
 				return this.MyBrakeNotch;
@@ -624,6 +715,7 @@ namespace OpenBveApi.Runtime {
 			}
 		}
 		/// <summary>Gets or sets the brake notch.</summary>
+		[DataMember]
 		public int LocoBrakeNotch {
 			get {
 				return this.MyLocoBrakeNotch;
@@ -633,6 +725,7 @@ namespace OpenBveApi.Runtime {
 			}
 		}
 		/// <summary>Gets or sets whether the const speed system is enabled.</summary>
+		[DataMember]
 		public bool ConstSpeed {
 			get {
 				return this.MyConstSpeed;
@@ -669,31 +762,44 @@ namespace OpenBveApi.Runtime {
 	}
 
 	/// <summary>Represents data given to the plugin in the Elapse call.</summary>
+	[DataContract]
 	public class ElapseData {
 		// --- members ---
 		/// <summary>The state of the train.</summary>
+		[DataMember]
 		private readonly VehicleState MyVehicle;
 		/// <summary>The state of the preceding train, or a null reference if there is no preceding train.</summary>
+		[DataMember]
 		private readonly PrecedingVehicleState MyPrecedingVehicle;
 		/// <summary>The virtual handles.</summary>
+		[DataMember]
 		private Handles MyHandles;
 		/// <summary>The state of the door interlock.</summary>
+		[DataMember]
 		private DoorInterlockStates MyDoorInterlockState;
 		/// <summary>The current absolute time.</summary>
+		[DataMember]
 		private readonly Time MyTotalTime;
 		/// <summary>The elapsed time since the last call to Elapse.</summary>
+		[DataMember]
 		private readonly Time MyElapsedTime;
 		/// <summary>The debug message the plugin wants the host application to display.</summary>
+		[DataMember]
 		private string MyDebugMessage;
 		/// <summary>Whether the plugin requests that time acceleration is disabled.</summary>
+		[DataMember]
 		private bool MyDisableTimeAcceleration;
 		/// <summary>Stores the list of current stations.</summary>
+		[DataMember]
 		private readonly List<Station> MyStations;
 		/// <summary>The current camera view mode.</summary>
+		[DataMember]
 		private readonly CameraViewMode MyCameraViewMode;
 		/// <summary>The current interface language code.</summary>
+		[DataMember]
 		private readonly string MyLanguageCode;
 		/// <summary>The current destination code</summary>
+		[DataMember]
 		private readonly int CurrentDestination;
 		// --- constructors ---
 		/// <summary>Creates a new instance of this class.</summary>
@@ -724,18 +830,23 @@ namespace OpenBveApi.Runtime {
 
 		// --- properties ---
 		/// <summary>Gets the state of the train.</summary>
+		[DataMember]
 		public VehicleState Vehicle {
 			get {
 				return this.MyVehicle;
 			}
+			private set { }
 		}
 		/// <summary>Gets the state of the preceding train, or a null reference if there is no preceding train.</summary>
+		[DataMember]
 		public PrecedingVehicleState PrecedingVehicle {
 			get {
 				return this.MyPrecedingVehicle;
 			}
+			private set { }
 		}
 		/// <summary>Gets or sets the virtual handles.</summary>
+		[DataMember]
 		public Handles Handles {
 			get {
 				return this.MyHandles;
@@ -745,6 +856,7 @@ namespace OpenBveApi.Runtime {
 			}
 		}
 		/// <summary>Gets or sets the state of the door lock.</summary>
+		[DataMember]
 		public DoorInterlockStates DoorInterlockState
 		{
 			get
@@ -757,18 +869,23 @@ namespace OpenBveApi.Runtime {
 			}
 		}
 		/// <summary>Gets the absolute in-game time.</summary>
+		[DataMember]
 		public Time TotalTime {
 			get {
 				return this.MyTotalTime;
 			}
+			private set { }
 		}
 		/// <summary>Gets the time that elapsed since the last call to Elapse.</summary>
+		[DataMember]
 		public Time ElapsedTime {
 			get {
 				return this.MyElapsedTime;
 			}
+			private set { }
 		}
 		/// <summary>Gets or sets the debug message the plugin wants the host application to display.</summary>
+		[DataMember]
 		public string DebugMessage {
 			get {
 				return this.MyDebugMessage;
@@ -779,6 +896,7 @@ namespace OpenBveApi.Runtime {
 		}
 
 		/// <summary>Gets or sets the disable time acceleration bool.</summary>
+		[DataMember]
 		public bool DisableTimeAcceleration
 		{
 			get
@@ -791,33 +909,66 @@ namespace OpenBveApi.Runtime {
 			}
 		}
 		/// <summary>Returns the list of stations in the current route.</summary>
+		[DataMember]
 		public List<Station> Stations
 		{
-			get { return this.MyStations; }
+			get
+			{
+				return this.MyStations;
+			}
+			private set { }
 		}
 		/// <summary>Gets the current camera view mode.</summary>
+		[DataMember]
 		public CameraViewMode CameraViewMode
 		{
 			get
 			{
 				return this.MyCameraViewMode;
 			}
+			private set { }
 		}
 		/// <summary>Gets the current user interface language code.</summary>
+		[DataMember]
 		public string CurrentLanguageCode
 		{
 			get
 			{
 				return this.MyLanguageCode;
 			}
+			private set { }
 		}
 		/// <summary>Gets the destination variable as set by the plugin</summary>
+		[DataMember]
 		public int Destination
 		{
 			get
 			{
 				return this.CurrentDestination;
 			}
+			private set { }
+		}
+	}
+
+	/// <summary>Represents Elapse data passed to a plugin proxy</summary>
+	[DataContract]
+	public class ElapseProxy
+	{
+		/// <summary>The elapse data being passed</summary>
+		[DataMember]
+		public ElapseData Data;
+		/// <summary>The panel array being passed</summary>
+		[DataMember]
+		public int[] Panel;
+		/// <summary>The sound handle array being passed</summary>
+		[DataMember]
+		public int[] Sound;
+		/// <summary>Creates a new ElapseProxy from an ElapseData</summary>
+		public ElapseProxy(ElapseData data)
+		{
+			this.Data = data;
+			Panel = new int[256];
+			Sound = new int[256];
 		}
 	}
 	
@@ -964,25 +1115,30 @@ namespace OpenBveApi.Runtime {
 		/// <summary>All doors are open.</summary>
 		Both = 3
 	}
-	
-	
+
+
 	// --- set signal ---
-	
+
 	/// <summary>Represents information about a signal or section.</summary>
+	[DataContract]
 	public class SignalData {
 		// --- members ---
 		/// <summary>The aspect of the signal or section.</summary>
+		[DataMember]
 		private readonly int MyAspect;
 		/// <summary>The underlying section. Possible values are 0 for the current section, 1 for the upcoming section, or higher values for sections further ahead.</summary>
+		[DataMember]
 		private readonly double MyDistance;
 		// --- properties ---
 		/// <summary>Gets the aspect of the signal or section.</summary>
+		[DataMember]
 		public int Aspect {
 			get {
 				return this.MyAspect;
 			}
 		}
 		/// <summary>Gets the distance to the signal or section.</summary>
+		[DataMember]
 		public double Distance {
 			get {
 				return this.MyDistance;
@@ -1002,22 +1158,28 @@ namespace OpenBveApi.Runtime {
 	// --- set beacon ---
 	
 	/// <summary>Represents data trasmitted by a beacon.</summary>
+	[DataContract]
 	public class BeaconData {
 		// --- members ---
 		/// <summary>The type of beacon.</summary>
+		[DataMember]
 		private readonly int MyType;
 		/// <summary>Optional data the beacon transmits.</summary>
+		[DataMember]
 		private readonly int MyOptional;
 		/// <summary>The section the beacon is attached to.</summary>
+		[DataMember]
 		private readonly SignalData MySignal;
 		// --- properties ---
 		/// <summary>Gets the type of beacon.</summary>
+		[DataMember]
 		public int Type {
 			get {
 				return this.MyType;
 			}
 		}
 		/// <summary>Gets optional data the beacon transmits.</summary>
+		[DataMember]
 		public int Optional {
 			get {
 				return this.MyOptional;
