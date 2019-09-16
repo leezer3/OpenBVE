@@ -317,7 +317,7 @@ namespace OpenBve {
 			double progressFactor = Expressions.Length == 0 ? 0.3333 : 0.3333 / (double)Expressions.Length;
 			// process non-track namespaces
 			//Check for any special-cased fixes we might need
-			CheckRouteSpecificFixes(FileName, ref Data, ref Expressions);
+			CheckRouteSpecificFixes(FileName, ref Data, ref Expressions, PreviewOnly);
 			//Apply parameters to object loaders
 			if (!PreviewOnly)
 			{

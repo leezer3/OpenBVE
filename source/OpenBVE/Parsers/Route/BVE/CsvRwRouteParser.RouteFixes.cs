@@ -5,7 +5,7 @@ namespace OpenBve
 {
 	internal partial class CsvRwRouteParser
 	{
-		private static void CheckRouteSpecificFixes(string FileName, ref RouteData Data, ref Expression[] Expressions)
+		private static void CheckRouteSpecificFixes(string FileName, ref RouteData Data, ref Expression[] Expressions, bool PreviewOnly)
 		{
 			if (Interface.CurrentOptions.EnableBveTsHacks == false)
 			{
@@ -178,6 +178,17 @@ namespace OpenBve
 				case "097B3ACC33FA9CB33A9D35023EE24F977657875D9C79DCFE1CC8655A2EEB67CA":
 					//TR_spec_L29.csv
 					Expressions[1318].Text = "5025,";
+					break;
+				case "99CE7D39513ECA681D9A8E6D23647FB161DAE50BF9E7540C2395596547A4ACE5":
+					//all2000.csv
+					if (!PreviewOnly)
+					{
+						Data.Structure.Ground.Add(1, new StaticObject(Program.CurrentHost));
+						Data.Structure.RailObjects.Add(16, new StaticObject(Program.CurrentHost));
+						Expressions[376].Text = ".freeobj 2;17;1.6;0;0";
+						Expressions[396].Text = ".freeobj 2;17;1.6;0;0";
+						Expressions[415].Text = ".freeobj 0;15;2;0;0";
+					}
 					break;
 			}
 		}
