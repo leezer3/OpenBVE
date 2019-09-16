@@ -171,6 +171,11 @@ namespace OpenBveApi
 						}
 						return Encoding.Windows1252;
 					case "WINDOWS-1252":
+						if (fInfo.Length == 62861)
+						{
+							//HK tram route. Comes in a non-unicode zip, so filename may be subject to mangling
+							return Encoding.Big5;
+						}
 						return Encoding.Windows1252;
 					case "WINDOWS-1255":
 						if (System.IO.Path.GetFileName(File).ToLowerInvariant() == "xdbetulasmall.csv" && fInfo.Length == 406)
