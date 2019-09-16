@@ -1156,7 +1156,15 @@ namespace OpenBve {
 			// apply other attributes for all cars
 			double AxleDistance = 0.4 * CarLength;
 			for (int i = 0; i < Cars; i++) {
-				Train.Cars[i].Coupler = new TrainManager.Coupler(0.9 * DistanceBetweenTheCars, 1.1 * DistanceBetweenTheCars, Train.Cars[i / 2], Train.Cars[(i / 2) + 1], Train);
+				if (Train.Cars.Length > 1)
+				{
+					Train.Cars[i].Coupler = new TrainManager.Coupler(0.9 * DistanceBetweenTheCars, 1.1 * DistanceBetweenTheCars, Train.Cars[i / 2], Train.Cars[(i / 2) + 1], Train);
+				}
+				else
+				{
+					Train.Cars[i].Coupler = new TrainManager.Coupler(0.9 * DistanceBetweenTheCars, 1.1 * DistanceBetweenTheCars, Train.Cars[i / 2], null, Train);
+				}
+				
 				Train.Cars[i].CurrentCarSection = -1;
 				Train.Cars[i].ChangeCarSection(TrainManager.CarSectionType.NotVisible);
 				Train.Cars[i].FrontBogie.ChangeSection(-1);

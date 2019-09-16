@@ -29,7 +29,14 @@ namespace OpenBve
 				MinimumDistanceBetweenCars = minimumDistance;
 				MaximumDistanceBetweenCars = maximumDistance;
 				baseCar = frontCar;
-				connectedCar = rearCar;
+				if (rearCar != null)
+				{
+					connectedCar = rearCar;
+				}
+				else
+				{
+					connectedCar = frontCar;
+				}
 				CarSections = new CarSection[] { };
 				baseTrain = train;
 			}
