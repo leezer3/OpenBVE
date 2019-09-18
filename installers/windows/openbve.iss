@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "openBVE"
-#define MyAppVersion "1.5.1.6"
+#define MyAppVersion "1.6.0.0"
 #define MyAppPublisher "Christopher Lees"
 #define MyAppURL "http://www.openbve-project.net"
 #define MyAppExeName "OpenBve.exe"

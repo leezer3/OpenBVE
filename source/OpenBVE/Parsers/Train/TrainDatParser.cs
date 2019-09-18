@@ -2,8 +2,10 @@ using System;
 using System.Linq;
 using System.Windows.Forms;
 using OpenBve.BrakeSystems;
+using OpenBve.SafetySystems;
 using OpenBveApi.Math;
 using OpenBveApi.Interface;
+using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 
 namespace OpenBve {
@@ -34,9 +36,9 @@ namespace OpenBve {
 			for (int i = 0; i < Lines.Length; i++) {
 				int j = Lines[i].IndexOf(';');
 				if (j >= 0) {
-					Lines[i] = Lines[i].Substring(0, j).Trim();
+					Lines[i] = Lines[i].Substring(0, j).Trim(new char[] { });
 				} else {
-					Lines[i] = Lines[i].Trim();
+					Lines[i] = Lines[i].Trim(new char[] { });
 				}
 			}
 			TrainDatFormats currentFormat = TrainDatFormats.openBVE;
@@ -126,7 +128,7 @@ namespace OpenBve {
 			double CarUnexposedFrontalArea = 0.2 * CarWidth * CarHeight;
 			bool FrontCarIsMotorCar = true;
 			TrainManager.ReadhesionDeviceType ReAdhesionDevice = TrainManager.ReadhesionDeviceType.TypeA;
-			
+			PassAlarmType passAlarm = PassAlarmType.None;
 			Train.Handles.EmergencyBrake = new TrainManager.EmergencyHandle();
 			Train.Handles.HasLocoBrake = false;
 			double[] powerDelayUp = { }, powerDelayDown = { }, brakeDelayUp = { }, brakeDelayDown = { }, locoBrakeDelayUp = { }, locoBrakeDelayDown = { };
@@ -159,7 +161,7 @@ namespace OpenBve {
 							while (true) {
 								int j = t.IndexOf(',');
 								if (j == -1) break;
-								string s = t.Substring(0, j).Trim();
+								string s = t.Substring(0, j).Trim(new char[] { });
 								t = t.Substring(j + 1);
 								double a; if (NumberFormats.TryParseDoubleVb6(s, out a)) {
 									switch (m) {
@@ -257,7 +259,7 @@ namespace OpenBve {
 									case 0:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											powerDelayUp = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
+											powerDelayUp = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										}
 										else
 										{
@@ -268,7 +270,7 @@ namespace OpenBve {
 									case 1:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											powerDelayDown = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
+											powerDelayDown = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										}
 										else
 										{
@@ -279,7 +281,7 @@ namespace OpenBve {
 									case 2:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											brakeDelayUp = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
+											brakeDelayUp = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										}
 										else
 										{
@@ -290,7 +292,7 @@ namespace OpenBve {
 									case 3:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											brakeDelayDown = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
+											brakeDelayDown = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										}
 										else
 										{
@@ -300,7 +302,7 @@ namespace OpenBve {
 									case 4:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											locoBrakeDelayUp = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
+											locoBrakeDelayUp = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										}
 										else
 										{
@@ -310,7 +312,7 @@ namespace OpenBve {
 									case 5:
 										if (currentFormat == TrainDatFormats.openBVE && myVersion >= 1534)
 										{
-											locoBrakeDelayDown = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
+											locoBrakeDelayDown = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										}
 										else
 										{
@@ -698,7 +700,7 @@ namespace OpenBve {
 										{
 											int b = (int)Math.Round(a);
 											if (b >= 0 & b <= 2) {
-												Train.Specs.PassAlarm = (TrainManager.PassAlarmType)b;
+												passAlarm = (PassAlarmType)b;
 											} else {
 												Interface.AddMessage(MessageType.Error, false, "PassAlarm is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											} break;
@@ -766,7 +768,7 @@ namespace OpenBve {
 								while (true) {
 									int j = t.IndexOf(',');
 									if (j == -1) break;
-									string s = t.Substring(0, j).Trim();
+									string s = t.Substring(0, j).Trim(new char[] { });
 									t = t.Substring(j + 1);
 									double a;
 									if (NumberFormats.TryParseDoubleVb6(s, out a)) {
@@ -786,7 +788,15 @@ namespace OpenBve {
 									} m++;
 								} i++; n++;
 							}
-							Array.Resize<TrainManager.MotorSoundTableEntry>(ref Tables[msi].Entries, n);
+
+							if (n != 0)
+							{
+								/*
+								 * Handle duplicated section header:
+								 * If no entries, don't resize
+								 */
+								Array.Resize<TrainManager.MotorSoundTableEntry>(ref Tables[msi].Entries, n);
+							}
 							i--;
 						} break;
 				}
@@ -1019,7 +1029,7 @@ namespace OpenBve {
 					}
 				}
 
-				if (Train.Cars[i].Specs.IsMotorCar || Train == TrainManager.PlayerTrain && i == Train.DriverCar || trainBrakeType == BrakeSystemType.ElectricCommandBrake)
+				if (Train.Cars[i].Specs.IsMotorCar || Train.IsPlayerTrain && i == Train.DriverCar || trainBrakeType == BrakeSystemType.ElectricCommandBrake)
 				{
 					Train.Cars[i].CarBrake.brakeType = BrakeType.Main;
 				}
@@ -1027,8 +1037,8 @@ namespace OpenBve {
 				{
 					Train.Cars[i].CarBrake.brakeType = BrakeType.Auxiliary;
 				}
-				Train.Cars[i].CarBrake.airCompressor = new Compressor(5000.0);
 				Train.Cars[i].CarBrake.mainReservoir = new MainReservoir(MainReservoirMinimumPressure, MainReservoirMaximumPressure, 0.01, (trainBrakeType == BrakeSystemType.AutomaticAirBrake ? 0.25 : 0.075) / Cars);
+				Train.Cars[i].CarBrake.airCompressor = new Compressor(5000.0, Train.Cars[i].CarBrake.mainReservoir, Train.Cars[i]);
 				Train.Cars[i].CarBrake.equalizingReservoir = new EqualizingReservoir(50000.0, 250000.0, 200000.0);
 				Train.Cars[i].CarBrake.equalizingReservoir.NormalPressure = 1.005 * OperatingPressure;
 				
@@ -1060,7 +1070,9 @@ namespace OpenBve {
 				Train.Handles.SingleHandle = false;
 				Train.Handles.HasHoldBrake = false;
 			}
-
+			Train.SafetySystems.PassAlarm = new PassAlarm(passAlarm, Train.Cars[DriverCar]);
+			Train.SafetySystems.PilotLamp = new PilotLamp(Train.Cars[DriverCar]);
+			Train.SafetySystems.StationAdjust = new StationAdjustAlarm(Train);
 			switch (Game.TrainStart)
 			{
 				// starting mode
@@ -1144,16 +1156,26 @@ namespace OpenBve {
 			// apply other attributes for all cars
 			double AxleDistance = 0.4 * CarLength;
 			for (int i = 0; i < Cars; i++) {
+				if (Train.Cars.Length > 1)
+				{
+					Train.Cars[i].Coupler = new TrainManager.Coupler(0.9 * DistanceBetweenTheCars, 1.1 * DistanceBetweenTheCars, Train.Cars[i / 2], Train.Cars[(i / 2) + 1], Train);
+				}
+				else
+				{
+					Train.Cars[i].Coupler = new TrainManager.Coupler(0.9 * DistanceBetweenTheCars, 1.1 * DistanceBetweenTheCars, Train.Cars[i / 2], null, Train);
+				}
+				
 				Train.Cars[i].CurrentCarSection = -1;
 				Train.Cars[i].ChangeCarSection(TrainManager.CarSectionType.NotVisible);
 				Train.Cars[i].FrontBogie.ChangeSection(-1);
 				Train.Cars[i].RearBogie.ChangeSection(-1);
-				Train.Cars[i].FrontAxle.Follower.TriggerType = i == 0 ? TrackManager.EventTriggerType.FrontCarFrontAxle : TrackManager.EventTriggerType.OtherCarFrontAxle;
-				Train.Cars[i].RearAxle.Follower.TriggerType = i == Cars - 1 ? TrackManager.EventTriggerType.RearCarRearAxle : TrackManager.EventTriggerType.OtherCarRearAxle;
-				Train.Cars[i].BeaconReceiver.TriggerType = i == 0 ? TrackManager.EventTriggerType.TrainFront : TrackManager.EventTriggerType.None;
+				Train.Cars[i].Coupler.ChangeSection(-1);
+				Train.Cars[i].FrontAxle.Follower.TriggerType = i == 0 ? EventTriggerType.FrontCarFrontAxle : EventTriggerType.OtherCarFrontAxle;
+				Train.Cars[i].RearAxle.Follower.TriggerType = i == Cars - 1 ? EventTriggerType.RearCarRearAxle : EventTriggerType.OtherCarRearAxle;
+				Train.Cars[i].BeaconReceiver.TriggerType = i == 0 ? EventTriggerType.TrainFront : EventTriggerType.None;
 				Train.Cars[i].BeaconReceiverPosition = 0.5 * CarLength;
-				Train.Cars[i].FrontAxle.Follower.CarIndex = i;
-				Train.Cars[i].RearAxle.Follower.CarIndex = i;
+				Train.Cars[i].FrontAxle.Follower.Car = Train.Cars[i];
+				Train.Cars[i].RearAxle.Follower.Car = Train.Cars[i];
 				Train.Cars[i].FrontAxle.Position = AxleDistance;
 				Train.Cars[i].RearAxle.Position = -AxleDistance;
 				Train.Cars[i].Specs.JerkPowerUp = JerkPowerUp;
@@ -1253,16 +1275,11 @@ namespace OpenBve {
 			Train.Cars[Train.DriverCar].Driver.X = Driver.X;
 			Train.Cars[Train.DriverCar].Driver.Y = Driver.Y;
 			Train.Cars[Train.DriverCar].Driver.Z = 0.5 * CarLength + Driver.Z;
-			if (Train == TrainManager.PlayerTrain)
+			if (Train.IsPlayerTrain)
 			{
 				Train.Cars[DriverCar].HasInteriorView = true;
 			}
-			// couplers
-			Train.Couplers = new TrainManager.Coupler[Cars - 1];
-			for (int i = 0; i < Train.Couplers.Length; i++) {
-				Train.Couplers[i].MinimumDistanceBetweenCars = 0.9 * DistanceBetweenTheCars;
-				Train.Couplers[i].MaximumDistanceBetweenCars = 1.1 * DistanceBetweenTheCars;
-			}
+			
 			// finish
 			
 		}

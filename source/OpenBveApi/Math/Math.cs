@@ -4,7 +4,7 @@ using System.Linq;
 namespace OpenBveApi.Math {
 
 	/// <summary>Contains methods required for parsing differently formatted numbers</summary>
-	public class NumberFormats
+	public static class NumberFormats
 	{
 		/// <summary>Parses a double formatted as a Visual Basic 6 string</summary>
 		/// <param name="Expression">The expression to parse</param>
@@ -103,13 +103,13 @@ namespace OpenBveApi.Math {
 			}
 			else
 			{
-				string[] parameters = Expression.Split(':');
+				string[] parameters = Expression.Split(new char[] {':'});
 				if (parameters.Length <= UnitFactors.Length)
 				{
 					Value = 0.0;
 					for (int i = 0; i < parameters.Length; i++)
 					{
-						if (double.TryParse(parameters[i].Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out a))
+						if (double.TryParse(parameters[i].Trim(new char[] { }), NumberStyles.Float, CultureInfo.InvariantCulture, out a))
 						{
 							int j = i + UnitFactors.Length - parameters.Length;
 							Value += a * UnitFactors[j];
@@ -144,13 +144,13 @@ namespace OpenBveApi.Math {
 			}
 			else
 			{
-				string[] parameters = Expression.Split(':');
+				string[] parameters = Expression.Split(new char[] {':'});
 				Value = 0.0;
 				if (parameters.Length <= UnitFactors.Length)
 				{
 					for (int i = 0; i < parameters.Length; i++)
 					{
-						if (TryParseDoubleVb6(parameters[i].Trim(), out a))
+						if (TryParseDoubleVb6(parameters[i].Trim(new char[] { }), out a))
 						{
 							int j = i + UnitFactors.Length - parameters.Length;
 							Value += a * UnitFactors[j];
@@ -167,6 +167,19 @@ namespace OpenBveApi.Math {
 					return false;
 				}
 			}
+		}
+
+		/// <summary>Converts a value given in degrees to Radians</summary>
+		public static double ToRadians(this double degrees)
+		{
+			return degrees * 0.0174532925199433;
+		}
+
+		/// <summary>Gets the modulous of two numbers</summary>
+		/// <returns>The modulous</returns>
+		public static double Mod(double a, double b)
+		{
+			return a - b * System.Math.Floor(a / b);
 		}
 
 		private static string TrimInside(string Expression)

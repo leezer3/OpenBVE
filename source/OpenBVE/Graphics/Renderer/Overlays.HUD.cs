@@ -1,9 +1,12 @@
 ﻿using System;
+using OpenBve.RouteManager;
+using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 using OpenTK.Graphics.OpenGL;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
@@ -22,7 +25,7 @@ namespace OpenBve
 			double w, h;
 			if (Element.CenterMiddle.BackgroundTexture != null)
 			{
-				if (Textures.LoadTexture(Element.CenterMiddle.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
+				if (Program.CurrentHost.LoadTexture(Element.CenterMiddle.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 				{
 					w = (double)Element.CenterMiddle.BackgroundTexture.Width;
 					h = (double)Element.CenterMiddle.BackgroundTexture.Height;
@@ -36,8 +39,8 @@ namespace OpenBve
 			{
 				w = 0.0; h = 0.0;
 			}
-			double x = Element.Alignment.X < 0 ? 0.0 : Element.Alignment.X == 0 ? 0.5 * (Screen.Width - w) : Screen.Width - w;
-			double y = Element.Alignment.Y < 0 ? 0.0 : Element.Alignment.Y == 0 ? 0.5 * (Screen.Height - h) : Screen.Height - h;
+			double x = Element.Alignment.X < 0 ? 0.0 : Element.Alignment.X == 0 ? 0.5 * (LibRender.Screen.Width - w) : LibRender.Screen.Width - w;
+			double y = Element.Alignment.Y < 0 ? 0.0 : Element.Alignment.Y == 0 ? 0.5 * (LibRender.Screen.Height - h) : LibRender.Screen.Height - h;
 			x += Element.Position.X;
 			y += Element.Position.Y;
 			// command
@@ -408,22 +411,22 @@ namespace OpenBve
 				case "stopnone":
 				{
 					int s = TrainManager.PlayerTrain.Station;
-					if (s >= 0 && Game.PlayerStopsAtStation(s) && Interface.CurrentOptions.GameMode != Interface.GameMode.Expert)
+					if (s >= 0 && CurrentRoute.Stations[s].PlayerStops() && Interface.CurrentOptions.GameMode != GameMode.Expert)
 					{
 						bool cond;
 						if (Command == "stopleft")
 						{
-							cond = Game.Stations[s].OpenLeftDoors;
+							cond = CurrentRoute.Stations[s].OpenLeftDoors;
 						}
 						else if (Command == "stopright")
 						{
-							cond = Game.Stations[s].OpenRightDoors;
+							cond = CurrentRoute.Stations[s].OpenRightDoors;
 						}
 						else
 						{
-							cond = !Game.Stations[s].OpenLeftDoors & !Game.Stations[s].OpenRightDoors;
+							cond = !CurrentRoute.Stations[s].OpenLeftDoors & !CurrentRoute.Stations[s].OpenRightDoors;
 						}
-						if (TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Pending & cond)
+						if (TrainManager.PlayerTrain.StationState == TrainStopState.Pending & cond)
 						{
 							Element.TransitionState -= speed * TimeElapsed;
 							if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
@@ -446,25 +449,25 @@ namespace OpenBve
 				case "stopnonetick":
 				{
 					int s = TrainManager.PlayerTrain.Station;
-					if (s >= 0 && Game.PlayerStopsAtStation(s) && Interface.CurrentOptions.GameMode != Interface.GameMode.Expert)
+					if (s >= 0 && CurrentRoute.Stations[s].PlayerStops() && Interface.CurrentOptions.GameMode != GameMode.Expert)
 					{
-						int c = Game.Stations[s].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
+						int c = CurrentRoute.Stations[s].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
 						if (c >= 0)
 						{
 							bool cond;
 							if (Command == "stoplefttick")
 							{
-								cond = Game.Stations[s].OpenLeftDoors;
+								cond = CurrentRoute.Stations[s].OpenLeftDoors;
 							}
 							else if (Command == "stoprighttick")
 							{
-								cond = Game.Stations[s].OpenRightDoors;
+								cond = CurrentRoute.Stations[s].OpenRightDoors;
 							}
 							else
 							{
-								cond = !Game.Stations[s].OpenLeftDoors & !Game.Stations[s].OpenRightDoors;
+								cond = !CurrentRoute.Stations[s].OpenLeftDoors & !CurrentRoute.Stations[s].OpenRightDoors;
 							}
-							if (TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Pending & cond)
+							if (TrainManager.PlayerTrain.StationState == TrainStopState.Pending & cond)
 							{
 								Element.TransitionState -= speed * TimeElapsed;
 								if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
@@ -478,11 +481,11 @@ namespace OpenBve
 							double r;
 							if (d > 0.0)
 							{
-								r = d / Game.Stations[s].Stops[c].BackwardTolerance;
+								r = d / CurrentRoute.Stations[s].Stops[c].BackwardTolerance;
 							}
 							else
 							{
-								r = d / Game.Stations[s].Stops[c].ForwardTolerance;
+								r = d / CurrentRoute.Stations[s].Stops[c].ForwardTolerance;
 							}
 							if (r < -1.0) r = -1.0;
 							if (r > 1.0) r = 1.0;
@@ -503,7 +506,7 @@ namespace OpenBve
 				} break;
 				case "clock":
 				{
-					int hours = (int)Math.Floor(Game.SecondsSinceMidnight);
+					int hours = (int)Math.Floor(CurrentRoute.SecondsSinceMidnight);
 					int seconds = hours % 60; hours /= 60;
 					int minutes = hours % 60; hours /= 60;
 					hours %= 24;
@@ -579,28 +582,28 @@ namespace OpenBve
 				case "speed":
 					if (OptionSpeed == SpeedDisplayMode.Kmph)
 					{
-						double kmph = Math.Abs(TrainManager.PlayerTrain.Specs.CurrentAverageSpeed) * 3.6;
+						double kmph = Math.Abs(TrainManager.PlayerTrain.CurrentSpeed) * 3.6;
 						t = kmph.ToString("0.00", Culture) + " km/h";
 						Element.TransitionState -= speed * TimeElapsed;
 						if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
 					}
 					else if (OptionSpeed == SpeedDisplayMode.Mph)
 					{
-						double mph = Math.Abs(TrainManager.PlayerTrain.Specs.CurrentAverageSpeed) * 2.2369362920544;
+						double mph = Math.Abs(TrainManager.PlayerTrain.CurrentSpeed) * 2.2369362920544;
 						t = mph.ToString("0.00", Culture) + " mph";
 						Element.TransitionState -= speed * TimeElapsed;
 						if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
 					}
 					else
 					{
-						double mph = Math.Abs(TrainManager.PlayerTrain.Specs.CurrentAverageSpeed) * 2.2369362920544;
+						double mph = Math.Abs(TrainManager.PlayerTrain.CurrentSpeed) * 2.2369362920544;
 						t = mph.ToString("0.00", Culture) + " mph";
 						Element.TransitionState += speed * TimeElapsed;
 						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
 					} break;
 				case "dist_next_station":
 					int i;
-					if (TrainManager.PlayerTrain.Station >= 0 && TrainManager.PlayerTrain.StationState != TrainManager.TrainStopState.Completed)
+					if (TrainManager.PlayerTrain.Station >= 0 && TrainManager.PlayerTrain.StationState != TrainStopState.Completed)
 					{
 					i = TrainManager.PlayerTrain.LastStation;
 					}
@@ -608,25 +611,25 @@ namespace OpenBve
 					{
 						i = TrainManager.PlayerTrain.LastStation + 1;
 					}
-					if (i > Game.Stations.Length - 1)
+					if (i > CurrentRoute.Stations.Length - 1)
 					{
 						i = TrainManager.PlayerTrain.LastStation;
 					}
-					int n = Game.Stations[i].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
-					double p0 = TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition - TrainManager.PlayerTrain.Cars[0].FrontAxle.Position + 0.5 * TrainManager.PlayerTrain.Cars[0].Length;
+					int n = CurrentRoute.Stations[i].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
+					double p0 = TrainManager.PlayerTrain.FrontCarTrackPosition();
 					double p1;
-					if (Game.Stations[i].Stops.Length > 0)
+					if (CurrentRoute.Stations[i].Stops.Length > 0)
 					{
-						p1 = Game.Stations[i].Stops[n].TrackPosition;
+						p1 = CurrentRoute.Stations[i].Stops[n].TrackPosition;
 					}
 					else
 					{
-						p1 = Game.Stations[i].DefaultTrackPosition;
+						p1 = CurrentRoute.Stations[i].DefaultTrackPosition;
 					}
 					double m = p1 - p0;
 					if (OptionDistanceToNextStation == DistanceToNextStationDisplayMode.Km)
 					{
-						if (Game.PlayerStopsAtStation(i))
+						if (CurrentRoute.Stations[i].PlayerStops())
 						{
 							t = "Stop: ";
 							if (Math.Abs(m) <= 10.0)
@@ -650,7 +653,7 @@ namespace OpenBve
 					else if (OptionDistanceToNextStation == DistanceToNextStationDisplayMode.Mile)
 					{
 						m /= 1609.34;
-						if (Game.PlayerStopsAtStation(i))
+						if (CurrentRoute.Stations[i].PlayerStops())
 						{
 							t = "Stop: ";
 						}
@@ -665,7 +668,7 @@ namespace OpenBve
 					else
 					{
 						m /= 1609.34;
-						if (Game.PlayerStopsAtStation(i))
+						if (CurrentRoute.Stations[i].PlayerStops())
 						{
 							t = "Stop: ";
 						}
@@ -678,7 +681,7 @@ namespace OpenBve
 						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
 					} break;
 				case "fps":
-					int fps = (int)Math.Round(Game.InfoFrameRate);
+					int fps = (int)Math.Round(LibRender.Renderer.FrameRate);
 					t = fps.ToString(Culture) + " fps";
 					if (OptionFrameRates)
 					{
@@ -703,7 +706,7 @@ namespace OpenBve
 						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
 					} break;
 				case "score":
-					if (Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade)
+					if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
 					{
 						t = Game.CurrentScore.CurrentValue.ToString(Culture) + " / " + Game.CurrentScore.Maximum.ToString(Culture);
 						if (Game.CurrentScore.CurrentValue < 0)
@@ -784,35 +787,32 @@ namespace OpenBve
 				}
 				if (Element.CenterMiddle.BackgroundTexture != null)
 				{
-					if (Textures.LoadTexture(Element.CenterMiddle.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
+					if (Program.CurrentHost.LoadTexture(Element.CenterMiddle.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
-						float r, g, b, a;
-						CreateBackColor(Element.BackgroundColor, sc, out r, out g, out b, out a);
-						GL.Color4(r, g, b, a * alpha);
-						RenderOverlayTexture(Element.CenterMiddle.BackgroundTexture, x, y, x + w, y + h);
+						Color128 c = Element.BackgroundColor.CreateBackColor(sc, alpha);
+						GL.Color4(c.R, c.G, c.B, c.A);
+						LibRender.Renderer.RenderOverlayTexture(Element.CenterMiddle.BackgroundTexture, x, y, x + w, y + h);
 					}
 				}
 				{ // text
-					System.Drawing.Size size = MeasureString(Element.Font, t);
+					System.Drawing.Size size = Element.Font.MeasureString(t);
 					float u = size.Width;
 					float v = size.Height;
 					double p = Math.Round(Element.TextAlignment.X < 0 ? x : Element.TextAlignment.X == 0 ? x + 0.5 * (w - u) : x + w - u);
 					double q = Math.Round(Element.TextAlignment.Y < 0 ? y : Element.TextAlignment.Y == 0 ? y + 0.5 * (h - v) : y + h - v);
 					p += Element.TextPosition.X;
 					q += Element.TextPosition.Y;
-					float r, g, b, a;
-					CreateTextColor(Element.TextColor, sc, out r, out g, out b, out a);
-					DrawString(Element.Font, t, new System.Drawing.Point((int)p, (int)q), TextAlignment.TopLeft, new Color128(r, g, b, a * alpha), Element.TextShadow);
+					Color128 c = Element.TextColor.CreateTextColor(sc, alpha);
+					LibRender.Renderer.DrawString(Element.Font, t, new System.Drawing.Point((int)p, (int)q), TextAlignment.TopLeft, c, Element.TextShadow);
 				}
 				// overlay
 				if (Element.CenterMiddle.OverlayTexture != null)
 				{
-					if (Textures.LoadTexture(Element.CenterMiddle.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
+					if (Program.CurrentHost.LoadTexture(Element.CenterMiddle.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
-						float r, g, b, a;
-						CreateBackColor(Element.OverlayColor, sc, out r, out g, out b, out a);
-						GL.Color4(r, g, b, a * alpha);
-						RenderOverlayTexture(Element.CenterMiddle.OverlayTexture, x, y, x + w, y + h);
+						Color128 c = Element.OverlayColor.CreateBackColor(sc, alpha);
+						GL.Color4(c.R, c.G, c.B, c.A);
+						LibRender.Renderer.RenderOverlayTexture(Element.CenterMiddle.OverlayTexture, x, y, x + w, y + h);
 					}
 				}
 			}

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using OpenBveApi;
 
 namespace OpenBve
 {
@@ -16,7 +17,7 @@ namespace OpenBve
 		/// <returns>Whether the header was validated successfully</returns>
 		internal static void ValidateHeader(string fileHeader, string expectedHeader, double maxSupportedVersion, out double Version, out Encoding Encoding, string headerType)
 		{
-			string[] splitHeader = fileHeader.Split(':');
+			string[] splitHeader = fileHeader.Split(new char[] {':'});
 			Version = 0;
 			if (!splitHeader[0].StartsWith(expectedHeader, StringComparison.InvariantCultureIgnoreCase))
 			{

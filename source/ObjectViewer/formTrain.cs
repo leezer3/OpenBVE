@@ -21,7 +21,7 @@ namespace OpenBve
 			}
 		}
 
-		private List<PluginState> PluginStates;
+		private readonly List<PluginState> PluginStates;
 
 		private static Task FormTrainTask;
 
@@ -288,11 +288,14 @@ namespace OpenBve
 				if (checkBoxEnableTrain.Checked)
 				{
 					Array.Resize(ref TrainManager.Trains, 1);
-					TrainManager.Trains[0] = new TrainManager.Train();
-					TrainManager.Trains[0].State = TrainState.Available;
+					TrainManager.Trains[0] = new TrainManager.Train
+					{
+						State = TrainState.Available
+					};
 					Array.Resize(ref TrainManager.Trains[0].Cars, (int)numericUpDownCars.Value);
 					for (int i = 0; i < TrainManager.Trains[0].Cars.Length; i++)
 					{
+						TrainManager.Trains[0].Cars[i] = new TrainManager.Car();
 						TrainManager.Trains[0].Cars[i].Specs.CurrentSpeed = (int)numericUpDownSpeed.Value / 3.6;
 						TrainManager.Trains[0].Cars[i].Specs.CurrentPerceivedSpeed = (int)numericUpDownSpeed.Value / 3.6;
 						TrainManager.Trains[0].Cars[i].Specs.CurrentAcceleration = (int)numericUpDownAccel.Value / 3.6;
@@ -341,7 +344,7 @@ namespace OpenBve
 					if (checkBoxEnablePlugin.Checked && PluginStates.Count != 0)
 					{
 						PluginManager.CurrentPlugin.Panel = new int[PluginStates.Max(value => value.Number) + 1];
-						foreach (var state in PluginStates)
+						foreach (PluginState state in PluginStates)
 						{
 							PluginManager.CurrentPlugin.Panel[state.Number] = state.State;
 						}

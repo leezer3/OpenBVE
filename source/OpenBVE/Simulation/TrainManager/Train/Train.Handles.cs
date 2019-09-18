@@ -1,4 +1,5 @@
 ﻿using OpenBveApi.Math;
+using SoundManager;
 
 namespace OpenBve
 {
@@ -51,29 +52,29 @@ namespace OpenBve
 					if (p > 0)
 					{
 						// down (not min)
-						Sounds.SoundBuffer buffer;
-						if ((Handles.Power.Driver - p > 2 | Cars[DriverCar].Sounds.PowerHandleFast) && Cars[DriverCar].Sounds.MasterControllerDownFast.Buffer != null)
+						SoundBuffer buffer;
+						if ((Handles.Power.Driver - p > 2 | Handles.Power.ContinuousMovement) && Handles.Power.DecreaseFast.Buffer != null)
 						{
-							buffer = Cars[DriverCar].Sounds.MasterControllerDownFast.Buffer;
+							buffer = Handles.Power.DecreaseFast.Buffer;
 						}
 						else
 						{
-							buffer = Cars[DriverCar].Sounds.MasterControllerDown.Buffer;
+							buffer = Handles.Power.Decrease.Buffer;
 						}
 						if (buffer != null)
 						{
-							Vector3 pos = Cars[DriverCar].Sounds.MasterControllerDown.Position;
-							Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+							Vector3 pos = Handles.Power.Decrease.Position;
+							Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 						}
 					}
 					else
 					{
 						// min
-						Sounds.SoundBuffer buffer = Cars[DriverCar].Sounds.MasterControllerMin.Buffer;
+						SoundBuffer buffer = Handles.Power.Min.Buffer;
 						if (buffer != null)
 						{
-							Vector3 pos = Cars[DriverCar].Sounds.MasterControllerMin.Position;
-							Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+							Vector3 pos = Handles.Power.Min.Position;
+							Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 						}
 					}
 				}
@@ -82,29 +83,29 @@ namespace OpenBve
 					if (p < Handles.Power.MaximumDriverNotch)
 					{
 						// up (not max)
-						Sounds.SoundBuffer buffer;
-						if ((Handles.Power.Driver - p > 2 | Cars[DriverCar].Sounds.PowerHandleFast) && Cars[DriverCar].Sounds.MasterControllerUpFast.Buffer != null)
+						SoundBuffer buffer;
+						if ((Handles.Power.Driver - p > 2 | Handles.Power.ContinuousMovement) && Handles.Power.IncreaseFast.Buffer != null)
 						{
-							buffer = Cars[DriverCar].Sounds.MasterControllerUpFast.Buffer;
+							buffer = Handles.Power.IncreaseFast.Buffer;
 						}
 						else
 						{
-							buffer = Cars[DriverCar].Sounds.MasterControllerUp.Buffer;
+							buffer = Handles.Power.Increase.Buffer;
 						}
 						if (buffer != null)
 						{
-							Vector3 pos = Cars[DriverCar].Sounds.MasterControllerUp.Position;
-							Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+							Vector3 pos = Handles.Power.Increase.Position;
+							Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 						}
 					}
 					else
 					{
 						// max
-						Sounds.SoundBuffer buffer = Cars[DriverCar].Sounds.MasterControllerMax.Buffer;
+						SoundBuffer buffer = Handles.Power.Max.Buffer;
 						if (buffer != null)
 						{
-							Vector3 pos = Cars[DriverCar].Sounds.MasterControllerMax.Position;
-							Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+							Vector3 pos = Handles.Power.Max.Position;
+							Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 						}
 					}
 				}
@@ -113,58 +114,58 @@ namespace OpenBve
 				if (b < Handles.Brake.Driver)
 				{
 					// brake release
-					Sounds.SoundBuffer buffer = Cars[DriverCar].Sounds.Brake.Buffer;
+					SoundBuffer buffer = Cars[DriverCar].Sounds.Brake.Buffer;
 					if (buffer != null)
 					{
 						Vector3 pos = Cars[DriverCar].Sounds.Brake.Position;
-						Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+						Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 					}
 
 					if (b > 0)
 					{
 						// brake release (not min)
-						if ((Handles.Brake.Driver - b > 2 | Cars[DriverCar].Sounds.BrakeHandleFast) && Cars[DriverCar].Sounds.BrakeHandleReleaseFast.Buffer != null)
+						if ((Handles.Brake.Driver - b > 2 | Handles.Brake.ContinuousMovement) && Handles.Brake.DecreaseFast.Buffer != null)
 						{
-							buffer = Cars[DriverCar].Sounds.BrakeHandleReleaseFast.Buffer;
+							buffer = Handles.Brake.DecreaseFast.Buffer;
 						}
 						else
 						{
-							buffer = Cars[DriverCar].Sounds.BrakeHandleRelease.Buffer;
+							buffer = Handles.Brake.Decrease.Buffer;
 						}
 						if (buffer != null)
 						{
-							Vector3 pos = Cars[DriverCar].Sounds.BrakeHandleRelease.Position;
-							Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+							Vector3 pos = Handles.Brake.Decrease.Position;
+							Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 						}
 					}
 					else
 					{
 						// brake min
-						buffer = Cars[DriverCar].Sounds.BrakeHandleMin.Buffer;
+						buffer = Handles.Brake.Min.Buffer;
 						if (buffer != null)
 						{
-							Vector3 pos = Cars[DriverCar].Sounds.BrakeHandleMin.Position;
-							Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+							Vector3 pos = Handles.Brake.Min.Position;
+							Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 						}
 					}
 				}
 				else if (b > Handles.Brake.Driver)
 				{
 					// brake
-					Sounds.SoundBuffer buffer;
-					if ((b - Handles.Brake.Driver > 2 | Cars[DriverCar].Sounds.BrakeHandleFast) && Cars[DriverCar].Sounds.BrakeHandleApplyFast.Buffer != null)
+					SoundBuffer buffer;
+					if ((b - Handles.Brake.Driver > 2 | Handles.Brake.ContinuousMovement) && Handles.Brake.IncreaseFast.Buffer != null)
 					{
-						buffer = Cars[DriverCar].Sounds.BrakeHandleApplyFast.Buffer;
+						buffer = Handles.Brake.IncreaseFast.Buffer;
 					}
 					else
 					{
-						buffer = Cars[DriverCar].Sounds.BrakeHandleApply.Buffer;
+						buffer = Handles.Brake.Increase.Buffer;
 					}
 					
 					if (buffer != null)
 					{
-						Vector3 pos = Cars[DriverCar].Sounds.BrakeHandleApply.Position;
-						Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+						Vector3 pos = Handles.Brake.Increase.Position;
+						Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 					}
 				}
 
@@ -204,57 +205,57 @@ namespace OpenBve
 				if (b < Handles.LocoBrake.Driver)
 				{
 					// brake release 
-					Sounds.SoundBuffer buffer = Cars[DriverCar].Sounds.Brake.Buffer;
+					SoundBuffer buffer = Cars[DriverCar].Sounds.Brake.Buffer;
 					if (buffer != null)
 					{
 						Vector3 pos = Cars[DriverCar].Sounds.Brake.Position;
-						Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+						Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 					}
 
 					if (b > 0)
 					{
 						// brake release (not min) 
-						if ((Handles.LocoBrake.Driver - b > 2 | Cars[DriverCar].Sounds.BrakeHandleFast) && Cars[DriverCar].Sounds.BrakeHandleReleaseFast.Buffer != null)
+						if ((Handles.LocoBrake.Driver - b > 2 | Handles.Brake.ContinuousMovement) && Handles.Brake.DecreaseFast.Buffer != null)
 						{
-							buffer = Cars[DriverCar].Sounds.BrakeHandleReleaseFast.Buffer;
+							buffer = Handles.Brake.DecreaseFast.Buffer;
 						}
 						else
 						{
-							buffer = Cars[DriverCar].Sounds.BrakeHandleRelease.Buffer;
+							buffer = Handles.Brake.Decrease.Buffer;
 						}
 						if (buffer != null)
 						{
-							Vector3 pos = Cars[DriverCar].Sounds.BrakeHandleRelease.Position;
-							Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+							Vector3 pos = Handles.Brake.Decrease.Position;
+							Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 						}
 					}
 					else
 					{
 						// brake min 
-						buffer = Cars[DriverCar].Sounds.BrakeHandleMin.Buffer;
+						buffer = Handles.Brake.Min.Buffer;
 						if (buffer != null)
 						{
-							Vector3 pos = Cars[DriverCar].Sounds.BrakeHandleMin.Position;
-							Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+							Vector3 pos = Handles.Brake.Min.Position;
+							Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 						}
 					}
 				}
 				else if (b > Handles.LocoBrake.Driver)
 				{
 					// brake 
-					Sounds.SoundBuffer buffer;
-					if ((b - Handles.LocoBrake.Driver > 2 | Cars[DriverCar].Sounds.BrakeHandleFast) && Cars[DriverCar].Sounds.BrakeHandleApplyFast.Buffer != null)
+					SoundBuffer buffer;
+					if ((b - Handles.LocoBrake.Driver > 2 | Handles.Brake.ContinuousMovement) && Handles.Brake.IncreaseFast.Buffer != null)
 					{
-						buffer = Cars[DriverCar].Sounds.BrakeHandleApplyFast.Buffer;
+						buffer = Handles.Brake.IncreaseFast.Buffer;
 					}
 					else
 					{
-						buffer = Cars[DriverCar].Sounds.BrakeHandleApply.Buffer;
+						buffer = Handles.Brake.Increase.Buffer;
 					}
 					if (buffer != null)
 					{
-						Vector3 pos = Cars[DriverCar].Sounds.BrakeHandleApply.Position;
-						Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+						Vector3 pos = Handles.Brake.Increase.Position;
+						Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 					}
 				}
 
@@ -282,17 +283,17 @@ namespace OpenBve
 					// sound
 					if (a == 0 & r != 0)
 					{
-						Sounds.SoundBuffer buffer = Cars[DriverCar].Sounds.ReverserOn.Buffer;
+						SoundBuffer buffer = Handles.Reverser.EngageSound.Buffer;
 						if (buffer == null) return;
-						Vector3 pos = Cars[DriverCar].Sounds.ReverserOn.Position;
-						Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+						Vector3 pos = Handles.Reverser.EngageSound.Position;
+						Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 					}
 					else if (a != 0 & r == 0)
 					{
-						Sounds.SoundBuffer buffer = Cars[DriverCar].Sounds.ReverserOff.Buffer;
+						SoundBuffer buffer = Handles.Reverser.ReleaseSound.Buffer;
 						if (buffer == null) return;
-						Vector3 pos = Cars[DriverCar].Sounds.ReverserOff.Position;
-						Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+						Vector3 pos = Handles.Reverser.ReleaseSound.Position;
+						Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 					}
 				}
 			}
@@ -303,20 +304,20 @@ namespace OpenBve
 				// sound
 				if (!Handles.EmergencyBrake.Driver)
 				{
-					Sounds.SoundBuffer buffer = Cars[DriverCar].Sounds.BrakeHandleMax.Buffer;
+					SoundBuffer buffer = Handles.Brake.Max.Buffer;
 					if (buffer != null)
 					{
-						Vector3 pos = Cars[DriverCar].Sounds.BrakeHandleMax.Position;
-						Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+						Vector3 pos = Handles.Brake.Max.Position;
+						Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 					}
 
 					for (int i = 0; i < Cars.Length; i++)
 					{
-						buffer = Cars[DriverCar].Sounds.EmrBrake.Buffer;
+						buffer = Handles.EmergencyBrake.ApplicationSound.Buffer;
 						if (buffer != null)
 						{
-							Vector3 pos = Cars[i].Sounds.EmrBrake.Position;
-							Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+							Vector3 pos = Handles.EmergencyBrake.ApplicationSound.Position;
+							Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 						}
 					}
 				}
@@ -364,11 +365,20 @@ namespace OpenBve
 				if (Handles.EmergencyBrake.Driver)
 				{
 					// sound
-					Sounds.SoundBuffer buffer = Cars[DriverCar].Sounds.BrakeHandleRelease.Buffer;
+					SoundBuffer buffer;
+					if (Handles.EmergencyBrake.ReleaseSound != null)
+					{
+						buffer = Handles.EmergencyBrake.ReleaseSound.Buffer;
+					}
+					else
+					{
+						buffer = Handles.Brake.Decrease.Buffer;
+					}
+					
 					if (buffer != null)
 					{
-						Vector3 pos = Cars[DriverCar].Sounds.BrakeHandleRelease.Position;
-						Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+						Vector3 pos = Handles.Brake.Decrease.Position;
+						Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 					}
 
 					// apply
@@ -443,11 +453,11 @@ namespace OpenBve
 						// sound when moved to service
 						if (newState == AirBrakeHandleState.Service)
 						{
-							Sounds.SoundBuffer buffer = Cars[DriverCar].Sounds.Brake.Buffer;
+							SoundBuffer buffer = Cars[DriverCar].Sounds.Brake.Buffer;
 							if (buffer != null)
 							{
 								Vector3 pos = Cars[DriverCar].Sounds.Brake.Position;
-								Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+								Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 							}
 						}
 
@@ -458,48 +468,48 @@ namespace OpenBve
 							if ((int) newState > 0)
 							{
 								// brake release (not min)
-								Sounds.SoundBuffer buffer;
-								if ((Handles.Brake.Driver - (int)newState > 2 | Cars[DriverCar].Sounds.BrakeHandleFast) && Cars[DriverCar].Sounds.BrakeHandleReleaseFast.Buffer != null)
+								SoundBuffer buffer;
+								if ((Handles.Brake.Driver - (int)newState > 2 | Handles.Brake.ContinuousMovement) && Handles.Brake.Decrease.Buffer != null)
 								{
-									buffer = Cars[DriverCar].Sounds.BrakeHandleReleaseFast.Buffer;
+									buffer = Handles.Brake.DecreaseFast.Buffer;
 								}
 								else
 								{
-									buffer = Cars[DriverCar].Sounds.BrakeHandleRelease.Buffer;
+									buffer = Handles.Brake.Decrease.Buffer;
 								}
 								if (buffer != null)
 								{
-									Vector3 pos = Cars[DriverCar].Sounds.BrakeHandleRelease.Position;
-									Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+									Vector3 pos = Handles.Brake.Decrease.Position;
+									Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 								}
 							}
 							else
 							{
 								// brake min
-								Sounds.SoundBuffer buffer = Cars[DriverCar].Sounds.BrakeHandleMin.Buffer;
+								SoundBuffer buffer = Handles.Brake.Min.Buffer;
 								if (buffer != null)
 								{
-									Vector3 pos = Cars[DriverCar].Sounds.BrakeHandleMin.Position;
-									Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+									Vector3 pos = Handles.Brake.Min.Position;
+									Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 								}
 							}
 						}
 						else if ((int) newState > (int) Handles.Brake.Driver)
 						{
 							// brake
-							Sounds.SoundBuffer buffer;
-							if (((int)newState - (int)Handles.Brake.Driver > 2 | Cars[DriverCar].Sounds.BrakeHandleFast) && Cars[DriverCar].Sounds.BrakeHandleApplyFast.Buffer != null)
+							SoundBuffer buffer;
+							if (((int)newState - (int)Handles.Brake.Driver > 2 | Handles.Brake.ContinuousMovement) && Handles.Brake.IncreaseFast.Buffer != null)
 							{
-								buffer = Cars[DriverCar].Sounds.BrakeHandleApplyFast.Buffer;
+								buffer = Handles.Brake.IncreaseFast.Buffer;
 							}
 							else
 							{
-								buffer = Cars[DriverCar].Sounds.BrakeHandleApply.Buffer;
+								buffer = Handles.Brake.Increase.Buffer;
 							}
 							if (buffer != null)
 							{
-								Vector3 pos = Cars[DriverCar].Sounds.BrakeHandleApply.Position;
-								Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+								Vector3 pos = Handles.Brake.Increase.Position;
+								Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 							}
 						}
 
@@ -527,11 +537,11 @@ namespace OpenBve
 						// sound when moved to service
 						if (newState == AirBrakeHandleState.Service)
 						{
-							Sounds.SoundBuffer buffer = Cars[DriverCar].Sounds.Brake.Buffer;
+							SoundBuffer buffer = Cars[DriverCar].Sounds.Brake.Buffer;
 							if (buffer != null)
 							{
 								Vector3 pos = Cars[DriverCar].Sounds.Brake.Position;
-								Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+								Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 							}
 						}
 
@@ -542,48 +552,48 @@ namespace OpenBve
 							if ((int) newState > 0)
 							{
 								// brake release (not min)
-								Sounds.SoundBuffer buffer;
-								if ((Handles.Brake.Driver - (int)newState > 2 | Cars[DriverCar].Sounds.BrakeHandleFast) && Cars[DriverCar].Sounds.BrakeHandleReleaseFast.Buffer != null)
+								SoundBuffer buffer;
+								if ((Handles.Brake.Driver - (int)newState > 2 | Handles.Brake.ContinuousMovement) && Handles.Brake.DecreaseFast.Buffer != null)
 								{
-									buffer = Cars[DriverCar].Sounds.BrakeHandleReleaseFast.Buffer;
+									buffer = Handles.Brake.DecreaseFast.Buffer;
 								}
 								else
 								{
-									buffer = Cars[DriverCar].Sounds.BrakeHandleRelease.Buffer;
+									buffer = Handles.Brake.Decrease.Buffer;
 								}
 								if (buffer != null)
 								{
-									Vector3 pos = Cars[DriverCar].Sounds.BrakeHandleRelease.Position;
-									Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+									Vector3 pos = Handles.Brake.Decrease.Position;
+									Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 								}
 							}
 							else
 							{
 								// brake min
-								Sounds.SoundBuffer buffer = Cars[DriverCar].Sounds.BrakeHandleMin.Buffer;
+								SoundBuffer buffer = Handles.Brake.Min.Buffer;
 								if (buffer != null)
 								{
-									Vector3 pos = Cars[DriverCar].Sounds.BrakeHandleMin.Position;
-									Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+									Vector3 pos = Handles.Brake.Min.Position;
+									Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 								}
 							}
 						}
 						else if ((int) newState > (int) Handles.LocoBrake.Driver)
 						{
 							// brake
-							Sounds.SoundBuffer buffer;
-							if (((int)newState - (int)Handles.LocoBrake.Driver > 2 | Cars[DriverCar].Sounds.BrakeHandleFast) && Cars[DriverCar].Sounds.BrakeHandleApplyFast.Buffer != null)
+							SoundBuffer buffer;
+							if (((int)newState - (int)Handles.LocoBrake.Driver > 2 | Handles.Brake.ContinuousMovement) && Handles.Brake.IncreaseFast.Buffer != null)
 							{
-								buffer = Cars[DriverCar].Sounds.BrakeHandleApplyFast.Buffer;
+								buffer = Handles.Brake.IncreaseFast.Buffer;
 							}
 							else
 							{
-								buffer = Cars[DriverCar].Sounds.BrakeHandleApply.Buffer;
+								buffer = Handles.Brake.Increase.Buffer;
 							}
 							if (buffer != null)
 							{
-								Vector3 pos = Cars[DriverCar].Sounds.BrakeHandleApply.Position;
-								Sounds.PlaySound(buffer, 1.0, 1.0, pos, this, DriverCar, false);
+								Vector3 pos = Handles.Brake.Increase.Position;
+								Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, Cars[DriverCar], false);
 							}
 						}
 

@@ -79,7 +79,7 @@ namespace OpenBve
 			switch (currentState)
 			{
 			case state.map:
-				Renderer.DrawRectangle(mapImage, origin, mapSize, null);
+				LibRender.Renderer.DrawRectangle(mapImage, origin, mapSize);
 				// get current train position
 				int n = TrainManager.Trains.Length;
 				for (int i = 0; i < n; i++)
@@ -92,22 +92,20 @@ namespace OpenBve
 					zPos = mapSize.Height - mapSize.Height * (trainZ - Game.RouteInformation.RouteMinZ) /
 							(Game.RouteInformation.RouteMaxZ - Game.RouteInformation.RouteMinZ) - trainDotRadius;
 					// draw a dot at current train position
-					Renderer.DrawRectangle(null, new Point(xPos, zPos),
+					LibRender.Renderer.DrawRectangle(null, new Point(xPos, zPos),
 							new Size(trainDotDiameter, trainDotDiameter),
-							TrainManager.Trains[i] == TrainManager.PlayerTrain ? playerTrainDotColour : trainDotColour);
+							TrainManager.Trains[i].IsPlayerTrain ? playerTrainDotColour : trainDotColour);
 				}
 				break;
 			case state.gradient:
-				Renderer.DrawRectangle(gradientImage, origin, gradientSize, null);
+				LibRender.Renderer.DrawRectangle(gradientImage, origin, gradientSize);
 				// get current train position in track
-				int trackPos	= (int)(TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition
-						- TrainManager.PlayerTrain.Cars[0].FrontAxle.Position
-					+ 0.5 * TrainManager.PlayerTrain.Cars[0].Length);
+				int trackPos	= (int)(TrainManager.PlayerTrain.FrontCarTrackPosition());
 				// convert to gradient profile offset
 				xPos = gradientSize.Width * (trackPos - Game.RouteInformation.GradientMinTrack) /
 						(Game.RouteInformation.GradientMaxTrack - Game.RouteInformation.GradientMinTrack);
 				// draw a vertical bar at the current train position
-				Renderer.DrawRectangle(null, new Point(xPos, gradientSize.Height / 2),
+				LibRender.Renderer.DrawRectangle(null, new Point(xPos, gradientSize.Height / 2),
 					new Size(gradientPosWidth, gradientSize.Height / 2), gradientPosBar);
 				break;
 			}

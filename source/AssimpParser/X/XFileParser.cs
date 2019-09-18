@@ -84,12 +84,15 @@ using System.Text;
 using System.IO;
 using System.Diagnostics;
 using System.Globalization;
-using OpenTK;
-using OpenTK.Graphics;
+using OpenBveApi.Colors;
+using OpenBveApi.Math;
 using ZlibWithDictionary;
-using VectorKey = System.Collections.Generic.KeyValuePair<double, OpenTK.Vector3>;
-using QuatKey = System.Collections.Generic.KeyValuePair<double, OpenTK.Quaternion>;
-using MatrixKey = System.Collections.Generic.KeyValuePair<double, OpenTK.Matrix4>;
+using VectorKey = System.Collections.Generic.KeyValuePair<double, OpenBveApi.Math.Vector3>;
+using QuatKey = System.Collections.Generic.KeyValuePair<double, OpenBveApi.Math.Quaternion>;
+using MatrixKey = System.Collections.Generic.KeyValuePair<double, OpenBveApi.Math.Matrix4D>;
+using Vector2 = OpenBveApi.Math.Vector2;
+using Vector3 = OpenBveApi.Math.Vector3;
+
 
 namespace AssimpNET.X
 {
@@ -107,7 +110,7 @@ namespace AssimpNET.X
 		// counter for number arrays in binary format
 		protected uint BinaryNumCount;
 
-		protected int P;
+		protected int currentPosition;
 		protected int End;
 
 		/// Line number when reading in text format
@@ -123,19 +126,19 @@ namespace AssimpNET.X
 			MajorVersion = MinorVersion = 0;
 			IsBinaryFormat = false;
 			BinaryNumCount = 0;
-			P = End = -1;
+			currentPosition = End = -1;
 			LineNumber = 0;
 			Scene = null;
 
 			// set up memory pointers
-			P = 0;
+			currentPosition = 0;
 			//End = P + Buffer.Length - 1;
-			End = P + Buffer.Length;
+			End = currentPosition + Buffer.Length;
 
 			// check header
 			if (Buffer.Length < 16)
 			{
-				throw new Exception("Header mismatch, file is not an XFile.");
+				throw new InvalidDataException("Header mismatch, file is not an XFile.");
 			}
 
 			ASCIIEncoding Ascii = new ASCIIEncoding();
@@ -143,7 +146,7 @@ namespace AssimpNET.X
 
 			if (header.Substring(0, 4) != "xof ")
 			{
-				throw new Exception("Header mismatch, file is not an XFile.");
+				throw new InvalidDataException("Header mismatch, file is not an XFile.");
 			}
 
 			// read version. It comes in a four byte format such as "0302"
@@ -176,7 +179,7 @@ namespace AssimpNET.X
 			}
 			else
 			{
-				throw new Exception("Unsupported xfile format '" + header.Substring(8, 4) + "'");
+				throw new FormatException("Unsupported xfile format '" + header.Substring(8, 4) + "'");
 			}
 
 			// float size
@@ -184,13 +187,13 @@ namespace AssimpNET.X
 
 			if (BinaryFloatSize != 32 && BinaryFloatSize != 64)
 			{
-				throw new Exception("Unknown float size " + BinaryFloatSize + " specified in xfile header.");
+				throw new FormatException("Unknown float size " + BinaryFloatSize + " specified in xfile header.");
 			}
 
 			// The x format specifies size in bits, but we work in bytes
 			BinaryFloatSize /= 8;
 
-			P += 16;
+			currentPosition += 16;
 
 			// If this is a compressed X file, apply the inflate algorithm to it
 			if (compressed)
@@ -216,8 +219,8 @@ namespace AssimpNET.X
 				 */
 
 				// Read file size after decompression excluding header
-				uint uncompressedFinalSize = BitConverter.ToUInt32(Buffer, P) - 16;
-				P += 4;
+				uint uncompressedFinalSize = BitConverter.ToUInt32(Buffer, currentPosition) - 16;
+				currentPosition += 4;
 
 				// Preparing for decompression
 				MemoryStream inputStream = new MemoryStream(Buffer);
@@ -225,39 +228,45 @@ namespace AssimpNET.X
 				int currentBlock = 0;
 				byte[] previousBlockBytes = new byte[(int)MSZIP_BLOCK];
 				byte[] blockBytes;
-				while (P + 3 < End)
+				while (currentPosition + 3 < End)
 				{
 #pragma warning disable CS0219
 					// Read compressed block size after decompression
-					ushort uncompressedBlockSize = BitConverter.ToUInt16(Buffer, P);
-					P += 2;
+					ushort uncompressedBlockSize = BitConverter.ToUInt16(Buffer, currentPosition);
+					currentPosition += 2;
 #pragma warning restore CS0219
 
 					// Read compressed block size
-					ushort compressedBlockSize = BitConverter.ToUInt16(Buffer, P);
-					P += 2;
+					ushort compressedBlockSize = BitConverter.ToUInt16(Buffer, currentPosition);
+					currentPosition += 2;
 
 					// Check compressed block size
 					if (compressedBlockSize > MSZIP_BLOCK)
 					{
-						throw new Exception("Compressed block size is larger than MSZIP standard.");
+						inputStream.Dispose();
+						outputStream.Dispose();
+						throw new FormatException("Compressed block size is larger than MSZIP standard.");
 					}
 
-					if (P + compressedBlockSize > End + 2)
+					if (currentPosition + compressedBlockSize > End + 2)
 					{
-						throw new Exception("X: Unexpected EOF in compressed chunk");
+						inputStream.Dispose();
+						outputStream.Dispose();
+						throw new InvalidDataException("X: Unexpected EOF in compressed chunk");
 					}
 
 					// Check MSZIP signature of compressed block
-					ushort signature = BitConverter.ToUInt16(Buffer, P);
+					ushort signature = BitConverter.ToUInt16(Buffer, currentPosition);
 
 					if (signature != MSZIP_MAGIC)
 					{
-						throw new Exception("The compressed block's signature is incorrect.");
+						inputStream.Dispose();
+						outputStream.Dispose();
+						throw new InvalidDataException("The compressed block's signature is incorrect.");
 					}
 
 					// Skip MSZIP signature
-					inputStream.Position = P + 2;
+					inputStream.Position = currentPosition + 2;
 
 					// Decompress the compressed block
 					blockBytes = new byte[compressedBlockSize - 2];
@@ -277,18 +286,20 @@ namespace AssimpNET.X
 					previousBlockBytes = decompressedBytes;
 
 					// Preparing to move to the next data block
-					P += compressedBlockSize;
+					currentPosition += compressedBlockSize;
 					currentBlock++;
 				}
 
 				// ok, update pointers to point to the uncompressed file data
 				Buffer = outputStream.ToArray();
-				P = 0;
+				outputStream.Dispose();
+				inputStream.Dispose();
+				currentPosition = 0;
 				End = Buffer.Length;
 
 				if (Buffer.Length != uncompressedFinalSize)
 				{
-					throw new Exception("The size after uncompression is incorrect.");
+					throw new InvalidDataException("The size after decompression is incorrect.");
 				}
 			}
 			else
@@ -480,29 +491,29 @@ namespace AssimpNET.X
 			}
 		}
 
-		protected void ParseDataObjectTransformationMatrix(out Matrix4 matrix)
+		protected void ParseDataObjectTransformationMatrix(out Matrix4D matrix)
 		{
 			// read header, we're not interested if it has a name
 			ReadHeadOfDataObject();
 
 			// read its components
-			matrix = new Matrix4();
-			matrix.M11 = ReadFloat();
-			matrix.M21 = ReadFloat();
-			matrix.M31 = ReadFloat();
-			matrix.M41 = ReadFloat();
-			matrix.M12 = ReadFloat();
-			matrix.M22 = ReadFloat();
-			matrix.M32 = ReadFloat();
-			matrix.M42 = ReadFloat();
-			matrix.M13 = ReadFloat();
-			matrix.M23 = ReadFloat();
-			matrix.M33 = ReadFloat();
-			matrix.M43 = ReadFloat();
-			matrix.M14 = ReadFloat();
-			matrix.M24 = ReadFloat();
-			matrix.M34 = ReadFloat();
-			matrix.M44 = ReadFloat();
+			matrix = new Matrix4D();
+			matrix.Row0.X = ReadFloat();
+			matrix.Row1.X = ReadFloat();
+			matrix.Row2.X = ReadFloat();
+			matrix.Row3.X = ReadFloat();
+			matrix.Row0.Y = ReadFloat();
+			matrix.Row1.Y = ReadFloat();
+			matrix.Row2.Y = ReadFloat();
+			matrix.Row3.Y = ReadFloat();
+			matrix.Row0.Z = ReadFloat();
+			matrix.Row1.Z = ReadFloat();
+			matrix.Row2.Z = ReadFloat();
+			matrix.Row3.Z = ReadFloat();
+			matrix.Row0.W = ReadFloat();
+			matrix.Row1.W = ReadFloat();
+			matrix.Row2.W = ReadFloat();
+			matrix.Row3.W = ReadFloat();
 
 			// trailing symbols
 			CheckForSemicolon();
@@ -627,22 +638,22 @@ namespace AssimpNET.X
 			}
 
 			// read matrix offset
-			bone.OffsetMatrix.M11 = ReadFloat();
-			bone.OffsetMatrix.M21 = ReadFloat();
-			bone.OffsetMatrix.M31 = ReadFloat();
-			bone.OffsetMatrix.M41 = ReadFloat();
-			bone.OffsetMatrix.M12 = ReadFloat();
-			bone.OffsetMatrix.M22 = ReadFloat();
-			bone.OffsetMatrix.M32 = ReadFloat();
-			bone.OffsetMatrix.M42 = ReadFloat();
-			bone.OffsetMatrix.M13 = ReadFloat();
-			bone.OffsetMatrix.M23 = ReadFloat();
-			bone.OffsetMatrix.M33 = ReadFloat();
-			bone.OffsetMatrix.M43 = ReadFloat();
-			bone.OffsetMatrix.M14 = ReadFloat();
-			bone.OffsetMatrix.M24 = ReadFloat();
-			bone.OffsetMatrix.M34 = ReadFloat();
-			bone.OffsetMatrix.M44 = ReadFloat();
+			bone.OffsetMatrix.Row0.X = ReadFloat();
+			bone.OffsetMatrix.Row1.X = ReadFloat();
+			bone.OffsetMatrix.Row2.X = ReadFloat();
+			bone.OffsetMatrix.Row3.X = ReadFloat();
+			bone.OffsetMatrix.Row0.Y = ReadFloat();
+			bone.OffsetMatrix.Row1.Y = ReadFloat();
+			bone.OffsetMatrix.Row2.Y = ReadFloat();
+			bone.OffsetMatrix.Row3.Y = ReadFloat();
+			bone.OffsetMatrix.Row0.Z = ReadFloat();
+			bone.OffsetMatrix.Row1.Z = ReadFloat();
+			bone.OffsetMatrix.Row2.Z = ReadFloat();
+			bone.OffsetMatrix.Row3.Z = ReadFloat();
+			bone.OffsetMatrix.Row0.W = ReadFloat();
+			bone.OffsetMatrix.Row1.W = ReadFloat();
+			bone.OffsetMatrix.Row2.W = ReadFloat();
+			bone.OffsetMatrix.Row3.W = ReadFloat();
 
 			mesh.Bones.Add(bone);
 
@@ -754,7 +765,7 @@ namespace AssimpNET.X
 				ThrowException("Vertex color count does not match vertex count");
 			}
 
-			List<Color4> colors = Enumerable.Repeat(new Color4(0.0f, 0.0f, 0.0f, 1.0f), (int)numColors).ToList();
+			List<Color128> colors = Enumerable.Repeat(new Color128(0.0f, 0.0f, 0.0f, 1.0f), (int)numColors).ToList();
 			for (int a = 0; a < (int)numColors; a++)
 			{
 				uint index = ReadInt();
@@ -768,9 +779,9 @@ namespace AssimpNET.X
 				if (!IsBinaryFormat)
 				{
 					FindNextNoneWhiteSpace();
-					if (Buffer[P] == ';' || Buffer[P] == ',')
+					if (Buffer[currentPosition] == ';' || Buffer[currentPosition] == ',')
 					{
-						P++;
+						currentPosition++;
 					}
 				}
 			}
@@ -810,9 +821,9 @@ namespace AssimpNET.X
 			// commented out version check, as version 03.03 exported from blender also has 2 semicolons
 			if (!IsBinaryFormat) // && MajorVersion == 3 && MinorVersion <= 2)
 			{
-				if (P < End && Buffer[P] == ';')
+				if (currentPosition < End && Buffer[currentPosition] == ';')
 				{
-					++P;
+					++currentPosition;
 				}
 			}
 
@@ -1064,23 +1075,23 @@ namespace AssimpNET.X
 							}
 
 							// read matrix
-							Matrix4 matrix = new Matrix4();
-							matrix.M11 = ReadFloat();
-							matrix.M21 = ReadFloat();
-							matrix.M31 = ReadFloat();
-							matrix.M41 = ReadFloat();
-							matrix.M12 = ReadFloat();
-							matrix.M22 = ReadFloat();
-							matrix.M32 = ReadFloat();
-							matrix.M42 = ReadFloat();
-							matrix.M13 = ReadFloat();
-							matrix.M23 = ReadFloat();
-							matrix.M33 = ReadFloat();
-							matrix.M43 = ReadFloat();
-							matrix.M14 = ReadFloat();
-							matrix.M24 = ReadFloat();
-							matrix.M34 = ReadFloat();
-							matrix.M44 = ReadFloat();
+							Matrix4D matrix = new Matrix4D();
+							matrix.Row0.X = ReadFloat();
+							matrix.Row0.Y = ReadFloat();
+							matrix.Row0.Z = ReadFloat();
+							matrix.Row0.W = ReadFloat();
+							matrix.Row1.X = ReadFloat();
+							matrix.Row1.Y = ReadFloat();
+							matrix.Row1.Z = ReadFloat();
+							matrix.Row1.W = ReadFloat();
+							matrix.Row2.X = ReadFloat();
+							matrix.Row2.Y = ReadFloat();
+							matrix.Row2.Z = ReadFloat();
+							matrix.Row2.W = ReadFloat();
+							matrix.Row3.X = ReadFloat();
+							matrix.Row3.Y = ReadFloat();
+							matrix.Row3.Z = ReadFloat();
+							matrix.Row3.W = ReadFloat();
 
 							MatrixKey key = new MatrixKey((double)time, matrix);
 							animBone.TrafoKeys.Add(key);
@@ -1165,22 +1176,22 @@ namespace AssimpNET.X
 
 			while (true)
 			{
-				while (P < End && char.IsWhiteSpace((char)Buffer[P]))
+				while (currentPosition < End && char.IsWhiteSpace((char)Buffer[currentPosition]))
 				{
-					if (Buffer[P] == '\n')
+					if (Buffer[currentPosition] == '\n')
 					{
 						LineNumber++;
 					}
-					++P;
+					++currentPosition;
 				}
 
-				if (P >= End)
+				if (currentPosition >= End)
 				{
 					return;
 				}
 
 				// check if this is a comment
-				if ((Buffer[P] == '/' && Buffer[P + 1] == '/') || Buffer[P] == '#')
+				if ((Buffer[currentPosition] == '/' && Buffer[currentPosition + 1] == '/') || Buffer[currentPosition] == '#')
 				{
 					ReadUntilEndOfLine();
 				}
@@ -1201,7 +1212,7 @@ namespace AssimpNET.X
 			{
 				// in binary mode it will only return NAME and STRING token
 				// and (correctly) skip over other tokens.
-				if (End - P < 2)
+				if (End - currentPosition < 2)
 				{
 					return s;
 				}
@@ -1214,49 +1225,49 @@ namespace AssimpNET.X
 				{
 					case 1:
 						// name token
-						if (End - P < 4)
+						if (End - currentPosition < 4)
 						{
 							return s;
 						}
 						len = ReadBinDWord();
-						if (End - P < (int)len)
+						if (End - currentPosition < (int)len)
 						{
 							return s;
 						}
-						s = Ascii.GetString(Buffer, P, (int)len);
-						P += (int)len;
+						s = Ascii.GetString(Buffer, currentPosition, (int)len);
+						currentPosition += (int)len;
 						return s;
 					case 2:
 						// string token
-						if (End - P < 4)
+						if (End - currentPosition < 4)
 						{
 							return s;
 						}
 						len = ReadBinDWord();
-						if (End - P < (int)len)
+						if (End - currentPosition < (int)len)
 						{
 							return s;
 						}
-						s = Ascii.GetString(Buffer, P, (int)len);
-						P += (int)(len + 2);
+						s = Ascii.GetString(Buffer, currentPosition, (int)len);
+						currentPosition += (int)(len + 2);
 						return s;
 					case 3:
 						// integer token
-						P += 4;
+						currentPosition += 4;
 						return "<integer>";
 					case 5:
 						// GUID token
-						P += 16;
+						currentPosition += 16;
 						return "<guid>";
 					case 6:
-						if (End - P < 4) return s;
+						if (End - currentPosition < 4) return s;
 						len = ReadBinDWord();
-						P += (int)(len * 4);
+						currentPosition += (int)(len * 4);
 						return "<int_list>";
 					case 7:
-						if (End - P < 4) return s;
+						if (End - currentPosition < 4) return s;
 						len = ReadBinDWord();
-						P += (int)(len * BinaryFloatSize);
+						currentPosition += (int)(len * BinaryFloatSize);
 						return "<flt_list>";
 					case 0x0a:
 						return "{";
@@ -1314,23 +1325,23 @@ namespace AssimpNET.X
 			else
 			{
 				FindNextNoneWhiteSpace();
-				if (P > End)
+				if (currentPosition > End)
 				{
 					return s;
 				}
 
-				while (P < End && !char.IsWhiteSpace((char)Buffer[P]))
+				while (currentPosition < End && !char.IsWhiteSpace((char)Buffer[currentPosition]))
 				{
 					// either keep token delimiters when already holding a token, or return if first valid char
-					if (Buffer[P] == ';' || Buffer[P] == '}' || Buffer[P] == '{' || Buffer[P] == ',')
+					if (Buffer[currentPosition] == ';' || Buffer[currentPosition] == '}' || Buffer[currentPosition] == '{' || Buffer[currentPosition] == ',')
 					{
 						if (s.Length == 0)
 						{
-							s += (char)Buffer[P++];
+							s += (char)Buffer[currentPosition++];
 						}
 						break; // stop for delimiter
 					}
-					s += (char)Buffer[P++];
+					s += (char)Buffer[currentPosition++];
 				}
 			}
 			return s;
@@ -1411,15 +1422,15 @@ namespace AssimpNET.X
 			}
 
 			FindNextNoneWhiteSpace();
-			if (P > End)
+			if (currentPosition > End)
 			{
 				return;
 			}
 
 			// test and skip
-			if (Buffer[P] == ';' || Buffer[P] == ',')
+			if (Buffer[currentPosition] == ';' || Buffer[currentPosition] == ',')
 			{
-				P++;
+				currentPosition++;
 			}
 		}
 
@@ -1434,32 +1445,32 @@ namespace AssimpNET.X
 			}
 
 			FindNextNoneWhiteSpace();
-			if (P >= End)
+			if (currentPosition >= End)
 			{
 				ThrowException("Unexpected end of file while parsing string");
 			}
 
-			if (Buffer[P] != '"')
+			if (Buffer[currentPosition] != '"')
 			{
 				ThrowException("Expected quotation mark.");
 			}
-			++P;
+			++currentPosition;
 
-			while (P < End && Buffer[P] != '"')
+			while (currentPosition < End && Buffer[currentPosition] != '"')
 			{
-				token += (char)Buffer[P++];
+				token += (char)Buffer[currentPosition++];
 			}
 
-			if (P >= End - 1)
+			if (currentPosition >= End - 1)
 			{
 				ThrowException("Unexpected end of file while parsing string");
 			}
 
-			if (Buffer[P + 1] != ';' || Buffer[P] != '"')
+			if (Buffer[currentPosition + 1] != ';' || Buffer[currentPosition] != '"')
 			{
 				ThrowException("Expected quotation mark and semicolon at the end of a string.");
 			}
-			P += 2;
+			currentPosition += 2;
 		}
 
 		protected void ReadUntilEndOfLine()
@@ -1469,32 +1480,32 @@ namespace AssimpNET.X
 				return;
 			}
 
-			while (P < End)
+			while (currentPosition < End)
 			{
-				if (Buffer[P] == '\n' || Buffer[P] == '\r')
+				if (Buffer[currentPosition] == '\n' || Buffer[currentPosition] == '\r')
 				{
-					++P;
+					++currentPosition;
 					LineNumber++;
 					return;
 				}
 
-				++P;
+				++currentPosition;
 			}
 		}
 
 		protected ushort ReadBinWord()
 		{
-			Debug.Assert(End - P >= 2);
-			ushort tmp = BitConverter.ToUInt16(Buffer, P);
-			P += 2;
+			Debug.Assert(End - currentPosition >= 2);
+			ushort tmp = BitConverter.ToUInt16(Buffer, currentPosition);
+			currentPosition += 2;
 			return tmp;
 		}
 
 		protected uint ReadBinDWord()
 		{
-			Debug.Assert(End - P >= 4);
-			uint tmp = BitConverter.ToUInt32(Buffer, P);
-			P += 4;
+			Debug.Assert(End - currentPosition >= 4);
+			uint tmp = BitConverter.ToUInt32(Buffer, currentPosition);
+			currentPosition += 4;
 			return tmp;
 		}
 
@@ -1502,11 +1513,11 @@ namespace AssimpNET.X
 		{
 			if (IsBinaryFormat)
 			{
-				if (BinaryNumCount == 0 && End - P >= 2)
+				if (BinaryNumCount == 0 && End - currentPosition >= 2)
 				{
 					ushort tmp = ReadBinWord(); // 0x06 or 0x03
 					// array of ints follows
-					if (tmp == 0x06 && End - P >= 4)
+					if (tmp == 0x06 && End - currentPosition >= 4)
 					{
 						BinaryNumCount = ReadBinDWord();
 					}
@@ -1518,13 +1529,13 @@ namespace AssimpNET.X
 				}
 
 				--BinaryNumCount;
-				if (End - P >= 4)
+				if (End - currentPosition >= 4)
 				{
 					return ReadBinDWord();
 				}
 				else
 				{
-					P = End;
+					currentPosition = End;
 					return 0;
 				}
 			}
@@ -1536,28 +1547,28 @@ namespace AssimpNET.X
 
 				// check preceding minus sign
 				bool isNegative = false;
-				if (Buffer[P] == '-')
+				if (Buffer[currentPosition] == '-')
 				{
 					isNegative = true;
-					P++;
+					currentPosition++;
 				}
 
 				// at least one digit expected
-				if (!char.IsDigit((char)Buffer[P]))
+				if (!char.IsDigit((char)Buffer[currentPosition]))
 				{
 					ThrowException("Number expected.");
 				}
 
 				// read digits
 				uint number = 0;
-				while (P < End)
+				while (currentPosition < End)
 				{
-					if (!char.IsDigit((char)Buffer[P]))
+					if (!char.IsDigit((char)Buffer[currentPosition]))
 					{
 						break;
 					}
-					number = number * 10 + (uint)(Buffer[P] - 48);
-					P++;
+					number = number * 10 + (uint)(Buffer[currentPosition] - 48);
+					currentPosition++;
 				}
 
 				CheckForSeparator();
@@ -1571,11 +1582,11 @@ namespace AssimpNET.X
 
 			if (IsBinaryFormat)
 			{
-				if (BinaryNumCount == 0 && End - P >= 2)
+				if (BinaryNumCount == 0 && End - currentPosition >= 2)
 				{
 					ushort tmp = ReadBinWord(); // 0x07 or 0x42
 					// array of floats following
-					if (tmp == 0x07 && End - P >= 4)
+					if (tmp == 0x07 && End - currentPosition >= 4)
 					{
 						BinaryNumCount = ReadBinDWord();
 					}
@@ -1589,29 +1600,29 @@ namespace AssimpNET.X
 				--BinaryNumCount;
 				if (BinaryFloatSize == 8)
 				{
-					if (End - P >= 8)
+					if (End - currentPosition >= 8)
 					{
-						result = (float)BitConverter.ToDouble(Buffer, P);
-						P += 8;
+						result = (float)BitConverter.ToDouble(Buffer, currentPosition);
+						currentPosition += 8;
 						return result;
 					}
 					else
 					{
-						P = End;
+						currentPosition = End;
 						return 0.0f;
 					}
 				}
 				else
 				{
-					if (End - P >= 4)
+					if (End - currentPosition >= 4)
 					{
-						result = BitConverter.ToSingle(Buffer, P);
-						P += 4;
+						result = BitConverter.ToSingle(Buffer, currentPosition);
+						currentPosition += 4;
 						return result;
 					}
 					else
 					{
-						P = End;
+						currentPosition = End;
 						return 0.0f;
 					}
 				}
@@ -1623,20 +1634,20 @@ namespace AssimpNET.X
 			// I mean you, Blender!
 			// Reading is safe because of the terminating zero
 			ASCIIEncoding Ascii = new ASCIIEncoding();
-			if (Ascii.GetString(Buffer, P, 9) == "-1.#IND00" || Ascii.GetString(Buffer, P, 8) == "1.#IND00")
+			if (Ascii.GetString(Buffer, currentPosition, 9) == "-1.#IND00" || Ascii.GetString(Buffer, currentPosition, 8) == "1.#IND00")
 			{
-				P += 9;
+				currentPosition += 9;
 				CheckForSeparator();
 				return 0.0f;
 			}
-			else if (Ascii.GetString(Buffer, P, 8) == "1.#QNAN0")
+			else if (Ascii.GetString(Buffer, currentPosition, 8) == "1.#QNAN0")
 			{
-				P += 8;
+				currentPosition += 8;
 				CheckForSeparator();
 				return 0.0f;
 			}
 
-			P = ConvertToFloat(P, out result);
+			currentPosition = ConvertToFloat(currentPosition, out result);
 
 			CheckForSeparator();
 
@@ -1664,9 +1675,9 @@ namespace AssimpNET.X
 			return vector;
 		}
 
-		protected Color4 ReadRGBA()
+		protected Color128 ReadRGBA()
 		{
-			Color4 color;
+			Color128 color;
 			color.R = ReadFloat();
 			color.G = ReadFloat();
 			color.B = ReadFloat();
@@ -1676,9 +1687,9 @@ namespace AssimpNET.X
 			return color;
 		}
 
-		protected Color4 ReadRGB()
+		protected Color128 ReadRGB()
 		{
-			Color4 color;
+			Color128 color;
 			color.R = ReadFloat();
 			color.G = ReadFloat();
 			color.B = ReadFloat();
@@ -1745,14 +1756,14 @@ namespace AssimpNET.X
 				++position;
 			}
 
-			if (string.Compare(Ascii.GetString(Buffer, position, 3), "nan", true, CultureInfo.InvariantCulture) == 0)
+			if (string.Compare(Ascii.GetString(Buffer, position, 3), "nan", StringComparison.OrdinalIgnoreCase) == 0)
 			{
 				result = float.NaN;
 				position += 3;
 				return position;
 			}
 
-			if (string.Compare(Ascii.GetString(Buffer, position, 3), "inf", true, CultureInfo.InvariantCulture) == 0)
+			if (string.Compare(Ascii.GetString(Buffer, position, 3), "inf", StringComparison.OrdinalIgnoreCase) == 0)
 			{
 				result = float.PositiveInfinity;
 				if (inv)
@@ -1760,7 +1771,7 @@ namespace AssimpNET.X
 					result = -result;
 				}
 				position += 3;
-				if (string.Compare(Ascii.GetString(Buffer, position, 5), "inity", true, CultureInfo.InvariantCulture) == 0)
+				if (string.Compare(Ascii.GetString(Buffer, position, 5), "inity", StringComparison.OrdinalIgnoreCase) == 0)
 				{
 					position += 5;
 				}
@@ -1789,7 +1800,7 @@ namespace AssimpNET.X
 
 			try
 			{
-				f = float.Parse(tmp);
+				f = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 			}
 			catch (Exception e)
 			{

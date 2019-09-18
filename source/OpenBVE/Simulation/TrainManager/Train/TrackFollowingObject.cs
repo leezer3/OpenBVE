@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBve.RouteManager;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
 
@@ -6,6 +7,7 @@ namespace OpenBve
 {
 	public static partial class TrainManager
 	{
+		/// <summary>A more advanced type of AnimatedObject, which follows a rail and a travel plan</summary>
 		public class TrackFollowingObject : Train
 		{
 			internal double AppearanceTime;
@@ -32,13 +34,14 @@ namespace OpenBve
 			internal new void Dispose()
 			{
 				State = TrainState.Disposed;
-				foreach (var Car in Cars)
+				for (int i = 0; i < Cars.Length; i++)
 				{
-					Car.ChangeCarSection(CarSectionType.NotVisible);
-					Car.FrontBogie.ChangeSection(-1);
-					Car.RearBogie.ChangeSection(-1);
+					Cars[i].ChangeCarSection(CarSectionType.NotVisible);
+					Cars[i].FrontBogie.ChangeSection(-1);
+					Cars[i].RearBogie.ChangeSection(-1);
+					Cars[i].Coupler.ChangeSection(-1);
 				}
-				Sounds.StopAllSounds(this);
+				Program.Sounds.StopAllSounds(this);
 			}
 
 			/// <summary>Call this method to update the train</summary>
@@ -48,7 +51,7 @@ namespace OpenBve
 				if (State == TrainState.Pending)
 				{
 					// pending train
-					if (Game.SecondsSinceMidnight >= AppearanceTime)
+					if (CurrentRoute.SecondsSinceMidnight >= AppearanceTime)
 					{
 						double PlayerTrainTrackPosition = PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition + 0.5 * PlayerTrain.Cars[0].Length - PlayerTrain.Cars[0].FrontAxle.Position;
 						if (PlayerTrainTrackPosition < AppearanceStartPosition || (PlayerTrainTrackPosition > AppearanceEndPosition && AppearanceEndPosition > AppearanceStartPosition))
@@ -66,13 +69,14 @@ namespace OpenBve
 							}
 							Cars[i].FrontBogie.ChangeSection(0);
 							Cars[i].RearBogie.ChangeSection(0);
+							Cars[i].Coupler.ChangeSection(0);
 
 							if (Cars[i].Specs.IsMotorCar)
 							{
 								if (Cars[i].Sounds.Loop.Buffer != null)
 								{
 									Vector3 pos = Cars[i].Sounds.Loop.Position;
-									Cars[i].Sounds.Loop.Source = Sounds.PlaySound(Cars[i].Sounds.Loop.Buffer, 1.0, 1.0, pos, this, i, true);
+									Cars[i].Sounds.Loop.Source = Program.Sounds.PlaySound(Cars[i].Sounds.Loop.Buffer, 1.0, 1.0, pos, Cars[i], true);
 								}
 							}
 						}
@@ -106,7 +110,7 @@ namespace OpenBve
 							//Calculate the cab brightness
 							double ccb = Math.Round(255.0 * (double) (1.0 - b));
 							//DNB then must equal the smaller of the cab brightness value & the dynamic brightness value
-							dnb = (byte) Math.Min(Renderer.DynamicCabBrightness, ccb);
+							dnb = (byte) Math.Min(LibRender.Renderer.DynamicCabBrightness, ccb);
 						}
 						int cs = Cars[i].CurrentCarSection;
 						if (cs >= 0 && Cars[i].CarSections.Length > 0 && Cars[i].CarSections.Length >= cs)
@@ -115,12 +119,11 @@ namespace OpenBve
 							{
 								for (int k = 0; k < Cars[i].CarSections[cs].Groups[0].Elements.Length; k++)
 								{
-									int o = Cars[i].CarSections[cs].Groups[0].Elements[k].ObjectIndex;
-									if (ObjectManager.Objects[o] != null)
+									if (Cars[i].CarSections[cs].Groups[0].Elements[k].internalObject != null)
 									{
-										for (int j = 0; j < ObjectManager.Objects[o].Mesh.Materials.Length; j++)
+										for (int j = 0; j < Cars[i].CarSections[cs].Groups[0].Elements[k].internalObject.Mesh.Materials.Length; j++)
 										{
-											ObjectManager.Objects[o].Mesh.Materials[j].DaytimeNighttimeBlend = dnb;
+											Cars[i].CarSections[cs].Groups[0].Elements[k].internalObject.Mesh.Materials[j].DaytimeNighttimeBlend = dnb;
 										}
 									}
 								}

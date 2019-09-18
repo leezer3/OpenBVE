@@ -550,6 +550,8 @@ namespace OpenBve {
             this.numericUpDownBrakeNotches.Name = "numericUpDownBrakeNotches";
             this.numericUpDownBrakeNotches.Size = new System.Drawing.Size(120, 19);
             this.numericUpDownBrakeNotches.TabIndex = 10;
+            this.numericUpDownBrakeNotches.Minimum = 1;
+            this.numericUpDownBrakeNotches.Value = 8;
             // 
             // labelBrakeNotch
             // 
@@ -593,6 +595,8 @@ namespace OpenBve {
             this.numericUpDownPowerNotches.Name = "numericUpDownPowerNotches";
             this.numericUpDownPowerNotches.Size = new System.Drawing.Size(120, 19);
             this.numericUpDownPowerNotches.TabIndex = 5;
+            this.numericUpDownPowerNotches.Minimum = 1;
+            this.numericUpDownPowerNotches.Value = 8;
             // 
             // labelPowerNotch
             // 

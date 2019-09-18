@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using OpenBveApi;
 using OpenBveApi.Interface;
 
 namespace OpenBve
@@ -28,7 +29,7 @@ namespace OpenBve
 						Game.LogRouteName = Reader.ReadString();
 						Game.LogTrainName = Reader.ReadString();
 						Game.LogDateTime = DateTime.FromBinary(Reader.ReadInt64());
-						Interface.CurrentOptions.GameMode = (Interface.GameMode)Reader.ReadInt16();
+						Interface.CurrentOptions.GameMode = (GameMode)Reader.ReadInt16();
 						Game.BlackBoxEntryCount = Reader.ReadInt32();
 						Game.BlackBoxEntries = new Game.BlackBoxEntry[Game.BlackBoxEntryCount];
 						for (int i = 0; i < Game.BlackBoxEntryCount; i++)

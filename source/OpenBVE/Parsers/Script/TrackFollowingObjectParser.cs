@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -159,8 +160,8 @@ namespace OpenBve
 
 			UnifiedObject[] CarObjects = new UnifiedObject[Train.Cars.Length];
 			UnifiedObject[] BogieObjects = new UnifiedObject[Train.Cars.Length * 2];
-
-			ExtensionsCfgParser.ParseExtensionsConfig(System.IO.Path.GetDirectoryName(ExteriorFile), TextEncoding.GetSystemEncodingFromFile(ExteriorFile), ref CarObjects, ref BogieObjects, Train, true);
+			UnifiedObject[] CouplerObjects = new UnifiedObject[Train.Cars.Length - 1];
+			ExtensionsCfgParser.ParseExtensionsConfig(System.IO.Path.GetDirectoryName(ExteriorFile), TextEncoding.GetSystemEncodingFromFile(ExteriorFile), ref CarObjects, ref BogieObjects, ref CouplerObjects, Train, true);
 
 			int currentBogieObject = 0;
 			for (int i = 0; i < Train.Cars.Length; i++)
@@ -169,7 +170,7 @@ namespace OpenBve
 				{
 					// load default exterior object
 					string file = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Compatibility"), "exterior.csv");
-					ObjectManager.StaticObject so = ObjectManager.LoadStaticObject(file, System.Text.Encoding.UTF8, false, false, false);
+					StaticObject so = ObjectManager.LoadStaticObject(file, System.Text.Encoding.UTF8, false);
 					if (so == null)
 					{
 						CarObjects[i] = null;
@@ -209,21 +210,21 @@ namespace OpenBve
 				{
 					if (Car.Doors[0].OpenSound.Buffer != null & Car.Doors[1].OpenSound.Buffer != null)
 					{
-						Sounds.LoadBuffer(Car.Doors[0].OpenSound.Buffer);
-						Sounds.LoadBuffer(Car.Doors[1].OpenSound.Buffer);
+						Program.Sounds.LoadBuffer(Car.Doors[0].OpenSound.Buffer);
+						Program.Sounds.LoadBuffer(Car.Doors[1].OpenSound.Buffer);
 						double a = Car.Doors[0].OpenSound.Buffer.Duration;
 						double b = Car.Doors[1].OpenSound.Buffer.Duration;
 						Car.Specs.DoorOpenFrequency = a + b > 0.0 ? 2.0 / (a + b) : 0.8;
 					}
 					else if (Car.Doors[0].OpenSound.Buffer != null)
 					{
-						Sounds.LoadBuffer(Car.Doors[0].OpenSound.Buffer);
+						Program.Sounds.LoadBuffer(Car.Doors[0].OpenSound.Buffer);
 						double a = Car.Doors[0].OpenSound.Buffer.Duration;
 						Car.Specs.DoorOpenFrequency = a > 0.0 ? 1.0 / a : 0.8;
 					}
 					else if (Car.Doors[1].OpenSound.Buffer != null)
 					{
-						Sounds.LoadBuffer(Car.Doors[0].OpenSound.Buffer);
+						Program.Sounds.LoadBuffer(Car.Doors[0].OpenSound.Buffer);
 						double b = Car.Doors[1].OpenSound.Buffer.Duration;
 						Car.Specs.DoorOpenFrequency = b > 0.0 ? 1.0 / b : 0.8;
 					}
@@ -236,21 +237,21 @@ namespace OpenBve
 				{
 					if (Car.Doors[0].CloseSound.Buffer != null & Car.Doors[1].CloseSound.Buffer != null)
 					{
-						Sounds.LoadBuffer(Car.Doors[0].CloseSound.Buffer);
-						Sounds.LoadBuffer(Car.Doors[1].CloseSound.Buffer);
+						Program.Sounds.LoadBuffer(Car.Doors[0].CloseSound.Buffer);
+						Program.Sounds.LoadBuffer(Car.Doors[1].CloseSound.Buffer);
 						double a = Car.Doors[0].CloseSound.Buffer.Duration;
 						double b = Car.Doors[1].CloseSound.Buffer.Duration;
 						Car.Specs.DoorCloseFrequency = a + b > 0.0 ? 2.0 / (a + b) : 0.8;
 					}
 					else if (Car.Doors[0].CloseSound.Buffer != null)
 					{
-						Sounds.LoadBuffer(Car.Doors[0].CloseSound.Buffer);
+						Program.Sounds.LoadBuffer(Car.Doors[0].CloseSound.Buffer);
 						double a = Car.Doors[0].CloseSound.Buffer.Duration;
 						Car.Specs.DoorCloseFrequency = a > 0.0 ? 1.0 / a : 0.8;
 					}
 					else if (Car.Doors[1].CloseSound.Buffer != null)
 					{
-						Sounds.LoadBuffer(Car.Doors[0].CloseSound.Buffer);
+						Program.Sounds.LoadBuffer(Car.Doors[0].CloseSound.Buffer);
 						double b = Car.Doors[1].CloseSound.Buffer.Duration;
 						Car.Specs.DoorCloseFrequency = b > 0.0 ? 1.0 / b : 0.8;
 					}

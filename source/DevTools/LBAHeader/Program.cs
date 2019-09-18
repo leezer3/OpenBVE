@@ -3,7 +3,7 @@ using System.IO;
 
 namespace LBAHeader
 {
-	class FixLBAHeader
+	static class FixLBAHeader
 	{
 		static byte[] data;
 		static void Main(string[] args)
@@ -31,6 +31,7 @@ namespace LBAHeader
 				return;
 			}
 			AddLbaFlag(f);
+			// ReSharper disable once AssignNullToNotNullAttribute
 			f = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(f), "RouteViewer.exe");
 			if (!System.IO.File.Exists(f))
 			{

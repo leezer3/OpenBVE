@@ -1,44 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
-using OpenTK.Audio.OpenAL;
+using static LibRender.CameraProperties;
+using OpenBve.RouteManager;
+using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
+using OpenBveApi.Sounds;
+using OpenBveApi.Trains;
+using OpenTK.Audio.OpenAL;
+using SoundManager;
 
-
-namespace OpenBve {
+namespace OpenBve
+{
 	using OpenBveApi.Math;
 
-	internal static partial class Sounds {
+	internal partial class Sounds
+	{
 
 		/// <summary>Updates the sound component. Should be called every frame.</summary>
 		/// <param name="timeElapsed">The time in seconds that elapsed since the last call to this function.</param>
-		/// <param name="model">The sound model.</param>
-		internal static void Update(double timeElapsed, SoundModels model) {
-            //The time elapsed is used to work out the clamp factor
-            //If this is zero, or above 0.5, then this causes sounds bugs
-            //TODO: This is a nasty hack. Store the previous clamp factor in these cases??
-		    if (timeElapsed == 0.0 || timeElapsed > 0.5) return;
-			if (model == SoundModels.Linear) {
-				UpdateLinearModel(timeElapsed);
-			} else {
-				UpdateInverseModel(timeElapsed);
-			}
-		}
-		
-		/// <summary>Updates the sound component. Should be called every frame.</summary>
-		/// <param name="timeElapsed">The time in seconds that elapsed since the last call to this function.</param>
-		private static void UpdateLinearModel(double timeElapsed) {
+		protected override void UpdateLinearModel(double timeElapsed)
+		{
 			/*
 			 * Set up the listener
 			 * */
-			Vector3 listenerPosition = World.AbsoluteCameraPosition;
-			Orientation3 listenerOrientation = new Orientation3(World.AbsoluteCameraSide, World.AbsoluteCameraUp, World.AbsoluteCameraDirection);
+			Vector3 listenerPosition = Camera.AbsolutePosition;
+			Orientation3 listenerOrientation = new Orientation3(Camera.AbsoluteSide, Camera.AbsoluteUp, Camera.AbsoluteDirection);
 			Vector3 listenerVelocity;
-			if (World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead | World.CameraMode == CameraViewMode.Exterior) {
+			if (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead | Camera.CurrentMode == CameraViewMode.Exterior) {
 				TrainManager.Car car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
 				Vector3 diff = car.FrontAxle.Follower.WorldPosition - car.RearAxle.Follower.WorldPosition;
-				listenerVelocity = car.Specs.CurrentSpeed * Vector3.Normalize(diff) + World.CameraAlignmentSpeed.Position;
+				listenerVelocity = car.CurrentSpeed * Vector3.Normalize(diff) + Camera.AlignmentSpeed.Position;
 			} else {
-				listenerVelocity = World.CameraAlignmentSpeed.Position;
+				listenerVelocity = Camera.AlignmentSpeed.Position;
 			}
             AL.Listener(ALListener3f.Position, 0.0f, 0.0f, 0.0f);
             AL.Listener(ALListener3f.Velocity, (float)listenerVelocity.X, (float)listenerVelocity.Y, (float)listenerVelocity.Z);
@@ -47,10 +40,10 @@ namespace OpenBve {
 			/*
 			 * Set up the atmospheric attributes
 			 * */
-			double elevation = World.AbsoluteCameraPosition.Y + Game.RouteInitialElevation;
-			double airTemperature = Game.GetAirTemperature(elevation);
-			double airPressure = Game.GetAirPressure(elevation, airTemperature);
-			double speedOfSound = Game.GetSpeedOfSound(airPressure, airTemperature);
+			double elevation = Camera.AbsolutePosition.Y + CurrentRoute.InitialElevation;
+			double airTemperature = Atmosphere.GetAirTemperature(elevation);
+			double airPressure = Atmosphere.GetAirPressure(elevation, airTemperature);
+			double speedOfSound = Atmosphere.GetSpeedOfSound(airPressure, airTemperature);
 			try {
                 AL.SpeedOfSound((float)speedOfSound);
 			} catch { }
@@ -103,19 +96,20 @@ namespace OpenBve {
 					 * The sound is to be played or is already playing.
 					 * Calculate the sound gain.
 					 * */
-					Vector3 direction;
+					
 					Vector3 position;
 					Vector3 velocity;
 
 					switch (Sources[i].Type)
 					{
 						case SoundType.TrainCar:
-							var Train = (TrainManager.Train)Sources[i].Parent;
-							Train.Cars[Sources[i].Car].CreateWorldCoordinates(Sources[i].Position, out position, out direction);
-							velocity = Train.Cars[Sources[i].Car].Specs.CurrentSpeed * direction;
+							Vector3 direction; //only relevant for moving objects
+							var Car = (AbstractCar)Sources[i].Parent;
+							Car.CreateWorldCoordinates(Sources[i].Position, out position, out direction);
+							velocity = Car.CurrentSpeed * direction;
 							break;
 						case SoundType.AnimatedObject:
-							var WorldSound = (ObjectManager.WorldSound)Sources[i].Parent;
+							var WorldSound = (WorldSound)Sources[i].Parent;
 							//TODO: Calculate speed...
 							position = WorldSound.Follower.WorldPosition + WorldSound.Position;
 							velocity = Vector3.Zero;
@@ -132,9 +126,9 @@ namespace OpenBve {
 					} else {
 						double distance = positionDifference.Norm();
 						double innerRadius = Sources[i].Radius;
-						if (World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead) {
-							if (Sources[i].Parent != TrainManager.PlayerTrain || Sources[i].Car != TrainManager.PlayerTrain.DriverCar) {
-								innerRadius *= 0.5;
+						if (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead) {
+							if (Sources[i].Parent != TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar]) {
+								innerRadius *= 0.5; 
 							}
 						}
 						double outerRadius = OuterRadiusFactor * innerRadius;
@@ -269,37 +263,24 @@ namespace OpenBve {
 
 			RecAndPlay(listenerPosition, true, 0.0);
 		}
-		
-		private class SoundSourceAttenuation : IComparable<SoundSourceAttenuation> {
-			internal readonly SoundSource Source;
-			internal double Gain;
-			internal readonly double Distance;
-			internal SoundSourceAttenuation(SoundSource source, double gain, double distance) {
-				this.Source = source;
-				this.Gain = gain;
-				this.Distance = distance;
-			}
-			int IComparable<SoundSourceAttenuation>.CompareTo(SoundSourceAttenuation other) {
-				return other.Gain.CompareTo(this.Gain);
-			}
-		}
-		
+
 		/// <summary>Updates the sound component. Should be called every frame.</summary>
 		/// <param name="timeElapsed">The time in seconds that elapsed since the last call to this function.</param>
-		private static void UpdateInverseModel(double timeElapsed) {
+		protected override void UpdateInverseModel(double timeElapsed)
+		{
 			/*
 			 * Set up the listener.
 			 * */
-			Vector3 listenerPosition = World.AbsoluteCameraPosition;
-			Orientation3 listenerOrientation = new Orientation3(World.AbsoluteCameraSide, World.AbsoluteCameraUp, World.AbsoluteCameraDirection);
+			Vector3 listenerPosition = Camera.AbsolutePosition;
+			Orientation3 listenerOrientation = new Orientation3(Camera.AbsoluteSide, Camera.AbsoluteUp, Camera.AbsoluteDirection);
 			Vector3 listenerVelocity;
-			if (World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead | World.CameraMode == CameraViewMode.Exterior) {
+			if (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead | Camera.CurrentMode == CameraViewMode.Exterior) {
 				TrainManager.Car car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
 				Vector3 diff = car.FrontAxle.Follower.WorldPosition - car.RearAxle.Follower.WorldPosition;
 				if (diff.IsNullVector()) {
-					listenerVelocity = car.Specs.CurrentSpeed * Vector3.Forward;
+					listenerVelocity = car.CurrentSpeed * Vector3.Forward;
 				} else {
-					listenerVelocity = car.Specs.CurrentSpeed * Vector3.Normalize(diff);
+					listenerVelocity = car.CurrentSpeed * Vector3.Normalize(diff);
 				}
 			} else {
 				listenerVelocity = Vector3.Zero;
@@ -311,10 +292,10 @@ namespace OpenBve {
 			/*
 			 * Set up the atmospheric attributes.
 			 * */
-			double elevation = World.AbsoluteCameraPosition.Y + Game.RouteInitialElevation;
-			double airTemperature = Game.GetAirTemperature(elevation);
-			double airPressure = Game.GetAirPressure(elevation, airTemperature);
-			double speedOfSound = Game.GetSpeedOfSound(airPressure, airTemperature);
+			double elevation = Camera.AbsolutePosition.Y + CurrentRoute.InitialElevation;
+			double airTemperature = Atmosphere.GetAirTemperature(elevation);
+			double airPressure = Atmosphere.GetAirPressure(elevation, airTemperature);
+			double speedOfSound = Atmosphere.GetSpeedOfSound(airPressure, airTemperature);
 			try {
 				AL.SpeedOfSound((float)speedOfSound);
 			} catch { }
@@ -393,11 +374,11 @@ namespace OpenBve {
 					{
 						case SoundType.TrainCar:
 							Vector3 direction;
-							var Train = (TrainManager.Train)Sources[i].Parent;
-							Train.Cars[Sources[i].Car].CreateWorldCoordinates(Sources[i].Position, out position, out direction);
+							var Car = (AbstractCar)Sources[i].Parent;
+							Car.CreateWorldCoordinates(Sources[i].Position, out position, out direction);
 							break;
 						case SoundType.AnimatedObject:
-							var WorldSound = (ObjectManager.WorldSound)Sources[i].Parent;
+							var WorldSound = (WorldSound)Sources[i].Parent;
 							position = WorldSound.Follower.WorldPosition + WorldSound.Position;
 							break;
 						default:
@@ -407,8 +388,8 @@ namespace OpenBve {
 					Vector3 positionDifference = position - listenerPosition;
 					double distance = positionDifference.Norm();
 					double radius = Sources[i].Radius;
-					if (World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead) {
-						if (Sources[i].Parent != TrainManager.PlayerTrain || Sources[i].Car != TrainManager.PlayerTrain.DriverCar) {
+					if (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead) {
+						if (Sources[i].Parent != TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar]) {
 							radius *= 0.5;
 						}
 					}
@@ -534,12 +515,12 @@ namespace OpenBve {
 					{
 						case SoundType.TrainCar:
 							Vector3 direction;
-							var Train = (TrainManager.Train)source.Parent;
-							Train.Cars[source.Car].CreateWorldCoordinates(source.Position, out position, out direction);
-							velocity = Train.Cars[source.Car].Specs.CurrentSpeed * direction;
+							var Car = (AbstractCar)source.Parent;
+							Car.CreateWorldCoordinates(source.Position, out position, out direction);
+							velocity = Car.CurrentSpeed * direction;
 							break;
 						case SoundType.AnimatedObject:
-							var WorldSound = (ObjectManager.WorldSound)source.Parent;
+							var WorldSound = (WorldSound)source.Parent;
 							position = WorldSound.Follower.WorldPosition + WorldSound.Position;
 							velocity = Vector3.Zero;
 							break;
@@ -564,7 +545,7 @@ namespace OpenBve {
 			RecAndPlay(listenerPosition, false, clampFactor);
 		}
 
-		private static void RecAndPlay(Vector3 listenerPosition, bool IsLinear, double clampFactor) {
+		private void RecAndPlay(Vector3 listenerPosition, bool IsLinear, double clampFactor) {
 			if (OpenAlMic == null) {
 				return;
 			}
@@ -583,7 +564,6 @@ namespace OpenBve {
 			}
 
 			// Make sure that the source is playing.
-			int sample;
 			int[] states = new int[MicSources.Count];
 
 			for (int i = 0; i < MicSources.Count; i++) {
@@ -591,7 +571,7 @@ namespace OpenBve {
 			}
 
 			// Get the number of buffers that can be recorded.
-			sample = OpenAlMic.AvailableSamples;
+			int sample = OpenAlMic.AvailableSamples;
 
 			for (int i = 0; i < MicSources.Count; i++) {
 				if (listenerPosition.Z < MicSources[i].Position.Z - MicSources[i].BackwardTolerance || listenerPosition.Z > MicSources[i].Position.Z + MicSources[i].ForwardTolerance) {
@@ -621,7 +601,7 @@ namespace OpenBve {
 					if (GlobalMute) {
 						gain = 0.0;
 					} else {
-						if (World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead) {
+						if (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead) {
 							innerRadius *= 0.5;
 						}
 						if (IsLinear) {

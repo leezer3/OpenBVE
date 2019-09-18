@@ -44,13 +44,13 @@ namespace TrainEditor
 				string Section = "";
 				for (int i = 0; i < Lines.Length; i++)
 				{
-					Lines[i] = Lines[i].Trim();
+					Lines[i] = Lines[i].Trim(new char[] { });
 					if (Lines[i].Length != 0 && !Lines[i].StartsWith(";", StringComparison.OrdinalIgnoreCase))
 					{
 						if (Lines[i].StartsWith("[", StringComparison.Ordinal) &
 							Lines[i].EndsWith("]", StringComparison.Ordinal))
 						{
-							Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim().ToLowerInvariant();
+							Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim(new char[] { }).ToLowerInvariant();
 						}
 						else
 						{
@@ -59,7 +59,7 @@ namespace TrainEditor
 							if (j >= 0)
 							{
 								Key = Lines[i].Substring(0, j).TrimEnd().ToLowerInvariant();
-								Value = Lines[i].Substring(j + 1).TrimStart();
+								Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 							}
 							else
 							{

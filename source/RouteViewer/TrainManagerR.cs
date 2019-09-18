@@ -6,7 +6,9 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using OpenBveApi.Math;
+using OpenBveApi.Routes;
 using OpenBveApi.Trains;
+using SoundManager;
 
 namespace OpenBve {
 	using System;
@@ -18,9 +20,8 @@ namespace OpenBve {
 
 		// structures
 		internal struct Axle {
-			internal TrackManager.TrackFollower Follower;
+			internal TrackFollower Follower;
 		}
-		internal struct Coupler { }
 		internal struct Section { }
 
 		// cars
@@ -154,24 +155,11 @@ namespace OpenBve {
 			internal double CurrentPitchDueToAccelerationTrackPosition;
 			internal double CurrentPitchDueToAccelerationSpeed;
 		}
-		internal struct CarBrightness {
-			internal float PreviousBrightness;
-			internal double PreviousTrackPosition;
-			internal float NextBrightness;
-			internal double NextTrackPosition;
-		}
 		internal struct Horn {
 			internal CarSound Sound;
 			internal bool Loop;
 		}
-		internal struct CarSound {
-			/// <summary>The sound buffer to play</summary>
-			internal Sounds.SoundBuffer Buffer;
-			/// <summary>The source of the sound within the car</summary>
-			internal Sounds.SoundSource Source;
-			/// <summary>A Vector3 describing the position of the sound source</summary>
-			internal Vector3 Position;
-		}
+		
 		internal struct MotorSoundTableEntry {
 			internal int SoundBufferIndex;
 			internal float Pitch;
@@ -258,16 +246,15 @@ namespace OpenBve {
 			internal CarSounds Sounds;
 			internal bool Derailed;
 			internal bool Topples;
-			internal CarBrightness Brightness;
 
-			internal void CreateWorldCoordinates(Vector3 Car, out Vector3 Position, out Vector3 Direction)
+			public override void CreateWorldCoordinates(Vector3 Car, out Vector3 Position, out Vector3 Direction)
 			{
 				Direction = FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition;
 				double t = Direction.Norm();
 				if (t != 0.0)
 				{
 					t = 1.0 / Math.Sqrt(t);
-					Direction.X *= t; Direction.Y *= t; Direction.Z *= t;
+					Direction *= t;
 					double sx = Direction.Z * Up.Y - Direction.Y * Up.Z;
 					double sy = Direction.X * Up.Z - Direction.Z * Up.X;
 					double sz = Direction.Y * Up.X - Direction.X * Up.Y;
@@ -358,22 +345,7 @@ namespace OpenBve {
 			internal double Time;
 			internal bool Reset;
 		}
-		internal struct TrainPendingTransponder {
-			internal TrackManager.TransponderType Type;
-			internal bool SwitchSubsystem;
-			internal int OptionalInteger;
-			internal double OptionalFloat;
-			internal int SectionIndex;
-		}
-		internal struct TrainSafety {
-			internal SafetySystem Mode;
-			internal SafetySystem ModeChange;
-			internal SafetyState State;
-			internal TrainPendingTransponder[] PendingTransponders;
-			internal Ats Ats;
-			internal Atc Atc;
-			internal Eb Eb;
-		}
+		
 		// train specs
 		internal enum PassAlarmType {
 			None = 0,
@@ -385,7 +357,6 @@ namespace OpenBve {
 		}
 		internal struct TrainSpecs {
 			internal ReverserHandle CurrentReverser;
-			internal double CurrentAverageSpeed;
 			internal int MaximumPowerNotch;
 			internal PowerHandle CurrentPowerNotch;
 			internal int MaximumBrakeNotch;
@@ -395,17 +366,38 @@ namespace OpenBve {
 			internal HoldBrakeHandle CurrentHoldBrake;
 			internal bool HasConstSpeed;
 			internal bool CurrentConstSpeed;
-			internal TrainSafety Safety;
 			internal TrainAirBrake AirBrake;
 		}
 		// train
-		internal enum TrainStopState {
-			Pending = 0, Boarding = 1, Completed = 2
-		}
 		internal class Train : AbstractTrain {
 			internal Car[] Cars;
 			internal TrainSpecs Specs;
-			internal int CurrentSectionIndex;
+
+			public override int NumberOfCars
+			{
+				get
+				{
+					return this.Cars.Length;
+				}
+			}
+
+			public override double FrontCarTrackPosition()
+			{
+				return Cars[0].FrontAxle.Follower.TrackPosition - Cars[0].FrontAxlePosition + 0.5 * Cars[0].Length;
+			}
+
+			public override double RearCarTrackPosition()
+			{
+				return Cars[Cars.Length - 1].RearAxle.Follower.TrackPosition - Cars[Cars.Length - 1].RearAxlePosition - 0.5 * Cars[Cars.Length - 1].Length;
+			}
+
+			public override bool IsPlayerTrain
+			{
+				get
+				{
+					return true;
+				}
+			}
 		}
 
 #pragma warning restore 0649

@@ -15,7 +15,7 @@ namespace OpenBveApi.Interface {
 				return;
 			}
             try {
-                string[] LanguageFiles = Directory.GetFiles(LanguageFolder, "*.cfg");
+				string[] LanguageFiles = Directory.GetFiles(LanguageFolder, "*.xlf");
 	            if (LanguageFiles.Length == 0)
 	            {
 		            MessageBox.Show(@"No valid language files were found.");
@@ -25,8 +25,11 @@ namespace OpenBveApi.Interface {
                 foreach (var File in LanguageFiles) {
 	                try
 	                {
-		                Language l = new Language(File);
-		                AvailableLanguages.Add(l);
+						using (FileStream stream = new FileStream(File, FileMode.Open, FileAccess.Read))
+						{
+							Language l = new Language(stream, System.IO.Path.GetFileNameWithoutExtension(File));
+							AvailableLanguages.Add(l);
+						}
 	                }
 	                catch { }
                 }
@@ -40,7 +43,7 @@ namespace OpenBveApi.Interface {
 		private static void LoadEmbeddedLanguage()
 		{
 			var thisAssembly = Assembly.GetExecutingAssembly();
-			using (var stream = thisAssembly.GetManifestResourceStream("OpenBveApi.en-US.cfg"))
+			using (Stream stream = thisAssembly.GetManifestResourceStream("OpenBveApi.en-US.xlf"))
 			{
 				Language l = new Language(stream, "en-US");
 				AvailableLanguages.Add(l);

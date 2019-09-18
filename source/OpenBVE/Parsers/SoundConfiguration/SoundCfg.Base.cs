@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Math;
+using SoundManager;
 
 namespace OpenBve
 {
@@ -18,16 +19,19 @@ namespace OpenBve
 			{
 				if (SoundXmlParser.ParseTrain(FileName, Train))
 				{
+					Program.FileSystem.AppendToLogFile("Loading sound.xml file: " + FileName);
 					return;
 				}
 			}
 			FileName = OpenBveApi.Path.CombineFile(TrainPath, "sound.cfg");
 			if (System.IO.File.Exists(FileName))
 			{
+				Program.FileSystem.AppendToLogFile("Loading sound.cfg file: " + FileName);
 				BVE4SoundParser.Parse(FileName, TrainPath, Encoding, Train);
 			}
 			else
 			{
+				Program.FileSystem.AppendToLogFile("Loading default BVE2 sounds.");
 				BVE2SoundParser.Parse(TrainPath, Train);
 			}
 		}
@@ -45,10 +49,10 @@ namespace OpenBve
 		/// <param name="Position">The position the sound is to be emitted from within the car</param>
 		/// <param name="Radius">The sound radius</param>
 		/// <returns>The new car sound array</returns>
-		internal static TrainManager.CarSound[] TryLoadSoundArray(string Folder, string FileStart, string FileEnd, Vector3 Position, double Radius)
+		internal static CarSound[] TryLoadSoundArray(string Folder, string FileStart, string FileEnd, Vector3 Position, double Radius)
 		{
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-			TrainManager.CarSound[] Sounds = { };
+			CarSound[] Sounds = { };
 			if (!System.IO.Directory.Exists(Folder))
 			{
 				//Detect whether the given folder exists before attempting to load from it
@@ -71,14 +75,14 @@ namespace OpenBve
 								int m = Sounds.Length;
 								if (n >= m)
 								{
-									Array.Resize<TrainManager.CarSound>(ref Sounds, n + 1);
+									Array.Resize(ref Sounds, n + 1);
 									for (int j = m; j < n; j++)
 									{
-										Sounds[j] = TrainManager.CarSound.Empty;
+										Sounds[j] = new CarSound();
 										Sounds[j].Source = null;
 									}
 								}
-								Sounds[n] = new TrainManager.CarSound(Files[i], Position, Radius);
+								Sounds[n] = new CarSound(Program.Sounds.RegisterBuffer(Files[i], Radius), Position);
 							}
 						}
 					}

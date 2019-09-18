@@ -5,9 +5,12 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using LibRender;
 using OpenTK;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
+using static LibRender.CameraProperties;
 
 namespace OpenBve {
 	/// <summary>Provides methods for starting the program, including the Main procedure.</summary>
@@ -50,7 +53,9 @@ namespace OpenBve {
 		public static GameWindow currentGameWindow;
 
 		internal static JoystickManager Joysticks;
-		
+
+		internal static Sounds Sounds;
+
 		// --- functions ---
 		
 		/// <summary>Is executed when the program starts.</summary>
@@ -88,6 +93,8 @@ namespace OpenBve {
 				MessageBox.Show(Translations.GetInterfaceString("errors_filesystem_invalid") + Environment.NewLine + Environment.NewLine + ex.Message, Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return;
 			}
+
+			Sounds = new Sounds();
 
 			//Platform specific startup checks
 			if (CurrentlyRunningOnMono && !CurrentlyRunningOnWindows)
@@ -149,22 +156,19 @@ namespace OpenBve {
 			}
 			Toolkit.Init(options);
 			// --- load language ---
-			{
-				string folder = Program.FileSystem.GetDataFolder("Languages");
-				Translations.LoadLanguageFiles(folder);
-			}
-			{
-				string folder = Program.FileSystem.GetDataFolder("Cursors");
-				Cursors.LoadCursorImages(folder);
-			}
+			string folder = Program.FileSystem.GetDataFolder("Languages");
+			Translations.LoadLanguageFiles(folder);
+			
+			folder = Program.FileSystem.GetDataFolder("Cursors");
+			Cursors.LoadCursorImages(folder);
+			
 			Interface.LoadControls(null, out Interface.CurrentControls);
-			{
-				string folder = Program.FileSystem.GetDataFolder("Controls");
-				string file = OpenBveApi.Path.CombineFile(folder, "Default keyboard assignment.controls");
-				Interface.Control[] controls;
-				Interface.LoadControls(file, out controls);
-				Interface.AddControls(ref Interface.CurrentControls, controls);
-			}
+			folder = Program.FileSystem.GetDataFolder("Controls");
+			string file = OpenBveApi.Path.CombineFile(folder, "Default keyboard assignment.controls");
+			Interface.Control[] controls;
+			Interface.LoadControls(file, out controls);
+			Interface.AddControls(ref Interface.CurrentControls, controls);
+			
 			InputDevicePlugin.LoadPlugins(Program.FileSystem);
 			
 			// --- check the command-line arguments for route and train ---
@@ -187,13 +191,23 @@ namespace OpenBve {
 				bool isRW = string.Equals(System.IO.Path.GetExtension(result.RouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
 				CsvRwRouteParser.ParseRoute(result.RouteFile, isRW, result.RouteEncoding, null, null, null, true);
 				if (!string.IsNullOrEmpty(Game.TrainName)) {
-					string folder = System.IO.Path.GetDirectoryName(result.RouteFile);
+					folder = System.IO.Path.GetDirectoryName(result.RouteFile);
 					while (true) {
 						string trainFolder = OpenBveApi.Path.CombineDirectory(folder, "Train");
 						if (System.IO.Directory.Exists(trainFolder)) {
-							folder = OpenBveApi.Path.CombineDirectory(trainFolder, Game.TrainName);
+							try
+							{
+								folder = OpenBveApi.Path.CombineDirectory(trainFolder, Game.TrainName);
+							}
+							catch (Exception ex)
+							{
+								if (ex is ArgumentException)
+								{
+									break;
+								}
+							}
 							if (System.IO.Directory.Exists(folder)) {
-								string file = OpenBveApi.Path.CombineFile(folder, "train.dat");
+								file = OpenBveApi.Path.CombineFile(folder, "train.dat");
 								if (System.IO.File.Exists(file)) {
 									result.TrainFolder = folder;
 									result.TrainEncoding = System.Text.Encoding.UTF8;
@@ -215,7 +229,7 @@ namespace OpenBve {
 						}
 					}
 				}
-				Game.Reset(false);
+				Game.Reset(false, false);
 			}
 			// --- show the main menu if necessary ---
 			if (result.RouteFile == null | result.TrainFolder == null) {
@@ -302,16 +316,13 @@ namespace OpenBve {
 			
 			Joysticks.RefreshJoysticks();
 			// begin HACK //
-			
-			//One degree in radians
-			const double degrees = 0.0174532925199433;
-			World.VerticalViewingAngle = 45.0 * degrees;
-			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
-			World.OriginalVerticalViewingAngle = World.VerticalViewingAngle;
-			World.ExtraViewingDistance = 50.0;
-			World.ForwardViewingDistance = (double)Interface.CurrentOptions.ViewingDistance;
-			World.BackwardViewingDistance = 0.0;
-			World.BackgroundImageDistance = (double)Interface.CurrentOptions.ViewingDistance;
+			Camera.VerticalViewingAngle = 45.0.ToRadians();
+			Camera.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * Camera.VerticalViewingAngle) * LibRender.Screen.AspectRatio);
+			Camera.OriginalVerticalViewingAngle = Camera.VerticalViewingAngle;
+			Camera.ExtraViewingDistance = 50.0;
+			Camera.ForwardViewingDistance = (double)Interface.CurrentOptions.ViewingDistance;
+			Camera.BackwardViewingDistance = 0.0;
+			Backgrounds.BackgroundImageDistance = (double)Interface.CurrentOptions.ViewingDistance;
 			// end HACK //
 			FileSystem.ClearLogFile();
 			return true;

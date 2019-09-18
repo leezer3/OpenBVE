@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using OpenBveApi;
 using OpenBveApi.Interface;
 
 namespace OpenBve
@@ -97,9 +98,9 @@ namespace OpenBve
 					if (index >= Translations.RatingsCount) index = Translations.RatingsCount - 1;
 					string s;
 					switch (Interface.CurrentOptions.GameMode) {
-							case Interface.GameMode.Arcade: s = Translations.GetInterfaceString("mode_arcade"); break;
-							case Interface.GameMode.Normal: s = Translations.GetInterfaceString("mode_normal"); break;
-							case Interface.GameMode.Expert: s = Translations.GetInterfaceString("mode_expert"); break;
+							case GameMode.Arcade: s = Translations.GetInterfaceString("mode_arcade"); break;
+							case GameMode.Normal: s = Translations.GetInterfaceString("mode_normal"); break;
+							case GameMode.Expert: s = Translations.GetInterfaceString("mode_expert"); break;
 							default: s = Translations.GetInterfaceString("mode_unknown"); break;
 					}
 					Builder.Append('║');

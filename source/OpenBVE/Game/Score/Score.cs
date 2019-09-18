@@ -1,8 +1,11 @@
 ﻿using System;
+using OpenBve.RouteManager;
+using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interface;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
@@ -64,12 +67,12 @@ namespace OpenBve
 						int j = TrainManager.PlayerTrain.Station;
 						if (j >= 0)
 						{
-							int p = Game.Stations[j].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
+							int p = CurrentRoute.Stations[j].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
 							if (p >= 0)
 							{
-								if (Math.Abs(TrainManager.PlayerTrain.Specs.CurrentAverageSpeed) < 0.1)
+								if (Math.Abs(TrainManager.PlayerTrain.CurrentSpeed) < 0.1)
 								{
-									if (leftopen == Stations[j].OpenLeftDoors & rightopen == Stations[j].OpenRightDoors)
+									if (leftopen == CurrentRoute.Stations[j].OpenLeftDoors & rightopen == CurrentRoute.Stations[j].OpenRightDoors)
 									{
 										bad = false;
 									}
@@ -83,7 +86,7 @@ namespace OpenBve
 					}
 					if (bad)
 					{
-						OpenedDoorsCounter += (Math.Abs(TrainManager.PlayerTrain.Specs.CurrentAverageSpeed) + 0.25) * TimeElapsed;
+						OpenedDoorsCounter += (Math.Abs(TrainManager.PlayerTrain.CurrentSpeed) + 0.25) * TimeElapsed;
 					}
 					else if (OpenedDoorsCounter != 0.0)
 					{
@@ -100,7 +103,7 @@ namespace OpenBve
 				double nr = TrainManager.PlayerTrain.CurrentRouteLimit;
 				double ns = TrainManager.PlayerTrain.CurrentSectionLimit;
 				double n = nr < ns ? nr : ns;
-				double a = Math.Abs(TrainManager.PlayerTrain.Specs.CurrentAverageSpeed) - 0.277777777777778;
+				double a = Math.Abs(TrainManager.PlayerTrain.CurrentSpeed) - 0.277777777777778;
 				if (a > n)
 				{
 					OverspeedCounter += (a - n) * TimeElapsed;
@@ -188,11 +191,11 @@ namespace OpenBve
 				// arrival
 				{
 					int j = TrainManager.PlayerTrain.Station;
-					if (j >= 0 & j < Stations.Length)
+					if (j >= 0 & j < CurrentRoute.Stations.Length)
 					{
-						if (j >= ArrivalStation & TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Boarding)
+						if (j >= ArrivalStation & TrainManager.PlayerTrain.StationState == TrainStopState.Boarding)
 						{
-							if (j == 0 || Stations[j - 1].Type != StationType.ChangeEnds)
+							if (j == 0 || CurrentRoute.Stations[j - 1].Type != StationType.ChangeEnds)
 							{
 								// arrival
 								int xa = ScoreValueStationArrival;
@@ -203,9 +206,9 @@ namespace OpenBve
 								}
 								// early/late
 								int xb;
-								if (Stations[j].ArrivalTime >= 0)
+								if (CurrentRoute.Stations[j].ArrivalTime >= 0)
 								{
-									double d = SecondsSinceMidnight - Stations[j].ArrivalTime;
+									double d = CurrentRoute.SecondsSinceMidnight - CurrentRoute.Stations[j].ArrivalTime;
 									if (d >= -5.0 & d <= 0.0)
 									{
 										xb = ScoreValueStationPerfectTime;
@@ -232,19 +235,19 @@ namespace OpenBve
 								}
 								// position
 								int xc;
-								int p = Game.Stations[j].GetStopIndex(TrainManager.PlayerTrain.Cars.Length);
+								int p = CurrentRoute.Stations[j].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
 								if (p >= 0)
 								{
 									double d = TrainManager.PlayerTrain.StationDistanceToStopPoint;
 									double r;
 									if (d >= 0)
 									{
-										double t = Stations[j].Stops[p].BackwardTolerance;
+										double t = CurrentRoute.Stations[j].Stops[p].BackwardTolerance;
 										r = (Math.Sqrt(d * d + 1.0) - 1.0) / (Math.Sqrt(t * t + 1.0) - 1.0);
 									}
 									else
 									{
-										double t = Stations[j].Stops[p].ForwardTolerance;
+										double t = CurrentRoute.Stations[j].Stops[p].ForwardTolerance;
 										r = (Math.Sqrt(d * d + 1.0) - 1.0) / (Math.Sqrt(t * t + 1.0) - 1.0);
 									}
 									if (r < 0.01)
@@ -270,7 +273,7 @@ namespace OpenBve
 									xc = 0;
 								}
 								// sum
-								if (Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade)
+								if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
 								{
 									int xs = xa + xb + xc;
 									AddScore("", 10.0);
@@ -278,9 +281,9 @@ namespace OpenBve
 									AddScore(" ", 10.0);
 								}
 								// evaluation
-								if (Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade)
+								if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
 								{
-									if (Stations[j].Type == StationType.Terminal)
+									if (CurrentRoute.Stations[j].Type == StationType.Terminal)
 									{
 										double y = (double)this.CurrentValue / (double)Maximum;
 										if (y < 0.0) y = 0.0;
@@ -302,20 +305,20 @@ namespace OpenBve
 				// departure
 				{
 					int j = TrainManager.PlayerTrain.Station;
-					if (j >= 0 & j < Stations.Length & j == DepartureStation)
+					if (j >= 0 & j < CurrentRoute.Stations.Length & j == DepartureStation)
 					{
 						bool q;
-						if (Stations[j].OpenLeftDoors | Stations[j].OpenRightDoors)
+						if (CurrentRoute.Stations[j].OpenLeftDoors | CurrentRoute.Stations[j].OpenRightDoors)
 						{
-							q = TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Completed;
+							q = TrainManager.PlayerTrain.StationState == TrainStopState.Completed;
 						}
 						else
 						{
-							q = TrainManager.PlayerTrain.StationState != TrainManager.TrainStopState.Pending & (TrainManager.PlayerTrain.Specs.CurrentAverageSpeed < -1.5 | TrainManager.PlayerTrain.Specs.CurrentAverageSpeed > 1.5);
+							q = TrainManager.PlayerTrain.StationState != TrainStopState.Pending & (TrainManager.PlayerTrain.CurrentSpeed < -1.5 | TrainManager.PlayerTrain.CurrentSpeed > 1.5);
 						}
 						if (q)
 						{
-							double r = TrainManager.PlayerTrain.StationDepartureTime - SecondsSinceMidnight;
+							double r = TrainManager.PlayerTrain.StationDepartureTime - CurrentRoute.SecondsSinceMidnight;
 							if (r > 0.0)
 							{
 								int x = (int)Math.Ceiling(ScoreFactorStationDeparture * r);
@@ -361,13 +364,13 @@ namespace OpenBve
 			/// <param name="Count">Whether this should be counted as a unique event (NOTE: Scheduled stops are the only case which are not)</param>
 			private void AddScore(int Value, ScoreTextToken TextToken, double Duration, bool Count = true)
 			{
-				if (Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade)
+				if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
 				{
 					int n = ScoreMessages.Length;
 					Array.Resize<ScoreMessage>(ref ScoreMessages, n + 1);
 					ScoreMessages[n].Value = Value;
 					ScoreMessages[n].Text = Interface.GetScoreText(TextToken) + ": " + Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
-					ScoreMessages[n].Timeout = SecondsSinceMidnight + Duration;
+					ScoreMessages[n].Timeout = CurrentRoute.SecondsSinceMidnight + Duration;
 					ScoreMessages[n].RendererPosition = new Vector2(0.0, 0.0);
 					ScoreMessages[n].RendererAlpha = 0.0;
 					if (Value < 0.0)
@@ -391,8 +394,8 @@ namespace OpenBve
 					}
 					ScoreLogs[ScoreLogCount].Value = Value;
 					ScoreLogs[ScoreLogCount].TextToken = TextToken;
-					ScoreLogs[ScoreLogCount].Position = TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition;
-					ScoreLogs[ScoreLogCount].Time = SecondsSinceMidnight;
+					ScoreLogs[ScoreLogCount].Position = TrainManager.PlayerTrain.Cars[0].TrackPosition;
+					ScoreLogs[ScoreLogCount].Time = CurrentRoute.SecondsSinceMidnight;
 					ScoreLogCount++;
 				}
 			}
@@ -402,13 +405,13 @@ namespace OpenBve
 			/// <param name="Duration">The duration of the score event (e.g. overspeed)</param>
 			private void AddScore(string Text, double Duration)
 			{
-				if (Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade)
+				if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
 				{
 					int n = ScoreMessages.Length;
 					Array.Resize<ScoreMessage>(ref ScoreMessages, n + 1);
 					ScoreMessages[n].Value = 0;
 					ScoreMessages[n].Text = Text.Length != 0 ? Text : "══════════";
-					ScoreMessages[n].Timeout = SecondsSinceMidnight + Duration;
+					ScoreMessages[n].Timeout = CurrentRoute.SecondsSinceMidnight + Duration;
 					ScoreMessages[n].RendererPosition = new Vector2(0.0, 0.0);
 					ScoreMessages[n].RendererAlpha = 0.0;
 					ScoreMessages[n].Color = MessageColor.White;
@@ -420,11 +423,11 @@ namespace OpenBve
 		/// <param name="TimeElapsed">The frame time elapsed</param>
 		internal static void UpdateScoreMessages(double TimeElapsed)
 		{
-			if (Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade)
+			if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
 			{
 				for (int i = 0; i < ScoreMessages.Length; i++)
 				{
-					if (SecondsSinceMidnight >= ScoreMessages[i].Timeout & ScoreMessages[i].RendererAlpha == 0.0)
+					if (CurrentRoute.SecondsSinceMidnight >= ScoreMessages[i].Timeout & ScoreMessages[i].RendererAlpha == 0.0)
 					{
 						for (int j = i; j < ScoreMessages.Length - 1; j++)
 						{

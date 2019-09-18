@@ -346,9 +346,9 @@ namespace TrainEditor {
 			for (int i = 0; i < Lines.Length; i++) {
 				int j = Lines[i].IndexOf(';');
 				if (j >= 0) {
-					Lines[i] = Lines[i].Substring(0, j).Trim();
+					Lines[i] = Lines[i].Substring(0, j).Trim(new char[] { });
 				} else {
-					Lines[i] = Lines[i].Trim();
+					Lines[i] = Lines[i].Trim(new char[] { });
 				}
 			}
 			bool ver1220000 = false;
@@ -403,7 +403,7 @@ namespace TrainEditor {
 							while (true) {
 								int j = u.IndexOf(',');
 								if (j == -1) break;
-								string s = u.Substring(0, j).Trim();
+								string s = u.Substring(0, j).Trim(new char[] { });
 								u = u.Substring(j + 1);
 								double a; if (double.TryParse(s, System.Globalization.NumberStyles.Float, Culture, out a)) {
 									switch (m) {
@@ -492,22 +492,22 @@ namespace TrainEditor {
 								switch (n)
 								{
 									case 0:
-										t.Delay.DelayPowerUp = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayPowerUp = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 1:
-										t.Delay.DelayPowerDown = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayPowerDown = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 2:
-										t.Delay.DelayBrakeUp = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayBrakeUp = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 3:
-										t.Delay.DelayBrakeDown = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayBrakeDown = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 4:
-										t.Delay.DelayLocoBrakeUp = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayLocoBrakeUp = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 									case 5:
-										t.Delay.DelayLocoBrakeDown = Lines[i].Split(',').Select(x => Double.Parse(x, Culture)).ToArray();
+										t.Delay.DelayLocoBrakeDown = Lines[i].Split(new char[] {','}).Select(x => Double.Parse(x, Culture)).ToArray();
 										break;
 								}
 							}
@@ -737,7 +737,7 @@ namespace TrainEditor {
 								while (true) {
 									int j = u.IndexOf(',');
 									if (j == -1) break;
-									string s = u.Substring(0, j).Trim();
+									string s = u.Substring(0, j).Trim(new char[] { });
 									u = u.Substring(j + 1);
 									double a; if (double.TryParse(s, System.Globalization.NumberStyles.Float, Culture, out a)) {
 										int b = (int)Math.Round(a);

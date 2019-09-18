@@ -79,6 +79,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 
 namespace AssimpNET.Obj
@@ -248,7 +250,7 @@ namespace AssimpNET.Obj
 		{
 			string tmp;
 			CopyNextWord(out tmp);
-			result = float.Parse(tmp);
+			result = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 		}
 
 		protected int GetNextToken(int tmp, int end)
@@ -328,7 +330,7 @@ namespace AssimpNET.Obj
 			tokens = new List<string>();
 
 			// Skip delimiters at beginning.
-			int lastPos = str.IndexOf(str.FirstOrDefault(ch => !delimiters.Contains(ch)));
+			int lastPos = str.IndexOf(str.FirstOrDefault(ch => !delimiters.Contains(ch.ToString())));
 
 			if (lastPos < 0)
 			{
@@ -336,7 +338,7 @@ namespace AssimpNET.Obj
 			}
 
 			// Find first "non-delimiter".
-			int pos = str.IndexOf(str.FirstOrDefault(ch => delimiters.Contains(ch)), lastPos);
+			int pos = str.IndexOf(str.FirstOrDefault(ch => delimiters.Contains(ch.ToString())), lastPos);
 
 			if (pos < 0)
 			{
@@ -354,7 +356,7 @@ namespace AssimpNET.Obj
 
 				// Skip delimiters.  Note the "not_of"
 				tmp = str.Substring(pos);
-				lastPos = tmp.IndexOf(tmp.FirstOrDefault(ch => !delimiters.Contains(ch)));
+				lastPos = tmp.IndexOf(tmp.FirstOrDefault(ch => !delimiters.Contains(ch.ToString())));
 
 				if (lastPos < 0)
 				{
@@ -364,7 +366,7 @@ namespace AssimpNET.Obj
 
 				// Find next "non-delimiter"
 				tmp = str.Substring(lastPos);
-				pos = tmp.IndexOf(tmp.FirstOrDefault(ch => delimiters.Contains(ch)));
+				pos = tmp.IndexOf(tmp.FirstOrDefault(ch => delimiters.Contains(ch.ToString())));
 
 				if (pos < 0)
 				{
@@ -383,8 +385,6 @@ namespace AssimpNET.Obj
 
 		protected int ConvertToInt(int position)
 		{
-			int i = 0;
-
 			bool inv = (Buffer[position] == '-');
 			if (inv || Buffer[position] == '+')
 			{
@@ -393,7 +393,7 @@ namespace AssimpNET.Obj
 
 			if (!char.IsDigit(Buffer[position]))
 			{
-				throw new Exception("Cannot parse string as real number: does not start with digit or decimal point followed by digit.");
+				throw new InvalidDataException("Cannot parse string as real number: does not start with digit or decimal point followed by digit.");
 			}
 
 			string tmp = string.Empty;
@@ -410,7 +410,7 @@ namespace AssimpNET.Obj
 				}
 			}
 
-			i = int.Parse(tmp);
+			int i = int.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 
 			if (inv)
 			{

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Globalization;
+using static LibRender.CameraProperties;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 using OpenTK;
@@ -44,7 +45,9 @@ namespace OpenBve
 
 		internal static void StartLoopEx(formMain.MainDialogResult result)
 		{
-			Sounds.Initialize();
+			LibRender.Renderer.currentHost = Program.CurrentHost;
+			LibRender.Renderer.currentOptions = Interface.CurrentOptions;
+			Program.Sounds.Initialize(Program.CurrentHost, Interface.CurrentOptions.SoundRange);
 			//Process extra command line arguments supplied
 			if (result.InitialStation != null)
 			{
@@ -412,19 +415,19 @@ namespace OpenBve
 		// save camera setting
 		internal static void SaveCameraSettings()
 		{
-			switch (World.CameraMode)
+			switch (Camera.CurrentMode)
 			{
 				case CameraViewMode.Interior:
 				case CameraViewMode.InteriorLookAhead:
-					TrainManager.PlayerTrain.Cars[World.CameraCar].InteriorCamera = World.CameraCurrentAlignment;
+					TrainManager.PlayerTrain.Cars[World.CameraCar].InteriorCamera = Camera.Alignment;
 					break;
 				case CameraViewMode.Exterior:
-					World.CameraSavedExterior = World.CameraCurrentAlignment;
+					World.CameraSavedExterior = Camera.Alignment;
 					break;
 				case CameraViewMode.Track:
 				case CameraViewMode.FlyBy:
 				case CameraViewMode.FlyByZooming:
-					World.CameraSavedTrack = World.CameraCurrentAlignment;
+					World.CameraSavedTrack = Camera.Alignment;
 					break;
 			}
 		}
@@ -432,25 +435,25 @@ namespace OpenBve
 		// restore camera setting
 		internal static void RestoreCameraSettings()
 		{
-			switch (World.CameraMode)
+			switch (Camera.CurrentMode)
 			{
 				case CameraViewMode.Interior:
 				case CameraViewMode.InteriorLookAhead:
-					World.CameraCurrentAlignment = TrainManager.PlayerTrain.Cars[World.CameraCar].InteriorCamera;
+					Camera.Alignment = TrainManager.PlayerTrain.Cars[World.CameraCar].InteriorCamera;
 					break;
 				case CameraViewMode.Exterior:
-					World.CameraCurrentAlignment = World.CameraSavedExterior;
+					Camera.Alignment = World.CameraSavedExterior;
 					break;
 				case CameraViewMode.Track:
 				case CameraViewMode.FlyBy:
 				case CameraViewMode.FlyByZooming:
-					World.CameraCurrentAlignment = World.CameraSavedTrack;
-					World.CameraTrackFollower.Update(World.CameraSavedTrack.TrackPosition, true, false);
-					World.CameraCurrentAlignment.TrackPosition = World.CameraTrackFollower.TrackPosition;
+					Camera.Alignment = World.CameraSavedTrack;
+					World.CameraTrackFollower.UpdateAbsolute(World.CameraSavedTrack.TrackPosition, true, false);
+					Camera.Alignment.TrackPosition = World.CameraTrackFollower.TrackPosition;
 					break;
 			}
-			World.CameraCurrentAlignment.Zoom = 0.0;
-			World.VerticalViewingAngle = World.OriginalVerticalViewingAngle;
+			Camera.Alignment.Zoom = 0.0;
+			Camera.VerticalViewingAngle = Camera.OriginalVerticalViewingAngle;
 		}
 
 		

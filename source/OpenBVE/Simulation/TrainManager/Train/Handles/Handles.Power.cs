@@ -1,4 +1,6 @@
-﻿namespace OpenBve
+﻿using OpenBve.RouteManager;
+
+namespace OpenBve
 {
 	public static partial class TrainManager
 	{
@@ -47,7 +49,7 @@
 				}
 				if (DelayedChanges.Length >= 1)
 				{
-					if (DelayedChanges[0].Time <= Game.SecondsSinceMidnight)
+					if (DelayedChanges[0].Time <= CurrentRoute.SecondsSinceMidnight)
 					{
 						Actual = DelayedChanges[0].Value;
 						RemoveChanges(1);

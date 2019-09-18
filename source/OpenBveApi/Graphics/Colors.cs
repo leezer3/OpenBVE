@@ -74,7 +74,7 @@ namespace OpenBveApi.Colors {
 			{
 				return false;
 			}
-			return this.Equals((Color24)obj);
+			return Equals(this, (Color24)obj);
 		}
 
 		/// <summary>Returns the hashcode for this instance.</summary>
@@ -118,9 +118,9 @@ namespace OpenBveApi.Colors {
 		public static bool TryParseHexColor(string Expression, out Color24 Color)
 		{
 			Color = Blue;
-			if (Expression.StartsWith("#"))
+			if (Expression.StartsWith("#", StringComparison.InvariantCultureIgnoreCase))
 			{
-				string a = Expression.Substring(1).TrimStart();
+				string a = Expression.Substring(1).TrimStart(new char[] { });
 				int x; if (int.TryParse(a, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out x))
 				{
 					int r = (x >> 16) & 0xFF;
@@ -137,12 +137,34 @@ namespace OpenBveApi.Colors {
 			return false;
 		}
 
+		public static Color24 ParseHexColor(string Expression)
+		{
+			Color24 color;
+
+			if (!TryParseHexColor(Expression, out color))
+			{
+				throw new FormatException();
+			}
+
+			return color;
+		}
+
 		/// <summary>Casts a System.Drawing.Color to a Color24, discarding the alpha component</summary>
 		/// <param name="c">The System.Drawing.Color</param>
 		/// <returns>The new Color24</returns>
 		public static implicit operator Color24(System.Drawing.Color c)
 		{
 			return new Color24(c.R, c.G, c.B);
+		}
+
+		public static implicit operator System.Drawing.Color(Color24 c)
+		{
+			return System.Drawing.Color.FromArgb(c.R, c.G, c.B);
+		}
+
+		public override string ToString()
+		{
+			return string.Format("#{0}", BitConverter.ToString(new byte[] { R, G, B }).Replace("-", string.Empty));
 		}
 	}
 	
@@ -217,6 +239,18 @@ namespace OpenBveApi.Colors {
 			return a.R != b.R | a.G != b.G | a.B != b.B | a.A != b.A;
 		}
 
+		/// <summary>Multiplies a Color32 with a scalar.</summary>
+		/// <param name="a">The Color32.</param>
+		/// <param name="b">The scalar.</param>
+		/// <returns>The product of the Color32 and the scalar.</returns>
+		public static Color32 operator *(Color32 a, double b)
+		{
+			a.R = (byte) System.Math.Round(a.R * b);
+			a.G = (byte) System.Math.Round(a.G * b);
+			a.B = (byte) System.Math.Round(a.B * b);
+			return a;
+		}
+
 		/// <summary>Checks whether two colors are equal.</summary>
 		/// <param name="a">The first color.</param>
 		/// <param name="b">The second color.</param>
@@ -235,7 +269,7 @@ namespace OpenBveApi.Colors {
 			{
 				return false;
 			}
-			return this.Equals((Color32)obj);
+			return Equals(this, (Color32)obj);
 		}
 
 		/// <summary>Returns the hashcode for this instance.</summary>
@@ -291,9 +325,9 @@ namespace OpenBveApi.Colors {
 		/// <returns>True if the parse succeds, false if it does not</returns>
 		public static bool TryParseHexColor(string Expression, out Color32 Color)
 		{
-			if (Expression.StartsWith("#"))
+			if (Expression.StartsWith("#", StringComparison.InvariantCultureIgnoreCase))
 			{
-				string a = Expression.Substring(1).TrimStart();
+				string a = Expression.Substring(1).TrimStart(new char[] { });
 				int x; if (Int32.TryParse(a, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out x))
 				{
 					int r = (x >> 16) & 0xFF;
@@ -312,6 +346,106 @@ namespace OpenBveApi.Colors {
 			}
 			Color = Blue;
 			return false;
+		}
+
+		private const float inv255 = 1.0f / 255.0f;
+
+		/// <summary>Creates the background color for anti-aliasing text</summary>
+		/// <param name="SystemColor">The color of the message text</param>
+		/// <param name="Alpha">The alpha to apply</param>
+		public Color128 CreateBackColor(MessageColor SystemColor, float Alpha)
+		{
+			Color128 c = new Color128();
+			if (this.R == 0 & this.G == 0 & this.B == 0)
+			{
+				switch (SystemColor)
+				{
+					case MessageColor.Black:
+						c.R = 0.0f; c.G = 0.0f; c.B = 0.0f;
+						break;
+					case MessageColor.Gray:
+						c.R = 0.4f; c.G = 0.4f; c.B = 0.4f;
+						break;
+					case MessageColor.White:
+						c.R = 1.0f; c.G = 1.0f; c.B = 1.0f;
+						break;
+					case MessageColor.Red:
+						c.R = 1.0f; c.G = 0.0f; c.B = 0.0f;
+						break;
+					case MessageColor.Orange:
+						c.R = 0.9f; c.G = 0.7f; c.B = 0.0f;
+						break;
+					case MessageColor.Green:
+						c.R = 0.2f; c.G = 0.8f; c.B = 0.0f;
+						break;
+					case MessageColor.Blue:
+						c.R = 0.0f; c.G = 0.7f; c.B = 1.0f;
+						break;
+					case MessageColor.Magenta:
+						c.R = 1.0f; c.G = 0.0f; c.B = 0.7f;
+						break;
+					default:
+						c.R = 1.0f; c.G = 1.0f; c.B = 1.0f;
+						break;
+				}
+			}
+			else
+			{
+				c.R = inv255 * (float)this.R;
+				c.G = inv255 * (float)this.G;
+				c.B = inv255 * (float)this.B;
+			}
+			c.A = inv255 * (float)this.A * Alpha;
+			return c;
+		}
+
+		/// <summary>Creates the foreground color for anti-aliasing text</summary>
+		/// <param name="SystemColor">The color of the message text</param>
+		/// <param name="Alpha">The alpha to apply</param>
+		public Color128 CreateTextColor(MessageColor SystemColor, float Alpha)
+		{
+			Color128 c = new Color128();
+			if (this.R == 0 & this.G == 0 & this.B == 0)
+			{
+				switch (SystemColor)
+				{
+					case MessageColor.Black:
+						c.R = 0.0f; c.G = 0.0f; c.B = 0.0f;
+						break;
+					case MessageColor.Gray:
+						c.R = 0.4f; c.G = 0.4f; c.B = 0.4f;
+						break;
+					case MessageColor.White:
+						c.R = 1.0f; c.G = 1.0f; c.B = 1.0f;
+						break;
+					case MessageColor.Red:
+						c.R = 1.0f; c.G = 0.0f; c.B = 0.0f;
+						break;
+					case MessageColor.Orange:
+						c.R = 0.9f; c.G = 0.7f; c.B = 0.0f;
+						break;
+					case MessageColor.Green:
+						c.R = 0.3f; c.G = 1.0f; c.B = 0.0f;
+						break;
+					case MessageColor.Blue:
+						c.R = 0.0f; c.G = 0.0f; c.B = 1.0f;
+						break;
+					case MessageColor.Magenta:
+						c.R = 1.0f; c.G = 0.0f; c.B = 0.7f;
+						break;
+					default:
+						c.R = 1.0f; c.G = 1.0f; c.B = 1.0f;
+						break;
+				}
+			}
+			else
+			{
+				c.R = inv255 * (float)this.R;
+				c.G = inv255 * (float)this.G;
+				c.B = inv255 * (float)this.B;
+			}
+			c.A = inv255 * (float)this.A * Alpha;
+			return c;
 		}
 
 		/// <summary>Casts a System.Drawing.Color to a Color32</summary>
@@ -379,7 +513,7 @@ namespace OpenBveApi.Colors {
 			{
 				return false;
 			}
-			return this.Equals((Color96)obj);
+			return Equals(this, (Color96)obj);
 		}
 
 		/// <summary>Returns the hashcode for this instance.</summary>
@@ -503,7 +637,7 @@ namespace OpenBveApi.Colors {
 			{
 				return false;
 			}
-			return this.Equals((Color128)obj);
+			return Equals(this, (Color128)obj);
 		}
 
 		/// <summary>Returns the hashcode for this instance.</summary>

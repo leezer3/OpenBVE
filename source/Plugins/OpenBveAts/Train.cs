@@ -61,16 +61,16 @@ namespace Plugin {
 		// --- panel and sound ---
 		
 		/// <summary>The panel variables.</summary>
-		internal int[] Panel;
+		internal readonly int[] Panel;
 
 		/// <summary>The sounds used on this train.</summary>
-		internal Sounds Sounds;
+		internal readonly Sounds Sounds;
 		
 		
 		// --- AI ---
 		
 		/// <summary>The AI component that drives the train.</summary>
-		internal AI AI;
+		internal readonly AI AI;
 		
 		
 		// --- devices ---
@@ -122,9 +122,9 @@ namespace Plugin {
 			for (int i = 0; i < lines.Length; i++) {
 				int semicolon = lines[i].IndexOf(';');
 				if (semicolon >= 0) {
-					lines[i] = lines[i].Substring(0, semicolon).Trim();
+					lines[i] = lines[i].Substring(0, semicolon).Trim(new char[] { });
 				} else {
-					lines[i] = lines[i].Trim();
+					lines[i] = lines[i].Trim(new char[] { });
 				}
 			}
 			for (int i = 0; i < lines.Length; i++) {

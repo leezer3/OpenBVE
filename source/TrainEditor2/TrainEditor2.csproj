@@ -1,0 +1,383 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0AE1C682-A15E-4880-925E-10F9EFD1CD49}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>TrainEditor2</RootNamespace>
+    <AssemblyName>TrainEditor2</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin_debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>6</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin_release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>6</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>..\..\assets\icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xaml.Behaviors, Version=1.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Xaml.Behaviors.Wpf.1.0.1\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\OpenTK.3.1.0\lib\net20\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK.GLControl, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\OpenTK.GLControl.3.1.0\lib\net20\OpenTK.GLControl.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="Prism, Version=7.2.0.1367, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Prism.Core.7.2.0.1367\lib\net45\Prism.dll</HintPath>
+    </Reference>
+    <Reference Include="ReactiveProperty, Version=5.5.0.0, Culture=neutral, PublicKeyToken=910d1732782c71cb, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ReactiveProperty.6.1.2\lib\net461\ReactiveProperty.dll</HintPath>
+    </Reference>
+    <Reference Include="ReactiveProperty.NET46, Version=5.5.0.0, Culture=neutral, PublicKeyToken=3d1fed915120cbde, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ReactiveProperty.6.1.2\lib\net461\ReactiveProperty.NET46.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.ComponentModel.Annotations.4.5.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Reactive, Version=4.1.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Reactive.4.1.6\lib\net46\System.Reactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Threading.Tasks.Extensions.4.5.3\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Audio\SoundApi.cs" />
+    <Compile Include="Audio\SoundApi.Update.cs" />
+    <Compile Include="Extensions\Binders.cs" />
+    <Compile Include="Extensions\CollectionBasedDictionary.cs" />
+    <Compile Include="Extensions\ObservableDictionary.cs" />
+    <Compile Include="Extensions\StringValueAttribute.cs" />
+    <Compile Include="Extensions\Utilities.cs" />
+    <Compile Include="IO\IntermediateFile\Parser.cs" />
+    <Compile Include="IO\IntermediateFile\Writer.cs" />
+    <Compile Include="IO\Panels\Bve4\Parser.cs" />
+    <Compile Include="IO\Panels\Bve4\Writer.cs" />
+    <Compile Include="IO\Panels\Xml\Parser.cs" />
+    <Compile Include="IO\Panels\Xml\Writer.cs" />
+    <Compile Include="IO\Sounds\Bve2\Parser.cs" />
+    <Compile Include="IO\Sounds\Bve4\Parser.cs" />
+    <Compile Include="IO\Sounds\Bve4\Writer.cs" />
+    <Compile Include="IO\Sounds\Xml\Parser.cs" />
+    <Compile Include="IO\Sounds\Xml\Writer.cs" />
+    <Compile Include="IO\Trains\ExtensionsCfg\Parser.cs" />
+    <Compile Include="IO\Trains\ExtensionsCfg\Writer.cs" />
+    <Compile Include="IO\Trains\TrainDat\Parser.cs" />
+    <Compile Include="IO\Trains\TrainDat\Writer.cs" />
+    <Compile Include="Models\App.cs" />
+    <Compile Include="Models\Dialogs\BaseDialog.cs" />
+    <Compile Include="Models\Dialogs\MessageBox.cs" />
+    <Compile Include="Models\Dialogs\OpenFileDialog.cs" />
+    <Compile Include="Models\Dialogs\SaveFileDialog.cs" />
+    <Compile Include="Models\Others\InputEventModel.cs" />
+    <Compile Include="Models\Others\ListViewColumnHeaderModel.cs" />
+    <Compile Include="Models\Others\ListViewItemModel.cs" />
+    <Compile Include="Models\Others\ToolTipModel.cs" />
+    <Compile Include="Models\Others\TreeViewItemModel.cs" />
+    <Compile Include="Models\Panels\DigitalGaugeElement.cs" />
+    <Compile Include="Models\Panels\DigitalNumberElement.cs" />
+    <Compile Include="Models\Panels\LinearGaugeElement.cs" />
+    <Compile Include="Models\Panels\NeedleElement.cs" />
+    <Compile Include="Models\Panels\Panel.cs" />
+    <Compile Include="Models\Panels\PanelElement.cs" />
+    <Compile Include="Models\Panels\PilotLampElement.cs" />
+    <Compile Include="Models\Panels\Screen.cs" />
+    <Compile Include="Models\Panels\Subject.cs" />
+    <Compile Include="Models\Panels\This.cs" />
+    <Compile Include="Models\Panels\TimetableElement.cs" />
+    <Compile Include="Models\Panels\TouchElement.cs" />
+    <Compile Include="Models\Sounds\Sound.cs" />
+    <Compile Include="Models\Sounds\SoundElement.cs" />
+    <Compile Include="Models\Trains\Acceleration.cs" />
+    <Compile Include="Models\Trains\Brake.cs" />
+    <Compile Include="Models\Trains\Cab.cs" />
+    <Compile Include="Models\Trains\Car.cs" />
+    <Compile Include="Models\Trains\Coupler.cs" />
+    <Compile Include="Models\Trains\Delay.cs" />
+    <Compile Include="Models\Trains\Device.cs" />
+    <Compile Include="Models\Trains\Handle.cs" />
+    <Compile Include="Models\Trains\Motor.cs" />
+    <Compile Include="Models\Trains\Motor.Functions.cs" />
+    <Compile Include="Models\Trains\Motor.Simulation.cs" />
+    <Compile Include="Models\Trains\Move.cs" />
+    <Compile Include="Models\Trains\Performance.cs" />
+    <Compile Include="Models\Trains\Pressure.cs" />
+    <Compile Include="Models\Trains\Train.cs" />
+    <Compile Include="Simulation\TrainManager\Car\Car.CarSounds.cs" />
+    <Compile Include="Simulation\TrainManager\Car\Car.cs" />
+    <Compile Include="Simulation\TrainManager\Car\Car.Specs.cs" />
+    <Compile Include="Simulation\TrainManager\Motor\MotorSounds.cs" />
+    <Compile Include="Simulation\TrainManager\TrainManager.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Train.cs" />
+    <Compile Include="Systems\Fonts.cs" />
+    <Compile Include="Systems\Functions\Plugins.cs" />
+    <Compile Include="Systems\Host.cs" />
+    <Compile Include="Systems\Interface.cs" />
+    <Compile Include="Systems\Options.cs" />
+    <Compile Include="ViewModels\AppViewModel.cs" />
+    <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\BaseDialogViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\MessageBoxViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\OpenFileDialogViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\SaveFileDialogViewModel.cs" />
+    <Compile Include="ViewModels\Others\ListViewColumnHeaderViewModel.cs" />
+    <Compile Include="ViewModels\Others\ListViewItemViewModel.cs" />
+    <Compile Include="ViewModels\Others\ToolTipViewModel.cs" />
+    <Compile Include="ViewModels\Others\TreeViewItemViewModel.cs" />
+    <Compile Include="ViewModels\Panels\DigitalGaugeElementViewModel.cs" />
+    <Compile Include="ViewModels\Panels\DigitalNumberElementViewModel.cs" />
+    <Compile Include="ViewModels\Panels\LinearGaugeElementViewModel.cs" />
+    <Compile Include="ViewModels\Panels\NeedleElementViewModel.cs" />
+    <Compile Include="ViewModels\Panels\PanelElementViewModel.cs" />
+    <Compile Include="ViewModels\Panels\PanelViewModel.cs" />
+    <Compile Include="ViewModels\Panels\PilotLampElementViewModel.cs" />
+    <Compile Include="ViewModels\Panels\ScreenViewModel.cs" />
+    <Compile Include="ViewModels\Panels\SubjectViewModel.cs" />
+    <Compile Include="ViewModels\Panels\ThisViewModel.cs" />
+    <Compile Include="ViewModels\Panels\TimetableElementViewModel.cs" />
+    <Compile Include="ViewModels\Panels\TouchElementViewModel.cs" />
+    <Compile Include="ViewModels\Sounds\SoundElementViewModel.cs" />
+    <Compile Include="ViewModels\Sounds\SoundViewModel.cs" />
+    <Compile Include="ViewModels\Trains\AccelerationViewModel.cs" />
+    <Compile Include="ViewModels\Trains\BrakeViewModel.cs" />
+    <Compile Include="ViewModels\Trains\CabViewModel.cs" />
+    <Compile Include="ViewModels\Trains\CarViewModel.cs" />
+    <Compile Include="ViewModels\Trains\CouplerViewModel.cs" />
+    <Compile Include="ViewModels\Trains\DelayViewModel.cs" />
+    <Compile Include="ViewModels\Trains\DeviceViewModel.cs" />
+    <Compile Include="ViewModels\Trains\HandleViewModel.cs" />
+    <Compile Include="ViewModels\Trains\MotorViewModel.cs" />
+    <Compile Include="ViewModels\Trains\MoveViewModel.cs" />
+    <Compile Include="ViewModels\Trains\PerformanceViewModel.cs" />
+    <Compile Include="ViewModels\Trains\PressureViewModel.cs" />
+    <Compile Include="ViewModels\Trains\TrainViewModel.cs" />
+    <Compile Include="Views\FormBogie.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormBogie.Designer.cs">
+      <DependentUpon>FormBogie.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormDelay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormDelay.Designer.cs">
+      <DependentUpon>FormDelay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormEditor.Acceleration.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.Brake.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.Cab.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.Car.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.Coupler.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.Designer.cs">
+      <DependentUpon>FormEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\FormEditor.Device.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.DigitalGauge.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.DigitalNumber.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.Functions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.Handle.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.LinearGauge.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.MessageBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.Motor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.Move.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.Needle.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.OpenFileDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.Panel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.Performance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.PilotLamp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.Pressure.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.SaveFileDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.Screen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.Sound.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.SoundElement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.This.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.Timetable.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.ToolTip.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.Touch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.Train.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormExport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormExport.Designer.cs">
+      <DependentUpon>FormExport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormImport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormImport.Designer.cs">
+      <DependentUpon>FormImport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormSubject.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormSubject.Designer.cs">
+      <DependentUpon>FormSubject.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="Views\FormBogie.resx">
+      <DependentUpon>FormBogie.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\FormDelay.resx">
+      <DependentUpon>FormDelay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\FormEditor.resx">
+      <DependentUpon>FormEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\FormExport.resx">
+      <DependentUpon>FormExport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\FormImport.resx">
+      <DependentUpon>FormImport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\FormSubject.resx">
+      <DependentUpon>FormSubject.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="OpenTK.dll.config" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LibRender\LibRender.csproj">
+      <Project>{2072ecd1-c7ff-427c-84dc-063f7c19792e}</Project>
+      <Name>LibRender</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
+      <Project>{27134980-4415-4375-a564-40a9014dfa5f}</Project>
+      <Name>OpenBveApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SoundManager\SoundManager.csproj">
+      <Project>{90abfa0c-abca-444e-adef-9a299aed6524}</Project>
+      <Name>SoundManager</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

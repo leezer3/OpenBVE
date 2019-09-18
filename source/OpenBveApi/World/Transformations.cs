@@ -3,7 +3,7 @@
 namespace OpenBveApi.World
 {
 	/// <summary>Describes a world transformation consisting of three vectors</summary>
-	public struct Transformation
+	public class Transformation
 	{
 		/// <summary>The X Vector</summary>
 		public Vector3 X;
@@ -11,6 +11,14 @@ namespace OpenBveApi.World
 		public Vector3 Y;
 		/// <summary>The Z Vector</summary>
 		public Vector3 Z;
+
+		/// <summary>Creates a new empty transformation</summary>
+		public Transformation()
+		{
+			this.X = Vector3.Right;
+			this.Y = Vector3.Down;
+			this.Z = Vector3.Forward;
+		}
 
 		/// <summary>Creates a new transformation, based upon yaw pitch and roll values</summary>
 		/// <param name="Yaw">The yaw to apply</param>

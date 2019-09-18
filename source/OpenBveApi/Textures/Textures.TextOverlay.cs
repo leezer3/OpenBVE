@@ -5,7 +5,7 @@ using OpenBveApi.Math;
 namespace OpenBveApi.Textures
 {
 	/// <summary>Provides functions for dyamically overlaying text onto a texture</summary>
-	public class TextOverlay
+	public static class TextOverlay
 	{
 		/// <summary>Adds a textual string to a bitmap image</summary>
 		/// <param name="bitmap">The bitmap image to add the text to, or a null reference if a new image is to be created</param>
@@ -37,7 +37,6 @@ namespace OpenBveApi.Textures
 				graphics.DrawString(txt, font, new SolidBrush(fcolor), (int) Padding.X, (int) Padding.Y);
 				graphics.Flush();
 				font.Dispose();
-				graphics.Dispose();
 			}
 
 			if (!overlay)

@@ -1,10 +1,11 @@
 ﻿using OpenBveApi.Interface;
+using OpenBveApi.Objects;
 
 namespace OpenBve
 {
 	internal partial class CsvRwRouteParser
 	{
-		private static void CheckRouteSpecificFixes(string FileName, ref RouteData Data, ref Expression[] Expressions)
+		private static void CheckRouteSpecificFixes(string FileName, ref RouteData Data, ref Expression[] Expressions, bool PreviewOnly)
 		{
 			if (Interface.CurrentOptions.EnableBveTsHacks == false)
 			{
@@ -126,10 +127,67 @@ namespace OpenBve
 					//Iiyama 2060-
 					//9001.csv
 					Expressions[434].Text = ".section 0; 103; 104; 105; 106";
-					if (Interface.CurrentOptions.CurrentXParser == Interface.XParsers.Original)
+					if (Interface.CurrentOptions.CurrentXParser == XParsers.Original)
 					{
 						//Various broken stuff with the original parser, either Assimp or new will do
-						Interface.CurrentOptions.CurrentXParser = Interface.XParsers.NewXParser;
+						Interface.CurrentOptions.CurrentXParser = XParsers.NewXParser;
+					}
+					break;
+				case "B97E93C1A21B43CCDA2C504F254E6F8FF099FD51E502E2EE875E6B05FBDE5326":
+					//NYCT-L.csv
+					Interface.CurrentOptions.Toppling = false;
+					break;
+				case "B44150CA3636B904E2A0058902CA739DE3F7B24D5D551C7FFD53597F3157FB79":
+					//M4.csv
+					Expressions[206].Text = string.Empty;
+					Expressions[207].Text = string.Empty;
+					Expressions[208].Text = string.Empty;
+					break;
+				case "5E976BA173F3267271746FB161730FFC205FAC85A38DB369BDC2FB25297B05E1":
+					//spaceroute1.csv
+					Data.IgnorePitchRoll = true;
+					Interface.CurrentOptions.Derailments = false;
+					Interface.CurrentOptions.Toppling = false;
+					break;
+				case "64F6EECA5B5976F271DC9686C585026A1A5732E743A1BA1DB6DC57C6672E9F3B":
+				case "FEFAF4332990CDDBC8F563010B539320AD00FB49CC6EFB14546FE30A65752752":
+					//TR_203_A6.rw
+					//TR_3_A5.rw
+					Expressions[803].Text = "Freeobj(0,50,0,0,168.075)";
+					break;
+				case "E734848C90A964904907AB3FCFAB2BE01F352D44B5D3C66A65E9A28AB70B920B":
+					//TR_207_A9.rw
+					Expressions[802].Text = "Freeobj(0,50,0,0,168.075)";
+					break;
+				case "C49103E985BD256ACC38E8373652F9B963F2AA7144FE66CCAC769FDD16053B79":
+					//TR_217_A1.rw
+					Expressions[799].Text = "Freeobj(0,50,0,0,168.075)";
+					break;
+				case "AFC9586954ED7867860EB167A1CE2718D9D49AA9AE4905B2A24E49F49295F07D":
+					//TR_3_A11.csv
+					Expressions[1316].Text = "5025,";
+					break;
+				case "A2FA01331674992B4E1AB935F496590B4CD7D083BF659109C28B0BF603AB93DB":
+					//TR_207_A1.csv
+					Expressions[1329].Text = "5025,";
+					break;
+				case "9EC666169C5B5E1AFFEAD1C7753FD67F54632E51C7FB64450D4B9A0329CFF9F9":
+					//TR_207_A9.csv
+					Expressions[1323].Text = "5025,";
+					break;
+				case "097B3ACC33FA9CB33A9D35023EE24F977657875D9C79DCFE1CC8655A2EEB67CA":
+					//TR_spec_L29.csv
+					Expressions[1318].Text = "5025,";
+					break;
+				case "99CE7D39513ECA681D9A8E6D23647FB161DAE50BF9E7540C2395596547A4ACE5":
+					//all2000.csv
+					if (!PreviewOnly)
+					{
+						Data.Structure.Ground.Add(1, new StaticObject(Program.CurrentHost));
+						Data.Structure.RailObjects.Add(16, new StaticObject(Program.CurrentHost));
+						Expressions[376].Text = ".freeobj 2;17;1.6;0;0";
+						Expressions[396].Text = ".freeobj 2;17;1.6;0;0";
+						Expressions[415].Text = ".freeobj 0;15;2;0;0";
 					}
 					break;
 			}

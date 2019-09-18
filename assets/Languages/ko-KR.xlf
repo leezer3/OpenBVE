@@ -1,0 +1,3835 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file datatype="plaintext" original="en-US.xlf" source-language="en-US" target-language="ko-KR">
+		<body>
+			<group id="language">
+				<trans-unit id="name">
+					<source>English (United States)</source>
+					<target>한국어</target>
+				</trans-unit>
+				<trans-unit id="flag">
+					<source>US.png</source>
+					<target>KR.png</target>
+				</trans-unit>
+				<trans-unit id="contributors">
+					<source>Unknown</source>
+					<target>HIDDEN-CATCH ( hidcatch.subtitle.kr )</target>
+				</trans-unit>
+				<trans-unit id="last_updated">
+					<source>2016-02-21</source>
+					<target>2009-12-07</target>
+				</trans-unit>
+			</group>
+			<group id="openbve">
+				<group id="program">
+					<trans-unit id="title">
+						<source>openBVE</source>
+						<target>openBVE</target>
+					</trans-unit>
+				</group>
+				<group id="panel">
+					<trans-unit id="start">
+						<source>Start new game</source>
+						<target>새 게임</target>
+					</trans-unit>
+					<trans-unit id="review">
+						<source>Review last game</source>
+						<target>운행 실적</target>
+					</trans-unit>
+					<trans-unit id="getaddons">
+						<source>Get Add-ons</source>
+						<target>Get Add-ons</target>
+					</trans-unit>
+					<trans-unit id="controls">
+						<source>Customize controls</source>
+						<target>조작 설정</target>
+					</trans-unit>
+					<trans-unit id="options">
+						<source>Options</source>
+						<target>기본 설정</target>
+					</trans-unit>
+					<trans-unit id="homepage">
+						<source>Visit official homepage</source>
+						<target>공식 홈페이지 방문</target>
+					</trans-unit>
+					<trans-unit id="updates">
+						<source>Check for updates</source>
+						<target>업데이트 검사</target>
+					</trans-unit>
+					<trans-unit id="updates_invalid">
+						<source>A connection to the server could be established. Unfortunately, the version information could not be retrieved.</source>
+						<target>서버에 접속하였으나 버전 정보를 읽어 올 수 없습니다.</target>
+					</trans-unit>
+					<trans-unit id="updates_old">
+						<source>You already have the latest version.</source>
+						<target>현재 최신 버전입니다.</target>
+					</trans-unit>
+					<trans-unit id="updates_new">
+						<source>The new version [version] ([date]) is available for download on the Official Homepage.</source>
+						<target>최신 버전인 [version] ([date])을 공식 홈페이지에서 사용할 수 있습니다.</target>
+					</trans-unit>
+					<trans-unit id="close">
+						<source>Close</source>
+						<target>닫기</target>
+					</trans-unit>
+					<trans-unit id="packages">
+						<source>Package Management</source>
+						<target>Package Management</target>
+					</trans-unit>
+					<trans-unit id="reportbug">
+						<source>Report Problem</source>
+						<target>Report Problem</target>
+					</trans-unit>
+					<trans-unit id="about">
+						<source>About</source>
+						<target>About</target>
+					</trans-unit>
+				</group>
+				<group id="mode">
+					<trans-unit id="arcade">
+						<source>Arcade</source>
+						<target>아케이드</target>
+					</trans-unit>
+					<trans-unit id="normal">
+						<source>Normal</source>
+						<target>일반</target>
+					</trans-unit>
+					<trans-unit id="expert">
+						<source>Expert</source>
+						<target>전문가</target>
+					</trans-unit>
+					<trans-unit id="unknown">
+						<source>Unknown</source>
+						<target>알 수 없음</target>
+					</trans-unit>
+				</group>
+				<group id="errors">
+					<trans-unit id="critical_file">
+						<source>A critical error occured whilst parsing the [file] file</source>
+						<target>A critical error occured whilst parsing the [file] file</target>
+					</trans-unit>
+					<trans-unit id="filesystem_invalid">
+						<source>The file system configuration could not be accessed or is invalid due to the following reason:</source>
+						<target>The file system configuration could not be accessed or is invalid due to the following reason:</target>
+					</trans-unit>
+					<trans-unit id="warning">
+						<source>Warning:</source>
+						<target>Warning:</target>
+					</trans-unit>
+					<trans-unit id="controls_missing">
+						<source>No control configuration files found.</source>
+						<target>No control configuration files found.</target>
+					</trans-unit>
+					<trans-unit id="controls_oldversion">
+						<source>An older key-configuration file was found.</source>
+						<target>An older key-configuration file was found.</target>
+					</trans-unit>
+					<trans-unit id="controls_reset">
+						<source>The current key-configuration has been reset to defaults.</source>
+						<target>The current key-configuration has been reset to defaults.</target>
+					</trans-unit>
+					<trans-unit id="controls_default_oldversion">
+						<source>The default key assingment file is an older version or corrupt.</source>
+						<target>The default key assingment file is an older version or corrupt.</target>
+					</trans-unit>
+					<trans-unit id="controls_default_missing">
+						<source>The default key assignment file does not exist.</source>
+						<target>The default key assignment file does not exist.</target>
+					</trans-unit>
+					<trans-unit id="controls_ingame">
+						<source>You are currently running on the [platform] backend. Please use the in-game menu to configure any joystick based controls.</source>
+						<target>You are currently running on the [platform] backend. Please use the in-game menu to configure any joystick based controls.</target>
+					</trans-unit>
+					<trans-unit id="sound_openal_version">
+						<source>OpenAL 1.1 is required. You seem to have version 1.0.</source>
+						<target>OpenAL 1.1 is required. You seem to have version 1.0.</target>
+					</trans-unit>
+					<trans-unit id="sound_openal_context">
+						<source>The OpenAL context could not be created.</source>
+						<target>The OpenAL context could not be created.</target>
+					</trans-unit>
+					<trans-unit id="sound_openal_device">
+						<source>The OpenAL sound device could not be opened.</source>
+						<target>The OpenAL sound device could not be opened.</target>
+					</trans-unit>
+					<trans-unit id="fullscreen_switch1">
+						<source>An error occured whilst attempting to switch to fullscreen mode.</source>
+						<target>An error occured whilst attempting to switch to fullscreen mode.</target>
+					</trans-unit>
+					<trans-unit id="fullscreen_switch2">
+						<source>Please check your fullscreen resolution settings.</source>
+						<target>Please check your fullscreen resolution settings.</target>
+					</trans-unit>
+					<trans-unit id="route_corrupt_withtrack">
+						<source>The selected route is corrupt: \r\n WithTrack section missing.</source>
+						<target>The selected route is corrupt: \r\n WithTrack section missing.</target>
+					</trans-unit>
+					<trans-unit id="route_corrupt_nostations">
+						<source>The selected route is corrupt: \r\n No stations defined.</source>
+						<target>The selected route is corrupt: \r\n No stations defined.</target>
+					</trans-unit>
+					<trans-unit id="route_corrupt_noobjects">
+						<source>The selected route is corrupt: \r\n No objects defined.</source>
+						<target>The selected route is corrupt: \r\n No objects defined.</target>
+					</trans-unit>
+					<trans-unit id="plugin_failure1">
+						<source>The train plugin [plugin] failed to load.</source>
+						<target>The train plugin [plugin] failed to load.</target>
+					</trans-unit>
+					<trans-unit id="plugin_failure2">
+						<source>The built-in ATS/ ATC systems will be used instead, which may cause issues.</source>
+						<target>The built-in ATS/ ATC systems will be used instead, which may cause issues.</target>
+					</trans-unit>
+					<trans-unit id="package_filename_empty">
+						<source>Attempted to create a package with an empty filename.</source>
+						<target>Attempted to create a package with an empty filename.</target>
+					</trans-unit>
+					<trans-unit id="package_directory_missing">
+						<source>The directory in which you attempted to save the package file does not exist: \r \n</source>
+						<target>The directory in which you attempted to save the package file does not exist: \r \n</target>
+					</trans-unit>
+					<trans-unit id="package_directory_nowrite">
+						<source>No write access available in the directory in which you attempted to save the package file: \r \n</source>
+						<target>No write access available in the directory in which you attempted to save the package file: \r \n</target>
+					</trans-unit>
+					<trans-unit id="package_file_generic">
+						<source>Failed to create the following file: \r \n</source>
+						<target>Failed to create the following file: \r \n</target>
+					</trans-unit>
+				</group>
+				<group id="start">
+					<trans-unit id="title">
+						<source>Start new game</source>
+						<target>새 게임</target>
+					</trans-unit>
+					<trans-unit id="route">
+						<source>Route</source>
+						<target>노선</target>
+					</trans-unit>
+					<trans-unit id="route_selection">
+						<source>Selection</source>
+						<target>선택</target>
+					</trans-unit>
+					<trans-unit id="route_addons">
+						<source>Add-ons</source>
+						<target>Add-ons</target>
+					</trans-unit>
+					<trans-unit id="route_browse">
+						<source>Browse manually</source>
+						<target>찾아 보기</target>
+					</trans-unit>
+					<trans-unit id="route_recently">
+						<source>Recently used</source>
+						<target>최근 기록</target>
+					</trans-unit>
+					<trans-unit id="route_details">
+						<source>Details</source>
+						<target>상세 정보</target>
+					</trans-unit>
+					<trans-unit id="route_description">
+						<source>Description</source>
+						<target>설명</target>
+					</trans-unit>
+					<trans-unit id="route_map">
+						<source>Map</source>
+						<target>지도</target>
+					</trans-unit>
+					<trans-unit id="route_gradient">
+						<source>Gradient profile</source>
+						<target>고도 보고서</target>
+					</trans-unit>
+					<trans-unit id="route_settings">
+						<source>Settings</source>
+						<target>설정</target>
+					</trans-unit>
+					<trans-unit id="route_settings_encoding">
+						<source>Encoding:</source>
+						<target>인코딩:</target>
+					</trans-unit>
+					<trans-unit id="route_settings_encoding_preview">
+						<source>Preview:</source>
+						<target>미리 보기:</target>
+					</trans-unit>
+					<trans-unit id="route_processing">
+						<source>Processing route, please wait.....</source>
+						<target>Processing route, please wait.....</target>
+					</trans-unit>
+					<trans-unit id="train">
+						<source>Train</source>
+						<target>차량</target>
+					</trans-unit>
+					<trans-unit id="train_selection">
+						<source>Selection</source>
+						<target>선택</target>
+					</trans-unit>
+					<trans-unit id="train_addons">
+						<source>Add-ons</source>
+						<target>Add-ons</target>
+					</trans-unit>
+					<trans-unit id="train_browse">
+						<source>Browse manually</source>
+						<target>찾아 보기</target>
+					</trans-unit>
+					<trans-unit id="train_recently">
+						<source>Recently used</source>
+						<target>최근 기록</target>
+					</trans-unit>
+					<trans-unit id="train_default">
+						<source>Route default</source>
+						<target>노선 설정</target>
+					</trans-unit>
+					<trans-unit id="train_usedefault">
+						<source>Use the train suggested by the route</source>
+						<target>노선에서 지정한 차량 사용:</target>
+					</trans-unit>
+					<trans-unit id="train_details">
+						<source>Details</source>
+						<target>상세 정보</target>
+					</trans-unit>
+					<trans-unit id="train_description">
+						<source>Description</source>
+						<target>설명</target>
+					</trans-unit>
+					<trans-unit id="train_settings">
+						<source>Settings</source>
+						<target>설정</target>
+					</trans-unit>
+					<trans-unit id="train_settings_encoding">
+						<source>Encoding:</source>
+						<target>인코딩:</target>
+					</trans-unit>
+					<trans-unit id="train_settings_encoding_preview">
+						<source>Preview:</source>
+						<target>미리 보기:</target>
+					</trans-unit>
+					<trans-unit id="train_notfound">
+						<source>The default train could not be found:\n\n</source>
+						<target>노선에 설정된 차량을 찾을 수 없습니다:\n\n</target>
+					</trans-unit>
+					<trans-unit id="train_pluginnotsupported">
+						<source>--- This train uses a safety system plugin which cannot be used on your operating system. The built-in safety systems ATS/ATC will be used instead, which might cause operational problems. ---</source>
+						<target>--- 이 차량은 현재 운영체제에서 사용할 수 없는 플러그인을 요청합니다. 따라서 차량이 요청한 플러그인 대신, OpenBVE 내장 플러그인을 사용하므로 운행중 오류가 발생할 수 있습니다. ---</target>
+					</trans-unit>
+					<trans-unit id="start">
+						<source>Start</source>
+						<target>시작</target>
+					</trans-unit>
+					<trans-unit id="start_mode">
+						<source>Mode of driving:</source>
+						<target>운행 난이도:</target>
+					</trans-unit>
+					<trans-unit id="start_start">
+						<source>Start</source>
+						<target>시작</target>
+					</trans-unit>
+				</group>
+				<group id="review">
+					<trans-unit id="title">
+						<source>Review last game</source>
+						<target>운행 실적 보기</target>
+					</trans-unit>
+					<trans-unit id="conditions">
+						<source>Conditions</source>
+						<target>상태</target>
+					</trans-unit>
+					<trans-unit id="conditions_route">
+						<source>Route</source>
+						<target>노선</target>
+					</trans-unit>
+					<trans-unit id="conditions_route_file">
+						<source>Route file:</source>
+						<target>노선 파일:</target>
+					</trans-unit>
+					<trans-unit id="conditions_train">
+						<source>Train</source>
+						<target>차량</target>
+					</trans-unit>
+					<trans-unit id="conditions_train_folder">
+						<source>Train folder:</source>
+						<target>차량 파일:</target>
+					</trans-unit>
+					<trans-unit id="conditions_datetime">
+						<source>Date and time</source>
+						<target>날짜/시간</target>
+					</trans-unit>
+					<trans-unit id="conditions_datetime_date">
+						<source>Date:</source>
+						<target>날짜:</target>
+					</trans-unit>
+					<trans-unit id="conditions_datetime_time">
+						<source>Time:</source>
+						<target>시간:</target>
+					</trans-unit>
+					<trans-unit id="score">
+						<source>Score</source>
+						<target>점수</target>
+					</trans-unit>
+					<trans-unit id="score_rating">
+						<source>Rating</source>
+						<target>평가</target>
+					</trans-unit>
+					<trans-unit id="score_rating_mode">
+						<source>Mode:</source>
+						<target>난이도:</target>
+					</trans-unit>
+					<trans-unit id="score_rating_achieved">
+						<source>Achieved:</source>
+						<target>성취:</target>
+					</trans-unit>
+					<trans-unit id="score_rating_maximum">
+						<source>Maximum:</source>
+						<target>목표:</target>
+					</trans-unit>
+					<trans-unit id="score_rating_ratio">
+						<source>Ratio:</source>
+						<target>비율:</target>
+					</trans-unit>
+					<trans-unit id="score_log">
+						<source>Log</source>
+						<target>기록</target>
+					</trans-unit>
+					<trans-unit id="score_log_list_time">
+						<source>Time</source>
+						<target>시간</target>
+					</trans-unit>
+					<trans-unit id="score_log_list_position">
+						<source>Position (m)</source>
+						<target>위치 (m)</target>
+					</trans-unit>
+					<trans-unit id="score_log_list_value">
+						<source>Value</source>
+						<target>값</target>
+					</trans-unit>
+					<trans-unit id="score_log_list_cumulative">
+						<source>Cumulative</source>
+						<target>누적 값</target>
+					</trans-unit>
+					<trans-unit id="score_log_list_reason">
+						<source>Reason</source>
+						<target>사유</target>
+					</trans-unit>
+					<trans-unit id="score_log_penalties">
+						<source>Show penalties only</source>
+						<target>감점 사항만 보기</target>
+					</trans-unit>
+					<trans-unit id="score_log_export">
+						<source>Export...</source>
+						<target>내보내기...</target>
+					</trans-unit>
+					<trans-unit id="blackbox">
+						<source>Black box</source>
+						<target>블랙박스</target>
+					</trans-unit>
+					<trans-unit id="blackbox_format">
+						<source>Format:</source>
+						<target>형식:</target>
+					</trans-unit>
+					<trans-unit id="blackbox_format_csv">
+						<source>Comma-separated value</source>
+						<target>콤마 구분 형식(csv) 파일</target>
+					</trans-unit>
+					<trans-unit id="blackbox_format_text">
+						<source>Formatted text</source>
+						<target>서식 있는 텍스트</target>
+					</trans-unit>
+					<trans-unit id="blackbox_export">
+						<source>Export...</source>
+						<target>내보내기...</target>
+					</trans-unit>
+				</group>
+				<group id="packages">
+					<trans-unit id="title">
+						<source>Package Management</source>
+						<target>Package Management</target>
+					</trans-unit>
+					<trans-unit id="proceed">
+						<source>Proceed...</source>
+						<target>Proceed...</target>
+					</trans-unit>
+					<trans-unit id="proceed_anyway">
+						<source>Proceed Anyway</source>
+						<target>Proceed Anyway</target>
+					</trans-unit>
+					<trans-unit id="processing">
+						<source>Processing, please wait...</source>
+						<target>Processing, please wait...</target>
+					</trans-unit>
+					<trans-unit id="unknown_file">
+						<source>Unknown File...</source>
+						<target>Unknown File...</target>
+					</trans-unit>
+					<trans-unit id="shownlist">
+						<source>These are shown in the list below:</source>
+						<target>These are shown in the list below:</target>
+					</trans-unit>
+					<trans-unit id="selection_none">
+						<source>No package selected.</source>
+						<target>No package selected.</target>
+					</trans-unit>
+					<trans-unit id="selection_none_website">
+						<source>No website provided.</source>
+						<target>No website provided.</target>
+					</trans-unit>
+					<trans-unit id="list">
+						<source>Installed Packages</source>
+						<target>Installed Packages</target>
+					</trans-unit>
+					<trans-unit id="list_type">
+						<source>Select the type of packages you wish to view:</source>
+						<target>Select the type of packages you wish to view:</target>
+					</trans-unit>
+					<trans-unit id="list_name">
+						<source>Name</source>
+						<target>Name</target>
+					</trans-unit>
+					<trans-unit id="list_version">
+						<source>Version</source>
+						<target>Version</target>
+					</trans-unit>
+					<trans-unit id="list_minimum">
+						<source>Minimum Version</source>
+						<target>Minimum Version</target>
+					</trans-unit>
+					<trans-unit id="list_maximum">
+						<source>Maximum Version</source>
+						<target>Maximum Version</target>
+					</trans-unit>
+					<trans-unit id="list_author">
+						<source>Author</source>
+						<target>Author</target>
+					</trans-unit>
+					<trans-unit id="list_website">
+						<source>Website</source>
+						<target>Website</target>
+					</trans-unit>
+					<trans-unit id="list_packagetype">
+						<source>Type</source>
+						<target>Type</target>
+					</trans-unit>
+					<trans-unit id="install">
+						<source>Install</source>
+						<target>Install</target>
+					</trans-unit>
+					<trans-unit id="install_button">
+						<source>Install Package</source>
+						<target>Install Package</target>
+					</trans-unit>
+					<trans-unit id="install_header">
+						<source>Install a Package</source>
+						<target>Install a Package</target>
+					</trans-unit>
+					<trans-unit id="install_invalid">
+						<source>This file does not appear to be a valid openBVE package.</source>
+						<target>This file does not appear to be a valid openBVE package.</target>
+					</trans-unit>
+					<trans-unit id="install_version_error">
+						<source>Package Version Error</source>
+						<target>Package Version Error</target>
+					</trans-unit>
+					<trans-unit id="install_version_new">
+						<source>The selected package is already installed, and is a newer version.</source>
+						<target>The selected package is already installed, and is a newer version.</target>
+					</trans-unit>
+					<trans-unit id="install_version_old">
+						<source>The selected package is already installed, and is an older version.</source>
+						<target>The selected package is already installed, and is an older version.</target>
+					</trans-unit>
+					<trans-unit id="install_version_same">
+						<source>The selected package is already installed, and is an identical version.</source>
+						<target>The selected package is already installed, and is an identical version.</target>
+					</trans-unit>
+					<trans-unit id="install_success">
+						<source>Package installation was successful.</source>
+						<target>Package installation was successful.</target>
+					</trans-unit>
+					<trans-unit id="install_success_header">
+						<source>Installation Successful</source>
+						<target>Installation Successful</target>
+					</trans-unit>
+					<trans-unit id="install_success_files">
+						<source>A list of files installed is shown below:</source>
+						<target>A list of files installed is shown below:</target>
+					</trans-unit>
+					<trans-unit id="install_failure">
+						<source>Unfortunately, package installation failed.</source>
+						<target>Unfortunately, package installation failed.</target>
+					</trans-unit>
+					<trans-unit id="install_failure_header">
+						<source>Package Installation Failed</source>
+						<target>Package Installation Failed</target>
+					</trans-unit>
+					<trans-unit id="install_select">
+						<source>Select Package......</source>
+						<target>Select Package......</target>
+					</trans-unit>
+					<trans-unit id="install_dependancies_unmet">
+						<source>The current package has unmet dependancies.</source>
+						<target>The current package has unmet dependancies.</target>
+					</trans-unit>
+					<trans-unit id="install_dependancies_unmet_header">
+						<source>Dependancy Error</source>
+						<target>Dependancy Error</target>
+					</trans-unit>
+					<trans-unit id="install_dependancies_broken">
+						<source>The following dependancies may be broken by this action:</source>
+						<target>The following dependancies may be broken by this action:</target>
+					</trans-unit>
+					<trans-unit id="install_reccomends_unmet">
+						<source>The following packages are recommended, but not installed:</source>
+						<target>The following packages are recommended, but not installed:</target>
+					</trans-unit>
+					<trans-unit id="install_reccomends_unmet_header">
+						<source>Recommended Packages</source>
+						<target>Recommended Packages</target>
+					</trans-unit>
+					<trans-unit id="install_name">
+						<source>Package Name:</source>
+						<target>Package Name:</target>
+					</trans-unit>
+					<trans-unit id="install_author">
+						<source>Package Author:</source>
+						<target>Package Author:</target>
+					</trans-unit>
+					<trans-unit id="install_version">
+						<source>Package Version:</source>
+						<target>Package Version:</target>
+					</trans-unit>
+					<trans-unit id="install_website">
+						<source>Package Website:</source>
+						<target>Package Website:</target>
+					</trans-unit>
+					<trans-unit id="install_description">
+						<source>Package Description:</source>
+						<target>Package Description:</target>
+					</trans-unit>
+					<trans-unit id="creation_button">
+						<source>Create Package</source>
+						<target>Create Package</target>
+					</trans-unit>
+					<trans-unit id="creation_header">
+						<source>Create a Package</source>
+						<target>Create a Package</target>
+					</trans-unit>
+					<trans-unit id="creation_saveas_button">
+						<source>Save As...</source>
+						<target>Save As...</target>
+					</trans-unit>
+					<trans-unit id="creation_saveas_label">
+						<source>Save package as:</source>
+						<target>Save package as:</target>
+					</trans-unit>
+					<trans-unit id="creation_dependancies">
+						<source>Select Dependancies</source>
+						<target>Select Dependancies</target>
+					</trans-unit>
+					<trans-unit id="creation_dependancies_add">
+						<source>Add Dependancy</source>
+						<target>Add Dependancy</target>
+					</trans-unit>
+					<trans-unit id="creation_dependancies_remove">
+						<source>Remove</source>
+						<target>Remove</target>
+					</trans-unit>
+					<trans-unit id="creation_dependancies_nextstep">
+						<source>Package details and dependancies may be assigned in the following steps.</source>
+						<target>Package details and dependancies may be assigned in the following steps.</target>
+					</trans-unit>
+					<trans-unit id="creation_reccommends_add">
+						<source>Add Recommendation</source>
+						<target>Add Recommendation</target>
+					</trans-unit>
+					<trans-unit id="creation_clearselection">
+						<source>Clear Selection</source>
+						<target>Clear Selection</target>
+					</trans-unit>
+					<trans-unit id="creation_additems">
+						<source>Add Item(s)</source>
+						<target>Add Item(s)</target>
+					</trans-unit>
+					<trans-unit id="creation_selecteditems">
+						<source>The following files and folders will be packaged:</source>
+						<target>The following files and folders will be packaged:</target>
+					</trans-unit>
+					<trans-unit id="creation_new_guid">
+						<source>The new package has been assigned the following GUID:</source>
+						<target>The new package has been assigned the following GUID:</target>
+					</trans-unit>
+					<trans-unit id="creation_header">
+						<source>Enter Package Details</source>
+						<target>Create a Package</target>
+					</trans-unit>
+					<trans-unit id="creation_name">
+						<source>Please enter a package name.</source>
+						<target>Please enter a package name.</target>
+					</trans-unit>
+					<trans-unit id="creation_author">
+						<source>Please enter a package author.</source>
+						<target>Please enter a package author.</target>
+					</trans-unit>
+					<trans-unit id="creation_description">
+						<source>Please enter a package description.</source>
+						<target>Please enter a package description.</target>
+					</trans-unit>
+					<trans-unit id="creation_version">
+						<source>Please enter a valid package version number in the following format: \r\n 1.0.0</source>
+						<target>Please enter a valid package version number in the following format: \r\n 1.0.0</target>
+					</trans-unit>
+					<trans-unit id="creation_version_invalid">
+						<source>You have entered an invalid version number. \r\n Please try again.</source>
+						<target>You have entered an invalid version number. \r\n Please try again.</target>
+					</trans-unit>
+					<trans-unit id="creation_success">
+						<source>Package creation was successful.</source>
+						<target>Package creation was successful.</target>
+					</trans-unit>
+					<trans-unit id="creation_success_header">
+						<source>Package Creation Successful</source>
+						<target>Package Creation Successful</target>
+					</trans-unit>
+					<trans-unit id="creation_success_files">
+						<source>The following files were added to your package:</source>
+						<target>The following files were added to your package:</target>
+					</trans-unit>
+					<trans-unit id="creation_failure">
+						<source>Unfortunately, creation of your package failed.</source>
+						<target>Unfortunately, creation of your package failed.</target>
+					</trans-unit>
+					<trans-unit id="creation_failure_header">
+						<source>Package Creation Failed</source>
+						<target>Package Creation Failed</target>
+					</trans-unit>
+					<trans-unit id="creation_failure_error">
+						<source>The following error was encountered:</source>
+						<target>The following error was encountered:</target>
+					</trans-unit>
+					<trans-unit id="creation_proceed">
+						<source>Proceed......</source>
+						<target>Proceed......</target>
+					</trans-unit>
+					<trans-unit id="creation_invalid_filename">
+						<source>The selected filename is invalid- Please retry.</source>
+						<target>The selected filename is invalid- Please retry.</target>
+					</trans-unit>
+					<trans-unit id="creation_new_id">
+						<source>The new package has been assigned the following GUID:</source>
+						<target>The new package has been assigned the following GUID:</target>
+					</trans-unit>
+					<trans-unit id="creation_replace_id">
+						<source>Replacing the package with the following GUID:</source>
+						<target>Replacing the package with the following GUID:</target>
+					</trans-unit>
+					<trans-unit id="creation_save">
+						<source>Save Package</source>
+						<target>Save Package</target>
+					</trans-unit>
+					<trans-unit id="creation_replace">
+						<source>Is this to replace an existing package?</source>
+						<target>Is this to replace an existing package?</target>
+					</trans-unit>
+					<trans-unit id="creation_yes">
+						<source>Yes</source>
+						<target>Yes</target>
+					</trans-unit>
+					<trans-unit id="creation_no">
+						<source>No</source>
+						<target>No</target>
+					</trans-unit>
+					<trans-unit id="replace_select">
+						<source>Replace this Package</source>
+						<target>Replace this Package</target>
+					</trans-unit>
+					<trans-unit id="replace_choose">
+						<source>Please select the package you wish to replace:</source>
+						<target>Please select the package you wish to replace:</target>
+					</trans-unit>
+					<trans-unit id="replace_noneavailable">
+						<source>No packages are currently installed.</source>
+						<target>No packages are currently installed.</target>
+					</trans-unit>
+					<trans-unit id="type_route">
+						<source>Route</source>
+						<target>Route</target>
+					</trans-unit>
+					<trans-unit id="type_train">
+						<source>Train</source>
+						<target>Train</target>
+					</trans-unit>
+					<trans-unit id="type_other">
+						<source>Other</source>
+						<target>Other</target>
+					</trans-unit>
+					<trans-unit id="type_select">
+						<source>Please select the package type:</source>
+						<target>Please select the package type:</target>
+					</trans-unit>
+					<trans-unit id="uninstall_failure">
+						<source>Unfortunately, uninstallation of this package failed.</source>
+						<target>Unfortunately, uninstallation of this package failed.</target>
+					</trans-unit>
+					<trans-unit id="uninstall_failure_header">
+						<source>Uninstallation Failed</source>
+						<target>Uninstallation Failed</target>
+					</trans-unit>
+					<trans-unit id="uninstall_success">
+						<source>Uninstallation of this package was successful.</source>
+						<target>Uninstallation of this package was successful.</target>
+					</trans-unit>
+					<trans-unit id="uninstall_success_header">
+						<source>Uninstallation Successful</source>
+						<target>Uninstallation Successful</target>
+					</trans-unit>
+					<trans-unit id="uninstall_log">
+						<source>A log is shown below:</source>
+						<target>A log is shown below:</target>
+					</trans-unit>
+					<trans-unit id="uninstall_button">
+						<source>Uninstall Package</source>
+						<target>Uninstall Package</target>
+					</trans-unit>
+					<trans-unit id="uninstall_broken">
+						<source>Some existing packages may be broken by this action.</source>
+						<target>Some existing packages may be broken by this action.</target>
+					</trans-unit>
+					<trans-unit id="uninstall_missing_xml">
+						<source>Unable to uninstall the selected package. \r\n XML file list missing.</source>
+						<target>Unable to uninstall the selected package. \r\n XML file list missing.</target>
+					</trans-unit>
+					<trans-unit id="uninstall_database_remove">
+						<source>Do you wish to remove this package from the database?</source>
+						<target>Do you wish to remove this package from the database?</target>
+					</trans-unit>
+					<trans-unit id="database_save_error">
+						<source>An error occured whilst saving the package database. \r\n Please check for write permissions.</source>
+						<target>An error occured whilst saving the package database. \r\n Please check for write permissions.</target>
+					</trans-unit>
+					<trans-unit id="version_new">
+						<source>New version:</source>
+						<target>New version:</target>
+					</trans-unit>
+					<trans-unit id="version_current">
+						<source>Current version:</source>
+						<target>Current version:</target>
+					</trans-unit>
+					<trans-unit id="success">
+						<source>Finished!</source>
+						<target>Finished!</target>
+					</trans-unit>
+					<trans-unit id="selected">
+						<source>Selected Packages</source>
+						<target>Selected Packages</target>
+					</trans-unit>
+					<trans-unit id="dependancy">
+						<source>Dependancy</source>
+						<target>Dependancy</target>
+					</trans-unit>
+					<trans-unit id="recommendation">
+						<source>Recommendation</source>
+						<target>Recommendation</target>
+					</trans-unit>
+					<trans-unit id="error_action">
+						<source>Please select the action you wish to take:</source>
+						<target>Please select the action you wish to take:</target>
+					</trans-unit>
+					<trans-unit id="error_overwrite">
+						<source>Overwrite</source>
+						<target>Overwrite</target>
+					</trans-unit>
+					<trans-unit id="error_replace">
+						<source>Replace</source>
+						<target>Replace</target>
+					</trans-unit>
+					<trans-unit id="button_next">
+						<source>Next &gt;</source>
+						<target>Next &gt;</target>
+					</trans-unit>
+					<trans-unit id="button_back">
+						<source>&lt; Back</source>
+						<target>&lt; Back</target>
+					</trans-unit>
+					<trans-unit id="button_cancel">
+						<source>Cancel</source>
+						<target>Cancel</target>
+					</trans-unit>
+					<trans-unit id="button_ok">
+						<source>OK</source>
+						<target>OK</target>
+					</trans-unit>
+					<trans-unit id="button_install">
+						<source>Install</source>
+						<target>Install</target>
+					</trans-unit>
+					<trans-unit id="button_create">
+						<source>Create</source>
+						<target>Create</target>
+					</trans-unit>
+					<trans-unit id="button_ignore">
+						<source>Ignore</source>
+						<target>Ignore</target>
+					</trans-unit>
+					<trans-unit id="button_abort">
+						<source>Abort</source>
+						<target>Abort</target>
+					</trans-unit>
+					<trans-unit id="filename_empty">
+						<source>Attempted to create a package with an empty filename.</source>
+						<target>Attempted to create a package with an empty filename.</target>
+					</trans-unit>
+					<trans-unit id="directory_missing">
+						<source>The directory in which you attempted to save the package file does not exist: \r \n</source>
+						<target>The directory in which you attempted to save the package file does not exist: \r \n</target>
+					</trans-unit>
+					<trans-unit id="directory_nowrite">
+						<source>No write access available in the directory in which you attempted to save the package file: \r \n</source>
+						<target>No write access available in the directory in which you attempted to save the package file: \r \n</target>
+					</trans-unit>
+					<trans-unit id="file_generic">
+						<source>Failed to create the following file: \r \n</source>
+						<target>Failed to create the following file: \r \n</target>
+					</trans-unit>
+				</group>
+				<group id="controls">
+					<trans-unit id="title">
+						<source>Customize controls</source>
+						<target>조작 설정</target>
+					</trans-unit>
+					<trans-unit id="list_command">
+						<source>Command</source>
+						<target>명령</target>
+					</trans-unit>
+					<trans-unit id="list_type">
+						<source>Type</source>
+						<target>형식</target>
+					</trans-unit>
+					<trans-unit id="list_type_digital">
+						<source>Digital</source>
+						<target>디지털</target>
+					</trans-unit>
+					<trans-unit id="list_type_analoghalf">
+						<source>Analog (half axis)</source>
+						<target>아날로그 (half axis)</target>
+					</trans-unit>
+					<trans-unit id="list_type_analogfull">
+						<source>Analog (full axis)</source>
+						<target>아날로그 (full axis)</target>
+					</trans-unit>
+					<trans-unit id="list_description">
+						<source>Description</source>
+						<target>설명</target>
+					</trans-unit>
+					<trans-unit id="list_assignment">
+						<source>Assignment</source>
+						<target>구성</target>
+					</trans-unit>
+					<trans-unit id="list_option">
+						<source>Command Option</source>
+						<target>Command Option</target>
+					</trans-unit>
+					<trans-unit id="add">
+						<source>Add control</source>
+						<target>명령 추가</target>
+					</trans-unit>
+					<trans-unit id="remove">
+						<source>Remove control</source>
+						<target>명령 제거</target>
+					</trans-unit>
+					<trans-unit id="import">
+						<source>Import...</source>
+						<target>가져오기...</target>
+					</trans-unit>
+					<trans-unit id="export">
+						<source>Export...</source>
+						<target>내보내기...</target>
+					</trans-unit>
+					<trans-unit id="reset">
+						<source>Reset to defaults</source>
+						<target>Reset to defaults</target>
+					</trans-unit>
+					<trans-unit id="up">
+						<source>Move up</source>
+						<target>위로 이동</target>
+					</trans-unit>
+					<trans-unit id="down">
+						<source>Move down</source>
+						<target>아래로 이동</target>
+					</trans-unit>
+					<trans-unit id="selection">
+						<source>Currently selected command</source>
+						<target>선택된 명령</target>
+					</trans-unit>
+					<trans-unit id="selection_command">
+						<source>Command:</source>
+						<target>명령:</target>
+					</trans-unit>
+					<trans-unit id="selection_command_option">
+						<source>Command Option:</source>
+						<target>Command Option:</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard">
+						<source>Keyboard:</source>
+						<target>키보드:</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_assignment_grab">
+						<source>Click here to enable keyboard grab to automatically select the desired key.</source>
+						<target>Click here to enable keyboard grab to automatically select the desired key.</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_assignment_grabbing">
+						<source>Please press any key...</source>
+						<target>Please press any key...</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_key">
+						<source>Key:</source>
+						<target>키:</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_modifiers">
+						<source>Modifiers:</source>
+						<target>기능키:</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_modifiers_shift">
+						<source>Shift</source>
+						<target>Shift</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_modifiers_ctrl">
+						<source>Ctrl</source>
+						<target>Ctrl</target>
+					</trans-unit>
+					<trans-unit id="selection_keyboard_modifiers_alt">
+						<source>Alt</source>
+						<target>Alt</target>
+					</trans-unit>
+					<trans-unit id="selection_joystick">
+						<source>Joystick:</source>
+						<target>조이스틱:</target>
+					</trans-unit>
+					<trans-unit id="selection_joystick_assignment">
+						<source>Assignment:</source>
+						<target>구성:</target>
+					</trans-unit>
+					<trans-unit id="selection_joystick_assignment_grab">
+						<source>Click here to enable joystick grab to automatically select the desired axis, button or hat.</source>
+						<target>조이스틱 입력을 자동으로 인식하려면 모든 입력을 중립으로 맞추고 여기를 누르십시오.</target>
+					</trans-unit>
+					<trans-unit id="selection_joystick_assignment_grab_normal">
+						<source>Press a button or move an axis or hat into the desired direction...</source>
+						<target>버튼을 누르거나 패드를 움직이십시오.</target>
+					</trans-unit>
+					<trans-unit id="selection_joystick_assignment_grab_fullaxis">
+						<source>Move an axis into the direction of "increase" or "power"...</source>
+						<target>"증가" 또는 "가속" 방향으로 패드를 움직이십시오.</target>
+					</trans-unit>
+					<trans-unit id="attached">
+						<source>Attached joysticks</source>
+						<target>포함된 조이스틱</target>
+					</trans-unit>
+					<trans-unit id="assignment_keyboard">
+						<source>Keyboard</source>
+						<target>키보드</target>
+					</trans-unit>
+					<trans-unit id="assignment_keyboard_shift">
+						<source>Shift +\x20</source>
+						<target>Shift +\x20</target>
+					</trans-unit>
+					<trans-unit id="assignment_keyboard_ctrl">
+						<source>Ctrl +\x20</source>
+						<target>Ctrl +\x20</target>
+					</trans-unit>
+					<trans-unit id="assignment_keyboard_alt">
+						<source>Alt +\x20</source>
+						<target>Alt +\x20</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick">
+						<source>Joystick [index]</source>
+						<target>조이스틱 [index]</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_axis">
+						<source>axis [index]</source>
+						<target>조이스틱 패드 [index]</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_axis_negative">
+						<source>negative direction</source>
+						<target>역방향</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_axis_positive">
+						<source>positive direction</source>
+						<target>정방향</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_axis_invalid">
+						<source>invalid direction</source>
+						<target>잘못된 방향</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_button">
+						<source>button [index]</source>
+						<target>버튼 [index]</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat">
+						<source>hat [index]</source>
+						<target>패드 [index]</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_left">
+						<source>left</source>
+						<target>서</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_upleft">
+						<source>up-left</source>
+						<target>북서</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_up">
+						<source>up</source>
+						<target>북</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_upright">
+						<source>up-right</source>
+						<target>북동</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_right">
+						<source>right</source>
+						<target>동</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_downright">
+						<source>down-right</source>
+						<target>남동</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_down">
+						<source>down</source>
+						<target>남</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_downleft">
+						<source>down-left</source>
+						<target>남서</target>
+					</trans-unit>
+					<trans-unit id="assignment_joystick_hat_invalid">
+						<source>invalid</source>
+						<target>오류</target>
+					</trans-unit>
+					<trans-unit id="assignment_invalid">
+						<source>Not assigned</source>
+						<target>할당되지 않음</target>
+					</trans-unit>
+					<trans-unit id="assignment_separator">
+						<source>,\x20</source>
+						<target>,\x20</target>
+					</trans-unit>
+				</group>
+				<group id="raildriver">
+					<trans-unit id="speedunits">
+						<source>LED Display speed units</source>
+						<target>LED Display speed units</target>
+					</trans-unit>
+					<trans-unit id="milesperhour">
+						<source>Miles per Hour (MPH)</source>
+						<target>Miles per Hour (MPH)</target>
+					</trans-unit>
+					<trans-unit id="kilometersperhour">
+						<source>Kilometers per Hour (KPH)</source>
+						<target>Kilometers per Hour (KPH)</target>
+					</trans-unit>
+					<trans-unit id="setcalibration">
+						<source>Set Calibration:</source>
+						<target>Set Calibration:</target>
+					</trans-unit>
+					<trans-unit id="launch">
+						<source>Launch</source>
+						<target>Launch</target>
+					</trans-unit>
+					<trans-unit id="notdetected">
+						<source>No RailDriver conrollers detected.</source>
+						<target>No RailDriver conrollers detected.</target>
+					</trans-unit>
+					<trans-unit id="config_error">
+						<source>Error loading RailDriver calibration file.</source>
+						<target>Error loading RailDriver calibration file.</target>
+					</trans-unit>
+					<trans-unit id="calibration_start">
+						<source>Please press 'Next' to start calibration.</source>
+						<target>Please press 'Next' to start calibration.</target>
+					</trans-unit>
+					<trans-unit id="calibration_a">
+						<source>Move the reverser lever to the full reverse position and press 'Next'.</source>
+						<target>Move the reverser lever to the full reverse position and press 'Next'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_b">
+						<source>Move the reverser lever to the full forward position and press 'Next'.</source>
+						<target>Move the reverser lever to the full forward position and press 'Next'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_c">
+						<source>Move the combined brake / throttle lever to the full power position and press 'Next'.</source>
+						<target>Move the combined brake / throttle lever to the full power position and press 'Next'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_d">
+						<source>Move the combined brake / throttle lever to the full brake position and press 'Next'.</source>
+						<target>Move the combined brake / throttle lever to the full brake position and press 'Next'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_e">
+						<source>Move the dynamic brake lever to the release position and press 'Next'.</source>
+						<target>Move the dynamic brake lever to the release position and press 'Next'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_f">
+						<source>Move the dynamic brake lever to the emergency position and press 'Next'.</source>
+						<target>Move the dynamic brake lever to the emergency position and press 'Next'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_g">
+						<source>Move the independant brake lever to the release position and press 'Next'.</source>
+						<target>Move the independant brake lever to the release position and press 'Next'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_h">
+						<source>Move the independant brake lever to the full position and press 'Next'.</source>
+						<target>Move the independant brake lever to the full position and press 'Next'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_i">
+						<source>Move the bail-off lever to the release position and press 'Next'.</source>
+						<target>Move the bail-off lever to the release position and press 'Next'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_j">
+						<source>Move and hold the bail-off lever into the full position and press 'Next'.</source>
+						<target>Move and hold the bail-off lever into the full position and press 'Next'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_k">
+						<source>Move the wiper switch to OFF and press 'Next'.</source>
+						<target>Move the wiper switch to OFF and press 'Next'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_l">
+						<source>Move the wiper switch to FULL and press 'Next'.</source>
+						<target>Move the wiper switch to FULL and press 'Next'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_m">
+						<source>Move the lights switch to OFF and press 'Next'.</source>
+						<target>Move the lights switch to OFF and press 'Next'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_n">
+						<source>Move the lights switch to FULL and press 'Next'.</source>
+						<target>Move the lights switch to FULL and press 'Next'.</target>
+					</trans-unit>
+					<trans-unit id="calibration_o">
+						<source>Calibration complete.</source>
+						<target>Calibration complete.</target>
+					</trans-unit>
+				</group>
+				<group id="options">
+					<trans-unit id="title">
+						<source>Options</source>
+						<target>기본 설정</target>
+					</trans-unit>
+					<trans-unit id="language">
+						<source>Language</source>
+						<target>언어</target>
+					</trans-unit>
+					<trans-unit id="display">
+						<source>Display</source>
+						<target>디스플레이 설정</target>
+					</trans-unit>
+					<trans-unit id="display_mode">
+						<source>Display mode</source>
+						<target>화면 모드</target>
+					</trans-unit>
+					<trans-unit id="display_mode_window">
+						<source>Window mode</source>
+						<target>창 모드</target>
+					</trans-unit>
+					<trans-unit id="display_mode_fullscreen">
+						<source>Fullscreen mode</source>
+						<target>전체 화면</target>
+					</trans-unit>
+					<trans-unit id="display_vsync">
+						<source>Vertical synchronization:</source>
+						<target>수직 재생 대기</target>
+					</trans-unit>
+					<trans-unit id="display_vsync_off">
+						<source>Disabled</source>
+						<target>사용 안 함</target>
+					</trans-unit>
+					<trans-unit id="display_vsync_on">
+						<source>Enabled</source>
+						<target>사용</target>
+					</trans-unit>
+					<trans-unit id="display_window">
+						<source>Window mode</source>
+						<target>창 모드</target>
+					</trans-unit>
+					<trans-unit id="display_window_width">
+						<source>Width:</source>
+						<target>가로:</target>
+					</trans-unit>
+					<trans-unit id="display_window_height">
+						<source>Height:</source>
+						<target>세로:</target>
+					</trans-unit>
+					<trans-unit id="display_fullscreen">
+						<source>Fullscreen</source>
+						<target>전체 화면</target>
+					</trans-unit>
+					<trans-unit id="display_fullscreen_width">
+						<source>Width:</source>
+						<target>가로:</target>
+					</trans-unit>
+					<trans-unit id="display_fullscreen_height">
+						<source>Height:</source>
+						<target>세로:</target>
+					</trans-unit>
+					<trans-unit id="display_fullscreen_bits">
+						<source>Bits per pixel:</source>
+						<target>색 품질:</target>
+					</trans-unit>
+					<trans-unit id="quality">
+						<source>Quality</source>
+						<target>품질</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation">
+						<source>Interpolation</source>
+						<target>이미지 필터</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode">
+						<source>Mode:</source>
+						<target>크기 조절:</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode_nearest">
+						<source>Nearest neighbor</source>
+						<target>Nearest neighbor</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode_bilinear">
+						<source>Bilinear</source>
+						<target>Bilinear (권장)</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode_nearestmipmap">
+						<source>Nearest neighbor (mipmapping)</source>
+						<target>Nearest neighbor (밉맵 적용)</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode_bilinearmipmap">
+						<source>Bilinear (mipmapping)</source>
+						<target>Bilinear (밉맵 적용)</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode_trilinearmipmap">
+						<source>Trilinear (mipmapping)</source>
+						<target>Trilinear (밉맵 적용)</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_mode_anisotropic">
+						<source>Anisotropic filtering</source>
+						<target>비등방성 필터링</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_anisotropic_level">
+						<source>Level of anisotropic filtering:</source>
+						<target>비등방성 필터링 :</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_antialiasing_level">
+						<source>Level of anti-aliasing:</source>
+						<target>Level of anti-aliasing:</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_transparency">
+						<source>Transparency:</source>
+						<target>투명 필터:</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_transparency_sharp">
+						<source>Sharp</source>
+						<target>날카롭게</target>
+					</trans-unit>
+					<trans-unit id="quality_interpolation_transparency_smooth">
+						<source>Smooth</source>
+						<target>부드럽게</target>
+					</trans-unit>
+					<trans-unit id="quality_distance">
+						<source>Distance effects</source>
+						<target>거리 효과</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_viewingdistance">
+						<source>Viewing distance:</source>
+						<target>가시 거리:</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_viewingdistance_meters">
+						<source>m</source>
+						<target>m</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_motionblur">
+						<source>Motion blur:</source>
+						<target>모션 블러:</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_motionblur_none">
+						<source>Disabled</source>
+						<target>사용 안 함</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_motionblur_low">
+						<source>Low</source>
+						<target>낮음</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_motionblur_medium">
+						<source>Medium</source>
+						<target>중간</target>
+					</trans-unit>
+					<trans-unit id="quality_distance_motionblur_high">
+						<source>High</source>
+						<target>높음</target>
+					</trans-unit>
+					<trans-unit id="misc">
+						<source>Miscellaneous</source>
+						<target>기타</target>
+					</trans-unit>
+					<trans-unit id="misc_simulation">
+						<source>Detail of simulation</source>
+						<target>시뮬레이션 현실성</target>
+					</trans-unit>
+					<trans-unit id="misc_simulation_toppling">
+						<source>Toppling</source>
+						<target>전복</target>
+					</trans-unit>
+					<trans-unit id="misc_simulation_collisions">
+						<source>Collisions</source>
+						<target>충돌</target>
+					</trans-unit>
+					<trans-unit id="misc_simulation_derailments">
+						<source>Derailments</source>
+						<target>탈선</target>
+					</trans-unit>
+					<trans-unit id="misc_simulation_blackbox">
+						<source>Enable black box</source>
+						<target>블랙박스 사용</target>
+					</trans-unit>
+					<trans-unit id="misc_simulation_loadingsway">
+						<source>Enable loading sway</source>
+						<target>Enable loading sway</target>
+					</trans-unit>
+					<trans-unit id="misc_controls">
+						<source>Controls</source>
+						<target>조작</target>
+					</trans-unit>
+					<trans-unit id="misc_controls_joysticks">
+						<source>Joysticks enabled</source>
+						<target>조이스틱 사용</target>
+					</trans-unit>
+					<trans-unit id="misc_controls_threshold">
+						<source>Joystick threshold:</source>
+						<target>조이스틱 감도:</target>
+					</trans-unit>
+					<trans-unit id="misc_controls_ebaxis">
+						<source>Allow EB on brake axis</source>
+						<target>Allow EB on brake axis</target>
+					</trans-unit>
+					<trans-unit id="misc_sound">
+						<source>Sound</source>
+						<target>음성</target>
+					</trans-unit>
+					<trans-unit id="misc_sound_range">
+						<source>Effective range:</source>
+						<target>효과 범위:</target>
+					</trans-unit>
+					<trans-unit id="misc_sound_range_low">
+						<source>Low</source>
+						<target>낮음</target>
+					</trans-unit>
+					<trans-unit id="misc_sound_range_medium">
+						<source>Medium</source>
+						<target>중간</target>
+					</trans-unit>
+					<trans-unit id="misc_sound_range_high">
+						<source>High</source>
+						<target>높음</target>
+					</trans-unit>
+					<trans-unit id="misc_sound_number">
+						<source>Number of allowed sounds:</source>
+						<target>동시 재생 음성 수:</target>
+					</trans-unit>
+					<trans-unit id="verbosity">
+						<source>Verbosity</source>
+						<target>알림</target>
+					</trans-unit>
+					<trans-unit id="verbosity_warningmessages">
+						<source>Show warning messages</source>
+						<target>경고 메시지 표시</target>
+					</trans-unit>
+					<trans-unit id="verbosity_errormessages">
+						<source>Show error messages</source>
+						<target>오류 메시지 표시</target>
+					</trans-unit>
+					<trans-unit id="advanced">
+						<source>Advanced Options</source>
+						<target>Advanced Options</target>
+					</trans-unit>
+					<trans-unit id="advanced_load_advance">
+						<source>Load in advance</source>
+						<target>Load in advance</target>
+					</trans-unit>
+					<trans-unit id="advanced_disable_displaylists">
+						<source>Disable OpenGL display lists</source>
+						<target>Disable OpenGL display lists</target>
+					</trans-unit>
+					<trans-unit id="advanced_timefactor">
+						<source>Accelerated Time Factor</source>
+						<target>Accelerated Time Factor</target>
+					</trans-unit>
+					<trans-unit id="advanced_unload_textures">
+						<source>Unload unused textures</source>
+						<target>Unload unused textures</target>
+					</trans-unit>
+					<trans-unit id="other">
+						<source>Other</source>
+						<target>Other</target>
+					</trans-unit>
+					<trans-unit id="other_timetable_mode">
+						<source>Timetable mode:</source>
+						<target>Timetable mode</target>
+					</trans-unit>
+					<trans-unit id="other_timetable_mode_none">
+						<source>None</source>
+						<target>None</target>
+					</trans-unit>
+					<trans-unit id="other_timetable_mode_default">
+						<source>Default</source>
+						<target>Default</target>
+					</trans-unit>
+					<trans-unit id="other_timetable_mode_autogenerated">
+						<source>Auto-generated timetable</source>
+						<target>Auto-generated timetable</target>
+					</trans-unit>
+					<trans-unit id="other_timetable_mode_prefercustom">
+						<source>Prefer custom timetable</source>
+						<target>Prefer custom timetable</target>
+					</trans-unit>
+					<trans-unit id="package_choose">
+						<source>Choose...</source>
+						<target>Choose...</target>
+					</trans-unit>
+					<trans-unit id="package_route_directory">
+						<source>Route installation directory:</source>
+						<target>Route installation directory:</target>
+					</trans-unit>
+					<trans-unit id="package_train_directory">
+						<source>Train installation directory:</source>
+						<target>Train installation directory:</target>
+					</trans-unit>
+					<trans-unit id="package_other_directory">
+						<source>Other items installation directory:</source>
+						<target>Other items installation directory:</target>
+					</trans-unit>
+					<trans-unit id="package_compression">
+						<source>Package compression format:</source>
+						<target>Package compression format:</target>
+					</trans-unit>
+					<trans-unit id="page_previous">
+						<source>Previous Page...</source>
+						<target>Previous Page...</target>
+					</trans-unit>
+					<trans-unit id="page_next">
+						<source>Next Page...</source>
+						<target>Next Page...</target>
+					</trans-unit>
+					<trans-unit id="kiosk_mode">
+						<source>Kiosk Mode</source>
+						<target>Kiosk Mode</target>
+					</trans-unit>
+					<trans-unit id="kiosk_mode_enable">
+						<source>Enable Kiosk Mode</source>
+						<target>Enable Kiosk Mode</target>
+					</trans-unit>
+					<trans-unit id="kiosk_mode_timer">
+						<source>Control Timeout (s)</source>
+						<target>Control Timeout (s)</target>
+					</trans-unit>
+					<trans-unit id="hud_size">
+						<source>HUD Size</source>
+						<target>HUD Size</target>
+					</trans-unit>
+					<trans-unit id="hud_size_small">
+						<source>Small</source>
+						<target>Small</target>
+					</trans-unit>
+					<trans-unit id="hud_size_normal">
+						<source>Normal</source>
+						<target>Normal</target>
+					</trans-unit>
+					<trans-unit id="hud_size_large">
+						<source>Large</source>
+						<target>Large</target>
+					</trans-unit>
+					<trans-unit id="transparencyfix">
+						<source>Attempt to fix transparency issues in older content.</source>
+						<target>Attempt to fix transparency issues in older content.</target>
+					</trans-unit>
+					<trans-unit id="hacks_enable">
+						<source>Enable hacks for buggy older content.</source>
+						<target>Enable hacks for buggy older content.</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin">
+						<source>Input Device Plugin</source>
+						<target>Input Device Plugin</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_warning">
+						<source>WARNING: If you enable Input Device Plugin(s), these may conflict with one or more controls.</source>
+						<target>WARNING: If you enable Input Device Plugin(s), these may conflict with one or more controls.</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_name">
+						<source>Name</source>
+						<target>Name</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_status">
+						<source>Status</source>
+						<target>Status</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_status_failure">
+						<source>Failure</source>
+						<target>Failure</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_status_disable">
+						<source>Disable</source>
+						<target>Disable</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_status_enable">
+						<source>Enable</source>
+						<target>Enable</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_version">
+						<source>Version</source>
+						<target>Version</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_provider">
+						<source>Provider</source>
+						<target>Provider</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_file_name">
+						<source>File Name</source>
+						<target>File Name</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_switch">
+						<source>Enable this Input Device Plugin</source>
+						<target>Enable this Input Device Plugin</target>
+					</trans-unit>
+					<trans-unit id="input_device_plugin_config">
+						<source>Config</source>
+						<target>Config</target>
+					</trans-unit>
+				</group>
+				<group id="dialog">
+					<trans-unit id="csvfiles">
+						<source>CSV files</source>
+						<target>CSV 노선 파일</target>
+					</trans-unit>
+					<trans-unit id="textfiles">
+						<source>Text files</source>
+						<target>텍스트 문서</target>
+					</trans-unit>
+					<trans-unit id="controlsfiles">
+						<source>Controls</source>
+						<target>조작 배치 파일</target>
+					</trans-unit>
+					<trans-unit id="allfiles">
+						<source>All files</source>
+						<target>모든 파일</target>
+					</trans-unit>
+				</group>
+				<group id="log">
+					<trans-unit id="time">
+						<source>Time</source>
+						<target>시간</target>
+					</trans-unit>
+					<trans-unit id="position">
+						<source>Position (m)</source>
+						<target>위치 (m)</target>
+					</trans-unit>
+					<trans-unit id="value">
+						<source>Value</source>
+						<target>값</target>
+					</trans-unit>
+					<trans-unit id="cumulative">
+						<source>Cumulative</source>
+						<target>누적 값</target>
+					</trans-unit>
+					<trans-unit id="reason">
+						<source>Reason</source>
+						<target>사유</target>
+					</trans-unit>
+					<trans-unit id="speed">
+						<source>Speed (m/s)</source>
+						<target>속도 (m/s)</target>
+					</trans-unit>
+					<trans-unit id="acceleration">
+						<source>Acceleration (m/s²)</source>
+						<target>가속도 (m/s²)</target>
+					</trans-unit>
+					<trans-unit id="reverser">
+						<source>Reverser</source>
+						<target>리버서</target>
+					</trans-unit>
+					<trans-unit id="power">
+						<source>Power</source>
+						<target>넛치</target>
+					</trans-unit>
+					<trans-unit id="brake">
+						<source>Brake</source>
+						<target>브레이크</target>
+					</trans-unit>
+					<trans-unit id="event">
+						<source>Event</source>
+						<target>상황</target>
+					</trans-unit>
+					<trans-unit id="route">
+						<source>Route:</source>
+						<target>노선:</target>
+					</trans-unit>
+					<trans-unit id="train">
+						<source>Train:</source>
+						<target>차량:</target>
+					</trans-unit>
+					<trans-unit id="date">
+						<source>Date:</source>
+						<target>날짜:</target>
+					</trans-unit>
+					<trans-unit id="mode">
+						<source>Mode:</source>
+						<target>모드:</target>
+					</trans-unit>
+					<trans-unit id="score">
+						<source>Score:</source>
+						<target>점수:</target>
+					</trans-unit>
+					<trans-unit id="rating">
+						<source>Rating:</source>
+						<target>순위:</target>
+					</trans-unit>
+				</group>
+				<group id="loading">
+					<trans-unit id="loading">
+						<source>Loading</source>
+						<target>불러오고 있습니다</target>
+					</trans-unit>
+					<trans-unit id="loading_route">
+						<source>Loading route...</source>
+						<target>노선을 불러옵니다...</target>
+					</trans-unit>
+					<trans-unit id="loading_train">
+						<source>Loading train...</source>
+						<target>차량을 불러옵니다...</target>
+					</trans-unit>
+					<trans-unit id="almost">
+						<source>Almost ready to start</source>
+						<target>거의 다 되었습니다...</target>
+					</trans-unit>
+					<trans-unit id="almost_filesnotfound">
+						<source>Files not found:</source>
+						<target>파일을 찾을 수 없음:</target>
+					</trans-unit>
+					<trans-unit id="almost_help_filesnotfound">
+						<source>Some issues were encountered while loading the route and train.\r\n\r\nAs some files could not be found, the route or train might not appear as intended. Try to redownload the route and train packages in order to ensure that you have a complete distribution.\r\n\r\nThe following list of issues might give additional information. You can still start the route by selecting "Ignore" from below.</source>
+						<target>노선과 차량을 불러오던 중 문제가 발생했습니다.\r\n\r\n파일이 누락되었다면, 노선 또는 차량이 정상적으로 보이지 않을 것입니다. 완벽한 운행을 위해서는 노선과 차량을 다시 다운로드하십시오.\r\n\r\n다음 목록은 발생한 문제사항입니다. [무시]를 누르면 발생한 문제를 무시하고 운행할 수 있습니다.</target>
+					</trans-unit>
+					<trans-unit id="almost_help_general">
+						<source>Some issues were encountered while loading the route and train. If you are the route or train developer, it might be worth taking a look at the following list of issues.\r\n\r\nAs a regular user, you can select "Ignore" at this point to start the game.</source>
+						<target>노선과 차량을 불러오던 중 문제가 발생했습니다. 노선이나 차량 개발자라면, 다음 문제점들을 살펴보십시오.\r\n\r\n일반적인 사용자라면, [무시]를 누르고 운행할 수 있습니다.</target>
+					</trans-unit>
+					<trans-unit id="almost_show">
+						<source>Show issues</source>
+						<target>목록 보기</target>
+					</trans-unit>
+					<trans-unit id="problems">
+						<source>Problems</source>
+						<target>문제점</target>
+					</trans-unit>
+					<trans-unit id="problems_type">
+						<source>Type</source>
+						<target>형식</target>
+					</trans-unit>
+					<trans-unit id="problems_description">
+						<source>Description</source>
+						<target>설명</target>
+					</trans-unit>
+					<trans-unit id="save">
+						<source>Save report...</source>
+						<target>보고서 저장...</target>
+					</trans-unit>
+					<trans-unit id="ignore">
+						<source>Ignore</source>
+						<target>무시</target>
+					</trans-unit>
+					<trans-unit id="cancel">
+						<source>Cancel</source>
+						<target>취소</target>
+					</trans-unit>
+				</group>
+				<group id="timetable">
+					<trans-unit id="highestspeed">
+						<source>Max.\r\nspd.</source>
+						<target>최대\r\n속력</target>
+					</trans-unit>
+					<trans-unit id="drivingtime">
+						<source>Drv.\r\ntime</source>
+						<target>운행\r\n시간</target>
+					</trans-unit>
+					<trans-unit id="stationname">
+						<source>Station name</source>
+						<target>역명</target>
+					</trans-unit>
+					<trans-unit id="arrivaltime">
+						<source>Arrival</source>
+						<target>출발</target>
+					</trans-unit>
+					<trans-unit id="departuretime">
+						<source>Departure</source>
+						<target>도착</target>
+					</trans-unit>
+				</group>
+				<group id="message">
+					<trans-unit id="delimiter">
+						<source>\x20</source>
+						<target>\x20</target>
+					</trans-unit>
+					<trans-unit id="signal_proceed">
+						<source>You may proceed at [speed] [unit] with extreme caution.</source>
+						<target>심각한 오류가 발생하면 [speed] [unit] 미만으로 운행해야 합니다.</target>
+					</trans-unit>
+					<trans-unit id="signal_stop">
+						<source>You have passed a stop signal. Please apply the emergency brakes immediately and come to a complete hold.</source>
+						<target>정지 신호를 지나쳤습니다. 즉시 비상 제동을 채결하고 정지하십시오.</target>
+					</trans-unit>
+					<trans-unit id="signal_overspeed">
+						<source>The signal indicates a speed limit of [limit] [unit]. You are currently traveling at [speed] [unit]. Please slow down.</source>
+						<target>신호기 제한속도는 [limit] [unit] 이나 현재 [speed] [unit] 로 운행중이므로 감속하십시오.</target>
+					</trans-unit>
+					<trans-unit id="route_overspeed">
+						<source>The speed post indicates a speed limit of [limit] [unit]. You are currently traveling at [speed] [unit]. Please slow down.</source>
+						<target>제한 속도는 [limit] [unit] 이나 현재 [speed] [unit]로 운행중이므로 감속하십시오.</target>
+					</trans-unit>
+					<trans-unit id="station_arrival">
+						<source>You have arrived at [name].</source>
+						<target>[name]에 도착했습니다.</target>
+					</trans-unit>
+					<trans-unit id="station_arrival_late">
+						<source>You have arrived at [name] and are [time] late.</source>
+						<target>[name]에 [time] 늦게 도착했습니다.</target>
+					</trans-unit>
+					<trans-unit id="station_arrival_early">
+						<source>You have arrived at [name] and are [time] early.</source>
+						<target>[name]에 [time] 일찍 도착했습니다.</target>
+					</trans-unit>
+					<trans-unit id="station_overrun">
+						<source>Overrun: [difference] m.</source>
+						<target>초과: [difference] m.</target>
+					</trans-unit>
+					<trans-unit id="station_underrun">
+						<source>Underrun: [difference] m.</source>
+						<target>미달: [difference] m.</target>
+					</trans-unit>
+					<trans-unit id="station_terminal">
+						<source>This is the terminal station.</source>
+						<target>종착역입니다.</target>
+					</trans-unit>
+					<trans-unit id="station_deadline">
+						<source>Departure is expected in [time].</source>
+						<target>[time] 후에 출발할 수 있습니다.</target>
+					</trans-unit>
+					<trans-unit id="station_security">
+						<source>Please activate [system].</source>
+						<target>[system]을 활성화하십시오.</target>
+					</trans-unit>
+					<trans-unit id="station_correct">
+						<source>Please correct your stop position.</source>
+						<target>정차 위치를 확인하십시오.</target>
+					</trans-unit>
+					<trans-unit id="station_depart_closedoors">
+						<source>Boarding complete. You may close the doors now.</source>
+						<target>이제 출입문을 닫고 출발할 수 있습니다.</target>
+					</trans-unit>
+					<trans-unit id="station_depart">
+						<source>Boarding complete.</source>
+						<target>출발할 수 있습니다.</target>
+					</trans-unit>
+					<trans-unit id="station_passed">
+						<source>You have passed [name] where you should have stopped.</source>
+						<target>[name]에 정차하지 않고 지나쳤습니다.</target>
+					</trans-unit>
+					<trans-unit id="station_passed_boarding">
+						<source>You have passed [name] while still boarding. Please come to a complete hold immediately.</source>
+						<target>승·하차 중인 [name]을(를) 벗어나고 있습니다. 즉시 제동을 채결하십시오.</target>
+					</trans-unit>
+					<trans-unit id="loading">
+						<source>Loading. Please wait...</source>
+						<target>불러오고 있습니다. 잠시만 기다리십시오...</target>
+					</trans-unit>
+				</group>
+				<group id="notification">
+					<trans-unit id="interior">
+						<source>Interior camera</source>
+						<target>내부 시점</target>
+					</trans-unit>
+					<trans-unit id="interior_lookahead">
+						<source>Interior camera (look ahead)</source>
+						<target>내부 시점 (자동 시점)</target>
+					</trans-unit>
+					<trans-unit id="exterior">
+						<source>Exterior camera</source>
+						<target>외부 시점</target>
+					</trans-unit>
+					<trans-unit id="track">
+						<source>Track camera</source>
+						<target>선로 시점</target>
+					</trans-unit>
+					<trans-unit id="flybynormal">
+						<source>Fly-by camera (normal)</source>
+						<target>고정 자동 시점 (표준)</target>
+					</trans-unit>
+					<trans-unit id="flybyzooming">
+						<source>Fly-by camera (zooming)</source>
+						<target>고정 자동 시점 (확대)</target>
+					</trans-unit>
+					<trans-unit id="cpu_normal">
+						<source>CPU: normal</source>
+						<target>CPU: 보통</target>
+					</trans-unit>
+					<trans-unit id="cpu_low">
+						<source>CPU: low</source>
+						<target>CPU: 낮음</target>
+					</trans-unit>
+					<trans-unit id="backfaceculling_on">
+						<source>Backface culling: on</source>
+						<target>뒷면 제거: 켬</target>
+					</trans-unit>
+					<trans-unit id="backfaceculling_off">
+						<source>Backface culling: off</source>
+						<target>뒷면 제거: 끔</target>
+					</trans-unit>
+					<trans-unit id="notavailableexpert">
+						<source>This feature is not available in Expert mode.</source>
+						<target>이 기능은 전문가 모드에서 사용할 수 없습니다.</target>
+					</trans-unit>
+					<trans-unit id="aiunable">
+						<source>The AI might be unable to fully operate this train.</source>
+						<target>AI가 이 열차를 완벽히 조작할 수 없습니다.</target>
+					</trans-unit>
+					<trans-unit id="camerarestriction_on">
+						<source>Camera restriction: on</source>
+						<target>카메라 제한: 켬</target>
+					</trans-unit>
+					<trans-unit id="camerarestriction_off">
+						<source>Camera restriction: off</source>
+						<target>카메라 제한: 끔</target>
+					</trans-unit>
+					<trans-unit id="mousegrab_on">
+						<source>Mouse grab: on</source>
+						<target>Mouse grab: on</target>
+					</trans-unit>
+					<trans-unit id="mousegrab_off">
+						<source>Mouse grab: off</source>
+						<target>Mouse grab: off</target>
+					</trans-unit>
+				</group>
+				<group id="score">
+					<trans-unit id="overspeed">
+						<source>Overspeed</source>
+						<target>속도 제한 초과</target>
+					</trans-unit>
+					<trans-unit id="redsignal">
+						<source>Passed red signal</source>
+						<target>정지 신호 무시</target>
+					</trans-unit>
+					<trans-unit id="toppling">
+						<source>Toppling</source>
+						<target>전복</target>
+					</trans-unit>
+					<trans-unit id="derailed">
+						<source>Derailed</source>
+						<target>탈선</target>
+					</trans-unit>
+					<trans-unit id="discomfort">
+						<source>Passenger discomfort</source>
+						<target>승객 불편</target>
+					</trans-unit>
+					<trans-unit id="doors">
+						<source>Doors opened</source>
+						<target>출입문 열림</target>
+					</trans-unit>
+					<trans-unit id="station_arrived">
+						<source>Arrived at station</source>
+						<target>정차역에 도착</target>
+					</trans-unit>
+					<trans-unit id="station_perfecttime">
+						<source>Perfect time bonus</source>
+						<target>정시 도착 보너스</target>
+					</trans-unit>
+					<trans-unit id="station_late">
+						<source>Late</source>
+						<target>지연 도착</target>
+					</trans-unit>
+					<trans-unit id="station_perfectstop">
+						<source>Perfect stop bonus</source>
+						<target>정위치 도착 보너스</target>
+					</trans-unit>
+					<trans-unit id="station_stop">
+						<source>Stop</source>
+						<target>정위치 도착</target>
+					</trans-unit>
+					<trans-unit id="station_departure">
+						<source>Premature departure</source>
+						<target>이른 발차</target>
+					</trans-unit>
+					<trans-unit id="station_total">
+						<source>Total</source>
+						<target>총점</target>
+					</trans-unit>
+					<trans-unit id="rating">
+						<source>Your rating:</source>
+						<target>평가:</target>
+					</trans-unit>
+				</group>
+				<group id="rating">
+					<trans-unit id="0">
+						<source>Abysmal</source>
+						<target>끔찍함</target>
+					</trans-unit>
+					<trans-unit id="1">
+						<source>Terrible</source>
+						<target>정말 나쁨</target>
+					</trans-unit>
+					<trans-unit id="2">
+						<source>Bad</source>
+						<target>매우 나쁨</target>
+					</trans-unit>
+					<trans-unit id="3">
+						<source>Poor</source>
+						<target>나쁨</target>
+					</trans-unit>
+					<trans-unit id="4">
+						<source>Fair</source>
+						<target>보통</target>
+					</trans-unit>
+					<trans-unit id="5">
+						<source>Mediocre</source>
+						<target>괜찮음</target>
+					</trans-unit>
+					<trans-unit id="6">
+						<source>Good</source>
+						<target>좋음</target>
+					</trans-unit>
+					<trans-unit id="7">
+						<source>Great</source>
+						<target>매우 좋음</target>
+					</trans-unit>
+					<trans-unit id="8">
+						<source>Superb</source>
+						<target>최고</target>
+					</trans-unit>
+					<trans-unit id="9">
+						<source>Excellent</source>
+						<target>완벽함</target>
+					</trans-unit>
+					<trans-unit id="unknown">
+						<source>Unknown</source>
+						<target>알 수 없음</target>
+					</trans-unit>
+				</group>
+				<group id="menu">
+					<trans-unit id="resume">
+						<source>Resume simulation</source>
+						<target>시뮬레이션으로 돌아가기</target>
+					</trans-unit>
+					<trans-unit id="jump">
+						<source>Jump to station</source>
+						<target>역으로 이동</target>
+					</trans-unit>
+					<trans-unit id="exit">
+						<source>Exit to main menu</source>
+						<target>주 메뉴로 나가기</target>
+					</trans-unit>
+					<trans-unit id="exit_question">
+						<source>Do you really want to exit to the main menu?</source>
+						<target>주 메뉴로 나가시겠습니까?</target>
+					</trans-unit>
+					<trans-unit id="exit_no">
+						<source>No</source>
+						<target>아니오</target>
+					</trans-unit>
+					<trans-unit id="exit_yes">
+						<source>Yes</source>
+						<target>예</target>
+					</trans-unit>
+					<trans-unit id="quit">
+						<source>Quit</source>
+						<target>종료</target>
+					</trans-unit>
+					<trans-unit id="quit_question">
+						<source>Do you really want to quit?</source>
+						<target>종료하시겠습니까?</target>
+					</trans-unit>
+					<trans-unit id="quit_no">
+						<source>No</source>
+						<target>아니오</target>
+					</trans-unit>
+					<trans-unit id="quit_yes">
+						<source>Yes</source>
+						<target>예</target>
+					</trans-unit>
+					<trans-unit id="back">
+						<source>← Back</source>
+						<target>← Back</target>
+					</trans-unit>
+					<trans-unit id="customize_controls">
+						<source>Customise controls</source>
+						<target>Customise controls</target>
+					</trans-unit>
+					<trans-unit id="assign">
+						<source>Please press any key or move a joystick axis to set this control...</source>
+						<target>Please press any key or move a joystick axis to set this control...</target>
+					</trans-unit>
+					<trans-unit id="keyboard">
+						<source>Keyboard</source>
+						<target>Keyboard</target>
+					</trans-unit>
+					<trans-unit id="joystick">
+						<source>Joystick</source>
+						<target>Joystick</target>
+					</trans-unit>
+					<trans-unit id="joystick_notavailable">
+						<source>N/A</source>
+						<target>N/A</target>
+					</trans-unit>
+					<trans-unit id="joystickdirection_positive">
+						<source>Positive</source>
+						<target>Positive</target>
+					</trans-unit>
+					<trans-unit id="joystickdirection_negative">
+						<source>Negative</source>
+						<target>Negative</target>
+					</trans-unit>
+					<trans-unit id="assignment_current">
+						<source>Current assignment:</source>
+						<target>Current assignment:</target>
+					</trans-unit>
+				</group>
+				<group id="lamps">
+					<trans-unit id="ats">
+						<source>ATS</source>
+						<target>ATS</target>
+					</trans-unit>
+					<trans-unit id="atsoperation">
+						<source>ATS RUN</source>
+						<target>ATS 작동</target>
+					</trans-unit>
+					<trans-unit id="atsppower">
+						<source>P POWER</source>
+						<target>P 전원</target>
+					</trans-unit>
+					<trans-unit id="atsppattern">
+						<source>PTN APPROACH</source>
+						<target>패턴 접근</target>
+					</trans-unit>
+					<trans-unit id="atspbrakeoverride">
+						<source>BRAKE RELEASE</source>
+						<target>브레이크 개방</target>
+					</trans-unit>
+					<trans-unit id="atspbrakeoperation">
+						<source>BRAKE APPLY</source>
+						<target>브레이크 동작</target>
+					</trans-unit>
+					<trans-unit id="atsp">
+						<source>ATS-P</source>
+						<target>ATS-P</target>
+					</trans-unit>
+					<trans-unit id="atspfailure">
+						<source>FAILURE</source>
+						<target>고장</target>
+					</trans-unit>
+					<trans-unit id="atc">
+						<source>ATC</source>
+						<target>ATC</target>
+					</trans-unit>
+					<trans-unit id="atcpower">
+						<source>ATC POWER</source>
+						<target>ATC 전원</target>
+					</trans-unit>
+					<trans-unit id="atcuse">
+						<source>ATC SRV</source>
+						<target>ATC 상용</target>
+					</trans-unit>
+					<trans-unit id="atcemergency">
+						<source>ATC EMG</source>
+						<target>ATC 비상</target>
+					</trans-unit>
+					<trans-unit id="eb">
+						<source>EB</source>
+						<target>EB</target>
+					</trans-unit>
+					<trans-unit id="constspeed">
+						<source>CONST SPEED</source>
+						<target>정속 운행</target>
+					</trans-unit>
+				</group>
+				<group id="handles">
+					<trans-unit id="forward">
+						<source>F</source>
+						<target>전</target>
+					</trans-unit>
+					<trans-unit id="neutral">
+						<source>N</source>
+						<target>절</target>
+					</trans-unit>
+					<trans-unit id="backward">
+						<source>B</source>
+						<target>후</target>
+					</trans-unit>
+					<trans-unit id="power">
+						<source>P</source>
+						<target>역행</target>
+					</trans-unit>
+					<trans-unit id="powernull">
+						<source>N</source>
+						<target>절</target>
+					</trans-unit>
+					<trans-unit id="brake">
+						<source>B</source>
+						<target>제동</target>
+					</trans-unit>
+					<trans-unit id="locobrake">
+						<source>L</source>
+						<target>L</target>
+					</trans-unit>
+					<trans-unit id="brakenull">
+						<source>N</source>
+						<target>절</target>
+					</trans-unit>
+					<trans-unit id="release">
+						<source>REL</source>
+						<target>해제</target>
+					</trans-unit>
+					<trans-unit id="lap">
+						<source>LAP</source>
+						<target>중</target>
+					</trans-unit>
+					<trans-unit id="service">
+						<source>SRV</source>
+						<target>제</target>
+					</trans-unit>
+					<trans-unit id="emergency">
+						<source>EMG</source>
+						<target>비상</target>
+					</trans-unit>
+					<trans-unit id="holdbrake">
+						<source>HLD</source>
+						<target>억속</target>
+					</trans-unit>
+				</group>
+				<group id="doors">
+					<trans-unit id="left">
+						<source>L</source>
+						<target>좌</target>
+					</trans-unit>
+					<trans-unit id="right">
+						<source>R</source>
+						<target>우</target>
+					</trans-unit>
+				</group>
+				<group id="misc">
+					<trans-unit id="score">
+						<source>Score:\x20</source>
+						<target>점수:\x20</target>
+					</trans-unit>
+				</group>
+				<group id="commands">
+					<trans-unit id="power_increase">
+						<source>Increases power by one notch for trains with two handles</source>
+						<target>투 핸들 차량의 마스콘을 1놋치 높입니다</target>
+					</trans-unit>
+					<trans-unit id="power_decrease">
+						<source>Decreases power by one notch for trains with two handles</source>
+						<target>투 핸들 차량의 마스콘을 1놋치 낮춤니다</target>
+					</trans-unit>
+					<trans-unit id="power_halfaxis">
+						<source>Controls power for trains with two handles on half of a joystick axis</source>
+						<target>투 핸들 차량 마스콘에 조이스틱 축 반체 사용</target>
+					</trans-unit>
+					<trans-unit id="power_fullaxis">
+						<source>Controls power for trains with two handles on a full joystick axis</source>
+						<target>투 핸들 차량 마스콘에 조이스틱 축 전체 사용</target>
+					</trans-unit>
+					<trans-unit id="brake_decrease">
+						<source>Decreases brake by one notch for trains with two handles</source>
+						<target>투 핸들 차량 브레이크 1 넛치 인하</target>
+					</trans-unit>
+					<trans-unit id="brake_increase">
+						<source>Increases brake by one notch for trains with two handles</source>
+						<target>투 핸들 차량 브레이크 1 넛치 인상</target>
+					</trans-unit>
+					<trans-unit id="locobrake_decrease">
+						<source>N/A</source>
+						<target>N/A</target>
+					</trans-unit>
+					<trans-unit id="locobrake_increase">
+						<source>N/A</source>
+						<target>N/A</target>
+					</trans-unit>
+					<trans-unit id="brake_halfaxis">
+						<source>Controls brake for trains with two handles on half of a joystick axis</source>
+						<target>투 핸들 차량 브레이크에 조이스틱 축 반체 사용</target>
+					</trans-unit>
+					<trans-unit id="brake_fullaxis">
+						<source>Controls brake for trains with two handles on a full joystick axis</source>
+						<target>투 핸들 차량 브레이크에 조이스틱 축 전체 사용</target>
+					</trans-unit>
+					<trans-unit id="brake_emergency">
+						<source>Activates emergency brakes for trains with two handles</source>
+						<target>투 핸들 차량 비상 브레이크</target>
+					</trans-unit>
+					<trans-unit id="single_power">
+						<source>Moves handle toward power by one notch for trains with one handle</source>
+						<target>원 핸들 차량 마스콘 1 넛치 역행 방향 이동</target>
+					</trans-unit>
+					<trans-unit id="single_neutral">
+						<source>Moves handle toward neutral by one notch for trains with one handle</source>
+						<target>원 핸들 차량 마스콘 1 넛치 중립 방향 이동</target>
+					</trans-unit>
+					<trans-unit id="single_brake">
+						<source>Moves handle toward brake by one notch for trains with one handle</source>
+						<target>원 핸들 차량 마스콘 1 넛치 제동 방향 이동</target>
+					</trans-unit>
+					<trans-unit id="single_emergency">
+						<source>Activates emergency brake for trains with one handle</source>
+						<target>원 핸들 차량 비상 브레이크</target>
+					</trans-unit>
+					<trans-unit id="single_fullaxis">
+						<source>Controls power and brake for trains with one handle on a full joystick axis</source>
+						<target>원 핸들 차량 마스콘에 조이스틱 축 전체 사용</target>
+					</trans-unit>
+					<trans-unit id="power_any_notch">
+						<source>Adjusts the power notch directly from a command option value.</source>
+						<target>Adjusts the power notch directly from a command option value.</target>
+					</trans-unit>
+					<trans-unit id="brake_any_notch">
+						<source>Adjusts the brake notch directly from a command option value.</source>
+						<target>Adjusts the brake notch directly from a command option value.</target>
+					</trans-unit>
+					<trans-unit id="reverser_any_position">
+						<source>Adjusts the reverser directly from a command option value.</source>
+						<target>Adjusts the reverser directly from a command option value.</target>
+					</trans-unit>
+					<trans-unit id="hold_brake">
+						<source>Hold Brake</source>
+						<target>Hold Brake</target>
+					</trans-unit>
+					<trans-unit id="reverser_forward">
+						<source>Moves reverser forward by one notch</source>
+						<target>리버서 전</target>
+					</trans-unit>
+					<trans-unit id="reverser_backward">
+						<source>Moves reverser backward by one notch</source>
+						<target>리버서 후</target>
+					</trans-unit>
+					<trans-unit id="reverser_fullaxis">
+						<source>Controls reverser on a full joystick axis</source>
+						<target>리버서에 조이스틱 축 전체 사용</target>
+					</trans-unit>
+					<trans-unit id="doors_left">
+						<source>Opens or closes the left doors</source>
+						<target>왼쪽 출입문 개폐</target>
+					</trans-unit>
+					<trans-unit id="doors_right">
+						<source>Opens or closes the right doors</source>
+						<target>오른쪽 출입문 개폐</target>
+					</trans-unit>
+					<trans-unit id="horn_primary">
+						<source>Plays the primary horn</source>
+						<target>제1 경적</target>
+					</trans-unit>
+					<trans-unit id="horn_secondary">
+						<source>Plays the secondary horn</source>
+						<target>제2 경적</target>
+					</trans-unit>
+					<trans-unit id="horn_music">
+						<source>Plays or stops the music horn</source>
+						<target>뮤직 호른</target>
+					</trans-unit>
+					<trans-unit id="device_constspeed">
+						<source>Activates or deactivates the constant speed device</source>
+						<target>정속 운행 장치 전환</target>
+					</trans-unit>
+					<trans-unit id="security_power">
+						<source>Activates or deactivates the security system on some trains</source>
+						<target>운전 보안 장치 전환</target>
+					</trans-unit>
+					<trans-unit id="security_s">
+						<source>The S function of the security system</source>
+						<target>운전 보안 장치 기능 S(차량에 따라 다름)</target>
+					</trans-unit>
+					<trans-unit id="security_a1">
+						<source>The A1 function of the security system</source>
+						<target>운전 보안 장치 기능 A1(차량에 따라 다름)</target>
+					</trans-unit>
+					<trans-unit id="security_a2">
+						<source>The A2 function of the security system</source>
+						<target>운전 보안 장치 기능 A2(차량에 따라 다름)</target>
+					</trans-unit>
+					<trans-unit id="security_b1">
+						<source>The B1 function of the security system</source>
+						<target>운전 보안 장치 기능 B1(차량에 따라 다름)</target>
+					</trans-unit>
+					<trans-unit id="security_b2">
+						<source>The B2 function of the security system</source>
+						<target>운전 보안 장치 기능 B2(차량에 따라 다름)</target>
+					</trans-unit>
+					<trans-unit id="security_c1">
+						<source>The C1 function of the security system</source>
+						<target>운전 보안 장치 기능 C1(차량에 따라 다름)</target>
+					</trans-unit>
+					<trans-unit id="security_c2">
+						<source>The C2 function of the security system</source>
+						<target>운전 보안 장치 기능 C2(차량에 따라 다름)</target>
+					</trans-unit>
+					<trans-unit id="security_d">
+						<source>The D function of the security system</source>
+						<target>운전 보안 장치 기능 D(차량에 따라 다름)</target>
+					</trans-unit>
+					<trans-unit id="security_e">
+						<source>The E function of the security system</source>
+						<target>운전 보안 장치 기능 E(차량에 따라 다름)</target>
+					</trans-unit>
+					<trans-unit id="security_f">
+						<source>The F function of the security system</source>
+						<target>운전 보안 장치 기능 F(차량에 따라 다름)</target>
+					</trans-unit>
+					<trans-unit id="security_g">
+						<source>The G function of the security system</source>
+						<target>운전 보안 장치 기능 G(차량에 따라 다름)</target>
+					</trans-unit>
+					<trans-unit id="security_h">
+						<source>The H function of the security system</source>
+						<target>운전 보안 장치 기능 H(차량에 따라 다름)</target>
+					</trans-unit>
+					<trans-unit id="security_i">
+						<source>The I function of the security system</source>
+						<target>운전 보안 장치 기능 I(차량에 따라 다름)</target>
+					</trans-unit>
+					<trans-unit id="security_j">
+						<source>The J function of the security system</source>
+						<target>운전 보안 장치 기능 J(차량에 따라 다름)</target>
+					</trans-unit>
+					<trans-unit id="security_k">
+						<source>The K function of the security system</source>
+						<target>운전 보안 장치 기능 K(차량에 따라 다름)</target>
+					</trans-unit>
+					<trans-unit id="security_l">
+						<source>The L function of the security system</source>
+						<target>운전 보안 장치 기능 L(차량에 따라 다름)</target>
+					</trans-unit>
+					<trans-unit id="security_m">
+						<source>N/A</source>
+						<target>N/A</target>
+					</trans-unit>
+					<trans-unit id="security_n">
+						<source>N/A</source>
+						<target>N/A</target>
+					</trans-unit>
+					<trans-unit id="security_o">
+						<source>N/A</source>
+						<target>N/A</target>
+					</trans-unit>
+					<trans-unit id="security_p">
+						<source>N/A</source>
+						<target>N/A</target>
+					</trans-unit>
+					<trans-unit id="camera_interior">
+						<source>Switches to the train's interior view</source>
+						<target>내부 시점</target>
+					</trans-unit>
+					<trans-unit id="camera_interior_nopanel">
+						<source>Switches to the train's interior view. However, the panel is not displayed.</source>
+					</trans-unit>
+					<trans-unit id="camera_exterior">
+						<source>Switches to the train's exterior view</source>
+						<target>외부 시점</target>
+					</trans-unit>
+					<trans-unit id="camera_track">
+						<source>Switches to the track view</source>
+						<target>선로 시점</target>
+					</trans-unit>
+					<trans-unit id="camera_flyby">
+						<source>Switches between different fly-by views</source>
+						<target>고정 자동 시점 전환</target>
+					</trans-unit>
+					<trans-unit id="camera_move_forward">
+						<source>Moves the camera forward</source>
+						<target>카메라 앞으로 이동</target>
+					</trans-unit>
+					<trans-unit id="camera_move_backward">
+						<source>Moves the camera backward</source>
+						<target>카메라 뒤로 이동</target>
+					</trans-unit>
+					<trans-unit id="camera_move_left">
+						<source>Moves the camera left</source>
+						<target>카메라 왼쪽으로 이동</target>
+					</trans-unit>
+					<trans-unit id="camera_move_right">
+						<source>Moves the camera right</source>
+						<target>카메라 오른쪽으로 이동</target>
+					</trans-unit>
+					<trans-unit id="camera_move_up">
+						<source>Moves the camera up</source>
+						<target>카메라 위로 이동</target>
+					</trans-unit>
+					<trans-unit id="camera_move_down">
+						<source>Moves the camera down</source>
+						<target>카메라 아래로 이동</target>
+					</trans-unit>
+					<trans-unit id="camera_rotate_left">
+						<source>Rotates the camera left</source>
+						<target>카메라 왼쪽으로 회전</target>
+					</trans-unit>
+					<trans-unit id="camera_rotate_right">
+						<source>Rotates the camera right</source>
+						<target>카메라 오른쪽으로 회전</target>
+					</trans-unit>
+					<trans-unit id="camera_rotate_up">
+						<source>Rotates the camera up</source>
+						<target>카메라 위로 회전</target>
+					</trans-unit>
+					<trans-unit id="camera_rotate_down">
+						<source>Rotates the camera down</source>
+						<target>카메라 아래로 회전</target>
+					</trans-unit>
+					<trans-unit id="camera_rotate_ccw">
+						<source>Rotates the camera counter-clockwise</source>
+						<target>카메라 반시계 방향 회전</target>
+					</trans-unit>
+					<trans-unit id="camera_rotate_cw">
+						<source>Rotates the camera clockwise</source>
+						<target>카메라 시계 방향 회전</target>
+					</trans-unit>
+					<trans-unit id="camera_zoom_in">
+						<source>Zooms the camera in</source>
+						<target>카메라 확대</target>
+					</trans-unit>
+					<trans-unit id="camera_zoom_out">
+						<source>Zooms the camera out</source>
+						<target>카메라 축소</target>
+					</trans-unit>
+					<trans-unit id="camera_poi_previous">
+						<source>Jumps to the previous point of interest in the route.</source>
+						<target>카메라 전 역으로 건너뛰기</target>
+					</trans-unit>
+					<trans-unit id="camera_poi_next">
+						<source>Jumps to the next point of interest in the route.</source>
+						<target>카메라 다음 역으로 건너뛰기</target>
+					</trans-unit>
+					<trans-unit id="camera_reset">
+						<source>Resets the camera view to default values</source>
+						<target>카메라 위치 초기화</target>
+					</trans-unit>
+					<trans-unit id="camera_restriction">
+						<source>Activates or deactivates interior view camera restriction</source>
+						<target>차내 카메라 제한</target>
+					</trans-unit>
+					<trans-unit id="timetable_toggle">
+						<source>Toggles through different timetable modes</source>
+						<target>시간표(다이아) 보이기/숨기기</target>
+					</trans-unit>
+					<trans-unit id="timetable_up">
+						<source>Scrolls the timetable up</source>
+						<target>시간표(다이아) 위로 스크롤</target>
+					</trans-unit>
+					<trans-unit id="timetable_down">
+						<source>Scrolls the timetable down</source>
+						<target>시간표(다이아) 아래로 스크롤</target>
+					</trans-unit>
+					<trans-unit id="menu_activate">
+						<source>Displays the in-game menu</source>
+						<target>게임 메뉴 표시</target>
+					</trans-unit>
+					<trans-unit id="menu_up">
+						<source>Moves the cursor up within the in-game menu</source>
+						<target>게임 메뉴:커서 위로 이동</target>
+					</trans-unit>
+					<trans-unit id="menu_down">
+						<source>Moves the cursor down within the in-game menu</source>
+						<target>게임 메뉴:커서 아래로 이동</target>
+					</trans-unit>
+					<trans-unit id="menu_enter">
+						<source>Performs the selected command within the in-game menu</source>
+						<target>게임 메뉴:확인</target>
+					</trans-unit>
+					<trans-unit id="menu_back">
+						<source>Goes back within the in-game menu</source>
+						<target>게임 메뉴:취소</target>
+					</trans-unit>
+					<trans-unit id="misc_clock">
+						<source>Shows or hides the clock</source>
+						<target>시계 표시 보이기/숨기기</target>
+					</trans-unit>
+					<trans-unit id="misc_speed">
+						<source>Toggles through different speed display modes</source>
+						<target>속도 표시 보이기/숨기기</target>
+					</trans-unit>
+					<trans-unit id="misc_gradient">
+						<source>Toggles through different gradient display modes</source>
+						<target>Toggles through different gradient display modes</target>
+					</trans-unit>
+					<trans-unit id="misc_dist_next_station">
+						<source>Toggles through different next station remain distance display modes</source>
+						<target>Toggles through different next station remain distance display modes</target>
+					</trans-unit>
+					<trans-unit id="misc_timefactor">
+						<source>Toggles through different time acceleration factors</source>
+						<target>다른 시간대 표시 보이기/숨기기</target>
+					</trans-unit>
+					<trans-unit id="misc_fps">
+						<source>Shows or hides the frame rate display</source>
+						<target>프레임률 표시 보이기/숨기기</target>
+					</trans-unit>
+					<trans-unit id="misc_ai">
+						<source>Activates or deactivates the virtual driver (AI)</source>
+						<target>자동 운행 전환</target>
+					</trans-unit>
+					<trans-unit id="misc_pause">
+						<source>Pauses or resumes the simulation</source>
+						<target>일시 정지</target>
+					</trans-unit>
+					<trans-unit id="misc_fullscreen">
+						<source>Toggles to or from fullscreen mode</source>
+						<target>전체 화면 전환</target>
+					</trans-unit>
+					<trans-unit id="misc_mute">
+						<source>Mutes sound or resumes playing sounds</source>
+						<target>음소거</target>
+					</trans-unit>
+					<trans-unit id="misc_quit">
+						<source>Quits the simulation</source>
+						<target>종료</target>
+					</trans-unit>
+					<trans-unit id="misc_interface">
+						<source>Toggles through different interface modes</source>
+						<target>인터페이스 보이기/숨기기</target>
+					</trans-unit>
+					<trans-unit id="misc_backface">
+						<source>Activates or deactivates backface culling</source>
+						<target>배면 카링 보이기/숨기기</target>
+					</trans-unit>
+					<trans-unit id="misc_cpumode">
+						<source>Switches to or from reduced CPU mode</source>
+						<target>CPU 부하 보이기/숨기기</target>
+					</trans-unit>
+					<trans-unit id="debug_wireframe">
+						<source>Activates or deactivates wireframe mode</source>
+						<target>와이어 프레임 보이기/숨기기</target>
+					</trans-unit>
+					<trans-unit id="debug_normals">
+						<source>Shows or hides vertex normals</source>
+						<target>정점 법선 보이기/숨기기</target>
+					</trans-unit>
+					<trans-unit id="debug_brake">
+						<source>Shows or hides brake system debug output</source>
+						<target>브레이크 디버그 보이기/숨기기</target>
+					</trans-unit>
+					<trans-unit id="debug_ats">
+						<source>Shows or hides plugin debug output</source>
+						<target>Shows or hides plugin debug output</target>
+					</trans-unit>
+					<trans-unit id="debug_touch_mode">
+						<source>Shows or hides the touch range</source>
+					</trans-unit>
+					<trans-unit id="route_information">
+						<source>Shows or hides the route information window</source>
+						<target>Shows or hides the route information window</target>
+					</trans-unit>
+					<trans-unit id="show_events">
+						<source>Shows or hides event markers (For developers)</source>
+						<target>Shows or hides event markers (For developers)</target>
+					</trans-unit>
+					<trans-unit id="wiper_speed_up">
+						<source>Increases the speed of the windscreen wipers</source>
+						<target>Increases the speed of the windscreen wipers</target>
+					</trans-unit>
+					<trans-unit id="wiper_speed_down">
+						<source>Decreases the speed of the windscreen wipers</source>
+						<target>Decreases the speed of the windscreen wipers</target>
+					</trans-unit>
+					<trans-unit id="fill_fuel">
+						<source>Fills fuel</source>
+						<target>Fills fuel</target>
+					</trans-unit>
+					<trans-unit id="headlights">
+						<source>Toggles the train headlights</source>
+						<target>Toggles the train headlights</target>
+					</trans-unit>
+					<trans-unit id="live_steam_injector">
+						<source>Activates or deactivates the live steam injector</source>
+						<target>Activates or deactivates the live steam injector</target>
+					</trans-unit>
+					<trans-unit id="exhaust_steam_injector">
+						<source>Activates or deactivates the exhaust steam injector</source>
+						<target>Activates or deactivates the exhaust steam injector</target>
+					</trans-unit>
+					<trans-unit id="increase_cutoff">
+						<source>Increases the cutoff</source>
+						<target>Increases the cutoff</target>
+					</trans-unit>
+					<trans-unit id="decrease_cutoff">
+						<source>Decreases the cutoff</source>
+						<target>Decreases the cutoff</target>
+					</trans-unit>
+					<trans-unit id="blowers">
+						<source>Activates or deactivates the blowers</source>
+						<target>Activates or deactivates the blowers</target>
+					</trans-unit>
+					<trans-unit id="engine_start">
+						<source>Starts the engine</source>
+						<target>Starts the engine</target>
+					</trans-unit>
+					<trans-unit id="engine_stop">
+						<source>Stops the engine</source>
+						<target>Stops the engine</target>
+					</trans-unit>
+					<trans-unit id="gear_up">
+						<source>Shifts up a gear in a train fitted with a gearbox</source>
+						<target>Shifts up a gear in a train fitted with a gearbox</target>
+					</trans-unit>
+					<trans-unit id="gear_down">
+						<source>Shifts down a gear in a train fitted with a gearbox</source>
+						<target>Shifts down a gear in a train fitted with a gearbox</target>
+					</trans-unit>
+					<trans-unit id="raise_pantograph">
+						<source>Raises the pantograph</source>
+						<target>Raises the pantograph</target>
+					</trans-unit>
+					<trans-unit id="lower_pantograph">
+						<source>Lowers the pantograph</source>
+						<target>Lowers the pantograph</target>
+					</trans-unit>
+					<trans-unit id="main_breaker">
+						<source>Toggles the main breaker</source>
+						<target>Toggles the main breaker</target>
+					</trans-unit>
+				</group>
+				<group id="keys">
+					<trans-unit id="0">
+						<source>0</source>
+						<target>0</target>
+					</trans-unit>
+					<trans-unit id="1">
+						<source>1</source>
+						<target>1</target>
+					</trans-unit>
+					<trans-unit id="2">
+						<source>2</source>
+						<target>2</target>
+					</trans-unit>
+					<trans-unit id="3">
+						<source>3</source>
+						<target>3</target>
+					</trans-unit>
+					<trans-unit id="4">
+						<source>4</source>
+						<target>4</target>
+					</trans-unit>
+					<trans-unit id="5">
+						<source>5</source>
+						<target>5</target>
+					</trans-unit>
+					<trans-unit id="6">
+						<source>6</source>
+						<target>6</target>
+					</trans-unit>
+					<trans-unit id="7">
+						<source>7</source>
+						<target>7</target>
+					</trans-unit>
+					<trans-unit id="8">
+						<source>8</source>
+						<target>8</target>
+					</trans-unit>
+					<trans-unit id="9">
+						<source>9</source>
+						<target>9</target>
+					</trans-unit>
+					<trans-unit id="ampersand">
+						<source>Ampersand</source>
+						<target>＆</target>
+					</trans-unit>
+					<trans-unit id="asterisk">
+						<source>Asterisk</source>
+						<target>*</target>
+					</trans-unit>
+					<trans-unit id="at">
+						<source>At</source>
+						<target>@</target>
+					</trans-unit>
+					<trans-unit id="backquote">
+						<source>Backquote</source>
+						<target>`</target>
+					</trans-unit>
+					<trans-unit id="backslash">
+						<source>Backslash</source>
+						<target>backslash＼(KS:￦)</target>
+					</trans-unit>
+					<trans-unit id="backspace">
+						<source>Backspace</source>
+						<target>BackSpace</target>
+					</trans-unit>
+					<trans-unit id="break">
+						<source>Break</source>
+						<target>Break</target>
+					</trans-unit>
+					<trans-unit id="capslock">
+						<source>Capslock</source>
+						<target>CapsLock</target>
+					</trans-unit>
+					<trans-unit id="caret">
+						<source>Caret</source>
+						<target>＾</target>
+					</trans-unit>
+					<trans-unit id="clear">
+						<source>Clear</source>
+						<target>Clear</target>
+					</trans-unit>
+					<trans-unit id="colon">
+						<source>Colon</source>
+						<target>：</target>
+					</trans-unit>
+					<trans-unit id="comma">
+						<source>Comma</source>
+						<target>,</target>
+					</trans-unit>
+					<trans-unit id="delete">
+						<source>Delete</source>
+						<target>Delete</target>
+					</trans-unit>
+					<trans-unit id="dollar">
+						<source>Dollar</source>
+						<target>＄</target>
+					</trans-unit>
+					<trans-unit id="down">
+						<source>Down</source>
+						<target>Down</target>
+					</trans-unit>
+					<trans-unit id="end">
+						<source>End</source>
+						<target>End</target>
+					</trans-unit>
+					<trans-unit id="enter">
+						<source>Enter</source>
+						<target>Enter</target>
+					</trans-unit>
+					<trans-unit id="equals">
+						<source>Equals</source>
+						<target>=</target>
+					</trans-unit>
+					<trans-unit id="escape">
+						<source>Escape</source>
+						<target>Esc</target>
+					</trans-unit>
+					<trans-unit id="euro">
+						<source>Euro</source>
+						<target>Euro</target>
+					</trans-unit>
+					<trans-unit id="exclaim">
+						<source>Exclamation</source>
+						<target>!</target>
+					</trans-unit>
+					<trans-unit id="f1">
+						<source>F1</source>
+						<target>F1</target>
+					</trans-unit>
+					<trans-unit id="f2">
+						<source>F2</source>
+						<target>F2</target>
+					</trans-unit>
+					<trans-unit id="f3">
+						<source>F3</source>
+						<target>F3</target>
+					</trans-unit>
+					<trans-unit id="f4">
+						<source>F4</source>
+						<target>F4</target>
+					</trans-unit>
+					<trans-unit id="f5">
+						<source>F5</source>
+						<target>F5</target>
+					</trans-unit>
+					<trans-unit id="f6">
+						<source>F6</source>
+						<target>F6</target>
+					</trans-unit>
+					<trans-unit id="f7">
+						<source>F7</source>
+						<target>F7</target>
+					</trans-unit>
+					<trans-unit id="f8">
+						<source>F8</source>
+						<target>F8</target>
+					</trans-unit>
+					<trans-unit id="f9">
+						<source>F9</source>
+						<target>F9</target>
+					</trans-unit>
+					<trans-unit id="f10">
+						<source>F10</source>
+						<target>F10</target>
+					</trans-unit>
+					<trans-unit id="f11">
+						<source>F11</source>
+						<target>F11</target>
+					</trans-unit>
+					<trans-unit id="f12">
+						<source>F12</source>
+						<target>F12</target>
+					</trans-unit>
+					<trans-unit id="f13">
+						<source>F13</source>
+						<target>F13</target>
+					</trans-unit>
+					<trans-unit id="f14">
+						<source>F14</source>
+						<target>F14</target>
+					</trans-unit>
+					<trans-unit id="f15">
+						<source>F15</source>
+						<target>F15</target>
+					</trans-unit>
+					<trans-unit id="greater">
+						<source>Greater</source>
+						<target>&gt;</target>
+					</trans-unit>
+					<trans-unit id="hash">
+						<source>Hash</source>
+						<target>#</target>
+					</trans-unit>
+					<trans-unit id="help">
+						<source>Help</source>
+						<target>Help</target>
+					</trans-unit>
+					<trans-unit id="home">
+						<source>Home</source>
+						<target>Home</target>
+					</trans-unit>
+					<trans-unit id="insert">
+						<source>Insert</source>
+						<target>Insert</target>
+					</trans-unit>
+					<trans-unit id="kp0">
+						<source>Keypad 0</source>
+						<target>키패드 0</target>
+					</trans-unit>
+					<trans-unit id="kp1">
+						<source>Keypad 1</source>
+						<target>키패드 1</target>
+					</trans-unit>
+					<trans-unit id="kp2">
+						<source>Keypad 2</source>
+						<target>키패드 2</target>
+					</trans-unit>
+					<trans-unit id="kp3">
+						<source>Keypad 3</source>
+						<target>키패드 3</target>
+					</trans-unit>
+					<trans-unit id="kp4">
+						<source>Keypad 4</source>
+						<target>키패드 4</target>
+					</trans-unit>
+					<trans-unit id="kp5">
+						<source>Keypad 5</source>
+						<target>키패드 5</target>
+					</trans-unit>
+					<trans-unit id="kp6">
+						<source>Keypad 6</source>
+						<target>키패드 6</target>
+					</trans-unit>
+					<trans-unit id="kp7">
+						<source>Keypad 7</source>
+						<target>키패드 7</target>
+					</trans-unit>
+					<trans-unit id="kp8">
+						<source>Keypad 8</source>
+						<target>키패드 8</target>
+					</trans-unit>
+					<trans-unit id="kp9">
+						<source>Keypad 9</source>
+						<target>키패드 9</target>
+					</trans-unit>
+					<trans-unit id="kp_divide">
+						<source>Keypad Divide</source>
+						<target>키패드 /</target>
+					</trans-unit>
+					<trans-unit id="kp_enter">
+						<source>Keypad Enter</source>
+						<target>키패드 Enter</target>
+					</trans-unit>
+					<trans-unit id="kp_equals">
+						<source>Keypad Equals</source>
+						<target>키패드 =</target>
+					</trans-unit>
+					<trans-unit id="kp_minus">
+						<source>Keypad Minus</source>
+						<target>키패드 －</target>
+					</trans-unit>
+					<trans-unit id="kp_multiply">
+						<source>Keypad Multiply</source>
+						<target>키패드 *</target>
+					</trans-unit>
+					<trans-unit id="kp_period">
+						<source>Keypad Period</source>
+						<target>키패드 .</target>
+					</trans-unit>
+					<trans-unit id="kp_plus">
+						<source>Keypad Plus</source>
+						<target>키패드 ＋</target>
+					</trans-unit>
+					<trans-unit id="lalt">
+						<source>Left Alt</source>
+						<target>왼쪽 Alt</target>
+					</trans-unit>
+					<trans-unit id="lctrl">
+						<source>Left Ctrl</source>
+						<target>왼쪽 Ctrl</target>
+					</trans-unit>
+					<trans-unit id="left">
+						<source>Left</source>
+						<target>Left</target>
+					</trans-unit>
+					<trans-unit id="leftbracket">
+						<source>Left bracket</source>
+						<target>［</target>
+					</trans-unit>
+					<trans-unit id="leftparen">
+						<source>Left parenthesis</source>
+						<target>(</target>
+					</trans-unit>
+					<trans-unit id="less">
+						<source>Less</source>
+						<target>&lt;</target>
+					</trans-unit>
+					<trans-unit id="lmeta">
+						<source>Left Meta</source>
+						<target>왼쪽 Meta</target>
+					</trans-unit>
+					<trans-unit id="lshift">
+						<source>Left Shift</source>
+						<target>왼쪽 Shift</target>
+					</trans-unit>
+					<trans-unit id="lsuper">
+						<source>Left Application</source>
+						<target>왼쪽 수퍼 키</target>
+					</trans-unit>
+					<trans-unit id="menu">
+						<source>Menu</source>
+						<target>Menu</target>
+					</trans-unit>
+					<trans-unit id="minus">
+						<source>Minus</source>
+						<target>-</target>
+					</trans-unit>
+					<trans-unit id="mode">
+						<source>Alt Gr</source>
+						<target>Alt Gr</target>
+					</trans-unit>
+					<trans-unit id="numlock">
+						<source>Numlock</source>
+						<target>NumLock</target>
+					</trans-unit>
+					<trans-unit id="pagedown">
+						<source>Page down</source>
+						<target>Page Down</target>
+					</trans-unit>
+					<trans-unit id="pageup">
+						<source>Page up</source>
+						<target>Page Up</target>
+					</trans-unit>
+					<trans-unit id="pause">
+						<source>Pause</source>
+						<target>Pause</target>
+					</trans-unit>
+					<trans-unit id="period">
+						<source>Period</source>
+						<target>.</target>
+					</trans-unit>
+					<trans-unit id="plus">
+						<source>Plus</source>
+						<target>＋</target>
+					</trans-unit>
+					<trans-unit id="power">
+						<source>Power</source>
+						<target>Power</target>
+					</trans-unit>
+					<trans-unit id="print">
+						<source>Print</source>
+						<target>Print</target>
+					</trans-unit>
+					<trans-unit id="question">
+						<source>Question</source>
+						<target>?</target>
+					</trans-unit>
+					<trans-unit id="quote">
+						<source>Quote</source>
+						<target>'</target>
+					</trans-unit>
+					<trans-unit id="quotedbl">
+						<source>Quote double</source>
+						<target>"</target>
+					</trans-unit>
+					<trans-unit id="ralt">
+						<source>Right Alt</source>
+						<target>오른쪽 Alt</target>
+					</trans-unit>
+					<trans-unit id="rctrl">
+						<source>Right Ctrl</source>
+						<target>오른쪽 Ctrl</target>
+					</trans-unit>
+					<trans-unit id="return">
+						<source>Return</source>
+						<target>Return</target>
+					</trans-unit>
+					<trans-unit id="right">
+						<source>Right</source>
+						<target>Right</target>
+					</trans-unit>
+					<trans-unit id="rightbracket">
+						<source>Right bracket</source>
+						<target>］</target>
+					</trans-unit>
+					<trans-unit id="rightparen">
+						<source>Right parenthesis</source>
+						<target>)</target>
+					</trans-unit>
+					<trans-unit id="rmeta">
+						<source>Right Meta</source>
+						<target>오른쪽 Meta</target>
+					</trans-unit>
+					<trans-unit id="rshift">
+						<source>Right Shift</source>
+						<target>오른쪽 Shift</target>
+					</trans-unit>
+					<trans-unit id="rsuper">
+						<source>Right Application</source>
+						<target>오른쪽 수퍼 키</target>
+					</trans-unit>
+					<trans-unit id="scrolllock">
+						<source>Scrolllock</source>
+						<target>ScrollLock</target>
+					</trans-unit>
+					<trans-unit id="semicolon">
+						<source>Semicolon</source>
+						<target>；</target>
+					</trans-unit>
+					<trans-unit id="slash">
+						<source>Slash</source>
+						<target>/</target>
+					</trans-unit>
+					<trans-unit id="space">
+						<source>Space</source>
+						<target>Space</target>
+					</trans-unit>
+					<trans-unit id="sysreq">
+						<source>SysRq</source>
+						<target>SysRq</target>
+					</trans-unit>
+					<trans-unit id="tab">
+						<source>Tab</source>
+						<target>Tab</target>
+					</trans-unit>
+					<trans-unit id="underscore">
+						<source>Underscore</source>
+						<target>_</target>
+					</trans-unit>
+					<trans-unit id="up">
+						<source>Up</source>
+						<target>Up</target>
+					</trans-unit>
+					<trans-unit id="a">
+						<source>A</source>
+						<target>A</target>
+					</trans-unit>
+					<trans-unit id="b">
+						<source>B</source>
+						<target>B</target>
+					</trans-unit>
+					<trans-unit id="c">
+						<source>C</source>
+						<target>C</target>
+					</trans-unit>
+					<trans-unit id="d">
+						<source>D</source>
+						<target>D</target>
+					</trans-unit>
+					<trans-unit id="e">
+						<source>E</source>
+						<target>E</target>
+					</trans-unit>
+					<trans-unit id="f">
+						<source>F</source>
+						<target>F</target>
+					</trans-unit>
+					<trans-unit id="g">
+						<source>G</source>
+						<target>G</target>
+					</trans-unit>
+					<trans-unit id="h">
+						<source>H</source>
+						<target>H</target>
+					</trans-unit>
+					<trans-unit id="i">
+						<source>I</source>
+						<target>I</target>
+					</trans-unit>
+					<trans-unit id="j">
+						<source>J</source>
+						<target>J</target>
+					</trans-unit>
+					<trans-unit id="k">
+						<source>K</source>
+						<target>K</target>
+					</trans-unit>
+					<trans-unit id="l">
+						<source>L</source>
+						<target>L</target>
+					</trans-unit>
+					<trans-unit id="m">
+						<source>M</source>
+						<target>M</target>
+					</trans-unit>
+					<trans-unit id="n">
+						<source>N</source>
+						<target>N</target>
+					</trans-unit>
+					<trans-unit id="o">
+						<source>O</source>
+						<target>O</target>
+					</trans-unit>
+					<trans-unit id="p">
+						<source>P</source>
+						<target>P</target>
+					</trans-unit>
+					<trans-unit id="q">
+						<source>Q</source>
+						<target>Q</target>
+					</trans-unit>
+					<trans-unit id="r">
+						<source>R</source>
+						<target>R</target>
+					</trans-unit>
+					<trans-unit id="s">
+						<source>S</source>
+						<target>S</target>
+					</trans-unit>
+					<trans-unit id="t">
+						<source>T</source>
+						<target>T</target>
+					</trans-unit>
+					<trans-unit id="u">
+						<source>U</source>
+						<target>U</target>
+					</trans-unit>
+					<trans-unit id="v">
+						<source>V</source>
+						<target>V</target>
+					</trans-unit>
+					<trans-unit id="w">
+						<source>W</source>
+						<target>W</target>
+					</trans-unit>
+					<trans-unit id="x">
+						<source>X</source>
+						<target>X</target>
+					</trans-unit>
+					<trans-unit id="y">
+						<source>Y</source>
+						<target>Y</target>
+					</trans-unit>
+					<trans-unit id="z">
+						<source>Z</source>
+						<target>Z</target>
+					</trans-unit>
+				</group>
+			</group>
+			<group id="train_editor">
+				<group id="general">
+					<trans-unit id="new">
+						<source>New</source>
+						<target>New</target>
+					</trans-unit>
+					<trans-unit id="open">
+						<source>Open...</source>
+						<target>Open...</target>
+					</trans-unit>
+					<trans-unit id="save">
+						<source>Save</source>
+						<target>Save</target>
+					</trans-unit>
+					<trans-unit id="save_as">
+						<source>Save as...</source>
+						<target>Save as...</target>
+					</trans-unit>
+					<trans-unit id="close">
+						<source>Close</source>
+						<target>Close</target>
+					</trans-unit>
+					<trans-unit id="new_message">
+						<source>Do you want to save data before creating a new train?</source>
+						<target>Do you want to save data before creating a new train?</target>
+					</trans-unit>
+					<trans-unit id="open_message">
+						<source>Do you want to save data before opening another train?</source>
+						<target>Do you want to save data before opening another train?</target>
+					</trans-unit>
+					<trans-unit id="close_message">
+						<source>Do you want to save data before closing?</source>
+						<target>Do you want to save data before closing?</target>
+					</trans-unit>
+					<trans-unit id="properties_one">
+						<source>Properties (1)</source>
+						<target>Properties (1)</target>
+					</trans-unit>
+					<trans-unit id="properties_two">
+						<source>Properties (2)</source>
+						<target>Properties (2)</target>
+					</trans-unit>
+				</group>
+				<group id="performance">
+					<trans-unit id="performance">
+						<source>Performance</source>
+						<target>Performance</target>
+					</trans-unit>
+					<trans-unit id="deceleration">
+						<source>Deceleration:</source>
+						<target>Deceleration:</target>
+					</trans-unit>
+					<trans-unit id="static_friction">
+						<source>CoefficientOfStaticFriction:</source>
+						<target>CoefficientOfStaticFriction:</target>
+					</trans-unit>
+					<trans-unit id="rolling_resistance">
+						<source>CoefficientOfRollingResistance:</source>
+						<target>CoefficientOfRollingResistance:</target>
+					</trans-unit>
+					<trans-unit id="aerodynamic_drag">
+						<source>AerodynamicDragCoefficient:</source>
+						<target>AerodynamicDragCoefficient:</target>
+					</trans-unit>
+				</group>
+				<group id="delay">
+					<trans-unit id="delay">
+						<source>Delay</source>
+						<target>Delay</target>
+					</trans-unit>
+					<trans-unit id="power_up">
+						<source>DelayPowerUp</source>
+						<target>DelayPowerUp</target>
+					</trans-unit>
+					<trans-unit id="power_down">
+						<source>DelayPowerDown</source>
+						<target>DelayPowerDown</target>
+					</trans-unit>
+					<trans-unit id="brake_up">
+						<source>DelayBrakeUp</source>
+						<target>DelayBrakeUp</target>
+					</trans-unit>
+					<trans-unit id="brake_down">
+						<source>DelayBrakeDown</source>
+						<target>DelayBrakeDown</target>
+					</trans-unit>
+					<trans-unit id="set">
+						<source>Set</source>
+						<target>Set</target>
+					</trans-unit>
+					<trans-unit id="notch">
+						<source>Notch</source>
+						<target>Notch</target>
+					</trans-unit>
+					<trans-unit id="save">
+						<source>Save</source>
+						<target>Save</target>
+					</trans-unit>
+					<trans-unit id="cancel">
+						<source>Cancel</source>
+						<target>Cancel</target>
+					</trans-unit>
+				</group>
+				<group id="move">
+					<trans-unit id="move">
+						<source>Move</source>
+						<target>Move</target>
+					</trans-unit>
+					<trans-unit id="jerk_power_up">
+						<source>JerkPowerUp:</source>
+						<target>JerkPowerUp:</target>
+					</trans-unit>
+					<trans-unit id="jerk_power_down">
+						<source>JerkPowerDown:</source>
+						<target>JerkPowerDown:</target>
+					</trans-unit>
+					<trans-unit id="jerk_brake_up">
+						<source>JerkBrakeUp:</source>
+						<target>JerkBrakeUp:</target>
+					</trans-unit>
+					<trans-unit id="jerk_brake_down">
+						<source>JerkBrakeDown:</source>
+						<target>JerkBrakeDown:</target>
+					</trans-unit>
+					<trans-unit id="brake_cylinder_up">
+						<source>BrakeCylinderUp:</source>
+						<target>BrakeCylinderUp:</target>
+					</trans-unit>
+					<trans-unit id="brake_cylinder_down">
+						<source>BrakeCylinderDown:</source>
+						<target>BrakeCylinderDown:</target>
+					</trans-unit>
+				</group>
+				<group id="brake">
+					<trans-unit id="brake">
+						<source>Brake</source>
+						<target>Brake</target>
+					</trans-unit>
+					<trans-unit id="type">
+						<source>BrakeType:</source>
+						<target>BrakeType:</target>
+					</trans-unit>
+					<trans-unit id="control_system">
+						<source>BrakeControlSystem:</source>
+						<target>BrakeControlSystem:</target>
+					</trans-unit>
+					<trans-unit id="control_speed">
+						<source>BrakeControlSpeed:</source>
+						<target>BrakeControlSpeed:</target>
+					</trans-unit>
+					<trans-unit id="smee">
+						<source>Electromagnetic straight air brake</source>
+						<target>Electromagnetic straight air brake</target>
+					</trans-unit>
+					<trans-unit id="ecb">
+						<source>Electro-pneumatic air brake without brake pipe</source>
+						<target>Electro-pneumatic air brake without brake pipe</target>
+					</trans-unit>
+					<trans-unit id="cl">
+						<source>Air brake with partial release feature</source>
+						<target>Air brake with partial release feature</target>
+					</trans-unit>
+					<trans-unit id="control_system_none">
+						<source>None</source>
+						<target>None</target>
+					</trans-unit>
+					<trans-unit id="lock_out_valve">
+						<source>Closing electromagnetic valve</source>
+						<target>Closing electromagnetic valve</target>
+					</trans-unit>
+					<trans-unit id="delay_including_control">
+						<source>Delay-including control</source>
+						<target>Delay-including control</target>
+					</trans-unit>
+				</group>
+				<group id="pressure">
+					<trans-unit id="pressure">
+						<source>Pressure</source>
+						<target>Pressure</target>
+					</trans-unit>
+					<trans-unit id="brake_cylinder_service_max">
+						<source>BrakeCylinderServiceMaximumPressure:</source>
+						<target>BrakeCylinderServiceMaximumPressure:</target>
+					</trans-unit>
+					<trans-unit id="brake_cylinder_emergency_max">
+						<source>BrakeCylinderEmergencyMaximumPressure:</source>
+						<target>BrakeCylinderEmergencyMaximumPressure:</target>
+					</trans-unit>
+					<trans-unit id="main_reservoir_min">
+						<source>MainReservoirMinimumPressure:</source>
+						<target>MainReservoirMinimumPressure:</target>
+					</trans-unit>
+					<trans-unit id="main_reservoir_max">
+						<source>MainReservoirMaximumPressure:</source>
+						<target>MainReservoirMaximumPressure:</target>
+					</trans-unit>
+					<trans-unit id="brake_pipe_normal">
+						<source>BrakePipeNormalPressure:</source>
+						<target>BrakePipeNormalPressure:</target>
+					</trans-unit>
+				</group>
+				<group id="handle">
+					<trans-unit id="handle">
+						<source>Handle</source>
+						<target>Handle</target>
+					</trans-unit>
+					<trans-unit id="type">
+						<source>HandleType:</source>
+						<target>HandleType:</target>
+					</trans-unit>
+					<trans-unit id="power_notches">
+						<source>PowerNotches:</source>
+						<target>PowerNotches:</target>
+					</trans-unit>
+					<trans-unit id="brake_notches">
+						<source>BrakeNotches:</source>
+						<target>BrakeNotches:</target>
+					</trans-unit>
+					<trans-unit id="driver_power_notches">
+						<source>DriverPowerNotches:</source>
+						<target>DriverPowerNotches:</target>
+					</trans-unit>
+					<trans-unit id="driver_brake_notches">
+						<source>DriverBrakeNotches:</source>
+						<target>DriverBrakeNotches:</target>
+					</trans-unit>
+					<trans-unit id="power_notch_reduce_steps">
+						<source>PowerNotchReduceSteps:</source>
+						<target>PowerNotchReduceSteps:</target>
+					</trans-unit>
+					<trans-unit id="separated">
+						<source>Separated</source>
+						<target>Separated</target>
+					</trans-unit>
+					<trans-unit id="combined">
+						<source>Combined</source>
+						<target>Combined</target>
+					</trans-unit>
+					<trans-unit id="brake_notches_error_message">
+						<source>BrakeNotches must be at least 1 if HoldBrake is set.</source>
+						<target>BrakeNotches must be at least 1 if HoldBrake is set.</target>
+					</trans-unit>
+					<trans-unit id="driver_power_notches_error_message">
+						<source>DriverPowerNotches must be less than or equal to PowerNotches.</source>
+						<target>DriverPowerNotches must be less than or equal to PowerNotches.</target>
+					</trans-unit>
+					<trans-unit id="driver_brake_notches_error_message">
+						<source>DriverBrakeNotches must be less than or equal to BrakeNotches.</source>
+						<target>DriverBrakeNotches must be less than or equal to BrakeNotches.</target>
+					</trans-unit>
+				</group>
+				<group id="cab">
+					<trans-unit id="cab">
+						<source>Cab</source>
+						<target>Cab</target>
+					</trans-unit>
+					<trans-unit id="driver_car">
+						<source>DriverCar:</source>
+						<target>DriverCar:</target>
+					</trans-unit>
+					<trans-unit id="driver_car_error_message">
+						<source>DriverCar must be less than NumberOfMotorCars + NumberOfTrailerCars.</source>
+						<target>DriverCar must be less than NumberOfMotorCars + NumberOfTrailerCars.</target>
+					</trans-unit>
+				</group>
+				<group id="car">
+					<trans-unit id="car">
+						<source>Car</source>
+						<target>Car</target>
+					</trans-unit>
+					<trans-unit id="motor_car_mass">
+						<source>MotorCarMass:</source>
+						<target>MotorCarMass:</target>
+					</trans-unit>
+					<trans-unit id="number_of_motor_cars">
+						<source>NumberOfMotorCars:</source>
+						<target>NumberOfMotorCars:</target>
+					</trans-unit>
+					<trans-unit id="trailer_car_mass">
+						<source>TrailerCarMass:</source>
+						<target>TrailerCarMass:</target>
+					</trans-unit>
+					<trans-unit id="number_of_trailer_cars">
+						<source>NumberOfTrailerCars:</source>
+						<target>NumberOfTrailerCars:</target>
+					</trans-unit>
+					<trans-unit id="length_of_a_car">
+						<source>LengthOfACar:</source>
+						<target>LengthOfACar:</target>
+					</trans-unit>
+					<trans-unit id="front_car_is_motor_car">
+						<source>FrontCarIsMotorCar:</source>
+						<target>FrontCarIsMotorCar:</target>
+					</trans-unit>
+					<trans-unit id="width_of_a_car">
+						<source>WidthOfACar:</source>
+						<target>WidthOfACar:</target>
+					</trans-unit>
+					<trans-unit id="height_of_a_car">
+						<source>HeightOfACar:</source>
+						<target>HeightOfACar:</target>
+					</trans-unit>
+					<trans-unit id="center_of_gravity_height">
+						<source>CenterOfGravityHeight:</source>
+						<target>CenterOfGravityHeight:</target>
+					</trans-unit>
+					<trans-unit id="exposed_frontal_area">
+						<source>ExposedFrontalArea:</source>
+						<target>ExposedFrontalArea:</target>
+					</trans-unit>
+					<trans-unit id="unexposed_frontal_area">
+						<source>UnexposedFrontalArea:</source>
+						<target>UnexposedFrontalArea:</target>
+					</trans-unit>
+					<trans-unit id="number_of_trailer_cars_error_message">
+						<source>NumberOfTrailerCars must be at least 1 if FrontCarIsAMotorCar is not set.</source>
+						<target>NumberOfTrailerCars must be at least 1 if FrontCarIsAMotorCar is not set.</target>
+					</trans-unit>
+				</group>
+				<group id="device">
+					<trans-unit id="device">
+						<source>Device</source>
+						<target>Device</target>
+					</trans-unit>
+					<trans-unit id="const_speed">
+						<source>ConstSpeed:</source>
+						<target>ConstSpeed:</target>
+					</trans-unit>
+					<trans-unit id="hold_brake">
+						<source>HoldBrake:</source>
+						<target>HoldBrake:</target>
+					</trans-unit>
+					<trans-unit id="readhesion_device">
+						<source>ReAdhesionDevice:</source>
+						<target>ReAdhesionDevice:</target>
+					</trans-unit>
+					<trans-unit id="pass_alarm">
+						<source>PassAlarm:</source>
+						<target>PassAlarm:</target>
+					</trans-unit>
+					<trans-unit id="door_open_mode">
+						<source>DoorOpenMode:</source>
+						<target>DoorOpenMode:</target>
+					</trans-unit>
+					<trans-unit id="door_close_mode">
+						<source>DoorCloseMode:</source>
+						<target>DoorCloseMode:</target>
+					</trans-unit>
+					<trans-unit id="door_width">
+						<source>DoorWidth:</source>
+						<target>DoorWidth:</target>
+					</trans-unit>
+					<trans-unit id="door_max_tolerance">
+						<source>DoorMaxTolerance:</source>
+						<target>DoorMaxTolerance:</target>
+					</trans-unit>
+					<trans-unit id="none">
+						<source>None</source>
+						<target>None</target>
+					</trans-unit>
+					<trans-unit id="manual_switching">
+						<source>Manual switching</source>
+						<target>Manual switching</target>
+					</trans-unit>
+					<trans-unit id="automatic_switching">
+						<source>Automatic switching</source>
+						<target>Automatic switching</target>
+					</trans-unit>
+					<trans-unit id="type_a">
+						<source>Type A (instant)</source>
+						<target>Type A (instant)</target>
+					</trans-unit>
+					<trans-unit id="type_b">
+						<source>Type B (slow)</source>
+						<target>Type B (slow)</target>
+					</trans-unit>
+					<trans-unit id="type_c">
+						<source>Type C (medium)</source>
+						<target>Type C (medium)</target>
+					</trans-unit>
+					<trans-unit id="type_d">
+						<source>Type D (fast)</source>
+						<target>Type D (fast)</target>
+					</trans-unit>
+					<trans-unit id="single">
+						<source>Single</source>
+						<target>Single</target>
+					</trans-unit>
+					<trans-unit id="looping">
+						<source>Looping</source>
+						<target>Looping</target>
+					</trans-unit>
+					<trans-unit id="semi_automatic">
+						<source>Semi-automatic</source>
+						<target>Semi-automatic</target>
+					</trans-unit>
+					<trans-unit id="automatic">
+						<source>Automatic</source>
+						<target>Automatic</target>
+					</trans-unit>
+					<trans-unit id="manual">
+						<source>Manual</source>
+						<target>Manual</target>
+					</trans-unit>
+				</group>
+				<group id="acceleration">
+					<trans-unit id="acceleration">
+						<source>Acceleration</source>
+						<target>Acceleration</target>
+					</trans-unit>
+					<trans-unit id="notch">
+						<source>Notch:</source>
+						<target>Notch:</target>
+					</trans-unit>
+					<trans-unit id="data">
+						<source>Data</source>
+						<target>Data</target>
+					</trans-unit>
+					<trans-unit id="preview">
+						<source>Preview</source>
+						<target>Preview</target>
+					</trans-unit>
+					<trans-unit id="subtract_deceleration">
+						<source>Subtract deceleration due to air and rolling resistance</source>
+						<target>Subtract deceleration due to air and rolling resistance</target>
+					</trans-unit>
+					<trans-unit id="max_x">
+						<source>Xmax:</source>
+						<target>Xmax:</target>
+					</trans-unit>
+					<trans-unit id="max_y">
+						<source>Ymax:</source>
+						<target>Ymax:</target>
+					</trans-unit>
+				</group>
+				<group id="motor">
+					<trans-unit id="sound">
+						<source>Motor Sound</source>
+						<target>Motor Sound</target>
+					</trans-unit>
+					<trans-unit id="edit">
+						<source>Edit mode</source>
+						<target>Edit mode</target>
+					</trans-unit>
+					<trans-unit id="sound_index">
+						<source>SoundIndex:</source>
+						<target>SoundIndex:</target>
+					</trans-unit>
+					<trans-unit id="pitch">
+						<source>Pitch</source>
+						<target>Pitch</target>
+					</trans-unit>
+					<trans-unit id="volume">
+						<source>Volume</source>
+						<target>Volume</target>
+					</trans-unit>
+					<trans-unit id="sound_none">
+						<source>None</source>
+						<target>None</target>
+					</trans-unit>
+					<trans-unit id="preview">
+						<source>Preview</source>
+						<target>Preview</target>
+					</trans-unit>
+					<trans-unit id="y_pitch">
+						<source>Ypitch</source>
+						<target>Ypitch</target>
+					</trans-unit>
+					<trans-unit id="y_volume">
+						<source>Yvolume</source>
+						<target>Yvolume</target>
+					</trans-unit>
+					<trans-unit id="min_x">
+						<source>Xmin:</source>
+						<target>Xmin:</target>
+					</trans-unit>
+					<trans-unit id="max_x">
+						<source>Xmax:</source>
+						<target>Xmax:</target>
+					</trans-unit>
+					<trans-unit id="left">
+						<source>Left</source>
+						<target>Left</target>
+					</trans-unit>
+					<trans-unit id="right">
+						<source>Right</source>
+						<target>Right</target>
+					</trans-unit>
+					<trans-unit id="in">
+						<source>In</source>
+						<target>In</target>
+					</trans-unit>
+					<trans-unit id="out">
+						<source>Out</source>
+						<target>Out</target>
+					</trans-unit>
+					<trans-unit id="max_y_pitch">
+						<source>YmaxPitch:</source>
+						<target>YmaxPitch:</target>
+					</trans-unit>
+					<trans-unit id="max_y_volume">
+						<source>YmaxVolume:</source>
+						<target>YmaxVolume:</target>
+					</trans-unit>
+				</group>
+				<group id="extended">
+					<trans-unit id="features">
+						<source>Extended Features</source>
+						<target>Extended Features</target>
+					</trans-unit>
+					<trans-unit id="note">
+						<source>Please note: Features found on this page may require the following minimum version of openBVE:</source>
+						<target>Please note: Features found on this page may require the following minimum version of openBVE:</target>
+					</trans-unit>
+					<trans-unit id="loco_brake">
+						<source>Locomotive Brake</source>
+						<target>Locomotive Brake</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_system_type">
+						<source>BrakeType:</source>
+						<target>BrakeType:</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_notches">
+						<source>Notches:</source>
+						<target>Notches:</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_delay_up">
+						<source>DelayUp:</source>
+						<target>DelayUp:</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_delay_down">
+						<source>DelayDown:</source>
+						<target>DelayDown:</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_type">
+						<source>Type:</source>
+						<target>Type:</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_set">
+						<source>Set</source>
+						<target>Set</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_none">
+						<source>Not fitted</source>
+						<target>Not fitted</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_notched_air_brake">
+						<source>Notched air brake</source>
+						<target>Notched air brake</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_cl">
+						<source>Air brake with partial release</source>
+						<target>Air brake with partial release</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_combined">
+						<source>Combined</source>
+						<target>Combined</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_independant">
+						<source>Independent</source>
+						<target>Independent</target>
+					</trans-unit>
+					<trans-unit id="loco_brake_blocking">
+						<source>Blocking</source>
+						<target>Blocking</target>
+					</trans-unit>
+					<trans-unit id="delay_loco_brake_up">
+						<source>DelayLocoBrakeUp</source>
+						<target>DelayLocoBrakeUp</target>
+					</trans-unit>
+					<trans-unit id="delay_loco_brake_down">
+						<source>DelayLocoBrakeDown</source>
+						<target>DelayLocoBrakeDown</target>
+					</trans-unit>
+					<trans-unit id="misc">
+						<source>Miscellaneous Features</source>
+						<target>Miscellaneous Features</target>
+					</trans-unit>
+					<trans-unit id="misc_eb">
+						<source>Handle behaviour on EB:</source>
+						<target>Handle behaviour on EB:</target>
+					</trans-unit>
+					<trans-unit id="misc_eb_no">
+						<source>No Action</source>
+						<target>No Action</target>
+					</trans-unit>
+					<trans-unit id="misc_eb_power">
+						<source>Return Power to neutral</source>
+						<target>Return Power to neutral</target>
+					</trans-unit>
+					<trans-unit id="misc_eb_reverser">
+						<source>Return Reverser to neutral</source>
+						<target>Return Reverser to neutral</target>
+					</trans-unit>
+					<trans-unit id="misc_eb_power_reverser">
+						<source>Return Power and Reverser to neutral</source>
+						<target>Return Power and Reverser to neutral</target>
+					</trans-unit>
+					<trans-unit id="language">
+						<source>Language</source>
+						<target>Language</target>
+					</trans-unit>
+				</group>
+			</group>
+		</body>
+	</file>
+</xliff>

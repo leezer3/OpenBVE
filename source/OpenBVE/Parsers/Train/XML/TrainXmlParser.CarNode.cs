@@ -5,8 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Linq;
+using LibRender;
 using OpenBve.BrakeSystems;
 using OpenBve.Parsers.Panel;
+using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
 using OpenBveApi.Interface;
 
@@ -124,7 +126,7 @@ namespace OpenBve.Parsers.Train
 						string f = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
 						if (System.IO.File.Exists(f))
 						{
-							CarObjects[Car] = ObjectManager.LoadObject(f, System.Text.Encoding.Default, false, false, false);
+							CarObjects[Car] = ObjectManager.LoadObject(f, System.Text.Encoding.Default, false);
 						}
 						break;
 					case "reversed":
@@ -133,6 +135,18 @@ namespace OpenBve.Parsers.Train
 						if (n == 1 || c.InnerText.ToLowerInvariant() == "true")
 						{
 							CarObjectsReversed[Car] = true;
+						}
+						break;
+					case "loadingsway":
+						int nm;
+						NumberFormats.TryParseIntVb6(c.InnerText, out nm);
+						if (nm == 1 || c.InnerText.ToLowerInvariant() == "true")
+						{
+							Train.Cars[Car].EnableLoadingSway = true;
+						}
+						else
+						{
+							Train.Cars[Car].EnableLoadingSway = false;
 						}
 						break;
 					case "frontbogie":
@@ -163,7 +177,7 @@ namespace OpenBve.Parsers.Train
 										string fb = OpenBveApi.Path.CombineFile(currentPath, cc.InnerText);
 										if (System.IO.File.Exists(fb))
 										{
-											BogieObjects[Car * 2] = ObjectManager.LoadObject(fb, System.Text.Encoding.Default, false, false, false);
+											BogieObjects[Car * 2] = ObjectManager.LoadObject(fb, System.Text.Encoding.Default, false);
 										}
 										break;
 									case "reversed":
@@ -206,7 +220,7 @@ namespace OpenBve.Parsers.Train
 										string fb = OpenBveApi.Path.CombineFile(currentPath, cc.InnerText);
 										if (System.IO.File.Exists(fb))
 										{
-											BogieObjects[Car * 2 + 1] = ObjectManager.LoadObject(fb, System.Text.Encoding.Default, false, false, false);
+											BogieObjects[Car * 2 + 1] = ObjectManager.LoadObject(fb, System.Text.Encoding.Default, false);
 										}
 										break;
 									case "reversed":
@@ -222,7 +236,7 @@ namespace OpenBve.Parsers.Train
 						}
 						break;
 					case "driverposition":
-						string[] splitText = c.InnerText.Split(',');
+						string[] splitText = c.InnerText.Split(new char[] { ',' });
 						if (splitText.Length != 3)
 						{
 							Interface.AddMessage(MessageType.Warning, false, "Driver position must have three arguments for Car " + Car + " in XML file " + fileName);
@@ -245,7 +259,7 @@ namespace OpenBve.Parsers.Train
 						Train.Cars[Car].Driver.Z = 0.5 * Train.Cars[Car].Length + driverZ;
 						break;
 					case "interiorview":
-						if (Train != TrainManager.PlayerTrain)
+						if (!Train.IsPlayerTrain)
 						{
 							break;
 						}
@@ -257,7 +271,7 @@ namespace OpenBve.Parsers.Train
 						};
 						Train.Cars[Car].CarSections[0].Groups[0] = new TrainManager.ElementsGroup
 						{
-							Elements = new ObjectManager.AnimatedObject[] { },
+							Elements = new AnimatedObject[] { },
 							Overlay = true
 						};
 						
@@ -317,14 +331,14 @@ namespace OpenBve.Parsers.Train
 					if (DocumentElements != null && DocumentElements.Count() != 0)
 					{
 						PanelAnimatedXmlParser.ParsePanelAnimatedXml(interiorFile, currentPath, Train, Car);
-						Train.Cars[Car].CameraRestrictionMode = Camera.RestrictionMode.NotAvailable;
+						Train.Cars[Car].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
 						return;
 					}
 					DocumentElements = CurrentXML.Root.Elements("Panel");
 					if (DocumentElements != null  && DocumentElements.Count() != 0)
 					{
 						PanelXmlParser.ParsePanelXml(interiorFile, currentPath, Train, Car);
-						Train.Cars[Car].CameraRestrictionMode = Camera.RestrictionMode.On;
+						Train.Cars[Car].CameraRestrictionMode = CameraRestrictionMode.On;
 						return;
 					}
 				}
@@ -332,25 +346,32 @@ namespace OpenBve.Parsers.Train
 				{
 					//Only supports panel2.cfg format
 					Panel2CfgParser.ParsePanel2Config(System.IO.Path.GetFileName(interiorFile), System.IO.Path.GetDirectoryName(interiorFile), Encoding.UTF8, Train, Car);
-					Train.Cars[Car].CameraRestrictionMode = Camera.RestrictionMode.On;
+					Train.Cars[Car].CameraRestrictionMode = CameraRestrictionMode.On;
 				}
 				else if (interiorFile.ToLowerInvariant().EndsWith(".animated"))
 				{
-					ObjectManager.AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(interiorFile, Encoding.UTF8);
-					try
+					
+					UnifiedObject currentObject;
+					Program.CurrentHost.LoadObject(interiorFile, Encoding.UTF8, out currentObject);
+					var a = currentObject as AnimatedObjectCollection;
+					if (a != null)
 					{
-						for (int i = 0; i < a.Objects.Length; i++)
+						try
 						{
-							a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject();
+							for (int i = 0; i < a.Objects.Length; i++)
+							{
+								ObjectManager.CreateDynamicObject(ref a.Objects[i].internalObject);
+							}
+							Train.Cars[Car].CarSections[0].Groups[0].Elements = a.Objects;
+							Train.Cars[Car].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
 						}
-						Train.Cars[Car].CarSections[0].Groups[0].Elements = a.Objects;
-						Train.Cars[Car].CameraRestrictionMode = Camera.RestrictionMode.NotAvailable;
+						catch
+						{
+							Program.RestartArguments = " ";
+							Loading.Cancel = true;
+						}
 					}
-					catch
-					{
-						Program.RestartArguments = " ";
-						Loading.Cancel = true;
-					}
+
 				}
 				else
 				{

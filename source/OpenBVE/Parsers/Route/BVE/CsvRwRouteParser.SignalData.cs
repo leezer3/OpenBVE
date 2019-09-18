@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Textures;
+﻿using OpenBveApi.Objects;
+using OpenBveApi.Textures;
 
 namespace OpenBve
 {
@@ -18,8 +19,8 @@ namespace OpenBve
 		/// </summary>
 		private class Bve4SignalData : SignalData
 		{
-			internal ObjectManager.StaticObject BaseObject;
-			internal ObjectManager.StaticObject GlowObject;
+			internal StaticObject BaseObject;
+			internal StaticObject GlowObject;
 			internal Texture[] SignalTextures;
 			internal Texture[] GlowTextures;
 		}
@@ -27,8 +28,8 @@ namespace OpenBve
 		private class CompatibilitySignalData : SignalData
 		{
 			internal readonly int[] Numbers;
-			internal readonly ObjectManager.StaticObject[] Objects;
-			internal CompatibilitySignalData(int[] Numbers, ObjectManager.StaticObject[] Objects)
+			internal readonly StaticObject[] Objects;
+			internal CompatibilitySignalData(int[] Numbers, StaticObject[] Objects)
 			{
 				this.Numbers = Numbers;
 				this.Objects = Objects;
@@ -39,7 +40,7 @@ namespace OpenBve
 		/// </summary>
 		private class AnimatedObjectSignalData : SignalData
 		{
-			internal ObjectManager.AnimatedObjectCollection Objects;
+			internal UnifiedObject Objects;
 		}
 	}
 }

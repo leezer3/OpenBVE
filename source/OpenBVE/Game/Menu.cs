@@ -5,6 +5,9 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;             // for Key
 using System;
 using System.Drawing;
+using LibRender;
+using OpenBve.RouteManager;
+using OpenBveApi;
 
 namespace OpenBve
 {
@@ -150,8 +153,8 @@ namespace OpenBve
 				switch (menuType)
 				{
 					case MenuType.Top:          // top level menu
-						for (i = 0; i < Game.Stations.Length; i++)
-							if (Game.PlayerStopsAtStation(i) & Game.Stations[i].Stops.Length > 0)
+						for (i = 0; i < CurrentRoute.Stations.Length; i++)
+							if (CurrentRoute.Stations[i].PlayerStops() & CurrentRoute.Stations[i].Stops.Length > 0)
 							{
 								jump = 1;
 								break;
@@ -176,18 +179,18 @@ namespace OpenBve
 					case MenuType.JumpToStation:    // list of stations to jump to
 													// count the number of available stations
 						menuItem = 0;
-						for (i = 0; i < Game.Stations.Length; i++)
-							if (Game.PlayerStopsAtStation(i) & Game.Stations[i].Stops.Length > 0)
+						for (i = 0; i < CurrentRoute.Stations.Length; i++)
+							if (CurrentRoute.Stations[i].PlayerStops() & CurrentRoute.Stations[i].Stops.Length > 0)
 								menuItem++;
 						// list available stations, selecting the next station as predefined choice
 						jump = 0;                           // no jump found yet
 						Items = new MenuEntry[menuItem + 1];
 						Items[0] = new MenuCommand(Translations.GetInterfaceString("menu_back"), MenuTag.MenuBack, 0);
 						menuItem = 1;
-						for (i = 0; i < Game.Stations.Length; i++)
-							if (Game.PlayerStopsAtStation(i) & Game.Stations[i].Stops.Length > 0)
+						for (i = 0; i < CurrentRoute.Stations.Length; i++)
+							if (CurrentRoute.Stations[i].PlayerStops() & CurrentRoute.Stations[i].Stops.Length > 0)
 							{
-								Items[menuItem] = new MenuCommand(Game.Stations[i].Name, MenuTag.JumpToStation, i);
+								Items[menuItem] = new MenuCommand(CurrentRoute.Stations[i].Name, MenuTag.JumpToStation, i);
 								// if no preferred jump-to-station found yet and this station is
 								// after the last station the user stopped at, select this item
 								if (jump == 0 && i > TrainManager.PlayerTrain.LastStation)
@@ -314,7 +317,7 @@ namespace OpenBve
 					{
 						continue;
 					}
-					size = Renderer.MeasureString(Game.Menu.MenuFont, Items[i].Text);
+					size = Game.Menu.MenuFont.MeasureString(Items[i].Text);
 					if (size.Width > Width)
 						Width = size.Width;
 					if (!(Items[i] is MenuCaption) && size.Width > ItemWidth)
@@ -337,7 +340,7 @@ namespace OpenBve
 		// the total line height from the top of an item to the top of the item below (in pixels)
 		private int lineHeight;
 		private SingleMenu[] Menus = { };
-		private Fonts.OpenGlFont menuFont = null;
+		private OpenGlFont menuFont = null;
 		// area occupied by the items of the current menu in screen coordinates
 		private int menuXmin, menuXmax, menuYmin, menuYmax;
 		private int topItemY;           // the top edge of top item
@@ -350,7 +353,7 @@ namespace OpenBve
 				return lineHeight;
 			}
 		}
-		internal Fonts.OpenGlFont MenuFont
+		internal OpenGlFont MenuFont
 		{
 			get
 			{
@@ -393,10 +396,10 @@ namespace OpenBve
 			// choose the text font size according to screen height
 			// the boundaries follow approximately the progression
 			// of font sizes defined in Graphics/Fonts.cs
-			if (Screen.Height <= 512) menuFont = Fonts.SmallFont;
-			else if (Screen.Height <= 680) menuFont = Fonts.NormalFont;
-			else if (Screen.Height <= 890) menuFont = Fonts.LargeFont;
-			else if (Screen.Height <= 1150) menuFont = Fonts.VeryLargeFont;
+			if (LibRender.Screen.Height <= 512) menuFont = Fonts.SmallFont;
+			else if (LibRender.Screen.Height <= 680) menuFont = Fonts.NormalFont;
+			else if (LibRender.Screen.Height <= 890) menuFont = Fonts.LargeFont;
+			else if (LibRender.Screen.Height <= 1150) menuFont = Fonts.VeryLargeFont;
 			else menuFont = Fonts.EvenLargerFont;
 			em = (int)menuFont.FontSize;
 			lineHeight = (int)(em * LineSpacing);
@@ -687,7 +690,7 @@ namespace OpenBve
 							case MenuTag.ExitToMainMenu:        // BACK TO MAIN MENU
 								Reset();
 								Program.RestartArguments =
-									Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade ? "/review" : "";
+									Interface.CurrentOptions.GameMode == GameMode.Arcade ? "/review" : "";
 								MainLoop.Quit = MainLoop.QuitMode.ExitToMenu;
 								break;
 							case MenuTag.Control:               // CONTROL CUSTOMIZATION
@@ -708,8 +711,8 @@ namespace OpenBve
 					break;
 				case Translations.Command.MiscMute:
 					// mute
-					Sounds.GlobalMute = !Sounds.GlobalMute;
-					Sounds.Update(timeElapsed, Interface.CurrentOptions.SoundModel);
+					Program.Sounds.GlobalMute = !Program.Sounds.GlobalMute;
+					Program.Sounds.Update(timeElapsed, Interface.CurrentOptions.SoundModel);
 					break;
 			}
 		}
@@ -729,30 +732,30 @@ namespace OpenBve
 			SingleMenu menu = Menus[CurrMenu];
 			// overlay background
 			GL.Color4(overlayColor.R, overlayColor.G, overlayColor.B, overlayColor.A);
-			Renderer.RenderOverlaySolid(0.0, 0.0, (double)Screen.Width, (double)Screen.Height);
+			LibRender.Renderer.RenderOverlaySolid(0.0, 0.0, (double)LibRender.Screen.Width, (double)LibRender.Screen.Height);
 			GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
 
 			// HORIZONTAL PLACEMENT: centre the menu in the main window
-			int itemLeft = (Screen.Width - menu.ItemWidth) / 2; // item left edge
+			int itemLeft = (LibRender.Screen.Width - menu.ItemWidth) / 2; // item left edge
 																// if menu alignment is left, left-align items, otherwise centre them in the screen
-			int itemX = (menu.Align & TextAlignment.Left) != 0 ? itemLeft : Screen.Width / 2;
+			int itemX = (menu.Align & TextAlignment.Left) != 0 ? itemLeft : LibRender.Screen.Width / 2;
 
 			int menuBottomItem = menu.TopItem + visibleItems - 1;
 
 			// draw the menu background
 			GL.Color4(backgroundColor.R, backgroundColor.G, backgroundColor.B, backgroundColor.A);
-			Renderer.RenderOverlaySolid(menuXmin - MenuBorderX, menuYmin - MenuBorderY,
+			LibRender.Renderer.RenderOverlaySolid(menuXmin - MenuBorderX, menuYmin - MenuBorderY,
 				menuXmax + MenuBorderX, menuYmax + MenuBorderY);
 
 			// if not starting from the top of the menu, draw a dimmed ellipsis item
 			if (menu.Selection == menu.TopItem - 1 && !isCustomisingControl)
 			{
 				GL.Color4(highlightColor.R, highlightColor.G, highlightColor.B, highlightColor.A);
-				Renderer.RenderOverlaySolid(itemLeft - MenuItemBorderX, menuYmin/*-MenuItemBorderY*/,
+				LibRender.Renderer.RenderOverlaySolid(itemLeft - MenuItemBorderX, menuYmin/*-MenuItemBorderY*/,
 					itemLeft + menu.ItemWidth + MenuItemBorderX, menuYmin + em + MenuItemBorderY * 2);
 			}
 			if (menu.TopItem > 0)
-				Renderer.DrawString(MenuFont, "...", new Point(itemX, menuYmin),
+				LibRender.Renderer.DrawString(MenuFont, "...", new Point(itemX, menuYmin),
 					menu.Align, ColourDimmed, false);
 			// draw the items
 			int itemY = topItemY;
@@ -768,17 +771,17 @@ namespace OpenBve
 					// HACK! the highlight rectangle has to be shifted a little down to match
 					// the text body. OpenGL 'feature'?
 					GL.Color4(highlightColor.R, highlightColor.G, highlightColor.B, highlightColor.A);
-					Renderer.RenderOverlaySolid(itemLeft - MenuItemBorderX, itemY/*-MenuItemBorderY*/,
+					LibRender.Renderer.RenderOverlaySolid(itemLeft - MenuItemBorderX, itemY/*-MenuItemBorderY*/,
 						itemLeft + menu.ItemWidth + MenuItemBorderX, itemY + em + MenuItemBorderY * 2);
 					// draw the text
-					Renderer.DrawString(MenuFont, menu.Items[i].Text, new Point(itemX, itemY),
+					LibRender.Renderer.DrawString(MenuFont, menu.Items[i].Text, new Point(itemX, itemY),
 						menu.Align, ColourHighlight, false);
 				}
 				else if (menu.Items[i] is MenuCaption)
-					Renderer.DrawString(MenuFont, menu.Items[i].Text, new Point(itemX, itemY),
+					LibRender.Renderer.DrawString(MenuFont, menu.Items[i].Text, new Point(itemX, itemY),
 						menu.Align, ColourCaption, false);
 				else
-					Renderer.DrawString(MenuFont, menu.Items[i].Text, new Point(itemX, itemY),
+					LibRender.Renderer.DrawString(MenuFont, menu.Items[i].Text, new Point(itemX, itemY),
 						menu.Align, ColourNormal, false);
 				itemY += lineHeight;
 			}
@@ -787,12 +790,12 @@ namespace OpenBve
 			if (menu.Selection == menu.TopItem + visibleItems)
 			{
 				GL.Color4(highlightColor.R, highlightColor.G, highlightColor.B, highlightColor.A);
-				Renderer.RenderOverlaySolid(itemLeft - MenuItemBorderX, itemY/*-MenuItemBorderY*/,
+				LibRender.Renderer.RenderOverlaySolid(itemLeft - MenuItemBorderX, itemY/*-MenuItemBorderY*/,
 					itemLeft + menu.ItemWidth + MenuItemBorderX, itemY + em + MenuItemBorderY * 2);
 			}
 			// if not at the end of the menu, draw a dimmed ellipsis item at the bottom
 			if (i < menu.Items.Length - 1)
-				Renderer.DrawString(MenuFont, "...", new Point(itemX, itemY),
+				LibRender.Renderer.DrawString(MenuFont, "...", new Point(itemX, itemY),
 					menu.Align, ColourDimmed, false);
 		}
 
@@ -810,10 +813,10 @@ namespace OpenBve
 
 			SingleMenu menu = Menus[CurrMenu];
 			// HORIZONTAL PLACEMENT: centre the menu in the main window
-			menuXmin = (Screen.Width - menu.Width) / 2;     // menu left edge (border excluded)
+			menuXmin = (LibRender.Screen.Width - menu.Width) / 2;     // menu left edge (border excluded)
 			menuXmax = menuXmin + menu.Width;               // menu right edge (border excluded)
 															// VERTICAL PLACEMENT: centre the menu in the main window
-			menuYmin = (Screen.Height - menu.Height) / 2;       // menu top edge (border excluded)
+			menuYmin = (LibRender.Screen.Height - menu.Height) / 2;       // menu top edge (border excluded)
 			menuYmax = menuYmin + menu.Height;              // menu bottom edge (border excluded)
 			topItemY = menuYmin;                                // top edge of top item
 																// assume all items fit in the screen
@@ -824,14 +827,14 @@ namespace OpenBve
 			if (menuYmin < MenuBorderY)
 			{
 				// the number of lines which fit in the screen
-				int numOfLines = (Screen.Height - MenuBorderY * 2) / lineHeight;
+				int numOfLines = (LibRender.Screen.Height - MenuBorderY * 2) / lineHeight;
 				visibleItems = numOfLines - 2;                  // at least an empty line at the top and at the bottom
 																// split the menu in chunks of 'visibleItems' items
 																// and display the chunk which contains the currently selected item
 				menu.TopItem = menu.Selection - (menu.Selection % visibleItems);
 				visibleItems = menu.Items.Length - menu.TopItem < visibleItems ?    // in the last chunk,
 					menu.Items.Length - menu.TopItem : visibleItems;                // display remaining items only
-				menuYmin = (Screen.Height - numOfLines * lineHeight) / 2;
+				menuYmin = (LibRender.Screen.Height - numOfLines * lineHeight) / 2;
 				menuYmax = menuYmin + numOfLines * lineHeight;
 				// first menu item is drawn on second line (first line is empty
 				// on first screen and contains an ellipsis on following screens

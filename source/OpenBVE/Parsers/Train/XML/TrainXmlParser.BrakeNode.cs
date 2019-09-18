@@ -227,8 +227,8 @@ namespace OpenBve.Parsers.Train
 						break;
 				}
 			}
-			Train.Cars[Car].CarBrake.airCompressor = new Compressor(compressorRate);
 			Train.Cars[Car].CarBrake.mainReservoir = new MainReservoir(compressorMinimumPressure, compressorMaximumPressure, 0.01, (Train.Handles.Brake is TrainManager.AirBrakeHandle ? 0.25 : 0.075) / Train.Cars.Length);
+			Train.Cars[Car].CarBrake.airCompressor = new Compressor(compressorRate, Train.Cars[Car].CarBrake.mainReservoir, Train.Cars[Car]);
 			Train.Cars[Car].CarBrake.equalizingReservoir = new EqualizingReservoir(equalizingReservoirServiceRate, equalizingReservoirEmergencyRate, equalizingReservoirChargeRate);
 			Train.Cars[Car].CarBrake.equalizingReservoir.NormalPressure = 1.005 * brakePipeNormalPressure;
 				

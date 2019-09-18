@@ -1,9 +1,14 @@
 ﻿using System;
+using LibRender;
+using OpenBve.RouteManager;
+using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
+using OpenBveApi.Trains;
 using OpenTK.Graphics.OpenGL;
+using static LibRender.CameraProperties;
 
 namespace OpenBve
 {
@@ -19,16 +24,16 @@ namespace OpenBve
 		{
 			//Initialize openGL
 			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-			GL.Enable(EnableCap.Blend); BlendEnabled = true;
+			GL.Enable(EnableCap.Blend); LibRender.Renderer.BlendEnabled = true;
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.PushMatrix();
 			GL.LoadIdentity();
-			GL.Ortho(0.0, (double)Screen.Width, (double)Screen.Height, 0.0, -1.0, 1.0);
+			GL.Ortho(0.0, (double)LibRender.Screen.Width, (double)LibRender.Screen.Height, 0.0, -1.0, 1.0);
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.PushMatrix();
 			GL.LoadIdentity();
 			//Check which overlays to show
-			switch (CurrentOutputMode)
+			switch (LibRender.Renderer.CurrentOutputMode)
 			{
 				case OutputMode.Default:
 					
@@ -63,17 +68,17 @@ namespace OpenBve
 							}
 						}
 						//Marker textures
-						if (Interface.CurrentOptions.GameMode != Interface.GameMode.Expert)
+						if (Interface.CurrentOptions.GameMode != GameMode.Expert)
 						{
 							double y = 8.0;
-							for (int i = 0; i < Game.MarkerTextures.Length; i++)
+							for (int i = 0; i < LibRender.Renderer.MarkerTextures.Length; i++)
 							{
-								if (Textures.LoadTexture(Game.MarkerTextures[i], OpenGlTextureWrapMode.ClampClamp))
+								if (Program.CurrentHost.LoadTexture(LibRender.Renderer.MarkerTextures[i], OpenGlTextureWrapMode.ClampClamp))
 								{
-									double w = (double)Game.MarkerTextures[i].Width;
-									double h = (double)Game.MarkerTextures[i].Height;
+									double w = (double)LibRender.Renderer.MarkerTextures[i].Width;
+									double h = (double)LibRender.Renderer.MarkerTextures[i].Height;
 									GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
-									RenderOverlayTexture(Game.MarkerTextures[i], (double)Screen.Width - w - 8.0, y, (double)Screen.Width - 8.0, y + h);
+									LibRender.Renderer.RenderOverlayTexture(LibRender.Renderer.MarkerTextures[i], (double)LibRender.Screen.Width - w - 8.0, y, (double)LibRender.Screen.Width - 8.0, y + h);
 									y += h + 8.0;
 								}
 							}
@@ -83,33 +88,33 @@ namespace OpenBve
 						if (Timetable.CurrentTimetable == Timetable.TimetableState.Default)
 						{
 							// default
-							if (Textures.LoadTexture(Timetable.DefaultTimetableTexture, OpenGlTextureWrapMode.ClampClamp))
+							if (Program.CurrentHost.LoadTexture(Timetable.DefaultTimetableTexture, OpenGlTextureWrapMode.ClampClamp))
 							{
 								int w = Timetable.DefaultTimetableTexture.Width;
 								int h = Timetable.DefaultTimetableTexture.Height;
 								GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
-								RenderOverlayTexture(Timetable.DefaultTimetableTexture, (double)(Screen.Width - w), Timetable.DefaultTimetablePosition, (double)Screen.Width, (double)h + Timetable.DefaultTimetablePosition);
+								LibRender.Renderer.RenderOverlayTexture(Timetable.DefaultTimetableTexture, (double)(LibRender.Screen.Width - w), Timetable.DefaultTimetablePosition, (double)LibRender.Screen.Width, (double)h + Timetable.DefaultTimetablePosition);
 							}
 						}
 						else if (Timetable.CurrentTimetable == Timetable.TimetableState.Custom & Timetable.CustomObjectsUsed == 0)
 					{
 						// custom
-						if (Textures.LoadTexture(Timetable.CurrentCustomTimetableDaytimeTexture, OpenGlTextureWrapMode.ClampClamp))
+						if (Program.CurrentHost.LoadTexture(Timetable.CurrentCustomTimetableDaytimeTexture, OpenGlTextureWrapMode.ClampClamp))
 						{
 							int w = Timetable.CurrentCustomTimetableDaytimeTexture.Width;
 							int h = Timetable.CurrentCustomTimetableDaytimeTexture.Height;
 							GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
-							RenderOverlayTexture(Timetable.CurrentCustomTimetableDaytimeTexture, (double) (Screen.Width - w), Timetable.CustomTimetablePosition, (double) Screen.Width, (double) h + Timetable.CustomTimetablePosition);
+							LibRender.Renderer.RenderOverlayTexture(Timetable.CurrentCustomTimetableDaytimeTexture, (double) (LibRender.Screen.Width - w), Timetable.CustomTimetablePosition, (double) LibRender.Screen.Width, (double) h + Timetable.CustomTimetablePosition);
 						}
 
-						if (Textures.LoadTexture(Timetable.CurrentCustomTimetableDaytimeTexture, OpenGlTextureWrapMode.ClampClamp))
+						if (Program.CurrentHost.LoadTexture(Timetable.CurrentCustomTimetableDaytimeTexture, OpenGlTextureWrapMode.ClampClamp))
 						{
 							int w = Timetable.CurrentCustomTimetableDaytimeTexture.Width;
 							int h = Timetable.CurrentCustomTimetableDaytimeTexture.Height;
 							float alpha;
 							if (Timetable.CurrentCustomTimetableDaytimeTexture != null)
 							{
-								double t = (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].FrontAxle.Follower.TrackPosition - TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Brightness.PreviousTrackPosition) / (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Brightness.NextTrackPosition - TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Brightness.PreviousTrackPosition);
+								double t = (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].TrackPosition - TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Brightness.PreviousTrackPosition) / (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Brightness.NextTrackPosition - TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Brightness.PreviousTrackPosition);
 								alpha = (float) ((1.0 - t) * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Brightness.PreviousBrightness + t * TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].Brightness.NextBrightness);
 							}
 							else
@@ -118,7 +123,7 @@ namespace OpenBve
 							}
 
 							GL.Color4(1.0f, 1.0f, 1.0f, alpha);
-							RenderOverlayTexture(Timetable.CurrentCustomTimetableDaytimeTexture, (double) (Screen.Width - w), Timetable.CustomTimetablePosition, (double) Screen.Width, (double) h + Timetable.CustomTimetablePosition);
+							LibRender.Renderer.RenderOverlayTexture(Timetable.CurrentCustomTimetableDaytimeTexture, (double) (LibRender.Screen.Width - w), Timetable.CustomTimetablePosition, (double) LibRender.Screen.Width, (double) h + Timetable.CustomTimetablePosition);
 						}
 					}
 					break;
@@ -130,7 +135,7 @@ namespace OpenBve
 					break;
 			}
 			// air brake debug output
-			if (Interface.CurrentOptions.GameMode != Interface.GameMode.Expert & OptionBrakeSystems)
+			if (Interface.CurrentOptions.GameMode != GameMode.Expert & OptionBrakeSystems)
 			{
 				RenderBrakeSystemDebug();
 			}
@@ -139,16 +144,16 @@ namespace OpenBve
 			{
 				// pause
 				GL.Color4(0.0f, 0.0f, 0.0f, 0.5f);
-				RenderOverlaySolid(0.0, 0.0, (double)Screen.Width, (double)Screen.Height);
+				LibRender.Renderer.RenderOverlaySolid(0.0, 0.0, (double)LibRender.Screen.Width, (double)LibRender.Screen.Height);
 				GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
-				DrawString(Fonts.VeryLargeFont, "PAUSE", new System.Drawing.Point(Screen.Width / 2, Screen.Height / 2), TextAlignment.CenterMiddle, Color128.White, true);
+				LibRender.Renderer.DrawString(Fonts.VeryLargeFont, "PAUSE", new System.Drawing.Point(LibRender.Screen.Width / 2, LibRender.Screen.Height / 2), TextAlignment.CenterMiddle, Color128.White, true);
 			}
 			else if (Game.CurrentInterface == Game.InterfaceType.Menu)
 				Game.Menu.Draw();
 			//Fade to black on change ends
-			if (TrainManager.PlayerTrain.Station >= 0 && Game.Stations[TrainManager.PlayerTrain.Station].Type == StationType.ChangeEnds && TrainManager.PlayerTrain.StationState == TrainManager.TrainStopState.Boarding)
+			if (TrainManager.PlayerTrain.Station >= 0 && CurrentRoute.Stations[TrainManager.PlayerTrain.Station].Type == StationType.ChangeEnds && TrainManager.PlayerTrain.StationState == TrainStopState.Boarding)
 			{
-				double time = TrainManager.PlayerTrain.StationDepartureTime - Game.SecondsSinceMidnight;
+				double time = TrainManager.PlayerTrain.StationDepartureTime - CurrentRoute.SecondsSinceMidnight;
 				if (time < 1.0)
 				{
 					FadeToBlackDueToChangeEnds = Math.Max(0.0, 1.0 - time);
@@ -170,10 +175,10 @@ namespace OpenBve
 					FadeToBlackDueToChangeEnds = 0.0;
 				}
 			}
-			if (FadeToBlackDueToChangeEnds > 0.0 & (World.CameraMode == CameraViewMode.Interior | World.CameraMode == CameraViewMode.InteriorLookAhead))
+			if (FadeToBlackDueToChangeEnds > 0.0 & (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead))
 			{
 				GL.Color4(0.0, 0.0, 0.0, FadeToBlackDueToChangeEnds);
-				RenderOverlaySolid(0.0, 0.0, (double)Screen.Width, (double)Screen.Height);
+				LibRender.Renderer.RenderOverlaySolid(0.0, 0.0, (double)LibRender.Screen.Width, (double)LibRender.Screen.Height);
 			}
 			// finalize
 			GL.PopMatrix();

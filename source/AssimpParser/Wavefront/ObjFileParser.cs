@@ -80,8 +80,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
-using OpenTK;
+using OpenBveApi.Math;
 
 namespace AssimpNET.Obj
 {
@@ -170,7 +171,7 @@ namespace AssimpNET.Obj
 										GetTwoVectors3(Model.Vertices, Model.VertexColors);
 										break;
 									default:
-										throw new Exception(numComponents + " arguments were supplied. A vertex must supply either 3, 4 or 6 arguments.");
+										throw new InvalidDataException(numComponents + " arguments were supplied. A vertex must supply either 3, 4 or 6 arguments.");
 								}
 							}
 							else if (Buffer[DataIt] == 't')
@@ -205,7 +206,7 @@ namespace AssimpNET.Obj
 
 							GetNameNoSpace(DataIt, DataEnd, out name);
 
-							int nextSpace = name.IndexOf(" ", StringComparison.InvariantCulture);
+							int nextSpace = name.IndexOf(" ", StringComparison.OrdinalIgnoreCase);
 							if (nextSpace != -1)
 							{
 								name = name.Substring(0, nextSpace);
@@ -223,7 +224,7 @@ namespace AssimpNET.Obj
 
 							GetNameNoSpace(DataIt, DataEnd, out name);
 
-							int nextSpace = name.IndexOf(" ", StringComparison.InvariantCulture);
+							int nextSpace = name.IndexOf(" ", StringComparison.OrdinalIgnoreCase);
 							if (nextSpace != -1)
 							{
 								name = name.Substring(0, nextSpace);
@@ -274,25 +275,25 @@ namespace AssimpNET.Obj
 			{
 				case 2:
 					CopyNextWord(out tmp);
-					v.X = float.Parse(tmp);
+					v.X = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 
 					CopyNextWord(out tmp);
-					v.Y = float.Parse(tmp);
+					v.Y = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 
 					v.Z = 0.0f;
 					break;
 				case 3:
 					CopyNextWord(out tmp);
-					v.X = float.Parse(tmp);
+					v.X = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 
 					CopyNextWord(out tmp);
-					v.Y = float.Parse(tmp);
+					v.Y = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 
 					CopyNextWord(out tmp);
-					v.Z = float.Parse(tmp);
+					v.Z = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 					break;
 				default:
-					throw new Exception(numComponents + " arguments were supplied. A vector must supply either 2 or 3 arguments.");
+					throw new InvalidDataException(numComponents + " arguments were supplied. A vector must supply either 2 or 3 arguments.");
 			}
 			point3dArray.Add(v);
 			DataIt = SkipLine(DataIt, DataEnd, ref Line);
@@ -303,13 +304,13 @@ namespace AssimpNET.Obj
 			Vector3 v;
 			string tmp;
 			CopyNextWord(out tmp);
-			v.X = float.Parse(tmp);
+			v.X = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 
 			CopyNextWord(out tmp);
-			v.Y = float.Parse(tmp);
+			v.Y = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 
 			CopyNextWord(out tmp);
-			v.Z = float.Parse(tmp);
+			v.Z = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 
 			point3dArray.Add(v);
 			DataIt = SkipLine(DataIt, DataEnd, ref Line);
@@ -320,16 +321,16 @@ namespace AssimpNET.Obj
 			Vector3 v;
 			string tmp;
 			CopyNextWord(out tmp);
-			v.X = float.Parse(tmp);
+			v.X = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 
 			CopyNextWord(out tmp);
-			v.Y = float.Parse(tmp);
+			v.Y = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 
 			CopyNextWord(out tmp);
-			v.Z = float.Parse(tmp);
+			v.Z = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 
 			CopyNextWord(out tmp);
-			float w = float.Parse(tmp);
+			float w = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 
 			Debug.Assert(w != 0);
 
@@ -343,25 +344,25 @@ namespace AssimpNET.Obj
 			Vector3 a;
 			string tmp;
 			CopyNextWord(out tmp);
-			a.X = float.Parse(tmp);
+			a.X = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 
 			CopyNextWord(out tmp);
-			a.Y = float.Parse(tmp);
+			a.Y = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 
 			CopyNextWord(out tmp);
-			a.Z = float.Parse(tmp);
+			a.Z = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 
 			point3dArrayA.Add(a);
 
 			Vector3 b;
 			CopyNextWord(out tmp);
-			b.X = float.Parse(tmp);
+			b.X = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 
 			CopyNextWord(out tmp);
-			b.Y = float.Parse(tmp);
+			b.Y = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 
 			CopyNextWord(out tmp);
-			b.Z = float.Parse(tmp);
+			b.Z = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 
 			point3dArrayB.Add(b);
 
@@ -475,7 +476,7 @@ namespace AssimpNET.Obj
 					else
 					{
 						//On error, std::atoi will return 0 which is not a valid value
-						throw new Exception("OBJ: Invalid face indice");
+						throw new InvalidDataException("OBJ: Invalid face indice");
 					}
 				}
 				DataIt += iStep;
@@ -534,7 +535,7 @@ namespace AssimpNET.Obj
 		{
 			Debug.Assert(Model != null);
 
-			Model.Current = new Object();
+			Model.Current = new WavefrontObject();
 			Model.Current.ObjName = objName;
 			Model.Objects.Add(Model.Current);
 
@@ -599,7 +600,7 @@ namespace AssimpNET.Obj
 			bool skip = false;
 
 			string name = Buffer.Substring(start, DataIt - start);
-			name = name.Trim();
+			name = name.Trim(new char[] { });
 			if (name.Length == 0)
 			{
 				skip = true;

@@ -22,6 +22,8 @@ namespace OpenBve {
 			internal OpenBveApi.Textures.TextureInterface Texture;
 			/// <summary>The interface to load sounds as exposed by the plugin, or a null reference.</summary>
 			internal OpenBveApi.Sounds.SoundInterface Sound;
+			/// <summary>The interface to load objects as exposed by the plugin, or a null reference.</summary>
+			internal OpenBveApi.Objects.ObjectInterface Object;
 			// --- constructors ---
 			/// <summary>Creates a new instance of this class.</summary>
 			/// <param name="file">The plugin file.</param>
@@ -40,6 +42,11 @@ namespace OpenBve {
 				if (this.Sound != null) {
 					this.Sound.Load(Program.CurrentHost);
 				}
+				if (this.Object != null) {
+					this.Object.Load(Program.CurrentHost, Program.FileSystem);
+					this.Object.SetObjectParser(Interface.CurrentOptions.CurrentXParser);
+					this.Object.SetObjectParser(Interface.CurrentOptions.CurrentObjParser);
+				}
 			}
 			/// <summary>Unloads all interfaces this plugin supports.</summary>
 			internal void Unload() {
@@ -48,6 +55,10 @@ namespace OpenBve {
 				}
 				if (this.Sound != null) {
 					this.Sound.Unload();
+				}
+				if (this.Object != null)
+				{
+					this.Object.Unload();
 				}
 			}
 		}
@@ -84,16 +95,17 @@ namespace OpenBve {
 						#endif
 						Plugin plugin = new Plugin(file);
 						Assembly assembly;
+						Type[] types;
 						try
 						{
 							assembly = Assembly.LoadFile(file);
+							types = assembly.GetTypes();
 						}
 						catch
 						{
 							builder.Append("Plugin ").Append(Path.GetFileName(file)).AppendLine(" is not a .Net assembly.");
 							continue;
 						}
-						Type[] types = assembly.GetTypes();
 						bool iruntime = false;
 						foreach (Type type in types) {
 							if (type.FullName == null)
@@ -106,11 +118,14 @@ namespace OpenBve {
 							if (type.IsSubclassOf(typeof(OpenBveApi.Sounds.SoundInterface))) {
 								plugin.Sound = (OpenBveApi.Sounds.SoundInterface)assembly.CreateInstance(type.FullName);
 							}
+							if (type.IsSubclassOf(typeof(OpenBveApi.Objects.ObjectInterface))) {
+								plugin.Object = (OpenBveApi.Objects.ObjectInterface)assembly.CreateInstance(type.FullName);
+							}
 							if (typeof(OpenBveApi.Runtime.IRuntime).IsAssignableFrom(type)) {
 								iruntime = true;
 							}
 						}
-						if (plugin.Texture != null | plugin.Sound != null) {
+						if (plugin.Texture != null | plugin.Sound != null | plugin.Object != null) {
 							plugin.Load();
 							list.Add(plugin);
 						} else if (!iruntime) {
@@ -132,7 +147,7 @@ namespace OpenBve {
 				                " Please re-download openBVE.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return false;
 			}
-			string message = builder.ToString().Trim();
+			string message = builder.ToString().Trim(new char[] { });
 			if (message.Length != 0) {
 				return MessageBox.Show(message, Application.ProductName, MessageBoxButtons.OKCancel, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button2) == DialogResult.OK;
 			} else {
@@ -158,7 +173,7 @@ namespace OpenBve {
 				}
 				LoadedPlugins = null;
 			}
-			string message = builder.ToString().Trim();
+			string message = builder.ToString().Trim(new char[] { });
 			if (message.Length != 0) {
 				MessageBox.Show(message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 			}

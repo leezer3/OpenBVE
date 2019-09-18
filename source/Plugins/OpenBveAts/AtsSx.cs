@@ -29,7 +29,7 @@ namespace Plugin {
 		// --- members ---
 		
 		/// <summary>The underlying train.</summary>
-		private Train Train;
+		private readonly Train Train;
 		
 		/// <summary>The current state of the system.</summary>
 		internal States State;

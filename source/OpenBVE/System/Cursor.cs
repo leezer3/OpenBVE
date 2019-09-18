@@ -94,7 +94,7 @@ namespace OpenBve
 
 	internal static class Cursors
 	{
-		internal static List<Cursor> CursorList = new List<Cursor>();
+		internal static readonly List<Cursor> CursorList = new List<Cursor>();
 		internal static MouseCursor CurrentCursor;
 		internal static MouseCursor CurrentCursorPlus;
 		internal static MouseCursor CurrentCursorMinus;

@@ -1,34 +1,17 @@
 ﻿using System;
-using System.Text;
 using System.Globalization;
+using System.Text;
+using LibRender;
+using OpenBveApi;
 using OpenBveApi.Graphics;
+using OpenBveApi.Objects;
 using OpenBveApi.Packages;
+using SoundManager;
 
 namespace OpenBve
 {
 	internal partial class Interface
 	{
-		/// <summary>Defines the levels of motion blur</summary>
-		internal enum MotionBlurMode
-		{
-			/// <summary>Motion blur is disabled</summary>
-			None = 0,
-			/// <summary>Low motion blur</summary>
-			Low = 1,
-			/// <summary>Medium motion blur</summary>
-			Medium = 2,
-			/// <summary>High motion blur</summary>
-			High = 3
-		}
-
-		/// <summary>Defines the range at which a sound will be loaded</summary>
-		internal enum SoundRange
-		{
-			Low = 0,
-			Medium = 1,
-			High = 2
-		}
-
 		/// <summary>Defines the possible timetable display modes</summary>
 		internal enum TimeTableMode
 		{
@@ -41,75 +24,19 @@ namespace OpenBve
 			/// <summary>The auto-generated timetable will be displayed only if no custom timetable is available</summary>
 			PreferCustom = 3
 		}
-		internal enum GameMode
-		{
-			Arcade = 0,
-			Normal = 1,
-			Expert = 2,
-		}
+		
 
-		internal enum XParsers
+		internal class Options : BaseOptions
 		{
-			/// <summary>Michelle's original parser</summary>
-			Original = 0,
-			/// <summary>The new X parser</summary>
-			NewXParser = 1,
-			/// <summary>C# port of Assimp</summary>
-			Assimp = 2
-		}
-
-		internal enum ObjParsers
-		{
-			/// <summary>Original parser</summary>
-			Original = 0,
-			/// <summary>C# port of Assimp</summary>
-			Assimp = 1
-		}
-
-		internal class Options
-		{
-			/// <summary>The ISO 639-1 code for the current user interface language</summary>
-			internal string LanguageCode;
-			/// <summary>Whether the program is to be run in full-screen mode</summary>
-			internal bool FullscreenMode;
-			/// <summary>Whether the program is to be rendered using vertical syncronisation</summary>
-			internal bool VerticalSynchronization;
-			/// <summary>The screen width (Windowed Mode)</summary>
-			internal int WindowWidth;
-			/// <summary>The screen height (Windowed Mode)</summary>
-			internal int WindowHeight;
-			/// <summary>The screen width (Fullscreen Mode)</summary>
-			internal int FullscreenWidth;
-			/// <summary>The screen height (Fullscreen Mode)</summary>
-			internal int FullscreenHeight;
-			/// <summary>The number of bits per pixel (Only relevant in fullscreen mode)</summary>
-			internal int FullscreenBits;
 			/// <summary>The on disk folder in which user interface components are stored</summary>
 			internal string UserInterfaceFolder;
-			/// <summary>The current pixel interpolation mode </summary>
-			internal InterpolationMode Interpolation;
-			/// <summary>The current transparency quality mode</summary>
-			internal TransparencyMode TransparencyMode;
-			/// <summary>The level of anisotropic filtering to be applied</summary>
-			internal int AnisotropicFilteringLevel;
-			/// <summary>The maximum level of anisotropic filtering supported by the system</summary>
-			internal int AnisotropicFilteringMaximum;
 			/// <summary>The accelerated time factor (1x to 5x)</summary>
 			internal int TimeAccelerationFactor;
-			/// <summary>The level of antialiasing to be applied</summary>
-			internal int AntiAliasingLevel;
 			/// <summary>The viewing distance in meters</summary>
 			internal int ViewingDistance;
 			/// <summary>The current type of motion blur</summary>
 			internal MotionBlurMode MotionBlur;
-			/*
-			 * Note: Object optimisation takes time whilst loading, but may increase the render performance of an
-			 * object by checking for duplicate vertices etc.
-			 */
-			/// <summary>The minimum number of vertices for basic optimisation to be performed on an object</summary>
-			internal int ObjectOptimizationBasicThreshold;
-			/// <summary>The minimum number of verticies for full optimisation to be performed on an object</summary>
-			internal int ObjectOptimizationFullThreshold;
+			
 			/// <summary>Whether duplicate verticies are culled during loading</summary>
 			internal bool ObjectOptimizationVertexCulling;
 			/// <summary>Whether toppling is enabled</summary>
@@ -131,11 +58,9 @@ namespace OpenBve
 			/// <summary>The interval at which a held down key will repeat after the intial delay</summary>
 			internal double KeyRepeatInterval;
 			/// <summary>The current sound model</summary>
-			internal Sounds.SoundModels SoundModel;
+			internal SoundModels SoundModel;
 			/// <summary>The range outside of which sounds will be inaudible</summary>
 			internal SoundRange SoundRange;
-			/// <summary>The maximum number of sounds playing at any one time</summary>
-			internal int SoundNumber;
 			/// <summary>Whether warning messages are to be shown</summary>
 			internal bool ShowWarningMessages;
 			/// <summary>Whether error messages are to be shown</summary>
@@ -183,8 +108,7 @@ namespace OpenBve
 			internal bool Panel2ExtendedMode;
 			internal int Panel2ExtendedMinSize;
 
-			internal XParsers CurrentXParser;
-			internal ObjParsers CurrentObjParser;
+			
 
 			internal TimeTableMode TimeTableStyle;
 
@@ -193,12 +117,7 @@ namespace OpenBve
 			 * Only relevant in developer mode, not saved
 			 */
 			internal bool ShowEvents = false;
-			/*
-			 * Note: Disabling texture resizing may produce artifacts at the edges of textures,
-			 * and may display issues with certain graphics cards.
-			 */
-			/// <summary>Whether textures are to be resized to the power of two rule</summary>
-			internal bool NoTextureResize;
+
 			/// <summary>Whether we are currently in kiosk mode</summary>
 			internal bool KioskMode;
 			/// <summary>The timer before AI controls are enabled in kiosk mode</summary>
@@ -241,8 +160,8 @@ namespace OpenBve
 				this.JoystickAxisThreshold = 0.0;
 				this.KeyRepeatDelay = 0.5;
 				this.KeyRepeatInterval = 0.1;
-				this.SoundModel = Sounds.SoundModels.Inverse;
-				this.SoundRange = SoundRange.Low;
+				SoundModel = SoundModels.Inverse;
+				SoundRange = SoundRange.Low;
 				this.SoundNumber = 16;
 				this.ShowWarningMessages = true;
 				this.ShowErrorMessages = true;
@@ -261,7 +180,6 @@ namespace OpenBve
 				this.DisableDisplayLists = false;
 				this.LoadInAdvance = false;
 				this.UnloadUnusedTextures = false;
-				this.NoTextureResize = false;
 				this.ProxyUrl = string.Empty;
 				this.ProxyUserName = string.Empty;
 				this.ProxyPassword = string.Empty;
@@ -307,12 +225,12 @@ namespace OpenBve
 				string Section = "";
 				for (int i = 0; i < Lines.Length; i++)
 				{
-					Lines[i] = Lines[i].Trim();
+					Lines[i] = Lines[i].Trim(new char[] { });
 					if (Lines[i].Length != 0 && !Lines[i].StartsWith(";", StringComparison.OrdinalIgnoreCase))
 					{
 						if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))
 						{
-							Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim().ToLowerInvariant();
+							Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim(new char[] { }).ToLowerInvariant();
 						}
 						else
 						{
@@ -321,7 +239,7 @@ namespace OpenBve
 							if (j >= 0)
 							{
 								Key = Lines[i].Substring(0, j).TrimEnd().ToLowerInvariant();
-								Value = Lines[i].Substring(j + 1).TrimStart();
+								Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 							}
 							else
 							{
@@ -454,9 +372,6 @@ namespace OpenBve
 										case "unloadtextures":
 											Interface.CurrentOptions.UnloadUnusedTextures = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
-										case "notextureresize":
-											Interface.CurrentOptions.NoTextureResize = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
 									} break;
 								case "quality":
 									switch (Key)
@@ -515,8 +430,13 @@ namespace OpenBve
 										case "viewingdistance":
 											{
 												int a;
-												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
-												Interface.CurrentOptions.ViewingDistance = a;
+												if (int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+												{
+													if (a >= 100 && a <= 10000)
+													{
+														Interface.CurrentOptions.ViewingDistance = a;
+													}
+												}
 											} break;
 										case "motionblur":
 											switch (Value.ToLowerInvariant())
@@ -568,10 +488,10 @@ namespace OpenBve
 										case "mode":
 											switch (Value.ToLowerInvariant())
 											{
-												case "arcade": Interface.CurrentOptions.GameMode = Interface.GameMode.Arcade; break;
-												case "normal": Interface.CurrentOptions.GameMode = Interface.GameMode.Normal; break;
-												case "expert": Interface.CurrentOptions.GameMode = Interface.GameMode.Expert; break;
-												default: Interface.CurrentOptions.GameMode = Interface.GameMode.Normal; break;
+												case "arcade": Interface.CurrentOptions.GameMode = GameMode.Arcade; break;
+												case "normal": Interface.CurrentOptions.GameMode = GameMode.Normal; break;
+												case "expert": Interface.CurrentOptions.GameMode = GameMode.Expert; break;
+												default: Interface.CurrentOptions.GameMode = GameMode.Normal; break;
 											} break;
 										case "acceleratedtimefactor":
 											int tf;
@@ -626,17 +546,17 @@ namespace OpenBve
 										case "model":
 											switch (Value.ToLowerInvariant())
 											{
-												case "linear": Interface.CurrentOptions.SoundModel = Sounds.SoundModels.Linear; break;
-												default: Interface.CurrentOptions.SoundModel = Sounds.SoundModels.Inverse; break;
+												case "linear": CurrentOptions.SoundModel = SoundModels.Linear; break;
+												default: CurrentOptions.SoundModel = SoundModels.Inverse; break;
 											}
 											break;
 										case "range":
 											switch (Value.ToLowerInvariant())
 											{
-												case "low": Interface.CurrentOptions.SoundRange = SoundRange.Low; break;
-												case "medium": Interface.CurrentOptions.SoundRange = SoundRange.Medium; break;
-												case "high": Interface.CurrentOptions.SoundRange = SoundRange.High; break;
-												default: Interface.CurrentOptions.SoundRange = SoundRange.Low; break;
+												case "low": CurrentOptions.SoundRange = SoundRange.Low; break;
+												case "medium": CurrentOptions.SoundRange = SoundRange.Medium; break;
+												case "high": CurrentOptions.SoundRange = SoundRange.High; break;
+												default: CurrentOptions.SoundRange = SoundRange.Low; break;
 											}
 											break;
 										case "number":
@@ -892,7 +812,6 @@ namespace OpenBve
 			Builder.AppendLine("disableDisplayLists = " + (CurrentOptions.DisableDisplayLists ? "true" : "false"));
 			Builder.AppendLine("loadInAdvance = " + (CurrentOptions.LoadInAdvance ? "true" : "false"));
 			Builder.AppendLine("unloadtextures = " + (CurrentOptions.UnloadUnusedTextures ? "true" : "false"));
-			Builder.AppendLine("noTextureResize = " + (CurrentOptions.NoTextureResize ? "true" : "false"));
 			Builder.AppendLine();
 			Builder.AppendLine("[quality]");
 			{
@@ -939,9 +858,9 @@ namespace OpenBve
 			Builder.Append("mode = ");
 			switch (CurrentOptions.GameMode)
 			{
-				case Interface.GameMode.Arcade: Builder.AppendLine("arcade"); break;
-				case Interface.GameMode.Normal: Builder.AppendLine("normal"); break;
-				case Interface.GameMode.Expert: Builder.AppendLine("expert"); break;
+				case GameMode.Arcade: Builder.AppendLine("arcade"); break;
+				case GameMode.Normal: Builder.AppendLine("normal"); break;
+				case GameMode.Expert: Builder.AppendLine("expert"); break;
 				default: Builder.AppendLine("normal"); break;
 			}
 			Builder.AppendLine("acceleratedtimefactor = " + CurrentOptions.TimeAccelerationFactor);
@@ -964,7 +883,7 @@ namespace OpenBve
 			Builder.Append("model = ");
 			switch (CurrentOptions.SoundModel)
 			{
-				case Sounds.SoundModels.Linear: Builder.AppendLine("linear"); break;
+				case SoundModels.Linear: Builder.AppendLine("linear"); break;
 				default: Builder.AppendLine("inverse"); break;
 			}
 			Builder.Append("range = ");

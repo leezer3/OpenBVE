@@ -154,12 +154,12 @@ namespace OpenBveApi
 		/// <param name="String">The string to trim.</param>
 		public static string RemoveEnclosingQuotes(this string String)
 		{
-			if (String.StartsWith("'") && String.EndsWith("'"))
+			if (String.StartsWith("'", StringComparison.InvariantCultureIgnoreCase) && String.EndsWith("'", StringComparison.InvariantCultureIgnoreCase))
 			{
 				String = String.Substring(1, String.Length - 2);
 			}
 
-			if (String.StartsWith("\"") && String.EndsWith("\""))
+			if (String.StartsWith("\"", StringComparison.InvariantCultureIgnoreCase) && String.EndsWith("\"", StringComparison.InvariantCultureIgnoreCase))
 			{
 				String = String.Substring(1, String.Length - 2);
 			}

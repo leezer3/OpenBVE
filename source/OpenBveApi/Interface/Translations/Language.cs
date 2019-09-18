@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Windows.Forms;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace OpenBveApi.Interface
 {
@@ -33,172 +34,55 @@ namespace OpenBveApi.Interface
 			internal readonly string LanguageCode;
 			/// <summary>The language codes on which to fall-back if a string is not found in this language(In order from best to worst)</summary>
 			/// en-US should always be present in this list
-			internal readonly List<String> FallbackCodes;
+			internal readonly List<string> FallbackCodes;
 
-			/// <summary>Creates a new language from an on-disk language file</summary>
-			/// <param name="languageFile">The absolute on-disk path to the language file we wish to load</param>
-			internal Language(string languageFile)
+			private class XliffFile
 			{
-				Name = "Unknown";
-				LanguageCode = System.IO.Path.GetFileNameWithoutExtension(languageFile);
-				FallbackCodes = new List<string> {"en-US"};
-				InterfaceStrings = new InterfaceString[16];
-				myCommandInfos = new CommandInfo[Translations.CommandInfos.Length];
-				KeyInfos = new KeyInfo[TranslatedKeys.Length];
-				myQuickReferences = new InterfaceQuickReference();
-				Array.Copy(Translations.CommandInfos, myCommandInfos, myCommandInfos.Length);
-				Array.Copy(TranslatedKeys, KeyInfos, TranslatedKeys.Length);
-				try
+				internal class Unit
 				{
-					string[] Lines = File.ReadAllLines(languageFile, new System.Text.UTF8Encoding());
-					string Section = "";
-					var LoadedStringCount = 0;
-					for (int i = 0; i < Lines.Length; i++)
+					internal readonly string Id;
+					internal readonly string Value;
+
+					internal Unit(XNamespace xmlns, XElement unit, string languageCode)
 					{
-						Lines[i] = Lines[i].Trim();
-						if (!Lines[i].StartsWith(";"))
+						XElement source = unit.Element(xmlns + "source");
+						XElement target = unit.Element(xmlns + "target");
+
+						if (target == null && languageCode != "en-US")
 						{
-							if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))
-							{
-								Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim().ToLowerInvariant();
-							}
-							else
-							{
-								int j = Lines[i].IndexOf('=');
-								if (j >= 0)
-								{
-									string a = Lines[i].Substring(0, j).TrimEnd().ToLowerInvariant();
-									string b = Lines[i].Substring(j + 1).TrimStart().Unescape();
-									switch (Section)
-									{
-										case "handles":
-											switch (a)
-											{
-												case "forward":
-													myQuickReferences.HandleForward = b;
-													break;
-												case "neutral":
-													myQuickReferences.HandleNeutral = b;
-													break;
-												case "backward":
-													myQuickReferences.HandleBackward = b;
-													break;
-												case "power":
-													myQuickReferences.HandlePower = b;
-													break;
-												case "powernull":
-													myQuickReferences.HandlePowerNull = b;
-													break;
-												case "brake":
-													myQuickReferences.HandleBrake = b;
-													break;
-												case "locobrake":
-													myQuickReferences.HandleLocoBrake = b;
-													break;
-												case "brakenull":
-													myQuickReferences.HandleBrakeNull = b;
-													break;
-												case "release":
-													myQuickReferences.HandleRelease = b;
-													break;
-												case "lap":
-													myQuickReferences.HandleLap = b;
-													break;
-												case "service":
-													myQuickReferences.HandleService = b;
-													break;
-												case "emergency":
-													myQuickReferences.HandleEmergency = b;
-													break;
-												case "holdbrake":
-													myQuickReferences.HandleHoldBrake = b;
-													break;
-											}
-											break;
-										case "doors":
-											switch (a)
-											{
-												case "left":
-													myQuickReferences.DoorsLeft = b;
-													break;
-												case "right":
-													myQuickReferences.DoorsRight = b;
-													break;
-											}
-											break;
-										case "misc":
-											switch (a)
-											{
-												case "score":
-													myQuickReferences.Score = b;
-													break;
-											}
-											break;
-										case "commands":
-											for (int k = 0; k < myCommandInfos.Length; k++)
-											{
-												if (string.Compare(myCommandInfos[k].Name, a, StringComparison.OrdinalIgnoreCase) == 0)
-												{
-													myCommandInfos[k].Description = b;
-													break;
-												}
-											}
-											break;
-										case "keys":
-											for (int k = 0; k < KeyInfos.Length; k++)
-											{
-												if (string.Compare(KeyInfos[k].Name, a, StringComparison.OrdinalIgnoreCase) == 0)
-												{
-													KeyInfos[k].Description = b;
-													break;
-												}
-											}
-											break;
-										case "fallback":
-											switch (a)
-											{
-												case "language":
-													FallbackCodes.Add(b);
-													break;
-											}
-											break;
-										case "language":
-											switch (a)
-											{
-												case "name":
-													Name = b;
-													break;
-												case "flag":
-													Flag = b;
-													break;
-											}
-											break;
-										default:
-											if (LoadedStringCount >= InterfaceStrings.Length)
-											{
-												Array.Resize<InterfaceString>(ref InterfaceStrings,
-													InterfaceStrings.Length << 1);
-											}
-
-											InterfaceStrings[LoadedStringCount].Name = Section + "_" + a;
-											InterfaceStrings[LoadedStringCount].Text = b;
-											LoadedStringCount++;
-											break;
-									}
-								}
-							}
+							return;
 						}
-					}
 
-					Array.Resize(ref InterfaceStrings, LoadedStringCount);
+						Id = (string)unit.Attribute("id");
+						Value = (languageCode != "en-US" ? (string)target : (string)source).Replace("\\n", Environment.NewLine).Replace("\\x20", " ");
+					}
 				}
-				catch
+
+				internal class Group
 				{
-					//This message is shown when loading a language fails, and must not be translated, as otherwise it could produce a blank error message
-					MessageBox.Show(@"An error occurred whilst attempting to load the language file: \n \n" + languageFile);
-					//Pass the exception down the line
-					//TODO: Not currently handled specifically, but may be in future
-					throw;
+					internal readonly string Id;
+					internal readonly Group[] Groups;
+					internal readonly Unit[] Units;
+
+					internal Group(XNamespace xmlns, XElement group, string languageCode)
+					{
+						Id = (string)group.Attribute("id");
+						Groups = group.Elements(xmlns + "group").Select(g => new Group(xmlns, g, languageCode)).ToArray();
+						Units = group.Elements(xmlns + "trans-unit").Select(t => new Unit(xmlns, t, languageCode)).Where(t => !string.IsNullOrEmpty(t.Value)).ToArray();
+					}
+				}
+
+				internal readonly Group[] Groups;
+				internal readonly Unit[] Units;
+
+				internal XliffFile(Stream stream, string languageCode)
+				{
+					XDocument xml = XDocument.Load(stream);
+					XNamespace xmlns = xml.Root.Name.Namespace;
+					XElement body = xml.Root.Element(xmlns + "file").Element(xmlns + "body");
+
+					Groups = body.Elements(xmlns + "group").Select(g => new Group(xmlns, g, languageCode)).ToArray();
+					Units = body.Elements(xmlns + "trans-unit").Select(t => new Unit(xmlns, t, languageCode)).Where(t => !string.IsNullOrEmpty(t.Value)).ToArray();
 				}
 			}
 
@@ -209,164 +93,197 @@ namespace OpenBveApi.Interface
 			{
 				Name = "Unknown";
 				LanguageCode = languageCode;
-				FallbackCodes = new List<string> {"en-US"};
-				InterfaceStrings = new InterfaceString[16];
-				myCommandInfos = new CommandInfo[Translations.CommandInfos.Length];
+				FallbackCodes = new List<string> { "en-US" };
+				myCommandInfos = new CommandInfo[CommandInfos.Length];
 				KeyInfos = new KeyInfo[TranslatedKeys.Length];
 				myQuickReferences = new InterfaceQuickReference();
-				Array.Copy(Translations.CommandInfos, myCommandInfos, myCommandInfos.Length);
+				Array.Copy(CommandInfos, myCommandInfos, myCommandInfos.Length);
 				Array.Copy(TranslatedKeys, KeyInfos, TranslatedKeys.Length);
-				try
-				{
-					string[] Lines;
-					using (StreamReader reader = new StreamReader(languageStream))
-					{
-						Lines = reader.ReadToEnd().Split(new char[] {'\r', '\n'}, StringSplitOptions.RemoveEmptyEntries);
-					}
 
-					string Section = "";
-					var LoadedStringCount = 0;
-					for (int i = 0; i < Lines.Length; i++)
+				string prefix = string.Empty;
+				XliffFile file = new XliffFile(languageStream, languageCode);
+				List<InterfaceString> strings = new List<InterfaceString>();
+
+				ExportUnits(prefix, file.Units, strings);
+
+				foreach (XliffFile.Group group in file.Groups)
+				{
+					ExportGroup(prefix, group, strings);
+				}
+
+				InterfaceString[] groupLanguage = strings.Where(s => s.Name.StartsWith("language_")).ToArray();
+
+				foreach (var interfaceString in groupLanguage)
+				{
+					string key = interfaceString.Name.Split('_')[1];
+
+					switch (key)
 					{
-						Lines[i] = Lines[i].Trim();
-						if (!Lines[i].StartsWith(";"))
-						{
-							if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))
+						case "name":
+							Name = interfaceString.Text;
+							strings.Remove(interfaceString);
+							break;
+						case "flag":
+							Flag = interfaceString.Text;
+							strings.Remove(interfaceString);
+							break;
+					}
+				}
+
+				InterfaceString[] groupOpenBve = strings.Where(s => s.Name.StartsWith("openbve_")).ToArray();
+
+				foreach (var interfaceString in groupOpenBve)
+				{
+					string section = interfaceString.Name.Split('_')[1];
+					string key = string.Join("_", interfaceString.Name.Split('_').Skip(2));
+
+					switch (section)
+					{
+						case "handles":
+							switch (key)
 							{
-								Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim().ToLowerInvariant();
+								case "forward":
+									myQuickReferences.HandleForward = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+								case "neutral":
+									myQuickReferences.HandleNeutral = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+								case "backward":
+									myQuickReferences.HandleBackward = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+								case "power":
+									myQuickReferences.HandlePower = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+								case "powernull":
+									myQuickReferences.HandlePowerNull = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+								case "brake":
+									myQuickReferences.HandleBrake = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+								case "locobrake":
+									myQuickReferences.HandleLocoBrake = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+								case "brakenull":
+									myQuickReferences.HandleBrakeNull = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+								case "release":
+									myQuickReferences.HandleRelease = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+								case "lap":
+									myQuickReferences.HandleLap = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+								case "service":
+									myQuickReferences.HandleService = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+								case "emergency":
+									myQuickReferences.HandleEmergency = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+								case "holdbrake":
+									myQuickReferences.HandleHoldBrake = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
 							}
-							else
+							break;
+						case "doors":
+							switch (key)
 							{
-								int j = Lines[i].IndexOf('=');
-								if (j >= 0)
+								case "left":
+									myQuickReferences.DoorsLeft = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+								case "right":
+									myQuickReferences.DoorsRight = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+							}
+							break;
+						case "misc":
+							switch (key)
+							{
+								case "score":
+									myQuickReferences.Score = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+							}
+							break;
+						case "commands":
+							for (int k = 0; k < myCommandInfos.Length; k++)
+							{
+								if (string.Compare(myCommandInfos[k].Name, key, StringComparison.OrdinalIgnoreCase) == 0)
 								{
-									string a = Lines[i].Substring(0, j).TrimEnd().ToLowerInvariant();
-									string b = Lines[i].Substring(j + 1).TrimStart().Unescape();
-									switch (Section)
-									{
-										case "handles":
-											switch (a)
-											{
-												case "forward":
-													myQuickReferences.HandleForward = b;
-													break;
-												case "neutral":
-													myQuickReferences.HandleNeutral = b;
-													break;
-												case "backward":
-													myQuickReferences.HandleBackward = b;
-													break;
-												case "power":
-													myQuickReferences.HandlePower = b;
-													break;
-												case "powernull":
-													myQuickReferences.HandlePowerNull = b;
-													break;
-												case "brake":
-													myQuickReferences.HandleBrake = b;
-													break;
-												case "locobrake":
-													myQuickReferences.HandleLocoBrake = b;
-													break;
-												case "brakenull":
-													myQuickReferences.HandleBrakeNull = b;
-													break;
-												case "release":
-													myQuickReferences.HandleRelease = b;
-													break;
-												case "lap":
-													myQuickReferences.HandleLap = b;
-													break;
-												case "service":
-													myQuickReferences.HandleService = b;
-													break;
-												case "emergency":
-													myQuickReferences.HandleEmergency = b;
-													break;
-												case "holdbrake":
-													myQuickReferences.HandleHoldBrake = b;
-													break;
-											}
-											break;
-										case "doors":
-											switch (a)
-											{
-												case "left":
-													myQuickReferences.DoorsLeft = b;
-													break;
-												case "right":
-													myQuickReferences.DoorsRight = b;
-													break;
-											}
-											break;
-										case "misc":
-											switch (a)
-											{
-												case "score":
-													myQuickReferences.Score = b;
-													break;
-											}
-											break;
-										case "commands":
-											for (int k = 0; k < myCommandInfos.Length; k++)
-											{
-												if (string.Compare(myCommandInfos[k].Name, a, StringComparison.OrdinalIgnoreCase) == 0)
-												{
-													myCommandInfos[k].Description = b;
-													break;
-												}
-											}
-											break;
-										case "keys":
-											for (int k = 0; k < KeyInfos.Length; k++)
-											{
-												if (string.Compare(KeyInfos[k].Name, a, StringComparison.OrdinalIgnoreCase) == 0)
-												{
-													KeyInfos[k].Description = b;
-													break;
-												}
-											}
-										break;
-										case "fallback":
-											switch (a)
-											{
-												case "language":
-													FallbackCodes.Add(b);
-													break;
-											}
-											break;
-										case "language":
-											switch (a)
-											{
-												case "name":
-													Name = b;
-													break;
-												case "flag":
-													Flag = b;
-													break;
-											}
-											break;
-										default:
-											if (LoadedStringCount >= InterfaceStrings.Length)
-											{
-												Array.Resize<InterfaceString>(ref InterfaceStrings,
-													InterfaceStrings.Length << 1);
-											}
-											InterfaceStrings[LoadedStringCount].Name = Section + "_" + a;
-											InterfaceStrings[LoadedStringCount].Text = b;
-											LoadedStringCount++;
-											break;
-									}
+									myCommandInfos[k].Description = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
 								}
 							}
-						}
+							break;
+						case "keys":
+							for (int k = 0; k < KeyInfos.Length; k++)
+							{
+								if (string.Compare(KeyInfos[k].Name, key, StringComparison.OrdinalIgnoreCase) == 0)
+								{
+									KeyInfos[k].Description = interfaceString.Text;
+									strings.Remove(interfaceString);
+									break;
+								}
+							}
+							break;
+						case "fallback":
+							switch (key)
+							{
+								case "language":
+									FallbackCodes.Add(interfaceString.Text);
+									strings.Remove(interfaceString);
+									break;
+							}
+							break;
 					}
-					Array.Resize(ref InterfaceStrings, LoadedStringCount);
 				}
-				catch
+
+				InterfaceStrings = strings.ToArray();
+
+				for (int i = 0; i < InterfaceStrings.Length; i++)
 				{
+					if (InterfaceStrings[i].Name.StartsWith("openbve_"))
+					{
+						InterfaceStrings[i].Name = InterfaceStrings[i].Name.Replace("openbve_", string.Empty);
+					}
 				}
 			}
+
+			private void ExportUnits(string prefix, XliffFile.Unit[] units, List<InterfaceString> strings)
+			{
+				strings.AddRange(units.Select(u => new InterfaceString
+				{
+					Name = prefix + u.Id,
+					Text = u.Value
+				}));
+			}
+
+			private void ExportGroup(string prefix, XliffFile.Group group, List<InterfaceString> strings)
+			{
+				prefix += group.Id + "_";
+
+				ExportUnits(prefix, group.Units, strings);
+
+				foreach (XliffFile.Group childGroup in group.Groups)
+				{
+					ExportGroup(prefix, childGroup, strings);
+				}
+			}
+
 
 			/// <summary>Always returns the textual name of the language</summary>
 			public override string ToString()

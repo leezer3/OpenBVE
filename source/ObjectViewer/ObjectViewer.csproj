@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -13,11 +13,11 @@
     <StartupObject>
     </StartupObject>
     <ApplicationIcon>..\..\assets\icon.ico</ApplicationIcon>
-    <SourceAnalysisOverrideSettingsFile>C:\Documents and Settings\Administrator\Application Data\ICSharpCode/SharpDevelop3.0\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <NoStdLib>False</NoStdLib>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -29,6 +29,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>6</LangVersion>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>None</DebugType>
@@ -39,6 +41,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DebugSymbols>false</DebugSymbols>
+    <LangVersion>6</LangVersion>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
@@ -57,17 +61,11 @@
     </AllowedReferenceRelatedFileExtensions>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NUniversalCharDet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\dependencies\NUniversalCharDet.dll</HintPath>
+    <Reference Include="OpenTK, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\OpenTK.3.1.0\lib\net20\OpenTK.dll</HintPath>
     </Reference>
-    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\dependencies\OpenTK.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpCompress, Version=0.21.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\dependencies\SharpCompress.dll</HintPath>
+    <Reference Include="SharpCompress, Version=0.24.0.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SharpCompress.0.24.0\lib\net45\SharpCompress.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
@@ -90,22 +88,10 @@
     <Compile Include="FunctionScripts.cs" />
     <Compile Include="Hosts.cs" />
     <Compile Include="Options.cs" />
-    <Compile Include="Parsers\AssimpObjParser.cs" />
     <Compile Include="Parsers\ExtensionsCfgParser.cs" />
-    <Compile Include="Parsers\Generic\AssimpXParser.cs" />
-    <Compile Include="Parsers\Ls3DGrpParser.cs" />
-    <Compile Include="Parsers\Ls3DObjectParser.cs" />
-    <Compile Include="Parsers\MeshBuilder.cs" />
-    <Compile Include="Parsers\MSTS\ShapeParser.cs" />
-    <Compile Include="Parsers\Generic\NewXParser.cs" />
-    <Compile Include="Parsers\WavefrontObjParser.cs" />
     <Compile Include="Plugins.cs" />
-    <Compile Include="Renderer.Strings.cs" />
     <Compile Include="System\GameWindow.cs" />
     <Compile Include="ObjectManager.cs" />
-    <Compile Include="Parsers\AnimatedObjectParser.cs" />
-    <Compile Include="Parsers\CsvB3dObjectParser.cs" />
-    <Compile Include="Parsers\Generic\XObjectParser.cs" />
     <Compile Include="Fonts.cs" />
     <Compile Include="formMessages.cs">
       <SubType>Form</SubType>
@@ -117,11 +103,9 @@
     <Compile Include="ProgramS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RendererS.cs" />
-    <Compile Include="TextEncoding.cs" />
     <Compile Include="TextureManager.cs" />
     <Compile Include="Timers.cs" />
     <Compile Include="TrainManagerS.cs" />
-    <Compile Include="WorldS.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="formMessages.resx">
@@ -141,20 +125,28 @@
       <Project>{77ccae62-d374-468e-98a0-dd8adb461c10}</Project>
       <Name>AssimpParser</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LibRender\LibRender.csproj">
+      <Project>{2072ecd1-c7ff-427c-84dc-063f7c19792e}</Project>
+      <Name>LibRender</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
       <Name>OpenBveApi</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Plugins\Formats.DirectX\Formats.DirectX.csproj">
-      <Project>{b8955ca6-e002-48a6-8fbf-90c2084c3508}</Project>
-      <Name>Formats.DirectX</Name>
-      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Plugins\Formats.Msts\Formats.Msts.csproj">
       <Project>{E81B7BD8-A326-47D3-B7EE-E9C7D4D119FA}</Project>
       <Name>Formats.Msts</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\RouteManager\RouteManager.csproj">
+      <Project>{87838364-8911-46b2-8628-d437c485d9c9}</Project>
+      <Name>RouteManager</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="OpenTK.dll.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

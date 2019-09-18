@@ -1,0 +1,74 @@
+openbve (1.6.0.0-1) unstable; urgency=low
+
+  openBVE stable release 1.6.0.0 introduces many changes and improvements, such
+  as parsers for new object types, additional train variables and more.
+  Additionally, the website and upstream maintainer have changed.
+
+ -- Christopher Lees <leezer3@gmail.com>  Mon, 15th Apr 2019 12:37:00 +0000
+
+openbve (1.4.0.5-1) unstable; urgency=low
+
+  Openbve stable release 1.4.0.0 introduces the upstream
+  content-manager for downloading external routes directly from within
+  the program.  This simplifies the installation procedure for
+  additional third-party content (Routes and Trains) and allows
+  meaningful use of Openbve without having the bve-{route,train}-*
+  packages installed first.
+
+ -- Paul Sladen <debian@paul.sladen.org>  Tue, 24 Jan 2012 00:00:00 +0100
+
+openbve (1.2.10.0-0ubuntu1) natty; urgency=low
+
+  Openbve has gained has gained a new Train plugin API ("OpenBveApi"),
+  for plugins written in CLR-based languages such as C#.  These
+  plugins should be fully portable in source-form and are intended
+  also to be portable in binary/compiled form too.  Previously the
+  plugin API was based on that used in BVE Trainsim 4 and was limited
+  to Win32-i386-COFF .dlls.
+
+  An example plugin written against the new OpenBveApi and in C# is
+  "UkTrainSys" by Anthony Bowden. This plugin is to some extent a
+  drop-in replacement for several previous generations of the plugins
+  'OS_Ats1.dll' and UkMut.dll', commonly distributed across many trains.
+
+  Plugins are activated by putting the plugin filename in 'ats.cfg' in
+  a corresponding Train/.../ directory.
+
+ -- Paul Sladen <sladen@ubuntu.com>  Tue, 28 Dec 2010 02:49:00 +0000
+
+openbve (1.2.4.1-0ubuntu1) lucid; urgency=low
+
+  Openbve now uses a home-grown .wav parser for loading audio files.
+
+  The older SDL/Alut sound loader would transparently load Ogg Vorbis;
+  as a consequence of this no longer working the default train and
+  route data packages have been rebuilt without a Vorbis recompression
+  stage and so are now larger in download size.
+
+ -- Paul Sladen <ubuntu@paul.sladen.org>  Wed,  6 Jan 2009 07:58:00 +0000
+
+openbve (1.2.1.3-0ubuntu1) unreleased; urgency=low
+
+  A marker at the front of first car is now used for
+  signalling/platform positioning, rather than first axle or "beacon
+  receiver" offset.  this should allow the removal of workarounds in
+  route/train models.
+
+  The "defaultexterior" configuration option has been removed by
+  upstream.  It is now always true and a version of the basic "model"
+  from 'Data/Compatibility/exterior.csv' is used as the default 3D
+  representation for the train in semi-invisible train front (the
+  "pre-train")---this model is expected to be a unit cube, that is
+  then scaled to the anticipated train height/width/length.
+
+  The default (unspecified) train data has been adjusted:
+  + CarHeight                   3.2 metres -> 3.6 metres
+  + AerodynamicDragCoefficient  1.2        -> 1.1
+  + CenterOfGravityHeight       1.5 metres -> 1.6 metres
+
+  Others:
+  * Boolean 'World.MouseGrabIgnoreOnce' used for working around Sdl.SDL_WM_GrabInput() bug.
+  * Huge churn from renaming "SecuritySystem" to "SafetySystem".
+  * debugCheckError() renamed to CheckForOpenGlError().
+
+ -- Paul Sladen <ubuntu@paul.sladen.org>  Tue,  1 Sep 2009 14:40:00 +0100

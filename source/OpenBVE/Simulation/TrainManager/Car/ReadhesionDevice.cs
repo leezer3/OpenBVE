@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBve.RouteManager;
 
 namespace OpenBve
 {
@@ -35,11 +36,11 @@ namespace OpenBve
 			/// <param name="CurrentAcceleration">The current acceleration output</param>
 			internal void Update(double CurrentAcceleration)
 			{
-				if (Game.SecondsSinceMidnight < NextUpdateTime)
+				if (CurrentRoute.SecondsSinceMidnight < NextUpdateTime)
 				{
 					return;
 				}
-				NextUpdateTime = Game.SecondsSinceMidnight + this.UpdateInterval;
+				NextUpdateTime = CurrentRoute.SecondsSinceMidnight + this.UpdateInterval;
 				if (Car.FrontAxle.CurrentWheelSlip | Car.RearAxle.CurrentWheelSlip)
 				{
 					MaximumAccelerationOutput = CurrentAcceleration * this.ApplicationFactor;

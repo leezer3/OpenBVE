@@ -24,7 +24,7 @@ namespace OpenBve
 				LoadCalibration(OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "RailDriver.xml"));
 			}
 
-			internal AxisCalibration[] Calibration = new AxisCalibration[7];
+			internal readonly AxisCalibration[] Calibration = new AxisCalibration[7];
 
 			private void LoadCalibration(string calibrationFile)
 			{

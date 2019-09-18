@@ -1,8 +1,15 @@
 ﻿using System;
+using LibRender;
+using OpenBve.RouteManager;
+using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
+using OpenBveApi.Routes;
+using OpenBveApi.Sounds;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
+using OpenBveApi.World;
 
 namespace OpenBve {
 	/// <summary>Represents the host application.</summary>
@@ -16,7 +23,16 @@ namespace OpenBve {
 		public override void ReportProblem(OpenBveApi.Hosts.ProblemType type, string text) {
 			Interface.AddMessage(MessageType.Error, false, text);
 		}
-		
+
+		public override void AddMessage(MessageType type, bool FileNotFound, string text)
+		{
+			Interface.AddMessage(type, FileNotFound, text);
+		}
+
+		public override void AddMessage(object Message)
+		{
+			MessageManager.AddMessage((AbstractMessage)Message);
+		}
 		
 		// --- texture ---
 		
@@ -96,6 +112,11 @@ namespace OpenBve {
 			texture = null;
 			return false;
 		}
+
+		public override bool LoadTexture(Texture Texture, OpenGlTextureWrapMode wrapMode)
+		{
+			return TextureManager.LoadTexture(Texture, wrapMode, CPreciseTimer.GetClockTicks(), Interface.CurrentOptions.Interpolation, Interface.CurrentOptions.AnisotropicFilteringLevel);
+		}
 		
 		/// <summary>Registers a texture and returns a handle to the texture.</summary>
 		/// <param name="path">The path to the file or folder that contains the texture.</param>
@@ -105,7 +126,7 @@ namespace OpenBve {
 		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle) {
 			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
 				Texture data;
-				if (Textures.RegisterTexture(path, parameters, out data)) {
+				if (TextureManager.RegisterTexture(path, parameters, out data)) {
 					handle = data;
 					return true;
 				}
@@ -123,7 +144,7 @@ namespace OpenBve {
 		/// <returns>Whether loading the texture was successful.</returns>
 		public override bool RegisterTexture(Texture texture, TextureParameters parameters, out Texture handle) {
 			texture = texture.ApplyParameters(parameters);
-			handle = Textures.RegisterTexture(texture);
+			handle = TextureManager.RegisterTexture(texture);
 			return true;
 		}
 		
@@ -162,34 +183,182 @@ namespace OpenBve {
 			return false;
 		}
 		
+		
 		/// <summary>Registers a sound and returns a handle to the sound.</summary>
 		/// <param name="path">The path to the file or folder that contains the sound.</param>
 		/// <param name="handle">Receives a handle to the sound.</param>
 		/// <returns>Whether loading the sound was successful.</returns>
-		public override bool RegisterSound(string path, out OpenBveApi.Sounds.SoundHandle handle) {
-			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
-				// Sounds.SoundBuffer data;
-				// data = Sounds.RegisterBuffer(path, 0.0); // TODO
-			} else {
+		public override bool RegisterSound(string path, out OpenBveApi.Sounds.SoundHandle handle)
+		{
+			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path))
+			{
+				handle = Program.Sounds.RegisterBuffer(path, 0.0);
+			}
+			else
+			{
 				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
 			}
 			handle = null;
 			return false;
 		}
-		
+
+		/// <summary>Registers a sound and returns a handle to the sound.</summary>
+		/// <param name="path">The path to the file or folder that contains the sound.</param>
+		/// /// <param name="radius">The sound radius</param>
+		/// <param name="handle">Receives a handle to the sound.</param>
+		/// <returns>Whether loading the sound was successful.</returns>
+		public override bool RegisterSound(string path, double radius, out OpenBveApi.Sounds.SoundHandle handle)
+		{
+			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path))
+			{
+				handle = Program.Sounds.RegisterBuffer(path, radius);
+				return true;
+			}
+			ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+			handle = null;
+			return false;
+		}
+
 		/// <summary>Registers a sound and returns a handle to the sound.</summary>
 		/// <param name="sound">The sound data.</param>
 		/// <param name="handle">Receives a handle to the sound.</param>
 		/// <returns>Whether loading the sound was successful.</returns>
-		public override bool RegisterSound(OpenBveApi.Sounds.Sound sound, out OpenBveApi.Sounds.SoundHandle handle) {
-			handle = Sounds.RegisterBuffer(sound, 0.0); // TODO
+		public override bool RegisterSound(OpenBveApi.Sounds.Sound sound, out OpenBveApi.Sounds.SoundHandle handle)
+		{
+			handle = Program.Sounds.RegisterBuffer(sound, 0.0);
 			return true;
+		}
+
+		public override bool LoadObject(string path, System.Text.Encoding Encoding, out UnifiedObject Object)
+		{
+			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
+				for (int i = 0; i < Plugins.LoadedPlugins.Length; i++) {
+					if (Plugins.LoadedPlugins[i].Object != null) {
+						try {
+							if (Plugins.LoadedPlugins[i].Object.CanLoadObject(path)) {
+								try {
+									if (Plugins.LoadedPlugins[i].Object.LoadObject(path, Encoding, out Object)) {
+										return true;
+									}
+									Interface.AddMessage(MessageType.Error, false, "Plugin " + Plugins.LoadedPlugins[i].Title + " returned unsuccessfully at LoadObject");
+								} catch (Exception ex) {
+									Interface.AddMessage(MessageType.Error, false, "Plugin " + Plugins.LoadedPlugins[i].Title + " raised the following exception at LoadObject:" + ex.Message);
+								}
+							}
+						} catch (Exception ex) {
+							Interface.AddMessage(MessageType.Error, false, "Plugin " + Plugins.LoadedPlugins[i].Title + " raised the following exception at CanLoadObject:" + ex.Message);
+						}
+					}
+				}
+				Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
+			} else {
+				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+			}
+			Object = null;
+			return false;
 		}
 
 		public override void ExecuteFunctionScript(OpenBveApi.FunctionScripting.FunctionScript functionScript, AbstractTrain train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState)
 		{
 			FunctionScripts.ExecuteFunctionScript(functionScript, (TrainManager.Train)train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 		}
-		
+
+		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		{
+			return ObjectManager.CreateStaticObject(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+		}
+
+		public override void CreateDynamicObject(ref StaticObject internalObject)
+		{
+			ObjectManager.CreateDynamicObject(ref internalObject);
+		}
+
+		public override void AddObjectForCustomTimeTable(AnimatedObject animatedObject)
+		{
+			Timetable.AddObjectForCustomTimetable(animatedObject);
+		}
+
+		public override void ShowObject(StaticObject objectToShow, ObjectType objectType)
+		{
+			LibRender.Renderer.ShowObject(objectToShow, objectType);
+		}
+
+		public override void HideObject(ref StaticObject objectToHide)
+		{
+			LibRender.Renderer.HideObject(ref objectToHide);
+		}
+
+		public override bool SoundIsPlaying(object SoundSource)
+		{
+			return Program.Sounds.IsPlaying(SoundSource);
+		}
+
+		public override object PlaySound(SoundHandle buffer, double pitch, double volume, Vector3 position, object parent, bool looped)
+		{
+			return Program.Sounds.PlaySound(buffer, pitch, volume, position, parent, looped);
+		}
+
+		public override void StopSound(object SoundSource)
+		{
+			Program.Sounds.StopSound(SoundSource);
+		}
+
+		public override bool SimulationSetup
+		{
+			get
+			{
+				return Loading.SimulationSetup;
+			}
+		}
+
+		public override int AnimatedWorldObjectsUsed
+		{
+			get
+			{
+				return ObjectManager.AnimatedWorldObjectsUsed;
+			}
+			set
+			{
+				int a = ObjectManager.AnimatedWorldObjectsUsed;
+				if (ObjectManager.AnimatedWorldObjects.Length -1 == a)
+				{
+					/*
+					 * HACK: We cannot resize an array via an accessor property
+					 *       With this in mind, resize it via the indexer instead
+					 */
+					Array.Resize(ref ObjectManager.AnimatedWorldObjects, ObjectManager.AnimatedWorldObjects.Length << 1);
+				}
+
+				ObjectManager.AnimatedWorldObjectsUsed = value;
+			}
+		}
+
+		public override WorldObject[] AnimatedWorldObjects
+		{
+			get
+			{
+				return ObjectManager.AnimatedWorldObjects;
+			}
+			set
+			{
+				ObjectManager.AnimatedWorldObjects = value;
+			}
+		}
+
+		public override Track[] Tracks
+		{
+			get
+			{
+				return CurrentRoute.Tracks;
+			}
+			set
+			{
+				CurrentRoute.Tracks = value;
+			}
+		}
+
+		public Host() : base(HostApplication.OpenBve)
+		{
+		}
 	}
 }

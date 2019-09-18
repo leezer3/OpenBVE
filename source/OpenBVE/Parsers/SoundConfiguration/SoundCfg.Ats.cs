@@ -1,4 +1,5 @@
 ﻿using OpenBveApi.Math;
+using SoundManager;
 
 namespace OpenBve
 {
@@ -11,13 +12,13 @@ namespace OpenBve
 		{
 			Vector3 position = new Vector3(train.Cars[train.DriverCar].Driver.X, train.Cars[train.DriverCar].Driver.Y, train.Cars[train.DriverCar].Driver.Z + 1.0);
 			const double radius = 2.0;
-			train.Cars[train.DriverCar].Sounds.Plugin = new TrainManager.CarSound[] {
-				new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, "ats.wav"), position, radius),
-				new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, "atscnt.wav"), position, radius),
-				new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, "ding.wav"), position, radius),
-				new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, "toats.wav"), position, radius),
-				new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, "toatc.wav"), position, radius),
-				new TrainManager.CarSound(OpenBveApi.Path.CombineFile(trainFolder, "eb.wav"), position, radius)
+			train.Cars[train.DriverCar].Sounds.Plugin = new CarSound[] {
+				new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "ats.wav"), radius), position),
+				new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "atscnt.wav"), radius), position),
+				new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "ding.wav"), radius), position),
+				new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "toats.wav"), radius), position),
+				new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "toatc.wav"), radius), position),
+				new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "eb.wav"), radius), position)
 			};
 		}
 	}

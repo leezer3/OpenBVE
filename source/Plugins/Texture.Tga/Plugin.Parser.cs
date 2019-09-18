@@ -211,7 +211,7 @@ namespace Plugin
 													break;
 												default:
 													//No other entry sizes than 15, 16, 24 & 32 are supported....
-													throw new Exception();
+													throw new NotSupportedException();
 
 											}
 

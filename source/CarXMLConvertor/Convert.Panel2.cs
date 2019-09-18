@@ -23,11 +23,11 @@ namespace CarXmlConvertor
                 int j = Lines[i].IndexOf(';');
                 if (j >= 0)
                 {
-                    Lines[i] = Lines[i].Substring(0, j).Trim();
+                    Lines[i] = Lines[i].Substring(0, j).Trim(new char[] { });
                 }
                 else
                 {
-                    Lines[i] = Lines[i].Trim();
+                    Lines[i] = Lines[i].Trim(new char[] { });
                 }
             }
             if (Lines.Length < 1 || string.Compare(Lines[0], "version 1.0", StringComparison.OrdinalIgnoreCase) != 0)
@@ -56,8 +56,8 @@ namespace CarXmlConvertor
 	            }
 				else if (Lines[i].IndexOf('=') != -1)
 	            {
-		            string a = Lines[i].Substring(0, j).TrimEnd();
-		            string b = Lines[i].Substring(j + 1).TrimStart();
+		            string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+		            string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 					newLines.Add("<" + a + ">" + b + "</"+ a + ">");
 	            }
             }

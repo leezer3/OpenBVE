@@ -1,4 +1,6 @@
 ﻿using System;
+using OpenBve.RouteManager;
+using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 
@@ -11,8 +13,6 @@ namespace OpenBve
 	 */
 	internal static partial class Game
 	{
-		
-
 		/// <summary>The current size of the plane upon which messages are rendered</summary>
 		internal static Vector2 MessagesRendererSize = new Vector2(16.0, 16.0);
 
@@ -23,7 +23,7 @@ namespace OpenBve
 		/// <param name="Color">The color of the message text</param>
 		/// <param name="Timeout">The time this message will display for</param>
 		/// <param name="key">The textual key identifiying this message</param>
-		internal static void AddMessage(string Text, MessageManager.MessageDependency Depencency, Interface.GameMode Mode, MessageColor Color, double Timeout, string key)
+		internal static void AddMessage(string Text, MessageDependency Depencency, GameMode Mode, MessageColor Color, double Timeout, string key)
 		{
 			
 			
@@ -47,12 +47,5 @@ namespace OpenBve
 		internal static double SpeedConversionFactor = 0.0;
 		/// <summary>The unit of speed displayed in in-game messages</summary>
 		internal static string UnitOfSpeed = "km/h";
-
-		/// <summary>Called once a frame to update the messages displayed on-screen</summary>
-		internal static void UpdateMessages()
-		{
-			MessageManager.UpdateMessages();
-			
-		}
 	}
 }

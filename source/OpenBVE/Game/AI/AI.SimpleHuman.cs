@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
+using OpenBve.RouteManager;
 
 namespace OpenBve
 {
@@ -29,7 +30,7 @@ namespace OpenBve
 				this.PersonalitySpeedFactor = 0.90 + 0.10 * Program.RandomNumberGenerator.NextDouble();
 				this.CurrentSpeedFactor = this.PersonalitySpeedFactor;
 				this.PowerNotchAtWhichWheelSlipIsObserved = Train.Handles.Power.MaximumNotch + 1;
-				if (Train.Station >= 0 & Train.StationState == TrainManager.TrainStopState.Boarding)
+				if (Train.Station >= 0 & Train.StationState == TrainStopState.Boarding)
 				{
 					this.LastStation = Train.Station;
 				}
@@ -57,25 +58,33 @@ namespace OpenBve
 			}
 			private void PerformDefault()
 			{
+				if (Train.Derailed)
+				{
+					if (Train.Handles.EmergencyBrake.Driver != true)
+					{
+						Train.ApplyEmergencyBrake();
+					}
+					return;
+				}
 				// personality
-				double spd = Train.Specs.CurrentAverageSpeed;
-				if (Train.Station >= 0 & Train.StationState == TrainManager.TrainStopState.Boarding)
+				double spd = Train.CurrentSpeed;
+				if (Train.Station >= 0 & Train.StationState == TrainStopState.Boarding)
 				{
 					if (Train.Station != this.LastStation)
 					{
 						this.LastStation = Train.Station;
 						double time;
-						if (Stations[Train.Station].ArrivalTime >= 0.0)
+						if (CurrentRoute.Stations[Train.Station].ArrivalTime >= 0.0)
 						{
-							time = Stations[Train.Station].ArrivalTime - Train.TimetableDelta;
+							time = CurrentRoute.Stations[Train.Station].ArrivalTime - Train.TimetableDelta;
 						}
-						else if (Stations[Train.Station].DepartureTime >= 0.0)
+						else if (CurrentRoute.Stations[Train.Station].DepartureTime >= 0.0)
 						{
-							time = Stations[Train.Station].DepartureTime - Train.TimetableDelta;
-							if (time > SecondsSinceMidnight)
+							time = CurrentRoute.Stations[Train.Station].DepartureTime - Train.TimetableDelta;
+							if (time > CurrentRoute.SecondsSinceMidnight)
 							{
-								time -= Stations[Train.Station].StopTime;
-								if (time > SecondsSinceMidnight)
+								time -= CurrentRoute.Stations[Train.Station].StopTime;
+								if (time > CurrentRoute.SecondsSinceMidnight)
 								{
 									time = double.MinValue;
 								}
@@ -91,7 +100,7 @@ namespace OpenBve
 							const double largeChangeFactor = 0.0025;
 							const double smallThreshold = 15.0;
 							const double smallChange = 0.05;
-							double diff = SecondsSinceMidnight - time;
+							double diff = CurrentRoute.SecondsSinceMidnight - time;
 							if (diff < -largeThreshold)
 							{
 								/* The AI is too fast. Decrease the preferred speed. */
@@ -150,7 +159,7 @@ namespace OpenBve
 				// do the ai
 				Train.Specs.CurrentConstSpeed = false;
 				Train.ApplyHoldBrake(false);
-				int stopIndex = Train.Station >= 0 ? Game.Stations[Train.Station].GetStopIndex(Train.Cars.Length) : -1;
+				int stopIndex = Train.Station >= 0 ? CurrentRoute.Stations[Train.Station].GetStopIndex(Train.NumberOfCars) : -1;
 				if (Train.CurrentSectionLimit == 0.0)
 				{
 					// passing red signal
@@ -158,11 +167,11 @@ namespace OpenBve
 					Train.ApplyNotch(-1, true, 1, true);
 					CurrentInterval = 0.5;
 				}
-				else if (doorsopen | Train.StationState == TrainManager.TrainStopState.Boarding)
+				else if (doorsopen | Train.StationState == TrainStopState.Boarding)
 				{
 					// door opened or boarding at station
 					this.PowerNotchAtWhichWheelSlipIsObserved = Train.Handles.Power.MaximumNotch + 1;
-					if (Train.Station >= 0 && Stations[Train.Station].Type != StationType.Normal && Stations[Train.Station].Type != StationType.RequestStop && Train == TrainManager.PlayerTrain)
+					if (Train.Station >= 0 && CurrentRoute.Stations[Train.Station].Type != StationType.Normal && CurrentRoute.Stations[Train.Station].Type != StationType.RequestStop && Train.IsPlayerTrain)
 					{
 						// player's terminal station
 						if (Train.Plugin == null || Train.Plugin.LastReverser == -2)
@@ -180,7 +189,7 @@ namespace OpenBve
 						Train.ApplyNotch(-1, true, 0, true);
 						if (Train.Handles.Brake is TrainManager.AirBrakeHandle)
 						{
-							if (Train.Cars[Train.DriverCar].CarBrake.brakeCylinder.CurrentPressure < 0.3 * Train.Cars[Train.DriverCar].CarBrake.brakeCylinder.ServiceMaximumPressure)
+							if (Train.StationDepartureTime - CurrentRoute.SecondsSinceMidnight > 10 || Train.Cars[Train.DriverCar].CarBrake.brakeCylinder.CurrentPressure < 0.3 * Train.Cars[Train.DriverCar].CarBrake.brakeCylinder.ServiceMaximumPressure)
 							{
 								Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Service);
 							}
@@ -215,37 +224,37 @@ namespace OpenBve
 							}
 						}
 						Train.UnapplyEmergencyBrake();
-						if (Train.Station >= 0 & Train.StationState == TrainManager.TrainStopState.Completed)
+						if (Train.Station >= 0 & Train.StationState == TrainStopState.Completed)
 						{
 							// ready for departure - close doors
-							if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic && Train.Specs.DoorInterlockState == TrainManager.DoorInterlockStates.Unlocked)
+							if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic && Train.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked)
 							{
 								TrainManager.CloseTrainDoors(Train, true, true);
 							}
 						}
-						else if (Train.Station >= 0 & Train.StationState == TrainManager.TrainStopState.Boarding)
+						else if (Train.Station >= 0 & Train.StationState == TrainStopState.Boarding)
 						{
 						}
 						else
 						{
 							// not at station - close doors
-							if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic && Train.Specs.DoorInterlockState == TrainManager.DoorInterlockStates.Unlocked)
+							if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic && Train.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked)
 							{
 								TrainManager.CloseTrainDoors(Train, true, true);
 							}
 						}
 					}
 				}
-				else if (Train.Station >= 0 && stopIndex >= 0 && Train.StationDistanceToStopPoint < Stations[Train.Station].Stops[stopIndex].BackwardTolerance && (StopsAtStation(Train.Station, Train) & (Stations[Train.Station].OpenLeftDoors | Stations[Train.Station].OpenRightDoors) & Math.Abs(Train.Specs.CurrentAverageSpeed) < 0.25 & Train.StationState == TrainManager.TrainStopState.Pending))
+				else if (Train.Station >= 0 && stopIndex >= 0 && Train.StationDistanceToStopPoint < CurrentRoute.Stations[Train.Station].Stops[stopIndex].BackwardTolerance && (StopsAtStation(Train.Station, Train) & (CurrentRoute.Stations[Train.Station].OpenLeftDoors | CurrentRoute.Stations[Train.Station].OpenRightDoors) & Math.Abs(Train.CurrentSpeed) < 0.25 & Train.StationState == TrainStopState.Pending))
 				{
 					// arrived at station - open doors
-					if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic && Train.Specs.DoorInterlockState == TrainManager.DoorInterlockStates.Unlocked)
+					if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic && Train.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked)
 					{
-						TrainManager.OpenTrainDoors(Train, Stations[Train.Station].OpenLeftDoors, Stations[Train.Station].OpenRightDoors);
+						TrainManager.OpenTrainDoors(Train, CurrentRoute.Stations[Train.Station].OpenLeftDoors, CurrentRoute.Stations[Train.Station].OpenRightDoors);
 					}
 					CurrentInterval = 1.0;
 				}
-				else if (Train.Station >= 0 && stopIndex >= 0 && Stations[Train.Station].Type != StationType.Normal && Stations[Train.Station].Type != StationType.RequestStop && Train == TrainManager.PlayerTrain && Train.StationDistanceToStopPoint < Stations[Train.Station].Stops[stopIndex].BackwardTolerance && -Train.StationDistanceToStopPoint < Stations[Train.Station].Stops[stopIndex].ForwardTolerance && Math.Abs(Train.Specs.CurrentAverageSpeed) < 0.25)
+				else if (Train.Station >= 0 && stopIndex >= 0 && CurrentRoute.Stations[Train.Station].Type != StationType.Normal && CurrentRoute.Stations[Train.Station].Type != StationType.RequestStop && Train.IsPlayerTrain && Train.StationDistanceToStopPoint < CurrentRoute.Stations[Train.Station].Stops[stopIndex].BackwardTolerance && -Train.StationDistanceToStopPoint < CurrentRoute.Stations[Train.Station].Stops[stopIndex].ForwardTolerance && Math.Abs(Train.CurrentSpeed) < 0.25)
 				{
 					// player's terminal station (not boarding any longer)
 					if (Train.Plugin != null || Train.Plugin.LastReverser == -2)
@@ -317,7 +326,7 @@ namespace OpenBve
 					double decelerationCruise;   /* power below this deceleration, cruise above */
 					double decelerationStart;    /* brake above this deceleration, cruise below */
 					double decelerationStep;     /* the deceleration step per brake notch */
-					double BrakeDeceleration = Train.Cars[Train.DriverCar].CarBrake.DecelerationAtServiceMaximumPressure(Train.Handles.Brake.Actual, Train.Cars[Train.DriverCar].Specs.CurrentSpeed);
+					double BrakeDeceleration = Train.Cars[Train.DriverCar].CarBrake.DecelerationAtServiceMaximumPressure(Train.Handles.Brake.Actual, Train.Cars[Train.DriverCar].CurrentSpeed);
 					for (int i = 0; i < Train.Cars.Length; i++)
 					{
 						if (Train.Cars[i].Specs.IsMotorCar)
@@ -361,26 +370,27 @@ namespace OpenBve
 					bool reduceDecelerationCruiseAndStart = false;
 					// look ahead
 					double lookahead = (Train.Station >= 0 ? 150.0 : 50.0) + (spd * spd) / (2.0 * decelerationCruise);
-					double tp = Train.Cars[0].FrontAxle.Follower.TrackPosition - Train.Cars[0].FrontAxle.Position + 0.5 * Train.Cars[0].Length;
+					double tp = Train.FrontCarTrackPosition();
 					double stopDistance = double.MaxValue;
 					{
 						// next station stop
 						int te = Train.Cars[0].FrontAxle.Follower.LastTrackElement;
-						for (int i = te; i < TrackManager.Tracks[0].Elements.Length; i++)
+						int currentTrack = Train.Cars[0].FrontAxle.Follower.TrackIndex;
+						for (int i = te; i < CurrentRoute.Tracks[currentTrack].Elements.Length; i++)
 						{
-							double stp = TrackManager.Tracks[0].Elements[i].StartingTrackPosition;
+							double stp = CurrentRoute.Tracks[currentTrack].Elements[i].StartingTrackPosition;
 							if (tp + lookahead <= stp) break;
-							for (int j = 0; j < TrackManager.Tracks[0].Elements[i].Events.Length; j++)
+							for (int j = 0; j < CurrentRoute.Tracks[currentTrack].Elements[i].Events.Length; j++)
 							{
-								if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationStartEvent && Train.NextStopSkipped == TrainManager.StopSkipMode.None)
+								if (CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is StationStartEvent && Train.NextStopSkipped == StopSkipMode.None)
 								{
-									TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.Tracks[0].Elements[i].Events[j];
+									StationStartEvent e = (StationStartEvent)CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
 									if (StopsAtStation(e.StationIndex, Train) & Train.LastStation != e.StationIndex)
 									{
-										int s = Game.Stations[e.StationIndex].GetStopIndex(Train.Cars.Length);
+										int s = CurrentRoute.Stations[e.StationIndex].GetStopIndex(Train.NumberOfCars);
 										if (s >= 0)
 										{
-											double dist = Stations[e.StationIndex].Stops[s].TrackPosition - tp;
+											double dist = CurrentRoute.Stations[e.StationIndex].Stops[s].TrackPosition - tp;
 											if (dist > 0.0 & dist < stopDistance)
 											{
 												stopDistance = dist;
@@ -394,16 +404,17 @@ namespace OpenBve
 					{
 						// events
 						int te = Train.Cars[0].FrontAxle.Follower.LastTrackElement;
-						for (int i = te; i < TrackManager.Tracks[0].Elements.Length; i++)
+						int currentTrack = Train.Cars[0].FrontAxle.Follower.TrackIndex;
+						for (int i = te; i < CurrentRoute.Tracks[currentTrack].Elements.Length; i++)
 						{
-							double stp = TrackManager.Tracks[0].Elements[i].StartingTrackPosition;
+							double stp = CurrentRoute.Tracks[currentTrack].Elements[i].StartingTrackPosition;
 							if (tp + lookahead <= stp) break;
-							for (int j = 0; j < TrackManager.Tracks[0].Elements[i].Events.Length; j++)
+							for (int j = 0; j < CurrentRoute.Tracks[currentTrack].Elements[i].Events.Length; j++)
 							{
-								if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.LimitChangeEvent)
+								if (CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is LimitChangeEvent)
 								{
 									// speed limit
-									TrackManager.LimitChangeEvent e = (TrackManager.LimitChangeEvent)TrackManager.Tracks[0].Elements[i].Events[j];
+									LimitChangeEvent e = (LimitChangeEvent)CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
 									if (e.NextSpeedLimit < spd)
 									{
 										double dist = stp + e.TrackPositionDelta - tp;
@@ -411,15 +422,15 @@ namespace OpenBve
 										if (edec > dec) dec = edec;
 									}
 								}
-								else if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.SectionChangeEvent)
+								else if (CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is SectionChangeEvent)
 								{
 									// section
-									TrackManager.SectionChangeEvent e = (TrackManager.SectionChangeEvent)TrackManager.Tracks[0].Elements[i].Events[j];
+									SectionChangeEvent e = (SectionChangeEvent)CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
 									if (stp + e.TrackPositionDelta > tp)
 									{
-										if (!Game.Sections[e.NextSectionIndex].Invisible & Game.Sections[e.NextSectionIndex].CurrentAspect >= 0)
+										if (!CurrentRoute.Sections[e.NextSectionIndex].Invisible & CurrentRoute.Sections[e.NextSectionIndex].CurrentAspect >= 0)
 										{
-											double elim = Game.Sections[e.NextSectionIndex].Aspects[Game.Sections[e.NextSectionIndex].CurrentAspect].Speed * this.CurrentSpeedFactor;
+											double elim = CurrentRoute.Sections[e.NextSectionIndex].Aspects[CurrentRoute.Sections[e.NextSectionIndex].CurrentAspect].Speed * this.CurrentSpeedFactor;
 											if (elim < spd | spd <= 0.0)
 											{
 												double dist = stp + e.TrackPositionDelta - tp;
@@ -427,12 +438,12 @@ namespace OpenBve
 												if (elim == 0.0)
 												{
 													double redstopdist;
-													if (Train.Station >= 0 & Train.StationState == TrainManager.TrainStopState.Completed & dist < 120.0)
+													if (Train.Station >= 0 & Train.StationState == TrainStopState.Completed & dist < 120.0)
 													{
 														dist = 1.0;
 														redstopdist = 25.0;
 													}
-													else if (Train.Station >= 0 & Train.StationState == TrainManager.TrainStopState.Pending | stopDistance < dist)
+													else if (Train.Station >= 0 & Train.StationState == TrainStopState.Pending | stopDistance < dist)
 													{
 														redstopdist = 1.0;
 													}
@@ -473,19 +484,19 @@ namespace OpenBve
 										}
 									}
 								}
-								else if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationStartEvent && Train.NextStopSkipped == TrainManager.StopSkipMode.None)
+								else if (CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is StationStartEvent && Train.NextStopSkipped == StopSkipMode.None)
 								{
 									// station start
 									if (Train.Station == -1)
 									{
-										TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.Tracks[0].Elements[i].Events[j];
+										StationStartEvent e = (StationStartEvent)CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
 										if (StopsAtStation(e.StationIndex, Train) & Train.LastStation != e.StationIndex)
 										{
-											int s = Game.Stations[e.StationIndex].GetStopIndex(Train.Cars.Length);
+											int s = CurrentRoute.Stations[e.StationIndex].GetStopIndex(Train.NumberOfCars);
 											if (s >= 0)
 											{
-												double dist = Stations[e.StationIndex].Stops[s].TrackPosition - tp;
-												if (dist > -Stations[e.StationIndex].Stops[s].ForwardTolerance)
+												double dist = CurrentRoute.Stations[e.StationIndex].Stops[s].TrackPosition - tp;
+												if (dist > -CurrentRoute.Stations[e.StationIndex].Stops[s].ForwardTolerance)
 												{
 													if (dist < 25.0)
 													{
@@ -502,19 +513,19 @@ namespace OpenBve
 										}
 									}
 								}
-								else if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationStartEvent && Train.NextStopSkipped == TrainManager.StopSkipMode.Decelerate)
+								else if (CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is StationStartEvent && Train.NextStopSkipped == StopSkipMode.Decelerate)
 								{
 									// Brakes the train when passing through a request stop, which is not to be passed at linespeed
 									if (Train.Station == -1)
 									{
-										TrackManager.StationStartEvent e = (TrackManager.StationStartEvent)TrackManager.Tracks[0].Elements[i].Events[j];
+										StationStartEvent e = (StationStartEvent)CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
 										if (StopsAtStation(e.StationIndex, Train) & Train.LastStation != e.StationIndex)
 										{
-											int s = Game.Stations[e.StationIndex].GetStopIndex(Train.Cars.Length);
+											int s = CurrentRoute.Stations[e.StationIndex].GetStopIndex(Train.NumberOfCars);
 											if (s >= 0)
 											{
-												double dist = Stations[e.StationIndex].Stops[s].TrackPosition - tp;
-												if (dist > -Stations[e.StationIndex].Stops[s].ForwardTolerance)
+												double dist = CurrentRoute.Stations[e.StationIndex].Stops[s].TrackPosition - tp;
+												if (dist > -CurrentRoute.Stations[e.StationIndex].Stops[s].ForwardTolerance)
 												{
 													if (dist < 25.0)
 													{
@@ -535,19 +546,19 @@ namespace OpenBve
 										}
 									}
 								}
-								else if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.StationEndEvent && Train.NextStopSkipped == TrainManager.StopSkipMode.None)
+								else if (CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is TrackManager.StationEndEvent && Train.NextStopSkipped == StopSkipMode.None)
 								{
 									// station end
 									if (Train.Station == -1)
 									{
-										TrackManager.StationEndEvent e = (TrackManager.StationEndEvent)TrackManager.Tracks[0].Elements[i].Events[j];
+										TrackManager.StationEndEvent e = (TrackManager.StationEndEvent)CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
 										if (StopsAtStation(e.StationIndex, Train) & Train.LastStation != e.StationIndex)
 										{
-											int s = Game.Stations[e.StationIndex].GetStopIndex(Train.Cars.Length);
+											int s = CurrentRoute.Stations[e.StationIndex].GetStopIndex(Train.NumberOfCars);
 											if (s >= 0)
 											{
-												double dist = Stations[e.StationIndex].Stops[s].TrackPosition - tp;
-												if (dist > -Stations[e.StationIndex].Stops[s].ForwardTolerance)
+												double dist = CurrentRoute.Stations[e.StationIndex].Stops[s].TrackPosition - tp;
+												if (dist > -CurrentRoute.Stations[e.StationIndex].Stops[s].ForwardTolerance)
 												{
 													if (dist < 25.0)
 													{
@@ -564,12 +575,12 @@ namespace OpenBve
 										}
 									}
 								}
-								else if (TrackManager.Tracks[0].Elements[i].Events[j] is TrackManager.TrackEndEvent)
+								else if (CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is TrackEndEvent)
 								{
 									// track end
-									if (Train == TrainManager.PlayerTrain)
+									if (Train.IsPlayerTrain)
 									{
-										TrackManager.TrackEndEvent e = (TrackManager.TrackEndEvent)TrackManager.Tracks[0].Elements[i].Events[j];
+										TrackEndEvent e = (TrackEndEvent)CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
 										double dist = stp + e.TrackPositionDelta - tp;
 										double edec;
 										if (dist >= 15.0)
@@ -587,7 +598,7 @@ namespace OpenBve
 						}
 					}
 					// buffers ahead
-					if (Train == TrainManager.PlayerTrain)
+					if (Train.IsPlayerTrain)
 					{
 						for (int i = 0; i < BufferTrackPositions.Length; i++)
 						{
@@ -663,14 +674,14 @@ namespace OpenBve
 					}
 					Train.UnapplyEmergencyBrake();
 					// current station
-					if (Train.Station >= 0 & Train.StationState == TrainManager.TrainStopState.Pending)
+					if (Train.Station >= 0 & Train.StationState == TrainStopState.Pending)
 					{
 						if (StopsAtStation(Train.Station, Train))
 						{
-							int s = Game.Stations[Train.Station].GetStopIndex(Train.Cars.Length);
+							int s = CurrentRoute.Stations[Train.Station].GetStopIndex(Train.NumberOfCars);
 							if (s >= 0)
 							{
-								double dist = Stations[Train.Station].Stops[s].TrackPosition - tp;
+								double dist = CurrentRoute.Stations[Train.Station].Stops[s].TrackPosition - tp;
 								if (dist > 0.0)
 								{
 									if (dist < 25.0)
@@ -852,13 +863,13 @@ namespace OpenBve
 			}
 			internal override void Trigger(double TimeElapsed)
 			{
-				if (TimeLastProcessed > SecondsSinceMidnight)
+				if (TimeLastProcessed > CurrentRoute.SecondsSinceMidnight)
 				{
-					TimeLastProcessed = SecondsSinceMidnight;
+					TimeLastProcessed = CurrentRoute.SecondsSinceMidnight;
 				}
-				else if (SecondsSinceMidnight - TimeLastProcessed >= CurrentInterval)
+				else if (CurrentRoute.SecondsSinceMidnight - TimeLastProcessed >= CurrentInterval)
 				{
-					TimeLastProcessed = SecondsSinceMidnight;
+					TimeLastProcessed = CurrentRoute.SecondsSinceMidnight;
 					if (Train.Plugin != null && Train.Plugin.SupportsAI)
 					{
 						if (PerformPlugin() != AIResponse.None)

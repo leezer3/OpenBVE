@@ -80,10 +80,10 @@ namespace OpenBve
 						if (idx != -1 && idx != Text.Length)
 						{
 							double d;
-							string s = this.Text.Substring(idx + 1, this.Text.Length - idx - 1).Trim();
+							string s = this.Text.Substring(idx + 1, this.Text.Length - idx - 1).Trim(new char[] { });
 							if (NumberFormats.TryParseDoubleVb6(s, out d))
 							{
-								this.Text = this.Text.Substring(0, idx).Trim();
+								this.Text = this.Text.Substring(0, idx).Trim(new char[] { });
 							}
 						}
 					}
@@ -192,12 +192,12 @@ namespace OpenBve
 					if (a.IndexOf('(') >= 0 & a.IndexOf(')') >= 0)
 					{
 						// indices found not separated from the command by spaces
-						Command = Text.Substring(0, i).TrimEnd();
-						ArgumentSequence = Text.Substring(i + 1).TrimStart();
+						Command = Text.Substring(0, i).TrimEnd(new char[] { });
+						ArgumentSequence = Text.Substring(i + 1).TrimStart(new char[] { });
 						if (ArgumentSequence.StartsWith("(") & ArgumentSequence.EndsWith(")"))
 						{
 							// arguments are enclosed by parentheses
-							ArgumentSequence = ArgumentSequence.Substring(1, ArgumentSequence.Length - 2).Trim();
+							ArgumentSequence = ArgumentSequence.Substring(1, ArgumentSequence.Length - 2).Trim(new char[] { });
 						}
 						else if (ArgumentSequence.StartsWith("("))
 						{
@@ -206,7 +206,8 @@ namespace OpenBve
 							{
 								Interface.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 							}
-							ArgumentSequence = ArgumentSequence.Substring(1).TrimStart();
+
+							ArgumentSequence = ArgumentSequence.Substring(1).TrimStart(new char[] { });
 						}
 					}
 					else
@@ -222,8 +223,8 @@ namespace OpenBve
 								if (j == Text.Length - 1)
 								{
 									// only closing parenthesis found at the end of the expression
-									Command = Text.Substring(0, i).TrimEnd();
-									ArgumentSequence = Text.Substring(i + 2, j - i - 2).Trim();
+									Command = Text.Substring(0, i).TrimEnd(new char[] { });
+									ArgumentSequence = Text.Substring(i + 2, j - i - 2).Trim(new char[] { });
 								}
 								else
 								{
@@ -234,14 +235,14 @@ namespace OpenBve
 									{
 										if (char.IsWhiteSpace(Text[k]))
 										{
-											Command = Text.Substring(0, k).TrimEnd();
-											ArgumentSequence = Text.Substring(k + 1).TrimStart();
+											Command = Text.Substring(0, k).TrimEnd(new char[] { });
+											ArgumentSequence = Text.Substring(k + 1).TrimStart(new char[] { });
 											found = true; break;
 										}
 										else if (Text[k] == '(')
 										{
-											Command = Text.Substring(0, k).TrimEnd();
-											ArgumentSequence = Text.Substring(k).TrimStart();
+											Command = Text.Substring(0, k).TrimEnd(new char[] { });
+											ArgumentSequence = Text.Substring(k).TrimStart(new char[] { });
 											found = true; break;
 										}
 									}
@@ -259,7 +260,7 @@ namespace OpenBve
 									if (ArgumentSequence.StartsWith("(") & ArgumentSequence.EndsWith(")"))
 									{
 										// arguments are enclosed by parentheses
-										ArgumentSequence = ArgumentSequence.Substring(1, ArgumentSequence.Length - 2).Trim();
+										ArgumentSequence = ArgumentSequence.Substring(1, ArgumentSequence.Length - 2).Trim(new char[] { });
 									}
 									else if (ArgumentSequence.StartsWith("("))
 									{
@@ -268,7 +269,8 @@ namespace OpenBve
 										{
 											Interface.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 										}
-										ArgumentSequence = ArgumentSequence.Substring(1).TrimStart();
+
+										ArgumentSequence = ArgumentSequence.Substring(1).TrimStart(new char[] { });
 									}
 								}
 							}
@@ -279,19 +281,20 @@ namespace OpenBve
 								{
 									Interface.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 								}
-								Command = Text.Substring(0, i).TrimEnd();
-								ArgumentSequence = Text.Substring(i + 2).TrimStart();
+
+								Command = Text.Substring(0, i).TrimEnd(new char[] { });
+								ArgumentSequence = Text.Substring(i + 2).TrimStart(new char[] { });
 							}
 						}
 						else
 						{
 							// no index possible
-							Command = Text.Substring(0, i).TrimEnd();
-							ArgumentSequence = Text.Substring(i + 1).TrimStart();
+							Command = Text.Substring(0, i).TrimEnd(new char[] { });
+							ArgumentSequence = Text.Substring(i + 1).TrimStart(new char[] { });
 							if (ArgumentSequence.StartsWith("(") & ArgumentSequence.EndsWith(")"))
 							{
 								// arguments are enclosed by parentheses
-								ArgumentSequence = ArgumentSequence.Substring(1, ArgumentSequence.Length - 2).Trim();
+								ArgumentSequence = ArgumentSequence.Substring(1, ArgumentSequence.Length - 2).Trim(new char[] { });
 							}
 							else if (ArgumentSequence.StartsWith("("))
 							{
@@ -300,7 +303,8 @@ namespace OpenBve
 								{
 									Interface.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 								}
-								ArgumentSequence = ArgumentSequence.Substring(1).TrimStart();
+
+								ArgumentSequence = ArgumentSequence.Substring(1).TrimStart(new char[] { });
 							}
 						}
 					}
@@ -313,8 +317,8 @@ namespace OpenBve
 						i = Text.LastIndexOf('(');
 						if (i >= 0)
 						{
-							Command = Text.Substring(0, i).TrimEnd();
-							ArgumentSequence = Text.Substring(i + 1, Text.Length - i - 2).Trim();
+							Command = Text.Substring(0, i).TrimEnd(new char[] { });
+							ArgumentSequence = Text.Substring(i + 1, Text.Length - i - 2).Trim(new char[] { });
 						}
 						else
 						{
@@ -331,8 +335,9 @@ namespace OpenBve
 							{
 								Interface.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 							}
-							Command = Text.Substring(0, i).TrimEnd();
-							ArgumentSequence = Text.Substring(i + 1).TrimStart();
+
+							Command = Text.Substring(0, i).TrimEnd(new char[] { });
+							ArgumentSequence = Text.Substring(i + 1).TrimStart(new char[] { });
 						}
 						else
 						{

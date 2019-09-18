@@ -15,7 +15,7 @@
 
 		internal override void Update(double TimeElapsed, double currentSpeed, TrainManager.AbstractHandle brakeHandle, out double deceleration)
 		{
-			airSound = AirSound.None;
+			airSound = null;
 			if (emergencyHandle.Actual == true)
 			{
 				if (brakeType == BrakeType.Main)
@@ -228,7 +228,7 @@
 						double p = 0.8 * brakeCylinder.CurrentPressure - 0.2 * brakeCylinder.EmergencyMaximumPressure;
 						if (p < 0.0) p = 0.0;
 						brakeCylinder.SoundPlayedForPressure = p;
-						airSound = p < Tolerance ? AirSound.AirZero : brakeCylinder.CurrentPressure > m - Tolerance ? AirSound.AirHigh : AirSound.Air;
+						airSound = p < Tolerance ? AirZero : brakeCylinder.CurrentPressure > m - Tolerance ? AirHigh : Air;
 					}
 				}
 			}

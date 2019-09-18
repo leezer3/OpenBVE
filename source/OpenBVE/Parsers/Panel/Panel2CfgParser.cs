@@ -1,4 +1,5 @@
 using System;
+using LibRender;
 using OpenBve.Parsers.Panel;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -7,6 +8,7 @@ using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 using OpenBveApi.FunctionScripting;
+using static LibRender.CameraProperties;
 
 namespace OpenBve {
 	internal static class Panel2CfgParser {
@@ -31,10 +33,11 @@ namespace OpenBve {
 			string FileName = Path.CombineFile(TrainPath, PanelFile);
 			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
 			for (int i = 0; i < Lines.Length; i++) {
-				Lines[i] = Lines[i].Trim();
+				Lines[i] = Lines[i].Trim(new char[] { });
 				int j = Lines[i].IndexOf(';');
-				if (j >= 0) {
-					Lines[i] = Lines[i].Substring(0, j).TrimEnd();
+				if (j >= 0)
+				{
+					Lines[i] = Lines[i].Substring(0, j).TrimEnd(new char[] { });
 				}
 			}
 			// initialize
@@ -50,14 +53,15 @@ namespace OpenBve {
 			for (int i = 0; i < Lines.Length; i++) {
 				if (Lines[i].Length > 0) {
 					if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)) {
-						string Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim();
+						string Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim(new char[] { });
 						switch (Section.ToLowerInvariant()) {
 								// panel
 							case "this":
 								i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
-									int j = Lines[i].IndexOf('='); if (j >= 0) {
-										string Key = Lines[i].Substring(0, j).TrimEnd();
-										string Value = Lines[i].Substring(j + 1).TrimStart();
+									int j = Lines[i].IndexOf('='); if (j >= 0)
+									{
+										string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+										string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 										switch (Key.ToLowerInvariant()) {
 											case "resolution":
 												double pr = 0.0;
@@ -136,9 +140,10 @@ namespace OpenBve {
 											case "center":
 												{
 													int k = Value.IndexOf(',');
-													if (k >= 0) {
-														string a = Value.Substring(0, k).TrimEnd();
-														string b = Value.Substring(k + 1).TrimStart();
+													if (k >= 0)
+													{
+														string a = Value.Substring(0, k).TrimEnd(new char[] { });
+														string b = Value.Substring(k + 1).TrimStart(new char[] { });
 														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out PanelCenter.X)) {
 															Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
@@ -209,9 +214,10 @@ namespace OpenBve {
 											case "origin":
 												{
 													int k = Value.IndexOf(',');
-													if (k >= 0) {
-														string a = Value.Substring(0, k).TrimEnd();
-														string b = Value.Substring(k + 1).TrimStart();
+													if (k >= 0)
+													{
+														string a = Value.Substring(0, k).TrimEnd(new char[] { });
+														string b = Value.Substring(k + 1).TrimStart(new char[] { });
 														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out PanelOrigin.X)) {
 															Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
@@ -244,19 +250,19 @@ namespace OpenBve {
 			}
 			{ // camera restriction
 				double WorldWidth, WorldHeight;
-				if (Screen.Width >= Screen.Height) {
-					WorldWidth = 2.0 * Math.Tan(0.5 * World.HorizontalViewingAngle) * EyeDistance;
-					WorldHeight = WorldWidth / World.AspectRatio;
+				if (LibRender.Screen.Width >= LibRender.Screen.Height) {
+					WorldWidth = 2.0 * Math.Tan(0.5 * Camera.HorizontalViewingAngle) * EyeDistance;
+					WorldHeight = WorldWidth / LibRender.Screen.AspectRatio;
 				} else {
-					WorldHeight = 2.0 * Math.Tan(0.5 * World.VerticalViewingAngle) * EyeDistance / World.AspectRatio;
-					WorldWidth = WorldHeight * World.AspectRatio;
+					WorldHeight = 2.0 * Math.Tan(0.5 * Camera.VerticalViewingAngle) * EyeDistance / LibRender.Screen.AspectRatio;
+					WorldWidth = WorldHeight * LibRender.Screen.AspectRatio;
 				}
 				double x0 = (PanelLeft - PanelCenter.X) / PanelResolution;
 				double x1 = (PanelRight - PanelCenter.X) / PanelResolution;
-				double y0 = (PanelCenter.Y - PanelBottom) / PanelResolution * World.AspectRatio;
-				double y1 = (PanelCenter.Y - PanelTop) / PanelResolution * World.AspectRatio;
-				World.CameraRestrictionBottomLeft = new Vector3(x0 * WorldWidth, y0 * WorldHeight, EyeDistance);
-				World.CameraRestrictionTopRight = new Vector3(x1 * WorldWidth, y1 * WorldHeight, EyeDistance);
+				double y0 = (PanelCenter.Y - PanelBottom) / PanelResolution * LibRender.Screen.AspectRatio;
+				double y1 = (PanelCenter.Y - PanelTop) / PanelResolution * LibRender.Screen.AspectRatio;
+				Camera.RestrictionBottomLeft = new Vector3(x0 * WorldWidth, y0 * WorldHeight, EyeDistance);
+				Camera.RestrictionTopRight = new Vector3(x1 * WorldWidth, y1 * WorldHeight, EyeDistance);
 				Train.Cars[Car].DriverYaw = Math.Atan((PanelCenter.X - PanelOrigin.X) * WorldWidth / PanelResolution);
 				Train.Cars[Car].DriverPitch = Math.Atan((PanelOrigin.Y - PanelCenter.Y) * WorldWidth / PanelResolution);
 			}
@@ -266,21 +272,20 @@ namespace OpenBve {
 					Interface.AddMessage(MessageType.Error, true, "The daytime panel bitmap could not be found in " + FileName);
 				} else {
 					Texture tday;
-					Textures.RegisterTexture(PanelDaytimeImage, new TextureParameters(null, new Color24(PanelTransparentColor.R, PanelTransparentColor.G, PanelTransparentColor.B)), out tday);
+					TextureManager.RegisterTexture(PanelDaytimeImage, new TextureParameters(null, PanelTransparentColor), out tday);
 					Texture tnight = null;
 					if (PanelNighttimeImage != null) {
 						if (!System.IO.File.Exists(PanelNighttimeImage)) {
 							Interface.AddMessage(MessageType.Error, true, "The nighttime panel bitmap could not be found in " + FileName);
 						} else {
-							Textures.RegisterTexture(PanelNighttimeImage, new TextureParameters(null, new Color24(PanelTransparentColor.R, PanelTransparentColor.G, PanelTransparentColor.B)), out tnight);
+							TextureManager.RegisterTexture(PanelNighttimeImage, new TextureParameters(null, PanelTransparentColor), out tnight);
 						}
 					}
 					OpenBVEGame.RunInRenderThread(() =>
 					{
-						Textures.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
-						//Textures.LoadTexture(tnight, OpenGlTextureWrapMode.ClampClamp);
+						Program.CurrentHost.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
 					});
-					CreateElement(Train.Cars[Car].CarSections[0].Groups[0], 0.0, 0.0, tday.Width, tday.Height, new Vector2(0.5, 0.5), 0.0, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
+					CreateElement(ref Train.Cars[Car].CarSections[0].Groups[0], 0.0, 0.0, tday.Width, tday.Height, new Vector2(0.5, 0.5), 0.0, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
 				}
 			}
 
@@ -292,7 +297,7 @@ namespace OpenBve {
 				Array.Resize(ref Train.Cars[Car].CarSections[0].Groups, GroupIndex + 1);
 				Train.Cars[Car].CarSections[0].Groups[GroupIndex] = new TrainManager.ElementsGroup
 				{
-					Elements = new ObjectManager.AnimatedObject[] { },
+					Elements = new AnimatedObject[] { },
 					Overlay = true
 				};
 			}
@@ -307,7 +312,7 @@ namespace OpenBve {
 				}
 				if (Lines[i].Length > 0) {
 					if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)) {
-						string Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim();
+						string Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim(new char[] { });
 						switch (Section.ToLowerInvariant()) {
 								// pilotlamp
 							case "pilotlamp":
@@ -319,18 +324,20 @@ namespace OpenBve {
 									int Layer = 0;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 										int j = Lines[i].IndexOf('=');
-										if (j >= 0) {
-											string Key = Lines[i].Substring(0, j).TrimEnd();
-											string Value = Lines[i].Substring(j + 1).TrimStart();
+										if (j >= 0)
+										{
+											string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+											string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 											switch (Key.ToLowerInvariant()) {
 												case "subject":
 													Subject = Value;
 													break;
 												case "location":
 													int k = Value.IndexOf(',');
-													if (k >= 0) {
-														string a = Value.Substring(0, k).TrimEnd();
-														string b = Value.Substring(k + 1).TrimStart();
+													if (k >= 0)
+													{
+														string a = Value.Substring(0, k).TrimEnd(new char[] { });
+														string b = Value.Substring(k + 1).TrimStart(new char[] { });
 														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
 															Interface.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
@@ -381,18 +388,18 @@ namespace OpenBve {
 									// create element
 									if (DaytimeImage != null) {
 										Texture tday;
-										Textures.RegisterTexture(DaytimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tday);
+										TextureManager.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out tday);
 										Texture tnight = null;
 										if (NighttimeImage != null) {
-											Textures.RegisterTexture(NighttimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight);
+											TextureManager.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
 										}
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
+											Program.CurrentHost.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
 										});
 										int w = tday.Width;
 										int h = tday.Height;
-										int j = CreateElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
+										int j = CreateElement(ref Train.Cars[Car].CarSections[0].Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
 										string f = GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
 										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Program.CurrentHost, f + " 1 == --", false);
 									}
@@ -414,9 +421,10 @@ namespace OpenBve {
 									bool Backstop = false, Smoothed = false;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 										int j = Lines[i].IndexOf('=');
-										if (j >= 0) {
-											string Key = Lines[i].Substring(0, j).TrimEnd();
-											string Value = Lines[i].Substring(j + 1).TrimStart();
+										if (j >= 0)
+										{
+											string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+											string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 											switch (Key.ToLowerInvariant()) {
 												case "subject":
 													Subject = Value;
@@ -424,9 +432,10 @@ namespace OpenBve {
 												case "location":
 													{
 														int k = Value.IndexOf(',');
-														if (k >= 0) {
-															string a = Value.Substring(0, k).TrimEnd();
-															string b = Value.Substring(k + 1).TrimStart();
+														if (k >= 0)
+														{
+															string a = Value.Substring(0, k).TrimEnd(new char[] { });
+															string b = Value.Substring(k + 1).TrimStart(new char[] { });
 															if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
 																Interface.AddMessage(MessageType.Error, false, "CenterX is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															}
@@ -479,9 +488,10 @@ namespace OpenBve {
 												case "origin":
 													{
 														int k = Value.IndexOf(',');
-														if (k >= 0) {
-															string a = Value.Substring(0, k).TrimEnd();
-															string b = Value.Substring(k + 1).TrimStart();
+														if (k >= 0)
+														{
+															string a = Value.Substring(0, k).TrimEnd(new char[] { });
+															string b = Value.Substring(k + 1).TrimStart(new char[] { });
 															if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out OriginX)) {
 																Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 															}
@@ -550,19 +560,17 @@ namespace OpenBve {
 									if (DaytimeImage != null)
 									{
 										Texture tday;
-										Textures.RegisterTexture(DaytimeImage,
-											new TextureParameters(null,
-												new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tday);
+										TextureManager.RegisterTexture(DaytimeImage,
+											new TextureParameters(null, TransparentColor), out tday);
 										Texture tnight = null;
 										if (NighttimeImage != null)
 										{
-											Textures.RegisterTexture(NighttimeImage,
-												new TextureParameters(null,
-													new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight);
+											TextureManager.RegisterTexture(NighttimeImage,
+												new TextureParameters(null, TransparentColor), out tnight);
 										}
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
+											Program.CurrentHost.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)tday.Width;
 										double h = (double)tday.Height;
@@ -575,7 +583,7 @@ namespace OpenBve {
 										double n = Radius == 0.0 | OriginY == 0.0 ? 1.0 : Radius / OriginY;
 										double nx = n * w;
 										double ny = n * h;
-										int j = CreateElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], LocationX - ox * nx, LocationY - oy * ny, nx, ny, new Vector2(ox, oy), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, tday, tnight, Color, false);
+										int j = CreateElement(ref Train.Cars[Car].CarSections[0].Groups[GroupIndex], LocationX - ox * nx, LocationY - oy * ny, nx, ny, new Vector2(ox, oy), (double)Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color, false);
 										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateZDirection = Vector3.Backward;
 										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateXDirection = Vector3.Right;
 										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateYDirection = Vector3.Cross(Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateZDirection, Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateXDirection);
@@ -594,9 +602,9 @@ namespace OpenBve {
 												f = GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
 												break;
 										}
-										//Convert angles from degrees to radians
-										InitialAngle *= 0.0174532925199433;
-										LastAngle *= 0.0174532925199433;
+
+										InitialAngle = InitialAngle.ToRadians();
+										LastAngle = LastAngle.ToRadians();
 										double a0 = (InitialAngle * Maximum - LastAngle * Minimum) / (Maximum - Minimum);
 										double a1 = (LastAngle - InitialAngle) / (Maximum - Minimum);
 										f += " " + a1.ToString(Culture) + " * " + a0.ToString(Culture) + " +";
@@ -623,18 +631,20 @@ namespace OpenBve {
 									int Layer = 0;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 										int j = Lines[i].IndexOf('=');
-										if (j >= 0) {
-											string Key = Lines[i].Substring(0, j).TrimEnd();
-											string Value = Lines[i].Substring(j + 1).TrimStart();
+										if (j >= 0)
+										{
+											string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+											string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 											switch (Key.ToLowerInvariant()) {
 												case "subject":
 													Subject = Value;
 													break;
 												case "location":
 													int k = Value.IndexOf(',');
-													if (k >= 0) {
-														string a = Value.Substring(0, k).TrimEnd();
-														string b = Value.Substring(k + 1).TrimStart();
+													if (k >= 0)
+													{
+														string a = Value.Substring(0, k).TrimEnd(new char[] { });
+														string b = Value.Substring(k + 1).TrimStart(new char[] { });
 														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
 															Interface.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
@@ -662,7 +672,7 @@ namespace OpenBve {
 													break;
 												case "direction":
 													{
-														string[] s = Value.Split(',');
+														string[] s = Value.Split( new char[] { ',' });
 														if (s.Length == 2)
 														{
 															double x, y;
@@ -726,18 +736,18 @@ namespace OpenBve {
 									// create element
 									if (DaytimeImage != null) {
 										Texture tday;
-										Textures.RegisterTexture(DaytimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tday);
+										TextureManager.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out tday);
 										Texture tnight = null;
 										if (NighttimeImage != null) {
-											Textures.RegisterTexture(NighttimeImage, new TextureParameters(null, new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight);
+											TextureManager.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
 										}
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
+											Program.CurrentHost.LoadTexture(tday, OpenGlTextureWrapMode.ClampClamp);
 										});
 										int w = tday.Width;
 										int h = tday.Height;
-										int j = CreateElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
+										int j = CreateElement(ref Train.Cars[Car].CarSections[0].Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
 										if (Maximum < Minimum)
 										{
 											Interface.AddMessage(MessageType.Error, false, "Maximum value must be greater than minimum value " + Section + " in " + FileName);
@@ -761,18 +771,20 @@ namespace OpenBve {
 									double Layer = 0.0; int Interval = 0;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 										int j = Lines[i].IndexOf('=');
-										if (j >= 0) {
-											string Key = Lines[i].Substring(0, j).TrimEnd();
-											string Value = Lines[i].Substring(j + 1).TrimStart();
+										if (j >= 0)
+										{
+											string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+											string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 											switch (Key.ToLowerInvariant()) {
 												case "subject":
 													Subject = Value;
 													break;
 												case "location":
 													int k = Value.IndexOf(',');
-													if (k >= 0) {
-														string a = Value.Substring(0, k).TrimEnd();
-														string b = Value.Substring(k + 1).TrimStart();
+													if (k >= 0)
+													{
+														string a = Value.Substring(0, k).TrimEnd(new char[] { });
+														string b = Value.Substring(k + 1).TrimStart(new char[] { });
 														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
 															Interface.AddMessage(MessageType.Error, false, "Left is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
@@ -870,7 +882,7 @@ namespace OpenBve {
 											{
 												if ((k + 1) * Interval <= hday)
 												{
-													Textures.RegisterTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, Interval), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tday[k]);
+													TextureManager.RegisterTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, Interval), TransparentColor), out tday[k]);
 												}
 												else if (k * Interval >= hday)
 												{
@@ -879,7 +891,7 @@ namespace OpenBve {
 												}
 												else
 												{
-													Textures.RegisterTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, hday - (k * Interval)), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tday[k]);
+													TextureManager.RegisterTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, hday - (k * Interval)), TransparentColor), out tday[k]);
 												}
 											}
 											if (NighttimeImage != null) {
@@ -889,7 +901,7 @@ namespace OpenBve {
 												for (int k = 0; k < numFrames; k++) {
 													if ((k + 1) * Interval <= hnight)
 													{
-														Textures.RegisterTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, Interval), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight[k]);
+														TextureManager.RegisterTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, Interval), TransparentColor), out tnight[k]);
 													}
 													else if (k * Interval > hnight)
 													{
@@ -897,7 +909,7 @@ namespace OpenBve {
 													}
 													else
 													{
-														Textures.RegisterTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, hnight - (k * Interval)), new Color24(TransparentColor.R, TransparentColor.G, TransparentColor.B)), out tnight[k]);
+														TextureManager.RegisterTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, hnight - (k * Interval)), TransparentColor), out tnight[k]);
 													}
 												}
 												
@@ -909,7 +921,7 @@ namespace OpenBve {
 											}
 											int j = -1;
 											for (int k = 0; k < tday.Length; k++) {
-												int l = CreateElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], LocationX, LocationY, (double)wday, (double)Interval, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, tday[k], tnight[k], Color32.White, k != 0);
+												int l = CreateElement(ref Train.Cars[Car].CarSections[0].Groups[GroupIndex], LocationX, LocationY, (double)wday, (double)Interval, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday[k], tnight[k], Color32.White, k != 0);
 												if (k == 0) j = l;
 											}
 											string f = GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
@@ -954,18 +966,20 @@ namespace OpenBve {
 									double Step = 0.0;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 										int j = Lines[i].IndexOf('=');
-										if (j >= 0) {
-											string Key = Lines[i].Substring(0, j).TrimEnd();
-											string Value = Lines[i].Substring(j + 1).TrimStart();
+										if (j >= 0)
+										{
+											string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+											string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 											switch (Key.ToLowerInvariant()) {
 												case "subject":
 													Subject = Value;
 													break;
 												case "location":
 													int k = Value.IndexOf(',');
-													if (k >= 0) {
-														string a = Value.Substring(0, k).TrimEnd();
-														string b = Value.Substring(k + 1).TrimStart();
+													if (k >= 0)
+													{
+														string a = Value.Substring(0, k).TrimEnd(new char[] { });
+														string b = Value.Substring(k + 1).TrimStart(new char[] { });
 														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
 															Interface.AddMessage(MessageType.Error, false, "CenterX is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
@@ -990,13 +1004,13 @@ namespace OpenBve {
 													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out InitialAngle)) {
 														Interface.AddMessage(MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
-														InitialAngle *= 0.0174532925199433;
+														InitialAngle = InitialAngle.ToRadians();
 													} break;
 												case "lastangle":
 													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out LastAngle)) {
 														Interface.AddMessage(MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 													} else {
-														LastAngle *= 0.0174532925199433;
+														LastAngle = LastAngle.ToRadians();
 													} break;
 												case "minimum":
 													if (Value.Length != 0 && !NumberFormats.TryParseDoubleVb6(Value, out Minimum)) {
@@ -1044,7 +1058,7 @@ namespace OpenBve {
 									}
 									if (Radius != 0.0) {
 										// create element
-										int j = CreateElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], LocationX - Radius, LocationY - Radius, 2.0 * Radius, 2.0 * Radius, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, null, null, Color, false);
+										int j = CreateElement(ref Train.Cars[Car].CarSections[0].Groups[GroupIndex], LocationX - Radius, LocationY - Radius, 2.0 * Radius, 2.0 * Radius, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, null, null, Color, false);
 										InitialAngle = InitialAngle + Math.PI;
 										LastAngle = LastAngle + Math.PI;
 										double x0 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Object.Mesh.Vertices[0].Coordinates.X;
@@ -1112,15 +1126,17 @@ namespace OpenBve {
 									double Layer = 0.0;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 										int j = Lines[i].IndexOf('=');
-										if (j >= 0) {
-											string Key = Lines[i].Substring(0, j).TrimEnd();
-											string Value = Lines[i].Substring(j + 1).TrimStart();
+										if (j >= 0)
+										{
+											string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+											string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 											switch (Key.ToLowerInvariant()) {
 												case "location":
 													int k = Value.IndexOf(',');
-													if (k >= 0) {
-														string a = Value.Substring(0, k).TrimEnd();
-														string b = Value.Substring(k + 1).TrimStart();
+													if (k >= 0)
+													{
+														string a = Value.Substring(0, k).TrimEnd(new char[] { });
+														string b = Value.Substring(k + 1).TrimStart(new char[] { });
 														if (a.Length != 0 && !NumberFormats.TryParseDoubleVb6(a, out LocationX)) {
 															Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														}
@@ -1161,7 +1177,7 @@ namespace OpenBve {
 										Interface.AddMessage(MessageType.Error, false, "Height is required to be specified in " + Section + " in " + FileName);
 									}
 									if (Width > 0.0 & Height > 0.0) {
-										int j = CreateElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], LocationX, LocationY, Width, Height, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter, PanelOrigin, Train.Cars[Car].Driver, null, null, Color32.White, false);
+										int j = CreateElement(ref Train.Cars[Car].CarSections[0].Groups[GroupIndex], LocationX, LocationY, Width, Height, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, null, null, Color32.White, false);
 										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Program.CurrentHost, "timetable", false);
 										Timetable.AddObjectForCustomTimetable(Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j]);
 									}
@@ -1188,6 +1204,10 @@ namespace OpenBve {
 			double range = ftc / ((Maximum + mp) - (Minimum + mp));
 			switch(Subject.ToLowerInvariant())
 			{
+				case "pilotlamp":
+				case "passalarm":
+				case "stationadjustalarm":
+					return Subject.ToLowerInvariant();
 				case "acc":
 					return "if[acceleration < " + Maximum + ", if[acceleration > " + Minimum + ", acceleration " + " * " + range + ", 0]," + ftc + "]";
 				case "motor":
@@ -1323,7 +1343,6 @@ namespace OpenBve {
 								Suffix = " ~ " + t0 + " >= <> " + t1 + " * floor 10 mod 10 ?";
 							}
 							Subject = Subject.Substring(0, i);
-							i--;
 						}
 					}
 				}
@@ -1463,22 +1482,23 @@ namespace OpenBve {
 
 		
 
-		internal static int CreateElement(TrainManager.ElementsGroup Group, double Left, double Top, double Width, double Height, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelLeft, double PanelRight, double PanelTop, double PanelBottom, Vector2 PanelCenter, Vector2 PanelOrigin, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, Color32 Color, bool AddStateToLastElement) {
+		internal static int CreateElement(ref TrainManager.ElementsGroup Group, double Left, double Top, double Width, double Height, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelTop, double PanelBottom, Vector2 PanelCenter, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, Color32 Color, bool AddStateToLastElement)
+		{
 			double WorldWidth, WorldHeight;
-			if (Screen.Width >= Screen.Height) {
-				WorldWidth = 2.0 * Math.Tan(0.5 * World.HorizontalViewingAngle) * EyeDistance;
-				WorldHeight = WorldWidth / World.AspectRatio;
+			if (LibRender.Screen.Width >= LibRender.Screen.Height) {
+				WorldWidth = 2.0 * Math.Tan(0.5 * Camera.HorizontalViewingAngle) * EyeDistance;
+				WorldHeight = WorldWidth / LibRender.Screen.AspectRatio;
 			} else {
-				WorldHeight = 2.0 * Math.Tan(0.5 * World.VerticalViewingAngle) * EyeDistance / World.AspectRatio;
-				WorldWidth = WorldHeight * World.AspectRatio;
+				WorldHeight = 2.0 * Math.Tan(0.5 * Camera.VerticalViewingAngle) * EyeDistance / LibRender.Screen.AspectRatio;
+				WorldWidth = WorldHeight * LibRender.Screen.AspectRatio;
 			}
 			double x0 = Left / PanelResolution;
 			double x1 = (Left + Width) / PanelResolution;
-			double y0 = (PanelBottom - Top) / PanelResolution * World.AspectRatio;
-			double y1 = (PanelBottom - (Top + Height)) / PanelResolution * World.AspectRatio;
+			double y0 = (PanelBottom - Top) / PanelResolution * LibRender.Screen.AspectRatio;
+			double y1 = (PanelBottom - (Top + Height)) / PanelResolution * LibRender.Screen.AspectRatio;
 			double xd = 0.5 - PanelCenter.X / PanelResolution;
 			x0 += xd; x1 += xd;
-			double yt = PanelBottom - PanelResolution / World.AspectRatio;
+			double yt = PanelBottom - PanelResolution / LibRender.Screen.AspectRatio;
 			double yd = (PanelCenter.Y - yt) / (PanelBottom - yt) - 0.5;
 			y0 += yd; y1 += yd;
 			x0 = (x0 - 0.5) * WorldWidth;
@@ -1496,7 +1516,7 @@ namespace OpenBve {
 			Vertex t1 = new Vertex(v[1], new Vector2(0.0f, 0.0f));
 			Vertex t2 = new Vertex(v[2], new Vector2(1.0f, 0.0f));
 			Vertex t3 = new Vertex(v[3], new Vector2(1.0f, 1.0f));
-			ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
+			StaticObject Object = new StaticObject(Program.CurrentHost);
 			Object.Mesh.Vertices = new VertexTemplate[] { t0, t1, t2, t3 };
 			Object.Mesh.Faces = new MeshFace[] { new MeshFace(new int[] { 0, 1, 2, 3 }) };
 			Object.Mesh.Materials = new MeshMaterial[1];
@@ -1515,20 +1535,20 @@ namespace OpenBve {
 			if (AddStateToLastElement) {
 				int n = Group.Elements.Length - 1;
 				int j = Group.Elements[n].States.Length;
-				Array.Resize<ObjectManager.AnimatedObjectState>(ref Group.Elements[n].States, j + 1);
+				Array.Resize<AnimatedObjectState>(ref Group.Elements[n].States, j + 1);
 				Group.Elements[n].States[j].Position = o;
-				Group.Elements[n].States[j].Object = Object;
+				Group.Elements[n].States[j].Object = (StaticObject)Object.Clone();
 				return n;
 			} else {
 				int n = Group.Elements.Length;
-				Array.Resize<ObjectManager.AnimatedObject>(ref Group.Elements, n + 1);
-				Group.Elements[n] = new ObjectManager.AnimatedObject();
-				Group.Elements[n].States = new ObjectManager.AnimatedObjectState[1];
+				Array.Resize(ref Group.Elements, n + 1);
+				Group.Elements[n] = new AnimatedObject(Program.CurrentHost);
+				Group.Elements[n].States = new AnimatedObjectState[1];
 				Group.Elements[n].States[0].Position = o;
 				Group.Elements[n].States[0].Object = Object;
 				Group.Elements[n].CurrentState = 0;
-				Group.Elements[n].ObjectIndex = ObjectManager.CreateDynamicObject();
-				ObjectManager.Objects[Group.Elements[n].ObjectIndex] = Object.Clone();
+				Group.Elements[n].internalObject = (StaticObject)Object.Clone();
+				ObjectManager.CreateDynamicObject(ref Group.Elements[n].internalObject);
 				return n;
 			}
 		}

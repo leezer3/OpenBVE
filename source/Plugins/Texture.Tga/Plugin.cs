@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using OpenBveApi.Hosts;
 using OpenBveApi.Textures;
@@ -5,7 +6,7 @@ using OpenBveApi.Textures;
 namespace Plugin
 {
 	/// <summary>Implements the texture interface.</summary>
-	public partial class Plugin : TextureInterface
+	public partial class Plugin : TextureInterface, IDisposable
 	{
 
 		// --- members ---
@@ -61,6 +62,19 @@ namespace Plugin
 			{
 				texture = null;
 				return false;
+			}
+		}
+
+		public void Dispose()
+		{
+			Dispose(true);
+		}
+
+		private void Dispose(bool currentlyDisposing)
+		{
+			if(currentlyDisposing)
+			{
+				bitmap.Dispose();
 			}
 		}
 

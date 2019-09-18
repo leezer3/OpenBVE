@@ -3,18 +3,18 @@
 namespace OpenBveApi.FunctionScripting
 {
 	/// <summary>Contains functions for dealing with function script notation</summary>
-	public class FunctionScriptNotation
+	public static class FunctionScriptNotation
 	{
 		/// <summary>Converts a string formatted in simple function script to postfix notation</summary>
 		/// <param name="Expression">The function script string</param>
 		public static string GetPostfixNotationFromFunctionNotation(string Expression) {
 			int i = Expression.IndexOf('[');
 			if (i >= 0) {
-				if (!Expression.EndsWith("]")) {
+				if (!Expression.EndsWith("]", StringComparison.InvariantCultureIgnoreCase)) {
 					throw new System.IO.InvalidDataException("Missing closing bracket encountered in " + Expression);
 				}
 			} else {
-				if (Expression.EndsWith("]")) {
+				if (Expression.EndsWith("]", StringComparison.InvariantCultureIgnoreCase)) {
 					throw new System.IO.InvalidDataException("Unexpected closing bracket encountered in " + Expression);
 				}
 				// ReSharper disable once NotAccessedVariable
@@ -72,7 +72,7 @@ namespace OpenBveApi.FunctionScripting
 						if (n == a.Length) {
 							Array.Resize<string>(ref a, n << 1);
 						}
-						a[n] = s.Substring(b, i - b).Trim();
+						a[n] = s.Substring(b, i - b).Trim(new char[] { });
 						n++;
 						b = i + 1;
 						break;
@@ -81,7 +81,7 @@ namespace OpenBveApi.FunctionScripting
 			if (n == a.Length) {
 				Array.Resize<string>(ref a, n << 1);
 			}
-			a[n] = s.Substring(b).Trim();
+			a[n] = s.Substring(b).Trim(new char[] { });
 			n++;
 			if (n == 1 & a[0].Length == 0) {
 				n = 0;
@@ -93,7 +93,7 @@ namespace OpenBveApi.FunctionScripting
 				if (a[i].IndexOf(' ') >= 0) {
 					throw new System.IO.InvalidDataException("An argument containing a space is invalid in " + f + " in " + Expression);
 				}
-				a[i] = GetPostfixNotationFromFunctionNotation(a[i]).Trim();
+				a[i] = GetPostfixNotationFromFunctionNotation(a[i]).Trim(new char[] { });
 			}
 			switch (f.ToLowerInvariant()) {
 					// arithmetic
@@ -295,6 +295,9 @@ namespace OpenBveApi.FunctionScripting
 				case "brakepipe":
 				case "brakecylinder":
 				case "straightairpipe":
+				// station index functions
+				case "distancestation":
+				case "stopsstation":
 					if (n == 1) {
 						return a[0] + " " + f.ToLowerInvariant() + "index";
 					}
@@ -339,8 +342,10 @@ namespace OpenBveApi.FunctionScripting
 									StackLength--;
 									q = false;
 								} else if (StackLength >= 2) {
+									// ReSharper disable once NotAccessedVariable
 									double b;
 									if (double.TryParse(Stack[StackLength - 1], System.Globalization.NumberStyles.Float, Culture, out b)) {
+										// ReSharper disable once NotAccessedVariable
 										double a;
 										if (double.TryParse(Stack[StackLength - 2], System.Globalization.NumberStyles.Float, Culture, out a)) {
 											// a b <>
@@ -847,8 +852,8 @@ namespace OpenBveApi.FunctionScripting
 										if (n >= p.Length) Array.Resize<string>(ref p, n << 1);
 										p[n] = Expression.Substring(t, j - t);
 										n++;
-										string a = Expression.Substring(0, i).Trim();
-										string c = Expression.Substring(j + 1).Trim();
+										string a = Expression.Substring(0, i).Trim(new char[] { });
+										string c = Expression.Substring(j + 1).Trim(new char[] { });
 										System.Text.StringBuilder r = new System.Text.StringBuilder();
 										for (int k = 0; k < n; k++)
 										{
@@ -901,9 +906,9 @@ namespace OpenBveApi.FunctionScripting
 								}
 								if (n == 0)
 								{
-									string a = Expression.Substring(0, i).Trim();
-									string b = Expression.Substring(i + 1, j - i - 1).Trim();
-									string c = Expression.Substring(j + 1).Trim();
+									string a = Expression.Substring(0, i).Trim(new char[] { });
+									string b = Expression.Substring(i + 1, j - i - 1).Trim(new char[] { });
+									string c = Expression.Substring(j + 1).Trim(new char[] { });
 									return GetFunctionNotationFromInfixNotation(a + GetFunctionNotationFromInfixNotation(b, false) + c,
 										false);
 								}
@@ -922,24 +927,24 @@ namespace OpenBveApi.FunctionScripting
 			{
 				int i = Expression.IndexOf('|');
 				if (i >= 0) {
-					string a = Expression.Substring(0, i).Trim();
-					string b = Expression.Substring(i + 1).Trim();
+					string a = Expression.Substring(0, i).Trim(new char[] { });
+					string b = Expression.Substring(i + 1).Trim(new char[] { });
 					return "Or[" + GetFunctionNotationFromInfixNotation(a, false) + "," + GetFunctionNotationFromInfixNotation(b, false) + "]";
 				}
 			}
 			{
 				int i = Expression.IndexOf('^');
 				if (i >= 0) {
-					string a = Expression.Substring(0, i).Trim();
-					string b = Expression.Substring(i + 1).Trim();
+					string a = Expression.Substring(0, i).Trim(new char[] { });
+					string b = Expression.Substring(i + 1).Trim(new char[] { });
 					return "Xor[" + GetFunctionNotationFromInfixNotation(a, false) + "," + GetFunctionNotationFromInfixNotation(b, false) + "]";
 				}
 			}
 			{
 				int i = Expression.IndexOf('&');
 				if (i >= 0) {
-					string a = Expression.Substring(0, i).Trim();
-					string b = Expression.Substring(i + 1).Trim();
+					string a = Expression.Substring(0, i).Trim(new char[] { });
+					string b = Expression.Substring(i + 1).Trim(new char[] { });
 					return "And[" + GetFunctionNotationFromInfixNotation(a, false) + "," + GetFunctionNotationFromInfixNotation(b, false) + "]";
 				}
 			}
@@ -956,7 +961,7 @@ namespace OpenBveApi.FunctionScripting
 					} else break;
 				}
 				if (i >= 0) {
-					string b = Expression.Substring(i + 1).Trim();
+					string b = Expression.Substring(i + 1).Trim(new char[] { });
 					return "Not[" + GetFunctionNotationFromInfixNotation(b, false) + "]";
 				}
 			}
@@ -980,8 +985,8 @@ namespace OpenBveApi.FunctionScripting
 				}
 				if (k >= 0) {
 					int l = k <= 3 ? 2 : 1;
-					string a = Expression.Substring(0, j[k]).Trim();
-					string b = Expression.Substring(j[k] + l).Trim();
+					string a = Expression.Substring(0, j[k]).Trim(new char[] { });
+					string b = Expression.Substring(j[k] + l).Trim(new char[] { });
 					string f; switch (k) {
 							case 0: f = "Equal"; break;
 							case 1: f = "Unequal"; break;
@@ -998,12 +1003,12 @@ namespace OpenBveApi.FunctionScripting
 				int i = Expression.LastIndexOf('+');
 				int j = Expression.LastIndexOf('-');
 				if (i >= 0 & (j == -1 | j >= 0 & i > j)) {
-					string a = Expression.Substring(0, i).Trim();
-					string b = Expression.Substring(i + 1).Trim();
+					string a = Expression.Substring(0, i).Trim(new char[] { });
+					string b = Expression.Substring(i + 1).Trim(new char[] { });
 					return "Plus[" + GetFunctionNotationFromInfixNotation(a, false) + "," + GetFunctionNotationFromInfixNotation(b, false) + "]";
 				} else if (j >= 0) {
-					string a = Expression.Substring(0, j).Trim();
-					string b = Expression.Substring(j + 1).Trim();
+					string a = Expression.Substring(0, j).Trim(new char[] { });
+					string b = Expression.Substring(j + 1).Trim(new char[] { });
 					if (a.Length != 0) {
 						return "Subtract[" + GetFunctionNotationFromInfixNotation(a, false) + "," + GetFunctionNotationFromInfixNotation(b, false) + "]";
 					}
@@ -1012,30 +1017,30 @@ namespace OpenBveApi.FunctionScripting
 			{
 				int i = Expression.IndexOf('*');
 				if (i >= 0) {
-					string a = Expression.Substring(0, i).Trim();
-					string b = Expression.Substring(i + 1).Trim();
+					string a = Expression.Substring(0, i).Trim(new char[] { });
+					string b = Expression.Substring(i + 1).Trim(new char[] { });
 					return "Times[" + GetFunctionNotationFromInfixNotation(a, false) + "," + GetFunctionNotationFromInfixNotation(b, false) + "]";
 				}
 			}
 			{
 				int i = Expression.IndexOf('/');
 				if (i >= 0) {
-					string a = Expression.Substring(0, i).Trim();
-					string b = Expression.Substring(i + 1).Trim();
+					string a = Expression.Substring(0, i).Trim(new char[] { });
+					string b = Expression.Substring(i + 1).Trim(new char[] { });
 					return "Divide[" + GetFunctionNotationFromInfixNotation(a, false) + "," + GetFunctionNotationFromInfixNotation(b, false) + "]";
 				}
 			}
 			{
 				int i = Expression.IndexOf('-');
 				if (i >= 0) {
-					string a = Expression.Substring(0, i).Trim();
-					string b = Expression.Substring(i + 1).Trim();
+					string a = Expression.Substring(0, i).Trim(new char[] { });
+					string b = Expression.Substring(i + 1).Trim(new char[] { });
 					if (a.Length == 0) {
 						return "Minus[" + GetFunctionNotationFromInfixNotation(b, false) + "]";
 					}
 				}
 			}
-			return Expression.Trim();
+			return Expression.Trim(new char[] { });
 		}
 	}
 }

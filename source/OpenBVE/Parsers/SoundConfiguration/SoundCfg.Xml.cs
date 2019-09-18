@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Xml;
-using OpenBveApi.Math;
 using System.Linq;
+using System.Xml;
 using OpenBve.BrakeSystems;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
+using SoundManager;
 
 namespace OpenBve
 {
-	class SoundXmlParser
+	internal class SoundXmlParser
 	{
 		internal static bool ParseTrain(string fileName, TrainManager.Train train)
 		{
@@ -15,7 +16,7 @@ namespace OpenBve
 			{
 				try
 				{
-					Parse(fileName, ref train.Cars[i], i == train.DriverCar);
+					Parse(fileName, ref train, ref train.Cars[i], i == train.DriverCar);
 				}
 				catch
 				{
@@ -26,7 +27,7 @@ namespace OpenBve
 		}
 
 		private static string currentPath;
-		internal static void Parse(string fileName, ref TrainManager.Car car, bool isDriverCar)
+		internal static void Parse(string fileName, ref TrainManager.Train Train, ref TrainManager.Car car, bool isDriverCar)
 		{
 			//3D center of the car
 			Vector3 center = Vector3.Zero;
@@ -88,19 +89,23 @@ namespace OpenBve
 										{
 											case "releasehigh":
 												//Release brakes from high pressure
-												ParseNode(cc, out car.Sounds.AirHigh, center, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.CarBrake.AirHigh, center, SoundCfgParser.smallRadius);
 												break;
 											case "release":
 												//Release brakes from normal pressure
-												ParseNode(cc, out car.Sounds.Air, center, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.CarBrake.Air, center, SoundCfgParser.smallRadius);
 												break;
 											case "releasefull":
 												//Release brakes from full pressure
-												ParseNode(cc, out car.Sounds.AirZero, center, SoundCfgParser.smallRadius);
+												ParseNode(cc, out car.CarBrake.AirZero, center, SoundCfgParser.smallRadius);
 												break;
 											case "emergency":
 												//Apply EB
-												ParseNode(cc, out car.Sounds.EmrBrake, center, SoundCfgParser.smallRadius);
+												ParseNode(cc, out Train.Handles.EmergencyBrake.ApplicationSound, center, SoundCfgParser.smallRadius);
+												break;
+											case "emergencyrelease":
+												//Release EB
+												ParseNode(cc, out Train.Handles.EmergencyBrake.ReleaseSound, center, SoundCfgParser.smallRadius);
 												break;
 											case "application":
 												//Standard application
@@ -127,24 +132,24 @@ namespace OpenBve
 										switch (cc.Name.ToLowerInvariant())
 										{
 											case "apply":
-												ParseNode(cc, out car.Sounds.BrakeHandleApply, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Brake.Increase, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "applyfast":
-												ParseNode(cc, out car.Sounds.BrakeHandleApplyFast, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Brake.IncreaseFast, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "release":
-												ParseNode(cc, out car.Sounds.BrakeHandleRelease, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Brake.Decrease, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "releasefast":
-												ParseNode(cc, out car.Sounds.BrakeHandleReleaseFast, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Brake.DecreaseFast, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "min":
 											case "minimum":
-												ParseNode(cc, out car.Sounds.BrakeHandleMin, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Brake.Min, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "max":
 											case "maximum":
-												ParseNode(cc, out car.Sounds.BrakeHandleMax, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Brake.Max, panel, SoundCfgParser.tinyRadius);
 												break;
 											default:
 												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
@@ -183,7 +188,7 @@ namespace OpenBve
 									{
 										break;
 									}
-									ParseNode(c, out car.Sounds.Adjust, panel, SoundCfgParser.tinyRadius);
+									ParseNode(c, out Train.SafetySystems.StationAdjust.AdjustAlarm, panel, SoundCfgParser.tinyRadius);
 									break;
 								case "compressor":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
@@ -202,17 +207,17 @@ namespace OpenBve
 											case "attack":
 											case "start":
 												//Compressor starting sound
-												ParseNode(cc, out car.Sounds.CpStart, center, SoundCfgParser.mediumRadius);
+												ParseNode(cc, out car.CarBrake.airCompressor.StartSound, center, SoundCfgParser.mediumRadius);
 												break;
 											case "loop":
 												//Compressor loop sound
-												ParseNode(cc, out car.Sounds.CpLoop, center, SoundCfgParser.mediumRadius);
+												ParseNode(cc, out car.CarBrake.airCompressor.LoopSound, center, SoundCfgParser.mediumRadius);
 												break;
 											case "release":
 											case "stop":
 											case "end":
 												//Compressor end sound
-												ParseNode(cc, out car.Sounds.CpEnd, center, SoundCfgParser.mediumRadius);
+												ParseNode(cc, out car.CarBrake.airCompressor.EndSound, center, SoundCfgParser.mediumRadius);
 												break;
 											default:
 												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
@@ -313,27 +318,27 @@ namespace OpenBve
 										{
 											case "up":
 											case "increase":
-												ParseNode(cc, out car.Sounds.MasterControllerUp, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Power.Increase, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "upfast":
 											case "increasefast":
-												ParseNode(cc, out car.Sounds.MasterControllerUpFast, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Power.IncreaseFast, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "down":
 											case "decrease":
-												ParseNode(cc, out car.Sounds.MasterControllerDown, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Power.Decrease, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "downfast":
 											case "decreasefast":
-												ParseNode(cc, out car.Sounds.MasterControllerDownFast, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Power.DecreaseFast, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "min":
 											case "minimum":
-												ParseNode(cc, out car.Sounds.MasterControllerMin, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Power.Min, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "max":
 											case "maximum":
-												ParseNode(cc, out car.Sounds.MasterControllerMax, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Power.Max, panel, SoundCfgParser.tinyRadius);
 												break;
 											default:
 												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
@@ -342,6 +347,11 @@ namespace OpenBve
 									}
 									break;
 								case "motor":
+									if (!c.ChildNodes.OfType<XmlElement>().Any())
+									{
+										Interface.AddMessage(MessageType.Error, false, string.Format("An empty list of motor sounds was defined in in XML file {0}", fileName));
+										break;
+									}
 									if (!car.Specs.IsMotorCar)
 									{
 										break;
@@ -363,10 +373,10 @@ namespace OpenBve
 										switch (cc.Name.ToLowerInvariant())
 										{
 											case "on":
-												ParseNode(cc, out car.Sounds.PilotLampOn, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.SafetySystems.PilotLamp.OnSound, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "off":
-												ParseNode(cc, out car.Sounds.PilotLampOff, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.SafetySystems.PilotLamp.OffSound, panel, SoundCfgParser.tinyRadius);
 												break;
 											default:
 												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
@@ -408,10 +418,10 @@ namespace OpenBve
 										switch (cc.Name.ToLowerInvariant())
 										{
 											case "on":
-												ParseNode(cc, out car.Sounds.ReverserOn, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Reverser.EngageSound, panel, SoundCfgParser.tinyRadius);
 												break;
 											case "off":
-												ParseNode(cc, out car.Sounds.ReverserOff, panel, SoundCfgParser.tinyRadius);
+												ParseNode(cc, out Train.Handles.Reverser.ReleaseSound, panel, SoundCfgParser.tinyRadius);
 												break;
 											default:
 												Interface.AddMessage(MessageType.Error, false, "Declaration " + cc.Name + " is unsupported in a " + c.Name + " node.");
@@ -429,7 +439,7 @@ namespace OpenBve
 									break;
 								case "shoe":
 								case "rub":
-									ParseNode(c, out car.Sounds.Rub, center, SoundCfgParser.mediumRadius);
+									ParseNode(c, out car.CarBrake.Rub, center, SoundCfgParser.mediumRadius);
 									break;
 								case "suspension":
 								case "spring":
@@ -544,21 +554,43 @@ namespace OpenBve
 		{
 			foreach (XmlNode c in node.ChildNodes)
 			{
-				int idx;
-				if (!NumberFormats.TryParseIntVb6(c.Name, out idx))
+				int idx = -1;
+				if (c.Name.ToLowerInvariant() != "sound")
 				{
-					continue;
+					Interface.AddMessage(MessageType.Error, false, "Invalid array node " + c.Name + " in XML node " + node.Name);
 				}
-				for (int i = 0; i < Tables.Length; i++)
+				else
 				{
-					Tables[i].Buffer = null;
-					Tables[i].Source = null;
-					for (int j = 0; j > Tables[i].Entries.Length; j++)
+					for (int i = 0; i < c.ChildNodes.Count; i++)
 					{
-						if (idx == Tables[i].Entries[j].SoundIndex)
+						if (c.ChildNodes[i].Name.ToLowerInvariant() == "index")
 						{
-							ParseNode(c, out Tables[i].Entries[j].Buffer, ref Position, Radius);
+							if (!NumberFormats.TryParseIntVb6(c.ChildNodes[i].InnerText.ToLowerInvariant(), out idx))
+							{
+								Interface.AddMessage(MessageType.Error, false, "Invalid array index " + c.Name + " in XML node " + node.Name);
+								return;
+							}
+							break;
 						}
+					}
+					if (idx >= 0)
+					{
+						for (int i = 0; i < Tables.Length; i++)
+						{
+							Tables[i].Buffer = null;
+							Tables[i].Source = null;
+							for (int j = 0; j < Tables[i].Entries.Length; j++)
+							{
+								if (idx == Tables[i].Entries[j].SoundIndex)
+								{
+									ParseNode(c, out Tables[i].Entries[j].Buffer, ref Position, Radius);
+								}
+							}
+						}
+					}
+					else
+					{
+						Interface.AddMessage(MessageType.Error, false, "Invalid array index " + c.Name + " in XML node " + node.Name);
 					}
 				}
 			}
@@ -569,7 +601,7 @@ namespace OpenBve
 		/// <param name="Sound">The car sound</param>
 		/// <param name="Position">The default position of this sound (May be overriden by the node)</param>
 		/// <param name="Radius">The default radius of this sound (May be overriden by the node)</param>
-		private static void ParseNode(XmlNode node, out Sounds.SoundBuffer Sound, ref Vector3 Position, double Radius)
+		private static void ParseNode(XmlNode node, out SoundBuffer Sound, ref Vector3 Position, double Radius)
 		{
 			string fileName = null;
 			foreach (XmlNode c in node.ChildNodes)
@@ -597,7 +629,7 @@ namespace OpenBve
 						}
 						break;
 					case "position":
-						string[] Arguments = c.InnerText.Split(',');
+						string[] Arguments = c.InnerText.Split(new char[] { ',' });
 						double x = 0.0, y = 0.0, z = 0.0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out x))
 						{
@@ -632,7 +664,7 @@ namespace OpenBve
 				Sound = null;
 				return;
 			}
-			Sound = Sounds.SoundBuffer.TryToLoad(fileName, Radius);
+			Sound = Program.Sounds.TryToLoad(fileName, Radius);
 		}
 
 		/// <summary>Parses a single XML node into a car sound</summary>
@@ -640,7 +672,7 @@ namespace OpenBve
 		/// <param name="Sound">The car sound</param>
 		/// <param name="Position">The default position of this sound (May be overriden by the node)</param>
 		/// <param name="Radius">The default radius of this sound (May be overriden by the node)</param>
-		private static void ParseNode(XmlNode node, out TrainManager.CarSound Sound, Vector3 Position, double Radius)
+		private static void ParseNode(XmlNode node, out CarSound Sound, Vector3 Position, double Radius)
 		{
 			string fileName = null;
 			foreach (XmlNode c in node.ChildNodes)
@@ -655,7 +687,7 @@ namespace OpenBve
 							{
 								//Valid path, but the file does not exist
 								Interface.AddMessage(MessageType.Error, false, "The sound path " + c.InnerText + " in XML node " + node.Name + " does not exist.");
-								Sound = TrainManager.CarSound.Empty;
+								Sound = new CarSound();
 								return;
 							}
 						}
@@ -663,12 +695,12 @@ namespace OpenBve
 						{
 							//Probably invalid filename characters
 							Interface.AddMessage(MessageType.Error, false, "The sound path " + c.InnerText + " in XML node " + node.Name + " is invalid.");
-							Sound = TrainManager.CarSound.Empty;
+							Sound = new CarSound();
 							return;
 						}
 						break;
 					case "position":
-						string[] Arguments = c.InnerText.Split(',');
+						string[] Arguments = c.InnerText.Split(new char[] { ',' });
 						double x = 0.0, y = 0.0, z = 0.0;
 						if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], out x))
 						{
@@ -700,10 +732,10 @@ namespace OpenBve
 			{
 				//No valid filename node specified
 				Interface.AddMessage(MessageType.Error, false, "XML node " + node.Name + " does not point to a valid sound file.");
-				Sound = TrainManager.CarSound.Empty;
+				Sound = new CarSound();
 				return;
 			}
-			Sound = new TrainManager.CarSound(fileName, Position, Radius);
+			Sound = new CarSound(Program.Sounds.RegisterBuffer(fileName,Radius), Position);
 		}
 
 		/// <summary>Parses an XML node containing a list of sounds into a car sound array</summary>
@@ -711,9 +743,9 @@ namespace OpenBve
 		/// <param name="Sounds">The car sound array</param>
 		/// <param name="Position">The default position of the sound (May be overriden by any node)</param>
 		/// <param name="Radius">The default radius of the sound (May be overriden by any node)</param>
-		private static void ParseArrayNode(XmlNode node, out TrainManager.CarSound[] Sounds, Vector3 Position, double Radius)
+		private static void ParseArrayNode(XmlNode node, out CarSound[] Sounds, Vector3 Position, double Radius)
 		{
-			Sounds = new TrainManager.CarSound[0];
+			Sounds = new CarSound[0];
 			foreach (XmlNode c in node.ChildNodes)
 			{
 				int idx = -1;
@@ -741,7 +773,7 @@ namespace OpenBve
 						Array.Resize(ref Sounds, idx + 1);
 						while (l < Sounds.Length)
 						{
-							Sounds[l] = TrainManager.CarSound.Empty;
+							Sounds[l] = new CarSound();
 							l++;
 						}
 						ParseNode(c, out Sounds[idx], Position, Radius);

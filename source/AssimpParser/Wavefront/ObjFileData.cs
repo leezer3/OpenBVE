@@ -79,8 +79,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using OpenTK;
-using OpenTK.Graphics;
+using OpenBveApi.Colors;
+using OpenBveApi.Math;
 using IndexArray = System.Collections.Generic.List<uint>;
 using GroupMap = System.Collections.Generic.SortedDictionary<string, System.Collections.Generic.List<uint>>;
 
@@ -114,7 +114,7 @@ namespace AssimpNET.Obj
 	//! \struct Object
 	//! \brief  Stores all objects of an obj-file object definition
 	// ------------------------------------------------------------------------------------------------
-	public class Object
+	public class WavefrontObject
 	{
 		enum ObjectType
 		{
@@ -126,10 +126,10 @@ namespace AssimpNET.Obj
 		public string ObjName = string.Empty;
 		//! Transformation matrix, stored in OpenGL format
 #pragma warning disable 169
-		Matrix4 Transformation;
+		Matrix4D Transformation;
 #pragma warning restore 169
 		//! All sub-objects referenced by this object
-		List<Object> SubObjects = new List<Object>();
+		List<WavefrontObject> SubObjects = new List<WavefrontObject>();
 		/// Assigned meshes
 		public List<uint> Meshes = new List<uint>();
 	}
@@ -180,13 +180,13 @@ namespace AssimpNET.Obj
 		public bool[] Clamp = Enumerable.Repeat(false, (int)TextureType.TextureTypeCount).ToArray();
 
 		//! Ambient color
-		public Color4 Ambient;
+		public Color128 Ambient;
 		//! Diffuse color
-		public Color4 Diffuse = new Color4(0.6f, 0.6f, 0.6f, 1.0f);
+		public Color128 Diffuse = new Color128(0.6f, 0.6f, 0.6f, 1.0f);
 		//! Specular color
-		public Color4 Specular;
+		public Color128 Specular;
 		//! Emissive color
-		public Color4 Emissive;
+		public Color128 Emissive;
 		//! Alpha value
 		public float Alpha = 1.0f;
 		//! Shineness factor
@@ -196,7 +196,7 @@ namespace AssimpNET.Obj
 		//! Index of refraction
 		public float Ior = 1.0f;
 		//! Transparency color
-		public Color4 Transparent = new Color4(1.0f, 1.0f, 1.0f, 1.0f);
+		public Color128 Transparent = new Color128(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 
 	// ------------------------------------------------------------------------------------------------
@@ -243,9 +243,9 @@ namespace AssimpNET.Obj
 		//! Model name
 		public string ModelName = string.Empty;
 		//! List ob assigned objects
-		public List<Object> Objects = new List<Object>();
+		public List<WavefrontObject> Objects = new List<WavefrontObject>();
 		//! Pointer to current object
-		public Object Current = null;
+		public WavefrontObject Current = null;
 		//! Pointer to current material
 		public Material CurrentMaterial = null;
 		//! Pointer to default material

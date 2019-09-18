@@ -68,5 +68,18 @@ namespace OpenBve
 
             return true;
         }
+
+		/// <summary>Loads an image from a file, without locking the source file</summary>
+		/// <param name="fileName">The filename to load</param>
+		/// <returns>The new image</returns>
+        public static Image FromFile(string fileName)
+        {
+	        Image image;
+	        using (var tempBitmap = new Bitmap(fileName))
+	        {
+		        image = new Bitmap(tempBitmap);
+	        }
+			return image;
+        }
     }
 }

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -21,7 +21,7 @@
     <RunCodeAnalysis>False</RunCodeAnalysis>
     <RunSourceAnalysis>False</RunSourceAnalysis>
     <ApplicationIcon>..\..\assets\icon.ico</ApplicationIcon>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -47,6 +47,8 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>6</LangVersion>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -60,6 +62,8 @@
     <DebugSymbols>true</DebugSymbols>
     <DocumentationFile>..\..\bin_release\OpenBve.XML</DocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>6</LangVersion>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
@@ -83,23 +87,18 @@
     </AllowedReferenceRelatedFileExtensions>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CSScriptLibrary">
-      <HintPath>..\..\dependencies\CSScriptLibrary.dll</HintPath>
+    <Reference Include="CSScriptLibrary, Version=3.29.0.0, Culture=neutral, PublicKeyToken=70fcc3d18c749033, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CS-Script.lib.3.29.0\lib\CSScriptLibrary.dll</HintPath>
     </Reference>
-    <Reference Include="NUniversalCharDet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\dependencies\NUniversalCharDet.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\dependencies\OpenTK.dll</HintPath>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="OpenTK, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\OpenTK.3.1.0\lib\net20\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="PIEHid32Net">
       <HintPath>..\..\dependencies\PIEHid32Net.dll</HintPath>
     </Reference>
-    <Reference Include="SharpCompress, Version=0.21.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\dependencies\SharpCompress.dll</HintPath>
+    <Reference Include="SharpCompress, Version=0.24.0.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SharpCompress.0.24.0\lib\net45\SharpCompress.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -120,46 +119,15 @@
       <SubType>Code</SubType>
       <DependentUpon>AI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Game\Events\Events.cs" />
-    <Compile Include="Game\Events\Events.TriggerType.cs" />
-    <Compile Include="Game\Events\EventTypes\BackgroundChange.cs" />
-    <Compile Include="Game\Events\EventTypes\BrightnessChange.cs" />
-    <Compile Include="Game\Events\EventTypes\FogChange.cs" />
-    <Compile Include="Game\Events\EventTypes\Markers.cs" />
-    <Compile Include="Game\Events\EventTypes\RequestStop.cs" />
-    <Compile Include="Game\Events\EventTypes\SignalSection.cs" />
     <Compile Include="Game\Events\EventTypes\Sounds.cs" />
-    <Compile Include="Game\Events\EventTypes\SpeedLimit.cs" />
     <Compile Include="Game\Events\EventTypes\Station.cs" />
-    <Compile Include="Game\Events\EventTypes\TrackEnd.cs" />
-    <Compile Include="Game\Events\EventTypes\DestinationChange.cs" />
-    <Compile Include="Game\Events\EventTypes\Transponder.cs" />
-    <Compile Include="Game\Markers.cs" />
     <Compile Include="Game\MessageManager.cs" />
-    <Compile Include="Game\MessageManager.Message.cs">
-      <DependentUpon>MessageManager.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Game\MessageManager.ImageMessage.cs">
-      <DependentUpon>MessageManager.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Game\MessageManager.MessageDependency.cs">
-      <DependentUpon>MessageManager.cs</DependentUpon>
-    </Compile>
     <Compile Include="Game\MessageManager.TextualMessages.cs">
       <DependentUpon>MessageManager.cs</DependentUpon>
     </Compile>
     <Compile Include="Game\Messages.cs" />
-    <Compile Include="Game\ObjectManager\AnimatedObjects\AnimatedObject.cs" />
-    <Compile Include="Game\ObjectManager\AnimatedObjects\AnimatedObjectCollection.cs" />
-    <Compile Include="Game\ObjectManager\AnimatedObjects\AnimatedWorldObject.cs" />
-    <Compile Include="Game\ObjectManager\AnimatedObjects\AnimatedWorldObject.StateSound.cs" />
-    <Compile Include="Game\ObjectManager\AnimatedObjects\AnimationScript.cs" />
-    <Compile Include="Game\ObjectManager\AnimatedObjects\TrackFollowingObject.cs" />
-    <Compile Include="Game\ObjectManager\AnimatedObjects\WorldSound.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.cs" />
-    <Compile Include="Game\ObjectManager\ObjectManager.StaticObject.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.Visibility.cs" />
-    <Compile Include="Game\ObjectManager\WorldObject.cs" />
     <Compile Include="Game\PointsOfInterest.cs" />
     <Compile Include="Game\RouteInformation.cs" />
     <Compile Include="Game\RouteInfoOverlay.cs" />
@@ -174,9 +142,6 @@
     <Compile Include="Game\Signalling.cs" />
     <Compile Include="Game\Station.cs" />
     <Compile Include="Game\TrackManager\TrackManager.cs" />
-    <Compile Include="Game\TrackManager\TrackManager.Track.cs" />
-    <Compile Include="Game\TrackManager\TrackManager.TrackFollower.cs" />
-    <Compile Include="Graphics\Camera.CameraRestriction.cs" />
     <Compile Include="Graphics\HUD\HUD.cs" />
     <Compile Include="Graphics\HUD\HUD.Element.cs">
       <DependentUpon>HUD.cs</DependentUpon>
@@ -187,13 +152,9 @@
     <Compile Include="Graphics\HUD\HUD.Transitions.cs">
       <DependentUpon>HUD.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\Renderer\Background.cs" />
-    <Compile Include="Graphics\Renderer\Colors.cs" />
     <Compile Include="Graphics\Renderer\Events.cs" />
     <Compile Include="Graphics\Renderer\Functions.cs" />
     <Compile Include="Graphics\Renderer\Lamp.cs" />
-    <Compile Include="Graphics\Renderer\Lighting.cs" />
-    <Compile Include="Graphics\Renderer\MotionBlur.cs" />
     <Compile Include="Graphics\Renderer\Overlays.cs" />
     <Compile Include="Graphics\Renderer\Overlays.ATS.cs">
       <DependentUpon>Overlays.cs</DependentUpon>
@@ -213,22 +174,15 @@
     <Compile Include="Graphics\Renderer\Overlays.ScoreMessages.cs">
       <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\Renderer\Structures.cs" />
     <Compile Include="Graphics\Renderer\Objects.cs" />
     <Compile Include="Graphics\Renderer\Touch.cs" />
-    <Compile Include="Graphics\Renderer\ViewportModes.cs" />
-    <Compile Include="Parsers\Object\Generic\AssimpObjParser.cs" />
-    <Compile Include="Parsers\Object\Generic\AssimpXParser.cs" />
-    <Compile Include="Parsers\Object\Generic\NewXParser.cs" />
-    <Compile Include="Parsers\Object\Generic\WavefrontObjParser.cs" />
-    <Compile Include="Parsers\Object\MeshBuilder.cs" />
-    <Compile Include="Parsers\Object\MSTS\ShapeParser.cs" />
     <Compile Include="Parsers\Panel\PanelAnimatedXmlParser.cs" />
     <Compile Include="Parsers\Panel\PanelXmlParser.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.ApplyRouteData.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.CompatibilityObjects.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Expression.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.ObjectDictionary.cs" />
+    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Preprocess.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.RouteData.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Functions.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Objects.cs" />
@@ -241,8 +195,6 @@
     <Compile Include="Parsers\Script\DynamicBackgroundParser.cs" />
     <Compile Include="Parsers\Script\DynamicLightParser.cs" />
     <Compile Include="Parsers\Script\MarkerScriptParser.cs" />
-    <Compile Include="Parsers\Object\Loksim3D\GroupParser.cs" />
-    <Compile Include="Parsers\Object\Loksim3D\ObjectParser.cs" />
     <Compile Include="Parsers\SoundConfiguration\SoundCfg.Ats.cs" />
     <Compile Include="Parsers\SoundConfiguration\SoundCfg.Base.cs" />
     <Compile Include="Parsers\SoundConfiguration\SoundCfg.Bve2.cs" />
@@ -262,7 +214,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Simulation\TrainManager\Brake\AirBrake\AirSound.cs" />
     <Compile Include="Simulation\TrainManager\Brake\AirBrake\AutomaticAirBrake.cs" />
     <Compile Include="Simulation\TrainManager\Brake\CarBrake.BrakeType.cs" />
     <Compile Include="Simulation\TrainManager\Brake\AirBrake\Components\AirCompressor.cs" />
@@ -275,12 +226,14 @@
     <Compile Include="Simulation\TrainManager\Brake\BrakeSystemType.cs" />
     <Compile Include="Simulation\TrainManager\Brake\CarBrake.cs" />
     <Compile Include="Simulation\TrainManager\Brake\ElectropnuematicBrakeType.cs" />
-    <Compile Include="Simulation\TrainManager\Car\Car.Brightness.cs" />
     <Compile Include="Simulation\TrainManager\Car\ConstantSpeedDevice.cs" />
+    <Compile Include="Simulation\TrainManager\Car\Coupler.cs" />
     <Compile Include="Simulation\TrainManager\Car\HoldBrake.cs" />
+    <Compile Include="Simulation\TrainManager\Train\SafetySystems\PilotLamp.cs" />
     <Compile Include="Simulation\TrainManager\Car\ReadhesionDevice.cs" />
     <Compile Include="Simulation\TrainManager\Car\ReadhesionDevice.Types.cs" />
     <Compile Include="Simulation\TrainManager\Doors.DoorMode.cs" />
+    <Compile Include="Simulation\TrainManager\DriverBody.cs" />
     <Compile Include="Simulation\TrainManager\Motor\AccelerationCurve.cs" />
     <Compile Include="Simulation\TrainManager\Car\Axle.cs" />
     <Compile Include="Simulation\TrainManager\Car\Car.Bogie.cs" />
@@ -288,8 +241,6 @@
     <Compile Include="Simulation\TrainManager\Car\Car.CarSounds.cs" />
     <Compile Include="Simulation\TrainManager\Car\Car.Specs.cs" />
     <Compile Include="Simulation\TrainManager\Car\Car.cs" />
-    <Compile Include="Simulation\TrainManager\Car\CarSound.cs" />
-    <Compile Include="Simulation\TrainManager\Car\Coupler.cs" />
     <Compile Include="Simulation\TrainManager\Doors.cs" />
     <Compile Include="Simulation\TrainManager\Functions.cs" />
     <Compile Include="Simulation\TrainManager\Motor\MotorSounds.cs" />
@@ -310,25 +261,25 @@
     <Compile Include="Simulation\TrainManager\Train\Handles\Handles.Reverser.Positions.cs" />
     <Compile Include="Simulation\TrainManager\Train\Horn.cs" />
     <Compile Include="Simulation\TrainManager\Train\Handles\Handles.LocoBrake.Types.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Plugin.cs" />
+    <Compile Include="Simulation\TrainManager\Train\SafetySystems.cs" />
+    <Compile Include="Simulation\TrainManager\Train\SafetySystems\StationAdjustAlarm.cs" />
     <Compile Include="Simulation\TrainManager\Train\TrackFollowingObject.cs" />
-    <Compile Include="Simulation\TrainManager\Train\PassAlarm.cs" />
-    <Compile Include="Simulation\TrainManager\Train\StopSkipMode.cs" />
+    <Compile Include="Simulation\TrainManager\Train\SafetySystems\PassAlarm.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Handles.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Train.RequestStop.cs" />
     <Compile Include="Simulation\TrainManager\Train\Train.Specs.cs" />
-    <Compile Include="Simulation\World\BackgroundManager.cs" />
+    <Compile Include="Simulation\TrainManager\Train\Train.Station.cs" />
     <Compile Include="System\Cursor.cs" />
     <Compile Include="System\Functions\Bve5Shared.cs" />
     <Compile Include="System\Functions\CrashHandler.cs" />
     <Compile Include="System\Functions\FolderBrowserDialog.cs" />
-    <Compile Include="System\Functions\TextEncoding.cs" />
     <Compile Include="System\Input\Controls.Control.cs" />
     <Compile Include="System\Input\Controls.cs" />
     <Compile Include="System\Input\InputDevicePlugin.cs" />
     <Compile Include="System\Logging\BlackBox.cs" />
     <Compile Include="System\Logging\Score.cs" />
-    <Compile Include="System\Messages\Message.cs" />
-    <Compile Include="System\Messages\Message.MessageType.cs" />
     <Compile Include="System\Options.cs" />
     <Compile Include="System\Program\CommandLine.cs" />
     <Compile Include="UserInterface\formRaildriverCalibration.cs">
@@ -367,36 +318,12 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <Compile Include="Game\ObjectManager\ObjectManager.LoadObject.cs" />
-    <Compile Include="Audio\Sounds.Convert.cs">
-      <DependentUpon>Sounds.cs</DependentUpon>
-    </Compile>
     <Compile Include="Audio\Sounds.cs" />
-    <Compile Include="Audio\Sounds.SoundBuffer.cs">
-      <DependentUpon>Sounds.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Audio\Sounds.SoundOrigin.cs">
-      <DependentUpon>Sounds.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Audio\Sounds.SoundModels.cs">
-      <DependentUpon>Sounds.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Audio\Sounds.SoundSource.cs">
-      <DependentUpon>Sounds.cs</DependentUpon>
-    </Compile>
     <Compile Include="Audio\Sounds.Update.cs">
       <DependentUpon>Sounds.cs</DependentUpon>
     </Compile>
     <Compile Include="Graphics\Fonts.cs" />
     <Compile Include="Graphics\Renderer.cs" />
-    <Compile Include="Graphics\Renderer.Loading.cs">
-      <DependentUpon>Renderer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Graphics\Renderer.Primitives.cs">
-      <DependentUpon>Renderer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Graphics\Renderer.Strings.cs">
-      <DependentUpon>Renderer.cs</DependentUpon>
-    </Compile>
     <Compile Include="Graphics\Screen.cs" />
     <Compile Include="Graphics\Textures.cs" />
     <Compile Include="UserInterface\formImage.cs">
@@ -449,12 +376,9 @@
     <Compile Include="Game\Timetable.cs" />
     <Compile Include="OldCode\TrainManager.cs" />
     <Compile Include="OldCode\World.cs" />
-    <Compile Include="Parsers\Object\BVE\AnimatedObjectParser.cs" />
     <Compile Include="Parsers\Train\ExtensionsCfgParser.cs" />
     <Compile Include="Parsers\Panel\Panel2CfgParser.cs" />
-    <Compile Include="Parsers\Object\BVE\CsvB3dObjectParser.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.cs" />
-    <Compile Include="Parsers\Object\Generic\XObjectParser.cs" />
     <Compile Include="Parsers\Panel\PanelCfgParser.cs" />
     <Compile Include="System\Host.cs" />
     <Compile Include="System\Input\JoystickManager.cs" />
@@ -479,6 +403,9 @@
     </EmbeddedResource>
     <Compile Include="Parsers\Train\TrainDatParser.cs" />
     <Compile Include="Simulation\TrainManager\Train\Handles\Handles.AirBrake.cs" />
+    <EmbeddedResource Include="..\..\assets\Controls\Default.controls" />
+    <None Include="OpenTK.dll.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\assets\Cursors\nk.png" />
@@ -520,18 +447,26 @@
       <Project>{e9b64673-65b7-4d77-a4db-4b441a7c9197}</Project>
       <Name>LBAHeader</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LibRender\LibRender.csproj">
+      <Project>{2072ecd1-c7ff-427c-84dc-063f7c19792e}</Project>
+      <Name>LibRender</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
       <Name>OpenBveApi</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Plugins\Formats.DirectX\Formats.DirectX.csproj">
-      <Project>{b8955ca6-e002-48a6-8fbf-90c2084c3508}</Project>
-      <Name>Formats.DirectX</Name>
     </ProjectReference>
     <ProjectReference Include="..\Plugins\Formats.Msts\Formats.Msts.csproj">
       <Project>{E81B7BD8-A326-47D3-B7EE-E9C7D4D119FA}</Project>
       <Name>Formats.Msts</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\RouteManager\RouteManager.csproj">
+      <Project>{87838364-8911-46b2-8628-d437c485d9c9}</Project>
+      <Name>RouteManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SoundManager\SoundManager.csproj">
+      <Project>{90abfa0c-abca-444e-adef-9a299aed6524}</Project>
+      <Name>SoundManager</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

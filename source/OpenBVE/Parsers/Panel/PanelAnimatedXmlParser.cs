@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -100,7 +101,7 @@ namespace OpenBve.Parsers.Panel
 								Array.Resize(ref CarSection.Groups, n + 2);
 								CarSection.Groups[n + 1] = new TrainManager.ElementsGroup
 								{
-									Elements = new ObjectManager.AnimatedObject[] { },
+									Elements = new AnimatedObject[] { },
 									Overlay = true
 								};
 							}
@@ -127,51 +128,15 @@ namespace OpenBve.Parsers.Panel
 								switch (Key.ToLowerInvariant())
 								{
 									case "position":
+										if (!Vector3.TryParse(KeyNode.Value, ',', out Position))
 										{
-											string[] s = Value.Split(',');
-											if (s.Length == 3)
-											{
-												if (s[0].Length != 0 && !NumberFormats.TryParseDoubleVb6(s[0], out Position.X))
-												{
-													Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-												if (s[1].Length != 0 && !NumberFormats.TryParseDoubleVb6(s[1], out Position.Y))
-												{
-													Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-												if (s[2].Length != 0 && !NumberFormats.TryParseDoubleVb6(s[2], out Position.Z))
-												{
-													Interface.AddMessage(MessageType.Error, false, "Z is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-											}
-											else
-											{
-												Interface.AddMessage(MessageType.Error, false, "Three arguments are expected in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-											}
+											Interface.AddMessage(MessageType.Error, false, "Position is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										break;
 									case "size":
+										if (!Vector3.TryParse(KeyNode.Value, ',', out Size))
 										{
-											string[] s = Value.Split(',');
-											if (s.Length == 3)
-											{
-												if (s[0].Length != 0 && !NumberFormats.TryParseDoubleVb6(s[0], out Size.X))
-												{
-													Interface.AddMessage(MessageType.Error, false, "X is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-												if (s[1].Length != 0 && !NumberFormats.TryParseDoubleVb6(s[1], out Size.Y))
-												{
-													Interface.AddMessage(MessageType.Error, false, "Y is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-												if (s[2].Length != 0 && !NumberFormats.TryParseDoubleVb6(s[2], out Size.Z))
-												{
-													Interface.AddMessage(MessageType.Error, false, "Z is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-												}
-											}
-											else
-											{
-												Interface.AddMessage(MessageType.Error, false, "Three arguments are expected in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
-											}
+											Interface.AddMessage(MessageType.Error, false, "Size is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										break;
 									case "jumpscreen":
@@ -233,12 +198,14 @@ namespace OpenBve.Parsers.Panel
 											if (System.IO.File.Exists(File))
 											{
 												System.Text.Encoding e = TextEncoding.GetSystemEncodingFromFile(File);
-												ObjectManager.AnimatedObjectCollection a = AnimatedObjectParser.ReadObject(File, e);
+												UnifiedObject currentObject;
+												Program.CurrentHost.LoadObject(File, e, out currentObject);
+												var a = currentObject as AnimatedObjectCollection;
 												if (a != null)
 												{
 													for (int i = 0; i < a.Objects.Length; i++)
 													{
-														a.Objects[i].ObjectIndex = ObjectManager.CreateDynamicObject();
+														ObjectManager.CreateDynamicObject(ref a.Objects[i].internalObject);
 													}
 													CarSection.Groups[GroupIndex].Elements = a.Objects;
 												}
@@ -267,7 +234,7 @@ namespace OpenBve.Parsers.Panel
             Vertex t5 = new Vertex(Size.X, -Size.Y, Size.Z);
             Vertex t6 = new Vertex(-Size.X, -Size.Y, Size.Z);
             Vertex t7 = new Vertex(-Size.X, Size.Y, Size.Z);
-			ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
+			StaticObject Object = new StaticObject(Program.CurrentHost);
 			Object.Mesh.Vertices = new VertexTemplate[] { t0, t1, t2, t3, t4, t5, t6, t7 };
             Object.Mesh.Faces = new MeshFace[] { new MeshFace(new int[] { 0, 1, 2, 3 }), new MeshFace(new int[] { 0, 4, 5, 1 }), new MeshFace(new int[] { 0, 3, 7, 4 }), new MeshFace(new int[] { 6, 5, 4, 7 }), new MeshFace(new int[] { 6, 7, 3, 2 }), new MeshFace(new int[] { 6, 2, 1, 5 }) };
 			Object.Mesh.Materials = new MeshMaterial[1];
@@ -285,18 +252,18 @@ namespace OpenBve.Parsers.Panel
 			Array.Resize(ref Group.TouchElements, n + 1);
 			Group.TouchElements[n] = new TrainManager.TouchElement
 			{
-				Element = new ObjectManager.AnimatedObject(),
+				Element = new AnimatedObject(Program.CurrentHost),
 				JumpScreenIndex = ScreenIndex,
 				SoundIndex = SoundIndex,
 				Command = Command,
 				CommandOption = CommandOption
 			};
-			Group.TouchElements[n].Element.States = new ObjectManager.AnimatedObjectState[1];
+			Group.TouchElements[n].Element.States = new AnimatedObjectState[1];
 			Group.TouchElements[n].Element.States[0].Position = Position;
 			Group.TouchElements[n].Element.States[0].Object = Object;
 			Group.TouchElements[n].Element.CurrentState = 0;
-			Group.TouchElements[n].Element.ObjectIndex = ObjectManager.CreateDynamicObject();
-			ObjectManager.Objects[Group.TouchElements[n].Element.ObjectIndex] = Object.Clone();
+			Group.TouchElements[n].Element.internalObject = (StaticObject) Object.Clone();
+			ObjectManager.CreateDynamicObject(ref Group.TouchElements[n].Element.internalObject);
 			int m = Interface.CurrentControls.Length;
 			Array.Resize(ref Interface.CurrentControls, m + 1);
 			Interface.CurrentControls[m].Command = Command;

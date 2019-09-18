@@ -6,6 +6,7 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using OpenBveApi.Math;
+using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 
 namespace OpenBve {
@@ -16,7 +17,7 @@ namespace OpenBve {
 
 		// structures
 		internal struct Axle {
-			internal TrackManager.TrackFollower Follower;
+			internal TrackFollower Follower;
 		}
 
 		// cars
@@ -143,13 +144,6 @@ namespace OpenBve {
 			internal double CurrentPitchDueToAccelerationTrackPosition;
 			internal double CurrentPitchDueToAccelerationSpeed;
 		}
-		internal struct CarBrightness {
-			internal float PreviousBrightness;
-			internal double PreviousTrackPosition;
-			internal float NextBrightness;
-			internal double NextTrackPosition;
-		}
-		
 
 		internal class Car : AbstractCar {
 			internal Axle FrontAxle;
@@ -161,7 +155,6 @@ namespace OpenBve {
 			internal bool CurrentlyVisible;
 			internal bool Derailed;
 			internal bool Topples;
-			internal CarBrightness Brightness;
 		}
 
 		// train
@@ -260,7 +253,6 @@ namespace OpenBve {
 		internal struct TrainSpecs {
 			internal double TotalMass;
 			internal ReverserHandle CurrentReverser;
-			internal double CurrentAverageSpeed;
 			internal double CurrentAverageAcceleration;
 			internal double CurrentAverageJerk;
 			internal double CurrentAirPressure;
@@ -289,13 +281,18 @@ namespace OpenBve {
 			internal PassAlarmType PassAlarm;
 		}
 		// train
-		internal enum TrainStopState {
-			Pending = 0, Boarding = 1, Completed = 2
-		}
 		internal class Train : AbstractTrain {
 			internal Car[] Cars;
 			internal TrainSpecs Specs;
-			internal int CurrentSectionIndex;
+			public override double FrontCarTrackPosition()
+			{
+				return Cars[0].FrontAxle.Follower.TrackPosition - Cars[0].FrontAxlePosition + 0.5 * Cars[0].Length;
+			}
+
+			public override double RearCarTrackPosition()
+			{
+				return Cars[Cars.Length - 1].RearAxle.Follower.TrackPosition - Cars[Cars.Length - 1].RearAxlePosition - 0.5 * Cars[Cars.Length - 1].Length;
+			}
 		}
 
 #pragma warning restore 0649

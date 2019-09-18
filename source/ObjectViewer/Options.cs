@@ -3,6 +3,8 @@ using System.Globalization;
 using System.Reflection;
 using System.Windows.Forms;
 using OpenBveApi.Graphics;
+using OpenBveApi.Objects;
+using Screen = LibRender.Screen;
 
 namespace OpenBve
 {
@@ -10,6 +12,7 @@ namespace OpenBve
     {
         internal static void LoadOptions()
         {
+			Interface.CurrentOptions = new Interface.Options();
             string optionsFolder = OpenBveApi.Path.CombineDirectory(Program.FileSystem.SettingsFolder, "1.5.0");
             if (!System.IO.Directory.Exists(optionsFolder))
             {
@@ -38,13 +41,13 @@ namespace OpenBve
                 string Section = "";
                 for (int i = 0; i < Lines.Length; i++)
                 {
-                    Lines[i] = Lines[i].Trim();
+                    Lines[i] = Lines[i].Trim(new char[] { });
                     if (Lines[i].Length != 0 && !Lines[i].StartsWith(";", StringComparison.OrdinalIgnoreCase))
                     {
                         if (Lines[i].StartsWith("[", StringComparison.Ordinal) &
                             Lines[i].EndsWith("]", StringComparison.Ordinal))
                         {
-                            Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim().ToLowerInvariant();
+                            Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim(new char[] { }).ToLowerInvariant();
                         }
                         else
                         {
@@ -53,7 +56,7 @@ namespace OpenBve
                             if (j >= 0)
                             {
                                 Key = Lines[i].Substring(0, j).TrimEnd().ToLowerInvariant();
-                                Value = Lines[i].Substring(j + 1).TrimStart();
+                                Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
                             }
                             else
                             {
@@ -68,20 +71,20 @@ namespace OpenBve
                                         case "windowwidth":
                                             {
                                                 int a;
-                                                if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+                                                if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a) || a < 300)
                                                 {
                                                     a = 960;
                                                 }
-                                                Renderer.ScreenWidth = a;
+                                                Screen.Width = a;
                                             } break;
                                         case "windowheight":
                                             {
                                                 int a;
-                                                if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a))
+                                                if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a) || a < 300)
                                                 {
                                                     a = 600;
                                                 }
-                                                Renderer.ScreenHeight = a;
+                                                Screen.Height = a;
                                             } break;
                                     } break;
                                 case "quality":
@@ -108,7 +111,7 @@ namespace OpenBve
                                             {
                                                 int a;
                                                 int.TryParse(Value, NumberStyles.Integer, Culture, out a);
-                                                Interface.CurrentOptions.AntialiasingLevel = a;
+                                                Interface.CurrentOptions.AntiAliasingLevel = a;
                                             } break;
                                         case "transparencymode":
                                             switch (Value.ToLowerInvariant())
@@ -135,29 +138,19 @@ namespace OpenBve
 									{
 										case "xobject":
                                             {
-											    int p;
-											    if (!int.TryParse(Value, NumberStyles.Integer, Culture, out p) || p < 0 || p > 3)
+											    if (!Enum.TryParse(Value, out Interface.CurrentOptions.CurrentXParser))
 											    {
-												    Interface.CurrentOptions.CurrentXParser = 0;
-											    }
-											    else
-											    {
-												    Interface.CurrentOptions.CurrentXParser = p;
+												    Interface.CurrentOptions.CurrentXParser = XParsers.Original;
 											    }
 											    break;
                                             }
 										case "objobject":
                                             {
-											    int p;
-											    if (!int.TryParse(Value, NumberStyles.Integer, Culture, out p) || p < 0 || p > 2)
+	                                            if (!Enum.TryParse(Value, out Interface.CurrentOptions.CurrentObjParser))
 											    {
-												    Interface.CurrentOptions.CurrentObjParser = 0;
+												    Interface.CurrentOptions.CurrentObjParser = ObjParsers.Original;
 											    }
-											    else
-											    {
-												    Interface.CurrentOptions.CurrentObjParser = p;
-											    }
-											    break;
+	                                            break;
                                             }
 									} break;
                             }
@@ -179,8 +172,8 @@ namespace OpenBve
                 Builder.AppendLine("; Object Viewer specific options file");
                 Builder.AppendLine();
                 Builder.AppendLine("[display]");
-                Builder.AppendLine("windowWidth = " + Renderer.ScreenWidth.ToString(Culture));
-                Builder.AppendLine("windowHeight = " + Renderer.ScreenHeight.ToString(Culture));
+                Builder.AppendLine("windowWidth = " + Screen.Width.ToString(Culture));
+                Builder.AppendLine("windowHeight = " + Screen.Height.ToString(Culture));
                 Builder.AppendLine();
                 Builder.AppendLine("[quality]");
                 {
@@ -197,7 +190,7 @@ namespace OpenBve
                     Builder.AppendLine("interpolation = " + t);
                 }
                 Builder.AppendLine("anisotropicfilteringlevel = " + Interface.CurrentOptions.AnisotropicFilteringLevel.ToString(Culture));
-                Builder.AppendLine("antialiasinglevel = " + Interface.CurrentOptions.AntialiasingLevel.ToString(Culture));
+                Builder.AppendLine("antialiasinglevel = " + Interface.CurrentOptions.AntiAliasingLevel.ToString(Culture));
                 Builder.AppendLine("transparencyMode = " + ((int)Interface.CurrentOptions.TransparencyMode).ToString(Culture));
                 Builder.AppendLine();
                 Builder.AppendLine("[Parsers]");

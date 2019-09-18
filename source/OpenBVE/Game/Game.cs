@@ -2,13 +2,15 @@
 using OpenBveApi.Colors;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
+using OpenBve.RouteManager;
+using OpenBve.SignalManager;
+using OpenBveApi.Routes;
 
 namespace OpenBve {
 	internal static partial class Game {
 
 		// date and time
-        /// <summary>The current in game time, expressed as the number of seconds since midnight on the first day</summary>
-		internal static double SecondsSinceMidnight = 0.0;
+        
         /// <summary>The time at which the current game started, expressed as the number of seconds since midnight on the first day</summary>
 		internal static double StartupTime = 0.0;
 		/// <summary>Whether the game is in minimal simulation mode: 
@@ -17,29 +19,8 @@ namespace OpenBve {
 		/// </summary>
 		internal static bool MinimalisticSimulation = false;
 
-		/// <summary>Defines a region of fog</summary>
-		internal struct Fog {
-			/// <summary>The offset at which the fog starts</summary>
-			internal float Start;
-			/// <summary>The offset at which the fog ends</summary>
-			internal float End;
-			/// <summary>The color of the fog</summary>
-			internal Color24 Color;
-			/// <summary>The track position at which the fog is placed</summary>
-			internal double TrackPosition;
-			/// <summary>Creates a new region of fog</summary>
-			internal Fog(float Start, float End, Color24 Color, double TrackPosition) {
-				this.Start = Start;
-				this.End = End;
-				this.Color = Color;
-				this.TrackPosition = TrackPosition;
-			}
-		}
-		internal static float NoFogStart = 800.0f; // must not be 600 or below
-		internal static float NoFogEnd = 1600.0f;
-		internal static Fog PreviousFog = new Fog(NoFogStart, NoFogEnd, Color24.Grey, 0.0);
-		internal static Fog CurrentFog = new Fog(NoFogStart, NoFogEnd, Color24.Grey, 0.5);
-		internal static Fog NextFog = new Fog(NoFogStart, NoFogEnd, Color24.Grey, 1.0);
+		
+		
 		
 		
 
@@ -60,13 +41,14 @@ namespace OpenBve {
 
 		// ================================
 
-        /// <summary>Call this function to reset the game</summary>
-        /// <param name="ResetLogs">Whether the logs should be reset</param>
-		internal static void Reset(bool ResetLogs) {
+		/// <summary>Call this function to reset the game</summary>
+		/// <param name="ResetLogs">Whether the logs should be reset</param>
+		/// <param name="ResetRenderer">Whether the renderer should be reset</param>
+		internal static void Reset(bool ResetLogs, bool ResetRenderer) {
 			// track manager
-			for (int i = 0; i < TrackManager.Tracks.Length; i++)
+			for (int i = 0; i < CurrentRoute.Tracks.Length; i++)
 			{
-				TrackManager.Tracks[i] = new TrackManager.Track();
+				CurrentRoute.Tracks[i] = new Track();
 			}
 			// train manager
 			TrainManager.Trains = new TrainManager.Train[] { };
@@ -75,35 +57,28 @@ namespace OpenBve {
 			CurrentInterface = InterfaceType.Normal;
 			RouteComment = "";
 			RouteImage = "";
-			RouteAccelerationDueToGravity = 9.80665;
-			RouteRailGauge = 1.435;
-			RouteInitialAirPressure = 101325.0;
-			RouteInitialAirTemperature = 293.15;
-			RouteInitialElevation = 0.0;
-			RouteSeaLevelAirPressure = 101325.0;
-			RouteSeaLevelAirTemperature = 293.15;
-			Stations = new Station[] { };
-			Sections = new Section[] { };
+			Atmosphere.AccelerationDueToGravity = 9.80665;
+			Atmosphere.InitialAirPressure = 101325.0;
+			Atmosphere.InitialAirTemperature = 293.15;
+			CurrentRoute.InitialElevation = 0.0;
+			Atmosphere.SeaLevelAirPressure = 101325.0;
+			Atmosphere.SeaLevelAirTemperature = 293.15;
+			CurrentRoute.Stations = new RouteStation[] { };
+			CurrentRoute.Sections = new Section[] { };
 			BufferTrackPositions = new double[] { };
 			//Messages = new Message[] { };
-			MarkerTextures = new Texture[] { };
-			PointsOfInterest = new PointOfInterest[] { };
+			LibRender.Renderer.MarkerTextures = new Texture[] { };
+			CurrentRoute.PointsOfInterest = new PointOfInterest[] { };
 			PrecedingTrainTimeDeltas = new double[] { };
 			PrecedingTrainSpeedLimit = double.PositiveInfinity;
-			BogusPretrainInstructions = new BogusPretrainInstruction[] { };
+			CurrentRoute.BogusPretrainInstructions = new BogusPretrainInstruction[] { };
 			TrainName = "";
 			TrainStart = TrainStartMode.EmergencyBrakesNoAts;
-			NoFogStart = (float)Math.Max(1.33333333333333 * Interface.CurrentOptions.ViewingDistance, 800.0);
-			NoFogEnd = (float)Math.Max(2.66666666666667 * Interface.CurrentOptions.ViewingDistance, 1600.0);
-			PreviousFog = new Fog(NoFogStart, NoFogEnd, Color24.Grey, 0.0);
-			CurrentFog = new Fog(NoFogStart, NoFogEnd, Color24.Grey, 0.5);
-			NextFog = new Fog(NoFogStart, NoFogEnd, Color24.Grey, 1.0);
-			InfoTotalTriangles = 0;
-			InfoTotalTriangleStrip = 0;
-			InfoTotalQuads = 0;
-			InfoTotalQuadStrip = 0;
-			InfoTotalPolygon = 0;
-			InfoStaticOpaqueFaceCount = 0;
+			CurrentRoute.NoFogStart = (float)Math.Max(1.33333333333333 * Interface.CurrentOptions.ViewingDistance, 800.0);
+			CurrentRoute.NoFogEnd = (float)Math.Max(2.66666666666667 * Interface.CurrentOptions.ViewingDistance, 1600.0);
+			CurrentRoute.PreviousFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, 0.0);
+			CurrentRoute.CurrentFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, 0.5);
+			CurrentRoute.NextFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, 1.0);
 			if (ResetLogs) {
 				LogRouteName = "";
 				LogTrainName = "";
@@ -117,7 +92,17 @@ namespace OpenBve {
 				BlackBoxNextUpdate = 0.0;
 			}
 			// renderer
-			Renderer.Reset();
+			if (ResetRenderer)
+			{
+				LibRender.Renderer.InfoTotalTriangles = 0;
+				LibRender.Renderer.InfoTotalTriangleStrip = 0;
+				LibRender.Renderer.InfoTotalQuads = 0;
+				LibRender.Renderer.InfoTotalQuadStrip = 0;
+				LibRender.Renderer.InfoTotalPolygon = 0;
+				LibRender.Renderer.InfoStaticOpaqueFaceCount = 0;
+				Renderer.Reset();
+			}
+			
 		}
 
 		// ================================
@@ -154,9 +139,9 @@ namespace OpenBve {
 		internal static int BlackBoxEntryCount = 0;
 		private static double BlackBoxNextUpdate = 0.0;
 		internal static void UpdateBlackBox() {
-			if (SecondsSinceMidnight >= BlackBoxNextUpdate) {
+			if (CurrentRoute.SecondsSinceMidnight >= BlackBoxNextUpdate) {
 				AddBlackBoxEntry(BlackBoxEventToken.None);
-				BlackBoxNextUpdate = SecondsSinceMidnight + 1.0;
+				BlackBoxNextUpdate = CurrentRoute.SecondsSinceMidnight + 1.0;
 			}
 		}
 		internal static void AddBlackBoxEntry(BlackBoxEventToken EventToken) {
@@ -164,9 +149,9 @@ namespace OpenBve {
 				if (BlackBoxEntryCount >= BlackBoxEntries.Length) {
 					Array.Resize<BlackBoxEntry>(ref BlackBoxEntries, BlackBoxEntries.Length << 1);
 				}
-				BlackBoxEntries[BlackBoxEntryCount].Time = SecondsSinceMidnight;
-				BlackBoxEntries[BlackBoxEntryCount].Position = TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition;
-				BlackBoxEntries[BlackBoxEntryCount].Speed = (float)TrainManager.PlayerTrain.Specs.CurrentAverageSpeed;
+				BlackBoxEntries[BlackBoxEntryCount].Time = CurrentRoute.SecondsSinceMidnight;
+				BlackBoxEntries[BlackBoxEntryCount].Position = TrainManager.PlayerTrain.Cars[0].TrackPosition;
+				BlackBoxEntries[BlackBoxEntryCount].Speed = (float)TrainManager.PlayerTrain.CurrentSpeed;
 				BlackBoxEntries[BlackBoxEntryCount].Acceleration = (float)TrainManager.PlayerTrain.Specs.CurrentAverageAcceleration;
 				BlackBoxEntries[BlackBoxEntryCount].ReverserDriver = (short)TrainManager.PlayerTrain.Handles.Reverser.Driver;
 				BlackBoxEntries[BlackBoxEntryCount].ReverserSafety = (short)TrainManager.PlayerTrain.Handles.Reverser.Actual;
@@ -208,7 +193,5 @@ namespace OpenBve {
 
 		// buffers
 		internal static double[] BufferTrackPositions = new double[] { };
-
-
 	}
 }

@@ -2,9 +2,11 @@
 using System.IO;
 using System.Linq;
 using System.Xml;
+using OpenBve.BackgroundManager;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 
 namespace OpenBve
@@ -12,9 +14,9 @@ namespace OpenBve
 	class DynamicBackgroundParser
 	{
 		//Parses an XML background definition
-		public static BackgroundManager.BackgroundHandle ReadBackgroundXML(string fileName)
+		public static BackgroundHandle ReadBackgroundXML(string fileName)
 		{
-			List<BackgroundManager.StaticBackground> Backgrounds = new List<BackgroundManager.StaticBackground>();
+			List<StaticBackground> Backgrounds = new List<StaticBackground>();
 			//The current XML file to load
 			XmlDocument currentXML = new XmlDocument();
 			//Load the object's XML file 
@@ -38,28 +40,28 @@ namespace OpenBve
 							//The texture to use (if static)
 							Texture t = null;
 							//The object to use (if object based)
-							ObjectManager.StaticObject o = null;
+							StaticObject o = null;
 							//The transition mode between backgrounds
-							BackgroundManager.BackgroundTransitionMode mode = BackgroundManager.BackgroundTransitionMode.FadeIn;
+							BackgroundTransitionMode mode = BackgroundTransitionMode.FadeIn;
 							//The number of times the texture is repeated around the viewing frustrum (if appropriate)
 							double repetitions = 6;
 							foreach (XmlNode c in n.ChildNodes)
 							{
 								
-								string[] Arguments = c.InnerText.Split(',');
+								string[] Arguments = c.InnerText.Split(new char[] { ',' });
 								switch (c.Name.ToLowerInvariant())
 								{
 									case "mode":
 										switch (c.InnerText.ToLowerInvariant())
 										{
 											case "fadein":
-												mode = BackgroundManager.BackgroundTransitionMode.FadeIn;
+												mode = BackgroundTransitionMode.FadeIn;
 												break;
 											case "fadeout":
-												mode = BackgroundManager.BackgroundTransitionMode.FadeOut;
+												mode = BackgroundTransitionMode.FadeOut;
 												break;
 											case "none":
-												mode = BackgroundManager.BackgroundTransitionMode.None;
+												mode = BackgroundTransitionMode.None;
 												break;
 											default:
 												Interface.AddMessage(MessageType.Error, true, c.InnerText +  "is not a valid background fade mode in file " + fileName);
@@ -83,8 +85,8 @@ namespace OpenBve
 										}
 										else
 										{
-											UnifiedObject b = ObjectManager.LoadObject(f, System.Text.Encoding.Default, false, false, false);
-											o = (ObjectManager.StaticObject) b;
+											UnifiedObject b = ObjectManager.LoadObject(f, System.Text.Encoding.Default, false);
+											o = (StaticObject) b;
 										}
 										break;
 									case "repetitions":
@@ -110,11 +112,11 @@ namespace OpenBve
 										}
 										else
 										{
-											Textures.RegisterTexture(file, out t);
+											Program.CurrentHost.RegisterTexture(file, new TextureParameters(null, null), out t);
 										}
 										break;
 									case "time":
-										if (!Interface.TryParseTime(Arguments[0].Trim(), out DisplayTime))
+										if (!Interface.TryParseTime(Arguments[0].Trim(new char[] { }), out DisplayTime))
 										{
 											Interface.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid time in file " + fileName);
 										}
@@ -130,13 +132,13 @@ namespace OpenBve
 							//Create background if texture is not null
 							if (t != null && o == null)
 							{
-								Backgrounds.Add(new BackgroundManager.StaticBackground(t, repetitions, false, TransitionTime, mode, DisplayTime));
+								Backgrounds.Add(new StaticBackground(t, repetitions, false, TransitionTime, mode, DisplayTime));
 							}
 							if (t == null && o != null)
 							{
 								//All other parameters are ignored if an object has been defined
 								//TODO: Error message stating they have been ignored
-								return new BackgroundManager.BackgroundObject(o);
+								return new BackgroundObject(o);
 							}
 							
 						}
@@ -150,7 +152,7 @@ namespace OpenBve
 						//Sort list- Not worried about when they start or end, so use simple LINQ
 						Backgrounds = Backgrounds.OrderBy(o => o.Time).ToList();
 						//If more than 2 backgrounds, convert to array and return a new dynamic background
-						return new BackgroundManager.DynamicBackground(Backgrounds.ToArray());
+						return new DynamicBackground(Backgrounds.ToArray());
 					}
 				}
 			}

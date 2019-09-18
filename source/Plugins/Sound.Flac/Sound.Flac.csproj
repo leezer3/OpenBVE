@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{081F5739-33DA-421A-B177-7B548D96646F}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -7,9 +7,8 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Sound.Flac</RootNamespace>
     <AssemblyName>Sound.Flac</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <SourceAnalysisOverrideSettingsFile>C:\Documents and Settings\Administrator\Application Data\ICSharpCode/SharpDevelop3.0\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <NoStdLib>False</NoStdLib>
     <WarningLevel>4</WarningLevel>
@@ -41,12 +40,16 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <OutputPath>..\..\..\bin_debug\Data\Plugins\</OutputPath>
+    <OutputPath>..\..\..\bin_debug\</OutputPath>
     <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>..\..\..\bin_release\Data\Plugins\</OutputPath>
+    <OutputPath>..\..\..\bin_release\</OutputPath>
     <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -64,7 +67,17 @@
     <ProjectReference Include="..\..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
       <Name>OpenBveApi</Name>
-      <Private>False</Private>
+      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
+  <PropertyGroup>
+	  <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
+		  mkdir $(TargetDir)Data\Plugins\
+		  move /Y $(TargetDir)$(TargetName).* $(TargetDir)Data\Plugins\
+	  </PostBuildEvent>
+	  <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
+		  mkdir -p $(TargetDir)Data/Plugins/
+		  mv -f $(TargetDir)$(TargetName).* $(TargetDir)Data/Plugins/
+	  </PostBuildEvent>
+  </PropertyGroup>
 </Project>

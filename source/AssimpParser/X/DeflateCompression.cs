@@ -33,7 +33,7 @@ namespace ZlibWithDictionary
 				if (dictionary != null)
 				{
 
-					codec.AssertOk("SetDictionary", codec.SetDictionary(dictionary));
+					codec.AssertOk("SetDictionary", codec.SetDictionaryUnconditionally(dictionary));
 				}
 
 				codec.OutputBuffer = buffer;

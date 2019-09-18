@@ -80,7 +80,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using OpenTK.Graphics;
+using System.Globalization;
+using OpenBveApi.Colors;
 
 namespace AssimpNET.Obj
 {
@@ -249,7 +250,7 @@ namespace AssimpNET.Obj
 		}
 
 		//  Loads a color definition
-		private void GetColorRGBA(ref Color4 color)
+		private void GetColorRGBA(ref Color128 color)
 		{
 			//Debug.Assert(color != null);
 
@@ -284,7 +285,7 @@ namespace AssimpNET.Obj
 		{
 			string tmp;
 			CopyNextWord(out tmp);
-			result = float.Parse(tmp);
+			result = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 		}
 
 		//  Gets a texture name from data.
@@ -292,64 +293,64 @@ namespace AssimpNET.Obj
 		{
 			int clampIndex = -1;
 
-			if (String.Compare(Buffer, DataIt, DiffuseTexture, 0, DiffuseTexture.Length, true) == 0)
+			if (String.Compare(Buffer, DataIt, DiffuseTexture, 0, DiffuseTexture.Length, StringComparison.OrdinalIgnoreCase) == 0)
 			{
 				// Diffuse texture
 				clampIndex = (int)Material.TextureType.TextureDiffuseType;
 				GetTextureOptionAndName(clampIndex, ref Model.CurrentMaterial.Texture);
 			}
-			else if (String.Compare(Buffer, DataIt, AmbientTexture, 0, AmbientTexture.Length, true) == 0)
+			else if (String.Compare(Buffer, DataIt, AmbientTexture, 0, AmbientTexture.Length, StringComparison.OrdinalIgnoreCase) == 0)
 			{
 				// Ambient texture
 				clampIndex = (int)Material.TextureType.TextureAmbientType;
 				GetTextureOptionAndName(clampIndex, ref Model.CurrentMaterial.TextureAmbient);
 			}
-			else if (String.Compare(Buffer, DataIt, SpecularTexture, 0, SpecularTexture.Length, true) == 0)
+			else if (String.Compare(Buffer, DataIt, SpecularTexture, 0, SpecularTexture.Length, StringComparison.OrdinalIgnoreCase) == 0)
 			{
 				// Specular texture
 				clampIndex = (int)Material.TextureType.TextureSpecularType;
 				GetTextureOptionAndName(clampIndex, ref Model.CurrentMaterial.TextureSpecular);
 			}
-			else if (String.Compare(Buffer, DataIt, OpacityTexture, 0, OpacityTexture.Length, true) == 0)
+			else if (String.Compare(Buffer, DataIt, OpacityTexture, 0, OpacityTexture.Length, StringComparison.OrdinalIgnoreCase) == 0)
 			{
 				// Opacity texture
 				clampIndex = (int)Material.TextureType.TextureOpacityType;
 				GetTextureOptionAndName(clampIndex, ref Model.CurrentMaterial.TextureOpacity);
 			}
-			else if (String.Compare(Buffer, DataIt, EmissiveTexture1, 0, EmissiveTexture1.Length, true) == 0
-			         || String.Compare(Buffer, DataIt, EmissiveTexture2, 0, EmissiveTexture2.Length, true) == 0)
+			else if (String.Compare(Buffer, DataIt, EmissiveTexture1, 0, EmissiveTexture1.Length, StringComparison.OrdinalIgnoreCase) == 0
+			         || String.Compare(Buffer, DataIt, EmissiveTexture2, 0, EmissiveTexture2.Length, StringComparison.OrdinalIgnoreCase) == 0)
 			{
 				// Emissive texture
 				clampIndex = (int)Material.TextureType.TextureEmissiveType;
 				GetTextureOptionAndName(clampIndex, ref Model.CurrentMaterial.TextureEmissive);
 			}
-			else if (String.Compare(Buffer, DataIt, BumpTexture1, 0, BumpTexture1.Length, true) == 0
-			         || String.Compare(Buffer, DataIt, BumpTexture2, 0, BumpTexture2.Length, true) == 0)
+			else if (String.Compare(Buffer, DataIt, BumpTexture1, 0, BumpTexture1.Length, StringComparison.OrdinalIgnoreCase) == 0
+			         || String.Compare(Buffer, DataIt, BumpTexture2, 0, BumpTexture2.Length, StringComparison.OrdinalIgnoreCase) == 0)
 			{
 				// Bump texture
 				clampIndex = (int)Material.TextureType.TextureBumpType;
 				GetTextureOptionAndName(clampIndex, ref Model.CurrentMaterial.TextureBump);
 			}
-			else if (String.Compare(Buffer, DataIt, NormalTexture, 0, NormalTexture.Length, true) == 0)
+			else if (String.Compare(Buffer, DataIt, NormalTexture, 0, NormalTexture.Length, StringComparison.OrdinalIgnoreCase) == 0)
 			{
 				// Normal map
 				clampIndex = (int)Material.TextureType.TextureNormalType;
 				GetTextureOptionAndName(clampIndex, ref Model.CurrentMaterial.TextureNormal);
 			}
-			else if (String.Compare(Buffer, DataIt, ReflectionTexture, 0, ReflectionTexture.Length, true) == 0)
+			else if (String.Compare(Buffer, DataIt, ReflectionTexture, 0, ReflectionTexture.Length, StringComparison.OrdinalIgnoreCase) == 0)
 			{
 				// Reflection texture(s)
 				// Do nothing here
 				return;
 			}
-			else if (String.Compare(Buffer, DataIt, DisplacementTexture1, 0, DisplacementTexture1.Length, true) == 0
-			         || String.Compare(Buffer, DataIt, DisplacementTexture2, 0, DisplacementTexture2.Length, true) == 0)
+			else if (String.Compare(Buffer, DataIt, DisplacementTexture1, 0, DisplacementTexture1.Length, StringComparison.OrdinalIgnoreCase) == 0
+			         || String.Compare(Buffer, DataIt, DisplacementTexture2, 0, DisplacementTexture2.Length, StringComparison.OrdinalIgnoreCase) == 0)
 			{
 				// Displacement texture
 				clampIndex = (int)Material.TextureType.TextureDispType;
 				GetTextureOptionAndName(clampIndex, ref Model.CurrentMaterial.TextureDisp);
 			}
-			else if (String.Compare(Buffer, DataIt, SpecularityTexture, 0, SpecularityTexture.Length, true) == 0)
+			else if (String.Compare(Buffer, DataIt, SpecularityTexture, 0, SpecularityTexture.Length, StringComparison.OrdinalIgnoreCase) == 0)
 			{
 				// Specularity scaling (glossiness)
 				clampIndex = (int)Material.TextureType.TextureSpecularityType;
@@ -389,60 +390,60 @@ namespace AssimpNET.Obj
 				//skip option key and value
 				int skipToken = 1;
 
-				if (String.Compare(Buffer, DataIt, ClampOption, 0, ClampOption.Length, true) == 0)
+				if (String.Compare(Buffer, DataIt, ClampOption, 0, ClampOption.Length, StringComparison.OrdinalIgnoreCase) == 0)
 				{
 					DataIt = GetNextToken(DataIt, DataEnd);
 					string tmp;
 					CopyNextWord(out tmp);
-					if (String.Compare(tmp, 0, "on", 0, 2, true) == 0)
+					if (String.Compare(tmp, 0, "on", 0, 2, StringComparison.OrdinalIgnoreCase) == 0)
 					{
 						clamp = true;
 					}
 
 					skipToken = 2;
 				}
-				else if (String.Compare(Buffer, DataIt, TypeOption, 0, TypeOption.Length, true) == 0)
+				else if (String.Compare(Buffer, DataIt, TypeOption, 0, TypeOption.Length, StringComparison.OrdinalIgnoreCase) == 0)
 				{
 					DataIt = GetNextToken(DataIt, DataEnd);
 					string tmp;
 					CopyNextWord(out tmp);
-					if (String.Compare(tmp, 0, "cube_top", 0, 8, true) == 0)
+					if (String.Compare(tmp, 0, "cube_top", 0, 8, StringComparison.OrdinalIgnoreCase) == 0)
 					{
 						clampIndex = (int)Material.TextureType.TextureReflectionCubeTopType;
 						GetTextureName(ref Model.CurrentMaterial.TextureReflection[0]);
 						already = true;
 					}
-					else if (String.Compare(tmp, 0, "cube_bottom", 0, 11, true) == 0)
+					else if (String.Compare(tmp, 0, "cube_bottom", 0, 11, StringComparison.OrdinalIgnoreCase) == 0)
 					{
 						clampIndex = (int)Material.TextureType.TextureReflectionCubeBottomType;
 						GetTextureName(ref Model.CurrentMaterial.TextureReflection[1]);
 						already = true;
 					}
-					else if (String.Compare(tmp, 0, "cube_front", 0, 10, true) == 0)
+					else if (String.Compare(tmp, 0, "cube_front", 0, 10, StringComparison.OrdinalIgnoreCase) == 0)
 					{
 						clampIndex = (int)Material.TextureType.TextureReflectionCubeFrontType;
 						GetTextureName(ref Model.CurrentMaterial.TextureReflection[2]);
 						already = true;
 					}
-					else if (String.Compare(tmp, 0, "cube_back", 0, 9, true) == 0)
+					else if (String.Compare(tmp, 0, "cube_back", 0, 9, StringComparison.OrdinalIgnoreCase) == 0)
 					{
 						clampIndex = (int)Material.TextureType.TextureReflectionCubeBackType;
 						GetTextureName(ref Model.CurrentMaterial.TextureReflection[3]);
 						already = true;
 					}
-					else if (String.Compare(tmp, 0, "cube_left", 0, 9, true) == 0)
+					else if (String.Compare(tmp, 0, "cube_left", 0, 9, StringComparison.OrdinalIgnoreCase) == 0)
 					{
 						clampIndex = (int)Material.TextureType.TextureReflectionCubeLeftType;
 						GetTextureName(ref Model.CurrentMaterial.TextureReflection[4]);
 						already = true;
 					}
-					else if (String.Compare(tmp, 0, "cube_right", 0, 10, true) == 0)
+					else if (String.Compare(tmp, 0, "cube_right", 0, 10, StringComparison.OrdinalIgnoreCase) == 0)
 					{
 						clampIndex = (int)Material.TextureType.TextureReflectionCubeRightType;
 						GetTextureName(ref Model.CurrentMaterial.TextureReflection[5]);
 						already = true;
 					}
-					else if (String.Compare(tmp, 0, "sphere", 0, 6, true) == 0)
+					else if (String.Compare(tmp, 0, "sphere", 0, 6, StringComparison.OrdinalIgnoreCase) == 0)
 					{
 						clampIndex = (int)Material.TextureType.TextureReflectionSphereType;
 						GetTextureName(ref Model.CurrentMaterial.TextureReflection[0]);
@@ -451,22 +452,22 @@ namespace AssimpNET.Obj
 
 					skipToken = 2;
 				}
-				else if (String.Compare(Buffer, DataIt, BlendUOption, 0, BlendUOption.Length, true) == 0
-				         || String.Compare(Buffer, DataIt, BlendVOption, 0, BlendVOption.Length, true) == 0
-				         || String.Compare(Buffer, DataIt, BoostOption, 0, BoostOption.Length, true) == 0
-				         || String.Compare(Buffer, DataIt, ResolutionOption, 0, ResolutionOption.Length, true) == 0
-				         || String.Compare(Buffer, DataIt, BumpOption, 0, BumpOption.Length, true) == 0
-				         || String.Compare(Buffer, DataIt, ChannelOption, 0, ChannelOption.Length, true) == 0)
+				else if (String.Compare(Buffer, DataIt, BlendUOption, 0, BlendUOption.Length, StringComparison.OrdinalIgnoreCase) == 0
+				         || String.Compare(Buffer, DataIt, BlendVOption, 0, BlendVOption.Length, StringComparison.OrdinalIgnoreCase) == 0
+				         || String.Compare(Buffer, DataIt, BoostOption, 0, BoostOption.Length, StringComparison.OrdinalIgnoreCase) == 0
+				         || String.Compare(Buffer, DataIt, ResolutionOption, 0, ResolutionOption.Length, StringComparison.OrdinalIgnoreCase) == 0
+				         || String.Compare(Buffer, DataIt, BumpOption, 0, BumpOption.Length, StringComparison.OrdinalIgnoreCase) == 0
+				         || String.Compare(Buffer, DataIt, ChannelOption, 0, ChannelOption.Length, StringComparison.OrdinalIgnoreCase) == 0)
 				{
 					skipToken = 2;
 				}
-				else if (String.Compare(Buffer, DataIt, ModifyMapOption, 0, ModifyMapOption.Length, true) == 0)
+				else if (String.Compare(Buffer, DataIt, ModifyMapOption, 0, ModifyMapOption.Length, StringComparison.OrdinalIgnoreCase) == 0)
 				{
 					skipToken = 3;
 				}
-				else if (String.Compare(Buffer, DataIt, OffsetOption, 0, OffsetOption.Length, true) == 0
-				         || String.Compare(Buffer, DataIt, ScaleOption, 0, ScaleOption.Length, true) == 0
-				         || String.Compare(Buffer, DataIt, TurbulenceOption, 0, TurbulenceOption.Length, true) == 0)
+				else if (String.Compare(Buffer, DataIt, OffsetOption, 0, OffsetOption.Length, StringComparison.OrdinalIgnoreCase) == 0
+				         || String.Compare(Buffer, DataIt, ScaleOption, 0, ScaleOption.Length, StringComparison.OrdinalIgnoreCase) == 0
+				         || String.Compare(Buffer, DataIt, TurbulenceOption, 0, TurbulenceOption.Length, StringComparison.OrdinalIgnoreCase) == 0)
 				{
 					skipToken = 4;
 				}
@@ -510,7 +511,7 @@ namespace AssimpNET.Obj
 				// skip newmtl and all following white spaces
 				name = token[1];
 			}
-			name = name.Trim();
+			name = name.Trim(new char[] { });
 
 			Material tmp;
 			if (!Model.MaterialMap.TryGetValue(name, out tmp))
@@ -537,7 +538,7 @@ namespace AssimpNET.Obj
 		{
 			string tmp;
 			CopyNextWord(out tmp);
-			illumModel = int.Parse(tmp);
+			illumModel = int.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
 		}
 	}
 }

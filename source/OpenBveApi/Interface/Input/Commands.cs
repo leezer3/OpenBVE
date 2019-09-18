@@ -288,8 +288,9 @@ namespace OpenBveApi.Interface {
 			MainBreaker,
 			//Other
 			/// <summary>Shows or hides the route information window</summary>
-			RouteInformation
-
+			RouteInformation,
+			/// <summary>Toggles the speed units in the RailDriver's display</summary>
+			RailDriverSpeedUnits
 		}
 
 		/// <summary>Defines the possible command types</summary>

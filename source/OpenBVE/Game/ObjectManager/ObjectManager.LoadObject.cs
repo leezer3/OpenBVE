@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -13,17 +14,13 @@ namespace OpenBve
 		/// <param name="FileName">The file to load</param>
 		/// <param name="Encoding">The text endcoding of the base file (Used if the encoding cannot be auto-detected)</param>
 		/// <param name="PreserveVertices">Whether object should be optimized to remove duplicate vertices</param>
-		/// <param name="ForceTextureRepeatX">Whether texture repeat is forced on the X-axis</param>
-		/// <param name="ForceTextureRepeatY">Whether texture repeat is forced on the Y-axis</param>
 		/// <returns>The new object, or a null reference if loading fails</returns>
 		/*
 		 * Notes for refactoring:
 		 *   * Unused vertices must only be preserved in deformable objects (e.g. Crack and Form)
-		 *   * ForceTextureRepeatX / Y is only used for animated objects using the TextureShiftFunction
-		 *   * TODO / BUG: ForceTextureRepeat is only supported by the B3D / CSV parser
 		 *   * TODO / BUG: No detection of actual file contents, which will make all parsers barf
 		 */
-		internal static UnifiedObject LoadObject(string FileName, Encoding Encoding, bool PreserveVertices, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
+		internal static UnifiedObject LoadObject(string FileName, Encoding Encoding, bool PreserveVertices)
 		{
 			if (String.IsNullOrEmpty(FileName))
 			{
@@ -101,6 +98,7 @@ namespace OpenBve
 					case TextEncoding.Encoding.Shift_JIS:
 						Encoding = System.Text.Encoding.GetEncoding(932);
 						break;
+					case TextEncoding.Encoding.ASCII:
 					case TextEncoding.Encoding.Windows1252:
 						Encoding = System.Text.Encoding.GetEncoding(1252);
 						break;
@@ -109,6 +107,9 @@ namespace OpenBve
 						break;
 					case TextEncoding.Encoding.EUC_KR:
 						Encoding = System.Text.Encoding.GetEncoding(949);
+						break;
+					case TextEncoding.Encoding.OEM866:
+						Encoding = System.Text.Encoding.GetEncoding(866);
 						break;
 				}
 			}
@@ -122,65 +123,16 @@ namespace OpenBve
 			{
 				case ".csv":
 				case ".b3d":
-					Result = CsvB3dObjectParser.ReadObject(FileName, Encoding);
-					break;
 				case ".x":
-					if (Interface.CurrentOptions.CurrentXParser != Interface.XParsers.Original)
-					{
-						try
-						{
-							if (Interface.CurrentOptions.CurrentXParser == Interface.XParsers.NewXParser)
-							{
-								Result = NewXParser.ReadObject(FileName, Encoding);
-							}
-							else
-							{
-								Result = AssimpXParser.ReadObject(FileName);
-							}
-						}
-						catch (Exception ex)
-						{
-							Interface.AddMessage(MessageType.Error, false, "The new X parser raised the following exception: " + ex);
-							Result = XObjectParser.ReadObject(FileName, Encoding);
-						}
-					}
-					else
-					{
-						Result = XObjectParser.ReadObject(FileName, Encoding);
-					}
-					break;
+				case ".obj":
 				case ".animated":
-					Result = AnimatedObjectParser.ReadObject(FileName, Encoding);
+				case ".l3dgrp":
+				case ".l3dobj":
+				case ".s":
+					Program.CurrentHost.LoadObject(FileName, Encoding, out Result);
 					break;
 				case ".xml":
 					Result = XMLParser.ReadObject(FileName, Encoding);
-					break;
-				case ".l3dgrp":
-					Result = Ls3DGrpParser.ReadObject(FileName, Encoding, new Vector3());
-					break;
-				case ".l3dobj":
-					Result = Ls3DObjectParser.ReadObject(FileName, new Vector3());
-					break;
-				case ".obj":
-					if (Interface.CurrentOptions.CurrentObjParser == Interface.ObjParsers.Assimp)
-					{
-						try
-						{
-							Result = AssimpObjParser.ReadObject(FileName);
-						}
-						catch (Exception ex)
-						{
-							Interface.AddMessage(MessageType.Error, false, "The new Obj parser raised the following exception: " + ex);
-							Result = WavefrontObjParser.ReadObject(FileName, Encoding);
-						}
-					}
-					else
-					{
-						Result = WavefrontObjParser.ReadObject(FileName, Encoding);
-					}
-					break;
-				case ".s":
-					Result = MsTsShapeParser.ReadObject(FileName);
 					break;
 				default:
 					Interface.AddMessage(MessageType.Error, false, "The file extension is not supported: " + FileName);
@@ -188,7 +140,7 @@ namespace OpenBve
 			}
 			if (Result != null)
 			{
-				Result.OptimizeObject(PreserveVertices);
+				Result.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, Interface.CurrentOptions.ObjectOptimizationVertexCulling);
 			}
 			return Result;
 #if !DEBUG
@@ -198,7 +150,7 @@ namespace OpenBve
 			}
 #endif
 		}
-		internal static StaticObject LoadStaticObject(string FileName, System.Text.Encoding Encoding, bool PreserveVertices, bool ForceTextureRepeatX, bool ForceTextureRepeatY)
+		internal static StaticObject LoadStaticObject(string FileName, Encoding Encoding, bool PreserveVertices)
 		{
 			if (String.IsNullOrEmpty(FileName))
 			{
@@ -231,7 +183,7 @@ namespace OpenBve
 					break;
 				}
 			}
-			StaticObject Result;
+			StaticObject Result = null;
 			string e = System.IO.Path.GetExtension(FileName);
 			if (e == null)
 			{
@@ -242,54 +194,20 @@ namespace OpenBve
 			{
 				case ".csv":
 				case ".b3d":
-					Result = CsvB3dObjectParser.ReadObject(FileName, Encoding);
-					break;
 				case ".x":
-					if (Interface.CurrentOptions.CurrentXParser != Interface.XParsers.Original)
-					{
-						try
-						{
-							if (Interface.CurrentOptions.CurrentXParser == Interface.XParsers.NewXParser)
-							{
-								Result = NewXParser.ReadObject(FileName, Encoding);
-							}
-							else
-							{
-								Result = AssimpXParser.ReadObject(FileName);
-							}
-						}
-						catch (Exception ex)
-						{
-							Interface.AddMessage(MessageType.Error, false, "The new X parser raised the following exception: " + ex);
-							Result = XObjectParser.ReadObject(FileName, Encoding);
-						}
-					}
-					else
-					{
-						Result = XObjectParser.ReadObject(FileName, Encoding);
-					}
-					break;
+				case ".obj":
+				case ".l3dgrp":
+				case ".l3dobj":
 				case ".animated":
 				case ".s":
-					Interface.AddMessage(MessageType.Error, false, "Tried to load an animated object even though only static objects are allowed: " + FileName);
-					return null;
-				case ".obj":
-					if (Interface.CurrentOptions.CurrentObjParser == Interface.ObjParsers.Assimp)
+					UnifiedObject obj;
+					Program.CurrentHost.LoadObject(FileName, Encoding, out obj);
+					if (obj is AnimatedObjectCollection)
 					{
-						try
-						{
-							Result = AssimpObjParser.ReadObject(FileName);
-						}
-						catch (Exception ex)
-						{
-							Interface.AddMessage(MessageType.Error, false, "The new Obj parser raised the following exception: " + ex);
-							Result = WavefrontObjParser.ReadObject(FileName, Encoding);
-						}
+						Interface.AddMessage(MessageType.Error, false, "Tried to load an animated object even though only static objects are allowed: " + FileName);
+						return null;
 					}
-					else
-					{
-						Result = WavefrontObjParser.ReadObject(FileName, Encoding);
-					}
+					Result = (StaticObject)obj;
 					break;
 				/*
 				 * This will require implementing a specific static object load function- Leave alone for the moment
@@ -304,7 +222,7 @@ namespace OpenBve
 			}
 			if (Result != null)
 			{
-				Result.OptimizeObject(PreserveVertices);
+				Result.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, Interface.CurrentOptions.ObjectOptimizationVertexCulling);
 			}
 			return Result;
 #if !DEBUG

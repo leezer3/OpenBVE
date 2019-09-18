@@ -1,4 +1,5 @@
 ﻿using OpenBveApi.Math;
+using SoundManager;
 
 namespace OpenBve
 {
@@ -8,13 +9,13 @@ namespace OpenBve
 		internal class Horn
 		{
 			/// <summary>The sound source for this horn</summary>
-			internal Sounds.SoundSource Source;
+			internal SoundSource Source;
 			/// <summary>The sound buffer to be played once when playback commences</summary>
-			internal Sounds.SoundBuffer StartSound;
+			internal SoundBuffer StartSound;
 			/// <summary>The loop sound</summary>
-			internal Sounds.SoundBuffer LoopSound;
+			internal SoundBuffer LoopSound;
 			/// <summary>The sound buffer to be played once when playback ends</summary>
-			internal Sounds.SoundBuffer EndSound;
+			internal SoundBuffer EndSound;
 			/// <summary>The position of the sound within the train car</summary>
 			internal Vector3 SoundPosition;
 			/// <summary>Whether this horn has start and end sounds, or uses the legacy loop/ stretch method</summary>
@@ -33,7 +34,7 @@ namespace OpenBve
 				this.Loop = false;
 			}
 
-			internal Horn(Sounds.SoundBuffer startSound, Sounds.SoundBuffer loopSound, Sounds.SoundBuffer endSound, bool loop)
+			internal Horn(SoundBuffer startSound, SoundBuffer loopSound, SoundBuffer endSound, bool loop)
 			{
 				this.Source = null;
 				this.StartSound = startSound;
@@ -48,36 +49,33 @@ namespace OpenBve
 			/// <summary>Called by the controls loop to start playback of this horn</summary>
 			internal void Play()
 			{
-				if (StartEndSounds == true)
+				if (StartEndSounds)
 				{
 					//New style three-part sounds
 					if (LoopStarted == false)
 					{
-						if (!Sounds.IsPlaying(Source))
+						if (!Program.Sounds.IsPlaying(Source))
 						{
 							if (StartSound != null)
 							{
 								//The start sound is not currently playing, so start it
-								Source = Sounds.PlaySound(StartSound, 1.0, 1.0, SoundPosition,
-									TrainManager.PlayerTrain, TrainManager.PlayerTrain.DriverCar, false);
+								Source = Program.Sounds.PlaySound(StartSound, 1.0, 1.0, SoundPosition, PlayerTrain.Cars[PlayerTrain.DriverCar], false);
 
 								//Set the loop control variable to started
 								LoopStarted = true;
 							}
 							else
 							{
-								Source = Sounds.PlaySound(LoopSound, 1.0, 1.0, SoundPosition,
-									TrainManager.PlayerTrain, TrainManager.PlayerTrain.DriverCar, true);
+								Source = Program.Sounds.PlaySound(LoopSound, 1.0, 1.0, SoundPosition, PlayerTrain.Cars[PlayerTrain.DriverCar], true);
 							}
 						}
 					}
 					else
 					{
-						if (!Sounds.IsPlaying(Source))
+						if (!Program.Sounds.IsPlaying(Source))
 						{
 							//Start our loop sound playing if the start sound is finished
-							Source = Sounds.PlaySound(LoopSound, 1.0, 1.0, SoundPosition,
-										TrainManager.PlayerTrain, TrainManager.PlayerTrain.DriverCar, true);
+							Source = Program.Sounds.PlaySound(LoopSound, 1.0, 1.0, SoundPosition, PlayerTrain.Cars[PlayerTrain.DriverCar], true);
 						}
 					}
 				}
@@ -89,11 +87,11 @@ namespace OpenBve
 						//Loop is ONLY true if this is a Music Horn
 						if (Loop)
 						{
-							if (!Sounds.IsPlaying(Source) && !LoopStarted)
+							if (!Program.Sounds.IsPlaying(Source) && !LoopStarted)
 							{
 								//On the first keydown event, start the sound source playing and trigger the loop control variable
-								Source = Sounds.PlaySound(LoopSound, 1.0, 1.0, SoundPosition,
-										TrainManager.PlayerTrain, TrainManager.PlayerTrain.DriverCar, true);
+								Source = Program.Sounds.PlaySound(LoopSound, 1.0, 1.0, SoundPosition,
+										PlayerTrain.Cars[PlayerTrain.DriverCar], true);
 								LoopStarted = true;
 							}
 							else
@@ -102,7 +100,7 @@ namespace OpenBve
 								{
 									//Our loop control variable is reset by the keyup event so this code will only trigger on the 
 									//second keydown meaning our horn toggles
-									Sounds.StopSound(Source);
+									Program.Sounds.StopSound(Source);
 									LoopStarted = true;
 								}
 							}
@@ -111,8 +109,7 @@ namespace OpenBve
 						{
 							if (!LoopStarted)
 							{
-								Source = Sounds.PlaySound(LoopSound, 1.0, 1.0, SoundPosition, TrainManager.PlayerTrain,
-									TrainManager.PlayerTrain.DriverCar, false);
+								Source = Program.Sounds.PlaySound(LoopSound, 1.0, 1.0, SoundPosition, PlayerTrain.Cars[PlayerTrain.DriverCar], false);
 							}
 							LoopStarted = true;
 						}
@@ -136,17 +133,15 @@ namespace OpenBve
 					//This sound is a toggle music horn sound
 					return;
 				}
-				if (Sounds.IsPlaying(Source))
+				if (Program.Sounds.IsPlaying(Source))
 				{
 					//Stop the loop sound playing
-					Sounds.StopSound(Source);
+					Program.Sounds.StopSound(Source);
 				}
-				if (StartEndSounds && !Sounds.IsPlaying(Source) && EndSound != null)
+				if (StartEndSounds && !Program.Sounds.IsPlaying(Source) && EndSound != null)
 				{
 					//If our end sound is defined and in use, play once
-					Source = Sounds.PlaySound(EndSound, 1.0, 1.0, SoundPosition,
-										TrainManager.PlayerTrain,
-										TrainManager.PlayerTrain.DriverCar, false);
+					Source = Program.Sounds.PlaySound(EndSound, 1.0, 1.0, SoundPosition, PlayerTrain.Cars[PlayerTrain.DriverCar], false);
 				}
 			}
 		}

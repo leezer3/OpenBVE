@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Math;
 using OpenBveApi.Interface;
+// ReSharper disable NotAccessedVariable
 
 namespace OpenBve
 {
@@ -22,7 +23,7 @@ namespace OpenBve
 			{
 				if (IsRW && Expressions[j].Text.StartsWith("[") && Expressions[j].Text.EndsWith("]"))
 				{
-					Section = Expressions[j].Text.Substring(1, Expressions[j].Text.Length - 2).Trim();
+					Section = Expressions[j].Text.Substring(1, Expressions[j].Text.Length - 2).Trim(new char[] { });
 					if (string.Compare(Section, "object", StringComparison.OrdinalIgnoreCase) == 0)
 					{
 						Section = "Structure";
@@ -65,18 +66,18 @@ namespace OpenBve
 							{
 								if (IsRW & ArgumentSequence[k] == ',')
 								{
-									Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim();
+									Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim(new char[] { });
 									a = k + 1; h++;
 								}
 								else if (ArgumentSequence[k] == ';')
 								{
-									Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim();
+									Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim(new char[] { });
 									a = k + 1; h++;
 								}
 							}
 							if (ArgumentSequence.Length - a > 0)
 							{
-								Arguments[h] = ArgumentSequence.Substring(a).Trim();
+								Arguments[h] = ArgumentSequence.Substring(a).Trim(new char[] { });
 								h++;
 							}
 							Array.Resize<string>(ref Arguments, h);
@@ -115,14 +116,14 @@ namespace OpenBve
 							{
 								if (Command[k] == '(')
 								{
-									string Indices = Command.Substring(k + 1, Command.Length - k - 2).TrimStart();
-									Command = Command.Substring(0, k).TrimEnd();
+									string Indices = Command.Substring(k + 1, Command.Length - k - 2).TrimStart(new char[] { });
+									Command = Command.Substring(0, k).TrimEnd(new char[] { });
 									int h = Indices.IndexOf(";", StringComparison.Ordinal);
 									int CommandIndex1;
 									if (h >= 0)
 									{
-										string a = Indices.Substring(0, h).TrimEnd();
-										string b = Indices.Substring(h + 1).TrimStart();
+										string a = Indices.Substring(0, h).TrimEnd(new char[] { });
+										string b = Indices.Substring(h + 1).TrimStart(new char[] { });
 										if (a.Length > 0 && !NumberFormats.TryParseIntVb6(a, out CommandIndex1))
 										{
 											Command = null; break;

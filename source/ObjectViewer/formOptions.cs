@@ -6,6 +6,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.World;
 using OpenTK.Graphics;
+using Screen = LibRender.Screen;
 
 namespace OpenBve
 {
@@ -16,12 +17,12 @@ namespace OpenBve
             InitializeComponent();
             InterpolationMode.SelectedIndex = (int) Interface.CurrentOptions.Interpolation;
             AnsiotropicLevel.Value = Interface.CurrentOptions.AnisotropicFilteringLevel;
-            AntialiasingLevel.Value = Interface.CurrentOptions.AntialiasingLevel;
+            AntialiasingLevel.Value = Interface.CurrentOptions.AntiAliasingLevel;
             TransparencyQuality.SelectedIndex = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance ? 0 : 2;
-            width.Value = Renderer.ScreenWidth;
-            height.Value = Renderer.ScreenHeight;
-            comboBoxNewXParser.SelectedIndex = Interface.CurrentOptions.CurrentXParser;
-            comboBoxNewObjParser.SelectedIndex = Interface.CurrentOptions.CurrentObjParser;
+            width.Value = Screen.Width;
+            height.Value = Screen.Height;
+            comboBoxNewXParser.SelectedIndex = (int)Interface.CurrentOptions.CurrentXParser;
+            comboBoxNewObjParser.SelectedIndex = (int)Interface.CurrentOptions.CurrentObjParser;
         }
 
         internal static DialogResult ShowOptions()
@@ -34,7 +35,7 @@ namespace OpenBve
         private void button1_Click(object sender, EventArgs e)
         {
             InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
-            int previousAntialasingLevel = Interface.CurrentOptions.AntialiasingLevel;
+            int previousAntialasingLevel = Interface.CurrentOptions.AntiAliasingLevel;
             int previousAnsiotropicLevel = Interface.CurrentOptions.AnisotropicFilteringLevel;
 
             //Interpolation mode
@@ -62,10 +63,10 @@ namespace OpenBve
             //Ansiotropic filtering level
             Interface.CurrentOptions.AnisotropicFilteringLevel = (int) AnsiotropicLevel.Value;
             //Antialiasing level
-            Interface.CurrentOptions.AntialiasingLevel = (int)AntialiasingLevel.Value;
-            if (Interface.CurrentOptions.AntialiasingLevel != previousAntialasingLevel)
+            Interface.CurrentOptions.AntiAliasingLevel = (int)AntialiasingLevel.Value;
+            if (Interface.CurrentOptions.AntiAliasingLevel != previousAntialasingLevel)
             {
-                Program.currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntialiasingLevel);
+                Program.currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
             }
             //Transparency quality
             switch (TransparencyQuality.SelectedIndex)
@@ -78,13 +79,19 @@ namespace OpenBve
                     break;
             }
             //Set width and height
-            if (Renderer.ScreenWidth != width.Value || Renderer.ScreenHeight != height.Value)
+            if (Screen.Width != width.Value || Screen.Height != height.Value)
             {
-                Renderer.ScreenWidth = (int) width.Value;
-                Renderer.ScreenHeight = (int) height.Value;
-                Program.currentGameWindow.Width = (int) width.Value;
-                Program.currentGameWindow.Height = (int) height.Value;
-                Program.UpdateViewport();
+	            if (width.Value >= 300)
+	            {
+		            Screen.Width = (int) width.Value;
+		            Program.currentGameWindow.Width = (int) width.Value;
+	            }
+	            if (height.Value >= 300)
+	            {
+		            Screen.Height = (int) height.Value;
+		            Program.currentGameWindow.Height = (int) height.Value;
+	            }
+	            Program.UpdateViewport();
             }
             //Check if interpolation mode or ansiotropic filtering level has changed, and trigger a reload
             if (previousInterpolationMode != Interface.CurrentOptions.Interpolation || previousAnsiotropicLevel != Interface.CurrentOptions.AnisotropicFilteringLevel)
@@ -92,17 +99,16 @@ namespace OpenBve
                     Program.ReducedMode = false;
                     Program.LightingRelative = -1.0;
                     Game.Reset();
-                    Textures.UnloadAllTextures();
+                    LibRender.TextureManager.UnloadAllTextures();
                     Interface.ClearMessages();
                     for (int i = 0; i < Program.Files.Length; i++)
                     {
 #if !DEBUG
 									try {
 #endif
-                        UnifiedObject o = ObjectManager.LoadObject(Program.Files[i], System.Text.Encoding.UTF8, false, false, false);
+                        UnifiedObject o = ObjectManager.LoadObject(Program.Files[i], System.Text.Encoding.UTF8, false);
                         ObjectManager.CreateObject(o, Vector3.Zero,
-                            new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0,
-                            0.0, 25.0, 0.0);
+                            new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0, 0.0);
 #if !DEBUG
 									} catch (Exception ex) {
 										Interface.AddMessage(MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + Program.Files[i] + ".");
@@ -114,9 +120,16 @@ namespace OpenBve
                     ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
                     
             }
-            Renderer.TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality & Interface.CurrentOptions.Interpolation != OpenBveApi.Graphics.InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != OpenBveApi.Graphics.InterpolationMode.Bilinear;
-            Interface.CurrentOptions.CurrentXParser = comboBoxNewXParser.SelectedIndex;
-            Interface.CurrentOptions.CurrentObjParser = comboBoxNewObjParser.SelectedIndex;
+            Interface.CurrentOptions.CurrentXParser = (XParsers)comboBoxNewXParser.SelectedIndex;
+            Interface.CurrentOptions.CurrentObjParser = (ObjParsers)comboBoxNewObjParser.SelectedIndex;
+            for (int i = 0; i < Plugins.LoadedPlugins.Length; i++)
+            {
+	            if (Plugins.LoadedPlugins[i].Object != null)
+	            {
+					Plugins.LoadedPlugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentXParser);
+					Plugins.LoadedPlugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentObjParser);
+	            }
+            }
             Options.SaveOptions();
             this.Close();
         }

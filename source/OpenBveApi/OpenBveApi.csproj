@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{27134980-4415-4375-A564-40A9014DFA5F}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -7,9 +7,8 @@
     <OutputType>Library</OutputType>
     <RootNamespace>OpenBveApi</RootNamespace>
     <AssemblyName>OpenBveApi</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <SourceAnalysisOverrideSettingsFile>C:\Documents and Settings\Administrator\Application Data\ICSharpCode/SharpDevelop3.0\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <NoStdLib>False</NoStdLib>
     <WarningLevel>4</WarningLevel>
@@ -46,32 +45,42 @@
     <OutputPath>..\..\bin_debug\</OutputPath>
     <DocumentationFile>..\..\bin_debug\OpenBveApi.xml</DocumentationFile>
     <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <Prefer32Bit>false</Prefer32Bit>
     <OutputPath>..\..\bin_release\</OutputPath>
     <DocumentationFile>..\..\bin_release\OpenBveApi.xml</DocumentationFile>
     <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\dependencies\OpenTK.dll</HintPath>
+    <Reference Include="CSScriptLibrary, Version=3.29.0.0, Culture=neutral, PublicKeyToken=70fcc3d18c749033, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CS-Script.lib.3.29.0\lib\CSScriptLibrary.dll</HintPath>
     </Reference>
-    <Reference Include="SharpCompress">
-      <HintPath>..\..\dependencies\SharpCompress.dll</HintPath>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="OpenTK, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\OpenTK.3.1.0\lib\net20\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpCompress, Version=0.24.0.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SharpCompress.0.24.0\lib\net45\SharpCompress.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Ude.NetStandard, Version=1.0.2.0, Culture=neutral, PublicKeyToken=103cb45fc06c90e4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Ude.NetStandard.1.2.0\lib\net45\Ude.NetStandard.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FunctionScripts\AnimationScripts.cs" />
     <Compile Include="FunctionScripts\FunctionScript.cs" />
     <Compile Include="FunctionScripts\FunctionScript.Notation.cs" />
     <Compile Include="FunctionScripts\Instructions.cs" />
+    <Compile Include="Graphics\Camera.RestrictionModes.cs" />
     <Compile Include="Graphics\Colors.cs">
     </Compile>
     <Compile Include="Interface\Input\InputDevice.cs" />
@@ -80,18 +89,47 @@
     <Compile Include="Interface\Time.cs" />
     <Compile Include="Interface\Translations\Language.cs" />
     <Compile Include="Math\Matrix4.cs" />
+    <Compile Include="Math\Quaternion.cs" />
     <Compile Include="Math\Vector4.cs" />
     <Compile Include="Objects\Glow.cs" />
+    <Compile Include="Objects\Helpers\Material.cs" />
+    <Compile Include="Objects\Helpers\MeshBuilder.cs" />
     <Compile Include="Objects\Mesh.cs" />
     <Compile Include="Objects\MeshFace.cs" />
     <Compile Include="Objects\MeshFaceVertex.cs" />
     <Compile Include="Objects\MeshMaterial.BlendMode.cs" />
     <Compile Include="Objects\MeshMaterial.cs" />
-    <Compile Include="Objects\UnifiedObject.cs" />
+    <Compile Include="Objects\ObjectInterface.cs" />
+    <Compile Include="Objects\ObjectTypes\AnimatedObject.AnimatedObjectState.cs" />
+    <Compile Include="Objects\ObjectTypes\AnimatedObject.cs" />
+    <Compile Include="Objects\ObjectTypes\AnimatedObjectCollection.cs" />
+    <Compile Include="Objects\ObjectTypes\AnimatedWorldObject.cs" />
+    <Compile Include="Objects\ObjectTypes\AnimatedWorldObject.StateSound.cs" />
+    <Compile Include="Objects\ObjectTypes\StaticObject.cs" />
+    <Compile Include="Objects\ObjectTypes\TrackFollowingObject.cs" />
+    <Compile Include="Objects\ObjectTypes\UnifiedObject.cs" />
+    <Compile Include="Objects\ObjectTypes\WorldObject.cs" />
+    <Compile Include="Objects\ObjectTypes\WorldSound.cs" />
+    <Compile Include="Objects\Parsers\ObjParsers.cs" />
+    <Compile Include="Objects\Parsers\XParsers.cs" />
+    <Compile Include="Routes\Background.Handle.cs" />
+    <Compile Include="Routes\Background.TransitionModes.cs" />
+    <Compile Include="Routes\Events.cs" />
+    <Compile Include="Routes\Events.TriggerTypes.cs" />
+    <Compile Include="Routes\Track.cs" />
+    <Compile Include="Routes\Track.TrackElement.cs" />
+    <Compile Include="Routes\Track.TrackFollower.cs" />
+    <Compile Include="Sounds\Sounds.PathOrigin.cs" />
+    <Compile Include="Sounds\Sounds.RawOrigin.cs" />
+    <Compile Include="Sounds\Sounds.SoundOrigin.cs" />
+    <Compile Include="Sounds\Sounds.SoundSourceState.cs" />
+    <Compile Include="Sounds\Sounds.SoundType.cs" />
+    <Compile Include="System\BaseOptions.cs" />
     <Compile Include="System\FileSystem.cs" />
     <Compile Include="Graphics\InterpolationModes.cs" />
     <Compile Include="Graphics\TextAlignment.cs" />
     <Compile Include="Graphics\TransparencyModes.cs" />
+    <Compile Include="System\GameMode.cs" />
     <Compile Include="System\Hosts.cs" />
     <Compile Include="Interface\Input\Commands.CommandInfo.cs" />
     <Compile Include="Interface\Input\Commands.cs" />
@@ -102,10 +140,16 @@
     <Compile Include="Objects\Damping.cs" />
     <Compile Include="Objects\Glow.AttenuationMode.cs" />
     <Compile Include="Objects\ObjectType.cs" />
+    <Compile Include="System\TextEncoding.cs" />
     <Compile Include="Train\AbstractCar.cs" />
     <Compile Include="Train\AbstractTrain.cs" />
+    <Compile Include="Train\CarBrightness.cs" />
+    <Compile Include="Train\AbstractCoupler.cs" />
+    <Compile Include="Train\RequestStop.cs" />
+    <Compile Include="Train\StopSkipMode.cs" />
     <Compile Include="Train\TrainStartMode.cs" />
     <Compile Include="Train\TrainState.cs" />
+    <Compile Include="Train\TrainStopState.cs" />
     <Compile Include="World\Orientation3.cs" />
     <Compile Include="Packages\Packages.cs" />
     <Compile Include="Packages\Packages.Database.cs" />
@@ -139,14 +183,21 @@
     <Compile Include="World\Vertex.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\..\assets\Languages\en-US.cfg" />
+    <EmbeddedResource Include="..\..\assets\Languages\en-US.xlf" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="OpenTK.dll.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>
-    <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">echo Resoloving dependencies
-      xcopy /E /Y "$(SolutionDir)dependencies" "$(TargetDir)"
-    </PreBuildEvent>
+    <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">
+		  echo Resoloving dependencies
+		  xcopy /E /Y "$(SolutionDir)dependencies" "$(TargetDir)"
+	  </PreBuildEvent>
     <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">
-      cp -r "$(SolutionDir)dependencies/." "$(TargetDir)"
-    </PreBuildEvent>
+		  cp -r "$(SolutionDir)dependencies/." "$(TargetDir)"
+	  </PreBuildEvent>
   </PropertyGroup>
 </Project>

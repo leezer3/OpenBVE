@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
@@ -736,7 +736,7 @@ namespace OpenBve
 			{
 				return;
 			}
-			Game.Reset(false);
+			Game.Reset(false, false);
 			bool IsRW = string.Equals(System.IO.Path.GetExtension(Result.RouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
 			CsvRwRouteParser.ParseRoute(Result.RouteFile, IsRW, Result.RouteEncoding, null, null, null, true);
 			
@@ -914,6 +914,7 @@ namespace OpenBve
 							comboboxRouteEncoding.Items[0] = "(SHIFT_JIS)";
 							Result.RouteEncoding = System.Text.Encoding.GetEncoding(932);
 							break;
+						case TextEncoding.Encoding.ASCII:
 						case TextEncoding.Encoding.Windows1252:
 							panelRouteEncoding.Enabled = false;
 							comboboxRouteEncoding.SelectedIndex = 0;
@@ -931,6 +932,12 @@ namespace OpenBve
 							comboboxRouteEncoding.SelectedIndex = 0;
 							comboboxRouteEncoding.Items[0] = "Korean - 949";
 							Result.RouteEncoding = System.Text.Encoding.GetEncoding(949);
+							break;
+						case TextEncoding.Encoding.OEM866:
+							panelRouteEncoding.Enabled = false;
+							comboboxRouteEncoding.SelectedIndex = 0;
+							comboboxRouteEncoding.Items[0] = "Legacy Cyrillic - 866";
+							Result.RouteEncoding = System.Text.Encoding.GetEncoding(866);
 							break;
 					}
 					panelRouteEncoding.Enabled = true;
@@ -1004,6 +1011,7 @@ namespace OpenBve
 						comboboxTrainEncoding.Items[0] = "(SHIFT_JIS)";
 						Result.TrainEncoding = System.Text.Encoding.GetEncoding(932);
 						break;
+					case TextEncoding.Encoding.ASCII:
 					case TextEncoding.Encoding.Windows1252:
 						comboboxTrainEncoding.SelectedIndex = 0;
 						comboboxTrainEncoding.Items[0] = "Western European (Windows) 1252";
@@ -1017,7 +1025,7 @@ namespace OpenBve
 					case TextEncoding.Encoding.EUC_KR:
 						comboboxTrainEncoding.SelectedIndex = 0;
 						comboboxTrainEncoding.Items[0] = "Korean - 949";
-						Result.TrainEncoding = System.Text.Encoding.GetEncoding(950);
+						Result.TrainEncoding = System.Text.Encoding.GetEncoding(949);
 						break;
 				}
 				int i;
@@ -1115,7 +1123,11 @@ namespace OpenBve
 					if (System.IO.Directory.Exists(TrainFolder)) {
 						try {
 							Folder = OpenBveApi.Path.CombineDirectory(TrainFolder, Game.TrainName);
-						} catch {
+						} catch (Exception ex) {
+							if (ex is ArgumentException)
+							{
+								break; // Invalid character in path causes infinite recursion
+							}
 							Folder = null;
 						}
 						if (Folder != null) {

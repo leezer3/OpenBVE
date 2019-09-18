@@ -59,6 +59,12 @@
 			StopMode = s.StopMode;
 			Type = s.Type;
 		}
+
+		/// <summary>Indicates whether the player's train stops at a station.</summary>
+		public bool PlayerStops()
+		{
+			return StopMode == StationStopMode.AllStop | StopMode == StationStopMode.PlayerStop | StopMode == StationStopMode.PlayerRequestStop | StopMode == StationStopMode.AllRequestStop;
+		}
 	}
 	
 	/// <summary>The differing stop modes available for a station</summary>

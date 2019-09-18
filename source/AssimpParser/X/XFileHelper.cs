@@ -78,11 +78,11 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System.Collections.Generic;
-using OpenTK;
-using OpenTK.Graphics;
-using VectorKey = System.Collections.Generic.KeyValuePair<double, OpenTK.Vector3>;
-using QuatKey = System.Collections.Generic.KeyValuePair<double, OpenTK.Quaternion>;
-using MatrixKey = System.Collections.Generic.KeyValuePair<double, OpenTK.Matrix4>;
+using OpenBveApi.Colors;
+using OpenBveApi.Math;
+using VectorKey = System.Collections.Generic.KeyValuePair<double, OpenBveApi.Math.Vector3>;
+using QuatKey = System.Collections.Generic.KeyValuePair<double, OpenBveApi.Math.Quaternion>;
+using MatrixKey = System.Collections.Generic.KeyValuePair<double, OpenBveApi.Math.Matrix4D>;
 
 namespace AssimpNET.X
 {
@@ -110,10 +110,10 @@ namespace AssimpNET.X
 	{
 		public string Name;
 		public bool IsReference; // if true, mName holds a name by which the actual material can be found in the material list
-		public Color4 Diffuse;
+		public Color128 Diffuse;
 		public float SpecularExponent;
-		public Color4 Specular;
-		public Color4 Emissive;
+		public Color128 Specular;
+		public Color128 Emissive;
 		public List<TexEntry> Textures = new List<TexEntry>();
 
 		public uint SceneIndex; // the index under which it was stored in the scene's material list
@@ -131,7 +131,7 @@ namespace AssimpNET.X
 	{
 		public string Name;
 		public List<BoneWeight> Weights = new List<BoneWeight>();
-		public Matrix4 OffsetMatrix;
+		public Matrix4D OffsetMatrix;
 	}
 
 	/** Helper structure to represent an XFile mesh */
@@ -148,7 +148,7 @@ namespace AssimpNET.X
 		public uint NumTextures = 0;
 		public List<Vector2>[] TexCoords = new List<Vector2>[AI_MAX_NUMBER_OF_TEXTURECOORDS];
 		public uint NumColorSets = 0;
-		public List<Color4>[] Colors = new List<Color4>[AI_MAX_NUMBER_OF_COLOR_SETS];
+		public List<Color128>[] Colors = new List<Color128>[AI_MAX_NUMBER_OF_COLOR_SETS];
 
 		public List<uint> FaceMaterials = new List<uint>();
 		public List<Material> Materials = new List<Material>();
@@ -165,7 +165,7 @@ namespace AssimpNET.X
 	public class Node
 	{
 		public string Name;
-		public Matrix4 TrafoMatrix;
+		public Matrix4D TrafoMatrix;
 		public Node Parent;
 		public List<Node> Children = new List<Node>();
 		public List<Mesh> Meshes = new List<Mesh>();

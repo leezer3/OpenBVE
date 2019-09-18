@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -11,10 +11,10 @@
     <RootNamespace>RouteViewer</RootNamespace>
     <AssemblyName>RouteViewer</AssemblyName>
     <ApplicationIcon>..\..\assets\icon.ico</ApplicationIcon>
-    <SourceAnalysisOverrideSettingsFile>C:\Documents and Settings\Administrator\Application Data\ICSharpCode/SharpDevelop3.0\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
     <NoStdLib>False</NoStdLib>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -26,6 +26,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>6</LangVersion>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>None</DebugType>
@@ -37,6 +39,8 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <DebugSymbols>false</DebugSymbols>
+    <LangVersion>6</LangVersion>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
@@ -55,12 +59,11 @@
     </AllowedReferenceRelatedFileExtensions>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\dependencies\OpenTK.dll</HintPath>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="OpenTK, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\OpenTK.3.1.0\lib\net20\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -79,29 +82,17 @@
       <DependentUpon>formOptions.cs</DependentUpon>
     </Compile>
     <Compile Include="FunctionScripts.cs" />
+    <Compile Include="Game\MessageManager.cs" />
     <Compile Include="LoadingR.cs" />
     <Compile Include="Fonts.cs" />
     <Compile Include="GameR.cs" />
     <Compile Include="InterfaceR.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="ObjectManager.cs" />
-    <Compile Include="Parsers\AnimatedObjectParser.cs" />
-    <Compile Include="Parsers\CsvB3dObjectParser.cs" />
     <Compile Include="Parsers\CsvRwRouteParser.cs" />
-    <Compile Include="Parsers\Ls3DGrpParser.cs" />
-    <Compile Include="Parsers\Ls3DObjectParser.cs" />
-    <Compile Include="Parsers\MeshBuilder.cs" />
-    <Compile Include="Parsers\WavefrontObjParser.cs" />
-    <Compile Include="Parsers\XObjectParser.cs" />
-    <Compile Include="Renderer.Loading.cs" />
-    <Compile Include="Renderer.Primitives.cs" />
-    <Compile Include="Renderer.Strings.cs" />
+    <Compile Include="Parsers\Script\MarkerScriptParser.cs" />
     <Compile Include="RendererR.cs" />
-    <Compile Include="Audio\Sounds.Convert.cs" />
     <Compile Include="Audio\Sounds.cs" />
-    <Compile Include="Audio\Sounds.SoundBuffer.cs" />
-    <Compile Include="Audio\Sounds.SoundOrigin.cs" />
-    <Compile Include="Audio\Sounds.SoundSource.cs" />
     <Compile Include="Audio\Sounds.Update.cs" />
     <Compile Include="System\Functions\Plugins.cs" />
     <Compile Include="System\Gamewindow.cs" />
@@ -126,6 +117,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="app.config" />
+    <None Include="OpenTK.dll.config" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -145,9 +139,21 @@
       <Project>{e9b64673-65b7-4d77-a4db-4b441a7c9197}</Project>
       <Name>LBAHeader</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LibRender\LibRender.csproj">
+      <Project>{2072ecd1-c7ff-427c-84dc-063f7c19792e}</Project>
+      <Name>LibRender</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
       <Name>OpenBveApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RouteManager\RouteManager.csproj">
+      <Project>{87838364-8911-46b2-8628-d437c485d9c9}</Project>
+      <Name>RouteManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SoundManager\SoundManager.csproj">
+      <Project>{90abfa0c-abca-444e-adef-9a299aed6524}</Project>
+      <Name>SoundManager</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

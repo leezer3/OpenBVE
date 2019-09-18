@@ -1,4 +1,6 @@
 ﻿using System;
+using OpenBve.RouteManager;
+using SoundManager;
 
 namespace OpenBve
 {
@@ -11,19 +13,44 @@ namespace OpenBve
 	{
 		internal abstract class AbstractHandle
 		{
+			/// <summary>The notch set by the driver</summary>
 			internal int Driver;
-
+			/// <summary>The notch set by the safety sytem</summary>
 			internal int Safety;
-
+			/// <summary>The actual notch, as used by the physics system etc.</summary>
 			internal int Actual;
-
+			/// <summary>The maximum notch this handle may be advanced to</summary>
 			internal int MaximumNotch;
-
+			/// <summary>The maximum notch the driver may advance this handle to</summary>
 			internal int MaximumDriverNotch;
 
 			internal HandleChange[] DelayedChanges;
+			/// <summary>Whether the current handle motion is a continuous motion</summary>
+			internal bool ContinuousMovement;
+			/// <summary>The sound played when the handle position is increased</summary>
+			internal CarSound Increase;
+			/// <summary>The sound played when the handle position is increased in a fast motion</summary>
+			internal CarSound IncreaseFast;
+			/// <summary>The sound played when the handle position is decreased</summary>
+			internal CarSound Decrease;
+			/// <summary>The sound played when the handle position is decreased in a fast motion</summary>
+			internal CarSound DecreaseFast;
+			/// <summary>The sound played when the handle is moved to the minimum position</summary>
+			internal CarSound Min;
+			/// <summary>The sound played when the handles is moved to the maximum position</summary>
+			internal CarSound Max;
 
 			internal abstract void Update();
+
+			internal AbstractHandle()
+			{
+				Increase = new CarSound();
+				IncreaseFast = new CarSound();
+				Decrease = new CarSound();
+				DecreaseFast = new CarSound();
+				Min = new CarSound();
+				Max = new CarSound();
+			}
 		}
 		/// <summary>Represents an abstract handle with a set number of notches</summary>
 		internal abstract class NotchedHandle : AbstractHandle
@@ -43,7 +70,7 @@ namespace OpenBve
 				int n = DelayedChanges.Length;
 				Array.Resize<HandleChange>(ref DelayedChanges, n + 1);
 				DelayedChanges[n].Value = Value;
-				DelayedChanges[n].Time = Game.SecondsSinceMidnight + Delay;
+				DelayedChanges[n].Time = CurrentRoute.SecondsSinceMidnight + Delay;
 			}
 			/// <summary>Removes a specified number of delayed changes</summary>
 			/// <param name="Count">The number of changes to remove</param>

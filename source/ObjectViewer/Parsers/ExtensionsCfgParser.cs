@@ -68,11 +68,11 @@ namespace OpenBve
 				int j = lines[i].IndexOf(';');
 				if (j >= 0)
 				{
-					lines[i] = lines[i].Substring(0, j).Trim();
+					lines[i] = lines[i].Substring(0, j).Trim(new char[] { });
 				}
 				else
 				{
-					lines[i] = lines[i].Trim();
+					lines[i] = lines[i].Trim(new char[] { });
 				}
 			}
 
@@ -92,8 +92,8 @@ namespace OpenBve
 									int j = lines[i].IndexOf("=", StringComparison.Ordinal);
 									if (j >= 0)
 									{
-										string a = lines[i].Substring(0, j).TrimEnd();
-										string b = lines[i].Substring(j + 1).TrimStart();
+										string a = lines[i].Substring(0, j).TrimEnd(new char[] { });
+										string b = lines[i].Substring(j + 1).TrimStart(new char[] { });
 										int n;
 										if (int.TryParse(a, System.Globalization.NumberStyles.Integer, culture, out n))
 										{
@@ -102,12 +102,14 @@ namespace OpenBve
 												if (n >= train.Cars.Length)
 												{
 													Array.Resize(ref train.Cars, n + 1);
+													train.Cars[n] = new TrainManager.Car();
 													Array.Resize(ref carObjects, n + 1);
 													Array.Resize(ref bogieObjects, (n + 1) * 2);
 													Array.Resize(ref carObjectsReversed, n + 1);
 													Array.Resize(ref bogieObjectsReversed, (n + 1) * 2);
 													Array.Resize(ref carsDefined, n + 1);
 													Array.Resize(ref bogiesDefined, (n + 1) * 2);
+													Array.Resize(ref axleLocations, (n + 1) * 2);
 												}
 												if (Path.ContainsInvalidChars(b))
 												{
@@ -120,7 +122,7 @@ namespace OpenBve
 													{
 														if (loadObjects)
 														{
-															carObjects[n] = ObjectManager.LoadObject(file, encoding, false, false, false);
+															carObjects[n] = ObjectManager.LoadObject(file, encoding, false);
 														}
 													}
 													else
@@ -161,6 +163,7 @@ namespace OpenBve
 										if (n >= train.Cars.Length)
 										{
 											Array.Resize(ref train.Cars, n + 1);
+											train.Cars[n] = new TrainManager.Car();
 											Array.Resize(ref carObjects, n + 1);
 											Array.Resize(ref bogieObjects, (n + 1) * 2);
 											Array.Resize(ref carObjectsReversed, n + 1);
@@ -182,8 +185,8 @@ namespace OpenBve
 												int j = lines[i].IndexOf("=", StringComparison.Ordinal);
 												if (j >= 0)
 												{
-													string a = lines[i].Substring(0, j).TrimEnd();
-													string b = lines[i].Substring(j + 1).TrimStart();
+													string a = lines[i].Substring(0, j).TrimEnd(new char[] { });
+													string b = lines[i].Substring(j + 1).TrimStart(new char[] { });
 													switch (a.ToLowerInvariant())
 													{
 														case "object":
@@ -203,7 +206,7 @@ namespace OpenBve
 																{
 																	if (loadObjects)
 																	{
-																		carObjects[n] = ObjectManager.LoadObject(file, encoding, false, false, false);
+																		carObjects[n] = ObjectManager.LoadObject(file, encoding, false);
 																	}
 																}
 																else
@@ -237,9 +240,10 @@ namespace OpenBve
 															break;
 														case "axles":
 															int k = b.IndexOf(',');
-															if (k >= 0) {
-																string c = b.Substring(0, k).TrimEnd();
-																string d = b.Substring(k + 1).TrimStart();
+															if (k >= 0)
+															{
+																string c = b.Substring(0, k).TrimEnd(new char[] { });
+																string d = b.Substring(k + 1).TrimStart(new char[] { });
 																double rear, front;
 																if (!double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out rear)) {
 																	Interface.AddMessage(MessageType.Error, false, "Rear is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + filePath);
@@ -248,8 +252,17 @@ namespace OpenBve
 																} else if (rear >= front) {
 																	Interface.AddMessage(MessageType.Error, false, "Rear is expected to be less than Front in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + filePath);
 																} else {
-																	axleLocations[n] = rear;
-																	axleLocations[n + 1] = front;
+																	if (n == 0)
+																	{
+																		axleLocations[n] = rear;
+																		axleLocations[n + 1] = front;
+																	}
+																	else
+																	{
+																		axleLocations[n * 2] = rear;
+																		axleLocations[n * 2 + 1] = front;
+																	}
+																	
 
 																}
 															} else {
@@ -290,6 +303,17 @@ namespace OpenBve
 									if (n >= train.Cars.Length * 2)
 									{
 										Array.Resize(ref train.Cars, n / 2 + 1);
+										if (n == 0)
+										{
+											train.Cars[0] = new TrainManager.Car();
+											Array.Resize(ref axleLocations, 2);
+										}
+										else
+										{
+											train.Cars[n / 2] = new TrainManager.Car();	
+											Array.Resize(ref axleLocations, ((n / 2) + 1) * 2);
+										}
+										
 										Array.Resize(ref carObjects, n / 2 + 1);
 										Array.Resize(ref bogieObjects, n + 2);
 										Array.Resize(ref carObjectsReversed, n / 2 + 1);
@@ -318,8 +342,8 @@ namespace OpenBve
 												int j = lines[i].IndexOf("=", StringComparison.Ordinal);
 												if (j >= 0)
 												{
-													string a = lines[i].Substring(0, j).TrimEnd();
-													string b = lines[i].Substring(j + 1).TrimStart();
+													string a = lines[i].Substring(0, j).TrimEnd(new char[] { });
+													string b = lines[i].Substring(j + 1).TrimStart(new char[] { });
 													switch (a.ToLowerInvariant())
 													{
 														case "object":
@@ -339,7 +363,7 @@ namespace OpenBve
 																{
 																	if (loadObjects)
 																	{
-																		bogieObjects[n] = ObjectManager.LoadObject(file, encoding, false, false, false);
+																		bogieObjects[n] = ObjectManager.LoadObject(file, encoding, false);
 																	}
 																}
 																else
@@ -426,14 +450,14 @@ namespace OpenBve
 					carObjectsCount++;
 					if (carObjectsReversed[i] && loadObjects)
 					{
-						if (carObjects[i] is ObjectManager.StaticObject)
+						if (carObjects[i] is StaticObject)
 						{
-							ObjectManager.StaticObject obj = (ObjectManager.StaticObject)carObjects[i];
+							StaticObject obj = (StaticObject)carObjects[i];
 							obj.ApplyScale(-1.0, 1.0, -1.0);
 						}
-						else if (carObjects[i] is ObjectManager.AnimatedObjectCollection)
+						else if (carObjects[i] is AnimatedObjectCollection)
 						{
-							ObjectManager.AnimatedObjectCollection obj = (ObjectManager.AnimatedObjectCollection)carObjects[i];
+							AnimatedObjectCollection obj = (AnimatedObjectCollection)carObjects[i];
 							for (int j = 0; j < obj.Objects.Length; j++)
 							{
 								for (int h = 0; h < obj.Objects[j].States.Length; h++)
@@ -467,14 +491,14 @@ namespace OpenBve
 					bogieObjectsCount++;
 					if (bogieObjectsReversed[i] && loadObjects)
 					{
-						if (bogieObjects[i] is ObjectManager.StaticObject)
+						if (bogieObjects[i] is StaticObject)
 						{
-							ObjectManager.StaticObject obj = (ObjectManager.StaticObject)bogieObjects[i];
+							StaticObject obj = (StaticObject)bogieObjects[i];
 							obj.ApplyScale(-1.0, 1.0, -1.0);
 						}
-						else if (bogieObjects[i] is ObjectManager.AnimatedObjectCollection)
+						else if (bogieObjects[i] is AnimatedObjectCollection)
 						{
-							ObjectManager.AnimatedObjectCollection obj = (ObjectManager.AnimatedObjectCollection)bogieObjects[i];
+							AnimatedObjectCollection obj = (AnimatedObjectCollection)bogieObjects[i];
 							for (int j = 0; j < obj.Objects.Length; j++)
 							{
 								for (int h = 0; h < obj.Objects[j].States.Length; h++)

@@ -8,14 +8,16 @@
 using System;
 using System.Globalization;
 using OpenBveApi;
-using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
+using OpenBveApi.Objects;
+using OpenBveApi.Textures;
+using SoundManager;
 
 namespace OpenBve {
 
 	// --- TimeTable.cs ---
 	internal static class Timetable {
-		internal static void AddObjectForCustomTimetable(ObjectManager.AnimatedObject obj) { }
+		internal static void AddObjectForCustomTimetable(AnimatedObject obj) { }
 		internal enum TimetableState {
 			None = 0,
 			Custom = 1,
@@ -24,45 +26,22 @@ namespace OpenBve {
 		internal static TimetableState CurrentTimetable = TimetableState.None;
 		internal static bool CustomTimetableAvailable = false;
 		internal static string DefaultTimetableDescription = null;
-		internal static int[] CustomTextureIndices = null;
-	}
-
-	// --- PluginManager.cs ---
-	internal static class PluginManager {
-		internal static class CurrentPlugin {
-			internal static int[] Panel = new int[] { };
-		}
+		internal static Texture[] CustomTextureIndices = null;
 	}
 
 	// --- Interface.cs ---
 	internal static class Interface {
 
-		// options
-		internal enum SoundRange {
-			Low = 0,
-			Medium = 1,
-			High = 2
-		}
-#pragma warning disable 0649
-		internal struct Options {
-			internal InterpolationMode Interpolation;
-			internal int AnisotropicFilteringLevel;
-			internal int AnisotropicFilteringMaximum;
-		    internal int AntialiasingLevel;
-			internal TransparencyMode TransparencyMode;
-			internal SoundRange SoundRange;
-			internal int SoundNumber;
-			internal bool UseSound;
-			internal int ObjectOptimizationBasicThreshold;
-			internal int ObjectOptimizationFullThreshold;
-			internal int SmoothenOutTurns;
-		    internal bool VerticalSynchronization;
+		/// <summary>Holds the program specific options</summary>
+		internal class Options : BaseOptions
+		{
 			internal bool LoadingProgressBar;
 			internal bool LoadingLogo;
 			internal bool LoadingBackground;
 		}
+
+		/// <summary>The current options in use</summary>
 		internal static Options CurrentOptions;
-#pragma warning restore 0649
 
 		internal static LogMessage[] LogMessages = new LogMessage[] { };
 		internal static int MessageCount = 0;
@@ -119,13 +98,6 @@ namespace OpenBve {
 			}
 			Value = 0.0;
 			return false;
-		}
-		// round to power of two
-		internal static int RoundToPowerOfTwo(int Value) {
-			Value -= 1;
-			for (int i = 1; i < sizeof(int) * 8; i *= 2) {
-				Value = Value | Value >> i;
-			} return Value + 1;
 		}
 	}
 }

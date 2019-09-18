@@ -7,16 +7,20 @@
 
 using System;
 using System.Windows.Forms;
+using LibRender;
 using OpenBveApi.World;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using ButtonState = OpenTK.Input.ButtonState;
+using Screen = LibRender.Screen;
 using Vector3 = OpenBveApi.Math.Vector3;
+using static LibRender.CameraProperties;
 
 namespace OpenBve {
 	internal static class Program {
@@ -46,7 +50,6 @@ namespace OpenBve {
         private static bool ShiftPressed = false;
         internal static bool ReducedMode = true;
 
-		internal static bool SoundError = false;
 
         internal static GameWindow currentGameWindow;
         internal static GraphicsMode currentGraphicsMode;
@@ -61,9 +64,11 @@ namespace OpenBve {
 	    {
 			CurrentlyRunOnMono = Type.GetType("Mono.Runtime") != null;
 			CurrentHost = new Host();
-		    
-	        // file system
+			// file system
 	        FileSystem = FileSystem.FromCommandLineArgs(args);
+	        Options.LoadOptions();
+	        LibRender.Renderer.currentHost = CurrentHost;
+	        LibRender.Renderer.currentOptions = Interface.CurrentOptions;
 	        FileSystem.CreateFileSystem();
 		    Plugins.LoadPlugins();
 	        // command line arguments
@@ -105,45 +110,48 @@ namespace OpenBve {
 	                if (Skips == args.Length) return;
 	            }
 	        }
-	        Options.LoadOptions();
+			
+	        var options = new ToolkitOptions();
+	        options.Backend = PlatformBackend.PreferX11;
+	        Toolkit.Init(options);
             Interface.CurrentOptions.ObjectOptimizationBasicThreshold = 1000;
 	        Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
-	        Interface.CurrentOptions.AntialiasingLevel = 16;
+	        Interface.CurrentOptions.AntiAliasingLevel = 16;
 	        Interface.CurrentOptions.AnisotropicFilteringLevel = 16;
 	        // initialize camera
 
-	        currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntialiasingLevel);
-	        currentGameWindow = new ObjectViewer(Renderer.ScreenWidth, Renderer.ScreenHeight, currentGraphicsMode,"Object Viewer", GameWindowFlags.Default);
+	        currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntiAliasingLevel);
+	        currentGameWindow = new ObjectViewer(Screen.Width, Screen.Height, currentGraphicsMode,"Object Viewer", GameWindowFlags.Default);
 	        currentGameWindow.Visible = true;
 	        currentGameWindow.TargetUpdateFrequency = 0;
 	        currentGameWindow.TargetRenderFrequency = 0;
 	        currentGameWindow.Title = "Object Viewer";
 	        currentGameWindow.Run();
 	        // quit
-	        Textures.UnloadAllTextures();
+	        LibRender.TextureManager.UnloadAllTextures();
 
 	    }
 
 	    // reset camera
 	    internal static void ResetCamera() {
-			World.AbsoluteCameraPosition = new Vector3(-5.0, 2.5, -25.0);
-			World.AbsoluteCameraDirection = new Vector3(-World.AbsoluteCameraPosition.X, -World.AbsoluteCameraPosition.Y, -World.AbsoluteCameraPosition.Z);
-			World.AbsoluteCameraSide = new Vector3(-World.AbsoluteCameraPosition.Z, 0.0, World.AbsoluteCameraPosition.X);
-			World.AbsoluteCameraDirection.Normalize();
-			World.AbsoluteCameraSide.Normalize();
-			World.AbsoluteCameraUp = Vector3.Cross(World.AbsoluteCameraDirection, World.AbsoluteCameraSide);
-			World.VerticalViewingAngle = 45.0 * 0.0174532925199433;
-			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
-			World.OriginalVerticalViewingAngle = World.VerticalViewingAngle;
+			Camera.AbsolutePosition = new Vector3(-5.0, 2.5, -25.0);
+			Camera.AbsoluteDirection = new Vector3(-Camera.AbsolutePosition.X, -Camera.AbsolutePosition.Y, -Camera.AbsolutePosition.Z);
+			Camera.AbsoluteSide = new Vector3(-Camera.AbsolutePosition.Z, 0.0, Camera.AbsolutePosition.X);
+			Camera.AbsoluteDirection.Normalize();
+			Camera.AbsoluteSide.Normalize();
+			Camera.AbsoluteUp = Vector3.Cross(Camera.AbsoluteDirection, Camera.AbsoluteSide);
+			Camera.VerticalViewingAngle = 45.0.ToRadians();
+			Camera.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * Camera.VerticalViewingAngle) * Screen.AspectRatio);
+			Camera.OriginalVerticalViewingAngle = Camera.VerticalViewingAngle;
 		}
 
 		// update viewport
 		internal static void UpdateViewport() {
-            GL.Viewport(0, 0, Renderer.ScreenWidth, Renderer.ScreenHeight);
-            World.AspectRatio = (double)Renderer.ScreenWidth / (double)Renderer.ScreenHeight;
-            World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
+            GL.Viewport(0, 0, Screen.Width, Screen.Height);
+            Screen.AspectRatio = (double)Screen.Width / (double)Screen.Height;
+            Camera.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * Camera.VerticalViewingAngle) * Screen.AspectRatio);
             GL.MatrixMode(MatrixMode.Projection);
-            Matrix4d perspective = Matrix4d.CreatePerspectiveFieldOfView(World.VerticalViewingAngle, World.AspectRatio, 0.2, 1000.0);
+            Matrix4d perspective = Matrix4d.CreatePerspectiveFieldOfView(Camera.VerticalViewingAngle, Screen.AspectRatio, 0.2, 1000.0);
             GL.LoadMatrix(ref perspective);
             GL.Scale(-1, 1, 1);
             GL.MatrixMode(MatrixMode.Modelview);
@@ -155,17 +163,17 @@ namespace OpenBve {
 			if(e.Delta != 0)
 			{
 				double dx = -0.025 * e.Delta;
-				World.AbsoluteCameraPosition += dx * World.AbsoluteCameraDirection;
+				Camera.AbsolutePosition += dx * Camera.AbsoluteDirection;
 				ReducedMode = false;
 			}
 		}
 
 	    internal static void MouseEvent(object sender, MouseButtonEventArgs e)
 	    {
-            MouseCameraPosition = World.AbsoluteCameraPosition;
-            MouseCameraDirection = World.AbsoluteCameraDirection;
-            MouseCameraUp = World.AbsoluteCameraUp;
-            MouseCameraSide = World.AbsoluteCameraSide;
+            MouseCameraPosition = Camera.AbsolutePosition;
+            MouseCameraDirection = Camera.AbsoluteDirection;
+            MouseCameraUp = Camera.AbsoluteUp;
+            MouseCameraSide = Camera.AbsoluteSide;
 	        if (e.Button == OpenTK.Input.MouseButton.Left)
 	        {
 	            MouseButton = e.Mouse.LeftButton == ButtonState.Pressed ? 1 : 0;
@@ -190,7 +198,7 @@ namespace OpenBve {
 			ReducedMode = false;
 			LightingRelative = -1.0;
 			Game.Reset();
-			Textures.UnloadAllTextures();
+			LibRender.TextureManager.UnloadAllTextures();
 			//Fonts.Initialize();
 			Interface.ClearMessages();
 			for (int i = 0; i < Files.Length; i++)
@@ -221,7 +229,7 @@ namespace OpenBve {
 					for (int j = 0; j < carObjects.Length; j++)
 					{
 						ObjectManager.CreateObject(carObjects[j], new Vector3(0.0, 0.0, z),
-						                           new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
+						                           new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0,
 						                           0.0);
 						if (j < train.Cars.Length - 1)
 						{
@@ -229,26 +237,28 @@ namespace OpenBve {
 						}
 					}
 					z = 0.0;
+					int trainCar = 0;
 					for (int j = 0; j < bogieObjects.Length; j++)
 					{
 						ObjectManager.CreateObject(bogieObjects[j], new Vector3(0.0, 0.0, z + axleLocations[j]),
-							new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
+							new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0,
 							0.0);
 						j++;
-						ObjectManager.CreateObject(bogieObjects[j], new Vector3(0.0, 0.0, z - axleLocations[j]),
-							new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
+						ObjectManager.CreateObject(bogieObjects[j], new Vector3(0.0, 0.0, z + axleLocations[j]),
+							new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0,
 							0.0);
-						if (j < train.Cars.Length - 1)
+						if (trainCar < train.Cars.Length - 1)
 						{
-							z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2;
+							z -= (train.Cars[trainCar].Length + train.Cars[trainCar + 1].Length) / 2;
 						}
+						trainCar++;
 					}
 				}
 				else
 				{
-					UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8, false, false, false);
+					UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8, false);
 					ObjectManager.CreateObject(o, Vector3.Zero,
-					                           new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
+					                           new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0,
 					                           0.0);
 				}
 #if !DEBUG
@@ -278,42 +288,42 @@ namespace OpenBve {
 	        {
 	            if (MouseButton == 1)
 	            {
-                    World.AbsoluteCameraDirection = MouseCameraDirection;
-                    World.AbsoluteCameraUp = MouseCameraUp;
-                    World.AbsoluteCameraSide = MouseCameraSide;
+                    Camera.AbsoluteDirection = MouseCameraDirection;
+                    Camera.AbsoluteUp = MouseCameraUp;
+                    Camera.AbsoluteSide = MouseCameraSide;
                     {
                         double dx = 0.0025 * (double)(previousMouseState.X - currentMouseState.X);
                         double cosa = Math.Cos(dx);
                         double sina = Math.Sin(dx);
-						World.AbsoluteCameraDirection.Rotate(Vector3.Down, cosa, sina);
-	                    World.AbsoluteCameraUp.Rotate(Vector3.Down, cosa, sina);
-	                    World.AbsoluteCameraSide.Rotate(Vector3.Down, cosa, sina);
+						Camera.AbsoluteDirection.Rotate(Vector3.Down, cosa, sina);
+	                    Camera.AbsoluteUp.Rotate(Vector3.Down, cosa, sina);
+	                    Camera.AbsoluteSide.Rotate(Vector3.Down, cosa, sina);
                     }
                     {
                         double dy = 0.0025 * (double)(previousMouseState.Y - currentMouseState.Y);
                         double cosa = Math.Cos(dy);
                         double sina = Math.Sin(dy);
-						World.AbsoluteCameraDirection.Rotate(World.AbsoluteCameraSide, cosa, sina);
-	                    World.AbsoluteCameraUp.Rotate(World.AbsoluteCameraSide, cosa, sina);
+						Camera.AbsoluteDirection.Rotate(Camera.AbsoluteSide, cosa, sina);
+	                    Camera.AbsoluteUp.Rotate(Camera.AbsoluteSide, cosa, sina);
                     }
                     ReducedMode = false;
 	            }
 	            else if(MouseButton == 2)
 	            {
-                    World.AbsoluteCameraPosition = MouseCameraPosition;
+                    Camera.AbsolutePosition = MouseCameraPosition;
                     double dx = -0.025 * (double)(currentMouseState.X - previousMouseState.X);
-                    World.AbsoluteCameraPosition += dx * World.AbsoluteCameraSide;
+                    Camera.AbsolutePosition += dx * Camera.AbsoluteSide;
                     double dy = 0.025 * (double)(currentMouseState.Y - previousMouseState.Y);
-                    World.AbsoluteCameraPosition += dy * World.AbsoluteCameraUp;
+                    Camera.AbsolutePosition += dy * Camera.AbsoluteUp;
                     ReducedMode = false;
 	            }
 	            else
 	            {
-                    World.AbsoluteCameraPosition = MouseCameraPosition;
+                    Camera.AbsolutePosition = MouseCameraPosition;
                     double dx = -0.025 * (double)(currentMouseState.X - previousMouseState.X);
-                    World.AbsoluteCameraPosition += dx * World.AbsoluteCameraSide;
+                    Camera.AbsolutePosition += dx * Camera.AbsoluteSide;
                     double dz = -0.025 * (double)(currentMouseState.Y - previousMouseState.Y);
-                    World.AbsoluteCameraPosition += dz * World.AbsoluteCameraDirection;
+                    Camera.AbsolutePosition += dz * Camera.AbsoluteDirection;
                     ReducedMode = false;
 	            }
 	        }
@@ -334,8 +344,7 @@ namespace OpenBve {
 	                ReducedMode = false;
 	                LightingRelative = -1.0;
 	                Game.Reset();
-	                Textures.UnloadAllTextures();
-	                //Fonts.Initialize();
+	                LibRender.TextureManager.UnloadAllTextures();
 	                Interface.ClearMessages();
 	                for (int i = 0; i < Files.Length; i++)
 	                {
@@ -361,10 +370,10 @@ namespace OpenBve {
 			                    }
 		                    }
 		                	double z = 0.0;
-		                	for (int j = 0; j < carObjects.Length; j++)
+		                    for (int j = 0; j < carObjects.Length; j++)
 		                	{
 		                		ObjectManager.CreateObject(carObjects[j], new Vector3(0.0, 0.0, z),
-		                		                           new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
+		                		                           new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0,
 		                		                           0.0);
 		                		if (j < train.Cars.Length - 1)
 		                		{
@@ -372,26 +381,28 @@ namespace OpenBve {
 		                		}
 		                	}
 		                    z = 0.0;
+		                    int trainCar = 0;
 		                    for (int j = 0; j < bogieObjects.Length; j++)
 		                    {
 			                    ObjectManager.CreateObject(bogieObjects[j], new Vector3(0.0, 0.0, z + axleLocations[j]),
-				                    new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
+				                    new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0,
 				                    0.0);
 			                    j++;
-			                    ObjectManager.CreateObject(bogieObjects[j], new Vector3(0.0, 0.0, z - axleLocations[j]),
-				                    new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
+			                    ObjectManager.CreateObject(bogieObjects[j], new Vector3(0.0, 0.0, z + axleLocations[j]),
+				                    new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0,
 				                    0.0);
-			                    if (j < train.Cars.Length - 1)
+			                    if (trainCar < train.Cars.Length - 1)
 			                    {
-				                    z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2;
+				                    z -= (train.Cars[trainCar].Length + train.Cars[trainCar + 1].Length) / 2;
 			                    }
+								trainCar++;
 		                    }
 		                }
 		                else
 		                {
-		                	UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8, false, false, false);
+		                	UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8, false);
 		                	ObjectManager.CreateObject(o, Vector3.Zero,
-		                	                           new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
+		                	                           new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0,
 		                	                           0.0);
 		                }
 #if !DEBUG
@@ -426,7 +437,7 @@ namespace OpenBve {
 			            ReducedMode = false;
 			            LightingRelative = -1.0;
 			            Game.Reset();
-			            Textures.UnloadAllTextures();
+			            LibRender.TextureManager.UnloadAllTextures();
 			            Interface.ClearMessages();
 			            for (int i = 0; i < Files.Length; i++)
 			            {
@@ -436,54 +447,56 @@ namespace OpenBve {
 #endif
 				            if (String.Compare(System.IO.Path.GetFileName(Files[i]), "extensions.cfg", StringComparison.OrdinalIgnoreCase) == 0)
 				            {
-				            	UnifiedObject[] carObjects;
-				            	UnifiedObject[] bogieObjects;
-								double[] axleLocations;
-								TrainManager.Train train;
-				            	ExtensionsCfgParser.ParseExtensionsConfig(Files[i], System.Text.Encoding.UTF8, out carObjects, out bogieObjects, out axleLocations, out train, true);
-				                if (axleLocations.Length == 0)
-				                {
-					                axleLocations = new double[train.Cars.Length * 2];
-					                for (int j = 0; j < train.Cars.Length; j++)
-					                {
-						                double ap = train.Cars.Length * 0.4;
-						                axleLocations[j] = ap;
-						                j++;
-						                axleLocations[j] = -ap;
-					                }
-				                }
-				            	double z = 0.0;
-				            	for (int j = 0; j < carObjects.Length; j++)
-				            	{
-				            		ObjectManager.CreateObject(carObjects[j], new Vector3(0.0, 0.0, z),
-				            		                           new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
-				            		                           0.0);
-				            		if (j < train.Cars.Length - 1)
-				            		{
-				            			z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2;
-				            		}
-				            	}
-								z = 0.0;
-				                for (int j = 0; j < bogieObjects.Length; j++)
-				                {
-					                ObjectManager.CreateObject(bogieObjects[j], new Vector3(0.0, 0.0, z + axleLocations[j]),
-						                new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
-						                0.0);
-					                j++;
-					                ObjectManager.CreateObject(bogieObjects[j], new Vector3(0.0, 0.0, z - axleLocations[j]),
-						                new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
-						                0.0);
-					                if (j < train.Cars.Length - 1)
-					                {
-						                z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2;
-					                }
-				                }
+					            UnifiedObject[] carObjects;
+					            UnifiedObject[] bogieObjects;
+					            TrainManager.Train train;
+					            double[] axleLocations;
+					            ExtensionsCfgParser.ParseExtensionsConfig(Files[i], System.Text.Encoding.UTF8, out carObjects, out bogieObjects, out axleLocations, out train, true);
+					            if (axleLocations.Length == 0)
+					            {
+						            axleLocations = new double[train.Cars.Length * 2];
+						            for (int j = 0; j < train.Cars.Length; j++)
+						            {
+							            double ap = train.Cars.Length * 0.4;
+							            axleLocations[j] = ap;
+							            j++;
+							            axleLocations[j] = -ap;
+						            }
+					            }
+					            double z = 0.0;
+					            for (int j = 0; j < carObjects.Length; j++)
+					            {
+						            ObjectManager.CreateObject(carObjects[j], new Vector3(0.0, 0.0, z),
+							            new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0,
+							            0.0);
+						            if (j < train.Cars.Length - 1)
+						            {
+							            z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2;
+						            }
+					            }
+					            z = 0.0;
+					            int trainCar = 0;
+					            for (int j = 0; j < bogieObjects.Length; j++)
+					            {
+						            ObjectManager.CreateObject(bogieObjects[j], new Vector3(0.0, 0.0, z + axleLocations[j]),
+							            new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0,
+							            0.0);
+						            j++;
+						            ObjectManager.CreateObject(bogieObjects[j], new Vector3(0.0, 0.0, z + axleLocations[j]),
+							            new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0,
+							            0.0);
+						            if (trainCar < train.Cars.Length - 1)
+						            {
+							            z -= (train.Cars[trainCar].Length + train.Cars[trainCar + 1].Length) / 2;
+						            }
+						            trainCar++;
+					            }
 				            }
 				            else
 				            {
-				            	UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8, false, false, false);
+				            	UnifiedObject o = ObjectManager.LoadObject(Files[i], System.Text.Encoding.UTF8, false);
 				            	ObjectManager.CreateObject(o, Vector3.Zero,
-				            	                           new Transformation(0.0, 0.0, 0.0), new Transformation(0.0, 0.0, 0.0), true, 0.0, 0.0, 25.0,
+				            	                           new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0,
 				            	                           0.0);
 				            }
 #if !DEBUG
@@ -524,8 +537,7 @@ namespace OpenBve {
 	                ReducedMode = false;
 	                LightingRelative = -1.0;
 	                Game.Reset();
-	                Textures.UnloadAllTextures();
-	                //Fonts.Initialize();
+	                LibRender.TextureManager.UnloadAllTextures();
 	                Interface.ClearMessages();
 	                Files = new string[] {};
 	                break;
@@ -578,19 +590,11 @@ namespace OpenBve {
 	                break;
 	            case Key.F:
 	            case Key.F1:
-	                Renderer.OptionWireframe = !Renderer.OptionWireframe;
-	                if (Renderer.OptionWireframe)
-	                {
-	                    GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
-	                }
-	                else
-	                {
-	                    GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-	                }
+					LibRender.Renderer.ToggleWireFrame();
 	                break;
 	            case Key.N:
 	            case Key.F2:
-	                Renderer.OptionNormals = !Renderer.OptionNormals;
+		            LibRender.Renderer.OptionNormals = !LibRender.Renderer.OptionNormals;
 	                break;
 	            case Key.L:
 	            case Key.F3:

@@ -42,13 +42,13 @@ namespace OpenBveApi.FunctionScripting
 		/// <summary>Checks whether the specified function will return a constant result</summary>
 		public bool ConstantResult()
 		{
-			if (InstructionSet.Length == 1 && InstructionSet[0] == FunctionScripting.Instructions.SystemConstant)
+			if (InstructionSet.Length == 1 && InstructionSet[0] == Instructions.SystemConstant)
 			{
 				return true;
 			}
 			for (int i = 0; i < InstructionSet.Length; i++)
 			{
-				if ((int) InstructionSet[i] >= (int) FunctionScripting.Instructions.LogicalXor)
+				if ((int) InstructionSet[i] >= (int) Instructions.LogicalXor)
 				{
 					return false;
 				}
@@ -519,7 +519,19 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.RightDoorButton;
 							n++; s++; if (s >= m) m = s; break;
-							// train: handles
+						case "pilotlamp":
+							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.PilotLamp;
+							n++; s++; if (s >= m) m = s; break;
+						case "passalarm":
+							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.PassAlarm;
+							n++; s++; if (s >= m) m = s; break;
+						case "stationadjustalarm":
+							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.StationAdjustAlarm;
+							n++; s++; if (s >= m) m = s; break;
+						// train: handles
 						case "reversernotch":
 							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.ReverserNotch;
@@ -657,6 +669,32 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.TimetableVisible;
 							n++; s++; if (s >= m) m = s; break;
+						case "distancenextstation":
+							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.DistanceNextStation;
+							n++; s++; if (s >= m) m = s; break;
+						case "stopsnextstation":
+							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.StopsNextStation;
+							n++; s++; if (s >= m) m = s; break;
+						case "distancestationindex":
+							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.DistanceStation;
+							n++; break;
+						case "stopsstationindex":
+							if (s < 1) throw new System.InvalidOperationException(Arguments[i] + " requires at least 1 argument on the stack in function script " + Expression);
+							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.StopsStation;
+							n++; break;
+						case "nextstation":
+							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.NextStation;
+							n++; s++; if (s >= m) m = s; break;
+						case "nextstationstop":
+							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.NextStationStop;
+							n++; s++; if (s >= m) m = s; break;
 							// sections
 						case "section":
 							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
@@ -676,9 +714,9 @@ namespace OpenBveApi.FunctionScripting
 			if (s != 1) {
 				throw new System.InvalidOperationException("There must be exactly one argument left on the stack at the end in function script " + Expression);
 			}
-			Array.Resize<Instructions>(ref InstructionSet, n);
-			Array.Resize<double>(ref Stack, m);
-			Array.Resize<double>(ref Constants, c);
+			Array.Resize(ref InstructionSet, n);
+			Array.Resize(ref Stack, m);
+			Array.Resize(ref Constants, c);
 		}
 		
 

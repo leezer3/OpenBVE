@@ -37,6 +37,51 @@ namespace OpenBveApi.Math {
 			this.Z = v.Z;
 		}
 
+		/// <summary>Parses a Vector3 stored in a string</summary>
+		/// <param name="stringToParse">The string to parse</param>
+		/// <param name="separator">The separator character</param>
+		/// <param name="v">The out Vector</param>
+		/// <returns>True if parsing succeded with no errors, false otherwise</returns>
+		/// <remarks>This will always return a Vector3.
+		/// If any part fails parsing, it will be set to zero</remarks>
+		public static bool TryParse(string stringToParse, char separator, out Vector3 v)
+		{
+			bool success = true;
+			v.X = 0; v.Y = 0; v.Z = 0; //Don't generate a new struct- Important in parsing objects with large numbers of verts
+			string[] splitString = stringToParse.Split(new char[] { separator });
+			int i;
+			for (i = 0; i < splitString.Length; i++)
+			{
+				switch (i)
+				{
+					case 0:
+						if (!double.TryParse(splitString[i], out v.X))
+						{
+							success = false;
+						}
+						break;
+					case 1:
+						if (!double.TryParse(splitString[i], out v.Y))
+						{
+							success = false;
+						}
+						break;
+					case 2:
+						if (!double.TryParse(splitString[i], out v.Z))
+						{
+							success = false;
+						}
+						break;
+				}
+			}
+
+			if (i != 3)
+			{
+				success = false;
+			}
+			return success;
+		}
+
 		/// <summary>Interpolates between two Vector3 values using a simple Cosine algorithm</summary>
 		/// <param name="Vector1">The first vector</param>
 		/// <param name="Vector2">The second vector</param>

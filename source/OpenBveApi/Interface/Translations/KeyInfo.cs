@@ -26,8 +26,63 @@ namespace OpenBveApi.Interface
 			{
 				return Description;
 			}
-		
-		
+
+			/// <summary>Checks whether the two specified KeyInfo instances are equal</summary>
+			/// <remarks>This ignores the translated key description</remarks>
+			public static bool operator ==(KeyInfo a, KeyInfo b)
+			{
+				if (a.Key != b.Key)
+				{
+					return false;
+				}
+				if (a.Name != b.Name)
+				{
+					return false;
+				}
+				return true;
+			}
+
+			/// <summary>Checks whether the two specified KeyInfo instances are NOT equal</summary>
+			/// <remarks>This ignores the translated key description</remarks>
+			public static bool operator !=(KeyInfo a, KeyInfo b)
+			{
+				if (a.Key == b.Key)
+				{
+					return false;
+				}
+				if (a.Name == b.Name)
+				{
+					return false;
+				}
+				return true;
+			}
+
+			/// <summary>Returns whether this KeyInfo instance is equal to the specified KeyInfo</summary>
+			/// <remarks>This ignores the translated key description</remarks>
+			public bool Equals(KeyInfo b)
+			{
+				return Key == b.Key && Name == b.Name;
+			}
+
+			/// <summary>Returns whether this KeyInfo instance is equal to the specified object</summary>
+			/// <remarks>This ignores the translated key description</remarks>
+			public override bool Equals(object obj)
+			{
+				if (ReferenceEquals(null, obj)) return false;
+				return obj is KeyInfo && Equals((KeyInfo) obj);
+			}
+
+			/// <summary>Gets the HashCode for this KeyInfo instance</summary>
+			/// <remarks>This ignores the translated key description</remarks>
+			public override int GetHashCode()
+			{
+				unchecked
+				{
+					return ((int) Key * 397) ^ (Name != null ? Name.GetHashCode() : 0);
+				}
+			}
+
+
 		}
 
 		/// <summary>Holds the translations for all keys available for assignation</summary>

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using LibRender;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
@@ -6,6 +8,7 @@ using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 using OpenBveApi.FunctionScripting;
+using static LibRender.CameraProperties;
 
 namespace OpenBve {
 	internal static class PanelCfgParser {
@@ -25,25 +28,26 @@ namespace OpenBve {
 			string FileName = OpenBveApi.Path.CombineFile(TrainPath, "panel.cfg");
 			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
 			for (int i = 0; i < Lines.Length; i++) {
-				Lines[i] = Lines[i].Trim();
+				Lines[i] = Lines[i].Trim(new char[] { });
 				int j = Lines[i].IndexOf(';');
-				if (j >= 0) {
-					Lines[i] = Lines[i].Substring(0, j).TrimEnd();
+				if (j >= 0)
+				{
+					Lines[i] = Lines[i].Substring(0, j).TrimEnd(new char[] { });
 				}
 			}
 			// initialize
 			double FullWidth = 480, FullHeight = 440, SemiHeight = 240;
 			double AspectRatio = FullWidth / FullHeight;
 			double WorldWidth, WorldHeight;
-			if (Screen.Width >= Screen.Height) {
-				WorldWidth = 2.0 * Math.Tan(0.5 * World.HorizontalViewingAngle) * EyeDistance;
+			if (LibRender.Screen.Width >= LibRender.Screen.Height) {
+				WorldWidth = 2.0 * Math.Tan(0.5 * Camera.HorizontalViewingAngle) * EyeDistance;
 				WorldHeight = WorldWidth / AspectRatio;
 			} else {
-				WorldHeight = 2.0 * Math.Tan(0.5 * World.VerticalViewingAngle) * EyeDistance;
+				WorldHeight = 2.0 * Math.Tan(0.5 * Camera.VerticalViewingAngle) * EyeDistance;
 				WorldWidth = WorldHeight * AspectRatio;
 			}
-			World.CameraRestrictionBottomLeft = new Vector3(-0.5 * WorldWidth, -0.5 * WorldHeight, EyeDistance);
-			World.CameraRestrictionTopRight = new Vector3(0.5 * WorldWidth, 0.5 * WorldHeight, EyeDistance);
+			Camera.RestrictionBottomLeft = new Vector3(-0.5 * WorldWidth, -0.5 * WorldHeight, EyeDistance);
+			Camera.RestrictionTopRight = new Vector3(0.5 * WorldWidth, 0.5 * WorldHeight, EyeDistance);
 			double WorldLeft = Train.Cars[Train.DriverCar].Driver.X - 0.5 * WorldWidth;
 			double WorldTop = Train.Cars[Train.DriverCar].Driver.Y + 0.5 * WorldHeight;
 			double WorldZ = Train.Cars[Train.DriverCar].Driver.Z;
@@ -55,15 +59,16 @@ namespace OpenBve {
 			for (int i = 0; i < Lines.Length; i++) {
 				if (Lines[i].Length > 0) {
 					if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)) {
-						string Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim();
+						string Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim(new char[] { });
 						switch (Section.ToLowerInvariant()) {
 								// panel
 							case "panel":
 								i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 									int j = Lines[i].IndexOf('=');
-									if (j >= 0) {
-										string Key = Lines[i].Substring(0, j).TrimEnd();
-										string Value = Lines[i].Substring(j + 1).TrimStart();
+									if (j >= 0)
+									{
+										string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+										string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 										switch (Key.ToLowerInvariant()) {
 											case "background":
 												if (Path.ContainsInvalidChars(Value)) {
@@ -83,9 +88,10 @@ namespace OpenBve {
 							case "view":
 								i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
 									int j = Lines[i].IndexOf('=');
-									if (j >= 0) {
-										string Key = Lines[i].Substring(0, j).TrimEnd();
-										string Value = Lines[i].Substring(j + 1).TrimStart();
+									if (j >= 0)
+									{
+										string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+										string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 										switch (Key.ToLowerInvariant()) {
 											case "yaw":
 												{
@@ -120,10 +126,10 @@ namespace OpenBve {
 					Interface.AddMessage(MessageType.Error, true, "The panel image could not be found in " + FileName);
 				} else {
 					Texture t;
-					Textures.RegisterTexture(PanelBackground, new TextureParameters(null, Color24.Blue), out t);
+					TextureManager.RegisterTexture(PanelBackground, new TextureParameters(null, Color24.Blue), out t);
 					OpenBVEGame.RunInRenderThread(() =>
 					{
-						Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp); 
+						Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp); 
 					});
 					double w = (double)t.Width;
 					double h = (double)t.Height;
@@ -141,7 +147,7 @@ namespace OpenBve {
 				}
 				if (Lines[i].Length != 0) {
 					if (Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal)) {
-						string Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim();
+						string Section = Lines[i].Substring(1, Lines[i].Length - 2).Trim(new char[] { });
 						switch (Section.ToLowerInvariant()) {
 								// pressuregauge
 							case "pressuregauge":
@@ -157,9 +163,10 @@ namespace OpenBve {
 									double Angle = 0.785398163397449, Minimum = 0.0, Maximum = 1000.0;
 									double UnitFactor = 1000.0;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
-										int j = Lines[i].IndexOf('='); if (j >= 0) {
-											string Key = Lines[i].Substring(0, j).TrimEnd();
-											string Value = Lines[i].Substring(j + 1).TrimStart();
+										int j = Lines[i].IndexOf('='); if (j >= 0)
+										{
+											string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+											string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 											string[] Arguments = GetArguments(Value);
 											switch (Key.ToLowerInvariant()) {
 												case "type":
@@ -315,7 +322,7 @@ namespace OpenBve {
 														Interface.AddMessage(MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														Angle = 0.785398163397449;
 													} else {
-														Angle *= 0.0174532925199433;
+														Angle = Angle.ToRadians();
 													} break;
 											}
 										} i++;
@@ -326,10 +333,10 @@ namespace OpenBve {
 									// background
 									if (Background != null) {
 										Texture t;
-										Textures.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out t);
+										TextureManager.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
+											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
@@ -338,10 +345,10 @@ namespace OpenBve {
 									// cover
 									if (Cover != null) {
 										Texture t;
-										Textures.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out t);
+										TextureManager.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
+											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
@@ -354,10 +361,10 @@ namespace OpenBve {
 												string Folder = Program.FileSystem.GetDataFolder("Compatibility");
 												string File = OpenBveApi.Path.CombineFile(Folder, k == 0 ? "needle_pressuregauge_lower.png" : "needle_pressuregauge_upper.png");
 												Texture t;
-												Textures.RegisterTexture(File, out t);
+												TextureManager.RegisterTexture(File, out t);
 												OpenBVEGame.RunInRenderThread(() =>
 												{
-													Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
+													Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 												});
 												double w = (double)t.Width;
 												double h = (double)t.Height;
@@ -448,9 +455,10 @@ namespace OpenBve {
 									string Background = null, Cover = null, Atc = null;
 									double Angle = 1.0471975511966, Maximum = 33.3333333333333, AtcRadius = 0.0;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
-										int j = Lines[i].IndexOf('='); if (j >= 0) {
-											string Key = Lines[i].Substring(0, j).TrimEnd();
-											string Value = Lines[i].Substring(j + 1).TrimStart();
+										int j = Lines[i].IndexOf('='); if (j >= 0)
+										{
+											string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+											string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 											string[] Arguments = GetArguments(Value);
 											switch (Key.ToLowerInvariant()) {
 												case "type":
@@ -546,7 +554,7 @@ namespace OpenBve {
 														Interface.AddMessage(MessageType.Error, false, "ValueInDegrees is invalid in " + Key + " in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
 														Angle = 1.0471975511966;
 													} else {
-														Angle *= 0.0174532925199433;
+														Angle = Angle.ToRadians();
 													} break;
 												case "maximum":
 												case "最大":
@@ -562,10 +570,10 @@ namespace OpenBve {
 									if (Background != null) {
 										// background/led
 										Texture t;
-										Textures.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out t);
+										TextureManager.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
+											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
@@ -574,10 +582,10 @@ namespace OpenBve {
 									if (Cover != null) {
 										// cover
 										Texture t;
-										Textures.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out t);
+										TextureManager.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
+											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
@@ -613,10 +621,10 @@ namespace OpenBve {
 												double x = CenterX - 0.5 * h + Math.Sin(a) * AtcRadius;
 												double y = CenterY - 0.5 * h - Math.Cos(a) * AtcRadius + SemiHeight;
 												Texture t;
-												Textures.RegisterTexture(Atc, new TextureParameters(new TextureClipRegion(j * h, 0, h, h), Color24.Blue), out t);
+												TextureManager.RegisterTexture(Atc, new TextureParameters(new TextureClipRegion(j * h, 0, h, h), Color24.Blue), out t);
 												OpenBVEGame.RunInRenderThread(() =>
 												{
-													Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
+													Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 												});
 												if (j == 0) {
 													k = CreateElement(Train, x, y, (double)h, (double)h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 4.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, t, Color32.White, false);
@@ -632,10 +640,10 @@ namespace OpenBve {
 										string Folder = Program.FileSystem.GetDataFolder("Compatibility");
 										string File = OpenBveApi.Path.CombineFile(Folder, "needle_speedometer.png");
 										Texture t;
-										Textures.RegisterTexture(File, out t);
+										TextureManager.RegisterTexture(File, out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
+											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
@@ -703,9 +711,10 @@ namespace OpenBve {
 									int Width = 0, Height = 0;
 									double UnitFactor = 3.6;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
-										int j = Lines[i].IndexOf('='); if (j >= 0) {
-											string Key = Lines[i].Substring(0, j).TrimEnd();
-											string Value = Lines[i].Substring(j + 1).TrimStart();
+										int j = Lines[i].IndexOf('='); if (j >= 0)
+										{
+											string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+											string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 											string[] Arguments = GetArguments(Value);
 											switch (Key.ToLowerInvariant()) {
 												case "number":
@@ -804,8 +813,7 @@ namespace OpenBve {
 											int n = h / Height;
 											Texture[] t = new Texture[n];
 											for (int j = 0; j < n; j++) {
-												Textures.RegisterTexture(Number, new TextureParameters(new TextureClipRegion(w - Width, j * Height, Width, Height), Color24.Blue), out t[j]);
-												//TextureManager.UseTexture(t[j], TextureManager.UseMode.Normal);
+												TextureManager.RegisterTexture(Number, new TextureParameters(new TextureClipRegion(w - Width, j * Height, Width, Height), Color24.Blue), out t[j]);
 											}
 											{ // hundreds
 												int k = -1;
@@ -850,9 +858,10 @@ namespace OpenBve {
 									double CornerX = 0.0, CornerY = 0.0;
 									string TurnOn = null, TurnOff = null;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
-										int j = Lines[i].IndexOf('='); if (j >= 0) {
-											string Key = Lines[i].Substring(0, j).TrimEnd();
-											string Value = Lines[i].Substring(j + 1).TrimStart();
+										int j = Lines[i].IndexOf('='); if (j >= 0)
+										{
+											string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+											string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 											string[] Arguments = GetArguments(Value);
 											switch (Key.ToLowerInvariant()) {
 												case "turnon":
@@ -895,12 +904,12 @@ namespace OpenBve {
 									} i--;
 									if (TurnOn != null & TurnOff != null) {
 										Texture t0, t1;
-										Textures.RegisterTexture(TurnOn, new TextureParameters(null, Color24.Blue), out t0);
-										Textures.RegisterTexture(TurnOff, new TextureParameters(null, Color24.Blue), out t1);
+										TextureManager.RegisterTexture(TurnOn, new TextureParameters(null, Color24.Blue), out t0);
+										TextureManager.RegisterTexture(TurnOff, new TextureParameters(null, Color24.Blue), out t1);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t0, OpenGlTextureWrapMode.ClampClamp);
-											Textures.LoadTexture(t1, OpenGlTextureWrapMode.ClampClamp);
+											Program.CurrentHost.LoadTexture(t0, OpenGlTextureWrapMode.ClampClamp);
+											Program.CurrentHost.LoadTexture(t1, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t0.Width;
 										double h = (double)t0.Height;
@@ -919,9 +928,10 @@ namespace OpenBve {
 									double CenterX = 0.0, CenterY = 0.0, Radius = 16.0;
 									string Background = null;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
-										int j = Lines[i].IndexOf('='); if (j >= 0) {
-											string Key = Lines[i].Substring(0, j).TrimEnd();
-											string Value = Lines[i].Substring(j + 1).TrimStart();
+										int j = Lines[i].IndexOf('='); if (j >= 0)
+										{
+											string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+											string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 											string[] Arguments = GetArguments(Value);
 											switch (Key.ToLowerInvariant()) {
 												case "background":
@@ -985,10 +995,10 @@ namespace OpenBve {
 									} i--;
 									if (Background != null) {
 										Texture t;
-										Textures.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out t);
+										TextureManager.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
+											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
@@ -998,10 +1008,10 @@ namespace OpenBve {
 									{ // hour
 										string File = OpenBveApi.Path.CombineFile(Folder, "needle_hour.png");
 										Texture t;
-										Textures.RegisterTexture(File, out t);
+										TextureManager.RegisterTexture(File, out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
+											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
@@ -1015,10 +1025,10 @@ namespace OpenBve {
 									{ // minute
 										string File = OpenBveApi.Path.CombineFile(Folder, "needle_minute.png");
 										Texture t;
-										Textures.RegisterTexture(File, out t);
+										TextureManager.RegisterTexture(File, out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
+											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
@@ -1032,10 +1042,10 @@ namespace OpenBve {
 									{ // second
 										string File = OpenBveApi.Path.CombineFile(Folder, "needle_second.png");
 										Texture t;
-										Textures.RegisterTexture(File, out t);
+										TextureManager.RegisterTexture(File, out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
-											Textures.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
+											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
 										});
 										double w = (double)t.Width;
 										double h = (double)t.Height;
@@ -1055,9 +1065,10 @@ namespace OpenBve {
 									string Image = null;
 									int Width = 0;
 									i++; while (i < Lines.Length && !(Lines[i].StartsWith("[", StringComparison.Ordinal) & Lines[i].EndsWith("]", StringComparison.Ordinal))) {
-										int j = Lines[i].IndexOf('='); if (j >= 0) {
-											string Key = Lines[i].Substring(0, j).TrimEnd();
-											string Value = Lines[i].Substring(j + 1).TrimStart();
+										int j = Lines[i].IndexOf('='); if (j >= 0)
+										{
+											string Key = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+											string Value = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 											string[] Arguments = GetArguments(Value);
 											switch (Key.ToLowerInvariant()) {
 												case "image":
@@ -1109,7 +1120,7 @@ namespace OpenBve {
 											for (int j = 0; j < n; j++) {
 												Texture t;
 												TextureClipRegion clip = new TextureClipRegion(j * Width, 0, Width, h);
-												Textures.RegisterTexture(Image, new TextureParameters(clip, Color24.Blue), out t);
+												TextureManager.RegisterTexture(Image, new TextureParameters(clip, Color24.Blue), out t);
 												if (j == 0) {
 													k = CreateElement(Train, CornerX, CornerY + SemiHeight, (double)Width, (double)h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - StackDistance, Train.Cars[Train.DriverCar].Driver, t, Color32.White, false);
 												} else {
@@ -1149,16 +1160,16 @@ namespace OpenBve {
 			for (int i = 0; i < Expression.Length; i++) {
 				if (Expression[i] == ',' | Expression[i] == ':') {
 					if (UsedArguments >= Arguments.Length) Array.Resize<string>(ref Arguments, Arguments.Length << 1);
-					Arguments[UsedArguments] = Expression.Substring(Start, i - Start).TrimStart();
+					Arguments[UsedArguments] = Expression.Substring(Start, i - Start).TrimStart(new char[] { });
 					UsedArguments++; Start = i + 1;
 				} else if (Expression[i] == ';') {
 					if (UsedArguments >= Arguments.Length) Array.Resize<string>(ref Arguments, Arguments.Length << 1);
-					Arguments[UsedArguments] = Expression.Substring(Start, i - Start).TrimStart();
+					Arguments[UsedArguments] = Expression.Substring(Start, i - Start).TrimStart(new char[] { });
 					UsedArguments++; Start = Expression.Length; break;
 				}
 			} if (Start < Expression.Length) {
 				if (UsedArguments >= Arguments.Length) Array.Resize<string>(ref Arguments, Arguments.Length << 1);
-				Arguments[UsedArguments] = Expression.Substring(Start).Trim();
+				Arguments[UsedArguments] = Expression.Substring(Start).Trim(new char[] { });
 				UsedArguments++;
 			}
 			Array.Resize<string>(ref Arguments, UsedArguments);
@@ -1168,7 +1179,7 @@ namespace OpenBve {
 		// create element
 		private static int CreateElement(TrainManager.Train Train, double Left, double Top, double Width, double Height, double FullWidth, double FullHeight, double WorldLeft, double WorldTop, double WorldWidth, double WorldHeight, double WorldZ, Vector3 Driver, Texture Texture, Color32 Color, bool AddStateToLastElement) {
 			// create object
-			ObjectManager.StaticObject Object = new ObjectManager.StaticObject();
+			StaticObject Object = new StaticObject(Program.CurrentHost);
 			Vector3[] v = new Vector3[4];
 			double sx = 0.5 * WorldWidth * Width / FullWidth;
 			double sy = 0.5 * WorldHeight * Height / FullHeight;
@@ -1198,20 +1209,20 @@ namespace OpenBve {
 			if (AddStateToLastElement) {
 				int n = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements.Length - 1;
 				int j = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States.Length;
-				Array.Resize<ObjectManager.AnimatedObjectState>(ref Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States, j + 1);
+				Array.Resize<AnimatedObjectState>(ref Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States, j + 1);
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[j].Position = o;
-				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[j].Object = Object;
+				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[j].Object = (StaticObject)Object.Clone();
 				return n;
 			} else {
 				int n = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements.Length;
-				Array.Resize<ObjectManager.AnimatedObject>(ref Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements, n + 1);
-				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n] = new ObjectManager.AnimatedObject();
-				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States = new ObjectManager.AnimatedObjectState[1];
+				Array.Resize(ref Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements, n + 1);
+				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n] = new AnimatedObject(Program.CurrentHost);
+				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States = new AnimatedObjectState[1];
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[0].Position = o;
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[0].Object = Object;
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].CurrentState = 0;
-				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].ObjectIndex = ObjectManager.CreateDynamicObject();
-				ObjectManager.Objects[Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].ObjectIndex] = Object.Clone();
+				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].internalObject = (StaticObject) Object.Clone();
+				ObjectManager.CreateDynamicObject(ref Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].internalObject);
 				return n;
 			}
 		}

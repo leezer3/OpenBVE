@@ -8,7 +8,7 @@ namespace OpenBve {
 	internal static class ExtensionsCfgParser {
 
 		// parse extensions config
-		internal static void ParseExtensionsConfig(string TrainPath, System.Text.Encoding Encoding, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, TrainManager.Train Train, bool LoadObjects)
+		internal static void ParseExtensionsConfig(string TrainPath, System.Text.Encoding Encoding, ref UnifiedObject[] CarObjects, ref UnifiedObject[] BogieObjects, ref UnifiedObject[] CouplerObjects, TrainManager.Train Train, bool LoadObjects)
 		{
 			bool[] CarObjectsReversed = new bool[Train.Cars.Length];
 			bool[] BogieObjectsReversed = new bool[Train.Cars.Length * 2];
@@ -51,9 +51,9 @@ namespace OpenBve {
 				for (int i = 0; i < Lines.Length; i++) {
 					int j = Lines[i].IndexOf(';');
 					if (j >= 0) {
-						Lines[i] = Lines[i].Substring(0, j).Trim();
+						Lines[i] = Lines[i].Substring(0, j).Trim(new char[] { });
 					} else {
-						Lines[i] = Lines[i].Trim();
+						Lines[i] = Lines[i].Trim(new char[] { });
 					}
 				}
 				for (int i = 0; i < Lines.Length; i++) {
@@ -65,9 +65,10 @@ namespace OpenBve {
 								while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal) & !Lines[i].EndsWith("]", StringComparison.Ordinal)) {
 									if (Lines[i].Length != 0) {
 										int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-										if (j >= 0) {
-											string a = Lines[i].Substring(0, j).TrimEnd();
-											string b = Lines[i].Substring(j + 1).TrimStart();
+										if (j >= 0)
+										{
+											string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+											string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 											int n;
 											if (int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out n)) {
 												if (n >= 0 & n < Train.Cars.Length) {
@@ -78,7 +79,7 @@ namespace OpenBve {
 														if (System.IO.File.Exists(File)) {
 															if (LoadObjects)
 															{
-																CarObjects[n] = ObjectManager.LoadObject(File, Encoding, false, false, false);
+																CarObjects[n] = ObjectManager.LoadObject(File, Encoding, false);
 															}
 														} else {
 															Interface.AddMessage(MessageType.Error, true, "The car object " + File + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -116,9 +117,10 @@ namespace OpenBve {
 											while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal) & !Lines[i].EndsWith("]", StringComparison.Ordinal)) {
 												if (Lines[i].Length != 0) {
 													int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-													if (j >= 0) {
-														string a = Lines[i].Substring(0, j).TrimEnd();
-														string b = Lines[i].Substring(j + 1).TrimStart();
+													if (j >= 0)
+													{
+														string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+														string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 														switch (a.ToLowerInvariant()) {
 															case "object":
 																if (string.IsNullOrEmpty(b))
@@ -133,7 +135,7 @@ namespace OpenBve {
 																	if (System.IO.File.Exists(File)) {
 																		if (LoadObjects)
 																		{
-																			CarObjects[n] = ObjectManager.LoadObject(File, Encoding, false, false, false);
+																			CarObjects[n] = ObjectManager.LoadObject(File, Encoding, false);
 																		}
 																	} else {
 																		Interface.AddMessage(MessageType.Error, true, "The car object " + File + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -159,9 +161,10 @@ namespace OpenBve {
 															case "axles":
 																{
 																	int k = b.IndexOf(',');
-																	if (k >= 0) {
-																		string c = b.Substring(0, k).TrimEnd();
-																		string d = b.Substring(k + 1).TrimStart();
+																	if (k >= 0)
+																	{
+																		string c = b.Substring(0, k).TrimEnd(new char[] { });
+																		string d = b.Substring(k + 1).TrimStart(new char[] { });
 																		double rear, front;
 																		if (!double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out rear)) {
 																			Interface.AddMessage(MessageType.Error, false, "Rear is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -181,6 +184,9 @@ namespace OpenBve {
 																break;
 															case "reversed":
 																CarObjectsReversed[n] = b.Equals("true", StringComparison.OrdinalIgnoreCase);
+																break;
+															case "loadingsway":
+																Train.Cars[n].EnableLoadingSway = b.Equals("true", StringComparison.OrdinalIgnoreCase);
 																break;
 															default:
 																Interface.AddMessage(MessageType.Warning, false, "Unsupported key-value pair " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -208,20 +214,22 @@ namespace OpenBve {
 									// coupler
 									string t = Lines[i].Substring(8, Lines[i].Length - 9);
 									int n; if (int.TryParse(t, System.Globalization.NumberStyles.Integer, Culture, out n)) {
-										if (n >= 0 & n < Train.Couplers.Length) {
+										if (n >= 0 & n < Train.Cars.Length -1) {
 											i++; while (i < Lines.Length && !Lines[i].StartsWith("[", StringComparison.Ordinal) & !Lines[i].EndsWith("]", StringComparison.Ordinal)) {
 												if (Lines[i].Length != 0) {
 													int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
-													if (j >= 0) {
-														string a = Lines[i].Substring(0, j).TrimEnd();
-														string b = Lines[i].Substring(j + 1).TrimStart();
+													if (j >= 0)
+													{
+														string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+														string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 														switch (a.ToLowerInvariant()) {
 															case "distances":
 																{
 																	int k = b.IndexOf(',');
-																	if (k >= 0) {
-																		string c = b.Substring(0, k).TrimEnd();
-																		string d = b.Substring(k + 1).TrimStart();
+																	if (k >= 0)
+																	{
+																		string c = b.Substring(0, k).TrimEnd(new char[] { });
+																		string d = b.Substring(k + 1).TrimStart(new char[] { });
 																		double min, max;
 																		if (!double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out min)) {
 																			Interface.AddMessage(MessageType.Error, false, "Minimum is expected to be a floating-point number in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -230,13 +238,33 @@ namespace OpenBve {
 																		} else if (min > max) {
 																			Interface.AddMessage(MessageType.Error, false, "Minimum is expected to be less than Maximum in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																		} else {
-																			Train.Couplers[n].MinimumDistanceBetweenCars = min;
-																			Train.Couplers[n].MaximumDistanceBetweenCars = max;
+																			Train.Cars[n].Coupler.MinimumDistanceBetweenCars = min;
+																			Train.Cars[n].Coupler.MaximumDistanceBetweenCars = max;
 																		}
 																	} else {
 																		Interface.AddMessage(MessageType.Error, false, "An argument-separating comma is expected in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																	}
 																} break;
+															case "object":
+																if (string.IsNullOrEmpty(b))
+																{
+																	Interface.AddMessage(MessageType.Error, true, "An empty coupler object was supplied at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																	break;
+																}
+																if (Path.ContainsInvalidChars(b)) {
+																	Interface.AddMessage(MessageType.Error, false, "File contains illegal characters at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																} else {
+																	string File = OpenBveApi.Path.CombineFile(TrainPath, b);
+																	if (System.IO.File.Exists(File)) {
+																		if (LoadObjects)
+																		{
+																			CouplerObjects[n] = ObjectManager.LoadObject(File, Encoding, false);
+																		}
+																	} else {
+																		Interface.AddMessage(MessageType.Error, true, "The coupler object " + File + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+																	}
+																}
+																break;
 															default:
 																Interface.AddMessage(MessageType.Warning, false, "Unsupported key-value pair " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																break;
@@ -282,8 +310,8 @@ namespace OpenBve {
 													int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
 													if (j >= 0)
 													{
-														string a = Lines[i].Substring(0, j).TrimEnd();
-														string b = Lines[i].Substring(j + 1).TrimStart();
+														string a = Lines[i].Substring(0, j).TrimEnd(new char[] { });
+														string b = Lines[i].Substring(j + 1).TrimStart(new char[] { });
 														switch (a.ToLowerInvariant())
 														{
 															case "object":
@@ -303,7 +331,7 @@ namespace OpenBve {
 																	{
 																		if (LoadObjects)
 																		{
-																			BogieObjects[n] = ObjectManager.LoadObject(File, Encoding, false, false, false);
+																			BogieObjects[n] = ObjectManager.LoadObject(File, Encoding, false);
 																		}
 																	}
 																	else
@@ -322,8 +350,8 @@ namespace OpenBve {
 																	int k = b.IndexOf(',');
 																	if (k >= 0)
 																	{
-																		string c = b.Substring(0, k).TrimEnd();
-																		string d = b.Substring(k + 1).TrimStart();
+																		string c = b.Substring(0, k).TrimEnd(new char[] { });
+																		string d = b.Substring(k + 1).TrimStart(new char[] { });
 																		double rear, front;
 																		if (!double.TryParse(c, System.Globalization.NumberStyles.Float, Culture, out rear))
 																		{
@@ -411,7 +439,7 @@ namespace OpenBve {
 										 *
 										 * Try again with ASCII instead
 										 */
-										ParseExtensionsConfig(TrainPath, Encoding.GetEncoding(1252), ref CarObjects, ref BogieObjects, Train, LoadObjects);
+										ParseExtensionsConfig(TrainPath, Encoding.GetEncoding(1252), ref CarObjects, ref BogieObjects, ref CouplerObjects, Train, LoadObjects);
 										return;
 									}
 									Interface.AddMessage(MessageType.Error, false, "Invalid statement " + Lines[i] + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -433,13 +461,17 @@ namespace OpenBve {
 								Train.Cars[i].FrontAxle.Position = -Train.Cars[i].RearAxle.Position;
 								Train.Cars[i].RearAxle.Position = -temp;
 							}
-							if (CarObjects[i] is ObjectManager.StaticObject) {
-								ObjectManager.StaticObject obj = (ObjectManager.StaticObject)CarObjects[i];
+							if (CarObjects[i] is StaticObject) {
+								StaticObject obj = (StaticObject)CarObjects[i];
 								obj.ApplyScale(-1.0, 1.0, -1.0);
-							} else if (CarObjects[i] is ObjectManager.AnimatedObjectCollection) {
-								ObjectManager.AnimatedObjectCollection obj = (ObjectManager.AnimatedObjectCollection)CarObjects[i];
+							} else if (CarObjects[i] is AnimatedObjectCollection) {
+								AnimatedObjectCollection obj = (AnimatedObjectCollection)CarObjects[i];
 								for (int j = 0; j < obj.Objects.Length; j++) {
 									for (int h = 0; h < obj.Objects[j].States.Length; h++) {
+										if (obj.Objects[j].States[h].Object == null)
+										{
+											continue; //object failed to load?
+										}
 										obj.Objects[j].States[h].Object.ApplyScale(-1.0, 1.0, -1.0);
 										obj.Objects[j].States[h].Position.X *= -1.0;
 										obj.Objects[j].States[h].Position.Z *= -1.0;
@@ -484,18 +516,22 @@ namespace OpenBve {
 									Train.Cars[CarIndex].RearBogie.RearAxle.Position = -temp;
 								}
 							}
-							if (BogieObjects[i] is ObjectManager.StaticObject)
+							if (BogieObjects[i] is StaticObject)
 							{
-								ObjectManager.StaticObject obj = (ObjectManager.StaticObject)BogieObjects[i];
+								StaticObject obj = (StaticObject)BogieObjects[i];
 								obj.ApplyScale(-1.0, 1.0, -1.0);
 							}
-							else if (BogieObjects[i] is ObjectManager.AnimatedObjectCollection)
+							else if (BogieObjects[i] is AnimatedObjectCollection)
 							{
-								ObjectManager.AnimatedObjectCollection obj = (ObjectManager.AnimatedObjectCollection)BogieObjects[i];
+								AnimatedObjectCollection obj = (AnimatedObjectCollection)BogieObjects[i];
 								for (int j = 0; j < obj.Objects.Length; j++)
 								{
 									for (int h = 0; h < obj.Objects[j].States.Length; h++)
 									{
+										if (obj.Objects[j].States[h].Object == null)
+										{
+											continue; //object failed to load?
+										}
 										obj.Objects[j].States[h].Object.ApplyScale(-1.0, 1.0, -1.0);
 										obj.Objects[j].States[h].Position.X *= -1.0;
 										obj.Objects[j].States[h].Position.Z *= -1.0;

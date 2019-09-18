@@ -4,10 +4,13 @@ using System.Drawing;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml;
+using LibRender;
 using OpenBve.UserInterface;
+using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Packages;
 using OpenBveApi.Interface;
+using OpenBveApi.Objects;
 using OpenTK.Input;
 using ButtonState = OpenTK.Input.ButtonState;
 using ContentAlignment = System.Drawing.ContentAlignment;
@@ -266,7 +269,7 @@ namespace OpenBve {
 			// modes
 			comboboxMode.Items.Clear();
 			comboboxMode.Items.AddRange(new object[] { "", "", "" });
-			comboboxMode.SelectedIndex = Interface.CurrentOptions.GameMode == Interface.GameMode.Arcade ? 0 : Interface.CurrentOptions.GameMode == Interface.GameMode.Expert ? 2 : 1;
+			comboboxMode.SelectedIndex = Interface.CurrentOptions.GameMode == GameMode.Arcade ? 0 : Interface.CurrentOptions.GameMode == GameMode.Expert ? 2 : 1;
 			// review last game
 			{
 				if (Game.LogRouteName.Length == 0 | Game.LogTrainName.Length == 0)
@@ -285,9 +288,9 @@ namespace OpenBve {
 					labelReviewTimeValue.Text = Game.LogDateTime.ToString("HH:mm:ss", Culture);
 					switch (Interface.CurrentOptions.GameMode)
 					{
-						case Interface.GameMode.Arcade: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_arcade"); break;
-						case Interface.GameMode.Normal: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_normal"); break;
-						case Interface.GameMode.Expert: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_expert"); break;
+						case GameMode.Arcade: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_arcade"); break;
+						case GameMode.Normal: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_normal"); break;
+						case GameMode.Expert: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_expert"); break;
 						default: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_unknown"); break;
 					}
 					if (Game.CurrentScore.Maximum == 0)
@@ -658,9 +661,9 @@ namespace OpenBve {
 			labelRatingModeCaption.Text = Translations.GetInterfaceString("review_score_rating_mode");
 			switch (Interface.CurrentOptions.GameMode)
 			{
-				case Interface.GameMode.Arcade: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_arcade"); break;
-				case Interface.GameMode.Normal: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_normal"); break;
-				case Interface.GameMode.Expert: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_expert"); break;
+				case GameMode.Arcade: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_arcade"); break;
+				case GameMode.Normal: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_normal"); break;
+				case GameMode.Expert: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_expert"); break;
 				default: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_unkown"); break;
 			}
 			{
@@ -907,7 +910,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.AntiAliasingLevel = (int)Math.Round(updownAntiAliasing.Value);
 			Interface.CurrentOptions.TransparencyMode = (TransparencyMode)trackbarTransparency.Value;
 			Interface.CurrentOptions.ViewingDistance = (int)Math.Round(updownDistance.Value);
-			Interface.CurrentOptions.MotionBlur = (Interface.MotionBlurMode)comboboxMotionBlur.SelectedIndex;
+			Interface.CurrentOptions.MotionBlur = (MotionBlurMode)comboboxMotionBlur.SelectedIndex;
 			Interface.CurrentOptions.Toppling = checkboxToppling.Checked;
 			Interface.CurrentOptions.Collisions = checkboxCollisions.Checked;
 			Interface.CurrentOptions.Derailments = checkboxDerailments.Checked;
@@ -916,7 +919,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.OldTransparencyMode = checkBoxTransparencyFix.Checked;
 			Interface.CurrentOptions.EnableBveTsHacks = checkBoxHacks.Checked;
 			Interface.CurrentOptions.DisableDisplayLists = checkBoxDisableDisplayLists.Checked;
-			Interface.CurrentOptions.GameMode = (Interface.GameMode)comboboxMode.SelectedIndex;
+			Interface.CurrentOptions.GameMode = (GameMode)comboboxMode.SelectedIndex;
 			Interface.CurrentOptions.BlackBox = checkboxBlackBox.Checked;
 			Interface.CurrentOptions.LoadingSway = checkBoxLoadingSway.Checked;
 			Interface.CurrentOptions.UseJoysticks = checkboxJoysticksUsed.Checked;
@@ -931,8 +934,8 @@ namespace OpenBve {
 			Interface.CurrentOptions.MainMenuHeight = this.WindowState == FormWindowState.Maximized ? -1 : this.Size.Height;
 			Interface.CurrentOptions.KioskMode = checkBoxEnableKiosk.Checked;
 			Interface.CurrentOptions.KioskModeTimer = (double)numericUpDownKioskTimeout.Value;
-			Interface.CurrentOptions.CurrentXParser = (Interface.XParsers)comboBoxXparser.SelectedIndex;
-			Interface.CurrentOptions.CurrentObjParser = (Interface.ObjParsers)comboBoxObjparser.SelectedIndex;
+			Interface.CurrentOptions.CurrentXParser = (XParsers)comboBoxXparser.SelectedIndex;
+			Interface.CurrentOptions.CurrentObjParser = (ObjParsers)comboBoxObjparser.SelectedIndex;
 			Interface.CurrentOptions.Panel2ExtendedMode = checkBoxPanel2Extended.Checked;
 			switch (trackBarHUDSize.Value)
 			{
@@ -1080,7 +1083,7 @@ namespace OpenBve {
 				Array.Resize<string>(ref a, n);
 				Interface.CurrentOptions.EnableInputDevicePlugins = a;
 			}
-			Sounds.Deinitialize();
+			Program.Sounds.Deinitialize();
 			routeWorkerThread.Dispose();
 			if (!OpenTK.Configuration.RunningOnMacOS)
 			{
@@ -1506,7 +1509,7 @@ namespace OpenBve {
 				{
 					try
 					{
-						return Image.FromFile(File);
+						return ImageExtensions.FromFile(File);
 					}
 					catch
 					{
@@ -1540,7 +1543,7 @@ namespace OpenBve {
 					}
 					try
 					{
-						Box.Image = Image.FromFile(File);
+						Box.Image = ImageExtensions.FromFile(File);
 						return;
 					}
 					catch

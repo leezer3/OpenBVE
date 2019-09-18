@@ -1,83 +1,84 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LibRender;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using SoundManager;
+using static LibRender.CameraProperties;
 
 namespace OpenBve
 {
 	internal static partial class Renderer
 	{
-		/// <summary>The list of touch element's faces to be rendered.</summary>
-		private static ObjectList Touch = new ObjectList();
+		
 
-		private static int PrePickedObjectIndex = -1;
+		private static StaticObject PrePickedObjectIndex = null;
 
 		internal static bool DebugTouchMode = false;
 
 		/// <summary>Makes an object visible within the world for selection</summary>
-		/// <param name="ObjectIndex">The object's index</param>
-		private static void ShowObjectSelection(int ObjectIndex)
+		/// <param name="ObjectToShow">The object's index</param>
+		private static void ShowObjectSelection(StaticObject ObjectToShow)
 		{
-			if (ObjectManager.Objects[ObjectIndex] == null)
+			if (ObjectToShow == null)
 			{
 				return;
 			}
-			if (ObjectManager.Objects[ObjectIndex].RendererIndex == 0)
+			if (ObjectToShow.RendererIndex == 0)
 			{
-				if (ObjectCount >= Objects.Length)
+				if (LibRender.Renderer.ObjectCount >= LibRender.Renderer.Objects.Length)
 				{
-					Array.Resize(ref Objects, Objects.Length << 1);
+					Array.Resize(ref LibRender.Renderer.Objects, LibRender.Renderer.Objects.Length << 1);
 				}
-				Objects[ObjectCount].ObjectIndex = ObjectIndex;
-				Objects[ObjectCount].Type = ObjectType.Overlay;
-				int f = ObjectManager.Objects[ObjectIndex].Mesh.Faces.Length;
-				Objects[ObjectCount].FaceListReferences = new ObjectListReference[f];
+				LibRender.Renderer.Objects[LibRender.Renderer.ObjectCount] = new RendererObject(ObjectToShow, ObjectType.Overlay);
+				int f = ObjectToShow.Mesh.Faces.Length;
+				LibRender.Renderer.Objects[LibRender.Renderer.ObjectCount].FaceListReferences = new ObjectListReference[f];
 				for (int i = 0; i < f; i++)
 				{
-					int k = ObjectManager.Objects[ObjectIndex].Mesh.Faces[i].Material;
 					OpenGlTextureWrapMode wrap = OpenGlTextureWrapMode.ClampClamp;
-					if (Touch.FaceCount == Touch.Faces.Length)
+					if (LibRender.Renderer.Touch.FaceCount == LibRender.Renderer.Touch.Faces.Length)
 					{
-						Array.Resize(ref Touch.Faces, Touch.Faces.Length << 1);
+						Array.Resize(ref LibRender.Renderer.Touch.Faces, LibRender.Renderer.Touch.Faces.Length << 1);
 					}
-					Touch.Faces[Touch.FaceCount] = new ObjectFace
+
+					LibRender.Renderer.Touch.Faces[LibRender.Renderer.Touch.FaceCount] = new ObjectFace
 					{
-						ObjectListIndex = ObjectCount,
-						ObjectIndex = ObjectIndex,
+						ObjectListIndex = LibRender.Renderer.ObjectCount,
+						ObjectReference = ObjectToShow,
 						FaceIndex = i,
 						Wrap = wrap
 					};
 
 					// HACK: Let's store the wrapping mode.
 
-					Objects[ObjectCount].FaceListReferences[i] = new ObjectListReference(ObjectListType.Touch, Touch.FaceCount);
-					Touch.FaceCount++;
+					LibRender.Renderer.Objects[LibRender.Renderer.ObjectCount].FaceListReferences[i] = new ObjectListReference(ObjectListType.Touch, LibRender.Renderer.Touch.FaceCount);
+					LibRender.Renderer.Touch.FaceCount++;
 				}
-				ObjectManager.Objects[ObjectIndex].RendererIndex = ObjectCount + 1;
-				ObjectCount++;
+				ObjectToShow.RendererIndex = LibRender.Renderer.ObjectCount + 1;
+				LibRender.Renderer.ObjectCount++;
 			}
 		}
 
 		/// <summary>Hides an object within the world for selection</summary>
 		/// <param name="ObjectIndex">The object's index</param>
-		private static void HideObjectSelection(int ObjectIndex)
+		private static void HideObjectSelection(ref StaticObject ObjectIndex)
 		{
-			if (ObjectManager.Objects[ObjectIndex] == null)
+			if (ObjectIndex == null)
 			{
 				return;
 			}
-			int k = ObjectManager.Objects[ObjectIndex].RendererIndex - 1;
+			int k = ObjectIndex.RendererIndex - 1;
 			if (k >= 0)
 			{
 				// remove faces
-				for (int i = 0; i < Objects[k].FaceListReferences.Length; i++)
+				for (int i = 0; i < LibRender.Renderer.Objects[k].FaceListReferences.Length; i++)
 				{
-					ObjectListType listType = Objects[k].FaceListReferences[i].Type;
+					ObjectListType listType = LibRender.Renderer.Objects[k].FaceListReferences[i].Type;
 					/*
 					 * For all other kinds of faces, move the last face into place
 					 * of the face to be removed and decrement the face counter.
@@ -86,61 +87,65 @@ namespace OpenBve
 					switch (listType)
 					{
 						case ObjectListType.Touch:
-							list = Touch;
+							list = LibRender.Renderer.Touch;
 							break;
 						default:
 							throw new InvalidOperationException();
 					}
-					int listIndex = Objects[k].FaceListReferences[i].Index;
+					int listIndex = LibRender.Renderer.Objects[k].FaceListReferences[i].Index;
 					list.Faces[listIndex] = list.Faces[list.FaceCount - 1];
-					Objects[list.Faces[listIndex].ObjectListIndex].FaceListReferences[list.Faces[listIndex].FaceIndex].Index = listIndex;
-					list.FaceCount--;
+					LibRender.Renderer.Objects[list.Faces[listIndex].ObjectListIndex].FaceListReferences[list.Faces[listIndex].FaceIndex].Index = listIndex;
+					if (list.FaceCount > 0)
+					{
+						list.FaceCount--;
+					}
+					
 				}
 				// remove object
-				if (k == ObjectCount - 1)
+				if (k == LibRender.Renderer.ObjectCount - 1)
 				{
-					ObjectCount--;
+					LibRender.Renderer.ObjectCount--;
 				}
 				else
 				{
-					Objects[k] = Objects[ObjectCount - 1];
-					ObjectCount--;
-					for (int i = 0; i < Objects[k].FaceListReferences.Length; i++)
+					LibRender.Renderer.Objects[k] = LibRender.Renderer.Objects[LibRender.Renderer.ObjectCount - 1];
+					LibRender.Renderer.ObjectCount--;
+					for (int i = 0; i < LibRender.Renderer.Objects[k].FaceListReferences.Length; i++)
 					{
-						ObjectListType listType = Objects[k].FaceListReferences[i].Type;
+						ObjectListType listType = LibRender.Renderer.Objects[k].FaceListReferences[i].Type;
 						ObjectList list;
 						switch (listType)
 						{
 							case ObjectListType.StaticOpaque:
 								{
-									int groupIndex = (int)ObjectManager.Objects[Objects[k].ObjectIndex].GroupIndex;
-									list = StaticOpaque[groupIndex].List;
+									int groupIndex = (int)LibRender.Renderer.Objects[k].InternalObject.GroupIndex;
+									list = LibRender.Renderer.StaticOpaque[groupIndex].List;
 								}
 								break;
 							case ObjectListType.DynamicOpaque:
-								list = DynamicOpaque;
+								list = LibRender.Renderer.DynamicOpaque;
 								break;
 							case ObjectListType.DynamicAlpha:
-								list = DynamicAlpha;
+								list = LibRender.Renderer.DynamicAlpha;
 								break;
 							case ObjectListType.OverlayOpaque:
-								list = OverlayOpaque;
+								list = LibRender.Renderer.OverlayOpaque;
 								break;
 							case ObjectListType.OverlayAlpha:
-								list = OverlayAlpha;
+								list = LibRender.Renderer.OverlayAlpha;
 								break;
 							case ObjectListType.Touch:
-								list = Touch;
+								list = LibRender.Renderer.Touch;
 								break;
 							default:
 								throw new InvalidOperationException();
 						}
-						int listIndex = Objects[k].FaceListReferences[i].Index;
+						int listIndex = LibRender.Renderer.Objects[k].FaceListReferences[i].Index;
 						list.Faces[listIndex].ObjectListIndex = k;
 					}
-					ObjectManager.Objects[Objects[k].ObjectIndex].RendererIndex = k + 1;
+					LibRender.Renderer.Objects[k].InternalObject.RendererIndex = k + 1;
 				}
-				ObjectManager.Objects[ObjectIndex].RendererIndex = 0;
+				ObjectIndex.RendererIndex = 0;
 			}
 		}
 
@@ -149,15 +154,15 @@ namespace OpenBve
 		/// <param name="Delta">Width and height of picking area in window coordinates</param>
 		private static void UpdateViewportSelection(Vector2 Point, Vector2 Delta)
 		{
-			CurrentViewPortMode = ViewPortMode.Cab;
-			int[] Viewport = new int[] { 0, 0, Screen.Width, Screen.Height };
+			LibRender.Renderer.CurrentViewPortMode = ViewPortMode.Cab;
+			int[] Viewport = new int[] { 0, 0, LibRender.Screen.Width, LibRender.Screen.Height };
 			GL.Viewport(Viewport[0], Viewport[1], Viewport[2], Viewport[3]);
-			World.AspectRatio = (double)Screen.Width / (double)Screen.Height;
-			World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
+			LibRender.Screen.AspectRatio = (double)LibRender.Screen.Width / (double)LibRender.Screen.Height;
+			Camera.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * Camera.VerticalViewingAngle) * LibRender.Screen.AspectRatio);
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();
 			PickMatrix(new Vector2(Point.X, Viewport[3] - Point.Y), Delta, Viewport);
-			Matrix4d perspective = Matrix4d.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.025, 50.0);
+			Matrix4d perspective = Matrix4d.Perspective(Camera.VerticalViewingAngle, -LibRender.Screen.AspectRatio, 0.025, 50.0);
 			GL.MultMatrix(ref perspective);
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.LoadIdentity();
@@ -187,40 +192,40 @@ namespace OpenBve
 			int PartId = 0;
 
 			// set up camera
-			double dx = World.AbsoluteCameraDirection.X;
-			double dy = World.AbsoluteCameraDirection.Y;
-			double dz = World.AbsoluteCameraDirection.Z;
-			double ux = World.AbsoluteCameraUp.X;
-			double uy = World.AbsoluteCameraUp.Y;
-			double uz = World.AbsoluteCameraUp.Z;
+			double dx = Camera.AbsoluteDirection.X;
+			double dy = Camera.AbsoluteDirection.Y;
+			double dz = Camera.AbsoluteDirection.Z;
+			double ux = Camera.AbsoluteUp.X;
+			double uy = Camera.AbsoluteUp.Y;
+			double uz = Camera.AbsoluteUp.Z;
 			Matrix4d LookAt = Matrix4d.LookAt(0.0, 0.0, 0.0, dx, dy, dz, ux, uy, uz);
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.LoadMatrix(ref LookAt);
 
-			if (LightingEnabled)
+			if (LibRender.Renderer.LightingEnabled)
 			{
 				GL.Disable(EnableCap.Lighting);
-				LightingEnabled = false; // TODO: was 'true' before
+				LibRender.Renderer.LightingEnabled = false; // TODO: was 'true' before
 			}
-			OptionLighting = false;
-			if (!BlendEnabled)
+			LibRender.Renderer.OptionLighting = false;
+			if (!LibRender.Renderer.BlendEnabled)
 			{
 				GL.Enable(EnableCap.Blend);
-				BlendEnabled = true;
+				LibRender.Renderer.BlendEnabled = true;
 			}
 			GL.DepthMask(false);
 			GL.Disable(EnableCap.DepthTest);
-			UnsetAlphaFunc();
-			Touch.SortPolygons();
-			for (int i = 0; i < Touch.FaceCount; i++)
+			LibRender.Renderer.UnsetAlphaFunc();
+			LibRender.Renderer.Touch.SortPolygons();
+			for (int i = 0; i < LibRender.Renderer.Touch.FaceCount; i++)
 			{
 				GL.LoadName(PartId);
-				RenderFace(ref Touch.Faces[i], World.AbsoluteCameraPosition, IsDebugTouchMode);
+				RenderFace(ref LibRender.Renderer.Touch.Faces[i], Camera.AbsolutePosition, IsDebugTouchMode);
 				PartId++;
 			}
 
 			GL.PopName();
-			OptionLighting = true;
+			LibRender.Renderer.OptionLighting = true;
 		}
 
 		/// <summary>Function to perform start processing of mouse picking.</summary>
@@ -232,7 +237,7 @@ namespace OpenBve
 			GL.SelectBuffer(SelectBuffer.Length, SelectBuffer);
 			GL.RenderMode(RenderingMode.Select);
 
-			ResetOpenGlState();
+			LibRender.Renderer.ResetOpenGlState();
 			GL.PushMatrix();
 
 			UpdateViewportSelection(Point, Delta);
@@ -286,14 +291,14 @@ namespace OpenBve
 		/// <summary>Function to perform the end processing of mouse picking.</summary>
 		/// <param name="SelectBuffer">Selection buffer</param>
 		/// <returns>The object index of the object hit in the shallowest place.</returns>
-		private static int PickPost(int[] SelectBuffer)
+		private static StaticObject PickPost(int[] SelectBuffer)
 		{
 			int Hits = GL.RenderMode(RenderingMode.Render);
 			GL.PopMatrix();
 
 			if (Hits <= 0)
 			{
-				return -1;
+				return null;
 			}
 
 			List<PickedObject> PickedObjects = ParseSelectBuffer(SelectBuffer);
@@ -301,10 +306,10 @@ namespace OpenBve
 			if (PickedObjects.Any())
 			{
 				PickedObjects = PickedObjects.OrderBy(x => x.MinDepth).ToList();
-				return Touch.Faces[PickedObjects[0].Names[0]].ObjectIndex;
+				return LibRender.Renderer.Touch.Faces[PickedObjects[0].Names[0]].ObjectReference;
 			}
 
-			return -1;
+			return null;
 		}
 
 		internal static void DebugTouchArea()
@@ -314,7 +319,7 @@ namespace OpenBve
 				return;
 			}
 			
-			if (World.CameraMode != CameraViewMode.Interior && World.CameraMode != CameraViewMode.InteriorLookAhead)
+			if (Camera.CurrentMode != CameraViewMode.Interior && Camera.CurrentMode != CameraViewMode.InteriorLookAhead)
 			{
 				return;
 			}
@@ -329,11 +334,10 @@ namespace OpenBve
 				{
 					foreach (var TouchElement in TouchElements)
 					{
-						int o = TouchElement.Element.ObjectIndex;
-						ShowObjectSelection(o);
+						ShowObjectSelection(TouchElement.Element.internalObject);
 					}
 
-					ResetOpenGlState();
+					LibRender.Renderer.ResetOpenGlState();
 					GL.PushMatrix();
 					
 					UpdateViewport(ViewPortChangeMode.ChangeToCab);
@@ -344,8 +348,7 @@ namespace OpenBve
 					
 					foreach (var TouchElement in TouchElements)
 					{
-						int o = TouchElement.Element.ObjectIndex;
-						HideObjectSelection(o);
+						HideObjectSelection(ref TouchElement.Element.internalObject);
 					}
 				}
 			}
@@ -359,7 +362,7 @@ namespace OpenBve
 				return false;
 			}
 
-			if (World.CameraMode != CameraViewMode.Interior && World.CameraMode != CameraViewMode.InteriorLookAhead)
+			if (Camera.CurrentMode != CameraViewMode.Interior && Camera.CurrentMode != CameraViewMode.InteriorLookAhead)
 			{
 				Status = Cursor.Status.Default;
 				return false;
@@ -377,8 +380,7 @@ namespace OpenBve
 				{
 					foreach (var TouchElement in TouchElements)
 					{
-						int o = TouchElement.Element.ObjectIndex;
-						ShowObjectSelection(o);
+						ShowObjectSelection(TouchElement.Element.internalObject);
 					}
 
 					int[] SelectBuffer = new int[2048];
@@ -387,14 +389,13 @@ namespace OpenBve
 
 					RenderSceneSelection();
 
-					int PickedObjectIndex = PickPost(SelectBuffer);
+					StaticObject PickedObjectIndex = PickPost(SelectBuffer);
 
 					foreach (var TouchElement in TouchElements)
 					{
-						int o = TouchElement.Element.ObjectIndex;
-						HideObjectSelection(o);
+						HideObjectSelection(ref TouchElement.Element.internalObject);
 
-						if (o == PickedObjectIndex)
+						if (TouchElement.Element.internalObject == PickedObjectIndex)
 						{
 							switch (TouchElement.Command)
 							{
@@ -412,7 +413,7 @@ namespace OpenBve
 						}
 					}
 					
-					if (PickedObjectIndex >= 0)
+					if (PickedObjectIndex != null)
 					{
 						return true;
 					}
@@ -428,7 +429,7 @@ namespace OpenBve
 				return;
 			}
 			
-			if (World.CameraMode != CameraViewMode.Interior && World.CameraMode != CameraViewMode.InteriorLookAhead)
+			if (Camera.CurrentMode != CameraViewMode.Interior && Camera.CurrentMode != CameraViewMode.InteriorLookAhead)
 			{
 				return;
 			}
@@ -443,8 +444,7 @@ namespace OpenBve
 				{
 					foreach (var TouchElement in TouchElements)
 					{
-						int o = TouchElement.Element.ObjectIndex;
-						ShowObjectSelection(o);
+						ShowObjectSelection(TouchElement.Element.internalObject);
 					}
 
 					int[] SelectBuffer = new int[2048];
@@ -453,13 +453,12 @@ namespace OpenBve
 
 					RenderSceneSelection();
 
-					int PickedObjectIndex = PickPost(SelectBuffer);
+					StaticObject PickedObjectIndex = PickPost(SelectBuffer);
 
 					foreach (var TouchElement in TouchElements)
 					{
-						int o = TouchElement.Element.ObjectIndex;
-						HideObjectSelection(o);
-						if (o == PickedObjectIndex)
+						HideObjectSelection(ref TouchElement.Element.internalObject);
+						if (TouchElement.Element.internalObject == PickedObjectIndex)
 						{
 							for (int i = 0; i < Interface.CurrentControls.Length; i++)
 							{
@@ -502,7 +501,7 @@ namespace OpenBve
 				return;
 			}
 
-			if (World.CameraMode != CameraViewMode.Interior && World.CameraMode != CameraViewMode.InteriorLookAhead)
+			if (Camera.CurrentMode != CameraViewMode.Interior && Camera.CurrentMode != CameraViewMode.InteriorLookAhead)
 			{
 				return;
 			}
@@ -517,8 +516,7 @@ namespace OpenBve
 				{
 					foreach (var TouchElement in TouchElements)
 					{
-						int o = TouchElement.Element.ObjectIndex;
-						ShowObjectSelection(o);
+						ShowObjectSelection(TouchElement.Element.internalObject);
 					}
 
 					int[] SelectBuffer = new int[2048];
@@ -527,26 +525,25 @@ namespace OpenBve
 
 					RenderSceneSelection();
 
-					int PickedObjectIndex = PickPost(SelectBuffer);
+					StaticObject PickedObjectIndex = PickPost(SelectBuffer);
 
 					foreach (var TouchElement in TouchElements)
 					{
-						int o = TouchElement.Element.ObjectIndex;
-						HideObjectSelection(o);
-						if (o == PickedObjectIndex)
+						HideObjectSelection(ref TouchElement.Element.internalObject);
+						if (TouchElement.Element.internalObject == PickedObjectIndex)
 						{
 							Car.CarSections[0].CurrentAdditionalGroup = TouchElement.JumpScreenIndex;
 							Car.ChangeCarSection(TrainManager.CarSectionType.Interior);
 							if (TouchElement.SoundIndex >= 0 && TouchElement.SoundIndex < Car.Sounds.Touch.Length)
 							{
-								Sounds.SoundBuffer Buffer = Car.Sounds.Touch[TouchElement.SoundIndex].Buffer;
+								SoundBuffer Buffer = Car.Sounds.Touch[TouchElement.SoundIndex].Buffer;
 								OpenBveApi.Math.Vector3 Position = Car.Sounds.Touch[TouchElement.SoundIndex].Position;
-								Sounds.PlaySound(Buffer, 1.0, 1.0, Position, TrainManager.PlayerTrain, TrainManager.PlayerTrain.DriverCar, false);
+								Program.Sounds.PlaySound(Buffer, 1.0, 1.0, Position, TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar], false);
 							}
 						}
 
 						// HACK: Normally terminate the command issued once.
-						if (o == PickedObjectIndex || (PickedObjectIndex != PrePickedObjectIndex && o == PrePickedObjectIndex))
+						if (TouchElement.Element.internalObject == PickedObjectIndex || (PickedObjectIndex != PrePickedObjectIndex && TouchElement.Element.internalObject == PrePickedObjectIndex))
 						{
 							for (int i = 0; i < Interface.CurrentControls.Length; i++)
 							{

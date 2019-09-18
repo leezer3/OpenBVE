@@ -1,75 +1,28 @@
 ﻿using System;
+using OpenBve.BackgroundManager;
+using OpenBve.RouteManager;
+using LibRender;
 using OpenBveApi.Colors;
 using OpenTK;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using Vector3 = OpenBveApi.Math.Vector3;
+using static LibRender.CameraProperties;
 
 namespace OpenBve
 {
     internal static partial class Renderer
     {
-        /// <summary>Performs a reset of OpenGL to the default state</summary>
-        private static void ResetOpenGlState()
-        {
-            LastBoundTexture = null;
-            GL.Enable(EnableCap.CullFace); CullEnabled = true;
-            GL.Disable(EnableCap.Lighting); LightingEnabled = false;
-            GL.Disable(EnableCap.Texture2D); TexturingEnabled = false;
-            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-            GL.Disable(EnableCap.Blend); BlendEnabled = false;
-            GL.Enable(EnableCap.DepthTest);
-            GL.DepthMask(true);
-            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new float[] { 0.0f, 0.0f, 0.0f, 1.0f });
-            SetAlphaFunc(AlphaFunction.Greater, 0.9f);
-        }
-
-        /// <summary>Specifies the OpenGL alpha function to perform</summary>
-        /// <param name="Comparison">The comparison to use</param>
-        /// <param name="Value">The value to compare</param>
-        internal static void SetAlphaFunc(AlphaFunction Comparison, float Value)
-        {
-            AlphaTestEnabled = true;
-            AlphaFuncComparison = Comparison;
-            AlphaFuncValue = Value;
-            GL.AlphaFunc(Comparison, Value);
-            GL.Enable(EnableCap.AlphaTest);
-        }
-
-        /// <summary>Disables OpenGL alpha testing</summary>
-        private static void UnsetAlphaFunc()
-        {
-            AlphaTestEnabled = false;
-            GL.Disable(EnableCap.AlphaTest);
-        }
-
-        /// <summary>
-        /// Restores the OpenGL alpha function to it's previous state
-        /// </summary>
-        private static void RestoreAlphaFunc()
-        {
-            if (AlphaTestEnabled)
-            {
-                GL.AlphaFunc(AlphaFuncComparison, AlphaFuncValue);
-                GL.Enable(EnableCap.AlphaTest);
-            }
-            else
-            {
-                GL.Disable(EnableCap.AlphaTest);
-            }
-        }
-
         /// <summary>Clears all currently registered OpenGL display lists</summary>
         internal static void ClearDisplayLists()
         {
-            for (int i = 0; i < StaticOpaque.Length; i++)
+            for (int i = 0; i < LibRender.Renderer.StaticOpaque.Length; i++)
             {
-                if (StaticOpaque[i] != null)
+                if (LibRender.Renderer.StaticOpaque[i] != null)
                 {
-                    if (StaticOpaque[i].OpenGlDisplayListAvailable)
+                    if (LibRender.Renderer.StaticOpaque[i].OpenGlDisplayListAvailable)
                     {
-                        GL.DeleteLists(StaticOpaque[i].OpenGlDisplayList, 1);
-                        StaticOpaque[i].OpenGlDisplayListAvailable = false;
+                        GL.DeleteLists(LibRender.Renderer.StaticOpaque[i].OpenGlDisplayList, 1);
+                        LibRender.Renderer.StaticOpaque[i].OpenGlDisplayListAvailable = false;
                     }
                 }
             }
@@ -79,54 +32,11 @@ namespace OpenBve
         /// <summary>Resets the state of the renderer</summary>
         internal static void Reset()
         {
-            LoadTexturesImmediately = LoadTextureImmediatelyMode.NotYet;
-            Objects = new Object[256];
-            ObjectCount = 0;
-            StaticOpaque = new ObjectGroup[] { };
+	        LibRender.Renderer.Reset();
             StaticOpaqueForceUpdate = true;
-            DynamicOpaque = new ObjectList();
-            DynamicAlpha = new ObjectList();
-            OverlayOpaque = new ObjectList();
-            OverlayAlpha = new ObjectList();
-            Touch = new ObjectList();
-            OptionLighting = true;
-            OptionAmbientColor = new Color24(160, 160, 160);
-            OptionDiffuseColor = new Color24(160, 160, 160);
-            OptionLightPosition = new Vector3(0.223606797749979f, 0.86602540378444f, -0.447213595499958f);
-            OptionLightingResultingAmount = 1.0f;
+            LibRender.Renderer.Touch = new ObjectList();
             OptionClock = false;
             OptionBrakeSystems = false;
-        }
-
-        /// <summary>Call this once to initialise the renderer</summary>
-        internal static void Initialize()
-        {
-            GL.ShadeModel(ShadingModel.Smooth);
-            GL.ClearColor(Color4.Black);
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            GL.Enable(EnableCap.DepthTest);
-            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-            GL.DepthFunc(DepthFunction.Lequal);
-            GL.Hint(HintTarget.FogHint, HintMode.Fastest);
-            GL.Hint(HintTarget.LineSmoothHint, HintMode.Fastest);
-            GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Fastest);
-            GL.Hint(HintTarget.PointSmoothHint, HintMode.Fastest);
-            GL.Hint(HintTarget.PolygonSmoothHint, HintMode.Fastest);
-            GL.Hint(HintTarget.GenerateMipmapHint, HintMode.Nicest);
-            GL.Disable(EnableCap.Dither);
-            GL.CullFace(CullFaceMode.Front);
-            GL.Enable(EnableCap.CullFace); CullEnabled = true;
-            GL.Disable(EnableCap.Lighting); LightingEnabled = false;
-            GL.Disable(EnableCap.Texture2D); TexturingEnabled = false;
-            HUD.LoadHUD();
-            InitLoading();
-            Matrix4d lookat = Matrix4d.LookAt(0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0);
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadMatrix(ref lookat);
-            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-            GL.Enable(EnableCap.Blend); BlendEnabled = true;
-            GL.Disable(EnableCap.Lighting); LightingEnabled = false;
-            GL.Disable(EnableCap.Fog);
         }
 
         /// <summary>Determines the maximum Anisotropic filtering level the system supports</summary>
@@ -170,29 +80,29 @@ namespace OpenBve
 	    {
 		    if (Mode == ViewPortChangeMode.ChangeToCab)
 		    {
-			    CurrentViewPortMode = ViewPortMode.Cab;
+			    LibRender.Renderer.CurrentViewPortMode = ViewPortMode.Cab;
 		    }
 		    else
 		    {
-			    CurrentViewPortMode = ViewPortMode.Scenery;
+			    LibRender.Renderer.CurrentViewPortMode = ViewPortMode.Scenery;
 		    }
 
-		    GL.Viewport(0, 0, Screen.Width, Screen.Height);
-		    World.AspectRatio = (double)Screen.Width / (double)Screen.Height;
-		    World.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * World.VerticalViewingAngle) * World.AspectRatio);
+		    GL.Viewport(0, 0, LibRender.Screen.Width, LibRender.Screen.Height);
+		    LibRender.Screen.AspectRatio = (double)LibRender.Screen.Width / (double)LibRender.Screen.Height;
+		    Camera.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * Camera.VerticalViewingAngle) * LibRender.Screen.AspectRatio);
 		    GL.MatrixMode(MatrixMode.Projection);
 		    GL.LoadIdentity();
-		    if (CurrentViewPortMode == ViewPortMode.Cab)
+		    if (LibRender.Renderer.CurrentViewPortMode == ViewPortMode.Cab)
 		    {
 
-			    Matrix4d perspective = Matrix4d.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.025, 50.0);
+			    Matrix4d perspective = Matrix4d.Perspective(Camera.VerticalViewingAngle, -LibRender.Screen.AspectRatio, 0.025, 50.0);
 			    GL.MultMatrix(ref perspective);
 		    }
 		    else
 		    {
-			    var b = BackgroundManager.CurrentBackground as BackgroundManager.BackgroundObject;
-			    var cd = b != null ? Math.Max(World.BackgroundImageDistance, b.ClipDistance) : World.BackgroundImageDistance;
-			    Matrix4d perspective = Matrix4d.Perspective(World.VerticalViewingAngle, -World.AspectRatio, 0.5, cd);
+			    var b = CurrentRoute.CurrentBackground as BackgroundObject;
+			    var cd = b != null ? Math.Max(Backgrounds.BackgroundImageDistance, b.ClipDistance) : Backgrounds.BackgroundImageDistance;
+			    Matrix4d perspective = Matrix4d.Perspective(Camera.VerticalViewingAngle, -LibRender.Screen.AspectRatio, 0.5, cd);
 			    GL.MultMatrix(ref perspective);
 		    }
 		    GL.MatrixMode(MatrixMode.Modelview);
