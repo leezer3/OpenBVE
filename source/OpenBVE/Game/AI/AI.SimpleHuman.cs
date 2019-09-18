@@ -189,7 +189,7 @@ namespace OpenBve
 						Train.ApplyNotch(-1, true, 0, true);
 						if (Train.Handles.Brake is TrainManager.AirBrakeHandle)
 						{
-							if (Train.Cars[Train.DriverCar].CarBrake.brakeCylinder.CurrentPressure < 0.3 * Train.Cars[Train.DriverCar].CarBrake.brakeCylinder.ServiceMaximumPressure)
+							if (Train.StationDepartureTime - CurrentRoute.SecondsSinceMidnight > 10 || Train.Cars[Train.DriverCar].CarBrake.brakeCylinder.CurrentPressure < 0.3 * Train.Cars[Train.DriverCar].CarBrake.brakeCylinder.ServiceMaximumPressure)
 							{
 								Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Service);
 							}
