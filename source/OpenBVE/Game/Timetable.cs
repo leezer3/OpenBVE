@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using LibRender;
 using OpenBve.RouteManager;
@@ -513,9 +513,16 @@ namespace OpenBve {
 		/// <summary>Creates the texture used to display the default auto-generated timetable</summary>
 		internal static void CreateTimetable()
 		{
-			Table Table = new Table();
-			Table.CollectData();
-			Table.RenderData(ref DefaultTimetableTexture);
+			try
+			{
+				Table Table = new Table();
+				Table.CollectData();
+				Table.RenderData(ref DefaultTimetableTexture);
+			}
+			catch
+			{
+				DefaultTimetableTexture = null;
+			}
 		}
 
 

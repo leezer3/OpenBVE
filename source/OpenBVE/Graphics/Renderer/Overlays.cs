@@ -151,12 +151,23 @@ namespace OpenBve
 			else if (Game.CurrentInterface == Game.InterfaceType.Menu)
 				Game.Menu.Draw();
 			//Fade to black on change ends
-			if (TrainManager.PlayerTrain.Station >= 0 && CurrentRoute.Stations[TrainManager.PlayerTrain.Station].Type == StationType.ChangeEnds && TrainManager.PlayerTrain.StationState == TrainStopState.Boarding)
+			if (TrainManager.PlayerTrain != null)
 			{
-				double time = TrainManager.PlayerTrain.StationDepartureTime - CurrentRoute.SecondsSinceMidnight;
-				if (time < 1.0)
+				if (TrainManager.PlayerTrain.Station >= 0 && CurrentRoute.Stations[TrainManager.PlayerTrain.Station].Type == StationType.ChangeEnds && TrainManager.PlayerTrain.StationState == TrainStopState.Boarding)
 				{
-					FadeToBlackDueToChangeEnds = Math.Max(0.0, 1.0 - time);
+					double time = TrainManager.PlayerTrain.StationDepartureTime - CurrentRoute.SecondsSinceMidnight;
+					if (time < 1.0)
+					{
+						FadeToBlackDueToChangeEnds = Math.Max(0.0, 1.0 - time);
+					}
+					else if (FadeToBlackDueToChangeEnds > 0.0)
+					{
+						FadeToBlackDueToChangeEnds -= TimeElapsed;
+						if (FadeToBlackDueToChangeEnds < 0.0)
+						{
+							FadeToBlackDueToChangeEnds = 0.0;
+						}
+					}
 				}
 				else if (FadeToBlackDueToChangeEnds > 0.0)
 				{
@@ -166,20 +177,13 @@ namespace OpenBve
 						FadeToBlackDueToChangeEnds = 0.0;
 					}
 				}
-			}
-			else if (FadeToBlackDueToChangeEnds > 0.0)
-			{
-				FadeToBlackDueToChangeEnds -= TimeElapsed;
-				if (FadeToBlackDueToChangeEnds < 0.0)
+				if (FadeToBlackDueToChangeEnds > 0.0 & (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead))
 				{
-					FadeToBlackDueToChangeEnds = 0.0;
+					GL.Color4(0.0, 0.0, 0.0, FadeToBlackDueToChangeEnds);
+					LibRender.Renderer.RenderOverlaySolid(0.0, 0.0, (double)LibRender.Screen.Width, (double)LibRender.Screen.Height);
 				}
 			}
-			if (FadeToBlackDueToChangeEnds > 0.0 & (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead))
-			{
-				GL.Color4(0.0, 0.0, 0.0, FadeToBlackDueToChangeEnds);
-				LibRender.Renderer.RenderOverlaySolid(0.0, 0.0, (double)LibRender.Screen.Width, (double)LibRender.Screen.Height);
-			}
+			
 			// finalize
 			GL.PopMatrix();
 			GL.MatrixMode(MatrixMode.Projection);

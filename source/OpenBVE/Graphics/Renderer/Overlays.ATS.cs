@@ -13,6 +13,10 @@ namespace OpenBve
 		/// <param name="TimeElapsed">The time elapsed</param>
 		private static void RenderATSLamps(HUD.Element Element, double TimeElapsed)
 		{
+			if (TrainManager.PlayerTrain == null)
+			{
+				return;
+			}
 			// ats lamps
 			if (CurrentLampCollection.Lamps == null)
 			{
