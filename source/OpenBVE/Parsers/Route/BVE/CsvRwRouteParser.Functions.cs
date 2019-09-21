@@ -151,6 +151,10 @@ namespace OpenBve
 
 		internal static string GetChecksum(string file)
 		{
+			if (string.IsNullOrEmpty(file) || !File.Exists(file))
+			{
+				return string.Empty;
+			}
 			using (FileStream stream = File.OpenRead(file))
 			{
 				SHA256Managed sha = new SHA256Managed();
