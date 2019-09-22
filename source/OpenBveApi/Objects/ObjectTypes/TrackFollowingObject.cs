@@ -31,8 +31,8 @@ namespace OpenBveApi.Objects
 		public TrackFollowingObject(HostInterface Host)
 		{
 			currentHost = Host;
-			FrontAxleFollower = new TrackFollower(currentHost.Tracks);
-			RearAxleFollower = new TrackFollower(currentHost.Tracks);
+			FrontAxleFollower = new TrackFollower(currentHost);
+			RearAxleFollower = new TrackFollower(currentHost);
 		}
 
 		/// <inheritdoc/>

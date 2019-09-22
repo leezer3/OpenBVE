@@ -127,7 +127,7 @@ namespace OpenBve {
 			// load route
 			bool IsRW = string.Equals(System.IO.Path.GetExtension(CurrentRouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
 			CsvRwRouteParser.ParseRoute(CurrentRouteFile, IsRW, CurrentRouteEncoding, Application.StartupPath, ObjectFolder, SoundFolder, false);
-			World.CameraTrackFollower = new TrackFollower(CurrentRoute.Tracks);
+			World.CameraTrackFollower = new TrackFollower(Program.CurrentHost);
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			Atmosphere.CalculateSeaLevelConstants();
 			RouteProgress = 1.0;

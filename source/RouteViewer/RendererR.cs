@@ -403,7 +403,7 @@ namespace OpenBve {
 							t = null;
 						}
 						if (t != null) {
-							TrackFollower f = new TrackFollower(CurrentRoute.Tracks);
+							TrackFollower f = new TrackFollower(Program.CurrentHost);
 							f.TriggerType = EventTriggerType.None;
 							f.TrackPosition = p;
 							f.UpdateAbsolute(p + e.TrackPositionDelta, true, false);
@@ -420,7 +420,7 @@ namespace OpenBve {
 						const double dy = 1.4;
 						const double s = 0.2;
 						double p = CurrentRoute.Stations[i].Stops[j].TrackPosition;
-						TrackFollower f = new TrackFollower(CurrentRoute.Tracks);
+						TrackFollower f = new TrackFollower(Program.CurrentHost);
 						f.TriggerType = EventTriggerType.None;
 						f.TrackPosition = p;
 						f.UpdateAbsolute(p, true, false);
@@ -436,7 +436,7 @@ namespace OpenBve {
 				if (d >= da & d <= db) {
 					const double dy = 2.5;
 					const double s = 0.25;
-					TrackFollower f = new TrackFollower(CurrentRoute.Tracks);
+					TrackFollower f = new TrackFollower(Program.CurrentHost);
 					f.TriggerType = EventTriggerType.None;
 					f.TrackPosition = p;
 					f.UpdateAbsolute(p, true, false);

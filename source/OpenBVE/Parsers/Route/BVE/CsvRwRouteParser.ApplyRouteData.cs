@@ -1889,7 +1889,7 @@ namespace OpenBve
 				if (m != 0)
 				{
 					int q = i / subdivisions;
-					TrackFollower follower = new TrackFollower(CurrentRoute.Tracks);
+					TrackFollower follower = new TrackFollower(Program.CurrentHost);
 					double r = (double)m / (double)subdivisions;
 					double p = (1.0 - r) * CurrentRoute.Tracks[0].Elements[q].StartingTrackPosition + r * CurrentRoute.Tracks[0].Elements[q + 1].StartingTrackPosition;
 					follower.UpdateAbsolute(-1.0, true, false);
@@ -1928,7 +1928,7 @@ namespace OpenBve
 			// find turns
 			bool[] isTurn = new bool[CurrentRoute.Tracks[0].Elements.Length];
 			{
-				TrackFollower follower = new TrackFollower(CurrentRoute.Tracks);
+				TrackFollower follower = new TrackFollower(Program.CurrentHost);
 				for (int i = 1; i < CurrentRoute.Tracks[0].Elements.Length - 1; i++)
 				{
 					int m = i % subdivisions;
@@ -2009,7 +2009,7 @@ namespace OpenBve
 						if (r * r > 1.0)
 						{
 							// apply radius
-							TrackFollower follower = new TrackFollower(CurrentRoute.Tracks);
+							TrackFollower follower = new TrackFollower(Program.CurrentHost);
 							CurrentRoute.Tracks[0].Elements[i - 1].CurveRadius = r;
 							double p = 0.00000001 * CurrentRoute.Tracks[0].Elements[i - 1].StartingTrackPosition + 0.99999999 * CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition;
 							follower.UpdateAbsolute(p - 1.0, true, false);

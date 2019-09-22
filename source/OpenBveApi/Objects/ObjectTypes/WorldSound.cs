@@ -4,6 +4,7 @@ using OpenBveApi.Routes;
 using OpenBveApi.Sounds;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
+using OpenTK.Graphics.ES11;
 
 namespace OpenBveApi.Objects
 {
@@ -31,6 +32,16 @@ namespace OpenBveApi.Objects
 		/// <summary>The function script controlling the sound's pitch, or a null reference</summary>
 		public FunctionScript PitchFunction;
 
+		/// <inheritdoc/>
+		/// <remarks>In this case, the position of the track follower is returned.</remarks>
+		public override double RelativeTrackPosition
+		{
+			get
+			{
+				return Follower.TrackPosition;
+			}
+		}
+
 		/// <summary>Creates a new WorldSound</summary>
 		public WorldSound(Hosts.HostInterface Host, SoundHandle buffer)
 		{
@@ -53,7 +64,7 @@ namespace OpenBveApi.Objects
 			{
 				//Must clone the vector, not pass the reference
 				Position = new Vector3(position),
-				Follower = new TrackFollower(currentHost.Tracks),
+				Follower = new TrackFollower(currentHost),
 				currentTrackPosition = trackPosition
 			};
 			snd.Follower.UpdateAbsolute(trackPosition, true, true);
