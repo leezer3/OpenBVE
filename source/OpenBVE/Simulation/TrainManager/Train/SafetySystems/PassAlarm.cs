@@ -26,6 +26,10 @@ namespace OpenBve.SafetySystems
 		{
 			Lit = true;
 			SoundBuffer buffer = Sound.Buffer;
+			if (Program.Sounds.IsPlaying(Sound.Source))
+			{
+				return;
+			}
 			if (buffer != null)
 			{
 				switch (Type)
