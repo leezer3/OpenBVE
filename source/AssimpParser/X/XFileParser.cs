@@ -269,8 +269,8 @@ namespace AssimpNET.X
 					inputStream.Position = currentPosition + 2;
 
 					// Decompress the compressed block
-					blockBytes = new byte[compressedBlockSize - 2];
-					inputStream.Read(blockBytes, 0, compressedBlockSize - 2);
+					blockBytes = new byte[compressedBlockSize];
+					inputStream.Read(blockBytes, 0, compressedBlockSize);
 					byte[] decompressedBytes;
 
 					if (currentBlock == 0)
