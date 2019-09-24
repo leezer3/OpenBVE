@@ -33,5 +33,11 @@ namespace OpenBveApi.Routes
 				Trigger(Direction, TriggerType, Train, Car);
 			}
 		}
+
+		/// <summary>Resets the event</summary>
+		public virtual void Reset()
+		{
+
+		}
 	}
 }

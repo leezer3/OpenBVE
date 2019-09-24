@@ -38,13 +38,14 @@ namespace OpenBveApi.Routes
 		public AbstractCar Car;
 		/// <summary>The track index the follower is currently following</summary>
 		public int TrackIndex;
-		/// <summary>Stores a reference to the CurrentRoute.Tracks array</summary>
-		private readonly Track[] Tracks;
+		private readonly Hosts.HostInterface currentHost;
+
+
 
 		/// <summary>Clones the TrackFollower</summary>
 		public TrackFollower Clone()
 		{
-			TrackFollower t = new TrackFollower(Tracks, Train, Car);
+			TrackFollower t = new TrackFollower(currentHost, Train, Car);
 			t.LastTrackElement = LastTrackElement;
 			t.TrackPosition = TrackPosition;
 			t.WorldPosition = new Vector3(WorldPosition);
@@ -56,9 +57,9 @@ namespace OpenBveApi.Routes
 		}
 
 		/// <summary>Creates a new TrackFollower</summary>
-		public TrackFollower(Track[] tracks, AbstractTrain train = null, AbstractCar car = null)
+		public TrackFollower(Hosts.HostInterface Host, AbstractTrain train = null, AbstractCar car = null)
 		{
-			Tracks = tracks;
+			currentHost = Host;
 			Train = train;
 			Car = car;
 			LastTrackElement = 0;
@@ -82,7 +83,7 @@ namespace OpenBveApi.Routes
 		{
 			get
 			{
-				return Tracks[TrackIndex].RailGauge;
+				return currentHost.Tracks[TrackIndex].RailGauge;
 			}
 		}
 
@@ -108,11 +109,11 @@ namespace OpenBveApi.Routes
 		/// <param name="AddTrackInaccuracy">Whether to add track innacuracy</param>
 		public void UpdateAbsolute(double NewTrackPosition, bool UpdateWorldCoordinates, bool AddTrackInaccuracy)
 		{
-			if (TrackIndex >= Tracks.Length || Tracks[TrackIndex].Elements.Length == 0) return;
+			if (TrackIndex >= currentHost.Tracks.Length || currentHost.Tracks[TrackIndex].Elements.Length == 0) return;
 			int i = LastTrackElement;
-			while (i >= 0 && NewTrackPosition < Tracks[TrackIndex].Elements[i].StartingTrackPosition)
+			while (i >= 0 && NewTrackPosition < currentHost.Tracks[TrackIndex].Elements[i].StartingTrackPosition)
 			{
-				double ta = TrackPosition - Tracks[TrackIndex].Elements[i].StartingTrackPosition;
+				double ta = TrackPosition - currentHost.Tracks[TrackIndex].Elements[i].StartingTrackPosition;
 				double tb = -0.01;
 				CheckEvents(i, -1, ta, tb);
 				i--;
@@ -120,11 +121,11 @@ namespace OpenBveApi.Routes
 
 			if (i >= 0)
 			{
-				while (i < Tracks[TrackIndex].Elements.Length - 1)
+				while (i < currentHost.Tracks[TrackIndex].Elements.Length - 1)
 				{
-					if (NewTrackPosition < Tracks[TrackIndex].Elements[i + 1].StartingTrackPosition) break;
-					double ta = TrackPosition - Tracks[TrackIndex].Elements[i].StartingTrackPosition;
-					double tb = Tracks[TrackIndex].Elements[i + 1].StartingTrackPosition - Tracks[TrackIndex].Elements[i].StartingTrackPosition + 0.01;
+					if (NewTrackPosition < currentHost.Tracks[TrackIndex].Elements[i + 1].StartingTrackPosition) break;
+					double ta = TrackPosition - currentHost.Tracks[TrackIndex].Elements[i].StartingTrackPosition;
+					double tb = currentHost.Tracks[TrackIndex].Elements[i + 1].StartingTrackPosition - currentHost.Tracks[TrackIndex].Elements[i].StartingTrackPosition + 0.01;
 					CheckEvents(i, 1, ta, tb);
 					i++;
 				}
@@ -134,33 +135,33 @@ namespace OpenBveApi.Routes
 				i = 0;
 			}
 
-			double da = TrackPosition - Tracks[TrackIndex].Elements[i].StartingTrackPosition;
-			double db = NewTrackPosition - Tracks[TrackIndex].Elements[i].StartingTrackPosition;
+			double da = TrackPosition - currentHost.Tracks[TrackIndex].Elements[i].StartingTrackPosition;
+			double db = NewTrackPosition - currentHost.Tracks[TrackIndex].Elements[i].StartingTrackPosition;
 
 			// track
 			if (UpdateWorldCoordinates)
 			{
 				if (db != 0.0)
 				{
-					if (Tracks[TrackIndex].Elements[i].CurveRadius != 0.0)
+					if (currentHost.Tracks[TrackIndex].Elements[i].CurveRadius != 0.0)
 					{
 						// curve
-						double r = Tracks[TrackIndex].Elements[i].CurveRadius;
-						double p = Tracks[TrackIndex].Elements[i].WorldDirection.Y / System.Math.Sqrt(Tracks[TrackIndex].Elements[i].WorldDirection.X * Tracks[TrackIndex].Elements[i].WorldDirection.X + Tracks[TrackIndex].Elements[i].WorldDirection.Z * Tracks[TrackIndex].Elements[i].WorldDirection.Z);
+						double r = currentHost.Tracks[TrackIndex].Elements[i].CurveRadius;
+						double p = currentHost.Tracks[TrackIndex].Elements[i].WorldDirection.Y / System.Math.Sqrt(currentHost.Tracks[TrackIndex].Elements[i].WorldDirection.X * currentHost.Tracks[TrackIndex].Elements[i].WorldDirection.X + currentHost.Tracks[TrackIndex].Elements[i].WorldDirection.Z * currentHost.Tracks[TrackIndex].Elements[i].WorldDirection.Z);
 						double s = db / System.Math.Sqrt(1.0 + p * p);
 						double h = s * p;
 						double b = s / System.Math.Abs(r);
 						double f = 2.0 * r * r * (1.0 - System.Math.Cos(b));
 						double c = (double) System.Math.Sign(db) * System.Math.Sqrt(f >= 0.0 ? f : 0.0);
 						double a = 0.5 * (double) System.Math.Sign(r) * b;
-						Vector3 D = new Vector3(Tracks[TrackIndex].Elements[i].WorldDirection.X, 0.0, Tracks[TrackIndex].Elements[i].WorldDirection.Z);
+						Vector3 D = new Vector3(currentHost.Tracks[TrackIndex].Elements[i].WorldDirection.X, 0.0, currentHost.Tracks[TrackIndex].Elements[i].WorldDirection.Z);
 						D.Normalize();
 						double cosa = System.Math.Cos(a);
 						double sina = System.Math.Sin(a);
 						D.Rotate(Vector3.Down, cosa, sina);
-						WorldPosition.X = Tracks[TrackIndex].Elements[i].WorldPosition.X + c * D.X;
-						WorldPosition.Y = Tracks[TrackIndex].Elements[i].WorldPosition.Y + h;
-						WorldPosition.Z = Tracks[TrackIndex].Elements[i].WorldPosition.Z + c * D.Z;
+						WorldPosition.X = currentHost.Tracks[TrackIndex].Elements[i].WorldPosition.X + c * D.X;
+						WorldPosition.Y = currentHost.Tracks[TrackIndex].Elements[i].WorldPosition.Y + h;
+						WorldPosition.Z = currentHost.Tracks[TrackIndex].Elements[i].WorldPosition.Z + c * D.Z;
 						D.Rotate(Vector3.Down, cosa, sina);
 						WorldDirection.X = D.X;
 						WorldDirection.Y = p;
@@ -168,7 +169,7 @@ namespace OpenBveApi.Routes
 						WorldDirection.Normalize();
 						double cos2a = System.Math.Cos(2.0 * a);
 						double sin2a = System.Math.Sin(2.0 * a);
-						WorldSide = Tracks[TrackIndex].Elements[i].WorldSide;
+						WorldSide = currentHost.Tracks[TrackIndex].Elements[i].WorldSide;
 						WorldSide.Rotate(Vector3.Down, cos2a, sin2a);
 						WorldUp = Vector3.Cross(WorldDirection, WorldSide);
 
@@ -176,17 +177,17 @@ namespace OpenBveApi.Routes
 					else
 					{
 						// straight
-						WorldPosition = Tracks[TrackIndex].Elements[i].WorldPosition + db * Tracks[TrackIndex].Elements[i].WorldDirection;
-						WorldDirection = Tracks[TrackIndex].Elements[i].WorldDirection;
-						WorldUp = Tracks[TrackIndex].Elements[i].WorldUp;
-						WorldSide = Tracks[TrackIndex].Elements[i].WorldSide;
+						WorldPosition = currentHost.Tracks[TrackIndex].Elements[i].WorldPosition + db * currentHost.Tracks[TrackIndex].Elements[i].WorldDirection;
+						WorldDirection = currentHost.Tracks[TrackIndex].Elements[i].WorldDirection;
+						WorldUp = currentHost.Tracks[TrackIndex].Elements[i].WorldUp;
+						WorldSide = currentHost.Tracks[TrackIndex].Elements[i].WorldSide;
 						CurveRadius = 0.0;
 					}
 
 					// cant
-					if (i < Tracks[TrackIndex].Elements.Length - 1)
+					if (i < currentHost.Tracks[TrackIndex].Elements.Length - 1)
 					{
-						double t = db / (Tracks[TrackIndex].Elements[i + 1].StartingTrackPosition - Tracks[TrackIndex].Elements[i].StartingTrackPosition);
+						double t = db / (currentHost.Tracks[TrackIndex].Elements[i + 1].StartingTrackPosition - currentHost.Tracks[TrackIndex].Elements[i].StartingTrackPosition);
 						if (t < 0.0)
 						{
 							t = 0.0;
@@ -199,27 +200,27 @@ namespace OpenBveApi.Routes
 						double t2 = t * t;
 						double t3 = t2 * t;
 						CurveCant =
-							(2.0 * t3 - 3.0 * t2 + 1.0) * Tracks[TrackIndex].Elements[i].CurveCant +
-							(t3 - 2.0 * t2 + t) * Tracks[TrackIndex].Elements[i].CurveCantTangent +
-							(-2.0 * t3 + 3.0 * t2) * Tracks[TrackIndex].Elements[i + 1].CurveCant +
-							(t3 - t2) * Tracks[TrackIndex].Elements[i + 1].CurveCantTangent;
-						CurveRadius = Tracks[TrackIndex].Elements[i].CurveRadius;
+							(2.0 * t3 - 3.0 * t2 + 1.0) * currentHost.Tracks[TrackIndex].Elements[i].CurveCant +
+							(t3 - 2.0 * t2 + t) * currentHost.Tracks[TrackIndex].Elements[i].CurveCantTangent +
+							(-2.0 * t3 + 3.0 * t2) * currentHost.Tracks[TrackIndex].Elements[i + 1].CurveCant +
+							(t3 - t2) * currentHost.Tracks[TrackIndex].Elements[i + 1].CurveCantTangent;
+						CurveRadius = currentHost.Tracks[TrackIndex].Elements[i].CurveRadius;
 					}
 					else
 					{
-						CurveCant = Tracks[TrackIndex].Elements[i].CurveCant;
+						CurveCant = currentHost.Tracks[TrackIndex].Elements[i].CurveCant;
 					}
 
 
 				}
 				else
 				{
-					WorldPosition = Tracks[TrackIndex].Elements[i].WorldPosition;
-					WorldDirection = Tracks[TrackIndex].Elements[i].WorldDirection;
-					WorldUp = Tracks[TrackIndex].Elements[i].WorldUp;
-					WorldSide = Tracks[TrackIndex].Elements[i].WorldSide;
-					CurveRadius = Tracks[TrackIndex].Elements[i].CurveRadius;
-					CurveCant = Tracks[TrackIndex].Elements[i].CurveCant;
+					WorldPosition = currentHost.Tracks[TrackIndex].Elements[i].WorldPosition;
+					WorldDirection = currentHost.Tracks[TrackIndex].Elements[i].WorldDirection;
+					WorldUp = currentHost.Tracks[TrackIndex].Elements[i].WorldUp;
+					WorldSide = currentHost.Tracks[TrackIndex].Elements[i].WorldSide;
+					CurveRadius = currentHost.Tracks[TrackIndex].Elements[i].CurveRadius;
+					CurveCant = currentHost.Tracks[TrackIndex].Elements[i].CurveCant;
 				}
 
 			}
@@ -227,18 +228,18 @@ namespace OpenBveApi.Routes
 			{
 				if (db != 0.0)
 				{
-					if (Tracks[TrackIndex].Elements[i].CurveRadius != 0.0)
+					if (currentHost.Tracks[TrackIndex].Elements[i].CurveRadius != 0.0)
 					{
-						CurveRadius = Tracks[TrackIndex].Elements[i].CurveRadius;
+						CurveRadius = currentHost.Tracks[TrackIndex].Elements[i].CurveRadius;
 					}
 					else
 					{
 						CurveRadius = 0.0;
 					}
 
-					if (i < Tracks[TrackIndex].Elements.Length - 1)
+					if (i < currentHost.Tracks[TrackIndex].Elements.Length - 1)
 					{
-						double t = db / (Tracks[TrackIndex].Elements[i + 1].StartingTrackPosition - Tracks[TrackIndex].Elements[i].StartingTrackPosition);
+						double t = db / (currentHost.Tracks[TrackIndex].Elements[i + 1].StartingTrackPosition - currentHost.Tracks[TrackIndex].Elements[i].StartingTrackPosition);
 						if (t < 0.0)
 						{
 							t = 0.0;
@@ -251,35 +252,35 @@ namespace OpenBveApi.Routes
 						double t2 = t * t;
 						double t3 = t2 * t;
 						CurveCant =
-							(2.0 * t3 - 3.0 * t2 + 1.0) * Tracks[TrackIndex].Elements[i].CurveCant +
-							(t3 - 2.0 * t2 + t) * Tracks[TrackIndex].Elements[i].CurveCantTangent +
-							(-2.0 * t3 + 3.0 * t2) * Tracks[TrackIndex].Elements[i + 1].CurveCant +
-							(t3 - t2) * Tracks[TrackIndex].Elements[i + 1].CurveCantTangent;
+							(2.0 * t3 - 3.0 * t2 + 1.0) * currentHost.Tracks[TrackIndex].Elements[i].CurveCant +
+							(t3 - 2.0 * t2 + t) * currentHost.Tracks[TrackIndex].Elements[i].CurveCantTangent +
+							(-2.0 * t3 + 3.0 * t2) * currentHost.Tracks[TrackIndex].Elements[i + 1].CurveCant +
+							(t3 - t2) * currentHost.Tracks[TrackIndex].Elements[i + 1].CurveCantTangent;
 					}
 					else
 					{
-						CurveCant = Tracks[TrackIndex].Elements[i].CurveCant;
+						CurveCant = currentHost.Tracks[TrackIndex].Elements[i].CurveCant;
 					}
 				}
 				else
 				{
-					CurveRadius = Tracks[TrackIndex].Elements[i].CurveRadius;
-					CurveCant = Tracks[TrackIndex].Elements[i].CurveCant;
+					CurveRadius = currentHost.Tracks[TrackIndex].Elements[i].CurveRadius;
+					CurveCant = currentHost.Tracks[TrackIndex].Elements[i].CurveCant;
 				}
 
 			}
 
-			AdhesionMultiplier = Tracks[TrackIndex].Elements[i].AdhesionMultiplier;
+			AdhesionMultiplier = currentHost.Tracks[TrackIndex].Elements[i].AdhesionMultiplier;
 			//Pitch added for Plugin Data usage
 			//Mutliply this by 1000 to get the original value
-			Pitch = Tracks[TrackIndex].Elements[i].Pitch * 1000;
+			Pitch = currentHost.Tracks[TrackIndex].Elements[i].Pitch * 1000;
 			// inaccuracy
 			if (AddTrackInaccuracy)
 			{
 				double x, y, c;
-				if (i < Tracks[TrackIndex].Elements.Length - 1)
+				if (i < currentHost.Tracks[TrackIndex].Elements.Length - 1)
 				{
-					double t = db / (Tracks[TrackIndex].Elements[i + 1].StartingTrackPosition - Tracks[TrackIndex].Elements[i].StartingTrackPosition);
+					double t = db / (currentHost.Tracks[TrackIndex].Elements[i + 1].StartingTrackPosition - currentHost.Tracks[TrackIndex].Elements[i].StartingTrackPosition);
 					if (t < 0.0)
 					{
 						t = 0.0;
@@ -291,15 +292,15 @@ namespace OpenBveApi.Routes
 
 					double x1, y1, c1;
 					double x2, y2, c2;
-					Tracks[TrackIndex].GetInaccuracies(NewTrackPosition, Tracks[TrackIndex].Elements[i].CsvRwAccuracyLevel, out x1, out y1, out c1);
-					Tracks[TrackIndex].GetInaccuracies(NewTrackPosition, Tracks[TrackIndex].Elements[i + 1].CsvRwAccuracyLevel, out x2, out y2, out c2);
+					currentHost.Tracks[TrackIndex].GetInaccuracies(NewTrackPosition, currentHost.Tracks[TrackIndex].Elements[i].CsvRwAccuracyLevel, out x1, out y1, out c1);
+					currentHost.Tracks[TrackIndex].GetInaccuracies(NewTrackPosition, currentHost.Tracks[TrackIndex].Elements[i + 1].CsvRwAccuracyLevel, out x2, out y2, out c2);
 					x = (1.0 - t) * x1 + t * x2;
 					y = (1.0 - t) * y1 + t * y2;
 					c = (1.0 - t) * c1 + t * c2;
 				}
 				else
 				{
-					Tracks[TrackIndex].GetInaccuracies(NewTrackPosition, Tracks[TrackIndex].Elements[i].CsvRwAccuracyLevel, out x, out y, out c);
+					currentHost.Tracks[TrackIndex].GetInaccuracies(NewTrackPosition, currentHost.Tracks[TrackIndex].Elements[i].CsvRwAccuracyLevel, out x, out y, out c);
 				}
 
 				WorldPosition += x * WorldSide + y * WorldUp;
@@ -334,7 +335,7 @@ namespace OpenBveApi.Routes
 
 		private void CheckEvents(int ElementIndex, int Direction, double OldDelta, double NewDelta)
 		{
-			if (this.TriggerType == EventTriggerType.None || Tracks[TrackIndex].Elements[ElementIndex].Events.Length == 0)
+			if (this.TriggerType == EventTriggerType.None || currentHost.Tracks[TrackIndex].Elements[ElementIndex].Events.Length == 0)
 			{
 				return;
 			}
@@ -342,10 +343,10 @@ namespace OpenBveApi.Routes
 			int Index = TrackIndex;
 			if (Direction < 0)
 			{
-				for (int j = Tracks[Index].Elements[ElementIndex].Events.Length - 1; j >= 0; j--)
+				for (int j = currentHost.Tracks[Index].Elements[ElementIndex].Events.Length - 1; j >= 0; j--)
 				{
-					GeneralEvent e = Tracks[Index].Elements[ElementIndex].Events[j];
-					if (Tracks[Index].Elements[ElementIndex].Events.Length == 0)
+					GeneralEvent e = currentHost.Tracks[Index].Elements[ElementIndex].Events[j];
+					if (currentHost.Tracks[Index].Elements[ElementIndex].Events.Length == 0)
 					{
 						return;
 					}
@@ -358,9 +359,9 @@ namespace OpenBveApi.Routes
 			}
 			else if (Direction > 0)
 			{
-				for (int j = 0; j < Tracks[Index].Elements[ElementIndex].Events.Length; j++)
+				for (int j = 0; j < currentHost.Tracks[Index].Elements[ElementIndex].Events.Length; j++)
 				{
-					GeneralEvent e = Tracks[Index].Elements[ElementIndex].Events[j];
+					GeneralEvent e = currentHost.Tracks[Index].Elements[ElementIndex].Events[j];
 					if (OldDelta < e.TrackPositionDelta & NewDelta >= e.TrackPositionDelta)
 					{
 						e.TryTrigger(1, this.TriggerType, this.Train, this.Car);

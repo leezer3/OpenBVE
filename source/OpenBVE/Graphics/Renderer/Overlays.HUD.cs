@@ -17,6 +17,10 @@ namespace OpenBve
 		/// <param name="TimeElapsed">The time elapsed</param>
 		private static void RenderHUDElement(HUD.Element Element, double TimeElapsed)
 		{
+			if (TrainManager.PlayerTrain == null)
+			{
+				return;
+			}
 			TrainManager.TrainDoorState LeftDoors = TrainManager.GetDoorsState(TrainManager.PlayerTrain, true, false);
 			TrainManager.TrainDoorState RightDoors = TrainManager.GetDoorsState(TrainManager.PlayerTrain, false, true);
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;

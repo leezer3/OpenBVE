@@ -26,6 +26,11 @@ namespace OpenBve
 					}
 				}
 			}
+
+			public override void Reset()
+			{
+				this.DontTriggerAnymore = false;
+			}
 		}
 		
 		/// <summary>Placed at the end of every station (as defined by the last possible stop point)</summary>

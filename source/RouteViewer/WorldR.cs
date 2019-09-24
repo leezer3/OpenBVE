@@ -15,7 +15,7 @@ using static LibRender.CameraProperties;
 namespace OpenBve {
 	public static class World
 	{
-		internal static TrackFollower CameraTrackFollower = new TrackFollower(CurrentRoute.Tracks);
+		internal static TrackFollower CameraTrackFollower = new TrackFollower(Program.CurrentHost);
 
 		// update absolute camera
 		internal static void UpdateAbsoluteCamera(double TimeElapsed) {

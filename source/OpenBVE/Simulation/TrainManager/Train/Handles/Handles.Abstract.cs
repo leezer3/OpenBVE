@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBve.RouteManager;
 using SoundManager;
 
@@ -113,7 +113,7 @@ namespace OpenBve
 					return DelayDown[Actual];
 				}
 
-				return DelayUp[DelayUp.Length - 1];
+				return DelayDown[DelayDown.Length - 1];
 			}
 
 		}

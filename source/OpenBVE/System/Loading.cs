@@ -210,7 +210,7 @@ namespace OpenBve {
 					}
 				}
 			}
-			World.CameraTrackFollower = new TrackFollower(CurrentRoute.Tracks) { Train = null, Car = null };
+			World.CameraTrackFollower = new TrackFollower(Program.CurrentHost) { Train = null, Car = null };
 			if (CurrentRoute.Stations.Length == 1)
 			{
 				//Log the fact that only a single station is present, as this is probably not right

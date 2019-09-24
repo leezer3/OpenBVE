@@ -31,6 +31,8 @@ namespace OpenBve
 		/// <param name="stationIndex">The zero-based index of the station</param>
 		internal static void JumpTrain(Train train, int stationIndex)
 		{
+			train.SafetySystems.PassAlarm.Halt();
+			int currentTrackElement = train.Cars[0].FrontAxle.Follower.LastTrackElement;
 			if (train.IsPlayerTrain)
 			{
 				for (int i = 0; i < ObjectManager.AnimatedWorldObjects.Length; i++)
@@ -151,6 +153,18 @@ namespace OpenBve
 				if (train.IsPlayerTrain)
 				{
 					train.LastStation = stationIndex;
+				}
+				int newTrackElement = train.Cars[0].FrontAxle.Follower.LastTrackElement;
+				if (newTrackElement < currentTrackElement)
+				{
+					for (int i = newTrackElement; i < currentTrackElement; i++)
+					{
+						for (int j = 0; j < Program.CurrentHost.Tracks[0].Elements[i].Events.Length; j++)
+						{
+							Program.CurrentHost.Tracks[0].Elements[i].Events[j].Reset();
+						}
+
+					}
 				}
 			}
 		}

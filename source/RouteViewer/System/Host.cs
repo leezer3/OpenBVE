@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using LibRender;
 using OpenBve.RouteManager;
 using OpenBveApi.Hosts;
@@ -175,6 +176,12 @@ namespace OpenBve
 		public override bool RegisterTexture(Texture texture, TextureParameters parameters, out Texture handle) {
 			texture = texture.ApplyParameters(parameters);
 			handle = TextureManager.RegisterTexture(texture);
+			return true;
+		}
+
+		public override bool RegisterTexture(Bitmap texture, TextureParameters parameters, out OpenBveApi.Textures.Texture handle)
+		{
+			handle = new Texture(texture, parameters);
 			return true;
 		}
 		

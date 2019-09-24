@@ -72,9 +72,9 @@ namespace OpenBve
 				baseTrain = train;
 				Index = index;
 				CarSections = new CarSection[] { };
-				FrontAxle.Follower = new TrackFollower(CurrentRoute.Tracks, train, this);
-				RearAxle.Follower = new TrackFollower(CurrentRoute.Tracks, train, this);
-				BeaconReceiver = new TrackFollower(CurrentRoute.Tracks, train);
+				FrontAxle.Follower = new TrackFollower(Program.CurrentHost, train, this);
+				RearAxle.Follower = new TrackFollower(Program.CurrentHost, train, this);
+				BeaconReceiver = new TrackFollower(Program.CurrentHost, train);
 				FrontBogie = new Bogie(train, this);
 				RearBogie = new Bogie(train, this);
 				Doors = new Door[2];

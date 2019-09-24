@@ -10,6 +10,15 @@ namespace OpenBveApi.Objects
 		public Vector3 Position;
 		/// <summary>The track position for this object</summary>
 		public double TrackPosition;
+		/// <summary>The relative track position for this object</summary>
+		public virtual double RelativeTrackPosition
+		{
+			get
+			{
+				return TrackPosition;
+			}
+		}
+
 		/// <summary>Whether the object is currently visible at the player's camera position</summary>
 		public bool Visible;
 		/// <summary>The world direction vector</summary>
