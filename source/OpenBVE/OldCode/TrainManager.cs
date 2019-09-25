@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Linq;
-using LibRender;
 using OpenBve.Parsers.Panel;
-using OpenBve.RouteManager;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
-using static LibRender.CameraProperties;
 
 namespace OpenBve
 {
@@ -67,7 +64,7 @@ namespace OpenBve
 						{
 							PanelAnimatedXmlParser.ParsePanelAnimatedXml(System.IO.Path.GetFileName(File), TrainPath, Train, Train.DriverCar);
 							Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
-							Camera.CurrentRestriction = CameraRestrictionMode.NotAvailable;
+							Program.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.NotAvailable;
 						}
 
 						DocumentElements = CurrentXML.Root.Elements("Panel");
@@ -75,7 +72,7 @@ namespace OpenBve
 						{
 							PanelXmlParser.ParsePanelXml(System.IO.Path.GetFileName(File), TrainPath, Train, Train.DriverCar);
 							Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.On;
-							Camera.CurrentRestriction = CameraRestrictionMode.On;
+							Program.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.On;
 						}
 					}
 				}
@@ -91,6 +88,7 @@ namespace OpenBve
 
 				if (Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements.Any())
 				{
+					Program.Renderer.InitializeVisibility();
 					World.UpdateViewingDistances();
 					return;
 				}
@@ -117,11 +115,11 @@ namespace OpenBve
 						{
 							for (int i = 0; i < a.Objects.Length; i++)
 							{
-								ObjectManager.CreateDynamicObject(ref a.Objects[i].internalObject);
+								Program.CurrentHost.CreateDynamicObject(ref a.Objects[i].internalObject);
 							}
 							Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements = a.Objects;
 							Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
-							Camera.CurrentRestriction = CameraRestrictionMode.NotAvailable;
+							Program.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.NotAvailable;
 							World.UpdateViewingDistances();
 							return;
 						}
@@ -149,7 +147,7 @@ namespace OpenBve
 					Panel2 = true;
 					Panel2CfgParser.ParsePanel2Config("panel2.cfg", TrainPath, Encoding, Train, Train.DriverCar);
 					Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.On;
-					Camera.CurrentRestriction = CameraRestrictionMode.On;
+					Program.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.On;
 				}
 				else
 				{
@@ -159,11 +157,11 @@ namespace OpenBve
 						Program.FileSystem.AppendToLogFile("Loading train panel: " + File);
 						PanelCfgParser.ParsePanelConfig(TrainPath, Encoding, Train);
 						Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.On;
-						Camera.CurrentRestriction = CameraRestrictionMode.On;
+						Program.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.On;
 					}
 					else
 					{
-						Camera.CurrentRestriction = CameraRestrictionMode.NotAvailable;
+						Program.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.NotAvailable;
 					}
 				}
 			}
@@ -190,21 +188,21 @@ namespace OpenBve
 				t = Train.Cars[CarIndex].Specs.UnexposedFrontalArea;
 			}
 			double f = t * Train.Cars[CarIndex].Specs.AerodynamicDragCoefficient * Train.Specs.CurrentAirDensity / (2.0 * Train.Cars[CarIndex].Specs.MassCurrent);
-			double a = Atmosphere.AccelerationDueToGravity * Train.Cars[CarIndex].Specs.CoefficientOfRollingResistance + f * Speed * Speed;
+			double a = Program.CurrentRoute.Atmosphere.AccelerationDueToGravity * Train.Cars[CarIndex].Specs.CoefficientOfRollingResistance + f * Speed * Speed;
 			return a;
 		}
 
 		// get critical wheelslip acceleration
 		private static double GetCriticalWheelSlipAccelerationForElectricMotor(Train Train, int CarIndex, double AdhesionMultiplier, double UpY, double Speed)
 		{
-			double NormalForceAcceleration = UpY * Atmosphere.AccelerationDueToGravity;
+			double NormalForceAcceleration = UpY * Program.CurrentRoute.Atmosphere.AccelerationDueToGravity;
 			// TODO: Implement formula that depends on speed here.
 			double coefficient = Train.Cars[CarIndex].Specs.CoefficientOfStaticFriction;
 			return coefficient * AdhesionMultiplier * NormalForceAcceleration;
 		}
 		private static double GetCriticalWheelSlipAccelerationForFrictionBrake(Train Train, int CarIndex, double AdhesionMultiplier, double UpY, double Speed)
 		{
-			double NormalForceAcceleration = UpY * Atmosphere.AccelerationDueToGravity;
+			double NormalForceAcceleration = UpY * Program.CurrentRoute.Atmosphere.AccelerationDueToGravity;
 			// TODO: Implement formula that depends on speed here.
 			double coefficient = Train.Cars[CarIndex].Specs.CoefficientOfStaticFriction;
 			return coefficient * AdhesionMultiplier * NormalForceAcceleration;

@@ -2,9 +2,12 @@
 using OpenBveApi.Colors;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
-using OpenBve.RouteManager;
-using OpenBve.SignalManager;
 using OpenBveApi.Routes;
+using RouteManager2;
+using RouteManager2.Climate;
+using RouteManager2.SignalManager;
+using RouteManager2.SignalManager.PreTrain;
+using RouteManager2.Stations;
 
 namespace OpenBve {
 	internal static partial class Game {
@@ -46,9 +49,9 @@ namespace OpenBve {
 		/// <param name="ResetRenderer">Whether the renderer should be reset</param>
 		internal static void Reset(bool ResetLogs, bool ResetRenderer) {
 			// track manager
-			for (int i = 0; i < CurrentRoute.Tracks.Length; i++)
+			for (int i = 0; i < Program.CurrentRoute.Tracks.Length; i++)
 			{
-				CurrentRoute.Tracks[i] = new Track();
+				Program.CurrentRoute.Tracks[i] = new Track();
 			}
 			// train manager
 			TrainManager.Trains = new TrainManager.Train[] { };
@@ -57,28 +60,28 @@ namespace OpenBve {
 			CurrentInterface = InterfaceType.Normal;
 			RouteComment = "";
 			RouteImage = "";
-			Atmosphere.AccelerationDueToGravity = 9.80665;
-			Atmosphere.InitialAirPressure = 101325.0;
-			Atmosphere.InitialAirTemperature = 293.15;
-			CurrentRoute.InitialElevation = 0.0;
-			Atmosphere.SeaLevelAirPressure = 101325.0;
-			Atmosphere.SeaLevelAirTemperature = 293.15;
-			CurrentRoute.Stations = new RouteStation[] { };
-			CurrentRoute.Sections = new Section[] { };
+			Program.CurrentRoute.Atmosphere.AccelerationDueToGravity = 9.80665;
+			Program.CurrentRoute.Atmosphere.InitialAirPressure = 101325.0;
+			Program.CurrentRoute.Atmosphere.InitialAirTemperature = 293.15;
+			Program.CurrentRoute.Atmosphere.InitialElevation = 0.0;
+			Program.CurrentRoute.Atmosphere.SeaLevelAirPressure = 101325.0;
+			Program.CurrentRoute.Atmosphere.SeaLevelAirTemperature = 293.15;
+			Program.CurrentRoute.Stations = new RouteStation[] { };
+			Program.CurrentRoute.Sections = new Section[] { };
 			BufferTrackPositions = new double[] { };
 			//Messages = new Message[] { };
-			LibRender.Renderer.MarkerTextures = new Texture[] { };
-			CurrentRoute.PointsOfInterest = new PointOfInterest[] { };
+			Program.Renderer.Marker.MarkerTextures = new Texture[] { };
+			Program.CurrentRoute.PointsOfInterest = new PointOfInterest[] { };
 			PrecedingTrainTimeDeltas = new double[] { };
 			PrecedingTrainSpeedLimit = double.PositiveInfinity;
-			CurrentRoute.BogusPretrainInstructions = new BogusPretrainInstruction[] { };
+			Program.CurrentRoute.BogusPreTrainInstructions = new BogusPreTrainInstruction[] { };
 			TrainName = "";
 			TrainStart = TrainStartMode.EmergencyBrakesNoAts;
-			CurrentRoute.NoFogStart = (float)Math.Max(1.33333333333333 * Interface.CurrentOptions.ViewingDistance, 800.0);
-			CurrentRoute.NoFogEnd = (float)Math.Max(2.66666666666667 * Interface.CurrentOptions.ViewingDistance, 1600.0);
-			CurrentRoute.PreviousFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, 0.0);
-			CurrentRoute.CurrentFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, 0.5);
-			CurrentRoute.NextFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, 1.0);
+			Program.CurrentRoute.NoFogStart = (float)Math.Max(1.33333333333333 * Interface.CurrentOptions.ViewingDistance, 800.0);
+			Program.CurrentRoute.NoFogEnd = (float)Math.Max(2.66666666666667 * Interface.CurrentOptions.ViewingDistance, 1600.0);
+			Program.CurrentRoute.PreviousFog = new Fog(Program.CurrentRoute.NoFogStart, Program.CurrentRoute.NoFogEnd, Color24.Grey, 0.0);
+			Program.CurrentRoute.CurrentFog = new Fog(Program.CurrentRoute.NoFogStart, Program.CurrentRoute.NoFogEnd, Color24.Grey, 0.5);
+			Program.CurrentRoute.NextFog = new Fog(Program.CurrentRoute.NoFogStart, Program.CurrentRoute.NoFogEnd, Color24.Grey, 1.0);
 			if (ResetLogs) {
 				LogRouteName = "";
 				LogTrainName = "";
@@ -94,13 +97,12 @@ namespace OpenBve {
 			// renderer
 			if (ResetRenderer)
 			{
-				LibRender.Renderer.InfoTotalTriangles = 0;
-				LibRender.Renderer.InfoTotalTriangleStrip = 0;
-				LibRender.Renderer.InfoTotalQuads = 0;
-				LibRender.Renderer.InfoTotalQuadStrip = 0;
-				LibRender.Renderer.InfoTotalPolygon = 0;
-				LibRender.Renderer.InfoStaticOpaqueFaceCount = 0;
-				Renderer.Reset();
+				Program.Renderer.InfoTotalTriangles = 0;
+				Program.Renderer.InfoTotalTriangleStrip = 0;
+				Program.Renderer.InfoTotalQuads = 0;
+				Program.Renderer.InfoTotalQuadStrip = 0;
+				Program.Renderer.InfoTotalPolygon = 0;
+				Program.Renderer.Reset();
 			}
 			
 		}
@@ -139,9 +141,9 @@ namespace OpenBve {
 		internal static int BlackBoxEntryCount = 0;
 		private static double BlackBoxNextUpdate = 0.0;
 		internal static void UpdateBlackBox() {
-			if (CurrentRoute.SecondsSinceMidnight >= BlackBoxNextUpdate) {
+			if (Program.CurrentRoute.SecondsSinceMidnight >= BlackBoxNextUpdate) {
 				AddBlackBoxEntry(BlackBoxEventToken.None);
-				BlackBoxNextUpdate = CurrentRoute.SecondsSinceMidnight + 1.0;
+				BlackBoxNextUpdate = Program.CurrentRoute.SecondsSinceMidnight + 1.0;
 			}
 		}
 		internal static void AddBlackBoxEntry(BlackBoxEventToken EventToken) {
@@ -149,7 +151,7 @@ namespace OpenBve {
 				if (BlackBoxEntryCount >= BlackBoxEntries.Length) {
 					Array.Resize<BlackBoxEntry>(ref BlackBoxEntries, BlackBoxEntries.Length << 1);
 				}
-				BlackBoxEntries[BlackBoxEntryCount].Time = CurrentRoute.SecondsSinceMidnight;
+				BlackBoxEntries[BlackBoxEntryCount].Time = Program.CurrentRoute.SecondsSinceMidnight;
 				BlackBoxEntries[BlackBoxEntryCount].Position = TrainManager.PlayerTrain.Cars[0].TrackPosition;
 				BlackBoxEntries[BlackBoxEntryCount].Speed = (float)TrainManager.PlayerTrain.CurrentSpeed;
 				BlackBoxEntries[BlackBoxEntryCount].Acceleration = (float)TrainManager.PlayerTrain.Specs.CurrentAverageAcceleration;

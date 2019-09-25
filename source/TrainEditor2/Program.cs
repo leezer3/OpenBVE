@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Reactive.Concurrency;
 using System.Windows.Forms;
-using LibRender;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
 using Reactive.Bindings;
 using SoundManager;
 using TrainEditor2.Audio;
+using TrainEditor2.Graphics;
 using TrainEditor2.Systems;
 using TrainEditor2.Systems.Functions;
 using TrainEditor2.Views;
@@ -20,6 +20,8 @@ namespace TrainEditor2
 
 		/// <summary>Information about the file system organization.</summary>
 		internal static FileSystem FileSystem;
+
+		internal static NewRenderer Renderer;
 
 		internal static SoundApi SoundApi;
 
@@ -46,7 +48,8 @@ namespace TrainEditor2
 
 			Interface.LoadOptions();
 
-			Renderer.currentHost = CurrentHost;
+			Renderer = new NewRenderer();
+			Renderer.Initialize(CurrentHost, Interface.CurrentOptions);
 
 			SoundApi = new SoundApi();
 			SoundApi.Initialize(CurrentHost, SoundRange.Medium);

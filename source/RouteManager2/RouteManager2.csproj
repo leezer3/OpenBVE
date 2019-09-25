@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4EF680D7-DF17-4978-9872-133EDC169B4B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RouteManager2</RootNamespace>
+    <AssemblyName>RouteManager2</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin_debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>6</LangVersion>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin_release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>6</LangVersion>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Climate\Atmosphere.cs" />
+    <Compile Include="CurrentRoute.cs" />
+    <Compile Include="Climate\Fog.cs" />
+    <Compile Include="Events\BackgroundChange.cs" />
+    <Compile Include="Events\BrightnessChange.cs" />
+    <Compile Include="Events\DestinationChange.cs" />
+    <Compile Include="Events\FogChange.cs" />
+    <Compile Include="Events\MarkerEnd.cs" />
+    <Compile Include="Events\MarkerStart.cs" />
+    <Compile Include="Events\RequestStop.cs" />
+    <Compile Include="Events\SignalSection.cs" />
+    <Compile Include="Events\SpeedLimit.cs" />
+    <Compile Include="Events\Station.cs" />
+    <Compile Include="Events\TrackEnd.cs" />
+    <Compile Include="Events\Transponder.cs" />
+    <Compile Include="Events\Transponder.Types.cs" />
+    <Compile Include="MessageManager\AbstractMessage.cs" />
+    <Compile Include="MessageManager\MessageDependancy.cs" />
+    <Compile Include="MessageManager\MessageDirection.cs" />
+    <Compile Include="MessageManager\MessageTypes\GeneralMessage.cs" />
+    <Compile Include="MessageManager\MessageTypes\MarkerImage.cs" />
+    <Compile Include="MessageManager\MessageTypes\MarkerText.cs" />
+    <Compile Include="MessageManager\MessageTypes\TextureMessage.cs" />
+    <Compile Include="PointOfInterest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SignalManager\PreTrain\BogusPreTrainInstruction.cs" />
+    <Compile Include="SignalManager\SafetySystems.cs" />
+    <Compile Include="SignalManager\Section.cs" />
+    <Compile Include="SignalManager\SectionAspect.cs" />
+    <Compile Include="SignalManager\SectionTypes.cs" />
+    <Compile Include="Stations\RouteStation.cs" />
+    <Compile Include="Stations\Station.Stop.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LibRender2\LibRender2.csproj">
+      <Project>{57bc7f10-0947-4349-b476-ab692a77818a}</Project>
+      <Name>LibRender2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
+      <Project>{27134980-4415-4375-a564-40a9014dfa5f}</Project>
+      <Name>OpenBveApi</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -161,7 +161,7 @@ namespace TrainEditor2.Models.Trains
 			return a * 3.6;
 		}
 
-		private void DrawAccelerationCurve(Graphics g, MotorCar car, Acceleration.Entry entry, bool selected)
+		private void DrawAccelerationCurve(System.Drawing.Graphics g, MotorCar car, Acceleration.Entry entry, bool selected)
 		{
 			// curve
 			Point[] points = new Point[car.Acceleration.ImageWidth];
@@ -230,7 +230,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		private void DrawDecelerationCurve(Graphics g, MotorCar car)
+		private void DrawDecelerationCurve(System.Drawing.Graphics g, MotorCar car)
 		{
 			if (!car.Acceleration.Resistance)
 			{
@@ -257,7 +257,7 @@ namespace TrainEditor2.Models.Trains
 
 			Bitmap image = new Bitmap(car.Acceleration.ImageWidth, car.Acceleration.ImageHeight);
 
-			Graphics g = Graphics.FromImage(image);
+			System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(image);
 
 			g.CompositingQuality = CompositingQuality.HighQuality;
 			g.InterpolationMode = InterpolationMode.High;

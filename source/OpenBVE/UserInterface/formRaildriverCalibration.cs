@@ -150,7 +150,7 @@ namespace OpenBve.UserInterface
 					break;
 				case 1:
 					Modified = new Bitmap(main);
-					using (var graphics = Graphics.FromImage(Modified))
+					using (var graphics = System.Drawing.Graphics.FromImage(Modified))
 					{
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(210, 130, 80, 145));
 						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_down.png")), 234, 284);
@@ -160,7 +160,7 @@ namespace OpenBve.UserInterface
 					break;
 				case 2:
 					Modified = new Bitmap(main);
-					using (var graphics = Graphics.FromImage(Modified))
+					using (var graphics = System.Drawing.Graphics.FromImage(Modified))
 					{
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(210, 130, 80, 145));
 						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_up.png")), 234, 84);
@@ -170,7 +170,7 @@ namespace OpenBve.UserInterface
 					break;
 				case 3:
 					Modified = new Bitmap(main);
-					using (var graphics = Graphics.FromImage(Modified))
+					using (var graphics = System.Drawing.Graphics.FromImage(Modified))
 					{
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(290, 130, 90, 145));
 						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_down.png")), 314, 284);
@@ -180,7 +180,7 @@ namespace OpenBve.UserInterface
 					break;
 				case 4:
 					Modified = new Bitmap(main);
-					using (var graphics = Graphics.FromImage(Modified))
+					using (var graphics = System.Drawing.Graphics.FromImage(Modified))
 					{
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(290, 130, 90, 145));
 						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_up.png")), 314, 84);
@@ -190,7 +190,7 @@ namespace OpenBve.UserInterface
 					break;
 				case 5:
 					Modified = new Bitmap(main);
-					using (var graphics = Graphics.FromImage(Modified))
+					using (var graphics = System.Drawing.Graphics.FromImage(Modified))
 					{
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(450, 130, 80, 165));
 						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_down.png")), 470, 304);
@@ -200,7 +200,7 @@ namespace OpenBve.UserInterface
 					break;
 				case 6:
 					Modified = new Bitmap(main);
-					using (var graphics = Graphics.FromImage(Modified))
+					using (var graphics = System.Drawing.Graphics.FromImage(Modified))
 					{
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(450, 130, 80, 165));
 						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_up.png")), 470, 79);
@@ -210,7 +210,7 @@ namespace OpenBve.UserInterface
 					break;
 				case 7:
 					Modified = new Bitmap(main);
-					using (var graphics = Graphics.FromImage(Modified))
+					using (var graphics = System.Drawing.Graphics.FromImage(Modified))
 					{
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(610, 130, 75, 165));
 						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_down.png")), 630, 304);
@@ -220,7 +220,7 @@ namespace OpenBve.UserInterface
 					break;
 				case 8:
 					Modified = new Bitmap(main);
-					using (var graphics = Graphics.FromImage(Modified))
+					using (var graphics = System.Drawing.Graphics.FromImage(Modified))
 					{
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(610, 130, 75, 165));
 						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_up.png")), 630, 79);
@@ -230,7 +230,7 @@ namespace OpenBve.UserInterface
 					break;
 				case 9:
 					Modified = new Bitmap(main);
-					using (var graphics = Graphics.FromImage(Modified))
+					using (var graphics = System.Drawing.Graphics.FromImage(Modified))
 					{
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(610, 130, 75, 165));
 						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_left.png")), 560, 175);
@@ -240,7 +240,7 @@ namespace OpenBve.UserInterface
 					break;
 				case 10:
 					Modified = new Bitmap(main);
-					using (var graphics = Graphics.FromImage(Modified))
+					using (var graphics = System.Drawing.Graphics.FromImage(Modified))
 					{
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(610, 130, 75, 165));
 						graphics.DrawImage(ImageExtensions.FromFile(OpenBveApi.Path.CombineFile(Program.FileSystem.DataFolder, "Menu\\arrow_right.png")), 690, 175);
@@ -250,7 +250,7 @@ namespace OpenBve.UserInterface
 					break;
 				case 11:
 					Modified = new Bitmap(main);
-					using (var graphics = Graphics.FromImage(Modified))
+					using (var graphics = System.Drawing.Graphics.FromImage(Modified))
 					{
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(715, 100, 55, 75));
 					}
@@ -259,7 +259,7 @@ namespace OpenBve.UserInterface
 					break;
 				case 12:
 					Modified = new Bitmap(main);
-					using (var graphics = Graphics.FromImage(Modified))
+					using (var graphics = System.Drawing.Graphics.FromImage(Modified))
 					{
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(715, 100, 55, 75));
 					}
@@ -268,7 +268,7 @@ namespace OpenBve.UserInterface
 					break;
 				case 13:
 					Modified = new Bitmap(main);
-					using (var graphics = Graphics.FromImage(Modified))
+					using (var graphics = System.Drawing.Graphics.FromImage(Modified))
 					{
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(715, 210, 55, 75));
 					}
@@ -277,7 +277,7 @@ namespace OpenBve.UserInterface
 					break;
 				case 14:
 					Modified = new Bitmap(main);
-					using (var graphics = Graphics.FromImage(Modified))
+					using (var graphics = System.Drawing.Graphics.FromImage(Modified))
 					{
 						graphics.DrawRectangle(new Pen(Color.Blue, 3.0f), new Rectangle(715, 210, 55, 75));
 					}

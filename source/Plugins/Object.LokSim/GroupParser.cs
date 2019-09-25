@@ -248,8 +248,12 @@ namespace Plugin
 								int aL = Result.Objects.Length;
 								Array.Resize(ref Result.Objects, aL + 1);
 								AnimatedObject a = new AnimatedObject(Plugin.currentHost);
-								AnimatedObjectState aos = new AnimatedObjectState(Object, CurrentObjects[i].Position);
-								a.States = new AnimatedObjectState[] { aos };
+								ObjectState aos = new ObjectState
+								{
+									Prototype = Object,
+									Translation = OpenTK.Matrix4.CreateTranslation((float)CurrentObjects[i].Position.X, (float)CurrentObjects[i].Position.Y, (float)-CurrentObjects[i].Position.Z)
+								};
+								a.States = new [] { aos };
 								Result.Objects[aL] = a;
 								Result.Objects[aL].StateFunction = new FunctionScript(Plugin.currentHost, CurrentObjects[i].FunctionScript + " 1 == --", false);
 							}
@@ -275,13 +279,13 @@ namespace Plugin
 									Result.Objects[o] = AnimatedObject.Objects[o - rl].Clone();
 									for (int si = 0; si < Result.Objects[o].States.Length; si++)
 									{
-										Result.Objects[o].States[si].Position += CurrentObjects[i].Position;
+										Result.Objects[o].States[si].Translation *= OpenTK.Matrix4.CreateTranslation((float)CurrentObjects[i].Position.X, (float)CurrentObjects[i].Position.Y, (float)-CurrentObjects[i].Position.Z);
 									}
 								}
 								else
 								{
 									Result.Objects[o] = new AnimatedObject(Plugin.currentHost);
-									Result.Objects[o].States = new AnimatedObjectState[0];
+									Result.Objects[o].States = new ObjectState[0];
 								}
 							}
 						}
@@ -290,8 +294,11 @@ namespace Plugin
 					{
 						Array.Resize(ref Result.Objects, Result.Objects.Length + 1);
 						AnimatedObject a = new AnimatedObject(Plugin.currentHost);
-						AnimatedObjectState aos = new AnimatedObjectState(staticObject, Vector3.Zero);
-						a.States = new AnimatedObjectState[] { aos };
+						ObjectState aos = new ObjectState
+						{
+							Prototype = staticObject
+						};
+						a.States = new [] { aos };
 						Result.Objects[Result.Objects.Length - 1] = a;
 					}
 				}

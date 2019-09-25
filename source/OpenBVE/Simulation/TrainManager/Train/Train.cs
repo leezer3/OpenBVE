@@ -6,10 +6,9 @@ using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
-using OpenBve.RouteManager;
-using OpenBve.SafetySystems;
 using OpenBveApi;
 using OpenBveApi.Math;
+using RouteManager2.MessageManager;
 using SoundManager;
 
 namespace OpenBve
@@ -96,11 +95,11 @@ namespace OpenBve
 				}
 				Program.Sounds.StopAllSounds(this);
 
-				for (int i = 0; i < CurrentRoute.Sections.Length; i++)
+				for (int i = 0; i < Program.CurrentRoute.Sections.Length; i++)
 				{
-					CurrentRoute.Sections[i].Leave(this);
+					Program.CurrentRoute.Sections[i].Leave(this);
 				}
-				if (CurrentRoute.Sections.Length != 0)
+				if (Program.CurrentRoute.Sections.Length != 0)
 				{
 					Game.UpdateAllSections();
 				}
@@ -157,31 +156,31 @@ namespace OpenBve
 					double time = 0.0;
 					if (!forceIntroduction)
 					{
-						for (int i = 0; i < CurrentRoute.Stations.Length; i++)
+						for (int i = 0; i < Program.CurrentRoute.Stations.Length; i++)
 						{
-							if (CurrentRoute.Stations[i].StopMode == StationStopMode.AllStop | CurrentRoute.Stations[i].StopMode == StationStopMode.PlayerPass)
+							if (Program.CurrentRoute.Stations[i].StopMode == StationStopMode.AllStop | Program.CurrentRoute.Stations[i].StopMode == StationStopMode.PlayerPass)
 							{
-								if (CurrentRoute.Stations[i].ArrivalTime >= 0.0)
+								if (Program.CurrentRoute.Stations[i].ArrivalTime >= 0.0)
 								{
-									time = CurrentRoute.Stations[i].ArrivalTime;
+									time = Program.CurrentRoute.Stations[i].ArrivalTime;
 								}
-								else if (CurrentRoute.Stations[i].DepartureTime >= 0.0)
+								else if (Program.CurrentRoute.Stations[i].DepartureTime >= 0.0)
 								{
-									time = CurrentRoute.Stations[i].DepartureTime - CurrentRoute.Stations[i].StopTime;
+									time = Program.CurrentRoute.Stations[i].DepartureTime - Program.CurrentRoute.Stations[i].StopTime;
 								}
 								break;
 							}
 						}
 						time -= TimetableDelta;
 					}
-					if (CurrentRoute.SecondsSinceMidnight >= time | forceIntroduction)
+					if (Program.CurrentRoute.SecondsSinceMidnight >= time | forceIntroduction)
 					{
 						bool introduce = true;
 						if (!forceIntroduction)
 						{
 							if (CurrentSectionIndex >= 0)
 							{
-								if (!CurrentRoute.Sections[CurrentSectionIndex].IsFree())
+								if (!Program.CurrentRoute.Sections[CurrentSectionIndex].IsFree())
 								{
 									introduce = false;
 								}
@@ -426,7 +425,7 @@ namespace OpenBve
 							double a = (3.6 * CurrentSectionLimit) * Game.SpeedConversionFactor;
 							s = s.Replace("[speed]", a.ToString("0", CultureInfo.InvariantCulture));
 							s = s.Replace("[unit]", Game.UnitOfSpeed);
-							Game.AddMessage(s, MessageDependency.None, GameMode.Normal, MessageColor.Red, CurrentRoute.SecondsSinceMidnight + 5.0, null);
+							Game.AddMessage(s, MessageDependency.None, GameMode.Normal, MessageColor.Red, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
 						}
 					}
 				}
@@ -464,7 +463,7 @@ namespace OpenBve
 					{
 						double a = Cars[i].FrontAxle.Follower.WorldDirection.Y;
 						double b = Cars[i].RearAxle.Follower.WorldDirection.Y;
-						PowerRollingCouplerAcceleration = -0.5 * (a + b) * Atmosphere.AccelerationDueToGravity;
+						PowerRollingCouplerAcceleration = -0.5 * (a + b) * Program.CurrentRoute.Atmosphere.AccelerationDueToGravity;
 					}
 					// friction
 					double FrictionBrakeAcceleration;
@@ -637,7 +636,7 @@ namespace OpenBve
 						{
 							double rf = Cars[i].FrontAxle.Follower.WorldDirection.Y;
 							double rr = Cars[i].RearAxle.Follower.WorldDirection.Y;
-							double ra = Math.Abs(0.5 * (rf + rr) * Atmosphere.AccelerationDueToGravity);
+							double ra = Math.Abs(0.5 * (rf + rr) * Program.CurrentRoute.Atmosphere.AccelerationDueToGravity);
 							if (a > ra) a = ra;
 						}
 						double factor = Cars[i].Specs.MassEmpty / Cars[i].Specs.MassCurrent;
@@ -660,7 +659,7 @@ namespace OpenBve
 					}
 					else if (Cars[i].Derailed)
 					{
-						FrictionBrakeAcceleration += Game.CoefficientOfGroundFriction * Atmosphere.AccelerationDueToGravity;
+						FrictionBrakeAcceleration += Game.CoefficientOfGroundFriction * Program.CurrentRoute.Atmosphere.AccelerationDueToGravity;
 					}
 					// motor
 					if (Handles.Reverser.Actual != 0)
@@ -711,7 +710,7 @@ namespace OpenBve
 							target = Cars[i].CurrentSpeed + wheelspin / 2500.0;
 						}
 						double diff = target - Cars[i].Specs.CurrentPerceivedSpeed;
-						double rate = (diff < 0.0 ? 5.0 : 1.0) * Atmosphere.AccelerationDueToGravity * TimeElapsed;
+						double rate = (diff < 0.0 ? 5.0 : 1.0) * Program.CurrentRoute.Atmosphere.AccelerationDueToGravity * TimeElapsed;
 						rate *= 1.0 - 0.7 / (diff * diff + 1.0);
 						double factor = rate * rate;
 						factor = 1.0 - factor / (factor + 1000.0);
@@ -966,10 +965,10 @@ namespace OpenBve
 				{
 					h += Cars[i].FrontAxle.Follower.WorldPosition.Y + Cars[i].RearAxle.Follower.WorldPosition.Y;
 				}
-				Specs.CurrentElevation = CurrentRoute.InitialElevation + h / (2.0 * (double)Cars.Length);
-				Specs.CurrentAirTemperature = Atmosphere.GetAirTemperature(Specs.CurrentElevation);
-				Specs.CurrentAirPressure = Atmosphere.GetAirPressure(Specs.CurrentElevation, Specs.CurrentAirTemperature);
-				Specs.CurrentAirDensity = Atmosphere.GetAirDensity(Specs.CurrentAirPressure, Specs.CurrentAirTemperature);
+				Specs.CurrentElevation = Program.CurrentRoute.Atmosphere.InitialElevation + h / (2.0 * (double)Cars.Length);
+				Specs.CurrentAirTemperature = Program.CurrentRoute.Atmosphere.GetAirTemperature(Specs.CurrentElevation);
+				Specs.CurrentAirPressure = Program.CurrentRoute.Atmosphere.GetAirPressure(Specs.CurrentElevation, Specs.CurrentAirTemperature);
+				Specs.CurrentAirDensity = Program.CurrentRoute.Atmosphere.GetAirDensity(Specs.CurrentAirPressure, Specs.CurrentAirTemperature);
 			}
 
 			/// <summary>Updates the safety system for this train</summary>
@@ -1024,7 +1023,7 @@ namespace OpenBve
 				this.Derailed = true;
 				if (Program.GenerateDebugLogging)
 				{
-					Program.FileSystem.AppendToLogFile("Train " + Array.IndexOf(TrainManager.Trains, this) + ", Car " + CarIndex + " derailed. Current simulation time: " + CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
+					Program.FileSystem.AppendToLogFile("Train " + Array.IndexOf(TrainManager.Trains, this) + ", Car " + CarIndex + " derailed. Current simulation time: " + Program.CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
 				}
 			}
 
@@ -1038,7 +1037,7 @@ namespace OpenBve
 					this.Derailed = true;
 					if (Program.GenerateDebugLogging)
 					{
-						Program.FileSystem.AppendToLogFile("Train " + Array.IndexOf(TrainManager.Trains, this) + ", Car " + c.Index + " derailed. Current simulation time: " + CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
+						Program.FileSystem.AppendToLogFile("Train " + Array.IndexOf(TrainManager.Trains, this) + ", Car " + c.Index + " derailed. Current simulation time: " + Program.CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
 					}
 				}
 			}
@@ -1051,7 +1050,7 @@ namespace OpenBve
 				this.Cars[CarIndex].Topples = true;
 				if (Program.GenerateDebugLogging)
 				{
-					Program.FileSystem.AppendToLogFile("Train " + Array.IndexOf(TrainManager.Trains, this) + ", Car " + CarIndex + " toppled. Current simulation time: " + CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
+					Program.FileSystem.AppendToLogFile("Train " + Array.IndexOf(TrainManager.Trains, this) + ", Car " + CarIndex + " toppled. Current simulation time: " + Program.CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
 				}
 			}
 

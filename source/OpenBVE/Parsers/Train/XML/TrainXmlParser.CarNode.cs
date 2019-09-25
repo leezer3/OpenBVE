@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Linq;
-using LibRender;
 using OpenBve.BrakeSystems;
 using OpenBve.Parsers.Panel;
 using OpenBveApi.Graphics;
@@ -360,7 +359,7 @@ namespace OpenBve.Parsers.Train
 						{
 							for (int i = 0; i < a.Objects.Length; i++)
 							{
-								ObjectManager.CreateDynamicObject(ref a.Objects[i].internalObject);
+								Program.CurrentHost.CreateDynamicObject(ref a.Objects[i].internalObject);
 							}
 							Train.Cars[Car].CarSections[0].Groups[0].Elements = a.Objects;
 							Train.Cars[Car].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;

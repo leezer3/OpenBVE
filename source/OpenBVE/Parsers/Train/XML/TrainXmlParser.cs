@@ -2,7 +2,6 @@
 using System.Xml;
 using System.Drawing;
 using System.Linq;
-using LibRender;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -137,7 +136,7 @@ namespace OpenBve.Parsers.Train
 				}
 				if (Train.Cars[Train.DriverCar].CameraRestrictionMode != CameraRestrictionMode.NotSpecified)
 				{
-					CameraProperties.Camera.CurrentRestriction = Train.Cars[Train.DriverCar].CameraRestrictionMode;
+					Program.Renderer.Camera.CurrentRestriction = Train.Cars[Train.DriverCar].CameraRestrictionMode;
 					World.UpdateViewingDistances();
 				}
 				DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/NotchDescriptions");
@@ -226,9 +225,9 @@ namespace OpenBve.Parsers.Train
 								{
 									for (int h = 0; h < obj.Objects[j].States.Length; h++)
 									{
-										obj.Objects[j].States[h].Object.ApplyScale(-1.0, 1.0, -1.0);
-										obj.Objects[j].States[h].Position.X *= -1.0;
-										obj.Objects[j].States[h].Position.Z *= -1.0;
+										obj.Objects[j].States[h].Prototype.ApplyScale(-1.0, 1.0, -1.0);
+										obj.Objects[j].States[h].Translation.Row3.X *= -1.0f;
+										obj.Objects[j].States[h].Translation.Row3.Z *= -1.0f;
 									}
 									obj.Objects[j].TranslateXDirection.X *= -1.0;
 									obj.Objects[j].TranslateXDirection.Z *= -1.0;
@@ -284,9 +283,9 @@ namespace OpenBve.Parsers.Train
 								{
 									for (int h = 0; h < obj.Objects[j].States.Length; h++)
 									{
-										obj.Objects[j].States[h].Object.ApplyScale(-1.0, 1.0, -1.0);
-										obj.Objects[j].States[h].Position.X *= -1.0;
-										obj.Objects[j].States[h].Position.Z *= -1.0;
+										obj.Objects[j].States[h].Prototype.ApplyScale(-1.0, 1.0, -1.0);
+										obj.Objects[j].States[h].Translation.Row3.X *= -1.0f;
+										obj.Objects[j].States[h].Translation.Row3.Z *= -1.0f;
 									}
 									obj.Objects[j].TranslateXDirection.X *= -1.0;
 									obj.Objects[j].TranslateXDirection.Z *= -1.0;

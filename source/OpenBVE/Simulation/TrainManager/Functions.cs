@@ -1,6 +1,5 @@
 ﻿using System;
 using OpenBveApi.Trains;
-using OpenBve.RouteManager;
 
 namespace OpenBve
 {
@@ -50,7 +49,7 @@ namespace OpenBve
 				}
 			}
 			train.StationState = TrainStopState.Jumping;
-			int stopIndex = CurrentRoute.Stations[stationIndex].GetStopIndex(train.NumberOfCars);
+			int stopIndex = Program.CurrentRoute.Stations[stationIndex].GetStopIndex(train.NumberOfCars);
 			if (stopIndex >= 0)
 			{
 				if (train.IsPlayerTrain)
@@ -64,7 +63,7 @@ namespace OpenBve
 				{
 					train.Cars[h].CurrentSpeed = 0.0;
 				}
-				double d = CurrentRoute.Stations[stationIndex].Stops[stopIndex].TrackPosition - train.Cars[0].FrontAxle.Follower.TrackPosition + train.Cars[0].FrontAxle.Position - 0.5 * train.Cars[0].Length;
+				double d = Program.CurrentRoute.Stations[stationIndex].Stops[stopIndex].TrackPosition - train.Cars[0].FrontAxle.Follower.TrackPosition + train.Cars[0].FrontAxle.Position - 0.5 * train.Cars[0].Length;
 				if (train.IsPlayerTrain)
 				{
 					TrackManager.SuppressSoundEvents = true;
@@ -107,7 +106,7 @@ namespace OpenBve
 					train.ApplyNotch(0, false, train.Handles.Brake.MaximumNotch, false);
 					train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Service);
 				}
-				if (CurrentRoute.Sections.Length > 0)
+				if (Program.CurrentRoute.Sections.Length > 0)
 				{
 					Game.UpdateAllSections();
 				}
@@ -120,19 +119,19 @@ namespace OpenBve
 				}
 				if (train.IsPlayerTrain)
 				{
-					if (CurrentRoute.Stations[stationIndex].ArrivalTime >= 0.0)
+					if (Program.CurrentRoute.Stations[stationIndex].ArrivalTime >= 0.0)
 					{
-						CurrentRoute.SecondsSinceMidnight = CurrentRoute.Stations[stationIndex].ArrivalTime;
+						Program.CurrentRoute.SecondsSinceMidnight = Program.CurrentRoute.Stations[stationIndex].ArrivalTime;
 					}
-					else if (CurrentRoute.Stations[stationIndex].DepartureTime >= 0.0)
+					else if (Program.CurrentRoute.Stations[stationIndex].DepartureTime >= 0.0)
 					{
-						CurrentRoute.SecondsSinceMidnight = CurrentRoute.Stations[stationIndex].DepartureTime - CurrentRoute.Stations[stationIndex].StopTime;
+						Program.CurrentRoute.SecondsSinceMidnight = Program.CurrentRoute.Stations[stationIndex].DepartureTime - Program.CurrentRoute.Stations[stationIndex].StopTime;
 					}
 				}
 				for (int i = 0; i < train.Cars.Length; i++)
 				{
-					train.Cars[i].Doors[0].AnticipatedOpen = CurrentRoute.Stations[stationIndex].OpenLeftDoors;
-					train.Cars[i].Doors[1].AnticipatedOpen = CurrentRoute.Stations[stationIndex].OpenRightDoors;
+					train.Cars[i].Doors[0].AnticipatedOpen = Program.CurrentRoute.Stations[stationIndex].OpenLeftDoors;
+					train.Cars[i].Doors[1].AnticipatedOpen = Program.CurrentRoute.Stations[stationIndex].OpenRightDoors;
 				}
 				if (train.IsPlayerTrain)
 				{

@@ -1,5 +1,4 @@
 ﻿using System;
-using OpenBve.RouteManager;
 
 namespace OpenBve
 {
@@ -29,9 +28,9 @@ namespace OpenBve
 			{
 				if (Enabled & Deceleration == 0.0)
 				{
-					if (CurrentRoute.SecondsSinceMidnight >= NextUpdateTime)
+					if (Program.CurrentRoute.SecondsSinceMidnight >= NextUpdateTime)
 					{
-						NextUpdateTime = CurrentRoute.SecondsSinceMidnight + UpdateInterval;
+						NextUpdateTime = Program.CurrentRoute.SecondsSinceMidnight + UpdateInterval;
 						this.CurrentDecelerationOutput += 0.8 * Car.Specs.CurrentAcceleration * (double)Math.Sign(Car.Specs.CurrentPerceivedSpeed);
 						if (this.CurrentDecelerationOutput < 0.0)
 						{

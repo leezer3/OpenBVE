@@ -1,7 +1,8 @@
 ﻿using System;
-using LibRender;
-using OpenBve.RouteManager;
+using LibRender2.Texts;
 using OpenBveApi.Trains;
+using RouteManager2;
+using RouteManager2.MessageManager;
 
 namespace OpenBve
 {
@@ -32,7 +33,7 @@ namespace OpenBve
 			public override void Update()
 			{
 				//If our message timeout is greater than or equal to the current time, queue it for removal
-				bool remove = CurrentRoute.SecondsSinceMidnight >= Timeout;
+				bool remove = Program.CurrentRoute.SecondsSinceMidnight >= Timeout;
 
 				switch (Depencency)
 				{
@@ -84,14 +85,14 @@ namespace OpenBve
 						int j = TrainManager.PlayerTrain.Station;
 						if (j >= 0 & TrainManager.PlayerTrain.StationState != TrainStopState.Completed)
 						{
-							double d = TrainManager.PlayerTrain.StationDepartureTime - CurrentRoute.SecondsSinceMidnight + 1.0;
+							double d = TrainManager.PlayerTrain.StationDepartureTime - Program.CurrentRoute.SecondsSinceMidnight + 1.0;
 							if (d < 0.0) d = 0.0;
 							string s = InternalText;
 							TimeSpan a = TimeSpan.FromSeconds(d);
 							System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 							string t = a.Hours.ToString("00", Culture) + ":" + a.Minutes.ToString("00", Culture) + ":" + a.Seconds.ToString("00", Culture);
 							s = s.Replace("[time]", t);
-							s = s.Replace("[name]", CurrentRoute.Stations[j].Name);
+							s = s.Replace("[name]", Program.CurrentRoute.Stations[j].Name);
 							MessageToDisplay = s;
 							if (d > 0.0) remove = false;
 						}
@@ -109,11 +110,11 @@ namespace OpenBve
 				{
 					if (Timeout == double.PositiveInfinity)
 					{
-						Timeout = CurrentRoute.SecondsSinceMidnight - 1.0;
+						Timeout = Program.CurrentRoute.SecondsSinceMidnight - 1.0;
 					}
 					//Remove the message if it has completely faded out
 					//NOTE: The fadeout is done in the renderer itself...
-					if (CurrentRoute.SecondsSinceMidnight >= Timeout & RendererAlpha == 0.0)
+					if (Program.CurrentRoute.SecondsSinceMidnight >= Timeout & RendererAlpha == 0.0)
 					{
 						QueueForRemoval = true;
 					}

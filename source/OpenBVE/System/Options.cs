@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Text;
-using LibRender;
 using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
@@ -34,8 +33,8 @@ namespace OpenBve
 			internal int TimeAccelerationFactor;
 			/// <summary>The viewing distance in meters</summary>
 			internal int ViewingDistance;
-			/// <summary>The current type of motion blur</summary>
-			internal MotionBlurMode MotionBlur;
+			///// <summary>The current type of motion blur</summary>
+			//internal MotionBlurMode MotionBlur;
 			
 			/// <summary>Whether duplicate verticies are culled during loading</summary>
 			internal bool ObjectOptimizationVertexCulling;
@@ -149,7 +148,7 @@ namespace OpenBve
 				this.AnisotropicFilteringMaximum = 0;
 				this.AntiAliasingLevel = 0;
 				this.ViewingDistance = 600;
-				this.MotionBlur = MotionBlurMode.None;
+				//this.MotionBlur = MotionBlurMode.None;
 				this.Toppling = true;
 				this.Collisions = true;
 				this.Derailments = true;
@@ -441,10 +440,10 @@ namespace OpenBve
 										case "motionblur":
 											switch (Value.ToLowerInvariant())
 											{
-												case "low": Interface.CurrentOptions.MotionBlur = MotionBlurMode.Low; break;
-												case "medium": Interface.CurrentOptions.MotionBlur = MotionBlurMode.Medium; break;
-												case "high": Interface.CurrentOptions.MotionBlur = MotionBlurMode.High; break;
-												default: Interface.CurrentOptions.MotionBlur = MotionBlurMode.None; break;
+												//case "low": Interface.CurrentOptions.MotionBlur = MotionBlurMode.Low; break;
+												//case "medium": Interface.CurrentOptions.MotionBlur = MotionBlurMode.Medium; break;
+												//case "high": Interface.CurrentOptions.MotionBlur = MotionBlurMode.High; break;
+												//default: Interface.CurrentOptions.MotionBlur = MotionBlurMode.None; break;
 											} break;
 									} break;
 								case "objectoptimization":
@@ -834,14 +833,14 @@ namespace OpenBve
 			Builder.AppendLine("oldtransparencymode = " + (CurrentOptions.OldTransparencyMode ? "true" : "false"));
 			Builder.AppendLine("viewingDistance = " + CurrentOptions.ViewingDistance.ToString(Culture));
 			{
-				string t; switch (CurrentOptions.MotionBlur)
-				{
-					case MotionBlurMode.Low: t = "low"; break;
-					case MotionBlurMode.Medium: t = "medium"; break;
-					case MotionBlurMode.High: t = "high"; break;
-					default: t = "none"; break;
-				}
-				Builder.AppendLine("motionBlur = " + t);
+				//string t; switch (CurrentOptions.MotionBlur)
+				//{
+				//	case MotionBlurMode.Low: t = "low"; break;
+				//	case MotionBlurMode.Medium: t = "medium"; break;
+				//	case MotionBlurMode.High: t = "high"; break;
+				//	default: t = "none"; break;
+				//}
+				//Builder.AppendLine("motionBlur = " + t);
 			}
 			Builder.AppendLine();
 			Builder.AppendLine("[objectOptimization]");

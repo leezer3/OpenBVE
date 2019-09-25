@@ -1,5 +1,4 @@
-﻿using OpenBve.RouteManager;
-using OpenBveApi.Routes;
+﻿using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 
 namespace OpenBve
@@ -53,7 +52,7 @@ namespace OpenBve
 					{
 						if (Train.IsPlayerTrain)
 						{
-							Timetable.UpdateCustomTimetable(CurrentRoute.Stations[this.StationIndex].TimetableDaytimeTexture, CurrentRoute.Stations[this.StationIndex].TimetableNighttimeTexture);
+							Timetable.UpdateCustomTimetable(Program.CurrentRoute.Stations[this.StationIndex].TimetableDaytimeTexture, Program.CurrentRoute.Stations[this.StationIndex].TimetableNighttimeTexture);
 						}
 					}
 				}

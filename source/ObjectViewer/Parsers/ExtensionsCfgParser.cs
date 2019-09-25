@@ -462,9 +462,9 @@ namespace OpenBve
 							{
 								for (int h = 0; h < obj.Objects[j].States.Length; h++)
 								{
-									obj.Objects[j].States[h].Object.ApplyScale(-1.0, 1.0, -1.0);
-									obj.Objects[j].States[h].Position.X *= -1.0;
-									obj.Objects[j].States[h].Position.Z *= -1.0;
+									obj.Objects[j].States[h].Prototype.ApplyScale(-1.0, 1.0, -1.0);
+									obj.Objects[j].States[h].Translation.Row3.X *= -1.0f;
+									obj.Objects[j].States[h].Translation.Row3.Z *= -1.0f;
 								}
 								obj.Objects[j].TranslateXDirection.X *= -1.0;
 								obj.Objects[j].TranslateXDirection.Z *= -1.0;
@@ -503,9 +503,9 @@ namespace OpenBve
 							{
 								for (int h = 0; h < obj.Objects[j].States.Length; h++)
 								{
-									obj.Objects[j].States[h].Object.ApplyScale(-1.0, 1.0, -1.0);
-									obj.Objects[j].States[h].Position.X *= -1.0;
-									obj.Objects[j].States[h].Position.Z *= -1.0;
+									obj.Objects[j].States[h].Prototype.ApplyScale(-1.0, 1.0, -1.0);
+									obj.Objects[j].States[h].Translation.Row3.X *= -1.0f;
+									obj.Objects[j].States[h].Translation.Row3.Z *= -1.0f;
 								}
 								obj.Objects[j].TranslateXDirection.X *= -1.0;
 								obj.Objects[j].TranslateXDirection.Z *= -1.0;

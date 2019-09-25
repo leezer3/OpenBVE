@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Windows.Forms;
 using OpenBveApi.Graphics;
-using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.World;
 using OpenTK.Graphics;
-using Screen = LibRender.Screen;
 
 namespace OpenBve
 {
@@ -19,8 +17,8 @@ namespace OpenBve
             AnsiotropicLevel.Value = Interface.CurrentOptions.AnisotropicFilteringLevel;
             AntialiasingLevel.Value = Interface.CurrentOptions.AntiAliasingLevel;
             TransparencyQuality.SelectedIndex = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance ? 0 : 2;
-            width.Value = Screen.Width;
-            height.Value = Screen.Height;
+            width.Value = Program.Renderer.Screen.Width;
+            height.Value = Program.Renderer.Screen.Height;
             comboBoxNewXParser.SelectedIndex = (int)Interface.CurrentOptions.CurrentXParser;
             comboBoxNewObjParser.SelectedIndex = (int)Interface.CurrentOptions.CurrentObjParser;
         }
@@ -79,19 +77,19 @@ namespace OpenBve
                     break;
             }
             //Set width and height
-            if (Screen.Width != width.Value || Screen.Height != height.Value)
+            if (Program.Renderer.Screen.Width != width.Value || Program.Renderer.Screen.Height != height.Value)
             {
 	            if (width.Value >= 300)
 	            {
-		            Screen.Width = (int) width.Value;
+		            Program.Renderer.Screen.Width = (int) width.Value;
 		            Program.currentGameWindow.Width = (int) width.Value;
 	            }
 	            if (height.Value >= 300)
 	            {
-		            Screen.Height = (int) height.Value;
+		            Program.Renderer.Screen.Height = (int) height.Value;
 		            Program.currentGameWindow.Height = (int) height.Value;
 	            }
-	            Program.UpdateViewport();
+	            Program.Renderer.UpdateViewport();
             }
             //Check if interpolation mode or ansiotropic filtering level has changed, and trigger a reload
             if (previousInterpolationMode != Interface.CurrentOptions.Interpolation || previousAnsiotropicLevel != Interface.CurrentOptions.AnisotropicFilteringLevel)
@@ -99,7 +97,7 @@ namespace OpenBve
                     Program.ReducedMode = false;
                     Program.LightingRelative = -1.0;
                     Game.Reset();
-                    LibRender.TextureManager.UnloadAllTextures();
+                    Program.Renderer.TextureManager.UnloadAllTextures();
                     Interface.ClearMessages();
                     for (int i = 0; i < Program.Files.Length; i++)
                     {
@@ -107,7 +105,7 @@ namespace OpenBve
 									try {
 #endif
                         UnifiedObject o = ObjectManager.LoadObject(Program.Files[i], System.Text.Encoding.UTF8, false);
-                        ObjectManager.CreateObject(o, Vector3.Zero,
+                        Program.Renderer.CreateObject(o, Vector3.Zero,
                             new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0, 0.0);
 #if !DEBUG
 									} catch (Exception ex) {
@@ -115,8 +113,8 @@ namespace OpenBve
 									}
 #endif
                     }
-                    ObjectManager.InitializeVisibility();
-                    ObjectManager.UpdateVisibility(0.0, true);
+                    Program.Renderer.InitializeVisibility();
+                    Program.Renderer.UpdateVisibility(0.0, true);
                     ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
                     
             }

@@ -1,6 +1,4 @@
-﻿using OpenBve.RouteManager;
-
-namespace OpenBve
+﻿namespace OpenBve
 {
 	public static partial class TrainManager
 	{
@@ -46,7 +44,7 @@ namespace OpenBve
 				}
 				if (DelayedChanges.Length >= 1)
 				{
-					if (DelayedChanges[0].Time <= CurrentRoute.SecondsSinceMidnight)
+					if (DelayedChanges[0].Time <= Program.CurrentRoute.SecondsSinceMidnight)
 					{
 						Actual = DelayedChanges[0].Value;
 						RemoveChanges(1);
@@ -69,7 +67,7 @@ namespace OpenBve
 			{
 				if (DelayedValue != AirBrakeHandleState.Invalid)
 				{
-					if (DelayedTime <= CurrentRoute.SecondsSinceMidnight)
+					if (DelayedTime <= Program.CurrentRoute.SecondsSinceMidnight)
 					{
 						Actual = (int)DelayedValue;
 						DelayedValue = AirBrakeHandleState.Invalid;
@@ -80,12 +78,12 @@ namespace OpenBve
 					if (Safety == (int)AirBrakeHandleState.Release & Actual != (int)AirBrakeHandleState.Release)
 					{
 						DelayedValue = AirBrakeHandleState.Release;
-						DelayedTime = CurrentRoute.SecondsSinceMidnight;
+						DelayedTime = Program.CurrentRoute.SecondsSinceMidnight;
 					}
 					else if (Safety == (int)AirBrakeHandleState.Service & Actual != (int)AirBrakeHandleState.Service)
 					{
 						DelayedValue = AirBrakeHandleState.Service;
-						DelayedTime = CurrentRoute.SecondsSinceMidnight;
+						DelayedTime = Program.CurrentRoute.SecondsSinceMidnight;
 					}
 					else if (Safety == (int)AirBrakeHandleState.Lap)
 					{

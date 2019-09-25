@@ -87,11 +87,11 @@
     <Compile Include="Fonts.cs" />
     <Compile Include="GameR.cs" />
     <Compile Include="InterfaceR.cs" />
+    <Compile Include="NewRendererR.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="ObjectManager.cs" />
     <Compile Include="Parsers\CsvRwRouteParser.cs" />
     <Compile Include="Parsers\Script\MarkerScriptParser.cs" />
-    <Compile Include="RendererR.cs" />
     <Compile Include="Audio\Sounds.cs" />
     <Compile Include="Audio\Sounds.Update.cs" />
     <Compile Include="System\Functions\Plugins.cs" />
@@ -139,17 +139,17 @@
       <Project>{e9b64673-65b7-4d77-a4db-4b441a7c9197}</Project>
       <Name>LBAHeader</Name>
     </ProjectReference>
-    <ProjectReference Include="..\LibRender\LibRender.csproj">
-      <Project>{2072ecd1-c7ff-427c-84dc-063f7c19792e}</Project>
-      <Name>LibRender</Name>
+    <ProjectReference Include="..\LibRender2\LibRender2.csproj">
+      <Project>{68215476-302c-49f2-9f7e-aae20a2b6b12}</Project>
+      <Name>LibRender2</Name>
     </ProjectReference>
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
       <Name>OpenBveApi</Name>
     </ProjectReference>
-    <ProjectReference Include="..\RouteManager\RouteManager.csproj">
-      <Project>{87838364-8911-46b2-8628-d437c485d9c9}</Project>
-      <Name>RouteManager</Name>
+    <ProjectReference Include="..\RouteManager2\RouteManager2.csproj">
+      <Project>{4ef680d7-df17-4978-9872-133edc169b4b}</Project>
+      <Name>RouteManager2</Name>
     </ProjectReference>
     <ProjectReference Include="..\SoundManager\SoundManager.csproj">
       <Project>{90abfa0c-abca-444e-adef-9a299aed6524}</Project>

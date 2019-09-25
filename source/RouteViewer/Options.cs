@@ -74,7 +74,7 @@ namespace OpenBve
 												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a) || a < 300) {
 													a = 960;
 												}
-												LibRender.Screen.Width = a;
+												Program.Renderer.Screen.Width = a;
 											} break;
 										case "windowheight":
 											{
@@ -82,7 +82,7 @@ namespace OpenBve
 												if (!int.TryParse(Value, NumberStyles.Integer, Culture, out a) || a < 300) {
 													a = 600;
 												}
-												LibRender.Screen.Height = a;
+												Program.Renderer.Screen.Height = a;
 											} break;
 									} break;
 								case "quality":
@@ -180,8 +180,8 @@ namespace OpenBve
                 Builder.AppendLine();
                 Builder.AppendLine("[display]");
                 Builder.AppendLine("vsync = " + (Interface.CurrentOptions.VerticalSynchronization ? "true" : "false"));
-                Builder.AppendLine("windowWidth = " + LibRender.Screen.Width.ToString(Culture));
-                Builder.AppendLine("windowHeight = " + LibRender.Screen.Height.ToString(Culture));
+                Builder.AppendLine("windowWidth = " + Program.Renderer.Screen.Width.ToString(Culture));
+                Builder.AppendLine("windowHeight = " + Program.Renderer.Screen.Height.ToString(Culture));
                 Builder.AppendLine();
                 Builder.AppendLine("[quality]");
                 {

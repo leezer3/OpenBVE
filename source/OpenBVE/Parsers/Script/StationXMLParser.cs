@@ -3,12 +3,12 @@ using System.IO;
 using System.Xml;
 using OpenBveApi.Math;
 using System.Linq;
-using OpenBve.RouteManager;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
-using OpenBve.SignalManager;
 using OpenBveApi.Trains;
+using RouteManager2.SignalManager;
+using RouteManager2.Stations;
 
 namespace OpenBve
 {
@@ -325,8 +325,8 @@ namespace OpenBve
 											{
 												if (CurrentStation > 0)
 												{
-													station.TimetableDaytimeTexture = CurrentRoute.Stations[CurrentStation - 1].TimetableDaytimeTexture;
-													station.TimetableNighttimeTexture = CurrentRoute.Stations[CurrentStation - 1].TimetableNighttimeTexture;
+													station.TimetableDaytimeTexture = Program.CurrentRoute.Stations[CurrentStation - 1].TimetableDaytimeTexture;
+													station.TimetableNighttimeTexture = Program.CurrentRoute.Stations[CurrentStation - 1].TimetableNighttimeTexture;
 												}
 												else if (daytimeTimetableTextures.Length > 0 & nighttimeTimetableTextures.Length > 0)
 												{

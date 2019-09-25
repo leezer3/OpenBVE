@@ -97,6 +97,26 @@ namespace OpenBveApi.World
 			Z.Rotate(AuxTransformation.Z, AuxTransformation.Y, AuxTransformation.X);
 		}
 
+		/// <summary>Creates a new transformation, based upon three other vectors</summary>
+		/// <param name="firstVector">The first vector</param>
+		/// <param name="secondVector">The second vector</param>
+		/// <param name="thirdVector">The third vector</param>
+		public Transformation(Vector3 firstVector, Vector3 secondVector, Vector3 thirdVector)
+		{
+			X = thirdVector;
+			Y = secondVector;
+			Z = firstVector;
+		}
+
+		public static explicit operator OpenTK.Matrix4(Transformation t)
+		{
+			return new OpenTK.Matrix4(
+				(float)t.X.X, (float)t.Y.X, (float)t.Z.X, 0.0f,
+				(float)t.X.Y, (float)t.Y.Y, (float)t.Z.Y, 0.0f,
+				(float)t.X.Z, (float)t.Y.Z, (float)t.Z.Z, 0.0f,
+				0.0f, 0.0f, 0.0f, 1.0f
+			);
+		}
 	}
 
 }

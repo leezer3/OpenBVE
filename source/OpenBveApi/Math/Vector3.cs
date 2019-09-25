@@ -334,6 +334,11 @@ namespace OpenBveApi.Math {
 			if (a.Z != b.Z) return true;
 			return false;
 		}
+
+		public static explicit operator OpenTK.Vector3(Vector3 v)
+		{
+			return new OpenTK.Vector3((float)v.X, (float)v.Y, (float)v.Z);
+		}
 		
 		
 		// --- instance functions ---

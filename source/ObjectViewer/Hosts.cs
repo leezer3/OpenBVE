@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using LibRender;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -11,14 +10,14 @@ using OpenBveApi.World;
 
 namespace OpenBve {
 	/// <summary>Represents the host application.</summary>
-	internal class Host : OpenBveApi.Hosts.HostInterface {
+	internal class Host : HostInterface {
 		
 		// --- functions ---
 		
 		/// <summary>Reports a problem to the host application.</summary>
 		/// <param name="type">The type of problem that is reported.</param>
 		/// <param name="text">The textual message that describes the problem.</param>
-		public override void ReportProblem(OpenBveApi.Hosts.ProblemType type, string text) {
+		public override void ReportProblem(ProblemType type, string text) {
 			Interface.AddMessage(MessageType.Error, false, text);
 		}
 
@@ -64,7 +63,7 @@ namespace OpenBve {
 				                     "No plugin found that is capable of loading texture " + path
 				                    );
 			} else {
-				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+				ReportProblem(ProblemType.PathNotFound, path);
 			}
 			width = 0;
 			height = 0;
@@ -100,7 +99,7 @@ namespace OpenBve {
 				}
 				Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading texture " + path);
 			} else {
-				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+				ReportProblem(ProblemType.PathNotFound, path);
 			}
 			texture = null;
 			return false;
@@ -108,7 +107,7 @@ namespace OpenBve {
 		
 		public override bool LoadTexture(Texture Texture, OpenGlTextureWrapMode wrapMode)
 		{
-			return TextureManager.LoadTexture(Texture, wrapMode, CPreciseTimer.GetClockTicks(), Interface.CurrentOptions.Interpolation, Interface.CurrentOptions.AnisotropicFilteringLevel);
+			return Program.Renderer.TextureManager.LoadTexture(Texture, wrapMode, CPreciseTimer.GetClockTicks(), Interface.CurrentOptions.Interpolation, Interface.CurrentOptions.AnisotropicFilteringLevel);
 		}
 
 		/// <summary>Registers a texture and returns a handle to the texture.</summary>
@@ -119,18 +118,18 @@ namespace OpenBve {
 		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle) {
 			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
 				Texture data;
-				if (LibRender.TextureManager.RegisterTexture(path, parameters, out data)) {
+				if (Program.Renderer.TextureManager.RegisterTexture(path, parameters, out data)) {
 					handle = data;
 					return true;
 				}
 			} else {
-				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+				ReportProblem(ProblemType.PathNotFound, path);
 			}
 			handle = null;
 			return false;
 		}
 
-		public override bool RegisterTexture(Bitmap texture, TextureParameters parameters, out OpenBveApi.Textures.Texture handle)
+		public override bool RegisterTexture(Bitmap texture, TextureParameters parameters, out Texture handle)
 		{
 			handle = new Texture(texture, parameters);
 			return true;
@@ -143,7 +142,7 @@ namespace OpenBve {
 		/// <returns>Whether loading the texture was successful.</returns>
 		public override bool RegisterTexture(Texture texture, TextureParameters parameters, out Texture handle) {
 			texture = texture.ApplyParameters(parameters);
-			handle = LibRender.TextureManager.RegisterTexture(texture);
+			handle = Program.Renderer.TextureManager.RegisterTexture(texture);
 			return true;
 		}
 		
@@ -176,7 +175,7 @@ namespace OpenBve {
 				}
 				Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading sound " + path);
 			} else {
-				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+				ReportProblem(ProblemType.PathNotFound, path);
 			}
 			sound = null;
 			return false;
@@ -191,7 +190,7 @@ namespace OpenBve {
 				// Sounds.SoundBuffer data;
 				// data = Sounds.RegisterBuffer(path, 0.0); // TODO
 			} else {
-				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+				ReportProblem(ProblemType.PathNotFound, path);
 			}
 			handle = null;
 			return false;
@@ -230,7 +229,7 @@ namespace OpenBve {
 				}
 				Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
 			} else {
-				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+				ReportProblem(ProblemType.PathNotFound, path);
 			}
 			Object = null;
 			return false;
@@ -243,22 +242,22 @@ namespace OpenBve {
 
 		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
 		{
-			return ObjectManager.CreateStaticObject(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+			return Program.Renderer.CreateStaticObject(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 		}
 
-		public override void CreateDynamicObject(ref StaticObject internalObject)
+		public override void CreateDynamicObject(ref ObjectState internalObject)
 		{
-			ObjectManager.CreateDynamicObject(ref internalObject);
+			Program.Renderer.CreateDynamicObject(ref internalObject);
 		}
 
-		public override void ShowObject(StaticObject objectToShow, ObjectType objectType)
+		public override void ShowObject(ObjectState objectToShow, ObjectType objectType)
 		{
-			LibRender.Renderer.ShowObject(objectToShow, objectType);
+			Program.Renderer.VisibleObjects.ShowObject(objectToShow, objectType);
 		}
 
-		public override void HideObject(ref StaticObject objectToHide)
+		public override void HideObject(ObjectState objectToHide)
 		{
-			LibRender.Renderer.HideObject(ref objectToHide);
+			Program.Renderer.VisibleObjects.HideObject(objectToHide);
 		}
 
 		public override int AnimatedWorldObjectsUsed

@@ -3,16 +3,14 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using OpenBveApi;
 
 namespace TrainEditor2.Systems
 {
 	internal static partial class Interface
 	{
-		internal class Options
+		internal class Options : BaseOptions
 		{
-			/// <summary>The ISO 639-1 code for the current user interface language</summary>
-			internal string LanguageCode;
-
 			/// <summary>Creates a new instance of the options class with default values set</summary>
 			internal Options()
 			{
