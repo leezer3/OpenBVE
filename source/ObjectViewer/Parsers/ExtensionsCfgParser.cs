@@ -102,7 +102,7 @@ namespace OpenBve
 												if (n >= train.Cars.Length)
 												{
 													Array.Resize(ref train.Cars, n + 1);
-													train.Cars[n] = new TrainManager.Car();
+													train.Cars[n] = new TrainManager.Car(TrainManager.Trains[0]);
 													Array.Resize(ref carObjects, n + 1);
 													Array.Resize(ref bogieObjects, (n + 1) * 2);
 													Array.Resize(ref carObjectsReversed, n + 1);
@@ -163,7 +163,7 @@ namespace OpenBve
 										if (n >= train.Cars.Length)
 										{
 											Array.Resize(ref train.Cars, n + 1);
-											train.Cars[n] = new TrainManager.Car();
+											train.Cars[n] = new TrainManager.Car(TrainManager.Trains[0]);
 											Array.Resize(ref carObjects, n + 1);
 											Array.Resize(ref bogieObjects, (n + 1) * 2);
 											Array.Resize(ref carObjectsReversed, n + 1);
@@ -305,12 +305,12 @@ namespace OpenBve
 										Array.Resize(ref train.Cars, n / 2 + 1);
 										if (n == 0)
 										{
-											train.Cars[0] = new TrainManager.Car();
+											train.Cars[0] = new TrainManager.Car(TrainManager.Trains[0]);
 											Array.Resize(ref axleLocations, 2);
 										}
 										else
 										{
-											train.Cars[n / 2] = new TrainManager.Car();	
+											train.Cars[n / 2] = new TrainManager.Car(TrainManager.Trains[0]);	
 											Array.Resize(ref axleLocations, ((n / 2) + 1) * 2);
 										}
 										

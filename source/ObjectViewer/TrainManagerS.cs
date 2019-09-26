@@ -155,6 +155,12 @@ namespace OpenBve {
 			internal bool CurrentlyVisible;
 			internal bool Derailed;
 			internal bool Topples;
+
+			internal Car(Train train)
+			{
+				FrontAxle.Follower = new TrackFollower(Program.CurrentHost, train, this);
+				RearAxle.Follower = new TrackFollower(Program.CurrentHost, train, this);
+			}
 		}
 
 		// train
