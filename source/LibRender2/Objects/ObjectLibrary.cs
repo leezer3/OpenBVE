@@ -199,40 +199,40 @@ namespace LibRender2.Objects
 		private void SortPolygons(ref List<FaceState> faces)
 		{
 			// calculate distance
-			float[] distances = new float[faces.Count];
+			double[] distances = new double[faces.Count];
 
 			for (int i = 0; i < faces.Count; i++)
 			{
 				if (faces[i].Face.Vertices.Length >= 3)
 				{
-					Vector4 v0 = new Vector4((Vector3)faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[0].Index].Coordinates, 1.0f);
-					Vector4 v1 = new Vector4((Vector3)faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[1].Index].Coordinates, 1.0f);
-					Vector4 v2 = new Vector4((Vector3)faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[2].Index].Coordinates, 1.0f);
-					v0.Z *= -1.0f;
-					v1.Z *= -1.0f;
-					v2.Z *= -1.0f;
-					v0 = Vector4.Transform(faces[i].Object.Scale, v0);
-					v1 = Vector4.Transform(faces[i].Object.Scale, v1);
-					v2 = Vector4.Transform(faces[i].Object.Scale, v2);
-					v0 = Vector4.Transform(faces[i].Object.Rotate, v0);
-					v1 = Vector4.Transform(faces[i].Object.Rotate, v1);
-					v2 = Vector4.Transform(faces[i].Object.Rotate, v2);
-					v0 = Vector4.Transform(faces[i].Object.Translation, v0);
-					v1 = Vector4.Transform(faces[i].Object.Translation, v1);
-					v2 = Vector4.Transform(faces[i].Object.Translation, v2);
-					v0.Z *= -1.0f;
-					v1.Z *= -1.0f;
-					v2.Z *= -1.0f;
-					Vector3 w1 = (v1 - v0).Xyz;
-					Vector3 w2 = (v2 - v0).Xyz;
-					Vector3 d = Vector3.Cross(w1, w2);
-					float t = d.Length;
+					Vector4d v0 = new Vector4d((Vector3d)faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[0].Index].Coordinates, 1.0);
+					Vector4d v1 = new Vector4d((Vector3d)faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[1].Index].Coordinates, 1.0);
+					Vector4d v2 = new Vector4d((Vector3d)faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[2].Index].Coordinates, 1.0);
+					v0.Z *= -1.0;
+					v1.Z *= -1.0;
+					v2.Z *= -1.0;
+					v0 = Vector4d.Transform(v0, faces[i].Object.Scale.Inverted());
+					v1 = Vector4d.Transform(v1, faces[i].Object.Scale.Inverted());
+					v2 = Vector4d.Transform(v2, faces[i].Object.Scale.Inverted());
+					v0 = Vector4d.Transform(v0, faces[i].Object.Rotate.Inverted());
+					v1 = Vector4d.Transform(v1, faces[i].Object.Rotate.Inverted());
+					v2 = Vector4d.Transform(v2, faces[i].Object.Rotate.Inverted());
+					v0 = Vector4d.Transform(v0, faces[i].Object.Translation.Inverted());
+					v1 = Vector4d.Transform(v1, faces[i].Object.Translation.Inverted());
+					v2 = Vector4d.Transform(v2, faces[i].Object.Translation.Inverted());
+					v0.Z *= -1.0;
+					v1.Z *= -1.0;
+					v2.Z *= -1.0;
+					Vector3d w1 = (v1 - v0).Xyz;
+					Vector3d w2 = (v2 - v0).Xyz;
+					Vector3d d = Vector3d.Cross(w1, w2);
+					double t = d.Length;
 
-					if (t != 0.0f)
+					if (t != 0.0)
 					{
 						d /= t;
-						Vector3 w0 = v0.Xyz - (Vector3)camera.AbsolutePosition;
-						t = Vector3.Dot(d, w0);
+						Vector3d w0 = v0.Xyz - (Vector3d)camera.AbsolutePosition;
+						t = Vector3d.Dot(d, w0);
 						distances[i] = -t * t;
 					}
 				}

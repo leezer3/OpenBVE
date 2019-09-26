@@ -108,13 +108,13 @@ namespace OpenBveApi.World
 			Z = firstVector;
 		}
 
-		public static explicit operator OpenTK.Matrix4(Transformation t)
+		public static explicit operator OpenTK.Matrix4d(Transformation t)
 		{
-			return new OpenTK.Matrix4(
-				(float)t.X.X, (float)t.Y.X, (float)t.Z.X, 0.0f,
-				(float)t.X.Y, (float)t.Y.Y, (float)t.Z.Y, 0.0f,
-				(float)t.X.Z, (float)t.Y.Z, (float)t.Z.Z, 0.0f,
-				0.0f, 0.0f, 0.0f, 1.0f
+			return new OpenTK.Matrix4d(
+				t.X.X, t.Y.X, t.Z.X, 0.0,
+				t.X.Y, t.Y.Y, t.Z.Y, 0.0,
+				t.X.Z, t.Y.Z, t.Z.Z, 0.0,
+				0.0, 0.0, 0.0, 1.0
 			);
 		}
 	}

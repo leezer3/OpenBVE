@@ -194,60 +194,76 @@ namespace LibRender2.Shaders
 			}
 		}
 
+		private Matrix4 ConvertToMatrix4(Matrix4d mat)
+		{
+			return new Matrix4(
+				(float)mat.M11, (float)mat.M12, (float)mat.M13, (float)mat.M14,
+				(float)mat.M21, (float)mat.M22, (float)mat.M23, (float)mat.M24,
+				(float)mat.M31, (float)mat.M32, (float)mat.M33, (float)mat.M34,
+				(float)mat.M41, (float)mat.M42, (float)mat.M43, (float)mat.M44
+			);
+		}
+
 		#region SetUniform
 
 		/// <summary>
 		/// Set the translation matrix
 		/// </summary>
 		/// <param name="TranslationMatrix"></param>
-		public void SetCurrentTranslateMatrix(Matrix4 TranslationMatrix)
+		public void SetCurrentTranslateMatrix(Matrix4d TranslationMatrix)
 		{
-			GL.UniformMatrix4(UniformLayout.CurrentTranslateMatrix, false, ref TranslationMatrix);
+			Matrix4 matrix = ConvertToMatrix4(TranslationMatrix);
+			GL.UniformMatrix4(UniformLayout.CurrentTranslateMatrix, false, ref matrix);
 		}
 
 		/// <summary>
 		/// Set the scale matrix
 		/// </summary>
 		/// <param name="ScaleMatrix"></param>
-		public void SetCurrentScaleMatrix(Matrix4 ScaleMatrix)
+		public void SetCurrentScaleMatrix(Matrix4d ScaleMatrix)
 		{
-			GL.UniformMatrix4(UniformLayout.CurrentScaleMatrix, false, ref ScaleMatrix);
+			Matrix4 matrix = ConvertToMatrix4(ScaleMatrix);
+			GL.UniformMatrix4(UniformLayout.CurrentScaleMatrix, false, ref matrix);
 		}
 
 		/// <summary>
 		/// Set the rotate matrix
 		/// </summary>
 		/// <param name="RotateMatrix"></param>
-		public void SetCurrentRotateMatrix(Matrix4 RotateMatrix)
+		public void SetCurrentRotateMatrix(Matrix4d RotateMatrix)
 		{
-			GL.UniformMatrix4(UniformLayout.CurrentRotateMatrix, false, ref RotateMatrix);
+			Matrix4 matrix = ConvertToMatrix4(RotateMatrix);
+			GL.UniformMatrix4(UniformLayout.CurrentRotateMatrix, false, ref matrix);
 		}
 
 		/// <summary>
 		/// Set the texture translation matrix
 		/// </summary>
 		/// <param name="TranslationMatrix"></param>
-		public void SetCurrentTextureTranslateMatrix(Matrix4 TranslationMatrix)
+		public void SetCurrentTextureTranslateMatrix(Matrix4d TranslationMatrix)
 		{
-			GL.UniformMatrix4(UniformLayout.CurrentTextureTranslateMatrix, false, ref TranslationMatrix);
+			Matrix4 matrix = ConvertToMatrix4(TranslationMatrix);
+			GL.UniformMatrix4(UniformLayout.CurrentTextureTranslateMatrix, false, ref matrix);
 		}
 
 		/// <summary>
 		/// Set the projection matrix
 		/// </summary>
 		/// <param name="ProjectionMatrix"></param>
-		public void SetCurrentProjectionMatrix(Matrix4 ProjectionMatrix)
+		public void SetCurrentProjectionMatrix(Matrix4d ProjectionMatrix)
 		{
-			GL.UniformMatrix4(UniformLayout.CurrentProjectionMatrix, false, ref ProjectionMatrix);
+			Matrix4 matrix = ConvertToMatrix4(ProjectionMatrix);
+			GL.UniformMatrix4(UniformLayout.CurrentProjectionMatrix, false, ref matrix);
 		}
 
 		/// <summary>
 		/// Set the view matrix
 		/// </summary>
 		/// <param name="ViewMatrix"></param>
-		public void SetCurrentViewMatrix(Matrix4 ViewMatrix)
+		public void SetCurrentViewMatrix(Matrix4d ViewMatrix)
 		{
-			GL.UniformMatrix4(UniformLayout.CurrentViewMatrix, false, ref ViewMatrix);
+			Matrix4 matrix = ConvertToMatrix4(ViewMatrix);
+			GL.UniformMatrix4(UniformLayout.CurrentViewMatrix, false, ref matrix);
 		}
 
 		public void SetEyePosition(Vector3 EyePosition)

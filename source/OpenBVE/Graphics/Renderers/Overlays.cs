@@ -36,9 +36,9 @@ namespace OpenBve.Graphics.Renderers
 			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 			GL.Enable(EnableCap.Blend);
 			renderer.PushMatrix(MatrixMode.Projection);
-			renderer.CurrentProjectionMatrix = Matrix4.CreateOrthographicOffCenter(0.0f, renderer.Screen.Width, renderer.Screen.Height, 0.0f, -1.0f, 1.0f);
+			renderer.CurrentProjectionMatrix = Matrix4d.CreateOrthographicOffCenter(0.0, renderer.Screen.Width, renderer.Screen.Height, 0.0, -1.0, 1.0);
 			renderer.PushMatrix(MatrixMode.Modelview);
-			renderer.CurrentViewMatrix = Matrix4.Identity;
+			renderer.CurrentViewMatrix = Matrix4d.Identity;
 
 			//Check which overlays to show
 			switch (renderer.CurrentOutputMode)

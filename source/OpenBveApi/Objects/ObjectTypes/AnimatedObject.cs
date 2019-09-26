@@ -481,7 +481,7 @@ namespace OpenBveApi.Objects
 			// texture shift
 			bool shiftx = TextureShiftXFunction != null;
 			bool shifty = TextureShiftYFunction != null;
-			internalObject.TextureTranslation = OpenTK.Matrix4.Identity;
+			internalObject.TextureTranslation = OpenTK.Matrix4d.Identity;
 
 			if ((shiftx | shifty) & UpdateFunctions)
 			{
@@ -489,14 +489,14 @@ namespace OpenBveApi.Objects
 				{
 					double x = TextureShiftXFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 					x -= System.Math.Floor(x);
-					internalObject.TextureTranslation *= OpenTK.Matrix4.CreateTranslation((float)(x * TextureShiftXDirection.X), (float)(x * TextureShiftXDirection.Y), 1.0f);
+					internalObject.TextureTranslation *= OpenTK.Matrix4d.CreateTranslation(x * TextureShiftXDirection.X, x * TextureShiftXDirection.Y, 1.0);
 				}
 
 				if (shifty)
 				{
 					double y = TextureShiftYFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 					y -= System.Math.Floor(y);
-					internalObject.TextureTranslation *= OpenTK.Matrix4.CreateTranslation((float)(y * TextureShiftXDirection.X), (float)(y * TextureShiftXDirection.Y), 1.0f);
+					internalObject.TextureTranslation *= OpenTK.Matrix4d.CreateTranslation(y * TextureShiftXDirection.X, y * TextureShiftXDirection.Y, 1.0);
 				}
 			}
 
@@ -560,7 +560,7 @@ namespace OpenBveApi.Objects
 						{
 							/* current angle to last angle */
 							{
-								double t = 0.5 + (0.636619772367582 * ledangle) - currentEdgeFloat;
+								double t = 0.5 + 0.636619772367582 * ledangle - currentEdgeFloat;
 								if (t < 0.0)
 								{
 									t = 0.0;
@@ -578,7 +578,7 @@ namespace OpenBveApi.Objects
 								v++;
 							}
 							{
-								double t = 0.5 + (0.636619772367582 * LEDLastAngle) - lastEdgeFloat;
+								double t = 0.5 + 0.636619772367582 * LEDLastAngle - lastEdgeFloat;
 								if (t < 0.0)
 								{
 									t = 0.0;
@@ -600,7 +600,7 @@ namespace OpenBveApi.Objects
 						{
 							{
 								/* current angle to square vertex */
-								double t = 0.5 + (0.636619772367582 * ledangle) - currentEdgeFloat;
+								double t = 0.5 + 0.636619772367582 * ledangle - currentEdgeFloat;
 								if (t < 0.0)
 								{
 									t = 0.0;
@@ -628,7 +628,7 @@ namespace OpenBveApi.Objects
 
 							{
 								/* square vertex to last angle */
-								double t = 0.5 + (0.636619772367582 * LEDLastAngle) - lastEdgeFloat;
+								double t = 0.5 + 0.636619772367582 * LEDLastAngle - lastEdgeFloat;
 								if (t < 0.0)
 								{
 									t = 0.0;
@@ -672,7 +672,7 @@ namespace OpenBveApi.Objects
 						{
 							/* current angle to last angle */
 							{
-								double t = 0.5 + (0.636619772367582 * LEDLastAngle) - lastEdgeFloat;
+								double t = 0.5 + 0.636619772367582 * LEDLastAngle - lastEdgeFloat;
 								if (t < 0.0)
 								{
 									t = 0.0;
@@ -690,7 +690,7 @@ namespace OpenBveApi.Objects
 								v++;
 							}
 							{
-								double t = 0.5 + (0.636619772367582 * ledangle) - currentEdgeFloat;
+								double t = 0.5 + 0.636619772367582 * ledangle - currentEdgeFloat;
 								if (t < 0.0)
 								{
 									t = 0.0;
@@ -713,7 +713,7 @@ namespace OpenBveApi.Objects
 						{
 							{
 								/* current angle to square vertex */
-								double t = 0.5 + (0.636619772367582 * ledangle) - currentEdgeFloat;
+								double t = 0.5 + 0.636619772367582 * ledangle - currentEdgeFloat;
 								if (t < 0.0)
 								{
 									t = 0.0;
@@ -741,7 +741,7 @@ namespace OpenBveApi.Objects
 
 							{
 								/* square vertex to last angle */
-								double t = 0.5 + (0.636619772367582 * LEDLastAngle) - lastEdgeFloat;
+								double t = 0.5 + 0.636619772367582 * LEDLastAngle - lastEdgeFloat;
 								if (t < 0.0)
 								{
 									t = 0.0;
@@ -780,50 +780,50 @@ namespace OpenBveApi.Objects
 
 			// update state
 			// rotate
-			internalObject.Rotate = OpenTK.Matrix4.Identity;
+			internalObject.Rotate = OpenTK.Matrix4d.Identity;
 
 			if (rotateX)
 			{
-				internalObject.Rotate *= OpenTK.Matrix4.CreateFromAxisAngle(new OpenTK.Vector3((float)RotateXDirection.X, (float)RotateXDirection.Y, (float)-RotateXDirection.Z), (float)(2.0 * System.Math.PI - radianX));
+				internalObject.Rotate *= OpenTK.Matrix4d.CreateFromAxisAngle(new OpenTK.Vector3d(RotateXDirection.X, RotateXDirection.Y, -RotateXDirection.Z), 2.0 * System.Math.PI - radianX);
 			}
 
 			if (rotateY)
 			{
-				internalObject.Rotate *= OpenTK.Matrix4.CreateFromAxisAngle(new OpenTK.Vector3((float)RotateYDirection.X, (float)RotateYDirection.Y, (float)-RotateYDirection.Z), (float)(2.0 * System.Math.PI - radianY));
+				internalObject.Rotate *= OpenTK.Matrix4d.CreateFromAxisAngle(new OpenTK.Vector3d(RotateYDirection.X, RotateYDirection.Y, -RotateYDirection.Z), 2.0 * System.Math.PI - radianY);
 			}
 
 			if (rotateZ)
 			{
-				internalObject.Rotate *= OpenTK.Matrix4.CreateFromAxisAngle(new OpenTK.Vector3((float)RotateZDirection.X, (float)RotateZDirection.Y, (float)-RotateZDirection.Z), (float)(2.0 * System.Math.PI - radianZ));
+				internalObject.Rotate *= OpenTK.Matrix4d.CreateFromAxisAngle(new OpenTK.Vector3d(RotateZDirection.X, RotateZDirection.Y, -RotateZDirection.Z), 2.0 * System.Math.PI - radianZ);
 			}
 
 			if (Camera != null && Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 			{
-				internalObject.Rotate *= States[s].Translation * OpenTK.Matrix4.CreateTranslation((float)-Position.X, (float)-Position.Y, (float)Position.Z);
+				internalObject.Rotate *= States[s].Translation * OpenTK.Matrix4d.CreateTranslation(-Position.X, -Position.Y, Position.Z);
 
-				OpenTK.Quaternion rot1 = Quaternion.RotationBetweenVectors(OpenTK.Vector3.UnitZ * -1.0f, new OpenTK.Vector3((float)Camera.AbsoluteDirection.X, (float)Camera.AbsoluteDirection.Y, (float)-Camera.AbsoluteDirection.Z).Normalized());
-				OpenTK.Vector3 newUp = rot1 * OpenTK.Vector3.UnitY;
-				OpenTK.Quaternion rot2 = Quaternion.RotationBetweenVectors(newUp, new OpenTK.Vector3((float)Camera.AbsoluteUp.X, (float)Camera.AbsoluteUp.Y, (float)-Camera.AbsoluteUp.Z).Normalized());
-				internalObject.Rotate *= OpenTK.Matrix4.CreateFromQuaternion(rot2 * rot1);
+				OpenTK.Quaterniond rot1 = Quaternion.RotationBetweenVectors(OpenTK.Vector3d.UnitZ * -1.0, new OpenTK.Vector3d(Camera.AbsoluteDirection.X, Camera.AbsoluteDirection.Y, -Camera.AbsoluteDirection.Z).Normalized());
+				OpenTK.Vector3d newUp = OpenTK.Vector3d.Transform(OpenTK.Vector3d.UnitY, rot1);
+				OpenTK.Quaterniond rot2 = Quaternion.RotationBetweenVectors(newUp, new OpenTK.Vector3d(Camera.AbsoluteUp.X, Camera.AbsoluteUp.Y, -Camera.AbsoluteUp.Z).Normalized());
+				internalObject.Rotate *= OpenTK.Matrix4d.CreateFromQuaternion(rot2 * rot1);
 
 				// translate
 				double dx = -System.Math.Tan(Camera.Alignment.Yaw) - Camera.Alignment.Position.X;
 				double dy = -System.Math.Tan(Camera.Alignment.Pitch) - Camera.Alignment.Position.Y;
 				double dz = -Camera.Alignment.Position.Z;
 				Vector3 add = Camera.AbsolutePosition + dx * Camera.AbsoluteSide + dy * Camera.AbsoluteUp + dz * Camera.AbsoluteDirection;
-				internalObject.Translation = OpenTK.Matrix4.CreateTranslation((float)add.X, (float)add.Y, (float)-add.Z);
+				internalObject.Translation = OpenTK.Matrix4d.CreateTranslation(add.X, add.Y, -add.Z);
 			}
 			else
 			{
 				internalObject.Rotate *= States[s].Translation;
 
-				OpenTK.Quaternion rot1 = Quaternion.RotationBetweenVectors(OpenTK.Vector3.UnitZ * -1.0f, new OpenTK.Vector3((float)Direction.X, (float)Direction.Y, (float)-Direction.Z).Normalized());
-				OpenTK.Vector3 newUp = rot1 * OpenTK.Vector3.UnitY;
-				OpenTK.Quaternion rot2 = Quaternion.RotationBetweenVectors(newUp, new OpenTK.Vector3((float)Up.X, (float)Up.Y, (float)-Up.Z).Normalized());
-				internalObject.Rotate *= OpenTK.Matrix4.CreateFromQuaternion(rot2 * rot1);
+				OpenTK.Quaterniond rot1 = Quaternion.RotationBetweenVectors(OpenTK.Vector3d.UnitZ * -1.0, new OpenTK.Vector3d(Direction.X, Direction.Y, -Direction.Z).Normalized());
+				OpenTK.Vector3d newUp = OpenTK.Vector3d.Transform(OpenTK.Vector3d.UnitY, rot1);
+				OpenTK.Quaterniond rot2 = Quaternion.RotationBetweenVectors(newUp, new OpenTK.Vector3d(Up.X, Up.Y, -Up.Z).Normalized());
+				internalObject.Rotate *= OpenTK.Matrix4d.CreateFromQuaternion(rot2 * rot1);
 
 				// translate
-				internalObject.Translation = OpenTK.Matrix4.CreateTranslation((float)Position.X, (float)Position.Y, (float)-Position.Z);
+				internalObject.Translation = OpenTK.Matrix4d.CreateTranslation(Position.X, Position.Y, -Position.Z);
 			}
 
 			// visibility changed

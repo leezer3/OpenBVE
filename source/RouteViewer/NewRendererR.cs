@@ -259,7 +259,7 @@ namespace OpenBve
 			double ux = Camera.AbsoluteUp.X;
 			double uy = Camera.AbsoluteUp.Y;
 			double uz = Camera.AbsoluteUp.Z;
-			CurrentViewMatrix = Matrix4.LookAt(0.0f, 0.0f, 0.0f, (float)dx, (float)dy, (float)-dz, (float)ux, (float)uy, (float)-uz);
+			CurrentViewMatrix = Matrix4d.LookAt(0.0, 0.0, 0.0, dx, dy, -dz, ux, uy, -uz);
 
 			// fog
 			double fd = Program.CurrentRoute.NextFog.TrackPosition - Program.CurrentRoute.PreviousFog.TrackPosition;
@@ -559,9 +559,9 @@ namespace OpenBve
 			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 			GL.Enable(EnableCap.Blend);
 			PushMatrix(MatrixMode.Projection);
-			CurrentProjectionMatrix = Matrix4.CreateOrthographicOffCenter(0.0f, Screen.Width, Screen.Height, 0.0f, -1.0f, 1.0f);
+			CurrentProjectionMatrix = Matrix4d.CreateOrthographicOffCenter(0.0, Screen.Width, Screen.Height, 0.0, -1.0, 1.0);
 			PushMatrix(MatrixMode.Modelview);
-			CurrentViewMatrix = Matrix4.Identity;
+			CurrentViewMatrix = Matrix4d.Identity;
 
 			CultureInfo culture = CultureInfo.InvariantCulture;
 

@@ -65,11 +65,11 @@ namespace LibRender2
 		public Keys Keys;
 		public MotionBlur MotionBlur;
 
-		public Matrix4 CurrentProjectionMatrix;
-		public Matrix4 CurrentViewMatrix;
+		public Matrix4d CurrentProjectionMatrix;
+		public Matrix4d CurrentViewMatrix;
 
-		protected List<Matrix4> projectionMatrixList;
-		protected List<Matrix4> viewMatrixList;
+		protected List<Matrix4d> projectionMatrixList;
+		protected List<Matrix4d> viewMatrixList;
 
 		public Shader DefaultShader;
 
@@ -122,8 +122,8 @@ namespace LibRender2
 			Lighting = new Lighting();
 			Marker = new Marker();
 
-			projectionMatrixList = new List<Matrix4>();
-			viewMatrixList = new List<Matrix4>();
+			projectionMatrixList = new List<Matrix4d>();
+			viewMatrixList = new List<Matrix4d>();
 		}
 
 		/// <summary>
@@ -302,8 +302,8 @@ namespace LibRender2
 			StaticObjectStates.Add(new ObjectState
 			{
 				Prototype = Prototype,
-				Translation = Matrix4.CreateTranslation((float)Position.X, (float)Position.Y, (float)-Position.Z),
-				Rotate = (Matrix4)new Transformation(BaseTransformation, AuxTransformation),
+				Translation = Matrix4d.CreateTranslation(Position.X, Position.Y, -Position.Z),
+				Rotate = (Matrix4d)new Transformation(BaseTransformation, AuxTransformation),
 				Brightness = Brightness,
 				StartingDistance = startingDistance,
 				EndingDistance = endingDistance
@@ -531,7 +531,7 @@ namespace LibRender2
 
 			Screen.AspectRatio = Screen.Width / (double)Screen.Height;
 			Camera.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * Camera.VerticalViewingAngle) * Screen.AspectRatio);
-			CurrentProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView((float)Camera.VerticalViewingAngle, (float)Screen.AspectRatio, 0.2f, 1000.0f)/* * Matrix4.CreateScale(-1, 1, 1)*/;
+			CurrentProjectionMatrix = Matrix4d.CreatePerspectiveFieldOfView(Camera.VerticalViewingAngle, Screen.AspectRatio, 0.2, 1000.0);
 		}
 
 		public void ResetShader(Shader Shader)
@@ -543,12 +543,12 @@ namespace LibRender2
 				throw new InvalidOperationException($"OpenGL Error: {message.ToString()}");
 			}
 
-			Shader.SetCurrentTranslateMatrix(Matrix4.Identity);
-			Shader.SetCurrentScaleMatrix(Matrix4.Identity);
-			Shader.SetCurrentRotateMatrix(Matrix4.Identity);
-			Shader.SetCurrentTextureTranslateMatrix(Matrix4.Identity);
-			Shader.SetCurrentProjectionMatrix(Matrix4.Identity);
-			Shader.SetCurrentViewMatrix(Matrix4.Identity);
+			Shader.SetCurrentTranslateMatrix(Matrix4d.Identity);
+			Shader.SetCurrentScaleMatrix(Matrix4d.Identity);
+			Shader.SetCurrentRotateMatrix(Matrix4d.Identity);
+			Shader.SetCurrentTextureTranslateMatrix(Matrix4d.Identity);
+			Shader.SetCurrentProjectionMatrix(Matrix4d.Identity);
+			Shader.SetCurrentViewMatrix(Matrix4d.Identity);
 			Shader.SetEyePosition(Vector3.Zero);
 			Shader.SetIsLight(false);
 			Shader.SetLightPosition(Vector3.Zero);
@@ -580,17 +580,17 @@ namespace LibRender2
 			RenderFace(Shader, State.Object, State.Face, IsDebugTouchMode);
 		}
 
-		public void RenderFace(Shader Shader, FaceState State, Vector3 EyePosition, bool IsDebugTouchMode = false)
+		public void RenderFace(Shader Shader, FaceState State, Vector3d EyePosition, bool IsDebugTouchMode = false)
 		{
 			RenderFace(Shader, State.Object, State.Face, EyePosition, IsDebugTouchMode);
 		}
 
 		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, bool IsDebugTouchMode = false)
 		{
-			RenderFace(Shader, State, Face, new Vector3((float)Camera.AbsolutePosition.X, (float)Camera.AbsolutePosition.Y, (float)-Camera.AbsolutePosition.Z), IsDebugTouchMode);
+			RenderFace(Shader, State, Face, new Vector3d(Camera.AbsolutePosition.X, Camera.AbsolutePosition.Y, -Camera.AbsolutePosition.Z), IsDebugTouchMode);
 		}
 
-		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, Vector3 EyePosition, bool IsDebugTouchMode = false)
+		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, Vector3d EyePosition, bool IsDebugTouchMode = false)
 		{
 			if (State.Prototype.Mesh.Vertices.Length < 1)
 			{
@@ -615,7 +615,7 @@ namespace LibRender2
 			}
 
 			// matrix
-			Shader.SetCurrentTranslateMatrix(State.Translation * Matrix4.CreateTranslation(-EyePosition));
+			Shader.SetCurrentTranslateMatrix(State.Translation * Matrix4d.CreateTranslation(-EyePosition));
 			Shader.SetCurrentScaleMatrix(State.Scale);
 			Shader.SetCurrentRotateMatrix(State.Rotate);
 			Shader.SetCurrentTextureTranslateMatrix(State.TextureTranslation);
@@ -635,9 +635,9 @@ namespace LibRender2
 			{
 				if (OptionLighting)
 				{
-					Shader.SetEyePosition(EyePosition);
+					Shader.SetEyePosition(new Vector3((float)EyePosition.X, (float)EyePosition.Y, (float)EyePosition.Z));
 					Shader.SetIsLight(true);
-					Shader.SetLightPosition(new Vector3((float)Lighting.OptionLightPosition.X, (float)Lighting.OptionLightPosition.Y, (float)-Lighting.OptionLightPosition.Z));
+					Shader.SetLightPosition(new Vector3((float)Lighting.OptionLightPosition.X, (float)Lighting.OptionLightPosition.Y, -(float)Lighting.OptionLightPosition.Z));
 					Shader.SetLightAmbient(new Color4(Lighting.OptionAmbientColor.R, Lighting.OptionAmbientColor.G, Lighting.OptionAmbientColor.B, 255));
 					Shader.SetLightDiffuse(new Color4(Lighting.OptionDiffuseColor.R, Lighting.OptionDiffuseColor.G, Lighting.OptionDiffuseColor.B, 255));
 					Shader.SetLightSpecular(new Color4(Lighting.OptionSpecularColor.R, Lighting.OptionSpecularColor.G, Lighting.OptionSpecularColor.B, 255));

@@ -156,9 +156,9 @@ namespace OpenBve
 			currentlyLoading = true;
 
 			Program.Renderer.PushMatrix(MatrixMode.Projection);
-			Program.Renderer.CurrentProjectionMatrix = Matrix4.CreateOrthographicOffCenter(0.0f, Program.Renderer.Screen.Width, Program.Renderer.Screen.Height, 0.0f, -1.0f, 1.0f);
+			Program.Renderer.CurrentProjectionMatrix = Matrix4d.CreateOrthographicOffCenter(0.0, Program.Renderer.Screen.Width, Program.Renderer.Screen.Height, 0.0, -1.0, 1.0);
 			Program.Renderer.PushMatrix(MatrixMode.Modelview);
-			Program.Renderer.CurrentViewMatrix = Matrix4.Identity;
+			Program.Renderer.CurrentViewMatrix = Matrix4d.Identity;
 
 			while (!Loading.Complete && !Loading.Cancel)
 			{

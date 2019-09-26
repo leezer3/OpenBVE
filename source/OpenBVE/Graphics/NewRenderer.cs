@@ -208,10 +208,10 @@ namespace OpenBve.Graphics
 				case ViewportMode.Scenery:
 					BackgroundObject b = Program.CurrentRoute.CurrentBackground as BackgroundObject;
 					double cd = b != null ? Math.Max(BackgroundHandle.BackgroundImageDistance, b.ClipDistance) : BackgroundHandle.BackgroundImageDistance;
-					CurrentProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView((float)Camera.VerticalViewingAngle, (float)Screen.AspectRatio, 0.5f, (float)cd);
+					CurrentProjectionMatrix = Matrix4d.CreatePerspectiveFieldOfView(Camera.VerticalViewingAngle, Screen.AspectRatio, 0.5, cd);
 					break;
 				case ViewportMode.Cab:
-					CurrentProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView((float)Camera.VerticalViewingAngle, (float)Screen.AspectRatio, 0.025f, 50.0f);
+					CurrentProjectionMatrix = Matrix4d.CreatePerspectiveFieldOfView(Camera.VerticalViewingAngle, Screen.AspectRatio, 0.025, 50.0);
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();
@@ -271,7 +271,7 @@ namespace OpenBve.Graphics
 			double ux = Camera.AbsoluteUp.X;
 			double uy = Camera.AbsoluteUp.Y;
 			double uz = Camera.AbsoluteUp.Z;
-			CurrentViewMatrix = Matrix4.LookAt(0.0f, 0.0f, 0.0f, (float)dx, (float)dy, (float)-dz, (float)ux, (float)uy, (float)-uz);
+			CurrentViewMatrix = Matrix4d.LookAt(0.0, 0.0, 0.0, dx, dy, -dz, ux, uy, -uz);
 
 			// fog
 			double fd = Program.CurrentRoute.NextFog.TrackPosition - Program.CurrentRoute.PreviousFog.TrackPosition;
@@ -407,7 +407,7 @@ namespace OpenBve.Graphics
 			// overlay layer
 			OptionFog = false;
 			UpdateViewport(ViewportChangeMode.ChangeToCab);
-			CurrentViewMatrix = Matrix4.LookAt(0.0f, 0.0f, 0.0f, (float)dx, (float)dy, (float)-dz, (float)ux, (float)uy, (float)-uz);
+			CurrentViewMatrix = Matrix4d.LookAt(0.0, 0.0, 0.0, dx, dy, -dz, ux, uy, -uz);
 
 			if (Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable)
 			{

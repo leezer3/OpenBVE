@@ -7,13 +7,13 @@ namespace OpenBveApi.Objects
 	{
 		public StaticObject Prototype;
 
-		public Matrix4 Translation;
+		public Matrix4d Translation;
 
-		public Matrix4 Scale;
+		public Matrix4d Scale;
 
-		public Matrix4 Rotate;
+		public Matrix4d Rotate;
 
-		public Matrix4 TextureTranslation;
+		public Matrix4d TextureTranslation;
 
 		public double Brightness;
 
@@ -25,10 +25,10 @@ namespace OpenBveApi.Objects
 		public ObjectState()
 		{
 			Prototype = null;
-			Translation = Matrix4.Identity;
-			Scale = Matrix4.Identity;
-			Rotate = Matrix4.Identity;
-			TextureTranslation = Matrix4.Identity;
+			Translation = Matrix4d.Identity;
+			Scale = Matrix4d.Identity;
+			Rotate = Matrix4d.Identity;
+			TextureTranslation = Matrix4d.Identity;
 			Brightness = 0.0;
 			StartingDistance = 0.0f;
 			EndingDistance = 0.0f;

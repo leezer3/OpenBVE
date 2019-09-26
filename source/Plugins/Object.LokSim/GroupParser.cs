@@ -251,7 +251,7 @@ namespace Plugin
 								ObjectState aos = new ObjectState
 								{
 									Prototype = Object,
-									Translation = OpenTK.Matrix4.CreateTranslation((float)CurrentObjects[i].Position.X, (float)CurrentObjects[i].Position.Y, (float)-CurrentObjects[i].Position.Z)
+									Translation = OpenTK.Matrix4d.CreateTranslation(CurrentObjects[i].Position.X, CurrentObjects[i].Position.Y, -CurrentObjects[i].Position.Z)
 								};
 								a.States = new [] { aos };
 								Result.Objects[aL] = a;
@@ -279,7 +279,7 @@ namespace Plugin
 									Result.Objects[o] = AnimatedObject.Objects[o - rl].Clone();
 									for (int si = 0; si < Result.Objects[o].States.Length; si++)
 									{
-										Result.Objects[o].States[si].Translation *= OpenTK.Matrix4.CreateTranslation((float)CurrentObjects[i].Position.X, (float)CurrentObjects[i].Position.Y, (float)-CurrentObjects[i].Position.Z);
+										Result.Objects[o].States[si].Translation *= OpenTK.Matrix4d.CreateTranslation(CurrentObjects[i].Position.X, CurrentObjects[i].Position.Y, -CurrentObjects[i].Position.Z);
 									}
 								}
 								else
