@@ -54,6 +54,7 @@ namespace OpenBve {
 			CurrentRouteEncoding = RouteEncoding;
 			CurrentTrainFolder = TrainFolder;
 			CurrentTrainEncoding = TrainEncoding;
+
 			//Set the route and train folders in the info class
 			Game.RouteInformation.RouteFile = RouteFile;
 			Game.RouteInformation.TrainFolder = TrainFolder;
@@ -176,8 +177,7 @@ namespace OpenBve {
 			string RailwayFolder = GetRailwayFolder(CurrentRouteFile);
 			string ObjectFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Object");
 			string SoundFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Sound");
-			// reset
-			Game.Reset(true, true);
+			Game.Reset(true, false);
 			Game.MinimalisticSimulation = true;
 			// screen
 			Program.Renderer.Camera.CurrentMode = CameraViewMode.Interior;

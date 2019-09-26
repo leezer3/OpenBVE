@@ -1069,7 +1069,7 @@ namespace TrainEditor2.Models.Trains
 
 			Matrix4d projPitch = Matrix4d.CreateOrthographic(MaxVelocity - MinVelocity, MaxPitch - MinPitch, float.Epsilon, 1.0);
 			Matrix4d projVolume = Matrix4d.CreateOrthographic(MaxVelocity - MinVelocity, MaxVolume - MinVolume, float.Epsilon, 1.0);
-			Matrix4d projString = Matrix4d.CreateOrthographicOffCenter(0.0, GlControlWidth, GlControlHeight, 0.0, -1.0, 1.0);
+			Matrix4 projString = Matrix4.CreateOrthographicOffCenter(0.0f, GlControlWidth, GlControlHeight, 0.0f, -1.0f, 1.0f);
 			Matrix4d lookPitch = Matrix4d.LookAt(new Vector3d((MinVelocity + MaxVelocity) / 2.0, (MinPitch + MaxPitch) / 2.0, float.Epsilon), new Vector3d((MinVelocity + MaxVelocity) / 2.0, (MinPitch + MaxPitch) / 2.0, 0.0), Vector3d.UnitY);
 			Matrix4d lookVolume = Matrix4d.LookAt(new Vector3d((MinVelocity + MaxVelocity) / 2.0, (MinVolume + MaxVolume) / 2.0, float.Epsilon), new Vector3d((MinVelocity + MaxVelocity) / 2.0, (MinVolume + MaxVolume) / 2.0, 0.0), Vector3d.UnitY);
 
@@ -1092,11 +1092,8 @@ namespace TrainEditor2.Models.Trains
 
 				GL.End();
 
-				GL.MatrixMode(MatrixMode.Projection);
-				GL.LoadMatrix(ref projString);
-
-				GL.MatrixMode(MatrixMode.Modelview);
-				GL.LoadIdentity();
+				Program.Renderer.CurrentProjectionMatrix = projString;
+				Program.Renderer.CurrentViewMatrix = Matrix4.Identity;
 
 				for (double v = 0.0; v < MaxVelocity; v += 10.0)
 				{
@@ -1127,11 +1124,8 @@ namespace TrainEditor2.Models.Trains
 
 					GL.End();
 
-					GL.MatrixMode(MatrixMode.Projection);
-					GL.LoadMatrix(ref projString);
-
-					GL.MatrixMode(MatrixMode.Modelview);
-					GL.LoadIdentity();
+					Program.Renderer.CurrentProjectionMatrix = projString;
+					Program.Renderer.CurrentViewMatrix = Matrix4.Identity;
 
 					for (double p = 0.0; p < MaxPitch; p += 100.0)
 					{
@@ -1158,11 +1152,8 @@ namespace TrainEditor2.Models.Trains
 
 					GL.End();
 
-					GL.MatrixMode(MatrixMode.Projection);
-					GL.LoadMatrix(ref projString);
-
-					GL.MatrixMode(MatrixMode.Modelview);
-					GL.LoadIdentity();
+					Program.Renderer.CurrentProjectionMatrix = projString;
+					Program.Renderer.CurrentViewMatrix = Matrix4.Identity;
 
 					for (double v = 0.0; v < MaxVolume; v += 128.0)
 					{

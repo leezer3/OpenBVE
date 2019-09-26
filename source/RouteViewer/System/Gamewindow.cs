@@ -29,6 +29,16 @@ namespace OpenBve
         private static bool currentlyLoading;
         private double ReducedModeEnteringTime;
 
+        protected override void OnUpdateFrame(FrameEventArgs e)
+        {
+	        base.OnUpdateFrame(e);
+
+	        if (Loading.Complete && currentlyLoading)
+	        {
+		        currentlyLoading = false;
+	        }
+        }
+
         //This renders the frame
         protected override void OnRenderFrame(FrameEventArgs e)
         {
@@ -190,8 +200,6 @@ namespace OpenBve
 			{
 				Program.currentGameWindow.Exit();
 			}
-
-			currentlyLoading = false;
 		}
 
 		internal static readonly object LoadingLock = new object();

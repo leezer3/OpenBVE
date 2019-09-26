@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBveApi.Graphics
@@ -8,6 +9,8 @@ namespace OpenBveApi.Graphics
 	/// </summary>
 	public class IndexBufferObject : IDisposable
 	{
+		public static List<IndexBufferObject> Disposable = new List<IndexBufferObject>();
+
 		private readonly int handle;
 		private readonly int[] indexData;
 		private readonly BufferUsageHint drawType;
@@ -22,6 +25,8 @@ namespace OpenBveApi.Graphics
 			GL.GenBuffers(1, out handle);
 			indexData = IndexData;
 			drawType = DrawType;
+
+			Disposable.Add(this);
 		}
 
 		/// <summary>

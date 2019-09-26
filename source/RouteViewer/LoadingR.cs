@@ -8,6 +8,7 @@
 using System;
 using System.Threading;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using LibRender2.Cameras;
 using OpenBveApi.Interface;
@@ -33,8 +34,11 @@ namespace OpenBve {
 
 		// load
 		internal static void Load(string RouteFile, Encoding RouteEncoding) {
-			// members
+			// reset
+			Game.Reset();
 			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString());
+			
+			// members
 			RouteProgress = 0.0;
 			TrainProgress = 0.0;
 			TrainProgressCurrentSum = 0.0;
@@ -85,12 +89,17 @@ namespace OpenBve {
 		}
 
 		// load threaded
-		private static void LoadThreaded() {
-			try {
-				LoadEverythingThreaded();
-			} catch (Exception ex) {
+		private static async Task LoadThreaded()
+		{
+			try
+			{
+				await Task.Run(() => LoadEverythingThreaded());
+			}
+			catch (Exception ex)
+			{
 				Interface.AddMessage(MessageType.Critical, false, "The route and train loader encountered the following critical error: " + ex.Message);
 			}
+
 			Complete = true;
 		}
 
@@ -105,10 +114,10 @@ namespace OpenBve {
 			Complete = false;
 			CurrentRouteFile = RouteFile;
 			CurrentRouteEncoding = RouteEncoding;
-			
+
 			//Set the route and train folders in the info class
-			Loader = new Thread(LoadThreaded) { IsBackground = true };
-			Loader.Start();
+			// ReSharper disable once UnusedVariable
+			Task loadThreaded = LoadThreaded();
 		}
 
 		private static void LoadEverythingThreaded() {
@@ -116,8 +125,6 @@ namespace OpenBve {
 			string ObjectFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Object");
 			string SoundFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Sound");
 			// string CompatibilityFolder = OpenBveApi.Path.CombineDirectory(Application.StartupPath, "Compatibility");
-			// reset
-			Game.Reset();
 			Game.MinimalisticSimulation = true;
 			// screen
 
@@ -130,7 +137,6 @@ namespace OpenBve {
 			Program.CurrentRoute.Atmosphere.CalculateSeaLevelConstants();
 			RouteProgress = 1.0;
 			// camera
-			Program.Renderer.InitializeVisibility();
 			World.CameraTrackFollower.UpdateAbsolute( 0.0, true, false);
 			World.CameraTrackFollower.UpdateAbsolute(0.1, true, false);
 			World.CameraTrackFollower.UpdateAbsolute(-0.1, true, false);

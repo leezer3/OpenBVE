@@ -179,6 +179,16 @@ namespace LibRender2
 				vao.Dispose();
 			}
 
+			foreach (VertexBufferObject vbo in VertexBufferObject.Disposable)
+			{
+				vbo.Dispose();
+			}
+
+			foreach (IndexBufferObject ibo in IndexBufferObject.Disposable)
+			{
+				ibo.Dispose();
+			}
+
 			foreach (Shader shader in Shader.Disposable)
 			{
 				shader.Dispose();

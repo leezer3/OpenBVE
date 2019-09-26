@@ -49,7 +49,6 @@ namespace TrainEditor2
 			Interface.LoadOptions();
 
 			Renderer = new NewRenderer();
-			Renderer.Initialize(CurrentHost, Interface.CurrentOptions);
 
 			SoundApi = new SoundApi();
 			SoundApi.Initialize(CurrentHost, SoundRange.Medium);
