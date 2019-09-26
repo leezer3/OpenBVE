@@ -503,7 +503,7 @@ namespace OpenBve.Graphics
                  * This is actually an animated object generated on the fly and held in memory
                  */
 				ResetOpenGlState();
-				OptionLighting = false;
+				OptionLighting = true;
 				GL.Enable(EnableCap.Blend);
 				GL.DepthMask(false);
 				GL.Disable(EnableCap.DepthTest);
@@ -519,12 +519,11 @@ namespace OpenBve.Graphics
 			}
 
 			// render touch
+			OptionLighting = false;
 			Touch.RenderScene();
 
 			// render overlays
 			ResetOpenGlState();
-			OptionLighting = false;
-			OptionFog = false;
 			GL.Disable(EnableCap.DepthTest);
 			overlays.Render(TimeElapsed);
 			OptionLighting = true;

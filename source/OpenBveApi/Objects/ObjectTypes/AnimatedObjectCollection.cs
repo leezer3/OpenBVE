@@ -61,8 +61,8 @@ namespace OpenBveApi.Objects
 							if (free[i])
 							{
 								OpenTK.Vector4d p = new OpenTK.Vector4d((OpenTK.Vector3d)Position, 1.0);
-								p = OpenTK.Vector4d.Transform(p,((OpenTK.Matrix4d)new Transformation(BaseTransformation, AuxTransformation)).Inverted());
-								p = OpenTK.Vector4d.Transform(p, Objects[i].States[0].Translation.Inverted());
+								p = OpenTK.Vector4d.Transform(p,((OpenTK.Matrix4d)new Transformation(BaseTransformation, AuxTransformation)));
+								p = OpenTK.Vector4d.Transform(p, Objects[i].States[0].Translation);
 								double zOffset = Objects[i].States[0].Translation.ExtractTranslation().Z;
 								currentHost.CreateStaticObject(Objects[i].States[0].Prototype, new Vector3(p.X, p.Y, p.Z), BaseTransformation, AuxTransformation, AccurateObjectDisposal, zOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 							}
