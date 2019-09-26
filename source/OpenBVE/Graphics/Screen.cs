@@ -176,7 +176,7 @@ namespace OpenBve
 			}
 			Program.Renderer.Lighting.Initialize();
 			Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-			//LibRender.MotionBlur.Initialize(Interface.CurrentOptions.MotionBlur);  // TODO
+			Program.Renderer.MotionBlur.Initialize(Interface.CurrentOptions.MotionBlur);
 			lock (Illustrations.Locker)
 			{
 				Timetable.CreateTimetable();

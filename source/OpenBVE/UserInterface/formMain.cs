@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml;
+using LibRender2.MotionBlurs;
 using OpenBve.UserInterface;
 using OpenBveApi;
 using OpenBveApi.Graphics;
@@ -405,7 +406,7 @@ namespace OpenBve {
 			updownDistance.Value = (decimal)Interface.CurrentOptions.ViewingDistance;
 			comboboxMotionBlur.Items.Clear();
 			comboboxMotionBlur.Items.AddRange(new object[] { "", "", "", "" });
-			//comboboxMotionBlur.SelectedIndex = (int)Interface.CurrentOptions.MotionBlur;
+			comboboxMotionBlur.SelectedIndex = (int)Interface.CurrentOptions.MotionBlur;
 			trackbarTransparency.Value = (int)Interface.CurrentOptions.TransparencyMode;
 			updownTimeAccelerationFactor.Value = Interface.CurrentOptions.TimeAccelerationFactor > updownTimeAccelerationFactor.Maximum ? updownTimeAccelerationFactor.Maximum : Interface.CurrentOptions.TimeAccelerationFactor;
 			checkboxToppling.Checked = Interface.CurrentOptions.Toppling;
@@ -909,7 +910,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.AntiAliasingLevel = (int)Math.Round(updownAntiAliasing.Value);
 			Interface.CurrentOptions.TransparencyMode = (TransparencyMode)trackbarTransparency.Value;
 			Interface.CurrentOptions.ViewingDistance = (int)Math.Round(updownDistance.Value);
-			//Interface.CurrentOptions.MotionBlur = (MotionBlurMode)comboboxMotionBlur.SelectedIndex;
+			Interface.CurrentOptions.MotionBlur = (MotionBlurMode)comboboxMotionBlur.SelectedIndex;
 			Interface.CurrentOptions.Toppling = checkboxToppling.Checked;
 			Interface.CurrentOptions.Collisions = checkboxCollisions.Checked;
 			Interface.CurrentOptions.Derailments = checkboxDerailments.Checked;

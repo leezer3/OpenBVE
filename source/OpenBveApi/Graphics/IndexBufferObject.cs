@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBveApi.Graphics
@@ -9,11 +8,10 @@ namespace OpenBveApi.Graphics
 	/// </summary>
 	public class IndexBufferObject : IDisposable
 	{
-		public static List<IndexBufferObject> Disposable = new List<IndexBufferObject>();
-
 		private readonly int handle;
 		private readonly int[] indexData;
 		private readonly BufferUsageHint drawType;
+		private bool disposed;
 
 		/// <summary>
 		/// Constructor
@@ -25,8 +23,6 @@ namespace OpenBveApi.Graphics
 			GL.GenBuffers(1, out handle);
 			indexData = IndexData;
 			drawType = DrawType;
-
-			Disposable.Add(this);
 		}
 
 		/// <summary>
@@ -70,16 +66,12 @@ namespace OpenBveApi.Graphics
 		/// </summary>
 		public void Dispose()
 		{
-			GL.DeleteBuffer(handle);
-			GC.SuppressFinalize(this);
-		}
-
-		/// <summary>
-		/// Finalizer, Dispose method should be called not this 
-		/// </summary>
-		~IndexBufferObject()
-		{
-			GL.DeleteBuffer(handle);
+			if (!disposed)
+			{
+				GL.DeleteBuffer(handle);
+				GC.SuppressFinalize(this);
+				disposed = true;
+			}
 		}
 	}
 }

@@ -22,6 +22,7 @@ namespace LibRender2.Shaders
 		private int fragmentShader;
 		public readonly VertexLayout VertexLayout;
 		public readonly UniformLayout UniformLayout;
+		private bool disposed;
 
 		/// <summary>
 		/// Constructor
@@ -185,16 +186,12 @@ namespace LibRender2.Shaders
 		/// </summary>
 		public void Dispose()
 		{
-			GL.DeleteProgram(handle);
-			GC.SuppressFinalize(this);
-		}
-
-		/// <summary>
-		/// finalizer make sure underlying openTK shader has been release
-		/// </summary>
-		~Shader()
-		{
-			GL.DeleteProgram(handle);
+			if (!disposed)
+			{
+				GL.DeleteProgram(handle);
+				GC.SuppressFinalize(this);
+				disposed = true;
+			}
 		}
 
 		#region SetUniform

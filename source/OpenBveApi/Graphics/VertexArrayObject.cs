@@ -14,6 +14,7 @@ namespace OpenBveApi.Graphics
 		private readonly int handle;
 		private VertexBufferObject vbo;
 		private IndexBufferObject ibo;
+		private bool disposed;
 
 		/// <summary>
 		/// Constructor
@@ -123,22 +124,15 @@ namespace OpenBveApi.Graphics
 		/// </summary>
 		public void Dispose()
 		{
-			ibo?.Dispose();
-			vbo?.Dispose();
+			if (!disposed)
+			{
+				ibo?.Dispose();
+				vbo?.Dispose();
 
-			GL.DeleteVertexArray(handle);
-			GC.SuppressFinalize(this);
-		}
-
-		/// <summary>
-		/// Finalizer, Dispose method should be called not this 
-		/// </summary>
-		~VertexArrayObject()
-		{
-			ibo?.Dispose();
-			vbo?.Dispose();
-
-			GL.DeleteVertexArray(handle);
+				GL.DeleteVertexArray(handle);
+				GC.SuppressFinalize(this);
+				disposed = true;
+			}
 		}
 	}
 }

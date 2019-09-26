@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using LibRender2;
+using LibRender2.MotionBlurs;
 using LibRender2.Viewports;
 using OpenBve.Graphics.Renderers;
 using OpenBveApi;
@@ -394,7 +395,14 @@ namespace OpenBve.Graphics
 			// motion blur
 			GL.Disable(EnableCap.DepthTest);
 			GL.DepthMask(false);
-			// TODO
+			GL.AlphaFunc(AlphaFunction.Greater, 0.0f);
+
+			if (Interface.CurrentOptions.MotionBlur != MotionBlurMode.None)
+			{
+				MotionBlur.RenderFullscreen(Interface.CurrentOptions.MotionBlur, FrameRate, Math.Abs(Camera.CurrentSpeed));
+			}
+
+			GL.AlphaFunc(AlphaFunction.Always, 0.0f);
 
 			// overlay layer
 			OptionFog = false;

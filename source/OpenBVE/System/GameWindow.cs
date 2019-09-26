@@ -325,7 +325,7 @@ namespace OpenBve
 			HUD.LoadHUD();
 			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString());
 			Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
-			//LibRender.MotionBlur.Initialize(Interface.CurrentOptions.MotionBlur);  // TODO
+			Program.Renderer.MotionBlur.Initialize(Interface.CurrentOptions.MotionBlur);
 			Loading.LoadAsynchronously(MainLoop.currentResult.RouteFile, MainLoop.currentResult.RouteEncoding, MainLoop.currentResult.TrainFolder, MainLoop.currentResult.TrainEncoding);
 			LoadingScreenLoop();
 			//Add event handler hooks for keyboard and mouse buttons

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
@@ -10,11 +9,10 @@ namespace OpenBveApi.Graphics
 	/// </summary>
 	public class VertexBufferObject : IDisposable
 	{
-		public static List<VertexBufferObject> Disposable = new List<VertexBufferObject>();
-
 		private readonly int handle;
 		private readonly LibRenderVertex[] vertexData;
 		private readonly BufferUsageHint drawType;
+		private bool disposed;
 
 		/// <summary>
 		/// Constructor
@@ -26,8 +24,6 @@ namespace OpenBveApi.Graphics
 			GL.GenBuffers(1, out handle);
 			vertexData = VertexData;
 			drawType = DrawType;
-
-			Disposable.Add(this);
 		}
 
 		/// <summary>
@@ -137,16 +133,12 @@ namespace OpenBveApi.Graphics
 		/// </summary>
 		public void Dispose()
 		{
-			GL.DeleteBuffer(handle);
-			GC.SuppressFinalize(this);
-		}
-
-		/// <summary>
-		/// Finalizer, Dispose method should be called not this 
-		/// </summary>
-		~VertexBufferObject()
-		{
-			GL.DeleteBuffer(handle);
+			if (!disposed)
+			{
+				GL.DeleteBuffer(handle);
+				GC.SuppressFinalize(this);
+				disposed = true;
+			}
 		}
 	}
 }

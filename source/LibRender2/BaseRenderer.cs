@@ -6,6 +6,7 @@ using LibRender2.Cameras;
 using LibRender2.Fogs;
 using LibRender2.Lightings;
 using LibRender2.Loadings;
+using LibRender2.MotionBlurs;
 using LibRender2.Objects;
 using LibRender2.Overlays;
 using LibRender2.Primitives;
@@ -62,6 +63,7 @@ namespace LibRender2
 		public Rectangle Rectangle;
 		public Loading Loading;
 		public Keys Keys;
+		public MotionBlur MotionBlur;
 
 		public Matrix4 CurrentProjectionMatrix;
 		public Matrix4 CurrentViewMatrix;
@@ -140,6 +142,7 @@ namespace LibRender2
 			Rectangle = new Rectangle(this);
 			Loading = new Loading(this);
 			Keys = new Keys(this);
+			MotionBlur = new MotionBlur(this);
 
 			StaticObjectStates = new List<ObjectState>();
 			DynamicObjectStates = new List<ObjectState>();
@@ -177,16 +180,6 @@ namespace LibRender2
 			foreach (VertexArrayObject vao in VertexArrayObject.Disposable)
 			{
 				vao.Dispose();
-			}
-
-			foreach (VertexBufferObject vbo in VertexBufferObject.Disposable)
-			{
-				vbo.Dispose();
-			}
-
-			foreach (IndexBufferObject ibo in IndexBufferObject.Disposable)
-			{
-				ibo.Dispose();
 			}
 
 			foreach (Shader shader in Shader.Disposable)

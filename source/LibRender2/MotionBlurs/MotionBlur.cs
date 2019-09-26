@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL;
+﻿using System;
+using OpenTK.Graphics.OpenGL;
 
 namespace LibRender2.MotionBlurs
 {
@@ -45,7 +46,84 @@ namespace LibRender2.MotionBlurs
 		/// <summary>This function renderers full-screen motion blur if selected</summary>
 		public void RenderFullscreen(MotionBlurMode mode, double frameRate, double speed)
 		{
+			if (renderer.Screen.Minimized)
+			{
+				/*
+		         * HACK:
+		         * This breaks if minimized, even if we don't reset the W / H values
+		         */
+				return;
+			}
 
+			GL.Enable(EnableCap.Texture2D);
+
+			// render
+			if (PixelBufferOpenGlTextureIndex >= 0)
+			{
+				double strength;
+
+				switch (mode)
+				{
+					case MotionBlurMode.Low: strength = 0.0025; break;
+					case MotionBlurMode.Medium: strength = 0.0040; break;
+					case MotionBlurMode.High: strength = 0.0064; break;
+					default: strength = 0.0040; break;
+				}
+
+				double denominator = strength * frameRate * Math.Sqrt(speed);
+				float factor;
+
+				if (denominator > 0.001)
+				{
+					factor = (float)Math.Exp(-1.0 / denominator);
+				}
+				else
+				{
+					factor = 0.0f;
+				}
+
+				// initialize
+				GL.Enable(EnableCap.Blend);
+				GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+
+				GL.MatrixMode(MatrixMode.Projection);
+				GL.PushMatrix();
+				GL.LoadIdentity();
+				GL.Ortho(0.0f, renderer.Screen.Width, 0.0f, renderer.Screen.Height, -1.0f, 1.0f);
+
+				GL.MatrixMode(MatrixMode.Modelview);
+				GL.PushMatrix();
+				GL.LoadIdentity();
+
+				// render
+				GL.BindTexture(TextureTarget.Texture2D, PixelBufferOpenGlTextureIndex);
+				GL.Color4(1.0f, 1.0f, 1.0f, factor);
+				GL.Begin(PrimitiveType.Polygon);
+				GL.TexCoord2(0.0f, 0.0f);
+				GL.Vertex2(0.0f, 0.0f);
+				GL.TexCoord2(0.0f, 1.0f);
+				GL.Vertex2(0.0f, renderer.Screen.Height);
+				GL.TexCoord2(1.0f, 1.0f);
+				GL.Vertex2(renderer.Screen.Width, renderer.Screen.Height);
+				GL.TexCoord2(1.0f, 0.0f);
+				GL.Vertex2(renderer.Screen.Width, 0.0f);
+				GL.End();
+
+				// finalize
+				GL.PopMatrix();
+
+				GL.MatrixMode(MatrixMode.Projection);
+				GL.PopMatrix();
+			}
+
+			// retrieve buffer
+			{
+				GL.BindTexture(TextureTarget.Texture2D, PixelBufferOpenGlTextureIndex);
+				GL.CopyTexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgb8, 0, 0, renderer.Screen.Width, renderer.Screen.Height, 0);
+			}
+
+			GL.BindTexture(TextureTarget.Texture2D, 0);
+			GL.Disable(EnableCap.Texture2D);
 		}
 	}
 }

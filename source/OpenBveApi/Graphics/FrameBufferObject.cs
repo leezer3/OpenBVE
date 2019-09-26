@@ -12,6 +12,7 @@ namespace OpenBveApi.Graphics
 		private readonly Dictionary<int, I2dPixelArray> colorBuffers;
 		private I2dPixelArray depthBuffer;
 		private I2dPixelArray stencilBuffer;
+		private bool disposed;
 
 		public FrameBufferObject()
 		{
@@ -148,31 +149,21 @@ namespace OpenBveApi.Graphics
 
 		public void Dispose()
 		{
-			stencilBuffer?.Dispose();
-
-			depthBuffer?.Dispose();
-
-			foreach (KeyValuePair<int, I2dPixelArray> buffer in colorBuffers)
+			if (!disposed)
 			{
-				buffer.Value.Dispose();
+				stencilBuffer?.Dispose();
+
+				depthBuffer?.Dispose();
+
+				foreach (KeyValuePair<int, I2dPixelArray> buffer in colorBuffers)
+				{
+					buffer.Value?.Dispose();
+				}
+
+				GL.DeleteFramebuffer(handle);
+				GC.SuppressFinalize(this);
+				disposed = true;
 			}
-
-			GL.DeleteFramebuffer(handle);
-			GC.SuppressFinalize(this);
-		}
-
-		~FrameBufferObject()
-		{
-			stencilBuffer?.Dispose();
-
-			depthBuffer?.Dispose();
-
-			foreach (KeyValuePair<int, I2dPixelArray> buffer in colorBuffers)
-			{
-				buffer.Value.Dispose();
-			}
-
-			GL.DeleteFramebuffer(handle);
 		}
 
 		public enum TargetBuffer
@@ -182,10 +173,12 @@ namespace OpenBveApi.Graphics
 			Stencil
 		}
 
-		private interface I2dPixelArray : IDisposable
+		private abstract class I2dPixelArray : IDisposable
 		{
-			void Bind();
-			void UnBind();
+			protected bool disposed;
+			internal abstract void Bind();
+			internal abstract void UnBind();
+			public abstract void Dispose();
 		}
 
 		private class TextureBuffer : I2dPixelArray
@@ -204,25 +197,24 @@ namespace OpenBveApi.Graphics
 				GL.BindTexture(TextureTarget.Texture2D, 0);
 			}
 
-			public void Bind()
+			internal override void Bind()
 			{
 				GL.BindTexture(TextureTarget.Texture2D, handle);
 			}
 
-			public void UnBind()
+			internal override void UnBind()
 			{
 				GL.BindTexture(TextureTarget.Texture2D, 0);
 			}
 
-			public void Dispose()
+			public override void Dispose()
 			{
-				GL.DeleteTexture(handle);
-				GC.SuppressFinalize(this);
-			}
-
-			~TextureBuffer()
-			{
-				GL.DeleteTexture(handle);
+				if (!disposed)
+				{
+					GL.DeleteTexture(handle);
+					GC.SuppressFinalize(this);
+					disposed = true;
+				}
 			}
 		}
 
@@ -238,25 +230,24 @@ namespace OpenBveApi.Graphics
 				GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, 0);
 			}
 
-			public void Bind()
+			internal override void Bind()
 			{
 				GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, handle);
 			}
 
-			public void UnBind()
+			internal override void UnBind()
 			{
 				GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, 0);
 			}
 
-			public void Dispose()
+			public override void Dispose()
 			{
-				GL.DeleteRenderbuffer(handle);
-				GC.SuppressFinalize(this);
-			}
-
-			~RenderBuffer()
-			{
-				GL.DeleteRenderbuffer(handle);
+				if (!disposed)
+				{
+					GL.DeleteRenderbuffer(handle);
+					GC.SuppressFinalize(this);
+					disposed = true;
+				}
 			}
 		}
 	}
