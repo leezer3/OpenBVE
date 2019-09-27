@@ -64,9 +64,8 @@ namespace OpenBveApi.Objects
 								mat *= Objects[i].States[0].Translation;
 								mat *= Objects[i].States[0].Rotate;
 								double zOffset = mat.ExtractTranslation().Z * -1.0;
-								mat = OpenTK.Matrix4d.CreateTranslation(Position.X, Position.Y, -Position.Z) * mat;
 								mat *= (OpenTK.Matrix4d)new Transformation(BaseTransformation, AuxTransformation);
-								OpenTK.Vector4d p = OpenTK.Vector4d.Transform(new OpenTK.Vector4d((OpenTK.Vector3d)Position, 1.0), mat);
+								OpenTK.Vector4d p = OpenTK.Vector4d.Transform(new OpenTK.Vector4d(Position.X, Position.Y, -Position.Z, 1.0), mat);
 								currentHost.CreateStaticObject(Objects[i].States[0].Prototype, new Vector3(p.X, p.Y, -p.Z), BaseTransformation, AuxTransformation, AccurateObjectDisposal, zOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 							}
 							else
