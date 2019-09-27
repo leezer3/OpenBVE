@@ -110,12 +110,10 @@ namespace OpenBveApi.World
 
 		public static explicit operator OpenTK.Matrix4d(Transformation t)
 		{
-			return new OpenTK.Matrix4d(
-				t.X.X, t.Y.X, t.Z.X, 0.0,
-				t.X.Y, t.Y.Y, t.Z.Y, 0.0,
-				t.X.Z, t.Y.Z, t.Z.Z, 0.0,
-				0.0, 0.0, 0.0, 1.0
-			);
+			OpenTK.Quaterniond rot1 = Quaternion.RotationBetweenVectors(OpenTK.Vector3d.UnitZ * -1.0, new OpenTK.Vector3d(t.Z.X, t.Z.Y, -t.Z.Z).Normalized());
+			OpenTK.Vector3d newUp = OpenTK.Vector3d.Transform(OpenTK.Vector3d.UnitY, rot1);
+			OpenTK.Quaterniond rot2 = Quaternion.RotationBetweenVectors(newUp, new OpenTK.Vector3d(t.Y.X, t.Y.Y, -t.Y.Z).Normalized());
+			return OpenTK.Matrix4d.CreateFromQuaternion(rot2 * rot1);
 		}
 	}
 

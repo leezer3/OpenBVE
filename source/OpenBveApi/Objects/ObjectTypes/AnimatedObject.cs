@@ -800,11 +800,7 @@ namespace OpenBveApi.Objects
 			if (Camera != null && Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 			{
 				internalObject.Rotate *= States[s].Translation * OpenTK.Matrix4d.CreateTranslation(-Position.X, -Position.Y, Position.Z);
-
-				OpenTK.Quaterniond rot1 = Quaternion.RotationBetweenVectors(OpenTK.Vector3d.UnitZ * -1.0, new OpenTK.Vector3d(Camera.AbsoluteDirection.X, Camera.AbsoluteDirection.Y, -Camera.AbsoluteDirection.Z).Normalized());
-				OpenTK.Vector3d newUp = OpenTK.Vector3d.Transform(OpenTK.Vector3d.UnitY, rot1);
-				OpenTK.Quaterniond rot2 = Quaternion.RotationBetweenVectors(newUp, new OpenTK.Vector3d(Camera.AbsoluteUp.X, Camera.AbsoluteUp.Y, -Camera.AbsoluteUp.Z).Normalized());
-				internalObject.Rotate *= OpenTK.Matrix4d.CreateFromQuaternion(rot2 * rot1);
+				internalObject.Rotate *= (OpenTK.Matrix4d)new Transformation((Vector3)Camera.AbsoluteDirection, (Vector3)Camera.AbsoluteUp, (Vector3)Camera.AbsoluteSide);
 
 				// translate
 				double dx = -System.Math.Tan(Camera.Alignment.Yaw) - Camera.Alignment.Position.X;
@@ -816,11 +812,7 @@ namespace OpenBveApi.Objects
 			else
 			{
 				internalObject.Rotate *= States[s].Translation;
-
-				OpenTK.Quaterniond rot1 = Quaternion.RotationBetweenVectors(OpenTK.Vector3d.UnitZ * -1.0, new OpenTK.Vector3d(Direction.X, Direction.Y, -Direction.Z).Normalized());
-				OpenTK.Vector3d newUp = OpenTK.Vector3d.Transform(OpenTK.Vector3d.UnitY, rot1);
-				OpenTK.Quaterniond rot2 = Quaternion.RotationBetweenVectors(newUp, new OpenTK.Vector3d(Up.X, Up.Y, -Up.Z).Normalized());
-				internalObject.Rotate *= OpenTK.Matrix4d.CreateFromQuaternion(rot2 * rot1);
+				internalObject.Rotate *= (OpenTK.Matrix4d)new Transformation(Direction, Up, Side);
 
 				// translate
 				internalObject.Translation = OpenTK.Matrix4d.CreateTranslation(Position.X, Position.Y, -Position.Z);
