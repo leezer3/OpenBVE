@@ -22,12 +22,10 @@ in vec3 iNormal;
 in vec2 iUv;
 in vec4 iColor;
 
-uniform mat4 uCurrentTranslateMatrix;
-uniform mat4 uCurrentScaleMatrix;
-uniform mat4 uCurrentRotateMatrix;
-uniform mat4 uCurrentTextureTranslateMatrix;
 uniform mat4 uCurrentProjectionMatrix;
-uniform mat4 uCurrentViewMatrix;
+uniform mat4 uCurrentModelViewMatrix;
+uniform mat4 uCurrentNormalMatrix;
+uniform mat4 uCurrentTextureMatrix;
 
 uniform vec3 uEyePosition;
 uniform bool uIsLight;
@@ -43,8 +41,8 @@ out float oFogFactor;
 
 void main()
 {
-	vec3 worldPos = (uCurrentTranslateMatrix * uCurrentRotateMatrix * uCurrentScaleMatrix * vec4(iPosition, 1.0)).xyz;
-	vec4 viewPos = uCurrentViewMatrix * vec4(worldPos, 1.0);
+	vec4 viewPos = uCurrentModelViewMatrix * vec4(iPosition, 1.0);
+	vec4 viewNormal = uCurrentNormalMatrix * vec4(iNormal, 1.0);
 	gl_Position = uCurrentProjectionMatrix * viewPos;
 
 	// Lighting
@@ -52,18 +50,22 @@ void main()
 	vec4 ambient  = uLight.ambient * uMaterial.ambient;
 
 	// Diffuse
-	vec3 norm = normalize(iNormal);
-	vec3 lightDir = normalize(uLight.position - worldPos);
-	float diff = max(dot(norm, lightDir), 0.0);
+	vec3 norm = normalize(viewNormal.xyz);
+	vec3 eye = normalize(-viewPos.xyz);
+	float diff = max(dot(norm, uLight.position), 0.0);
 	vec4 diffuse = uLight.diffuse * (diff * uMaterial.diffuse);
 
 	// Specular
-	vec3 eyeDir = normalize(uEyePosition - worldPos);
-	vec3 reflectDir = reflect(-lightDir, norm);
-	float spec = pow(max(dot(eyeDir, reflectDir), 0.0), uMaterial.shininess);
-	vec4 specular = uLight.specular * (spec * uMaterial.specular);
+	vec4 specular = vec4(0.0);
 
-	vec4 result = ambient + diffuse + specular + uMaterial.emission;
+	if(diff > 0.0)
+	{
+		vec3 halfVector = normalize(uLight.position + eye);
+		float spec = pow(max(dot(halfVector, norm), 0.0), uMaterial.shininess);
+		specular = uLight.specular * (spec * uMaterial.specular);
+	}
+
+	vec4 result = clamp(ambient + diffuse + specular + uMaterial.emission, 0.0, 1.0);
 
 	// Fog
 	oFogFactor = 1.0;
@@ -73,7 +75,7 @@ void main()
 		oFogFactor *= clamp((uFogEnd - length(viewPos)) / (uFogEnd - uFogStart), 0.0, 1.0);
 	}
 
-	oUv = (uCurrentTextureTranslateMatrix * vec4(iUv, 1.0, 1.0)).xy;
+	oUv = (uCurrentTextureMatrix * vec4(iUv, 1.0, 1.0)).xy;
 
 	oColor = iColor;
 

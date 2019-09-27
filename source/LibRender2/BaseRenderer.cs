@@ -550,12 +550,10 @@ namespace LibRender2
 				throw new InvalidOperationException($"OpenGL Error: {message.ToString()}");
 			}
 
-			Shader.SetCurrentTranslateMatrix(Matrix4d.Identity);
-			Shader.SetCurrentScaleMatrix(Matrix4d.Identity);
-			Shader.SetCurrentRotateMatrix(Matrix4d.Identity);
-			Shader.SetCurrentTextureTranslateMatrix(Matrix4d.Identity);
 			Shader.SetCurrentProjectionMatrix(Matrix4d.Identity);
-			Shader.SetCurrentViewMatrix(Matrix4d.Identity);
+			Shader.SetCurrentModelViewMatrix(Matrix4d.Identity);
+			Shader.SetCurrentNormalMatrix(Matrix4d.Identity);
+			Shader.SetCurrentTextureMatrix(Matrix4d.Identity);
 			Shader.SetEyePosition(Vector3.Zero);
 			Shader.SetIsLight(false);
 			Shader.SetLightPosition(Vector3.Zero);
@@ -629,12 +627,11 @@ namespace LibRender2
 			}
 
 			// matrix
-			Shader.SetCurrentTranslateMatrix(State.Translation * Matrix4d.CreateTranslation(-EyePosition));
-			Shader.SetCurrentScaleMatrix(State.Scale);
-			Shader.SetCurrentRotateMatrix(State.Rotate);
-			Shader.SetCurrentTextureTranslateMatrix(State.TextureTranslation);
+			Matrix4d modelViewMatrix = State.Scale * State.Rotate * State.Translation * Matrix4d.CreateTranslation(-EyePosition) * CurrentViewMatrix;
 			Shader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
-			Shader.SetCurrentViewMatrix(CurrentViewMatrix);
+			Shader.SetCurrentModelViewMatrix(modelViewMatrix);
+			Shader.SetCurrentNormalMatrix(Matrix4d.Transpose(modelViewMatrix.Inverted()));
+			Shader.SetCurrentTextureMatrix(State.TextureTranslation);
 
 			if (OptionWireFrame || IsDebugTouchMode)
 			{

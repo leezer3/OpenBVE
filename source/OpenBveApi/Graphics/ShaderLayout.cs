@@ -29,34 +29,24 @@
 	public class UniformLayout
 	{
 		/// <summary>
-		/// The handle of "uCurrentTranslateMatrix" within the shader
-		/// </summary>
-		public int CurrentTranslateMatrix = -1;
-
-		/// <summary>
-		/// The handle of "uCurrentScaleMatrix" within the shader
-		/// </summary>
-		public int CurrentScaleMatrix = -1;
-
-		/// <summary>
-		/// The handle of "uCurrentRotateMatrix" within the shader
-		/// </summary>
-		public int CurrentRotateMatrix = -1;
-
-		/// <summary>
-		/// The handle of "uCurrentTextureTranslateMatrix" within the shader
-		/// </summary>
-		public int CurrentTextureTranslateMatrix = -1;
-
-		/// <summary>
 		/// The handle of "uCurrentProjectionMatrix" within the shader
 		/// </summary>
 		public int CurrentProjectionMatrix = -1;
 
 		/// <summary>
-		/// The handle of "uCurrentViewMatrix" within the shader
+		/// The handle of "uCurrentModelViewMatrix" within the shader
 		/// </summary>
-		public int CurrentViewMatrix = -1;
+		public int CurrentModelViewMatrix = -1;
+
+		/// <summary>
+		/// The handle of "uCurrentNormalMatrix" within the shader
+		/// </summary>
+		public int CurrentNormalMatrix = -1;
+
+		/// <summary>
+		/// The handle of "uCurrentTextureMatrix" within the shader
+		/// </summary>
+		public int CurrentTextureMatrix = -1;
 
 		/// <summary>
 		/// The handle of "uEyePosition" within the shader

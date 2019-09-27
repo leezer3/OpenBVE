@@ -137,9 +137,8 @@ namespace LibRender2.Backgrounds
 				renderer.ResetShader(renderer.DefaultShader);
 
 				// matrix
-				renderer.DefaultShader.SetCurrentScaleMatrix(Matrix4d.Scale(scale));
 				renderer.DefaultShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
-				renderer.DefaultShader.SetCurrentViewMatrix(renderer.CurrentViewMatrix);
+				renderer.DefaultShader.SetCurrentModelViewMatrix(Matrix4d.Scale(scale) * renderer.CurrentViewMatrix);
 
 				// fog
 				if (renderer.OptionFog)

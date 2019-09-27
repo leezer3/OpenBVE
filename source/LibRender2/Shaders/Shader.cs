@@ -144,12 +144,10 @@ namespace LibRender2.Shaders
 		{
 			return new UniformLayout
 			{
-				CurrentTranslateMatrix = GL.GetUniformLocation(handle, "uCurrentTranslateMatrix"),
-				CurrentScaleMatrix = GL.GetUniformLocation(handle, "uCurrentScaleMatrix"),
-				CurrentRotateMatrix = GL.GetUniformLocation(handle, "uCurrentRotateMatrix"),
-				CurrentTextureTranslateMatrix = GL.GetUniformLocation(handle, "uCurrentTextureTranslateMatrix"),
 				CurrentProjectionMatrix = GL.GetUniformLocation(handle, "uCurrentProjectionMatrix"),
-				CurrentViewMatrix = GL.GetUniformLocation(handle, "uCurrentViewMatrix"),
+				CurrentModelViewMatrix = GL.GetUniformLocation(handle, "uCurrentModelViewMatrix"),
+				CurrentNormalMatrix = GL.GetUniformLocation(handle, "uCurrentNormalMatrix"),
+				CurrentTextureMatrix = GL.GetUniformLocation(handle, "uCurrentTextureMatrix"),
 				EyePosition = GL.GetUniformLocation(handle, "uEyePosition"),
 				IsLight = GL.GetUniformLocation(handle, "uIsLight"),
 				LightPosition = GL.GetUniformLocation(handle, "uLight.position"),
@@ -207,46 +205,6 @@ namespace LibRender2.Shaders
 		#region SetUniform
 
 		/// <summary>
-		/// Set the translation matrix
-		/// </summary>
-		/// <param name="TranslationMatrix"></param>
-		public void SetCurrentTranslateMatrix(Matrix4d TranslationMatrix)
-		{
-			Matrix4 matrix = ConvertToMatrix4(TranslationMatrix);
-			GL.UniformMatrix4(UniformLayout.CurrentTranslateMatrix, false, ref matrix);
-		}
-
-		/// <summary>
-		/// Set the scale matrix
-		/// </summary>
-		/// <param name="ScaleMatrix"></param>
-		public void SetCurrentScaleMatrix(Matrix4d ScaleMatrix)
-		{
-			Matrix4 matrix = ConvertToMatrix4(ScaleMatrix);
-			GL.UniformMatrix4(UniformLayout.CurrentScaleMatrix, false, ref matrix);
-		}
-
-		/// <summary>
-		/// Set the rotate matrix
-		/// </summary>
-		/// <param name="RotateMatrix"></param>
-		public void SetCurrentRotateMatrix(Matrix4d RotateMatrix)
-		{
-			Matrix4 matrix = ConvertToMatrix4(RotateMatrix);
-			GL.UniformMatrix4(UniformLayout.CurrentRotateMatrix, false, ref matrix);
-		}
-
-		/// <summary>
-		/// Set the texture translation matrix
-		/// </summary>
-		/// <param name="TranslationMatrix"></param>
-		public void SetCurrentTextureTranslateMatrix(Matrix4d TranslationMatrix)
-		{
-			Matrix4 matrix = ConvertToMatrix4(TranslationMatrix);
-			GL.UniformMatrix4(UniformLayout.CurrentTextureTranslateMatrix, false, ref matrix);
-		}
-
-		/// <summary>
 		/// Set the projection matrix
 		/// </summary>
 		/// <param name="ProjectionMatrix"></param>
@@ -257,13 +215,33 @@ namespace LibRender2.Shaders
 		}
 
 		/// <summary>
-		/// Set the view matrix
+		/// Set the model view matrix
 		/// </summary>
-		/// <param name="ViewMatrix"></param>
-		public void SetCurrentViewMatrix(Matrix4d ViewMatrix)
+		/// <param name="ModelViewMatrix"></param>
+		public void SetCurrentModelViewMatrix(Matrix4d ModelViewMatrix)
 		{
-			Matrix4 matrix = ConvertToMatrix4(ViewMatrix);
-			GL.UniformMatrix4(UniformLayout.CurrentViewMatrix, false, ref matrix);
+			Matrix4 matrix = ConvertToMatrix4(ModelViewMatrix);
+			GL.UniformMatrix4(UniformLayout.CurrentModelViewMatrix, false, ref matrix);
+		}
+
+		/// <summary>
+		/// Set the normal matrix
+		/// </summary>
+		/// <param name="NormalMatrix"></param>
+		public void SetCurrentNormalMatrix(Matrix4d NormalMatrix)
+		{
+			Matrix4 matrix = ConvertToMatrix4(NormalMatrix);
+			GL.UniformMatrix4(UniformLayout.CurrentNormalMatrix, false, ref matrix);
+		}
+
+		/// <summary>
+		/// Set the texture matrix
+		/// </summary>
+		/// <param name="TextureMatrix"></param>
+		public void SetCurrentTextureMatrix(Matrix4d TextureMatrix)
+		{
+			Matrix4 matrix = ConvertToMatrix4(TextureMatrix);
+			GL.UniformMatrix4(UniformLayout.CurrentTextureMatrix, false, ref matrix);
 		}
 
 		public void SetEyePosition(Vector3 EyePosition)
