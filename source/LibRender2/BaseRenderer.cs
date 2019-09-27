@@ -115,7 +115,7 @@ namespace LibRender2
 		/// <summary>The game's current framerate</summary>
 		public double FrameRate = 1.0;
 
-		public BaseRenderer()
+		protected BaseRenderer()
 		{
 			Screen = new Screen();
 			Camera = new CameraProperties();
@@ -168,6 +168,9 @@ namespace LibRender2
 			GL.CullFace(CullFaceMode.Front);
 			GL.Disable(EnableCap.Texture2D);
 			GL.Disable(EnableCap.Dither);
+			GL.Disable(EnableCap.Lighting);
+			GL.Disable(EnableCap.Fog);
+			GL.Fog(FogParameter.FogMode, (int)FogMode.Linear);
 		}
 
 		public void Finalization()
@@ -194,11 +197,15 @@ namespace LibRender2
 		public virtual void ResetOpenGlState()
 		{
 			GL.Enable(EnableCap.CullFace);
+			GL.Disable(EnableCap.Lighting);
+			GL.Disable(EnableCap.Fog);
 			GL.Disable(EnableCap.Texture2D);
 			GL.Disable(EnableCap.Blend);
 			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthMask(true);
+			GL.Enable(EnableCap.AlphaTest);
+			GL.AlphaFunc(AlphaFunction.Greater, 0.9f);
 			DefaultShader.Use();
 			ResetShader(DefaultShader);
 			DefaultShader.SetIsAlphaTest(true);
@@ -575,6 +582,13 @@ namespace LibRender2
 			GL.GetError();
 		}
 
+		public void SetFogForImmediateMode()
+		{
+			GL.Fog(FogParameter.FogStart, Fog.Start);
+			GL.Fog(FogParameter.FogEnd, Fog.End);
+			GL.Fog(FogParameter.FogColor, new[] { inv255 * Fog.Color.R, inv255 * Fog.Color.G, inv255 * Fog.Color.B, 1.0f });
+		}
+
 		public void RenderFace(Shader Shader, FaceState State, bool IsDebugTouchMode = false)
 		{
 			RenderFace(Shader, State.Object, State.Face, IsDebugTouchMode);
@@ -702,11 +716,7 @@ namespace LibRender2
 				{
 					if (currentHost.LoadTexture(material.DaytimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
 					{
-						if (!GL.IsEnabled(EnableCap.Texture2D))
-						{
-							GL.Enable(EnableCap.Texture2D);
-						}
-
+						GL.Enable(EnableCap.Texture2D);
 						Shader.SetIsTexture(true);
 						Shader.SetTexture(0);
 						GL.BindTexture(TextureTarget.Texture2D, material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode].Name);
@@ -718,7 +728,9 @@ namespace LibRender2
 				if (material.BlendMode == MeshMaterialBlendMode.Additive)
 				{
 					factor = 1.0f;
+					GL.Enable(EnableCap.Blend);
 					GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
+					Shader.SetIsFog(false);
 				}
 				else if (material.NighttimeTexture == null)
 				{
@@ -759,15 +771,13 @@ namespace LibRender2
 			// nighttime polygon
 			if (material.NighttimeTexture != null && currentHost.LoadTexture(material.NighttimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
 			{
-				if (!GL.IsEnabled(EnableCap.Texture2D))
-				{
-					GL.Enable(EnableCap.Texture2D);
-				}
-
 				// texture
+				GL.Enable(EnableCap.Texture2D);
 				Shader.SetIsTexture(true);
 				Shader.SetTexture(0);
 				GL.BindTexture(TextureTarget.Texture2D, material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode].Name);
+
+				GL.Enable(EnableCap.Blend);
 
 				// alpha test
 				Shader.SetIsAlphaTest(true);
@@ -820,6 +830,286 @@ namespace LibRender2
 				NormalsVAO.Draw(Shader.VertexLayout, PrimitiveType.Lines, Face.NormalsIboStartIndex, Face.Vertices.Length * 2);
 				NormalsVAO.UnBind();
 			}
+
+			// finalize
+			if (material.BlendMode == MeshMaterialBlendMode.Additive)
+			{
+				GL.Disable(EnableCap.Blend);
+				GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+			}
+		}
+
+		public void RenderFaceImmediateMode(FaceState State, bool IsDebugTouchMode = false)
+		{
+			RenderFaceImmediateMode(State.Object, State.Face, IsDebugTouchMode);
+		}
+
+		public void RenderFaceImmediateMode(FaceState State, Vector3d EyePosition, bool IsDebugTouchMode = false)
+		{
+			RenderFaceImmediateMode(State.Object, State.Face, EyePosition, IsDebugTouchMode);
+		}
+
+		public void RenderFaceImmediateMode(ObjectState State, MeshFace Face, bool IsDebugTouchMode = false)
+		{
+			RenderFaceImmediateMode(State, Face, new Vector3d(Camera.AbsolutePosition.X, Camera.AbsolutePosition.Y, -Camera.AbsolutePosition.Z), IsDebugTouchMode);
+		}
+
+		public void RenderFaceImmediateMode(ObjectState State, MeshFace Face, Vector3d EyePosition, bool IsDebugTouchMode = false)
+		{
+			if (State.Prototype.Mesh.Vertices.Length < 1)
+			{
+				return;
+			}
+
+			VertexTemplate[] vertices = State.Prototype.Mesh.Vertices;
+			MeshMaterial material = State.Prototype.Mesh.Materials[Face.Material];
+
+			if (!OptionBackFaceCulling || (Face.Flags & MeshFace.Face2Mask) != 0)
+			{
+				GL.Disable(EnableCap.CullFace);
+			}
+			else if (OptionBackFaceCulling)
+			{
+				if ((Face.Flags & MeshFace.Face2Mask) == 0)
+				{
+					GL.Enable(EnableCap.CullFace);
+				}
+			}
+
+			// matrix
+			GL.MatrixMode(MatrixMode.Projection);
+			GL.PushMatrix();
+			GL.LoadMatrix(ref CurrentProjectionMatrix);
+
+			GL.MatrixMode(MatrixMode.Modelview);
+			GL.PushMatrix();
+			GL.LoadIdentity();
+			GL.MultMatrix(ref CurrentViewMatrix);
+			Matrix4d translationMatrix = State.Translation * Matrix4d.CreateTranslation(-EyePosition);
+			GL.MultMatrix(ref translationMatrix);
+			GL.MultMatrix(ref State.Rotate);
+			GL.MultMatrix(ref State.Scale);
+
+			GL.MatrixMode(MatrixMode.Texture);
+			GL.PushMatrix();
+			GL.LoadMatrix(ref State.TextureTranslation);
+
+			// lighting
+			if (material.NighttimeTexture == null)
+			{
+				if (OptionLighting)
+				{
+					GL.Enable(EnableCap.Lighting);
+
+					if ((material.Flags & MeshMaterial.EmissiveColorMask) != 0)
+					{
+						GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new Color4(material.EmissiveColor.R, material.EmissiveColor.G, material.EmissiveColor.B, 255));
+					}
+					else
+					{
+						GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new Color4(0.0f, 0.0f, 0.0f, 1.0f));
+					}
+				}
+			}
+
+			// fog
+			if (OptionFog)
+			{
+				GL.Enable(EnableCap.Fog);
+			}
+
+			PrimitiveType DrawMode;
+
+			switch (Face.Flags & MeshFace.FaceTypeMask)
+			{
+				case MeshFace.FaceTypeTriangles:
+					DrawMode = PrimitiveType.Triangles;
+					break;
+				case MeshFace.FaceTypeTriangleStrip:
+					DrawMode = PrimitiveType.TriangleStrip;
+					break;
+				case MeshFace.FaceTypeQuads:
+					DrawMode = PrimitiveType.Quads;
+					break;
+				case MeshFace.FaceTypeQuadStrip:
+					DrawMode = PrimitiveType.QuadStrip;
+					break;
+				default:
+					DrawMode = PrimitiveType.Polygon;
+					break;
+			}
+
+			// daytime polygon
+			{
+				// texture
+				if (material.DaytimeTexture != null)
+				{
+					if (currentHost.LoadTexture(material.DaytimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
+					{
+						GL.Enable(EnableCap.Texture2D);
+						GL.BindTexture(TextureTarget.Texture2D, material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode].Name);
+					}
+				}
+
+				// blend mode
+				float factor;
+				if (material.BlendMode == MeshMaterialBlendMode.Additive)
+				{
+					factor = 1.0f;
+					GL.Enable(EnableCap.Blend);
+					GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
+					GL.Disable(EnableCap.Fog);
+				}
+				else if (material.NighttimeTexture == null)
+				{
+					float blend = inv255 * material.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
+
+					if (blend > 1.0f)
+					{
+						blend = 1.0f;
+					}
+
+					factor = 1.0f - 0.7f * blend;
+				}
+				else
+				{
+					factor = 1.0f;
+				}
+
+				float alphaFactor;
+				if (material.GlowAttenuationData != 0)
+				{
+					alphaFactor = (float)Glow.GetDistanceFactor(vertices, ref Face, material.GlowAttenuationData, Camera.AbsolutePosition);
+				}
+				else
+				{
+					alphaFactor = 1.0f;
+				}
+
+				GL.Begin(DrawMode);
+
+				if (OptionWireFrame)
+				{
+					GL.Color4(inv255 * material.Color.R * factor, inv255 * material.Color.G * factor, inv255 * material.Color.B * factor, 1.0f);
+				}
+				else
+				{
+					GL.Color4(inv255 * material.Color.R * factor, inv255 * material.Color.G * factor, inv255 * material.Color.B * factor, inv255 * material.Color.A * alphaFactor);
+				}
+
+				for (int i = 0; i < Face.Vertices.Length; i++)
+				{
+					GL.Normal3(Face.Vertices[i].Normal.X, Face.Vertices[i].Normal.Y, -Face.Vertices[i].Normal.Z);
+					GL.TexCoord2(vertices[Face.Vertices[i].Index].TextureCoordinates.X, vertices[Face.Vertices[i].Index].TextureCoordinates.Y);
+
+					if (vertices[Face.Vertices[i].Index] is ColoredVertex)
+					{
+						ColoredVertex v = (ColoredVertex)vertices[Face.Vertices[i].Index];
+						GL.Color3(v.Color.R, v.Color.G, v.Color.B);
+					}
+
+					GL.Vertex3(vertices[Face.Vertices[i].Index].Coordinates.X, vertices[Face.Vertices[i].Index].Coordinates.Y, -vertices[Face.Vertices[i].Index].Coordinates.Z);
+				}
+
+				GL.End();
+
+				GL.BindTexture(TextureTarget.Texture2D, 0);
+			}
+
+			// nighttime polygon
+			if (material.NighttimeTexture != null && currentHost.LoadTexture(material.NighttimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
+			{
+				// texture
+				GL.Enable(EnableCap.Texture2D);
+				GL.BindTexture(TextureTarget.Texture2D, material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode].Name);
+
+				GL.Enable(EnableCap.Blend);
+
+				// alpha test
+				GL.Enable(EnableCap.AlphaTest);
+				GL.AlphaFunc(AlphaFunction.Greater, 0.0f);
+
+				// blend mode
+				float alphaFactor;
+				if (material.GlowAttenuationData != 0)
+				{
+					alphaFactor = (float)Glow.GetDistanceFactor(vertices, ref Face, material.GlowAttenuationData, Camera.AbsolutePosition);
+					float blend = inv255 * material.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
+					if (blend > 1.0f)
+					{
+						blend = 1.0f;
+					}
+
+					alphaFactor *= blend;
+				}
+				else
+				{
+					alphaFactor = inv255 * material.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
+					if (alphaFactor > 1.0f)
+					{
+						alphaFactor = 1.0f;
+					}
+				}
+
+				GL.Begin(DrawMode);
+
+				if (OptionWireFrame)
+				{
+					GL.Color4(inv255 * material.Color.R, inv255 * material.Color.G, inv255 * material.Color.B, 1.0f);
+				}
+				else
+				{
+					GL.Color4(inv255 * material.Color.R, inv255 * material.Color.G, inv255 * material.Color.B, inv255 * material.Color.A * alphaFactor);
+				}
+
+				for (int i = 0; i < Face.Vertices.Length; i++)
+				{
+					GL.Normal3(Face.Vertices[i].Normal.X, Face.Vertices[i].Normal.Y, -Face.Vertices[i].Normal.Z);
+					GL.TexCoord2(vertices[Face.Vertices[i].Index].TextureCoordinates.X, vertices[Face.Vertices[i].Index].TextureCoordinates.Y);
+
+					if (vertices[Face.Vertices[i].Index] is ColoredVertex)
+					{
+						ColoredVertex v = (ColoredVertex)vertices[Face.Vertices[i].Index];
+						GL.Color3(v.Color.R, v.Color.G, v.Color.B);
+					}
+
+					GL.Vertex3(vertices[Face.Vertices[i].Index].Coordinates.X, vertices[Face.Vertices[i].Index].Coordinates.Y, -vertices[Face.Vertices[i].Index].Coordinates.Z);
+				}
+
+				GL.End();
+
+				GL.BindTexture(TextureTarget.Texture2D, 0);
+			}
+
+			GL.Disable(EnableCap.Texture2D);
+
+			// normals
+			if (OptionNormals)
+			{
+				for (int i = 0; i < Face.Vertices.Length; i++)
+				{
+					GL.Begin(PrimitiveType.Lines);
+					GL.Color4(new Color4(material.Color.R, material.Color.G, material.Color.B, 255));
+					GL.Vertex3(vertices[Face.Vertices[i].Index].Coordinates.X, vertices[Face.Vertices[i].Index].Coordinates.Y, -vertices[Face.Vertices[i].Index].Coordinates.Z);
+					GL.Vertex3(vertices[Face.Vertices[i].Index].Coordinates.X + Face.Vertices[i].Normal.X, vertices[Face.Vertices[i].Index].Coordinates.Y + +Face.Vertices[i].Normal.Z, -(vertices[Face.Vertices[i].Index].Coordinates.Z + Face.Vertices[i].Normal.Z));
+					GL.End();
+				}
+			}
+
+			// finalize
+			if (material.BlendMode == MeshMaterialBlendMode.Additive)
+			{
+				GL.Disable(EnableCap.Blend);
+				GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+			}
+
+			GL.PopMatrix();
+
+			GL.MatrixMode(MatrixMode.Modelview);
+			GL.PopMatrix();
+
+			GL.MatrixMode(MatrixMode.Projection);
+			GL.PopMatrix();
 		}
 	}
 }

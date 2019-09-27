@@ -1582,6 +1582,9 @@ namespace OpenBve
 									case Translations.Command.ShowEvents:
 										Interface.CurrentOptions.ShowEvents = !Interface.CurrentOptions.ShowEvents;
 										break;
+									case Translations.Command.DebugRendererMode:
+										Interface.CurrentOptions.IsUseNewRenderer = !Interface.CurrentOptions.IsUseNewRenderer;
+										break;
 									case Translations.Command.MiscAI:
 										// option: AI
 										if (Interface.CurrentOptions.GameMode == GameMode.Expert)

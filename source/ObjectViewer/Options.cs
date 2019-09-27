@@ -85,7 +85,11 @@ namespace OpenBve
                                                 }
                                                 Program.Renderer.Screen.Height = a;
                                             } break;
-                                    } break;
+                                        case "isusenewrenderer":
+	                                        Interface.CurrentOptions.IsUseNewRenderer = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+	                                        break;
+                                    }
+									break;
                                 case "quality":
                                     switch (Key)
                                     {
@@ -173,6 +177,7 @@ namespace OpenBve
                 Builder.AppendLine("[display]");
                 Builder.AppendLine("windowWidth = " + Program.Renderer.Screen.Width.ToString(Culture));
                 Builder.AppendLine("windowHeight = " + Program.Renderer.Screen.Height.ToString(Culture));
+                Builder.AppendLine("isUseNewRenderer = " + (Interface.CurrentOptions.IsUseNewRenderer ? "true" : "false"));
                 Builder.AppendLine();
                 Builder.AppendLine("[quality]");
                 {

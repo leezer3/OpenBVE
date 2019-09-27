@@ -1,6 +1,8 @@
 ﻿using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
 
 namespace LibRender2.Lightings
 {
@@ -32,12 +34,17 @@ namespace LibRender2.Lightings
 
 		internal Lighting()
 		{
-			Initialize();
 		}
 
 		/// <summary>Updates the lighting model on a per frame basis</summary>
 		public void Initialize()
 		{
+			GL.Light(LightName.Light0, LightParameter.Ambient,new Color4(OptionAmbientColor.R,OptionAmbientColor.G,OptionAmbientColor.B,255));
+			GL.Light(LightName.Light0, LightParameter.Diffuse, new Color4(OptionDiffuseColor.R, OptionDiffuseColor.G, OptionDiffuseColor.B, 255));
+			GL.LightModel(LightModelParameter.LightModelAmbient, new[] { 0.0f, 0.0f, 0.0f, 1.0f });
+			GL.Enable(EnableCap.Light0);
+			GL.Enable(EnableCap.ColorMaterial);
+
 			float x = OptionAmbientColor.R + (float)OptionAmbientColor.G + OptionAmbientColor.B;
 			float y = OptionDiffuseColor.R + (float)OptionDiffuseColor.G + OptionDiffuseColor.B;
 

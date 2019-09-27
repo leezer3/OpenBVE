@@ -121,7 +121,7 @@
 			this.checkBoxUnloadTextures = new System.Windows.Forms.CheckBox();
 			this.labelTimeAcceleration = new System.Windows.Forms.Label();
 			this.updownTimeAccelerationFactor = new System.Windows.Forms.NumericUpDown();
-			this.checkBoxDisableDisplayLists = new System.Windows.Forms.CheckBox();
+			this.checkBoxIsUseNewRenderer = new System.Windows.Forms.CheckBox();
 			this.checkBoxLoadInAdvance = new System.Windows.Forms.CheckBox();
 			this.groupBoxPackageOptions = new System.Windows.Forms.GroupBox();
 			this.comboBoxCompressionFormat = new System.Windows.Forms.ComboBox();
@@ -1641,7 +1641,7 @@
 			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxUnloadTextures);
 			this.groupBoxAdvancedOptions.Controls.Add(this.labelTimeAcceleration);
 			this.groupBoxAdvancedOptions.Controls.Add(this.updownTimeAccelerationFactor);
-			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxDisableDisplayLists);
+			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxIsUseNewRenderer);
 			this.groupBoxAdvancedOptions.Controls.Add(this.checkBoxLoadInAdvance);
 			this.groupBoxAdvancedOptions.Location = new System.Drawing.Point(6, 160);
 			this.groupBoxAdvancedOptions.Name = "groupBoxAdvancedOptions";
@@ -1739,13 +1739,13 @@
 			// 
 			// checkBoxDisableDisplayLists
 			// 
-			this.checkBoxDisableDisplayLists.AutoSize = true;
-			this.checkBoxDisableDisplayLists.Location = new System.Drawing.Point(8, 43);
-			this.checkBoxDisableDisplayLists.Name = "checkBoxDisableDisplayLists";
-			this.checkBoxDisableDisplayLists.Size = new System.Drawing.Size(159, 17);
-			this.checkBoxDisableDisplayLists.TabIndex = 2;
-			this.checkBoxDisableDisplayLists.Text = "Disable OpenGL display lists";
-			this.checkBoxDisableDisplayLists.UseVisualStyleBackColor = true;
+			this.checkBoxIsUseNewRenderer.AutoSize = true;
+			this.checkBoxIsUseNewRenderer.Location = new System.Drawing.Point(8, 43);
+			this.checkBoxIsUseNewRenderer.Name = "checkBoxDisableDisplayLists";
+			this.checkBoxIsUseNewRenderer.Size = new System.Drawing.Size(159, 17);
+			this.checkBoxIsUseNewRenderer.TabIndex = 2;
+			this.checkBoxIsUseNewRenderer.Text = "Disable OpenGL display lists";
+			this.checkBoxIsUseNewRenderer.UseVisualStyleBackColor = true;
 			// 
 			// checkBoxLoadInAdvance
 			// 
@@ -6152,7 +6152,7 @@
 		private System.Windows.Forms.Label labelCursor;
         private System.Windows.Forms.ComboBox comboboxCursor;
 		private System.Windows.Forms.CheckBox checkBoxPanel2Extended;
-		private System.Windows.Forms.CheckBox checkBoxDisableDisplayLists;
+		private System.Windows.Forms.CheckBox checkBoxIsUseNewRenderer;
 		private System.Windows.Forms.CheckBox checkBoxLoadInAdvance;
 		private System.Windows.Forms.GroupBox groupBoxRailDriver;
 		private System.Windows.Forms.Label labelRailDriverCalibration;

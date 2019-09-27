@@ -117,24 +117,15 @@ namespace LibRender2.Backgrounds
 		{
 			if (data.Texture != null && renderer.currentHost.LoadTexture(data.Texture, OpenGlTextureWrapMode.RepeatClamp))
 			{
-				if (!GL.IsEnabled(EnableCap.Texture2D))
-				{
-					GL.Enable(EnableCap.Texture2D);
-				}
+				GL.Enable(EnableCap.Texture2D);
 
 				if (alpha == 1.0f)
 				{
-					if (GL.IsEnabled(EnableCap.Blend))
-					{
-						GL.Disable(EnableCap.Blend);
-					}
+					GL.Disable(EnableCap.Blend);
 				}
 				else
 				{
-					if (!GL.IsEnabled(EnableCap.Blend))
-					{
-						GL.Enable(EnableCap.Blend);
-					}
+					GL.Enable(EnableCap.Blend);
 				}
 
 				if (data.VAO == null)
@@ -188,11 +179,7 @@ namespace LibRender2.Backgrounds
 				renderer.DefaultShader.NonUse();
 
 				GL.Disable(EnableCap.Texture2D);
-
-				if (GL.IsEnabled(EnableCap.Blend))
-				{
-					GL.Disable(EnableCap.Blend);
-				}
+				GL.Disable(EnableCap.Blend);
 			}
 		}
 

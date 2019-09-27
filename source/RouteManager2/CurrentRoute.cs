@@ -335,6 +335,7 @@ namespace RouteManager2
 				renderer.Fog.Start = CurrentFog.Start * ratio * scale;
 				renderer.Fog.End = CurrentFog.End * ratio * scale;
 				renderer.Fog.Color = CurrentFog.Color;
+				renderer.SetFogForImmediateMode();
 			}
 			else
 			{
