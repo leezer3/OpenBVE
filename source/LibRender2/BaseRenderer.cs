@@ -897,6 +897,11 @@ namespace LibRender2
 			GL.PushMatrix();
 			GL.LoadMatrix(ref State.TextureTranslation);
 
+			if (OptionWireFrame)
+			{
+				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+			}
+
 			// lighting
 			if (material.NighttimeTexture == null)
 			{
@@ -1100,6 +1105,11 @@ namespace LibRender2
 			}
 
 			// finalize
+			if (OptionWireFrame)
+			{
+				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+			}
+
 			if (material.BlendMode == MeshMaterialBlendMode.Additive)
 			{
 				GL.Disable(EnableCap.Blend);
