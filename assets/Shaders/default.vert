@@ -27,7 +27,6 @@ uniform mat4 uCurrentModelViewMatrix;
 uniform mat4 uCurrentNormalMatrix;
 uniform mat4 uCurrentTextureMatrix;
 
-uniform vec3 uEyePosition;
 uniform bool uIsLight;
 uniform Light uLight;
 uniform MaterialColor uMaterial;
@@ -82,5 +81,10 @@ void main()
 	if (uIsLight)
 	{
 		oColor *= result;
+	}
+	else
+	{
+		vec4 globalAmbient = vec4(1.0);
+		oColor *= globalAmbient * uMaterial.ambient;
 	}
 }

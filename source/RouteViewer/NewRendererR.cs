@@ -445,6 +445,7 @@ namespace OpenBve
 			ResetOpenGlState();
 			OptionLighting = false;
 			OptionFog = false;
+			GL.Disable(EnableCap.AlphaTest);
 			GL.Disable(EnableCap.DepthTest);
 			RenderOverlays();
 			OptionLighting = true;

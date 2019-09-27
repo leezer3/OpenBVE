@@ -5,6 +5,7 @@ using LibRender2.MotionBlurs;
 using LibRender2.Viewports;
 using OpenBve.Graphics.Renderers;
 using OpenBveApi;
+using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -462,8 +463,6 @@ namespace OpenBve.Graphics
 				MotionBlur.RenderFullscreen(Interface.CurrentOptions.MotionBlur, FrameRate, Math.Abs(Camera.CurrentSpeed));
 			}
 
-			OptionLighting = true;
-
 			// overlay layer
 			OptionFog = false;
 			UpdateViewport(ViewportChangeMode.ChangeToCab);
@@ -473,8 +472,13 @@ namespace OpenBve.Graphics
 			{
 				ResetOpenGlState(); // TODO: inserted
 				GL.Clear(ClearBufferMask.DepthBufferBit);
-				GL.Light(LightName.Light0, LightParameter.Ambient, new[] { 0.7f, 0.7f, 0.7f, 1.0f });
-				GL.Light(LightName.Light0, LightParameter.Diffuse, new[] { 0.7f, 0.7f, 0.7f, 1.0f });
+				OptionLighting = true;
+				Color24 prevOptionAmbientColor = Lighting.OptionAmbientColor;
+				Color24 prevOptionDiffuseColor = Lighting.OptionDiffuseColor;
+				Lighting.OptionAmbientColor = new Color24(178, 178, 178);
+				Lighting.OptionDiffuseColor = new Color24(178, 178, 178);
+				GL.Light(LightName.Light0, LightParameter.Ambient, new[] { inv255 * 178, inv255 * 178, inv255 * 178, 1.0f });
+				GL.Light(LightName.Light0, LightParameter.Diffuse, new[] { inv255 * 178, inv255 * 178, inv255 * 178, 1.0f });
 
 				// overlay opaque face
 				foreach (FaceState face in VisibleObjects.OverlayOpaqueFaces)
@@ -605,6 +609,10 @@ namespace OpenBve.Graphics
 						}
 					}
 				}
+
+				Lighting.OptionAmbientColor = prevOptionAmbientColor;
+				Lighting.OptionDiffuseColor = prevOptionDiffuseColor;
+				Lighting.Initialize();
 			}
 			else
 			{
@@ -613,12 +621,7 @@ namespace OpenBve.Graphics
                  * This is actually an animated object generated on the fly and held in memory
                  */
 				ResetOpenGlState();
-
-				if (!Interface.CurrentOptions.IsUseNewRenderer)
-				{
-					OptionLighting = false;
-				}
-
+				OptionLighting = false;
 				GL.Enable(EnableCap.Blend);
 				GL.Disable(EnableCap.AlphaTest);
 				GL.Disable(EnableCap.DepthTest);
@@ -647,6 +650,7 @@ namespace OpenBve.Graphics
 
 			// render overlays
 			ResetOpenGlState();
+			GL.Disable(EnableCap.AlphaTest);
 			GL.Disable(EnableCap.DepthTest);
 			overlays.Render(TimeElapsed);
 			OptionLighting = true;

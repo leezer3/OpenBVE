@@ -49,11 +49,6 @@
 		public int CurrentTextureMatrix = -1;
 
 		/// <summary>
-		/// The handle of "uEyePosition" within the shader
-		/// </summary>
-		public int EyePosition = -1;
-
-		/// <summary>
 		/// The handle of "uIsLight" within the shader
 		/// </summary>
 		public int IsLight = -1;

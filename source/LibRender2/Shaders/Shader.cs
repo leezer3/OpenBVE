@@ -148,7 +148,6 @@ namespace LibRender2.Shaders
 				CurrentModelViewMatrix = GL.GetUniformLocation(handle, "uCurrentModelViewMatrix"),
 				CurrentNormalMatrix = GL.GetUniformLocation(handle, "uCurrentNormalMatrix"),
 				CurrentTextureMatrix = GL.GetUniformLocation(handle, "uCurrentTextureMatrix"),
-				EyePosition = GL.GetUniformLocation(handle, "uEyePosition"),
 				IsLight = GL.GetUniformLocation(handle, "uIsLight"),
 				LightPosition = GL.GetUniformLocation(handle, "uLight.position"),
 				LightAmbient = GL.GetUniformLocation(handle, "uLight.ambient"),
@@ -242,11 +241,6 @@ namespace LibRender2.Shaders
 		{
 			Matrix4 matrix = ConvertToMatrix4(TextureMatrix);
 			GL.UniformMatrix4(UniformLayout.CurrentTextureMatrix, false, ref matrix);
-		}
-
-		public void SetEyePosition(Vector3 EyePosition)
-		{
-			GL.Uniform3(UniformLayout.EyePosition, EyePosition);
 		}
 
 		public void SetIsLight(bool IsLight)

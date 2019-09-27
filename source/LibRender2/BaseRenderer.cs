@@ -554,7 +554,6 @@ namespace LibRender2
 			Shader.SetCurrentModelViewMatrix(Matrix4d.Identity);
 			Shader.SetCurrentNormalMatrix(Matrix4d.Identity);
 			Shader.SetCurrentTextureMatrix(Matrix4d.Identity);
-			Shader.SetEyePosition(Vector3.Zero);
 			Shader.SetIsLight(false);
 			Shader.SetLightPosition(Vector3.Zero);
 			Shader.SetLightAmbient(Color4.White);
@@ -646,7 +645,6 @@ namespace LibRender2
 			{
 				if (OptionLighting)
 				{
-					Shader.SetEyePosition(new Vector3((float)EyePosition.X, (float)EyePosition.Y, (float)EyePosition.Z));
 					Shader.SetIsLight(true);
 					Shader.SetLightPosition(new Vector3((float)Lighting.OptionLightPosition.X, (float)Lighting.OptionLightPosition.Y, -(float)Lighting.OptionLightPosition.Z));
 					Shader.SetLightAmbient(new Color4(Lighting.OptionAmbientColor.R, Lighting.OptionAmbientColor.G, Lighting.OptionAmbientColor.B, 255));
@@ -674,6 +672,14 @@ namespace LibRender2
 						Lighting.OptionLightingResultingAmount = 1.0f;
 					}
 				}
+				else
+				{
+					Shader.SetMaterialAmbient(new Color4(material.Color.R, material.Color.G, material.Color.B, material.Color.A));  // TODO
+				}
+			}
+			else
+			{
+				Shader.SetMaterialAmbient(new Color4(material.Color.R, material.Color.G, material.Color.B, material.Color.A));  // TODO
 			}
 
 			// fog

@@ -313,6 +313,7 @@ namespace OpenBve
 			// render overlays
 			ResetOpenGlState();
 			OptionLighting = false;
+			GL.Disable(EnableCap.AlphaTest);
 			GL.Disable(EnableCap.DepthTest);
 			RenderOverlays();
 			OptionLighting = true;
