@@ -60,11 +60,14 @@ namespace OpenBveApi.Objects
 						{
 							if (free[i])
 							{
-								OpenTK.Vector4d p = new OpenTK.Vector4d((OpenTK.Vector3d)Position, 1.0);
-								p = OpenTK.Vector4d.Transform(p,((OpenTK.Matrix4d)new Transformation(BaseTransformation, AuxTransformation)));
-								p = OpenTK.Vector4d.Transform(p, Objects[i].States[0].Translation);
-								double zOffset = Objects[i].States[0].Translation.ExtractTranslation().Z;
-								currentHost.CreateStaticObject(Objects[i].States[0].Prototype, new Vector3(p.X, p.Y, p.Z), BaseTransformation, AuxTransformation, AccurateObjectDisposal, zOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+								OpenTK.Matrix4d mat = OpenTK.Matrix4d.Identity;
+								mat *= Objects[i].States[0].Translation;
+								mat *= Objects[i].States[0].Rotate;
+								double zOffset = mat.ExtractTranslation().Z * -1.0;
+								mat = OpenTK.Matrix4d.CreateTranslation(Position.X, Position.Y, -Position.Z) * mat;
+								mat *= (OpenTK.Matrix4d)new Transformation(BaseTransformation, AuxTransformation);
+								OpenTK.Vector4d p = OpenTK.Vector4d.Transform(new OpenTK.Vector4d((OpenTK.Vector3d)Position, 1.0), mat);
+								currentHost.CreateStaticObject(Objects[i].States[0].Prototype, new Vector3(p.X, p.Y, -p.Z), BaseTransformation, AuxTransformation, AccurateObjectDisposal, zOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 							}
 							else
 							{
