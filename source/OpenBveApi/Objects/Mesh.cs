@@ -152,12 +152,11 @@ namespace OpenBveApi.Objects
 
 					if (coloredVertex != null)
 					{
-						var color = coloredVertex.Color;
-						data.Color = new Color4(color.R, color.G, color.B, color.A);
+						data.Color = coloredVertex.Color;
 					}
 					else
 					{
-						data.Color = Color4.White;
+						data.Color = Color128.White;
 					}
 
 					vertexData.Add(data);
@@ -168,7 +167,7 @@ namespace OpenBveApi.Objects
 
 					for (int j = 0; j < normalsData.Length; j++)
 					{
-						normalsData[j].Color = Color4.White;
+						normalsData[j].Color = Color128.White;
 					}
 
 					normalsVertexData.AddRange(normalsData);

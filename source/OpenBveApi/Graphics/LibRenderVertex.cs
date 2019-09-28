@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
+using OpenBveApi.Colors;
 using OpenTK;
-using OpenTK.Graphics;
 
 namespace OpenBveApi.Graphics
 {
@@ -27,7 +27,7 @@ namespace OpenBveApi.Graphics
 		/// <summary>
 		/// Vertex color
 		/// </summary>
-		public Color4 Color;
+		public Color128 Color;
 
 		/// <summary>
 		/// Size in bytes

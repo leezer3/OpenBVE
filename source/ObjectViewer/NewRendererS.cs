@@ -10,7 +10,6 @@ using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.World;
 using OpenTK;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBve
@@ -34,9 +33,9 @@ namespace OpenBve
 		{
 			base.Initialize(CurrentHost, CurrentOptions);
 
-			redAxisVAO = RegisterBox(Color4.Red);
-			greenAxisVAO = RegisterBox(Color4.Green);
-			blueAxisVAO = RegisterBox(Color4.Blue);
+			redAxisVAO = RegisterBox(Color128.Red);
+			greenAxisVAO = RegisterBox(Color128.Green);
+			blueAxisVAO = RegisterBox(Color128.Blue);
 		}
 
 		internal string GetBackgroundColorName()
@@ -114,7 +113,7 @@ namespace OpenBve
 			return base.CreateStaticObject(obj, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 		}
 
-		private VertexArrayObject RegisterBox(Color4 Color)
+		private VertexArrayObject RegisterBox(Color128 Color)
 		{
 			LibRenderVertex[] vertexData = new LibRenderVertex[8];
 			vertexData[0].Position = new Vector3(1.0f, 1.0f, -1.0f);

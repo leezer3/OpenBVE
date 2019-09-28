@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Textures;
 using OpenTK;
@@ -114,28 +115,28 @@ namespace OpenBveApi.Routes
 				{
 					Position = top[i],
 					UV = new Vector2(textureX, 0.005f),
-					Color = Color4.White
+					Color = Color128.White
 				});
 
 				vertexData.Add(new LibRenderVertex
 				{
 					Position = bottom[i],
 					UV = new Vector2(textureX, 0.995f),
-					Color = Color4.White
+					Color = Color128.White
 				});
 
 				vertexData.Add(new LibRenderVertex
 				{
 					Position = bottom[j],
 					UV = new Vector2(textureX + textureIncrement, 0.995f),
-					Color = Color4.White
+					Color = Color128.White
 				});
 
 				vertexData.Add(new LibRenderVertex
 				{
 					Position = top[j],
 					UV = new Vector2(textureX + textureIncrement, 0.005f),
-					Color = Color4.White
+					Color = Color128.White
 				});
 
 				indexData.AddRange(new[] { 0, 1, 2, 3 }.Select(x => x + indexOffset));
@@ -145,7 +146,7 @@ namespace OpenBveApi.Routes
 				{
 					Position = new Vector3(0.0f, top[i].Y, 0.0f),
 					UV = new Vector2(textureX + 0.5f * textureIncrement, 0.1f),
-					Color = Color4.White
+					Color = Color128.White
 				});
 
 				indexData.AddRange(new[] { 0, 3, 4 }.Select(x => x + indexOffset));
@@ -155,7 +156,7 @@ namespace OpenBveApi.Routes
 				{
 					Position = new Vector3(0.0f, bottom[i].Y, 0.0f),
 					UV = new Vector2(textureX + 0.5f * textureIncrement, 0.9f),
-					Color = Color4.White
+					Color = Color128.White
 				});
 
 				indexData.AddRange(new[] { 5, 2, 1 }.Select(x => x + indexOffset));
