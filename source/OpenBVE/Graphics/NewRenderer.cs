@@ -341,8 +341,8 @@ namespace OpenBve.Graphics
 
 			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
 			{
-				GL.Enable(EnableCap.Blend);
-				GL.AlphaFunc(AlphaFunction.Greater, 0.0f);
+				SetBlendFunc();
+				SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 				GL.DepthMask(false);
 
 				foreach (FaceState face in VisibleObjects.AlphaFaces)
@@ -362,8 +362,8 @@ namespace OpenBve.Graphics
 			}
 			else
 			{
-				GL.Disable(EnableCap.Blend);
-				GL.AlphaFunc(AlphaFunction.Equal, 1.0f);
+				UnsetBlendFunc();
+				SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 				GL.DepthMask(true);
 
 				foreach (FaceState face in VisibleObjects.AlphaFaces)
@@ -387,8 +387,8 @@ namespace OpenBve.Graphics
 					}
 				}
 
-				GL.Enable(EnableCap.Blend);
-				GL.AlphaFunc(AlphaFunction.Less, 1.0f);
+				SetBlendFunc();
+				SetAlphaFunc(AlphaFunction.Less, 1.0f);
 				GL.DepthMask(false);
 				bool additive = false;
 
@@ -398,7 +398,7 @@ namespace OpenBve.Graphics
 					{
 						if (!additive)
 						{
-							GL.Disable(EnableCap.AlphaTest);
+							UnsetAlphaFunc();
 							additive = true;
 						}
 
@@ -413,15 +413,12 @@ namespace OpenBve.Graphics
 						{
 							RenderFaceImmediateMode(face);
 						}
-
-						GL.Enable(EnableCap.Blend);
 					}
 					else
 					{
 						if (additive)
 						{
-							GL.Enable(EnableCap.AlphaTest);
-							GL.AlphaFunc(AlphaFunction.Less, 1.0f);
+							SetAlphaFunc();
 							additive = false;
 						}
 
@@ -442,7 +439,7 @@ namespace OpenBve.Graphics
 
 			// motion blur
 			ResetOpenGlState();
-			GL.AlphaFunc(AlphaFunction.Greater, 0.0f);
+			SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 			GL.Disable(EnableCap.DepthTest);
 			GL.DepthMask(false);
 			OptionLighting = false;
@@ -491,8 +488,8 @@ namespace OpenBve.Graphics
 
 				if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
 				{
-					GL.Enable(EnableCap.Blend);
-					GL.AlphaFunc(AlphaFunction.Greater, 0.0f);
+					SetBlendFunc();
+					SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 					GL.DepthMask(false);
 
 					foreach (FaceState face in VisibleObjects.OverlayAlphaFaces)
@@ -512,8 +509,8 @@ namespace OpenBve.Graphics
 				}
 				else
 				{
-					GL.Disable(EnableCap.Blend);
-					GL.AlphaFunc(AlphaFunction.Equal, 1.0f);
+					UnsetBlendFunc();
+					SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 					GL.DepthMask(true);
 
 					foreach (FaceState face in VisibleObjects.OverlayAlphaFaces)
@@ -537,8 +534,8 @@ namespace OpenBve.Graphics
 						}
 					}
 
-					GL.Enable(EnableCap.Blend);
-					GL.AlphaFunc(AlphaFunction.Less, 1.0f);
+					SetBlendFunc();
+					SetAlphaFunc(AlphaFunction.Less, 1.0f);
 					GL.DepthMask(false);
 					bool additive = false;
 
@@ -548,7 +545,7 @@ namespace OpenBve.Graphics
 						{
 							if (!additive)
 							{
-								GL.Disable(EnableCap.AlphaTest);
+								UnsetAlphaFunc();
 								additive = true;
 							}
 
@@ -568,8 +565,7 @@ namespace OpenBve.Graphics
 						{
 							if (additive)
 							{
-								GL.Enable(EnableCap.AlphaTest);
-								GL.AlphaFunc(AlphaFunction.Less, 1.0f);
+								SetAlphaFunc();
 								additive = false;
 							}
 
@@ -600,8 +596,8 @@ namespace OpenBve.Graphics
                  */
 				ResetOpenGlState();
 				OptionLighting = false;
-				GL.Enable(EnableCap.Blend);
-				GL.Disable(EnableCap.AlphaTest);
+				SetBlendFunc();
+				UnsetAlphaFunc();
 				GL.Disable(EnableCap.DepthTest);
 				GL.DepthMask(false);
 				VisibleObjects.SortPolygonsInOverlayAlphaFaces();
@@ -628,7 +624,7 @@ namespace OpenBve.Graphics
 
 			// render overlays
 			ResetOpenGlState();
-			GL.Disable(EnableCap.AlphaTest);
+			UnsetAlphaFunc();
 			GL.Disable(EnableCap.DepthTest);
 			overlays.Render(TimeElapsed);
 			OptionLighting = true;

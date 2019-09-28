@@ -115,6 +115,22 @@ namespace LibRender2
 		/// <summary>The game's current framerate</summary>
 		public double FrameRate = 1.0;
 
+		/// <summary>Whether Blend is enabled in openGL</summary>
+		private bool blendEnabled;
+
+		private BlendingFactor blendSrcFactor;
+
+		private BlendingFactor blendDestFactor;
+
+		/// <summary>Whether Alpha Testing is enabled in openGL</summary>
+		private bool alphaTestEnabled;
+
+		/// <summary>The current AlphaFunc comparison</summary>
+		private AlphaFunction alphaFuncComparison;
+
+		/// <summary>The current AlphaFunc comparison value</summary>
+		private float alphaFuncValue;
+
 		protected BaseRenderer()
 		{
 			Screen = new Screen();
@@ -156,8 +172,7 @@ namespace LibRender2
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthFunc(DepthFunction.Lequal);
-			GL.Enable(EnableCap.Blend);
-			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 			GL.Hint(HintTarget.FogHint, HintMode.Fastest);
 			GL.Hint(HintTarget.LineSmoothHint, HintMode.Fastest);
 			GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Fastest);
@@ -200,12 +215,11 @@ namespace LibRender2
 			GL.Disable(EnableCap.Lighting);
 			GL.Disable(EnableCap.Fog);
 			GL.Disable(EnableCap.Texture2D);
-			GL.Disable(EnableCap.Blend);
-			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+			UnsetBlendFunc();
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthMask(true);
-			GL.Enable(EnableCap.AlphaTest);
-			GL.AlphaFunc(AlphaFunction.Greater, 0.9f);
+			SetAlphaFunc(AlphaFunction.Greater, 0.9f);
 			DefaultShader.Use();
 			ResetShader(DefaultShader);
 			DefaultShader.NonUse();
@@ -580,6 +594,78 @@ namespace LibRender2
 			GL.Fog(FogParameter.FogColor, new[] { inv255 * Fog.Color.R, inv255 * Fog.Color.G, inv255 * Fog.Color.B, 1.0f });
 		}
 
+		public void SetBlendFunc()
+		{
+			SetBlendFunc(blendSrcFactor, blendDestFactor);
+		}
+
+		public void SetBlendFunc(BlendingFactor SrcFactor, BlendingFactor DestFactor)
+		{
+			blendEnabled = true;
+			blendSrcFactor = SrcFactor;
+			blendDestFactor = DestFactor;
+			GL.Enable(EnableCap.Blend);
+			GL.BlendFunc(SrcFactor, DestFactor);
+		}
+
+		public void UnsetBlendFunc()
+		{
+			blendEnabled = false;
+			GL.Disable(EnableCap.Blend);
+		}
+
+		public void RestoreBlendFunc()
+		{
+			if (blendEnabled)
+			{
+				GL.Enable(EnableCap.Blend);
+				GL.BlendFunc(blendSrcFactor, blendDestFactor);
+			}
+			else
+			{
+				GL.Disable(EnableCap.Blend);
+			}
+		}
+
+		/// <summary>Specifies the OpenGL alpha function to perform</summary>
+		public void SetAlphaFunc()
+		{
+			SetAlphaFunc(alphaFuncComparison, alphaFuncValue);
+		}
+
+		/// <summary>Specifies the OpenGL alpha function to perform</summary>
+		/// <param name="Comparison">The comparison to use</param>
+		/// <param name="Value">The value to compare</param>
+		public void SetAlphaFunc(AlphaFunction Comparison, float Value)
+		{
+			alphaTestEnabled = true;
+			alphaFuncComparison = Comparison;
+			alphaFuncValue = Value;
+			GL.Enable(EnableCap.AlphaTest);
+			GL.AlphaFunc(Comparison, Value);
+		}
+
+		/// <summary>Disables OpenGL alpha testing</summary>
+		public void UnsetAlphaFunc()
+		{
+			alphaTestEnabled = false;
+			GL.Disable(EnableCap.AlphaTest);
+		}
+
+		/// <summary>Restores the OpenGL alpha function to it's previous state</summary>
+		public void RestoreAlphaFunc()
+		{
+			if (alphaTestEnabled)
+			{
+				GL.Enable(EnableCap.AlphaTest);
+				GL.AlphaFunc(alphaFuncComparison, alphaFuncValue);
+			}
+			else
+			{
+				GL.Disable(EnableCap.AlphaTest);
+			}
+		}
+
 		public void RenderFace(Shader Shader, FaceState State, bool IsDebugTouchMode = false)
 		{
 			RenderFace(Shader, State.Object, State.Face, IsDebugTouchMode);
@@ -655,7 +741,7 @@ namespace LibRender2
 					}
 					else
 					{
-						Shader.SetMaterialEmission(new Color4(0.0f, 0.0f, 0.0f, 0.0f));
+						Shader.SetMaterialEmission(new Color4(0.0f, 0.0f, 0.0f, 1.0f));
 					}
 
 					Shader.SetMaterialShininess(1.0f);
@@ -811,6 +897,9 @@ namespace LibRender2
 				VAO.UnBind();
 
 				GL.BindTexture(TextureTarget.Texture2D, 0);
+
+				RestoreBlendFunc();
+				RestoreAlphaFunc();
 			}
 
 			GL.Disable(EnableCap.Texture2D);
@@ -821,7 +910,6 @@ namespace LibRender2
 				Shader.SetIsTexture(false);
 				Shader.SetBrightness(1.0f);
 				Shader.SetOpacity(1.0f);
-				GL.Disable(EnableCap.AlphaTest);
 
 				NormalsVAO.Bind();
 				NormalsVAO.Draw(Shader.VertexLayout, PrimitiveType.Lines, Face.NormalsIboStartIndex, Face.Vertices.Length * 2);
@@ -831,8 +919,7 @@ namespace LibRender2
 			// finalize
 			if (material.BlendMode == MeshMaterialBlendMode.Additive)
 			{
-				GL.Disable(EnableCap.Blend);
-				GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+				RestoreBlendFunc();
 			}
 		}
 
@@ -1078,6 +1165,9 @@ namespace LibRender2
 				GL.End();
 
 				GL.BindTexture(TextureTarget.Texture2D, 0);
+
+				RestoreBlendFunc();
+				RestoreAlphaFunc();
 			}
 
 			GL.Disable(EnableCap.Texture2D);
@@ -1103,8 +1193,7 @@ namespace LibRender2
 
 			if (material.BlendMode == MeshMaterialBlendMode.Additive)
 			{
-				GL.Disable(EnableCap.Blend);
-				GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+				RestoreBlendFunc();
 			}
 
 			GL.PopMatrix();

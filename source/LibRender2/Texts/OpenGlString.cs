@@ -155,7 +155,7 @@ namespace LibRender2.Texts
 				left += data.TypographicSize.Width;
 			}
 
-			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); // HACK //
+			renderer.RestoreBlendFunc();
 
 			GL.BindTexture(TextureTarget.Texture2D, 0);
 			GL.Disable(EnableCap.Texture2D);

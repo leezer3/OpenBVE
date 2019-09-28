@@ -97,7 +97,7 @@ namespace LibRender2.Loadings
 		public void DrawLoadingScreen(OpenGlFont Font, double RouteProgress, double TrainProgress)
 		{
 			renderer.ResetOpenGlState();
-			GL.Enable(EnableCap.Blend);
+			renderer.SetBlendFunc();
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
 			renderer.Rectangle.Draw(null, new PointF(0.0f, 0.0f), new SizeF(renderer.Screen.Width, renderer.Screen.Height), bkg);

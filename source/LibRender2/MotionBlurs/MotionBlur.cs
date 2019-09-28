@@ -83,8 +83,7 @@ namespace LibRender2.MotionBlurs
 				}
 
 				// initialize
-				GL.Enable(EnableCap.Blend);
-				GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+				renderer.SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
 				GL.MatrixMode(MatrixMode.Projection);
 				GL.PushMatrix();

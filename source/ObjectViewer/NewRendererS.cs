@@ -200,8 +200,8 @@ namespace OpenBve
 
 			if (Interface.CurrentOptions.TransparencyMode == TransparencyMode.Performance)
 			{
-				GL.Enable(EnableCap.Blend);
-				GL.AlphaFunc(AlphaFunction.Greater, 0.0f);
+				SetBlendFunc();
+				SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 				GL.DepthMask(false);
 
 				foreach (FaceState face in VisibleObjects.AlphaFaces)
@@ -221,8 +221,8 @@ namespace OpenBve
 			}
 			else
 			{
-				GL.Disable(EnableCap.Blend);
-				GL.AlphaFunc(AlphaFunction.Equal, 1.0f);
+				UnsetBlendFunc();
+				SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 				GL.DepthMask(true);
 
 				foreach (FaceState face in VisibleObjects.AlphaFaces)
@@ -246,8 +246,8 @@ namespace OpenBve
 					}
 				}
 
-				GL.Enable(EnableCap.Blend);
-				GL.AlphaFunc(AlphaFunction.Less, 1.0f);
+				SetBlendFunc();
+				SetAlphaFunc(AlphaFunction.Less, 1.0f);
 				GL.DepthMask(false);
 				bool additive = false;
 
@@ -257,7 +257,7 @@ namespace OpenBve
 					{
 						if (!additive)
 						{
-							GL.Disable(EnableCap.AlphaTest);
+							UnsetAlphaFunc();
 							additive = true;
 						}
 
@@ -272,15 +272,12 @@ namespace OpenBve
 						{
 							RenderFaceImmediateMode(face);
 						}
-
-						GL.Enable(EnableCap.Blend);
 					}
 					else
 					{
 						if (additive)
 						{
-							GL.Enable(EnableCap.AlphaTest);
-							GL.AlphaFunc(AlphaFunction.Less, 1.0f);
+							SetAlphaFunc();
 							additive = false;
 						}
 
@@ -302,7 +299,7 @@ namespace OpenBve
 			// render overlays
 			ResetOpenGlState();
 			OptionLighting = false;
-			GL.Disable(EnableCap.AlphaTest);
+			UnsetAlphaFunc();
 			GL.Disable(EnableCap.DepthTest);
 			RenderOverlays();
 			OptionLighting = true;
@@ -311,8 +308,7 @@ namespace OpenBve
 		private void RenderOverlays()
 		{
 			//Initialize openGL
-			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-			GL.Enable(EnableCap.Blend);
+			SetBlendFunc();
 			PushMatrix(MatrixMode.Projection);
 			CurrentProjectionMatrix = Matrix4d.CreateOrthographicOffCenter(0.0, Screen.Width, Screen.Height, 0.0, -1.0, 1.0);
 			PushMatrix(MatrixMode.Modelview);
@@ -366,7 +362,7 @@ namespace OpenBve
 					if (Interface.MessageCount == 1)
 					{
 						Keys.Render(4, 112, 20, Fonts.SmallFont, new[] { new[] { "F9" } });
-						
+
 						if (Interface.LogMessages[0].Type != MessageType.Information)
 						{
 							OpenGlString.Draw(Fonts.SmallFont, "Display the 1 error message recently generated.", new Point(32, 112), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
@@ -381,7 +377,7 @@ namespace OpenBve
 					{
 						Keys.Render(4, 112, 20, Fonts.SmallFont, new[] { new[] { "F9" } });
 						bool error = Interface.LogMessages.Any(x => x.Type != MessageType.Information);
-						
+
 						if (error)
 						{
 							OpenGlString.Draw(Fonts.SmallFont, $"Display the {Interface.MessageCount.ToString(culture)} error messages recently generated.", new Point(32, 112), TextAlignment.TopLeft, new Color128(1.0f, 0.5f, 0.5f));
@@ -397,7 +393,6 @@ namespace OpenBve
 			// finalize
 			PopMatrix(MatrixMode.Projection);
 			PopMatrix(MatrixMode.Modelview);
-			GL.Disable(EnableCap.Blend);
 		}
 	}
 }

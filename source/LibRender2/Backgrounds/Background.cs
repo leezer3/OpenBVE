@@ -154,7 +154,7 @@ namespace LibRender2.Backgrounds
 				GL.BindTexture(TextureTarget.Texture2D, data.Texture.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp].Name);
 
 				// alpha test
-				GL.AlphaFunc(AlphaFunction.Greater, 0.0f);
+				renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 
 				// blend mode
 				renderer.DefaultShader.SetOpacity(alpha);
@@ -175,7 +175,7 @@ namespace LibRender2.Backgrounds
 				renderer.DefaultShader.NonUse();
 
 				GL.Disable(EnableCap.Texture2D);
-				GL.Disable(EnableCap.Blend);
+				renderer.RestoreBlendFunc();
 			}
 		}
 

@@ -33,8 +33,7 @@ namespace OpenBve.Graphics.Renderers
 		internal void Render(double TimeElapsed)
 		{
 			//Initialize openGL
-			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-			GL.Enable(EnableCap.Blend);
+			renderer.SetBlendFunc();
 			renderer.PushMatrix(MatrixMode.Projection);
 			renderer.CurrentProjectionMatrix = Matrix4d.CreateOrthographicOffCenter(0.0, renderer.Screen.Width, renderer.Screen.Height, 0.0, -1.0, 1.0);
 			renderer.PushMatrix(MatrixMode.Modelview);
@@ -189,7 +188,6 @@ namespace OpenBve.Graphics.Renderers
 			// finalize
 			renderer.PopMatrix(MatrixMode.Projection);
 			renderer.PopMatrix(MatrixMode.Modelview);
-			GL.Disable(EnableCap.Blend);
 		}
 	}
 }
