@@ -81,24 +81,28 @@ namespace OpenBveApi.Graphics
 		/// </summary>
 		internal void SetAttribute(VertexLayout VertexLayout)
 		{
+			int offset = 0;
 			if (VertexLayout.Position >= 0)
 			{
-				GL.VertexAttribPointer(VertexLayout.Position, 3, VertexAttribPointerType.Float, false, LibRenderVertex.SizeInBytes, 0);
+				GL.VertexAttribPointer(VertexLayout.Position, 3, VertexAttribPointerType.Float, false, LibRenderVertex.SizeInBytes, offset);
+				offset += Vector3.SizeInBytes;
 			}
 
 			if (VertexLayout.Normal >= 0)
 			{
-				GL.VertexAttribPointer(VertexLayout.Normal, 3, VertexAttribPointerType.Float, false, LibRenderVertex.SizeInBytes, Vector3.SizeInBytes);
+				GL.VertexAttribPointer(VertexLayout.Normal, 3, VertexAttribPointerType.Float, false, LibRenderVertex.SizeInBytes, offset);
+				offset += Vector3.SizeInBytes;
 			}
 
 			if (VertexLayout.UV >= 0)
 			{
-				GL.VertexAttribPointer(VertexLayout.UV, 2, VertexAttribPointerType.Float, false, LibRenderVertex.SizeInBytes, Vector3.SizeInBytes * 2);
+				GL.VertexAttribPointer(VertexLayout.UV, 2, VertexAttribPointerType.Float, false, LibRenderVertex.SizeInBytes, offset);
+				offset += Vector2.SizeInBytes;
 			}
 
 			if (VertexLayout.Color >= 0)
 			{
-				GL.VertexAttribPointer(VertexLayout.Color, 4, VertexAttribPointerType.Float, false, LibRenderVertex.SizeInBytes, Vector3.SizeInBytes * 2 + Vector2.SizeInBytes);
+				GL.VertexAttribPointer(VertexLayout.Color, 4, VertexAttribPointerType.Float, false, LibRenderVertex.SizeInBytes, offset);
 			}
 		}
 
