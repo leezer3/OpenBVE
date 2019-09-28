@@ -166,9 +166,6 @@ namespace LibRender2.Shaders
 				Texture = GL.GetUniformLocation(handle, "uTexture"),
 				Brightness = GL.GetUniformLocation(handle, "uBrightness"),
 				Opacity = GL.GetUniformLocation(handle, "uOpacity"),
-				IsAlphaTest = GL.GetUniformLocation(handle, "uIsAlphaTest"),
-				AlphaFuncType = GL.GetUniformLocation(handle, "uAlphaFuncType"),
-				AlphaFuncValue = GL.GetUniformLocation(handle, "uAlphaFuncValue"),
 				ObjectIndex = GL.GetUniformLocation(handle, "uObjectIndex")
 			};
 		}
@@ -331,21 +328,6 @@ namespace LibRender2.Shaders
 		public void SetOpacity(float Opacity)
 		{
 			GL.Uniform1(UniformLayout.Opacity, Opacity);
-		}
-
-		public void SetIsAlphaTest(bool IsAlphaTest)
-		{
-			GL.Uniform1(UniformLayout.IsAlphaTest, IsAlphaTest ? 1 : 0);
-		}
-
-		public void SetAlphaFuncType(AlphaFuncType AlphaFuncType)
-		{
-			GL.Uniform1(UniformLayout.AlphaFuncType, (int)AlphaFuncType);
-		}
-
-		public void SetAlphaFuncValue(float AlphaFuncValue)
-		{
-			GL.Uniform1(UniformLayout.AlphaFuncValue, AlphaFuncValue);
 		}
 
 		public void SetObjectIndex(int ObjectIndex)

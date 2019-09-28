@@ -139,35 +139,8 @@
 		public int Opacity = -1;
 
 		/// <summary>
-		/// The handle of "uIsAlphaTest" within the shader
-		/// </summary>
-		public int IsAlphaTest = -1;
-
-		/// <summary>
-		/// The handle of "uAlphaFuncType" within the shader
-		/// </summary>
-		public int AlphaFuncType = -1;
-
-		/// <summary>
-		/// The handle of "uAlphaFuncValue" within the shader
-		/// </summary>
-		public int AlphaFuncValue = -1;
-
-		/// <summary>
 		/// The handle of "uObjectIndex" within the shader
 		/// </summary>
 		public int ObjectIndex = -1;
-	}
-
-	public enum AlphaFuncType
-	{
-		Never = 0,
-		Less = 1,
-		Equal = 2,
-		Lequal = 3,
-		Greater = 4,
-		Notequal = 5,
-		Gequal = 6,
-		Always = 7
 	}
 }

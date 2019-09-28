@@ -1,5 +1,4 @@
-﻿using OpenBveApi.Graphics;
-using OpenBveApi.Objects;
+﻿using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenTK;
@@ -155,9 +154,7 @@ namespace LibRender2.Backgrounds
 				GL.BindTexture(TextureTarget.Texture2D, data.Texture.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp].Name);
 
 				// alpha test
-				renderer.DefaultShader.SetIsAlphaTest(true);
-				renderer.DefaultShader.SetAlphaFuncType(AlphaFuncType.Greater);
-				renderer.DefaultShader.SetAlphaFuncValue(0.0f);
+				GL.AlphaFunc(AlphaFunction.Greater, 0.0f);
 
 				// blend mode
 				renderer.DefaultShader.SetOpacity(alpha);

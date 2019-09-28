@@ -316,9 +316,6 @@ namespace OpenBve
 				{
 					DefaultShader.Use();
 					ResetShader(DefaultShader);
-					DefaultShader.SetIsAlphaTest(true);
-					DefaultShader.SetAlphaFuncType(AlphaFuncType.Greater);
-					DefaultShader.SetAlphaFuncValue(0.9f);
 					RenderFace(DefaultShader, face);
 					DefaultShader.NonUse();
 				}
@@ -344,9 +341,6 @@ namespace OpenBve
 					{
 						DefaultShader.Use();
 						ResetShader(DefaultShader);
-						DefaultShader.SetIsAlphaTest(true);
-						DefaultShader.SetAlphaFuncType(AlphaFuncType.Greater);
-						DefaultShader.SetAlphaFuncValue(0.0f);
 						RenderFace(DefaultShader, face);
 						DefaultShader.NonUse();
 					}
@@ -372,9 +366,6 @@ namespace OpenBve
 							{
 								DefaultShader.Use();
 								ResetShader(DefaultShader);
-								DefaultShader.SetIsAlphaTest(true);
-								DefaultShader.SetAlphaFuncType(AlphaFuncType.Equal);
-								DefaultShader.SetAlphaFuncValue(1.0f);
 								RenderFace(DefaultShader, face);
 								DefaultShader.NonUse();
 							}
@@ -395,6 +386,12 @@ namespace OpenBve
 				{
 					if (face.Object.Prototype.Mesh.Materials[face.Face.Material].BlendMode == MeshMaterialBlendMode.Additive)
 					{
+						if (!additive)
+						{
+							GL.Disable(EnableCap.AlphaTest);
+							additive = true;
+						}
+
 						if (Interface.CurrentOptions.IsUseNewRenderer)
 						{
 							DefaultShader.Use();
@@ -404,12 +401,6 @@ namespace OpenBve
 						}
 						else
 						{
-							if (!additive)
-							{
-								GL.Disable(EnableCap.AlphaTest);
-								additive = true;
-							}
-
 							RenderFaceImmediateMode(face);
 						}
 
@@ -417,24 +408,22 @@ namespace OpenBve
 					}
 					else
 					{
+						if (additive)
+						{
+							GL.Enable(EnableCap.AlphaTest);
+							GL.AlphaFunc(AlphaFunction.Less, 1.0f);
+							additive = false;
+						}
+
 						if (Interface.CurrentOptions.IsUseNewRenderer)
 						{
 							DefaultShader.Use();
 							ResetShader(DefaultShader);
-							DefaultShader.SetIsAlphaTest(true);
-							DefaultShader.SetAlphaFuncType(AlphaFuncType.Less);
-							DefaultShader.SetAlphaFuncValue(1.0f);
 							RenderFace(DefaultShader, face);
 							DefaultShader.NonUse();
 						}
 						else
 						{
-							if (additive)
-							{
-								GL.Enable(EnableCap.AlphaTest);
-								additive = false;
-							}
-
 							RenderFaceImmediateMode(face);
 						}
 					}

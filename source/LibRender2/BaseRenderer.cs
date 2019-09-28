@@ -208,9 +208,6 @@ namespace LibRender2
 			GL.AlphaFunc(AlphaFunction.Greater, 0.9f);
 			DefaultShader.Use();
 			ResetShader(DefaultShader);
-			DefaultShader.SetIsAlphaTest(true);
-			DefaultShader.SetAlphaFuncType(AlphaFuncType.Greater);
-			DefaultShader.SetAlphaFuncValue(0.9f);
 			DefaultShader.NonUse();
 		}
 
@@ -572,9 +569,6 @@ namespace LibRender2
 			Shader.SetTexture(0);
 			Shader.SetBrightness(1.0f);
 			Shader.SetOpacity(1.0f);
-			Shader.SetIsAlphaTest(false);
-			Shader.SetAlphaFuncType(AlphaFuncType.Always);
-			Shader.SetAlphaFuncValue(1.0f);
 			Shader.SetObjectIndex(0);
 			GL.GetError();
 		}
@@ -626,7 +620,8 @@ namespace LibRender2
 			}
 
 			// matrix
-			Matrix4d modelViewMatrix = State.Scale * State.Rotate * State.Translation * Matrix4d.CreateTranslation(-EyePosition) * CurrentViewMatrix;
+			Matrix4d modelMatrix = State.Scale * State.Rotate * State.Translation * Matrix4d.CreateTranslation(-EyePosition);
+			Matrix4d modelViewMatrix = modelMatrix * CurrentViewMatrix;
 			Shader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
 			Shader.SetCurrentModelViewMatrix(modelViewMatrix);
 			Shader.SetCurrentNormalMatrix(Matrix4d.Transpose(modelViewMatrix.Inverted()));
@@ -755,7 +750,7 @@ namespace LibRender2
 				float alphaFactor;
 				if (material.GlowAttenuationData != 0)
 				{
-					alphaFactor = (float)Glow.GetDistanceFactor(vertices, ref Face, material.GlowAttenuationData, Camera.AbsolutePosition);
+					alphaFactor = (float)Glow.GetDistanceFactor(modelMatrix, vertices, ref Face, material.GlowAttenuationData);
 				}
 				else
 				{
@@ -783,15 +778,14 @@ namespace LibRender2
 				GL.Enable(EnableCap.Blend);
 
 				// alpha test
-				Shader.SetIsAlphaTest(true);
-				Shader.SetAlphaFuncType(AlphaFuncType.Greater);
-				Shader.SetAlphaFuncValue(0.0f);
+				GL.Enable(EnableCap.AlphaTest);
+				GL.AlphaFunc(AlphaFunction.Greater, 0.0f);
 
 				// blend mode
 				float alphaFactor;
 				if (material.GlowAttenuationData != 0)
 				{
-					alphaFactor = (float)Glow.GetDistanceFactor(vertices, ref Face, material.GlowAttenuationData, Camera.AbsolutePosition);
+					alphaFactor = (float)Glow.GetDistanceFactor(modelMatrix, vertices, ref Face, material.GlowAttenuationData);
 					float blend = inv255 * material.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
 					if (blend > 1.0f)
 					{
@@ -827,7 +821,7 @@ namespace LibRender2
 				Shader.SetIsTexture(false);
 				Shader.SetBrightness(1.0f);
 				Shader.SetOpacity(1.0f);
-				Shader.SetIsAlphaTest(false);
+				GL.Disable(EnableCap.AlphaTest);
 
 				NormalsVAO.Bind();
 				NormalsVAO.Draw(Shader.VertexLayout, PrimitiveType.Lines, Face.NormalsIboStartIndex, Face.Vertices.Length * 2);
@@ -886,12 +880,9 @@ namespace LibRender2
 
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.PushMatrix();
-			GL.LoadIdentity();
-			GL.MultMatrix(ref CurrentViewMatrix);
-			Matrix4d translationMatrix = State.Translation * Matrix4d.CreateTranslation(-EyePosition);
-			GL.MultMatrix(ref translationMatrix);
-			GL.MultMatrix(ref State.Rotate);
-			GL.MultMatrix(ref State.Scale);
+			GL.LoadMatrix(ref CurrentViewMatrix);
+			Matrix4d modelMatrix = State.Scale * State.Rotate * State.Translation * Matrix4d.CreateTranslation(-EyePosition);
+			GL.MultMatrix(ref modelMatrix);
 
 			GL.MatrixMode(MatrixMode.Texture);
 			GL.PushMatrix();
@@ -987,7 +978,7 @@ namespace LibRender2
 				float alphaFactor;
 				if (material.GlowAttenuationData != 0)
 				{
-					alphaFactor = (float)Glow.GetDistanceFactor(vertices, ref Face, material.GlowAttenuationData, Camera.AbsolutePosition);
+					alphaFactor = (float)Glow.GetDistanceFactor(modelMatrix, vertices, ref Face, material.GlowAttenuationData);
 				}
 				else
 				{
@@ -1041,7 +1032,7 @@ namespace LibRender2
 				float alphaFactor;
 				if (material.GlowAttenuationData != 0)
 				{
-					alphaFactor = (float)Glow.GetDistanceFactor(vertices, ref Face, material.GlowAttenuationData, Camera.AbsolutePosition);
+					alphaFactor = (float)Glow.GetDistanceFactor(modelMatrix, vertices, ref Face, material.GlowAttenuationData);
 					float blend = inv255 * material.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
 					if (blend > 1.0f)
 					{
