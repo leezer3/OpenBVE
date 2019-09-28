@@ -1,8 +1,8 @@
-﻿using OpenBve.RouteManager;
-using OpenBveApi;
+﻿using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
+using RouteManager2.MessageManager;
 
 namespace OpenBve
 {
@@ -58,17 +58,17 @@ namespace OpenBve
 					{
 						if (this.IsPlayerTrain)
 						{
-							if (CurrentRoute.Stations[stationIndex].PlayerStops() & TrainManager.PlayerTrain.StationState == TrainStopState.Pending)
+							if (Program.CurrentRoute.Stations[stationIndex].PlayerStops() & TrainManager.PlayerTrain.StationState == TrainStopState.Pending)
 							{
 								string s = Translations.GetInterfaceString("message_station_passed");
-								s = s.Replace("[name]", CurrentRoute.Stations[stationIndex].Name);
-								Game.AddMessage(s, MessageDependency.None, GameMode.Normal, MessageColor.Orange, CurrentRoute.SecondsSinceMidnight + 10.0, null);
+								s = s.Replace("[name]", Program.CurrentRoute.Stations[stationIndex].Name);
+								Game.AddMessage(s, MessageDependency.None, GameMode.Normal, MessageColor.Orange, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 							}
-							else if (CurrentRoute.Stations[stationIndex].PlayerStops() & TrainManager.PlayerTrain.StationState == TrainStopState.Boarding)
+							else if (Program.CurrentRoute.Stations[stationIndex].PlayerStops() & TrainManager.PlayerTrain.StationState == TrainStopState.Boarding)
 							{
 								string s = Translations.GetInterfaceString("message_station_passed_boarding");
-								s = s.Replace("[name]", CurrentRoute.Stations[stationIndex].Name);
-								Game.AddMessage(s, MessageDependency.None, GameMode.Normal, MessageColor.Red, CurrentRoute.SecondsSinceMidnight + 10.0, null);
+								s = s.Replace("[name]", Program.CurrentRoute.Stations[stationIndex].Name);
+								Game.AddMessage(s, MessageDependency.None, GameMode.Normal, MessageColor.Red, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 							}
 						}
 						Station = -1;

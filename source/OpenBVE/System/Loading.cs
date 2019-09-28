@@ -3,13 +3,11 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Threading;
-using LibRender;
 using OpenBve.Parsers.Train;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
-using OpenBve.RouteManager;
 using OpenBveApi.Routes;
 
 namespace OpenBve {
@@ -56,6 +54,7 @@ namespace OpenBve {
 			CurrentRouteEncoding = RouteEncoding;
 			CurrentTrainFolder = TrainFolder;
 			CurrentTrainEncoding = TrainEncoding;
+
 			//Set the route and train folders in the info class
 			Game.RouteInformation.RouteFile = RouteFile;
 			Game.RouteInformation.TrainFolder = TrainFolder;
@@ -178,11 +177,10 @@ namespace OpenBve {
 			string RailwayFolder = GetRailwayFolder(CurrentRouteFile);
 			string ObjectFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Object");
 			string SoundFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Sound");
-			// reset
-			Game.Reset(true, true);
+			Game.Reset(true, false);
 			Game.MinimalisticSimulation = true;
 			// screen
-			CameraProperties.Camera.CurrentMode = CameraViewMode.Interior;
+			Program.Renderer.Camera.CurrentMode = CameraViewMode.Interior;
 			//First, check the format of the route file
 			//RW routes were written for BVE1 / 2, and have a different command syntax
 			bool IsRW = CsvRwRouteParser.isRWFile(CurrentRouteFile);
@@ -191,27 +189,27 @@ namespace OpenBve {
 			Thread createIllustrations = new Thread(Game.RouteInformation.LoadInformation) {IsBackground = true};
 			createIllustrations.Start();
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
-			Atmosphere.CalculateSeaLevelConstants();
-			if (CurrentRoute.BogusPretrainInstructions.Length != 0) {
-				double t = CurrentRoute.BogusPretrainInstructions[0].Time;
-				double p = CurrentRoute.BogusPretrainInstructions[0].TrackPosition;
-				for (int i = 1; i < CurrentRoute.BogusPretrainInstructions.Length; i++) {
-					if (CurrentRoute.BogusPretrainInstructions[i].Time > t) {
-						t = CurrentRoute.BogusPretrainInstructions[i].Time;
+			Program.CurrentRoute.Atmosphere.CalculateSeaLevelConstants();
+			if (Program.CurrentRoute.BogusPreTrainInstructions.Length != 0) {
+				double t = Program.CurrentRoute.BogusPreTrainInstructions[0].Time;
+				double p = Program.CurrentRoute.BogusPreTrainInstructions[0].TrackPosition;
+				for (int i = 1; i < Program.CurrentRoute.BogusPreTrainInstructions.Length; i++) {
+					if (Program.CurrentRoute.BogusPreTrainInstructions[i].Time > t) {
+						t = Program.CurrentRoute.BogusPreTrainInstructions[i].Time;
 					} else {
 						t += 1.0;
-						CurrentRoute.BogusPretrainInstructions[i].Time = t;
+						Program.CurrentRoute.BogusPreTrainInstructions[i].Time = t;
 					}
-					if (CurrentRoute.BogusPretrainInstructions[i].TrackPosition > p) {
-						p = CurrentRoute.BogusPretrainInstructions[i].TrackPosition;
+					if (Program.CurrentRoute.BogusPreTrainInstructions[i].TrackPosition > p) {
+						p = Program.CurrentRoute.BogusPreTrainInstructions[i].TrackPosition;
 					} else {
 						p += 1.0;
-						CurrentRoute.BogusPretrainInstructions[i].TrackPosition = p;
+						Program.CurrentRoute.BogusPreTrainInstructions[i].TrackPosition = p;
 					}
 				}
 			}
 			World.CameraTrackFollower = new TrackFollower(Program.CurrentHost) { Train = null, Car = null };
-			if (CurrentRoute.Stations.Length == 1)
+			if (Program.CurrentRoute.Stations.Length == 1)
 			{
 				//Log the fact that only a single station is present, as this is probably not right
 				Program.FileSystem.AppendToLogFile("The processed route file only contains a single station.");
@@ -220,10 +218,10 @@ namespace OpenBve {
 			RouteProgress = 1.0;
 			// initialize trains
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
-			TrainManager.Trains = new TrainManager.Train[Game.PrecedingTrainTimeDeltas.Length + 1 + (CurrentRoute.BogusPretrainInstructions.Length != 0 ? 1 : 0)];
+			TrainManager.Trains = new TrainManager.Train[Game.PrecedingTrainTimeDeltas.Length + 1 + (Program.CurrentRoute.BogusPreTrainInstructions.Length != 0 ? 1 : 0)];
 			for (int k = 0; k < TrainManager.Trains.Length; k++)
 			{
-				if (k == TrainManager.Trains.Length - 1 & CurrentRoute.BogusPretrainInstructions.Length != 0)
+				if (k == TrainManager.Trains.Length - 1 & Program.CurrentRoute.BogusPreTrainInstructions.Length != 0)
 				{
 					TrainManager.Trains[k] = new TrainManager.Train(TrainState.Bogus);
 				}
@@ -417,14 +415,13 @@ namespace OpenBve {
 			 *       Remember not to modify via this ref
 			 */
 			// ReSharper disable once CoVariantArrayConversion
-			CurrentRoute.Trains = TrainManager.Trains;
+			Program.CurrentRoute.Trains = TrainManager.Trains;
 			TrainProgress = 1.0;
 			// finished created objects
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
-			Array.Resize(ref ObjectManager.Objects, ObjectManager.ObjectsUsed);
 			Array.Resize(ref ObjectManager.AnimatedWorldObjects, ObjectManager.AnimatedWorldObjectsUsed);
 			// update sections
-			if (CurrentRoute.Sections.Length > 0) {
+			if (Program.CurrentRoute.Sections.Length > 0) {
 				Game.UpdateAllSections();
 			}
 			// load plugin

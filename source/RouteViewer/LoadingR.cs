@@ -8,14 +8,13 @@
 using System;
 using System.Threading;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using LibRender;
-using OpenBve.RouteManager;
+using LibRender2.Cameras;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
-using static LibRender.CameraProperties;
 
 namespace OpenBve {
 	internal static class Loading {
@@ -35,8 +34,11 @@ namespace OpenBve {
 
 		// load
 		internal static void Load(string RouteFile, Encoding RouteEncoding) {
+			// reset
+			Game.Reset();
+			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString());
+			
 			// members
-			LoadingScreen.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(Renderer).Assembly.GetName().Version.ToString());
 			RouteProgress = 0.0;
 			TrainProgress = 0.0;
 			TrainProgressCurrentSum = 0.0;
@@ -87,12 +89,17 @@ namespace OpenBve {
 		}
 
 		// load threaded
-		private static void LoadThreaded() {
-			try {
-				LoadEverythingThreaded();
-			} catch (Exception ex) {
+		private static async Task LoadThreaded()
+		{
+			try
+			{
+				await Task.Run(() => LoadEverythingThreaded());
+			}
+			catch (Exception ex)
+			{
 				Interface.AddMessage(MessageType.Critical, false, "The route and train loader encountered the following critical error: " + ex.Message);
 			}
+
 			Complete = true;
 		}
 
@@ -107,10 +114,10 @@ namespace OpenBve {
 			Complete = false;
 			CurrentRouteFile = RouteFile;
 			CurrentRouteEncoding = RouteEncoding;
-			
+
 			//Set the route and train folders in the info class
-			Loader = new Thread(LoadThreaded) { IsBackground = true };
-			Loader.Start();
+			// ReSharper disable once UnusedVariable
+			Task loadThreaded = LoadThreaded();
 		}
 
 		private static void LoadEverythingThreaded() {
@@ -118,21 +125,18 @@ namespace OpenBve {
 			string ObjectFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Object");
 			string SoundFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Sound");
 			// string CompatibilityFolder = OpenBveApi.Path.CombineDirectory(Application.StartupPath, "Compatibility");
-			// reset
-			Game.Reset();
 			Game.MinimalisticSimulation = true;
 			// screen
-			
-			Camera.CurrentMode = CameraViewMode.Track;
+
+			Program.Renderer.Camera.CurrentMode = CameraViewMode.Track;
 			// load route
 			bool IsRW = string.Equals(System.IO.Path.GetExtension(CurrentRouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
 			CsvRwRouteParser.ParseRoute(CurrentRouteFile, IsRW, CurrentRouteEncoding, Application.StartupPath, ObjectFolder, SoundFolder, false);
 			World.CameraTrackFollower = new TrackFollower(Program.CurrentHost);
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
-			Atmosphere.CalculateSeaLevelConstants();
+			Program.CurrentRoute.Atmosphere.CalculateSeaLevelConstants();
 			RouteProgress = 1.0;
 			// camera
-			ObjectManager.InitializeVisibility();
 			World.CameraTrackFollower.UpdateAbsolute( 0.0, true, false);
 			World.CameraTrackFollower.UpdateAbsolute(0.1, true, false);
 			World.CameraTrackFollower.UpdateAbsolute(-0.1, true, false);
@@ -142,30 +146,27 @@ namespace OpenBve {
 			Game.StartupTime = 0.0;
 			// finished created objects
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
-			ObjectManager.FinishCreatingObjects();
 			// signals
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			// ReSharper disable once CoVariantArrayConversion
-			CurrentRoute.Trains = TrainManager.Trains;
-			if (CurrentRoute.Sections.Length > 0) {
-				CurrentRoute.Sections[CurrentRoute.Sections.Length - 1].Update(Game.SecondsSinceMidnight);
-			}
+			Program.CurrentRoute.Trains = TrainManager.Trains;
+			Program.CurrentRoute.UpdateAllSections();
 			// starting track position
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			// int FirstStationIndex = -1;
 			double FirstStationPosition = 0.0;
-			for (int i = 0; i < CurrentRoute.Stations.Length; i++) {
-				if (CurrentRoute.Stations[i].Stops.Length != 0) {
+			for (int i = 0; i < Program.CurrentRoute.Stations.Length; i++) {
+				if (Program.CurrentRoute.Stations[i].Stops.Length != 0) {
 					// FirstStationIndex = i;
-					FirstStationPosition = CurrentRoute.Stations[i].Stops[CurrentRoute.Stations[i].Stops.Length - 1].TrackPosition;
-					if (CurrentRoute.Stations[i].ArrivalTime < 0.0) {
-						if (CurrentRoute.Stations[i].DepartureTime < 0.0) {
+					FirstStationPosition = Program.CurrentRoute.Stations[i].Stops[Program.CurrentRoute.Stations[i].Stops.Length - 1].TrackPosition;
+					if (Program.CurrentRoute.Stations[i].ArrivalTime < 0.0) {
+						if (Program.CurrentRoute.Stations[i].DepartureTime < 0.0) {
 							Game.SecondsSinceMidnight = 0.0;
 						} else {
-							Game.SecondsSinceMidnight = CurrentRoute.Stations[i].DepartureTime - CurrentRoute.Stations[i].StopTime;
+							Game.SecondsSinceMidnight = Program.CurrentRoute.Stations[i].DepartureTime - Program.CurrentRoute.Stations[i].StopTime;
 						}
 					} else {
-						Game.SecondsSinceMidnight = CurrentRoute.Stations[i].ArrivalTime;
+						Game.SecondsSinceMidnight = Program.CurrentRoute.Stations[i].ArrivalTime;
 					}
 					Game.StartupTime = Game.SecondsSinceMidnight;
 					break;
@@ -174,9 +175,8 @@ namespace OpenBve {
 			// initialize camera
 			World.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
 			World.CameraTrackFollower.UpdateAbsolute(FirstStationPosition, true, false);
-			Camera.Alignment = new CameraAlignment(new Vector3(0.0, 2.5, 0.0), 0.0, 0.0, 0.0, FirstStationPosition, 1.0);
+			Program.Renderer.Camera.Alignment = new CameraAlignment(new Vector3(0.0, 2.5, 0.0), 0.0, 0.0, 0.0, FirstStationPosition, 1.0);
 			World.UpdateAbsoluteCamera(0.0);
-			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z);
 		}
 
 	}

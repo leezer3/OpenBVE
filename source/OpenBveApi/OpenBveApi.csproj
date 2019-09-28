@@ -83,6 +83,12 @@
     <Compile Include="Graphics\Camera.RestrictionModes.cs" />
     <Compile Include="Graphics\Colors.cs">
     </Compile>
+    <Compile Include="Graphics\FrameBufferObject.cs" />
+    <Compile Include="Graphics\IndexBufferObject.cs" />
+    <Compile Include="Graphics\LibRenderVertex.cs" />
+    <Compile Include="Graphics\ShaderLayout.cs" />
+    <Compile Include="Graphics\VertexArrayObject.cs" />
+    <Compile Include="Graphics\VertexBufferObject.cs" />
     <Compile Include="Interface\Input\InputDevice.cs" />
     <Compile Include="Interface\Logging\LogMessage.cs" />
     <Compile Include="Interface\Logging\LogMessage.MessageType.cs" />
@@ -100,6 +106,7 @@
     <Compile Include="Objects\MeshMaterial.BlendMode.cs" />
     <Compile Include="Objects\MeshMaterial.cs" />
     <Compile Include="Objects\ObjectInterface.cs" />
+    <Compile Include="Objects\ObjectState.cs" />
     <Compile Include="Objects\ObjectTypes\AnimatedObject.AnimatedObjectState.cs" />
     <Compile Include="Objects\ObjectTypes\AnimatedObject.cs" />
     <Compile Include="Objects\ObjectTypes\AnimatedObjectCollection.cs" />
@@ -114,8 +121,11 @@
     <Compile Include="Objects\Parsers\XParsers.cs" />
     <Compile Include="Routes\Background.Handle.cs" />
     <Compile Include="Routes\Background.TransitionModes.cs" />
+    <Compile Include="Routes\BackgroundObject.cs" />
+    <Compile Include="Routes\DynamicBackground.cs" />
     <Compile Include="Routes\Events.cs" />
     <Compile Include="Routes\Events.TriggerTypes.cs" />
+    <Compile Include="Routes\StaticBackground.cs" />
     <Compile Include="Routes\Track.cs" />
     <Compile Include="Routes\Track.TrackElement.cs" />
     <Compile Include="Routes\Track.TrackFollower.cs" />

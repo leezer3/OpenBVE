@@ -43,7 +43,7 @@ namespace OpenBveApi.Objects
 				Object.SecondsSinceLastUpdate += TimeElapsed;
 				if (base.Visible)
 				{
-					currentHost.HideObject(ref Object.internalObject);
+					currentHost.HideObject(Object.internalObject);
 					base.Visible = false;
 				}
 			}

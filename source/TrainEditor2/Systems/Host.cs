@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using LibRender;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Sounds;
@@ -18,7 +17,7 @@ namespace TrainEditor2.Systems
 
 		public override bool LoadTexture(Texture Texture, OpenGlTextureWrapMode wrapMode)
 		{
-			return TextureManager.LoadTexture(Texture, wrapMode, Environment.TickCount, InterpolationMode.BilinearMipmapped, 16);
+			return Program.Renderer.TextureManager.LoadTexture(Texture, wrapMode, Environment.TickCount, InterpolationMode.BilinearMipmapped, 16);
 		}
 
 		// --- sound ---

@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using CSScriptLibrary;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Graphics;
@@ -14,7 +15,7 @@ namespace OpenBveApi.Objects
 	public class AnimatedObject
 	{
 		/// <summary>The array of states</summary>
-		public AnimatedObjectState[] States;
+		public ObjectState[] States;
 		/// <summary>The function script controlling state changes</summary>
 		public FunctionScript StateFunction;
 		/// <summary>The index of the current state</summary>
@@ -101,7 +102,7 @@ namespace OpenBveApi.Objects
 		public double RearAxlePosition = -1;
 		/// <summary>Holds a reference to the internal static object used for display</summary>
 		/// <remarks>This is a fully transformed deep copy of the current state</remarks>
-		public StaticObject internalObject;
+		public ObjectState internalObject;
 		/// <summary>Holds a reference to the host interface of the current application</summary>
 		private readonly HostInterface currentHost;
 		/// <summary>Whether this object uses the Timetable texture</summary>
@@ -117,41 +118,33 @@ namespace OpenBveApi.Objects
 		/// <returns>The new object</returns>
 		public AnimatedObject Clone()
 		{
-			AnimatedObject Result = new AnimatedObject(currentHost) {States = new AnimatedObjectState[this.States.Length]};
-			for (int i = 0; i < this.States.Length; i++)
-			{
-				Result.States[i].Position = this.States[i].Position;
-				if (this.States[i].Object != null)
-				{
-					Result.States[i].Object = (StaticObject) this.States[i].Object.Clone();
-				}
-			}
+			AnimatedObject Result = new AnimatedObject(currentHost) { States = States.Select(x => (ObjectState)x.Clone()).ToArray() };
 
-			Result.TrackFollowerFunction = this.TrackFollowerFunction == null ? null : this.TrackFollowerFunction.Clone();
+			Result.TrackFollowerFunction = TrackFollowerFunction?.Clone();
 			Result.FrontAxlePosition = this.FrontAxlePosition;
 			Result.RearAxlePosition = this.RearAxlePosition;
 			Result.TranslateXScriptFile = this.TranslateXScriptFile;
-			Result.StateFunction = this.StateFunction == null ? null : this.StateFunction.Clone();
+			Result.StateFunction = StateFunction?.Clone();
 			Result.CurrentState = this.CurrentState;
 			Result.TranslateZDirection = this.TranslateZDirection;
 			Result.TranslateYDirection = this.TranslateYDirection;
 			Result.TranslateXDirection = this.TranslateXDirection;
-			Result.TranslateXFunction = this.TranslateXFunction == null ? null : this.TranslateXFunction.Clone();
-			Result.TranslateYFunction = this.TranslateYFunction == null ? null : this.TranslateYFunction.Clone();
-			Result.TranslateZFunction = this.TranslateZFunction == null ? null : this.TranslateZFunction.Clone();
+			Result.TranslateXFunction = TranslateXFunction?.Clone();
+			Result.TranslateYFunction = TranslateYFunction?.Clone();
+			Result.TranslateZFunction = TranslateZFunction?.Clone();
 			Result.RotateXDirection = this.RotateXDirection;
 			Result.RotateYDirection = this.RotateYDirection;
 			Result.RotateZDirection = this.RotateZDirection;
-			Result.RotateXFunction = this.RotateXFunction == null ? null : this.RotateXFunction.Clone();
-			Result.RotateXDamping = this.RotateXDamping == null ? null : this.RotateXDamping.Clone();
-			Result.RotateYFunction = this.RotateYFunction == null ? null : this.RotateYFunction.Clone();
-			Result.RotateYDamping = this.RotateYDamping == null ? null : this.RotateYDamping.Clone();
-			Result.RotateZFunction = this.RotateZFunction == null ? null : this.RotateZFunction.Clone();
-			Result.RotateZDamping = this.RotateZDamping == null ? null : this.RotateZDamping.Clone();
+			Result.RotateXFunction = RotateXFunction?.Clone();
+			Result.RotateXDamping = RotateXDamping?.Clone();
+			Result.RotateYFunction = RotateYFunction?.Clone();
+			Result.RotateYDamping = RotateYDamping?.Clone();
+			Result.RotateZFunction = RotateZFunction?.Clone();
+			Result.RotateZDamping = RotateZDamping?.Clone();
 			Result.TextureShiftXDirection = this.TextureShiftXDirection;
 			Result.TextureShiftYDirection = this.TextureShiftYDirection;
-			Result.TextureShiftXFunction = this.TextureShiftXFunction == null ? null : this.TextureShiftXFunction.Clone();
-			Result.TextureShiftYFunction = this.TextureShiftYFunction == null ? null : this.TextureShiftYFunction.Clone();
+			Result.TextureShiftXFunction = TextureShiftXFunction?.Clone();
+			Result.TextureShiftYFunction = TextureShiftYFunction?.Clone();
 			Result.LEDClockwiseWinding = this.LEDClockwiseWinding;
 			Result.LEDInitialAngle = this.LEDInitialAngle;
 			Result.LEDLastAngle = this.LEDLastAngle;
@@ -168,7 +161,7 @@ namespace OpenBveApi.Objects
 				Result.LEDVectors = null;
 			}
 
-			Result.LEDFunction = this.LEDFunction == null ? null : this.LEDFunction.Clone();
+			Result.LEDFunction = LEDFunction?.Clone();
 			Result.RefreshRate = this.RefreshRate;
 			Result.SecondsSinceLastUpdate = 0.0;
 			if (isTimeTableObject)
@@ -200,53 +193,19 @@ namespace OpenBveApi.Objects
 		/// <param name="Show">Whether the object should be shown immediately on initialisation</param>
 		public void Initialize(int StateIndex, bool Overlay, bool Show)
 		{
-			currentHost.HideObject(ref internalObject);
+			currentHost.HideObject(internalObject);
 			int t = StateIndex;
-			if (t >= 0 && States[t].Object != null)
+			if (t >= 0 && States[t].Prototype != null)
 			{
-				int m = States[t].Object.Mesh.Vertices.Length;
-				internalObject.Mesh.Vertices = new VertexTemplate[m];
-				for (int k = 0; k < m; k++)
-				{
-					if (States[t].Object.Mesh.Vertices[k] is ColoredVertex)
-					{
-						internalObject.Mesh.Vertices[k] = new ColoredVertex((ColoredVertex) States[t].Object.Mesh.Vertices[k]);
-					}
-					else
-					{
-						internalObject.Mesh.Vertices[k] = new Vertex((Vertex) States[t].Object.Mesh.Vertices[k]);
-					}
-
-				}
-
-				m = States[t].Object.Mesh.Faces.Length;
-				internalObject.Mesh.Faces = new MeshFace[m];
-				for (int k = 0; k < m; k++)
-				{
-					internalObject.Mesh.Faces[k].Flags = States[t].Object.Mesh.Faces[k].Flags;
-					internalObject.Mesh.Faces[k].Material = States[t].Object.Mesh.Faces[k].Material;
-					int o = States[t].Object.Mesh.Faces[k].Vertices.Length;
-					internalObject.Mesh.Faces[k].Vertices = new MeshFaceVertex[o];
-					for (int h = 0; h < o; h++)
-					{
-						internalObject.Mesh.Faces[k].Vertices[h] = States[t].Object.Mesh.Faces[k].Vertices[h];
-					}
-				}
-
-				internalObject.Mesh.Materials = States[t].Object.Mesh.Materials;
+				internalObject.Prototype = States[t].Prototype;
 			}
 			else
 			{
-				/* Must internally reset the object, not create a new one.
+				/*
+				 * Must internally reset the object, not create a new one.
 				 * This allows the reference to keep pointing to the same place
 				 */
-				internalObject.Mesh = new Mesh
-				{
-					Faces = new MeshFace[] { },
-					Materials = new MeshMaterial[] { },
-					Vertices = new VertexTemplate[] { }
-				};
-
+				internalObject.Prototype = new StaticObject(currentHost);
 			}
 
 			CurrentState = StateIndex;
@@ -444,7 +403,7 @@ namespace OpenBveApi.Objects
 			bool rotateX = RotateXFunction != null;
 			bool rotateY = RotateYFunction != null;
 			bool rotateZ = RotateZFunction != null;
-			double cosX, sinX;
+			double radianX;
 			if (rotateX)
 			{
 				double a;
@@ -462,16 +421,14 @@ namespace OpenBveApi.Objects
 					RotateXDamping.Update(TimeElapsed, ref a, EnableDamping);
 				}
 
-				cosX = System.Math.Cos(a);
-				sinX = System.Math.Sin(a);
+				radianX = a;
 			}
 			else
 			{
-				cosX = 0.0;
-				sinX = 0.0;
+				radianX = 0.0;
 			}
 
-			double cosY, sinY;
+			double radianY;
 			if (rotateY)
 			{
 				double a;
@@ -489,16 +446,14 @@ namespace OpenBveApi.Objects
 					RotateYDamping.Update(TimeElapsed, ref a, EnableDamping);
 				}
 
-				cosY = System.Math.Cos(a);
-				sinY = System.Math.Sin(a);
+				radianY = a;
 			}
 			else
 			{
-				cosY = 0.0;
-				sinY = 0.0;
+				radianY = 0.0;
 			}
 
-			double cosZ, sinZ;
+			double radianZ;
 			if (rotateZ)
 			{
 				double a;
@@ -516,45 +471,32 @@ namespace OpenBveApi.Objects
 					RotateZDamping.Update(TimeElapsed, ref a, EnableDamping);
 				}
 
-				cosZ = System.Math.Cos(a);
-				sinZ = System.Math.Sin(a);
+				radianZ = a;
 			}
 			else
 			{
-				cosZ = 0.0;
-				sinZ = 0.0;
+				radianZ = 0.0;
 			}
 
 			// texture shift
 			bool shiftx = TextureShiftXFunction != null;
 			bool shifty = TextureShiftYFunction != null;
+			internalObject.TextureTranslation = OpenTK.Matrix4d.Identity;
+
 			if ((shiftx | shifty) & UpdateFunctions)
 			{
-				for (int k = 0; k < internalObject.Mesh.Vertices.Length; k++)
-				{
-					internalObject.Mesh.Vertices[k].TextureCoordinates = States[s].Object.Mesh.Vertices[k].TextureCoordinates;
-				}
-
 				if (shiftx)
 				{
 					double x = TextureShiftXFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 					x -= System.Math.Floor(x);
-					for (int k = 0; k < internalObject.Mesh.Vertices.Length; k++)
-					{
-						internalObject.Mesh.Vertices[k].TextureCoordinates.X += (float) (x * TextureShiftXDirection.X);
-						internalObject.Mesh.Vertices[k].TextureCoordinates.Y += (float) (x * TextureShiftXDirection.Y);
-					}
+					internalObject.TextureTranslation *= OpenTK.Matrix4d.CreateTranslation(x * TextureShiftXDirection.X, x * TextureShiftXDirection.Y, 1.0);
 				}
 
 				if (shifty)
 				{
 					double y = TextureShiftYFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 					y -= System.Math.Floor(y);
-					for (int k = 0; k < internalObject.Mesh.Vertices.Length; k++)
-					{
-						internalObject.Mesh.Vertices[k].TextureCoordinates.X += (float) (y * TextureShiftYDirection.X);
-						internalObject.Mesh.Vertices[k].TextureCoordinates.Y += (float) (y * TextureShiftYDirection.Y);
-					}
+					internalObject.TextureTranslation *= OpenTK.Matrix4d.CreateTranslation(y * TextureShiftYDirection.X, y * TextureShiftYDirection.Y, 1.0);
 				}
 			}
 
@@ -578,15 +520,9 @@ namespace OpenBveApi.Objects
 			}
 
 			// null object
-			if (States[s].Object == null)
+			if (States[s].Prototype == null)
 			{
 				return;
-			}
-
-			// initialize vertices
-			for (int k = 0; k < States[s].Object.Mesh.Vertices.Length; k++)
-			{
-				internalObject.Mesh.Vertices[k].Coordinates = States[s].Object.Mesh.Vertices[k].Coordinates;
 			}
 
 			// led
@@ -624,7 +560,7 @@ namespace OpenBveApi.Objects
 						{
 							/* current angle to last angle */
 							{
-								double t = 0.5 + (0.636619772367582 * ledangle) - currentEdgeFloat;
+								double t = 0.5 + 0.636619772367582 * ledangle - currentEdgeFloat;
 								if (t < 0.0)
 								{
 									t = 0.0;
@@ -638,11 +574,11 @@ namespace OpenBveApi.Objects
 								double cx = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].X + t * LEDVectors[currentEdge].X;
 								double cy = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].Y + t * LEDVectors[currentEdge].Y;
 								double cz = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].Z + t * LEDVectors[currentEdge].Z;
-								States[s].Object.Mesh.Vertices[v].Coordinates = new Vector3(cx, cy, cz);
+								States[s].Prototype.Mesh.Vertices[v].Coordinates = new Vector3(cx, cy, cz);
 								v++;
 							}
 							{
-								double t = 0.5 + (0.636619772367582 * LEDLastAngle) - lastEdgeFloat;
+								double t = 0.5 + 0.636619772367582 * LEDLastAngle - lastEdgeFloat;
 								if (t < 0.0)
 								{
 									t = 0.0;
@@ -656,7 +592,7 @@ namespace OpenBveApi.Objects
 								double lx = (1.0 - t) * LEDVectors[(lastEdge + 3) % 4].X + t * LEDVectors[lastEdge].X;
 								double ly = (1.0 - t) * LEDVectors[(lastEdge + 3) % 4].Y + t * LEDVectors[lastEdge].Y;
 								double lz = (1.0 - t) * LEDVectors[(lastEdge + 3) % 4].Z + t * LEDVectors[lastEdge].Z;
-								States[s].Object.Mesh.Vertices[v].Coordinates = new Vector3(lx, ly, lz);
+								States[s].Prototype.Mesh.Vertices[v].Coordinates = new Vector3(lx, ly, lz);
 								v++;
 							}
 						}
@@ -664,7 +600,7 @@ namespace OpenBveApi.Objects
 						{
 							{
 								/* current angle to square vertex */
-								double t = 0.5 + (0.636619772367582 * ledangle) - currentEdgeFloat;
+								double t = 0.5 + 0.636619772367582 * ledangle - currentEdgeFloat;
 								if (t < 0.0)
 								{
 									t = 0.0;
@@ -678,21 +614,21 @@ namespace OpenBveApi.Objects
 								double cx = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].X + t * LEDVectors[currentEdge].X;
 								double cy = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].Y + t * LEDVectors[currentEdge].Y;
 								double cz = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].Z + t * LEDVectors[currentEdge].Z;
-								States[s].Object.Mesh.Vertices[v + 0].Coordinates = new Vector3(cx, cy, cz);
-								States[s].Object.Mesh.Vertices[v + 1].Coordinates = LEDVectors[currentEdge];
+								States[s].Prototype.Mesh.Vertices[v + 0].Coordinates = new Vector3(cx, cy, cz);
+								States[s].Prototype.Mesh.Vertices[v + 1].Coordinates = LEDVectors[currentEdge];
 								v += 2;
 							}
 							for (int j = currentEdge + 1; j < lastEdge; j++)
 							{
 								/* square-vertex to square-vertex */
-								States[s].Object.Mesh.Vertices[v + 0].Coordinates = LEDVectors[(j + 3) % 4];
-								States[s].Object.Mesh.Vertices[v + 1].Coordinates = LEDVectors[j % 4];
+								States[s].Prototype.Mesh.Vertices[v + 0].Coordinates = LEDVectors[(j + 3) % 4];
+								States[s].Prototype.Mesh.Vertices[v + 1].Coordinates = LEDVectors[j % 4];
 								v += 2;
 							}
 
 							{
 								/* square vertex to last angle */
-								double t = 0.5 + (0.636619772367582 * LEDLastAngle) - lastEdgeFloat;
+								double t = 0.5 + 0.636619772367582 * LEDLastAngle - lastEdgeFloat;
 								if (t < 0.0)
 								{
 									t = 0.0;
@@ -706,8 +642,8 @@ namespace OpenBveApi.Objects
 								double lx = (1.0 - t) * LEDVectors[(lastEdge + 3) % 4].X + t * LEDVectors[lastEdge % 4].X;
 								double ly = (1.0 - t) * LEDVectors[(lastEdge + 3) % 4].Y + t * LEDVectors[lastEdge % 4].Y;
 								double lz = (1.0 - t) * LEDVectors[(lastEdge + 3) % 4].Z + t * LEDVectors[lastEdge % 4].Z;
-								States[s].Object.Mesh.Vertices[v + 0].Coordinates = LEDVectors[(lastEdge + 3) % 4];
-								States[s].Object.Mesh.Vertices[v + 1].Coordinates = new Vector3(lx, ly, lz);
+								States[s].Prototype.Mesh.Vertices[v + 0].Coordinates = LEDVectors[(lastEdge + 3) % 4];
+								States[s].Prototype.Mesh.Vertices[v + 1].Coordinates = new Vector3(lx, ly, lz);
 								v += 2;
 							}
 						}
@@ -736,7 +672,7 @@ namespace OpenBveApi.Objects
 						{
 							/* current angle to last angle */
 							{
-								double t = 0.5 + (0.636619772367582 * LEDLastAngle) - lastEdgeFloat;
+								double t = 0.5 + 0.636619772367582 * LEDLastAngle - lastEdgeFloat;
 								if (t < 0.0)
 								{
 									t = 0.0;
@@ -750,11 +686,11 @@ namespace OpenBveApi.Objects
 								double lx = (1.0 - t) * LEDVectors[(lastEdge + 3) % 4].X + t * LEDVectors[lastEdge].X;
 								double ly = (1.0 - t) * LEDVectors[(lastEdge + 3) % 4].Y + t * LEDVectors[lastEdge].Y;
 								double lz = (1.0 - t) * LEDVectors[(lastEdge + 3) % 4].Z + t * LEDVectors[lastEdge].Z;
-								States[s].Object.Mesh.Vertices[v].Coordinates = new Vector3(lx, ly, lz);
+								States[s].Prototype.Mesh.Vertices[v].Coordinates = new Vector3(lx, ly, lz);
 								v++;
 							}
 							{
-								double t = 0.5 + (0.636619772367582 * ledangle) - currentEdgeFloat;
+								double t = 0.5 + 0.636619772367582 * ledangle - currentEdgeFloat;
 								if (t < 0.0)
 								{
 									t = 0.0;
@@ -769,7 +705,7 @@ namespace OpenBveApi.Objects
 								double cx = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].X + t * LEDVectors[currentEdge].X;
 								double cy = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].Y + t * LEDVectors[currentEdge].Y;
 								double cz = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].Z + t * LEDVectors[currentEdge].Z;
-								States[s].Object.Mesh.Vertices[v].Coordinates = new Vector3(cx, cy, cz);
+								States[s].Prototype.Mesh.Vertices[v].Coordinates = new Vector3(cx, cy, cz);
 								v++;
 							}
 						}
@@ -777,7 +713,7 @@ namespace OpenBveApi.Objects
 						{
 							{
 								/* current angle to square vertex */
-								double t = 0.5 + (0.636619772367582 * ledangle) - currentEdgeFloat;
+								double t = 0.5 + 0.636619772367582 * ledangle - currentEdgeFloat;
 								if (t < 0.0)
 								{
 									t = 0.0;
@@ -791,21 +727,21 @@ namespace OpenBveApi.Objects
 								double cx = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].X + t * LEDVectors[currentEdge % 4].X;
 								double cy = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].Y + t * LEDVectors[currentEdge % 4].Y;
 								double cz = (1.0 - t) * LEDVectors[(currentEdge + 3) % 4].Z + t * LEDVectors[currentEdge % 4].Z;
-								States[s].Object.Mesh.Vertices[v + 0].Coordinates = LEDVectors[(currentEdge + 3) % 4];
-								States[s].Object.Mesh.Vertices[v + 1].Coordinates = new Vector3(cx, cy, cz);
+								States[s].Prototype.Mesh.Vertices[v + 0].Coordinates = LEDVectors[(currentEdge + 3) % 4];
+								States[s].Prototype.Mesh.Vertices[v + 1].Coordinates = new Vector3(cx, cy, cz);
 								v += 2;
 							}
 							for (int j = currentEdge - 1; j > lastEdge; j--)
 							{
 								/* square-vertex to square-vertex */
-								States[s].Object.Mesh.Vertices[v + 0].Coordinates = LEDVectors[(j + 3) % 4];
-								States[s].Object.Mesh.Vertices[v + 1].Coordinates = LEDVectors[j % 4];
+								States[s].Prototype.Mesh.Vertices[v + 0].Coordinates = LEDVectors[(j + 3) % 4];
+								States[s].Prototype.Mesh.Vertices[v + 1].Coordinates = LEDVectors[j % 4];
 								v += 2;
 							}
 
 							{
 								/* square vertex to last angle */
-								double t = 0.5 + (0.636619772367582 * LEDLastAngle) - lastEdgeFloat;
+								double t = 0.5 + 0.636619772367582 * LEDLastAngle - lastEdgeFloat;
 								if (t < 0.0)
 								{
 									t = 0.0;
@@ -819,8 +755,8 @@ namespace OpenBveApi.Objects
 								double lx = (1.0 - t) * LEDVectors[(lastEdge + 3) % 4].X + t * LEDVectors[lastEdge].X;
 								double ly = (1.0 - t) * LEDVectors[(lastEdge + 3) % 4].Y + t * LEDVectors[lastEdge].Y;
 								double lz = (1.0 - t) * LEDVectors[(lastEdge + 3) % 4].Z + t * LEDVectors[lastEdge].Z;
-								States[s].Object.Mesh.Vertices[v + 0].Coordinates = new Vector3(lx, ly, lz);
-								States[s].Object.Mesh.Vertices[v + 1].Coordinates = LEDVectors[lastEdge % 4];
+								States[s].Prototype.Mesh.Vertices[v + 0].Coordinates = new Vector3(lx, ly, lz);
+								States[s].Prototype.Mesh.Vertices[v + 1].Coordinates = LEDVectors[lastEdge % 4];
 								v += 2;
 							}
 						}
@@ -829,97 +765,77 @@ namespace OpenBveApi.Objects
 
 				for (int j = v; v < 11; v++)
 				{
-					States[s].Object.Mesh.Vertices[j].Coordinates = LEDVectors[4];
+					States[s].Prototype.Mesh.Vertices[j].Coordinates = LEDVectors[4];
 				}
 			}
 
-			// update vertices
-			for (int k = 0; k < States[s].Object.Mesh.Vertices.Length; k++)
+			// update prototype
+			internalObject.Prototype = States[s].Prototype;
+
+			// update VAO for led
+			if (led)
 			{
-				// rotate
-				if (rotateX)
-				{
-					internalObject.Mesh.Vertices[k].Coordinates.Rotate(RotateXDirection, cosX, sinX);
-				}
+				internalObject.Prototype.Mesh.CreateVAO(true);
+			}
 
-				if (rotateY)
-				{
-					internalObject.Mesh.Vertices[k].Coordinates.Rotate(RotateYDirection, cosY, sinY);
-				}
+			// update state
+			// rotate
+			internalObject.Rotate = OpenTK.Matrix4d.Identity;
 
-				if (rotateZ)
-				{
-					internalObject.Mesh.Vertices[k].Coordinates.Rotate(RotateZDirection, cosZ, sinZ);
-				}
+			if (rotateX)
+			{
+				internalObject.Rotate *= OpenTK.Matrix4d.CreateFromAxisAngle(new OpenTK.Vector3d(RotateXDirection.X, RotateXDirection.Y, -RotateXDirection.Z), 2.0 * System.Math.PI - radianX);
+			}
+
+			if (rotateY)
+			{
+				internalObject.Rotate *= OpenTK.Matrix4d.CreateFromAxisAngle(new OpenTK.Vector3d(RotateYDirection.X, RotateYDirection.Y, -RotateYDirection.Z), 2.0 * System.Math.PI - radianY);
+			}
+
+			if (rotateZ)
+			{
+				internalObject.Rotate *= OpenTK.Matrix4d.CreateFromAxisAngle(new OpenTK.Vector3d(RotateZDirection.X, RotateZDirection.Y, -RotateZDirection.Z), 2.0 * System.Math.PI - radianZ);
+			}
+
+			if (Camera != null && Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
+			{
+				internalObject.Rotate *= States[s].Translation * OpenTK.Matrix4d.CreateTranslation(-Position.X, -Position.Y, Position.Z);
+				internalObject.Rotate *= (OpenTK.Matrix4d)new Transformation((Vector3)Camera.AbsoluteDirection, (Vector3)Camera.AbsoluteUp, (Vector3)Camera.AbsoluteSide);
 
 				// translate
-				if (Camera != null && Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
-				{
+				double dx = -System.Math.Tan(Camera.Alignment.Yaw) - Camera.Alignment.Position.X;
+				double dy = -System.Math.Tan(Camera.Alignment.Pitch) - Camera.Alignment.Position.Y;
+				double dz = -Camera.Alignment.Position.Z;
+				Vector3 add = Camera.AbsolutePosition + dx * Camera.AbsoluteSide + dy * Camera.AbsoluteUp + dz * Camera.AbsoluteDirection;
+				internalObject.Translation = OpenTK.Matrix4d.CreateTranslation(add.X, add.Y, -add.Z);
+			}
+			else
+			{
+				internalObject.Rotate *= States[s].Translation;
+				internalObject.Rotate *= (OpenTK.Matrix4d)new Transformation(Direction, Up, Side);
 
-					internalObject.Mesh.Vertices[k].Coordinates += States[s].Position - Position;
-					/*
-					 * HACK: No idea why, but when using dynamic here, we MUST cast the parameters to Vector3 as otherwise it breaks....
-					 */
-					internalObject.Mesh.Vertices[k].Coordinates.Rotate((Vector3) Camera.AbsoluteDirection, (Vector3) Camera.AbsoluteUp, (Vector3) Camera.AbsoluteSide);
-					double dx = -System.Math.Tan(Camera.Alignment.Yaw) - Camera.Alignment.Position.X;
-					double dy = -System.Math.Tan(Camera.Alignment.Pitch) - Camera.Alignment.Position.Y;
-					double dz = -Camera.Alignment.Position.Z;
-					internalObject.Mesh.Vertices[k].Coordinates += Camera.AbsolutePosition + dx * Camera.AbsoluteSide + dy * Camera.AbsoluteUp + dz * Camera.AbsoluteDirection;
-				}
-				else
-				{
-					internalObject.Mesh.Vertices[k].Coordinates += States[s].Position;
-					internalObject.Mesh.Vertices[k].Coordinates.Rotate(Direction, Up, Side);
-					internalObject.Mesh.Vertices[k].Coordinates += Position;
-				}
+				// translate
+				internalObject.Translation = OpenTK.Matrix4d.CreateTranslation(Position.X, Position.Y, -Position.Z);
 			}
 
-			// update normals
-			for (int k = 0; k < States[s].Object.Mesh.Faces.Length; k++)
+			// visibility changed
+			// TouchElement is handled by another function.
+			if (!IsTouch)
 			{
-				for (int h = 0; h < States[s].Object.Mesh.Faces[k].Vertices.Length; h++)
+				if (Show)
 				{
-					internalObject.Mesh.Faces[k].Vertices[h].Normal = States[s].Object.Mesh.Faces[k].Vertices[h].Normal;
-					if (!Vector3.IsZero(States[s].Object.Mesh.Faces[k].Vertices[h].Normal))
+					if (Camera != null)
 					{
-						if (rotateX)
-						{
-							internalObject.Mesh.Faces[k].Vertices[h].Normal.Rotate(RotateXDirection, cosX, sinX);
-						}
-
-						if (rotateY)
-						{
-							internalObject.Mesh.Faces[k].Vertices[h].Normal.Rotate(RotateYDirection, cosY, sinY);
-						}
-
-						if (rotateZ)
-						{
-							internalObject.Mesh.Faces[k].Vertices[h].Normal.Rotate(RotateZDirection, cosZ, sinZ);
-						}
-
-						internalObject.Mesh.Faces[k].Vertices[h].Normal.Rotate(Direction, Up, Side);
-					}
-				}
-
-				// visibility changed
-				// TouchElement is handled by another function.
-				if (!IsTouch)
-				{
-					if (Show)
-					{
-						if (Camera != null)
-						{
-							currentHost.ShowObject(internalObject, ObjectType.Overlay);
-						}
-						else
-						{
-							currentHost.ShowObject(internalObject, ObjectType.Dynamic);
-						}
+						currentHost.ShowObject(internalObject, ObjectType.Overlay);
 					}
 					else
 					{
-						currentHost.HideObject(ref internalObject);
+						currentHost.ShowObject(internalObject, ObjectType.Dynamic);
 					}
+				}
+				else
+				{
+					currentHost.HideObject(internalObject);
 				}
 			}
 		}
@@ -941,7 +857,7 @@ namespace OpenBveApi.Objects
 			if (TrackFollowerFunction != null)
 			{
 				var o = this.Clone();
-				currentHost.CreateDynamicObject(ref internalObject);
+				currentHost.CreateDynamicObject(ref o.internalObject);
 				TrackFollowingObject currentObject = new TrackFollowingObject(currentHost)
 				{
 					Position = Position,
@@ -961,23 +877,20 @@ namespace OpenBveApi.Objects
 				currentObject.RearAxleFollower.UpdateWorldCoordinates(false);
 				for (int i = 0; i < currentObject.Object.States.Length; i++)
 				{
-					if (currentObject.Object.States[i].Object == null)
+					if (currentObject.Object.States[i].Prototype == null)
 					{
-						currentObject.Object.States[i].Object = new StaticObject(currentHost) {RendererIndex = -1};
+						currentObject.Object.States[i].Prototype = new StaticObject(currentHost) {RendererIndex = -1};
 					}
 				}
+
+				currentObject.Object.internalObject.Brightness = Brightness;
 
 				double r = 0.0;
 				for (int i = 0; i < currentObject.Object.States.Length; i++)
 				{
-					for (int j = 0; j < currentObject.Object.States[i].Object.Mesh.Materials.Length; j++)
+					for (int j = 0; j < currentObject.Object.States[i].Prototype.Mesh.Vertices.Length; j++)
 					{
-						currentObject.Object.States[i].Object.Mesh.Materials[j].Color *= Brightness;
-					}
-
-					for (int j = 0; j < currentObject.Object.States[i].Object.Mesh.Vertices.Length; j++)
-					{
-						double t = States[i].Object.Mesh.Vertices[j].Coordinates.Norm();
+						double t = States[i].Prototype.Mesh.Vertices[j].Coordinates.Norm();
 						if (t > r) r = t;
 					}
 				}
@@ -1003,23 +916,20 @@ namespace OpenBveApi.Objects
 				};
 				for (int i = 0; i < currentObject.Object.States.Length; i++)
 				{
-					if (currentObject.Object.States[i].Object == null)
+					if (currentObject.Object.States[i].Prototype == null)
 					{
-						currentObject.Object.States[i].Object = new StaticObject(currentHost) {RendererIndex = -1};
+						currentObject.Object.States[i].Prototype = new StaticObject(currentHost) {RendererIndex = -1};
 					}
 				}
+
+				currentObject.Object.internalObject.Brightness = Brightness;
 
 				double r = 0.0;
 				for (int i = 0; i < currentObject.Object.States.Length; i++)
 				{
-					for (int j = 0; j < currentObject.Object.States[i].Object.Mesh.Materials.Length; j++)
+					for (int j = 0; j < currentObject.Object.States[i].Prototype.Mesh.Vertices.Length; j++)
 					{
-						currentObject.Object.States[i].Object.Mesh.Materials[j].Color *= Brightness;
-					}
-
-					for (int j = 0; j < currentObject.Object.States[i].Object.Mesh.Vertices.Length; j++)
-					{
-						double t = States[i].Object.Mesh.Vertices[j].Coordinates.Norm();
+						double t = States[i].Prototype.Mesh.Vertices[j].Coordinates.Norm();
 						if (t > r) r = t;
 					}
 				}

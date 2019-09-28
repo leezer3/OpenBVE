@@ -1,9 +1,7 @@
 ﻿using System;
-using static LibRender.CameraProperties;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
-using OpenBve.RouteManager;
 
 namespace OpenBve {
 	internal static class FunctionScripts {
@@ -222,15 +220,15 @@ namespace OpenBve {
 						s++; break;
 					case Instructions.CameraDistance:
 						{
-							double dx = Camera.AbsolutePosition.X - Position.X;
-							double dy = Camera.AbsolutePosition.Y - Position.Y;
-							double dz = Camera.AbsolutePosition.Z - Position.Z;
+							double dx = Program.Renderer.Camera.AbsolutePosition.X - Position.X;
+							double dy = Program.Renderer.Camera.AbsolutePosition.Y - Position.Y;
+							double dz = Program.Renderer.Camera.AbsolutePosition.Z - Position.Z;
 							Function.Stack[s] = Math.Sqrt(dx * dx + dy * dy + dz * dz);
 							s++;
 						} break;
 					case Instructions.CameraView:
 						//Returns whether the camera is in interior or exterior mode
-						if (Camera.CurrentMode == CameraViewMode.Interior)
+						if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior)
 						{
 							Function.Stack[s] = 0;
 						}
@@ -981,18 +979,18 @@ namespace OpenBve {
 					case Instructions.SectionAspectNumber:
 						if (IsPartOfTrain) {
 							int nextSectionIndex = Train.CurrentSectionIndex + 1;
-							if (nextSectionIndex >= 0 & nextSectionIndex < CurrentRoute.Sections.Length) {
-								int a = CurrentRoute.Sections[nextSectionIndex].CurrentAspect;
-								if (a >= 0 & a < CurrentRoute.Sections[nextSectionIndex].Aspects.Length) {
-									Function.Stack[s] = (double)CurrentRoute.Sections[nextSectionIndex].Aspects[a].Number;
+							if (nextSectionIndex >= 0 & nextSectionIndex < Program.CurrentRoute.Sections.Length) {
+								int a = Program.CurrentRoute.Sections[nextSectionIndex].CurrentAspect;
+								if (a >= 0 & a < Program.CurrentRoute.Sections[nextSectionIndex].Aspects.Length) {
+									Function.Stack[s] = (double)Program.CurrentRoute.Sections[nextSectionIndex].Aspects[a].Number;
 								} else {
 									Function.Stack[s] = 0;
 								}
 							}
-						} else if (SectionIndex >= 0 & SectionIndex < CurrentRoute.Sections.Length) {
-							int a = CurrentRoute.Sections[SectionIndex].CurrentAspect;
-							if (a >= 0 & a < CurrentRoute.Sections[SectionIndex].Aspects.Length) {
-								Function.Stack[s] = (double)CurrentRoute.Sections[SectionIndex].Aspects[a].Number;
+						} else if (SectionIndex >= 0 & SectionIndex < Program.CurrentRoute.Sections.Length) {
+							int a = Program.CurrentRoute.Sections[SectionIndex].CurrentAspect;
+							if (a >= 0 & a < Program.CurrentRoute.Sections[SectionIndex].Aspects.Length) {
+								Function.Stack[s] = (double)Program.CurrentRoute.Sections[SectionIndex].Aspects[a].Number;
 							} else {
 								Function.Stack[s] = 0;
 							}

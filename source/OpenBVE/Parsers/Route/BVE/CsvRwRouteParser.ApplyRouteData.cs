@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using OpenBve.BackgroundManager;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
@@ -9,11 +8,12 @@ using OpenBveApi.World;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.FunctionScripting;
-using OpenBve.SignalManager;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
-using OpenBve.RouteManager;
 using OpenBveApi.Routes;
+using RouteManager2.Climate;
+using RouteManager2.Events;
+using RouteManager2.SignalManager;
 
 namespace OpenBve
 {
@@ -90,7 +90,7 @@ namespace OpenBve
 			{
 				if (Data.Blocks[0].Background >= 0 & Data.Backgrounds.ContainsKey(Data.Blocks[0].Background))
 				{
-					CurrentRoute.CurrentBackground = Data.Backgrounds[Data.Blocks[0].Background];
+					Program.CurrentRoute.CurrentBackground = Data.Backgrounds[Data.Blocks[0].Background];
 				}
 				else
 				{
@@ -103,7 +103,7 @@ namespace OpenBve
 						string f = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Compatibility"), "Uchibo\\Back_Mt.png");
 						Texture t;
 						Program.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out t);
-						CurrentRoute.CurrentBackground = new StaticBackground(t, 6, false);
+						Program.CurrentRoute.CurrentBackground = new StaticBackground(t, 6, false);
 					}
 					else if (Data.Backgrounds.Count == 1 && !Data.Backgrounds.ContainsKey(0) && Data.Blocks[0].Background == 0)
 					{
@@ -114,14 +114,14 @@ namespace OpenBve
 						 * Don't hide behind the hacks option, as routes can start at a non-zero position with a
 						 * non-zero background quite validly
 						 */
-						CurrentRoute.CurrentBackground = Data.Backgrounds[Data.Backgrounds.ElementAt(0).Key];
+						Program.CurrentRoute.CurrentBackground = Data.Backgrounds[Data.Backgrounds.ElementAt(0).Key];
 					}
 					else
 					{
-						CurrentRoute.CurrentBackground = new StaticBackground(null, 6, false);
+						Program.CurrentRoute.CurrentBackground = new StaticBackground(null, 6, false);
 					}
 				}
-				CurrentRoute.TargetBackground = CurrentRoute.CurrentBackground;
+				Program.CurrentRoute.TargetBackground = Program.CurrentRoute.CurrentBackground;
 			}
 			// brightness
 			int CurrentBrightnessElement = -1;
@@ -150,24 +150,24 @@ namespace OpenBve
 			int CurrentTrackLength = 0;
 			int PreviousFogElement = -1;
 			int PreviousFogEvent = -1;
-			Fog PreviousFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, -Data.BlockInterval);
-			Fog CurrentFog = new Fog(CurrentRoute.NoFogStart, CurrentRoute.NoFogEnd, Color24.Grey, 0.0);
+			Fog PreviousFog = new Fog(Program.CurrentRoute.NoFogStart, Program.CurrentRoute.NoFogEnd, Color24.Grey, -Data.BlockInterval);
+			Fog CurrentFog = new Fog(Program.CurrentRoute.NoFogStart, Program.CurrentRoute.NoFogEnd, Color24.Grey, 0.0);
 			for (int i = Data.FirstUsedBlock; i < Data.Blocks.Length; i++)
 			{
-				if (Data.Blocks[i].Rails.Length > CurrentRoute.Tracks.Length)
+				if (Data.Blocks[i].Rails.Length > Program.CurrentRoute.Tracks.Length)
 				{
-					Array.Resize(ref CurrentRoute.Tracks, Data.Blocks[i].Rails.Length);
+					Array.Resize(ref Program.CurrentRoute.Tracks, Data.Blocks[i].Rails.Length);
 				}
 			}
-			for (int i = 0; i < CurrentRoute.Tracks.Length; i++)
+			for (int i = 0; i < Program.CurrentRoute.Tracks.Length; i++)
 			{
-				if (CurrentRoute.Tracks[i] == null)
+				if (Program.CurrentRoute.Tracks[i] == null)
 				{
-					CurrentRoute.Tracks[i] = new Track();
+					Program.CurrentRoute.Tracks[i] = new Track();
 				}
-				if (CurrentRoute.Tracks[i].Elements == null)
+				if (Program.CurrentRoute.Tracks[i].Elements == null)
 				{
-					CurrentRoute.Tracks[i].Elements = new TrackElement[256];
+					Program.CurrentRoute.Tracks[i].Elements = new TrackElement[256];
 				}
 			}
 			// process blocks
@@ -201,25 +201,25 @@ namespace OpenBve
 				}
 				TrackElement WorldTrackElement = Data.Blocks[i].CurrentTrackState;
 				int n = CurrentTrackLength;
-				for (int j = 0; j < CurrentRoute.Tracks.Length; j++)
+				for (int j = 0; j < Program.CurrentRoute.Tracks.Length; j++)
 				{
-					if (n >= CurrentRoute.Tracks[j].Elements.Length)
+					if (n >= Program.CurrentRoute.Tracks[j].Elements.Length)
 					{
-						Array.Resize(ref CurrentRoute.Tracks[j].Elements, CurrentRoute.Tracks[j].Elements.Length << 1);
+						Array.Resize(ref Program.CurrentRoute.Tracks[j].Elements, Program.CurrentRoute.Tracks[j].Elements.Length << 1);
 					}
 				}
 				CurrentTrackLength++;
-				CurrentRoute.Tracks[0].Elements[n] = WorldTrackElement;
-				CurrentRoute.Tracks[0].Elements[n].WorldPosition = Position;
-				CurrentRoute.Tracks[0].Elements[n].WorldDirection = Vector3.GetVector3(Direction, Data.Blocks[i].Pitch);
-				CurrentRoute.Tracks[0].Elements[n].WorldSide = new Vector3(Direction.Y, 0.0, -Direction.X);
-				CurrentRoute.Tracks[0].Elements[n].WorldUp = Vector3.Cross(CurrentRoute.Tracks[0].Elements[n].WorldDirection, CurrentRoute.Tracks[0].Elements[n].WorldSide);
-				CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition = StartingDistance;
-				CurrentRoute.Tracks[0].Elements[n].AdhesionMultiplier = Data.Blocks[i].AdhesionMultiplier;
-				CurrentRoute.Tracks[0].Elements[n].CsvRwAccuracyLevel = Data.Blocks[i].Accuracy;
-				for (int j = 0; j < CurrentRoute.Tracks.Length; j++)
+				Program.CurrentRoute.Tracks[0].Elements[n] = WorldTrackElement;
+				Program.CurrentRoute.Tracks[0].Elements[n].WorldPosition = Position;
+				Program.CurrentRoute.Tracks[0].Elements[n].WorldDirection = Vector3.GetVector3(Direction, Data.Blocks[i].Pitch);
+				Program.CurrentRoute.Tracks[0].Elements[n].WorldSide = new Vector3(Direction.Y, 0.0, -Direction.X);
+				Program.CurrentRoute.Tracks[0].Elements[n].WorldUp = Vector3.Cross(Program.CurrentRoute.Tracks[0].Elements[n].WorldDirection, Program.CurrentRoute.Tracks[0].Elements[n].WorldSide);
+				Program.CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition = StartingDistance;
+				Program.CurrentRoute.Tracks[0].Elements[n].AdhesionMultiplier = Data.Blocks[i].AdhesionMultiplier;
+				Program.CurrentRoute.Tracks[0].Elements[n].CsvRwAccuracyLevel = Data.Blocks[i].Accuracy;
+				for (int j = 0; j < Program.CurrentRoute.Tracks.Length; j++)
 				{
-					CurrentRoute.Tracks[j].Elements[n].Events = new GeneralEvent[] { };
+					Program.CurrentRoute.Tracks[j].Elements[n].Events = new GeneralEvent[] { };
 				}
 				// background
 				if (!PreviewOnly)
@@ -245,9 +245,9 @@ namespace OpenBve
 						}
 						if (typ >= 0 & Data.Backgrounds.ContainsKey(typ))
 						{
-							int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-							Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-							CurrentRoute.Tracks[0].Elements[n].Events[m] = new BackgroundChangeEvent(0.0, Data.Backgrounds[typ], Data.Backgrounds[Data.Blocks[i].Background]);
+							int m = Program.CurrentRoute.Tracks[0].Elements[n].Events.Length;
+							Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
+							Program.CurrentRoute.Tracks[0].Elements[n].Events[m] = new BackgroundChangeEvent(Program.CurrentRoute, 0.0, Data.Backgrounds[typ], Data.Backgrounds[Data.Blocks[i].Background]);
 						}
 					}
 				}
@@ -259,18 +259,18 @@ namespace OpenBve
 						/*
 						 * Legacy brightness: This applies equally to all tracks in a block
 						 */
-						for (int t = 0; t < CurrentRoute.Tracks.Length; t++)
+						for (int t = 0; t < Program.CurrentRoute.Tracks.Length; t++)
 						{
-							int m = CurrentRoute.Tracks[t].Elements[n].Events.Length;
-							Array.Resize(ref CurrentRoute.Tracks[t].Elements[n].Events, m + 1);
+							int m = Program.CurrentRoute.Tracks[t].Elements[n].Events.Length;
+							Array.Resize(ref Program.CurrentRoute.Tracks[t].Elements[n].Events, m + 1);
 							double d = Data.Blocks[i].BrightnessChanges[j].TrackPosition - StartingDistance;
-							CurrentRoute.Tracks[t].Elements[n].Events[m] = new BrightnessChangeEvent(d, Data.Blocks[i].BrightnessChanges[j].Value, CurrentBrightnessValue, Data.Blocks[i].BrightnessChanges[j].TrackPosition - CurrentBrightnessTrackPosition);
+							Program.CurrentRoute.Tracks[t].Elements[n].Events[m] = new BrightnessChangeEvent(d, Data.Blocks[i].BrightnessChanges[j].Value, CurrentBrightnessValue, Data.Blocks[i].BrightnessChanges[j].TrackPosition - CurrentBrightnessTrackPosition);
 							
 							if (t == 0)
 							{
 								if (CurrentBrightnessElement >= 0 & CurrentBrightnessEvent >= 0)
 								{
-									BrightnessChangeEvent bce = (BrightnessChangeEvent)CurrentRoute.Tracks[t].Elements[CurrentBrightnessElement].Events[CurrentBrightnessEvent];
+									BrightnessChangeEvent bce = (BrightnessChangeEvent)Program.CurrentRoute.Tracks[t].Elements[CurrentBrightnessElement].Events[CurrentBrightnessEvent];
 									bce.NextBrightness = Data.Blocks[i].BrightnessChanges[j].Value;
 									bce.NextDistance = Data.Blocks[i].BrightnessChanges[j].TrackPosition - CurrentBrightnessTrackPosition;
 								}
@@ -281,11 +281,11 @@ namespace OpenBve
 							{
 								if (CurrentBrightnessElement >= 0 & CurrentBrightnessEvent >= 0)
 								{
-									for (int e = 0; e < CurrentRoute.Tracks[t].Elements[CurrentBrightnessElement].Events.Length; e++)
+									for (int e = 0; e < Program.CurrentRoute.Tracks[t].Elements[CurrentBrightnessElement].Events.Length; e++)
 									{
-										if (!(CurrentRoute.Tracks[t].Elements[CurrentBrightnessElement].Events[e] is BrightnessChangeEvent))
+										if (!(Program.CurrentRoute.Tracks[t].Elements[CurrentBrightnessElement].Events[e] is BrightnessChangeEvent))
 											continue;
-										BrightnessChangeEvent bce = (BrightnessChangeEvent)CurrentRoute.Tracks[t].Elements[CurrentBrightnessElement].Events[e];
+										BrightnessChangeEvent bce = (BrightnessChangeEvent)Program.CurrentRoute.Tracks[t].Elements[CurrentBrightnessElement].Events[e];
 										bce.NextBrightness = Data.Blocks[i].BrightnessChanges[j].Value;
 										bce.NextDistance = Data.Blocks[i].BrightnessChanges[j].TrackPosition - CurrentBrightnessTrackPosition;
 									}
@@ -310,19 +310,19 @@ namespace OpenBve
 								PreviousFog = Data.Blocks[i].Fog;
 							}
 							Data.Blocks[i].Fog.TrackPosition = StartingDistance;
-							int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-							Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-							CurrentRoute.Tracks[0].Elements[n].Events[m] = new FogChangeEvent(0.0, PreviousFog, Data.Blocks[i].Fog, Data.Blocks[i].Fog);
+							int m = Program.CurrentRoute.Tracks[0].Elements[n].Events.Length;
+							Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
+							Program.CurrentRoute.Tracks[0].Elements[n].Events[m] = new FogChangeEvent(Program.CurrentRoute, 0.0, PreviousFog, Data.Blocks[i].Fog, Data.Blocks[i].Fog);
 							if (PreviousFogElement >= 0 & PreviousFogEvent >= 0)
 							{
-								FogChangeEvent e = (FogChangeEvent)CurrentRoute.Tracks[0].Elements[PreviousFogElement].Events[PreviousFogEvent];
+								FogChangeEvent e = (FogChangeEvent)Program.CurrentRoute.Tracks[0].Elements[PreviousFogElement].Events[PreviousFogEvent];
 								e.NextFog = Data.Blocks[i].Fog;
 							}
 							else
 							{
-								CurrentRoute.PreviousFog = PreviousFog;
-								CurrentRoute.CurrentFog = PreviousFog;
-								CurrentRoute.NextFog = Data.Blocks[i].Fog;
+								Program.CurrentRoute.PreviousFog = PreviousFog;
+								Program.CurrentRoute.CurrentFog = PreviousFog;
+								Program.CurrentRoute.NextFog = Data.Blocks[i].Fog;
 							}
 							PreviousFog = Data.Blocks[i].Fog;
 							PreviousFogElement = n;
@@ -336,18 +336,18 @@ namespace OpenBve
 							//Fog starts at zero position
 							CurrentFog = Data.Blocks[i].Fog;
 							PreviousFog = CurrentFog;
-							CurrentRoute.PreviousFog = CurrentFog;
-							CurrentRoute.CurrentFog = CurrentFog;
-							CurrentRoute.NextFog = CurrentFog;
+							Program.CurrentRoute.PreviousFog = CurrentFog;
+							Program.CurrentRoute.CurrentFog = CurrentFog;
+							Program.CurrentRoute.NextFog = CurrentFog;
 
 
 						}
 						else
 						{
 							Data.Blocks[i].Fog.TrackPosition = StartingDistance + Data.BlockInterval;
-							int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-							Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-							CurrentRoute.Tracks[0].Elements[n].Events[m] = new FogChangeEvent(0.0, PreviousFog, CurrentFog, Data.Blocks[i].Fog);
+							int m = Program.CurrentRoute.Tracks[0].Elements[n].Events.Length;
+							Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
+							Program.CurrentRoute.Tracks[0].Elements[n].Events[m] = new FogChangeEvent(Program.CurrentRoute, 0.0, PreviousFog, CurrentFog, Data.Blocks[i].Fog);
 							PreviousFog = CurrentFog;
 							CurrentFog = Data.Blocks[i].Fog;
 						}
@@ -359,9 +359,9 @@ namespace OpenBve
 					int j = Data.Blocks[i].RailType[0];
 					int r = j < Data.Structure.Run.Length ? Data.Structure.Run[j] : 0;
 					int f = j < Data.Structure.Flange.Length ? Data.Structure.Flange[j] : 0;
-					int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-					Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-					CurrentRoute.Tracks[0].Elements[n].Events[m] = new TrackManager.RailSoundsChangeEvent(0.0, CurrentRunIndex, CurrentFlangeIndex, r, f);
+					int m = Program.CurrentRoute.Tracks[0].Elements[n].Events.Length;
+					Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
+					Program.CurrentRoute.Tracks[0].Elements[n].Events[m] = new TrackManager.RailSoundsChangeEvent(0.0, CurrentRunIndex, CurrentFlangeIndex, r, f);
 					CurrentRunIndex = r;
 					CurrentFlangeIndex = f;
 				}
@@ -390,9 +390,9 @@ namespace OpenBve
 								}
 								if (q)
 								{
-									int m = CurrentRoute.Tracks[j].Elements[n].Events.Length;
-									Array.Resize(ref CurrentRoute.Tracks[j].Elements[n].Events, m + 1);
-									CurrentRoute.Tracks[j].Elements[n].Events[m] = new TrackManager.PointSoundEvent();
+									int m = Program.CurrentRoute.Tracks[j].Elements[n].Events.Length;
+									Array.Resize(ref Program.CurrentRoute.Tracks[j].Elements[n].Events, m + 1);
+									Program.CurrentRoute.Tracks[j].Elements[n].Events[m] = new TrackManager.PointSoundEvent();
 								}
 							}
 						}
@@ -403,15 +403,15 @@ namespace OpenBve
 				{
 					// station
 					int s = Data.Blocks[i].Station;
-					int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-					Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-					CurrentRoute.Tracks[0].Elements[n].Events[m] = new StationStartEvent(0.0, s);
+					int m = Program.CurrentRoute.Tracks[0].Elements[n].Events.Length;
+					Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
+					Program.CurrentRoute.Tracks[0].Elements[n].Events[m] = new StationStartEvent(0.0, s);
 					double dx, dy = 3.0;
-					if (CurrentRoute.Stations[s].OpenLeftDoors & !CurrentRoute.Stations[s].OpenRightDoors)
+					if (Program.CurrentRoute.Stations[s].OpenLeftDoors & !Program.CurrentRoute.Stations[s].OpenRightDoors)
 					{
 						dx = -5.0;
 					}
-					else if (!CurrentRoute.Stations[s].OpenLeftDoors & CurrentRoute.Stations[s].OpenRightDoors)
+					else if (!Program.CurrentRoute.Stations[s].OpenLeftDoors & Program.CurrentRoute.Stations[s].OpenRightDoors)
 					{
 						dx = 5.0;
 					}
@@ -419,7 +419,7 @@ namespace OpenBve
 					{
 						dx = 0.0;
 					}
-					CurrentRoute.Stations[s].SoundOrigin = Position + dx * CurrentRoute.Tracks[0].Elements[n].WorldSide + dy * CurrentRoute.Tracks[0].Elements[n].WorldUp;
+					Program.CurrentRoute.Stations[s].SoundOrigin = Position + dx * Program.CurrentRoute.Tracks[0].Elements[n].WorldSide + dy * Program.CurrentRoute.Tracks[0].Elements[n].WorldUp;
 					// passalarm
 					if (!PreviewOnly)
 					{
@@ -431,9 +431,9 @@ namespace OpenBve
 								int j = b - Data.FirstUsedBlock;
 								if (j >= 0)
 								{
-									m = CurrentRoute.Tracks[0].Elements[j].Events.Length;
-									Array.Resize(ref CurrentRoute.Tracks[0].Elements[j].Events, m + 1);
-									CurrentRoute.Tracks[0].Elements[j].Events[m] = new TrackManager.StationPassAlarmEvent(0.0);
+									m = Program.CurrentRoute.Tracks[0].Elements[j].Events.Length;
+									Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[j].Events, m + 1);
+									Program.CurrentRoute.Tracks[0].Elements[j].Events[m] = new TrackManager.StationPassAlarmEvent(0.0);
 								}
 							}
 						}
@@ -443,18 +443,18 @@ namespace OpenBve
 				for (int j = 0; j < Data.Blocks[i].StopPositions.Length; j++)
 				{
 					int s = Data.Blocks[i].StopPositions[j].Station;
-					int t = CurrentRoute.Stations[s].Stops.Length;
-					Array.Resize(ref CurrentRoute.Stations[s].Stops, t + 1);
-					CurrentRoute.Stations[s].Stops[t].TrackPosition = Data.Blocks[i].StopPositions[j].TrackPosition;
-					CurrentRoute.Stations[s].Stops[t].ForwardTolerance = Data.Blocks[i].StopPositions[j].ForwardTolerance;
-					CurrentRoute.Stations[s].Stops[t].BackwardTolerance = Data.Blocks[i].StopPositions[j].BackwardTolerance;
-					CurrentRoute.Stations[s].Stops[t].Cars = Data.Blocks[i].StopPositions[j].Cars;
+					int t = Program.CurrentRoute.Stations[s].Stops.Length;
+					Array.Resize(ref Program.CurrentRoute.Stations[s].Stops, t + 1);
+					Program.CurrentRoute.Stations[s].Stops[t].TrackPosition = Data.Blocks[i].StopPositions[j].TrackPosition;
+					Program.CurrentRoute.Stations[s].Stops[t].ForwardTolerance = Data.Blocks[i].StopPositions[j].ForwardTolerance;
+					Program.CurrentRoute.Stations[s].Stops[t].BackwardTolerance = Data.Blocks[i].StopPositions[j].BackwardTolerance;
+					Program.CurrentRoute.Stations[s].Stops[t].Cars = Data.Blocks[i].StopPositions[j].Cars;
 					double dx, dy = 2.0;
-					if (CurrentRoute.Stations[s].OpenLeftDoors & !CurrentRoute.Stations[s].OpenRightDoors)
+					if (Program.CurrentRoute.Stations[s].OpenLeftDoors & !Program.CurrentRoute.Stations[s].OpenRightDoors)
 					{
 						dx = -5.0;
 					}
-					else if (!CurrentRoute.Stations[s].OpenLeftDoors & CurrentRoute.Stations[s].OpenRightDoors)
+					else if (!Program.CurrentRoute.Stations[s].OpenLeftDoors & Program.CurrentRoute.Stations[s].OpenRightDoors)
 					{
 						dx = 5.0;
 					}
@@ -463,15 +463,15 @@ namespace OpenBve
 						dx = 0.0;
 					}
 
-					CurrentRoute.Stations[s].SoundOrigin = Position + dx * CurrentRoute.Tracks[0].Elements[n].WorldSide + dy * CurrentRoute.Tracks[0].Elements[n].WorldUp;
+					Program.CurrentRoute.Stations[s].SoundOrigin = Position + dx * Program.CurrentRoute.Tracks[0].Elements[n].WorldSide + dy * Program.CurrentRoute.Tracks[0].Elements[n].WorldUp;
 				}
 				// limit
 				for (int j = 0; j < Data.Blocks[i].Limits.Length; j++)
 				{
-					int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-					Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
+					int m = Program.CurrentRoute.Tracks[0].Elements[n].Events.Length;
+					Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
 					double d = Data.Blocks[i].Limits[j].TrackPosition - StartingDistance;
-					CurrentRoute.Tracks[0].Elements[n].Events[m] = new LimitChangeEvent(d, CurrentSpeedLimit, Data.Blocks[i].Limits[j].Speed);
+					Program.CurrentRoute.Tracks[0].Elements[n].Events[m] = new LimitChangeEvent(d, CurrentSpeedLimit, Data.Blocks[i].Limits[j].Speed);
 					CurrentSpeedLimit = Data.Blocks[i].Limits[j].Speed;
 				}
 				// marker
@@ -481,22 +481,22 @@ namespace OpenBve
 					{
 						if (Data.Markers[j].StartingPosition >= StartingDistance & Data.Markers[j].StartingPosition < EndingDistance)
 						{
-							int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-							Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
+							int m = Program.CurrentRoute.Tracks[0].Elements[n].Events.Length;
+							Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
 							double d = Data.Markers[j].StartingPosition - StartingDistance;
 							if (Data.Markers[j].Message != null)
 							{
-								CurrentRoute.Tracks[0].Elements[n].Events[m] = new MarkerStartEvent(d, Data.Markers[j].Message, Program.CurrentHost);
+								Program.CurrentRoute.Tracks[0].Elements[n].Events[m] = new MarkerStartEvent(d, Data.Markers[j].Message, Program.CurrentHost);
 							}
 						}
 						if (Data.Markers[j].EndingPosition >= StartingDistance & Data.Markers[j].EndingPosition < EndingDistance)
 						{
-							int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-							Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
+							int m = Program.CurrentRoute.Tracks[0].Elements[n].Events.Length;
+							Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
 							double d = Data.Markers[j].EndingPosition - StartingDistance;
 							if (Data.Markers[j].Message != null)
 							{
-								CurrentRoute.Tracks[0].Elements[n].Events[m] = new MarkerEndEvent(d, Data.Markers[j].Message, Program.CurrentHost);
+								Program.CurrentRoute.Tracks[0].Elements[n].Events[m] = new MarkerEndEvent(d, Data.Markers[j].Message, Program.CurrentHost);
 							}
 						}
 					}
@@ -508,9 +508,9 @@ namespace OpenBve
 					{
 						if (Data.RequestStops[j].TrackPosition >= StartingDistance & Data.RequestStops[j].TrackPosition < EndingDistance)
 						{
-							int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-							Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-							CurrentRoute.Tracks[0].Elements[n].Events[m] = new RequestStopEvent(Data.RequestStops[j].StationIndex, Data.RequestStops[j].MaxNumberOfCars, Data.RequestStops[j].FullSpeed, Data.RequestStops[j].OnTime , Data.RequestStops[j].Early, Data.RequestStops[j].Late);
+							int m = Program.CurrentRoute.Tracks[0].Elements[n].Events.Length;
+							Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
+							Program.CurrentRoute.Tracks[0].Elements[n].Events[m] = new RequestStopEvent(Program.CurrentRoute, Data.RequestStops[j].StationIndex, Data.RequestStops[j].MaxNumberOfCars, Data.RequestStops[j].FullSpeed, Data.RequestStops[j].OnTime, Data.RequestStops[j].Early, Data.RequestStops[j].Late);
 						}
 						
 					}
@@ -522,16 +522,16 @@ namespace OpenBve
 					{
 						if (Data.Blocks[i].SoundEvents[j].Type == SoundType.TrainStatic | Data.Blocks[i].SoundEvents[j].Type == SoundType.TrainDynamic)
 						{
-							int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-							Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
+							int m = Program.CurrentRoute.Tracks[0].Elements[n].Events.Length;
+							Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
 							double d = Data.Blocks[i].SoundEvents[j].TrackPosition - StartingDistance;
 							switch (Data.Blocks[i].SoundEvents[j].Type)
 							{
 								case SoundType.TrainStatic:
-									CurrentRoute.Tracks[0].Elements[n].Events[m] = new TrackManager.SoundEvent(d, Data.Blocks[i].SoundEvents[j].SoundBuffer, true, true, false, Vector3.Zero, 0.0);
+									Program.CurrentRoute.Tracks[0].Elements[n].Events[m] = new TrackManager.SoundEvent(d, Data.Blocks[i].SoundEvents[j].SoundBuffer, true, true, false, Vector3.Zero, 0.0);
 									break;
 								case SoundType.TrainDynamic:
-									CurrentRoute.Tracks[0].Elements[n].Events[m] = new TrackManager.SoundEvent(d, Data.Blocks[i].SoundEvents[j].SoundBuffer, false, false, true, Vector3.Zero, Data.Blocks[i].SoundEvents[j].Speed);
+									Program.CurrentRoute.Tracks[0].Elements[n].Events[m] = new TrackManager.SoundEvent(d, Data.Blocks[i].SoundEvents[j].SoundBuffer, false, false, true, Vector3.Zero, Data.Blocks[i].SoundEvents[j].Speed);
 									break;
 							}
 						}
@@ -544,18 +544,18 @@ namespace OpenBve
 					double cosag = Math.Cos(ag);
 					double sinag = Math.Sin(ag);
 					Direction.Rotate(cosag, sinag);
-					CurrentRoute.Tracks[0].Elements[n].WorldDirection.RotatePlane(cosag, sinag);
-					CurrentRoute.Tracks[0].Elements[n].WorldSide.RotatePlane(cosag, sinag);
-					CurrentRoute.Tracks[0].Elements[n].WorldUp = Vector3.Cross(CurrentRoute.Tracks[0].Elements[n].WorldDirection, CurrentRoute.Tracks[0].Elements[n].WorldSide);
+					Program.CurrentRoute.Tracks[0].Elements[n].WorldDirection.RotatePlane(cosag, sinag);
+					Program.CurrentRoute.Tracks[0].Elements[n].WorldSide.RotatePlane(cosag, sinag);
+					Program.CurrentRoute.Tracks[0].Elements[n].WorldUp = Vector3.Cross(Program.CurrentRoute.Tracks[0].Elements[n].WorldDirection, Program.CurrentRoute.Tracks[0].Elements[n].WorldSide);
 				}
 				//Pitch
 				if (Data.Blocks[i].Pitch != 0.0)
 				{
-					CurrentRoute.Tracks[0].Elements[n].Pitch = Data.Blocks[i].Pitch;
+					Program.CurrentRoute.Tracks[0].Elements[n].Pitch = Data.Blocks[i].Pitch;
 				}
 				else
 				{
-					CurrentRoute.Tracks[0].Elements[n].Pitch = 0.0;
+					Program.CurrentRoute.Tracks[0].Elements[n].Pitch = 0.0;
 				}
 				// curves
 				double a = 0.0;
@@ -725,13 +725,13 @@ namespace OpenBve
 								RailTransformation = new Transformation(TrackTransformation, 0.0, 0.0, 0.0);
 							}
 
-							CurrentRoute.Tracks[j].Elements[n].StartingTrackPosition = StartingDistance;
-							CurrentRoute.Tracks[j].Elements[n].WorldPosition = pos;
-							CurrentRoute.Tracks[j].Elements[n].WorldDirection = RailTransformation.Z;
-							CurrentRoute.Tracks[j].Elements[n].WorldSide = RailTransformation.X;
-							CurrentRoute.Tracks[j].Elements[n].WorldUp = RailTransformation.Y;
-							CurrentRoute.Tracks[j].Elements[n].CurveCant = Data.Blocks[i].Rails[j].CurveCant;
-							CurrentRoute.Tracks[j].Elements[n].AdhesionMultiplier = Data.Blocks[i].AdhesionMultiplier;
+							Program.CurrentRoute.Tracks[j].Elements[n].StartingTrackPosition = StartingDistance;
+							Program.CurrentRoute.Tracks[j].Elements[n].WorldPosition = pos;
+							Program.CurrentRoute.Tracks[j].Elements[n].WorldDirection = RailTransformation.Z;
+							Program.CurrentRoute.Tracks[j].Elements[n].WorldSide = RailTransformation.X;
+							Program.CurrentRoute.Tracks[j].Elements[n].WorldUp = RailTransformation.Y;
+							Program.CurrentRoute.Tracks[j].Elements[n].CurveCant = Data.Blocks[i].Rails[j].CurveCant;
+							Program.CurrentRoute.Tracks[j].Elements[n].AdhesionMultiplier = Data.Blocks[i].AdhesionMultiplier;
 						}
 						if (Data.Structure.RailObjects.ContainsKey(Data.Blocks[i].RailType[j]))
 						{
@@ -748,27 +748,27 @@ namespace OpenBve
 								double d = Data.Blocks[i].PointsOfInterest[k].TrackPosition - StartingDistance;
 								double x = Data.Blocks[i].PointsOfInterest[k].Position.X;
 								double y = Data.Blocks[i].PointsOfInterest[k].Position.Y;
-								int m = CurrentRoute.PointsOfInterest.Length;
-								Array.Resize(ref CurrentRoute.PointsOfInterest, m + 1);
-								CurrentRoute.PointsOfInterest[m].TrackPosition = Data.Blocks[i].PointsOfInterest[k].TrackPosition;
+								int m = Program.CurrentRoute.PointsOfInterest.Length;
+								Array.Resize(ref Program.CurrentRoute.PointsOfInterest, m + 1);
+								Program.CurrentRoute.PointsOfInterest[m].TrackPosition = Data.Blocks[i].PointsOfInterest[k].TrackPosition;
 								if (i < Data.Blocks.Length - 1 && Data.Blocks[i + 1].Rails.Length > j)
 								{
 									double dx = Data.Blocks[i + 1].Rails[j].RailEnd.X - Data.Blocks[i].Rails[j].RailStart.X;
 									double dy = Data.Blocks[i + 1].Rails[j].RailEnd.Y - Data.Blocks[i].Rails[j].RailStart.Y;
 									dx = Data.Blocks[i].Rails[j].RailStart.X + d / Data.BlockInterval * dx;
 									dy = Data.Blocks[i].Rails[j].RailStart.Y + d / Data.BlockInterval * dy;
-									CurrentRoute.PointsOfInterest[m].TrackOffset = new Vector3(x + dx, y + dy, 0.0);
+									Program.CurrentRoute.PointsOfInterest[m].TrackOffset = new Vector3(x + dx, y + dy, 0.0);
 								}
 								else
 								{
 									double dx = Data.Blocks[i].Rails[j].RailStart.X;
 									double dy = Data.Blocks[i].Rails[j].RailStart.Y;
-									CurrentRoute.PointsOfInterest[m].TrackOffset = new Vector3(x + dx, y + dy, 0.0);
+									Program.CurrentRoute.PointsOfInterest[m].TrackOffset = new Vector3(x + dx, y + dy, 0.0);
 								}
-								CurrentRoute.PointsOfInterest[m].TrackYaw = Data.Blocks[i].PointsOfInterest[k].Yaw + planar;
-								CurrentRoute.PointsOfInterest[m].TrackPitch = Data.Blocks[i].PointsOfInterest[k].Pitch + updown;
-								CurrentRoute.PointsOfInterest[m].TrackRoll = Data.Blocks[i].PointsOfInterest[k].Roll;
-								CurrentRoute.PointsOfInterest[m].Text = Data.Blocks[i].PointsOfInterest[k].Text;
+								Program.CurrentRoute.PointsOfInterest[m].TrackYaw = Data.Blocks[i].PointsOfInterest[k].Yaw + planar;
+								Program.CurrentRoute.PointsOfInterest[m].TrackPitch = Data.Blocks[i].PointsOfInterest[k].Pitch + updown;
+								Program.CurrentRoute.PointsOfInterest[m].TrackRoll = Data.Blocks[i].PointsOfInterest[k].Roll;
+								Program.CurrentRoute.PointsOfInterest[m].Text = Data.Blocks[i].PointsOfInterest[k].Text;
 							}
 						}
 						// poles
@@ -905,7 +905,7 @@ namespace OpenBve
 									}
 									else
 									{
-										ObjectManager.CreateStaticObject((StaticObject)Data.Structure.FormCL[Data.Blocks[i].Forms[k].FormType], pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+										Program.Renderer.CreateStaticObject((StaticObject)Data.Structure.FormCL[Data.Blocks[i].Forms[k].FormType], pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 									}
 									if (Data.Blocks[i].Forms[k].RoofType > 0)
 									{
@@ -923,7 +923,7 @@ namespace OpenBve
 										}
 										else
 										{
-											ObjectManager.CreateStaticObject((StaticObject)Data.Structure.RoofCL[Data.Blocks[i].Forms[k].RoofType], pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+											Program.Renderer.CreateStaticObject((StaticObject)Data.Structure.RoofCL[Data.Blocks[i].Forms[k].RoofType], pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 										}
 									}
 								}
@@ -943,7 +943,7 @@ namespace OpenBve
 									}
 									else
 									{
-										ObjectManager.CreateStaticObject((StaticObject)Data.Structure.FormCR[Data.Blocks[i].Forms[k].FormType], pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+										Program.Renderer.CreateStaticObject((StaticObject)Data.Structure.FormCR[Data.Blocks[i].Forms[k].FormType], pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 									}
 									if (Data.Blocks[i].Forms[k].RoofType > 0)
 									{
@@ -961,7 +961,7 @@ namespace OpenBve
 										}
 										else
 										{
-											ObjectManager.CreateStaticObject((StaticObject)Data.Structure.RoofCR[Data.Blocks[i].Forms[k].RoofType], pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+											Program.Renderer.CreateStaticObject((StaticObject)Data.Structure.RoofCR[Data.Blocks[i].Forms[k].RoofType], pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 										}
 									}
 								}
@@ -998,7 +998,7 @@ namespace OpenBve
 											else
 											{
 												StaticObject FormC = GetTransformedStaticObject((StaticObject)Data.Structure.FormCL[Data.Blocks[i].Forms[k].FormType], d0, d1);
-												ObjectManager.CreateStaticObject(FormC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+												Program.Renderer.CreateStaticObject(FormC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 											}
 											if (Data.Blocks[i].Forms[k].RoofType > 0)
 											{
@@ -1017,7 +1017,7 @@ namespace OpenBve
 												else
 												{
 													StaticObject RoofC = GetTransformedStaticObject((StaticObject)Data.Structure.RoofCL[Data.Blocks[i].Forms[k].RoofType], d0, d1);
-													ObjectManager.CreateStaticObject(RoofC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+													Program.Renderer.CreateStaticObject(RoofC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 												}
 											}
 										}
@@ -1038,7 +1038,7 @@ namespace OpenBve
 											else
 											{
 												StaticObject FormC = GetTransformedStaticObject((StaticObject)Data.Structure.FormCR[Data.Blocks[i].Forms[k].FormType], d0, d1);
-												ObjectManager.CreateStaticObject(FormC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+												Program.Renderer.CreateStaticObject(FormC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 											}
 											if (Data.Blocks[i].Forms[k].RoofType > 0)
 											{
@@ -1057,7 +1057,7 @@ namespace OpenBve
 												else
 												{
 													StaticObject RoofC = GetTransformedStaticObject((StaticObject)Data.Structure.RoofCR[Data.Blocks[i].Forms[k].RoofType], d0, d1);
-													ObjectManager.CreateStaticObject(RoofC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+													Program.Renderer.CreateStaticObject(RoofC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 												}
 											}
 										}
@@ -1146,7 +1146,7 @@ namespace OpenBve
 										else
 										{
 											StaticObject Crack = GetTransformedStaticObject((StaticObject)Data.Structure.CrackL[Data.Blocks[i].Cracks[k].Type], d0, d1);
-											ObjectManager.CreateStaticObject(Crack, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+											Program.Renderer.CreateStaticObject(Crack, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 										}
 									}
 									else if (d0 > 0.0)
@@ -1158,7 +1158,7 @@ namespace OpenBve
 										else
 										{
 											StaticObject Crack = GetTransformedStaticObject((StaticObject)Data.Structure.CrackR[Data.Blocks[i].Cracks[k].Type], d0, d1);
-											ObjectManager.CreateStaticObject(Crack, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+											Program.Renderer.CreateStaticObject(Crack, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 										}
 									}
 								}
@@ -1270,7 +1270,7 @@ namespace OpenBve
 									wpos += dx * RailTransformation.X + dz * RailTransformation.Z;
 									double tpos = Data.Blocks[i].Signals[k].TrackPosition;
 									double b = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
-									ObjectManager.CreateStaticObject(CompatibilityObjects.SignalPost, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+									Program.Renderer.CreateStaticObject(CompatibilityObjects.SignalPost, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
 								}
 								if (Data.Blocks[i].Signals[k].ShowObject)
 								{
@@ -1294,10 +1294,10 @@ namespace OpenBve
 											AnimatedObjectCollection aoc = new AnimatedObjectCollection(Program.CurrentHost);
 											aoc.Objects = new AnimatedObject[1];
 											aoc.Objects[0] = new AnimatedObject(Program.CurrentHost);
-											aoc.Objects[0].States = new AnimatedObjectState[csd.Numbers.Length];
+											aoc.Objects[0].States = new ObjectState[csd.Numbers.Length];
 											for (int l = 0; l < csd.Numbers.Length; l++)
 											{
-												aoc.Objects[0].States[l].Object = (StaticObject)csd.Objects[l].Clone();
+												aoc.Objects[0].States[l] = new ObjectState { Prototype = (StaticObject)csd.Objects[l].Clone() };
 											}
 											string expr = "";
 											for (int l = 0; l < csd.Numbers.Length - 1; l++)
@@ -1331,7 +1331,7 @@ namespace OpenBve
 											AnimatedObjectCollection aoc = new AnimatedObjectCollection(Program.CurrentHost);
 											aoc.Objects = new AnimatedObject[1];
 											aoc.Objects[0] = new AnimatedObject(Program.CurrentHost);
-											aoc.Objects[0].States = new AnimatedObjectState[zn];
+											aoc.Objects[0].States = new ObjectState[zn];
 											int zi = 0;
 											string expr = "";
 											for (int l = 0; l < m; l++)
@@ -1352,7 +1352,7 @@ namespace OpenBve
 														go = b4sd.GlowObject.Clone(b4sd.GlowTextures[l], null);
 													}
 													so.JoinObjects(go);
-													aoc.Objects[0].States[zi].Object = so;
+													aoc.Objects[0].States[zi] = new ObjectState { Prototype = so };
 												}
 												else if (qs)
 												{
@@ -1360,7 +1360,7 @@ namespace OpenBve
 													{
 														so = b4sd.BaseObject.Clone(b4sd.SignalTextures[l], null);
 													}
-													aoc.Objects[0].States[zi].Object = so;
+													aoc.Objects[0].States[zi] = new ObjectState { Prototype = so };
 												}
 												else if (qg)
 												{
@@ -1368,7 +1368,7 @@ namespace OpenBve
 													{
 														go = b4sd.GlowObject.Clone(b4sd.GlowTextures[l], null);
 													}
-													aoc.Objects[0].States[zi].Object = go;
+													aoc.Objects[0].States[zi] = new ObjectState { Prototype = so };
 												}
 												if (qs | qg)
 												{
@@ -1397,8 +1397,8 @@ namespace OpenBve
 							// sections
 							for (int k = 0; k < Data.Blocks[i].Sections.Length; k++)
 							{
-								int m = CurrentRoute.Sections.Length;
-								Array.Resize <SignalManager.Section>(ref CurrentRoute.Sections, m + 1);
+								int m = Program.CurrentRoute.Sections.Length;
+								Array.Resize(ref Program.CurrentRoute.Sections, m + 1);
 								// create associated transponders
 								for (int g = 0; g <= i; g++)
 								{
@@ -1406,49 +1406,50 @@ namespace OpenBve
 									{
 										if (Data.Blocks[g].Transponders[l].Type != -1 & Data.Blocks[g].Transponders[l].SectionIndex == m)
 										{
-											int o = CurrentRoute.Tracks[0].Elements[n - i + g].Events.Length;
-											Array.Resize(ref CurrentRoute.Tracks[0].Elements[n - i + g].Events, o + 1);
+											int o = Program.CurrentRoute.Tracks[0].Elements[n - i + g].Events.Length;
+											Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[n - i + g].Events, o + 1);
 											double dt = Data.Blocks[g].Transponders[l].TrackPosition - StartingDistance + (double)(i - g) * Data.BlockInterval;
-											CurrentRoute.Tracks[0].Elements[n - i + g].Events[o] = new TransponderEvent(dt, Data.Blocks[g].Transponders[l].Type, Data.Blocks[g].Transponders[l].Data, m, Data.Blocks[g].Transponders[l].ClipToFirstRedSection);
+											Program.CurrentRoute.Tracks[0].Elements[n - i + g].Events[o] = new TransponderEvent(Program.CurrentRoute, dt, Data.Blocks[g].Transponders[l].Type, Data.Blocks[g].Transponders[l].Data, m, Data.Blocks[g].Transponders[l].ClipToFirstRedSection);
 											Data.Blocks[g].Transponders[l].Type = -1;
 										}
 									}
 								}
 								// create section
-								CurrentRoute.Sections[m].TrackPosition = Data.Blocks[i].Sections[k].TrackPosition;
-								CurrentRoute.Sections[m].Aspects = new SectionAspect[Data.Blocks[i].Sections[k].Aspects.Length];
+								Program.CurrentRoute.Sections[m] = new RouteManager2.SignalManager.Section();
+								Program.CurrentRoute.Sections[m].TrackPosition = Data.Blocks[i].Sections[k].TrackPosition;
+								Program.CurrentRoute.Sections[m].Aspects = new SectionAspect[Data.Blocks[i].Sections[k].Aspects.Length];
 								for (int l = 0; l < Data.Blocks[i].Sections[k].Aspects.Length; l++)
 								{
-									CurrentRoute.Sections[m].Aspects[l].Number = Data.Blocks[i].Sections[k].Aspects[l];
+									Program.CurrentRoute.Sections[m].Aspects[l].Number = Data.Blocks[i].Sections[k].Aspects[l];
 									if (Data.Blocks[i].Sections[k].Aspects[l] >= 0 & Data.Blocks[i].Sections[k].Aspects[l] < Data.SignalSpeeds.Length)
 									{
-										CurrentRoute.Sections[m].Aspects[l].Speed = Data.SignalSpeeds[Data.Blocks[i].Sections[k].Aspects[l]];
+										Program.CurrentRoute.Sections[m].Aspects[l].Speed = Data.SignalSpeeds[Data.Blocks[i].Sections[k].Aspects[l]];
 									}
 									else
 									{
-										CurrentRoute.Sections[m].Aspects[l].Speed = double.PositiveInfinity;
+										Program.CurrentRoute.Sections[m].Aspects[l].Speed = double.PositiveInfinity;
 									}
 								}
-								CurrentRoute.Sections[m].Type = Data.Blocks[i].Sections[k].Type;
-								CurrentRoute.Sections[m].CurrentAspect = -1;
+								Program.CurrentRoute.Sections[m].Type = Data.Blocks[i].Sections[k].Type;
+								Program.CurrentRoute.Sections[m].CurrentAspect = -1;
 								if (m > 0)
 								{
-									CurrentRoute.Sections[m].PreviousSection = m - 1;
-									CurrentRoute.Sections[m - 1].NextSection = m;
+									Program.CurrentRoute.Sections[m].PreviousSection = Program.CurrentRoute.Sections[m - 1];
+									Program.CurrentRoute.Sections[m - 1].NextSection = Program.CurrentRoute.Sections[m];
 								}
 								else
 								{
-									CurrentRoute.Sections[m].PreviousSection = -1;
+									Program.CurrentRoute.Sections[m].PreviousSection = null;
 								}
-								CurrentRoute.Sections[m].NextSection = -1;
-								CurrentRoute.Sections[m].StationIndex = Data.Blocks[i].Sections[k].DepartureStationIndex;
-								CurrentRoute.Sections[m].Invisible = Data.Blocks[i].Sections[k].Invisible;
-								CurrentRoute.Sections[m].Trains = new AbstractTrain[] { };
+								Program.CurrentRoute.Sections[m].NextSection = null;
+								Program.CurrentRoute.Sections[m].StationIndex = Data.Blocks[i].Sections[k].DepartureStationIndex;
+								Program.CurrentRoute.Sections[m].Invisible = Data.Blocks[i].Sections[k].Invisible;
+								Program.CurrentRoute.Sections[m].Trains = new AbstractTrain[] { };
 								// create section change event
 								double d = Data.Blocks[i].Sections[k].TrackPosition - StartingDistance;
-								int p = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-								Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, p + 1);
-								CurrentRoute.Tracks[0].Elements[n].Events[p] = new SectionChangeEvent(d, m - 1, m);
+								int p = Program.CurrentRoute.Tracks[0].Elements[n].Events.Length;
+								Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[n].Events, p + 1);
+								Program.CurrentRoute.Tracks[0].Elements[n].Events[p] = new SectionChangeEvent(Program.CurrentRoute, d, m - 1, m);
 							}
 							// transponders introduced after corresponding sections
 							for (int l = 0; l < Data.Blocks[i].Transponders.Length; l++)
@@ -1456,12 +1457,12 @@ namespace OpenBve
 								if (Data.Blocks[i].Transponders[l].Type != -1)
 								{
 									int t = Data.Blocks[i].Transponders[l].SectionIndex;
-									if (t >= 0 & t < CurrentRoute.Sections.Length)
+									if (t >= 0 & t < Program.CurrentRoute.Sections.Length)
 									{
-										int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-										Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
+										int m = Program.CurrentRoute.Tracks[0].Elements[n].Events.Length;
+										Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
 										double dt = Data.Blocks[i].Transponders[l].TrackPosition - StartingDistance;
-										CurrentRoute.Tracks[0].Elements[n].Events[m] = new TransponderEvent(dt, Data.Blocks[i].Transponders[l].Type, Data.Blocks[i].Transponders[l].Data, t, Data.Blocks[i].Transponders[l].ClipToFirstRedSection);
+										Program.CurrentRoute.Tracks[0].Elements[n].Events[m] = new TransponderEvent(Program.CurrentRoute, dt, Data.Blocks[i].Transponders[l].Type, Data.Blocks[i].Transponders[l].Data, t, Data.Blocks[i].Transponders[l].ClipToFirstRedSection);
 										Data.Blocks[i].Transponders[l].Type = -1;
 									}
 								}
@@ -1482,30 +1483,30 @@ namespace OpenBve
 									double b = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
 									if (Data.Blocks[i].Limits[k].Speed <= 0.0 | Data.Blocks[i].Limits[k].Speed >= 1000.0)
 									{
-										ObjectManager.CreateStaticObject(CompatibilityObjects.LimitPostInfinite, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+										Program.Renderer.CreateStaticObject(CompatibilityObjects.LimitPostInfinite, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
 									}
 									else
 									{
 										if (Data.Blocks[i].Limits[k].Cource < 0)
 										{
-											ObjectManager.CreateStaticObject(CompatibilityObjects.LimitPostLeft, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+											Program.Renderer.CreateStaticObject(CompatibilityObjects.LimitPostLeft, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
 										}
 										else if (Data.Blocks[i].Limits[k].Cource > 0)
 										{
-											ObjectManager.CreateStaticObject(CompatibilityObjects.LimitPostRight, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+											Program.Renderer.CreateStaticObject(CompatibilityObjects.LimitPostRight, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
 										}
 										else
 										{
-											ObjectManager.CreateStaticObject(CompatibilityObjects.LimitPostStraight, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+											Program.Renderer.CreateStaticObject(CompatibilityObjects.LimitPostStraight, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
 										}
 										double lim = Data.Blocks[i].Limits[k].Speed / Data.UnitOfSpeed;
 										if (lim < 10.0)
 										{
 											int d0 = (int)Math.Round(lim);
-											int o = ObjectManager.CreateStaticObject(CompatibilityObjects.LimitOneDigit, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
-											if (ObjectManager.Objects[o].Mesh.Materials.Length >= 1)
+											int o = Program.Renderer.CreateStaticObject(CompatibilityObjects.LimitOneDigit, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+											if (Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials.Length >= 1)
 											{
-												Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out ObjectManager.Objects[o].Mesh.Materials[0].DaytimeTexture);
+												Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials[0].DaytimeTexture);
 											}
 										}
 										else if (lim < 100.0)
@@ -1513,14 +1514,14 @@ namespace OpenBve
 											int d1 = (int)Math.Round(lim);
 											int d0 = d1 % 10;
 											d1 /= 10;
-											int o = ObjectManager.CreateStaticObject(CompatibilityObjects.LimitTwoDigits, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
-											if (ObjectManager.Objects[o].Mesh.Materials.Length >= 1)
+											int o = Program.Renderer.CreateStaticObject(CompatibilityObjects.LimitTwoDigits, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+											if (Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials.Length >= 1)
 											{
-												Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d1 + ".png"), new TextureParameters(null, null), out ObjectManager.Objects[o].Mesh.Materials[0].DaytimeTexture);
+												Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d1 + ".png"), new TextureParameters(null, null), out Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials[0].DaytimeTexture);
 											}
-											if (ObjectManager.Objects[o].Mesh.Materials.Length >= 2)
+											if (Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials.Length >= 2)
 											{
-												Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out ObjectManager.Objects[o].Mesh.Materials[1].DaytimeTexture);
+												Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials[1].DaytimeTexture);
 											}
 										}
 										else
@@ -1529,18 +1530,18 @@ namespace OpenBve
 											int d0 = d2 % 10;
 											int d1 = (d2 / 10) % 10;
 											d2 /= 100;
-											int o = ObjectManager.CreateStaticObject(CompatibilityObjects.LimitThreeDigits, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
-											if (ObjectManager.Objects[o].Mesh.Materials.Length >= 1)
+											int o = Program.Renderer.CreateStaticObject(CompatibilityObjects.LimitThreeDigits, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+											if (Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials.Length >= 1)
 											{
-												Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d2 + ".png"), new TextureParameters(null, null), out ObjectManager.Objects[o].Mesh.Materials[0].DaytimeTexture);
+												Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d2 + ".png"), new TextureParameters(null, null), out Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials[0].DaytimeTexture);
 											}
-											if (ObjectManager.Objects[o].Mesh.Materials.Length >= 2)
+											if (Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials.Length >= 2)
 											{
-												Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d1 + ".png"), new TextureParameters(null, null), out ObjectManager.Objects[o].Mesh.Materials[1].DaytimeTexture);
+												Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d1 + ".png"), new TextureParameters(null, null), out Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials[1].DaytimeTexture);
 											}
-											if (ObjectManager.Objects[o].Mesh.Materials.Length >= 3)
+											if (Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials.Length >= 3)
 											{
-												Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out ObjectManager.Objects[o].Mesh.Materials[2].DaytimeTexture);
+												Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials[2].DaytimeTexture);
 											}
 										}
 									}
@@ -1560,7 +1561,7 @@ namespace OpenBve
 									wpos += dx * RailTransformation.X + dz * RailTransformation.Z;
 									double tpos = Data.Blocks[i].StopPositions[k].TrackPosition;
 									double b = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
-									ObjectManager.CreateStaticObject(CompatibilityObjects.StopPost, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+									Program.Renderer.CreateStaticObject(CompatibilityObjects.StopPost, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
 								}
 							}
 						}
@@ -1585,12 +1586,12 @@ namespace OpenBve
 						if (Data.Blocks[i].Transponders[j].Type != -1)
 						{
 							int n = i - Data.FirstUsedBlock;
-							int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-							Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-							double d = Data.Blocks[i].Transponders[j].TrackPosition - CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition;
+							int m = Program.CurrentRoute.Tracks[0].Elements[n].Events.Length;
+							Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
+							double d = Data.Blocks[i].Transponders[j].TrackPosition - Program.CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition;
 							int s = Data.Blocks[i].Transponders[j].SectionIndex;
 							if (s >= 0) s = -1;
-							CurrentRoute.Tracks[0].Elements[n].Events[m] = new TransponderEvent(d, Data.Blocks[i].Transponders[j].Type, Data.Blocks[i].Transponders[j].Data, s, Data.Blocks[i].Transponders[j].ClipToFirstRedSection);
+							Program.CurrentRoute.Tracks[0].Elements[n].Events[m] = new TransponderEvent(Program.CurrentRoute, d, Data.Blocks[i].Transponders[j].Type, Data.Blocks[i].Transponders[j].Data, s, Data.Blocks[i].Transponders[j].ClipToFirstRedSection);
 							Data.Blocks[i].Transponders[j].Type = -1;
 						}
 					}
@@ -1598,205 +1599,205 @@ namespace OpenBve
 					for (int j = 0; j < Data.Blocks[i].DestinationChanges.Length; j++)
 					{
 						int n = i - Data.FirstUsedBlock;
-						int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-						Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-						double d = Data.Blocks[i].DestinationChanges[j].TrackPosition - CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition;
-						CurrentRoute.Tracks[0].Elements[n].Events[m] = new RouteManager.DestinationEvent(d, Data.Blocks[i].DestinationChanges[j].Type, Data.Blocks[i].DestinationChanges[j].NextDestination, Data.Blocks[i].DestinationChanges[j].PreviousDestination, Data.Blocks[i].DestinationChanges[j].TriggerOnce);
+						int m = Program.CurrentRoute.Tracks[0].Elements[n].Events.Length;
+						Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
+						double d = Data.Blocks[i].DestinationChanges[j].TrackPosition - Program.CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition;
+						Program.CurrentRoute.Tracks[0].Elements[n].Events[m] = new RouteManager2.Events.DestinationEvent(d, Data.Blocks[i].DestinationChanges[j].Type, Data.Blocks[i].DestinationChanges[j].NextDestination, Data.Blocks[i].DestinationChanges[j].PreviousDestination, Data.Blocks[i].DestinationChanges[j].TriggerOnce);
 					}
 				}
 			}
 			// insert station end events
-			for (int i = 0; i < CurrentRoute.Stations.Length; i++)
+			for (int i = 0; i < Program.CurrentRoute.Stations.Length; i++)
 			{
-				int j = CurrentRoute.Stations[i].Stops.Length - 1;
+				int j = Program.CurrentRoute.Stations[i].Stops.Length - 1;
 				if (j >= 0)
 				{
-					double p = CurrentRoute.Stations[i].Stops[j].TrackPosition + CurrentRoute.Stations[i].Stops[j].ForwardTolerance + Data.BlockInterval;
+					double p = Program.CurrentRoute.Stations[i].Stops[j].TrackPosition + Program.CurrentRoute.Stations[i].Stops[j].ForwardTolerance + Data.BlockInterval;
 					int k = (int)Math.Floor(p / (double)Data.BlockInterval) - Data.FirstUsedBlock;
 					if (k >= 0 & k < Data.Blocks.Length)
 					{
 						double d = p - (double)(k + Data.FirstUsedBlock) * (double)Data.BlockInterval;
-						int m = CurrentRoute.Tracks[0].Elements[k].Events.Length;
-						Array.Resize(ref CurrentRoute.Tracks[0].Elements[k].Events, m + 1);
-						CurrentRoute.Tracks[0].Elements[k].Events[m] = new TrackManager.StationEndEvent(d, i);
+						int m = Program.CurrentRoute.Tracks[0].Elements[k].Events.Length;
+						Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[k].Events, m + 1);
+						Program.CurrentRoute.Tracks[0].Elements[k].Events[m] = new TrackManager.StationEndEvent(d, i);
 					}
 				}
 			}
 			// create default point of interests
-			if (CurrentRoute.PointsOfInterest.Length == 0)
+			if (Program.CurrentRoute.PointsOfInterest.Length == 0)
 			{
-				CurrentRoute.PointsOfInterest = new RouteManager.PointOfInterest[CurrentRoute.Stations.Length];
+				Program.CurrentRoute.PointsOfInterest = new RouteManager2.PointOfInterest[Program.CurrentRoute.Stations.Length];
 				int n = 0;
-				for (int i = 0; i < CurrentRoute.Stations.Length; i++)
+				for (int i = 0; i < Program.CurrentRoute.Stations.Length; i++)
 				{
-					if (CurrentRoute.Stations[i].Stops.Length != 0)
+					if (Program.CurrentRoute.Stations[i].Stops.Length != 0)
 					{
-						CurrentRoute.PointsOfInterest[n].Text = CurrentRoute.Stations[i].Name;
-						CurrentRoute.PointsOfInterest[n].TrackPosition = CurrentRoute.Stations[i].Stops[0].TrackPosition;
-						CurrentRoute.PointsOfInterest[n].TrackOffset = new Vector3(0.0, 2.8, 0.0);
-						if (CurrentRoute.Stations[i].OpenLeftDoors & !CurrentRoute.Stations[i].OpenRightDoors)
+						Program.CurrentRoute.PointsOfInterest[n].Text = Program.CurrentRoute.Stations[i].Name;
+						Program.CurrentRoute.PointsOfInterest[n].TrackPosition = Program.CurrentRoute.Stations[i].Stops[0].TrackPosition;
+						Program.CurrentRoute.PointsOfInterest[n].TrackOffset = new Vector3(0.0, 2.8, 0.0);
+						if (Program.CurrentRoute.Stations[i].OpenLeftDoors & !Program.CurrentRoute.Stations[i].OpenRightDoors)
 						{
-							CurrentRoute.PointsOfInterest[n].TrackOffset.X = -2.5;
+							Program.CurrentRoute.PointsOfInterest[n].TrackOffset.X = -2.5;
 						}
-						else if (!CurrentRoute.Stations[i].OpenLeftDoors & CurrentRoute.Stations[i].OpenRightDoors)
+						else if (!Program.CurrentRoute.Stations[i].OpenLeftDoors & Program.CurrentRoute.Stations[i].OpenRightDoors)
 						{
-							CurrentRoute.PointsOfInterest[n].TrackOffset.X = 2.5;
+							Program.CurrentRoute.PointsOfInterest[n].TrackOffset.X = 2.5;
 						}
 						n++;
 					}
 				}
-				Array.Resize(ref CurrentRoute.PointsOfInterest, n);
+				Array.Resize(ref Program.CurrentRoute.PointsOfInterest, n);
 			}
 			// convert block-based cant into point-based cant
-			for (int i = 0; i < CurrentRoute.Tracks.Length; i++)
+			for (int i = 0; i < Program.CurrentRoute.Tracks.Length; i++)
 			{
 				for (int j = CurrentTrackLength - 1; j >= 1; j--)
 				{
-					if (CurrentRoute.Tracks[i].Elements[j].CurveCant == 0.0)
+					if (Program.CurrentRoute.Tracks[i].Elements[j].CurveCant == 0.0)
 					{
-						CurrentRoute.Tracks[i].Elements[j].CurveCant = CurrentRoute.Tracks[i].Elements[j - 1].CurveCant;
+						Program.CurrentRoute.Tracks[i].Elements[j].CurveCant = Program.CurrentRoute.Tracks[i].Elements[j - 1].CurveCant;
 					}
-					else if (CurrentRoute.Tracks[i].Elements[j - 1].CurveCant != 0.0)
+					else if (Program.CurrentRoute.Tracks[i].Elements[j - 1].CurveCant != 0.0)
 					{
-						if (Math.Sign(CurrentRoute.Tracks[i].Elements[j - 1].CurveCant) == Math.Sign(CurrentRoute.Tracks[i].Elements[j].CurveCant))
+						if (Math.Sign(Program.CurrentRoute.Tracks[i].Elements[j - 1].CurveCant) == Math.Sign(Program.CurrentRoute.Tracks[i].Elements[j].CurveCant))
 						{
-							if (Math.Abs(CurrentRoute.Tracks[i].Elements[j - 1].CurveCant) > Math.Abs(CurrentRoute.Tracks[i].Elements[j].CurveCant))
+							if (Math.Abs(Program.CurrentRoute.Tracks[i].Elements[j - 1].CurveCant) > Math.Abs(Program.CurrentRoute.Tracks[i].Elements[j].CurveCant))
 							{
-								CurrentRoute.Tracks[i].Elements[j].CurveCant = CurrentRoute.Tracks[i].Elements[j - 1].CurveCant;
+								Program.CurrentRoute.Tracks[i].Elements[j].CurveCant = Program.CurrentRoute.Tracks[i].Elements[j - 1].CurveCant;
 							}
 						}
 						else
 						{
-							CurrentRoute.Tracks[i].Elements[j].CurveCant = 0.5 * (CurrentRoute.Tracks[i].Elements[j].CurveCant + CurrentRoute.Tracks[i].Elements[j - 1].CurveCant);
+							Program.CurrentRoute.Tracks[i].Elements[j].CurveCant = 0.5 * (Program.CurrentRoute.Tracks[i].Elements[j].CurveCant + Program.CurrentRoute.Tracks[i].Elements[j - 1].CurveCant);
 						}
 					}
 				}
 			}
 			// finalize
-			for (int i = 0; i < CurrentRoute.Tracks.Length; i++)
+			for (int i = 0; i < Program.CurrentRoute.Tracks.Length; i++)
 			{
-				Array.Resize(ref CurrentRoute.Tracks[i].Elements, CurrentTrackLength);
+				Array.Resize(ref Program.CurrentRoute.Tracks[i].Elements, CurrentTrackLength);
 			}
-			for (int i = 0; i < CurrentRoute.Stations.Length; i++)
+			for (int i = 0; i < Program.CurrentRoute.Stations.Length; i++)
 			{
-				if (CurrentRoute.Stations[i].Stops.Length == 0 & CurrentRoute.Stations[i].StopMode != StationStopMode.AllPass)
+				if (Program.CurrentRoute.Stations[i].Stops.Length == 0 & Program.CurrentRoute.Stations[i].StopMode != StationStopMode.AllPass)
 				{
-					Interface.AddMessage(MessageType.Warning, false, "Station " + CurrentRoute.Stations[i].Name + " expects trains to stop but does not define stop points at track position " + CurrentRoute.Stations[i].DefaultTrackPosition.ToString(Culture) + " in file " + FileName);
-					CurrentRoute.Stations[i].StopMode = StationStopMode.AllPass;
+					Interface.AddMessage(MessageType.Warning, false, "Station " + Program.CurrentRoute.Stations[i].Name + " expects trains to stop but does not define stop points at track position " + Program.CurrentRoute.Stations[i].DefaultTrackPosition.ToString(Culture) + " in file " + FileName);
+					Program.CurrentRoute.Stations[i].StopMode = StationStopMode.AllPass;
 				}
-				if (CurrentRoute.Stations[i].Type == StationType.ChangeEnds)
+				if (Program.CurrentRoute.Stations[i].Type == StationType.ChangeEnds)
 				{
-					if (i < CurrentRoute.Stations.Length - 1)
+					if (i < Program.CurrentRoute.Stations.Length - 1)
 					{
-						if (CurrentRoute.Stations[i + 1].StopMode != StationStopMode.AllStop)
+						if (Program.CurrentRoute.Stations[i + 1].StopMode != StationStopMode.AllStop)
 						{
-							Interface.AddMessage(MessageType.Warning, false, "Station " + CurrentRoute.Stations[i].Name + " is marked as \"change ends\" but the subsequent station does not expect all trains to stop in file " + FileName);
-							CurrentRoute.Stations[i + 1].StopMode = StationStopMode.AllStop;
+							Interface.AddMessage(MessageType.Warning, false, "Station " + Program.CurrentRoute.Stations[i].Name + " is marked as \"change ends\" but the subsequent station does not expect all trains to stop in file " + FileName);
+							Program.CurrentRoute.Stations[i + 1].StopMode = StationStopMode.AllStop;
 						}
 					}
 					else
 					{
-						Interface.AddMessage(MessageType.Warning, false, "Station " + CurrentRoute.Stations[i].Name + " is marked as \"change ends\" but there is no subsequent station defined in file " + FileName);
-						CurrentRoute.Stations[i].Type = StationType.Terminal;
+						Interface.AddMessage(MessageType.Warning, false, "Station " + Program.CurrentRoute.Stations[i].Name + " is marked as \"change ends\" but there is no subsequent station defined in file " + FileName);
+						Program.CurrentRoute.Stations[i].Type = StationType.Terminal;
 					}
 				}
 			}
-			if (CurrentRoute.Stations.Length != 0)
+			if (Program.CurrentRoute.Stations.Length != 0)
 			{
-				CurrentRoute.Stations[CurrentRoute.Stations.Length - 1].Type = StationType.Terminal;
+				Program.CurrentRoute.Stations[Program.CurrentRoute.Stations.Length - 1].Type = StationType.Terminal;
 			}
-			if (CurrentRoute.Tracks[0].Elements.Length != 0)
+			if (Program.CurrentRoute.Tracks[0].Elements.Length != 0)
 			{
-				int n = CurrentRoute.Tracks[0].Elements.Length - 1;
-				int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-				Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-				CurrentRoute.Tracks[0].Elements[n].Events[m] = new TrackEndEvent(Data.BlockInterval);
+				int n = Program.CurrentRoute.Tracks[0].Elements.Length - 1;
+				int m = Program.CurrentRoute.Tracks[0].Elements[n].Events.Length;
+				Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
+				Program.CurrentRoute.Tracks[0].Elements[n].Events[m] = new TrackEndEvent(Program.Renderer.Camera, Data.BlockInterval);
 			}
 			// insert compatibility beacons
 			if (!PreviewOnly)
 			{
 				List<TransponderEvent> transponders = new List<TransponderEvent>();
 				bool atc = false;
-				for (int i = 0; i < CurrentRoute.Tracks[0].Elements.Length; i++)
+				for (int i = 0; i < Program.CurrentRoute.Tracks[0].Elements.Length; i++)
 				{
-					for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Length; j++)
+					for (int j = 0; j < Program.CurrentRoute.Tracks[0].Elements[i].Events.Length; j++)
 					{
 						if (!atc)
 						{
-							if (CurrentRoute.Tracks[0].Elements[i].Events[j] is StationStartEvent)
+							if (Program.CurrentRoute.Tracks[0].Elements[i].Events[j] is StationStartEvent)
 							{
-								StationStartEvent station = (StationStartEvent)CurrentRoute.Tracks[0].Elements[i].Events[j];
-								if (CurrentRoute.Stations[station.StationIndex].SafetySystem == SafetySystem.Atc)
+								StationStartEvent station = (StationStartEvent)Program.CurrentRoute.Tracks[0].Elements[i].Events[j];
+								if (Program.CurrentRoute.Stations[station.StationIndex].SafetySystem == SafetySystem.Atc)
 								{
-									Array.Resize(ref CurrentRoute.Tracks[0].Elements[i].Events, CurrentRoute.Tracks[0].Elements[i].Events.Length + 2);
-									CurrentRoute.Tracks[0].Elements[i].Events[CurrentRoute.Tracks[0].Elements[i].Events.Length - 2] = new TransponderEvent(0.0, TransponderTypes.AtcTrackStatus, 0, 0, false);
-									CurrentRoute.Tracks[0].Elements[i].Events[CurrentRoute.Tracks[0].Elements[i].Events.Length - 1] = new TransponderEvent(0.0, TransponderTypes.AtcTrackStatus, 1, 0, false);
+									Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[i].Events, Program.CurrentRoute.Tracks[0].Elements[i].Events.Length + 2);
+									Program.CurrentRoute.Tracks[0].Elements[i].Events[Program.CurrentRoute.Tracks[0].Elements[i].Events.Length - 2] = new TransponderEvent(Program.CurrentRoute, 0.0, TransponderTypes.AtcTrackStatus, 0, 0, false);
+									Program.CurrentRoute.Tracks[0].Elements[i].Events[Program.CurrentRoute.Tracks[0].Elements[i].Events.Length - 1] = new TransponderEvent(Program.CurrentRoute, 0.0, TransponderTypes.AtcTrackStatus, 1, 0, false);
 									atc = true;
 								}
 							}
 						}
 						else
 						{
-							if (CurrentRoute.Tracks[0].Elements[i].Events[j] is StationStartEvent)
+							if (Program.CurrentRoute.Tracks[0].Elements[i].Events[j] is StationStartEvent)
 							{
-								StationStartEvent station = (StationStartEvent)CurrentRoute.Tracks[0].Elements[i].Events[j];
-								if (CurrentRoute.Stations[station.StationIndex].SafetySystem == SafetySystem.Ats)
+								StationStartEvent station = (StationStartEvent)Program.CurrentRoute.Tracks[0].Elements[i].Events[j];
+								if (Program.CurrentRoute.Stations[station.StationIndex].SafetySystem == SafetySystem.Ats)
 								{
-									Array.Resize(ref CurrentRoute.Tracks[0].Elements[i].Events, CurrentRoute.Tracks[0].Elements[i].Events.Length + 2);
-									CurrentRoute.Tracks[0].Elements[i].Events[CurrentRoute.Tracks[0].Elements[i].Events.Length - 2] = new TransponderEvent(0.0, TransponderTypes.AtcTrackStatus, 2, 0, false);
-									CurrentRoute.Tracks[0].Elements[i].Events[CurrentRoute.Tracks[0].Elements[i].Events.Length - 1] = new TransponderEvent(0.0, TransponderTypes.AtcTrackStatus, 3, 0, false);
+									Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[i].Events, Program.CurrentRoute.Tracks[0].Elements[i].Events.Length + 2);
+									Program.CurrentRoute.Tracks[0].Elements[i].Events[Program.CurrentRoute.Tracks[0].Elements[i].Events.Length - 2] = new TransponderEvent(Program.CurrentRoute, 0.0, TransponderTypes.AtcTrackStatus, 2, 0, false);
+									Program.CurrentRoute.Tracks[0].Elements[i].Events[Program.CurrentRoute.Tracks[0].Elements[i].Events.Length - 1] = new TransponderEvent(Program.CurrentRoute, 0.0, TransponderTypes.AtcTrackStatus, 3, 0, false);
 								}
 							}
-							else if (CurrentRoute.Tracks[0].Elements[i].Events[j] is TrackManager.StationEndEvent)
+							else if (Program.CurrentRoute.Tracks[0].Elements[i].Events[j] is TrackManager.StationEndEvent)
 							{
-								TrackManager.StationEndEvent station = (TrackManager.StationEndEvent)CurrentRoute.Tracks[0].Elements[i].Events[j];
-								if (CurrentRoute.Stations[station.StationIndex].SafetySystem == SafetySystem.Atc)
+								TrackManager.StationEndEvent station = (TrackManager.StationEndEvent)Program.CurrentRoute.Tracks[0].Elements[i].Events[j];
+								if (Program.CurrentRoute.Stations[station.StationIndex].SafetySystem == SafetySystem.Atc)
 								{
-									Array.Resize(ref CurrentRoute.Tracks[0].Elements[i].Events, CurrentRoute.Tracks[0].Elements[i].Events.Length + 2);
-									CurrentRoute.Tracks[0].Elements[i].Events[CurrentRoute.Tracks[0].Elements[i].Events.Length - 2] = new TransponderEvent(0.0, TransponderTypes.AtcTrackStatus, 1, 0, false);
-									CurrentRoute.Tracks[0].Elements[i].Events[CurrentRoute.Tracks[0].Elements[i].Events.Length - 1] = new TransponderEvent(0.0, TransponderTypes.AtcTrackStatus, 2, 0, false);
+									Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[i].Events, Program.CurrentRoute.Tracks[0].Elements[i].Events.Length + 2);
+									Program.CurrentRoute.Tracks[0].Elements[i].Events[Program.CurrentRoute.Tracks[0].Elements[i].Events.Length - 2] = new TransponderEvent(Program.CurrentRoute, 0.0, TransponderTypes.AtcTrackStatus, 1, 0, false);
+									Program.CurrentRoute.Tracks[0].Elements[i].Events[Program.CurrentRoute.Tracks[0].Elements[i].Events.Length - 1] = new TransponderEvent(Program.CurrentRoute, 0.0, TransponderTypes.AtcTrackStatus, 2, 0, false);
 								}
-								else if (CurrentRoute.Stations[station.StationIndex].SafetySystem == SafetySystem.Ats)
+								else if (Program.CurrentRoute.Stations[station.StationIndex].SafetySystem == SafetySystem.Ats)
 								{
-									Array.Resize(ref CurrentRoute.Tracks[0].Elements[i].Events, CurrentRoute.Tracks[0].Elements[i].Events.Length + 2);
-									CurrentRoute.Tracks[0].Elements[i].Events[CurrentRoute.Tracks[0].Elements[i].Events.Length - 2] = new TransponderEvent(0.0, TransponderTypes.AtcTrackStatus, 3, 0, false);
-									CurrentRoute.Tracks[0].Elements[i].Events[CurrentRoute.Tracks[0].Elements[i].Events.Length - 1] = new TransponderEvent(0.0, TransponderTypes.AtcTrackStatus, 0, 0, false);
+									Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[i].Events, Program.CurrentRoute.Tracks[0].Elements[i].Events.Length + 2);
+									Program.CurrentRoute.Tracks[0].Elements[i].Events[Program.CurrentRoute.Tracks[0].Elements[i].Events.Length - 2] = new TransponderEvent(Program.CurrentRoute, 0.0, TransponderTypes.AtcTrackStatus, 3, 0, false);
+									Program.CurrentRoute.Tracks[0].Elements[i].Events[Program.CurrentRoute.Tracks[0].Elements[i].Events.Length - 1] = new TransponderEvent(Program.CurrentRoute, 0.0, TransponderTypes.AtcTrackStatus, 0, 0, false);
 									atc = false;
 								}
 							}
-							else if (CurrentRoute.Tracks[0].Elements[i].Events[j] is LimitChangeEvent)
+							else if (Program.CurrentRoute.Tracks[0].Elements[i].Events[j] is LimitChangeEvent)
 							{
-								LimitChangeEvent limit = (LimitChangeEvent)CurrentRoute.Tracks[0].Elements[i].Events[j];
+								LimitChangeEvent limit = (LimitChangeEvent)Program.CurrentRoute.Tracks[0].Elements[i].Events[j];
 								int speed = (int)Math.Round(Math.Min(4095.0, 3.6 * limit.NextSpeedLimit));
-								int distance = Math.Min(1048575, (int)Math.Round(CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition + limit.TrackPositionDelta));
+								int distance = Math.Min(1048575, (int)Math.Round(Program.CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition + limit.TrackPositionDelta));
 								unchecked
 								{
 									int value = (int)((uint)speed | ((uint)distance << 12));
-									transponders.Add(new TransponderEvent(0.0, TransponderTypes.AtcSpeedLimit, value, 0, false));
+									transponders.Add(new TransponderEvent(Program.CurrentRoute, 0.0, TransponderTypes.AtcSpeedLimit, value, 0, false));
 								}
 							}
 						}
-						if (CurrentRoute.Tracks[0].Elements[i].Events[j] is TransponderEvent)
+						if (Program.CurrentRoute.Tracks[0].Elements[i].Events[j] is TransponderEvent)
 						{
-							TransponderEvent transponder = CurrentRoute.Tracks[0].Elements[i].Events[j] as TransponderEvent;
+							TransponderEvent transponder = Program.CurrentRoute.Tracks[0].Elements[i].Events[j] as TransponderEvent;
 							if (transponder.Type == (int)TransponderTypes.InternalAtsPTemporarySpeedLimit)
 							{
 								int speed = Math.Min(4095, transponder.Data);
-								int distance = Math.Min(1048575, (int)Math.Round(CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition + transponder.TrackPositionDelta));
+								int distance = Math.Min(1048575, (int)Math.Round(Program.CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition + transponder.TrackPositionDelta));
 								unchecked
 								{
 									int value = (int)((uint)speed | ((uint)distance << 12));
-									transponders.Add(new TransponderEvent(0.0, TransponderTypes.AtsPTemporarySpeedLimit, value, 0, false));
+									transponders.Add(new TransponderEvent(Program.CurrentRoute, 0.0, TransponderTypes.AtsPTemporarySpeedLimit, value, 0, false));
 								}
 							}
 						}
 					}
 				}
-				int n = CurrentRoute.Tracks[0].Elements[0].Events.Length;
-				Array.Resize(ref CurrentRoute.Tracks[0].Elements[0].Events, n + transponders.Count);
+				int n = Program.CurrentRoute.Tracks[0].Elements[0].Events.Length;
+				Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[0].Events, n + transponders.Count);
 				for (int i = 0; i < transponders.Count; i++)
 				{
-					CurrentRoute.Tracks[0].Elements[0].Events[n + i] = transponders[i];
+					Program.CurrentRoute.Tracks[0].Elements[0].Events[n + i] = transponders[i];
 				}
 			}
 			// cant
@@ -1817,27 +1818,27 @@ namespace OpenBve
 		// compute cant tangents
 		private static void ComputeCantTangents()
 		{
-			for (int i = 0; i < CurrentRoute.Tracks.Length; i++)
+			for (int i = 0; i < Program.CurrentRoute.Tracks.Length; i++)
 			{
-				if (CurrentRoute.Tracks[i].Elements.Length == 1)
+				if (Program.CurrentRoute.Tracks[i].Elements.Length == 1)
 				{
-					CurrentRoute.Tracks[i].Elements[0].CurveCantTangent = 0.0;
+					Program.CurrentRoute.Tracks[i].Elements[0].CurveCantTangent = 0.0;
 				}
-				else if (CurrentRoute.Tracks[i].Elements.Length != 0)
+				else if (Program.CurrentRoute.Tracks[i].Elements.Length != 0)
 				{
-					double[] deltas = new double[CurrentRoute.Tracks[i].Elements.Length - 1];
-					for (int j = 0; j < CurrentRoute.Tracks[i].Elements.Length - 1; j++)
+					double[] deltas = new double[Program.CurrentRoute.Tracks[i].Elements.Length - 1];
+					for (int j = 0; j < Program.CurrentRoute.Tracks[i].Elements.Length - 1; j++)
 					{
-						deltas[j] = CurrentRoute.Tracks[i].Elements[j + 1].CurveCant - CurrentRoute.Tracks[i].Elements[j].CurveCant;
+						deltas[j] = Program.CurrentRoute.Tracks[i].Elements[j + 1].CurveCant - Program.CurrentRoute.Tracks[i].Elements[j].CurveCant;
 					}
-					double[] tangents = new double[CurrentRoute.Tracks[i].Elements.Length];
+					double[] tangents = new double[Program.CurrentRoute.Tracks[i].Elements.Length];
 					tangents[0] = deltas[0];
-					tangents[CurrentRoute.Tracks[i].Elements.Length - 1] = deltas[CurrentRoute.Tracks[i].Elements.Length - 2];
-					for (int j = 1; j < CurrentRoute.Tracks[i].Elements.Length - 1; j++)
+					tangents[Program.CurrentRoute.Tracks[i].Elements.Length - 1] = deltas[Program.CurrentRoute.Tracks[i].Elements.Length - 2];
+					for (int j = 1; j < Program.CurrentRoute.Tracks[i].Elements.Length - 1; j++)
 					{
 						tangents[j] = 0.5 * (deltas[j - 1] + deltas[j]);
 					}
-					for (int j = 0; j < CurrentRoute.Tracks[i].Elements.Length - 1; j++)
+					for (int j = 0; j < Program.CurrentRoute.Tracks[i].Elements.Length - 1; j++)
 					{
 						if (deltas[j] == 0.0)
 						{
@@ -1856,9 +1857,9 @@ namespace OpenBve
 							}
 						}
 					}
-					for (int j = 0; j < CurrentRoute.Tracks[i].Elements.Length; j++)
+					for (int j = 0; j < Program.CurrentRoute.Tracks[i].Elements.Length; j++)
 					{
-						CurrentRoute.Tracks[i].Elements[j].CurveCantTangent = tangents[j];
+						Program.CurrentRoute.Tracks[i].Elements[j].CurveCantTangent = tangents[j];
 					}
 				}
 			}
@@ -1875,7 +1876,7 @@ namespace OpenBve
 				throw new InvalidOperationException();
 			}
 			// subdivide track
-			int length = CurrentRoute.Tracks[0].Elements.Length;
+			int length = Program.CurrentRoute.Tracks[0].Elements.Length;
 			int newLength = (length - 1) * subdivisions + 1;
 			double[] midpointsTrackPositions = new double[newLength];
 			Vector3[] midpointsWorldPositions = new Vector3[newLength];
@@ -1891,7 +1892,7 @@ namespace OpenBve
 					int q = i / subdivisions;
 					TrackFollower follower = new TrackFollower(Program.CurrentHost);
 					double r = (double)m / (double)subdivisions;
-					double p = (1.0 - r) * CurrentRoute.Tracks[0].Elements[q].StartingTrackPosition + r * CurrentRoute.Tracks[0].Elements[q + 1].StartingTrackPosition;
+					double p = (1.0 - r) * Program.CurrentRoute.Tracks[0].Elements[q].StartingTrackPosition + r * Program.CurrentRoute.Tracks[0].Elements[q + 1].StartingTrackPosition;
 					follower.UpdateAbsolute(-1.0, true, false);
 					follower.UpdateAbsolute(p, true, false);
 					midpointsTrackPositions[i] = p;
@@ -1902,41 +1903,41 @@ namespace OpenBve
 					midpointsCant[i] = follower.CurveCant;
 				}
 			}
-			Array.Resize(ref CurrentRoute.Tracks[0].Elements, newLength);
+			Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements, newLength);
 			for (int i = length - 1; i >= 1; i--)
 			{
-				CurrentRoute.Tracks[0].Elements[subdivisions * i] = CurrentRoute.Tracks[0].Elements[i];
+				Program.CurrentRoute.Tracks[0].Elements[subdivisions * i] = Program.CurrentRoute.Tracks[0].Elements[i];
 			}
-			for (int i = 0; i < CurrentRoute.Tracks[0].Elements.Length; i++)
+			for (int i = 0; i < Program.CurrentRoute.Tracks[0].Elements.Length; i++)
 			{
 				int m = i % subdivisions;
 				if (m != 0)
 				{
 					int q = i / subdivisions;
 					int j = q * subdivisions;
-					CurrentRoute.Tracks[0].Elements[i] = CurrentRoute.Tracks[0].Elements[j];
-					CurrentRoute.Tracks[0].Elements[i].Events = new GeneralEvent[] { };
-					CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition = midpointsTrackPositions[i];
-					CurrentRoute.Tracks[0].Elements[i].WorldPosition = midpointsWorldPositions[i];
-					CurrentRoute.Tracks[0].Elements[i].WorldDirection = midpointsWorldDirections[i];
-					CurrentRoute.Tracks[0].Elements[i].WorldUp = midpointsWorldUps[i];
-					CurrentRoute.Tracks[0].Elements[i].WorldSide = midpointsWorldSides[i];
-					CurrentRoute.Tracks[0].Elements[i].CurveCant = midpointsCant[i];
-					CurrentRoute.Tracks[0].Elements[i].CurveCantTangent = 0.0;
+					Program.CurrentRoute.Tracks[0].Elements[i] = Program.CurrentRoute.Tracks[0].Elements[j];
+					Program.CurrentRoute.Tracks[0].Elements[i].Events = new GeneralEvent[] { };
+					Program.CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition = midpointsTrackPositions[i];
+					Program.CurrentRoute.Tracks[0].Elements[i].WorldPosition = midpointsWorldPositions[i];
+					Program.CurrentRoute.Tracks[0].Elements[i].WorldDirection = midpointsWorldDirections[i];
+					Program.CurrentRoute.Tracks[0].Elements[i].WorldUp = midpointsWorldUps[i];
+					Program.CurrentRoute.Tracks[0].Elements[i].WorldSide = midpointsWorldSides[i];
+					Program.CurrentRoute.Tracks[0].Elements[i].CurveCant = midpointsCant[i];
+					Program.CurrentRoute.Tracks[0].Elements[i].CurveCantTangent = 0.0;
 				}
 			}
 			// find turns
-			bool[] isTurn = new bool[CurrentRoute.Tracks[0].Elements.Length];
+			bool[] isTurn = new bool[Program.CurrentRoute.Tracks[0].Elements.Length];
 			{
 				TrackFollower follower = new TrackFollower(Program.CurrentHost);
-				for (int i = 1; i < CurrentRoute.Tracks[0].Elements.Length - 1; i++)
+				for (int i = 1; i < Program.CurrentRoute.Tracks[0].Elements.Length - 1; i++)
 				{
 					int m = i % subdivisions;
 					if (m == 0)
 					{
-						double p = 0.00000001 * CurrentRoute.Tracks[0].Elements[i - 1].StartingTrackPosition + 0.99999999 * CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition;
+						double p = 0.00000001 * Program.CurrentRoute.Tracks[0].Elements[i - 1].StartingTrackPosition + 0.99999999 * Program.CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition;
 						follower.UpdateAbsolute(p, true, false);
-						Vector3 d1 = CurrentRoute.Tracks[0].Elements[i].WorldDirection;
+						Vector3 d1 = Program.CurrentRoute.Tracks[0].Elements[i].WorldDirection;
 						Vector3 d2 = follower.WorldDirection;
 						Vector3 d = d1 - d2;
 						double t = d.X * d.X + d.Z * d.Z;
@@ -1950,14 +1951,14 @@ namespace OpenBve
 			}
 			// replace turns by curves
 			double totalShortage = 0.0;
-			for (int i = 0; i < CurrentRoute.Tracks[0].Elements.Length; i++)
+			for (int i = 0; i < Program.CurrentRoute.Tracks[0].Elements.Length; i++)
 			{
 				if (isTurn[i])
 				{
 					// estimate radius
-					Vector3 AP = CurrentRoute.Tracks[0].Elements[i - 1].WorldPosition;
-					Vector3 BP = CurrentRoute.Tracks[0].Elements[i + 1].WorldPosition;
-					Vector3 S = CurrentRoute.Tracks[0].Elements[i - 1].WorldSide - CurrentRoute.Tracks[0].Elements[i + 1].WorldSide;
+					Vector3 AP = Program.CurrentRoute.Tracks[0].Elements[i - 1].WorldPosition;
+					Vector3 BP = Program.CurrentRoute.Tracks[0].Elements[i + 1].WorldPosition;
+					Vector3 S = Program.CurrentRoute.Tracks[0].Elements[i - 1].WorldSide - Program.CurrentRoute.Tracks[0].Elements[i + 1].WorldSide;
 					double rx;
 					if (S.X * S.X > 0.000001)
 					{
@@ -2010,28 +2011,28 @@ namespace OpenBve
 						{
 							// apply radius
 							TrackFollower follower = new TrackFollower(Program.CurrentHost);
-							CurrentRoute.Tracks[0].Elements[i - 1].CurveRadius = r;
-							double p = 0.00000001 * CurrentRoute.Tracks[0].Elements[i - 1].StartingTrackPosition + 0.99999999 * CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition;
+							Program.CurrentRoute.Tracks[0].Elements[i - 1].CurveRadius = r;
+							double p = 0.00000001 * Program.CurrentRoute.Tracks[0].Elements[i - 1].StartingTrackPosition + 0.99999999 * Program.CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition;
 							follower.UpdateAbsolute(p - 1.0, true, false);
 							follower.UpdateAbsolute(p, true, false);
-							CurrentRoute.Tracks[0].Elements[i].CurveRadius = r;
-							CurrentRoute.Tracks[0].Elements[i].WorldPosition = follower.WorldPosition;
-							CurrentRoute.Tracks[0].Elements[i].WorldDirection = follower.WorldDirection;
-							CurrentRoute.Tracks[0].Elements[i].WorldUp = follower.WorldUp;
-							CurrentRoute.Tracks[0].Elements[i].WorldSide = follower.WorldSide;
+							Program.CurrentRoute.Tracks[0].Elements[i].CurveRadius = r;
+							Program.CurrentRoute.Tracks[0].Elements[i].WorldPosition = follower.WorldPosition;
+							Program.CurrentRoute.Tracks[0].Elements[i].WorldDirection = follower.WorldDirection;
+							Program.CurrentRoute.Tracks[0].Elements[i].WorldUp = follower.WorldUp;
+							Program.CurrentRoute.Tracks[0].Elements[i].WorldSide = follower.WorldSide;
 							// iterate to shorten track element length
-							p = 0.00000001 * CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition + 0.99999999 * CurrentRoute.Tracks[0].Elements[i + 1].StartingTrackPosition;
+							p = 0.00000001 * Program.CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition + 0.99999999 * Program.CurrentRoute.Tracks[0].Elements[i + 1].StartingTrackPosition;
 							follower.UpdateAbsolute(p - 1.0, true, false);
 							follower.UpdateAbsolute(p, true, false);
-							Vector3 d = CurrentRoute.Tracks[0].Elements[i + 1].WorldPosition - follower.WorldPosition;
+							Vector3 d = Program.CurrentRoute.Tracks[0].Elements[i + 1].WorldPosition - follower.WorldPosition;
 							double bestT = d.NormSquared();
 							int bestJ = 0;
 							int n = 1000;
-							double a = 1.0 / (double)n * (CurrentRoute.Tracks[0].Elements[i + 1].StartingTrackPosition - CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition);
+							double a = 1.0 / (double)n * (Program.CurrentRoute.Tracks[0].Elements[i + 1].StartingTrackPosition - Program.CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition);
 							for (int j = 1; j < n - 1; j++)
 							{
-								follower.UpdateAbsolute(CurrentRoute.Tracks[0].Elements[i + 1].StartingTrackPosition - (double)j * a, true, false);
-								d = CurrentRoute.Tracks[0].Elements[i + 1].WorldPosition - follower.WorldPosition;
+								follower.UpdateAbsolute(Program.CurrentRoute.Tracks[0].Elements[i + 1].StartingTrackPosition - (double)j * a, true, false);
+								d = Program.CurrentRoute.Tracks[0].Elements[i + 1].WorldPosition - follower.WorldPosition;
 								double t = d.NormSquared();
 								if (t < bestT)
 								{
@@ -2044,18 +2045,18 @@ namespace OpenBve
 								}
 							}
 							double s = (double)bestJ * a;
-							for (int j = i + 1; j < CurrentRoute.Tracks[0].Elements.Length; j++)
+							for (int j = i + 1; j < Program.CurrentRoute.Tracks[0].Elements.Length; j++)
 							{
-								CurrentRoute.Tracks[0].Elements[j].StartingTrackPosition -= s;
+								Program.CurrentRoute.Tracks[0].Elements[j].StartingTrackPosition -= s;
 							}
 							totalShortage += s;
 							// introduce turn to compensate for curve
-							p = 0.00000001 * CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition + 0.99999999 * CurrentRoute.Tracks[0].Elements[i + 1].StartingTrackPosition;
+							p = 0.00000001 * Program.CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition + 0.99999999 * Program.CurrentRoute.Tracks[0].Elements[i + 1].StartingTrackPosition;
 							follower.UpdateAbsolute(p - 1.0, true, false);
 							follower.UpdateAbsolute(p, true, false);
-							Vector3 AB = CurrentRoute.Tracks[0].Elements[i + 1].WorldPosition - follower.WorldPosition;
-							Vector3 AC = CurrentRoute.Tracks[0].Elements[i + 1].WorldPosition - CurrentRoute.Tracks[0].Elements[i].WorldPosition;
-							Vector3 BC = follower.WorldPosition - CurrentRoute.Tracks[0].Elements[i].WorldPosition;
+							Vector3 AB = Program.CurrentRoute.Tracks[0].Elements[i + 1].WorldPosition - follower.WorldPosition;
+							Vector3 AC = Program.CurrentRoute.Tracks[0].Elements[i + 1].WorldPosition - Program.CurrentRoute.Tracks[0].Elements[i].WorldPosition;
+							Vector3 BC = follower.WorldPosition - Program.CurrentRoute.Tracks[0].Elements[i].WorldPosition;
 							double sa = Math.Sqrt(BC.X * BC.X + BC.Z * BC.Z);
 							double sb = Math.Sqrt(AC.X * AC.X + AC.Z * AC.Z);
 							double sc = Math.Sqrt(AB.X * AB.X + AB.Z * AB.Z);
@@ -2078,7 +2079,7 @@ namespace OpenBve
 										originalAngle = Math.Acos(value);
 									}
 								}
-								TrackElement originalTrackElement = CurrentRoute.Tracks[0].Elements[i];
+								TrackElement originalTrackElement = Program.CurrentRoute.Tracks[0].Elements[i];
 								bestT = double.MaxValue;
 								bestJ = 0;
 								for (int j = -1; j <= 1; j++)
@@ -2086,14 +2087,14 @@ namespace OpenBve
 									double g = (double)j * originalAngle;
 									double cosg = Math.Cos(g);
 									double sing = Math.Sin(g);
-									CurrentRoute.Tracks[0].Elements[i] = originalTrackElement;
-									CurrentRoute.Tracks[0].Elements[i].WorldDirection.Rotate(Vector3.Down, cosg, sing);
-									CurrentRoute.Tracks[0].Elements[i].WorldUp.Rotate(Vector3.Down, cosg, sing);
-									CurrentRoute.Tracks[0].Elements[i].WorldSide.Rotate(Vector3.Down, cosg, sing);
-									p = 0.00000001 * CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition + 0.99999999 * CurrentRoute.Tracks[0].Elements[i + 1].StartingTrackPosition;
+									Program.CurrentRoute.Tracks[0].Elements[i] = originalTrackElement;
+									Program.CurrentRoute.Tracks[0].Elements[i].WorldDirection.Rotate(Vector3.Down, cosg, sing);
+									Program.CurrentRoute.Tracks[0].Elements[i].WorldUp.Rotate(Vector3.Down, cosg, sing);
+									Program.CurrentRoute.Tracks[0].Elements[i].WorldSide.Rotate(Vector3.Down, cosg, sing);
+									p = 0.00000001 * Program.CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition + 0.99999999 * Program.CurrentRoute.Tracks[0].Elements[i + 1].StartingTrackPosition;
 									follower.UpdateAbsolute(p - 1.0, true, false);
 									follower.UpdateAbsolute(p, true, false);
-									d = CurrentRoute.Tracks[0].Elements[i + 1].WorldPosition - follower.WorldPosition;
+									d = Program.CurrentRoute.Tracks[0].Elements[i + 1].WorldPosition - follower.WorldPosition;
 									double t = d.NormSquared();
 									if (t < bestT)
 									{
@@ -2105,24 +2106,24 @@ namespace OpenBve
 									double newAngle = (double)bestJ * originalAngle;
 									double cosg = Math.Cos(newAngle);
 									double sing = Math.Sin(newAngle);
-									CurrentRoute.Tracks[0].Elements[i] = originalTrackElement;
-									CurrentRoute.Tracks[0].Elements[i].WorldDirection.Rotate(Vector3.Down, cosg, sing);
-									CurrentRoute.Tracks[0].Elements[i].WorldUp.Rotate(Vector3.Down, cosg, sing);
-									CurrentRoute.Tracks[0].Elements[i].WorldSide.Rotate(Vector3.Down, cosg, sing);
+									Program.CurrentRoute.Tracks[0].Elements[i] = originalTrackElement;
+									Program.CurrentRoute.Tracks[0].Elements[i].WorldDirection.Rotate(Vector3.Down, cosg, sing);
+									Program.CurrentRoute.Tracks[0].Elements[i].WorldUp.Rotate(Vector3.Down, cosg, sing);
+									Program.CurrentRoute.Tracks[0].Elements[i].WorldSide.Rotate(Vector3.Down, cosg, sing);
 								}
 								// iterate again to further shorten track element length
-								p = 0.00000001 * CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition + 0.99999999 * CurrentRoute.Tracks[0].Elements[i + 1].StartingTrackPosition;
+								p = 0.00000001 * Program.CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition + 0.99999999 * Program.CurrentRoute.Tracks[0].Elements[i + 1].StartingTrackPosition;
 								follower.UpdateAbsolute(p - 1.0, true, false);
 								follower.UpdateAbsolute(p, true, false);
-								d = CurrentRoute.Tracks[0].Elements[i + 1].WorldPosition - follower.WorldPosition;
+								d = Program.CurrentRoute.Tracks[0].Elements[i + 1].WorldPosition - follower.WorldPosition;
 								bestT = d.NormSquared();
 								bestJ = 0;
 								n = 1000;
-								a = 1.0 / (double)n * (CurrentRoute.Tracks[0].Elements[i + 1].StartingTrackPosition - CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition);
+								a = 1.0 / (double)n * (Program.CurrentRoute.Tracks[0].Elements[i + 1].StartingTrackPosition - Program.CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition);
 								for (int j = 1; j < n - 1; j++)
 								{
-									follower.UpdateAbsolute(CurrentRoute.Tracks[0].Elements[i + 1].StartingTrackPosition - (double)j * a, true, false);
-									d = CurrentRoute.Tracks[0].Elements[i + 1].WorldPosition - follower.WorldPosition;
+									follower.UpdateAbsolute(Program.CurrentRoute.Tracks[0].Elements[i + 1].StartingTrackPosition - (double)j * a, true, false);
+									d = Program.CurrentRoute.Tracks[0].Elements[i + 1].WorldPosition - follower.WorldPosition;
 									double t = d.NormSquared();
 									if (t < bestT)
 									{
@@ -2135,54 +2136,54 @@ namespace OpenBve
 									}
 								}
 								s = (double)bestJ * a;
-								for (int j = i + 1; j < CurrentRoute.Tracks[0].Elements.Length; j++)
+								for (int j = i + 1; j < Program.CurrentRoute.Tracks[0].Elements.Length; j++)
 								{
-									CurrentRoute.Tracks[0].Elements[j].StartingTrackPosition -= s;
+									Program.CurrentRoute.Tracks[0].Elements[j].StartingTrackPosition -= s;
 								}
 								totalShortage += s;
 							}
 							// compensate for height difference
-							p = 0.00000001 * CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition + 0.99999999 * CurrentRoute.Tracks[0].Elements[i + 1].StartingTrackPosition;
+							p = 0.00000001 * Program.CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition + 0.99999999 * Program.CurrentRoute.Tracks[0].Elements[i + 1].StartingTrackPosition;
 							follower.UpdateAbsolute(p - 1.0, true, false);
 							follower.UpdateAbsolute(p, true, false);
-							Vector3 d1 = CurrentRoute.Tracks[0].Elements[i + 1].WorldPosition - CurrentRoute.Tracks[0].Elements[i].WorldPosition;
+							Vector3 d1 = Program.CurrentRoute.Tracks[0].Elements[i + 1].WorldPosition - Program.CurrentRoute.Tracks[0].Elements[i].WorldPosition;
 							double a1 = Math.Atan(d1.Y / Math.Sqrt(d1.X * d1.X + d1.Z * d1.Z));
-							Vector3 d2 = follower.WorldPosition - CurrentRoute.Tracks[0].Elements[i].WorldPosition;
+							Vector3 d2 = follower.WorldPosition - Program.CurrentRoute.Tracks[0].Elements[i].WorldPosition;
 							double a2 = Math.Atan(d2.Y / Math.Sqrt(d2.X * d2.X + d2.Z * d2.Z));
 							double b = a2 - a1;
 							if (b * b > 0.00000001)
 							{
 								double cosa = Math.Cos(b);
 								double sina = Math.Sin(b);
-								CurrentRoute.Tracks[0].Elements[i].WorldDirection.Rotate(CurrentRoute.Tracks[0].Elements[i].WorldSide, cosa, sina);
-								CurrentRoute.Tracks[0].Elements[i].WorldUp.Rotate(CurrentRoute.Tracks[0].Elements[i].WorldSide, cosa, sina);
+								Program.CurrentRoute.Tracks[0].Elements[i].WorldDirection.Rotate(Program.CurrentRoute.Tracks[0].Elements[i].WorldSide, cosa, sina);
+								Program.CurrentRoute.Tracks[0].Elements[i].WorldUp.Rotate(Program.CurrentRoute.Tracks[0].Elements[i].WorldSide, cosa, sina);
 							}
 						}
 					}
 				}
 			}
 			// correct events
-			for (int i = 0; i < CurrentRoute.Tracks[0].Elements.Length - 1; i++)
+			for (int i = 0; i < Program.CurrentRoute.Tracks[0].Elements.Length - 1; i++)
 			{
-				double startingTrackPosition = CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition;
-				double endingTrackPosition = CurrentRoute.Tracks[0].Elements[i + 1].StartingTrackPosition;
-				for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Length; j++)
+				double startingTrackPosition = Program.CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition;
+				double endingTrackPosition = Program.CurrentRoute.Tracks[0].Elements[i + 1].StartingTrackPosition;
+				for (int j = 0; j < Program.CurrentRoute.Tracks[0].Elements[i].Events.Length; j++)
 				{
-					dynamic e = CurrentRoute.Tracks[0].Elements[i].Events[j];
+					dynamic e = Program.CurrentRoute.Tracks[0].Elements[i].Events[j];
 					double p = startingTrackPosition + e.TrackPositionDelta;
 					if (p >= endingTrackPosition)
 					{
-						int len = CurrentRoute.Tracks[0].Elements[i + 1].Events.Length;
-						Array.Resize(ref CurrentRoute.Tracks[0].Elements[i + 1].Events, len + 1);
-						CurrentRoute.Tracks[0].Elements[i + 1].Events[len] = CurrentRoute.Tracks[0].Elements[i].Events[j];
-						e = CurrentRoute.Tracks[0].Elements[i + 1].Events[len];
+						int len = Program.CurrentRoute.Tracks[0].Elements[i + 1].Events.Length;
+						Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[i + 1].Events, len + 1);
+						Program.CurrentRoute.Tracks[0].Elements[i + 1].Events[len] = Program.CurrentRoute.Tracks[0].Elements[i].Events[j];
+						e = Program.CurrentRoute.Tracks[0].Elements[i + 1].Events[len];
 						e.TrackPositionDelta += startingTrackPosition - endingTrackPosition;
-						for (int k = j; k < CurrentRoute.Tracks[0].Elements[i].Events.Length - 1; k++)
+						for (int k = j; k < Program.CurrentRoute.Tracks[0].Elements[i].Events.Length - 1; k++)
 						{
-							CurrentRoute.Tracks[0].Elements[i].Events[k] = CurrentRoute.Tracks[0].Elements[i].Events[k + 1];
+							Program.CurrentRoute.Tracks[0].Elements[i].Events[k] = Program.CurrentRoute.Tracks[0].Elements[i].Events[k + 1];
 						}
-						len = CurrentRoute.Tracks[0].Elements[i].Events.Length;
-						Array.Resize(ref CurrentRoute.Tracks[0].Elements[i].Events, len - 1);
+						len = Program.CurrentRoute.Tracks[0].Elements[i].Events.Length;
+						Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[i].Events, len - 1);
 						j--;
 					}
 				}

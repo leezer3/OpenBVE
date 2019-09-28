@@ -4,7 +4,7 @@ using OpenBveApi.Objects;
 namespace OpenBveApi
 {
 	/// <summary>Defines the base shared options to be passed to the Renderer etc.</summary>
-	public class BaseOptions
+	public abstract class BaseOptions
 	{
 		/// <summary>The ISO 639-1 code for the current user interface language</summary>
 		public string LanguageCode;
@@ -37,14 +37,16 @@ namespace OpenBveApi
 		/// <summary>The parser to use for Wavefront Obj objects</summary>
 		public ObjParsers CurrentObjParser;
 		/*
-			 * Note: Object optimisation takes time whilst loading, but may increase the render performance of an
-			 * object by checking for duplicate vertices etc.
-			 */
+		 * Note: Object optimisation takes time whilst loading, but may increase the render performance of an
+		 * object by checking for duplicate vertices etc.
+		 */
 		/// <summary>The minimum number of vertices for basic optimisation to be performed on an object</summary>
 		public int ObjectOptimizationBasicThreshold;
 		/// <summary>The minimum number of verticies for full optimisation to be performed on an object</summary>
 		public int ObjectOptimizationFullThreshold;
 		/// <summary>The maximum number of sounds playing at any one time</summary>
 		public int SoundNumber;
+		/// <summary>Whether to use the new rendering method.</summary>
+		public bool IsUseNewRenderer;
 	}
 }

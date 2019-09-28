@@ -1,5 +1,4 @@
 ﻿using System;
-using OpenBve.RouteManager;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
 
@@ -51,7 +50,7 @@ namespace OpenBve
 				if (State == TrainState.Pending)
 				{
 					// pending train
-					if (CurrentRoute.SecondsSinceMidnight >= AppearanceTime)
+					if (Program.CurrentRoute.SecondsSinceMidnight >= AppearanceTime)
 					{
 						double PlayerTrainTrackPosition = PlayerTrain.Cars[0].FrontAxle.Follower.TrackPosition + 0.5 * PlayerTrain.Cars[0].Length - PlayerTrain.Cars[0].FrontAxle.Position;
 						if (PlayerTrainTrackPosition < AppearanceStartPosition || (PlayerTrainTrackPosition > AppearanceEndPosition && AppearanceEndPosition > AppearanceStartPosition))
@@ -110,7 +109,7 @@ namespace OpenBve
 							//Calculate the cab brightness
 							double ccb = Math.Round(255.0 * (double) (1.0 - b));
 							//DNB then must equal the smaller of the cab brightness value & the dynamic brightness value
-							dnb = (byte) Math.Min(LibRender.Renderer.DynamicCabBrightness, ccb);
+							dnb = (byte) Math.Min(Program.Renderer.Lighting.DynamicCabBrightness, ccb);
 						}
 						int cs = Cars[i].CurrentCarSection;
 						if (cs >= 0 && Cars[i].CarSections.Length > 0 && Cars[i].CarSections.Length >= cs)
@@ -121,9 +120,9 @@ namespace OpenBve
 								{
 									if (Cars[i].CarSections[cs].Groups[0].Elements[k].internalObject != null)
 									{
-										for (int j = 0; j < Cars[i].CarSections[cs].Groups[0].Elements[k].internalObject.Mesh.Materials.Length; j++)
+										for (int j = 0; j < Cars[i].CarSections[cs].Groups[0].Elements[k].internalObject.Prototype.Mesh.Materials.Length; j++)
 										{
-											Cars[i].CarSections[cs].Groups[0].Elements[k].internalObject.Mesh.Materials[j].DaytimeNighttimeBlend = dnb;
+											Cars[i].CarSections[cs].Groups[0].Elements[k].internalObject.Prototype.Mesh.Materials[j].DaytimeNighttimeBlend = dnb;
 										}
 									}
 								}

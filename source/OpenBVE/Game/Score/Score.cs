@@ -1,5 +1,4 @@
 ﻿using System;
-using OpenBve.RouteManager;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
@@ -67,12 +66,12 @@ namespace OpenBve
 						int j = TrainManager.PlayerTrain.Station;
 						if (j >= 0)
 						{
-							int p = CurrentRoute.Stations[j].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
+							int p = Program.CurrentRoute.Stations[j].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
 							if (p >= 0)
 							{
 								if (Math.Abs(TrainManager.PlayerTrain.CurrentSpeed) < 0.1)
 								{
-									if (leftopen == CurrentRoute.Stations[j].OpenLeftDoors & rightopen == CurrentRoute.Stations[j].OpenRightDoors)
+									if (leftopen == Program.CurrentRoute.Stations[j].OpenLeftDoors & rightopen == Program.CurrentRoute.Stations[j].OpenRightDoors)
 									{
 										bad = false;
 									}
@@ -191,11 +190,11 @@ namespace OpenBve
 				// arrival
 				{
 					int j = TrainManager.PlayerTrain.Station;
-					if (j >= 0 & j < CurrentRoute.Stations.Length)
+					if (j >= 0 & j < Program.CurrentRoute.Stations.Length)
 					{
 						if (j >= ArrivalStation & TrainManager.PlayerTrain.StationState == TrainStopState.Boarding)
 						{
-							if (j == 0 || CurrentRoute.Stations[j - 1].Type != StationType.ChangeEnds)
+							if (j == 0 || Program.CurrentRoute.Stations[j - 1].Type != StationType.ChangeEnds)
 							{
 								// arrival
 								int xa = ScoreValueStationArrival;
@@ -206,9 +205,9 @@ namespace OpenBve
 								}
 								// early/late
 								int xb;
-								if (CurrentRoute.Stations[j].ArrivalTime >= 0)
+								if (Program.CurrentRoute.Stations[j].ArrivalTime >= 0)
 								{
-									double d = CurrentRoute.SecondsSinceMidnight - CurrentRoute.Stations[j].ArrivalTime;
+									double d = Program.CurrentRoute.SecondsSinceMidnight - Program.CurrentRoute.Stations[j].ArrivalTime;
 									if (d >= -5.0 & d <= 0.0)
 									{
 										xb = ScoreValueStationPerfectTime;
@@ -235,19 +234,19 @@ namespace OpenBve
 								}
 								// position
 								int xc;
-								int p = CurrentRoute.Stations[j].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
+								int p = Program.CurrentRoute.Stations[j].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
 								if (p >= 0)
 								{
 									double d = TrainManager.PlayerTrain.StationDistanceToStopPoint;
 									double r;
 									if (d >= 0)
 									{
-										double t = CurrentRoute.Stations[j].Stops[p].BackwardTolerance;
+										double t = Program.CurrentRoute.Stations[j].Stops[p].BackwardTolerance;
 										r = (Math.Sqrt(d * d + 1.0) - 1.0) / (Math.Sqrt(t * t + 1.0) - 1.0);
 									}
 									else
 									{
-										double t = CurrentRoute.Stations[j].Stops[p].ForwardTolerance;
+										double t = Program.CurrentRoute.Stations[j].Stops[p].ForwardTolerance;
 										r = (Math.Sqrt(d * d + 1.0) - 1.0) / (Math.Sqrt(t * t + 1.0) - 1.0);
 									}
 									if (r < 0.01)
@@ -283,7 +282,7 @@ namespace OpenBve
 								// evaluation
 								if (Interface.CurrentOptions.GameMode == GameMode.Arcade)
 								{
-									if (CurrentRoute.Stations[j].Type == StationType.Terminal)
+									if (Program.CurrentRoute.Stations[j].Type == StationType.Terminal)
 									{
 										double y = (double)this.CurrentValue / (double)Maximum;
 										if (y < 0.0) y = 0.0;
@@ -305,10 +304,10 @@ namespace OpenBve
 				// departure
 				{
 					int j = TrainManager.PlayerTrain.Station;
-					if (j >= 0 & j < CurrentRoute.Stations.Length & j == DepartureStation)
+					if (j >= 0 & j < Program.CurrentRoute.Stations.Length & j == DepartureStation)
 					{
 						bool q;
-						if (CurrentRoute.Stations[j].OpenLeftDoors | CurrentRoute.Stations[j].OpenRightDoors)
+						if (Program.CurrentRoute.Stations[j].OpenLeftDoors | Program.CurrentRoute.Stations[j].OpenRightDoors)
 						{
 							q = TrainManager.PlayerTrain.StationState == TrainStopState.Completed;
 						}
@@ -318,7 +317,7 @@ namespace OpenBve
 						}
 						if (q)
 						{
-							double r = TrainManager.PlayerTrain.StationDepartureTime - CurrentRoute.SecondsSinceMidnight;
+							double r = TrainManager.PlayerTrain.StationDepartureTime - Program.CurrentRoute.SecondsSinceMidnight;
 							if (r > 0.0)
 							{
 								int x = (int)Math.Ceiling(ScoreFactorStationDeparture * r);
@@ -370,7 +369,7 @@ namespace OpenBve
 					Array.Resize<ScoreMessage>(ref ScoreMessages, n + 1);
 					ScoreMessages[n].Value = Value;
 					ScoreMessages[n].Text = Interface.GetScoreText(TextToken) + ": " + Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
-					ScoreMessages[n].Timeout = CurrentRoute.SecondsSinceMidnight + Duration;
+					ScoreMessages[n].Timeout = Program.CurrentRoute.SecondsSinceMidnight + Duration;
 					ScoreMessages[n].RendererPosition = new Vector2(0.0, 0.0);
 					ScoreMessages[n].RendererAlpha = 0.0;
 					if (Value < 0.0)
@@ -395,7 +394,7 @@ namespace OpenBve
 					ScoreLogs[ScoreLogCount].Value = Value;
 					ScoreLogs[ScoreLogCount].TextToken = TextToken;
 					ScoreLogs[ScoreLogCount].Position = TrainManager.PlayerTrain.Cars[0].TrackPosition;
-					ScoreLogs[ScoreLogCount].Time = CurrentRoute.SecondsSinceMidnight;
+					ScoreLogs[ScoreLogCount].Time = Program.CurrentRoute.SecondsSinceMidnight;
 					ScoreLogCount++;
 				}
 			}
@@ -411,7 +410,7 @@ namespace OpenBve
 					Array.Resize<ScoreMessage>(ref ScoreMessages, n + 1);
 					ScoreMessages[n].Value = 0;
 					ScoreMessages[n].Text = Text.Length != 0 ? Text : "══════════";
-					ScoreMessages[n].Timeout = CurrentRoute.SecondsSinceMidnight + Duration;
+					ScoreMessages[n].Timeout = Program.CurrentRoute.SecondsSinceMidnight + Duration;
 					ScoreMessages[n].RendererPosition = new Vector2(0.0, 0.0);
 					ScoreMessages[n].RendererAlpha = 0.0;
 					ScoreMessages[n].Color = MessageColor.White;
@@ -427,7 +426,7 @@ namespace OpenBve
 			{
 				for (int i = 0; i < ScoreMessages.Length; i++)
 				{
-					if (CurrentRoute.SecondsSinceMidnight >= ScoreMessages[i].Timeout & ScoreMessages[i].RendererAlpha == 0.0)
+					if (Program.CurrentRoute.SecondsSinceMidnight >= ScoreMessages[i].Timeout & ScoreMessages[i].RendererAlpha == 0.0)
 					{
 						for (int j = i; j < ScoreMessages.Length - 1; j++)
 						{

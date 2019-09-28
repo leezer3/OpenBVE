@@ -45,14 +45,8 @@ namespace OpenBve {
 		}
 		
 		internal static void Reset() {
-			Renderer.Reset();
-			ObjectManager.Objects = new StaticObject[16];
-			ObjectManager.ObjectsUsed = 0;
-			ObjectManager.ObjectsSortedByStart = new int[] { };
-			ObjectManager.ObjectsSortedByEnd = new int[] { };
-			ObjectManager.ObjectsSortedByStartPointer = 0;
-			ObjectManager.ObjectsSortedByEndPointer = 0;
-			ObjectManager.LastUpdatedTrackPosition = 0.0;
+			Program.Renderer.Reset();
+			Program.Renderer.InitializeVisibility();
 			ObjectManager.AnimatedWorldObjects = new AnimatedWorldObject[4];
 			ObjectManager.AnimatedWorldObjectsUsed = 0;
 		}

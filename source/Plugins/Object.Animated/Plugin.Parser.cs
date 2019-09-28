@@ -138,8 +138,12 @@ namespace Plugin
 												Array.Resize(ref Result.Objects, Result.Objects.Length << 1);
 											}
 											AnimatedObject a = new AnimatedObject(currentHost);
-											AnimatedObjectState aos = new AnimatedObjectState(s, position);
-											a.States = new AnimatedObjectState[] { aos };
+											ObjectState aos = new ObjectState
+											{
+												Prototype = s,
+												Translation = OpenTK.Matrix4d.CreateTranslation(position.X, position.Y, -position.Z)
+											};
+											a.States = new ObjectState[] { aos };
 											Result.Objects[ObjectCount] = a;
 											ObjectCount++;
 										}
@@ -154,9 +158,7 @@ namespace Plugin
 												}
 												for (int h = 0; h < a.Objects[k].States.Length; h++)
 												{
-													a.Objects[k].States[h].Position.X += position.X;
-													a.Objects[k].States[h].Position.Y += position.Y;
-													a.Objects[k].States[h].Position.Z += position.Z;
+													a.Objects[k].States[h].Translation *= OpenTK.Matrix4d.CreateTranslation(position.X, position.Y, -position.Z);
 												}
 												Result.Objects[ObjectCount] = a.Objects[k];
 												ObjectCount++;
@@ -175,7 +177,7 @@ namespace Plugin
 								}
 								Result.Objects[ObjectCount] = new AnimatedObject(currentHost)
 								{
-									States = new AnimatedObjectState[] {},
+									States = new ObjectState[] {},
 									CurrentState = -1,
 									TranslateXDirection = Vector3.Right,
 									TranslateYDirection = Vector3.Down,
@@ -789,59 +791,59 @@ namespace Plugin
 											currentHost.AddMessage(MessageType.Error, false, ex.Message + " in StateFunction at line " + (StateFunctionLine + 1).ToString(Culture) + " in file " + FileName);
 										}
 									}
-									Result.Objects[ObjectCount].States = new AnimatedObjectState[StateFiles.Length];
+									Result.Objects[ObjectCount].States = new ObjectState[StateFiles.Length];
 									bool ForceTextureRepeatX = Result.Objects[ObjectCount].TextureShiftXFunction != null & Result.Objects[ObjectCount].TextureShiftXDirection.X != 0.0 |
 									                           Result.Objects[ObjectCount].TextureShiftYFunction != null & Result.Objects[ObjectCount].TextureShiftYDirection.X != 0.0;
 									bool ForceTextureRepeatY = Result.Objects[ObjectCount].TextureShiftXFunction != null & Result.Objects[ObjectCount].TextureShiftXDirection.Y != 0.0 |
 									                           Result.Objects[ObjectCount].TextureShiftYFunction != null & Result.Objects[ObjectCount].TextureShiftYDirection.Y != 0.0;
 									for (int k = 0; k < StateFiles.Length; k++)
 									{
-										Result.Objects[ObjectCount].States[k].Position = Vector3.Zero;
+										Result.Objects[ObjectCount].States[k] = new ObjectState();
 										if (StateFiles[k] != null)
 										{
 											UnifiedObject currentObject;
 											currentHost.LoadObject(StateFiles[k], Encoding, out currentObject);
 											if (currentObject is StaticObject)
 											{
-												Result.Objects[ObjectCount].States[k].Object = (StaticObject) currentObject;
+												Result.Objects[ObjectCount].States[k].Prototype = (StaticObject) currentObject;
 											}
 											else
 											{
 												currentHost.AddMessage(MessageType.Error, false, "Attempted to load the animated object " + StateFiles[k] + " where only static objects are allowed at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 												continue;
 											}
-											if (Result.Objects[ObjectCount].States[k].Object != null)
+											if (Result.Objects[ObjectCount].States[k].Prototype != null)
 											{
-												Result.Objects[ObjectCount].States[k].Object.Dynamic = true;
-												for (int l = 0; l < Result.Objects[ObjectCount].States[k].Object.Mesh.Materials.Length; l++)
+												Result.Objects[ObjectCount].States[k].Prototype.Dynamic = true;
+												for (int l = 0; l < Result.Objects[ObjectCount].States[k].Prototype.Mesh.Materials.Length; l++)
 												{
 													if (ForceTextureRepeatX && ForceTextureRepeatY)
 													{
-														Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = OpenGlTextureWrapMode.RepeatRepeat;
+														Result.Objects[ObjectCount].States[k].Prototype.Mesh.Materials[l].WrapMode = OpenGlTextureWrapMode.RepeatRepeat;
 													}
 													else if (ForceTextureRepeatX)
 													{
 														
-														switch (Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode)
+														switch (Result.Objects[ObjectCount].States[k].Prototype.Mesh.Materials[l].WrapMode)
 														{
 															case OpenGlTextureWrapMode.ClampRepeat:
-																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = OpenGlTextureWrapMode.RepeatRepeat;
+																Result.Objects[ObjectCount].States[k].Prototype.Mesh.Materials[l].WrapMode = OpenGlTextureWrapMode.RepeatRepeat;
 																break;
 															case OpenGlTextureWrapMode.ClampClamp:
-																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = OpenGlTextureWrapMode.RepeatClamp;
+																Result.Objects[ObjectCount].States[k].Prototype.Mesh.Materials[l].WrapMode = OpenGlTextureWrapMode.RepeatClamp;
 																break;
 														}
 													}
 													else if (ForceTextureRepeatY)
 													{
 														
-														switch (Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode)
+														switch (Result.Objects[ObjectCount].States[k].Prototype.Mesh.Materials[l].WrapMode)
 														{
 															case OpenGlTextureWrapMode.RepeatClamp:
-																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = OpenGlTextureWrapMode.RepeatRepeat;
+																Result.Objects[ObjectCount].States[k].Prototype.Mesh.Materials[l].WrapMode = OpenGlTextureWrapMode.RepeatRepeat;
 																break;
 															case OpenGlTextureWrapMode.ClampClamp:
-																Result.Objects[ObjectCount].States[k].Object.Mesh.Materials[l].WrapMode = OpenGlTextureWrapMode.ClampRepeat;
+																Result.Objects[ObjectCount].States[k].Prototype.Mesh.Materials[l].WrapMode = OpenGlTextureWrapMode.ClampRepeat;
 																break;
 														}
 													}
@@ -851,7 +853,7 @@ namespace Plugin
 										}
 										else
 										{
-											Result.Objects[ObjectCount].States[k].Object = null;
+											Result.Objects[ObjectCount].States[k].Prototype = null;
 										}
 										
 									}
@@ -859,12 +861,12 @@ namespace Plugin
 									{
 
 										//Rotate X
-										if (Result.Objects[ObjectCount].States[j].Object == null)
+										if (Result.Objects[ObjectCount].States[j].Prototype == null)
 										{
 											continue;
 										}
 										//Apply position
-										Result.Objects[ObjectCount].States[j].Position = Position;
+										Result.Objects[ObjectCount].States[j].Translation = OpenTK.Matrix4d.CreateTranslation(Position.X, Position.Y, -Position.Z);
 										//Test whether the object contains non static rotation functions
 										//If so, the results may be off so don't optimise
 										if (!StaticXRotation)
@@ -890,17 +892,17 @@ namespace Plugin
 										}
 										if (StaticXRotation)
 										{
-											ApplyStaticRotation(ref Result.Objects[ObjectCount].States[j].Object.Mesh, Result.Objects[ObjectCount].RotateXDirection, RotateX);
+											ApplyStaticRotation(ref Result.Objects[ObjectCount].States[j].Prototype.Mesh, Result.Objects[ObjectCount].RotateXDirection, RotateX);
 											Result.Objects[ObjectCount].RotateXFunction = null;
 										}
 										if (StaticYRotation)
 										{
-											ApplyStaticRotation(ref Result.Objects[ObjectCount].States[j].Object.Mesh, Result.Objects[ObjectCount].RotateYDirection, RotateY);
+											ApplyStaticRotation(ref Result.Objects[ObjectCount].States[j].Prototype.Mesh, Result.Objects[ObjectCount].RotateYDirection, RotateY);
 											Result.Objects[ObjectCount].RotateYFunction = null;
 										}
 										if (StaticZRotation)
 										{
-											ApplyStaticRotation(ref Result.Objects[ObjectCount].States[j].Object.Mesh, Result.Objects[ObjectCount].RotateZDirection, RotateZ);
+											ApplyStaticRotation(ref Result.Objects[ObjectCount].States[j].Prototype.Mesh, Result.Objects[ObjectCount].RotateZDirection, RotateZ);
 											Result.Objects[ObjectCount].RotateZFunction = null;
 										}
 										
@@ -908,7 +910,7 @@ namespace Plugin
 								}
 								else
 								{
-									Result.Objects[ObjectCount].States = new AnimatedObjectState[] { };
+									Result.Objects[ObjectCount].States = new ObjectState[] { };
 								}
 								ObjectCount++;
 							}

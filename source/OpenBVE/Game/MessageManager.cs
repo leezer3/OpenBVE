@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using OpenBveApi.Trains;
-using OpenBve.RouteManager;
+using RouteManager2.MessageManager;
+using RouteManager2.MessageManager.MessageTypes;
 
 namespace OpenBve
 {
@@ -29,7 +30,7 @@ namespace OpenBve
 						return;
 					}
 				}
-				message.AddMessage(CurrentRoute.SecondsSinceMidnight);
+				message.AddMessage(Program.CurrentRoute.SecondsSinceMidnight);
 				ImageMessages.Add(message);
 				return;
 			}
@@ -89,7 +90,7 @@ namespace OpenBve
 
 			}
 			//Prep: May be needed to trigger text replacement etc.
-			message.AddMessage(CurrentRoute.SecondsSinceMidnight);
+			message.AddMessage(Program.CurrentRoute.SecondsSinceMidnight);
 			if (m != null)
 			{
 				//This is a game-message: Add to the end of the list

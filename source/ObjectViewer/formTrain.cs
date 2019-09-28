@@ -295,7 +295,7 @@ namespace OpenBve
 					Array.Resize(ref TrainManager.Trains[0].Cars, (int)numericUpDownCars.Value);
 					for (int i = 0; i < TrainManager.Trains[0].Cars.Length; i++)
 					{
-						TrainManager.Trains[0].Cars[i] = new TrainManager.Car();
+						TrainManager.Trains[0].Cars[i] = new TrainManager.Car(TrainManager.Trains[0]);
 						TrainManager.Trains[0].Cars[i].Specs.CurrentSpeed = (int)numericUpDownSpeed.Value / 3.6;
 						TrainManager.Trains[0].Cars[i].Specs.CurrentPerceivedSpeed = (int)numericUpDownSpeed.Value / 3.6;
 						TrainManager.Trains[0].Cars[i].Specs.CurrentAcceleration = (int)numericUpDownAccel.Value / 3.6;

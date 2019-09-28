@@ -47,5 +47,12 @@
 				Xyz.Z = value;
 			}
 		}
+
+		public static OpenTK.Quaterniond RotationBetweenVectors(OpenTK.Vector3d Start, OpenTK.Vector3d Dest)
+		{
+			double m = System.Math.Sqrt((1.0 + OpenTK.Vector3d.Dot(Start, Dest)) * 2.0);
+			OpenTK.Vector3d w = (1.0 / m) * OpenTK.Vector3d.Cross(Start, Dest);
+			return new OpenTK.Quaterniond(w.X, w.Y, w.Z, 0.5 * m);
+		}
 	}
 }

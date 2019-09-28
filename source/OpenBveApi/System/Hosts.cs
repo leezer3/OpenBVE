@@ -202,7 +202,7 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Creates a dynamic object</summary>
 		/// <param name="internalObject">The internal static object to be updated</param>
 		/// <returns>The index of the dynamic object</returns>
-		public virtual void CreateDynamicObject(ref StaticObject internalObject)
+		public virtual void CreateDynamicObject(ref ObjectState internalObject)
 		{
 			
 		}
@@ -216,14 +216,14 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Shows an object in the base renderer</summary>
 		/// <param name="objectToShow">The reference to the object to show</param>
 		/// <param name="objectType">The object type</param>
-		public virtual void ShowObject(StaticObject objectToShow, ObjectType objectType)
+		public virtual void ShowObject(ObjectState objectToShow, ObjectType objectType)
 		{
 
 		}
 
 		/// <summary>Hides an object in the base renderer</summary>
 		/// <param name="objectToHide">The reference to the object to hide</param>
-		public virtual void HideObject(ref StaticObject objectToHide)
+		public virtual void HideObject(ObjectState objectToHide)
 		{
 
 		}

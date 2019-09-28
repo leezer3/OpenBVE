@@ -1,5 +1,4 @@
-﻿using OpenBve.RouteManager;
-using SoundManager;
+﻿using SoundManager;
 
 namespace OpenBve
 {
@@ -33,9 +32,9 @@ namespace OpenBve
 			{
 				if (Safety & !Actual)
 				{
-					double t = CurrentRoute.SecondsSinceMidnight;
+					double t = Program.CurrentRoute.SecondsSinceMidnight;
 					if (t < ApplicationTime) ApplicationTime = t;
-					if (ApplicationTime <= CurrentRoute.SecondsSinceMidnight)
+					if (ApplicationTime <= Program.CurrentRoute.SecondsSinceMidnight)
 					{
 						Actual = true;
 						ApplicationTime = double.MaxValue;

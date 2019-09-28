@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml;
-using LibRender;
+using LibRender2.MotionBlurs;
 using OpenBve.UserInterface;
 using OpenBveApi;
 using OpenBveApi.Graphics;
@@ -414,7 +414,7 @@ namespace OpenBve {
 			checkboxDerailments.Checked = Interface.CurrentOptions.Derailments;
 			checkBoxLoadInAdvance.Checked = Interface.CurrentOptions.LoadInAdvance;
 			checkBoxUnloadTextures.Checked = Interface.CurrentOptions.UnloadUnusedTextures;
-			checkBoxDisableDisplayLists.Checked = Interface.CurrentOptions.DisableDisplayLists;
+			checkBoxIsUseNewRenderer.Checked = Interface.CurrentOptions.IsUseNewRenderer;
 			checkboxBlackBox.Checked = Interface.CurrentOptions.BlackBox;
 			checkBoxLoadingSway.Checked = Interface.CurrentOptions.LoadingSway;
 			checkBoxTransparencyFix.Checked = Interface.CurrentOptions.OldTransparencyMode;
@@ -552,7 +552,7 @@ namespace OpenBve {
 			groupBoxAdvancedOptions.Text = Translations.GetInterfaceString("options_advanced");
 			checkBoxLoadInAdvance.Text = Translations.GetInterfaceString("options_advanced_load_advance");
 			checkBoxUnloadTextures.Text = Translations.GetInterfaceString("options_advanced_unload_textures");
-			checkBoxDisableDisplayLists.Text = Translations.GetInterfaceString("options_advanced_disable_displaylists");
+			checkBoxIsUseNewRenderer.Text = Translations.GetInterfaceString("options_advanced_is_use_new_renderer");
 			labelTimeAcceleration.Text = Translations.GetInterfaceString("options_advanced_timefactor");
 			//Other Options
 			groupBoxOther.Text = Translations.GetInterfaceString("options_other");
@@ -918,7 +918,7 @@ namespace OpenBve {
 			Interface.CurrentOptions.UnloadUnusedTextures = checkBoxUnloadTextures.Checked;
 			Interface.CurrentOptions.OldTransparencyMode = checkBoxTransparencyFix.Checked;
 			Interface.CurrentOptions.EnableBveTsHacks = checkBoxHacks.Checked;
-			Interface.CurrentOptions.DisableDisplayLists = checkBoxDisableDisplayLists.Checked;
+			Interface.CurrentOptions.IsUseNewRenderer = checkBoxIsUseNewRenderer.Checked;
 			Interface.CurrentOptions.GameMode = (GameMode)comboboxMode.SelectedIndex;
 			Interface.CurrentOptions.BlackBox = checkboxBlackBox.Checked;
 			Interface.CurrentOptions.LoadingSway = checkBoxLoadingSway.Checked;
@@ -1571,7 +1571,7 @@ namespace OpenBve {
 			else
 			{
 				checkBoxUnloadTextures.Enabled = true;
-				checkBoxDisableDisplayLists.Enabled = true;
+				checkBoxIsUseNewRenderer.Enabled = true;
 			}
 		}
 
@@ -1580,13 +1580,13 @@ namespace OpenBve {
 			if (checkBoxUnloadTextures.Checked)
 			{
 				//If we use display lists, a stale texture reference may remain in the GPU, resulting in untextured faces
-				checkBoxDisableDisplayLists.Checked = true;
-				checkBoxDisableDisplayLists.Enabled = false;
+				checkBoxIsUseNewRenderer.Checked = true;
+				checkBoxIsUseNewRenderer.Enabled = false;
 			}
 			else
 			{
-				checkBoxDisableDisplayLists.Enabled = true;
-				checkBoxDisableDisplayLists.Checked = false;
+				checkBoxIsUseNewRenderer.Enabled = true;
+				checkBoxIsUseNewRenderer.Checked = false;
 			}
 		}
 

@@ -1,6 +1,4 @@
 ﻿using System;
-using static LibRender.CameraProperties;
-using OpenBve.RouteManager;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
@@ -75,7 +73,7 @@ namespace OpenBve
 				Vector3 p = new Vector3(0.5 * (FrontAxle.Follower.WorldPosition + RearAxle.Follower.WorldPosition));
 				p -= d * (0.5 * (FrontAxle.Position + RearAxle.Position));
 				// determine visibility
-				Vector3 cd = new Vector3(p - Camera.AbsolutePosition);
+				Vector3 cd = new Vector3(p - Program.Renderer.Camera.AbsolutePosition);
 				double dist = cd.NormSquared();
 				double bid = Interface.CurrentOptions.ViewingDistance + Length;
 				CurrentlyVisible = dist < bid * bid;
@@ -107,9 +105,9 @@ namespace OpenBve
 						// brightness change
 						if (CarSections[cs].Groups[0].Elements[i].internalObject != null)
 						{
-							for (int j = 0; j < CarSections[cs].Groups[0].Elements[i].internalObject.Mesh.Materials.Length; j++)
+							for (int j = 0; j < CarSections[cs].Groups[0].Elements[i].internalObject.Prototype.Mesh.Materials.Length; j++)
 							{
-								CarSections[cs].Groups[0].Elements[i].internalObject.Mesh.Materials[j].DaytimeNighttimeBlend = dnb;
+								CarSections[cs].Groups[0].Elements[i].internalObject.Prototype.Mesh.Materials[j].DaytimeNighttimeBlend = dnb;
 							}
 						}
 					}
@@ -131,13 +129,11 @@ namespace OpenBve
 					CarSections[j].Groups[0].Elements = new AnimatedObject[1];
 					CarSections[j].Groups[0].Elements[0] = new AnimatedObject(Program.CurrentHost)
 					{
-						States = new AnimatedObjectState[1]
-						
+						States = new[] { new ObjectState() }
 					};
-					CarSections[j].Groups[0].Elements[0].States[0].Position = Vector3.Zero;
-					CarSections[j].Groups[0].Elements[0].States[0].Object = s;
+					CarSections[j].Groups[0].Elements[0].States[0].Prototype = s;
 					CarSections[j].Groups[0].Elements[0].CurrentState = 0;
-					ObjectManager.CreateDynamicObject(ref CarSections[j].Groups[0].Elements[0].internalObject);
+					Program.CurrentHost.CreateDynamicObject(ref CarSections[j].Groups[0].Elements[0].internalObject);
 				}
 				else if (currentObject is AnimatedObjectCollection)
 				{
@@ -146,7 +142,7 @@ namespace OpenBve
 					for (int h = 0; h < a.Objects.Length; h++)
 					{
 						CarSections[j].Groups[0].Elements[h] = a.Objects[h].Clone();
-						ObjectManager.CreateDynamicObject(ref CarSections[j].Groups[0].Elements[h].internalObject);
+						Program.CurrentHost.CreateDynamicObject(ref CarSections[j].Groups[0].Elements[h].internalObject);
 					}
 				}
 			}
@@ -163,7 +159,7 @@ namespace OpenBve
 				{
 					for (int j = 0; j < CarSections[i].Groups[0].Elements.Length; j++)
 					{
-						LibRender.Renderer.HideObject(ref CarSections[i].Groups[0].Elements[j].internalObject);
+						Program.CurrentHost.HideObject(CarSections[i].Groups[0].Elements[j].internalObject);
 					}
 				}
 				if (SectionIndex >= 0)
@@ -242,8 +238,8 @@ namespace OpenBve
 					{
 						double a = baseCar.Specs.CurrentRollDueToTopplingAngle +
 						           baseCar.Specs.CurrentRollDueToCantAngle;
-						double x = Math.Sign(a) * 0.5 * CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * (1.0 - Math.Cos(a));
-						double y = Math.Abs(0.5 * CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * Math.Sin(a));
+						double x = Math.Sign(a) * 0.5 * Program.CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * (1.0 - Math.Cos(a));
+						double y = Math.Abs(0.5 * Program.CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * Math.Sin(a));
 						Vector3 c = new Vector3(s.X * x + Up.X * y, s.Y * x + Up.Y * y, s.Z * x + Up.Z * y);
 						FrontAxle.Follower.WorldPosition += c;
 						RearAxle.Follower.WorldPosition += c;

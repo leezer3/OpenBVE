@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Text;
-using LibRender;
+using LibRender2.MotionBlurs;
 using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
@@ -34,7 +34,7 @@ namespace OpenBve
 			internal int TimeAccelerationFactor;
 			/// <summary>The viewing distance in meters</summary>
 			internal int ViewingDistance;
-			/// <summary>The current type of motion blur</summary>
+			///// <summary>The current type of motion blur</summary>
 			internal MotionBlurMode MotionBlur;
 			
 			/// <summary>Whether duplicate verticies are culled during loading</summary>
@@ -85,8 +85,6 @@ namespace OpenBve
 			internal int MainMenuWidth;
 			/// <summary>The height of the main menu window</summary>
 			internal int MainMenuHeight;
-			/// <summary>Whether the use of OpenGL display lists is disabled</summary>
-			internal bool DisableDisplayLists;
 			/// <summary>Whether the simulation will load all textures and sounds into system memory on initial load</summary>
 			internal bool LoadInAdvance;
 			/// <summary>Whether the simulation will dynamically unload unused textures</summary>
@@ -177,7 +175,6 @@ namespace OpenBve
 				this.TrainEncodings = new TextEncoding.EncodingValue[] { };
 				this.MainMenuWidth = 0;
 				this.MainMenuHeight = 0;
-				this.DisableDisplayLists = false;
 				this.LoadInAdvance = false;
 				this.UnloadUnusedTextures = false;
 				this.ProxyUrl = string.Empty;
@@ -363,14 +360,14 @@ namespace OpenBve
 												int.TryParse(Value, NumberStyles.Integer, Culture, out a);
 												Interface.CurrentOptions.MainMenuHeight = a;
 											} break;
-										case "disabledisplaylists":
-											Interface.CurrentOptions.DisableDisplayLists = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
-											break;
 										case "loadinadvance":
 											Interface.CurrentOptions.LoadInAdvance = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 										case "unloadtextures":
 											Interface.CurrentOptions.UnloadUnusedTextures = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											break;
+										case "isusenewrenderer":
+											Interface.CurrentOptions.IsUseNewRenderer = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
 											break;
 									} break;
 								case "quality":
@@ -809,9 +806,9 @@ namespace OpenBve
 			Builder.AppendLine("fullscreenBits = " + CurrentOptions.FullscreenBits.ToString(Culture));
 			Builder.AppendLine("mainmenuWidth = " + CurrentOptions.MainMenuWidth.ToString(Culture));
 			Builder.AppendLine("mainmenuHeight = " + CurrentOptions.MainMenuHeight.ToString(Culture));
-			Builder.AppendLine("disableDisplayLists = " + (CurrentOptions.DisableDisplayLists ? "true" : "false"));
 			Builder.AppendLine("loadInAdvance = " + (CurrentOptions.LoadInAdvance ? "true" : "false"));
 			Builder.AppendLine("unloadtextures = " + (CurrentOptions.UnloadUnusedTextures ? "true" : "false"));
+			Builder.AppendLine("isUseNewRenderer = " + (CurrentOptions.IsUseNewRenderer ? "true" : "false"));
 			Builder.AppendLine();
 			Builder.AppendLine("[quality]");
 			{

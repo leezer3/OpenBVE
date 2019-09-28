@@ -1,9 +1,7 @@
 ﻿using System;
-using LibRender;
 using OpenTK;
 using OpenTK.Graphics;
 using Vector3 = OpenBveApi.Math.Vector3;
-using static LibRender.CameraProperties;
 
 namespace OpenBve
 {
@@ -82,9 +80,9 @@ namespace OpenBve
             {
                 double cosa = Math.Cos(RotateXSpeed * timeElapsed);
                 double sina = Math.Sin(RotateXSpeed * timeElapsed);
-				Camera.AbsoluteDirection.Rotate(Vector3.Down, cosa, sina);
-	            Camera.AbsoluteUp.Rotate(Vector3.Down, cosa, sina);
-	            Camera.AbsoluteSide.Rotate(Vector3.Down, cosa, sina);
+                Program.Renderer.Camera.AbsoluteDirection.Rotate(Vector3.Down, cosa, sina);
+                Program.Renderer.Camera.AbsoluteUp.Rotate(Vector3.Down, cosa, sina);
+                Program.Renderer.Camera.AbsoluteSide.Rotate(Vector3.Down, cosa, sina);
                 keep = true;
             }
             // rotate y
@@ -118,8 +116,8 @@ namespace OpenBve
             {
                 double cosa = Math.Cos(RotateYSpeed * timeElapsed);
                 double sina = Math.Sin(RotateYSpeed * timeElapsed);
-				Camera.AbsoluteDirection.Rotate(Camera.AbsoluteSide, cosa, sina);
-	            Camera.AbsoluteUp.Rotate(Camera.AbsoluteSide, cosa, sina);
+                Program.Renderer.Camera.AbsoluteDirection.Rotate(Program.Renderer.Camera.AbsoluteSide, cosa, sina);
+                Program.Renderer.Camera.AbsoluteUp.Rotate(Program.Renderer.Camera.AbsoluteSide, cosa, sina);
                 keep = true;
             }
             // move x
@@ -151,9 +149,9 @@ namespace OpenBve
             }
             if (MoveXSpeed != 0.0)
             {
-                Camera.AbsolutePosition.X += MoveXSpeed * timeElapsed * Camera.AbsoluteSide.X;
-                Camera.AbsolutePosition.Y += MoveXSpeed * timeElapsed * Camera.AbsoluteSide.Y;
-                Camera.AbsolutePosition.Z += MoveXSpeed * timeElapsed * Camera.AbsoluteSide.Z;
+	            Program.Renderer.Camera.AbsolutePosition.X += MoveXSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteSide.X;
+	            Program.Renderer.Camera.AbsolutePosition.Y += MoveXSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteSide.Y;
+	            Program.Renderer.Camera.AbsolutePosition.Z += MoveXSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteSide.Z;
                 keep = true;
             }
             // move y
@@ -185,9 +183,9 @@ namespace OpenBve
             }
             if (MoveYSpeed != 0.0)
             {
-                Camera.AbsolutePosition.X += MoveYSpeed * timeElapsed * Camera.AbsoluteUp.X;
-                Camera.AbsolutePosition.Y += MoveYSpeed * timeElapsed * Camera.AbsoluteUp.Y;
-                Camera.AbsolutePosition.Z += MoveYSpeed * timeElapsed * Camera.AbsoluteUp.Z;
+	            Program.Renderer.Camera.AbsolutePosition.X += MoveYSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteUp.X;
+	            Program.Renderer.Camera.AbsolutePosition.Y += MoveYSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteUp.Y;
+	            Program.Renderer.Camera.AbsolutePosition.Z += MoveYSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteUp.Z;
                 keep = true;
             }
             // move z
@@ -219,9 +217,9 @@ namespace OpenBve
             }
             if (MoveZSpeed != 0.0)
             {
-                Camera.AbsolutePosition.X += MoveZSpeed * timeElapsed * Camera.AbsoluteDirection.X;
-                Camera.AbsolutePosition.Y += MoveZSpeed * timeElapsed * Camera.AbsoluteDirection.Y;
-                Camera.AbsolutePosition.Z += MoveZSpeed * timeElapsed * Camera.AbsoluteDirection.Z;
+	            Program.Renderer.Camera.AbsolutePosition.X += MoveZSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteDirection.X;
+	            Program.Renderer.Camera.AbsolutePosition.Y += MoveZSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteDirection.Y;
+	            Program.Renderer.Camera.AbsolutePosition.Z += MoveZSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteDirection.Z;
                 keep = true;
             }
             // lighting
@@ -264,10 +262,10 @@ namespace OpenBve
                 else if (ReducedModeEnteringTime <= 0)
                 {
                     Program.ReducedMode = true;
-                    Camera.AbsoluteSide.Y = 0.0;
-                    Camera.AbsoluteSide.Normalize();
-                    Camera.AbsoluteDirection.Normalize();
-                    Camera.AbsoluteUp = Vector3.Cross(Camera.AbsoluteDirection, Camera.AbsoluteSide);
+                    Program.Renderer.Camera.AbsoluteSide.Y = 0.0;
+                    Program.Renderer.Camera.AbsoluteSide.Normalize();
+                    Program.Renderer.Camera.AbsoluteDirection.Normalize();
+                    Program.Renderer.Camera.AbsoluteUp = Vector3.Cross(Program.Renderer.Camera.AbsoluteDirection, Program.Renderer.Camera.AbsoluteSide);
                 }
                 else
                 {
@@ -276,23 +274,23 @@ namespace OpenBve
             }
             if (updatelight)
             {
-				LibRender.Renderer.OptionAmbientColor.R = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative * (2.0 - Program.LightingRelative));
-				LibRender.Renderer.OptionAmbientColor.G = (byte)Math.Round(32.0 + 128.0 * 0.5 * (Program.LightingRelative + Program.LightingRelative * (2.0 - Program.LightingRelative)));
-				LibRender.Renderer.OptionAmbientColor.B = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative);
-				LibRender.Renderer.OptionDiffuseColor.R = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative);
-				LibRender.Renderer.OptionDiffuseColor.G = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative);
-				LibRender.Renderer.OptionDiffuseColor.B = (byte)Math.Round(32.0 + 128.0 * Math.Sqrt(Program.LightingRelative));
-				LibRender.Renderer.InitializeLighting();
+				Program.Renderer.Lighting.OptionAmbientColor.R = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative * (2.0 - Program.LightingRelative));
+				Program.Renderer.Lighting.OptionAmbientColor.G = (byte)Math.Round(32.0 + 128.0 * 0.5 * (Program.LightingRelative + Program.LightingRelative * (2.0 - Program.LightingRelative)));
+				Program.Renderer.Lighting.OptionAmbientColor.B = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative);
+				Program.Renderer.Lighting.OptionDiffuseColor.R = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative);
+				Program.Renderer.Lighting.OptionDiffuseColor.G = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative);
+				Program.Renderer.Lighting.OptionDiffuseColor.B = (byte)Math.Round(32.0 + 128.0 * Math.Sqrt(Program.LightingRelative));
+				Program.Renderer.Lighting.Initialize();
             }
-            Renderer.RenderScene();
+            Program.Renderer.RenderScene();
             SwapBuffers();
         }
 
         protected override void OnResize(EventArgs e)
         {
-            Screen.Width = Width;
-            Screen.Height = Height;
-            Program.UpdateViewport();
+	        Program.Renderer.Screen.Width = Width;
+	        Program.Renderer.Screen.Height = Height;
+            Program.Renderer.UpdateViewport();
         }
 
         protected override void OnLoad(EventArgs e)
@@ -304,39 +302,45 @@ namespace OpenBve
 			MouseWheel += Program.MouseWheelEvent;
 	        FileDrop += Program.DragFile;
             Program.ResetCamera();
-            Renderer.Initialize();
-            LibRender.Renderer.InitializeLighting();
+            Program.Renderer.Initialize(Program.CurrentHost,Interface.CurrentOptions);
+            Program.Renderer.Lighting.Initialize();
             //SwapBuffers();
             //Fonts.Initialize();
-            Program.UpdateViewport();
-            // command line arguments
-            // if (commandLineArgs != null)
-            // {
-            //     for (int i = 0; i < commandLineArgs.Length; i++)
-            //     {
-            //         if (!Program.SkipArgs[i] && System.IO.File.Exists(commandLineArgs[i]))
-            //         {
-            //             try
-            //             {
-            //                 UnifiedObject o = ObjectManager.LoadObject(commandLineArgs[i],
-            //                     System.Text.Encoding.UTF8, false, false, false,0,0,0);
-            //                 ObjectManager.CreateObject(o, new Vector3(0.0, 0.0, 0.0),
-            //                     new Transformation(), new Transformation(), true,
-            //                     0.0, 0.0, 25.0, 0.0);
-            //             }
-            //             catch (Exception ex)
-            //             {
-            //                 Interface.AddMessage(MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + commandLineArgs[i] + ".");
-            //             }
-            //             Array.Resize<string>(ref Program.Files, Program.Files.Length + 1);
-            //             Program.Files[Program.Files.Length - 1] = commandLineArgs[i];
-            //         }
-            //     }
-            // }
-            ObjectManager.InitializeVisibility();
-            ObjectManager.FinishCreatingObjects();
-            ObjectManager.UpdateVisibility(0.0, true);
+            Program.Renderer.UpdateViewport();
+			// command line arguments
+			// if (commandLineArgs != null)
+			// {
+			//     for (int i = 0; i < commandLineArgs.Length; i++)
+			//     {
+			//         if (!Program.SkipArgs[i] && System.IO.File.Exists(commandLineArgs[i]))
+			//         {
+			//             try
+			//             {
+			//                 UnifiedObject o = ObjectManager.LoadObject(commandLineArgs[i],
+			//                     System.Text.Encoding.UTF8, false, false, false,0,0,0);
+			//                 ObjectManager.CreateObject(o, new Vector3(0.0, 0.0, 0.0),
+			//                     new Transformation(), new Transformation(), true,
+			//                     0.0, 0.0, 25.0, 0.0);
+			//             }
+			//             catch (Exception ex)
+			//             {
+			//                 Interface.AddMessage(MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + commandLineArgs[i] + ".");
+			//             }
+			//             Array.Resize<string>(ref Program.Files, Program.Files.Length + 1);
+			//             Program.Files[Program.Files.Length - 1] = commandLineArgs[i];
+			//         }
+			//     }
+			// }
+			Program.Renderer.InitializeVisibility();
+            Program.Renderer.UpdateVisibility(0.0, true);
             ObjectManager.UpdateAnimatedWorldObjects(0.01, true);
+        }
+
+        public override void Dispose()
+        {
+			Program.Renderer.Finalization();
+
+	        base.Dispose();
         }
     }
 }

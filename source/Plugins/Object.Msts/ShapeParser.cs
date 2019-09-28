@@ -409,10 +409,9 @@ namespace Plugin
 				for (int j = 0; j < shape.LODs[i].subObjects.Count; j++)
 				{
 					Result.Objects[idx] = new AnimatedObject(Plugin.currentHost);
-					Result.Objects[idx].States = new AnimatedObjectState[1];
-					AnimatedObjectState aos = new AnimatedObjectState(null, Vector3.Zero);
-					shape.LODs[i].subObjects[j].Apply(out aos.Object);
-					aos.Position = new Vector3(0, 0, 0);
+					Result.Objects[idx].States = new ObjectState[1];
+					ObjectState aos = new ObjectState();
+					shape.LODs[i].subObjects[j].Apply(out aos.Prototype);
 					Result.Objects[idx].States[0] = aos;
 					previousLODs[idx] = shape.LODs[i].viewingDistance;
 					int k = idx;

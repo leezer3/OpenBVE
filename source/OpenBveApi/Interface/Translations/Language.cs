@@ -54,7 +54,7 @@ namespace OpenBveApi.Interface
 						}
 
 						Id = (string)unit.Attribute("id");
-						Value = (languageCode != "en-US" ? (string)target : (string)source).Replace("\\n", Environment.NewLine).Replace("\\x20", " ");
+						Value = (languageCode != "en-US" ? (string)target : (string)source).Replace("\\r\\n", Environment.NewLine).Replace("\\x20", " ");
 					}
 				}
 

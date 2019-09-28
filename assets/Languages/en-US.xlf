@@ -1089,8 +1089,8 @@
 					<trans-unit id="advanced_load_advance">
 						<source>Load in advance</source>
 					</trans-unit>
-					<trans-unit id="advanced_disable_displaylists">
-						<source>Disable OpenGL display lists</source>
+					<trans-unit id="advanced_is_use_new_renderer">
+						<source>Enable the new renderer</source>
 					</trans-unit>
 					<trans-unit id="advanced_timefactor">
 						<source>Accelerated Time Factor</source>
@@ -1980,6 +1980,9 @@
 					</trans-unit>
 					<trans-unit id="show_events">
 						<source>Shows or hides event markers (For developers)</source>
+					</trans-unit>
+					<trans-unit id="debug_renderer_mode">
+						<source>Toggles the renderer</source>
 					</trans-unit>
 					<trans-unit id="wiper_speed_up">
 						<source>Increases the speed of the windscreen wipers</source>

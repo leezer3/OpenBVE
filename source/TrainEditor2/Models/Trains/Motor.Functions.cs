@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using LibRender;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenTK;
@@ -1093,15 +1092,12 @@ namespace TrainEditor2.Models.Trains
 
 				GL.End();
 
-				GL.MatrixMode(MatrixMode.Projection);
-				GL.LoadMatrix(ref projString);
-
-				GL.MatrixMode(MatrixMode.Modelview);
-				GL.LoadIdentity();
+				Program.Renderer.CurrentProjectionMatrix = projString;
+				Program.Renderer.CurrentViewMatrix = Matrix4d.Identity;
 
 				for (double v = 0.0; v < MaxVelocity; v += 10.0)
 				{
-					Renderer.DrawString(Fonts.VerySmallFont, v.ToString("0", culture), new Point((int)VelocityToX(v) + 1, 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
+					Program.Renderer.OpenGlString.Draw(Fonts.VerySmallFont, v.ToString("0", culture), new Point((int)VelocityToX(v) + 1, 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
 				}
 
 				GL.Disable(EnableCap.Texture2D);
@@ -1128,15 +1124,12 @@ namespace TrainEditor2.Models.Trains
 
 					GL.End();
 
-					GL.MatrixMode(MatrixMode.Projection);
-					GL.LoadMatrix(ref projString);
-
-					GL.MatrixMode(MatrixMode.Modelview);
-					GL.LoadIdentity();
+					Program.Renderer.CurrentProjectionMatrix = projString;
+					Program.Renderer.CurrentViewMatrix = Matrix4d.Identity;
 
 					for (double p = 0.0; p < MaxPitch; p += 100.0)
 					{
-						Renderer.DrawString(Fonts.VerySmallFont, p.ToString("0", culture), new Point(1, (int)PitchToY(p) + 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
+						Program.Renderer.OpenGlString.Draw(Fonts.VerySmallFont, p.ToString("0", culture), new Point(1, (int)PitchToY(p) + 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
 					}
 
 					GL.Disable(EnableCap.Texture2D);
@@ -1159,15 +1152,12 @@ namespace TrainEditor2.Models.Trains
 
 					GL.End();
 
-					GL.MatrixMode(MatrixMode.Projection);
-					GL.LoadMatrix(ref projString);
-
-					GL.MatrixMode(MatrixMode.Modelview);
-					GL.LoadIdentity();
+					Program.Renderer.CurrentProjectionMatrix = projString;
+					Program.Renderer.CurrentViewMatrix = Matrix4d.Identity;
 
 					for (double v = 0.0; v < MaxVolume; v += 128.0)
 					{
-						Renderer.DrawString(Fonts.VerySmallFont, v.ToString("0", culture), new Point(1, (int)VolumeToY(v) + 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
+						Program.Renderer.OpenGlString.Draw(Fonts.VerySmallFont, v.ToString("0", culture), new Point(1, (int)VolumeToY(v) + 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
 					}
 
 					GL.Disable(EnableCap.Texture2D);

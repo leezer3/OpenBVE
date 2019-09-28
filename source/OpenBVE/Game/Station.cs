@@ -1,5 +1,4 @@
-﻿using OpenBve.RouteManager;
-using OpenBveApi.Runtime;
+﻿using OpenBveApi.Runtime;
 
 namespace OpenBve
 {
@@ -15,9 +14,9 @@ namespace OpenBve
 		{
 			if (Train.IsPlayerTrain)
 			{
-				return CurrentRoute.Stations[StationIndex].StopMode == StationStopMode.AllStop | CurrentRoute.Stations[StationIndex].StopMode == StationStopMode.PlayerStop | CurrentRoute.Stations[StationIndex].StopMode == StationStopMode.PlayerRequestStop | CurrentRoute.Stations[StationIndex].StopMode == StationStopMode.AllRequestStop;
+				return Program.CurrentRoute.Stations[StationIndex].StopMode == StationStopMode.AllStop | Program.CurrentRoute.Stations[StationIndex].StopMode == StationStopMode.PlayerStop | Program.CurrentRoute.Stations[StationIndex].StopMode == StationStopMode.PlayerRequestStop | Program.CurrentRoute.Stations[StationIndex].StopMode == StationStopMode.AllRequestStop;
 			}
-			return CurrentRoute.Stations[StationIndex].StopMode == StationStopMode.AllStop | CurrentRoute.Stations[StationIndex].StopMode == StationStopMode.PlayerPass | CurrentRoute.Stations[StationIndex].StopMode == StationStopMode.AllRequestStop;
+			return Program.CurrentRoute.Stations[StationIndex].StopMode == StationStopMode.AllStop | Program.CurrentRoute.Stations[StationIndex].StopMode == StationStopMode.PlayerPass | Program.CurrentRoute.Stations[StationIndex].StopMode == StationStopMode.AllRequestStop;
 		}
 	}
 }
