@@ -132,7 +132,7 @@ namespace LibRender2.Backgrounds
 					data.CreateVAO();
 				}
 
-				renderer.DefaultShader.Use();
+				renderer.DefaultShader.Activate();
 				renderer.ResetShader(renderer.DefaultShader);
 
 				// matrix
@@ -172,7 +172,7 @@ namespace LibRender2.Backgrounds
 				data.VAO.UnBind();
 
 				GL.BindTexture(TextureTarget.Texture2D, 0);
-				renderer.DefaultShader.NonUse();
+				renderer.DefaultShader.Deactivate();
 
 				GL.Disable(EnableCap.Texture2D);
 				renderer.RestoreBlendFunc();
@@ -213,10 +213,10 @@ namespace LibRender2.Backgrounds
 					}
 				}
 
-				renderer.DefaultShader.Use();
+				renderer.DefaultShader.Activate();
 				renderer.ResetShader(renderer.DefaultShader);
 				renderer.RenderFace(renderer.DefaultShader, new ObjectState { Prototype = data.Object }, face);
-				renderer.DefaultShader.NonUse();
+				renderer.DefaultShader.Deactivate();
 			}
 		}
 	}

@@ -27,8 +27,8 @@ namespace OpenBve.Graphics.Renderers
 			touchFaces = new List<FaceState>();
 
 			pickingShader = new Shader("default", "picking", true);
-			pickingShader.Use();
-			pickingShader.NonUse();
+			pickingShader.Activate();
+			pickingShader.Deactivate();
 
 			fbo = new FrameBufferObject();
 			fbo.Bind();
@@ -58,11 +58,11 @@ namespace OpenBve.Graphics.Renderers
 
 			foreach (FaceState face in touchFaces)
 			{
-				pickingShader.Use();
+				pickingShader.Activate();
 				renderer.ResetShader(pickingShader);
 				pickingShader.SetObjectIndex(objectStates.IndexOf(face.Object) + 1);
 				renderer.RenderFace(pickingShader, face);
-				pickingShader.NonUse();
+				pickingShader.Deactivate();
 			}
 
 			fbo.UnBind();
@@ -75,10 +75,10 @@ namespace OpenBve.Graphics.Renderers
 
 				foreach (FaceState face in touchFaces)
 				{
-					renderer.DefaultShader.Use();
+					renderer.DefaultShader.Activate();
 					renderer.ResetShader(renderer.DefaultShader);
 					renderer.RenderFace(renderer.DefaultShader, face, true);
-					renderer.DefaultShader.NonUse();
+					renderer.DefaultShader.Deactivate();
 				}
 			}
 		}

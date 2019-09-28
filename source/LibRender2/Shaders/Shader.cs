@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -121,10 +121,8 @@ namespace LibRender2.Shaders
 			}
 		}
 
-		/// <summary>
-		/// Activate the shader program for use
-		/// </summary>
-		public void Use()
+		/// <summary>Activates the shader program for use</summary>
+		public void Activate()
 		{
 			GL.UseProgram(handle);
 		}
@@ -170,14 +168,13 @@ namespace LibRender2.Shaders
 			};
 		}
 
-		public void NonUse()
+		/// <summary>Deactivates the shader</summary>
+		public void Deactivate()
 		{
 			GL.UseProgram(0);
 		}
 
-		/// <summary>
-		/// cleans up, releasing the underlying openTK/OpenGL shader program
-		/// </summary>
+		/// <summary>Cleans up, releasing the underlying openTK/OpenGL shader program</summary>
 		public void Dispose()
 		{
 			if (!disposed)

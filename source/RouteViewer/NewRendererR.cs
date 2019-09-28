@@ -318,10 +318,10 @@ namespace OpenBve
 			{
 				if (Interface.CurrentOptions.IsUseNewRenderer)
 				{
-					DefaultShader.Use();
+					DefaultShader.Activate();
 					ResetShader(DefaultShader);
 					RenderFace(DefaultShader, face);
-					DefaultShader.NonUse();
+					DefaultShader.Deactivate();
 				}
 				else
 				{
@@ -343,10 +343,10 @@ namespace OpenBve
 				{
 					if (Interface.CurrentOptions.IsUseNewRenderer)
 					{
-						DefaultShader.Use();
+						DefaultShader.Activate();
 						ResetShader(DefaultShader);
 						RenderFace(DefaultShader, face);
-						DefaultShader.NonUse();
+						DefaultShader.Deactivate();
 					}
 					else
 					{
@@ -368,10 +368,10 @@ namespace OpenBve
 						{
 							if (Interface.CurrentOptions.IsUseNewRenderer)
 							{
-								DefaultShader.Use();
+								DefaultShader.Activate();
 								ResetShader(DefaultShader);
 								RenderFace(DefaultShader, face);
-								DefaultShader.NonUse();
+								DefaultShader.Deactivate();
 							}
 							else
 							{
@@ -398,10 +398,10 @@ namespace OpenBve
 
 						if (Interface.CurrentOptions.IsUseNewRenderer)
 						{
-							DefaultShader.Use();
+							DefaultShader.Activate();
 							ResetShader(DefaultShader);
 							RenderFace(DefaultShader, face);
-							DefaultShader.NonUse();
+							DefaultShader.Deactivate();
 						}
 						else
 						{
@@ -418,10 +418,10 @@ namespace OpenBve
 
 						if (Interface.CurrentOptions.IsUseNewRenderer)
 						{
-							DefaultShader.Use();
+							DefaultShader.Activate();
 							ResetShader(DefaultShader);
 							RenderFace(DefaultShader, face);
-							DefaultShader.NonUse();
+							DefaultShader.Deactivate();
 						}
 						else
 						{

@@ -220,7 +220,7 @@ namespace LibRender2.Primitives
 		/// <param name="TextureIndex">The texture to apply</param>
 		public void Draw(VertexArrayObject VAO, OpenBveApi.Math.Vector3 Position, OpenBveApi.Math.Vector3 Direction, OpenBveApi.Math.Vector3 Up, OpenBveApi.Math.Vector3 Side, OpenBveApi.Math.Vector3 Size, OpenBveApi.Math.Vector3 Camera, Texture TextureIndex)
 		{
-			renderer.DefaultShader.Use();
+			renderer.DefaultShader.Activate();
 			renderer.ResetShader(renderer.DefaultShader);
 
 			// matrix
@@ -247,7 +247,7 @@ namespace LibRender2.Primitives
 			VAO.UnBind();
 
 			GL.BindTexture(TextureTarget.Texture2D, 0);
-			renderer.DefaultShader.NonUse();
+			renderer.DefaultShader.Deactivate();
 
 			GL.Disable(EnableCap.Texture2D);
 		}

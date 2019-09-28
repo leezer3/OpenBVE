@@ -165,8 +165,8 @@ namespace LibRender2
 			VisibleObjects = new VisibleObjectLibrary(currentHost, Camera, currentOptions);
 
 			DefaultShader = new Shader("default", "default", true);
-			DefaultShader.Use();
-			DefaultShader.NonUse();
+			DefaultShader.Activate();
+			DefaultShader.Deactivate();
 
 			GL.ClearColor(0.67f, 0.67f, 0.67f, 1.0f);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -220,9 +220,9 @@ namespace LibRender2
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthMask(true);
 			SetAlphaFunc(AlphaFunction.Greater, 0.9f);
-			DefaultShader.Use();
+			DefaultShader.Activate();
 			ResetShader(DefaultShader);
-			DefaultShader.NonUse();
+			DefaultShader.Deactivate();
 		}
 
 		public void PushMatrix(MatrixMode Mode)
