@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -85,39 +85,39 @@ namespace LibRender2.Shaders
 			Disposable.Add(this);
 		}
 
-		/// <summary>
-		/// Loads the shader source and compiles the shader 
-		/// </summary>
+		/// <summary>Loads the shader source and compiles the shader</summary>
 		/// <param name="shaderSource">Shader source code string</param>
 		/// <param name="shaderType">type of shader VertexShader or FragmentShader</param>
 		private void LoadShader(string shaderSource, ShaderType shaderType)
 		{
 			int status;
 
-			if (shaderType == ShaderType.VertexShader)
+			switch (shaderType)
 			{
-				vertexShader = GL.CreateShader(shaderType);
-				GL.ShaderSource(vertexShader, shaderSource);
-				GL.CompileShader(vertexShader);
-				GL.GetShader(vertexShader, ShaderParameter.CompileStatus, out status);
+				case ShaderType.VertexShader:
+					vertexShader = GL.CreateShader(shaderType);
+					GL.ShaderSource(vertexShader, shaderSource);
+					GL.CompileShader(vertexShader);
+					GL.GetShader(vertexShader, ShaderParameter.CompileStatus, out status);
+					if (status == 0)
+					{
+						throw new ApplicationException(GL.GetShaderInfoLog(vertexShader));
+					}
+					break;
+				case ShaderType.FragmentShader:
+				
+					fragmentShader = GL.CreateShader(shaderType);
+					GL.ShaderSource(fragmentShader, shaderSource);
+					GL.CompileShader(fragmentShader);
+					GL.GetShader(fragmentShader, ShaderParameter.CompileStatus, out status);
 
-				if (status == 0)
-				{
-					throw new ApplicationException(GL.GetShaderInfoLog(vertexShader));
-				}
-			}
-
-			if (shaderType == ShaderType.FragmentShader)
-			{
-				fragmentShader = GL.CreateShader(shaderType);
-				GL.ShaderSource(fragmentShader, shaderSource);
-				GL.CompileShader(fragmentShader);
-				GL.GetShader(fragmentShader, ShaderParameter.CompileStatus, out status);
-
-				if (status == 0)
-				{
-					throw new ApplicationException(GL.GetShaderInfoLog(fragmentShader));
-				}
+					if (status == 0)
+					{
+						throw new ApplicationException(GL.GetShaderInfoLog(fragmentShader));
+					}
+					break;
+				default:
+					throw new InvalidOperationException("Attempted to load an unknown shader type");
 			}
 		}
 
