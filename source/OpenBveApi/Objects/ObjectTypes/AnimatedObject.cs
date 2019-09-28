@@ -496,7 +496,7 @@ namespace OpenBveApi.Objects
 				{
 					double y = TextureShiftYFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 					y -= System.Math.Floor(y);
-					internalObject.TextureTranslation *= OpenTK.Matrix4d.CreateTranslation(y * TextureShiftXDirection.X, y * TextureShiftXDirection.Y, 1.0);
+					internalObject.TextureTranslation *= OpenTK.Matrix4d.CreateTranslation(y * TextureShiftYDirection.X, y * TextureShiftYDirection.Y, 1.0);
 				}
 			}
 

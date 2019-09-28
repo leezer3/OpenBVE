@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using LibRender2.Cameras;
 using OpenBveApi;
 using OpenBveApi.Graphics;
@@ -196,36 +197,31 @@ namespace LibRender2.Objects
 			RemoveObject(State);
 		}
 
-		private void SortPolygons(ref List<FaceState> faces)
+		private List<FaceState> SortPolygons(List<FaceState> faces)
 		{
 			// calculate distance
 			double[] distances = new double[faces.Count];
 
-			for (int i = 0; i < faces.Count; i++)
+			Parallel.For(0, faces.Count, i =>
 			{
 				if (faces[i].Face.Vertices.Length >= 3)
 				{
 					Vector4d v0 = new Vector4d((Vector3d)faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[0].Index].Coordinates, 1.0);
 					Vector4d v1 = new Vector4d((Vector3d)faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[1].Index].Coordinates, 1.0);
 					Vector4d v2 = new Vector4d((Vector3d)faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[2].Index].Coordinates, 1.0);
+					Vector4d w1 = v1 - v0;
+					Vector4d w2 = v2 - v0;
 					v0.Z *= -1.0;
-					v1.Z *= -1.0;
-					v2.Z *= -1.0;
-					v0 = Vector4d.Transform(v0, faces[i].Object.Scale);
-					v1 = Vector4d.Transform(v1, faces[i].Object.Scale);
-					v2 = Vector4d.Transform(v2, faces[i].Object.Scale);
-					v0 = Vector4d.Transform(v0, faces[i].Object.Rotate);
-					v1 = Vector4d.Transform(v1, faces[i].Object.Rotate);
-					v2 = Vector4d.Transform(v2, faces[i].Object.Rotate);
-					v0 = Vector4d.Transform(v0, faces[i].Object.Translation);
-					v1 = Vector4d.Transform(v1, faces[i].Object.Translation);
-					v2 = Vector4d.Transform(v2, faces[i].Object.Translation);
+					w1.Z *= -1.0;
+					w2.Z *= -1.0;
+					Matrix4d mat = faces[i].Object.Scale * faces[i].Object.Rotate * faces[i].Object.Translation;
+					v0 = Vector4d.Transform(v0, mat);
+					w1 = Vector4d.Transform(w1, mat);
+					w2 = Vector4d.Transform(w2, mat);
 					v0.Z *= -1.0;
-					v1.Z *= -1.0;
-					v2.Z *= -1.0;
-					Vector3d w1 = (v1 - v0).Xyz;
-					Vector3d w2 = (v2 - v0).Xyz;
-					Vector3d d = Vector3d.Cross(w1, w2);
+					w1.Z *= -1.0;
+					w2.Z *= -1.0;
+					Vector3d d = Vector3d.Cross(w1.Xyz, w2.Xyz);
 					double t = d.Length;
 
 					if (t != 0.0)
@@ -236,21 +232,21 @@ namespace LibRender2.Objects
 						distances[i] = -t * t;
 					}
 				}
-			}
+			});
 
 			// sort
-			faces = faces.Select((face, index) => new { Face = face, Distance = distances[index] }).OrderBy(list => list.Distance).Select(list => list.Face).ToList();
+			return faces.Select((face, index) => new { Face = face, Distance = distances[index] }).OrderBy(list => list.Distance).Select(list => list.Face).ToList();
 		}
 
 		public void SortPolygonsInAlphaFaces()
 		{
-			SortPolygons(ref myAlphaFaces);
+			myAlphaFaces = SortPolygons(myAlphaFaces);
 			AlphaFaces = myAlphaFaces.AsReadOnly();
 		}
 
 		public void SortPolygonsInOverlayAlphaFaces()
 		{
-			SortPolygons(ref myOverlayAlphaFaces);
+			myOverlayAlphaFaces = SortPolygons(myOverlayAlphaFaces);
 			OverlayAlphaFaces = myOverlayAlphaFaces.AsReadOnly();
 		}
 	}
