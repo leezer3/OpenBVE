@@ -4,9 +4,8 @@ using OpenTK;
 
 namespace OpenBveApi.Graphics
 {
-	/// <summary>
-	/// Vertex structure
-	/// </summary>
+	/// <summary>Vertex structure</summary>
+	[StructLayout(LayoutKind.Sequential)]
 	public struct LibRenderVertex
 	{
 		/// <summary>
