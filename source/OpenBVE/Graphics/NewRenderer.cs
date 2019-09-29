@@ -54,6 +54,8 @@ namespace OpenBve.Graphics
 			events = new Events(this);
 			overlays = new Overlays(this);
 			Touch = new Touch(this);
+			ObjectsSortedByStart = new int[] { };
+			ObjectsSortedByEnd = new int[] { };
 		}
 
 		internal int CreateStaticObject(StaticObject Prototype, OpenBveApi.Math.Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition)
