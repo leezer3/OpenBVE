@@ -160,16 +160,17 @@ namespace LibRender2.Backgrounds
 				renderer.DefaultShader.SetOpacity(alpha);
 
 				// render polygon
-				data.VAO.Bind();
+				VertexArrayObject VAO = (VertexArrayObject) data.VAO;
+				VAO.Bind();
 
 				for (int i = 0; i + 9 < 32 * 10; i += 10)
 				{
-					data.VAO.Draw(renderer.DefaultShader.VertexLayout, PrimitiveType.Quads, i, 4);
-					data.VAO.Draw(renderer.DefaultShader.VertexLayout, PrimitiveType.Triangles, i + 4, 3);
-					data.VAO.Draw(renderer.DefaultShader.VertexLayout, PrimitiveType.Triangles, i + 7, 3);
+					VAO.Draw(renderer.DefaultShader.VertexLayout, PrimitiveType.Quads, i, 4);
+					VAO.Draw(renderer.DefaultShader.VertexLayout, PrimitiveType.Triangles, i + 4, 3);
+					VAO.Draw(renderer.DefaultShader.VertexLayout, PrimitiveType.Triangles, i + 7, 3);
 				}
 
-				data.VAO.UnBind();
+				VAO.UnBind();
 
 				GL.BindTexture(TextureTarget.Texture2D, 0);
 				renderer.DefaultShader.Deactivate();
@@ -185,7 +186,7 @@ namespace LibRender2.Backgrounds
 		{
 			if (data.Object.Mesh.VAO == null)
 			{
-				data.Object.Mesh.CreateVAO(false);
+				VAOExtensions.CreateVAO(ref data.Object.Mesh, false);
 			}
 
 			foreach (MeshFace face in data.Object.Mesh.Faces)

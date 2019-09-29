@@ -52,10 +52,16 @@
     <Compile Include="MotionBlurs\MotionBlur.cs" />
     <Compile Include="MotionBlurs\MotionBlurMode.cs" />
     <Compile Include="Objects\ObjectLibrary.cs" />
+    <Compile Include="openGL\FrameBufferObject.cs" />
+    <Compile Include="openGL\IndexBufferObject.cs" />
+    <Compile Include="openGL\ShaderLayout.cs" />
+    <Compile Include="openGL\VertexArrayObject.cs" />
+    <Compile Include="openGL\VertexBufferObject.cs" />
     <Compile Include="Overlays\Keys.cs" />
     <Compile Include="Overlays\Marker.cs" />
     <Compile Include="Primitives\Cube.cs" />
     <Compile Include="Primitives\Rectangle.cs" />
+    <Compile Include="openGL\Vertex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Screens\OutputModes.cs" />
     <Compile Include="Screens\Screen.cs" />

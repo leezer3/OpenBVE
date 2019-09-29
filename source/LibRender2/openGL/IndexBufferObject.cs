@@ -1,7 +1,7 @@
 ﻿using System;
 using OpenTK.Graphics.OpenGL;
 
-namespace OpenBveApi.Graphics
+namespace LibRender2
 {
 	/// <summary>
 	/// Class representing an OpenGL/OpenTK IBO/EBO

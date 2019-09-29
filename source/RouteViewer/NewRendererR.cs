@@ -297,7 +297,7 @@ namespace OpenBve
 			float aa = Program.CurrentRoute.CurrentFog.Start;
 			float bb = Program.CurrentRoute.CurrentFog.End;
 
-			if (aa < bb & aa < BackgroundHandle.BackgroundImageDistance)
+			if (aa < bb & aa < Program.CurrentRoute.CurrentBackground.BackgroundImageDistance)
 			{
 				OptionFog = true;
 				Fog.Start = aa;

@@ -83,12 +83,6 @@
     <Compile Include="Graphics\Camera.RestrictionModes.cs" />
     <Compile Include="Graphics\Colors.cs">
     </Compile>
-    <Compile Include="Graphics\FrameBufferObject.cs" />
-    <Compile Include="Graphics\IndexBufferObject.cs" />
-    <Compile Include="Graphics\LibRenderVertex.cs" />
-    <Compile Include="Graphics\ShaderLayout.cs" />
-    <Compile Include="Graphics\VertexArrayObject.cs" />
-    <Compile Include="Graphics\VertexBufferObject.cs" />
     <Compile Include="Interface\Input\InputDevice.cs" />
     <Compile Include="Interface\Logging\LogMessage.cs" />
     <Compile Include="Interface\Logging\LogMessage.MessageType.cs" />

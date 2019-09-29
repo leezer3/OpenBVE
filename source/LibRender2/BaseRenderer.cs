@@ -690,8 +690,8 @@ namespace LibRender2
 
 			VertexTemplate[] vertices = State.Prototype.Mesh.Vertices;
 			MeshMaterial material = State.Prototype.Mesh.Materials[Face.Material];
-			VertexArrayObject VAO = State.Prototype.Mesh.VAO;
-			VertexArrayObject NormalsVAO = State.Prototype.Mesh.NormalsVAO;
+			VertexArrayObject VAO = (VertexArrayObject)State.Prototype.Mesh.VAO;
+			VertexArrayObject NormalsVAO = (VertexArrayObject)State.Prototype.Mesh.NormalsVAO;
 
 			if (!OptionBackFaceCulling || (Face.Flags & MeshFace.Face2Mask) != 0)
 			{

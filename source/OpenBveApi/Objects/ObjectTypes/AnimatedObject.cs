@@ -775,7 +775,7 @@ namespace OpenBveApi.Objects
 			// update VAO for led
 			if (led)
 			{
-				internalObject.Prototype.Mesh.CreateVAO(true);
+				//internalObject.Prototype.Mesh.CreateVAO(true);
 			}
 
 			// update state

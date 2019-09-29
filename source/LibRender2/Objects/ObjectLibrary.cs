@@ -87,7 +87,7 @@ namespace LibRender2.Objects
 
 			if (State.Prototype.Mesh.VAO == null)
 			{
-				State.Prototype.Mesh.CreateVAO(State.Prototype.Dynamic);
+				VAOExtensions.CreateVAO(ref State.Prototype.Mesh, State.Prototype.Dynamic);
 			}
 
 			if (!result)

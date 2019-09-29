@@ -213,7 +213,7 @@ namespace OpenBve.Graphics
 			{
 				case ViewportMode.Scenery:
 					BackgroundObject b = Program.CurrentRoute.CurrentBackground as BackgroundObject;
-					double cd = b != null ? Math.Max(BackgroundHandle.BackgroundImageDistance, b.ClipDistance) : BackgroundHandle.BackgroundImageDistance;
+					double cd = b != null ? Math.Max(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance, b.ClipDistance) : Program.CurrentRoute.CurrentBackground.BackgroundImageDistance;
 					CurrentProjectionMatrix = Matrix4d.CreatePerspectiveFieldOfView(Camera.VerticalViewingAngle, Screen.AspectRatio, 0.5, cd);
 					break;
 				case ViewportMode.Cab:
@@ -308,7 +308,7 @@ namespace OpenBve.Graphics
 			float aa = Program.CurrentRoute.CurrentFog.Start;
 			float bb = Program.CurrentRoute.CurrentFog.End;
 
-			if (aa < bb & aa < BackgroundHandle.BackgroundImageDistance)
+			if (aa < bb & aa < Program.CurrentRoute.CurrentBackground.BackgroundImageDistance)
 			{
 				OptionFog = true;
 				Fog.Start = aa;

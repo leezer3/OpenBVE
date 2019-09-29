@@ -4,7 +4,7 @@
 	public abstract class BackgroundHandle
 	{
 		/// <summary>The user-selected viewing distance.</summary>
-		public static double BackgroundImageDistance;
+		public double BackgroundImageDistance = 600;
 
 		/// <summary>The current transition mode between backgrounds</summary>
 		public BackgroundTransitionMode Mode;

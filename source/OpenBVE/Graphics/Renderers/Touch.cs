@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using LibRender2;
 using LibRender2.Shaders;
-using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
@@ -125,7 +125,7 @@ namespace OpenBve.Graphics.Renderers
 
 			if (state.Prototype.Mesh.VAO == null)
 			{
-				state.Prototype.Mesh.CreateVAO(state.Prototype.Dynamic);
+				VAOExtensions.CreateVAO(ref state.Prototype.Mesh, state.Prototype.Dynamic);
 			}
 
 			foreach (MeshFace face in state.Prototype.Mesh.Faces)

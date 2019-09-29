@@ -1,8 +1,9 @@
 ﻿using System;
+using OpenBveApi.Graphics;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
-namespace OpenBveApi.Graphics
+namespace LibRender2
 {
 	/// <summary>
 	/// Class that represents an OpenGL/OpenTK vertex buffer object 
