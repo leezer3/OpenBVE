@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{27134980-4415-4375-A564-40A9014DFA5F}</ProjectGuid>
@@ -84,6 +84,7 @@
     <Compile Include="Graphics\Colors.cs">
     </Compile>
     <Compile Include="Interface\Input\InputDevice.cs" />
+    <Compile Include="Interface\Key.cs" />
     <Compile Include="Interface\Logging\LogMessage.cs" />
     <Compile Include="Interface\Logging\LogMessage.MessageType.cs" />
     <Compile Include="Interface\Time.cs" />

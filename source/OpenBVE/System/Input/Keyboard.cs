@@ -28,7 +28,7 @@ namespace OpenBve
 			if (e.Alt) CurrentKeyboardModifier |= Interface.KeyboardModifier.Alt;
 			if (Game.CurrentInterface == Game.InterfaceType.Menu && Game.Menu.IsCustomizingControl())
 			{
-				Game.Menu.SetControlKbdCustomData(e.Key, CurrentKeyboardModifier);
+				Game.Menu.SetControlKbdCustomData((OpenBveApi.Input.Key)e.Key, CurrentKeyboardModifier);
 				return;
 			}
 			//Traverse the controls array
@@ -40,7 +40,7 @@ namespace OpenBve
 					//Compare the current and previous keyboard states
 					//Only process if they are different
 					if (!Enum.IsDefined(typeof(Key), Interface.CurrentControls[i].Key)) continue;
-					if (e.Key == Interface.CurrentControls[i].Key & Interface.CurrentControls[i].Modifier == CurrentKeyboardModifier)
+					if ((OpenBveApi.Input.Key)e.Key == Interface.CurrentControls[i].Key & Interface.CurrentControls[i].Modifier == CurrentKeyboardModifier)
 					{
 
 						Interface.CurrentControls[i].AnalogState = 1.0;
@@ -93,7 +93,7 @@ namespace OpenBve
 					//Compare the current and previous keyboard states
 					//Only process if they are different
 					if (!Enum.IsDefined(typeof(Key), Interface.CurrentControls[i].Key)) continue;
-					if (e.Key == Interface.CurrentControls[i].Key & Interface.CurrentControls[i].AnalogState == 1.0 & Interface.CurrentControls[i].DigitalState > Interface.DigitalControlState.Released)
+					if ((OpenBveApi.Input.Key)e.Key == Interface.CurrentControls[i].Key & Interface.CurrentControls[i].AnalogState == 1.0 & Interface.CurrentControls[i].DigitalState > Interface.DigitalControlState.Released)
 					{
 						Interface.CurrentControls[i].AnalogState = 0.0;
 						Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Released;
