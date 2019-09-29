@@ -2,9 +2,8 @@
 using System.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
+using OpenBveApi.Math;
 using OpenBveApi.Textures;
-using OpenTK;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenBveApi.Routes
@@ -79,8 +78,8 @@ namespace OpenBveApi.Routes
 			}
 
 			const int n = 32;
-			Vector3[] bottom = new Vector3[n];
-			Vector3[] top = new Vector3[n];
+			Vector3f[] bottom = new Vector3f[n];
+			Vector3f[] top = new Vector3f[n];
 			double angleValue = 2.61799387799149 - 3.14159265358979 / n;
 			const double angleIncrement = 6.28318530717958 / n;
 
@@ -93,8 +92,8 @@ namespace OpenBveApi.Routes
 			{
 				float x = (float)(BackgroundImageDistance * System.Math.Cos(angleValue));
 				float z = (float)(BackgroundImageDistance * System.Math.Sin(angleValue));
-				bottom[i] = new Vector3(x, y0, -z);
-				top[i] = new Vector3(x, y1, -z);
+				bottom[i] = new Vector3f(x, y0, -z);
+				top[i] = new Vector3f(x, y1, -z);
 				angleValue += angleIncrement;
 			}
 
@@ -114,28 +113,28 @@ namespace OpenBveApi.Routes
 				vertexData.Add(new LibRenderVertex
 				{
 					Position = top[i],
-					UV = new Vector2(textureX, 0.005f),
+					UV = new Vector2f(textureX, 0.005f),
 					Color = Color128.White
 				});
 
 				vertexData.Add(new LibRenderVertex
 				{
 					Position = bottom[i],
-					UV = new Vector2(textureX, 0.995f),
+					UV = new Vector2f(textureX, 0.995f),
 					Color = Color128.White
 				});
 
 				vertexData.Add(new LibRenderVertex
 				{
 					Position = bottom[j],
-					UV = new Vector2(textureX + textureIncrement, 0.995f),
+					UV = new Vector2f(textureX + textureIncrement, 0.995f),
 					Color = Color128.White
 				});
 
 				vertexData.Add(new LibRenderVertex
 				{
 					Position = top[j],
-					UV = new Vector2(textureX + textureIncrement, 0.005f),
+					UV = new Vector2f(textureX + textureIncrement, 0.005f),
 					Color = Color128.White
 				});
 
@@ -144,8 +143,8 @@ namespace OpenBveApi.Routes
 				// top cap
 				vertexData.Add(new LibRenderVertex
 				{
-					Position = new Vector3(0.0f, top[i].Y, 0.0f),
-					UV = new Vector2(textureX + 0.5f * textureIncrement, 0.1f),
+					Position = new Vector3f(0.0f, top[i].Y, 0.0f),
+					UV = new Vector2f(textureX + 0.5f * textureIncrement, 0.1f),
 					Color = Color128.White
 				});
 
@@ -154,8 +153,8 @@ namespace OpenBveApi.Routes
 				// bottom cap
 				vertexData.Add(new LibRenderVertex
 				{
-					Position = new Vector3(0.0f, bottom[i].Y, 0.0f),
-					UV = new Vector2(textureX + 0.5f * textureIncrement, 0.9f),
+					Position = new Vector3f(0.0f, bottom[i].Y, 0.0f),
+					UV = new Vector2f(textureX + 0.5f * textureIncrement, 0.9f),
 					Color = Color128.White
 				});
 

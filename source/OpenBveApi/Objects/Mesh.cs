@@ -143,9 +143,9 @@ namespace OpenBveApi.Objects
 				{
 					var data = new LibRenderVertex
 					{
-						Position = new OpenTK.Vector3((float)Vertices[vertex.Index].Coordinates.X, (float)Vertices[vertex.Index].Coordinates.Y, (float)-Vertices[vertex.Index].Coordinates.Z),
-						Normal = new OpenTK.Vector3((float)vertex.Normal.X, (float)vertex.Normal.Y, (float)-vertex.Normal.Z),
-						UV = new OpenTK.Vector2((float)Vertices[vertex.Index].TextureCoordinates.X, (float)Vertices[vertex.Index].TextureCoordinates.Y)
+						Position = new Vector3f((float)Vertices[vertex.Index].Coordinates.X, (float)Vertices[vertex.Index].Coordinates.Y, (float)-Vertices[vertex.Index].Coordinates.Z),
+						Normal = new Vector3f((float)vertex.Normal.X, (float)vertex.Normal.Y, (float)-vertex.Normal.Z),
+						UV = new Vector2f((float)Vertices[vertex.Index].TextureCoordinates.X, (float)Vertices[vertex.Index].TextureCoordinates.Y)
 					};
 
 					var coloredVertex = Vertices[vertex.Index] as ColoredVertex;

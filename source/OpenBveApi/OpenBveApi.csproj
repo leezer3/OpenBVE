@@ -96,7 +96,9 @@
     <Compile Include="Interface\Translations\Language.cs" />
     <Compile Include="Math\Matrix4.cs" />
     <Compile Include="Math\Quaternion.cs" />
-    <Compile Include="Math\Vector4.cs" />
+    <Compile Include="Math\Vectors\Vector2f.cs" />
+    <Compile Include="Math\Vectors\Vector3f.cs" />
+    <Compile Include="Math\Vectors\Vector4.cs" />
     <Compile Include="Objects\Glow.cs" />
     <Compile Include="Objects\Helpers\Material.cs" />
     <Compile Include="Objects\Helpers\MeshBuilder.cs" />
@@ -188,8 +190,8 @@
     <Compile Include="Textures\Textures.TextureParameters.cs" />
     <Compile Include="Textures\Textures.TransparencyType.cs" />
     <Compile Include="World\Transformations.cs" />
-    <Compile Include="Math\Vector2.cs" />
-    <Compile Include="Math\Vector3.cs" />
+    <Compile Include="Math\Vectors\Vector2.cs" />
+    <Compile Include="Math\Vectors\Vector3.cs" />
     <Compile Include="World\Vertex.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -201,6 +203,7 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">
 		  echo Resoloving dependencies

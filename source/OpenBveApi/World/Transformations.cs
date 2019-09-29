@@ -108,6 +108,17 @@ namespace OpenBveApi.World
 			Z = firstVector;
 		}
 
+		/// <summary>Creates a new transformation, based upon three other vectors</summary>
+		/// <param name="firstVector">The first vector</param>
+		/// <param name="secondVector">The second vector</param>
+		/// <param name="thirdVector">The third vector</param>
+		public Transformation(Vector3f firstVector, Vector3f secondVector, Vector3f thirdVector)
+		{
+			X = thirdVector;
+			Y = secondVector;
+			Z = firstVector;
+		}
+
 		public static explicit operator OpenTK.Matrix4d(Transformation t)
 		{
 			OpenTK.Quaterniond rot1 = Quaternion.RotationBetweenVectors(OpenTK.Vector3d.UnitZ * -1.0, new OpenTK.Vector3d(t.Z.X, t.Z.Y, -t.Z.Z).Normalized());
