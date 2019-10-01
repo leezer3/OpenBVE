@@ -842,7 +842,7 @@ namespace LibRender2
 				{
 					alphaFactor = 1.0f;
 				}
-				Shader.SetOpacity(alphaFactor);
+				Shader.SetOpacity(inv255 * material.Color.A * alphaFactor);
 
 				// render polygon
 				VAO.Bind();
