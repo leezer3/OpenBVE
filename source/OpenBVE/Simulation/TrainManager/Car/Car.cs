@@ -623,6 +623,10 @@ namespace OpenBve
 					updatefunctions = true;
 				}
 				CarSections[SectionIndex].Groups[GroupIndex].Elements[ElementIndex].Update(true, baseTrain, Index, CurrentCarSection, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, EnableDamping, false, CarSections[SectionIndex].Groups[GroupIndex].Overlay ? Program.Renderer.Camera : null);
+				if (CarSections[SectionIndex].Groups[GroupIndex].Elements[ElementIndex].UpdateVAO)
+				{
+					LibRender2.VAOExtensions.CreateVAO(ref CarSections[SectionIndex].Groups[GroupIndex].Elements[ElementIndex].internalObject.Prototype.Mesh, true);
+				}
 			}
 
 			private void UpdateCarSectionTouchElement(int SectionIndex, int GroupIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
@@ -664,6 +668,10 @@ namespace OpenBve
 					updatefunctions = true;
 				}
 				CarSections[SectionIndex].Groups[GroupIndex].TouchElements[ElementIndex].Element.Update(true, baseTrain, Index, CurrentCarSection, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, EnableDamping, true, CarSections[SectionIndex].Groups[GroupIndex].Overlay ? Program.Renderer.Camera : null);
+				if (CarSections[SectionIndex].Groups[GroupIndex].TouchElements[ElementIndex].Element.UpdateVAO)
+				{
+					LibRender2.VAOExtensions.CreateVAO(ref CarSections[SectionIndex].Groups[GroupIndex].TouchElements[ElementIndex].Element.internalObject.Prototype.Mesh, true);
+				}
 			}
 
 			internal void UpdateTopplingCantAndSpring(double TimeElapsed)

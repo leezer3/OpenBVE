@@ -108,6 +108,8 @@ namespace OpenBveApi.Objects
 		/// <summary>Whether this object uses the Timetable texture</summary>
 		public bool isTimeTableObject;
 
+		public bool UpdateVAO;
+
 		/// <summary>Creates a new animated object</summary>
 		public AnimatedObject(HostInterface host)
 		{
@@ -772,11 +774,8 @@ namespace OpenBveApi.Objects
 			// update prototype
 			internalObject.Prototype = States[s].Prototype;
 
-			// update VAO for led
-			if (led)
-			{
-				//internalObject.Prototype.Mesh.CreateVAO(true);
-			}
+			// update VAO for led if required
+			UpdateVAO = led;
 
 			// update state
 			// rotate
