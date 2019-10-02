@@ -7,12 +7,15 @@ using System.Linq;
 using System.Text;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
+using OpenBveApi.Math;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Dialogs;
 using TrainEditor2.Models.Others;
 using TrainEditor2.Systems;
+using Vector2 = OpenBveApi.Math.Vector2;
+using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace TrainEditor2.Models.Trains
 {
@@ -999,10 +1002,10 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		private void DrawPolyLine(Matrix4d proj, Matrix4d look, Vector2d p1, Vector2d p2, double lineWidth, Color color)
+		private void DrawPolyLine(Matrix4D proj, Matrix4D look, Vector2 p1, Vector2 p2, double lineWidth, Color color)
 		{
-			Matrix4d inv = Matrix4d.Invert(look) * Matrix4d.Invert(proj);
-			Vector2d line = new Vector2d((inv.M11 + inv.M12) * lineWidth / 2.0, (inv.M21 + inv.M22) * lineWidth / 2.0) / 100.0;
+			Matrix4D inv = Matrix4D.Invert(look) * Matrix4D.Invert(proj);
+			Vector2 line = new Vector2((inv.M11 + inv.M12) * lineWidth / 2.0, (inv.M21 + inv.M22) * lineWidth / 2.0) / 100.0;
 
 			double rad = Math.Atan2(p2.Y - p1.Y, p2.X - p1.X);
 
@@ -1027,29 +1030,29 @@ namespace TrainEditor2.Models.Trains
 			GL.End();
 		}
 
-		private void DrawPolyDashLine(Matrix4d proj, Matrix4d look, Box2d box, double lineWidth, double dashLength, Color color)
+		private void DrawPolyDashLine(Matrix4D proj, Matrix4D look, Box2d box, double lineWidth, double dashLength, Color color)
 		{
-			Matrix4d inv = Matrix4d.Invert(look) * Matrix4d.Invert(proj);
-			Vector2d dash = new Vector2d((inv.M11 + inv.M12) * dashLength, (inv.M21 + inv.M22) * dashLength) / 100.0;
+			Matrix4D inv = Matrix4D.Invert(look) * Matrix4D.Invert(proj);
+			Vector2 dash = new Vector2((inv.M11 + inv.M12) * dashLength, (inv.M21 + inv.M22) * dashLength) / 100.0;
 
 			for (double i = box.Left; i + dash.X < box.Right; i += dash.X * 2)
 			{
-				DrawPolyLine(proj, look, new Vector2d(i, box.Bottom), new Vector2d(i + dash.X, box.Bottom), lineWidth, color);
+				DrawPolyLine(proj, look, new Vector2(i, box.Bottom), new Vector2(i + dash.X, box.Bottom), lineWidth, color);
 			}
 
 			for (double i = box.Bottom; i + dash.Y < box.Top; i += dash.Y * 2)
 			{
-				DrawPolyLine(proj, look, new Vector2d(box.Right, i), new Vector2d(box.Right, i + dash.Y), lineWidth, color);
+				DrawPolyLine(proj, look, new Vector2(box.Right, i), new Vector2(box.Right, i + dash.Y), lineWidth, color);
 			}
 
 			for (double i = box.Left; i + dash.X < box.Right; i += dash.X * 2)
 			{
-				DrawPolyLine(proj, look, new Vector2d(i, box.Top), new Vector2d(i + dash.X, box.Top), lineWidth, color);
+				DrawPolyLine(proj, look, new Vector2(i, box.Top), new Vector2(i + dash.X, box.Top), lineWidth, color);
 			}
 
 			for (double i = box.Bottom; i + dash.Y < box.Top; i += dash.Y * 2)
 			{
-				DrawPolyLine(proj, look, new Vector2d(box.Left, i), new Vector2d(box.Left, i + dash.Y), lineWidth, color);
+				DrawPolyLine(proj, look, new Vector2(box.Left, i), new Vector2(box.Left, i + dash.Y), lineWidth, color);
 			}
 		}
 
@@ -1067,11 +1070,11 @@ namespace TrainEditor2.Models.Trains
 			GL.ClearColor(Color.Black);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-			Matrix4d projPitch = Matrix4d.CreateOrthographic(MaxVelocity - MinVelocity, MaxPitch - MinPitch, float.Epsilon, 1.0);
-			Matrix4d projVolume = Matrix4d.CreateOrthographic(MaxVelocity - MinVelocity, MaxVolume - MinVolume, float.Epsilon, 1.0);
-			Matrix4d projString = Matrix4d.CreateOrthographicOffCenter(0.0, GlControlWidth, GlControlHeight, 0.0, -1.0, 1.0);
-			Matrix4d lookPitch = Matrix4d.LookAt(new Vector3d((MinVelocity + MaxVelocity) / 2.0, (MinPitch + MaxPitch) / 2.0, float.Epsilon), new Vector3d((MinVelocity + MaxVelocity) / 2.0, (MinPitch + MaxPitch) / 2.0, 0.0), Vector3d.UnitY);
-			Matrix4d lookVolume = Matrix4d.LookAt(new Vector3d((MinVelocity + MaxVelocity) / 2.0, (MinVolume + MaxVolume) / 2.0, float.Epsilon), new Vector3d((MinVelocity + MaxVelocity) / 2.0, (MinVolume + MaxVolume) / 2.0, 0.0), Vector3d.UnitY);
+			Matrix4D projPitch = Matrix4D.CreateOrthographic(MaxVelocity - MinVelocity, MaxPitch - MinPitch, float.Epsilon, 1.0);
+			Matrix4D projVolume = Matrix4D.CreateOrthographic(MaxVelocity - MinVelocity, MaxVolume - MinVolume, float.Epsilon, 1.0);
+			Matrix4D projString = Matrix4D.CreateOrthographicOffCenter(0.0, GlControlWidth, GlControlHeight, 0.0, -1.0, 1.0);
+			Matrix4D lookPitch = Matrix4D.LookAt(new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinPitch + MaxPitch) / 2.0, float.Epsilon), new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinPitch + MaxPitch) / 2.0, 0.0), new Vector3(0,1,0));
+			Matrix4D lookVolume = Matrix4D.LookAt(new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinVolume + MaxVolume) / 2.0, float.Epsilon), new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinVolume + MaxVolume) / 2.0, 0.0), new Vector3(0,1,0));
 
 			// vertical grid
 			{
@@ -1093,7 +1096,7 @@ namespace TrainEditor2.Models.Trains
 				GL.End();
 
 				Program.Renderer.CurrentProjectionMatrix = projString;
-				Program.Renderer.CurrentViewMatrix = Matrix4d.Identity;
+				Program.Renderer.CurrentViewMatrix = Matrix4D.Identity;
 
 				for (double v = 0.0; v < MaxVelocity; v += 10.0)
 				{
@@ -1125,7 +1128,7 @@ namespace TrainEditor2.Models.Trains
 					GL.End();
 
 					Program.Renderer.CurrentProjectionMatrix = projString;
-					Program.Renderer.CurrentViewMatrix = Matrix4d.Identity;
+					Program.Renderer.CurrentViewMatrix = Matrix4D.Identity;
 
 					for (double p = 0.0; p < MaxPitch; p += 100.0)
 					{
@@ -1153,7 +1156,7 @@ namespace TrainEditor2.Models.Trains
 					GL.End();
 
 					Program.Renderer.CurrentProjectionMatrix = projString;
-					Program.Renderer.CurrentViewMatrix = Matrix4d.Identity;
+					Program.Renderer.CurrentViewMatrix = Matrix4D.Identity;
 
 					for (double v = 0.0; v < MaxVolume; v += 128.0)
 					{
@@ -1275,7 +1278,7 @@ namespace TrainEditor2.Models.Trains
 							c = Color.FromArgb((int)Math.Round(Color.Silver.R * 0.6), (int)Math.Round(Color.Silver.G * 0.6), (int)Math.Round(Color.Silver.B * 0.6));
 						}
 
-						DrawPolyLine(projPitch, lookPitch, new Vector2d(left.X, left.Y), new Vector2d(right.X, right.Y), 1.5, c);
+						DrawPolyLine(projPitch, lookPitch, new Vector2(left.X, left.Y), new Vector2(right.X, right.Y), 1.5, c);
 					}
 
 					foreach (Area area in SelectedTrack.SoundIndices)
@@ -1288,8 +1291,8 @@ namespace TrainEditor2.Models.Trains
 						double hue = Utilities.HueFactor * area.Index;
 						hue -= Math.Floor(hue);
 
-						Vector2d p1 = new Vector2d(left.X < area.LeftX ? area.LeftX : left.X, left.X < area.LeftX ? f(area.LeftX) : left.Y);
-						Vector2d p2 = new Vector2d(right.X > area.RightX ? area.RightX : right.X, right.X > area.RightX ? f(area.RightX) : right.Y);
+						Vector2 p1 = new Vector2(left.X < area.LeftX ? area.LeftX : left.X, left.X < area.LeftX ? f(area.LeftX) : left.Y);
+						Vector2 p2 = new Vector2(right.X > area.RightX ? area.RightX : right.X, right.X > area.RightX ? f(area.RightX) : right.Y);
 
 						DrawPolyLine(projPitch, lookPitch, p1, p2, 1.5, Utilities.GetColor(hue, line.Selected));
 					}
@@ -1323,7 +1326,7 @@ namespace TrainEditor2.Models.Trains
 							c = Color.FromArgb((int)Math.Round(Color.Silver.R * 0.6), (int)Math.Round(Color.Silver.G * 0.6), (int)Math.Round(Color.Silver.B * 0.6));
 						}
 
-						DrawPolyLine(projVolume, lookVolume, new Vector2d(left.X, left.Y), new Vector2d(right.X, right.Y), 1.0, c);
+						DrawPolyLine(projVolume, lookVolume, new Vector2(left.X, left.Y), new Vector2(right.X, right.Y), 1.0, c);
 					}
 
 					foreach (Area area in SelectedTrack.SoundIndices)
@@ -1336,8 +1339,8 @@ namespace TrainEditor2.Models.Trains
 						double hue = Utilities.HueFactor * area.Index;
 						hue -= Math.Floor(hue);
 
-						Vector2d p1 = new Vector2d(left.X < area.LeftX ? area.LeftX : left.X, left.X < area.LeftX ? f(area.LeftX) : left.Y);
-						Vector2d p2 = new Vector2d(right.X > area.RightX ? area.RightX : right.X, right.X > area.RightX ? f(area.RightX) : right.Y);
+						Vector2 p1 = new Vector2(left.X < area.LeftX ? area.LeftX : left.X, left.X < area.LeftX ? f(area.LeftX) : left.Y);
+						Vector2 p2 = new Vector2(right.X > area.RightX ? area.RightX : right.X, right.X > area.RightX ? f(area.RightX) : right.Y);
 
 						DrawPolyLine(projVolume, lookVolume, p1, p2, 1.0, Utilities.GetColor(hue, line.Selected));
 					}

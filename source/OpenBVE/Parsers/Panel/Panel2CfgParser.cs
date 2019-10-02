@@ -1536,7 +1536,7 @@ namespace OpenBve {
 				Array.Resize(ref Group.Elements[n].States, j + 1);
 				Group.Elements[n].States[j] = new ObjectState
 				{
-					Translation = OpenTK.Matrix4d.CreateTranslation(o.X, o.Y, -o.Z),
+					Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z),
 					Prototype = Object
 				};
 				return n;
@@ -1545,7 +1545,7 @@ namespace OpenBve {
 				Array.Resize(ref Group.Elements, n + 1);
 				Group.Elements[n] = new AnimatedObject(Program.CurrentHost);
 				Group.Elements[n].States = new[] { new ObjectState() };
-				Group.Elements[n].States[0].Translation = OpenTK.Matrix4d.CreateTranslation(o.X, o.Y, -o.Z);
+				Group.Elements[n].States[0].Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z);
 				Group.Elements[n].States[0].Prototype = Object;
 				Group.Elements[n].CurrentState = 0;
 				Group.Elements[n].internalObject = new ObjectState { Prototype = Object };

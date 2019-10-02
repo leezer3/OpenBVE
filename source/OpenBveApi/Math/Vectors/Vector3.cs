@@ -335,12 +335,6 @@ namespace OpenBveApi.Math {
 			return false;
 		}
 
-		public static explicit operator OpenTK.Vector3d(Vector3 v)
-		{
-			return new OpenTK.Vector3d(v.X, v.Y, v.Z);
-		}
-		
-		
 		// --- instance functions ---
 		
 		/// <summary>Normalizes the vector.</summary>
@@ -635,6 +629,34 @@ namespace OpenBveApi.Math {
 			X = x;
 			Y = y;
 			Z = z;
+		}
+
+		/// <summary>Transforms a vector by a quaternion rotation.</summary>
+		/// <param name="vec">The vector to transform.</param>
+		/// <param name="quat">The quaternion to rotate the vector by.</param>
+		/// <returns>The result of the operation.</returns>
+		public static Vector3 Transform(Vector3 vec, Quaternion quat)
+		{
+			Vector3 result;
+			Transform(ref vec, ref quat, out result);
+			return result;
+		}
+
+		/// <summary>Transforms a vector by a quaternion rotation.</summary>
+		/// <param name="vec">The vector to transform.</param>
+		/// <param name="quat">The quaternion to rotate the vector by.</param>
+		/// <param name="result">The result of the operation.</param>
+		public static void Transform(ref Vector3 vec, ref Quaternion quat, out Vector3 result)
+		{
+			// Since vec.W == 0, we can optimize quat * vec * quat^-1 as follows:
+			// vec + 2.0 * cross(quat.xyz, cross(quat.xyz, vec) + quat.w * vec)
+			Vector3 xyz = quat.Xyz, temp, temp2;
+			temp = Cross(xyz, vec);
+			temp2 = vec * quat.W;
+			temp += temp2;
+			temp2 = Cross(xyz, temp);
+			temp2 *= 2f;
+			result = vec + temp2;
 		}
 
 		/// <summary>Determines whether this is a zero (0,0,0) vector</summary>

@@ -226,7 +226,7 @@ namespace LibRender2.Primitives
 
 			// matrix
 			renderer.DefaultShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
-			renderer.DefaultShader.SetCurrentModelViewMatrix(Matrix4d.Scale((Vector3d)Size) * (Matrix4d)new Transformation(Direction, Up, Side) * Matrix4d.CreateTranslation(Position.X - Camera.X, Position.Y - Camera.Y, -Position.Z + Camera.Z) * renderer.CurrentViewMatrix);
+			renderer.DefaultShader.SetCurrentModelViewMatrix(Matrix4D.Scale((OpenBveApi.Math.Vector3)Size) * (Matrix4D)new Transformation(Direction, Up, Side) * Matrix4D.CreateTranslation(Position.X - Camera.X, Position.Y - Camera.Y, -Position.Z + Camera.Z) * renderer.CurrentViewMatrix);
 
 			// texture
 			if (TextureIndex != null && renderer.currentHost.LoadTexture(TextureIndex, OpenGlTextureWrapMode.ClampClamp))

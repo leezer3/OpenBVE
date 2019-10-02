@@ -7,7 +7,7 @@
 		public readonly StaticBackground[] StaticBackgrounds;
 		/// <summary>The current background in use</summary>
 		public int CurrentBackgroundIndex = 0;
-
+		/// <summary>The previous background in use</summary>
 		public int PreviousBackgroundIndex = 0;
 
 		/// <summary>Creates a new dynamic background</summary>

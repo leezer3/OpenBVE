@@ -4,11 +4,13 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using LibRender2;
+using LibRender2.Objects;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
@@ -17,6 +19,7 @@ using OpenBveApi.World;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using RouteManager2.Events;
+using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve
 {
@@ -257,13 +260,7 @@ namespace OpenBve
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
 			// set up camera
-			double dx = Camera.AbsoluteDirection.X;
-			double dy = Camera.AbsoluteDirection.Y;
-			double dz = Camera.AbsoluteDirection.Z;
-			double ux = Camera.AbsoluteUp.X;
-			double uy = Camera.AbsoluteUp.Y;
-			double uz = Camera.AbsoluteUp.Z;
-			CurrentViewMatrix = Matrix4d.LookAt(0.0, 0.0, 0.0, dx, dy, -dz, ux, uy, -uz);
+			CurrentViewMatrix = Matrix4D.LookAt(Vector3.Zero, new Vector3(Camera.AbsoluteDirection.X, Camera.AbsoluteDirection.Y, -Camera.AbsoluteDirection.Z), new Vector3(Camera.AbsoluteUp.X, Camera.AbsoluteUp.Y, -Camera.AbsoluteUp.Z));
 			GL.Light(LightName.Light0, LightParameter.Position, new[] { (float)Lighting.OptionLightPosition.X, (float)Lighting.OptionLightPosition.Y, (float)-Lighting.OptionLightPosition.Z, 0.0f });
 
 			// fog
@@ -607,9 +604,9 @@ namespace OpenBve
 			//Initialize openGL
 			SetBlendFunc();
 			PushMatrix(MatrixMode.Projection);
-			CurrentProjectionMatrix = Matrix4d.CreateOrthographicOffCenter(0.0, Screen.Width, Screen.Height, 0.0, -1.0, 1.0);
+			Matrix4D.CreateOrthographicOffCenter(0.0f, Screen.Width, Screen.Height, 0.0f, -1.0f, 1.0f, out CurrentProjectionMatrix);
 			PushMatrix(MatrixMode.Modelview);
-			CurrentViewMatrix = Matrix4d.Identity;
+			CurrentViewMatrix = Matrix4D.Identity;
 
 			CultureInfo culture = CultureInfo.InvariantCulture;
 

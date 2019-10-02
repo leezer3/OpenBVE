@@ -1209,7 +1209,7 @@ namespace OpenBve {
 				Array.Resize(ref Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States, j + 1);
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[j] = new ObjectState
 				{
-					Translation = OpenTK.Matrix4d.CreateTranslation(o.X, o.Y, -o.Z),
+					Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z),
 					Prototype = Object
 				};
 				return n;
@@ -1218,7 +1218,7 @@ namespace OpenBve {
 				Array.Resize(ref Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements, n + 1);
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n] = new AnimatedObject(Program.CurrentHost);
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States = new[] { new ObjectState() };
-				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[0].Translation = OpenTK.Matrix4d.CreateTranslation(o.X, o.Y, -o.Z);
+				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[0].Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z);
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[0].Prototype = Object;
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].CurrentState = 0;
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].internalObject = new ObjectState { Prototype = Object };

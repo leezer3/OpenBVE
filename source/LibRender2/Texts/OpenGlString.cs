@@ -100,11 +100,20 @@ namespace LibRender2.Texts
 
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.PushMatrix();
-			GL.LoadMatrix(ref renderer.CurrentProjectionMatrix);
-
-			GL.MatrixMode(MatrixMode.Modelview);
-			GL.PushMatrix();
-			GL.LoadMatrix(ref renderer.CurrentViewMatrix);
+			unsafe
+			{
+				fixed (double* matrixPointer = &renderer.CurrentProjectionMatrix.Row0.X)
+				{
+					GL.LoadMatrix(matrixPointer);
+				}
+				GL.MatrixMode(MatrixMode.Modelview);
+				GL.PushMatrix();
+				fixed (double* matrixPointer = &renderer.CurrentViewMatrix.Row0.X)
+				{
+					GL.LoadMatrix(matrixPointer);
+				}
+			}
+			
 
 			for (int i = 0; i < text.Length; i++)
 			{

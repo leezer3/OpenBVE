@@ -1,10 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using OpenBveApi.Colors;
-using OpenBveApi.Graphics;
+﻿using OpenBveApi.Colors;
 using OpenBveApi.Math;
-using OpenTK.Graphics;
-using OpenTK.Graphics.OpenGL;
 
 namespace OpenBveApi.Objects
 {

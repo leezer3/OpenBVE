@@ -60,17 +60,7 @@ namespace OpenBveApi.Math {
 		{
 			return new Vector3(v.X, v.Y, v.Z);
 		}
-
-		public static implicit operator OpenTK.Vector3(Vector3f v)
-		{
-			return new OpenTK.Vector3(v.X, v.Y, v.Z);
-		}
-
-		public static implicit operator OpenTK.Vector3d(Vector3f v)
-		{
-			return new OpenTK.Vector3d(v.X, v.Y, v.Z);
-		}
-
+		
 		/// <summary>Parses a Vector3f stored in a string</summary>
 		/// <param name="stringToParse">The string to parse</param>
 		/// <param name="separator">The separator character</param>

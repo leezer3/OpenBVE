@@ -17,7 +17,32 @@ namespace OpenBveApi.Math
 		/// <summary>The W-component of the vector</summary>
 		public double W;
 
-		/// <summary>Creates a new three-dimensional vector.</summary>
+		/// <summary>A Vector3 representing the X Y and Z components</summary>
+		public Vector3 Xyz
+		{
+			get
+			{
+				return new Vector3(X, Y, Z);
+			}
+			set
+			{
+				X = value.X;
+				Y = value.Y;
+				Z = value.Z;
+			}
+		}
+
+		/// <summary>Creates a new four-dimensional vector.</summary>
+		/// <param name="Xyz">A Vector3 representing the X Y and Z components.</param>
+		/// <param name="w">The w-component</param>
+		public Vector4(Vector3 Xyz, double w) {
+			this.X = Xyz.X;
+			this.Y = Xyz.Y;
+			this.Z = Xyz.Z;
+			this.W = w;
+		}
+
+		/// <summary>Creates a new four-dimensional vector.</summary>
 		/// <param name="x">The x-coordinate.</param>
 		/// <param name="y">The y-coordinate.</param>
 		/// <param name="z">The z-coordinate.</param>
@@ -284,6 +309,30 @@ namespace OpenBveApi.Math
 			if (a.Z != b.Z) return true;
 			if (a.W != b.W) return true;
 			return false;
+		}
+
+		/// <summary>Transforms a Vector by the given Matrix</summary>
+		/// <param name="vec">The vector to transform</param>
+		/// <param name="mat">The desired transformation</param>
+		/// <returns>The transformed vector</returns>
+		public static Vector4 Transform(Vector4 vec, Matrix4D mat)
+		{
+			Vector4 result;
+			Transform(ref vec, ref mat, out result);
+			return result;
+		}
+
+		/// <summary>Transforms a Vector by the given Matrix</summary>
+		/// <param name="vec">The vector to transform</param>
+		/// <param name="mat">The desired transformation</param>
+		/// <param name="result">The transformed vector</param>
+		public static void Transform(ref Vector4 vec, ref Matrix4D mat, out Vector4 result)
+		{
+			result = new Vector4(
+				vec.X * mat.Row0.X + vec.Y * mat.Row1.X + vec.Z * mat.Row2.X + vec.W * mat.Row3.X,
+				vec.X * mat.Row0.Y + vec.Y * mat.Row1.Y + vec.Z * mat.Row2.Y + vec.W * mat.Row3.Y,
+				vec.X * mat.Row0.Z + vec.Y * mat.Row1.Z + vec.Z * mat.Row2.Z + vec.W * mat.Row3.Z,
+				vec.X * mat.Row0.W + vec.Y * mat.Row1.W + vec.Z * mat.Row2.W + vec.W * mat.Row3.W);
 		}
 
 		/// <summary>Represents a null vector</summary>

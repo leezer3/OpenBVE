@@ -60,12 +60,12 @@ namespace OpenBveApi.Objects
 						{
 							if (free[i])
 							{
-								OpenTK.Matrix4d mat = OpenTK.Matrix4d.Identity;
+								Matrix4D mat = Matrix4D.Identity;
 								mat *= Objects[i].States[0].Translation;
 								mat *= Objects[i].States[0].Rotate;
 								double zOffset = mat.ExtractTranslation().Z * -1.0;
-								mat *= (OpenTK.Matrix4d)new Transformation(BaseTransformation, AuxTransformation);
-								OpenTK.Vector4d p = OpenTK.Vector4d.Transform(new OpenTK.Vector4d(Position.X, Position.Y, -Position.Z, 1.0), mat);
+								mat *= (Matrix4D)new Transformation(BaseTransformation, AuxTransformation);
+								Vector4 p = Vector4.Transform(new Vector4(Position.X, Position.Y, -Position.Z, 1.0), mat);
 								currentHost.CreateStaticObject(Objects[i].States[0].Prototype, new Vector3(p.X, p.Y, -p.Z), BaseTransformation, AuxTransformation, AccurateObjectDisposal, zOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 							}
 							else

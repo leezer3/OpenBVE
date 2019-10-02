@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using LibRender2;
+using LibRender2.Objects;
 using LibRender2.Shaders;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;

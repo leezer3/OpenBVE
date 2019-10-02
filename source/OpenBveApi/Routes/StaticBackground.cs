@@ -1,10 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using OpenBveApi.Colors;
-using OpenBveApi.Graphics;
-using OpenBveApi.Math;
-using OpenBveApi.Textures;
-using OpenTK.Graphics.OpenGL;
+﻿using OpenBveApi.Textures;
 
 namespace OpenBveApi.Routes
 {

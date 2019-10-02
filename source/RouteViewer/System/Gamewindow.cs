@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
+using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenTK;
 using OpenTK.Graphics;
@@ -156,9 +157,9 @@ namespace OpenBve
 			currentlyLoading = true;
 
 			Program.Renderer.PushMatrix(MatrixMode.Projection);
-			Program.Renderer.CurrentProjectionMatrix = Matrix4d.CreateOrthographicOffCenter(0.0, Program.Renderer.Screen.Width, Program.Renderer.Screen.Height, 0.0, -1.0, 1.0);
+			Matrix4D.CreateOrthographicOffCenter(0.0f, Program.Renderer.Screen.Width, Program.Renderer.Screen.Height, 0.0f, -1.0f, 1.0f, out Program.Renderer.CurrentProjectionMatrix);
 			Program.Renderer.PushMatrix(MatrixMode.Modelview);
-			Program.Renderer.CurrentViewMatrix = Matrix4d.Identity;
+			Program.Renderer.CurrentViewMatrix = Matrix4D.Identity;
 
 			while (!Loading.Complete && !Loading.Cancel)
 			{

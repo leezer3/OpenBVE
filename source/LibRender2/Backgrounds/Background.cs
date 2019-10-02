@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Objects;
+﻿using OpenBveApi.Math;
+using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenTK;
@@ -137,7 +138,7 @@ namespace LibRender2.Backgrounds
 
 				// matrix
 				renderer.DefaultShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
-				renderer.DefaultShader.SetCurrentModelViewMatrix(Matrix4d.Scale(scale) * renderer.CurrentViewMatrix);
+				renderer.DefaultShader.SetCurrentModelViewMatrix(Matrix4D.Scale(scale) * renderer.CurrentViewMatrix);
 
 				// fog
 				if (renderer.OptionFog)
