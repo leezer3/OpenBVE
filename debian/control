@@ -2,7 +2,7 @@ Source: openbve
 Priority: optional
 Maintainer: Christopher Lees <leezer3@gmail.com>
 Build-Depends: debhelper (>= 10.2.5~), cli-common-dev (>= 0.8~)
-Build-Depends-Indep: mono-devel, mono-xbuild
+Build-Depends-Indep: mono-devel, mono-xbuild, nuget
 Standards-Version: 4.3.0
 Homepage: https://openbve-project.net
 

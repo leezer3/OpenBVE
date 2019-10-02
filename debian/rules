@@ -8,8 +8,10 @@ DEBUG_CONFIGURATION=Release
 override_dh_auto_build:
 	# Get rid of any prior build result
 	rm -rf openbve
+	#Restore NuGet packages required for build
+	nuget restore OpenBVE.sln
 	#Build solution
-	xbuild /p:TargetFrameworkVersion="v4.5" OpenBVE.sln /p:Configuration=$(DEBUG_CONFIGURATION)
+	xbuild /p:TargetFrameworkVersion="v4.6.1" OpenBVE.sln /p:Configuration=$(DEBUG_CONFIGURATION)
 	#This is Windows only, so can be removed
 	rm bin_release/AtsPluginProxy.*
 	# As we reference this, it gets copied to this directory too
