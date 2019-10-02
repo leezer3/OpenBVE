@@ -66,13 +66,16 @@ namespace OpenBve.Graphics
 		internal int CreateStaticObject(UnifiedObject Prototype, OpenBveApi.Math.Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
 		{
 			StaticObject obj = Prototype as StaticObject;
-
 			if (obj == null)
 			{
 				Interface.AddMessage(MessageType.Error, false, "Attempted to use an animated object where only static objects are allowed.");
 				return -1;
 			}
-
+			if (obj.Mesh.Faces.Length == 0)
+			{
+				//Null object- Waste of time trying to calculate anything for these
+				return -1;
+			}
 			return base.CreateStaticObject(obj, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 		}
 

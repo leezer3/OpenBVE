@@ -79,6 +79,10 @@ namespace OpenBve
 			if (Prototype is StaticObject)
 			{
 				StaticObject s = (StaticObject)Prototype;
+				if (s.Mesh.Faces.Length == 0)
+				{
+					return;
+				}
 				CreateStaticObject(s, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 			}
 			else if (Prototype is AnimatedObjectCollection)
