@@ -1005,7 +1005,7 @@ namespace TrainEditor2.Models.Trains
 		private void DrawPolyLine(Matrix4D proj, Matrix4D look, Vector2 p1, Vector2 p2, double lineWidth, Color color)
 		{
 			Matrix4D inv = Matrix4D.Invert(look) * Matrix4D.Invert(proj);
-			Vector2 line = new Vector2((inv.M11 + inv.M12) * lineWidth / 2.0, (inv.M21 + inv.M22) * lineWidth / 2.0) / 100.0;
+			Vector2 line = new Vector2((inv.Row0.X + inv.Row0.Y) * lineWidth / 2.0, (inv.Row1.X + inv.Row1.Y) * lineWidth / 2.0) / 100.0;
 
 			double rad = Math.Atan2(p2.Y - p1.Y, p2.X - p1.X);
 
@@ -1033,7 +1033,7 @@ namespace TrainEditor2.Models.Trains
 		private void DrawPolyDashLine(Matrix4D proj, Matrix4D look, Box2d box, double lineWidth, double dashLength, Color color)
 		{
 			Matrix4D inv = Matrix4D.Invert(look) * Matrix4D.Invert(proj);
-			Vector2 dash = new Vector2((inv.M11 + inv.M12) * dashLength, (inv.M21 + inv.M22) * dashLength) / 100.0;
+			Vector2 dash = new Vector2((inv.Row0.X + inv.Row0.Y) * dashLength, (inv.Row1.X + inv.Row1.Y) * dashLength) / 100.0;
 
 			for (double i = box.Left; i + dash.X < box.Right; i += dash.X * 2)
 			{
@@ -1070,20 +1070,25 @@ namespace TrainEditor2.Models.Trains
 			GL.ClearColor(Color.Black);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-			Matrix4D projPitch = Matrix4D.CreateOrthographic(MaxVelocity - MinVelocity, MaxPitch - MinPitch, float.Epsilon, 1.0);
-			Matrix4D projVolume = Matrix4D.CreateOrthographic(MaxVelocity - MinVelocity, MaxVolume - MinVolume, float.Epsilon, 1.0);
-			Matrix4D projString = Matrix4D.CreateOrthographicOffCenter(0.0, GlControlWidth, GlControlHeight, 0.0, -1.0, 1.0);
+			Matrix4D projPitch, projVolume, projString;
+			Matrix4D.CreateOrthographic(MaxVelocity - MinVelocity, MaxPitch - MinPitch, float.Epsilon, 1.0, out projPitch);
+			Matrix4D.CreateOrthographic(MaxVelocity - MinVelocity, MaxVolume - MinVolume, float.Epsilon, 1.0, out projVolume);
+			Matrix4D.CreateOrthographicOffCenter(0.0, GlControlWidth, GlControlHeight, 0.0, -1.0, 1.0, out projString);
 			Matrix4D lookPitch = Matrix4D.LookAt(new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinPitch + MaxPitch) / 2.0, float.Epsilon), new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinPitch + MaxPitch) / 2.0, 0.0), new Vector3(0,1,0));
 			Matrix4D lookVolume = Matrix4D.LookAt(new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinVolume + MaxVolume) / 2.0, float.Epsilon), new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinVolume + MaxVolume) / 2.0, 0.0), new Vector3(0,1,0));
 
 			// vertical grid
 			{
-				GL.MatrixMode(MatrixMode.Projection);
-				GL.LoadMatrix(ref projPitch);
-
-				GL.MatrixMode(MatrixMode.Modelview);
-				GL.LoadMatrix(ref lookPitch);
-
+				
+				unsafe
+				{
+					GL.MatrixMode(MatrixMode.Projection);
+					double* matrixPointer = &projPitch.Row0.X;
+					GL.LoadMatrix(matrixPointer);
+					GL.MatrixMode(MatrixMode.Modelview);
+					matrixPointer = &lookPitch.Row0.X;
+					GL.LoadMatrix(matrixPointer);
+				}
 				GL.Begin(PrimitiveType.Lines);
 
 				for (double v = 0.0; v < MaxVelocity; v += 10.0)
@@ -1110,11 +1115,15 @@ namespace TrainEditor2.Models.Trains
 			switch (CurrentInputMode)
 			{
 				case InputMode.Pitch:
-					GL.MatrixMode(MatrixMode.Projection);
-					GL.LoadMatrix(ref projPitch);
-
-					GL.MatrixMode(MatrixMode.Modelview);
-					GL.LoadMatrix(ref lookPitch);
+					unsafe
+					{
+						GL.MatrixMode(MatrixMode.Projection);
+						double* matrixPointer = &projPitch.Row0.X;
+						GL.LoadMatrix(matrixPointer);
+						GL.MatrixMode(MatrixMode.Modelview);
+						matrixPointer = &lookPitch.Row0.X;
+						GL.LoadMatrix(matrixPointer);
+					}
 
 					GL.Begin(PrimitiveType.Lines);
 
@@ -1138,11 +1147,15 @@ namespace TrainEditor2.Models.Trains
 					GL.Disable(EnableCap.Texture2D);
 					break;
 				case InputMode.Volume:
-					GL.MatrixMode(MatrixMode.Projection);
-					GL.LoadMatrix(ref projVolume);
-
-					GL.MatrixMode(MatrixMode.Modelview);
-					GL.LoadMatrix(ref lookVolume);
+					unsafe
+					{
+						GL.MatrixMode(MatrixMode.Projection);
+						double* matrixPointer = &projVolume.Row0.X;
+						GL.LoadMatrix(matrixPointer);
+						GL.MatrixMode(MatrixMode.Modelview);
+						matrixPointer = &lookVolume.Row0.X;
+						GL.LoadMatrix(matrixPointer);
+					}
 
 					GL.Begin(PrimitiveType.Lines);
 
@@ -1170,11 +1183,15 @@ namespace TrainEditor2.Models.Trains
 			// dot
 			if (CurrentInputMode != InputMode.Volume)
 			{
-				GL.MatrixMode(MatrixMode.Projection);
-				GL.LoadMatrix(ref projPitch);
-
-				GL.MatrixMode(MatrixMode.Modelview);
-				GL.LoadMatrix(ref lookPitch);
+				unsafe
+				{
+					GL.MatrixMode(MatrixMode.Projection);
+					double* matrixPointer = &projPitch.Row0.X;
+					GL.LoadMatrix(matrixPointer);
+					GL.MatrixMode(MatrixMode.Modelview);
+					matrixPointer = &lookPitch.Row0.X;
+					GL.LoadMatrix(matrixPointer);
+				}
 
 				GL.PointSize(11.0f);
 				GL.Begin(PrimitiveType.Points);
@@ -1211,11 +1228,15 @@ namespace TrainEditor2.Models.Trains
 
 			if (CurrentInputMode != InputMode.Pitch)
 			{
-				GL.MatrixMode(MatrixMode.Projection);
-				GL.LoadMatrix(ref projVolume);
-
-				GL.MatrixMode(MatrixMode.Modelview);
-				GL.LoadMatrix(ref lookVolume);
+				unsafe
+				{
+					GL.MatrixMode(MatrixMode.Projection);
+					double* matrixPointer = &projVolume.Row0.X;
+					GL.LoadMatrix(matrixPointer);
+					GL.MatrixMode(MatrixMode.Modelview);
+					matrixPointer = &lookVolume.Row0.X;
+					GL.LoadMatrix(matrixPointer);
+				}
 
 				GL.PointSize(9.0f);
 				GL.Begin(PrimitiveType.Points);
@@ -1253,11 +1274,15 @@ namespace TrainEditor2.Models.Trains
 			// line
 			if (CurrentInputMode != InputMode.Volume)
 			{
-				GL.MatrixMode(MatrixMode.Projection);
-				GL.LoadMatrix(ref projPitch);
-
-				GL.MatrixMode(MatrixMode.Modelview);
-				GL.LoadMatrix(ref lookPitch);
+				unsafe
+				{
+					GL.MatrixMode(MatrixMode.Projection);
+					double* matrixPointer = &projPitch.Row0.X;
+					GL.LoadMatrix(matrixPointer);
+					GL.MatrixMode(MatrixMode.Modelview);
+					matrixPointer = &lookPitch.Row0.X;
+					GL.LoadMatrix(matrixPointer);
+				}
 
 				foreach (Line line in SelectedTrack.PitchLines)
 				{
@@ -1301,11 +1326,15 @@ namespace TrainEditor2.Models.Trains
 
 			if (CurrentInputMode != InputMode.Pitch)
 			{
-				GL.MatrixMode(MatrixMode.Projection);
-				GL.LoadMatrix(ref projVolume);
-
-				GL.MatrixMode(MatrixMode.Modelview);
-				GL.LoadMatrix(ref lookVolume);
+				unsafe
+				{
+					GL.MatrixMode(MatrixMode.Projection);
+					double* matrixPointer = &projVolume.Row0.X;
+					GL.LoadMatrix(matrixPointer);
+					GL.MatrixMode(MatrixMode.Modelview);
+					matrixPointer = &lookVolume.Row0.X;
+					GL.LoadMatrix(matrixPointer);
+				}
 
 				foreach (Line line in SelectedTrack.VolumeLines)
 				{
@@ -1361,11 +1390,15 @@ namespace TrainEditor2.Models.Trains
 					areas = SelectedTrack.SoundIndices;
 				}
 
-				GL.MatrixMode(MatrixMode.Projection);
-				GL.LoadMatrix(ref projPitch);
-
-				GL.MatrixMode(MatrixMode.Modelview);
-				GL.LoadMatrix(ref lookPitch);
+				unsafe
+				{
+					GL.MatrixMode(MatrixMode.Projection);
+					double* matrixPointer = &projPitch.Row0.X;
+					GL.LoadMatrix(matrixPointer);
+					GL.MatrixMode(MatrixMode.Modelview);
+					matrixPointer = &lookPitch.Row0.X;
+					GL.LoadMatrix(matrixPointer);
+				}
 
 				foreach (Area area in areas)
 				{
@@ -1411,18 +1444,22 @@ namespace TrainEditor2.Models.Trains
 			// simulation speed
 			if (CurrentSimState == SimulationState.Started || CurrentSimState == SimulationState.Paused)
 			{
-				GL.MatrixMode(MatrixMode.Projection);
-				GL.LoadMatrix(ref projPitch);
-
-				GL.MatrixMode(MatrixMode.Modelview);
-				GL.LoadMatrix(ref lookPitch);
+				unsafe
+				{
+					GL.MatrixMode(MatrixMode.Projection);
+					double* matrixPointer = &projPitch.Row0.X;
+					GL.LoadMatrix(matrixPointer);
+					GL.MatrixMode(MatrixMode.Modelview);
+					matrixPointer = &lookPitch.Row0.X;
+					GL.LoadMatrix(matrixPointer);
+				}
 
 				GL.LineWidth(3.0f);
 				GL.Begin(PrimitiveType.Lines);
 
 				GL.Color4(Color.White);
-				GL.Vertex2(new Vector2((float)nowSpeed, 0.0f));
-				GL.Vertex2(new Vector2((float)nowSpeed, float.MaxValue));
+				GL.Vertex2((float)nowSpeed, 0.0f);
+				GL.Vertex2((float)nowSpeed, float.MaxValue);
 
 				GL.End();
 			}

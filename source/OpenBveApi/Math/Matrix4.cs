@@ -636,6 +636,47 @@ namespace OpenBveApi.Math
         /// <summary>
         /// Creates an orthographic projection matrix.
         /// </summary>
+        /// <param name="width">The width of the projection volume.</param>
+        /// <param name="height">The height of the projection volume.</param>
+        /// <param name="depthNear">The near edge of the projection volume.</param>
+        /// <param name="depthFar">The far edge of the projection volume.</param>
+        /// <param name="result">The resulting Matrix4d instance.</param>
+        public static void CreateOrthographic(double width, double height, double depthNear, double depthFar, out Matrix4D result)
+        {
+	        CreateOrthographicOffCenter(-width / 2, width / 2, -height / 2, height / 2, depthNear, depthFar, out result);
+        }
+
+        /// <summary>
+        /// Creates an orthographic projection matrix.
+        /// </summary>
+        /// <param name="left">The left edge of the projection volume.</param>
+        /// <param name="right">The right edge of the projection volume.</param>
+        /// <param name="bottom">The bottom edge of the projection volume.</param>
+        /// <param name="top">The top edge of the projection volume.</param>
+        /// <param name="zNear">The near edge of the projection volume.</param>
+        /// <param name="zFar">The far edge of the projection volume.</param>
+        /// <param name="result">The resulting Matrix4 instance.</param>
+        public static void CreateOrthographicOffCenter(double left, double right, double bottom, double top, double zNear, double zFar, out Matrix4D result)
+        {
+	        result = new Matrix4D();
+
+	        double invRL = 1 / (right - left);
+	        double invTB = 1 / (top - bottom);
+	        double invFN = 1 / (zFar - zNear);
+
+	        result.Row0.X = 2 * invRL;
+	        result.Row1.Y = 2 * invTB;
+	        result.Row2.Z = -2 * invFN;
+
+	        result.Row3.X = -(right + left) * invRL;
+	        result.Row3.Y = -(top + bottom) * invTB;
+	        result.Row3.Z = -(zFar + zNear) * invFN;
+	        result.Row3.W = 1;
+        }
+
+        /// <summary>
+        /// Creates an orthographic projection matrix.
+        /// </summary>
         /// <param name="left">The left edge of the projection volume.</param>
         /// <param name="right">The right edge of the projection volume.</param>
         /// <param name="bottom">The bottom edge of the projection volume.</param>
