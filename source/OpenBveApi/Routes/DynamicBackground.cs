@@ -17,6 +17,7 @@
 			StaticBackgrounds = staticBackgrounds;
 		}
 
+		/// <inheritdoc/>
 		public override void UpdateBackground(double SecondsSinceMidnight, double ElapsedTime, bool Target)
 		{
 			if (StaticBackgrounds.Length < 2)

@@ -56,6 +56,7 @@ namespace OpenBveApi.Math {
 			this.Z = (float)v.Z;
 		}
 
+		/// <summary>Converts a Vector3f to a Vector3</summary>
 		public static implicit operator Vector3(Vector3f v)
 		{
 			return new Vector3(v.X, v.Y, v.Z);

@@ -145,9 +145,7 @@ namespace LibRender2
 
 	public static class VAOExtensions
 	{
-		/// <summary>
-		/// Create an OpenGL/OpenTK VAO for a mesh
-		/// </summary>
+		/// <summary>Create an OpenGL/OpenTK VAO for a mesh</summary>
 		/// <param name="isDynamic"></param>
 		public static void CreateVAO(ref Mesh mesh, bool isDynamic)
 		{

@@ -12,8 +12,9 @@ namespace OpenBveApi.Objects
 		public ushort Material;
 		/// <summary>A bit mask combining constants of the MeshFace structure.</summary>
 		public byte Flags;
-
+		/// <summary>The starting position for the face in the VAO</summary>
 		public int IboStartIndex;
+		/// <summary>The starting position for the normals in the VAO</summary>
 		public int NormalsIboStartIndex;
 
 		/// <summary>Returns a representation of the face in string format</summary>
