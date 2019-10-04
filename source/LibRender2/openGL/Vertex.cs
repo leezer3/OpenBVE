@@ -17,7 +17,7 @@ namespace LibRender2
 		public Vector3f Normal;
 
 		/// <summary>Vertex texture coordinates</summary>
-		public Vector2f UV;
+		public Vector2 UV;
 
 		/// <summary>Vertex color</summary>
 		public Color128 Color;

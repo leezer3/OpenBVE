@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 
 namespace OpenBveApi.Math {
 	/// <summary>Represents a two-dimensional vector.</summary>
+	[StructLayout(LayoutKind.Sequential)]
 	public struct Vector2 {
 		
 		// --- members ---
@@ -370,6 +372,9 @@ namespace OpenBveApi.Math {
 		
 		/// <summary>Represents a vector pointing down.</summary>
 		public static readonly Vector2 Down = new Vector2(0.0, 1.0);
+
+		/// <summary>Represents a vector pointing right.</summary>
+		public static readonly Vector2 One = new Vector2(1.0, 1.0);
 
 		/// <summary>Returns the representation of the vector in string format</summary>
 		public override string ToString()
