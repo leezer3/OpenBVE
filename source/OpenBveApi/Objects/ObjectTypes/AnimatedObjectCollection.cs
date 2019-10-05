@@ -64,7 +64,6 @@ namespace OpenBveApi.Objects
 								mat *= Objects[i].States[0].Translation;
 								mat *= Objects[i].States[0].Rotate;
 								double zOffset = mat.ExtractTranslation().Z * -1.0;
-								mat *= (Matrix4D)new Transformation(BaseTransformation, AuxTransformation);
 								Vector3 p = new Vector3(Position.X, Position.Y, Position.Z);
 								p.Transform(mat);
 								currentHost.CreateStaticObject(Objects[i].States[0].Prototype, p, BaseTransformation, AuxTransformation, AccurateObjectDisposal, zOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);

@@ -10,8 +10,6 @@ namespace OpenBveApi.Objects
 	{
 		/// <summary>The mesh of the object</summary>
 		public Mesh Mesh;
-		/// <summary>The index to the Renderer.Object array, plus 1. The value of zero represents that the object is not currently shown by the renderer.</summary>
-		public int RendererIndex;
 		/// <summary>The starting track position, for static objects only.</summary>
 		public float StartingDistance;
 		/// <summary>The ending track position, for static objects only.</summary>

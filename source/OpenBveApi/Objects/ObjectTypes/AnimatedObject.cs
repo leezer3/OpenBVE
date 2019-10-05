@@ -878,7 +878,7 @@ namespace OpenBveApi.Objects
 				{
 					if (currentObject.Object.States[i].Prototype == null)
 					{
-						currentObject.Object.States[i].Prototype = new StaticObject(currentHost) {RendererIndex = -1};
+						currentObject.Object.States[i].Prototype = new StaticObject(currentHost);
 					}
 				}
 
@@ -917,7 +917,7 @@ namespace OpenBveApi.Objects
 				{
 					if (currentObject.Object.States[i].Prototype == null)
 					{
-						currentObject.Object.States[i].Prototype = new StaticObject(currentHost) {RendererIndex = -1};
+						currentObject.Object.States[i].Prototype = new StaticObject(currentHost);
 					}
 				}
 
