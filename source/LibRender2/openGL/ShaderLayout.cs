@@ -1,4 +1,4 @@
-﻿namespace OpenBveApi.Graphics
+﻿namespace LibRender2
 {
 	/// <summary>
 	/// Vertex layout

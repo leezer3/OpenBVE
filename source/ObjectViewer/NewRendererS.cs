@@ -2,16 +2,18 @@
 using System.Globalization;
 using System.Linq;
 using LibRender2;
+using LibRender2.Objects;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.World;
 using OpenTK;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
+using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve
 {
@@ -34,9 +36,9 @@ namespace OpenBve
 		{
 			base.Initialize(CurrentHost, CurrentOptions);
 
-			redAxisVAO = RegisterBox(Color4.Red);
-			greenAxisVAO = RegisterBox(Color4.Green);
-			blueAxisVAO = RegisterBox(Color4.Blue);
+			redAxisVAO = RegisterBox(Color128.Red);
+			greenAxisVAO = RegisterBox(Color128.Green);
+			blueAxisVAO = RegisterBox(Color128.Blue);
 		}
 
 		internal string GetBackgroundColorName()
@@ -114,17 +116,17 @@ namespace OpenBve
 			return base.CreateStaticObject(obj, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 		}
 
-		private VertexArrayObject RegisterBox(Color4 Color)
+		private VertexArrayObject RegisterBox(Color128 Color)
 		{
 			LibRenderVertex[] vertexData = new LibRenderVertex[8];
-			vertexData[0].Position = new Vector3(1.0f, 1.0f, -1.0f);
-			vertexData[1].Position = new Vector3(1.0f, -1.0f, -1.0f);
-			vertexData[2].Position = new Vector3(-1.0f, -1.0f, -1.0f);
-			vertexData[3].Position = new Vector3(-1.0f, 1.0f, -1.0f);
-			vertexData[4].Position = new Vector3(1.0f, 1.0f, 1.0f);
-			vertexData[5].Position = new Vector3(1.0f, -1.0f, 1.0f);
-			vertexData[6].Position = new Vector3(-1.0f, -1.0f, 1.0f);
-			vertexData[7].Position = new Vector3(-1.0f, 1.0f, 1.0f);
+			vertexData[0].Position = new OpenBveApi.Math.Vector3f(1.0f, 1.0f, -1.0f);
+			vertexData[1].Position = new OpenBveApi.Math.Vector3f(1.0f, -1.0f, -1.0f);
+			vertexData[2].Position = new OpenBveApi.Math.Vector3f(-1.0f, -1.0f, -1.0f);
+			vertexData[3].Position = new OpenBveApi.Math.Vector3f(-1.0f, 1.0f, -1.0f);
+			vertexData[4].Position = new OpenBveApi.Math.Vector3f(1.0f, 1.0f, 1.0f);
+			vertexData[5].Position = new OpenBveApi.Math.Vector3f(1.0f, -1.0f, 1.0f);
+			vertexData[6].Position = new OpenBveApi.Math.Vector3f(-1.0f, -1.0f, 1.0f);
+			vertexData[7].Position = new OpenBveApi.Math.Vector3f(-1.0f, 1.0f, 1.0f);
 
 			for (int i = 0; i < vertexData.Length; i++)
 			{
@@ -158,14 +160,7 @@ namespace OpenBve
 
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-			// set up camera
-			double dx = Camera.AbsoluteDirection.X;
-			double dy = Camera.AbsoluteDirection.Y;
-			double dz = Camera.AbsoluteDirection.Z;
-			double ux = Camera.AbsoluteUp.X;
-			double uy = Camera.AbsoluteUp.Y;
-			double uz = Camera.AbsoluteUp.Z;
-			CurrentViewMatrix = Matrix4d.LookAt(0.0, 0.0, 0.0, dx, dy, -dz, ux, uy, -uz);
+			CurrentViewMatrix = Matrix4D.LookAt(Vector3.Zero, new Vector3(Camera.AbsoluteDirection.X, Camera.AbsoluteDirection.Y, -Camera.AbsoluteDirection.Z), new Vector3(Camera.AbsoluteUp.X, Camera.AbsoluteUp.Y, -Camera.AbsoluteUp.Z));
 
 			OptionFog = false;
 
@@ -183,10 +178,10 @@ namespace OpenBve
 			{
 				if (Interface.CurrentOptions.IsUseNewRenderer)
 				{
-					DefaultShader.Use();
+					DefaultShader.Activate();
 					ResetShader(DefaultShader);
 					RenderFace(DefaultShader, face);
-					DefaultShader.NonUse();
+					DefaultShader.Deactivate();
 				}
 				else
 				{
@@ -208,10 +203,10 @@ namespace OpenBve
 				{
 					if (Interface.CurrentOptions.IsUseNewRenderer)
 					{
-						DefaultShader.Use();
+						DefaultShader.Activate();
 						ResetShader(DefaultShader);
 						RenderFace(DefaultShader, face);
-						DefaultShader.NonUse();
+						DefaultShader.Deactivate();
 					}
 					else
 					{
@@ -233,10 +228,10 @@ namespace OpenBve
 						{
 							if (Interface.CurrentOptions.IsUseNewRenderer)
 							{
-								DefaultShader.Use();
+								DefaultShader.Activate();
 								ResetShader(DefaultShader);
 								RenderFace(DefaultShader, face);
-								DefaultShader.NonUse();
+								DefaultShader.Deactivate();
 							}
 							else
 							{
@@ -263,10 +258,10 @@ namespace OpenBve
 
 						if (Interface.CurrentOptions.IsUseNewRenderer)
 						{
-							DefaultShader.Use();
+							DefaultShader.Activate();
 							ResetShader(DefaultShader);
 							RenderFace(DefaultShader, face);
-							DefaultShader.NonUse();
+							DefaultShader.Deactivate();
 						}
 						else
 						{
@@ -283,10 +278,10 @@ namespace OpenBve
 
 						if (Interface.CurrentOptions.IsUseNewRenderer)
 						{
-							DefaultShader.Use();
+							DefaultShader.Activate();
 							ResetShader(DefaultShader);
 							RenderFace(DefaultShader, face);
-							DefaultShader.NonUse();
+							DefaultShader.Deactivate();
 						}
 						else
 						{
@@ -310,9 +305,9 @@ namespace OpenBve
 			//Initialize openGL
 			SetBlendFunc();
 			PushMatrix(MatrixMode.Projection);
-			CurrentProjectionMatrix = Matrix4d.CreateOrthographicOffCenter(0.0, Screen.Width, Screen.Height, 0.0, -1.0, 1.0);
+			Matrix4D.CreateOrthographicOffCenter(0.0f, Screen.Width, Screen.Height, 0.0f, -1.0f, 1.0f, out CurrentProjectionMatrix);
 			PushMatrix(MatrixMode.Modelview);
-			CurrentViewMatrix = Matrix4d.Identity;
+			CurrentViewMatrix = Matrix4D.Identity;
 
 			CultureInfo culture = CultureInfo.InvariantCulture;
 

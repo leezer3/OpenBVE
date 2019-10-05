@@ -1,10 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using OpenBveApi.Colors;
-using OpenBveApi.Graphics;
+﻿using OpenBveApi.Colors;
 using OpenBveApi.Math;
-using OpenTK.Graphics;
-using OpenTK.Graphics.OpenGL;
 
 namespace OpenBveApi.Objects
 {
@@ -21,9 +16,9 @@ namespace OpenBveApi.Objects
 		/// <remarks>Not currently implemented</remarks>
 		public Vector3[] BoundingBox;
 		/// <summary>The OpenGL/OpenTK VAO for the mesh</summary>
-		public VertexArrayObject VAO;
+		public object VAO;
 		/// <summary>The OpenGL/OpenTK VAO for the normals</summary>
-		public VertexArrayObject NormalsVAO;
+		public object NormalsVAO;
 
 		/// <summary>Creates a mesh consisting of one face, which is represented by individual vertices, and a color.</summary>
 		/// <param name="Vertices">The vertices that make up one face.</param>
@@ -120,81 +115,6 @@ namespace OpenBveApi.Objects
 			}
 		}
 
-		/// <summary>
-		/// Create an OpenGL/OpenTK VAO for the mesh
-		/// </summary>
-		/// <param name="isDynamic"></param>
-		public void CreateVAO(bool isDynamic)
-		{
-			var hint = isDynamic ? BufferUsageHint.DynamicDraw : BufferUsageHint.StaticDraw;
-
-			var vertexData = new List<LibRenderVertex>();
-			var indexData = new List<int>();
-
-			var normalsVertexData = new List<LibRenderVertex>();
-			var normalsIndexData = new List<int>();
-
-			for (int i = 0; i < Faces.Length; i++)
-			{
-				Faces[i].IboStartIndex = indexData.Count;
-				Faces[i].NormalsIboStartIndex = normalsIndexData.Count;
-
-				foreach (var vertex in Faces[i].Vertices)
-				{
-					var data = new LibRenderVertex
-					{
-						Position = new OpenTK.Vector3((float)Vertices[vertex.Index].Coordinates.X, (float)Vertices[vertex.Index].Coordinates.Y, (float)-Vertices[vertex.Index].Coordinates.Z),
-						Normal = new OpenTK.Vector3((float)vertex.Normal.X, (float)vertex.Normal.Y, (float)-vertex.Normal.Z),
-						UV = new OpenTK.Vector2((float)Vertices[vertex.Index].TextureCoordinates.X, (float)Vertices[vertex.Index].TextureCoordinates.Y)
-					};
-
-					var coloredVertex = Vertices[vertex.Index] as ColoredVertex;
-
-					if (coloredVertex != null)
-					{
-						var color = coloredVertex.Color;
-						data.Color = new Color4(color.R, color.G, color.B, color.A);
-					}
-					else
-					{
-						data.Color = Color4.White;
-					}
-
-					vertexData.Add(data);
-
-					var normalsData = new LibRenderVertex[2];
-					normalsData[0].Position = data.Position;
-					normalsData[1].Position = data.Position + data.Normal;
-
-					for (int j = 0; j < normalsData.Length; j++)
-					{
-						normalsData[j].Color = Color4.White;
-					}
-
-					normalsVertexData.AddRange(normalsData);
-				}
-
-				indexData.AddRange(Enumerable.Range(Faces[i].IboStartIndex, Faces[i].Vertices.Length));
-				normalsIndexData.AddRange(Enumerable.Range(Faces[i].NormalsIboStartIndex, Faces[i].Vertices.Length * 2));
-			}
-
-			VAO?.UnBind();
-			VAO?.Dispose();
-
-			VAO = new VertexArrayObject();
-			VAO.Bind();
-			VAO.SetVBO(new VertexBufferObject(vertexData.ToArray(), hint));
-			VAO.SetIBO(new IndexBufferObject(indexData.ToArray(), hint));
-			VAO.UnBind();
-
-			NormalsVAO?.UnBind();
-			NormalsVAO?.Dispose();
-
-			NormalsVAO = new VertexArrayObject();
-			NormalsVAO.Bind();
-			NormalsVAO.SetVBO(new VertexBufferObject(normalsVertexData.ToArray(), hint));
-			NormalsVAO.SetIBO(new IndexBufferObject(normalsIndexData.ToArray(), hint));
-			NormalsVAO.UnBind();
-		}
+		
 	}
 }

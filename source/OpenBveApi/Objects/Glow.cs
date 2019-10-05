@@ -28,11 +28,12 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <summary>Gets the current intensity glow intensity, using the glow attenuation factor</summary>
+		/// <param name="ModelMatrix">The model transformation matrix to apply</param>
 		/// <param name="Vertices">The verticies to which the glow is to be applied</param>
 		/// <param name="Face">The face which these vertices make up</param>
 		/// <param name="GlowAttenuationData">The current glow attenuation</param>
 		/// <returns></returns>
-		public static double GetDistanceFactor(OpenTK.Matrix4d ModelMatrix, VertexTemplate[] Vertices, ref MeshFace Face, ushort GlowAttenuationData)
+		public static double GetDistanceFactor(Matrix4D ModelMatrix, VertexTemplate[] Vertices, ref MeshFace Face, ushort GlowAttenuationData)
 		{
 			if (Face.Vertices.Length == 0)
 			{
@@ -42,17 +43,18 @@ namespace OpenBveApi.Objects
 			double halfdistance;
 			Glow.SplitAttenuationData(GlowAttenuationData, out mode, out halfdistance);
 			int i = (int)Face.Vertices[0].Index;
-			OpenTK.Vector4d d = OpenTK.Vector4d.Transform(new OpenTK.Vector4d(Vertices[i].Coordinates.X, Vertices[i].Coordinates.Y, -Vertices[i].Coordinates.Z, 1.0), ModelMatrix);
+			Vector3 d = new Vector3(Vertices[i].Coordinates.X, Vertices[i].Coordinates.Y, -Vertices[i].Coordinates.Z);
+			d.Transform(ModelMatrix);
 			switch (mode)
 			{
 				case GlowAttenuationMode.DivisionExponent2:
 				{
-					double t = d.X * d.X + d.Y * d.Y + d.Z * d.Z;
+					double t = d.NormSquared();
 					return t / (t + halfdistance * halfdistance);
 				}
 				case GlowAttenuationMode.DivisionExponent4:
 				{
-					double t = d.X * d.X + d.Y * d.Y + d.Z * d.Z;
+					double t = d.NormSquared();
 					t *= t;
 					halfdistance *= halfdistance;
 					return t / (t + halfdistance * halfdistance);

@@ -4,7 +4,6 @@ using OpenBveApi.Routes;
 using OpenBveApi.Sounds;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
-using OpenTK.Graphics.ES11;
 
 namespace OpenBveApi.Objects
 {

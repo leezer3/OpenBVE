@@ -7,9 +7,9 @@ using LibRender2.Cameras;
 using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
+using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
-using OpenTK;
 
 namespace LibRender2.Objects
 {
@@ -87,7 +87,7 @@ namespace LibRender2.Objects
 
 			if (State.Prototype.Mesh.VAO == null)
 			{
-				State.Prototype.Mesh.CreateVAO(State.Prototype.Dynamic);
+				VAOExtensions.CreateVAO(ref State.Prototype.Mesh, State.Prototype.Dynamic);
 			}
 
 			if (!result)
@@ -206,29 +206,29 @@ namespace LibRender2.Objects
 			{
 				if (faces[i].Face.Vertices.Length >= 3)
 				{
-					Vector4d v0 = new Vector4d((Vector3d)faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[0].Index].Coordinates, 1.0);
-					Vector4d v1 = new Vector4d((Vector3d)faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[1].Index].Coordinates, 1.0);
-					Vector4d v2 = new Vector4d((Vector3d)faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[2].Index].Coordinates, 1.0);
-					Vector4d w1 = v1 - v0;
-					Vector4d w2 = v2 - v0;
+					Vector4 v0 = new Vector4(faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[0].Index].Coordinates, 1.0);
+					Vector4 v1 = new Vector4(faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[1].Index].Coordinates, 1.0);
+					Vector4 v2 = new Vector4(faces[i].Object.Prototype.Mesh.Vertices[faces[i].Face.Vertices[2].Index].Coordinates, 1.0);
+					Vector4 w1 = v1 - v0;
+					Vector4 w2 = v2 - v0;
 					v0.Z *= -1.0;
 					w1.Z *= -1.0;
 					w2.Z *= -1.0;
-					Matrix4d mat = faces[i].Object.Scale * faces[i].Object.Rotate * faces[i].Object.Translation;
-					v0 = Vector4d.Transform(v0, mat);
-					w1 = Vector4d.Transform(w1, mat);
-					w2 = Vector4d.Transform(w2, mat);
+					Matrix4D mat = faces[i].Object.Scale * faces[i].Object.Rotate * faces[i].Object.Translation;
+					v0 = Vector4.Transform(v0, mat);
+					w1 = Vector4.Transform(w1, mat);
+					w2 = Vector4.Transform(w2, mat);
 					v0.Z *= -1.0;
 					w1.Z *= -1.0;
 					w2.Z *= -1.0;
-					Vector3d d = Vector3d.Cross(w1.Xyz, w2.Xyz);
-					double t = d.Length;
+					Vector3 d = Vector3.Cross(w1.Xyz, w2.Xyz);
+					double t = d.Norm();
 
 					if (t != 0.0)
 					{
 						d /= t;
-						Vector3d w0 = v0.Xyz - (Vector3d)camera.AbsolutePosition;
-						t = Vector3d.Dot(d, w0);
+						Vector3 w0 = v0.Xyz - camera.AbsolutePosition;
+						t = Vector3.Dot(d, w0);
 						distances[i] = -t * t;
 					}
 				}

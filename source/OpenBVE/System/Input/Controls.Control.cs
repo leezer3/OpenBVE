@@ -1,5 +1,5 @@
 ﻿using System;
-using OpenTK.Input;
+using OpenBveApi.Input;
 using OpenBveApi.Interface;
 
 namespace OpenBve

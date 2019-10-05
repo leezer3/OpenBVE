@@ -141,7 +141,7 @@ namespace Plugin
 											ObjectState aos = new ObjectState
 											{
 												Prototype = s,
-												Translation = OpenTK.Matrix4d.CreateTranslation(position.X, position.Y, -position.Z)
+												Translation = Matrix4D.CreateTranslation(position.X, position.Y, -position.Z)
 											};
 											a.States = new ObjectState[] { aos };
 											Result.Objects[ObjectCount] = a;
@@ -158,7 +158,7 @@ namespace Plugin
 												}
 												for (int h = 0; h < a.Objects[k].States.Length; h++)
 												{
-													a.Objects[k].States[h].Translation *= OpenTK.Matrix4d.CreateTranslation(position.X, position.Y, -position.Z);
+													a.Objects[k].States[h].Translation *= Matrix4D.CreateTranslation(position.X, position.Y, -position.Z);
 												}
 												Result.Objects[ObjectCount] = a.Objects[k];
 												ObjectCount++;
@@ -866,7 +866,7 @@ namespace Plugin
 											continue;
 										}
 										//Apply position
-										Result.Objects[ObjectCount].States[j].Translation = OpenTK.Matrix4d.CreateTranslation(Position.X, Position.Y, -Position.Z);
+										Result.Objects[ObjectCount].States[j].Translation = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z);
 										//Test whether the object contains non static rotation functions
 										//If so, the results may be off so don't optimise
 										if (!StaticXRotation)

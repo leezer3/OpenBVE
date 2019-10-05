@@ -133,7 +133,7 @@ namespace OpenBve {
 				min = c0 < c1 ? c0 : c1;
 				if (min > 0.0) min = 0.0;
 			}
-			double d = BackgroundHandle.BackgroundImageDistance + Program.Renderer.Camera.ExtraViewingDistance;
+			double d = Program.CurrentRoute.CurrentBackground.BackgroundImageDistance + Program.Renderer.Camera.ExtraViewingDistance;
 			Program.Renderer.Camera.ForwardViewingDistance = d * max;
 			Program.Renderer.Camera.BackwardViewingDistance = -d * min;
 			Program.Renderer.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z, true);

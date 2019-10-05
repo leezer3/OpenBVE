@@ -45,12 +45,20 @@ namespace LibRender2.Primitives
 			// TODO: Remove Nullable<T> from color once RenderOverlayTexture and RenderOverlaySolid are fully replaced.
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.PushMatrix();
-			GL.LoadMatrix(ref renderer.CurrentProjectionMatrix);
+			unsafe
+			{
+				fixed (double* matrixPointer = &renderer.CurrentProjectionMatrix.Row0.X)
+				{
+					GL.LoadMatrix(matrixPointer);
+				}
+				GL.MatrixMode(MatrixMode.Modelview);
+				GL.PushMatrix();
+				fixed (double* matrixPointer = &renderer.CurrentViewMatrix.Row0.X)
+				{
+					GL.LoadMatrix(matrixPointer);
+				}
 
-			GL.MatrixMode(MatrixMode.Modelview);
-			GL.PushMatrix();
-			GL.LoadMatrix(ref renderer.CurrentViewMatrix);
-
+			}
 			if (texture == null || !renderer.currentHost.LoadTexture(texture, OpenGlTextureWrapMode.ClampClamp))
 			{
 				GL.Disable(EnableCap.Texture2D);

@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Objects;
+﻿using OpenBveApi.Math;
+using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenTK;
@@ -132,12 +133,12 @@ namespace LibRender2.Backgrounds
 					data.CreateVAO();
 				}
 
-				renderer.DefaultShader.Use();
+				renderer.DefaultShader.Activate();
 				renderer.ResetShader(renderer.DefaultShader);
 
 				// matrix
 				renderer.DefaultShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
-				renderer.DefaultShader.SetCurrentModelViewMatrix(Matrix4d.Scale(scale) * renderer.CurrentViewMatrix);
+				renderer.DefaultShader.SetCurrentModelViewMatrix(Matrix4D.Scale(scale) * renderer.CurrentViewMatrix);
 
 				// fog
 				if (renderer.OptionFog)
@@ -160,19 +161,20 @@ namespace LibRender2.Backgrounds
 				renderer.DefaultShader.SetOpacity(alpha);
 
 				// render polygon
-				data.VAO.Bind();
+				VertexArrayObject VAO = (VertexArrayObject) data.VAO;
+				VAO.Bind();
 
 				for (int i = 0; i + 9 < 32 * 10; i += 10)
 				{
-					data.VAO.Draw(renderer.DefaultShader.VertexLayout, PrimitiveType.Quads, i, 4);
-					data.VAO.Draw(renderer.DefaultShader.VertexLayout, PrimitiveType.Triangles, i + 4, 3);
-					data.VAO.Draw(renderer.DefaultShader.VertexLayout, PrimitiveType.Triangles, i + 7, 3);
+					VAO.Draw(renderer.DefaultShader.VertexLayout, PrimitiveType.Quads, i, 4);
+					VAO.Draw(renderer.DefaultShader.VertexLayout, PrimitiveType.Triangles, i + 4, 3);
+					VAO.Draw(renderer.DefaultShader.VertexLayout, PrimitiveType.Triangles, i + 7, 3);
 				}
 
-				data.VAO.UnBind();
+				VAO.UnBind();
 
 				GL.BindTexture(TextureTarget.Texture2D, 0);
-				renderer.DefaultShader.NonUse();
+				renderer.DefaultShader.Deactivate();
 
 				GL.Disable(EnableCap.Texture2D);
 				renderer.RestoreBlendFunc();
@@ -185,7 +187,7 @@ namespace LibRender2.Backgrounds
 		{
 			if (data.Object.Mesh.VAO == null)
 			{
-				data.Object.Mesh.CreateVAO(false);
+				VAOExtensions.CreateVAO(ref data.Object.Mesh, false);
 			}
 
 			foreach (MeshFace face in data.Object.Mesh.Faces)
@@ -213,10 +215,10 @@ namespace LibRender2.Backgrounds
 					}
 				}
 
-				renderer.DefaultShader.Use();
+				renderer.DefaultShader.Activate();
 				renderer.ResetShader(renderer.DefaultShader);
 				renderer.RenderFace(renderer.DefaultShader, new ObjectState { Prototype = data.Object }, face);
-				renderer.DefaultShader.NonUse();
+				renderer.DefaultShader.Deactivate();
 			}
 		}
 	}

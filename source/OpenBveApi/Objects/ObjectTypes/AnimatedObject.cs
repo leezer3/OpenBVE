@@ -107,6 +107,8 @@ namespace OpenBveApi.Objects
 		private readonly HostInterface currentHost;
 		/// <summary>Whether this object uses the Timetable texture</summary>
 		public bool isTimeTableObject;
+		/// <summary>Sets whether the openGL VAO should be updated by the renderer this frame</summary>
+		public bool UpdateVAO;
 
 		/// <summary>Creates a new animated object</summary>
 		public AnimatedObject(HostInterface host)
@@ -481,7 +483,7 @@ namespace OpenBveApi.Objects
 			// texture shift
 			bool shiftx = TextureShiftXFunction != null;
 			bool shifty = TextureShiftYFunction != null;
-			internalObject.TextureTranslation = OpenTK.Matrix4d.Identity;
+			internalObject.TextureTranslation = Matrix4D.Identity;
 
 			if ((shiftx | shifty) & UpdateFunctions)
 			{
@@ -489,14 +491,14 @@ namespace OpenBveApi.Objects
 				{
 					double x = TextureShiftXFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 					x -= System.Math.Floor(x);
-					internalObject.TextureTranslation *= OpenTK.Matrix4d.CreateTranslation(x * TextureShiftXDirection.X, x * TextureShiftXDirection.Y, 1.0);
+					internalObject.TextureTranslation *= Matrix4D.CreateTranslation(x * TextureShiftXDirection.X, x * TextureShiftXDirection.Y, 1.0);
 				}
 
 				if (shifty)
 				{
 					double y = TextureShiftYFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
 					y -= System.Math.Floor(y);
-					internalObject.TextureTranslation *= OpenTK.Matrix4d.CreateTranslation(y * TextureShiftYDirection.X, y * TextureShiftYDirection.Y, 1.0);
+					internalObject.TextureTranslation *= Matrix4D.CreateTranslation(y * TextureShiftYDirection.X, y * TextureShiftYDirection.Y, 1.0);
 				}
 			}
 
@@ -772,50 +774,47 @@ namespace OpenBveApi.Objects
 			// update prototype
 			internalObject.Prototype = States[s].Prototype;
 
-			// update VAO for led
-			if (led)
-			{
-				internalObject.Prototype.Mesh.CreateVAO(true);
-			}
+			// update VAO for led if required
+			UpdateVAO = led;
 
 			// update state
 			// rotate
-			internalObject.Rotate = OpenTK.Matrix4d.Identity;
+			internalObject.Rotate = Matrix4D.Identity;
 
 			if (rotateX)
 			{
-				internalObject.Rotate *= OpenTK.Matrix4d.CreateFromAxisAngle(new OpenTK.Vector3d(RotateXDirection.X, RotateXDirection.Y, -RotateXDirection.Z), 2.0 * System.Math.PI - radianX);
+				internalObject.Rotate *= Matrix4D.CreateFromAxisAngle(new Vector3(RotateXDirection.X, RotateXDirection.Y, -RotateXDirection.Z), 2.0 * System.Math.PI - radianX);
 			}
 
 			if (rotateY)
 			{
-				internalObject.Rotate *= OpenTK.Matrix4d.CreateFromAxisAngle(new OpenTK.Vector3d(RotateYDirection.X, RotateYDirection.Y, -RotateYDirection.Z), 2.0 * System.Math.PI - radianY);
+				internalObject.Rotate *= Matrix4D.CreateFromAxisAngle(new Vector3(RotateYDirection.X, RotateYDirection.Y, -RotateYDirection.Z), 2.0 * System.Math.PI - radianY);
 			}
 
 			if (rotateZ)
 			{
-				internalObject.Rotate *= OpenTK.Matrix4d.CreateFromAxisAngle(new OpenTK.Vector3d(RotateZDirection.X, RotateZDirection.Y, -RotateZDirection.Z), 2.0 * System.Math.PI - radianZ);
+				internalObject.Rotate *= Matrix4D.CreateFromAxisAngle(new Vector3(RotateZDirection.X, RotateZDirection.Y, -RotateZDirection.Z), 2.0 * System.Math.PI - radianZ);
 			}
 
 			if (Camera != null && Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 			{
-				internalObject.Rotate *= States[s].Translation * OpenTK.Matrix4d.CreateTranslation(-Position.X, -Position.Y, Position.Z);
-				internalObject.Rotate *= (OpenTK.Matrix4d)new Transformation((Vector3)Camera.AbsoluteDirection, (Vector3)Camera.AbsoluteUp, (Vector3)Camera.AbsoluteSide);
+				internalObject.Rotate *= States[s].Translation * Matrix4D.CreateTranslation(-Position.X, -Position.Y, Position.Z);
+				internalObject.Rotate *= (Matrix4D)new Transformation((Vector3)Camera.AbsoluteDirection, (Vector3)Camera.AbsoluteUp, (Vector3)Camera.AbsoluteSide);
 
 				// translate
 				double dx = -System.Math.Tan(Camera.Alignment.Yaw) - Camera.Alignment.Position.X;
 				double dy = -System.Math.Tan(Camera.Alignment.Pitch) - Camera.Alignment.Position.Y;
 				double dz = -Camera.Alignment.Position.Z;
 				Vector3 add = Camera.AbsolutePosition + dx * Camera.AbsoluteSide + dy * Camera.AbsoluteUp + dz * Camera.AbsoluteDirection;
-				internalObject.Translation = OpenTK.Matrix4d.CreateTranslation(add.X, add.Y, -add.Z);
+				internalObject.Translation = Matrix4D.CreateTranslation(add.X, add.Y, -add.Z);
 			}
 			else
 			{
 				internalObject.Rotate *= States[s].Translation;
-				internalObject.Rotate *= (OpenTK.Matrix4d)new Transformation(Direction, Up, Side);
+				internalObject.Rotate *= (Matrix4D)new Transformation(Direction, Up, Side);
 
 				// translate
-				internalObject.Translation = OpenTK.Matrix4d.CreateTranslation(Position.X, Position.Y, -Position.Z);
+				internalObject.Translation = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z);
 			}
 
 			// visibility changed
@@ -879,7 +878,7 @@ namespace OpenBveApi.Objects
 				{
 					if (currentObject.Object.States[i].Prototype == null)
 					{
-						currentObject.Object.States[i].Prototype = new StaticObject(currentHost) {RendererIndex = -1};
+						currentObject.Object.States[i].Prototype = new StaticObject(currentHost);
 					}
 				}
 
@@ -918,7 +917,7 @@ namespace OpenBveApi.Objects
 				{
 					if (currentObject.Object.States[i].Prototype == null)
 					{
-						currentObject.Object.States[i].Prototype = new StaticObject(currentHost) {RendererIndex = -1};
+						currentObject.Object.States[i].Prototype = new StaticObject(currentHost);
 					}
 				}
 

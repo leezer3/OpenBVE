@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using OpenBveApi.Graphics;
+using OpenBveApi.Math;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
+using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace LibRender2.Shaders
 {
@@ -85,46 +86,44 @@ namespace LibRender2.Shaders
 			Disposable.Add(this);
 		}
 
-		/// <summary>
-		/// Loads the shader source and compiles the shader 
-		/// </summary>
+		/// <summary>Loads the shader source and compiles the shader</summary>
 		/// <param name="shaderSource">Shader source code string</param>
 		/// <param name="shaderType">type of shader VertexShader or FragmentShader</param>
 		private void LoadShader(string shaderSource, ShaderType shaderType)
 		{
 			int status;
 
-			if (shaderType == ShaderType.VertexShader)
+			switch (shaderType)
 			{
-				vertexShader = GL.CreateShader(shaderType);
-				GL.ShaderSource(vertexShader, shaderSource);
-				GL.CompileShader(vertexShader);
-				GL.GetShader(vertexShader, ShaderParameter.CompileStatus, out status);
+				case ShaderType.VertexShader:
+					vertexShader = GL.CreateShader(shaderType);
+					GL.ShaderSource(vertexShader, shaderSource);
+					GL.CompileShader(vertexShader);
+					GL.GetShader(vertexShader, ShaderParameter.CompileStatus, out status);
+					if (status == 0)
+					{
+						throw new ApplicationException(GL.GetShaderInfoLog(vertexShader));
+					}
+					break;
+				case ShaderType.FragmentShader:
+				
+					fragmentShader = GL.CreateShader(shaderType);
+					GL.ShaderSource(fragmentShader, shaderSource);
+					GL.CompileShader(fragmentShader);
+					GL.GetShader(fragmentShader, ShaderParameter.CompileStatus, out status);
 
-				if (status == 0)
-				{
-					throw new ApplicationException(GL.GetShaderInfoLog(vertexShader));
-				}
-			}
-
-			if (shaderType == ShaderType.FragmentShader)
-			{
-				fragmentShader = GL.CreateShader(shaderType);
-				GL.ShaderSource(fragmentShader, shaderSource);
-				GL.CompileShader(fragmentShader);
-				GL.GetShader(fragmentShader, ShaderParameter.CompileStatus, out status);
-
-				if (status == 0)
-				{
-					throw new ApplicationException(GL.GetShaderInfoLog(fragmentShader));
-				}
+					if (status == 0)
+					{
+						throw new ApplicationException(GL.GetShaderInfoLog(fragmentShader));
+					}
+					break;
+				default:
+					throw new InvalidOperationException("Attempted to load an unknown shader type");
 			}
 		}
 
-		/// <summary>
-		/// Activate the shader program for use
-		/// </summary>
-		public void Use()
+		/// <summary>Activates the shader program for use</summary>
+		public void Activate()
 		{
 			GL.UseProgram(handle);
 		}
@@ -170,14 +169,13 @@ namespace LibRender2.Shaders
 			};
 		}
 
-		public void NonUse()
+		/// <summary>Deactivates the shader</summary>
+		public void Deactivate()
 		{
 			GL.UseProgram(0);
 		}
 
-		/// <summary>
-		/// cleans up, releasing the underlying openTK/OpenGL shader program
-		/// </summary>
+		/// <summary>Cleans up, releasing the underlying openTK/OpenGL shader program</summary>
 		public void Dispose()
 		{
 			if (!disposed)
@@ -188,13 +186,13 @@ namespace LibRender2.Shaders
 			}
 		}
 
-		private Matrix4 ConvertToMatrix4(Matrix4d mat)
+		private Matrix4 ConvertToMatrix4(Matrix4D mat)
 		{
 			return new Matrix4(
-				(float)mat.M11, (float)mat.M12, (float)mat.M13, (float)mat.M14,
-				(float)mat.M21, (float)mat.M22, (float)mat.M23, (float)mat.M24,
-				(float)mat.M31, (float)mat.M32, (float)mat.M33, (float)mat.M34,
-				(float)mat.M41, (float)mat.M42, (float)mat.M43, (float)mat.M44
+				(float)mat.Row0.X, (float)mat.Row0.Y, (float)mat.Row0.Z, (float)mat.Row0.W,
+				(float)mat.Row1.X, (float)mat.Row1.Y, (float)mat.Row1.Z, (float)mat.Row1.W,
+				(float)mat.Row2.X, (float)mat.Row2.Y, (float)mat.Row2.Z, (float)mat.Row2.W,
+				(float)mat.Row3.X, (float)mat.Row3.Y, (float)mat.Row3.Z, (float)mat.Row3.W
 			);
 		}
 
@@ -204,7 +202,7 @@ namespace LibRender2.Shaders
 		/// Set the projection matrix
 		/// </summary>
 		/// <param name="ProjectionMatrix"></param>
-		public void SetCurrentProjectionMatrix(Matrix4d ProjectionMatrix)
+		public void SetCurrentProjectionMatrix(Matrix4D ProjectionMatrix)
 		{
 			Matrix4 matrix = ConvertToMatrix4(ProjectionMatrix);
 			GL.UniformMatrix4(UniformLayout.CurrentProjectionMatrix, false, ref matrix);
@@ -214,7 +212,7 @@ namespace LibRender2.Shaders
 		/// Set the model view matrix
 		/// </summary>
 		/// <param name="ModelViewMatrix"></param>
-		public void SetCurrentModelViewMatrix(Matrix4d ModelViewMatrix)
+		public void SetCurrentModelViewMatrix(Matrix4D ModelViewMatrix)
 		{
 			Matrix4 matrix = ConvertToMatrix4(ModelViewMatrix);
 			GL.UniformMatrix4(UniformLayout.CurrentModelViewMatrix, false, ref matrix);
@@ -224,7 +222,7 @@ namespace LibRender2.Shaders
 		/// Set the normal matrix
 		/// </summary>
 		/// <param name="NormalMatrix"></param>
-		public void SetCurrentNormalMatrix(Matrix4d NormalMatrix)
+		public void SetCurrentNormalMatrix(Matrix4D NormalMatrix)
 		{
 			Matrix4 matrix = ConvertToMatrix4(NormalMatrix);
 			GL.UniformMatrix4(UniformLayout.CurrentNormalMatrix, false, ref matrix);
@@ -234,7 +232,7 @@ namespace LibRender2.Shaders
 		/// Set the texture matrix
 		/// </summary>
 		/// <param name="TextureMatrix"></param>
-		public void SetCurrentTextureMatrix(Matrix4d TextureMatrix)
+		public void SetCurrentTextureMatrix(Matrix4D TextureMatrix)
 		{
 			Matrix4 matrix = ConvertToMatrix4(TextureMatrix);
 			GL.UniformMatrix4(UniformLayout.CurrentTextureMatrix, false, ref matrix);
@@ -247,7 +245,7 @@ namespace LibRender2.Shaders
 
 		public void SetLightPosition(Vector3 LightPosition)
 		{
-			GL.Uniform3(UniformLayout.LightPosition, LightPosition);
+			GL.Uniform3(UniformLayout.LightPosition, new OpenTK.Vector3((float)LightPosition.X, (float)LightPosition.Y, (float)LightPosition.Z));
 		}
 
 		public void SetLightAmbient(Color4 LightAmbient)

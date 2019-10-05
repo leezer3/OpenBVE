@@ -1,11 +1,11 @@
 ﻿using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
-using OpenTK.Input;             // for Key
 using System;
 using System.Drawing;
 using LibRender2.Texts;
 using OpenBveApi;
+using OpenBveApi.Input;
 
 namespace OpenBve
 {

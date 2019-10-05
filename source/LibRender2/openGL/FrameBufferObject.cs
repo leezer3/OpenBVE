@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL;
 
-namespace OpenBveApi.Graphics
+namespace LibRender2
 {
 	public class FrameBufferObject : IDisposable
 	{

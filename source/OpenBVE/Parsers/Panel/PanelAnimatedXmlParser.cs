@@ -259,7 +259,7 @@ namespace OpenBve.Parsers.Panel
 				CommandOption = CommandOption
 			};
 			Group.TouchElements[n].Element.States = new [] { new ObjectState() };
-			Group.TouchElements[n].Element.States[0].Translation = OpenTK.Matrix4d.CreateTranslation(Position.X, Position.Y, -Position.Z);
+			Group.TouchElements[n].Element.States[0].Translation = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z);
 			Group.TouchElements[n].Element.States[0].Prototype = Object;
 			Group.TouchElements[n].Element.CurrentState = 0;
 			Group.TouchElements[n].Element.internalObject = new ObjectState { Prototype = Object };
