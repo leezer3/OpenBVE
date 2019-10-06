@@ -164,8 +164,8 @@ namespace LibRender2
 				{
 					var data = new LibRenderVertex
 					{
-						Position = new Vector3f((float)mesh.Vertices[vertex.Index].Coordinates.X, (float)mesh.Vertices[vertex.Index].Coordinates.Y, (float)mesh.Vertices[vertex.Index].Coordinates.Z),
-						Normal = new Vector3f((float)vertex.Normal.X, (float)vertex.Normal.Y, (float)vertex.Normal.Z),
+						Position = mesh.Vertices[vertex.Index].Coordinates,
+						Normal = vertex.Normal,
 						UV = mesh.Vertices[vertex.Index].TextureCoordinates
 					};
 
