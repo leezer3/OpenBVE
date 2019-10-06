@@ -150,10 +150,10 @@ namespace LibRender2
 			var hint = isDynamic ? BufferUsageHint.DynamicDraw : BufferUsageHint.StaticDraw;
 
 			var vertexData = new List<LibRenderVertex>();
-			var indexData = new List<int>();
+			var indexData = new List<ushort>();
 
 			var normalsVertexData = new List<LibRenderVertex>();
-			var normalsIndexData = new List<int>();
+			var normalsIndexData = new List<ushort>();
 
 			for (int i = 0; i < mesh.Faces.Length; i++)
 			{
@@ -194,8 +194,8 @@ namespace LibRender2
 					normalsVertexData.AddRange(normalsData);
 				}
 
-				indexData.AddRange(Enumerable.Range(mesh.Faces[i].IboStartIndex, mesh.Faces[i].Vertices.Length));
-				normalsIndexData.AddRange(Enumerable.Range(mesh.Faces[i].NormalsIboStartIndex, mesh.Faces[i].Vertices.Length * 2));
+				indexData.AddRange(Enumerable.Range(mesh.Faces[i].IboStartIndex, mesh.Faces[i].Vertices.Length).Select(x => (ushort) x));
+				normalsIndexData.AddRange(Enumerable.Range(mesh.Faces[i].NormalsIboStartIndex, mesh.Faces[i].Vertices.Length * 2).Select(x => (ushort) x));
 			}
 
 			VertexArrayObject VAO = (VertexArrayObject) mesh.VAO;
@@ -263,7 +263,7 @@ namespace LibRender2
 			float textureX = textureStart;
 
 			List<LibRenderVertex> vertexData = new List<LibRenderVertex>();
-			List<int> indexData = new List<int>();
+			List<ushort> indexData = new List<ushort>();
 
 			for (int i = 0; i < n; i++)
 			{
@@ -299,7 +299,7 @@ namespace LibRender2
 					Color = Color128.White
 				});
 
-				indexData.AddRange(new[] { 0, 1, 2, 3 }.Select(x => x + indexOffset));
+				indexData.AddRange(new[] { 0, 1, 2, 3 }.Select(x => x + indexOffset).Select(x => (ushort) x));
 
 				// top cap
 				vertexData.Add(new LibRenderVertex
@@ -309,7 +309,7 @@ namespace LibRender2
 					Color = Color128.White
 				});
 
-				indexData.AddRange(new[] { 0, 3, 4 }.Select(x => x + indexOffset));
+				indexData.AddRange(new[] { 0, 3, 4 }.Select(x => x + indexOffset).Select(x => (ushort) x));
 
 				// bottom cap
 				vertexData.Add(new LibRenderVertex
@@ -319,7 +319,7 @@ namespace LibRender2
 					Color = Color128.White
 				});
 
-				indexData.AddRange(new[] { 5, 2, 1 }.Select(x => x + indexOffset));
+				indexData.AddRange(new[] { 5, 2, 1 }.Select(x => x + indexOffset).Select(x => (ushort) x));
 
 				// finish
 				textureX += textureIncrement;

@@ -132,7 +132,7 @@ namespace OpenBve
 				vertexData[i].Color = Color;
 			}
 
-			int[] indexData =
+			ushort[] indexData =
 			{
 				0, 1, 2, 3,
 				0, 4, 5, 1,
