@@ -24,25 +24,25 @@ namespace LibRender2.Primitives
 				// back
 				new LibRenderVertex
 				{
-					Position = new Vector3f(1.0f, 1.0f, -1.0f),
+					Position = new Vector3f(1.0f, 1.0f, 1.0f),
 					UV = Vector2.Null,
 					Color = Color128.White
 				},
 				new LibRenderVertex
 				{
-					Position = new Vector3f(-1.0f, 1.0f, -1.0f),
+					Position = new Vector3f(-1.0f, 1.0f, 1.0f),
 					UV = Vector2.Right,
 					Color = Color128.White
 				},
 				new LibRenderVertex
 				{
-					Position = new Vector3f(-1.0f, -1.0f, -1.0f),
+					Position = new Vector3f(-1.0f, -1.0f, 1.0f),
 					UV = Vector2.One,
 					Color = Color128.White
 				},
 				new LibRenderVertex
 				{
-					Position = new Vector3f(1.0f, -1.0f, -1.0f),
+					Position = new Vector3f(1.0f, -1.0f, 1.0f),
 					UV = Vector2.Down,
 					Color = Color128.White
 				},
@@ -50,25 +50,25 @@ namespace LibRender2.Primitives
 				// right
 				new LibRenderVertex
 				{
-					Position = new Vector3f(1.0f, 1.0f, -1.0f),
+					Position = new Vector3f(1.0f, 1.0f, 1.0f),
 					UV = Vector2.Right,
 					Color = Color128.White
 				},
 				new LibRenderVertex
 				{
-					Position = new Vector3f(1.0f, -1.0f, -1.0f),
+					Position = new Vector3f(1.0f, -1.0f, 1.0f),
 					UV = Vector2.One,
 					Color = Color128.White
 				},
 				new LibRenderVertex
 				{
-					Position = new Vector3f(1.0f, -1.0f, 1.0f),
+					Position = new Vector3f(1.0f, -1.0f, -1.0f),
 					UV = Vector2.Down,
 					Color = Color128.White
 				},
 				new LibRenderVertex
 				{
-					Position = new Vector3f(1.0f, 1.0f, 1.0f),
+					Position = new Vector3f(1.0f, 1.0f, -1.0f),
 					UV = Vector2.Null,
 					Color = Color128.White
 				},
@@ -76,33 +76,19 @@ namespace LibRender2.Primitives
 				// top
 				new LibRenderVertex
 				{
-					Position = new Vector3f(1.0f, 1.0f, -1.0f),
+					Position = new Vector3f(1.0f, 1.0f, 1.0f),
 					UV = Vector2.Right,
 					Color = Color128.White
 				},
 				new LibRenderVertex
 				{
-					Position = new Vector3f(1.0f, 1.0f, 1.0f),
+					Position = new Vector3f(1.0f, 1.0f, -1.0f),
 					UV = Vector2.One,
-					Color = Color128.White
-				},
-				new LibRenderVertex
-				{
-					Position = new Vector3f(-1.0f, 1.0f, 1.0f),
-					UV = Vector2.Down,
 					Color = Color128.White
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(-1.0f, 1.0f, -1.0f),
-					UV = Vector2.Null,
-					Color = Color128.White
-				},
-
-				// front
-				new LibRenderVertex
-				{
-					Position = new Vector3f(-1.0f, -1.0f, 1.0f),
 					UV = Vector2.Down,
 					Color = Color128.White
 				},
@@ -112,26 +98,8 @@ namespace LibRender2.Primitives
 					UV = Vector2.Null,
 					Color = Color128.White
 				},
-				new LibRenderVertex
-				{
-					Position = new Vector3f(1.0f, 1.0f, 1.0f),
-					UV = Vector2.Right,
-					Color = Color128.White
-				},
-				new LibRenderVertex
-				{
-					Position = new Vector3f(1.0f, -1.0f, 1.0f),
-					UV = Vector2.One,
-					Color = Color128.White
-				},
 
-				// left
-				new LibRenderVertex
-				{
-					Position = new Vector3f(-1.0f, -1.0f, 1.0f),
-					UV = Vector2.One,
-					Color = Color128.White
-				},
+				// front
 				new LibRenderVertex
 				{
 					Position = new Vector3f(-1.0f, -1.0f, -1.0f),
@@ -146,21 +114,7 @@ namespace LibRender2.Primitives
 				},
 				new LibRenderVertex
 				{
-					Position = new Vector3f(-1.0f, 1.0f, 1.0f),
-					UV = Vector2.Right,
-					Color = Color128.White
-				},
-
-				// bottom
-				new LibRenderVertex
-				{
-					Position = new Vector3f(-1.0f, -1.0f, 1.0f),
-					UV = Vector2.Null,
-					Color = Color128.White
-				},
-				new LibRenderVertex
-				{
-					Position = new Vector3f(1.0f, -1.0f, 1.0f),
+					Position = new Vector3f(1.0f, 1.0f, -1.0f),
 					UV = Vector2.Right,
 					Color = Color128.White
 				},
@@ -170,9 +124,55 @@ namespace LibRender2.Primitives
 					UV = Vector2.One,
 					Color = Color128.White
 				},
+
+				// left
 				new LibRenderVertex
 				{
 					Position = new Vector3f(-1.0f, -1.0f, -1.0f),
+					UV = Vector2.One,
+					Color = Color128.White
+				},
+				new LibRenderVertex
+				{
+					Position = new Vector3f(-1.0f, -1.0f, 1.0f),
+					UV = Vector2.Down,
+					Color = Color128.White
+				},
+				new LibRenderVertex
+				{
+					Position = new Vector3f(-1.0f, 1.0f, 1.0f),
+					UV = Vector2.Null,
+					Color = Color128.White
+				},
+				new LibRenderVertex
+				{
+					Position = new Vector3f(-1.0f, 1.0f, -1.0f),
+					UV = Vector2.Right,
+					Color = Color128.White
+				},
+
+				// bottom
+				new LibRenderVertex
+				{
+					Position = new Vector3f(-1.0f, -1.0f, -1.0f),
+					UV = Vector2.Null,
+					Color = Color128.White
+				},
+				new LibRenderVertex
+				{
+					Position = new Vector3f(1.0f, -1.0f, -1.0f),
+					UV = Vector2.Right,
+					Color = Color128.White
+				},
+				new LibRenderVertex
+				{
+					Position = new Vector3f(1.0f, -1.0f, 1.0f),
+					UV = Vector2.One,
+					Color = Color128.White
+				},
+				new LibRenderVertex
+				{
+					Position = new Vector3f(-1.0f, -1.0f, 1.0f),
 					UV = Vector2.Down,
 					Color = Color128.White
 				}

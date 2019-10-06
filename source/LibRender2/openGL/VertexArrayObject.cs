@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using OpenBveApi.Colors;
-using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
-using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 
 namespace LibRender2
@@ -166,8 +164,8 @@ namespace LibRender2
 				{
 					var data = new LibRenderVertex
 					{
-						Position = new Vector3f((float)mesh.Vertices[vertex.Index].Coordinates.X, (float)mesh.Vertices[vertex.Index].Coordinates.Y, (float)-mesh.Vertices[vertex.Index].Coordinates.Z),
-						Normal = new Vector3f((float)vertex.Normal.X, (float)vertex.Normal.Y, (float)-vertex.Normal.Z),
+						Position = new Vector3f((float)mesh.Vertices[vertex.Index].Coordinates.X, (float)mesh.Vertices[vertex.Index].Coordinates.Y, (float)mesh.Vertices[vertex.Index].Coordinates.Z),
+						Normal = new Vector3f((float)vertex.Normal.X, (float)vertex.Normal.Y, (float)vertex.Normal.Z),
 						UV = mesh.Vertices[vertex.Index].TextureCoordinates
 					};
 
@@ -255,8 +253,8 @@ namespace LibRender2
 			{
 				float x = (float)(background.BackgroundImageDistance * System.Math.Cos(angleValue));
 				float z = (float)(background.BackgroundImageDistance * System.Math.Sin(angleValue));
-				bottom[i] = new Vector3f(x, y0, -z);
-				top[i] = new Vector3f(x, y1, -z);
+				bottom[i] = new Vector3f(x, y0, z);
+				top[i] = new Vector3f(x, y1, z);
 				angleValue += angleIncrement;
 			}
 

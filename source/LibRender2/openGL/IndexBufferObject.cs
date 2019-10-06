@@ -33,9 +33,8 @@ namespace LibRender2
 			GL.BindBuffer(BufferTarget.ElementArrayBuffer, handle);
 		}
 
-		/// <summary>
-		/// Copies the Indices in to the IBO/EBO must be done before use
-		/// </summary>
+		/// <summary>Copies the Indices into the IBO/EBO</summary>
+		/// <remarks>Must be called before attempting to use the IBO/ EBO</remarks>
 		internal void BufferData()
 		{
 			GL.BufferData(BufferTarget.ElementArrayBuffer, indexData.Length * sizeof(int), indexData, drawType);
