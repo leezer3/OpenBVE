@@ -191,7 +191,7 @@ namespace OpenBve
 										if (!TrainManager.PlayerTrain.Handles.SingleHandle)
 										{
 											double a = Interface.CurrentControls[i].AnalogState;
-											if (Interface.CurrentControls[i].Command == Translations.Command.BrakeFullAxis)
+											if (Interface.CurrentControls[i].Command == Translations.Command.PowerFullAxis)
 											{
 												a = 0.5*(a + 1.0);
 											}
