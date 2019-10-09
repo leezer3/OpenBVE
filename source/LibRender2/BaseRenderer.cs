@@ -353,6 +353,97 @@ namespace LibRender2
 			return StaticObjectStates.Count - 1;
 		}
 
+
+		public int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation AuxTransformation, Matrix4D Rotate, Matrix4D Translate, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		{
+			if (Prototype == null)
+			{
+				return -1;
+			}
+
+			float startingDistance = float.MaxValue;
+			float endingDistance = float.MinValue;
+
+			if (AccurateObjectDisposal)
+			{
+				foreach (VertexTemplate vertex in Prototype.Mesh.Vertices)
+				{
+					OpenBveApi.Math.Vector3 Coordinates = vertex.Coordinates;
+					Coordinates.Rotate(AuxTransformation);
+
+					if (Coordinates.Z < StartingDistance)
+					{
+						startingDistance = (float)Coordinates.Z;
+					}
+
+					if (Coordinates.Z > EndingDistance)
+					{
+						endingDistance = (float)Coordinates.Z;
+					}
+				}
+
+				startingDistance += (float)AccurateObjectDisposalZOffset;
+				endingDistance += (float)AccurateObjectDisposalZOffset;
+			}
+
+			const double minBlockLength = 20.0;
+
+			if (BlockLength < minBlockLength)
+			{
+				BlockLength *= Math.Ceiling(minBlockLength / BlockLength);
+			}
+
+			if (AccurateObjectDisposal)
+			{
+				startingDistance += (float)TrackPosition;
+				endingDistance += (float)TrackPosition;
+				double z = BlockLength * Math.Floor(TrackPosition / BlockLength);
+				StartingDistance = Math.Min(z - BlockLength, startingDistance);
+				EndingDistance = Math.Max(z + 2.0 * BlockLength, endingDistance);
+				startingDistance = (float)(BlockLength * Math.Floor(StartingDistance / BlockLength));
+				endingDistance = (float)(BlockLength * Math.Ceiling(EndingDistance / BlockLength));
+			}
+			else
+			{
+				startingDistance = (float)StartingDistance;
+				endingDistance = (float)EndingDistance;
+			}
+
+			StaticObjectStates.Add(new ObjectState
+			{
+				Prototype = Prototype,
+				Translation = Translate,
+				Rotate = Rotate,
+				Brightness = Brightness,
+				StartingDistance = startingDistance,
+				EndingDistance = endingDistance
+			});
+			
+			foreach (MeshFace face in Prototype.Mesh.Faces)
+			{
+				switch (face.Flags & MeshFace.FaceTypeMask)
+				{
+					case MeshFace.FaceTypeTriangles:
+						InfoTotalTriangles++;
+						break;
+					case MeshFace.FaceTypeTriangleStrip:
+						InfoTotalTriangleStrip++;
+						break;
+					case MeshFace.FaceTypeQuads:
+						InfoTotalQuads++;
+						break;
+					case MeshFace.FaceTypeQuadStrip:
+						InfoTotalQuadStrip++;
+						break;
+					case MeshFace.FaceTypePolygon:
+						InfoTotalPolygon++;
+						break;
+				}
+			}
+
+			return StaticObjectStates.Count - 1;
+		}
+
 		public void CreateDynamicObject(ref ObjectState internalObject)
 		{
 			if (internalObject == null)
