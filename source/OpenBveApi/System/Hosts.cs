@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -195,6 +195,25 @@ namespace OpenBveApi.Hosts {
 		/// <param name="Brightness">The brightness value at this track position</param>
 		/// <returns>The index to the created object, or -1 if this call fails</returns>
 		public virtual int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		{
+			return -1;
+		}
+
+		/// <summary>Creates a static object within the world of the host application, and returns the ObjectManager ID</summary>
+		/// <param name="Prototype">The prototype (un-transformed) static object</param>
+		/// <param name="Position">The world position</param>
+		/// <param name="AuxTransformation">The secondary rail transformation to apply NOTE: Only used for object disposal calcs</param>
+		/// <param name="Rotate">The rotation matrix to apply</param>
+		/// <param name="Translate">The translation matrix to apply</param>
+		/// <param name="AccurateObjectDisposal">Whether accurate object disposal is in use</param>
+		/// <param name="AccurateObjectDisposalZOffset">The offset for accurate Z-disposal</param>
+		/// <param name="StartingDistance">The absolute route based starting distance for the object</param>
+		/// <param name="EndingDistance">The absolute route based ending distance for the object</param>
+		/// <param name="BlockLength">The block length</param>
+		/// <param name="TrackPosition">The absolute route based track position</param>
+		/// <param name="Brightness">The brightness value at this track position</param>
+		/// <returns>The index to the created object, or -1 if this call fails</returns>
+		public virtual int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation AuxTransformation, Matrix4D Rotate, Matrix4D Translate, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
 		{
 			return -1;
 		}

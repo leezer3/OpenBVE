@@ -40,8 +40,8 @@ out float oFogFactor;
 
 void main()
 {
-	vec4 viewPos = uCurrentModelViewMatrix * vec4(iPosition, 1.0);
-	vec4 viewNormal = uCurrentNormalMatrix * vec4(iNormal, 1.0);
+	vec4 viewPos = uCurrentModelViewMatrix * vec4(vec3(iPosition.x, iPosition.y, -iPosition.z), 1.0);
+	vec4 viewNormal = uCurrentNormalMatrix * vec4(vec3(iNormal.x, iNormal.y, -iNormal.z), 1.0);
 	gl_Position = uCurrentProjectionMatrix * viewPos;
 
 	// Lighting

@@ -60,13 +60,13 @@ namespace OpenBveApi.Objects
 						{
 							if (free[i])
 							{
+								Transformation FinalTransformation = new Transformation(BaseTransformation, AuxTransformation);
 								Matrix4D mat = Matrix4D.Identity;
 								mat *= Objects[i].States[0].Translation;
-								mat *= Objects[i].States[0].Rotate;
+								mat *= (Matrix4D)new Transformation(FinalTransformation.Z, FinalTransformation.Y, FinalTransformation.X);
 								double zOffset = mat.ExtractTranslation().Z * -1.0;
-								Vector3 p = new Vector3(Position.X, Position.Y, Position.Z);
-								p.Transform(mat);
-								currentHost.CreateStaticObject(Objects[i].States[0].Prototype, p, BaseTransformation, AuxTransformation, AccurateObjectDisposal, zOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+								
+								currentHost.CreateStaticObject(Objects[i].States[0].Prototype, Position, AuxTransformation, mat, Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z), AccurateObjectDisposal, zOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 							}
 							else
 							{

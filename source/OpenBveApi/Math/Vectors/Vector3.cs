@@ -103,6 +103,12 @@ namespace OpenBveApi.Math {
 			return new Vector3(Vector1.X + ((Vector2.X - Vector1.X) * mu), Vector1.Y + ((Vector2.Y - Vector1.Y) * mu), Vector1.Z + ((Vector2.Z - Vector1.Z) * mu));
 		}
 		
+		/// <summary>Converts a Vector3 to a Vector3f</summary>
+		///	<remarks>This discards the double precision</remarks>
+		public static implicit operator Vector3f(Vector3 v)
+		{
+			return new Vector3f(v.X, v.Y, v.Z);
+		}
 		
 		// --- arithmetic operators ---
 		

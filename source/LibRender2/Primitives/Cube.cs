@@ -1,15 +1,14 @@
 ﻿using System.Linq;
 using OpenBveApi.Colors;
-using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using OpenBveApi.Textures;
 using OpenBveApi.World;
-using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Vector2 = OpenBveApi.Math.Vector2;
 
 namespace LibRender2.Primitives
 {
+	/// <summary>A Cube of nomimal 1.0 size</summary>
 	public class Cube
 	{
 		private readonly BaseRenderer renderer;
@@ -24,25 +23,25 @@ namespace LibRender2.Primitives
 				// back
 				new LibRenderVertex
 				{
-					Position = new Vector3f(1.0f, 1.0f, -1.0f),
+					Position = new Vector3f(1.0f, 1.0f, 1.0f),
 					UV = Vector2.Null,
 					Color = Color128.White
 				},
 				new LibRenderVertex
 				{
-					Position = new Vector3f(-1.0f, 1.0f, -1.0f),
+					Position = new Vector3f(-1.0f, 1.0f, 1.0f),
 					UV = Vector2.Right,
 					Color = Color128.White
 				},
 				new LibRenderVertex
 				{
-					Position = new Vector3f(-1.0f, -1.0f, -1.0f),
+					Position = new Vector3f(-1.0f, -1.0f, 1.0f),
 					UV = Vector2.One,
 					Color = Color128.White
 				},
 				new LibRenderVertex
 				{
-					Position = new Vector3f(1.0f, -1.0f, -1.0f),
+					Position = new Vector3f(1.0f, -1.0f, 1.0f),
 					UV = Vector2.Down,
 					Color = Color128.White
 				},
@@ -50,25 +49,25 @@ namespace LibRender2.Primitives
 				// right
 				new LibRenderVertex
 				{
-					Position = new Vector3f(1.0f, 1.0f, -1.0f),
+					Position = new Vector3f(1.0f, 1.0f, 1.0f),
 					UV = Vector2.Right,
 					Color = Color128.White
 				},
 				new LibRenderVertex
 				{
-					Position = new Vector3f(1.0f, -1.0f, -1.0f),
+					Position = new Vector3f(1.0f, -1.0f, 1.0f),
 					UV = Vector2.One,
 					Color = Color128.White
 				},
 				new LibRenderVertex
 				{
-					Position = new Vector3f(1.0f, -1.0f, 1.0f),
+					Position = new Vector3f(1.0f, -1.0f, -1.0f),
 					UV = Vector2.Down,
 					Color = Color128.White
 				},
 				new LibRenderVertex
 				{
-					Position = new Vector3f(1.0f, 1.0f, 1.0f),
+					Position = new Vector3f(1.0f, 1.0f, -1.0f),
 					UV = Vector2.Null,
 					Color = Color128.White
 				},
@@ -76,33 +75,19 @@ namespace LibRender2.Primitives
 				// top
 				new LibRenderVertex
 				{
-					Position = new Vector3f(1.0f, 1.0f, -1.0f),
+					Position = new Vector3f(1.0f, 1.0f, 1.0f),
 					UV = Vector2.Right,
 					Color = Color128.White
 				},
 				new LibRenderVertex
 				{
-					Position = new Vector3f(1.0f, 1.0f, 1.0f),
+					Position = new Vector3f(1.0f, 1.0f, -1.0f),
 					UV = Vector2.One,
-					Color = Color128.White
-				},
-				new LibRenderVertex
-				{
-					Position = new Vector3f(-1.0f, 1.0f, 1.0f),
-					UV = Vector2.Down,
 					Color = Color128.White
 				},
 				new LibRenderVertex
 				{
 					Position = new Vector3f(-1.0f, 1.0f, -1.0f),
-					UV = Vector2.Null,
-					Color = Color128.White
-				},
-
-				// front
-				new LibRenderVertex
-				{
-					Position = new Vector3f(-1.0f, -1.0f, 1.0f),
 					UV = Vector2.Down,
 					Color = Color128.White
 				},
@@ -112,26 +97,8 @@ namespace LibRender2.Primitives
 					UV = Vector2.Null,
 					Color = Color128.White
 				},
-				new LibRenderVertex
-				{
-					Position = new Vector3f(1.0f, 1.0f, 1.0f),
-					UV = Vector2.Right,
-					Color = Color128.White
-				},
-				new LibRenderVertex
-				{
-					Position = new Vector3f(1.0f, -1.0f, 1.0f),
-					UV = Vector2.One,
-					Color = Color128.White
-				},
 
-				// left
-				new LibRenderVertex
-				{
-					Position = new Vector3f(-1.0f, -1.0f, 1.0f),
-					UV = Vector2.One,
-					Color = Color128.White
-				},
+				// front
 				new LibRenderVertex
 				{
 					Position = new Vector3f(-1.0f, -1.0f, -1.0f),
@@ -146,21 +113,7 @@ namespace LibRender2.Primitives
 				},
 				new LibRenderVertex
 				{
-					Position = new Vector3f(-1.0f, 1.0f, 1.0f),
-					UV = Vector2.Right,
-					Color = Color128.White
-				},
-
-				// bottom
-				new LibRenderVertex
-				{
-					Position = new Vector3f(-1.0f, -1.0f, 1.0f),
-					UV = Vector2.Null,
-					Color = Color128.White
-				},
-				new LibRenderVertex
-				{
-					Position = new Vector3f(1.0f, -1.0f, 1.0f),
+					Position = new Vector3f(1.0f, 1.0f, -1.0f),
 					UV = Vector2.Right,
 					Color = Color128.White
 				},
@@ -170,9 +123,55 @@ namespace LibRender2.Primitives
 					UV = Vector2.One,
 					Color = Color128.White
 				},
+
+				// left
 				new LibRenderVertex
 				{
 					Position = new Vector3f(-1.0f, -1.0f, -1.0f),
+					UV = Vector2.One,
+					Color = Color128.White
+				},
+				new LibRenderVertex
+				{
+					Position = new Vector3f(-1.0f, -1.0f, 1.0f),
+					UV = Vector2.Down,
+					Color = Color128.White
+				},
+				new LibRenderVertex
+				{
+					Position = new Vector3f(-1.0f, 1.0f, 1.0f),
+					UV = Vector2.Null,
+					Color = Color128.White
+				},
+				new LibRenderVertex
+				{
+					Position = new Vector3f(-1.0f, 1.0f, -1.0f),
+					UV = Vector2.Right,
+					Color = Color128.White
+				},
+
+				// bottom
+				new LibRenderVertex
+				{
+					Position = new Vector3f(-1.0f, -1.0f, -1.0f),
+					UV = Vector2.Null,
+					Color = Color128.White
+				},
+				new LibRenderVertex
+				{
+					Position = new Vector3f(1.0f, -1.0f, -1.0f),
+					UV = Vector2.Right,
+					Color = Color128.White
+				},
+				new LibRenderVertex
+				{
+					Position = new Vector3f(1.0f, -1.0f, 1.0f),
+					UV = Vector2.One,
+					Color = Color128.White
+				},
+				new LibRenderVertex
+				{
+					Position = new Vector3f(-1.0f, -1.0f, 1.0f),
 					UV = Vector2.Down,
 					Color = Color128.White
 				}
@@ -181,7 +180,7 @@ namespace LibRender2.Primitives
 			defaultVAO = new VertexArrayObject();
 			defaultVAO.Bind();
 			defaultVAO.SetVBO(new VertexBufferObject(vertexData, BufferUsageHint.StaticDraw));
-			defaultVAO.SetIBO(new IndexBufferObject(Enumerable.Range(0, vertexData.Length).ToArray(), BufferUsageHint.StaticDraw));
+			defaultVAO.SetIBO(new IndexBufferObject(Enumerable.Range(0, vertexData.Length).Select(x => (ushort) x).ToArray(), BufferUsageHint.StaticDraw));
 			defaultVAO.UnBind();
 		}
 
@@ -227,7 +226,7 @@ namespace LibRender2.Primitives
 
 			// matrix
 			renderer.DefaultShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
-			renderer.DefaultShader.SetCurrentModelViewMatrix(Matrix4D.Scale((OpenBveApi.Math.Vector3)Size) * (Matrix4D)new Transformation(Direction, Up, Side) * Matrix4D.CreateTranslation(Position.X - Camera.X, Position.Y - Camera.Y, -Position.Z + Camera.Z) * renderer.CurrentViewMatrix);
+			renderer.DefaultShader.SetCurrentModelViewMatrix(Matrix4D.Scale(Size) * (Matrix4D)new Transformation(Direction, Up, Side) * Matrix4D.CreateTranslation(Position.X - Camera.X, Position.Y - Camera.Y, -Position.Z + Camera.Z) * renderer.CurrentViewMatrix);
 
 			// texture
 			if (TextureIndex != null && renderer.currentHost.LoadTexture(TextureIndex, OpenGlTextureWrapMode.ClampClamp))
