@@ -649,7 +649,7 @@ namespace OpenBveApi.Math
 	        Matrix4D result;
 	        result.Row0 = new Vector4(1,0,0,0) * x;
 	        result.Row1 = new Vector4(0,1,0,0) * y;
-	        result.Row2 = new Vector4(0,0,1,0) * x;
+	        result.Row2 = new Vector4(0,0,1,0) * z;
 	        result.Row3 = new Vector4(0,0,0,1);
 	        return result;
         }

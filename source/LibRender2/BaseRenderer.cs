@@ -556,7 +556,7 @@ namespace LibRender2
 		public void ResetShader(Shader Shader)
 		{
 			ErrorCode message = GL.GetError();
-
+			
 			if (message != ErrorCode.NoError)
 			{
 				throw new InvalidOperationException($"OpenGL Error: {message.ToString()}");

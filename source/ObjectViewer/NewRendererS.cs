@@ -118,14 +118,14 @@ namespace OpenBve
 		private VertexArrayObject RegisterBox(Color128 Color)
 		{
 			LibRenderVertex[] vertexData = new LibRenderVertex[8];
-			vertexData[0].Position = new OpenBveApi.Math.Vector3f(1.0f, 1.0f, 1.0f);
-			vertexData[1].Position = new OpenBveApi.Math.Vector3f(1.0f, -1.0f, 1.0f);
-			vertexData[2].Position = new OpenBveApi.Math.Vector3f(-1.0f, -1.0f, 1.0f);
-			vertexData[3].Position = new OpenBveApi.Math.Vector3f(-1.0f, 1.0f, 1.0f);
-			vertexData[4].Position = new OpenBveApi.Math.Vector3f(1.0f, 1.0f, -1.0f);
-			vertexData[5].Position = new OpenBveApi.Math.Vector3f(1.0f, -1.0f, -1.0f);
-			vertexData[6].Position = new OpenBveApi.Math.Vector3f(-1.0f, -1.0f, -1.0f);
-			vertexData[7].Position = new OpenBveApi.Math.Vector3f(-1.0f, 1.0f, -1.0f);
+			vertexData[0].Position = new Vector3f(1.0f, 1.0f, 1.0f);
+			vertexData[1].Position = new Vector3f(1.0f, -1.0f, 1.0f);
+			vertexData[2].Position = new Vector3f(-1.0f, -1.0f, 1.0f);
+			vertexData[3].Position = new Vector3f(-1.0f, 1.0f, 1.0f);
+			vertexData[4].Position = new Vector3f(1.0f, 1.0f, -1.0f);
+			vertexData[5].Position = new Vector3f(1.0f, -1.0f, -1.0f);
+			vertexData[6].Position = new Vector3f(-1.0f, -1.0f, -1.0f);
+			vertexData[7].Position = new Vector3f(-1.0f, 1.0f, -1.0f);
 
 			for (int i = 0; i < vertexData.Length; i++)
 			{
@@ -165,11 +165,10 @@ namespace OpenBve
 
 			if (OptionCoordinateSystem)
 			{
-				Cube.Draw(redAxisVAO, OpenBveApi.Math.Vector3.Zero, OpenBveApi.Math.Vector3.Forward, OpenBveApi.Math.Vector3.Down, OpenBveApi.Math.Vector3.Right, new OpenBveApi.Math.Vector3(100.0, 0.01, 0.01), Camera.AbsolutePosition, null);
-				Cube.Draw(greenAxisVAO, OpenBveApi.Math.Vector3.Zero, OpenBveApi.Math.Vector3.Forward, OpenBveApi.Math.Vector3.Down, OpenBveApi.Math.Vector3.Right, new OpenBveApi.Math.Vector3(0.01, 100.0, 0.01), Camera.AbsolutePosition, null);
-				Cube.Draw(blueAxisVAO, OpenBveApi.Math.Vector3.Zero, OpenBveApi.Math.Vector3.Forward, OpenBveApi.Math.Vector3.Down, OpenBveApi.Math.Vector3.Right, new OpenBveApi.Math.Vector3(0.01, 0.01, 100.0), Camera.AbsolutePosition, null);
+				Cube.Draw(redAxisVAO, Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), Camera.AbsolutePosition, null);
+				Cube.Draw(greenAxisVAO, Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), Camera.AbsolutePosition, null);
+				Cube.Draw(blueAxisVAO, Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), Camera.AbsolutePosition, null);
 			}
-
 			// opaque face
 			ResetOpenGlState();
 

@@ -47,7 +47,7 @@ namespace LibRender2
 		/// <param name="DrawMode">Specifies the primitive or primitives that will be created from vertices</param>
 		internal void Draw(PrimitiveType DrawMode)
 		{
-			GL.DrawElements(DrawMode, indexData.Length, DrawElementsType.UnsignedInt, 0);
+			GL.DrawElements(DrawMode, indexData.Length, DrawElementsType.UnsignedShort, 0);
 		}
 
 		/// <summary>
