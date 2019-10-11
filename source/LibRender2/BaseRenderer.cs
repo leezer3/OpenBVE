@@ -322,7 +322,8 @@ namespace LibRender2
 			{
 				Prototype = Prototype,
 				Translation = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z),
-				Rotate = (Matrix4D)new Transformation(BaseTransformation, AuxTransformation),
+				//FIXME: This seems to need to be the 'wrong' way around. Need to standardise on Matrices throughout?
+				Rotate = (Matrix4D)new Transformation(AuxTransformation, BaseTransformation),
 				Brightness = Brightness,
 				StartingDistance = startingDistance,
 				EndingDistance = endingDistance
