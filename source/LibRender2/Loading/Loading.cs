@@ -146,6 +146,7 @@ namespace LibRender2.Loadings
 					renderer.SetAlphaFunc(AlphaFunction.Less, 1.0f);
 					GL.DepthMask(false);
 					renderer.Rectangle.Draw(TextureLogo, new Point((renderer.Screen.Width - TextureLogo.Width) / 2, logoTop), new Size(TextureLogo.Width, TextureLogo.Height), Color128.White);
+					renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 				}
 			}
 			// ReSharper disable once RedundantIfElseBlock
