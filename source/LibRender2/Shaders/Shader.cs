@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenTK;
 using OpenTK.Graphics;
@@ -245,42 +246,42 @@ namespace LibRender2.Shaders
 
 		public void SetLightPosition(Vector3 LightPosition)
 		{
-			GL.Uniform3(UniformLayout.LightPosition, new OpenTK.Vector3((float)LightPosition.X, (float)LightPosition.Y, (float)LightPosition.Z));
+			GL.Uniform3(UniformLayout.LightPosition, (float)LightPosition.X, (float)LightPosition.Y, (float)LightPosition.Z);
 		}
 
-		public void SetLightAmbient(Color4 LightAmbient)
+		public void SetLightAmbient(Color24 LightAmbient)
 		{
-			GL.Uniform4(UniformLayout.LightAmbient, LightAmbient);
+			GL.Uniform4(UniformLayout.LightAmbient, LightAmbient.R / 255.0f, LightAmbient.G / 255.0f, LightAmbient.B / 255.0f, 1.0f);
 		}
 
-		public void SetLightDiffuse(Color4 LightDiffuse)
+		public void SetLightDiffuse(Color24 LightDiffuse)
 		{
-			GL.Uniform4(UniformLayout.LightDiffuse, LightDiffuse);
+			GL.Uniform4(UniformLayout.LightDiffuse, LightDiffuse.R / 255.0f, LightDiffuse.G / 255.0f, LightDiffuse.B / 255.0f, 1.0f);
 		}
 
-		public void SetLightSpecular(Color4 LightSpecular)
+		public void SetLightSpecular(Color24 LightSpecular)
 		{
-			GL.Uniform4(UniformLayout.LightSpecular, LightSpecular);
+			GL.Uniform4(UniformLayout.LightSpecular, LightSpecular.R / 255.0f, LightSpecular.G / 255.0f, LightSpecular.B / 255.0f, 1.0f);
 		}
 
-		public void SetMaterialAmbient(Color4 MaterialAmbient)
+		public void SetMaterialAmbient(Color32 MaterialAmbient)
 		{
-			GL.Uniform4(UniformLayout.MaterialAmbient, MaterialAmbient);
+			GL.Uniform4(UniformLayout.MaterialAmbient, MaterialAmbient.R / 255.0f, MaterialAmbient.G / 255.0f, MaterialAmbient.B / 255.0f, MaterialAmbient.A / 255.0f);
 		}
 
-		public void SetMaterialDiffuse(Color4 MaterialDiffuse)
+		public void SetMaterialDiffuse(Color32 MaterialDiffuse)
 		{
-			GL.Uniform4(UniformLayout.MaterialDiffuse, MaterialDiffuse);
+			GL.Uniform4(UniformLayout.MaterialDiffuse, MaterialDiffuse.R / 255.0f, MaterialDiffuse.G / 255.0f, MaterialDiffuse.B / 255.0f, MaterialDiffuse.A / 255.0f);
 		}
 
-		public void SetMaterialSpecular(Color4 MaterialSpecular)
+		public void SetMaterialSpecular(Color32 MaterialSpecular)
 		{
-			GL.Uniform4(UniformLayout.MaterialSpecular, MaterialSpecular);
+			GL.Uniform4(UniformLayout.MaterialSpecular, MaterialSpecular.R / 255.0f, MaterialSpecular.G / 255.0f, MaterialSpecular.B / 255.0f, MaterialSpecular.A / 255.0f);
 		}
 
-		public void SetMaterialEmission(Color4 MaterialEmission)
+		public void SetMaterialEmission(Color24 MaterialEmission)
 		{
-			GL.Uniform4(UniformLayout.MaterialEmission, MaterialEmission);
+			GL.Uniform4(UniformLayout.MaterialEmission, MaterialEmission.R / 255.0f, MaterialEmission.G / 255.0f, MaterialEmission.B / 255.0f, 1.0f);
 		}
 
 		public void SetMaterialShininess(float MaterialShininess)
@@ -303,9 +304,9 @@ namespace LibRender2.Shaders
 			GL.Uniform1(UniformLayout.FogEnd, FogEnd);
 		}
 
-		public void SetFogColor(Color4 FogColor)
+		public void SetFogColor(Color24 FogColor)
 		{
-			GL.Uniform4(UniformLayout.FogColor, FogColor);
+			GL.Uniform4(UniformLayout.FogColor, FogColor.R / 255.0f, FogColor.G / 255.0f, FogColor.B / 255.0f, 1.0f);
 		}
 
 		public void SetIsTexture(bool IsTexture)

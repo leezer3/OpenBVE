@@ -146,7 +146,7 @@ namespace LibRender2.Backgrounds
 					renderer.DefaultShader.SetIsFog(true);
 					renderer.DefaultShader.SetFogStart(renderer.Fog.Start);
 					renderer.DefaultShader.SetFogEnd(renderer.Fog.End);
-					renderer.DefaultShader.SetFogColor(new Color4(renderer.Fog.Color.R, renderer.Fog.Color.G, renderer.Fog.Color.B, 255));
+					renderer.DefaultShader.SetFogColor(renderer.Fog.Color);
 				}
 
 				// texture

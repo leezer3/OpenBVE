@@ -16,6 +16,7 @@ using LibRender2.Texts;
 using LibRender2.Textures;
 using LibRender2.Viewports;
 using OpenBveApi;
+using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -660,18 +661,18 @@ namespace LibRender2
 			Shader.SetCurrentTextureMatrix(Matrix4D.Identity);
 			Shader.SetIsLight(false);
 			Shader.SetLightPosition(Vector3.Zero);
-			Shader.SetLightAmbient(Color4.White);
-			Shader.SetLightDiffuse(Color4.White);
-			Shader.SetLightSpecular(Color4.White);
-			Shader.SetMaterialAmbient(Color4.White);
-			Shader.SetMaterialDiffuse(Color4.White);
-			Shader.SetMaterialSpecular(Color4.White);
-			Shader.SetMaterialEmission(Color4.White);
+			Shader.SetLightAmbient(Color24.White);
+			Shader.SetLightDiffuse(Color24.White);
+			Shader.SetLightSpecular(Color24.White);
+			Shader.SetMaterialAmbient(Color24.White);
+			Shader.SetMaterialDiffuse(Color24.White);
+			Shader.SetMaterialSpecular(Color24.White);
+			Shader.SetMaterialEmission(Color24.White);
 			Shader.SetMaterialShininess(1.0f);
 			Shader.SetIsFog(false);
 			Shader.SetFogStart(0.0f);
 			Shader.SetFogEnd(0.0f);
-			Shader.SetFogColor(Color4.White);
+			Shader.SetFogColor(Color24.White);
 			Shader.SetIsTexture(false);
 			Shader.SetTexture(0);
 			Shader.SetBrightness(1.0f);
@@ -821,20 +822,20 @@ namespace LibRender2
 				{
 					Shader.SetIsLight(true);
 					Shader.SetLightPosition(new Vector3(Lighting.OptionLightPosition.X, Lighting.OptionLightPosition.Y, -Lighting.OptionLightPosition.Z));
-					Shader.SetLightAmbient(new Color4(Lighting.OptionAmbientColor.R, Lighting.OptionAmbientColor.G, Lighting.OptionAmbientColor.B, 255));
-					Shader.SetLightDiffuse(new Color4(Lighting.OptionDiffuseColor.R, Lighting.OptionDiffuseColor.G, Lighting.OptionDiffuseColor.B, 255));
-					Shader.SetLightSpecular(new Color4(Lighting.OptionSpecularColor.R, Lighting.OptionSpecularColor.G, Lighting.OptionSpecularColor.B, 255));
-					Shader.SetMaterialAmbient(new Color4(material.Color.R, material.Color.G, material.Color.B, material.Color.A));  // TODO
-					Shader.SetMaterialDiffuse(new Color4(material.Color.R, material.Color.G, material.Color.B, material.Color.A));
-					Shader.SetMaterialSpecular(new Color4(material.Color.R, material.Color.G, material.Color.B, material.Color.A));  // TODO
+					Shader.SetLightAmbient(Lighting.OptionAmbientColor);
+					Shader.SetLightDiffuse(Lighting.OptionDiffuseColor);
+					Shader.SetLightSpecular(Lighting.OptionSpecularColor);
+					Shader.SetMaterialAmbient(material.Color);  // TODO
+					Shader.SetMaterialDiffuse(material.Color);
+					Shader.SetMaterialSpecular(material.Color);  // TODO
 
 					if ((material.Flags & MeshMaterial.EmissiveColorMask) != 0)
 					{
-						Shader.SetMaterialEmission(new Color4(material.EmissiveColor.R, material.EmissiveColor.G, material.EmissiveColor.B, 255));
+						Shader.SetMaterialEmission(material.EmissiveColor);
 					}
 					else
 					{
-						Shader.SetMaterialEmission(new Color4(0.0f, 0.0f, 0.0f, 1.0f));
+						Shader.SetMaterialEmission(Color24.Black);
 					}
 
 					Shader.SetMaterialShininess(1.0f);
@@ -848,12 +849,12 @@ namespace LibRender2
 				}
 				else
 				{
-					Shader.SetMaterialAmbient(new Color4(material.Color.R, material.Color.G, material.Color.B, material.Color.A));  // TODO
+					Shader.SetMaterialAmbient(material.Color);  // TODO
 				}
 			}
 			else
 			{
-				Shader.SetMaterialAmbient(new Color4(material.Color.R, material.Color.G, material.Color.B, material.Color.A));  // TODO
+				Shader.SetMaterialAmbient(material.Color);  // TODO
 			}
 
 			// fog
@@ -862,7 +863,7 @@ namespace LibRender2
 				Shader.SetIsFog(true);
 				Shader.SetFogStart(Fog.Start);
 				Shader.SetFogEnd(Fog.End);
-				Shader.SetFogColor(new Color4(Fog.Color.R, Fog.Color.G, Fog.Color.B, 255));
+				Shader.SetFogColor(Fog.Color);
 			}
 
 			PrimitiveType DrawMode;
