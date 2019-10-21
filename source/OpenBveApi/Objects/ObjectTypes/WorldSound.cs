@@ -64,7 +64,10 @@ namespace OpenBveApi.Objects
 				//Must clone the vector, not pass the reference
 				Position = new Vector3(position),
 				Follower = new TrackFollower(currentHost),
-				currentTrackPosition = trackPosition
+				currentTrackPosition = trackPosition,
+				TrackFollowerFunction =  TrackFollowerFunction,
+				PitchFunction =  PitchFunction,
+				VolumeFunction =  VolumeFunction
 			};
 			snd.Follower.UpdateAbsolute(trackPosition, true, true);
 			if (this.TrackFollowerFunction != null)
