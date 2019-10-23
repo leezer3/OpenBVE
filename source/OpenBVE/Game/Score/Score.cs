@@ -194,7 +194,7 @@ namespace OpenBve
 					{
 						if (j >= ArrivalStation & TrainManager.PlayerTrain.StationState == TrainStopState.Boarding)
 						{
-							if (j == 0 || Program.CurrentRoute.Stations[j - 1].Type != StationType.ChangeEnds)
+							if (j == 0 || Program.CurrentRoute.Stations[j - 1].Type != StationType.ChangeEnds && Program.CurrentRoute.Stations[j - 1].Type != StationType.Jump)
 							{
 								// arrival
 								int xa = ScoreValueStationArrival;

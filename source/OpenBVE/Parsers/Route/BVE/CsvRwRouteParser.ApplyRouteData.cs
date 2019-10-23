@@ -1685,21 +1685,39 @@ namespace OpenBve
 					Interface.AddMessage(MessageType.Warning, false, "Station " + Program.CurrentRoute.Stations[i].Name + " expects trains to stop but does not define stop points at track position " + Program.CurrentRoute.Stations[i].DefaultTrackPosition.ToString(Culture) + " in file " + FileName);
 					Program.CurrentRoute.Stations[i].StopMode = StationStopMode.AllPass;
 				}
-				if (Program.CurrentRoute.Stations[i].Type == StationType.ChangeEnds)
+
+				switch (Program.CurrentRoute.Stations[i].Type)
 				{
-					if (i < Program.CurrentRoute.Stations.Length - 1)
-					{
-						if (Program.CurrentRoute.Stations[i + 1].StopMode != StationStopMode.AllStop)
+					case StationType.ChangeEnds:
+						if (i < Program.CurrentRoute.Stations.Length - 1)
 						{
-							Interface.AddMessage(MessageType.Warning, false, "Station " + Program.CurrentRoute.Stations[i].Name + " is marked as \"change ends\" but the subsequent station does not expect all trains to stop in file " + FileName);
-							Program.CurrentRoute.Stations[i + 1].StopMode = StationStopMode.AllStop;
+							if (Program.CurrentRoute.Stations[i + 1].StopMode != StationStopMode.AllStop)
+							{
+								Interface.AddMessage(MessageType.Warning, false, "Station " + Program.CurrentRoute.Stations[i].Name + " is marked as \"change ends\" but the subsequent station does not expect all trains to stop in file " + FileName);
+								Program.CurrentRoute.Stations[i + 1].StopMode = StationStopMode.AllStop;
+							}
 						}
-					}
-					else
-					{
-						Interface.AddMessage(MessageType.Warning, false, "Station " + Program.CurrentRoute.Stations[i].Name + " is marked as \"change ends\" but there is no subsequent station defined in file " + FileName);
-						Program.CurrentRoute.Stations[i].Type = StationType.Terminal;
-					}
+						else
+						{
+							Interface.AddMessage(MessageType.Warning, false, "Station " + Program.CurrentRoute.Stations[i].Name + " is marked as \"change ends\" but there is no subsequent station defined in file " + FileName);
+							Program.CurrentRoute.Stations[i].Type = StationType.Terminal;
+						}
+						break;
+					case StationType.Jump:
+						if (Program.CurrentRoute.Stations[i].JumpIndex < Program.CurrentRoute.Stations.Length)
+						{
+							if (Program.CurrentRoute.Stations[Program.CurrentRoute.Stations[i].JumpIndex].StopMode != StationStopMode.AllStop)
+							{
+								Interface.AddMessage(MessageType.Warning, false, "Station " + Program.CurrentRoute.Stations[i].Name + " is marked as a \"jump trigger\" but the target station does not expect all trains to stop in file " + FileName);
+								Program.CurrentRoute.Stations[Program.CurrentRoute.Stations[i].JumpIndex].StopMode = StationStopMode.AllStop;
+							}
+						}
+						else
+						{
+							Interface.AddMessage(MessageType.Warning, false, "Station " + Program.CurrentRoute.Stations[i].Name + " is marked as a \"jump trigger\" but the target station does not exist in file " + FileName);
+							Program.CurrentRoute.Stations[i].Type = StationType.Terminal;
+						}
+						break;
 				}
 			}
 			if (Program.CurrentRoute.Stations.Length != 0)

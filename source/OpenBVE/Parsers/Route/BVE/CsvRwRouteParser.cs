@@ -3274,7 +3274,30 @@ namespace OpenBve {
 													Interface.AddMessage(MessageType.Error, false, "DepartureTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													dep = -1.0;
 												}
-											} else if(Arguments[2].Length == 1 && Arguments[2][0] == '.')
+											} else if (Arguments[2].StartsWith("J:", StringComparison.InvariantCultureIgnoreCase)) {
+												string[] splitString = Arguments[2].Split(new char[] {':'});
+												for (int i = 0; i < splitString.Length; i++)
+												{
+													switch (i)
+													{
+														case 1:
+															if (!NumberFormats.TryParseIntVb6(splitString[1].TrimStart(), out Program.CurrentRoute.Stations[CurrentStation].JumpIndex)) {
+																Interface.AddMessage(MessageType.Error, false, "JumpStationIndex is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+																dep = -1.0;
+															} else {
+																Program.CurrentRoute.Stations[CurrentStation].Type = StationType.Jump;
+															}
+															break;
+														case 2:
+															if (!Interface.TryParseTime(splitString[2].TrimStart(), out dep)) {
+																Interface.AddMessage(MessageType.Error, false, "DepartureTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+																dep = -1.0;
+															}
+															break;
+													}
+												}
+											}
+											else if(Arguments[2].Length == 1 && Arguments[2][0] == '.')
 											{ /* Treat a single period as a blank space */ }
 											else if (!Interface.TryParseTime(Arguments[2], out dep)) {
 												Interface.AddMessage(MessageType.Error, false, "DepartureTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);

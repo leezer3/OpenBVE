@@ -4,6 +4,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
+using RouteManager2;
 using RouteManager2.MessageManager;
 using SoundManager;
 
@@ -400,7 +401,7 @@ namespace OpenBve
 							}
 						}
 					}
-					if (Train.Specs.DoorCloseMode == DoorMode.Manual || doorState == TrainDoorState.None || doorState == (TrainDoorState.Closed | TrainDoorState.AllClosed))
+					if (Train.Specs.DoorCloseMode == DoorMode.Manual || doorState == TrainDoorState.None || doorState == (TrainDoorState.Closed | TrainDoorState.AllClosed) || (Program.CurrentRoute.Stations[Train.Station].Type == StationType.ChangeEnds || Program.CurrentRoute.Stations[Train.Station].Type == StationType.Jump))
 					{
 						if (left | right)
 						{
@@ -408,20 +409,28 @@ namespace OpenBve
 							if (Program.CurrentRoute.SecondsSinceMidnight > Train.StationDepartureTime && (Program.CurrentRoute.Stations[i].Type != StationType.Terminal || Train != PlayerTrain))
 							{
 								Train.StationState = TrainStopState.Completed;
-								if (Train.IsPlayerTrain & Program.CurrentRoute.Stations[i].Type == StationType.Normal)
+								switch (Program.CurrentRoute.Stations[i].Type)
 								{
-									if (!Program.CurrentRoute.Stations[i].OpenLeftDoors & !Program.CurrentRoute.Stations[i].OpenRightDoors | Train.Specs.DoorCloseMode != DoorMode.Manual)
-									{
-										Game.AddMessage(Translations.GetInterfaceString("message_station_depart"), MessageDependency.None, GameMode.Normal, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
-									}
-									else
-									{
-										Game.AddMessage(Translations.GetInterfaceString("message_station_depart_closedoors"), MessageDependency.None, GameMode.Normal, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
-									}
-								}
-								else if (Program.CurrentRoute.Stations[i].Type == StationType.ChangeEnds)
-								{
-									JumpTrain(Train, i + 1);
+									case StationType.Normal:
+										if (!Train.IsPlayerTrain)
+											break; // Only trigger messages for the player train
+										if (!Program.CurrentRoute.Stations[i].OpenLeftDoors & !Program.CurrentRoute.Stations[i].OpenRightDoors | Train.Specs.DoorCloseMode != DoorMode.Manual)
+										{
+											Game.AddMessage(Translations.GetInterfaceString("message_station_depart"), MessageDependency.None, GameMode.Normal, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+										}
+										else
+										{
+											Game.AddMessage(Translations.GetInterfaceString("message_station_depart_closedoors"), MessageDependency.None, GameMode.Normal, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+										}
+										break;
+									case StationType.ChangeEnds:
+										// Change ends always jumps to the NEXT station
+										JumpTrain(Train, i + 1);
+										break;
+									case StationType.Jump:
+										// Jumps to an arbritrary station as defined in the routefile
+										JumpTrain(Train, Program.CurrentRoute.Stations[i].JumpIndex);
+										break;
 								}
 							}
 						}

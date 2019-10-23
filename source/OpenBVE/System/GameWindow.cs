@@ -669,7 +669,7 @@ namespace OpenBve
 			{
 				if (i != PlayerFirstStationIndex & Program.CurrentRoute.Stations[i].PlayerStops())
 				{
-					if (i == 0 || Program.CurrentRoute.Stations[i - 1].Type != StationType.ChangeEnds)
+					if (i == 0 || Program.CurrentRoute.Stations[i - 1].Type != StationType.ChangeEnds && Program.CurrentRoute.Stations[i - 1].Type != StationType.Jump)
 					{
 						Game.CurrentScore.Maximum += Game.ScoreValueStationArrival;
 					}

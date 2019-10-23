@@ -747,9 +747,14 @@ namespace OpenBve
 								break;
 						}
 
-						if (Program.CurrentRoute.Stations[Program.CurrentStation].Type == StationType.ChangeEnds)
+						switch (Program.CurrentRoute.Stations[Program.CurrentStation].Type)
 						{
-							t.Append(", Change ends");
+							case StationType.ChangeEnds:
+								t.Append(", Change ends");
+								break;
+							case StationType.Jump:
+								t.Append(", then Jumps to " + Program.CurrentRoute.Stations[Program.CurrentRoute.Stations[Program.CurrentStation].JumpIndex].Name);
+								break;
 						}
 
 						t.Append(", Ratio=").Append((100.0 * Program.CurrentRoute.Stations[Program.CurrentStation].PassengerRatio).ToString("0", culture)).Append("%");
