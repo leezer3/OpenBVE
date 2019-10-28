@@ -51,6 +51,7 @@
     <Compile Include="Events\MarkerStart.cs" />
     <Compile Include="Events\RequestStop.cs" />
     <Compile Include="Events\SignalSection.cs" />
+    <Compile Include="Events\Sound.cs" />
     <Compile Include="Events\SpeedLimit.cs" />
     <Compile Include="Events\Station.cs" />
     <Compile Include="Events\TrackEnd.cs" />
@@ -81,6 +82,10 @@
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-a564-40a9014dfa5f}</Project>
       <Name>OpenBveApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SoundManager\SoundManager.csproj">
+      <Project>{90abfa0c-abca-444e-adef-9a299aed6524}</Project>
+      <Name>SoundManager</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

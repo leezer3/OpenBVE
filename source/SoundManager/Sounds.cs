@@ -59,6 +59,9 @@ namespace SoundManager
 
 		private HostInterface CurrentHost = null;
 
+		/// <summary>Whether sound events are currently suppressed</summary>
+		public static bool SuppressSoundEvents = false;
+
 
 		// --- linear distance clamp model ---
 

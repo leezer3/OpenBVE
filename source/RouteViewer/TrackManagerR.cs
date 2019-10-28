@@ -41,30 +41,7 @@ namespace OpenBve {
                 }
             }
         }
-
-        // sound
-        internal static bool SuppressSoundEvents = false;
-        internal class SoundEvent : GeneralEvent {
-            internal SoundBuffer SoundBuffer;
-            internal bool PlayerTrainOnly;
-            internal bool Once;
-            internal bool Dynamic;
-            internal Vector3 Position;
-            internal double Speed;
-            internal SoundEvent(double TrackPositionDelta, SoundBuffer SoundBuffer, bool PlayerTrainOnly, bool Once, bool Dynamic, Vector3 Position, double Speed) {
-                this.TrackPositionDelta = TrackPositionDelta;
-                this.DontTriggerAnymore = false;
-                this.SoundBuffer = SoundBuffer;
-                this.PlayerTrainOnly = PlayerTrainOnly;
-                this.Once = Once;
-                this.Dynamic = Dynamic;
-                this.Position = Position;
-                this.Speed = Speed;
-            }
-            public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car) { }
-            internal const int SoundIndexTrainPoint = -2;
-        }
-        // rail sounds change
+		// rail sounds change
         internal class RailSoundsChangeEvent : GeneralEvent {
             internal int PreviousRunIndex;
             internal int PreviousFlangeIndex;

@@ -131,9 +131,9 @@ namespace OpenBve.Graphics.Renderers
 							dy = 0.4;
 							t = TransponderTexture;
 						}
-						else if (e is TrackManager.SoundEvent)
+						else if (e is SoundEvent)
 						{
-							TrackManager.SoundEvent f = (TrackManager.SoundEvent)e;
+							SoundEvent f = (SoundEvent)e;
 							s = 0.2;
 							dx = f.Position.X;
 							dy = f.Position.Y < 0.1 ? 0.1 : f.Position.Y;

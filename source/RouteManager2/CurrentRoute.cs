@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using LibRender2;
 using OpenBveApi.Colors;
 using OpenBveApi.Routes;
@@ -156,7 +157,7 @@ namespace RouteManager2
 
 				if (train == null)
 				{
-					double b = -double.MaxValue;
+					double b = -Double.MaxValue;
 
 					foreach (AbstractTrain t in Trains)
 					{

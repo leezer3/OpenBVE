@@ -5694,7 +5694,7 @@ namespace OpenBve
 						if (q) {
 							int m = Program.CurrentRoute.Tracks[0].Elements[n].Events.Length;
 							Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-							Program.CurrentRoute.Tracks[0].Elements[n].Events[m] = new TrackManager.SoundEvent(0.0, null, false, false, true, Vector3.Zero, 12.5);
+							Program.CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(0.0, null, false, false, true, Vector3.Zero, 12.5, Program.CurrentHost);
 						}
 					}
 				}
@@ -5796,10 +5796,10 @@ namespace OpenBve
 							double d = Data.Blocks[i].Sound[j].TrackPosition - StartingDistance;
 							switch (Data.Blocks[i].Sound[j].Type) {
 								case SoundType.TrainStatic:
-									Program.CurrentRoute.Tracks[0].Elements[n].Events[m] = new TrackManager.SoundEvent(d, Data.Blocks[i].Sound[j].SoundBuffer, true, true, false, Vector3.Zero, 0.0);
+									Program.CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(d, Data.Blocks[i].Sound[j].SoundBuffer, true, true, false, Vector3.Zero, 0.0, Program.CurrentHost);
 									break;
 								case SoundType.TrainDynamic:
-									Program.CurrentRoute.Tracks[0].Elements[n].Events[m] = new TrackManager.SoundEvent(d, Data.Blocks[i].Sound[j].SoundBuffer, false, false, true, Vector3.Zero, Data.Blocks[i].Sound[j].Speed);
+									Program.CurrentRoute.Tracks[0].Elements[n].Events[m] = new SoundEvent(d, Data.Blocks[i].Sound[j].SoundBuffer, false, false, true, Vector3.Zero, Data.Blocks[i].Sound[j].Speed, Program.CurrentHost);
 									break;
 							}
 						}
