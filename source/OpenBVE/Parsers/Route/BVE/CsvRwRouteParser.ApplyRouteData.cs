@@ -1619,7 +1619,7 @@ namespace OpenBve
 						double d = p - (double)(k + Data.FirstUsedBlock) * (double)Data.BlockInterval;
 						int m = Program.CurrentRoute.Tracks[0].Elements[k].Events.Length;
 						Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[k].Events, m + 1);
-						Program.CurrentRoute.Tracks[0].Elements[k].Events[m] = new TrackManager.StationEndEvent(d, i);
+						Program.CurrentRoute.Tracks[0].Elements[k].Events[m] = new StationEndEvent(d, i, Program.CurrentRoute, Program.CurrentHost);
 					}
 				}
 			}
@@ -1766,9 +1766,9 @@ namespace OpenBve
 									Program.CurrentRoute.Tracks[0].Elements[i].Events[Program.CurrentRoute.Tracks[0].Elements[i].Events.Length - 1] = new TransponderEvent(Program.CurrentRoute, 0.0, TransponderTypes.AtcTrackStatus, 3, 0, false);
 								}
 							}
-							else if (Program.CurrentRoute.Tracks[0].Elements[i].Events[j] is TrackManager.StationEndEvent)
+							else if (Program.CurrentRoute.Tracks[0].Elements[i].Events[j] is StationEndEvent)
 							{
-								TrackManager.StationEndEvent station = (TrackManager.StationEndEvent)Program.CurrentRoute.Tracks[0].Elements[i].Events[j];
+								StationEndEvent station = (StationEndEvent)Program.CurrentRoute.Tracks[0].Elements[i].Events[j];
 								if (Program.CurrentRoute.Stations[station.StationIndex].SafetySystem == SafetySystem.Atc)
 								{
 									Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[i].Events, Program.CurrentRoute.Tracks[0].Elements[i].Events.Length + 2);

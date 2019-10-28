@@ -546,12 +546,12 @@ namespace OpenBve
 										}
 									}
 								}
-								else if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is TrackManager.StationEndEvent && Train.NextStopSkipped == StopSkipMode.None)
+								else if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is StationEndEvent && Train.NextStopSkipped == StopSkipMode.None)
 								{
 									// station end
 									if (Train.Station == -1)
 									{
-										TrackManager.StationEndEvent e = (TrackManager.StationEndEvent)Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
+										StationEndEvent e = (StationEndEvent)Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
 										if (StopsAtStation(e.StationIndex, Train) & Train.LastStation != e.StationIndex)
 										{
 											int s = Program.CurrentRoute.Stations[e.StationIndex].GetStopIndex(Train.NumberOfCars);

@@ -1,4 +1,6 @@
-﻿using OpenBveApi.Routes;
+﻿using System.Security;
+using OpenBveApi.Hosts;
+using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 
 namespace OpenBve
@@ -29,37 +31,6 @@ namespace OpenBve
 			public override void Reset()
 			{
 				this.DontTriggerAnymore = false;
-			}
-		}
-		
-		/// <summary>Placed at the end of every station (as defined by the last possible stop point)</summary>
-		internal class StationEndEvent : GeneralEvent
-		{
-			/// <summary>The index of the station this event describes</summary>
-			internal readonly int StationIndex;
-
-			internal StationEndEvent(double TrackPositionDelta, int StationIndex)
-			{
-				this.TrackPositionDelta = TrackPositionDelta;
-				this.DontTriggerAnymore = false;
-				this.StationIndex = StationIndex;
-			}
-			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
-			{
-				if (TriggerType == EventTriggerType.FrontCarFrontAxle)
-				{
-					if (Direction > 0)
-					{
-						if (Train.IsPlayerTrain)
-						{
-							Timetable.UpdateCustomTimetable(Program.CurrentRoute.Stations[this.StationIndex].TimetableDaytimeTexture, Program.CurrentRoute.Stations[this.StationIndex].TimetableNighttimeTexture);
-						}
-					}
-				}
-				else if (TriggerType == EventTriggerType.RearCarRearAxle)
-				{
-					Train.LeaveStation(StationIndex, Direction);
-				}
 			}
 		}
 	}

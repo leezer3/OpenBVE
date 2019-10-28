@@ -335,6 +335,14 @@ namespace OpenBveApi.Hosts {
 
 			}
 		}
+
+		/// <summary>Updates the custom timetable texture displayed when triggered by an event</summary>
+		/// <param name="Daytime">The daytime texture</param>
+		/// <param name="Nighttime">The nighttime texture</param>
+		public virtual void UpdateCustomTimetable(Textures.Texture Daytime, Textures.Texture Nighttime)
+		{
+
+		}
 	}
 	
 }

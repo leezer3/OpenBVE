@@ -367,6 +367,11 @@ namespace OpenBve {
 			}
 		}
 
+		public override void UpdateCustomTimetable(Texture Daytime, Texture Nighttime)
+		{
+			Timetable.UpdateCustomTimetable(Daytime, Nighttime);
+		}
+
 		public Host() : base(HostApplication.OpenBve)
 		{
 		}

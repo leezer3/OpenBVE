@@ -488,12 +488,12 @@ namespace OpenBve
 							StationStartEvent f = (StationStartEvent)e;
 							sta[f.StationIndex] = true;
 						}
-						else if (e is TrackManager.StationEndEvent)
+						else if (e is StationEndEvent)
 						{
 							s = 0.25;
 							dy = 1.6;
 							t = StationEndTexture;
-							TrackManager.StationEndEvent f = (TrackManager.StationEndEvent)e;
+							StationEndEvent f = (StationEndEvent)e;
 							sta[f.StationIndex] = true;
 						}
 						else if (e is LimitChangeEvent)
