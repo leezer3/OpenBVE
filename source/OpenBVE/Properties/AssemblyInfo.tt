@@ -4,8 +4,8 @@
 <#@ output extension=".cs" #>
 <#
      int major = 1; 
-     int minor = 4; 
-     int build = 40; 
+     int minor = 7; 
+     int build = 0; 
      int revision = 0;
 	 int CheckDays = 0;
 	 string UserName;
@@ -13,7 +13,7 @@
      try
      {
 			//This is a quick and easy hack to increment the build number once a day if built
-			CheckDays = (int)(DateTime.UtcNow - new DateTime(2016,3,8)).TotalDays;
+			CheckDays = (int)(DateTime.UtcNow - new DateTime(2019,10,29)).TotalDays;
 			build += CheckDays;
 			//The revision represents the total number of minutes since midnight when this version was built.
 			revision = (int)DateTime.Now.TimeOfDay.TotalMinutes;
