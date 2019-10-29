@@ -7,9 +7,7 @@
 
 using System;
 using OpenBveApi;
-using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
-using OpenBveApi.Math;
 using OpenBveApi.Objects;
 
 namespace OpenBve {
@@ -47,7 +45,7 @@ namespace OpenBve {
 		internal static void Reset() {
 			Program.Renderer.Reset();
 			Program.Renderer.InitializeVisibility();
-			ObjectManager.AnimatedWorldObjects = new AnimatedWorldObject[4];
+			ObjectManager.AnimatedWorldObjects = new WorldObject[4];
 			ObjectManager.AnimatedWorldObjectsUsed = 0;
 		}
 	}

@@ -1,10 +1,7 @@
-using System;
 using System.Text;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
-using OpenBveApi.Routes;
 using OpenBveApi.Trains;
-using RouteManager2;
 
 namespace OpenBve
 {

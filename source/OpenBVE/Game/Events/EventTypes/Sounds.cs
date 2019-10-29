@@ -26,7 +26,6 @@ namespace OpenBve
 				{
 					case EventTriggerType.FrontCarFrontAxle:
 					case EventTriggerType.OtherCarFrontAxle:
-						
 						c.FrontAxle.PointSoundTriggered = true;
 						DontTriggerAnymore = false;
 						break;
