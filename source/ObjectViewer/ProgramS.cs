@@ -58,7 +58,7 @@ namespace OpenBve {
 
 		internal static CurrentRoute CurrentRoute;
 
-		internal static Object LockObj = new Object();
+		internal static readonly Object LockObj = new Object();
 
 		// main
 	    [STAThread]

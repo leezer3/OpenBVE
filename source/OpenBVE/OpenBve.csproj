@@ -119,8 +119,6 @@
       <SubType>Code</SubType>
       <DependentUpon>AI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Game\Events\EventTypes\Sounds.cs" />
-    <Compile Include="Game\Events\EventTypes\Station.cs" />
     <Compile Include="Game\MessageManager.cs" />
     <Compile Include="Game\MessageManager.TextualMessages.cs">
       <DependentUpon>MessageManager.cs</DependentUpon>

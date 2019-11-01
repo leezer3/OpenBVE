@@ -5673,7 +5673,7 @@ namespace OpenBve
 					int f = j < Data.Structure.Flange.Length ? Data.Structure.Flange[j] : 0;
 					int m = Program.CurrentRoute.Tracks[0].Elements[n].Events.Length;
 					Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-					Program.CurrentRoute.Tracks[0].Elements[n].Events[m] = new TrackManager.RailSoundsChangeEvent(0.0, CurrentRunIndex, CurrentFlangeIndex, r, f);
+					Program.CurrentRoute.Tracks[0].Elements[n].Events[m] = new RailSoundsChangeEvent(0.0, CurrentRunIndex, CurrentFlangeIndex, r, f);
 					CurrentRunIndex = r;
 					CurrentFlangeIndex = f;
 				}
@@ -5725,7 +5725,7 @@ namespace OpenBve
 								if (j >= 0) {
 									m = Program.CurrentRoute.Tracks[0].Elements[j].Events.Length;
 									Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[j].Events, m + 1);
-									Program.CurrentRoute.Tracks[0].Elements[j].Events[m] = new TrackManager.StationPassAlarmEvent(0.0);
+									Program.CurrentRoute.Tracks[0].Elements[j].Events[m] = new StationPassAlarmEvent(0.0);
 								}
 							}
 						}

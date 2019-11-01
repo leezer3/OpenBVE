@@ -35,6 +35,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -49,6 +50,9 @@
     <Compile Include="Events\FogChange.cs" />
     <Compile Include="Events\MarkerEnd.cs" />
     <Compile Include="Events\MarkerStart.cs" />
+    <Compile Include="Events\PassAlarm.cs" />
+    <Compile Include="Events\PointSound.cs" />
+    <Compile Include="Events\RailSound.cs" />
     <Compile Include="Events\RequestStop.cs" />
     <Compile Include="Events\SignalSection.cs" />
     <Compile Include="Events\Sound.cs" />

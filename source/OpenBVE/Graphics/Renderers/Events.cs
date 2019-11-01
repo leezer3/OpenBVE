@@ -140,7 +140,7 @@ namespace OpenBve.Graphics.Renderers
 							dz = f.Position.Z;
 							t = SoundTexture;
 						}
-						else if (e is TrackManager.PointSoundEvent)
+						else if (e is PointSoundEvent)
 						{
 							s = 0.2;
 							dx = 0;

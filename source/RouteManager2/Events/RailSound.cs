@@ -1,51 +1,16 @@
 ﻿using OpenBveApi.Routes;
 using OpenBveApi.Trains;
-using SoundManager;
 
-namespace OpenBve
+namespace RouteManager2.Events
 {
-	internal static partial class TrackManager
-	{
-		internal class PointSoundEvent : GeneralEvent
-		{
-			internal PointSoundEvent()
-			{
-				this.DontTriggerAnymore = false;
-			}
-
-			/// <summary>Triggers the playback of a sound</summary>
-			/// <param name="Direction">The direction of travel- 1 for forwards, and -1 for backwards</param>
-			/// <param name="TriggerType">They type of event which triggered this sound</param>
-			/// <param name="Train">The root train which triggered this sound</param>
-			/// <param name="Car">The car which triggered this sound</param>
-			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
-			{
-				if (SoundsBase.SuppressSoundEvents) return;
-				TrainManager.Car c = (TrainManager.Car) Car;
-				switch (TriggerType)
-				{
-					case EventTriggerType.FrontCarFrontAxle:
-					case EventTriggerType.OtherCarFrontAxle:
-						c.FrontAxle.PointSoundTriggered = true;
-						DontTriggerAnymore = false;
-						break;
-					case EventTriggerType.OtherCarRearAxle:
-					case EventTriggerType.RearCarRearAxle:
-						c.RearAxle.PointSoundTriggered = true;
-						DontTriggerAnymore = false;
-						break;
-				}
-			}
-		}
-
-		/// <summary>Called when the rail played for a train should be changed</summary>
-		internal class RailSoundsChangeEvent : GeneralEvent
+	/// <summary>Called when the rail played for a train should be changed</summary>
+		public class RailSoundsChangeEvent : GeneralEvent
 		{
 			private readonly int PreviousRunIndex;
 			private readonly int PreviousFlangeIndex;
 			private readonly int NextRunIndex;
 			private readonly int NextFlangeIndex;
-			internal RailSoundsChangeEvent(double TrackPositionDelta, int PreviousRunIndex, int PreviousFlangeIndex, int NextRunIndex, int NextFlangeIndex)
+			public RailSoundsChangeEvent(double TrackPositionDelta, int PreviousRunIndex, int PreviousFlangeIndex, int NextRunIndex, int NextFlangeIndex)
 			{
 				this.TrackPositionDelta = TrackPositionDelta;
 				this.DontTriggerAnymore = false;
@@ -61,7 +26,7 @@ namespace OpenBve
 			/// <param name="Car">The car which triggered this sound</param>
 			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
 			{
-				TrainManager.Car c = (TrainManager.Car) Car;
+				dynamic c = Car;
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle)
 				{
 					if (Direction < 0)
@@ -90,5 +55,4 @@ namespace OpenBve
 				}
 			}
 		}
-	}
 }
