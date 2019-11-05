@@ -26,7 +26,6 @@ namespace OpenBve {
 		// date and time
 		internal static double SecondsSinceMidnight = 0.0;
 		internal static double StartupTime = 0.0;
-		internal static bool MinimalisticSimulation = false;
 		internal static double[] RouteUnitOfLength = new double[] { 1.0 };
 
 		
