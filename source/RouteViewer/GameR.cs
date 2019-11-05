@@ -41,12 +41,6 @@ namespace OpenBve {
 		internal static TrainStartMode TrainStart = TrainStartMode.EmergencyBrakesNoAts;
 		internal static string TrainName = "";
 
-		// information
-		
-		/// <summary>The current plugin debug message to be displayed</summary>
-		internal static string InfoDebugString = "";
-		
-
 		// ================================
 
 		internal static void Reset() {
