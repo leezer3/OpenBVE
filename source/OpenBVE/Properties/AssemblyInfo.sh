@@ -35,6 +35,7 @@ cat > AssemblyInfo.cs << EOF
  
 using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("openBVE")]
@@ -45,6 +46,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyInformationalVersion("$InfoVersion")]
 [assembly: AssemblyFileVersion("$Version")]
 [assembly: CLSCompliant(false)]
+[assembly: InternalsVisibleTo("RouteManager2")]
 
 namespace OpenBve {
 	internal static partial class Program {

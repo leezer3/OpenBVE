@@ -32,6 +32,7 @@
  
 using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("openBVE")]
@@ -42,6 +43,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyInformationalVersion("<#= major #>.<#= minor #>.<#= build #>.<#= revision #>-<#= UserName #>")]
 [assembly: AssemblyFileVersion("<#= major #>.<#= minor #>.<#= build #>.<#= revision #>")]
 [assembly: CLSCompliant(false)]
+[assembly: InternalsVisibleTo("RouteManager2")]
 
 namespace OpenBve {
 	internal static partial class Program {
