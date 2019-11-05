@@ -66,9 +66,7 @@ namespace OpenBve {
 			Program.CurrentRoute.Atmosphere.InitialElevation = 0.0;
 			Program.CurrentRoute.Atmosphere.SeaLevelAirPressure = 101325.0;
 			Program.CurrentRoute.Atmosphere.SeaLevelAirTemperature = 293.15;
-			Program.CurrentRoute.Stations = new RouteStation[] { };
-			Program.CurrentRoute.Sections = new Section[] { };
-			BufferTrackPositions = new double[] { };
+			Program.CurrentRoute.BufferTrackPositions = new double[] { };
 			//Messages = new Message[] { };
 			Program.Renderer.Marker.MarkerTextures = new Texture[] { };
 			Program.CurrentRoute.PointsOfInterest = new PointOfInterest[] { };
@@ -140,6 +138,7 @@ namespace OpenBve {
 		internal static BlackBoxEntry[] BlackBoxEntries = new BlackBoxEntry[256];
 		internal static int BlackBoxEntryCount = 0;
 		private static double BlackBoxNextUpdate = 0.0;
+
 		internal static void UpdateBlackBox() {
 			if (Program.CurrentRoute.SecondsSinceMidnight >= BlackBoxNextUpdate) {
 				AddBlackBoxEntry(BlackBoxEventToken.None);
@@ -194,6 +193,6 @@ namespace OpenBve {
 
 
 		// buffers
-		internal static double[] BufferTrackPositions = new double[] { };
+		
 	}
 }

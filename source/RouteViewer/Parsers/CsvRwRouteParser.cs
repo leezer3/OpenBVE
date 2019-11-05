@@ -4399,9 +4399,9 @@ namespace OpenBve
 								case "track.buffer":
 									{
 										if (!PreviewOnly) {
-											int n = Game.BufferTrackPositions.Length;
-											Array.Resize<double>(ref Game.BufferTrackPositions, n + 1);
-											Game.BufferTrackPositions[n] = Data.TrackPosition;
+											int n = Program.CurrentRoute.BufferTrackPositions.Length;
+											Array.Resize<double>(ref Program.CurrentRoute.BufferTrackPositions, n + 1);
+											Program.CurrentRoute.BufferTrackPositions[n] = Data.TrackPosition;
 										}
 									} break;
 								case "track.form":

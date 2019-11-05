@@ -67,7 +67,7 @@ namespace OpenBve {
 			Program.CurrentRoute.Atmosphere.SeaLevelAirTemperature = 293.15;
 			Program.CurrentRoute.Stations = new RouteStation[] { };
 			Program.CurrentRoute.Sections = new Section[] { };
-			BufferTrackPositions = new double[] { };
+			Program.CurrentRoute.BufferTrackPositions = new double[] { };
 			Program.Renderer.Marker.MarkerTextures = new Texture[] { };
 			Program.CurrentRoute.PointsOfInterest = new PointOfInterest[] { };
 			Program.CurrentRoute.BogusPreTrainInstructions = new BogusPreTrainInstruction[] { };
@@ -85,7 +85,7 @@ namespace OpenBve {
 			Program.Renderer.InfoTotalPolygon = 0;
 			// object manager
 			Program.Renderer.InitializeVisibility();
-			ObjectManager.AnimatedWorldObjects = new AnimatedWorldObject[4];
+			ObjectManager.AnimatedWorldObjects = new WorldObject[4];
 			ObjectManager.AnimatedWorldObjectsUsed = 0;
 			// renderer / sound
 			Program.Renderer.Reset();
@@ -94,14 +94,6 @@ namespace OpenBve {
 		}
 
 		// ================================
-
-		
-		
-
-		// ================================
-
-		// buffers
-		internal static double[] BufferTrackPositions = new double[] { };
 
 		internal static bool ApplyPointOfInterest(int Value, bool Relative) {
 			double t = 0.0;

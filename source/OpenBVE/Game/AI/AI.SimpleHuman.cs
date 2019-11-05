@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
+using RouteManager2;
 using RouteManager2.Events;
 
 namespace OpenBve
@@ -600,9 +601,9 @@ namespace OpenBve
 					// buffers ahead
 					if (Train.IsPlayerTrain)
 					{
-						for (int i = 0; i < BufferTrackPositions.Length; i++)
+						for (int i = 0; i < Program.CurrentRoute.BufferTrackPositions.Length; i++)
 						{
-							double dist = BufferTrackPositions[i] - tp;
+							double dist = Program.CurrentRoute.BufferTrackPositions[i] - tp;
 							if (dist > 0.0)
 							{
 								double edec;

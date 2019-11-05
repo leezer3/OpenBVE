@@ -11,6 +11,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using OpenBveApi.Textures;
+using RouteManager2;
 using RouteManager2.SignalManager;
 using RouteManager2.Stations;
 using RouteManager2.Events;
@@ -3648,9 +3649,9 @@ namespace OpenBve {
 								case "track.buffer":
 									{
 										if (!PreviewOnly) {
-											int n = Game.BufferTrackPositions.Length;
-											Array.Resize<double>(ref Game.BufferTrackPositions, n + 1);
-											Game.BufferTrackPositions[n] = Data.TrackPosition;
+											int n = Program.CurrentRoute.BufferTrackPositions.Length;
+											Array.Resize<double>(ref Program.CurrentRoute.BufferTrackPositions, n + 1);
+											Program.CurrentRoute.BufferTrackPositions[n] = Data.TrackPosition;
 										}
 									} break;
 								case "track.form":

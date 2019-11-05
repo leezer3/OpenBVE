@@ -8,6 +8,7 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
+using RouteManager2;
 
 namespace OpenBve
 {
@@ -456,14 +457,14 @@ namespace OpenBve
 								   0.5*Trains[i].Cars[0].Length;
 						double b = Trains[i].Cars[Trains[i].Cars.Length - 1].RearAxle.Follower.TrackPosition -
 								   Trains[i].Cars[Trains[i].Cars.Length - 1].RearAxle.Position - 0.5*Trains[i].Cars[0].Length;
-						for (int j = 0; j < Game.BufferTrackPositions.Length; j++)
+						for (int j = 0; j < Program.CurrentRoute.BufferTrackPositions.Length; j++)
 						{
-							if (a > Game.BufferTrackPositions[j] & b < Game.BufferTrackPositions[j])
+							if (a > Program.CurrentRoute.BufferTrackPositions[j] & b < Program.CurrentRoute.BufferTrackPositions[j])
 							{
 								a += 0.0001;
 								b -= 0.0001;
-								double da = a - Game.BufferTrackPositions[j];
-								double db = Game.BufferTrackPositions[j] - b;
+								double da = a - Program.CurrentRoute.BufferTrackPositions[j];
+								double db = Program.CurrentRoute.BufferTrackPositions[j] - b;
 								if (da < db)
 								{
 									// front

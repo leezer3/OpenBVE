@@ -4,6 +4,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
+using RouteManager2;
 using RouteManager2.Events;
 
 namespace OpenBve.Graphics.Renderers
@@ -199,7 +200,7 @@ namespace OpenBve.Graphics.Renderers
 			}
 
 			// buffers
-			foreach (double p in Game.BufferTrackPositions)
+			foreach (double p in Program.CurrentRoute.BufferTrackPositions)
 			{
 				double d = p - World.CameraTrackFollower.TrackPosition;
 

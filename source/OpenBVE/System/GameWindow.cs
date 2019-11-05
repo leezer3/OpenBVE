@@ -20,6 +20,7 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenTK.Graphics.OpenGL;
+using RouteManager2;
 using RouteManager2.MessageManager;
 using Path = System.IO.Path;
 using Vector2 = OpenTK.Vector2;
@@ -515,9 +516,9 @@ namespace OpenBve
 						TrainLength += TrainManager.PlayerTrain.Cars[c].Length;
 					}
 
-					for (int j = 0; j < Game.BufferTrackPositions.Length; j++)
+					for (int j = 0; j < Program.CurrentRoute.BufferTrackPositions.Length; j++)
 					{
-						if (PlayerFirstStationPosition > Game.BufferTrackPositions[j] && PlayerFirstStationPosition - TrainLength < Game.BufferTrackPositions[j])
+						if (PlayerFirstStationPosition > Program.CurrentRoute.BufferTrackPositions[j] && PlayerFirstStationPosition - TrainLength < Program.CurrentRoute.BufferTrackPositions[j])
 						{
 							/*
 							 * HACK: The initial start position for the player train is stuck on a set of buffers
@@ -525,7 +526,7 @@ namespace OpenBve
 							 */
 
 							//Set the start position to be the buffer position plus the train length plus 1m
-							PlayerFirstStationPosition = Game.BufferTrackPositions[j] + TrainLength + 1;
+							PlayerFirstStationPosition = Program.CurrentRoute.BufferTrackPositions[j] + TrainLength + 1;
 							//Update the station stop location
 							if (s >= 0)
 							{

@@ -574,7 +574,7 @@ namespace OpenBve
 			}
 
 			// buffers
-			foreach (double p in Game.BufferTrackPositions)
+			foreach (double p in Program.CurrentRoute.BufferTrackPositions)
 			{
 				double d = p - World.CameraTrackFollower.TrackPosition;
 
