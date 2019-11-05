@@ -13,6 +13,8 @@
 		internal readonly double ServiceRate;
 		/// <summary>The rate in Pa/s when making an EB brake application</summary>
 		internal readonly double EmergencyRate;
+		/// <summary>The number of pascals leaked by the brake pipe each second</summary>
+		internal readonly double LeakRate = 500000.0;
 
 		internal BrakePipe(double normalPressure, double chargeRate, double serviceRate, double emergencyRate, bool electricCommand)
 		{

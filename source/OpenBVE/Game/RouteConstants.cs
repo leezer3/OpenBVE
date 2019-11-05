@@ -10,7 +10,5 @@
         internal const double CoefficientOfGroundFriction = 0.5;
         /// <summary>The speed difference in m/s above which derailments etc. will occur</summary>
         internal const double CriticalCollisionSpeedDifference = 8.0;
-        /// <summary>The number of pascals leaked by the brake pipe each second</summary>
-        internal const double BrakePipeLeakRate = 500000.0;
     }
 }

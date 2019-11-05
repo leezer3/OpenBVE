@@ -29,7 +29,7 @@ namespace OpenBve
 					{
 						if (Cars[i - 1].Derailed | Cars[i].Derailed)
 						{
-							Cars[i].CarBrake.brakePipe.CurrentPressure -= Game.BrakePipeLeakRate * TimeElapsed;
+							Cars[i].CarBrake.brakePipe.CurrentPressure -= Cars[i].CarBrake.brakePipe.LeakRate * TimeElapsed;
 							if (Cars[i].CarBrake.brakePipe.CurrentPressure < 0.0) Cars[i].CarBrake.brakePipe.CurrentPressure = 0.0;
 						}
 					}
@@ -37,7 +37,7 @@ namespace OpenBve
 					{
 						if (Cars[i].Derailed | Cars[i + 1].Derailed)
 						{
-							Cars[i].CarBrake.brakePipe.CurrentPressure -= Game.BrakePipeLeakRate * TimeElapsed;
+							Cars[i].CarBrake.brakePipe.CurrentPressure -= Cars[i].CarBrake.brakePipe.LeakRate * TimeElapsed;
 							if (Cars[i].CarBrake.brakePipe.CurrentPressure < 0.0) Cars[i].CarBrake.brakePipe.CurrentPressure = 0.0;
 						}
 					}
