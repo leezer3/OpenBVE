@@ -103,7 +103,6 @@
     <Compile Include="InterfaceS.cs" />
     <Compile Include="ProgramS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TextureManager.cs" />
     <Compile Include="Timers.cs" />
     <Compile Include="TrainManagerS.cs" />
   </ItemGroup>
