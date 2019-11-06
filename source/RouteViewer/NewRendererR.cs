@@ -32,9 +32,6 @@ namespace OpenBve
 		internal bool OptionInterface = true;
 		internal bool OptionEvents = false;
 
-		// current opengl data
-		internal bool TransparentColorDepthSorting = false;
-
 		// textures
 		private Texture BrightnessChangeTexture;
 		private Texture BackgroundChangeTexture;
@@ -65,8 +62,6 @@ namespace OpenBve
 			TextureManager.RegisterTexture(Path.CombineFile(Folder, "buffer.png"), out BufferTexture);
 			TextureManager.RegisterTexture(Path.CombineFile(Folder, "sound.png"), out SoundTexture);
 			TextureManager.RegisterTexture(Path.CombineFile(Folder, "switchsound.png"), out PointSoundTexture);
-
-			TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality & Interface.CurrentOptions.Interpolation != InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != InterpolationMode.Bilinear;
 		}
 
 		internal void CreateObject(UnifiedObject Prototype, OpenBveApi.Math.Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition)

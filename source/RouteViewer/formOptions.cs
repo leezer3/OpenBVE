@@ -37,7 +37,6 @@ namespace OpenBve
 	    readonly int previousAntialasingLevel = Interface.CurrentOptions.AntiAliasingLevel;
 	    readonly int previousAnsiotropicLevel = Interface.CurrentOptions.AnisotropicFilteringLevel;
 	    readonly InterpolationMode previousInterpolationMode = Interface.CurrentOptions.Interpolation;
-	    readonly bool PreviousSort = Program.Renderer.TransparentColorDepthSorting;
 	    private bool GraphicsModeChanged = false;
 
         private void button1_Click(object sender, EventArgs e)
@@ -101,13 +100,12 @@ namespace OpenBve
 				}
 				Program.Renderer.UpdateViewport();
 			}
-			Program.Renderer.TransparentColorDepthSorting = Interface.CurrentOptions.TransparencyMode == TransparencyMode.Quality & Interface.CurrentOptions.Interpolation != OpenBveApi.Graphics.InterpolationMode.NearestNeighbor & Interface.CurrentOptions.Interpolation != OpenBveApi.Graphics.InterpolationMode.Bilinear;
 			Interface.CurrentOptions.LoadingLogo = checkBoxLogo.Checked;
 			Interface.CurrentOptions.LoadingBackground = checkBoxBackgrounds.Checked;
 			Interface.CurrentOptions.LoadingProgressBar = checkBoxProgressBar.Checked;
 			Options.SaveOptions();
 			//Check if interpolation mode or ansiotropic filtering level has changed, and trigger a reload
-			if (previousInterpolationMode != Interface.CurrentOptions.Interpolation || previousAnsiotropicLevel != Interface.CurrentOptions.AnisotropicFilteringLevel || PreviousSort != Program.Renderer.TransparentColorDepthSorting || GraphicsModeChanged)
+			if (previousInterpolationMode != Interface.CurrentOptions.Interpolation || previousAnsiotropicLevel != Interface.CurrentOptions.AnisotropicFilteringLevel || GraphicsModeChanged)
 			{
 				this.DialogResult = DialogResult.OK;
 			}
