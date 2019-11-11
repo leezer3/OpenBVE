@@ -289,7 +289,7 @@ namespace OpenBve {
 			PreprocessOptions(IsRW, Expressions, ref Data, ref UnitOfLength, PreviewOnly);
 			PreprocessSortByTrackPosition(IsRW, UnitOfLength, ref Expressions);
 			ParseRouteForData(FileName, IsRW, Encoding, Expressions, UnitOfLength, ref Data, PreviewOnly);
-			Game.RouteUnitOfLength = UnitOfLength;
+			Program.CurrentRoute.UnitOfLength = UnitOfLength;
 		}
 
 		// preprocess sort by track position
@@ -575,7 +575,7 @@ namespace OpenBve {
 									if (Arguments.Length < 1) {
 										Interface.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 									} else {
-										Game.RouteComment = Arguments[0];
+										Program.CurrentRoute.Comment = Arguments[0];
 									} break;
 								case "route.image":
 									if (Arguments.Length < 1) {
@@ -585,7 +585,7 @@ namespace OpenBve {
 										if (!System.IO.File.Exists(f)) {
 											Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 										} else {
-											Game.RouteImage = f;
+											Program.CurrentRoute.Image = f;
 										}
 									} break;
 								case "route.timetable":

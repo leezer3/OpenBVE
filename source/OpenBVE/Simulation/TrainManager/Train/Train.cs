@@ -53,6 +53,10 @@ namespace OpenBve
 			internal int MaxLocoBrakeNotchWidth = 48;
 			/// <summary>The max width used in px for the reverser HUD string</summary>
 			internal int MaxReverserWidth = 48;
+			/// <summary>Coefficient of friction used for braking</summary>
+			private const double CoefficientOfGroundFriction = 0.5;
+			/// <summary>The speed difference in m/s above which derailments etc. will occur</summary>
+			internal double CriticalCollisionSpeedDifference = 8.0;
 
 			private double previousRouteLimit = 0.0;
 
@@ -659,7 +663,7 @@ namespace OpenBve
 					}
 					else if (Cars[i].Derailed)
 					{
-						FrictionBrakeAcceleration += Game.CoefficientOfGroundFriction * Program.CurrentRoute.Atmosphere.AccelerationDueToGravity;
+						FrictionBrakeAcceleration += CoefficientOfGroundFriction * Program.CurrentRoute.Atmosphere.AccelerationDueToGravity;
 					}
 					// motor
 					if (Handles.Reverser.Actual != 0)
@@ -932,7 +936,7 @@ namespace OpenBve
 							}
 							for (int k = i; k <= j; k++)
 							{
-								if (Interface.CurrentOptions.Derailments && Math.Abs(v - NewSpeeds[k]) > 0.5 * Game.CriticalCollisionSpeedDifference)
+								if (Interface.CurrentOptions.Derailments && Math.Abs(v - NewSpeeds[k]) > 0.5 * CriticalCollisionSpeedDifference)
 								{
 									Derail(k, TimeElapsed);
 								}

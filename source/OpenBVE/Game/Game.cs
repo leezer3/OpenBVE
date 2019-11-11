@@ -58,8 +58,8 @@ namespace OpenBve {
 			// game
 			Interface.ClearMessages();
 			CurrentInterface = InterfaceType.Normal;
-			RouteComment = "";
-			RouteImage = "";
+			Program.CurrentRoute.Comment = "";
+			Program.CurrentRoute.Image = "";
 			Program.CurrentRoute.Atmosphere.AccelerationDueToGravity = 9.80665;
 			Program.CurrentRoute.Atmosphere.InitialAirPressure = 101325.0;
 			Program.CurrentRoute.Atmosphere.InitialAirTemperature = 293.15;

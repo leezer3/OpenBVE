@@ -16,6 +16,11 @@ namespace RouteManager2
 	{
 		private readonly BaseRenderer renderer;
 
+		/// <summary>The route's comment (For display in the main menu)</summary>
+		public string Comment = "";
+		/// <summary>The route's image file (For display in the main menu)</summary>
+		public string Image = "";
+
 		/// <summary>The list of tracks available in the simulation.</summary>
 		public Track[] Tracks;
 
@@ -63,6 +68,9 @@ namespace RouteManager2
 
 		/// <summary>The current in game time, expressed as the number of seconds since midnight on the first day</summary>
 		public double SecondsSinceMidnight;
+
+		/// <summary>Holds the length conversion units</summary>
+		public double[] UnitOfLength = new double[] { 1.0 };
 
 		public CurrentRoute(BaseRenderer renderer)
 		{

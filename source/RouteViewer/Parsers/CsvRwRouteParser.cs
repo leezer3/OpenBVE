@@ -592,7 +592,7 @@ namespace OpenBve
 			PreprocessOptions(FileName, IsRW, Encoding, Expressions, ref Data, ref UnitOfLength);
 			PreprocessSortByTrackPosition(FileName, IsRW, UnitOfLength, ref Expressions);
 			ParseRouteForData(FileName, IsRW, Encoding, Expressions, TrainPath, ObjectPath, SoundPath, UnitOfLength, ref Data, PreviewOnly);
-			Game.RouteUnitOfLength = UnitOfLength;
+			Program.CurrentRoute.UnitOfLength = UnitOfLength;
 		}
 
 		// preprocess split into expressions
@@ -636,12 +636,12 @@ namespace OpenBve
 						Lines[i].StartsWith("$")
 					) {
 						AllowRwRouteDescription = false;
-						Game.RouteComment = Game.RouteComment.Trim(new char[] { });
+						Program.CurrentRoute.Comment = Program.CurrentRoute.Comment.Trim(new char[] { });
 					} else {
-						if (Game.RouteComment.Length != 0) {
-							Game.RouteComment += "\n";
+						if (Program.CurrentRoute.Comment.Length != 0) {
+							Program.CurrentRoute.Comment += "\n";
 						}
-						Game.RouteComment += Lines[i];
+						Program.CurrentRoute.Comment += Lines[i];
 						continue;
 					}
 				}
@@ -1829,7 +1829,7 @@ namespace OpenBve
 									if (Arguments.Length < 1) {
 										Interface.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 									} else {
-										Game.RouteComment = Arguments[0];
+										Program.CurrentRoute.Comment = Arguments[0];
 									} break;
 								case "route.image":
 									if (Arguments.Length < 1) {
@@ -1839,7 +1839,7 @@ namespace OpenBve
 										if (!System.IO.File.Exists(f)) {
 											Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 										} else {
-											Game.RouteImage = f;
+											Program.CurrentRoute.Image = f;
 										}
 									} break;
 								case "route.timetable":

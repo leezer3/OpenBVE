@@ -130,7 +130,6 @@
     <Compile Include="Game\RouteInfoOverlay.cs" />
     <Compile Include="Game\Information.cs" />
     <Compile Include="Game\Menu.cs" />
-    <Compile Include="Game\RouteConstants.cs" />
     <Compile Include="Game\Score\Score.cs" />
     <Compile Include="Game\Score\Score.Log.cs" />
     <Compile Include="Game\Score\Score.ScoreMessage.cs" />

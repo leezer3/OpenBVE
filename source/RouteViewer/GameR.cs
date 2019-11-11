@@ -26,14 +26,7 @@ namespace OpenBve {
 		// date and time
 		internal static double SecondsSinceMidnight = 0.0;
 		internal static double StartupTime = 0.0;
-		internal static double[] RouteUnitOfLength = new double[] { 1.0 };
 
-		
-
-		// route constants
-		internal static string RouteComment = "";
-		internal static string RouteImage = "";
-		
 		// game constants
 		internal static double[] PrecedingTrainTimeDeltas;
 		internal static double PrecedingTrainSpeedLimit;
@@ -50,8 +43,8 @@ namespace OpenBve {
 			TrainManager.Trains = new TrainManager.Train[] { };
 			// game
 			Interface.ClearMessages();
-			RouteComment = "";
-			RouteImage = "";
+			Program.CurrentRoute.Comment = "";
+			Program.CurrentRoute.Image = "";
 			Program.CurrentRoute.Atmosphere.AccelerationDueToGravity = 9.80665;
 			Program.CurrentRoute.Atmosphere.InitialAirPressure = 101325.0;
 			Program.CurrentRoute.Atmosphere.InitialAirTemperature = 293.15;

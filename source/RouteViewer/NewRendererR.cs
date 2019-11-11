@@ -819,20 +819,20 @@ namespace OpenBve
 		{
 			CultureInfo culture = CultureInfo.InvariantCulture;
 
-			if (Game.RouteUnitOfLength.Length == 1 && Game.RouteUnitOfLength[0] == 1.0)
+			if (Program.CurrentRoute.UnitOfLength.Length == 1 && Program.CurrentRoute.UnitOfLength[0] == 1.0)
 			{
 				return Value.ToString("0.00", culture);
 			}
 
-			double[] values = new double[Game.RouteUnitOfLength.Length];
+			double[] values = new double[Program.CurrentRoute.UnitOfLength.Length];
 
-			for (int i = 0; i < Game.RouteUnitOfLength.Length - 1; i++)
+			for (int i = 0; i < Program.CurrentRoute.UnitOfLength.Length - 1; i++)
 			{
-				values[i] = Math.Floor(Value / Game.RouteUnitOfLength[i]);
-				Value -= values[i] * Game.RouteUnitOfLength[i];
+				values[i] = Math.Floor(Value / Program.CurrentRoute.UnitOfLength[i]);
+				Value -= values[i] * Program.CurrentRoute.UnitOfLength[i];
 			}
 
-			values[Game.RouteUnitOfLength.Length - 1] = Value / Game.RouteUnitOfLength[Game.RouteUnitOfLength.Length - 1];
+			values[Program.CurrentRoute.UnitOfLength.Length - 1] = Value / Program.CurrentRoute.UnitOfLength[Program.CurrentRoute.UnitOfLength.Length - 1];
 			StringBuilder builder = new StringBuilder();
 
 			for (int i = 0; i < values.Length - 1; i++)
