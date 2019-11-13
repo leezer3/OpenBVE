@@ -68,29 +68,29 @@ namespace OpenBve {
 			if ((Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) & Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.On) {
 				Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 				UpdateAbsoluteCamera(0.0);
-				if (!Program.Renderer.Camera.PerformRestrictionTest()) {
+				if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction)) {
 					Program.Renderer.Camera.Alignment = new CameraAlignment();
 					Program.Renderer.Camera.VerticalViewingAngle = Program.Renderer.Camera.OriginalVerticalViewingAngle;
 					Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 					UpdateAbsoluteCamera(0.0);
 					UpdateViewingDistances();
-					if (!Program.Renderer.Camera.PerformRestrictionTest()) {
+					if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction)) {
 						Program.Renderer.Camera.Alignment.Position.Z = 0.8;
 						UpdateAbsoluteCamera(0.0);
 						PerformProgressiveAdjustmentForCameraRestriction(ref Program.Renderer.Camera.Alignment.Position.Z, 0.0, true);
-						if (!Program.Renderer.Camera.PerformRestrictionTest()) {
-							Program.Renderer.Camera.Alignment.Position.X = 0.5 * (Program.Renderer.Camera.RestrictionBottomLeft.X + Program.Renderer.Camera.RestrictionTopRight.X);
-							Program.Renderer.Camera.Alignment.Position.Y = 0.5 * (Program.Renderer.Camera.RestrictionBottomLeft.Y + Program.Renderer.Camera.RestrictionTopRight.Y);
+						if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction)) {
+							Program.Renderer.Camera.Alignment.Position.X = 0.5 * (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction.BottomLeft.X + TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction.TopRight.X);
+							Program.Renderer.Camera.Alignment.Position.Y = 0.5 * (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction.BottomLeft.Y + TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction.TopRight.Y);
 							Program.Renderer.Camera.Alignment.Position.Z = 0.0;
 							UpdateAbsoluteCamera(0.0);
-							if (Program.Renderer.Camera.PerformRestrictionTest()) {
+							if (Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction)) {
 								PerformProgressiveAdjustmentForCameraRestriction(ref Program.Renderer.Camera.Alignment.Position.X, 0.0, true);
 								PerformProgressiveAdjustmentForCameraRestriction(ref Program.Renderer.Camera.Alignment.Position.Y, 0.0, true);
 							} else {
 								Program.Renderer.Camera.Alignment.Position.Z = 0.8;
 								UpdateAbsoluteCamera(0.0);
 								PerformProgressiveAdjustmentForCameraRestriction(ref Program.Renderer.Camera.Alignment.Position.Z, 0.0, true);
-								if (!Program.Renderer.Camera.PerformRestrictionTest()) {
+								if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction)) {
 									Program.Renderer.Camera.Alignment = new CameraAlignment();
 								}
 							}
@@ -101,7 +101,7 @@ namespace OpenBve {
 			}
 		}
 		internal static bool PerformProgressiveAdjustmentForCameraRestriction(ref double Source, double Target, bool Zoom) {
-			if ((Program.Renderer.Camera.CurrentMode != CameraViewMode.Interior & Program.Renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead) | Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.On) {
+			if ((Program.Renderer.Camera.CurrentMode != CameraViewMode.Interior & Program.Renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead) | (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.On && Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.Restricted3D)) {
 				Source = Target;
 				return true;
 			}
@@ -111,7 +111,7 @@ namespace OpenBve {
 			double b = Target;
 			Source = Target;
 			if (Zoom) ApplyZoom();
-			if (Program.Renderer.Camera.PerformRestrictionTest()) {
+			if (Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction)) {
 				return true;
 			}
 			double x = 0.5 * (a + b);
@@ -120,7 +120,7 @@ namespace OpenBve {
 				//Do not remove, this is updated via the ref & causes the panel zoom to bug out
 				Source = x;
 				if (Zoom) ApplyZoom();
-				q = Program.Renderer.Camera.PerformRestrictionTest();
+				q = Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction);
 				if (q) {
 					a = x;
 					best = x;

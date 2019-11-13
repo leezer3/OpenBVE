@@ -1,4 +1,5 @@
 ﻿using System;
+using LibRender2.Camera;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
@@ -51,23 +52,17 @@ namespace LibRender2.Cameras
 		public CameraViewMode CurrentMode;
 		/// <summary>The current camera restriction mode</summary>
 		public CameraRestrictionMode CurrentRestriction = CameraRestrictionMode.NotAvailable;
-		/// <summary>The top left vector when the camera is restricted</summary>
-		/// <remarks>2D panel</remarks>
-		public Vector3 RestrictionBottomLeft = new Vector3(-1.0, -1.0, 1.0);
-		/// <summary>The bottom right vector when the camera is restricted</summary>
-		/// <remarks>2D panel</remarks>
-		public Vector3 RestrictionTopRight = new Vector3(1.0, 1.0, 1.0);
 
 		internal CameraProperties()
 		{
 		}
 
 		/// <summary>Tests whether the camera may move further in the current direction</summary>
-		public bool PerformRestrictionTest()
+		public bool PerformRestrictionTest(CameraRestriction Restriction)
 		{
 			if (CurrentRestriction == CameraRestrictionMode.On)
 			{
-				Vector3[] p = { RestrictionBottomLeft, RestrictionTopRight };
+				Vector3[] p = { Restriction.BottomLeft, Restriction.TopRight };
 				Vector2[] r = new Vector2[2];
 
 				for (int j = 0; j < 2; j++)
@@ -95,7 +90,22 @@ namespace LibRender2.Cameras
 
 				return r[0].X <= -1.0025 & r[1].X >= 1.0025 & r[0].Y <= -1.0025 & r[1].Y >= 1.0025;
 			}
+			if (CurrentRestriction == CameraRestrictionMode.Restricted3D)
+			{
+				Vector3[] p = { Restriction.BottomLeft, Restriction.TopRight };
 
+				for (int j = 0; j < 2; j++)
+				{
+					// determine relative world coordinates
+					p[j].Rotate(AbsoluteDirection, AbsoluteUp, AbsoluteSide);
+					double rx = -Math.Tan(Alignment.Yaw) - Alignment.Position.X;
+					double ry = -Math.Tan(Alignment.Pitch) - Alignment.Position.Y;
+					double rz = -Alignment.Position.Z;
+					p[j] += rx * AbsoluteSide + ry * AbsoluteUp + rz * AbsoluteDirection;
+				}
+
+				return AbsolutePosition.X >= Restriction.AbsoluteBottomLeft.X & AbsolutePosition.X <= Restriction.AbsoluteTopRight.X & AbsolutePosition.Y >= Restriction.AbsoluteBottomLeft.Y & AbsolutePosition.Y <= Restriction.AbsoluteTopRight.Y & AbsolutePosition.Z >= Restriction.AbsoluteBottomLeft.Z & AbsolutePosition.Z <= Restriction.AbsoluteTopRight.Z;
+			}
 			return true;
 		}
 	}

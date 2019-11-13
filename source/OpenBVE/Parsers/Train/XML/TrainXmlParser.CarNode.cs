@@ -24,6 +24,51 @@ namespace OpenBve.Parsers.Train
 				//Note: Don't use the short-circuiting operator, as otherwise we need another if
 				switch (c.Name.ToLowerInvariant())
 				{
+					case "camerarestriction":
+						Train.Cars[Car].CameraRestrictionMode = CameraRestrictionMode.Restricted3D;
+						foreach (XmlNode cc in c.ChildNodes)
+						{
+							switch (cc.Name.ToLowerInvariant())
+							{
+								case "backwards":
+									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].CameraRestriction.BottomLeft.Z))
+									{
+										Interface.AddMessage(MessageType.Warning, false, "Invalid backwards camera restriction defined for Car " + Car + " in XML file " + fileName);
+									}
+									break;
+								case "forwards":
+									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].CameraRestriction.TopRight.Z))
+									{
+										Interface.AddMessage(MessageType.Warning, false, "Invalid forwards camera restriction defined for Car " + Car + " in XML file " + fileName);
+									}
+									break;
+								case "left":
+									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].CameraRestriction.BottomLeft.X))
+									{
+										Interface.AddMessage(MessageType.Warning, false, "Invalid left camera restriction defined for Car " + Car + " in XML file " + fileName);
+									}
+									break;
+								case "right":
+									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].CameraRestriction.TopRight.X))
+									{
+										Interface.AddMessage(MessageType.Warning, false, "Invalid right camera restriction defined for Car " + Car + " in XML file " + fileName);
+									}
+									break;
+								case "down":
+									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].CameraRestriction.BottomLeft.Y))
+									{
+										Interface.AddMessage(MessageType.Warning, false, "Invalid down camera restriction defined for Car " + Car + " in XML file " + fileName);
+									}
+									break;
+								case "up":
+									if (!NumberFormats.TryParseDoubleVb6(cc.InnerText, out Train.Cars[Car].CameraRestriction.TopRight.Y))
+									{
+										Interface.AddMessage(MessageType.Warning, false, "Invalid up camera restriction defined for Car " + Car + " in XML file " + fileName);
+									}
+									break;
+							}
+						}
+						break;
 					case "brake":
 						Train.Cars[Car].CarBrake.brakeType = BrakeType.Auxiliary;
 						if (c.ChildNodes.OfType<XmlElement>().Any())
@@ -330,7 +375,10 @@ namespace OpenBve.Parsers.Train
 					if (DocumentElements != null && DocumentElements.Count() != 0)
 					{
 						PanelAnimatedXmlParser.ParsePanelAnimatedXml(interiorFile, currentPath, Train, Car);
-						Train.Cars[Car].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
+						if (Train.Cars[Car].CameraRestrictionMode != CameraRestrictionMode.Restricted3D)
+						{
+							Train.Cars[Car].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
+						}
 						return;
 					}
 					DocumentElements = CurrentXML.Root.Elements("Panel");
@@ -362,7 +410,10 @@ namespace OpenBve.Parsers.Train
 								Program.CurrentHost.CreateDynamicObject(ref a.Objects[i].internalObject);
 							}
 							Train.Cars[Car].CarSections[0].Groups[0].Elements = a.Objects;
-							Train.Cars[Car].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
+							if (Train.Cars[Car].CameraRestrictionMode != CameraRestrictionMode.Restricted3D)
+							{
+								Train.Cars[Car].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
+							}
 						}
 						catch
 						{
