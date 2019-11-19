@@ -1049,40 +1049,23 @@ namespace OpenBve
 			/// <summary>Updates the position of the camera relative to this car</summary>
 			internal void UpdateCamera()
 			{
-				double dx = FrontAxle.Follower.WorldPosition.X - RearAxle.Follower.WorldPosition.X;
-				double dy = FrontAxle.Follower.WorldPosition.Y - RearAxle.Follower.WorldPosition.Y;
-				double dz = FrontAxle.Follower.WorldPosition.Z - RearAxle.Follower.WorldPosition.Z;
-				double t = 1.0 / Math.Sqrt(dx * dx + dy * dy + dz * dz);
-				dx *= t; dy *= t; dz *= t;
-				double ux = Up.X;
-				double uy = Up.Y;
-				double uz = Up.Z;
-				double sx = dz * uy - dy * uz;
-				double sy = dx * uz - dz * ux;
-				double sz = dy * ux - dx * uy;
+				Vector3 direction = new Vector3(FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition);
+				direction *= 1.0 / direction.Norm();
+				double sx = direction.Z * Up.Y - direction.Y * Up.Z;
+				double sy = direction.X * Up.Z - direction.Z * Up.X;
+				double sz = direction.Y * Up.X - direction.X * Up.Y;
 				double rx = 0.5 * (FrontAxle.Follower.WorldPosition.X + RearAxle.Follower.WorldPosition.X);
 				double ry = 0.5 * (FrontAxle.Follower.WorldPosition.Y + RearAxle.Follower.WorldPosition.Y);
 				double rz = 0.5 * (FrontAxle.Follower.WorldPosition.Z + RearAxle.Follower.WorldPosition.Z);
-				double cx, cy, cz;
-				if (this.HasInteriorView)
-				{
-					cx = rx + sx * Driver.X + ux * Driver.Y + dx * Driver.Z;
-					cy = ry + sy * Driver.X + uy * Driver.Y + dy * Driver.Z;
-					cz = rz + sz * Driver.X + uz * Driver.Y + dz * Driver.Z;
-				}
-				else
-				{
-					/*
-					 * If we do not have an interior view, base the camera update on the driver car
-					 */
-					Vector3 d = this.baseTrain.Cars[this.baseTrain.DriverCar].Driver;
-					cx = rx + sx * d.X + ux * d.Y + dx * d.Z;
-					cy = ry + sy * d.X + uy * d.Y + dy * d.Z;
-					cz = rz + sz * d.X + uz * d.Y + dz * d.Z;
-				}
-				World.CameraTrackFollower.WorldPosition = new Vector3(cx, cy, cz);
-				World.CameraTrackFollower.WorldDirection = new Vector3(dx, dy, dz);
-				World.CameraTrackFollower.WorldUp = new Vector3(ux, uy, uz);
+				Vector3 cameraPosition;
+				Vector3 driverPosition = this.HasInteriorView ? Driver : this.baseTrain.Cars[this.baseTrain.DriverCar].Driver;
+				cameraPosition.X = rx + sx * driverPosition.X + Up.X * driverPosition.Y + direction.X * driverPosition.Z;
+				cameraPosition.Y = ry + sy * driverPosition.X + Up.Y * driverPosition.Y + direction.Y * driverPosition.Z;
+				cameraPosition.Z = rz + sz * driverPosition.X + Up.Z * driverPosition.Y + direction.Z * driverPosition.Z;
+
+				World.CameraTrackFollower.WorldPosition = cameraPosition;
+				World.CameraTrackFollower.WorldDirection = direction;
+				World.CameraTrackFollower.WorldUp = new Vector3(Up);
 				World.CameraTrackFollower.WorldSide = new Vector3(sx, sy, sz);
 				double f = (Driver.Z - RearAxle.Position) / (FrontAxle.Position - RearAxle.Position);
 				double tp = (1.0 - f) * RearAxle.Follower.TrackPosition + f * FrontAxle.Follower.TrackPosition;
