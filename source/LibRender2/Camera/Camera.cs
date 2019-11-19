@@ -104,7 +104,56 @@ namespace LibRender2.Cameras
 					p[j] += rx * AbsoluteSide + ry * AbsoluteUp + rz * AbsoluteDirection;
 				}
 
-				return AbsolutePosition.X >= Restriction.AbsoluteBottomLeft.X & AbsolutePosition.X <= Restriction.AbsoluteTopRight.X & AbsolutePosition.Y >= Restriction.AbsoluteBottomLeft.Y & AbsolutePosition.Y <= Restriction.AbsoluteTopRight.Y & AbsolutePosition.Z >= Restriction.AbsoluteBottomLeft.Z & AbsolutePosition.Z <= Restriction.AbsoluteTopRight.Z;
+				if (AlignmentDirection.Position.X > 0)
+				{
+					//moving right
+					if (AbsolutePosition.X >= Restriction.AbsoluteTopRight.X)
+					{
+						return false;
+					}
+				}
+				if (AlignmentDirection.Position.X < 0)
+				{
+					//moving left
+					if (AbsolutePosition.X <= Restriction.AbsoluteBottomLeft.X)
+					{
+						return false;
+					}
+				}
+
+				if (AlignmentDirection.Position.Y > 0)
+				{
+					//moving up
+					if (AbsolutePosition.Y >= Restriction.AbsoluteTopRight.Y)
+					{
+						return false;
+					}
+				}
+				if (AlignmentDirection.Position.Y < 0)
+				{
+					//moving down
+					if (AbsolutePosition.Y <= Restriction.AbsoluteBottomLeft.Y)
+					{
+						return false;
+					}
+				}
+
+				if (AlignmentDirection.Position.Z > 0)
+				{
+					//moving forwards
+					if (AbsolutePosition.Z >= Restriction.AbsoluteTopRight.Z)
+					{
+						return false;
+					}
+				}
+				if (AlignmentDirection.Position.Z < 0)
+				{
+					//moving back
+					if (AbsolutePosition.Z <= Restriction.AbsoluteBottomLeft.Z)
+					{
+						return false;
+					}
+				}
 			}
 			return true;
 		}
