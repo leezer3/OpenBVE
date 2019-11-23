@@ -221,8 +221,6 @@ namespace OpenBve.Graphics
 				case ViewportMode.Cab:
 					CurrentProjectionMatrix = Matrix4D.CreatePerspectiveFieldOfView(Camera.VerticalViewingAngle, Screen.AspectRatio, 0.025, 50.0);
 					break;
-				default:
-					throw new ArgumentOutOfRangeException();
 			}
 
 			Touch.UpdateViewport();

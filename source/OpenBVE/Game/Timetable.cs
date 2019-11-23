@@ -488,7 +488,9 @@ namespace OpenBve {
 						descriptionheight = s.Height + 2;
 						h += (int) Math.Ceiling((double) s.Height) + 4;
 					}
-
+					f.Dispose();
+					fs.Dispose();
+					fss.Dispose();
 					// finish
 					if (k == 0)
 					{

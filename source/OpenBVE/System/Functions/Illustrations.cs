@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.IO;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using RouteManager2.Events;
@@ -366,7 +367,7 @@ namespace OpenBve {
 				// If we have track elements, but no stations, show a specific error message, rather
 				// than the more generic one thrown later
 				// NOTE: Will throw the generic error message on routes shorter than 900m with no stations
-				throw new Exception(Translations.GetInterfaceString("errors_route_corrupt_nostations"));
+				throw new InvalidDataException(Translations.GetInterfaceString("errors_route_corrupt_nostations"));
 			}
 			// Track elements are assumed to be all of the same length, and this length
 			// is used as measure unit, rather than computing the incremental track length
@@ -515,7 +516,7 @@ namespace OpenBve {
 					{
 						//If k is equal to zero, this generally means that the WithTrack section is missing from our routefile
 						//Adding zero to the loop control variable will also produce an infinite loop, so that's a bad idea too
-						throw new Exception(Translations.GetInterfaceString("errors_route_corrupt_withtrack"));
+						throw new InvalidDataException(Translations.GetInterfaceString("errors_route_corrupt_withtrack"));
 					}
 					/*
 					 * A route with a single station can somehow sometimes work OK in preview but not in-game

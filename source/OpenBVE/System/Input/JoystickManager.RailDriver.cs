@@ -207,7 +207,7 @@ namespace OpenBve
 				devices[0].ReadData(ref currentState);
 			}
 
-			private int ScaleValue(int value, int value_min, int value_max)
+			private static int ScaleValue(int value, int value_min, int value_max)
 			{
 				long temp = (value - value_min) * 65535;
 				return (int)(temp / (value_max - value_min) + Int16.MinValue);
@@ -245,7 +245,7 @@ namespace OpenBve
 					throw new Exception();
 				}
 			}
-			private byte GetDigit(int num)
+			private static byte GetDigit(int num)
 			{
 				num = Math.Abs(num);
 				if (num > 9 || num < 0)
