@@ -341,6 +341,7 @@ namespace OpenBve
 										gain *= Math.Pow(cur / max, 0.25);
 									}
 								}
+
 								if (obuf != nbuf)
 								{
 									Program.Sounds.StopSound(Sounds.Motor.Tables[j].Source);

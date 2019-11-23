@@ -40,6 +40,11 @@ namespace OpenBve {
 				} else {
 					Lines[i] = Lines[i].Trim(new char[] { });
 				}
+				if(Lines[i].EndsWith(","))
+				{
+					//File edited with MSExcel may have additional commas at the end of a line
+					Lines[i] = Lines[i].TrimEnd(new char[] { ','});
+				}
 			}
 			TrainDatFormats currentFormat = TrainDatFormats.openBVE;
 			const int currentVersion = 15311;
