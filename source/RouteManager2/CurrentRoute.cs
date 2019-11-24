@@ -76,7 +76,7 @@ namespace RouteManager2
 		{
 			this.renderer = renderer;
 
-			Tracks = new[] { new Track() };
+			Tracks = new[] { new Track { Elements = new TrackElement[0] } };
 			Trains = new AbstractTrain[0];
 			Sections = new Section[0];
 			Stations = new RouteStation[0];

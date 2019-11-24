@@ -974,7 +974,11 @@ namespace Plugin
 														fileName = OpenBveApi.Path.CombineFile(Folder, b);
 														if (!System.IO.File.Exists(fileName))
 														{
-															fileName = OpenBveApi.Path.CombineFile(currentSoundFolder, b);
+															if (currentSoundFolder != null)
+															{
+																fileName = OpenBveApi.Path.CombineFile(currentSoundFolder, b);
+															}
+
 															if (!System.IO.File.Exists(fileName))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "Sound file " + b + " was not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -1255,7 +1259,11 @@ namespace Plugin
 														fileNames = new string[] {OpenBveApi.Path.CombineFile(Folder, b)};
 														if (!System.IO.File.Exists(fileNames[0]))
 														{
-															fileNames[0] = OpenBveApi.Path.CombineFile(currentSoundFolder, b);
+															if (currentSoundFolder != null)
+															{
+																fileNames[0] = OpenBveApi.Path.CombineFile(currentSoundFolder, b);
+															}
+
 															if (!System.IO.File.Exists(fileNames[0]))
 															{
 																currentHost.AddMessage(MessageType.Error, false, "Sound file " + b + " was not found at line " + (i + 1).ToString(Culture) + " in file " + FileName);
