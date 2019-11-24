@@ -187,8 +187,7 @@ namespace TrainEditor2.IO.Panels.Xml
 
 							if (!File.Exists(This.DaytimeImage))
 							{
-								Interface.AddMessage(MessageType.Error, true, $"FileName {This.DaytimeImage} could not be found in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-								This.DaytimeImage = string.Empty;
+								Interface.AddMessage(MessageType.Warning, true, $"FileName {This.DaytimeImage} could not be found in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
 						}
 
@@ -209,8 +208,7 @@ namespace TrainEditor2.IO.Panels.Xml
 
 							if (!File.Exists(This.NighttimeImage))
 							{
-								Interface.AddMessage(MessageType.Error, true, $"FileName {This.NighttimeImage} could not be found in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-								This.NighttimeImage = string.Empty;
+								Interface.AddMessage(MessageType.Warning, true, $"FileName {This.NighttimeImage} could not be found in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
 						}
 
@@ -465,8 +463,7 @@ namespace TrainEditor2.IO.Panels.Xml
 
 							if (!File.Exists(pilotLamp.DaytimeImage))
 							{
-								Interface.AddMessage(MessageType.Error, true, $"FileName {pilotLamp.DaytimeImage} could not be found in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-								pilotLamp.DaytimeImage = string.Empty;
+								Interface.AddMessage(MessageType.Warning, true, $"FileName {pilotLamp.DaytimeImage} could not be found in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
 						}
 						break;
@@ -486,8 +483,7 @@ namespace TrainEditor2.IO.Panels.Xml
 
 							if (!File.Exists(pilotLamp.NighttimeImage))
 							{
-								Interface.AddMessage(MessageType.Error, true, $"FileName {pilotLamp.NighttimeImage} could not be found in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-								pilotLamp.NighttimeImage = string.Empty;
+								Interface.AddMessage(MessageType.Warning, true, $"FileName {pilotLamp.NighttimeImage} could not be found in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
 						}
 						break;
@@ -616,8 +612,7 @@ namespace TrainEditor2.IO.Panels.Xml
 
 							if (!File.Exists(needle.DaytimeImage))
 							{
-								Interface.AddMessage(MessageType.Error, true, $"FileName {needle.DaytimeImage} could not be found in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-								needle.DaytimeImage = string.Empty;
+								Interface.AddMessage(MessageType.Warning, true, $"FileName {needle.DaytimeImage} could not be found in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
 						}
 						break;
@@ -637,8 +632,7 @@ namespace TrainEditor2.IO.Panels.Xml
 
 							if (!File.Exists(needle.NighttimeImage))
 							{
-								Interface.AddMessage(MessageType.Error, true, "FileName " + needle.NighttimeImage + " could not be found in " + key + " in " + section + " at line " + lineNumber.ToString(culture) + " in " + fileName);
-								needle.NighttimeImage = string.Empty;
+								Interface.AddMessage(MessageType.Warning, true, "FileName " + needle.NighttimeImage + " could not be found in " + key + " in " + section + " at line " + lineNumber.ToString(culture) + " in " + fileName);
 							}
 						}
 						break;
@@ -905,8 +899,7 @@ namespace TrainEditor2.IO.Panels.Xml
 
 							if (!File.Exists(digitalNumber.DaytimeImage))
 							{
-								Interface.AddMessage(MessageType.Error, true, $"FileName {digitalNumber.DaytimeImage} could not be found in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-								digitalNumber.DaytimeImage = string.Empty;
+								Interface.AddMessage(MessageType.Warning, true, $"FileName {digitalNumber.DaytimeImage} could not be found in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
 						}
 						break;
@@ -926,8 +919,7 @@ namespace TrainEditor2.IO.Panels.Xml
 
 							if (!File.Exists(digitalNumber.NighttimeImage))
 							{
-								Interface.AddMessage(MessageType.Error, true, $"FileName {digitalNumber.NighttimeImage} could not be found in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-								digitalNumber.NighttimeImage = string.Empty;
+								Interface.AddMessage(MessageType.Warning, true, $"FileName {digitalNumber.NighttimeImage} could not be found in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
 						}
 						break;
@@ -1299,8 +1291,7 @@ namespace TrainEditor2.IO.Panels.Xml
 
 							if (!File.Exists(linearGauge.DaytimeImage))
 							{
-								Interface.AddMessage(MessageType.Error, true, $"FileName {linearGauge.DaytimeImage} could not be found in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-								linearGauge.DaytimeImage = string.Empty;
+								Interface.AddMessage(MessageType.Warning, true, $"FileName {linearGauge.DaytimeImage} could not be found in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
 						}
 						break;
@@ -1320,8 +1311,7 @@ namespace TrainEditor2.IO.Panels.Xml
 
 							if (!File.Exists(linearGauge.NighttimeImage))
 							{
-								Interface.AddMessage(MessageType.Error, true, $"FileName {linearGauge.NighttimeImage} could not be found in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-								linearGauge.NighttimeImage = string.Empty;
+								Interface.AddMessage(MessageType.Warning, true, $"FileName {linearGauge.NighttimeImage} could not be found in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
 						}
 						break;

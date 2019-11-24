@@ -54,8 +54,18 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 
 										if (int.TryParse(a, NumberStyles.Integer, culture, out n))
 										{
-											if (n >= 0 & n < train.Cars.Count)
+											if (n >= 0)
 											{
+												for (int k = n; k >= train.Cars.Count; k--)
+												{
+													train.Cars.Add(new TrailerCar());
+													train.Couplers.Add(new Coupler());
+
+													train.ApplyPowerNotchesToCar();
+													train.ApplyBrakeNotchesToCar();
+													train.ApplyLocoBrakeNotchesToCar();
+												}
+
 												if (string.IsNullOrEmpty(b))
 												{
 													Interface.AddMessage(MessageType.Error, true, $"An empty car object was supplied at line {(i + 1).ToString(culture)} in file {fileName}");
@@ -68,14 +78,12 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 												{
 													string file = Path.CombineFile(System.IO.Path.GetDirectoryName(fileName), b);
 
-													if (File.Exists(file))
+													if (!File.Exists(file))
 													{
-														train.Cars[n].Object = file;
+														Interface.AddMessage(MessageType.Warning, true, $"The car object {file} does not exist at line {(i + 1).ToString(culture)} in file {fileName}");
 													}
-													else
-													{
-														Interface.AddMessage(MessageType.Error, true, $"The car object {file} does not exist at line {(i + 1).ToString(culture)} in file {fileName}");
-													}
+
+													train.Cars[n].Object = file;
 												}
 											}
 											else
@@ -108,8 +116,18 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 
 								if (int.TryParse(t, NumberStyles.Integer, culture, out n))
 								{
-									if (n >= 0 & n < train.Cars.Count)
+									if (n >= 0)
 									{
+										for (int j = n; j >= train.Cars.Count; j--)
+										{
+											train.Cars.Add(new TrailerCar());
+											train.Couplers.Add(new Coupler());
+
+											train.ApplyPowerNotchesToCar();
+											train.ApplyBrakeNotchesToCar();
+											train.ApplyLocoBrakeNotchesToCar();
+										}
+
 										i++;
 
 										while (i < lines.Length && !lines[i].StartsWith("[", StringComparison.Ordinal) & !lines[i].EndsWith("]", StringComparison.Ordinal))
@@ -138,14 +156,12 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 															{
 																string file = Path.CombineFile(System.IO.Path.GetDirectoryName(fileName), b);
 
-																if (File.Exists(file))
+																if (!File.Exists(file))
 																{
-																	train.Cars[n].Object = file;
+																	Interface.AddMessage(MessageType.Warning, true, $"The car object {file} does not exist at line {(i + 1).ToString(culture)} in file {fileName}");
 																}
-																else
-																{
-																	Interface.AddMessage(MessageType.Error, true, $"The car object {file} does not exist at line {(i + 1).ToString(culture)} in file {fileName}");
-																}
+
+																train.Cars[n].Object = file;
 															}
 															break;
 														case "length":
@@ -238,8 +254,18 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 
 								if (int.TryParse(t, NumberStyles.Integer, culture, out n))
 								{
-									if (n >= 0 & n < train.Couplers.Count)
+									if (n >= 0)
 									{
+										for (int j = n; j >= train.Couplers.Count; j--)
+										{
+											train.Cars.Add(new TrailerCar());
+											train.Couplers.Add(new Coupler());
+
+											train.ApplyPowerNotchesToCar();
+											train.ApplyBrakeNotchesToCar();
+											train.ApplyLocoBrakeNotchesToCar();
+										}
+
 										i++;
 
 										while (i < lines.Length && !lines[i].StartsWith("[", StringComparison.Ordinal) & !lines[i].EndsWith("]", StringComparison.Ordinal))
@@ -302,14 +328,12 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 															{
 																string file = Path.CombineFile(System.IO.Path.GetDirectoryName(fileName), b);
 
-																if (File.Exists(file))
+																if (!File.Exists(file))
 																{
-																	train.Couplers[n].Object = file;
+																	Interface.AddMessage(MessageType.Warning, true, $"The coupler object {file} does not exist at line {(i + 1).ToString(culture)} in file {fileName}");
 																}
-																else
-																{
-																	Interface.AddMessage(MessageType.Error, true, $"The coupler object {file} does not exist at line {(i + 1).ToString(culture)} in file {fileName}");
-																}
+
+																train.Couplers[n].Object = file;
 															}
 															break;
 														default:
@@ -350,8 +374,18 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 									bool IsOdd = (n % 2 != 0);
 									int CarIndex = n / 2;
 
-									if (n >= 0 & n < train.Cars.Count * 2)
+									if (n >= 0)
 									{
+										for (int j = CarIndex; j >= train.Cars.Count; j--)
+										{
+											train.Cars.Add(new TrailerCar());
+											train.Couplers.Add(new Coupler());
+
+											train.ApplyPowerNotchesToCar();
+											train.ApplyBrakeNotchesToCar();
+											train.ApplyLocoBrakeNotchesToCar();
+										}
+
 										i++;
 
 										while (i < lines.Length && !lines[i].StartsWith("[", StringComparison.Ordinal) & !lines[i].EndsWith("]", StringComparison.Ordinal))
@@ -380,20 +414,18 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 															{
 																string file = Path.CombineFile(System.IO.Path.GetDirectoryName(fileName), b);
 
-																if (File.Exists(file))
+																if (!File.Exists(file))
 																{
-																	if (IsOdd)
-																	{
-																		train.Cars[CarIndex].RearBogie.Object = b;
-																	}
-																	else
-																	{
-																		train.Cars[CarIndex].FrontBogie.Object = b;
-																	}
+																	Interface.AddMessage(MessageType.Warning, true, $"The bogie object {file} does not exist at line {(i + 1).ToString(culture)} in file {fileName}");
+																}
+
+																if (IsOdd)
+																{
+																	train.Cars[CarIndex].RearBogie.Object = b;
 																}
 																else
 																{
-																	Interface.AddMessage(MessageType.Error, true, $"The bogie object {file} does not exist at line {(i + 1).ToString(culture)} in file {fileName}");
+																	train.Cars[CarIndex].FrontBogie.Object = b;
 																}
 															}
 															break;
@@ -464,7 +496,6 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 										}
 
 										i--;
-
 									}
 									else
 									{

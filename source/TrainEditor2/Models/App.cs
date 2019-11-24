@@ -622,14 +622,14 @@ namespace TrainEditor2.Models
 						{
 							TrainDat.Parse(TrainDatImportLocation, out train);
 							OnPropertyChanged(new PropertyChangedEventArgs(nameof(Train)));
-
-							CreateItem();
 						}
 
 						if (!string.IsNullOrEmpty(ExtensionsCfgImportLocation))
 						{
 							ExtensionsCfg.Parse(ExtensionsCfgImportLocation, Train);
 						}
+
+						CreateItem();
 						break;
 					default:
 						throw new ArgumentOutOfRangeException();
