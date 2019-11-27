@@ -94,7 +94,7 @@ namespace OpenBve
 					World.UpdateViewingDistances();
 					if (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 					{
-						if (!Program.Renderer.Camera.PerformRestrictionTest())
+						if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction))
 						{
 							World.InitializeCameraRestriction();
 						}
@@ -720,7 +720,7 @@ namespace OpenBve
 											World.UpdateViewingDistances();
 											if (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 											{
-												if (!Program.Renderer.Camera.PerformRestrictionTest())
+												if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction))
 												{
 													World.InitializeCameraRestriction();
 												}
@@ -794,7 +794,7 @@ namespace OpenBve
 											World.UpdateViewingDistances();
 											if (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 											{
-												if (!Program.Renderer.Camera.PerformRestrictionTest())
+												if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction))
 												{
 													World.InitializeCameraRestriction();
 												}
@@ -1013,9 +1013,9 @@ namespace OpenBve
 										World.UpdateViewingDistances();
 										if ((Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior |
 											 Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) &
-											Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.On)
+											(Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.On || Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Restricted3D))
 										{
-											if (!Program.Renderer.Camera.PerformRestrictionTest())
+											if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction))
 											{
 												World.InitializeCameraRestriction();
 											}
@@ -1023,31 +1023,46 @@ namespace OpenBve
 										break;
 									case Translations.Command.CameraRestriction:
 										// camera: restriction
-										if (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
+										switch (Program.Renderer.Camera.CurrentRestriction)
 										{
-											if (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Off)
-											{
-												Program.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.On;
-											}
-											else
-											{
-												Program.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.Off;
-											}
-											World.InitializeCameraRestriction();
-											if (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Off)
-											{
-												Game.AddMessage(
-													Translations.GetInterfaceString("notification_camerarestriction_off"),
+											case CameraRestrictionMode.Restricted3D:
+												Program.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.NotAvailable;
+												Game.AddMessage(Translations.GetInterfaceString("notification_camerarestriction_off"),
 													MessageDependency.CameraView, GameMode.Expert,
 													MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
-											}
-											else
-											{
-												Game.AddMessage(
-													Translations.GetInterfaceString("notification_camerarestriction_on"),
-													MessageDependency.CameraView, GameMode.Expert,
-													MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
-											}
+												break;
+											case CameraRestrictionMode.NotAvailable:
+												Program.Renderer.Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
+												if (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Restricted3D)
+												{
+													Game.AddMessage(Translations.GetInterfaceString("notification_camerarestriction_on"),
+														MessageDependency.CameraView, GameMode.Expert,
+														MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
+												}
+												break;
+											default:
+												if (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Off)
+												{
+													Program.Renderer.Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
+												}
+												else
+												{
+													Program.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.Off;
+												}
+												World.InitializeCameraRestriction();
+												if (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Off)
+												{
+													Game.AddMessage(Translations.GetInterfaceString("notification_camerarestriction_off"),
+														MessageDependency.CameraView, GameMode.Expert,
+														MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
+												}
+												else
+												{
+													Game.AddMessage(Translations.GetInterfaceString("notification_camerarestriction_on"),
+														MessageDependency.CameraView, GameMode.Expert,
+														MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
+												}
+												break;
 										}
 										break;
 									case Translations.Command.SinglePower:

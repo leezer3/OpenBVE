@@ -1,4 +1,5 @@
 ﻿using System;
+using LibRender2.Camera;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
@@ -51,23 +52,17 @@ namespace LibRender2.Cameras
 		public CameraViewMode CurrentMode;
 		/// <summary>The current camera restriction mode</summary>
 		public CameraRestrictionMode CurrentRestriction = CameraRestrictionMode.NotAvailable;
-		/// <summary>The top left vector when the camera is restricted</summary>
-		/// <remarks>2D panel</remarks>
-		public Vector3 RestrictionBottomLeft = new Vector3(-1.0, -1.0, 1.0);
-		/// <summary>The bottom right vector when the camera is restricted</summary>
-		/// <remarks>2D panel</remarks>
-		public Vector3 RestrictionTopRight = new Vector3(1.0, 1.0, 1.0);
 
 		internal CameraProperties()
 		{
 		}
 
 		/// <summary>Tests whether the camera may move further in the current direction</summary>
-		public bool PerformRestrictionTest()
+		public bool PerformRestrictionTest(CameraRestriction Restriction)
 		{
 			if (CurrentRestriction == CameraRestrictionMode.On)
 			{
-				Vector3[] p = { RestrictionBottomLeft, RestrictionTopRight };
+				Vector3[] p = { Restriction.BottomLeft, Restriction.TopRight };
 				Vector2[] r = new Vector2[2];
 
 				for (int j = 0; j < 2; j++)
@@ -95,7 +90,71 @@ namespace LibRender2.Cameras
 
 				return r[0].X <= -1.0025 & r[1].X >= 1.0025 & r[0].Y <= -1.0025 & r[1].Y >= 1.0025;
 			}
+			if (CurrentRestriction == CameraRestrictionMode.Restricted3D)
+			{
+				Vector3[] p = { Restriction.BottomLeft, Restriction.TopRight };
 
+				for (int j = 0; j < 2; j++)
+				{
+					// determine relative world coordinates
+					p[j].Rotate(AbsoluteDirection, AbsoluteUp, AbsoluteSide);
+					double rx = -Math.Tan(Alignment.Yaw) - Alignment.Position.X;
+					double ry = -Math.Tan(Alignment.Pitch) - Alignment.Position.Y;
+					double rz = -Alignment.Position.Z;
+					p[j] += rx * AbsoluteSide + ry * AbsoluteUp + rz * AbsoluteDirection;
+				}
+
+				if (AlignmentDirection.Position.X > 0)
+				{
+					//moving right
+					if (AbsolutePosition.X >= Restriction.AbsoluteTopRight.X)
+					{
+						return false;
+					}
+				}
+				if (AlignmentDirection.Position.X < 0)
+				{
+					//moving left
+					if (AbsolutePosition.X <= Restriction.AbsoluteBottomLeft.X)
+					{
+						return false;
+					}
+				}
+
+				if (AlignmentDirection.Position.Y > 0)
+				{
+					//moving up
+					if (AbsolutePosition.Y >= Restriction.AbsoluteTopRight.Y)
+					{
+						return false;
+					}
+				}
+				if (AlignmentDirection.Position.Y < 0)
+				{
+					//moving down
+					if (AbsolutePosition.Y <= Restriction.AbsoluteBottomLeft.Y)
+					{
+						return false;
+					}
+				}
+
+				if (AlignmentDirection.Position.Z > 0)
+				{
+					//moving forwards
+					if (AbsolutePosition.Z >= Restriction.AbsoluteTopRight.Z)
+					{
+						return false;
+					}
+				}
+				if (AlignmentDirection.Position.Z < 0)
+				{
+					//moving back
+					if (AbsolutePosition.Z <= Restriction.AbsoluteBottomLeft.Z)
+					{
+						return false;
+					}
+				}
+			}
 			return true;
 		}
 	}

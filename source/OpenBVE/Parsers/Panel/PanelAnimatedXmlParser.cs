@@ -6,6 +6,7 @@ using System.Xml;
 using System.Xml.Linq;
 using OpenBveApi;
 using OpenBveApi.Colors;
+using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;

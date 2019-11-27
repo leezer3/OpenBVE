@@ -1,4 +1,6 @@
 using System;
+using System.Windows.Forms;
+using LibRender2.Camera;
 using LibRender2.Cameras;
 using OpenBve.BrakeSystems;
 using OpenBveApi.Graphics;
@@ -6,6 +8,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
+using OpenBveApi.World;
 using SoundManager;
 
 namespace OpenBve
@@ -60,6 +63,8 @@ namespace OpenBve
 			internal readonly int Index;
 			/// <summary>Stores the camera restriction mode for the interior view of this car</summary>
 			internal CameraRestrictionMode CameraRestrictionMode = CameraRestrictionMode.NotSpecified;
+
+			internal CameraRestriction CameraRestriction;
 			/// <summary>Stores the camera interior camera alignment for this car</summary>
 			internal CameraAlignment InteriorCamera;
 
@@ -571,6 +576,19 @@ namespace OpenBve
 						}
 					}
 				}
+				//Update camera restriction
+				
+				CameraRestriction.AbsoluteBottomLeft = new Vector3(CameraRestriction.BottomLeft);
+				CameraRestriction.AbsoluteBottomLeft += Driver;
+				CameraRestriction.AbsoluteBottomLeft.Rotate(new Transformation(d, u, s));
+				CameraRestriction.AbsoluteBottomLeft.Translate(p);
+
+				CameraRestriction.AbsoluteTopRight = new Vector3(CameraRestriction.TopRight);
+				CameraRestriction.AbsoluteTopRight += Driver;
+				CameraRestriction.AbsoluteTopRight.Rotate(new Transformation(d, u, s));
+				CameraRestriction.AbsoluteTopRight.Translate(p);
+
+				
 			}
 
 			/// <summary>Updates the given car section element</summary>
