@@ -330,7 +330,7 @@ namespace OpenBve
 					double BrakeDeceleration = Train.Cars[Train.DriverCar].CarBrake.DecelerationAtServiceMaximumPressure(Train.Handles.Brake.Actual, Train.Cars[Train.DriverCar].CurrentSpeed);
 					for (int i = 0; i < Train.Cars.Length; i++)
 					{
-						if (Train.Cars[i].Specs.IsMotorCar)
+						if (Train.Cars[i] is TrainManager.MotorCar)
 						{
 							if (Train.Cars[Train.DriverCar].Specs.MotorDeceleration != 0 && Train.Cars[Train.DriverCar].Specs.MotorDeceleration < BrakeDeceleration)
 							{

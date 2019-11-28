@@ -116,7 +116,7 @@ namespace OpenBve.Graphics.Renderers
 			int car = 0;
 			for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
 			{
-				if (TrainManager.PlayerTrain.Cars[i].Specs.IsMotorCar)
+				if (TrainManager.PlayerTrain.Cars[i] is TrainManager.MotorCar)
 				{
 					car = i;
 					break;

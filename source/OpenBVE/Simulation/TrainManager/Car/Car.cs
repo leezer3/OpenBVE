@@ -14,9 +14,16 @@ namespace OpenBve
 {
 	public static partial class TrainManager
 	{
-		internal partial class MotorCar : Car
+		internal class MotorCar : Car
 		{
 			internal MotorCar(Train train, int index) : base(train, index)
+			{
+			}
+		}
+
+		internal class TrailerCar : Car
+		{
+			internal TrailerCar(Train train, int index) : base(train, index)
 			{
 			}
 		}
@@ -63,7 +70,7 @@ namespace OpenBve
 			/// <summary>Whether loading sway is enabled for this car</summary>
 			internal bool EnableLoadingSway = true;
 			/// <summary>A reference to the base train</summary>
-			private readonly Train baseTrain;
+			internal readonly Train baseTrain;
 			/// <summary>Stores the camera restriction mode for the interior view of this car</summary>
 			internal CameraRestrictionMode CameraRestrictionMode = CameraRestrictionMode.NotSpecified;
 
@@ -281,9 +288,9 @@ namespace OpenBve
 
 			internal void UpdateMotorSounds(double TimeElapsed)
 			{
-				if (!this.Specs.IsMotorCar)
+				if (!(this is MotorCar))
 				{
-					return;
+					return; //FIXME: This will go shortly
 				}
 				double speed = Math.Abs(Specs.CurrentPerceivedSpeed);
 				int idx = (int)Math.Round(speed * Sounds.Motor.SpeedConversionFactor);

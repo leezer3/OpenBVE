@@ -26,7 +26,7 @@ namespace OpenBve.Parsers.Train
 			{
 				for (int i = 0; i < Train.Cars.Length; i++)
 				{
-					if (Train.Cars[i].Specs.IsMotorCar)
+					if (Train.Cars[i] is TrainManager.MotorCar)
 					{
 						AccelerationCurves = new TrainManager.BveAccelerationCurve[Train.Cars[i].Specs.AccelerationCurves.Length];
 						for (int j = 0; j < Train.Cars[i].Specs.AccelerationCurves.Length; j++)

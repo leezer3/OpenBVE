@@ -5,8 +5,6 @@
 	{
 		internal struct CarSpecs
 		{
-			/// motor
-			internal bool IsMotorCar;
 			internal AccelerationCurve[] AccelerationCurves;
 
 			internal double AccelerationCurveMaximum;

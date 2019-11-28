@@ -784,7 +784,7 @@ namespace OpenBve
 										case "noise":
 											for (int c = 0; c < train.Cars.Length; c++)
 											{
-												if (train.Cars[c].Specs.IsMotorCar | c == train.DriverCar)
+												if (train.Cars[c] is TrainManager.MotorCar | c == train.DriverCar)
 												{
 													train.Cars[c].Sounds.Loop = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center);
 												}
@@ -821,7 +821,7 @@ namespace OpenBve
 			// motor sound
 			for (int c = 0; c < train.Cars.Length; c++)
 			{
-				if (train.Cars[c].Specs.IsMotorCar)
+				if (train.Cars[c] is TrainManager.MotorCar)
 				{
 					train.Cars[c].Sounds.Motor.Position = center;
 					for (int i = 0; i < train.Cars[c].Sounds.Motor.Tables.Length; i++)

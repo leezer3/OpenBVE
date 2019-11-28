@@ -91,7 +91,7 @@ namespace OpenBve
 				train.Cars[i].Sounds.SpringL = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "SpringL.wav"), SoundCfgParser.smallRadius), left);
 				train.Cars[i].Sounds.SpringR = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "SpringR.wav"), SoundCfgParser.smallRadius), right);
 				// motor sound
-				if (train.Cars[i].Specs.IsMotorCar)
+				if (train.Cars[i] is TrainManager.MotorCar)
 				{
 					System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 					train.Cars[i].Sounds.Motor.Position = center;

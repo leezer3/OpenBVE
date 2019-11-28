@@ -237,7 +237,7 @@ namespace OpenBve
 								Cars[j].RearBogie.ChangeSection(!IsPlayerTrain ? 0 : -1);
 								Cars[j].Coupler.ChangeSection(!IsPlayerTrain ? 0 : -1);
 								
-								if (Cars[j].Specs.IsMotorCar)
+								if (Cars[j] is MotorCar)
 								{
 									if (Cars[j].Sounds.Loop.Buffer != null)
 									{
@@ -500,7 +500,7 @@ namespace OpenBve
 					if (DecelerationDueToMotor[i] == 0.0)
 					{
 						double a;
-						if (Cars[i].Specs.IsMotorCar)
+						if (Cars[i] is MotorCar)
 						{
 							if (DecelerationDueToMotor[i] == 0.0)
 							{
@@ -607,7 +607,7 @@ namespace OpenBve
 					{
 						double a;
 						// motor
-						if (Cars[i].Specs.IsMotorCar & DecelerationDueToMotor[i] != 0.0)
+						if (Cars[i] is MotorCar & DecelerationDueToMotor[i] != 0.0)
 						{
 							a = -DecelerationDueToMotor[i];
 							if (Cars[i].Specs.CurrentAccelerationOutput > a)
