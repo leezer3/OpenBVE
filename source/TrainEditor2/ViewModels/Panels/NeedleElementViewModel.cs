@@ -156,7 +156,7 @@ namespace TrainEditor2.ViewModels.Panels
 				.ToReactivePropertyAsSynchronized(
 					x => x.Radius,
 					x => x.ToString(culture),
-					double.Parse,
+					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -196,7 +196,7 @@ namespace TrainEditor2.ViewModels.Panels
 				.ToReactivePropertyAsSynchronized(
 					x => x.OriginX,
 					x => x.ToString(culture),
-					double.Parse,
+					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -214,7 +214,7 @@ namespace TrainEditor2.ViewModels.Panels
 				.ToReactivePropertyAsSynchronized(
 					x => x.OriginY,
 					x => x.ToString(culture),
-					double.Parse,
+					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -268,7 +268,7 @@ namespace TrainEditor2.ViewModels.Panels
 				.ToReactivePropertyAsSynchronized(
 					x => x.Minimum,
 					x => x.ToString(culture),
-					double.Parse,
+					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -286,7 +286,7 @@ namespace TrainEditor2.ViewModels.Panels
 				.ToReactivePropertyAsSynchronized(
 					x => x.Maximum,
 					x => x.ToString(culture),
-					double.Parse,
+					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -308,7 +308,7 @@ namespace TrainEditor2.ViewModels.Panels
 				.ToReactivePropertyAsSynchronized(
 					x => x.NaturalFreq,
 					x => x.ToString(culture),
-					double.Parse,
+					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -330,7 +330,7 @@ namespace TrainEditor2.ViewModels.Panels
 				.ToReactivePropertyAsSynchronized(
 					x => x.DampingRatio,
 					x => x.ToString(culture),
-					double.Parse,
+					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
