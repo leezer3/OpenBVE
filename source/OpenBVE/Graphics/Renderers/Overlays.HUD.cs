@@ -6,6 +6,7 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
+using RouteManager2;
 
 namespace OpenBve.Graphics.Renderers
 {
@@ -42,6 +43,21 @@ namespace OpenBve.Graphics.Renderers
 			{
 				w = 0.0; h = 0.0;
 			}
+
+			int stationIndex;
+			if (TrainManager.PlayerTrain.Station >= 0 && TrainManager.PlayerTrain.StationState != TrainStopState.Completed)
+			{
+				stationIndex = TrainManager.PlayerTrain.LastStation;
+			}
+			else
+			{
+				stationIndex = TrainManager.PlayerTrain.LastStation + 1;
+			}
+			if (stationIndex > Program.CurrentRoute.Stations.Length - 1)
+			{
+				stationIndex = TrainManager.PlayerTrain.LastStation;
+			}
+
 			double x = Element.Alignment.X < 0 ? 0.0 : Element.Alignment.X == 0 ? 0.5 * (Program.Renderer.Screen.Width - w) : Program.Renderer.Screen.Width - w;
 			double y = Element.Alignment.Y < 0 ? 0.0 : Element.Alignment.Y == 0 ? 0.5 * (Program.Renderer.Screen.Height - h) : Program.Renderer.Screen.Height - h;
 			x += Element.Position.X;
@@ -605,84 +621,116 @@ namespace OpenBve.Graphics.Renderers
 						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
 					} break;
 				case "dist_next_station":
-					int i;
-					if (TrainManager.PlayerTrain.Station >= 0 && TrainManager.PlayerTrain.StationState != TrainStopState.Completed)
+					if (!Program.CurrentRoute.Stations[stationIndex].PlayerStops())
 					{
-					i = TrainManager.PlayerTrain.LastStation;
-					}
-					else
-					{
-						i = TrainManager.PlayerTrain.LastStation + 1;
-					}
-					if (i > Program.CurrentRoute.Stations.Length - 1)
-					{
-						i = TrainManager.PlayerTrain.LastStation;
-					}
-					int n = Program.CurrentRoute.Stations[i].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
-					double p0 = TrainManager.PlayerTrain.FrontCarTrackPosition();
-					double p1;
-					if (Program.CurrentRoute.Stations[i].Stops.Length > 0)
-					{
-						p1 = Program.CurrentRoute.Stations[i].Stops[n].TrackPosition;
-					}
-					else
-					{
-						p1 = Program.CurrentRoute.Stations[i].DefaultTrackPosition;
-					}
-					double m = p1 - p0;
-					if (renderer.OptionDistanceToNextStation == NewRenderer.DistanceToNextStationDisplayMode.Km)
-					{
-						if (Program.CurrentRoute.Stations[i].PlayerStops())
+						int n = Program.CurrentRoute.Stations[stationIndex].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
+						double p0 = TrainManager.PlayerTrain.FrontCarTrackPosition();
+						double p1 = Program.CurrentRoute.Stations[stationIndex].Stops.Length > 0 ? Program.CurrentRoute.Stations[stationIndex].Stops[n].TrackPosition : Program.CurrentRoute.Stations[stationIndex].DefaultTrackPosition;
+						double m = p1 - p0;
+						if (m < 0)
 						{
-							t = "Stop: ";
+							m = 0.0; //Don't display negative numbers when passing (stop zone goes beyond the absolute station limit)
+						}
+						if (renderer.OptionDistanceToNextStation == NewRenderer.DistanceToNextStationDisplayMode.Km)
+						{
+							m /= 1000.0;
+							t = "Pass: " + m.ToString("0.000", Culture) + " km";
+							Element.TransitionState -= speed * TimeElapsed;
+							if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
+						}
+						else if (renderer.OptionDistanceToNextStation == NewRenderer.DistanceToNextStationDisplayMode.Mile)
+						{
+							m /= 1609.34;
+							t = "Pass: " + m.ToString("0.0000", Culture) + " miles";
+							Element.TransitionState -= speed * TimeElapsed;
+							if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
+						}
+						else
+						{
+							m /= 1609.34;
+							t = "Pass: " + m.ToString("0.0000", Culture) + " miles";
+							Element.TransitionState += speed * TimeElapsed;
+							if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
+						}
+					}
+					else
+					{
+						t = String.Empty;
+					}
+					break;
+				case "dist_next_station2":
+					if (!Program.CurrentRoute.Stations[stationIndex].PlayerStops())
+					{
+						int n = Program.CurrentRoute.Stations[stationIndex].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
+						double p0 = TrainManager.PlayerTrain.FrontCarTrackPosition();
+						double p1 = 0.0;
+						for (int i = stationIndex; i < Program.CurrentRoute.Stations.Length; i++)
+						{
+							if (Program.CurrentRoute.Stations[i].PlayerStops())
+							{
+								p1 = Program.CurrentRoute.Stations[i].Stops.Length > 0 ? Program.CurrentRoute.Stations[i].Stops[n].TrackPosition : Program.CurrentRoute.Stations[i].DefaultTrackPosition;
+							}
+						}
+						
+						double m = p1 - p0;
+						if (renderer.OptionDistanceToNextStation == NewRenderer.DistanceToNextStationDisplayMode.Km)
+						{
+							m /= 1000.0;
+							t = "Next Stop: " + m.ToString("0.000", Culture) + " km";
+							Element.TransitionState -= speed * TimeElapsed;
+							if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
+						}
+						else if (renderer.OptionDistanceToNextStation == NewRenderer.DistanceToNextStationDisplayMode.Mile)
+						{
+							m /= 1609.34;
+							t = "Next Stop: " + m.ToString("0.0000", Culture) + " miles";
+							Element.TransitionState -= speed * TimeElapsed;
+							if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
+						}
+						else
+						{
+							m /= 1609.34;
+							t = "Next Stop: " + m.ToString("0.0000", Culture) + " miles";
+							Element.TransitionState += speed * TimeElapsed;
+							if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
+						}
+					}
+					else
+					{
+						int n = Program.CurrentRoute.Stations[stationIndex].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
+						double p0 = TrainManager.PlayerTrain.FrontCarTrackPosition();
+						double p1 = Program.CurrentRoute.Stations[stationIndex].Stops.Length > 0 ? Program.CurrentRoute.Stations[stationIndex].Stops[n].TrackPosition : Program.CurrentRoute.Stations[stationIndex].DefaultTrackPosition;;
+						double m = p1 - p0;
+						if (renderer.OptionDistanceToNextStation == NewRenderer.DistanceToNextStationDisplayMode.Km)
+						{
 							if (Math.Abs(m) <= 10.0)
 							{
-								t += m.ToString("0.00", Culture) + " m";
+								t = "Stop: " + m.ToString("0.00", Culture) + " m";
 							}
 							else
 							{
 								m /= 1000.0;
-								t += m.ToString("0.000", Culture) + " km";
+								t = "Stop: " + m.ToString("0.000", Culture) + " km";
 							}
+							Element.TransitionState -= speed * TimeElapsed;
+							if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
+						}
+						else if (renderer.OptionDistanceToNextStation == NewRenderer.DistanceToNextStationDisplayMode.Mile)
+						{
+							m /= 1609.34;
+							t = "Stop: " + m.ToString("0.0000", Culture) + " miles";
+							Element.TransitionState -= speed * TimeElapsed;
+							if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
 						}
 						else
 						{
-							m /= 1000.0;
-							t = "Pass: " + m.ToString("0.000", Culture) + " km";
+							m /= 1609.34;
+							t = "Stop: " + m.ToString("0.0000", Culture) + " miles";
+							Element.TransitionState += speed * TimeElapsed;
+							if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
 						}
-						Element.TransitionState -= speed * TimeElapsed;
-						if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
 					}
-					else if (renderer.OptionDistanceToNextStation == NewRenderer.DistanceToNextStationDisplayMode.Mile)
-					{
-						m /= 1609.34;
-						if (Program.CurrentRoute.Stations[i].PlayerStops())
-						{
-							t = "Stop: ";
-						}
-						else
-						{
-							t = "Pass: ";
-						}
-						t += m.ToString("0.0000", Culture) + " miles";
-						Element.TransitionState -= speed * TimeElapsed;
-						if (Element.TransitionState < 0.0) Element.TransitionState = 0.0;
-					}
-					else
-					{
-						m /= 1609.34;
-						if (Program.CurrentRoute.Stations[i].PlayerStops())
-						{
-							t = "Stop: ";
-						}
-						else
-						{
-							t = "Pass: ";
-						}
-						t += m.ToString("0.0000", Culture) + " miles";
-						Element.TransitionState += speed * TimeElapsed;
-						if (Element.TransitionState > 1.0) Element.TransitionState = 1.0;
-					} break;
+					 break;
 				case "fps":
 					int fps = (int)Math.Round(Program.Renderer.FrameRate);
 					t = fps.ToString(Culture) + " fps";
