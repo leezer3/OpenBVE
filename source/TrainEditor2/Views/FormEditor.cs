@@ -452,6 +452,7 @@ namespace TrainEditor2.Views
 			app.ChangeVisibleLogMessages.BindToButton(MessageType.Error, toolStripMenuItemError).AddTo(disposable);
 			app.ChangeVisibleLogMessages.BindToButton(MessageType.Critical, toolStripMenuItemError).AddTo(disposable);
 			app.ClearLogMessages.BindToButton(toolStripMenuItemClear).AddTo(disposable);
+			app.OutputLogs.BindToButton(buttonOutputLogs).AddTo(disposable);
 		}
 
 		private void FormEditor_Load(object sender, EventArgs e)
