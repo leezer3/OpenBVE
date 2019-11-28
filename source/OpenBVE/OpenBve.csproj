@@ -225,6 +225,7 @@
     <Compile Include="Simulation\TrainManager\Car\ConstantSpeedDevice.cs" />
     <Compile Include="Simulation\TrainManager\Car\Coupler.cs" />
     <Compile Include="Simulation\TrainManager\Car\HoldBrake.cs" />
+    <Compile Include="Simulation\TrainManager\Motor\FuelTank.cs" />
     <Compile Include="Simulation\TrainManager\Train\SafetySystems\PilotLamp.cs" />
     <Compile Include="Simulation\TrainManager\Car\ReadhesionDevice.cs" />
     <Compile Include="Simulation\TrainManager\Car\ReadhesionDevice.Types.cs" />
