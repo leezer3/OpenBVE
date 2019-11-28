@@ -636,6 +636,8 @@ namespace TrainEditor2.Views
 			this.toolStripComboBoxLanguage = new System.Windows.Forms.ToolStripComboBox();
 			this.toolStripStatusLabelLanguage = new System.Windows.Forms.ToolStripStatusLabel();
 			this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+			this.panelStatusNavi = new System.Windows.Forms.Panel();
+			this.buttonOutputLogs = new System.Windows.Forms.Button();
 			this.tabControlEditor.SuspendLayout();
 			this.tabPageTrain.SuspendLayout();
 			this.groupBoxDevice.SuspendLayout();
@@ -740,6 +742,7 @@ namespace TrainEditor2.Views
 			this.panelCarsNavi.SuspendLayout();
 			this.menuStripMenu.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
+			this.panelStatusNavi.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tabControlEditor
@@ -4198,7 +4201,7 @@ namespace TrainEditor2.Views
 			this.tabPageScreen.Location = new System.Drawing.Point(4, 40);
 			this.tabPageScreen.Name = "tabPageScreen";
 			this.tabPageScreen.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPageScreen.Size = new System.Drawing.Size(312, 625);
+			this.tabPageScreen.Size = new System.Drawing.Size(312, 626);
 			this.tabPageScreen.TabIndex = 1;
 			this.tabPageScreen.Text = "Screen";
 			this.tabPageScreen.UseVisualStyleBackColor = true;
@@ -4253,7 +4256,7 @@ namespace TrainEditor2.Views
 			this.tabPagePilotLamp.Controls.Add(this.labelPilotLampTransparentColor);
 			this.tabPagePilotLamp.Location = new System.Drawing.Point(4, 40);
 			this.tabPagePilotLamp.Name = "tabPagePilotLamp";
-			this.tabPagePilotLamp.Size = new System.Drawing.Size(312, 625);
+			this.tabPagePilotLamp.Size = new System.Drawing.Size(312, 626);
 			this.tabPagePilotLamp.TabIndex = 2;
 			this.tabPagePilotLamp.Text = "PilotLamp";
 			this.tabPagePilotLamp.UseVisualStyleBackColor = true;
@@ -4464,7 +4467,7 @@ namespace TrainEditor2.Views
 			this.tabPageNeedle.Controls.Add(this.labelNeedleTransparentColor);
 			this.tabPageNeedle.Location = new System.Drawing.Point(4, 40);
 			this.tabPageNeedle.Name = "tabPageNeedle";
-			this.tabPageNeedle.Size = new System.Drawing.Size(312, 625);
+			this.tabPageNeedle.Size = new System.Drawing.Size(312, 626);
 			this.tabPageNeedle.TabIndex = 3;
 			this.tabPageNeedle.Text = "Needle";
 			this.tabPageNeedle.UseVisualStyleBackColor = true;
@@ -4932,7 +4935,7 @@ namespace TrainEditor2.Views
 			this.tabPageDigitalNumber.Controls.Add(this.labelDigitalNumberTransparentColor);
 			this.tabPageDigitalNumber.Location = new System.Drawing.Point(4, 40);
 			this.tabPageDigitalNumber.Name = "tabPageDigitalNumber";
-			this.tabPageDigitalNumber.Size = new System.Drawing.Size(312, 625);
+			this.tabPageDigitalNumber.Size = new System.Drawing.Size(312, 626);
 			this.tabPageDigitalNumber.TabIndex = 4;
 			this.tabPageDigitalNumber.Text = "DigitalNumber";
 			this.tabPageDigitalNumber.UseVisualStyleBackColor = true;
@@ -5135,7 +5138,7 @@ namespace TrainEditor2.Views
 			this.tabPageDigitalGauge.Controls.Add(this.labelDigitalGaugeSubject);
 			this.tabPageDigitalGauge.Location = new System.Drawing.Point(4, 40);
 			this.tabPageDigitalGauge.Name = "tabPageDigitalGauge";
-			this.tabPageDigitalGauge.Size = new System.Drawing.Size(312, 625);
+			this.tabPageDigitalGauge.Size = new System.Drawing.Size(312, 626);
 			this.tabPageDigitalGauge.TabIndex = 5;
 			this.tabPageDigitalGauge.Text = "DigitalGauge";
 			this.tabPageDigitalGauge.UseVisualStyleBackColor = true;
@@ -5367,7 +5370,7 @@ namespace TrainEditor2.Views
 			this.tabPageLinearGauge.Controls.Add(this.labelLinearGaugeSubject);
 			this.tabPageLinearGauge.Location = new System.Drawing.Point(4, 40);
 			this.tabPageLinearGauge.Name = "tabPageLinearGauge";
-			this.tabPageLinearGauge.Size = new System.Drawing.Size(312, 625);
+			this.tabPageLinearGauge.Size = new System.Drawing.Size(312, 626);
 			this.tabPageLinearGauge.TabIndex = 6;
 			this.tabPageLinearGauge.Text = "LinearGauge";
 			this.tabPageLinearGauge.UseVisualStyleBackColor = true;
@@ -5657,7 +5660,7 @@ namespace TrainEditor2.Views
 			this.tabPageTimetable.Controls.Add(this.groupBoxTimetableLocation);
 			this.tabPageTimetable.Location = new System.Drawing.Point(4, 40);
 			this.tabPageTimetable.Name = "tabPageTimetable";
-			this.tabPageTimetable.Size = new System.Drawing.Size(312, 625);
+			this.tabPageTimetable.Size = new System.Drawing.Size(312, 626);
 			this.tabPageTimetable.TabIndex = 7;
 			this.tabPageTimetable.Text = "Timetable";
 			this.tabPageTimetable.UseVisualStyleBackColor = true;
@@ -5795,7 +5798,7 @@ namespace TrainEditor2.Views
 			this.tabPageTouch.Controls.Add(this.groupBoxTouchLocation);
 			this.tabPageTouch.Location = new System.Drawing.Point(4, 40);
 			this.tabPageTouch.Name = "tabPageTouch";
-			this.tabPageTouch.Size = new System.Drawing.Size(312, 625);
+			this.tabPageTouch.Size = new System.Drawing.Size(312, 626);
 			this.tabPageTouch.TabIndex = 8;
 			this.tabPageTouch.Text = "Touch";
 			this.tabPageTouch.UseVisualStyleBackColor = true;
@@ -6257,6 +6260,7 @@ namespace TrainEditor2.Views
 			// tabPageStatus
 			// 
 			this.tabPageStatus.Controls.Add(this.listViewStatus);
+			this.tabPageStatus.Controls.Add(this.panelStatusNavi);
 			this.tabPageStatus.Controls.Add(this.menuStripStatus);
 			this.tabPageStatus.Location = new System.Drawing.Point(4, 22);
 			this.tabPageStatus.Name = "tabPageStatus";
@@ -6276,7 +6280,7 @@ namespace TrainEditor2.Views
 			this.listViewStatus.Location = new System.Drawing.Point(0, 24);
 			this.listViewStatus.MultiSelect = false;
 			this.listViewStatus.Name = "listViewStatus";
-			this.listViewStatus.Size = new System.Drawing.Size(792, 646);
+			this.listViewStatus.Size = new System.Drawing.Size(792, 608);
 			this.listViewStatus.TabIndex = 0;
 			this.listViewStatus.UseCompatibleStateImageBehavior = false;
 			this.listViewStatus.View = System.Windows.Forms.View.Details;
@@ -6518,6 +6522,25 @@ namespace TrainEditor2.Views
 			// 
 			this.errorProvider.ContainerControl = this;
 			// 
+			// panelStatusNavi
+			// 
+			this.panelStatusNavi.Controls.Add(this.buttonOutputLogs);
+			this.panelStatusNavi.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.panelStatusNavi.Location = new System.Drawing.Point(0, 632);
+			this.panelStatusNavi.Name = "panelStatusNavi";
+			this.panelStatusNavi.Size = new System.Drawing.Size(792, 38);
+			this.panelStatusNavi.TabIndex = 4;
+			// 
+			// buttonOutputLogs
+			// 
+			this.buttonOutputLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonOutputLogs.Location = new System.Drawing.Point(704, 8);
+			this.buttonOutputLogs.Name = "buttonOutputLogs";
+			this.buttonOutputLogs.Size = new System.Drawing.Size(80, 24);
+			this.buttonOutputLogs.TabIndex = 0;
+			this.buttonOutputLogs.Text = "Output logs...";
+			this.buttonOutputLogs.UseVisualStyleBackColor = true;
+			// 
 			// FormEditor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -6682,6 +6705,7 @@ namespace TrainEditor2.Views
 			this.menuStripMenu.ResumeLayout(false);
 			this.menuStripMenu.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
+			this.panelStatusNavi.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -7292,5 +7316,7 @@ namespace TrainEditor2.Views
 		private Label labelCouplerObject;
 		private Button buttonCouplerObject;
 		private OpenTK.GLControl glControlMotor;
+		private Panel panelStatusNavi;
+		private Button buttonOutputLogs;
 	}
 }

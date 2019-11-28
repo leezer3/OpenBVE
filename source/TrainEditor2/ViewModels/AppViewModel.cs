@@ -205,6 +205,11 @@ namespace TrainEditor2.ViewModels
 			get;
 		}
 
+		internal ReactiveCommand OutputLogs
+		{
+			get;
+		}
+
 		internal ReactiveCommand UpCar
 		{
 			get;
@@ -552,6 +557,10 @@ namespace TrainEditor2.ViewModels
 				.CombineLatestValuesAreAllFalse()
 				.ToReactiveCommand()
 				.WithSubscribe(app.ExportFiles)
+				.AddTo(disposable);
+
+			OutputLogs = new ReactiveCommand()
+				.WithSubscribe(app.OutputLogs)
 				.AddTo(disposable);
 
 			UpCar = SelectedItem
