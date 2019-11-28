@@ -1,5 +1,4 @@
 using System;
-using System.Windows.Forms;
 using LibRender2.Camera;
 using LibRender2.Cameras;
 using OpenBve.BrakeSystems;
@@ -15,8 +14,14 @@ namespace OpenBve
 {
 	public static partial class TrainManager
 	{
+		internal partial class MotorCar : Car
+		{
+			internal MotorCar(Train train, int index) : base(train, index)
+			{
+			}
+		}
 		/// <summary>The base class containing the properties of a train car</summary>
-		internal partial class Car : AbstractCar
+		internal abstract class Car : AbstractCar
 		{
 			/// <summary>Front axle about which the car pivots</summary>
 			internal Axle FrontAxle;
@@ -59,8 +64,6 @@ namespace OpenBve
 			internal bool EnableLoadingSway = true;
 			/// <summary>A reference to the base train</summary>
 			private readonly Train baseTrain;
-			/// <summary>The index of the car within the train</summary>
-			internal readonly int Index;
 			/// <summary>Stores the camera restriction mode for the interior view of this car</summary>
 			internal CameraRestrictionMode CameraRestrictionMode = CameraRestrictionMode.NotSpecified;
 

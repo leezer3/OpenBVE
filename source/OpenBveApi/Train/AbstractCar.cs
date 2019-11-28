@@ -18,6 +18,8 @@ namespace OpenBveApi.Trains
 		public double CurrentSpeed;
 		/// <summary>Contains the current brightness values</summary>
 		public Brightness Brightness;
+		/// <summary>Returns the index of the car within the train</summary>
+		public int Index;
 		
 		/// <summary>Creates the in-world co-ordinates for a sound attached to this car</summary>
 		public virtual void CreateWorldCoordinates(Vector3 Car, out Vector3 Position, out Vector3 Direction)
@@ -25,7 +27,7 @@ namespace OpenBveApi.Trains
 			Position = Vector3.Zero;
 			Direction = Vector3.Zero;
 		}
-
+		
 		/// <summary>Gets the track position of this car</summary>
 		public virtual double TrackPosition
 		{
@@ -34,5 +36,23 @@ namespace OpenBveApi.Trains
 				return 0.0;
 			}
 		}
-}
+
+		/// <summary>Gets the current total roll</summary>
+		public virtual double Roll
+		{
+			get
+			{
+				return 0.0;
+			}
+		}
+
+		/// <summary>Gets the current total roll</summary>
+		public virtual double Pitch
+		{
+			get
+			{
+				return 0.0;
+			}
+		}
+	}
 }

@@ -2,6 +2,7 @@
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
@@ -30,7 +31,7 @@ namespace OpenBve
 			/// <summary>Whether currently visible from the in-game camera location</summary>
 			internal bool CurrentlyVisible;
 			/// <summary>Holds a reference to the base car</summary>
-			private readonly Car baseCar;
+			private readonly AbstractCar baseCar;
 			/// <summary>Holds a reference to the base train</summary>
 			// We don't want this to be read-only if we ever manage to uncouple cars...
 			// ReSharper disable once FieldCanBeMadeReadOnly.Local
@@ -236,8 +237,7 @@ namespace OpenBve
 					//TODO: This currently uses the figures from the base car
 					// apply position due to cant/toppling
 					{
-						double a = baseCar.Specs.CurrentRollDueToTopplingAngle +
-						           baseCar.Specs.CurrentRollDueToCantAngle;
+						double a = baseCar.Roll;
 						double x = Math.Sign(a) * 0.5 * Program.CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * (1.0 - Math.Cos(a));
 						double y = Math.Abs(0.5 * Program.CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * Math.Sin(a));
 						Vector3 c = new Vector3(s.X * x + Up.X * y, s.Y * x + Up.Y * y, s.Z * x + Up.Z * y);
@@ -246,8 +246,7 @@ namespace OpenBve
 					}
 					// apply rolling
 					{
-						double a = -baseCar.Specs.CurrentRollDueToTopplingAngle -
-						           baseCar.Specs.CurrentRollDueToCantAngle;
+						double a = -baseCar.Roll;
 						double cosa = Math.Cos(a);
 						double sina = Math.Sin(a);
 						s.Rotate(d, cosa, sina);
@@ -257,7 +256,7 @@ namespace OpenBve
 					if (CurrentCarSection >= 0 &&
 						CarSections[CurrentCarSection].Groups[0].Overlay)
 					{
-						double a = baseCar.Specs.CurrentPitchDueToAccelerationAngle;
+						double a = baseCar.Pitch;
 						double cosa = Math.Cos(a);
 						double sina = Math.Sin(a);
 						d.Rotate(s, cosa, sina);

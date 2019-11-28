@@ -872,7 +872,7 @@ namespace OpenBve {
 			Train.Cars = new TrainManager.Car[Cars];
 			for (int i = 0; i < Train.Cars.Length; i++)
 			{
-				Train.Cars[i] = new TrainManager.Car(Train, i);
+				Train.Cars[i] = new TrainManager.MotorCar(Train, i);
 			}
 			double DistanceBetweenTheCars = 0.3;
 			
