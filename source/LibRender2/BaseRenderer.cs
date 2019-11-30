@@ -278,15 +278,15 @@ namespace LibRender2
 			{
 				foreach (VertexTemplate vertex in Prototype.Mesh.Vertices)
 				{
-					OpenBveApi.Math.Vector3 Coordinates = vertex.Coordinates;
+					OpenBveApi.Math.Vector3 Coordinates = new Vector3(vertex.Coordinates);
 					Coordinates.Rotate(AuxTransformation);
 
-					if (Coordinates.Z < StartingDistance)
+					if (Coordinates.Z < startingDistance)
 					{
 						startingDistance = (float)Coordinates.Z;
 					}
 
-					if (Coordinates.Z > EndingDistance)
+					if (Coordinates.Z > endingDistance)
 					{
 						endingDistance = (float)Coordinates.Z;
 					}
@@ -370,15 +370,15 @@ namespace LibRender2
 			{
 				foreach (VertexTemplate vertex in Prototype.Mesh.Vertices)
 				{
-					OpenBveApi.Math.Vector3 Coordinates = vertex.Coordinates;
+					OpenBveApi.Math.Vector3 Coordinates = new Vector3(vertex.Coordinates);
 					Coordinates.Rotate(AuxTransformation);
 
-					if (Coordinates.Z < StartingDistance)
+					if (Coordinates.Z < startingDistance)
 					{
 						startingDistance = (float)Coordinates.Z;
 					}
 
-					if (Coordinates.Z > EndingDistance)
+					if (Coordinates.Z > endingDistance)
 					{
 						endingDistance = (float)Coordinates.Z;
 					}
