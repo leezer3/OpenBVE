@@ -5,7 +5,7 @@
 	{
 		internal struct CarSpecs
 		{
-			internal AccelerationCurve[] AccelerationCurves;
+			
 
 			internal double AccelerationCurveMaximum;
 			internal double JerkPowerUp;

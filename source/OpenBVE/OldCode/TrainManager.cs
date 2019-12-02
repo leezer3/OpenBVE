@@ -197,20 +197,7 @@ namespace OpenBve
 		}
 
 		// get critical wheelslip acceleration
-		private static double GetCriticalWheelSlipAccelerationForElectricMotor(Train Train, int CarIndex, double AdhesionMultiplier, double UpY, double Speed)
-		{
-			double NormalForceAcceleration = UpY * Program.CurrentRoute.Atmosphere.AccelerationDueToGravity;
-			// TODO: Implement formula that depends on speed here.
-			double coefficient = Train.Cars[CarIndex].Specs.CoefficientOfStaticFriction;
-			return coefficient * AdhesionMultiplier * NormalForceAcceleration;
-		}
-		private static double GetCriticalWheelSlipAccelerationForFrictionBrake(Train Train, int CarIndex, double AdhesionMultiplier, double UpY, double Speed)
-		{
-			double NormalForceAcceleration = UpY * Program.CurrentRoute.Atmosphere.AccelerationDueToGravity;
-			// TODO: Implement formula that depends on speed here.
-			double coefficient = Train.Cars[CarIndex].Specs.CoefficientOfStaticFriction;
-			return coefficient * AdhesionMultiplier * NormalForceAcceleration;
-		}
+		
 
 		
 		/// <summary>Updates the objects for all trains within the simulation world</summary>

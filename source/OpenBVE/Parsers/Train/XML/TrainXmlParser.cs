@@ -28,10 +28,11 @@ namespace OpenBve.Parsers.Train
 				{
 					if (Train.Cars[i] is TrainManager.MotorCar)
 					{
-						AccelerationCurves = new TrainManager.BveAccelerationCurve[Train.Cars[i].Specs.AccelerationCurves.Length];
-						for (int j = 0; j < Train.Cars[i].Specs.AccelerationCurves.Length; j++)
+						TrainManager.MotorCar currentMotorCar = Train.Cars[i] as TrainManager.MotorCar;
+						AccelerationCurves = new TrainManager.BveAccelerationCurve[currentMotorCar.AccelerationCurves.Length];
+						for (int j = 0; j < currentMotorCar.AccelerationCurves.Length; j++)
 						{
-							TrainManager.BveAccelerationCurve c = (TrainManager.BveAccelerationCurve)Train.Cars[i].Specs.AccelerationCurves[j];
+							TrainManager.BveAccelerationCurve c = (TrainManager.BveAccelerationCurve)currentMotorCar.AccelerationCurves[j];
 							AccelerationCurves[j] = c.Clone(c.Multiplier);
 						}
 					}

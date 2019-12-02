@@ -129,16 +129,16 @@ namespace OpenBve.Parsers.Train
 						// Further, when the train.xml becomes a complete format it will need to create the cars as it goes :)
 						if (c.InnerText.ToLowerInvariant() == "1" || c.InnerText.ToLowerInvariant() == "true")
 						{
-							Train.Cars[Car] = new TrainManager.MotorCar(Train, Car);
-							Train.Cars[Car].Specs.AccelerationCurves = new TrainManager.AccelerationCurve[AccelerationCurves.Length];
+							TrainManager.MotorCar motorCar = new TrainManager.MotorCar(Train, Car);
+							motorCar.AccelerationCurves = new TrainManager.AccelerationCurve[AccelerationCurves.Length];
 							for (int i = 0; i < AccelerationCurves.Length; i++)
 							{
-								Train.Cars[Car].Specs.AccelerationCurves[i] = AccelerationCurves[i].Clone(AccelerationCurves[i].Multiplier);
+								motorCar.AccelerationCurves[i] = AccelerationCurves[i].Clone(AccelerationCurves[i].Multiplier);
 							}
+							Train.Cars[Car] = motorCar;
 						}
 						else
 						{
-							Train.Cars[Car].Specs.AccelerationCurves = new TrainManager.AccelerationCurve[] { };
 							Train.Cars[Car] = new TrainManager.TrailerCar(Train, Car);
 							Train.Cars[Car].Specs.ReAdhesionDevice = new TrainManager.CarReAdhesionDevice(Train.Cars[Car]);
 						}

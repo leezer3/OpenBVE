@@ -1213,14 +1213,15 @@ namespace OpenBve {
 				Train.Cars[i].Specs.ConstSpeed = new TrainManager.CarConstSpeed(Train.Cars[i]);
 				Train.Cars[i].Specs.HoldBrake = new TrainManager.CarHoldBrake(Train.Cars[i]);
 				Train.Cars[i].Specs.ReAdhesionDevice = new TrainManager.CarReAdhesionDevice(Train.Cars[i]);
-				if (motorCars[i]) {
+				if (Train.Cars[i] is TrainManager.MotorCar) {
 					// motor car
+					TrainManager.MotorCar currentMotorCar = Train.Cars[i] as TrainManager.MotorCar;
 					Train.Cars[i].Specs.MassEmpty = MotorCarMass;
 					Train.Cars[i].Specs.MassCurrent = MotorCarMass;
-					Array.Resize(ref Train.Cars[i].Specs.AccelerationCurves, AccelerationCurves.Length);
+					Array.Resize(ref currentMotorCar.AccelerationCurves, AccelerationCurves.Length);
 					for (int j = 0; j < AccelerationCurves.Length; j++)
 					{
-						Train.Cars[i].Specs.AccelerationCurves[j] = AccelerationCurves[j].Clone(1.0 + TrailerCars * TrailerCarMass / (MotorCars * MotorCarMass));
+						currentMotorCar.AccelerationCurves[j] = AccelerationCurves[j].Clone(1.0 + TrailerCars * TrailerCarMass / (MotorCars * MotorCarMass));
 					}
 					Train.Cars[i].Specs.AccelerationCurveMaximum = MaximumAcceleration;
 					switch (ReAdhesionDevice) {
@@ -1268,7 +1269,6 @@ namespace OpenBve {
 					// trailer car
 					Train.Cars[i].Specs.MassEmpty = TrailerCarMass;
 					Train.Cars[i].Specs.MassCurrent = TrailerCarMass;
-					Train.Cars[i].Specs.AccelerationCurves = new TrainManager.AccelerationCurve[] { };
 					Train.Cars[i].Specs.AccelerationCurveMaximum = 0.0;
 					Train.Cars[i].Sounds.Motor.SpeedConversionFactor = 18.0;
 					Train.Cars[i].Sounds.Motor.Tables = new TrainManager.MotorSoundTable[4];
