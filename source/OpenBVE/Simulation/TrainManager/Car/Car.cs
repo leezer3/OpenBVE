@@ -16,102 +16,133 @@ namespace OpenBve
 	{
 		internal class MotorCar : Car
 		{
+			internal double DecelerationDueToMotor;
+
 			internal MotorCar(Train train, int index) : base(train, index)
 			{
 			}
 
 			internal override void UpdateMotor(double TimeElapsed)
 			{
-				double Acceleration = 0.0;
-				if (baseTrain.Handles.Reverser.Actual != 0 & baseTrain.Handles.Power.Actual > 0 & !baseTrain.Handles.HoldBrake.Actual & !baseTrain.Handles.EmergencyBrake.Actual)
+				// power
+				double wheelspin = 0.0;
+				double wheelSlipAccelerationMotorFront;
+				double wheelSlipAccelerationMotorRear;
+				if (Derailed)
 				{
-					// target acceleration
-					if (baseTrain.Handles.Power.Actual - 1 < AccelerationCurves.Length)
-					{
-						// Load factor is a constant 1.0 for anything prior to BVE5
-						// This will need to be changed when the relevant branch is merged in
-						Acceleration = AccelerationCurves[baseTrain.Handles.Power.Actual - 1].GetAccelerationOutput((double) baseTrain.Handles.Reverser.Actual * CurrentSpeed, 1.0);
-					}
-					else
-					{
-						Acceleration = 0.0;
-					}
-
-					// readhesion device
-					if (Acceleration > Specs.ReAdhesionDevice.MaximumAccelerationOutput)
-					{
-						Acceleration = Specs.ReAdhesionDevice.MaximumAccelerationOutput;
-					}
-
-					double wheelspin = 0.0;
-					// wheel slip
-					if (Acceleration < GetCriticalWheelSlipAccelerationForElectricMotor(FrontAxle.Follower.AdhesionMultiplier, Up.Y, CurrentSpeed))
-					{
-						FrontAxle.CurrentWheelSlip = false;
-					}
-					else
-					{
-						FrontAxle.CurrentWheelSlip = true;
-						wheelspin += (double) baseTrain.Handles.Reverser.Actual * Acceleration * Specs.MassCurrent;
-					}
-
-					if (Acceleration < GetCriticalWheelSlipAccelerationForElectricMotor(RearAxle.Follower.AdhesionMultiplier, Up.Y, CurrentSpeed))
-					{
-						RearAxle.CurrentWheelSlip = false;
-					}
-					else
-					{
-						RearAxle.CurrentWheelSlip = true;
-						wheelspin += (double) baseTrain.Handles.Reverser.Actual * Acceleration * Specs.MassCurrent;
-					}
-
-					// Update readhesion device
-					Specs.ReAdhesionDevice.Update(Acceleration);
-					// Update constant speed device
-
-					Specs.ConstSpeed.Update(ref Acceleration, baseTrain.Specs.CurrentConstSpeed, baseTrain.Handles.Reverser.Actual);
-
-					// finalize
-					if (wheelspin != 0.0) Acceleration = 0.0;
+					wheelSlipAccelerationMotorFront = 0.0;
+					wheelSlipAccelerationMotorRear = 0.0;
 				}
 				else
 				{
-					Acceleration = 0.0;
-					FrontAxle.CurrentWheelSlip = false;
-					RearAxle.CurrentWheelSlip = false;
+					wheelSlipAccelerationMotorFront = GetCriticalWheelSlipAccelerationForElectricMotor(FrontAxle.Follower.AdhesionMultiplier, FrontAxle.Follower.WorldUp.Y, CurrentSpeed);
+					wheelSlipAccelerationMotorRear = GetCriticalWheelSlipAccelerationForElectricMotor(RearAxle.Follower.AdhesionMultiplier, RearAxle.Follower.WorldUp.Y, CurrentSpeed);
+
 				}
 
-				if (!Derailed)
+				if (DecelerationDueToMotor == 0.0)
 				{
-					if (Specs.CurrentAccelerationOutput < Acceleration)
+					double a;
+					if (DecelerationDueToMotor == 0.0)
 					{
-						if (Specs.CurrentAccelerationOutput < 0.0)
+						if (baseTrain.Handles.Reverser.Actual != 0 & baseTrain.Handles.Power.Actual > 0 & !baseTrain.Handles.HoldBrake.Actual & !baseTrain.Handles.EmergencyBrake.Actual)
 						{
-							Specs.CurrentAccelerationOutput += Specs.JerkBrakeDown * TimeElapsed;
+							// target acceleration
+							if (baseTrain.Handles.Power.Actual - 1 < AccelerationCurves.Length)
+							{
+								// Load factor is a constant 1.0 for anything prior to BVE5
+								// This will need to be changed when the relevant branch is merged in
+								a = AccelerationCurves[baseTrain.Handles.Power.Actual - 1].GetAccelerationOutput((double) baseTrain.Handles.Reverser.Actual * CurrentSpeed, 1.0);
+							}
+							else
+							{
+								a = 0.0;
+							}
+
+							// readhesion device
+							if (a > Specs.ReAdhesionDevice.MaximumAccelerationOutput)
+							{
+								a = Specs.ReAdhesionDevice.MaximumAccelerationOutput;
+							}
+
+							// wheel slip
+							if (a < wheelSlipAccelerationMotorFront)
+							{
+								FrontAxle.CurrentWheelSlip = false;
+							}
+							else
+							{
+								FrontAxle.CurrentWheelSlip = true;
+								wheelspin += (double) baseTrain.Handles.Reverser.Actual * a * Specs.MassCurrent;
+							}
+
+							if (a < wheelSlipAccelerationMotorRear)
+							{
+								RearAxle.CurrentWheelSlip = false;
+							}
+							else
+							{
+								RearAxle.CurrentWheelSlip = true;
+								wheelspin += (double) baseTrain.Handles.Reverser.Actual * a * Specs.MassCurrent;
+							}
+
+							// Update readhesion device
+							this.Specs.ReAdhesionDevice.Update(a);
+							// Update constant speed device
+
+							this.Specs.ConstSpeed.Update(ref a, baseTrain.Specs.CurrentConstSpeed, baseTrain.Handles.Reverser.Actual);
+
+							// finalize
+							if (wheelspin != 0.0) a = 0.0;
 						}
 						else
 						{
-							Specs.CurrentAccelerationOutput += Specs.JerkPowerUp * TimeElapsed;
-						}
-						if (Specs.CurrentAccelerationOutput > Acceleration)
-						{
-							Specs.CurrentAccelerationOutput = Acceleration;
+							a = 0.0;
+							FrontAxle.CurrentWheelSlip = false;
+							RearAxle.CurrentWheelSlip = false;
 						}
 					}
 					else
 					{
-						Specs.CurrentAccelerationOutput -= Specs.JerkPowerDown * TimeElapsed;
-						if (Specs.CurrentAccelerationOutput < Acceleration)
+						a = 0.0;
+						FrontAxle.CurrentWheelSlip = false;
+						RearAxle.CurrentWheelSlip = false;
+					}
+
+					if (!Derailed)
+					{
+						if (Specs.CurrentAccelerationOutput < a)
 						{
-							Specs.CurrentAccelerationOutput = Acceleration;
+							if (Specs.CurrentAccelerationOutput < 0.0)
+							{
+								Specs.CurrentAccelerationOutput += Specs.JerkBrakeDown * TimeElapsed;
+							}
+							else
+							{
+								Specs.CurrentAccelerationOutput += Specs.JerkPowerUp * TimeElapsed;
+							}
+
+							if (Specs.CurrentAccelerationOutput > a)
+							{
+								Specs.CurrentAccelerationOutput = a;
+							}
+						}
+						else
+						{
+							Specs.CurrentAccelerationOutput -= Specs.JerkPowerDown * TimeElapsed;
+							if (Specs.CurrentAccelerationOutput < a)
+							{
+								Specs.CurrentAccelerationOutput = a;
+							}
 						}
 					}
-				}
-				else
-				{
-					Specs.CurrentAccelerationOutput = 0.0;
+					else
+					{
+						Specs.CurrentAccelerationOutput = 0.0;
+					}
 				}
 			}
+
 
 			/// <summary>Holds the acceleration curves generated by the motor</summary>
 			internal AccelerationCurve[] AccelerationCurves;
@@ -125,9 +156,12 @@ namespace OpenBve
 
 			internal override void UpdateMotor(double TimeElapsed)
 			{
+				double a = 0.0;
+				FrontAxle.CurrentWheelSlip = false;
+				RearAxle.CurrentWheelSlip = false;
 				if (!Derailed)
 				{
-					if (Specs.CurrentAccelerationOutput < 0.0)
+					if (Specs.CurrentAccelerationOutput < a)
 					{
 						if (Specs.CurrentAccelerationOutput < 0.0)
 						{
@@ -137,17 +171,17 @@ namespace OpenBve
 						{
 							Specs.CurrentAccelerationOutput += Specs.JerkPowerUp * TimeElapsed;
 						}
-						if (Specs.CurrentAccelerationOutput > 0.0)
+						if (Specs.CurrentAccelerationOutput > a)
 						{
-							Specs.CurrentAccelerationOutput = 0.0;
+							Specs.CurrentAccelerationOutput = a;
 						}
 					}
 					else
 					{
 						Specs.CurrentAccelerationOutput -= Specs.JerkPowerDown * TimeElapsed;
-						if (Specs.CurrentAccelerationOutput < 0.0)
+						if (Specs.CurrentAccelerationOutput < a)
 						{
-							Specs.CurrentAccelerationOutput = 0.0;
+							Specs.CurrentAccelerationOutput = a;
 						}
 					}
 				}
@@ -194,6 +228,8 @@ namespace OpenBve
 			internal bool Topples;
 			/// <summary>The coupler between cars</summary>
 			internal Coupler Coupler;
+
+			internal double DecelerationDueToBrake;
 			
 			internal double BeaconReceiverPosition;
 			internal TrackFollower BeaconReceiver;

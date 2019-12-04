@@ -456,8 +456,7 @@ namespace OpenBve
 					return;
 				}
 				// update brake system
-				double[] DecelerationDueToBrake, DecelerationDueToMotor;
-				UpdateBrakeSystem(TimeElapsed, out DecelerationDueToBrake, out DecelerationDueToMotor);
+				UpdateBrakeSystem(TimeElapsed);
 				// calculate new car speeds
 				double[] NewSpeeds = new double[Cars.Length];
 				for (int i = 0; i < Cars.Length; i++)
@@ -492,50 +491,18 @@ namespace OpenBve
 					}
 					else
 					{
-						wheelSlipAccelerationMotorFront = GetCriticalWheelSlipAccelerationForElectricMotor(this, i, Cars[i].FrontAxle.Follower.AdhesionMultiplier, Cars[i].FrontAxle.Follower.WorldUp.Y, Cars[i].CurrentSpeed);
-						wheelSlipAccelerationMotorRear = GetCriticalWheelSlipAccelerationForElectricMotor(this, i, Cars[i].RearAxle.Follower.AdhesionMultiplier, Cars[i].RearAxle.Follower.WorldUp.Y, Cars[i].CurrentSpeed);
-						wheelSlipAccelerationBrakeFront = GetCriticalWheelSlipAccelerationForFrictionBrake(this, i, Cars[i].FrontAxle.Follower.AdhesionMultiplier, Cars[i].FrontAxle.Follower.WorldUp.Y, Cars[i].CurrentSpeed);
-						wheelSlipAccelerationBrakeRear = GetCriticalWheelSlipAccelerationForFrictionBrake(this, i, Cars[i].RearAxle.Follower.AdhesionMultiplier, Cars[i].RearAxle.Follower.WorldUp.Y, Cars[i].CurrentSpeed);
+						wheelSlipAccelerationMotorFront = Cars[i].GetCriticalWheelSlipAccelerationForElectricMotor(Cars[i].FrontAxle.Follower.AdhesionMultiplier, Cars[i].FrontAxle.Follower.WorldUp.Y, Cars[i].CurrentSpeed);
+						wheelSlipAccelerationMotorRear = Cars[i].GetCriticalWheelSlipAccelerationForElectricMotor(Cars[i].RearAxle.Follower.AdhesionMultiplier, Cars[i].RearAxle.Follower.WorldUp.Y, Cars[i].CurrentSpeed);
+						wheelSlipAccelerationBrakeFront = Cars[i].GetCriticalWheelSlipAccelerationForFrictionBrake(Cars[i].FrontAxle.Follower.AdhesionMultiplier, Cars[i].FrontAxle.Follower.WorldUp.Y, Cars[i].CurrentSpeed);
+						wheelSlipAccelerationBrakeRear = Cars[i].GetCriticalWheelSlipAccelerationForFrictionBrake(Cars[i].RearAxle.Follower.AdhesionMultiplier, Cars[i].RearAxle.Follower.WorldUp.Y, Cars[i].CurrentSpeed);
 					}
-					if (DecelerationDueToMotor[i] == 0.0)
-					{
-						Cars[i].UpdateMotor(TimeElapsed);
-					}
+					Cars[i].UpdateMotor(TimeElapsed);
+					
 					// brake
 					bool wheellock = wheelspin == 0.0 & Cars[i].Derailed;
 					if (!Cars[i].Derailed & wheelspin == 0.0)
 					{
-						double a;
-						// motor
-						if (Cars[i] is MotorCar & DecelerationDueToMotor[i] != 0.0)
-						{
-							a = -DecelerationDueToMotor[i];
-							if (Cars[i].Specs.CurrentAccelerationOutput > a)
-							{
-								if (Cars[i].Specs.CurrentAccelerationOutput > 0.0)
-								{
-									Cars[i].Specs.CurrentAccelerationOutput -= Cars[i].Specs.JerkPowerDown * TimeElapsed;
-								}
-								else
-								{
-									Cars[i].Specs.CurrentAccelerationOutput -= Cars[i].Specs.JerkBrakeUp * TimeElapsed;
-								}
-								if (Cars[i].Specs.CurrentAccelerationOutput < a)
-								{
-									Cars[i].Specs.CurrentAccelerationOutput = a;
-								}
-							}
-							else
-							{
-								Cars[i].Specs.CurrentAccelerationOutput += Cars[i].Specs.JerkBrakeDown * TimeElapsed;
-								if (Cars[i].Specs.CurrentAccelerationOutput > a)
-								{
-									Cars[i].Specs.CurrentAccelerationOutput = a;
-								}
-							}
-						}
-						// brake
-						a = DecelerationDueToBrake[i];
+						double a = Cars[i].DecelerationDueToBrake;
 						if (Cars[i].CurrentSpeed >= -0.01 & Cars[i].CurrentSpeed <= 0.01)
 						{
 							double rf = Cars[i].FrontAxle.Follower.WorldDirection.Y;
