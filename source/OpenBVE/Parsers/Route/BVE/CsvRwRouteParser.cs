@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using LibRender;
 using SoundManager;
 using Path = OpenBveApi.Path;
-using OpenBve.BackgroundManager;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
@@ -12,9 +10,12 @@ using OpenBveApi.Objects;
 using OpenBveApi.Interface;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
-using OpenBve.RouteManager;
-using OpenBve.SignalManager;
 using OpenBveApi.Textures;
+using RouteManager2;
+using RouteManager2.SignalManager;
+using RouteManager2.Stations;
+using RouteManager2.Events;
+using RouteManager2.MessageManager.MessageTypes;
 
 namespace OpenBve {
 	internal partial class CsvRwRouteParser {
@@ -77,8 +78,8 @@ namespace OpenBve {
 			{
 				Data.Blocks[0].Background = 0;
 				Data.Blocks[0].BrightnessChanges = new Brightness[] {};
-				Data.Blocks[0].Fog.Start = CurrentRoute.NoFogStart;
-				Data.Blocks[0].Fog.End = CurrentRoute.NoFogEnd;
+				Data.Blocks[0].Fog.Start = Program.CurrentRoute.NoFogStart;
+				Data.Blocks[0].Fog.End = Program.CurrentRoute.NoFogEnd;
 				Data.Blocks[0].Fog.Color = Color24.Grey;
 				Data.Blocks[0].Cycle = new int[] {-1};
 				Data.Blocks[0].RailCycles = new RailCycle[1];
@@ -245,15 +246,15 @@ namespace OpenBve {
 							System.Text.Encoding.UTF8, false)
 					});
 				// game data
-				CurrentRoute.Sections = new SignalManager.Section[1];
-				CurrentRoute.Sections[0].Aspects = new SectionAspect[]
+				Program.CurrentRoute.Sections = new []{new RouteManager2.SignalManager.Section() };
+				Program.CurrentRoute.Sections[0].Aspects = new SectionAspect[]
 				{new SectionAspect(0, 0.0), new SectionAspect(4, double.PositiveInfinity)};
-				CurrentRoute.Sections[0].CurrentAspect = 0;
-				CurrentRoute.Sections[0].NextSection = -1;
-				CurrentRoute.Sections[0].PreviousSection = -1;
-				CurrentRoute.Sections[0].StationIndex = -1;
-				CurrentRoute.Sections[0].TrackPosition = 0;
-				CurrentRoute.Sections[0].Trains = new AbstractTrain[] {};
+				Program.CurrentRoute.Sections[0].CurrentAspect = 0;
+				Program.CurrentRoute.Sections[0].NextSection = null;
+				Program.CurrentRoute.Sections[0].PreviousSection = null;
+				Program.CurrentRoute.Sections[0].StationIndex = -1;
+				Program.CurrentRoute.Sections[0].TrackPosition = 0;
+				Program.CurrentRoute.Sections[0].Trains = new AbstractTrain[] {};
 
 				/*
 				 * These are the speed limits for the default Japanese signal aspects, and in most cases will be overwritten
@@ -288,7 +289,7 @@ namespace OpenBve {
 			PreprocessOptions(IsRW, Expressions, ref Data, ref UnitOfLength, PreviewOnly);
 			PreprocessSortByTrackPosition(IsRW, UnitOfLength, ref Expressions);
 			ParseRouteForData(FileName, IsRW, Encoding, Expressions, UnitOfLength, ref Data, PreviewOnly);
-			Game.RouteUnitOfLength = UnitOfLength;
+			Program.CurrentRoute.UnitOfLength = UnitOfLength;
 		}
 
 		// preprocess sort by track position
@@ -307,7 +308,7 @@ namespace OpenBve {
 			string Section = ""; bool SectionAlwaysPrefix = false;
 			int BlockIndex = 0;
 			int BlocksUsed = Data.Blocks.Length;
-			CurrentRoute.Stations = new RouteStation[] { };
+			Program.CurrentRoute.Stations = new RouteStation[] { };
 			Data.RequestStops = new StopRequest[] { };
 			int CurrentStation = -1;
 			int CurrentStop = -1;
@@ -574,7 +575,7 @@ namespace OpenBve {
 									if (Arguments.Length < 1) {
 										Interface.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 									} else {
-										Game.RouteComment = Arguments[0];
+										Program.CurrentRoute.Comment = Arguments[0];
 									} break;
 								case "route.image":
 									if (Arguments.Length < 1) {
@@ -584,7 +585,7 @@ namespace OpenBve {
 										if (!System.IO.File.Exists(f)) {
 											Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 										} else {
-											Game.RouteImage = f;
+											Program.CurrentRoute.Image = f;
 										}
 									} break;
 								case "route.timetable":
@@ -618,9 +619,9 @@ namespace OpenBve {
 										} else if (a <= 0.0) {
 											Interface.AddMessage(MessageType.Error, false, "ValueInMillimeters is expected to be positive in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 										} else {
-											for (int t = 0; t < CurrentRoute.Tracks.Length; t++)
+											for (int t = 0; t < Program.CurrentRoute.Tracks.Length; t++)
 											{
-												CurrentRoute.Tracks[t].RailGauge = 0.001 * a;
+												Program.CurrentRoute.Tracks[t].RailGauge = 0.001 * a;
 											}
 										}
 									} break;
@@ -719,7 +720,7 @@ namespace OpenBve {
 										} else if (a <= 0.0) {
 											Interface.AddMessage(MessageType.Error, false, "Value is expected to be positive in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 										} else {
-											Atmosphere.AccelerationDueToGravity = a;
+											Program.CurrentRoute.Atmosphere.AccelerationDueToGravity = a;
 										}
 									} break;
 								//Sets the time the game will start at
@@ -762,7 +763,7 @@ namespace OpenBve {
 										Interface.AddMessage (MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions [j].Line.ToString (Culture) + ", column " + Expressions [j].Column.ToString (Culture) + " in file " + Expressions [j].File);
 									}
 									else
-										LoadingScreen.SetLoadingBkg(f);
+										Program.Renderer.Loading.SetLoadingBkg(f);
 									}
 									break;
 								//Sets a custom unit of speed to to displayed in on-screen messages
@@ -816,7 +817,7 @@ namespace OpenBve {
 										if (!NumberFormats.TryParseDoubleVb6(Arguments[0], UnitOfLength, out a)) {
 											Interface.AddMessage(MessageType.Error, false, "Height is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 										} else {
-											CurrentRoute.InitialElevation = a;
+											Program.CurrentRoute.Atmosphere.InitialElevation = a;
 										}
 									} break;
 								case "route.temperature":
@@ -829,7 +830,7 @@ namespace OpenBve {
 										} else if (a <= -273.15) {
 											Interface.AddMessage(MessageType.Error, false, "ValueInCelsius is expected to be greater than to -273.15 in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 										} else {
-											Atmosphere.InitialAirTemperature = a + 273.15;
+											Program.CurrentRoute.Atmosphere.InitialAirTemperature = a + 273.15;
 										}
 									} break;
 								case "route.pressure":
@@ -842,12 +843,12 @@ namespace OpenBve {
 										} else if (a <= 0.0) {
 											Interface.AddMessage(MessageType.Error, false, "ValueInKPa is expected to be positive in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 										} else {
-											Atmosphere.InitialAirPressure = 1000.0 * a;
+											Program.CurrentRoute.Atmosphere.InitialAirPressure = 1000.0 * a;
 										}
 									} break;
 								case "route.ambientlight":
 									{
-										if (LibRender.Renderer.DynamicLighting == true)
+										if (Program.Renderer.Lighting.DynamicLighting == true)
 										{
 											Interface.AddMessage(MessageType.Warning, false, "Dynamic lighting is enabled- Route.AmbientLight will be ignored");
 											break;
@@ -871,11 +872,11 @@ namespace OpenBve {
 											Interface.AddMessage(MessageType.Error, false, "BlueValue is required to be within the range from 0 to 255 in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											b = b < 0 ? 0 : 255;
 										}
-										LibRender.Renderer.OptionAmbientColor = new Color24((byte)r, (byte)g, (byte)b);
+										Program.Renderer.Lighting.OptionAmbientColor = new Color24((byte)r, (byte)g, (byte)b);
 									} break;
 								case "route.directionallight":
 									{
-										if (LibRender.Renderer.DynamicLighting == true)
+										if (Program.Renderer.Lighting.DynamicLighting == true)
 										{
 											Interface.AddMessage(MessageType.Warning, false, "Dynamic lighting is enabled- Route.DirectionalLight will be ignored");
 											break;
@@ -899,12 +900,12 @@ namespace OpenBve {
 											Interface.AddMessage(MessageType.Error, false, "BlueValue is required to be within the range from 0 to 255 in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											b = b < 0 ? 0 : 255;
 										}
-										LibRender.Renderer.OptionDiffuseColor = new Color24((byte)r, (byte)g, (byte)b);
+										Program.Renderer.Lighting.OptionDiffuseColor = new Color24((byte)r, (byte)g, (byte)b);
 									}
 									break;
 								case "route.lightdirection":
 									{
-										if (LibRender.Renderer.DynamicLighting == true)
+										if (Program.Renderer.Lighting.DynamicLighting == true)
 										{
 											Interface.AddMessage(MessageType.Warning, false, "Dynamic lighting is enabled- Route.LightDirection will be ignored");
 											break;
@@ -921,7 +922,7 @@ namespace OpenBve {
 										double dx = Math.Cos(theta) * Math.Sin(phi);
 										double dy = -Math.Sin(theta);
 										double dz = Math.Cos(theta) * Math.Cos(phi);
-										LibRender.Renderer.OptionLightPosition = new Vector3((float)-dx, (float)-dy, (float)-dz);
+										Program.Renderer.Lighting.OptionLightPosition = new Vector3((float)-dx, (float)-dy, (float)-dz);
 									} break;
 								case "route.dynamiclight":
 									//Read the lighting XML file
@@ -930,7 +931,7 @@ namespace OpenBve {
 									{
 										if (DynamicLightParser.ReadLightingXML(path))
 										{
-											LibRender.Renderer.DynamicLighting = true;
+											Program.Renderer.Lighting.DynamicLighting = true;
 										}
 										else
 										{
@@ -2610,8 +2611,8 @@ namespace OpenBve {
 												Data.Blocks[BlockIndex].Fog.Start = (float)start;
 												Data.Blocks[BlockIndex].Fog.End = (float)end;
 											} else {
-												Data.Blocks[BlockIndex].Fog.Start = CurrentRoute.NoFogStart;
-												Data.Blocks[BlockIndex].Fog.End = CurrentRoute.NoFogEnd;
+												Data.Blocks[BlockIndex].Fog.Start = Program.CurrentRoute.NoFogStart;
+												Data.Blocks[BlockIndex].Fog.End = Program.CurrentRoute.NoFogEnd;
 											}
 											Data.Blocks[BlockIndex].Fog.Color = new Color24((byte)r, (byte)g, (byte)b);
 											Data.Blocks[BlockIndex].FogDefined = true;
@@ -2669,7 +2670,7 @@ namespace OpenBve {
 												Data.Blocks[BlockIndex].Sections[n].Aspects = aspects;
 												Data.Blocks[BlockIndex].Sections[n].Type = valueBased ? SectionType.ValueBased : SectionType.IndexBased;
 												Data.Blocks[BlockIndex].Sections[n].DepartureStationIndex = -1;
-												if (CurrentStation >= 0 && CurrentRoute.Stations[CurrentStation].ForceStopSignal) {
+												if (CurrentStation >= 0 && Program.CurrentRoute.Stations[CurrentStation].ForceStopSignal) {
 													if (CurrentStation >= 0 & CurrentStop >= 0 & !DepartureSignalUsed) {
 														Data.Blocks[BlockIndex].Sections[n].DepartureStationIndex = CurrentStation;
 														DepartureSignalUsed = true;
@@ -2794,7 +2795,7 @@ namespace OpenBve {
 											Data.Blocks[BlockIndex].Sections[n].DepartureStationIndex = -1;
 											Data.Blocks[BlockIndex].Sections[n].Invisible = x == 0.0;
 											Data.Blocks[BlockIndex].Sections[n].Type = SectionType.ValueBased;
-											if (CurrentStation >= 0 && CurrentRoute.Stations[CurrentStation].ForceStopSignal) {
+											if (CurrentStation >= 0 && Program.CurrentRoute.Stations[CurrentStation].ForceStopSignal) {
 												if (CurrentStation >= 0 & CurrentStop >= 0 & !DepartureSignalUsed) {
 													Data.Blocks[BlockIndex].Sections[n].DepartureStationIndex = CurrentStation;
 													DepartureSignalUsed = true;
@@ -3225,27 +3226,27 @@ namespace OpenBve {
 								case "track.sta":
 									{
 										CurrentStation++;
-										Array.Resize(ref CurrentRoute.Stations, CurrentStation + 1);
-										CurrentRoute.Stations[CurrentStation] = new RouteStation();
+										Array.Resize(ref Program.CurrentRoute.Stations, CurrentStation + 1);
+										Program.CurrentRoute.Stations[CurrentStation] = new RouteStation();
 										if (Arguments.Length >= 1 && Arguments[0].Length > 0) {
-											CurrentRoute.Stations[CurrentStation].Name = Arguments[0];
+											Program.CurrentRoute.Stations[CurrentStation].Name = Arguments[0];
 										}
 										double arr = -1.0, dep = -1.0;
 										if (Arguments.Length >= 2 && Arguments[1].Length > 0) {
 											if (string.Equals(Arguments[1], "P", StringComparison.OrdinalIgnoreCase) | string.Equals(Arguments[1], "L", StringComparison.OrdinalIgnoreCase)) {
-												CurrentRoute.Stations[CurrentStation].StopMode = StationStopMode.AllPass;
+												Program.CurrentRoute.Stations[CurrentStation].StopMode = StationStopMode.AllPass;
 											} else if (string.Equals(Arguments[1], "B", StringComparison.OrdinalIgnoreCase)) {
-												CurrentRoute.Stations[CurrentStation].StopMode = StationStopMode.PlayerPass;
+												Program.CurrentRoute.Stations[CurrentStation].StopMode = StationStopMode.PlayerPass;
 											} else if (Arguments[1].StartsWith("B:", StringComparison.InvariantCultureIgnoreCase)) {
-												CurrentRoute.Stations[CurrentStation].StopMode = StationStopMode.PlayerPass;
+												Program.CurrentRoute.Stations[CurrentStation].StopMode = StationStopMode.PlayerPass;
 												if (!Interface.TryParseTime(Arguments[1].Substring(2).TrimStart(), out arr)) {
 													Interface.AddMessage(MessageType.Error, false, "ArrivalTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													arr = -1.0;
 												}
 											} else if (string.Equals(Arguments[1], "S", StringComparison.OrdinalIgnoreCase)) {
-												CurrentRoute.Stations[CurrentStation].StopMode = StationStopMode.PlayerStop;
+												Program.CurrentRoute.Stations[CurrentStation].StopMode = StationStopMode.PlayerStop;
 											} else if (Arguments[1].StartsWith("S:", StringComparison.InvariantCultureIgnoreCase)) {
-												CurrentRoute.Stations[CurrentStation].StopMode = StationStopMode.PlayerStop;
+												Program.CurrentRoute.Stations[CurrentStation].StopMode = StationStopMode.PlayerStop;
 												if (!Interface.TryParseTime(Arguments[1].Substring(2).TrimStart(), out arr)) {
 													Interface.AddMessage(MessageType.Error, false, "ArrivalTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													arr = -1.0;
@@ -3259,22 +3260,45 @@ namespace OpenBve {
 										}
 										if (Arguments.Length >= 3 && (Arguments[2].Length > 0)) {
 											if (string.Equals(Arguments[2], "T", StringComparison.OrdinalIgnoreCase) | string.Equals(Arguments[2], "=", StringComparison.OrdinalIgnoreCase)) {
-												CurrentRoute.Stations[CurrentStation].Type = StationType.Terminal;
+												Program.CurrentRoute.Stations[CurrentStation].Type = StationType.Terminal;
 											} else if (Arguments[2].StartsWith("T:", StringComparison.InvariantCultureIgnoreCase)) {
-												CurrentRoute.Stations[CurrentStation].Type = StationType.Terminal;
+												Program.CurrentRoute.Stations[CurrentStation].Type = StationType.Terminal;
 												if (!Interface.TryParseTime(Arguments[2].Substring(2).TrimStart(), out dep)) {
 													Interface.AddMessage(MessageType.Error, false, "DepartureTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													dep = -1.0;
 												}
 											} else if (string.Equals(Arguments[2], "C", StringComparison.OrdinalIgnoreCase)) {
-												CurrentRoute.Stations[CurrentStation].Type = StationType.ChangeEnds;
+												Program.CurrentRoute.Stations[CurrentStation].Type = StationType.ChangeEnds;
 											} else if (Arguments[2].StartsWith("C:", StringComparison.InvariantCultureIgnoreCase)) {
-												CurrentRoute.Stations[CurrentStation].Type = StationType.ChangeEnds;
+												Program.CurrentRoute.Stations[CurrentStation].Type = StationType.ChangeEnds;
 												if (!Interface.TryParseTime(Arguments[2].Substring(2).TrimStart(), out dep)) {
 													Interface.AddMessage(MessageType.Error, false, "DepartureTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													dep = -1.0;
 												}
-											} else if(Arguments[2].Length == 1 && Arguments[2][0] == '.')
+											} else if (Arguments[2].StartsWith("J:", StringComparison.InvariantCultureIgnoreCase)) {
+												string[] splitString = Arguments[2].Split(new char[] {':'});
+												for (int i = 0; i < splitString.Length; i++)
+												{
+													switch (i)
+													{
+														case 1:
+															if (!NumberFormats.TryParseIntVb6(splitString[1].TrimStart(), out Program.CurrentRoute.Stations[CurrentStation].JumpIndex)) {
+																Interface.AddMessage(MessageType.Error, false, "JumpStationIndex is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+																dep = -1.0;
+															} else {
+																Program.CurrentRoute.Stations[CurrentStation].Type = StationType.Jump;
+															}
+															break;
+														case 2:
+															if (!Interface.TryParseTime(splitString[2].TrimStart(), out dep)) {
+																Interface.AddMessage(MessageType.Error, false, "DepartureTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+																dep = -1.0;
+															}
+															break;
+													}
+												}
+											}
+											else if(Arguments[2].Length == 1 && Arguments[2][0] == '.')
 											{ /* Treat a single period as a blank space */ }
 											else if (!Interface.TryParseTime(Arguments[2], out dep)) {
 												Interface.AddMessage(MessageType.Error, false, "DepartureTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -3403,8 +3427,8 @@ namespace OpenBve {
 											}
 											if (ttidx == -1) {
 												if (CurrentStation > 0) {
-													tdt = CurrentRoute.Stations[CurrentStation - 1].TimetableDaytimeTexture;
-													tnt = CurrentRoute.Stations[CurrentStation - 1].TimetableNighttimeTexture;
+													tdt = Program.CurrentRoute.Stations[CurrentStation - 1].TimetableDaytimeTexture;
+													tnt = Program.CurrentRoute.Stations[CurrentStation - 1].TimetableNighttimeTexture;
 												} else if (Data.TimetableDaytime.Length > 0 & Data.TimetableNighttime.Length > 0) {
 													tdt = Data.TimetableDaytime[0];
 													tnt = Data.TimetableNighttime[0];
@@ -3458,27 +3482,27 @@ namespace OpenBve {
 												maxInterferingObjectRate = Program.RandomNumberGenerator.Next(1, 99);
 											}
 										}
-										if (CurrentRoute.Stations[CurrentStation].Name.Length == 0 & (CurrentRoute.Stations[CurrentStation].StopMode == StationStopMode.PlayerStop | CurrentRoute.Stations[CurrentStation].StopMode == StationStopMode.AllStop)) {
-											CurrentRoute.Stations[CurrentStation].Name = "Station " + (CurrentStation + 1).ToString(Culture) + ")";
+										if (Program.CurrentRoute.Stations[CurrentStation].Name.Length == 0 & (Program.CurrentRoute.Stations[CurrentStation].StopMode == StationStopMode.PlayerStop | Program.CurrentRoute.Stations[CurrentStation].StopMode == StationStopMode.AllStop)) {
+											Program.CurrentRoute.Stations[CurrentStation].Name = "Station " + (CurrentStation + 1).ToString(Culture) + ")";
 										}
-										CurrentRoute.Stations[CurrentStation].ArrivalTime = arr;
-										CurrentRoute.Stations[CurrentStation].ArrivalSoundBuffer = arrsnd;
-										CurrentRoute.Stations[CurrentStation].DepartureTime = dep;
-										CurrentRoute.Stations[CurrentStation].DepartureSoundBuffer = depsnd;
-										CurrentRoute.Stations[CurrentStation].StopTime = halt;
-										CurrentRoute.Stations[CurrentStation].ForceStopSignal = stop == 1;
-										CurrentRoute.Stations[CurrentStation].OpenLeftDoors = door < 0.0 | doorboth;
-										CurrentRoute.Stations[CurrentStation].OpenRightDoors = door > 0.0 | doorboth;
-										CurrentRoute.Stations[CurrentStation].SafetySystem = device == 1 ? SafetySystem.Atc : SafetySystem.Ats;
-										CurrentRoute.Stations[CurrentStation].Stops = new StationStop[] { };
-										CurrentRoute.Stations[CurrentStation].PassengerRatio = 0.01 * jam;
-										CurrentRoute.Stations[CurrentStation].TimetableDaytimeTexture = tdt;
-										CurrentRoute.Stations[CurrentStation].TimetableNighttimeTexture = tnt;
-										CurrentRoute.Stations[CurrentStation].DefaultTrackPosition = Data.TrackPosition;
-										CurrentRoute.Stations[CurrentStation].ReopenDoor = 0.01 * reopenDoor;
-										CurrentRoute.Stations[CurrentStation].ReopenStationLimit = reopenStationLimit;
-										CurrentRoute.Stations[CurrentStation].InterferenceInDoor = interferenceInDoor;
-										CurrentRoute.Stations[CurrentStation].MaxInterferingObjectRate = maxInterferingObjectRate;
+										Program.CurrentRoute.Stations[CurrentStation].ArrivalTime = arr;
+										Program.CurrentRoute.Stations[CurrentStation].ArrivalSoundBuffer = arrsnd;
+										Program.CurrentRoute.Stations[CurrentStation].DepartureTime = dep;
+										Program.CurrentRoute.Stations[CurrentStation].DepartureSoundBuffer = depsnd;
+										Program.CurrentRoute.Stations[CurrentStation].StopTime = halt;
+										Program.CurrentRoute.Stations[CurrentStation].ForceStopSignal = stop == 1;
+										Program.CurrentRoute.Stations[CurrentStation].OpenLeftDoors = door < 0.0 | doorboth;
+										Program.CurrentRoute.Stations[CurrentStation].OpenRightDoors = door > 0.0 | doorboth;
+										Program.CurrentRoute.Stations[CurrentStation].SafetySystem = device == 1 ? SafetySystem.Atc : SafetySystem.Ats;
+										Program.CurrentRoute.Stations[CurrentStation].Stops = new StationStop[] { };
+										Program.CurrentRoute.Stations[CurrentStation].PassengerRatio = 0.01 * jam;
+										Program.CurrentRoute.Stations[CurrentStation].TimetableDaytimeTexture = tdt;
+										Program.CurrentRoute.Stations[CurrentStation].TimetableNighttimeTexture = tnt;
+										Program.CurrentRoute.Stations[CurrentStation].DefaultTrackPosition = Data.TrackPosition;
+										Program.CurrentRoute.Stations[CurrentStation].ReopenDoor = 0.01 * reopenDoor;
+										Program.CurrentRoute.Stations[CurrentStation].ReopenStationLimit = reopenStationLimit;
+										Program.CurrentRoute.Stations[CurrentStation].InterferenceInDoor = interferenceInDoor;
+										Program.CurrentRoute.Stations[CurrentStation].MaxInterferingObjectRate = maxInterferingObjectRate;
 										Data.Blocks[BlockIndex].Station = CurrentStation;
 										Data.Blocks[BlockIndex].StationPassAlarm = passalarm == 1;
 										CurrentStop = -1;
@@ -3487,27 +3511,27 @@ namespace OpenBve {
 								case "track.station":
 									{
 										CurrentStation++;
-										Array.Resize(ref CurrentRoute.Stations, CurrentStation + 1);
-										CurrentRoute.Stations[CurrentStation] = new RouteStation();
+										Array.Resize(ref Program.CurrentRoute.Stations, CurrentStation + 1);
+										Program.CurrentRoute.Stations[CurrentStation] = new RouteStation();
 										if (Arguments.Length >= 1 && Arguments[0].Length > 0) {
-											CurrentRoute.Stations[CurrentStation].Name = Arguments[0];
+											Program.CurrentRoute.Stations[CurrentStation].Name = Arguments[0];
 										}
 										double arr = -1.0, dep = -1.0;
 										if (Arguments.Length >= 2 && Arguments[1].Length > 0) {
 											if (string.Equals(Arguments[1], "P", StringComparison.OrdinalIgnoreCase) | string.Equals(Arguments[1], "L", StringComparison.OrdinalIgnoreCase)) {
-												CurrentRoute.Stations[CurrentStation].StopMode = StationStopMode.AllPass;
+												Program.CurrentRoute.Stations[CurrentStation].StopMode = StationStopMode.AllPass;
 											} else if (string.Equals(Arguments[1], "B", StringComparison.OrdinalIgnoreCase)) {
-												CurrentRoute.Stations[CurrentStation].StopMode = StationStopMode.PlayerPass;
+												Program.CurrentRoute.Stations[CurrentStation].StopMode = StationStopMode.PlayerPass;
 											} else if (Arguments[1].StartsWith("B:", StringComparison.InvariantCultureIgnoreCase)) {
-												CurrentRoute.Stations[CurrentStation].StopMode = StationStopMode.PlayerPass;
+												Program.CurrentRoute.Stations[CurrentStation].StopMode = StationStopMode.PlayerPass;
 												if (!Interface.TryParseTime(Arguments[1].Substring(2).TrimStart(), out arr)) {
 													Interface.AddMessage(MessageType.Error, false, "ArrivalTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													arr = -1.0;
 												}
 											} else if (string.Equals(Arguments[1], "S", StringComparison.OrdinalIgnoreCase)) {
-												CurrentRoute.Stations[CurrentStation].StopMode = StationStopMode.PlayerStop;
+												Program.CurrentRoute.Stations[CurrentStation].StopMode = StationStopMode.PlayerStop;
 											} else if (Arguments[1].StartsWith("S:", StringComparison.InvariantCultureIgnoreCase)) {
-												CurrentRoute.Stations[CurrentStation].StopMode = StationStopMode.PlayerStop;
+												Program.CurrentRoute.Stations[CurrentStation].StopMode = StationStopMode.PlayerStop;
 												if (!Interface.TryParseTime(Arguments[1].Substring(2).TrimStart(), out arr)) {
 													Interface.AddMessage(MessageType.Error, false, "ArrivalTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													arr = -1.0;
@@ -3519,17 +3543,17 @@ namespace OpenBve {
 										}
 										if (Arguments.Length >= 3 && Arguments[2].Length > 0) {
 											if (string.Equals(Arguments[2], "T", StringComparison.OrdinalIgnoreCase) | string.Equals(Arguments[2], "=", StringComparison.OrdinalIgnoreCase)) {
-												CurrentRoute.Stations[CurrentStation].Type = StationType.Terminal;
+												Program.CurrentRoute.Stations[CurrentStation].Type = StationType.Terminal;
 											} else if (Arguments[2].StartsWith("T:", StringComparison.InvariantCultureIgnoreCase)) {
-												CurrentRoute.Stations[CurrentStation].Type = StationType.Terminal;
+												Program.CurrentRoute.Stations[CurrentStation].Type = StationType.Terminal;
 												if (!Interface.TryParseTime(Arguments[2].Substring(2).TrimStart(), out dep)) {
 													Interface.AddMessage(MessageType.Error, false, "DepartureTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													dep = -1.0;
 												}
 											} else if (string.Equals(Arguments[2], "C", StringComparison.OrdinalIgnoreCase)) {
-												CurrentRoute.Stations[CurrentStation].Type = StationType.ChangeEnds;
+												Program.CurrentRoute.Stations[CurrentStation].Type = StationType.ChangeEnds;
 											} else if (Arguments[2].StartsWith("C:", StringComparison.InvariantCultureIgnoreCase)) {
-												CurrentRoute.Stations[CurrentStation].Type = StationType.ChangeEnds;
+												Program.CurrentRoute.Stations[CurrentStation].Type = StationType.ChangeEnds;
 												if (!Interface.TryParseTime(Arguments[2].Substring(2).TrimStart(), out dep)) {
 													Interface.AddMessage(MessageType.Error, false, "DepartureTime is invalid in Track.Sta at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													dep = -1.0;
@@ -3574,27 +3598,27 @@ namespace OpenBve {
 												}
 											}
 										}
-										if (CurrentRoute.Stations[CurrentStation].Name.Length == 0 & (CurrentRoute.Stations[CurrentStation].StopMode == StationStopMode.PlayerStop | CurrentRoute.Stations[CurrentStation].StopMode == StationStopMode.AllStop)) {
-											CurrentRoute.Stations[CurrentStation].Name = "Station " + (CurrentStation + 1).ToString(Culture) + ")";
+										if (Program.CurrentRoute.Stations[CurrentStation].Name.Length == 0 & (Program.CurrentRoute.Stations[CurrentStation].StopMode == StationStopMode.PlayerStop | Program.CurrentRoute.Stations[CurrentStation].StopMode == StationStopMode.AllStop)) {
+											Program.CurrentRoute.Stations[CurrentStation].Name = "Station " + (CurrentStation + 1).ToString(Culture) + ")";
 										}
-										CurrentRoute.Stations[CurrentStation].ArrivalTime = arr;
-										CurrentRoute.Stations[CurrentStation].ArrivalSoundBuffer = null;
-										CurrentRoute.Stations[CurrentStation].DepartureTime = dep;
-										CurrentRoute.Stations[CurrentStation].DepartureSoundBuffer = depsnd;
-										CurrentRoute.Stations[CurrentStation].StopTime = 15.0;
-										CurrentRoute.Stations[CurrentStation].ForceStopSignal = stop == 1;
-										CurrentRoute.Stations[CurrentStation].OpenLeftDoors = true;
-										CurrentRoute.Stations[CurrentStation].OpenRightDoors = true;
-										CurrentRoute.Stations[CurrentStation].SafetySystem = device == 1 ? SafetySystem.Atc : SafetySystem.Ats;
-										CurrentRoute.Stations[CurrentStation].Stops = new StationStop[] { };
-										CurrentRoute.Stations[CurrentStation].PassengerRatio = 1.0;
-										CurrentRoute.Stations[CurrentStation].TimetableDaytimeTexture = null;
-										CurrentRoute.Stations[CurrentStation].TimetableNighttimeTexture = null;
-										CurrentRoute.Stations[CurrentStation].DefaultTrackPosition = Data.TrackPosition;
-										CurrentRoute.Stations[CurrentStation].ReopenDoor = 0.0;
-										CurrentRoute.Stations[CurrentStation].ReopenStationLimit = 0;
-										CurrentRoute.Stations[CurrentStation].InterferenceInDoor = 0.0;
-										CurrentRoute.Stations[CurrentStation].MaxInterferingObjectRate = 10;
+										Program.CurrentRoute.Stations[CurrentStation].ArrivalTime = arr;
+										Program.CurrentRoute.Stations[CurrentStation].ArrivalSoundBuffer = null;
+										Program.CurrentRoute.Stations[CurrentStation].DepartureTime = dep;
+										Program.CurrentRoute.Stations[CurrentStation].DepartureSoundBuffer = depsnd;
+										Program.CurrentRoute.Stations[CurrentStation].StopTime = 15.0;
+										Program.CurrentRoute.Stations[CurrentStation].ForceStopSignal = stop == 1;
+										Program.CurrentRoute.Stations[CurrentStation].OpenLeftDoors = true;
+										Program.CurrentRoute.Stations[CurrentStation].OpenRightDoors = true;
+										Program.CurrentRoute.Stations[CurrentStation].SafetySystem = device == 1 ? SafetySystem.Atc : SafetySystem.Ats;
+										Program.CurrentRoute.Stations[CurrentStation].Stops = new StationStop[] { };
+										Program.CurrentRoute.Stations[CurrentStation].PassengerRatio = 1.0;
+										Program.CurrentRoute.Stations[CurrentStation].TimetableDaytimeTexture = null;
+										Program.CurrentRoute.Stations[CurrentStation].TimetableNighttimeTexture = null;
+										Program.CurrentRoute.Stations[CurrentStation].DefaultTrackPosition = Data.TrackPosition;
+										Program.CurrentRoute.Stations[CurrentStation].ReopenDoor = 0.0;
+										Program.CurrentRoute.Stations[CurrentStation].ReopenStationLimit = 0;
+										Program.CurrentRoute.Stations[CurrentStation].InterferenceInDoor = 0.0;
+										Program.CurrentRoute.Stations[CurrentStation].MaxInterferingObjectRate = 10;
 										Data.Blocks[BlockIndex].Station = CurrentStation;
 										Data.Blocks[BlockIndex].StationPassAlarm = false;
 										CurrentStop = -1;
@@ -3608,13 +3632,13 @@ namespace OpenBve {
 										break;
 									}
 									CurrentStation++;
-									Array.Resize(ref CurrentRoute.Stations, CurrentStation + 1);
-									CurrentRoute.Stations[CurrentStation] = new RouteStation();
+									Array.Resize(ref Program.CurrentRoute.Stations, CurrentStation + 1);
+									Program.CurrentRoute.Stations[CurrentStation] = new RouteStation();
 									StopRequest sr = new StopRequest();
 									sr.TrackPosition = Data.TrackPosition;
 									sr.StationIndex = CurrentStation;
-									CurrentRoute.Stations[CurrentStation] = StationXMLParser.ReadStationXML(fn, PreviewOnly, Data.TimetableDaytime, Data.TimetableNighttime, CurrentStation, ref Data.Blocks[BlockIndex].StationPassAlarm, ref sr);
-									if (CurrentRoute.Stations[CurrentStation].Type == StationType.RequestStop)
+									Program.CurrentRoute.Stations[CurrentStation] = StationXMLParser.ReadStationXML(fn, PreviewOnly, Data.TimetableDaytime, Data.TimetableNighttime, CurrentStation, ref Data.Blocks[BlockIndex].StationPassAlarm, ref sr);
+									if (Program.CurrentRoute.Stations[CurrentStation].Type == StationType.RequestStop)
 									{
 										int l = Data.RequestStops.Length;
 										Array.Resize<StopRequest> (ref Data.RequestStops, l + 1);
@@ -3625,9 +3649,9 @@ namespace OpenBve {
 								case "track.buffer":
 									{
 										if (!PreviewOnly) {
-											int n = Game.BufferTrackPositions.Length;
-											Array.Resize<double>(ref Game.BufferTrackPositions, n + 1);
-											Game.BufferTrackPositions[n] = Data.TrackPosition;
+											int n = Program.CurrentRoute.BufferTrackPositions.Length;
+											Array.Resize<double>(ref Program.CurrentRoute.BufferTrackPositions, n + 1);
+											Program.CurrentRoute.BufferTrackPositions[n] = Data.TrackPosition;
 										}
 									} break;
 								case "track.form":
@@ -4089,8 +4113,8 @@ namespace OpenBve {
 													{
 														OpenBveApi.Textures.Texture t;
 														Program.CurrentHost.RegisterTexture(f, new OpenBveApi.Textures.TextureParameters(null, new Color24(64, 64, 64)), out t);
-														Data.Markers[n].Message = new MarkerImage(t);
-														
+														Data.Markers[n].Message = new MarkerImage(Program.Renderer, t);
+
 													}
 													
 												}
@@ -4432,13 +4456,13 @@ namespace OpenBve {
 													Interface.AddMessage(MessageType.Error, false, "Time is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													time = 0.0;
 												}
-												int n = CurrentRoute.BogusPretrainInstructions.Length;
-												if (n != 0 && CurrentRoute.BogusPretrainInstructions[n - 1].Time >= time) {
+												int n = Program.CurrentRoute.BogusPreTrainInstructions.Length;
+												if (n != 0 && Program.CurrentRoute.BogusPreTrainInstructions[n - 1].Time >= time) {
 													Interface.AddMessage(MessageType.Error, false, "Time is expected to be in ascending order between successive " + Command + " commands at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												}
-												Array.Resize<BogusPretrainInstruction>(ref CurrentRoute.BogusPretrainInstructions, n + 1);
-												CurrentRoute.BogusPretrainInstructions[n].TrackPosition = Data.TrackPosition;
-												CurrentRoute.BogusPretrainInstructions[n].Time = time;
+												Array.Resize(ref Program.CurrentRoute.BogusPreTrainInstructions, n + 1);
+												Program.CurrentRoute.BogusPreTrainInstructions[n].TrackPosition = Data.TrackPosition;
+												Program.CurrentRoute.BogusPreTrainInstructions[n].Time = time;
 											}
 										}
 									} break;

@@ -137,6 +137,9 @@ namespace OpenBveApi.Colors {
 			return false;
 		}
 
+		/// <summary>Parses a Hexadecimal string into a Color24</summary>
+		/// <param name="Expression">The color in hexadecimal format</param>
+		/// <returns>The new Color24</returns>
 		public static Color24 ParseHexColor(string Expression)
 		{
 			Color24 color;
@@ -157,11 +160,15 @@ namespace OpenBveApi.Colors {
 			return new Color24(c.R, c.G, c.B);
 		}
 
+		/// <summary>Casts a Color24 to a System.Drawing.Color, discarding the alpha component</summary>
+		/// <param name="c">The Color24</param>
+		/// <returns>The new System.Drawing.Color</returns>
 		public static implicit operator System.Drawing.Color(Color24 c)
 		{
 			return System.Drawing.Color.FromArgb(c.R, c.G, c.B);
 		}
 
+		/// <summary>Returns a string representation of this Color24</summary>
 		public override string ToString()
 		{
 			return string.Format("#{0}", BitConverter.ToString(new byte[] { R, G, B }).Replace("-", string.Empty));

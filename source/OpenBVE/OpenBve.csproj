@@ -119,21 +119,17 @@
       <SubType>Code</SubType>
       <DependentUpon>AI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Game\Events\EventTypes\Sounds.cs" />
-    <Compile Include="Game\Events\EventTypes\Station.cs" />
     <Compile Include="Game\MessageManager.cs" />
     <Compile Include="Game\MessageManager.TextualMessages.cs">
       <DependentUpon>MessageManager.cs</DependentUpon>
     </Compile>
     <Compile Include="Game\Messages.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.cs" />
-    <Compile Include="Game\ObjectManager\ObjectManager.Visibility.cs" />
     <Compile Include="Game\PointsOfInterest.cs" />
     <Compile Include="Game\RouteInformation.cs" />
     <Compile Include="Game\RouteInfoOverlay.cs" />
     <Compile Include="Game\Information.cs" />
     <Compile Include="Game\Menu.cs" />
-    <Compile Include="Game\RouteConstants.cs" />
     <Compile Include="Game\Score\Score.cs" />
     <Compile Include="Game\Score\Score.Log.cs" />
     <Compile Include="Game\Score\Score.ScoreMessage.cs" />
@@ -152,30 +148,30 @@
     <Compile Include="Graphics\HUD\HUD.Transitions.cs">
       <DependentUpon>HUD.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\Renderer\Events.cs" />
-    <Compile Include="Graphics\Renderer\Functions.cs" />
-    <Compile Include="Graphics\Renderer\Lamp.cs" />
-    <Compile Include="Graphics\Renderer\Overlays.cs" />
-    <Compile Include="Graphics\Renderer\Overlays.ATS.cs">
+    <Compile Include="Graphics\NewRenderer.cs" />
+    <Compile Include="Graphics\Renderers\Events.cs" />
+    <Compile Include="Graphics\Renderers\Overlays.Lamp.cs" />
+    <Compile Include="Graphics\Renderers\Overlays.cs" />
+    <Compile Include="Graphics\Renderers\Overlays.ATS.cs">
       <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\Renderer\Overlays.Debug.cs">
+    <Compile Include="Graphics\Renderers\Overlays.Debug.cs">
       <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\Renderer\Overlays.Functions.cs">
+    <Compile Include="Graphics\Renderers\Overlays.Functions.cs">
       <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\Renderer\Overlays.GameMessages.cs">
+    <Compile Include="Graphics\Renderers\Overlays.GameMessages.cs">
       <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\Renderer\Overlays.HUD.cs">
+    <Compile Include="Graphics\Renderers\Overlays.HUD.cs">
       <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\Renderer\Overlays.ScoreMessages.cs">
+    <Compile Include="Graphics\Renderers\Overlays.ScoreMessages.cs">
       <DependentUpon>Overlays.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\Renderer\Objects.cs" />
-    <Compile Include="Graphics\Renderer\Touch.cs" />
+    <Compile Include="Graphics\Renderers\Touch.cs" />
+    <Compile Include="Graphics\Textures.cs" />
     <Compile Include="Parsers\Panel\PanelAnimatedXmlParser.cs" />
     <Compile Include="Parsers\Panel\PanelXmlParser.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.ApplyRouteData.cs" />
@@ -323,9 +319,7 @@
       <DependentUpon>Sounds.cs</DependentUpon>
     </Compile>
     <Compile Include="Graphics\Fonts.cs" />
-    <Compile Include="Graphics\Renderer.cs" />
     <Compile Include="Graphics\Screen.cs" />
-    <Compile Include="Graphics\Textures.cs" />
     <Compile Include="UserInterface\formImage.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -447,9 +441,9 @@
       <Project>{e9b64673-65b7-4d77-a4db-4b441a7c9197}</Project>
       <Name>LBAHeader</Name>
     </ProjectReference>
-    <ProjectReference Include="..\LibRender\LibRender.csproj">
-      <Project>{2072ecd1-c7ff-427c-84dc-063f7c19792e}</Project>
-      <Name>LibRender</Name>
+    <ProjectReference Include="..\LibRender2\LibRender2.csproj">
+      <Project>{68215476-302c-49f2-9f7e-aae20a2b6b12}</Project>
+      <Name>LibRender2</Name>
     </ProjectReference>
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
@@ -460,9 +454,9 @@
       <Name>Formats.Msts</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\RouteManager\RouteManager.csproj">
-      <Project>{87838364-8911-46b2-8628-d437c485d9c9}</Project>
-      <Name>RouteManager</Name>
+    <ProjectReference Include="..\RouteManager2\RouteManager2.csproj">
+      <Project>{4ef680d7-df17-4978-9872-133edc169b4b}</Project>
+      <Name>RouteManager2</Name>
     </ProjectReference>
     <ProjectReference Include="..\SoundManager\SoundManager.csproj">
       <Project>{90abfa0c-abca-444e-adef-9a299aed6524}</Project>

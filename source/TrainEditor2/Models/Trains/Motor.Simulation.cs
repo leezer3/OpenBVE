@@ -18,14 +18,14 @@ namespace TrainEditor2.Models.Trains
 			}
 			catch (Exception e)
 			{
-				Interface.AddMessage(MessageType.Error, false, e.Message);
+				Interface.AddMessage(MessageType.Error, false, $"{e.GetType().FullName}: {e.Message} at {e.StackTrace}");
 				CurrentSimState = SimulationState.Disable;
 				return;
 			}
 
 			if (TrainManager.PlayerTrain == null)
 			{
-				Interface.AddMessage(MessageType.Error, false, "列車の作成に失敗しました。");
+				Interface.AddMessage(MessageType.Error, false, "Failed to create train.");
 				CurrentSimState = SimulationState.Disable;
 				return;
 			}

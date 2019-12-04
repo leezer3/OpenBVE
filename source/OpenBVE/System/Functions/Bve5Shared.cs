@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 using OpenBveApi;
 
@@ -21,7 +22,7 @@ namespace OpenBve
 			Version = 0;
 			if (!splitHeader[0].StartsWith(expectedHeader, StringComparison.InvariantCultureIgnoreCase))
 			{
-				throw new Exception("Invalid BVE5 " + headerType + " header: " + fileHeader);
+				throw new InvalidDataException("Invalid BVE5 " + headerType + " header: " + fileHeader);
 			}
 			int l = splitHeader[0].Length -1;
 			int e = splitHeader[0].Length;
@@ -38,11 +39,11 @@ namespace OpenBve
 					string s = splitHeader[0].Substring(l + 1, e - l -1);
 					if (!Double.TryParse(s, out Version))
 					{
-						throw new Exception("Invalid BVE5 " + headerType + " version: " + s);
+						throw new InvalidDataException("Invalid BVE5 " + headerType + " version: " + s);
 					}
 					if (Version > maxSupportedVersion)
 					{
-						throw new Exception("Unsupported BVE5 " + headerType + " version: " + s);
+						throw new InvalidDataException("Unsupported BVE5 " + headerType + " version: " + s);
 					}
 					break;
 				}

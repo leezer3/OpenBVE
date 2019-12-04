@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using LibRender;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
@@ -8,7 +6,6 @@ using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 using OpenBveApi.FunctionScripting;
-using static LibRender.CameraProperties;
 
 namespace OpenBve {
 	internal static class PanelCfgParser {
@@ -39,15 +36,15 @@ namespace OpenBve {
 			double FullWidth = 480, FullHeight = 440, SemiHeight = 240;
 			double AspectRatio = FullWidth / FullHeight;
 			double WorldWidth, WorldHeight;
-			if (LibRender.Screen.Width >= LibRender.Screen.Height) {
-				WorldWidth = 2.0 * Math.Tan(0.5 * Camera.HorizontalViewingAngle) * EyeDistance;
+			if (Program.Renderer.Screen.Width >= Program.Renderer.Screen.Height) {
+				WorldWidth = 2.0 * Math.Tan(0.5 * Program.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
 				WorldHeight = WorldWidth / AspectRatio;
 			} else {
-				WorldHeight = 2.0 * Math.Tan(0.5 * Camera.VerticalViewingAngle) * EyeDistance;
+				WorldHeight = 2.0 * Math.Tan(0.5 * Program.Renderer.Camera.VerticalViewingAngle) * EyeDistance;
 				WorldWidth = WorldHeight * AspectRatio;
 			}
-			Camera.RestrictionBottomLeft = new Vector3(-0.5 * WorldWidth, -0.5 * WorldHeight, EyeDistance);
-			Camera.RestrictionTopRight = new Vector3(0.5 * WorldWidth, 0.5 * WorldHeight, EyeDistance);
+			Train.Cars[Train.DriverCar].CameraRestriction.BottomLeft = new Vector3(-0.5 * WorldWidth, -0.5 * WorldHeight, EyeDistance);
+			Train.Cars[Train.DriverCar].CameraRestriction.TopRight = new Vector3(0.5 * WorldWidth, 0.5 * WorldHeight, EyeDistance);
 			double WorldLeft = Train.Cars[Train.DriverCar].Driver.X - 0.5 * WorldWidth;
 			double WorldTop = Train.Cars[Train.DriverCar].Driver.Y + 0.5 * WorldHeight;
 			double WorldZ = Train.Cars[Train.DriverCar].Driver.Z;
@@ -126,7 +123,7 @@ namespace OpenBve {
 					Interface.AddMessage(MessageType.Error, true, "The panel image could not be found in " + FileName);
 				} else {
 					Texture t;
-					TextureManager.RegisterTexture(PanelBackground, new TextureParameters(null, Color24.Blue), out t);
+					Program.Renderer.TextureManager.RegisterTexture(PanelBackground, new TextureParameters(null, Color24.Blue), out t);
 					OpenBVEGame.RunInRenderThread(() =>
 					{
 						Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp); 
@@ -333,7 +330,7 @@ namespace OpenBve {
 									// background
 									if (Background != null) {
 										Texture t;
-										TextureManager.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out t);
+										Program.Renderer.TextureManager.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
 											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
@@ -345,7 +342,7 @@ namespace OpenBve {
 									// cover
 									if (Cover != null) {
 										Texture t;
-										TextureManager.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out t);
+										Program.Renderer.TextureManager.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
 											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
@@ -361,7 +358,7 @@ namespace OpenBve {
 												string Folder = Program.FileSystem.GetDataFolder("Compatibility");
 												string File = OpenBveApi.Path.CombineFile(Folder, k == 0 ? "needle_pressuregauge_lower.png" : "needle_pressuregauge_upper.png");
 												Texture t;
-												TextureManager.RegisterTexture(File, out t);
+												Program.Renderer.TextureManager.RegisterTexture(File, out t);
 												OpenBVEGame.RunInRenderThread(() =>
 												{
 													Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
@@ -389,18 +386,18 @@ namespace OpenBve {
 										// leds
 										if (NeedleType[1] != 0) {
 											int j = CreateElement(Train, CenterX - Radius, CenterY + SemiHeight - Radius, 2.0 * Radius, 2.0 * Radius, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 5.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, null, NeedleColor[1], false);
-											double x0 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[0].Coordinates.X;
-											double y0 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[0].Coordinates.Y;
-											double z0 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[0].Coordinates.Z;
-											double x1 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[1].Coordinates.X;
-											double y1 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[1].Coordinates.Y;
-											double z1 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[1].Coordinates.Z;
-											double x2 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[2].Coordinates.X;
-											double y2 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[2].Coordinates.Y;
-											double z2 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[2].Coordinates.Z;
-											double x3 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[3].Coordinates.X;
-											double y3 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[3].Coordinates.Y;
-											double z3 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[3].Coordinates.Z;
+											double x0 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.X;
+											double y0 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Y;
+											double z0 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Z;
+											double x1 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[1].Coordinates.X;
+											double y1 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[1].Coordinates.Y;
+											double z1 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[1].Coordinates.Z;
+											double x2 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[2].Coordinates.X;
+											double y2 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[2].Coordinates.Y;
+											double z2 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[2].Coordinates.Z;
+											double x3 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[3].Coordinates.X;
+											double y3 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[3].Coordinates.Y;
+											double z3 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[3].Coordinates.Z;
 											double cx = 0.25 * (x0 + x1 + x2 + x3);
 											double cy = 0.25 * (y0 + y1 + y2 + y3);
 											double cz = 0.25 * (z0 + z1 + z2 + z3);
@@ -417,7 +414,7 @@ namespace OpenBve {
 												new int[] { 0, 7, 8 },
 												new int[] { 0, 9, 10 }
 											};
-											Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh = new Mesh(vertices, faces, NeedleColor[1]);
+											Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh = new Mesh(vertices, faces, NeedleColor[1]);
 											Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].LEDClockwiseWinding = true;
 											Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].LEDInitialAngle = Angle - 2.0 * Math.PI;
 											Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].LEDLastAngle = 2.0 * Math.PI - Angle;
@@ -570,7 +567,7 @@ namespace OpenBve {
 									if (Background != null) {
 										// background/led
 										Texture t;
-										TextureManager.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out t);
+										Program.Renderer.TextureManager.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
 											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
@@ -582,7 +579,7 @@ namespace OpenBve {
 									if (Cover != null) {
 										// cover
 										Texture t;
-										TextureManager.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out t);
+										Program.Renderer.TextureManager.RegisterTexture(Cover, new TextureParameters(null, Color24.Blue), out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
 											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
@@ -621,7 +618,7 @@ namespace OpenBve {
 												double x = CenterX - 0.5 * h + Math.Sin(a) * AtcRadius;
 												double y = CenterY - 0.5 * h - Math.Cos(a) * AtcRadius + SemiHeight;
 												Texture t;
-												TextureManager.RegisterTexture(Atc, new TextureParameters(new TextureClipRegion(j * h, 0, h, h), Color24.Blue), out t);
+												Program.Renderer.TextureManager.RegisterTexture(Atc, new TextureParameters(new TextureClipRegion(j * h, 0, h, h), Color24.Blue), out t);
 												OpenBVEGame.RunInRenderThread(() =>
 												{
 													Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
@@ -640,7 +637,7 @@ namespace OpenBve {
 										string Folder = Program.FileSystem.GetDataFolder("Compatibility");
 										string File = OpenBveApi.Path.CombineFile(Folder, "needle_speedometer.png");
 										Texture t;
-										TextureManager.RegisterTexture(File, out t);
+										Program.Renderer.TextureManager.RegisterTexture(File, out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
 											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
@@ -658,18 +655,18 @@ namespace OpenBve {
 										// led
 										if (!NeedleOverridden) Needle = Color32.Black;
 										int j = CreateElement(Train, CenterX - Radius, CenterY + SemiHeight - Radius, 2.0 * Radius, 2.0 * Radius, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - 5.0 * StackDistance, Train.Cars[Train.DriverCar].Driver, null, Needle, false);
-										double x0 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[0].Coordinates.X;
-										double y0 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[0].Coordinates.Y;
-										double z0 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[0].Coordinates.Z;
-										double x1 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[1].Coordinates.X;
-										double y1 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[1].Coordinates.Y;
-										double z1 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[1].Coordinates.Z;
-										double x2 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[2].Coordinates.X;
-										double y2 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[2].Coordinates.Y;
-										double z2 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[2].Coordinates.Z;
-										double x3 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[3].Coordinates.X;
-										double y3 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[3].Coordinates.Y;
-										double z3 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh.Vertices[3].Coordinates.Z;
+										double x0 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.X;
+										double y0 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Y;
+										double z0 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Z;
+										double x1 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[1].Coordinates.X;
+										double y1 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[1].Coordinates.Y;
+										double z1 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[1].Coordinates.Z;
+										double x2 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[2].Coordinates.X;
+										double y2 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[2].Coordinates.Y;
+										double z2 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[2].Coordinates.Z;
+										double x3 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[3].Coordinates.X;
+										double y3 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[3].Coordinates.Y;
+										double z3 = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh.Vertices[3].Coordinates.Z;
 										double cx = 0.25 * (x0 + x1 + x2 + x3);
 										double cy = 0.25 * (y0 + y1 + y2 + y3);
 										double cz = 0.25 * (z0 + z1 + z2 + z3);
@@ -686,7 +683,7 @@ namespace OpenBve {
 											new int[] { 0, 7, 8 },
 											new int[] { 0, 9, 10 }
 										};
-										Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Object.Mesh = new Mesh(vertices, faces, Needle);
+										Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].States[0].Prototype.Mesh = new Mesh(vertices, faces, Needle);
 										Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].LEDClockwiseWinding = true;
 										Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].LEDInitialAngle = Angle - 2.0 * Math.PI;
 										Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[j].LEDLastAngle = 2.0 * Math.PI - Angle;
@@ -813,7 +810,7 @@ namespace OpenBve {
 											int n = h / Height;
 											Texture[] t = new Texture[n];
 											for (int j = 0; j < n; j++) {
-												TextureManager.RegisterTexture(Number, new TextureParameters(new TextureClipRegion(w - Width, j * Height, Width, Height), Color24.Blue), out t[j]);
+												Program.Renderer.TextureManager.RegisterTexture(Number, new TextureParameters(new TextureClipRegion(w - Width, j * Height, Width, Height), Color24.Blue), out t[j]);
 											}
 											{ // hundreds
 												int k = -1;
@@ -904,8 +901,8 @@ namespace OpenBve {
 									} i--;
 									if (TurnOn != null & TurnOff != null) {
 										Texture t0, t1;
-										TextureManager.RegisterTexture(TurnOn, new TextureParameters(null, Color24.Blue), out t0);
-										TextureManager.RegisterTexture(TurnOff, new TextureParameters(null, Color24.Blue), out t1);
+										Program.Renderer.TextureManager.RegisterTexture(TurnOn, new TextureParameters(null, Color24.Blue), out t0);
+										Program.Renderer.TextureManager.RegisterTexture(TurnOff, new TextureParameters(null, Color24.Blue), out t1);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
 											Program.CurrentHost.LoadTexture(t0, OpenGlTextureWrapMode.ClampClamp);
@@ -995,7 +992,7 @@ namespace OpenBve {
 									} i--;
 									if (Background != null) {
 										Texture t;
-										TextureManager.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out t);
+										Program.Renderer.TextureManager.RegisterTexture(Background, new TextureParameters(null, Color24.Blue), out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
 											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
@@ -1008,7 +1005,7 @@ namespace OpenBve {
 									{ // hour
 										string File = OpenBveApi.Path.CombineFile(Folder, "needle_hour.png");
 										Texture t;
-										TextureManager.RegisterTexture(File, out t);
+										Program.Renderer.TextureManager.RegisterTexture(File, out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
 											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
@@ -1025,7 +1022,7 @@ namespace OpenBve {
 									{ // minute
 										string File = OpenBveApi.Path.CombineFile(Folder, "needle_minute.png");
 										Texture t;
-										TextureManager.RegisterTexture(File, out t);
+										Program.Renderer.TextureManager.RegisterTexture(File, out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
 											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
@@ -1042,7 +1039,7 @@ namespace OpenBve {
 									{ // second
 										string File = OpenBveApi.Path.CombineFile(Folder, "needle_second.png");
 										Texture t;
-										TextureManager.RegisterTexture(File, out t);
+										Program.Renderer.TextureManager.RegisterTexture(File, out t);
 										OpenBVEGame.RunInRenderThread(() =>
 										{
 											Program.CurrentHost.LoadTexture(t, OpenGlTextureWrapMode.ClampClamp);
@@ -1120,7 +1117,7 @@ namespace OpenBve {
 											for (int j = 0; j < n; j++) {
 												Texture t;
 												TextureClipRegion clip = new TextureClipRegion(j * Width, 0, Width, h);
-												TextureManager.RegisterTexture(Image, new TextureParameters(clip, Color24.Blue), out t);
+												Program.Renderer.TextureManager.RegisterTexture(Image, new TextureParameters(clip, Color24.Blue), out t);
 												if (j == 0) {
 													k = CreateElement(Train, CornerX, CornerY + SemiHeight, (double)Width, (double)h, FullWidth, FullHeight, WorldLeft, WorldTop, WorldWidth, WorldHeight, WorldZ + EyeDistance - StackDistance, Train.Cars[Train.DriverCar].Driver, t, Color32.White, false);
 												} else {
@@ -1209,20 +1206,23 @@ namespace OpenBve {
 			if (AddStateToLastElement) {
 				int n = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements.Length - 1;
 				int j = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States.Length;
-				Array.Resize<AnimatedObjectState>(ref Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States, j + 1);
-				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[j].Position = o;
-				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[j].Object = (StaticObject)Object.Clone();
+				Array.Resize(ref Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States, j + 1);
+				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[j] = new ObjectState
+				{
+					Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z),
+					Prototype = Object
+				};
 				return n;
 			} else {
 				int n = Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements.Length;
 				Array.Resize(ref Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements, n + 1);
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n] = new AnimatedObject(Program.CurrentHost);
-				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States = new AnimatedObjectState[1];
-				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[0].Position = o;
-				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[0].Object = Object;
+				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States = new[] { new ObjectState() };
+				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[0].Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z);
+				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].States[0].Prototype = Object;
 				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].CurrentState = 0;
-				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].internalObject = (StaticObject) Object.Clone();
-				ObjectManager.CreateDynamicObject(ref Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].internalObject);
+				Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].internalObject = new ObjectState { Prototype = Object };
+				Program.CurrentHost.CreateDynamicObject(ref Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements[n].internalObject);
 				return n;
 			}
 		}

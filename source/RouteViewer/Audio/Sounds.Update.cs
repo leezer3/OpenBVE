@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using static LibRender.CameraProperties;
-using OpenBve.RouteManager;
 using OpenBveApi.Runtime;
 using OpenBveApi.Sounds;
 using OpenBveApi.Trains;
@@ -23,15 +21,15 @@ namespace OpenBve
 			/*
 			 * Set up the listener
 			 * */
-			Vector3 listenerPosition = Camera.AbsolutePosition;
-			Orientation3 listenerOrientation = new Orientation3(Camera.AbsoluteSide, Camera.AbsoluteUp, Camera.AbsoluteDirection);
+			Vector3 listenerPosition = Program.Renderer.Camera.AbsolutePosition;
+			Orientation3 listenerOrientation = new Orientation3(Program.Renderer.Camera.AbsoluteSide, Program.Renderer.Camera.AbsoluteUp, Program.Renderer.Camera.AbsoluteDirection);
 			Vector3 listenerVelocity;
-			if (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead | Camera.CurrentMode == CameraViewMode.Exterior) {
+			if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead | Program.Renderer.Camera.CurrentMode == CameraViewMode.Exterior) {
 				TrainManager.Car car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
 				Vector3 diff = car.FrontAxle.Follower.WorldPosition - car.RearAxle.Follower.WorldPosition;
-				listenerVelocity = car.CurrentSpeed * Vector3.Normalize(diff) + Camera.AlignmentSpeed.Position;
+				listenerVelocity = car.CurrentSpeed * Vector3.Normalize(diff) + Program.Renderer.Camera.AlignmentSpeed.Position;
 			} else {
-				listenerVelocity = Camera.AlignmentSpeed.Position;
+				listenerVelocity = Program.Renderer.Camera.AlignmentSpeed.Position;
 			}
             AL.Listener(ALListener3f.Position, 0.0f, 0.0f, 0.0f);
             AL.Listener(ALListener3f.Velocity, (float)listenerVelocity.X, (float)listenerVelocity.Y, (float)listenerVelocity.Z);
@@ -40,10 +38,10 @@ namespace OpenBve
 			/*
 			 * Set up the atmospheric attributes
 			 * */
-			double elevation = Camera.AbsolutePosition.Y + CurrentRoute.InitialElevation;
-			double airTemperature = Atmosphere.GetAirTemperature(elevation);
-			double airPressure = Atmosphere.GetAirPressure(elevation, airTemperature);
-			double speedOfSound = Atmosphere.GetSpeedOfSound(airPressure, airTemperature);
+			double elevation = Program.Renderer.Camera.AbsolutePosition.Y + Program.CurrentRoute.Atmosphere.InitialElevation;
+			double airTemperature = Program.CurrentRoute.Atmosphere.GetAirTemperature(elevation);
+			double airPressure = Program.CurrentRoute.Atmosphere.GetAirPressure(elevation, airTemperature);
+			double speedOfSound = Program.CurrentRoute.Atmosphere.GetSpeedOfSound(airPressure, airTemperature);
 			try {
                 AL.SpeedOfSound((float)speedOfSound);
 			} catch { }
@@ -119,7 +117,7 @@ namespace OpenBve
 					} else {
 						double distance = positionDifference.Norm();
 						double innerRadius = Sources[i].Radius;
-						if (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead) {
+						if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) {
 							if (Sources[i].Parent != TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar]) {
 								innerRadius *= 0.5; 
 							}
@@ -262,10 +260,10 @@ namespace OpenBve
 			/*
 			 * Set up the listener.
 			 * */
-			Vector3 listenerPosition = Camera.AbsolutePosition;
-			Orientation3 listenerOrientation = new Orientation3(Camera.AbsoluteSide, Camera.AbsoluteUp, Camera.AbsoluteDirection);
+			Vector3 listenerPosition = Program.Renderer.Camera.AbsolutePosition;
+			Orientation3 listenerOrientation = new Orientation3(Program.Renderer.Camera.AbsoluteSide, Program.Renderer.Camera.AbsoluteUp, Program.Renderer.Camera.AbsoluteDirection);
 			Vector3 listenerVelocity;
-			if (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead | Camera.CurrentMode == CameraViewMode.Exterior) {
+			if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead | Program.Renderer.Camera.CurrentMode == CameraViewMode.Exterior) {
 				TrainManager.Car car = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar];
 				Vector3 diff = car.FrontAxle.Follower.WorldPosition - car.RearAxle.Follower.WorldPosition;
 				if (diff.IsNullVector()) {
@@ -283,10 +281,10 @@ namespace OpenBve
 			/*
 			 * Set up the atmospheric attributes.
 			 * */
-			double elevation = Camera.AbsolutePosition.Y + CurrentRoute.InitialElevation;
-			double airTemperature = Atmosphere.GetAirTemperature(elevation);
-			double airPressure = Atmosphere.GetAirPressure(elevation, airTemperature);
-			double speedOfSound = Atmosphere.GetSpeedOfSound(airPressure, airTemperature);
+			double elevation = Program.Renderer.Camera.AbsolutePosition.Y + Program.CurrentRoute.Atmosphere.InitialElevation;
+			double airTemperature = Program.CurrentRoute.Atmosphere.GetAirTemperature(elevation);
+			double airPressure = Program.CurrentRoute.Atmosphere.GetAirPressure(elevation, airTemperature);
+			double speedOfSound = Program.CurrentRoute.Atmosphere.GetSpeedOfSound(airPressure, airTemperature);
 			try {
 				AL.SpeedOfSound((float)speedOfSound);
 			} catch { }
@@ -375,7 +373,7 @@ namespace OpenBve
 					Vector3 positionDifference = position - listenerPosition;
 					double distance = positionDifference.Norm();
 					double radius = Sources[i].Radius;
-					if (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead) {
+					if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) {
 						if (Sources[i].Parent != TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar]) {
 							radius *= 0.5;
 						}

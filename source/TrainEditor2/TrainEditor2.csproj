@@ -24,6 +24,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>6</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -34,6 +35,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>6</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>..\..\assets\icon.ico</ApplicationIcon>
@@ -94,6 +96,7 @@
     <Compile Include="Extensions\ObservableDictionary.cs" />
     <Compile Include="Extensions\StringValueAttribute.cs" />
     <Compile Include="Extensions\Utilities.cs" />
+    <Compile Include="Graphics\NewRenderer.cs" />
     <Compile Include="IO\IntermediateFile\Parser.cs" />
     <Compile Include="IO\IntermediateFile\Writer.cs" />
     <Compile Include="IO\Panels\Bve4\Parser.cs" />
@@ -365,9 +368,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LibRender\LibRender.csproj">
-      <Project>{2072ecd1-c7ff-427c-84dc-063f7c19792e}</Project>
-      <Name>LibRender</Name>
+    <ProjectReference Include="..\LibRender2\LibRender2.csproj">
+      <Project>{68215476-302c-49f2-9f7e-aae20a2b6b12}</Project>
+      <Name>LibRender2</Name>
     </ProjectReference>
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-a564-40a9014dfa5f}</Project>

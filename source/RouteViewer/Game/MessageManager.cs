@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using OpenBveApi.Trains;
-using OpenBve.RouteManager;
+using RouteManager2.MessageManager;
+using RouteManager2.MessageManager.MessageTypes;
 
 namespace OpenBve
 {

@@ -26,7 +26,7 @@ namespace OpenBve
 				if (stream != null)
 				{
 					Bitmap Plus = new Bitmap(stream);
-					using (var g = Graphics.FromImage(Plus))
+					using (var g = System.Drawing.Graphics.FromImage(Plus))
 					{
 						g.DrawImage(image, 0.0f, 0.0f, image.Width, image.Height);
 						var data = Plus.LockBits(new Rectangle(0, 0, Plus.Width, Plus.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
@@ -37,7 +37,7 @@ namespace OpenBve
 				else
 				{
 					Bitmap Plus = new Bitmap(OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder(), "Cursors\\Symbols\\plus.png"));
-					using (var g = Graphics.FromImage(Plus))
+					using (var g = System.Drawing.Graphics.FromImage(Plus))
 					{
 						g.DrawImage(image, 0.0f, 0.0f, image.Width, image.Height);
 						var data = Plus.LockBits(new Rectangle(0, 0, Plus.Width, Plus.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
@@ -51,7 +51,7 @@ namespace OpenBve
 				if (stream != null)
 				{
 					Bitmap Minus = new Bitmap(stream);
-					using (var g = Graphics.FromImage(Minus))
+					using (var g = System.Drawing.Graphics.FromImage(Minus))
 					{
 						g.DrawImage(image, 0.0f, 0.0f, image.Width, image.Height);
 						var data = Minus.LockBits(new Rectangle(0, 0, Minus.Width, Minus.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
@@ -62,7 +62,7 @@ namespace OpenBve
 				else
 				{
 					Bitmap Minus = new Bitmap(OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder(), "Cursors\\Symbols\\minus.png"));
-					using (var g = Graphics.FromImage(Minus))
+					using (var g = System.Drawing.Graphics.FromImage(Minus))
 					{
 						g.DrawImage(image, 0.0f, 0.0f, image.Width, image.Height);
 						var data = Minus.LockBits(new Rectangle(0, 0, Minus.Width, Minus.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);

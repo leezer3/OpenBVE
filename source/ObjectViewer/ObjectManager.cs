@@ -1,26 +1,13 @@
 using System;
 using System.Text;
-using LibRender;
 using OpenBveApi.Interface;
-using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
-using OpenBveApi.World;
-using static LibRender.CameraProperties;
 
 namespace OpenBve
 {
     internal static class ObjectManager
     {
-		// static objects
-        internal static StaticObject[] Objects = new StaticObject[16];
-        internal static int ObjectsUsed;
-        internal static int[] ObjectsSortedByStart = new int[] { };
-        internal static int[] ObjectsSortedByEnd = new int[] { };
-        internal static int ObjectsSortedByStartPointer = 0;
-        internal static int ObjectsSortedByEndPointer = 0;
-        internal static double LastUpdatedTrackPosition = 0.0;
-		
         internal static WorldObject[] AnimatedWorldObjects = new WorldObject[4];
         internal static int AnimatedWorldObjectsUsed = 0;
 
@@ -30,11 +17,16 @@ namespace OpenBve
 			{
 				TrainManager.Train train = null;
 				const double extraRadius = 10.0;
-				double z = AnimatedWorldObjects[i].Object.TranslateZFunction == null ? 0.0 : AnimatedWorldObjects[i].Object.TranslateZFunction.LastResult;
+				double z = 0.0;
+				if (AnimatedWorldObjects[i].Object != null)
+				{
+					//Standalone sound may not have an object file attached
+					z = AnimatedWorldObjects[i].Object.TranslateZFunction == null ? 0.0 : AnimatedWorldObjects[i].Object.TranslateZFunction.LastResult;
+				}
 				double pa = AnimatedWorldObjects[i].TrackPosition + z - AnimatedWorldObjects[i].Radius - extraRadius;
 				double pb = AnimatedWorldObjects[i].TrackPosition + z + AnimatedWorldObjects[i].Radius + extraRadius;
-				double ta = Camera.Alignment.Position.Z - Backgrounds.BackgroundImageDistance - Camera.ExtraViewingDistance;
-				double tb = Camera.Alignment.Position.Z + Backgrounds.BackgroundImageDistance + Camera.ExtraViewingDistance;
+				double ta = Program.Renderer.Camera.Alignment.Position.Z - Program.CurrentRoute.CurrentBackground.BackgroundImageDistance - Program.Renderer.Camera.ExtraViewingDistance;
+				double tb = Program.Renderer.Camera.Alignment.Position.Z + Program.CurrentRoute.CurrentBackground.BackgroundImageDistance + Program.Renderer.Camera.ExtraViewingDistance;
 				bool visible = pb >= ta & pa <= tb;
 				if (visible | ForceUpdate)
 				{
@@ -140,248 +132,5 @@ namespace OpenBve
 			}
 #endif
         }
-        
-        // create object
-        internal static void CreateObject(UnifiedObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition)
-        {
-		if (Prototype != null)
-		{
-			CreateObject(Prototype, Position, BaseTransformation, AuxTransformation, -1, AccurateObjectDisposal, StartingDistance, EndingDistance, BlockLength, TrackPosition, 1.0, false);
-		}
-		else
-		{
-			int a = ObjectsUsed;
-			if (a >= Objects.Length)
-			{
-				Array.Resize<StaticObject>(ref Objects, Objects.Length << 1);
-			}
-			ObjectsUsed++;
-		}
-        }
-        internal static void CreateObject(UnifiedObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
-        {
-            if (Prototype is StaticObject)
-            {
-                StaticObject s = (StaticObject)Prototype;
-                CreateStaticObject(s, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
-            }
-            else if (Prototype is AnimatedObjectCollection)
-            {
-                AnimatedObjectCollection a = (AnimatedObjectCollection)Prototype;
-				a.CreateObject(Position, BaseTransformation, AuxTransformation, SectionIndex, AccurateObjectDisposal, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness, DuplicateMaterials);
-            }
-        }
-
-        internal static int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
-        {
-	        if (Prototype == null)
-	        {
-		        return -1;
-	        }
-            int a = ObjectsUsed;
-            if (a >= Objects.Length)
-            {
-                Array.Resize<StaticObject>(ref Objects, Objects.Length << 1);
-            }
-
-            Objects[a] = new StaticObject(Program.CurrentHost);
-            Objects[a].ApplyData(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness, 600);
-            for (int i = 0; i < Prototype.Mesh.Faces.Length; i++)
-            {
-                switch (Prototype.Mesh.Faces[i].Flags & MeshFace.FaceTypeMask)
-                {
-                    case MeshFace.FaceTypeTriangles:
-                        LibRender.Renderer.InfoTotalTriangles++;
-                        break;
-                    case MeshFace.FaceTypeTriangleStrip:
-                        LibRender.Renderer.InfoTotalTriangleStrip++;
-                        break;
-                    case MeshFace.FaceTypeQuads:
-                        LibRender.Renderer.InfoTotalQuads++;
-                        break;
-                    case MeshFace.FaceTypeQuadStrip:
-                        LibRender.Renderer.InfoTotalQuadStrip++;
-                        break;
-                    case MeshFace.FaceTypePolygon:
-                        LibRender.Renderer.InfoTotalPolygon++;
-                        break;
-                }
-            }
-            ObjectsUsed++;
-            return a;
-        }
-        
-        // create dynamic object
-        internal static void CreateDynamicObject(ref StaticObject internalObject)
-        {
-	        int a = ObjectsUsed;
-	        if (a >= Objects.Length)
-	        {
-		        Array.Resize<StaticObject>(ref Objects, Objects.Length << 1);
-	        }
-
-	        if (internalObject == null)
-	        {
-				
-		        Objects[a] = new StaticObject(Program.CurrentHost)
-		        {
-			        Dynamic = true,
-		        };
-		        internalObject = Objects[a];
-		        ObjectsUsed++;
-		        return;
-	        }
-	        else
-	        {
-		        Objects[a] = internalObject;
-		        internalObject.Dynamic = true;
-		        ObjectsUsed++;
-	        }
-        }
-
-        // finish creating objects
-        internal static void FinishCreatingObjects()
-        {
-            Array.Resize(ref Objects, ObjectsUsed);
-            //Array.Resize(ref AnimatedWorldObjects, AnimatedWorldObjectsUsed);
-        }
-
-        // initialize visibility
-        internal static void InitializeVisibility()
-        {
-            // sort objects
-            ObjectsSortedByStart = new int[ObjectsUsed];
-            ObjectsSortedByEnd = new int[ObjectsUsed];
-            double[] a = new double[ObjectsUsed];
-            double[] b = new double[ObjectsUsed];
-            int n = 0;
-            for (int i = 0; i < ObjectsUsed; i++)
-            {
-                if (Objects[i] != null && !Objects[i].Dynamic)
-                {
-                    ObjectsSortedByStart[n] = i;
-                    ObjectsSortedByEnd[n] = i;
-                    a[n] = Objects[i].StartingDistance;
-                    b[n] = Objects[i].EndingDistance;
-                    n++;
-                }
-            }
-            Array.Resize<int>(ref ObjectsSortedByStart, n);
-            Array.Resize<int>(ref ObjectsSortedByEnd, n);
-            Array.Resize<double>(ref a, n);
-            Array.Resize<double>(ref b, n);
-            Array.Sort<double, int>(a, ObjectsSortedByStart);
-            Array.Sort<double, int>(b, ObjectsSortedByEnd);
-            ObjectsSortedByStartPointer = 0;
-            ObjectsSortedByEndPointer = 0;
-            // initial visiblity
-            double p = Camera.Alignment.Position.Z;
-            for (int i = 0; i < ObjectsUsed; i++)
-            {
-                if (Objects[i] != null && !Objects[i].Dynamic)
-                {
-                    if (Objects[i].StartingDistance <= p + Camera.ForwardViewingDistance & Objects[i].EndingDistance >= p - Camera.BackwardViewingDistance)
-                    {
-                        LibRender.Renderer.ShowObject(Objects[i], ObjectType.Static);
-                    }
-                }
-            }
-        }
-
-        // update visibility
-        internal static void UpdateVisibility(double TrackPosition, bool ViewingDistanceChanged)
-        {
-            if (ViewingDistanceChanged)
-            {
-                UpdateVisibility(TrackPosition);
-                UpdateVisibility(TrackPosition - 0.001);
-                UpdateVisibility(TrackPosition + 0.001);
-                UpdateVisibility(TrackPosition);
-            }
-            else
-            {
-                UpdateVisibility(TrackPosition);
-            }
-        }
-        internal static void UpdateVisibility(double TrackPosition)
-        {
-            double d = TrackPosition - LastUpdatedTrackPosition;
-            int n = ObjectsSortedByStart.Length;
-            double p = Camera.Alignment.Position.Z;
-            if (d < 0.0)
-            {
-                if (ObjectsSortedByStartPointer >= n) ObjectsSortedByStartPointer = n - 1;
-                if (ObjectsSortedByEndPointer >= n) ObjectsSortedByEndPointer = n - 1;
-                // dispose
-                while (ObjectsSortedByStartPointer >= 0)
-                {
-                    int o = ObjectsSortedByStart[ObjectsSortedByStartPointer];
-                    if (Objects[o].StartingDistance > p + Camera.ForwardViewingDistance)
-                    {
-                        LibRender.Renderer.HideObject(ref ObjectManager.Objects[o]);
-                        ObjectsSortedByStartPointer--;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                // introduce
-                while (ObjectsSortedByEndPointer >= 0)
-                {
-                    int o = ObjectsSortedByEnd[ObjectsSortedByEndPointer];
-                    if (Objects[o].EndingDistance >= p - Camera.BackwardViewingDistance)
-                    {
-                        if (Objects[o].StartingDistance <= p + Camera.ForwardViewingDistance)
-                        {
-                            LibRender.Renderer.ShowObject(Objects[o], ObjectType.Static);
-                        }
-                        ObjectsSortedByEndPointer--;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            }
-            else if (d > 0.0)
-            {
-                if (ObjectsSortedByStartPointer < 0) ObjectsSortedByStartPointer = 0;
-                if (ObjectsSortedByEndPointer < 0) ObjectsSortedByEndPointer = 0;
-                // dispose
-                while (ObjectsSortedByEndPointer < n)
-                {
-                    int o = ObjectsSortedByEnd[ObjectsSortedByEndPointer];
-                    if (Objects[o].EndingDistance < p - Camera.BackwardViewingDistance)
-                    {
-                        LibRender.Renderer.HideObject(ref ObjectManager.Objects[o]);
-                        ObjectsSortedByEndPointer++;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                // introduce
-                while (ObjectsSortedByStartPointer < n)
-                {
-                    int o = ObjectsSortedByStart[ObjectsSortedByStartPointer];
-                    if (Objects[o].StartingDistance <= p + Camera.ForwardViewingDistance)
-                    {
-                        if (Objects[o].EndingDistance >= p - Camera.BackwardViewingDistance)
-                        {
-                            LibRender.Renderer.ShowObject(Objects[o], ObjectType.Static);
-                        }
-                        ObjectsSortedByStartPointer++;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            }
-            LastUpdatedTrackPosition = TrackPosition;
-        }
-
     }
 }

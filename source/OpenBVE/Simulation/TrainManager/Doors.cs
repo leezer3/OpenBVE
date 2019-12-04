@@ -1,5 +1,4 @@
 ﻿using System;
-using OpenBve.RouteManager;
 using SoundManager;
 
 namespace OpenBve
@@ -158,11 +157,11 @@ namespace OpenBve
 		/// <param name="ForwardsTolerance">The forwards tolerance for this stop point</param>
 		internal static void AttemptToOpenDoors(Train Train, int StationIndex, double BackwardsTolerance, double ForwardsTolerance)
 		{
-			if ((GetDoorsState(Train, CurrentRoute.Stations[StationIndex].OpenLeftDoors, CurrentRoute.Stations[StationIndex].OpenRightDoors) & TrainDoorState.AllOpened) == 0)
+			if ((GetDoorsState(Train, Program.CurrentRoute.Stations[StationIndex].OpenLeftDoors, Program.CurrentRoute.Stations[StationIndex].OpenRightDoors) & TrainDoorState.AllOpened) == 0)
 			{
 					if (Train.StationDistanceToStopPoint < BackwardsTolerance & -Train.StationDistanceToStopPoint < ForwardsTolerance)
 					{
-						OpenTrainDoors(Train, CurrentRoute.Stations[StationIndex].OpenLeftDoors, CurrentRoute.Stations[StationIndex].OpenRightDoors);
+						OpenTrainDoors(Train, Program.CurrentRoute.Stations[StationIndex].OpenLeftDoors, Program.CurrentRoute.Stations[StationIndex].OpenRightDoors);
 					}
 				
 			}
@@ -172,7 +171,7 @@ namespace OpenBve
 		/// <param name="Train">The train</param>
 		internal static void AttemptToCloseDoors(Train Train)
 		{
-			if (CurrentRoute.SecondsSinceMidnight >= Train.StationDepartureTime - 1.0 / Train.Cars[Train.DriverCar].Specs.DoorCloseFrequency)
+			if (Program.CurrentRoute.SecondsSinceMidnight >= Train.StationDepartureTime - 1.0 / Train.Cars[Train.DriverCar].Specs.DoorCloseFrequency)
 			{
 				if ((GetDoorsState(Train, true, true) & TrainDoorState.AllClosed) == 0)
 				{

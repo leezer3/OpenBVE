@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using LibRender;
+using LibRender2.Cameras;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
-using OpenBve.RouteManager;
+using RouteManager2;
+using RouteManager2.Stations;
 
 namespace OpenBve {
 	internal static class PluginManager {
@@ -79,10 +80,10 @@ namespace OpenBve {
 				{
 					currentRouteStations = new List<Station>();
 					int s = 0;
-					foreach (RouteStation selectedStation in CurrentRoute.Stations)
+					foreach (RouteStation selectedStation in Program.CurrentRoute.Stations)
 					{
 						double stopPosition = -1;
-						int stopIdx = CurrentRoute.Stations[s].GetStopIndex(Train.NumberOfCars);
+						int stopIdx = Program.CurrentRoute.Stations[s].GetStopIndex(Train.NumberOfCars);
 						if (selectedStation.Stops.Length != 0)
 						{
 							stopPosition = selectedStation.Stops[stopIdx].TrackPosition;
@@ -136,12 +137,12 @@ namespace OpenBve {
 				/*
 				 * Update the plugin.
 				 * */
-				double totalTime = CurrentRoute.SecondsSinceMidnight;
-				double elapsedTime = CurrentRoute.SecondsSinceMidnight - LastTime;
+				double totalTime = Program.CurrentRoute.SecondsSinceMidnight;
+				double elapsedTime = Program.CurrentRoute.SecondsSinceMidnight - LastTime;
 
-				ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, this.Train.SafetySystems.DoorInterlockState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, CameraProperties.Camera.CurrentMode, Translations.CurrentLanguageCode, this.Train.Destination);
+				ElapseData data = new ElapseData(vehicle, precedingVehicle, handles, this.Train.SafetySystems.DoorInterlockState, new Time(totalTime), new Time(elapsedTime), currentRouteStations, Program.Renderer.Camera.CurrentMode, Translations.CurrentLanguageCode, this.Train.Destination);
 				ElapseData inputDevicePluginData = data;
-				LastTime = CurrentRoute.SecondsSinceMidnight;
+				LastTime = Program.CurrentRoute.SecondsSinceMidnight;
 				Elapse(data);
 				this.PluginMessage = data.DebugMessage;
 				this.Train.SafetySystems.DoorInterlockState = data.DoorInterlockState;
@@ -428,12 +429,12 @@ namespace OpenBve {
 				if (sectionIndex == -1) {
 					sectionIndex = this.Train.CurrentSectionIndex + 1;
 					SignalData signal = null;
-					while (sectionIndex < CurrentRoute.Sections.Length) {
-						signal = CurrentRoute.Sections[sectionIndex].GetPluginSignal(this.Train);
+					while (sectionIndex < Program.CurrentRoute.Sections.Length) {
+						signal = Program.CurrentRoute.Sections[sectionIndex].GetPluginSignal(this.Train);
 						if (signal.Aspect == 0) break;
 						sectionIndex++;
 					}
-					if (sectionIndex < CurrentRoute.Sections.Length) {
+					if (sectionIndex < Program.CurrentRoute.Sections.Length) {
 						SetBeacon(new BeaconData(type, optional, signal));
 					} else {
 						SetBeacon(new BeaconData(type, optional, new SignalData(-1, double.MaxValue)));
@@ -441,8 +442,8 @@ namespace OpenBve {
 				}
 				if (sectionIndex >= 0) {
 					SignalData signal;
-					if (sectionIndex < CurrentRoute.Sections.Length) {
-						signal = CurrentRoute.Sections[sectionIndex].GetPluginSignal(this.Train);
+					if (sectionIndex < Program.CurrentRoute.Sections.Length) {
+						signal = Program.CurrentRoute.Sections[sectionIndex].GetPluginSignal(this.Train);
 					} else {
 						signal = new SignalData(0, double.MaxValue);
 					}

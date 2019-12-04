@@ -1,5 +1,4 @@
 using System;
-using LibRender;
 using OpenBve.Parsers.Panel;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -8,7 +7,6 @@ using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 using OpenBveApi.FunctionScripting;
-using static LibRender.CameraProperties;
 
 namespace OpenBve {
 	internal static class Panel2CfgParser {
@@ -250,19 +248,19 @@ namespace OpenBve {
 			}
 			{ // camera restriction
 				double WorldWidth, WorldHeight;
-				if (LibRender.Screen.Width >= LibRender.Screen.Height) {
-					WorldWidth = 2.0 * Math.Tan(0.5 * Camera.HorizontalViewingAngle) * EyeDistance;
-					WorldHeight = WorldWidth / LibRender.Screen.AspectRatio;
+				if (Program.Renderer.Screen.Width >= Program.Renderer.Screen.Height) {
+					WorldWidth = 2.0 * Math.Tan(0.5 * Program.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
+					WorldHeight = WorldWidth / Program.Renderer.Screen.AspectRatio;
 				} else {
-					WorldHeight = 2.0 * Math.Tan(0.5 * Camera.VerticalViewingAngle) * EyeDistance / LibRender.Screen.AspectRatio;
-					WorldWidth = WorldHeight * LibRender.Screen.AspectRatio;
+					WorldHeight = 2.0 * Math.Tan(0.5 * Program.Renderer.Camera.VerticalViewingAngle) * EyeDistance / Program.Renderer.Screen.AspectRatio;
+					WorldWidth = WorldHeight * Program.Renderer.Screen.AspectRatio;
 				}
 				double x0 = (PanelLeft - PanelCenter.X) / PanelResolution;
 				double x1 = (PanelRight - PanelCenter.X) / PanelResolution;
-				double y0 = (PanelCenter.Y - PanelBottom) / PanelResolution * LibRender.Screen.AspectRatio;
-				double y1 = (PanelCenter.Y - PanelTop) / PanelResolution * LibRender.Screen.AspectRatio;
-				Camera.RestrictionBottomLeft = new Vector3(x0 * WorldWidth, y0 * WorldHeight, EyeDistance);
-				Camera.RestrictionTopRight = new Vector3(x1 * WorldWidth, y1 * WorldHeight, EyeDistance);
+				double y0 = (PanelCenter.Y - PanelBottom) / PanelResolution * Program.Renderer.Screen.AspectRatio;
+				double y1 = (PanelCenter.Y - PanelTop) / PanelResolution * Program.Renderer.Screen.AspectRatio;
+				Train.Cars[Car].CameraRestriction.BottomLeft = new Vector3(x0 * WorldWidth, y0 * WorldHeight, EyeDistance);
+				Train.Cars[Car].CameraRestriction.TopRight = new Vector3(x1 * WorldWidth, y1 * WorldHeight, EyeDistance);
 				Train.Cars[Car].DriverYaw = Math.Atan((PanelCenter.X - PanelOrigin.X) * WorldWidth / PanelResolution);
 				Train.Cars[Car].DriverPitch = Math.Atan((PanelOrigin.Y - PanelCenter.Y) * WorldWidth / PanelResolution);
 			}
@@ -272,13 +270,13 @@ namespace OpenBve {
 					Interface.AddMessage(MessageType.Error, true, "The daytime panel bitmap could not be found in " + FileName);
 				} else {
 					Texture tday;
-					TextureManager.RegisterTexture(PanelDaytimeImage, new TextureParameters(null, PanelTransparentColor), out tday);
+					Program.Renderer.TextureManager.RegisterTexture(PanelDaytimeImage, new TextureParameters(null, PanelTransparentColor), out tday);
 					Texture tnight = null;
 					if (PanelNighttimeImage != null) {
 						if (!System.IO.File.Exists(PanelNighttimeImage)) {
 							Interface.AddMessage(MessageType.Error, true, "The nighttime panel bitmap could not be found in " + FileName);
 						} else {
-							TextureManager.RegisterTexture(PanelNighttimeImage, new TextureParameters(null, PanelTransparentColor), out tnight);
+							Program.Renderer.TextureManager.RegisterTexture(PanelNighttimeImage, new TextureParameters(null, PanelTransparentColor), out tnight);
 						}
 					}
 					OpenBVEGame.RunInRenderThread(() =>
@@ -388,10 +386,10 @@ namespace OpenBve {
 									// create element
 									if (DaytimeImage != null) {
 										Texture tday;
-										TextureManager.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out tday);
+										Program.Renderer.TextureManager.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out tday);
 										Texture tnight = null;
 										if (NighttimeImage != null) {
-											TextureManager.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
+											Program.Renderer.TextureManager.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
 										}
 										OpenBVEGame.RunInRenderThread(() =>
 										{
@@ -560,12 +558,12 @@ namespace OpenBve {
 									if (DaytimeImage != null)
 									{
 										Texture tday;
-										TextureManager.RegisterTexture(DaytimeImage,
+										Program.Renderer.TextureManager.RegisterTexture(DaytimeImage,
 											new TextureParameters(null, TransparentColor), out tday);
 										Texture tnight = null;
 										if (NighttimeImage != null)
 										{
-											TextureManager.RegisterTexture(NighttimeImage,
+											Program.Renderer.TextureManager.RegisterTexture(NighttimeImage,
 												new TextureParameters(null, TransparentColor), out tnight);
 										}
 										OpenBVEGame.RunInRenderThread(() =>
@@ -736,10 +734,10 @@ namespace OpenBve {
 									// create element
 									if (DaytimeImage != null) {
 										Texture tday;
-										TextureManager.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out tday);
+										Program.Renderer.TextureManager.RegisterTexture(DaytimeImage, new TextureParameters(null, TransparentColor), out tday);
 										Texture tnight = null;
 										if (NighttimeImage != null) {
-											TextureManager.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
+											Program.Renderer.TextureManager.RegisterTexture(NighttimeImage, new TextureParameters(null, TransparentColor), out tnight);
 										}
 										OpenBVEGame.RunInRenderThread(() =>
 										{
@@ -882,7 +880,7 @@ namespace OpenBve {
 											{
 												if ((k + 1) * Interval <= hday)
 												{
-													TextureManager.RegisterTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, Interval), TransparentColor), out tday[k]);
+													Program.Renderer.TextureManager.RegisterTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, Interval), TransparentColor), out tday[k]);
 												}
 												else if (k * Interval >= hday)
 												{
@@ -891,7 +889,7 @@ namespace OpenBve {
 												}
 												else
 												{
-													TextureManager.RegisterTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, hday - (k * Interval)), TransparentColor), out tday[k]);
+													Program.Renderer.TextureManager.RegisterTexture(DaytimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wday, hday - (k * Interval)), TransparentColor), out tday[k]);
 												}
 											}
 											if (NighttimeImage != null) {
@@ -901,7 +899,7 @@ namespace OpenBve {
 												for (int k = 0; k < numFrames; k++) {
 													if ((k + 1) * Interval <= hnight)
 													{
-														TextureManager.RegisterTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, Interval), TransparentColor), out tnight[k]);
+														Program.Renderer.TextureManager.RegisterTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, Interval), TransparentColor), out tnight[k]);
 													}
 													else if (k * Interval > hnight)
 													{
@@ -909,7 +907,7 @@ namespace OpenBve {
 													}
 													else
 													{
-														TextureManager.RegisterTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, hnight - (k * Interval)), TransparentColor), out tnight[k]);
+														Program.Renderer.TextureManager.RegisterTexture(NighttimeImage, new TextureParameters(new TextureClipRegion(0, k * Interval, wnight, hnight - (k * Interval)), TransparentColor), out tnight[k]);
 													}
 												}
 												
@@ -1061,18 +1059,18 @@ namespace OpenBve {
 										int j = CreateElement(ref Train.Cars[Car].CarSections[0].Groups[GroupIndex], LocationX - Radius, LocationY - Radius, 2.0 * Radius, 2.0 * Radius, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, null, null, Color, false);
 										InitialAngle = InitialAngle + Math.PI;
 										LastAngle = LastAngle + Math.PI;
-										double x0 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Object.Mesh.Vertices[0].Coordinates.X;
-										double y0 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Object.Mesh.Vertices[0].Coordinates.Y;
-										double z0 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Object.Mesh.Vertices[0].Coordinates.Z;
-										double x1 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Object.Mesh.Vertices[1].Coordinates.X;
-										double y1 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Object.Mesh.Vertices[1].Coordinates.Y;
-										double z1 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Object.Mesh.Vertices[1].Coordinates.Z;
-										double x2 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Object.Mesh.Vertices[2].Coordinates.X;
-										double y2 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Object.Mesh.Vertices[2].Coordinates.Y;
-										double z2 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Object.Mesh.Vertices[2].Coordinates.Z;
-										double x3 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Object.Mesh.Vertices[3].Coordinates.X;
-										double y3 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Object.Mesh.Vertices[3].Coordinates.Y;
-										double z3 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Object.Mesh.Vertices[3].Coordinates.Z;
+										double x0 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.X;
+										double y0 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Y;
+										double z0 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[0].Coordinates.Z;
+										double x1 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[1].Coordinates.X;
+										double y1 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[1].Coordinates.Y;
+										double z1 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[1].Coordinates.Z;
+										double x2 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[2].Coordinates.X;
+										double y2 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[2].Coordinates.Y;
+										double z2 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[2].Coordinates.Z;
+										double x3 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[3].Coordinates.X;
+										double y3 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[3].Coordinates.Y;
+										double z3 = Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh.Vertices[3].Coordinates.Z;
 										double cx = 0.25 * (x0 + x1 + x2 + x3);
 										double cy = 0.25 * (y0 + y1 + y2 + y3);
 										double cz = 0.25 * (z0 + z1 + z2 + z3);
@@ -1088,7 +1086,7 @@ namespace OpenBve {
 											new int[] { 0, 7, 8 },
 											new int[] { 0, 9, 10 }
 										};
-										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Object.Mesh = new Mesh(vertices, faces, Color);
+										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].States[0].Prototype.Mesh = new Mesh(vertices, faces, Color);
 										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].LEDClockwiseWinding = InitialAngle <= LastAngle;
 										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].LEDInitialAngle = InitialAngle;
 										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].LEDLastAngle = LastAngle;
@@ -1485,20 +1483,20 @@ namespace OpenBve {
 		internal static int CreateElement(ref TrainManager.ElementsGroup Group, double Left, double Top, double Width, double Height, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelTop, double PanelBottom, Vector2 PanelCenter, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, Color32 Color, bool AddStateToLastElement)
 		{
 			double WorldWidth, WorldHeight;
-			if (LibRender.Screen.Width >= LibRender.Screen.Height) {
-				WorldWidth = 2.0 * Math.Tan(0.5 * Camera.HorizontalViewingAngle) * EyeDistance;
-				WorldHeight = WorldWidth / LibRender.Screen.AspectRatio;
+			if (Program.Renderer.Screen.Width >= Program.Renderer.Screen.Height) {
+				WorldWidth = 2.0 * Math.Tan(0.5 * Program.Renderer.Camera.HorizontalViewingAngle) * EyeDistance;
+				WorldHeight = WorldWidth / Program.Renderer.Screen.AspectRatio;
 			} else {
-				WorldHeight = 2.0 * Math.Tan(0.5 * Camera.VerticalViewingAngle) * EyeDistance / LibRender.Screen.AspectRatio;
-				WorldWidth = WorldHeight * LibRender.Screen.AspectRatio;
+				WorldHeight = 2.0 * Math.Tan(0.5 * Program.Renderer.Camera.VerticalViewingAngle) * EyeDistance / Program.Renderer.Screen.AspectRatio;
+				WorldWidth = WorldHeight * Program.Renderer.Screen.AspectRatio;
 			}
 			double x0 = Left / PanelResolution;
 			double x1 = (Left + Width) / PanelResolution;
-			double y0 = (PanelBottom - Top) / PanelResolution * LibRender.Screen.AspectRatio;
-			double y1 = (PanelBottom - (Top + Height)) / PanelResolution * LibRender.Screen.AspectRatio;
+			double y0 = (PanelBottom - Top) / PanelResolution * Program.Renderer.Screen.AspectRatio;
+			double y1 = (PanelBottom - (Top + Height)) / PanelResolution * Program.Renderer.Screen.AspectRatio;
 			double xd = 0.5 - PanelCenter.X / PanelResolution;
 			x0 += xd; x1 += xd;
-			double yt = PanelBottom - PanelResolution / LibRender.Screen.AspectRatio;
+			double yt = PanelBottom - PanelResolution / Program.Renderer.Screen.AspectRatio;
 			double yd = (PanelCenter.Y - yt) / (PanelBottom - yt) - 0.5;
 			y0 += yd; y1 += yd;
 			x0 = (x0 - 0.5) * WorldWidth;
@@ -1535,20 +1533,23 @@ namespace OpenBve {
 			if (AddStateToLastElement) {
 				int n = Group.Elements.Length - 1;
 				int j = Group.Elements[n].States.Length;
-				Array.Resize<AnimatedObjectState>(ref Group.Elements[n].States, j + 1);
-				Group.Elements[n].States[j].Position = o;
-				Group.Elements[n].States[j].Object = (StaticObject)Object.Clone();
+				Array.Resize(ref Group.Elements[n].States, j + 1);
+				Group.Elements[n].States[j] = new ObjectState
+				{
+					Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z),
+					Prototype = Object
+				};
 				return n;
 			} else {
 				int n = Group.Elements.Length;
 				Array.Resize(ref Group.Elements, n + 1);
 				Group.Elements[n] = new AnimatedObject(Program.CurrentHost);
-				Group.Elements[n].States = new AnimatedObjectState[1];
-				Group.Elements[n].States[0].Position = o;
-				Group.Elements[n].States[0].Object = Object;
+				Group.Elements[n].States = new[] { new ObjectState() };
+				Group.Elements[n].States[0].Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z);
+				Group.Elements[n].States[0].Prototype = Object;
 				Group.Elements[n].CurrentState = 0;
-				Group.Elements[n].internalObject = (StaticObject)Object.Clone();
-				ObjectManager.CreateDynamicObject(ref Group.Elements[n].internalObject);
+				Group.Elements[n].internalObject = new ObjectState { Prototype = Object };
+				Program.CurrentHost.CreateDynamicObject(ref Group.Elements[n].internalObject);
 				return n;
 			}
 		}

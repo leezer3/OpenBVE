@@ -174,6 +174,8 @@ namespace OpenBveApi.Interface {
 			DebugTouchMode,
 			/// <summary>Shows or hides a visual representation of all events on the track</summary>
 			ShowEvents,
+			/// <summary>Toggles the renderer</summary>
+			DebugRendererMode,
 			/*
 			 * The following keys must be handled by the train-plugin.
 			 * They have no specified purpose.

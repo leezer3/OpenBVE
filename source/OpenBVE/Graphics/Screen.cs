@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using LibRender;
+using LibRender2.Viewports;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using OpenBveApi.Runtime;
-using static LibRender.CameraProperties;
 
 namespace OpenBve
 {
@@ -17,9 +17,9 @@ namespace OpenBve
 		internal static void Initialize()
 		{
             //Initialize the values used by the renderer
-            LibRender.Screen.Width = Interface.CurrentOptions.FullscreenMode ? Interface.CurrentOptions.FullscreenWidth : Interface.CurrentOptions.WindowWidth;
-            LibRender.Screen.Height = Interface.CurrentOptions.FullscreenMode ? Interface.CurrentOptions.FullscreenHeight : Interface.CurrentOptions.WindowHeight;
-            LibRender.Screen.Fullscreen = Interface.CurrentOptions.FullscreenMode;
+            Program.Renderer.Screen.Width = Interface.CurrentOptions.FullscreenMode ? Interface.CurrentOptions.FullscreenWidth : Interface.CurrentOptions.WindowWidth;
+            Program.Renderer.Screen.Height = Interface.CurrentOptions.FullscreenMode ? Interface.CurrentOptions.FullscreenHeight : Interface.CurrentOptions.WindowHeight;
+            Program.Renderer.Screen.Fullscreen = Interface.CurrentOptions.FullscreenMode;
 			//Set a new graphics mode, using 8 bits for R,G,B,A & a 8 bit stencil buffer (Currently unused)
 			GraphicsMode currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
 			if (Interface.CurrentOptions.FullscreenMode)
@@ -107,13 +107,13 @@ namespace OpenBve
         /// <summary>Resizes the OpenGL viewport if the window is resized</summary>
 	    internal static void WindowResize(int newWidth, int newHeight)
         {
-	        LibRender.Screen.Width = newWidth;
-	        LibRender.Screen.Height = newHeight;
+	        Program.Renderer.Screen.Width = newWidth;
+	        Program.Renderer.Screen.Height = newHeight;
             if (Loading.Complete)
             {
-                Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
+	            Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
                 World.InitializeCameraRestriction();
-                if (LibRender.Renderer.OptionBackfaceCulling)
+                if (Program.Renderer.OptionBackFaceCulling)
                 {
                     GL.Enable(EnableCap.CullFace);
                 }
@@ -121,31 +121,25 @@ namespace OpenBve
                 {
                     GL.Disable(EnableCap.CullFace);
                 }
-                LibRender.Renderer.ReAddObjects();
             }
 			else
-			{
-                GL.Viewport(0, 0, LibRender.Screen.Width, LibRender.Screen.Height);
-                GL.MatrixMode(MatrixMode.Projection);
-                GL.LoadIdentity();
-                GL.Ortho(0.0, (double) LibRender.Screen.Width, (double) LibRender.Screen.Height, 0.0, -1.0, 1.0);
+            {
+	            Matrix4D.CreateOrthographicOffCenter(0.0f, Program.Renderer.Screen.Width, Program.Renderer.Screen.Height, 0.0f, -1.0f, 1.0f, out Program.Renderer.CurrentProjectionMatrix);
             }
 	    }
 
 		/// <summary>Changes to or from fullscreen mode.</summary>
 		internal static void ToggleFullscreen()
 		{
-			LibRender.Screen.Fullscreen = !LibRender.Screen.Fullscreen;
+			Program.Renderer.Screen.Fullscreen = !Program.Renderer.Screen.Fullscreen;
+
 			// begin HACK //
-			Renderer.ClearDisplayLists();
-			
-			GL.Disable(EnableCap.Fog);
-			GL.Disable(EnableCap.Lighting);
-			LibRender.Renderer.LightingEnabled = false;
-			if (LibRender.Screen.Fullscreen)
+			Program.Renderer.OptionFog = false;
+			Program.Renderer.OptionLighting = false;
+
+			if (Program.Renderer.Screen.Fullscreen)
 			{
-                
-                IList<DisplayResolution> resolutions = OpenTK.DisplayDevice.Default.AvailableResolutions;
+				IList<DisplayResolution> resolutions = DisplayDevice.Default.AvailableResolutions;
                 
 			    for (int i = 0; i < resolutions.Count; i++)
 			    {
@@ -154,11 +148,11 @@ namespace OpenBve
 			            resolutions[i].Height == Interface.CurrentOptions.FullscreenHeight &&
 			            resolutions[i].BitsPerPixel == Interface.CurrentOptions.FullscreenBits)
 			        {
-			            OpenTK.DisplayDevice.Default.ChangeResolution(resolutions[i]);
+			            DisplayDevice.Default.ChangeResolution(resolutions[i]);
 			            Program.currentGameWindow.Width = resolutions[i].Width;
 			            Program.currentGameWindow.Height = resolutions[i].Height;
-                        LibRender.Screen.Width = Interface.CurrentOptions.FullscreenWidth;
-                        LibRender.Screen.Height = Interface.CurrentOptions.FullscreenHeight;
+			            Program.Renderer.Screen.Width = Interface.CurrentOptions.FullscreenWidth;
+			            Program.Renderer.Screen.Height = Interface.CurrentOptions.FullscreenHeight;
                         Program.currentGameWindow.WindowState = WindowState.Fullscreen;
 				        break;
 			        }
@@ -168,22 +162,22 @@ namespace OpenBve
 			    {
                     MessageBox.Show(Translations.GetInterfaceString("errors_fullscreen_switch1") + System.Environment.NewLine +
                         Translations.GetInterfaceString("errors_fullscreen_switch2"), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                    LibRender.Screen.Fullscreen = false;
+                    Program.Renderer.Screen.Fullscreen = false;
 			    }
 			}
 			else
 			{
-                OpenTK.DisplayDevice.Default.RestoreResolution();
+                DisplayDevice.Default.RestoreResolution();
                 Program.currentGameWindow.WindowState = WindowState.Normal;
                 Program.currentGameWindow.Width = Interface.CurrentOptions.WindowWidth;
                 Program.currentGameWindow.Height = Interface.CurrentOptions.WindowHeight;
-			    
-                LibRender.Screen.Width = Interface.CurrentOptions.WindowWidth;
-                LibRender.Screen.Height = Interface.CurrentOptions.WindowHeight;
+
+                Program.Renderer.Screen.Width = Interface.CurrentOptions.WindowWidth;
+                Program.Renderer.Screen.Height = Interface.CurrentOptions.WindowHeight;
 			}
-			LibRender.Renderer.InitializeLighting();
-			Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
-			LibRender.MotionBlur.Initialize(Interface.CurrentOptions.MotionBlur);
+			Program.Renderer.Lighting.Initialize();
+			Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
+			Program.Renderer.MotionBlur.Initialize(Interface.CurrentOptions.MotionBlur);
 			lock (Illustrations.Locker)
 			{
 				Timetable.CreateTimetable();
@@ -191,7 +185,7 @@ namespace OpenBve
 			Timetable.UpdateCustomTimetable(null, null);
 			
 			World.InitializeCameraRestriction();
-			if (LibRender.Renderer.OptionBackfaceCulling)
+			if (Program.Renderer.OptionBackFaceCulling)
 			{
 			    GL.Enable(EnableCap.CullFace);
 			}
@@ -199,18 +193,17 @@ namespace OpenBve
 			{
 				GL.Disable(EnableCap.CullFace);
 			}
-			LibRender.Renderer.ReAddObjects();
 			// end HACK //
 
             //Reset the camera when switching between fullscreen and windowed mode
             //Otherwise, if the aspect ratio changes distortion will occur until the view is changed or the camera reset
-            if (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead)
+            if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead)
             {
-                Camera.Alignment.Position = OpenBveApi.Math.Vector3.Zero;
+	            Program.Renderer.Camera.Alignment.Position = OpenBveApi.Math.Vector3.Zero;
             }
-            Camera.Alignment.Yaw = 0.0;
-            Camera.Alignment.Pitch = 0.0;
-            Camera.Alignment.Roll = 0.0;
+            Program.Renderer.Camera.Alignment.Yaw = 0.0;
+            Program.Renderer.Camera.Alignment.Pitch = 0.0;
+            Program.Renderer.Camera.Alignment.Roll = 0.0;
 		}
         
 		

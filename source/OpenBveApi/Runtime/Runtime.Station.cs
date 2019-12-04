@@ -1,4 +1,4 @@
-﻿namespace OpenBveApi.Runtime
+namespace OpenBveApi.Runtime
 {
 	/// <summary>Represents a station.</summary>
 	public class Station
@@ -33,6 +33,8 @@
 		public double InterferenceInDoor;
 		/// <summary>The maximum width of the obstacle to the overall width of the door</summary>
 		public int MaxInterferingObjectRate;
+		/// <summary>If departing this station triggers a jump, contains the index of the station to jump to</summary>
+		public int JumpIndex;
 
 		/// <summary>Creates a new station with default (empty) values</summary>
 		public Station()
@@ -94,6 +96,8 @@
 		/// <summary>This station is the terminal station</summary>
 		Terminal = 2,
 		/// <summary>This station is a request stop</summary>
-		RequestStop = 3
+		RequestStop = 3,
+		/// <summary>This station triggers the jump mechanic on departure</summary>
+		Jump
 	}
 }

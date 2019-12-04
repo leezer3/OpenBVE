@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Linq;
-using LibRender;
 using OpenBve.Parsers.Panel;
-using OpenBve.RouteManager;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
-using static LibRender.CameraProperties;
+using RouteManager2;
 
 namespace OpenBve
 {
@@ -66,16 +64,16 @@ namespace OpenBve
 						if (DocumentElements.Any())
 						{
 							PanelAnimatedXmlParser.ParsePanelAnimatedXml(System.IO.Path.GetFileName(File), TrainPath, Train, Train.DriverCar);
-							Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
-							Camera.CurrentRestriction = CameraRestrictionMode.NotAvailable;
+							if (Train.Cars[Train.DriverCar].CameraRestrictionMode != CameraRestrictionMode.Restricted3D)
+							{
+								Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
+							}
 						}
 
 						DocumentElements = CurrentXML.Root.Elements("Panel");
 						if (DocumentElements.Any())
 						{
 							PanelXmlParser.ParsePanelXml(System.IO.Path.GetFileName(File), TrainPath, Train, Train.DriverCar);
-							Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.On;
-							Camera.CurrentRestriction = CameraRestrictionMode.On;
 						}
 					}
 				}
@@ -91,6 +89,7 @@ namespace OpenBve
 
 				if (Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements.Any())
 				{
+					Program.Renderer.InitializeVisibility();
 					World.UpdateViewingDistances();
 					return;
 				}
@@ -117,11 +116,14 @@ namespace OpenBve
 						{
 							for (int i = 0; i < a.Objects.Length; i++)
 							{
-								ObjectManager.CreateDynamicObject(ref a.Objects[i].internalObject);
+								Program.CurrentHost.CreateDynamicObject(ref a.Objects[i].internalObject);
 							}
 							Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements = a.Objects;
-							Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
-							Camera.CurrentRestriction = CameraRestrictionMode.NotAvailable;
+							if (Train.Cars[Train.DriverCar].CameraRestrictionMode != CameraRestrictionMode.Restricted3D)
+							{
+								Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
+								Program.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.NotAvailable;
+							}
 							World.UpdateViewingDistances();
 							return;
 						}
@@ -149,7 +151,7 @@ namespace OpenBve
 					Panel2 = true;
 					Panel2CfgParser.ParsePanel2Config("panel2.cfg", TrainPath, Encoding, Train, Train.DriverCar);
 					Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.On;
-					Camera.CurrentRestriction = CameraRestrictionMode.On;
+					Program.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.On;
 				}
 				else
 				{
@@ -159,11 +161,11 @@ namespace OpenBve
 						Program.FileSystem.AppendToLogFile("Loading train panel: " + File);
 						PanelCfgParser.ParsePanelConfig(TrainPath, Encoding, Train);
 						Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.On;
-						Camera.CurrentRestriction = CameraRestrictionMode.On;
+						Program.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.On;
 					}
 					else
 					{
-						Camera.CurrentRestriction = CameraRestrictionMode.NotAvailable;
+						Program.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.NotAvailable;
 					}
 				}
 			}
@@ -190,21 +192,21 @@ namespace OpenBve
 				t = Train.Cars[CarIndex].Specs.UnexposedFrontalArea;
 			}
 			double f = t * Train.Cars[CarIndex].Specs.AerodynamicDragCoefficient * Train.Specs.CurrentAirDensity / (2.0 * Train.Cars[CarIndex].Specs.MassCurrent);
-			double a = Atmosphere.AccelerationDueToGravity * Train.Cars[CarIndex].Specs.CoefficientOfRollingResistance + f * Speed * Speed;
+			double a = Program.CurrentRoute.Atmosphere.AccelerationDueToGravity * Train.Cars[CarIndex].Specs.CoefficientOfRollingResistance + f * Speed * Speed;
 			return a;
 		}
 
 		// get critical wheelslip acceleration
 		private static double GetCriticalWheelSlipAccelerationForElectricMotor(Train Train, int CarIndex, double AdhesionMultiplier, double UpY, double Speed)
 		{
-			double NormalForceAcceleration = UpY * Atmosphere.AccelerationDueToGravity;
+			double NormalForceAcceleration = UpY * Program.CurrentRoute.Atmosphere.AccelerationDueToGravity;
 			// TODO: Implement formula that depends on speed here.
 			double coefficient = Train.Cars[CarIndex].Specs.CoefficientOfStaticFriction;
 			return coefficient * AdhesionMultiplier * NormalForceAcceleration;
 		}
 		private static double GetCriticalWheelSlipAccelerationForFrictionBrake(Train Train, int CarIndex, double AdhesionMultiplier, double UpY, double Speed)
 		{
-			double NormalForceAcceleration = UpY * Atmosphere.AccelerationDueToGravity;
+			double NormalForceAcceleration = UpY * Program.CurrentRoute.Atmosphere.AccelerationDueToGravity;
 			// TODO: Implement formula that depends on speed here.
 			double coefficient = Train.Cars[CarIndex].Specs.CoefficientOfStaticFriction;
 			return coefficient * AdhesionMultiplier * NormalForceAcceleration;
@@ -291,9 +293,9 @@ namespace OpenBve
 												double fj = Trains[i].Cars[k].Specs.MassCurrent*f;
 												double vi = v*fi;
 												double vj = v*fj;
-												if (vi > Game.CriticalCollisionSpeedDifference)
+												if (vi > Trains[i].CriticalCollisionSpeedDifference)
 													Trains[i].Derail(k, TimeElapsed);
-												if (vj > Game.CriticalCollisionSpeedDifference)
+												if (vj > Trains[j].CriticalCollisionSpeedDifference)
 													Trains[j].Derail(i, TimeElapsed);
 											}
 											// adjust cars for train i
@@ -316,9 +318,9 @@ namespace OpenBve
 														double fj = Trains[i].Cars[h].Specs.MassCurrent*f;
 														double vi = v*fi;
 														double vj = v*fj;
-														if (vi > Game.CriticalCollisionSpeedDifference)
+														if (vi > Trains[i].CriticalCollisionSpeedDifference)
 															Trains[i].Derail(h + 1, TimeElapsed);
-														if (vj > Game.CriticalCollisionSpeedDifference)
+														if (vj > Trains[j].CriticalCollisionSpeedDifference)
 															Trains[i].Derail(h, TimeElapsed);
 													}
 													Trains[i].Cars[h].CurrentSpeed =
@@ -345,9 +347,9 @@ namespace OpenBve
 														double fj = Trains[j].Cars[h].Specs.MassCurrent*f;
 														double vi = v*fi;
 														double vj = v*fj;
-														if (vi > Game.CriticalCollisionSpeedDifference)
+														if (vi > Trains[j].CriticalCollisionSpeedDifference)
 															Trains[j].Derail(h -1, TimeElapsed);
-														if (vj > Game.CriticalCollisionSpeedDifference)
+														if (vj > Trains[j].CriticalCollisionSpeedDifference)
 															Trains[j].Derail(h, TimeElapsed);
 													}
 													Trains[j].Cars[h].CurrentSpeed =
@@ -381,9 +383,9 @@ namespace OpenBve
 												double fj = Trains[i].Cars[0].Specs.MassCurrent*f;
 												double vi = v*fi;
 												double vj = v*fj;
-												if (vi > Game.CriticalCollisionSpeedDifference)
+												if (vi > Trains[i].CriticalCollisionSpeedDifference)
 													Trains[i].Derail(0, TimeElapsed);
-												if (vj > Game.CriticalCollisionSpeedDifference)
+												if (vj > Trains[j].CriticalCollisionSpeedDifference)
 													Trains[j].Derail(k, TimeElapsed);
 											}
 											// adjust cars for train i
@@ -406,9 +408,9 @@ namespace OpenBve
 														double fj = Trains[i].Cars[h].Specs.MassCurrent*f;
 														double vi = v*fi;
 														double vj = v*fj;
-														if (vi > Game.CriticalCollisionSpeedDifference)
+														if (vi > Trains[i].CriticalCollisionSpeedDifference)
 															Trains[i].Derail(h -1, TimeElapsed);
-														if (vj > Game.CriticalCollisionSpeedDifference)
+														if (vj > Trains[i].CriticalCollisionSpeedDifference)
 															Trains[i].Derail(h, TimeElapsed);
 													}
 													Trains[i].Cars[h].CurrentSpeed =
@@ -435,9 +437,9 @@ namespace OpenBve
 														double fj = Trains[j].Cars[h].Specs.MassCurrent*f;
 														double vi = v*fi;
 														double vj = v*fj;
-														if (vi > Game.CriticalCollisionSpeedDifference)
+														if (vi > Trains[i].CriticalCollisionSpeedDifference)
 															Trains[j].Derail(h + 1, TimeElapsed);
-														if (vj > Game.CriticalCollisionSpeedDifference)
+														if (vj > Trains[j].CriticalCollisionSpeedDifference)
 															Trains[j].Derail(h, TimeElapsed);
 													}
 													Trains[j].Cars[h].CurrentSpeed =
@@ -458,20 +460,20 @@ namespace OpenBve
 								   0.5*Trains[i].Cars[0].Length;
 						double b = Trains[i].Cars[Trains[i].Cars.Length - 1].RearAxle.Follower.TrackPosition -
 								   Trains[i].Cars[Trains[i].Cars.Length - 1].RearAxle.Position - 0.5*Trains[i].Cars[0].Length;
-						for (int j = 0; j < Game.BufferTrackPositions.Length; j++)
+						for (int j = 0; j < Program.CurrentRoute.BufferTrackPositions.Length; j++)
 						{
-							if (a > Game.BufferTrackPositions[j] & b < Game.BufferTrackPositions[j])
+							if (a > Program.CurrentRoute.BufferTrackPositions[j] & b < Program.CurrentRoute.BufferTrackPositions[j])
 							{
 								a += 0.0001;
 								b -= 0.0001;
-								double da = a - Game.BufferTrackPositions[j];
-								double db = Game.BufferTrackPositions[j] - b;
+								double da = a - Program.CurrentRoute.BufferTrackPositions[j];
+								double db = Program.CurrentRoute.BufferTrackPositions[j] - b;
 								if (da < db)
 								{
 									// front
 									Trains[i].Cars[0].UpdateTrackFollowers(-da, false, false);
 									if (Interface.CurrentOptions.Derailments &&
-										Math.Abs(Trains[i].Cars[0].CurrentSpeed) > Game.CriticalCollisionSpeedDifference)
+										Math.Abs(Trains[i].Cars[0].CurrentSpeed) > Trains[i].CriticalCollisionSpeedDifference)
 									{
 										Trains[i].Derail(0, TimeElapsed);
 									}
@@ -489,7 +491,7 @@ namespace OpenBve
 											Trains[i].Cars[h].UpdateTrackFollowers(d, false, false);
 											if (Interface.CurrentOptions.Derailments &&
 												Math.Abs(Trains[i].Cars[h].CurrentSpeed) >
-												Game.CriticalCollisionSpeedDifference)
+												Trains[j].CriticalCollisionSpeedDifference)
 											{
 												Trains[i].Derail(h, TimeElapsed);
 											}
@@ -503,7 +505,7 @@ namespace OpenBve
 									int c = Trains[i].Cars.Length - 1;
 									Trains[i].Cars[c].UpdateTrackFollowers(db, false, false);
 									if (Interface.CurrentOptions.Derailments &&
-										Math.Abs(Trains[i].Cars[c].CurrentSpeed) > Game.CriticalCollisionSpeedDifference)
+										Math.Abs(Trains[i].Cars[c].CurrentSpeed) > Trains[i].CriticalCollisionSpeedDifference)
 									{
 										Trains[i].Derail(c, TimeElapsed);
 									}
@@ -521,7 +523,7 @@ namespace OpenBve
 											Trains[i].Cars[h].UpdateTrackFollowers(-d, false, false);
 											if (Interface.CurrentOptions.Derailments &&
 												Math.Abs(Trains[i].Cars[h].CurrentSpeed) >
-												Game.CriticalCollisionSpeedDifference)
+												Trains[i].CriticalCollisionSpeedDifference)
 											{
 												Trains[i].Derail(h, TimeElapsed);
 											}

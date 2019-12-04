@@ -12,7 +12,9 @@ namespace OpenBve
             /// <summary>A bitmap storing the current route gradient profile </summary>
             internal static Bitmap GradientProfile;
             /// <summary>A string storing the absolute on-disk path to a .RTF or .TXT document describing the briefing for the current scenario</summary>
+#pragma warning disable 649
             internal static string RouteBriefing;
+#pragma warning restore 649
             /// <summary>A string storing the absolute on-disk path to the current route file</summary>
             internal static string RouteFile;
             /// <summary>A string storing the absolute on-disk path to the current train folder</summary>

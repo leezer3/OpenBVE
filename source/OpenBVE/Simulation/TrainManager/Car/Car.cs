@@ -1,13 +1,14 @@
 using System;
-using static LibRender.CameraProperties;
-using LibRender;
+using System.Windows.Forms;
+using LibRender2.Camera;
+using LibRender2.Cameras;
 using OpenBve.BrakeSystems;
-using OpenBve.RouteManager;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
+using OpenBveApi.World;
 using SoundManager;
 
 namespace OpenBve
@@ -62,6 +63,8 @@ namespace OpenBve
 			internal readonly int Index;
 			/// <summary>Stores the camera restriction mode for the interior view of this car</summary>
 			internal CameraRestrictionMode CameraRestrictionMode = CameraRestrictionMode.NotSpecified;
+
+			internal CameraRestriction CameraRestriction;
 			/// <summary>Stores the camera interior camera alignment for this car</summary>
 			internal CameraAlignment InteriorCamera;
 
@@ -343,6 +346,7 @@ namespace OpenBve
 										gain *= Math.Pow(cur / max, 0.25);
 									}
 								}
+
 								if (obuf != nbuf)
 								{
 									Program.Sounds.StopSound(Sounds.Motor.Tables[j].Source);
@@ -400,11 +404,10 @@ namespace OpenBve
 					StaticObject s = (StaticObject)currentObject;
 					CarSections[j].Groups[0].Elements = new AnimatedObject[1];
 					CarSections[j].Groups[0].Elements[0] = new AnimatedObject(Program.CurrentHost);
-					CarSections[j].Groups[0].Elements[0].States = new AnimatedObjectState[1];
-					CarSections[j].Groups[0].Elements[0].States[0].Position = Vector3.Zero;
-					CarSections[j].Groups[0].Elements[0].States[0].Object = s;
+					CarSections[j].Groups[0].Elements[0].States = new[] { new ObjectState() };
+					CarSections[j].Groups[0].Elements[0].States[0].Prototype = s;
 					CarSections[j].Groups[0].Elements[0].CurrentState = 0;
-					ObjectManager.CreateDynamicObject(ref CarSections[j].Groups[0].Elements[0].internalObject);
+					Program.CurrentHost.CreateDynamicObject(ref CarSections[j].Groups[0].Elements[0].internalObject);
 				}
 				else if (currentObject is AnimatedObjectCollection)
 				{
@@ -413,7 +416,7 @@ namespace OpenBve
 					for (int h = 0; h < a.Objects.Length; h++)
 					{
 						CarSections[j].Groups[0].Elements[h] = a.Objects[h].Clone();
-						ObjectManager.CreateDynamicObject(ref CarSections[j].Groups[0].Elements[h].internalObject);
+						Program.CurrentHost.CreateDynamicObject(ref CarSections[j].Groups[0].Elements[h].internalObject);
 					}
 				}
 			}
@@ -428,7 +431,7 @@ namespace OpenBve
 					{
 						for (int k = 0; k < CarSections[i].Groups[j].Elements.Length; k++)
 						{
-							LibRender.Renderer.HideObject(ref CarSections[i].Groups[j].Elements[k].internalObject);
+							Program.CurrentHost.HideObject(CarSections[i].Groups[j].Elements[k].internalObject);
 						}
 					}
 				}
@@ -498,7 +501,7 @@ namespace OpenBve
 				Vector3 p = new Vector3(0.5 * (FrontAxle.Follower.WorldPosition + RearAxle.Follower.WorldPosition));
 				p -= d * (0.5 * (FrontAxle.Position + RearAxle.Position));
 				// determine visibility
-				Vector3 cd = new Vector3(p - Camera.AbsolutePosition);
+				Vector3 cd = new Vector3(p - Program.Renderer.Camera.AbsolutePosition);
 				double dist = cd.NormSquared();
 				double bid = Interface.CurrentOptions.ViewingDistance + Length;
 				CurrentlyVisible = dist < bid * bid;
@@ -524,7 +527,7 @@ namespace OpenBve
 					//Calculate the cab brightness
 					double ccb = Math.Round(255.0 * (double)(1.0 - b));
 					//DNB then must equal the smaller of the cab brightness value & the dynamic brightness value
-					dnb = (byte)Math.Min(LibRender.Renderer.DynamicCabBrightness, ccb);
+					dnb = (byte)Math.Min(Program.Renderer.Lighting.DynamicCabBrightness, ccb);
 				}
 				// update current section
 				int cs = CurrentCarSection;
@@ -539,9 +542,9 @@ namespace OpenBve
 							// brightness change
 							if (CarSections[cs].Groups[0].Elements[i].internalObject != null)
 							{
-								for (int j = 0; j < CarSections[cs].Groups[0].Elements[i].internalObject.Mesh.Materials.Length; j++)
+								for (int j = 0; j < CarSections[cs].Groups[0].Elements[i].internalObject.Prototype.Mesh.Materials.Length; j++)
 								{
-									CarSections[cs].Groups[0].Elements[i].internalObject.Mesh.Materials[j].DaytimeNighttimeBlend = dnb;
+									CarSections[cs].Groups[0].Elements[i].internalObject.Prototype.Mesh.Materials[j].DaytimeNighttimeBlend = dnb;
 								}
 							}
 						}
@@ -557,9 +560,9 @@ namespace OpenBve
 							// brightness change
 							if (CarSections[cs].Groups[add].Elements[i].internalObject != null)
 							{
-								for (int j = 0; j < CarSections[cs].Groups[add].Elements[i].internalObject.Mesh.Materials.Length; j++)
+								for (int j = 0; j < CarSections[cs].Groups[add].Elements[i].internalObject.Prototype.Mesh.Materials.Length; j++)
 								{
-									CarSections[cs].Groups[add].Elements[i].internalObject.Mesh.Materials[j].DaytimeNighttimeBlend = dnb;
+									CarSections[cs].Groups[add].Elements[i].internalObject.Prototype.Mesh.Materials[j].DaytimeNighttimeBlend = dnb;
 								}
 							}
 						}
@@ -573,6 +576,19 @@ namespace OpenBve
 						}
 					}
 				}
+				//Update camera restriction
+				
+				CameraRestriction.AbsoluteBottomLeft = new Vector3(CameraRestriction.BottomLeft);
+				CameraRestriction.AbsoluteBottomLeft += Driver;
+				CameraRestriction.AbsoluteBottomLeft.Rotate(new Transformation(d, u, s));
+				CameraRestriction.AbsoluteBottomLeft.Translate(p);
+
+				CameraRestriction.AbsoluteTopRight = new Vector3(CameraRestriction.TopRight);
+				CameraRestriction.AbsoluteTopRight += Driver;
+				CameraRestriction.AbsoluteTopRight.Rotate(new Transformation(d, u, s));
+				CameraRestriction.AbsoluteTopRight.Translate(p);
+
+				
 			}
 
 			/// <summary>Updates the given car section element</summary>
@@ -590,7 +606,7 @@ namespace OpenBve
 			private void UpdateCarSectionElement(int SectionIndex, int GroupIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
 			{
 				Vector3 p;
-				if (CarSections[SectionIndex].Groups[GroupIndex].Overlay & Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
+				if (CarSections[SectionIndex].Groups[GroupIndex].Overlay & Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 				{
 					p = new Vector3(Driver.X, Driver.Y, Driver.Z);
 				}
@@ -625,13 +641,17 @@ namespace OpenBve
 				{
 					updatefunctions = true;
 				}
-				CarSections[SectionIndex].Groups[GroupIndex].Elements[ElementIndex].Update(true, baseTrain, Index, CurrentCarSection, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, EnableDamping, false, CarSections[SectionIndex].Groups[GroupIndex].Overlay ? Camera : null);
+				CarSections[SectionIndex].Groups[GroupIndex].Elements[ElementIndex].Update(true, baseTrain, Index, CurrentCarSection, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, EnableDamping, false, CarSections[SectionIndex].Groups[GroupIndex].Overlay ? Program.Renderer.Camera : null);
+				if (CarSections[SectionIndex].Groups[GroupIndex].Elements[ElementIndex].UpdateVAO)
+				{
+					LibRender2.VAOExtensions.CreateVAO(ref CarSections[SectionIndex].Groups[GroupIndex].Elements[ElementIndex].internalObject.Prototype.Mesh, true);
+				}
 			}
 
 			private void UpdateCarSectionTouchElement(int SectionIndex, int GroupIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
 			{
 				Vector3 p;
-				if (CarSections[SectionIndex].Groups[GroupIndex].Overlay & Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
+				if (CarSections[SectionIndex].Groups[GroupIndex].Overlay & Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 				{
 					p = new Vector3(Driver.X, Driver.Y, Driver.Z);
 				}
@@ -666,7 +686,11 @@ namespace OpenBve
 				{
 					updatefunctions = true;
 				}
-				CarSections[SectionIndex].Groups[GroupIndex].TouchElements[ElementIndex].Element.Update(true, baseTrain, Index, CurrentCarSection, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, EnableDamping, true, CarSections[SectionIndex].Groups[GroupIndex].Overlay ? Camera : null);
+				CarSections[SectionIndex].Groups[GroupIndex].TouchElements[ElementIndex].Element.Update(true, baseTrain, Index, CurrentCarSection, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, EnableDamping, true, CarSections[SectionIndex].Groups[GroupIndex].Overlay ? Program.Renderer.Camera : null);
+				if (CarSections[SectionIndex].Groups[GroupIndex].TouchElements[ElementIndex].Element.UpdateVAO)
+				{
+					LibRender2.VAOExtensions.CreateVAO(ref CarSections[SectionIndex].Groups[GroupIndex].TouchElements[ElementIndex].Element.internalObject.Prototype.Mesh, true);
+				}
 			}
 
 			internal void UpdateTopplingCantAndSpring(double TimeElapsed)
@@ -762,7 +786,7 @@ namespace OpenBve
 				}
 				// roll due to cant (incorporates shaking)
 				{
-					double cantAngle = Math.Atan(c / CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge);
+					double cantAngle = Math.Atan(c / Program.CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge);
 					Specs.CurrentRollDueToCantAngle = cantAngle + Specs.CurrentRollDueToShakingAngle;
 				}
 				// pitch due to acceleration
@@ -845,7 +869,7 @@ namespace OpenBve
 					double ab = Specs.CurrentRollDueToTopplingAngle + Specs.CurrentRollDueToCantAngle;
 					double h = Specs.CenterOfGravityHeight;
 					double sr = Math.Abs(CurrentSpeed);
-					double rmax = 2.0 * h * sr * sr / (Atmosphere.AccelerationDueToGravity * CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge);
+					double rmax = 2.0 * h * sr * sr / (Program.CurrentRoute.Atmosphere.AccelerationDueToGravity * Program.CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge);
 					double ta;
 					Topples = false;
 					if (Derailed)
@@ -859,7 +883,7 @@ namespace OpenBve
 						{
 							if (r < rmax)
 							{
-								double s0 = Math.Sqrt(r * Atmosphere.AccelerationDueToGravity * CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge / (2.0 * h));
+								double s0 = Math.Sqrt(r * Program.CurrentRoute.Atmosphere.AccelerationDueToGravity * Program.CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge / (2.0 * h));
 								const double fac = 0.25; // arbitrary coefficient
 								ta = -fac * (sr - s0) * rs;
 								baseTrain.Topple(Index, TimeElapsed);
@@ -905,8 +929,8 @@ namespace OpenBve
 				// apply position due to cant/toppling
 				{
 					double a = Specs.CurrentRollDueToTopplingAngle + Specs.CurrentRollDueToCantAngle;
-					double x = Math.Sign(a) * 0.5 * CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * (1.0 - Math.Cos(a));
-					double y = Math.Abs(0.5 * CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * Math.Sin(a));
+					double x = Math.Sign(a) * 0.5 * Program.CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * (1.0 - Math.Cos(a));
+					double y = Math.Abs(0.5 * Program.CurrentRoute.Tracks[FrontAxle.Follower.TrackIndex].RailGauge * Math.Sin(a));
 					Vector3 cc = new Vector3(s.X * x + Up.X * y, s.Y * x + Up.Y * y, s.Z * x + Up.Z * y);
 					FrontAxle.Follower.WorldPosition += cc;
 					RearAxle.Follower.WorldPosition += cc;
@@ -1044,40 +1068,23 @@ namespace OpenBve
 			/// <summary>Updates the position of the camera relative to this car</summary>
 			internal void UpdateCamera()
 			{
-				double dx = FrontAxle.Follower.WorldPosition.X - RearAxle.Follower.WorldPosition.X;
-				double dy = FrontAxle.Follower.WorldPosition.Y - RearAxle.Follower.WorldPosition.Y;
-				double dz = FrontAxle.Follower.WorldPosition.Z - RearAxle.Follower.WorldPosition.Z;
-				double t = 1.0 / Math.Sqrt(dx * dx + dy * dy + dz * dz);
-				dx *= t; dy *= t; dz *= t;
-				double ux = Up.X;
-				double uy = Up.Y;
-				double uz = Up.Z;
-				double sx = dz * uy - dy * uz;
-				double sy = dx * uz - dz * ux;
-				double sz = dy * ux - dx * uy;
+				Vector3 direction = new Vector3(FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition);
+				direction *= 1.0 / direction.Norm();
+				double sx = direction.Z * Up.Y - direction.Y * Up.Z;
+				double sy = direction.X * Up.Z - direction.Z * Up.X;
+				double sz = direction.Y * Up.X - direction.X * Up.Y;
 				double rx = 0.5 * (FrontAxle.Follower.WorldPosition.X + RearAxle.Follower.WorldPosition.X);
 				double ry = 0.5 * (FrontAxle.Follower.WorldPosition.Y + RearAxle.Follower.WorldPosition.Y);
 				double rz = 0.5 * (FrontAxle.Follower.WorldPosition.Z + RearAxle.Follower.WorldPosition.Z);
-				double cx, cy, cz;
-				if (this.HasInteriorView)
-				{
-					cx = rx + sx * Driver.X + ux * Driver.Y + dx * Driver.Z;
-					cy = ry + sy * Driver.X + uy * Driver.Y + dy * Driver.Z;
-					cz = rz + sz * Driver.X + uz * Driver.Y + dz * Driver.Z;
-				}
-				else
-				{
-					/*
-					 * If we do not have an interior view, base the camera update on the driver car
-					 */
-					Vector3 d = this.baseTrain.Cars[this.baseTrain.DriverCar].Driver;
-					cx = rx + sx * d.X + ux * d.Y + dx * d.Z;
-					cy = ry + sy * d.X + uy * d.Y + dy * d.Z;
-					cz = rz + sz * d.X + uz * d.Y + dz * d.Z;
-				}
-				World.CameraTrackFollower.WorldPosition = new Vector3(cx, cy, cz);
-				World.CameraTrackFollower.WorldDirection = new Vector3(dx, dy, dz);
-				World.CameraTrackFollower.WorldUp = new Vector3(ux, uy, uz);
+				Vector3 cameraPosition;
+				Vector3 driverPosition = this.HasInteriorView ? Driver : this.baseTrain.Cars[this.baseTrain.DriverCar].Driver;
+				cameraPosition.X = rx + sx * driverPosition.X + Up.X * driverPosition.Y + direction.X * driverPosition.Z;
+				cameraPosition.Y = ry + sy * driverPosition.X + Up.Y * driverPosition.Y + direction.Y * driverPosition.Z;
+				cameraPosition.Z = rz + sz * driverPosition.X + Up.Z * driverPosition.Y + direction.Z * driverPosition.Z;
+
+				World.CameraTrackFollower.WorldPosition = cameraPosition;
+				World.CameraTrackFollower.WorldDirection = direction;
+				World.CameraTrackFollower.WorldUp = new Vector3(Up);
 				World.CameraTrackFollower.WorldSide = new Vector3(sx, sy, sz);
 				double f = (Driver.Z - RearAxle.Position) / (FrontAxle.Position - RearAxle.Position);
 				double tp = (1.0 - f) * RearAxle.Follower.TrackPosition + f * FrontAxle.Follower.TrackPosition;

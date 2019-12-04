@@ -5,12 +5,13 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using LibRender;
+using OpenBve.Graphics;
 using OpenTK;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
-using static LibRender.CameraProperties;
+using OpenBveApi.Routes;
+using RouteManager2;
 
 namespace OpenBve {
 	/// <summary>Provides methods for starting the program, including the Main procedure.</summary>
@@ -54,7 +55,11 @@ namespace OpenBve {
 
 		internal static JoystickManager Joysticks;
 
+		internal static NewRenderer Renderer;
+
 		internal static Sounds Sounds;
+
+		internal static CurrentRoute CurrentRoute;
 
 		// --- functions ---
 		
@@ -94,7 +99,9 @@ namespace OpenBve {
 				return;
 			}
 
+			Renderer = new NewRenderer();
 			Sounds = new Sounds();
+			CurrentRoute = new CurrentRoute(Renderer);
 
 			//Platform specific startup checks
 			if (CurrentlyRunningOnMono && !CurrentlyRunningOnWindows)
@@ -316,13 +323,13 @@ namespace OpenBve {
 			
 			Joysticks.RefreshJoysticks();
 			// begin HACK //
-			Camera.VerticalViewingAngle = 45.0.ToRadians();
-			Camera.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * Camera.VerticalViewingAngle) * LibRender.Screen.AspectRatio);
-			Camera.OriginalVerticalViewingAngle = Camera.VerticalViewingAngle;
-			Camera.ExtraViewingDistance = 50.0;
-			Camera.ForwardViewingDistance = (double)Interface.CurrentOptions.ViewingDistance;
-			Camera.BackwardViewingDistance = 0.0;
-			Backgrounds.BackgroundImageDistance = (double)Interface.CurrentOptions.ViewingDistance;
+			Renderer.Camera.VerticalViewingAngle = 45.0.ToRadians();
+			Renderer.Camera.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * Renderer.Camera.VerticalViewingAngle) * Renderer.Screen.AspectRatio);
+			Renderer.Camera.OriginalVerticalViewingAngle = Renderer.Camera.VerticalViewingAngle;
+			Renderer.Camera.ExtraViewingDistance = 50.0;
+			Renderer.Camera.ForwardViewingDistance = (double)Interface.CurrentOptions.ViewingDistance;
+			Renderer.Camera.BackwardViewingDistance = 0.0;
+			Program.CurrentRoute.CurrentBackground.BackgroundImageDistance = (double)Interface.CurrentOptions.ViewingDistance;
 			// end HACK //
 			FileSystem.ClearLogFile();
 			return true;

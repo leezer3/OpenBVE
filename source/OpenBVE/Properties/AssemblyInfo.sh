@@ -2,7 +2,7 @@
 #Set base development branch revision numbers
 #This needs to be bumped once we have a stable release branch
 MajorVersion=1
-MinorVersion=5
+MinorVersion=7
 
 # cd to correct directory
 cd -P -- "$(dirname -- "$0")"
@@ -15,11 +15,11 @@ else
 	# determine revision and build numbers
 	if [[ "$OSTYPE" == "darwin"* ]]; then
 		#OSX
-		Revision=$(((($(date +%s) - $(date -jf "%Y-%m-%d" "2016-03-08" $B +%s))/86400 )+40 ))
+		Revision=$(((($(date +%s) - $(date -jf "%Y-%m-%d" "2019-10-29" $B +%s))/86400 )+40 ))
 		Minutes=$(( $(date "+10#%H * 60 + 10#%M") ))
 	else
 		#Linux & Cygwin
-		Revision=$(( ( ($(date "+%s") - $(date --date="2016-03-08" +%s))/(60*60*24) )+40 ))
+		Revision=$(( ( ($(date "+%s") - $(date --date="2019-10-29" +%s))/(60*60*24) )+40 ))
 		Minutes=$(( ( $(date "+%s") - $(date -d "today 0" +%s))/60 ))
 	fi
 
@@ -35,6 +35,7 @@ cat > AssemblyInfo.cs << EOF
  
 using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("openBVE")]
@@ -45,6 +46,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyInformationalVersion("$InfoVersion")]
 [assembly: AssemblyFileVersion("$Version")]
 [assembly: CLSCompliant(false)]
+[assembly: InternalsVisibleTo("RouteManager2")]
 
 namespace OpenBve {
 	internal static partial class Program {

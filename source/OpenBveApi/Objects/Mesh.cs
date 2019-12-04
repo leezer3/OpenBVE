@@ -15,6 +15,10 @@ namespace OpenBveApi.Objects
 		/// <summary>The bounding box for the mesh</summary>
 		/// <remarks>Not currently implemented</remarks>
 		public Vector3[] BoundingBox;
+		/// <summary>The OpenGL/OpenTK VAO for the mesh</summary>
+		public object VAO;
+		/// <summary>The OpenGL/OpenTK VAO for the normals</summary>
+		public object NormalsVAO;
 
 		/// <summary>Creates a mesh consisting of one face, which is represented by individual vertices, and a color.</summary>
 		/// <param name="Vertices">The vertices that make up one face.</param>
@@ -33,6 +37,8 @@ namespace OpenBveApi.Objects
 			}
 
 			this.BoundingBox = new Vector3[2];
+			VAO = null;
+			NormalsVAO = null;
 		}
 
 		/// <summary>Creates a mesh consisting of the specified vertices, faces and color.</summary>
@@ -51,6 +57,8 @@ namespace OpenBveApi.Objects
 			}
 
 			this.BoundingBox = new Vector3[2];
+			VAO = null;
+			NormalsVAO = null;
 		}
 
 		/// <summary>Creates the normals for all faces within this mesh</summary>
@@ -106,5 +114,7 @@ namespace OpenBveApi.Objects
 				}
 			}
 		}
+
+		
 	}
 }

@@ -236,7 +236,7 @@ namespace OpenBve
 										Controls[Length].Method = ControlMethod.Keyboard;
 										Controls[Length].Device = -1;
 										Controls[Length].Component = JoystickComponent.Invalid;
-										Controls[Length].Key = CurrentKey;
+										Controls[Length].Key = (OpenBveApi.Input.Key)CurrentKey;
 										Controls[Length].Direction = 0;
 										Controls[Length].Modifier = (KeyboardModifier) Modifiers;
 										int Option;

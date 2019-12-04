@@ -452,6 +452,7 @@ namespace TrainEditor2.Views
 			app.ChangeVisibleLogMessages.BindToButton(MessageType.Error, toolStripMenuItemError).AddTo(disposable);
 			app.ChangeVisibleLogMessages.BindToButton(MessageType.Critical, toolStripMenuItemError).AddTo(disposable);
 			app.ClearLogMessages.BindToButton(toolStripMenuItemClear).AddTo(disposable);
+			app.OutputLogs.BindToButton(buttonOutputLogs).AddTo(disposable);
 		}
 
 		private void FormEditor_Load(object sender, EventArgs e)
@@ -609,6 +610,9 @@ namespace TrainEditor2.Views
 					{
 						app.SaveAsFile.Execute();
 					}
+
+					glControlMotor.MakeCurrent();
+					Program.Renderer.Finalization();
 					break;
 			}
 
@@ -949,6 +953,12 @@ namespace TrainEditor2.Views
 		private void buttonCouplerObject_Click(object sender, EventArgs e)
 		{
 			OpenFileDialog(textBoxCouplerObject);
+		}
+
+		private void glControlMotor_Load(object sender, EventArgs e)
+		{
+			glControlMotor.MakeCurrent();
+			Program.Renderer.Initialize(Program.CurrentHost, Interface.CurrentOptions);
 		}
 	}
 }

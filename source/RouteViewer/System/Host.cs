@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using LibRender;
-using OpenBve.RouteManager;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -10,6 +8,7 @@ using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
+using RouteManager2.MessageManager;
 
 namespace OpenBve
 {
@@ -146,7 +145,7 @@ namespace OpenBve
 
 		public override bool LoadTexture(Texture Texture, OpenGlTextureWrapMode wrapMode)
 		{
-			return TextureManager.LoadTexture(Texture, wrapMode, CPreciseTimer.GetClockTicks(), Interface.CurrentOptions.Interpolation, Interface.CurrentOptions.AnisotropicFilteringLevel);
+			return Program.Renderer.TextureManager.LoadTexture(Texture, wrapMode, CPreciseTimer.GetClockTicks(), Interface.CurrentOptions.Interpolation, Interface.CurrentOptions.AnisotropicFilteringLevel);
 		}
 		
 		/// <summary>Registers a texture and returns a handle to the texture.</summary>
@@ -157,7 +156,7 @@ namespace OpenBve
 		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle) {
 			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
 				Texture data;
-				if (TextureManager.RegisterTexture(path, parameters, out data)) {
+				if (Program.Renderer.TextureManager.RegisterTexture(path, parameters, out data)) {
 					handle = data;
 					return true;
 				}
@@ -175,7 +174,7 @@ namespace OpenBve
 		/// <returns>Whether loading the texture was successful.</returns>
 		public override bool RegisterTexture(Texture texture, TextureParameters parameters, out Texture handle) {
 			texture = texture.ApplyParameters(parameters);
-			handle = TextureManager.RegisterTexture(texture);
+			handle = Program.Renderer.TextureManager.RegisterTexture(texture);
 			return true;
 		}
 
@@ -314,22 +313,27 @@ namespace OpenBve
 
 		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
 		{
-			return ObjectManager.CreateStaticObject(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+			return Program.Renderer.CreateStaticObject(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 		}
 
-		public override void CreateDynamicObject(ref StaticObject internalObject)
+		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation AuxTransformation, Matrix4D Rotate, Matrix4D Translate, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
 		{
-			ObjectManager.CreateDynamicObject(ref internalObject);
+			return Program.Renderer.CreateStaticObject(Prototype, Position, AuxTransformation, Rotate, Translate, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 		}
 
-		public override void ShowObject(StaticObject objectToShow, ObjectType objectType)
+		public override void CreateDynamicObject(ref ObjectState internalObject)
 		{
-			LibRender.Renderer.ShowObject(objectToShow, objectType);
+			Program.Renderer.CreateDynamicObject(ref internalObject);
 		}
 
-		public override void HideObject(ref StaticObject objectToHide)
+		public override void ShowObject(ObjectState objectToShow, ObjectType objectType)
 		{
-			LibRender.Renderer.HideObject(ref objectToHide);
+			Program.Renderer.VisibleObjects.ShowObject(objectToShow, objectType);
+		}
+
+		public override void HideObject(ObjectState objectToHide)
+		{
+			Program.Renderer.VisibleObjects.HideObject(objectToHide);
 		}
 
 		public override int AnimatedWorldObjectsUsed
@@ -370,11 +374,11 @@ namespace OpenBve
 		{
 			get
 			{
-				return CurrentRoute.Tracks;
+				return Program.CurrentRoute.Tracks;
 			}
 			set
 			{
-				CurrentRoute.Tracks = value;
+				Program.CurrentRoute.Tracks = value;
 			}
 		}
 

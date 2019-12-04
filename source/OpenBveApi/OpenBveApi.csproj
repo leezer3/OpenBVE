@@ -60,9 +60,6 @@
       <HintPath>..\..\packages\CS-Script.lib.3.29.0\lib\CSScriptLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="OpenTK, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\OpenTK.3.1.0\lib\net20\OpenTK.dll</HintPath>
-    </Reference>
     <Reference Include="SharpCompress, Version=0.24.0.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SharpCompress.0.24.0\lib\net45\SharpCompress.dll</HintPath>
     </Reference>
@@ -84,13 +81,16 @@
     <Compile Include="Graphics\Colors.cs">
     </Compile>
     <Compile Include="Interface\Input\InputDevice.cs" />
+    <Compile Include="Interface\Key.cs" />
     <Compile Include="Interface\Logging\LogMessage.cs" />
     <Compile Include="Interface\Logging\LogMessage.MessageType.cs" />
     <Compile Include="Interface\Time.cs" />
     <Compile Include="Interface\Translations\Language.cs" />
     <Compile Include="Math\Matrix4.cs" />
     <Compile Include="Math\Quaternion.cs" />
-    <Compile Include="Math\Vector4.cs" />
+    <Compile Include="Math\Vectors\Vector2f.cs" />
+    <Compile Include="Math\Vectors\Vector3f.cs" />
+    <Compile Include="Math\Vectors\Vector4.cs" />
     <Compile Include="Objects\Glow.cs" />
     <Compile Include="Objects\Helpers\Material.cs" />
     <Compile Include="Objects\Helpers\MeshBuilder.cs" />
@@ -100,6 +100,7 @@
     <Compile Include="Objects\MeshMaterial.BlendMode.cs" />
     <Compile Include="Objects\MeshMaterial.cs" />
     <Compile Include="Objects\ObjectInterface.cs" />
+    <Compile Include="Objects\ObjectState.cs" />
     <Compile Include="Objects\ObjectTypes\AnimatedObject.AnimatedObjectState.cs" />
     <Compile Include="Objects\ObjectTypes\AnimatedObject.cs" />
     <Compile Include="Objects\ObjectTypes\AnimatedObjectCollection.cs" />
@@ -114,8 +115,11 @@
     <Compile Include="Objects\Parsers\XParsers.cs" />
     <Compile Include="Routes\Background.Handle.cs" />
     <Compile Include="Routes\Background.TransitionModes.cs" />
+    <Compile Include="Routes\BackgroundObject.cs" />
+    <Compile Include="Routes\DynamicBackground.cs" />
     <Compile Include="Routes\Events.cs" />
     <Compile Include="Routes\Events.TriggerTypes.cs" />
+    <Compile Include="Routes\StaticBackground.cs" />
     <Compile Include="Routes\Track.cs" />
     <Compile Include="Routes\Track.TrackElement.cs" />
     <Compile Include="Routes\Track.TrackFollower.cs" />
@@ -178,8 +182,8 @@
     <Compile Include="Textures\Textures.TextureParameters.cs" />
     <Compile Include="Textures\Textures.TransparencyType.cs" />
     <Compile Include="World\Transformations.cs" />
-    <Compile Include="Math\Vector2.cs" />
-    <Compile Include="Math\Vector3.cs" />
+    <Compile Include="Math\Vectors\Vector2.cs" />
+    <Compile Include="Math\Vectors\Vector3.cs" />
     <Compile Include="World\Vertex.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -191,6 +195,7 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">
 		  echo Resoloving dependencies

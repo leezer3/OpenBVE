@@ -2,6 +2,7 @@
 
 namespace OpenBveApi
 {
+	/// <summary>Contains helper functions for working with TextEncodings</summary>
 	public static class TextEncoding
 	{
 		/// <summary>Represents a text encoding</summary>

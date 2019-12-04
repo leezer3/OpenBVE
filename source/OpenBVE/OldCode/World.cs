@@ -2,15 +2,14 @@
 #pragma warning disable 0661 // Defines == or != but does not override Object.GetHashCode
 
 using System;
-using LibRender;
+using LibRender2.Cameras;
+using LibRender2.Viewports;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
-using Vector2 = OpenBveApi.Math.Vector2;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
-using static LibRender.CameraProperties;
 
 namespace OpenBve {
 	internal static class World {
@@ -32,14 +31,14 @@ namespace OpenBve {
 		internal static void UpdateMouseGrab(double TimeElapsed) {
 			if (MouseGrabEnabled) {
 				double factor;
-				if (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead) {
+				if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) {
 					factor = 1.0;
 				} else {
 					factor = 3.0;
 				}
 
-				Camera.AlignmentDirection.Yaw += factor * MouseGrabTarget.X;
-				Camera.AlignmentDirection.Pitch -= factor * MouseGrabTarget.Y;
+				Program.Renderer.Camera.AlignmentDirection.Yaw += factor * MouseGrabTarget.X;
+				Program.Renderer.Camera.AlignmentDirection.Pitch -= factor * MouseGrabTarget.Y;
 				MouseGrabTarget = Vector2.Null;
 			}
 		}
@@ -66,33 +65,33 @@ namespace OpenBve {
 
 		// camera restriction
 		internal static void InitializeCameraRestriction() {
-			if ((Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead) & Camera.CurrentRestriction == CameraRestrictionMode.On) {
-				Camera.AlignmentSpeed = new CameraAlignment();
+			if ((Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) & Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.On) {
+				Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 				UpdateAbsoluteCamera(0.0);
-				if (!Camera.PerformRestrictionTest()) {
-					Camera.Alignment = new CameraAlignment();
-					Camera.VerticalViewingAngle = Camera.OriginalVerticalViewingAngle;
-					Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
+				if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction)) {
+					Program.Renderer.Camera.Alignment = new CameraAlignment();
+					Program.Renderer.Camera.VerticalViewingAngle = Program.Renderer.Camera.OriginalVerticalViewingAngle;
+					Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 					UpdateAbsoluteCamera(0.0);
 					UpdateViewingDistances();
-					if (!Camera.PerformRestrictionTest()) {
-						Camera.Alignment.Position.Z = 0.8;
+					if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction)) {
+						Program.Renderer.Camera.Alignment.Position.Z = 0.8;
 						UpdateAbsoluteCamera(0.0);
-						PerformProgressiveAdjustmentForCameraRestriction(ref Camera.Alignment.Position.Z, 0.0, true);
-						if (!Camera.PerformRestrictionTest()) {
-							Camera.Alignment.Position.X = 0.5 * (Camera.RestrictionBottomLeft.X + Camera.RestrictionTopRight.X);
-							Camera.Alignment.Position.Y = 0.5 * (Camera.RestrictionBottomLeft.Y + Camera.RestrictionTopRight.Y);
-							Camera.Alignment.Position.Z = 0.0;
+						PerformProgressiveAdjustmentForCameraRestriction(ref Program.Renderer.Camera.Alignment.Position.Z, 0.0, true);
+						if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction)) {
+							Program.Renderer.Camera.Alignment.Position.X = 0.5 * (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction.BottomLeft.X + TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction.TopRight.X);
+							Program.Renderer.Camera.Alignment.Position.Y = 0.5 * (TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction.BottomLeft.Y + TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction.TopRight.Y);
+							Program.Renderer.Camera.Alignment.Position.Z = 0.0;
 							UpdateAbsoluteCamera(0.0);
-							if (Camera.PerformRestrictionTest()) {
-								PerformProgressiveAdjustmentForCameraRestriction(ref Camera.Alignment.Position.X, 0.0, true);
-								PerformProgressiveAdjustmentForCameraRestriction(ref Camera.Alignment.Position.Y, 0.0, true);
+							if (Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction)) {
+								PerformProgressiveAdjustmentForCameraRestriction(ref Program.Renderer.Camera.Alignment.Position.X, 0.0, true);
+								PerformProgressiveAdjustmentForCameraRestriction(ref Program.Renderer.Camera.Alignment.Position.Y, 0.0, true);
 							} else {
-								Camera.Alignment.Position.Z = 0.8;
+								Program.Renderer.Camera.Alignment.Position.Z = 0.8;
 								UpdateAbsoluteCamera(0.0);
-								PerformProgressiveAdjustmentForCameraRestriction(ref Camera.Alignment.Position.Z, 0.0, true);
-								if (!Camera.PerformRestrictionTest()) {
-									Camera.Alignment = new CameraAlignment();
+								PerformProgressiveAdjustmentForCameraRestriction(ref Program.Renderer.Camera.Alignment.Position.Z, 0.0, true);
+								if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction)) {
+									Program.Renderer.Camera.Alignment = new CameraAlignment();
 								}
 							}
 						}
@@ -102,7 +101,7 @@ namespace OpenBve {
 			}
 		}
 		internal static bool PerformProgressiveAdjustmentForCameraRestriction(ref double Source, double Target, bool Zoom) {
-			if ((Camera.CurrentMode != CameraViewMode.Interior & Camera.CurrentMode != CameraViewMode.InteriorLookAhead) | Camera.CurrentRestriction != CameraRestrictionMode.On) {
+			if ((Program.Renderer.Camera.CurrentMode != CameraViewMode.Interior & Program.Renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead) | (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.On && Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.Restricted3D)) {
 				Source = Target;
 				return true;
 			}
@@ -112,7 +111,7 @@ namespace OpenBve {
 			double b = Target;
 			Source = Target;
 			if (Zoom) ApplyZoom();
-			if (Camera.PerformRestrictionTest()) {
+			if (Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction)) {
 				return true;
 			}
 			double x = 0.5 * (a + b);
@@ -121,7 +120,7 @@ namespace OpenBve {
 				//Do not remove, this is updated via the ref & causes the panel zoom to bug out
 				Source = x;
 				if (Zoom) ApplyZoom();
-				q = Camera.PerformRestrictionTest();
+				q = Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction);
 				if (q) {
 					a = x;
 					best = x;
@@ -153,19 +152,19 @@ namespace OpenBve {
 		// update absolute camera
 		internal static void UpdateAbsoluteCamera(double TimeElapsed) {
 			// zoom
-			double zm = Camera.Alignment.Zoom;
-			AdjustAlignment(ref Camera.Alignment.Zoom, Camera.AlignmentDirection.Zoom, ref Camera.AlignmentSpeed.Zoom, TimeElapsed, true);
-			if (zm != Camera.Alignment.Zoom) {
+			double zm = Program.Renderer.Camera.Alignment.Zoom;
+			AdjustAlignment(ref Program.Renderer.Camera.Alignment.Zoom, Program.Renderer.Camera.AlignmentDirection.Zoom, ref Program.Renderer.Camera.AlignmentSpeed.Zoom, TimeElapsed, true);
+			if (zm != Program.Renderer.Camera.Alignment.Zoom) {
 				ApplyZoom();
 			}
-			if (Camera.CurrentMode == CameraViewMode.FlyBy | Camera.CurrentMode == CameraViewMode.FlyByZooming) {
+			if (Program.Renderer.Camera.CurrentMode == CameraViewMode.FlyBy | Program.Renderer.Camera.CurrentMode == CameraViewMode.FlyByZooming) {
 				// fly-by
-				AdjustAlignment(ref Camera.Alignment.Position.X, Camera.AlignmentDirection.Position.X, ref Camera.AlignmentSpeed.Position.X, TimeElapsed);
-				AdjustAlignment(ref Camera.Alignment.Position.Y, Camera.AlignmentDirection.Position.Y, ref Camera.AlignmentSpeed.Position.Y, TimeElapsed);
-				double tr = Camera.Alignment.TrackPosition;
-				AdjustAlignment(ref Camera.Alignment.TrackPosition, Camera.AlignmentDirection.TrackPosition, ref Camera.AlignmentSpeed.TrackPosition, TimeElapsed);
-				if (tr != Camera.Alignment.TrackPosition) {
-					World.CameraTrackFollower.UpdateAbsolute(Camera.Alignment.TrackPosition, true, false);
+				AdjustAlignment(ref Program.Renderer.Camera.Alignment.Position.X, Program.Renderer.Camera.AlignmentDirection.Position.X, ref Program.Renderer.Camera.AlignmentSpeed.Position.X, TimeElapsed);
+				AdjustAlignment(ref Program.Renderer.Camera.Alignment.Position.Y, Program.Renderer.Camera.AlignmentDirection.Position.Y, ref Program.Renderer.Camera.AlignmentSpeed.Position.Y, TimeElapsed);
+				double tr = Program.Renderer.Camera.Alignment.TrackPosition;
+				AdjustAlignment(ref Program.Renderer.Camera.Alignment.TrackPosition, Program.Renderer.Camera.AlignmentDirection.TrackPosition, ref Program.Renderer.Camera.AlignmentSpeed.TrackPosition, TimeElapsed);
+				if (tr != Program.Renderer.Camera.Alignment.TrackPosition) {
+					World.CameraTrackFollower.UpdateAbsolute(Program.Renderer.Camera.Alignment.TrackPosition, true, false);
 					UpdateViewingDistances();
 				}
 				// position to focus on
@@ -227,18 +226,18 @@ namespace OpenBve {
 				}
 				// camera
 				{
-					Camera.AbsoluteDirection = new Vector3(CameraTrackFollower.WorldDirection);
-					Camera.AbsolutePosition = CameraTrackFollower.WorldPosition + CameraTrackFollower.WorldSide * Camera.Alignment.Position.X + CameraTrackFollower.WorldUp * Camera.Alignment.Position.Y + Camera.AbsoluteDirection * Camera.Alignment.Position.Z;
-					Camera.AbsoluteDirection = focusPosition - Camera.AbsolutePosition;
-					double t = Camera.AbsoluteDirection.Norm();
+					Program.Renderer.Camera.AbsoluteDirection = new Vector3(CameraTrackFollower.WorldDirection);
+					Program.Renderer.Camera.AbsolutePosition = CameraTrackFollower.WorldPosition + CameraTrackFollower.WorldSide * Program.Renderer.Camera.Alignment.Position.X + CameraTrackFollower.WorldUp * Program.Renderer.Camera.Alignment.Position.Y + Program.Renderer.Camera.AbsoluteDirection * Program.Renderer.Camera.Alignment.Position.Z;
+					Program.Renderer.Camera.AbsoluteDirection = focusPosition - Program.Renderer.Camera.AbsolutePosition;
+					double t = Program.Renderer.Camera.AbsoluteDirection.Norm();
 					double ti = 1.0 / t;
-					Camera.AbsoluteDirection *= ti;
+					Program.Renderer.Camera.AbsoluteDirection *= ti;
 
-					Camera.AbsoluteSide = new Vector3(Camera.AbsoluteDirection.Z, 0.0, -Camera.AbsoluteDirection.X);
-					Camera.AbsoluteSide.Normalize();
-					Camera.AbsoluteUp = Vector3.Cross(Camera.AbsoluteDirection, Camera.AbsoluteSide);
+					Program.Renderer.Camera.AbsoluteSide = new Vector3(Program.Renderer.Camera.AbsoluteDirection.Z, 0.0, -Program.Renderer.Camera.AbsoluteDirection.X);
+					Program.Renderer.Camera.AbsoluteSide.Normalize();
+					Program.Renderer.Camera.AbsoluteUp = Vector3.Cross(Program.Renderer.Camera.AbsoluteDirection, Program.Renderer.Camera.AbsoluteSide);
 					UpdateViewingDistances();
-					if (Camera.CurrentMode == CameraViewMode.FlyByZooming) {
+					if (Program.Renderer.Camera.CurrentMode == CameraViewMode.FlyByZooming) {
 						// zoom
 						const double fadeOutDistance = 600.0; /* the distance with the highest zoom factor is half the fade-out distance */
 						const double maxZoomFactor = 7.0; /* the zoom factor at half the fade-out distance */
@@ -251,30 +250,30 @@ namespace OpenBve {
 						} else {
 							zoom = 1.0;
 						}
-						Camera.VerticalViewingAngle = Camera.OriginalVerticalViewingAngle / zoom;
-						Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
+						Program.Renderer.Camera.VerticalViewingAngle = Program.Renderer.Camera.OriginalVerticalViewingAngle / zoom;
+						Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 					}
 				}
 			} else {
 				// non-fly-by
 				{
 					// current alignment
-					AdjustAlignment(ref Camera.Alignment.Position.X, Camera.AlignmentDirection.Position.X, ref Camera.AlignmentSpeed.Position.X, TimeElapsed);
-					AdjustAlignment(ref Camera.Alignment.Position.Y, Camera.AlignmentDirection.Position.Y, ref Camera.AlignmentSpeed.Position.Y, TimeElapsed);
-					AdjustAlignment(ref Camera.Alignment.Position.Z, Camera.AlignmentDirection.Position.Z, ref Camera.AlignmentSpeed.Position.Z, TimeElapsed);
-					if ((Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead) & Camera.CurrentRestriction == CameraRestrictionMode.On) {
-						if (Camera.Alignment.Position.Z > 0.75) {
-							Camera.Alignment.Position.Z = 0.75;
+					AdjustAlignment(ref Program.Renderer.Camera.Alignment.Position.X, Program.Renderer.Camera.AlignmentDirection.Position.X, ref Program.Renderer.Camera.AlignmentSpeed.Position.X, TimeElapsed);
+					AdjustAlignment(ref Program.Renderer.Camera.Alignment.Position.Y, Program.Renderer.Camera.AlignmentDirection.Position.Y, ref Program.Renderer.Camera.AlignmentSpeed.Position.Y, TimeElapsed);
+					AdjustAlignment(ref Program.Renderer.Camera.Alignment.Position.Z, Program.Renderer.Camera.AlignmentDirection.Position.Z, ref Program.Renderer.Camera.AlignmentSpeed.Position.Z, TimeElapsed);
+					if ((Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) & Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.On) {
+						if (Program.Renderer.Camera.Alignment.Position.Z > 0.75) {
+							Program.Renderer.Camera.Alignment.Position.Z = 0.75;
 						}
 					}
-					bool q = Camera.AlignmentSpeed.Yaw != 0.0 | Camera.AlignmentSpeed.Pitch != 0.0 | Camera.AlignmentSpeed.Roll != 0.0;
-					AdjustAlignment(ref Camera.Alignment.Yaw, Camera.AlignmentDirection.Yaw, ref Camera.AlignmentSpeed.Yaw, TimeElapsed);
-					AdjustAlignment(ref Camera.Alignment.Pitch, Camera.AlignmentDirection.Pitch, ref Camera.AlignmentSpeed.Pitch, TimeElapsed);
-					AdjustAlignment(ref Camera.Alignment.Roll, Camera.AlignmentDirection.Roll, ref Camera.AlignmentSpeed.Roll, TimeElapsed);
-					double tr = Camera.Alignment.TrackPosition;
-					AdjustAlignment(ref Camera.Alignment.TrackPosition, Camera.AlignmentDirection.TrackPosition, ref Camera.AlignmentSpeed.TrackPosition, TimeElapsed);
-					if (tr != Camera.Alignment.TrackPosition) {
-						World.CameraTrackFollower.UpdateAbsolute(Camera.Alignment.TrackPosition, true, false);
+					bool q = Program.Renderer.Camera.AlignmentSpeed.Yaw != 0.0 | Program.Renderer.Camera.AlignmentSpeed.Pitch != 0.0 | Program.Renderer.Camera.AlignmentSpeed.Roll != 0.0;
+					AdjustAlignment(ref Program.Renderer.Camera.Alignment.Yaw, Program.Renderer.Camera.AlignmentDirection.Yaw, ref Program.Renderer.Camera.AlignmentSpeed.Yaw, TimeElapsed);
+					AdjustAlignment(ref Program.Renderer.Camera.Alignment.Pitch, Program.Renderer.Camera.AlignmentDirection.Pitch, ref Program.Renderer.Camera.AlignmentSpeed.Pitch, TimeElapsed);
+					AdjustAlignment(ref Program.Renderer.Camera.Alignment.Roll, Program.Renderer.Camera.AlignmentDirection.Roll, ref Program.Renderer.Camera.AlignmentSpeed.Roll, TimeElapsed);
+					double tr = Program.Renderer.Camera.Alignment.TrackPosition;
+					AdjustAlignment(ref Program.Renderer.Camera.Alignment.TrackPosition, Program.Renderer.Camera.AlignmentDirection.TrackPosition, ref Program.Renderer.Camera.AlignmentSpeed.TrackPosition, TimeElapsed);
+					if (tr != Program.Renderer.Camera.Alignment.TrackPosition) {
+						World.CameraTrackFollower.UpdateAbsolute(Program.Renderer.Camera.Alignment.TrackPosition, true, false);
 						q = true;
 					}
 					if (q) {
@@ -288,7 +287,7 @@ namespace OpenBve {
 				Vector3 sF = new Vector3(CameraTrackFollower.WorldSide);
 				double lookaheadYaw;
 				double lookaheadPitch;
-				if (Camera.CurrentMode == CameraViewMode.InteriorLookAhead) {
+				if (Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) {
 					// look-ahead
 					double d = 20.0;
 					if (TrainManager.PlayerTrain.CurrentSpeed > 0.0) {
@@ -327,7 +326,7 @@ namespace OpenBve {
 					// cab pitch and yaw
 					Vector3 d2 = new Vector3(dF);
 					Vector3 u2 = new Vector3(uF);
-					if ((Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead) & TrainManager.PlayerTrain != null) {
+					if ((Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) & TrainManager.PlayerTrain != null) {
 						int c = TrainManager.PlayerTrain.DriverCar;
 						if (c >= 0) {
 							if (TrainManager.PlayerTrain.Cars[c].CarSections.Length == 0 || !TrainManager.PlayerTrain.Cars[c].CarSections[0].Groups[0].Overlay) {
@@ -340,27 +339,27 @@ namespace OpenBve {
 						}
 					}
 
-					cF += sF * Camera.Alignment.Position.X + u2 * Camera.Alignment.Position + d2 * Camera.Alignment.Position.Z;
+					cF += sF * Program.Renderer.Camera.Alignment.Position.X + u2 * Program.Renderer.Camera.Alignment.Position + d2 * Program.Renderer.Camera.Alignment.Position.Z;
 
 				}
 				// yaw, pitch, roll
-				double headYaw = Camera.Alignment.Yaw + lookaheadYaw;
-				if ((Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead) & TrainManager.PlayerTrain != null) {
+				double headYaw = Program.Renderer.Camera.Alignment.Yaw + lookaheadYaw;
+				if ((Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) & TrainManager.PlayerTrain != null) {
 					if (TrainManager.PlayerTrain.DriverCar >= 0) {
 						headYaw += TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DriverYaw;
 					}
 				}
-				double headPitch = Camera.Alignment.Pitch + lookaheadPitch;
-				if ((Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead) & TrainManager.PlayerTrain != null) {
+				double headPitch = Program.Renderer.Camera.Alignment.Pitch + lookaheadPitch;
+				if ((Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) & TrainManager.PlayerTrain != null) {
 					if (TrainManager.PlayerTrain.DriverCar >= 0) {
 						headPitch += TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].DriverPitch;
 					}
 				}
 				double bodyPitch = 0.0;
 				double bodyRoll = 0.0;
-				double headRoll = Camera.Alignment.Roll;
+				double headRoll = Program.Renderer.Camera.Alignment.Roll;
 				// rotation
-				if (Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable & (Camera.CurrentMode == CameraViewMode.Interior | Camera.CurrentMode == CameraViewMode.InteriorLookAhead)) {
+				if (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable & (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead)) {
 					// with body and head
 					bodyPitch += TrainManager.PlayerTrain.DriverBody.Pitch;
 					headPitch -= 0.2 * TrainManager.PlayerTrain.DriverBody.Pitch;
@@ -453,10 +452,10 @@ namespace OpenBve {
 					}
 				}
 				// finish
-				Camera.AbsolutePosition = cF;
-				Camera.AbsoluteDirection = dF;
-				Camera.AbsoluteUp = uF;
-				Camera.AbsoluteSide = sF;
+				Program.Renderer.Camera.AbsolutePosition = cF;
+				Program.Renderer.Camera.AbsoluteDirection = dF;
+				Program.Renderer.Camera.AbsoluteUp = uF;
+				Program.Renderer.Camera.AbsoluteSide = sF;
 			}
 		}
 		private static void AdjustAlignment(ref double Source, double Direction, ref double Speed, double TimeElapsed) {
@@ -490,23 +489,23 @@ namespace OpenBve {
 			}
 		}
 		private static void ApplyZoom() {
-			Camera.VerticalViewingAngle = Camera.OriginalVerticalViewingAngle * Math.Exp(Camera.Alignment.Zoom);
-			if (Camera.VerticalViewingAngle < 0.001) Camera.VerticalViewingAngle = 0.001;
-			if (Camera.VerticalViewingAngle > 1.5) Camera.VerticalViewingAngle = 1.5;
-			Renderer.UpdateViewport(ViewPortChangeMode.NoChange);
+			Program.Renderer.Camera.VerticalViewingAngle = Program.Renderer.Camera.OriginalVerticalViewingAngle * Math.Exp(Program.Renderer.Camera.Alignment.Zoom);
+			if (Program.Renderer.Camera.VerticalViewingAngle < 0.001) Program.Renderer.Camera.VerticalViewingAngle = 0.001;
+			if (Program.Renderer.Camera.VerticalViewingAngle > 1.5) Program.Renderer.Camera.VerticalViewingAngle = 1.5;
+			Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 		}
 
 		// update viewing distance
 		internal static void UpdateViewingDistances() {
 			double f = Math.Atan2(World.CameraTrackFollower.WorldDirection.Z, World.CameraTrackFollower.WorldDirection.X);
-			double c = Math.Atan2(Camera.AbsoluteDirection.Z, Camera.AbsoluteDirection.X) - f;
+			double c = Math.Atan2(Program.Renderer.Camera.AbsoluteDirection.Z, Program.Renderer.Camera.AbsoluteDirection.X) - f;
 			if (c < -Math.PI) {
 				c += 2.0 * Math.PI;
 			} else if (c > Math.PI) {
 				c -= 2.0 * Math.PI;
 			}
-			double a0 = c - 0.5 * Camera.HorizontalViewingAngle;
-			double a1 = c + 0.5 * Camera.HorizontalViewingAngle;
+			double a0 = c - 0.5 * Program.Renderer.Camera.HorizontalViewingAngle;
+			double a1 = c + 0.5 * Program.Renderer.Camera.HorizontalViewingAngle;
 			double max;
 			if (a0 <= 0.0 & a1 >= 0.0) {
 				max = 1.0;
@@ -525,10 +524,10 @@ namespace OpenBve {
 				min = c0 < c1 ? c0 : c1;
 				if (min > 0.0) min = 0.0;
 			}
-			double d = Backgrounds.BackgroundImageDistance + Camera.ExtraViewingDistance;
-			Camera.ForwardViewingDistance = d * max;
-			Camera.BackwardViewingDistance = -d * min;
-			ObjectManager.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z, true);
+			double d = Program.CurrentRoute.CurrentBackground.BackgroundImageDistance + Program.Renderer.Camera.ExtraViewingDistance;
+			Program.Renderer.Camera.ForwardViewingDistance = d * max;
+			Program.Renderer.Camera.BackwardViewingDistance = -d * min;
+			Program.Renderer.UpdateVisibility(CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z, true);
 		}
 
 		// ================================

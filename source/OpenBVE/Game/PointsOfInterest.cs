@@ -1,8 +1,7 @@
 ﻿using System;
-using static LibRender.CameraProperties;
-using OpenBve.RouteManager;
 using OpenBveApi;
 using OpenBveApi.Colors;
+using RouteManager2.MessageManager;
 
 namespace OpenBve
 {
@@ -26,13 +25,13 @@ namespace OpenBve
 				{
 					// previous poi
 					t = double.NegativeInfinity;
-					for (int i = 0; i < CurrentRoute.PointsOfInterest.Length; i++)
+					for (int i = 0; i < Program.CurrentRoute.PointsOfInterest.Length; i++)
 					{
-						if (CurrentRoute.PointsOfInterest[i].TrackPosition < World.CameraTrackFollower.TrackPosition)
+						if (Program.CurrentRoute.PointsOfInterest[i].TrackPosition < World.CameraTrackFollower.TrackPosition)
 						{
-							if (CurrentRoute.PointsOfInterest[i].TrackPosition > t)
+							if (Program.CurrentRoute.PointsOfInterest[i].TrackPosition > t)
 							{
-								t = CurrentRoute.PointsOfInterest[i].TrackPosition;
+								t = Program.CurrentRoute.PointsOfInterest[i].TrackPosition;
 								j = i;
 							}
 						}
@@ -42,13 +41,13 @@ namespace OpenBve
 				{
 					// next poi
 					t = double.PositiveInfinity;
-					for (int i = 0; i < CurrentRoute.PointsOfInterest.Length; i++)
+					for (int i = 0; i < Program.CurrentRoute.PointsOfInterest.Length; i++)
 					{
-						if (CurrentRoute.PointsOfInterest[i].TrackPosition > World.CameraTrackFollower.TrackPosition)
+						if (Program.CurrentRoute.PointsOfInterest[i].TrackPosition > World.CameraTrackFollower.TrackPosition)
 						{
-							if (CurrentRoute.PointsOfInterest[i].TrackPosition < t)
+							if (Program.CurrentRoute.PointsOfInterest[i].TrackPosition < t)
 							{
-								t = CurrentRoute.PointsOfInterest[i].TrackPosition;
+								t = Program.CurrentRoute.PointsOfInterest[i].TrackPosition;
 								j = i;
 							}
 						}
@@ -58,21 +57,21 @@ namespace OpenBve
 			else
 			{
 				// absolute
-				j = Value >= 0 & Value < CurrentRoute.PointsOfInterest.Length ? Value : -1;
+				j = Value >= 0 & Value < Program.CurrentRoute.PointsOfInterest.Length ? Value : -1;
 			}
 			// process poi
 			if (j < 0) return false;
 			World.CameraTrackFollower.UpdateAbsolute(t, true, false);
-			Camera.Alignment.Position = CurrentRoute.PointsOfInterest[j].TrackOffset;
-			Camera.Alignment.Yaw = CurrentRoute.PointsOfInterest[j].TrackYaw;
-			Camera.Alignment.Pitch = CurrentRoute.PointsOfInterest[j].TrackPitch;
-			Camera.Alignment.Roll = CurrentRoute.PointsOfInterest[j].TrackRoll;
-			Camera.Alignment.TrackPosition = t;
+			Program.Renderer.Camera.Alignment.Position = Program.CurrentRoute.PointsOfInterest[j].TrackOffset;
+			Program.Renderer.Camera.Alignment.Yaw = Program.CurrentRoute.PointsOfInterest[j].TrackYaw;
+			Program.Renderer.Camera.Alignment.Pitch = Program.CurrentRoute.PointsOfInterest[j].TrackPitch;
+			Program.Renderer.Camera.Alignment.Roll = Program.CurrentRoute.PointsOfInterest[j].TrackRoll;
+			Program.Renderer.Camera.Alignment.TrackPosition = t;
 			World.UpdateAbsoluteCamera(0.0);
-			if (CurrentRoute.PointsOfInterest[j].Text != null)
+			if (Program.CurrentRoute.PointsOfInterest[j].Text != null)
 			{
-				double n = 3.0 + 0.5 * Math.Sqrt((double) CurrentRoute.PointsOfInterest[j].Text.Length);
-				Game.AddMessage(CurrentRoute.PointsOfInterest[j].Text, MessageDependency.PointOfInterest, GameMode.Expert, MessageColor.White, CurrentRoute.SecondsSinceMidnight + n, null);
+				double n = 3.0 + 0.5 * Math.Sqrt((double) Program.CurrentRoute.PointsOfInterest[j].Text.Length);
+				Game.AddMessage(Program.CurrentRoute.PointsOfInterest[j].Text, MessageDependency.PointOfInterest, GameMode.Expert, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + n, null);
 			}
 			return true;
 		}

@@ -1,6 +1,4 @@
-﻿using OpenBve.RouteManager;
-
-namespace OpenBve
+﻿namespace OpenBve
 {
 	internal static partial class Game
 	{
@@ -20,34 +18,34 @@ namespace OpenBve
 
 			internal override void Trigger(double TimeElapsed)
 			{
-				if (CurrentRoute.SecondsSinceMidnight - TimeLastProcessed >= CurrentInterval)
+				if (Program.CurrentRoute.SecondsSinceMidnight - TimeLastProcessed >= CurrentInterval)
 				{
-					TimeLastProcessed = CurrentRoute.SecondsSinceMidnight;
+					TimeLastProcessed = Program.CurrentRoute.SecondsSinceMidnight;
 					CurrentInterval = 5.0;
 					double ap = double.MaxValue, at = double.MaxValue;
 					double bp = double.MinValue, bt = double.MinValue;
-					for (int i = 0; i < CurrentRoute.BogusPretrainInstructions.Length; i++)
+					for (int i = 0; i < Program.CurrentRoute.BogusPreTrainInstructions.Length; i++)
 					{
-						if (CurrentRoute.BogusPretrainInstructions[i].Time < CurrentRoute.SecondsSinceMidnight | at == double.MaxValue)
+						if (Program.CurrentRoute.BogusPreTrainInstructions[i].Time < Program.CurrentRoute.SecondsSinceMidnight | at == double.MaxValue)
 						{
-							at = CurrentRoute.BogusPretrainInstructions[i].Time;
-							ap = CurrentRoute.BogusPretrainInstructions[i].TrackPosition;
+							at = Program.CurrentRoute.BogusPreTrainInstructions[i].Time;
+							ap = Program.CurrentRoute.BogusPreTrainInstructions[i].TrackPosition;
 						}
 					}
-					for (int i = CurrentRoute.BogusPretrainInstructions.Length - 1; i >= 0; i--)
+					for (int i = Program.CurrentRoute.BogusPreTrainInstructions.Length - 1; i >= 0; i--)
 					{
-						if (CurrentRoute.BogusPretrainInstructions[i].Time > at | bt == double.MinValue)
+						if (Program.CurrentRoute.BogusPreTrainInstructions[i].Time > at | bt == double.MinValue)
 						{
-							bt = CurrentRoute.BogusPretrainInstructions[i].Time;
-							bp = CurrentRoute.BogusPretrainInstructions[i].TrackPosition;
+							bt = Program.CurrentRoute.BogusPreTrainInstructions[i].Time;
+							bp = Program.CurrentRoute.BogusPreTrainInstructions[i].TrackPosition;
 						}
 					}
-					if (at != double.MaxValue & bt != double.MinValue & CurrentRoute.SecondsSinceMidnight <= CurrentRoute.BogusPretrainInstructions[CurrentRoute.BogusPretrainInstructions.Length - 1].Time)
+					if (at != double.MaxValue & bt != double.MinValue & Program.CurrentRoute.SecondsSinceMidnight <= Program.CurrentRoute.BogusPreTrainInstructions[Program.CurrentRoute.BogusPreTrainInstructions.Length - 1].Time)
 					{
 						double r = bt - at;
 						if (r > 0.0)
 						{
-							r = (CurrentRoute.SecondsSinceMidnight - at) / r;
+							r = (Program.CurrentRoute.SecondsSinceMidnight - at) / r;
 							if (r < 0.0) r = 0.0;
 							if (r > 1.0) r = 1.0;
 						}

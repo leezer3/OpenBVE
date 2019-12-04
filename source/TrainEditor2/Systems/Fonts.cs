@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-using LibRender;
+using LibRender2.Texts;
 
 namespace TrainEditor2.Systems
 {

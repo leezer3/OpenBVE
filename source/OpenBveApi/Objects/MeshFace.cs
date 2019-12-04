@@ -12,6 +12,10 @@ namespace OpenBveApi.Objects
 		public ushort Material;
 		/// <summary>A bit mask combining constants of the MeshFace structure.</summary>
 		public byte Flags;
+		/// <summary>The starting position for the face in the VAO</summary>
+		public int IboStartIndex;
+		/// <summary>The starting position for the normals in the VAO</summary>
+		public int NormalsIboStartIndex;
 
 		/// <summary>Returns a representation of the face in string format</summary>
 		public override string ToString()
@@ -36,6 +40,8 @@ namespace OpenBveApi.Objects
 
 			this.Material = 0;
 			this.Flags = 0;
+			IboStartIndex = 0;
+			NormalsIboStartIndex = 0;
 		}
 
 		/// <summary>Creates a new MeshFace using the specified vertex indices and material</summary>
@@ -47,6 +53,8 @@ namespace OpenBveApi.Objects
 			this.Vertices = verticies;
 			this.Material = material;
 			this.Flags = 0;
+			IboStartIndex = 0;
+			NormalsIboStartIndex = 0;
 		}
 
 		/// <summary>Flips the MeshFace</summary>

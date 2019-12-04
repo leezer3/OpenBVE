@@ -10,14 +10,10 @@ namespace OpenBveApi.Objects
 	{
 		/// <summary>The mesh of the object</summary>
 		public Mesh Mesh;
-		/// <summary>The index to the Renderer.Object array, plus 1. The value of zero represents that the object is not currently shown by the renderer.</summary>
-		public int RendererIndex;
 		/// <summary>The starting track position, for static objects only.</summary>
 		public float StartingDistance;
 		/// <summary>The ending track position, for static objects only.</summary>
 		public float EndingDistance;
-		/// <summary>The block mod group, for static objects only.</summary>
-		public short GroupIndex;
 		/// <summary>Whether the object is dynamic, i.e. not static.</summary>
 		public bool Dynamic;
 		/// <summary> Stores the author for this object.</summary>
@@ -482,14 +478,6 @@ namespace OpenBveApi.Objects
 			{
 				StartingDistance = (float) startingDistance;
 				EndingDistance = (float) endingDistance;
-			}
-
-			if (BlockLength != 0.0)
-			{
-				checked
-				{
-					GroupIndex = (short) NumberFormats.Mod(System.Math.Floor(StartingDistance / BlockLength), System.Math.Ceiling(ViewingDistance / BlockLength));
-				}
 			}
 		}
 

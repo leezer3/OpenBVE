@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Xml;
-using OpenBve.BackgroundManager;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;

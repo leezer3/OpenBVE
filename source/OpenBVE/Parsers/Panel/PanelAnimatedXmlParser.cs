@@ -6,6 +6,7 @@ using System.Xml;
 using System.Xml.Linq;
 using OpenBveApi;
 using OpenBveApi.Colors;
+using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -205,7 +206,7 @@ namespace OpenBve.Parsers.Panel
 												{
 													for (int i = 0; i < a.Objects.Length; i++)
 													{
-														ObjectManager.CreateDynamicObject(ref a.Objects[i].internalObject);
+														Program.CurrentHost.CreateDynamicObject(ref a.Objects[i].internalObject);
 													}
 													CarSection.Groups[GroupIndex].Elements = a.Objects;
 												}
@@ -258,12 +259,12 @@ namespace OpenBve.Parsers.Panel
 				Command = Command,
 				CommandOption = CommandOption
 			};
-			Group.TouchElements[n].Element.States = new AnimatedObjectState[1];
-			Group.TouchElements[n].Element.States[0].Position = Position;
-			Group.TouchElements[n].Element.States[0].Object = Object;
+			Group.TouchElements[n].Element.States = new [] { new ObjectState() };
+			Group.TouchElements[n].Element.States[0].Translation = Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z);
+			Group.TouchElements[n].Element.States[0].Prototype = Object;
 			Group.TouchElements[n].Element.CurrentState = 0;
-			Group.TouchElements[n].Element.internalObject = (StaticObject) Object.Clone();
-			ObjectManager.CreateDynamicObject(ref Group.TouchElements[n].Element.internalObject);
+			Group.TouchElements[n].Element.internalObject = new ObjectState { Prototype = Object };
+			Program.CurrentHost.CreateDynamicObject(ref Group.TouchElements[n].Element.internalObject);
 			int m = Interface.CurrentControls.Length;
 			Array.Resize(ref Interface.CurrentControls, m + 1);
 			Interface.CurrentControls[m].Command = Command;

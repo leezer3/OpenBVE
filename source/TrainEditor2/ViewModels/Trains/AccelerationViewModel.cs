@@ -47,7 +47,7 @@ namespace TrainEditor2.ViewModels.Trains
 					.ToReactivePropertyAsSynchronized(
 						x => x.A0,
 						x => x.ToString(culture),
-						double.Parse,
+						x => double.Parse(x, NumberStyles.Float, culture),
 						ignoreValidationErrorValue: true
 					)
 					.SetValidateNotifyError(x =>
@@ -65,7 +65,7 @@ namespace TrainEditor2.ViewModels.Trains
 					.ToReactivePropertyAsSynchronized(
 						x => x.A1,
 						x => x.ToString(culture),
-						double.Parse,
+						x => double.Parse(x, NumberStyles.Float, culture),
 						ignoreValidationErrorValue: true
 					)
 					.SetValidateNotifyError(x =>
@@ -83,7 +83,7 @@ namespace TrainEditor2.ViewModels.Trains
 					.ToReactivePropertyAsSynchronized(
 						x => x.V1,
 						x => x.ToString(culture),
-						double.Parse,
+						x => double.Parse(x, NumberStyles.Float, culture),
 						ignoreValidationErrorValue: true
 					)
 					.SetValidateNotifyError(x =>
@@ -101,7 +101,7 @@ namespace TrainEditor2.ViewModels.Trains
 					.ToReactivePropertyAsSynchronized(
 						x => x.V2,
 						x => x.ToString(culture),
-						double.Parse,
+						x => double.Parse(x, NumberStyles.Float, culture),
 						ignoreValidationErrorValue: true
 					)
 					.SetValidateNotifyError(x =>
@@ -119,7 +119,7 @@ namespace TrainEditor2.ViewModels.Trains
 					.ToReactivePropertyAsSynchronized(
 						x => x.E,
 						x => x.ToString(culture),
-						double.Parse,
+						x => double.Parse(x, NumberStyles.Float, culture),
 						ignoreValidationErrorValue: true
 					)
 					.SetValidateNotifyError(x =>
@@ -265,7 +265,7 @@ namespace TrainEditor2.ViewModels.Trains
 				.ToReactivePropertyAsSynchronized(
 					x => x.MinVelocity,
 					x => x.ToString(culture),
-					double.Parse,
+					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
 				.AddTo(disposable);
@@ -274,7 +274,7 @@ namespace TrainEditor2.ViewModels.Trains
 				.ToReactivePropertyAsSynchronized(
 					x => x.MaxVelocity,
 					x => x.ToString(culture),
-					double.Parse,
+					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
 				.AddTo(disposable);
@@ -283,7 +283,7 @@ namespace TrainEditor2.ViewModels.Trains
 				.ToReactivePropertyAsSynchronized(
 					x => x.MinAcceleration,
 					x => x.ToString(culture),
-					double.Parse,
+					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
 				.AddTo(disposable);
@@ -292,7 +292,7 @@ namespace TrainEditor2.ViewModels.Trains
 				.ToReactivePropertyAsSynchronized(
 					x => x.MaxAcceleration,
 					x => x.ToString(culture),
-					double.Parse,
+					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
 				.AddTo(disposable);

@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -199,10 +199,29 @@ namespace OpenBveApi.Hosts {
 			return -1;
 		}
 
+		/// <summary>Creates a static object within the world of the host application, and returns the ObjectManager ID</summary>
+		/// <param name="Prototype">The prototype (un-transformed) static object</param>
+		/// <param name="Position">The world position</param>
+		/// <param name="AuxTransformation">The secondary rail transformation to apply NOTE: Only used for object disposal calcs</param>
+		/// <param name="Rotate">The rotation matrix to apply</param>
+		/// <param name="Translate">The translation matrix to apply</param>
+		/// <param name="AccurateObjectDisposal">Whether accurate object disposal is in use</param>
+		/// <param name="AccurateObjectDisposalZOffset">The offset for accurate Z-disposal</param>
+		/// <param name="StartingDistance">The absolute route based starting distance for the object</param>
+		/// <param name="EndingDistance">The absolute route based ending distance for the object</param>
+		/// <param name="BlockLength">The block length</param>
+		/// <param name="TrackPosition">The absolute route based track position</param>
+		/// <param name="Brightness">The brightness value at this track position</param>
+		/// <returns>The index to the created object, or -1 if this call fails</returns>
+		public virtual int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation AuxTransformation, Matrix4D Rotate, Matrix4D Translate, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		{
+			return -1;
+		}
+
 		/// <summary>Creates a dynamic object</summary>
 		/// <param name="internalObject">The internal static object to be updated</param>
 		/// <returns>The index of the dynamic object</returns>
-		public virtual void CreateDynamicObject(ref StaticObject internalObject)
+		public virtual void CreateDynamicObject(ref ObjectState internalObject)
 		{
 			
 		}
@@ -216,14 +235,14 @@ namespace OpenBveApi.Hosts {
 		/// <summary>Shows an object in the base renderer</summary>
 		/// <param name="objectToShow">The reference to the object to show</param>
 		/// <param name="objectType">The object type</param>
-		public virtual void ShowObject(StaticObject objectToShow, ObjectType objectType)
+		public virtual void ShowObject(ObjectState objectToShow, ObjectType objectType)
 		{
 
 		}
 
 		/// <summary>Hides an object in the base renderer</summary>
 		/// <param name="objectToHide">The reference to the object to hide</param>
-		public virtual void HideObject(ref StaticObject objectToHide)
+		public virtual void HideObject(ObjectState objectToHide)
 		{
 
 		}
@@ -315,6 +334,14 @@ namespace OpenBveApi.Hosts {
 			{
 
 			}
+		}
+
+		/// <summary>Updates the custom timetable texture displayed when triggered by an event</summary>
+		/// <param name="Daytime">The daytime texture</param>
+		/// <param name="Nighttime">The nighttime texture</param>
+		public virtual void UpdateCustomTimetable(Textures.Texture Daytime, Textures.Texture Nighttime)
+		{
+
 		}
 	}
 	

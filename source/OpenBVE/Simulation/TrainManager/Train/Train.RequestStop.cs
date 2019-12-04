@@ -1,8 +1,8 @@
-﻿using OpenBve.RouteManager;
-using OpenBveApi;
+﻿using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
+using RouteManager2.MessageManager;
 
 namespace OpenBve
 {
@@ -24,7 +24,7 @@ namespace OpenBve
 				if (Program.RandomNumberGenerator.Next(0, 100) <= stopRequest.Probability)
 				{
 					//We have hit our probability roll
-					if (CurrentRoute.Stations[stopRequest.StationIndex].StopMode == StationStopMode.AllRequestStop || (IsPlayerTrain && CurrentRoute.Stations[stopRequest.StationIndex].StopMode == StationStopMode.PlayerRequestStop))
+					if (Program.CurrentRoute.Stations[stopRequest.StationIndex].StopMode == StationStopMode.AllRequestStop || (IsPlayerTrain && Program.CurrentRoute.Stations[stopRequest.StationIndex].StopMode == StationStopMode.PlayerRequestStop))
 					{
 
 						//If our train can stop at this station, set it's index accordingly
@@ -51,7 +51,7 @@ namespace OpenBve
 						//If message is not empty, add it
 						if (!string.IsNullOrEmpty(stopRequest.PassMessage) && IsPlayerTrain)
 						{
-							Game.AddMessage(stopRequest.PassMessage, MessageDependency.None, GameMode.Normal, MessageColor.White, CurrentRoute.SecondsSinceMidnight + 10.0, null);
+							Game.AddMessage(stopRequest.PassMessage, MessageDependency.None, GameMode.Normal, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 						}
 
 						return;
@@ -62,7 +62,7 @@ namespace OpenBve
 					//If message is not empty, add it
 					if (!string.IsNullOrEmpty(stopRequest.StopMessage) && IsPlayerTrain)
 					{
-						Game.AddMessage(stopRequest.StopMessage, MessageDependency.None, GameMode.Normal, MessageColor.White, CurrentRoute.SecondsSinceMidnight + 10.0, null);
+						Game.AddMessage(stopRequest.StopMessage, MessageDependency.None, GameMode.Normal, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 					}
 				}
 				else
@@ -83,7 +83,7 @@ namespace OpenBve
 					//If message is not empty, add it
 					if (!string.IsNullOrEmpty(stopRequest.PassMessage) && IsPlayerTrain)
 					{
-						Game.AddMessage(stopRequest.PassMessage, MessageDependency.None, GameMode.Normal, MessageColor.White, CurrentRoute.SecondsSinceMidnight + 10.0, null);
+						Game.AddMessage(stopRequest.PassMessage, MessageDependency.None, GameMode.Normal, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 					}
 				}
 			}

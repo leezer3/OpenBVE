@@ -97,6 +97,42 @@ namespace OpenBveApi.World
 			Z.Rotate(AuxTransformation.Z, AuxTransformation.Y, AuxTransformation.X);
 		}
 
+		/// <summary>Creates a new transformation, based upon three other vectors</summary>
+		/// <param name="firstVector">The first vector</param>
+		/// <param name="secondVector">The second vector</param>
+		/// <param name="thirdVector">The third vector</param>
+		public Transformation(Vector3 firstVector, Vector3 secondVector, Vector3 thirdVector)
+		{
+			X = thirdVector;
+			Y = secondVector;
+			Z = firstVector;
+		}
+
+		/// <summary>Creates a new transformation, based upon three other vectors</summary>
+		/// <param name="firstVector">The first vector</param>
+		/// <param name="secondVector">The second vector</param>
+		/// <param name="thirdVector">The third vector</param>
+		public Transformation(Vector3f firstVector, Vector3f secondVector, Vector3f thirdVector)
+		{
+			X = thirdVector;
+			Y = secondVector;
+			Z = firstVector;
+		}
+
+		/// <summary>Converts a Transformation into an openGL rotation matrix</summary>
+		/// <param name="t">The transformation to convert</param>
+		public static explicit operator Matrix4D(Transformation t)
+		{
+			Vector3 v = new Vector3(t.Z.X, t.Z.Y, -t.Z.Z);
+			v.Normalize();
+			Quaternion rot1 = Quaternion.RotationBetweenVectors(new Vector3(0.0, 0.0, 1.0) * -1.0, v);
+			Vector3 newUp = new Vector3(0.0, 1.0, 0.0);
+			newUp = Vector3.Transform(newUp, rot1);
+			Vector3 v2 = new Vector3(t.Y.X, t.Y.Y, -t.Y.Z);
+			v2.Normalize();
+			Quaternion rot2 = Quaternion.RotationBetweenVectors(newUp, v2);
+			return Matrix4D.CreateFromQuaternion(rot2 * rot1);
+		}
 	}
 
 }

@@ -1,12 +1,11 @@
 using System;
 using System.Drawing;
-using LibRender;
-using OpenBve.RouteManager;
 using OpenBveApi;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
+using RouteManager2.Events;
 
 namespace OpenBve {
 	internal static class Timetable {
@@ -67,12 +66,12 @@ namespace OpenBve {
 				double Limit = -1.0, LastLimit = 6.94444444444444;
 				int LastArrivalHours = -1, LastDepartureHours = -1;
 				double LastTime = -1.0;
-				for (int i = 0; i < CurrentRoute.Tracks[0].Elements.Length; i++)
+				for (int i = 0; i < Program.CurrentRoute.Tracks[0].Elements.Length; i++)
 				{
-					for (int j = 0; j < CurrentRoute.Tracks[0].Elements[i].Events.Length; j++)
+					for (int j = 0; j < Program.CurrentRoute.Tracks[0].Elements[i].Events.Length; j++)
 					{
-						StationStartEvent sse = CurrentRoute.Tracks[0].Elements[i].Events[j] as StationStartEvent;
-						if (sse != null && CurrentRoute.Stations[sse.StationIndex].Name != string.Empty)
+						StationStartEvent sse = Program.CurrentRoute.Tracks[0].Elements[i].Events[j] as StationStartEvent;
+						if (sse != null && Program.CurrentRoute.Stations[sse.StationIndex].Name != string.Empty)
 						{
 							if (Limit == -1.0) Limit = LastLimit;
 							// update station
@@ -81,14 +80,14 @@ namespace OpenBve {
 								Array.Resize<Station>(ref Stations, Stations.Length << 1);
 							}
 
-							Stations[n].Name = CurrentRoute.Stations[sse.StationIndex].Name;
-							Stations[n].NameJapanese = CurrentRoute.Stations[sse.StationIndex].Name.IsJapanese();
-							Stations[n].Pass = !CurrentRoute.Stations[sse.StationIndex].PlayerStops();
-							Stations[n].Terminal = CurrentRoute.Stations[sse.StationIndex].Type != StationType.Normal;
+							Stations[n].Name = Program.CurrentRoute.Stations[sse.StationIndex].Name;
+							Stations[n].NameJapanese = Program.CurrentRoute.Stations[sse.StationIndex].Name.IsJapanese();
+							Stations[n].Pass = !Program.CurrentRoute.Stations[sse.StationIndex].PlayerStops();
+							Stations[n].Terminal = Program.CurrentRoute.Stations[sse.StationIndex].Type != StationType.Normal;
 							double x;
-							if (CurrentRoute.Stations[sse.StationIndex].ArrivalTime >= 0.0)
+							if (Program.CurrentRoute.Stations[sse.StationIndex].ArrivalTime >= 0.0)
 							{
-								x = CurrentRoute.Stations[sse.StationIndex].ArrivalTime;
+								x = Program.CurrentRoute.Stations[sse.StationIndex].ArrivalTime;
 								x -= 86400.0 * Math.Floor(x / 86400.0);
 								int hours = (int) Math.Floor(x / 3600.0);
 								x -= 3600.0 * (double) hours;
@@ -107,9 +106,9 @@ namespace OpenBve {
 								Stations[n].Arrival.Second = "";
 							}
 
-							if (CurrentRoute.Stations[sse.StationIndex].DepartureTime >= 0.0)
+							if (Program.CurrentRoute.Stations[sse.StationIndex].DepartureTime >= 0.0)
 							{
-								x = CurrentRoute.Stations[sse.StationIndex].DepartureTime;
+								x = Program.CurrentRoute.Stations[sse.StationIndex].DepartureTime;
 								x -= 86400.0 * Math.Floor(x / 86400.0);
 								int hours = (int) Math.Floor(x / 3600.0);
 								x -= 3600.0 * (double) hours;
@@ -143,13 +142,13 @@ namespace OpenBve {
 								// time
 								if (LastTime >= 0.0)
 								{
-									if (CurrentRoute.Stations[sse.StationIndex].ArrivalTime >= 0.0)
+									if (Program.CurrentRoute.Stations[sse.StationIndex].ArrivalTime >= 0.0)
 									{
-										x = CurrentRoute.Stations[sse.StationIndex].ArrivalTime;
+										x = Program.CurrentRoute.Stations[sse.StationIndex].ArrivalTime;
 									}
-									else if (CurrentRoute.Stations[sse.StationIndex].DepartureTime >= 0.0)
+									else if (Program.CurrentRoute.Stations[sse.StationIndex].DepartureTime >= 0.0)
 									{
-										x = CurrentRoute.Stations[sse.StationIndex].DepartureTime;
+										x = Program.CurrentRoute.Stations[sse.StationIndex].DepartureTime;
 									}
 									else x = -1.0;
 
@@ -181,13 +180,13 @@ namespace OpenBve {
 							}
 
 							// update last data
-							if (CurrentRoute.Stations[sse.StationIndex].DepartureTime >= 0.0)
+							if (Program.CurrentRoute.Stations[sse.StationIndex].DepartureTime >= 0.0)
 							{
-								LastTime = CurrentRoute.Stations[sse.StationIndex].DepartureTime;
+								LastTime = Program.CurrentRoute.Stations[sse.StationIndex].DepartureTime;
 							}
-							else if (CurrentRoute.Stations[sse.StationIndex].ArrivalTime >= 0.0)
+							else if (Program.CurrentRoute.Stations[sse.StationIndex].ArrivalTime >= 0.0)
 							{
-								LastTime = CurrentRoute.Stations[sse.StationIndex].ArrivalTime;
+								LastTime = Program.CurrentRoute.Stations[sse.StationIndex].ArrivalTime;
 							}
 							else
 							{
@@ -201,7 +200,7 @@ namespace OpenBve {
 
 						if (n >= 1)
 						{
-							LimitChangeEvent lce = CurrentRoute.Tracks[0].Elements[i].Events[j] as LimitChangeEvent;
+							LimitChangeEvent lce = Program.CurrentRoute.Tracks[0].Elements[i].Events[j] as LimitChangeEvent;
 							if (lce != null)
 							{
 								if (lce.NextSpeedLimit != double.PositiveInfinity & lce.NextSpeedLimit > Limit) Limit = lce.NextSpeedLimit;
@@ -235,7 +234,7 @@ namespace OpenBve {
 				for (int k = 0; k < 2; k++)
 				{
 					Bitmap b = new Bitmap(w, h);
-					Graphics g = Graphics.FromImage(b);
+					System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(b);
 					g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 					g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 					g.Clear(Color.Transparent);
@@ -489,22 +488,24 @@ namespace OpenBve {
 						descriptionheight = s.Height + 2;
 						h += (int) Math.Ceiling((double) s.Height) + 4;
 					}
-
+					f.Dispose();
+					fs.Dispose();
+					fss.Dispose();
 					// finish
 					if (k == 0)
 					{
 						// measures
-						int nw = TextureManager.RoundUpToPowerOfTwo(w);
+						int nw = Program.Renderer.TextureManager.RoundUpToPowerOfTwo(w);
 						offsetx = nw - w;
 						w = nw;
 						actualheight = h;
-						h = TextureManager.RoundUpToPowerOfTwo(h);
+						h = Program.Renderer.TextureManager.RoundUpToPowerOfTwo(h);
 					}
 					else
 					{
 						// create texture
 						g.Dispose();
-						timetableTexture = TextureManager.RegisterTexture(b);
+						timetableTexture = Program.Renderer.TextureManager.RegisterTexture(b);
 					}
 				}
 			}
@@ -530,12 +531,12 @@ namespace OpenBve {
 		internal static void UpdateCustomTimetable(Texture daytime, Texture nighttime) {
 			for (int i = 0; i < CustomObjectsUsed; i++) {
 				for (int j = 0; j < CustomObjects[i].States.Length; j++) {
-					for (int k = 0; k < CustomObjects[i].States[j].Object.Mesh.Materials.Length; k++) {
+					for (int k = 0; k < CustomObjects[i].States[j].Prototype.Mesh.Materials.Length; k++) {
 						if (daytime != null) {
-							CustomObjects[i].States[j].Object.Mesh.Materials[k].DaytimeTexture = daytime;
+							CustomObjects[i].States[j].Prototype.Mesh.Materials[k].DaytimeTexture = daytime;
 						}
 						if (nighttime != null) {
-							CustomObjects[i].States[j].Object.Mesh.Materials[k].NighttimeTexture = nighttime;
+							CustomObjects[i].States[j].Prototype.Mesh.Materials[k].NighttimeTexture = nighttime;
 						}
 					}
 				}

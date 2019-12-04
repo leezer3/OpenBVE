@@ -60,14 +60,13 @@ namespace OpenBveApi.Objects
 						{
 							if (free[i])
 							{
-								Vector3 p = Position;
-								Transformation t = new Transformation(BaseTransformation, AuxTransformation);
-								Vector3 s = t.X;
-								Vector3 u = t.Y;
-								Vector3 d = t.Z;
-								p += Objects[i].States[0].Position.X * s + Objects[i].States[0].Position.Y * u + Objects[i].States[0].Position.Z * d;
-								double zOffset = Objects[i].States[0].Position.Z;
-								currentHost.CreateStaticObject(Objects[i].States[0].Object, p, BaseTransformation, AuxTransformation, AccurateObjectDisposal, zOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+								Transformation FinalTransformation = new Transformation(BaseTransformation, AuxTransformation);
+								Matrix4D mat = Matrix4D.Identity;
+								mat *= Objects[i].States[0].Translation;
+								mat *= (Matrix4D)new Transformation(FinalTransformation.Z, FinalTransformation.Y, FinalTransformation.X);
+								double zOffset = mat.ExtractTranslation().Z * -1.0;
+								
+								currentHost.CreateStaticObject(Objects[i].States[0].Prototype, Position, AuxTransformation, mat, Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z), AccurateObjectDisposal, zOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 							}
 							else
 							{
@@ -116,11 +115,11 @@ namespace OpenBveApi.Objects
 				{
 					for (int j = 0; j < Objects[i].States.Length; j++)
 					{
-						if (Objects[i].States[j].Object == null)
+						if (Objects[i].States[j].Prototype == null)
 						{
 							continue;
 						}
-						Objects[i].States[j].Object.OptimizeObject(PreserveVerticies, Threshold, VertexCulling);
+						Objects[i].States[j].Prototype.OptimizeObject(PreserveVerticies, Threshold, VertexCulling);
 					}
 				}
 			}
@@ -143,7 +142,7 @@ namespace OpenBveApi.Objects
 					Result.Objects[i] = Objects[i].Clone();
 					for (int j = 0; j < Objects[i].States.Length; j++)
 					{
-						Result.Objects[i].States[j].Object = (StaticObject)Result.Objects[i].States[j].Object.Mirror();
+						Result.Objects[i].States[j].Prototype = (StaticObject)Result.Objects[i].States[j].Prototype.Mirror();
 					}
 					Result.Objects[i].TranslateXDirection.X *= -1.0;
 					Result.Objects[i].TranslateYDirection.X *= -1.0;

@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Windows.Forms;
 using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
-using Screen = LibRender.Screen;
 
 namespace OpenBve
 {
@@ -75,7 +74,7 @@ namespace OpenBve
                                                 {
                                                     a = 960;
                                                 }
-                                                Screen.Width = a;
+                                                Program.Renderer.Screen.Width = a;
                                             } break;
                                         case "windowheight":
                                             {
@@ -84,9 +83,13 @@ namespace OpenBve
                                                 {
                                                     a = 600;
                                                 }
-                                                Screen.Height = a;
+                                                Program.Renderer.Screen.Height = a;
                                             } break;
-                                    } break;
+                                        case "isusenewrenderer":
+	                                        Interface.CurrentOptions.IsUseNewRenderer = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+	                                        break;
+                                    }
+									break;
                                 case "quality":
                                     switch (Key)
                                     {
@@ -172,8 +175,9 @@ namespace OpenBve
                 Builder.AppendLine("; Object Viewer specific options file");
                 Builder.AppendLine();
                 Builder.AppendLine("[display]");
-                Builder.AppendLine("windowWidth = " + Screen.Width.ToString(Culture));
-                Builder.AppendLine("windowHeight = " + Screen.Height.ToString(Culture));
+                Builder.AppendLine("windowWidth = " + Program.Renderer.Screen.Width.ToString(Culture));
+                Builder.AppendLine("windowHeight = " + Program.Renderer.Screen.Height.ToString(Culture));
+                Builder.AppendLine("isUseNewRenderer = " + (Interface.CurrentOptions.IsUseNewRenderer ? "true" : "false"));
                 Builder.AppendLine();
                 Builder.AppendLine("[quality]");
                 {

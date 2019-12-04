@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Media;
+using System.Text;
 using System.Xml;
 using OpenBveApi.Interface;
 using Prism.Mvvm;
@@ -622,14 +623,14 @@ namespace TrainEditor2.Models
 						{
 							TrainDat.Parse(TrainDatImportLocation, out train);
 							OnPropertyChanged(new PropertyChangedEventArgs(nameof(Train)));
-
-							CreateItem();
 						}
 
 						if (!string.IsNullOrEmpty(ExtensionsCfgImportLocation))
 						{
 							ExtensionsCfg.Parse(ExtensionsCfgImportLocation, Train);
 						}
+
+						CreateItem();
 						break;
 					default:
 						throw new ArgumentOutOfRangeException();
@@ -637,7 +638,7 @@ namespace TrainEditor2.Models
 			}
 			catch (Exception e)
 			{
-				Interface.AddMessage(MessageType.Error, false, e.Message);
+				Interface.AddMessage(MessageType.Error, false, $"{e.GetType().FullName}: {e.Message} at {e.StackTrace}");
 			}
 
 			try
@@ -664,7 +665,7 @@ namespace TrainEditor2.Models
 			}
 			catch (Exception e)
 			{
-				Interface.AddMessage(MessageType.Error, false, e.Message);
+				Interface.AddMessage(MessageType.Error, false, $"{e.GetType().FullName}: {e.Message} at {e.StackTrace}");
 			}
 
 			try
@@ -698,7 +699,7 @@ namespace TrainEditor2.Models
 			}
 			catch (Exception e)
 			{
-				Interface.AddMessage(MessageType.Error, false, e.Message);
+				Interface.AddMessage(MessageType.Error, false, $"{e.GetType().FullName}: {e.Message} at {e.StackTrace}");
 			}
 		}
 
@@ -725,7 +726,7 @@ namespace TrainEditor2.Models
 			}
 			catch (Exception e)
 			{
-				Interface.AddMessage(MessageType.Error, false, e.Message);
+				Interface.AddMessage(MessageType.Error, false, $"{e.GetType().FullName}: {e.Message} at {e.StackTrace}");
 			}
 
 			try
@@ -750,7 +751,7 @@ namespace TrainEditor2.Models
 			}
 			catch (Exception e)
 			{
-				Interface.AddMessage(MessageType.Error, false, e.Message);
+				Interface.AddMessage(MessageType.Error, false, $"{e.GetType().FullName}: {e.Message} at {e.StackTrace}");
 			}
 
 			try
@@ -777,8 +778,33 @@ namespace TrainEditor2.Models
 			}
 			catch (Exception e)
 			{
-				Interface.AddMessage(MessageType.Error, false, e.Message);
+				Interface.AddMessage(MessageType.Error, false, $"{e.GetType().FullName}: {e.Message} at {e.StackTrace}");
 			}
+		}
+
+		internal void OutputLogs()
+		{
+			SaveFileDialog = new SaveFileDialog
+			{
+				Filter = @"Text files (*.txt)|*.txt|All files (*.*)|*",
+				OverwritePrompt = true,
+				IsOpen = true
+			};
+
+			if (SaveFileDialog.DialogResult != true)
+			{
+				return;
+			}
+
+			StringBuilder builder = new StringBuilder();
+			builder.AppendLine($"TrainEditor2 Log: {DateTime.Now}");
+
+			foreach (string message in Interface.LogMessages.Select(x => $"{x.Type.ToString()}: {x.Text}"))
+			{
+				builder.AppendLine(message);
+			}
+
+			File.WriteAllText(SaveFileDialog.FileName, builder.ToString());
 		}
 
 		private void RenameTreeViewItem(ObservableCollection<TreeViewItemModel> items)

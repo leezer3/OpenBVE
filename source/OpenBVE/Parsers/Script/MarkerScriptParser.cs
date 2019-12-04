@@ -3,9 +3,9 @@ using System.Xml;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using System.Linq;
-using OpenBve.RouteManager;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
+using RouteManager2.MessageManager.MessageTypes;
 
 namespace OpenBve
 {
@@ -234,7 +234,7 @@ namespace OpenBve
 								marker.StartingPosition -= EndingPosition;
 							}
 						}
-						TextureMessage t = new TextureMessage();
+						TextureMessage t = new TextureMessage(Program.Renderer);
 						GeneralMessage m = new GeneralMessage();
 						//Add variants
 

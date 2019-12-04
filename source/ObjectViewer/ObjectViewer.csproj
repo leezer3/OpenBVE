@@ -87,6 +87,7 @@
     </Compile>
     <Compile Include="FunctionScripts.cs" />
     <Compile Include="Hosts.cs" />
+    <Compile Include="NewRendererS.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Parsers\ExtensionsCfgParser.cs" />
     <Compile Include="Plugins.cs" />
@@ -102,8 +103,6 @@
     <Compile Include="InterfaceS.cs" />
     <Compile Include="ProgramS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RendererS.cs" />
-    <Compile Include="TextureManager.cs" />
     <Compile Include="Timers.cs" />
     <Compile Include="TrainManagerS.cs" />
   </ItemGroup>
@@ -125,9 +124,9 @@
       <Project>{77ccae62-d374-468e-98a0-dd8adb461c10}</Project>
       <Name>AssimpParser</Name>
     </ProjectReference>
-    <ProjectReference Include="..\LibRender\LibRender.csproj">
-      <Project>{2072ecd1-c7ff-427c-84dc-063f7c19792e}</Project>
-      <Name>LibRender</Name>
+    <ProjectReference Include="..\LibRender2\LibRender2.csproj">
+      <Project>{68215476-302c-49f2-9f7e-aae20a2b6b12}</Project>
+      <Name>LibRender2</Name>
     </ProjectReference>
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
@@ -138,9 +137,9 @@
       <Name>Formats.Msts</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\RouteManager\RouteManager.csproj">
-      <Project>{87838364-8911-46b2-8628-d437c485d9c9}</Project>
-      <Name>RouteManager</Name>
+    <ProjectReference Include="..\RouteManager2\RouteManager2.csproj">
+      <Project>{4ef680d7-df17-4978-9872-133edc169b4b}</Project>
+      <Name>RouteManager2</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

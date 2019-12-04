@@ -3,12 +3,12 @@ using System.IO;
 using System.Xml;
 using OpenBveApi.Math;
 using System.Linq;
-using OpenBve.RouteManager;
 using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
-using OpenBve.SignalManager;
 using OpenBveApi.Trains;
+using RouteManager2.SignalManager;
+using RouteManager2.Stations;
 
 namespace OpenBve
 {
@@ -81,6 +81,10 @@ namespace OpenBve
 											case "changeends":
 												station.Type = StationType.ChangeEnds;
 												break;
+											case "j":
+											case "jump":
+												station.Type = StationType.Jump;
+												break;
 											case "t":
 											case "terminal":
 												station.Type = StationType.Terminal;
@@ -88,6 +92,21 @@ namespace OpenBve
 											default:
 												station.Type = StationType.Normal;
 												break;
+										}
+										break;
+									case "jumpindex":
+										if (!string.IsNullOrEmpty(c.InnerText))
+										{
+											if (!NumberFormats.TryParseIntVb6(c.InnerText, out station.JumpIndex))
+											{
+												Interface.AddMessage(MessageType.Error, false, "Station jump index was invalid in XML file " + fileName);
+												station.Type = StationType.Normal;
+											}
+										}
+										else
+										{
+											Interface.AddMessage(MessageType.Error, false, "Station jump index was empty in XML file " + fileName);
+											station.Type = StationType.Normal;
 										}
 										break;
 									case "passalarm":
@@ -325,8 +344,8 @@ namespace OpenBve
 											{
 												if (CurrentStation > 0)
 												{
-													station.TimetableDaytimeTexture = CurrentRoute.Stations[CurrentStation - 1].TimetableDaytimeTexture;
-													station.TimetableNighttimeTexture = CurrentRoute.Stations[CurrentStation - 1].TimetableNighttimeTexture;
+													station.TimetableDaytimeTexture = Program.CurrentRoute.Stations[CurrentStation - 1].TimetableDaytimeTexture;
+													station.TimetableNighttimeTexture = Program.CurrentRoute.Stations[CurrentStation - 1].TimetableNighttimeTexture;
 												}
 												else if (daytimeTimetableTextures.Length > 0 & nighttimeTimetableTextures.Length > 0)
 												{

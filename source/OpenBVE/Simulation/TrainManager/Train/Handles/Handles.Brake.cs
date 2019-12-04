@@ -1,6 +1,4 @@
-﻿using OpenBve.RouteManager;
-
-namespace OpenBve
+﻿namespace OpenBve
 {
 	public static partial class TrainManager
 	{
@@ -48,7 +46,7 @@ namespace OpenBve
 				}
 				if (DelayedChanges.Length >= 1)
 				{
-					if (DelayedChanges[0].Time <= CurrentRoute.SecondsSinceMidnight)
+					if (DelayedChanges[0].Time <= Program.CurrentRoute.SecondsSinceMidnight)
 					{
 						Actual = DelayedChanges[0].Value;
 						RemoveChanges(1);

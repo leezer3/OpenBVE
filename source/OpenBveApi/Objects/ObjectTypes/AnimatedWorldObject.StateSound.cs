@@ -117,7 +117,7 @@ namespace OpenBveApi.Objects
 				Object.SecondsSinceLastUpdate += TimeElapsed;
 				if (base.Visible)
 				{
-					currentHost.HideObject(ref Object.internalObject);
+					currentHost.HideObject(Object.internalObject);
 					base.Visible = false;
 				}
 			}
@@ -155,23 +155,20 @@ namespace OpenBveApi.Objects
 			};
 			for (int i = 0; i < currentObject.Object.States.Length; i++)
 			{
-				if (currentObject.Object.States[i].Object == null)
+				if (currentObject.Object.States[i].Prototype == null)
 				{
-					currentObject.Object.States[i].Object = new StaticObject(currentHost) {RendererIndex = -1};
+					currentObject.Object.States[i].Prototype = new StaticObject(currentHost);
 				}
 			}
+
+			currentObject.Object.internalObject.Brightness = Brightness;
 
 			double r = 0.0;
 			for (int i = 0; i < currentObject.Object.States.Length; i++)
 			{
-				for (int j = 0; j < currentObject.Object.States[i].Object.Mesh.Materials.Length; j++)
+				for (int j = 0; j < currentObject.Object.States[i].Prototype.Mesh.Vertices.Length; j++)
 				{
-					currentObject.Object.States[i].Object.Mesh.Materials[j].Color *= Brightness;
-				}
-
-				for (int j = 0; j < currentObject.Object.States[i].Object.Mesh.Vertices.Length; j++)
-				{
-					double t = this.Object.States[i].Object.Mesh.Vertices[j].Coordinates.NormSquared();
+					double t = this.Object.States[i].Prototype.Mesh.Vertices[j].Coordinates.NormSquared();
 					if (t > r) r = t;
 				}
 			}

@@ -1,6 +1,4 @@
-﻿using OpenBve.RouteManager;
-
-namespace OpenBve
+﻿namespace OpenBve
 {
 	/// <summary>The TrainManager is the root class containing functions to load and manage trains within the simulation world.</summary>
 	public static partial class TrainManager
@@ -32,9 +30,9 @@ namespace OpenBve
 					this.CurrentAccelerationOutput = Acceleration;
 					return;
 				}
-				if (CurrentRoute.SecondsSinceMidnight >= this.NextUpdateTime)
+				if (Program.CurrentRoute.SecondsSinceMidnight >= this.NextUpdateTime)
 				{
-					this.NextUpdateTime = CurrentRoute.SecondsSinceMidnight + UpdateInterval;
+					this.NextUpdateTime = Program.CurrentRoute.SecondsSinceMidnight + UpdateInterval;
 					this.CurrentAccelerationOutput -= 0.8 * this.Car.Specs.CurrentAcceleration * (double)ReverserPosition;
 					if (this.CurrentAccelerationOutput < 0.0)
 					{
