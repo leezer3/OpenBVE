@@ -477,61 +477,12 @@ namespace OpenBve
 						FrictionBrakeAcceleration = 0.5 * (a + b);
 					}
 					// power
-					double wheelspin = 0.0;
-					double wheelSlipAccelerationMotorFront;
-					double wheelSlipAccelerationMotorRear;
-					double wheelSlipAccelerationBrakeFront;
-					double wheelSlipAccelerationBrakeRear;
-					if (Cars[i].Derailed)
-					{
-						wheelSlipAccelerationMotorFront = 0.0;
-						wheelSlipAccelerationBrakeFront = 0.0;
-						wheelSlipAccelerationMotorRear = 0.0;
-						wheelSlipAccelerationBrakeRear = 0.0;
-					}
-					else
-					{
-						wheelSlipAccelerationMotorFront = Cars[i].GetCriticalWheelSlipAccelerationForElectricMotor(Cars[i].FrontAxle.Follower.AdhesionMultiplier, Cars[i].FrontAxle.Follower.WorldUp.Y, Cars[i].CurrentSpeed);
-						wheelSlipAccelerationMotorRear = Cars[i].GetCriticalWheelSlipAccelerationForElectricMotor(Cars[i].RearAxle.Follower.AdhesionMultiplier, Cars[i].RearAxle.Follower.WorldUp.Y, Cars[i].CurrentSpeed);
-						wheelSlipAccelerationBrakeFront = Cars[i].GetCriticalWheelSlipAccelerationForFrictionBrake(Cars[i].FrontAxle.Follower.AdhesionMultiplier, Cars[i].FrontAxle.Follower.WorldUp.Y, Cars[i].CurrentSpeed);
-						wheelSlipAccelerationBrakeRear = Cars[i].GetCriticalWheelSlipAccelerationForFrictionBrake(Cars[i].RearAxle.Follower.AdhesionMultiplier, Cars[i].RearAxle.Follower.WorldUp.Y, Cars[i].CurrentSpeed);
-					}
-					Cars[i].UpdateMotor(TimeElapsed);
+					double wheelSlipAccelerationMotorFront = Cars[i].GetCriticalWheelSlipAccelerationForElectricMotor(Cars[i].FrontAxle, Cars[i].CurrentSpeed);
+					double wheelSlipAccelerationMotorRear = Cars[i].GetCriticalWheelSlipAccelerationForElectricMotor(Cars[i].RearAxle, Cars[i].CurrentSpeed);
+
+					Cars[i].UpdateAcceleration(TimeElapsed);
+					Cars[i].UpdateBrakeDeceleration(ref FrictionBrakeAcceleration);
 					
-					// brake
-					bool wheellock = wheelspin == 0.0 & Cars[i].Derailed;
-					if (!Cars[i].Derailed & wheelspin == 0.0)
-					{
-						double a = Cars[i].DecelerationDueToBrake;
-						if (Cars[i].CurrentSpeed >= -0.01 & Cars[i].CurrentSpeed <= 0.01)
-						{
-							double rf = Cars[i].FrontAxle.Follower.WorldDirection.Y;
-							double rr = Cars[i].RearAxle.Follower.WorldDirection.Y;
-							double ra = Math.Abs(0.5 * (rf + rr) * Program.CurrentRoute.Atmosphere.AccelerationDueToGravity);
-							if (a > ra) a = ra;
-						}
-						double factor = Cars[i].Specs.MassEmpty / Cars[i].Specs.MassCurrent;
-						if (a >= wheelSlipAccelerationBrakeFront)
-						{
-							wheellock = true;
-						}
-						else
-						{
-							FrictionBrakeAcceleration += 0.5 * a * factor;
-						}
-						if (a >= wheelSlipAccelerationBrakeRear)
-						{
-							wheellock = true;
-						}
-						else
-						{
-							FrictionBrakeAcceleration += 0.5 * a * factor;
-						}
-					}
-					else if (Cars[i].Derailed)
-					{
-						FrictionBrakeAcceleration += CoefficientOfGroundFriction * Program.CurrentRoute.Atmosphere.AccelerationDueToGravity;
-					}
 					// motor
 					if (Handles.Reverser.Actual != 0)
 					{
@@ -568,17 +519,17 @@ namespace OpenBve
 					// perceived speed
 					{
 						double target;
-						if (wheellock)
+						if (Cars[i].WheelLock)
 						{
 							target = 0.0;
 						}
-						else if (wheelspin == 0.0)
+						else if (Cars[i].WheelSpin == 0.0)
 						{
 							target = Cars[i].CurrentSpeed;
 						}
 						else
 						{
-							target = Cars[i].CurrentSpeed + wheelspin / 2500.0;
+							target = Cars[i].CurrentSpeed + Cars[i].WheelSpin / 2500.0;
 						}
 						double diff = target - Cars[i].Specs.CurrentPerceivedSpeed;
 						double rate = (diff < 0.0 ? 5.0 : 1.0) * Program.CurrentRoute.Atmosphere.AccelerationDueToGravity * TimeElapsed;
@@ -891,6 +842,8 @@ namespace OpenBve
 			public override void Derail(int CarIndex, double ElapsedTime)
 			{
 				this.Cars[CarIndex].Derailed = true;
+				this.Cars[CarIndex].FrontAxle.Derailed = true;
+				this.Cars[CarIndex].RearAxle.Derailed = true;
 				this.Derailed = true;
 				if (Program.GenerateDebugLogging)
 				{
@@ -905,6 +858,8 @@ namespace OpenBve
 				{
 					var c = Car as TrainManager.Car;
 					c.Derailed = true;
+					c.FrontAxle.Derailed = true;
+					c.RearAxle.Derailed = true;
 					this.Derailed = true;
 					if (Program.GenerateDebugLogging)
 					{

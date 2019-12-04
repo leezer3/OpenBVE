@@ -195,10 +195,7 @@ namespace OpenBve
 			double a = Program.CurrentRoute.Atmosphere.AccelerationDueToGravity * Train.Cars[CarIndex].Specs.CoefficientOfRollingResistance + f * Speed * Speed;
 			return a;
 		}
-
-		// get critical wheelslip acceleration
 		
-
 		
 		/// <summary>Updates the objects for all trains within the simulation world</summary>
 		/// <param name="TimeElapsed">The time elapsed</param>

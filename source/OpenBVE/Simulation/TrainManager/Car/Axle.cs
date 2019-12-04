@@ -17,6 +17,8 @@ namespace OpenBve
 			internal int RunIndex;
 			/// <summary>Stores whether the point sound has been triggered</summary>
 			internal bool PointSoundTriggered;
+
+			internal bool Derailed;
 		}
 	}
 }
