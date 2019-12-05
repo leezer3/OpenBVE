@@ -18,6 +18,7 @@ using LibRender2.Viewports;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Hosts;
+using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
@@ -165,10 +166,17 @@ namespace LibRender2
 			StaticObjectStates = new List<ObjectState>();
 			DynamicObjectStates = new List<ObjectState>();
 			VisibleObjects = new VisibleObjectLibrary(currentHost, Camera, currentOptions);
-
-			DefaultShader = new Shader("default", "default", true);
-			DefaultShader.Activate();
-			DefaultShader.Deactivate();
+			try
+			{
+				DefaultShader = new Shader("default", "default", true);
+				DefaultShader.Activate();
+				DefaultShader.Deactivate();
+			}
+			catch
+			{
+				CurrentHost.AddMessage(MessageType.Error, false, "Initialising the default shaders failed- Falling back to legacy openGL.");
+				CurrentOptions.IsUseNewRenderer = false;
+			}
 
 			GL.ClearColor(0.67f, 0.67f, 0.67f, 1.0f);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -222,9 +230,12 @@ namespace LibRender2
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthMask(true);
 			SetAlphaFunc(AlphaFunction.Greater, 0.9f);
-			DefaultShader.Activate();
-			ResetShader(DefaultShader);
-			DefaultShader.Deactivate();
+			if (DefaultShader != null)
+			{
+				DefaultShader.Activate();
+				ResetShader(DefaultShader);
+				DefaultShader.Deactivate();
+			}
 		}
 
 		public void PushMatrix(MatrixMode Mode)

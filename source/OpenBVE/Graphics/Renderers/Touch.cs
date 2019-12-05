@@ -26,10 +26,18 @@ namespace OpenBve.Graphics.Renderers
 
 			objectStates = new List<ObjectState>();
 			touchFaces = new List<FaceState>();
-
-			pickingShader = new Shader("default", "picking", true);
-			pickingShader.Activate();
-			pickingShader.Deactivate();
+			try
+			{
+				pickingShader = new Shader("default", "picking", true);
+				pickingShader.Activate();
+				pickingShader.Deactivate();
+			}
+			catch
+			{
+				Interface.AddMessage(MessageType.Error, false, "Initialising the touch shader failed- Falling back to legacy openGL.");
+				Interface.CurrentOptions.IsUseNewRenderer = false;
+			}
+			
 
 			fbo = new FrameBufferObject();
 			fbo.Bind();
