@@ -305,6 +305,8 @@ namespace TrainEditor2.Views
 			this.labelTimetableLocationY = new System.Windows.Forms.Label();
 			this.labelTimetableLocationX = new System.Windows.Forms.Label();
 			this.tabPageTouch = new System.Windows.Forms.TabPage();
+			this.numericUpDownTouchLayer = new System.Windows.Forms.NumericUpDown();
+			this.labelTouchLayer = new System.Windows.Forms.Label();
 			this.buttonTouchSoundCommand = new System.Windows.Forms.Button();
 			this.labelTouchSoundCommand = new System.Windows.Forms.Label();
 			this.numericUpDownTouchJumpScreen = new System.Windows.Forms.NumericUpDown();
@@ -634,8 +636,6 @@ namespace TrainEditor2.Views
 			this.comboBoxHandleType = new System.Windows.Forms.ComboBox();
 			this.labelHandleType = new System.Windows.Forms.Label();
 			this.tabControlEditor = new System.Windows.Forms.TabControl();
-			this.numericUpDownTouchLayer = new System.Windows.Forms.NumericUpDown();
-			this.labelTouchLayer = new System.Windows.Forms.Label();
 			this.panelCars.SuspendLayout();
 			this.panelCarsNavi.SuspendLayout();
 			this.menuStripMenu.SuspendLayout();
@@ -694,6 +694,7 @@ namespace TrainEditor2.Views
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTimetableLayer)).BeginInit();
 			this.groupBoxTimetableLocation.SuspendLayout();
 			this.tabPageTouch.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchLayer)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchJumpScreen)).BeginInit();
 			this.groupBoxTouchSize.SuspendLayout();
 			this.groupBoxTouchLocation.SuspendLayout();
@@ -739,7 +740,6 @@ namespace TrainEditor2.Views
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBrakeNotches)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownPowerNotches)).BeginInit();
 			this.tabControlEditor.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchLayer)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// panelCars
@@ -1132,6 +1132,11 @@ namespace TrainEditor2.Views
 			// numericUpDownSoundKeyIndex
 			// 
 			this.numericUpDownSoundKeyIndex.Location = new System.Drawing.Point(136, 16);
+			this.numericUpDownSoundKeyIndex.Maximum = new decimal(new int[] {
+            256,
+            0,
+            0,
+            0});
 			this.numericUpDownSoundKeyIndex.Name = "numericUpDownSoundKeyIndex";
 			this.numericUpDownSoundKeyIndex.Size = new System.Drawing.Size(40, 19);
 			this.numericUpDownSoundKeyIndex.TabIndex = 1;
@@ -3318,6 +3323,22 @@ namespace TrainEditor2.Views
 			this.tabPageTouch.TabIndex = 8;
 			this.tabPageTouch.Text = "Touch";
 			this.tabPageTouch.UseVisualStyleBackColor = true;
+			// 
+			// numericUpDownTouchLayer
+			// 
+			this.numericUpDownTouchLayer.Location = new System.Drawing.Point(136, 216);
+			this.numericUpDownTouchLayer.Name = "numericUpDownTouchLayer";
+			this.numericUpDownTouchLayer.Size = new System.Drawing.Size(48, 19);
+			this.numericUpDownTouchLayer.TabIndex = 108;
+			// 
+			// labelTouchLayer
+			// 
+			this.labelTouchLayer.Location = new System.Drawing.Point(8, 216);
+			this.labelTouchLayer.Name = "labelTouchLayer";
+			this.labelTouchLayer.Size = new System.Drawing.Size(120, 16);
+			this.labelTouchLayer.TabIndex = 109;
+			this.labelTouchLayer.Text = "Layer:";
+			this.labelTouchLayer.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// buttonTouchSoundCommand
 			// 
@@ -6495,22 +6516,6 @@ namespace TrainEditor2.Views
 			this.tabControlEditor.Size = new System.Drawing.Size(800, 696);
 			this.tabControlEditor.TabIndex = 9;
 			// 
-			// numericUpDownTouchLayer
-			// 
-			this.numericUpDownTouchLayer.Location = new System.Drawing.Point(136, 216);
-			this.numericUpDownTouchLayer.Name = "numericUpDownTouchLayer";
-			this.numericUpDownTouchLayer.Size = new System.Drawing.Size(48, 19);
-			this.numericUpDownTouchLayer.TabIndex = 108;
-			// 
-			// labelTouchLayer
-			// 
-			this.labelTouchLayer.Location = new System.Drawing.Point(8, 216);
-			this.labelTouchLayer.Name = "labelTouchLayer";
-			this.labelTouchLayer.Size = new System.Drawing.Size(120, 16);
-			this.labelTouchLayer.TabIndex = 109;
-			this.labelTouchLayer.Text = "Layer:";
-			this.labelTouchLayer.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
 			// FormEditor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -6606,6 +6611,7 @@ namespace TrainEditor2.Views
 			this.groupBoxTimetableLocation.ResumeLayout(false);
 			this.groupBoxTimetableLocation.PerformLayout();
 			this.tabPageTouch.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchLayer)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchJumpScreen)).EndInit();
 			this.groupBoxTouchSize.ResumeLayout(false);
 			this.groupBoxTouchSize.PerformLayout();
@@ -6674,7 +6680,6 @@ namespace TrainEditor2.Views
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBrakeNotches)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownPowerNotches)).EndInit();
 			this.tabControlEditor.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchLayer)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
