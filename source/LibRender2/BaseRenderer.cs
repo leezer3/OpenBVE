@@ -42,7 +42,7 @@ namespace LibRender2
 		internal HostInterface currentHost;
 
 		/// <summary>Holds a reference to the current options</summary>
-		private BaseOptions currentOptions;
+		internal BaseOptions currentOptions;
 
 		public List<ObjectState> StaticObjectStates;
 		public List<ObjectState> DynamicObjectStates;
