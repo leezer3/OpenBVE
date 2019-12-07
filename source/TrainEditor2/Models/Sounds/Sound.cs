@@ -118,7 +118,7 @@ namespace TrainEditor2.Models.Sounds
 
 		internal void CreateListColumns()
 		{
-			ListColumns.RemoveAll(_ => true);
+			ListColumns.Clear();
 
 			if (TreeItem.Children.Contains(SelectedTreeItem))
 			{
@@ -131,7 +131,7 @@ namespace TrainEditor2.Models.Sounds
 
 		internal void CreateListItems()
 		{
-			ListItems.RemoveAll(_ => true);
+			ListItems.Clear();
 
 			IEnumerable<SoundElement> elements = null;
 

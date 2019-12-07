@@ -176,7 +176,7 @@ namespace TrainEditor2.IO.Panels.Bve4
 				return;
 			}
 
-			builder.AppendLine(string.Format("{0} = {1}", key, string.Join(", ", values)));
+			builder.AppendLine($"{key} = {string.Join(", ", values)}");
 		}
 
 		private static void WriteKey(StringBuilder builder, string key, params int[] values)
