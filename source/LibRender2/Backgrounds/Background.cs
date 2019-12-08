@@ -153,6 +153,7 @@ namespace LibRender2.Backgrounds
 				renderer.DefaultShader.SetIsTexture(true);
 				renderer.DefaultShader.SetTexture(0);
 				GL.BindTexture(TextureTarget.Texture2D, data.Texture.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp].Name);
+				renderer.LastBoundTexture = null;
 
 				// alpha test
 				renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
@@ -172,8 +173,6 @@ namespace LibRender2.Backgrounds
 				}
 
 				VAO.UnBind();
-
-				GL.BindTexture(TextureTarget.Texture2D, 0);
 				renderer.DefaultShader.Deactivate();
 
 				GL.Disable(EnableCap.Texture2D);

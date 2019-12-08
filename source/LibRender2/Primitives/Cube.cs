@@ -261,8 +261,6 @@ namespace LibRender2.Primitives
 			VAO.Bind();
 			VAO.Draw(renderer.DefaultShader.VertexLayout, PrimitiveType.Quads);
 			VAO.UnBind();
-
-			GL.BindTexture(TextureTarget.Texture2D, 0);
 			renderer.DefaultShader.Deactivate();
 
 			GL.Disable(EnableCap.Texture2D);
@@ -278,6 +276,7 @@ namespace LibRender2.Primitives
 		/// <param name="TextureIndex">The texture to apply</param>
 		public void DrawImmediate(OpenBveApi.Math.Vector3 Position, OpenBveApi.Math.Vector3 Direction, OpenBveApi.Math.Vector3 Up, OpenBveApi.Math.Vector3 Side, OpenBveApi.Math.Vector3 Size, OpenBveApi.Math.Vector3 Camera, Texture TextureIndex)
 		{
+			renderer.LastBoundTexture = null;
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.PushMatrix();
 			GL.LoadIdentity();

@@ -134,6 +134,9 @@ namespace LibRender2
 		/// <summary>The current AlphaFunc comparison value</summary>
 		private float alphaFuncValue;
 
+		/// <summary>Stores the most recently bound texture</summary>
+		public OpenGlTexture LastBoundTexture;
+
 		protected BaseRenderer()
 		{
 			Screen = new Screen();
@@ -908,7 +911,12 @@ namespace LibRender2
 						GL.Enable(EnableCap.Texture2D);
 						Shader.SetIsTexture(true);
 						Shader.SetTexture(0);
-						GL.BindTexture(TextureTarget.Texture2D, material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode].Name);
+						if (LastBoundTexture != material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode])
+						{
+							GL.BindTexture(TextureTarget.Texture2D, material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode].Name);
+							LastBoundTexture = material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode];
+						}
+						
 					}
 				}
 
@@ -953,8 +961,6 @@ namespace LibRender2
 				VAO.Bind();
 				VAO.Draw(Shader.VertexLayout, DrawMode, Face.IboStartIndex, Face.Vertices.Length);
 				VAO.UnBind();
-
-				GL.BindTexture(TextureTarget.Texture2D, 0);
 			}
 
 			// nighttime polygon
@@ -964,7 +970,12 @@ namespace LibRender2
 				GL.Enable(EnableCap.Texture2D);
 				Shader.SetIsTexture(true);
 				Shader.SetTexture(0);
-				GL.BindTexture(TextureTarget.Texture2D, material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode].Name);
+				if (LastBoundTexture != material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode])
+				{
+					GL.BindTexture(TextureTarget.Texture2D, material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode].Name);
+					LastBoundTexture = material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode];
+				}
+				
 
 				GL.Enable(EnableCap.Blend);
 
@@ -1000,9 +1011,6 @@ namespace LibRender2
 				VAO.Bind();
 				VAO.Draw(Shader.VertexLayout, DrawMode, Face.IboStartIndex, Face.Vertices.Length);
 				VAO.UnBind();
-
-				GL.BindTexture(TextureTarget.Texture2D, 0);
-
 				RestoreBlendFunc();
 				RestoreAlphaFunc();
 			}
@@ -1154,7 +1162,11 @@ namespace LibRender2
 					if (currentHost.LoadTexture(material.DaytimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
 					{
 						GL.Enable(EnableCap.Texture2D);
-						GL.BindTexture(TextureTarget.Texture2D, material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode].Name);
+						if (LastBoundTexture != material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode])
+						{
+							GL.BindTexture(TextureTarget.Texture2D, material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode].Name);
+							LastBoundTexture = material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode];
+						}
 					}
 				}
 
@@ -1217,10 +1229,7 @@ namespace LibRender2
 
 					GL.Vertex3(vertices[Face.Vertices[i].Index].Coordinates.X, vertices[Face.Vertices[i].Index].Coordinates.Y, -vertices[Face.Vertices[i].Index].Coordinates.Z);
 				}
-
 				GL.End();
-
-				GL.BindTexture(TextureTarget.Texture2D, 0);
 			}
 
 			// nighttime polygon
@@ -1228,7 +1237,11 @@ namespace LibRender2
 			{
 				// texture
 				GL.Enable(EnableCap.Texture2D);
-				GL.BindTexture(TextureTarget.Texture2D, material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode].Name);
+				if (LastBoundTexture != material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode])
+				{
+					GL.BindTexture(TextureTarget.Texture2D, material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode].Name);
+					LastBoundTexture = material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode];
+				}
 
 				GL.Enable(EnableCap.Blend);
 
@@ -1284,9 +1297,6 @@ namespace LibRender2
 				}
 
 				GL.End();
-
-				GL.BindTexture(TextureTarget.Texture2D, 0);
-
 				RestoreBlendFunc();
 				RestoreAlphaFunc();
 			}

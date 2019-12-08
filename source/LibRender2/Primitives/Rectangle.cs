@@ -42,6 +42,7 @@ namespace LibRender2.Primitives
 		/// <param name="color">The color, or a null reference.</param>
 		public void Draw(Texture texture, PointF point, SizeF size, Color128? color = null)
 		{
+			renderer.LastBoundTexture = null;
 			// TODO: Remove Nullable<T> from color once RenderOverlayTexture and RenderOverlaySolid are fully replaced.
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.PushMatrix();
@@ -95,8 +96,6 @@ namespace LibRender2.Primitives
 				GL.TexCoord2(0.0f, 1.0f);
 				GL.Vertex2(point.X, point.Y + size.Height);
 				GL.End();
-
-				GL.BindTexture(TextureTarget.Texture2D, 0);
 				GL.Disable(EnableCap.Texture2D);
 			}
 

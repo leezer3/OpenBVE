@@ -15,6 +15,7 @@ namespace OpenBveApi.Objects
 		/// <summary>The rotation matrix to be applied</summary>
 		private Matrix4D _rotate;
 
+		public Vector3 WorldPosition;
 
 		/// <summary>The translation matrix to be applied</summary>
 		public Matrix4D Translation
