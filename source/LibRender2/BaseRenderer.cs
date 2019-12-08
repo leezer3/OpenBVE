@@ -811,7 +811,7 @@ namespace LibRender2
 			}
 
 			// matrix
-			Matrix4D modelMatrix = State.Scale * State.Rotate * State.Translation * Matrix4D.CreateTranslation(-EyePosition);
+			Matrix4D modelMatrix = State.ModelMatrix * Matrix4D.CreateTranslation(-EyePosition);
 			Matrix4D modelViewMatrix = modelMatrix * CurrentViewMatrix;
 			Shader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
 			Shader.SetCurrentModelViewMatrix(modelViewMatrix);
@@ -1064,7 +1064,7 @@ namespace LibRender2
 					GL.Enable(EnableCap.CullFace);
 				}
 			}
-			Matrix4D modelMatrix = State.Scale * State.Rotate * State.Translation * Matrix4D.CreateTranslation(-EyePosition);
+			Matrix4D modelMatrix = State.ModelMatrix * Matrix4D.CreateTranslation(-EyePosition);
 			// matrix
 			unsafe
 			{

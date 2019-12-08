@@ -3,6 +3,7 @@ using System.Text;
 using OpenBveApi;
 using OpenBveApi.Objects;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 
 namespace OpenBve {
 	internal static class ExtensionsCfgParser {
@@ -473,8 +474,10 @@ namespace OpenBve {
 											continue; //object failed to load?
 										}
 										obj.Objects[j].States[h].Prototype.ApplyScale(-1.0, 1.0, -1.0);
-										obj.Objects[j].States[h].Translation.Row3.X *= -1.0f;
-										obj.Objects[j].States[h].Translation.Row3.Z *= -1.0f;
+										Matrix4D t = obj.Objects[j].States[h].Translation;
+										t.Row3.X *= -1.0f;
+										t.Row3.Z *= -1.0f;
+										obj.Objects[j].States[h].Translation = t;
 									}
 									obj.Objects[j].TranslateXDirection.X *= -1.0;
 									obj.Objects[j].TranslateXDirection.Z *= -1.0;
@@ -533,8 +536,10 @@ namespace OpenBve {
 											continue; //object failed to load?
 										}
 										obj.Objects[j].States[h].Prototype.ApplyScale(-1.0, 1.0, -1.0);
-										obj.Objects[j].States[h].Translation.Row3.X *= -1.0f;
-										obj.Objects[j].States[h].Translation.Row3.Z *= -1.0f;
+										Matrix4D t = obj.Objects[j].States[h].Translation;
+										t.Row3.X *= -1.0f;
+										t.Row3.Z *= -1.0f;
+										obj.Objects[j].States[h].Translation = t;
 									}
 									obj.Objects[j].TranslateXDirection.X *= -1.0;
 									obj.Objects[j].TranslateXDirection.Z *= -1.0;

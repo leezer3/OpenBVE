@@ -214,10 +214,9 @@ namespace LibRender2.Objects
 					v0.Z *= -1.0;
 					w1.Z *= -1.0;
 					w2.Z *= -1.0;
-					Matrix4D mat = faces[i].Object.Scale * faces[i].Object.Rotate * faces[i].Object.Translation;
-					v0 = Vector4.Transform(v0, mat);
-					w1 = Vector4.Transform(w1, mat);
-					w2 = Vector4.Transform(w2, mat);
+					v0 = Vector4.Transform(v0, faces[i].Object.ModelMatrix);
+					w1 = Vector4.Transform(w1, faces[i].Object.ModelMatrix);
+					w2 = Vector4.Transform(w2, faces[i].Object.ModelMatrix);
 					v0.Z *= -1.0;
 					w1.Z *= -1.0;
 					w2.Z *= -1.0;
