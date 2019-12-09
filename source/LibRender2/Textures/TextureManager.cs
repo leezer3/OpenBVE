@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
@@ -284,7 +284,7 @@ namespace LibRender2.Textures
 						GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, 1);
 					}
 
-					if (Interpolation == InterpolationMode.AnisotropicFiltering)
+					if (Interpolation == InterpolationMode.AnisotropicFiltering && AnisotropicFilteringLevel > 0)
 					{
 						GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, AnisotropicFilteringLevel);
 					}
