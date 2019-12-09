@@ -239,6 +239,7 @@ namespace LibRender2
 				ResetShader(DefaultShader);
 				DefaultShader.Deactivate();
 			}
+
 		}
 
 		public void PushMatrix(MatrixMode Mode)

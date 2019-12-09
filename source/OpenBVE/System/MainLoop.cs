@@ -77,7 +77,14 @@ namespace OpenBve
 					Interface.CurrentOptions.WindowHeight = result.Height;
 				}
 			}
-
+			if (Interface.CurrentOptions.IsUseNewRenderer)
+			{
+				Program.FileSystem.AppendToLogFile("Using openGL 3.0 (new) renderer");
+			}
+			else
+			{
+				Program.FileSystem.AppendToLogFile("Using openGL 1.2 (old) renderer");
+			}
 			if (Interface.CurrentOptions.FullscreenMode)
 			{
 				Program.FileSystem.AppendToLogFile("Initialising full-screen game window of size " + Interface.CurrentOptions.FullscreenWidth + " x " + Interface.CurrentOptions.FullscreenHeight);
