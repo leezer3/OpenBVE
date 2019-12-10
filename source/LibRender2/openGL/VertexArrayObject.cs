@@ -27,7 +27,10 @@ namespace LibRender2
 		public VertexArrayObject()
 		{
 			GL.GenVertexArrays(1, out handle);
-
+			if (handle == 0)
+			{
+				throw new InvalidOperationException("Failed to generate the required vertex array handle- No openGL context.");
+			}
 			Disposable.Add(this);
 		}
 

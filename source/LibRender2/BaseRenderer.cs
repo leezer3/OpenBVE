@@ -473,6 +473,9 @@ namespace LibRender2
 			DynamicObjectStates.Add(internalObject);
 		}
 
+		/// <summary>Initialises the visibility of all objects within the game world</summary>
+		/// <remarks>If the new renderer is enabled, this must be run in a thread posessing an openGL context in order to successfully create
+		/// the required VAO objects</remarks>
 		public virtual void InitializeVisibility()
 		{
 			ObjectsSortedByStart = StaticObjectStates.Select((x, i) => new { Index = i, Distance = x.StartingDistance }).OrderBy(x => x.Distance).Select(x => x.Index).ToArray();

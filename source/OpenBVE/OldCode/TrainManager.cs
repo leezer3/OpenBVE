@@ -89,7 +89,11 @@ namespace OpenBve
 
 				if (Train.Cars[Train.DriverCar].CarSections[0].Groups[0].Elements.Any())
 				{
-					Program.Renderer.InitializeVisibility();
+					OpenBVEGame.RunInRenderThread(() =>
+					{
+						//Needs to be on the thread containing the openGL context
+						Program.Renderer.InitializeVisibility();
+					});
 					World.UpdateViewingDistances();
 					return;
 				}
