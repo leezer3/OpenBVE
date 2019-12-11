@@ -140,7 +140,7 @@ namespace LibRender2
 		protected BaseRenderer()
 		{
 			Screen = new Screen();
-			Camera = new CameraProperties();
+			Camera = new CameraProperties(this);
 			Lighting = new Lighting();
 			Marker = new Marker();
 
@@ -651,6 +651,23 @@ namespace LibRender2
 		public void UpdateViewport()
 		{
 			UpdateViewport(Screen.Width, Screen.Height);
+		}
+
+		/// <summary>Updates the openGL viewport</summary>
+		/// <param name="Mode">The viewport change mode</param>
+		public void UpdateViewport(ViewportChangeMode Mode)
+		{
+			switch (Mode)
+			{
+				case ViewportChangeMode.ChangeToScenery:
+					CurrentViewportMode = ViewportMode.Scenery;
+					break;
+				case ViewportChangeMode.ChangeToCab:
+					CurrentViewportMode = ViewportMode.Cab;
+					break;
+			}
+
+			UpdateViewport();
 		}
 
 		public virtual void UpdateViewport(int Width, int Height)

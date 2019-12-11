@@ -69,7 +69,7 @@ namespace OpenBve {
 			double a = Source;
 			double b = Target;
 			Source = Target;
-			if (Zoom) ApplyZoom();
+			if (Zoom) Program.Renderer.Camera.ApplyZoom();
 			if (Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction)) {
 				return true;
 			}
@@ -78,7 +78,7 @@ namespace OpenBve {
 			for (int i = 0; i < Precision; i++) {
 				//Do not remove, this is updated via the ref & causes the panel zoom to bug out
 				Source = x;
-				if (Zoom) ApplyZoom();
+				if (Zoom) Program.Renderer.Camera.ApplyZoom();
 				q = Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction);
 				if (q) {
 					a = x;
@@ -89,7 +89,7 @@ namespace OpenBve {
 				x = 0.5 * (a + b);
 			}
 			Source = best;
-			if (Zoom) ApplyZoom();
+			if (Zoom) Program.Renderer.Camera.ApplyZoom();
 			return q;
 		}
 		/// <summary>Checks whether the camera can move in the selected direction, due to a bounding box.</summary>
@@ -114,7 +114,7 @@ namespace OpenBve {
 			double zm = Program.Renderer.Camera.Alignment.Zoom;
 			AdjustAlignment(ref Program.Renderer.Camera.Alignment.Zoom, Program.Renderer.Camera.AlignmentDirection.Zoom, ref Program.Renderer.Camera.AlignmentSpeed.Zoom, TimeElapsed, true);
 			if (zm != Program.Renderer.Camera.Alignment.Zoom) {
-				ApplyZoom();
+				Program.Renderer.Camera.ApplyZoom();
 			}
 			if (Program.Renderer.Camera.CurrentMode == CameraViewMode.FlyBy | Program.Renderer.Camera.CurrentMode == CameraViewMode.FlyByZooming) {
 				// fly-by
@@ -446,12 +446,6 @@ namespace OpenBve {
 					}
 				}
 			}
-		}
-		private static void ApplyZoom() {
-			Program.Renderer.Camera.VerticalViewingAngle = Program.Renderer.Camera.OriginalVerticalViewingAngle * Math.Exp(Program.Renderer.Camera.Alignment.Zoom);
-			if (Program.Renderer.Camera.VerticalViewingAngle < 0.001) Program.Renderer.Camera.VerticalViewingAngle = 0.001;
-			if (Program.Renderer.Camera.VerticalViewingAngle > 1.5) Program.Renderer.Camera.VerticalViewingAngle = 1.5;
-			Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 		}
 
 		// update viewing distance

@@ -225,24 +225,7 @@ namespace OpenBve.Graphics
 
 			Touch.UpdateViewport();
 		}
-
-		/// <summary>Updates the openGL viewport</summary>
-		/// <param name="Mode">The viewport change mode</param>
-		internal void UpdateViewport(ViewportChangeMode Mode)
-		{
-			switch (Mode)
-			{
-				case ViewportChangeMode.ChangeToScenery:
-					CurrentViewportMode = ViewportMode.Scenery;
-					break;
-				case ViewportChangeMode.ChangeToCab:
-					CurrentViewportMode = ViewportMode.Cab;
-					break;
-			}
-
-			UpdateViewport();
-		}
-
+		
 		// render scene
 		internal void RenderScene(double TimeElapsed)
 		{

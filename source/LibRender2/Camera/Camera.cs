@@ -1,5 +1,6 @@
 ﻿using System;
 using LibRender2.Camera;
+using LibRender2.Viewports;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
@@ -8,6 +9,7 @@ namespace LibRender2.Cameras
 {
 	public class CameraProperties
 	{
+		private readonly BaseRenderer Renderer;
 		/// <summary>The current viewing distance in the forward direction.</summary>
 		public double ForwardViewingDistance;
 		/// <summary>The current viewing distance in the backward direction.</summary>
@@ -53,8 +55,9 @@ namespace LibRender2.Cameras
 		/// <summary>The current camera restriction mode</summary>
 		public CameraRestrictionMode CurrentRestriction = CameraRestrictionMode.NotAvailable;
 
-		internal CameraProperties()
+		internal CameraProperties(BaseRenderer renderer)
 		{
+			Renderer = renderer;
 		}
 
 		/// <summary>Tests whether the camera may move further in the current direction</summary>
@@ -156,6 +159,15 @@ namespace LibRender2.Cameras
 				}
 			}
 			return true;
+		}
+
+		/// <summary>Applies the current zoom settings after a change</summary>
+		public void ApplyZoom()
+		{
+			VerticalViewingAngle = OriginalVerticalViewingAngle * Math.Exp(Alignment.Zoom);
+			if (VerticalViewingAngle < 0.001) VerticalViewingAngle = 0.001;
+			if (VerticalViewingAngle > 1.5) VerticalViewingAngle = 1.5;
+			Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 		}
 	}
 }
