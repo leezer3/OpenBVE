@@ -74,6 +74,8 @@ namespace OpenBve
 						if (DocumentElements.Any())
 						{
 							PanelXmlParser.ParsePanelXml(System.IO.Path.GetFileName(File), TrainPath, Train, Train.DriverCar);
+							Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.On;
+							Program.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.On;
 						}
 					}
 				}

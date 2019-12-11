@@ -14,7 +14,7 @@ namespace LibRender2
 	/// </summary>
 	public class VertexArrayObject : IDisposable
 	{
-		public static List<VertexArrayObject> Disposable = new List<VertexArrayObject>();
+		public static readonly List<VertexArrayObject> Disposable = new List<VertexArrayObject>();
 
 		private readonly int handle;
 		private VertexBufferObject vbo;
