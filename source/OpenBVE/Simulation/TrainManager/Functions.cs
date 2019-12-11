@@ -109,7 +109,7 @@ namespace OpenBve
 				}
 				if (Program.CurrentRoute.Sections.Length > 0)
 				{
-					Game.UpdateAllSections();
+					Program.CurrentRoute.UpdateAllSections();
 				}
 				if (train.IsPlayerTrain)
 				{
