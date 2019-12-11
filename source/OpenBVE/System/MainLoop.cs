@@ -125,6 +125,10 @@ namespace OpenBve
 		/// <summary>The current mouse state</summary>
 		internal static MouseState currentMouseState, previousMouseState;
 
+		internal static bool MouseGrabEnabled = false;
+		internal static bool MouseGrabIgnoreOnce = false;
+		internal static OpenBveApi.Math.Vector2 MouseGrabTarget = new OpenBveApi.Math.Vector2(0.0, 0.0);
+
 		/// <summary>Called when a mouse button is pressed</summary>
 		/// <param name="sender">The sender</param>
 		/// <param name="e">The button arguments</param>
@@ -132,8 +136,8 @@ namespace OpenBve
 		{
 			if (e.Button == MouseButton.Right)
 			{
-				World.MouseGrabEnabled = !World.MouseGrabEnabled;
-				World.MouseGrabIgnoreOnce = true;
+				MouseGrabEnabled = !MouseGrabEnabled;
+				MouseGrabIgnoreOnce = true;
 			}
 			if (e.Button == MouseButton.Left)
 			{
@@ -180,6 +184,26 @@ namespace OpenBve
 			if (Game.CurrentInterface == Game.InterfaceType.Menu)
 			{
 				Game.Menu.ProcessMouseScroll(e.Delta);
+			}
+		}
+
+		internal static void UpdateMouseGrab(double TimeElapsed)
+		{
+			if (MainLoop.MouseGrabEnabled)
+			{
+				double factor;
+				if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead)
+				{
+					factor = 1.0;
+				}
+				else
+				{
+					factor = 3.0;
+				}
+
+				Program.Renderer.Camera.AlignmentDirection.Yaw += factor * MouseGrabTarget.X;
+				Program.Renderer.Camera.AlignmentDirection.Pitch -= factor * MouseGrabTarget.Y;
+				MouseGrabTarget = OpenBveApi.Math.Vector2.Null;
 			}
 		}
 
@@ -241,19 +265,19 @@ namespace OpenBve
 				}
 				return;
 			}
-			if (World.MouseGrabEnabled)
+			if (MouseGrabEnabled)
 			{
 				previousMouseState = currentMouseState;
 				currentMouseState = Mouse.GetState();
 				if (previousMouseState != currentMouseState)
 				{
-					if (World.MouseGrabIgnoreOnce)
+					if (MouseGrabIgnoreOnce)
 					{
-						World.MouseGrabIgnoreOnce = false;
+						MouseGrabIgnoreOnce = false;
 					}
-					else if (World.MouseGrabEnabled)
+					else if (MouseGrabEnabled)
 					{
-						World.MouseGrabTarget = new OpenBveApi.Math.Vector2(currentMouseState.X - previousMouseState.X, currentMouseState.Y - previousMouseState.Y);
+						MouseGrabTarget = new OpenBveApi.Math.Vector2(currentMouseState.X - previousMouseState.X, currentMouseState.Y - previousMouseState.Y);
 					}
 				}
 			}

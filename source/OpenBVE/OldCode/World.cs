@@ -13,41 +13,7 @@ using OpenBveApi.Trains;
 
 namespace OpenBve {
 	internal static class World {
-		// display
-		
-		
-		
-		
-		
-
-		// driver body
-		
-		
-		
-		// mouse grab
-		internal static bool MouseGrabEnabled = false;
-		internal static bool MouseGrabIgnoreOnce = false;
-		internal static Vector2 MouseGrabTarget = new Vector2(0.0, 0.0);
-		internal static void UpdateMouseGrab(double TimeElapsed) {
-			if (MouseGrabEnabled) {
-				double factor;
-				if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) {
-					factor = 1.0;
-				} else {
-					factor = 3.0;
-				}
-
-				Program.Renderer.Camera.AlignmentDirection.Yaw += factor * MouseGrabTarget.X;
-				Program.Renderer.Camera.AlignmentDirection.Pitch -= factor * MouseGrabTarget.Y;
-				MouseGrabTarget = Vector2.Null;
-			}
-		}
-		
-		// relative camera
-		
 		internal static TrackFollower CameraTrackFollower;
-		
-		
 		
 		/// <summary>The index of the car which the camera is currently anchored to</summary>
 		internal static int CameraCar;
@@ -55,13 +21,6 @@ namespace OpenBve {
 		// camera memory
 		internal static CameraAlignment CameraSavedExterior;
 		internal static CameraAlignment CameraSavedTrack;
-
-		// camera restriction
-		
-
-
-		// absolute camera
-		
 
 		// camera restriction
 		internal static void InitializeCameraRestriction() {
