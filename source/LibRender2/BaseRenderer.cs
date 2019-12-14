@@ -74,6 +74,8 @@ namespace LibRender2
 		protected List<Matrix4D> projectionMatrixList;
 		protected List<Matrix4D> viewMatrixList;
 
+		private ErrorCode lastError;
+
 		public Shader DefaultShader;
 
 		/// <summary>Whether fog is enabled in the debug options</summary>
@@ -683,13 +685,14 @@ namespace LibRender2
 
 		public void ResetShader(Shader Shader)
 		{
-			ErrorCode message = GL.GetError();
+#if DEBUG
+			lastError = GL.GetError();
 			
-			if (message != ErrorCode.NoError)
+			if (lastError != ErrorCode.NoError)
 			{
-				throw new InvalidOperationException($"OpenGL Error: {message.ToString()}");
+				throw new InvalidOperationException($"OpenGL Error: {lastError.ToString()}");
 			}
-
+#endif   
 			Shader.SetCurrentProjectionMatrix(Matrix4D.Identity);
 			Shader.SetCurrentModelViewMatrix(Matrix4D.Identity);
 			Shader.SetCurrentNormalMatrix(Matrix4D.Identity);
@@ -713,7 +716,6 @@ namespace LibRender2
 			Shader.SetBrightness(1.0f);
 			Shader.SetOpacity(1.0f);
 			Shader.SetObjectIndex(0);
-			GL.GetError();
 		}
 
 		public void SetFogForImmediateMode()
