@@ -225,7 +225,7 @@ namespace OpenBveApi.Math
 				Row0 = new Vector4(x.X, y.X, z.X, 0.0),
 				Row1 = new Vector4(x.Y, y.Y, z.Y, 0.0),
 				Row2 = new Vector4(x.Z, y.Z, z.Z, 0.0),
-				Row3 = new Vector4(0.0, 0.0, 0.0, 1.0)
+				Row3 = Vector4.UnitW
 			};
 			Matrix4D translationMatrix = NoTransformation;
 			translationMatrix.Row3 = new Vector4(-eyePosition.X, -eyePosition.Y, -eyePosition.Z, 1.0);
@@ -448,7 +448,7 @@ namespace OpenBveApi.Math
 			result.Row2.Y = tYZ + sinX;
 			result.Row2.Z = tZZ + cos;
 			result.Row2.W = 0;
-			result.Row3 = new Vector4(0.0, 0.0, 0.0, 1.0);
+			result.Row3 = Vector4.UnitW;
 		}
 
 		/// <summary>Build a rotation matrix from the specified axis/angle rotation.</summary>
@@ -647,10 +647,10 @@ namespace OpenBveApi.Math
         public static Matrix4D Scale(double x, double y, double z)
         {
 	        Matrix4D result;
-	        result.Row0 = new Vector4(1,0,0,0) * x;
-	        result.Row1 = new Vector4(0,1,0,0) * y;
-	        result.Row2 = new Vector4(0,0,1,0) * z;
-	        result.Row3 = new Vector4(0,0,0,1);
+	        result.Row0 = Vector4.UnitX * x;
+	        result.Row1 = Vector4.UnitY * y;
+	        result.Row2 = Vector4.UnitZ * z;
+	        result.Row3 = Vector4.UnitW;
 	        return result;
         }
 
@@ -728,9 +728,9 @@ namespace OpenBveApi.Math
 		public static readonly Matrix4D Zero = new Matrix4D(Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero);
 
 		/// <summary>Represents a matrix which performs no transformation</summary>
-		public static readonly Matrix4D NoTransformation = new Matrix4D(new Vector4(1.0, 0.0, 0.0, 0.0), new Vector4(0.0, 1.0, 0.0, 0.0), new Vector4(0.0, 0.0, 1.0, 0.0), new Vector4(0.0, 0.0, 0.0, 1.0));
+		public static readonly Matrix4D NoTransformation = new Matrix4D(Vector4.UnitX, Vector4.UnitY, Vector4.UnitZ, Vector4.UnitW);
 
 		/// <summary>Represents an identity matrix</summary>
-		public static Matrix4D Identity = new Matrix4D(new Vector4(1.0, 0.0, 0.0, 0.0), new Vector4(0.0, 1.0, 0.0, 0.0), new Vector4(0.0, 0.0, 1.0, 0.0), new Vector4(0.0, 0.0, 0.0, 1.0));
+		public static Matrix4D Identity = new Matrix4D(Vector4.UnitX, Vector4.UnitY, Vector4.UnitZ, Vector4.UnitW);
 	}
 }
