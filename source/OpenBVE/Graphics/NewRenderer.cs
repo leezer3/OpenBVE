@@ -309,7 +309,7 @@ namespace OpenBve.Graphics
 					DefaultShader.Activate();
 					ResetShader(DefaultShader);
 					RenderFace(DefaultShader, face);
-					DefaultShader.Deactivate();
+					
 				}
 				else
 				{
@@ -334,7 +334,7 @@ namespace OpenBve.Graphics
 						DefaultShader.Activate();
 						ResetShader(DefaultShader);
 						RenderFace(DefaultShader, face);
-						DefaultShader.Deactivate();
+						
 					}
 					else
 					{
@@ -359,7 +359,7 @@ namespace OpenBve.Graphics
 								DefaultShader.Activate();
 								ResetShader(DefaultShader);
 								RenderFace(DefaultShader, face);
-								DefaultShader.Deactivate();
+								
 							}
 							else
 							{
@@ -389,7 +389,7 @@ namespace OpenBve.Graphics
 							DefaultShader.Activate();
 							ResetShader(DefaultShader);
 							RenderFace(DefaultShader, face);
-							DefaultShader.Deactivate();
+							
 						}
 						else
 						{
@@ -409,7 +409,7 @@ namespace OpenBve.Graphics
 							DefaultShader.Activate();
 							ResetShader(DefaultShader);
 							RenderFace(DefaultShader, face);
-							DefaultShader.Deactivate();
+							
 						}
 						else
 						{
@@ -456,7 +456,7 @@ namespace OpenBve.Graphics
 						DefaultShader.Activate();
 						ResetShader(DefaultShader);
 						RenderFace(DefaultShader, face);
-						DefaultShader.Deactivate();
+						
 					}
 					else
 					{
@@ -481,7 +481,7 @@ namespace OpenBve.Graphics
 							DefaultShader.Activate();
 							ResetShader(DefaultShader);
 							RenderFace(DefaultShader, face);
-							DefaultShader.Deactivate();
+							
 						}
 						else
 						{
@@ -506,7 +506,7 @@ namespace OpenBve.Graphics
 									DefaultShader.Activate();
 									ResetShader(DefaultShader);
 									RenderFace(DefaultShader, face);
-									DefaultShader.Deactivate();
+									
 								}
 								else
 								{
@@ -536,7 +536,7 @@ namespace OpenBve.Graphics
 								DefaultShader.Activate();
 								ResetShader(DefaultShader);
 								RenderFace(DefaultShader, face);
-								DefaultShader.Deactivate();
+								
 							}
 							else
 							{
@@ -556,7 +556,7 @@ namespace OpenBve.Graphics
 								DefaultShader.Activate();
 								ResetShader(DefaultShader);
 								RenderFace(DefaultShader, face);
-								DefaultShader.Deactivate();
+								
 							}
 							else
 							{
@@ -591,7 +591,7 @@ namespace OpenBve.Graphics
 						DefaultShader.Activate();
 						ResetShader(DefaultShader);
 						RenderFace(DefaultShader, face);
-						DefaultShader.Deactivate();
+						
 					}
 					else
 					{

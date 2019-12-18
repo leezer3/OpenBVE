@@ -219,8 +219,6 @@ namespace LibRender2.Backgrounds
 					VAO.Draw(renderer.DefaultShader.VertexLayout, PrimitiveType.Triangles, i + 4, 3);
 					VAO.Draw(renderer.DefaultShader.VertexLayout, PrimitiveType.Triangles, i + 7, 3);
 				}
-
-				VAO.UnBind();
 				renderer.DefaultShader.Deactivate();
 
 				GL.Disable(EnableCap.Texture2D);

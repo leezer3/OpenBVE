@@ -823,7 +823,7 @@ namespace LibRender2
 			MeshMaterial material = State.Prototype.Mesh.Materials[Face.Material];
 			VertexArrayObject VAO = (VertexArrayObject)State.Prototype.Mesh.VAO;
 			VertexArrayObject NormalsVAO = (VertexArrayObject)State.Prototype.Mesh.NormalsVAO;
-
+			VAO.Bind();
 			if (!OptionBackFaceCulling || (Face.Flags & MeshFace.Face2Mask) != 0)
 			{
 				GL.Disable(EnableCap.CullFace);
@@ -846,9 +846,7 @@ namespace LibRender2
 
 			if (OptionWireFrame || IsDebugTouchMode)
 			{
-				VAO.Bind();
 				VAO.Draw(Shader.VertexLayout, PrimitiveType.LineLoop, Face.IboStartIndex, Face.Vertices.Length);
-				VAO.UnBind();
 				return;
 			}
 
@@ -981,9 +979,7 @@ namespace LibRender2
 				Shader.SetOpacity(inv255 * material.Color.A * alphaFactor);
 
 				// render polygon
-				VAO.Bind();
 				VAO.Draw(Shader.VertexLayout, DrawMode, Face.IboStartIndex, Face.Vertices.Length);
-				VAO.UnBind();
 			}
 
 			// nighttime polygon
@@ -1031,9 +1027,7 @@ namespace LibRender2
 				Shader.SetOpacity(alphaFactor);
 
 				// render polygon
-				VAO.Bind();
 				VAO.Draw(Shader.VertexLayout, DrawMode, Face.IboStartIndex, Face.Vertices.Length);
-				VAO.UnBind();
 				RestoreBlendFunc();
 				RestoreAlphaFunc();
 			}
@@ -1049,7 +1043,6 @@ namespace LibRender2
 
 				NormalsVAO.Bind();
 				NormalsVAO.Draw(Shader.VertexLayout, PrimitiveType.Lines, Face.NormalsIboStartIndex, Face.Vertices.Length * 2);
-				NormalsVAO.UnBind();
 			}
 
 			// finalize
