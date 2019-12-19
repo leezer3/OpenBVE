@@ -235,13 +235,6 @@ namespace LibRender2
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthMask(true);
 			SetAlphaFunc(AlphaFunction.Greater, 0.9f);
-			if (DefaultShader != null)
-			{
-				DefaultShader.Activate();
-				ResetShader(DefaultShader);
-				DefaultShader.Deactivate();
-			}
-
 		}
 
 		public void PushMatrix(MatrixMode Mode)
@@ -844,6 +837,11 @@ namespace LibRender2
 			Shader.SetCurrentNormalMatrix(Matrix4D.Transpose(Matrix4D.Invert(modelViewMatrix)));
 			Shader.SetCurrentTextureMatrix(State.TextureTranslation);
 
+			
+			
+			
+
+
 			if (OptionWireFrame || IsDebugTouchMode)
 			{
 				VAO.Draw(Shader.VertexLayout, PrimitiveType.LineLoop, Face.IboStartIndex, Face.Vertices.Length);
@@ -885,6 +883,12 @@ namespace LibRender2
 				else
 				{
 					Shader.SetMaterialAmbient(material.Color);  // TODO
+				}
+
+				if (material.DaytimeTexture == null)
+				{
+					Shader.SetIsTexture(false);
+					Shader.SetTexture(0);
 				}
 			}
 			else

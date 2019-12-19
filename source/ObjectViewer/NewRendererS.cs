@@ -171,15 +171,16 @@ namespace OpenBve
 			}
 			// opaque face
 			ResetOpenGlState();
-
+			if (Interface.CurrentOptions.IsUseNewRenderer)
+			{
+				DefaultShader.Activate();
+			}
 			foreach (FaceState face in VisibleObjects.OpaqueFaces)
 			{
 				if (Interface.CurrentOptions.IsUseNewRenderer)
 				{
-					DefaultShader.Activate();
 					ResetShader(DefaultShader);
 					RenderFace(DefaultShader, face);
-					DefaultShader.Deactivate();
 				}
 				else
 				{
@@ -201,10 +202,8 @@ namespace OpenBve
 				{
 					if (Interface.CurrentOptions.IsUseNewRenderer)
 					{
-						DefaultShader.Activate();
 						ResetShader(DefaultShader);
 						RenderFace(DefaultShader, face);
-						DefaultShader.Deactivate();
 					}
 					else
 					{
@@ -226,10 +225,8 @@ namespace OpenBve
 						{
 							if (Interface.CurrentOptions.IsUseNewRenderer)
 							{
-								DefaultShader.Activate();
 								ResetShader(DefaultShader);
 								RenderFace(DefaultShader, face);
-								DefaultShader.Deactivate();
 							}
 							else
 							{
@@ -256,10 +253,8 @@ namespace OpenBve
 
 						if (Interface.CurrentOptions.IsUseNewRenderer)
 						{
-							DefaultShader.Activate();
 							ResetShader(DefaultShader);
 							RenderFace(DefaultShader, face);
-							DefaultShader.Deactivate();
 						}
 						else
 						{
@@ -276,10 +271,8 @@ namespace OpenBve
 
 						if (Interface.CurrentOptions.IsUseNewRenderer)
 						{
-							DefaultShader.Activate();
 							ResetShader(DefaultShader);
 							RenderFace(DefaultShader, face);
-							DefaultShader.Deactivate();
 						}
 						else
 						{
@@ -288,7 +281,10 @@ namespace OpenBve
 					}
 				}
 			}
-
+			if (Interface.CurrentOptions.IsUseNewRenderer)
+			{
+				DefaultShader.Deactivate();
+			}
 			// render overlays
 			ResetOpenGlState();
 			OptionLighting = false;

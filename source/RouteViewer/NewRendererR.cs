@@ -304,16 +304,18 @@ namespace OpenBve
 
 			// world layer
 			// opaque face
+			if (Interface.CurrentOptions.IsUseNewRenderer)
+			{
+				DefaultShader.Activate();
+			}
 			ResetOpenGlState();
 
 			foreach (FaceState face in VisibleObjects.OpaqueFaces)
 			{
 				if (Interface.CurrentOptions.IsUseNewRenderer)
 				{
-					DefaultShader.Activate();
 					ResetShader(DefaultShader);
 					RenderFace(DefaultShader, face);
-					DefaultShader.Deactivate();
 				}
 				else
 				{
@@ -335,10 +337,8 @@ namespace OpenBve
 				{
 					if (Interface.CurrentOptions.IsUseNewRenderer)
 					{
-						DefaultShader.Activate();
 						ResetShader(DefaultShader);
 						RenderFace(DefaultShader, face);
-						DefaultShader.Deactivate();
 					}
 					else
 					{
@@ -360,10 +360,8 @@ namespace OpenBve
 						{
 							if (Interface.CurrentOptions.IsUseNewRenderer)
 							{
-								DefaultShader.Activate();
 								ResetShader(DefaultShader);
 								RenderFace(DefaultShader, face);
-								DefaultShader.Deactivate();
 							}
 							else
 							{
@@ -390,10 +388,8 @@ namespace OpenBve
 
 						if (Interface.CurrentOptions.IsUseNewRenderer)
 						{
-							DefaultShader.Activate();
 							ResetShader(DefaultShader);
 							RenderFace(DefaultShader, face);
-							DefaultShader.Deactivate();
 						}
 						else
 						{
@@ -410,10 +406,8 @@ namespace OpenBve
 
 						if (Interface.CurrentOptions.IsUseNewRenderer)
 						{
-							DefaultShader.Activate();
 							ResetShader(DefaultShader);
 							RenderFace(DefaultShader, face);
-							DefaultShader.Deactivate();
 						}
 						else
 						{
@@ -424,6 +418,10 @@ namespace OpenBve
 			}
 
 			// render overlays
+			if (Interface.CurrentOptions.IsUseNewRenderer)
+			{
+				DefaultShader.Deactivate();
+			}
 			ResetOpenGlState();
 			OptionLighting = false;
 			OptionFog = false;
