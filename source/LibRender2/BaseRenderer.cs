@@ -812,10 +812,9 @@ namespace LibRender2
 				return;
 			}
 
-			VertexTemplate[] vertices = State.Prototype.Mesh.Vertices;
 			MeshMaterial material = State.Prototype.Mesh.Materials[Face.Material];
 			VertexArrayObject VAO = (VertexArrayObject)State.Prototype.Mesh.VAO;
-			VertexArrayObject NormalsVAO = (VertexArrayObject)State.Prototype.Mesh.NormalsVAO;
+			
 			VAO.Bind();
 			if (!OptionBackFaceCulling || (Face.Flags & MeshFace.Face2Mask) != 0)
 			{
@@ -836,12 +835,7 @@ namespace LibRender2
 			Shader.SetCurrentModelViewMatrix(modelViewMatrix);
 			Shader.SetCurrentNormalMatrix(Matrix4D.Transpose(Matrix4D.Invert(modelViewMatrix)));
 			Shader.SetCurrentTextureMatrix(State.TextureTranslation);
-
 			
-			
-			
-
-
 			if (OptionWireFrame || IsDebugTouchMode)
 			{
 				VAO.Draw(Shader.VertexLayout, PrimitiveType.LineLoop, Face.IboStartIndex, Face.Vertices.Length);
@@ -853,11 +847,6 @@ namespace LibRender2
 			{
 				if (OptionLighting)
 				{
-					Shader.SetIsLight(true);
-					Shader.SetLightPosition(new Vector3(Lighting.OptionLightPosition.X, Lighting.OptionLightPosition.Y, -Lighting.OptionLightPosition.Z));
-					Shader.SetLightAmbient(Lighting.OptionAmbientColor);
-					Shader.SetLightDiffuse(Lighting.OptionDiffuseColor);
-					Shader.SetLightSpecular(Lighting.OptionSpecularColor);
 					Shader.SetMaterialAmbient(material.Color);  // TODO
 					Shader.SetMaterialDiffuse(material.Color);
 					Shader.SetMaterialSpecular(material.Color);  // TODO
@@ -974,7 +963,7 @@ namespace LibRender2
 				float alphaFactor;
 				if (material.GlowAttenuationData != 0)
 				{
-					alphaFactor = (float)Glow.GetDistanceFactor(modelMatrix, vertices, ref Face, material.GlowAttenuationData);
+					alphaFactor = (float)Glow.GetDistanceFactor(modelMatrix, State.Prototype.Mesh.Vertices, ref Face, material.GlowAttenuationData);
 				}
 				else
 				{
@@ -1010,7 +999,7 @@ namespace LibRender2
 				float alphaFactor;
 				if (material.GlowAttenuationData != 0)
 				{
-					alphaFactor = (float)Glow.GetDistanceFactor(modelMatrix, vertices, ref Face, material.GlowAttenuationData);
+					alphaFactor = (float)Glow.GetDistanceFactor(modelMatrix, State.Prototype.Mesh.Vertices, ref Face, material.GlowAttenuationData);
 					float blend = inv255 * material.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
 					if (blend > 1.0f)
 					{
@@ -1044,7 +1033,7 @@ namespace LibRender2
 				Shader.SetIsTexture(false);
 				Shader.SetBrightness(1.0f);
 				Shader.SetOpacity(1.0f);
-
+				VertexArrayObject NormalsVAO = (VertexArrayObject)State.Prototype.Mesh.NormalsVAO;
 				NormalsVAO.Bind();
 				NormalsVAO.Draw(Shader.VertexLayout, PrimitiveType.Lines, Face.NormalsIboStartIndex, Face.Vertices.Length * 2);
 			}

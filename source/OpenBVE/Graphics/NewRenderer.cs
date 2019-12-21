@@ -303,6 +303,14 @@ namespace OpenBve.Graphics
 			if (Interface.CurrentOptions.IsUseNewRenderer)
 			{
 				DefaultShader.Activate();
+				if (OptionLighting)
+				{
+					DefaultShader.SetIsLight(true);
+					DefaultShader.SetLightPosition(new Vector3(Lighting.OptionLightPosition.X, Lighting.OptionLightPosition.Y, -Lighting.OptionLightPosition.Z));
+					DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
+					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
+					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
+				}
 			}
 			ResetOpenGlState();
 			foreach (FaceState face in VisibleObjects.OpaqueFaces)
