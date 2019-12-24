@@ -3,9 +3,9 @@
 struct Light
 {
     vec3 position;
-    vec4 ambient;
-    vec4 diffuse;
-    vec4 specular;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
 };
 
 struct MaterialColor
@@ -13,7 +13,7 @@ struct MaterialColor
     vec4 ambient;
     vec4 diffuse;
     vec4 specular;
-	vec4 emission;
+	vec3 emission;
     float shininess;
 }; 
 
@@ -46,13 +46,13 @@ void main()
 
 	// Lighting
 	// Ambient
-	vec4 ambient  = uLight.ambient * uMaterial.ambient;
+	vec4 ambient  = vec4(uLight.ambient.x, uLight.ambient.y, uLight.ambient.z, 1.0) * uMaterial.ambient;
 
 	// Diffuse
 	vec3 norm = normalize(viewNormal.xyz);
 	vec3 eye = normalize(-viewPos.xyz);
 	float diff = max(dot(norm, uLight.position), 0.0);
-	vec4 diffuse = uLight.diffuse * (diff * uMaterial.diffuse);
+	vec4 diffuse = vec4(uLight.diffuse.x, uLight.diffuse.y, uLight.diffuse.z, 1.0) * (diff * uMaterial.diffuse);
 
 	// Specular
 	vec4 specular = vec4(0.0);
@@ -61,10 +61,10 @@ void main()
 	{
 		vec3 halfVector = normalize(uLight.position + eye);
 		float spec = pow(max(dot(halfVector, norm), 0.0), uMaterial.shininess);
-		specular = uLight.specular * (spec * uMaterial.specular);
+		specular = vec4(uLight.specular.x, uLight.specular.y, uLight.specular.z, 1.0) * (spec * uMaterial.specular);
 	}
 
-	vec4 result = clamp(ambient + diffuse + specular + uMaterial.emission, 0.0, 1.0);
+	vec4 result = clamp(ambient + diffuse + specular + vec4(uMaterial.emission.x, uMaterial.emission.y, uMaterial.emission.z, 1.0), 0.0, 1.0);
 
 	// Fog
 	oFogFactor = 1.0;

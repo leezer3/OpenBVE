@@ -239,17 +239,17 @@ namespace LibRender2.Shaders
 
 		public void SetLightAmbient(Color24 LightAmbient)
 		{
-			GL.Uniform4(UniformLayout.LightAmbient, LightAmbient.R / 255.0f, LightAmbient.G / 255.0f, LightAmbient.B / 255.0f, 1.0f);
+			GL.Uniform3(UniformLayout.LightAmbient, LightAmbient.R / 255.0f, LightAmbient.G / 255.0f, LightAmbient.B / 255.0f);
 		}
 
 		public void SetLightDiffuse(Color24 LightDiffuse)
 		{
-			GL.Uniform4(UniformLayout.LightDiffuse, LightDiffuse.R / 255.0f, LightDiffuse.G / 255.0f, LightDiffuse.B / 255.0f, 1.0f);
+			GL.Uniform3(UniformLayout.LightDiffuse, LightDiffuse.R / 255.0f, LightDiffuse.G / 255.0f, LightDiffuse.B / 255.0f);
 		}
 
 		public void SetLightSpecular(Color24 LightSpecular)
 		{
-			GL.Uniform4(UniformLayout.LightSpecular, LightSpecular.R / 255.0f, LightSpecular.G / 255.0f, LightSpecular.B / 255.0f, 1.0f);
+			GL.Uniform3(UniformLayout.LightSpecular, LightSpecular.R / 255.0f, LightSpecular.G / 255.0f, LightSpecular.B / 255.0f);
 		}
 
 		public void SetMaterialAmbient(Color32 MaterialAmbient)
@@ -269,7 +269,7 @@ namespace LibRender2.Shaders
 
 		public void SetMaterialEmission(Color24 MaterialEmission)
 		{
-			GL.Uniform4(UniformLayout.MaterialEmission, MaterialEmission.R / 255.0f, MaterialEmission.G / 255.0f, MaterialEmission.B / 255.0f, 1.0f);
+			GL.Uniform3(UniformLayout.MaterialEmission, MaterialEmission.R / 255.0f, MaterialEmission.G / 255.0f, MaterialEmission.B / 255.0f);
 		}
 
 		public void SetMaterialShininess(float MaterialShininess)
