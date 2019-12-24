@@ -169,7 +169,7 @@ namespace LibRender2
 					{
 						Position = mesh.Vertices[vertex.Index].Coordinates,
 						Normal = vertex.Normal,
-						UV = mesh.Vertices[vertex.Index].TextureCoordinates
+						UV = new Vector2f(mesh.Vertices[vertex.Index].TextureCoordinates)
 					};
 
 					var coloredVertex = mesh.Vertices[vertex.Index] as ColoredVertex;
@@ -277,28 +277,28 @@ namespace LibRender2
 				vertexData.Add(new LibRenderVertex
 				{
 					Position = top[i],
-					UV = new Vector2(textureX, 0.005f),
+					UV = new Vector2f(textureX, 0.005f),
 					Color = Color128.White
 				});
 
 				vertexData.Add(new LibRenderVertex
 				{
 					Position = bottom[i],
-					UV = new Vector2(textureX, 0.995f),
+					UV = new Vector2f(textureX, 0.995f),
 					Color = Color128.White
 				});
 
 				vertexData.Add(new LibRenderVertex
 				{
 					Position = bottom[j],
-					UV = new Vector2(textureX + textureIncrement, 0.995f),
+					UV = new Vector2f(textureX + textureIncrement, 0.995f),
 					Color = Color128.White
 				});
 
 				vertexData.Add(new LibRenderVertex
 				{
 					Position = top[j],
-					UV = new Vector2(textureX + textureIncrement, 0.005f),
+					UV = new Vector2f(textureX + textureIncrement, 0.005f),
 					Color = Color128.White
 				});
 
@@ -308,7 +308,7 @@ namespace LibRender2
 				vertexData.Add(new LibRenderVertex
 				{
 					Position = new Vector3f(0.0f, top[i].Y, 0.0f),
-					UV = new Vector2(textureX + 0.5f * textureIncrement, 0.1f),
+					UV = new Vector2f(textureX + 0.5f * textureIncrement, 0.1f),
 					Color = Color128.White
 				});
 
@@ -318,7 +318,7 @@ namespace LibRender2
 				vertexData.Add(new LibRenderVertex
 				{
 					Position = new Vector3f(0.0f, bottom[i].Y, 0.0f),
-					UV = new Vector2(textureX + 0.5f * textureIncrement, 0.9f),
+					UV = new Vector2f(textureX + 0.5f * textureIncrement, 0.9f),
 					Color = Color128.White
 				});
 

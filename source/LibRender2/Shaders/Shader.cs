@@ -132,10 +132,10 @@ namespace LibRender2.Shaders
 		{
 			return new VertexLayout
 			{
-				Position = GL.GetAttribLocation(handle, "iPosition"),
-				Normal = GL.GetAttribLocation(handle, "iNormal"),
-				UV = GL.GetAttribLocation(handle, "iUv"),
-				Color = GL.GetAttribLocation(handle, "iColor")
+				Position = (short)GL.GetAttribLocation(handle, "iPosition"),
+				Normal = (short)GL.GetAttribLocation(handle, "iNormal"),
+				UV = (short)GL.GetAttribLocation(handle, "iUv"),
+				Color = (short)GL.GetAttribLocation(handle, "iColor")
 			};
 		}
 
@@ -143,28 +143,28 @@ namespace LibRender2.Shaders
 		{
 			return new UniformLayout
 			{
-				CurrentProjectionMatrix = GL.GetUniformLocation(handle, "uCurrentProjectionMatrix"),
-				CurrentModelViewMatrix = GL.GetUniformLocation(handle, "uCurrentModelViewMatrix"),
-				CurrentTextureMatrix = GL.GetUniformLocation(handle, "uCurrentTextureMatrix"),
-				IsLight = GL.GetUniformLocation(handle, "uIsLight"),
-				LightPosition = GL.GetUniformLocation(handle, "uLight.position"),
-				LightAmbient = GL.GetUniformLocation(handle, "uLight.ambient"),
-				LightDiffuse = GL.GetUniformLocation(handle, "uLight.diffuse"),
-				LightSpecular = GL.GetUniformLocation(handle, "uLight.specular"),
-				MaterialAmbient = GL.GetUniformLocation(handle, "uMaterial.ambient"),
-				MaterialDiffuse = GL.GetUniformLocation(handle, "uMaterial.diffuse"),
-				MaterialSpecular = GL.GetUniformLocation(handle, "uMaterial.specular"),
-				MaterialEmission = GL.GetUniformLocation(handle, "uMaterial.emission"),
-				MaterialShininess = GL.GetUniformLocation(handle, "uMaterial.shininess"),
-				IsFog = GL.GetUniformLocation(handle, "uIsFog"),
-				FogStart = GL.GetUniformLocation(handle, "uFogStart"),
-				FogEnd = GL.GetUniformLocation(handle, "uFogEnd"),
-				FogColor = GL.GetUniformLocation(handle, "uFogColor"),
-				IsTexture = GL.GetUniformLocation(handle, "uIsTexture"),
-				Texture = GL.GetUniformLocation(handle, "uTexture"),
-				Brightness = GL.GetUniformLocation(handle, "uBrightness"),
-				Opacity = GL.GetUniformLocation(handle, "uOpacity"),
-				ObjectIndex = GL.GetUniformLocation(handle, "uObjectIndex")
+				CurrentProjectionMatrix = (short)GL.GetUniformLocation(handle, "uCurrentProjectionMatrix"),
+				CurrentModelViewMatrix = (short)GL.GetUniformLocation(handle, "uCurrentModelViewMatrix"),
+				CurrentTextureMatrix = (short)GL.GetUniformLocation(handle, "uCurrentTextureMatrix"),
+				IsLight = (short)GL.GetUniformLocation(handle, "uIsLight"),
+				LightPosition = (short)GL.GetUniformLocation(handle, "uLight.position"),
+				LightAmbient = (short)GL.GetUniformLocation(handle, "uLight.ambient"),
+				LightDiffuse = (short)GL.GetUniformLocation(handle, "uLight.diffuse"),
+				LightSpecular = (short)GL.GetUniformLocation(handle, "uLight.specular"),
+				MaterialAmbient = (short)GL.GetUniformLocation(handle, "uMaterial.ambient"),
+				MaterialDiffuse = (short)GL.GetUniformLocation(handle, "uMaterial.diffuse"),
+				MaterialSpecular = (short)GL.GetUniformLocation(handle, "uMaterial.specular"),
+				MaterialEmission = (short)GL.GetUniformLocation(handle, "uMaterial.emission"),
+				MaterialShininess = (short)GL.GetUniformLocation(handle, "uMaterial.shininess"),
+				IsFog = (short)GL.GetUniformLocation(handle, "uIsFog"),
+				FogStart = (short)GL.GetUniformLocation(handle, "uFogStart"),
+				FogEnd = (short)GL.GetUniformLocation(handle, "uFogEnd"),
+				FogColor = (short)GL.GetUniformLocation(handle, "uFogColor"),
+				IsTexture = (short)GL.GetUniformLocation(handle, "uIsTexture"),
+				Texture = (short)GL.GetUniformLocation(handle, "uTexture"),
+				Brightness = (short)GL.GetUniformLocation(handle, "uBrightness"),
+				Opacity = (short)GL.GetUniformLocation(handle, "uOpacity"),
+				ObjectIndex = (short)GL.GetUniformLocation(handle, "uObjectIndex")
 			};
 		}
 
