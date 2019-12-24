@@ -4,7 +4,7 @@ in vec2 oUv;
 in vec4 oColor;
 in float oFogFactor;
 
-uniform vec4  uFogColor;
+uniform vec3  uFogColor;
 uniform bool uIsTexture;
 uniform sampler2D uTexture;
 uniform float uBrightness;
@@ -18,6 +18,5 @@ void main(void)
 	{
 		textureColor *= texture2D(uTexture, oUv);
 	}
-
-	gl_FragData[0] = clamp(vec4(mix(vec3(uFogColor), vec3(oColor.rgb * textureColor.rgb * uBrightness), oFogFactor), oColor.a * textureColor.a * uOpacity), 0.0, 1.0);
+	gl_FragData[0] = clamp(vec4(mix(uFogColor, vec3(oColor.rgb * textureColor.rgb * uBrightness), oFogFactor), oColor.a * textureColor.a * uOpacity), 0.0, 1.0);
 }

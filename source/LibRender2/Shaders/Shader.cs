@@ -294,7 +294,7 @@ namespace LibRender2.Shaders
 
 		public void SetFogColor(Color24 FogColor)
 		{
-			GL.Uniform4(UniformLayout.FogColor, FogColor.R / 255.0f, FogColor.G / 255.0f, FogColor.B / 255.0f, 1.0f);
+			GL.Uniform3(UniformLayout.FogColor, FogColor.R / 255.0f, FogColor.G / 255.0f, FogColor.B / 255.0f);
 		}
 
 		public void SetIsTexture(bool IsTexture)

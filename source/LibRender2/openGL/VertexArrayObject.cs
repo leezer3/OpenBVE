@@ -98,7 +98,6 @@ namespace LibRender2
 			vbo.EnableAttribute(VertexLayout);
 			vbo.SetAttribute(VertexLayout);
 			ibo.Draw(DrawMode);
-			vbo.DisableAttribute(VertexLayout);
 		}
 
 		/// <summary>
@@ -114,7 +113,6 @@ namespace LibRender2
 			vbo.EnableAttribute(VertexLayout);
 			vbo.SetAttribute(VertexLayout);
 			ibo.Draw(DrawMode, Start, Count);
-			vbo.DisableAttribute(VertexLayout);
 		}
 
 		/// <summary>
