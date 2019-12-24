@@ -145,7 +145,6 @@ namespace LibRender2.Shaders
 			{
 				CurrentProjectionMatrix = GL.GetUniformLocation(handle, "uCurrentProjectionMatrix"),
 				CurrentModelViewMatrix = GL.GetUniformLocation(handle, "uCurrentModelViewMatrix"),
-				CurrentNormalMatrix = GL.GetUniformLocation(handle, "uCurrentNormalMatrix"),
 				CurrentTextureMatrix = GL.GetUniformLocation(handle, "uCurrentTextureMatrix"),
 				IsLight = GL.GetUniformLocation(handle, "uIsLight"),
 				LightPosition = GL.GetUniformLocation(handle, "uLight.position"),
@@ -217,17 +216,7 @@ namespace LibRender2.Shaders
 			Matrix4 matrix = ConvertToMatrix4(ModelViewMatrix);
 			GL.UniformMatrix4(UniformLayout.CurrentModelViewMatrix, false, ref matrix);
 		}
-
-		/// <summary>
-		/// Set the normal matrix
-		/// </summary>
-		/// <param name="NormalMatrix"></param>
-		public void SetCurrentNormalMatrix(Matrix4D NormalMatrix)
-		{
-			Matrix4 matrix = ConvertToMatrix4(NormalMatrix);
-			GL.UniformMatrix4(UniformLayout.CurrentNormalMatrix, false, ref matrix);
-		}
-
+		
 		/// <summary>
 		/// Set the texture matrix
 		/// </summary>

@@ -1,4 +1,4 @@
-﻿#version 130
+﻿#version 140
 
 struct Light
 {
@@ -24,7 +24,6 @@ in vec4 iColor;
 
 uniform mat4 uCurrentProjectionMatrix;
 uniform mat4 uCurrentModelViewMatrix;
-uniform mat4 uCurrentNormalMatrix;
 uniform mat4 uCurrentTextureMatrix;
 
 uniform bool uIsLight;
@@ -41,7 +40,8 @@ out float oFogFactor;
 void main()
 {
 	vec4 viewPos = uCurrentModelViewMatrix * vec4(vec3(iPosition.x, iPosition.y, -iPosition.z), 1.0);
-	vec4 viewNormal = uCurrentNormalMatrix * vec4(vec3(iNormal.x, iNormal.y, -iNormal.z), 1.0);
+	mat4 shaderNormalMatrix = mat4(transpose(inverse(uCurrentModelViewMatrix)));
+	vec4 viewNormal = shaderNormalMatrix * vec4(vec3(iNormal.x, iNormal.y, -iNormal.z), 1.0);
 	gl_Position = uCurrentProjectionMatrix * viewPos;
 
 	// Lighting

@@ -688,7 +688,6 @@ namespace LibRender2
 #endif   
 			Shader.SetCurrentProjectionMatrix(Matrix4D.Identity);
 			Shader.SetCurrentModelViewMatrix(Matrix4D.Identity);
-			Shader.SetCurrentNormalMatrix(Matrix4D.Identity);
 			Shader.SetCurrentTextureMatrix(Matrix4D.Identity);
 			Shader.SetIsLight(false);
 			Shader.SetLightPosition(Vector3.Zero);
@@ -831,9 +830,7 @@ namespace LibRender2
 			// matrix
 			Matrix4D modelMatrix = State.ModelMatrix * Matrix4D.CreateTranslation(-EyePosition);
 			Matrix4D modelViewMatrix = modelMatrix * CurrentViewMatrix;
-			Shader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
 			Shader.SetCurrentModelViewMatrix(modelViewMatrix);
-			Shader.SetCurrentNormalMatrix(Matrix4D.Transpose(Matrix4D.Invert(modelViewMatrix)));
 			Shader.SetCurrentTextureMatrix(State.TextureTranslation);
 			
 			if (OptionWireFrame || IsDebugTouchMode)
@@ -877,7 +874,6 @@ namespace LibRender2
 				if (material.DaytimeTexture == null)
 				{
 					Shader.SetIsTexture(false);
-					Shader.SetTexture(0);
 				}
 			}
 			else
@@ -924,7 +920,6 @@ namespace LibRender2
 					{
 						GL.Enable(EnableCap.Texture2D);
 						Shader.SetIsTexture(true);
-						Shader.SetTexture(0);
 						if (LastBoundTexture != material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode])
 						{
 							GL.BindTexture(TextureTarget.Texture2D, material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode].Name);
@@ -981,7 +976,6 @@ namespace LibRender2
 				// texture
 				GL.Enable(EnableCap.Texture2D);
 				Shader.SetIsTexture(true);
-				Shader.SetTexture(0);
 				if (LastBoundTexture != material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode])
 				{
 					GL.BindTexture(TextureTarget.Texture2D, material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode].Name);

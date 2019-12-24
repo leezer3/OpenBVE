@@ -37,12 +37,7 @@
 		/// The handle of "uCurrentModelViewMatrix" within the shader
 		/// </summary>
 		public int CurrentModelViewMatrix = -1;
-
-		/// <summary>
-		/// The handle of "uCurrentNormalMatrix" within the shader
-		/// </summary>
-		public int CurrentNormalMatrix = -1;
-
+		
 		/// <summary>
 		/// The handle of "uCurrentTextureMatrix" within the shader
 		/// </summary>

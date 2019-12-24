@@ -302,6 +302,7 @@ namespace OpenBve.Graphics
 			// opaque face
 			if (Interface.CurrentOptions.IsUseNewRenderer)
 			{
+				//Setup the shader for rendering the scene
 				DefaultShader.Activate();
 				if (OptionLighting)
 				{
@@ -311,6 +312,8 @@ namespace OpenBve.Graphics
 					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
 					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
 				}
+				DefaultShader.SetTexture(0);
+				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
 			}
 			ResetOpenGlState();
 			foreach (FaceState face in VisibleObjects.OpaqueFaces)
@@ -428,6 +431,7 @@ namespace OpenBve.Graphics
 			if (Interface.CurrentOptions.IsUseNewRenderer)
 			{
 				ResetShader(DefaultShader); //Must reset shader between overlay and world layers for correct lighting results
+				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
 			}
 			// overlay layer
 			OptionFog = false;
