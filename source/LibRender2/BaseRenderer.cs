@@ -804,6 +804,8 @@ namespace LibRender2
 			RenderFace(Shader, State, Face, new Vector3(Camera.AbsolutePosition.X, Camera.AbsolutePosition.Y, -Camera.AbsolutePosition.Z), IsDebugTouchMode);
 		}
 
+		private Color32 lastColor;
+
 		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, Vector3 EyePosition, bool IsDebugTouchMode = false)
 		{
 			if (State.Prototype.Mesh.Vertices.Length < 1)
@@ -844,10 +846,13 @@ namespace LibRender2
 			{
 				if (OptionLighting)
 				{
-					Shader.SetMaterialAmbient(material.Color);  // TODO
-					Shader.SetMaterialDiffuse(material.Color);
-					Shader.SetMaterialSpecular(material.Color);  // TODO
-
+					if (material.Color != lastColor)
+					{
+						Shader.SetMaterialAmbient(material.Color);  // TODO
+						Shader.SetMaterialDiffuse(material.Color);
+						Shader.SetMaterialSpecular(material.Color);  // TODO
+					}
+					
 					if ((material.Flags & MeshMaterial.EmissiveColorMask) != 0)
 					{
 						Shader.SetMaterialEmission(material.EmissiveColor);
@@ -868,7 +873,10 @@ namespace LibRender2
 				}
 				else
 				{
-					Shader.SetMaterialAmbient(material.Color);  // TODO
+					if (material.Color != lastColor)
+					{
+						Shader.SetMaterialAmbient(material.Color);  // TODO
+					}
 				}
 
 				if (material.DaytimeTexture == null)
@@ -878,9 +886,14 @@ namespace LibRender2
 			}
 			else
 			{
-				Shader.SetMaterialAmbient(material.Color);  // TODO
+				if (material.Color != lastColor)
+				{
+					Shader.SetMaterialAmbient(material.Color);  // TODO
+				}
+				
 			}
 
+			lastColor = material.Color;
 			// fog
 			if (OptionFog)
 			{
