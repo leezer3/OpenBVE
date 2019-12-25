@@ -156,6 +156,7 @@ namespace LibRender2.Shaders
 				MaterialSpecular = (short)GL.GetUniformLocation(handle, "uMaterial.specular"),
 				MaterialEmission = (short)GL.GetUniformLocation(handle, "uMaterial.emission"),
 				MaterialShininess = (short)GL.GetUniformLocation(handle, "uMaterial.shininess"),
+				MaterialIsEmissive = (short)GL.GetUniformLocation(handle, "uMaterial.isEmissive"),
 				IsFog = (short)GL.GetUniformLocation(handle, "uIsFog"),
 				FogStart = (short)GL.GetUniformLocation(handle, "uFogStart"),
 				FogEnd = (short)GL.GetUniformLocation(handle, "uFogEnd"),
@@ -275,6 +276,11 @@ namespace LibRender2.Shaders
 		public void SetMaterialShininess(float MaterialShininess)
 		{
 			GL.Uniform1(UniformLayout.MaterialShininess, MaterialShininess);
+		}
+
+		public void SetMaterialEmissive(bool Emissive)
+		{
+			GL.Uniform1(UniformLayout.MaterialIsEmissive, Emissive ? 1 : 0);
 		}
 
 		public void SetIsFog(bool IsFog)

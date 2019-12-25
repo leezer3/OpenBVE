@@ -94,6 +94,11 @@
 		public short MaterialShininess = -1;
 
 		/// <summary>
+		/// The handle of "uMaterial.isEmmisive" within the shader
+		/// </summary>
+		public short MaterialIsEmissive = -1;
+
+		/// <summary>
 		/// The handle of "uIsFog" within the shader
 		/// </summary>
 		public short IsFog = -1;

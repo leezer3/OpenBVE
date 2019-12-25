@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using LibRender2;
 using LibRender2.MotionBlurs;
@@ -307,7 +307,7 @@ namespace OpenBve.Graphics
 				if (OptionLighting)
 				{
 					DefaultShader.SetIsLight(true);
-					DefaultShader.SetLightPosition(new Vector3(Lighting.OptionLightPosition.X, Lighting.OptionLightPosition.Y, -Lighting.OptionLightPosition.Z));
+					DefaultShader.SetLightPosition(Lighting.OptionLightPosition);
 					DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
 					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
 					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);

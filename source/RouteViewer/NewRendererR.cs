@@ -306,7 +306,18 @@ namespace OpenBve
 			// opaque face
 			if (Interface.CurrentOptions.IsUseNewRenderer)
 			{
+				//Setup the shader for rendering the scene
 				DefaultShader.Activate();
+				if (OptionLighting)
+				{
+					DefaultShader.SetIsLight(true);
+					DefaultShader.SetLightPosition(Lighting.OptionLightPosition);
+					DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
+					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
+					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
+				}
+				DefaultShader.SetTexture(0);
+				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
 			}
 			ResetOpenGlState();
 
@@ -314,7 +325,6 @@ namespace OpenBve
 			{
 				if (Interface.CurrentOptions.IsUseNewRenderer)
 				{
-					ResetShader(DefaultShader);
 					RenderFace(DefaultShader, face);
 				}
 				else
@@ -337,7 +347,6 @@ namespace OpenBve
 				{
 					if (Interface.CurrentOptions.IsUseNewRenderer)
 					{
-						ResetShader(DefaultShader);
 						RenderFace(DefaultShader, face);
 					}
 					else
@@ -360,7 +369,6 @@ namespace OpenBve
 						{
 							if (Interface.CurrentOptions.IsUseNewRenderer)
 							{
-								ResetShader(DefaultShader);
 								RenderFace(DefaultShader, face);
 							}
 							else
@@ -388,7 +396,6 @@ namespace OpenBve
 
 						if (Interface.CurrentOptions.IsUseNewRenderer)
 						{
-							ResetShader(DefaultShader);
 							RenderFace(DefaultShader, face);
 						}
 						else
@@ -406,7 +413,6 @@ namespace OpenBve
 
 						if (Interface.CurrentOptions.IsUseNewRenderer)
 						{
-							ResetShader(DefaultShader);
 							RenderFace(DefaultShader, face);
 						}
 						else

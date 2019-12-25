@@ -842,7 +842,7 @@ namespace LibRender2
 			}
 
 			// lighting
-			if (material.NighttimeTexture == null)
+			if (material.NighttimeTexture == null || material.NighttimeTexture == material.DaytimeTexture)
 			{
 				if (OptionLighting)
 				{
@@ -856,10 +856,11 @@ namespace LibRender2
 					if ((material.Flags & MeshMaterial.EmissiveColorMask) != 0)
 					{
 						Shader.SetMaterialEmission(material.EmissiveColor);
+						Shader.SetMaterialEmissive(true);
 					}
 					else
 					{
-						Shader.SetMaterialEmission(Color24.Black);
+						Shader.SetMaterialEmissive(false);
 					}
 
 					Shader.SetMaterialShininess(1.0f);
@@ -984,7 +985,7 @@ namespace LibRender2
 			}
 
 			// nighttime polygon
-			if (material.NighttimeTexture != null && currentHost.LoadTexture(material.NighttimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
+			if (material.NighttimeTexture != null && material.NighttimeTexture != material.DaytimeTexture && currentHost.LoadTexture(material.NighttimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
 			{
 				// texture
 				GL.Enable(EnableCap.Texture2D);
