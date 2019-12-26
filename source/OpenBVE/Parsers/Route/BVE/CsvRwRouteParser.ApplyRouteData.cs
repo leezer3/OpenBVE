@@ -103,7 +103,7 @@ namespace OpenBve
 						string f = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Compatibility"), "Uchibo\\Back_Mt.png");
 						Texture t;
 						Program.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out t);
-						Program.CurrentRoute.CurrentBackground = new StaticBackground(t, 6, false);
+						Program.CurrentRoute.CurrentBackground = new StaticBackground(t, 6, false, Interface.CurrentOptions.ViewingDistance);
 					}
 					else if (Data.Backgrounds.Count == 1 && !Data.Backgrounds.ContainsKey(0) && Data.Blocks[0].Background == 0)
 					{
@@ -118,7 +118,7 @@ namespace OpenBve
 					}
 					else
 					{
-						Program.CurrentRoute.CurrentBackground = new StaticBackground(null, 6, false);
+						Program.CurrentRoute.CurrentBackground = new StaticBackground(null, 6, false, Interface.CurrentOptions.ViewingDistance);
 					}
 				}
 				Program.CurrentRoute.TargetBackground = Program.CurrentRoute.CurrentBackground;
