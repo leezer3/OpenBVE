@@ -793,20 +793,10 @@ namespace LibRender2
 		{
 			RenderFace(Shader, State.Object, State.Face, IsDebugTouchMode);
 		}
-
-		public void RenderFace(Shader Shader, FaceState State, Vector3 EyePosition, bool IsDebugTouchMode = false)
-		{
-			RenderFace(Shader, State.Object, State.Face, EyePosition, IsDebugTouchMode);
-		}
-
-		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, bool IsDebugTouchMode = false)
-		{
-			RenderFace(Shader, State, Face, new Vector3(Camera.AbsolutePosition.X, Camera.AbsolutePosition.Y, -Camera.AbsolutePosition.Z), IsDebugTouchMode);
-		}
-
+		
 		private Color32 lastColor;
 
-		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, Vector3 EyePosition, bool IsDebugTouchMode = false)
+		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, bool IsDebugTouchMode = false)
 		{
 			if (State.Prototype.Mesh.Vertices.Length < 1)
 			{
@@ -830,7 +820,7 @@ namespace LibRender2
 			}
 
 			// matrix
-			Matrix4D modelMatrix = State.ModelMatrix * Matrix4D.CreateTranslation(-EyePosition);
+			Matrix4D modelMatrix = State.ModelMatrix * Camera.TranslationMatrix;
 			Matrix4D modelViewMatrix = modelMatrix * CurrentViewMatrix;
 			Shader.SetCurrentModelViewMatrix(modelViewMatrix);
 			Shader.SetCurrentTextureMatrix(State.TextureTranslation);
@@ -1058,17 +1048,7 @@ namespace LibRender2
 			RenderFaceImmediateMode(State.Object, State.Face, IsDebugTouchMode);
 		}
 
-		public void RenderFaceImmediateMode(FaceState State, Vector3 EyePosition, bool IsDebugTouchMode = false)
-		{
-			RenderFaceImmediateMode(State.Object, State.Face, EyePosition, IsDebugTouchMode);
-		}
-
 		public void RenderFaceImmediateMode(ObjectState State, MeshFace Face, bool IsDebugTouchMode = false)
-		{
-			RenderFaceImmediateMode(State, Face, new Vector3(Camera.AbsolutePosition.X, Camera.AbsolutePosition.Y, -Camera.AbsolutePosition.Z), IsDebugTouchMode);
-		}
-
-		public void RenderFaceImmediateMode(ObjectState State, MeshFace Face, Vector3 EyePosition, bool IsDebugTouchMode = false)
 		{
 			if (State.Prototype.Mesh.Vertices.Length < 1)
 			{
@@ -1089,7 +1069,7 @@ namespace LibRender2
 					GL.Enable(EnableCap.CullFace);
 				}
 			}
-			Matrix4D modelMatrix = State.ModelMatrix * Matrix4D.CreateTranslation(-EyePosition);
+			Matrix4D modelMatrix = State.ModelMatrix * Camera.TranslationMatrix;
 			// matrix
 			unsafe
 			{

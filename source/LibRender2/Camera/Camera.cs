@@ -24,8 +24,21 @@ namespace LibRender2.Cameras
 		public double VerticalViewingAngle;
 		/// <summary>The original vertical viewing angle in radians</summary>
 		public double OriginalVerticalViewingAngle;
+		/// <summary>A Matrix4D describing the current camera translation</summary>
+		public Matrix4D TranslationMatrix;
 		/// <summary>The absolute in-world camera position</summary>
-		public Vector3 AbsolutePosition;
+		public Vector3 AbsolutePosition
+		{
+			get
+			{
+				return absolutePosition;
+			}
+			set
+			{
+				absolutePosition = value;
+				TranslationMatrix = Matrix4D.CreateTranslation(-value.X, -value.Y, value.Z);
+			}
+		}
 		/// <summary>The absolute in-world camera Direction vector</summary>
 		public Vector3 AbsoluteDirection;
 		/// <summary>The absolute in-world camera Up vector</summary>
@@ -54,6 +67,8 @@ namespace LibRender2.Cameras
 		public CameraViewMode CurrentMode;
 		/// <summary>The current camera restriction mode</summary>
 		public CameraRestrictionMode CurrentRestriction = CameraRestrictionMode.NotAvailable;
+
+		private Vector3 absolutePosition;
 
 		internal CameraProperties(BaseRenderer renderer)
 		{
