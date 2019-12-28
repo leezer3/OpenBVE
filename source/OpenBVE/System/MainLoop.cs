@@ -25,7 +25,9 @@ namespace OpenBve
 		internal static bool BlockKeyRepeat;
 		/// <summary>The current simulation time-factor</summary>
 		internal static int TimeFactor = 1;
-		
+
+		internal static double timeSinceLastMouseEvent;
+
 		internal static formMain.MainDialogResult currentResult;
 		//		internal static formRouteInformation RouteInformationForm;
 		//		internal static Thread RouteInfoThread;
@@ -134,6 +136,7 @@ namespace OpenBve
 		/// <param name="e">The button arguments</param>
 		internal static void mouseDownEvent(object sender, MouseButtonEventArgs e)
 		{
+			timeSinceLastMouseEvent = 0;
 			if (e.Button == MouseButton.Right)
 			{
 				MouseGrabEnabled = !MouseGrabEnabled;
@@ -155,6 +158,7 @@ namespace OpenBve
 
 		internal static void mouseUpEvent(object sender, MouseButtonEventArgs e)
 		{
+			timeSinceLastMouseEvent = 0;
 			if (e.Button == MouseButton.Left)
 			{
 				if (Game.CurrentInterface == Game.InterfaceType.Normal)
@@ -169,6 +173,7 @@ namespace OpenBve
 		/// <param name="e">The button arguments</param>
 		internal static void mouseMoveEvent(object sender, MouseMoveEventArgs e)
 		{
+			timeSinceLastMouseEvent = 0;
 			// if currently in a menu, forward the click to the menu system
 			if (Game.CurrentInterface == Game.InterfaceType.Menu)
 			{
@@ -181,14 +186,33 @@ namespace OpenBve
 		/// <param name="e">The button arguments</param>
 		internal static void mouseWheelEvent(object sender, MouseWheelEventArgs e)
 		{
+			timeSinceLastMouseEvent = 0;
 			if (Game.CurrentInterface == Game.InterfaceType.Menu)
 			{
 				Game.Menu.ProcessMouseScroll(e.Delta);
 			}
 		}
 
-		internal static void UpdateMouseGrab(double TimeElapsed)
+		internal static void UpdateMouse(double TimeElapsed)
 		{
+			if (Game.CurrentInterface != Game.InterfaceType.Menu)
+			{
+				timeSinceLastMouseEvent += TimeElapsed;
+			}
+			else
+			{
+				timeSinceLastMouseEvent = 0; //Always show the mouse in the menu
+			}
+
+			if (Interface.CurrentOptions.CursorHideDelay > 0 && timeSinceLastMouseEvent > Interface.CurrentOptions.CursorHideDelay)
+			{
+				Program.currentGameWindow.CursorVisible = false;
+			}
+			else
+			{
+				Program.currentGameWindow.CursorVisible = true;
+			}
+
 			if (MainLoop.MouseGrabEnabled)
 			{
 				double factor;

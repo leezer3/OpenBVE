@@ -170,7 +170,7 @@ namespace OpenBve
 			}
 			MainLoop.UpdateControlRepeats(RealTimeElapsed);
 			MainLoop.ProcessKeyboard();
-			MainLoop.UpdateMouseGrab(TimeElapsed);
+			MainLoop.UpdateMouse(RealTimeElapsed);
 			MainLoop.ProcessControls(TimeElapsed);
 			for (int i = 0; i < JoystickManager.AttachedJoysticks.Length; i++)
 			{
