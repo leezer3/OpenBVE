@@ -43,6 +43,17 @@ namespace LibRender2
 		}
 
 		/// <summary>
+		/// Binds the VAO ready for drawing
+		/// </summary>
+		public void BindForDrawing(VertexLayout VertexLayout)
+		{
+			GL.BindVertexArray(handle);
+			vbo.Bind();
+			vbo.EnableAttribute(VertexLayout);
+			vbo.SetAttribute(VertexLayout);
+		}
+
+		/// <summary>
 		/// Adds a VBO object to the VAO needs to have one to draw, if a second is added it will replace the first and the first will be disposed of
 		/// </summary>
 		/// <param name="VBO">The VBO object to be added</param>
@@ -90,13 +101,9 @@ namespace LibRender2
 		/// <summary>
 		/// Draw using VAO
 		/// </summary>
-		/// <param name="VertexLayout"></param>
 		/// <param name="DrawMode">Specifies the primitive or primitives that will be created from vertices</param>
-		public void Draw(VertexLayout VertexLayout, PrimitiveType DrawMode)
+		public void Draw(PrimitiveType DrawMode)
 		{
-			vbo.Bind();
-			vbo.EnableAttribute(VertexLayout);
-			vbo.SetAttribute(VertexLayout);
 			ibo.Draw(DrawMode);
 		}
 
@@ -107,11 +114,8 @@ namespace LibRender2
 		/// <param name="DrawMode">Specifies the primitive or primitives that will be created from vertices</param>
 		/// <param name="Start">Start position of vertex index</param>
 		/// <param name="Count">Number of vertex indices to use</param>
-		public void Draw(VertexLayout VertexLayout, PrimitiveType DrawMode, int Start, int Count)
+		public void Draw(PrimitiveType DrawMode, int Start, int Count)
 		{
-			vbo.Bind();
-			vbo.EnableAttribute(VertexLayout);
-			vbo.SetAttribute(VertexLayout);
 			ibo.Draw(DrawMode, Start, Count);
 		}
 

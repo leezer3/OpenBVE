@@ -211,13 +211,13 @@ namespace LibRender2.Backgrounds
 
 				// render polygon
 				VertexArrayObject VAO = (VertexArrayObject) data.VAO;
-				VAO.Bind();
+				VAO.BindForDrawing(renderer.DefaultShader.VertexLayout);
 
 				for (int i = 0; i + 9 < 32 * 10; i += 10)
 				{
-					VAO.Draw(renderer.DefaultShader.VertexLayout, PrimitiveType.Quads, i, 4);
-					VAO.Draw(renderer.DefaultShader.VertexLayout, PrimitiveType.Triangles, i + 4, 3);
-					VAO.Draw(renderer.DefaultShader.VertexLayout, PrimitiveType.Triangles, i + 7, 3);
+					VAO.Draw(PrimitiveType.Quads, i, 4);
+					VAO.Draw(PrimitiveType.Triangles, i + 4, 3);
+					VAO.Draw(PrimitiveType.Triangles, i + 7, 3);
 				}
 				renderer.DefaultShader.Deactivate();
 

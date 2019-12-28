@@ -806,7 +806,7 @@ namespace LibRender2
 			MeshMaterial material = State.Prototype.Mesh.Materials[Face.Material];
 			VertexArrayObject VAO = (VertexArrayObject)State.Prototype.Mesh.VAO;
 			
-			VAO.Bind();
+			VAO.BindForDrawing(Shader.VertexLayout);
 			if (!OptionBackFaceCulling || (Face.Flags & MeshFace.Face2Mask) != 0)
 			{
 				GL.Disable(EnableCap.CullFace);
@@ -827,7 +827,7 @@ namespace LibRender2
 			
 			if (OptionWireFrame || IsDebugTouchMode)
 			{
-				VAO.Draw(Shader.VertexLayout, PrimitiveType.LineLoop, Face.IboStartIndex, Face.Vertices.Length);
+				VAO.Draw(PrimitiveType.LineLoop, Face.IboStartIndex, Face.Vertices.Length);
 				return;
 			}
 
@@ -869,11 +869,6 @@ namespace LibRender2
 						Shader.SetMaterialAmbient(material.Color);  // TODO
 					}
 				}
-
-				if (material.DaytimeTexture == null)
-				{
-					Shader.SetIsTexture(false);
-				}
 			}
 			else
 			{
@@ -885,15 +880,6 @@ namespace LibRender2
 			}
 
 			lastColor = material.Color;
-			// fog
-			if (OptionFog)
-			{
-				Shader.SetIsFog(true);
-				Shader.SetFogStart(Fog.Start);
-				Shader.SetFogEnd(Fog.End);
-				Shader.SetFogColor(Fog.Color);
-			}
-
 			PrimitiveType DrawMode;
 
 			switch (Face.Flags & MeshFace.FaceTypeMask)
@@ -918,19 +904,20 @@ namespace LibRender2
 			// daytime polygon
 			{
 				// texture
-				if (material.DaytimeTexture != null)
+				if (material.DaytimeTexture != null && currentHost.LoadTexture(material.DaytimeTexture, (OpenGlTextureWrapMode) material.WrapMode))
 				{
-					if (currentHost.LoadTexture(material.DaytimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
+					GL.Enable(EnableCap.Texture2D);
+					Shader.SetIsTexture(true);
+					if (LastBoundTexture != material.DaytimeTexture.OpenGlTextures[(int) material.WrapMode])
 					{
-						GL.Enable(EnableCap.Texture2D);
-						Shader.SetIsTexture(true);
-						if (LastBoundTexture != material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode])
-						{
-							GL.BindTexture(TextureTarget.Texture2D, material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode].Name);
-							LastBoundTexture = material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode];
-						}
-						
+						GL.BindTexture(TextureTarget.Texture2D,
+							material.DaytimeTexture.OpenGlTextures[(int) material.WrapMode].Name);
+						LastBoundTexture = material.DaytimeTexture.OpenGlTextures[(int) material.WrapMode];
 					}
+				}
+				else
+				{
+					Shader.SetIsTexture(false);
 				}
 
 				// blend mode
@@ -971,7 +958,7 @@ namespace LibRender2
 				Shader.SetOpacity(inv255 * material.Color.A * alphaFactor);
 
 				// render polygon
-				VAO.Draw(Shader.VertexLayout, DrawMode, Face.IboStartIndex, Face.Vertices.Length);
+				VAO.Draw(DrawMode, Face.IboStartIndex, Face.Vertices.Length);
 			}
 
 			// nighttime polygon
@@ -1018,7 +1005,7 @@ namespace LibRender2
 				Shader.SetOpacity(alphaFactor);
 
 				// render polygon
-				VAO.Draw(Shader.VertexLayout, DrawMode, Face.IboStartIndex, Face.Vertices.Length);
+				VAO.Draw(DrawMode, Face.IboStartIndex, Face.Vertices.Length);
 				RestoreBlendFunc();
 				RestoreAlphaFunc();
 			}
@@ -1032,8 +1019,8 @@ namespace LibRender2
 				Shader.SetBrightness(1.0f);
 				Shader.SetOpacity(1.0f);
 				VertexArrayObject NormalsVAO = (VertexArrayObject)State.Prototype.Mesh.NormalsVAO;
-				NormalsVAO.Bind();
-				NormalsVAO.Draw(Shader.VertexLayout, PrimitiveType.Lines, Face.NormalsIboStartIndex, Face.Vertices.Length * 2);
+				NormalsVAO.BindForDrawing(Shader.VertexLayout);
+				NormalsVAO.Draw(PrimitiveType.Lines, Face.NormalsIboStartIndex, Face.Vertices.Length * 2);
 			}
 
 			// finalize

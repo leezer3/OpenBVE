@@ -312,6 +312,13 @@ namespace OpenBve.Graphics
 					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
 					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
 				}
+				if (OptionFog)
+				{
+					DefaultShader.SetIsFog(true);
+					DefaultShader.SetFogStart(Fog.Start);
+					DefaultShader.SetFogEnd(Fog.End);
+					DefaultShader.SetFogColor(Fog.Color);
+				}
 				DefaultShader.SetTexture(0);
 				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
 			}
