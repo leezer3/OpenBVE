@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using LibRender2.Backgrounds;
@@ -712,6 +712,7 @@ namespace LibRender2
 
 		public void SetFogForImmediateMode()
 		{
+			GL.Fog(FogParameter.FogMode, (int)FogMode.Linear);
 			GL.Fog(FogParameter.FogStart, Fog.Start);
 			GL.Fog(FogParameter.FogEnd, Fog.End);
 			GL.Fog(FogParameter.FogColor, new[] { inv255 * Fog.Color.R, inv255 * Fog.Color.G, inv255 * Fog.Color.B, 1.0f });

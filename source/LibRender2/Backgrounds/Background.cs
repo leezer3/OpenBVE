@@ -232,7 +232,7 @@ namespace LibRender2.Backgrounds
 		/// <param name="scale">The scale</param>
 		private void RenderStaticBackgroundImmediate(StaticBackground data, float alpha, float scale)
 		{
-			return;
+			//return;
 			if (data.Texture != null && renderer.currentHost.LoadTexture(data.Texture, OpenGlTextureWrapMode.RepeatClamp))
 			{
 				GL.MatrixMode(MatrixMode.Projection);
@@ -263,9 +263,12 @@ namespace LibRender2.Backgrounds
 				GL.BindTexture(TextureTarget.Texture2D, data.Texture.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp].Name);
 				renderer.LastBoundTexture = data.Texture.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp];
 				GL.Color4(1.0f, 1.0f, 1.0f, alpha);
+				
 				if (data.DisplayList > 0)
 				{
 					GL.CallList(data.DisplayList);
+					GL.Disable(EnableCap.Texture2D);
+					GL.Enable(EnableCap.Blend);
 					GL.PopMatrix();
 					GL.MatrixMode(MatrixMode.Projection);
 					GL.PopMatrix();
