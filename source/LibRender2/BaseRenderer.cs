@@ -956,6 +956,8 @@ namespace LibRender2
 				{
 					alphaFactor = 1.0f;
 				}
+
+				Shader.SetMaterialAdditive(material.BlendMode == MeshMaterialBlendMode.Additive);
 				Shader.SetOpacity(inv255 * material.Color.A * alphaFactor);
 
 				// render polygon
@@ -1028,6 +1030,7 @@ namespace LibRender2
 			if (material.BlendMode == MeshMaterialBlendMode.Additive)
 			{
 				RestoreBlendFunc();
+				Shader.SetIsFog(OptionFog);
 			}
 		}
 

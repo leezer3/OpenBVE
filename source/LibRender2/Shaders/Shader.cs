@@ -157,6 +157,7 @@ namespace LibRender2.Shaders
 				MaterialEmission = (short)GL.GetUniformLocation(handle, "uMaterial.emission"),
 				MaterialShininess = (short)GL.GetUniformLocation(handle, "uMaterial.shininess"),
 				MaterialIsEmissive = (short)GL.GetUniformLocation(handle, "uMaterial.isEmissive"),
+				MaterialIsAdditive = (short)GL.GetUniformLocation(handle, "uIsAdditive"),
 				IsFog = (short)GL.GetUniformLocation(handle, "uIsFog"),
 				FogStart = (short)GL.GetUniformLocation(handle, "uFogStart"),
 				FogEnd = (short)GL.GetUniformLocation(handle, "uFogEnd"),
@@ -286,6 +287,11 @@ namespace LibRender2.Shaders
 		public void SetIsFog(bool IsFog)
 		{
 			GL.Uniform1(UniformLayout.IsFog, IsFog ? 1 : 0);
+		}
+
+		public void SetMaterialAdditive(bool Additive)
+		{
+			GL.Uniform1(UniformLayout.MaterialIsAdditive, Additive ? 1 : 0);
 		}
 
 		public void SetFogStart(float FogStart)
