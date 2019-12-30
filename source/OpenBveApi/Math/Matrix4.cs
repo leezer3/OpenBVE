@@ -134,10 +134,10 @@ namespace OpenBveApi.Math
 
 		// --- comparisons ---
 
-		/// <summary>Checks whether the two specified vectors are equal.</summary>
-		/// <param name="a">The first vector.</param>
-		/// <param name="b">The second vector.</param>
-		/// <returns>Whether the two vectors are equal.</returns>
+		/// <summary>Checks whether the two specified matrices are equal.</summary>
+		/// <param name="a">The first matrix.</param>
+		/// <param name="b">The second matrix.</param>
+		/// <returns>Whether the two matricies are equal.</returns>
 		public static bool operator ==(Matrix4D a, Matrix4D b)
 		{
 			if (a.Row0 != b.Row0) return false;
