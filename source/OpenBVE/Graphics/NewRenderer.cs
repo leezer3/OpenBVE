@@ -433,10 +433,12 @@ namespace OpenBve.Graphics
 
 			if (Interface.CurrentOptions.MotionBlur != MotionBlurMode.None)
 			{
+				DefaultShader.Deactivate();
 				MotionBlur.RenderFullscreen(Interface.CurrentOptions.MotionBlur, FrameRate, Math.Abs(Camera.CurrentSpeed));
 			}
 			if (Interface.CurrentOptions.IsUseNewRenderer)
 			{
+				DefaultShader.Activate();
 				ResetShader(DefaultShader); //Must reset shader between overlay and world layers for correct lighting results
 				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
 			}
