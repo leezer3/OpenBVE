@@ -176,12 +176,14 @@ namespace LibRender2.Primitives
 					Color = Color128.White
 				}
 			};
-
-			defaultVAO = new VertexArrayObject();
-			defaultVAO.Bind();
-			defaultVAO.SetVBO(new VertexBufferObject(vertexData, BufferUsageHint.StaticDraw));
-			defaultVAO.SetIBO(new IndexBufferObject(Enumerable.Range(0, vertexData.Length).Select(x => (ushort) x).ToArray(), BufferUsageHint.StaticDraw));
-			defaultVAO.UnBind();
+			if (renderer.currentOptions.IsUseNewRenderer)
+			{
+				defaultVAO = new VertexArrayObject();
+				defaultVAO.Bind();
+				defaultVAO.SetVBO(new VertexBufferObject(vertexData, BufferUsageHint.StaticDraw));
+				defaultVAO.SetIBO(new IndexBufferObject(Enumerable.Range(0, vertexData.Length).Select(x => (ushort) x).ToArray(), BufferUsageHint.StaticDraw));
+				defaultVAO.UnBind();
+			}
 		}
 
 		/// <summary>Draws a 3D cube</summary>
