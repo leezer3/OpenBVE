@@ -263,7 +263,10 @@ namespace LibRender2.Backgrounds
 				GL.BindTexture(TextureTarget.Texture2D, data.Texture.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp].Name);
 				renderer.LastBoundTexture = data.Texture.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp];
 				GL.Color4(1.0f, 1.0f, 1.0f, alpha);
-				
+				if (renderer.OptionFog)
+				{
+					GL.Enable(EnableCap.Fog);
+				}
 				if (data.DisplayList > 0)
 				{
 					GL.CallList(data.DisplayList);
