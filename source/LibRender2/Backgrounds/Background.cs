@@ -212,7 +212,7 @@ namespace LibRender2.Backgrounds
 				// render polygon
 				VertexArrayObject VAO = (VertexArrayObject) data.VAO;
 				VAO.BindForDrawing(renderer.DefaultShader.VertexLayout);
-
+				renderer.lastVAO = VAO.handle;
 				for (int i = 0; i + 9 < 32 * 10; i += 10)
 				{
 					VAO.Draw(PrimitiveType.Quads, i, 4);

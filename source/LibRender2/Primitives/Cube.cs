@@ -262,6 +262,7 @@ namespace LibRender2.Primitives
 			// render polygon
 			VAO.BindForDrawing(renderer.DefaultShader.VertexLayout);
 			VAO.Draw(PrimitiveType.Quads);
+			renderer.lastVAO = -1;
 			VAO.UnBind();
 			renderer.DefaultShader.Deactivate();
 

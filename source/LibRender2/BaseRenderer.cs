@@ -797,6 +797,8 @@ namespace LibRender2
 		
 		private Color32 lastColor;
 
+		internal int lastVAO;
+
 		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, bool IsDebugTouchMode = false)
 		{
 			if (State.Prototype.Mesh.Vertices.Length < 1)
@@ -806,8 +808,13 @@ namespace LibRender2
 
 			MeshMaterial material = State.Prototype.Mesh.Materials[Face.Material];
 			VertexArrayObject VAO = (VertexArrayObject)State.Prototype.Mesh.VAO;
+
+			if (lastVAO != VAO.handle)
+			{
+				VAO.BindForDrawing(Shader.VertexLayout);
+				lastVAO = VAO.handle;
+			}
 			
-			VAO.BindForDrawing(Shader.VertexLayout);
 			if (!OptionBackFaceCulling || (Face.Flags & MeshFace.Face2Mask) != 0)
 			{
 				GL.Disable(EnableCap.CullFace);
@@ -855,13 +862,6 @@ namespace LibRender2
 					}
 
 					Shader.SetMaterialShininess(1.0f);
-
-					Lighting.OptionLightingResultingAmount = (Lighting.OptionAmbientColor.R + Lighting.OptionAmbientColor.G + Lighting.OptionAmbientColor.B) / 480.0f;
-
-					if (Lighting.OptionLightingResultingAmount > 1.0f)
-					{
-						Lighting.OptionLightingResultingAmount = 1.0f;
-					}
 				}
 				else
 				{
@@ -1023,6 +1023,7 @@ namespace LibRender2
 				Shader.SetOpacity(1.0f);
 				VertexArrayObject NormalsVAO = (VertexArrayObject)State.Prototype.Mesh.NormalsVAO;
 				NormalsVAO.BindForDrawing(Shader.VertexLayout);
+				lastVAO = NormalsVAO.handle;
 				NormalsVAO.Draw(PrimitiveType.Lines, Face.NormalsIboStartIndex, Face.Vertices.Length * 2);
 			}
 
