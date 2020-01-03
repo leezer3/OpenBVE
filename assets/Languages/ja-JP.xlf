@@ -1444,6 +1444,9 @@
 						<source>Load in advance</source>
 						<target>全テクスチャを前もって読み込む</target>
 					</trans-unit>
+					<trans-unit id="advanced_is_use_new_renderer">
+						<source>Enable the new renderer</source>
+					</trans-unit>
 					<trans-unit id="advanced_disable_displaylists">
 						<source>Disable OpenGL display lists</source>
 						<target>OpenGL display lists(描画高速化)を無効</target>

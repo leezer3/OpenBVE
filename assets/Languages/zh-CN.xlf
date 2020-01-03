@@ -1445,6 +1445,9 @@
 						<source>Load in advance</source>
 						<target>提前加载</target>
 					</trans-unit>
+					<trans-unit id="advanced_is_use_new_renderer">
+						<source>Enable the new renderer</source>
+					</trans-unit>
 					<trans-unit id="advanced_disable_displaylists">
 						<source>Disable OpenGL display lists</source>
 						<target>禁用OpenGL显示列表</target>
