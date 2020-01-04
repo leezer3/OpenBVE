@@ -110,7 +110,6 @@ namespace LibRender2
 		/// <summary>
 		/// Draw using VAO
 		/// </summary>
-		/// <param name="VertexLayout"></param>
 		/// <param name="DrawMode">Specifies the primitive or primitives that will be created from vertices</param>
 		/// <param name="Start">Start position of vertex index</param>
 		/// <param name="Count">Number of vertex indices to use</param>

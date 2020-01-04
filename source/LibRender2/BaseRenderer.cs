@@ -907,7 +907,6 @@ namespace LibRender2
 				// texture
 				if (material.DaytimeTexture != null && currentHost.LoadTexture(material.DaytimeTexture, (OpenGlTextureWrapMode) material.WrapMode))
 				{
-					GL.Enable(EnableCap.Texture2D);
 					Shader.SetIsTexture(true);
 					if (LastBoundTexture != material.DaytimeTexture.OpenGlTextures[(int) material.WrapMode])
 					{
@@ -968,7 +967,6 @@ namespace LibRender2
 			if (material.NighttimeTexture != null && material.NighttimeTexture != material.DaytimeTexture && currentHost.LoadTexture(material.NighttimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
 			{
 				// texture
-				GL.Enable(EnableCap.Texture2D);
 				Shader.SetIsTexture(true);
 				if (LastBoundTexture != material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode])
 				{
@@ -1013,7 +1011,6 @@ namespace LibRender2
 				RestoreAlphaFunc();
 			}
 
-			GL.Disable(EnableCap.Texture2D);
 
 			// normals
 			if (OptionNormals)
