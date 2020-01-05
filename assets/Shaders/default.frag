@@ -9,7 +9,7 @@ uniform bool uIsTexture;
 uniform sampler2D uTexture;
 uniform float uBrightness;
 uniform float uOpacity;
-uniform bool uIsAdditive;
+uniform int uIsAdditive;
 
 void main(void)
 {
@@ -22,9 +22,20 @@ void main(void)
 
 	vec3 finalRGB = vec3(oColor.rgb * textureColor.rgb * uBrightness);
 	float finalA = oColor.a * textureColor.a * uOpacity;
-	if(uIsAdditive)
+	switch(uIsAdditive)
 	{
-		finalRGB /= finalA * 2;
+		case 1:
+			//Plain additive
+			finalRGB /= finalA;
+		break;
+		case 2:
+			//Divide exponent 2
+			finalRGB /= finalA * 2;
+		break;
+		case 3:
+			//Divide exponent 4
+			finalRGB /= finalA * 4;
+		break;
 	}
 		
 	gl_FragData[0] = clamp(vec4(mix(uFogColor, finalRGB, oFogFactor), oColor.a * textureColor.a * uOpacity), 0.0, 1.0);

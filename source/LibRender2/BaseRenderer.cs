@@ -947,16 +947,26 @@ namespace LibRender2
 				Shader.SetBrightness(factor);
 
 				float alphaFactor;
+				GlowAttenuationMode mode = GlowAttenuationMode.None;
 				if (material.GlowAttenuationData != 0)
 				{
-					alphaFactor = (float)Glow.GetDistanceFactor(modelMatrix, State.Prototype.Mesh.Vertices, ref Face, material.GlowAttenuationData);
+					alphaFactor = (float)Glow.GetDistanceFactor(modelMatrix, State.Prototype.Mesh.Vertices, ref Face, material.GlowAttenuationData, out mode);
+					
 				}
 				else
 				{
 					alphaFactor = 1.0f;
 				}
 
-				Shader.SetMaterialAdditive(material.BlendMode == MeshMaterialBlendMode.Additive);
+				if (material.BlendMode == MeshMaterialBlendMode.Additive)
+				{
+					Shader.SetMaterialAdditive(1 + (int)mode);
+				}
+				else
+				{
+					Shader.SetMaterialAdditive(0);
+				}
+				
 				Shader.SetOpacity(inv255 * material.Color.A * alphaFactor);
 
 				// render polygon
