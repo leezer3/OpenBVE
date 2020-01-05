@@ -444,7 +444,7 @@ namespace OpenBve
 						if (this.HasInteriorView && this.CarSections.Length > 0)
 						{
 							this.CurrentCarSection = 0;
-							this.CarSections[0].Initialize(true);
+							this.CarSections[0].Initialize(false);
 							CarSections[0].Show();
 							break;
 						}
@@ -454,14 +454,14 @@ namespace OpenBve
 						if (this.HasInteriorView && this.CarSections.Length > 1)
 						{
 							this.CurrentCarSection = 1;
-							this.CarSections[1].Initialize(true);
+							this.CarSections[1].Initialize(false);
 							CarSections[1].Show();
 							break;
 						}
 						else if(!this.HasInteriorView && this.CarSections.Length > 0)
 						{
 							this.CurrentCarSection = 0;
-							this.CarSections[0].Initialize(true);
+							this.CarSections[0].Initialize(false);
 							CarSections[0].Show();
 							break;
 						}

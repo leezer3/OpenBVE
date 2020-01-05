@@ -149,10 +149,8 @@ namespace OpenBve
             }
             if (MoveXSpeed != 0.0)
             {
-	            Program.Renderer.Camera.AbsolutePosition.X += MoveXSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteSide.X;
-	            Program.Renderer.Camera.AbsolutePosition.Y += MoveXSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteSide.Y;
-	            Program.Renderer.Camera.AbsolutePosition.Z += MoveXSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteSide.Z;
-                keep = true;
+	            Program.Renderer.Camera.AbsolutePosition += MoveXSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteSide;
+	            keep = true;
             }
             // move y
             if (Program.MoveY == 0)
@@ -183,10 +181,8 @@ namespace OpenBve
             }
             if (MoveYSpeed != 0.0)
             {
-	            Program.Renderer.Camera.AbsolutePosition.X += MoveYSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteUp.X;
-	            Program.Renderer.Camera.AbsolutePosition.Y += MoveYSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteUp.Y;
-	            Program.Renderer.Camera.AbsolutePosition.Z += MoveYSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteUp.Z;
-                keep = true;
+	            Program.Renderer.Camera.AbsolutePosition += MoveYSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteUp;
+	            keep = true;
             }
             // move z
             if (Program.MoveZ == 0)
@@ -217,9 +213,8 @@ namespace OpenBve
             }
             if (MoveZSpeed != 0.0)
             {
-	            Program.Renderer.Camera.AbsolutePosition.X += MoveZSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteDirection.X;
-	            Program.Renderer.Camera.AbsolutePosition.Y += MoveZSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteDirection.Y;
-	            Program.Renderer.Camera.AbsolutePosition.Z += MoveZSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteDirection.Z;
+	            Program.Renderer.Camera.AbsolutePosition += MoveZSpeed * timeElapsed * Program.Renderer.Camera.AbsoluteDirection;
+
                 keep = true;
             }
             // lighting

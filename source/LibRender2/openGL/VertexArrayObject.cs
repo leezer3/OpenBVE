@@ -14,9 +14,9 @@ namespace LibRender2
 	/// </summary>
 	public class VertexArrayObject : IDisposable
 	{
-		public static List<VertexArrayObject> Disposable = new List<VertexArrayObject>();
+		public static readonly List<VertexArrayObject> Disposable = new List<VertexArrayObject>();
 
-		private readonly int handle;
+		internal readonly int handle;
 		private VertexBufferObject vbo;
 		private IndexBufferObject ibo;
 		private bool disposed;
@@ -27,7 +27,10 @@ namespace LibRender2
 		public VertexArrayObject()
 		{
 			GL.GenVertexArrays(1, out handle);
-
+			if (handle == 0)
+			{
+				throw new InvalidOperationException("Failed to generate the required vertex array handle- No openGL context.");
+			}
 			Disposable.Add(this);
 		}
 
@@ -37,6 +40,17 @@ namespace LibRender2
 		public void Bind()
 		{
 			GL.BindVertexArray(handle);
+		}
+
+		/// <summary>
+		/// Binds the VAO ready for drawing
+		/// </summary>
+		public void BindForDrawing(VertexLayout VertexLayout)
+		{
+			GL.BindVertexArray(handle);
+			vbo.Bind();
+			vbo.EnableAttribute(VertexLayout);
+			vbo.SetAttribute(VertexLayout);
 		}
 
 		/// <summary>
@@ -87,31 +101,21 @@ namespace LibRender2
 		/// <summary>
 		/// Draw using VAO
 		/// </summary>
-		/// <param name="VertexLayout"></param>
 		/// <param name="DrawMode">Specifies the primitive or primitives that will be created from vertices</param>
-		public void Draw(VertexLayout VertexLayout, PrimitiveType DrawMode)
+		public void Draw(PrimitiveType DrawMode)
 		{
-			vbo.Bind();
-			vbo.EnableAttribute(VertexLayout);
-			vbo.SetAttribute(VertexLayout);
 			ibo.Draw(DrawMode);
-			vbo.DisableAttribute(VertexLayout);
 		}
 
 		/// <summary>
 		/// Draw using VAO
 		/// </summary>
-		/// <param name="VertexLayout"></param>
 		/// <param name="DrawMode">Specifies the primitive or primitives that will be created from vertices</param>
 		/// <param name="Start">Start position of vertex index</param>
 		/// <param name="Count">Number of vertex indices to use</param>
-		public void Draw(VertexLayout VertexLayout, PrimitiveType DrawMode, int Start, int Count)
+		public void Draw(PrimitiveType DrawMode, int Start, int Count)
 		{
-			vbo.Bind();
-			vbo.EnableAttribute(VertexLayout);
-			vbo.SetAttribute(VertexLayout);
 			ibo.Draw(DrawMode, Start, Count);
-			vbo.DisableAttribute(VertexLayout);
 		}
 
 		/// <summary>
@@ -166,7 +170,7 @@ namespace LibRender2
 					{
 						Position = mesh.Vertices[vertex.Index].Coordinates,
 						Normal = vertex.Normal,
-						UV = mesh.Vertices[vertex.Index].TextureCoordinates
+						UV = new Vector2f(mesh.Vertices[vertex.Index].TextureCoordinates)
 					};
 
 					var coloredVertex = mesh.Vertices[vertex.Index] as ColoredVertex;
@@ -274,28 +278,28 @@ namespace LibRender2
 				vertexData.Add(new LibRenderVertex
 				{
 					Position = top[i],
-					UV = new Vector2(textureX, 0.005f),
+					UV = new Vector2f(textureX, 0.005f),
 					Color = Color128.White
 				});
 
 				vertexData.Add(new LibRenderVertex
 				{
 					Position = bottom[i],
-					UV = new Vector2(textureX, 0.995f),
+					UV = new Vector2f(textureX, 0.995f),
 					Color = Color128.White
 				});
 
 				vertexData.Add(new LibRenderVertex
 				{
 					Position = bottom[j],
-					UV = new Vector2(textureX + textureIncrement, 0.995f),
+					UV = new Vector2f(textureX + textureIncrement, 0.995f),
 					Color = Color128.White
 				});
 
 				vertexData.Add(new LibRenderVertex
 				{
 					Position = top[j],
-					UV = new Vector2(textureX + textureIncrement, 0.005f),
+					UV = new Vector2f(textureX + textureIncrement, 0.005f),
 					Color = Color128.White
 				});
 
@@ -305,7 +309,7 @@ namespace LibRender2
 				vertexData.Add(new LibRenderVertex
 				{
 					Position = new Vector3f(0.0f, top[i].Y, 0.0f),
-					UV = new Vector2(textureX + 0.5f * textureIncrement, 0.1f),
+					UV = new Vector2f(textureX + 0.5f * textureIncrement, 0.1f),
 					Color = Color128.White
 				});
 
@@ -315,7 +319,7 @@ namespace LibRender2
 				vertexData.Add(new LibRenderVertex
 				{
 					Position = new Vector3f(0.0f, bottom[i].Y, 0.0f),
-					UV = new Vector2(textureX + 0.5f * textureIncrement, 0.9f),
+					UV = new Vector2f(textureX + 0.5f * textureIncrement, 0.9f),
 					Color = Color128.White
 				});
 

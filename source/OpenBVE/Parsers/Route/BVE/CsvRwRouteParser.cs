@@ -1878,7 +1878,7 @@ namespace OpenBve {
 													Interface.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
 													if (!Data.Backgrounds.ContainsKey(CommandIndex1)) {
-														Data.Backgrounds.Add(CommandIndex1, new StaticBackground(null, 6, false));
+														Data.Backgrounds.Add(CommandIndex1, new StaticBackground(null, 6, false, Interface.CurrentOptions.ViewingDistance));
 													}
 													string f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
 													if (!System.IO.File.Exists(f) && (Arguments[0].ToLowerInvariant() == "back_mt.bmp" || Arguments[0] == "back_mthigh.bmp")) {
@@ -1936,7 +1936,7 @@ namespace OpenBve {
 												Interface.AddMessage(MessageType.Error, false,  Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (!Data.Backgrounds.ContainsKey(CommandIndex1)) {
-													Data.Backgrounds.Add(CommandIndex1, new StaticBackground(null, 6, false));
+													Data.Backgrounds.Add(CommandIndex1, new StaticBackground(null, 6, false, Interface.CurrentOptions.ViewingDistance));
 												}
 												int x;
 												if (!NumberFormats.TryParseIntVb6(Arguments[0], out x)) {
@@ -1963,7 +1963,7 @@ namespace OpenBve {
 												Interface.AddMessage(MessageType.Error, false,  Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else {
 												if (!Data.Backgrounds.ContainsKey(CommandIndex1)) {
-													Data.Backgrounds.Add(CommandIndex1, new StaticBackground(null, 6, false));
+													Data.Backgrounds.Add(CommandIndex1, new StaticBackground(null, 6, false, Interface.CurrentOptions.ViewingDistance));
 												}
 												int aspect;
 												if (!NumberFormats.TryParseIntVb6(Arguments[0], out aspect)) {

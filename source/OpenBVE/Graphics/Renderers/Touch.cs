@@ -26,10 +26,18 @@ namespace OpenBve.Graphics.Renderers
 
 			objectStates = new List<ObjectState>();
 			touchFaces = new List<FaceState>();
-
-			pickingShader = new Shader("default", "picking", true);
-			pickingShader.Activate();
-			pickingShader.Deactivate();
+			try
+			{
+				pickingShader = new Shader("default", "picking", true);
+				pickingShader.Activate();
+				pickingShader.Deactivate();
+			}
+			catch
+			{
+				Interface.AddMessage(MessageType.Error, false, "Initialising the touch shader failed- Falling back to legacy openGL.");
+				Interface.CurrentOptions.IsUseNewRenderer = false;
+			}
+			
 
 			fbo = new FrameBufferObject();
 			fbo.Bind();
@@ -48,24 +56,28 @@ namespace OpenBve.Graphics.Renderers
 
 		internal void RenderScene()
 		{
+			
 			PreRender();
-
+			if (touchFaces.Count == 0)
+			{
+				//Drop out early if the pre-render process reveals no available touch faces for a minor boost
+				return;
+			}
 			renderer.ResetOpenGlState();
 
 			fbo.Bind();
 
 			GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
+			pickingShader.Activate();
+			pickingShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
 			foreach (FaceState face in touchFaces)
 			{
-				pickingShader.Activate();
-				renderer.ResetShader(pickingShader);
 				pickingShader.SetObjectIndex(objectStates.IndexOf(face.Object) + 1);
 				renderer.RenderFace(pickingShader, face);
-				pickingShader.Deactivate();
 			}
-
+			//Must deactivate and unbind here
+			pickingShader.Deactivate();
 			fbo.UnBind();
 
 			// for debug
@@ -73,14 +85,16 @@ namespace OpenBve.Graphics.Renderers
 			{
 				GL.DepthMask(false);
 				GL.Disable(EnableCap.DepthTest);
-
+				renderer.DefaultShader.Activate();
+				renderer.ResetShader(renderer.DefaultShader);
+				renderer.DefaultShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
 				foreach (FaceState face in touchFaces)
 				{
-					renderer.DefaultShader.Activate();
-					renderer.ResetShader(renderer.DefaultShader);
+					
 					renderer.RenderFace(renderer.DefaultShader, face, true);
-					renderer.DefaultShader.Deactivate();
+					
 				}
+				renderer.DefaultShader.Deactivate();
 			}
 		}
 

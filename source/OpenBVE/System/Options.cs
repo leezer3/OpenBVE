@@ -101,7 +101,9 @@ namespace OpenBve
 			internal bool OldTransparencyMode;
 			/// <summary>The list of enable Input Device Plugins</summary>
 			internal string[] EnableInputDevicePlugins;
-
+			/// <summary>The time in seconds after which the mouse cursor is hidden</summary>
+			/// <remarks>Set to zero to never hide the cursor</remarks>
+			internal double CursorHideDelay;
 			internal string CursorFileName;
 			internal bool Panel2ExtendedMode;
 			internal int Panel2ExtendedMinSize;
@@ -195,6 +197,7 @@ namespace OpenBve
 				this.Panel2ExtendedMinSize = 128;
 				this.CurrentXParser = XParsers.Original; //Set to Michelle's original X parser by default
 				this.CurrentObjParser = ObjParsers.Original; //Set to original Obj parser by default
+				this.CursorHideDelay = 10;
 			}
 		}
 		/// <summary>The current game options</summary>
@@ -535,6 +538,13 @@ namespace OpenBve
 											} break;
 										case "raildrivermph":
 											Interface.CurrentOptions.RailDriverMPH = string.Compare(Value, "false", StringComparison.OrdinalIgnoreCase) != 0;
+											break;
+										case "cursorhidedelay":
+											{
+												double a;
+												double.TryParse(Value, NumberStyles.Float, Culture, out a);
+												Interface.CurrentOptions.CursorHideDelay = a;
+											}
 											break;
 									} break;
 								case "sound":

@@ -103,7 +103,7 @@ namespace OpenBve
 						string f = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Compatibility"), "Uchibo\\Back_Mt.png");
 						Texture t;
 						Program.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out t);
-						Program.CurrentRoute.CurrentBackground = new StaticBackground(t, 6, false);
+						Program.CurrentRoute.CurrentBackground = new StaticBackground(t, 6, false, Interface.CurrentOptions.ViewingDistance);
 					}
 					else if (Data.Backgrounds.Count == 1 && !Data.Backgrounds.ContainsKey(0) && Data.Blocks[0].Background == 0)
 					{
@@ -118,7 +118,7 @@ namespace OpenBve
 					}
 					else
 					{
-						Program.CurrentRoute.CurrentBackground = new StaticBackground(null, 6, false);
+						Program.CurrentRoute.CurrentBackground = new StaticBackground(null, 6, false, Interface.CurrentOptions.ViewingDistance);
 					}
 				}
 				Program.CurrentRoute.TargetBackground = Program.CurrentRoute.CurrentBackground;
@@ -1503,7 +1503,7 @@ namespace OpenBve
 										if (lim < 10.0)
 										{
 											int d0 = (int)Math.Round(lim);
-											int o = Program.Renderer.CreateStaticObject(CompatibilityObjects.LimitOneDigit, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+											int o = Program.Renderer.CreateStaticObject(CompatibilityObjects.LimitOneDigit.Clone(), wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
 											if (Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials.Length >= 1)
 											{
 												Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials[0].DaytimeTexture);
@@ -1514,7 +1514,7 @@ namespace OpenBve
 											int d1 = (int)Math.Round(lim);
 											int d0 = d1 % 10;
 											d1 /= 10;
-											int o = Program.Renderer.CreateStaticObject(CompatibilityObjects.LimitTwoDigits, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+											int o = Program.Renderer.CreateStaticObject(CompatibilityObjects.LimitTwoDigits.Clone(), wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
 											if (Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials.Length >= 1)
 											{
 												Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d1 + ".png"), new TextureParameters(null, null), out Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials[0].DaytimeTexture);
@@ -1530,7 +1530,7 @@ namespace OpenBve
 											int d0 = d2 % 10;
 											int d1 = (d2 / 10) % 10;
 											d2 /= 100;
-											int o = Program.Renderer.CreateStaticObject(CompatibilityObjects.LimitThreeDigits, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+											int o = Program.Renderer.CreateStaticObject(CompatibilityObjects.LimitThreeDigits.Clone(), wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
 											if (Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials.Length >= 1)
 											{
 												Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d2 + ".png"), new TextureParameters(null, null), out Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials[0].DaytimeTexture);
