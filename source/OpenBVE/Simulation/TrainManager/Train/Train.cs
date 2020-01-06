@@ -54,7 +54,7 @@ namespace OpenBve
 			/// <summary>The max width used in px for the reverser HUD string</summary>
 			internal int MaxReverserWidth = 48;
 			/// <summary>Coefficient of friction used for braking</summary>
-			private const double CoefficientOfGroundFriction = 0.5;
+			internal const double CoefficientOfGroundFriction = 0.5;
 			/// <summary>The speed difference in m/s above which derailments etc. will occur</summary>
 			internal double CriticalCollisionSpeedDifference = 8.0;
 
@@ -481,8 +481,8 @@ namespace OpenBve
 					double wheelSlipAccelerationMotorRear = Cars[i].GetCriticalWheelSlipAccelerationForElectricMotor(Cars[i].RearAxle, Cars[i].CurrentSpeed);
 
 					Cars[i].UpdateAcceleration(TimeElapsed);
-					Cars[i].UpdateBrakeDeceleration(ref FrictionBrakeAcceleration);
-					
+					Cars[i].UpdateBrakeDeceleration(TimeElapsed, ref FrictionBrakeAcceleration);
+
 					// motor
 					if (Handles.Reverser.Actual != 0)
 					{

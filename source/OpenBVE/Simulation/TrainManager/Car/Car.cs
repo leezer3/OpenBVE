@@ -111,15 +111,9 @@ namespace OpenBve
 
 			/// <summary>Updates the acceleration provided by the motor and jerk from other cars</summary>
 			/// <param name="TimeElapsed">The time elapsed this frame</param>
-			internal virtual void UpdateAcceleration(double TimeElapsed)
-			{
-				Specs.CurrentAcceleration = 0.0;
-				FrontAxle.CurrentWheelSlip = false;
-				RearAxle.CurrentWheelSlip = false;
-				WheelSpin = 0.0;
-			}
+			internal abstract void UpdateAcceleration(double TimeElapsed);
 
-			internal virtual void UpdateBrakeDeceleration(ref double FrictionBrakeAcceleration)
+			internal virtual void UpdateBrakeDeceleration(double TimeElapsed, ref double FrictionBrakeAcceleration)
 			{
 				WheelLock = WheelSpin == 0.0 & Derailed;
 				if (!Derailed & WheelSpin == 0.0)
@@ -152,8 +146,7 @@ namespace OpenBve
 				}
 				else if (Derailed)
 				{
-					//Arbritary coefficent of ground friction
-					FrictionBrakeAcceleration += 0.5 * Program.CurrentRoute.Atmosphere.AccelerationDueToGravity;
+					FrictionBrakeAcceleration += Train.CoefficientOfGroundFriction * Program.CurrentRoute.Atmosphere.AccelerationDueToGravity;
 				}
 			}
 
@@ -327,116 +320,8 @@ namespace OpenBve
 				}
 			}
 
-			internal void UpdateMotorSounds(double TimeElapsed)
+			internal virtual void UpdateMotorSounds(double TimeElapsed)
 			{
-				if (!(this is MotorCar))
-				{
-					return; //FIXME: This will go shortly
-				}
-				double speed = Math.Abs(Specs.CurrentPerceivedSpeed);
-				int idx = (int)Math.Round(speed * Sounds.Motor.SpeedConversionFactor);
-				int odir = Sounds.Motor.CurrentAccelerationDirection;
-				int ndir = Math.Sign(Specs.CurrentAccelerationOutput);
-				for (int h = 0; h < 2; h++)
-				{
-					int j = h == 0 ? TrainManager.MotorSound.MotorP1 : TrainManager.MotorSound.MotorP2;
-					int k = h == 0 ? TrainManager.MotorSound.MotorB1 : TrainManager.MotorSound.MotorB2;
-					if (odir > 0 & ndir <= 0)
-					{
-						if (j < Sounds.Motor.Tables.Length)
-						{
-							Program.Sounds.StopSound(Sounds.Motor.Tables[j].Source);
-							Sounds.Motor.Tables[j].Source = null;
-							Sounds.Motor.Tables[j].Buffer = null;
-						}
-					}
-					else if (odir < 0 & ndir >= 0)
-					{
-						if (k < Sounds.Motor.Tables.Length)
-						{
-							Program.Sounds.StopSound(Sounds.Motor.Tables[k].Source);
-							Sounds.Motor.Tables[k].Source = null;
-							Sounds.Motor.Tables[k].Buffer = null;
-						}
-					}
-					if (ndir != 0)
-					{
-						if (ndir < 0) j = k;
-						if (j < Sounds.Motor.Tables.Length)
-						{
-							int idx2 = idx;
-							if (idx2 >= Sounds.Motor.Tables[j].Entries.Length)
-							{
-								idx2 = Sounds.Motor.Tables[j].Entries.Length - 1;
-							}
-							if (idx2 >= 0)
-							{
-								SoundBuffer obuf = Sounds.Motor.Tables[j].Buffer;
-								SoundBuffer nbuf = Sounds.Motor.Tables[j].Entries[idx2].Buffer;
-								double pitch = Sounds.Motor.Tables[j].Entries[idx2].Pitch;
-								double gain = Sounds.Motor.Tables[j].Entries[idx2].Gain;
-								if (ndir == 1)
-								{
-									// power
-									double max = Specs.AccelerationCurveMaximum;
-									if (max != 0.0)
-									{
-										double cur = Specs.CurrentAccelerationOutput;
-										if (cur < 0.0) cur = 0.0;
-										gain *= Math.Pow(cur / max, 0.25);
-									}
-								}
-								else if (ndir == -1)
-								{
-									// brake
-									double max = CarBrake.DecelerationAtServiceMaximumPressure(baseTrain.Handles.Brake.Actual, CurrentSpeed);
-									if (max != 0.0)
-									{
-										double cur = -Specs.CurrentAccelerationOutput;
-										if (cur < 0.0) cur = 0.0;
-										gain *= Math.Pow(cur / max, 0.25);
-									}
-								}
-
-								if (obuf != nbuf)
-								{
-									Program.Sounds.StopSound(Sounds.Motor.Tables[j].Source);
-									if (nbuf != null)
-									{
-										Sounds.Motor.Tables[j].Source = Program.Sounds.PlaySound(nbuf, pitch, gain, Sounds.Motor.Position, this, true);
-										Sounds.Motor.Tables[j].Buffer = nbuf;
-									}
-									else
-									{
-										Sounds.Motor.Tables[j].Source = null;
-										Sounds.Motor.Tables[j].Buffer = null;
-									}
-								}
-								else if (nbuf != null)
-								{
-									if (Sounds.Motor.Tables[j].Source != null)
-									{
-										Sounds.Motor.Tables[j].Source.Pitch = pitch;
-										Sounds.Motor.Tables[j].Source.Volume = gain;
-									}
-								}
-								else
-								{
-									Program.Sounds.StopSound(Sounds.Motor.Tables[j].Source);
-									Sounds.Motor.Tables[j].Source = null;
-									Sounds.Motor.Tables[j].Buffer = null;
-								}
-							}
-							else
-							{
-								Program.Sounds.StopSound(Sounds.Motor.Tables[j].Source);
-								Sounds.Motor.Tables[j].Source = null;
-								Sounds.Motor.Tables[j].Buffer = null;
-							}
-						}
-					}
-				}
-				Sounds.Motor.CurrentAccelerationDirection = ndir;
 			}
 
 			/// <summary>Loads Car Sections (Exterior objects etc.) for this car</summary>

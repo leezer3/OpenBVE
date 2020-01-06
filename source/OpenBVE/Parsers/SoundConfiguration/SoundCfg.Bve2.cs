@@ -37,73 +37,76 @@ namespace OpenBve
 			train.Cars[train.DriverCar].Horns[2].SoundPosition = front;
 			train.SafetySystems.PilotLamp.OnSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Leave.wav"), SoundCfgParser.tinyRadius), cab);
 			// load sounds for all cars
-			for (int i = 0; i < train.Cars.Length; i++)
+			foreach (TrainManager.Car car in train.Cars)
 			{
-				Vector3 frontaxle = new Vector3(0.0, 0.0, train.Cars[i].FrontAxle.Position);
-				Vector3 rearaxle = new Vector3(0.0, 0.0, train.Cars[i].RearAxle.Position);
-				train.Cars[i].CarBrake.Air = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Air.wav"), SoundCfgParser.smallRadius), center);
-				train.Cars[i].CarBrake.AirHigh = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "AirHigh.wav"), SoundCfgParser.smallRadius), center);
-				train.Cars[i].CarBrake.AirZero = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "AirZero.wav"), SoundCfgParser.smallRadius), center);
-				if (train.Cars[i].CarBrake.brakeType == BrakeType.Main)
+				Vector3 frontaxle = new Vector3(0.0, 0.0, car.FrontAxle.Position);
+				Vector3 rearaxle = new Vector3(0.0, 0.0, car.RearAxle.Position);
+				car.CarBrake.Air = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Air.wav"), SoundCfgParser.smallRadius), center);
+				car.CarBrake.AirHigh = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "AirHigh.wav"), SoundCfgParser.smallRadius), center);
+				car.CarBrake.AirZero = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "AirZero.wav"), SoundCfgParser.smallRadius), center);
+				if (car.CarBrake.brakeType == BrakeType.Main)
 				{
-					train.Cars[i].CarBrake.airCompressor.EndSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "CpEnd.wav"), SoundCfgParser.mediumRadius), center);
-					train.Cars[i].CarBrake.airCompressor.LoopSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "CpLoop.wav"), SoundCfgParser.mediumRadius), center);
-					train.Cars[i].CarBrake.airCompressor.StartSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "CpStart.wav"), SoundCfgParser.mediumRadius), center);
+					car.CarBrake.airCompressor.EndSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "CpEnd.wav"), SoundCfgParser.mediumRadius), center);
+					car.CarBrake.airCompressor.LoopSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "CpLoop.wav"), SoundCfgParser.mediumRadius), center);
+					car.CarBrake.airCompressor.StartSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "CpStart.wav"), SoundCfgParser.mediumRadius), center);
 				}
-				train.Cars[i].Sounds.BreakerResume = new CarSound();
-				train.Cars[i].Sounds.BreakerResumeOrInterrupt = new CarSound();
-				train.Cars[i].Sounds.BreakerResumed = false;
-				train.Cars[i].Doors[0].CloseSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "DoorClsL.wav"), SoundCfgParser.smallRadius), left);
-				train.Cars[i].Doors[1].CloseSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "DoorClsR.wav"), SoundCfgParser.smallRadius), right);
-				if (train.Cars[i].Doors[0].CloseSound.Buffer == null)
+				car.Sounds.BreakerResume = new CarSound();
+				car.Sounds.BreakerResumeOrInterrupt = new CarSound();
+				car.Sounds.BreakerResumed = false;
+				car.Doors[0].CloseSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "DoorClsL.wav"), SoundCfgParser.smallRadius), left);
+				car.Doors[1].CloseSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "DoorClsR.wav"), SoundCfgParser.smallRadius), right);
+				if (car.Doors[0].CloseSound.Buffer == null)
 				{
-					train.Cars[i].Doors[0].CloseSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "DoorCls.wav"), SoundCfgParser.smallRadius), left);
+					car.Doors[0].CloseSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "DoorCls.wav"), SoundCfgParser.smallRadius), left);
 				}
-				if (train.Cars[i].Doors[1].CloseSound.Buffer == null)
+				if (car.Doors[1].CloseSound.Buffer == null)
 				{
-					train.Cars[i].Doors[1].CloseSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "DoorCls.wav"), SoundCfgParser.smallRadius), right);
+					car.Doors[1].CloseSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "DoorCls.wav"), SoundCfgParser.smallRadius), right);
 				}
-				train.Cars[i].Doors[0].OpenSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "DoorOpnL.wav"), SoundCfgParser.smallRadius), left);
-				train.Cars[i].Doors[1].OpenSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "DoorOpnR.wav"), SoundCfgParser.smallRadius), right);
-				if (train.Cars[i].Doors[0].OpenSound.Buffer == null)
+				car.Doors[0].OpenSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "DoorOpnL.wav"), SoundCfgParser.smallRadius), left);
+				car.Doors[1].OpenSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "DoorOpnR.wav"), SoundCfgParser.smallRadius), right);
+				if (car.Doors[0].OpenSound.Buffer == null)
 				{
-					train.Cars[i].Doors[0].OpenSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "DoorOpn.wav"), SoundCfgParser.smallRadius), left);
+					car.Doors[0].OpenSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "DoorOpn.wav"), SoundCfgParser.smallRadius), left);
 				}
-				if (train.Cars[i].Doors[1].OpenSound.Buffer == null)
+				if (car.Doors[1].OpenSound.Buffer == null)
 				{
-					train.Cars[i].Doors[1].OpenSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "DoorOpn.wav"), SoundCfgParser.smallRadius), right);
+					car.Doors[1].OpenSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "DoorOpn.wav"), SoundCfgParser.smallRadius), right);
 				}
 				train.Handles.EmergencyBrake.ApplicationSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "EmrBrake.wav"), SoundCfgParser.mediumRadius), center);
-				train.Cars[i].Sounds.Flange = SoundCfgParser.TryLoadSoundArray(trainFolder, "Flange", ".wav", center, SoundCfgParser.mediumRadius);
-				train.Cars[i].Sounds.FlangeVolume = new double[train.Cars[i].Sounds.Flange.Length];
-				train.Cars[i].Sounds.Loop = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Loop.wav"), SoundCfgParser.mediumRadius), center);
-				train.Cars[i].FrontAxle.PointSounds = new CarSound[]
+				car.Sounds.Flange = SoundCfgParser.TryLoadSoundArray(trainFolder, "Flange", ".wav", center, SoundCfgParser.mediumRadius);
+				car.Sounds.FlangeVolume = new double[car.Sounds.Flange.Length];
+				car.Sounds.Loop = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Loop.wav"), SoundCfgParser.mediumRadius), center);
+				car.FrontAxle.PointSounds = new[]
 				{
 					new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Point.wav"), SoundCfgParser.smallRadius), frontaxle)
 				};
-				train.Cars[i].RearAxle.PointSounds = new CarSound[]
+				car.RearAxle.PointSounds = new[]
 				{
 					new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Point.wav"), SoundCfgParser.smallRadius), rearaxle)
 				};
-				train.Cars[i].CarBrake.Rub = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Rub.wav"), SoundCfgParser.mediumRadius), center);
-				train.Cars[i].Sounds.Run = SoundCfgParser.TryLoadSoundArray(trainFolder, "Run", ".wav", center, SoundCfgParser.mediumRadius);
-				train.Cars[i].Sounds.RunVolume = new double[train.Cars[i].Sounds.Run.Length];
-				train.Cars[i].Sounds.SpringL = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "SpringL.wav"), SoundCfgParser.smallRadius), left);
-				train.Cars[i].Sounds.SpringR = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "SpringR.wav"), SoundCfgParser.smallRadius), right);
+				car.CarBrake.Rub = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Rub.wav"), SoundCfgParser.mediumRadius), center);
+				car.Sounds.Run = SoundCfgParser.TryLoadSoundArray(trainFolder, "Run", ".wav", center, SoundCfgParser.mediumRadius);
+				car.Sounds.RunVolume = new double[car.Sounds.Run.Length];
+				car.Sounds.SpringL = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "SpringL.wav"), SoundCfgParser.smallRadius), left);
+				car.Sounds.SpringR = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "SpringR.wav"), SoundCfgParser.smallRadius), right);
 				// motor sound
-				if (train.Cars[i] is TrainManager.MotorCar)
+				if (car is TrainManager.MotorCar)
 				{
 					System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
-					train.Cars[i].Sounds.Motor.Position = center;
-					for (int j = 0; j < train.Cars[i].Sounds.Motor.Tables.Length; j++)
+					car.Sounds.Motor.Position = center;
+
+					foreach (TrainManager.MotorSound.Table table in car.Sounds.Motor.PowerTables)
 					{
-						for (int k = 0; k < train.Cars[i].Sounds.Motor.Tables[j].Entries.Length; k++)
+						table.PlayingBuffer = null;
+						table.PlayingSource = null;
+
+						foreach (TrainManager.MotorSound.Vertex<int, SoundBuffer> vertex in table.BufferVertices)
 						{
-							int idx = train.Cars[i].Sounds.Motor.Tables[j].Entries[k].SoundIndex;
-							if (idx >= 0)
+							if (vertex.Y >= 0)
 							{
-								CarSound snd = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Motor" + idx.ToString(Culture) + ".wav"), SoundCfgParser.mediumRadius), center);
-								train.Cars[i].Sounds.Motor.Tables[j].Entries[k].Buffer = snd.Buffer;
+								CarSound snd = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Motor" + vertex.Y.ToString(Culture) + ".wav"), SoundCfgParser.mediumRadius), center);
+								vertex.Z = snd.Buffer;
 							}
 						}
 					}

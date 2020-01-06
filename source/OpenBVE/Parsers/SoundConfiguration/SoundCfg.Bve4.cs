@@ -819,22 +819,20 @@ namespace OpenBve
 				train.Cars[i].Sounds.FlangeVolume = new double[train.Cars[i].Sounds.Flange.Length];
 			}
 			// motor sound
-			for (int c = 0; c < train.Cars.Length; c++)
+			foreach (TrainManager.MotorCar car in train.Cars.OfType<TrainManager.MotorCar>())
 			{
-				if (train.Cars[c] is TrainManager.MotorCar)
+				car.Sounds.Motor.Position = center;
+
+				foreach (TrainManager.MotorSound.Table table in car.Sounds.Motor.PowerTables)
 				{
-					train.Cars[c].Sounds.Motor.Position = center;
-					for (int i = 0; i < train.Cars[c].Sounds.Motor.Tables.Length; i++)
+					table.PlayingBuffer = null;
+					table.PlayingSource = null;
+
+					foreach (TrainManager.MotorSound.Vertex<int, SoundBuffer> vertex in table.BufferVertices)
 					{
-						train.Cars[c].Sounds.Motor.Tables[i].Buffer = null;
-						train.Cars[c].Sounds.Motor.Tables[i].Source = null;
-						for (int j = 0; j < train.Cars[c].Sounds.Motor.Tables[i].Entries.Length; j++)
+						if (vertex.Y >= 0 && vertex.Y < MotorFiles.Length && MotorFiles[vertex.Y] != null)
 						{
-							int index = train.Cars[c].Sounds.Motor.Tables[i].Entries[j].SoundIndex;
-							if (index >= 0 && index < MotorFiles.Length && MotorFiles[index] != null)
-							{
-								train.Cars[c].Sounds.Motor.Tables[i].Entries[j].Buffer = Program.Sounds.RegisterBuffer(MotorFiles[index], SoundCfgParser.mediumRadius);
-							}
+							vertex.Z = Program.Sounds.RegisterBuffer(MotorFiles[vertex.Y], SoundCfgParser.mediumRadius);
 						}
 					}
 				}

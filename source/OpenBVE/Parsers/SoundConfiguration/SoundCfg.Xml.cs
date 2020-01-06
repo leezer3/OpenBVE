@@ -356,7 +356,7 @@ namespace OpenBve
 									{
 										break;
 									}
-									ParseMotorSoundTableNode(c, ref car.Sounds.Motor.Tables, center, SoundCfgParser.mediumRadius);
+									ParseMotorSoundTableNode(c, car.Sounds.Motor, center, SoundCfgParser.mediumRadius);
 									break;
 								case "pilotlamp":
 									if (!c.ChildNodes.OfType<XmlElement>().Any())
@@ -547,10 +547,10 @@ namespace OpenBve
 
 		/// <summary>Parses an XML motor table node</summary>
 		/// <param name="node">The node</param>
-		/// <param name="Tables">The motor sound tables to assign this node's contents to</param>
+		/// <param name="motor">The motor sound tables to assign this node's contents to</param>
 		/// <param name="Position">The default sound position</param>
 		/// <param name="Radius">The default sound radius</param>
-		private static void ParseMotorSoundTableNode(XmlNode node, ref TrainManager.MotorSoundTable[] Tables, Vector3 Position, double Radius)
+		private static void ParseMotorSoundTableNode(XmlNode node, TrainManager.MotorSound motor, Vector3 Position, double Radius)
 		{
 			foreach (XmlNode c in node.ChildNodes)
 			{
@@ -575,16 +575,25 @@ namespace OpenBve
 					}
 					if (idx >= 0)
 					{
-						for (int i = 0; i < Tables.Length; i++)
+						foreach (TrainManager.MotorSound.Table table in motor.PowerTables)
 						{
-							Tables[i].Buffer = null;
-							Tables[i].Source = null;
-							for (int j = 0; j < Tables[i].Entries.Length; j++)
+							table.PlayingBuffer = null;
+							table.PlayingSource = null;
+
+							foreach (TrainManager.MotorSound.Vertex<int, SoundBuffer> vertex in table.BufferVertices.Where(v => v.Y == idx))
 							{
-								if (idx == Tables[i].Entries[j].SoundIndex)
-								{
-									ParseNode(c, out Tables[i].Entries[j].Buffer, ref Position, Radius);
-								}
+								ParseNode(c, out vertex.Z, ref Position, Radius);
+							}
+						}
+
+						foreach (TrainManager.MotorSound.Table table in motor.BrakeTables)
+						{
+							table.PlayingBuffer = null;
+							table.PlayingSource = null;
+
+							foreach (TrainManager.MotorSound.Vertex<int, SoundBuffer> vertex in table.BufferVertices.Where(v => v.Y == idx))
+							{
+								ParseNode(c, out vertex.Z, ref Position, Radius);
 							}
 						}
 					}

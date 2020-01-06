@@ -8,11 +8,15 @@
 			{
 			}
 
+
 			internal override void UpdateAcceleration(double TimeElapsed)
 			{
-				double a = 0.0;
+				//Trailer car cannot spin it's wheels
+				WheelSpin = 0.0;
+				const double a = 0.0;
 				FrontAxle.CurrentWheelSlip = false;
 				RearAxle.CurrentWheelSlip = false;
+
 				if (!Derailed)
 				{
 					if (Specs.CurrentAccelerationOutput < a)
@@ -44,8 +48,6 @@
 				{
 					Specs.CurrentAccelerationOutput = 0.0;
 				}
-				//Trailer car cannot spin it's wheels
-				WheelSpin = 0.0;
 			}
 		}
 	}
