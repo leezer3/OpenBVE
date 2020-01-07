@@ -81,7 +81,10 @@ namespace OpenBve
 				FrontBogie = new Bogie(train, this);
 				RearBogie = new Bogie(train, this);
 				Doors = new Door[2];
-				
+				Doors[0].Width = 1000.0;
+				Doors[0].MaxTolerance = 0.0;
+				Doors[1].Width = 1000.0;
+				Doors[1].MaxTolerance = 0.0;
 			}
 
 			/// <summary>Moves the car</summary>

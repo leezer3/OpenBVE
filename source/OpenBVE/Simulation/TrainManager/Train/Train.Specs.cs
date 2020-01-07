@@ -22,8 +22,6 @@ namespace OpenBve
 			internal DoorMode DoorCloseMode;
 			
 			internal bool DoorClosureAttempted;
-			internal double DoorWidth;
-			internal double DoorMaxTolerance;
 		}
 	}
 }

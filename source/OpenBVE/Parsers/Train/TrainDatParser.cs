@@ -132,6 +132,8 @@ namespace OpenBve {
 			double CarExposedFrontalArea = 0.6 * CarWidth * CarHeight;
 			double CarUnexposedFrontalArea = 0.2 * CarWidth * CarHeight;
 			bool FrontCarIsMotorCar = true;
+			double DoorWidth = 1000.0;
+			double DoorTolerance = 0.0;
 			TrainManager.ReadhesionDeviceType ReAdhesionDevice = TrainManager.ReadhesionDeviceType.TypeA;
 			PassAlarmType passAlarm = PassAlarmType.None;
 			Train.Handles.EmergencyBrake = new TrainManager.EmergencyHandle();
@@ -731,7 +733,7 @@ namespace OpenBve {
 									case 10:
 										{
 											if (a >= 0.0) {
-												Train.Specs.DoorWidth = a;
+												DoorWidth = a;
 											} else {
 												Interface.AddMessage(MessageType.Error, false, "DoorWidth is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											} break;
@@ -739,7 +741,7 @@ namespace OpenBve {
 									case 11:
 										{
 											if (a >= 0.0) {
-												Train.Specs.DoorMaxTolerance = a;
+												DoorTolerance = a;
 											} else {
 												Interface.AddMessage(MessageType.Error, false, "DoorMaxTolerance is invalid at line " + (i + 1).ToString(Culture) + " in " + FileName);
 											} break;
@@ -1194,8 +1196,12 @@ namespace OpenBve {
 				Train.Cars[i].Specs.UnexposedFrontalArea = CarUnexposedFrontalArea;
 				Train.Cars[i].Doors[0].Direction = -1;
 				Train.Cars[i].Doors[0].State = 0.0;
+				Train.Cars[i].Doors[0].Width = DoorWidth;
+				Train.Cars[i].Doors[0].MaxTolerance = DoorTolerance;
 				Train.Cars[i].Doors[1].Direction = 1;
 				Train.Cars[i].Doors[1].State = 0.0;
+				Train.Cars[i].Doors[1].Width = DoorWidth;
+				Train.Cars[i].Doors[1].MaxTolerance = DoorTolerance;
 				Train.Cars[i].Specs.DoorOpenFrequency = 0.0;
 				Train.Cars[i].Specs.DoorCloseFrequency = 0.0;
 				Train.Cars[i].Specs.CenterOfGravityHeight = CenterOfGravityHeight;
