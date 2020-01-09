@@ -1093,6 +1093,356 @@ namespace OpenBve
 				double tp = (1.0 - f) * RearAxle.Follower.TrackPosition + f * FrontAxle.Follower.TrackPosition;
 				World.CameraTrackFollower.UpdateAbsolute(tp, false, false);
 			}
+
+			internal void UpdateSpeed(double TimeElapsed, double DecelerationDueToMotor, double DecelerationDueToBrake, out double Speed)
+			{
+
+				double PowerRollingCouplerAcceleration;
+				// rolling on an incline
+				{
+					double a = FrontAxle.Follower.WorldDirection.Y;
+					double b = RearAxle.Follower.WorldDirection.Y;
+					PowerRollingCouplerAcceleration =
+						-0.5 * (a + b) * Program.CurrentRoute.Atmosphere.AccelerationDueToGravity;
+				}
+				// friction
+				double FrictionBrakeAcceleration;
+				{
+					double v = Math.Abs(CurrentSpeed);
+					double a = GetResistance(baseTrain, Index, ref FrontAxle, v);
+					double b = GetResistance(baseTrain, Index, ref RearAxle, v);
+					FrictionBrakeAcceleration = 0.5 * (a + b);
+				}
+				// power
+				double wheelspin = 0.0;
+				double wheelSlipAccelerationMotorFront;
+				double wheelSlipAccelerationMotorRear;
+				double wheelSlipAccelerationBrakeFront;
+				double wheelSlipAccelerationBrakeRear;
+				if (Derailed)
+				{
+					wheelSlipAccelerationMotorFront = 0.0;
+					wheelSlipAccelerationBrakeFront = 0.0;
+					wheelSlipAccelerationMotorRear = 0.0;
+					wheelSlipAccelerationBrakeRear = 0.0;
+				}
+				else
+				{
+					wheelSlipAccelerationMotorFront = GetCriticalWheelSlipAccelerationForElectricMotor(baseTrain, Index,
+						FrontAxle.Follower.AdhesionMultiplier, FrontAxle.Follower.WorldUp.Y,
+						CurrentSpeed);
+					wheelSlipAccelerationMotorRear = GetCriticalWheelSlipAccelerationForElectricMotor(baseTrain, Index,
+						RearAxle.Follower.AdhesionMultiplier, RearAxle.Follower.WorldUp.Y,
+						CurrentSpeed);
+					wheelSlipAccelerationBrakeFront = GetCriticalWheelSlipAccelerationForFrictionBrake(baseTrain, Index,
+						FrontAxle.Follower.AdhesionMultiplier, FrontAxle.Follower.WorldUp.Y,
+						CurrentSpeed);
+					wheelSlipAccelerationBrakeRear = GetCriticalWheelSlipAccelerationForFrictionBrake(baseTrain, Index,
+						RearAxle.Follower.AdhesionMultiplier, RearAxle.Follower.WorldUp.Y,
+						CurrentSpeed);
+				}
+
+				if (DecelerationDueToMotor == 0.0)
+				{
+					double a;
+					if (Specs.IsMotorCar)
+					{
+						if (DecelerationDueToMotor == 0.0)
+						{
+							if (baseTrain.Handles.Reverser.Actual != 0 & baseTrain.Handles.Power.Actual > 0 &
+							    !baseTrain.Handles.HoldBrake.Actual &
+							    !baseTrain.Handles.EmergencyBrake.Actual)
+							{
+								// target acceleration
+								if (baseTrain.Handles.Power.Actual - 1 < Specs.AccelerationCurves.Length)
+								{
+									// Load factor is a constant 1.0 for anything prior to BVE5
+									// This will need to be changed when the relevant branch is merged in
+									a = Specs.AccelerationCurves[baseTrain.Handles.Power.Actual - 1]
+										.GetAccelerationOutput(
+											(double) baseTrain.Handles.Reverser.Actual * CurrentSpeed,
+											1.0);
+								}
+								else
+								{
+									a = 0.0;
+								}
+
+								// readhesion device
+								if (a > Specs.ReAdhesionDevice.MaximumAccelerationOutput)
+								{
+									a = Specs.ReAdhesionDevice.MaximumAccelerationOutput;
+								}
+
+								// wheel slip
+								if (a < wheelSlipAccelerationMotorFront)
+								{
+									FrontAxle.CurrentWheelSlip = false;
+								}
+								else
+								{
+									FrontAxle.CurrentWheelSlip = true;
+									wheelspin += (double) baseTrain.Handles.Reverser.Actual * a * Specs.MassCurrent;
+								}
+
+								if (a < wheelSlipAccelerationMotorRear)
+								{
+									RearAxle.CurrentWheelSlip = false;
+								}
+								else
+								{
+									RearAxle.CurrentWheelSlip = true;
+									wheelspin += (double) baseTrain.Handles.Reverser.Actual * a * Specs.MassCurrent;
+								}
+
+								// Update readhesion device
+								this.Specs.ReAdhesionDevice.Update(a);
+								// Update constant speed device
+
+								this.Specs.ConstSpeed.Update(ref a, baseTrain.Specs.CurrentConstSpeed,
+									baseTrain.Handles.Reverser.Actual);
+
+								// finalize
+								if (wheelspin != 0.0) a = 0.0;
+							}
+							else
+							{
+								a = 0.0;
+								FrontAxle.CurrentWheelSlip = false;
+								RearAxle.CurrentWheelSlip = false;
+							}
+						}
+						else
+						{
+							a = 0.0;
+							FrontAxle.CurrentWheelSlip = false;
+							RearAxle.CurrentWheelSlip = false;
+						}
+					}
+					else
+					{
+						a = 0.0;
+						FrontAxle.CurrentWheelSlip = false;
+						RearAxle.CurrentWheelSlip = false;
+					}
+
+					if (!Derailed)
+					{
+						if (Specs.CurrentAccelerationOutput < a)
+						{
+							if (Specs.CurrentAccelerationOutput < 0.0)
+							{
+								Specs.CurrentAccelerationOutput += Specs.JerkBrakeDown * TimeElapsed;
+							}
+							else
+							{
+								Specs.CurrentAccelerationOutput += Specs.JerkPowerUp * TimeElapsed;
+							}
+
+							if (Specs.CurrentAccelerationOutput > a)
+							{
+								Specs.CurrentAccelerationOutput = a;
+							}
+						}
+						else
+						{
+							Specs.CurrentAccelerationOutput -= Specs.JerkPowerDown * TimeElapsed;
+							if (Specs.CurrentAccelerationOutput < a)
+							{
+								Specs.CurrentAccelerationOutput = a;
+							}
+						}
+					}
+					else
+					{
+						Specs.CurrentAccelerationOutput = 0.0;
+					}
+				}
+
+				// brake
+				bool wheellock = wheelspin == 0.0 & Derailed;
+				if (!Derailed & wheelspin == 0.0)
+				{
+					double a;
+					// motor
+					if (Specs.IsMotorCar & DecelerationDueToMotor != 0.0)
+					{
+						a = -DecelerationDueToMotor;
+						if (Specs.CurrentAccelerationOutput > a)
+						{
+							if (Specs.CurrentAccelerationOutput > 0.0)
+							{
+								Specs.CurrentAccelerationOutput -= Specs.JerkPowerDown * TimeElapsed;
+							}
+							else
+							{
+								Specs.CurrentAccelerationOutput -= Specs.JerkBrakeUp * TimeElapsed;
+							}
+
+							if (Specs.CurrentAccelerationOutput < a)
+							{
+								Specs.CurrentAccelerationOutput = a;
+							}
+						}
+						else
+						{
+							Specs.CurrentAccelerationOutput += Specs.JerkBrakeDown * TimeElapsed;
+							if (Specs.CurrentAccelerationOutput > a)
+							{
+								Specs.CurrentAccelerationOutput = a;
+							}
+						}
+					}
+
+					// brake
+					a = DecelerationDueToBrake;
+					if (CurrentSpeed >= -0.01 & CurrentSpeed <= 0.01)
+					{
+						double rf = FrontAxle.Follower.WorldDirection.Y;
+						double rr = RearAxle.Follower.WorldDirection.Y;
+						double ra = Math.Abs(0.5 * (rf + rr) *
+						                     Program.CurrentRoute.Atmosphere.AccelerationDueToGravity);
+						if (a > ra) a = ra;
+					}
+
+					double factor = Specs.MassEmpty / Specs.MassCurrent;
+					if (a >= wheelSlipAccelerationBrakeFront)
+					{
+						wheellock = true;
+					}
+					else
+					{
+						FrictionBrakeAcceleration += 0.5 * a * factor;
+					}
+
+					if (a >= wheelSlipAccelerationBrakeRear)
+					{
+						wheellock = true;
+					}
+					else
+					{
+						FrictionBrakeAcceleration += 0.5 * a * factor;
+					}
+				}
+				else if (Derailed)
+				{
+					FrictionBrakeAcceleration += Train.CoefficientOfGroundFriction *
+					                             Program.CurrentRoute.Atmosphere.AccelerationDueToGravity;
+				}
+
+				// motor
+				if (baseTrain.Handles.Reverser.Actual != 0)
+				{
+					double factor = Specs.MassEmpty / Specs.MassCurrent;
+					if (Specs.CurrentAccelerationOutput > 0.0)
+					{
+						PowerRollingCouplerAcceleration +=
+							(double) baseTrain.Handles.Reverser.Actual * Specs.CurrentAccelerationOutput * factor;
+					}
+					else
+					{
+						double a = -Specs.CurrentAccelerationOutput;
+						if (a >= wheelSlipAccelerationMotorFront)
+						{
+							FrontAxle.CurrentWheelSlip = true;
+						}
+						else if (!Derailed)
+						{
+							FrictionBrakeAcceleration += 0.5 * a * factor;
+						}
+
+						if (a >= wheelSlipAccelerationMotorRear)
+						{
+							RearAxle.CurrentWheelSlip = true;
+						}
+						else
+						{
+							FrictionBrakeAcceleration += 0.5 * a * factor;
+						}
+					}
+				}
+				else
+				{
+					Specs.CurrentAccelerationOutput = 0.0;
+				}
+
+				// perceived speed
+				{
+					double target;
+					if (wheellock)
+					{
+						target = 0.0;
+					}
+					else if (wheelspin == 0.0)
+					{
+						target = CurrentSpeed;
+					}
+					else
+					{
+						target = CurrentSpeed + wheelspin / 2500.0;
+					}
+
+					double diff = target - Specs.CurrentPerceivedSpeed;
+					double rate = (diff < 0.0 ? 5.0 : 1.0) * Program.CurrentRoute.Atmosphere.AccelerationDueToGravity *
+					              TimeElapsed;
+					rate *= 1.0 - 0.7 / (diff * diff + 1.0);
+					double factor = rate * rate;
+					factor = 1.0 - factor / (factor + 1000.0);
+					rate *= factor;
+					if (diff >= -rate & diff <= rate)
+					{
+						Specs.CurrentPerceivedSpeed = target;
+					}
+					else
+					{
+						Specs.CurrentPerceivedSpeed += rate * (double) Math.Sign(diff);
+					}
+				}
+				// calculate new speed
+				{
+					int d = Math.Sign(CurrentSpeed);
+					double a = PowerRollingCouplerAcceleration;
+					double b = FrictionBrakeAcceleration;
+					if (Math.Abs(a) < b)
+					{
+						if (Math.Sign(a) == d)
+						{
+							if (d == 0)
+							{
+								Speed = 0.0;
+							}
+							else
+							{
+								double c = (b - Math.Abs(a)) * TimeElapsed;
+								if (Math.Abs(CurrentSpeed) > c)
+								{
+									Speed = CurrentSpeed - (double) d * c;
+								}
+								else
+								{
+									Speed = 0.0;
+								}
+							}
+						}
+						else
+						{
+							double c = (Math.Abs(a) + b) * TimeElapsed;
+							if (Math.Abs(CurrentSpeed) > c)
+							{
+								Speed = CurrentSpeed - (double) d * c;
+							}
+							else
+							{
+								Speed = 0.0;
+							}
+						}
+					}
+					else
+					{
+						Speed = CurrentSpeed + (a - b * (double) d) * TimeElapsed;
+					}
+				}
+			}
 		}
 	}
 }
