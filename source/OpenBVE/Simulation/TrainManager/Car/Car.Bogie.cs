@@ -41,8 +41,8 @@ namespace OpenBve
 				baseTrain = train;
 				baseCar = car;
 				CarSections = new CarSection[] { };
-				FrontAxle.Follower = new TrackFollower(Program.CurrentHost, train, car);
-				RearAxle.Follower = new TrackFollower(Program.CurrentHost, train, car);
+				FrontAxle = new Axle(train, car);
+				RearAxle = new Axle(train, car);
 			}
 
 			internal void UpdateObjects(double TimeElapsed, bool ForceUpdate)
