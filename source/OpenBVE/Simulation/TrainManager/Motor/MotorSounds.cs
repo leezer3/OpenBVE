@@ -58,6 +58,12 @@ namespace OpenBve
 				{
 					Vertex<float> left = vertices.LastOrDefault(v => v.X <= x) ?? vertices.First();
 					Vertex<float> right = vertices.FirstOrDefault(v => x < v.X) ?? vertices.Last();
+
+					if (left == right)
+					{
+						return left.Y;
+					}
+
 					return left.Y + (right.Y - left.Y) / (right.X - left.X) * (x - left.X);
 				}
 

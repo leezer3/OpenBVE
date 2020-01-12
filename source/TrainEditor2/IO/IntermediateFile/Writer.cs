@@ -169,10 +169,10 @@ namespace TrainEditor2.IO.IntermediateFile
 
 		private static XElement WriteDelayEntryNode(Delay.Entry entry)
 		{
-			return new XElement(new XElement("Entry",
+			return new XElement("Entry",
 				new XElement("Up", entry.Up),
 				new XElement("Down", entry.Down)
-			));
+			);
 		}
 
 		private static void WriteMoveNode(XElement parent, Move move)
@@ -228,7 +228,9 @@ namespace TrainEditor2.IO.IntermediateFile
 
 			foreach (Motor.Track track in motor.Tracks)
 			{
-				XElement trackNode = new XElement("Track");
+				XElement trackNode = new XElement("Track",
+					new XElement("Type", track.Type)
+				);
 				motorNode.Add(trackNode);
 
 				XElement pitchNode = new XElement("Pitch");
@@ -278,8 +280,8 @@ namespace TrainEditor2.IO.IntermediateFile
 			parent.Add(new XElement("Coupler",
 				new XElement("Min", coupler.Min),
 				new XElement("Max", coupler.Max),
-			new XElement("Object", coupler.Object)
-				));
+				new XElement("Object", coupler.Object)
+			));
 		}
 
 		private static void WritePanelNode(XElement parent, Panel panel)

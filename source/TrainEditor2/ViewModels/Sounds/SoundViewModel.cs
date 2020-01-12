@@ -13,7 +13,7 @@ namespace TrainEditor2.ViewModels.Sounds
 {
 	internal class SoundViewModel : BaseViewModel
 	{
-		internal ReactiveProperty<TreeViewItemViewModel> TreeItem
+		internal ReadOnlyReactiveCollection<TreeViewItemViewModel> TreeItems
 		{
 			get;
 		}
@@ -414,29 +414,12 @@ namespace TrainEditor2.ViewModels.Sounds
 				})
 				.AddTo(disposable);
 
-			TreeItem = sound
-				.ObserveProperty(x => x.TreeItem)
-				.Do(_ => TreeItem?.Value.Dispose())
-				.Select(x => new TreeViewItemViewModel(x))
-				.ToReactiveProperty()
-				.AddTo(disposable);
-
-			TreeItem.Subscribe(x =>
-				{
-					treeItemDisposable.Dispose();
-					treeItemDisposable = new CompositeDisposable();
-
-					x.PropertyChangedAsObservable()
-						.ToReadOnlyReactivePropertySlim(mode: ReactivePropertyMode.None)
-						.Subscribe(_ => TreeItem.ForceNotify())
-						.AddTo(treeItemDisposable);
-				})
-				.AddTo(disposable);
+			TreeItems = sound.TreeItems.ToReadOnlyReactiveCollection(x => new TreeViewItemViewModel(x, null)).AddTo(disposable);
 
 			SelectedTreeItem = sound
 				.ToReactivePropertyAsSynchronized(
 					x => x.SelectedTreeItem,
-					x => TreeItem.Value.SearchViewModel(x),
+					x => TreeItems.Select(y => y.SearchViewModel(x)).FirstOrDefault(y => y != null),
 					x => x?.Model
 				)
 				.AddTo(disposable);
@@ -647,38 +630,38 @@ namespace TrainEditor2.ViewModels.Sounds
 				.AddTo(disposable);
 
 			AddRun = SelectedTreeItem
-				.Select(x => x == TreeItem.Value.Children[0])
+				.Select(x => x == TreeItems[0].Children[0])
 				.ToReactiveCommand()
 				.WithSubscribe(sound.AddElement<RunElement>)
 				.AddTo(disposable);
 
 			AddFlange = SelectedTreeItem
-				.Select(x => x == TreeItem.Value.Children[1])
+				.Select(x => x == TreeItems[0].Children[1])
 				.ToReactiveCommand()
 				.WithSubscribe(sound.AddElement<FlangeElement>)
 				.AddTo(disposable);
 
 			AddMotor = SelectedTreeItem
-				.Select(x => x == TreeItem.Value.Children[2])
+				.Select(x => x == TreeItems[0].Children[2])
 				.ToReactiveCommand()
 				.WithSubscribe(sound.AddElement<MotorElement>)
 				.AddTo(disposable);
 
 			AddFrontSwitch = SelectedTreeItem
-				.Select(x => x == TreeItem.Value.Children[3])
+				.Select(x => x == TreeItems[0].Children[3])
 				.ToReactiveCommand()
 				.WithSubscribe(sound.AddElement<FrontSwitchElement>)
 				.AddTo(disposable);
 
 			AddRearSwitch = SelectedTreeItem
-				.Select(x => x == TreeItem.Value.Children[4])
+				.Select(x => x == TreeItems[0].Children[4])
 				.ToReactiveCommand()
 				.WithSubscribe(sound.AddElement<RearSwitchElement>)
 				.AddTo(disposable);
 
 			AddBrake = new[]
 				{
-					SelectedTreeItem.Select(x => x == TreeItem.Value.Children[5]),
+					SelectedTreeItem.Select(x => x == TreeItems[0].Children[5]),
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
@@ -695,7 +678,7 @@ namespace TrainEditor2.ViewModels.Sounds
 
 			AddCompressor = new[]
 				{
-					SelectedTreeItem.Select(x => x == TreeItem.Value.Children[6]),
+					SelectedTreeItem.Select(x => x == TreeItems[0].Children[6]),
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
@@ -712,7 +695,7 @@ namespace TrainEditor2.ViewModels.Sounds
 
 			AddSuspension = new[]
 				{
-					SelectedTreeItem.Select(x => x == TreeItem.Value.Children[7]),
+					SelectedTreeItem.Select(x => x == TreeItems[0].Children[7]),
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
@@ -729,7 +712,7 @@ namespace TrainEditor2.ViewModels.Sounds
 
 			AddPrimaryHorn = new[]
 				{
-					SelectedTreeItem.Select(x => x == TreeItem.Value.Children[8]),
+					SelectedTreeItem.Select(x => x == TreeItems[0].Children[8]),
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
@@ -746,7 +729,7 @@ namespace TrainEditor2.ViewModels.Sounds
 
 			AddSecondaryHorn = new[]
 				{
-					SelectedTreeItem.Select(x => x == TreeItem.Value.Children[9]),
+					SelectedTreeItem.Select(x => x == TreeItems[0].Children[9]),
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
@@ -763,7 +746,7 @@ namespace TrainEditor2.ViewModels.Sounds
 
 			AddMusicHorn = new[]
 				{
-					SelectedTreeItem.Select(x => x == TreeItem.Value.Children[10]),
+					SelectedTreeItem.Select(x => x == TreeItems[0].Children[10]),
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
@@ -780,7 +763,7 @@ namespace TrainEditor2.ViewModels.Sounds
 
 			AddDoor = new[]
 				{
-					SelectedTreeItem.Select(x => x == TreeItem.Value.Children[11]),
+					SelectedTreeItem.Select(x => x == TreeItems[0].Children[11]),
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
@@ -796,14 +779,14 @@ namespace TrainEditor2.ViewModels.Sounds
 				.AddTo(disposable);
 
 			AddAts = SelectedTreeItem
-				.Select(x => x == TreeItem.Value.Children[12])
+				.Select(x => x == TreeItems[0].Children[12])
 				.ToReactiveCommand()
 				.WithSubscribe(sound.AddElement<AtsElement>)
 				.AddTo(disposable);
 
 			AddBuzzer = new[]
 				{
-					SelectedTreeItem.Select(x => x == TreeItem.Value.Children[13]),
+					SelectedTreeItem.Select(x => x == TreeItems[0].Children[13]),
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
@@ -820,7 +803,7 @@ namespace TrainEditor2.ViewModels.Sounds
 
 			AddPilotLamp = new[]
 				{
-					SelectedTreeItem.Select(x => x == TreeItem.Value.Children[14]),
+					SelectedTreeItem.Select(x => x == TreeItems[0].Children[14]),
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
@@ -837,7 +820,7 @@ namespace TrainEditor2.ViewModels.Sounds
 
 			AddBrakeHandle = new[]
 				{
-					SelectedTreeItem.Select(x => x == TreeItem.Value.Children[15]),
+					SelectedTreeItem.Select(x => x == TreeItems[0].Children[15]),
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
@@ -854,7 +837,7 @@ namespace TrainEditor2.ViewModels.Sounds
 
 			AddMasterController = new[]
 				{
-					SelectedTreeItem.Select(x => x == TreeItem.Value.Children[16]),
+					SelectedTreeItem.Select(x => x == TreeItems[0].Children[16]),
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
@@ -871,7 +854,7 @@ namespace TrainEditor2.ViewModels.Sounds
 
 			AddReverser = new[]
 				{
-					SelectedTreeItem.Select(x => x == TreeItem.Value.Children[17]),
+					SelectedTreeItem.Select(x => x == TreeItems[0].Children[17]),
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
@@ -888,7 +871,7 @@ namespace TrainEditor2.ViewModels.Sounds
 
 			AddBreaker = new[]
 				{
-					SelectedTreeItem.Select(x => x == TreeItem.Value.Children[18]),
+					SelectedTreeItem.Select(x => x == TreeItems[0].Children[18]),
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
@@ -905,7 +888,7 @@ namespace TrainEditor2.ViewModels.Sounds
 
 			AddRequestStop = new[]
 				{
-					SelectedTreeItem.Select(x => x == TreeItem.Value.Children[19]),
+					SelectedTreeItem.Select(x => x == TreeItems[0].Children[19]),
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
@@ -921,14 +904,14 @@ namespace TrainEditor2.ViewModels.Sounds
 				.AddTo(disposable);
 
 			AddTouch = SelectedTreeItem
-				.Select(x => x == TreeItem.Value.Children[20])
+				.Select(x => x == TreeItems[0].Children[20])
 				.ToReactiveCommand()
 				.WithSubscribe(sound.AddElement<TouchElement>)
 				.AddTo(disposable);
 
 			AddOthers = new[]
 				{
-					SelectedTreeItem.Select(x => x == TreeItem.Value.Children[21]),
+					SelectedTreeItem.Select(x => x == TreeItems[0].Children[21]),
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()

@@ -8,7 +8,6 @@
 			{
 			}
 
-
 			internal override void UpdateAcceleration(double TimeElapsed)
 			{
 				//Trailer car cannot spin it's wheels

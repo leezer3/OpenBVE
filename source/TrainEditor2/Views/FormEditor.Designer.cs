@@ -240,16 +240,20 @@ namespace TrainEditor2.Views
 			this.groupBoxNotch = new System.Windows.Forms.GroupBox();
 			this.comboBoxNotch = new System.Windows.Forms.ComboBox();
 			this.tabPageMotor = new System.Windows.Forms.TabPage();
-			this.panelMotorSound = new System.Windows.Forms.Panel();
+			this.splitContainerMotor = new System.Windows.Forms.SplitContainer();
+			this.treeViewMotor = new System.Windows.Forms.TreeView();
+			this.panelMoterNavi = new System.Windows.Forms.Panel();
+			this.buttonMotorCopy = new System.Windows.Forms.Button();
+			this.buttonMotorRemove = new System.Windows.Forms.Button();
+			this.buttonMotorAdd = new System.Windows.Forms.Button();
+			this.buttonMotorUp = new System.Windows.Forms.Button();
+			this.buttonMotorDown = new System.Windows.Forms.Button();
 			this.toolStripContainerDrawArea = new System.Windows.Forms.ToolStripContainer();
 			this.glControlMotor = new OpenTK.GLControl();
 			this.toolStripToolBar = new System.Windows.Forms.ToolStrip();
 			this.toolStripButtonUndo = new System.Windows.Forms.ToolStripButton();
 			this.toolStripButtonRedo = new System.Windows.Forms.ToolStripButton();
 			this.toolStripSeparatorRedo = new System.Windows.Forms.ToolStripSeparator();
-			this.toolStripButtonTearingOff = new System.Windows.Forms.ToolStripButton();
-			this.toolStripButtonCopy = new System.Windows.Forms.ToolStripButton();
-			this.toolStripButtonPaste = new System.Windows.Forms.ToolStripButton();
 			this.toolStripButtonCleanup = new System.Windows.Forms.ToolStripButton();
 			this.toolStripButtonDelete = new System.Windows.Forms.ToolStripButton();
 			this.toolStripSeparatorEdit = new System.Windows.Forms.ToolStripSeparator();
@@ -258,6 +262,9 @@ namespace TrainEditor2.Views
 			this.toolStripButtonDot = new System.Windows.Forms.ToolStripButton();
 			this.toolStripButtonLine = new System.Windows.Forms.ToolStripButton();
 			this.panelMotorSetting = new System.Windows.Forms.Panel();
+			this.groupBoxTrack = new System.Windows.Forms.GroupBox();
+			this.comboBoxTrackType = new System.Windows.Forms.ComboBox();
+			this.labelTrackType = new System.Windows.Forms.Label();
 			this.groupBoxDirect = new System.Windows.Forms.GroupBox();
 			this.buttonDirectDot = new System.Windows.Forms.Button();
 			this.buttonDirectMove = new System.Windows.Forms.Button();
@@ -283,8 +290,6 @@ namespace TrainEditor2.Views
 			this.groupBoxSource = new System.Windows.Forms.GroupBox();
 			this.numericUpDownRunIndex = new System.Windows.Forms.NumericUpDown();
 			this.labelRun = new System.Windows.Forms.Label();
-			this.checkBoxTrack2 = new System.Windows.Forms.CheckBox();
-			this.checkBoxTrack1 = new System.Windows.Forms.CheckBox();
 			this.groupBoxView = new System.Windows.Forms.GroupBox();
 			this.buttonMotorReset = new System.Windows.Forms.Button();
 			this.buttonMotorZoomOut = new System.Windows.Forms.Button();
@@ -303,30 +308,13 @@ namespace TrainEditor2.Views
 			this.labelMotorMinVelocityUnit = new System.Windows.Forms.Label();
 			this.textBoxMotorMinVelocity = new System.Windows.Forms.TextBox();
 			this.labelMotorMinVelocity = new System.Windows.Forms.Label();
-			this.statusStripStatus = new System.Windows.Forms.StatusStrip();
-			this.toolStripStatusLabelY = new System.Windows.Forms.ToolStripStatusLabel();
-			this.toolStripStatusLabelX = new System.Windows.Forms.ToolStripStatusLabel();
-			this.toolStripStatusLabelTool = new System.Windows.Forms.ToolStripStatusLabel();
-			this.toolStripStatusLabelMode = new System.Windows.Forms.ToolStripStatusLabel();
-			this.toolStripStatusLabelTrack = new System.Windows.Forms.ToolStripStatusLabel();
-			this.toolStripStatusLabelType = new System.Windows.Forms.ToolStripStatusLabel();
 			this.menuStripMotor = new System.Windows.Forms.MenuStrip();
 			this.toolStripMenuItemEdit = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemUndo = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemRedo = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparatorUndo = new System.Windows.Forms.ToolStripSeparator();
-			this.toolStripMenuItemTearingOff = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItemCopy = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItemPaste = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemCleanup = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemDelete = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItemView = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItemPower = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItemPowerTrack1 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItemPowerTrack2 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItemBrake = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItemBrakeTrack1 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItemBrakeTrack2 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemInput = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemPitch = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemVolume = new System.Windows.Forms.ToolStripMenuItem();
@@ -337,6 +325,12 @@ namespace TrainEditor2.Views
 			this.toolStripMenuItemMove = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemDot = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemLine = new System.Windows.Forms.ToolStripMenuItem();
+			this.statusStripStatus = new System.Windows.Forms.StatusStrip();
+			this.toolStripStatusLabelY = new System.Windows.Forms.ToolStripStatusLabel();
+			this.toolStripStatusLabelX = new System.Windows.Forms.ToolStripStatusLabel();
+			this.toolStripStatusLabelTool = new System.Windows.Forms.ToolStripStatusLabel();
+			this.toolStripStatusLabelMode = new System.Windows.Forms.ToolStripStatusLabel();
+			this.toolStripStatusLabelType = new System.Windows.Forms.ToolStripStatusLabel();
 			this.tabPageCoupler = new System.Windows.Forms.TabPage();
 			this.groupBoxCouplerGeneral = new System.Windows.Forms.GroupBox();
 			this.buttonCouplerObject = new System.Windows.Forms.Button();
@@ -608,6 +602,8 @@ namespace TrainEditor2.Views
 			this.listViewStatus = new System.Windows.Forms.ListView();
 			this.columnHeaderLevel = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.columnHeaderText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.panelStatusNavi = new System.Windows.Forms.Panel();
+			this.buttonOutputLogs = new System.Windows.Forms.Button();
 			this.menuStripStatus = new System.Windows.Forms.MenuStrip();
 			this.toolStripMenuItemError = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemWarning = new System.Windows.Forms.ToolStripMenuItem();
@@ -636,8 +632,6 @@ namespace TrainEditor2.Views
 			this.toolStripComboBoxLanguage = new System.Windows.Forms.ToolStripComboBox();
 			this.toolStripStatusLabelLanguage = new System.Windows.Forms.ToolStripStatusLabel();
 			this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-			this.panelStatusNavi = new System.Windows.Forms.Panel();
-			this.buttonOutputLogs = new System.Windows.Forms.Button();
 			this.tabControlEditor.SuspendLayout();
 			this.tabPageTrain.SuspendLayout();
 			this.groupBoxDevice.SuspendLayout();
@@ -664,20 +658,25 @@ namespace TrainEditor2.Views
 			this.groupBoxParameter.SuspendLayout();
 			this.groupBoxNotch.SuspendLayout();
 			this.tabPageMotor.SuspendLayout();
-			this.panelMotorSound.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainerMotor)).BeginInit();
+			this.splitContainerMotor.Panel1.SuspendLayout();
+			this.splitContainerMotor.Panel2.SuspendLayout();
+			this.splitContainerMotor.SuspendLayout();
+			this.panelMoterNavi.SuspendLayout();
 			this.toolStripContainerDrawArea.ContentPanel.SuspendLayout();
 			this.toolStripContainerDrawArea.TopToolStripPanel.SuspendLayout();
 			this.toolStripContainerDrawArea.SuspendLayout();
 			this.toolStripToolBar.SuspendLayout();
 			this.panelMotorSetting.SuspendLayout();
+			this.groupBoxTrack.SuspendLayout();
 			this.groupBoxDirect.SuspendLayout();
 			this.groupBoxPlay.SuspendLayout();
 			this.groupBoxArea.SuspendLayout();
 			this.groupBoxSource.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownRunIndex)).BeginInit();
 			this.groupBoxView.SuspendLayout();
-			this.statusStripStatus.SuspendLayout();
 			this.menuStripMotor.SuspendLayout();
+			this.statusStripStatus.SuspendLayout();
 			this.tabPageCoupler.SuspendLayout();
 			this.groupBoxCouplerGeneral.SuspendLayout();
 			this.tabPagePanel.SuspendLayout();
@@ -737,12 +736,12 @@ namespace TrainEditor2.Views
 			this.groupBoxSoundValue.SuspendLayout();
 			this.groupBoxSoundPosition.SuspendLayout();
 			this.tabPageStatus.SuspendLayout();
+			this.panelStatusNavi.SuspendLayout();
 			this.menuStripStatus.SuspendLayout();
 			this.panelCars.SuspendLayout();
 			this.panelCarsNavi.SuspendLayout();
 			this.menuStripMenu.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
-			this.panelStatusNavi.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tabControlEditor
@@ -2767,7 +2766,7 @@ namespace TrainEditor2.Views
 			// 
 			// tabPageMotor
 			// 
-			this.tabPageMotor.Controls.Add(this.panelMotorSound);
+			this.tabPageMotor.Controls.Add(this.splitContainerMotor);
 			this.tabPageMotor.Location = new System.Drawing.Point(4, 22);
 			this.tabPageMotor.Name = "tabPageMotor";
 			this.tabPageMotor.Padding = new System.Windows.Forms.Padding(3);
@@ -2776,17 +2775,94 @@ namespace TrainEditor2.Views
 			this.tabPageMotor.Text = "Motor sound settings";
 			this.tabPageMotor.UseVisualStyleBackColor = true;
 			// 
-			// panelMotorSound
+			// splitContainerMotor
 			// 
-			this.panelMotorSound.Controls.Add(this.toolStripContainerDrawArea);
-			this.panelMotorSound.Controls.Add(this.panelMotorSetting);
-			this.panelMotorSound.Controls.Add(this.statusStripStatus);
-			this.panelMotorSound.Controls.Add(this.menuStripMotor);
-			this.panelMotorSound.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panelMotorSound.Location = new System.Drawing.Point(3, 3);
-			this.panelMotorSound.Name = "panelMotorSound";
-			this.panelMotorSound.Size = new System.Drawing.Size(786, 664);
-			this.panelMotorSound.TabIndex = 5;
+			this.splitContainerMotor.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainerMotor.Location = new System.Drawing.Point(3, 3);
+			this.splitContainerMotor.Name = "splitContainerMotor";
+			// 
+			// splitContainerMotor.Panel1
+			// 
+			this.splitContainerMotor.Panel1.Controls.Add(this.treeViewMotor);
+			this.splitContainerMotor.Panel1.Controls.Add(this.panelMoterNavi);
+			// 
+			// splitContainerMotor.Panel2
+			// 
+			this.splitContainerMotor.Panel2.Controls.Add(this.toolStripContainerDrawArea);
+			this.splitContainerMotor.Panel2.Controls.Add(this.panelMotorSetting);
+			this.splitContainerMotor.Panel2.Controls.Add(this.menuStripMotor);
+			this.splitContainerMotor.Panel2.Controls.Add(this.statusStripStatus);
+			this.splitContainerMotor.Size = new System.Drawing.Size(786, 664);
+			this.splitContainerMotor.SplitterDistance = 200;
+			this.splitContainerMotor.TabIndex = 6;
+			// 
+			// treeViewMotor
+			// 
+			this.treeViewMotor.CheckBoxes = true;
+			this.treeViewMotor.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.treeViewMotor.HideSelection = false;
+			this.treeViewMotor.Location = new System.Drawing.Point(0, 0);
+			this.treeViewMotor.Name = "treeViewMotor";
+			this.treeViewMotor.Size = new System.Drawing.Size(200, 592);
+			this.treeViewMotor.TabIndex = 5;
+			// 
+			// panelMoterNavi
+			// 
+			this.panelMoterNavi.Controls.Add(this.buttonMotorCopy);
+			this.panelMoterNavi.Controls.Add(this.buttonMotorRemove);
+			this.panelMoterNavi.Controls.Add(this.buttonMotorAdd);
+			this.panelMoterNavi.Controls.Add(this.buttonMotorUp);
+			this.panelMoterNavi.Controls.Add(this.buttonMotorDown);
+			this.panelMoterNavi.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.panelMoterNavi.Location = new System.Drawing.Point(0, 592);
+			this.panelMoterNavi.Name = "panelMoterNavi";
+			this.panelMoterNavi.Size = new System.Drawing.Size(200, 72);
+			this.panelMoterNavi.TabIndex = 4;
+			// 
+			// buttonMotorCopy
+			// 
+			this.buttonMotorCopy.Location = new System.Drawing.Point(72, 40);
+			this.buttonMotorCopy.Name = "buttonMotorCopy";
+			this.buttonMotorCopy.Size = new System.Drawing.Size(56, 24);
+			this.buttonMotorCopy.TabIndex = 5;
+			this.buttonMotorCopy.Text = "Copy";
+			this.buttonMotorCopy.UseVisualStyleBackColor = true;
+			// 
+			// buttonMotorRemove
+			// 
+			this.buttonMotorRemove.Location = new System.Drawing.Point(136, 8);
+			this.buttonMotorRemove.Name = "buttonMotorRemove";
+			this.buttonMotorRemove.Size = new System.Drawing.Size(56, 24);
+			this.buttonMotorRemove.TabIndex = 3;
+			this.buttonMotorRemove.Text = "Remove";
+			this.buttonMotorRemove.UseVisualStyleBackColor = true;
+			// 
+			// buttonMotorAdd
+			// 
+			this.buttonMotorAdd.Location = new System.Drawing.Point(72, 8);
+			this.buttonMotorAdd.Name = "buttonMotorAdd";
+			this.buttonMotorAdd.Size = new System.Drawing.Size(56, 24);
+			this.buttonMotorAdd.TabIndex = 2;
+			this.buttonMotorAdd.Text = "Add";
+			this.buttonMotorAdd.UseVisualStyleBackColor = true;
+			// 
+			// buttonMotorUp
+			// 
+			this.buttonMotorUp.Location = new System.Drawing.Point(8, 8);
+			this.buttonMotorUp.Name = "buttonMotorUp";
+			this.buttonMotorUp.Size = new System.Drawing.Size(56, 24);
+			this.buttonMotorUp.TabIndex = 0;
+			this.buttonMotorUp.Text = "Up";
+			this.buttonMotorUp.UseVisualStyleBackColor = true;
+			// 
+			// buttonMotorDown
+			// 
+			this.buttonMotorDown.Location = new System.Drawing.Point(8, 40);
+			this.buttonMotorDown.Name = "buttonMotorDown";
+			this.buttonMotorDown.Size = new System.Drawing.Size(56, 24);
+			this.buttonMotorDown.TabIndex = 1;
+			this.buttonMotorDown.Text = "Down";
+			this.buttonMotorDown.UseVisualStyleBackColor = true;
 			// 
 			// toolStripContainerDrawArea
 			// 
@@ -2794,11 +2870,11 @@ namespace TrainEditor2.Views
 			// toolStripContainerDrawArea.ContentPanel
 			// 
 			this.toolStripContainerDrawArea.ContentPanel.Controls.Add(this.glControlMotor);
-			this.toolStripContainerDrawArea.ContentPanel.Size = new System.Drawing.Size(568, 593);
+			this.toolStripContainerDrawArea.ContentPanel.Size = new System.Drawing.Size(364, 593);
 			this.toolStripContainerDrawArea.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.toolStripContainerDrawArea.Location = new System.Drawing.Point(0, 24);
 			this.toolStripContainerDrawArea.Name = "toolStripContainerDrawArea";
-			this.toolStripContainerDrawArea.Size = new System.Drawing.Size(568, 618);
+			this.toolStripContainerDrawArea.Size = new System.Drawing.Size(364, 618);
 			this.toolStripContainerDrawArea.TabIndex = 4;
 			this.toolStripContainerDrawArea.Text = "toolStripContainer1";
 			// 
@@ -2812,10 +2888,10 @@ namespace TrainEditor2.Views
 			this.glControlMotor.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.glControlMotor.Location = new System.Drawing.Point(0, 0);
 			this.glControlMotor.Name = "glControlMotor";
-			this.glControlMotor.Size = new System.Drawing.Size(568, 593);
+			this.glControlMotor.Size = new System.Drawing.Size(364, 593);
 			this.glControlMotor.TabIndex = 0;
 			this.glControlMotor.VSync = false;
-			this.glControlMotor.Load += new System.EventHandler(this.glControlMotor_Load);
+			this.glControlMotor.Load += new System.EventHandler(this.GlControlMotor_Load);
 			this.glControlMotor.Paint += new System.Windows.Forms.PaintEventHandler(this.GlControlMotor_Paint);
 			this.glControlMotor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GlControlMotor_KeyDown);
 			this.glControlMotor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.GlControlMotor_MouseDown);
@@ -2823,6 +2899,7 @@ namespace TrainEditor2.Views
 			this.glControlMotor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.GlControlMotor_MouseMove);
 			this.glControlMotor.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GlControlMotor_MouseUp);
 			this.glControlMotor.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.GlControlMotor_PreviewKeyDown);
+			this.glControlMotor.Resize += new System.EventHandler(this.GlControlMotor_Resize);
 			// 
 			// toolStripToolBar
 			// 
@@ -2831,9 +2908,6 @@ namespace TrainEditor2.Views
             this.toolStripButtonUndo,
             this.toolStripButtonRedo,
             this.toolStripSeparatorRedo,
-            this.toolStripButtonTearingOff,
-            this.toolStripButtonCopy,
-            this.toolStripButtonPaste,
             this.toolStripButtonCleanup,
             this.toolStripButtonDelete,
             this.toolStripSeparatorEdit,
@@ -2843,7 +2917,7 @@ namespace TrainEditor2.Views
             this.toolStripButtonLine});
 			this.toolStripToolBar.Location = new System.Drawing.Point(3, 0);
 			this.toolStripToolBar.Name = "toolStripToolBar";
-			this.toolStripToolBar.Size = new System.Drawing.Size(275, 25);
+			this.toolStripToolBar.Size = new System.Drawing.Size(206, 25);
 			this.toolStripToolBar.TabIndex = 0;
 			// 
 			// toolStripButtonUndo
@@ -2866,30 +2940,6 @@ namespace TrainEditor2.Views
 			// 
 			this.toolStripSeparatorRedo.Name = "toolStripSeparatorRedo";
 			this.toolStripSeparatorRedo.Size = new System.Drawing.Size(6, 25);
-			// 
-			// toolStripButtonTearingOff
-			// 
-			this.toolStripButtonTearingOff.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButtonTearingOff.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButtonTearingOff.Name = "toolStripButtonTearingOff";
-			this.toolStripButtonTearingOff.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonTearingOff.Text = "Cut (Ctrl+X)";
-			// 
-			// toolStripButtonCopy
-			// 
-			this.toolStripButtonCopy.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButtonCopy.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButtonCopy.Name = "toolStripButtonCopy";
-			this.toolStripButtonCopy.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonCopy.Text = "Copy (Ctrl+C)";
-			// 
-			// toolStripButtonPaste
-			// 
-			this.toolStripButtonPaste.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButtonPaste.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButtonPaste.Name = "toolStripButtonPaste";
-			this.toolStripButtonPaste.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonPaste.Text = "Paste (Ctrl+V)";
 			// 
 			// toolStripButtonCleanup
 			// 
@@ -2946,14 +2996,48 @@ namespace TrainEditor2.Views
 			// 
 			// panelMotorSetting
 			// 
+			this.panelMotorSetting.Controls.Add(this.groupBoxTrack);
 			this.panelMotorSetting.Controls.Add(this.groupBoxDirect);
 			this.panelMotorSetting.Controls.Add(this.groupBoxPlay);
 			this.panelMotorSetting.Controls.Add(this.groupBoxView);
 			this.panelMotorSetting.Dock = System.Windows.Forms.DockStyle.Right;
-			this.panelMotorSetting.Location = new System.Drawing.Point(568, 24);
+			this.panelMotorSetting.Location = new System.Drawing.Point(364, 24);
 			this.panelMotorSetting.Name = "panelMotorSetting";
 			this.panelMotorSetting.Size = new System.Drawing.Size(218, 618);
 			this.panelMotorSetting.TabIndex = 3;
+			// 
+			// groupBoxTrack
+			// 
+			this.groupBoxTrack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBoxTrack.Controls.Add(this.comboBoxTrackType);
+			this.groupBoxTrack.Controls.Add(this.labelTrackType);
+			this.groupBoxTrack.Location = new System.Drawing.Point(8, 16);
+			this.groupBoxTrack.Name = "groupBoxTrack";
+			this.groupBoxTrack.Size = new System.Drawing.Size(200, 48);
+			this.groupBoxTrack.TabIndex = 3;
+			this.groupBoxTrack.TabStop = false;
+			this.groupBoxTrack.Text = "Track setting";
+			// 
+			// comboBoxTrackType
+			// 
+			this.comboBoxTrackType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxTrackType.FormattingEnabled = true;
+			this.comboBoxTrackType.Items.AddRange(new object[] {
+            "Power",
+            "Brake"});
+			this.comboBoxTrackType.Location = new System.Drawing.Point(112, 16);
+			this.comboBoxTrackType.Name = "comboBoxTrackType";
+			this.comboBoxTrackType.Size = new System.Drawing.Size(81, 20);
+			this.comboBoxTrackType.TabIndex = 6;
+			// 
+			// labelTrackType
+			// 
+			this.labelTrackType.Location = new System.Drawing.Point(8, 16);
+			this.labelTrackType.Name = "labelTrackType";
+			this.labelTrackType.Size = new System.Drawing.Size(96, 16);
+			this.labelTrackType.TabIndex = 5;
+			this.labelTrackType.Text = "Track type:";
+			this.labelTrackType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// groupBoxDirect
 			// 
@@ -2965,7 +3049,7 @@ namespace TrainEditor2.Views
 			this.groupBoxDirect.Controls.Add(this.labelDirectXUnit);
 			this.groupBoxDirect.Controls.Add(this.textBoxDirectX);
 			this.groupBoxDirect.Controls.Add(this.labelDirectX);
-			this.groupBoxDirect.Location = new System.Drawing.Point(8, 254);
+			this.groupBoxDirect.Location = new System.Drawing.Point(8, 271);
 			this.groupBoxDirect.Name = "groupBoxDirect";
 			this.groupBoxDirect.Size = new System.Drawing.Size(200, 96);
 			this.groupBoxDirect.TabIndex = 2;
@@ -3037,16 +3121,16 @@ namespace TrainEditor2.Views
 			this.groupBoxPlay.Controls.Add(this.buttonPlay);
 			this.groupBoxPlay.Controls.Add(this.groupBoxArea);
 			this.groupBoxPlay.Controls.Add(this.groupBoxSource);
-			this.groupBoxPlay.Location = new System.Drawing.Point(8, 359);
+			this.groupBoxPlay.Location = new System.Drawing.Point(8, 376);
 			this.groupBoxPlay.Name = "groupBoxPlay";
-			this.groupBoxPlay.Size = new System.Drawing.Size(200, 248);
+			this.groupBoxPlay.Size = new System.Drawing.Size(200, 233);
 			this.groupBoxPlay.TabIndex = 1;
 			this.groupBoxPlay.TabStop = false;
 			this.groupBoxPlay.Text = "Playback setting";
 			// 
 			// buttonStop
 			// 
-			this.buttonStop.Location = new System.Drawing.Point(136, 216);
+			this.buttonStop.Location = new System.Drawing.Point(136, 200);
 			this.buttonStop.Name = "buttonStop";
 			this.buttonStop.Size = new System.Drawing.Size(56, 24);
 			this.buttonStop.TabIndex = 4;
@@ -3054,7 +3138,7 @@ namespace TrainEditor2.Views
 			// 
 			// buttonPause
 			// 
-			this.buttonPause.Location = new System.Drawing.Point(72, 216);
+			this.buttonPause.Location = new System.Drawing.Point(72, 200);
 			this.buttonPause.Name = "buttonPause";
 			this.buttonPause.Size = new System.Drawing.Size(56, 24);
 			this.buttonPause.TabIndex = 3;
@@ -3062,7 +3146,7 @@ namespace TrainEditor2.Views
 			// 
 			// buttonPlay
 			// 
-			this.buttonPlay.Location = new System.Drawing.Point(8, 216);
+			this.buttonPlay.Location = new System.Drawing.Point(8, 200);
 			this.buttonPlay.Name = "buttonPlay";
 			this.buttonPlay.Size = new System.Drawing.Size(56, 24);
 			this.buttonPlay.TabIndex = 2;
@@ -3079,7 +3163,7 @@ namespace TrainEditor2.Views
 			this.groupBoxArea.Controls.Add(this.labelMotorAccel);
 			this.groupBoxArea.Controls.Add(this.labelMotorAccelUnit);
 			this.groupBoxArea.Controls.Add(this.textBoxMotorAccel);
-			this.groupBoxArea.Location = new System.Drawing.Point(8, 88);
+			this.groupBoxArea.Location = new System.Drawing.Point(8, 72);
 			this.groupBoxArea.Name = "groupBoxArea";
 			this.groupBoxArea.Size = new System.Drawing.Size(184, 120);
 			this.groupBoxArea.TabIndex = 1;
@@ -3166,11 +3250,9 @@ namespace TrainEditor2.Views
 			// 
 			this.groupBoxSource.Controls.Add(this.numericUpDownRunIndex);
 			this.groupBoxSource.Controls.Add(this.labelRun);
-			this.groupBoxSource.Controls.Add(this.checkBoxTrack2);
-			this.groupBoxSource.Controls.Add(this.checkBoxTrack1);
 			this.groupBoxSource.Location = new System.Drawing.Point(8, 16);
 			this.groupBoxSource.Name = "groupBoxSource";
-			this.groupBoxSource.Size = new System.Drawing.Size(184, 64);
+			this.groupBoxSource.Size = new System.Drawing.Size(184, 48);
 			this.groupBoxSource.TabIndex = 0;
 			this.groupBoxSource.TabStop = false;
 			this.groupBoxSource.Text = "Sound source setting";
@@ -3206,26 +3288,6 @@ namespace TrainEditor2.Views
 			this.labelRun.Text = "Running sound:";
 			this.labelRun.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// checkBoxTrack2
-			// 
-			this.checkBoxTrack2.AutoSize = true;
-			this.checkBoxTrack2.Location = new System.Drawing.Point(96, 40);
-			this.checkBoxTrack2.Name = "checkBoxTrack2";
-			this.checkBoxTrack2.Size = new System.Drawing.Size(59, 16);
-			this.checkBoxTrack2.TabIndex = 2;
-			this.checkBoxTrack2.Text = "Track2";
-			this.checkBoxTrack2.UseVisualStyleBackColor = true;
-			// 
-			// checkBoxTrack1
-			// 
-			this.checkBoxTrack1.AutoSize = true;
-			this.checkBoxTrack1.Location = new System.Drawing.Point(8, 40);
-			this.checkBoxTrack1.Name = "checkBoxTrack1";
-			this.checkBoxTrack1.Size = new System.Drawing.Size(59, 16);
-			this.checkBoxTrack1.TabIndex = 1;
-			this.checkBoxTrack1.Text = "Track1";
-			this.checkBoxTrack1.UseVisualStyleBackColor = true;
-			// 
 			// groupBoxView
 			// 
 			this.groupBoxView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -3246,7 +3308,7 @@ namespace TrainEditor2.Views
 			this.groupBoxView.Controls.Add(this.labelMotorMinVelocityUnit);
 			this.groupBoxView.Controls.Add(this.textBoxMotorMinVelocity);
 			this.groupBoxView.Controls.Add(this.labelMotorMinVelocity);
-			this.groupBoxView.Location = new System.Drawing.Point(8, 54);
+			this.groupBoxView.Location = new System.Drawing.Point(8, 71);
 			this.groupBoxView.Name = "groupBoxView";
 			this.groupBoxView.Size = new System.Drawing.Size(200, 192);
 			this.groupBoxView.TabIndex = 0;
@@ -3391,92 +3453,15 @@ namespace TrainEditor2.Views
 			this.labelMotorMinVelocity.Text = "x-min(Velocity):";
 			this.labelMotorMinVelocity.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// statusStripStatus
-			// 
-			this.statusStripStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabelY,
-            this.toolStripStatusLabelX,
-            this.toolStripStatusLabelTool,
-            this.toolStripStatusLabelMode,
-            this.toolStripStatusLabelTrack,
-            this.toolStripStatusLabelType});
-			this.statusStripStatus.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-			this.statusStripStatus.Location = new System.Drawing.Point(0, 642);
-			this.statusStripStatus.Name = "statusStripStatus";
-			this.statusStripStatus.Size = new System.Drawing.Size(786, 22);
-			this.statusStripStatus.TabIndex = 1;
-			this.statusStripStatus.Text = "statusStrip1";
-			// 
-			// toolStripStatusLabelY
-			// 
-			this.toolStripStatusLabelY.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-			this.toolStripStatusLabelY.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-			this.toolStripStatusLabelY.Name = "toolStripStatusLabelY";
-			this.toolStripStatusLabelY.Size = new System.Drawing.Size(16, 17);
-			this.toolStripStatusLabelY.Text = "Y";
-			// 
-			// toolStripStatusLabelX
-			// 
-			this.toolStripStatusLabelX.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-			this.toolStripStatusLabelX.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-			this.toolStripStatusLabelX.Name = "toolStripStatusLabelX";
-			this.toolStripStatusLabelX.Size = new System.Drawing.Size(16, 17);
-			this.toolStripStatusLabelX.Text = "X";
-			// 
-			// toolStripStatusLabelTool
-			// 
-			this.toolStripStatusLabelTool.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-			this.toolStripStatusLabelTool.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-			this.toolStripStatusLabelTool.Name = "toolStripStatusLabelTool";
-			this.toolStripStatusLabelTool.Size = new System.Drawing.Size(31, 17);
-			this.toolStripStatusLabelTool.Text = "Tool";
-			// 
-			// toolStripStatusLabelMode
-			// 
-			this.toolStripStatusLabelMode.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-			this.toolStripStatusLabelMode.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-			this.toolStripStatusLabelMode.Name = "toolStripStatusLabelMode";
-			this.toolStripStatusLabelMode.Size = new System.Drawing.Size(36, 17);
-			this.toolStripStatusLabelMode.Text = "Mode";
-			// 
-			// toolStripStatusLabelTrack
-			// 
-			this.toolStripStatusLabelTrack.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-			this.toolStripStatusLabelTrack.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-			this.toolStripStatusLabelTrack.Name = "toolStripStatusLabelTrack";
-			this.toolStripStatusLabelTrack.Size = new System.Drawing.Size(38, 17);
-			this.toolStripStatusLabelTrack.Text = "Track";
-			// 
-			// toolStripStatusLabelType
-			// 
-			this.toolStripStatusLabelType.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-			this.toolStripStatusLabelType.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-			this.toolStripStatusLabelType.Name = "toolStripStatusLabelType";
-			this.toolStripStatusLabelType.Size = new System.Drawing.Size(34, 17);
-			this.toolStripStatusLabelType.Text = "Type";
-			// 
 			// menuStripMotor
 			// 
 			this.menuStripMotor.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemEdit,
-            this.toolStripMenuItemView,
             this.toolStripMenuItemInput,
             this.toolStripMenuItemTool});
 			this.menuStripMotor.Location = new System.Drawing.Point(0, 0);
 			this.menuStripMotor.Name = "menuStripMotor";
-			this.menuStripMotor.Size = new System.Drawing.Size(786, 24);
+			this.menuStripMotor.Size = new System.Drawing.Size(582, 24);
 			this.menuStripMotor.TabIndex = 0;
 			this.menuStripMotor.Text = "menuStrip1";
 			// 
@@ -3486,9 +3471,6 @@ namespace TrainEditor2.Views
             this.toolStripMenuItemUndo,
             this.toolStripMenuItemRedo,
             this.toolStripSeparatorUndo,
-            this.toolStripMenuItemTearingOff,
-            this.toolStripMenuItemCopy,
-            this.toolStripMenuItemPaste,
             this.toolStripMenuItemCleanup,
             this.toolStripMenuItemDelete});
 			this.toolStripMenuItemEdit.Name = "toolStripMenuItemEdit";
@@ -3499,105 +3481,33 @@ namespace TrainEditor2.Views
 			// 
 			this.toolStripMenuItemUndo.Name = "toolStripMenuItemUndo";
 			this.toolStripMenuItemUndo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-			this.toolStripMenuItemUndo.Size = new System.Drawing.Size(152, 22);
+			this.toolStripMenuItemUndo.Size = new System.Drawing.Size(149, 22);
 			this.toolStripMenuItemUndo.Text = "Undo(&U)";
 			// 
 			// toolStripMenuItemRedo
 			// 
 			this.toolStripMenuItemRedo.Name = "toolStripMenuItemRedo";
 			this.toolStripMenuItemRedo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-			this.toolStripMenuItemRedo.Size = new System.Drawing.Size(152, 22);
+			this.toolStripMenuItemRedo.Size = new System.Drawing.Size(149, 22);
 			this.toolStripMenuItemRedo.Text = "Redo(&R)";
 			// 
 			// toolStripSeparatorUndo
 			// 
 			this.toolStripSeparatorUndo.Name = "toolStripSeparatorUndo";
-			this.toolStripSeparatorUndo.Size = new System.Drawing.Size(149, 6);
-			// 
-			// toolStripMenuItemTearingOff
-			// 
-			this.toolStripMenuItemTearingOff.Name = "toolStripMenuItemTearingOff";
-			this.toolStripMenuItemTearingOff.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-			this.toolStripMenuItemTearingOff.Size = new System.Drawing.Size(152, 22);
-			this.toolStripMenuItemTearingOff.Text = "Cut(&T)";
-			// 
-			// toolStripMenuItemCopy
-			// 
-			this.toolStripMenuItemCopy.Name = "toolStripMenuItemCopy";
-			this.toolStripMenuItemCopy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-			this.toolStripMenuItemCopy.Size = new System.Drawing.Size(152, 22);
-			this.toolStripMenuItemCopy.Text = "Copy(&C)";
-			// 
-			// toolStripMenuItemPaste
-			// 
-			this.toolStripMenuItemPaste.Name = "toolStripMenuItemPaste";
-			this.toolStripMenuItemPaste.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-			this.toolStripMenuItemPaste.Size = new System.Drawing.Size(152, 22);
-			this.toolStripMenuItemPaste.Text = "Paste(&P)";
+			this.toolStripSeparatorUndo.Size = new System.Drawing.Size(146, 6);
 			// 
 			// toolStripMenuItemCleanup
 			// 
 			this.toolStripMenuItemCleanup.Name = "toolStripMenuItemCleanup";
-			this.toolStripMenuItemCleanup.Size = new System.Drawing.Size(152, 22);
+			this.toolStripMenuItemCleanup.Size = new System.Drawing.Size(149, 22);
 			this.toolStripMenuItemCleanup.Text = "Cleanup";
 			// 
 			// toolStripMenuItemDelete
 			// 
 			this.toolStripMenuItemDelete.Name = "toolStripMenuItemDelete";
 			this.toolStripMenuItemDelete.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-			this.toolStripMenuItemDelete.Size = new System.Drawing.Size(152, 22);
+			this.toolStripMenuItemDelete.Size = new System.Drawing.Size(149, 22);
 			this.toolStripMenuItemDelete.Text = "Delete(&D)";
-			// 
-			// toolStripMenuItemView
-			// 
-			this.toolStripMenuItemView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemPower,
-            this.toolStripMenuItemBrake});
-			this.toolStripMenuItemView.Name = "toolStripMenuItemView";
-			this.toolStripMenuItemView.Size = new System.Drawing.Size(58, 20);
-			this.toolStripMenuItemView.Text = "View(&V)";
-			// 
-			// toolStripMenuItemPower
-			// 
-			this.toolStripMenuItemPower.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemPowerTrack1,
-            this.toolStripMenuItemPowerTrack2});
-			this.toolStripMenuItemPower.Name = "toolStripMenuItemPower";
-			this.toolStripMenuItemPower.Size = new System.Drawing.Size(116, 22);
-			this.toolStripMenuItemPower.Text = "Power(&P)";
-			// 
-			// toolStripMenuItemPowerTrack1
-			// 
-			this.toolStripMenuItemPowerTrack1.Name = "toolStripMenuItemPowerTrack1";
-			this.toolStripMenuItemPowerTrack1.Size = new System.Drawing.Size(119, 22);
-			this.toolStripMenuItemPowerTrack1.Text = "Track1(&1)";
-			// 
-			// toolStripMenuItemPowerTrack2
-			// 
-			this.toolStripMenuItemPowerTrack2.Name = "toolStripMenuItemPowerTrack2";
-			this.toolStripMenuItemPowerTrack2.Size = new System.Drawing.Size(119, 22);
-			this.toolStripMenuItemPowerTrack2.Text = "Track2(&2)";
-			// 
-			// toolStripMenuItemBrake
-			// 
-			this.toolStripMenuItemBrake.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemBrakeTrack1,
-            this.toolStripMenuItemBrakeTrack2});
-			this.toolStripMenuItemBrake.Name = "toolStripMenuItemBrake";
-			this.toolStripMenuItemBrake.Size = new System.Drawing.Size(116, 22);
-			this.toolStripMenuItemBrake.Text = "Brake(&B)";
-			// 
-			// toolStripMenuItemBrakeTrack1
-			// 
-			this.toolStripMenuItemBrakeTrack1.Name = "toolStripMenuItemBrakeTrack1";
-			this.toolStripMenuItemBrakeTrack1.Size = new System.Drawing.Size(119, 22);
-			this.toolStripMenuItemBrakeTrack1.Text = "Track1(&1)";
-			// 
-			// toolStripMenuItemBrakeTrack2
-			// 
-			this.toolStripMenuItemBrakeTrack2.Name = "toolStripMenuItemBrakeTrack2";
-			this.toolStripMenuItemBrakeTrack2.Size = new System.Drawing.Size(119, 22);
-			this.toolStripMenuItemBrakeTrack2.Text = "Track2(&2)";
 			// 
 			// toolStripMenuItemInput
 			// 
@@ -3692,6 +3602,71 @@ namespace TrainEditor2.Views
 			this.toolStripMenuItemLine.Size = new System.Drawing.Size(151, 22);
 			this.toolStripMenuItemLine.Text = "Line(&L)";
 			// 
+			// statusStripStatus
+			// 
+			this.statusStripStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabelY,
+            this.toolStripStatusLabelX,
+            this.toolStripStatusLabelTool,
+            this.toolStripStatusLabelMode,
+            this.toolStripStatusLabelType});
+			this.statusStripStatus.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
+			this.statusStripStatus.Location = new System.Drawing.Point(0, 642);
+			this.statusStripStatus.Name = "statusStripStatus";
+			this.statusStripStatus.Size = new System.Drawing.Size(582, 22);
+			this.statusStripStatus.TabIndex = 1;
+			this.statusStripStatus.Text = "statusStrip1";
+			// 
+			// toolStripStatusLabelY
+			// 
+			this.toolStripStatusLabelY.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.toolStripStatusLabelY.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+			this.toolStripStatusLabelY.Name = "toolStripStatusLabelY";
+			this.toolStripStatusLabelY.Size = new System.Drawing.Size(16, 17);
+			this.toolStripStatusLabelY.Text = "Y";
+			// 
+			// toolStripStatusLabelX
+			// 
+			this.toolStripStatusLabelX.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.toolStripStatusLabelX.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+			this.toolStripStatusLabelX.Name = "toolStripStatusLabelX";
+			this.toolStripStatusLabelX.Size = new System.Drawing.Size(16, 17);
+			this.toolStripStatusLabelX.Text = "X";
+			// 
+			// toolStripStatusLabelTool
+			// 
+			this.toolStripStatusLabelTool.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.toolStripStatusLabelTool.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+			this.toolStripStatusLabelTool.Name = "toolStripStatusLabelTool";
+			this.toolStripStatusLabelTool.Size = new System.Drawing.Size(31, 17);
+			this.toolStripStatusLabelTool.Text = "Tool";
+			// 
+			// toolStripStatusLabelMode
+			// 
+			this.toolStripStatusLabelMode.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.toolStripStatusLabelMode.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+			this.toolStripStatusLabelMode.Name = "toolStripStatusLabelMode";
+			this.toolStripStatusLabelMode.Size = new System.Drawing.Size(36, 17);
+			this.toolStripStatusLabelMode.Text = "Mode";
+			// 
+			// toolStripStatusLabelType
+			// 
+			this.toolStripStatusLabelType.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.toolStripStatusLabelType.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+			this.toolStripStatusLabelType.Name = "toolStripStatusLabelType";
+			this.toolStripStatusLabelType.Size = new System.Drawing.Size(34, 17);
+			this.toolStripStatusLabelType.Text = "Type";
+			// 
 			// tabPageCoupler
 			// 
 			this.tabPageCoupler.Controls.Add(this.groupBoxCouplerGeneral);
@@ -3728,7 +3703,7 @@ namespace TrainEditor2.Views
 			this.buttonCouplerObject.TabIndex = 30;
 			this.buttonCouplerObject.Text = "Open...";
 			this.buttonCouplerObject.UseVisualStyleBackColor = true;
-			this.buttonCouplerObject.Click += new System.EventHandler(this.buttonCouplerObject_Click);
+			this.buttonCouplerObject.Click += new System.EventHandler(this.ButtonCouplerObject_Click);
 			// 
 			// textBoxCouplerObject
 			// 
@@ -6293,6 +6268,25 @@ namespace TrainEditor2.Views
 			// 
 			this.columnHeaderText.Text = "Description";
 			// 
+			// panelStatusNavi
+			// 
+			this.panelStatusNavi.Controls.Add(this.buttonOutputLogs);
+			this.panelStatusNavi.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.panelStatusNavi.Location = new System.Drawing.Point(0, 632);
+			this.panelStatusNavi.Name = "panelStatusNavi";
+			this.panelStatusNavi.Size = new System.Drawing.Size(792, 38);
+			this.panelStatusNavi.TabIndex = 4;
+			// 
+			// buttonOutputLogs
+			// 
+			this.buttonOutputLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonOutputLogs.Location = new System.Drawing.Point(704, 8);
+			this.buttonOutputLogs.Name = "buttonOutputLogs";
+			this.buttonOutputLogs.Size = new System.Drawing.Size(80, 24);
+			this.buttonOutputLogs.TabIndex = 0;
+			this.buttonOutputLogs.Text = "Output logs...";
+			this.buttonOutputLogs.UseVisualStyleBackColor = true;
+			// 
 			// menuStripStatus
 			// 
 			this.menuStripStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -6522,25 +6516,6 @@ namespace TrainEditor2.Views
 			// 
 			this.errorProvider.ContainerControl = this;
 			// 
-			// panelStatusNavi
-			// 
-			this.panelStatusNavi.Controls.Add(this.buttonOutputLogs);
-			this.panelStatusNavi.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.panelStatusNavi.Location = new System.Drawing.Point(0, 632);
-			this.panelStatusNavi.Name = "panelStatusNavi";
-			this.panelStatusNavi.Size = new System.Drawing.Size(792, 38);
-			this.panelStatusNavi.TabIndex = 4;
-			// 
-			// buttonOutputLogs
-			// 
-			this.buttonOutputLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonOutputLogs.Location = new System.Drawing.Point(704, 8);
-			this.buttonOutputLogs.Name = "buttonOutputLogs";
-			this.buttonOutputLogs.Size = new System.Drawing.Size(80, 24);
-			this.buttonOutputLogs.TabIndex = 0;
-			this.buttonOutputLogs.Text = "Output logs...";
-			this.buttonOutputLogs.UseVisualStyleBackColor = true;
-			// 
 			// FormEditor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -6557,6 +6532,7 @@ namespace TrainEditor2.Views
 			this.Load += new System.EventHandler(this.FormEditor_Load);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormEditor_KeyDown);
 			this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FormEditor_KeyUp);
+			this.Resize += new System.EventHandler(this.FormEditor_Resize);
 			this.tabControlEditor.ResumeLayout(false);
 			this.tabPageTrain.ResumeLayout(false);
 			this.groupBoxDevice.ResumeLayout(false);
@@ -6593,8 +6569,12 @@ namespace TrainEditor2.Views
 			this.groupBoxParameter.PerformLayout();
 			this.groupBoxNotch.ResumeLayout(false);
 			this.tabPageMotor.ResumeLayout(false);
-			this.panelMotorSound.ResumeLayout(false);
-			this.panelMotorSound.PerformLayout();
+			this.splitContainerMotor.Panel1.ResumeLayout(false);
+			this.splitContainerMotor.Panel2.ResumeLayout(false);
+			this.splitContainerMotor.Panel2.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainerMotor)).EndInit();
+			this.splitContainerMotor.ResumeLayout(false);
+			this.panelMoterNavi.ResumeLayout(false);
 			this.toolStripContainerDrawArea.ContentPanel.ResumeLayout(false);
 			this.toolStripContainerDrawArea.TopToolStripPanel.ResumeLayout(false);
 			this.toolStripContainerDrawArea.TopToolStripPanel.PerformLayout();
@@ -6603,20 +6583,20 @@ namespace TrainEditor2.Views
 			this.toolStripToolBar.ResumeLayout(false);
 			this.toolStripToolBar.PerformLayout();
 			this.panelMotorSetting.ResumeLayout(false);
+			this.groupBoxTrack.ResumeLayout(false);
 			this.groupBoxDirect.ResumeLayout(false);
 			this.groupBoxDirect.PerformLayout();
 			this.groupBoxPlay.ResumeLayout(false);
 			this.groupBoxArea.ResumeLayout(false);
 			this.groupBoxArea.PerformLayout();
 			this.groupBoxSource.ResumeLayout(false);
-			this.groupBoxSource.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownRunIndex)).EndInit();
 			this.groupBoxView.ResumeLayout(false);
 			this.groupBoxView.PerformLayout();
-			this.statusStripStatus.ResumeLayout(false);
-			this.statusStripStatus.PerformLayout();
 			this.menuStripMotor.ResumeLayout(false);
 			this.menuStripMotor.PerformLayout();
+			this.statusStripStatus.ResumeLayout(false);
+			this.statusStripStatus.PerformLayout();
 			this.tabPageCoupler.ResumeLayout(false);
 			this.groupBoxCouplerGeneral.ResumeLayout(false);
 			this.groupBoxCouplerGeneral.PerformLayout();
@@ -6698,6 +6678,7 @@ namespace TrainEditor2.Views
 			this.groupBoxSoundPosition.PerformLayout();
 			this.tabPageStatus.ResumeLayout(false);
 			this.tabPageStatus.PerformLayout();
+			this.panelStatusNavi.ResumeLayout(false);
 			this.menuStripStatus.ResumeLayout(false);
 			this.menuStripStatus.PerformLayout();
 			this.panelCars.ResumeLayout(false);
@@ -6705,7 +6686,6 @@ namespace TrainEditor2.Views
 			this.menuStripMenu.ResumeLayout(false);
 			this.menuStripMenu.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
-			this.panelStatusNavi.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -6916,15 +6896,11 @@ namespace TrainEditor2.Views
 		private System.Windows.Forms.GroupBox groupBoxNotch;
 		private System.Windows.Forms.ComboBox comboBoxNotch;
 		private System.Windows.Forms.TabPage tabPageMotor;
-		private System.Windows.Forms.Panel panelMotorSound;
 		private System.Windows.Forms.ToolStripContainer toolStripContainerDrawArea;
 		private System.Windows.Forms.ToolStrip toolStripToolBar;
 		private System.Windows.Forms.ToolStripButton toolStripButtonUndo;
 		private System.Windows.Forms.ToolStripButton toolStripButtonRedo;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparatorRedo;
-		private System.Windows.Forms.ToolStripButton toolStripButtonTearingOff;
-		private System.Windows.Forms.ToolStripButton toolStripButtonCopy;
-		private System.Windows.Forms.ToolStripButton toolStripButtonPaste;
 		private System.Windows.Forms.ToolStripButton toolStripButtonCleanup;
 		private System.Windows.Forms.ToolStripButton toolStripButtonDelete;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparatorEdit;
@@ -6957,8 +6933,6 @@ namespace TrainEditor2.Views
 		private System.Windows.Forms.TextBox textBoxMotorAccel;
 		private System.Windows.Forms.GroupBox groupBoxSource;
 		private System.Windows.Forms.Label labelRun;
-		private System.Windows.Forms.CheckBox checkBoxTrack2;
-		private System.Windows.Forms.CheckBox checkBoxTrack1;
 		private System.Windows.Forms.GroupBox groupBoxView;
 		private System.Windows.Forms.Button buttonMotorReset;
 		private System.Windows.Forms.Button buttonMotorZoomOut;
@@ -6982,7 +6956,6 @@ namespace TrainEditor2.Views
 		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelX;
 		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelTool;
 		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelMode;
-		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelTrack;
 		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelType;
 		private System.Windows.Forms.TabPage tabPageCoupler;
 		private System.Windows.Forms.GroupBox groupBoxCouplerGeneral;
@@ -7267,18 +7240,8 @@ namespace TrainEditor2.Views
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemUndo;
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRedo;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparatorUndo;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemTearingOff;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemCopy;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPaste;
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemCleanup;
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDelete;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemView;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPower;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPowerTrack1;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPowerTrack2;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemBrake;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemBrakeTrack1;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemBrakeTrack2;
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInput;
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPitch;
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemVolume;
@@ -7318,5 +7281,16 @@ namespace TrainEditor2.Views
 		private OpenTK.GLControl glControlMotor;
 		private Panel panelStatusNavi;
 		private Button buttonOutputLogs;
+		private SplitContainer splitContainerMotor;
+		private TreeView treeViewMotor;
+		private Panel panelMoterNavi;
+		private Button buttonMotorCopy;
+		private Button buttonMotorRemove;
+		private Button buttonMotorAdd;
+		private Button buttonMotorUp;
+		private Button buttonMotorDown;
+		private GroupBox groupBoxTrack;
+		private ComboBox comboBoxTrackType;
+		private Label labelTrackType;
 	}
 }

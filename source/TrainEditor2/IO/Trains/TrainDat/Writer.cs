@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using TrainEditor2.Models.Trains;
+using TrainEditor2.Simulation.TrainManager;
 
 namespace TrainEditor2.IO.Trains.TrainDat
 {
@@ -116,48 +117,65 @@ namespace TrainEditor2.IO.Trains.TrainDat
 			builder.AppendLine($"{train.Device.DoorWidth.ToString(culture).PadRight(n, ' ')}; DoorWidth");
 			builder.AppendLine($"{train.Device.DoorMaxTolerance.ToString(culture).PadRight(n, ' ')}; DoorMaxTolerance");
 
+			TrainManager.MotorSound.Table[] powerTables = firstMotorCar.Motor.Tracks.Where(x => x.Type == Motor.TrackType.Power).Select(x => Motor.Track.TrackToMotorSoundTable(x, y => y, y => y, y => y)).ToArray();
+			TrainManager.MotorSound.Table[] brakeTables = firstMotorCar.Motor.Tracks.Where(x => x.Type == Motor.TrackType.Brake).Select(x => Motor.Track.TrackToMotorSoundTable(x, y => y, y => y, y => y)).ToArray();
+
 			for (int i = 0; i < 4; i++)
 			{
-				Motor.Entry[] entries = new Motor.Entry[0];
+				TrainManager.MotorSound.Table table = null;
 
 				switch (i)
 				{
 					case 0:
 						builder.AppendLine("#MOTOR_P1");
-						entries = Motor.Track.TrackToEntries(firstMotorCar.Motor.Tracks[(int)Motor.TrackInfo.Power1]);
+						table = powerTables.ElementAtOrDefault(0);
 						break;
 					case 1:
 						builder.AppendLine("#MOTOR_P2");
-						entries = Motor.Track.TrackToEntries(firstMotorCar.Motor.Tracks[(int)Motor.TrackInfo.Power2]);
+						table = powerTables.ElementAtOrDefault(1);
 						break;
 					case 2:
 						builder.AppendLine("#MOTOR_B1");
-						entries = Motor.Track.TrackToEntries(firstMotorCar.Motor.Tracks[(int)Motor.TrackInfo.Brake1]);
+						table = brakeTables.ElementAtOrDefault(0);
 						break;
 					case 3:
 						builder.AppendLine("#MOTOR_B2");
-						entries = Motor.Track.TrackToEntries(firstMotorCar.Motor.Tracks[(int)Motor.TrackInfo.Brake2]);
+						table = brakeTables.ElementAtOrDefault(1);
 						break;
 				}
 
-				int k;
-
-				for (k = entries.Length - 1; k >= 0; k--)
+				if (table == null)
 				{
-					if (entries[k].SoundIndex >= 0)
-					{
-						break;
-					}
+					continue;
 				}
 
-				k = Math.Min(k + 2, entries.Length);
-				Array.Resize(ref entries, k);
+				float maxSpeed = 0.0f;
+				TrainManager.MotorSound.Vertex<float> lastPitchVertex = table.PitchVertices.LastOrDefault();
+				TrainManager.MotorSound.Vertex<float> lastGainVertex = table.GainVertices.LastOrDefault();
+				TrainManager.MotorSound.Vertex<int> lastBufferVertex = table.BufferVertices.LastOrDefault();
 
-				for (int j = 0; j < entries.Length; j++)
+				if (lastPitchVertex != null)
 				{
-					builder.Append(entries[j].SoundIndex.ToString(culture) + ",");
-					builder.Append(entries[j].Pitch.ToString(culture) + ",");
-					builder.AppendLine(entries[j].Volume.ToString(culture));
+					maxSpeed = Math.Max(lastPitchVertex.X, maxSpeed);
+				}
+
+				if (lastGainVertex != null)
+				{
+					maxSpeed = Math.Max(lastGainVertex.X, maxSpeed);
+				}
+
+				if (lastBufferVertex != null)
+				{
+					maxSpeed = Math.Max(lastBufferVertex.X, maxSpeed);
+				}
+
+				for (float j = 0.0f; j < maxSpeed; j += 0.2f)
+				{
+					TrainManager.MotorSound.Entry entry = table.GetEntry(j);
+
+					builder.Append(entry.SoundIndex.ToString(culture) + ",");
+					builder.Append(entry.Pitch.ToString(culture) + ",");
+					builder.AppendLine(entry.Gain.ToString(culture));
 				}
 			}
 

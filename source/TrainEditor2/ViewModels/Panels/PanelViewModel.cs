@@ -17,7 +17,7 @@ namespace TrainEditor2.ViewModels.Panels
 			get;
 		}
 
-		internal ReactiveProperty<TreeViewItemViewModel> TreeItem
+		internal ReadOnlyReactiveCollection<TreeViewItemViewModel> TreeItems
 		{
 			get;
 		}
@@ -214,29 +214,12 @@ namespace TrainEditor2.ViewModels.Panels
 				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 
-			TreeItem = panel
-				.ObserveProperty(x => x.TreeItem)
-				.Do(_ => TreeItem?.Value.Dispose())
-				.Select(x => new TreeViewItemViewModel(x))
-				.ToReactiveProperty()
-				.AddTo(disposable);
-
-			TreeItem.Subscribe(x =>
-				{
-					treeItemDisposable.Dispose();
-					treeItemDisposable = new CompositeDisposable();
-
-					x.PropertyChangedAsObservable()
-						.ToReadOnlyReactivePropertySlim(mode: ReactivePropertyMode.None)
-						.Subscribe(_ => TreeItem.ForceNotify())
-						.AddTo(treeItemDisposable);
-				})
-				.AddTo(disposable);
+			TreeItems = panel.TreeItems.ToReadOnlyReactiveCollection(x => new TreeViewItemViewModel(x, null)).AddTo(disposable);
 
 			SelectedTreeItem = panel
 				.ToReactivePropertyAsSynchronized(
 					x => x.SelectedTreeItem,
-					x => TreeItem.Value.SearchViewModel(x),
+					x => TreeItems.Select(y => y.SearchViewModel(x)).FirstOrDefault(y => y != null),
 					x => x?.Model
 				)
 				.AddTo(disposable);
@@ -296,7 +279,7 @@ namespace TrainEditor2.ViewModels.Panels
 							LinearGaugeElement linearGauge = y as LinearGaugeElement;
 
 							screen?.ObserveProperty(z => z.Number)
-								.Select(_ => TreeItem.Value.Children[1].Children.FirstOrDefault(z => z.Tag.Value == screen))
+								.Select(_ => TreeItems[0].Children[1].Children.FirstOrDefault(z => z.Tag.Value == screen))
 								.Where(z => z != null)
 								.Subscribe(z => panel.RenameScreenTreeItem(z.Model))
 								.AddTo(tagDisposable);
@@ -426,55 +409,55 @@ namespace TrainEditor2.ViewModels.Panels
 				.AddTo(disposable);
 
 			AddScreen = SelectedTreeItem
-				.Select(x => x == TreeItem.Value.Children[1])
+				.Select(x => x == TreeItems[0].Children[1])
 				.ToReactiveCommand()
 				.WithSubscribe(panel.AddScreen)
 				.AddTo(disposable);
 
 			AddPilotLamp = SelectedTreeItem
-				.Select(x => TreeItem.Value.Children[1].Children.Any(y => x == y.Children[0].Children[0])
-							 || x == TreeItem.Value.Children[2].Children[0])
+				.Select(x => TreeItems[0].Children[1].Children.Any(y => x == y.Children[0].Children[0])
+							 || x == TreeItems[0].Children[2].Children[0])
 				.ToReactiveCommand()
 				.WithSubscribe(panel.AddPilotLamp)
 				.AddTo(disposable);
 
 			AddNeedle = SelectedTreeItem
-				.Select(x => TreeItem.Value.Children[1].Children.Any(y => x == y.Children[0].Children[1])
-							 || x == TreeItem.Value.Children[2].Children[1])
+				.Select(x => TreeItems[0].Children[1].Children.Any(y => x == y.Children[0].Children[1])
+							 || x == TreeItems[0].Children[2].Children[1])
 				.ToReactiveCommand()
 				.WithSubscribe(panel.AddNeedle)
 				.AddTo(disposable);
 
 			AddDigitalNumber = SelectedTreeItem
-				.Select(x => TreeItem.Value.Children[1].Children.Any(y => x == y.Children[0].Children[2])
-							 || x == TreeItem.Value.Children[2].Children[2])
+				.Select(x => TreeItems[0].Children[1].Children.Any(y => x == y.Children[0].Children[2])
+							 || x == TreeItems[0].Children[2].Children[2])
 				.ToReactiveCommand()
 				.WithSubscribe(panel.AddDigitalNumber)
 				.AddTo(disposable);
 
 			AddDigitalGauge = SelectedTreeItem
-				.Select(x => TreeItem.Value.Children[1].Children.Any(y => x == y.Children[0].Children[3])
-							 || x == TreeItem.Value.Children[2].Children[3])
+				.Select(x => TreeItems[0].Children[1].Children.Any(y => x == y.Children[0].Children[3])
+							 || x == TreeItems[0].Children[2].Children[3])
 				.ToReactiveCommand()
 				.WithSubscribe(panel.AddDigitalGauge)
 				.AddTo(disposable);
 
 			AddLinearGauge = SelectedTreeItem
-				.Select(x => TreeItem.Value.Children[1].Children.Any(y => x == y.Children[0].Children[4])
-							 || x == TreeItem.Value.Children[2].Children[4])
+				.Select(x => TreeItems[0].Children[1].Children.Any(y => x == y.Children[0].Children[4])
+							 || x == TreeItems[0].Children[2].Children[4])
 				.ToReactiveCommand()
 				.WithSubscribe(panel.AddLinearGauge)
 				.AddTo(disposable);
 
 			AddTimetable = SelectedTreeItem
-				.Select(x => TreeItem.Value.Children[1].Children.Any(y => x == y.Children[0].Children[5])
-							 || x == TreeItem.Value.Children[2].Children[5])
+				.Select(x => TreeItems[0].Children[1].Children.Any(y => x == y.Children[0].Children[5])
+							 || x == TreeItems[0].Children[2].Children[5])
 				.ToReactiveCommand()
 				.WithSubscribe(panel.AddTimetable)
 				.AddTo(disposable);
 
 			AddTouch = SelectedTreeItem
-				.Select(x => TreeItem.Value.Children[1].Children.Any(y => x == y.Children[1]))
+				.Select(x => TreeItems[0].Children[1].Children.Any(y => x == y.Children[1]))
 				.ToReactiveCommand()
 				.WithSubscribe(panel.AddTouch)
 				.AddTo(disposable);

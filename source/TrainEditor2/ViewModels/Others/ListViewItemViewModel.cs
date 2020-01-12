@@ -11,7 +11,7 @@ namespace TrainEditor2.ViewModels.Others
 			get;
 		}
 
-		internal ReadOnlyReactiveCollection<string> Texts
+		internal ReadOnlyReactiveCollection<ListViewSubItemViewModel> SubItems
 		{
 			get;
 		}
@@ -30,7 +30,7 @@ namespace TrainEditor2.ViewModels.Others
 		{
 			Model = item;
 
-			Texts = item.Texts.ToReadOnlyReactiveCollection().AddTo(disposable);
+			SubItems = item.SubItems.ToReadOnlyReactiveCollection(x => new ListViewSubItemViewModel(x)).AddTo(disposable);
 
 			Tag = item
 				.ObserveProperty(x => x.Tag)

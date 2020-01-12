@@ -42,7 +42,7 @@ namespace TrainEditor2.IO.Panels.Xml
 			{
 				switch (sectionNode.Name.LocalName.ToLowerInvariant())
 				{
-					case "This":
+					case "this":
 						ParseThisNode(fileName, sectionNode, panel.This);
 						break;
 					case "screen":

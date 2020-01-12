@@ -545,7 +545,6 @@ namespace TrainEditor2.ViewModels.Trains
 	{
 		internal TrailerCarViewModel(TrailerCar car) : base(car)
 		{
-
 		}
 	}
 }

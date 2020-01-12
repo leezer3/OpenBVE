@@ -7,41 +7,12 @@ using OpenBveApi.Interface;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Others;
 using TrainEditor2.Systems;
-using TrainEditor2.ViewModels.Others;
 using TrainEditor2.ViewModels.Trains;
 
 namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private TreeNode TreeViewItemViewModelToTreeNode(TreeViewItemViewModel item)
-		{
-			return new TreeNode(item.Title.Value, item.Children.Select(TreeViewItemViewModelToTreeNode).ToArray()) { Tag = item };
-		}
-
-		private TreeNode SearchTreeNode(TreeViewItemViewModel item, TreeNode node)
-		{
-			return node.Tag == item ? node : node.Nodes.OfType<TreeNode>().Select(x => SearchTreeNode(item, x)).FirstOrDefault(x => x != null);
-		}
-
-		private ColumnHeader ListViewColumnHeaderViewModelToColumnHeader(ListViewColumnHeaderViewModel column)
-		{
-			return new ColumnHeader { Text = column.Text.Value, Tag = column };
-		}
-
-		private ListViewItem ListViewItemViewModelToListViewItem(ListViewItemViewModel item)
-		{
-			return new ListViewItem(item.Texts.ToArray()) { ImageIndex = item.ImageIndex.Value, Tag = item };
-		}
-
-		private void UpdateListViewItem(ListViewItem item, ListViewItemViewModel viewModel)
-		{
-			for (int i = 0; i < viewModel.Texts.Count; i++)
-			{
-				item.SubItems[i].Text = viewModel.Texts[i];
-			}
-		}
-
 		private InputEventModel.EventArgs MouseEventArgsToModel(MouseEventArgs e)
 		{
 			return new InputEventModel.EventArgs
@@ -117,27 +88,27 @@ namespace TrainEditor2.Views
 
 		private void ModifierKeysDownUp(KeyEventArgs e)
 		{
-			MotorCarViewModel car = app.Train.Value.SelectedCar.Value as MotorCarViewModel;
+			MotorViewModel.TrackViewModel track = (app.Train.Value.SelectedCar.Value as MotorCarViewModel)?.Motor.Value.SelectedTrack.Value;
 
 			if (glControlMotor.Focused)
 			{
-				if (car != null)
+				if (track != null)
 				{
-					car.Motor.Value.CurrentModifierKeys.Value = InputEventModel.ModifierKeys.None;
+					track.CurrentModifierKeys.Value = InputEventModel.ModifierKeys.None;
 
 					if (e.Alt)
 					{
-						car.Motor.Value.CurrentModifierKeys.Value |= InputEventModel.ModifierKeys.Alt;
+						track.CurrentModifierKeys.Value |= InputEventModel.ModifierKeys.Alt;
 					}
 
 					if (e.Control)
 					{
-						car.Motor.Value.CurrentModifierKeys.Value |= InputEventModel.ModifierKeys.Control;
+						track.CurrentModifierKeys.Value |= InputEventModel.ModifierKeys.Control;
 					}
 
 					if (e.Shift)
 					{
-						car.Motor.Value.CurrentModifierKeys.Value |= InputEventModel.ModifierKeys.Shift;
+						track.CurrentModifierKeys.Value |= InputEventModel.ModifierKeys.Shift;
 					}
 				}
 			}
@@ -356,25 +327,13 @@ namespace TrainEditor2.Views
 			toolStripMenuItemEdit.Text = $@"{Utilities.GetInterfaceString("motor_sound_settings", "menu", "edit", "name")}(&E)";
 			toolStripMenuItemUndo.Text = $@"{Utilities.GetInterfaceString("motor_sound_settings", "menu", "edit", "undo")}(&U)";
 			toolStripMenuItemRedo.Text = $@"{Utilities.GetInterfaceString("motor_sound_settings", "menu", "edit", "redo")}(&R)";
-			toolStripMenuItemTearingOff.Text = $@"{Utilities.GetInterfaceString("motor_sound_settings", "menu", "edit", "cut")}(&T)";
-			toolStripMenuItemCopy.Text = $@"{Utilities.GetInterfaceString("motor_sound_settings", "menu", "edit", "copy")}(&C)";
-			toolStripMenuItemPaste.Text = $@"{Utilities.GetInterfaceString("motor_sound_settings", "menu", "edit", "paste")}(&P)";
 			toolStripMenuItemCleanup.Text = Utilities.GetInterfaceString("motor_sound_settings", "menu", "edit", "cleanup");
 			toolStripMenuItemDelete.Text = $@"{Utilities.GetInterfaceString("motor_sound_settings", "menu", "edit", "delete")}(&D)";
 
 			toolStripButtonUndo.Text = $@"{Utilities.GetInterfaceString("motor_sound_settings", "menu", "edit", "undo")} (Ctrl+Z)";
 			toolStripButtonRedo.Text = $@"{Utilities.GetInterfaceString("motor_sound_settings", "menu", "edit", "redo")} (Ctrl+Y)";
-			toolStripButtonTearingOff.Text = $@"{Utilities.GetInterfaceString("motor_sound_settings", "menu", "edit", "cut")} (Ctrl+X)";
-			toolStripButtonCopy.Text = $@"{Utilities.GetInterfaceString("motor_sound_settings", "menu", "edit", "copy")} (Ctrl+C)";
-			toolStripButtonPaste.Text = $@"{Utilities.GetInterfaceString("motor_sound_settings", "menu", "edit", "paste")} (Ctrl+V)";
 			toolStripButtonCleanup.Text = Utilities.GetInterfaceString("motor_sound_settings", "menu", "edit", "cleanup");
 			toolStripButtonDelete.Text = $@"{Utilities.GetInterfaceString("motor_sound_settings", "menu", "edit", "delete")} (Del)";
-
-			toolStripMenuItemView.Text = $@"{Utilities.GetInterfaceString("motor_sound_settings", "menu", "view", "name")}(&V)";
-			toolStripMenuItemPower.Text = $@"{Utilities.GetInterfaceString("motor_sound_settings", "menu", "view", "power")}(&P)";
-			toolStripMenuItemBrake.Text = $@"{Utilities.GetInterfaceString("motor_sound_settings", "menu", "view", "brake")}(&B)";
-			toolStripMenuItemPowerTrack1.Text = toolStripMenuItemBrakeTrack1.Text = $@"{Utilities.GetInterfaceString("motor_sound_settings", "menu", "view", "track")}1(&1)";
-			toolStripMenuItemPowerTrack2.Text = toolStripMenuItemBrakeTrack2.Text = $@"{Utilities.GetInterfaceString("motor_sound_settings", "menu", "view", "track")}2(&2)";
 
 			toolStripMenuItemInput.Text = $@"{Utilities.GetInterfaceString("motor_sound_settings", "menu", "input", "name")}(&I)";
 			toolStripMenuItemPitch.Text = $@"{Utilities.GetInterfaceString("motor_sound_settings", "menu", "input", "pitch")}(&P)";
@@ -409,8 +368,6 @@ namespace TrainEditor2.Views
 
 			groupBoxSource.Text = Utilities.GetInterfaceString("motor_sound_settings", "play_setting", "source", "name");
 			labelRun.Text = $@"{Utilities.GetInterfaceString("motor_sound_settings", "play_setting", "source", "run")}:";
-			checkBoxTrack1.Text = $@"{Utilities.GetInterfaceString("motor_sound_settings", "play_setting", "source", "track")}1";
-			checkBoxTrack2.Text = $@"{Utilities.GetInterfaceString("motor_sound_settings", "play_setting", "source", "track")}2";
 
 			groupBoxArea.Text = Utilities.GetInterfaceString("motor_sound_settings", "play_setting", "area", "name");
 			checkBoxMotorLoop.Text = Utilities.GetInterfaceString("motor_sound_settings", "play_setting", "area", "loop");

@@ -2,11 +2,9 @@
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Windows.Forms;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
-using TrainEditor2.ViewModels.Others;
 using TrainEditor2.ViewModels.Panels;
 
 namespace TrainEditor2.Views
@@ -16,7 +14,6 @@ namespace TrainEditor2.Views
 		private IDisposable BindToPanel(PanelViewModel x)
 		{
 			CompositeDisposable panelDisposable = new CompositeDisposable();
-			CompositeDisposable listItemDisposable = new CompositeDisposable().AddTo(panelDisposable);
 			CompositeDisposable thisDisposable = new CompositeDisposable().AddTo(panelDisposable);
 			CompositeDisposable screenDisposable = new CompositeDisposable().AddTo(panelDisposable);
 			CompositeDisposable pilotLampDisposable = new CompositeDisposable().AddTo(panelDisposable);
@@ -27,39 +24,14 @@ namespace TrainEditor2.Views
 			CompositeDisposable timetableDisposable = new CompositeDisposable().AddTo(panelDisposable);
 			CompositeDisposable touchDisposable = new CompositeDisposable().AddTo(panelDisposable);
 
-			listViewPanel.Items.Clear();
-
-			x.TreeItem
-				.BindTo(
-					this,
-					y => y.TreeViewPanelTopNode,
-					BindingMode.OneWay,
-					TreeViewItemViewModelToTreeNode
-				)
-				.AddTo(panelDisposable);
-
-			x.SelectedTreeItem
-				.BindTo(
-					treeViewPanel,
-					y => y.SelectedNode,
-					BindingMode.TwoWay,
-					y => treeViewPanel.Nodes.OfType<TreeNode>().Select(z => SearchTreeNode(y, z)).FirstOrDefault(z => z != null),
-					y => (TreeViewItemViewModel)y.Tag,
-					Observable.FromEvent<TreeViewEventHandler, TreeViewEventArgs>(
-							h => (s, e) => h(e),
-							h => treeViewPanel.AfterSelect += h,
-							h => treeViewPanel.AfterSelect -= h
-						)
-						.ToUnit()
-				)
-				.AddTo(panelDisposable);
+			Binders.BindToTreeView(treeViewPanel, x.TreeItems, x.SelectedTreeItem).AddTo(panelDisposable);
 
 			x.SelectedTreeItem
 				.BindTo(
 					tabControlPanel,
 					y => y.SelectedTab,
 					BindingMode.OneWay,
-					y => y == x.TreeItem.Value.Children[0] ? tabPageThis : tabControlPanel.SelectedTab
+					y => y == x.TreeItems[0].Children[0] ? tabPageThis : tabControlPanel.SelectedTab
 				)
 				.AddTo(panelDisposable);
 
@@ -68,7 +40,7 @@ namespace TrainEditor2.Views
 					tabPageThis,
 					y => y.Enabled,
 					BindingMode.OneWay,
-					y => y == x.TreeItem.Value.Children[0]
+					y => y == x.TreeItems[0].Children[0]
 				)
 				.AddTo(panelDisposable);
 
@@ -77,89 +49,13 @@ namespace TrainEditor2.Views
 					listViewPanel,
 					y => y.Enabled,
 					BindingMode.OneWay,
-					y => y == x.TreeItem.Value.Children[1]
-						 || x.TreeItem.Value.Children[1].Children.Any(z => z.Children[0].Children.Contains(y) || y == z.Children[1])
-						 || x.TreeItem.Value.Children[2].Children.Contains(y)
+					y => y == x.TreeItems[0].Children[1]
+						 || x.TreeItems[0].Children[1].Children.Any(z => z.Children[0].Children.Contains(y) || y == z.Children[1])
+						 || x.TreeItems[0].Children[2].Children.Contains(y)
 				)
 				.AddTo(panelDisposable);
 
-			x.ListColumns
-				.ObserveAddChanged()
-				.Subscribe(y =>
-				{
-					listViewPanel.Columns.Add(ListViewColumnHeaderViewModelToColumnHeader(y));
-					listViewPanel.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-				})
-				.AddTo(panelDisposable);
-
-			x.ListColumns
-				.ObserveRemoveChanged()
-				.Subscribe(y =>
-				{
-					foreach (ColumnHeader column in listViewPanel.Columns.OfType<ColumnHeader>().Where(z => z.Tag == y).ToArray())
-					{
-						listViewPanel.Columns.Remove(column);
-					}
-
-					listViewPanel.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-				})
-				.AddTo(panelDisposable);
-
-			x.ListItems
-				.ObserveAddChanged()
-				.Subscribe(y =>
-				{
-					listViewPanel.Items.Add(ListViewItemViewModelToListViewItem(y));
-					listViewPanel.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-				})
-				.AddTo(panelDisposable);
-
-			x.ListItems
-				.ObserveRemoveChanged()
-				.Subscribe(y =>
-				{
-					foreach (ListViewItem item in listViewPanel.Items.OfType<ListViewItem>().Where(z => z.Tag == y).ToArray())
-					{
-						listViewPanel.Items.Remove(item);
-					}
-
-					listViewPanel.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-				})
-				.AddTo(panelDisposable);
-
-			x.SelectedListItem
-				.BindTo(
-					this,
-					y => y.ListViewPanelSelectedItem,
-					BindingMode.TwoWay,
-					y => listViewPanel.Items.OfType<ListViewItem>().FirstOrDefault(z => z.Tag == y),
-					y => (ListViewItemViewModel)y?.Tag,
-					Observable.FromEvent<EventHandler, EventArgs>(
-							h => (s, e) => h(e),
-							h => listViewPanel.SelectedIndexChanged += h,
-							h => listViewPanel.SelectedIndexChanged -= h
-						)
-						.ToUnit()
-				)
-				.AddTo(panelDisposable);
-
-			x.SelectedListItem
-				.Where(y => y != null)
-				.Subscribe(y =>
-				{
-					listItemDisposable.Dispose();
-					listItemDisposable = new CompositeDisposable().AddTo(panelDisposable);
-
-					y.Texts
-						.ObserveReplaceChanged()
-						.Subscribe(_ =>
-						{
-							UpdateListViewItem(ListViewPanelSelectedItem, x.SelectedListItem.Value);
-							listViewPanel.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-						})
-						.AddTo(listItemDisposable);
-				})
-				.AddTo(panelDisposable);
+			Binders.BindToListView(listViewPanel, x.ListColumns, x.ListItems, x.SelectedListItem).AddTo(panelDisposable);
 
 			x.This
 				.Subscribe(y =>

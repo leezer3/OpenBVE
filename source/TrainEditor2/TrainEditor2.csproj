@@ -112,6 +112,7 @@
     <Compile Include="IO\Trains\ExtensionsCfg\Writer.cs" />
     <Compile Include="IO\Trains\TrainDat\Parser.cs" />
     <Compile Include="IO\Trains\TrainDat\Writer.cs" />
+    <Compile Include="IO\Trains\Xml\Writer.cs" />
     <Compile Include="Models\App.cs" />
     <Compile Include="Models\Dialogs\BaseDialog.cs" />
     <Compile Include="Models\Dialogs\MessageBox.cs" />
@@ -120,6 +121,7 @@
     <Compile Include="Models\Others\InputEventModel.cs" />
     <Compile Include="Models\Others\ListViewColumnHeaderModel.cs" />
     <Compile Include="Models\Others\ListViewItemModel.cs" />
+    <Compile Include="Models\Others\ListViewSubItemModel.cs" />
     <Compile Include="Models\Others\ToolTipModel.cs" />
     <Compile Include="Models\Others\TreeViewItemModel.cs" />
     <Compile Include="Models\Panels\DigitalGaugeElement.cs" />
@@ -145,8 +147,8 @@
     <Compile Include="Models\Trains\Device.cs" />
     <Compile Include="Models\Trains\Handle.cs" />
     <Compile Include="Models\Trains\Motor.cs" />
-    <Compile Include="Models\Trains\Motor.Functions.cs" />
-    <Compile Include="Models\Trains\Motor.Simulation.cs" />
+    <Compile Include="Models\Trains\Motor.Track.cs" />
+    <Compile Include="Models\Trains\Motor.Track.Functions.cs" />
     <Compile Include="Models\Trains\Move.cs" />
     <Compile Include="Models\Trains\Performance.cs" />
     <Compile Include="Models\Trains\Pressure.cs" />
@@ -170,6 +172,7 @@
     <Compile Include="ViewModels\Dialogs\SaveFileDialogViewModel.cs" />
     <Compile Include="ViewModels\Others\ListViewColumnHeaderViewModel.cs" />
     <Compile Include="ViewModels\Others\ListViewItemViewModel.cs" />
+    <Compile Include="ViewModels\Others\ListViewSubItemViewModel.cs" />
     <Compile Include="ViewModels\Others\ToolTipViewModel.cs" />
     <Compile Include="ViewModels\Others\TreeViewItemViewModel.cs" />
     <Compile Include="ViewModels\Panels\DigitalGaugeElementViewModel.cs" />

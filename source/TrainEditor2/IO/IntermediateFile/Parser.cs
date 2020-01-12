@@ -230,15 +230,25 @@ namespace TrainEditor2.IO.IntermediateFile
 
 		private static Motor ParseMotorNode(XElement parent)
 		{
-			return new Motor
-			{
-				Tracks = new ObservableCollection<Motor.Track>(parent.Elements("Track").Select(ParseTrackNode))
-			};
+			Motor motor = new Motor();
+			motor.Tracks = new ObservableCollection<Motor.Track>(parent.Elements("Track").Select((x, y) => ParseTrackNode(motor, x, y)));
+			return motor;
 		}
 
-		private static Motor.Track ParseTrackNode(XElement parent)
+		private static Motor.Track ParseTrackNode(Motor baseMotor, XElement parent, int index)
 		{
-			Motor.Track track = new Motor.Track();
+			Motor.Track track = new Motor.Track(baseMotor);
+
+			XElement type = parent.Element("Type");
+
+			if (type != null)
+			{
+				track.Type = (Motor.TrackType)Enum.Parse(typeof(Motor.TrackType), (string)type);
+			}
+			else
+			{
+				track.Type = index % 4 < 2 ? Motor.TrackType.Power : Motor.TrackType.Brake;
+			}
 
 			ParseVertexLineNode(parent.Element("Pitch"), out track.PitchVertices, out track.PitchLines);
 			ParseVertexLineNode(parent.Element("Volume"), out track.VolumeVertices, out track.VolumeLines);

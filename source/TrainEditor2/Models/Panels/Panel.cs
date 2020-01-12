@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using Prism.Mvvm;
@@ -16,7 +15,6 @@ namespace TrainEditor2.Models.Panels
 
 		private This _this;
 
-		private TreeViewItemModel treeItem;
 		private TreeViewItemModel selectedTreeItem;
 
 		private ListViewItemModel selectedListItem;
@@ -30,18 +28,6 @@ namespace TrainEditor2.Models.Panels
 			set
 			{
 				SetProperty(ref _this, value);
-			}
-		}
-
-		internal TreeViewItemModel TreeItem
-		{
-			get
-			{
-				return treeItem;
-			}
-			set
-			{
-				SetProperty(ref treeItem, value);
 			}
 		}
 
@@ -72,6 +58,8 @@ namespace TrainEditor2.Models.Panels
 		internal ObservableCollection<Screen> Screens;
 		internal ObservableCollection<PanelElement> PanelElements;
 
+		internal ObservableCollection<TreeViewItemModel> TreeItems;
+
 		internal ObservableCollection<ListViewColumnHeaderModel> ListColumns;
 		internal ObservableCollection<ListViewItemModel> ListItems;
 
@@ -83,11 +71,12 @@ namespace TrainEditor2.Models.Panels
 			Screens = new ObservableCollection<Screen>();
 			PanelElements = new ObservableCollection<PanelElement>();
 
+			TreeItems = new ObservableCollection<TreeViewItemModel>();
+
 			ListColumns = new ObservableCollection<ListViewColumnHeaderModel>();
 			ListItems = new ObservableCollection<ListViewItemModel>();
 
 			CreateTreeItem();
-			SelectedTreeItem = TreeItem;
 		}
 
 		public object Clone()
@@ -101,18 +90,18 @@ namespace TrainEditor2.Models.Panels
 			panel.ListItems = new ObservableCollection<ListViewItemModel>();
 
 			panel.CreateTreeItem();
-			panel.SelectedTreeItem = panel.TreeItem;
 			return panel;
 		}
 
 		internal void CreateTreeItem()
 		{
-			treeItem = new TreeViewItemModel(null) { Title = "Panel" };
-			treeItem.Children.Add(new TreeViewItemModel(TreeItem) { Title = "This" });
-			treeItem.Children.Add(new TreeViewItemModel(TreeItem) { Title = "Screens" });
-			treeItem.Children.Add(CreatePanelElementsTreeItem(TreeItem));
+			TreeItems.Clear();
+			TreeViewItemModel treeItem = new TreeViewItemModel(null) { Title = "Panel" };
+			treeItem.Children.Add(new TreeViewItemModel(treeItem) { Title = "This" });
+			treeItem.Children.Add(new TreeViewItemModel(treeItem) { Title = "Screens" });
+			treeItem.Children.Add(CreatePanelElementsTreeItem(treeItem));
 			treeItem.Children[1].Children = new ObservableCollection<TreeViewItemModel>(Screens.Select(x => CreateScreenTreeItem(treeItem.Children[1], x)));
-			OnPropertyChanged(new PropertyChangedEventArgs(nameof(TreeItem)));
+			TreeItems.Add(treeItem);
 		}
 
 		private TreeViewItemModel CreateScreenTreeItem(TreeViewItemModel parent, Screen screen)
@@ -142,15 +131,15 @@ namespace TrainEditor2.Models.Panels
 
 		internal void CreateListColumns()
 		{
-			ListColumns.RemoveAll(_ => true);
+			ListColumns.Clear();
 
-			if (SelectedTreeItem == TreeItem.Children[1])
+			if (SelectedTreeItem == TreeItems[0].Children[1])
 			{
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Number" });
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Layer" });
 			}
 
-			if (TreeItem.Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[0]) || SelectedTreeItem == TreeItem.Children[2].Children[0])
+			if (TreeItems[0].Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[0]) || SelectedTreeItem == TreeItems[0].Children[2].Children[0])
 			{
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Subject" });
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Location" });
@@ -160,7 +149,7 @@ namespace TrainEditor2.Models.Panels
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Layer" });
 			}
 
-			if (TreeItem.Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[1]) || SelectedTreeItem == TreeItem.Children[2].Children[1])
+			if (TreeItems[0].Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[1]) || SelectedTreeItem == TreeItems[0].Children[2].Children[1])
 			{
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Subject" });
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Location" });
@@ -181,7 +170,7 @@ namespace TrainEditor2.Models.Panels
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Layer" });
 			}
 
-			if (TreeItem.Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[2]) || SelectedTreeItem == TreeItem.Children[2].Children[2])
+			if (TreeItems[0].Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[2]) || SelectedTreeItem == TreeItems[0].Children[2].Children[2])
 			{
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Subject" });
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Location" });
@@ -192,7 +181,7 @@ namespace TrainEditor2.Models.Panels
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Layer" });
 			}
 
-			if (TreeItem.Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[3]) || SelectedTreeItem == TreeItem.Children[2].Children[3])
+			if (TreeItems[0].Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[3]) || SelectedTreeItem == TreeItems[0].Children[2].Children[3])
 			{
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Subject" });
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Location" });
@@ -206,7 +195,7 @@ namespace TrainEditor2.Models.Panels
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Layer" });
 			}
 
-			if (TreeItem.Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[4]) || SelectedTreeItem == TreeItem.Children[2].Children[4])
+			if (TreeItems[0].Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[4]) || SelectedTreeItem == TreeItems[0].Children[2].Children[4])
 			{
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Subject" });
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Location" });
@@ -220,7 +209,7 @@ namespace TrainEditor2.Models.Panels
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Layer" });
 			}
 
-			if (TreeItem.Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[5]) || SelectedTreeItem == TreeItem.Children[2].Children[5])
+			if (TreeItems[0].Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[5]) || SelectedTreeItem == TreeItems[0].Children[2].Children[5])
 			{
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Location" });
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Width" });
@@ -229,7 +218,7 @@ namespace TrainEditor2.Models.Panels
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Layer" });
 			}
 
-			if (TreeItem.Children[1].Children.Any(y => SelectedTreeItem == y.Children[1]))
+			if (TreeItems[0].Children[1].Children.Any(y => SelectedTreeItem == y.Children[1]))
 			{
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Location" });
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Size" });
@@ -242,19 +231,25 @@ namespace TrainEditor2.Models.Panels
 
 		internal void CreateListItems()
 		{
-			ListItems.RemoveAll(_ => true);
+			ListItems.Clear();
 
-			if (SelectedTreeItem == TreeItem.Children[1])
+			if (SelectedTreeItem == TreeItems[0].Children[1])
 			{
 				foreach (Screen screen in Screens)
 				{
-					ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[2]), Tag = screen };
+					ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = screen };
+
+					for (int i = 0; i < 2; i++)
+					{
+						newItem.SubItems.Add(new ListViewSubItemModel());
+					}
+
 					UpdateListItem(newItem);
 					ListItems.Add(newItem);
 				}
 			}
 
-			if (TreeItem.Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[0]) || SelectedTreeItem == TreeItem.Children[2].Children[0])
+			if (TreeItems[0].Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[0]) || SelectedTreeItem == TreeItems[0].Children[2].Children[0])
 			{
 				Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
 
@@ -262,13 +257,19 @@ namespace TrainEditor2.Models.Panels
 
 				foreach (PilotLampElement pilotLamp in pilotLamps)
 				{
-					ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[6]), Tag = pilotLamp };
+					ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = pilotLamp };
+
+					for (int i = 0; i < 6; i++)
+					{
+						newItem.SubItems.Add(new ListViewSubItemModel());
+					}
+
 					UpdateListItem(newItem);
 					ListItems.Add(newItem);
 				}
 			}
 
-			if (TreeItem.Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[1]) || SelectedTreeItem == TreeItem.Children[2].Children[1])
+			if (TreeItems[0].Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[1]) || SelectedTreeItem == TreeItems[0].Children[2].Children[1])
 			{
 				Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
 
@@ -276,13 +277,19 @@ namespace TrainEditor2.Models.Panels
 
 				foreach (NeedleElement needle in needles)
 				{
-					ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[17]), Tag = needle };
+					ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = needle };
+
+					for (int i = 0; i < 17; i++)
+					{
+						newItem.SubItems.Add(new ListViewSubItemModel());
+					}
+
 					UpdateListItem(newItem);
 					ListItems.Add(newItem);
 				}
 			}
 
-			if (TreeItem.Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[2]) || SelectedTreeItem == TreeItem.Children[2].Children[2])
+			if (TreeItems[0].Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[2]) || SelectedTreeItem == TreeItems[0].Children[2].Children[2])
 			{
 				Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
 
@@ -290,13 +297,19 @@ namespace TrainEditor2.Models.Panels
 
 				foreach (DigitalNumberElement digitalNumber in digitalNumbers)
 				{
-					ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[7]), Tag = digitalNumber };
+					ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = digitalNumber };
+
+					for (int i = 0; i < 7; i++)
+					{
+						newItem.SubItems.Add(new ListViewSubItemModel());
+					}
+
 					UpdateListItem(newItem);
 					ListItems.Add(newItem);
 				}
 			}
 
-			if (TreeItem.Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[3]) || SelectedTreeItem == TreeItem.Children[2].Children[3])
+			if (TreeItems[0].Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[3]) || SelectedTreeItem == TreeItems[0].Children[2].Children[3])
 			{
 				Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
 
@@ -304,13 +317,19 @@ namespace TrainEditor2.Models.Panels
 
 				foreach (DigitalGaugeElement digitalGauge in digitalGauges)
 				{
-					ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[10]), Tag = digitalGauge };
+					ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = digitalGauge };
+
+					for (int i = 0; i < 10; i++)
+					{
+						newItem.SubItems.Add(new ListViewSubItemModel());
+					}
+
 					UpdateListItem(newItem);
 					ListItems.Add(newItem);
 				}
 			}
 
-			if (TreeItem.Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[4]) || SelectedTreeItem == TreeItem.Children[2].Children[4])
+			if (TreeItems[0].Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[4]) || SelectedTreeItem == TreeItems[0].Children[2].Children[4])
 			{
 				Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
 
@@ -318,13 +337,19 @@ namespace TrainEditor2.Models.Panels
 
 				foreach (LinearGaugeElement linearGauge in linearGauges)
 				{
-					ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[10]), Tag = linearGauge };
+					ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = linearGauge };
+
+					for (int i = 0; i < 10; i++)
+					{
+						newItem.SubItems.Add(new ListViewSubItemModel());
+					}
+
 					UpdateListItem(newItem);
 					ListItems.Add(newItem);
 				}
 			}
 
-			if (TreeItem.Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[5]) || SelectedTreeItem == TreeItem.Children[2].Children[5])
+			if (TreeItems[0].Children[1].Children.Any(y => SelectedTreeItem == y.Children[0].Children[5]) || SelectedTreeItem == TreeItems[0].Children[2].Children[5])
 			{
 				Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
 
@@ -332,19 +357,31 @@ namespace TrainEditor2.Models.Panels
 
 				foreach (TimetableElement timetable in timetables)
 				{
-					ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[5]), Tag = timetable };
+					ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = timetable };
+
+					for (int i = 0; i < 5; i++)
+					{
+						newItem.SubItems.Add(new ListViewSubItemModel());
+					}
+
 					UpdateListItem(newItem);
 					ListItems.Add(newItem);
 				}
 			}
 
-			if (TreeItem.Children[1].Children.Any(y => SelectedTreeItem == y.Children[1]))
+			if (TreeItems[0].Children[1].Children.Any(y => SelectedTreeItem == y.Children[1]))
 			{
 				Screen screen = (Screen)SelectedTreeItem.Parent.Tag;
 
 				foreach (TouchElement touch in screen.TouchElements)
 				{
-					ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[6]), Tag = touch };
+					ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = touch };
+
+					for (int i = 0; i < 6; i++)
+					{
+						newItem.SubItems.Add(new ListViewSubItemModel());
+					}
+
 					UpdateListItem(newItem);
 					ListItems.Add(newItem);
 				}
@@ -364,97 +401,97 @@ namespace TrainEditor2.Models.Panels
 
 			if (screen != null)
 			{
-				item.Texts[0] = screen.Number.ToString(culture);
-				item.Texts[1] = screen.Layer.ToString(culture);
+				item.SubItems[0].Text = screen.Number.ToString(culture);
+				item.SubItems[1].Text = screen.Layer.ToString(culture);
 			}
 
 			if (pilotLamp != null)
 			{
-				item.Texts[0] = pilotLamp.Subject.ToString();
-				item.Texts[1] = $"{pilotLamp.LocationX.ToString(culture)}, {pilotLamp.LocationY.ToString(culture)}";
-				item.Texts[2] = pilotLamp.DaytimeImage;
-				item.Texts[3] = pilotLamp.NighttimeImage;
-				item.Texts[4] = pilotLamp.TransparentColor.ToString();
-				item.Texts[5] = pilotLamp.Layer.ToString(culture);
+				item.SubItems[0].Text = pilotLamp.Subject.ToString();
+				item.SubItems[1].Text = $"{pilotLamp.LocationX.ToString(culture)}, {pilotLamp.LocationY.ToString(culture)}";
+				item.SubItems[2].Text = pilotLamp.DaytimeImage;
+				item.SubItems[3].Text = pilotLamp.NighttimeImage;
+				item.SubItems[4].Text = pilotLamp.TransparentColor.ToString();
+				item.SubItems[5].Text = pilotLamp.Layer.ToString(culture);
 			}
 
 			if (needle != null)
 			{
-				item.Texts[0] = needle.Subject.ToString();
-				item.Texts[1] = $"{needle.LocationX.ToString(culture)}, {needle.LocationY.ToString(culture)}";
-				item.Texts[2] = needle.DefinedRadius ? needle.Radius.ToString(culture) : string.Empty;
-				item.Texts[3] = needle.DaytimeImage;
-				item.Texts[4] = needle.NighttimeImage;
-				item.Texts[5] = needle.Color.ToString();
-				item.Texts[6] = needle.TransparentColor.ToString();
-				item.Texts[7] = needle.DefinedOrigin ? $"{needle.OriginX.ToString(culture)}, {needle.OriginY.ToString(culture)}" : string.Empty;
-				item.Texts[8] = needle.InitialAngle.ToDegrees().ToString(culture);
-				item.Texts[9] = needle.LastAngle.ToDegrees().ToString(culture);
-				item.Texts[10] = needle.Minimum.ToString(culture);
-				item.Texts[11] = needle.Maximum.ToString(culture);
-				item.Texts[12] = needle.DefinedNaturalFreq ? needle.NaturalFreq.ToString(culture) : string.Empty;
-				item.Texts[13] = needle.DefinedDampingRatio ? needle.DampingRatio.ToString(culture) : string.Empty;
-				item.Texts[14] = needle.Backstop.ToString();
-				item.Texts[15] = needle.Smoothed.ToString();
-				item.Texts[16] = needle.Layer.ToString(culture);
+				item.SubItems[0].Text = needle.Subject.ToString();
+				item.SubItems[1].Text = $"{needle.LocationX.ToString(culture)}, {needle.LocationY.ToString(culture)}";
+				item.SubItems[2].Text = needle.DefinedRadius ? needle.Radius.ToString(culture) : string.Empty;
+				item.SubItems[3].Text = needle.DaytimeImage;
+				item.SubItems[4].Text = needle.NighttimeImage;
+				item.SubItems[5].Text = needle.Color.ToString();
+				item.SubItems[6].Text = needle.TransparentColor.ToString();
+				item.SubItems[7].Text = needle.DefinedOrigin ? $"{needle.OriginX.ToString(culture)}, {needle.OriginY.ToString(culture)}" : string.Empty;
+				item.SubItems[8].Text = needle.InitialAngle.ToDegrees().ToString(culture);
+				item.SubItems[9].Text = needle.LastAngle.ToDegrees().ToString(culture);
+				item.SubItems[10].Text = needle.Minimum.ToString(culture);
+				item.SubItems[11].Text = needle.Maximum.ToString(culture);
+				item.SubItems[12].Text = needle.DefinedNaturalFreq ? needle.NaturalFreq.ToString(culture) : string.Empty;
+				item.SubItems[13].Text = needle.DefinedDampingRatio ? needle.DampingRatio.ToString(culture) : string.Empty;
+				item.SubItems[14].Text = needle.Backstop.ToString();
+				item.SubItems[15].Text = needle.Smoothed.ToString();
+				item.SubItems[16].Text = needle.Layer.ToString(culture);
 			}
 
 			if (digitalNumber != null)
 			{
-				item.Texts[0] = digitalNumber.Subject.ToString();
-				item.Texts[1] = $"{digitalNumber.LocationX.ToString(culture)}, {digitalNumber.LocationY.ToString(culture)}";
-				item.Texts[2] = digitalNumber.DaytimeImage;
-				item.Texts[3] = digitalNumber.NighttimeImage;
-				item.Texts[4] = digitalNumber.TransparentColor.ToString();
-				item.Texts[5] = digitalNumber.Interval.ToString(culture);
-				item.Texts[6] = digitalNumber.Layer.ToString(culture);
+				item.SubItems[0].Text = digitalNumber.Subject.ToString();
+				item.SubItems[1].Text = $"{digitalNumber.LocationX.ToString(culture)}, {digitalNumber.LocationY.ToString(culture)}";
+				item.SubItems[2].Text = digitalNumber.DaytimeImage;
+				item.SubItems[3].Text = digitalNumber.NighttimeImage;
+				item.SubItems[4].Text = digitalNumber.TransparentColor.ToString();
+				item.SubItems[5].Text = digitalNumber.Interval.ToString(culture);
+				item.SubItems[6].Text = digitalNumber.Layer.ToString(culture);
 			}
 
 			if (digitalGauge != null)
 			{
-				item.Texts[0] = digitalGauge.Subject.ToString();
-				item.Texts[1] = $"{digitalGauge.LocationX.ToString(culture)}, {digitalGauge.LocationY.ToString(culture)}";
-				item.Texts[2] = digitalGauge.Radius.ToString(culture);
-				item.Texts[3] = digitalGauge.Color.ToString();
-				item.Texts[4] = digitalGauge.InitialAngle.ToDegrees().ToString(culture);
-				item.Texts[5] = digitalGauge.LastAngle.ToDegrees().ToString(culture);
-				item.Texts[6] = digitalGauge.Minimum.ToString(culture);
-				item.Texts[7] = digitalGauge.Maximum.ToString(culture);
-				item.Texts[8] = digitalGauge.Step.ToString(culture);
-				item.Texts[9] = digitalGauge.Layer.ToString(culture);
+				item.SubItems[0].Text = digitalGauge.Subject.ToString();
+				item.SubItems[1].Text = $"{digitalGauge.LocationX.ToString(culture)}, {digitalGauge.LocationY.ToString(culture)}";
+				item.SubItems[2].Text = digitalGauge.Radius.ToString(culture);
+				item.SubItems[3].Text = digitalGauge.Color.ToString();
+				item.SubItems[4].Text = digitalGauge.InitialAngle.ToDegrees().ToString(culture);
+				item.SubItems[5].Text = digitalGauge.LastAngle.ToDegrees().ToString(culture);
+				item.SubItems[6].Text = digitalGauge.Minimum.ToString(culture);
+				item.SubItems[7].Text = digitalGauge.Maximum.ToString(culture);
+				item.SubItems[8].Text = digitalGauge.Step.ToString(culture);
+				item.SubItems[9].Text = digitalGauge.Layer.ToString(culture);
 			}
 
 			if (linearGauge != null)
 			{
-				item.Texts[0] = linearGauge.Subject.ToString();
-				item.Texts[1] = $"{linearGauge.LocationX.ToString(culture)}, {linearGauge.LocationY.ToString(culture)}";
-				item.Texts[2] = linearGauge.DaytimeImage;
-				item.Texts[3] = linearGauge.NighttimeImage;
-				item.Texts[4] = linearGauge.TransparentColor.ToString();
-				item.Texts[5] = linearGauge.Minimum.ToString(culture);
-				item.Texts[6] = linearGauge.Maximum.ToString(culture);
-				item.Texts[7] = $"{linearGauge.DirectionX.ToString(culture)}, {linearGauge.DirectionY.ToString(culture)}";
-				item.Texts[8] = linearGauge.Width.ToString(culture);
-				item.Texts[9] = linearGauge.Layer.ToString(culture);
+				item.SubItems[0].Text = linearGauge.Subject.ToString();
+				item.SubItems[1].Text = $"{linearGauge.LocationX.ToString(culture)}, {linearGauge.LocationY.ToString(culture)}";
+				item.SubItems[2].Text = linearGauge.DaytimeImage;
+				item.SubItems[3].Text = linearGauge.NighttimeImage;
+				item.SubItems[4].Text = linearGauge.TransparentColor.ToString();
+				item.SubItems[5].Text = linearGauge.Minimum.ToString(culture);
+				item.SubItems[6].Text = linearGauge.Maximum.ToString(culture);
+				item.SubItems[7].Text = $"{linearGauge.DirectionX.ToString(culture)}, {linearGauge.DirectionY.ToString(culture)}";
+				item.SubItems[8].Text = linearGauge.Width.ToString(culture);
+				item.SubItems[9].Text = linearGauge.Layer.ToString(culture);
 			}
 
 			if (timetable != null)
 			{
-				item.Texts[0] = $"{timetable.LocationX.ToString(culture)}, {timetable.LocationY.ToString(culture)}";
-				item.Texts[1] = timetable.Width.ToString(culture);
-				item.Texts[2] = timetable.Height.ToString(culture);
-				item.Texts[3] = timetable.TransparentColor.ToString();
-				item.Texts[4] = timetable.Layer.ToString(culture);
+				item.SubItems[0].Text = $"{timetable.LocationX.ToString(culture)}, {timetable.LocationY.ToString(culture)}";
+				item.SubItems[1].Text = timetable.Width.ToString(culture);
+				item.SubItems[2].Text = timetable.Height.ToString(culture);
+				item.SubItems[3].Text = timetable.TransparentColor.ToString();
+				item.SubItems[4].Text = timetable.Layer.ToString(culture);
 			}
 
 			if (touch != null)
 			{
-				item.Texts[0] = $"{touch.LocationX.ToString(culture)}, {touch.LocationY.ToString(culture)}";
-				item.Texts[1] = $"{touch.SizeX.ToString(culture)}, {touch.SizeY.ToString(culture)}";
-				item.Texts[2] = touch.JumpScreen.ToString(culture);
-				item.Texts[3] = touch.SoundIndex.ToString(culture);
-				item.Texts[4] = touch.CommandInfo.Name;
-				item.Texts[5] = touch.CommandOption.ToString(culture);
+				item.SubItems[0].Text = $"{touch.LocationX.ToString(culture)}, {touch.LocationY.ToString(culture)}";
+				item.SubItems[1].Text = $"{touch.SizeX.ToString(culture)}, {touch.SizeY.ToString(culture)}";
+				item.SubItems[2].Text = touch.JumpScreen.ToString(culture);
+				item.SubItems[3].Text = touch.SoundIndex.ToString(culture);
+				item.SubItems[4].Text = touch.CommandInfo.Name;
+				item.SubItems[5].Text = touch.CommandOption.ToString(culture);
 			}
 		}
 
@@ -469,7 +506,17 @@ namespace TrainEditor2.Models.Panels
 
 			Screens.Add(screen);
 
-			TreeItem.Children[1].Children.Add(CreateScreenTreeItem(TreeItem.Children[1], Screens.Last()));
+			TreeItems[0].Children[1].Children.Add(CreateScreenTreeItem(TreeItems[0].Children[1], Screens.Last()));
+
+			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = screen };
+
+			for (int i = 0; i < 2; i++)
+			{
+				newItem.SubItems.Add(new ListViewSubItemModel());
+			}
+
+			UpdateListItem(newItem);
+			ListItems.Add(newItem);
 
 			SelectedListItem = ListItems.Last();
 		}
@@ -488,7 +535,13 @@ namespace TrainEditor2.Models.Panels
 				PanelElements.Add(pilotLamp);
 			}
 
-			ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[6]), Tag = pilotLamp };
+			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = pilotLamp };
+
+			for (int i = 0; i < 6; i++)
+			{
+				newItem.SubItems.Add(new ListViewSubItemModel());
+			}
+
 			UpdateListItem(newItem);
 			ListItems.Add(newItem);
 
@@ -509,7 +562,13 @@ namespace TrainEditor2.Models.Panels
 				PanelElements.Add(needle);
 			}
 
-			ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[17]), Tag = needle };
+			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = needle };
+
+			for (int i = 0; i < 17; i++)
+			{
+				newItem.SubItems.Add(new ListViewSubItemModel());
+			}
+
 			UpdateListItem(newItem);
 			ListItems.Add(newItem);
 
@@ -530,7 +589,13 @@ namespace TrainEditor2.Models.Panels
 				PanelElements.Add(digitalNumber);
 			}
 
-			ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[7]), Tag = digitalNumber };
+			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = digitalNumber };
+
+			for (int i = 0; i < 7; i++)
+			{
+				newItem.SubItems.Add(new ListViewSubItemModel());
+			}
+
 			UpdateListItem(newItem);
 			ListItems.Add(newItem);
 
@@ -551,7 +616,13 @@ namespace TrainEditor2.Models.Panels
 				PanelElements.Add(digitalGauge);
 			}
 
-			ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[10]), Tag = digitalGauge };
+			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = digitalGauge };
+
+			for (int i = 0; i < 10; i++)
+			{
+				newItem.SubItems.Add(new ListViewSubItemModel());
+			}
+
 			UpdateListItem(newItem);
 			ListItems.Add(newItem);
 
@@ -572,7 +643,13 @@ namespace TrainEditor2.Models.Panels
 				PanelElements.Add(linearGauge);
 			}
 
-			ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[10]), Tag = linearGauge };
+			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = linearGauge };
+
+			for (int i = 0; i < 10; i++)
+			{
+				newItem.SubItems.Add(new ListViewSubItemModel());
+			}
+
 			UpdateListItem(newItem);
 			ListItems.Add(newItem);
 
@@ -593,7 +670,13 @@ namespace TrainEditor2.Models.Panels
 				PanelElements.Add(timetable);
 			}
 
-			ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[5]), Tag = timetable };
+			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = timetable };
+
+			for (int i = 0; i < 5; i++)
+			{
+				newItem.SubItems.Add(new ListViewSubItemModel());
+			}
+
 			UpdateListItem(newItem);
 			ListItems.Add(newItem);
 
@@ -607,7 +690,13 @@ namespace TrainEditor2.Models.Panels
 
 			screen.TouchElements.Add(touch);
 
-			ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[6]), Tag = touch };
+			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = touch };
+
+			for (int i = 0; i < 6; i++)
+			{
+				newItem.SubItems.Add(new ListViewSubItemModel());
+			}
+
 			UpdateListItem(newItem);
 			ListItems.Add(newItem);
 
@@ -625,7 +714,17 @@ namespace TrainEditor2.Models.Panels
 
 			Screens.Add(screen);
 
-			TreeItem.Children[1].Children.Add(CreateScreenTreeItem(TreeItem.Children[1], Screens.Last()));
+			TreeItems[0].Children[1].Children.Add(CreateScreenTreeItem(TreeItems[0].Children[1], Screens.Last()));
+
+			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = screen };
+
+			for (int i = 0; i < 2; i++)
+			{
+				newItem.SubItems.Add(new ListViewSubItemModel());
+			}
+
+			UpdateListItem(newItem);
+			ListItems.Add(newItem);
 
 			SelectedListItem = ListItems.Last();
 		}
@@ -644,7 +743,13 @@ namespace TrainEditor2.Models.Panels
 				PanelElements.Add(pilotLamp);
 			}
 
-			ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[6]), Tag = pilotLamp };
+			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = pilotLamp };
+
+			for (int i = 0; i < 6; i++)
+			{
+				newItem.SubItems.Add(new ListViewSubItemModel());
+			}
+
 			UpdateListItem(newItem);
 			ListItems.Add(newItem);
 
@@ -665,7 +770,13 @@ namespace TrainEditor2.Models.Panels
 				PanelElements.Add(needle);
 			}
 
-			ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[17]), Tag = needle };
+			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = needle };
+
+			for (int i = 0; i < 17; i++)
+			{
+				newItem.SubItems.Add(new ListViewSubItemModel());
+			}
+
 			UpdateListItem(newItem);
 			ListItems.Add(newItem);
 
@@ -686,7 +797,13 @@ namespace TrainEditor2.Models.Panels
 				PanelElements.Add(digitalNumber);
 			}
 
-			ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[7]), Tag = digitalNumber };
+			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = digitalNumber };
+
+			for (int i = 0; i < 7; i++)
+			{
+				newItem.SubItems.Add(new ListViewSubItemModel());
+			}
+
 			UpdateListItem(newItem);
 			ListItems.Add(newItem);
 
@@ -707,7 +824,13 @@ namespace TrainEditor2.Models.Panels
 				PanelElements.Add(digitalGauge);
 			}
 
-			ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[10]), Tag = digitalGauge };
+			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = digitalGauge };
+
+			for (int i = 0; i < 10; i++)
+			{
+				newItem.SubItems.Add(new ListViewSubItemModel());
+			}
+
 			UpdateListItem(newItem);
 			ListItems.Add(newItem);
 
@@ -728,7 +851,13 @@ namespace TrainEditor2.Models.Panels
 				PanelElements.Add(linearGauge);
 			}
 
-			ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[10]), Tag = linearGauge };
+			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = linearGauge };
+
+			for (int i = 0; i < 10; i++)
+			{
+				newItem.SubItems.Add(new ListViewSubItemModel());
+			}
+
 			UpdateListItem(newItem);
 			ListItems.Add(newItem);
 
@@ -749,7 +878,13 @@ namespace TrainEditor2.Models.Panels
 				PanelElements.Add(timetable);
 			}
 
-			ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[5]), Tag = timetable };
+			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = timetable };
+
+			for (int i = 0; i < 5; i++)
+			{
+				newItem.SubItems.Add(new ListViewSubItemModel());
+			}
+
 			UpdateListItem(newItem);
 			ListItems.Add(newItem);
 
@@ -763,7 +898,13 @@ namespace TrainEditor2.Models.Panels
 
 			screen.TouchElements.Add(touch);
 
-			ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[6]), Tag = touch };
+			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = touch };
+
+			for (int i = 0; i < 6; i++)
+			{
+				newItem.SubItems.Add(new ListViewSubItemModel());
+			}
+
 			UpdateListItem(newItem);
 			ListItems.Add(newItem);
 
@@ -776,7 +917,7 @@ namespace TrainEditor2.Models.Panels
 
 			Screens.Remove(screen);
 
-			TreeItem.Children[1].Children.RemoveAll(x => x.Tag == screen);
+			TreeItems[0].Children[1].Children.RemoveAll(x => x.Tag == screen);
 
 			SelectedListItem = null;
 		}

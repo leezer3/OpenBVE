@@ -6,6 +6,7 @@ namespace TrainEditor2.Models.Others
 	internal class TreeViewItemModel : BindableBase
 	{
 		private string title;
+		private bool _checked;
 		private object tag;
 
 		internal TreeViewItemModel Parent
@@ -22,6 +23,18 @@ namespace TrainEditor2.Models.Others
 			set
 			{
 				SetProperty(ref title, value);
+			}
+		}
+
+		internal bool Checked
+		{
+			get
+			{
+				return _checked;
+			}
+			set
+			{
+				SetProperty(ref _checked, value);
 			}
 		}
 

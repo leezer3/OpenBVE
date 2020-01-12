@@ -109,6 +109,139 @@ namespace OpenBve
 				}
 			}
 
+			internal void UpdateSpeed(double TimeElapsed, out double NewSpeed)
+			{
+				double PowerRollingCouplerAcceleration;
+				// rolling on an incline
+				{
+					double a = FrontAxle.Follower.WorldDirection.Y;
+					double b = RearAxle.Follower.WorldDirection.Y;
+					PowerRollingCouplerAcceleration = -0.5 * (a + b) * Program.CurrentRoute.Atmosphere.AccelerationDueToGravity;
+				}
+				// friction
+				double FrictionBrakeAcceleration;
+				{
+					double v = Math.Abs(CurrentSpeed);
+					double a = GetResistance(baseTrain, Index, ref FrontAxle, v);
+					double b = GetResistance(baseTrain, Index, ref RearAxle, v);
+					FrictionBrakeAcceleration = 0.5 * (a + b);
+				}
+				// power
+				double wheelSlipAccelerationMotorFront = GetCriticalWheelSlipAccelerationForElectricMotor(FrontAxle, CurrentSpeed);
+				double wheelSlipAccelerationMotorRear = GetCriticalWheelSlipAccelerationForElectricMotor(RearAxle, CurrentSpeed);
+
+				UpdateAcceleration(TimeElapsed);
+				UpdateBrakeDeceleration(TimeElapsed, ref FrictionBrakeAcceleration);
+
+				// motor
+				if (baseTrain.Handles.Reverser.Actual != 0)
+				{
+					double factor = Specs.MassEmpty / Specs.MassCurrent;
+					if (Specs.CurrentAccelerationOutput > 0.0)
+					{
+						PowerRollingCouplerAcceleration += (double)baseTrain.Handles.Reverser.Actual * Specs.CurrentAccelerationOutput * factor;
+					}
+					else
+					{
+						double a = -Specs.CurrentAccelerationOutput;
+						if (a >= wheelSlipAccelerationMotorFront)
+						{
+							FrontAxle.CurrentWheelSlip = true;
+						}
+						else if (!Derailed)
+						{
+							FrictionBrakeAcceleration += 0.5 * a * factor;
+						}
+						if (a >= wheelSlipAccelerationMotorRear)
+						{
+							RearAxle.CurrentWheelSlip = true;
+						}
+						else
+						{
+							FrictionBrakeAcceleration += 0.5 * a * factor;
+						}
+					}
+				}
+				else
+				{
+					Specs.CurrentAccelerationOutput = 0.0;
+				}
+				// perceived speed
+				{
+					double target;
+					if (WheelLock)
+					{
+						target = 0.0;
+					}
+					else if (WheelSpin == 0.0)
+					{
+						target = CurrentSpeed;
+					}
+					else
+					{
+						target = CurrentSpeed + WheelSpin / 2500.0;
+					}
+					double diff = target - Specs.CurrentPerceivedSpeed;
+					double rate = (diff < 0.0 ? 5.0 : 1.0) * Program.CurrentRoute.Atmosphere.AccelerationDueToGravity * TimeElapsed;
+					rate *= 1.0 - 0.7 / (diff * diff + 1.0);
+					double factor = rate * rate;
+					factor = 1.0 - factor / (factor + 1000.0);
+					rate *= factor;
+					if (diff >= -rate & diff <= rate)
+					{
+						Specs.CurrentPerceivedSpeed = target;
+					}
+					else
+					{
+						Specs.CurrentPerceivedSpeed += rate * Math.Sign(diff);
+					}
+				}
+				// calculate new speed
+				{
+					int d = Math.Sign(CurrentSpeed);
+					double a = PowerRollingCouplerAcceleration;
+					double b = FrictionBrakeAcceleration;
+					if (Math.Abs(a) < b)
+					{
+						if (Math.Sign(a) == d)
+						{
+							if (d == 0)
+							{
+								NewSpeed = 0.0;
+							}
+							else
+							{
+								double c = (b - Math.Abs(a)) * TimeElapsed;
+								if (Math.Abs(CurrentSpeed) > c)
+								{
+									NewSpeed = CurrentSpeed - d * c;
+								}
+								else
+								{
+									NewSpeed = 0.0;
+								}
+							}
+						}
+						else
+						{
+							double c = (Math.Abs(a) + b) * TimeElapsed;
+							if (Math.Abs(CurrentSpeed) > c)
+							{
+								NewSpeed = CurrentSpeed - d * c;
+							}
+							else
+							{
+								NewSpeed = 0.0;
+							}
+						}
+					}
+					else
+					{
+						NewSpeed = CurrentSpeed + (a - b * d) * TimeElapsed;
+					}
+				}
+			}
+
 			/// <summary>Updates the acceleration provided by the motor and jerk from other cars</summary>
 			/// <param name="TimeElapsed">The time elapsed this frame</param>
 			internal abstract void UpdateAcceleration(double TimeElapsed);

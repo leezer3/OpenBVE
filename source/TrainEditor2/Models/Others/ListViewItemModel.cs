@@ -8,7 +8,7 @@ namespace TrainEditor2.Models.Others
 		private object tag;
 		private int imageIndex;
 
-		internal ObservableCollection<string> Texts;
+		internal ObservableCollection<ListViewSubItemModel> SubItems;
 
 		internal object Tag
 		{
@@ -36,7 +36,7 @@ namespace TrainEditor2.Models.Others
 
 		internal ListViewItemModel()
 		{
-			Texts = new ObservableCollection<string>();
+			SubItems = new ObservableCollection<ListViewSubItemModel>();
 			ImageIndex = -1;
 		}
 	}

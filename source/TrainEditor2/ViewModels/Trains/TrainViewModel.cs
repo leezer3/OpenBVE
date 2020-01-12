@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reactive.Disposables;
+﻿using System.Linq;
 using System.Reactive.Linq;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
@@ -96,14 +94,14 @@ namespace TrainEditor2.ViewModels.Trains
 				.AddTo(disposable);
 
 			SelectedCar = app
-				.ObserveProperty(x => x.SelectedItem)
+				.ObserveProperty(x => x.SelectedTreeItem)
 				.Where(x => x != null)
 				.Select(x => Cars.FirstOrDefault(y => y.Model == x.Tag))
 				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 
 			SelectedCoupler = app
-				.ObserveProperty(x => x.SelectedItem)
+				.ObserveProperty(x => x.SelectedTreeItem)
 				.Where(x => x != null)
 				.Select(x => Couplers.FirstOrDefault(y => y.Model == x.Tag))
 				.ToReadOnlyReactivePropertySlim()

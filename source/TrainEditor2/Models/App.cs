@@ -78,8 +78,7 @@ namespace TrainEditor2.Models
 		private string soundXmlImportLocation;
 		private string soundXmlExportLocation;
 
-		private TreeViewItemModel item;
-		private TreeViewItemModel selectedItem;
+		private TreeViewItemModel selectedTreeItem;
 
 		internal string SaveLocation
 		{
@@ -369,29 +368,19 @@ namespace TrainEditor2.Models
 			}
 		}
 
-		internal TreeViewItemModel Item
+		internal TreeViewItemModel SelectedTreeItem
 		{
 			get
 			{
-				return item;
+				return selectedTreeItem;
 			}
 			set
 			{
-				SetProperty(ref item, value);
+				SetProperty(ref selectedTreeItem, value);
 			}
 		}
 
-		internal TreeViewItemModel SelectedItem
-		{
-			get
-			{
-				return selectedItem;
-			}
-			set
-			{
-				SetProperty(ref selectedItem, value);
-			}
-		}
+		internal ObservableCollection<TreeViewItemModel> TreeItems;
 
 		internal ObservableCollection<ListViewItemModel> VisibleLogMessages;
 
@@ -405,20 +394,23 @@ namespace TrainEditor2.Models
 			OpenFileDialog = new OpenFileDialog();
 			SaveFileDialog = new SaveFileDialog();
 
+			TreeItems = new ObservableCollection<TreeViewItemModel>();
+
 			VisibleLogMessages = new ObservableCollection<ListViewItemModel>();
 
 			CreateNewFile();
 		}
 
-		internal void CreateItem()
+		internal void CreateTreeItem()
 		{
-			item = new TreeViewItemModel(null) { Title = Utilities.GetInterfaceString("tree_cars", "train") };
-			item.Children.Add(new TreeViewItemModel(Item) { Title = Utilities.GetInterfaceString("tree_cars", "general") });
-			item.Children.Add(new TreeViewItemModel(Item) { Title = Utilities.GetInterfaceString("tree_cars", "cars") });
-			item.Children.Add(new TreeViewItemModel(Item) { Title = Utilities.GetInterfaceString("tree_cars", "couplers") });
-			item.Children[1].Children = new ObservableCollection<TreeViewItemModel>(Train.Cars.Select((x, i) => new TreeViewItemModel(Item.Children[1]) { Title = i.ToString(culture), Tag = x }));
-			item.Children[2].Children = new ObservableCollection<TreeViewItemModel>(Train.Couplers.Select((x, i) => new TreeViewItemModel(Item.Children[2]) { Title = i.ToString(culture), Tag = x }));
-			OnPropertyChanged(new PropertyChangedEventArgs(nameof(Item)));
+			TreeItems.Clear();
+			TreeViewItemModel treeItem = new TreeViewItemModel(null) { Title = Utilities.GetInterfaceString("tree_cars", "train") };
+			treeItem.Children.Add(new TreeViewItemModel(treeItem) { Title = Utilities.GetInterfaceString("tree_cars", "general") });
+			treeItem.Children.Add(new TreeViewItemModel(treeItem) { Title = Utilities.GetInterfaceString("tree_cars", "cars") });
+			treeItem.Children.Add(new TreeViewItemModel(treeItem) { Title = Utilities.GetInterfaceString("tree_cars", "couplers") });
+			treeItem.Children[1].Children.AddRange(Train.Cars.Select((x, i) => new TreeViewItemModel(treeItem.Children[1]) { Title = i.ToString(culture), Tag = x }));
+			treeItem.Children[2].Children.AddRange(Train.Couplers.Select((x, i) => new TreeViewItemModel(treeItem.Children[2]) { Title = i.ToString(culture), Tag = x }));
+			TreeItems.Add(treeItem);
 		}
 
 		internal void CreateNewFile()
@@ -457,7 +449,7 @@ namespace TrainEditor2.Models
 
 			Sound = new Sound();
 
-			CreateItem();
+			CreateTreeItem();
 		}
 
 		internal void OpenFile()
@@ -505,7 +497,9 @@ namespace TrainEditor2.Models
 				OnPropertyChanged(new PropertyChangedEventArgs(nameof(Panel)));
 				OnPropertyChanged(new PropertyChangedEventArgs(nameof(Sound)));
 
-				CreateItem();
+				CreateTreeItem();
+				Panel.CreateTreeItem();
+				Sound.CreateTreeItem();
 			}
 			catch (Exception e)
 			{
@@ -629,11 +623,16 @@ namespace TrainEditor2.Models
 						{
 							ExtensionsCfg.Parse(ExtensionsCfgImportLocation, Train);
 						}
-
-						CreateItem();
 						break;
 					default:
 						throw new ArgumentOutOfRangeException();
+				}
+
+				CreateTreeItem();
+
+				foreach (MotorCar car in Train.Cars.OfType<MotorCar>())
+				{
+					car.Motor.CreateTreeItem();
 				}
 			}
 			catch (Exception e)
@@ -662,6 +661,8 @@ namespace TrainEditor2.Models
 					default:
 						throw new ArgumentOutOfRangeException();
 				}
+
+				Panel.CreateTreeItem();
 			}
 			catch (Exception e)
 			{
@@ -696,6 +697,8 @@ namespace TrainEditor2.Models
 					default:
 						throw new ArgumentOutOfRangeException();
 				}
+
+				Sound.CreateTreeItem();
 			}
 			catch (Exception e)
 			{
@@ -817,20 +820,20 @@ namespace TrainEditor2.Models
 
 		internal void UpCar()
 		{
-			int index = Train.Cars.IndexOf((Car)SelectedItem.Tag);
+			int index = Train.Cars.IndexOf((Car)SelectedTreeItem.Tag);
 			Train.Cars.Move(index, index - 1);
 
-			Item.Children[1].Children.Move(index, index - 1);
-			RenameTreeViewItem(Item.Children[1].Children);
+			TreeItems[0].Children[1].Children.Move(index, index - 1);
+			RenameTreeViewItem(TreeItems[0].Children[1].Children);
 		}
 
 		internal void DownCar()
 		{
-			int index = Train.Cars.IndexOf((Car)SelectedItem.Tag);
+			int index = Train.Cars.IndexOf((Car)SelectedTreeItem.Tag);
 			Train.Cars.Move(index, index + 1);
 
-			Item.Children[1].Children.Move(index, index + 1);
-			RenameTreeViewItem(Item.Children[1].Children);
+			TreeItems[0].Children[1].Children.Move(index, index + 1);
+			RenameTreeViewItem(TreeItems[0].Children[1].Children);
 		}
 
 		internal void AddCar()
@@ -842,51 +845,51 @@ namespace TrainEditor2.Models
 			Train.ApplyBrakeNotchesToCar();
 			Train.ApplyLocoBrakeNotchesToCar();
 
-			Item.Children[1].Children.Add(new TreeViewItemModel(Item.Children[1]) { Title = (Train.Cars.Count - 1).ToString(culture), Tag = Train.Cars.Last() });
-			Item.Children[2].Children.Add(new TreeViewItemModel(Item.Children[2]) { Title = (Train.Couplers.Count - 1).ToString(culture), Tag = Train.Couplers.Last() });
-			SelectedItem = Item.Children[1].Children.Last();
+			TreeItems[0].Children[1].Children.Add(new TreeViewItemModel(TreeItems[0].Children[1]) { Title = (Train.Cars.Count - 1).ToString(culture), Tag = Train.Cars.Last() });
+			TreeItems[0].Children[2].Children.Add(new TreeViewItemModel(TreeItems[0].Children[2]) { Title = (Train.Couplers.Count - 1).ToString(culture), Tag = Train.Couplers.Last() });
+			SelectedTreeItem = TreeItems[0].Children[1].Children.Last();
 		}
 
 		internal void RemoveCar()
 		{
-			int index = Train.Cars.IndexOf((Car)SelectedItem.Tag);
+			int index = Train.Cars.IndexOf((Car)SelectedTreeItem.Tag);
 			Train.Cars.RemoveAt(index);
 			Train.Couplers.RemoveAt(index == 0 ? 0 : index - 1);
 
-			Item.Children[1].Children.RemoveAt(index);
-			Item.Children[2].Children.RemoveAt(index == 0 ? 0 : index - 1);
-			RenameTreeViewItem(Item.Children[1].Children);
-			RenameTreeViewItem(Item.Children[2].Children);
+			TreeItems[0].Children[1].Children.RemoveAt(index);
+			TreeItems[0].Children[2].Children.RemoveAt(index == 0 ? 0 : index - 1);
+			RenameTreeViewItem(TreeItems[0].Children[1].Children);
+			RenameTreeViewItem(TreeItems[0].Children[2].Children);
 
-			SelectedItem = null;
+			SelectedTreeItem = null;
 		}
 
 		internal void CopyCar()
 		{
-			Train.Cars.Add((Car)((Car)SelectedItem.Tag).Clone());
+			Train.Cars.Add((Car)((Car)SelectedTreeItem.Tag).Clone());
 			Train.Couplers.Add(new Coupler());
 
-			Item.Children[1].Children.Add(new TreeViewItemModel(Item.Children[1]) { Title = (Train.Cars.Count - 1).ToString(culture), Tag = Train.Cars.Last() });
-			Item.Children[2].Children.Add(new TreeViewItemModel(Item.Children[2]) { Title = (Train.Couplers.Count - 1).ToString(culture), Tag = Train.Couplers.Last() });
-			SelectedItem = Item.Children[1].Children.Last();
+			TreeItems[0].Children[1].Children.Add(new TreeViewItemModel(TreeItems[0].Children[1]) { Title = (Train.Cars.Count - 1).ToString(culture), Tag = Train.Cars.Last() });
+			TreeItems[0].Children[2].Children.Add(new TreeViewItemModel(TreeItems[0].Children[2]) { Title = (Train.Couplers.Count - 1).ToString(culture), Tag = Train.Couplers.Last() });
+			SelectedTreeItem = TreeItems[0].Children[1].Children.Last();
 		}
 
 		internal void UpCoupler()
 		{
-			int index = Train.Couplers.IndexOf((Coupler)SelectedItem.Tag);
+			int index = Train.Couplers.IndexOf((Coupler)SelectedTreeItem.Tag);
 			Train.Couplers.Move(index, index - 1);
 
-			Item.Children[2].Children.Move(index, index - 1);
-			RenameTreeViewItem(Item.Children[2].Children);
+			TreeItems[0].Children[2].Children.Move(index, index - 1);
+			RenameTreeViewItem(TreeItems[0].Children[2].Children);
 		}
 
 		internal void DownCoupler()
 		{
-			int index = Train.Couplers.IndexOf((Coupler)SelectedItem.Tag);
+			int index = Train.Couplers.IndexOf((Coupler)SelectedTreeItem.Tag);
 			Train.Couplers.Move(index, index + 1);
 
-			Item.Children[2].Children.Move(index, index + 1);
-			RenameTreeViewItem(Item.Children[2].Children);
+			TreeItems[0].Children[2].Children.Move(index, index + 1);
+			RenameTreeViewItem(TreeItems[0].Children[2].Children);
 		}
 
 		internal void ChangeCarClass(int carIndex)
@@ -906,8 +909,8 @@ namespace TrainEditor2.Models
 				Train.ApplyPowerNotchesToCar();
 			}
 
-			Item.Children[1].Children[carIndex].Tag = Train.Cars[carIndex];
-			OnPropertyChanged(new PropertyChangedEventArgs(nameof(SelectedItem)));
+			TreeItems[0].Children[1].Children[carIndex].Tag = Train.Cars[carIndex];
+			OnPropertyChanged(new PropertyChangedEventArgs(nameof(SelectedTreeItem)));
 		}
 
 		private string GetMessageTypeString(MessageType type)
@@ -931,7 +934,7 @@ namespace TrainEditor2.Models
 			VisibleLogMessages
 				.Add(new ListViewItemModel
 				{
-					Texts = new ObservableCollection<string>(new[] { GetMessageTypeString(message.Type), message.Text }),
+					SubItems = new ObservableCollection<ListViewSubItemModel>(new[] { new ListViewSubItemModel { Text = GetMessageTypeString(message.Type) }, new ListViewSubItemModel { Text = message.Text } }),
 					ImageIndex = (int)message.Type,
 					Tag = message
 				});
@@ -944,7 +947,7 @@ namespace TrainEditor2.Models
 
 		internal void ResetLogMessages()
 		{
-			VisibleLogMessages.RemoveAll(_ => true);
+			VisibleLogMessages.Clear();
 		}
 
 		internal void ChangeVisibleLogMessages(MessageType type, bool visible)
@@ -957,7 +960,7 @@ namespace TrainEditor2.Models
 							.Where(x => x.Type == type)
 							.Select(x => new ListViewItemModel
 							{
-								Texts = new ObservableCollection<string>(new[] { GetMessageTypeString(x.Type), x.Text }),
+								SubItems = new ObservableCollection<ListViewSubItemModel>(new[] { new ListViewSubItemModel { Text = GetMessageTypeString(x.Type) }, new ListViewSubItemModel { Text = x.Text } }),
 								ImageIndex = (int)x.Type,
 								Tag = x
 							})

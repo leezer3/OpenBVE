@@ -4,7 +4,7 @@ using Prism.Mvvm;
 
 namespace TrainEditor2.ViewModels
 {
-	internal abstract class BaseViewModel : BindableBase, IDisposable
+	internal abstract class BaseViewModel : /*BindableBase,*/ IDisposable
 	{
 		protected CompositeDisposable disposable
 		{

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using OpenBveApi.Interface;
 using Reactive.Bindings;
@@ -140,12 +139,12 @@ namespace TrainEditor2.ViewModels
 			get;
 		}
 
-		internal ReactiveProperty<TreeViewItemViewModel> Item
+		internal ReadOnlyReactiveCollection<TreeViewItemViewModel> TreeItems
 		{
 			get;
 		}
 
-		internal ReactiveProperty<TreeViewItemViewModel> SelectedItem
+		internal ReactiveProperty<TreeViewItemViewModel> SelectedTreeItem
 		{
 			get;
 		}
@@ -262,15 +261,13 @@ namespace TrainEditor2.ViewModels
 
 		internal AppViewModel()
 		{
-			CompositeDisposable itemDisposable = new CompositeDisposable();
-
 			App app = new App();
 
 			CurrentLanguageCode = app
 				.ToReactivePropertyAsSynchronized(x => x.CurrentLanguageCode)
 				.AddTo(disposable);
 
-			CurrentLanguageCode.Subscribe(_ => app.CreateItem()).AddTo(disposable);
+			CurrentLanguageCode.Subscribe(_ => app.CreateTreeItem()).AddTo(disposable);
 
 			SaveLocation = app
 				.ObserveProperty(x => x.SaveLocation)
@@ -435,29 +432,14 @@ namespace TrainEditor2.ViewModels
 				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 
-			Item = app
-				.ObserveProperty(x => x.Item)
-				.Do(_ => Item?.Value.Dispose())
-				.Select(x => new TreeViewItemViewModel(x))
-				.ToReactiveProperty()
-				.AddTo(disposable);
+			TreeItems = app.TreeItems.ToReadOnlyReactiveCollection(x => new TreeViewItemViewModel(x, null)).AddTo(disposable);
 
-			Item.Subscribe(x =>
-				{
-					itemDisposable.Dispose();
-					itemDisposable = new CompositeDisposable();
-
-					x.PropertyChangedAsObservable()
-						.Subscribe(_ => Item.ForceNotify())
-						.AddTo(itemDisposable);
-				})
-				.AddTo(disposable);
-
-			SelectedItem = app
+			SelectedTreeItem = app
 				.ToReactivePropertyAsSynchronized(
-					x => x.SelectedItem,
-					x => Item.Value.SearchViewModel(x),
-					x => x?.Model
+					x => x.SelectedTreeItem,
+					x => TreeItems.Select(y => y.SearchViewModel(x)).FirstOrDefault(y => y != null),
+					x => x?.Model,
+					ReactivePropertyMode.RaiseLatestValueOnSubscribe
 				)
 				.AddTo(disposable);
 
@@ -563,54 +545,54 @@ namespace TrainEditor2.ViewModels
 				.WithSubscribe(app.OutputLogs)
 				.AddTo(disposable);
 
-			UpCar = SelectedItem
-				.Select(x => Item.Value.Children[1].Children.IndexOf(x) > 0)
+			UpCar = SelectedTreeItem
+				.Select(x => TreeItems[0].Children[1].Children.IndexOf(x) > 0)
 				.ToReactiveCommand()
 				.WithSubscribe(app.UpCar)
 				.AddTo(disposable);
 
-			DownCar = SelectedItem
-				.Select(x => Item.Value.Children[1].Children.IndexOf(x))
-				.Select(x => x >= 0 && x < Item.Value.Children[1].Children.Count - 1)
+			DownCar = SelectedTreeItem
+				.Select(x => TreeItems[0].Children[1].Children.IndexOf(x))
+				.Select(x => x >= 0 && x < TreeItems[0].Children[1].Children.Count - 1)
 				.ToReactiveCommand()
 				.WithSubscribe(app.DownCar)
 				.AddTo(disposable);
 
-			AddCar = SelectedItem
-				.Select(x => x == Item.Value.Children[1] || Item.Value.Children[1].Children.Contains(x))
+			AddCar = SelectedTreeItem
+				.Select(x => x == TreeItems[0].Children[1] || TreeItems[0].Children[1].Children.Contains(x))
 				.ToReactiveCommand()
 				.WithSubscribe(app.AddCar)
 				.AddTo(disposable);
 
-			RemoveCar = SelectedItem
-				.Select(x => Item.Value.Children[1].Children.Contains(x) && Item.Value.Children[1].Children.Where(y => y != x).Any(y => y.Tag.Value is MotorCar))
+			RemoveCar = SelectedTreeItem
+				.Select(x => TreeItems[0].Children[1].Children.Contains(x) && TreeItems[0].Children[1].Children.Where(y => y != x).Any(y => y.Tag.Value is MotorCar))
 				.ToReactiveCommand()
 				.WithSubscribe(app.RemoveCar)
 				.AddTo(disposable);
 
-			CopyCar = SelectedItem
-				.Select(x => Item.Value.Children[1].Children.Contains(x))
+			CopyCar = SelectedTreeItem
+				.Select(x => TreeItems[0].Children[1].Children.Contains(x))
 				.ToReactiveCommand()
 				.WithSubscribe(app.CopyCar)
 				.AddTo(disposable);
 
-			UpCoupler = SelectedItem
-				.Select(x => Item.Value.Children[2].Children.IndexOf(x) > 0)
+			UpCoupler = SelectedTreeItem
+				.Select(x => TreeItems[0].Children[2].Children.IndexOf(x) > 0)
 				.ToReactiveCommand()
 				.WithSubscribe(app.UpCoupler)
 				.AddTo(disposable);
 
-			DownCoupler = SelectedItem
-				.Select(x => Item.Value.Children[2].Children.IndexOf(x))
-				.Select(x => x >= 0 && x < Item.Value.Children[2].Children.Count - 1)
+			DownCoupler = SelectedTreeItem
+				.Select(x => TreeItems[0].Children[2].Children.IndexOf(x))
+				.Select(x => x >= 0 && x < TreeItems[0].Children[2].Children.Count - 1)
 				.ToReactiveCommand()
 				.WithSubscribe(app.DownCoupler)
 				.AddTo(disposable);
 
-			ChangeCarClass = SelectedItem
-				.Select(x => x?.Tag.Value is TrailerCar || Item.Value.Children[1].Children.Count(y => y?.Tag.Value is MotorCar) > 1)
+			ChangeCarClass = SelectedTreeItem
+				.Select(x => x?.Tag.Value is TrailerCar || TreeItems[0].Children[1].Children.Count(y => y?.Tag.Value is MotorCar) > 1)
 				.ToReactiveCommand()
-				.WithSubscribe(() => app.ChangeCarClass(app.Train.Cars.IndexOf((Car)SelectedItem.Value.Tag.Value)))
+				.WithSubscribe(() => app.ChangeCarClass(app.Train.Cars.IndexOf((Car)SelectedTreeItem.Value.Tag.Value)))
 				.AddTo(disposable);
 
 			ChangeVisibleLogMessages = new ReactiveCommand<MessageType>()
@@ -645,8 +627,6 @@ namespace TrainEditor2.ViewModels
 			ClearLogMessages = new ReactiveCommand()
 				.WithSubscribe(Interface.LogMessages.Clear)
 				.AddTo(disposable);
-
-			itemDisposable.AddTo(disposable);
 		}
 	}
 }

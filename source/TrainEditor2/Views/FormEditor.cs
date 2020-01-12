@@ -4,7 +4,6 @@ using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Security.Permissions;
 using System.Windows.Forms;
 using OpenBveApi.Interface;
@@ -16,7 +15,6 @@ using TrainEditor2.Extensions;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.Systems;
 using TrainEditor2.ViewModels;
-using TrainEditor2.ViewModels.Others;
 using TrainEditor2.ViewModels.Trains;
 
 namespace TrainEditor2.Views
@@ -26,133 +24,6 @@ namespace TrainEditor2.Views
 		private readonly CompositeDisposable disposable;
 
 		private readonly AppViewModel app;
-
-		private TreeNode TreeViewCarsTopNode
-		{
-			get
-			{
-				if (treeViewCars.Nodes.Count == 0)
-				{
-					treeViewCars.Nodes.Add(new TreeNode());
-				}
-
-				return treeViewCars.Nodes[0];
-			}
-			// ReSharper disable once UnusedMember.Local
-			set
-			{
-				treeViewCars.Nodes.Clear();
-				treeViewCars.Nodes.Add(value);
-				treeViewCars.ExpandAll();
-				treeViewCars.SelectedNode = treeViewCars.Nodes
-					.OfType<TreeNode>()
-					.Select(y => SearchTreeNode(app.SelectedItem.Value, y))
-					.FirstOrDefault(y => y != null);
-				app.SelectedItem.ForceNotify();
-			}
-		}
-
-		private TreeNode TreeViewPanelTopNode
-		{
-			get
-			{
-				if (treeViewPanel.Nodes.Count == 0)
-				{
-					treeViewPanel.Nodes.Add(new TreeNode());
-				}
-
-				return treeViewPanel.Nodes[0];
-			}
-			// ReSharper disable once UnusedMember.Local
-			set
-			{
-				treeViewPanel.Nodes.Clear();
-				treeViewPanel.Nodes.Add(value);
-				treeViewPanel.ExpandAll();
-				treeViewPanel.SelectedNode = treeViewPanel.Nodes
-					.OfType<TreeNode>()
-					.Select(z => SearchTreeNode(app.Panel.Value.SelectedTreeItem.Value, z))
-					.FirstOrDefault(z => z != null);
-				app.Panel.Value.SelectedTreeItem.ForceNotify();
-			}
-		}
-
-		private ListViewItem ListViewPanelSelectedItem
-		{
-			get
-			{
-				if (listViewPanel.SelectedItems.Count == 1)
-				{
-					return listViewPanel.SelectedItems[0];
-				}
-
-				return null;
-			}
-			// ReSharper disable once UnusedMember.Local
-			set
-			{
-				foreach (ListViewItem item in listViewPanel.Items.OfType<ListViewItem>().Where(x => x.Selected))
-				{
-					item.Selected = false;
-				}
-
-				if (value != null)
-				{
-					value.Selected = true;
-				}
-			}
-		}
-
-		private TreeNode TreeViewSoundTopNode
-		{
-			get
-			{
-				if (treeViewSound.Nodes.Count == 0)
-				{
-					treeViewSound.Nodes.Add(new TreeNode());
-				}
-
-				return treeViewSound.Nodes[0];
-			}
-			// ReSharper disable once UnusedMember.Local
-			set
-			{
-				treeViewSound.Nodes.Clear();
-				treeViewSound.Nodes.Add(value);
-				treeViewSound.ExpandAll();
-				treeViewSound.SelectedNode = treeViewSound.Nodes
-					.OfType<TreeNode>()
-					.Select(z => SearchTreeNode(app.Sound.Value.SelectedTreeItem.Value, z))
-					.FirstOrDefault(z => z != null);
-				app.Sound.Value.SelectedTreeItem.ForceNotify();
-			}
-		}
-
-		private ListViewItem ListViewSoundSelectedItem
-		{
-			get
-			{
-				if (listViewSound.SelectedItems.Count == 1)
-				{
-					return listViewSound.SelectedItems[0];
-				}
-
-				return null;
-			}
-			// ReSharper disable once UnusedMember.Local
-			set
-			{
-				foreach (ListViewItem item in listViewSound.Items.OfType<ListViewItem>().Where(x => x.Selected))
-				{
-					item.Selected = false;
-				}
-
-				if (value != null)
-				{
-					value.Selected = true;
-				}
-			}
-		}
 
 		public FormEditor()
 		{
@@ -167,7 +38,7 @@ namespace TrainEditor2.Views
 			CompositeDisposable panelDisposable = new CompositeDisposable().AddTo(disposable);
 			CompositeDisposable soundDisposable = new CompositeDisposable().AddTo(disposable);
 
-			app = new AppViewModel();
+			app = new AppViewModel().AddTo(disposable);
 
 			InitializeComponent();
 
@@ -239,95 +110,72 @@ namespace TrainEditor2.Views
 				})
 				.AddTo(disposable);
 
-			app.Item
-				.BindTo(
-					this,
-					x => x.TreeViewCarsTopNode,
-					BindingMode.OneWay,
-					TreeViewItemViewModelToTreeNode
-				)
-				.AddTo(disposable);
+			Binders.BindToTreeView(treeViewCars, app.TreeItems, app.SelectedTreeItem).AddTo(disposable);
 
-			app.SelectedItem
-				.BindTo(
-					treeViewCars,
-					x => x.SelectedNode,
-					BindingMode.TwoWay,
-					x => treeViewCars.Nodes.OfType<TreeNode>().Select(y => SearchTreeNode(x, y)).FirstOrDefault(y => y != null),
-					x => (TreeViewItemViewModel)x.Tag,
-					Observable.FromEvent<TreeViewEventHandler, TreeViewEventArgs>(
-							h => (s, e) => h(e),
-							h => treeViewCars.AfterSelect += h,
-							h => treeViewCars.AfterSelect -= h
-						)
-						.ToUnit()
-				)
-				.AddTo(disposable);
-
-			app.SelectedItem
+			app.SelectedTreeItem
 				.BindTo(
 					tabPageTrain,
 					x => x.Enabled,
 					BindingMode.OneWay,
-					x => x == app.Item.Value.Children[0]
+					x => x == app.TreeItems[0].Children[0]
 				)
 				.AddTo(disposable);
 
-			app.SelectedItem
+			app.SelectedTreeItem
 				.BindTo(
 					tabPageCar,
 					x => x.Enabled,
 					BindingMode.OneWay,
-					x => app.Item.Value.Children[1].Children.Contains(x)
+					x => app.TreeItems[0].Children[1].Children.Contains(x)
 				)
 				.AddTo(disposable);
 
-			app.SelectedItem
+			app.SelectedTreeItem
 				.BindTo(
 					tabPageAccel,
 					x => x.Enabled,
 					BindingMode.OneWay,
-					x => x?.Tag.Value is MotorCar && app.Item.Value.Children[1].Children.Contains(x)
+					x => x?.Tag.Value is MotorCar && app.TreeItems[0].Children[1].Children.Contains(x)
 				)
 				.AddTo(disposable);
 
-			app.SelectedItem
+			app.SelectedTreeItem
 				.BindTo(
 					tabPageMotor,
 					x => x.Enabled,
 					BindingMode.OneWay,
-					x => x?.Tag.Value is MotorCar && app.Item.Value.Children[1].Children.Contains(x)
+					x => x?.Tag.Value is MotorCar && app.TreeItems[0].Children[1].Children.Contains(x)
 				)
 				.AddTo(disposable);
 
-			app.SelectedItem
+			app.SelectedTreeItem
 				.BindTo(
 					tabPageCoupler,
 					x => x.Enabled,
 					BindingMode.OneWay,
-					x => app.Item.Value.Children[2].Children.Contains(x)
+					x => app.TreeItems[0].Children[2].Children.Contains(x)
 				)
 				.AddTo(disposable);
 
-			app.SelectedItem
+			app.SelectedTreeItem
 				.BindTo(
 					tabPagePanel,
 					x => x.Enabled,
 					BindingMode.OneWay,
-					x => x == app.Item.Value.Children[0]
+					x => x == app.TreeItems[0].Children[0]
 				)
 				.AddTo(disposable);
 
-			app.SelectedItem
+			app.SelectedTreeItem
 				.BindTo(
 					tabPageSound,
 					x => x.Enabled,
 					BindingMode.OneWay,
-					x => x == app.Item.Value.Children[0]
+					x => x == app.TreeItems[0].Children[0]
 				)
 				.AddTo(disposable);
 
-			app.SelectedItem
+			app.SelectedTreeItem
 				.BindTo(
 					tabControlEditor,
 					x => x.SelectedTab,
@@ -412,27 +260,7 @@ namespace TrainEditor2.Views
 				})
 				.AddTo(disposable);
 
-			app.VisibleLogMessages
-				.ObserveAddChanged()
-				.Subscribe(y =>
-				{
-					listViewStatus.Items.Add(ListViewItemViewModelToListViewItem(y));
-					listViewStatus.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-				})
-				.AddTo(disposable);
-
-			app.VisibleLogMessages
-				.ObserveRemoveChanged()
-				.Subscribe(y =>
-				{
-					foreach (ListViewItem item in listViewStatus.Items.OfType<ListViewItem>().Where(z => z.Tag == y).ToArray())
-					{
-						listViewStatus.Items.Remove(item);
-					}
-
-					listViewStatus.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-				})
-				.AddTo(disposable);
+			Binders.BindToListViewItemCollection(listViewStatus, app.VisibleLogMessages, listViewStatus.Items).AddTo(disposable);
 
 			app.CreateNewFile.BindToButton(toolStripMenuItemNew).AddTo(disposable);
 			app.OpenFile.BindToButton(toolStripMenuItemOpen).AddTo(disposable);
@@ -497,9 +325,6 @@ namespace TrainEditor2.Views
 
 			toolStripButtonUndo.Image = GetImage("undo.png");
 			toolStripButtonRedo.Image = GetImage("redo.png");
-			toolStripButtonTearingOff.Image = GetImage("cut.png");
-			toolStripButtonCopy.Image = GetImage("copy.png");
-			toolStripButtonPaste.Image = GetImage("paste.png");
 			toolStripButtonDelete.Image = GetImage("delete.png");
 			toolStripButtonCleanup.Image = GetImage("cleanup.png");
 			toolStripButtonSelect.Image = GetImage("select.png");
@@ -751,21 +576,21 @@ namespace TrainEditor2.Views
 
 		private void GlControlMotor_KeyDown(object sender, KeyEventArgs e)
 		{
-			MotorCarViewModel car = app.Train.Value.SelectedCar.Value as MotorCarViewModel;
+			MotorViewModel.TrackViewModel track = (app.Train.Value.SelectedCar.Value as MotorCarViewModel)?.Motor.Value.SelectedTrack.Value;
 
 			switch (e.KeyCode)
 			{
 				case Keys.Left:
-					car?.Motor.Value.MoveLeft.Execute();
+					track?.MoveLeft.Execute();
 					break;
 				case Keys.Right:
-					car?.Motor.Value.MoveRight.Execute();
+					track?.MoveRight.Execute();
 					break;
 				case Keys.Down:
-					car?.Motor.Value.MoveBottom.Execute();
+					track?.MoveBottom.Execute();
 					break;
 				case Keys.Up:
-					car?.Motor.Value.MoveTop.Execute();
+					track?.MoveTop.Execute();
 					break;
 			}
 		}
@@ -777,34 +602,34 @@ namespace TrainEditor2.Views
 
 		private void GlControlMotor_MouseDown(object sender, MouseEventArgs e)
 		{
-			MotorCarViewModel car = app.Train.Value.SelectedCar.Value as MotorCarViewModel;
+			MotorViewModel.TrackViewModel track = (app.Train.Value.SelectedCar.Value as MotorCarViewModel)?.Motor.Value.SelectedTrack.Value;
 
-			car?.Motor.Value.MouseDown.Execute(MouseEventArgsToModel(e));
+			track?.MouseDown.Execute(MouseEventArgsToModel(e));
 		}
 
 		private void GlControlMotor_MouseMove(object sender, MouseEventArgs e)
 		{
-			MotorCarViewModel car = app.Train.Value.SelectedCar.Value as MotorCarViewModel;
+			MotorViewModel.TrackViewModel track = (app.Train.Value.SelectedCar.Value as MotorCarViewModel)?.Motor.Value.SelectedTrack.Value;
 
-			car?.Motor.Value.MouseMove.Execute(MouseEventArgsToModel(e));
+			track?.MouseMove.Execute(MouseEventArgsToModel(e));
 		}
 
 		private void GlControlMotor_MouseUp(object sender, MouseEventArgs e)
 		{
-			MotorCarViewModel car = app.Train.Value.SelectedCar.Value as MotorCarViewModel;
+			MotorViewModel.TrackViewModel track = (app.Train.Value.SelectedCar.Value as MotorCarViewModel)?.Motor.Value.SelectedTrack.Value;
 
-			car?.Motor.Value.MouseUp.Execute();
+			track?.MouseUp.Execute();
 		}
 
 		private void GlControlMotor_Paint(object sender, PaintEventArgs e)
 		{
-			MotorCarViewModel car = app.Train.Value.SelectedCar.Value as MotorCarViewModel;
+			MotorViewModel.TrackViewModel track = (app.Train.Value.SelectedCar.Value as MotorCarViewModel)?.Motor.Value.SelectedTrack.Value;
 
 			glControlMotor.MakeCurrent();
 
-			if (car != null)
+			if (track != null)
 			{
-				car.Motor.Value.DrawGlControl.Execute();
+				track.DrawGlControl.Execute();
 			}
 			else
 			{
@@ -950,15 +775,27 @@ namespace TrainEditor2.Views
 			OpenFileDialog(textBoxSoundFileName);
 		}
 
-		private void buttonCouplerObject_Click(object sender, EventArgs e)
+		private void ButtonCouplerObject_Click(object sender, EventArgs e)
 		{
 			OpenFileDialog(textBoxCouplerObject);
 		}
 
-		private void glControlMotor_Load(object sender, EventArgs e)
+		private void GlControlMotor_Load(object sender, EventArgs e)
 		{
 			glControlMotor.MakeCurrent();
 			Program.Renderer.Initialize(Program.CurrentHost, Interface.CurrentOptions);
+		}
+
+		private void GlControlMotor_Resize(object sender, EventArgs e)
+		{
+			Motor.Track.GlControlWidth = glControlMotor.Width;
+			Motor.Track.GlControlHeight = glControlMotor.Height;
+		}
+
+		private void FormEditor_Resize(object sender, EventArgs e)
+		{
+			Motor.Track.GlControlWidth = glControlMotor.Width;
+			Motor.Track.GlControlHeight = glControlMotor.Height;
 		}
 	}
 }

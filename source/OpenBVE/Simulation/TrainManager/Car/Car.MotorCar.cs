@@ -1,5 +1,4 @@
 ﻿using System;
-using SoundManager;
 
 namespace OpenBve
 {
@@ -11,7 +10,6 @@ namespace OpenBve
 			internal AccelerationCurve[] AccelerationCurves;
 
 			internal double DecelerationDueToMotor;
-
 
 			internal MotorCar(Train train, int index) : base(train, index)
 			{
@@ -217,7 +215,11 @@ namespace OpenBve
 							if (max != 0.0)
 							{
 								double cur = Specs.CurrentAccelerationOutput;
-								if (cur < 0.0) cur = 0.0;
+								if (cur < 0.0)
+								{
+									cur = 0.0;
+								}
+
 								entry.Gain *= Math.Pow(cur / max, 0.25);
 							}
 						}
@@ -228,7 +230,11 @@ namespace OpenBve
 							if (max != 0.0)
 							{
 								double cur = -Specs.CurrentAccelerationOutput;
-								if (cur < 0.0) cur = 0.0;
+								if (cur < 0.0)
+								{
+									cur = 0.0;
+								}
+
 								entry.Gain *= Math.Pow(cur / max, 0.25);
 							}
 						}
