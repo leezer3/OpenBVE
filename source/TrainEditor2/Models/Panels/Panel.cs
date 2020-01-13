@@ -142,7 +142,7 @@ namespace TrainEditor2.Models.Panels
 
 		internal void CreateListColumns()
 		{
-			ListColumns.RemoveAll(_ => true);
+			ListColumns.Clear();
 
 			if (SelectedTreeItem == TreeItem.Children[1])
 			{
@@ -234,15 +234,13 @@ namespace TrainEditor2.Models.Panels
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Location" });
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Size" });
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "JumpScreen" });
-				ListColumns.Add(new ListViewColumnHeaderModel { Text = "SoundIndex" });
-				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Command" });
-				ListColumns.Add(new ListViewColumnHeaderModel { Text = "CommandOption" });
+				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Layer" });
 			}
 		}
 
 		internal void CreateListItems()
 		{
-			ListItems.RemoveAll(_ => true);
+			ListItems.Clear();
 
 			if (SelectedTreeItem == TreeItem.Children[1])
 			{
@@ -344,7 +342,7 @@ namespace TrainEditor2.Models.Panels
 
 				foreach (TouchElement touch in screen.TouchElements)
 				{
-					ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[6]), Tag = touch };
+					ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[4]), Tag = touch };
 					UpdateListItem(newItem);
 					ListItems.Add(newItem);
 				}
@@ -452,9 +450,7 @@ namespace TrainEditor2.Models.Panels
 				item.Texts[0] = $"{touch.LocationX.ToString(culture)}, {touch.LocationY.ToString(culture)}";
 				item.Texts[1] = $"{touch.SizeX.ToString(culture)}, {touch.SizeY.ToString(culture)}";
 				item.Texts[2] = touch.JumpScreen.ToString(culture);
-				item.Texts[3] = touch.SoundIndex.ToString(culture);
-				item.Texts[4] = touch.CommandInfo.Name;
-				item.Texts[5] = touch.CommandOption.ToString(culture);
+				item.Texts[3] = touch.Layer.ToString(culture);
 			}
 		}
 
@@ -607,7 +603,7 @@ namespace TrainEditor2.Models.Panels
 
 			screen.TouchElements.Add(touch);
 
-			ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[6]), Tag = touch };
+			ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[4]), Tag = touch };
 			UpdateListItem(newItem);
 			ListItems.Add(newItem);
 
@@ -763,7 +759,7 @@ namespace TrainEditor2.Models.Panels
 
 			screen.TouchElements.Add(touch);
 
-			ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[6]), Tag = touch };
+			ListViewItemModel newItem = new ListViewItemModel { Texts = new ObservableCollection<string>(new string[4]), Tag = touch };
 			UpdateListItem(newItem);
 			ListItems.Add(newItem);
 

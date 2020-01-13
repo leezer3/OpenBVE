@@ -491,10 +491,25 @@ namespace TrainEditor2.IO.IntermediateFile
 				new XElement("Location", $"{element.LocationX}, {element.LocationY}"),
 				new XElement("Size", $"{element.SizeX}, {element.SizeY}"),
 				new XElement("JumpScreen", element.JumpScreen),
-				new XElement("SoundIndex", element.SoundIndex),
-				new XElement("CommandInfo", element.CommandInfo.Command),
-				new XElement("CommandOption", element.CommandOption)
+				new XElement("SoundEntries", element.SoundEntries.Select(WriteTouchElementSoundEntryNode)),
+				new XElement("CommandEntries", element.CommandEntries.Select(WriteTouchElementCommandEntryNode)),
+				new XElement("Layer", element.Layer)
 				));
+		}
+
+		private static XElement WriteTouchElementSoundEntryNode(Models.Panels.TouchElement.SoundEntry entry)
+		{
+			return new XElement("Entry",
+				new XElement("Index", entry.Index)
+			);
+		}
+
+		private static XElement WriteTouchElementCommandEntryNode(Models.Panels.TouchElement.CommandEntry entry)
+		{
+			return new XElement("Entry",
+				new XElement("Info", entry.Info.Command),
+				new XElement("Option", entry.Option)
+				);
 		}
 
 		private static void WriteSoundsNode(XElement parent, Sound sound)

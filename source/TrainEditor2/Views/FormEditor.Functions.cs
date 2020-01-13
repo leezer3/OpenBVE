@@ -14,27 +14,27 @@ namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private TreeNode TreeViewItemViewModelToTreeNode(TreeViewItemViewModel item)
+		internal static TreeNode TreeViewItemViewModelToTreeNode(TreeViewItemViewModel item)
 		{
 			return new TreeNode(item.Title.Value, item.Children.Select(TreeViewItemViewModelToTreeNode).ToArray()) { Tag = item };
 		}
 
-		private TreeNode SearchTreeNode(TreeViewItemViewModel item, TreeNode node)
+		internal static TreeNode SearchTreeNode(TreeViewItemViewModel item, TreeNode node)
 		{
 			return node.Tag == item ? node : node.Nodes.OfType<TreeNode>().Select(x => SearchTreeNode(item, x)).FirstOrDefault(x => x != null);
 		}
 
-		private ColumnHeader ListViewColumnHeaderViewModelToColumnHeader(ListViewColumnHeaderViewModel column)
+		internal static ColumnHeader ListViewColumnHeaderViewModelToColumnHeader(ListViewColumnHeaderViewModel column)
 		{
 			return new ColumnHeader { Text = column.Text.Value, Tag = column };
 		}
 
-		private ListViewItem ListViewItemViewModelToListViewItem(ListViewItemViewModel item)
+		internal static ListViewItem ListViewItemViewModelToListViewItem(ListViewItemViewModel item)
 		{
 			return new ListViewItem(item.Texts.ToArray()) { ImageIndex = item.ImageIndex.Value, Tag = item };
 		}
 
-		private void UpdateListViewItem(ListViewItem item, ListViewItemViewModel viewModel)
+		internal static void UpdateListViewItem(ListViewItem item, ListViewItemViewModel viewModel)
 		{
 			for (int i = 0; i < viewModel.Texts.Count; i++)
 			{
