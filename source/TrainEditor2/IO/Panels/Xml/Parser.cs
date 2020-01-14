@@ -1466,6 +1466,7 @@ namespace TrainEditor2.IO.Panels.Xml
 		private static void ParseTouchElementNode(string fileName, XElement parent, Screen screen, out TouchElement touch)
 		{
 			touch = new TouchElement(screen);
+			TouchElement.CommandEntry commandEntry = new TouchElement.CommandEntry();
 			CultureInfo culture = CultureInfo.InvariantCulture;
 
 			string section = parent.Name.LocalName;
@@ -1579,11 +1580,21 @@ namespace TrainEditor2.IO.Panels.Xml
 								Interface.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
 
-							touch.SoundIndex = soundIndex;
+							touch.SoundEntries.Add(new TouchElement.SoundEntry { Index = soundIndex });
 						}
 						break;
 					case "command":
 						{
+							if (!touch.CommandEntries.Contains(commandEntry))
+							{
+								touch.CommandEntries.Add(commandEntry);
+							}
+
+							if (string.Compare(value, "N/A", StringComparison.InvariantCultureIgnoreCase) == 0)
+							{
+								break;
+							}
+
 							int i;
 
 							for (i = 0; i < Translations.CommandInfos.Length; i++)
@@ -1600,11 +1611,16 @@ namespace TrainEditor2.IO.Panels.Xml
 							}
 							else
 							{
-								touch.CommandInfo = Translations.CommandInfos[i];
+								commandEntry.Info = Translations.CommandInfos[i];
 							}
 						}
 						break;
 					case "commandoption":
+						if (!touch.CommandEntries.Contains(commandEntry))
+						{
+							touch.CommandEntries.Add(commandEntry);
+						}
+
 						if (value.Any())
 						{
 							int commandOption;
@@ -1613,10 +1629,158 @@ namespace TrainEditor2.IO.Panels.Xml
 							{
 								Interface.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
-
-							touch.CommandOption = commandOption;
+							else
+							{
+								commandEntry.Option = commandOption;
+							}
 						}
 						break;
+					case "soundentries":
+						if (!keyNode.HasElements)
+						{
+							Interface.AddMessage(MessageType.Error, false, $"An empty list of touch sound indices was defined at line {((IXmlLineInfo)keyNode).LineNumber} in XML file {fileName}");
+							break;
+						}
+
+						ParseTouchElementSoundEntryNode(fileName, keyNode, touch.SoundEntries);
+						break;
+					case "commandentries":
+						if (!keyNode.HasElements)
+						{
+							Interface.AddMessage(MessageType.Error, false, $"An empty list of touch commands was defined at line {((IXmlLineInfo)keyNode).LineNumber} in XML file {fileName}");
+							break;
+						}
+
+						ParseTouchElementCommandEntryNode(fileName, keyNode, touch.CommandEntries);
+						break;
+					case "layer":
+						if (value.Any())
+						{
+							int layer;
+
+							if (!NumberFormats.TryParseIntVb6(value, out layer))
+							{
+								Interface.AddMessage(MessageType.Error, false, $"LayerIndex is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+							}
+
+							touch.Layer = layer;
+						}
+						break;
+				}
+			}
+		}
+
+		private static void ParseTouchElementSoundEntryNode(string fileName, XElement parent, ICollection<TouchElement.SoundEntry> entries)
+		{
+			foreach (XElement childNode in parent.Elements())
+			{
+				if (childNode.Name.LocalName.ToLowerInvariant() != "entry")
+				{
+					Interface.AddMessage(MessageType.Error, false, $"Invalid entry node {childNode.Name.LocalName} in XML node {parent.Name.LocalName} at line {((IXmlLineInfo)childNode).LineNumber}");
+				}
+				else
+				{
+					TouchElement.SoundEntry entry = new TouchElement.SoundEntry();
+					CultureInfo culture = CultureInfo.InvariantCulture;
+
+					string section = childNode.Name.LocalName;
+
+					foreach (XElement keyNode in childNode.Elements())
+					{
+						string key = keyNode.Name.LocalName;
+						string value = keyNode.Value;
+						int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
+
+						switch (keyNode.Name.LocalName.ToLowerInvariant())
+						{
+							case "index":
+								if (value.Any())
+								{
+									int index;
+
+									if (!NumberFormats.TryParseIntVb6(value, out index))
+									{
+										Interface.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+									}
+
+									entry.Index = index;
+								}
+								break;
+						}
+					}
+
+					entries.Add(entry);
+				}
+			}
+		}
+
+		private static void ParseTouchElementCommandEntryNode(string fileName, XElement parent, ICollection<TouchElement.CommandEntry> entries)
+		{
+			foreach (XElement childNode in parent.Elements())
+			{
+				if (childNode.Name.LocalName.ToLowerInvariant() != "entry")
+				{
+					Interface.AddMessage(MessageType.Error, false, $"Invalid entry node {childNode.Name.LocalName} in XML node {parent.Name.LocalName} at line {((IXmlLineInfo)childNode).LineNumber}");
+				}
+				else
+				{
+					TouchElement.CommandEntry entry = new TouchElement.CommandEntry();
+					CultureInfo culture = CultureInfo.InvariantCulture;
+
+					string section = childNode.Name.LocalName;
+
+					foreach (XElement keyNode in childNode.Elements())
+					{
+						string key = keyNode.Name.LocalName;
+						string value = keyNode.Value;
+						int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
+
+						switch (keyNode.Name.LocalName.ToLowerInvariant())
+						{
+							case "name":
+								if (string.Compare(value, "N/A", StringComparison.InvariantCultureIgnoreCase) == 0)
+								{
+									break;
+								}
+
+								int i;
+
+								for (i = 0; i < Translations.CommandInfos.Length; i++)
+								{
+									if (string.Compare(value, Translations.CommandInfos[i].Name, StringComparison.OrdinalIgnoreCase) == 0)
+									{
+										break;
+									}
+								}
+
+								if (i == Translations.CommandInfos.Length || Translations.CommandInfos[i].Type != Translations.CommandType.Digital)
+								{
+									Interface.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+								}
+								else
+								{
+									entry.Info = Translations.CommandInfos[i];
+								}
+								break;
+							case "option":
+								if (value.Any())
+								{
+									int option;
+
+									if (!NumberFormats.TryParseIntVb6(value, out option))
+									{
+										Interface.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+									}
+									else
+									{
+										entry.Option = option;
+									}
+								}
+								break;
+						}
+					}
+
+					entries.Add(entry);
 				}
 			}
 		}

@@ -170,7 +170,7 @@ namespace OpenBve
 			}
 			MainLoop.UpdateControlRepeats(RealTimeElapsed);
 			MainLoop.ProcessKeyboard();
-			World.UpdateMouseGrab(TimeElapsed);
+			MainLoop.UpdateMouse(RealTimeElapsed);
 			MainLoop.ProcessControls(TimeElapsed);
 			for (int i = 0; i < JoystickManager.AttachedJoysticks.Length; i++)
 			{
@@ -256,7 +256,7 @@ namespace OpenBve
 				{
 					if (Program.CurrentRoute.Sections.Length != 0)
 					{
-						Game.UpdateAllSections();
+						Program.CurrentRoute.UpdateAllSections();
 					}
 					TotalTimeElapsedForSectionUpdate = 0.0;
 				}
@@ -683,7 +683,7 @@ namespace OpenBve
 			// signals
 			if (Program.CurrentRoute.Sections.Length > 0)
 			{
-				Game.UpdateAllSections();
+				Program.CurrentRoute.UpdateAllSections();
 			}
 			// move train in position
 			for (int i = 0; i < TrainManager.Trains.Length; i++)
@@ -732,7 +732,7 @@ namespace OpenBve
 			}
 			if (Program.CurrentRoute.Sections.Length > 0)
 			{
-				Game.UpdateAllSections();
+				Program.CurrentRoute.UpdateAllSections();
 			}
 			// fast-forward until start time
 			{
@@ -752,7 +752,7 @@ namespace OpenBve
 						{
 							if (Program.CurrentRoute.Sections.Length > 0)
 							{
-								Game.UpdateAllSections();
+								Program.CurrentRoute.UpdateAllSections();
 							}
 							TotalTimeElapsedForSectionUpdate = 0.0;
 						}

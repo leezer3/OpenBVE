@@ -507,6 +507,12 @@ namespace TrainEditor2.Models
 				}
 
 				Panel.CreateTreeItem();
+
+				foreach (var touch in Panel.Screens.SelectMany(x => x.TouchElements))
+				{
+					touch.CreateTreeItem();
+				}
+
 				Sound.CreateTreeItem();
 
 				SelectedTreeItem = null;
@@ -673,6 +679,12 @@ namespace TrainEditor2.Models
 				}
 
 				Panel.CreateTreeItem();
+
+				foreach (var touch in Panel.Screens.SelectMany(x => x.TouchElements))
+				{
+					touch.CreateTreeItem();
+				}
+
 			}
 			catch (Exception e)
 			{

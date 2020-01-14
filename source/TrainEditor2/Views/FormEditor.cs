@@ -295,15 +295,6 @@ namespace TrainEditor2.Views
 				comboBox.DrawItem += ToolStripComboBoxIndex_DrawItem;
 			}
 
-			comboBoxTouchCommand.Items
-				.AddRange(
-					Enum.GetValues(typeof(Translations.Command))
-						.OfType<Translations.Command>()
-						.Select(c => Translations.CommandInfos.TryGetInfo(c).Name)
-						.OfType<object>()
-						.ToArray()
-				);
-
 			Icon = GetIcon();
 
 			toolStripMenuItemError.Image = Bitmap.FromHicon(SystemIcons.Error.Handle);
@@ -361,6 +352,12 @@ namespace TrainEditor2.Views
 			{
 				app.CurrentLanguageCode.ForceNotify();
 			}
+		}
+
+		private void FormEditor_Resize(object sender, EventArgs e)
+		{
+			Motor.Track.GlControlWidth = glControlMotor.Width;
+			Motor.Track.GlControlHeight = glControlMotor.Height;
 		}
 
 		[UIPermission(SecurityAction.Demand, Window = UIPermissionWindow.AllWindows)]
@@ -561,6 +558,18 @@ namespace TrainEditor2.Views
 			e.Graphics.DrawString(toolStripComboBoxIndex.Items[e.Index].ToString(), e.Font, new SolidBrush(e.ForeColor), e.Bounds.X + e.Bounds.Height + 10, e.Bounds.Y);
 		}
 
+		private void GlControlMotor_Load(object sender, EventArgs e)
+		{
+			glControlMotor.MakeCurrent();
+			Program.Renderer.Initialize(Program.CurrentHost, Interface.CurrentOptions);
+		}
+
+		private void GlControlMotor_Resize(object sender, EventArgs e)
+		{
+			Motor.Track.GlControlWidth = glControlMotor.Width;
+			Motor.Track.GlControlHeight = glControlMotor.Height;
+		}
+
 		private void GlControlMotor_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
 		{
 			switch (e.KeyCode)
@@ -638,6 +647,11 @@ namespace TrainEditor2.Views
 			}
 
 			glControlMotor.SwapBuffers();
+		}
+
+		private void ButtonCouplerObject_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog(textBoxCouplerObject);
 		}
 
 		private void ButtonThisDaytimeImageOpen_Click(object sender, EventArgs e)
@@ -770,32 +784,17 @@ namespace TrainEditor2.Views
 			OpenColorDialog(textBoxTimetableTransparentColor);
 		}
 
+		private void ButtonTouchSoundCommand_Click(object sender, EventArgs e)
+		{
+			using (FormTouch form = new FormTouch(app.Panel.Value.SelectedTouch.Value))
+			{
+				form.ShowDialog(this);
+			}
+		}
+
 		private void ButtonSoundFileNameOpen_Click(object sender, EventArgs e)
 		{
 			OpenFileDialog(textBoxSoundFileName);
-		}
-
-		private void ButtonCouplerObject_Click(object sender, EventArgs e)
-		{
-			OpenFileDialog(textBoxCouplerObject);
-		}
-
-		private void GlControlMotor_Load(object sender, EventArgs e)
-		{
-			glControlMotor.MakeCurrent();
-			Program.Renderer.Initialize(Program.CurrentHost, Interface.CurrentOptions);
-		}
-
-		private void GlControlMotor_Resize(object sender, EventArgs e)
-		{
-			Motor.Track.GlControlWidth = glControlMotor.Width;
-			Motor.Track.GlControlHeight = glControlMotor.Height;
-		}
-
-		private void FormEditor_Resize(object sender, EventArgs e)
-		{
-			Motor.Track.GlControlWidth = glControlMotor.Width;
-			Motor.Track.GlControlHeight = glControlMotor.Height;
 		}
 	}
 }

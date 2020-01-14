@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using OpenBveApi.Interface;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -55,6 +54,22 @@ namespace TrainEditor2.Views
 				.BindToErrorProvider(errorProvider, textBoxTouchLocationY)
 				.AddTo(touchDisposable);
 
+			y.Layer
+				.BindTo(
+					numericUpDownTouchLayer,
+					z => z.Value,
+					BindingMode.TwoWay,
+					null,
+					z => (int)z,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => numericUpDownTouchLayer.ValueChanged += h,
+							h => numericUpDownTouchLayer.ValueChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(touchDisposable);
+
 			y.SizeX
 				.BindTo(
 					textBoxTouchSizeX,
@@ -106,54 +121,6 @@ namespace TrainEditor2.Views
 							h => (s, e) => h(e),
 							h => numericUpDownTouchJumpScreen.ValueChanged += h,
 							h => numericUpDownTouchJumpScreen.ValueChanged -= h
-						)
-						.ToUnit()
-				)
-				.AddTo(touchDisposable);
-
-			y.SoundIndex
-				.BindTo(
-					numericUpDownTouchSoundIndex,
-					z => z.Value,
-					BindingMode.TwoWay,
-					null,
-					z => (int)z,
-					Observable.FromEvent<EventHandler, EventArgs>(
-							h => (s, e) => h(e),
-							h => numericUpDownTouchSoundIndex.ValueChanged += h,
-							h => numericUpDownTouchSoundIndex.ValueChanged -= h
-						)
-						.ToUnit()
-				)
-				.AddTo(touchDisposable);
-
-			y.CommandInfo
-				.BindTo(
-					comboBoxTouchCommand,
-					z => z.SelectedIndex,
-					BindingMode.TwoWay,
-					z => (int)z.Command,
-					z => Translations.CommandInfos.TryGetInfo((Translations.Command)z),
-					Observable.FromEvent<EventHandler, EventArgs>(
-							h => (s, e) => h(e),
-							h => comboBoxTouchCommand.SelectedIndexChanged += h,
-							h => comboBoxTouchCommand.SelectedIndexChanged -= h
-						)
-						.ToUnit()
-				)
-				.AddTo(touchDisposable);
-
-			y.CommandOption
-				.BindTo(
-					numericUpDownTouchCommandOption,
-					z => z.Value,
-					BindingMode.TwoWay,
-					null,
-					z => (int)z,
-					Observable.FromEvent<EventHandler, EventArgs>(
-							h => (s, e) => h(e),
-							h => numericUpDownTouchCommandOption.ValueChanged += h,
-							h => numericUpDownTouchCommandOption.ValueChanged -= h
 						)
 						.ToUnit()
 				)

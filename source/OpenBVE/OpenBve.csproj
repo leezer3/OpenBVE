@@ -135,9 +135,7 @@
     <Compile Include="Game\Score\Score.ScoreMessage.cs" />
     <Compile Include="Game\Score\Score.Tokens.cs" />
     <Compile Include="Game\Score\Score.Values.cs" />
-    <Compile Include="Game\Signalling.cs" />
     <Compile Include="Game\Station.cs" />
-    <Compile Include="Game\TrackManager\TrackManager.cs" />
     <Compile Include="Graphics\HUD\HUD.cs" />
     <Compile Include="Graphics\HUD\HUD.Element.cs">
       <DependentUpon>HUD.cs</DependentUpon>

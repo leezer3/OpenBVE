@@ -35,6 +35,7 @@ namespace OpenBve.Graphics.Renderers
 		{
 			//Initialize openGL
 			renderer.SetBlendFunc();
+			GL.Enable(EnableCap.Blend);
 			renderer.PushMatrix(MatrixMode.Projection);
 			Matrix4D.CreateOrthographicOffCenter(0.0f, renderer.Screen.Width, renderer.Screen.Height, 0.0f, -1.0f, 1.0f, out renderer.CurrentProjectionMatrix);
 			renderer.PushMatrix(MatrixMode.Modelview);

@@ -931,20 +931,20 @@ namespace OpenBve {
 												{
 													if (Subject == "power")
 													{
-														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, -1, Translations.Command.PowerDecrease, 0, new Vector2(0.5, 0.5), PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
-														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, -1, Translations.Command.PowerIncrease, 0, new Vector2(0.5, 0.5), PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
+														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new TrainManager.CommandEntry { Command = Translations.Command.PowerDecrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
+														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new TrainManager.CommandEntry { Command = Translations.Command.PowerIncrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
 													}
 
 													if (Subject == "brake")
 													{
-														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, -1, Translations.Command.BrakeIncrease, 0, new Vector2(0.5, 0.5), PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
-														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, -1, Translations.Command.BrakeDecrease, 0, new Vector2(0.5, 0.5), PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
+														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new TrainManager.CommandEntry { Command = Translations.Command.BrakeIncrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
+														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new TrainManager.CommandEntry { Command = Translations.Command.BrakeDecrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
 													}
 
 													if (Subject == "reverser")
 													{
-														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, -1, Translations.Command.ReverserForward, 0, new Vector2(0.5, 0.5), PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
-														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, -1, Translations.Command.ReverserBackward, 0, new Vector2(0.5, 0.5), PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
+														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new TrainManager.CommandEntry { Command = Translations.Command.ReverserForward } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
+														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new TrainManager.CommandEntry { Command = Translations.Command.ReverserBackward } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
 													}
 												}
 											}

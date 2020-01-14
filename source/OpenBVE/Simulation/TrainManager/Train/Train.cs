@@ -72,8 +72,6 @@ namespace OpenBve
 				
 				Specs.DoorOpenMode = DoorMode.AutomaticManualOverride;
 				Specs.DoorCloseMode = DoorMode.AutomaticManualOverride;
-				Specs.DoorWidth = 1000.0;
-				Specs.DoorMaxTolerance = 0.0;
 			}
 
 			internal void Initialize()
@@ -105,7 +103,7 @@ namespace OpenBve
 				}
 				if (Program.CurrentRoute.Sections.Length != 0)
 				{
-					Game.UpdateAllSections();
+					Program.CurrentRoute.UpdateAllSections();
 				}
 			}
 
@@ -665,17 +663,35 @@ namespace OpenBve
 				Specs.CurrentAirDensity = Program.CurrentRoute.Atmosphere.GetAirDensity(Specs.CurrentAirPressure, Specs.CurrentAirTemperature);
 			}
 
-			/// <summary>Updates the safety system for this train</summary>
+			/// <summary>Updates the safety system plugin for this train</summary>
 			internal void UpdateSafetySystem()
 			{
-				Game.UpdatePluginSections(this);
 				if (Plugin != null)
 				{
+					SignalData[] data = new SignalData[16];
+					int count = 0;
+					int start = CurrentSectionIndex >= 0 ? CurrentSectionIndex : 0;
+					for (int i = start; i < Program.CurrentRoute.Sections.Length; i++)
+					{
+						SignalData signal = Program.CurrentRoute.Sections[i].GetPluginSignal(this);
+						if (data.Length == count)
+						{
+							Array.Resize<SignalData>(ref data, data.Length << 1);
+						}
+						data[count] = signal;
+						count++;
+						if (signal.Aspect == 0 | count == 16)
+						{
+							break;
+						}
+					}
+					Array.Resize<SignalData>(ref data, count);
+					Plugin.UpdateSignals(data);
 					Plugin.LastSection = CurrentSectionIndex;
 					Plugin.UpdatePlugin();
 				}
 			}
-
+			
 			/// <summary>Updates the objects for all cars in this train</summary>
 			/// <param name="TimeElapsed">The time elapsed</param>
 			/// <param name="ForceUpdate">Whether this is a forced update</param>

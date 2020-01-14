@@ -18,12 +18,19 @@ namespace OpenBveApi.Routes
 		/// <summary>The OpenGL/OpenTK VAO for the background</summary>
 		public object VAO;
 
+		public int DisplayList = 0;
+
 		/// <summary>Creates a new static background, using the default 0.8s fade-in time</summary>
 		/// <param name="Texture">The texture to apply</param>
 		/// <param name="Repetition">The number of times the texture should be repeated around the viewing frustrum</param>
 		/// <param name="KeepAspectRatio">Whether the aspect ratio of the texture should be preseved</param>
-		public StaticBackground(Texture Texture, double Repetition, bool KeepAspectRatio) : this(Texture, Repetition, KeepAspectRatio, 0.8, BackgroundTransitionMode.FadeIn)
+		/// <param name="Distance">The viewing distance</param>
+		public StaticBackground(Texture Texture, double Repetition, bool KeepAspectRatio, double Distance = 0) : this(Texture, Repetition, KeepAspectRatio, 0.8, BackgroundTransitionMode.FadeIn)
 		{
+			if (Distance > 0)
+			{
+				BackgroundImageDistance = Distance;
+			}
 		}
 
 		/// <summary>Creates a new static background</summary>

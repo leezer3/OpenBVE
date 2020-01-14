@@ -28,7 +28,7 @@ namespace LibRender2.Texts
 			{
 				return;
 			}
-
+			renderer.LastBoundTexture = null;
 			/*
 			 * Prepare the top-left coordinates for rendering, incorporating the
 			 * orientation of the string in relation to the specified location.
@@ -165,8 +165,6 @@ namespace LibRender2.Texts
 			}
 
 			renderer.RestoreBlendFunc();
-
-			GL.BindTexture(TextureTarget.Texture2D, 0);
 			GL.Disable(EnableCap.Texture2D);
 
 			GL.PopMatrix();

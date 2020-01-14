@@ -1,11 +1,11 @@
-﻿#version 130
+#version 150
 
 struct Light
 {
     vec3 position;
-    vec4 ambient;
-    vec4 diffuse;
-    vec4 specular;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
 };
 
 struct MaterialColor
@@ -13,8 +13,9 @@ struct MaterialColor
     vec4 ambient;
     vec4 diffuse;
     vec4 specular;
-	vec4 emission;
+	vec3 emission;
     float shininess;
+	bool isEmissive;
 }; 
 
 in vec3 iPosition;
@@ -24,10 +25,10 @@ in vec4 iColor;
 
 uniform mat4 uCurrentProjectionMatrix;
 uniform mat4 uCurrentModelViewMatrix;
-uniform mat4 uCurrentNormalMatrix;
 uniform mat4 uCurrentTextureMatrix;
 
 uniform bool uIsLight;
+uniform bool uIsEmissive;
 uniform Light uLight;
 uniform MaterialColor uMaterial;
 uniform bool uIsFog;
@@ -41,18 +42,18 @@ out float oFogFactor;
 void main()
 {
 	vec4 viewPos = uCurrentModelViewMatrix * vec4(vec3(iPosition.x, iPosition.y, -iPosition.z), 1.0);
-	vec4 viewNormal = uCurrentNormalMatrix * vec4(vec3(iNormal.x, iNormal.y, -iNormal.z), 1.0);
+	vec3 viewNormal = mat3(transpose(inverse(uCurrentModelViewMatrix))) * vec3(iNormal.x, iNormal.y, -iNormal.z);
 	gl_Position = uCurrentProjectionMatrix * viewPos;
 
 	// Lighting
 	// Ambient
-	vec4 ambient  = uLight.ambient * uMaterial.ambient;
+	vec4 ambient  = vec4(uLight.ambient.x, uLight.ambient.y, uLight.ambient.z, 1.0) * uMaterial.ambient;
 
 	// Diffuse
-	vec3 norm = normalize(viewNormal.xyz);
+	viewNormal = normalize(viewNormal);
 	vec3 eye = normalize(-viewPos.xyz);
-	float diff = max(dot(norm, uLight.position), 0.0);
-	vec4 diffuse = uLight.diffuse * (diff * uMaterial.diffuse);
+	float diff = max(dot(viewNormal, uLight.position), 0.0);
+	vec4 diffuse = vec4(uLight.diffuse.x, uLight.diffuse.y, uLight.diffuse.z, 1.0) * (diff * uMaterial.diffuse);
 
 	// Specular
 	vec4 specular = vec4(0.0);
@@ -60,11 +61,9 @@ void main()
 	if(diff > 0.0)
 	{
 		vec3 halfVector = normalize(uLight.position + eye);
-		float spec = pow(max(dot(halfVector, norm), 0.0), uMaterial.shininess);
-		specular = uLight.specular * (spec * uMaterial.specular);
+		float spec = pow(max(dot(halfVector, viewNormal), 0.0), uMaterial.shininess);
+		specular = vec4(uLight.specular.x, uLight.specular.y, uLight.specular.z, 1.0) * (spec * uMaterial.specular);
 	}
-
-	vec4 result = clamp(ambient + diffuse + specular + uMaterial.emission, 0.0, 1.0);
 
 	// Fog
 	oFogFactor = 1.0;
@@ -80,7 +79,19 @@ void main()
 
 	if (uIsLight)
 	{
-		oColor *= result;
+		vec4 result;
+		if(uMaterial.isEmissive)
+		{
+			vec4 result = clamp(ambient + diffuse + specular + vec4(uMaterial.emission.x, uMaterial.emission.y, uMaterial.emission.z, 1.0), 0.0, 1.0);
+			oColor *= result;
+		}
+		else
+		{
+			vec4 result = clamp(ambient + diffuse + specular, 0.0, 1.0);
+			oColor *= result;
+		}
+		
+		
 	}
 	else
 	{

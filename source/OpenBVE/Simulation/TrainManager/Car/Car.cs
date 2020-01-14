@@ -78,13 +78,16 @@ namespace OpenBve
 				baseTrain = train;
 				Index = index;
 				CarSections = new CarSection[] { };
-				FrontAxle.Follower = new TrackFollower(Program.CurrentHost, train, this);
-				RearAxle.Follower = new TrackFollower(Program.CurrentHost, train, this);
+				FrontAxle = new Axle(train, this);
+				RearAxle = new Axle(train, this);
 				BeaconReceiver = new TrackFollower(Program.CurrentHost, train);
 				FrontBogie = new Bogie(train, this);
 				RearBogie = new Bogie(train, this);
 				Doors = new Door[2];
-				
+				Doors[0].Width = 1000.0;
+				Doors[0].MaxTolerance = 0.0;
+				Doors[1].Width = 1000.0;
+				Doors[1].MaxTolerance = 0.0;
 			}
 
 			/// <summary>Moves the car</summary>
@@ -513,7 +516,7 @@ namespace OpenBve
 						if (this.HasInteriorView && this.CarSections.Length > 0)
 						{
 							this.CurrentCarSection = 0;
-							this.CarSections[0].Initialize(true);
+							this.CarSections[0].Initialize(false);
 							CarSections[0].Show();
 							break;
 						}
@@ -523,14 +526,14 @@ namespace OpenBve
 						if (this.HasInteriorView && this.CarSections.Length > 1)
 						{
 							this.CurrentCarSection = 1;
-							this.CarSections[1].Initialize(true);
+							this.CarSections[1].Initialize(false);
 							CarSections[1].Show();
 							break;
 						}
 						else if(!this.HasInteriorView && this.CarSections.Length > 0)
 						{
 							this.CurrentCarSection = 0;
-							this.CarSections[0].Initialize(true);
+							this.CarSections[0].Initialize(false);
 							CarSections[0].Show();
 							break;
 						}

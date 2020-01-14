@@ -422,7 +422,7 @@ namespace OpenBve {
 			Array.Resize(ref ObjectManager.AnimatedWorldObjects, ObjectManager.AnimatedWorldObjectsUsed);
 			// update sections
 			if (Program.CurrentRoute.Sections.Length > 0) {
-				Game.UpdateAllSections();
+				Program.CurrentRoute.UpdateAllSections();
 			}
 			// load plugin
 			for (int i = 0; i < TrainManager.Trains.Length; i++) {

@@ -661,13 +661,14 @@ namespace OpenBve.Graphics.Renderers
 				case "dist_next_station2":
 					if (!Program.CurrentRoute.Stations[stationIndex].PlayerStops())
 					{
-						int n = Program.CurrentRoute.Stations[stationIndex].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
+						
 						double p0 = TrainManager.PlayerTrain.FrontCarTrackPosition();
 						double p1 = 0.0;
 						for (int i = stationIndex; i < Program.CurrentRoute.Stations.Length; i++)
 						{
 							if (Program.CurrentRoute.Stations[i].PlayerStops())
 							{
+								int n = Program.CurrentRoute.Stations[i].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
 								p1 = Program.CurrentRoute.Stations[i].Stops.Length > 0 ? Program.CurrentRoute.Stations[i].Stops[n].TrackPosition : Program.CurrentRoute.Stations[i].DefaultTrackPosition;
 							}
 						}

@@ -25,7 +25,7 @@ namespace LibRender2.MotionBlurs
 			{
 				return;
 			}
-
+			renderer.LastBoundTexture = null;
 			if (PixelBufferOpenGlTextureIndex != 0)
 			{
 				GL.DeleteTextures(1, new int[] { PixelBufferOpenGlTextureIndex });
@@ -54,7 +54,7 @@ namespace LibRender2.MotionBlurs
 		         */
 				return;
 			}
-
+			renderer.LastBoundTexture = null;
 			GL.Enable(EnableCap.Texture2D);
 
 			// render
@@ -120,8 +120,6 @@ namespace LibRender2.MotionBlurs
 				GL.BindTexture(TextureTarget.Texture2D, PixelBufferOpenGlTextureIndex);
 				GL.CopyTexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgb8, 0, 0, renderer.Screen.Width, renderer.Screen.Height, 0);
 			}
-
-			GL.BindTexture(TextureTarget.Texture2D, 0);
 			GL.Disable(EnableCap.Texture2D);
 		}
 	}

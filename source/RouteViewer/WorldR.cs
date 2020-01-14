@@ -20,7 +20,7 @@ namespace OpenBve {
 			double zm = Program.Renderer.Camera.Alignment.Zoom;
 			AdjustAlignment(ref Program.Renderer.Camera.Alignment.Zoom, Program.Renderer.Camera.AlignmentDirection.Zoom, ref Program.Renderer.Camera.AlignmentSpeed.Zoom, TimeElapsed, Program.Renderer.Camera.AlignmentSpeed.Zoom != 0.0);
 			if (zm != Program.Renderer.Camera.Alignment.Zoom) {
-				ApplyZoom();
+				Program.Renderer.Camera.ApplyZoom();
 			}
 			// current alignment
 			AdjustAlignment(ref Program.Renderer.Camera.Alignment.Position.X, Program.Renderer.Camera.AlignmentDirection.Position.X, ref Program.Renderer.Camera.AlignmentSpeed.Position.X, TimeElapsed);
@@ -96,12 +96,6 @@ namespace OpenBve {
 				}
 				Source += Speed * TimeElapsed;
 			}
-		}
-		private static void ApplyZoom() {
-			Program.Renderer.Camera.VerticalViewingAngle = Program.Renderer.Camera.OriginalVerticalViewingAngle * Math.Exp(Program.Renderer.Camera.Alignment.Zoom);
-			if (Program.Renderer.Camera.VerticalViewingAngle < 0.001) Program.Renderer.Camera.VerticalViewingAngle = 0.001;
-			if (Program.Renderer.Camera.VerticalViewingAngle > 1.5) Program.Renderer.Camera.VerticalViewingAngle = 1.5;
-			Program.Renderer.UpdateViewport();
 		}
 
 		// update viewing distance

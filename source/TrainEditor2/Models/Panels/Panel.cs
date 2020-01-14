@@ -224,9 +224,7 @@ namespace TrainEditor2.Models.Panels
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Location" });
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Size" });
 				ListColumns.Add(new ListViewColumnHeaderModel { Text = "JumpScreen" });
-				ListColumns.Add(new ListViewColumnHeaderModel { Text = "SoundIndex" });
-				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Command" });
-				ListColumns.Add(new ListViewColumnHeaderModel { Text = "CommandOption" });
+				ListColumns.Add(new ListViewColumnHeaderModel { Text = "Layer" });
 			}
 		}
 
@@ -378,7 +376,7 @@ namespace TrainEditor2.Models.Panels
 				{
 					ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = touch };
 
-					for (int i = 0; i < 6; i++)
+					for (int i = 0; i < 4; i++)
 					{
 						newItem.SubItems.Add(new ListViewSubItemModel());
 					}
@@ -490,9 +488,7 @@ namespace TrainEditor2.Models.Panels
 				item.SubItems[0].Text = $"{touch.LocationX.ToString(culture)}, {touch.LocationY.ToString(culture)}";
 				item.SubItems[1].Text = $"{touch.SizeX.ToString(culture)}, {touch.SizeY.ToString(culture)}";
 				item.SubItems[2].Text = touch.JumpScreen.ToString(culture);
-				item.SubItems[3].Text = touch.SoundIndex.ToString(culture);
-				item.SubItems[4].Text = touch.CommandInfo.Name;
-				item.SubItems[5].Text = touch.CommandOption.ToString(culture);
+				item.SubItems[3].Text = touch.Layer.ToString(culture);
 			}
 		}
 
@@ -693,7 +689,7 @@ namespace TrainEditor2.Models.Panels
 
 			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = touch };
 
-			for (int i = 0; i < 6; i++)
+			for (int i = 0; i < 4; i++)
 			{
 				newItem.SubItems.Add(new ListViewSubItemModel());
 			}
@@ -901,7 +897,7 @@ namespace TrainEditor2.Models.Panels
 
 			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = touch };
 
-			for (int i = 0; i < 6; i++)
+			for (int i = 0; i < 4; i++)
 			{
 				newItem.SubItems.Add(new ListViewSubItemModel());
 			}

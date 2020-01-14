@@ -2,9 +2,8 @@
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Textures;
-using OpenTK;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
+using System;
 
 namespace LibRender2.Backgrounds
 {
@@ -59,7 +58,15 @@ namespace LibRender2.Backgrounds
 
 			if (staticBackground != null)
 			{
-				RenderStaticBackground(staticBackground, Alpha, Scale);
+				if (renderer.currentOptions.IsUseNewRenderer)
+				{
+					RenderStaticBackground(staticBackground, Alpha, Scale);
+				}
+				else
+				{
+					RenderStaticBackgroundImmediate(staticBackground, Alpha, Scale);
+				}
+				
 			}
 
 			if (backgroundObject != null)
@@ -75,19 +82,43 @@ namespace LibRender2.Backgrounds
 		{
 			if (data.PreviousBackgroundIndex == data.CurrentBackgroundIndex)
 			{
-				RenderStaticBackground(data.StaticBackgrounds[data.CurrentBackgroundIndex], 1.0f, scale);
+				if (renderer.currentOptions.IsUseNewRenderer)
+				{
+					RenderStaticBackground(data.StaticBackgrounds[data.CurrentBackgroundIndex], 1.0f, scale);
+				}
+				else
+				{
+					RenderStaticBackgroundImmediate(data.StaticBackgrounds[data.CurrentBackgroundIndex], 1.0f, scale);
+				}
+				
 				return;
 			}
 
 			switch (data.StaticBackgrounds[data.CurrentBackgroundIndex].Mode)
 			{
 				case BackgroundTransitionMode.FadeIn:
-					RenderStaticBackground(data.StaticBackgrounds[data.PreviousBackgroundIndex], 1.0f, scale);
-					RenderStaticBackground(data.StaticBackgrounds[data.CurrentBackgroundIndex], data.CurrentAlpha, scale);
+					if (renderer.currentOptions.IsUseNewRenderer)
+					{
+						RenderStaticBackground(data.StaticBackgrounds[data.PreviousBackgroundIndex], 1.0f, scale);
+						RenderStaticBackground(data.StaticBackgrounds[data.CurrentBackgroundIndex], data.CurrentAlpha, scale);
+					}
+					else
+					{
+						RenderStaticBackgroundImmediate(data.StaticBackgrounds[data.PreviousBackgroundIndex], 1.0f, scale);
+						RenderStaticBackground(data.StaticBackgrounds[data.CurrentBackgroundIndex], data.CurrentAlpha, scale);
+					}
 					break;
 				case BackgroundTransitionMode.FadeOut:
-					RenderStaticBackground(data.StaticBackgrounds[data.CurrentBackgroundIndex], 1.0f, scale);
-					RenderStaticBackground(data.StaticBackgrounds[data.PreviousBackgroundIndex], data.CurrentAlpha, scale);
+					if (renderer.currentOptions.IsUseNewRenderer)
+					{
+						RenderStaticBackground(data.StaticBackgrounds[data.CurrentBackgroundIndex], 1.0f, scale);
+						RenderStaticBackground(data.StaticBackgrounds[data.PreviousBackgroundIndex], data.CurrentAlpha, scale);
+					}
+					else
+					{
+						RenderStaticBackgroundImmediate(data.StaticBackgrounds[data.CurrentBackgroundIndex], 1.0f, scale);
+						RenderStaticBackgroundImmediate(data.StaticBackgrounds[data.PreviousBackgroundIndex], data.CurrentAlpha, scale);
+					}
 					break;
 			}
 		}
@@ -98,7 +129,15 @@ namespace LibRender2.Backgrounds
 		/// <param name="scale">The scale</param>
 		private void RenderDynamicBackground(DynamicBackground data, float alpha, float scale)
 		{
-			RenderStaticBackground(data.StaticBackgrounds[data.CurrentBackgroundIndex], alpha, scale);
+			if (renderer.currentOptions.IsUseNewRenderer)
+			{
+				RenderStaticBackground(data.StaticBackgrounds[data.CurrentBackgroundIndex], alpha, scale);
+			}
+			else
+			{
+				RenderStaticBackgroundImmediate(data.StaticBackgrounds[data.CurrentBackgroundIndex], alpha, scale);
+			}
+			
 		}
 
 		/// <summary>Renders a static frustrum based background</summary>
@@ -106,7 +145,15 @@ namespace LibRender2.Backgrounds
 		/// <param name="scale">The scale</param>
 		private void RenderStaticBackground(StaticBackground data, float scale)
 		{
-			RenderStaticBackground(data, 1.0f, scale);
+			if (renderer.currentOptions.IsUseNewRenderer)
+			{
+				RenderStaticBackground(data, 1.0f, scale);
+			}
+			else
+			{
+				RenderStaticBackgroundImmediate(data, 1.0f, scale);
+			}
+			
 		}
 
 		/// <summary>Renders a static frustrum based background</summary>
@@ -117,6 +164,7 @@ namespace LibRender2.Backgrounds
 		{
 			if (data.Texture != null && renderer.currentHost.LoadTexture(data.Texture, OpenGlTextureWrapMode.RepeatClamp))
 			{
+				renderer.LastBoundTexture = data.Texture.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp];
 				GL.Enable(EnableCap.Texture2D);
 
 				if (alpha == 1.0f)
@@ -153,6 +201,7 @@ namespace LibRender2.Backgrounds
 				renderer.DefaultShader.SetIsTexture(true);
 				renderer.DefaultShader.SetTexture(0);
 				GL.BindTexture(TextureTarget.Texture2D, data.Texture.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp].Name);
+				renderer.LastBoundTexture = null;
 
 				// alpha test
 				renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
@@ -162,22 +211,154 @@ namespace LibRender2.Backgrounds
 
 				// render polygon
 				VertexArrayObject VAO = (VertexArrayObject) data.VAO;
-				VAO.Bind();
-
+				VAO.BindForDrawing(renderer.DefaultShader.VertexLayout);
+				renderer.lastVAO = VAO.handle;
 				for (int i = 0; i + 9 < 32 * 10; i += 10)
 				{
-					VAO.Draw(renderer.DefaultShader.VertexLayout, PrimitiveType.Quads, i, 4);
-					VAO.Draw(renderer.DefaultShader.VertexLayout, PrimitiveType.Triangles, i + 4, 3);
-					VAO.Draw(renderer.DefaultShader.VertexLayout, PrimitiveType.Triangles, i + 7, 3);
+					VAO.Draw(PrimitiveType.Quads, i, 4);
+					VAO.Draw(PrimitiveType.Triangles, i + 4, 3);
+					VAO.Draw(PrimitiveType.Triangles, i + 7, 3);
 				}
-
-				VAO.UnBind();
-
-				GL.BindTexture(TextureTarget.Texture2D, 0);
 				renderer.DefaultShader.Deactivate();
 
 				GL.Disable(EnableCap.Texture2D);
 				renderer.RestoreBlendFunc();
+			}
+		}
+
+		/// <summary>Renders a static frustrum based background</summary>
+		/// <param name="data">The background to render</param>
+		/// <param name="alpha">The alpha level</param>
+		/// <param name="scale">The scale</param>
+		private void RenderStaticBackgroundImmediate(StaticBackground data, float alpha, float scale)
+		{
+			//return;
+			if (data.Texture != null && renderer.currentHost.LoadTexture(data.Texture, OpenGlTextureWrapMode.RepeatClamp))
+			{
+				GL.MatrixMode(MatrixMode.Projection);
+				GL.PushMatrix();
+				GL.LoadIdentity();
+				OpenTK.Matrix4d perspective = OpenTK.Matrix4d.Perspective(renderer.Camera.VerticalViewingAngle, -renderer.Screen.AspectRatio, 0.2, 1000.0);
+				GL.MultMatrix(ref perspective);
+				double dx = renderer.Camera.AbsoluteDirection.X;
+				double dy = renderer.Camera.AbsoluteDirection.Y;
+				double dz = renderer.Camera.AbsoluteDirection.Z;
+				double ux = renderer.Camera.AbsoluteUp.X;
+				double uy = renderer.Camera.AbsoluteUp.Y;
+				double uz = renderer.Camera.AbsoluteUp.Z;
+				OpenTK.Matrix4d lookat = OpenTK.Matrix4d.LookAt(0.0, 0.0, 0.0, dx, dy, dz, ux, uy, uz);
+				GL.MatrixMode(MatrixMode.Modelview);
+				GL.PushMatrix();
+				GL.LoadMatrix(ref lookat);
+				GL.Disable(EnableCap.Lighting);
+				GL.Enable(EnableCap.Texture2D);
+				if (alpha == 1.0f)
+				{
+					GL.Disable(EnableCap.Blend);
+				}
+				else
+				{
+					GL.Enable(EnableCap.Blend);
+				}
+				GL.BindTexture(TextureTarget.Texture2D, data.Texture.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp].Name);
+				renderer.LastBoundTexture = data.Texture.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp];
+				GL.Color4(1.0f, 1.0f, 1.0f, alpha);
+				if (renderer.OptionFog)
+				{
+					GL.Enable(EnableCap.Fog);
+				}
+				if (data.DisplayList > 0)
+				{
+					GL.CallList(data.DisplayList);
+					GL.Disable(EnableCap.Texture2D);
+					GL.Enable(EnableCap.Blend);
+					GL.PopMatrix();
+					GL.MatrixMode(MatrixMode.Projection);
+					GL.PopMatrix();
+					return;
+				}
+				else
+				{
+					data.DisplayList = GL.GenLists(1);
+					GL.NewList(data.DisplayList, ListMode.Compile);
+					float y0, y1;
+					if (data.KeepAspectRatio)
+					{
+						int tw = data.Texture.Width;
+						int th = data.Texture.Height;
+						double hh = Math.PI * data.BackgroundImageDistance * (double)th /
+									((double)tw * (double)data.Repetition);
+						y0 = (float)(-0.5 * hh);
+						y1 = (float)(1.5 * hh);
+					}
+					else
+					{
+						y0 = (float)(-0.125 * data.BackgroundImageDistance);
+						y1 = (float)(0.375 * data.BackgroundImageDistance);
+					}
+					const int n = 32;
+					Vector3[] bottom = new Vector3[n];
+					Vector3[] top = new Vector3[n];
+					double angleValue = 2.61799387799149 - 3.14159265358979 / (double)n;
+					const double angleIncrement = 6.28318530717958 / (double)n;
+					/*
+				 * To ensure that the whole background cylinder is rendered inside the viewing frustum,
+				 * the background is rendered before the scene with z-buffer writes disabled. Then,
+				 * the actual distance from the camera is irrelevant as long as it is inside the frustum.
+				 * */
+					for (int i = 0; i < n; i++)
+					{
+						float x = (float)(data.BackgroundImageDistance * Math.Cos(angleValue));
+						float z = (float)(data.BackgroundImageDistance * Math.Sin(angleValue));
+						bottom[i] = new Vector3(scale * x, scale * y0, scale * z);
+						top[i] = new Vector3(scale * x, scale * y1, scale * z);
+						angleValue += angleIncrement;
+					}
+					float textureStart = 0.5f * (float)data.Repetition / (float)n;
+					float textureIncrement = -(float)data.Repetition / (float)n;
+					double textureX = textureStart;
+					for (int i = 0; i < n; i++)
+					{
+						int j = (i + 1) % n;
+						// side wall
+						GL.Begin(PrimitiveType.Quads);
+						GL.TexCoord2(textureX, 0.005f);
+						GL.Vertex3(top[i].X, top[i].Y, top[i].Z);
+						GL.TexCoord2(textureX, 0.995f);
+						GL.Vertex3(bottom[i].X, bottom[i].Y, bottom[i].Z);
+						GL.TexCoord2(textureX + textureIncrement, 0.995f);
+						GL.Vertex3(bottom[j].X, bottom[j].Y, bottom[j].Z);
+						GL.TexCoord2(textureX + textureIncrement, 0.005f);
+						GL.Vertex3(top[j].X, top[j].Y, top[j].Z);
+						GL.End();
+						// top cap
+						GL.Begin(PrimitiveType.Triangles);
+						GL.TexCoord2(textureX, 0.005f);
+						GL.Vertex3(top[i].X, top[i].Y, top[i].Z);
+						GL.TexCoord2(textureX + textureIncrement, 0.005f);
+						GL.Vertex3(top[j].X, top[j].Y, top[j].Z);
+						GL.TexCoord2(textureX + 0.5 * textureIncrement, 0.1f);
+						GL.Vertex3(0.0f, top[i].Y, 0.0f);
+						// bottom cap
+						GL.TexCoord2(textureX + 0.5 * textureIncrement, 0.9f);
+						GL.Vertex3(0.0f, bottom[i].Y, 0.0f);
+						GL.TexCoord2(textureX + textureIncrement, 0.995f);
+						GL.Vertex3(bottom[j].X, bottom[j].Y, bottom[j].Z);
+						GL.TexCoord2(textureX, 0.995f);
+						GL.Vertex3(bottom[i].X, bottom[i].Y, bottom[i].Z);
+						GL.End();
+						// finish
+						textureX += textureIncrement;
+					}
+					GL.EndList();
+					GL.CallList(data.DisplayList);
+					GL.Disable(EnableCap.Texture2D);
+					GL.Enable(EnableCap.Blend);
+					GL.PopMatrix();
+					GL.MatrixMode(MatrixMode.Projection);
+					GL.PopMatrix();
+
+				}				
 			}
 		}
 

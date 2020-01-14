@@ -370,7 +370,6 @@ namespace TrainEditor2.ViewModels.Sounds
 
 		internal SoundViewModel(Sound sound)
 		{
-			CompositeDisposable treeItemDisposable = new CompositeDisposable();
 			CompositeDisposable listItemDisposable = new CompositeDisposable();
 
 			TrainManager.RunSounds = sound.SoundElements.OfType<RunElement>().ToList();
@@ -1058,7 +1057,6 @@ namespace TrainEditor2.ViewModels.Sounds
 				.WithSubscribe(sound.RemoveElement<OthersElement>)
 				.AddTo(disposable);
 
-			treeItemDisposable.AddTo(disposable);
 			listItemDisposable.AddTo(disposable);
 		}
 	}

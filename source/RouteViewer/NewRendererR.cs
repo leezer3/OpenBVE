@@ -257,7 +257,13 @@ namespace OpenBve
 			// set up camera
 			CurrentViewMatrix = Matrix4D.LookAt(Vector3.Zero, new Vector3(Camera.AbsoluteDirection.X, Camera.AbsoluteDirection.Y, -Camera.AbsoluteDirection.Z), new Vector3(Camera.AbsoluteUp.X, Camera.AbsoluteUp.Y, -Camera.AbsoluteUp.Z));
 			GL.Light(LightName.Light0, LightParameter.Position, new[] { (float)Lighting.OptionLightPosition.X, (float)Lighting.OptionLightPosition.Y, (float)-Lighting.OptionLightPosition.Z, 0.0f });
+			
+			Lighting.OptionLightingResultingAmount = (Lighting.OptionAmbientColor.R + Lighting.OptionAmbientColor.G + Lighting.OptionAmbientColor.B) / 480.0f;
 
+			if (Lighting.OptionLightingResultingAmount > 1.0f)
+			{
+				Lighting.OptionLightingResultingAmount = 1.0f;
+			}
 			// fog
 			double fd = Program.CurrentRoute.NextFog.TrackPosition - Program.CurrentRoute.PreviousFog.TrackPosition;
 
@@ -304,16 +310,35 @@ namespace OpenBve
 
 			// world layer
 			// opaque face
+			if (Interface.CurrentOptions.IsUseNewRenderer)
+			{
+				//Setup the shader for rendering the scene
+				DefaultShader.Activate();
+				if (OptionLighting)
+				{
+					DefaultShader.SetIsLight(true);
+					DefaultShader.SetLightPosition(Lighting.OptionLightPosition);
+					DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
+					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
+					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
+				}
+				if (OptionFog)
+				{
+					DefaultShader.SetIsFog(true);
+					DefaultShader.SetFogStart(Fog.Start);
+					DefaultShader.SetFogEnd(Fog.End);
+					DefaultShader.SetFogColor(Fog.Color);
+				}
+				DefaultShader.SetTexture(0);
+				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
+			}
 			ResetOpenGlState();
 
 			foreach (FaceState face in VisibleObjects.OpaqueFaces)
 			{
 				if (Interface.CurrentOptions.IsUseNewRenderer)
 				{
-					DefaultShader.Activate();
-					ResetShader(DefaultShader);
 					RenderFace(DefaultShader, face);
-					DefaultShader.Deactivate();
 				}
 				else
 				{
@@ -335,10 +360,7 @@ namespace OpenBve
 				{
 					if (Interface.CurrentOptions.IsUseNewRenderer)
 					{
-						DefaultShader.Activate();
-						ResetShader(DefaultShader);
 						RenderFace(DefaultShader, face);
-						DefaultShader.Deactivate();
 					}
 					else
 					{
@@ -360,10 +382,7 @@ namespace OpenBve
 						{
 							if (Interface.CurrentOptions.IsUseNewRenderer)
 							{
-								DefaultShader.Activate();
-								ResetShader(DefaultShader);
 								RenderFace(DefaultShader, face);
-								DefaultShader.Deactivate();
 							}
 							else
 							{
@@ -390,10 +409,7 @@ namespace OpenBve
 
 						if (Interface.CurrentOptions.IsUseNewRenderer)
 						{
-							DefaultShader.Activate();
-							ResetShader(DefaultShader);
 							RenderFace(DefaultShader, face);
-							DefaultShader.Deactivate();
 						}
 						else
 						{
@@ -410,10 +426,7 @@ namespace OpenBve
 
 						if (Interface.CurrentOptions.IsUseNewRenderer)
 						{
-							DefaultShader.Activate();
-							ResetShader(DefaultShader);
 							RenderFace(DefaultShader, face);
-							DefaultShader.Deactivate();
 						}
 						else
 						{
@@ -424,6 +437,10 @@ namespace OpenBve
 			}
 
 			// render overlays
+			if (Interface.CurrentOptions.IsUseNewRenderer)
+			{
+				DefaultShader.Deactivate();
+			}
 			ResetOpenGlState();
 			OptionLighting = false;
 			OptionFog = false;

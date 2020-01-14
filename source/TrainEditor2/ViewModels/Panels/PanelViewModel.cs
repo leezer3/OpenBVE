@@ -204,7 +204,6 @@ namespace TrainEditor2.ViewModels.Panels
 
 		internal PanelViewModel(Panel panel)
 		{
-			CompositeDisposable treeItemDisposable = new CompositeDisposable();
 			CompositeDisposable listItemDisposable = new CompositeDisposable();
 
 			This = panel
@@ -558,7 +557,6 @@ namespace TrainEditor2.ViewModels.Panels
 				.WithSubscribe(panel.RemoveTouch)
 				.AddTo(disposable);
 
-			treeItemDisposable.AddTo(disposable);
 			listItemDisposable.AddTo(disposable);
 		}
 	}

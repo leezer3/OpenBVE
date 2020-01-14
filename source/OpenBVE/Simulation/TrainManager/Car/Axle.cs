@@ -7,7 +7,7 @@ namespace OpenBve
 	public static partial class TrainManager
 	{
 		// axle
-		internal struct Axle
+		internal class Axle
 		{
 			internal TrackFollower Follower;
 			internal bool CurrentWheelSlip;
@@ -19,6 +19,11 @@ namespace OpenBve
 			internal bool PointSoundTriggered;
 
 			internal bool Derailed;
+
+			internal Axle(TrainManager.Train Train, TrainManager.Car Car)
+			{
+				Follower = new TrackFollower(Program.CurrentHost, Train, Car);
+			}
 		}
 	}
 }

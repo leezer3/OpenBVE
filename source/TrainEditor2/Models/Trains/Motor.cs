@@ -135,6 +135,7 @@ namespace TrainEditor2.Models.Trains
 			TreeItems = new ObservableCollection<TreeViewItemModel>();
 			CreateTreeItem();
 
+			CurrentSimState = SimulationState.Stopped;
 			RunIndex = -1;
 			Acceleration = 2.6;
 			StartSpeed = 0.0;
@@ -244,7 +245,7 @@ namespace TrainEditor2.Models.Trains
 			DisposeCar();
 			CurrentSimState = SimulationState.Stopped;
 
-			Track selectedTrack = SelectedTreeItem.Tag as Track;
+			Track selectedTrack = SelectedTreeItem?.Tag as Track;
 
 			if (selectedTrack != null)
 			{
@@ -324,7 +325,7 @@ namespace TrainEditor2.Models.Trains
 
 			oldElapsedTime = nowElapsedTime;
 
-			(SelectedTreeItem.Tag as Track)?.DrawSimulation(StartSpeed, EndSpeed);
+			(SelectedTreeItem?.Tag as Track)?.DrawSimulation(StartSpeed, EndSpeed);
 		}
 
 		private void DisposeCar()
@@ -346,6 +347,7 @@ namespace TrainEditor2.Models.Trains
 				return track;
 			}));
 			motor.CreateTreeItem();
+			motor.SelectedTreeItem = null;
 			return motor;
 		}
 	}

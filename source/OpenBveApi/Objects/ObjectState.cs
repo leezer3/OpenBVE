@@ -9,11 +9,76 @@ namespace OpenBveApi.Objects
 		/// <summary>The prototype static object</summary>
 		public StaticObject Prototype;
 		/// <summary>The translation matrix to be applied</summary>
-		public Matrix4D Translation;
+		private Matrix4D _translation;
 		/// <summary>The scale matrix to be applied</summary>
-		public Matrix4D Scale;
+		private Matrix4D _scale;
 		/// <summary>The rotation matrix to be applied</summary>
-		public Matrix4D Rotate;
+		private Matrix4D _rotate;
+
+		public Vector3 WorldPosition;
+
+		/// <summary>The translation matrix to be applied</summary>
+		public Matrix4D Translation
+		{
+			get
+			{
+				return _translation;
+			}
+			set
+			{
+				_translation = value;
+				updateModelMatrix = true;
+			}
+		}
+		/// <summary>The scale matrix to be applied</summary>
+		public Matrix4D Scale
+		{
+			get
+			{
+				return _scale;
+			}
+			set
+			{
+				_scale = value;
+				updateModelMatrix = true;
+			}
+		}
+		/// <summary>The rotation matrix to be applied</summary>
+		public Matrix4D Rotate
+		{
+			get
+			{
+				return _rotate;
+			}
+			set
+			{
+				_rotate = value;
+				updateModelMatrix = true;
+			}
+		}
+
+		/// <summary>Backing property holding the cached model matrix</summary>
+		private Matrix4D modelMatrix;
+
+		/// <summary>Returns the final model matrix</summary>
+		public Matrix4D ModelMatrix
+		{
+			get
+			{
+				if(updateModelMatrix == false)
+				{
+					return modelMatrix;
+				}
+				else
+				{
+					updateModelMatrix = false;
+					modelMatrix = _scale * _rotate * _translation;
+					return modelMatrix;
+				}
+			}
+		}
+
+		private bool updateModelMatrix;
 		/// <summary>The texture translation matrix to be applied</summary>
 		public Matrix4D TextureTranslation;
 		/// <summary>The brightness value at this object's track position</summary>
@@ -28,13 +93,14 @@ namespace OpenBveApi.Objects
 		public ObjectState()
 		{
 			Prototype = null;
-			Translation = Matrix4D.Identity;
-			Scale = Matrix4D.Identity;
-			Rotate = Matrix4D.Identity;
+			_translation = Matrix4D.Identity;
+			_scale = Matrix4D.Identity;
+			_rotate = Matrix4D.Identity;
 			TextureTranslation = Matrix4D.Identity;
 			Brightness = 0.0;
 			StartingDistance = 0.0f;
 			EndingDistance = 0.0f;
+			updateModelMatrix = false;
 		}
 
 		/// <summary>Clones this ObjectState</summary>

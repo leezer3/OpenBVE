@@ -336,9 +336,9 @@ namespace TrainEditor2.Views
 			this.buttonCouplerObject = new System.Windows.Forms.Button();
 			this.textBoxCouplerObject = new System.Windows.Forms.TextBox();
 			this.labelCouplerObject = new System.Windows.Forms.Label();
-			this.labelCouplerMaxUnit = new System.Windows.Forms.Label();
 			this.textBoxCouplerMax = new System.Windows.Forms.TextBox();
 			this.labelCouplerMax = new System.Windows.Forms.Label();
+			this.labelCouplerMaxUnit = new System.Windows.Forms.Label();
 			this.labelCouplerMinUnit = new System.Windows.Forms.Label();
 			this.textBoxCouplerMin = new System.Windows.Forms.TextBox();
 			this.labelCouplerMin = new System.Windows.Forms.Label();
@@ -551,10 +551,6 @@ namespace TrainEditor2.Views
 			this.labelTimetableLocationY = new System.Windows.Forms.Label();
 			this.labelTimetableLocationX = new System.Windows.Forms.Label();
 			this.tabPageTouch = new System.Windows.Forms.TabPage();
-			this.comboBoxTouchCommand = new System.Windows.Forms.ComboBox();
-			this.labelTouchCommand = new System.Windows.Forms.Label();
-			this.numericUpDownTouchCommandOption = new System.Windows.Forms.NumericUpDown();
-			this.labelTouchCommandOption = new System.Windows.Forms.Label();
 			this.numericUpDownTouchSoundIndex = new System.Windows.Forms.NumericUpDown();
 			this.labelTouchSoundIndex = new System.Windows.Forms.Label();
 			this.numericUpDownTouchJumpScreen = new System.Windows.Forms.NumericUpDown();
@@ -632,6 +628,10 @@ namespace TrainEditor2.Views
 			this.toolStripComboBoxLanguage = new System.Windows.Forms.ToolStripComboBox();
 			this.toolStripStatusLabelLanguage = new System.Windows.Forms.ToolStripStatusLabel();
 			this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+			this.buttonTouchSoundCommand = new System.Windows.Forms.Button();
+			this.labelTouchSoundCommand = new System.Windows.Forms.Label();
+			this.numericUpDownTouchLayer = new System.Windows.Forms.NumericUpDown();
+			this.labelTouchLayer = new System.Windows.Forms.Label();
 			this.tabControlEditor.SuspendLayout();
 			this.tabPageTrain.SuspendLayout();
 			this.groupBoxDevice.SuspendLayout();
@@ -718,7 +718,6 @@ namespace TrainEditor2.Views
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTimetableLayer)).BeginInit();
 			this.groupBoxTimetableLocation.SuspendLayout();
 			this.tabPageTouch.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchCommandOption)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchSoundIndex)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchJumpScreen)).BeginInit();
 			this.groupBoxTouchSize.SuspendLayout();
@@ -742,6 +741,7 @@ namespace TrainEditor2.Views
 			this.panelCarsNavi.SuspendLayout();
 			this.menuStripMenu.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchLayer)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// tabControlEditor
@@ -3717,15 +3717,6 @@ namespace TrainEditor2.Views
 			this.labelCouplerObject.Text = "Object:";
 			this.labelCouplerObject.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// labelCouplerMaxUnit
-			// 
-			this.labelCouplerMaxUnit.Location = new System.Drawing.Point(120, 40);
-			this.labelCouplerMaxUnit.Name = "labelCouplerMaxUnit";
-			this.labelCouplerMaxUnit.Size = new System.Drawing.Size(16, 16);
-			this.labelCouplerMaxUnit.TabIndex = 27;
-			this.labelCouplerMaxUnit.Text = "m";
-			this.labelCouplerMaxUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// textBoxCouplerMax
 			// 
 			this.textBoxCouplerMax.Location = new System.Drawing.Point(64, 40);
@@ -3741,6 +3732,15 @@ namespace TrainEditor2.Views
 			this.labelCouplerMax.TabIndex = 25;
 			this.labelCouplerMax.Text = "Max:";
 			this.labelCouplerMax.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelCouplerMaxUnit
+			// 
+			this.labelCouplerMaxUnit.Location = new System.Drawing.Point(120, 40);
+			this.labelCouplerMaxUnit.Name = "labelCouplerMaxUnit";
+			this.labelCouplerMaxUnit.Size = new System.Drawing.Size(16, 16);
+			this.labelCouplerMaxUnit.TabIndex = 27;
+			this.labelCouplerMaxUnit.Text = "m";
+			this.labelCouplerMaxUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// labelCouplerMinUnit
 			// 
@@ -5757,10 +5757,10 @@ namespace TrainEditor2.Views
 			// 
 			// tabPageTouch
 			// 
-			this.tabPageTouch.Controls.Add(this.comboBoxTouchCommand);
-			this.tabPageTouch.Controls.Add(this.labelTouchCommand);
-			this.tabPageTouch.Controls.Add(this.numericUpDownTouchCommandOption);
-			this.tabPageTouch.Controls.Add(this.labelTouchCommandOption);
+			this.tabPageTouch.Controls.Add(this.numericUpDownTouchLayer);
+			this.tabPageTouch.Controls.Add(this.labelTouchLayer);
+			this.tabPageTouch.Controls.Add(this.buttonTouchSoundCommand);
+			this.tabPageTouch.Controls.Add(this.labelTouchSoundCommand);
 			this.tabPageTouch.Controls.Add(this.numericUpDownTouchSoundIndex);
 			this.tabPageTouch.Controls.Add(this.labelTouchSoundIndex);
 			this.tabPageTouch.Controls.Add(this.numericUpDownTouchJumpScreen);
@@ -5773,40 +5773,6 @@ namespace TrainEditor2.Views
 			this.tabPageTouch.TabIndex = 8;
 			this.tabPageTouch.Text = "Touch";
 			this.tabPageTouch.UseVisualStyleBackColor = true;
-			// 
-			// comboBoxTouchCommand
-			// 
-			this.comboBoxTouchCommand.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxTouchCommand.FormattingEnabled = true;
-			this.comboBoxTouchCommand.Location = new System.Drawing.Point(136, 216);
-			this.comboBoxTouchCommand.Name = "comboBoxTouchCommand";
-			this.comboBoxTouchCommand.Size = new System.Drawing.Size(104, 20);
-			this.comboBoxTouchCommand.TabIndex = 111;
-			// 
-			// labelTouchCommand
-			// 
-			this.labelTouchCommand.Location = new System.Drawing.Point(8, 216);
-			this.labelTouchCommand.Name = "labelTouchCommand";
-			this.labelTouchCommand.Size = new System.Drawing.Size(120, 16);
-			this.labelTouchCommand.TabIndex = 110;
-			this.labelTouchCommand.Text = "Command:";
-			this.labelTouchCommand.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// numericUpDownTouchCommandOption
-			// 
-			this.numericUpDownTouchCommandOption.Location = new System.Drawing.Point(136, 240);
-			this.numericUpDownTouchCommandOption.Name = "numericUpDownTouchCommandOption";
-			this.numericUpDownTouchCommandOption.Size = new System.Drawing.Size(48, 19);
-			this.numericUpDownTouchCommandOption.TabIndex = 109;
-			// 
-			// labelTouchCommandOption
-			// 
-			this.labelTouchCommandOption.Location = new System.Drawing.Point(8, 240);
-			this.labelTouchCommandOption.Name = "labelTouchCommandOption";
-			this.labelTouchCommandOption.Size = new System.Drawing.Size(120, 16);
-			this.labelTouchCommandOption.TabIndex = 108;
-			this.labelTouchCommandOption.Text = "CommandOption:";
-			this.labelTouchCommandOption.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// numericUpDownTouchSoundIndex
 			// 
@@ -6512,6 +6478,41 @@ namespace TrainEditor2.Views
 			// 
 			this.errorProvider.ContainerControl = this;
 			// 
+			// buttonTouchSoundCommand
+			// 
+			this.buttonTouchSoundCommand.Location = new System.Drawing.Point(136, 216);
+			this.buttonTouchSoundCommand.Name = "buttonTouchSoundCommand";
+			this.buttonTouchSoundCommand.Size = new System.Drawing.Size(48, 19);
+			this.buttonTouchSoundCommand.TabIndex = 109;
+			this.buttonTouchSoundCommand.Text = "Set...";
+			this.buttonTouchSoundCommand.UseVisualStyleBackColor = true;
+			this.buttonTouchSoundCommand.Click += new System.EventHandler(this.ButtonTouchSoundCommand_Click);
+			// 
+			// labelTouchSoundCommand
+			// 
+			this.labelTouchSoundCommand.Location = new System.Drawing.Point(8, 216);
+			this.labelTouchSoundCommand.Name = "labelTouchSoundCommand";
+			this.labelTouchSoundCommand.Size = new System.Drawing.Size(120, 16);
+			this.labelTouchSoundCommand.TabIndex = 108;
+			this.labelTouchSoundCommand.Text = "Sound and Command:";
+			this.labelTouchSoundCommand.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// numericUpDownTouchLayer
+			// 
+			this.numericUpDownTouchLayer.Location = new System.Drawing.Point(136, 240);
+			this.numericUpDownTouchLayer.Name = "numericUpDownTouchLayer";
+			this.numericUpDownTouchLayer.Size = new System.Drawing.Size(48, 19);
+			this.numericUpDownTouchLayer.TabIndex = 111;
+			// 
+			// labelTouchLayer
+			// 
+			this.labelTouchLayer.Location = new System.Drawing.Point(8, 240);
+			this.labelTouchLayer.Name = "labelTouchLayer";
+			this.labelTouchLayer.Size = new System.Drawing.Size(120, 16);
+			this.labelTouchLayer.TabIndex = 110;
+			this.labelTouchLayer.Text = "Layer:";
+			this.labelTouchLayer.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
 			// FormEditor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -6651,7 +6652,6 @@ namespace TrainEditor2.Views
 			this.groupBoxTimetableLocation.ResumeLayout(false);
 			this.groupBoxTimetableLocation.PerformLayout();
 			this.tabPageTouch.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchCommandOption)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchSoundIndex)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchJumpScreen)).EndInit();
 			this.groupBoxTouchSize.ResumeLayout(false);
@@ -6682,6 +6682,7 @@ namespace TrainEditor2.Views
 			this.menuStripMenu.ResumeLayout(false);
 			this.menuStripMenu.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchLayer)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -7154,10 +7155,6 @@ namespace TrainEditor2.Views
 		private System.Windows.Forms.Label labelTimetableLocationY;
 		private System.Windows.Forms.Label labelTimetableLocationX;
 		private System.Windows.Forms.TabPage tabPageTouch;
-		private System.Windows.Forms.ComboBox comboBoxTouchCommand;
-		private System.Windows.Forms.Label labelTouchCommand;
-		private System.Windows.Forms.NumericUpDown numericUpDownTouchCommandOption;
-		private System.Windows.Forms.Label labelTouchCommandOption;
 		private System.Windows.Forms.NumericUpDown numericUpDownTouchSoundIndex;
 		private System.Windows.Forms.Label labelTouchSoundIndex;
 		private System.Windows.Forms.NumericUpDown numericUpDownTouchJumpScreen;
@@ -7288,5 +7285,9 @@ namespace TrainEditor2.Views
 		private GroupBox groupBoxTrack;
 		private ComboBox comboBoxTrackType;
 		private Label labelTrackType;
+		private NumericUpDown numericUpDownTouchLayer;
+		private Label labelTouchLayer;
+		private Button buttonTouchSoundCommand;
+		private Label labelTouchSoundCommand;
 	}
 }
