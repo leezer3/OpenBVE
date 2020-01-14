@@ -101,6 +101,8 @@ namespace TrainEditor2.IO.Trains.TrainDat
 			double centerOfGravityHeight = 1.5;
 			double exposedFrontalArea = 5.0;
 			double unexposedFrontalArea = 1.6;
+			double doorWidth = 1000.0;
+			double doorMaxTolerance = 0.0;
 
 			TrainManager.MotorSound.Table[] PowerTables = new TrainManager.MotorSound.Table[2];
 			TrainManager.MotorSound.Table[] BrakeTables = new TrainManager.MotorSound.Table[2];
@@ -812,14 +814,14 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									case 10:
 										if (a >= 0.0)
 										{
-											train.Device.DoorWidth = a;
+											doorWidth = a;
 										}
 
 										break;
 									case 11:
 										if (a >= 0.0)
 										{
-											train.Device.DoorMaxTolerance = a;
+											doorMaxTolerance = a;
 										}
 
 										break;
@@ -1022,6 +1024,8 @@ namespace TrainEditor2.IO.Trains.TrainDat
 				car.CenterOfGravityHeight = centerOfGravityHeight;
 				car.ExposedFrontalArea = exposedFrontalArea;
 				car.UnexposedFrontalArea = unexposedFrontalArea;
+				car.LeftDoorWidth = car.RightDoorWidth = doorWidth;
+				car.LeftDoorMaxTolerance = car.RightDoorMaxTolerance = doorMaxTolerance;
 				car.Performance = (Performance)performance.Clone();
 				car.Delay = (Delay)delay.Clone();
 				car.Move = (Move)move.Clone();

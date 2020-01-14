@@ -87,9 +87,7 @@ namespace TrainEditor2.IO.IntermediateFile
 				new XElement("LoadCompensatingDevice", device.LoadCompensatingDevice),
 				new XElement("PassAlarm", device.PassAlarm),
 				new XElement("DoorOpenMode", device.DoorOpenMode),
-				new XElement("DoorCloseMode", device.DoorCloseMode),
-				new XElement("DoorWidth", device.DoorWidth),
-				new XElement("DoorMaxTolerance", device.DoorMaxTolerance)
+				new XElement("DoorCloseMode", device.DoorCloseMode)
 				));
 		}
 
@@ -105,6 +103,10 @@ namespace TrainEditor2.IO.IntermediateFile
 				new XElement("Width", car.Width),
 				new XElement("Height", car.Height),
 				new XElement("CenterOfGravityHeight", car.CenterOfGravityHeight),
+				new XElement("LeftDoorWidth", car.LeftDoorWidth),
+				new XElement("LeftDoorMaxTolerance", car.LeftDoorMaxTolerance),
+				new XElement("RightDoorWidth", car.RightDoorWidth),
+				new XElement("RightDoorMaxTolerance", car.RightDoorMaxTolerance),
 				new XElement("DefinedAxles", car.DefinedAxles),
 				new XElement("FrontAxle", car.FrontAxle),
 				new XElement("RearAxle", car.RearAxle)

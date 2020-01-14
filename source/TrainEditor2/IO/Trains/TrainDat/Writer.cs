@@ -114,8 +114,8 @@ namespace TrainEditor2.IO.Trains.TrainDat
 			builder.AppendLine($"{((int)train.Device.PassAlarm).ToString(culture).PadRight(n, ' ')}; PassAlarm");
 			builder.AppendLine($"{((int)train.Device.DoorOpenMode).ToString(culture).PadRight(n, ' ')}; DoorOpenMode");
 			builder.AppendLine($"{((int)train.Device.DoorCloseMode).ToString(culture).PadRight(n, ' ')}; DoorCloseMode");
-			builder.AppendLine($"{train.Device.DoorWidth.ToString(culture).PadRight(n, ' ')}; DoorWidth");
-			builder.AppendLine($"{train.Device.DoorMaxTolerance.ToString(culture).PadRight(n, ' ')}; DoorMaxTolerance");
+			builder.AppendLine($"{firstMotorCar.LeftDoorWidth.ToString(culture).PadRight(n, ' ')}; DoorWidth");
+			builder.AppendLine($"{firstMotorCar.LeftDoorMaxTolerance.ToString(culture).PadRight(n, ' ')}; DoorMaxTolerance");
 
 			TrainManager.MotorSound.Table[] powerTables = firstMotorCar.Motor.Tracks.Where(x => x.Type == Motor.TrackType.Power).Select(x => Motor.Track.TrackToMotorSoundTable(x, y => y, y => y, y => y)).ToArray();
 			TrainManager.MotorSound.Table[] brakeTables = firstMotorCar.Motor.Tracks.Where(x => x.Type == Motor.TrackType.Brake).Select(x => Motor.Track.TrackToMotorSoundTable(x, y => y, y => y, y => y)).ToArray();

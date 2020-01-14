@@ -163,46 +163,6 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(deviceDisposable);
 
-			y.DoorWidth
-				.BindTo(
-					textBoxDoorWidth,
-					z => z.Text,
-					BindingMode.TwoWay,
-					null,
-					null,
-					Observable.FromEvent<EventHandler, EventArgs>(
-							h => (s, e) => h(e),
-							h => textBoxDoorWidth.TextChanged += h,
-							h => textBoxDoorWidth.TextChanged -= h
-						)
-						.ToUnit()
-				)
-				.AddTo(deviceDisposable);
-
-			y.DoorWidth
-				.BindToErrorProvider(errorProvider, textBoxDoorWidth)
-				.AddTo(deviceDisposable);
-
-			y.DoorMaxTolerance
-				.BindTo(
-					textBoxDoorMaxTolerance,
-					z => z.Text,
-					BindingMode.TwoWay,
-					null,
-					null,
-					Observable.FromEvent<EventHandler, EventArgs>(
-							h => (s, e) => h(e),
-							h => textBoxDoorMaxTolerance.TextChanged += h,
-							h => textBoxDoorMaxTolerance.TextChanged -= h
-						)
-						.ToUnit()
-				)
-				.AddTo(deviceDisposable);
-
-			y.DoorMaxTolerance
-				.BindToErrorProvider(errorProvider, textBoxDoorMaxTolerance)
-				.AddTo(deviceDisposable);
-
 			return deviceDisposable;
 		}
 	}

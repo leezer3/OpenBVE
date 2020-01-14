@@ -236,6 +236,26 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
+		internal ReactiveProperty<string> LeftDoorWidth
+		{
+			get;
+		}
+
+		internal ReactiveProperty<string> LeftDoorMaxTolerance
+		{
+			get;
+		}
+
+		internal ReactiveProperty<string> RightDoorWidth
+		{
+			get;
+		}
+
+		internal ReactiveProperty<string> RightDoorMaxTolerance
+		{
+			get;
+		}
+
 		internal CarViewModel(Car car)
 		{
 			CultureInfo culture = CultureInfo.InvariantCulture;
@@ -449,6 +469,78 @@ namespace TrainEditor2.ViewModels.Trains
 
 			LoadingSway = car
 				.ToReactivePropertyAsSynchronized(x => x.LoadingSway)
+				.AddTo(disposable);
+
+			LeftDoorWidth = car
+				.ToReactivePropertyAsSynchronized(
+					x => x.LeftDoorWidth,
+					x => x.ToString(culture),
+					x => double.Parse(x, NumberStyles.Float, culture),
+					ignoreValidationErrorValue: true
+				)
+				.SetValidateNotifyError(x =>
+				{
+					double result;
+					string message;
+
+					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
+
+					return message;
+				})
+				.AddTo(disposable);
+
+			LeftDoorMaxTolerance = car
+				.ToReactivePropertyAsSynchronized(
+					x => x.LeftDoorMaxTolerance,
+					x => x.ToString(culture),
+					x => double.Parse(x, NumberStyles.Float, culture),
+					ignoreValidationErrorValue: true
+				)
+				.SetValidateNotifyError(x =>
+				{
+					double result;
+					string message;
+
+					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
+
+					return message;
+				})
+				.AddTo(disposable);
+
+			RightDoorWidth = car
+				.ToReactivePropertyAsSynchronized(
+					x => x.RightDoorWidth,
+					x => x.ToString(culture),
+					x => double.Parse(x, NumberStyles.Float, culture),
+					ignoreValidationErrorValue: true
+				)
+				.SetValidateNotifyError(x =>
+				{
+					double result;
+					string message;
+
+					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
+
+					return message;
+				})
+				.AddTo(disposable);
+
+			RightDoorMaxTolerance = car
+				.ToReactivePropertyAsSynchronized(
+					x => x.RightDoorMaxTolerance,
+					x => x.ToString(culture),
+					x => double.Parse(x, NumberStyles.Float, culture),
+					ignoreValidationErrorValue: true
+				)
+				.SetValidateNotifyError(x =>
+				{
+					double result;
+					string message;
+
+					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
+
+					return message;
+				})
 				.AddTo(disposable);
 
 			DefinedAxles.Subscribe(_ =>

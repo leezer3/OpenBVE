@@ -53,16 +53,6 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
-		internal ReactiveProperty<string> DoorWidth
-		{
-			get;
-		}
-
-		internal ReactiveProperty<string> DoorMaxTolerance
-		{
-			get;
-		}
-
 		internal DeviceViewModel(Device device, Handle handle)
 		{
 			CultureInfo culture = CultureInfo.InvariantCulture;
@@ -110,42 +100,6 @@ namespace TrainEditor2.ViewModels.Trains
 
 			DoorCloseMode = device
 				.ToReactivePropertyAsSynchronized(x => x.DoorCloseMode)
-				.AddTo(disposable);
-
-			DoorWidth = device
-				.ToReactivePropertyAsSynchronized(
-					x => x.DoorWidth,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
-					ignoreValidationErrorValue: true
-				)
-				.SetValidateNotifyError(x =>
-				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
-
-					return message;
-				})
-				.AddTo(disposable);
-
-			DoorMaxTolerance = device
-				.ToReactivePropertyAsSynchronized(
-					x => x.DoorMaxTolerance,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
-					ignoreValidationErrorValue: true
-				)
-				.SetValidateNotifyError(x =>
-				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
-
-					return message;
-				})
 				.AddTo(disposable);
 		}
 	}

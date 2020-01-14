@@ -312,6 +312,86 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(carDisposable);
 
+			y.LeftDoorWidth
+				.BindTo(
+					textBoxLeftDoorWidth,
+					z => z.Text,
+					BindingMode.TwoWay,
+					null,
+					null,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => textBoxLeftDoorWidth.TextChanged += h,
+							h => textBoxLeftDoorWidth.TextChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(carDisposable);
+
+			y.LeftDoorWidth
+				.BindToErrorProvider(errorProvider, textBoxLeftDoorWidth)
+				.AddTo(carDisposable);
+
+			y.LeftDoorMaxTolerance
+				.BindTo(
+					textBoxLeftDoorMaxTolerance,
+					z => z.Text,
+					BindingMode.TwoWay,
+					null,
+					null,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => textBoxLeftDoorMaxTolerance.TextChanged += h,
+							h => textBoxLeftDoorMaxTolerance.TextChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(carDisposable);
+
+			y.LeftDoorMaxTolerance
+				.BindToErrorProvider(errorProvider, textBoxLeftDoorMaxTolerance)
+				.AddTo(carDisposable);
+
+			y.RightDoorWidth
+				.BindTo(
+					textBoxRightDoorWidth,
+					z => z.Text,
+					BindingMode.TwoWay,
+					null,
+					null,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => textBoxRightDoorWidth.TextChanged += h,
+							h => textBoxRightDoorWidth.TextChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(carDisposable);
+
+			y.RightDoorWidth
+				.BindToErrorProvider(errorProvider, textBoxRightDoorWidth)
+				.AddTo(carDisposable);
+
+			y.RightDoorMaxTolerance
+				.BindTo(
+					textBoxRightDoorMaxTolerance,
+					z => z.Text,
+					BindingMode.TwoWay,
+					null,
+					null,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => textBoxRightDoorMaxTolerance.TextChanged += h,
+							h => textBoxRightDoorMaxTolerance.TextChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(carDisposable);
+
+			y.RightDoorMaxTolerance
+				.BindToErrorProvider(errorProvider, textBoxRightDoorMaxTolerance)
+				.AddTo(carDisposable);
+
 			MotorCarViewModel motorCar = y as MotorCarViewModel;
 
 			motorCar?.Acceleration

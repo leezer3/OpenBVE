@@ -87,9 +87,7 @@ namespace TrainEditor2.IO.Trains.Xml
 				new XElement("LoadCompensatingDevice", device.LoadCompensatingDevice.ToString(culture)),
 				new XElement("PassAlarm", ((int)device.PassAlarm).ToString(culture)),
 				new XElement("DoorOpenMode", ((int)device.DoorOpenMode).ToString(culture)),
-				new XElement("DoorCloseMode", ((int)device.DoorCloseMode).ToString(culture)),
-				new XElement("DoorWidth", device.DoorWidth.ToString(culture)),
-				new XElement("DoorMaxTolerance", device.DoorMaxTolerance.ToString(culture))
+				new XElement("DoorCloseMode", ((int)device.DoorCloseMode).ToString(culture))
 			));
 		}
 
@@ -106,7 +104,11 @@ namespace TrainEditor2.IO.Trains.Xml
 				new XElement("Length", car.Length.ToString(culture)),
 				new XElement("Width", car.Width.ToString(culture)),
 				new XElement("Height", car.Height.ToString(culture)),
-				new XElement("CenterOfGravityHeight", car.CenterOfGravityHeight.ToString(culture))
+				new XElement("CenterOfGravityHeight", car.CenterOfGravityHeight.ToString(culture)),
+				new XElement("LeftDoorWidth", car.LeftDoorWidth.ToString(culture)),
+				new XElement("LeftDoorMaxTolerance", car.LeftDoorMaxTolerance.ToString(culture)),
+				new XElement("RightDoorWidth", car.RightDoorWidth.ToString(culture)),
+				new XElement("RightDoorMaxTolerance", car.RightDoorMaxTolerance.ToString(culture))
 			);
 
 			if (car.DefinedAxles)

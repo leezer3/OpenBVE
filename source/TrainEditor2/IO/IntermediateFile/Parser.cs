@@ -82,9 +82,7 @@ namespace TrainEditor2.IO.IntermediateFile
 				LoadCompensatingDevice = (double)parent.Element("LoadCompensatingDevice"),
 				PassAlarm = (Device.PassAlarmModes)Enum.Parse(typeof(Device.PassAlarmModes), (string)parent.Element("PassAlarm")),
 				DoorOpenMode = (Device.DoorModes)Enum.Parse(typeof(Device.DoorModes), (string)parent.Element("DoorOpenMode")),
-				DoorCloseMode = (Device.DoorModes)Enum.Parse(typeof(Device.DoorModes), (string)parent.Element("DoorCloseMode")),
-				DoorWidth = (double)parent.Element("DoorWidth"),
-				DoorMaxTolerance = (double)parent.Element("DoorMaxTolerance")
+				DoorCloseMode = (Device.DoorModes)Enum.Parse(typeof(Device.DoorModes), (string)parent.Element("DoorCloseMode"))
 			};
 		}
 
@@ -106,6 +104,31 @@ namespace TrainEditor2.IO.IntermediateFile
 			car.Width = (double)parent.Element("Width");
 			car.Height = (double)parent.Element("Height");
 			car.CenterOfGravityHeight = (double)parent.Element("CenterOfGravityHeight");
+
+			XElement doorWidth = parent.XPathSelectElement("../../Device/DoorWidth");
+
+			if (doorWidth != null)
+			{
+				car.LeftDoorWidth = car.RightDoorWidth = (double)doorWidth;
+			}
+			else
+			{
+				car.LeftDoorWidth = (double)parent.Element("LeftDoorWidth");
+				car.RightDoorWidth = (double)parent.Element("RightDoorWidth");
+			}
+
+			XElement doorMaxTolerance = parent.XPathSelectElement("../../Device/DoorMaxTolerance");
+
+			if (doorMaxTolerance != null)
+			{
+				car.LeftDoorMaxTolerance = car.RightDoorMaxTolerance = (double)doorMaxTolerance;
+			}
+			else
+			{
+				car.LeftDoorMaxTolerance = (double)parent.Element("LeftDoorMaxTolerance");
+				car.RightDoorMaxTolerance = (double)parent.Element("RightDoorMaxTolerance");
+			}
+
 			car.DefinedAxles = (bool)parent.Element("DefinedAxles");
 			car.FrontAxle = (double)parent.Element("FrontAxle");
 			car.RearAxle = (double)parent.Element("RearAxle");

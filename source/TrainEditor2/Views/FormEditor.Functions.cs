@@ -237,8 +237,6 @@ namespace TrainEditor2.Views
 			comboBoxDoorCloseMode.Items[0] = Utilities.GetInterfaceString("general_settings", "device", "door_mode", "semi_automatic");
 			comboBoxDoorCloseMode.Items[1] = Utilities.GetInterfaceString("general_settings", "device", "door_mode", "automatic");
 			comboBoxDoorCloseMode.Items[2] = Utilities.GetInterfaceString("general_settings", "device", "door_mode", "manual");
-			labelDoorWidth.Text = $@"{Utilities.GetInterfaceString("general_settings", "device", "door_width")}:";
-			labelDoorMaxTolerance.Text = $@"{Utilities.GetInterfaceString("general_settings", "device", "door_max_tolerance")}:";
 
 			tabPageCar.Text = Utilities.GetInterfaceString("car_settings", "name");
 

@@ -102,6 +102,10 @@ namespace TrainEditor2.Models.Trains
 		private bool reversed;
 		private string _object;
 		private bool loadingSway;
+		private double leftDoorWidth;
+		private double leftDoorMaxTolerance;
+		private double rightDoorWidth;
+		private double rightDoorMaxTolerance;
 
 		internal double Mass
 		{
@@ -343,6 +347,54 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
+		internal double LeftDoorWidth
+		{
+			get
+			{
+				return leftDoorWidth;
+			}
+			set
+			{
+				SetProperty(ref leftDoorWidth, value);
+			}
+		}
+
+		internal double LeftDoorMaxTolerance
+		{
+			get
+			{
+				return leftDoorMaxTolerance;
+			}
+			set
+			{
+				SetProperty(ref leftDoorMaxTolerance, value);
+			}
+		}
+
+		internal double RightDoorWidth
+		{
+			get
+			{
+				return rightDoorWidth;
+			}
+			set
+			{
+				SetProperty(ref rightDoorWidth, value);
+			}
+		}
+
+		internal double RightDoorMaxTolerance
+		{
+			get
+			{
+				return rightDoorMaxTolerance;
+			}
+			set
+			{
+				SetProperty(ref rightDoorMaxTolerance, value);
+			}
+		}
+
 		internal Car()
 		{
 			Mass = 40.0;
@@ -365,6 +417,10 @@ namespace TrainEditor2.Models.Trains
 			Reversed = false;
 			Object = string.Empty;
 			LoadingSway = false;
+			LeftDoorWidth = 1000.0;
+			LeftDoorMaxTolerance = 0.0;
+			RightDoorWidth = 1000.0;
+			RightDoorMaxTolerance = 0.0;
 		}
 
 		public virtual object Clone()

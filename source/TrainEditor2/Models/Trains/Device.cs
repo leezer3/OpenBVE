@@ -55,8 +55,6 @@ namespace TrainEditor2.Models.Trains
 		private PassAlarmModes passAlarm;
 		private DoorModes doorOpenMode;
 		private DoorModes doorCloseMode;
-		private double doorWidth;
-		private double doorMaxTolerance;
 
 		internal AtsModes Ats
 		{
@@ -178,30 +176,6 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double DoorWidth
-		{
-			get
-			{
-				return doorWidth;
-			}
-			set
-			{
-				SetProperty(ref doorWidth, value);
-			}
-		}
-
-		internal double DoorMaxTolerance
-		{
-			get
-			{
-				return doorMaxTolerance;
-			}
-			set
-			{
-				SetProperty(ref doorMaxTolerance, value);
-			}
-		}
-
 		internal Device()
 		{
 			Ats = AtsModes.AtsSn;
@@ -214,8 +188,6 @@ namespace TrainEditor2.Models.Trains
 			PassAlarm = PassAlarmModes.None;
 			DoorOpenMode = DoorModes.SemiAutomatic;
 			DoorCloseMode = DoorModes.SemiAutomatic;
-			DoorWidth = 1000.0;
-			DoorMaxTolerance = 0.0;
 		}
 
 		public object Clone()
