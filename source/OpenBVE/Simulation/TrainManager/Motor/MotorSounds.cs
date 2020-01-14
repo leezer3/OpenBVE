@@ -50,12 +50,22 @@ namespace OpenBve
 
 				private static SoundBuffer GetVertex(Vertex<int, SoundBuffer>[] vertices, float x)
 				{
+					if (!vertices.Any())
+					{
+						return null;
+					}
+
 					Vertex<int, SoundBuffer> left = vertices.LastOrDefault(v => v.X <= x) ?? vertices.First();
 					return left.Z;
 				}
 
 				private static float GetVertex(Vertex<float>[] vertices, float x)
 				{
+					if (!vertices.Any())
+					{
+						return 1.0f;
+					}
+
 					Vertex<float> left = vertices.LastOrDefault(v => v.X <= x) ?? vertices.First();
 					Vertex<float> right = vertices.FirstOrDefault(v => x < v.X) ?? vertices.Last();
 

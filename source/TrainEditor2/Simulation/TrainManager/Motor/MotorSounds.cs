@@ -51,12 +51,22 @@ namespace TrainEditor2.Simulation.TrainManager
 
 				private static Tuple<int, SoundBuffer> GetVertex(Vertex<int, SoundBuffer>[] vertices, float x)
 				{
+					if (!vertices.Any())
+					{
+						return new Tuple<int, SoundBuffer>(-1, null);
+					}
+
 					Vertex<int, SoundBuffer> left = vertices.LastOrDefault(v => v.X <= x) ?? vertices.First();
 					return new Tuple<int, SoundBuffer>(left.Y, left.Z);
 				}
 
 				private static float GetVertex(Vertex<float>[] vertices, float x)
 				{
+					if (!vertices.Any())
+					{
+						return 1.0f;
+					}
+
 					Vertex<float> left = vertices.LastOrDefault(v => v.X <= x) ?? vertices.First();
 					Vertex<float> right = vertices.FirstOrDefault(v => x < v.X) ?? vertices.Last();
 

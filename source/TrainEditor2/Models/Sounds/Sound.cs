@@ -72,7 +72,7 @@ namespace TrainEditor2.Models.Sounds
 			sound.ListItems = new ObservableCollection<ListViewItemModel>();
 
 			sound.CreateTreeItem();
-
+			sound.SelectedTreeItem = null;
 			return sound;
 		}
 

@@ -450,6 +450,8 @@ namespace TrainEditor2.Models
 			Sound = new Sound();
 
 			CreateTreeItem();
+
+			SelectedTreeItem = null;
 		}
 
 		internal void OpenFile()
@@ -498,8 +500,16 @@ namespace TrainEditor2.Models
 				OnPropertyChanged(new PropertyChangedEventArgs(nameof(Sound)));
 
 				CreateTreeItem();
+
+				foreach (MotorCar car in Train.Cars.OfType<MotorCar>())
+				{
+					car.Motor.CreateTreeItem();
+				}
+
 				Panel.CreateTreeItem();
 				Sound.CreateTreeItem();
+
+				SelectedTreeItem = null;
 			}
 			catch (Exception e)
 			{
@@ -704,6 +714,8 @@ namespace TrainEditor2.Models
 			{
 				Interface.AddMessage(MessageType.Error, false, $"{e.GetType().FullName}: {e.Message} at {e.StackTrace}");
 			}
+
+			SelectedTreeItem = null;
 		}
 
 		internal void ExportFiles()

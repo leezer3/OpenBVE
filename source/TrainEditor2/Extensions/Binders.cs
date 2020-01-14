@@ -648,6 +648,8 @@ namespace TrainEditor2.Extensions
 			CompositeDisposable disposable = new CompositeDisposable();
 			DictionaryDisposable<ListViewItemViewModel> disposables = new DictionaryDisposable<ListViewItemViewModel>().AddTo(disposable);
 
+			ListViewItem selectedItem = null;
+
 			views.Clear();
 			disposables.AddRange(
 				viewModels.ToDictionary(
@@ -670,6 +672,20 @@ namespace TrainEditor2.Extensions
 					ListViewItem view = new ListViewItem { Tag = viewModel };
 					views.Insert(x.NewStartingIndex, view);
 					disposables.Add(viewModel, BindToListViewItem(listView, viewModel, view));
+
+					if (selectedItem != null)
+					{
+						if (viewModel == selectedItem.Tag)
+						{
+							foreach (ListViewItem unselectedItem in listView.Items.OfType<ListViewItem>().Where(y => y.Selected))
+							{
+								unselectedItem.Selected = false;
+							}
+
+							view.Selected = true;
+							selectedItem = null;
+						}
+					}
 				})
 				.AddTo(disposable);
 
@@ -690,6 +706,7 @@ namespace TrainEditor2.Extensions
 				.Subscribe(x =>
 				{
 					ListViewItemViewModel viewModel = (ListViewItemViewModel)x.OldItems[0];
+					selectedItem = views[x.OldStartingIndex].Selected ? views[x.OldStartingIndex] : null;
 					views.RemoveAt(x.OldStartingIndex);
 					disposables[viewModel].Dispose();
 					disposables.Remove(viewModel);

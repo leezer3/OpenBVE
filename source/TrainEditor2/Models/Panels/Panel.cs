@@ -90,6 +90,7 @@ namespace TrainEditor2.Models.Panels
 			panel.ListItems = new ObservableCollection<ListViewItemModel>();
 
 			panel.CreateTreeItem();
+			panel.SelectedTreeItem = null;
 			return panel;
 		}
 

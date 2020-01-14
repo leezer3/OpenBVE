@@ -131,7 +131,7 @@ namespace TrainEditor2.Simulation.TrainManager
 							Program.SoundApi.StopSound(table.PlayingSource);
 							if (entry.Buffer != null)
 							{
-								table.PlayingSource = Program.SoundApi.PlaySound(entry.Buffer, entry.Pitch, entry.Gain, Sounds.Motor.Position, this, true);
+								table.PlayingSource = Program.SoundApi.PlaySound(entry.Buffer, entry.Pitch, entry.Gain, Sounds.Motor.Position, baseTrain, true);
 								table.PlayingBuffer = entry.Buffer;
 							}
 							else
