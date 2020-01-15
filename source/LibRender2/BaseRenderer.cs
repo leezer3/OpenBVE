@@ -836,6 +836,14 @@ namespace LibRender2
 			
 			if (OptionWireFrame || IsDebugTouchMode)
 			{
+				if (material.Color != lastColor)
+				{
+					Shader.SetMaterialAmbient(material.Color);  // TODO
+					Shader.SetMaterialDiffuse(material.Color);
+					Shader.SetMaterialSpecular(material.Color);  // TODO
+				}
+				Shader.SetOpacity(1.0f);
+				Shader.SetBrightness(1.0f);
 				VAO.Draw(PrimitiveType.LineLoop, Face.IboStartIndex, Face.Vertices.Length);
 				return;
 			}
