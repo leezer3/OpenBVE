@@ -708,6 +708,7 @@ namespace LibRender2
 			Shader.SetBrightness(1.0f);
 			Shader.SetOpacity(1.0f);
 			Shader.SetObjectIndex(0);
+			Shader.SetMaterialAdditive(0);
 		}
 
 		public void SetFogForImmediateMode()
