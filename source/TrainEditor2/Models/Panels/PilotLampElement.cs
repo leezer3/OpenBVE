@@ -57,7 +57,7 @@ namespace TrainEditor2.Models.Panels
 			}
 		}
 
-		internal PilotLampElement()
+		public PilotLampElement()
 		{
 			Subject = new Subject();
 			DaytimeImage = string.Empty;

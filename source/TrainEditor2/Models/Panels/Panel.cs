@@ -492,6 +492,86 @@ namespace TrainEditor2.Models.Panels
 			}
 		}
 
+		internal void UpScreen()
+		{
+			int index = Screens.IndexOf((Screen)SelectedListItem.Tag);
+			Screens.Move(index, index - 1);
+
+			TreeItems[0].Children[1].Children.Move(index, index - 1);
+			ListItems.Move(index, index - 1);
+		}
+
+		internal void UpPanelElement<T>() where T : PanelElement
+		{
+			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
+
+			PanelElement currentPanelElement = (PanelElement)SelectedListItem.Tag;
+			int currentIndex = screen?.PanelElements.IndexOf(currentPanelElement) ?? PanelElements.IndexOf(currentPanelElement);
+			int currentListIndex = ListItems.IndexOf(SelectedListItem);
+
+			PanelElement prevPanelElement = screen != null ? screen.PanelElements.Take(currentIndex).OfType<T>().Last() : PanelElements.Take(currentIndex).OfType<T>().Last();
+			int prevIndex = screen?.PanelElements.IndexOf(prevPanelElement) ?? PanelElements.IndexOf(prevPanelElement);
+
+			if (screen != null)
+			{
+				screen.PanelElements.Move(currentIndex, prevIndex);
+			}
+			else
+			{
+				PanelElements.Move(currentIndex, prevIndex);
+			}
+
+			ListItems.Move(currentListIndex, currentListIndex - 1);
+		}
+
+		internal void UpTouch()
+		{
+			Screen screen = (Screen)SelectedTreeItem.Parent.Tag;
+			int index = screen.TouchElements.IndexOf((TouchElement)SelectedListItem.Tag);
+
+			ListItems.Move(index, index - 1);
+		}
+
+		internal void DownScreen()
+		{
+			int index = Screens.IndexOf((Screen)SelectedListItem.Tag);
+			Screens.Move(index, index + 1);
+
+			TreeItems[0].Children[1].Children.Move(index, index + 1);
+			ListItems.Move(index, index + 1);
+		}
+
+		internal void DownPanelElement<T>() where T : PanelElement
+		{
+			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
+
+			PanelElement currentPanelElement = (PanelElement)SelectedListItem.Tag;
+			int currentIndex = screen?.PanelElements.IndexOf(currentPanelElement) ?? PanelElements.IndexOf(currentPanelElement);
+			int currentListIndex = ListItems.IndexOf(SelectedListItem);
+
+			PanelElement nextPanelElement = screen != null ? screen.PanelElements.Skip(currentIndex + 1).OfType<T>().First() : PanelElements.Skip(currentIndex + 1).OfType<T>().First();
+			int nextIndex = screen?.PanelElements.IndexOf(nextPanelElement) ?? PanelElements.IndexOf(nextPanelElement);
+
+			if (screen != null)
+			{
+				screen.PanelElements.Move(currentIndex, nextIndex);
+			}
+			else
+			{
+				PanelElements.Move(currentIndex, nextIndex);
+			}
+
+			ListItems.Move(currentListIndex, currentListIndex + 1);
+		}
+
+		internal void DownTouch()
+		{
+			Screen screen = (Screen)SelectedTreeItem.Parent.Tag;
+			int index = screen.TouchElements.IndexOf((TouchElement)SelectedListItem.Tag);
+
+			ListItems.Move(index, index + 1);
+		}
+
 		internal void AddScreen()
 		{
 			Screen screen = new Screen();
@@ -518,158 +598,23 @@ namespace TrainEditor2.Models.Panels
 			SelectedListItem = ListItems.Last();
 		}
 
-		internal void AddPilotLamp()
+		internal void AddPanelElement<T>(int numberOfColumns) where T : PanelElement, new()
 		{
 			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
-			PilotLampElement pilotLamp = new PilotLampElement();
+			PanelElement panelElement = new T();
 
 			if (screen != null)
 			{
-				screen.PanelElements.Add(pilotLamp);
+				screen.PanelElements.Add(panelElement);
 			}
 			else
 			{
-				PanelElements.Add(pilotLamp);
+				PanelElements.Add(panelElement);
 			}
 
-			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = pilotLamp };
+			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = panelElement };
 
-			for (int i = 0; i < 6; i++)
-			{
-				newItem.SubItems.Add(new ListViewSubItemModel());
-			}
-
-			UpdateListItem(newItem);
-			ListItems.Add(newItem);
-
-			SelectedListItem = ListItems.Last();
-		}
-
-		internal void AddNeedle()
-		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
-			NeedleElement needle = new NeedleElement();
-
-			if (screen != null)
-			{
-				screen.PanelElements.Add(needle);
-			}
-			else
-			{
-				PanelElements.Add(needle);
-			}
-
-			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = needle };
-
-			for (int i = 0; i < 17; i++)
-			{
-				newItem.SubItems.Add(new ListViewSubItemModel());
-			}
-
-			UpdateListItem(newItem);
-			ListItems.Add(newItem);
-
-			SelectedListItem = ListItems.Last();
-		}
-
-		internal void AddDigitalNumber()
-		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
-			DigitalNumberElement digitalNumber = new DigitalNumberElement();
-
-			if (screen != null)
-			{
-				screen.PanelElements.Add(digitalNumber);
-			}
-			else
-			{
-				PanelElements.Add(digitalNumber);
-			}
-
-			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = digitalNumber };
-
-			for (int i = 0; i < 7; i++)
-			{
-				newItem.SubItems.Add(new ListViewSubItemModel());
-			}
-
-			UpdateListItem(newItem);
-			ListItems.Add(newItem);
-
-			SelectedListItem = ListItems.Last();
-		}
-
-		internal void AddDigitalGauge()
-		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
-			DigitalGaugeElement digitalGauge = new DigitalGaugeElement();
-
-			if (screen != null)
-			{
-				screen.PanelElements.Add(digitalGauge);
-			}
-			else
-			{
-				PanelElements.Add(digitalGauge);
-			}
-
-			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = digitalGauge };
-
-			for (int i = 0; i < 10; i++)
-			{
-				newItem.SubItems.Add(new ListViewSubItemModel());
-			}
-
-			UpdateListItem(newItem);
-			ListItems.Add(newItem);
-
-			SelectedListItem = ListItems.Last();
-		}
-
-		internal void AddLinearGauge()
-		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
-			LinearGaugeElement linearGauge = new LinearGaugeElement();
-
-			if (screen != null)
-			{
-				screen.PanelElements.Add(linearGauge);
-			}
-			else
-			{
-				PanelElements.Add(linearGauge);
-			}
-
-			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = linearGauge };
-
-			for (int i = 0; i < 10; i++)
-			{
-				newItem.SubItems.Add(new ListViewSubItemModel());
-			}
-
-			UpdateListItem(newItem);
-			ListItems.Add(newItem);
-
-			SelectedListItem = ListItems.Last();
-		}
-
-		internal void AddTimetable()
-		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
-			TimetableElement timetable = new TimetableElement();
-
-			if (screen != null)
-			{
-				screen.PanelElements.Add(timetable);
-			}
-			else
-			{
-				PanelElements.Add(timetable);
-			}
-
-			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = timetable };
-
-			for (int i = 0; i < 5; i++)
+			for (int i = 0; i < numberOfColumns; i++)
 			{
 				newItem.SubItems.Add(new ListViewSubItemModel());
 			}
@@ -726,158 +671,23 @@ namespace TrainEditor2.Models.Panels
 			SelectedListItem = ListItems.Last();
 		}
 
-		internal void CopyPilotLamp()
+		internal void CopyPanelElement(int numberOfColumns)
 		{
 			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
-			PilotLampElement pilotLamp = (PilotLampElement)((PilotLampElement)SelectedListItem.Tag).Clone();
+			PanelElement panelElement = (PanelElement)((PanelElement)SelectedListItem.Tag).Clone();
 
 			if (screen != null)
 			{
-				screen.PanelElements.Add(pilotLamp);
+				screen.PanelElements.Add(panelElement);
 			}
 			else
 			{
-				PanelElements.Add(pilotLamp);
+				PanelElements.Add(panelElement);
 			}
 
-			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = pilotLamp };
+			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = panelElement };
 
-			for (int i = 0; i < 6; i++)
-			{
-				newItem.SubItems.Add(new ListViewSubItemModel());
-			}
-
-			UpdateListItem(newItem);
-			ListItems.Add(newItem);
-
-			SelectedListItem = ListItems.Last();
-		}
-
-		internal void CopyNeedle()
-		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
-			NeedleElement needle = (NeedleElement)((NeedleElement)SelectedListItem.Tag).Clone();
-
-			if (screen != null)
-			{
-				screen.PanelElements.Add(needle);
-			}
-			else
-			{
-				PanelElements.Add(needle);
-			}
-
-			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = needle };
-
-			for (int i = 0; i < 17; i++)
-			{
-				newItem.SubItems.Add(new ListViewSubItemModel());
-			}
-
-			UpdateListItem(newItem);
-			ListItems.Add(newItem);
-
-			SelectedListItem = ListItems.Last();
-		}
-
-		internal void CopyDigitalNumber()
-		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
-			DigitalNumberElement digitalNumber = (DigitalNumberElement)((DigitalNumberElement)SelectedListItem.Tag).Clone();
-
-			if (screen != null)
-			{
-				screen.PanelElements.Add(digitalNumber);
-			}
-			else
-			{
-				PanelElements.Add(digitalNumber);
-			}
-
-			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = digitalNumber };
-
-			for (int i = 0; i < 7; i++)
-			{
-				newItem.SubItems.Add(new ListViewSubItemModel());
-			}
-
-			UpdateListItem(newItem);
-			ListItems.Add(newItem);
-
-			SelectedListItem = ListItems.Last();
-		}
-
-		internal void CopyDigitalGauge()
-		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
-			DigitalGaugeElement digitalGauge = (DigitalGaugeElement)((DigitalGaugeElement)SelectedListItem.Tag).Clone();
-
-			if (screen != null)
-			{
-				screen.PanelElements.Add(digitalGauge);
-			}
-			else
-			{
-				PanelElements.Add(digitalGauge);
-			}
-
-			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = digitalGauge };
-
-			for (int i = 0; i < 10; i++)
-			{
-				newItem.SubItems.Add(new ListViewSubItemModel());
-			}
-
-			UpdateListItem(newItem);
-			ListItems.Add(newItem);
-
-			SelectedListItem = ListItems.Last();
-		}
-
-		internal void CopyLinearGauge()
-		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
-			LinearGaugeElement linearGauge = (LinearGaugeElement)((LinearGaugeElement)SelectedListItem.Tag).Clone();
-
-			if (screen != null)
-			{
-				screen.PanelElements.Add(linearGauge);
-			}
-			else
-			{
-				PanelElements.Add(linearGauge);
-			}
-
-			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = linearGauge };
-
-			for (int i = 0; i < 10; i++)
-			{
-				newItem.SubItems.Add(new ListViewSubItemModel());
-			}
-
-			UpdateListItem(newItem);
-			ListItems.Add(newItem);
-
-			SelectedListItem = ListItems.Last();
-		}
-
-		internal void CopyTimetable()
-		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
-			TimetableElement timetable = (TimetableElement)((TimetableElement)SelectedListItem.Tag).Clone();
-
-			if (screen != null)
-			{
-				screen.PanelElements.Add(timetable);
-			}
-			else
-			{
-				PanelElements.Add(timetable);
-			}
-
-			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = timetable };
-
-			for (int i = 0; i < 5; i++)
+			for (int i = 0; i < numberOfColumns; i++)
 			{
 				newItem.SubItems.Add(new ListViewSubItemModel());
 			}
@@ -919,113 +729,18 @@ namespace TrainEditor2.Models.Panels
 			SelectedListItem = null;
 		}
 
-		internal void RemovePilotLamp()
+		internal void RemovePanelElement()
 		{
 			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
-			PilotLampElement pilotLamp = (PilotLampElement)SelectedListItem.Tag;
+			PanelElement panelElement = (PanelElement)SelectedListItem.Tag;
 
 			if (screen != null)
 			{
-				screen.PanelElements.Remove(pilotLamp);
+				screen.PanelElements.Remove(panelElement);
 			}
 			else
 			{
-				PanelElements.Remove(pilotLamp);
-			}
-
-			ListItems.Remove(SelectedListItem);
-
-			SelectedListItem = null;
-		}
-
-		internal void RemoveNeedle()
-		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
-			NeedleElement needle = (NeedleElement)SelectedListItem.Tag;
-
-			if (screen != null)
-			{
-				screen.PanelElements.Remove(needle);
-			}
-			else
-			{
-				PanelElements.Remove(needle);
-			}
-
-			ListItems.Remove(SelectedListItem);
-
-			SelectedListItem = null;
-		}
-
-		internal void RemoveDigitalNumber()
-		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
-			DigitalNumberElement digitalNumber = (DigitalNumberElement)SelectedListItem.Tag;
-
-			if (screen != null)
-			{
-				screen.PanelElements.Remove(digitalNumber);
-			}
-			else
-			{
-				PanelElements.Remove(digitalNumber);
-			}
-
-			ListItems.Remove(SelectedListItem);
-
-			SelectedListItem = null;
-		}
-
-		internal void RemoveDigitalGauge()
-		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
-			DigitalGaugeElement digitalGauge = (DigitalGaugeElement)SelectedListItem.Tag;
-
-			if (screen != null)
-			{
-				screen.PanelElements.Remove(digitalGauge);
-			}
-			else
-			{
-				PanelElements.Remove(digitalGauge);
-			}
-
-			ListItems.Remove(SelectedListItem);
-
-			SelectedListItem = null;
-		}
-
-		internal void RemoveLinearGauge()
-		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
-			LinearGaugeElement linearGauge = (LinearGaugeElement)SelectedListItem.Tag;
-
-			if (screen != null)
-			{
-				screen.PanelElements.Remove(linearGauge);
-			}
-			else
-			{
-				PanelElements.Remove(linearGauge);
-			}
-
-			ListItems.Remove(SelectedListItem);
-
-			SelectedListItem = null;
-		}
-
-		internal void RemoveTimetable()
-		{
-			Screen screen = SelectedTreeItem.Parent.Parent.Tag as Screen;
-			TimetableElement timetable = (TimetableElement)SelectedListItem.Tag;
-
-			if (screen != null)
-			{
-				screen.PanelElements.Remove(timetable);
-			}
-			else
-			{
-				PanelElements.Remove(timetable);
+				PanelElements.Remove(panelElement);
 			}
 
 			ListItems.Remove(SelectedListItem);

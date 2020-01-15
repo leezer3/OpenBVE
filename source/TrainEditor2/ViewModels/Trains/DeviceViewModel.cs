@@ -1,7 +1,5 @@
-﻿using System.Globalization;
-using Reactive.Bindings;
+﻿using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
-using TrainEditor2.Extensions;
 using TrainEditor2.Models.Trains;
 
 namespace TrainEditor2.ViewModels.Trains
@@ -55,8 +53,6 @@ namespace TrainEditor2.ViewModels.Trains
 
 		internal DeviceViewModel(Device device, Handle handle)
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			Ats = device
 				.ToReactivePropertyAsSynchronized(x => x.Ats)
 				.AddTo(disposable);

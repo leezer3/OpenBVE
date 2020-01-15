@@ -15,15 +15,10 @@ namespace TrainEditor2.Views
 	{
 		private readonly CompositeDisposable disposable;
 
-		private readonly TouchElementViewModel touch;
-
 		internal FormTouch(TouchElementViewModel touch)
 		{
 			disposable = new CompositeDisposable();
-			CompositeDisposable listItemDisposable = new CompositeDisposable().AddTo(disposable);
 			CompositeDisposable entryDisposable = new CompositeDisposable().AddTo(disposable);
-
-			this.touch = touch;
 
 			InitializeComponent();
 

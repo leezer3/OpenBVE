@@ -44,7 +44,7 @@ namespace TrainEditor2.Models.Panels
 			}
 		}
 
-		internal TimetableElement()
+		public TimetableElement()
 		{
 			Width = 0.0;
 			Height = 0.0;

@@ -57,291 +57,354 @@ namespace TrainEditor2.Views
 			this.toolStripStatusLabelLanguage = new System.Windows.Forms.ToolStripStatusLabel();
 			this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
 			this.tabPageStatus = new System.Windows.Forms.TabPage();
+			this.listViewStatus = new System.Windows.Forms.ListView();
+			this.columnHeaderLevel = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.columnHeaderText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.panelStatusNavi = new System.Windows.Forms.Panel();
+			this.buttonOutputLogs = new System.Windows.Forms.Button();
 			this.menuStripStatus = new System.Windows.Forms.MenuStrip();
 			this.toolStripMenuItemError = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemWarning = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemInfo = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemClear = new System.Windows.Forms.ToolStripMenuItem();
-			this.panelStatusNavi = new System.Windows.Forms.Panel();
-			this.buttonOutputLogs = new System.Windows.Forms.Button();
-			this.listViewStatus = new System.Windows.Forms.ListView();
-			this.columnHeaderLevel = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-			this.columnHeaderText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.tabPageSound = new System.Windows.Forms.TabPage();
 			this.panelSoundSetting = new System.Windows.Forms.Panel();
+			this.splitContainerSound = new System.Windows.Forms.SplitContainer();
+			this.treeViewSound = new System.Windows.Forms.TreeView();
+			this.listViewSound = new System.Windows.Forms.ListView();
 			this.panelSoundSettingEdit = new System.Windows.Forms.Panel();
 			this.groupBoxSoundEntry = new System.Windows.Forms.GroupBox();
-			this.groupBoxSoundValue = new System.Windows.Forms.GroupBox();
-			this.textBoxSoundFileName = new System.Windows.Forms.TextBox();
-			this.buttonSoundFileNameOpen = new System.Windows.Forms.Button();
-			this.labelSoundFileName = new System.Windows.Forms.Label();
-			this.groupBoxSoundPosition = new System.Windows.Forms.GroupBox();
-			this.labelSoundPositionX = new System.Windows.Forms.Label();
-			this.textBoxSoundPositionX = new System.Windows.Forms.TextBox();
-			this.labelSoundPositionXUnit = new System.Windows.Forms.Label();
-			this.labelSoundPositionY = new System.Windows.Forms.Label();
-			this.textBoxSoundPositionY = new System.Windows.Forms.TextBox();
-			this.labelSoundPositionYUnit = new System.Windows.Forms.Label();
-			this.labelSoundPositionZ = new System.Windows.Forms.Label();
-			this.textBoxSoundPositionZ = new System.Windows.Forms.TextBox();
-			this.labelSoundPositionZUnit = new System.Windows.Forms.Label();
-			this.textBoxSoundRadius = new System.Windows.Forms.TextBox();
-			this.checkBoxSoundDefinedPosition = new System.Windows.Forms.CheckBox();
-			this.checkBoxSoundRadius = new System.Windows.Forms.CheckBox();
-			this.buttonSoundAdd = new System.Windows.Forms.Button();
-			this.groupBoxSoundKey = new System.Windows.Forms.GroupBox();
-			this.comboBoxSoundKey = new System.Windows.Forms.ComboBox();
-			this.numericUpDownSoundKeyIndex = new System.Windows.Forms.NumericUpDown();
 			this.buttonSoundRemove = new System.Windows.Forms.Button();
-			this.splitContainerSound = new System.Windows.Forms.SplitContainer();
-			this.listViewSound = new System.Windows.Forms.ListView();
-			this.treeViewSound = new System.Windows.Forms.TreeView();
+			this.groupBoxSoundKey = new System.Windows.Forms.GroupBox();
+			this.numericUpDownSoundKeyIndex = new System.Windows.Forms.NumericUpDown();
+			this.comboBoxSoundKey = new System.Windows.Forms.ComboBox();
+			this.buttonSoundAdd = new System.Windows.Forms.Button();
+			this.groupBoxSoundValue = new System.Windows.Forms.GroupBox();
+			this.checkBoxSoundRadius = new System.Windows.Forms.CheckBox();
+			this.checkBoxSoundDefinedPosition = new System.Windows.Forms.CheckBox();
+			this.textBoxSoundRadius = new System.Windows.Forms.TextBox();
+			this.groupBoxSoundPosition = new System.Windows.Forms.GroupBox();
+			this.labelSoundPositionZUnit = new System.Windows.Forms.Label();
+			this.textBoxSoundPositionZ = new System.Windows.Forms.TextBox();
+			this.labelSoundPositionZ = new System.Windows.Forms.Label();
+			this.labelSoundPositionYUnit = new System.Windows.Forms.Label();
+			this.textBoxSoundPositionY = new System.Windows.Forms.TextBox();
+			this.labelSoundPositionY = new System.Windows.Forms.Label();
+			this.labelSoundPositionXUnit = new System.Windows.Forms.Label();
+			this.textBoxSoundPositionX = new System.Windows.Forms.TextBox();
+			this.labelSoundPositionX = new System.Windows.Forms.Label();
+			this.labelSoundFileName = new System.Windows.Forms.Label();
+			this.buttonSoundFileNameOpen = new System.Windows.Forms.Button();
+			this.textBoxSoundFileName = new System.Windows.Forms.TextBox();
 			this.tabPagePanel = new System.Windows.Forms.TabPage();
-			this.tabControlPanel = new System.Windows.Forms.TabControl();
-			this.tabPageTouch = new System.Windows.Forms.TabPage();
-			this.groupBoxTouchLocation = new System.Windows.Forms.GroupBox();
-			this.labelTouchLocationX = new System.Windows.Forms.Label();
-			this.labelTouchLocationY = new System.Windows.Forms.Label();
-			this.textBoxTouchLocationX = new System.Windows.Forms.TextBox();
-			this.textBoxTouchLocationY = new System.Windows.Forms.TextBox();
-			this.groupBoxTouchSize = new System.Windows.Forms.GroupBox();
-			this.labelTouchSizeX = new System.Windows.Forms.Label();
-			this.labelTouchSizeY = new System.Windows.Forms.Label();
-			this.textBoxTouchSizeX = new System.Windows.Forms.TextBox();
-			this.textBoxTouchSizeY = new System.Windows.Forms.TextBox();
-			this.labelTouchJumpScreen = new System.Windows.Forms.Label();
-			this.numericUpDownTouchJumpScreen = new System.Windows.Forms.NumericUpDown();
-			this.labelTouchSoundIndex = new System.Windows.Forms.Label();
-			this.numericUpDownTouchSoundIndex = new System.Windows.Forms.NumericUpDown();
-			this.labelTouchSoundCommand = new System.Windows.Forms.Label();
-			this.buttonTouchSoundCommand = new System.Windows.Forms.Button();
-			this.labelTouchLayer = new System.Windows.Forms.Label();
-			this.numericUpDownTouchLayer = new System.Windows.Forms.NumericUpDown();
-			this.tabPageTimetable = new System.Windows.Forms.TabPage();
-			this.groupBoxTimetableLocation = new System.Windows.Forms.GroupBox();
-			this.labelTimetableLocationX = new System.Windows.Forms.Label();
-			this.labelTimetableLocationY = new System.Windows.Forms.Label();
-			this.textBoxTimetableLocationX = new System.Windows.Forms.TextBox();
-			this.textBoxTimetableLocationY = new System.Windows.Forms.TextBox();
-			this.labelTimetableWidth = new System.Windows.Forms.Label();
-			this.textBoxTimetableWidth = new System.Windows.Forms.TextBox();
-			this.labelTimetableHeight = new System.Windows.Forms.Label();
-			this.textBoxTimetableHeight = new System.Windows.Forms.TextBox();
-			this.labelTimetableTransparentColor = new System.Windows.Forms.Label();
-			this.textBoxTimetableTransparentColor = new System.Windows.Forms.TextBox();
-			this.labelTimetableLayer = new System.Windows.Forms.Label();
-			this.numericUpDownTimetableLayer = new System.Windows.Forms.NumericUpDown();
-			this.buttonTimetableTransparentColorSet = new System.Windows.Forms.Button();
-			this.tabPageLinearGauge = new System.Windows.Forms.TabPage();
-			this.labelLinearGaugeSubject = new System.Windows.Forms.Label();
-			this.buttonLinearGaugeSubjectSet = new System.Windows.Forms.Button();
-			this.groupBoxLinearGaugeLocation = new System.Windows.Forms.GroupBox();
-			this.labelLinearGaugeLocationX = new System.Windows.Forms.Label();
-			this.labelLinearGaugeLocationY = new System.Windows.Forms.Label();
-			this.textBoxLinearGaugeLocationX = new System.Windows.Forms.TextBox();
-			this.textBoxLinearGaugeLocationY = new System.Windows.Forms.TextBox();
-			this.labelLinearGaugeMinimum = new System.Windows.Forms.Label();
-			this.textBoxLinearGaugeMinimum = new System.Windows.Forms.TextBox();
-			this.labelLinearGaugeMaximum = new System.Windows.Forms.Label();
-			this.textBoxLinearGaugeMaximum = new System.Windows.Forms.TextBox();
-			this.labelLinearGaugeLayer = new System.Windows.Forms.Label();
-			this.groupBoxLinearGaugeDirection = new System.Windows.Forms.GroupBox();
-			this.labelLinearGaugeDirectionX = new System.Windows.Forms.Label();
-			this.labelLinearGaugeDirectionY = new System.Windows.Forms.Label();
-			this.numericUpDownLinearGaugeDirectionX = new System.Windows.Forms.NumericUpDown();
-			this.numericUpDownLinearGaugeDirectionY = new System.Windows.Forms.NumericUpDown();
-			this.labelLinearGaugeWidth = new System.Windows.Forms.Label();
-			this.numericUpDownLinearGaugeWidth = new System.Windows.Forms.NumericUpDown();
-			this.numericUpDownLinearGaugeLayer = new System.Windows.Forms.NumericUpDown();
-			this.labelLinearGaugeTransparentColor = new System.Windows.Forms.Label();
-			this.labelLinearGaugeNighttimeImage = new System.Windows.Forms.Label();
-			this.labelLinearGaugeDaytimeImage = new System.Windows.Forms.Label();
-			this.textBoxLinearGaugeDaytimeImage = new System.Windows.Forms.TextBox();
-			this.textBoxLinearGaugeNighttimeImage = new System.Windows.Forms.TextBox();
-			this.textBoxLinearGaugeTransparentColor = new System.Windows.Forms.TextBox();
-			this.buttonLinearGaugeDaytimeImageOpen = new System.Windows.Forms.Button();
-			this.buttonLinearGaugeNighttimeImageOpen = new System.Windows.Forms.Button();
-			this.buttonLinearGaugeTransparentColorSet = new System.Windows.Forms.Button();
-			this.tabPageDigitalGauge = new System.Windows.Forms.TabPage();
-			this.labelDigitalGaugeSubject = new System.Windows.Forms.Label();
-			this.buttonDigitalGaugeSubjectSet = new System.Windows.Forms.Button();
-			this.groupBoxDigitalGaugeLocation = new System.Windows.Forms.GroupBox();
-			this.labelDigitalGaugeLocationX = new System.Windows.Forms.Label();
-			this.labelDigitalGaugeLocationY = new System.Windows.Forms.Label();
-			this.textBoxDigitalGaugeLocationX = new System.Windows.Forms.TextBox();
-			this.textBoxDigitalGaugeLocationY = new System.Windows.Forms.TextBox();
-			this.labelDigitalGaugeRadius = new System.Windows.Forms.Label();
-			this.textBoxDigitalGaugeRadius = new System.Windows.Forms.TextBox();
-			this.labelDigitalGaugeColor = new System.Windows.Forms.Label();
-			this.textBoxDigitalGaugeColor = new System.Windows.Forms.TextBox();
-			this.labelDigitalGaugeInitialAngle = new System.Windows.Forms.Label();
-			this.textBoxDigitalGaugeInitialAngle = new System.Windows.Forms.TextBox();
-			this.labelDigitalGaugeLastAngle = new System.Windows.Forms.Label();
-			this.textBoxDigitalGaugeLastAngle = new System.Windows.Forms.TextBox();
-			this.labelDigitalGaugeMinimum = new System.Windows.Forms.Label();
-			this.textBoxDigitalGaugeMinimum = new System.Windows.Forms.TextBox();
-			this.labelDigitalGaugeMaximum = new System.Windows.Forms.Label();
-			this.textBoxDigitalGaugeMaximum = new System.Windows.Forms.TextBox();
-			this.labelDigitalGaugeLayer = new System.Windows.Forms.Label();
-			this.labelDigitalGaugeStep = new System.Windows.Forms.Label();
-			this.textBoxDigitalGaugeStep = new System.Windows.Forms.TextBox();
-			this.numericUpDownDigitalGaugeLayer = new System.Windows.Forms.NumericUpDown();
-			this.buttonDigitalGaugeColorSet = new System.Windows.Forms.Button();
-			this.tabPageDigitalNumber = new System.Windows.Forms.TabPage();
-			this.labelDigitalNumberTransparentColor = new System.Windows.Forms.Label();
-			this.labelDigitalNumberNighttimeImage = new System.Windows.Forms.Label();
-			this.labelDigitalNumberDaytimeImage = new System.Windows.Forms.Label();
-			this.textBoxDigitalNumberDaytimeImage = new System.Windows.Forms.TextBox();
-			this.textBoxDigitalNumberNighttimeImage = new System.Windows.Forms.TextBox();
-			this.textBoxDigitalNumberTransparentColor = new System.Windows.Forms.TextBox();
-			this.buttonDigitalNumberDaytimeImageOpen = new System.Windows.Forms.Button();
-			this.buttonDigitalNumberNighttimeImageOpen = new System.Windows.Forms.Button();
-			this.labelDigitalNumberLayer = new System.Windows.Forms.Label();
-			this.labelDigitalNumberSubject = new System.Windows.Forms.Label();
-			this.buttonDigitalNumberSubjectSet = new System.Windows.Forms.Button();
-			this.groupBoxDigitalNumberLocation = new System.Windows.Forms.GroupBox();
-			this.labelDigitalNumberLocationX = new System.Windows.Forms.Label();
-			this.labelDigitalNumberLocationY = new System.Windows.Forms.Label();
-			this.textBoxDigitalNumberLocationX = new System.Windows.Forms.TextBox();
-			this.textBoxDigitalNumberLocationY = new System.Windows.Forms.TextBox();
-			this.labelDigitalNumberInterval = new System.Windows.Forms.Label();
-			this.numericUpDownDigitalNumberInterval = new System.Windows.Forms.NumericUpDown();
-			this.numericUpDownDigitalNumberLayer = new System.Windows.Forms.NumericUpDown();
-			this.buttonDigitalNumberTransparentColorSet = new System.Windows.Forms.Button();
-			this.tabPageNeedle = new System.Windows.Forms.TabPage();
-			this.labelNeedleTransparentColor = new System.Windows.Forms.Label();
-			this.labelNeedleNighttimeImage = new System.Windows.Forms.Label();
-			this.labelNeedleDaytimeImage = new System.Windows.Forms.Label();
-			this.textBoxNeedleDaytimeImage = new System.Windows.Forms.TextBox();
-			this.textBoxNeedleNighttimeImage = new System.Windows.Forms.TextBox();
-			this.textBoxNeedleTransparentColor = new System.Windows.Forms.TextBox();
-			this.buttonNeedleDaytimeImageOpen = new System.Windows.Forms.Button();
-			this.buttonNeedleNighttimeImageOpen = new System.Windows.Forms.Button();
-			this.labelNeedleLayer = new System.Windows.Forms.Label();
-			this.labelNeedleSubject = new System.Windows.Forms.Label();
-			this.buttonNeedleSubjectSet = new System.Windows.Forms.Button();
-			this.groupBoxNeedleLocation = new System.Windows.Forms.GroupBox();
-			this.labelNeedleLocationX = new System.Windows.Forms.Label();
-			this.labelNeedleLocationY = new System.Windows.Forms.Label();
-			this.textBoxNeedleLocationX = new System.Windows.Forms.TextBox();
-			this.textBoxNeedleLocationY = new System.Windows.Forms.TextBox();
-			this.labelNeedleRadius = new System.Windows.Forms.Label();
-			this.textBoxNeedleRadius = new System.Windows.Forms.TextBox();
-			this.labelNeedleColor = new System.Windows.Forms.Label();
-			this.textBoxNeedleColor = new System.Windows.Forms.TextBox();
-			this.groupBoxNeedleOrigin = new System.Windows.Forms.GroupBox();
-			this.labelNeedleOriginX = new System.Windows.Forms.Label();
-			this.labelNeedleOriginY = new System.Windows.Forms.Label();
-			this.textBoxNeedleOriginX = new System.Windows.Forms.TextBox();
-			this.textBoxNeedleOriginY = new System.Windows.Forms.TextBox();
-			this.labelNeedleInitialAngle = new System.Windows.Forms.Label();
-			this.textBoxNeedleInitialAngle = new System.Windows.Forms.TextBox();
-			this.labelNeedleLastAngle = new System.Windows.Forms.Label();
-			this.textBoxNeedleLastAngle = new System.Windows.Forms.TextBox();
-			this.labelNeedleMinimum = new System.Windows.Forms.Label();
-			this.textBoxNeedleMinimum = new System.Windows.Forms.TextBox();
-			this.labelNeedleMaximum = new System.Windows.Forms.Label();
-			this.textBoxNeedleMaximum = new System.Windows.Forms.TextBox();
-			this.labelNeedleNaturalFreq = new System.Windows.Forms.Label();
-			this.textBoxNeedleNaturalFreq = new System.Windows.Forms.TextBox();
-			this.labelNeedleDampingRatio = new System.Windows.Forms.Label();
-			this.textBoxNeedleDampingRatio = new System.Windows.Forms.TextBox();
-			this.labelNeedleBackstop = new System.Windows.Forms.Label();
-			this.checkBoxNeedleBackstop = new System.Windows.Forms.CheckBox();
-			this.labelNeedleSmoothed = new System.Windows.Forms.Label();
-			this.checkBoxNeedleSmoothed = new System.Windows.Forms.CheckBox();
-			this.numericUpDownNeedleLayer = new System.Windows.Forms.NumericUpDown();
-			this.labelNeedleDefinedRadius = new System.Windows.Forms.Label();
-			this.checkBoxNeedleDefinedRadius = new System.Windows.Forms.CheckBox();
-			this.labelNeedleDefinedOrigin = new System.Windows.Forms.Label();
-			this.checkBoxNeedleDefinedOrigin = new System.Windows.Forms.CheckBox();
-			this.buttonNeedleColorSet = new System.Windows.Forms.Button();
-			this.buttonNeedleTransparentColorSet = new System.Windows.Forms.Button();
-			this.labelNeedleDefinedNaturalFreq = new System.Windows.Forms.Label();
-			this.labelNeedleDefinedDampingRatio = new System.Windows.Forms.Label();
-			this.checkBoxNeedleDefinedNaturalFreq = new System.Windows.Forms.CheckBox();
-			this.checkBoxNeedleDefinedDampingRatio = new System.Windows.Forms.CheckBox();
-			this.tabPagePilotLamp = new System.Windows.Forms.TabPage();
-			this.labelPilotLampTransparentColor = new System.Windows.Forms.Label();
-			this.labelPilotLampNighttimeImage = new System.Windows.Forms.Label();
-			this.labelPilotLampDaytimeImage = new System.Windows.Forms.Label();
-			this.textBoxPilotLampDaytimeImage = new System.Windows.Forms.TextBox();
-			this.textBoxPilotLampNighttimeImage = new System.Windows.Forms.TextBox();
-			this.textBoxPilotLampTransparentColor = new System.Windows.Forms.TextBox();
-			this.buttonPilotLampDaytimeImageOpen = new System.Windows.Forms.Button();
-			this.buttonPilotLampNighttimeImageOpen = new System.Windows.Forms.Button();
-			this.labelPilotLampLayer = new System.Windows.Forms.Label();
-			this.labelPilotLampSubject = new System.Windows.Forms.Label();
-			this.buttonPilotLampSubjectSet = new System.Windows.Forms.Button();
-			this.groupBoxPilotLampLocation = new System.Windows.Forms.GroupBox();
-			this.labelPilotLampLocationX = new System.Windows.Forms.Label();
-			this.labelPilotLampLocationY = new System.Windows.Forms.Label();
-			this.textBoxPilotLampLocationX = new System.Windows.Forms.TextBox();
-			this.textBoxPilotLampLocationY = new System.Windows.Forms.TextBox();
-			this.numericUpDownPilotLampLayer = new System.Windows.Forms.NumericUpDown();
-			this.buttonPilotLampTransparentColorSet = new System.Windows.Forms.Button();
-			this.tabPageScreen = new System.Windows.Forms.TabPage();
-			this.labelScreenNumber = new System.Windows.Forms.Label();
-			this.labelScreenLayer = new System.Windows.Forms.Label();
-			this.numericUpDownScreenNumber = new System.Windows.Forms.NumericUpDown();
-			this.numericUpDownScreenLayer = new System.Windows.Forms.NumericUpDown();
-			this.tabPageThis = new System.Windows.Forms.TabPage();
-			this.labelThisTransparentColor = new System.Windows.Forms.Label();
-			this.labelThisNighttimeImage = new System.Windows.Forms.Label();
-			this.labelThisDaytimeImage = new System.Windows.Forms.Label();
-			this.labelThisBottom = new System.Windows.Forms.Label();
-			this.labelThisTop = new System.Windows.Forms.Label();
-			this.labelThisRight = new System.Windows.Forms.Label();
-			this.labelThisLeft = new System.Windows.Forms.Label();
-			this.labelThisResolution = new System.Windows.Forms.Label();
-			this.textBoxThisResolution = new System.Windows.Forms.TextBox();
-			this.textBoxThisLeft = new System.Windows.Forms.TextBox();
-			this.textBoxThisRight = new System.Windows.Forms.TextBox();
-			this.textBoxThisTop = new System.Windows.Forms.TextBox();
-			this.textBoxThisBottom = new System.Windows.Forms.TextBox();
-			this.textBoxThisDaytimeImage = new System.Windows.Forms.TextBox();
-			this.textBoxThisNighttimeImage = new System.Windows.Forms.TextBox();
-			this.textBoxThisTransparentColor = new System.Windows.Forms.TextBox();
-			this.groupBoxThisCenter = new System.Windows.Forms.GroupBox();
-			this.labelThisCenterX = new System.Windows.Forms.Label();
-			this.labelThisCenterY = new System.Windows.Forms.Label();
-			this.textBoxThisCenterX = new System.Windows.Forms.TextBox();
-			this.textBoxThisCenterY = new System.Windows.Forms.TextBox();
-			this.groupBoxThisOrigin = new System.Windows.Forms.GroupBox();
-			this.labelThisOriginX = new System.Windows.Forms.Label();
-			this.labelThisOriginY = new System.Windows.Forms.Label();
-			this.textBoxThisOriginX = new System.Windows.Forms.TextBox();
-			this.textBoxThisOriginY = new System.Windows.Forms.TextBox();
-			this.buttonThisDaytimeImageOpen = new System.Windows.Forms.Button();
-			this.buttonThisNighttimeImageOpen = new System.Windows.Forms.Button();
-			this.buttonThisTransparentColorSet = new System.Windows.Forms.Button();
 			this.splitContainerPanel = new System.Windows.Forms.SplitContainer();
+			this.treeViewPanel = new System.Windows.Forms.TreeView();
+			this.listViewPanel = new System.Windows.Forms.ListView();
 			this.panelPanelNavi = new System.Windows.Forms.Panel();
 			this.panelPanelNaviCmd = new System.Windows.Forms.Panel();
-			this.buttonPanelRemove = new System.Windows.Forms.Button();
-			this.buttonPanelAdd = new System.Windows.Forms.Button();
+			this.buttonPanelUp = new System.Windows.Forms.Button();
+			this.buttonPanelDown = new System.Windows.Forms.Button();
 			this.buttonPanelCopy = new System.Windows.Forms.Button();
-			this.listViewPanel = new System.Windows.Forms.ListView();
-			this.treeViewPanel = new System.Windows.Forms.TreeView();
+			this.buttonPanelAdd = new System.Windows.Forms.Button();
+			this.buttonPanelRemove = new System.Windows.Forms.Button();
+			this.tabControlPanel = new System.Windows.Forms.TabControl();
+			this.tabPageThis = new System.Windows.Forms.TabPage();
+			this.buttonThisTransparentColorSet = new System.Windows.Forms.Button();
+			this.buttonThisNighttimeImageOpen = new System.Windows.Forms.Button();
+			this.buttonThisDaytimeImageOpen = new System.Windows.Forms.Button();
+			this.groupBoxThisOrigin = new System.Windows.Forms.GroupBox();
+			this.textBoxThisOriginY = new System.Windows.Forms.TextBox();
+			this.textBoxThisOriginX = new System.Windows.Forms.TextBox();
+			this.labelThisOriginY = new System.Windows.Forms.Label();
+			this.labelThisOriginX = new System.Windows.Forms.Label();
+			this.groupBoxThisCenter = new System.Windows.Forms.GroupBox();
+			this.textBoxThisCenterY = new System.Windows.Forms.TextBox();
+			this.textBoxThisCenterX = new System.Windows.Forms.TextBox();
+			this.labelThisCenterY = new System.Windows.Forms.Label();
+			this.labelThisCenterX = new System.Windows.Forms.Label();
+			this.textBoxThisTransparentColor = new System.Windows.Forms.TextBox();
+			this.textBoxThisNighttimeImage = new System.Windows.Forms.TextBox();
+			this.textBoxThisDaytimeImage = new System.Windows.Forms.TextBox();
+			this.textBoxThisBottom = new System.Windows.Forms.TextBox();
+			this.textBoxThisTop = new System.Windows.Forms.TextBox();
+			this.textBoxThisRight = new System.Windows.Forms.TextBox();
+			this.textBoxThisLeft = new System.Windows.Forms.TextBox();
+			this.textBoxThisResolution = new System.Windows.Forms.TextBox();
+			this.labelThisResolution = new System.Windows.Forms.Label();
+			this.labelThisLeft = new System.Windows.Forms.Label();
+			this.labelThisRight = new System.Windows.Forms.Label();
+			this.labelThisTop = new System.Windows.Forms.Label();
+			this.labelThisBottom = new System.Windows.Forms.Label();
+			this.labelThisDaytimeImage = new System.Windows.Forms.Label();
+			this.labelThisNighttimeImage = new System.Windows.Forms.Label();
+			this.labelThisTransparentColor = new System.Windows.Forms.Label();
+			this.tabPageScreen = new System.Windows.Forms.TabPage();
+			this.numericUpDownScreenLayer = new System.Windows.Forms.NumericUpDown();
+			this.numericUpDownScreenNumber = new System.Windows.Forms.NumericUpDown();
+			this.labelScreenLayer = new System.Windows.Forms.Label();
+			this.labelScreenNumber = new System.Windows.Forms.Label();
+			this.tabPagePilotLamp = new System.Windows.Forms.TabPage();
+			this.buttonPilotLampTransparentColorSet = new System.Windows.Forms.Button();
+			this.numericUpDownPilotLampLayer = new System.Windows.Forms.NumericUpDown();
+			this.groupBoxPilotLampLocation = new System.Windows.Forms.GroupBox();
+			this.textBoxPilotLampLocationY = new System.Windows.Forms.TextBox();
+			this.textBoxPilotLampLocationX = new System.Windows.Forms.TextBox();
+			this.labelPilotLampLocationY = new System.Windows.Forms.Label();
+			this.labelPilotLampLocationX = new System.Windows.Forms.Label();
+			this.buttonPilotLampSubjectSet = new System.Windows.Forms.Button();
+			this.labelPilotLampSubject = new System.Windows.Forms.Label();
+			this.labelPilotLampLayer = new System.Windows.Forms.Label();
+			this.buttonPilotLampNighttimeImageOpen = new System.Windows.Forms.Button();
+			this.buttonPilotLampDaytimeImageOpen = new System.Windows.Forms.Button();
+			this.textBoxPilotLampTransparentColor = new System.Windows.Forms.TextBox();
+			this.textBoxPilotLampNighttimeImage = new System.Windows.Forms.TextBox();
+			this.textBoxPilotLampDaytimeImage = new System.Windows.Forms.TextBox();
+			this.labelPilotLampDaytimeImage = new System.Windows.Forms.Label();
+			this.labelPilotLampNighttimeImage = new System.Windows.Forms.Label();
+			this.labelPilotLampTransparentColor = new System.Windows.Forms.Label();
+			this.tabPageNeedle = new System.Windows.Forms.TabPage();
+			this.checkBoxNeedleDefinedDampingRatio = new System.Windows.Forms.CheckBox();
+			this.checkBoxNeedleDefinedNaturalFreq = new System.Windows.Forms.CheckBox();
+			this.labelNeedleDefinedDampingRatio = new System.Windows.Forms.Label();
+			this.labelNeedleDefinedNaturalFreq = new System.Windows.Forms.Label();
+			this.buttonNeedleTransparentColorSet = new System.Windows.Forms.Button();
+			this.buttonNeedleColorSet = new System.Windows.Forms.Button();
+			this.checkBoxNeedleDefinedOrigin = new System.Windows.Forms.CheckBox();
+			this.labelNeedleDefinedOrigin = new System.Windows.Forms.Label();
+			this.checkBoxNeedleDefinedRadius = new System.Windows.Forms.CheckBox();
+			this.labelNeedleDefinedRadius = new System.Windows.Forms.Label();
+			this.numericUpDownNeedleLayer = new System.Windows.Forms.NumericUpDown();
+			this.checkBoxNeedleSmoothed = new System.Windows.Forms.CheckBox();
+			this.labelNeedleSmoothed = new System.Windows.Forms.Label();
+			this.checkBoxNeedleBackstop = new System.Windows.Forms.CheckBox();
+			this.labelNeedleBackstop = new System.Windows.Forms.Label();
+			this.textBoxNeedleDampingRatio = new System.Windows.Forms.TextBox();
+			this.labelNeedleDampingRatio = new System.Windows.Forms.Label();
+			this.textBoxNeedleNaturalFreq = new System.Windows.Forms.TextBox();
+			this.labelNeedleNaturalFreq = new System.Windows.Forms.Label();
+			this.textBoxNeedleMaximum = new System.Windows.Forms.TextBox();
+			this.labelNeedleMaximum = new System.Windows.Forms.Label();
+			this.textBoxNeedleMinimum = new System.Windows.Forms.TextBox();
+			this.labelNeedleMinimum = new System.Windows.Forms.Label();
+			this.textBoxNeedleLastAngle = new System.Windows.Forms.TextBox();
+			this.labelNeedleLastAngle = new System.Windows.Forms.Label();
+			this.textBoxNeedleInitialAngle = new System.Windows.Forms.TextBox();
+			this.labelNeedleInitialAngle = new System.Windows.Forms.Label();
+			this.groupBoxNeedleOrigin = new System.Windows.Forms.GroupBox();
+			this.textBoxNeedleOriginY = new System.Windows.Forms.TextBox();
+			this.textBoxNeedleOriginX = new System.Windows.Forms.TextBox();
+			this.labelNeedleOriginY = new System.Windows.Forms.Label();
+			this.labelNeedleOriginX = new System.Windows.Forms.Label();
+			this.textBoxNeedleColor = new System.Windows.Forms.TextBox();
+			this.labelNeedleColor = new System.Windows.Forms.Label();
+			this.textBoxNeedleRadius = new System.Windows.Forms.TextBox();
+			this.labelNeedleRadius = new System.Windows.Forms.Label();
+			this.groupBoxNeedleLocation = new System.Windows.Forms.GroupBox();
+			this.textBoxNeedleLocationY = new System.Windows.Forms.TextBox();
+			this.textBoxNeedleLocationX = new System.Windows.Forms.TextBox();
+			this.labelNeedleLocationY = new System.Windows.Forms.Label();
+			this.labelNeedleLocationX = new System.Windows.Forms.Label();
+			this.buttonNeedleSubjectSet = new System.Windows.Forms.Button();
+			this.labelNeedleSubject = new System.Windows.Forms.Label();
+			this.labelNeedleLayer = new System.Windows.Forms.Label();
+			this.buttonNeedleNighttimeImageOpen = new System.Windows.Forms.Button();
+			this.buttonNeedleDaytimeImageOpen = new System.Windows.Forms.Button();
+			this.textBoxNeedleTransparentColor = new System.Windows.Forms.TextBox();
+			this.textBoxNeedleNighttimeImage = new System.Windows.Forms.TextBox();
+			this.textBoxNeedleDaytimeImage = new System.Windows.Forms.TextBox();
+			this.labelNeedleDaytimeImage = new System.Windows.Forms.Label();
+			this.labelNeedleNighttimeImage = new System.Windows.Forms.Label();
+			this.labelNeedleTransparentColor = new System.Windows.Forms.Label();
+			this.tabPageDigitalNumber = new System.Windows.Forms.TabPage();
+			this.buttonDigitalNumberTransparentColorSet = new System.Windows.Forms.Button();
+			this.numericUpDownDigitalNumberLayer = new System.Windows.Forms.NumericUpDown();
+			this.numericUpDownDigitalNumberInterval = new System.Windows.Forms.NumericUpDown();
+			this.labelDigitalNumberInterval = new System.Windows.Forms.Label();
+			this.groupBoxDigitalNumberLocation = new System.Windows.Forms.GroupBox();
+			this.textBoxDigitalNumberLocationY = new System.Windows.Forms.TextBox();
+			this.textBoxDigitalNumberLocationX = new System.Windows.Forms.TextBox();
+			this.labelDigitalNumberLocationY = new System.Windows.Forms.Label();
+			this.labelDigitalNumberLocationX = new System.Windows.Forms.Label();
+			this.buttonDigitalNumberSubjectSet = new System.Windows.Forms.Button();
+			this.labelDigitalNumberSubject = new System.Windows.Forms.Label();
+			this.labelDigitalNumberLayer = new System.Windows.Forms.Label();
+			this.buttonDigitalNumberNighttimeImageOpen = new System.Windows.Forms.Button();
+			this.buttonDigitalNumberDaytimeImageOpen = new System.Windows.Forms.Button();
+			this.textBoxDigitalNumberTransparentColor = new System.Windows.Forms.TextBox();
+			this.textBoxDigitalNumberNighttimeImage = new System.Windows.Forms.TextBox();
+			this.textBoxDigitalNumberDaytimeImage = new System.Windows.Forms.TextBox();
+			this.labelDigitalNumberDaytimeImage = new System.Windows.Forms.Label();
+			this.labelDigitalNumberNighttimeImage = new System.Windows.Forms.Label();
+			this.labelDigitalNumberTransparentColor = new System.Windows.Forms.Label();
+			this.tabPageDigitalGauge = new System.Windows.Forms.TabPage();
+			this.buttonDigitalGaugeColorSet = new System.Windows.Forms.Button();
+			this.numericUpDownDigitalGaugeLayer = new System.Windows.Forms.NumericUpDown();
+			this.textBoxDigitalGaugeStep = new System.Windows.Forms.TextBox();
+			this.labelDigitalGaugeStep = new System.Windows.Forms.Label();
+			this.labelDigitalGaugeLayer = new System.Windows.Forms.Label();
+			this.textBoxDigitalGaugeMaximum = new System.Windows.Forms.TextBox();
+			this.labelDigitalGaugeMaximum = new System.Windows.Forms.Label();
+			this.textBoxDigitalGaugeMinimum = new System.Windows.Forms.TextBox();
+			this.labelDigitalGaugeMinimum = new System.Windows.Forms.Label();
+			this.textBoxDigitalGaugeLastAngle = new System.Windows.Forms.TextBox();
+			this.labelDigitalGaugeLastAngle = new System.Windows.Forms.Label();
+			this.textBoxDigitalGaugeInitialAngle = new System.Windows.Forms.TextBox();
+			this.labelDigitalGaugeInitialAngle = new System.Windows.Forms.Label();
+			this.textBoxDigitalGaugeColor = new System.Windows.Forms.TextBox();
+			this.labelDigitalGaugeColor = new System.Windows.Forms.Label();
+			this.textBoxDigitalGaugeRadius = new System.Windows.Forms.TextBox();
+			this.labelDigitalGaugeRadius = new System.Windows.Forms.Label();
+			this.groupBoxDigitalGaugeLocation = new System.Windows.Forms.GroupBox();
+			this.textBoxDigitalGaugeLocationY = new System.Windows.Forms.TextBox();
+			this.textBoxDigitalGaugeLocationX = new System.Windows.Forms.TextBox();
+			this.labelDigitalGaugeLocationY = new System.Windows.Forms.Label();
+			this.labelDigitalGaugeLocationX = new System.Windows.Forms.Label();
+			this.buttonDigitalGaugeSubjectSet = new System.Windows.Forms.Button();
+			this.labelDigitalGaugeSubject = new System.Windows.Forms.Label();
+			this.tabPageLinearGauge = new System.Windows.Forms.TabPage();
+			this.buttonLinearGaugeTransparentColorSet = new System.Windows.Forms.Button();
+			this.buttonLinearGaugeNighttimeImageOpen = new System.Windows.Forms.Button();
+			this.buttonLinearGaugeDaytimeImageOpen = new System.Windows.Forms.Button();
+			this.textBoxLinearGaugeTransparentColor = new System.Windows.Forms.TextBox();
+			this.textBoxLinearGaugeNighttimeImage = new System.Windows.Forms.TextBox();
+			this.textBoxLinearGaugeDaytimeImage = new System.Windows.Forms.TextBox();
+			this.labelLinearGaugeDaytimeImage = new System.Windows.Forms.Label();
+			this.labelLinearGaugeNighttimeImage = new System.Windows.Forms.Label();
+			this.labelLinearGaugeTransparentColor = new System.Windows.Forms.Label();
+			this.numericUpDownLinearGaugeLayer = new System.Windows.Forms.NumericUpDown();
+			this.numericUpDownLinearGaugeWidth = new System.Windows.Forms.NumericUpDown();
+			this.labelLinearGaugeWidth = new System.Windows.Forms.Label();
+			this.groupBoxLinearGaugeDirection = new System.Windows.Forms.GroupBox();
+			this.numericUpDownLinearGaugeDirectionY = new System.Windows.Forms.NumericUpDown();
+			this.numericUpDownLinearGaugeDirectionX = new System.Windows.Forms.NumericUpDown();
+			this.labelLinearGaugeDirectionY = new System.Windows.Forms.Label();
+			this.labelLinearGaugeDirectionX = new System.Windows.Forms.Label();
+			this.labelLinearGaugeLayer = new System.Windows.Forms.Label();
+			this.textBoxLinearGaugeMaximum = new System.Windows.Forms.TextBox();
+			this.labelLinearGaugeMaximum = new System.Windows.Forms.Label();
+			this.textBoxLinearGaugeMinimum = new System.Windows.Forms.TextBox();
+			this.labelLinearGaugeMinimum = new System.Windows.Forms.Label();
+			this.groupBoxLinearGaugeLocation = new System.Windows.Forms.GroupBox();
+			this.textBoxLinearGaugeLocationY = new System.Windows.Forms.TextBox();
+			this.textBoxLinearGaugeLocationX = new System.Windows.Forms.TextBox();
+			this.labelLinearGaugeLocationY = new System.Windows.Forms.Label();
+			this.labelLinearGaugeLocationX = new System.Windows.Forms.Label();
+			this.buttonLinearGaugeSubjectSet = new System.Windows.Forms.Button();
+			this.labelLinearGaugeSubject = new System.Windows.Forms.Label();
+			this.tabPageTimetable = new System.Windows.Forms.TabPage();
+			this.buttonTimetableTransparentColorSet = new System.Windows.Forms.Button();
+			this.numericUpDownTimetableLayer = new System.Windows.Forms.NumericUpDown();
+			this.labelTimetableLayer = new System.Windows.Forms.Label();
+			this.textBoxTimetableTransparentColor = new System.Windows.Forms.TextBox();
+			this.labelTimetableTransparentColor = new System.Windows.Forms.Label();
+			this.textBoxTimetableHeight = new System.Windows.Forms.TextBox();
+			this.labelTimetableHeight = new System.Windows.Forms.Label();
+			this.textBoxTimetableWidth = new System.Windows.Forms.TextBox();
+			this.labelTimetableWidth = new System.Windows.Forms.Label();
+			this.groupBoxTimetableLocation = new System.Windows.Forms.GroupBox();
+			this.textBoxTimetableLocationY = new System.Windows.Forms.TextBox();
+			this.textBoxTimetableLocationX = new System.Windows.Forms.TextBox();
+			this.labelTimetableLocationY = new System.Windows.Forms.Label();
+			this.labelTimetableLocationX = new System.Windows.Forms.Label();
+			this.tabPageTouch = new System.Windows.Forms.TabPage();
+			this.numericUpDownTouchLayer = new System.Windows.Forms.NumericUpDown();
+			this.labelTouchLayer = new System.Windows.Forms.Label();
+			this.buttonTouchSoundCommand = new System.Windows.Forms.Button();
+			this.labelTouchSoundCommand = new System.Windows.Forms.Label();
+			this.numericUpDownTouchSoundIndex = new System.Windows.Forms.NumericUpDown();
+			this.labelTouchSoundIndex = new System.Windows.Forms.Label();
+			this.numericUpDownTouchJumpScreen = new System.Windows.Forms.NumericUpDown();
+			this.labelTouchJumpScreen = new System.Windows.Forms.Label();
+			this.groupBoxTouchSize = new System.Windows.Forms.GroupBox();
+			this.textBoxTouchSizeY = new System.Windows.Forms.TextBox();
+			this.textBoxTouchSizeX = new System.Windows.Forms.TextBox();
+			this.labelTouchSizeY = new System.Windows.Forms.Label();
+			this.labelTouchSizeX = new System.Windows.Forms.Label();
+			this.groupBoxTouchLocation = new System.Windows.Forms.GroupBox();
+			this.textBoxTouchLocationY = new System.Windows.Forms.TextBox();
+			this.textBoxTouchLocationX = new System.Windows.Forms.TextBox();
+			this.labelTouchLocationY = new System.Windows.Forms.Label();
+			this.labelTouchLocationX = new System.Windows.Forms.Label();
 			this.tabPageCoupler = new System.Windows.Forms.TabPage();
 			this.groupBoxCouplerGeneral = new System.Windows.Forms.GroupBox();
-			this.labelCouplerMin = new System.Windows.Forms.Label();
-			this.textBoxCouplerMin = new System.Windows.Forms.TextBox();
-			this.labelCouplerMinUnit = new System.Windows.Forms.Label();
-			this.labelCouplerMaxUnit = new System.Windows.Forms.Label();
-			this.labelCouplerMax = new System.Windows.Forms.Label();
-			this.textBoxCouplerMax = new System.Windows.Forms.TextBox();
-			this.labelCouplerObject = new System.Windows.Forms.Label();
-			this.textBoxCouplerObject = new System.Windows.Forms.TextBox();
 			this.buttonCouplerObject = new System.Windows.Forms.Button();
+			this.textBoxCouplerObject = new System.Windows.Forms.TextBox();
+			this.labelCouplerObject = new System.Windows.Forms.Label();
+			this.textBoxCouplerMax = new System.Windows.Forms.TextBox();
+			this.labelCouplerMax = new System.Windows.Forms.Label();
+			this.labelCouplerMaxUnit = new System.Windows.Forms.Label();
+			this.labelCouplerMinUnit = new System.Windows.Forms.Label();
+			this.textBoxCouplerMin = new System.Windows.Forms.TextBox();
+			this.labelCouplerMin = new System.Windows.Forms.Label();
 			this.tabPageMotor = new System.Windows.Forms.TabPage();
 			this.splitContainerMotor = new System.Windows.Forms.SplitContainer();
-			this.statusStripStatus = new System.Windows.Forms.StatusStrip();
-			this.toolStripStatusLabelY = new System.Windows.Forms.ToolStripStatusLabel();
-			this.toolStripStatusLabelX = new System.Windows.Forms.ToolStripStatusLabel();
-			this.toolStripStatusLabelTool = new System.Windows.Forms.ToolStripStatusLabel();
-			this.toolStripStatusLabelMode = new System.Windows.Forms.ToolStripStatusLabel();
-			this.toolStripStatusLabelType = new System.Windows.Forms.ToolStripStatusLabel();
+			this.treeViewMotor = new System.Windows.Forms.TreeView();
+			this.panelMoterNavi = new System.Windows.Forms.Panel();
+			this.buttonMotorCopy = new System.Windows.Forms.Button();
+			this.buttonMotorRemove = new System.Windows.Forms.Button();
+			this.buttonMotorAdd = new System.Windows.Forms.Button();
+			this.buttonMotorUp = new System.Windows.Forms.Button();
+			this.buttonMotorDown = new System.Windows.Forms.Button();
+			this.toolStripContainerDrawArea = new System.Windows.Forms.ToolStripContainer();
+			this.glControlMotor = new OpenTK.GLControl();
+			this.toolStripToolBar = new System.Windows.Forms.ToolStrip();
+			this.toolStripButtonUndo = new System.Windows.Forms.ToolStripButton();
+			this.toolStripButtonRedo = new System.Windows.Forms.ToolStripButton();
+			this.toolStripSeparatorRedo = new System.Windows.Forms.ToolStripSeparator();
+			this.toolStripButtonCleanup = new System.Windows.Forms.ToolStripButton();
+			this.toolStripButtonDelete = new System.Windows.Forms.ToolStripButton();
+			this.toolStripSeparatorEdit = new System.Windows.Forms.ToolStripSeparator();
+			this.toolStripButtonSelect = new System.Windows.Forms.ToolStripButton();
+			this.toolStripButtonMove = new System.Windows.Forms.ToolStripButton();
+			this.toolStripButtonDot = new System.Windows.Forms.ToolStripButton();
+			this.toolStripButtonLine = new System.Windows.Forms.ToolStripButton();
+			this.panelMotorSetting = new System.Windows.Forms.Panel();
+			this.groupBoxPlay = new System.Windows.Forms.GroupBox();
+			this.buttonStop = new System.Windows.Forms.Button();
+			this.buttonPause = new System.Windows.Forms.Button();
+			this.buttonPlay = new System.Windows.Forms.Button();
+			this.groupBoxArea = new System.Windows.Forms.GroupBox();
+			this.checkBoxMotorConstant = new System.Windows.Forms.CheckBox();
+			this.checkBoxMotorLoop = new System.Windows.Forms.CheckBox();
+			this.buttonMotorSwap = new System.Windows.Forms.Button();
+			this.textBoxMotorAreaLeft = new System.Windows.Forms.TextBox();
+			this.labelMotorAreaUnit = new System.Windows.Forms.Label();
+			this.textBoxMotorAreaRight = new System.Windows.Forms.TextBox();
+			this.labelMotorAccel = new System.Windows.Forms.Label();
+			this.labelMotorAccelUnit = new System.Windows.Forms.Label();
+			this.textBoxMotorAccel = new System.Windows.Forms.TextBox();
+			this.groupBoxSource = new System.Windows.Forms.GroupBox();
+			this.numericUpDownRunIndex = new System.Windows.Forms.NumericUpDown();
+			this.labelRun = new System.Windows.Forms.Label();
+			this.groupBoxDirect = new System.Windows.Forms.GroupBox();
+			this.buttonDirectDot = new System.Windows.Forms.Button();
+			this.buttonDirectMove = new System.Windows.Forms.Button();
+			this.textBoxDirectY = new System.Windows.Forms.TextBox();
+			this.labelDirectY = new System.Windows.Forms.Label();
+			this.labelDirectXUnit = new System.Windows.Forms.Label();
+			this.textBoxDirectX = new System.Windows.Forms.TextBox();
+			this.labelDirectX = new System.Windows.Forms.Label();
+			this.groupBoxView = new System.Windows.Forms.GroupBox();
+			this.buttonMotorReset = new System.Windows.Forms.Button();
+			this.buttonMotorZoomOut = new System.Windows.Forms.Button();
+			this.buttonMotorZoomIn = new System.Windows.Forms.Button();
+			this.labelMotorMaxVolume = new System.Windows.Forms.Label();
+			this.textBoxMotorMaxVolume = new System.Windows.Forms.TextBox();
+			this.labelMotorMinVolume = new System.Windows.Forms.Label();
+			this.textBoxMotorMinVolume = new System.Windows.Forms.TextBox();
+			this.labelMotorMaxPitch = new System.Windows.Forms.Label();
+			this.textBoxMotorMaxPitch = new System.Windows.Forms.TextBox();
+			this.labelMotorMinPitch = new System.Windows.Forms.Label();
+			this.textBoxMotorMinPitch = new System.Windows.Forms.TextBox();
+			this.labelMotorMaxVelocityUnit = new System.Windows.Forms.Label();
+			this.textBoxMotorMaxVelocity = new System.Windows.Forms.TextBox();
+			this.labelMotorMaxVelocity = new System.Windows.Forms.Label();
+			this.labelMotorMinVelocityUnit = new System.Windows.Forms.Label();
+			this.textBoxMotorMinVelocity = new System.Windows.Forms.TextBox();
+			this.labelMotorMinVelocity = new System.Windows.Forms.Label();
+			this.groupBoxTrack = new System.Windows.Forms.GroupBox();
+			this.comboBoxTrackType = new System.Windows.Forms.ComboBox();
+			this.labelTrackType = new System.Windows.Forms.Label();
 			this.menuStripMotor = new System.Windows.Forms.MenuStrip();
 			this.toolStripMenuItemEdit = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemUndo = new System.Windows.Forms.ToolStripMenuItem();
@@ -359,348 +422,289 @@ namespace TrainEditor2.Views
 			this.toolStripMenuItemMove = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemDot = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemLine = new System.Windows.Forms.ToolStripMenuItem();
-			this.panelMotorSetting = new System.Windows.Forms.Panel();
-			this.groupBoxTrack = new System.Windows.Forms.GroupBox();
-			this.labelTrackType = new System.Windows.Forms.Label();
-			this.comboBoxTrackType = new System.Windows.Forms.ComboBox();
-			this.groupBoxView = new System.Windows.Forms.GroupBox();
-			this.labelMotorMinVelocity = new System.Windows.Forms.Label();
-			this.textBoxMotorMinVelocity = new System.Windows.Forms.TextBox();
-			this.labelMotorMinVelocityUnit = new System.Windows.Forms.Label();
-			this.labelMotorMaxVelocity = new System.Windows.Forms.Label();
-			this.textBoxMotorMaxVelocity = new System.Windows.Forms.TextBox();
-			this.labelMotorMaxVelocityUnit = new System.Windows.Forms.Label();
-			this.textBoxMotorMinPitch = new System.Windows.Forms.TextBox();
-			this.labelMotorMinPitch = new System.Windows.Forms.Label();
-			this.textBoxMotorMaxPitch = new System.Windows.Forms.TextBox();
-			this.labelMotorMaxPitch = new System.Windows.Forms.Label();
-			this.textBoxMotorMinVolume = new System.Windows.Forms.TextBox();
-			this.labelMotorMinVolume = new System.Windows.Forms.Label();
-			this.textBoxMotorMaxVolume = new System.Windows.Forms.TextBox();
-			this.labelMotorMaxVolume = new System.Windows.Forms.Label();
-			this.buttonMotorZoomIn = new System.Windows.Forms.Button();
-			this.buttonMotorZoomOut = new System.Windows.Forms.Button();
-			this.buttonMotorReset = new System.Windows.Forms.Button();
-			this.groupBoxDirect = new System.Windows.Forms.GroupBox();
-			this.labelDirectX = new System.Windows.Forms.Label();
-			this.textBoxDirectX = new System.Windows.Forms.TextBox();
-			this.labelDirectXUnit = new System.Windows.Forms.Label();
-			this.labelDirectY = new System.Windows.Forms.Label();
-			this.textBoxDirectY = new System.Windows.Forms.TextBox();
-			this.buttonDirectMove = new System.Windows.Forms.Button();
-			this.buttonDirectDot = new System.Windows.Forms.Button();
-			this.groupBoxPlay = new System.Windows.Forms.GroupBox();
-			this.groupBoxSource = new System.Windows.Forms.GroupBox();
-			this.labelRun = new System.Windows.Forms.Label();
-			this.numericUpDownRunIndex = new System.Windows.Forms.NumericUpDown();
-			this.groupBoxArea = new System.Windows.Forms.GroupBox();
-			this.textBoxMotorAccel = new System.Windows.Forms.TextBox();
-			this.labelMotorAccelUnit = new System.Windows.Forms.Label();
-			this.labelMotorAccel = new System.Windows.Forms.Label();
-			this.textBoxMotorAreaRight = new System.Windows.Forms.TextBox();
-			this.labelMotorAreaUnit = new System.Windows.Forms.Label();
-			this.textBoxMotorAreaLeft = new System.Windows.Forms.TextBox();
-			this.buttonMotorSwap = new System.Windows.Forms.Button();
-			this.checkBoxMotorLoop = new System.Windows.Forms.CheckBox();
-			this.checkBoxMotorConstant = new System.Windows.Forms.CheckBox();
-			this.buttonPlay = new System.Windows.Forms.Button();
-			this.buttonPause = new System.Windows.Forms.Button();
-			this.buttonStop = new System.Windows.Forms.Button();
-			this.toolStripContainerDrawArea = new System.Windows.Forms.ToolStripContainer();
-			this.toolStripToolBar = new System.Windows.Forms.ToolStrip();
-			this.toolStripButtonUndo = new System.Windows.Forms.ToolStripButton();
-			this.toolStripButtonRedo = new System.Windows.Forms.ToolStripButton();
-			this.toolStripSeparatorRedo = new System.Windows.Forms.ToolStripSeparator();
-			this.toolStripButtonCleanup = new System.Windows.Forms.ToolStripButton();
-			this.toolStripButtonDelete = new System.Windows.Forms.ToolStripButton();
-			this.toolStripSeparatorEdit = new System.Windows.Forms.ToolStripSeparator();
-			this.toolStripButtonSelect = new System.Windows.Forms.ToolStripButton();
-			this.toolStripButtonMove = new System.Windows.Forms.ToolStripButton();
-			this.toolStripButtonDot = new System.Windows.Forms.ToolStripButton();
-			this.toolStripButtonLine = new System.Windows.Forms.ToolStripButton();
-			this.glControlMotor = new OpenTK.GLControl();
-			this.panelMoterNavi = new System.Windows.Forms.Panel();
-			this.buttonMotorDown = new System.Windows.Forms.Button();
-			this.buttonMotorUp = new System.Windows.Forms.Button();
-			this.buttonMotorAdd = new System.Windows.Forms.Button();
-			this.buttonMotorRemove = new System.Windows.Forms.Button();
-			this.buttonMotorCopy = new System.Windows.Forms.Button();
-			this.treeViewMotor = new System.Windows.Forms.TreeView();
+			this.statusStripStatus = new System.Windows.Forms.StatusStrip();
+			this.toolStripStatusLabelY = new System.Windows.Forms.ToolStripStatusLabel();
+			this.toolStripStatusLabelX = new System.Windows.Forms.ToolStripStatusLabel();
+			this.toolStripStatusLabelTool = new System.Windows.Forms.ToolStripStatusLabel();
+			this.toolStripStatusLabelMode = new System.Windows.Forms.ToolStripStatusLabel();
+			this.toolStripStatusLabelType = new System.Windows.Forms.ToolStripStatusLabel();
 			this.tabPageAccel = new System.Windows.Forms.TabPage();
+			this.pictureBoxAccel = new System.Windows.Forms.PictureBox();
 			this.panelAccel = new System.Windows.Forms.Panel();
+			this.groupBoxPreview = new System.Windows.Forms.GroupBox();
+			this.buttonAccelReset = new System.Windows.Forms.Button();
+			this.buttonAccelZoomOut = new System.Windows.Forms.Button();
+			this.buttonAccelZoomIn = new System.Windows.Forms.Button();
+			this.labelAccelYValue = new System.Windows.Forms.Label();
+			this.labelAccelXValue = new System.Windows.Forms.Label();
+			this.labelAccelXmaxUnit = new System.Windows.Forms.Label();
+			this.labelAccelXminUnit = new System.Windows.Forms.Label();
+			this.labelAccelYmaxUnit = new System.Windows.Forms.Label();
+			this.labelAccelYminUnit = new System.Windows.Forms.Label();
+			this.textBoxAccelYmax = new System.Windows.Forms.TextBox();
+			this.textBoxAccelYmin = new System.Windows.Forms.TextBox();
+			this.textBoxAccelXmax = new System.Windows.Forms.TextBox();
+			this.textBoxAccelXmin = new System.Windows.Forms.TextBox();
+			this.labelAccelYmax = new System.Windows.Forms.Label();
+			this.labelAccelYmin = new System.Windows.Forms.Label();
+			this.labelAccelXmax = new System.Windows.Forms.Label();
+			this.labelAccelXmin = new System.Windows.Forms.Label();
+			this.labelAccelY = new System.Windows.Forms.Label();
+			this.labelAccelX = new System.Windows.Forms.Label();
+			this.checkBoxSubtractDeceleration = new System.Windows.Forms.CheckBox();
+			this.groupBoxParameter = new System.Windows.Forms.GroupBox();
+			this.labeAccelA0Unit = new System.Windows.Forms.Label();
+			this.textBoxAccelA0 = new System.Windows.Forms.TextBox();
+			this.labelAccelA0 = new System.Windows.Forms.Label();
+			this.labelAccelA1Unit = new System.Windows.Forms.Label();
+			this.textBoxAccelA1 = new System.Windows.Forms.TextBox();
+			this.labelAccelA1 = new System.Windows.Forms.Label();
+			this.labelAccelV1Unit = new System.Windows.Forms.Label();
+			this.textBoxAccelV1 = new System.Windows.Forms.TextBox();
+			this.labelAccelV1 = new System.Windows.Forms.Label();
+			this.labelAccelV2Unit = new System.Windows.Forms.Label();
+			this.textBoxAccelV2 = new System.Windows.Forms.TextBox();
+			this.labelAccelV2 = new System.Windows.Forms.Label();
+			this.textBoxAccelE = new System.Windows.Forms.TextBox();
+			this.labelAccelE = new System.Windows.Forms.Label();
 			this.groupBoxNotch = new System.Windows.Forms.GroupBox();
 			this.comboBoxNotch = new System.Windows.Forms.ComboBox();
-			this.groupBoxParameter = new System.Windows.Forms.GroupBox();
-			this.labelAccelE = new System.Windows.Forms.Label();
-			this.textBoxAccelE = new System.Windows.Forms.TextBox();
-			this.labelAccelV2 = new System.Windows.Forms.Label();
-			this.textBoxAccelV2 = new System.Windows.Forms.TextBox();
-			this.labelAccelV2Unit = new System.Windows.Forms.Label();
-			this.labelAccelV1 = new System.Windows.Forms.Label();
-			this.textBoxAccelV1 = new System.Windows.Forms.TextBox();
-			this.labelAccelV1Unit = new System.Windows.Forms.Label();
-			this.labelAccelA1 = new System.Windows.Forms.Label();
-			this.textBoxAccelA1 = new System.Windows.Forms.TextBox();
-			this.labelAccelA1Unit = new System.Windows.Forms.Label();
-			this.labelAccelA0 = new System.Windows.Forms.Label();
-			this.textBoxAccelA0 = new System.Windows.Forms.TextBox();
-			this.labeAccelA0Unit = new System.Windows.Forms.Label();
-			this.groupBoxPreview = new System.Windows.Forms.GroupBox();
-			this.checkBoxSubtractDeceleration = new System.Windows.Forms.CheckBox();
-			this.labelAccelX = new System.Windows.Forms.Label();
-			this.labelAccelY = new System.Windows.Forms.Label();
-			this.labelAccelXmin = new System.Windows.Forms.Label();
-			this.labelAccelXmax = new System.Windows.Forms.Label();
-			this.labelAccelYmin = new System.Windows.Forms.Label();
-			this.labelAccelYmax = new System.Windows.Forms.Label();
-			this.textBoxAccelXmin = new System.Windows.Forms.TextBox();
-			this.textBoxAccelXmax = new System.Windows.Forms.TextBox();
-			this.textBoxAccelYmin = new System.Windows.Forms.TextBox();
-			this.textBoxAccelYmax = new System.Windows.Forms.TextBox();
-			this.labelAccelYminUnit = new System.Windows.Forms.Label();
-			this.labelAccelYmaxUnit = new System.Windows.Forms.Label();
-			this.labelAccelXminUnit = new System.Windows.Forms.Label();
-			this.labelAccelXmaxUnit = new System.Windows.Forms.Label();
-			this.labelAccelXValue = new System.Windows.Forms.Label();
-			this.labelAccelYValue = new System.Windows.Forms.Label();
-			this.buttonAccelZoomIn = new System.Windows.Forms.Button();
-			this.buttonAccelZoomOut = new System.Windows.Forms.Button();
-			this.buttonAccelReset = new System.Windows.Forms.Button();
-			this.pictureBoxAccel = new System.Windows.Forms.PictureBox();
 			this.tabPageCar = new System.Windows.Forms.TabPage();
-			this.groupBoxCarGeneral = new System.Windows.Forms.GroupBox();
-			this.labelIsMotorCar = new System.Windows.Forms.Label();
-			this.labelMass = new System.Windows.Forms.Label();
-			this.labelLength = new System.Windows.Forms.Label();
-			this.labelWidth = new System.Windows.Forms.Label();
-			this.labelHeight = new System.Windows.Forms.Label();
-			this.labelCenterOfMassHeight = new System.Windows.Forms.Label();
-			this.labelExposedFrontalArea = new System.Windows.Forms.Label();
-			this.labelDefinedAxles = new System.Windows.Forms.Label();
-			this.groupBoxAxles = new System.Windows.Forms.GroupBox();
-			this.labelFrontAxle = new System.Windows.Forms.Label();
-			this.labelRearAxle = new System.Windows.Forms.Label();
-			this.textBoxFrontAxle = new System.Windows.Forms.TextBox();
-			this.textBoxRearAxle = new System.Windows.Forms.TextBox();
-			this.labelFrontAxleUnit = new System.Windows.Forms.Label();
-			this.labelRearAxleUnit = new System.Windows.Forms.Label();
-			this.labelReversed = new System.Windows.Forms.Label();
-			this.labelObject = new System.Windows.Forms.Label();
-			this.textBoxObject = new System.Windows.Forms.TextBox();
-			this.textBoxExposedFrontalArea = new System.Windows.Forms.TextBox();
-			this.textBoxCenterOfMassHeight = new System.Windows.Forms.TextBox();
-			this.textBoxHeight = new System.Windows.Forms.TextBox();
-			this.textBoxWidth = new System.Windows.Forms.TextBox();
-			this.textBoxLength = new System.Windows.Forms.TextBox();
-			this.textBoxMass = new System.Windows.Forms.TextBox();
-			this.labelMassUnit = new System.Windows.Forms.Label();
-			this.labelLengthUnit = new System.Windows.Forms.Label();
-			this.labelWidthUnit = new System.Windows.Forms.Label();
-			this.labelHeightUnit = new System.Windows.Forms.Label();
-			this.labelLoadingSway = new System.Windows.Forms.Label();
-			this.labelCenterOfMassHeightUnit = new System.Windows.Forms.Label();
-			this.labelExposedFrontalAreaUnit = new System.Windows.Forms.Label();
-			this.buttonObjectOpen = new System.Windows.Forms.Button();
-			this.checkBoxIsMotorCar = new System.Windows.Forms.CheckBox();
-			this.checkBoxDefinedAxles = new System.Windows.Forms.CheckBox();
-			this.checkBoxLoadingSway = new System.Windows.Forms.CheckBox();
-			this.checkBoxReversed = new System.Windows.Forms.CheckBox();
-			this.buttonFrontBogieSet = new System.Windows.Forms.Button();
-			this.buttonRearBogieSet = new System.Windows.Forms.Button();
-			this.labelFrontBogie = new System.Windows.Forms.Label();
-			this.labelRearBogie = new System.Windows.Forms.Label();
-			this.labelUnexposedFrontalArea = new System.Windows.Forms.Label();
-			this.textBoxUnexposedFrontalArea = new System.Windows.Forms.TextBox();
-			this.labelUnexposedFrontalAreaUnit = new System.Windows.Forms.Label();
-			this.labelLeftDoorWidth = new System.Windows.Forms.Label();
-			this.labelLeftDoorMaxTolerance = new System.Windows.Forms.Label();
-			this.labelRightDoorWidth = new System.Windows.Forms.Label();
-			this.labelRightDoorMaxTolerance = new System.Windows.Forms.Label();
-			this.labelLeftDoorWidthUnit = new System.Windows.Forms.Label();
-			this.labelLeftDoorMaxToleranceUnit = new System.Windows.Forms.Label();
-			this.labelRightDoorWidthUnit = new System.Windows.Forms.Label();
-			this.labelRightDoorMaxToleranceUnit = new System.Windows.Forms.Label();
-			this.textBoxLeftDoorWidth = new System.Windows.Forms.TextBox();
-			this.textBoxLeftDoorMaxTolerance = new System.Windows.Forms.TextBox();
-			this.textBoxRightDoorWidth = new System.Windows.Forms.TextBox();
-			this.textBoxRightDoorMaxTolerance = new System.Windows.Forms.TextBox();
-			this.groupBoxPerformance = new System.Windows.Forms.GroupBox();
-			this.labelCoefficientOfRollingResistance = new System.Windows.Forms.Label();
-			this.labelDeceleration = new System.Windows.Forms.Label();
-			this.labelCoefficientOfStaticFriction = new System.Windows.Forms.Label();
-			this.labelAerodynamicDragCoefficient = new System.Windows.Forms.Label();
-			this.textBoxDeceleration = new System.Windows.Forms.TextBox();
-			this.labelDecelerationUnit = new System.Windows.Forms.Label();
-			this.textBoxCoefficientOfStaticFriction = new System.Windows.Forms.TextBox();
-			this.textBoxCoefficientOfRollingResistance = new System.Windows.Forms.TextBox();
-			this.textBoxAerodynamicDragCoefficient = new System.Windows.Forms.TextBox();
-			this.groupBoxDelay = new System.Windows.Forms.GroupBox();
-			this.labelDelayPower = new System.Windows.Forms.Label();
-			this.labelDelayBrake = new System.Windows.Forms.Label();
-			this.labelDelayLocoBrake = new System.Windows.Forms.Label();
-			this.buttonDelayPowerSet = new System.Windows.Forms.Button();
-			this.buttonDelayBrakeSet = new System.Windows.Forms.Button();
-			this.buttonDelayLocoBrakeSet = new System.Windows.Forms.Button();
-			this.groupBoxMove = new System.Windows.Forms.GroupBox();
-			this.labelBrakeCylinderDown = new System.Windows.Forms.Label();
-			this.labelBrakeCylinderUp = new System.Windows.Forms.Label();
-			this.labelJerkBrakeDown = new System.Windows.Forms.Label();
-			this.labelJerkBrakeUp = new System.Windows.Forms.Label();
-			this.labelJerkPowerDown = new System.Windows.Forms.Label();
-			this.labelJerkPowerUp = new System.Windows.Forms.Label();
-			this.textBoxJerkPowerUp = new System.Windows.Forms.TextBox();
-			this.labelJerkPowerUpUnit = new System.Windows.Forms.Label();
-			this.textBoxJerkPowerDown = new System.Windows.Forms.TextBox();
-			this.labelJerkPowerDownUnit = new System.Windows.Forms.Label();
-			this.textBoxJerkBrakeUp = new System.Windows.Forms.TextBox();
-			this.labelJerkBrakeUpUnit = new System.Windows.Forms.Label();
-			this.textBoxJerkBrakeDown = new System.Windows.Forms.TextBox();
-			this.labelJerkBrakeDownUnit = new System.Windows.Forms.Label();
-			this.textBoxBrakeCylinderUp = new System.Windows.Forms.TextBox();
-			this.labelBrakeCylinderUpUnit = new System.Windows.Forms.Label();
-			this.textBoxBrakeCylinderDown = new System.Windows.Forms.TextBox();
-			this.labelBrakeCylinderDownUnit = new System.Windows.Forms.Label();
-			this.groupBoxBrake = new System.Windows.Forms.GroupBox();
-			this.labelBrakeControlSystem = new System.Windows.Forms.Label();
-			this.labelBrakeControlSpeed = new System.Windows.Forms.Label();
-			this.labelBrakeType = new System.Windows.Forms.Label();
-			this.labelLocoBrakeType = new System.Windows.Forms.Label();
-			this.comboBoxBrakeType = new System.Windows.Forms.ComboBox();
-			this.comboBoxLocoBrakeType = new System.Windows.Forms.ComboBox();
-			this.comboBoxBrakeControlSystem = new System.Windows.Forms.ComboBox();
-			this.labelBrakeControlSpeedUnit = new System.Windows.Forms.Label();
-			this.textBoxBrakeControlSpeed = new System.Windows.Forms.TextBox();
 			this.groupBoxPressure = new System.Windows.Forms.GroupBox();
-			this.labelBrakeCylinderEmergencyMaximumPressure = new System.Windows.Forms.Label();
-			this.labelBrakeCylinderServiceMaximumPressure = new System.Windows.Forms.Label();
-			this.labelMainReservoirMinimumPressure = new System.Windows.Forms.Label();
-			this.labelMainReservoirMaximumPressure = new System.Windows.Forms.Label();
-			this.textBoxBrakeCylinderServiceMaximumPressure = new System.Windows.Forms.TextBox();
-			this.textBoxBrakeCylinderEmergencyMaximumPressure = new System.Windows.Forms.TextBox();
-			this.textBoxMainReservoirMinimumPressure = new System.Windows.Forms.TextBox();
-			this.textBoxMainReservoirMaximumPressure = new System.Windows.Forms.TextBox();
-			this.labelBrakeCylinderEmergencyMaximumPressureUnit = new System.Windows.Forms.Label();
-			this.labelMainReservoirMinimumPressureUnit = new System.Windows.Forms.Label();
-			this.labelMainReservoirMaximumPressureUnit = new System.Windows.Forms.Label();
-			this.labelBrakeCylinderServiceMaximumPressureUnit = new System.Windows.Forms.Label();
-			this.labelBrakePipeNormalPressure = new System.Windows.Forms.Label();
-			this.textBoxBrakePipeNormalPressure = new System.Windows.Forms.TextBox();
 			this.labelBrakePipeNormalPressureUnit = new System.Windows.Forms.Label();
+			this.textBoxBrakePipeNormalPressure = new System.Windows.Forms.TextBox();
+			this.labelBrakePipeNormalPressure = new System.Windows.Forms.Label();
+			this.labelBrakeCylinderServiceMaximumPressureUnit = new System.Windows.Forms.Label();
+			this.labelMainReservoirMaximumPressureUnit = new System.Windows.Forms.Label();
+			this.labelMainReservoirMinimumPressureUnit = new System.Windows.Forms.Label();
+			this.labelBrakeCylinderEmergencyMaximumPressureUnit = new System.Windows.Forms.Label();
+			this.textBoxMainReservoirMaximumPressure = new System.Windows.Forms.TextBox();
+			this.textBoxMainReservoirMinimumPressure = new System.Windows.Forms.TextBox();
+			this.textBoxBrakeCylinderEmergencyMaximumPressure = new System.Windows.Forms.TextBox();
+			this.textBoxBrakeCylinderServiceMaximumPressure = new System.Windows.Forms.TextBox();
+			this.labelMainReservoirMaximumPressure = new System.Windows.Forms.Label();
+			this.labelMainReservoirMinimumPressure = new System.Windows.Forms.Label();
+			this.labelBrakeCylinderServiceMaximumPressure = new System.Windows.Forms.Label();
+			this.labelBrakeCylinderEmergencyMaximumPressure = new System.Windows.Forms.Label();
+			this.groupBoxBrake = new System.Windows.Forms.GroupBox();
+			this.textBoxBrakeControlSpeed = new System.Windows.Forms.TextBox();
+			this.labelBrakeControlSpeedUnit = new System.Windows.Forms.Label();
+			this.comboBoxBrakeControlSystem = new System.Windows.Forms.ComboBox();
+			this.comboBoxLocoBrakeType = new System.Windows.Forms.ComboBox();
+			this.comboBoxBrakeType = new System.Windows.Forms.ComboBox();
+			this.labelLocoBrakeType = new System.Windows.Forms.Label();
+			this.labelBrakeType = new System.Windows.Forms.Label();
+			this.labelBrakeControlSpeed = new System.Windows.Forms.Label();
+			this.labelBrakeControlSystem = new System.Windows.Forms.Label();
+			this.groupBoxMove = new System.Windows.Forms.GroupBox();
+			this.labelBrakeCylinderDownUnit = new System.Windows.Forms.Label();
+			this.textBoxBrakeCylinderDown = new System.Windows.Forms.TextBox();
+			this.labelBrakeCylinderUpUnit = new System.Windows.Forms.Label();
+			this.textBoxBrakeCylinderUp = new System.Windows.Forms.TextBox();
+			this.labelJerkBrakeDownUnit = new System.Windows.Forms.Label();
+			this.textBoxJerkBrakeDown = new System.Windows.Forms.TextBox();
+			this.labelJerkBrakeUpUnit = new System.Windows.Forms.Label();
+			this.textBoxJerkBrakeUp = new System.Windows.Forms.TextBox();
+			this.labelJerkPowerDownUnit = new System.Windows.Forms.Label();
+			this.textBoxJerkPowerDown = new System.Windows.Forms.TextBox();
+			this.labelJerkPowerUpUnit = new System.Windows.Forms.Label();
+			this.textBoxJerkPowerUp = new System.Windows.Forms.TextBox();
+			this.labelJerkPowerUp = new System.Windows.Forms.Label();
+			this.labelJerkPowerDown = new System.Windows.Forms.Label();
+			this.labelJerkBrakeUp = new System.Windows.Forms.Label();
+			this.labelJerkBrakeDown = new System.Windows.Forms.Label();
+			this.labelBrakeCylinderUp = new System.Windows.Forms.Label();
+			this.labelBrakeCylinderDown = new System.Windows.Forms.Label();
+			this.groupBoxDelay = new System.Windows.Forms.GroupBox();
+			this.buttonDelayLocoBrakeSet = new System.Windows.Forms.Button();
+			this.buttonDelayBrakeSet = new System.Windows.Forms.Button();
+			this.buttonDelayPowerSet = new System.Windows.Forms.Button();
+			this.labelDelayLocoBrake = new System.Windows.Forms.Label();
+			this.labelDelayBrake = new System.Windows.Forms.Label();
+			this.labelDelayPower = new System.Windows.Forms.Label();
+			this.groupBoxPerformance = new System.Windows.Forms.GroupBox();
+			this.textBoxAerodynamicDragCoefficient = new System.Windows.Forms.TextBox();
+			this.textBoxCoefficientOfRollingResistance = new System.Windows.Forms.TextBox();
+			this.textBoxCoefficientOfStaticFriction = new System.Windows.Forms.TextBox();
+			this.labelDecelerationUnit = new System.Windows.Forms.Label();
+			this.textBoxDeceleration = new System.Windows.Forms.TextBox();
+			this.labelAerodynamicDragCoefficient = new System.Windows.Forms.Label();
+			this.labelCoefficientOfStaticFriction = new System.Windows.Forms.Label();
+			this.labelDeceleration = new System.Windows.Forms.Label();
+			this.labelCoefficientOfRollingResistance = new System.Windows.Forms.Label();
+			this.groupBoxCarGeneral = new System.Windows.Forms.GroupBox();
+			this.textBoxRightDoorMaxTolerance = new System.Windows.Forms.TextBox();
+			this.textBoxRightDoorWidth = new System.Windows.Forms.TextBox();
+			this.textBoxLeftDoorMaxTolerance = new System.Windows.Forms.TextBox();
+			this.textBoxLeftDoorWidth = new System.Windows.Forms.TextBox();
+			this.labelRightDoorMaxToleranceUnit = new System.Windows.Forms.Label();
+			this.labelRightDoorWidthUnit = new System.Windows.Forms.Label();
+			this.labelLeftDoorMaxToleranceUnit = new System.Windows.Forms.Label();
+			this.labelLeftDoorWidthUnit = new System.Windows.Forms.Label();
+			this.labelRightDoorMaxTolerance = new System.Windows.Forms.Label();
+			this.labelRightDoorWidth = new System.Windows.Forms.Label();
+			this.labelLeftDoorMaxTolerance = new System.Windows.Forms.Label();
+			this.labelLeftDoorWidth = new System.Windows.Forms.Label();
+			this.labelUnexposedFrontalAreaUnit = new System.Windows.Forms.Label();
+			this.textBoxUnexposedFrontalArea = new System.Windows.Forms.TextBox();
+			this.labelUnexposedFrontalArea = new System.Windows.Forms.Label();
+			this.labelRearBogie = new System.Windows.Forms.Label();
+			this.labelFrontBogie = new System.Windows.Forms.Label();
+			this.buttonRearBogieSet = new System.Windows.Forms.Button();
+			this.buttonFrontBogieSet = new System.Windows.Forms.Button();
+			this.checkBoxReversed = new System.Windows.Forms.CheckBox();
+			this.checkBoxLoadingSway = new System.Windows.Forms.CheckBox();
+			this.checkBoxDefinedAxles = new System.Windows.Forms.CheckBox();
+			this.checkBoxIsMotorCar = new System.Windows.Forms.CheckBox();
+			this.buttonObjectOpen = new System.Windows.Forms.Button();
+			this.labelExposedFrontalAreaUnit = new System.Windows.Forms.Label();
+			this.labelCenterOfMassHeightUnit = new System.Windows.Forms.Label();
+			this.labelLoadingSway = new System.Windows.Forms.Label();
+			this.labelHeightUnit = new System.Windows.Forms.Label();
+			this.labelWidthUnit = new System.Windows.Forms.Label();
+			this.labelLengthUnit = new System.Windows.Forms.Label();
+			this.labelMassUnit = new System.Windows.Forms.Label();
+			this.textBoxMass = new System.Windows.Forms.TextBox();
+			this.textBoxLength = new System.Windows.Forms.TextBox();
+			this.textBoxWidth = new System.Windows.Forms.TextBox();
+			this.textBoxHeight = new System.Windows.Forms.TextBox();
+			this.textBoxCenterOfMassHeight = new System.Windows.Forms.TextBox();
+			this.textBoxExposedFrontalArea = new System.Windows.Forms.TextBox();
+			this.textBoxObject = new System.Windows.Forms.TextBox();
+			this.labelObject = new System.Windows.Forms.Label();
+			this.labelReversed = new System.Windows.Forms.Label();
+			this.groupBoxAxles = new System.Windows.Forms.GroupBox();
+			this.labelRearAxleUnit = new System.Windows.Forms.Label();
+			this.labelFrontAxleUnit = new System.Windows.Forms.Label();
+			this.textBoxRearAxle = new System.Windows.Forms.TextBox();
+			this.textBoxFrontAxle = new System.Windows.Forms.TextBox();
+			this.labelRearAxle = new System.Windows.Forms.Label();
+			this.labelFrontAxle = new System.Windows.Forms.Label();
+			this.labelDefinedAxles = new System.Windows.Forms.Label();
+			this.labelExposedFrontalArea = new System.Windows.Forms.Label();
+			this.labelCenterOfMassHeight = new System.Windows.Forms.Label();
+			this.labelHeight = new System.Windows.Forms.Label();
+			this.labelWidth = new System.Windows.Forms.Label();
+			this.labelLength = new System.Windows.Forms.Label();
+			this.labelMass = new System.Windows.Forms.Label();
+			this.labelIsMotorCar = new System.Windows.Forms.Label();
 			this.tabPageTrain = new System.Windows.Forms.TabPage();
-			this.groupBoxHandle = new System.Windows.Forms.GroupBox();
-			this.labelHandleType = new System.Windows.Forms.Label();
-			this.comboBoxHandleType = new System.Windows.Forms.ComboBox();
-			this.labelPowerNotches = new System.Windows.Forms.Label();
-			this.numericUpDownPowerNotches = new System.Windows.Forms.NumericUpDown();
-			this.labelBrakeNotches = new System.Windows.Forms.Label();
-			this.numericUpDownBrakeNotches = new System.Windows.Forms.NumericUpDown();
-			this.labelPowerNotchReduceSteps = new System.Windows.Forms.Label();
-			this.numericUpDownPowerNotchReduceSteps = new System.Windows.Forms.NumericUpDown();
-			this.labelDriverPowerNotches = new System.Windows.Forms.Label();
-			this.numericUpDownDriverPowerNotches = new System.Windows.Forms.NumericUpDown();
-			this.labelDriverBrakeNotches = new System.Windows.Forms.Label();
-			this.numericUpDownDriverBrakeNotches = new System.Windows.Forms.NumericUpDown();
-			this.labelEbHandleBehaviour = new System.Windows.Forms.Label();
-			this.comboBoxEbHandleBehaviour = new System.Windows.Forms.ComboBox();
-			this.labelLocoBrakeHandleType = new System.Windows.Forms.Label();
-			this.comboBoxLocoBrakeHandleType = new System.Windows.Forms.ComboBox();
-			this.labelLocoBrakeNotches = new System.Windows.Forms.Label();
-			this.numericUpDownLocoBrakeNotches = new System.Windows.Forms.NumericUpDown();
-			this.groupBoxCab = new System.Windows.Forms.GroupBox();
-			this.labelCabX = new System.Windows.Forms.Label();
-			this.labelCabY = new System.Windows.Forms.Label();
-			this.labelCabZ = new System.Windows.Forms.Label();
-			this.labelDriverCar = new System.Windows.Forms.Label();
-			this.textBoxCabX = new System.Windows.Forms.TextBox();
-			this.labelCabXUnit = new System.Windows.Forms.Label();
-			this.textBoxCabY = new System.Windows.Forms.TextBox();
-			this.labelCabYUnit = new System.Windows.Forms.Label();
-			this.textBoxCabZ = new System.Windows.Forms.TextBox();
-			this.labelCabZUnit = new System.Windows.Forms.Label();
-			this.comboBoxDriverCar = new System.Windows.Forms.ComboBox();
 			this.groupBoxDevice = new System.Windows.Forms.GroupBox();
-			this.labelAts = new System.Windows.Forms.Label();
-			this.labelAtc = new System.Windows.Forms.Label();
-			this.labelEb = new System.Windows.Forms.Label();
-			this.labelConstSpeed = new System.Windows.Forms.Label();
-			this.labelHoldBrake = new System.Windows.Forms.Label();
-			this.labelReAdhesionDevice = new System.Windows.Forms.Label();
-			this.labelPassAlarm = new System.Windows.Forms.Label();
-			this.labelDoorOpenMode = new System.Windows.Forms.Label();
-			this.labelDoorCloseMode = new System.Windows.Forms.Label();
-			this.checkBoxConstSpeed = new System.Windows.Forms.CheckBox();
-			this.checkBoxEb = new System.Windows.Forms.CheckBox();
-			this.checkBoxHoldBrake = new System.Windows.Forms.CheckBox();
-			this.comboBoxAts = new System.Windows.Forms.ComboBox();
-			this.comboBoxAtc = new System.Windows.Forms.ComboBox();
-			this.comboBoxReAdhesionDevice = new System.Windows.Forms.ComboBox();
-			this.comboBoxPassAlarm = new System.Windows.Forms.ComboBox();
-			this.comboBoxDoorOpenMode = new System.Windows.Forms.ComboBox();
 			this.comboBoxDoorCloseMode = new System.Windows.Forms.ComboBox();
+			this.comboBoxDoorOpenMode = new System.Windows.Forms.ComboBox();
+			this.comboBoxPassAlarm = new System.Windows.Forms.ComboBox();
+			this.comboBoxReAdhesionDevice = new System.Windows.Forms.ComboBox();
+			this.comboBoxAtc = new System.Windows.Forms.ComboBox();
+			this.comboBoxAts = new System.Windows.Forms.ComboBox();
+			this.checkBoxHoldBrake = new System.Windows.Forms.CheckBox();
+			this.checkBoxEb = new System.Windows.Forms.CheckBox();
+			this.checkBoxConstSpeed = new System.Windows.Forms.CheckBox();
+			this.labelDoorCloseMode = new System.Windows.Forms.Label();
+			this.labelDoorOpenMode = new System.Windows.Forms.Label();
+			this.labelPassAlarm = new System.Windows.Forms.Label();
+			this.labelReAdhesionDevice = new System.Windows.Forms.Label();
+			this.labelHoldBrake = new System.Windows.Forms.Label();
+			this.labelConstSpeed = new System.Windows.Forms.Label();
+			this.labelEb = new System.Windows.Forms.Label();
+			this.labelAtc = new System.Windows.Forms.Label();
+			this.labelAts = new System.Windows.Forms.Label();
+			this.groupBoxCab = new System.Windows.Forms.GroupBox();
+			this.comboBoxDriverCar = new System.Windows.Forms.ComboBox();
+			this.labelCabZUnit = new System.Windows.Forms.Label();
+			this.textBoxCabZ = new System.Windows.Forms.TextBox();
+			this.labelCabYUnit = new System.Windows.Forms.Label();
+			this.textBoxCabY = new System.Windows.Forms.TextBox();
+			this.labelCabXUnit = new System.Windows.Forms.Label();
+			this.textBoxCabX = new System.Windows.Forms.TextBox();
+			this.labelDriverCar = new System.Windows.Forms.Label();
+			this.labelCabZ = new System.Windows.Forms.Label();
+			this.labelCabY = new System.Windows.Forms.Label();
+			this.labelCabX = new System.Windows.Forms.Label();
+			this.groupBoxHandle = new System.Windows.Forms.GroupBox();
+			this.numericUpDownLocoBrakeNotches = new System.Windows.Forms.NumericUpDown();
+			this.labelLocoBrakeNotches = new System.Windows.Forms.Label();
+			this.comboBoxLocoBrakeHandleType = new System.Windows.Forms.ComboBox();
+			this.labelLocoBrakeHandleType = new System.Windows.Forms.Label();
+			this.comboBoxEbHandleBehaviour = new System.Windows.Forms.ComboBox();
+			this.labelEbHandleBehaviour = new System.Windows.Forms.Label();
+			this.numericUpDownDriverBrakeNotches = new System.Windows.Forms.NumericUpDown();
+			this.labelDriverBrakeNotches = new System.Windows.Forms.Label();
+			this.numericUpDownDriverPowerNotches = new System.Windows.Forms.NumericUpDown();
+			this.labelDriverPowerNotches = new System.Windows.Forms.Label();
+			this.numericUpDownPowerNotchReduceSteps = new System.Windows.Forms.NumericUpDown();
+			this.labelPowerNotchReduceSteps = new System.Windows.Forms.Label();
+			this.numericUpDownBrakeNotches = new System.Windows.Forms.NumericUpDown();
+			this.labelBrakeNotches = new System.Windows.Forms.Label();
+			this.numericUpDownPowerNotches = new System.Windows.Forms.NumericUpDown();
+			this.labelPowerNotches = new System.Windows.Forms.Label();
+			this.comboBoxHandleType = new System.Windows.Forms.ComboBox();
+			this.labelHandleType = new System.Windows.Forms.Label();
 			this.tabControlEditor = new System.Windows.Forms.TabControl();
+			this.buttonSoundUp = new System.Windows.Forms.Button();
+			this.buttonSoundDown = new System.Windows.Forms.Button();
 			this.panelCars.SuspendLayout();
 			this.panelCarsNavi.SuspendLayout();
 			this.menuStripMenu.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
 			this.tabPageStatus.SuspendLayout();
-			this.menuStripStatus.SuspendLayout();
 			this.panelStatusNavi.SuspendLayout();
+			this.menuStripStatus.SuspendLayout();
 			this.tabPageSound.SuspendLayout();
 			this.panelSoundSetting.SuspendLayout();
-			this.panelSoundSettingEdit.SuspendLayout();
-			this.groupBoxSoundEntry.SuspendLayout();
-			this.groupBoxSoundValue.SuspendLayout();
-			this.groupBoxSoundPosition.SuspendLayout();
-			this.groupBoxSoundKey.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownSoundKeyIndex)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainerSound)).BeginInit();
 			this.splitContainerSound.Panel1.SuspendLayout();
 			this.splitContainerSound.Panel2.SuspendLayout();
 			this.splitContainerSound.SuspendLayout();
+			this.panelSoundSettingEdit.SuspendLayout();
+			this.groupBoxSoundEntry.SuspendLayout();
+			this.groupBoxSoundKey.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownSoundKeyIndex)).BeginInit();
+			this.groupBoxSoundValue.SuspendLayout();
+			this.groupBoxSoundPosition.SuspendLayout();
 			this.tabPagePanel.SuspendLayout();
-			this.tabControlPanel.SuspendLayout();
-			this.tabPageTouch.SuspendLayout();
-			this.groupBoxTouchLocation.SuspendLayout();
-			this.groupBoxTouchSize.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchJumpScreen)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchSoundIndex)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchLayer)).BeginInit();
-			this.tabPageTimetable.SuspendLayout();
-			this.groupBoxTimetableLocation.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTimetableLayer)).BeginInit();
-			this.tabPageLinearGauge.SuspendLayout();
-			this.groupBoxLinearGaugeLocation.SuspendLayout();
-			this.groupBoxLinearGaugeDirection.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownLinearGaugeDirectionX)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownLinearGaugeDirectionY)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownLinearGaugeWidth)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownLinearGaugeLayer)).BeginInit();
-			this.tabPageDigitalGauge.SuspendLayout();
-			this.groupBoxDigitalGaugeLocation.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDigitalGaugeLayer)).BeginInit();
-			this.tabPageDigitalNumber.SuspendLayout();
-			this.groupBoxDigitalNumberLocation.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDigitalNumberInterval)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDigitalNumberLayer)).BeginInit();
-			this.tabPageNeedle.SuspendLayout();
-			this.groupBoxNeedleLocation.SuspendLayout();
-			this.groupBoxNeedleOrigin.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeedleLayer)).BeginInit();
-			this.tabPagePilotLamp.SuspendLayout();
-			this.groupBoxPilotLampLocation.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownPilotLampLayer)).BeginInit();
-			this.tabPageScreen.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownScreenNumber)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownScreenLayer)).BeginInit();
-			this.tabPageThis.SuspendLayout();
-			this.groupBoxThisCenter.SuspendLayout();
-			this.groupBoxThisOrigin.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainerPanel)).BeginInit();
 			this.splitContainerPanel.Panel1.SuspendLayout();
 			this.splitContainerPanel.Panel2.SuspendLayout();
 			this.splitContainerPanel.SuspendLayout();
 			this.panelPanelNavi.SuspendLayout();
 			this.panelPanelNaviCmd.SuspendLayout();
+			this.tabControlPanel.SuspendLayout();
+			this.tabPageThis.SuspendLayout();
+			this.groupBoxThisOrigin.SuspendLayout();
+			this.groupBoxThisCenter.SuspendLayout();
+			this.tabPageScreen.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownScreenLayer)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownScreenNumber)).BeginInit();
+			this.tabPagePilotLamp.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownPilotLampLayer)).BeginInit();
+			this.groupBoxPilotLampLocation.SuspendLayout();
+			this.tabPageNeedle.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeedleLayer)).BeginInit();
+			this.groupBoxNeedleOrigin.SuspendLayout();
+			this.groupBoxNeedleLocation.SuspendLayout();
+			this.tabPageDigitalNumber.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDigitalNumberLayer)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDigitalNumberInterval)).BeginInit();
+			this.groupBoxDigitalNumberLocation.SuspendLayout();
+			this.tabPageDigitalGauge.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDigitalGaugeLayer)).BeginInit();
+			this.groupBoxDigitalGaugeLocation.SuspendLayout();
+			this.tabPageLinearGauge.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownLinearGaugeLayer)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownLinearGaugeWidth)).BeginInit();
+			this.groupBoxLinearGaugeDirection.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownLinearGaugeDirectionY)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownLinearGaugeDirectionX)).BeginInit();
+			this.groupBoxLinearGaugeLocation.SuspendLayout();
+			this.tabPageTimetable.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTimetableLayer)).BeginInit();
+			this.groupBoxTimetableLocation.SuspendLayout();
+			this.tabPageTouch.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchLayer)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchSoundIndex)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchJumpScreen)).BeginInit();
+			this.groupBoxTouchSize.SuspendLayout();
+			this.groupBoxTouchLocation.SuspendLayout();
 			this.tabPageCoupler.SuspendLayout();
 			this.groupBoxCouplerGeneral.SuspendLayout();
 			this.tabPageMotor.SuspendLayout();
@@ -708,45 +712,45 @@ namespace TrainEditor2.Views
 			this.splitContainerMotor.Panel1.SuspendLayout();
 			this.splitContainerMotor.Panel2.SuspendLayout();
 			this.splitContainerMotor.SuspendLayout();
-			this.statusStripStatus.SuspendLayout();
-			this.menuStripMotor.SuspendLayout();
-			this.panelMotorSetting.SuspendLayout();
-			this.groupBoxTrack.SuspendLayout();
-			this.groupBoxView.SuspendLayout();
-			this.groupBoxDirect.SuspendLayout();
-			this.groupBoxPlay.SuspendLayout();
-			this.groupBoxSource.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownRunIndex)).BeginInit();
-			this.groupBoxArea.SuspendLayout();
+			this.panelMoterNavi.SuspendLayout();
 			this.toolStripContainerDrawArea.ContentPanel.SuspendLayout();
 			this.toolStripContainerDrawArea.TopToolStripPanel.SuspendLayout();
 			this.toolStripContainerDrawArea.SuspendLayout();
 			this.toolStripToolBar.SuspendLayout();
-			this.panelMoterNavi.SuspendLayout();
+			this.panelMotorSetting.SuspendLayout();
+			this.groupBoxPlay.SuspendLayout();
+			this.groupBoxArea.SuspendLayout();
+			this.groupBoxSource.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownRunIndex)).BeginInit();
+			this.groupBoxDirect.SuspendLayout();
+			this.groupBoxView.SuspendLayout();
+			this.groupBoxTrack.SuspendLayout();
+			this.menuStripMotor.SuspendLayout();
+			this.statusStripStatus.SuspendLayout();
 			this.tabPageAccel.SuspendLayout();
-			this.panelAccel.SuspendLayout();
-			this.groupBoxNotch.SuspendLayout();
-			this.groupBoxParameter.SuspendLayout();
-			this.groupBoxPreview.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBoxAccel)).BeginInit();
+			this.panelAccel.SuspendLayout();
+			this.groupBoxPreview.SuspendLayout();
+			this.groupBoxParameter.SuspendLayout();
+			this.groupBoxNotch.SuspendLayout();
 			this.tabPageCar.SuspendLayout();
+			this.groupBoxPressure.SuspendLayout();
+			this.groupBoxBrake.SuspendLayout();
+			this.groupBoxMove.SuspendLayout();
+			this.groupBoxDelay.SuspendLayout();
+			this.groupBoxPerformance.SuspendLayout();
 			this.groupBoxCarGeneral.SuspendLayout();
 			this.groupBoxAxles.SuspendLayout();
-			this.groupBoxPerformance.SuspendLayout();
-			this.groupBoxDelay.SuspendLayout();
-			this.groupBoxMove.SuspendLayout();
-			this.groupBoxBrake.SuspendLayout();
-			this.groupBoxPressure.SuspendLayout();
 			this.tabPageTrain.SuspendLayout();
-			this.groupBoxHandle.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownPowerNotches)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBrakeNotches)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownPowerNotchReduceSteps)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDriverPowerNotches)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDriverBrakeNotches)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownLocoBrakeNotches)).BeginInit();
-			this.groupBoxCab.SuspendLayout();
 			this.groupBoxDevice.SuspendLayout();
+			this.groupBoxCab.SuspendLayout();
+			this.groupBoxHandle.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownLocoBrakeNotches)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDriverBrakeNotches)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDriverPowerNotches)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownPowerNotchReduceSteps)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBrakeNotches)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownPowerNotches)).BeginInit();
 			this.tabControlEditor.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -953,6 +957,49 @@ namespace TrainEditor2.Views
 			this.tabPageStatus.Text = "Status (0)";
 			this.tabPageStatus.UseVisualStyleBackColor = true;
 			// 
+			// listViewStatus
+			// 
+			this.listViewStatus.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderLevel,
+            this.columnHeaderText});
+			this.listViewStatus.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.listViewStatus.FullRowSelect = true;
+			this.listViewStatus.HideSelection = false;
+			this.listViewStatus.Location = new System.Drawing.Point(0, 24);
+			this.listViewStatus.MultiSelect = false;
+			this.listViewStatus.Name = "listViewStatus";
+			this.listViewStatus.Size = new System.Drawing.Size(792, 608);
+			this.listViewStatus.TabIndex = 0;
+			this.listViewStatus.UseCompatibleStateImageBehavior = false;
+			this.listViewStatus.View = System.Windows.Forms.View.Details;
+			// 
+			// columnHeaderLevel
+			// 
+			this.columnHeaderLevel.Text = "Level";
+			// 
+			// columnHeaderText
+			// 
+			this.columnHeaderText.Text = "Description";
+			// 
+			// panelStatusNavi
+			// 
+			this.panelStatusNavi.Controls.Add(this.buttonOutputLogs);
+			this.panelStatusNavi.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.panelStatusNavi.Location = new System.Drawing.Point(0, 632);
+			this.panelStatusNavi.Name = "panelStatusNavi";
+			this.panelStatusNavi.Size = new System.Drawing.Size(792, 38);
+			this.panelStatusNavi.TabIndex = 4;
+			// 
+			// buttonOutputLogs
+			// 
+			this.buttonOutputLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonOutputLogs.Location = new System.Drawing.Point(704, 8);
+			this.buttonOutputLogs.Name = "buttonOutputLogs";
+			this.buttonOutputLogs.Size = new System.Drawing.Size(80, 24);
+			this.buttonOutputLogs.TabIndex = 0;
+			this.buttonOutputLogs.Text = "Output logs...";
+			this.buttonOutputLogs.UseVisualStyleBackColor = true;
+			// 
 			// menuStripStatus
 			// 
 			this.menuStripStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -991,49 +1038,6 @@ namespace TrainEditor2.Views
 			this.toolStripMenuItemClear.Size = new System.Drawing.Size(44, 20);
 			this.toolStripMenuItemClear.Text = "Clear";
 			// 
-			// panelStatusNavi
-			// 
-			this.panelStatusNavi.Controls.Add(this.buttonOutputLogs);
-			this.panelStatusNavi.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.panelStatusNavi.Location = new System.Drawing.Point(0, 632);
-			this.panelStatusNavi.Name = "panelStatusNavi";
-			this.panelStatusNavi.Size = new System.Drawing.Size(792, 38);
-			this.panelStatusNavi.TabIndex = 4;
-			// 
-			// buttonOutputLogs
-			// 
-			this.buttonOutputLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonOutputLogs.Location = new System.Drawing.Point(704, 8);
-			this.buttonOutputLogs.Name = "buttonOutputLogs";
-			this.buttonOutputLogs.Size = new System.Drawing.Size(80, 24);
-			this.buttonOutputLogs.TabIndex = 0;
-			this.buttonOutputLogs.Text = "Output logs...";
-			this.buttonOutputLogs.UseVisualStyleBackColor = true;
-			// 
-			// listViewStatus
-			// 
-			this.listViewStatus.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeaderLevel,
-            this.columnHeaderText});
-			this.listViewStatus.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.listViewStatus.FullRowSelect = true;
-			this.listViewStatus.HideSelection = false;
-			this.listViewStatus.Location = new System.Drawing.Point(0, 24);
-			this.listViewStatus.MultiSelect = false;
-			this.listViewStatus.Name = "listViewStatus";
-			this.listViewStatus.Size = new System.Drawing.Size(792, 608);
-			this.listViewStatus.TabIndex = 0;
-			this.listViewStatus.UseCompatibleStateImageBehavior = false;
-			this.listViewStatus.View = System.Windows.Forms.View.Details;
-			// 
-			// columnHeaderLevel
-			// 
-			this.columnHeaderLevel.Text = "Level";
-			// 
-			// columnHeaderText
-			// 
-			this.columnHeaderText.Text = "Description";
-			// 
 			// tabPageSound
 			// 
 			this.tabPageSound.Controls.Add(this.panelSoundSetting);
@@ -1055,6 +1059,45 @@ namespace TrainEditor2.Views
 			this.panelSoundSetting.Size = new System.Drawing.Size(786, 664);
 			this.panelSoundSetting.TabIndex = 0;
 			// 
+			// splitContainerSound
+			// 
+			this.splitContainerSound.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainerSound.Location = new System.Drawing.Point(0, 0);
+			this.splitContainerSound.Name = "splitContainerSound";
+			// 
+			// splitContainerSound.Panel1
+			// 
+			this.splitContainerSound.Panel1.Controls.Add(this.treeViewSound);
+			// 
+			// splitContainerSound.Panel2
+			// 
+			this.splitContainerSound.Panel2.Controls.Add(this.listViewSound);
+			this.splitContainerSound.Size = new System.Drawing.Size(570, 664);
+			this.splitContainerSound.SplitterDistance = 190;
+			this.splitContainerSound.TabIndex = 2;
+			// 
+			// treeViewSound
+			// 
+			this.treeViewSound.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.treeViewSound.HideSelection = false;
+			this.treeViewSound.Location = new System.Drawing.Point(0, 0);
+			this.treeViewSound.Name = "treeViewSound";
+			this.treeViewSound.Size = new System.Drawing.Size(190, 664);
+			this.treeViewSound.TabIndex = 0;
+			// 
+			// listViewSound
+			// 
+			this.listViewSound.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.listViewSound.FullRowSelect = true;
+			this.listViewSound.HideSelection = false;
+			this.listViewSound.Location = new System.Drawing.Point(0, 0);
+			this.listViewSound.MultiSelect = false;
+			this.listViewSound.Name = "listViewSound";
+			this.listViewSound.Size = new System.Drawing.Size(376, 664);
+			this.listViewSound.TabIndex = 0;
+			this.listViewSound.UseCompatibleStateImageBehavior = false;
+			this.listViewSound.View = System.Windows.Forms.View.Details;
+			// 
 			// panelSoundSettingEdit
 			// 
 			this.panelSoundSettingEdit.Controls.Add(this.groupBoxSoundEntry);
@@ -1067,16 +1110,63 @@ namespace TrainEditor2.Views
 			// groupBoxSoundEntry
 			// 
 			this.groupBoxSoundEntry.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBoxSoundEntry.Controls.Add(this.buttonSoundUp);
+			this.groupBoxSoundEntry.Controls.Add(this.buttonSoundDown);
 			this.groupBoxSoundEntry.Controls.Add(this.buttonSoundRemove);
 			this.groupBoxSoundEntry.Controls.Add(this.groupBoxSoundKey);
 			this.groupBoxSoundEntry.Controls.Add(this.buttonSoundAdd);
 			this.groupBoxSoundEntry.Controls.Add(this.groupBoxSoundValue);
-			this.groupBoxSoundEntry.Location = new System.Drawing.Point(8, 320);
+			this.groupBoxSoundEntry.Location = new System.Drawing.Point(8, 288);
 			this.groupBoxSoundEntry.Name = "groupBoxSoundEntry";
-			this.groupBoxSoundEntry.Size = new System.Drawing.Size(200, 336);
+			this.groupBoxSoundEntry.Size = new System.Drawing.Size(200, 368);
 			this.groupBoxSoundEntry.TabIndex = 6;
 			this.groupBoxSoundEntry.TabStop = false;
 			this.groupBoxSoundEntry.Text = "Edit entry";
+			// 
+			// buttonSoundRemove
+			// 
+			this.buttonSoundRemove.Location = new System.Drawing.Point(136, 304);
+			this.buttonSoundRemove.Name = "buttonSoundRemove";
+			this.buttonSoundRemove.Size = new System.Drawing.Size(56, 24);
+			this.buttonSoundRemove.TabIndex = 4;
+			this.buttonSoundRemove.Text = "Remove";
+			this.buttonSoundRemove.UseVisualStyleBackColor = true;
+			// 
+			// groupBoxSoundKey
+			// 
+			this.groupBoxSoundKey.Controls.Add(this.numericUpDownSoundKeyIndex);
+			this.groupBoxSoundKey.Controls.Add(this.comboBoxSoundKey);
+			this.groupBoxSoundKey.Location = new System.Drawing.Point(8, 16);
+			this.groupBoxSoundKey.Name = "groupBoxSoundKey";
+			this.groupBoxSoundKey.Size = new System.Drawing.Size(184, 48);
+			this.groupBoxSoundKey.TabIndex = 1;
+			this.groupBoxSoundKey.TabStop = false;
+			this.groupBoxSoundKey.Text = "Key type select";
+			// 
+			// numericUpDownSoundKeyIndex
+			// 
+			this.numericUpDownSoundKeyIndex.Location = new System.Drawing.Point(136, 16);
+			this.numericUpDownSoundKeyIndex.Name = "numericUpDownSoundKeyIndex";
+			this.numericUpDownSoundKeyIndex.Size = new System.Drawing.Size(40, 19);
+			this.numericUpDownSoundKeyIndex.TabIndex = 1;
+			// 
+			// comboBoxSoundKey
+			// 
+			this.comboBoxSoundKey.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxSoundKey.FormattingEnabled = true;
+			this.comboBoxSoundKey.Location = new System.Drawing.Point(8, 16);
+			this.comboBoxSoundKey.Name = "comboBoxSoundKey";
+			this.comboBoxSoundKey.Size = new System.Drawing.Size(120, 20);
+			this.comboBoxSoundKey.TabIndex = 0;
+			// 
+			// buttonSoundAdd
+			// 
+			this.buttonSoundAdd.Location = new System.Drawing.Point(72, 304);
+			this.buttonSoundAdd.Name = "buttonSoundAdd";
+			this.buttonSoundAdd.Size = new System.Drawing.Size(56, 24);
+			this.buttonSoundAdd.TabIndex = 3;
+			this.buttonSoundAdd.Text = "Add";
+			this.buttonSoundAdd.UseVisualStyleBackColor = true;
 			// 
 			// groupBoxSoundValue
 			// 
@@ -1094,31 +1184,30 @@ namespace TrainEditor2.Views
 			this.groupBoxSoundValue.TabStop = false;
 			this.groupBoxSoundValue.Text = "Input value";
 			// 
-			// textBoxSoundFileName
+			// checkBoxSoundRadius
 			// 
-			this.textBoxSoundFileName.Location = new System.Drawing.Point(72, 16);
-			this.textBoxSoundFileName.Name = "textBoxSoundFileName";
-			this.textBoxSoundFileName.Size = new System.Drawing.Size(104, 19);
-			this.textBoxSoundFileName.TabIndex = 0;
+			this.checkBoxSoundRadius.Location = new System.Drawing.Point(8, 72);
+			this.checkBoxSoundRadius.Name = "checkBoxSoundRadius";
+			this.checkBoxSoundRadius.Size = new System.Drawing.Size(80, 16);
+			this.checkBoxSoundRadius.TabIndex = 22;
+			this.checkBoxSoundRadius.Text = "Radius:";
+			this.checkBoxSoundRadius.UseVisualStyleBackColor = true;
 			// 
-			// buttonSoundFileNameOpen
+			// checkBoxSoundDefinedPosition
 			// 
-			this.buttonSoundFileNameOpen.Location = new System.Drawing.Point(120, 40);
-			this.buttonSoundFileNameOpen.Name = "buttonSoundFileNameOpen";
-			this.buttonSoundFileNameOpen.Size = new System.Drawing.Size(56, 24);
-			this.buttonSoundFileNameOpen.TabIndex = 1;
-			this.buttonSoundFileNameOpen.Text = "Open...";
-			this.buttonSoundFileNameOpen.UseVisualStyleBackColor = true;
-			this.buttonSoundFileNameOpen.Click += new System.EventHandler(this.ButtonSoundFileNameOpen_Click);
+			this.checkBoxSoundDefinedPosition.Location = new System.Drawing.Point(8, 96);
+			this.checkBoxSoundDefinedPosition.Name = "checkBoxSoundDefinedPosition";
+			this.checkBoxSoundDefinedPosition.Size = new System.Drawing.Size(104, 16);
+			this.checkBoxSoundDefinedPosition.TabIndex = 21;
+			this.checkBoxSoundDefinedPosition.Text = "Position setting";
+			this.checkBoxSoundDefinedPosition.UseVisualStyleBackColor = true;
 			// 
-			// labelSoundFileName
+			// textBoxSoundRadius
 			// 
-			this.labelSoundFileName.Location = new System.Drawing.Point(8, 16);
-			this.labelSoundFileName.Name = "labelSoundFileName";
-			this.labelSoundFileName.Size = new System.Drawing.Size(56, 16);
-			this.labelSoundFileName.TabIndex = 2;
-			this.labelSoundFileName.Text = "Filename:";
-			this.labelSoundFileName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.textBoxSoundRadius.Location = new System.Drawing.Point(96, 72);
+			this.textBoxSoundRadius.Name = "textBoxSoundRadius";
+			this.textBoxSoundRadius.Size = new System.Drawing.Size(56, 19);
+			this.textBoxSoundRadius.TabIndex = 20;
 			// 
 			// groupBoxSoundPosition
 			// 
@@ -1138,55 +1227,21 @@ namespace TrainEditor2.Views
 			this.groupBoxSoundPosition.TabStop = false;
 			this.groupBoxSoundPosition.Text = "Position";
 			// 
-			// labelSoundPositionX
+			// labelSoundPositionZUnit
 			// 
-			this.labelSoundPositionX.Location = new System.Drawing.Point(8, 16);
-			this.labelSoundPositionX.Name = "labelSoundPositionX";
-			this.labelSoundPositionX.Size = new System.Drawing.Size(72, 16);
-			this.labelSoundPositionX.TabIndex = 18;
-			this.labelSoundPositionX.Text = "x coordinate:";
-			this.labelSoundPositionX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.labelSoundPositionZUnit.Location = new System.Drawing.Point(152, 64);
+			this.labelSoundPositionZUnit.Name = "labelSoundPositionZUnit";
+			this.labelSoundPositionZUnit.Size = new System.Drawing.Size(8, 16);
+			this.labelSoundPositionZUnit.TabIndex = 26;
+			this.labelSoundPositionZUnit.Text = "m";
+			this.labelSoundPositionZUnit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
-			// textBoxSoundPositionX
+			// textBoxSoundPositionZ
 			// 
-			this.textBoxSoundPositionX.Location = new System.Drawing.Point(88, 16);
-			this.textBoxSoundPositionX.Name = "textBoxSoundPositionX";
-			this.textBoxSoundPositionX.Size = new System.Drawing.Size(56, 19);
-			this.textBoxSoundPositionX.TabIndex = 19;
-			// 
-			// labelSoundPositionXUnit
-			// 
-			this.labelSoundPositionXUnit.Location = new System.Drawing.Point(152, 16);
-			this.labelSoundPositionXUnit.Name = "labelSoundPositionXUnit";
-			this.labelSoundPositionXUnit.Size = new System.Drawing.Size(8, 16);
-			this.labelSoundPositionXUnit.TabIndex = 20;
-			this.labelSoundPositionXUnit.Text = "m";
-			this.labelSoundPositionXUnit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// labelSoundPositionY
-			// 
-			this.labelSoundPositionY.Location = new System.Drawing.Point(8, 40);
-			this.labelSoundPositionY.Name = "labelSoundPositionY";
-			this.labelSoundPositionY.Size = new System.Drawing.Size(72, 16);
-			this.labelSoundPositionY.TabIndex = 21;
-			this.labelSoundPositionY.Text = "y coordinate:";
-			this.labelSoundPositionY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxSoundPositionY
-			// 
-			this.textBoxSoundPositionY.Location = new System.Drawing.Point(88, 40);
-			this.textBoxSoundPositionY.Name = "textBoxSoundPositionY";
-			this.textBoxSoundPositionY.Size = new System.Drawing.Size(56, 19);
-			this.textBoxSoundPositionY.TabIndex = 22;
-			// 
-			// labelSoundPositionYUnit
-			// 
-			this.labelSoundPositionYUnit.Location = new System.Drawing.Point(152, 40);
-			this.labelSoundPositionYUnit.Name = "labelSoundPositionYUnit";
-			this.labelSoundPositionYUnit.Size = new System.Drawing.Size(8, 16);
-			this.labelSoundPositionYUnit.TabIndex = 23;
-			this.labelSoundPositionYUnit.Text = "m";
-			this.labelSoundPositionYUnit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.textBoxSoundPositionZ.Location = new System.Drawing.Point(88, 64);
+			this.textBoxSoundPositionZ.Name = "textBoxSoundPositionZ";
+			this.textBoxSoundPositionZ.Size = new System.Drawing.Size(56, 19);
+			this.textBoxSoundPositionZ.TabIndex = 25;
 			// 
 			// labelSoundPositionZ
 			// 
@@ -1197,130 +1252,81 @@ namespace TrainEditor2.Views
 			this.labelSoundPositionZ.Text = "z coordinate:";
 			this.labelSoundPositionZ.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// textBoxSoundPositionZ
+			// labelSoundPositionYUnit
 			// 
-			this.textBoxSoundPositionZ.Location = new System.Drawing.Point(88, 64);
-			this.textBoxSoundPositionZ.Name = "textBoxSoundPositionZ";
-			this.textBoxSoundPositionZ.Size = new System.Drawing.Size(56, 19);
-			this.textBoxSoundPositionZ.TabIndex = 25;
+			this.labelSoundPositionYUnit.Location = new System.Drawing.Point(152, 40);
+			this.labelSoundPositionYUnit.Name = "labelSoundPositionYUnit";
+			this.labelSoundPositionYUnit.Size = new System.Drawing.Size(8, 16);
+			this.labelSoundPositionYUnit.TabIndex = 23;
+			this.labelSoundPositionYUnit.Text = "m";
+			this.labelSoundPositionYUnit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
-			// labelSoundPositionZUnit
+			// textBoxSoundPositionY
 			// 
-			this.labelSoundPositionZUnit.Location = new System.Drawing.Point(152, 64);
-			this.labelSoundPositionZUnit.Name = "labelSoundPositionZUnit";
-			this.labelSoundPositionZUnit.Size = new System.Drawing.Size(8, 16);
-			this.labelSoundPositionZUnit.TabIndex = 26;
-			this.labelSoundPositionZUnit.Text = "m";
-			this.labelSoundPositionZUnit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.textBoxSoundPositionY.Location = new System.Drawing.Point(88, 40);
+			this.textBoxSoundPositionY.Name = "textBoxSoundPositionY";
+			this.textBoxSoundPositionY.Size = new System.Drawing.Size(56, 19);
+			this.textBoxSoundPositionY.TabIndex = 22;
 			// 
-			// textBoxSoundRadius
+			// labelSoundPositionY
 			// 
-			this.textBoxSoundRadius.Location = new System.Drawing.Point(96, 72);
-			this.textBoxSoundRadius.Name = "textBoxSoundRadius";
-			this.textBoxSoundRadius.Size = new System.Drawing.Size(56, 19);
-			this.textBoxSoundRadius.TabIndex = 20;
+			this.labelSoundPositionY.Location = new System.Drawing.Point(8, 40);
+			this.labelSoundPositionY.Name = "labelSoundPositionY";
+			this.labelSoundPositionY.Size = new System.Drawing.Size(72, 16);
+			this.labelSoundPositionY.TabIndex = 21;
+			this.labelSoundPositionY.Text = "y coordinate:";
+			this.labelSoundPositionY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// checkBoxSoundDefinedPosition
+			// labelSoundPositionXUnit
 			// 
-			this.checkBoxSoundDefinedPosition.Location = new System.Drawing.Point(8, 96);
-			this.checkBoxSoundDefinedPosition.Name = "checkBoxSoundDefinedPosition";
-			this.checkBoxSoundDefinedPosition.Size = new System.Drawing.Size(104, 16);
-			this.checkBoxSoundDefinedPosition.TabIndex = 21;
-			this.checkBoxSoundDefinedPosition.Text = "Position setting";
-			this.checkBoxSoundDefinedPosition.UseVisualStyleBackColor = true;
+			this.labelSoundPositionXUnit.Location = new System.Drawing.Point(152, 16);
+			this.labelSoundPositionXUnit.Name = "labelSoundPositionXUnit";
+			this.labelSoundPositionXUnit.Size = new System.Drawing.Size(8, 16);
+			this.labelSoundPositionXUnit.TabIndex = 20;
+			this.labelSoundPositionXUnit.Text = "m";
+			this.labelSoundPositionXUnit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
-			// checkBoxSoundRadius
+			// textBoxSoundPositionX
 			// 
-			this.checkBoxSoundRadius.Location = new System.Drawing.Point(8, 72);
-			this.checkBoxSoundRadius.Name = "checkBoxSoundRadius";
-			this.checkBoxSoundRadius.Size = new System.Drawing.Size(80, 16);
-			this.checkBoxSoundRadius.TabIndex = 22;
-			this.checkBoxSoundRadius.Text = "Radius:";
-			this.checkBoxSoundRadius.UseVisualStyleBackColor = true;
+			this.textBoxSoundPositionX.Location = new System.Drawing.Point(88, 16);
+			this.textBoxSoundPositionX.Name = "textBoxSoundPositionX";
+			this.textBoxSoundPositionX.Size = new System.Drawing.Size(56, 19);
+			this.textBoxSoundPositionX.TabIndex = 19;
 			// 
-			// buttonSoundAdd
+			// labelSoundPositionX
 			// 
-			this.buttonSoundAdd.Location = new System.Drawing.Point(8, 304);
-			this.buttonSoundAdd.Name = "buttonSoundAdd";
-			this.buttonSoundAdd.Size = new System.Drawing.Size(56, 24);
-			this.buttonSoundAdd.TabIndex = 3;
-			this.buttonSoundAdd.Text = "Add";
-			this.buttonSoundAdd.UseVisualStyleBackColor = true;
+			this.labelSoundPositionX.Location = new System.Drawing.Point(8, 16);
+			this.labelSoundPositionX.Name = "labelSoundPositionX";
+			this.labelSoundPositionX.Size = new System.Drawing.Size(72, 16);
+			this.labelSoundPositionX.TabIndex = 18;
+			this.labelSoundPositionX.Text = "x coordinate:";
+			this.labelSoundPositionX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// groupBoxSoundKey
+			// labelSoundFileName
 			// 
-			this.groupBoxSoundKey.Controls.Add(this.numericUpDownSoundKeyIndex);
-			this.groupBoxSoundKey.Controls.Add(this.comboBoxSoundKey);
-			this.groupBoxSoundKey.Location = new System.Drawing.Point(8, 16);
-			this.groupBoxSoundKey.Name = "groupBoxSoundKey";
-			this.groupBoxSoundKey.Size = new System.Drawing.Size(184, 48);
-			this.groupBoxSoundKey.TabIndex = 1;
-			this.groupBoxSoundKey.TabStop = false;
-			this.groupBoxSoundKey.Text = "Key type select";
+			this.labelSoundFileName.Location = new System.Drawing.Point(8, 16);
+			this.labelSoundFileName.Name = "labelSoundFileName";
+			this.labelSoundFileName.Size = new System.Drawing.Size(56, 16);
+			this.labelSoundFileName.TabIndex = 2;
+			this.labelSoundFileName.Text = "Filename:";
+			this.labelSoundFileName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// comboBoxSoundKey
+			// buttonSoundFileNameOpen
 			// 
-			this.comboBoxSoundKey.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxSoundKey.FormattingEnabled = true;
-			this.comboBoxSoundKey.Location = new System.Drawing.Point(8, 16);
-			this.comboBoxSoundKey.Name = "comboBoxSoundKey";
-			this.comboBoxSoundKey.Size = new System.Drawing.Size(120, 20);
-			this.comboBoxSoundKey.TabIndex = 0;
+			this.buttonSoundFileNameOpen.Location = new System.Drawing.Point(120, 40);
+			this.buttonSoundFileNameOpen.Name = "buttonSoundFileNameOpen";
+			this.buttonSoundFileNameOpen.Size = new System.Drawing.Size(56, 24);
+			this.buttonSoundFileNameOpen.TabIndex = 1;
+			this.buttonSoundFileNameOpen.Text = "Open...";
+			this.buttonSoundFileNameOpen.UseVisualStyleBackColor = true;
+			this.buttonSoundFileNameOpen.Click += new System.EventHandler(this.ButtonSoundFileNameOpen_Click);
 			// 
-			// numericUpDownSoundKeyIndex
+			// textBoxSoundFileName
 			// 
-			this.numericUpDownSoundKeyIndex.Location = new System.Drawing.Point(136, 16);
-			this.numericUpDownSoundKeyIndex.Name = "numericUpDownSoundKeyIndex";
-			this.numericUpDownSoundKeyIndex.Size = new System.Drawing.Size(40, 19);
-			this.numericUpDownSoundKeyIndex.TabIndex = 1;
-			// 
-			// buttonSoundRemove
-			// 
-			this.buttonSoundRemove.Location = new System.Drawing.Point(72, 304);
-			this.buttonSoundRemove.Name = "buttonSoundRemove";
-			this.buttonSoundRemove.Size = new System.Drawing.Size(56, 24);
-			this.buttonSoundRemove.TabIndex = 4;
-			this.buttonSoundRemove.Text = "Remove";
-			this.buttonSoundRemove.UseVisualStyleBackColor = true;
-			// 
-			// splitContainerSound
-			// 
-			this.splitContainerSound.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.splitContainerSound.Location = new System.Drawing.Point(0, 0);
-			this.splitContainerSound.Name = "splitContainerSound";
-			// 
-			// splitContainerSound.Panel1
-			// 
-			this.splitContainerSound.Panel1.Controls.Add(this.treeViewSound);
-			// 
-			// splitContainerSound.Panel2
-			// 
-			this.splitContainerSound.Panel2.Controls.Add(this.listViewSound);
-			this.splitContainerSound.Size = new System.Drawing.Size(570, 664);
-			this.splitContainerSound.SplitterDistance = 190;
-			this.splitContainerSound.TabIndex = 2;
-			// 
-			// listViewSound
-			// 
-			this.listViewSound.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.listViewSound.FullRowSelect = true;
-			this.listViewSound.HideSelection = false;
-			this.listViewSound.Location = new System.Drawing.Point(0, 0);
-			this.listViewSound.MultiSelect = false;
-			this.listViewSound.Name = "listViewSound";
-			this.listViewSound.Size = new System.Drawing.Size(376, 664);
-			this.listViewSound.TabIndex = 0;
-			this.listViewSound.UseCompatibleStateImageBehavior = false;
-			this.listViewSound.View = System.Windows.Forms.View.Details;
-			// 
-			// treeViewSound
-			// 
-			this.treeViewSound.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.treeViewSound.HideSelection = false;
-			this.treeViewSound.Location = new System.Drawing.Point(0, 0);
-			this.treeViewSound.Name = "treeViewSound";
-			this.treeViewSound.Size = new System.Drawing.Size(190, 664);
-			this.treeViewSound.TabIndex = 0;
+			this.textBoxSoundFileName.Location = new System.Drawing.Point(72, 16);
+			this.textBoxSoundFileName.Name = "textBoxSoundFileName";
+			this.textBoxSoundFileName.Size = new System.Drawing.Size(104, 19);
+			this.textBoxSoundFileName.TabIndex = 0;
 			// 
 			// tabPagePanel
 			// 
@@ -1332,6 +1338,113 @@ namespace TrainEditor2.Views
 			this.tabPagePanel.TabIndex = 2;
 			this.tabPagePanel.Text = "Panel settings";
 			this.tabPagePanel.UseVisualStyleBackColor = true;
+			// 
+			// splitContainerPanel
+			// 
+			this.splitContainerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainerPanel.Location = new System.Drawing.Point(0, 0);
+			this.splitContainerPanel.Name = "splitContainerPanel";
+			// 
+			// splitContainerPanel.Panel1
+			// 
+			this.splitContainerPanel.Panel1.Controls.Add(this.treeViewPanel);
+			// 
+			// splitContainerPanel.Panel2
+			// 
+			this.splitContainerPanel.Panel2.Controls.Add(this.listViewPanel);
+			this.splitContainerPanel.Panel2.Controls.Add(this.panelPanelNavi);
+			this.splitContainerPanel.Size = new System.Drawing.Size(472, 670);
+			this.splitContainerPanel.SplitterDistance = 157;
+			this.splitContainerPanel.TabIndex = 1;
+			// 
+			// treeViewPanel
+			// 
+			this.treeViewPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.treeViewPanel.HideSelection = false;
+			this.treeViewPanel.Location = new System.Drawing.Point(0, 0);
+			this.treeViewPanel.Name = "treeViewPanel";
+			this.treeViewPanel.Size = new System.Drawing.Size(157, 670);
+			this.treeViewPanel.TabIndex = 0;
+			// 
+			// listViewPanel
+			// 
+			this.listViewPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.listViewPanel.FullRowSelect = true;
+			this.listViewPanel.HideSelection = false;
+			this.listViewPanel.Location = new System.Drawing.Point(0, 0);
+			this.listViewPanel.MultiSelect = false;
+			this.listViewPanel.Name = "listViewPanel";
+			this.listViewPanel.Size = new System.Drawing.Size(311, 598);
+			this.listViewPanel.TabIndex = 1;
+			this.listViewPanel.UseCompatibleStateImageBehavior = false;
+			this.listViewPanel.View = System.Windows.Forms.View.Details;
+			// 
+			// panelPanelNavi
+			// 
+			this.panelPanelNavi.Controls.Add(this.panelPanelNaviCmd);
+			this.panelPanelNavi.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.panelPanelNavi.Location = new System.Drawing.Point(0, 598);
+			this.panelPanelNavi.Name = "panelPanelNavi";
+			this.panelPanelNavi.Size = new System.Drawing.Size(311, 72);
+			this.panelPanelNavi.TabIndex = 0;
+			// 
+			// panelPanelNaviCmd
+			// 
+			this.panelPanelNaviCmd.Controls.Add(this.buttonPanelUp);
+			this.panelPanelNaviCmd.Controls.Add(this.buttonPanelDown);
+			this.panelPanelNaviCmd.Controls.Add(this.buttonPanelCopy);
+			this.panelPanelNaviCmd.Controls.Add(this.buttonPanelAdd);
+			this.panelPanelNaviCmd.Controls.Add(this.buttonPanelRemove);
+			this.panelPanelNaviCmd.Dock = System.Windows.Forms.DockStyle.Right;
+			this.panelPanelNaviCmd.Location = new System.Drawing.Point(112, 0);
+			this.panelPanelNaviCmd.Name = "panelPanelNaviCmd";
+			this.panelPanelNaviCmd.Size = new System.Drawing.Size(199, 72);
+			this.panelPanelNaviCmd.TabIndex = 7;
+			// 
+			// buttonPanelUp
+			// 
+			this.buttonPanelUp.Location = new System.Drawing.Point(8, 8);
+			this.buttonPanelUp.Name = "buttonPanelUp";
+			this.buttonPanelUp.Size = new System.Drawing.Size(56, 24);
+			this.buttonPanelUp.TabIndex = 7;
+			this.buttonPanelUp.Text = "Up";
+			this.buttonPanelUp.UseVisualStyleBackColor = true;
+			// 
+			// buttonPanelDown
+			// 
+			this.buttonPanelDown.Location = new System.Drawing.Point(8, 40);
+			this.buttonPanelDown.Name = "buttonPanelDown";
+			this.buttonPanelDown.Size = new System.Drawing.Size(56, 24);
+			this.buttonPanelDown.TabIndex = 8;
+			this.buttonPanelDown.Text = "Down";
+			this.buttonPanelDown.UseVisualStyleBackColor = true;
+			// 
+			// buttonPanelCopy
+			// 
+			this.buttonPanelCopy.Location = new System.Drawing.Point(72, 40);
+			this.buttonPanelCopy.Name = "buttonPanelCopy";
+			this.buttonPanelCopy.Size = new System.Drawing.Size(56, 24);
+			this.buttonPanelCopy.TabIndex = 6;
+			this.buttonPanelCopy.Text = "Copy";
+			this.buttonPanelCopy.UseVisualStyleBackColor = true;
+			// 
+			// buttonPanelAdd
+			// 
+			this.buttonPanelAdd.Location = new System.Drawing.Point(72, 8);
+			this.buttonPanelAdd.Name = "buttonPanelAdd";
+			this.buttonPanelAdd.Size = new System.Drawing.Size(56, 24);
+			this.buttonPanelAdd.TabIndex = 4;
+			this.buttonPanelAdd.Text = "Add";
+			this.buttonPanelAdd.UseVisualStyleBackColor = true;
+			// 
+			// buttonPanelRemove
+			// 
+			this.buttonPanelRemove.Location = new System.Drawing.Point(136, 8);
+			this.buttonPanelRemove.Name = "buttonPanelRemove";
+			this.buttonPanelRemove.Size = new System.Drawing.Size(56, 24);
+			this.buttonPanelRemove.TabIndex = 2;
+			this.buttonPanelRemove.Text = "Remove";
+			this.buttonPanelRemove.UseVisualStyleBackColor = true;
 			// 
 			// tabControlPanel
 			// 
@@ -1352,1060 +1465,511 @@ namespace TrainEditor2.Views
 			this.tabControlPanel.Size = new System.Drawing.Size(320, 670);
 			this.tabControlPanel.TabIndex = 0;
 			// 
-			// tabPageTouch
-			// 
-			this.tabPageTouch.Controls.Add(this.numericUpDownTouchLayer);
-			this.tabPageTouch.Controls.Add(this.labelTouchLayer);
-			this.tabPageTouch.Controls.Add(this.buttonTouchSoundCommand);
-			this.tabPageTouch.Controls.Add(this.labelTouchSoundCommand);
-			this.tabPageTouch.Controls.Add(this.numericUpDownTouchSoundIndex);
-			this.tabPageTouch.Controls.Add(this.labelTouchSoundIndex);
-			this.tabPageTouch.Controls.Add(this.numericUpDownTouchJumpScreen);
-			this.tabPageTouch.Controls.Add(this.labelTouchJumpScreen);
-			this.tabPageTouch.Controls.Add(this.groupBoxTouchSize);
-			this.tabPageTouch.Controls.Add(this.groupBoxTouchLocation);
-			this.tabPageTouch.Location = new System.Drawing.Point(4, 40);
-			this.tabPageTouch.Name = "tabPageTouch";
-			this.tabPageTouch.Size = new System.Drawing.Size(312, 626);
-			this.tabPageTouch.TabIndex = 8;
-			this.tabPageTouch.Text = "Touch";
-			this.tabPageTouch.UseVisualStyleBackColor = true;
-			// 
-			// groupBoxTouchLocation
-			// 
-			this.groupBoxTouchLocation.Controls.Add(this.textBoxTouchLocationY);
-			this.groupBoxTouchLocation.Controls.Add(this.textBoxTouchLocationX);
-			this.groupBoxTouchLocation.Controls.Add(this.labelTouchLocationY);
-			this.groupBoxTouchLocation.Controls.Add(this.labelTouchLocationX);
-			this.groupBoxTouchLocation.Location = new System.Drawing.Point(8, 8);
-			this.groupBoxTouchLocation.Name = "groupBoxTouchLocation";
-			this.groupBoxTouchLocation.Size = new System.Drawing.Size(184, 72);
-			this.groupBoxTouchLocation.TabIndex = 89;
-			this.groupBoxTouchLocation.TabStop = false;
-			this.groupBoxTouchLocation.Text = "Location";
-			// 
-			// labelTouchLocationX
-			// 
-			this.labelTouchLocationX.Location = new System.Drawing.Point(8, 16);
-			this.labelTouchLocationX.Name = "labelTouchLocationX";
-			this.labelTouchLocationX.Size = new System.Drawing.Size(112, 16);
-			this.labelTouchLocationX.TabIndex = 9;
-			this.labelTouchLocationX.Text = "X:";
-			this.labelTouchLocationX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelTouchLocationY
-			// 
-			this.labelTouchLocationY.Location = new System.Drawing.Point(8, 40);
-			this.labelTouchLocationY.Name = "labelTouchLocationY";
-			this.labelTouchLocationY.Size = new System.Drawing.Size(112, 16);
-			this.labelTouchLocationY.TabIndex = 10;
-			this.labelTouchLocationY.Text = "Y:";
-			this.labelTouchLocationY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxTouchLocationX
-			// 
-			this.textBoxTouchLocationX.Location = new System.Drawing.Point(128, 16);
-			this.textBoxTouchLocationX.Name = "textBoxTouchLocationX";
-			this.textBoxTouchLocationX.Size = new System.Drawing.Size(48, 19);
-			this.textBoxTouchLocationX.TabIndex = 32;
-			// 
-			// textBoxTouchLocationY
-			// 
-			this.textBoxTouchLocationY.Location = new System.Drawing.Point(128, 40);
-			this.textBoxTouchLocationY.Name = "textBoxTouchLocationY";
-			this.textBoxTouchLocationY.Size = new System.Drawing.Size(48, 19);
-			this.textBoxTouchLocationY.TabIndex = 33;
-			// 
-			// groupBoxTouchSize
-			// 
-			this.groupBoxTouchSize.Controls.Add(this.textBoxTouchSizeY);
-			this.groupBoxTouchSize.Controls.Add(this.textBoxTouchSizeX);
-			this.groupBoxTouchSize.Controls.Add(this.labelTouchSizeY);
-			this.groupBoxTouchSize.Controls.Add(this.labelTouchSizeX);
-			this.groupBoxTouchSize.Location = new System.Drawing.Point(8, 88);
-			this.groupBoxTouchSize.Name = "groupBoxTouchSize";
-			this.groupBoxTouchSize.Size = new System.Drawing.Size(184, 72);
-			this.groupBoxTouchSize.TabIndex = 90;
-			this.groupBoxTouchSize.TabStop = false;
-			this.groupBoxTouchSize.Text = "Size";
-			// 
-			// labelTouchSizeX
-			// 
-			this.labelTouchSizeX.Location = new System.Drawing.Point(8, 16);
-			this.labelTouchSizeX.Name = "labelTouchSizeX";
-			this.labelTouchSizeX.Size = new System.Drawing.Size(112, 16);
-			this.labelTouchSizeX.TabIndex = 9;
-			this.labelTouchSizeX.Text = "X:";
-			this.labelTouchSizeX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelTouchSizeY
-			// 
-			this.labelTouchSizeY.Location = new System.Drawing.Point(8, 40);
-			this.labelTouchSizeY.Name = "labelTouchSizeY";
-			this.labelTouchSizeY.Size = new System.Drawing.Size(112, 16);
-			this.labelTouchSizeY.TabIndex = 10;
-			this.labelTouchSizeY.Text = "Y:";
-			this.labelTouchSizeY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxTouchSizeX
-			// 
-			this.textBoxTouchSizeX.Location = new System.Drawing.Point(128, 16);
-			this.textBoxTouchSizeX.Name = "textBoxTouchSizeX";
-			this.textBoxTouchSizeX.Size = new System.Drawing.Size(48, 19);
-			this.textBoxTouchSizeX.TabIndex = 32;
-			// 
-			// textBoxTouchSizeY
-			// 
-			this.textBoxTouchSizeY.Location = new System.Drawing.Point(128, 40);
-			this.textBoxTouchSizeY.Name = "textBoxTouchSizeY";
-			this.textBoxTouchSizeY.Size = new System.Drawing.Size(48, 19);
-			this.textBoxTouchSizeY.TabIndex = 33;
-			// 
-			// labelTouchJumpScreen
-			// 
-			this.labelTouchJumpScreen.Location = new System.Drawing.Point(8, 168);
-			this.labelTouchJumpScreen.Name = "labelTouchJumpScreen";
-			this.labelTouchJumpScreen.Size = new System.Drawing.Size(120, 16);
-			this.labelTouchJumpScreen.TabIndex = 104;
-			this.labelTouchJumpScreen.Text = "JumpScreen:";
-			this.labelTouchJumpScreen.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// numericUpDownTouchJumpScreen
-			// 
-			this.numericUpDownTouchJumpScreen.Location = new System.Drawing.Point(136, 168);
-			this.numericUpDownTouchJumpScreen.Name = "numericUpDownTouchJumpScreen";
-			this.numericUpDownTouchJumpScreen.Size = new System.Drawing.Size(48, 19);
-			this.numericUpDownTouchJumpScreen.TabIndex = 105;
-			// 
-			// labelTouchSoundIndex
-			// 
-			this.labelTouchSoundIndex.Location = new System.Drawing.Point(8, 192);
-			this.labelTouchSoundIndex.Name = "labelTouchSoundIndex";
-			this.labelTouchSoundIndex.Size = new System.Drawing.Size(120, 16);
-			this.labelTouchSoundIndex.TabIndex = 106;
-			this.labelTouchSoundIndex.Text = "SoundIndex:";
-			this.labelTouchSoundIndex.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// numericUpDownTouchSoundIndex
-			// 
-			this.numericUpDownTouchSoundIndex.Location = new System.Drawing.Point(136, 192);
-			this.numericUpDownTouchSoundIndex.Maximum = new decimal(new int[] {
-            256,
-            0,
-            0,
-            0});
-			this.numericUpDownTouchSoundIndex.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
-			this.numericUpDownTouchSoundIndex.Name = "numericUpDownTouchSoundIndex";
-			this.numericUpDownTouchSoundIndex.Size = new System.Drawing.Size(48, 19);
-			this.numericUpDownTouchSoundIndex.TabIndex = 107;
-			// 
-			// labelTouchSoundCommand
-			// 
-			this.labelTouchSoundCommand.Location = new System.Drawing.Point(8, 216);
-			this.labelTouchSoundCommand.Name = "labelTouchSoundCommand";
-			this.labelTouchSoundCommand.Size = new System.Drawing.Size(120, 16);
-			this.labelTouchSoundCommand.TabIndex = 108;
-			this.labelTouchSoundCommand.Text = "Sound and Command:";
-			this.labelTouchSoundCommand.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// buttonTouchSoundCommand
-			// 
-			this.buttonTouchSoundCommand.Location = new System.Drawing.Point(136, 216);
-			this.buttonTouchSoundCommand.Name = "buttonTouchSoundCommand";
-			this.buttonTouchSoundCommand.Size = new System.Drawing.Size(48, 19);
-			this.buttonTouchSoundCommand.TabIndex = 109;
-			this.buttonTouchSoundCommand.Text = "Set...";
-			this.buttonTouchSoundCommand.UseVisualStyleBackColor = true;
-			this.buttonTouchSoundCommand.Click += new System.EventHandler(this.ButtonTouchSoundCommand_Click);
-			// 
-			// labelTouchLayer
-			// 
-			this.labelTouchLayer.Location = new System.Drawing.Point(8, 240);
-			this.labelTouchLayer.Name = "labelTouchLayer";
-			this.labelTouchLayer.Size = new System.Drawing.Size(120, 16);
-			this.labelTouchLayer.TabIndex = 110;
-			this.labelTouchLayer.Text = "Layer:";
-			this.labelTouchLayer.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// numericUpDownTouchLayer
-			// 
-			this.numericUpDownTouchLayer.Location = new System.Drawing.Point(136, 240);
-			this.numericUpDownTouchLayer.Name = "numericUpDownTouchLayer";
-			this.numericUpDownTouchLayer.Size = new System.Drawing.Size(48, 19);
-			this.numericUpDownTouchLayer.TabIndex = 111;
-			// 
-			// tabPageTimetable
-			// 
-			this.tabPageTimetable.Controls.Add(this.buttonTimetableTransparentColorSet);
-			this.tabPageTimetable.Controls.Add(this.numericUpDownTimetableLayer);
-			this.tabPageTimetable.Controls.Add(this.labelTimetableLayer);
-			this.tabPageTimetable.Controls.Add(this.textBoxTimetableTransparentColor);
-			this.tabPageTimetable.Controls.Add(this.labelTimetableTransparentColor);
-			this.tabPageTimetable.Controls.Add(this.textBoxTimetableHeight);
-			this.tabPageTimetable.Controls.Add(this.labelTimetableHeight);
-			this.tabPageTimetable.Controls.Add(this.textBoxTimetableWidth);
-			this.tabPageTimetable.Controls.Add(this.labelTimetableWidth);
-			this.tabPageTimetable.Controls.Add(this.groupBoxTimetableLocation);
-			this.tabPageTimetable.Location = new System.Drawing.Point(4, 40);
-			this.tabPageTimetable.Name = "tabPageTimetable";
-			this.tabPageTimetable.Size = new System.Drawing.Size(312, 626);
-			this.tabPageTimetable.TabIndex = 7;
-			this.tabPageTimetable.Text = "Timetable";
-			this.tabPageTimetable.UseVisualStyleBackColor = true;
-			// 
-			// groupBoxTimetableLocation
-			// 
-			this.groupBoxTimetableLocation.Controls.Add(this.textBoxTimetableLocationY);
-			this.groupBoxTimetableLocation.Controls.Add(this.textBoxTimetableLocationX);
-			this.groupBoxTimetableLocation.Controls.Add(this.labelTimetableLocationY);
-			this.groupBoxTimetableLocation.Controls.Add(this.labelTimetableLocationX);
-			this.groupBoxTimetableLocation.Location = new System.Drawing.Point(8, 8);
-			this.groupBoxTimetableLocation.Name = "groupBoxTimetableLocation";
-			this.groupBoxTimetableLocation.Size = new System.Drawing.Size(184, 72);
-			this.groupBoxTimetableLocation.TabIndex = 88;
-			this.groupBoxTimetableLocation.TabStop = false;
-			this.groupBoxTimetableLocation.Text = "Location";
-			// 
-			// labelTimetableLocationX
-			// 
-			this.labelTimetableLocationX.Location = new System.Drawing.Point(8, 16);
-			this.labelTimetableLocationX.Name = "labelTimetableLocationX";
-			this.labelTimetableLocationX.Size = new System.Drawing.Size(112, 16);
-			this.labelTimetableLocationX.TabIndex = 9;
-			this.labelTimetableLocationX.Text = "X:";
-			this.labelTimetableLocationX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelTimetableLocationY
-			// 
-			this.labelTimetableLocationY.Location = new System.Drawing.Point(8, 40);
-			this.labelTimetableLocationY.Name = "labelTimetableLocationY";
-			this.labelTimetableLocationY.Size = new System.Drawing.Size(112, 16);
-			this.labelTimetableLocationY.TabIndex = 10;
-			this.labelTimetableLocationY.Text = "Y:";
-			this.labelTimetableLocationY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxTimetableLocationX
-			// 
-			this.textBoxTimetableLocationX.Location = new System.Drawing.Point(128, 16);
-			this.textBoxTimetableLocationX.Name = "textBoxTimetableLocationX";
-			this.textBoxTimetableLocationX.Size = new System.Drawing.Size(48, 19);
-			this.textBoxTimetableLocationX.TabIndex = 32;
-			// 
-			// textBoxTimetableLocationY
-			// 
-			this.textBoxTimetableLocationY.Location = new System.Drawing.Point(128, 40);
-			this.textBoxTimetableLocationY.Name = "textBoxTimetableLocationY";
-			this.textBoxTimetableLocationY.Size = new System.Drawing.Size(48, 19);
-			this.textBoxTimetableLocationY.TabIndex = 33;
-			// 
-			// labelTimetableWidth
-			// 
-			this.labelTimetableWidth.Location = new System.Drawing.Point(8, 88);
-			this.labelTimetableWidth.Name = "labelTimetableWidth";
-			this.labelTimetableWidth.Size = new System.Drawing.Size(120, 16);
-			this.labelTimetableWidth.TabIndex = 96;
-			this.labelTimetableWidth.Text = "Width:";
-			this.labelTimetableWidth.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxTimetableWidth
-			// 
-			this.textBoxTimetableWidth.Location = new System.Drawing.Point(136, 88);
-			this.textBoxTimetableWidth.Name = "textBoxTimetableWidth";
-			this.textBoxTimetableWidth.Size = new System.Drawing.Size(48, 19);
-			this.textBoxTimetableWidth.TabIndex = 97;
-			// 
-			// labelTimetableHeight
-			// 
-			this.labelTimetableHeight.Location = new System.Drawing.Point(8, 112);
-			this.labelTimetableHeight.Name = "labelTimetableHeight";
-			this.labelTimetableHeight.Size = new System.Drawing.Size(120, 16);
-			this.labelTimetableHeight.TabIndex = 98;
-			this.labelTimetableHeight.Text = "Height:";
-			this.labelTimetableHeight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxTimetableHeight
-			// 
-			this.textBoxTimetableHeight.Location = new System.Drawing.Point(136, 112);
-			this.textBoxTimetableHeight.Name = "textBoxTimetableHeight";
-			this.textBoxTimetableHeight.Size = new System.Drawing.Size(48, 19);
-			this.textBoxTimetableHeight.TabIndex = 99;
-			// 
-			// labelTimetableTransparentColor
-			// 
-			this.labelTimetableTransparentColor.Location = new System.Drawing.Point(8, 136);
-			this.labelTimetableTransparentColor.Name = "labelTimetableTransparentColor";
-			this.labelTimetableTransparentColor.Size = new System.Drawing.Size(120, 16);
-			this.labelTimetableTransparentColor.TabIndex = 100;
-			this.labelTimetableTransparentColor.Text = "TransparentColor:";
-			this.labelTimetableTransparentColor.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxTimetableTransparentColor
-			// 
-			this.textBoxTimetableTransparentColor.Location = new System.Drawing.Point(136, 136);
-			this.textBoxTimetableTransparentColor.Name = "textBoxTimetableTransparentColor";
-			this.textBoxTimetableTransparentColor.Size = new System.Drawing.Size(104, 19);
-			this.textBoxTimetableTransparentColor.TabIndex = 101;
-			// 
-			// labelTimetableLayer
-			// 
-			this.labelTimetableLayer.Location = new System.Drawing.Point(8, 160);
-			this.labelTimetableLayer.Name = "labelTimetableLayer";
-			this.labelTimetableLayer.Size = new System.Drawing.Size(120, 16);
-			this.labelTimetableLayer.TabIndex = 102;
-			this.labelTimetableLayer.Text = "Layer:";
-			this.labelTimetableLayer.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// numericUpDownTimetableLayer
-			// 
-			this.numericUpDownTimetableLayer.Location = new System.Drawing.Point(136, 160);
-			this.numericUpDownTimetableLayer.Name = "numericUpDownTimetableLayer";
-			this.numericUpDownTimetableLayer.Size = new System.Drawing.Size(48, 19);
-			this.numericUpDownTimetableLayer.TabIndex = 103;
-			// 
-			// buttonTimetableTransparentColorSet
-			// 
-			this.buttonTimetableTransparentColorSet.Location = new System.Drawing.Point(248, 136);
-			this.buttonTimetableTransparentColorSet.Name = "buttonTimetableTransparentColorSet";
-			this.buttonTimetableTransparentColorSet.Size = new System.Drawing.Size(48, 19);
-			this.buttonTimetableTransparentColorSet.TabIndex = 106;
-			this.buttonTimetableTransparentColorSet.Text = "Set...";
-			this.buttonTimetableTransparentColorSet.UseVisualStyleBackColor = true;
-			this.buttonTimetableTransparentColorSet.Click += new System.EventHandler(this.ButtonTimetableTransparentColorSet_Click);
-			// 
-			// tabPageLinearGauge
-			// 
-			this.tabPageLinearGauge.Controls.Add(this.buttonLinearGaugeTransparentColorSet);
-			this.tabPageLinearGauge.Controls.Add(this.buttonLinearGaugeNighttimeImageOpen);
-			this.tabPageLinearGauge.Controls.Add(this.buttonLinearGaugeDaytimeImageOpen);
-			this.tabPageLinearGauge.Controls.Add(this.textBoxLinearGaugeTransparentColor);
-			this.tabPageLinearGauge.Controls.Add(this.textBoxLinearGaugeNighttimeImage);
-			this.tabPageLinearGauge.Controls.Add(this.textBoxLinearGaugeDaytimeImage);
-			this.tabPageLinearGauge.Controls.Add(this.labelLinearGaugeDaytimeImage);
-			this.tabPageLinearGauge.Controls.Add(this.labelLinearGaugeNighttimeImage);
-			this.tabPageLinearGauge.Controls.Add(this.labelLinearGaugeTransparentColor);
-			this.tabPageLinearGauge.Controls.Add(this.numericUpDownLinearGaugeLayer);
-			this.tabPageLinearGauge.Controls.Add(this.numericUpDownLinearGaugeWidth);
-			this.tabPageLinearGauge.Controls.Add(this.labelLinearGaugeWidth);
-			this.tabPageLinearGauge.Controls.Add(this.groupBoxLinearGaugeDirection);
-			this.tabPageLinearGauge.Controls.Add(this.labelLinearGaugeLayer);
-			this.tabPageLinearGauge.Controls.Add(this.textBoxLinearGaugeMaximum);
-			this.tabPageLinearGauge.Controls.Add(this.labelLinearGaugeMaximum);
-			this.tabPageLinearGauge.Controls.Add(this.textBoxLinearGaugeMinimum);
-			this.tabPageLinearGauge.Controls.Add(this.labelLinearGaugeMinimum);
-			this.tabPageLinearGauge.Controls.Add(this.groupBoxLinearGaugeLocation);
-			this.tabPageLinearGauge.Controls.Add(this.buttonLinearGaugeSubjectSet);
-			this.tabPageLinearGauge.Controls.Add(this.labelLinearGaugeSubject);
-			this.tabPageLinearGauge.Location = new System.Drawing.Point(4, 40);
-			this.tabPageLinearGauge.Name = "tabPageLinearGauge";
-			this.tabPageLinearGauge.Size = new System.Drawing.Size(312, 626);
-			this.tabPageLinearGauge.TabIndex = 6;
-			this.tabPageLinearGauge.Text = "LinearGauge";
-			this.tabPageLinearGauge.UseVisualStyleBackColor = true;
-			// 
-			// labelLinearGaugeSubject
-			// 
-			this.labelLinearGaugeSubject.Location = new System.Drawing.Point(8, 8);
-			this.labelLinearGaugeSubject.Name = "labelLinearGaugeSubject";
-			this.labelLinearGaugeSubject.Size = new System.Drawing.Size(120, 16);
-			this.labelLinearGaugeSubject.TabIndex = 85;
-			this.labelLinearGaugeSubject.Text = "Subject:";
-			this.labelLinearGaugeSubject.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// buttonLinearGaugeSubjectSet
-			// 
-			this.buttonLinearGaugeSubjectSet.Location = new System.Drawing.Point(136, 8);
-			this.buttonLinearGaugeSubjectSet.Name = "buttonLinearGaugeSubjectSet";
-			this.buttonLinearGaugeSubjectSet.Size = new System.Drawing.Size(48, 19);
-			this.buttonLinearGaugeSubjectSet.TabIndex = 86;
-			this.buttonLinearGaugeSubjectSet.Text = "Set...";
-			this.buttonLinearGaugeSubjectSet.UseVisualStyleBackColor = true;
-			this.buttonLinearGaugeSubjectSet.Click += new System.EventHandler(this.ButtonLinearGaugeSubjectSet_Click);
-			// 
-			// groupBoxLinearGaugeLocation
-			// 
-			this.groupBoxLinearGaugeLocation.Controls.Add(this.textBoxLinearGaugeLocationY);
-			this.groupBoxLinearGaugeLocation.Controls.Add(this.textBoxLinearGaugeLocationX);
-			this.groupBoxLinearGaugeLocation.Controls.Add(this.labelLinearGaugeLocationY);
-			this.groupBoxLinearGaugeLocation.Controls.Add(this.labelLinearGaugeLocationX);
-			this.groupBoxLinearGaugeLocation.Location = new System.Drawing.Point(8, 32);
-			this.groupBoxLinearGaugeLocation.Name = "groupBoxLinearGaugeLocation";
-			this.groupBoxLinearGaugeLocation.Size = new System.Drawing.Size(184, 72);
-			this.groupBoxLinearGaugeLocation.TabIndex = 87;
-			this.groupBoxLinearGaugeLocation.TabStop = false;
-			this.groupBoxLinearGaugeLocation.Text = "Location";
-			// 
-			// labelLinearGaugeLocationX
-			// 
-			this.labelLinearGaugeLocationX.Location = new System.Drawing.Point(8, 16);
-			this.labelLinearGaugeLocationX.Name = "labelLinearGaugeLocationX";
-			this.labelLinearGaugeLocationX.Size = new System.Drawing.Size(112, 16);
-			this.labelLinearGaugeLocationX.TabIndex = 9;
-			this.labelLinearGaugeLocationX.Text = "X:";
-			this.labelLinearGaugeLocationX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelLinearGaugeLocationY
-			// 
-			this.labelLinearGaugeLocationY.Location = new System.Drawing.Point(8, 40);
-			this.labelLinearGaugeLocationY.Name = "labelLinearGaugeLocationY";
-			this.labelLinearGaugeLocationY.Size = new System.Drawing.Size(112, 16);
-			this.labelLinearGaugeLocationY.TabIndex = 10;
-			this.labelLinearGaugeLocationY.Text = "Y:";
-			this.labelLinearGaugeLocationY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxLinearGaugeLocationX
-			// 
-			this.textBoxLinearGaugeLocationX.Location = new System.Drawing.Point(128, 16);
-			this.textBoxLinearGaugeLocationX.Name = "textBoxLinearGaugeLocationX";
-			this.textBoxLinearGaugeLocationX.Size = new System.Drawing.Size(48, 19);
-			this.textBoxLinearGaugeLocationX.TabIndex = 32;
-			// 
-			// textBoxLinearGaugeLocationY
-			// 
-			this.textBoxLinearGaugeLocationY.Location = new System.Drawing.Point(128, 40);
-			this.textBoxLinearGaugeLocationY.Name = "textBoxLinearGaugeLocationY";
-			this.textBoxLinearGaugeLocationY.Size = new System.Drawing.Size(48, 19);
-			this.textBoxLinearGaugeLocationY.TabIndex = 33;
-			// 
-			// labelLinearGaugeMinimum
-			// 
-			this.labelLinearGaugeMinimum.Location = new System.Drawing.Point(8, 184);
-			this.labelLinearGaugeMinimum.Name = "labelLinearGaugeMinimum";
-			this.labelLinearGaugeMinimum.Size = new System.Drawing.Size(120, 16);
-			this.labelLinearGaugeMinimum.TabIndex = 88;
-			this.labelLinearGaugeMinimum.Text = "Minimum:";
-			this.labelLinearGaugeMinimum.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxLinearGaugeMinimum
-			// 
-			this.textBoxLinearGaugeMinimum.Location = new System.Drawing.Point(136, 184);
-			this.textBoxLinearGaugeMinimum.Name = "textBoxLinearGaugeMinimum";
-			this.textBoxLinearGaugeMinimum.Size = new System.Drawing.Size(48, 19);
-			this.textBoxLinearGaugeMinimum.TabIndex = 89;
-			// 
-			// labelLinearGaugeMaximum
-			// 
-			this.labelLinearGaugeMaximum.Location = new System.Drawing.Point(8, 208);
-			this.labelLinearGaugeMaximum.Name = "labelLinearGaugeMaximum";
-			this.labelLinearGaugeMaximum.Size = new System.Drawing.Size(120, 16);
-			this.labelLinearGaugeMaximum.TabIndex = 90;
-			this.labelLinearGaugeMaximum.Text = "Maximum:";
-			this.labelLinearGaugeMaximum.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxLinearGaugeMaximum
-			// 
-			this.textBoxLinearGaugeMaximum.Location = new System.Drawing.Point(136, 208);
-			this.textBoxLinearGaugeMaximum.Name = "textBoxLinearGaugeMaximum";
-			this.textBoxLinearGaugeMaximum.Size = new System.Drawing.Size(48, 19);
-			this.textBoxLinearGaugeMaximum.TabIndex = 91;
-			// 
-			// labelLinearGaugeLayer
-			// 
-			this.labelLinearGaugeLayer.Location = new System.Drawing.Point(8, 336);
-			this.labelLinearGaugeLayer.Name = "labelLinearGaugeLayer";
-			this.labelLinearGaugeLayer.Size = new System.Drawing.Size(120, 16);
-			this.labelLinearGaugeLayer.TabIndex = 92;
-			this.labelLinearGaugeLayer.Text = "Layer:";
-			this.labelLinearGaugeLayer.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// groupBoxLinearGaugeDirection
-			// 
-			this.groupBoxLinearGaugeDirection.Controls.Add(this.numericUpDownLinearGaugeDirectionY);
-			this.groupBoxLinearGaugeDirection.Controls.Add(this.numericUpDownLinearGaugeDirectionX);
-			this.groupBoxLinearGaugeDirection.Controls.Add(this.labelLinearGaugeDirectionY);
-			this.groupBoxLinearGaugeDirection.Controls.Add(this.labelLinearGaugeDirectionX);
-			this.groupBoxLinearGaugeDirection.Location = new System.Drawing.Point(8, 232);
-			this.groupBoxLinearGaugeDirection.Name = "groupBoxLinearGaugeDirection";
-			this.groupBoxLinearGaugeDirection.Size = new System.Drawing.Size(184, 72);
-			this.groupBoxLinearGaugeDirection.TabIndex = 88;
-			this.groupBoxLinearGaugeDirection.TabStop = false;
-			this.groupBoxLinearGaugeDirection.Text = "Direction";
-			// 
-			// labelLinearGaugeDirectionX
-			// 
-			this.labelLinearGaugeDirectionX.Location = new System.Drawing.Point(8, 16);
-			this.labelLinearGaugeDirectionX.Name = "labelLinearGaugeDirectionX";
-			this.labelLinearGaugeDirectionX.Size = new System.Drawing.Size(112, 16);
-			this.labelLinearGaugeDirectionX.TabIndex = 9;
-			this.labelLinearGaugeDirectionX.Text = "X:";
-			this.labelLinearGaugeDirectionX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelLinearGaugeDirectionY
-			// 
-			this.labelLinearGaugeDirectionY.Location = new System.Drawing.Point(8, 40);
-			this.labelLinearGaugeDirectionY.Name = "labelLinearGaugeDirectionY";
-			this.labelLinearGaugeDirectionY.Size = new System.Drawing.Size(112, 16);
-			this.labelLinearGaugeDirectionY.TabIndex = 10;
-			this.labelLinearGaugeDirectionY.Text = "Y:";
-			this.labelLinearGaugeDirectionY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// numericUpDownLinearGaugeDirectionX
-			// 
-			this.numericUpDownLinearGaugeDirectionX.Location = new System.Drawing.Point(128, 16);
-			this.numericUpDownLinearGaugeDirectionX.Maximum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-			this.numericUpDownLinearGaugeDirectionX.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
-			this.numericUpDownLinearGaugeDirectionX.Name = "numericUpDownLinearGaugeDirectionX";
-			this.numericUpDownLinearGaugeDirectionX.Size = new System.Drawing.Size(48, 19);
-			this.numericUpDownLinearGaugeDirectionX.TabIndex = 106;
-			// 
-			// numericUpDownLinearGaugeDirectionY
-			// 
-			this.numericUpDownLinearGaugeDirectionY.Location = new System.Drawing.Point(128, 40);
-			this.numericUpDownLinearGaugeDirectionY.Maximum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-			this.numericUpDownLinearGaugeDirectionY.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
-			this.numericUpDownLinearGaugeDirectionY.Name = "numericUpDownLinearGaugeDirectionY";
-			this.numericUpDownLinearGaugeDirectionY.Size = new System.Drawing.Size(48, 19);
-			this.numericUpDownLinearGaugeDirectionY.TabIndex = 107;
-			// 
-			// labelLinearGaugeWidth
-			// 
-			this.labelLinearGaugeWidth.Location = new System.Drawing.Point(8, 312);
-			this.labelLinearGaugeWidth.Name = "labelLinearGaugeWidth";
-			this.labelLinearGaugeWidth.Size = new System.Drawing.Size(120, 16);
-			this.labelLinearGaugeWidth.TabIndex = 94;
-			this.labelLinearGaugeWidth.Text = "Width:";
-			this.labelLinearGaugeWidth.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// numericUpDownLinearGaugeWidth
-			// 
-			this.numericUpDownLinearGaugeWidth.Location = new System.Drawing.Point(136, 312);
-			this.numericUpDownLinearGaugeWidth.Name = "numericUpDownLinearGaugeWidth";
-			this.numericUpDownLinearGaugeWidth.Size = new System.Drawing.Size(48, 19);
-			this.numericUpDownLinearGaugeWidth.TabIndex = 95;
-			// 
-			// numericUpDownLinearGaugeLayer
-			// 
-			this.numericUpDownLinearGaugeLayer.Location = new System.Drawing.Point(136, 336);
-			this.numericUpDownLinearGaugeLayer.Name = "numericUpDownLinearGaugeLayer";
-			this.numericUpDownLinearGaugeLayer.Size = new System.Drawing.Size(48, 19);
-			this.numericUpDownLinearGaugeLayer.TabIndex = 96;
-			// 
-			// labelLinearGaugeTransparentColor
-			// 
-			this.labelLinearGaugeTransparentColor.Location = new System.Drawing.Point(8, 160);
-			this.labelLinearGaugeTransparentColor.Name = "labelLinearGaugeTransparentColor";
-			this.labelLinearGaugeTransparentColor.Size = new System.Drawing.Size(120, 16);
-			this.labelLinearGaugeTransparentColor.TabIndex = 97;
-			this.labelLinearGaugeTransparentColor.Text = "TransparentColor:";
-			this.labelLinearGaugeTransparentColor.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelLinearGaugeNighttimeImage
-			// 
-			this.labelLinearGaugeNighttimeImage.Location = new System.Drawing.Point(8, 136);
-			this.labelLinearGaugeNighttimeImage.Name = "labelLinearGaugeNighttimeImage";
-			this.labelLinearGaugeNighttimeImage.Size = new System.Drawing.Size(120, 16);
-			this.labelLinearGaugeNighttimeImage.TabIndex = 98;
-			this.labelLinearGaugeNighttimeImage.Text = "NighttimeImage:";
-			this.labelLinearGaugeNighttimeImage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelLinearGaugeDaytimeImage
-			// 
-			this.labelLinearGaugeDaytimeImage.Location = new System.Drawing.Point(8, 112);
-			this.labelLinearGaugeDaytimeImage.Name = "labelLinearGaugeDaytimeImage";
-			this.labelLinearGaugeDaytimeImage.Size = new System.Drawing.Size(120, 16);
-			this.labelLinearGaugeDaytimeImage.TabIndex = 99;
-			this.labelLinearGaugeDaytimeImage.Text = "DaytimeImage:";
-			this.labelLinearGaugeDaytimeImage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxLinearGaugeDaytimeImage
-			// 
-			this.textBoxLinearGaugeDaytimeImage.Location = new System.Drawing.Point(136, 112);
-			this.textBoxLinearGaugeDaytimeImage.Name = "textBoxLinearGaugeDaytimeImage";
-			this.textBoxLinearGaugeDaytimeImage.Size = new System.Drawing.Size(104, 19);
-			this.textBoxLinearGaugeDaytimeImage.TabIndex = 100;
-			// 
-			// textBoxLinearGaugeNighttimeImage
-			// 
-			this.textBoxLinearGaugeNighttimeImage.Location = new System.Drawing.Point(136, 136);
-			this.textBoxLinearGaugeNighttimeImage.Name = "textBoxLinearGaugeNighttimeImage";
-			this.textBoxLinearGaugeNighttimeImage.Size = new System.Drawing.Size(104, 19);
-			this.textBoxLinearGaugeNighttimeImage.TabIndex = 101;
-			// 
-			// textBoxLinearGaugeTransparentColor
-			// 
-			this.textBoxLinearGaugeTransparentColor.Location = new System.Drawing.Point(136, 160);
-			this.textBoxLinearGaugeTransparentColor.Name = "textBoxLinearGaugeTransparentColor";
-			this.textBoxLinearGaugeTransparentColor.Size = new System.Drawing.Size(104, 19);
-			this.textBoxLinearGaugeTransparentColor.TabIndex = 102;
-			// 
-			// buttonLinearGaugeDaytimeImageOpen
-			// 
-			this.buttonLinearGaugeDaytimeImageOpen.Location = new System.Drawing.Point(248, 112);
-			this.buttonLinearGaugeDaytimeImageOpen.Name = "buttonLinearGaugeDaytimeImageOpen";
-			this.buttonLinearGaugeDaytimeImageOpen.Size = new System.Drawing.Size(48, 19);
-			this.buttonLinearGaugeDaytimeImageOpen.TabIndex = 103;
-			this.buttonLinearGaugeDaytimeImageOpen.Text = "Open...";
-			this.buttonLinearGaugeDaytimeImageOpen.UseVisualStyleBackColor = true;
-			this.buttonLinearGaugeDaytimeImageOpen.Click += new System.EventHandler(this.ButtonLinearGaugeDaytimeImageOpen_Click);
-			// 
-			// buttonLinearGaugeNighttimeImageOpen
-			// 
-			this.buttonLinearGaugeNighttimeImageOpen.Location = new System.Drawing.Point(248, 136);
-			this.buttonLinearGaugeNighttimeImageOpen.Name = "buttonLinearGaugeNighttimeImageOpen";
-			this.buttonLinearGaugeNighttimeImageOpen.Size = new System.Drawing.Size(48, 19);
-			this.buttonLinearGaugeNighttimeImageOpen.TabIndex = 104;
-			this.buttonLinearGaugeNighttimeImageOpen.Text = "Open...";
-			this.buttonLinearGaugeNighttimeImageOpen.UseVisualStyleBackColor = true;
-			this.buttonLinearGaugeNighttimeImageOpen.Click += new System.EventHandler(this.ButtonLinearGaugeNighttimeImageOpen_Click);
-			// 
-			// buttonLinearGaugeTransparentColorSet
-			// 
-			this.buttonLinearGaugeTransparentColorSet.Location = new System.Drawing.Point(248, 160);
-			this.buttonLinearGaugeTransparentColorSet.Name = "buttonLinearGaugeTransparentColorSet";
-			this.buttonLinearGaugeTransparentColorSet.Size = new System.Drawing.Size(48, 19);
-			this.buttonLinearGaugeTransparentColorSet.TabIndex = 105;
-			this.buttonLinearGaugeTransparentColorSet.Text = "Set...";
-			this.buttonLinearGaugeTransparentColorSet.UseVisualStyleBackColor = true;
-			this.buttonLinearGaugeTransparentColorSet.Click += new System.EventHandler(this.ButtonLinearGaugeTransparentColorSet_Click);
-			// 
-			// tabPageDigitalGauge
-			// 
-			this.tabPageDigitalGauge.Controls.Add(this.buttonDigitalGaugeColorSet);
-			this.tabPageDigitalGauge.Controls.Add(this.numericUpDownDigitalGaugeLayer);
-			this.tabPageDigitalGauge.Controls.Add(this.textBoxDigitalGaugeStep);
-			this.tabPageDigitalGauge.Controls.Add(this.labelDigitalGaugeStep);
-			this.tabPageDigitalGauge.Controls.Add(this.labelDigitalGaugeLayer);
-			this.tabPageDigitalGauge.Controls.Add(this.textBoxDigitalGaugeMaximum);
-			this.tabPageDigitalGauge.Controls.Add(this.labelDigitalGaugeMaximum);
-			this.tabPageDigitalGauge.Controls.Add(this.textBoxDigitalGaugeMinimum);
-			this.tabPageDigitalGauge.Controls.Add(this.labelDigitalGaugeMinimum);
-			this.tabPageDigitalGauge.Controls.Add(this.textBoxDigitalGaugeLastAngle);
-			this.tabPageDigitalGauge.Controls.Add(this.labelDigitalGaugeLastAngle);
-			this.tabPageDigitalGauge.Controls.Add(this.textBoxDigitalGaugeInitialAngle);
-			this.tabPageDigitalGauge.Controls.Add(this.labelDigitalGaugeInitialAngle);
-			this.tabPageDigitalGauge.Controls.Add(this.textBoxDigitalGaugeColor);
-			this.tabPageDigitalGauge.Controls.Add(this.labelDigitalGaugeColor);
-			this.tabPageDigitalGauge.Controls.Add(this.textBoxDigitalGaugeRadius);
-			this.tabPageDigitalGauge.Controls.Add(this.labelDigitalGaugeRadius);
-			this.tabPageDigitalGauge.Controls.Add(this.groupBoxDigitalGaugeLocation);
-			this.tabPageDigitalGauge.Controls.Add(this.buttonDigitalGaugeSubjectSet);
-			this.tabPageDigitalGauge.Controls.Add(this.labelDigitalGaugeSubject);
-			this.tabPageDigitalGauge.Location = new System.Drawing.Point(4, 40);
-			this.tabPageDigitalGauge.Name = "tabPageDigitalGauge";
-			this.tabPageDigitalGauge.Size = new System.Drawing.Size(312, 626);
-			this.tabPageDigitalGauge.TabIndex = 5;
-			this.tabPageDigitalGauge.Text = "DigitalGauge";
-			this.tabPageDigitalGauge.UseVisualStyleBackColor = true;
-			// 
-			// labelDigitalGaugeSubject
-			// 
-			this.labelDigitalGaugeSubject.Location = new System.Drawing.Point(8, 8);
-			this.labelDigitalGaugeSubject.Name = "labelDigitalGaugeSubject";
-			this.labelDigitalGaugeSubject.Size = new System.Drawing.Size(120, 16);
-			this.labelDigitalGaugeSubject.TabIndex = 64;
-			this.labelDigitalGaugeSubject.Text = "Subject:";
-			this.labelDigitalGaugeSubject.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// buttonDigitalGaugeSubjectSet
-			// 
-			this.buttonDigitalGaugeSubjectSet.Location = new System.Drawing.Point(136, 8);
-			this.buttonDigitalGaugeSubjectSet.Name = "buttonDigitalGaugeSubjectSet";
-			this.buttonDigitalGaugeSubjectSet.Size = new System.Drawing.Size(48, 19);
-			this.buttonDigitalGaugeSubjectSet.TabIndex = 65;
-			this.buttonDigitalGaugeSubjectSet.Text = "Set...";
-			this.buttonDigitalGaugeSubjectSet.UseVisualStyleBackColor = true;
-			this.buttonDigitalGaugeSubjectSet.Click += new System.EventHandler(this.ButtonDigitalGaugeSubjectSet_Click);
-			// 
-			// groupBoxDigitalGaugeLocation
-			// 
-			this.groupBoxDigitalGaugeLocation.Controls.Add(this.textBoxDigitalGaugeLocationY);
-			this.groupBoxDigitalGaugeLocation.Controls.Add(this.textBoxDigitalGaugeLocationX);
-			this.groupBoxDigitalGaugeLocation.Controls.Add(this.labelDigitalGaugeLocationY);
-			this.groupBoxDigitalGaugeLocation.Controls.Add(this.labelDigitalGaugeLocationX);
-			this.groupBoxDigitalGaugeLocation.Location = new System.Drawing.Point(8, 32);
-			this.groupBoxDigitalGaugeLocation.Name = "groupBoxDigitalGaugeLocation";
-			this.groupBoxDigitalGaugeLocation.Size = new System.Drawing.Size(184, 72);
-			this.groupBoxDigitalGaugeLocation.TabIndex = 66;
-			this.groupBoxDigitalGaugeLocation.TabStop = false;
-			this.groupBoxDigitalGaugeLocation.Text = "Location";
-			// 
-			// labelDigitalGaugeLocationX
-			// 
-			this.labelDigitalGaugeLocationX.Location = new System.Drawing.Point(8, 16);
-			this.labelDigitalGaugeLocationX.Name = "labelDigitalGaugeLocationX";
-			this.labelDigitalGaugeLocationX.Size = new System.Drawing.Size(112, 16);
-			this.labelDigitalGaugeLocationX.TabIndex = 9;
-			this.labelDigitalGaugeLocationX.Text = "X:";
-			this.labelDigitalGaugeLocationX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelDigitalGaugeLocationY
-			// 
-			this.labelDigitalGaugeLocationY.Location = new System.Drawing.Point(8, 40);
-			this.labelDigitalGaugeLocationY.Name = "labelDigitalGaugeLocationY";
-			this.labelDigitalGaugeLocationY.Size = new System.Drawing.Size(112, 16);
-			this.labelDigitalGaugeLocationY.TabIndex = 10;
-			this.labelDigitalGaugeLocationY.Text = "Y:";
-			this.labelDigitalGaugeLocationY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxDigitalGaugeLocationX
-			// 
-			this.textBoxDigitalGaugeLocationX.Location = new System.Drawing.Point(128, 16);
-			this.textBoxDigitalGaugeLocationX.Name = "textBoxDigitalGaugeLocationX";
-			this.textBoxDigitalGaugeLocationX.Size = new System.Drawing.Size(48, 19);
-			this.textBoxDigitalGaugeLocationX.TabIndex = 32;
-			// 
-			// textBoxDigitalGaugeLocationY
-			// 
-			this.textBoxDigitalGaugeLocationY.Location = new System.Drawing.Point(128, 40);
-			this.textBoxDigitalGaugeLocationY.Name = "textBoxDigitalGaugeLocationY";
-			this.textBoxDigitalGaugeLocationY.Size = new System.Drawing.Size(48, 19);
-			this.textBoxDigitalGaugeLocationY.TabIndex = 33;
-			// 
-			// labelDigitalGaugeRadius
-			// 
-			this.labelDigitalGaugeRadius.Location = new System.Drawing.Point(8, 112);
-			this.labelDigitalGaugeRadius.Name = "labelDigitalGaugeRadius";
-			this.labelDigitalGaugeRadius.Size = new System.Drawing.Size(120, 16);
-			this.labelDigitalGaugeRadius.TabIndex = 67;
-			this.labelDigitalGaugeRadius.Text = "Radius:";
-			this.labelDigitalGaugeRadius.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxDigitalGaugeRadius
-			// 
-			this.textBoxDigitalGaugeRadius.Location = new System.Drawing.Point(136, 112);
-			this.textBoxDigitalGaugeRadius.Name = "textBoxDigitalGaugeRadius";
-			this.textBoxDigitalGaugeRadius.Size = new System.Drawing.Size(48, 19);
-			this.textBoxDigitalGaugeRadius.TabIndex = 68;
-			// 
-			// labelDigitalGaugeColor
-			// 
-			this.labelDigitalGaugeColor.Location = new System.Drawing.Point(8, 136);
-			this.labelDigitalGaugeColor.Name = "labelDigitalGaugeColor";
-			this.labelDigitalGaugeColor.Size = new System.Drawing.Size(120, 16);
-			this.labelDigitalGaugeColor.TabIndex = 69;
-			this.labelDigitalGaugeColor.Text = "Color:";
-			this.labelDigitalGaugeColor.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxDigitalGaugeColor
-			// 
-			this.textBoxDigitalGaugeColor.Location = new System.Drawing.Point(136, 136);
-			this.textBoxDigitalGaugeColor.Name = "textBoxDigitalGaugeColor";
-			this.textBoxDigitalGaugeColor.Size = new System.Drawing.Size(104, 19);
-			this.textBoxDigitalGaugeColor.TabIndex = 70;
-			// 
-			// labelDigitalGaugeInitialAngle
-			// 
-			this.labelDigitalGaugeInitialAngle.Location = new System.Drawing.Point(8, 160);
-			this.labelDigitalGaugeInitialAngle.Name = "labelDigitalGaugeInitialAngle";
-			this.labelDigitalGaugeInitialAngle.Size = new System.Drawing.Size(120, 16);
-			this.labelDigitalGaugeInitialAngle.TabIndex = 75;
-			this.labelDigitalGaugeInitialAngle.Text = "InitialAngle:";
-			this.labelDigitalGaugeInitialAngle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxDigitalGaugeInitialAngle
-			// 
-			this.textBoxDigitalGaugeInitialAngle.Location = new System.Drawing.Point(136, 160);
-			this.textBoxDigitalGaugeInitialAngle.Name = "textBoxDigitalGaugeInitialAngle";
-			this.textBoxDigitalGaugeInitialAngle.Size = new System.Drawing.Size(48, 19);
-			this.textBoxDigitalGaugeInitialAngle.TabIndex = 76;
-			// 
-			// labelDigitalGaugeLastAngle
-			// 
-			this.labelDigitalGaugeLastAngle.Location = new System.Drawing.Point(8, 184);
-			this.labelDigitalGaugeLastAngle.Name = "labelDigitalGaugeLastAngle";
-			this.labelDigitalGaugeLastAngle.Size = new System.Drawing.Size(120, 16);
-			this.labelDigitalGaugeLastAngle.TabIndex = 77;
-			this.labelDigitalGaugeLastAngle.Text = "LastAngle:";
-			this.labelDigitalGaugeLastAngle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxDigitalGaugeLastAngle
-			// 
-			this.textBoxDigitalGaugeLastAngle.Location = new System.Drawing.Point(136, 184);
-			this.textBoxDigitalGaugeLastAngle.Name = "textBoxDigitalGaugeLastAngle";
-			this.textBoxDigitalGaugeLastAngle.Size = new System.Drawing.Size(48, 19);
-			this.textBoxDigitalGaugeLastAngle.TabIndex = 78;
-			// 
-			// labelDigitalGaugeMinimum
-			// 
-			this.labelDigitalGaugeMinimum.Location = new System.Drawing.Point(8, 208);
-			this.labelDigitalGaugeMinimum.Name = "labelDigitalGaugeMinimum";
-			this.labelDigitalGaugeMinimum.Size = new System.Drawing.Size(120, 16);
-			this.labelDigitalGaugeMinimum.TabIndex = 79;
-			this.labelDigitalGaugeMinimum.Text = "Minimum:";
-			this.labelDigitalGaugeMinimum.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxDigitalGaugeMinimum
-			// 
-			this.textBoxDigitalGaugeMinimum.Location = new System.Drawing.Point(136, 208);
-			this.textBoxDigitalGaugeMinimum.Name = "textBoxDigitalGaugeMinimum";
-			this.textBoxDigitalGaugeMinimum.Size = new System.Drawing.Size(48, 19);
-			this.textBoxDigitalGaugeMinimum.TabIndex = 80;
-			// 
-			// labelDigitalGaugeMaximum
-			// 
-			this.labelDigitalGaugeMaximum.Location = new System.Drawing.Point(8, 232);
-			this.labelDigitalGaugeMaximum.Name = "labelDigitalGaugeMaximum";
-			this.labelDigitalGaugeMaximum.Size = new System.Drawing.Size(120, 16);
-			this.labelDigitalGaugeMaximum.TabIndex = 81;
-			this.labelDigitalGaugeMaximum.Text = "Maximum:";
-			this.labelDigitalGaugeMaximum.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxDigitalGaugeMaximum
-			// 
-			this.textBoxDigitalGaugeMaximum.Location = new System.Drawing.Point(136, 232);
-			this.textBoxDigitalGaugeMaximum.Name = "textBoxDigitalGaugeMaximum";
-			this.textBoxDigitalGaugeMaximum.Size = new System.Drawing.Size(48, 19);
-			this.textBoxDigitalGaugeMaximum.TabIndex = 82;
-			// 
-			// labelDigitalGaugeLayer
-			// 
-			this.labelDigitalGaugeLayer.Location = new System.Drawing.Point(8, 280);
-			this.labelDigitalGaugeLayer.Name = "labelDigitalGaugeLayer";
-			this.labelDigitalGaugeLayer.Size = new System.Drawing.Size(120, 16);
-			this.labelDigitalGaugeLayer.TabIndex = 83;
-			this.labelDigitalGaugeLayer.Text = "Layer:";
-			this.labelDigitalGaugeLayer.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelDigitalGaugeStep
-			// 
-			this.labelDigitalGaugeStep.Location = new System.Drawing.Point(8, 256);
-			this.labelDigitalGaugeStep.Name = "labelDigitalGaugeStep";
-			this.labelDigitalGaugeStep.Size = new System.Drawing.Size(120, 16);
-			this.labelDigitalGaugeStep.TabIndex = 85;
-			this.labelDigitalGaugeStep.Text = "Step:";
-			this.labelDigitalGaugeStep.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxDigitalGaugeStep
-			// 
-			this.textBoxDigitalGaugeStep.Location = new System.Drawing.Point(136, 256);
-			this.textBoxDigitalGaugeStep.Name = "textBoxDigitalGaugeStep";
-			this.textBoxDigitalGaugeStep.Size = new System.Drawing.Size(48, 19);
-			this.textBoxDigitalGaugeStep.TabIndex = 86;
-			// 
-			// numericUpDownDigitalGaugeLayer
-			// 
-			this.numericUpDownDigitalGaugeLayer.Location = new System.Drawing.Point(136, 280);
-			this.numericUpDownDigitalGaugeLayer.Name = "numericUpDownDigitalGaugeLayer";
-			this.numericUpDownDigitalGaugeLayer.Size = new System.Drawing.Size(48, 19);
-			this.numericUpDownDigitalGaugeLayer.TabIndex = 87;
-			// 
-			// buttonDigitalGaugeColorSet
-			// 
-			this.buttonDigitalGaugeColorSet.Location = new System.Drawing.Point(248, 136);
-			this.buttonDigitalGaugeColorSet.Name = "buttonDigitalGaugeColorSet";
-			this.buttonDigitalGaugeColorSet.Size = new System.Drawing.Size(48, 19);
-			this.buttonDigitalGaugeColorSet.TabIndex = 88;
-			this.buttonDigitalGaugeColorSet.Text = "Set...";
-			this.buttonDigitalGaugeColorSet.UseVisualStyleBackColor = true;
-			this.buttonDigitalGaugeColorSet.Click += new System.EventHandler(this.ButtonDigitalGaugeColorSet_Click);
-			// 
-			// tabPageDigitalNumber
-			// 
-			this.tabPageDigitalNumber.Controls.Add(this.buttonDigitalNumberTransparentColorSet);
-			this.tabPageDigitalNumber.Controls.Add(this.numericUpDownDigitalNumberLayer);
-			this.tabPageDigitalNumber.Controls.Add(this.numericUpDownDigitalNumberInterval);
-			this.tabPageDigitalNumber.Controls.Add(this.labelDigitalNumberInterval);
-			this.tabPageDigitalNumber.Controls.Add(this.groupBoxDigitalNumberLocation);
-			this.tabPageDigitalNumber.Controls.Add(this.buttonDigitalNumberSubjectSet);
-			this.tabPageDigitalNumber.Controls.Add(this.labelDigitalNumberSubject);
-			this.tabPageDigitalNumber.Controls.Add(this.labelDigitalNumberLayer);
-			this.tabPageDigitalNumber.Controls.Add(this.buttonDigitalNumberNighttimeImageOpen);
-			this.tabPageDigitalNumber.Controls.Add(this.buttonDigitalNumberDaytimeImageOpen);
-			this.tabPageDigitalNumber.Controls.Add(this.textBoxDigitalNumberTransparentColor);
-			this.tabPageDigitalNumber.Controls.Add(this.textBoxDigitalNumberNighttimeImage);
-			this.tabPageDigitalNumber.Controls.Add(this.textBoxDigitalNumberDaytimeImage);
-			this.tabPageDigitalNumber.Controls.Add(this.labelDigitalNumberDaytimeImage);
-			this.tabPageDigitalNumber.Controls.Add(this.labelDigitalNumberNighttimeImage);
-			this.tabPageDigitalNumber.Controls.Add(this.labelDigitalNumberTransparentColor);
-			this.tabPageDigitalNumber.Location = new System.Drawing.Point(4, 40);
-			this.tabPageDigitalNumber.Name = "tabPageDigitalNumber";
-			this.tabPageDigitalNumber.Size = new System.Drawing.Size(312, 626);
-			this.tabPageDigitalNumber.TabIndex = 4;
-			this.tabPageDigitalNumber.Text = "DigitalNumber";
-			this.tabPageDigitalNumber.UseVisualStyleBackColor = true;
-			// 
-			// labelDigitalNumberTransparentColor
-			// 
-			this.labelDigitalNumberTransparentColor.Location = new System.Drawing.Point(8, 160);
-			this.labelDigitalNumberTransparentColor.Name = "labelDigitalNumberTransparentColor";
-			this.labelDigitalNumberTransparentColor.Size = new System.Drawing.Size(120, 16);
-			this.labelDigitalNumberTransparentColor.TabIndex = 49;
-			this.labelDigitalNumberTransparentColor.Text = "TransparentColor:";
-			this.labelDigitalNumberTransparentColor.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelDigitalNumberNighttimeImage
-			// 
-			this.labelDigitalNumberNighttimeImage.Location = new System.Drawing.Point(8, 136);
-			this.labelDigitalNumberNighttimeImage.Name = "labelDigitalNumberNighttimeImage";
-			this.labelDigitalNumberNighttimeImage.Size = new System.Drawing.Size(120, 16);
-			this.labelDigitalNumberNighttimeImage.TabIndex = 50;
-			this.labelDigitalNumberNighttimeImage.Text = "NighttimeImage:";
-			this.labelDigitalNumberNighttimeImage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelDigitalNumberDaytimeImage
-			// 
-			this.labelDigitalNumberDaytimeImage.Location = new System.Drawing.Point(8, 112);
-			this.labelDigitalNumberDaytimeImage.Name = "labelDigitalNumberDaytimeImage";
-			this.labelDigitalNumberDaytimeImage.Size = new System.Drawing.Size(120, 16);
-			this.labelDigitalNumberDaytimeImage.TabIndex = 51;
-			this.labelDigitalNumberDaytimeImage.Text = "DaytimeImage:";
-			this.labelDigitalNumberDaytimeImage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxDigitalNumberDaytimeImage
-			// 
-			this.textBoxDigitalNumberDaytimeImage.Location = new System.Drawing.Point(136, 112);
-			this.textBoxDigitalNumberDaytimeImage.Name = "textBoxDigitalNumberDaytimeImage";
-			this.textBoxDigitalNumberDaytimeImage.Size = new System.Drawing.Size(104, 19);
-			this.textBoxDigitalNumberDaytimeImage.TabIndex = 52;
-			// 
-			// textBoxDigitalNumberNighttimeImage
-			// 
-			this.textBoxDigitalNumberNighttimeImage.Location = new System.Drawing.Point(136, 136);
-			this.textBoxDigitalNumberNighttimeImage.Name = "textBoxDigitalNumberNighttimeImage";
-			this.textBoxDigitalNumberNighttimeImage.Size = new System.Drawing.Size(104, 19);
-			this.textBoxDigitalNumberNighttimeImage.TabIndex = 53;
-			// 
-			// textBoxDigitalNumberTransparentColor
-			// 
-			this.textBoxDigitalNumberTransparentColor.Location = new System.Drawing.Point(136, 160);
-			this.textBoxDigitalNumberTransparentColor.Name = "textBoxDigitalNumberTransparentColor";
-			this.textBoxDigitalNumberTransparentColor.Size = new System.Drawing.Size(104, 19);
-			this.textBoxDigitalNumberTransparentColor.TabIndex = 54;
-			// 
-			// buttonDigitalNumberDaytimeImageOpen
-			// 
-			this.buttonDigitalNumberDaytimeImageOpen.Location = new System.Drawing.Point(248, 112);
-			this.buttonDigitalNumberDaytimeImageOpen.Name = "buttonDigitalNumberDaytimeImageOpen";
-			this.buttonDigitalNumberDaytimeImageOpen.Size = new System.Drawing.Size(48, 19);
-			this.buttonDigitalNumberDaytimeImageOpen.TabIndex = 55;
-			this.buttonDigitalNumberDaytimeImageOpen.Text = "Open...";
-			this.buttonDigitalNumberDaytimeImageOpen.UseVisualStyleBackColor = true;
-			this.buttonDigitalNumberDaytimeImageOpen.Click += new System.EventHandler(this.ButtonDigitalNumberDaytimeImageOpen_Click);
-			// 
-			// buttonDigitalNumberNighttimeImageOpen
-			// 
-			this.buttonDigitalNumberNighttimeImageOpen.Location = new System.Drawing.Point(248, 136);
-			this.buttonDigitalNumberNighttimeImageOpen.Name = "buttonDigitalNumberNighttimeImageOpen";
-			this.buttonDigitalNumberNighttimeImageOpen.Size = new System.Drawing.Size(48, 19);
-			this.buttonDigitalNumberNighttimeImageOpen.TabIndex = 56;
-			this.buttonDigitalNumberNighttimeImageOpen.Text = "Open...";
-			this.buttonDigitalNumberNighttimeImageOpen.UseVisualStyleBackColor = true;
-			this.buttonDigitalNumberNighttimeImageOpen.Click += new System.EventHandler(this.ButtonDigitalNumberNighttimeImageOpen_Click);
-			// 
-			// labelDigitalNumberLayer
-			// 
-			this.labelDigitalNumberLayer.Location = new System.Drawing.Point(8, 208);
-			this.labelDigitalNumberLayer.Name = "labelDigitalNumberLayer";
-			this.labelDigitalNumberLayer.Size = new System.Drawing.Size(120, 16);
-			this.labelDigitalNumberLayer.TabIndex = 57;
-			this.labelDigitalNumberLayer.Text = "Layer:";
-			this.labelDigitalNumberLayer.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelDigitalNumberSubject
-			// 
-			this.labelDigitalNumberSubject.Location = new System.Drawing.Point(8, 8);
-			this.labelDigitalNumberSubject.Name = "labelDigitalNumberSubject";
-			this.labelDigitalNumberSubject.Size = new System.Drawing.Size(120, 16);
-			this.labelDigitalNumberSubject.TabIndex = 59;
-			this.labelDigitalNumberSubject.Text = "Subject:";
-			this.labelDigitalNumberSubject.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// buttonDigitalNumberSubjectSet
-			// 
-			this.buttonDigitalNumberSubjectSet.Location = new System.Drawing.Point(136, 8);
-			this.buttonDigitalNumberSubjectSet.Name = "buttonDigitalNumberSubjectSet";
-			this.buttonDigitalNumberSubjectSet.Size = new System.Drawing.Size(48, 19);
-			this.buttonDigitalNumberSubjectSet.TabIndex = 60;
-			this.buttonDigitalNumberSubjectSet.Text = "Set...";
-			this.buttonDigitalNumberSubjectSet.UseVisualStyleBackColor = true;
-			this.buttonDigitalNumberSubjectSet.Click += new System.EventHandler(this.ButtonDigitalNumberSubjectSet_Click);
-			// 
-			// groupBoxDigitalNumberLocation
-			// 
-			this.groupBoxDigitalNumberLocation.Controls.Add(this.textBoxDigitalNumberLocationY);
-			this.groupBoxDigitalNumberLocation.Controls.Add(this.textBoxDigitalNumberLocationX);
-			this.groupBoxDigitalNumberLocation.Controls.Add(this.labelDigitalNumberLocationY);
-			this.groupBoxDigitalNumberLocation.Controls.Add(this.labelDigitalNumberLocationX);
-			this.groupBoxDigitalNumberLocation.Location = new System.Drawing.Point(8, 32);
-			this.groupBoxDigitalNumberLocation.Name = "groupBoxDigitalNumberLocation";
-			this.groupBoxDigitalNumberLocation.Size = new System.Drawing.Size(184, 72);
-			this.groupBoxDigitalNumberLocation.TabIndex = 61;
-			this.groupBoxDigitalNumberLocation.TabStop = false;
-			this.groupBoxDigitalNumberLocation.Text = "Location";
-			// 
-			// labelDigitalNumberLocationX
-			// 
-			this.labelDigitalNumberLocationX.Location = new System.Drawing.Point(8, 16);
-			this.labelDigitalNumberLocationX.Name = "labelDigitalNumberLocationX";
-			this.labelDigitalNumberLocationX.Size = new System.Drawing.Size(112, 16);
-			this.labelDigitalNumberLocationX.TabIndex = 9;
-			this.labelDigitalNumberLocationX.Text = "X:";
-			this.labelDigitalNumberLocationX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelDigitalNumberLocationY
-			// 
-			this.labelDigitalNumberLocationY.Location = new System.Drawing.Point(8, 40);
-			this.labelDigitalNumberLocationY.Name = "labelDigitalNumberLocationY";
-			this.labelDigitalNumberLocationY.Size = new System.Drawing.Size(112, 16);
-			this.labelDigitalNumberLocationY.TabIndex = 10;
-			this.labelDigitalNumberLocationY.Text = "Y:";
-			this.labelDigitalNumberLocationY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxDigitalNumberLocationX
-			// 
-			this.textBoxDigitalNumberLocationX.Location = new System.Drawing.Point(128, 16);
-			this.textBoxDigitalNumberLocationX.Name = "textBoxDigitalNumberLocationX";
-			this.textBoxDigitalNumberLocationX.Size = new System.Drawing.Size(48, 19);
-			this.textBoxDigitalNumberLocationX.TabIndex = 32;
-			// 
-			// textBoxDigitalNumberLocationY
-			// 
-			this.textBoxDigitalNumberLocationY.Location = new System.Drawing.Point(128, 40);
-			this.textBoxDigitalNumberLocationY.Name = "textBoxDigitalNumberLocationY";
-			this.textBoxDigitalNumberLocationY.Size = new System.Drawing.Size(48, 19);
-			this.textBoxDigitalNumberLocationY.TabIndex = 33;
-			// 
-			// labelDigitalNumberInterval
-			// 
-			this.labelDigitalNumberInterval.Location = new System.Drawing.Point(8, 184);
-			this.labelDigitalNumberInterval.Name = "labelDigitalNumberInterval";
-			this.labelDigitalNumberInterval.Size = new System.Drawing.Size(120, 16);
-			this.labelDigitalNumberInterval.TabIndex = 62;
-			this.labelDigitalNumberInterval.Text = "Interval:";
-			this.labelDigitalNumberInterval.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// numericUpDownDigitalNumberInterval
-			// 
-			this.numericUpDownDigitalNumberInterval.Location = new System.Drawing.Point(136, 184);
-			this.numericUpDownDigitalNumberInterval.Name = "numericUpDownDigitalNumberInterval";
-			this.numericUpDownDigitalNumberInterval.Size = new System.Drawing.Size(48, 19);
-			this.numericUpDownDigitalNumberInterval.TabIndex = 84;
-			// 
-			// numericUpDownDigitalNumberLayer
-			// 
-			this.numericUpDownDigitalNumberLayer.Location = new System.Drawing.Point(136, 208);
-			this.numericUpDownDigitalNumberLayer.Name = "numericUpDownDigitalNumberLayer";
-			this.numericUpDownDigitalNumberLayer.Size = new System.Drawing.Size(48, 19);
-			this.numericUpDownDigitalNumberLayer.TabIndex = 85;
-			// 
-			// buttonDigitalNumberTransparentColorSet
-			// 
-			this.buttonDigitalNumberTransparentColorSet.Location = new System.Drawing.Point(248, 160);
-			this.buttonDigitalNumberTransparentColorSet.Name = "buttonDigitalNumberTransparentColorSet";
-			this.buttonDigitalNumberTransparentColorSet.Size = new System.Drawing.Size(48, 19);
-			this.buttonDigitalNumberTransparentColorSet.TabIndex = 86;
-			this.buttonDigitalNumberTransparentColorSet.Text = "Set...";
-			this.buttonDigitalNumberTransparentColorSet.UseVisualStyleBackColor = true;
-			this.buttonDigitalNumberTransparentColorSet.Click += new System.EventHandler(this.ButtonDigitalNumberTransparentColorSet_Click);
+			// tabPageThis
+			// 
+			this.tabPageThis.Controls.Add(this.buttonThisTransparentColorSet);
+			this.tabPageThis.Controls.Add(this.buttonThisNighttimeImageOpen);
+			this.tabPageThis.Controls.Add(this.buttonThisDaytimeImageOpen);
+			this.tabPageThis.Controls.Add(this.groupBoxThisOrigin);
+			this.tabPageThis.Controls.Add(this.groupBoxThisCenter);
+			this.tabPageThis.Controls.Add(this.textBoxThisTransparentColor);
+			this.tabPageThis.Controls.Add(this.textBoxThisNighttimeImage);
+			this.tabPageThis.Controls.Add(this.textBoxThisDaytimeImage);
+			this.tabPageThis.Controls.Add(this.textBoxThisBottom);
+			this.tabPageThis.Controls.Add(this.textBoxThisTop);
+			this.tabPageThis.Controls.Add(this.textBoxThisRight);
+			this.tabPageThis.Controls.Add(this.textBoxThisLeft);
+			this.tabPageThis.Controls.Add(this.textBoxThisResolution);
+			this.tabPageThis.Controls.Add(this.labelThisResolution);
+			this.tabPageThis.Controls.Add(this.labelThisLeft);
+			this.tabPageThis.Controls.Add(this.labelThisRight);
+			this.tabPageThis.Controls.Add(this.labelThisTop);
+			this.tabPageThis.Controls.Add(this.labelThisBottom);
+			this.tabPageThis.Controls.Add(this.labelThisDaytimeImage);
+			this.tabPageThis.Controls.Add(this.labelThisNighttimeImage);
+			this.tabPageThis.Controls.Add(this.labelThisTransparentColor);
+			this.tabPageThis.Location = new System.Drawing.Point(4, 40);
+			this.tabPageThis.Name = "tabPageThis";
+			this.tabPageThis.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPageThis.Size = new System.Drawing.Size(312, 626);
+			this.tabPageThis.TabIndex = 0;
+			this.tabPageThis.Text = "This";
+			this.tabPageThis.UseVisualStyleBackColor = true;
+			// 
+			// buttonThisTransparentColorSet
+			// 
+			this.buttonThisTransparentColorSet.Location = new System.Drawing.Point(248, 176);
+			this.buttonThisTransparentColorSet.Name = "buttonThisTransparentColorSet";
+			this.buttonThisTransparentColorSet.Size = new System.Drawing.Size(48, 19);
+			this.buttonThisTransparentColorSet.TabIndex = 36;
+			this.buttonThisTransparentColorSet.Text = "Set...";
+			this.buttonThisTransparentColorSet.UseVisualStyleBackColor = true;
+			this.buttonThisTransparentColorSet.Click += new System.EventHandler(this.ButtonThisTransparentColorSet_Click);
+			// 
+			// buttonThisNighttimeImageOpen
+			// 
+			this.buttonThisNighttimeImageOpen.Location = new System.Drawing.Point(248, 152);
+			this.buttonThisNighttimeImageOpen.Name = "buttonThisNighttimeImageOpen";
+			this.buttonThisNighttimeImageOpen.Size = new System.Drawing.Size(48, 19);
+			this.buttonThisNighttimeImageOpen.TabIndex = 35;
+			this.buttonThisNighttimeImageOpen.Text = "Open...";
+			this.buttonThisNighttimeImageOpen.UseVisualStyleBackColor = true;
+			this.buttonThisNighttimeImageOpen.Click += new System.EventHandler(this.ButtonThisNighttimeImageOpen_Click);
+			// 
+			// buttonThisDaytimeImageOpen
+			// 
+			this.buttonThisDaytimeImageOpen.Location = new System.Drawing.Point(248, 128);
+			this.buttonThisDaytimeImageOpen.Name = "buttonThisDaytimeImageOpen";
+			this.buttonThisDaytimeImageOpen.Size = new System.Drawing.Size(48, 19);
+			this.buttonThisDaytimeImageOpen.TabIndex = 34;
+			this.buttonThisDaytimeImageOpen.Text = "Open...";
+			this.buttonThisDaytimeImageOpen.UseVisualStyleBackColor = true;
+			this.buttonThisDaytimeImageOpen.Click += new System.EventHandler(this.ButtonThisDaytimeImageOpen_Click);
+			// 
+			// groupBoxThisOrigin
+			// 
+			this.groupBoxThisOrigin.Controls.Add(this.textBoxThisOriginY);
+			this.groupBoxThisOrigin.Controls.Add(this.textBoxThisOriginX);
+			this.groupBoxThisOrigin.Controls.Add(this.labelThisOriginY);
+			this.groupBoxThisOrigin.Controls.Add(this.labelThisOriginX);
+			this.groupBoxThisOrigin.Location = new System.Drawing.Point(8, 280);
+			this.groupBoxThisOrigin.Name = "groupBoxThisOrigin";
+			this.groupBoxThisOrigin.Size = new System.Drawing.Size(184, 72);
+			this.groupBoxThisOrigin.TabIndex = 33;
+			this.groupBoxThisOrigin.TabStop = false;
+			this.groupBoxThisOrigin.Text = "Origin";
+			// 
+			// textBoxThisOriginY
+			// 
+			this.textBoxThisOriginY.Location = new System.Drawing.Point(128, 40);
+			this.textBoxThisOriginY.Name = "textBoxThisOriginY";
+			this.textBoxThisOriginY.Size = new System.Drawing.Size(48, 19);
+			this.textBoxThisOriginY.TabIndex = 33;
+			// 
+			// textBoxThisOriginX
+			// 
+			this.textBoxThisOriginX.Location = new System.Drawing.Point(128, 16);
+			this.textBoxThisOriginX.Name = "textBoxThisOriginX";
+			this.textBoxThisOriginX.Size = new System.Drawing.Size(48, 19);
+			this.textBoxThisOriginX.TabIndex = 32;
+			// 
+			// labelThisOriginY
+			// 
+			this.labelThisOriginY.Location = new System.Drawing.Point(8, 40);
+			this.labelThisOriginY.Name = "labelThisOriginY";
+			this.labelThisOriginY.Size = new System.Drawing.Size(112, 16);
+			this.labelThisOriginY.TabIndex = 10;
+			this.labelThisOriginY.Text = "Y:";
+			this.labelThisOriginY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelThisOriginX
+			// 
+			this.labelThisOriginX.Location = new System.Drawing.Point(8, 16);
+			this.labelThisOriginX.Name = "labelThisOriginX";
+			this.labelThisOriginX.Size = new System.Drawing.Size(112, 16);
+			this.labelThisOriginX.TabIndex = 9;
+			this.labelThisOriginX.Text = "X:";
+			this.labelThisOriginX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// groupBoxThisCenter
+			// 
+			this.groupBoxThisCenter.Controls.Add(this.textBoxThisCenterY);
+			this.groupBoxThisCenter.Controls.Add(this.textBoxThisCenterX);
+			this.groupBoxThisCenter.Controls.Add(this.labelThisCenterY);
+			this.groupBoxThisCenter.Controls.Add(this.labelThisCenterX);
+			this.groupBoxThisCenter.Location = new System.Drawing.Point(8, 200);
+			this.groupBoxThisCenter.Name = "groupBoxThisCenter";
+			this.groupBoxThisCenter.Size = new System.Drawing.Size(184, 72);
+			this.groupBoxThisCenter.TabIndex = 32;
+			this.groupBoxThisCenter.TabStop = false;
+			this.groupBoxThisCenter.Text = "Center";
+			// 
+			// textBoxThisCenterY
+			// 
+			this.textBoxThisCenterY.Location = new System.Drawing.Point(128, 40);
+			this.textBoxThisCenterY.Name = "textBoxThisCenterY";
+			this.textBoxThisCenterY.Size = new System.Drawing.Size(48, 19);
+			this.textBoxThisCenterY.TabIndex = 33;
+			// 
+			// textBoxThisCenterX
+			// 
+			this.textBoxThisCenterX.Location = new System.Drawing.Point(128, 16);
+			this.textBoxThisCenterX.Name = "textBoxThisCenterX";
+			this.textBoxThisCenterX.Size = new System.Drawing.Size(48, 19);
+			this.textBoxThisCenterX.TabIndex = 32;
+			// 
+			// labelThisCenterY
+			// 
+			this.labelThisCenterY.Location = new System.Drawing.Point(8, 40);
+			this.labelThisCenterY.Name = "labelThisCenterY";
+			this.labelThisCenterY.Size = new System.Drawing.Size(112, 16);
+			this.labelThisCenterY.TabIndex = 10;
+			this.labelThisCenterY.Text = "Y:";
+			this.labelThisCenterY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelThisCenterX
+			// 
+			this.labelThisCenterX.Location = new System.Drawing.Point(8, 16);
+			this.labelThisCenterX.Name = "labelThisCenterX";
+			this.labelThisCenterX.Size = new System.Drawing.Size(112, 16);
+			this.labelThisCenterX.TabIndex = 9;
+			this.labelThisCenterX.Text = "X:";
+			this.labelThisCenterX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxThisTransparentColor
+			// 
+			this.textBoxThisTransparentColor.Location = new System.Drawing.Point(136, 176);
+			this.textBoxThisTransparentColor.Name = "textBoxThisTransparentColor";
+			this.textBoxThisTransparentColor.Size = new System.Drawing.Size(104, 19);
+			this.textBoxThisTransparentColor.TabIndex = 31;
+			// 
+			// textBoxThisNighttimeImage
+			// 
+			this.textBoxThisNighttimeImage.Location = new System.Drawing.Point(136, 152);
+			this.textBoxThisNighttimeImage.Name = "textBoxThisNighttimeImage";
+			this.textBoxThisNighttimeImage.Size = new System.Drawing.Size(104, 19);
+			this.textBoxThisNighttimeImage.TabIndex = 30;
+			// 
+			// textBoxThisDaytimeImage
+			// 
+			this.textBoxThisDaytimeImage.Location = new System.Drawing.Point(136, 128);
+			this.textBoxThisDaytimeImage.Name = "textBoxThisDaytimeImage";
+			this.textBoxThisDaytimeImage.Size = new System.Drawing.Size(104, 19);
+			this.textBoxThisDaytimeImage.TabIndex = 29;
+			// 
+			// textBoxThisBottom
+			// 
+			this.textBoxThisBottom.Location = new System.Drawing.Point(136, 104);
+			this.textBoxThisBottom.Name = "textBoxThisBottom";
+			this.textBoxThisBottom.Size = new System.Drawing.Size(48, 19);
+			this.textBoxThisBottom.TabIndex = 28;
+			// 
+			// textBoxThisTop
+			// 
+			this.textBoxThisTop.Location = new System.Drawing.Point(136, 80);
+			this.textBoxThisTop.Name = "textBoxThisTop";
+			this.textBoxThisTop.Size = new System.Drawing.Size(48, 19);
+			this.textBoxThisTop.TabIndex = 27;
+			// 
+			// textBoxThisRight
+			// 
+			this.textBoxThisRight.Location = new System.Drawing.Point(136, 56);
+			this.textBoxThisRight.Name = "textBoxThisRight";
+			this.textBoxThisRight.Size = new System.Drawing.Size(48, 19);
+			this.textBoxThisRight.TabIndex = 26;
+			// 
+			// textBoxThisLeft
+			// 
+			this.textBoxThisLeft.Location = new System.Drawing.Point(136, 32);
+			this.textBoxThisLeft.Name = "textBoxThisLeft";
+			this.textBoxThisLeft.Size = new System.Drawing.Size(48, 19);
+			this.textBoxThisLeft.TabIndex = 25;
+			// 
+			// textBoxThisResolution
+			// 
+			this.textBoxThisResolution.Location = new System.Drawing.Point(136, 8);
+			this.textBoxThisResolution.Name = "textBoxThisResolution";
+			this.textBoxThisResolution.Size = new System.Drawing.Size(48, 19);
+			this.textBoxThisResolution.TabIndex = 24;
+			// 
+			// labelThisResolution
+			// 
+			this.labelThisResolution.Location = new System.Drawing.Point(8, 8);
+			this.labelThisResolution.Name = "labelThisResolution";
+			this.labelThisResolution.Size = new System.Drawing.Size(120, 16);
+			this.labelThisResolution.TabIndex = 9;
+			this.labelThisResolution.Text = "Resolution:";
+			this.labelThisResolution.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelThisLeft
+			// 
+			this.labelThisLeft.Location = new System.Drawing.Point(8, 32);
+			this.labelThisLeft.Name = "labelThisLeft";
+			this.labelThisLeft.Size = new System.Drawing.Size(120, 16);
+			this.labelThisLeft.TabIndex = 8;
+			this.labelThisLeft.Text = "Left:";
+			this.labelThisLeft.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelThisRight
+			// 
+			this.labelThisRight.Location = new System.Drawing.Point(8, 56);
+			this.labelThisRight.Name = "labelThisRight";
+			this.labelThisRight.Size = new System.Drawing.Size(120, 16);
+			this.labelThisRight.TabIndex = 7;
+			this.labelThisRight.Text = "Right:";
+			this.labelThisRight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelThisTop
+			// 
+			this.labelThisTop.Location = new System.Drawing.Point(8, 80);
+			this.labelThisTop.Name = "labelThisTop";
+			this.labelThisTop.Size = new System.Drawing.Size(120, 16);
+			this.labelThisTop.TabIndex = 6;
+			this.labelThisTop.Text = "Top:";
+			this.labelThisTop.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelThisBottom
+			// 
+			this.labelThisBottom.Location = new System.Drawing.Point(8, 104);
+			this.labelThisBottom.Name = "labelThisBottom";
+			this.labelThisBottom.Size = new System.Drawing.Size(120, 16);
+			this.labelThisBottom.TabIndex = 5;
+			this.labelThisBottom.Text = "Bottom:";
+			this.labelThisBottom.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelThisDaytimeImage
+			// 
+			this.labelThisDaytimeImage.Location = new System.Drawing.Point(8, 128);
+			this.labelThisDaytimeImage.Name = "labelThisDaytimeImage";
+			this.labelThisDaytimeImage.Size = new System.Drawing.Size(120, 16);
+			this.labelThisDaytimeImage.TabIndex = 4;
+			this.labelThisDaytimeImage.Text = "DaytimeImage:";
+			this.labelThisDaytimeImage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelThisNighttimeImage
+			// 
+			this.labelThisNighttimeImage.Location = new System.Drawing.Point(8, 152);
+			this.labelThisNighttimeImage.Name = "labelThisNighttimeImage";
+			this.labelThisNighttimeImage.Size = new System.Drawing.Size(120, 16);
+			this.labelThisNighttimeImage.TabIndex = 3;
+			this.labelThisNighttimeImage.Text = "NighttimeImage:";
+			this.labelThisNighttimeImage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelThisTransparentColor
+			// 
+			this.labelThisTransparentColor.Location = new System.Drawing.Point(8, 176);
+			this.labelThisTransparentColor.Name = "labelThisTransparentColor";
+			this.labelThisTransparentColor.Size = new System.Drawing.Size(120, 16);
+			this.labelThisTransparentColor.TabIndex = 2;
+			this.labelThisTransparentColor.Text = "TransparentColor:";
+			this.labelThisTransparentColor.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// tabPageScreen
+			// 
+			this.tabPageScreen.Controls.Add(this.numericUpDownScreenLayer);
+			this.tabPageScreen.Controls.Add(this.numericUpDownScreenNumber);
+			this.tabPageScreen.Controls.Add(this.labelScreenLayer);
+			this.tabPageScreen.Controls.Add(this.labelScreenNumber);
+			this.tabPageScreen.Location = new System.Drawing.Point(4, 40);
+			this.tabPageScreen.Name = "tabPageScreen";
+			this.tabPageScreen.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPageScreen.Size = new System.Drawing.Size(312, 626);
+			this.tabPageScreen.TabIndex = 1;
+			this.tabPageScreen.Text = "Screen";
+			this.tabPageScreen.UseVisualStyleBackColor = true;
+			// 
+			// numericUpDownScreenLayer
+			// 
+			this.numericUpDownScreenLayer.Location = new System.Drawing.Point(136, 32);
+			this.numericUpDownScreenLayer.Name = "numericUpDownScreenLayer";
+			this.numericUpDownScreenLayer.Size = new System.Drawing.Size(48, 19);
+			this.numericUpDownScreenLayer.TabIndex = 31;
+			// 
+			// numericUpDownScreenNumber
+			// 
+			this.numericUpDownScreenNumber.Location = new System.Drawing.Point(136, 8);
+			this.numericUpDownScreenNumber.Name = "numericUpDownScreenNumber";
+			this.numericUpDownScreenNumber.Size = new System.Drawing.Size(48, 19);
+			this.numericUpDownScreenNumber.TabIndex = 30;
+			// 
+			// labelScreenLayer
+			// 
+			this.labelScreenLayer.Location = new System.Drawing.Point(8, 32);
+			this.labelScreenLayer.Name = "labelScreenLayer";
+			this.labelScreenLayer.Size = new System.Drawing.Size(120, 16);
+			this.labelScreenLayer.TabIndex = 28;
+			this.labelScreenLayer.Text = "Layer:";
+			this.labelScreenLayer.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelScreenNumber
+			// 
+			this.labelScreenNumber.Location = new System.Drawing.Point(8, 8);
+			this.labelScreenNumber.Name = "labelScreenNumber";
+			this.labelScreenNumber.Size = new System.Drawing.Size(120, 16);
+			this.labelScreenNumber.TabIndex = 26;
+			this.labelScreenNumber.Text = "Number:";
+			this.labelScreenNumber.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// tabPagePilotLamp
+			// 
+			this.tabPagePilotLamp.Controls.Add(this.buttonPilotLampTransparentColorSet);
+			this.tabPagePilotLamp.Controls.Add(this.numericUpDownPilotLampLayer);
+			this.tabPagePilotLamp.Controls.Add(this.groupBoxPilotLampLocation);
+			this.tabPagePilotLamp.Controls.Add(this.buttonPilotLampSubjectSet);
+			this.tabPagePilotLamp.Controls.Add(this.labelPilotLampSubject);
+			this.tabPagePilotLamp.Controls.Add(this.labelPilotLampLayer);
+			this.tabPagePilotLamp.Controls.Add(this.buttonPilotLampNighttimeImageOpen);
+			this.tabPagePilotLamp.Controls.Add(this.buttonPilotLampDaytimeImageOpen);
+			this.tabPagePilotLamp.Controls.Add(this.textBoxPilotLampTransparentColor);
+			this.tabPagePilotLamp.Controls.Add(this.textBoxPilotLampNighttimeImage);
+			this.tabPagePilotLamp.Controls.Add(this.textBoxPilotLampDaytimeImage);
+			this.tabPagePilotLamp.Controls.Add(this.labelPilotLampDaytimeImage);
+			this.tabPagePilotLamp.Controls.Add(this.labelPilotLampNighttimeImage);
+			this.tabPagePilotLamp.Controls.Add(this.labelPilotLampTransparentColor);
+			this.tabPagePilotLamp.Location = new System.Drawing.Point(4, 40);
+			this.tabPagePilotLamp.Name = "tabPagePilotLamp";
+			this.tabPagePilotLamp.Size = new System.Drawing.Size(312, 626);
+			this.tabPagePilotLamp.TabIndex = 2;
+			this.tabPagePilotLamp.Text = "PilotLamp";
+			this.tabPagePilotLamp.UseVisualStyleBackColor = true;
+			// 
+			// buttonPilotLampTransparentColorSet
+			// 
+			this.buttonPilotLampTransparentColorSet.Location = new System.Drawing.Point(248, 160);
+			this.buttonPilotLampTransparentColorSet.Name = "buttonPilotLampTransparentColorSet";
+			this.buttonPilotLampTransparentColorSet.Size = new System.Drawing.Size(48, 19);
+			this.buttonPilotLampTransparentColorSet.TabIndex = 49;
+			this.buttonPilotLampTransparentColorSet.Text = "Set...";
+			this.buttonPilotLampTransparentColorSet.UseVisualStyleBackColor = true;
+			this.buttonPilotLampTransparentColorSet.Click += new System.EventHandler(this.ButtonPilotLampTransparentColorSet_Click);
+			// 
+			// numericUpDownPilotLampLayer
+			// 
+			this.numericUpDownPilotLampLayer.Location = new System.Drawing.Point(136, 184);
+			this.numericUpDownPilotLampLayer.Name = "numericUpDownPilotLampLayer";
+			this.numericUpDownPilotLampLayer.Size = new System.Drawing.Size(48, 19);
+			this.numericUpDownPilotLampLayer.TabIndex = 34;
+			// 
+			// groupBoxPilotLampLocation
+			// 
+			this.groupBoxPilotLampLocation.Controls.Add(this.textBoxPilotLampLocationY);
+			this.groupBoxPilotLampLocation.Controls.Add(this.textBoxPilotLampLocationX);
+			this.groupBoxPilotLampLocation.Controls.Add(this.labelPilotLampLocationY);
+			this.groupBoxPilotLampLocation.Controls.Add(this.labelPilotLampLocationX);
+			this.groupBoxPilotLampLocation.Location = new System.Drawing.Point(8, 32);
+			this.groupBoxPilotLampLocation.Name = "groupBoxPilotLampLocation";
+			this.groupBoxPilotLampLocation.Size = new System.Drawing.Size(184, 72);
+			this.groupBoxPilotLampLocation.TabIndex = 48;
+			this.groupBoxPilotLampLocation.TabStop = false;
+			this.groupBoxPilotLampLocation.Text = "Location";
+			// 
+			// textBoxPilotLampLocationY
+			// 
+			this.textBoxPilotLampLocationY.Location = new System.Drawing.Point(128, 40);
+			this.textBoxPilotLampLocationY.Name = "textBoxPilotLampLocationY";
+			this.textBoxPilotLampLocationY.Size = new System.Drawing.Size(48, 19);
+			this.textBoxPilotLampLocationY.TabIndex = 33;
+			// 
+			// textBoxPilotLampLocationX
+			// 
+			this.textBoxPilotLampLocationX.Location = new System.Drawing.Point(128, 16);
+			this.textBoxPilotLampLocationX.Name = "textBoxPilotLampLocationX";
+			this.textBoxPilotLampLocationX.Size = new System.Drawing.Size(48, 19);
+			this.textBoxPilotLampLocationX.TabIndex = 32;
+			// 
+			// labelPilotLampLocationY
+			// 
+			this.labelPilotLampLocationY.Location = new System.Drawing.Point(8, 40);
+			this.labelPilotLampLocationY.Name = "labelPilotLampLocationY";
+			this.labelPilotLampLocationY.Size = new System.Drawing.Size(112, 16);
+			this.labelPilotLampLocationY.TabIndex = 10;
+			this.labelPilotLampLocationY.Text = "Y:";
+			this.labelPilotLampLocationY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelPilotLampLocationX
+			// 
+			this.labelPilotLampLocationX.Location = new System.Drawing.Point(8, 16);
+			this.labelPilotLampLocationX.Name = "labelPilotLampLocationX";
+			this.labelPilotLampLocationX.Size = new System.Drawing.Size(112, 16);
+			this.labelPilotLampLocationX.TabIndex = 9;
+			this.labelPilotLampLocationX.Text = "X:";
+			this.labelPilotLampLocationX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// buttonPilotLampSubjectSet
+			// 
+			this.buttonPilotLampSubjectSet.Location = new System.Drawing.Point(136, 8);
+			this.buttonPilotLampSubjectSet.Name = "buttonPilotLampSubjectSet";
+			this.buttonPilotLampSubjectSet.Size = new System.Drawing.Size(48, 19);
+			this.buttonPilotLampSubjectSet.TabIndex = 47;
+			this.buttonPilotLampSubjectSet.Text = "Set...";
+			this.buttonPilotLampSubjectSet.UseVisualStyleBackColor = true;
+			this.buttonPilotLampSubjectSet.Click += new System.EventHandler(this.ButtonPilotLampSubjectSet_Click);
+			// 
+			// labelPilotLampSubject
+			// 
+			this.labelPilotLampSubject.Location = new System.Drawing.Point(8, 8);
+			this.labelPilotLampSubject.Name = "labelPilotLampSubject";
+			this.labelPilotLampSubject.Size = new System.Drawing.Size(120, 16);
+			this.labelPilotLampSubject.TabIndex = 46;
+			this.labelPilotLampSubject.Text = "Subject:";
+			this.labelPilotLampSubject.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelPilotLampLayer
+			// 
+			this.labelPilotLampLayer.Location = new System.Drawing.Point(8, 184);
+			this.labelPilotLampLayer.Name = "labelPilotLampLayer";
+			this.labelPilotLampLayer.Size = new System.Drawing.Size(120, 16);
+			this.labelPilotLampLayer.TabIndex = 44;
+			this.labelPilotLampLayer.Text = "Layer:";
+			this.labelPilotLampLayer.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// buttonPilotLampNighttimeImageOpen
+			// 
+			this.buttonPilotLampNighttimeImageOpen.Location = new System.Drawing.Point(248, 136);
+			this.buttonPilotLampNighttimeImageOpen.Name = "buttonPilotLampNighttimeImageOpen";
+			this.buttonPilotLampNighttimeImageOpen.Size = new System.Drawing.Size(48, 19);
+			this.buttonPilotLampNighttimeImageOpen.TabIndex = 43;
+			this.buttonPilotLampNighttimeImageOpen.Text = "Open...";
+			this.buttonPilotLampNighttimeImageOpen.UseVisualStyleBackColor = true;
+			this.buttonPilotLampNighttimeImageOpen.Click += new System.EventHandler(this.ButtonPilotLampNighttimeImageOpen_Click);
+			// 
+			// buttonPilotLampDaytimeImageOpen
+			// 
+			this.buttonPilotLampDaytimeImageOpen.Location = new System.Drawing.Point(248, 112);
+			this.buttonPilotLampDaytimeImageOpen.Name = "buttonPilotLampDaytimeImageOpen";
+			this.buttonPilotLampDaytimeImageOpen.Size = new System.Drawing.Size(48, 19);
+			this.buttonPilotLampDaytimeImageOpen.TabIndex = 42;
+			this.buttonPilotLampDaytimeImageOpen.Text = "Open...";
+			this.buttonPilotLampDaytimeImageOpen.UseVisualStyleBackColor = true;
+			this.buttonPilotLampDaytimeImageOpen.Click += new System.EventHandler(this.ButtonPilotLampDaytimeImageOpen_Click);
+			// 
+			// textBoxPilotLampTransparentColor
+			// 
+			this.textBoxPilotLampTransparentColor.Location = new System.Drawing.Point(136, 160);
+			this.textBoxPilotLampTransparentColor.Name = "textBoxPilotLampTransparentColor";
+			this.textBoxPilotLampTransparentColor.Size = new System.Drawing.Size(104, 19);
+			this.textBoxPilotLampTransparentColor.TabIndex = 41;
+			// 
+			// textBoxPilotLampNighttimeImage
+			// 
+			this.textBoxPilotLampNighttimeImage.Location = new System.Drawing.Point(136, 136);
+			this.textBoxPilotLampNighttimeImage.Name = "textBoxPilotLampNighttimeImage";
+			this.textBoxPilotLampNighttimeImage.Size = new System.Drawing.Size(104, 19);
+			this.textBoxPilotLampNighttimeImage.TabIndex = 40;
+			// 
+			// textBoxPilotLampDaytimeImage
+			// 
+			this.textBoxPilotLampDaytimeImage.Location = new System.Drawing.Point(136, 112);
+			this.textBoxPilotLampDaytimeImage.Name = "textBoxPilotLampDaytimeImage";
+			this.textBoxPilotLampDaytimeImage.Size = new System.Drawing.Size(104, 19);
+			this.textBoxPilotLampDaytimeImage.TabIndex = 39;
+			// 
+			// labelPilotLampDaytimeImage
+			// 
+			this.labelPilotLampDaytimeImage.Location = new System.Drawing.Point(8, 112);
+			this.labelPilotLampDaytimeImage.Name = "labelPilotLampDaytimeImage";
+			this.labelPilotLampDaytimeImage.Size = new System.Drawing.Size(120, 16);
+			this.labelPilotLampDaytimeImage.TabIndex = 38;
+			this.labelPilotLampDaytimeImage.Text = "DaytimeImage:";
+			this.labelPilotLampDaytimeImage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelPilotLampNighttimeImage
+			// 
+			this.labelPilotLampNighttimeImage.Location = new System.Drawing.Point(8, 136);
+			this.labelPilotLampNighttimeImage.Name = "labelPilotLampNighttimeImage";
+			this.labelPilotLampNighttimeImage.Size = new System.Drawing.Size(120, 16);
+			this.labelPilotLampNighttimeImage.TabIndex = 37;
+			this.labelPilotLampNighttimeImage.Text = "NighttimeImage:";
+			this.labelPilotLampNighttimeImage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelPilotLampTransparentColor
+			// 
+			this.labelPilotLampTransparentColor.Location = new System.Drawing.Point(8, 160);
+			this.labelPilotLampTransparentColor.Name = "labelPilotLampTransparentColor";
+			this.labelPilotLampTransparentColor.Size = new System.Drawing.Size(120, 16);
+			this.labelPilotLampTransparentColor.TabIndex = 36;
+			this.labelPilotLampTransparentColor.Text = "TransparentColor:";
+			this.labelPilotLampTransparentColor.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// tabPageNeedle
 			// 
@@ -2460,178 +2024,230 @@ namespace TrainEditor2.Views
 			this.tabPageNeedle.Text = "Needle";
 			this.tabPageNeedle.UseVisualStyleBackColor = true;
 			// 
-			// labelNeedleTransparentColor
+			// checkBoxNeedleDefinedDampingRatio
 			// 
-			this.labelNeedleTransparentColor.Location = new System.Drawing.Point(8, 232);
-			this.labelNeedleTransparentColor.Name = "labelNeedleTransparentColor";
-			this.labelNeedleTransparentColor.Size = new System.Drawing.Size(120, 16);
-			this.labelNeedleTransparentColor.TabIndex = 49;
-			this.labelNeedleTransparentColor.Text = "TransparentColor:";
-			this.labelNeedleTransparentColor.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.checkBoxNeedleDefinedDampingRatio.Location = new System.Drawing.Point(136, 504);
+			this.checkBoxNeedleDefinedDampingRatio.Name = "checkBoxNeedleDefinedDampingRatio";
+			this.checkBoxNeedleDefinedDampingRatio.Size = new System.Drawing.Size(48, 16);
+			this.checkBoxNeedleDefinedDampingRatio.TabIndex = 93;
+			this.checkBoxNeedleDefinedDampingRatio.UseVisualStyleBackColor = true;
 			// 
-			// labelNeedleNighttimeImage
+			// checkBoxNeedleDefinedNaturalFreq
 			// 
-			this.labelNeedleNighttimeImage.Location = new System.Drawing.Point(8, 184);
-			this.labelNeedleNighttimeImage.Name = "labelNeedleNighttimeImage";
-			this.labelNeedleNighttimeImage.Size = new System.Drawing.Size(120, 16);
-			this.labelNeedleNighttimeImage.TabIndex = 50;
-			this.labelNeedleNighttimeImage.Text = "NighttimeImage:";
-			this.labelNeedleNighttimeImage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.checkBoxNeedleDefinedNaturalFreq.Location = new System.Drawing.Point(136, 456);
+			this.checkBoxNeedleDefinedNaturalFreq.Name = "checkBoxNeedleDefinedNaturalFreq";
+			this.checkBoxNeedleDefinedNaturalFreq.Size = new System.Drawing.Size(48, 16);
+			this.checkBoxNeedleDefinedNaturalFreq.TabIndex = 92;
+			this.checkBoxNeedleDefinedNaturalFreq.UseVisualStyleBackColor = true;
 			// 
-			// labelNeedleDaytimeImage
+			// labelNeedleDefinedDampingRatio
 			// 
-			this.labelNeedleDaytimeImage.Location = new System.Drawing.Point(8, 160);
-			this.labelNeedleDaytimeImage.Name = "labelNeedleDaytimeImage";
-			this.labelNeedleDaytimeImage.Size = new System.Drawing.Size(120, 16);
-			this.labelNeedleDaytimeImage.TabIndex = 51;
-			this.labelNeedleDaytimeImage.Text = "DaytimeImage:";
-			this.labelNeedleDaytimeImage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.labelNeedleDefinedDampingRatio.Location = new System.Drawing.Point(8, 504);
+			this.labelNeedleDefinedDampingRatio.Name = "labelNeedleDefinedDampingRatio";
+			this.labelNeedleDefinedDampingRatio.Size = new System.Drawing.Size(120, 16);
+			this.labelNeedleDefinedDampingRatio.TabIndex = 91;
+			this.labelNeedleDefinedDampingRatio.Text = "DefinedDampingRatio:";
+			this.labelNeedleDefinedDampingRatio.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// textBoxNeedleDaytimeImage
+			// labelNeedleDefinedNaturalFreq
 			// 
-			this.textBoxNeedleDaytimeImage.Location = new System.Drawing.Point(136, 160);
-			this.textBoxNeedleDaytimeImage.Name = "textBoxNeedleDaytimeImage";
-			this.textBoxNeedleDaytimeImage.Size = new System.Drawing.Size(104, 19);
-			this.textBoxNeedleDaytimeImage.TabIndex = 52;
+			this.labelNeedleDefinedNaturalFreq.Location = new System.Drawing.Point(16, 456);
+			this.labelNeedleDefinedNaturalFreq.Name = "labelNeedleDefinedNaturalFreq";
+			this.labelNeedleDefinedNaturalFreq.Size = new System.Drawing.Size(112, 16);
+			this.labelNeedleDefinedNaturalFreq.TabIndex = 90;
+			this.labelNeedleDefinedNaturalFreq.Text = "DefinedNaturalFreq:";
+			this.labelNeedleDefinedNaturalFreq.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// textBoxNeedleNighttimeImage
+			// buttonNeedleTransparentColorSet
 			// 
-			this.textBoxNeedleNighttimeImage.Location = new System.Drawing.Point(136, 184);
-			this.textBoxNeedleNighttimeImage.Name = "textBoxNeedleNighttimeImage";
-			this.textBoxNeedleNighttimeImage.Size = new System.Drawing.Size(104, 19);
-			this.textBoxNeedleNighttimeImage.TabIndex = 53;
+			this.buttonNeedleTransparentColorSet.Location = new System.Drawing.Point(248, 232);
+			this.buttonNeedleTransparentColorSet.Name = "buttonNeedleTransparentColorSet";
+			this.buttonNeedleTransparentColorSet.Size = new System.Drawing.Size(48, 19);
+			this.buttonNeedleTransparentColorSet.TabIndex = 89;
+			this.buttonNeedleTransparentColorSet.Text = "Set...";
+			this.buttonNeedleTransparentColorSet.UseVisualStyleBackColor = true;
+			this.buttonNeedleTransparentColorSet.Click += new System.EventHandler(this.ButtonNeedleTransparentColorSet_Click);
 			// 
-			// textBoxNeedleTransparentColor
+			// buttonNeedleColorSet
 			// 
-			this.textBoxNeedleTransparentColor.Location = new System.Drawing.Point(136, 232);
-			this.textBoxNeedleTransparentColor.Name = "textBoxNeedleTransparentColor";
-			this.textBoxNeedleTransparentColor.Size = new System.Drawing.Size(104, 19);
-			this.textBoxNeedleTransparentColor.TabIndex = 54;
+			this.buttonNeedleColorSet.Location = new System.Drawing.Point(248, 208);
+			this.buttonNeedleColorSet.Name = "buttonNeedleColorSet";
+			this.buttonNeedleColorSet.Size = new System.Drawing.Size(48, 19);
+			this.buttonNeedleColorSet.TabIndex = 88;
+			this.buttonNeedleColorSet.Text = "Set...";
+			this.buttonNeedleColorSet.UseVisualStyleBackColor = true;
+			this.buttonNeedleColorSet.Click += new System.EventHandler(this.ButtonNeedleColorSet_Click);
 			// 
-			// buttonNeedleDaytimeImageOpen
+			// checkBoxNeedleDefinedOrigin
 			// 
-			this.buttonNeedleDaytimeImageOpen.Location = new System.Drawing.Point(248, 160);
-			this.buttonNeedleDaytimeImageOpen.Name = "buttonNeedleDaytimeImageOpen";
-			this.buttonNeedleDaytimeImageOpen.Size = new System.Drawing.Size(48, 19);
-			this.buttonNeedleDaytimeImageOpen.TabIndex = 55;
-			this.buttonNeedleDaytimeImageOpen.Text = "Open...";
-			this.buttonNeedleDaytimeImageOpen.UseVisualStyleBackColor = true;
-			this.buttonNeedleDaytimeImageOpen.Click += new System.EventHandler(this.ButtonNeedleDaytimeImageOpen_Click);
+			this.checkBoxNeedleDefinedOrigin.Location = new System.Drawing.Point(136, 256);
+			this.checkBoxNeedleDefinedOrigin.Name = "checkBoxNeedleDefinedOrigin";
+			this.checkBoxNeedleDefinedOrigin.Size = new System.Drawing.Size(48, 16);
+			this.checkBoxNeedleDefinedOrigin.TabIndex = 87;
+			this.checkBoxNeedleDefinedOrigin.UseVisualStyleBackColor = true;
 			// 
-			// buttonNeedleNighttimeImageOpen
+			// labelNeedleDefinedOrigin
 			// 
-			this.buttonNeedleNighttimeImageOpen.Location = new System.Drawing.Point(248, 184);
-			this.buttonNeedleNighttimeImageOpen.Name = "buttonNeedleNighttimeImageOpen";
-			this.buttonNeedleNighttimeImageOpen.Size = new System.Drawing.Size(48, 19);
-			this.buttonNeedleNighttimeImageOpen.TabIndex = 56;
-			this.buttonNeedleNighttimeImageOpen.Text = "Open...";
-			this.buttonNeedleNighttimeImageOpen.UseVisualStyleBackColor = true;
-			this.buttonNeedleNighttimeImageOpen.Click += new System.EventHandler(this.ButtonNeedleNighttimeImageOpen_Click);
+			this.labelNeedleDefinedOrigin.Location = new System.Drawing.Point(8, 256);
+			this.labelNeedleDefinedOrigin.Name = "labelNeedleDefinedOrigin";
+			this.labelNeedleDefinedOrigin.Size = new System.Drawing.Size(120, 16);
+			this.labelNeedleDefinedOrigin.TabIndex = 86;
+			this.labelNeedleDefinedOrigin.Text = "DefinedOrigin:";
+			this.labelNeedleDefinedOrigin.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// labelNeedleLayer
+			// checkBoxNeedleDefinedRadius
 			// 
-			this.labelNeedleLayer.Location = new System.Drawing.Point(8, 600);
-			this.labelNeedleLayer.Name = "labelNeedleLayer";
-			this.labelNeedleLayer.Size = new System.Drawing.Size(120, 16);
-			this.labelNeedleLayer.TabIndex = 57;
-			this.labelNeedleLayer.Text = "Layer:";
-			this.labelNeedleLayer.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.checkBoxNeedleDefinedRadius.Location = new System.Drawing.Point(136, 112);
+			this.checkBoxNeedleDefinedRadius.Name = "checkBoxNeedleDefinedRadius";
+			this.checkBoxNeedleDefinedRadius.Size = new System.Drawing.Size(48, 16);
+			this.checkBoxNeedleDefinedRadius.TabIndex = 85;
+			this.checkBoxNeedleDefinedRadius.UseVisualStyleBackColor = true;
 			// 
-			// labelNeedleSubject
+			// labelNeedleDefinedRadius
 			// 
-			this.labelNeedleSubject.Location = new System.Drawing.Point(8, 8);
-			this.labelNeedleSubject.Name = "labelNeedleSubject";
-			this.labelNeedleSubject.Size = new System.Drawing.Size(120, 16);
-			this.labelNeedleSubject.TabIndex = 59;
-			this.labelNeedleSubject.Text = "Subject:";
-			this.labelNeedleSubject.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.labelNeedleDefinedRadius.Location = new System.Drawing.Point(8, 112);
+			this.labelNeedleDefinedRadius.Name = "labelNeedleDefinedRadius";
+			this.labelNeedleDefinedRadius.Size = new System.Drawing.Size(120, 16);
+			this.labelNeedleDefinedRadius.TabIndex = 84;
+			this.labelNeedleDefinedRadius.Text = "DefinedRadius:";
+			this.labelNeedleDefinedRadius.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// buttonNeedleSubjectSet
+			// numericUpDownNeedleLayer
 			// 
-			this.buttonNeedleSubjectSet.Location = new System.Drawing.Point(136, 8);
-			this.buttonNeedleSubjectSet.Name = "buttonNeedleSubjectSet";
-			this.buttonNeedleSubjectSet.Size = new System.Drawing.Size(48, 19);
-			this.buttonNeedleSubjectSet.TabIndex = 60;
-			this.buttonNeedleSubjectSet.Text = "Set...";
-			this.buttonNeedleSubjectSet.UseVisualStyleBackColor = true;
-			this.buttonNeedleSubjectSet.Click += new System.EventHandler(this.ButtonNeedleSubjectSet_Click);
+			this.numericUpDownNeedleLayer.Location = new System.Drawing.Point(136, 600);
+			this.numericUpDownNeedleLayer.Name = "numericUpDownNeedleLayer";
+			this.numericUpDownNeedleLayer.Size = new System.Drawing.Size(48, 19);
+			this.numericUpDownNeedleLayer.TabIndex = 83;
 			// 
-			// groupBoxNeedleLocation
+			// checkBoxNeedleSmoothed
 			// 
-			this.groupBoxNeedleLocation.Controls.Add(this.textBoxNeedleLocationY);
-			this.groupBoxNeedleLocation.Controls.Add(this.textBoxNeedleLocationX);
-			this.groupBoxNeedleLocation.Controls.Add(this.labelNeedleLocationY);
-			this.groupBoxNeedleLocation.Controls.Add(this.labelNeedleLocationX);
-			this.groupBoxNeedleLocation.Location = new System.Drawing.Point(8, 32);
-			this.groupBoxNeedleLocation.Name = "groupBoxNeedleLocation";
-			this.groupBoxNeedleLocation.Size = new System.Drawing.Size(184, 72);
-			this.groupBoxNeedleLocation.TabIndex = 61;
-			this.groupBoxNeedleLocation.TabStop = false;
-			this.groupBoxNeedleLocation.Text = "Location";
+			this.checkBoxNeedleSmoothed.Location = new System.Drawing.Point(136, 576);
+			this.checkBoxNeedleSmoothed.Name = "checkBoxNeedleSmoothed";
+			this.checkBoxNeedleSmoothed.Size = new System.Drawing.Size(48, 16);
+			this.checkBoxNeedleSmoothed.TabIndex = 82;
+			this.checkBoxNeedleSmoothed.UseVisualStyleBackColor = true;
 			// 
-			// labelNeedleLocationX
+			// labelNeedleSmoothed
 			// 
-			this.labelNeedleLocationX.Location = new System.Drawing.Point(8, 16);
-			this.labelNeedleLocationX.Name = "labelNeedleLocationX";
-			this.labelNeedleLocationX.Size = new System.Drawing.Size(112, 16);
-			this.labelNeedleLocationX.TabIndex = 9;
-			this.labelNeedleLocationX.Text = "X:";
-			this.labelNeedleLocationX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.labelNeedleSmoothed.Location = new System.Drawing.Point(8, 576);
+			this.labelNeedleSmoothed.Name = "labelNeedleSmoothed";
+			this.labelNeedleSmoothed.Size = new System.Drawing.Size(120, 16);
+			this.labelNeedleSmoothed.TabIndex = 81;
+			this.labelNeedleSmoothed.Text = "Smoothed:";
+			this.labelNeedleSmoothed.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// labelNeedleLocationY
+			// checkBoxNeedleBackstop
 			// 
-			this.labelNeedleLocationY.Location = new System.Drawing.Point(8, 40);
-			this.labelNeedleLocationY.Name = "labelNeedleLocationY";
-			this.labelNeedleLocationY.Size = new System.Drawing.Size(112, 16);
-			this.labelNeedleLocationY.TabIndex = 10;
-			this.labelNeedleLocationY.Text = "Y:";
-			this.labelNeedleLocationY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.checkBoxNeedleBackstop.Location = new System.Drawing.Point(136, 552);
+			this.checkBoxNeedleBackstop.Name = "checkBoxNeedleBackstop";
+			this.checkBoxNeedleBackstop.Size = new System.Drawing.Size(48, 16);
+			this.checkBoxNeedleBackstop.TabIndex = 80;
+			this.checkBoxNeedleBackstop.UseVisualStyleBackColor = true;
 			// 
-			// textBoxNeedleLocationX
+			// labelNeedleBackstop
 			// 
-			this.textBoxNeedleLocationX.Location = new System.Drawing.Point(128, 16);
-			this.textBoxNeedleLocationX.Name = "textBoxNeedleLocationX";
-			this.textBoxNeedleLocationX.Size = new System.Drawing.Size(48, 19);
-			this.textBoxNeedleLocationX.TabIndex = 32;
+			this.labelNeedleBackstop.Location = new System.Drawing.Point(8, 552);
+			this.labelNeedleBackstop.Name = "labelNeedleBackstop";
+			this.labelNeedleBackstop.Size = new System.Drawing.Size(120, 16);
+			this.labelNeedleBackstop.TabIndex = 79;
+			this.labelNeedleBackstop.Text = "Backstop:";
+			this.labelNeedleBackstop.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// textBoxNeedleLocationY
+			// textBoxNeedleDampingRatio
 			// 
-			this.textBoxNeedleLocationY.Location = new System.Drawing.Point(128, 40);
-			this.textBoxNeedleLocationY.Name = "textBoxNeedleLocationY";
-			this.textBoxNeedleLocationY.Size = new System.Drawing.Size(48, 19);
-			this.textBoxNeedleLocationY.TabIndex = 33;
+			this.textBoxNeedleDampingRatio.Location = new System.Drawing.Point(136, 528);
+			this.textBoxNeedleDampingRatio.Name = "textBoxNeedleDampingRatio";
+			this.textBoxNeedleDampingRatio.Size = new System.Drawing.Size(48, 19);
+			this.textBoxNeedleDampingRatio.TabIndex = 78;
 			// 
-			// labelNeedleRadius
+			// labelNeedleDampingRatio
 			// 
-			this.labelNeedleRadius.Location = new System.Drawing.Point(8, 136);
-			this.labelNeedleRadius.Name = "labelNeedleRadius";
-			this.labelNeedleRadius.Size = new System.Drawing.Size(120, 16);
-			this.labelNeedleRadius.TabIndex = 62;
-			this.labelNeedleRadius.Text = "Radius:";
-			this.labelNeedleRadius.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.labelNeedleDampingRatio.Location = new System.Drawing.Point(8, 528);
+			this.labelNeedleDampingRatio.Name = "labelNeedleDampingRatio";
+			this.labelNeedleDampingRatio.Size = new System.Drawing.Size(120, 16);
+			this.labelNeedleDampingRatio.TabIndex = 77;
+			this.labelNeedleDampingRatio.Text = "DampingRatio:";
+			this.labelNeedleDampingRatio.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// textBoxNeedleRadius
+			// textBoxNeedleNaturalFreq
 			// 
-			this.textBoxNeedleRadius.Location = new System.Drawing.Point(136, 136);
-			this.textBoxNeedleRadius.Name = "textBoxNeedleRadius";
-			this.textBoxNeedleRadius.Size = new System.Drawing.Size(48, 19);
-			this.textBoxNeedleRadius.TabIndex = 63;
+			this.textBoxNeedleNaturalFreq.Location = new System.Drawing.Point(136, 480);
+			this.textBoxNeedleNaturalFreq.Name = "textBoxNeedleNaturalFreq";
+			this.textBoxNeedleNaturalFreq.Size = new System.Drawing.Size(48, 19);
+			this.textBoxNeedleNaturalFreq.TabIndex = 76;
 			// 
-			// labelNeedleColor
+			// labelNeedleNaturalFreq
 			// 
-			this.labelNeedleColor.Location = new System.Drawing.Point(8, 208);
-			this.labelNeedleColor.Name = "labelNeedleColor";
-			this.labelNeedleColor.Size = new System.Drawing.Size(120, 16);
-			this.labelNeedleColor.TabIndex = 64;
-			this.labelNeedleColor.Text = "Color:";
-			this.labelNeedleColor.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.labelNeedleNaturalFreq.Location = new System.Drawing.Point(8, 480);
+			this.labelNeedleNaturalFreq.Name = "labelNeedleNaturalFreq";
+			this.labelNeedleNaturalFreq.Size = new System.Drawing.Size(120, 16);
+			this.labelNeedleNaturalFreq.TabIndex = 75;
+			this.labelNeedleNaturalFreq.Text = "NaturalFreq:";
+			this.labelNeedleNaturalFreq.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// textBoxNeedleColor
+			// textBoxNeedleMaximum
 			// 
-			this.textBoxNeedleColor.Location = new System.Drawing.Point(136, 208);
-			this.textBoxNeedleColor.Name = "textBoxNeedleColor";
-			this.textBoxNeedleColor.Size = new System.Drawing.Size(104, 19);
-			this.textBoxNeedleColor.TabIndex = 65;
+			this.textBoxNeedleMaximum.Location = new System.Drawing.Point(136, 432);
+			this.textBoxNeedleMaximum.Name = "textBoxNeedleMaximum";
+			this.textBoxNeedleMaximum.Size = new System.Drawing.Size(48, 19);
+			this.textBoxNeedleMaximum.TabIndex = 74;
+			// 
+			// labelNeedleMaximum
+			// 
+			this.labelNeedleMaximum.Location = new System.Drawing.Point(8, 432);
+			this.labelNeedleMaximum.Name = "labelNeedleMaximum";
+			this.labelNeedleMaximum.Size = new System.Drawing.Size(120, 16);
+			this.labelNeedleMaximum.TabIndex = 73;
+			this.labelNeedleMaximum.Text = "Maximum:";
+			this.labelNeedleMaximum.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxNeedleMinimum
+			// 
+			this.textBoxNeedleMinimum.Location = new System.Drawing.Point(136, 408);
+			this.textBoxNeedleMinimum.Name = "textBoxNeedleMinimum";
+			this.textBoxNeedleMinimum.Size = new System.Drawing.Size(48, 19);
+			this.textBoxNeedleMinimum.TabIndex = 72;
+			// 
+			// labelNeedleMinimum
+			// 
+			this.labelNeedleMinimum.Location = new System.Drawing.Point(8, 408);
+			this.labelNeedleMinimum.Name = "labelNeedleMinimum";
+			this.labelNeedleMinimum.Size = new System.Drawing.Size(120, 16);
+			this.labelNeedleMinimum.TabIndex = 71;
+			this.labelNeedleMinimum.Text = "Minimum:";
+			this.labelNeedleMinimum.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxNeedleLastAngle
+			// 
+			this.textBoxNeedleLastAngle.Location = new System.Drawing.Point(136, 384);
+			this.textBoxNeedleLastAngle.Name = "textBoxNeedleLastAngle";
+			this.textBoxNeedleLastAngle.Size = new System.Drawing.Size(48, 19);
+			this.textBoxNeedleLastAngle.TabIndex = 70;
+			// 
+			// labelNeedleLastAngle
+			// 
+			this.labelNeedleLastAngle.Location = new System.Drawing.Point(8, 384);
+			this.labelNeedleLastAngle.Name = "labelNeedleLastAngle";
+			this.labelNeedleLastAngle.Size = new System.Drawing.Size(120, 16);
+			this.labelNeedleLastAngle.TabIndex = 69;
+			this.labelNeedleLastAngle.Text = "LastAngle:";
+			this.labelNeedleLastAngle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxNeedleInitialAngle
+			// 
+			this.textBoxNeedleInitialAngle.Location = new System.Drawing.Point(136, 360);
+			this.textBoxNeedleInitialAngle.Name = "textBoxNeedleInitialAngle";
+			this.textBoxNeedleInitialAngle.Size = new System.Drawing.Size(48, 19);
+			this.textBoxNeedleInitialAngle.TabIndex = 68;
+			// 
+			// labelNeedleInitialAngle
+			// 
+			this.labelNeedleInitialAngle.Location = new System.Drawing.Point(8, 360);
+			this.labelNeedleInitialAngle.Name = "labelNeedleInitialAngle";
+			this.labelNeedleInitialAngle.Size = new System.Drawing.Size(120, 16);
+			this.labelNeedleInitialAngle.TabIndex = 67;
+			this.labelNeedleInitialAngle.Text = "InitialAngle:";
+			this.labelNeedleInitialAngle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// groupBoxNeedleOrigin
 			// 
@@ -2646,14 +2262,19 @@ namespace TrainEditor2.Views
 			this.groupBoxNeedleOrigin.TabStop = false;
 			this.groupBoxNeedleOrigin.Text = "Origin";
 			// 
-			// labelNeedleOriginX
+			// textBoxNeedleOriginY
 			// 
-			this.labelNeedleOriginX.Location = new System.Drawing.Point(8, 16);
-			this.labelNeedleOriginX.Name = "labelNeedleOriginX";
-			this.labelNeedleOriginX.Size = new System.Drawing.Size(112, 16);
-			this.labelNeedleOriginX.TabIndex = 9;
-			this.labelNeedleOriginX.Text = "X:";
-			this.labelNeedleOriginX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.textBoxNeedleOriginY.Location = new System.Drawing.Point(128, 40);
+			this.textBoxNeedleOriginY.Name = "textBoxNeedleOriginY";
+			this.textBoxNeedleOriginY.Size = new System.Drawing.Size(48, 19);
+			this.textBoxNeedleOriginY.TabIndex = 33;
+			// 
+			// textBoxNeedleOriginX
+			// 
+			this.textBoxNeedleOriginX.Location = new System.Drawing.Point(128, 16);
+			this.textBoxNeedleOriginX.Name = "textBoxNeedleOriginX";
+			this.textBoxNeedleOriginX.Size = new System.Drawing.Size(48, 19);
+			this.textBoxNeedleOriginX.TabIndex = 32;
 			// 
 			// labelNeedleOriginY
 			// 
@@ -2664,837 +2285,1242 @@ namespace TrainEditor2.Views
 			this.labelNeedleOriginY.Text = "Y:";
 			this.labelNeedleOriginY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// textBoxNeedleOriginX
-			// 
-			this.textBoxNeedleOriginX.Location = new System.Drawing.Point(128, 16);
-			this.textBoxNeedleOriginX.Name = "textBoxNeedleOriginX";
-			this.textBoxNeedleOriginX.Size = new System.Drawing.Size(48, 19);
-			this.textBoxNeedleOriginX.TabIndex = 32;
-			// 
-			// textBoxNeedleOriginY
-			// 
-			this.textBoxNeedleOriginY.Location = new System.Drawing.Point(128, 40);
-			this.textBoxNeedleOriginY.Name = "textBoxNeedleOriginY";
-			this.textBoxNeedleOriginY.Size = new System.Drawing.Size(48, 19);
-			this.textBoxNeedleOriginY.TabIndex = 33;
-			// 
-			// labelNeedleInitialAngle
-			// 
-			this.labelNeedleInitialAngle.Location = new System.Drawing.Point(8, 360);
-			this.labelNeedleInitialAngle.Name = "labelNeedleInitialAngle";
-			this.labelNeedleInitialAngle.Size = new System.Drawing.Size(120, 16);
-			this.labelNeedleInitialAngle.TabIndex = 67;
-			this.labelNeedleInitialAngle.Text = "InitialAngle:";
-			this.labelNeedleInitialAngle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxNeedleInitialAngle
-			// 
-			this.textBoxNeedleInitialAngle.Location = new System.Drawing.Point(136, 360);
-			this.textBoxNeedleInitialAngle.Name = "textBoxNeedleInitialAngle";
-			this.textBoxNeedleInitialAngle.Size = new System.Drawing.Size(48, 19);
-			this.textBoxNeedleInitialAngle.TabIndex = 68;
-			// 
-			// labelNeedleLastAngle
-			// 
-			this.labelNeedleLastAngle.Location = new System.Drawing.Point(8, 384);
-			this.labelNeedleLastAngle.Name = "labelNeedleLastAngle";
-			this.labelNeedleLastAngle.Size = new System.Drawing.Size(120, 16);
-			this.labelNeedleLastAngle.TabIndex = 69;
-			this.labelNeedleLastAngle.Text = "LastAngle:";
-			this.labelNeedleLastAngle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxNeedleLastAngle
-			// 
-			this.textBoxNeedleLastAngle.Location = new System.Drawing.Point(136, 384);
-			this.textBoxNeedleLastAngle.Name = "textBoxNeedleLastAngle";
-			this.textBoxNeedleLastAngle.Size = new System.Drawing.Size(48, 19);
-			this.textBoxNeedleLastAngle.TabIndex = 70;
-			// 
-			// labelNeedleMinimum
-			// 
-			this.labelNeedleMinimum.Location = new System.Drawing.Point(8, 408);
-			this.labelNeedleMinimum.Name = "labelNeedleMinimum";
-			this.labelNeedleMinimum.Size = new System.Drawing.Size(120, 16);
-			this.labelNeedleMinimum.TabIndex = 71;
-			this.labelNeedleMinimum.Text = "Minimum:";
-			this.labelNeedleMinimum.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxNeedleMinimum
-			// 
-			this.textBoxNeedleMinimum.Location = new System.Drawing.Point(136, 408);
-			this.textBoxNeedleMinimum.Name = "textBoxNeedleMinimum";
-			this.textBoxNeedleMinimum.Size = new System.Drawing.Size(48, 19);
-			this.textBoxNeedleMinimum.TabIndex = 72;
-			// 
-			// labelNeedleMaximum
-			// 
-			this.labelNeedleMaximum.Location = new System.Drawing.Point(8, 432);
-			this.labelNeedleMaximum.Name = "labelNeedleMaximum";
-			this.labelNeedleMaximum.Size = new System.Drawing.Size(120, 16);
-			this.labelNeedleMaximum.TabIndex = 73;
-			this.labelNeedleMaximum.Text = "Maximum:";
-			this.labelNeedleMaximum.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxNeedleMaximum
-			// 
-			this.textBoxNeedleMaximum.Location = new System.Drawing.Point(136, 432);
-			this.textBoxNeedleMaximum.Name = "textBoxNeedleMaximum";
-			this.textBoxNeedleMaximum.Size = new System.Drawing.Size(48, 19);
-			this.textBoxNeedleMaximum.TabIndex = 74;
-			// 
-			// labelNeedleNaturalFreq
-			// 
-			this.labelNeedleNaturalFreq.Location = new System.Drawing.Point(8, 480);
-			this.labelNeedleNaturalFreq.Name = "labelNeedleNaturalFreq";
-			this.labelNeedleNaturalFreq.Size = new System.Drawing.Size(120, 16);
-			this.labelNeedleNaturalFreq.TabIndex = 75;
-			this.labelNeedleNaturalFreq.Text = "NaturalFreq:";
-			this.labelNeedleNaturalFreq.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxNeedleNaturalFreq
-			// 
-			this.textBoxNeedleNaturalFreq.Location = new System.Drawing.Point(136, 480);
-			this.textBoxNeedleNaturalFreq.Name = "textBoxNeedleNaturalFreq";
-			this.textBoxNeedleNaturalFreq.Size = new System.Drawing.Size(48, 19);
-			this.textBoxNeedleNaturalFreq.TabIndex = 76;
-			// 
-			// labelNeedleDampingRatio
-			// 
-			this.labelNeedleDampingRatio.Location = new System.Drawing.Point(8, 528);
-			this.labelNeedleDampingRatio.Name = "labelNeedleDampingRatio";
-			this.labelNeedleDampingRatio.Size = new System.Drawing.Size(120, 16);
-			this.labelNeedleDampingRatio.TabIndex = 77;
-			this.labelNeedleDampingRatio.Text = "DampingRatio:";
-			this.labelNeedleDampingRatio.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxNeedleDampingRatio
-			// 
-			this.textBoxNeedleDampingRatio.Location = new System.Drawing.Point(136, 528);
-			this.textBoxNeedleDampingRatio.Name = "textBoxNeedleDampingRatio";
-			this.textBoxNeedleDampingRatio.Size = new System.Drawing.Size(48, 19);
-			this.textBoxNeedleDampingRatio.TabIndex = 78;
-			// 
-			// labelNeedleBackstop
-			// 
-			this.labelNeedleBackstop.Location = new System.Drawing.Point(8, 552);
-			this.labelNeedleBackstop.Name = "labelNeedleBackstop";
-			this.labelNeedleBackstop.Size = new System.Drawing.Size(120, 16);
-			this.labelNeedleBackstop.TabIndex = 79;
-			this.labelNeedleBackstop.Text = "Backstop:";
-			this.labelNeedleBackstop.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// checkBoxNeedleBackstop
-			// 
-			this.checkBoxNeedleBackstop.Location = new System.Drawing.Point(136, 552);
-			this.checkBoxNeedleBackstop.Name = "checkBoxNeedleBackstop";
-			this.checkBoxNeedleBackstop.Size = new System.Drawing.Size(48, 16);
-			this.checkBoxNeedleBackstop.TabIndex = 80;
-			this.checkBoxNeedleBackstop.UseVisualStyleBackColor = true;
-			// 
-			// labelNeedleSmoothed
-			// 
-			this.labelNeedleSmoothed.Location = new System.Drawing.Point(8, 576);
-			this.labelNeedleSmoothed.Name = "labelNeedleSmoothed";
-			this.labelNeedleSmoothed.Size = new System.Drawing.Size(120, 16);
-			this.labelNeedleSmoothed.TabIndex = 81;
-			this.labelNeedleSmoothed.Text = "Smoothed:";
-			this.labelNeedleSmoothed.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// checkBoxNeedleSmoothed
-			// 
-			this.checkBoxNeedleSmoothed.Location = new System.Drawing.Point(136, 576);
-			this.checkBoxNeedleSmoothed.Name = "checkBoxNeedleSmoothed";
-			this.checkBoxNeedleSmoothed.Size = new System.Drawing.Size(48, 16);
-			this.checkBoxNeedleSmoothed.TabIndex = 82;
-			this.checkBoxNeedleSmoothed.UseVisualStyleBackColor = true;
-			// 
-			// numericUpDownNeedleLayer
-			// 
-			this.numericUpDownNeedleLayer.Location = new System.Drawing.Point(136, 600);
-			this.numericUpDownNeedleLayer.Name = "numericUpDownNeedleLayer";
-			this.numericUpDownNeedleLayer.Size = new System.Drawing.Size(48, 19);
-			this.numericUpDownNeedleLayer.TabIndex = 83;
-			// 
-			// labelNeedleDefinedRadius
-			// 
-			this.labelNeedleDefinedRadius.Location = new System.Drawing.Point(8, 112);
-			this.labelNeedleDefinedRadius.Name = "labelNeedleDefinedRadius";
-			this.labelNeedleDefinedRadius.Size = new System.Drawing.Size(120, 16);
-			this.labelNeedleDefinedRadius.TabIndex = 84;
-			this.labelNeedleDefinedRadius.Text = "DefinedRadius:";
-			this.labelNeedleDefinedRadius.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// checkBoxNeedleDefinedRadius
-			// 
-			this.checkBoxNeedleDefinedRadius.Location = new System.Drawing.Point(136, 112);
-			this.checkBoxNeedleDefinedRadius.Name = "checkBoxNeedleDefinedRadius";
-			this.checkBoxNeedleDefinedRadius.Size = new System.Drawing.Size(48, 16);
-			this.checkBoxNeedleDefinedRadius.TabIndex = 85;
-			this.checkBoxNeedleDefinedRadius.UseVisualStyleBackColor = true;
-			// 
-			// labelNeedleDefinedOrigin
-			// 
-			this.labelNeedleDefinedOrigin.Location = new System.Drawing.Point(8, 256);
-			this.labelNeedleDefinedOrigin.Name = "labelNeedleDefinedOrigin";
-			this.labelNeedleDefinedOrigin.Size = new System.Drawing.Size(120, 16);
-			this.labelNeedleDefinedOrigin.TabIndex = 86;
-			this.labelNeedleDefinedOrigin.Text = "DefinedOrigin:";
-			this.labelNeedleDefinedOrigin.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// checkBoxNeedleDefinedOrigin
-			// 
-			this.checkBoxNeedleDefinedOrigin.Location = new System.Drawing.Point(136, 256);
-			this.checkBoxNeedleDefinedOrigin.Name = "checkBoxNeedleDefinedOrigin";
-			this.checkBoxNeedleDefinedOrigin.Size = new System.Drawing.Size(48, 16);
-			this.checkBoxNeedleDefinedOrigin.TabIndex = 87;
-			this.checkBoxNeedleDefinedOrigin.UseVisualStyleBackColor = true;
-			// 
-			// buttonNeedleColorSet
-			// 
-			this.buttonNeedleColorSet.Location = new System.Drawing.Point(248, 208);
-			this.buttonNeedleColorSet.Name = "buttonNeedleColorSet";
-			this.buttonNeedleColorSet.Size = new System.Drawing.Size(48, 19);
-			this.buttonNeedleColorSet.TabIndex = 88;
-			this.buttonNeedleColorSet.Text = "Set...";
-			this.buttonNeedleColorSet.UseVisualStyleBackColor = true;
-			this.buttonNeedleColorSet.Click += new System.EventHandler(this.ButtonNeedleColorSet_Click);
-			// 
-			// buttonNeedleTransparentColorSet
-			// 
-			this.buttonNeedleTransparentColorSet.Location = new System.Drawing.Point(248, 232);
-			this.buttonNeedleTransparentColorSet.Name = "buttonNeedleTransparentColorSet";
-			this.buttonNeedleTransparentColorSet.Size = new System.Drawing.Size(48, 19);
-			this.buttonNeedleTransparentColorSet.TabIndex = 89;
-			this.buttonNeedleTransparentColorSet.Text = "Set...";
-			this.buttonNeedleTransparentColorSet.UseVisualStyleBackColor = true;
-			this.buttonNeedleTransparentColorSet.Click += new System.EventHandler(this.ButtonNeedleTransparentColorSet_Click);
-			// 
-			// labelNeedleDefinedNaturalFreq
-			// 
-			this.labelNeedleDefinedNaturalFreq.Location = new System.Drawing.Point(16, 456);
-			this.labelNeedleDefinedNaturalFreq.Name = "labelNeedleDefinedNaturalFreq";
-			this.labelNeedleDefinedNaturalFreq.Size = new System.Drawing.Size(112, 16);
-			this.labelNeedleDefinedNaturalFreq.TabIndex = 90;
-			this.labelNeedleDefinedNaturalFreq.Text = "DefinedNaturalFreq:";
-			this.labelNeedleDefinedNaturalFreq.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelNeedleDefinedDampingRatio
-			// 
-			this.labelNeedleDefinedDampingRatio.Location = new System.Drawing.Point(8, 504);
-			this.labelNeedleDefinedDampingRatio.Name = "labelNeedleDefinedDampingRatio";
-			this.labelNeedleDefinedDampingRatio.Size = new System.Drawing.Size(120, 16);
-			this.labelNeedleDefinedDampingRatio.TabIndex = 91;
-			this.labelNeedleDefinedDampingRatio.Text = "DefinedDampingRatio:";
-			this.labelNeedleDefinedDampingRatio.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// checkBoxNeedleDefinedNaturalFreq
-			// 
-			this.checkBoxNeedleDefinedNaturalFreq.Location = new System.Drawing.Point(136, 456);
-			this.checkBoxNeedleDefinedNaturalFreq.Name = "checkBoxNeedleDefinedNaturalFreq";
-			this.checkBoxNeedleDefinedNaturalFreq.Size = new System.Drawing.Size(48, 16);
-			this.checkBoxNeedleDefinedNaturalFreq.TabIndex = 92;
-			this.checkBoxNeedleDefinedNaturalFreq.UseVisualStyleBackColor = true;
-			// 
-			// checkBoxNeedleDefinedDampingRatio
-			// 
-			this.checkBoxNeedleDefinedDampingRatio.Location = new System.Drawing.Point(136, 504);
-			this.checkBoxNeedleDefinedDampingRatio.Name = "checkBoxNeedleDefinedDampingRatio";
-			this.checkBoxNeedleDefinedDampingRatio.Size = new System.Drawing.Size(48, 16);
-			this.checkBoxNeedleDefinedDampingRatio.TabIndex = 93;
-			this.checkBoxNeedleDefinedDampingRatio.UseVisualStyleBackColor = true;
-			// 
-			// tabPagePilotLamp
-			// 
-			this.tabPagePilotLamp.Controls.Add(this.buttonPilotLampTransparentColorSet);
-			this.tabPagePilotLamp.Controls.Add(this.numericUpDownPilotLampLayer);
-			this.tabPagePilotLamp.Controls.Add(this.groupBoxPilotLampLocation);
-			this.tabPagePilotLamp.Controls.Add(this.buttonPilotLampSubjectSet);
-			this.tabPagePilotLamp.Controls.Add(this.labelPilotLampSubject);
-			this.tabPagePilotLamp.Controls.Add(this.labelPilotLampLayer);
-			this.tabPagePilotLamp.Controls.Add(this.buttonPilotLampNighttimeImageOpen);
-			this.tabPagePilotLamp.Controls.Add(this.buttonPilotLampDaytimeImageOpen);
-			this.tabPagePilotLamp.Controls.Add(this.textBoxPilotLampTransparentColor);
-			this.tabPagePilotLamp.Controls.Add(this.textBoxPilotLampNighttimeImage);
-			this.tabPagePilotLamp.Controls.Add(this.textBoxPilotLampDaytimeImage);
-			this.tabPagePilotLamp.Controls.Add(this.labelPilotLampDaytimeImage);
-			this.tabPagePilotLamp.Controls.Add(this.labelPilotLampNighttimeImage);
-			this.tabPagePilotLamp.Controls.Add(this.labelPilotLampTransparentColor);
-			this.tabPagePilotLamp.Location = new System.Drawing.Point(4, 40);
-			this.tabPagePilotLamp.Name = "tabPagePilotLamp";
-			this.tabPagePilotLamp.Size = new System.Drawing.Size(312, 626);
-			this.tabPagePilotLamp.TabIndex = 2;
-			this.tabPagePilotLamp.Text = "PilotLamp";
-			this.tabPagePilotLamp.UseVisualStyleBackColor = true;
-			// 
-			// labelPilotLampTransparentColor
-			// 
-			this.labelPilotLampTransparentColor.Location = new System.Drawing.Point(8, 160);
-			this.labelPilotLampTransparentColor.Name = "labelPilotLampTransparentColor";
-			this.labelPilotLampTransparentColor.Size = new System.Drawing.Size(120, 16);
-			this.labelPilotLampTransparentColor.TabIndex = 36;
-			this.labelPilotLampTransparentColor.Text = "TransparentColor:";
-			this.labelPilotLampTransparentColor.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelPilotLampNighttimeImage
-			// 
-			this.labelPilotLampNighttimeImage.Location = new System.Drawing.Point(8, 136);
-			this.labelPilotLampNighttimeImage.Name = "labelPilotLampNighttimeImage";
-			this.labelPilotLampNighttimeImage.Size = new System.Drawing.Size(120, 16);
-			this.labelPilotLampNighttimeImage.TabIndex = 37;
-			this.labelPilotLampNighttimeImage.Text = "NighttimeImage:";
-			this.labelPilotLampNighttimeImage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelPilotLampDaytimeImage
-			// 
-			this.labelPilotLampDaytimeImage.Location = new System.Drawing.Point(8, 112);
-			this.labelPilotLampDaytimeImage.Name = "labelPilotLampDaytimeImage";
-			this.labelPilotLampDaytimeImage.Size = new System.Drawing.Size(120, 16);
-			this.labelPilotLampDaytimeImage.TabIndex = 38;
-			this.labelPilotLampDaytimeImage.Text = "DaytimeImage:";
-			this.labelPilotLampDaytimeImage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxPilotLampDaytimeImage
-			// 
-			this.textBoxPilotLampDaytimeImage.Location = new System.Drawing.Point(136, 112);
-			this.textBoxPilotLampDaytimeImage.Name = "textBoxPilotLampDaytimeImage";
-			this.textBoxPilotLampDaytimeImage.Size = new System.Drawing.Size(104, 19);
-			this.textBoxPilotLampDaytimeImage.TabIndex = 39;
-			// 
-			// textBoxPilotLampNighttimeImage
-			// 
-			this.textBoxPilotLampNighttimeImage.Location = new System.Drawing.Point(136, 136);
-			this.textBoxPilotLampNighttimeImage.Name = "textBoxPilotLampNighttimeImage";
-			this.textBoxPilotLampNighttimeImage.Size = new System.Drawing.Size(104, 19);
-			this.textBoxPilotLampNighttimeImage.TabIndex = 40;
-			// 
-			// textBoxPilotLampTransparentColor
-			// 
-			this.textBoxPilotLampTransparentColor.Location = new System.Drawing.Point(136, 160);
-			this.textBoxPilotLampTransparentColor.Name = "textBoxPilotLampTransparentColor";
-			this.textBoxPilotLampTransparentColor.Size = new System.Drawing.Size(104, 19);
-			this.textBoxPilotLampTransparentColor.TabIndex = 41;
-			// 
-			// buttonPilotLampDaytimeImageOpen
-			// 
-			this.buttonPilotLampDaytimeImageOpen.Location = new System.Drawing.Point(248, 112);
-			this.buttonPilotLampDaytimeImageOpen.Name = "buttonPilotLampDaytimeImageOpen";
-			this.buttonPilotLampDaytimeImageOpen.Size = new System.Drawing.Size(48, 19);
-			this.buttonPilotLampDaytimeImageOpen.TabIndex = 42;
-			this.buttonPilotLampDaytimeImageOpen.Text = "Open...";
-			this.buttonPilotLampDaytimeImageOpen.UseVisualStyleBackColor = true;
-			this.buttonPilotLampDaytimeImageOpen.Click += new System.EventHandler(this.ButtonPilotLampDaytimeImageOpen_Click);
-			// 
-			// buttonPilotLampNighttimeImageOpen
-			// 
-			this.buttonPilotLampNighttimeImageOpen.Location = new System.Drawing.Point(248, 136);
-			this.buttonPilotLampNighttimeImageOpen.Name = "buttonPilotLampNighttimeImageOpen";
-			this.buttonPilotLampNighttimeImageOpen.Size = new System.Drawing.Size(48, 19);
-			this.buttonPilotLampNighttimeImageOpen.TabIndex = 43;
-			this.buttonPilotLampNighttimeImageOpen.Text = "Open...";
-			this.buttonPilotLampNighttimeImageOpen.UseVisualStyleBackColor = true;
-			this.buttonPilotLampNighttimeImageOpen.Click += new System.EventHandler(this.ButtonPilotLampNighttimeImageOpen_Click);
-			// 
-			// labelPilotLampLayer
-			// 
-			this.labelPilotLampLayer.Location = new System.Drawing.Point(8, 184);
-			this.labelPilotLampLayer.Name = "labelPilotLampLayer";
-			this.labelPilotLampLayer.Size = new System.Drawing.Size(120, 16);
-			this.labelPilotLampLayer.TabIndex = 44;
-			this.labelPilotLampLayer.Text = "Layer:";
-			this.labelPilotLampLayer.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelPilotLampSubject
-			// 
-			this.labelPilotLampSubject.Location = new System.Drawing.Point(8, 8);
-			this.labelPilotLampSubject.Name = "labelPilotLampSubject";
-			this.labelPilotLampSubject.Size = new System.Drawing.Size(120, 16);
-			this.labelPilotLampSubject.TabIndex = 46;
-			this.labelPilotLampSubject.Text = "Subject:";
-			this.labelPilotLampSubject.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// buttonPilotLampSubjectSet
-			// 
-			this.buttonPilotLampSubjectSet.Location = new System.Drawing.Point(136, 8);
-			this.buttonPilotLampSubjectSet.Name = "buttonPilotLampSubjectSet";
-			this.buttonPilotLampSubjectSet.Size = new System.Drawing.Size(48, 19);
-			this.buttonPilotLampSubjectSet.TabIndex = 47;
-			this.buttonPilotLampSubjectSet.Text = "Set...";
-			this.buttonPilotLampSubjectSet.UseVisualStyleBackColor = true;
-			this.buttonPilotLampSubjectSet.Click += new System.EventHandler(this.ButtonPilotLampSubjectSet_Click);
-			// 
-			// groupBoxPilotLampLocation
-			// 
-			this.groupBoxPilotLampLocation.Controls.Add(this.textBoxPilotLampLocationY);
-			this.groupBoxPilotLampLocation.Controls.Add(this.textBoxPilotLampLocationX);
-			this.groupBoxPilotLampLocation.Controls.Add(this.labelPilotLampLocationY);
-			this.groupBoxPilotLampLocation.Controls.Add(this.labelPilotLampLocationX);
-			this.groupBoxPilotLampLocation.Location = new System.Drawing.Point(8, 32);
-			this.groupBoxPilotLampLocation.Name = "groupBoxPilotLampLocation";
-			this.groupBoxPilotLampLocation.Size = new System.Drawing.Size(184, 72);
-			this.groupBoxPilotLampLocation.TabIndex = 48;
-			this.groupBoxPilotLampLocation.TabStop = false;
-			this.groupBoxPilotLampLocation.Text = "Location";
-			// 
-			// labelPilotLampLocationX
-			// 
-			this.labelPilotLampLocationX.Location = new System.Drawing.Point(8, 16);
-			this.labelPilotLampLocationX.Name = "labelPilotLampLocationX";
-			this.labelPilotLampLocationX.Size = new System.Drawing.Size(112, 16);
-			this.labelPilotLampLocationX.TabIndex = 9;
-			this.labelPilotLampLocationX.Text = "X:";
-			this.labelPilotLampLocationX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelPilotLampLocationY
-			// 
-			this.labelPilotLampLocationY.Location = new System.Drawing.Point(8, 40);
-			this.labelPilotLampLocationY.Name = "labelPilotLampLocationY";
-			this.labelPilotLampLocationY.Size = new System.Drawing.Size(112, 16);
-			this.labelPilotLampLocationY.TabIndex = 10;
-			this.labelPilotLampLocationY.Text = "Y:";
-			this.labelPilotLampLocationY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxPilotLampLocationX
-			// 
-			this.textBoxPilotLampLocationX.Location = new System.Drawing.Point(128, 16);
-			this.textBoxPilotLampLocationX.Name = "textBoxPilotLampLocationX";
-			this.textBoxPilotLampLocationX.Size = new System.Drawing.Size(48, 19);
-			this.textBoxPilotLampLocationX.TabIndex = 32;
-			// 
-			// textBoxPilotLampLocationY
-			// 
-			this.textBoxPilotLampLocationY.Location = new System.Drawing.Point(128, 40);
-			this.textBoxPilotLampLocationY.Name = "textBoxPilotLampLocationY";
-			this.textBoxPilotLampLocationY.Size = new System.Drawing.Size(48, 19);
-			this.textBoxPilotLampLocationY.TabIndex = 33;
-			// 
-			// numericUpDownPilotLampLayer
-			// 
-			this.numericUpDownPilotLampLayer.Location = new System.Drawing.Point(136, 184);
-			this.numericUpDownPilotLampLayer.Name = "numericUpDownPilotLampLayer";
-			this.numericUpDownPilotLampLayer.Size = new System.Drawing.Size(48, 19);
-			this.numericUpDownPilotLampLayer.TabIndex = 34;
-			// 
-			// buttonPilotLampTransparentColorSet
-			// 
-			this.buttonPilotLampTransparentColorSet.Location = new System.Drawing.Point(248, 160);
-			this.buttonPilotLampTransparentColorSet.Name = "buttonPilotLampTransparentColorSet";
-			this.buttonPilotLampTransparentColorSet.Size = new System.Drawing.Size(48, 19);
-			this.buttonPilotLampTransparentColorSet.TabIndex = 49;
-			this.buttonPilotLampTransparentColorSet.Text = "Set...";
-			this.buttonPilotLampTransparentColorSet.UseVisualStyleBackColor = true;
-			this.buttonPilotLampTransparentColorSet.Click += new System.EventHandler(this.ButtonPilotLampTransparentColorSet_Click);
-			// 
-			// tabPageScreen
-			// 
-			this.tabPageScreen.Controls.Add(this.numericUpDownScreenLayer);
-			this.tabPageScreen.Controls.Add(this.numericUpDownScreenNumber);
-			this.tabPageScreen.Controls.Add(this.labelScreenLayer);
-			this.tabPageScreen.Controls.Add(this.labelScreenNumber);
-			this.tabPageScreen.Location = new System.Drawing.Point(4, 40);
-			this.tabPageScreen.Name = "tabPageScreen";
-			this.tabPageScreen.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPageScreen.Size = new System.Drawing.Size(312, 626);
-			this.tabPageScreen.TabIndex = 1;
-			this.tabPageScreen.Text = "Screen";
-			this.tabPageScreen.UseVisualStyleBackColor = true;
-			// 
-			// labelScreenNumber
-			// 
-			this.labelScreenNumber.Location = new System.Drawing.Point(8, 8);
-			this.labelScreenNumber.Name = "labelScreenNumber";
-			this.labelScreenNumber.Size = new System.Drawing.Size(120, 16);
-			this.labelScreenNumber.TabIndex = 26;
-			this.labelScreenNumber.Text = "Number:";
-			this.labelScreenNumber.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelScreenLayer
-			// 
-			this.labelScreenLayer.Location = new System.Drawing.Point(8, 32);
-			this.labelScreenLayer.Name = "labelScreenLayer";
-			this.labelScreenLayer.Size = new System.Drawing.Size(120, 16);
-			this.labelScreenLayer.TabIndex = 28;
-			this.labelScreenLayer.Text = "Layer:";
-			this.labelScreenLayer.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// numericUpDownScreenNumber
-			// 
-			this.numericUpDownScreenNumber.Location = new System.Drawing.Point(136, 8);
-			this.numericUpDownScreenNumber.Name = "numericUpDownScreenNumber";
-			this.numericUpDownScreenNumber.Size = new System.Drawing.Size(48, 19);
-			this.numericUpDownScreenNumber.TabIndex = 30;
-			// 
-			// numericUpDownScreenLayer
-			// 
-			this.numericUpDownScreenLayer.Location = new System.Drawing.Point(136, 32);
-			this.numericUpDownScreenLayer.Name = "numericUpDownScreenLayer";
-			this.numericUpDownScreenLayer.Size = new System.Drawing.Size(48, 19);
-			this.numericUpDownScreenLayer.TabIndex = 31;
-			// 
-			// tabPageThis
-			// 
-			this.tabPageThis.Controls.Add(this.buttonThisTransparentColorSet);
-			this.tabPageThis.Controls.Add(this.buttonThisNighttimeImageOpen);
-			this.tabPageThis.Controls.Add(this.buttonThisDaytimeImageOpen);
-			this.tabPageThis.Controls.Add(this.groupBoxThisOrigin);
-			this.tabPageThis.Controls.Add(this.groupBoxThisCenter);
-			this.tabPageThis.Controls.Add(this.textBoxThisTransparentColor);
-			this.tabPageThis.Controls.Add(this.textBoxThisNighttimeImage);
-			this.tabPageThis.Controls.Add(this.textBoxThisDaytimeImage);
-			this.tabPageThis.Controls.Add(this.textBoxThisBottom);
-			this.tabPageThis.Controls.Add(this.textBoxThisTop);
-			this.tabPageThis.Controls.Add(this.textBoxThisRight);
-			this.tabPageThis.Controls.Add(this.textBoxThisLeft);
-			this.tabPageThis.Controls.Add(this.textBoxThisResolution);
-			this.tabPageThis.Controls.Add(this.labelThisResolution);
-			this.tabPageThis.Controls.Add(this.labelThisLeft);
-			this.tabPageThis.Controls.Add(this.labelThisRight);
-			this.tabPageThis.Controls.Add(this.labelThisTop);
-			this.tabPageThis.Controls.Add(this.labelThisBottom);
-			this.tabPageThis.Controls.Add(this.labelThisDaytimeImage);
-			this.tabPageThis.Controls.Add(this.labelThisNighttimeImage);
-			this.tabPageThis.Controls.Add(this.labelThisTransparentColor);
-			this.tabPageThis.Location = new System.Drawing.Point(4, 40);
-			this.tabPageThis.Name = "tabPageThis";
-			this.tabPageThis.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPageThis.Size = new System.Drawing.Size(312, 626);
-			this.tabPageThis.TabIndex = 0;
-			this.tabPageThis.Text = "This";
-			this.tabPageThis.UseVisualStyleBackColor = true;
-			// 
-			// labelThisTransparentColor
-			// 
-			this.labelThisTransparentColor.Location = new System.Drawing.Point(8, 176);
-			this.labelThisTransparentColor.Name = "labelThisTransparentColor";
-			this.labelThisTransparentColor.Size = new System.Drawing.Size(120, 16);
-			this.labelThisTransparentColor.TabIndex = 2;
-			this.labelThisTransparentColor.Text = "TransparentColor:";
-			this.labelThisTransparentColor.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelThisNighttimeImage
-			// 
-			this.labelThisNighttimeImage.Location = new System.Drawing.Point(8, 152);
-			this.labelThisNighttimeImage.Name = "labelThisNighttimeImage";
-			this.labelThisNighttimeImage.Size = new System.Drawing.Size(120, 16);
-			this.labelThisNighttimeImage.TabIndex = 3;
-			this.labelThisNighttimeImage.Text = "NighttimeImage:";
-			this.labelThisNighttimeImage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelThisDaytimeImage
-			// 
-			this.labelThisDaytimeImage.Location = new System.Drawing.Point(8, 128);
-			this.labelThisDaytimeImage.Name = "labelThisDaytimeImage";
-			this.labelThisDaytimeImage.Size = new System.Drawing.Size(120, 16);
-			this.labelThisDaytimeImage.TabIndex = 4;
-			this.labelThisDaytimeImage.Text = "DaytimeImage:";
-			this.labelThisDaytimeImage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelThisBottom
-			// 
-			this.labelThisBottom.Location = new System.Drawing.Point(8, 104);
-			this.labelThisBottom.Name = "labelThisBottom";
-			this.labelThisBottom.Size = new System.Drawing.Size(120, 16);
-			this.labelThisBottom.TabIndex = 5;
-			this.labelThisBottom.Text = "Bottom:";
-			this.labelThisBottom.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelThisTop
-			// 
-			this.labelThisTop.Location = new System.Drawing.Point(8, 80);
-			this.labelThisTop.Name = "labelThisTop";
-			this.labelThisTop.Size = new System.Drawing.Size(120, 16);
-			this.labelThisTop.TabIndex = 6;
-			this.labelThisTop.Text = "Top:";
-			this.labelThisTop.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelThisRight
-			// 
-			this.labelThisRight.Location = new System.Drawing.Point(8, 56);
-			this.labelThisRight.Name = "labelThisRight";
-			this.labelThisRight.Size = new System.Drawing.Size(120, 16);
-			this.labelThisRight.TabIndex = 7;
-			this.labelThisRight.Text = "Right:";
-			this.labelThisRight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelThisLeft
-			// 
-			this.labelThisLeft.Location = new System.Drawing.Point(8, 32);
-			this.labelThisLeft.Name = "labelThisLeft";
-			this.labelThisLeft.Size = new System.Drawing.Size(120, 16);
-			this.labelThisLeft.TabIndex = 8;
-			this.labelThisLeft.Text = "Left:";
-			this.labelThisLeft.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelThisResolution
-			// 
-			this.labelThisResolution.Location = new System.Drawing.Point(8, 8);
-			this.labelThisResolution.Name = "labelThisResolution";
-			this.labelThisResolution.Size = new System.Drawing.Size(120, 16);
-			this.labelThisResolution.TabIndex = 9;
-			this.labelThisResolution.Text = "Resolution:";
-			this.labelThisResolution.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxThisResolution
-			// 
-			this.textBoxThisResolution.Location = new System.Drawing.Point(136, 8);
-			this.textBoxThisResolution.Name = "textBoxThisResolution";
-			this.textBoxThisResolution.Size = new System.Drawing.Size(48, 19);
-			this.textBoxThisResolution.TabIndex = 24;
-			// 
-			// textBoxThisLeft
-			// 
-			this.textBoxThisLeft.Location = new System.Drawing.Point(136, 32);
-			this.textBoxThisLeft.Name = "textBoxThisLeft";
-			this.textBoxThisLeft.Size = new System.Drawing.Size(48, 19);
-			this.textBoxThisLeft.TabIndex = 25;
-			// 
-			// textBoxThisRight
-			// 
-			this.textBoxThisRight.Location = new System.Drawing.Point(136, 56);
-			this.textBoxThisRight.Name = "textBoxThisRight";
-			this.textBoxThisRight.Size = new System.Drawing.Size(48, 19);
-			this.textBoxThisRight.TabIndex = 26;
-			// 
-			// textBoxThisTop
-			// 
-			this.textBoxThisTop.Location = new System.Drawing.Point(136, 80);
-			this.textBoxThisTop.Name = "textBoxThisTop";
-			this.textBoxThisTop.Size = new System.Drawing.Size(48, 19);
-			this.textBoxThisTop.TabIndex = 27;
-			// 
-			// textBoxThisBottom
-			// 
-			this.textBoxThisBottom.Location = new System.Drawing.Point(136, 104);
-			this.textBoxThisBottom.Name = "textBoxThisBottom";
-			this.textBoxThisBottom.Size = new System.Drawing.Size(48, 19);
-			this.textBoxThisBottom.TabIndex = 28;
-			// 
-			// textBoxThisDaytimeImage
-			// 
-			this.textBoxThisDaytimeImage.Location = new System.Drawing.Point(136, 128);
-			this.textBoxThisDaytimeImage.Name = "textBoxThisDaytimeImage";
-			this.textBoxThisDaytimeImage.Size = new System.Drawing.Size(104, 19);
-			this.textBoxThisDaytimeImage.TabIndex = 29;
-			// 
-			// textBoxThisNighttimeImage
-			// 
-			this.textBoxThisNighttimeImage.Location = new System.Drawing.Point(136, 152);
-			this.textBoxThisNighttimeImage.Name = "textBoxThisNighttimeImage";
-			this.textBoxThisNighttimeImage.Size = new System.Drawing.Size(104, 19);
-			this.textBoxThisNighttimeImage.TabIndex = 30;
-			// 
-			// textBoxThisTransparentColor
-			// 
-			this.textBoxThisTransparentColor.Location = new System.Drawing.Point(136, 176);
-			this.textBoxThisTransparentColor.Name = "textBoxThisTransparentColor";
-			this.textBoxThisTransparentColor.Size = new System.Drawing.Size(104, 19);
-			this.textBoxThisTransparentColor.TabIndex = 31;
-			// 
-			// groupBoxThisCenter
-			// 
-			this.groupBoxThisCenter.Controls.Add(this.textBoxThisCenterY);
-			this.groupBoxThisCenter.Controls.Add(this.textBoxThisCenterX);
-			this.groupBoxThisCenter.Controls.Add(this.labelThisCenterY);
-			this.groupBoxThisCenter.Controls.Add(this.labelThisCenterX);
-			this.groupBoxThisCenter.Location = new System.Drawing.Point(8, 200);
-			this.groupBoxThisCenter.Name = "groupBoxThisCenter";
-			this.groupBoxThisCenter.Size = new System.Drawing.Size(184, 72);
-			this.groupBoxThisCenter.TabIndex = 32;
-			this.groupBoxThisCenter.TabStop = false;
-			this.groupBoxThisCenter.Text = "Center";
-			// 
-			// labelThisCenterX
-			// 
-			this.labelThisCenterX.Location = new System.Drawing.Point(8, 16);
-			this.labelThisCenterX.Name = "labelThisCenterX";
-			this.labelThisCenterX.Size = new System.Drawing.Size(112, 16);
-			this.labelThisCenterX.TabIndex = 9;
-			this.labelThisCenterX.Text = "X:";
-			this.labelThisCenterX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelThisCenterY
-			// 
-			this.labelThisCenterY.Location = new System.Drawing.Point(8, 40);
-			this.labelThisCenterY.Name = "labelThisCenterY";
-			this.labelThisCenterY.Size = new System.Drawing.Size(112, 16);
-			this.labelThisCenterY.TabIndex = 10;
-			this.labelThisCenterY.Text = "Y:";
-			this.labelThisCenterY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxThisCenterX
-			// 
-			this.textBoxThisCenterX.Location = new System.Drawing.Point(128, 16);
-			this.textBoxThisCenterX.Name = "textBoxThisCenterX";
-			this.textBoxThisCenterX.Size = new System.Drawing.Size(48, 19);
-			this.textBoxThisCenterX.TabIndex = 32;
-			// 
-			// textBoxThisCenterY
-			// 
-			this.textBoxThisCenterY.Location = new System.Drawing.Point(128, 40);
-			this.textBoxThisCenterY.Name = "textBoxThisCenterY";
-			this.textBoxThisCenterY.Size = new System.Drawing.Size(48, 19);
-			this.textBoxThisCenterY.TabIndex = 33;
-			// 
-			// groupBoxThisOrigin
-			// 
-			this.groupBoxThisOrigin.Controls.Add(this.textBoxThisOriginY);
-			this.groupBoxThisOrigin.Controls.Add(this.textBoxThisOriginX);
-			this.groupBoxThisOrigin.Controls.Add(this.labelThisOriginY);
-			this.groupBoxThisOrigin.Controls.Add(this.labelThisOriginX);
-			this.groupBoxThisOrigin.Location = new System.Drawing.Point(8, 280);
-			this.groupBoxThisOrigin.Name = "groupBoxThisOrigin";
-			this.groupBoxThisOrigin.Size = new System.Drawing.Size(184, 72);
-			this.groupBoxThisOrigin.TabIndex = 33;
-			this.groupBoxThisOrigin.TabStop = false;
-			this.groupBoxThisOrigin.Text = "Origin";
-			// 
-			// labelThisOriginX
-			// 
-			this.labelThisOriginX.Location = new System.Drawing.Point(8, 16);
-			this.labelThisOriginX.Name = "labelThisOriginX";
-			this.labelThisOriginX.Size = new System.Drawing.Size(112, 16);
-			this.labelThisOriginX.TabIndex = 9;
-			this.labelThisOriginX.Text = "X:";
-			this.labelThisOriginX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelThisOriginY
-			// 
-			this.labelThisOriginY.Location = new System.Drawing.Point(8, 40);
-			this.labelThisOriginY.Name = "labelThisOriginY";
-			this.labelThisOriginY.Size = new System.Drawing.Size(112, 16);
-			this.labelThisOriginY.TabIndex = 10;
-			this.labelThisOriginY.Text = "Y:";
-			this.labelThisOriginY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxThisOriginX
-			// 
-			this.textBoxThisOriginX.Location = new System.Drawing.Point(128, 16);
-			this.textBoxThisOriginX.Name = "textBoxThisOriginX";
-			this.textBoxThisOriginX.Size = new System.Drawing.Size(48, 19);
-			this.textBoxThisOriginX.TabIndex = 32;
-			// 
-			// textBoxThisOriginY
-			// 
-			this.textBoxThisOriginY.Location = new System.Drawing.Point(128, 40);
-			this.textBoxThisOriginY.Name = "textBoxThisOriginY";
-			this.textBoxThisOriginY.Size = new System.Drawing.Size(48, 19);
-			this.textBoxThisOriginY.TabIndex = 33;
-			// 
-			// buttonThisDaytimeImageOpen
-			// 
-			this.buttonThisDaytimeImageOpen.Location = new System.Drawing.Point(248, 128);
-			this.buttonThisDaytimeImageOpen.Name = "buttonThisDaytimeImageOpen";
-			this.buttonThisDaytimeImageOpen.Size = new System.Drawing.Size(48, 19);
-			this.buttonThisDaytimeImageOpen.TabIndex = 34;
-			this.buttonThisDaytimeImageOpen.Text = "Open...";
-			this.buttonThisDaytimeImageOpen.UseVisualStyleBackColor = true;
-			this.buttonThisDaytimeImageOpen.Click += new System.EventHandler(this.ButtonThisDaytimeImageOpen_Click);
-			// 
-			// buttonThisNighttimeImageOpen
-			// 
-			this.buttonThisNighttimeImageOpen.Location = new System.Drawing.Point(248, 152);
-			this.buttonThisNighttimeImageOpen.Name = "buttonThisNighttimeImageOpen";
-			this.buttonThisNighttimeImageOpen.Size = new System.Drawing.Size(48, 19);
-			this.buttonThisNighttimeImageOpen.TabIndex = 35;
-			this.buttonThisNighttimeImageOpen.Text = "Open...";
-			this.buttonThisNighttimeImageOpen.UseVisualStyleBackColor = true;
-			this.buttonThisNighttimeImageOpen.Click += new System.EventHandler(this.ButtonThisNighttimeImageOpen_Click);
-			// 
-			// buttonThisTransparentColorSet
-			// 
-			this.buttonThisTransparentColorSet.Location = new System.Drawing.Point(248, 176);
-			this.buttonThisTransparentColorSet.Name = "buttonThisTransparentColorSet";
-			this.buttonThisTransparentColorSet.Size = new System.Drawing.Size(48, 19);
-			this.buttonThisTransparentColorSet.TabIndex = 36;
-			this.buttonThisTransparentColorSet.Text = "Set...";
-			this.buttonThisTransparentColorSet.UseVisualStyleBackColor = true;
-			this.buttonThisTransparentColorSet.Click += new System.EventHandler(this.ButtonThisTransparentColorSet_Click);
-			// 
-			// splitContainerPanel
-			// 
-			this.splitContainerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.splitContainerPanel.Location = new System.Drawing.Point(0, 0);
-			this.splitContainerPanel.Name = "splitContainerPanel";
-			// 
-			// splitContainerPanel.Panel1
-			// 
-			this.splitContainerPanel.Panel1.Controls.Add(this.treeViewPanel);
-			// 
-			// splitContainerPanel.Panel2
-			// 
-			this.splitContainerPanel.Panel2.Controls.Add(this.listViewPanel);
-			this.splitContainerPanel.Panel2.Controls.Add(this.panelPanelNavi);
-			this.splitContainerPanel.Size = new System.Drawing.Size(472, 670);
-			this.splitContainerPanel.SplitterDistance = 157;
-			this.splitContainerPanel.TabIndex = 1;
-			// 
-			// panelPanelNavi
-			// 
-			this.panelPanelNavi.Controls.Add(this.panelPanelNaviCmd);
-			this.panelPanelNavi.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.panelPanelNavi.Location = new System.Drawing.Point(0, 598);
-			this.panelPanelNavi.Name = "panelPanelNavi";
-			this.panelPanelNavi.Size = new System.Drawing.Size(311, 72);
-			this.panelPanelNavi.TabIndex = 0;
-			// 
-			// panelPanelNaviCmd
-			// 
-			this.panelPanelNaviCmd.Controls.Add(this.buttonPanelCopy);
-			this.panelPanelNaviCmd.Controls.Add(this.buttonPanelAdd);
-			this.panelPanelNaviCmd.Controls.Add(this.buttonPanelRemove);
-			this.panelPanelNaviCmd.Dock = System.Windows.Forms.DockStyle.Right;
-			this.panelPanelNaviCmd.Location = new System.Drawing.Point(176, 0);
-			this.panelPanelNaviCmd.Name = "panelPanelNaviCmd";
-			this.panelPanelNaviCmd.Size = new System.Drawing.Size(135, 72);
-			this.panelPanelNaviCmd.TabIndex = 7;
-			// 
-			// buttonPanelRemove
-			// 
-			this.buttonPanelRemove.Location = new System.Drawing.Point(72, 8);
-			this.buttonPanelRemove.Name = "buttonPanelRemove";
-			this.buttonPanelRemove.Size = new System.Drawing.Size(56, 24);
-			this.buttonPanelRemove.TabIndex = 2;
-			this.buttonPanelRemove.Text = "Remove";
-			this.buttonPanelRemove.UseVisualStyleBackColor = true;
-			// 
-			// buttonPanelAdd
-			// 
-			this.buttonPanelAdd.Location = new System.Drawing.Point(8, 8);
-			this.buttonPanelAdd.Name = "buttonPanelAdd";
-			this.buttonPanelAdd.Size = new System.Drawing.Size(56, 24);
-			this.buttonPanelAdd.TabIndex = 4;
-			this.buttonPanelAdd.Text = "Add";
-			this.buttonPanelAdd.UseVisualStyleBackColor = true;
-			// 
-			// buttonPanelCopy
-			// 
-			this.buttonPanelCopy.Location = new System.Drawing.Point(8, 40);
-			this.buttonPanelCopy.Name = "buttonPanelCopy";
-			this.buttonPanelCopy.Size = new System.Drawing.Size(56, 24);
-			this.buttonPanelCopy.TabIndex = 6;
-			this.buttonPanelCopy.Text = "Copy";
-			this.buttonPanelCopy.UseVisualStyleBackColor = true;
-			// 
-			// listViewPanel
-			// 
-			this.listViewPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.listViewPanel.FullRowSelect = true;
-			this.listViewPanel.HideSelection = false;
-			this.listViewPanel.Location = new System.Drawing.Point(0, 0);
-			this.listViewPanel.MultiSelect = false;
-			this.listViewPanel.Name = "listViewPanel";
-			this.listViewPanel.Size = new System.Drawing.Size(311, 598);
-			this.listViewPanel.TabIndex = 1;
-			this.listViewPanel.UseCompatibleStateImageBehavior = false;
-			this.listViewPanel.View = System.Windows.Forms.View.Details;
-			// 
-			// treeViewPanel
-			// 
-			this.treeViewPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.treeViewPanel.HideSelection = false;
-			this.treeViewPanel.Location = new System.Drawing.Point(0, 0);
-			this.treeViewPanel.Name = "treeViewPanel";
-			this.treeViewPanel.Size = new System.Drawing.Size(157, 670);
-			this.treeViewPanel.TabIndex = 0;
+			// labelNeedleOriginX
+			// 
+			this.labelNeedleOriginX.Location = new System.Drawing.Point(8, 16);
+			this.labelNeedleOriginX.Name = "labelNeedleOriginX";
+			this.labelNeedleOriginX.Size = new System.Drawing.Size(112, 16);
+			this.labelNeedleOriginX.TabIndex = 9;
+			this.labelNeedleOriginX.Text = "X:";
+			this.labelNeedleOriginX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxNeedleColor
+			// 
+			this.textBoxNeedleColor.Location = new System.Drawing.Point(136, 208);
+			this.textBoxNeedleColor.Name = "textBoxNeedleColor";
+			this.textBoxNeedleColor.Size = new System.Drawing.Size(104, 19);
+			this.textBoxNeedleColor.TabIndex = 65;
+			// 
+			// labelNeedleColor
+			// 
+			this.labelNeedleColor.Location = new System.Drawing.Point(8, 208);
+			this.labelNeedleColor.Name = "labelNeedleColor";
+			this.labelNeedleColor.Size = new System.Drawing.Size(120, 16);
+			this.labelNeedleColor.TabIndex = 64;
+			this.labelNeedleColor.Text = "Color:";
+			this.labelNeedleColor.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxNeedleRadius
+			// 
+			this.textBoxNeedleRadius.Location = new System.Drawing.Point(136, 136);
+			this.textBoxNeedleRadius.Name = "textBoxNeedleRadius";
+			this.textBoxNeedleRadius.Size = new System.Drawing.Size(48, 19);
+			this.textBoxNeedleRadius.TabIndex = 63;
+			// 
+			// labelNeedleRadius
+			// 
+			this.labelNeedleRadius.Location = new System.Drawing.Point(8, 136);
+			this.labelNeedleRadius.Name = "labelNeedleRadius";
+			this.labelNeedleRadius.Size = new System.Drawing.Size(120, 16);
+			this.labelNeedleRadius.TabIndex = 62;
+			this.labelNeedleRadius.Text = "Radius:";
+			this.labelNeedleRadius.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// groupBoxNeedleLocation
+			// 
+			this.groupBoxNeedleLocation.Controls.Add(this.textBoxNeedleLocationY);
+			this.groupBoxNeedleLocation.Controls.Add(this.textBoxNeedleLocationX);
+			this.groupBoxNeedleLocation.Controls.Add(this.labelNeedleLocationY);
+			this.groupBoxNeedleLocation.Controls.Add(this.labelNeedleLocationX);
+			this.groupBoxNeedleLocation.Location = new System.Drawing.Point(8, 32);
+			this.groupBoxNeedleLocation.Name = "groupBoxNeedleLocation";
+			this.groupBoxNeedleLocation.Size = new System.Drawing.Size(184, 72);
+			this.groupBoxNeedleLocation.TabIndex = 61;
+			this.groupBoxNeedleLocation.TabStop = false;
+			this.groupBoxNeedleLocation.Text = "Location";
+			// 
+			// textBoxNeedleLocationY
+			// 
+			this.textBoxNeedleLocationY.Location = new System.Drawing.Point(128, 40);
+			this.textBoxNeedleLocationY.Name = "textBoxNeedleLocationY";
+			this.textBoxNeedleLocationY.Size = new System.Drawing.Size(48, 19);
+			this.textBoxNeedleLocationY.TabIndex = 33;
+			// 
+			// textBoxNeedleLocationX
+			// 
+			this.textBoxNeedleLocationX.Location = new System.Drawing.Point(128, 16);
+			this.textBoxNeedleLocationX.Name = "textBoxNeedleLocationX";
+			this.textBoxNeedleLocationX.Size = new System.Drawing.Size(48, 19);
+			this.textBoxNeedleLocationX.TabIndex = 32;
+			// 
+			// labelNeedleLocationY
+			// 
+			this.labelNeedleLocationY.Location = new System.Drawing.Point(8, 40);
+			this.labelNeedleLocationY.Name = "labelNeedleLocationY";
+			this.labelNeedleLocationY.Size = new System.Drawing.Size(112, 16);
+			this.labelNeedleLocationY.TabIndex = 10;
+			this.labelNeedleLocationY.Text = "Y:";
+			this.labelNeedleLocationY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelNeedleLocationX
+			// 
+			this.labelNeedleLocationX.Location = new System.Drawing.Point(8, 16);
+			this.labelNeedleLocationX.Name = "labelNeedleLocationX";
+			this.labelNeedleLocationX.Size = new System.Drawing.Size(112, 16);
+			this.labelNeedleLocationX.TabIndex = 9;
+			this.labelNeedleLocationX.Text = "X:";
+			this.labelNeedleLocationX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// buttonNeedleSubjectSet
+			// 
+			this.buttonNeedleSubjectSet.Location = new System.Drawing.Point(136, 8);
+			this.buttonNeedleSubjectSet.Name = "buttonNeedleSubjectSet";
+			this.buttonNeedleSubjectSet.Size = new System.Drawing.Size(48, 19);
+			this.buttonNeedleSubjectSet.TabIndex = 60;
+			this.buttonNeedleSubjectSet.Text = "Set...";
+			this.buttonNeedleSubjectSet.UseVisualStyleBackColor = true;
+			this.buttonNeedleSubjectSet.Click += new System.EventHandler(this.ButtonNeedleSubjectSet_Click);
+			// 
+			// labelNeedleSubject
+			// 
+			this.labelNeedleSubject.Location = new System.Drawing.Point(8, 8);
+			this.labelNeedleSubject.Name = "labelNeedleSubject";
+			this.labelNeedleSubject.Size = new System.Drawing.Size(120, 16);
+			this.labelNeedleSubject.TabIndex = 59;
+			this.labelNeedleSubject.Text = "Subject:";
+			this.labelNeedleSubject.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelNeedleLayer
+			// 
+			this.labelNeedleLayer.Location = new System.Drawing.Point(8, 600);
+			this.labelNeedleLayer.Name = "labelNeedleLayer";
+			this.labelNeedleLayer.Size = new System.Drawing.Size(120, 16);
+			this.labelNeedleLayer.TabIndex = 57;
+			this.labelNeedleLayer.Text = "Layer:";
+			this.labelNeedleLayer.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// buttonNeedleNighttimeImageOpen
+			// 
+			this.buttonNeedleNighttimeImageOpen.Location = new System.Drawing.Point(248, 184);
+			this.buttonNeedleNighttimeImageOpen.Name = "buttonNeedleNighttimeImageOpen";
+			this.buttonNeedleNighttimeImageOpen.Size = new System.Drawing.Size(48, 19);
+			this.buttonNeedleNighttimeImageOpen.TabIndex = 56;
+			this.buttonNeedleNighttimeImageOpen.Text = "Open...";
+			this.buttonNeedleNighttimeImageOpen.UseVisualStyleBackColor = true;
+			this.buttonNeedleNighttimeImageOpen.Click += new System.EventHandler(this.ButtonNeedleNighttimeImageOpen_Click);
+			// 
+			// buttonNeedleDaytimeImageOpen
+			// 
+			this.buttonNeedleDaytimeImageOpen.Location = new System.Drawing.Point(248, 160);
+			this.buttonNeedleDaytimeImageOpen.Name = "buttonNeedleDaytimeImageOpen";
+			this.buttonNeedleDaytimeImageOpen.Size = new System.Drawing.Size(48, 19);
+			this.buttonNeedleDaytimeImageOpen.TabIndex = 55;
+			this.buttonNeedleDaytimeImageOpen.Text = "Open...";
+			this.buttonNeedleDaytimeImageOpen.UseVisualStyleBackColor = true;
+			this.buttonNeedleDaytimeImageOpen.Click += new System.EventHandler(this.ButtonNeedleDaytimeImageOpen_Click);
+			// 
+			// textBoxNeedleTransparentColor
+			// 
+			this.textBoxNeedleTransparentColor.Location = new System.Drawing.Point(136, 232);
+			this.textBoxNeedleTransparentColor.Name = "textBoxNeedleTransparentColor";
+			this.textBoxNeedleTransparentColor.Size = new System.Drawing.Size(104, 19);
+			this.textBoxNeedleTransparentColor.TabIndex = 54;
+			// 
+			// textBoxNeedleNighttimeImage
+			// 
+			this.textBoxNeedleNighttimeImage.Location = new System.Drawing.Point(136, 184);
+			this.textBoxNeedleNighttimeImage.Name = "textBoxNeedleNighttimeImage";
+			this.textBoxNeedleNighttimeImage.Size = new System.Drawing.Size(104, 19);
+			this.textBoxNeedleNighttimeImage.TabIndex = 53;
+			// 
+			// textBoxNeedleDaytimeImage
+			// 
+			this.textBoxNeedleDaytimeImage.Location = new System.Drawing.Point(136, 160);
+			this.textBoxNeedleDaytimeImage.Name = "textBoxNeedleDaytimeImage";
+			this.textBoxNeedleDaytimeImage.Size = new System.Drawing.Size(104, 19);
+			this.textBoxNeedleDaytimeImage.TabIndex = 52;
+			// 
+			// labelNeedleDaytimeImage
+			// 
+			this.labelNeedleDaytimeImage.Location = new System.Drawing.Point(8, 160);
+			this.labelNeedleDaytimeImage.Name = "labelNeedleDaytimeImage";
+			this.labelNeedleDaytimeImage.Size = new System.Drawing.Size(120, 16);
+			this.labelNeedleDaytimeImage.TabIndex = 51;
+			this.labelNeedleDaytimeImage.Text = "DaytimeImage:";
+			this.labelNeedleDaytimeImage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelNeedleNighttimeImage
+			// 
+			this.labelNeedleNighttimeImage.Location = new System.Drawing.Point(8, 184);
+			this.labelNeedleNighttimeImage.Name = "labelNeedleNighttimeImage";
+			this.labelNeedleNighttimeImage.Size = new System.Drawing.Size(120, 16);
+			this.labelNeedleNighttimeImage.TabIndex = 50;
+			this.labelNeedleNighttimeImage.Text = "NighttimeImage:";
+			this.labelNeedleNighttimeImage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelNeedleTransparentColor
+			// 
+			this.labelNeedleTransparentColor.Location = new System.Drawing.Point(8, 232);
+			this.labelNeedleTransparentColor.Name = "labelNeedleTransparentColor";
+			this.labelNeedleTransparentColor.Size = new System.Drawing.Size(120, 16);
+			this.labelNeedleTransparentColor.TabIndex = 49;
+			this.labelNeedleTransparentColor.Text = "TransparentColor:";
+			this.labelNeedleTransparentColor.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// tabPageDigitalNumber
+			// 
+			this.tabPageDigitalNumber.Controls.Add(this.buttonDigitalNumberTransparentColorSet);
+			this.tabPageDigitalNumber.Controls.Add(this.numericUpDownDigitalNumberLayer);
+			this.tabPageDigitalNumber.Controls.Add(this.numericUpDownDigitalNumberInterval);
+			this.tabPageDigitalNumber.Controls.Add(this.labelDigitalNumberInterval);
+			this.tabPageDigitalNumber.Controls.Add(this.groupBoxDigitalNumberLocation);
+			this.tabPageDigitalNumber.Controls.Add(this.buttonDigitalNumberSubjectSet);
+			this.tabPageDigitalNumber.Controls.Add(this.labelDigitalNumberSubject);
+			this.tabPageDigitalNumber.Controls.Add(this.labelDigitalNumberLayer);
+			this.tabPageDigitalNumber.Controls.Add(this.buttonDigitalNumberNighttimeImageOpen);
+			this.tabPageDigitalNumber.Controls.Add(this.buttonDigitalNumberDaytimeImageOpen);
+			this.tabPageDigitalNumber.Controls.Add(this.textBoxDigitalNumberTransparentColor);
+			this.tabPageDigitalNumber.Controls.Add(this.textBoxDigitalNumberNighttimeImage);
+			this.tabPageDigitalNumber.Controls.Add(this.textBoxDigitalNumberDaytimeImage);
+			this.tabPageDigitalNumber.Controls.Add(this.labelDigitalNumberDaytimeImage);
+			this.tabPageDigitalNumber.Controls.Add(this.labelDigitalNumberNighttimeImage);
+			this.tabPageDigitalNumber.Controls.Add(this.labelDigitalNumberTransparentColor);
+			this.tabPageDigitalNumber.Location = new System.Drawing.Point(4, 40);
+			this.tabPageDigitalNumber.Name = "tabPageDigitalNumber";
+			this.tabPageDigitalNumber.Size = new System.Drawing.Size(312, 626);
+			this.tabPageDigitalNumber.TabIndex = 4;
+			this.tabPageDigitalNumber.Text = "DigitalNumber";
+			this.tabPageDigitalNumber.UseVisualStyleBackColor = true;
+			// 
+			// buttonDigitalNumberTransparentColorSet
+			// 
+			this.buttonDigitalNumberTransparentColorSet.Location = new System.Drawing.Point(248, 160);
+			this.buttonDigitalNumberTransparentColorSet.Name = "buttonDigitalNumberTransparentColorSet";
+			this.buttonDigitalNumberTransparentColorSet.Size = new System.Drawing.Size(48, 19);
+			this.buttonDigitalNumberTransparentColorSet.TabIndex = 86;
+			this.buttonDigitalNumberTransparentColorSet.Text = "Set...";
+			this.buttonDigitalNumberTransparentColorSet.UseVisualStyleBackColor = true;
+			this.buttonDigitalNumberTransparentColorSet.Click += new System.EventHandler(this.ButtonDigitalNumberTransparentColorSet_Click);
+			// 
+			// numericUpDownDigitalNumberLayer
+			// 
+			this.numericUpDownDigitalNumberLayer.Location = new System.Drawing.Point(136, 208);
+			this.numericUpDownDigitalNumberLayer.Name = "numericUpDownDigitalNumberLayer";
+			this.numericUpDownDigitalNumberLayer.Size = new System.Drawing.Size(48, 19);
+			this.numericUpDownDigitalNumberLayer.TabIndex = 85;
+			// 
+			// numericUpDownDigitalNumberInterval
+			// 
+			this.numericUpDownDigitalNumberInterval.Location = new System.Drawing.Point(136, 184);
+			this.numericUpDownDigitalNumberInterval.Name = "numericUpDownDigitalNumberInterval";
+			this.numericUpDownDigitalNumberInterval.Size = new System.Drawing.Size(48, 19);
+			this.numericUpDownDigitalNumberInterval.TabIndex = 84;
+			// 
+			// labelDigitalNumberInterval
+			// 
+			this.labelDigitalNumberInterval.Location = new System.Drawing.Point(8, 184);
+			this.labelDigitalNumberInterval.Name = "labelDigitalNumberInterval";
+			this.labelDigitalNumberInterval.Size = new System.Drawing.Size(120, 16);
+			this.labelDigitalNumberInterval.TabIndex = 62;
+			this.labelDigitalNumberInterval.Text = "Interval:";
+			this.labelDigitalNumberInterval.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// groupBoxDigitalNumberLocation
+			// 
+			this.groupBoxDigitalNumberLocation.Controls.Add(this.textBoxDigitalNumberLocationY);
+			this.groupBoxDigitalNumberLocation.Controls.Add(this.textBoxDigitalNumberLocationX);
+			this.groupBoxDigitalNumberLocation.Controls.Add(this.labelDigitalNumberLocationY);
+			this.groupBoxDigitalNumberLocation.Controls.Add(this.labelDigitalNumberLocationX);
+			this.groupBoxDigitalNumberLocation.Location = new System.Drawing.Point(8, 32);
+			this.groupBoxDigitalNumberLocation.Name = "groupBoxDigitalNumberLocation";
+			this.groupBoxDigitalNumberLocation.Size = new System.Drawing.Size(184, 72);
+			this.groupBoxDigitalNumberLocation.TabIndex = 61;
+			this.groupBoxDigitalNumberLocation.TabStop = false;
+			this.groupBoxDigitalNumberLocation.Text = "Location";
+			// 
+			// textBoxDigitalNumberLocationY
+			// 
+			this.textBoxDigitalNumberLocationY.Location = new System.Drawing.Point(128, 40);
+			this.textBoxDigitalNumberLocationY.Name = "textBoxDigitalNumberLocationY";
+			this.textBoxDigitalNumberLocationY.Size = new System.Drawing.Size(48, 19);
+			this.textBoxDigitalNumberLocationY.TabIndex = 33;
+			// 
+			// textBoxDigitalNumberLocationX
+			// 
+			this.textBoxDigitalNumberLocationX.Location = new System.Drawing.Point(128, 16);
+			this.textBoxDigitalNumberLocationX.Name = "textBoxDigitalNumberLocationX";
+			this.textBoxDigitalNumberLocationX.Size = new System.Drawing.Size(48, 19);
+			this.textBoxDigitalNumberLocationX.TabIndex = 32;
+			// 
+			// labelDigitalNumberLocationY
+			// 
+			this.labelDigitalNumberLocationY.Location = new System.Drawing.Point(8, 40);
+			this.labelDigitalNumberLocationY.Name = "labelDigitalNumberLocationY";
+			this.labelDigitalNumberLocationY.Size = new System.Drawing.Size(112, 16);
+			this.labelDigitalNumberLocationY.TabIndex = 10;
+			this.labelDigitalNumberLocationY.Text = "Y:";
+			this.labelDigitalNumberLocationY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelDigitalNumberLocationX
+			// 
+			this.labelDigitalNumberLocationX.Location = new System.Drawing.Point(8, 16);
+			this.labelDigitalNumberLocationX.Name = "labelDigitalNumberLocationX";
+			this.labelDigitalNumberLocationX.Size = new System.Drawing.Size(112, 16);
+			this.labelDigitalNumberLocationX.TabIndex = 9;
+			this.labelDigitalNumberLocationX.Text = "X:";
+			this.labelDigitalNumberLocationX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// buttonDigitalNumberSubjectSet
+			// 
+			this.buttonDigitalNumberSubjectSet.Location = new System.Drawing.Point(136, 8);
+			this.buttonDigitalNumberSubjectSet.Name = "buttonDigitalNumberSubjectSet";
+			this.buttonDigitalNumberSubjectSet.Size = new System.Drawing.Size(48, 19);
+			this.buttonDigitalNumberSubjectSet.TabIndex = 60;
+			this.buttonDigitalNumberSubjectSet.Text = "Set...";
+			this.buttonDigitalNumberSubjectSet.UseVisualStyleBackColor = true;
+			this.buttonDigitalNumberSubjectSet.Click += new System.EventHandler(this.ButtonDigitalNumberSubjectSet_Click);
+			// 
+			// labelDigitalNumberSubject
+			// 
+			this.labelDigitalNumberSubject.Location = new System.Drawing.Point(8, 8);
+			this.labelDigitalNumberSubject.Name = "labelDigitalNumberSubject";
+			this.labelDigitalNumberSubject.Size = new System.Drawing.Size(120, 16);
+			this.labelDigitalNumberSubject.TabIndex = 59;
+			this.labelDigitalNumberSubject.Text = "Subject:";
+			this.labelDigitalNumberSubject.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelDigitalNumberLayer
+			// 
+			this.labelDigitalNumberLayer.Location = new System.Drawing.Point(8, 208);
+			this.labelDigitalNumberLayer.Name = "labelDigitalNumberLayer";
+			this.labelDigitalNumberLayer.Size = new System.Drawing.Size(120, 16);
+			this.labelDigitalNumberLayer.TabIndex = 57;
+			this.labelDigitalNumberLayer.Text = "Layer:";
+			this.labelDigitalNumberLayer.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// buttonDigitalNumberNighttimeImageOpen
+			// 
+			this.buttonDigitalNumberNighttimeImageOpen.Location = new System.Drawing.Point(248, 136);
+			this.buttonDigitalNumberNighttimeImageOpen.Name = "buttonDigitalNumberNighttimeImageOpen";
+			this.buttonDigitalNumberNighttimeImageOpen.Size = new System.Drawing.Size(48, 19);
+			this.buttonDigitalNumberNighttimeImageOpen.TabIndex = 56;
+			this.buttonDigitalNumberNighttimeImageOpen.Text = "Open...";
+			this.buttonDigitalNumberNighttimeImageOpen.UseVisualStyleBackColor = true;
+			this.buttonDigitalNumberNighttimeImageOpen.Click += new System.EventHandler(this.ButtonDigitalNumberNighttimeImageOpen_Click);
+			// 
+			// buttonDigitalNumberDaytimeImageOpen
+			// 
+			this.buttonDigitalNumberDaytimeImageOpen.Location = new System.Drawing.Point(248, 112);
+			this.buttonDigitalNumberDaytimeImageOpen.Name = "buttonDigitalNumberDaytimeImageOpen";
+			this.buttonDigitalNumberDaytimeImageOpen.Size = new System.Drawing.Size(48, 19);
+			this.buttonDigitalNumberDaytimeImageOpen.TabIndex = 55;
+			this.buttonDigitalNumberDaytimeImageOpen.Text = "Open...";
+			this.buttonDigitalNumberDaytimeImageOpen.UseVisualStyleBackColor = true;
+			this.buttonDigitalNumberDaytimeImageOpen.Click += new System.EventHandler(this.ButtonDigitalNumberDaytimeImageOpen_Click);
+			// 
+			// textBoxDigitalNumberTransparentColor
+			// 
+			this.textBoxDigitalNumberTransparentColor.Location = new System.Drawing.Point(136, 160);
+			this.textBoxDigitalNumberTransparentColor.Name = "textBoxDigitalNumberTransparentColor";
+			this.textBoxDigitalNumberTransparentColor.Size = new System.Drawing.Size(104, 19);
+			this.textBoxDigitalNumberTransparentColor.TabIndex = 54;
+			// 
+			// textBoxDigitalNumberNighttimeImage
+			// 
+			this.textBoxDigitalNumberNighttimeImage.Location = new System.Drawing.Point(136, 136);
+			this.textBoxDigitalNumberNighttimeImage.Name = "textBoxDigitalNumberNighttimeImage";
+			this.textBoxDigitalNumberNighttimeImage.Size = new System.Drawing.Size(104, 19);
+			this.textBoxDigitalNumberNighttimeImage.TabIndex = 53;
+			// 
+			// textBoxDigitalNumberDaytimeImage
+			// 
+			this.textBoxDigitalNumberDaytimeImage.Location = new System.Drawing.Point(136, 112);
+			this.textBoxDigitalNumberDaytimeImage.Name = "textBoxDigitalNumberDaytimeImage";
+			this.textBoxDigitalNumberDaytimeImage.Size = new System.Drawing.Size(104, 19);
+			this.textBoxDigitalNumberDaytimeImage.TabIndex = 52;
+			// 
+			// labelDigitalNumberDaytimeImage
+			// 
+			this.labelDigitalNumberDaytimeImage.Location = new System.Drawing.Point(8, 112);
+			this.labelDigitalNumberDaytimeImage.Name = "labelDigitalNumberDaytimeImage";
+			this.labelDigitalNumberDaytimeImage.Size = new System.Drawing.Size(120, 16);
+			this.labelDigitalNumberDaytimeImage.TabIndex = 51;
+			this.labelDigitalNumberDaytimeImage.Text = "DaytimeImage:";
+			this.labelDigitalNumberDaytimeImage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelDigitalNumberNighttimeImage
+			// 
+			this.labelDigitalNumberNighttimeImage.Location = new System.Drawing.Point(8, 136);
+			this.labelDigitalNumberNighttimeImage.Name = "labelDigitalNumberNighttimeImage";
+			this.labelDigitalNumberNighttimeImage.Size = new System.Drawing.Size(120, 16);
+			this.labelDigitalNumberNighttimeImage.TabIndex = 50;
+			this.labelDigitalNumberNighttimeImage.Text = "NighttimeImage:";
+			this.labelDigitalNumberNighttimeImage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelDigitalNumberTransparentColor
+			// 
+			this.labelDigitalNumberTransparentColor.Location = new System.Drawing.Point(8, 160);
+			this.labelDigitalNumberTransparentColor.Name = "labelDigitalNumberTransparentColor";
+			this.labelDigitalNumberTransparentColor.Size = new System.Drawing.Size(120, 16);
+			this.labelDigitalNumberTransparentColor.TabIndex = 49;
+			this.labelDigitalNumberTransparentColor.Text = "TransparentColor:";
+			this.labelDigitalNumberTransparentColor.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// tabPageDigitalGauge
+			// 
+			this.tabPageDigitalGauge.Controls.Add(this.buttonDigitalGaugeColorSet);
+			this.tabPageDigitalGauge.Controls.Add(this.numericUpDownDigitalGaugeLayer);
+			this.tabPageDigitalGauge.Controls.Add(this.textBoxDigitalGaugeStep);
+			this.tabPageDigitalGauge.Controls.Add(this.labelDigitalGaugeStep);
+			this.tabPageDigitalGauge.Controls.Add(this.labelDigitalGaugeLayer);
+			this.tabPageDigitalGauge.Controls.Add(this.textBoxDigitalGaugeMaximum);
+			this.tabPageDigitalGauge.Controls.Add(this.labelDigitalGaugeMaximum);
+			this.tabPageDigitalGauge.Controls.Add(this.textBoxDigitalGaugeMinimum);
+			this.tabPageDigitalGauge.Controls.Add(this.labelDigitalGaugeMinimum);
+			this.tabPageDigitalGauge.Controls.Add(this.textBoxDigitalGaugeLastAngle);
+			this.tabPageDigitalGauge.Controls.Add(this.labelDigitalGaugeLastAngle);
+			this.tabPageDigitalGauge.Controls.Add(this.textBoxDigitalGaugeInitialAngle);
+			this.tabPageDigitalGauge.Controls.Add(this.labelDigitalGaugeInitialAngle);
+			this.tabPageDigitalGauge.Controls.Add(this.textBoxDigitalGaugeColor);
+			this.tabPageDigitalGauge.Controls.Add(this.labelDigitalGaugeColor);
+			this.tabPageDigitalGauge.Controls.Add(this.textBoxDigitalGaugeRadius);
+			this.tabPageDigitalGauge.Controls.Add(this.labelDigitalGaugeRadius);
+			this.tabPageDigitalGauge.Controls.Add(this.groupBoxDigitalGaugeLocation);
+			this.tabPageDigitalGauge.Controls.Add(this.buttonDigitalGaugeSubjectSet);
+			this.tabPageDigitalGauge.Controls.Add(this.labelDigitalGaugeSubject);
+			this.tabPageDigitalGauge.Location = new System.Drawing.Point(4, 40);
+			this.tabPageDigitalGauge.Name = "tabPageDigitalGauge";
+			this.tabPageDigitalGauge.Size = new System.Drawing.Size(312, 626);
+			this.tabPageDigitalGauge.TabIndex = 5;
+			this.tabPageDigitalGauge.Text = "DigitalGauge";
+			this.tabPageDigitalGauge.UseVisualStyleBackColor = true;
+			// 
+			// buttonDigitalGaugeColorSet
+			// 
+			this.buttonDigitalGaugeColorSet.Location = new System.Drawing.Point(248, 136);
+			this.buttonDigitalGaugeColorSet.Name = "buttonDigitalGaugeColorSet";
+			this.buttonDigitalGaugeColorSet.Size = new System.Drawing.Size(48, 19);
+			this.buttonDigitalGaugeColorSet.TabIndex = 88;
+			this.buttonDigitalGaugeColorSet.Text = "Set...";
+			this.buttonDigitalGaugeColorSet.UseVisualStyleBackColor = true;
+			this.buttonDigitalGaugeColorSet.Click += new System.EventHandler(this.ButtonDigitalGaugeColorSet_Click);
+			// 
+			// numericUpDownDigitalGaugeLayer
+			// 
+			this.numericUpDownDigitalGaugeLayer.Location = new System.Drawing.Point(136, 280);
+			this.numericUpDownDigitalGaugeLayer.Name = "numericUpDownDigitalGaugeLayer";
+			this.numericUpDownDigitalGaugeLayer.Size = new System.Drawing.Size(48, 19);
+			this.numericUpDownDigitalGaugeLayer.TabIndex = 87;
+			// 
+			// textBoxDigitalGaugeStep
+			// 
+			this.textBoxDigitalGaugeStep.Location = new System.Drawing.Point(136, 256);
+			this.textBoxDigitalGaugeStep.Name = "textBoxDigitalGaugeStep";
+			this.textBoxDigitalGaugeStep.Size = new System.Drawing.Size(48, 19);
+			this.textBoxDigitalGaugeStep.TabIndex = 86;
+			// 
+			// labelDigitalGaugeStep
+			// 
+			this.labelDigitalGaugeStep.Location = new System.Drawing.Point(8, 256);
+			this.labelDigitalGaugeStep.Name = "labelDigitalGaugeStep";
+			this.labelDigitalGaugeStep.Size = new System.Drawing.Size(120, 16);
+			this.labelDigitalGaugeStep.TabIndex = 85;
+			this.labelDigitalGaugeStep.Text = "Step:";
+			this.labelDigitalGaugeStep.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelDigitalGaugeLayer
+			// 
+			this.labelDigitalGaugeLayer.Location = new System.Drawing.Point(8, 280);
+			this.labelDigitalGaugeLayer.Name = "labelDigitalGaugeLayer";
+			this.labelDigitalGaugeLayer.Size = new System.Drawing.Size(120, 16);
+			this.labelDigitalGaugeLayer.TabIndex = 83;
+			this.labelDigitalGaugeLayer.Text = "Layer:";
+			this.labelDigitalGaugeLayer.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxDigitalGaugeMaximum
+			// 
+			this.textBoxDigitalGaugeMaximum.Location = new System.Drawing.Point(136, 232);
+			this.textBoxDigitalGaugeMaximum.Name = "textBoxDigitalGaugeMaximum";
+			this.textBoxDigitalGaugeMaximum.Size = new System.Drawing.Size(48, 19);
+			this.textBoxDigitalGaugeMaximum.TabIndex = 82;
+			// 
+			// labelDigitalGaugeMaximum
+			// 
+			this.labelDigitalGaugeMaximum.Location = new System.Drawing.Point(8, 232);
+			this.labelDigitalGaugeMaximum.Name = "labelDigitalGaugeMaximum";
+			this.labelDigitalGaugeMaximum.Size = new System.Drawing.Size(120, 16);
+			this.labelDigitalGaugeMaximum.TabIndex = 81;
+			this.labelDigitalGaugeMaximum.Text = "Maximum:";
+			this.labelDigitalGaugeMaximum.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxDigitalGaugeMinimum
+			// 
+			this.textBoxDigitalGaugeMinimum.Location = new System.Drawing.Point(136, 208);
+			this.textBoxDigitalGaugeMinimum.Name = "textBoxDigitalGaugeMinimum";
+			this.textBoxDigitalGaugeMinimum.Size = new System.Drawing.Size(48, 19);
+			this.textBoxDigitalGaugeMinimum.TabIndex = 80;
+			// 
+			// labelDigitalGaugeMinimum
+			// 
+			this.labelDigitalGaugeMinimum.Location = new System.Drawing.Point(8, 208);
+			this.labelDigitalGaugeMinimum.Name = "labelDigitalGaugeMinimum";
+			this.labelDigitalGaugeMinimum.Size = new System.Drawing.Size(120, 16);
+			this.labelDigitalGaugeMinimum.TabIndex = 79;
+			this.labelDigitalGaugeMinimum.Text = "Minimum:";
+			this.labelDigitalGaugeMinimum.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxDigitalGaugeLastAngle
+			// 
+			this.textBoxDigitalGaugeLastAngle.Location = new System.Drawing.Point(136, 184);
+			this.textBoxDigitalGaugeLastAngle.Name = "textBoxDigitalGaugeLastAngle";
+			this.textBoxDigitalGaugeLastAngle.Size = new System.Drawing.Size(48, 19);
+			this.textBoxDigitalGaugeLastAngle.TabIndex = 78;
+			// 
+			// labelDigitalGaugeLastAngle
+			// 
+			this.labelDigitalGaugeLastAngle.Location = new System.Drawing.Point(8, 184);
+			this.labelDigitalGaugeLastAngle.Name = "labelDigitalGaugeLastAngle";
+			this.labelDigitalGaugeLastAngle.Size = new System.Drawing.Size(120, 16);
+			this.labelDigitalGaugeLastAngle.TabIndex = 77;
+			this.labelDigitalGaugeLastAngle.Text = "LastAngle:";
+			this.labelDigitalGaugeLastAngle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxDigitalGaugeInitialAngle
+			// 
+			this.textBoxDigitalGaugeInitialAngle.Location = new System.Drawing.Point(136, 160);
+			this.textBoxDigitalGaugeInitialAngle.Name = "textBoxDigitalGaugeInitialAngle";
+			this.textBoxDigitalGaugeInitialAngle.Size = new System.Drawing.Size(48, 19);
+			this.textBoxDigitalGaugeInitialAngle.TabIndex = 76;
+			// 
+			// labelDigitalGaugeInitialAngle
+			// 
+			this.labelDigitalGaugeInitialAngle.Location = new System.Drawing.Point(8, 160);
+			this.labelDigitalGaugeInitialAngle.Name = "labelDigitalGaugeInitialAngle";
+			this.labelDigitalGaugeInitialAngle.Size = new System.Drawing.Size(120, 16);
+			this.labelDigitalGaugeInitialAngle.TabIndex = 75;
+			this.labelDigitalGaugeInitialAngle.Text = "InitialAngle:";
+			this.labelDigitalGaugeInitialAngle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxDigitalGaugeColor
+			// 
+			this.textBoxDigitalGaugeColor.Location = new System.Drawing.Point(136, 136);
+			this.textBoxDigitalGaugeColor.Name = "textBoxDigitalGaugeColor";
+			this.textBoxDigitalGaugeColor.Size = new System.Drawing.Size(104, 19);
+			this.textBoxDigitalGaugeColor.TabIndex = 70;
+			// 
+			// labelDigitalGaugeColor
+			// 
+			this.labelDigitalGaugeColor.Location = new System.Drawing.Point(8, 136);
+			this.labelDigitalGaugeColor.Name = "labelDigitalGaugeColor";
+			this.labelDigitalGaugeColor.Size = new System.Drawing.Size(120, 16);
+			this.labelDigitalGaugeColor.TabIndex = 69;
+			this.labelDigitalGaugeColor.Text = "Color:";
+			this.labelDigitalGaugeColor.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxDigitalGaugeRadius
+			// 
+			this.textBoxDigitalGaugeRadius.Location = new System.Drawing.Point(136, 112);
+			this.textBoxDigitalGaugeRadius.Name = "textBoxDigitalGaugeRadius";
+			this.textBoxDigitalGaugeRadius.Size = new System.Drawing.Size(48, 19);
+			this.textBoxDigitalGaugeRadius.TabIndex = 68;
+			// 
+			// labelDigitalGaugeRadius
+			// 
+			this.labelDigitalGaugeRadius.Location = new System.Drawing.Point(8, 112);
+			this.labelDigitalGaugeRadius.Name = "labelDigitalGaugeRadius";
+			this.labelDigitalGaugeRadius.Size = new System.Drawing.Size(120, 16);
+			this.labelDigitalGaugeRadius.TabIndex = 67;
+			this.labelDigitalGaugeRadius.Text = "Radius:";
+			this.labelDigitalGaugeRadius.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// groupBoxDigitalGaugeLocation
+			// 
+			this.groupBoxDigitalGaugeLocation.Controls.Add(this.textBoxDigitalGaugeLocationY);
+			this.groupBoxDigitalGaugeLocation.Controls.Add(this.textBoxDigitalGaugeLocationX);
+			this.groupBoxDigitalGaugeLocation.Controls.Add(this.labelDigitalGaugeLocationY);
+			this.groupBoxDigitalGaugeLocation.Controls.Add(this.labelDigitalGaugeLocationX);
+			this.groupBoxDigitalGaugeLocation.Location = new System.Drawing.Point(8, 32);
+			this.groupBoxDigitalGaugeLocation.Name = "groupBoxDigitalGaugeLocation";
+			this.groupBoxDigitalGaugeLocation.Size = new System.Drawing.Size(184, 72);
+			this.groupBoxDigitalGaugeLocation.TabIndex = 66;
+			this.groupBoxDigitalGaugeLocation.TabStop = false;
+			this.groupBoxDigitalGaugeLocation.Text = "Location";
+			// 
+			// textBoxDigitalGaugeLocationY
+			// 
+			this.textBoxDigitalGaugeLocationY.Location = new System.Drawing.Point(128, 40);
+			this.textBoxDigitalGaugeLocationY.Name = "textBoxDigitalGaugeLocationY";
+			this.textBoxDigitalGaugeLocationY.Size = new System.Drawing.Size(48, 19);
+			this.textBoxDigitalGaugeLocationY.TabIndex = 33;
+			// 
+			// textBoxDigitalGaugeLocationX
+			// 
+			this.textBoxDigitalGaugeLocationX.Location = new System.Drawing.Point(128, 16);
+			this.textBoxDigitalGaugeLocationX.Name = "textBoxDigitalGaugeLocationX";
+			this.textBoxDigitalGaugeLocationX.Size = new System.Drawing.Size(48, 19);
+			this.textBoxDigitalGaugeLocationX.TabIndex = 32;
+			// 
+			// labelDigitalGaugeLocationY
+			// 
+			this.labelDigitalGaugeLocationY.Location = new System.Drawing.Point(8, 40);
+			this.labelDigitalGaugeLocationY.Name = "labelDigitalGaugeLocationY";
+			this.labelDigitalGaugeLocationY.Size = new System.Drawing.Size(112, 16);
+			this.labelDigitalGaugeLocationY.TabIndex = 10;
+			this.labelDigitalGaugeLocationY.Text = "Y:";
+			this.labelDigitalGaugeLocationY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelDigitalGaugeLocationX
+			// 
+			this.labelDigitalGaugeLocationX.Location = new System.Drawing.Point(8, 16);
+			this.labelDigitalGaugeLocationX.Name = "labelDigitalGaugeLocationX";
+			this.labelDigitalGaugeLocationX.Size = new System.Drawing.Size(112, 16);
+			this.labelDigitalGaugeLocationX.TabIndex = 9;
+			this.labelDigitalGaugeLocationX.Text = "X:";
+			this.labelDigitalGaugeLocationX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// buttonDigitalGaugeSubjectSet
+			// 
+			this.buttonDigitalGaugeSubjectSet.Location = new System.Drawing.Point(136, 8);
+			this.buttonDigitalGaugeSubjectSet.Name = "buttonDigitalGaugeSubjectSet";
+			this.buttonDigitalGaugeSubjectSet.Size = new System.Drawing.Size(48, 19);
+			this.buttonDigitalGaugeSubjectSet.TabIndex = 65;
+			this.buttonDigitalGaugeSubjectSet.Text = "Set...";
+			this.buttonDigitalGaugeSubjectSet.UseVisualStyleBackColor = true;
+			this.buttonDigitalGaugeSubjectSet.Click += new System.EventHandler(this.ButtonDigitalGaugeSubjectSet_Click);
+			// 
+			// labelDigitalGaugeSubject
+			// 
+			this.labelDigitalGaugeSubject.Location = new System.Drawing.Point(8, 8);
+			this.labelDigitalGaugeSubject.Name = "labelDigitalGaugeSubject";
+			this.labelDigitalGaugeSubject.Size = new System.Drawing.Size(120, 16);
+			this.labelDigitalGaugeSubject.TabIndex = 64;
+			this.labelDigitalGaugeSubject.Text = "Subject:";
+			this.labelDigitalGaugeSubject.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// tabPageLinearGauge
+			// 
+			this.tabPageLinearGauge.Controls.Add(this.buttonLinearGaugeTransparentColorSet);
+			this.tabPageLinearGauge.Controls.Add(this.buttonLinearGaugeNighttimeImageOpen);
+			this.tabPageLinearGauge.Controls.Add(this.buttonLinearGaugeDaytimeImageOpen);
+			this.tabPageLinearGauge.Controls.Add(this.textBoxLinearGaugeTransparentColor);
+			this.tabPageLinearGauge.Controls.Add(this.textBoxLinearGaugeNighttimeImage);
+			this.tabPageLinearGauge.Controls.Add(this.textBoxLinearGaugeDaytimeImage);
+			this.tabPageLinearGauge.Controls.Add(this.labelLinearGaugeDaytimeImage);
+			this.tabPageLinearGauge.Controls.Add(this.labelLinearGaugeNighttimeImage);
+			this.tabPageLinearGauge.Controls.Add(this.labelLinearGaugeTransparentColor);
+			this.tabPageLinearGauge.Controls.Add(this.numericUpDownLinearGaugeLayer);
+			this.tabPageLinearGauge.Controls.Add(this.numericUpDownLinearGaugeWidth);
+			this.tabPageLinearGauge.Controls.Add(this.labelLinearGaugeWidth);
+			this.tabPageLinearGauge.Controls.Add(this.groupBoxLinearGaugeDirection);
+			this.tabPageLinearGauge.Controls.Add(this.labelLinearGaugeLayer);
+			this.tabPageLinearGauge.Controls.Add(this.textBoxLinearGaugeMaximum);
+			this.tabPageLinearGauge.Controls.Add(this.labelLinearGaugeMaximum);
+			this.tabPageLinearGauge.Controls.Add(this.textBoxLinearGaugeMinimum);
+			this.tabPageLinearGauge.Controls.Add(this.labelLinearGaugeMinimum);
+			this.tabPageLinearGauge.Controls.Add(this.groupBoxLinearGaugeLocation);
+			this.tabPageLinearGauge.Controls.Add(this.buttonLinearGaugeSubjectSet);
+			this.tabPageLinearGauge.Controls.Add(this.labelLinearGaugeSubject);
+			this.tabPageLinearGauge.Location = new System.Drawing.Point(4, 40);
+			this.tabPageLinearGauge.Name = "tabPageLinearGauge";
+			this.tabPageLinearGauge.Size = new System.Drawing.Size(312, 626);
+			this.tabPageLinearGauge.TabIndex = 6;
+			this.tabPageLinearGauge.Text = "LinearGauge";
+			this.tabPageLinearGauge.UseVisualStyleBackColor = true;
+			// 
+			// buttonLinearGaugeTransparentColorSet
+			// 
+			this.buttonLinearGaugeTransparentColorSet.Location = new System.Drawing.Point(248, 160);
+			this.buttonLinearGaugeTransparentColorSet.Name = "buttonLinearGaugeTransparentColorSet";
+			this.buttonLinearGaugeTransparentColorSet.Size = new System.Drawing.Size(48, 19);
+			this.buttonLinearGaugeTransparentColorSet.TabIndex = 105;
+			this.buttonLinearGaugeTransparentColorSet.Text = "Set...";
+			this.buttonLinearGaugeTransparentColorSet.UseVisualStyleBackColor = true;
+			this.buttonLinearGaugeTransparentColorSet.Click += new System.EventHandler(this.ButtonLinearGaugeTransparentColorSet_Click);
+			// 
+			// buttonLinearGaugeNighttimeImageOpen
+			// 
+			this.buttonLinearGaugeNighttimeImageOpen.Location = new System.Drawing.Point(248, 136);
+			this.buttonLinearGaugeNighttimeImageOpen.Name = "buttonLinearGaugeNighttimeImageOpen";
+			this.buttonLinearGaugeNighttimeImageOpen.Size = new System.Drawing.Size(48, 19);
+			this.buttonLinearGaugeNighttimeImageOpen.TabIndex = 104;
+			this.buttonLinearGaugeNighttimeImageOpen.Text = "Open...";
+			this.buttonLinearGaugeNighttimeImageOpen.UseVisualStyleBackColor = true;
+			this.buttonLinearGaugeNighttimeImageOpen.Click += new System.EventHandler(this.ButtonLinearGaugeNighttimeImageOpen_Click);
+			// 
+			// buttonLinearGaugeDaytimeImageOpen
+			// 
+			this.buttonLinearGaugeDaytimeImageOpen.Location = new System.Drawing.Point(248, 112);
+			this.buttonLinearGaugeDaytimeImageOpen.Name = "buttonLinearGaugeDaytimeImageOpen";
+			this.buttonLinearGaugeDaytimeImageOpen.Size = new System.Drawing.Size(48, 19);
+			this.buttonLinearGaugeDaytimeImageOpen.TabIndex = 103;
+			this.buttonLinearGaugeDaytimeImageOpen.Text = "Open...";
+			this.buttonLinearGaugeDaytimeImageOpen.UseVisualStyleBackColor = true;
+			this.buttonLinearGaugeDaytimeImageOpen.Click += new System.EventHandler(this.ButtonLinearGaugeDaytimeImageOpen_Click);
+			// 
+			// textBoxLinearGaugeTransparentColor
+			// 
+			this.textBoxLinearGaugeTransparentColor.Location = new System.Drawing.Point(136, 160);
+			this.textBoxLinearGaugeTransparentColor.Name = "textBoxLinearGaugeTransparentColor";
+			this.textBoxLinearGaugeTransparentColor.Size = new System.Drawing.Size(104, 19);
+			this.textBoxLinearGaugeTransparentColor.TabIndex = 102;
+			// 
+			// textBoxLinearGaugeNighttimeImage
+			// 
+			this.textBoxLinearGaugeNighttimeImage.Location = new System.Drawing.Point(136, 136);
+			this.textBoxLinearGaugeNighttimeImage.Name = "textBoxLinearGaugeNighttimeImage";
+			this.textBoxLinearGaugeNighttimeImage.Size = new System.Drawing.Size(104, 19);
+			this.textBoxLinearGaugeNighttimeImage.TabIndex = 101;
+			// 
+			// textBoxLinearGaugeDaytimeImage
+			// 
+			this.textBoxLinearGaugeDaytimeImage.Location = new System.Drawing.Point(136, 112);
+			this.textBoxLinearGaugeDaytimeImage.Name = "textBoxLinearGaugeDaytimeImage";
+			this.textBoxLinearGaugeDaytimeImage.Size = new System.Drawing.Size(104, 19);
+			this.textBoxLinearGaugeDaytimeImage.TabIndex = 100;
+			// 
+			// labelLinearGaugeDaytimeImage
+			// 
+			this.labelLinearGaugeDaytimeImage.Location = new System.Drawing.Point(8, 112);
+			this.labelLinearGaugeDaytimeImage.Name = "labelLinearGaugeDaytimeImage";
+			this.labelLinearGaugeDaytimeImage.Size = new System.Drawing.Size(120, 16);
+			this.labelLinearGaugeDaytimeImage.TabIndex = 99;
+			this.labelLinearGaugeDaytimeImage.Text = "DaytimeImage:";
+			this.labelLinearGaugeDaytimeImage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelLinearGaugeNighttimeImage
+			// 
+			this.labelLinearGaugeNighttimeImage.Location = new System.Drawing.Point(8, 136);
+			this.labelLinearGaugeNighttimeImage.Name = "labelLinearGaugeNighttimeImage";
+			this.labelLinearGaugeNighttimeImage.Size = new System.Drawing.Size(120, 16);
+			this.labelLinearGaugeNighttimeImage.TabIndex = 98;
+			this.labelLinearGaugeNighttimeImage.Text = "NighttimeImage:";
+			this.labelLinearGaugeNighttimeImage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelLinearGaugeTransparentColor
+			// 
+			this.labelLinearGaugeTransparentColor.Location = new System.Drawing.Point(8, 160);
+			this.labelLinearGaugeTransparentColor.Name = "labelLinearGaugeTransparentColor";
+			this.labelLinearGaugeTransparentColor.Size = new System.Drawing.Size(120, 16);
+			this.labelLinearGaugeTransparentColor.TabIndex = 97;
+			this.labelLinearGaugeTransparentColor.Text = "TransparentColor:";
+			this.labelLinearGaugeTransparentColor.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// numericUpDownLinearGaugeLayer
+			// 
+			this.numericUpDownLinearGaugeLayer.Location = new System.Drawing.Point(136, 336);
+			this.numericUpDownLinearGaugeLayer.Name = "numericUpDownLinearGaugeLayer";
+			this.numericUpDownLinearGaugeLayer.Size = new System.Drawing.Size(48, 19);
+			this.numericUpDownLinearGaugeLayer.TabIndex = 96;
+			// 
+			// numericUpDownLinearGaugeWidth
+			// 
+			this.numericUpDownLinearGaugeWidth.Location = new System.Drawing.Point(136, 312);
+			this.numericUpDownLinearGaugeWidth.Name = "numericUpDownLinearGaugeWidth";
+			this.numericUpDownLinearGaugeWidth.Size = new System.Drawing.Size(48, 19);
+			this.numericUpDownLinearGaugeWidth.TabIndex = 95;
+			// 
+			// labelLinearGaugeWidth
+			// 
+			this.labelLinearGaugeWidth.Location = new System.Drawing.Point(8, 312);
+			this.labelLinearGaugeWidth.Name = "labelLinearGaugeWidth";
+			this.labelLinearGaugeWidth.Size = new System.Drawing.Size(120, 16);
+			this.labelLinearGaugeWidth.TabIndex = 94;
+			this.labelLinearGaugeWidth.Text = "Width:";
+			this.labelLinearGaugeWidth.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// groupBoxLinearGaugeDirection
+			// 
+			this.groupBoxLinearGaugeDirection.Controls.Add(this.numericUpDownLinearGaugeDirectionY);
+			this.groupBoxLinearGaugeDirection.Controls.Add(this.numericUpDownLinearGaugeDirectionX);
+			this.groupBoxLinearGaugeDirection.Controls.Add(this.labelLinearGaugeDirectionY);
+			this.groupBoxLinearGaugeDirection.Controls.Add(this.labelLinearGaugeDirectionX);
+			this.groupBoxLinearGaugeDirection.Location = new System.Drawing.Point(8, 232);
+			this.groupBoxLinearGaugeDirection.Name = "groupBoxLinearGaugeDirection";
+			this.groupBoxLinearGaugeDirection.Size = new System.Drawing.Size(184, 72);
+			this.groupBoxLinearGaugeDirection.TabIndex = 88;
+			this.groupBoxLinearGaugeDirection.TabStop = false;
+			this.groupBoxLinearGaugeDirection.Text = "Direction";
+			// 
+			// numericUpDownLinearGaugeDirectionY
+			// 
+			this.numericUpDownLinearGaugeDirectionY.Location = new System.Drawing.Point(128, 40);
+			this.numericUpDownLinearGaugeDirectionY.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.numericUpDownLinearGaugeDirectionY.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+			this.numericUpDownLinearGaugeDirectionY.Name = "numericUpDownLinearGaugeDirectionY";
+			this.numericUpDownLinearGaugeDirectionY.Size = new System.Drawing.Size(48, 19);
+			this.numericUpDownLinearGaugeDirectionY.TabIndex = 107;
+			// 
+			// numericUpDownLinearGaugeDirectionX
+			// 
+			this.numericUpDownLinearGaugeDirectionX.Location = new System.Drawing.Point(128, 16);
+			this.numericUpDownLinearGaugeDirectionX.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.numericUpDownLinearGaugeDirectionX.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+			this.numericUpDownLinearGaugeDirectionX.Name = "numericUpDownLinearGaugeDirectionX";
+			this.numericUpDownLinearGaugeDirectionX.Size = new System.Drawing.Size(48, 19);
+			this.numericUpDownLinearGaugeDirectionX.TabIndex = 106;
+			// 
+			// labelLinearGaugeDirectionY
+			// 
+			this.labelLinearGaugeDirectionY.Location = new System.Drawing.Point(8, 40);
+			this.labelLinearGaugeDirectionY.Name = "labelLinearGaugeDirectionY";
+			this.labelLinearGaugeDirectionY.Size = new System.Drawing.Size(112, 16);
+			this.labelLinearGaugeDirectionY.TabIndex = 10;
+			this.labelLinearGaugeDirectionY.Text = "Y:";
+			this.labelLinearGaugeDirectionY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelLinearGaugeDirectionX
+			// 
+			this.labelLinearGaugeDirectionX.Location = new System.Drawing.Point(8, 16);
+			this.labelLinearGaugeDirectionX.Name = "labelLinearGaugeDirectionX";
+			this.labelLinearGaugeDirectionX.Size = new System.Drawing.Size(112, 16);
+			this.labelLinearGaugeDirectionX.TabIndex = 9;
+			this.labelLinearGaugeDirectionX.Text = "X:";
+			this.labelLinearGaugeDirectionX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelLinearGaugeLayer
+			// 
+			this.labelLinearGaugeLayer.Location = new System.Drawing.Point(8, 336);
+			this.labelLinearGaugeLayer.Name = "labelLinearGaugeLayer";
+			this.labelLinearGaugeLayer.Size = new System.Drawing.Size(120, 16);
+			this.labelLinearGaugeLayer.TabIndex = 92;
+			this.labelLinearGaugeLayer.Text = "Layer:";
+			this.labelLinearGaugeLayer.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxLinearGaugeMaximum
+			// 
+			this.textBoxLinearGaugeMaximum.Location = new System.Drawing.Point(136, 208);
+			this.textBoxLinearGaugeMaximum.Name = "textBoxLinearGaugeMaximum";
+			this.textBoxLinearGaugeMaximum.Size = new System.Drawing.Size(48, 19);
+			this.textBoxLinearGaugeMaximum.TabIndex = 91;
+			// 
+			// labelLinearGaugeMaximum
+			// 
+			this.labelLinearGaugeMaximum.Location = new System.Drawing.Point(8, 208);
+			this.labelLinearGaugeMaximum.Name = "labelLinearGaugeMaximum";
+			this.labelLinearGaugeMaximum.Size = new System.Drawing.Size(120, 16);
+			this.labelLinearGaugeMaximum.TabIndex = 90;
+			this.labelLinearGaugeMaximum.Text = "Maximum:";
+			this.labelLinearGaugeMaximum.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxLinearGaugeMinimum
+			// 
+			this.textBoxLinearGaugeMinimum.Location = new System.Drawing.Point(136, 184);
+			this.textBoxLinearGaugeMinimum.Name = "textBoxLinearGaugeMinimum";
+			this.textBoxLinearGaugeMinimum.Size = new System.Drawing.Size(48, 19);
+			this.textBoxLinearGaugeMinimum.TabIndex = 89;
+			// 
+			// labelLinearGaugeMinimum
+			// 
+			this.labelLinearGaugeMinimum.Location = new System.Drawing.Point(8, 184);
+			this.labelLinearGaugeMinimum.Name = "labelLinearGaugeMinimum";
+			this.labelLinearGaugeMinimum.Size = new System.Drawing.Size(120, 16);
+			this.labelLinearGaugeMinimum.TabIndex = 88;
+			this.labelLinearGaugeMinimum.Text = "Minimum:";
+			this.labelLinearGaugeMinimum.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// groupBoxLinearGaugeLocation
+			// 
+			this.groupBoxLinearGaugeLocation.Controls.Add(this.textBoxLinearGaugeLocationY);
+			this.groupBoxLinearGaugeLocation.Controls.Add(this.textBoxLinearGaugeLocationX);
+			this.groupBoxLinearGaugeLocation.Controls.Add(this.labelLinearGaugeLocationY);
+			this.groupBoxLinearGaugeLocation.Controls.Add(this.labelLinearGaugeLocationX);
+			this.groupBoxLinearGaugeLocation.Location = new System.Drawing.Point(8, 32);
+			this.groupBoxLinearGaugeLocation.Name = "groupBoxLinearGaugeLocation";
+			this.groupBoxLinearGaugeLocation.Size = new System.Drawing.Size(184, 72);
+			this.groupBoxLinearGaugeLocation.TabIndex = 87;
+			this.groupBoxLinearGaugeLocation.TabStop = false;
+			this.groupBoxLinearGaugeLocation.Text = "Location";
+			// 
+			// textBoxLinearGaugeLocationY
+			// 
+			this.textBoxLinearGaugeLocationY.Location = new System.Drawing.Point(128, 40);
+			this.textBoxLinearGaugeLocationY.Name = "textBoxLinearGaugeLocationY";
+			this.textBoxLinearGaugeLocationY.Size = new System.Drawing.Size(48, 19);
+			this.textBoxLinearGaugeLocationY.TabIndex = 33;
+			// 
+			// textBoxLinearGaugeLocationX
+			// 
+			this.textBoxLinearGaugeLocationX.Location = new System.Drawing.Point(128, 16);
+			this.textBoxLinearGaugeLocationX.Name = "textBoxLinearGaugeLocationX";
+			this.textBoxLinearGaugeLocationX.Size = new System.Drawing.Size(48, 19);
+			this.textBoxLinearGaugeLocationX.TabIndex = 32;
+			// 
+			// labelLinearGaugeLocationY
+			// 
+			this.labelLinearGaugeLocationY.Location = new System.Drawing.Point(8, 40);
+			this.labelLinearGaugeLocationY.Name = "labelLinearGaugeLocationY";
+			this.labelLinearGaugeLocationY.Size = new System.Drawing.Size(112, 16);
+			this.labelLinearGaugeLocationY.TabIndex = 10;
+			this.labelLinearGaugeLocationY.Text = "Y:";
+			this.labelLinearGaugeLocationY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelLinearGaugeLocationX
+			// 
+			this.labelLinearGaugeLocationX.Location = new System.Drawing.Point(8, 16);
+			this.labelLinearGaugeLocationX.Name = "labelLinearGaugeLocationX";
+			this.labelLinearGaugeLocationX.Size = new System.Drawing.Size(112, 16);
+			this.labelLinearGaugeLocationX.TabIndex = 9;
+			this.labelLinearGaugeLocationX.Text = "X:";
+			this.labelLinearGaugeLocationX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// buttonLinearGaugeSubjectSet
+			// 
+			this.buttonLinearGaugeSubjectSet.Location = new System.Drawing.Point(136, 8);
+			this.buttonLinearGaugeSubjectSet.Name = "buttonLinearGaugeSubjectSet";
+			this.buttonLinearGaugeSubjectSet.Size = new System.Drawing.Size(48, 19);
+			this.buttonLinearGaugeSubjectSet.TabIndex = 86;
+			this.buttonLinearGaugeSubjectSet.Text = "Set...";
+			this.buttonLinearGaugeSubjectSet.UseVisualStyleBackColor = true;
+			this.buttonLinearGaugeSubjectSet.Click += new System.EventHandler(this.ButtonLinearGaugeSubjectSet_Click);
+			// 
+			// labelLinearGaugeSubject
+			// 
+			this.labelLinearGaugeSubject.Location = new System.Drawing.Point(8, 8);
+			this.labelLinearGaugeSubject.Name = "labelLinearGaugeSubject";
+			this.labelLinearGaugeSubject.Size = new System.Drawing.Size(120, 16);
+			this.labelLinearGaugeSubject.TabIndex = 85;
+			this.labelLinearGaugeSubject.Text = "Subject:";
+			this.labelLinearGaugeSubject.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// tabPageTimetable
+			// 
+			this.tabPageTimetable.Controls.Add(this.buttonTimetableTransparentColorSet);
+			this.tabPageTimetable.Controls.Add(this.numericUpDownTimetableLayer);
+			this.tabPageTimetable.Controls.Add(this.labelTimetableLayer);
+			this.tabPageTimetable.Controls.Add(this.textBoxTimetableTransparentColor);
+			this.tabPageTimetable.Controls.Add(this.labelTimetableTransparentColor);
+			this.tabPageTimetable.Controls.Add(this.textBoxTimetableHeight);
+			this.tabPageTimetable.Controls.Add(this.labelTimetableHeight);
+			this.tabPageTimetable.Controls.Add(this.textBoxTimetableWidth);
+			this.tabPageTimetable.Controls.Add(this.labelTimetableWidth);
+			this.tabPageTimetable.Controls.Add(this.groupBoxTimetableLocation);
+			this.tabPageTimetable.Location = new System.Drawing.Point(4, 40);
+			this.tabPageTimetable.Name = "tabPageTimetable";
+			this.tabPageTimetable.Size = new System.Drawing.Size(312, 626);
+			this.tabPageTimetable.TabIndex = 7;
+			this.tabPageTimetable.Text = "Timetable";
+			this.tabPageTimetable.UseVisualStyleBackColor = true;
+			// 
+			// buttonTimetableTransparentColorSet
+			// 
+			this.buttonTimetableTransparentColorSet.Location = new System.Drawing.Point(248, 136);
+			this.buttonTimetableTransparentColorSet.Name = "buttonTimetableTransparentColorSet";
+			this.buttonTimetableTransparentColorSet.Size = new System.Drawing.Size(48, 19);
+			this.buttonTimetableTransparentColorSet.TabIndex = 106;
+			this.buttonTimetableTransparentColorSet.Text = "Set...";
+			this.buttonTimetableTransparentColorSet.UseVisualStyleBackColor = true;
+			this.buttonTimetableTransparentColorSet.Click += new System.EventHandler(this.ButtonTimetableTransparentColorSet_Click);
+			// 
+			// numericUpDownTimetableLayer
+			// 
+			this.numericUpDownTimetableLayer.Location = new System.Drawing.Point(136, 160);
+			this.numericUpDownTimetableLayer.Name = "numericUpDownTimetableLayer";
+			this.numericUpDownTimetableLayer.Size = new System.Drawing.Size(48, 19);
+			this.numericUpDownTimetableLayer.TabIndex = 103;
+			// 
+			// labelTimetableLayer
+			// 
+			this.labelTimetableLayer.Location = new System.Drawing.Point(8, 160);
+			this.labelTimetableLayer.Name = "labelTimetableLayer";
+			this.labelTimetableLayer.Size = new System.Drawing.Size(120, 16);
+			this.labelTimetableLayer.TabIndex = 102;
+			this.labelTimetableLayer.Text = "Layer:";
+			this.labelTimetableLayer.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxTimetableTransparentColor
+			// 
+			this.textBoxTimetableTransparentColor.Location = new System.Drawing.Point(136, 136);
+			this.textBoxTimetableTransparentColor.Name = "textBoxTimetableTransparentColor";
+			this.textBoxTimetableTransparentColor.Size = new System.Drawing.Size(104, 19);
+			this.textBoxTimetableTransparentColor.TabIndex = 101;
+			// 
+			// labelTimetableTransparentColor
+			// 
+			this.labelTimetableTransparentColor.Location = new System.Drawing.Point(8, 136);
+			this.labelTimetableTransparentColor.Name = "labelTimetableTransparentColor";
+			this.labelTimetableTransparentColor.Size = new System.Drawing.Size(120, 16);
+			this.labelTimetableTransparentColor.TabIndex = 100;
+			this.labelTimetableTransparentColor.Text = "TransparentColor:";
+			this.labelTimetableTransparentColor.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxTimetableHeight
+			// 
+			this.textBoxTimetableHeight.Location = new System.Drawing.Point(136, 112);
+			this.textBoxTimetableHeight.Name = "textBoxTimetableHeight";
+			this.textBoxTimetableHeight.Size = new System.Drawing.Size(48, 19);
+			this.textBoxTimetableHeight.TabIndex = 99;
+			// 
+			// labelTimetableHeight
+			// 
+			this.labelTimetableHeight.Location = new System.Drawing.Point(8, 112);
+			this.labelTimetableHeight.Name = "labelTimetableHeight";
+			this.labelTimetableHeight.Size = new System.Drawing.Size(120, 16);
+			this.labelTimetableHeight.TabIndex = 98;
+			this.labelTimetableHeight.Text = "Height:";
+			this.labelTimetableHeight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxTimetableWidth
+			// 
+			this.textBoxTimetableWidth.Location = new System.Drawing.Point(136, 88);
+			this.textBoxTimetableWidth.Name = "textBoxTimetableWidth";
+			this.textBoxTimetableWidth.Size = new System.Drawing.Size(48, 19);
+			this.textBoxTimetableWidth.TabIndex = 97;
+			// 
+			// labelTimetableWidth
+			// 
+			this.labelTimetableWidth.Location = new System.Drawing.Point(8, 88);
+			this.labelTimetableWidth.Name = "labelTimetableWidth";
+			this.labelTimetableWidth.Size = new System.Drawing.Size(120, 16);
+			this.labelTimetableWidth.TabIndex = 96;
+			this.labelTimetableWidth.Text = "Width:";
+			this.labelTimetableWidth.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// groupBoxTimetableLocation
+			// 
+			this.groupBoxTimetableLocation.Controls.Add(this.textBoxTimetableLocationY);
+			this.groupBoxTimetableLocation.Controls.Add(this.textBoxTimetableLocationX);
+			this.groupBoxTimetableLocation.Controls.Add(this.labelTimetableLocationY);
+			this.groupBoxTimetableLocation.Controls.Add(this.labelTimetableLocationX);
+			this.groupBoxTimetableLocation.Location = new System.Drawing.Point(8, 8);
+			this.groupBoxTimetableLocation.Name = "groupBoxTimetableLocation";
+			this.groupBoxTimetableLocation.Size = new System.Drawing.Size(184, 72);
+			this.groupBoxTimetableLocation.TabIndex = 88;
+			this.groupBoxTimetableLocation.TabStop = false;
+			this.groupBoxTimetableLocation.Text = "Location";
+			// 
+			// textBoxTimetableLocationY
+			// 
+			this.textBoxTimetableLocationY.Location = new System.Drawing.Point(128, 40);
+			this.textBoxTimetableLocationY.Name = "textBoxTimetableLocationY";
+			this.textBoxTimetableLocationY.Size = new System.Drawing.Size(48, 19);
+			this.textBoxTimetableLocationY.TabIndex = 33;
+			// 
+			// textBoxTimetableLocationX
+			// 
+			this.textBoxTimetableLocationX.Location = new System.Drawing.Point(128, 16);
+			this.textBoxTimetableLocationX.Name = "textBoxTimetableLocationX";
+			this.textBoxTimetableLocationX.Size = new System.Drawing.Size(48, 19);
+			this.textBoxTimetableLocationX.TabIndex = 32;
+			// 
+			// labelTimetableLocationY
+			// 
+			this.labelTimetableLocationY.Location = new System.Drawing.Point(8, 40);
+			this.labelTimetableLocationY.Name = "labelTimetableLocationY";
+			this.labelTimetableLocationY.Size = new System.Drawing.Size(112, 16);
+			this.labelTimetableLocationY.TabIndex = 10;
+			this.labelTimetableLocationY.Text = "Y:";
+			this.labelTimetableLocationY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelTimetableLocationX
+			// 
+			this.labelTimetableLocationX.Location = new System.Drawing.Point(8, 16);
+			this.labelTimetableLocationX.Name = "labelTimetableLocationX";
+			this.labelTimetableLocationX.Size = new System.Drawing.Size(112, 16);
+			this.labelTimetableLocationX.TabIndex = 9;
+			this.labelTimetableLocationX.Text = "X:";
+			this.labelTimetableLocationX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// tabPageTouch
+			// 
+			this.tabPageTouch.Controls.Add(this.numericUpDownTouchLayer);
+			this.tabPageTouch.Controls.Add(this.labelTouchLayer);
+			this.tabPageTouch.Controls.Add(this.buttonTouchSoundCommand);
+			this.tabPageTouch.Controls.Add(this.labelTouchSoundCommand);
+			this.tabPageTouch.Controls.Add(this.numericUpDownTouchSoundIndex);
+			this.tabPageTouch.Controls.Add(this.labelTouchSoundIndex);
+			this.tabPageTouch.Controls.Add(this.numericUpDownTouchJumpScreen);
+			this.tabPageTouch.Controls.Add(this.labelTouchJumpScreen);
+			this.tabPageTouch.Controls.Add(this.groupBoxTouchSize);
+			this.tabPageTouch.Controls.Add(this.groupBoxTouchLocation);
+			this.tabPageTouch.Location = new System.Drawing.Point(4, 40);
+			this.tabPageTouch.Name = "tabPageTouch";
+			this.tabPageTouch.Size = new System.Drawing.Size(312, 626);
+			this.tabPageTouch.TabIndex = 8;
+			this.tabPageTouch.Text = "Touch";
+			this.tabPageTouch.UseVisualStyleBackColor = true;
+			// 
+			// numericUpDownTouchLayer
+			// 
+			this.numericUpDownTouchLayer.Location = new System.Drawing.Point(136, 240);
+			this.numericUpDownTouchLayer.Name = "numericUpDownTouchLayer";
+			this.numericUpDownTouchLayer.Size = new System.Drawing.Size(48, 19);
+			this.numericUpDownTouchLayer.TabIndex = 111;
+			// 
+			// labelTouchLayer
+			// 
+			this.labelTouchLayer.Location = new System.Drawing.Point(8, 240);
+			this.labelTouchLayer.Name = "labelTouchLayer";
+			this.labelTouchLayer.Size = new System.Drawing.Size(120, 16);
+			this.labelTouchLayer.TabIndex = 110;
+			this.labelTouchLayer.Text = "Layer:";
+			this.labelTouchLayer.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// buttonTouchSoundCommand
+			// 
+			this.buttonTouchSoundCommand.Location = new System.Drawing.Point(136, 216);
+			this.buttonTouchSoundCommand.Name = "buttonTouchSoundCommand";
+			this.buttonTouchSoundCommand.Size = new System.Drawing.Size(48, 19);
+			this.buttonTouchSoundCommand.TabIndex = 109;
+			this.buttonTouchSoundCommand.Text = "Set...";
+			this.buttonTouchSoundCommand.UseVisualStyleBackColor = true;
+			this.buttonTouchSoundCommand.Click += new System.EventHandler(this.ButtonTouchSoundCommand_Click);
+			// 
+			// labelTouchSoundCommand
+			// 
+			this.labelTouchSoundCommand.Location = new System.Drawing.Point(8, 216);
+			this.labelTouchSoundCommand.Name = "labelTouchSoundCommand";
+			this.labelTouchSoundCommand.Size = new System.Drawing.Size(120, 16);
+			this.labelTouchSoundCommand.TabIndex = 108;
+			this.labelTouchSoundCommand.Text = "Sound and Command:";
+			this.labelTouchSoundCommand.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// numericUpDownTouchSoundIndex
+			// 
+			this.numericUpDownTouchSoundIndex.Location = new System.Drawing.Point(136, 192);
+			this.numericUpDownTouchSoundIndex.Maximum = new decimal(new int[] {
+            256,
+            0,
+            0,
+            0});
+			this.numericUpDownTouchSoundIndex.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+			this.numericUpDownTouchSoundIndex.Name = "numericUpDownTouchSoundIndex";
+			this.numericUpDownTouchSoundIndex.Size = new System.Drawing.Size(48, 19);
+			this.numericUpDownTouchSoundIndex.TabIndex = 107;
+			// 
+			// labelTouchSoundIndex
+			// 
+			this.labelTouchSoundIndex.Location = new System.Drawing.Point(8, 192);
+			this.labelTouchSoundIndex.Name = "labelTouchSoundIndex";
+			this.labelTouchSoundIndex.Size = new System.Drawing.Size(120, 16);
+			this.labelTouchSoundIndex.TabIndex = 106;
+			this.labelTouchSoundIndex.Text = "SoundIndex:";
+			this.labelTouchSoundIndex.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// numericUpDownTouchJumpScreen
+			// 
+			this.numericUpDownTouchJumpScreen.Location = new System.Drawing.Point(136, 168);
+			this.numericUpDownTouchJumpScreen.Name = "numericUpDownTouchJumpScreen";
+			this.numericUpDownTouchJumpScreen.Size = new System.Drawing.Size(48, 19);
+			this.numericUpDownTouchJumpScreen.TabIndex = 105;
+			// 
+			// labelTouchJumpScreen
+			// 
+			this.labelTouchJumpScreen.Location = new System.Drawing.Point(8, 168);
+			this.labelTouchJumpScreen.Name = "labelTouchJumpScreen";
+			this.labelTouchJumpScreen.Size = new System.Drawing.Size(120, 16);
+			this.labelTouchJumpScreen.TabIndex = 104;
+			this.labelTouchJumpScreen.Text = "JumpScreen:";
+			this.labelTouchJumpScreen.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// groupBoxTouchSize
+			// 
+			this.groupBoxTouchSize.Controls.Add(this.textBoxTouchSizeY);
+			this.groupBoxTouchSize.Controls.Add(this.textBoxTouchSizeX);
+			this.groupBoxTouchSize.Controls.Add(this.labelTouchSizeY);
+			this.groupBoxTouchSize.Controls.Add(this.labelTouchSizeX);
+			this.groupBoxTouchSize.Location = new System.Drawing.Point(8, 88);
+			this.groupBoxTouchSize.Name = "groupBoxTouchSize";
+			this.groupBoxTouchSize.Size = new System.Drawing.Size(184, 72);
+			this.groupBoxTouchSize.TabIndex = 90;
+			this.groupBoxTouchSize.TabStop = false;
+			this.groupBoxTouchSize.Text = "Size";
+			// 
+			// textBoxTouchSizeY
+			// 
+			this.textBoxTouchSizeY.Location = new System.Drawing.Point(128, 40);
+			this.textBoxTouchSizeY.Name = "textBoxTouchSizeY";
+			this.textBoxTouchSizeY.Size = new System.Drawing.Size(48, 19);
+			this.textBoxTouchSizeY.TabIndex = 33;
+			// 
+			// textBoxTouchSizeX
+			// 
+			this.textBoxTouchSizeX.Location = new System.Drawing.Point(128, 16);
+			this.textBoxTouchSizeX.Name = "textBoxTouchSizeX";
+			this.textBoxTouchSizeX.Size = new System.Drawing.Size(48, 19);
+			this.textBoxTouchSizeX.TabIndex = 32;
+			// 
+			// labelTouchSizeY
+			// 
+			this.labelTouchSizeY.Location = new System.Drawing.Point(8, 40);
+			this.labelTouchSizeY.Name = "labelTouchSizeY";
+			this.labelTouchSizeY.Size = new System.Drawing.Size(112, 16);
+			this.labelTouchSizeY.TabIndex = 10;
+			this.labelTouchSizeY.Text = "Y:";
+			this.labelTouchSizeY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelTouchSizeX
+			// 
+			this.labelTouchSizeX.Location = new System.Drawing.Point(8, 16);
+			this.labelTouchSizeX.Name = "labelTouchSizeX";
+			this.labelTouchSizeX.Size = new System.Drawing.Size(112, 16);
+			this.labelTouchSizeX.TabIndex = 9;
+			this.labelTouchSizeX.Text = "X:";
+			this.labelTouchSizeX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// groupBoxTouchLocation
+			// 
+			this.groupBoxTouchLocation.Controls.Add(this.textBoxTouchLocationY);
+			this.groupBoxTouchLocation.Controls.Add(this.textBoxTouchLocationX);
+			this.groupBoxTouchLocation.Controls.Add(this.labelTouchLocationY);
+			this.groupBoxTouchLocation.Controls.Add(this.labelTouchLocationX);
+			this.groupBoxTouchLocation.Location = new System.Drawing.Point(8, 8);
+			this.groupBoxTouchLocation.Name = "groupBoxTouchLocation";
+			this.groupBoxTouchLocation.Size = new System.Drawing.Size(184, 72);
+			this.groupBoxTouchLocation.TabIndex = 89;
+			this.groupBoxTouchLocation.TabStop = false;
+			this.groupBoxTouchLocation.Text = "Location";
+			// 
+			// textBoxTouchLocationY
+			// 
+			this.textBoxTouchLocationY.Location = new System.Drawing.Point(128, 40);
+			this.textBoxTouchLocationY.Name = "textBoxTouchLocationY";
+			this.textBoxTouchLocationY.Size = new System.Drawing.Size(48, 19);
+			this.textBoxTouchLocationY.TabIndex = 33;
+			// 
+			// textBoxTouchLocationX
+			// 
+			this.textBoxTouchLocationX.Location = new System.Drawing.Point(128, 16);
+			this.textBoxTouchLocationX.Name = "textBoxTouchLocationX";
+			this.textBoxTouchLocationX.Size = new System.Drawing.Size(48, 19);
+			this.textBoxTouchLocationX.TabIndex = 32;
+			// 
+			// labelTouchLocationY
+			// 
+			this.labelTouchLocationY.Location = new System.Drawing.Point(8, 40);
+			this.labelTouchLocationY.Name = "labelTouchLocationY";
+			this.labelTouchLocationY.Size = new System.Drawing.Size(112, 16);
+			this.labelTouchLocationY.TabIndex = 10;
+			this.labelTouchLocationY.Text = "Y:";
+			this.labelTouchLocationY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelTouchLocationX
+			// 
+			this.labelTouchLocationX.Location = new System.Drawing.Point(8, 16);
+			this.labelTouchLocationX.Name = "labelTouchLocationX";
+			this.labelTouchLocationX.Size = new System.Drawing.Size(112, 16);
+			this.labelTouchLocationX.TabIndex = 9;
+			this.labelTouchLocationX.Text = "X:";
+			this.labelTouchLocationX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// tabPageCoupler
 			// 
@@ -3524,55 +3550,22 @@ namespace TrainEditor2.Views
 			this.groupBoxCouplerGeneral.TabStop = false;
 			this.groupBoxCouplerGeneral.Text = "General";
 			// 
-			// labelCouplerMin
+			// buttonCouplerObject
 			// 
-			this.labelCouplerMin.Location = new System.Drawing.Point(8, 16);
-			this.labelCouplerMin.Name = "labelCouplerMin";
-			this.labelCouplerMin.Size = new System.Drawing.Size(48, 16);
-			this.labelCouplerMin.TabIndex = 22;
-			this.labelCouplerMin.Text = "Min:";
-			this.labelCouplerMin.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.buttonCouplerObject.Location = new System.Drawing.Point(128, 88);
+			this.buttonCouplerObject.Name = "buttonCouplerObject";
+			this.buttonCouplerObject.Size = new System.Drawing.Size(56, 19);
+			this.buttonCouplerObject.TabIndex = 30;
+			this.buttonCouplerObject.Text = "Open...";
+			this.buttonCouplerObject.UseVisualStyleBackColor = true;
+			this.buttonCouplerObject.Click += new System.EventHandler(this.ButtonCouplerObject_Click);
 			// 
-			// textBoxCouplerMin
+			// textBoxCouplerObject
 			// 
-			this.textBoxCouplerMin.Location = new System.Drawing.Point(64, 16);
-			this.textBoxCouplerMin.Name = "textBoxCouplerMin";
-			this.textBoxCouplerMin.Size = new System.Drawing.Size(48, 19);
-			this.textBoxCouplerMin.TabIndex = 23;
-			// 
-			// labelCouplerMinUnit
-			// 
-			this.labelCouplerMinUnit.Location = new System.Drawing.Point(120, 16);
-			this.labelCouplerMinUnit.Name = "labelCouplerMinUnit";
-			this.labelCouplerMinUnit.Size = new System.Drawing.Size(16, 16);
-			this.labelCouplerMinUnit.TabIndex = 24;
-			this.labelCouplerMinUnit.Text = "m";
-			this.labelCouplerMinUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelCouplerMaxUnit
-			// 
-			this.labelCouplerMaxUnit.Location = new System.Drawing.Point(120, 40);
-			this.labelCouplerMaxUnit.Name = "labelCouplerMaxUnit";
-			this.labelCouplerMaxUnit.Size = new System.Drawing.Size(16, 16);
-			this.labelCouplerMaxUnit.TabIndex = 27;
-			this.labelCouplerMaxUnit.Text = "m";
-			this.labelCouplerMaxUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelCouplerMax
-			// 
-			this.labelCouplerMax.Location = new System.Drawing.Point(8, 40);
-			this.labelCouplerMax.Name = "labelCouplerMax";
-			this.labelCouplerMax.Size = new System.Drawing.Size(48, 16);
-			this.labelCouplerMax.TabIndex = 25;
-			this.labelCouplerMax.Text = "Max:";
-			this.labelCouplerMax.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxCouplerMax
-			// 
-			this.textBoxCouplerMax.Location = new System.Drawing.Point(64, 40);
-			this.textBoxCouplerMax.Name = "textBoxCouplerMax";
-			this.textBoxCouplerMax.Size = new System.Drawing.Size(48, 19);
-			this.textBoxCouplerMax.TabIndex = 26;
+			this.textBoxCouplerObject.Location = new System.Drawing.Point(64, 64);
+			this.textBoxCouplerObject.Name = "textBoxCouplerObject";
+			this.textBoxCouplerObject.Size = new System.Drawing.Size(120, 19);
+			this.textBoxCouplerObject.TabIndex = 29;
 			// 
 			// labelCouplerObject
 			// 
@@ -3583,22 +3576,55 @@ namespace TrainEditor2.Views
 			this.labelCouplerObject.Text = "Object:";
 			this.labelCouplerObject.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// textBoxCouplerObject
+			// textBoxCouplerMax
 			// 
-			this.textBoxCouplerObject.Location = new System.Drawing.Point(64, 64);
-			this.textBoxCouplerObject.Name = "textBoxCouplerObject";
-			this.textBoxCouplerObject.Size = new System.Drawing.Size(120, 19);
-			this.textBoxCouplerObject.TabIndex = 29;
+			this.textBoxCouplerMax.Location = new System.Drawing.Point(64, 40);
+			this.textBoxCouplerMax.Name = "textBoxCouplerMax";
+			this.textBoxCouplerMax.Size = new System.Drawing.Size(48, 19);
+			this.textBoxCouplerMax.TabIndex = 26;
 			// 
-			// buttonCouplerObject
+			// labelCouplerMax
 			// 
-			this.buttonCouplerObject.Location = new System.Drawing.Point(128, 88);
-			this.buttonCouplerObject.Name = "buttonCouplerObject";
-			this.buttonCouplerObject.Size = new System.Drawing.Size(56, 19);
-			this.buttonCouplerObject.TabIndex = 30;
-			this.buttonCouplerObject.Text = "Open...";
-			this.buttonCouplerObject.UseVisualStyleBackColor = true;
-			this.buttonCouplerObject.Click += new System.EventHandler(this.ButtonCouplerObject_Click);
+			this.labelCouplerMax.Location = new System.Drawing.Point(8, 40);
+			this.labelCouplerMax.Name = "labelCouplerMax";
+			this.labelCouplerMax.Size = new System.Drawing.Size(48, 16);
+			this.labelCouplerMax.TabIndex = 25;
+			this.labelCouplerMax.Text = "Max:";
+			this.labelCouplerMax.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelCouplerMaxUnit
+			// 
+			this.labelCouplerMaxUnit.Location = new System.Drawing.Point(120, 40);
+			this.labelCouplerMaxUnit.Name = "labelCouplerMaxUnit";
+			this.labelCouplerMaxUnit.Size = new System.Drawing.Size(16, 16);
+			this.labelCouplerMaxUnit.TabIndex = 27;
+			this.labelCouplerMaxUnit.Text = "m";
+			this.labelCouplerMaxUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// labelCouplerMinUnit
+			// 
+			this.labelCouplerMinUnit.Location = new System.Drawing.Point(120, 16);
+			this.labelCouplerMinUnit.Name = "labelCouplerMinUnit";
+			this.labelCouplerMinUnit.Size = new System.Drawing.Size(16, 16);
+			this.labelCouplerMinUnit.TabIndex = 24;
+			this.labelCouplerMinUnit.Text = "m";
+			this.labelCouplerMinUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// textBoxCouplerMin
+			// 
+			this.textBoxCouplerMin.Location = new System.Drawing.Point(64, 16);
+			this.textBoxCouplerMin.Name = "textBoxCouplerMin";
+			this.textBoxCouplerMin.Size = new System.Drawing.Size(48, 19);
+			this.textBoxCouplerMin.TabIndex = 23;
+			// 
+			// labelCouplerMin
+			// 
+			this.labelCouplerMin.Location = new System.Drawing.Point(8, 16);
+			this.labelCouplerMin.Name = "labelCouplerMin";
+			this.labelCouplerMin.Size = new System.Drawing.Size(48, 16);
+			this.labelCouplerMin.TabIndex = 22;
+			this.labelCouplerMin.Text = "Min:";
+			this.labelCouplerMin.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// tabPageMotor
 			// 
@@ -3632,70 +3658,658 @@ namespace TrainEditor2.Views
 			this.splitContainerMotor.SplitterDistance = 200;
 			this.splitContainerMotor.TabIndex = 6;
 			// 
-			// statusStripStatus
+			// treeViewMotor
 			// 
-			this.statusStripStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabelY,
-            this.toolStripStatusLabelX,
-            this.toolStripStatusLabelTool,
-            this.toolStripStatusLabelMode,
-            this.toolStripStatusLabelType});
-			this.statusStripStatus.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-			this.statusStripStatus.Location = new System.Drawing.Point(0, 642);
-			this.statusStripStatus.Name = "statusStripStatus";
-			this.statusStripStatus.Size = new System.Drawing.Size(582, 22);
-			this.statusStripStatus.TabIndex = 1;
-			this.statusStripStatus.Text = "statusStrip1";
+			this.treeViewMotor.CheckBoxes = true;
+			this.treeViewMotor.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.treeViewMotor.HideSelection = false;
+			this.treeViewMotor.Location = new System.Drawing.Point(0, 0);
+			this.treeViewMotor.Name = "treeViewMotor";
+			this.treeViewMotor.Size = new System.Drawing.Size(200, 592);
+			this.treeViewMotor.TabIndex = 5;
 			// 
-			// toolStripStatusLabelY
+			// panelMoterNavi
 			// 
-			this.toolStripStatusLabelY.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-			this.toolStripStatusLabelY.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-			this.toolStripStatusLabelY.Name = "toolStripStatusLabelY";
-			this.toolStripStatusLabelY.Size = new System.Drawing.Size(16, 17);
-			this.toolStripStatusLabelY.Text = "Y";
+			this.panelMoterNavi.Controls.Add(this.buttonMotorCopy);
+			this.panelMoterNavi.Controls.Add(this.buttonMotorRemove);
+			this.panelMoterNavi.Controls.Add(this.buttonMotorAdd);
+			this.panelMoterNavi.Controls.Add(this.buttonMotorUp);
+			this.panelMoterNavi.Controls.Add(this.buttonMotorDown);
+			this.panelMoterNavi.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.panelMoterNavi.Location = new System.Drawing.Point(0, 592);
+			this.panelMoterNavi.Name = "panelMoterNavi";
+			this.panelMoterNavi.Size = new System.Drawing.Size(200, 72);
+			this.panelMoterNavi.TabIndex = 4;
 			// 
-			// toolStripStatusLabelX
+			// buttonMotorCopy
 			// 
-			this.toolStripStatusLabelX.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-			this.toolStripStatusLabelX.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-			this.toolStripStatusLabelX.Name = "toolStripStatusLabelX";
-			this.toolStripStatusLabelX.Size = new System.Drawing.Size(16, 17);
-			this.toolStripStatusLabelX.Text = "X";
+			this.buttonMotorCopy.Location = new System.Drawing.Point(72, 40);
+			this.buttonMotorCopy.Name = "buttonMotorCopy";
+			this.buttonMotorCopy.Size = new System.Drawing.Size(56, 24);
+			this.buttonMotorCopy.TabIndex = 5;
+			this.buttonMotorCopy.Text = "Copy";
+			this.buttonMotorCopy.UseVisualStyleBackColor = true;
 			// 
-			// toolStripStatusLabelTool
+			// buttonMotorRemove
 			// 
-			this.toolStripStatusLabelTool.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-			this.toolStripStatusLabelTool.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-			this.toolStripStatusLabelTool.Name = "toolStripStatusLabelTool";
-			this.toolStripStatusLabelTool.Size = new System.Drawing.Size(31, 17);
-			this.toolStripStatusLabelTool.Text = "Tool";
+			this.buttonMotorRemove.Location = new System.Drawing.Point(136, 8);
+			this.buttonMotorRemove.Name = "buttonMotorRemove";
+			this.buttonMotorRemove.Size = new System.Drawing.Size(56, 24);
+			this.buttonMotorRemove.TabIndex = 3;
+			this.buttonMotorRemove.Text = "Remove";
+			this.buttonMotorRemove.UseVisualStyleBackColor = true;
 			// 
-			// toolStripStatusLabelMode
+			// buttonMotorAdd
 			// 
-			this.toolStripStatusLabelMode.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-			this.toolStripStatusLabelMode.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-			this.toolStripStatusLabelMode.Name = "toolStripStatusLabelMode";
-			this.toolStripStatusLabelMode.Size = new System.Drawing.Size(36, 17);
-			this.toolStripStatusLabelMode.Text = "Mode";
+			this.buttonMotorAdd.Location = new System.Drawing.Point(72, 8);
+			this.buttonMotorAdd.Name = "buttonMotorAdd";
+			this.buttonMotorAdd.Size = new System.Drawing.Size(56, 24);
+			this.buttonMotorAdd.TabIndex = 2;
+			this.buttonMotorAdd.Text = "Add";
+			this.buttonMotorAdd.UseVisualStyleBackColor = true;
 			// 
-			// toolStripStatusLabelType
+			// buttonMotorUp
 			// 
-			this.toolStripStatusLabelType.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-			this.toolStripStatusLabelType.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-			this.toolStripStatusLabelType.Name = "toolStripStatusLabelType";
-			this.toolStripStatusLabelType.Size = new System.Drawing.Size(34, 17);
-			this.toolStripStatusLabelType.Text = "Type";
+			this.buttonMotorUp.Location = new System.Drawing.Point(8, 8);
+			this.buttonMotorUp.Name = "buttonMotorUp";
+			this.buttonMotorUp.Size = new System.Drawing.Size(56, 24);
+			this.buttonMotorUp.TabIndex = 0;
+			this.buttonMotorUp.Text = "Up";
+			this.buttonMotorUp.UseVisualStyleBackColor = true;
+			// 
+			// buttonMotorDown
+			// 
+			this.buttonMotorDown.Location = new System.Drawing.Point(8, 40);
+			this.buttonMotorDown.Name = "buttonMotorDown";
+			this.buttonMotorDown.Size = new System.Drawing.Size(56, 24);
+			this.buttonMotorDown.TabIndex = 1;
+			this.buttonMotorDown.Text = "Down";
+			this.buttonMotorDown.UseVisualStyleBackColor = true;
+			// 
+			// toolStripContainerDrawArea
+			// 
+			// 
+			// toolStripContainerDrawArea.ContentPanel
+			// 
+			this.toolStripContainerDrawArea.ContentPanel.Controls.Add(this.glControlMotor);
+			this.toolStripContainerDrawArea.ContentPanel.Size = new System.Drawing.Size(364, 593);
+			this.toolStripContainerDrawArea.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.toolStripContainerDrawArea.Location = new System.Drawing.Point(0, 24);
+			this.toolStripContainerDrawArea.Name = "toolStripContainerDrawArea";
+			this.toolStripContainerDrawArea.Size = new System.Drawing.Size(364, 618);
+			this.toolStripContainerDrawArea.TabIndex = 4;
+			this.toolStripContainerDrawArea.Text = "toolStripContainer1";
+			// 
+			// toolStripContainerDrawArea.TopToolStripPanel
+			// 
+			this.toolStripContainerDrawArea.TopToolStripPanel.Controls.Add(this.toolStripToolBar);
+			// 
+			// glControlMotor
+			// 
+			this.glControlMotor.BackColor = System.Drawing.Color.Black;
+			this.glControlMotor.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.glControlMotor.Location = new System.Drawing.Point(0, 0);
+			this.glControlMotor.Name = "glControlMotor";
+			this.glControlMotor.Size = new System.Drawing.Size(364, 593);
+			this.glControlMotor.TabIndex = 0;
+			this.glControlMotor.VSync = false;
+			this.glControlMotor.Load += new System.EventHandler(this.GlControlMotor_Load);
+			this.glControlMotor.Paint += new System.Windows.Forms.PaintEventHandler(this.GlControlMotor_Paint);
+			this.glControlMotor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GlControlMotor_KeyDown);
+			this.glControlMotor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.GlControlMotor_MouseDown);
+			this.glControlMotor.MouseEnter += new System.EventHandler(this.GlControlMotor_MouseEnter);
+			this.glControlMotor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.GlControlMotor_MouseMove);
+			this.glControlMotor.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GlControlMotor_MouseUp);
+			this.glControlMotor.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.GlControlMotor_PreviewKeyDown);
+			this.glControlMotor.Resize += new System.EventHandler(this.GlControlMotor_Resize);
+			// 
+			// toolStripToolBar
+			// 
+			this.toolStripToolBar.Dock = System.Windows.Forms.DockStyle.None;
+			this.toolStripToolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButtonUndo,
+            this.toolStripButtonRedo,
+            this.toolStripSeparatorRedo,
+            this.toolStripButtonCleanup,
+            this.toolStripButtonDelete,
+            this.toolStripSeparatorEdit,
+            this.toolStripButtonSelect,
+            this.toolStripButtonMove,
+            this.toolStripButtonDot,
+            this.toolStripButtonLine});
+			this.toolStripToolBar.Location = new System.Drawing.Point(3, 0);
+			this.toolStripToolBar.Name = "toolStripToolBar";
+			this.toolStripToolBar.Size = new System.Drawing.Size(206, 25);
+			this.toolStripToolBar.TabIndex = 0;
+			// 
+			// toolStripButtonUndo
+			// 
+			this.toolStripButtonUndo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButtonUndo.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButtonUndo.Name = "toolStripButtonUndo";
+			this.toolStripButtonUndo.Size = new System.Drawing.Size(23, 22);
+			this.toolStripButtonUndo.Text = "Undo (Ctrl+Z)";
+			// 
+			// toolStripButtonRedo
+			// 
+			this.toolStripButtonRedo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButtonRedo.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButtonRedo.Name = "toolStripButtonRedo";
+			this.toolStripButtonRedo.Size = new System.Drawing.Size(23, 22);
+			this.toolStripButtonRedo.Text = "Redo (Ctrl+Y)";
+			// 
+			// toolStripSeparatorRedo
+			// 
+			this.toolStripSeparatorRedo.Name = "toolStripSeparatorRedo";
+			this.toolStripSeparatorRedo.Size = new System.Drawing.Size(6, 25);
+			// 
+			// toolStripButtonCleanup
+			// 
+			this.toolStripButtonCleanup.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButtonCleanup.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButtonCleanup.Name = "toolStripButtonCleanup";
+			this.toolStripButtonCleanup.Size = new System.Drawing.Size(23, 22);
+			this.toolStripButtonCleanup.Text = "Cleanup";
+			// 
+			// toolStripButtonDelete
+			// 
+			this.toolStripButtonDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButtonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButtonDelete.Name = "toolStripButtonDelete";
+			this.toolStripButtonDelete.Size = new System.Drawing.Size(23, 22);
+			this.toolStripButtonDelete.Text = "Delete (Del)";
+			// 
+			// toolStripSeparatorEdit
+			// 
+			this.toolStripSeparatorEdit.Name = "toolStripSeparatorEdit";
+			this.toolStripSeparatorEdit.Size = new System.Drawing.Size(6, 25);
+			// 
+			// toolStripButtonSelect
+			// 
+			this.toolStripButtonSelect.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButtonSelect.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButtonSelect.Name = "toolStripButtonSelect";
+			this.toolStripButtonSelect.Size = new System.Drawing.Size(23, 22);
+			this.toolStripButtonSelect.Text = "Select (Alt+A)";
+			// 
+			// toolStripButtonMove
+			// 
+			this.toolStripButtonMove.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButtonMove.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButtonMove.Name = "toolStripButtonMove";
+			this.toolStripButtonMove.Size = new System.Drawing.Size(23, 22);
+			this.toolStripButtonMove.Text = "Move (Alt+S)";
+			// 
+			// toolStripButtonDot
+			// 
+			this.toolStripButtonDot.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButtonDot.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButtonDot.Name = "toolStripButtonDot";
+			this.toolStripButtonDot.Size = new System.Drawing.Size(23, 22);
+			this.toolStripButtonDot.Text = "Dot (Alt+D)";
+			// 
+			// toolStripButtonLine
+			// 
+			this.toolStripButtonLine.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButtonLine.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButtonLine.Name = "toolStripButtonLine";
+			this.toolStripButtonLine.Size = new System.Drawing.Size(23, 22);
+			this.toolStripButtonLine.Text = "Line (Alt+F)";
+			// 
+			// panelMotorSetting
+			// 
+			this.panelMotorSetting.Controls.Add(this.groupBoxPlay);
+			this.panelMotorSetting.Controls.Add(this.groupBoxDirect);
+			this.panelMotorSetting.Controls.Add(this.groupBoxView);
+			this.panelMotorSetting.Controls.Add(this.groupBoxTrack);
+			this.panelMotorSetting.Dock = System.Windows.Forms.DockStyle.Right;
+			this.panelMotorSetting.Location = new System.Drawing.Point(364, 24);
+			this.panelMotorSetting.Name = "panelMotorSetting";
+			this.panelMotorSetting.Size = new System.Drawing.Size(218, 618);
+			this.panelMotorSetting.TabIndex = 3;
+			// 
+			// groupBoxPlay
+			// 
+			this.groupBoxPlay.Controls.Add(this.buttonStop);
+			this.groupBoxPlay.Controls.Add(this.buttonPause);
+			this.groupBoxPlay.Controls.Add(this.buttonPlay);
+			this.groupBoxPlay.Controls.Add(this.groupBoxArea);
+			this.groupBoxPlay.Controls.Add(this.groupBoxSource);
+			this.groupBoxPlay.Location = new System.Drawing.Point(8, 368);
+			this.groupBoxPlay.Name = "groupBoxPlay";
+			this.groupBoxPlay.Size = new System.Drawing.Size(200, 233);
+			this.groupBoxPlay.TabIndex = 1;
+			this.groupBoxPlay.TabStop = false;
+			this.groupBoxPlay.Text = "Playback setting";
+			// 
+			// buttonStop
+			// 
+			this.buttonStop.Location = new System.Drawing.Point(136, 200);
+			this.buttonStop.Name = "buttonStop";
+			this.buttonStop.Size = new System.Drawing.Size(56, 24);
+			this.buttonStop.TabIndex = 4;
+			this.buttonStop.UseVisualStyleBackColor = true;
+			// 
+			// buttonPause
+			// 
+			this.buttonPause.Location = new System.Drawing.Point(72, 200);
+			this.buttonPause.Name = "buttonPause";
+			this.buttonPause.Size = new System.Drawing.Size(56, 24);
+			this.buttonPause.TabIndex = 3;
+			this.buttonPause.UseVisualStyleBackColor = true;
+			// 
+			// buttonPlay
+			// 
+			this.buttonPlay.Location = new System.Drawing.Point(8, 200);
+			this.buttonPlay.Name = "buttonPlay";
+			this.buttonPlay.Size = new System.Drawing.Size(56, 24);
+			this.buttonPlay.TabIndex = 2;
+			this.buttonPlay.UseVisualStyleBackColor = true;
+			// 
+			// groupBoxArea
+			// 
+			this.groupBoxArea.Controls.Add(this.checkBoxMotorConstant);
+			this.groupBoxArea.Controls.Add(this.checkBoxMotorLoop);
+			this.groupBoxArea.Controls.Add(this.buttonMotorSwap);
+			this.groupBoxArea.Controls.Add(this.textBoxMotorAreaLeft);
+			this.groupBoxArea.Controls.Add(this.labelMotorAreaUnit);
+			this.groupBoxArea.Controls.Add(this.textBoxMotorAreaRight);
+			this.groupBoxArea.Controls.Add(this.labelMotorAccel);
+			this.groupBoxArea.Controls.Add(this.labelMotorAccelUnit);
+			this.groupBoxArea.Controls.Add(this.textBoxMotorAccel);
+			this.groupBoxArea.Location = new System.Drawing.Point(8, 72);
+			this.groupBoxArea.Name = "groupBoxArea";
+			this.groupBoxArea.Size = new System.Drawing.Size(184, 120);
+			this.groupBoxArea.TabIndex = 1;
+			this.groupBoxArea.TabStop = false;
+			this.groupBoxArea.Text = "Area setting";
+			// 
+			// checkBoxMotorConstant
+			// 
+			this.checkBoxMotorConstant.AutoSize = true;
+			this.checkBoxMotorConstant.Location = new System.Drawing.Point(8, 40);
+			this.checkBoxMotorConstant.Name = "checkBoxMotorConstant";
+			this.checkBoxMotorConstant.Size = new System.Drawing.Size(104, 16);
+			this.checkBoxMotorConstant.TabIndex = 19;
+			this.checkBoxMotorConstant.Text = "Constant speed";
+			this.checkBoxMotorConstant.UseVisualStyleBackColor = true;
+			// 
+			// checkBoxMotorLoop
+			// 
+			this.checkBoxMotorLoop.AutoSize = true;
+			this.checkBoxMotorLoop.Location = new System.Drawing.Point(8, 16);
+			this.checkBoxMotorLoop.Name = "checkBoxMotorLoop";
+			this.checkBoxMotorLoop.Size = new System.Drawing.Size(97, 16);
+			this.checkBoxMotorLoop.TabIndex = 18;
+			this.checkBoxMotorLoop.Text = "Loop playback";
+			this.checkBoxMotorLoop.UseVisualStyleBackColor = true;
+			// 
+			// buttonMotorSwap
+			// 
+			this.buttonMotorSwap.Location = new System.Drawing.Point(56, 88);
+			this.buttonMotorSwap.Name = "buttonMotorSwap";
+			this.buttonMotorSwap.Size = new System.Drawing.Size(32, 19);
+			this.buttonMotorSwap.TabIndex = 17;
+			this.buttonMotorSwap.UseVisualStyleBackColor = true;
+			// 
+			// textBoxMotorAreaLeft
+			// 
+			this.textBoxMotorAreaLeft.Location = new System.Drawing.Point(8, 88);
+			this.textBoxMotorAreaLeft.Name = "textBoxMotorAreaLeft";
+			this.textBoxMotorAreaLeft.Size = new System.Drawing.Size(40, 19);
+			this.textBoxMotorAreaLeft.TabIndex = 16;
+			// 
+			// labelMotorAreaUnit
+			// 
+			this.labelMotorAreaUnit.Location = new System.Drawing.Point(144, 88);
+			this.labelMotorAreaUnit.Name = "labelMotorAreaUnit";
+			this.labelMotorAreaUnit.Size = new System.Drawing.Size(32, 16);
+			this.labelMotorAreaUnit.TabIndex = 15;
+			this.labelMotorAreaUnit.Text = "km/h";
+			this.labelMotorAreaUnit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// textBoxMotorAreaRight
+			// 
+			this.textBoxMotorAreaRight.Location = new System.Drawing.Point(96, 88);
+			this.textBoxMotorAreaRight.Name = "textBoxMotorAreaRight";
+			this.textBoxMotorAreaRight.Size = new System.Drawing.Size(40, 19);
+			this.textBoxMotorAreaRight.TabIndex = 3;
+			// 
+			// labelMotorAccel
+			// 
+			this.labelMotorAccel.Location = new System.Drawing.Point(8, 64);
+			this.labelMotorAccel.Name = "labelMotorAccel";
+			this.labelMotorAccel.Size = new System.Drawing.Size(72, 16);
+			this.labelMotorAccel.TabIndex = 2;
+			this.labelMotorAccel.Text = "Acceleration:";
+			this.labelMotorAccel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelMotorAccelUnit
+			// 
+			this.labelMotorAccelUnit.Location = new System.Drawing.Point(128, 64);
+			this.labelMotorAccelUnit.Name = "labelMotorAccelUnit";
+			this.labelMotorAccelUnit.Size = new System.Drawing.Size(44, 16);
+			this.labelMotorAccelUnit.TabIndex = 1;
+			this.labelMotorAccelUnit.Text = "km/h/s";
+			this.labelMotorAccelUnit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// textBoxMotorAccel
+			// 
+			this.textBoxMotorAccel.Location = new System.Drawing.Point(88, 64);
+			this.textBoxMotorAccel.Name = "textBoxMotorAccel";
+			this.textBoxMotorAccel.Size = new System.Drawing.Size(32, 19);
+			this.textBoxMotorAccel.TabIndex = 0;
+			// 
+			// groupBoxSource
+			// 
+			this.groupBoxSource.Controls.Add(this.numericUpDownRunIndex);
+			this.groupBoxSource.Controls.Add(this.labelRun);
+			this.groupBoxSource.Location = new System.Drawing.Point(8, 16);
+			this.groupBoxSource.Name = "groupBoxSource";
+			this.groupBoxSource.Size = new System.Drawing.Size(184, 48);
+			this.groupBoxSource.TabIndex = 0;
+			this.groupBoxSource.TabStop = false;
+			this.groupBoxSource.Text = "Sound source setting";
+			// 
+			// numericUpDownRunIndex
+			// 
+			this.numericUpDownRunIndex.Location = new System.Drawing.Point(112, 16);
+			this.numericUpDownRunIndex.Maximum = new decimal(new int[] {
+            256,
+            0,
+            0,
+            0});
+			this.numericUpDownRunIndex.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+			this.numericUpDownRunIndex.Name = "numericUpDownRunIndex";
+			this.numericUpDownRunIndex.Size = new System.Drawing.Size(48, 19);
+			this.numericUpDownRunIndex.TabIndex = 16;
+			this.numericUpDownRunIndex.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+			// 
+			// labelRun
+			// 
+			this.labelRun.Location = new System.Drawing.Point(8, 16);
+			this.labelRun.Name = "labelRun";
+			this.labelRun.Size = new System.Drawing.Size(96, 16);
+			this.labelRun.TabIndex = 4;
+			this.labelRun.Text = "Running sound:";
+			this.labelRun.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// groupBoxDirect
+			// 
+			this.groupBoxDirect.Controls.Add(this.buttonDirectDot);
+			this.groupBoxDirect.Controls.Add(this.buttonDirectMove);
+			this.groupBoxDirect.Controls.Add(this.textBoxDirectY);
+			this.groupBoxDirect.Controls.Add(this.labelDirectY);
+			this.groupBoxDirect.Controls.Add(this.labelDirectXUnit);
+			this.groupBoxDirect.Controls.Add(this.textBoxDirectX);
+			this.groupBoxDirect.Controls.Add(this.labelDirectX);
+			this.groupBoxDirect.Location = new System.Drawing.Point(8, 264);
+			this.groupBoxDirect.Name = "groupBoxDirect";
+			this.groupBoxDirect.Size = new System.Drawing.Size(200, 96);
+			this.groupBoxDirect.TabIndex = 2;
+			this.groupBoxDirect.TabStop = false;
+			this.groupBoxDirect.Text = "Direct input";
+			// 
+			// buttonDirectDot
+			// 
+			this.buttonDirectDot.Location = new System.Drawing.Point(8, 64);
+			this.buttonDirectDot.Name = "buttonDirectDot";
+			this.buttonDirectDot.Size = new System.Drawing.Size(56, 24);
+			this.buttonDirectDot.TabIndex = 22;
+			this.buttonDirectDot.UseVisualStyleBackColor = true;
+			// 
+			// buttonDirectMove
+			// 
+			this.buttonDirectMove.Location = new System.Drawing.Point(72, 64);
+			this.buttonDirectMove.Name = "buttonDirectMove";
+			this.buttonDirectMove.Size = new System.Drawing.Size(56, 24);
+			this.buttonDirectMove.TabIndex = 21;
+			this.buttonDirectMove.UseVisualStyleBackColor = true;
+			// 
+			// textBoxDirectY
+			// 
+			this.textBoxDirectY.Location = new System.Drawing.Point(112, 40);
+			this.textBoxDirectY.Name = "textBoxDirectY";
+			this.textBoxDirectY.Size = new System.Drawing.Size(40, 19);
+			this.textBoxDirectY.TabIndex = 19;
+			// 
+			// labelDirectY
+			// 
+			this.labelDirectY.Location = new System.Drawing.Point(8, 40);
+			this.labelDirectY.Name = "labelDirectY";
+			this.labelDirectY.Size = new System.Drawing.Size(96, 16);
+			this.labelDirectY.TabIndex = 18;
+			this.labelDirectY.Text = "y coordinate:";
+			this.labelDirectY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelDirectXUnit
+			// 
+			this.labelDirectXUnit.Location = new System.Drawing.Point(160, 16);
+			this.labelDirectXUnit.Name = "labelDirectXUnit";
+			this.labelDirectXUnit.Size = new System.Drawing.Size(32, 16);
+			this.labelDirectXUnit.TabIndex = 17;
+			this.labelDirectXUnit.Text = "km/h";
+			this.labelDirectXUnit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// textBoxDirectX
+			// 
+			this.textBoxDirectX.Location = new System.Drawing.Point(112, 16);
+			this.textBoxDirectX.Name = "textBoxDirectX";
+			this.textBoxDirectX.Size = new System.Drawing.Size(40, 19);
+			this.textBoxDirectX.TabIndex = 16;
+			// 
+			// labelDirectX
+			// 
+			this.labelDirectX.Location = new System.Drawing.Point(8, 16);
+			this.labelDirectX.Name = "labelDirectX";
+			this.labelDirectX.Size = new System.Drawing.Size(96, 16);
+			this.labelDirectX.TabIndex = 15;
+			this.labelDirectX.Text = "x coordinate:";
+			this.labelDirectX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// groupBoxView
+			// 
+			this.groupBoxView.Controls.Add(this.buttonMotorReset);
+			this.groupBoxView.Controls.Add(this.buttonMotorZoomOut);
+			this.groupBoxView.Controls.Add(this.buttonMotorZoomIn);
+			this.groupBoxView.Controls.Add(this.labelMotorMaxVolume);
+			this.groupBoxView.Controls.Add(this.textBoxMotorMaxVolume);
+			this.groupBoxView.Controls.Add(this.labelMotorMinVolume);
+			this.groupBoxView.Controls.Add(this.textBoxMotorMinVolume);
+			this.groupBoxView.Controls.Add(this.labelMotorMaxPitch);
+			this.groupBoxView.Controls.Add(this.textBoxMotorMaxPitch);
+			this.groupBoxView.Controls.Add(this.labelMotorMinPitch);
+			this.groupBoxView.Controls.Add(this.textBoxMotorMinPitch);
+			this.groupBoxView.Controls.Add(this.labelMotorMaxVelocityUnit);
+			this.groupBoxView.Controls.Add(this.textBoxMotorMaxVelocity);
+			this.groupBoxView.Controls.Add(this.labelMotorMaxVelocity);
+			this.groupBoxView.Controls.Add(this.labelMotorMinVelocityUnit);
+			this.groupBoxView.Controls.Add(this.textBoxMotorMinVelocity);
+			this.groupBoxView.Controls.Add(this.labelMotorMinVelocity);
+			this.groupBoxView.Location = new System.Drawing.Point(8, 64);
+			this.groupBoxView.Name = "groupBoxView";
+			this.groupBoxView.Size = new System.Drawing.Size(200, 192);
+			this.groupBoxView.TabIndex = 0;
+			this.groupBoxView.TabStop = false;
+			this.groupBoxView.Text = "View setting";
+			// 
+			// buttonMotorReset
+			// 
+			this.buttonMotorReset.Location = new System.Drawing.Point(136, 160);
+			this.buttonMotorReset.Name = "buttonMotorReset";
+			this.buttonMotorReset.Size = new System.Drawing.Size(56, 24);
+			this.buttonMotorReset.TabIndex = 25;
+			this.buttonMotorReset.UseVisualStyleBackColor = true;
+			// 
+			// buttonMotorZoomOut
+			// 
+			this.buttonMotorZoomOut.Location = new System.Drawing.Point(72, 160);
+			this.buttonMotorZoomOut.Name = "buttonMotorZoomOut";
+			this.buttonMotorZoomOut.Size = new System.Drawing.Size(56, 24);
+			this.buttonMotorZoomOut.TabIndex = 24;
+			this.buttonMotorZoomOut.UseVisualStyleBackColor = true;
+			// 
+			// buttonMotorZoomIn
+			// 
+			this.buttonMotorZoomIn.Location = new System.Drawing.Point(8, 160);
+			this.buttonMotorZoomIn.Name = "buttonMotorZoomIn";
+			this.buttonMotorZoomIn.Size = new System.Drawing.Size(56, 24);
+			this.buttonMotorZoomIn.TabIndex = 23;
+			this.buttonMotorZoomIn.UseVisualStyleBackColor = true;
+			// 
+			// labelMotorMaxVolume
+			// 
+			this.labelMotorMaxVolume.Location = new System.Drawing.Point(8, 136);
+			this.labelMotorMaxVolume.Name = "labelMotorMaxVolume";
+			this.labelMotorMaxVolume.Size = new System.Drawing.Size(104, 16);
+			this.labelMotorMaxVolume.TabIndex = 14;
+			this.labelMotorMaxVolume.Text = "y-max(Volume):";
+			this.labelMotorMaxVolume.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxMotorMaxVolume
+			// 
+			this.textBoxMotorMaxVolume.Location = new System.Drawing.Point(120, 136);
+			this.textBoxMotorMaxVolume.Name = "textBoxMotorMaxVolume";
+			this.textBoxMotorMaxVolume.Size = new System.Drawing.Size(32, 19);
+			this.textBoxMotorMaxVolume.TabIndex = 13;
+			// 
+			// labelMotorMinVolume
+			// 
+			this.labelMotorMinVolume.Location = new System.Drawing.Point(8, 112);
+			this.labelMotorMinVolume.Name = "labelMotorMinVolume";
+			this.labelMotorMinVolume.Size = new System.Drawing.Size(104, 16);
+			this.labelMotorMinVolume.TabIndex = 12;
+			this.labelMotorMinVolume.Text = "y-min(Volume):";
+			this.labelMotorMinVolume.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxMotorMinVolume
+			// 
+			this.textBoxMotorMinVolume.Location = new System.Drawing.Point(120, 112);
+			this.textBoxMotorMinVolume.Name = "textBoxMotorMinVolume";
+			this.textBoxMotorMinVolume.Size = new System.Drawing.Size(32, 19);
+			this.textBoxMotorMinVolume.TabIndex = 11;
+			// 
+			// labelMotorMaxPitch
+			// 
+			this.labelMotorMaxPitch.Location = new System.Drawing.Point(8, 88);
+			this.labelMotorMaxPitch.Name = "labelMotorMaxPitch";
+			this.labelMotorMaxPitch.Size = new System.Drawing.Size(104, 16);
+			this.labelMotorMaxPitch.TabIndex = 10;
+			this.labelMotorMaxPitch.Text = "y-max(Pitch):";
+			this.labelMotorMaxPitch.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxMotorMaxPitch
+			// 
+			this.textBoxMotorMaxPitch.Location = new System.Drawing.Point(120, 88);
+			this.textBoxMotorMaxPitch.Name = "textBoxMotorMaxPitch";
+			this.textBoxMotorMaxPitch.Size = new System.Drawing.Size(32, 19);
+			this.textBoxMotorMaxPitch.TabIndex = 9;
+			// 
+			// labelMotorMinPitch
+			// 
+			this.labelMotorMinPitch.Location = new System.Drawing.Point(8, 64);
+			this.labelMotorMinPitch.Name = "labelMotorMinPitch";
+			this.labelMotorMinPitch.Size = new System.Drawing.Size(104, 16);
+			this.labelMotorMinPitch.TabIndex = 8;
+			this.labelMotorMinPitch.Text = "y-min(Pitch):";
+			this.labelMotorMinPitch.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxMotorMinPitch
+			// 
+			this.textBoxMotorMinPitch.Location = new System.Drawing.Point(120, 64);
+			this.textBoxMotorMinPitch.Name = "textBoxMotorMinPitch";
+			this.textBoxMotorMinPitch.Size = new System.Drawing.Size(32, 19);
+			this.textBoxMotorMinPitch.TabIndex = 7;
+			// 
+			// labelMotorMaxVelocityUnit
+			// 
+			this.labelMotorMaxVelocityUnit.Location = new System.Drawing.Point(160, 40);
+			this.labelMotorMaxVelocityUnit.Name = "labelMotorMaxVelocityUnit";
+			this.labelMotorMaxVelocityUnit.Size = new System.Drawing.Size(32, 16);
+			this.labelMotorMaxVelocityUnit.TabIndex = 5;
+			this.labelMotorMaxVelocityUnit.Text = "km/h";
+			this.labelMotorMaxVelocityUnit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// textBoxMotorMaxVelocity
+			// 
+			this.textBoxMotorMaxVelocity.Location = new System.Drawing.Point(120, 40);
+			this.textBoxMotorMaxVelocity.Name = "textBoxMotorMaxVelocity";
+			this.textBoxMotorMaxVelocity.Size = new System.Drawing.Size(32, 19);
+			this.textBoxMotorMaxVelocity.TabIndex = 4;
+			// 
+			// labelMotorMaxVelocity
+			// 
+			this.labelMotorMaxVelocity.Location = new System.Drawing.Point(8, 40);
+			this.labelMotorMaxVelocity.Name = "labelMotorMaxVelocity";
+			this.labelMotorMaxVelocity.Size = new System.Drawing.Size(104, 16);
+			this.labelMotorMaxVelocity.TabIndex = 3;
+			this.labelMotorMaxVelocity.Text = "x-max(Velocity):";
+			this.labelMotorMaxVelocity.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelMotorMinVelocityUnit
+			// 
+			this.labelMotorMinVelocityUnit.Location = new System.Drawing.Point(160, 16);
+			this.labelMotorMinVelocityUnit.Name = "labelMotorMinVelocityUnit";
+			this.labelMotorMinVelocityUnit.Size = new System.Drawing.Size(32, 16);
+			this.labelMotorMinVelocityUnit.TabIndex = 2;
+			this.labelMotorMinVelocityUnit.Text = "km/h";
+			this.labelMotorMinVelocityUnit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// textBoxMotorMinVelocity
+			// 
+			this.textBoxMotorMinVelocity.Location = new System.Drawing.Point(120, 16);
+			this.textBoxMotorMinVelocity.Name = "textBoxMotorMinVelocity";
+			this.textBoxMotorMinVelocity.Size = new System.Drawing.Size(32, 19);
+			this.textBoxMotorMinVelocity.TabIndex = 1;
+			// 
+			// labelMotorMinVelocity
+			// 
+			this.labelMotorMinVelocity.Location = new System.Drawing.Point(8, 16);
+			this.labelMotorMinVelocity.Name = "labelMotorMinVelocity";
+			this.labelMotorMinVelocity.Size = new System.Drawing.Size(104, 16);
+			this.labelMotorMinVelocity.TabIndex = 0;
+			this.labelMotorMinVelocity.Text = "x-min(Velocity):";
+			this.labelMotorMinVelocity.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// groupBoxTrack
+			// 
+			this.groupBoxTrack.Controls.Add(this.comboBoxTrackType);
+			this.groupBoxTrack.Controls.Add(this.labelTrackType);
+			this.groupBoxTrack.Location = new System.Drawing.Point(8, 8);
+			this.groupBoxTrack.Name = "groupBoxTrack";
+			this.groupBoxTrack.Size = new System.Drawing.Size(200, 48);
+			this.groupBoxTrack.TabIndex = 3;
+			this.groupBoxTrack.TabStop = false;
+			this.groupBoxTrack.Text = "Track setting";
+			// 
+			// comboBoxTrackType
+			// 
+			this.comboBoxTrackType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxTrackType.FormattingEnabled = true;
+			this.comboBoxTrackType.Items.AddRange(new object[] {
+            "Power",
+            "Brake"});
+			this.comboBoxTrackType.Location = new System.Drawing.Point(112, 16);
+			this.comboBoxTrackType.Name = "comboBoxTrackType";
+			this.comboBoxTrackType.Size = new System.Drawing.Size(81, 20);
+			this.comboBoxTrackType.TabIndex = 6;
+			// 
+			// labelTrackType
+			// 
+			this.labelTrackType.Location = new System.Drawing.Point(8, 16);
+			this.labelTrackType.Name = "labelTrackType";
+			this.labelTrackType.Size = new System.Drawing.Size(96, 16);
+			this.labelTrackType.TabIndex = 5;
+			this.labelTrackType.Text = "Track type:";
+			this.labelTrackType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// menuStripMotor
 			// 
@@ -3846,658 +4460,70 @@ namespace TrainEditor2.Views
 			this.toolStripMenuItemLine.Size = new System.Drawing.Size(151, 22);
 			this.toolStripMenuItemLine.Text = "Line(&L)";
 			// 
-			// panelMotorSetting
-			// 
-			this.panelMotorSetting.Controls.Add(this.groupBoxPlay);
-			this.panelMotorSetting.Controls.Add(this.groupBoxDirect);
-			this.panelMotorSetting.Controls.Add(this.groupBoxView);
-			this.panelMotorSetting.Controls.Add(this.groupBoxTrack);
-			this.panelMotorSetting.Dock = System.Windows.Forms.DockStyle.Right;
-			this.panelMotorSetting.Location = new System.Drawing.Point(364, 24);
-			this.panelMotorSetting.Name = "panelMotorSetting";
-			this.panelMotorSetting.Size = new System.Drawing.Size(218, 618);
-			this.panelMotorSetting.TabIndex = 3;
-			// 
-			// groupBoxTrack
-			// 
-			this.groupBoxTrack.Controls.Add(this.comboBoxTrackType);
-			this.groupBoxTrack.Controls.Add(this.labelTrackType);
-			this.groupBoxTrack.Location = new System.Drawing.Point(8, 8);
-			this.groupBoxTrack.Name = "groupBoxTrack";
-			this.groupBoxTrack.Size = new System.Drawing.Size(200, 48);
-			this.groupBoxTrack.TabIndex = 3;
-			this.groupBoxTrack.TabStop = false;
-			this.groupBoxTrack.Text = "Track setting";
-			// 
-			// labelTrackType
-			// 
-			this.labelTrackType.Location = new System.Drawing.Point(8, 16);
-			this.labelTrackType.Name = "labelTrackType";
-			this.labelTrackType.Size = new System.Drawing.Size(96, 16);
-			this.labelTrackType.TabIndex = 5;
-			this.labelTrackType.Text = "Track type:";
-			this.labelTrackType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// comboBoxTrackType
-			// 
-			this.comboBoxTrackType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxTrackType.FormattingEnabled = true;
-			this.comboBoxTrackType.Items.AddRange(new object[] {
-            "Power",
-            "Brake"});
-			this.comboBoxTrackType.Location = new System.Drawing.Point(112, 16);
-			this.comboBoxTrackType.Name = "comboBoxTrackType";
-			this.comboBoxTrackType.Size = new System.Drawing.Size(81, 20);
-			this.comboBoxTrackType.TabIndex = 6;
-			// 
-			// groupBoxView
-			// 
-			this.groupBoxView.Controls.Add(this.buttonMotorReset);
-			this.groupBoxView.Controls.Add(this.buttonMotorZoomOut);
-			this.groupBoxView.Controls.Add(this.buttonMotorZoomIn);
-			this.groupBoxView.Controls.Add(this.labelMotorMaxVolume);
-			this.groupBoxView.Controls.Add(this.textBoxMotorMaxVolume);
-			this.groupBoxView.Controls.Add(this.labelMotorMinVolume);
-			this.groupBoxView.Controls.Add(this.textBoxMotorMinVolume);
-			this.groupBoxView.Controls.Add(this.labelMotorMaxPitch);
-			this.groupBoxView.Controls.Add(this.textBoxMotorMaxPitch);
-			this.groupBoxView.Controls.Add(this.labelMotorMinPitch);
-			this.groupBoxView.Controls.Add(this.textBoxMotorMinPitch);
-			this.groupBoxView.Controls.Add(this.labelMotorMaxVelocityUnit);
-			this.groupBoxView.Controls.Add(this.textBoxMotorMaxVelocity);
-			this.groupBoxView.Controls.Add(this.labelMotorMaxVelocity);
-			this.groupBoxView.Controls.Add(this.labelMotorMinVelocityUnit);
-			this.groupBoxView.Controls.Add(this.textBoxMotorMinVelocity);
-			this.groupBoxView.Controls.Add(this.labelMotorMinVelocity);
-			this.groupBoxView.Location = new System.Drawing.Point(8, 64);
-			this.groupBoxView.Name = "groupBoxView";
-			this.groupBoxView.Size = new System.Drawing.Size(200, 192);
-			this.groupBoxView.TabIndex = 0;
-			this.groupBoxView.TabStop = false;
-			this.groupBoxView.Text = "View setting";
-			// 
-			// labelMotorMinVelocity
-			// 
-			this.labelMotorMinVelocity.Location = new System.Drawing.Point(8, 16);
-			this.labelMotorMinVelocity.Name = "labelMotorMinVelocity";
-			this.labelMotorMinVelocity.Size = new System.Drawing.Size(104, 16);
-			this.labelMotorMinVelocity.TabIndex = 0;
-			this.labelMotorMinVelocity.Text = "x-min(Velocity):";
-			this.labelMotorMinVelocity.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxMotorMinVelocity
-			// 
-			this.textBoxMotorMinVelocity.Location = new System.Drawing.Point(120, 16);
-			this.textBoxMotorMinVelocity.Name = "textBoxMotorMinVelocity";
-			this.textBoxMotorMinVelocity.Size = new System.Drawing.Size(32, 19);
-			this.textBoxMotorMinVelocity.TabIndex = 1;
-			// 
-			// labelMotorMinVelocityUnit
-			// 
-			this.labelMotorMinVelocityUnit.Location = new System.Drawing.Point(160, 16);
-			this.labelMotorMinVelocityUnit.Name = "labelMotorMinVelocityUnit";
-			this.labelMotorMinVelocityUnit.Size = new System.Drawing.Size(32, 16);
-			this.labelMotorMinVelocityUnit.TabIndex = 2;
-			this.labelMotorMinVelocityUnit.Text = "km/h";
-			this.labelMotorMinVelocityUnit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// labelMotorMaxVelocity
-			// 
-			this.labelMotorMaxVelocity.Location = new System.Drawing.Point(8, 40);
-			this.labelMotorMaxVelocity.Name = "labelMotorMaxVelocity";
-			this.labelMotorMaxVelocity.Size = new System.Drawing.Size(104, 16);
-			this.labelMotorMaxVelocity.TabIndex = 3;
-			this.labelMotorMaxVelocity.Text = "x-max(Velocity):";
-			this.labelMotorMaxVelocity.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxMotorMaxVelocity
-			// 
-			this.textBoxMotorMaxVelocity.Location = new System.Drawing.Point(120, 40);
-			this.textBoxMotorMaxVelocity.Name = "textBoxMotorMaxVelocity";
-			this.textBoxMotorMaxVelocity.Size = new System.Drawing.Size(32, 19);
-			this.textBoxMotorMaxVelocity.TabIndex = 4;
-			// 
-			// labelMotorMaxVelocityUnit
-			// 
-			this.labelMotorMaxVelocityUnit.Location = new System.Drawing.Point(160, 40);
-			this.labelMotorMaxVelocityUnit.Name = "labelMotorMaxVelocityUnit";
-			this.labelMotorMaxVelocityUnit.Size = new System.Drawing.Size(32, 16);
-			this.labelMotorMaxVelocityUnit.TabIndex = 5;
-			this.labelMotorMaxVelocityUnit.Text = "km/h";
-			this.labelMotorMaxVelocityUnit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// textBoxMotorMinPitch
-			// 
-			this.textBoxMotorMinPitch.Location = new System.Drawing.Point(120, 64);
-			this.textBoxMotorMinPitch.Name = "textBoxMotorMinPitch";
-			this.textBoxMotorMinPitch.Size = new System.Drawing.Size(32, 19);
-			this.textBoxMotorMinPitch.TabIndex = 7;
-			// 
-			// labelMotorMinPitch
-			// 
-			this.labelMotorMinPitch.Location = new System.Drawing.Point(8, 64);
-			this.labelMotorMinPitch.Name = "labelMotorMinPitch";
-			this.labelMotorMinPitch.Size = new System.Drawing.Size(104, 16);
-			this.labelMotorMinPitch.TabIndex = 8;
-			this.labelMotorMinPitch.Text = "y-min(Pitch):";
-			this.labelMotorMinPitch.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxMotorMaxPitch
-			// 
-			this.textBoxMotorMaxPitch.Location = new System.Drawing.Point(120, 88);
-			this.textBoxMotorMaxPitch.Name = "textBoxMotorMaxPitch";
-			this.textBoxMotorMaxPitch.Size = new System.Drawing.Size(32, 19);
-			this.textBoxMotorMaxPitch.TabIndex = 9;
-			// 
-			// labelMotorMaxPitch
-			// 
-			this.labelMotorMaxPitch.Location = new System.Drawing.Point(8, 88);
-			this.labelMotorMaxPitch.Name = "labelMotorMaxPitch";
-			this.labelMotorMaxPitch.Size = new System.Drawing.Size(104, 16);
-			this.labelMotorMaxPitch.TabIndex = 10;
-			this.labelMotorMaxPitch.Text = "y-max(Pitch):";
-			this.labelMotorMaxPitch.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxMotorMinVolume
-			// 
-			this.textBoxMotorMinVolume.Location = new System.Drawing.Point(120, 112);
-			this.textBoxMotorMinVolume.Name = "textBoxMotorMinVolume";
-			this.textBoxMotorMinVolume.Size = new System.Drawing.Size(32, 19);
-			this.textBoxMotorMinVolume.TabIndex = 11;
-			// 
-			// labelMotorMinVolume
-			// 
-			this.labelMotorMinVolume.Location = new System.Drawing.Point(8, 112);
-			this.labelMotorMinVolume.Name = "labelMotorMinVolume";
-			this.labelMotorMinVolume.Size = new System.Drawing.Size(104, 16);
-			this.labelMotorMinVolume.TabIndex = 12;
-			this.labelMotorMinVolume.Text = "y-min(Volume):";
-			this.labelMotorMinVolume.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxMotorMaxVolume
-			// 
-			this.textBoxMotorMaxVolume.Location = new System.Drawing.Point(120, 136);
-			this.textBoxMotorMaxVolume.Name = "textBoxMotorMaxVolume";
-			this.textBoxMotorMaxVolume.Size = new System.Drawing.Size(32, 19);
-			this.textBoxMotorMaxVolume.TabIndex = 13;
-			// 
-			// labelMotorMaxVolume
-			// 
-			this.labelMotorMaxVolume.Location = new System.Drawing.Point(8, 136);
-			this.labelMotorMaxVolume.Name = "labelMotorMaxVolume";
-			this.labelMotorMaxVolume.Size = new System.Drawing.Size(104, 16);
-			this.labelMotorMaxVolume.TabIndex = 14;
-			this.labelMotorMaxVolume.Text = "y-max(Volume):";
-			this.labelMotorMaxVolume.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// buttonMotorZoomIn
-			// 
-			this.buttonMotorZoomIn.Location = new System.Drawing.Point(8, 160);
-			this.buttonMotorZoomIn.Name = "buttonMotorZoomIn";
-			this.buttonMotorZoomIn.Size = new System.Drawing.Size(56, 24);
-			this.buttonMotorZoomIn.TabIndex = 23;
-			this.buttonMotorZoomIn.UseVisualStyleBackColor = true;
-			// 
-			// buttonMotorZoomOut
-			// 
-			this.buttonMotorZoomOut.Location = new System.Drawing.Point(72, 160);
-			this.buttonMotorZoomOut.Name = "buttonMotorZoomOut";
-			this.buttonMotorZoomOut.Size = new System.Drawing.Size(56, 24);
-			this.buttonMotorZoomOut.TabIndex = 24;
-			this.buttonMotorZoomOut.UseVisualStyleBackColor = true;
-			// 
-			// buttonMotorReset
-			// 
-			this.buttonMotorReset.Location = new System.Drawing.Point(136, 160);
-			this.buttonMotorReset.Name = "buttonMotorReset";
-			this.buttonMotorReset.Size = new System.Drawing.Size(56, 24);
-			this.buttonMotorReset.TabIndex = 25;
-			this.buttonMotorReset.UseVisualStyleBackColor = true;
-			// 
-			// groupBoxDirect
-			// 
-			this.groupBoxDirect.Controls.Add(this.buttonDirectDot);
-			this.groupBoxDirect.Controls.Add(this.buttonDirectMove);
-			this.groupBoxDirect.Controls.Add(this.textBoxDirectY);
-			this.groupBoxDirect.Controls.Add(this.labelDirectY);
-			this.groupBoxDirect.Controls.Add(this.labelDirectXUnit);
-			this.groupBoxDirect.Controls.Add(this.textBoxDirectX);
-			this.groupBoxDirect.Controls.Add(this.labelDirectX);
-			this.groupBoxDirect.Location = new System.Drawing.Point(8, 264);
-			this.groupBoxDirect.Name = "groupBoxDirect";
-			this.groupBoxDirect.Size = new System.Drawing.Size(200, 96);
-			this.groupBoxDirect.TabIndex = 2;
-			this.groupBoxDirect.TabStop = false;
-			this.groupBoxDirect.Text = "Direct input";
-			// 
-			// labelDirectX
-			// 
-			this.labelDirectX.Location = new System.Drawing.Point(8, 16);
-			this.labelDirectX.Name = "labelDirectX";
-			this.labelDirectX.Size = new System.Drawing.Size(96, 16);
-			this.labelDirectX.TabIndex = 15;
-			this.labelDirectX.Text = "x coordinate:";
-			this.labelDirectX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxDirectX
-			// 
-			this.textBoxDirectX.Location = new System.Drawing.Point(112, 16);
-			this.textBoxDirectX.Name = "textBoxDirectX";
-			this.textBoxDirectX.Size = new System.Drawing.Size(40, 19);
-			this.textBoxDirectX.TabIndex = 16;
-			// 
-			// labelDirectXUnit
-			// 
-			this.labelDirectXUnit.Location = new System.Drawing.Point(160, 16);
-			this.labelDirectXUnit.Name = "labelDirectXUnit";
-			this.labelDirectXUnit.Size = new System.Drawing.Size(32, 16);
-			this.labelDirectXUnit.TabIndex = 17;
-			this.labelDirectXUnit.Text = "km/h";
-			this.labelDirectXUnit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// labelDirectY
-			// 
-			this.labelDirectY.Location = new System.Drawing.Point(8, 40);
-			this.labelDirectY.Name = "labelDirectY";
-			this.labelDirectY.Size = new System.Drawing.Size(96, 16);
-			this.labelDirectY.TabIndex = 18;
-			this.labelDirectY.Text = "y coordinate:";
-			this.labelDirectY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxDirectY
-			// 
-			this.textBoxDirectY.Location = new System.Drawing.Point(112, 40);
-			this.textBoxDirectY.Name = "textBoxDirectY";
-			this.textBoxDirectY.Size = new System.Drawing.Size(40, 19);
-			this.textBoxDirectY.TabIndex = 19;
-			// 
-			// buttonDirectMove
-			// 
-			this.buttonDirectMove.Location = new System.Drawing.Point(72, 64);
-			this.buttonDirectMove.Name = "buttonDirectMove";
-			this.buttonDirectMove.Size = new System.Drawing.Size(56, 24);
-			this.buttonDirectMove.TabIndex = 21;
-			this.buttonDirectMove.UseVisualStyleBackColor = true;
-			// 
-			// buttonDirectDot
-			// 
-			this.buttonDirectDot.Location = new System.Drawing.Point(8, 64);
-			this.buttonDirectDot.Name = "buttonDirectDot";
-			this.buttonDirectDot.Size = new System.Drawing.Size(56, 24);
-			this.buttonDirectDot.TabIndex = 22;
-			this.buttonDirectDot.UseVisualStyleBackColor = true;
-			// 
-			// groupBoxPlay
-			// 
-			this.groupBoxPlay.Controls.Add(this.buttonStop);
-			this.groupBoxPlay.Controls.Add(this.buttonPause);
-			this.groupBoxPlay.Controls.Add(this.buttonPlay);
-			this.groupBoxPlay.Controls.Add(this.groupBoxArea);
-			this.groupBoxPlay.Controls.Add(this.groupBoxSource);
-			this.groupBoxPlay.Location = new System.Drawing.Point(8, 368);
-			this.groupBoxPlay.Name = "groupBoxPlay";
-			this.groupBoxPlay.Size = new System.Drawing.Size(200, 233);
-			this.groupBoxPlay.TabIndex = 1;
-			this.groupBoxPlay.TabStop = false;
-			this.groupBoxPlay.Text = "Playback setting";
-			// 
-			// groupBoxSource
-			// 
-			this.groupBoxSource.Controls.Add(this.numericUpDownRunIndex);
-			this.groupBoxSource.Controls.Add(this.labelRun);
-			this.groupBoxSource.Location = new System.Drawing.Point(8, 16);
-			this.groupBoxSource.Name = "groupBoxSource";
-			this.groupBoxSource.Size = new System.Drawing.Size(184, 48);
-			this.groupBoxSource.TabIndex = 0;
-			this.groupBoxSource.TabStop = false;
-			this.groupBoxSource.Text = "Sound source setting";
-			// 
-			// labelRun
-			// 
-			this.labelRun.Location = new System.Drawing.Point(8, 16);
-			this.labelRun.Name = "labelRun";
-			this.labelRun.Size = new System.Drawing.Size(96, 16);
-			this.labelRun.TabIndex = 4;
-			this.labelRun.Text = "Running sound:";
-			this.labelRun.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// numericUpDownRunIndex
-			// 
-			this.numericUpDownRunIndex.Location = new System.Drawing.Point(112, 16);
-			this.numericUpDownRunIndex.Maximum = new decimal(new int[] {
-            256,
-            0,
-            0,
-            0});
-			this.numericUpDownRunIndex.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
-			this.numericUpDownRunIndex.Name = "numericUpDownRunIndex";
-			this.numericUpDownRunIndex.Size = new System.Drawing.Size(48, 19);
-			this.numericUpDownRunIndex.TabIndex = 16;
-			this.numericUpDownRunIndex.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
-			// 
-			// groupBoxArea
-			// 
-			this.groupBoxArea.Controls.Add(this.checkBoxMotorConstant);
-			this.groupBoxArea.Controls.Add(this.checkBoxMotorLoop);
-			this.groupBoxArea.Controls.Add(this.buttonMotorSwap);
-			this.groupBoxArea.Controls.Add(this.textBoxMotorAreaLeft);
-			this.groupBoxArea.Controls.Add(this.labelMotorAreaUnit);
-			this.groupBoxArea.Controls.Add(this.textBoxMotorAreaRight);
-			this.groupBoxArea.Controls.Add(this.labelMotorAccel);
-			this.groupBoxArea.Controls.Add(this.labelMotorAccelUnit);
-			this.groupBoxArea.Controls.Add(this.textBoxMotorAccel);
-			this.groupBoxArea.Location = new System.Drawing.Point(8, 72);
-			this.groupBoxArea.Name = "groupBoxArea";
-			this.groupBoxArea.Size = new System.Drawing.Size(184, 120);
-			this.groupBoxArea.TabIndex = 1;
-			this.groupBoxArea.TabStop = false;
-			this.groupBoxArea.Text = "Area setting";
-			// 
-			// textBoxMotorAccel
-			// 
-			this.textBoxMotorAccel.Location = new System.Drawing.Point(88, 64);
-			this.textBoxMotorAccel.Name = "textBoxMotorAccel";
-			this.textBoxMotorAccel.Size = new System.Drawing.Size(32, 19);
-			this.textBoxMotorAccel.TabIndex = 0;
-			// 
-			// labelMotorAccelUnit
-			// 
-			this.labelMotorAccelUnit.Location = new System.Drawing.Point(128, 64);
-			this.labelMotorAccelUnit.Name = "labelMotorAccelUnit";
-			this.labelMotorAccelUnit.Size = new System.Drawing.Size(44, 16);
-			this.labelMotorAccelUnit.TabIndex = 1;
-			this.labelMotorAccelUnit.Text = "km/h/s";
-			this.labelMotorAccelUnit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// labelMotorAccel
-			// 
-			this.labelMotorAccel.Location = new System.Drawing.Point(8, 64);
-			this.labelMotorAccel.Name = "labelMotorAccel";
-			this.labelMotorAccel.Size = new System.Drawing.Size(72, 16);
-			this.labelMotorAccel.TabIndex = 2;
-			this.labelMotorAccel.Text = "Acceleration:";
-			this.labelMotorAccel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxMotorAreaRight
-			// 
-			this.textBoxMotorAreaRight.Location = new System.Drawing.Point(96, 88);
-			this.textBoxMotorAreaRight.Name = "textBoxMotorAreaRight";
-			this.textBoxMotorAreaRight.Size = new System.Drawing.Size(40, 19);
-			this.textBoxMotorAreaRight.TabIndex = 3;
-			// 
-			// labelMotorAreaUnit
-			// 
-			this.labelMotorAreaUnit.Location = new System.Drawing.Point(144, 88);
-			this.labelMotorAreaUnit.Name = "labelMotorAreaUnit";
-			this.labelMotorAreaUnit.Size = new System.Drawing.Size(32, 16);
-			this.labelMotorAreaUnit.TabIndex = 15;
-			this.labelMotorAreaUnit.Text = "km/h";
-			this.labelMotorAreaUnit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// textBoxMotorAreaLeft
-			// 
-			this.textBoxMotorAreaLeft.Location = new System.Drawing.Point(8, 88);
-			this.textBoxMotorAreaLeft.Name = "textBoxMotorAreaLeft";
-			this.textBoxMotorAreaLeft.Size = new System.Drawing.Size(40, 19);
-			this.textBoxMotorAreaLeft.TabIndex = 16;
-			// 
-			// buttonMotorSwap
-			// 
-			this.buttonMotorSwap.Location = new System.Drawing.Point(56, 88);
-			this.buttonMotorSwap.Name = "buttonMotorSwap";
-			this.buttonMotorSwap.Size = new System.Drawing.Size(32, 19);
-			this.buttonMotorSwap.TabIndex = 17;
-			this.buttonMotorSwap.UseVisualStyleBackColor = true;
-			// 
-			// checkBoxMotorLoop
-			// 
-			this.checkBoxMotorLoop.AutoSize = true;
-			this.checkBoxMotorLoop.Location = new System.Drawing.Point(8, 16);
-			this.checkBoxMotorLoop.Name = "checkBoxMotorLoop";
-			this.checkBoxMotorLoop.Size = new System.Drawing.Size(97, 16);
-			this.checkBoxMotorLoop.TabIndex = 18;
-			this.checkBoxMotorLoop.Text = "Loop playback";
-			this.checkBoxMotorLoop.UseVisualStyleBackColor = true;
-			// 
-			// checkBoxMotorConstant
-			// 
-			this.checkBoxMotorConstant.AutoSize = true;
-			this.checkBoxMotorConstant.Location = new System.Drawing.Point(8, 40);
-			this.checkBoxMotorConstant.Name = "checkBoxMotorConstant";
-			this.checkBoxMotorConstant.Size = new System.Drawing.Size(104, 16);
-			this.checkBoxMotorConstant.TabIndex = 19;
-			this.checkBoxMotorConstant.Text = "Constant speed";
-			this.checkBoxMotorConstant.UseVisualStyleBackColor = true;
-			// 
-			// buttonPlay
-			// 
-			this.buttonPlay.Location = new System.Drawing.Point(8, 200);
-			this.buttonPlay.Name = "buttonPlay";
-			this.buttonPlay.Size = new System.Drawing.Size(56, 24);
-			this.buttonPlay.TabIndex = 2;
-			this.buttonPlay.UseVisualStyleBackColor = true;
-			// 
-			// buttonPause
-			// 
-			this.buttonPause.Location = new System.Drawing.Point(72, 200);
-			this.buttonPause.Name = "buttonPause";
-			this.buttonPause.Size = new System.Drawing.Size(56, 24);
-			this.buttonPause.TabIndex = 3;
-			this.buttonPause.UseVisualStyleBackColor = true;
-			// 
-			// buttonStop
-			// 
-			this.buttonStop.Location = new System.Drawing.Point(136, 200);
-			this.buttonStop.Name = "buttonStop";
-			this.buttonStop.Size = new System.Drawing.Size(56, 24);
-			this.buttonStop.TabIndex = 4;
-			this.buttonStop.UseVisualStyleBackColor = true;
-			// 
-			// toolStripContainerDrawArea
-			// 
-			// 
-			// toolStripContainerDrawArea.ContentPanel
-			// 
-			this.toolStripContainerDrawArea.ContentPanel.Controls.Add(this.glControlMotor);
-			this.toolStripContainerDrawArea.ContentPanel.Size = new System.Drawing.Size(364, 593);
-			this.toolStripContainerDrawArea.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.toolStripContainerDrawArea.Location = new System.Drawing.Point(0, 24);
-			this.toolStripContainerDrawArea.Name = "toolStripContainerDrawArea";
-			this.toolStripContainerDrawArea.Size = new System.Drawing.Size(364, 618);
-			this.toolStripContainerDrawArea.TabIndex = 4;
-			this.toolStripContainerDrawArea.Text = "toolStripContainer1";
-			// 
-			// toolStripContainerDrawArea.TopToolStripPanel
-			// 
-			this.toolStripContainerDrawArea.TopToolStripPanel.Controls.Add(this.toolStripToolBar);
-			// 
-			// toolStripToolBar
-			// 
-			this.toolStripToolBar.Dock = System.Windows.Forms.DockStyle.None;
-			this.toolStripToolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButtonUndo,
-            this.toolStripButtonRedo,
-            this.toolStripSeparatorRedo,
-            this.toolStripButtonCleanup,
-            this.toolStripButtonDelete,
-            this.toolStripSeparatorEdit,
-            this.toolStripButtonSelect,
-            this.toolStripButtonMove,
-            this.toolStripButtonDot,
-            this.toolStripButtonLine});
-			this.toolStripToolBar.Location = new System.Drawing.Point(3, 0);
-			this.toolStripToolBar.Name = "toolStripToolBar";
-			this.toolStripToolBar.Size = new System.Drawing.Size(206, 25);
-			this.toolStripToolBar.TabIndex = 0;
-			// 
-			// toolStripButtonUndo
-			// 
-			this.toolStripButtonUndo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButtonUndo.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButtonUndo.Name = "toolStripButtonUndo";
-			this.toolStripButtonUndo.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonUndo.Text = "Undo (Ctrl+Z)";
-			// 
-			// toolStripButtonRedo
-			// 
-			this.toolStripButtonRedo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButtonRedo.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButtonRedo.Name = "toolStripButtonRedo";
-			this.toolStripButtonRedo.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonRedo.Text = "Redo (Ctrl+Y)";
-			// 
-			// toolStripSeparatorRedo
-			// 
-			this.toolStripSeparatorRedo.Name = "toolStripSeparatorRedo";
-			this.toolStripSeparatorRedo.Size = new System.Drawing.Size(6, 25);
-			// 
-			// toolStripButtonCleanup
-			// 
-			this.toolStripButtonCleanup.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButtonCleanup.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButtonCleanup.Name = "toolStripButtonCleanup";
-			this.toolStripButtonCleanup.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonCleanup.Text = "Cleanup";
-			// 
-			// toolStripButtonDelete
-			// 
-			this.toolStripButtonDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButtonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButtonDelete.Name = "toolStripButtonDelete";
-			this.toolStripButtonDelete.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonDelete.Text = "Delete (Del)";
-			// 
-			// toolStripSeparatorEdit
-			// 
-			this.toolStripSeparatorEdit.Name = "toolStripSeparatorEdit";
-			this.toolStripSeparatorEdit.Size = new System.Drawing.Size(6, 25);
-			// 
-			// toolStripButtonSelect
-			// 
-			this.toolStripButtonSelect.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButtonSelect.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButtonSelect.Name = "toolStripButtonSelect";
-			this.toolStripButtonSelect.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonSelect.Text = "Select (Alt+A)";
-			// 
-			// toolStripButtonMove
-			// 
-			this.toolStripButtonMove.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButtonMove.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButtonMove.Name = "toolStripButtonMove";
-			this.toolStripButtonMove.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonMove.Text = "Move (Alt+S)";
-			// 
-			// toolStripButtonDot
-			// 
-			this.toolStripButtonDot.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButtonDot.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButtonDot.Name = "toolStripButtonDot";
-			this.toolStripButtonDot.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonDot.Text = "Dot (Alt+D)";
-			// 
-			// toolStripButtonLine
-			// 
-			this.toolStripButtonLine.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButtonLine.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButtonLine.Name = "toolStripButtonLine";
-			this.toolStripButtonLine.Size = new System.Drawing.Size(23, 22);
-			this.toolStripButtonLine.Text = "Line (Alt+F)";
-			// 
-			// glControlMotor
-			// 
-			this.glControlMotor.BackColor = System.Drawing.Color.Black;
-			this.glControlMotor.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.glControlMotor.Location = new System.Drawing.Point(0, 0);
-			this.glControlMotor.Name = "glControlMotor";
-			this.glControlMotor.Size = new System.Drawing.Size(364, 593);
-			this.glControlMotor.TabIndex = 0;
-			this.glControlMotor.VSync = false;
-			this.glControlMotor.Load += new System.EventHandler(this.GlControlMotor_Load);
-			this.glControlMotor.Paint += new System.Windows.Forms.PaintEventHandler(this.GlControlMotor_Paint);
-			this.glControlMotor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GlControlMotor_KeyDown);
-			this.glControlMotor.MouseDown += new System.Windows.Forms.MouseEventHandler(this.GlControlMotor_MouseDown);
-			this.glControlMotor.MouseEnter += new System.EventHandler(this.GlControlMotor_MouseEnter);
-			this.glControlMotor.MouseMove += new System.Windows.Forms.MouseEventHandler(this.GlControlMotor_MouseMove);
-			this.glControlMotor.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GlControlMotor_MouseUp);
-			this.glControlMotor.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.GlControlMotor_PreviewKeyDown);
-			this.glControlMotor.Resize += new System.EventHandler(this.GlControlMotor_Resize);
-			// 
-			// panelMoterNavi
-			// 
-			this.panelMoterNavi.Controls.Add(this.buttonMotorCopy);
-			this.panelMoterNavi.Controls.Add(this.buttonMotorRemove);
-			this.panelMoterNavi.Controls.Add(this.buttonMotorAdd);
-			this.panelMoterNavi.Controls.Add(this.buttonMotorUp);
-			this.panelMoterNavi.Controls.Add(this.buttonMotorDown);
-			this.panelMoterNavi.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.panelMoterNavi.Location = new System.Drawing.Point(0, 592);
-			this.panelMoterNavi.Name = "panelMoterNavi";
-			this.panelMoterNavi.Size = new System.Drawing.Size(200, 72);
-			this.panelMoterNavi.TabIndex = 4;
-			// 
-			// buttonMotorDown
-			// 
-			this.buttonMotorDown.Location = new System.Drawing.Point(8, 40);
-			this.buttonMotorDown.Name = "buttonMotorDown";
-			this.buttonMotorDown.Size = new System.Drawing.Size(56, 24);
-			this.buttonMotorDown.TabIndex = 1;
-			this.buttonMotorDown.Text = "Down";
-			this.buttonMotorDown.UseVisualStyleBackColor = true;
-			// 
-			// buttonMotorUp
-			// 
-			this.buttonMotorUp.Location = new System.Drawing.Point(8, 8);
-			this.buttonMotorUp.Name = "buttonMotorUp";
-			this.buttonMotorUp.Size = new System.Drawing.Size(56, 24);
-			this.buttonMotorUp.TabIndex = 0;
-			this.buttonMotorUp.Text = "Up";
-			this.buttonMotorUp.UseVisualStyleBackColor = true;
-			// 
-			// buttonMotorAdd
-			// 
-			this.buttonMotorAdd.Location = new System.Drawing.Point(72, 8);
-			this.buttonMotorAdd.Name = "buttonMotorAdd";
-			this.buttonMotorAdd.Size = new System.Drawing.Size(56, 24);
-			this.buttonMotorAdd.TabIndex = 2;
-			this.buttonMotorAdd.Text = "Add";
-			this.buttonMotorAdd.UseVisualStyleBackColor = true;
-			// 
-			// buttonMotorRemove
-			// 
-			this.buttonMotorRemove.Location = new System.Drawing.Point(136, 8);
-			this.buttonMotorRemove.Name = "buttonMotorRemove";
-			this.buttonMotorRemove.Size = new System.Drawing.Size(56, 24);
-			this.buttonMotorRemove.TabIndex = 3;
-			this.buttonMotorRemove.Text = "Remove";
-			this.buttonMotorRemove.UseVisualStyleBackColor = true;
-			// 
-			// buttonMotorCopy
-			// 
-			this.buttonMotorCopy.Location = new System.Drawing.Point(72, 40);
-			this.buttonMotorCopy.Name = "buttonMotorCopy";
-			this.buttonMotorCopy.Size = new System.Drawing.Size(56, 24);
-			this.buttonMotorCopy.TabIndex = 5;
-			this.buttonMotorCopy.Text = "Copy";
-			this.buttonMotorCopy.UseVisualStyleBackColor = true;
-			// 
-			// treeViewMotor
-			// 
-			this.treeViewMotor.CheckBoxes = true;
-			this.treeViewMotor.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.treeViewMotor.HideSelection = false;
-			this.treeViewMotor.Location = new System.Drawing.Point(0, 0);
-			this.treeViewMotor.Name = "treeViewMotor";
-			this.treeViewMotor.Size = new System.Drawing.Size(200, 592);
-			this.treeViewMotor.TabIndex = 5;
+			// statusStripStatus
+			// 
+			this.statusStripStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabelY,
+            this.toolStripStatusLabelX,
+            this.toolStripStatusLabelTool,
+            this.toolStripStatusLabelMode,
+            this.toolStripStatusLabelType});
+			this.statusStripStatus.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
+			this.statusStripStatus.Location = new System.Drawing.Point(0, 642);
+			this.statusStripStatus.Name = "statusStripStatus";
+			this.statusStripStatus.Size = new System.Drawing.Size(582, 22);
+			this.statusStripStatus.TabIndex = 1;
+			this.statusStripStatus.Text = "statusStrip1";
+			// 
+			// toolStripStatusLabelY
+			// 
+			this.toolStripStatusLabelY.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.toolStripStatusLabelY.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+			this.toolStripStatusLabelY.Name = "toolStripStatusLabelY";
+			this.toolStripStatusLabelY.Size = new System.Drawing.Size(16, 17);
+			this.toolStripStatusLabelY.Text = "Y";
+			// 
+			// toolStripStatusLabelX
+			// 
+			this.toolStripStatusLabelX.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.toolStripStatusLabelX.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+			this.toolStripStatusLabelX.Name = "toolStripStatusLabelX";
+			this.toolStripStatusLabelX.Size = new System.Drawing.Size(16, 17);
+			this.toolStripStatusLabelX.Text = "X";
+			// 
+			// toolStripStatusLabelTool
+			// 
+			this.toolStripStatusLabelTool.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.toolStripStatusLabelTool.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+			this.toolStripStatusLabelTool.Name = "toolStripStatusLabelTool";
+			this.toolStripStatusLabelTool.Size = new System.Drawing.Size(31, 17);
+			this.toolStripStatusLabelTool.Text = "Tool";
+			// 
+			// toolStripStatusLabelMode
+			// 
+			this.toolStripStatusLabelMode.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.toolStripStatusLabelMode.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+			this.toolStripStatusLabelMode.Name = "toolStripStatusLabelMode";
+			this.toolStripStatusLabelMode.Size = new System.Drawing.Size(36, 17);
+			this.toolStripStatusLabelMode.Text = "Mode";
+			// 
+			// toolStripStatusLabelType
+			// 
+			this.toolStripStatusLabelType.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.toolStripStatusLabelType.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+			this.toolStripStatusLabelType.Name = "toolStripStatusLabelType";
+			this.toolStripStatusLabelType.Size = new System.Drawing.Size(34, 17);
+			this.toolStripStatusLabelType.Text = "Type";
 			// 
 			// tabPageAccel
 			// 
@@ -4510,6 +4536,17 @@ namespace TrainEditor2.Views
 			this.tabPageAccel.Text = "Acceleration settings";
 			this.tabPageAccel.UseVisualStyleBackColor = true;
 			// 
+			// pictureBoxAccel
+			// 
+			this.pictureBoxAccel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.pictureBoxAccel.Location = new System.Drawing.Point(0, 0);
+			this.pictureBoxAccel.Name = "pictureBoxAccel";
+			this.pictureBoxAccel.Size = new System.Drawing.Size(576, 670);
+			this.pictureBoxAccel.TabIndex = 1;
+			this.pictureBoxAccel.TabStop = false;
+			this.pictureBoxAccel.MouseEnter += new System.EventHandler(this.PictureBoxAccel_MouseEnter);
+			this.pictureBoxAccel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PictureBoxAccel_MouseMove);
+			// 
 			// panelAccel
 			// 
 			this.panelAccel.Controls.Add(this.groupBoxPreview);
@@ -4520,164 +4557,6 @@ namespace TrainEditor2.Views
 			this.panelAccel.Name = "panelAccel";
 			this.panelAccel.Size = new System.Drawing.Size(216, 670);
 			this.panelAccel.TabIndex = 0;
-			// 
-			// groupBoxNotch
-			// 
-			this.groupBoxNotch.Controls.Add(this.comboBoxNotch);
-			this.groupBoxNotch.Location = new System.Drawing.Point(8, 8);
-			this.groupBoxNotch.Name = "groupBoxNotch";
-			this.groupBoxNotch.Size = new System.Drawing.Size(200, 48);
-			this.groupBoxNotch.TabIndex = 0;
-			this.groupBoxNotch.TabStop = false;
-			this.groupBoxNotch.Text = "Notch";
-			// 
-			// comboBoxNotch
-			// 
-			this.comboBoxNotch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxNotch.FormattingEnabled = true;
-			this.comboBoxNotch.Location = new System.Drawing.Point(8, 16);
-			this.comboBoxNotch.Name = "comboBoxNotch";
-			this.comboBoxNotch.Size = new System.Drawing.Size(72, 20);
-			this.comboBoxNotch.TabIndex = 0;
-			// 
-			// groupBoxParameter
-			// 
-			this.groupBoxParameter.Controls.Add(this.labeAccelA0Unit);
-			this.groupBoxParameter.Controls.Add(this.textBoxAccelA0);
-			this.groupBoxParameter.Controls.Add(this.labelAccelA0);
-			this.groupBoxParameter.Controls.Add(this.labelAccelA1Unit);
-			this.groupBoxParameter.Controls.Add(this.textBoxAccelA1);
-			this.groupBoxParameter.Controls.Add(this.labelAccelA1);
-			this.groupBoxParameter.Controls.Add(this.labelAccelV1Unit);
-			this.groupBoxParameter.Controls.Add(this.textBoxAccelV1);
-			this.groupBoxParameter.Controls.Add(this.labelAccelV1);
-			this.groupBoxParameter.Controls.Add(this.labelAccelV2Unit);
-			this.groupBoxParameter.Controls.Add(this.textBoxAccelV2);
-			this.groupBoxParameter.Controls.Add(this.labelAccelV2);
-			this.groupBoxParameter.Controls.Add(this.textBoxAccelE);
-			this.groupBoxParameter.Controls.Add(this.labelAccelE);
-			this.groupBoxParameter.Location = new System.Drawing.Point(8, 64);
-			this.groupBoxParameter.Name = "groupBoxParameter";
-			this.groupBoxParameter.Size = new System.Drawing.Size(200, 144);
-			this.groupBoxParameter.TabIndex = 1;
-			this.groupBoxParameter.TabStop = false;
-			this.groupBoxParameter.Text = "Parameter";
-			// 
-			// labelAccelE
-			// 
-			this.labelAccelE.Location = new System.Drawing.Point(8, 112);
-			this.labelAccelE.Name = "labelAccelE";
-			this.labelAccelE.Size = new System.Drawing.Size(72, 16);
-			this.labelAccelE.TabIndex = 2;
-			this.labelAccelE.Text = "e (2.0):";
-			this.labelAccelE.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxAccelE
-			// 
-			this.textBoxAccelE.Location = new System.Drawing.Point(88, 112);
-			this.textBoxAccelE.Name = "textBoxAccelE";
-			this.textBoxAccelE.Size = new System.Drawing.Size(48, 19);
-			this.textBoxAccelE.TabIndex = 21;
-			// 
-			// labelAccelV2
-			// 
-			this.labelAccelV2.Location = new System.Drawing.Point(8, 88);
-			this.labelAccelV2.Name = "labelAccelV2";
-			this.labelAccelV2.Size = new System.Drawing.Size(72, 16);
-			this.labelAccelV2.TabIndex = 22;
-			this.labelAccelV2.Text = "v2:";
-			this.labelAccelV2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxAccelV2
-			// 
-			this.textBoxAccelV2.Location = new System.Drawing.Point(88, 88);
-			this.textBoxAccelV2.Name = "textBoxAccelV2";
-			this.textBoxAccelV2.Size = new System.Drawing.Size(48, 19);
-			this.textBoxAccelV2.TabIndex = 23;
-			// 
-			// labelAccelV2Unit
-			// 
-			this.labelAccelV2Unit.Location = new System.Drawing.Point(144, 88);
-			this.labelAccelV2Unit.Name = "labelAccelV2Unit";
-			this.labelAccelV2Unit.Size = new System.Drawing.Size(48, 16);
-			this.labelAccelV2Unit.TabIndex = 24;
-			this.labelAccelV2Unit.Text = "km/h";
-			this.labelAccelV2Unit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelAccelV1
-			// 
-			this.labelAccelV1.Location = new System.Drawing.Point(8, 64);
-			this.labelAccelV1.Name = "labelAccelV1";
-			this.labelAccelV1.Size = new System.Drawing.Size(72, 16);
-			this.labelAccelV1.TabIndex = 25;
-			this.labelAccelV1.Text = "v1:";
-			this.labelAccelV1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxAccelV1
-			// 
-			this.textBoxAccelV1.Location = new System.Drawing.Point(88, 64);
-			this.textBoxAccelV1.Name = "textBoxAccelV1";
-			this.textBoxAccelV1.Size = new System.Drawing.Size(48, 19);
-			this.textBoxAccelV1.TabIndex = 26;
-			// 
-			// labelAccelV1Unit
-			// 
-			this.labelAccelV1Unit.Location = new System.Drawing.Point(144, 64);
-			this.labelAccelV1Unit.Name = "labelAccelV1Unit";
-			this.labelAccelV1Unit.Size = new System.Drawing.Size(48, 16);
-			this.labelAccelV1Unit.TabIndex = 27;
-			this.labelAccelV1Unit.Text = "km/h";
-			this.labelAccelV1Unit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelAccelA1
-			// 
-			this.labelAccelA1.Location = new System.Drawing.Point(8, 40);
-			this.labelAccelA1.Name = "labelAccelA1";
-			this.labelAccelA1.Size = new System.Drawing.Size(72, 16);
-			this.labelAccelA1.TabIndex = 28;
-			this.labelAccelA1.Text = "a1:";
-			this.labelAccelA1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxAccelA1
-			// 
-			this.textBoxAccelA1.Location = new System.Drawing.Point(88, 40);
-			this.textBoxAccelA1.Name = "textBoxAccelA1";
-			this.textBoxAccelA1.Size = new System.Drawing.Size(48, 19);
-			this.textBoxAccelA1.TabIndex = 29;
-			// 
-			// labelAccelA1Unit
-			// 
-			this.labelAccelA1Unit.Location = new System.Drawing.Point(144, 40);
-			this.labelAccelA1Unit.Name = "labelAccelA1Unit";
-			this.labelAccelA1Unit.Size = new System.Drawing.Size(48, 16);
-			this.labelAccelA1Unit.TabIndex = 30;
-			this.labelAccelA1Unit.Text = "km/h/s";
-			this.labelAccelA1Unit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelAccelA0
-			// 
-			this.labelAccelA0.Location = new System.Drawing.Point(8, 16);
-			this.labelAccelA0.Name = "labelAccelA0";
-			this.labelAccelA0.Size = new System.Drawing.Size(72, 16);
-			this.labelAccelA0.TabIndex = 31;
-			this.labelAccelA0.Text = "a0:";
-			this.labelAccelA0.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxAccelA0
-			// 
-			this.textBoxAccelA0.Location = new System.Drawing.Point(88, 16);
-			this.textBoxAccelA0.Name = "textBoxAccelA0";
-			this.textBoxAccelA0.Size = new System.Drawing.Size(48, 19);
-			this.textBoxAccelA0.TabIndex = 32;
-			// 
-			// labeAccelA0Unit
-			// 
-			this.labeAccelA0Unit.Location = new System.Drawing.Point(144, 16);
-			this.labeAccelA0Unit.Name = "labeAccelA0Unit";
-			this.labeAccelA0Unit.Size = new System.Drawing.Size(48, 16);
-			this.labeAccelA0Unit.TabIndex = 33;
-			this.labeAccelA0Unit.Text = "km/h/s";
-			this.labeAccelA0Unit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// groupBoxPreview
 			// 
@@ -4708,141 +4587,29 @@ namespace TrainEditor2.Views
 			this.groupBoxPreview.TabStop = false;
 			this.groupBoxPreview.Text = "Preview";
 			// 
-			// checkBoxSubtractDeceleration
+			// buttonAccelReset
 			// 
-			this.checkBoxSubtractDeceleration.Location = new System.Drawing.Point(8, 16);
-			this.checkBoxSubtractDeceleration.Name = "checkBoxSubtractDeceleration";
-			this.checkBoxSubtractDeceleration.Size = new System.Drawing.Size(184, 32);
-			this.checkBoxSubtractDeceleration.TabIndex = 0;
-			this.checkBoxSubtractDeceleration.Text = "Subtract deceleration due to air and rolling resistance";
-			this.checkBoxSubtractDeceleration.UseVisualStyleBackColor = true;
+			this.buttonAccelReset.Location = new System.Drawing.Point(136, 200);
+			this.buttonAccelReset.Name = "buttonAccelReset";
+			this.buttonAccelReset.Size = new System.Drawing.Size(56, 24);
+			this.buttonAccelReset.TabIndex = 42;
+			this.buttonAccelReset.UseVisualStyleBackColor = true;
 			// 
-			// labelAccelX
+			// buttonAccelZoomOut
 			// 
-			this.labelAccelX.Location = new System.Drawing.Point(8, 56);
-			this.labelAccelX.Name = "labelAccelX";
-			this.labelAccelX.Size = new System.Drawing.Size(72, 16);
-			this.labelAccelX.TabIndex = 3;
-			this.labelAccelX.Text = "X:";
-			this.labelAccelX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.buttonAccelZoomOut.Location = new System.Drawing.Point(72, 200);
+			this.buttonAccelZoomOut.Name = "buttonAccelZoomOut";
+			this.buttonAccelZoomOut.Size = new System.Drawing.Size(56, 24);
+			this.buttonAccelZoomOut.TabIndex = 41;
+			this.buttonAccelZoomOut.UseVisualStyleBackColor = true;
 			// 
-			// labelAccelY
+			// buttonAccelZoomIn
 			// 
-			this.labelAccelY.Location = new System.Drawing.Point(8, 80);
-			this.labelAccelY.Name = "labelAccelY";
-			this.labelAccelY.Size = new System.Drawing.Size(72, 16);
-			this.labelAccelY.TabIndex = 4;
-			this.labelAccelY.Text = "Y:";
-			this.labelAccelY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelAccelXmin
-			// 
-			this.labelAccelXmin.Location = new System.Drawing.Point(8, 104);
-			this.labelAccelXmin.Name = "labelAccelXmin";
-			this.labelAccelXmin.Size = new System.Drawing.Size(72, 16);
-			this.labelAccelXmin.TabIndex = 5;
-			this.labelAccelXmin.Text = "Xmin:";
-			this.labelAccelXmin.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelAccelXmax
-			// 
-			this.labelAccelXmax.Location = new System.Drawing.Point(8, 128);
-			this.labelAccelXmax.Name = "labelAccelXmax";
-			this.labelAccelXmax.Size = new System.Drawing.Size(72, 16);
-			this.labelAccelXmax.TabIndex = 6;
-			this.labelAccelXmax.Text = "Xmax:";
-			this.labelAccelXmax.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelAccelYmin
-			// 
-			this.labelAccelYmin.Location = new System.Drawing.Point(8, 152);
-			this.labelAccelYmin.Name = "labelAccelYmin";
-			this.labelAccelYmin.Size = new System.Drawing.Size(72, 16);
-			this.labelAccelYmin.TabIndex = 7;
-			this.labelAccelYmin.Text = "Ymin:";
-			this.labelAccelYmin.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelAccelYmax
-			// 
-			this.labelAccelYmax.Location = new System.Drawing.Point(8, 176);
-			this.labelAccelYmax.Name = "labelAccelYmax";
-			this.labelAccelYmax.Size = new System.Drawing.Size(72, 16);
-			this.labelAccelYmax.TabIndex = 8;
-			this.labelAccelYmax.Text = "Ymax:";
-			this.labelAccelYmax.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxAccelXmin
-			// 
-			this.textBoxAccelXmin.Location = new System.Drawing.Point(88, 104);
-			this.textBoxAccelXmin.Name = "textBoxAccelXmin";
-			this.textBoxAccelXmin.Size = new System.Drawing.Size(48, 19);
-			this.textBoxAccelXmin.TabIndex = 22;
-			// 
-			// textBoxAccelXmax
-			// 
-			this.textBoxAccelXmax.Location = new System.Drawing.Point(88, 128);
-			this.textBoxAccelXmax.Name = "textBoxAccelXmax";
-			this.textBoxAccelXmax.Size = new System.Drawing.Size(48, 19);
-			this.textBoxAccelXmax.TabIndex = 23;
-			// 
-			// textBoxAccelYmin
-			// 
-			this.textBoxAccelYmin.Location = new System.Drawing.Point(88, 152);
-			this.textBoxAccelYmin.Name = "textBoxAccelYmin";
-			this.textBoxAccelYmin.Size = new System.Drawing.Size(48, 19);
-			this.textBoxAccelYmin.TabIndex = 24;
-			// 
-			// textBoxAccelYmax
-			// 
-			this.textBoxAccelYmax.Location = new System.Drawing.Point(88, 176);
-			this.textBoxAccelYmax.Name = "textBoxAccelYmax";
-			this.textBoxAccelYmax.Size = new System.Drawing.Size(48, 19);
-			this.textBoxAccelYmax.TabIndex = 25;
-			// 
-			// labelAccelYminUnit
-			// 
-			this.labelAccelYminUnit.Location = new System.Drawing.Point(144, 152);
-			this.labelAccelYminUnit.Name = "labelAccelYminUnit";
-			this.labelAccelYminUnit.Size = new System.Drawing.Size(48, 16);
-			this.labelAccelYminUnit.TabIndex = 34;
-			this.labelAccelYminUnit.Text = "km/h/s";
-			this.labelAccelYminUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelAccelYmaxUnit
-			// 
-			this.labelAccelYmaxUnit.Location = new System.Drawing.Point(144, 176);
-			this.labelAccelYmaxUnit.Name = "labelAccelYmaxUnit";
-			this.labelAccelYmaxUnit.Size = new System.Drawing.Size(48, 16);
-			this.labelAccelYmaxUnit.TabIndex = 35;
-			this.labelAccelYmaxUnit.Text = "km/h/s";
-			this.labelAccelYmaxUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelAccelXminUnit
-			// 
-			this.labelAccelXminUnit.Location = new System.Drawing.Point(144, 104);
-			this.labelAccelXminUnit.Name = "labelAccelXminUnit";
-			this.labelAccelXminUnit.Size = new System.Drawing.Size(48, 16);
-			this.labelAccelXminUnit.TabIndex = 36;
-			this.labelAccelXminUnit.Text = "km/h";
-			this.labelAccelXminUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelAccelXmaxUnit
-			// 
-			this.labelAccelXmaxUnit.Location = new System.Drawing.Point(144, 128);
-			this.labelAccelXmaxUnit.Name = "labelAccelXmaxUnit";
-			this.labelAccelXmaxUnit.Size = new System.Drawing.Size(48, 16);
-			this.labelAccelXmaxUnit.TabIndex = 37;
-			this.labelAccelXmaxUnit.Text = "km/h";
-			this.labelAccelXmaxUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelAccelXValue
-			// 
-			this.labelAccelXValue.Location = new System.Drawing.Point(88, 56);
-			this.labelAccelXValue.Name = "labelAccelXValue";
-			this.labelAccelXValue.Size = new System.Drawing.Size(104, 16);
-			this.labelAccelXValue.TabIndex = 38;
-			this.labelAccelXValue.Text = "0.00 km/h";
-			this.labelAccelXValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.buttonAccelZoomIn.Location = new System.Drawing.Point(8, 200);
+			this.buttonAccelZoomIn.Name = "buttonAccelZoomIn";
+			this.buttonAccelZoomIn.Size = new System.Drawing.Size(56, 24);
+			this.buttonAccelZoomIn.TabIndex = 40;
+			this.buttonAccelZoomIn.UseVisualStyleBackColor = true;
 			// 
 			// labelAccelYValue
 			// 
@@ -4853,40 +4620,299 @@ namespace TrainEditor2.Views
 			this.labelAccelYValue.Text = "0.00 km/h/s";
 			this.labelAccelYValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// buttonAccelZoomIn
+			// labelAccelXValue
 			// 
-			this.buttonAccelZoomIn.Location = new System.Drawing.Point(8, 200);
-			this.buttonAccelZoomIn.Name = "buttonAccelZoomIn";
-			this.buttonAccelZoomIn.Size = new System.Drawing.Size(56, 24);
-			this.buttonAccelZoomIn.TabIndex = 40;
-			this.buttonAccelZoomIn.UseVisualStyleBackColor = true;
+			this.labelAccelXValue.Location = new System.Drawing.Point(88, 56);
+			this.labelAccelXValue.Name = "labelAccelXValue";
+			this.labelAccelXValue.Size = new System.Drawing.Size(104, 16);
+			this.labelAccelXValue.TabIndex = 38;
+			this.labelAccelXValue.Text = "0.00 km/h";
+			this.labelAccelXValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// buttonAccelZoomOut
+			// labelAccelXmaxUnit
 			// 
-			this.buttonAccelZoomOut.Location = new System.Drawing.Point(72, 200);
-			this.buttonAccelZoomOut.Name = "buttonAccelZoomOut";
-			this.buttonAccelZoomOut.Size = new System.Drawing.Size(56, 24);
-			this.buttonAccelZoomOut.TabIndex = 41;
-			this.buttonAccelZoomOut.UseVisualStyleBackColor = true;
+			this.labelAccelXmaxUnit.Location = new System.Drawing.Point(144, 128);
+			this.labelAccelXmaxUnit.Name = "labelAccelXmaxUnit";
+			this.labelAccelXmaxUnit.Size = new System.Drawing.Size(48, 16);
+			this.labelAccelXmaxUnit.TabIndex = 37;
+			this.labelAccelXmaxUnit.Text = "km/h";
+			this.labelAccelXmaxUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// buttonAccelReset
+			// labelAccelXminUnit
 			// 
-			this.buttonAccelReset.Location = new System.Drawing.Point(136, 200);
-			this.buttonAccelReset.Name = "buttonAccelReset";
-			this.buttonAccelReset.Size = new System.Drawing.Size(56, 24);
-			this.buttonAccelReset.TabIndex = 42;
-			this.buttonAccelReset.UseVisualStyleBackColor = true;
+			this.labelAccelXminUnit.Location = new System.Drawing.Point(144, 104);
+			this.labelAccelXminUnit.Name = "labelAccelXminUnit";
+			this.labelAccelXminUnit.Size = new System.Drawing.Size(48, 16);
+			this.labelAccelXminUnit.TabIndex = 36;
+			this.labelAccelXminUnit.Text = "km/h";
+			this.labelAccelXminUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// pictureBoxAccel
+			// labelAccelYmaxUnit
 			// 
-			this.pictureBoxAccel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.pictureBoxAccel.Location = new System.Drawing.Point(0, 0);
-			this.pictureBoxAccel.Name = "pictureBoxAccel";
-			this.pictureBoxAccel.Size = new System.Drawing.Size(576, 670);
-			this.pictureBoxAccel.TabIndex = 1;
-			this.pictureBoxAccel.TabStop = false;
-			this.pictureBoxAccel.MouseEnter += new System.EventHandler(this.PictureBoxAccel_MouseEnter);
-			this.pictureBoxAccel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PictureBoxAccel_MouseMove);
+			this.labelAccelYmaxUnit.Location = new System.Drawing.Point(144, 176);
+			this.labelAccelYmaxUnit.Name = "labelAccelYmaxUnit";
+			this.labelAccelYmaxUnit.Size = new System.Drawing.Size(48, 16);
+			this.labelAccelYmaxUnit.TabIndex = 35;
+			this.labelAccelYmaxUnit.Text = "km/h/s";
+			this.labelAccelYmaxUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// labelAccelYminUnit
+			// 
+			this.labelAccelYminUnit.Location = new System.Drawing.Point(144, 152);
+			this.labelAccelYminUnit.Name = "labelAccelYminUnit";
+			this.labelAccelYminUnit.Size = new System.Drawing.Size(48, 16);
+			this.labelAccelYminUnit.TabIndex = 34;
+			this.labelAccelYminUnit.Text = "km/h/s";
+			this.labelAccelYminUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// textBoxAccelYmax
+			// 
+			this.textBoxAccelYmax.Location = new System.Drawing.Point(88, 176);
+			this.textBoxAccelYmax.Name = "textBoxAccelYmax";
+			this.textBoxAccelYmax.Size = new System.Drawing.Size(48, 19);
+			this.textBoxAccelYmax.TabIndex = 25;
+			// 
+			// textBoxAccelYmin
+			// 
+			this.textBoxAccelYmin.Location = new System.Drawing.Point(88, 152);
+			this.textBoxAccelYmin.Name = "textBoxAccelYmin";
+			this.textBoxAccelYmin.Size = new System.Drawing.Size(48, 19);
+			this.textBoxAccelYmin.TabIndex = 24;
+			// 
+			// textBoxAccelXmax
+			// 
+			this.textBoxAccelXmax.Location = new System.Drawing.Point(88, 128);
+			this.textBoxAccelXmax.Name = "textBoxAccelXmax";
+			this.textBoxAccelXmax.Size = new System.Drawing.Size(48, 19);
+			this.textBoxAccelXmax.TabIndex = 23;
+			// 
+			// textBoxAccelXmin
+			// 
+			this.textBoxAccelXmin.Location = new System.Drawing.Point(88, 104);
+			this.textBoxAccelXmin.Name = "textBoxAccelXmin";
+			this.textBoxAccelXmin.Size = new System.Drawing.Size(48, 19);
+			this.textBoxAccelXmin.TabIndex = 22;
+			// 
+			// labelAccelYmax
+			// 
+			this.labelAccelYmax.Location = new System.Drawing.Point(8, 176);
+			this.labelAccelYmax.Name = "labelAccelYmax";
+			this.labelAccelYmax.Size = new System.Drawing.Size(72, 16);
+			this.labelAccelYmax.TabIndex = 8;
+			this.labelAccelYmax.Text = "Ymax:";
+			this.labelAccelYmax.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelAccelYmin
+			// 
+			this.labelAccelYmin.Location = new System.Drawing.Point(8, 152);
+			this.labelAccelYmin.Name = "labelAccelYmin";
+			this.labelAccelYmin.Size = new System.Drawing.Size(72, 16);
+			this.labelAccelYmin.TabIndex = 7;
+			this.labelAccelYmin.Text = "Ymin:";
+			this.labelAccelYmin.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelAccelXmax
+			// 
+			this.labelAccelXmax.Location = new System.Drawing.Point(8, 128);
+			this.labelAccelXmax.Name = "labelAccelXmax";
+			this.labelAccelXmax.Size = new System.Drawing.Size(72, 16);
+			this.labelAccelXmax.TabIndex = 6;
+			this.labelAccelXmax.Text = "Xmax:";
+			this.labelAccelXmax.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelAccelXmin
+			// 
+			this.labelAccelXmin.Location = new System.Drawing.Point(8, 104);
+			this.labelAccelXmin.Name = "labelAccelXmin";
+			this.labelAccelXmin.Size = new System.Drawing.Size(72, 16);
+			this.labelAccelXmin.TabIndex = 5;
+			this.labelAccelXmin.Text = "Xmin:";
+			this.labelAccelXmin.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelAccelY
+			// 
+			this.labelAccelY.Location = new System.Drawing.Point(8, 80);
+			this.labelAccelY.Name = "labelAccelY";
+			this.labelAccelY.Size = new System.Drawing.Size(72, 16);
+			this.labelAccelY.TabIndex = 4;
+			this.labelAccelY.Text = "Y:";
+			this.labelAccelY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelAccelX
+			// 
+			this.labelAccelX.Location = new System.Drawing.Point(8, 56);
+			this.labelAccelX.Name = "labelAccelX";
+			this.labelAccelX.Size = new System.Drawing.Size(72, 16);
+			this.labelAccelX.TabIndex = 3;
+			this.labelAccelX.Text = "X:";
+			this.labelAccelX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// checkBoxSubtractDeceleration
+			// 
+			this.checkBoxSubtractDeceleration.Location = new System.Drawing.Point(8, 16);
+			this.checkBoxSubtractDeceleration.Name = "checkBoxSubtractDeceleration";
+			this.checkBoxSubtractDeceleration.Size = new System.Drawing.Size(184, 32);
+			this.checkBoxSubtractDeceleration.TabIndex = 0;
+			this.checkBoxSubtractDeceleration.Text = "Subtract deceleration due to air and rolling resistance";
+			this.checkBoxSubtractDeceleration.UseVisualStyleBackColor = true;
+			// 
+			// groupBoxParameter
+			// 
+			this.groupBoxParameter.Controls.Add(this.labeAccelA0Unit);
+			this.groupBoxParameter.Controls.Add(this.textBoxAccelA0);
+			this.groupBoxParameter.Controls.Add(this.labelAccelA0);
+			this.groupBoxParameter.Controls.Add(this.labelAccelA1Unit);
+			this.groupBoxParameter.Controls.Add(this.textBoxAccelA1);
+			this.groupBoxParameter.Controls.Add(this.labelAccelA1);
+			this.groupBoxParameter.Controls.Add(this.labelAccelV1Unit);
+			this.groupBoxParameter.Controls.Add(this.textBoxAccelV1);
+			this.groupBoxParameter.Controls.Add(this.labelAccelV1);
+			this.groupBoxParameter.Controls.Add(this.labelAccelV2Unit);
+			this.groupBoxParameter.Controls.Add(this.textBoxAccelV2);
+			this.groupBoxParameter.Controls.Add(this.labelAccelV2);
+			this.groupBoxParameter.Controls.Add(this.textBoxAccelE);
+			this.groupBoxParameter.Controls.Add(this.labelAccelE);
+			this.groupBoxParameter.Location = new System.Drawing.Point(8, 64);
+			this.groupBoxParameter.Name = "groupBoxParameter";
+			this.groupBoxParameter.Size = new System.Drawing.Size(200, 144);
+			this.groupBoxParameter.TabIndex = 1;
+			this.groupBoxParameter.TabStop = false;
+			this.groupBoxParameter.Text = "Parameter";
+			// 
+			// labeAccelA0Unit
+			// 
+			this.labeAccelA0Unit.Location = new System.Drawing.Point(144, 16);
+			this.labeAccelA0Unit.Name = "labeAccelA0Unit";
+			this.labeAccelA0Unit.Size = new System.Drawing.Size(48, 16);
+			this.labeAccelA0Unit.TabIndex = 33;
+			this.labeAccelA0Unit.Text = "km/h/s";
+			this.labeAccelA0Unit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// textBoxAccelA0
+			// 
+			this.textBoxAccelA0.Location = new System.Drawing.Point(88, 16);
+			this.textBoxAccelA0.Name = "textBoxAccelA0";
+			this.textBoxAccelA0.Size = new System.Drawing.Size(48, 19);
+			this.textBoxAccelA0.TabIndex = 32;
+			// 
+			// labelAccelA0
+			// 
+			this.labelAccelA0.Location = new System.Drawing.Point(8, 16);
+			this.labelAccelA0.Name = "labelAccelA0";
+			this.labelAccelA0.Size = new System.Drawing.Size(72, 16);
+			this.labelAccelA0.TabIndex = 31;
+			this.labelAccelA0.Text = "a0:";
+			this.labelAccelA0.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelAccelA1Unit
+			// 
+			this.labelAccelA1Unit.Location = new System.Drawing.Point(144, 40);
+			this.labelAccelA1Unit.Name = "labelAccelA1Unit";
+			this.labelAccelA1Unit.Size = new System.Drawing.Size(48, 16);
+			this.labelAccelA1Unit.TabIndex = 30;
+			this.labelAccelA1Unit.Text = "km/h/s";
+			this.labelAccelA1Unit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// textBoxAccelA1
+			// 
+			this.textBoxAccelA1.Location = new System.Drawing.Point(88, 40);
+			this.textBoxAccelA1.Name = "textBoxAccelA1";
+			this.textBoxAccelA1.Size = new System.Drawing.Size(48, 19);
+			this.textBoxAccelA1.TabIndex = 29;
+			// 
+			// labelAccelA1
+			// 
+			this.labelAccelA1.Location = new System.Drawing.Point(8, 40);
+			this.labelAccelA1.Name = "labelAccelA1";
+			this.labelAccelA1.Size = new System.Drawing.Size(72, 16);
+			this.labelAccelA1.TabIndex = 28;
+			this.labelAccelA1.Text = "a1:";
+			this.labelAccelA1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelAccelV1Unit
+			// 
+			this.labelAccelV1Unit.Location = new System.Drawing.Point(144, 64);
+			this.labelAccelV1Unit.Name = "labelAccelV1Unit";
+			this.labelAccelV1Unit.Size = new System.Drawing.Size(48, 16);
+			this.labelAccelV1Unit.TabIndex = 27;
+			this.labelAccelV1Unit.Text = "km/h";
+			this.labelAccelV1Unit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// textBoxAccelV1
+			// 
+			this.textBoxAccelV1.Location = new System.Drawing.Point(88, 64);
+			this.textBoxAccelV1.Name = "textBoxAccelV1";
+			this.textBoxAccelV1.Size = new System.Drawing.Size(48, 19);
+			this.textBoxAccelV1.TabIndex = 26;
+			// 
+			// labelAccelV1
+			// 
+			this.labelAccelV1.Location = new System.Drawing.Point(8, 64);
+			this.labelAccelV1.Name = "labelAccelV1";
+			this.labelAccelV1.Size = new System.Drawing.Size(72, 16);
+			this.labelAccelV1.TabIndex = 25;
+			this.labelAccelV1.Text = "v1:";
+			this.labelAccelV1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelAccelV2Unit
+			// 
+			this.labelAccelV2Unit.Location = new System.Drawing.Point(144, 88);
+			this.labelAccelV2Unit.Name = "labelAccelV2Unit";
+			this.labelAccelV2Unit.Size = new System.Drawing.Size(48, 16);
+			this.labelAccelV2Unit.TabIndex = 24;
+			this.labelAccelV2Unit.Text = "km/h";
+			this.labelAccelV2Unit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// textBoxAccelV2
+			// 
+			this.textBoxAccelV2.Location = new System.Drawing.Point(88, 88);
+			this.textBoxAccelV2.Name = "textBoxAccelV2";
+			this.textBoxAccelV2.Size = new System.Drawing.Size(48, 19);
+			this.textBoxAccelV2.TabIndex = 23;
+			// 
+			// labelAccelV2
+			// 
+			this.labelAccelV2.Location = new System.Drawing.Point(8, 88);
+			this.labelAccelV2.Name = "labelAccelV2";
+			this.labelAccelV2.Size = new System.Drawing.Size(72, 16);
+			this.labelAccelV2.TabIndex = 22;
+			this.labelAccelV2.Text = "v2:";
+			this.labelAccelV2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// textBoxAccelE
+			// 
+			this.textBoxAccelE.Location = new System.Drawing.Point(88, 112);
+			this.textBoxAccelE.Name = "textBoxAccelE";
+			this.textBoxAccelE.Size = new System.Drawing.Size(48, 19);
+			this.textBoxAccelE.TabIndex = 21;
+			// 
+			// labelAccelE
+			// 
+			this.labelAccelE.Location = new System.Drawing.Point(8, 112);
+			this.labelAccelE.Name = "labelAccelE";
+			this.labelAccelE.Size = new System.Drawing.Size(72, 16);
+			this.labelAccelE.TabIndex = 2;
+			this.labelAccelE.Text = "e (2.0):";
+			this.labelAccelE.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// groupBoxNotch
+			// 
+			this.groupBoxNotch.Controls.Add(this.comboBoxNotch);
+			this.groupBoxNotch.Location = new System.Drawing.Point(8, 8);
+			this.groupBoxNotch.Name = "groupBoxNotch";
+			this.groupBoxNotch.Size = new System.Drawing.Size(200, 48);
+			this.groupBoxNotch.TabIndex = 0;
+			this.groupBoxNotch.TabStop = false;
+			this.groupBoxNotch.Text = "Notch";
+			// 
+			// comboBoxNotch
+			// 
+			this.comboBoxNotch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxNotch.FormattingEnabled = true;
+			this.comboBoxNotch.Location = new System.Drawing.Point(8, 16);
+			this.comboBoxNotch.Name = "comboBoxNotch";
+			this.comboBoxNotch.Size = new System.Drawing.Size(72, 20);
+			this.comboBoxNotch.TabIndex = 0;
 			// 
 			// tabPageCar
 			// 
@@ -4902,6 +4928,604 @@ namespace TrainEditor2.Views
 			this.tabPageCar.TabIndex = 4;
 			this.tabPageCar.Text = "Car settings";
 			this.tabPageCar.UseVisualStyleBackColor = true;
+			// 
+			// groupBoxPressure
+			// 
+			this.groupBoxPressure.Controls.Add(this.labelBrakePipeNormalPressureUnit);
+			this.groupBoxPressure.Controls.Add(this.textBoxBrakePipeNormalPressure);
+			this.groupBoxPressure.Controls.Add(this.labelBrakePipeNormalPressure);
+			this.groupBoxPressure.Controls.Add(this.labelBrakeCylinderServiceMaximumPressureUnit);
+			this.groupBoxPressure.Controls.Add(this.labelMainReservoirMaximumPressureUnit);
+			this.groupBoxPressure.Controls.Add(this.labelMainReservoirMinimumPressureUnit);
+			this.groupBoxPressure.Controls.Add(this.labelBrakeCylinderEmergencyMaximumPressureUnit);
+			this.groupBoxPressure.Controls.Add(this.textBoxMainReservoirMaximumPressure);
+			this.groupBoxPressure.Controls.Add(this.textBoxMainReservoirMinimumPressure);
+			this.groupBoxPressure.Controls.Add(this.textBoxBrakeCylinderEmergencyMaximumPressure);
+			this.groupBoxPressure.Controls.Add(this.textBoxBrakeCylinderServiceMaximumPressure);
+			this.groupBoxPressure.Controls.Add(this.labelMainReservoirMaximumPressure);
+			this.groupBoxPressure.Controls.Add(this.labelMainReservoirMinimumPressure);
+			this.groupBoxPressure.Controls.Add(this.labelBrakeCylinderServiceMaximumPressure);
+			this.groupBoxPressure.Controls.Add(this.labelBrakeCylinderEmergencyMaximumPressure);
+			this.groupBoxPressure.Location = new System.Drawing.Point(288, 440);
+			this.groupBoxPressure.Name = "groupBoxPressure";
+			this.groupBoxPressure.Size = new System.Drawing.Size(448, 144);
+			this.groupBoxPressure.TabIndex = 33;
+			this.groupBoxPressure.TabStop = false;
+			this.groupBoxPressure.Text = "Pressure";
+			// 
+			// labelBrakePipeNormalPressureUnit
+			// 
+			this.labelBrakePipeNormalPressureUnit.Location = new System.Drawing.Point(408, 112);
+			this.labelBrakePipeNormalPressureUnit.Name = "labelBrakePipeNormalPressureUnit";
+			this.labelBrakePipeNormalPressureUnit.Size = new System.Drawing.Size(24, 16);
+			this.labelBrakePipeNormalPressureUnit.TabIndex = 39;
+			this.labelBrakePipeNormalPressureUnit.Text = "kPa";
+			this.labelBrakePipeNormalPressureUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// textBoxBrakePipeNormalPressure
+			// 
+			this.textBoxBrakePipeNormalPressure.Location = new System.Drawing.Point(248, 112);
+			this.textBoxBrakePipeNormalPressure.Name = "textBoxBrakePipeNormalPressure";
+			this.textBoxBrakePipeNormalPressure.Size = new System.Drawing.Size(152, 19);
+			this.textBoxBrakePipeNormalPressure.TabIndex = 38;
+			// 
+			// labelBrakePipeNormalPressure
+			// 
+			this.labelBrakePipeNormalPressure.Location = new System.Drawing.Point(8, 112);
+			this.labelBrakePipeNormalPressure.Name = "labelBrakePipeNormalPressure";
+			this.labelBrakePipeNormalPressure.Size = new System.Drawing.Size(232, 16);
+			this.labelBrakePipeNormalPressure.TabIndex = 37;
+			this.labelBrakePipeNormalPressure.Text = "BrakePipeNormalPressure:";
+			this.labelBrakePipeNormalPressure.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelBrakeCylinderServiceMaximumPressureUnit
+			// 
+			this.labelBrakeCylinderServiceMaximumPressureUnit.Location = new System.Drawing.Point(408, 16);
+			this.labelBrakeCylinderServiceMaximumPressureUnit.Name = "labelBrakeCylinderServiceMaximumPressureUnit";
+			this.labelBrakeCylinderServiceMaximumPressureUnit.Size = new System.Drawing.Size(24, 16);
+			this.labelBrakeCylinderServiceMaximumPressureUnit.TabIndex = 32;
+			this.labelBrakeCylinderServiceMaximumPressureUnit.Text = "kPa";
+			this.labelBrakeCylinderServiceMaximumPressureUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// labelMainReservoirMaximumPressureUnit
+			// 
+			this.labelMainReservoirMaximumPressureUnit.Location = new System.Drawing.Point(408, 88);
+			this.labelMainReservoirMaximumPressureUnit.Name = "labelMainReservoirMaximumPressureUnit";
+			this.labelMainReservoirMaximumPressureUnit.Size = new System.Drawing.Size(24, 16);
+			this.labelMainReservoirMaximumPressureUnit.TabIndex = 36;
+			this.labelMainReservoirMaximumPressureUnit.Text = "kPa";
+			this.labelMainReservoirMaximumPressureUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// labelMainReservoirMinimumPressureUnit
+			// 
+			this.labelMainReservoirMinimumPressureUnit.Location = new System.Drawing.Point(408, 64);
+			this.labelMainReservoirMinimumPressureUnit.Name = "labelMainReservoirMinimumPressureUnit";
+			this.labelMainReservoirMinimumPressureUnit.Size = new System.Drawing.Size(24, 16);
+			this.labelMainReservoirMinimumPressureUnit.TabIndex = 35;
+			this.labelMainReservoirMinimumPressureUnit.Text = "kPa";
+			this.labelMainReservoirMinimumPressureUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// labelBrakeCylinderEmergencyMaximumPressureUnit
+			// 
+			this.labelBrakeCylinderEmergencyMaximumPressureUnit.Location = new System.Drawing.Point(408, 40);
+			this.labelBrakeCylinderEmergencyMaximumPressureUnit.Name = "labelBrakeCylinderEmergencyMaximumPressureUnit";
+			this.labelBrakeCylinderEmergencyMaximumPressureUnit.Size = new System.Drawing.Size(24, 16);
+			this.labelBrakeCylinderEmergencyMaximumPressureUnit.TabIndex = 34;
+			this.labelBrakeCylinderEmergencyMaximumPressureUnit.Text = "kPa";
+			this.labelBrakeCylinderEmergencyMaximumPressureUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// textBoxMainReservoirMaximumPressure
+			// 
+			this.textBoxMainReservoirMaximumPressure.Location = new System.Drawing.Point(248, 88);
+			this.textBoxMainReservoirMaximumPressure.Name = "textBoxMainReservoirMaximumPressure";
+			this.textBoxMainReservoirMaximumPressure.Size = new System.Drawing.Size(152, 19);
+			this.textBoxMainReservoirMaximumPressure.TabIndex = 34;
+			// 
+			// textBoxMainReservoirMinimumPressure
+			// 
+			this.textBoxMainReservoirMinimumPressure.Location = new System.Drawing.Point(248, 64);
+			this.textBoxMainReservoirMinimumPressure.Name = "textBoxMainReservoirMinimumPressure";
+			this.textBoxMainReservoirMinimumPressure.Size = new System.Drawing.Size(152, 19);
+			this.textBoxMainReservoirMinimumPressure.TabIndex = 33;
+			// 
+			// textBoxBrakeCylinderEmergencyMaximumPressure
+			// 
+			this.textBoxBrakeCylinderEmergencyMaximumPressure.Location = new System.Drawing.Point(248, 40);
+			this.textBoxBrakeCylinderEmergencyMaximumPressure.Name = "textBoxBrakeCylinderEmergencyMaximumPressure";
+			this.textBoxBrakeCylinderEmergencyMaximumPressure.Size = new System.Drawing.Size(152, 19);
+			this.textBoxBrakeCylinderEmergencyMaximumPressure.TabIndex = 32;
+			// 
+			// textBoxBrakeCylinderServiceMaximumPressure
+			// 
+			this.textBoxBrakeCylinderServiceMaximumPressure.Location = new System.Drawing.Point(248, 16);
+			this.textBoxBrakeCylinderServiceMaximumPressure.Name = "textBoxBrakeCylinderServiceMaximumPressure";
+			this.textBoxBrakeCylinderServiceMaximumPressure.Size = new System.Drawing.Size(152, 19);
+			this.textBoxBrakeCylinderServiceMaximumPressure.TabIndex = 31;
+			// 
+			// labelMainReservoirMaximumPressure
+			// 
+			this.labelMainReservoirMaximumPressure.Location = new System.Drawing.Point(8, 88);
+			this.labelMainReservoirMaximumPressure.Name = "labelMainReservoirMaximumPressure";
+			this.labelMainReservoirMaximumPressure.Size = new System.Drawing.Size(232, 16);
+			this.labelMainReservoirMaximumPressure.TabIndex = 11;
+			this.labelMainReservoirMaximumPressure.Text = "MainReservoirMaximumPressure:";
+			this.labelMainReservoirMaximumPressure.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelMainReservoirMinimumPressure
+			// 
+			this.labelMainReservoirMinimumPressure.Location = new System.Drawing.Point(8, 64);
+			this.labelMainReservoirMinimumPressure.Name = "labelMainReservoirMinimumPressure";
+			this.labelMainReservoirMinimumPressure.Size = new System.Drawing.Size(232, 16);
+			this.labelMainReservoirMinimumPressure.TabIndex = 10;
+			this.labelMainReservoirMinimumPressure.Text = "MainReservoirMinimumPressure:";
+			this.labelMainReservoirMinimumPressure.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelBrakeCylinderServiceMaximumPressure
+			// 
+			this.labelBrakeCylinderServiceMaximumPressure.Location = new System.Drawing.Point(8, 16);
+			this.labelBrakeCylinderServiceMaximumPressure.Name = "labelBrakeCylinderServiceMaximumPressure";
+			this.labelBrakeCylinderServiceMaximumPressure.Size = new System.Drawing.Size(232, 16);
+			this.labelBrakeCylinderServiceMaximumPressure.TabIndex = 9;
+			this.labelBrakeCylinderServiceMaximumPressure.Text = "BrakeCylinderServiceMaximumPressure:";
+			this.labelBrakeCylinderServiceMaximumPressure.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelBrakeCylinderEmergencyMaximumPressure
+			// 
+			this.labelBrakeCylinderEmergencyMaximumPressure.Location = new System.Drawing.Point(8, 40);
+			this.labelBrakeCylinderEmergencyMaximumPressure.Name = "labelBrakeCylinderEmergencyMaximumPressure";
+			this.labelBrakeCylinderEmergencyMaximumPressure.Size = new System.Drawing.Size(232, 16);
+			this.labelBrakeCylinderEmergencyMaximumPressure.TabIndex = 8;
+			this.labelBrakeCylinderEmergencyMaximumPressure.Text = "BrakeCylinderEmergencyMaximumPressure:";
+			this.labelBrakeCylinderEmergencyMaximumPressure.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// groupBoxBrake
+			// 
+			this.groupBoxBrake.Controls.Add(this.textBoxBrakeControlSpeed);
+			this.groupBoxBrake.Controls.Add(this.labelBrakeControlSpeedUnit);
+			this.groupBoxBrake.Controls.Add(this.comboBoxBrakeControlSystem);
+			this.groupBoxBrake.Controls.Add(this.comboBoxLocoBrakeType);
+			this.groupBoxBrake.Controls.Add(this.comboBoxBrakeType);
+			this.groupBoxBrake.Controls.Add(this.labelLocoBrakeType);
+			this.groupBoxBrake.Controls.Add(this.labelBrakeType);
+			this.groupBoxBrake.Controls.Add(this.labelBrakeControlSpeed);
+			this.groupBoxBrake.Controls.Add(this.labelBrakeControlSystem);
+			this.groupBoxBrake.Location = new System.Drawing.Point(288, 312);
+			this.groupBoxBrake.Name = "groupBoxBrake";
+			this.groupBoxBrake.Size = new System.Drawing.Size(448, 120);
+			this.groupBoxBrake.TabIndex = 4;
+			this.groupBoxBrake.TabStop = false;
+			this.groupBoxBrake.Text = "Brake";
+			// 
+			// textBoxBrakeControlSpeed
+			// 
+			this.textBoxBrakeControlSpeed.Location = new System.Drawing.Point(136, 88);
+			this.textBoxBrakeControlSpeed.Name = "textBoxBrakeControlSpeed";
+			this.textBoxBrakeControlSpeed.Size = new System.Drawing.Size(264, 19);
+			this.textBoxBrakeControlSpeed.TabIndex = 31;
+			// 
+			// labelBrakeControlSpeedUnit
+			// 
+			this.labelBrakeControlSpeedUnit.Location = new System.Drawing.Point(408, 88);
+			this.labelBrakeControlSpeedUnit.Name = "labelBrakeControlSpeedUnit";
+			this.labelBrakeControlSpeedUnit.Size = new System.Drawing.Size(32, 16);
+			this.labelBrakeControlSpeedUnit.TabIndex = 32;
+			this.labelBrakeControlSpeedUnit.Text = "km/h";
+			this.labelBrakeControlSpeedUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// comboBoxBrakeControlSystem
+			// 
+			this.comboBoxBrakeControlSystem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxBrakeControlSystem.FormattingEnabled = true;
+			this.comboBoxBrakeControlSystem.Items.AddRange(new object[] {
+            "None",
+            "Closing electromagnetic valve",
+            "Delay-including control"});
+			this.comboBoxBrakeControlSystem.Location = new System.Drawing.Point(136, 64);
+			this.comboBoxBrakeControlSystem.Name = "comboBoxBrakeControlSystem";
+			this.comboBoxBrakeControlSystem.Size = new System.Drawing.Size(264, 20);
+			this.comboBoxBrakeControlSystem.TabIndex = 17;
+			// 
+			// comboBoxLocoBrakeType
+			// 
+			this.comboBoxLocoBrakeType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxLocoBrakeType.FormattingEnabled = true;
+			this.comboBoxLocoBrakeType.Items.AddRange(new object[] {
+            "Not fitted",
+            "Notched air brake",
+            "Air brake with partial release"});
+			this.comboBoxLocoBrakeType.Location = new System.Drawing.Point(136, 40);
+			this.comboBoxLocoBrakeType.Name = "comboBoxLocoBrakeType";
+			this.comboBoxLocoBrakeType.Size = new System.Drawing.Size(264, 20);
+			this.comboBoxLocoBrakeType.TabIndex = 16;
+			// 
+			// comboBoxBrakeType
+			// 
+			this.comboBoxBrakeType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxBrakeType.FormattingEnabled = true;
+			this.comboBoxBrakeType.Items.AddRange(new object[] {
+            "Electromagnetic straight air brake",
+            "Electro-pneumatic air brake without brake pipe",
+            "Air brake with partial release feature"});
+			this.comboBoxBrakeType.Location = new System.Drawing.Point(136, 16);
+			this.comboBoxBrakeType.Name = "comboBoxBrakeType";
+			this.comboBoxBrakeType.Size = new System.Drawing.Size(264, 20);
+			this.comboBoxBrakeType.TabIndex = 15;
+			// 
+			// labelLocoBrakeType
+			// 
+			this.labelLocoBrakeType.Location = new System.Drawing.Point(8, 40);
+			this.labelLocoBrakeType.Name = "labelLocoBrakeType";
+			this.labelLocoBrakeType.Size = new System.Drawing.Size(120, 16);
+			this.labelLocoBrakeType.TabIndex = 8;
+			this.labelLocoBrakeType.Text = "LocoBrakeType:";
+			this.labelLocoBrakeType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelBrakeType
+			// 
+			this.labelBrakeType.Location = new System.Drawing.Point(8, 16);
+			this.labelBrakeType.Name = "labelBrakeType";
+			this.labelBrakeType.Size = new System.Drawing.Size(120, 16);
+			this.labelBrakeType.TabIndex = 7;
+			this.labelBrakeType.Text = "BrakeType:";
+			this.labelBrakeType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelBrakeControlSpeed
+			// 
+			this.labelBrakeControlSpeed.Location = new System.Drawing.Point(8, 88);
+			this.labelBrakeControlSpeed.Name = "labelBrakeControlSpeed";
+			this.labelBrakeControlSpeed.Size = new System.Drawing.Size(120, 16);
+			this.labelBrakeControlSpeed.TabIndex = 6;
+			this.labelBrakeControlSpeed.Text = "BrakeControlSpeed:";
+			this.labelBrakeControlSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelBrakeControlSystem
+			// 
+			this.labelBrakeControlSystem.Location = new System.Drawing.Point(8, 64);
+			this.labelBrakeControlSystem.Name = "labelBrakeControlSystem";
+			this.labelBrakeControlSystem.Size = new System.Drawing.Size(120, 16);
+			this.labelBrakeControlSystem.TabIndex = 5;
+			this.labelBrakeControlSystem.Text = "BrakeControlSystem:";
+			this.labelBrakeControlSystem.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// groupBoxMove
+			// 
+			this.groupBoxMove.Controls.Add(this.labelBrakeCylinderDownUnit);
+			this.groupBoxMove.Controls.Add(this.textBoxBrakeCylinderDown);
+			this.groupBoxMove.Controls.Add(this.labelBrakeCylinderUpUnit);
+			this.groupBoxMove.Controls.Add(this.textBoxBrakeCylinderUp);
+			this.groupBoxMove.Controls.Add(this.labelJerkBrakeDownUnit);
+			this.groupBoxMove.Controls.Add(this.textBoxJerkBrakeDown);
+			this.groupBoxMove.Controls.Add(this.labelJerkBrakeUpUnit);
+			this.groupBoxMove.Controls.Add(this.textBoxJerkBrakeUp);
+			this.groupBoxMove.Controls.Add(this.labelJerkPowerDownUnit);
+			this.groupBoxMove.Controls.Add(this.textBoxJerkPowerDown);
+			this.groupBoxMove.Controls.Add(this.labelJerkPowerUpUnit);
+			this.groupBoxMove.Controls.Add(this.textBoxJerkPowerUp);
+			this.groupBoxMove.Controls.Add(this.labelJerkPowerUp);
+			this.groupBoxMove.Controls.Add(this.labelJerkPowerDown);
+			this.groupBoxMove.Controls.Add(this.labelJerkBrakeUp);
+			this.groupBoxMove.Controls.Add(this.labelJerkBrakeDown);
+			this.groupBoxMove.Controls.Add(this.labelBrakeCylinderUp);
+			this.groupBoxMove.Controls.Add(this.labelBrakeCylinderDown);
+			this.groupBoxMove.Location = new System.Drawing.Point(288, 136);
+			this.groupBoxMove.Name = "groupBoxMove";
+			this.groupBoxMove.Size = new System.Drawing.Size(448, 168);
+			this.groupBoxMove.TabIndex = 3;
+			this.groupBoxMove.TabStop = false;
+			this.groupBoxMove.Text = "Move";
+			// 
+			// labelBrakeCylinderDownUnit
+			// 
+			this.labelBrakeCylinderDownUnit.Location = new System.Drawing.Point(376, 136);
+			this.labelBrakeCylinderDownUnit.Name = "labelBrakeCylinderDownUnit";
+			this.labelBrakeCylinderDownUnit.Size = new System.Drawing.Size(64, 16);
+			this.labelBrakeCylinderDownUnit.TabIndex = 31;
+			this.labelBrakeCylinderDownUnit.Text = "kPa/s";
+			this.labelBrakeCylinderDownUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// textBoxBrakeCylinderDown
+			// 
+			this.textBoxBrakeCylinderDown.Location = new System.Drawing.Point(184, 136);
+			this.textBoxBrakeCylinderDown.Name = "textBoxBrakeCylinderDown";
+			this.textBoxBrakeCylinderDown.Size = new System.Drawing.Size(184, 19);
+			this.textBoxBrakeCylinderDown.TabIndex = 30;
+			// 
+			// labelBrakeCylinderUpUnit
+			// 
+			this.labelBrakeCylinderUpUnit.Location = new System.Drawing.Point(376, 112);
+			this.labelBrakeCylinderUpUnit.Name = "labelBrakeCylinderUpUnit";
+			this.labelBrakeCylinderUpUnit.Size = new System.Drawing.Size(64, 16);
+			this.labelBrakeCylinderUpUnit.TabIndex = 29;
+			this.labelBrakeCylinderUpUnit.Text = "kPa/s";
+			this.labelBrakeCylinderUpUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// textBoxBrakeCylinderUp
+			// 
+			this.textBoxBrakeCylinderUp.Location = new System.Drawing.Point(184, 112);
+			this.textBoxBrakeCylinderUp.Name = "textBoxBrakeCylinderUp";
+			this.textBoxBrakeCylinderUp.Size = new System.Drawing.Size(184, 19);
+			this.textBoxBrakeCylinderUp.TabIndex = 28;
+			// 
+			// labelJerkBrakeDownUnit
+			// 
+			this.labelJerkBrakeDownUnit.Location = new System.Drawing.Point(376, 88);
+			this.labelJerkBrakeDownUnit.Name = "labelJerkBrakeDownUnit";
+			this.labelJerkBrakeDownUnit.Size = new System.Drawing.Size(64, 16);
+			this.labelJerkBrakeDownUnit.TabIndex = 27;
+			this.labelJerkBrakeDownUnit.Text = "1/100 m/s³";
+			this.labelJerkBrakeDownUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// textBoxJerkBrakeDown
+			// 
+			this.textBoxJerkBrakeDown.Location = new System.Drawing.Point(184, 88);
+			this.textBoxJerkBrakeDown.Name = "textBoxJerkBrakeDown";
+			this.textBoxJerkBrakeDown.Size = new System.Drawing.Size(184, 19);
+			this.textBoxJerkBrakeDown.TabIndex = 26;
+			// 
+			// labelJerkBrakeUpUnit
+			// 
+			this.labelJerkBrakeUpUnit.Location = new System.Drawing.Point(376, 64);
+			this.labelJerkBrakeUpUnit.Name = "labelJerkBrakeUpUnit";
+			this.labelJerkBrakeUpUnit.Size = new System.Drawing.Size(64, 16);
+			this.labelJerkBrakeUpUnit.TabIndex = 25;
+			this.labelJerkBrakeUpUnit.Text = "1/100 m/s³";
+			this.labelJerkBrakeUpUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// textBoxJerkBrakeUp
+			// 
+			this.textBoxJerkBrakeUp.Location = new System.Drawing.Point(184, 64);
+			this.textBoxJerkBrakeUp.Name = "textBoxJerkBrakeUp";
+			this.textBoxJerkBrakeUp.Size = new System.Drawing.Size(184, 19);
+			this.textBoxJerkBrakeUp.TabIndex = 24;
+			// 
+			// labelJerkPowerDownUnit
+			// 
+			this.labelJerkPowerDownUnit.Location = new System.Drawing.Point(376, 40);
+			this.labelJerkPowerDownUnit.Name = "labelJerkPowerDownUnit";
+			this.labelJerkPowerDownUnit.Size = new System.Drawing.Size(64, 16);
+			this.labelJerkPowerDownUnit.TabIndex = 23;
+			this.labelJerkPowerDownUnit.Text = "1/100 m/s³";
+			this.labelJerkPowerDownUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// textBoxJerkPowerDown
+			// 
+			this.textBoxJerkPowerDown.Location = new System.Drawing.Point(184, 40);
+			this.textBoxJerkPowerDown.Name = "textBoxJerkPowerDown";
+			this.textBoxJerkPowerDown.Size = new System.Drawing.Size(184, 19);
+			this.textBoxJerkPowerDown.TabIndex = 22;
+			// 
+			// labelJerkPowerUpUnit
+			// 
+			this.labelJerkPowerUpUnit.Location = new System.Drawing.Point(376, 16);
+			this.labelJerkPowerUpUnit.Name = "labelJerkPowerUpUnit";
+			this.labelJerkPowerUpUnit.Size = new System.Drawing.Size(64, 16);
+			this.labelJerkPowerUpUnit.TabIndex = 21;
+			this.labelJerkPowerUpUnit.Text = "1/100 m/s³";
+			this.labelJerkPowerUpUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// textBoxJerkPowerUp
+			// 
+			this.textBoxJerkPowerUp.Location = new System.Drawing.Point(184, 16);
+			this.textBoxJerkPowerUp.Name = "textBoxJerkPowerUp";
+			this.textBoxJerkPowerUp.Size = new System.Drawing.Size(184, 19);
+			this.textBoxJerkPowerUp.TabIndex = 20;
+			// 
+			// labelJerkPowerUp
+			// 
+			this.labelJerkPowerUp.Location = new System.Drawing.Point(8, 16);
+			this.labelJerkPowerUp.Name = "labelJerkPowerUp";
+			this.labelJerkPowerUp.Size = new System.Drawing.Size(168, 16);
+			this.labelJerkPowerUp.TabIndex = 6;
+			this.labelJerkPowerUp.Text = "JerkPowerUp:";
+			this.labelJerkPowerUp.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelJerkPowerDown
+			// 
+			this.labelJerkPowerDown.Location = new System.Drawing.Point(8, 40);
+			this.labelJerkPowerDown.Name = "labelJerkPowerDown";
+			this.labelJerkPowerDown.Size = new System.Drawing.Size(168, 16);
+			this.labelJerkPowerDown.TabIndex = 5;
+			this.labelJerkPowerDown.Text = "JerkPowerDown:";
+			this.labelJerkPowerDown.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelJerkBrakeUp
+			// 
+			this.labelJerkBrakeUp.Location = new System.Drawing.Point(8, 64);
+			this.labelJerkBrakeUp.Name = "labelJerkBrakeUp";
+			this.labelJerkBrakeUp.Size = new System.Drawing.Size(168, 16);
+			this.labelJerkBrakeUp.TabIndex = 4;
+			this.labelJerkBrakeUp.Text = "JerkBrakeUp:";
+			this.labelJerkBrakeUp.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelJerkBrakeDown
+			// 
+			this.labelJerkBrakeDown.Location = new System.Drawing.Point(8, 88);
+			this.labelJerkBrakeDown.Name = "labelJerkBrakeDown";
+			this.labelJerkBrakeDown.Size = new System.Drawing.Size(168, 16);
+			this.labelJerkBrakeDown.TabIndex = 3;
+			this.labelJerkBrakeDown.Text = "JerkBrakeDown:";
+			this.labelJerkBrakeDown.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelBrakeCylinderUp
+			// 
+			this.labelBrakeCylinderUp.Location = new System.Drawing.Point(8, 112);
+			this.labelBrakeCylinderUp.Name = "labelBrakeCylinderUp";
+			this.labelBrakeCylinderUp.Size = new System.Drawing.Size(168, 16);
+			this.labelBrakeCylinderUp.TabIndex = 2;
+			this.labelBrakeCylinderUp.Text = "BrakeCylinderUp:";
+			this.labelBrakeCylinderUp.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelBrakeCylinderDown
+			// 
+			this.labelBrakeCylinderDown.Location = new System.Drawing.Point(8, 136);
+			this.labelBrakeCylinderDown.Name = "labelBrakeCylinderDown";
+			this.labelBrakeCylinderDown.Size = new System.Drawing.Size(168, 16);
+			this.labelBrakeCylinderDown.TabIndex = 1;
+			this.labelBrakeCylinderDown.Text = "BrakeCylinderDown:";
+			this.labelBrakeCylinderDown.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// groupBoxDelay
+			// 
+			this.groupBoxDelay.Controls.Add(this.buttonDelayLocoBrakeSet);
+			this.groupBoxDelay.Controls.Add(this.buttonDelayBrakeSet);
+			this.groupBoxDelay.Controls.Add(this.buttonDelayPowerSet);
+			this.groupBoxDelay.Controls.Add(this.labelDelayLocoBrake);
+			this.groupBoxDelay.Controls.Add(this.labelDelayBrake);
+			this.groupBoxDelay.Controls.Add(this.labelDelayPower);
+			this.groupBoxDelay.Location = new System.Drawing.Point(8, 568);
+			this.groupBoxDelay.Name = "groupBoxDelay";
+			this.groupBoxDelay.Size = new System.Drawing.Size(272, 96);
+			this.groupBoxDelay.TabIndex = 2;
+			this.groupBoxDelay.TabStop = false;
+			this.groupBoxDelay.Text = "Delay";
+			// 
+			// buttonDelayLocoBrakeSet
+			// 
+			this.buttonDelayLocoBrakeSet.Location = new System.Drawing.Point(160, 64);
+			this.buttonDelayLocoBrakeSet.Name = "buttonDelayLocoBrakeSet";
+			this.buttonDelayLocoBrakeSet.Size = new System.Drawing.Size(48, 19);
+			this.buttonDelayLocoBrakeSet.TabIndex = 37;
+			this.buttonDelayLocoBrakeSet.Text = "Set...";
+			this.buttonDelayLocoBrakeSet.UseVisualStyleBackColor = true;
+			this.buttonDelayLocoBrakeSet.Click += new System.EventHandler(this.ButtonDelayLocoBrakeSet_Click);
+			// 
+			// buttonDelayBrakeSet
+			// 
+			this.buttonDelayBrakeSet.Location = new System.Drawing.Point(160, 40);
+			this.buttonDelayBrakeSet.Name = "buttonDelayBrakeSet";
+			this.buttonDelayBrakeSet.Size = new System.Drawing.Size(48, 19);
+			this.buttonDelayBrakeSet.TabIndex = 35;
+			this.buttonDelayBrakeSet.Text = "Set...";
+			this.buttonDelayBrakeSet.UseVisualStyleBackColor = true;
+			this.buttonDelayBrakeSet.Click += new System.EventHandler(this.ButtonDelayBrakeSet_Click);
+			// 
+			// buttonDelayPowerSet
+			// 
+			this.buttonDelayPowerSet.Location = new System.Drawing.Point(160, 16);
+			this.buttonDelayPowerSet.Name = "buttonDelayPowerSet";
+			this.buttonDelayPowerSet.Size = new System.Drawing.Size(48, 19);
+			this.buttonDelayPowerSet.TabIndex = 33;
+			this.buttonDelayPowerSet.Text = "Set...";
+			this.buttonDelayPowerSet.UseVisualStyleBackColor = true;
+			this.buttonDelayPowerSet.Click += new System.EventHandler(this.ButtonDelayPowerSet_Click);
+			// 
+			// labelDelayLocoBrake
+			// 
+			this.labelDelayLocoBrake.Location = new System.Drawing.Point(8, 64);
+			this.labelDelayLocoBrake.Name = "labelDelayLocoBrake";
+			this.labelDelayLocoBrake.Size = new System.Drawing.Size(144, 16);
+			this.labelDelayLocoBrake.TabIndex = 6;
+			this.labelDelayLocoBrake.Text = "LocoBrake:";
+			this.labelDelayLocoBrake.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelDelayBrake
+			// 
+			this.labelDelayBrake.Location = new System.Drawing.Point(8, 40);
+			this.labelDelayBrake.Name = "labelDelayBrake";
+			this.labelDelayBrake.Size = new System.Drawing.Size(144, 16);
+			this.labelDelayBrake.TabIndex = 4;
+			this.labelDelayBrake.Text = "Brake:";
+			this.labelDelayBrake.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelDelayPower
+			// 
+			this.labelDelayPower.Location = new System.Drawing.Point(8, 16);
+			this.labelDelayPower.Name = "labelDelayPower";
+			this.labelDelayPower.Size = new System.Drawing.Size(144, 16);
+			this.labelDelayPower.TabIndex = 2;
+			this.labelDelayPower.Text = "Power:";
+			this.labelDelayPower.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// groupBoxPerformance
+			// 
+			this.groupBoxPerformance.Controls.Add(this.textBoxAerodynamicDragCoefficient);
+			this.groupBoxPerformance.Controls.Add(this.textBoxCoefficientOfRollingResistance);
+			this.groupBoxPerformance.Controls.Add(this.textBoxCoefficientOfStaticFriction);
+			this.groupBoxPerformance.Controls.Add(this.labelDecelerationUnit);
+			this.groupBoxPerformance.Controls.Add(this.textBoxDeceleration);
+			this.groupBoxPerformance.Controls.Add(this.labelAerodynamicDragCoefficient);
+			this.groupBoxPerformance.Controls.Add(this.labelCoefficientOfStaticFriction);
+			this.groupBoxPerformance.Controls.Add(this.labelDeceleration);
+			this.groupBoxPerformance.Controls.Add(this.labelCoefficientOfRollingResistance);
+			this.groupBoxPerformance.Location = new System.Drawing.Point(288, 8);
+			this.groupBoxPerformance.Name = "groupBoxPerformance";
+			this.groupBoxPerformance.Size = new System.Drawing.Size(448, 120);
+			this.groupBoxPerformance.TabIndex = 1;
+			this.groupBoxPerformance.TabStop = false;
+			this.groupBoxPerformance.Text = "Performance";
+			// 
+			// textBoxAerodynamicDragCoefficient
+			// 
+			this.textBoxAerodynamicDragCoefficient.Location = new System.Drawing.Point(184, 88);
+			this.textBoxAerodynamicDragCoefficient.Name = "textBoxAerodynamicDragCoefficient";
+			this.textBoxAerodynamicDragCoefficient.Size = new System.Drawing.Size(184, 19);
+			this.textBoxAerodynamicDragCoefficient.TabIndex = 25;
+			// 
+			// textBoxCoefficientOfRollingResistance
+			// 
+			this.textBoxCoefficientOfRollingResistance.Location = new System.Drawing.Point(184, 64);
+			this.textBoxCoefficientOfRollingResistance.Name = "textBoxCoefficientOfRollingResistance";
+			this.textBoxCoefficientOfRollingResistance.Size = new System.Drawing.Size(184, 19);
+			this.textBoxCoefficientOfRollingResistance.TabIndex = 24;
+			// 
+			// textBoxCoefficientOfStaticFriction
+			// 
+			this.textBoxCoefficientOfStaticFriction.Location = new System.Drawing.Point(184, 40);
+			this.textBoxCoefficientOfStaticFriction.Name = "textBoxCoefficientOfStaticFriction";
+			this.textBoxCoefficientOfStaticFriction.Size = new System.Drawing.Size(184, 19);
+			this.textBoxCoefficientOfStaticFriction.TabIndex = 23;
+			// 
+			// labelDecelerationUnit
+			// 
+			this.labelDecelerationUnit.Location = new System.Drawing.Point(376, 16);
+			this.labelDecelerationUnit.Name = "labelDecelerationUnit";
+			this.labelDecelerationUnit.Size = new System.Drawing.Size(48, 16);
+			this.labelDecelerationUnit.TabIndex = 22;
+			this.labelDecelerationUnit.Text = "km/h/s";
+			this.labelDecelerationUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// textBoxDeceleration
+			// 
+			this.textBoxDeceleration.Location = new System.Drawing.Point(184, 16);
+			this.textBoxDeceleration.Name = "textBoxDeceleration";
+			this.textBoxDeceleration.Size = new System.Drawing.Size(184, 19);
+			this.textBoxDeceleration.TabIndex = 20;
+			// 
+			// labelAerodynamicDragCoefficient
+			// 
+			this.labelAerodynamicDragCoefficient.Location = new System.Drawing.Point(8, 88);
+			this.labelAerodynamicDragCoefficient.Name = "labelAerodynamicDragCoefficient";
+			this.labelAerodynamicDragCoefficient.Size = new System.Drawing.Size(168, 16);
+			this.labelAerodynamicDragCoefficient.TabIndex = 5;
+			this.labelAerodynamicDragCoefficient.Text = "AerodynamicDragCoefficient:";
+			this.labelAerodynamicDragCoefficient.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelCoefficientOfStaticFriction
+			// 
+			this.labelCoefficientOfStaticFriction.Location = new System.Drawing.Point(8, 40);
+			this.labelCoefficientOfStaticFriction.Name = "labelCoefficientOfStaticFriction";
+			this.labelCoefficientOfStaticFriction.Size = new System.Drawing.Size(168, 16);
+			this.labelCoefficientOfStaticFriction.TabIndex = 4;
+			this.labelCoefficientOfStaticFriction.Text = "CoefficientOfStaticFriction:";
+			this.labelCoefficientOfStaticFriction.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelDeceleration
+			// 
+			this.labelDeceleration.Location = new System.Drawing.Point(8, 16);
+			this.labelDeceleration.Name = "labelDeceleration";
+			this.labelDeceleration.Size = new System.Drawing.Size(168, 16);
+			this.labelDeceleration.TabIndex = 3;
+			this.labelDeceleration.Text = "Deceleration:";
+			this.labelDeceleration.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelCoefficientOfRollingResistance
+			// 
+			this.labelCoefficientOfRollingResistance.Location = new System.Drawing.Point(8, 64);
+			this.labelCoefficientOfRollingResistance.Name = "labelCoefficientOfRollingResistance";
+			this.labelCoefficientOfRollingResistance.Size = new System.Drawing.Size(168, 16);
+			this.labelCoefficientOfRollingResistance.TabIndex = 2;
+			this.labelCoefficientOfRollingResistance.Text = "CoefficientOfRollingResistance:";
+			this.labelCoefficientOfRollingResistance.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// groupBoxCarGeneral
 			// 
@@ -4961,77 +5585,340 @@ namespace TrainEditor2.Views
 			this.groupBoxCarGeneral.TabStop = false;
 			this.groupBoxCarGeneral.Text = "General";
 			// 
-			// labelIsMotorCar
+			// textBoxRightDoorMaxTolerance
 			// 
-			this.labelIsMotorCar.Location = new System.Drawing.Point(8, 16);
-			this.labelIsMotorCar.Name = "labelIsMotorCar";
-			this.labelIsMotorCar.Size = new System.Drawing.Size(144, 16);
-			this.labelIsMotorCar.TabIndex = 0;
-			this.labelIsMotorCar.Text = "IsMotorCar:";
-			this.labelIsMotorCar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.textBoxRightDoorMaxTolerance.Location = new System.Drawing.Point(160, 280);
+			this.textBoxRightDoorMaxTolerance.Name = "textBoxRightDoorMaxTolerance";
+			this.textBoxRightDoorMaxTolerance.Size = new System.Drawing.Size(48, 19);
+			this.textBoxRightDoorMaxTolerance.TabIndex = 50;
 			// 
-			// labelMass
+			// textBoxRightDoorWidth
 			// 
-			this.labelMass.Location = new System.Drawing.Point(8, 40);
-			this.labelMass.Name = "labelMass";
-			this.labelMass.Size = new System.Drawing.Size(144, 16);
-			this.labelMass.TabIndex = 1;
-			this.labelMass.Text = "Mass:";
-			this.labelMass.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.textBoxRightDoorWidth.Location = new System.Drawing.Point(160, 256);
+			this.textBoxRightDoorWidth.Name = "textBoxRightDoorWidth";
+			this.textBoxRightDoorWidth.Size = new System.Drawing.Size(48, 19);
+			this.textBoxRightDoorWidth.TabIndex = 49;
 			// 
-			// labelLength
+			// textBoxLeftDoorMaxTolerance
 			// 
-			this.labelLength.Location = new System.Drawing.Point(8, 64);
-			this.labelLength.Name = "labelLength";
-			this.labelLength.Size = new System.Drawing.Size(144, 16);
-			this.labelLength.TabIndex = 2;
-			this.labelLength.Text = "Length:";
-			this.labelLength.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.textBoxLeftDoorMaxTolerance.Location = new System.Drawing.Point(160, 232);
+			this.textBoxLeftDoorMaxTolerance.Name = "textBoxLeftDoorMaxTolerance";
+			this.textBoxLeftDoorMaxTolerance.Size = new System.Drawing.Size(48, 19);
+			this.textBoxLeftDoorMaxTolerance.TabIndex = 48;
 			// 
-			// labelWidth
+			// textBoxLeftDoorWidth
 			// 
-			this.labelWidth.Location = new System.Drawing.Point(8, 88);
-			this.labelWidth.Name = "labelWidth";
-			this.labelWidth.Size = new System.Drawing.Size(144, 16);
-			this.labelWidth.TabIndex = 3;
-			this.labelWidth.Text = "Width:";
-			this.labelWidth.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.textBoxLeftDoorWidth.Location = new System.Drawing.Point(160, 208);
+			this.textBoxLeftDoorWidth.Name = "textBoxLeftDoorWidth";
+			this.textBoxLeftDoorWidth.Size = new System.Drawing.Size(48, 19);
+			this.textBoxLeftDoorWidth.TabIndex = 47;
 			// 
-			// labelHeight
+			// labelRightDoorMaxToleranceUnit
 			// 
-			this.labelHeight.Location = new System.Drawing.Point(8, 112);
-			this.labelHeight.Name = "labelHeight";
-			this.labelHeight.Size = new System.Drawing.Size(144, 16);
-			this.labelHeight.TabIndex = 4;
-			this.labelHeight.Text = "Height:";
-			this.labelHeight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.labelRightDoorMaxToleranceUnit.Location = new System.Drawing.Point(216, 280);
+			this.labelRightDoorMaxToleranceUnit.Name = "labelRightDoorMaxToleranceUnit";
+			this.labelRightDoorMaxToleranceUnit.Size = new System.Drawing.Size(48, 16);
+			this.labelRightDoorMaxToleranceUnit.TabIndex = 46;
+			this.labelRightDoorMaxToleranceUnit.Text = "mm";
+			this.labelRightDoorMaxToleranceUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// labelCenterOfMassHeight
+			// labelRightDoorWidthUnit
 			// 
-			this.labelCenterOfMassHeight.Location = new System.Drawing.Point(8, 136);
-			this.labelCenterOfMassHeight.Name = "labelCenterOfMassHeight";
-			this.labelCenterOfMassHeight.Size = new System.Drawing.Size(144, 16);
-			this.labelCenterOfMassHeight.TabIndex = 5;
-			this.labelCenterOfMassHeight.Text = "CenterOfMassHeight:";
-			this.labelCenterOfMassHeight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.labelRightDoorWidthUnit.Location = new System.Drawing.Point(216, 256);
+			this.labelRightDoorWidthUnit.Name = "labelRightDoorWidthUnit";
+			this.labelRightDoorWidthUnit.Size = new System.Drawing.Size(48, 16);
+			this.labelRightDoorWidthUnit.TabIndex = 45;
+			this.labelRightDoorWidthUnit.Text = "mm";
+			this.labelRightDoorWidthUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// labelExposedFrontalArea
+			// labelLeftDoorMaxToleranceUnit
 			// 
-			this.labelExposedFrontalArea.Location = new System.Drawing.Point(8, 160);
-			this.labelExposedFrontalArea.Name = "labelExposedFrontalArea";
-			this.labelExposedFrontalArea.Size = new System.Drawing.Size(144, 16);
-			this.labelExposedFrontalArea.TabIndex = 6;
-			this.labelExposedFrontalArea.Text = "ExposedFrontalArea:";
-			this.labelExposedFrontalArea.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.labelLeftDoorMaxToleranceUnit.Location = new System.Drawing.Point(216, 232);
+			this.labelLeftDoorMaxToleranceUnit.Name = "labelLeftDoorMaxToleranceUnit";
+			this.labelLeftDoorMaxToleranceUnit.Size = new System.Drawing.Size(48, 16);
+			this.labelLeftDoorMaxToleranceUnit.TabIndex = 44;
+			this.labelLeftDoorMaxToleranceUnit.Text = "mm";
+			this.labelLeftDoorMaxToleranceUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// labelDefinedAxles
+			// labelLeftDoorWidthUnit
 			// 
-			this.labelDefinedAxles.Location = new System.Drawing.Point(8, 304);
-			this.labelDefinedAxles.Name = "labelDefinedAxles";
-			this.labelDefinedAxles.Size = new System.Drawing.Size(144, 16);
-			this.labelDefinedAxles.TabIndex = 7;
-			this.labelDefinedAxles.Text = "DefinedAxles:";
-			this.labelDefinedAxles.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.labelLeftDoorWidthUnit.Location = new System.Drawing.Point(216, 208);
+			this.labelLeftDoorWidthUnit.Name = "labelLeftDoorWidthUnit";
+			this.labelLeftDoorWidthUnit.Size = new System.Drawing.Size(48, 16);
+			this.labelLeftDoorWidthUnit.TabIndex = 43;
+			this.labelLeftDoorWidthUnit.Text = "mm";
+			this.labelLeftDoorWidthUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// labelRightDoorMaxTolerance
+			// 
+			this.labelRightDoorMaxTolerance.Location = new System.Drawing.Point(8, 280);
+			this.labelRightDoorMaxTolerance.Name = "labelRightDoorMaxTolerance";
+			this.labelRightDoorMaxTolerance.Size = new System.Drawing.Size(144, 16);
+			this.labelRightDoorMaxTolerance.TabIndex = 42;
+			this.labelRightDoorMaxTolerance.Text = "RightDoorMaxTolerance:";
+			this.labelRightDoorMaxTolerance.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelRightDoorWidth
+			// 
+			this.labelRightDoorWidth.Location = new System.Drawing.Point(8, 256);
+			this.labelRightDoorWidth.Name = "labelRightDoorWidth";
+			this.labelRightDoorWidth.Size = new System.Drawing.Size(144, 16);
+			this.labelRightDoorWidth.TabIndex = 41;
+			this.labelRightDoorWidth.Text = "RightDoorWidth:";
+			this.labelRightDoorWidth.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelLeftDoorMaxTolerance
+			// 
+			this.labelLeftDoorMaxTolerance.Location = new System.Drawing.Point(8, 232);
+			this.labelLeftDoorMaxTolerance.Name = "labelLeftDoorMaxTolerance";
+			this.labelLeftDoorMaxTolerance.Size = new System.Drawing.Size(144, 16);
+			this.labelLeftDoorMaxTolerance.TabIndex = 40;
+			this.labelLeftDoorMaxTolerance.Text = "LeftDoorMaxTolerance:";
+			this.labelLeftDoorMaxTolerance.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelLeftDoorWidth
+			// 
+			this.labelLeftDoorWidth.Location = new System.Drawing.Point(8, 208);
+			this.labelLeftDoorWidth.Name = "labelLeftDoorWidth";
+			this.labelLeftDoorWidth.Size = new System.Drawing.Size(144, 16);
+			this.labelLeftDoorWidth.TabIndex = 39;
+			this.labelLeftDoorWidth.Text = "LeftDoorWidth:";
+			this.labelLeftDoorWidth.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelUnexposedFrontalAreaUnit
+			// 
+			this.labelUnexposedFrontalAreaUnit.Location = new System.Drawing.Point(216, 184);
+			this.labelUnexposedFrontalAreaUnit.Name = "labelUnexposedFrontalAreaUnit";
+			this.labelUnexposedFrontalAreaUnit.Size = new System.Drawing.Size(40, 16);
+			this.labelUnexposedFrontalAreaUnit.TabIndex = 38;
+			this.labelUnexposedFrontalAreaUnit.Text = "m²";
+			this.labelUnexposedFrontalAreaUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// textBoxUnexposedFrontalArea
+			// 
+			this.textBoxUnexposedFrontalArea.Location = new System.Drawing.Point(160, 184);
+			this.textBoxUnexposedFrontalArea.Name = "textBoxUnexposedFrontalArea";
+			this.textBoxUnexposedFrontalArea.Size = new System.Drawing.Size(48, 19);
+			this.textBoxUnexposedFrontalArea.TabIndex = 37;
+			// 
+			// labelUnexposedFrontalArea
+			// 
+			this.labelUnexposedFrontalArea.Location = new System.Drawing.Point(8, 184);
+			this.labelUnexposedFrontalArea.Name = "labelUnexposedFrontalArea";
+			this.labelUnexposedFrontalArea.Size = new System.Drawing.Size(144, 16);
+			this.labelUnexposedFrontalArea.TabIndex = 36;
+			this.labelUnexposedFrontalArea.Text = "UnexposedFrontalArea:";
+			this.labelUnexposedFrontalArea.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelRearBogie
+			// 
+			this.labelRearBogie.Location = new System.Drawing.Point(8, 432);
+			this.labelRearBogie.Name = "labelRearBogie";
+			this.labelRearBogie.Size = new System.Drawing.Size(144, 16);
+			this.labelRearBogie.TabIndex = 35;
+			this.labelRearBogie.Text = "RearBogie:";
+			this.labelRearBogie.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelFrontBogie
+			// 
+			this.labelFrontBogie.Location = new System.Drawing.Point(8, 408);
+			this.labelFrontBogie.Name = "labelFrontBogie";
+			this.labelFrontBogie.Size = new System.Drawing.Size(144, 16);
+			this.labelFrontBogie.TabIndex = 34;
+			this.labelFrontBogie.Text = "FrontBogie:";
+			this.labelFrontBogie.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// buttonRearBogieSet
+			// 
+			this.buttonRearBogieSet.Location = new System.Drawing.Point(160, 432);
+			this.buttonRearBogieSet.Name = "buttonRearBogieSet";
+			this.buttonRearBogieSet.Size = new System.Drawing.Size(48, 19);
+			this.buttonRearBogieSet.TabIndex = 33;
+			this.buttonRearBogieSet.Text = "Set...";
+			this.buttonRearBogieSet.UseVisualStyleBackColor = true;
+			this.buttonRearBogieSet.Click += new System.EventHandler(this.ButtonRearBogieSet_Click);
+			// 
+			// buttonFrontBogieSet
+			// 
+			this.buttonFrontBogieSet.Location = new System.Drawing.Point(160, 408);
+			this.buttonFrontBogieSet.Name = "buttonFrontBogieSet";
+			this.buttonFrontBogieSet.Size = new System.Drawing.Size(48, 19);
+			this.buttonFrontBogieSet.TabIndex = 32;
+			this.buttonFrontBogieSet.Text = "Set...";
+			this.buttonFrontBogieSet.UseVisualStyleBackColor = true;
+			this.buttonFrontBogieSet.Click += new System.EventHandler(this.ButtonFrontBogieSet_Click);
+			// 
+			// checkBoxReversed
+			// 
+			this.checkBoxReversed.Location = new System.Drawing.Point(160, 480);
+			this.checkBoxReversed.Name = "checkBoxReversed";
+			this.checkBoxReversed.Size = new System.Drawing.Size(48, 16);
+			this.checkBoxReversed.TabIndex = 31;
+			this.checkBoxReversed.UseVisualStyleBackColor = true;
+			// 
+			// checkBoxLoadingSway
+			// 
+			this.checkBoxLoadingSway.Location = new System.Drawing.Point(160, 456);
+			this.checkBoxLoadingSway.Name = "checkBoxLoadingSway";
+			this.checkBoxLoadingSway.Size = new System.Drawing.Size(48, 16);
+			this.checkBoxLoadingSway.TabIndex = 30;
+			this.checkBoxLoadingSway.UseVisualStyleBackColor = true;
+			// 
+			// checkBoxDefinedAxles
+			// 
+			this.checkBoxDefinedAxles.Location = new System.Drawing.Point(160, 304);
+			this.checkBoxDefinedAxles.Name = "checkBoxDefinedAxles";
+			this.checkBoxDefinedAxles.Size = new System.Drawing.Size(48, 16);
+			this.checkBoxDefinedAxles.TabIndex = 29;
+			this.checkBoxDefinedAxles.UseVisualStyleBackColor = true;
+			// 
+			// checkBoxIsMotorCar
+			// 
+			this.checkBoxIsMotorCar.Location = new System.Drawing.Point(160, 16);
+			this.checkBoxIsMotorCar.Name = "checkBoxIsMotorCar";
+			this.checkBoxIsMotorCar.Size = new System.Drawing.Size(48, 16);
+			this.checkBoxIsMotorCar.TabIndex = 28;
+			this.checkBoxIsMotorCar.UseVisualStyleBackColor = true;
+			// 
+			// buttonObjectOpen
+			// 
+			this.buttonObjectOpen.Location = new System.Drawing.Point(208, 528);
+			this.buttonObjectOpen.Name = "buttonObjectOpen";
+			this.buttonObjectOpen.Size = new System.Drawing.Size(56, 19);
+			this.buttonObjectOpen.TabIndex = 3;
+			this.buttonObjectOpen.Text = "Open...";
+			this.buttonObjectOpen.UseVisualStyleBackColor = true;
+			this.buttonObjectOpen.Click += new System.EventHandler(this.ButtonObjectOpen_Click);
+			// 
+			// labelExposedFrontalAreaUnit
+			// 
+			this.labelExposedFrontalAreaUnit.Location = new System.Drawing.Point(216, 160);
+			this.labelExposedFrontalAreaUnit.Name = "labelExposedFrontalAreaUnit";
+			this.labelExposedFrontalAreaUnit.Size = new System.Drawing.Size(40, 16);
+			this.labelExposedFrontalAreaUnit.TabIndex = 27;
+			this.labelExposedFrontalAreaUnit.Text = "m²";
+			this.labelExposedFrontalAreaUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// labelCenterOfMassHeightUnit
+			// 
+			this.labelCenterOfMassHeightUnit.Location = new System.Drawing.Point(216, 136);
+			this.labelCenterOfMassHeightUnit.Name = "labelCenterOfMassHeightUnit";
+			this.labelCenterOfMassHeightUnit.Size = new System.Drawing.Size(48, 16);
+			this.labelCenterOfMassHeightUnit.TabIndex = 24;
+			this.labelCenterOfMassHeightUnit.Text = "m";
+			this.labelCenterOfMassHeightUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// labelLoadingSway
+			// 
+			this.labelLoadingSway.Location = new System.Drawing.Point(8, 456);
+			this.labelLoadingSway.Name = "labelLoadingSway";
+			this.labelLoadingSway.Size = new System.Drawing.Size(144, 16);
+			this.labelLoadingSway.TabIndex = 11;
+			this.labelLoadingSway.Text = "LoadingSway:";
+			this.labelLoadingSway.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelHeightUnit
+			// 
+			this.labelHeightUnit.Location = new System.Drawing.Point(216, 112);
+			this.labelHeightUnit.Name = "labelHeightUnit";
+			this.labelHeightUnit.Size = new System.Drawing.Size(48, 16);
+			this.labelHeightUnit.TabIndex = 23;
+			this.labelHeightUnit.Text = "m";
+			this.labelHeightUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// labelWidthUnit
+			// 
+			this.labelWidthUnit.Location = new System.Drawing.Point(216, 88);
+			this.labelWidthUnit.Name = "labelWidthUnit";
+			this.labelWidthUnit.Size = new System.Drawing.Size(48, 16);
+			this.labelWidthUnit.TabIndex = 22;
+			this.labelWidthUnit.Text = "m";
+			this.labelWidthUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// labelLengthUnit
+			// 
+			this.labelLengthUnit.Location = new System.Drawing.Point(216, 64);
+			this.labelLengthUnit.Name = "labelLengthUnit";
+			this.labelLengthUnit.Size = new System.Drawing.Size(48, 16);
+			this.labelLengthUnit.TabIndex = 21;
+			this.labelLengthUnit.Text = "m";
+			this.labelLengthUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// labelMassUnit
+			// 
+			this.labelMassUnit.Location = new System.Drawing.Point(216, 40);
+			this.labelMassUnit.Name = "labelMassUnit";
+			this.labelMassUnit.Size = new System.Drawing.Size(48, 16);
+			this.labelMassUnit.TabIndex = 20;
+			this.labelMassUnit.Text = "1000 kg";
+			this.labelMassUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// textBoxMass
+			// 
+			this.textBoxMass.Location = new System.Drawing.Point(160, 40);
+			this.textBoxMass.Name = "textBoxMass";
+			this.textBoxMass.Size = new System.Drawing.Size(48, 19);
+			this.textBoxMass.TabIndex = 19;
+			// 
+			// textBoxLength
+			// 
+			this.textBoxLength.Location = new System.Drawing.Point(160, 64);
+			this.textBoxLength.Name = "textBoxLength";
+			this.textBoxLength.Size = new System.Drawing.Size(48, 19);
+			this.textBoxLength.TabIndex = 18;
+			// 
+			// textBoxWidth
+			// 
+			this.textBoxWidth.Location = new System.Drawing.Point(160, 88);
+			this.textBoxWidth.Name = "textBoxWidth";
+			this.textBoxWidth.Size = new System.Drawing.Size(48, 19);
+			this.textBoxWidth.TabIndex = 17;
+			// 
+			// textBoxHeight
+			// 
+			this.textBoxHeight.Location = new System.Drawing.Point(160, 112);
+			this.textBoxHeight.Name = "textBoxHeight";
+			this.textBoxHeight.Size = new System.Drawing.Size(48, 19);
+			this.textBoxHeight.TabIndex = 16;
+			// 
+			// textBoxCenterOfMassHeight
+			// 
+			this.textBoxCenterOfMassHeight.Location = new System.Drawing.Point(160, 136);
+			this.textBoxCenterOfMassHeight.Name = "textBoxCenterOfMassHeight";
+			this.textBoxCenterOfMassHeight.Size = new System.Drawing.Size(48, 19);
+			this.textBoxCenterOfMassHeight.TabIndex = 15;
+			// 
+			// textBoxExposedFrontalArea
+			// 
+			this.textBoxExposedFrontalArea.Location = new System.Drawing.Point(160, 160);
+			this.textBoxExposedFrontalArea.Name = "textBoxExposedFrontalArea";
+			this.textBoxExposedFrontalArea.Size = new System.Drawing.Size(48, 19);
+			this.textBoxExposedFrontalArea.TabIndex = 14;
+			// 
+			// textBoxObject
+			// 
+			this.textBoxObject.Location = new System.Drawing.Point(160, 504);
+			this.textBoxObject.Name = "textBoxObject";
+			this.textBoxObject.Size = new System.Drawing.Size(104, 19);
+			this.textBoxObject.TabIndex = 13;
+			// 
+			// labelObject
+			// 
+			this.labelObject.Location = new System.Drawing.Point(8, 504);
+			this.labelObject.Name = "labelObject";
+			this.labelObject.Size = new System.Drawing.Size(144, 16);
+			this.labelObject.TabIndex = 10;
+			this.labelObject.Text = "Object:";
+			this.labelObject.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelReversed
+			// 
+			this.labelReversed.Location = new System.Drawing.Point(8, 480);
+			this.labelReversed.Name = "labelReversed";
+			this.labelReversed.Size = new System.Drawing.Size(144, 16);
+			this.labelReversed.TabIndex = 9;
+			this.labelReversed.Text = "Reversed:";
+			this.labelReversed.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// groupBoxAxles
 			// 
@@ -5048,37 +5935,14 @@ namespace TrainEditor2.Views
 			this.groupBoxAxles.TabStop = false;
 			this.groupBoxAxles.Text = "Axles";
 			// 
-			// labelFrontAxle
+			// labelRearAxleUnit
 			// 
-			this.labelFrontAxle.Location = new System.Drawing.Point(8, 16);
-			this.labelFrontAxle.Name = "labelFrontAxle";
-			this.labelFrontAxle.Size = new System.Drawing.Size(136, 16);
-			this.labelFrontAxle.TabIndex = 9;
-			this.labelFrontAxle.Text = "FrontAxle:";
-			this.labelFrontAxle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelRearAxle
-			// 
-			this.labelRearAxle.Location = new System.Drawing.Point(8, 40);
-			this.labelRearAxle.Name = "labelRearAxle";
-			this.labelRearAxle.Size = new System.Drawing.Size(136, 16);
-			this.labelRearAxle.TabIndex = 10;
-			this.labelRearAxle.Text = "RearAxle:";
-			this.labelRearAxle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxFrontAxle
-			// 
-			this.textBoxFrontAxle.Location = new System.Drawing.Point(152, 16);
-			this.textBoxFrontAxle.Name = "textBoxFrontAxle";
-			this.textBoxFrontAxle.Size = new System.Drawing.Size(48, 19);
-			this.textBoxFrontAxle.TabIndex = 11;
-			// 
-			// textBoxRearAxle
-			// 
-			this.textBoxRearAxle.Location = new System.Drawing.Point(152, 40);
-			this.textBoxRearAxle.Name = "textBoxRearAxle";
-			this.textBoxRearAxle.Size = new System.Drawing.Size(48, 19);
-			this.textBoxRearAxle.TabIndex = 12;
+			this.labelRearAxleUnit.Location = new System.Drawing.Point(208, 40);
+			this.labelRearAxleUnit.Name = "labelRearAxleUnit";
+			this.labelRearAxleUnit.Size = new System.Drawing.Size(40, 16);
+			this.labelRearAxleUnit.TabIndex = 26;
+			this.labelRearAxleUnit.Text = "m";
+			this.labelRearAxleUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// labelFrontAxleUnit
 			// 
@@ -5089,947 +5953,109 @@ namespace TrainEditor2.Views
 			this.labelFrontAxleUnit.Text = "m";
 			this.labelFrontAxleUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// labelRearAxleUnit
-			// 
-			this.labelRearAxleUnit.Location = new System.Drawing.Point(208, 40);
-			this.labelRearAxleUnit.Name = "labelRearAxleUnit";
-			this.labelRearAxleUnit.Size = new System.Drawing.Size(40, 16);
-			this.labelRearAxleUnit.TabIndex = 26;
-			this.labelRearAxleUnit.Text = "m";
-			this.labelRearAxleUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelReversed
-			// 
-			this.labelReversed.Location = new System.Drawing.Point(8, 480);
-			this.labelReversed.Name = "labelReversed";
-			this.labelReversed.Size = new System.Drawing.Size(144, 16);
-			this.labelReversed.TabIndex = 9;
-			this.labelReversed.Text = "Reversed:";
-			this.labelReversed.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelObject
-			// 
-			this.labelObject.Location = new System.Drawing.Point(8, 504);
-			this.labelObject.Name = "labelObject";
-			this.labelObject.Size = new System.Drawing.Size(144, 16);
-			this.labelObject.TabIndex = 10;
-			this.labelObject.Text = "Object:";
-			this.labelObject.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxObject
-			// 
-			this.textBoxObject.Location = new System.Drawing.Point(160, 504);
-			this.textBoxObject.Name = "textBoxObject";
-			this.textBoxObject.Size = new System.Drawing.Size(104, 19);
-			this.textBoxObject.TabIndex = 13;
-			// 
-			// textBoxExposedFrontalArea
-			// 
-			this.textBoxExposedFrontalArea.Location = new System.Drawing.Point(160, 160);
-			this.textBoxExposedFrontalArea.Name = "textBoxExposedFrontalArea";
-			this.textBoxExposedFrontalArea.Size = new System.Drawing.Size(48, 19);
-			this.textBoxExposedFrontalArea.TabIndex = 14;
-			// 
-			// textBoxCenterOfMassHeight
-			// 
-			this.textBoxCenterOfMassHeight.Location = new System.Drawing.Point(160, 136);
-			this.textBoxCenterOfMassHeight.Name = "textBoxCenterOfMassHeight";
-			this.textBoxCenterOfMassHeight.Size = new System.Drawing.Size(48, 19);
-			this.textBoxCenterOfMassHeight.TabIndex = 15;
-			// 
-			// textBoxHeight
-			// 
-			this.textBoxHeight.Location = new System.Drawing.Point(160, 112);
-			this.textBoxHeight.Name = "textBoxHeight";
-			this.textBoxHeight.Size = new System.Drawing.Size(48, 19);
-			this.textBoxHeight.TabIndex = 16;
-			// 
-			// textBoxWidth
-			// 
-			this.textBoxWidth.Location = new System.Drawing.Point(160, 88);
-			this.textBoxWidth.Name = "textBoxWidth";
-			this.textBoxWidth.Size = new System.Drawing.Size(48, 19);
-			this.textBoxWidth.TabIndex = 17;
-			// 
-			// textBoxLength
-			// 
-			this.textBoxLength.Location = new System.Drawing.Point(160, 64);
-			this.textBoxLength.Name = "textBoxLength";
-			this.textBoxLength.Size = new System.Drawing.Size(48, 19);
-			this.textBoxLength.TabIndex = 18;
-			// 
-			// textBoxMass
-			// 
-			this.textBoxMass.Location = new System.Drawing.Point(160, 40);
-			this.textBoxMass.Name = "textBoxMass";
-			this.textBoxMass.Size = new System.Drawing.Size(48, 19);
-			this.textBoxMass.TabIndex = 19;
-			// 
-			// labelMassUnit
-			// 
-			this.labelMassUnit.Location = new System.Drawing.Point(216, 40);
-			this.labelMassUnit.Name = "labelMassUnit";
-			this.labelMassUnit.Size = new System.Drawing.Size(48, 16);
-			this.labelMassUnit.TabIndex = 20;
-			this.labelMassUnit.Text = "1000 kg";
-			this.labelMassUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelLengthUnit
-			// 
-			this.labelLengthUnit.Location = new System.Drawing.Point(216, 64);
-			this.labelLengthUnit.Name = "labelLengthUnit";
-			this.labelLengthUnit.Size = new System.Drawing.Size(48, 16);
-			this.labelLengthUnit.TabIndex = 21;
-			this.labelLengthUnit.Text = "m";
-			this.labelLengthUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelWidthUnit
-			// 
-			this.labelWidthUnit.Location = new System.Drawing.Point(216, 88);
-			this.labelWidthUnit.Name = "labelWidthUnit";
-			this.labelWidthUnit.Size = new System.Drawing.Size(48, 16);
-			this.labelWidthUnit.TabIndex = 22;
-			this.labelWidthUnit.Text = "m";
-			this.labelWidthUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelHeightUnit
-			// 
-			this.labelHeightUnit.Location = new System.Drawing.Point(216, 112);
-			this.labelHeightUnit.Name = "labelHeightUnit";
-			this.labelHeightUnit.Size = new System.Drawing.Size(48, 16);
-			this.labelHeightUnit.TabIndex = 23;
-			this.labelHeightUnit.Text = "m";
-			this.labelHeightUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelLoadingSway
-			// 
-			this.labelLoadingSway.Location = new System.Drawing.Point(8, 456);
-			this.labelLoadingSway.Name = "labelLoadingSway";
-			this.labelLoadingSway.Size = new System.Drawing.Size(144, 16);
-			this.labelLoadingSway.TabIndex = 11;
-			this.labelLoadingSway.Text = "LoadingSway:";
-			this.labelLoadingSway.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelCenterOfMassHeightUnit
-			// 
-			this.labelCenterOfMassHeightUnit.Location = new System.Drawing.Point(216, 136);
-			this.labelCenterOfMassHeightUnit.Name = "labelCenterOfMassHeightUnit";
-			this.labelCenterOfMassHeightUnit.Size = new System.Drawing.Size(48, 16);
-			this.labelCenterOfMassHeightUnit.TabIndex = 24;
-			this.labelCenterOfMassHeightUnit.Text = "m";
-			this.labelCenterOfMassHeightUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelExposedFrontalAreaUnit
-			// 
-			this.labelExposedFrontalAreaUnit.Location = new System.Drawing.Point(216, 160);
-			this.labelExposedFrontalAreaUnit.Name = "labelExposedFrontalAreaUnit";
-			this.labelExposedFrontalAreaUnit.Size = new System.Drawing.Size(40, 16);
-			this.labelExposedFrontalAreaUnit.TabIndex = 27;
-			this.labelExposedFrontalAreaUnit.Text = "m²";
-			this.labelExposedFrontalAreaUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// buttonObjectOpen
-			// 
-			this.buttonObjectOpen.Location = new System.Drawing.Point(208, 528);
-			this.buttonObjectOpen.Name = "buttonObjectOpen";
-			this.buttonObjectOpen.Size = new System.Drawing.Size(56, 19);
-			this.buttonObjectOpen.TabIndex = 3;
-			this.buttonObjectOpen.Text = "Open...";
-			this.buttonObjectOpen.UseVisualStyleBackColor = true;
-			this.buttonObjectOpen.Click += new System.EventHandler(this.ButtonObjectOpen_Click);
-			// 
-			// checkBoxIsMotorCar
-			// 
-			this.checkBoxIsMotorCar.Location = new System.Drawing.Point(160, 16);
-			this.checkBoxIsMotorCar.Name = "checkBoxIsMotorCar";
-			this.checkBoxIsMotorCar.Size = new System.Drawing.Size(48, 16);
-			this.checkBoxIsMotorCar.TabIndex = 28;
-			this.checkBoxIsMotorCar.UseVisualStyleBackColor = true;
-			// 
-			// checkBoxDefinedAxles
-			// 
-			this.checkBoxDefinedAxles.Location = new System.Drawing.Point(160, 304);
-			this.checkBoxDefinedAxles.Name = "checkBoxDefinedAxles";
-			this.checkBoxDefinedAxles.Size = new System.Drawing.Size(48, 16);
-			this.checkBoxDefinedAxles.TabIndex = 29;
-			this.checkBoxDefinedAxles.UseVisualStyleBackColor = true;
-			// 
-			// checkBoxLoadingSway
-			// 
-			this.checkBoxLoadingSway.Location = new System.Drawing.Point(160, 456);
-			this.checkBoxLoadingSway.Name = "checkBoxLoadingSway";
-			this.checkBoxLoadingSway.Size = new System.Drawing.Size(48, 16);
-			this.checkBoxLoadingSway.TabIndex = 30;
-			this.checkBoxLoadingSway.UseVisualStyleBackColor = true;
-			// 
-			// checkBoxReversed
-			// 
-			this.checkBoxReversed.Location = new System.Drawing.Point(160, 480);
-			this.checkBoxReversed.Name = "checkBoxReversed";
-			this.checkBoxReversed.Size = new System.Drawing.Size(48, 16);
-			this.checkBoxReversed.TabIndex = 31;
-			this.checkBoxReversed.UseVisualStyleBackColor = true;
-			// 
-			// buttonFrontBogieSet
-			// 
-			this.buttonFrontBogieSet.Location = new System.Drawing.Point(160, 408);
-			this.buttonFrontBogieSet.Name = "buttonFrontBogieSet";
-			this.buttonFrontBogieSet.Size = new System.Drawing.Size(48, 19);
-			this.buttonFrontBogieSet.TabIndex = 32;
-			this.buttonFrontBogieSet.Text = "Set...";
-			this.buttonFrontBogieSet.UseVisualStyleBackColor = true;
-			this.buttonFrontBogieSet.Click += new System.EventHandler(this.ButtonFrontBogieSet_Click);
-			// 
-			// buttonRearBogieSet
-			// 
-			this.buttonRearBogieSet.Location = new System.Drawing.Point(160, 432);
-			this.buttonRearBogieSet.Name = "buttonRearBogieSet";
-			this.buttonRearBogieSet.Size = new System.Drawing.Size(48, 19);
-			this.buttonRearBogieSet.TabIndex = 33;
-			this.buttonRearBogieSet.Text = "Set...";
-			this.buttonRearBogieSet.UseVisualStyleBackColor = true;
-			this.buttonRearBogieSet.Click += new System.EventHandler(this.ButtonRearBogieSet_Click);
-			// 
-			// labelFrontBogie
-			// 
-			this.labelFrontBogie.Location = new System.Drawing.Point(8, 408);
-			this.labelFrontBogie.Name = "labelFrontBogie";
-			this.labelFrontBogie.Size = new System.Drawing.Size(144, 16);
-			this.labelFrontBogie.TabIndex = 34;
-			this.labelFrontBogie.Text = "FrontBogie:";
-			this.labelFrontBogie.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelRearBogie
-			// 
-			this.labelRearBogie.Location = new System.Drawing.Point(8, 432);
-			this.labelRearBogie.Name = "labelRearBogie";
-			this.labelRearBogie.Size = new System.Drawing.Size(144, 16);
-			this.labelRearBogie.TabIndex = 35;
-			this.labelRearBogie.Text = "RearBogie:";
-			this.labelRearBogie.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelUnexposedFrontalArea
-			// 
-			this.labelUnexposedFrontalArea.Location = new System.Drawing.Point(8, 184);
-			this.labelUnexposedFrontalArea.Name = "labelUnexposedFrontalArea";
-			this.labelUnexposedFrontalArea.Size = new System.Drawing.Size(144, 16);
-			this.labelUnexposedFrontalArea.TabIndex = 36;
-			this.labelUnexposedFrontalArea.Text = "UnexposedFrontalArea:";
-			this.labelUnexposedFrontalArea.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxUnexposedFrontalArea
-			// 
-			this.textBoxUnexposedFrontalArea.Location = new System.Drawing.Point(160, 184);
-			this.textBoxUnexposedFrontalArea.Name = "textBoxUnexposedFrontalArea";
-			this.textBoxUnexposedFrontalArea.Size = new System.Drawing.Size(48, 19);
-			this.textBoxUnexposedFrontalArea.TabIndex = 37;
-			// 
-			// labelUnexposedFrontalAreaUnit
-			// 
-			this.labelUnexposedFrontalAreaUnit.Location = new System.Drawing.Point(216, 184);
-			this.labelUnexposedFrontalAreaUnit.Name = "labelUnexposedFrontalAreaUnit";
-			this.labelUnexposedFrontalAreaUnit.Size = new System.Drawing.Size(40, 16);
-			this.labelUnexposedFrontalAreaUnit.TabIndex = 38;
-			this.labelUnexposedFrontalAreaUnit.Text = "m²";
-			this.labelUnexposedFrontalAreaUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelLeftDoorWidth
-			// 
-			this.labelLeftDoorWidth.Location = new System.Drawing.Point(8, 208);
-			this.labelLeftDoorWidth.Name = "labelLeftDoorWidth";
-			this.labelLeftDoorWidth.Size = new System.Drawing.Size(144, 16);
-			this.labelLeftDoorWidth.TabIndex = 39;
-			this.labelLeftDoorWidth.Text = "LeftDoorWidth:";
-			this.labelLeftDoorWidth.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelLeftDoorMaxTolerance
-			// 
-			this.labelLeftDoorMaxTolerance.Location = new System.Drawing.Point(8, 232);
-			this.labelLeftDoorMaxTolerance.Name = "labelLeftDoorMaxTolerance";
-			this.labelLeftDoorMaxTolerance.Size = new System.Drawing.Size(144, 16);
-			this.labelLeftDoorMaxTolerance.TabIndex = 40;
-			this.labelLeftDoorMaxTolerance.Text = "LeftDoorMaxTolerance:";
-			this.labelLeftDoorMaxTolerance.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelRightDoorWidth
-			// 
-			this.labelRightDoorWidth.Location = new System.Drawing.Point(8, 256);
-			this.labelRightDoorWidth.Name = "labelRightDoorWidth";
-			this.labelRightDoorWidth.Size = new System.Drawing.Size(144, 16);
-			this.labelRightDoorWidth.TabIndex = 41;
-			this.labelRightDoorWidth.Text = "RightDoorWidth:";
-			this.labelRightDoorWidth.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelRightDoorMaxTolerance
-			// 
-			this.labelRightDoorMaxTolerance.Location = new System.Drawing.Point(8, 280);
-			this.labelRightDoorMaxTolerance.Name = "labelRightDoorMaxTolerance";
-			this.labelRightDoorMaxTolerance.Size = new System.Drawing.Size(144, 16);
-			this.labelRightDoorMaxTolerance.TabIndex = 42;
-			this.labelRightDoorMaxTolerance.Text = "RightDoorMaxTolerance:";
-			this.labelRightDoorMaxTolerance.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelLeftDoorWidthUnit
-			// 
-			this.labelLeftDoorWidthUnit.Location = new System.Drawing.Point(216, 208);
-			this.labelLeftDoorWidthUnit.Name = "labelLeftDoorWidthUnit";
-			this.labelLeftDoorWidthUnit.Size = new System.Drawing.Size(48, 16);
-			this.labelLeftDoorWidthUnit.TabIndex = 43;
-			this.labelLeftDoorWidthUnit.Text = "mm";
-			this.labelLeftDoorWidthUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelLeftDoorMaxToleranceUnit
-			// 
-			this.labelLeftDoorMaxToleranceUnit.Location = new System.Drawing.Point(216, 232);
-			this.labelLeftDoorMaxToleranceUnit.Name = "labelLeftDoorMaxToleranceUnit";
-			this.labelLeftDoorMaxToleranceUnit.Size = new System.Drawing.Size(48, 16);
-			this.labelLeftDoorMaxToleranceUnit.TabIndex = 44;
-			this.labelLeftDoorMaxToleranceUnit.Text = "mm";
-			this.labelLeftDoorMaxToleranceUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelRightDoorWidthUnit
-			// 
-			this.labelRightDoorWidthUnit.Location = new System.Drawing.Point(216, 256);
-			this.labelRightDoorWidthUnit.Name = "labelRightDoorWidthUnit";
-			this.labelRightDoorWidthUnit.Size = new System.Drawing.Size(48, 16);
-			this.labelRightDoorWidthUnit.TabIndex = 45;
-			this.labelRightDoorWidthUnit.Text = "mm";
-			this.labelRightDoorWidthUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelRightDoorMaxToleranceUnit
-			// 
-			this.labelRightDoorMaxToleranceUnit.Location = new System.Drawing.Point(216, 280);
-			this.labelRightDoorMaxToleranceUnit.Name = "labelRightDoorMaxToleranceUnit";
-			this.labelRightDoorMaxToleranceUnit.Size = new System.Drawing.Size(48, 16);
-			this.labelRightDoorMaxToleranceUnit.TabIndex = 46;
-			this.labelRightDoorMaxToleranceUnit.Text = "mm";
-			this.labelRightDoorMaxToleranceUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textBoxLeftDoorWidth
-			// 
-			this.textBoxLeftDoorWidth.Location = new System.Drawing.Point(160, 208);
-			this.textBoxLeftDoorWidth.Name = "textBoxLeftDoorWidth";
-			this.textBoxLeftDoorWidth.Size = new System.Drawing.Size(48, 19);
-			this.textBoxLeftDoorWidth.TabIndex = 47;
-			// 
-			// textBoxLeftDoorMaxTolerance
-			// 
-			this.textBoxLeftDoorMaxTolerance.Location = new System.Drawing.Point(160, 232);
-			this.textBoxLeftDoorMaxTolerance.Name = "textBoxLeftDoorMaxTolerance";
-			this.textBoxLeftDoorMaxTolerance.Size = new System.Drawing.Size(48, 19);
-			this.textBoxLeftDoorMaxTolerance.TabIndex = 48;
-			// 
-			// textBoxRightDoorWidth
-			// 
-			this.textBoxRightDoorWidth.Location = new System.Drawing.Point(160, 256);
-			this.textBoxRightDoorWidth.Name = "textBoxRightDoorWidth";
-			this.textBoxRightDoorWidth.Size = new System.Drawing.Size(48, 19);
-			this.textBoxRightDoorWidth.TabIndex = 49;
-			// 
-			// textBoxRightDoorMaxTolerance
-			// 
-			this.textBoxRightDoorMaxTolerance.Location = new System.Drawing.Point(160, 280);
-			this.textBoxRightDoorMaxTolerance.Name = "textBoxRightDoorMaxTolerance";
-			this.textBoxRightDoorMaxTolerance.Size = new System.Drawing.Size(48, 19);
-			this.textBoxRightDoorMaxTolerance.TabIndex = 50;
-			// 
-			// groupBoxPerformance
-			// 
-			this.groupBoxPerformance.Controls.Add(this.textBoxAerodynamicDragCoefficient);
-			this.groupBoxPerformance.Controls.Add(this.textBoxCoefficientOfRollingResistance);
-			this.groupBoxPerformance.Controls.Add(this.textBoxCoefficientOfStaticFriction);
-			this.groupBoxPerformance.Controls.Add(this.labelDecelerationUnit);
-			this.groupBoxPerformance.Controls.Add(this.textBoxDeceleration);
-			this.groupBoxPerformance.Controls.Add(this.labelAerodynamicDragCoefficient);
-			this.groupBoxPerformance.Controls.Add(this.labelCoefficientOfStaticFriction);
-			this.groupBoxPerformance.Controls.Add(this.labelDeceleration);
-			this.groupBoxPerformance.Controls.Add(this.labelCoefficientOfRollingResistance);
-			this.groupBoxPerformance.Location = new System.Drawing.Point(288, 8);
-			this.groupBoxPerformance.Name = "groupBoxPerformance";
-			this.groupBoxPerformance.Size = new System.Drawing.Size(448, 120);
-			this.groupBoxPerformance.TabIndex = 1;
-			this.groupBoxPerformance.TabStop = false;
-			this.groupBoxPerformance.Text = "Performance";
-			// 
-			// labelCoefficientOfRollingResistance
-			// 
-			this.labelCoefficientOfRollingResistance.Location = new System.Drawing.Point(8, 64);
-			this.labelCoefficientOfRollingResistance.Name = "labelCoefficientOfRollingResistance";
-			this.labelCoefficientOfRollingResistance.Size = new System.Drawing.Size(168, 16);
-			this.labelCoefficientOfRollingResistance.TabIndex = 2;
-			this.labelCoefficientOfRollingResistance.Text = "CoefficientOfRollingResistance:";
-			this.labelCoefficientOfRollingResistance.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelDeceleration
-			// 
-			this.labelDeceleration.Location = new System.Drawing.Point(8, 16);
-			this.labelDeceleration.Name = "labelDeceleration";
-			this.labelDeceleration.Size = new System.Drawing.Size(168, 16);
-			this.labelDeceleration.TabIndex = 3;
-			this.labelDeceleration.Text = "Deceleration:";
-			this.labelDeceleration.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelCoefficientOfStaticFriction
-			// 
-			this.labelCoefficientOfStaticFriction.Location = new System.Drawing.Point(8, 40);
-			this.labelCoefficientOfStaticFriction.Name = "labelCoefficientOfStaticFriction";
-			this.labelCoefficientOfStaticFriction.Size = new System.Drawing.Size(168, 16);
-			this.labelCoefficientOfStaticFriction.TabIndex = 4;
-			this.labelCoefficientOfStaticFriction.Text = "CoefficientOfStaticFriction:";
-			this.labelCoefficientOfStaticFriction.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelAerodynamicDragCoefficient
-			// 
-			this.labelAerodynamicDragCoefficient.Location = new System.Drawing.Point(8, 88);
-			this.labelAerodynamicDragCoefficient.Name = "labelAerodynamicDragCoefficient";
-			this.labelAerodynamicDragCoefficient.Size = new System.Drawing.Size(168, 16);
-			this.labelAerodynamicDragCoefficient.TabIndex = 5;
-			this.labelAerodynamicDragCoefficient.Text = "AerodynamicDragCoefficient:";
-			this.labelAerodynamicDragCoefficient.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxDeceleration
-			// 
-			this.textBoxDeceleration.Location = new System.Drawing.Point(184, 16);
-			this.textBoxDeceleration.Name = "textBoxDeceleration";
-			this.textBoxDeceleration.Size = new System.Drawing.Size(184, 19);
-			this.textBoxDeceleration.TabIndex = 20;
-			// 
-			// labelDecelerationUnit
-			// 
-			this.labelDecelerationUnit.Location = new System.Drawing.Point(376, 16);
-			this.labelDecelerationUnit.Name = "labelDecelerationUnit";
-			this.labelDecelerationUnit.Size = new System.Drawing.Size(48, 16);
-			this.labelDecelerationUnit.TabIndex = 22;
-			this.labelDecelerationUnit.Text = "km/h/s";
-			this.labelDecelerationUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textBoxCoefficientOfStaticFriction
-			// 
-			this.textBoxCoefficientOfStaticFriction.Location = new System.Drawing.Point(184, 40);
-			this.textBoxCoefficientOfStaticFriction.Name = "textBoxCoefficientOfStaticFriction";
-			this.textBoxCoefficientOfStaticFriction.Size = new System.Drawing.Size(184, 19);
-			this.textBoxCoefficientOfStaticFriction.TabIndex = 23;
-			// 
-			// textBoxCoefficientOfRollingResistance
-			// 
-			this.textBoxCoefficientOfRollingResistance.Location = new System.Drawing.Point(184, 64);
-			this.textBoxCoefficientOfRollingResistance.Name = "textBoxCoefficientOfRollingResistance";
-			this.textBoxCoefficientOfRollingResistance.Size = new System.Drawing.Size(184, 19);
-			this.textBoxCoefficientOfRollingResistance.TabIndex = 24;
-			// 
-			// textBoxAerodynamicDragCoefficient
-			// 
-			this.textBoxAerodynamicDragCoefficient.Location = new System.Drawing.Point(184, 88);
-			this.textBoxAerodynamicDragCoefficient.Name = "textBoxAerodynamicDragCoefficient";
-			this.textBoxAerodynamicDragCoefficient.Size = new System.Drawing.Size(184, 19);
-			this.textBoxAerodynamicDragCoefficient.TabIndex = 25;
-			// 
-			// groupBoxDelay
-			// 
-			this.groupBoxDelay.Controls.Add(this.buttonDelayLocoBrakeSet);
-			this.groupBoxDelay.Controls.Add(this.buttonDelayBrakeSet);
-			this.groupBoxDelay.Controls.Add(this.buttonDelayPowerSet);
-			this.groupBoxDelay.Controls.Add(this.labelDelayLocoBrake);
-			this.groupBoxDelay.Controls.Add(this.labelDelayBrake);
-			this.groupBoxDelay.Controls.Add(this.labelDelayPower);
-			this.groupBoxDelay.Location = new System.Drawing.Point(8, 568);
-			this.groupBoxDelay.Name = "groupBoxDelay";
-			this.groupBoxDelay.Size = new System.Drawing.Size(272, 96);
-			this.groupBoxDelay.TabIndex = 2;
-			this.groupBoxDelay.TabStop = false;
-			this.groupBoxDelay.Text = "Delay";
-			// 
-			// labelDelayPower
-			// 
-			this.labelDelayPower.Location = new System.Drawing.Point(8, 16);
-			this.labelDelayPower.Name = "labelDelayPower";
-			this.labelDelayPower.Size = new System.Drawing.Size(144, 16);
-			this.labelDelayPower.TabIndex = 2;
-			this.labelDelayPower.Text = "Power:";
-			this.labelDelayPower.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelDelayBrake
-			// 
-			this.labelDelayBrake.Location = new System.Drawing.Point(8, 40);
-			this.labelDelayBrake.Name = "labelDelayBrake";
-			this.labelDelayBrake.Size = new System.Drawing.Size(144, 16);
-			this.labelDelayBrake.TabIndex = 4;
-			this.labelDelayBrake.Text = "Brake:";
-			this.labelDelayBrake.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelDelayLocoBrake
-			// 
-			this.labelDelayLocoBrake.Location = new System.Drawing.Point(8, 64);
-			this.labelDelayLocoBrake.Name = "labelDelayLocoBrake";
-			this.labelDelayLocoBrake.Size = new System.Drawing.Size(144, 16);
-			this.labelDelayLocoBrake.TabIndex = 6;
-			this.labelDelayLocoBrake.Text = "LocoBrake:";
-			this.labelDelayLocoBrake.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// buttonDelayPowerSet
-			// 
-			this.buttonDelayPowerSet.Location = new System.Drawing.Point(160, 16);
-			this.buttonDelayPowerSet.Name = "buttonDelayPowerSet";
-			this.buttonDelayPowerSet.Size = new System.Drawing.Size(48, 19);
-			this.buttonDelayPowerSet.TabIndex = 33;
-			this.buttonDelayPowerSet.Text = "Set...";
-			this.buttonDelayPowerSet.UseVisualStyleBackColor = true;
-			this.buttonDelayPowerSet.Click += new System.EventHandler(this.ButtonDelayPowerSet_Click);
-			// 
-			// buttonDelayBrakeSet
-			// 
-			this.buttonDelayBrakeSet.Location = new System.Drawing.Point(160, 40);
-			this.buttonDelayBrakeSet.Name = "buttonDelayBrakeSet";
-			this.buttonDelayBrakeSet.Size = new System.Drawing.Size(48, 19);
-			this.buttonDelayBrakeSet.TabIndex = 35;
-			this.buttonDelayBrakeSet.Text = "Set...";
-			this.buttonDelayBrakeSet.UseVisualStyleBackColor = true;
-			this.buttonDelayBrakeSet.Click += new System.EventHandler(this.ButtonDelayBrakeSet_Click);
-			// 
-			// buttonDelayLocoBrakeSet
-			// 
-			this.buttonDelayLocoBrakeSet.Location = new System.Drawing.Point(160, 64);
-			this.buttonDelayLocoBrakeSet.Name = "buttonDelayLocoBrakeSet";
-			this.buttonDelayLocoBrakeSet.Size = new System.Drawing.Size(48, 19);
-			this.buttonDelayLocoBrakeSet.TabIndex = 37;
-			this.buttonDelayLocoBrakeSet.Text = "Set...";
-			this.buttonDelayLocoBrakeSet.UseVisualStyleBackColor = true;
-			this.buttonDelayLocoBrakeSet.Click += new System.EventHandler(this.ButtonDelayLocoBrakeSet_Click);
-			// 
-			// groupBoxMove
-			// 
-			this.groupBoxMove.Controls.Add(this.labelBrakeCylinderDownUnit);
-			this.groupBoxMove.Controls.Add(this.textBoxBrakeCylinderDown);
-			this.groupBoxMove.Controls.Add(this.labelBrakeCylinderUpUnit);
-			this.groupBoxMove.Controls.Add(this.textBoxBrakeCylinderUp);
-			this.groupBoxMove.Controls.Add(this.labelJerkBrakeDownUnit);
-			this.groupBoxMove.Controls.Add(this.textBoxJerkBrakeDown);
-			this.groupBoxMove.Controls.Add(this.labelJerkBrakeUpUnit);
-			this.groupBoxMove.Controls.Add(this.textBoxJerkBrakeUp);
-			this.groupBoxMove.Controls.Add(this.labelJerkPowerDownUnit);
-			this.groupBoxMove.Controls.Add(this.textBoxJerkPowerDown);
-			this.groupBoxMove.Controls.Add(this.labelJerkPowerUpUnit);
-			this.groupBoxMove.Controls.Add(this.textBoxJerkPowerUp);
-			this.groupBoxMove.Controls.Add(this.labelJerkPowerUp);
-			this.groupBoxMove.Controls.Add(this.labelJerkPowerDown);
-			this.groupBoxMove.Controls.Add(this.labelJerkBrakeUp);
-			this.groupBoxMove.Controls.Add(this.labelJerkBrakeDown);
-			this.groupBoxMove.Controls.Add(this.labelBrakeCylinderUp);
-			this.groupBoxMove.Controls.Add(this.labelBrakeCylinderDown);
-			this.groupBoxMove.Location = new System.Drawing.Point(288, 136);
-			this.groupBoxMove.Name = "groupBoxMove";
-			this.groupBoxMove.Size = new System.Drawing.Size(448, 168);
-			this.groupBoxMove.TabIndex = 3;
-			this.groupBoxMove.TabStop = false;
-			this.groupBoxMove.Text = "Move";
-			// 
-			// labelBrakeCylinderDown
-			// 
-			this.labelBrakeCylinderDown.Location = new System.Drawing.Point(8, 136);
-			this.labelBrakeCylinderDown.Name = "labelBrakeCylinderDown";
-			this.labelBrakeCylinderDown.Size = new System.Drawing.Size(168, 16);
-			this.labelBrakeCylinderDown.TabIndex = 1;
-			this.labelBrakeCylinderDown.Text = "BrakeCylinderDown:";
-			this.labelBrakeCylinderDown.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelBrakeCylinderUp
-			// 
-			this.labelBrakeCylinderUp.Location = new System.Drawing.Point(8, 112);
-			this.labelBrakeCylinderUp.Name = "labelBrakeCylinderUp";
-			this.labelBrakeCylinderUp.Size = new System.Drawing.Size(168, 16);
-			this.labelBrakeCylinderUp.TabIndex = 2;
-			this.labelBrakeCylinderUp.Text = "BrakeCylinderUp:";
-			this.labelBrakeCylinderUp.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelJerkBrakeDown
-			// 
-			this.labelJerkBrakeDown.Location = new System.Drawing.Point(8, 88);
-			this.labelJerkBrakeDown.Name = "labelJerkBrakeDown";
-			this.labelJerkBrakeDown.Size = new System.Drawing.Size(168, 16);
-			this.labelJerkBrakeDown.TabIndex = 3;
-			this.labelJerkBrakeDown.Text = "JerkBrakeDown:";
-			this.labelJerkBrakeDown.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelJerkBrakeUp
-			// 
-			this.labelJerkBrakeUp.Location = new System.Drawing.Point(8, 64);
-			this.labelJerkBrakeUp.Name = "labelJerkBrakeUp";
-			this.labelJerkBrakeUp.Size = new System.Drawing.Size(168, 16);
-			this.labelJerkBrakeUp.TabIndex = 4;
-			this.labelJerkBrakeUp.Text = "JerkBrakeUp:";
-			this.labelJerkBrakeUp.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelJerkPowerDown
-			// 
-			this.labelJerkPowerDown.Location = new System.Drawing.Point(8, 40);
-			this.labelJerkPowerDown.Name = "labelJerkPowerDown";
-			this.labelJerkPowerDown.Size = new System.Drawing.Size(168, 16);
-			this.labelJerkPowerDown.TabIndex = 5;
-			this.labelJerkPowerDown.Text = "JerkPowerDown:";
-			this.labelJerkPowerDown.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelJerkPowerUp
-			// 
-			this.labelJerkPowerUp.Location = new System.Drawing.Point(8, 16);
-			this.labelJerkPowerUp.Name = "labelJerkPowerUp";
-			this.labelJerkPowerUp.Size = new System.Drawing.Size(168, 16);
-			this.labelJerkPowerUp.TabIndex = 6;
-			this.labelJerkPowerUp.Text = "JerkPowerUp:";
-			this.labelJerkPowerUp.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxJerkPowerUp
-			// 
-			this.textBoxJerkPowerUp.Location = new System.Drawing.Point(184, 16);
-			this.textBoxJerkPowerUp.Name = "textBoxJerkPowerUp";
-			this.textBoxJerkPowerUp.Size = new System.Drawing.Size(184, 19);
-			this.textBoxJerkPowerUp.TabIndex = 20;
-			// 
-			// labelJerkPowerUpUnit
-			// 
-			this.labelJerkPowerUpUnit.Location = new System.Drawing.Point(376, 16);
-			this.labelJerkPowerUpUnit.Name = "labelJerkPowerUpUnit";
-			this.labelJerkPowerUpUnit.Size = new System.Drawing.Size(64, 16);
-			this.labelJerkPowerUpUnit.TabIndex = 21;
-			this.labelJerkPowerUpUnit.Text = "1/100 m/s³";
-			this.labelJerkPowerUpUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textBoxJerkPowerDown
-			// 
-			this.textBoxJerkPowerDown.Location = new System.Drawing.Point(184, 40);
-			this.textBoxJerkPowerDown.Name = "textBoxJerkPowerDown";
-			this.textBoxJerkPowerDown.Size = new System.Drawing.Size(184, 19);
-			this.textBoxJerkPowerDown.TabIndex = 22;
-			// 
-			// labelJerkPowerDownUnit
-			// 
-			this.labelJerkPowerDownUnit.Location = new System.Drawing.Point(376, 40);
-			this.labelJerkPowerDownUnit.Name = "labelJerkPowerDownUnit";
-			this.labelJerkPowerDownUnit.Size = new System.Drawing.Size(64, 16);
-			this.labelJerkPowerDownUnit.TabIndex = 23;
-			this.labelJerkPowerDownUnit.Text = "1/100 m/s³";
-			this.labelJerkPowerDownUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textBoxJerkBrakeUp
-			// 
-			this.textBoxJerkBrakeUp.Location = new System.Drawing.Point(184, 64);
-			this.textBoxJerkBrakeUp.Name = "textBoxJerkBrakeUp";
-			this.textBoxJerkBrakeUp.Size = new System.Drawing.Size(184, 19);
-			this.textBoxJerkBrakeUp.TabIndex = 24;
-			// 
-			// labelJerkBrakeUpUnit
-			// 
-			this.labelJerkBrakeUpUnit.Location = new System.Drawing.Point(376, 64);
-			this.labelJerkBrakeUpUnit.Name = "labelJerkBrakeUpUnit";
-			this.labelJerkBrakeUpUnit.Size = new System.Drawing.Size(64, 16);
-			this.labelJerkBrakeUpUnit.TabIndex = 25;
-			this.labelJerkBrakeUpUnit.Text = "1/100 m/s³";
-			this.labelJerkBrakeUpUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textBoxJerkBrakeDown
-			// 
-			this.textBoxJerkBrakeDown.Location = new System.Drawing.Point(184, 88);
-			this.textBoxJerkBrakeDown.Name = "textBoxJerkBrakeDown";
-			this.textBoxJerkBrakeDown.Size = new System.Drawing.Size(184, 19);
-			this.textBoxJerkBrakeDown.TabIndex = 26;
-			// 
-			// labelJerkBrakeDownUnit
-			// 
-			this.labelJerkBrakeDownUnit.Location = new System.Drawing.Point(376, 88);
-			this.labelJerkBrakeDownUnit.Name = "labelJerkBrakeDownUnit";
-			this.labelJerkBrakeDownUnit.Size = new System.Drawing.Size(64, 16);
-			this.labelJerkBrakeDownUnit.TabIndex = 27;
-			this.labelJerkBrakeDownUnit.Text = "1/100 m/s³";
-			this.labelJerkBrakeDownUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textBoxBrakeCylinderUp
-			// 
-			this.textBoxBrakeCylinderUp.Location = new System.Drawing.Point(184, 112);
-			this.textBoxBrakeCylinderUp.Name = "textBoxBrakeCylinderUp";
-			this.textBoxBrakeCylinderUp.Size = new System.Drawing.Size(184, 19);
-			this.textBoxBrakeCylinderUp.TabIndex = 28;
-			// 
-			// labelBrakeCylinderUpUnit
-			// 
-			this.labelBrakeCylinderUpUnit.Location = new System.Drawing.Point(376, 112);
-			this.labelBrakeCylinderUpUnit.Name = "labelBrakeCylinderUpUnit";
-			this.labelBrakeCylinderUpUnit.Size = new System.Drawing.Size(64, 16);
-			this.labelBrakeCylinderUpUnit.TabIndex = 29;
-			this.labelBrakeCylinderUpUnit.Text = "kPa/s";
-			this.labelBrakeCylinderUpUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textBoxBrakeCylinderDown
-			// 
-			this.textBoxBrakeCylinderDown.Location = new System.Drawing.Point(184, 136);
-			this.textBoxBrakeCylinderDown.Name = "textBoxBrakeCylinderDown";
-			this.textBoxBrakeCylinderDown.Size = new System.Drawing.Size(184, 19);
-			this.textBoxBrakeCylinderDown.TabIndex = 30;
-			// 
-			// labelBrakeCylinderDownUnit
-			// 
-			this.labelBrakeCylinderDownUnit.Location = new System.Drawing.Point(376, 136);
-			this.labelBrakeCylinderDownUnit.Name = "labelBrakeCylinderDownUnit";
-			this.labelBrakeCylinderDownUnit.Size = new System.Drawing.Size(64, 16);
-			this.labelBrakeCylinderDownUnit.TabIndex = 31;
-			this.labelBrakeCylinderDownUnit.Text = "kPa/s";
-			this.labelBrakeCylinderDownUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// groupBoxBrake
-			// 
-			this.groupBoxBrake.Controls.Add(this.textBoxBrakeControlSpeed);
-			this.groupBoxBrake.Controls.Add(this.labelBrakeControlSpeedUnit);
-			this.groupBoxBrake.Controls.Add(this.comboBoxBrakeControlSystem);
-			this.groupBoxBrake.Controls.Add(this.comboBoxLocoBrakeType);
-			this.groupBoxBrake.Controls.Add(this.comboBoxBrakeType);
-			this.groupBoxBrake.Controls.Add(this.labelLocoBrakeType);
-			this.groupBoxBrake.Controls.Add(this.labelBrakeType);
-			this.groupBoxBrake.Controls.Add(this.labelBrakeControlSpeed);
-			this.groupBoxBrake.Controls.Add(this.labelBrakeControlSystem);
-			this.groupBoxBrake.Location = new System.Drawing.Point(288, 312);
-			this.groupBoxBrake.Name = "groupBoxBrake";
-			this.groupBoxBrake.Size = new System.Drawing.Size(448, 120);
-			this.groupBoxBrake.TabIndex = 4;
-			this.groupBoxBrake.TabStop = false;
-			this.groupBoxBrake.Text = "Brake";
-			// 
-			// labelBrakeControlSystem
-			// 
-			this.labelBrakeControlSystem.Location = new System.Drawing.Point(8, 64);
-			this.labelBrakeControlSystem.Name = "labelBrakeControlSystem";
-			this.labelBrakeControlSystem.Size = new System.Drawing.Size(120, 16);
-			this.labelBrakeControlSystem.TabIndex = 5;
-			this.labelBrakeControlSystem.Text = "BrakeControlSystem:";
-			this.labelBrakeControlSystem.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelBrakeControlSpeed
-			// 
-			this.labelBrakeControlSpeed.Location = new System.Drawing.Point(8, 88);
-			this.labelBrakeControlSpeed.Name = "labelBrakeControlSpeed";
-			this.labelBrakeControlSpeed.Size = new System.Drawing.Size(120, 16);
-			this.labelBrakeControlSpeed.TabIndex = 6;
-			this.labelBrakeControlSpeed.Text = "BrakeControlSpeed:";
-			this.labelBrakeControlSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelBrakeType
-			// 
-			this.labelBrakeType.Location = new System.Drawing.Point(8, 16);
-			this.labelBrakeType.Name = "labelBrakeType";
-			this.labelBrakeType.Size = new System.Drawing.Size(120, 16);
-			this.labelBrakeType.TabIndex = 7;
-			this.labelBrakeType.Text = "BrakeType:";
-			this.labelBrakeType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelLocoBrakeType
-			// 
-			this.labelLocoBrakeType.Location = new System.Drawing.Point(8, 40);
-			this.labelLocoBrakeType.Name = "labelLocoBrakeType";
-			this.labelLocoBrakeType.Size = new System.Drawing.Size(120, 16);
-			this.labelLocoBrakeType.TabIndex = 8;
-			this.labelLocoBrakeType.Text = "LocoBrakeType:";
-			this.labelLocoBrakeType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// comboBoxBrakeType
-			// 
-			this.comboBoxBrakeType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxBrakeType.FormattingEnabled = true;
-			this.comboBoxBrakeType.Items.AddRange(new object[] {
-            "Electromagnetic straight air brake",
-            "Electro-pneumatic air brake without brake pipe",
-            "Air brake with partial release feature"});
-			this.comboBoxBrakeType.Location = new System.Drawing.Point(136, 16);
-			this.comboBoxBrakeType.Name = "comboBoxBrakeType";
-			this.comboBoxBrakeType.Size = new System.Drawing.Size(264, 20);
-			this.comboBoxBrakeType.TabIndex = 15;
-			// 
-			// comboBoxLocoBrakeType
-			// 
-			this.comboBoxLocoBrakeType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxLocoBrakeType.FormattingEnabled = true;
-			this.comboBoxLocoBrakeType.Items.AddRange(new object[] {
-            "Not fitted",
-            "Notched air brake",
-            "Air brake with partial release"});
-			this.comboBoxLocoBrakeType.Location = new System.Drawing.Point(136, 40);
-			this.comboBoxLocoBrakeType.Name = "comboBoxLocoBrakeType";
-			this.comboBoxLocoBrakeType.Size = new System.Drawing.Size(264, 20);
-			this.comboBoxLocoBrakeType.TabIndex = 16;
-			// 
-			// comboBoxBrakeControlSystem
-			// 
-			this.comboBoxBrakeControlSystem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxBrakeControlSystem.FormattingEnabled = true;
-			this.comboBoxBrakeControlSystem.Items.AddRange(new object[] {
-            "None",
-            "Closing electromagnetic valve",
-            "Delay-including control"});
-			this.comboBoxBrakeControlSystem.Location = new System.Drawing.Point(136, 64);
-			this.comboBoxBrakeControlSystem.Name = "comboBoxBrakeControlSystem";
-			this.comboBoxBrakeControlSystem.Size = new System.Drawing.Size(264, 20);
-			this.comboBoxBrakeControlSystem.TabIndex = 17;
-			// 
-			// labelBrakeControlSpeedUnit
-			// 
-			this.labelBrakeControlSpeedUnit.Location = new System.Drawing.Point(408, 88);
-			this.labelBrakeControlSpeedUnit.Name = "labelBrakeControlSpeedUnit";
-			this.labelBrakeControlSpeedUnit.Size = new System.Drawing.Size(32, 16);
-			this.labelBrakeControlSpeedUnit.TabIndex = 32;
-			this.labelBrakeControlSpeedUnit.Text = "km/h";
-			this.labelBrakeControlSpeedUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textBoxBrakeControlSpeed
-			// 
-			this.textBoxBrakeControlSpeed.Location = new System.Drawing.Point(136, 88);
-			this.textBoxBrakeControlSpeed.Name = "textBoxBrakeControlSpeed";
-			this.textBoxBrakeControlSpeed.Size = new System.Drawing.Size(264, 19);
-			this.textBoxBrakeControlSpeed.TabIndex = 31;
-			// 
-			// groupBoxPressure
-			// 
-			this.groupBoxPressure.Controls.Add(this.labelBrakePipeNormalPressureUnit);
-			this.groupBoxPressure.Controls.Add(this.textBoxBrakePipeNormalPressure);
-			this.groupBoxPressure.Controls.Add(this.labelBrakePipeNormalPressure);
-			this.groupBoxPressure.Controls.Add(this.labelBrakeCylinderServiceMaximumPressureUnit);
-			this.groupBoxPressure.Controls.Add(this.labelMainReservoirMaximumPressureUnit);
-			this.groupBoxPressure.Controls.Add(this.labelMainReservoirMinimumPressureUnit);
-			this.groupBoxPressure.Controls.Add(this.labelBrakeCylinderEmergencyMaximumPressureUnit);
-			this.groupBoxPressure.Controls.Add(this.textBoxMainReservoirMaximumPressure);
-			this.groupBoxPressure.Controls.Add(this.textBoxMainReservoirMinimumPressure);
-			this.groupBoxPressure.Controls.Add(this.textBoxBrakeCylinderEmergencyMaximumPressure);
-			this.groupBoxPressure.Controls.Add(this.textBoxBrakeCylinderServiceMaximumPressure);
-			this.groupBoxPressure.Controls.Add(this.labelMainReservoirMaximumPressure);
-			this.groupBoxPressure.Controls.Add(this.labelMainReservoirMinimumPressure);
-			this.groupBoxPressure.Controls.Add(this.labelBrakeCylinderServiceMaximumPressure);
-			this.groupBoxPressure.Controls.Add(this.labelBrakeCylinderEmergencyMaximumPressure);
-			this.groupBoxPressure.Location = new System.Drawing.Point(288, 440);
-			this.groupBoxPressure.Name = "groupBoxPressure";
-			this.groupBoxPressure.Size = new System.Drawing.Size(448, 144);
-			this.groupBoxPressure.TabIndex = 33;
-			this.groupBoxPressure.TabStop = false;
-			this.groupBoxPressure.Text = "Pressure";
-			// 
-			// labelBrakeCylinderEmergencyMaximumPressure
-			// 
-			this.labelBrakeCylinderEmergencyMaximumPressure.Location = new System.Drawing.Point(8, 40);
-			this.labelBrakeCylinderEmergencyMaximumPressure.Name = "labelBrakeCylinderEmergencyMaximumPressure";
-			this.labelBrakeCylinderEmergencyMaximumPressure.Size = new System.Drawing.Size(232, 16);
-			this.labelBrakeCylinderEmergencyMaximumPressure.TabIndex = 8;
-			this.labelBrakeCylinderEmergencyMaximumPressure.Text = "BrakeCylinderEmergencyMaximumPressure:";
-			this.labelBrakeCylinderEmergencyMaximumPressure.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelBrakeCylinderServiceMaximumPressure
-			// 
-			this.labelBrakeCylinderServiceMaximumPressure.Location = new System.Drawing.Point(8, 16);
-			this.labelBrakeCylinderServiceMaximumPressure.Name = "labelBrakeCylinderServiceMaximumPressure";
-			this.labelBrakeCylinderServiceMaximumPressure.Size = new System.Drawing.Size(232, 16);
-			this.labelBrakeCylinderServiceMaximumPressure.TabIndex = 9;
-			this.labelBrakeCylinderServiceMaximumPressure.Text = "BrakeCylinderServiceMaximumPressure:";
-			this.labelBrakeCylinderServiceMaximumPressure.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelMainReservoirMinimumPressure
-			// 
-			this.labelMainReservoirMinimumPressure.Location = new System.Drawing.Point(8, 64);
-			this.labelMainReservoirMinimumPressure.Name = "labelMainReservoirMinimumPressure";
-			this.labelMainReservoirMinimumPressure.Size = new System.Drawing.Size(232, 16);
-			this.labelMainReservoirMinimumPressure.TabIndex = 10;
-			this.labelMainReservoirMinimumPressure.Text = "MainReservoirMinimumPressure:";
-			this.labelMainReservoirMinimumPressure.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelMainReservoirMaximumPressure
-			// 
-			this.labelMainReservoirMaximumPressure.Location = new System.Drawing.Point(8, 88);
-			this.labelMainReservoirMaximumPressure.Name = "labelMainReservoirMaximumPressure";
-			this.labelMainReservoirMaximumPressure.Size = new System.Drawing.Size(232, 16);
-			this.labelMainReservoirMaximumPressure.TabIndex = 11;
-			this.labelMainReservoirMaximumPressure.Text = "MainReservoirMaximumPressure:";
-			this.labelMainReservoirMaximumPressure.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxBrakeCylinderServiceMaximumPressure
-			// 
-			this.textBoxBrakeCylinderServiceMaximumPressure.Location = new System.Drawing.Point(248, 16);
-			this.textBoxBrakeCylinderServiceMaximumPressure.Name = "textBoxBrakeCylinderServiceMaximumPressure";
-			this.textBoxBrakeCylinderServiceMaximumPressure.Size = new System.Drawing.Size(152, 19);
-			this.textBoxBrakeCylinderServiceMaximumPressure.TabIndex = 31;
-			// 
-			// textBoxBrakeCylinderEmergencyMaximumPressure
-			// 
-			this.textBoxBrakeCylinderEmergencyMaximumPressure.Location = new System.Drawing.Point(248, 40);
-			this.textBoxBrakeCylinderEmergencyMaximumPressure.Name = "textBoxBrakeCylinderEmergencyMaximumPressure";
-			this.textBoxBrakeCylinderEmergencyMaximumPressure.Size = new System.Drawing.Size(152, 19);
-			this.textBoxBrakeCylinderEmergencyMaximumPressure.TabIndex = 32;
-			// 
-			// textBoxMainReservoirMinimumPressure
-			// 
-			this.textBoxMainReservoirMinimumPressure.Location = new System.Drawing.Point(248, 64);
-			this.textBoxMainReservoirMinimumPressure.Name = "textBoxMainReservoirMinimumPressure";
-			this.textBoxMainReservoirMinimumPressure.Size = new System.Drawing.Size(152, 19);
-			this.textBoxMainReservoirMinimumPressure.TabIndex = 33;
-			// 
-			// textBoxMainReservoirMaximumPressure
-			// 
-			this.textBoxMainReservoirMaximumPressure.Location = new System.Drawing.Point(248, 88);
-			this.textBoxMainReservoirMaximumPressure.Name = "textBoxMainReservoirMaximumPressure";
-			this.textBoxMainReservoirMaximumPressure.Size = new System.Drawing.Size(152, 19);
-			this.textBoxMainReservoirMaximumPressure.TabIndex = 34;
-			// 
-			// labelBrakeCylinderEmergencyMaximumPressureUnit
-			// 
-			this.labelBrakeCylinderEmergencyMaximumPressureUnit.Location = new System.Drawing.Point(408, 40);
-			this.labelBrakeCylinderEmergencyMaximumPressureUnit.Name = "labelBrakeCylinderEmergencyMaximumPressureUnit";
-			this.labelBrakeCylinderEmergencyMaximumPressureUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelBrakeCylinderEmergencyMaximumPressureUnit.TabIndex = 34;
-			this.labelBrakeCylinderEmergencyMaximumPressureUnit.Text = "kPa";
-			this.labelBrakeCylinderEmergencyMaximumPressureUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelMainReservoirMinimumPressureUnit
-			// 
-			this.labelMainReservoirMinimumPressureUnit.Location = new System.Drawing.Point(408, 64);
-			this.labelMainReservoirMinimumPressureUnit.Name = "labelMainReservoirMinimumPressureUnit";
-			this.labelMainReservoirMinimumPressureUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelMainReservoirMinimumPressureUnit.TabIndex = 35;
-			this.labelMainReservoirMinimumPressureUnit.Text = "kPa";
-			this.labelMainReservoirMinimumPressureUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelMainReservoirMaximumPressureUnit
-			// 
-			this.labelMainReservoirMaximumPressureUnit.Location = new System.Drawing.Point(408, 88);
-			this.labelMainReservoirMaximumPressureUnit.Name = "labelMainReservoirMaximumPressureUnit";
-			this.labelMainReservoirMaximumPressureUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelMainReservoirMaximumPressureUnit.TabIndex = 36;
-			this.labelMainReservoirMaximumPressureUnit.Text = "kPa";
-			this.labelMainReservoirMaximumPressureUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelBrakeCylinderServiceMaximumPressureUnit
-			// 
-			this.labelBrakeCylinderServiceMaximumPressureUnit.Location = new System.Drawing.Point(408, 16);
-			this.labelBrakeCylinderServiceMaximumPressureUnit.Name = "labelBrakeCylinderServiceMaximumPressureUnit";
-			this.labelBrakeCylinderServiceMaximumPressureUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelBrakeCylinderServiceMaximumPressureUnit.TabIndex = 32;
-			this.labelBrakeCylinderServiceMaximumPressureUnit.Text = "kPa";
-			this.labelBrakeCylinderServiceMaximumPressureUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelBrakePipeNormalPressure
-			// 
-			this.labelBrakePipeNormalPressure.Location = new System.Drawing.Point(8, 112);
-			this.labelBrakePipeNormalPressure.Name = "labelBrakePipeNormalPressure";
-			this.labelBrakePipeNormalPressure.Size = new System.Drawing.Size(232, 16);
-			this.labelBrakePipeNormalPressure.TabIndex = 37;
-			this.labelBrakePipeNormalPressure.Text = "BrakePipeNormalPressure:";
-			this.labelBrakePipeNormalPressure.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxBrakePipeNormalPressure
-			// 
-			this.textBoxBrakePipeNormalPressure.Location = new System.Drawing.Point(248, 112);
-			this.textBoxBrakePipeNormalPressure.Name = "textBoxBrakePipeNormalPressure";
-			this.textBoxBrakePipeNormalPressure.Size = new System.Drawing.Size(152, 19);
-			this.textBoxBrakePipeNormalPressure.TabIndex = 38;
-			// 
-			// labelBrakePipeNormalPressureUnit
-			// 
-			this.labelBrakePipeNormalPressureUnit.Location = new System.Drawing.Point(408, 112);
-			this.labelBrakePipeNormalPressureUnit.Name = "labelBrakePipeNormalPressureUnit";
-			this.labelBrakePipeNormalPressureUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelBrakePipeNormalPressureUnit.TabIndex = 39;
-			this.labelBrakePipeNormalPressureUnit.Text = "kPa";
-			this.labelBrakePipeNormalPressureUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// textBoxRearAxle
+			// 
+			this.textBoxRearAxle.Location = new System.Drawing.Point(152, 40);
+			this.textBoxRearAxle.Name = "textBoxRearAxle";
+			this.textBoxRearAxle.Size = new System.Drawing.Size(48, 19);
+			this.textBoxRearAxle.TabIndex = 12;
+			// 
+			// textBoxFrontAxle
+			// 
+			this.textBoxFrontAxle.Location = new System.Drawing.Point(152, 16);
+			this.textBoxFrontAxle.Name = "textBoxFrontAxle";
+			this.textBoxFrontAxle.Size = new System.Drawing.Size(48, 19);
+			this.textBoxFrontAxle.TabIndex = 11;
+			// 
+			// labelRearAxle
+			// 
+			this.labelRearAxle.Location = new System.Drawing.Point(8, 40);
+			this.labelRearAxle.Name = "labelRearAxle";
+			this.labelRearAxle.Size = new System.Drawing.Size(136, 16);
+			this.labelRearAxle.TabIndex = 10;
+			this.labelRearAxle.Text = "RearAxle:";
+			this.labelRearAxle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelFrontAxle
+			// 
+			this.labelFrontAxle.Location = new System.Drawing.Point(8, 16);
+			this.labelFrontAxle.Name = "labelFrontAxle";
+			this.labelFrontAxle.Size = new System.Drawing.Size(136, 16);
+			this.labelFrontAxle.TabIndex = 9;
+			this.labelFrontAxle.Text = "FrontAxle:";
+			this.labelFrontAxle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelDefinedAxles
+			// 
+			this.labelDefinedAxles.Location = new System.Drawing.Point(8, 304);
+			this.labelDefinedAxles.Name = "labelDefinedAxles";
+			this.labelDefinedAxles.Size = new System.Drawing.Size(144, 16);
+			this.labelDefinedAxles.TabIndex = 7;
+			this.labelDefinedAxles.Text = "DefinedAxles:";
+			this.labelDefinedAxles.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelExposedFrontalArea
+			// 
+			this.labelExposedFrontalArea.Location = new System.Drawing.Point(8, 160);
+			this.labelExposedFrontalArea.Name = "labelExposedFrontalArea";
+			this.labelExposedFrontalArea.Size = new System.Drawing.Size(144, 16);
+			this.labelExposedFrontalArea.TabIndex = 6;
+			this.labelExposedFrontalArea.Text = "ExposedFrontalArea:";
+			this.labelExposedFrontalArea.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelCenterOfMassHeight
+			// 
+			this.labelCenterOfMassHeight.Location = new System.Drawing.Point(8, 136);
+			this.labelCenterOfMassHeight.Name = "labelCenterOfMassHeight";
+			this.labelCenterOfMassHeight.Size = new System.Drawing.Size(144, 16);
+			this.labelCenterOfMassHeight.TabIndex = 5;
+			this.labelCenterOfMassHeight.Text = "CenterOfMassHeight:";
+			this.labelCenterOfMassHeight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelHeight
+			// 
+			this.labelHeight.Location = new System.Drawing.Point(8, 112);
+			this.labelHeight.Name = "labelHeight";
+			this.labelHeight.Size = new System.Drawing.Size(144, 16);
+			this.labelHeight.TabIndex = 4;
+			this.labelHeight.Text = "Height:";
+			this.labelHeight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelWidth
+			// 
+			this.labelWidth.Location = new System.Drawing.Point(8, 88);
+			this.labelWidth.Name = "labelWidth";
+			this.labelWidth.Size = new System.Drawing.Size(144, 16);
+			this.labelWidth.TabIndex = 3;
+			this.labelWidth.Text = "Width:";
+			this.labelWidth.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelLength
+			// 
+			this.labelLength.Location = new System.Drawing.Point(8, 64);
+			this.labelLength.Name = "labelLength";
+			this.labelLength.Size = new System.Drawing.Size(144, 16);
+			this.labelLength.TabIndex = 2;
+			this.labelLength.Text = "Length:";
+			this.labelLength.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelMass
+			// 
+			this.labelMass.Location = new System.Drawing.Point(8, 40);
+			this.labelMass.Name = "labelMass";
+			this.labelMass.Size = new System.Drawing.Size(144, 16);
+			this.labelMass.TabIndex = 1;
+			this.labelMass.Text = "Mass:";
+			this.labelMass.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelIsMotorCar
+			// 
+			this.labelIsMotorCar.Location = new System.Drawing.Point(8, 16);
+			this.labelIsMotorCar.Name = "labelIsMotorCar";
+			this.labelIsMotorCar.Size = new System.Drawing.Size(144, 16);
+			this.labelIsMotorCar.TabIndex = 0;
+			this.labelIsMotorCar.Text = "IsMotorCar:";
+			this.labelIsMotorCar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// tabPageTrain
 			// 
@@ -6042,308 +6068,6 @@ namespace TrainEditor2.Views
 			this.tabPageTrain.TabIndex = 3;
 			this.tabPageTrain.Text = "Train settings";
 			this.tabPageTrain.UseVisualStyleBackColor = true;
-			// 
-			// groupBoxHandle
-			// 
-			this.groupBoxHandle.Controls.Add(this.numericUpDownLocoBrakeNotches);
-			this.groupBoxHandle.Controls.Add(this.labelLocoBrakeNotches);
-			this.groupBoxHandle.Controls.Add(this.comboBoxLocoBrakeHandleType);
-			this.groupBoxHandle.Controls.Add(this.labelLocoBrakeHandleType);
-			this.groupBoxHandle.Controls.Add(this.comboBoxEbHandleBehaviour);
-			this.groupBoxHandle.Controls.Add(this.labelEbHandleBehaviour);
-			this.groupBoxHandle.Controls.Add(this.numericUpDownDriverBrakeNotches);
-			this.groupBoxHandle.Controls.Add(this.labelDriverBrakeNotches);
-			this.groupBoxHandle.Controls.Add(this.numericUpDownDriverPowerNotches);
-			this.groupBoxHandle.Controls.Add(this.labelDriverPowerNotches);
-			this.groupBoxHandle.Controls.Add(this.numericUpDownPowerNotchReduceSteps);
-			this.groupBoxHandle.Controls.Add(this.labelPowerNotchReduceSteps);
-			this.groupBoxHandle.Controls.Add(this.numericUpDownBrakeNotches);
-			this.groupBoxHandle.Controls.Add(this.labelBrakeNotches);
-			this.groupBoxHandle.Controls.Add(this.numericUpDownPowerNotches);
-			this.groupBoxHandle.Controls.Add(this.labelPowerNotches);
-			this.groupBoxHandle.Controls.Add(this.comboBoxHandleType);
-			this.groupBoxHandle.Controls.Add(this.labelHandleType);
-			this.groupBoxHandle.Location = new System.Drawing.Point(8, 8);
-			this.groupBoxHandle.Name = "groupBoxHandle";
-			this.groupBoxHandle.Size = new System.Drawing.Size(416, 240);
-			this.groupBoxHandle.TabIndex = 0;
-			this.groupBoxHandle.TabStop = false;
-			this.groupBoxHandle.Text = "Handle";
-			// 
-			// labelHandleType
-			// 
-			this.labelHandleType.Location = new System.Drawing.Point(8, 16);
-			this.labelHandleType.Name = "labelHandleType";
-			this.labelHandleType.Size = new System.Drawing.Size(176, 16);
-			this.labelHandleType.TabIndex = 0;
-			this.labelHandleType.Text = "HandleType:";
-			this.labelHandleType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// comboBoxHandleType
-			// 
-			this.comboBoxHandleType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxHandleType.FormattingEnabled = true;
-			this.comboBoxHandleType.Items.AddRange(new object[] {
-            "Separated",
-            "Combined"});
-			this.comboBoxHandleType.Location = new System.Drawing.Point(192, 16);
-			this.comboBoxHandleType.Name = "comboBoxHandleType";
-			this.comboBoxHandleType.Size = new System.Drawing.Size(216, 20);
-			this.comboBoxHandleType.TabIndex = 1;
-			// 
-			// labelPowerNotches
-			// 
-			this.labelPowerNotches.Location = new System.Drawing.Point(8, 40);
-			this.labelPowerNotches.Name = "labelPowerNotches";
-			this.labelPowerNotches.Size = new System.Drawing.Size(176, 16);
-			this.labelPowerNotches.TabIndex = 2;
-			this.labelPowerNotches.Text = "PowerNotches:";
-			this.labelPowerNotches.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// numericUpDownPowerNotches
-			// 
-			this.numericUpDownPowerNotches.Location = new System.Drawing.Point(192, 40);
-			this.numericUpDownPowerNotches.Name = "numericUpDownPowerNotches";
-			this.numericUpDownPowerNotches.Size = new System.Drawing.Size(216, 19);
-			this.numericUpDownPowerNotches.TabIndex = 3;
-			// 
-			// labelBrakeNotches
-			// 
-			this.labelBrakeNotches.Location = new System.Drawing.Point(8, 64);
-			this.labelBrakeNotches.Name = "labelBrakeNotches";
-			this.labelBrakeNotches.Size = new System.Drawing.Size(176, 16);
-			this.labelBrakeNotches.TabIndex = 4;
-			this.labelBrakeNotches.Text = "BrakeNotches:";
-			this.labelBrakeNotches.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// numericUpDownBrakeNotches
-			// 
-			this.numericUpDownBrakeNotches.Location = new System.Drawing.Point(192, 64);
-			this.numericUpDownBrakeNotches.Name = "numericUpDownBrakeNotches";
-			this.numericUpDownBrakeNotches.Size = new System.Drawing.Size(216, 19);
-			this.numericUpDownBrakeNotches.TabIndex = 5;
-			// 
-			// labelPowerNotchReduceSteps
-			// 
-			this.labelPowerNotchReduceSteps.Location = new System.Drawing.Point(8, 88);
-			this.labelPowerNotchReduceSteps.Name = "labelPowerNotchReduceSteps";
-			this.labelPowerNotchReduceSteps.Size = new System.Drawing.Size(176, 16);
-			this.labelPowerNotchReduceSteps.TabIndex = 6;
-			this.labelPowerNotchReduceSteps.Text = "PowerNotchReduceSteps:";
-			this.labelPowerNotchReduceSteps.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// numericUpDownPowerNotchReduceSteps
-			// 
-			this.numericUpDownPowerNotchReduceSteps.Location = new System.Drawing.Point(192, 88);
-			this.numericUpDownPowerNotchReduceSteps.Name = "numericUpDownPowerNotchReduceSteps";
-			this.numericUpDownPowerNotchReduceSteps.Size = new System.Drawing.Size(216, 19);
-			this.numericUpDownPowerNotchReduceSteps.TabIndex = 7;
-			// 
-			// labelDriverPowerNotches
-			// 
-			this.labelDriverPowerNotches.Location = new System.Drawing.Point(8, 112);
-			this.labelDriverPowerNotches.Name = "labelDriverPowerNotches";
-			this.labelDriverPowerNotches.Size = new System.Drawing.Size(176, 16);
-			this.labelDriverPowerNotches.TabIndex = 8;
-			this.labelDriverPowerNotches.Text = "DriverPowerNotches:";
-			this.labelDriverPowerNotches.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// numericUpDownDriverPowerNotches
-			// 
-			this.numericUpDownDriverPowerNotches.Location = new System.Drawing.Point(192, 112);
-			this.numericUpDownDriverPowerNotches.Name = "numericUpDownDriverPowerNotches";
-			this.numericUpDownDriverPowerNotches.Size = new System.Drawing.Size(216, 19);
-			this.numericUpDownDriverPowerNotches.TabIndex = 9;
-			// 
-			// labelDriverBrakeNotches
-			// 
-			this.labelDriverBrakeNotches.Location = new System.Drawing.Point(8, 136);
-			this.labelDriverBrakeNotches.Name = "labelDriverBrakeNotches";
-			this.labelDriverBrakeNotches.Size = new System.Drawing.Size(176, 16);
-			this.labelDriverBrakeNotches.TabIndex = 10;
-			this.labelDriverBrakeNotches.Text = "DriverBrakeNotches:";
-			this.labelDriverBrakeNotches.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// numericUpDownDriverBrakeNotches
-			// 
-			this.numericUpDownDriverBrakeNotches.Location = new System.Drawing.Point(192, 136);
-			this.numericUpDownDriverBrakeNotches.Name = "numericUpDownDriverBrakeNotches";
-			this.numericUpDownDriverBrakeNotches.Size = new System.Drawing.Size(216, 19);
-			this.numericUpDownDriverBrakeNotches.TabIndex = 11;
-			// 
-			// labelEbHandleBehaviour
-			// 
-			this.labelEbHandleBehaviour.Location = new System.Drawing.Point(8, 160);
-			this.labelEbHandleBehaviour.Name = "labelEbHandleBehaviour";
-			this.labelEbHandleBehaviour.Size = new System.Drawing.Size(176, 16);
-			this.labelEbHandleBehaviour.TabIndex = 12;
-			this.labelEbHandleBehaviour.Text = "EbHandleBehaviour:";
-			this.labelEbHandleBehaviour.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// comboBoxEbHandleBehaviour
-			// 
-			this.comboBoxEbHandleBehaviour.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxEbHandleBehaviour.FormattingEnabled = true;
-			this.comboBoxEbHandleBehaviour.Items.AddRange(new object[] {
-            "No action",
-            "Return power to neutral",
-            "Return reverser to neutral",
-            "Return power and reverser to neutral"});
-			this.comboBoxEbHandleBehaviour.Location = new System.Drawing.Point(192, 160);
-			this.comboBoxEbHandleBehaviour.Name = "comboBoxEbHandleBehaviour";
-			this.comboBoxEbHandleBehaviour.Size = new System.Drawing.Size(216, 20);
-			this.comboBoxEbHandleBehaviour.TabIndex = 13;
-			// 
-			// labelLocoBrakeHandleType
-			// 
-			this.labelLocoBrakeHandleType.Location = new System.Drawing.Point(8, 184);
-			this.labelLocoBrakeHandleType.Name = "labelLocoBrakeHandleType";
-			this.labelLocoBrakeHandleType.Size = new System.Drawing.Size(176, 16);
-			this.labelLocoBrakeHandleType.TabIndex = 14;
-			this.labelLocoBrakeHandleType.Text = "LocoBrakeHandleType:";
-			this.labelLocoBrakeHandleType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// comboBoxLocoBrakeHandleType
-			// 
-			this.comboBoxLocoBrakeHandleType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxLocoBrakeHandleType.FormattingEnabled = true;
-			this.comboBoxLocoBrakeHandleType.Items.AddRange(new object[] {
-            "Combined",
-            "Independant",
-            "Blocking"});
-			this.comboBoxLocoBrakeHandleType.Location = new System.Drawing.Point(192, 184);
-			this.comboBoxLocoBrakeHandleType.Name = "comboBoxLocoBrakeHandleType";
-			this.comboBoxLocoBrakeHandleType.Size = new System.Drawing.Size(216, 20);
-			this.comboBoxLocoBrakeHandleType.TabIndex = 15;
-			// 
-			// labelLocoBrakeNotches
-			// 
-			this.labelLocoBrakeNotches.Location = new System.Drawing.Point(8, 208);
-			this.labelLocoBrakeNotches.Name = "labelLocoBrakeNotches";
-			this.labelLocoBrakeNotches.Size = new System.Drawing.Size(176, 16);
-			this.labelLocoBrakeNotches.TabIndex = 16;
-			this.labelLocoBrakeNotches.Text = "LocoBrakeNotches:";
-			this.labelLocoBrakeNotches.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// numericUpDownLocoBrakeNotches
-			// 
-			this.numericUpDownLocoBrakeNotches.Location = new System.Drawing.Point(192, 208);
-			this.numericUpDownLocoBrakeNotches.Name = "numericUpDownLocoBrakeNotches";
-			this.numericUpDownLocoBrakeNotches.Size = new System.Drawing.Size(216, 19);
-			this.numericUpDownLocoBrakeNotches.TabIndex = 17;
-			// 
-			// groupBoxCab
-			// 
-			this.groupBoxCab.Controls.Add(this.comboBoxDriverCar);
-			this.groupBoxCab.Controls.Add(this.labelCabZUnit);
-			this.groupBoxCab.Controls.Add(this.textBoxCabZ);
-			this.groupBoxCab.Controls.Add(this.labelCabYUnit);
-			this.groupBoxCab.Controls.Add(this.textBoxCabY);
-			this.groupBoxCab.Controls.Add(this.labelCabXUnit);
-			this.groupBoxCab.Controls.Add(this.textBoxCabX);
-			this.groupBoxCab.Controls.Add(this.labelDriverCar);
-			this.groupBoxCab.Controls.Add(this.labelCabZ);
-			this.groupBoxCab.Controls.Add(this.labelCabY);
-			this.groupBoxCab.Controls.Add(this.labelCabX);
-			this.groupBoxCab.Location = new System.Drawing.Point(8, 256);
-			this.groupBoxCab.Name = "groupBoxCab";
-			this.groupBoxCab.Size = new System.Drawing.Size(416, 120);
-			this.groupBoxCab.TabIndex = 1;
-			this.groupBoxCab.TabStop = false;
-			this.groupBoxCab.Text = "Cab";
-			// 
-			// labelCabX
-			// 
-			this.labelCabX.Location = new System.Drawing.Point(8, 16);
-			this.labelCabX.Name = "labelCabX";
-			this.labelCabX.Size = new System.Drawing.Size(176, 16);
-			this.labelCabX.TabIndex = 0;
-			this.labelCabX.Text = "X:";
-			this.labelCabX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelCabY
-			// 
-			this.labelCabY.Location = new System.Drawing.Point(8, 40);
-			this.labelCabY.Name = "labelCabY";
-			this.labelCabY.Size = new System.Drawing.Size(176, 16);
-			this.labelCabY.TabIndex = 1;
-			this.labelCabY.Text = "Y:";
-			this.labelCabY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelCabZ
-			// 
-			this.labelCabZ.Location = new System.Drawing.Point(8, 64);
-			this.labelCabZ.Name = "labelCabZ";
-			this.labelCabZ.Size = new System.Drawing.Size(176, 16);
-			this.labelCabZ.TabIndex = 2;
-			this.labelCabZ.Text = "Z:";
-			this.labelCabZ.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelDriverCar
-			// 
-			this.labelDriverCar.Location = new System.Drawing.Point(8, 88);
-			this.labelDriverCar.Name = "labelDriverCar";
-			this.labelDriverCar.Size = new System.Drawing.Size(176, 16);
-			this.labelDriverCar.TabIndex = 3;
-			this.labelDriverCar.Text = "DriverCar:";
-			this.labelDriverCar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// textBoxCabX
-			// 
-			this.textBoxCabX.Location = new System.Drawing.Point(192, 16);
-			this.textBoxCabX.Name = "textBoxCabX";
-			this.textBoxCabX.Size = new System.Drawing.Size(184, 19);
-			this.textBoxCabX.TabIndex = 4;
-			// 
-			// labelCabXUnit
-			// 
-			this.labelCabXUnit.Location = new System.Drawing.Point(384, 16);
-			this.labelCabXUnit.Name = "labelCabXUnit";
-			this.labelCabXUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelCabXUnit.TabIndex = 5;
-			this.labelCabXUnit.Text = "mm";
-			this.labelCabXUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textBoxCabY
-			// 
-			this.textBoxCabY.Location = new System.Drawing.Point(192, 40);
-			this.textBoxCabY.Name = "textBoxCabY";
-			this.textBoxCabY.Size = new System.Drawing.Size(184, 19);
-			this.textBoxCabY.TabIndex = 6;
-			// 
-			// labelCabYUnit
-			// 
-			this.labelCabYUnit.Location = new System.Drawing.Point(384, 40);
-			this.labelCabYUnit.Name = "labelCabYUnit";
-			this.labelCabYUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelCabYUnit.TabIndex = 7;
-			this.labelCabYUnit.Text = "mm";
-			this.labelCabYUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// textBoxCabZ
-			// 
-			this.textBoxCabZ.Location = new System.Drawing.Point(192, 64);
-			this.textBoxCabZ.Name = "textBoxCabZ";
-			this.textBoxCabZ.Size = new System.Drawing.Size(184, 19);
-			this.textBoxCabZ.TabIndex = 8;
-			// 
-			// labelCabZUnit
-			// 
-			this.labelCabZUnit.Location = new System.Drawing.Point(384, 64);
-			this.labelCabZUnit.Name = "labelCabZUnit";
-			this.labelCabZUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelCabZUnit.TabIndex = 9;
-			this.labelCabZUnit.Text = "mm";
-			this.labelCabZUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// comboBoxDriverCar
-			// 
-			this.comboBoxDriverCar.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxDriverCar.FormattingEnabled = true;
-			this.comboBoxDriverCar.Location = new System.Drawing.Point(192, 88);
-			this.comboBoxDriverCar.Name = "comboBoxDriverCar";
-			this.comboBoxDriverCar.Size = new System.Drawing.Size(184, 20);
-			this.comboBoxDriverCar.TabIndex = 10;
 			// 
 			// groupBoxDevice
 			// 
@@ -6372,136 +6096,44 @@ namespace TrainEditor2.Views
 			this.groupBoxDevice.TabStop = false;
 			this.groupBoxDevice.Text = "Device";
 			// 
-			// labelAts
+			// comboBoxDoorCloseMode
 			// 
-			this.labelAts.Location = new System.Drawing.Point(8, 16);
-			this.labelAts.Name = "labelAts";
-			this.labelAts.Size = new System.Drawing.Size(112, 16);
-			this.labelAts.TabIndex = 0;
-			this.labelAts.Text = "Ats:";
-			this.labelAts.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.comboBoxDoorCloseMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxDoorCloseMode.FormattingEnabled = true;
+			this.comboBoxDoorCloseMode.Items.AddRange(new object[] {
+            "Semi-automatic",
+            "Automatic",
+            "Manual"});
+			this.comboBoxDoorCloseMode.Location = new System.Drawing.Point(128, 208);
+			this.comboBoxDoorCloseMode.Name = "comboBoxDoorCloseMode";
+			this.comboBoxDoorCloseMode.Size = new System.Drawing.Size(168, 20);
+			this.comboBoxDoorCloseMode.TabIndex = 19;
 			// 
-			// labelAtc
+			// comboBoxDoorOpenMode
 			// 
-			this.labelAtc.Location = new System.Drawing.Point(8, 40);
-			this.labelAtc.Name = "labelAtc";
-			this.labelAtc.Size = new System.Drawing.Size(112, 16);
-			this.labelAtc.TabIndex = 1;
-			this.labelAtc.Text = "Atc:";
-			this.labelAtc.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.comboBoxDoorOpenMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxDoorOpenMode.FormattingEnabled = true;
+			this.comboBoxDoorOpenMode.Items.AddRange(new object[] {
+            "Semi-automatic",
+            "Automatic",
+            "Manual"});
+			this.comboBoxDoorOpenMode.Location = new System.Drawing.Point(128, 184);
+			this.comboBoxDoorOpenMode.Name = "comboBoxDoorOpenMode";
+			this.comboBoxDoorOpenMode.Size = new System.Drawing.Size(168, 20);
+			this.comboBoxDoorOpenMode.TabIndex = 18;
 			// 
-			// labelEb
+			// comboBoxPassAlarm
 			// 
-			this.labelEb.Location = new System.Drawing.Point(8, 64);
-			this.labelEb.Name = "labelEb";
-			this.labelEb.Size = new System.Drawing.Size(112, 16);
-			this.labelEb.TabIndex = 2;
-			this.labelEb.Text = "Eb:";
-			this.labelEb.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelConstSpeed
-			// 
-			this.labelConstSpeed.Location = new System.Drawing.Point(8, 88);
-			this.labelConstSpeed.Name = "labelConstSpeed";
-			this.labelConstSpeed.Size = new System.Drawing.Size(112, 16);
-			this.labelConstSpeed.TabIndex = 3;
-			this.labelConstSpeed.Text = "ConstSpeed:";
-			this.labelConstSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelHoldBrake
-			// 
-			this.labelHoldBrake.Location = new System.Drawing.Point(8, 112);
-			this.labelHoldBrake.Name = "labelHoldBrake";
-			this.labelHoldBrake.Size = new System.Drawing.Size(112, 16);
-			this.labelHoldBrake.TabIndex = 4;
-			this.labelHoldBrake.Text = "HoldBrake:";
-			this.labelHoldBrake.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelReAdhesionDevice
-			// 
-			this.labelReAdhesionDevice.Location = new System.Drawing.Point(8, 136);
-			this.labelReAdhesionDevice.Name = "labelReAdhesionDevice";
-			this.labelReAdhesionDevice.Size = new System.Drawing.Size(112, 16);
-			this.labelReAdhesionDevice.TabIndex = 5;
-			this.labelReAdhesionDevice.Text = "ReAdhesionDevice:";
-			this.labelReAdhesionDevice.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelPassAlarm
-			// 
-			this.labelPassAlarm.Location = new System.Drawing.Point(8, 160);
-			this.labelPassAlarm.Name = "labelPassAlarm";
-			this.labelPassAlarm.Size = new System.Drawing.Size(112, 16);
-			this.labelPassAlarm.TabIndex = 6;
-			this.labelPassAlarm.Text = "PassAlarm:";
-			this.labelPassAlarm.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelDoorOpenMode
-			// 
-			this.labelDoorOpenMode.Location = new System.Drawing.Point(8, 184);
-			this.labelDoorOpenMode.Name = "labelDoorOpenMode";
-			this.labelDoorOpenMode.Size = new System.Drawing.Size(112, 16);
-			this.labelDoorOpenMode.TabIndex = 7;
-			this.labelDoorOpenMode.Text = "DoorOpenMode:";
-			this.labelDoorOpenMode.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelDoorCloseMode
-			// 
-			this.labelDoorCloseMode.Location = new System.Drawing.Point(8, 208);
-			this.labelDoorCloseMode.Name = "labelDoorCloseMode";
-			this.labelDoorCloseMode.Size = new System.Drawing.Size(112, 16);
-			this.labelDoorCloseMode.TabIndex = 8;
-			this.labelDoorCloseMode.Text = "DoorCloseMode:";
-			this.labelDoorCloseMode.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// checkBoxConstSpeed
-			// 
-			this.checkBoxConstSpeed.Location = new System.Drawing.Point(128, 88);
-			this.checkBoxConstSpeed.Name = "checkBoxConstSpeed";
-			this.checkBoxConstSpeed.Size = new System.Drawing.Size(168, 16);
-			this.checkBoxConstSpeed.TabIndex = 11;
-			this.checkBoxConstSpeed.UseVisualStyleBackColor = true;
-			// 
-			// checkBoxEb
-			// 
-			this.checkBoxEb.Location = new System.Drawing.Point(128, 64);
-			this.checkBoxEb.Name = "checkBoxEb";
-			this.checkBoxEb.Size = new System.Drawing.Size(168, 16);
-			this.checkBoxEb.TabIndex = 12;
-			this.checkBoxEb.UseVisualStyleBackColor = true;
-			// 
-			// checkBoxHoldBrake
-			// 
-			this.checkBoxHoldBrake.Location = new System.Drawing.Point(128, 112);
-			this.checkBoxHoldBrake.Name = "checkBoxHoldBrake";
-			this.checkBoxHoldBrake.Size = new System.Drawing.Size(168, 16);
-			this.checkBoxHoldBrake.TabIndex = 13;
-			this.checkBoxHoldBrake.UseVisualStyleBackColor = true;
-			// 
-			// comboBoxAts
-			// 
-			this.comboBoxAts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxAts.FormattingEnabled = true;
-			this.comboBoxAts.Items.AddRange(new object[] {
+			this.comboBoxPassAlarm.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxPassAlarm.FormattingEnabled = true;
+			this.comboBoxPassAlarm.Items.AddRange(new object[] {
             "None",
-            "ATS-SN",
-            "ATS-SN / ATS-P"});
-			this.comboBoxAts.Location = new System.Drawing.Point(128, 16);
-			this.comboBoxAts.Name = "comboBoxAts";
-			this.comboBoxAts.Size = new System.Drawing.Size(168, 20);
-			this.comboBoxAts.TabIndex = 14;
-			// 
-			// comboBoxAtc
-			// 
-			this.comboBoxAtc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxAtc.FormattingEnabled = true;
-			this.comboBoxAtc.Items.AddRange(new object[] {
-            "None",
-            "Manual switching",
-            "Automatic switching"});
-			this.comboBoxAtc.Location = new System.Drawing.Point(128, 40);
-			this.comboBoxAtc.Name = "comboBoxAtc";
-			this.comboBoxAtc.Size = new System.Drawing.Size(168, 20);
-			this.comboBoxAtc.TabIndex = 15;
+            "Single",
+            "Looping"});
+			this.comboBoxPassAlarm.Location = new System.Drawing.Point(128, 160);
+			this.comboBoxPassAlarm.Name = "comboBoxPassAlarm";
+			this.comboBoxPassAlarm.Size = new System.Drawing.Size(168, 20);
+			this.comboBoxPassAlarm.TabIndex = 17;
 			// 
 			// comboBoxReAdhesionDevice
 			// 
@@ -6518,44 +6150,438 @@ namespace TrainEditor2.Views
 			this.comboBoxReAdhesionDevice.Size = new System.Drawing.Size(168, 20);
 			this.comboBoxReAdhesionDevice.TabIndex = 16;
 			// 
-			// comboBoxPassAlarm
+			// comboBoxAtc
 			// 
-			this.comboBoxPassAlarm.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxPassAlarm.FormattingEnabled = true;
-			this.comboBoxPassAlarm.Items.AddRange(new object[] {
+			this.comboBoxAtc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxAtc.FormattingEnabled = true;
+			this.comboBoxAtc.Items.AddRange(new object[] {
             "None",
-            "Single",
-            "Looping"});
-			this.comboBoxPassAlarm.Location = new System.Drawing.Point(128, 160);
-			this.comboBoxPassAlarm.Name = "comboBoxPassAlarm";
-			this.comboBoxPassAlarm.Size = new System.Drawing.Size(168, 20);
-			this.comboBoxPassAlarm.TabIndex = 17;
+            "Manual switching",
+            "Automatic switching"});
+			this.comboBoxAtc.Location = new System.Drawing.Point(128, 40);
+			this.comboBoxAtc.Name = "comboBoxAtc";
+			this.comboBoxAtc.Size = new System.Drawing.Size(168, 20);
+			this.comboBoxAtc.TabIndex = 15;
 			// 
-			// comboBoxDoorOpenMode
+			// comboBoxAts
 			// 
-			this.comboBoxDoorOpenMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxDoorOpenMode.FormattingEnabled = true;
-			this.comboBoxDoorOpenMode.Items.AddRange(new object[] {
-            "Semi-automatic",
-            "Automatic",
-            "Manual"});
-			this.comboBoxDoorOpenMode.Location = new System.Drawing.Point(128, 184);
-			this.comboBoxDoorOpenMode.Name = "comboBoxDoorOpenMode";
-			this.comboBoxDoorOpenMode.Size = new System.Drawing.Size(168, 20);
-			this.comboBoxDoorOpenMode.TabIndex = 18;
+			this.comboBoxAts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxAts.FormattingEnabled = true;
+			this.comboBoxAts.Items.AddRange(new object[] {
+            "None",
+            "ATS-SN",
+            "ATS-SN / ATS-P"});
+			this.comboBoxAts.Location = new System.Drawing.Point(128, 16);
+			this.comboBoxAts.Name = "comboBoxAts";
+			this.comboBoxAts.Size = new System.Drawing.Size(168, 20);
+			this.comboBoxAts.TabIndex = 14;
 			// 
-			// comboBoxDoorCloseMode
+			// checkBoxHoldBrake
 			// 
-			this.comboBoxDoorCloseMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxDoorCloseMode.FormattingEnabled = true;
-			this.comboBoxDoorCloseMode.Items.AddRange(new object[] {
-            "Semi-automatic",
-            "Automatic",
-            "Manual"});
-			this.comboBoxDoorCloseMode.Location = new System.Drawing.Point(128, 208);
-			this.comboBoxDoorCloseMode.Name = "comboBoxDoorCloseMode";
-			this.comboBoxDoorCloseMode.Size = new System.Drawing.Size(168, 20);
-			this.comboBoxDoorCloseMode.TabIndex = 19;
+			this.checkBoxHoldBrake.Location = new System.Drawing.Point(128, 112);
+			this.checkBoxHoldBrake.Name = "checkBoxHoldBrake";
+			this.checkBoxHoldBrake.Size = new System.Drawing.Size(168, 16);
+			this.checkBoxHoldBrake.TabIndex = 13;
+			this.checkBoxHoldBrake.UseVisualStyleBackColor = true;
+			// 
+			// checkBoxEb
+			// 
+			this.checkBoxEb.Location = new System.Drawing.Point(128, 64);
+			this.checkBoxEb.Name = "checkBoxEb";
+			this.checkBoxEb.Size = new System.Drawing.Size(168, 16);
+			this.checkBoxEb.TabIndex = 12;
+			this.checkBoxEb.UseVisualStyleBackColor = true;
+			// 
+			// checkBoxConstSpeed
+			// 
+			this.checkBoxConstSpeed.Location = new System.Drawing.Point(128, 88);
+			this.checkBoxConstSpeed.Name = "checkBoxConstSpeed";
+			this.checkBoxConstSpeed.Size = new System.Drawing.Size(168, 16);
+			this.checkBoxConstSpeed.TabIndex = 11;
+			this.checkBoxConstSpeed.UseVisualStyleBackColor = true;
+			// 
+			// labelDoorCloseMode
+			// 
+			this.labelDoorCloseMode.Location = new System.Drawing.Point(8, 208);
+			this.labelDoorCloseMode.Name = "labelDoorCloseMode";
+			this.labelDoorCloseMode.Size = new System.Drawing.Size(112, 16);
+			this.labelDoorCloseMode.TabIndex = 8;
+			this.labelDoorCloseMode.Text = "DoorCloseMode:";
+			this.labelDoorCloseMode.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelDoorOpenMode
+			// 
+			this.labelDoorOpenMode.Location = new System.Drawing.Point(8, 184);
+			this.labelDoorOpenMode.Name = "labelDoorOpenMode";
+			this.labelDoorOpenMode.Size = new System.Drawing.Size(112, 16);
+			this.labelDoorOpenMode.TabIndex = 7;
+			this.labelDoorOpenMode.Text = "DoorOpenMode:";
+			this.labelDoorOpenMode.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelPassAlarm
+			// 
+			this.labelPassAlarm.Location = new System.Drawing.Point(8, 160);
+			this.labelPassAlarm.Name = "labelPassAlarm";
+			this.labelPassAlarm.Size = new System.Drawing.Size(112, 16);
+			this.labelPassAlarm.TabIndex = 6;
+			this.labelPassAlarm.Text = "PassAlarm:";
+			this.labelPassAlarm.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelReAdhesionDevice
+			// 
+			this.labelReAdhesionDevice.Location = new System.Drawing.Point(8, 136);
+			this.labelReAdhesionDevice.Name = "labelReAdhesionDevice";
+			this.labelReAdhesionDevice.Size = new System.Drawing.Size(112, 16);
+			this.labelReAdhesionDevice.TabIndex = 5;
+			this.labelReAdhesionDevice.Text = "ReAdhesionDevice:";
+			this.labelReAdhesionDevice.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelHoldBrake
+			// 
+			this.labelHoldBrake.Location = new System.Drawing.Point(8, 112);
+			this.labelHoldBrake.Name = "labelHoldBrake";
+			this.labelHoldBrake.Size = new System.Drawing.Size(112, 16);
+			this.labelHoldBrake.TabIndex = 4;
+			this.labelHoldBrake.Text = "HoldBrake:";
+			this.labelHoldBrake.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelConstSpeed
+			// 
+			this.labelConstSpeed.Location = new System.Drawing.Point(8, 88);
+			this.labelConstSpeed.Name = "labelConstSpeed";
+			this.labelConstSpeed.Size = new System.Drawing.Size(112, 16);
+			this.labelConstSpeed.TabIndex = 3;
+			this.labelConstSpeed.Text = "ConstSpeed:";
+			this.labelConstSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelEb
+			// 
+			this.labelEb.Location = new System.Drawing.Point(8, 64);
+			this.labelEb.Name = "labelEb";
+			this.labelEb.Size = new System.Drawing.Size(112, 16);
+			this.labelEb.TabIndex = 2;
+			this.labelEb.Text = "Eb:";
+			this.labelEb.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelAtc
+			// 
+			this.labelAtc.Location = new System.Drawing.Point(8, 40);
+			this.labelAtc.Name = "labelAtc";
+			this.labelAtc.Size = new System.Drawing.Size(112, 16);
+			this.labelAtc.TabIndex = 1;
+			this.labelAtc.Text = "Atc:";
+			this.labelAtc.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelAts
+			// 
+			this.labelAts.Location = new System.Drawing.Point(8, 16);
+			this.labelAts.Name = "labelAts";
+			this.labelAts.Size = new System.Drawing.Size(112, 16);
+			this.labelAts.TabIndex = 0;
+			this.labelAts.Text = "Ats:";
+			this.labelAts.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// groupBoxCab
+			// 
+			this.groupBoxCab.Controls.Add(this.comboBoxDriverCar);
+			this.groupBoxCab.Controls.Add(this.labelCabZUnit);
+			this.groupBoxCab.Controls.Add(this.textBoxCabZ);
+			this.groupBoxCab.Controls.Add(this.labelCabYUnit);
+			this.groupBoxCab.Controls.Add(this.textBoxCabY);
+			this.groupBoxCab.Controls.Add(this.labelCabXUnit);
+			this.groupBoxCab.Controls.Add(this.textBoxCabX);
+			this.groupBoxCab.Controls.Add(this.labelDriverCar);
+			this.groupBoxCab.Controls.Add(this.labelCabZ);
+			this.groupBoxCab.Controls.Add(this.labelCabY);
+			this.groupBoxCab.Controls.Add(this.labelCabX);
+			this.groupBoxCab.Location = new System.Drawing.Point(8, 256);
+			this.groupBoxCab.Name = "groupBoxCab";
+			this.groupBoxCab.Size = new System.Drawing.Size(416, 120);
+			this.groupBoxCab.TabIndex = 1;
+			this.groupBoxCab.TabStop = false;
+			this.groupBoxCab.Text = "Cab";
+			// 
+			// comboBoxDriverCar
+			// 
+			this.comboBoxDriverCar.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxDriverCar.FormattingEnabled = true;
+			this.comboBoxDriverCar.Location = new System.Drawing.Point(192, 88);
+			this.comboBoxDriverCar.Name = "comboBoxDriverCar";
+			this.comboBoxDriverCar.Size = new System.Drawing.Size(184, 20);
+			this.comboBoxDriverCar.TabIndex = 10;
+			// 
+			// labelCabZUnit
+			// 
+			this.labelCabZUnit.Location = new System.Drawing.Point(384, 64);
+			this.labelCabZUnit.Name = "labelCabZUnit";
+			this.labelCabZUnit.Size = new System.Drawing.Size(24, 16);
+			this.labelCabZUnit.TabIndex = 9;
+			this.labelCabZUnit.Text = "mm";
+			this.labelCabZUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// textBoxCabZ
+			// 
+			this.textBoxCabZ.Location = new System.Drawing.Point(192, 64);
+			this.textBoxCabZ.Name = "textBoxCabZ";
+			this.textBoxCabZ.Size = new System.Drawing.Size(184, 19);
+			this.textBoxCabZ.TabIndex = 8;
+			// 
+			// labelCabYUnit
+			// 
+			this.labelCabYUnit.Location = new System.Drawing.Point(384, 40);
+			this.labelCabYUnit.Name = "labelCabYUnit";
+			this.labelCabYUnit.Size = new System.Drawing.Size(24, 16);
+			this.labelCabYUnit.TabIndex = 7;
+			this.labelCabYUnit.Text = "mm";
+			this.labelCabYUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// textBoxCabY
+			// 
+			this.textBoxCabY.Location = new System.Drawing.Point(192, 40);
+			this.textBoxCabY.Name = "textBoxCabY";
+			this.textBoxCabY.Size = new System.Drawing.Size(184, 19);
+			this.textBoxCabY.TabIndex = 6;
+			// 
+			// labelCabXUnit
+			// 
+			this.labelCabXUnit.Location = new System.Drawing.Point(384, 16);
+			this.labelCabXUnit.Name = "labelCabXUnit";
+			this.labelCabXUnit.Size = new System.Drawing.Size(24, 16);
+			this.labelCabXUnit.TabIndex = 5;
+			this.labelCabXUnit.Text = "mm";
+			this.labelCabXUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// textBoxCabX
+			// 
+			this.textBoxCabX.Location = new System.Drawing.Point(192, 16);
+			this.textBoxCabX.Name = "textBoxCabX";
+			this.textBoxCabX.Size = new System.Drawing.Size(184, 19);
+			this.textBoxCabX.TabIndex = 4;
+			// 
+			// labelDriverCar
+			// 
+			this.labelDriverCar.Location = new System.Drawing.Point(8, 88);
+			this.labelDriverCar.Name = "labelDriverCar";
+			this.labelDriverCar.Size = new System.Drawing.Size(176, 16);
+			this.labelDriverCar.TabIndex = 3;
+			this.labelDriverCar.Text = "DriverCar:";
+			this.labelDriverCar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelCabZ
+			// 
+			this.labelCabZ.Location = new System.Drawing.Point(8, 64);
+			this.labelCabZ.Name = "labelCabZ";
+			this.labelCabZ.Size = new System.Drawing.Size(176, 16);
+			this.labelCabZ.TabIndex = 2;
+			this.labelCabZ.Text = "Z:";
+			this.labelCabZ.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelCabY
+			// 
+			this.labelCabY.Location = new System.Drawing.Point(8, 40);
+			this.labelCabY.Name = "labelCabY";
+			this.labelCabY.Size = new System.Drawing.Size(176, 16);
+			this.labelCabY.TabIndex = 1;
+			this.labelCabY.Text = "Y:";
+			this.labelCabY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelCabX
+			// 
+			this.labelCabX.Location = new System.Drawing.Point(8, 16);
+			this.labelCabX.Name = "labelCabX";
+			this.labelCabX.Size = new System.Drawing.Size(176, 16);
+			this.labelCabX.TabIndex = 0;
+			this.labelCabX.Text = "X:";
+			this.labelCabX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// groupBoxHandle
+			// 
+			this.groupBoxHandle.Controls.Add(this.numericUpDownLocoBrakeNotches);
+			this.groupBoxHandle.Controls.Add(this.labelLocoBrakeNotches);
+			this.groupBoxHandle.Controls.Add(this.comboBoxLocoBrakeHandleType);
+			this.groupBoxHandle.Controls.Add(this.labelLocoBrakeHandleType);
+			this.groupBoxHandle.Controls.Add(this.comboBoxEbHandleBehaviour);
+			this.groupBoxHandle.Controls.Add(this.labelEbHandleBehaviour);
+			this.groupBoxHandle.Controls.Add(this.numericUpDownDriverBrakeNotches);
+			this.groupBoxHandle.Controls.Add(this.labelDriverBrakeNotches);
+			this.groupBoxHandle.Controls.Add(this.numericUpDownDriverPowerNotches);
+			this.groupBoxHandle.Controls.Add(this.labelDriverPowerNotches);
+			this.groupBoxHandle.Controls.Add(this.numericUpDownPowerNotchReduceSteps);
+			this.groupBoxHandle.Controls.Add(this.labelPowerNotchReduceSteps);
+			this.groupBoxHandle.Controls.Add(this.numericUpDownBrakeNotches);
+			this.groupBoxHandle.Controls.Add(this.labelBrakeNotches);
+			this.groupBoxHandle.Controls.Add(this.numericUpDownPowerNotches);
+			this.groupBoxHandle.Controls.Add(this.labelPowerNotches);
+			this.groupBoxHandle.Controls.Add(this.comboBoxHandleType);
+			this.groupBoxHandle.Controls.Add(this.labelHandleType);
+			this.groupBoxHandle.Location = new System.Drawing.Point(8, 8);
+			this.groupBoxHandle.Name = "groupBoxHandle";
+			this.groupBoxHandle.Size = new System.Drawing.Size(416, 240);
+			this.groupBoxHandle.TabIndex = 0;
+			this.groupBoxHandle.TabStop = false;
+			this.groupBoxHandle.Text = "Handle";
+			// 
+			// numericUpDownLocoBrakeNotches
+			// 
+			this.numericUpDownLocoBrakeNotches.Location = new System.Drawing.Point(192, 208);
+			this.numericUpDownLocoBrakeNotches.Name = "numericUpDownLocoBrakeNotches";
+			this.numericUpDownLocoBrakeNotches.Size = new System.Drawing.Size(216, 19);
+			this.numericUpDownLocoBrakeNotches.TabIndex = 17;
+			// 
+			// labelLocoBrakeNotches
+			// 
+			this.labelLocoBrakeNotches.Location = new System.Drawing.Point(8, 208);
+			this.labelLocoBrakeNotches.Name = "labelLocoBrakeNotches";
+			this.labelLocoBrakeNotches.Size = new System.Drawing.Size(176, 16);
+			this.labelLocoBrakeNotches.TabIndex = 16;
+			this.labelLocoBrakeNotches.Text = "LocoBrakeNotches:";
+			this.labelLocoBrakeNotches.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// comboBoxLocoBrakeHandleType
+			// 
+			this.comboBoxLocoBrakeHandleType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxLocoBrakeHandleType.FormattingEnabled = true;
+			this.comboBoxLocoBrakeHandleType.Items.AddRange(new object[] {
+            "Combined",
+            "Independant",
+            "Blocking"});
+			this.comboBoxLocoBrakeHandleType.Location = new System.Drawing.Point(192, 184);
+			this.comboBoxLocoBrakeHandleType.Name = "comboBoxLocoBrakeHandleType";
+			this.comboBoxLocoBrakeHandleType.Size = new System.Drawing.Size(216, 20);
+			this.comboBoxLocoBrakeHandleType.TabIndex = 15;
+			// 
+			// labelLocoBrakeHandleType
+			// 
+			this.labelLocoBrakeHandleType.Location = new System.Drawing.Point(8, 184);
+			this.labelLocoBrakeHandleType.Name = "labelLocoBrakeHandleType";
+			this.labelLocoBrakeHandleType.Size = new System.Drawing.Size(176, 16);
+			this.labelLocoBrakeHandleType.TabIndex = 14;
+			this.labelLocoBrakeHandleType.Text = "LocoBrakeHandleType:";
+			this.labelLocoBrakeHandleType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// comboBoxEbHandleBehaviour
+			// 
+			this.comboBoxEbHandleBehaviour.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxEbHandleBehaviour.FormattingEnabled = true;
+			this.comboBoxEbHandleBehaviour.Items.AddRange(new object[] {
+            "No action",
+            "Return power to neutral",
+            "Return reverser to neutral",
+            "Return power and reverser to neutral"});
+			this.comboBoxEbHandleBehaviour.Location = new System.Drawing.Point(192, 160);
+			this.comboBoxEbHandleBehaviour.Name = "comboBoxEbHandleBehaviour";
+			this.comboBoxEbHandleBehaviour.Size = new System.Drawing.Size(216, 20);
+			this.comboBoxEbHandleBehaviour.TabIndex = 13;
+			// 
+			// labelEbHandleBehaviour
+			// 
+			this.labelEbHandleBehaviour.Location = new System.Drawing.Point(8, 160);
+			this.labelEbHandleBehaviour.Name = "labelEbHandleBehaviour";
+			this.labelEbHandleBehaviour.Size = new System.Drawing.Size(176, 16);
+			this.labelEbHandleBehaviour.TabIndex = 12;
+			this.labelEbHandleBehaviour.Text = "EbHandleBehaviour:";
+			this.labelEbHandleBehaviour.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// numericUpDownDriverBrakeNotches
+			// 
+			this.numericUpDownDriverBrakeNotches.Location = new System.Drawing.Point(192, 136);
+			this.numericUpDownDriverBrakeNotches.Name = "numericUpDownDriverBrakeNotches";
+			this.numericUpDownDriverBrakeNotches.Size = new System.Drawing.Size(216, 19);
+			this.numericUpDownDriverBrakeNotches.TabIndex = 11;
+			// 
+			// labelDriverBrakeNotches
+			// 
+			this.labelDriverBrakeNotches.Location = new System.Drawing.Point(8, 136);
+			this.labelDriverBrakeNotches.Name = "labelDriverBrakeNotches";
+			this.labelDriverBrakeNotches.Size = new System.Drawing.Size(176, 16);
+			this.labelDriverBrakeNotches.TabIndex = 10;
+			this.labelDriverBrakeNotches.Text = "DriverBrakeNotches:";
+			this.labelDriverBrakeNotches.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// numericUpDownDriverPowerNotches
+			// 
+			this.numericUpDownDriverPowerNotches.Location = new System.Drawing.Point(192, 112);
+			this.numericUpDownDriverPowerNotches.Name = "numericUpDownDriverPowerNotches";
+			this.numericUpDownDriverPowerNotches.Size = new System.Drawing.Size(216, 19);
+			this.numericUpDownDriverPowerNotches.TabIndex = 9;
+			// 
+			// labelDriverPowerNotches
+			// 
+			this.labelDriverPowerNotches.Location = new System.Drawing.Point(8, 112);
+			this.labelDriverPowerNotches.Name = "labelDriverPowerNotches";
+			this.labelDriverPowerNotches.Size = new System.Drawing.Size(176, 16);
+			this.labelDriverPowerNotches.TabIndex = 8;
+			this.labelDriverPowerNotches.Text = "DriverPowerNotches:";
+			this.labelDriverPowerNotches.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// numericUpDownPowerNotchReduceSteps
+			// 
+			this.numericUpDownPowerNotchReduceSteps.Location = new System.Drawing.Point(192, 88);
+			this.numericUpDownPowerNotchReduceSteps.Name = "numericUpDownPowerNotchReduceSteps";
+			this.numericUpDownPowerNotchReduceSteps.Size = new System.Drawing.Size(216, 19);
+			this.numericUpDownPowerNotchReduceSteps.TabIndex = 7;
+			// 
+			// labelPowerNotchReduceSteps
+			// 
+			this.labelPowerNotchReduceSteps.Location = new System.Drawing.Point(8, 88);
+			this.labelPowerNotchReduceSteps.Name = "labelPowerNotchReduceSteps";
+			this.labelPowerNotchReduceSteps.Size = new System.Drawing.Size(176, 16);
+			this.labelPowerNotchReduceSteps.TabIndex = 6;
+			this.labelPowerNotchReduceSteps.Text = "PowerNotchReduceSteps:";
+			this.labelPowerNotchReduceSteps.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// numericUpDownBrakeNotches
+			// 
+			this.numericUpDownBrakeNotches.Location = new System.Drawing.Point(192, 64);
+			this.numericUpDownBrakeNotches.Name = "numericUpDownBrakeNotches";
+			this.numericUpDownBrakeNotches.Size = new System.Drawing.Size(216, 19);
+			this.numericUpDownBrakeNotches.TabIndex = 5;
+			// 
+			// labelBrakeNotches
+			// 
+			this.labelBrakeNotches.Location = new System.Drawing.Point(8, 64);
+			this.labelBrakeNotches.Name = "labelBrakeNotches";
+			this.labelBrakeNotches.Size = new System.Drawing.Size(176, 16);
+			this.labelBrakeNotches.TabIndex = 4;
+			this.labelBrakeNotches.Text = "BrakeNotches:";
+			this.labelBrakeNotches.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// numericUpDownPowerNotches
+			// 
+			this.numericUpDownPowerNotches.Location = new System.Drawing.Point(192, 40);
+			this.numericUpDownPowerNotches.Name = "numericUpDownPowerNotches";
+			this.numericUpDownPowerNotches.Size = new System.Drawing.Size(216, 19);
+			this.numericUpDownPowerNotches.TabIndex = 3;
+			// 
+			// labelPowerNotches
+			// 
+			this.labelPowerNotches.Location = new System.Drawing.Point(8, 40);
+			this.labelPowerNotches.Name = "labelPowerNotches";
+			this.labelPowerNotches.Size = new System.Drawing.Size(176, 16);
+			this.labelPowerNotches.TabIndex = 2;
+			this.labelPowerNotches.Text = "PowerNotches:";
+			this.labelPowerNotches.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// comboBoxHandleType
+			// 
+			this.comboBoxHandleType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxHandleType.FormattingEnabled = true;
+			this.comboBoxHandleType.Items.AddRange(new object[] {
+            "Separated",
+            "Combined"});
+			this.comboBoxHandleType.Location = new System.Drawing.Point(192, 16);
+			this.comboBoxHandleType.Name = "comboBoxHandleType";
+			this.comboBoxHandleType.Size = new System.Drawing.Size(216, 20);
+			this.comboBoxHandleType.TabIndex = 1;
+			// 
+			// labelHandleType
+			// 
+			this.labelHandleType.Location = new System.Drawing.Point(8, 16);
+			this.labelHandleType.Name = "labelHandleType";
+			this.labelHandleType.Size = new System.Drawing.Size(176, 16);
+			this.labelHandleType.TabIndex = 0;
+			this.labelHandleType.Text = "HandleType:";
+			this.labelHandleType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// tabControlEditor
 			// 
@@ -6574,6 +6600,24 @@ namespace TrainEditor2.Views
 			this.tabControlEditor.SelectedIndex = 0;
 			this.tabControlEditor.Size = new System.Drawing.Size(800, 696);
 			this.tabControlEditor.TabIndex = 9;
+			// 
+			// buttonSoundUp
+			// 
+			this.buttonSoundUp.Location = new System.Drawing.Point(8, 304);
+			this.buttonSoundUp.Name = "buttonSoundUp";
+			this.buttonSoundUp.Size = new System.Drawing.Size(56, 24);
+			this.buttonSoundUp.TabIndex = 5;
+			this.buttonSoundUp.Text = "Up";
+			this.buttonSoundUp.UseVisualStyleBackColor = true;
+			// 
+			// buttonSoundDown
+			// 
+			this.buttonSoundDown.Location = new System.Drawing.Point(8, 336);
+			this.buttonSoundDown.Name = "buttonSoundDown";
+			this.buttonSoundDown.Size = new System.Drawing.Size(56, 24);
+			this.buttonSoundDown.TabIndex = 6;
+			this.buttonSoundDown.Text = "Down";
+			this.buttonSoundDown.UseVisualStyleBackColor = true;
 			// 
 			// FormEditor
 			// 
@@ -6599,85 +6643,85 @@ namespace TrainEditor2.Views
 			((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
 			this.tabPageStatus.ResumeLayout(false);
 			this.tabPageStatus.PerformLayout();
+			this.panelStatusNavi.ResumeLayout(false);
 			this.menuStripStatus.ResumeLayout(false);
 			this.menuStripStatus.PerformLayout();
-			this.panelStatusNavi.ResumeLayout(false);
 			this.tabPageSound.ResumeLayout(false);
 			this.panelSoundSetting.ResumeLayout(false);
-			this.panelSoundSettingEdit.ResumeLayout(false);
-			this.groupBoxSoundEntry.ResumeLayout(false);
-			this.groupBoxSoundValue.ResumeLayout(false);
-			this.groupBoxSoundValue.PerformLayout();
-			this.groupBoxSoundPosition.ResumeLayout(false);
-			this.groupBoxSoundPosition.PerformLayout();
-			this.groupBoxSoundKey.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownSoundKeyIndex)).EndInit();
 			this.splitContainerSound.Panel1.ResumeLayout(false);
 			this.splitContainerSound.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainerSound)).EndInit();
 			this.splitContainerSound.ResumeLayout(false);
+			this.panelSoundSettingEdit.ResumeLayout(false);
+			this.groupBoxSoundEntry.ResumeLayout(false);
+			this.groupBoxSoundKey.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownSoundKeyIndex)).EndInit();
+			this.groupBoxSoundValue.ResumeLayout(false);
+			this.groupBoxSoundValue.PerformLayout();
+			this.groupBoxSoundPosition.ResumeLayout(false);
+			this.groupBoxSoundPosition.PerformLayout();
 			this.tabPagePanel.ResumeLayout(false);
-			this.tabControlPanel.ResumeLayout(false);
-			this.tabPageTouch.ResumeLayout(false);
-			this.groupBoxTouchLocation.ResumeLayout(false);
-			this.groupBoxTouchLocation.PerformLayout();
-			this.groupBoxTouchSize.ResumeLayout(false);
-			this.groupBoxTouchSize.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchJumpScreen)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchSoundIndex)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchLayer)).EndInit();
-			this.tabPageTimetable.ResumeLayout(false);
-			this.tabPageTimetable.PerformLayout();
-			this.groupBoxTimetableLocation.ResumeLayout(false);
-			this.groupBoxTimetableLocation.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTimetableLayer)).EndInit();
-			this.tabPageLinearGauge.ResumeLayout(false);
-			this.tabPageLinearGauge.PerformLayout();
-			this.groupBoxLinearGaugeLocation.ResumeLayout(false);
-			this.groupBoxLinearGaugeLocation.PerformLayout();
-			this.groupBoxLinearGaugeDirection.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownLinearGaugeDirectionX)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownLinearGaugeDirectionY)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownLinearGaugeWidth)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownLinearGaugeLayer)).EndInit();
-			this.tabPageDigitalGauge.ResumeLayout(false);
-			this.tabPageDigitalGauge.PerformLayout();
-			this.groupBoxDigitalGaugeLocation.ResumeLayout(false);
-			this.groupBoxDigitalGaugeLocation.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDigitalGaugeLayer)).EndInit();
-			this.tabPageDigitalNumber.ResumeLayout(false);
-			this.tabPageDigitalNumber.PerformLayout();
-			this.groupBoxDigitalNumberLocation.ResumeLayout(false);
-			this.groupBoxDigitalNumberLocation.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDigitalNumberInterval)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDigitalNumberLayer)).EndInit();
-			this.tabPageNeedle.ResumeLayout(false);
-			this.tabPageNeedle.PerformLayout();
-			this.groupBoxNeedleLocation.ResumeLayout(false);
-			this.groupBoxNeedleLocation.PerformLayout();
-			this.groupBoxNeedleOrigin.ResumeLayout(false);
-			this.groupBoxNeedleOrigin.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeedleLayer)).EndInit();
-			this.tabPagePilotLamp.ResumeLayout(false);
-			this.tabPagePilotLamp.PerformLayout();
-			this.groupBoxPilotLampLocation.ResumeLayout(false);
-			this.groupBoxPilotLampLocation.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownPilotLampLayer)).EndInit();
-			this.tabPageScreen.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownScreenNumber)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownScreenLayer)).EndInit();
-			this.tabPageThis.ResumeLayout(false);
-			this.tabPageThis.PerformLayout();
-			this.groupBoxThisCenter.ResumeLayout(false);
-			this.groupBoxThisCenter.PerformLayout();
-			this.groupBoxThisOrigin.ResumeLayout(false);
-			this.groupBoxThisOrigin.PerformLayout();
 			this.splitContainerPanel.Panel1.ResumeLayout(false);
 			this.splitContainerPanel.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainerPanel)).EndInit();
 			this.splitContainerPanel.ResumeLayout(false);
 			this.panelPanelNavi.ResumeLayout(false);
 			this.panelPanelNaviCmd.ResumeLayout(false);
+			this.tabControlPanel.ResumeLayout(false);
+			this.tabPageThis.ResumeLayout(false);
+			this.tabPageThis.PerformLayout();
+			this.groupBoxThisOrigin.ResumeLayout(false);
+			this.groupBoxThisOrigin.PerformLayout();
+			this.groupBoxThisCenter.ResumeLayout(false);
+			this.groupBoxThisCenter.PerformLayout();
+			this.tabPageScreen.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownScreenLayer)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownScreenNumber)).EndInit();
+			this.tabPagePilotLamp.ResumeLayout(false);
+			this.tabPagePilotLamp.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownPilotLampLayer)).EndInit();
+			this.groupBoxPilotLampLocation.ResumeLayout(false);
+			this.groupBoxPilotLampLocation.PerformLayout();
+			this.tabPageNeedle.ResumeLayout(false);
+			this.tabPageNeedle.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeedleLayer)).EndInit();
+			this.groupBoxNeedleOrigin.ResumeLayout(false);
+			this.groupBoxNeedleOrigin.PerformLayout();
+			this.groupBoxNeedleLocation.ResumeLayout(false);
+			this.groupBoxNeedleLocation.PerformLayout();
+			this.tabPageDigitalNumber.ResumeLayout(false);
+			this.tabPageDigitalNumber.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDigitalNumberLayer)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDigitalNumberInterval)).EndInit();
+			this.groupBoxDigitalNumberLocation.ResumeLayout(false);
+			this.groupBoxDigitalNumberLocation.PerformLayout();
+			this.tabPageDigitalGauge.ResumeLayout(false);
+			this.tabPageDigitalGauge.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDigitalGaugeLayer)).EndInit();
+			this.groupBoxDigitalGaugeLocation.ResumeLayout(false);
+			this.groupBoxDigitalGaugeLocation.PerformLayout();
+			this.tabPageLinearGauge.ResumeLayout(false);
+			this.tabPageLinearGauge.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownLinearGaugeLayer)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownLinearGaugeWidth)).EndInit();
+			this.groupBoxLinearGaugeDirection.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownLinearGaugeDirectionY)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownLinearGaugeDirectionX)).EndInit();
+			this.groupBoxLinearGaugeLocation.ResumeLayout(false);
+			this.groupBoxLinearGaugeLocation.PerformLayout();
+			this.tabPageTimetable.ResumeLayout(false);
+			this.tabPageTimetable.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTimetableLayer)).EndInit();
+			this.groupBoxTimetableLocation.ResumeLayout(false);
+			this.groupBoxTimetableLocation.PerformLayout();
+			this.tabPageTouch.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchLayer)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchSoundIndex)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchJumpScreen)).EndInit();
+			this.groupBoxTouchSize.ResumeLayout(false);
+			this.groupBoxTouchSize.PerformLayout();
+			this.groupBoxTouchLocation.ResumeLayout(false);
+			this.groupBoxTouchLocation.PerformLayout();
 			this.tabPageCoupler.ResumeLayout(false);
 			this.groupBoxCouplerGeneral.ResumeLayout(false);
 			this.groupBoxCouplerGeneral.PerformLayout();
@@ -6687,21 +6731,7 @@ namespace TrainEditor2.Views
 			this.splitContainerMotor.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainerMotor)).EndInit();
 			this.splitContainerMotor.ResumeLayout(false);
-			this.statusStripStatus.ResumeLayout(false);
-			this.statusStripStatus.PerformLayout();
-			this.menuStripMotor.ResumeLayout(false);
-			this.menuStripMotor.PerformLayout();
-			this.panelMotorSetting.ResumeLayout(false);
-			this.groupBoxTrack.ResumeLayout(false);
-			this.groupBoxView.ResumeLayout(false);
-			this.groupBoxView.PerformLayout();
-			this.groupBoxDirect.ResumeLayout(false);
-			this.groupBoxDirect.PerformLayout();
-			this.groupBoxPlay.ResumeLayout(false);
-			this.groupBoxSource.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownRunIndex)).EndInit();
-			this.groupBoxArea.ResumeLayout(false);
-			this.groupBoxArea.PerformLayout();
+			this.panelMoterNavi.ResumeLayout(false);
 			this.toolStripContainerDrawArea.ContentPanel.ResumeLayout(false);
 			this.toolStripContainerDrawArea.TopToolStripPanel.ResumeLayout(false);
 			this.toolStripContainerDrawArea.TopToolStripPanel.PerformLayout();
@@ -6709,40 +6739,54 @@ namespace TrainEditor2.Views
 			this.toolStripContainerDrawArea.PerformLayout();
 			this.toolStripToolBar.ResumeLayout(false);
 			this.toolStripToolBar.PerformLayout();
-			this.panelMoterNavi.ResumeLayout(false);
+			this.panelMotorSetting.ResumeLayout(false);
+			this.groupBoxPlay.ResumeLayout(false);
+			this.groupBoxArea.ResumeLayout(false);
+			this.groupBoxArea.PerformLayout();
+			this.groupBoxSource.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownRunIndex)).EndInit();
+			this.groupBoxDirect.ResumeLayout(false);
+			this.groupBoxDirect.PerformLayout();
+			this.groupBoxView.ResumeLayout(false);
+			this.groupBoxView.PerformLayout();
+			this.groupBoxTrack.ResumeLayout(false);
+			this.menuStripMotor.ResumeLayout(false);
+			this.menuStripMotor.PerformLayout();
+			this.statusStripStatus.ResumeLayout(false);
+			this.statusStripStatus.PerformLayout();
 			this.tabPageAccel.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.pictureBoxAccel)).EndInit();
 			this.panelAccel.ResumeLayout(false);
-			this.groupBoxNotch.ResumeLayout(false);
-			this.groupBoxParameter.ResumeLayout(false);
-			this.groupBoxParameter.PerformLayout();
 			this.groupBoxPreview.ResumeLayout(false);
 			this.groupBoxPreview.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBoxAccel)).EndInit();
+			this.groupBoxParameter.ResumeLayout(false);
+			this.groupBoxParameter.PerformLayout();
+			this.groupBoxNotch.ResumeLayout(false);
 			this.tabPageCar.ResumeLayout(false);
+			this.groupBoxPressure.ResumeLayout(false);
+			this.groupBoxPressure.PerformLayout();
+			this.groupBoxBrake.ResumeLayout(false);
+			this.groupBoxBrake.PerformLayout();
+			this.groupBoxMove.ResumeLayout(false);
+			this.groupBoxMove.PerformLayout();
+			this.groupBoxDelay.ResumeLayout(false);
+			this.groupBoxPerformance.ResumeLayout(false);
+			this.groupBoxPerformance.PerformLayout();
 			this.groupBoxCarGeneral.ResumeLayout(false);
 			this.groupBoxCarGeneral.PerformLayout();
 			this.groupBoxAxles.ResumeLayout(false);
 			this.groupBoxAxles.PerformLayout();
-			this.groupBoxPerformance.ResumeLayout(false);
-			this.groupBoxPerformance.PerformLayout();
-			this.groupBoxDelay.ResumeLayout(false);
-			this.groupBoxMove.ResumeLayout(false);
-			this.groupBoxMove.PerformLayout();
-			this.groupBoxBrake.ResumeLayout(false);
-			this.groupBoxBrake.PerformLayout();
-			this.groupBoxPressure.ResumeLayout(false);
-			this.groupBoxPressure.PerformLayout();
 			this.tabPageTrain.ResumeLayout(false);
-			this.groupBoxHandle.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownPowerNotches)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBrakeNotches)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownPowerNotchReduceSteps)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDriverPowerNotches)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDriverBrakeNotches)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownLocoBrakeNotches)).EndInit();
+			this.groupBoxDevice.ResumeLayout(false);
 			this.groupBoxCab.ResumeLayout(false);
 			this.groupBoxCab.PerformLayout();
-			this.groupBoxDevice.ResumeLayout(false);
+			this.groupBoxHandle.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownLocoBrakeNotches)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDriverBrakeNotches)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDriverPowerNotches)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownPowerNotchReduceSteps)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBrakeNotches)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownPowerNotches)).EndInit();
 			this.tabControlEditor.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
@@ -7355,5 +7399,9 @@ namespace TrainEditor2.Views
 		private ToolStripMenuItem toolStripMenuItemWarning;
 		private ToolStripMenuItem toolStripMenuItemInfo;
 		private ToolStripMenuItem toolStripMenuItemClear;
+		private Button buttonPanelUp;
+		private Button buttonPanelDown;
+		private Button buttonSoundUp;
+		private Button buttonSoundDown;
 	}
 }

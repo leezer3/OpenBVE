@@ -291,6 +291,28 @@ namespace TrainEditor2.Views
 
 			new[]
 				{
+					x.UpRun, x.UpFlange, x.UpMotor, x.UpFrontSwitch, x.UpRearSwitch,
+					x.UpBrake, x.UpCompressor, x.UpSuspension, x.UpPrimaryHorn, x.UpSecondaryHorn,
+					x.UpMusicHorn, x.UpDoor, x.UpAts, x.UpBuzzer, x.UpPilotLamp,
+					x.UpBrakeHandle, x.UpMasterController, x.UpReverser, x.UpBreaker, x.UpRequestStop,
+					x.UpTouch, x.UpOthers
+				}
+				.BindToButton(buttonSoundUp)
+				.AddTo(soundDisposable);
+
+			new[]
+				{
+					x.DownRun, x.DownFlange, x.DownMotor, x.DownFrontSwitch, x.DownRearSwitch,
+					x.DownBrake, x.DownCompressor, x.DownSuspension, x.DownPrimaryHorn, x.DownSecondaryHorn,
+					x.DownMusicHorn, x.DownDoor, x.DownAts, x.DownBuzzer, x.DownPilotLamp,
+					x.DownBrakeHandle, x.DownMasterController, x.DownReverser, x.DownBreaker, x.DownRequestStop,
+					x.DownTouch, x.DownOthers
+				}
+				.BindToButton(buttonSoundDown)
+				.AddTo(soundDisposable);
+
+			new[]
+				{
 					x.AddRun, x.AddFlange, x.AddMotor, x.AddFrontSwitch, x.AddRearSwitch,
 					x.AddBrake, x.AddCompressor, x.AddSuspension, x.AddPrimaryHorn, x.AddSecondaryHorn,
 					x.AddMusicHorn, x.AddDoor, x.AddAts, x.AddBuzzer, x.AddPilotLamp,

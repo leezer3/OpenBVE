@@ -262,18 +262,44 @@ namespace TrainEditor2.Models.Sounds
 			item.SubItems[3].Text = element.DefinedRadius ? element.Radius.ToString(culture) : string.Empty;
 		}
 
+		internal void UpElement<T>() where T : SoundElement
+		{
+			SoundElement currentElement = (SoundElement)SelectedListItem.Tag;
+			int currentIndex = SoundElements.IndexOf(currentElement);
+			int currentListIndex = ListItems.IndexOf(SelectedListItem);
+
+			SoundElement prevElement = SoundElements.Take(currentIndex).OfType<T>().Last();
+			int prevIndex = SoundElements.IndexOf(prevElement);
+
+			SoundElements.Move(currentIndex, prevIndex);
+			ListItems.Move(currentListIndex, currentListIndex - 1);
+		}
+
+		internal void DownElement<T>() where T : SoundElement
+		{
+			SoundElement currentElement = (SoundElement)SelectedListItem.Tag;
+			int currentIndex = SoundElements.IndexOf(currentElement);
+			int currentListIndex = ListItems.IndexOf(SelectedListItem);
+
+			SoundElement nextElement = SoundElements.Skip(currentIndex + 1).OfType<T>().First();
+			int nextIndex = SoundElements.IndexOf(nextElement);
+
+			SoundElements.Move(currentIndex, nextIndex);
+			ListItems.Move(currentListIndex, currentListIndex + 1);
+		}
+
 		internal void AddElement<T>() where T : SoundElement<int>, new()
 		{
-			T t = new T();
+			T element = new T();
 
 			if (SoundElements.OfType<T>().Any())
 			{
-				t.Key = SoundElements.OfType<T>().Last().Key + 1;
+				element.Key = SoundElements.OfType<T>().OrderBy(x => x.Key).Last().Key + 1;
 			}
 
-			SoundElements.Add(t);
+			SoundElements.Add(element);
 
-			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = t };
+			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = element };
 
 			for (int i = 0; i < 4; i++)
 			{
@@ -288,14 +314,14 @@ namespace TrainEditor2.Models.Sounds
 
 		internal void AddElement<T, U>() where T : SoundElement<U>, new()
 		{
-			T t = new T
+			T element = new T
 			{
 				Key = Enum.GetValues(typeof(U)).OfType<U>().Except(SoundElements.OfType<T>().Select(x => x.Key)).First()
 			};
 
-			SoundElements.Add(t);
+			SoundElements.Add(element);
 
-			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = t };
+			ListViewItemModel newItem = new ListViewItemModel { SubItems = new ObservableCollection<ListViewSubItemModel>(), Tag = element };
 
 			for (int i = 0; i < 4; i++)
 			{
@@ -308,11 +334,11 @@ namespace TrainEditor2.Models.Sounds
 			SelectedListItem = ListItems.Last();
 		}
 
-		internal void RemoveElement<T>() where T : SoundElement
+		internal void RemoveElement()
 		{
-			T t = (T)SelectedListItem.Tag;
+			SoundElement element = (SoundElement)SelectedListItem.Tag;
 
-			SoundElements.Remove(t);
+			SoundElements.Remove(element);
 
 			ListItems.Remove(SelectedListItem);
 

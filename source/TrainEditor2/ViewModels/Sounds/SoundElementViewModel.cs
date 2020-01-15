@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Reactive.Bindings;
@@ -73,15 +74,6 @@ namespace TrainEditor2.ViewModels.Sounds
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
-				.SetValidateNotifyError(x =>
-				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Any, out result, out message);
-
-					return message;
-				})
 				.AddTo(disposable);
 
 			PositionY = element
@@ -91,15 +83,6 @@ namespace TrainEditor2.ViewModels.Sounds
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
-				.SetValidateNotifyError(x =>
-				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Any, out result, out message);
-
-					return message;
-				})
 				.AddTo(disposable);
 
 			PositionZ = element
@@ -109,15 +92,6 @@ namespace TrainEditor2.ViewModels.Sounds
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
-				.SetValidateNotifyError(x =>
-				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Any, out result, out message);
-
-					return message;
-				})
 				.AddTo(disposable);
 
 			DefinedRadius = element
@@ -131,12 +105,85 @@ namespace TrainEditor2.ViewModels.Sounds
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
-				.SetValidateNotifyError(x =>
+				.AddTo(disposable);
+
+			DefinedRadius.Subscribe(_ => Radius.ForceValidate()).AddTo(disposable);
+
+			Radius.SetValidateNotifyError(x =>
 				{
-					double result;
 					string message;
 
-					Utilities.TryParse(x, NumberRange.Any, out result, out message);
+					if (DefinedRadius.Value)
+					{
+						double result;
+						Utilities.TryParse(x, NumberRange.Any, out result, out message);
+					}
+					else
+					{
+						message = string.Empty;
+					}
+
+					return message;
+				})
+				.AddTo(disposable);
+
+			DefinedPosition.Subscribe(_ =>
+				{
+					PositionX.ForceValidate();
+					PositionY.ForceValidate();
+					PositionZ.ForceValidate();
+				})
+				.AddTo(disposable);
+
+			PositionX.SetValidateNotifyError(x =>
+				{
+					string message;
+
+					if (DefinedPosition.Value)
+					{
+						double result;
+						Utilities.TryParse(x, NumberRange.Any, out result, out message);
+					}
+					else
+					{
+						message = string.Empty;
+					}
+
+					return message;
+				})
+				.AddTo(disposable);
+
+			PositionY.SetValidateNotifyError(x =>
+				{
+					string message;
+
+					if (DefinedPosition.Value)
+					{
+						double result;
+						Utilities.TryParse(x, NumberRange.Any, out result, out message);
+					}
+					else
+					{
+						message = string.Empty;
+					}
+
+					return message;
+				})
+				.AddTo(disposable);
+
+			PositionZ.SetValidateNotifyError(x =>
+				{
+					string message;
+
+					if (DefinedPosition.Value)
+					{
+						double result;
+						Utilities.TryParse(x, NumberRange.Any, out result, out message);
+					}
+					else
+					{
+						message = string.Empty;
+					}
 
 					return message;
 				})

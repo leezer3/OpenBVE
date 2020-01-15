@@ -443,11 +443,17 @@ namespace TrainEditor2.Extensions
 				})
 				.AddTo(disposable);
 
+			bool parentUpdating = false;
 			bool childrenUpdating = false;
 
 			item.Checked
 				.Subscribe(x =>
 				{
+					if (parentUpdating)
+					{
+						return;
+					}
+
 					childrenUpdating = true;
 
 					foreach (TreeViewItemViewModel child in item.Children)
@@ -463,10 +469,16 @@ namespace TrainEditor2.Extensions
 				.ObserveElementObservableProperty(x => x.Checked)
 				.Subscribe(x =>
 				{
-					if (!childrenUpdating)
+					if (childrenUpdating)
 					{
-						item.Checked.Value = x.Value && item.Children.All(y => y.Checked.Value);
+						return;
 					}
+
+					parentUpdating = true;
+
+					item.Checked.Value = x.Value && item.Children.All(y => y.Checked.Value);
+
+					parentUpdating = false;
 				})
 				.AddTo(disposable);
 

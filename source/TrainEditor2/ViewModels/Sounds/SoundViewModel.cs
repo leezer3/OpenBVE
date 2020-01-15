@@ -148,6 +148,226 @@ namespace TrainEditor2.ViewModels.Sounds
 			get;
 		}
 
+		internal ReactiveCommand UpRun
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpFlange
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpMotor
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpFrontSwitch
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpRearSwitch
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpBrake
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpCompressor
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpSuspension
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpPrimaryHorn
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpSecondaryHorn
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpMusicHorn
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpDoor
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpAts
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpBuzzer
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpPilotLamp
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpBrakeHandle
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpMasterController
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpReverser
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpBreaker
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpRequestStop
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpTouch
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpOthers
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownRun
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownFlange
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownMotor
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownFrontSwitch
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownRearSwitch
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownBrake
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownCompressor
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownSuspension
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownPrimaryHorn
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownSecondaryHorn
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownMusicHorn
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownDoor
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownAts
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownBuzzer
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownPilotLamp
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownBrakeHandle
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownMasterController
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownReverser
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownBreaker
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownRequestStop
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownTouch
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownOthers
+		{
+			get;
+		}
+
 		internal ReactiveCommand AddRun
 		{
 			get;
@@ -370,7 +590,7 @@ namespace TrainEditor2.ViewModels.Sounds
 
 		internal SoundViewModel(Sound sound)
 		{
-			CompositeDisposable listItemDisposable = new CompositeDisposable();
+			CompositeDisposable listItemDisposable = new CompositeDisposable().AddTo(disposable);
 
 			TrainManager.RunSounds = sound.SoundElements.OfType<RunElement>().ToList();
 			TrainManager.MotorSounds = sound.SoundElements.OfType<MotorElement>().ToList();
@@ -626,6 +846,270 @@ namespace TrainEditor2.ViewModels.Sounds
 				.Do(_ => SelectedOthers?.Value?.Dispose())
 				.Select(x => x != null ? new OthersElementViewModel(x, sound.SoundElements.OfType<OthersElement>().Where(y => y != x)) : null)
 				.ToReadOnlyReactivePropertySlim()
+				.AddTo(disposable);
+
+			UpRun = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is RunElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.UpElement<RunElement>)
+				.AddTo(disposable);
+
+			UpFlange = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is FlangeElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.UpElement<FlangeElement>)
+				.AddTo(disposable);
+
+			UpMotor = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is MotorElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.UpElement<MotorElement>)
+				.AddTo(disposable);
+
+			UpFrontSwitch = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is FrontSwitchElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.UpElement<FrontSwitchElement>)
+				.AddTo(disposable);
+
+			UpRearSwitch = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is RearSwitchElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.UpElement<RearSwitchElement>)
+				.AddTo(disposable);
+
+			UpBrake = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is BrakeElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.UpElement<BrakeElement>)
+				.AddTo(disposable);
+
+			UpCompressor = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is CompressorElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.UpElement<CompressorElement>)
+				.AddTo(disposable);
+
+			UpSuspension = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is SuspensionElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.UpElement<SuspensionElement>)
+				.AddTo(disposable);
+
+			UpPrimaryHorn = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is PrimaryHornElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.UpElement<PrimaryHornElement>)
+				.AddTo(disposable);
+
+			UpSecondaryHorn = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is SecondaryHornElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.UpElement<SecondaryHornElement>)
+				.AddTo(disposable);
+
+			UpMusicHorn = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is MusicHornElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.UpElement<MusicHornElement>)
+				.AddTo(disposable);
+
+			UpDoor = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is DoorElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.UpElement<DoorElement>)
+				.AddTo(disposable);
+
+			UpAts = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is AtsElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.UpElement<AtsElement>)
+				.AddTo(disposable);
+
+			UpBuzzer = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is BuzzerElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.UpElement<BuzzerElement>)
+				.AddTo(disposable);
+
+			UpPilotLamp = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is PilotLampElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.UpElement<PilotLampElement>)
+				.AddTo(disposable);
+
+			UpBrakeHandle = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is BrakeHandleElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.UpElement<BrakeHandleElement>)
+				.AddTo(disposable);
+
+			UpMasterController = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is MasterControllerElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.UpElement<MasterControllerElement>)
+				.AddTo(disposable);
+
+			UpReverser = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is ReverserElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.UpElement<ReverserElement>)
+				.AddTo(disposable);
+
+			UpBreaker = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is BreakerElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.UpElement<BreakerElement>)
+				.AddTo(disposable);
+
+			UpRequestStop = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is RequestStopElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.UpElement<RequestStopElement>)
+				.AddTo(disposable);
+
+			UpTouch = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is TouchElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.UpElement<TouchElement>)
+				.AddTo(disposable);
+
+			UpOthers = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is OthersElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.UpElement<OthersElement>)
+				.AddTo(disposable);
+
+			DownRun = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is RunElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.DownElement<RunElement>)
+				.AddTo(disposable);
+
+			DownFlange = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is FlangeElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.DownElement<FlangeElement>)
+				.AddTo(disposable);
+
+			DownMotor = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is MotorElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.DownElement<MotorElement>)
+				.AddTo(disposable);
+
+			DownFrontSwitch = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is FrontSwitchElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.DownElement<FrontSwitchElement>)
+				.AddTo(disposable);
+
+			DownRearSwitch = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is RearSwitchElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.DownElement<RearSwitchElement>)
+				.AddTo(disposable);
+
+			DownBrake = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is BrakeElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.DownElement<BrakeElement>)
+				.AddTo(disposable);
+
+			DownCompressor = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is CompressorElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.DownElement<CompressorElement>)
+				.AddTo(disposable);
+
+			DownSuspension = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is SuspensionElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.DownElement<SuspensionElement>)
+				.AddTo(disposable);
+
+			DownPrimaryHorn = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is PrimaryHornElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.DownElement<PrimaryHornElement>)
+				.AddTo(disposable);
+
+			DownSecondaryHorn = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is SecondaryHornElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.DownElement<SecondaryHornElement>)
+				.AddTo(disposable);
+
+			DownMusicHorn = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is MusicHornElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.DownElement<MusicHornElement>)
+				.AddTo(disposable);
+
+			DownDoor = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is DoorElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.DownElement<DoorElement>)
+				.AddTo(disposable);
+
+			DownAts = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is AtsElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.DownElement<AtsElement>)
+				.AddTo(disposable);
+
+			DownBuzzer = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is BuzzerElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.DownElement<BuzzerElement>)
+				.AddTo(disposable);
+
+			DownPilotLamp = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is PilotLampElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.DownElement<PilotLampElement>)
+				.AddTo(disposable);
+
+			DownBrakeHandle = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is BrakeHandleElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.DownElement<BrakeHandleElement>)
+				.AddTo(disposable);
+
+			DownMasterController = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is MasterControllerElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.DownElement<MasterControllerElement>)
+				.AddTo(disposable);
+
+			DownReverser = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is ReverserElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.DownElement<ReverserElement>)
+				.AddTo(disposable);
+
+			DownBreaker = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is BreakerElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.DownElement<BreakerElement>)
+				.AddTo(disposable);
+
+			DownRequestStop = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is RequestStopElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.DownElement<RequestStopElement>)
+				.AddTo(disposable);
+
+			DownTouch = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is TouchElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.DownElement<TouchElement>)
+				.AddTo(disposable);
+
+			DownOthers = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is OthersElement)
+				.ToReactiveCommand()
+				.WithSubscribe(sound.DownElement<OthersElement>)
 				.AddTo(disposable);
 
 			AddRun = SelectedTreeItem
@@ -928,136 +1412,134 @@ namespace TrainEditor2.ViewModels.Sounds
 			RemoveRun = SelectedRun
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(sound.RemoveElement<RunElement>)
+				.WithSubscribe(sound.RemoveElement)
 				.AddTo(disposable);
 
 			RemoveFlange = SelectedFlange
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(sound.RemoveElement<FlangeElement>)
+				.WithSubscribe(sound.RemoveElement)
 				.AddTo(disposable);
 
 			RemoveMotor = SelectedMotor
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(sound.RemoveElement<MotorElement>)
+				.WithSubscribe(sound.RemoveElement)
 				.AddTo(disposable);
 
 			RemoveFrontSwitch = SelectedFrontSwitch
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(sound.RemoveElement<FrontSwitchElement>)
+				.WithSubscribe(sound.RemoveElement)
 				.AddTo(disposable);
 
 			RemoveRearSwitch = SelectedRearSwitch
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(sound.RemoveElement<RearSwitchElement>)
+				.WithSubscribe(sound.RemoveElement)
 				.AddTo(disposable);
 
 			RemoveBrake = SelectedBrake
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(sound.RemoveElement<BrakeElement>)
+				.WithSubscribe(sound.RemoveElement)
 				.AddTo(disposable);
 
 			RemoveCompressor = SelectedCompressor
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(sound.RemoveElement<CompressorElement>)
+				.WithSubscribe(sound.RemoveElement)
 				.AddTo(disposable);
 
 			RemoveSuspension = SelectedSuspension
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(sound.RemoveElement<SuspensionElement>)
+				.WithSubscribe(sound.RemoveElement)
 				.AddTo(disposable);
 
 			RemovePrimaryHorn = SelectedPrimaryHorn
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(sound.RemoveElement<PrimaryHornElement>)
+				.WithSubscribe(sound.RemoveElement)
 				.AddTo(disposable);
 
 			RemoveSecondaryHorn = SelectedSecondaryHorn
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(sound.RemoveElement<SecondaryHornElement>)
+				.WithSubscribe(sound.RemoveElement)
 				.AddTo(disposable);
 
 			RemoveMusicHorn = SelectedMusicHorn
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(sound.RemoveElement<MusicHornElement>)
+				.WithSubscribe(sound.RemoveElement)
 				.AddTo(disposable);
 
 			RemoveDoor = SelectedDoor
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(sound.RemoveElement<DoorElement>)
+				.WithSubscribe(sound.RemoveElement)
 				.AddTo(disposable);
 
 			RemoveAts = SelectedAts
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(sound.RemoveElement<AtsElement>)
+				.WithSubscribe(sound.RemoveElement)
 				.AddTo(disposable);
 
 			RemoveBuzzer = SelectedBuzzer
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(sound.RemoveElement<BuzzerElement>)
+				.WithSubscribe(sound.RemoveElement)
 				.AddTo(disposable);
 
 			RemovePilotLamp = SelectedPilotLamp
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(sound.RemoveElement<PilotLampElement>)
+				.WithSubscribe(sound.RemoveElement)
 				.AddTo(disposable);
 
 			RemoveBrakeHandle = SelectedBrakeHandle
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(sound.RemoveElement<BrakeHandleElement>)
+				.WithSubscribe(sound.RemoveElement)
 				.AddTo(disposable);
 
 			RemoveMasterController = SelectedMasterController
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(sound.RemoveElement<MasterControllerElement>)
+				.WithSubscribe(sound.RemoveElement)
 				.AddTo(disposable);
 
 			RemoveReverser = SelectedReverser
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(sound.RemoveElement<ReverserElement>)
+				.WithSubscribe(sound.RemoveElement)
 				.AddTo(disposable);
 
 			RemoveBreaker = SelectedBreaker
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(sound.RemoveElement<BreakerElement>)
+				.WithSubscribe(sound.RemoveElement)
 				.AddTo(disposable);
 
 			RemoveRequestStop = SelectedRequestStop
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(sound.RemoveElement<RequestStopElement>)
+				.WithSubscribe(sound.RemoveElement)
 				.AddTo(disposable);
 
 			RemoveTouch = SelectedTouch
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(sound.RemoveElement<TouchElement>)
+				.WithSubscribe(sound.RemoveElement)
 				.AddTo(disposable);
 
 			RemoveOthers = SelectedOthers
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(sound.RemoveElement<OthersElement>)
+				.WithSubscribe(sound.RemoveElement)
 				.AddTo(disposable);
-
-			listItemDisposable.AddTo(disposable);
 		}
 	}
 }

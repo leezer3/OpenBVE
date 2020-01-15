@@ -283,6 +283,14 @@ namespace TrainEditor2.Views
 				})
 				.AddTo(panelDisposable);
 
+			new[] { x.UpScreen, x.UpPilotLamp, x.UpNeedle, x.UpDigitalNumber, x.UpDigitalGauge, x.UpLinearGauge, x.UpTimetable, x.UpTouch }
+				.BindToButton(buttonPanelUp)
+				.AddTo(panelDisposable);
+
+			new[] { x.DownScreen, x.DownPilotLamp, x.DownNeedle, x.DownDigitalNumber, x.DownDigitalGauge, x.DownLinearGauge, x.DownTimetable, x.DownTouch }
+				.BindToButton(buttonPanelDown)
+				.AddTo(panelDisposable);
+
 			new[] { x.AddScreen, x.AddPilotLamp, x.AddNeedle, x.AddDigitalNumber, x.AddDigitalGauge, x.AddLinearGauge, x.AddTimetable, x.AddTouch }
 				.BindToButton(buttonPanelAdd)
 				.AddTo(panelDisposable);

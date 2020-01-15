@@ -467,6 +467,13 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(trackDisposable);
 
+			w.StoppedSim
+				.BindTo(
+					groupBoxTrack,
+					x => x.Enabled
+				)
+				.AddTo(trackDisposable);
+
 			w.EnabledDirect
 				.BindTo(
 					groupBoxDirect,
@@ -561,19 +568,6 @@ namespace TrainEditor2.Views
 			Binders.BindToTreeView(treeViewMotor, z.TreeItems, z.SelectedTreeItem).AddTo(motorDisposable);
 
 			z.SelectedTrack
-				.Subscribe(w =>
-				{
-					trackDisposable.Dispose();
-					trackDisposable = new CompositeDisposable().AddTo(motorDisposable);
-
-					if (w != null)
-					{
-						BindToTrack(w).AddTo(trackDisposable);
-					}
-				})
-				.AddTo(motorDisposable);
-
-			z.SelectedTrack
 				.BindTo(
 					menuStripMotor,
 					w => w.Enabled,
@@ -603,6 +597,27 @@ namespace TrainEditor2.Views
 					w => w.Enabled,
 					w => w != null
 				)
+				.AddTo(motorDisposable);
+
+			z.SelectedTrack
+				.BindTo(
+					groupBoxDirect,
+					w => w.Enabled,
+					w => w != null
+				)
+				.AddTo(motorDisposable);
+
+			z.SelectedTrack
+				.Subscribe(w =>
+				{
+					trackDisposable.Dispose();
+					trackDisposable = new CompositeDisposable().AddTo(motorDisposable);
+
+					if (w != null)
+					{
+						BindToTrack(w).AddTo(trackDisposable);
+					}
+				})
 				.AddTo(motorDisposable);
 
 			z.StoppedSim

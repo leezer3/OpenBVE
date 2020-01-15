@@ -41,6 +41,11 @@ namespace TrainEditor2.ViewModels.Trains
 				get;
 			}
 
+			internal ReadOnlyReactivePropertySlim<bool> StoppedSim
+			{
+				get;
+			}
+
 			internal ReactiveProperty<string> MinVelocity
 			{
 				get;
@@ -221,7 +226,7 @@ namespace TrainEditor2.ViewModels.Trains
 				get;
 			}
 
-			internal TrackViewModel(MotorViewModel baseMotor, Motor.Track track)
+			internal TrackViewModel(Motor baseMotor, Motor.Track track)
 			{
 				CultureInfo culture = CultureInfo.InvariantCulture;
 
@@ -252,6 +257,12 @@ namespace TrainEditor2.ViewModels.Trains
 
 				CurrentCursorType = track
 					.ObserveProperty(x => x.CurrentCursorType)
+					.ToReadOnlyReactivePropertySlim()
+					.AddTo(disposable);
+
+				StoppedSim = baseMotor
+					.ObserveProperty(x => x.CurrentSimState)
+					.Select(x => x == Motor.SimulationState.Disable || x == Motor.SimulationState.Stopped)
 					.ToReadOnlyReactivePropertySlim()
 					.AddTo(disposable);
 
@@ -369,7 +380,7 @@ namespace TrainEditor2.ViewModels.Trains
 				EnabledDirect = new[]
 					{
 						CurrentInputMode.Select(x => x != Motor.InputMode.SoundIndex),
-						baseMotor.StoppedSim
+						StoppedSim
 					}
 					.CombineLatestValuesAreAllTrue()
 					.ToReadOnlyReactivePropertySlim()
@@ -442,7 +453,7 @@ namespace TrainEditor2.ViewModels.Trains
 				ChangeToolMode = new[]
 					{
 						CurrentInputMode.Select(x => x != Motor.InputMode.SoundIndex),
-						baseMotor.StoppedSim
+						StoppedSim
 					}
 					.CombineLatestValuesAreAllTrue()
 					.ToReactiveCommand<Motor.ToolMode>()
@@ -466,7 +477,7 @@ namespace TrainEditor2.ViewModels.Trains
 				Undo = new[]
 					{
 						track.PrevStates.CollectionChangedAsObservable().Select(_ => track.PrevStates.Any()),
-						baseMotor.StoppedSim
+						StoppedSim
 					}
 					.CombineLatestValuesAreAllTrue()
 					.ToReactiveCommand(false)
@@ -476,19 +487,19 @@ namespace TrainEditor2.ViewModels.Trains
 				Redo = new[]
 					{
 						track.NextStates.CollectionChangedAsObservable().Select(_ => track.NextStates.Any()),
-						baseMotor.StoppedSim
+						StoppedSim
 					}
 					.CombineLatestValuesAreAllTrue()
 					.ToReactiveCommand(false)
 					.WithSubscribe(track.Redo)
 					.AddTo(disposable);
 
-				Cleanup = baseMotor.StoppedSim
+				Cleanup = StoppedSim
 					.ToReactiveCommand()
 					.WithSubscribe(track.Cleanup)
 					.AddTo(disposable);
 
-				Delete = baseMotor.StoppedSim
+				Delete = StoppedSim
 					.ToReactiveCommand()
 					.WithSubscribe(track.Delete)
 					.AddTo(disposable);
@@ -501,7 +512,7 @@ namespace TrainEditor2.ViewModels.Trains
 
 				DirectDot = new[]
 					{
-						baseMotor.StoppedSim,
+						StoppedSim,
 						CurrentToolMode.Select(x => x == Motor.ToolMode.Dot),
 						DirectX.ObserveHasErrors.Select(x => !x),
 						DirectY.ObserveHasErrors.Select(x => !x)
@@ -513,7 +524,7 @@ namespace TrainEditor2.ViewModels.Trains
 
 				DirectMove = new[]
 					{
-						baseMotor.StoppedSim,
+						StoppedSim,
 						CurrentToolMode.Select(x => x == Motor.ToolMode.Move),
 						DirectX.ObserveHasErrors.Select(x => !x),
 						DirectY.ObserveHasErrors.Select(x => !x)
@@ -808,7 +819,7 @@ namespace TrainEditor2.ViewModels.Trains
 			SelectedTrack = SelectedTreeItem
 				.Select(x => x?.Tag.Value as Motor.Track)
 				.Do(_ => SelectedTrack?.Value?.Dispose())
-				.Select(x => x != null ? new TrackViewModel(this, x) : null)
+				.Select(x => x != null ? new TrackViewModel(motor, x) : null)
 				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 
