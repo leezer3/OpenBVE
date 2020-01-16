@@ -249,7 +249,7 @@ namespace TrainEditor2.IO.IntermediateFile
 			}
 		}
 
-		private static void WriteVertexLineNode(XElement parent, Motor.VertexLibrary vertices, ObservableCollection<Motor.Line> lines)
+		private static void WriteVertexLineNode(XElement parent, Motor.VertexLibrary vertices, ICollection<Motor.Line> lines)
 		{
 			parent.Add(new XElement("Vertices",
 				vertices.Select(vertex => new XElement("Vertex",
@@ -266,7 +266,7 @@ namespace TrainEditor2.IO.IntermediateFile
 				));
 		}
 
-		private static void WriteAreaNode(XElement parent, ObservableCollection<Motor.Area> areas)
+		private static void WriteAreaNode(XElement parent, ICollection<Motor.Area> areas)
 		{
 			parent.Add(new XElement("Areas",
 				areas.Select(area => new XElement("Area",

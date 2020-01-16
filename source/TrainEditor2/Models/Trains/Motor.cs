@@ -319,7 +319,7 @@ namespace TrainEditor2.Models.Trains
 
 			TrainManager.PlayerTrain.Car.UpdateRunSounds(deltaTime, RunIndex);
 
-			TrainManager.PlayerTrain.Car.UpdateMotorSounds(TreeItems[0].Children.Select(x => x.Checked).ToArray());
+			TrainManager.PlayerTrain.Car.UpdateMotorSounds(TreeItems[0].Children.Where(x => ((Track)x.Tag).Type == TrackType.Power).Select(x => x.Checked).ToArray(), TreeItems[0].Children.Where(x => ((Track)x.Tag).Type == TrackType.Brake).Select(x => x.Checked).ToArray());
 
 			Program.SoundApi.Update(deltaTime, SoundModels.Inverse);
 

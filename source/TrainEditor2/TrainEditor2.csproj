@@ -92,8 +92,6 @@
     <Compile Include="Audio\SoundApi.cs" />
     <Compile Include="Audio\SoundApi.Update.cs" />
     <Compile Include="Extensions\Binders.cs" />
-    <Compile Include="Extensions\CollectionBasedDictionary.cs" />
-    <Compile Include="Extensions\ObservableDictionary.cs" />
     <Compile Include="Extensions\StringValueAttribute.cs" />
     <Compile Include="Extensions\Utilities.cs" />
     <Compile Include="Graphics\NewRenderer.cs" />

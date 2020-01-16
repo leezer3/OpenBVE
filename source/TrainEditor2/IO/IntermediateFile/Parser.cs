@@ -282,7 +282,7 @@ namespace TrainEditor2.IO.IntermediateFile
 			return track;
 		}
 
-		private static void ParseVertexLineNode(XElement parent, out Motor.VertexLibrary vertices, out ObservableCollection<Motor.Line> lines)
+		private static void ParseVertexLineNode(XElement parent, out Motor.VertexLibrary vertices, out List<Motor.Line> lines)
 		{
 			vertices = new Motor.VertexLibrary();
 
@@ -293,12 +293,12 @@ namespace TrainEditor2.IO.IntermediateFile
 				vertices.Add((int)n.Element("Id"), new Motor.Vertex(position[0], position[1]));
 			}
 
-			lines = new ObservableCollection<Motor.Line>(parent.XPathSelectElements("Lines/Line").Select(n => new Motor.Line((int)n.Element("LeftID"), (int)n.Element("RightID"))));
+			lines = new List<Motor.Line>(parent.XPathSelectElements("Lines/Line").Select(n => new Motor.Line((int)n.Element("LeftID"), (int)n.Element("RightID"))));
 		}
 
-		private static void ParseAreaNode(XElement parent, out ObservableCollection<Motor.Area> areas)
+		private static void ParseAreaNode(XElement parent, out List<Motor.Area> areas)
 		{
-			areas = new ObservableCollection<Motor.Area>(parent.XPathSelectElements("Areas/Area").Select(n => new Motor.Area((double)n.Element("LeftX"), (double)n.Element("RightX"), (int)n.Element("Index"))));
+			areas = new List<Motor.Area>(parent.XPathSelectElements("Areas/Area").Select(n => new Motor.Area((double)n.Element("LeftX"), (double)n.Element("RightX"), (int)n.Element("Index"))));
 		}
 
 		private static Coupler ParseCouplerNode(XElement parent)

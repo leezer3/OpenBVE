@@ -74,6 +74,8 @@ namespace TrainEditor2.Views
 			this.listViewSound = new System.Windows.Forms.ListView();
 			this.panelSoundSettingEdit = new System.Windows.Forms.Panel();
 			this.groupBoxSoundEntry = new System.Windows.Forms.GroupBox();
+			this.buttonSoundUp = new System.Windows.Forms.Button();
+			this.buttonSoundDown = new System.Windows.Forms.Button();
 			this.buttonSoundRemove = new System.Windows.Forms.Button();
 			this.groupBoxSoundKey = new System.Windows.Forms.GroupBox();
 			this.numericUpDownSoundKeyIndex = new System.Windows.Forms.NumericUpDown();
@@ -311,8 +313,6 @@ namespace TrainEditor2.Views
 			this.labelTouchLayer = new System.Windows.Forms.Label();
 			this.buttonTouchSoundCommand = new System.Windows.Forms.Button();
 			this.labelTouchSoundCommand = new System.Windows.Forms.Label();
-			this.numericUpDownTouchSoundIndex = new System.Windows.Forms.NumericUpDown();
-			this.labelTouchSoundIndex = new System.Windows.Forms.Label();
 			this.numericUpDownTouchJumpScreen = new System.Windows.Forms.NumericUpDown();
 			this.labelTouchJumpScreen = new System.Windows.Forms.Label();
 			this.groupBoxTouchSize = new System.Windows.Forms.GroupBox();
@@ -640,8 +640,6 @@ namespace TrainEditor2.Views
 			this.comboBoxHandleType = new System.Windows.Forms.ComboBox();
 			this.labelHandleType = new System.Windows.Forms.Label();
 			this.tabControlEditor = new System.Windows.Forms.TabControl();
-			this.buttonSoundUp = new System.Windows.Forms.Button();
-			this.buttonSoundDown = new System.Windows.Forms.Button();
 			this.panelCars.SuspendLayout();
 			this.panelCarsNavi.SuspendLayout();
 			this.menuStripMenu.SuspendLayout();
@@ -701,7 +699,6 @@ namespace TrainEditor2.Views
 			this.groupBoxTimetableLocation.SuspendLayout();
 			this.tabPageTouch.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchLayer)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchSoundIndex)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchJumpScreen)).BeginInit();
 			this.groupBoxTouchSize.SuspendLayout();
 			this.groupBoxTouchLocation.SuspendLayout();
@@ -1122,6 +1119,24 @@ namespace TrainEditor2.Views
 			this.groupBoxSoundEntry.TabIndex = 6;
 			this.groupBoxSoundEntry.TabStop = false;
 			this.groupBoxSoundEntry.Text = "Edit entry";
+			// 
+			// buttonSoundUp
+			// 
+			this.buttonSoundUp.Location = new System.Drawing.Point(8, 304);
+			this.buttonSoundUp.Name = "buttonSoundUp";
+			this.buttonSoundUp.Size = new System.Drawing.Size(56, 24);
+			this.buttonSoundUp.TabIndex = 5;
+			this.buttonSoundUp.Text = "Up";
+			this.buttonSoundUp.UseVisualStyleBackColor = true;
+			// 
+			// buttonSoundDown
+			// 
+			this.buttonSoundDown.Location = new System.Drawing.Point(8, 336);
+			this.buttonSoundDown.Name = "buttonSoundDown";
+			this.buttonSoundDown.Size = new System.Drawing.Size(56, 24);
+			this.buttonSoundDown.TabIndex = 6;
+			this.buttonSoundDown.Text = "Down";
+			this.buttonSoundDown.UseVisualStyleBackColor = true;
 			// 
 			// buttonSoundRemove
 			// 
@@ -3342,8 +3357,6 @@ namespace TrainEditor2.Views
 			this.tabPageTouch.Controls.Add(this.labelTouchLayer);
 			this.tabPageTouch.Controls.Add(this.buttonTouchSoundCommand);
 			this.tabPageTouch.Controls.Add(this.labelTouchSoundCommand);
-			this.tabPageTouch.Controls.Add(this.numericUpDownTouchSoundIndex);
-			this.tabPageTouch.Controls.Add(this.labelTouchSoundIndex);
 			this.tabPageTouch.Controls.Add(this.numericUpDownTouchJumpScreen);
 			this.tabPageTouch.Controls.Add(this.labelTouchJumpScreen);
 			this.tabPageTouch.Controls.Add(this.groupBoxTouchSize);
@@ -3357,14 +3370,14 @@ namespace TrainEditor2.Views
 			// 
 			// numericUpDownTouchLayer
 			// 
-			this.numericUpDownTouchLayer.Location = new System.Drawing.Point(136, 240);
+			this.numericUpDownTouchLayer.Location = new System.Drawing.Point(136, 216);
 			this.numericUpDownTouchLayer.Name = "numericUpDownTouchLayer";
 			this.numericUpDownTouchLayer.Size = new System.Drawing.Size(48, 19);
 			this.numericUpDownTouchLayer.TabIndex = 111;
 			// 
 			// labelTouchLayer
 			// 
-			this.labelTouchLayer.Location = new System.Drawing.Point(8, 240);
+			this.labelTouchLayer.Location = new System.Drawing.Point(8, 216);
 			this.labelTouchLayer.Name = "labelTouchLayer";
 			this.labelTouchLayer.Size = new System.Drawing.Size(120, 16);
 			this.labelTouchLayer.TabIndex = 110;
@@ -3373,7 +3386,7 @@ namespace TrainEditor2.Views
 			// 
 			// buttonTouchSoundCommand
 			// 
-			this.buttonTouchSoundCommand.Location = new System.Drawing.Point(136, 216);
+			this.buttonTouchSoundCommand.Location = new System.Drawing.Point(136, 192);
 			this.buttonTouchSoundCommand.Name = "buttonTouchSoundCommand";
 			this.buttonTouchSoundCommand.Size = new System.Drawing.Size(48, 19);
 			this.buttonTouchSoundCommand.TabIndex = 109;
@@ -3383,38 +3396,12 @@ namespace TrainEditor2.Views
 			// 
 			// labelTouchSoundCommand
 			// 
-			this.labelTouchSoundCommand.Location = new System.Drawing.Point(8, 216);
+			this.labelTouchSoundCommand.Location = new System.Drawing.Point(8, 192);
 			this.labelTouchSoundCommand.Name = "labelTouchSoundCommand";
 			this.labelTouchSoundCommand.Size = new System.Drawing.Size(120, 16);
 			this.labelTouchSoundCommand.TabIndex = 108;
 			this.labelTouchSoundCommand.Text = "Sound and Command:";
 			this.labelTouchSoundCommand.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// numericUpDownTouchSoundIndex
-			// 
-			this.numericUpDownTouchSoundIndex.Location = new System.Drawing.Point(136, 192);
-			this.numericUpDownTouchSoundIndex.Maximum = new decimal(new int[] {
-            256,
-            0,
-            0,
-            0});
-			this.numericUpDownTouchSoundIndex.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
-			this.numericUpDownTouchSoundIndex.Name = "numericUpDownTouchSoundIndex";
-			this.numericUpDownTouchSoundIndex.Size = new System.Drawing.Size(48, 19);
-			this.numericUpDownTouchSoundIndex.TabIndex = 107;
-			// 
-			// labelTouchSoundIndex
-			// 
-			this.labelTouchSoundIndex.Location = new System.Drawing.Point(8, 192);
-			this.labelTouchSoundIndex.Name = "labelTouchSoundIndex";
-			this.labelTouchSoundIndex.Size = new System.Drawing.Size(120, 16);
-			this.labelTouchSoundIndex.TabIndex = 106;
-			this.labelTouchSoundIndex.Text = "SoundIndex:";
-			this.labelTouchSoundIndex.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// numericUpDownTouchJumpScreen
 			// 
@@ -6601,24 +6588,6 @@ namespace TrainEditor2.Views
 			this.tabControlEditor.Size = new System.Drawing.Size(800, 696);
 			this.tabControlEditor.TabIndex = 9;
 			// 
-			// buttonSoundUp
-			// 
-			this.buttonSoundUp.Location = new System.Drawing.Point(8, 304);
-			this.buttonSoundUp.Name = "buttonSoundUp";
-			this.buttonSoundUp.Size = new System.Drawing.Size(56, 24);
-			this.buttonSoundUp.TabIndex = 5;
-			this.buttonSoundUp.Text = "Up";
-			this.buttonSoundUp.UseVisualStyleBackColor = true;
-			// 
-			// buttonSoundDown
-			// 
-			this.buttonSoundDown.Location = new System.Drawing.Point(8, 336);
-			this.buttonSoundDown.Name = "buttonSoundDown";
-			this.buttonSoundDown.Size = new System.Drawing.Size(56, 24);
-			this.buttonSoundDown.TabIndex = 6;
-			this.buttonSoundDown.Text = "Down";
-			this.buttonSoundDown.UseVisualStyleBackColor = true;
-			// 
 			// FormEditor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -6716,7 +6685,6 @@ namespace TrainEditor2.Views
 			this.groupBoxTimetableLocation.PerformLayout();
 			this.tabPageTouch.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchLayer)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchSoundIndex)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTouchJumpScreen)).EndInit();
 			this.groupBoxTouchSize.ResumeLayout(false);
 			this.groupBoxTouchSize.PerformLayout();
@@ -7345,8 +7313,6 @@ namespace TrainEditor2.Views
 		private Label labelTouchLayer;
 		private Button buttonTouchSoundCommand;
 		private Label labelTouchSoundCommand;
-		private NumericUpDown numericUpDownTouchSoundIndex;
-		private Label labelTouchSoundIndex;
 		private NumericUpDown numericUpDownTouchJumpScreen;
 		private Label labelTouchJumpScreen;
 		private GroupBox groupBoxTouchSize;

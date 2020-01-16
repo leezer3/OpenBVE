@@ -110,6 +110,21 @@ namespace OpenBve
 							}
 						}
 					}
+
+					foreach (TrainManager.MotorSound.Table table in car.Sounds.Motor.BrakeTables)
+					{
+						table.PlayingBuffer = null;
+						table.PlayingSource = null;
+
+						foreach (TrainManager.MotorSound.Vertex<int, SoundBuffer> vertex in table.BufferVertices)
+						{
+							if (vertex.Y >= 0)
+							{
+								CarSound snd = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, "Motor" + vertex.Y.ToString(Culture) + ".wav"), SoundCfgParser.mediumRadius), center);
+								vertex.Z = snd.Buffer;
+							}
+						}
+					}
 				}
 			}
 		}

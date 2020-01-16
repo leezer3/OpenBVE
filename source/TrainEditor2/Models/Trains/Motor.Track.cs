@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using OpenTK;
 using Prism.Mvvm;
-using TrainEditor2.Extensions;
 using TrainEditor2.Models.Dialogs;
 using TrainEditor2.Models.Others;
 
@@ -12,60 +11,12 @@ namespace TrainEditor2.Models.Trains
 {
 	internal partial class Motor
 	{
-		internal class Vertex : BindableBase, ICloneable
+		internal class Vertex : ICloneable
 		{
-			private double x;
-			private double y;
-			private bool selected;
-			private bool isOrigin;
-
-			internal double X
-			{
-				get
-				{
-					return x;
-				}
-				set
-				{
-					SetProperty(ref x, value);
-				}
-			}
-
-			internal double Y
-			{
-				get
-				{
-					return y;
-				}
-				set
-				{
-					SetProperty(ref y, value);
-				}
-			}
-
-			internal bool Selected
-			{
-				get
-				{
-					return selected;
-				}
-				set
-				{
-					SetProperty(ref selected, value);
-				}
-			}
-
-			internal bool IsOrigin
-			{
-				get
-				{
-					return isOrigin;
-				}
-				set
-				{
-					SetProperty(ref isOrigin, value);
-				}
-			}
+			internal double X;
+			internal double Y;
+			internal bool Selected;
+			internal bool IsOrigin;
 
 			internal Vertex(double x, double y)
 			{
@@ -81,47 +32,11 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal class Line : BindableBase, ICloneable
+		internal class Line : ICloneable
 		{
-			private int leftID;
-			private int rightID;
-			private bool selected;
-
-			internal int LeftID
-			{
-				get
-				{
-					return leftID;
-				}
-				private set
-				{
-					SetProperty(ref leftID, value);
-				}
-			}
-
-			internal int RightID
-			{
-				get
-				{
-					return rightID;
-				}
-				private set
-				{
-					SetProperty(ref rightID, value);
-				}
-			}
-
-			internal bool Selected
-			{
-				get
-				{
-					return selected;
-				}
-				set
-				{
-					SetProperty(ref selected, value);
-				}
-			}
+			internal int LeftID;
+			internal int RightID;
+			internal bool Selected;
 
 			internal Line(int leftID, int rightID)
 			{
@@ -136,60 +51,12 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal class Area : BindableBase, ICloneable
+		internal class Area : ICloneable
 		{
-			private double leftX;
-			private double rightX;
-			private int index;
-			private bool tbd;
-
-			internal double LeftX
-			{
-				get
-				{
-					return leftX;
-				}
-				set
-				{
-					SetProperty(ref leftX, value);
-				}
-			}
-
-			internal double RightX
-			{
-				get
-				{
-					return rightX;
-				}
-				set
-				{
-					SetProperty(ref rightX, value);
-				}
-			}
-
-			internal int Index
-			{
-				get
-				{
-					return index;
-				}
-				private set
-				{
-					SetProperty(ref index, value);
-				}
-			}
-
-			internal bool TBD
-			{
-				get
-				{
-					return tbd;
-				}
-				set
-				{
-					SetProperty(ref tbd, value);
-				}
-			}
+			internal double LeftX;
+			internal double RightX;
+			internal int Index;
+			internal bool TBD;
 
 			internal Area(double leftX, double rightX, int index)
 			{
@@ -205,7 +72,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal class VertexLibrary : ObservableDictionary<int, Vertex>, ICloneable
+		internal class VertexLibrary : Dictionary<int, Vertex>, ICloneable
 		{
 			private int lastID;
 
@@ -302,7 +169,7 @@ namespace TrainEditor2.Models.Trains
 				SelectedLines = selectedLines;
 			}
 
-			internal static SelectedRange CreateSelectedRange(VertexLibrary vertices, ObservableCollection<Line> lines, double leftX, double rightX, double topY, double bottomY)
+			internal static SelectedRange CreateSelectedRange(VertexLibrary vertices, ICollection<Line> lines, double leftX, double rightX, double topY, double bottomY)
 			{
 				Func<Vertex, bool> conditionVertex = v => v.X >= leftX && v.X <= rightX && v.Y >= bottomY && v.Y <= topY;
 
@@ -316,33 +183,33 @@ namespace TrainEditor2.Models.Trains
 		internal class TrackState : ICloneable
 		{
 			internal VertexLibrary PitchVertices;
-			internal ObservableCollection<Line> PitchLines;
+			internal List<Line> PitchLines;
 
 			internal VertexLibrary VolumeVertices;
-			internal ObservableCollection<Line> VolumeLines;
+			internal List<Line> VolumeLines;
 
-			internal ObservableCollection<Area> SoundIndices;
+			internal List<Area> SoundIndices;
 
 			private TrackState()
 			{
 				PitchVertices = new VertexLibrary();
-				PitchLines = new ObservableCollection<Line>();
+				PitchLines = new List<Line>();
 
 				VolumeVertices = new VertexLibrary();
-				VolumeLines = new ObservableCollection<Line>();
+				VolumeLines = new List<Line>();
 
-				SoundIndices = new ObservableCollection<Area>();
+				SoundIndices = new List<Area>();
 			}
 
 			internal TrackState(Track track)
 			{
 				PitchVertices = (VertexLibrary)track.PitchVertices.Clone();
-				PitchLines = new ObservableCollection<Line>(track.PitchLines.Select(l => (Line)l.Clone()));
+				PitchLines = new List<Line>(track.PitchLines.Select(l => (Line)l.Clone()));
 
 				VolumeVertices = (VertexLibrary)track.VolumeVertices.Clone();
-				VolumeLines = new ObservableCollection<Line>(track.VolumeLines.Select(l => (Line)l.Clone()));
+				VolumeLines = new List<Line>(track.VolumeLines.Select(l => (Line)l.Clone()));
 
-				SoundIndices = new ObservableCollection<Area>(track.SoundIndices.Select(a => (Area)a.Clone()));
+				SoundIndices = new List<Area>(track.SoundIndices.Select(a => (Area)a.Clone()));
 			}
 
 			internal void Apply(Track track)
@@ -361,12 +228,12 @@ namespace TrainEditor2.Models.Trains
 				return new TrackState
 				{
 					PitchVertices = (VertexLibrary)PitchVertices.Clone(),
-					PitchLines = new ObservableCollection<Line>(PitchLines.Select(l => (Line)l.Clone())),
+					PitchLines = new List<Line>(PitchLines.Select(l => (Line)l.Clone())),
 
 					VolumeVertices = (VertexLibrary)VolumeVertices.Clone(),
-					VolumeLines = new ObservableCollection<Line>(VolumeLines.Select(l => (Line)l.Clone())),
+					VolumeLines = new List<Line>(VolumeLines.Select(l => (Line)l.Clone())),
 
-					SoundIndices = new ObservableCollection<Area>(SoundIndices.Select(a => (Area)a.Clone())),
+					SoundIndices = new List<Area>(SoundIndices.Select(a => (Area)a.Clone())),
 				};
 			}
 		}
@@ -409,12 +276,12 @@ namespace TrainEditor2.Models.Trains
 			private TrackType type;
 
 			internal VertexLibrary PitchVertices;
-			internal ObservableCollection<Line> PitchLines;
+			internal List<Line> PitchLines;
 
 			internal VertexLibrary VolumeVertices;
-			internal ObservableCollection<Line> VolumeLines;
+			internal List<Line> VolumeLines;
 
-			internal ObservableCollection<Area> SoundIndices;
+			internal List<Area> SoundIndices;
 
 			internal ObservableCollection<TrackState> PrevStates;
 			internal ObservableCollection<TrackState> NextStates;
@@ -708,12 +575,12 @@ namespace TrainEditor2.Models.Trains
 				Type = TrackType.Power;
 
 				PitchVertices = new VertexLibrary();
-				PitchLines = new ObservableCollection<Line>();
+				PitchLines = new List<Line>();
 
 				VolumeVertices = new VertexLibrary();
-				VolumeLines = new ObservableCollection<Line>();
+				VolumeLines = new List<Line>();
 
-				SoundIndices = new ObservableCollection<Area>();
+				SoundIndices = new List<Area>();
 			}
 
 			public object Clone()
@@ -729,12 +596,12 @@ namespace TrainEditor2.Models.Trains
 				track.NextStates = new ObservableCollection<TrackState>(NextStates.Select(x => (TrackState)x.Clone()));
 
 				track.PitchVertices = (VertexLibrary)PitchVertices.Clone();
-				track.PitchLines = new ObservableCollection<Line>(PitchLines.Select(l => (Line)l.Clone()));
+				track.PitchLines = new List<Line>(PitchLines.Select(l => (Line)l.Clone()));
 
 				track.VolumeVertices = (VertexLibrary)VolumeVertices.Clone();
-				track.VolumeLines = new ObservableCollection<Line>(VolumeLines.Select(l => (Line)l.Clone()));
+				track.VolumeLines = new List<Line>(VolumeLines.Select(l => (Line)l.Clone()));
 
-				track.SoundIndices = new ObservableCollection<Area>(SoundIndices.Select(a => (Area)a.Clone()));
+				track.SoundIndices = new List<Area>(SoundIndices.Select(a => (Area)a.Clone()));
 
 				return track;
 			}

@@ -590,11 +590,12 @@ namespace TrainEditor2.Extensions
 					{
 						ColumnHeader view = new ColumnHeader { Tag = x };
 						views.Add(view);
+						int index = views.Count - 1;
 
 						return x.Text.Subscribe(y =>
 						{
 							view.Text = y;
-							listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+							listView.AutoResizeColumn(index, ColumnHeaderAutoResizeStyle.HeaderSize);
 						});
 					})
 			);
@@ -607,12 +608,14 @@ namespace TrainEditor2.Extensions
 					ListViewColumnHeaderViewModel viewModel = (ListViewColumnHeaderViewModel)x.NewItems[0];
 					ColumnHeader view = new ColumnHeader { Tag = viewModel };
 					views.Insert(x.NewStartingIndex, view);
+					int index = views.Count - 1;
+
 					disposables.Add(
 						viewModel,
 						viewModel.Text.Subscribe(y =>
 						{
 							view.Text = y;
-							listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+							listView.AutoResizeColumn(index, ColumnHeaderAutoResizeStyle.HeaderSize);
 						})
 					);
 				})
@@ -763,11 +766,12 @@ namespace TrainEditor2.Extensions
 					{
 						ListViewItem.ListViewSubItem view = new ListViewItem.ListViewSubItem { Tag = x };
 						views.Add(view);
+						int index = views.Count - 1;
 
 						return x.Text.Subscribe(y =>
 						{
 							view.Text = y;
-							listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+							listView.AutoResizeColumn(index, ColumnHeaderAutoResizeStyle.HeaderSize);
 						});
 					})
 			);
@@ -780,12 +784,14 @@ namespace TrainEditor2.Extensions
 					ListViewSubItemViewModel viewModel = (ListViewSubItemViewModel)x.NewItems[0];
 					ListViewItem.ListViewSubItem view = new ListViewItem.ListViewSubItem { Tag = viewModel };
 					views.Insert(x.NewStartingIndex, view);
+					int index = views.Count - 1;
+
 					disposables.Add(
 						viewModel,
 						viewModel.Text.Subscribe(y =>
 						{
 							view.Text = y;
-							listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+							listView.AutoResizeColumn(index, ColumnHeaderAutoResizeStyle.HeaderSize);
 						})
 					);
 				})

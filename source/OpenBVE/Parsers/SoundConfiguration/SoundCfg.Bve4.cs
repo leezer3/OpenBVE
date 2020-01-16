@@ -33,7 +33,7 @@ namespace OpenBve
 
 			//Radius at which the sound is audible at full volume, presumably in m
 			//TODO: All radii are much too SoundCfgParser.smallRadius in external mode, but we can't change them by default.....
-			
+
 
 			// parse configuration file
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
@@ -824,6 +824,20 @@ namespace OpenBve
 				car.Sounds.Motor.Position = center;
 
 				foreach (TrainManager.MotorSound.Table table in car.Sounds.Motor.PowerTables)
+				{
+					table.PlayingBuffer = null;
+					table.PlayingSource = null;
+
+					foreach (TrainManager.MotorSound.Vertex<int, SoundBuffer> vertex in table.BufferVertices)
+					{
+						if (vertex.Y >= 0 && vertex.Y < MotorFiles.Length && MotorFiles[vertex.Y] != null)
+						{
+							vertex.Z = Program.Sounds.RegisterBuffer(MotorFiles[vertex.Y], SoundCfgParser.mediumRadius);
+						}
+					}
+				}
+
+				foreach (TrainManager.MotorSound.Table table in car.Sounds.Motor.BrakeTables)
 				{
 					table.PlayingBuffer = null;
 					table.PlayingSource = null;

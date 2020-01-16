@@ -152,7 +152,7 @@ namespace TrainEditor2.IO.Panels.Bve4
 			WriteKey(builder, "Location", element.LocationX, element.LocationY);
 			WriteKey(builder, "Minimum", element.Minimum);
 			WriteKey(builder, "Maximum", element.Maximum);
-			WriteKey(builder, "Location", element.LocationX, element.LocationY);
+			WriteKey(builder, "Direction", element.DirectionX, element.DirectionY);
 			WriteKey(builder, "DaytimeImage", Utilities.MakeRelativePath(fileName, element.DaytimeImage));
 			WriteKey(builder, "NighttimeImage", Utilities.MakeRelativePath(fileName, element.NighttimeImage));
 			WriteKey(builder, "Width", element.Width);

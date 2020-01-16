@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -209,7 +208,7 @@ namespace TrainEditor2.Models.Trains
 
 			internal void Cleanup()
 			{
-				Func<int, ObservableCollection<Line>, bool> condition = (i, ls) => ls.Any(l => l.LeftID == i || l.RightID == i);
+				Func<int, ICollection<Line>, bool> condition = (i, ls) => ls.Any(l => l.LeftID == i || l.RightID == i);
 
 				int[] pitchTargetIDs = new int[0];
 				int[] volumeTargetIDs = new int[0];
@@ -245,7 +244,7 @@ namespace TrainEditor2.Models.Trains
 				IsRefreshGlControl = true;
 			}
 
-			private static void DeleteDotLine(VertexLibrary vertices, ObservableCollection<Line> lines)
+			private static void DeleteDotLine(VertexLibrary vertices, ICollection<Line> lines)
 			{
 				if (vertices.Any(v => v.Value.Selected) || lines.Any(l => l.Selected))
 				{
@@ -511,7 +510,7 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			private void ChangeCursor(VertexLibrary vertices, ObservableCollection<Line> lines, double x, double y)
+			private void ChangeCursor(VertexLibrary vertices, ICollection<Line> lines, double x, double y)
 			{
 				if (IsSelectDotLine(vertices, lines, x, y))
 				{
@@ -530,7 +529,7 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			private void MouseDrag(VertexLibrary vertices, ObservableCollection<Line> lines, double x, double y, double deltaX, double deltaY)
+			private void MouseDrag(VertexLibrary vertices, ICollection<Line> lines, double x, double y, double deltaX, double deltaY)
 			{
 				switch (CurrentToolMode)
 				{
@@ -646,7 +645,7 @@ namespace TrainEditor2.Models.Trains
 						SoundIndices.Add(previewArea);
 						SoundIndices.AddRange(addAreas);
 						SoundIndices.RemoveAll(a => a.TBD);
-						SoundIndices = new ObservableCollection<Area>(SoundIndices.OrderBy(a => a.LeftX));
+						SoundIndices = new List<Area>(SoundIndices.OrderBy(a => a.LeftX));
 
 						if (previewArea.TBD)
 						{
@@ -693,7 +692,7 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			private void ResetSelect(VertexLibrary vertices, ObservableCollection<Line> lines)
+			private void ResetSelect(VertexLibrary vertices, ICollection<Line> lines)
 			{
 				foreach (Vertex vertex in vertices.Values)
 				{
@@ -717,7 +716,7 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			private bool IsSelectDotLine(VertexLibrary vertices, ObservableCollection<Line> lines, double x, double y)
+			private bool IsSelectDotLine(VertexLibrary vertices, ICollection<Line> lines, double x, double y)
 			{
 				if (vertices.Any(v => v.Value.X - 0.01 < x && x < v.Value.X + 0.01 && v.Value.Y - 2.0 < y && y < v.Value.Y + 2.0))
 				{
@@ -749,7 +748,7 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			private void SelectDotLine(VertexLibrary vertices, ObservableCollection<Line> lines, double x, double y)
+			private void SelectDotLine(VertexLibrary vertices, ICollection<Line> lines, double x, double y)
 			{
 				Func<Vertex, bool> conditionVertex = v => v.X - 0.01 < x && x < v.X + 0.01 && v.Y - 2.0 < y && y < v.Y + 2.0;
 
@@ -891,7 +890,7 @@ namespace TrainEditor2.Models.Trains
 				IsRefreshGlControl = true;
 			}
 
-			private bool IsDrawLine(VertexLibrary vertices, ObservableCollection<Line> lines, double x, double y)
+			private bool IsDrawLine(VertexLibrary vertices, ICollection<Line> lines, double x, double y)
 			{
 				Func<Vertex, bool> conditionVertex = v => v.X - 0.01 < x && x < v.X + 0.01 && v.Y - 2.0 < y && y < v.Y + 2.0;
 
@@ -943,7 +942,7 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			private void DrawLine(VertexLibrary vertices, ObservableCollection<Line> lines, double x, double y)
+			private void DrawLine(VertexLibrary vertices, ICollection<Line> lines, double x, double y)
 			{
 				Func<Vertex, bool> conditionVertex = v => v.X - 0.01 < x && x < v.X + 0.01 && v.Y - 2.0 < y && y < v.Y + 2.0;
 
