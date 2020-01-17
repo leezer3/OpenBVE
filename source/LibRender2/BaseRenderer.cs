@@ -1022,7 +1022,7 @@ namespace LibRender2
 					}
 				}
 
-				Shader.SetOpacity(alphaFactor);
+				Shader.SetOpacity(inv255 * material.Color.A * alphaFactor);
 
 				// render polygon
 				VAO.Draw(DrawMode, Face.IboStartIndex, Face.Vertices.Length);
