@@ -811,6 +811,61 @@ namespace OpenBve
 							i++;
 						}
 						i--; break;
+					case "[touch]":
+						i++;
+
+						while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						{
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+
+							if (j >= 0)
+							{
+								string a = Lines[i].Substring(0, j).TrimEnd();
+								string b = Lines[i].Substring(j + 1).TrimStart();
+
+								if (b.Length == 0 || Path.ContainsInvalidChars(b))
+								{
+									Interface.AddMessage(MessageType.Error, false, $"FileName contains illegal characters or is empty at line {(i + 1).ToString(Culture)} in file {FileName}");
+								}
+								else
+								{
+									int k;
+
+									if (!int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out k))
+									{
+										Interface.AddMessage(MessageType.Error, false, $"Invalid index appeared at line {(i + 1).ToString(Culture)} in file {FileName}");
+									}
+									else
+									{
+										if (k >= 0)
+										{
+											int n = train.Cars[train.DriverCar].Sounds.Touch.Length;
+
+											if (k >= n)
+											{
+												Array.Resize(ref train.Cars[train.DriverCar].Sounds.Touch, k + 1);
+
+												for (int h = n; h < k; h++)
+												{
+													train.Cars[train.DriverCar].Sounds.Touch[h] = new CarSound();
+												}
+											}
+
+											train.Cars[train.DriverCar].Sounds.Touch[k] = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), panel);
+										}
+										else
+										{
+											Interface.AddMessage(MessageType.Warning, false, $"Index must be greater or equal to zero at line {(i + 1).ToString(Culture)} in file {FileName}");
+										}
+									}
+								}
+							}
+
+							i++;
+						}
+
+						i--;
+						break;
 				}
 			}
 			for (int i = 0; i < train.Cars.Length; i++)
