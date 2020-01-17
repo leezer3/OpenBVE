@@ -502,7 +502,14 @@ namespace OpenBve
 			}
 			if (PlayerFirstStationIndex == -1)
 			{
-				PlayerFirstStationIndex = os;
+				if (os == -1)
+				{
+					PlayerFirstStationIndex = 0;
+				}
+				else
+				{
+					PlayerFirstStationIndex = os;	
+				}
 			}
 			{
 				int s = Program.CurrentRoute.Stations[PlayerFirstStationIndex].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
