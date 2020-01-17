@@ -299,7 +299,7 @@ namespace TrainEditor2.Views
 				.BindToButton(buttonPanelCopy)
 				.AddTo(panelDisposable);
 
-			new[] { x.RemoveScreen, x.RemovePilotLamp, x.RemoveNeedle, x.RemoveDigitalNumber, x.RemoveDigitalGauge, x.RemoveLinearGauge, x.RemoveTimetable, x.RemoveTouch }
+			new[] { x.RemoveScreen, x.RemovePanelElement, x.RemoveTouch }
 				.BindToButton(buttonPanelRemove)
 				.AddTo(panelDisposable);
 

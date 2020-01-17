@@ -247,32 +247,7 @@ namespace TrainEditor2.ViewModels.Panels
 			get;
 		}
 
-		internal ReactiveCommand RemovePilotLamp
-		{
-			get;
-		}
-
-		internal ReactiveCommand RemoveNeedle
-		{
-			get;
-		}
-
-		internal ReactiveCommand RemoveDigitalNumber
-		{
-			get;
-		}
-
-		internal ReactiveCommand RemoveDigitalGauge
-		{
-			get;
-		}
-
-		internal ReactiveCommand RemoveLinearGauge
-		{
-			get;
-		}
-
-		internal ReactiveCommand RemoveTimetable
+		internal ReactiveCommand RemovePanelElement
 		{
 			get;
 		}
@@ -691,38 +666,8 @@ namespace TrainEditor2.ViewModels.Panels
 				.WithSubscribe(panel.RemoveScreen)
 				.AddTo(disposable);
 
-			RemovePilotLamp = SelectedPilotLamp
-				.Select(x => x != null)
-				.ToReactiveCommand()
-				.WithSubscribe(panel.RemovePanelElement)
-				.AddTo(disposable);
-
-			RemoveNeedle = SelectedNeedle
-				.Select(x => x != null)
-				.ToReactiveCommand()
-				.WithSubscribe(panel.RemovePanelElement)
-				.AddTo(disposable);
-
-			RemoveDigitalNumber = SelectedDigitalNumber
-				.Select(x => x != null)
-				.ToReactiveCommand()
-				.WithSubscribe(panel.RemovePanelElement)
-				.AddTo(disposable);
-
-			RemoveDigitalGauge = SelectedDigitalGauge
-				.Select(x => x != null)
-				.ToReactiveCommand()
-				.WithSubscribe(panel.RemovePanelElement)
-				.AddTo(disposable);
-
-			RemoveLinearGauge = SelectedLinearGauge
-				.Select(x => x != null)
-				.ToReactiveCommand()
-				.WithSubscribe(panel.RemovePanelElement)
-				.AddTo(disposable);
-
-			RemoveTimetable = SelectedTimetable
-				.Select(x => x != null)
+			RemovePanelElement = SelectedListItem
+				.Select(x => x?.Tag.Value is PanelElement)
 				.ToReactiveCommand()
 				.WithSubscribe(panel.RemovePanelElement)
 				.AddTo(disposable);

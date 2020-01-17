@@ -322,16 +322,7 @@ namespace TrainEditor2.Views
 				.BindToButton(buttonSoundAdd)
 				.AddTo(soundDisposable);
 
-			new[]
-				{
-					x.RemoveRun, x.RemoveFlange, x.RemoveMotor, x.RemoveFrontSwitch, x.RemoveRearSwitch,
-					x.RemoveBrake, x.RemoveCompressor, x.RemoveSuspension, x.RemovePrimaryHorn, x.RemoveSecondaryHorn,
-					x.RemoveMusicHorn, x.RemoveDoor, x.RemoveAts, x.RemoveBuzzer, x.RemovePilotLamp,
-					x.RemoveBrakeHandle, x.RemoveMasterController, x.RemoveReverser, x.RemoveBreaker, x.RemoveRequestStop,
-					x.RemoveTouch, x.RemoveOthers
-				}
-				.BindToButton(buttonSoundRemove)
-				.AddTo(soundDisposable);
+			x.RemoveSoundElement.BindToButton(buttonSoundRemove).AddTo(soundDisposable);
 
 			return soundDisposable;
 		}

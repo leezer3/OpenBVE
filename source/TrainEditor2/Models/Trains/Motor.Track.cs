@@ -248,19 +248,7 @@ namespace TrainEditor2.Models.Trains
 			private InputEventModel.ModifierKeys currentModifierKeys;
 			private InputEventModel.CursorType currentCursorType;
 
-			private int selectedSoundIndex;
-			private double minVelocity;
-			private double maxVelocity;
-			private double minPitch;
-			private double maxPitch;
-			private double minVolume;
-			private double maxVolume;
-			private double nowVelocity;
-			private double nowPitch;
-			private double nowVolume;
-
-			private InputMode currentInputMode;
-			private ToolMode currentToolMode;
+			private static ToolMode currentToolMode;
 
 			private double lastMousePosX;
 			private double lastMousePosY;
@@ -270,8 +258,6 @@ namespace TrainEditor2.Models.Trains
 			private SelectedRange selectedRange;
 			private Vertex hoveredVertexPitch;
 			private Vertex hoveredVertexVolume;
-
-			private bool isRefreshGlControl;
 
 			private TrackType type;
 
@@ -285,11 +271,6 @@ namespace TrainEditor2.Models.Trains
 
 			internal ObservableCollection<TrackState> PrevStates;
 			internal ObservableCollection<TrackState> NextStates;
-
-			internal static double CurrentSimSpeed;
-
-			private static int glControlWidth;
-			private static int glControlHeight;
 
 			internal MessageBox MessageBox
 			{
@@ -351,138 +332,6 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			internal int SelectedSoundIndex
-			{
-				get
-				{
-					return selectedSoundIndex;
-				}
-				set
-				{
-					SetProperty(ref selectedSoundIndex, value);
-				}
-			}
-
-			internal double MinVelocity
-			{
-				get
-				{
-					return minVelocity;
-				}
-				set
-				{
-					SetProperty(ref minVelocity, value);
-				}
-			}
-
-			internal double MaxVelocity
-			{
-				get
-				{
-					return maxVelocity;
-				}
-				set
-				{
-					SetProperty(ref maxVelocity, value);
-				}
-			}
-
-			internal double MinPitch
-			{
-				get
-				{
-					return minPitch;
-				}
-				set
-				{
-					SetProperty(ref minPitch, value);
-				}
-			}
-
-			internal double MaxPitch
-			{
-				get
-				{
-					return maxPitch;
-				}
-				set
-				{
-					SetProperty(ref maxPitch, value);
-				}
-			}
-
-			internal double MinVolume
-			{
-				get
-				{
-					return minVolume;
-				}
-				set
-				{
-					SetProperty(ref minVolume, value);
-				}
-			}
-
-			internal double MaxVolume
-			{
-				get
-				{
-					return maxVolume;
-				}
-				set
-				{
-					SetProperty(ref maxVolume, value);
-				}
-			}
-
-			internal double NowVelocity
-			{
-				get
-				{
-					return nowVelocity;
-				}
-				set
-				{
-					SetProperty(ref nowVelocity, value);
-				}
-			}
-
-			internal double NowPitch
-			{
-				get
-				{
-					return nowPitch;
-				}
-				set
-				{
-					SetProperty(ref nowPitch, value);
-				}
-			}
-
-			internal double NowVolume
-			{
-				get
-				{
-					return nowVolume;
-				}
-				set
-				{
-					SetProperty(ref nowVolume, value);
-				}
-			}
-
-			internal InputMode CurrentInputMode
-			{
-				get
-				{
-					return currentInputMode;
-				}
-				set
-				{
-					SetProperty(ref currentInputMode, value);
-				}
-			}
-
 			internal ToolMode CurrentToolMode
 			{
 				get
@@ -492,48 +341,6 @@ namespace TrainEditor2.Models.Trains
 				set
 				{
 					SetProperty(ref currentToolMode, value);
-				}
-			}
-
-			internal static int GlControlWidth
-			{
-				get
-				{
-					return glControlWidth;
-				}
-				set
-				{
-					if (value > 0)
-					{
-						glControlWidth = value;
-					}
-				}
-			}
-
-			internal static int GlControlHeight
-			{
-				get
-				{
-					return glControlHeight;
-				}
-				set
-				{
-					if (value > 0)
-					{
-						glControlHeight = value;
-					}
-				}
-			}
-
-			internal bool IsRefreshGlControl
-			{
-				get
-				{
-					return isRefreshGlControl;
-				}
-				set
-				{
-					SetProperty(ref isRefreshGlControl, value);
 				}
 			}
 
@@ -558,19 +365,8 @@ namespace TrainEditor2.Models.Trains
 				ToolTipVertexVolume = new ToolTipModel();
 				CurrentCursorType = InputEventModel.CursorType.Arrow;
 
-				SelectedSoundIndex = -1;
-
 				PrevStates = new ObservableCollection<TrackState>();
 				NextStates = new ObservableCollection<TrackState>();
-
-				MinVelocity = 0.0;
-				MaxVelocity = 40.0;
-
-				MinPitch = 0.0;
-				MaxPitch = 400.0;
-
-				MinVolume = 0.0;
-				MaxVolume = 256.0;
 
 				Type = TrackType.Power;
 

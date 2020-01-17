@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using OpenBveApi.Colors;
-using OpenBveApi.Graphics;
 using OpenBveApi.Math;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -14,9 +11,7 @@ using TrainEditor2.Extensions;
 using TrainEditor2.Models.Dialogs;
 using TrainEditor2.Models.Others;
 using TrainEditor2.Simulation.TrainManager;
-using TrainEditor2.Systems;
 using Vector2 = OpenBveApi.Math.Vector2;
-using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace TrainEditor2.Models.Trains
 {
@@ -24,168 +19,6 @@ namespace TrainEditor2.Models.Trains
 	{
 		internal partial class Track
 		{
-			private double XtoVelocity(double x)
-			{
-				double factorVelocity = GlControlWidth / (MaxVelocity - MinVelocity);
-				return MinVelocity + x / factorVelocity;
-			}
-
-			private double YtoPitch(double y)
-			{
-				double factorPitch = -GlControlHeight / (MaxPitch - MinPitch);
-				return MinPitch + (y - GlControlHeight) / factorPitch;
-			}
-
-			private double YtoVolume(double y)
-			{
-				double factorVolume = -GlControlHeight / (MaxVolume - MinVolume);
-				return MinVolume + (y - GlControlHeight) / factorVolume;
-			}
-
-			private double VelocityToX(double v)
-			{
-				double factorVelocity = GlControlWidth / (MaxVelocity - MinVelocity);
-				return (v - MinVelocity) * factorVelocity;
-			}
-
-			private double PitchToY(double p)
-			{
-				double factorPitch = -GlControlHeight / (MaxPitch - MinPitch);
-				return GlControlHeight + (p - MinPitch) * factorPitch;
-			}
-
-			private double VolumeToY(double v)
-			{
-				double factorVolume = -GlControlHeight / (MaxVolume - MinVolume);
-				return GlControlHeight + (v - MinVolume) * factorVolume;
-			}
-
-			internal void ZoomIn()
-			{
-				Utilities.ZoomIn(ref minVelocity, ref maxVelocity);
-
-				OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVelocity)));
-				OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVelocity)));
-
-				switch (CurrentInputMode)
-				{
-					case InputMode.Pitch:
-						Utilities.ZoomIn(ref minPitch, ref maxPitch);
-
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinPitch)));
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxPitch)));
-						break;
-					case InputMode.Volume:
-						Utilities.ZoomIn(ref minVolume, ref maxVolume);
-
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVolume)));
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVolume)));
-						break;
-				}
-			}
-
-			internal void ZoomOut()
-			{
-				Utilities.ZoomOut(ref minVelocity, ref maxVelocity);
-
-				OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVelocity)));
-				OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVelocity)));
-
-				switch (CurrentInputMode)
-				{
-					case InputMode.Pitch:
-						Utilities.ZoomOut(ref minPitch, ref maxPitch);
-
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinPitch)));
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxPitch)));
-						break;
-					case InputMode.Volume:
-						Utilities.ZoomOut(ref minVolume, ref maxVolume);
-
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVolume)));
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVolume)));
-						break;
-				}
-			}
-
-			internal void Reset()
-			{
-				Utilities.Reset(0.5 * 40.0, ref minVelocity, ref maxVelocity);
-
-				OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVelocity)));
-				OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVelocity)));
-
-				switch (CurrentInputMode)
-				{
-					case InputMode.Pitch:
-						Utilities.Reset(0.5 * 400.0, ref minPitch, ref maxPitch);
-
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinPitch)));
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxPitch)));
-						break;
-					case InputMode.Volume:
-						Utilities.Reset(0.5 * 256.0, ref minVolume, ref maxVolume);
-
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVolume)));
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVolume)));
-						break;
-				}
-			}
-
-			internal void MoveLeft()
-			{
-				Utilities.MoveNegative(ref minVelocity, ref maxVelocity);
-
-				OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVelocity)));
-				OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVelocity)));
-			}
-
-			internal void MoveRight()
-			{
-				Utilities.MovePositive(ref minVelocity, ref maxVelocity);
-
-				OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVelocity)));
-				OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVelocity)));
-			}
-
-			internal void MoveBottom()
-			{
-				switch (CurrentInputMode)
-				{
-					case InputMode.Pitch:
-						Utilities.MoveNegative(ref minPitch, ref maxPitch);
-
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinPitch)));
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxPitch)));
-						break;
-					case InputMode.Volume:
-						Utilities.MoveNegative(ref minVolume, ref maxVolume);
-
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVolume)));
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVolume)));
-						break;
-				}
-			}
-
-			internal void MoveTop()
-			{
-				switch (CurrentInputMode)
-				{
-					case InputMode.Pitch:
-						Utilities.MovePositive(ref minPitch, ref maxPitch);
-
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinPitch)));
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxPitch)));
-						break;
-					case InputMode.Volume:
-						Utilities.MovePositive(ref minVolume, ref maxVolume);
-
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVolume)));
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVolume)));
-						break;
-				}
-			}
-
 			internal void Undo()
 			{
 				TrackState prev = PrevStates.Last();
@@ -193,7 +26,7 @@ namespace TrainEditor2.Models.Trains
 				prev.Apply(this);
 				PrevStates.Remove(prev);
 
-				IsRefreshGlControl = true;
+				BaseMotor.IsRefreshGlControl = true;
 			}
 
 			internal void Redo()
@@ -203,7 +36,7 @@ namespace TrainEditor2.Models.Trains
 				next.Apply(this);
 				NextStates.Remove(next);
 
-				IsRefreshGlControl = true;
+				BaseMotor.IsRefreshGlControl = true;
 			}
 
 			internal void Cleanup()
@@ -213,12 +46,12 @@ namespace TrainEditor2.Models.Trains
 				int[] pitchTargetIDs = new int[0];
 				int[] volumeTargetIDs = new int[0];
 
-				if (CurrentInputMode != InputMode.Volume)
+				if (BaseMotor.CurrentInputMode != InputMode.Volume)
 				{
 					pitchTargetIDs = PitchVertices.Keys.Where(i => !condition(i, PitchLines)).ToArray();
 				}
 
-				if (CurrentInputMode != InputMode.Pitch)
+				if (BaseMotor.CurrentInputMode != InputMode.Pitch)
 				{
 					volumeTargetIDs = VolumeVertices.Keys.Where(i => !condition(i, VolumeLines)).ToArray();
 				}
@@ -241,7 +74,7 @@ namespace TrainEditor2.Models.Trains
 					VolumeVertices.Remove(targetID);
 				}
 
-				IsRefreshGlControl = true;
+				BaseMotor.IsRefreshGlControl = true;
 			}
 
 			private static void DeleteDotLine(VertexLibrary vertices, ICollection<Line> lines)
@@ -270,7 +103,7 @@ namespace TrainEditor2.Models.Trains
 				PrevStates.Add(new TrackState(this));
 				NextStates.Clear();
 
-				switch (CurrentInputMode)
+				switch (BaseMotor.CurrentInputMode)
 				{
 					case InputMode.Pitch:
 						DeleteDotLine(PitchVertices, PitchLines);
@@ -283,7 +116,7 @@ namespace TrainEditor2.Models.Trains
 						break;
 				}
 
-				IsRefreshGlControl = true;
+				BaseMotor.IsRefreshGlControl = true;
 			}
 
 			internal void DirectDot(double x, double y)
@@ -293,7 +126,7 @@ namespace TrainEditor2.Models.Trains
 
 				bool exist = false;
 
-				switch (CurrentInputMode)
+				switch (BaseMotor.CurrentInputMode)
 				{
 					case InputMode.Pitch:
 						exist = PitchVertices.Any(v => v.Value.X == x);
@@ -320,7 +153,7 @@ namespace TrainEditor2.Models.Trains
 					}
 				}
 
-				switch (CurrentInputMode)
+				switch (BaseMotor.CurrentInputMode)
 				{
 					case InputMode.Pitch:
 						DrawDot(PitchVertices, x, y);
@@ -340,7 +173,7 @@ namespace TrainEditor2.Models.Trains
 
 					if (BaseMotor.CurrentSimState == SimulationState.Disable || BaseMotor.CurrentSimState == SimulationState.Stopped)
 					{
-						if (CurrentInputMode != InputMode.SoundIndex)
+						if (BaseMotor.CurrentInputMode != InputMode.SoundIndex)
 						{
 							switch (CurrentToolMode)
 							{
@@ -361,35 +194,31 @@ namespace TrainEditor2.Models.Trains
 
 			internal void MouseMove(InputEventModel.EventArgs e)
 			{
-				NowVelocity = 0.01 * Math.Round(100.0 * XtoVelocity(e.X));
-				NowPitch = 0.01 * Math.Round(100.0 * YtoPitch(e.Y));
-				NowVolume = 0.01 * Math.Round(100.0 * YtoVolume(e.Y));
-
-				if (CurrentInputMode != InputMode.Volume)
+				if (BaseMotor.CurrentInputMode != InputMode.Volume)
 				{
-					ShowToolTipVertex(InputMode.Pitch, PitchVertices, ref hoveredVertexPitch, toolTipVertexPitch, NowVelocity, NowPitch);
+					ShowToolTipVertex(InputMode.Pitch, PitchVertices, ref hoveredVertexPitch, toolTipVertexPitch, BaseMotor.NowVelocity, BaseMotor.NowPitch);
 				}
 
-				if (CurrentInputMode != InputMode.Pitch)
+				if (BaseMotor.CurrentInputMode != InputMode.Pitch)
 				{
-					ShowToolTipVertex(InputMode.Pitch, VolumeVertices, ref hoveredVertexVolume, toolTipVertexVolume, NowVelocity, NowVolume);
+					ShowToolTipVertex(InputMode.Pitch, VolumeVertices, ref hoveredVertexVolume, toolTipVertexVolume, BaseMotor.NowVelocity, BaseMotor.NowVolume);
 				}
 
 				if (BaseMotor.CurrentSimState == SimulationState.Disable || BaseMotor.CurrentSimState == SimulationState.Stopped)
 				{
-					if (CurrentInputMode != InputMode.SoundIndex)
+					if (BaseMotor.CurrentInputMode != InputMode.SoundIndex)
 					{
 						switch (CurrentToolMode)
 						{
 							case ToolMode.Select:
 							case ToolMode.Line:
-								switch (CurrentInputMode)
+								switch (BaseMotor.CurrentInputMode)
 								{
 									case InputMode.Pitch:
-										ChangeCursor(PitchVertices, PitchLines, NowVelocity, NowPitch);
+										ChangeCursor(PitchVertices, PitchLines, BaseMotor.NowVelocity, BaseMotor.NowPitch);
 										break;
 									case InputMode.Volume:
-										ChangeCursor(VolumeVertices, VolumeLines, NowVelocity, NowVolume);
+										ChangeCursor(VolumeVertices, VolumeLines, BaseMotor.NowVelocity, BaseMotor.NowVolume);
 										break;
 								}
 								break;
@@ -418,26 +247,26 @@ namespace TrainEditor2.Models.Trains
 						double deltaX = e.X - lastMousePosX;
 						double deltaY = e.Y - lastMousePosY;
 
-						double factorVelocity = GlControlWidth / (maxVelocity - minVelocity);
-						double factorPitch = -GlControlHeight / (maxPitch - minPitch);
-						double factorVolume = -GlControlHeight / (maxVolume - minVolume);
+						double factorVelocity = GlControlWidth / (BaseMotor.MaxVelocity - BaseMotor.MinVelocity);
+						double factorPitch = -GlControlHeight / (BaseMotor.MaxPitch - BaseMotor.MinPitch);
+						double factorVolume = -GlControlHeight / (BaseMotor.MaxVolume - BaseMotor.MinVolume);
 
 						double deltaVelocity = 0.01 * Math.Round(100.0 * deltaX / factorVelocity);
 						double deltaPitch = 0.01 * Math.Round(100.0 * deltaY / factorPitch);
 						double deltaVolume = 0.01 * Math.Round(100.0 * deltaY / factorVolume);
 
-						switch (CurrentInputMode)
+						switch (BaseMotor.CurrentInputMode)
 						{
 							case InputMode.Pitch:
-								MouseDrag(PitchVertices, PitchLines, NowVelocity, NowPitch, deltaVelocity, deltaPitch);
+								MouseDrag(PitchVertices, PitchLines, BaseMotor.NowVelocity, BaseMotor.NowPitch, deltaVelocity, deltaPitch);
 								break;
 							case InputMode.Volume:
-								MouseDrag(VolumeVertices, VolumeLines, NowVelocity, NowVolume, deltaVelocity, deltaVolume);
+								MouseDrag(VolumeVertices, VolumeLines, BaseMotor.NowVelocity, BaseMotor.NowVolume, deltaVelocity, deltaVolume);
 								break;
 							case InputMode.SoundIndex:
 								if (deltaVelocity != 0.0)
 								{
-									previewArea = new Area(Math.Min(NowVelocity - deltaVelocity, NowVelocity), Math.Max(NowVelocity - deltaVelocity, NowVelocity), SelectedSoundIndex);
+									previewArea = new Area(Math.Min(BaseMotor.NowVelocity - deltaVelocity, BaseMotor.NowVelocity), Math.Max(BaseMotor.NowVelocity - deltaVelocity, BaseMotor.NowVelocity), BaseMotor.SelectedSoundIndex);
 								}
 								else
 								{
@@ -446,13 +275,13 @@ namespace TrainEditor2.Models.Trains
 								break;
 						}
 
-						if (CurrentInputMode != InputMode.SoundIndex && CurrentToolMode != ToolMode.Select)
+						if (BaseMotor.CurrentInputMode != InputMode.SoundIndex && CurrentToolMode != ToolMode.Select)
 						{
 							lastMousePosX = e.X;
 							lastMousePosY = e.Y;
 						}
 
-						IsRefreshGlControl = true;
+						BaseMotor.IsRefreshGlControl = true;
 					}
 				}
 			}
@@ -487,15 +316,15 @@ namespace TrainEditor2.Models.Trains
 						toolTipVertex.Title = Utilities.GetInterfaceString("motor_sound_settings", "vertex_info", "name");
 						toolTipVertex.Icon = ToolTipModel.ToolTipIcon.Information;
 						toolTipVertex.Text = builder.ToString();
-						toolTipVertex.X = VelocityToX(newHoveredVertex.X) + 10.0;
+						toolTipVertex.X = BaseMotor.VelocityToX(newHoveredVertex.X) + 10.0;
 
 						switch (inputMode)
 						{
 							case InputMode.Pitch:
-								toolTipVertex.Y = PitchToY(newHoveredVertex.Y) + 10.0;
+								toolTipVertex.Y = BaseMotor.PitchToY(newHoveredVertex.Y) + 10.0;
 								break;
 							case InputMode.Volume:
-								toolTipVertex.Y = VolumeToY(newHoveredVertex.Y) + 10.0;
+								toolTipVertex.Y = BaseMotor.VolumeToY(newHoveredVertex.Y) + 10.0;
 								break;
 						}
 
@@ -559,7 +388,7 @@ namespace TrainEditor2.Models.Trains
 
 			internal void MouseUp()
 			{
-				if (CurrentInputMode != InputMode.SoundIndex)
+				if (BaseMotor.CurrentInputMode != InputMode.SoundIndex)
 				{
 					isMoving = false;
 
@@ -660,7 +489,7 @@ namespace TrainEditor2.Models.Trains
 					}
 				}
 
-				IsRefreshGlControl = true;
+				BaseMotor.IsRefreshGlControl = true;
 			}
 
 			internal void DirectMove(double x, double y)
@@ -668,7 +497,7 @@ namespace TrainEditor2.Models.Trains
 				x = 0.01 * Math.Round(100.0 * x);
 				y = 0.01 * Math.Round(100.0 * y);
 
-				switch (CurrentInputMode)
+				switch (BaseMotor.CurrentInputMode)
 				{
 					case InputMode.Pitch:
 						MoveDot(PitchVertices, x, y);
@@ -681,12 +510,12 @@ namespace TrainEditor2.Models.Trains
 
 			internal void ResetSelect()
 			{
-				if (CurrentInputMode != InputMode.Volume)
+				if (BaseMotor.CurrentInputMode != InputMode.Volume)
 				{
 					ResetSelect(PitchVertices, PitchLines);
 				}
 
-				if (CurrentInputMode != InputMode.Pitch)
+				if (BaseMotor.CurrentInputMode != InputMode.Pitch)
 				{
 					ResetSelect(VolumeVertices, VolumeLines);
 				}
@@ -696,12 +525,12 @@ namespace TrainEditor2.Models.Trains
 			{
 				foreach (Vertex vertex in vertices.Values)
 				{
-					if (CurrentInputMode == InputMode.SoundIndex || CurrentToolMode != ToolMode.Select && CurrentToolMode != ToolMode.Move)
+					if (BaseMotor.CurrentInputMode == InputMode.SoundIndex || CurrentToolMode != ToolMode.Select && CurrentToolMode != ToolMode.Move)
 					{
 						vertex.Selected = false;
 					}
 
-					if (CurrentInputMode == InputMode.SoundIndex || CurrentToolMode != ToolMode.Line)
+					if (BaseMotor.CurrentInputMode == InputMode.SoundIndex || CurrentToolMode != ToolMode.Line)
 					{
 						vertex.IsOrigin = false;
 					}
@@ -709,7 +538,7 @@ namespace TrainEditor2.Models.Trains
 
 				foreach (Line line in lines)
 				{
-					if (CurrentInputMode == InputMode.SoundIndex || CurrentToolMode != ToolMode.Select && CurrentToolMode != ToolMode.Move)
+					if (BaseMotor.CurrentInputMode == InputMode.SoundIndex || CurrentToolMode != ToolMode.Select && CurrentToolMode != ToolMode.Move)
 					{
 						line.Selected = false;
 					}
@@ -733,11 +562,11 @@ namespace TrainEditor2.Models.Trains
 
 			private void SelectDotLine(InputEventModel.EventArgs e)
 			{
-				double velocity = XtoVelocity(e.X);
-				double pitch = YtoPitch(e.Y);
-				double volume = YtoVolume(e.Y);
+				double velocity = BaseMotor.XtoVelocity(e.X);
+				double pitch = BaseMotor.YtoPitch(e.Y);
+				double volume = BaseMotor.YtoVolume(e.Y);
 
-				switch (CurrentInputMode)
+				switch (BaseMotor.CurrentInputMode)
 				{
 					case InputMode.Pitch:
 						SelectDotLine(PitchVertices, PitchLines, velocity, pitch);
@@ -799,7 +628,7 @@ namespace TrainEditor2.Models.Trains
 					}
 				}
 
-				IsRefreshGlControl = true;
+				BaseMotor.IsRefreshGlControl = true;
 			}
 
 			private void MoveDot(VertexLibrary vertices, double deltaX, double deltaY)
@@ -860,17 +689,17 @@ namespace TrainEditor2.Models.Trains
 						vertex.Y += deltaY;
 					}
 
-					IsRefreshGlControl = true;
+					BaseMotor.IsRefreshGlControl = true;
 				}
 			}
 
 			private void DrawDot(InputEventModel.EventArgs e)
 			{
-				double velocity = 0.01 * Math.Round(100.0 * XtoVelocity(e.X));
-				double pitch = 0.01 * Math.Round(100.0 * YtoPitch(e.Y));
-				double volume = 0.01 * Math.Round(100.0 * YtoVolume(e.Y));
+				double velocity = 0.01 * Math.Round(100.0 * BaseMotor.XtoVelocity(e.X));
+				double pitch = 0.01 * Math.Round(100.0 * BaseMotor.YtoPitch(e.Y));
+				double volume = 0.01 * Math.Round(100.0 * BaseMotor.YtoVolume(e.Y));
 
-				switch (CurrentInputMode)
+				switch (BaseMotor.CurrentInputMode)
 				{
 					case InputMode.Pitch:
 						DrawDot(PitchVertices, velocity, pitch);
@@ -887,7 +716,7 @@ namespace TrainEditor2.Models.Trains
 				NextStates.Clear();
 				vertices.Add(new Vertex(x, y));
 
-				IsRefreshGlControl = true;
+				BaseMotor.IsRefreshGlControl = true;
 			}
 
 			private bool IsDrawLine(VertexLibrary vertices, ICollection<Line> lines, double x, double y)
@@ -927,11 +756,11 @@ namespace TrainEditor2.Models.Trains
 
 			private void DrawLine(InputEventModel.EventArgs e)
 			{
-				double velocity = XtoVelocity(e.X);
-				double pitch = YtoPitch(e.Y);
-				double volume = YtoVolume(e.Y);
+				double velocity = BaseMotor.XtoVelocity(e.X);
+				double pitch = BaseMotor.YtoPitch(e.Y);
+				double volume = BaseMotor.YtoVolume(e.Y);
 
-				switch (CurrentInputMode)
+				switch (BaseMotor.CurrentInputMode)
 				{
 					case InputMode.Pitch:
 						DrawLine(PitchVertices, PitchLines, velocity, pitch);
@@ -977,7 +806,7 @@ namespace TrainEditor2.Models.Trains
 						selectVertex.Value.IsOrigin = true;
 					}
 
-					IsRefreshGlControl = true;
+					BaseMotor.IsRefreshGlControl = true;
 				}
 			}
 
@@ -1193,52 +1022,6 @@ namespace TrainEditor2.Models.Trains
 				return track;
 			}
 
-			internal void DrawSimulation(double startSpeed, double endSpeed)
-			{
-				double rangeVelocity = MaxVelocity - MinVelocity;
-
-				if (startSpeed <= endSpeed)
-				{
-					if (CurrentSimSpeed < MinVelocity || CurrentSimSpeed > MaxVelocity)
-					{
-						minVelocity = 10.0 * Math.Round(0.1 * CurrentSimSpeed);
-
-						if (MinVelocity < 0.0)
-						{
-							minVelocity = 0.0;
-						}
-
-						maxVelocity = MinVelocity + rangeVelocity;
-
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVelocity)));
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVelocity)));
-
-						return;
-					}
-				}
-				else
-				{
-					if (CurrentSimSpeed < MinVelocity || CurrentSimSpeed > MaxVelocity)
-					{
-						maxVelocity = 10.0 * Math.Round(0.1 * CurrentSimSpeed);
-
-						if (MaxVelocity < rangeVelocity)
-						{
-							maxVelocity = rangeVelocity;
-						}
-
-						minVelocity = MaxVelocity - rangeVelocity;
-
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVelocity)));
-						OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVelocity)));
-
-						return;
-					}
-				}
-
-				IsRefreshGlControl = true;
-			}
-
 			private void DrawPolyLine(Matrix4D proj, Matrix4D look, Vector2 p1, Vector2 p2, double lineWidth, Color color)
 			{
 				Matrix4D inv = Matrix4D.Invert(look) * Matrix4D.Invert(proj);
@@ -1293,132 +1076,10 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			internal void DrawGlControl()
+			internal void DrawGlControl(Matrix4D projPitch, Matrix4D projVolume, Matrix4D lookPitch, Matrix4D lookVolume, bool isOverlay)
 			{
-				// prepare
-				GL.Enable(EnableCap.PointSmooth);
-				GL.Enable(EnableCap.PolygonSmooth);
-				GL.Hint(HintTarget.PointSmoothHint, HintMode.Nicest);
-				GL.Hint(HintTarget.PolygonSmoothHint, HintMode.Nicest);
-				GL.Enable(EnableCap.Blend);
-				GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-
-				GL.Viewport(0, 0, GlControlWidth, GlControlHeight);
-				GL.ClearColor(Color.Black);
-				GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
-				Matrix4D projPitch, projVolume, projString;
-				Matrix4D.CreateOrthographic(MaxVelocity - MinVelocity, MaxPitch - MinPitch, float.Epsilon, 1.0, out projPitch);
-				Matrix4D.CreateOrthographic(MaxVelocity - MinVelocity, MaxVolume - MinVolume, float.Epsilon, 1.0, out projVolume);
-				Matrix4D.CreateOrthographicOffCenter(0.0, GlControlWidth, GlControlHeight, 0.0, -1.0, 1.0, out projString);
-				Matrix4D lookPitch = Matrix4D.LookAt(new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinPitch + MaxPitch) / 2.0, float.Epsilon), new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinPitch + MaxPitch) / 2.0, 0.0), new Vector3(0, 1, 0));
-				Matrix4D lookVolume = Matrix4D.LookAt(new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinVolume + MaxVolume) / 2.0, float.Epsilon), new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinVolume + MaxVolume) / 2.0, 0.0), new Vector3(0, 1, 0));
-
-				// vertical grid
-				{
-
-					unsafe
-					{
-						GL.MatrixMode(MatrixMode.Projection);
-						double* matrixPointer = &projPitch.Row0.X;
-						GL.LoadMatrix(matrixPointer);
-						GL.MatrixMode(MatrixMode.Modelview);
-						matrixPointer = &lookPitch.Row0.X;
-						GL.LoadMatrix(matrixPointer);
-					}
-					GL.Begin(PrimitiveType.Lines);
-
-					for (double v = 0.0; v < MaxVelocity; v += 10.0)
-					{
-						GL.Color4(Color.DimGray);
-						GL.Vertex2(v, 0.0);
-						GL.Vertex2(v, float.MaxValue);
-					}
-
-					GL.End();
-
-					Program.Renderer.CurrentProjectionMatrix = projString;
-					Program.Renderer.CurrentViewMatrix = Matrix4D.Identity;
-
-					for (double v = 0.0; v < MaxVelocity; v += 10.0)
-					{
-						Program.Renderer.OpenGlString.Draw(Fonts.VerySmallFont, v.ToString("0", Culture), new Point((int)VelocityToX(v) + 1, 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
-					}
-
-					GL.Disable(EnableCap.Texture2D);
-				}
-
-				// horizontal grid
-				switch (CurrentInputMode)
-				{
-					case InputMode.Pitch:
-						unsafe
-						{
-							GL.MatrixMode(MatrixMode.Projection);
-							double* matrixPointer = &projPitch.Row0.X;
-							GL.LoadMatrix(matrixPointer);
-							GL.MatrixMode(MatrixMode.Modelview);
-							matrixPointer = &lookPitch.Row0.X;
-							GL.LoadMatrix(matrixPointer);
-						}
-
-						GL.Begin(PrimitiveType.Lines);
-
-						for (double p = 0.0; p < MaxPitch; p += 100.0)
-						{
-							GL.Color4(Color.DimGray);
-							GL.Vertex2(MinVelocity, p);
-							GL.Vertex2(MaxVelocity, p);
-						}
-
-						GL.End();
-
-						Program.Renderer.CurrentProjectionMatrix = projString;
-						Program.Renderer.CurrentViewMatrix = Matrix4D.Identity;
-
-						for (double p = 0.0; p < MaxPitch; p += 100.0)
-						{
-							Program.Renderer.OpenGlString.Draw(Fonts.VerySmallFont, p.ToString("0", Culture), new Point(1, (int)PitchToY(p) + 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
-						}
-
-						GL.Disable(EnableCap.Texture2D);
-						break;
-					case InputMode.Volume:
-						unsafe
-						{
-							GL.MatrixMode(MatrixMode.Projection);
-							double* matrixPointer = &projVolume.Row0.X;
-							GL.LoadMatrix(matrixPointer);
-							GL.MatrixMode(MatrixMode.Modelview);
-							matrixPointer = &lookVolume.Row0.X;
-							GL.LoadMatrix(matrixPointer);
-						}
-
-						GL.Begin(PrimitiveType.Lines);
-
-						for (double v = 0.0; v < MaxVolume; v += 128.0)
-						{
-							GL.Color4(Color.DimGray);
-							GL.Vertex2(MinVelocity, v);
-							GL.Vertex2(MaxVelocity, v);
-						}
-
-						GL.End();
-
-						Program.Renderer.CurrentProjectionMatrix = projString;
-						Program.Renderer.CurrentViewMatrix = Matrix4D.Identity;
-
-						for (double v = 0.0; v < MaxVolume; v += 128.0)
-						{
-							Program.Renderer.OpenGlString.Draw(Fonts.VerySmallFont, v.ToString("0", Culture), new Point(1, (int)VolumeToY(v) + 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
-						}
-
-						GL.Disable(EnableCap.Texture2D);
-						break;
-				}
-
 				// dot
-				if (CurrentInputMode != InputMode.Volume)
+				if (BaseMotor.CurrentInputMode != InputMode.Volume)
 				{
 					unsafe
 					{
@@ -1463,7 +1124,7 @@ namespace TrainEditor2.Models.Trains
 					GL.End();
 				}
 
-				if (CurrentInputMode != InputMode.Pitch)
+				if (BaseMotor.CurrentInputMode != InputMode.Pitch)
 				{
 					unsafe
 					{
@@ -1509,7 +1170,7 @@ namespace TrainEditor2.Models.Trains
 				}
 
 				// line
-				if (CurrentInputMode != InputMode.Volume)
+				if (BaseMotor.CurrentInputMode != InputMode.Volume)
 				{
 					unsafe
 					{
@@ -1561,7 +1222,7 @@ namespace TrainEditor2.Models.Trains
 					}
 				}
 
-				if (CurrentInputMode != InputMode.Pitch)
+				if (BaseMotor.CurrentInputMode != InputMode.Pitch)
 				{
 					unsafe
 					{
@@ -1614,7 +1275,7 @@ namespace TrainEditor2.Models.Trains
 				}
 
 				// area
-				if (CurrentInputMode == InputMode.SoundIndex)
+				if (BaseMotor.CurrentInputMode == InputMode.SoundIndex && !isOverlay)
 				{
 					IEnumerable<Area> areas;
 
@@ -1665,9 +1326,9 @@ namespace TrainEditor2.Models.Trains
 				}
 
 				// selected range
-				if (selectedRange != null)
+				if (selectedRange != null && !isOverlay)
 				{
-					switch (CurrentInputMode)
+					switch (BaseMotor.CurrentInputMode)
 					{
 						case InputMode.Pitch:
 							DrawPolyDashLine(projPitch, lookPitch, selectedRange.Range, 2.0, 4.0, Color.DimGray);
@@ -1677,31 +1338,6 @@ namespace TrainEditor2.Models.Trains
 							break;
 					}
 				}
-
-				// simulation speed
-				if (BaseMotor.CurrentSimState == SimulationState.Started || BaseMotor.CurrentSimState == SimulationState.Paused)
-				{
-					unsafe
-					{
-						GL.MatrixMode(MatrixMode.Projection);
-						double* matrixPointer = &projPitch.Row0.X;
-						GL.LoadMatrix(matrixPointer);
-						GL.MatrixMode(MatrixMode.Modelview);
-						matrixPointer = &lookPitch.Row0.X;
-						GL.LoadMatrix(matrixPointer);
-					}
-
-					GL.LineWidth(3.0f);
-					GL.Begin(PrimitiveType.Lines);
-
-					GL.Color4(Color.White);
-					GL.Vertex2((float)CurrentSimSpeed, 0.0f);
-					GL.Vertex2((float)CurrentSimSpeed, float.MaxValue);
-
-					GL.End();
-				}
-
-				IsRefreshGlControl = false;
 			}
 		}
 	}

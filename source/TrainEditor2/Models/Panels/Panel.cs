@@ -101,7 +101,7 @@ namespace TrainEditor2.Models.Panels
 			treeItem.Children.Add(new TreeViewItemModel(treeItem) { Title = "This" });
 			treeItem.Children.Add(new TreeViewItemModel(treeItem) { Title = "Screens" });
 			treeItem.Children.Add(CreatePanelElementsTreeItem(treeItem));
-			treeItem.Children[1].Children = new ObservableCollection<TreeViewItemModel>(Screens.Select(x => CreateScreenTreeItem(treeItem.Children[1], x)));
+			treeItem.Children[1].Children.AddRange(Screens.Select(x => CreateScreenTreeItem(treeItem.Children[1], x)));
 			TreeItems.Add(treeItem);
 		}
 

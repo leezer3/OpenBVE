@@ -113,89 +113,76 @@ namespace TrainEditor2.Views
 			Binders.BindToTreeView(treeViewCars, app.TreeItems, app.SelectedTreeItem).AddTo(disposable);
 
 			app.SelectedTreeItem
-				.BindTo(
-					tabPageTrain,
-					x => x.Enabled,
-					BindingMode.OneWay,
-					x => x == app.TreeItems[0].Children[0]
-				)
-				.AddTo(disposable);
-
-			app.SelectedTreeItem
-				.BindTo(
-					tabPageCar,
-					x => x.Enabled,
-					BindingMode.OneWay,
-					x => app.TreeItems[0].Children[1].Children.Contains(x)
-				)
-				.AddTo(disposable);
-
-			app.SelectedTreeItem
-				.BindTo(
-					tabPageAccel,
-					x => x.Enabled,
-					BindingMode.OneWay,
-					x => x?.Tag.Value is MotorCar && app.TreeItems[0].Children[1].Children.Contains(x)
-				)
-				.AddTo(disposable);
-
-			app.SelectedTreeItem
-				.BindTo(
-					tabPageMotor,
-					x => x.Enabled,
-					BindingMode.OneWay,
-					x => x?.Tag.Value is MotorCar && app.TreeItems[0].Children[1].Children.Contains(x)
-				)
-				.AddTo(disposable);
-
-			app.SelectedTreeItem
-				.BindTo(
-					tabPageCoupler,
-					x => x.Enabled,
-					BindingMode.OneWay,
-					x => app.TreeItems[0].Children[2].Children.Contains(x)
-				)
-				.AddTo(disposable);
-
-			app.SelectedTreeItem
-				.BindTo(
-					tabPagePanel,
-					x => x.Enabled,
-					BindingMode.OneWay,
-					x => x == app.TreeItems[0].Children[0]
-				)
-				.AddTo(disposable);
-
-			app.SelectedTreeItem
-				.BindTo(
-					tabPageSound,
-					x => x.Enabled,
-					BindingMode.OneWay,
-					x => x == app.TreeItems[0].Children[0]
-				)
-				.AddTo(disposable);
-
-			app.SelectedTreeItem
-				.BindTo(
-					tabControlEditor,
-					x => x.SelectedTab,
-					BindingMode.OneWay,
-					_ =>
+				.Subscribe(x =>
+				{
+					if (x == app.TreeItems[0].Children[0])
 					{
-						TabPage tabPage;
-
-						if (tabControlEditor.SelectedTab.Enabled)
+						if (!tabControlEditor.TabPages.Contains(tabPageTrain))
 						{
-							tabPage = tabControlEditor.SelectedTab;
+							tabControlEditor.TabPages.Add(tabPageTrain);
+						}
+
+						if (!tabControlEditor.TabPages.Contains(tabPagePanel))
+						{
+							tabControlEditor.TabPages.Add(tabPagePanel);
+						}
+
+						if (!tabControlEditor.TabPages.Contains(tabPageSound))
+						{
+							tabControlEditor.TabPages.Add(tabPageSound);
+						}
+					}
+					else
+					{
+						tabControlEditor.TabPages.Remove(tabPageTrain);
+						tabControlEditor.TabPages.Remove(tabPagePanel);
+						tabControlEditor.TabPages.Remove(tabPageSound);
+					}
+
+					if (app.TreeItems[0].Children[1].Children.Contains(x))
+					{
+						if (!tabControlEditor.TabPages.Contains(tabPageCar))
+						{
+							tabControlEditor.TabPages.Add(tabPageCar);
+						}
+
+						if (x?.Tag.Value is MotorCar)
+						{
+							if (!tabControlEditor.TabPages.Contains(tabPageAccel))
+							{
+								tabControlEditor.TabPages.Add(tabPageAccel);
+							}
+
+							if (!tabControlEditor.TabPages.Contains(tabPageMotor))
+							{
+								tabControlEditor.TabPages.Add(tabPageMotor);
+							}
 						}
 						else
 						{
-							tabPage = tabControlEditor.TabPages.OfType<TabPage>().FirstOrDefault(x => x.Enabled);
+							tabControlEditor.TabPages.Remove(tabPageAccel);
+							tabControlEditor.TabPages.Remove(tabPageMotor);
 						}
-
-						return tabPage;
 					}
-				)
+					else
+					{
+						tabControlEditor.TabPages.Remove(tabPageCar);
+						tabControlEditor.TabPages.Remove(tabPageAccel);
+						tabControlEditor.TabPages.Remove(tabPageMotor);
+					}
+
+					if (app.TreeItems[0].Children[2].Children.Contains(x))
+					{
+						if (!tabControlEditor.TabPages.Contains(tabPageCoupler))
+						{
+							tabControlEditor.TabPages.Add(tabPageCoupler);
+						}
+					}
+					else
+					{
+						tabControlEditor.TabPages.Remove(tabPageCoupler);
+					}
+				})
 				.AddTo(disposable);
 
 			app.IsVisibleInfo
@@ -356,8 +343,8 @@ namespace TrainEditor2.Views
 
 		private void FormEditor_Resize(object sender, EventArgs e)
 		{
-			Motor.Track.GlControlWidth = glControlMotor.Width;
-			Motor.Track.GlControlHeight = glControlMotor.Height;
+			Motor.GlControlWidth = glControlMotor.Width;
+			Motor.GlControlHeight = glControlMotor.Height;
 		}
 
 		[UIPermission(SecurityAction.Demand, Window = UIPermissionWindow.AllWindows)]
@@ -566,8 +553,8 @@ namespace TrainEditor2.Views
 
 		private void GlControlMotor_Resize(object sender, EventArgs e)
 		{
-			Motor.Track.GlControlWidth = glControlMotor.Width;
-			Motor.Track.GlControlHeight = glControlMotor.Height;
+			Motor.GlControlWidth = glControlMotor.Width;
+			Motor.GlControlHeight = glControlMotor.Height;
 		}
 
 		private void GlControlMotor_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -585,21 +572,21 @@ namespace TrainEditor2.Views
 
 		private void GlControlMotor_KeyDown(object sender, KeyEventArgs e)
 		{
-			MotorViewModel.TrackViewModel track = (app.Train.Value.SelectedCar.Value as MotorCarViewModel)?.Motor.Value.SelectedTrack.Value;
+			MotorViewModel motor = (app.Train.Value.SelectedCar.Value as MotorCarViewModel)?.Motor.Value;
 
 			switch (e.KeyCode)
 			{
 				case Keys.Left:
-					track?.MoveLeft.Execute();
+					motor?.MoveLeft.Execute();
 					break;
 				case Keys.Right:
-					track?.MoveRight.Execute();
+					motor?.MoveRight.Execute();
 					break;
 				case Keys.Down:
-					track?.MoveBottom.Execute();
+					motor?.MoveBottom.Execute();
 					break;
 				case Keys.Up:
-					track?.MoveTop.Execute();
+					motor?.MoveTop.Execute();
 					break;
 			}
 		}
@@ -618,9 +605,9 @@ namespace TrainEditor2.Views
 
 		private void GlControlMotor_MouseMove(object sender, MouseEventArgs e)
 		{
-			MotorViewModel.TrackViewModel track = (app.Train.Value.SelectedCar.Value as MotorCarViewModel)?.Motor.Value.SelectedTrack.Value;
+			MotorViewModel motor = (app.Train.Value.SelectedCar.Value as MotorCarViewModel)?.Motor.Value;
 
-			track?.MouseMove.Execute(MouseEventArgsToModel(e));
+			motor?.MouseMove.Execute(MouseEventArgsToModel(e));
 		}
 
 		private void GlControlMotor_MouseUp(object sender, MouseEventArgs e)
@@ -632,13 +619,13 @@ namespace TrainEditor2.Views
 
 		private void GlControlMotor_Paint(object sender, PaintEventArgs e)
 		{
-			MotorViewModel.TrackViewModel track = (app.Train.Value.SelectedCar.Value as MotorCarViewModel)?.Motor.Value.SelectedTrack.Value;
+			MotorViewModel motor = (app.Train.Value.SelectedCar.Value as MotorCarViewModel)?.Motor.Value;
 
 			glControlMotor.MakeCurrent();
 
-			if (track != null)
+			if (motor != null)
 			{
-				track.DrawGlControl.Execute();
+				motor.DrawGlControl.Execute();
 			}
 			else
 			{

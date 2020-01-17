@@ -452,7 +452,7 @@ namespace TrainEditor2.IO.Sounds.Bve4
 										}
 										else
 										{
-											Interface.AddMessage(MessageType.Warning, false, "Index must be greater or equal to zero at line " + (i + 1).ToString(culture) + " in file " + fileName);
+											Interface.AddMessage(MessageType.Warning, false, $"Index must be greater or equal to zero at line {(i + 1).ToString(culture)} in file {fileName}");
 										}
 									}
 								}
@@ -783,7 +783,7 @@ namespace TrainEditor2.IO.Sounds.Bve4
 										}
 										else
 										{
-											Interface.AddMessage(MessageType.Warning, false, "Index must be greater or equal to zero at line " + (i + 1).ToString(culture) + " in file " + fileName);
+											Interface.AddMessage(MessageType.Warning, false, $"Index must be greater or equal to zero at line {(i + 1).ToString(culture)} in file {fileName}");
 										}
 									}
 								}

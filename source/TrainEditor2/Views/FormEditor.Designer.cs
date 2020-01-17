@@ -6573,6 +6573,7 @@ namespace TrainEditor2.Views
 			// tabControlEditor
 			// 
 			this.tabControlEditor.AllowDrop = true;
+			this.tabControlEditor.Controls.Add(this.tabPageStatus);
 			this.tabControlEditor.Controls.Add(this.tabPageTrain);
 			this.tabControlEditor.Controls.Add(this.tabPageCar);
 			this.tabControlEditor.Controls.Add(this.tabPageAccel);
@@ -6580,7 +6581,6 @@ namespace TrainEditor2.Views
 			this.tabControlEditor.Controls.Add(this.tabPageCoupler);
 			this.tabControlEditor.Controls.Add(this.tabPagePanel);
 			this.tabControlEditor.Controls.Add(this.tabPageSound);
-			this.tabControlEditor.Controls.Add(this.tabPageStatus);
 			this.tabControlEditor.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tabControlEditor.Location = new System.Drawing.Point(200, 24);
 			this.tabControlEditor.Name = "tabControlEditor";
