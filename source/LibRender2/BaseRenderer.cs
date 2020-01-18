@@ -170,7 +170,7 @@ namespace LibRender2
 
 			StaticObjectStates = new List<ObjectState>();
 			DynamicObjectStates = new List<ObjectState>();
-			VisibleObjects = new VisibleObjectLibrary(currentHost, Camera, currentOptions);
+			VisibleObjects = new VisibleObjectLibrary(currentHost, Camera, currentOptions, this);
 			try
 			{
 				DefaultShader = new Shader("default", "default", true);
@@ -812,7 +812,7 @@ namespace LibRender2
 
 			if (lastVAO != VAO.handle)
 			{
-				VAO.BindForDrawing(Shader.VertexLayout);
+				VAO.Bind();
 				lastVAO = VAO.handle;
 			}
 			
@@ -1038,7 +1038,7 @@ namespace LibRender2
 				Shader.SetBrightness(1.0f);
 				Shader.SetOpacity(1.0f);
 				VertexArrayObject NormalsVAO = (VertexArrayObject)State.Prototype.Mesh.NormalsVAO;
-				NormalsVAO.BindForDrawing(Shader.VertexLayout);
+				NormalsVAO.Bind();
 				lastVAO = NormalsVAO.handle;
 				NormalsVAO.Draw(PrimitiveType.Lines, Face.NormalsIboStartIndex, Face.Vertices.Length * 2);
 			}

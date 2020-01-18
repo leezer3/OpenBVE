@@ -18,6 +18,7 @@ namespace LibRender2.Objects
 		private readonly HostInterface currentHost;
 		private readonly CameraProperties camera;
 		private readonly BaseOptions currentOptions;
+		private readonly BaseRenderer renderer;
 
 		private readonly List<ObjectState> myObjects;
 		private readonly List<FaceState> myOpaqueFaces;
@@ -30,11 +31,12 @@ namespace LibRender2.Objects
 		public readonly ReadOnlyCollection<FaceState> OverlayOpaqueFaces;
 		public ReadOnlyCollection<FaceState> OverlayAlphaFaces;
 
-		internal VisibleObjectLibrary(HostInterface CurrentHost, CameraProperties Camera, BaseOptions CurrentOptions)
+		internal VisibleObjectLibrary(HostInterface CurrentHost, CameraProperties Camera, BaseOptions CurrentOptions, BaseRenderer Renderer)
 		{
 			currentHost = CurrentHost;
 			camera = Camera;
 			currentOptions = CurrentOptions;
+			renderer = Renderer;
 
 			myObjects = new List<ObjectState>();
 			myOpaqueFaces = new List<FaceState>();
@@ -87,7 +89,7 @@ namespace LibRender2.Objects
 
 			if (State.Prototype.Mesh.VAO == null)
 			{
-				VAOExtensions.CreateVAO(ref State.Prototype.Mesh, State.Prototype.Dynamic);
+				VAOExtensions.CreateVAO(ref State.Prototype.Mesh, State.Prototype.Dynamic, renderer.DefaultShader.VertexLayout);
 			}
 
 			if (!result)
