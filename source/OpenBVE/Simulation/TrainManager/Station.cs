@@ -211,7 +211,10 @@ namespace OpenBve
 							}
 							else
 							{
-								Train.SafetySystems.StationAdjust.Update(tb, tf);
+								if (Train.SafetySystems.StationAdjust != null)
+								{
+									Train.SafetySystems.StationAdjust.Update(tb, tf);
+								}
 							}
 						}
 					}

@@ -16,7 +16,7 @@ namespace OpenBve
 	{
 		/// <summary>Parses a track following object</summary>
 		/// <param name="FileName">The XML file to parse</param>
-		internal static TrainManager.TrackFollowingObject ParseTrackFollowingObject(string FileName)
+		internal static TrainManager.TrackFollowingObject ParseTrackFollowingObject(string FileName, string ObjectPath)
 		{
 			// The current XML file to load
 			XDocument CurrentXML = XDocument.Load(FileName, LoadOptions.SetLineInfo);
@@ -42,7 +42,7 @@ namespace OpenBve
 
 			foreach (XElement Element in DocumentElements)
 			{
-				ParseTrackFollowingObjectNode(Element, FileName, Path, Train);
+				ParseTrackFollowingObjectNode(Element, FileName, Path, ObjectPath, Train);
 			}
 
 			return Train;
@@ -53,7 +53,7 @@ namespace OpenBve
 		/// <param name="FileName">The filename of the containing XML file</param>
 		/// <param name="Path">The path of the containing XML file</param>
 		/// <param name="Train">The track following object to parse this node into</param>
-		private static void ParseTrackFollowingObjectNode(XElement Element, string FileName, string Path, TrainManager.TrackFollowingObject Train)
+		private static void ParseTrackFollowingObjectNode(XElement Element, string FileName, string Path, string ObjectPath, TrainManager.TrackFollowingObject Train)
 		{
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string TrainDirectory = string.Empty;
@@ -87,6 +87,10 @@ namespace OpenBve
 										if (!System.IO.Directory.Exists(trainDirectory))
 										{
 											trainDirectory = OpenBveApi.Path.CombineFile(Program.FileSystem.TrainInstallationDirectory, Value);
+										}
+										if (!System.IO.Directory.Exists(trainDirectory))
+										{
+											trainDirectory = OpenBveApi.Path.CombineFile(ObjectPath, Value);
 										}
 
 										if(!System.IO.Directory.Exists(trainDirectory))

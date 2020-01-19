@@ -997,7 +997,7 @@ namespace OpenBve {
 										}
 										int n = TrainManager.TFOs.Length;
 										Array.Resize(ref TrainManager.TFOs, n + 1);
-										TrainManager.TFOs[n] = TrackFollowingObjectParser.ParseTrackFollowingObject(tfoFile);
+										TrainManager.TFOs[n] = TrackFollowingObjectParser.ParseTrackFollowingObject(tfoFile, ObjectPath);
 									}
 									break;
 									// train
@@ -2270,6 +2270,7 @@ namespace OpenBve {
 								case "route.loadingscreen":
 								case "route.displayspeed":
 								case "route.othertrainxml":
+								case "route.tfoxml":
 									break;
 									// track
 								case "track.railstart":

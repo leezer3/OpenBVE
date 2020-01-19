@@ -5,7 +5,7 @@ namespace OpenBve.SafetySystems
 {
 	internal class PassAlarm
 	{
-		/// <summary>Holds the reference to the base train</summary>
+		/// <summary>Holds the reference to the base train's driver car</summary>
 		private readonly AbstractCar baseCar;
 		/// <summary>The type of pass alarm</summary>
 		private readonly PassAlarmType Type;

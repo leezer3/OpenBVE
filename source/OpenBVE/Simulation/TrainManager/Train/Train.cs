@@ -8,7 +8,6 @@ using OpenBveApi.Interface;
 using OpenBveApi.Trains;
 using OpenBveApi;
 using OpenBveApi.Math;
-using OpenTK.Graphics.ES20;
 using RouteManager2.MessageManager;
 using SoundManager;
 
