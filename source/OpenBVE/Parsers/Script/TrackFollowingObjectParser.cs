@@ -57,6 +57,7 @@ namespace OpenBve
 		{
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string TrainDirectory = string.Empty;
+			bool consistReversed = false;
 			List<Game.TravelData> Data = new List<Game.TravelData>();
 
 			foreach (XElement SectionElement in Element.Elements())
@@ -101,6 +102,14 @@ namespace OpenBve
 										{
 											TrainDirectory = trainDirectory;
 										}
+									}
+									break;
+								case "reversed":
+									int n;
+									NumberFormats.TryParseIntVb6(Value, out n);
+									if (n == 1 || Value.ToLowerInvariant() == "true")
+									{
+										consistReversed = true;
 									}
 									break;
 							}
@@ -296,6 +305,10 @@ namespace OpenBve
 				Car.RearBogie.RearAxle.Follower.TrackIndex = Data[0].RailIndex;
 			}
 
+			if (consistReversed)
+			{
+				Train.Reverse();
+			}
 			Train.PlaceCars(Data[0].StopPosition);
 		}
 

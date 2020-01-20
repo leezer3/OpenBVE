@@ -753,6 +753,17 @@ namespace OpenBve
 				}
 			}
 
+			public override void Reverse()
+			{
+				double trackPosition = Cars[0].TrackPosition;
+				Cars = Cars.Reverse().ToArray();
+				for (int i = 0; i < Cars.Length; i++)
+				{
+					Cars[i].Reverse();
+				}
+				PlaceCars(trackPosition);
+			}
+
 			/// <summary>Call this method to topple a car</summary>
 			/// <param name="CarIndex">The car index to derail</param>
 			/// <param name="ElapsedTime">The elapsed time for this frame (Used for logging)</param>
