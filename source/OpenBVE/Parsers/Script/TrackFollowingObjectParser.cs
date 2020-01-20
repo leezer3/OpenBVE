@@ -150,8 +150,16 @@ namespace OpenBve
 				return;
 			}
 
-			// Initial setting
-			string TrainData = OpenBveApi.Path.CombineFile(TrainDirectory, "train.dat");
+			/*
+			 * First check for a train.ai file- Functionally identical, but allows for differently configured AI
+			 * trains not to show up as driveable
+			 */
+			string TrainData = OpenBveApi.Path.CombineFile(TrainDirectory, "train.ai");
+			if (!System.IO.File.Exists(TrainData))
+			{
+				// Check for the standard driveable train.dat
+				TrainData = OpenBveApi.Path.CombineFile(TrainDirectory, "train.dat");
+			}
 			string ExteriorFile = OpenBveApi.Path.CombineFile(TrainDirectory, "extensions.cfg");
 			if (!System.IO.File.Exists(TrainData) || !System.IO.File.Exists(ExteriorFile))
 			{
