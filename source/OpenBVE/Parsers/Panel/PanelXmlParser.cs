@@ -928,6 +928,8 @@ namespace OpenBve.Parsers.Panel
 										f = Panel2CfgParser.GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
 										break;
 								}
+								InitialAngle = InitialAngle.ToRadians();
+								LastAngle = LastAngle.ToRadians();
 								double a0 = (InitialAngle * Maximum - LastAngle * Minimum) / (Maximum - Minimum);
 								double a1 = (LastAngle - InitialAngle) / (Maximum - Minimum);
 								f += " " + a1.ToString(Culture) + " * " + a0.ToString(Culture) + " +";
@@ -938,8 +940,8 @@ namespace OpenBve.Parsers.Panel
 								CarSection.Groups[GroupIndex].Elements[j].RotateZFunction = new FunctionScript(Program.CurrentHost, f, false);
 								if (Backstop)
 								{
-									CarSection.Groups[GroupIndex].Elements[j].RotateZFunction.Minimum = InitialAngle.ToRadians();
-									CarSection.Groups[GroupIndex].Elements[j].RotateZFunction.Maximum = LastAngle.ToRadians();
+									CarSection.Groups[GroupIndex].Elements[j].RotateZFunction.Minimum = InitialAngle;
+									CarSection.Groups[GroupIndex].Elements[j].RotateZFunction.Maximum = LastAngle;
 								}
 							}
 						}
@@ -1106,7 +1108,7 @@ namespace OpenBve.Parsers.Panel
 								if (tf != String.Empty)
 								{
 									CarSection.Groups[GroupIndex].Elements[j].TextureShiftXDirection = Direction;
-									CarSection.Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Program.CurrentHost, tf, true);
+									CarSection.Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Program.CurrentHost, tf, false);
 								}
 							}
 						}
