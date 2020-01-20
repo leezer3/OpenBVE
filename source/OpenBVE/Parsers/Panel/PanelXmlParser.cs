@@ -1108,7 +1108,7 @@ namespace OpenBve.Parsers.Panel
 								if (tf != String.Empty)
 								{
 									CarSection.Groups[GroupIndex].Elements[j].TextureShiftXDirection = Direction;
-									CarSection.Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Program.CurrentHost, tf, true);
+									CarSection.Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Program.CurrentHost, tf, false);
 								}
 							}
 						}
