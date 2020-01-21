@@ -299,6 +299,9 @@
 						<source>Encoding:</source>
 						<target>Codificação:</target>
 					</trans-unit>
+					<trans-unit id="train_settings_reverseconsist">
+						<source>Reverse Consist:</source>
+					</trans-unit>
 					<trans-unit id="train_settings_encoding_preview">
 						<source>Preview:</source>
 						<target>Pré-visualização:</target>

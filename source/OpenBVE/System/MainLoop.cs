@@ -57,10 +57,9 @@ namespace OpenBve
 			{
 				Game.InitialStationTime = result.StartTime;
 			}
-			if (result.AIDriver == true)
-			{
-				Game.InitialAIDriver = true;
-			}
+
+			Game.InitialAIDriver = result.AIDriver;
+			Game.InitialReversedConsist = result.ReverseConsist;
 			if (result.FullScreen == true)
 			{
 				Interface.CurrentOptions.FullscreenMode = true;

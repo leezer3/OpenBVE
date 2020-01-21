@@ -762,6 +762,8 @@ namespace OpenBve
 					Cars[i].Reverse();
 				}
 				PlaceCars(trackPosition);
+				DriverCar = Cars.Length - 1 - DriverCar;
+				UpdateCabObjects();
 			}
 
 			/// <summary>Call this method to topple a car</summary>
