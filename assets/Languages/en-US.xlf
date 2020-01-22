@@ -227,6 +227,9 @@
 					<trans-unit id="train_settings_encoding">
 						<source>Encoding:</source>
 					</trans-unit>
+					<trans-unit id="train_settings_reverseconsist">
+						<source>Reverse Consist:</source>
+					</trans-unit>
 					<trans-unit id="train_settings_encoding_preview">
 						<source>Preview:</source>
 					</trans-unit>

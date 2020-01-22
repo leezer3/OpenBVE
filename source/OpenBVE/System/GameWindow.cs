@@ -855,6 +855,16 @@ namespace OpenBve
 			Loading.SimulationSetup = true;
 			switch (Game.InitialViewpoint)
 			{
+				case 0:
+					if (Game.InitialReversedConsist)
+					{
+						/*
+						 * HACK: The cab view has been created using the position of the initial driver car.
+						 * Trigger a forced change to ensure that it is now correctly positioned in the consist
+						 */
+						TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(TrainManager.CarSectionType.Interior);
+					}
+					break;
 				case 1:
 					//Switch camera to exterior
 					MainLoop.SaveCameraSettings();

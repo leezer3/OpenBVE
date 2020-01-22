@@ -398,10 +398,16 @@ namespace OpenBve {
 				}
 				// place cars
 				TrainManager.Trains[k].PlaceCars(0.0);
-				
-				// configure ai / timetable
+
+				// configure other properties
 				if (TrainManager.Trains[k].IsPlayerTrain) {
 					TrainManager.Trains[k].TimetableDelta = 0.0;
+					if (Game.InitialReversedConsist)
+					{
+						TrainManager.Trains[k].Reverse();
+						World.CameraCar = TrainManager.Trains[k].DriverCar;
+						Program.Renderer.Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
+					}
 				} else if (TrainManager.Trains[k].State != TrainState.Bogus) {
 					TrainManager.Trains[k].AI = new Game.SimpleHumanDriverAI(TrainManager.Trains[k]);
 					TrainManager.Trains[k].TimetableDelta = Game.PrecedingTrainTimeDeltas[k];

@@ -1,5 +1,4 @@
 using System;
-using System.Windows.Forms;
 using LibRender2.Camera;
 using LibRender2.Cameras;
 using OpenBve.BrakeSystems;
@@ -23,9 +22,9 @@ namespace OpenBve
 			/// <summary>Rear axle about which the car pivots</summary>
 			internal Axle RearAxle;
 			/// <summary>The front bogie</summary>
-			internal readonly Bogie FrontBogie;
+			internal Bogie FrontBogie;
 			/// <summary>The rear bogie</summary>
-			internal readonly Bogie RearBogie;
+			internal Bogie RearBogie;
 			/// <summary>The horns attached to this car</summary>
 			internal Horn[] Horns;
 			/// <summary>The doors for this car</summary>
@@ -188,6 +187,48 @@ namespace OpenBve
 				{
 					return FrontAxle.Follower.TrackPosition;
 				}
+				
+			}
+
+			public override void Reverse()
+			{
+				// reverse axle positions
+				double temp = FrontAxle.Position;
+				FrontAxle.Position = -RearAxle.Position;
+				RearAxle.Position = -temp;
+				int idxToReverse = HasInteriorView ? 1 : 0;
+				if (CarSections != null && CarSections.Length > 0)
+				{
+					foreach (var carSection in CarSections[idxToReverse].Groups[0].Elements)
+					{
+						for (int h = 0; h < carSection.States.Length; h++)
+						{
+							carSection.States[h].Prototype.ApplyScale(-1.0, 1.0, -1.0);
+							Matrix4D t = carSection.States[h].Translation;
+							t.Row3.X *= -1.0f;
+							t.Row3.Z *= -1.0f;
+							carSection.States[h].Translation = t;
+						}
+
+						carSection.TranslateXDirection.X *= -1.0;
+						carSection.TranslateXDirection.Z *= -1.0;
+						carSection.TranslateYDirection.X *= -1.0;
+						carSection.TranslateYDirection.Z *= -1.0;
+						carSection.TranslateZDirection.X *= -1.0;
+						carSection.TranslateZDirection.Z *= -1.0;
+					}
+				}
+
+				Bogie b = RearBogie;
+				RearBogie = FrontBogie;
+				FrontBogie = b;
+				FrontBogie.Reverse();
+				RearBogie.Reverse();
+				FrontBogie.FrontAxle.Follower.UpdateAbsolute(FrontAxle.Position + FrontBogie.FrontAxle.Position, true, false);
+				FrontBogie.RearAxle.Follower.UpdateAbsolute(FrontAxle.Position + FrontBogie.RearAxle.Position, true, false);
+
+				RearBogie.FrontAxle.Follower.UpdateAbsolute(RearAxle.Position + RearBogie.FrontAxle.Position, true, false);
+				RearBogie.RearAxle.Follower.UpdateAbsolute(RearAxle.Position + RearBogie.RearAxle.Position, true, false);
 				
 			}
 

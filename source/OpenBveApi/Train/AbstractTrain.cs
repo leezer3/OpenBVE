@@ -78,6 +78,12 @@ namespace OpenBveApi.Trains
 
 		}
 
+		/// <summary>Call this method to reverse (flip) the entire train</summary>
+		public virtual void Reverse()
+		{
+
+		}
+
 		/// <summary>Disposes of the train and releases all resources</summary>
 		public virtual void Dispose()
 		{

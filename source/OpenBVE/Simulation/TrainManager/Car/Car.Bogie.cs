@@ -19,9 +19,9 @@ namespace OpenBve
 			internal double Length;
 #pragma warning restore 0649
 			/// <summary>Front axle about which the bogie pivots</summary>
-			internal Axle FrontAxle;
+			internal readonly Axle FrontAxle;
 			/// <summary>Rear axle about which the bogie pivots</summary>
-			internal Axle RearAxle;
+			internal readonly Axle RearAxle;
 			internal Vector3 Up;
 			/// <summary>The car sections (objects) attached to the bogie</summary>
 			internal CarSection[] CarSections;
@@ -111,6 +111,37 @@ namespace OpenBve
 							}
 						}
 					}
+				}
+			}
+
+			internal void Reverse()
+			{
+				// reverse axle positions
+				double temp = FrontAxle.Position;
+				FrontAxle.Position = -RearAxle.Position;
+				RearAxle.Position = -temp;
+				if (CarSections.Length == 0 || CarSections == null)
+				{
+					return;
+				}
+				int idxToReverse = 0; //cannot have an interior view
+				
+				for (int i = 0; i < CarSections[idxToReverse].Groups[0].Elements.Length; i++)
+				{
+					for (int h = 0; h < CarSections[idxToReverse].Groups[0].Elements[i].States.Length; h++)
+					{
+						CarSections[idxToReverse].Groups[0].Elements[i].States[h].Prototype.ApplyScale(-1.0, 1.0, -1.0);
+						Matrix4D t = CarSections[idxToReverse].Groups[0].Elements[i].States[h].Translation;
+						t.Row3.X *= -1.0f;
+						t.Row3.Z *= -1.0f;
+						CarSections[idxToReverse].Groups[0].Elements[i].States[h].Translation = t;
+					}
+					CarSections[idxToReverse].Groups[0].Elements[i].TranslateXDirection.X *= -1.0;
+					CarSections[idxToReverse].Groups[0].Elements[i].TranslateXDirection.Z *= -1.0;
+					CarSections[idxToReverse].Groups[0].Elements[i].TranslateYDirection.X *= -1.0;
+					CarSections[idxToReverse].Groups[0].Elements[i].TranslateYDirection.Z *= -1.0;
+					CarSections[idxToReverse].Groups[0].Elements[i].TranslateZDirection.X *= -1.0;
+					CarSections[idxToReverse].Groups[0].Elements[i].TranslateZDirection.Z *= -1.0;
 				}
 			}
 

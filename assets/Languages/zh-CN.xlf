@@ -299,6 +299,9 @@
 						<source>Encoding:</source>
 						<target>字符编码: </target>
 					</trans-unit>
+					<trans-unit id="train_settings_reverseconsist">
+						<source>Reverse Consist:</source>
+					</trans-unit>
 					<trans-unit id="train_settings_encoding_preview">
 						<source>Preview:</source>
 						<target>预览: </target>

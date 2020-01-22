@@ -85,6 +85,10 @@ namespace LibRender2.Objects
 
 		public void ShowObject(ObjectState State, ObjectType Type)
 		{
+			if (renderer.DefaultShader == null)
+			{
+				throw new Exception();
+			}
 			bool result = AddObject(State);
 
 			if (State.Prototype.Mesh.VAO == null)
