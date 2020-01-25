@@ -777,6 +777,10 @@ namespace Plugin
 										case "glow":
 											blendmode = MeshMaterialBlendMode.Additive;
 											break;
+										case "daytimesubtractive":
+										case "subtractive":
+											blendmode = MeshMaterialBlendMode.DaytimeSubtractive;
+											break;
 										default:
 											currentHost.AddMessage(MessageType.Error, false, "The given BlendMode is not supported in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 											blendmode = MeshMaterialBlendMode.Normal;

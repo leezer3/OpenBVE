@@ -967,14 +967,20 @@ namespace LibRender2
 					alphaFactor = 1.0f;
 				}
 
-				if (material.BlendMode == MeshMaterialBlendMode.Additive)
+				switch (material.BlendMode)
 				{
-					Shader.SetMaterialAdditive(1 + (int)mode);
+					case MeshMaterialBlendMode.Additive:
+						Shader.SetMaterialAdditive(1 + (int)mode);
+						break;
+					case MeshMaterialBlendMode.DaytimeSubtractive:
+						Shader.SetMaterialAdditive(0);
+						alphaFactor -= Lighting.OptionLightingResultingAmount;
+						break;
+					default:
+						Shader.SetMaterialAdditive(0);
+						break;
 				}
-				else
-				{
-					Shader.SetMaterialAdditive(0);
-				}
+				
 				
 				Shader.SetOpacity(inv255 * material.Color.A * alphaFactor);
 
