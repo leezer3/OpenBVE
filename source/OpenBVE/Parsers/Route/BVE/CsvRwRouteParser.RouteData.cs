@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using OpenBveApi.Math;
 using OpenBveApi.Textures;
 
 namespace OpenBve
@@ -89,16 +91,18 @@ namespace OpenBve
 								}
 							}
 						}
-						Blocks[i].Rails = new Rail[Blocks[i - 1].Rails.Length];
-						for (int j = 0; j < Blocks[i].Rails.Length; j++)
+						
+						for (int j = 0; j < Blocks[i - 1].Rails.Count; j++)
 						{
-							Blocks[i].Rails[j].RailStarted = Blocks[i - 1].Rails[j].RailStarted;
-							Blocks[i].Rails[j].RailStart.X = Blocks[i - 1].Rails[j].RailStart.X;
-							Blocks[i].Rails[j].RailStart.Y = Blocks[i - 1].Rails[j].RailStart.Y;
-							Blocks[i].Rails[j].RailStartRefreshed = false;
-							Blocks[i].Rails[j].RailEnded = false;
-							Blocks[i].Rails[j].RailEnd.X = Blocks[i - 1].Rails[j].RailStart.X;
-							Blocks[i].Rails[j].RailEnd.Y = Blocks[i - 1].Rails[j].RailStart.Y;
+							int key = Blocks[i - 1].Rails.ElementAt(j).Key;
+							Rail rail = new Rail
+							{
+								RailStarted = Blocks[i -1].Rails[key].RailStarted,
+								RailStart = new Vector2(Blocks[i -1].Rails[key].RailStart),
+								RailStartRefreshed = false,
+								RailEnd = new Vector2(Blocks[i - 1].Rails[key].RailStart)
+							};
+							Blocks[i].Rails.Add(key, rail);
 						}
 						if (!PreviewOnly)
 						{
