@@ -378,13 +378,13 @@ namespace OpenBve
 						for (int jj = 0; jj < Data.Blocks[i].Rails.Count; jj++)
 						{
 							int j = Data.Blocks[i].Rails.ElementAt(jj).Key;
-							if (Data.Blocks[i].Rails[j].RailStarted & !Data.Blocks[i + 1].Rails.ContainsKey(j))
+							if (Data.Blocks[i].Rails[j].RailStarted & Data.Blocks[i + 1].Rails.ContainsKey(j))
 							{
 								bool q = false;
 								for (int kk = 0; kk < Data.Blocks[i].Rails.Count; kk++)
 								{
 									int k = Data.Blocks[i].Rails.ElementAt(kk).Key;
-									if (Data.Blocks[i].Rails[k].RailStarted & !Data.Blocks[i + 1].Rails.ContainsKey(k))
+									if (Data.Blocks[i].Rails[k].RailStarted & Data.Blocks[i + 1].Rails.ContainsKey(k))
 									{
 										bool qx = Math.Sign(Data.Blocks[i].Rails[k].RailStart.X - Data.Blocks[i].Rails[j].RailStart.X) != Math.Sign(Data.Blocks[i + 1].Rails[k].RailEnd.X - Data.Blocks[i + 1].Rails[j].RailEnd.X);
 										bool qy = (Data.Blocks[i].Rails[k].RailStart.Y - Data.Blocks[i].Rails[j].RailStart.Y) * (Data.Blocks[i + 1].Rails[k].RailEnd.Y - Data.Blocks[i + 1].Rails[j].RailEnd.Y) <= 0.0;
@@ -652,7 +652,7 @@ namespace OpenBve
 							double y = Data.Blocks[i].Rails[j].RailStart.Y;
 							Vector3 offset = new Vector3(Direction.Y * x, y, -Direction.X * x);
 							pos = Position + offset;
-							if (i < Data.Blocks.Length - 1 && !Data.Blocks[i + 1].Rails.ContainsKey(j))
+							if (i < Data.Blocks.Length - 1 && Data.Blocks[i + 1].Rails.ContainsKey(j))
 							{
 								// take orientation of upcoming block into account
 								Vector2 Direction2 = Direction;
@@ -759,7 +759,7 @@ namespace OpenBve
 								int m = Program.CurrentRoute.PointsOfInterest.Length;
 								Array.Resize(ref Program.CurrentRoute.PointsOfInterest, m + 1);
 								Program.CurrentRoute.PointsOfInterest[m].TrackPosition = Data.Blocks[i].PointsOfInterest[k].TrackPosition;
-								if (i < Data.Blocks.Length - 1 && !Data.Blocks[i + 1].Rails.ContainsKey(j))
+								if (i < Data.Blocks.Length - 1 && Data.Blocks[i + 1].Rails.ContainsKey(j))
 								{
 									double dx = Data.Blocks[i + 1].Rails[j].RailEnd.X - Data.Blocks[i].Rails[j].RailStart.X;
 									double dy = Data.Blocks[i + 1].Rails[j].RailEnd.Y - Data.Blocks[i].Rails[j].RailStart.Y;

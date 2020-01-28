@@ -100,6 +100,7 @@ namespace OpenBve
 								RailStarted = Blocks[i -1].Rails[key].RailStarted,
 								RailStart = new Vector2(Blocks[i -1].Rails[key].RailStart),
 								RailStartRefreshed = false,
+								RailEnded = false,
 								RailEnd = new Vector2(Blocks[i - 1].Rails[key].RailStart)
 							};
 							Blocks[i].Rails.Add(key, rail);
