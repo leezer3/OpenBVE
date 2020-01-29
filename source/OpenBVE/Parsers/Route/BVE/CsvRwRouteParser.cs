@@ -2334,7 +2334,7 @@ namespace OpenBve {
 											}
 											if (!Data.Blocks[BlockIndex].Rails[idx].RailEnded)
 											{
-												currentRail.RailEnd.X = Data.Blocks[BlockIndex].Rails[idx].RailStart.X;
+												currentRail.RailEnd.X = currentRail.RailStart.X;
 											}
 										}
 										if (Arguments.Length >= 3)
@@ -2351,7 +2351,7 @@ namespace OpenBve {
 											}
 											if (!Data.Blocks[BlockIndex].Rails[idx].RailEnded)
 											{
-												currentRail.RailEnd.Y = Data.Blocks[BlockIndex].Rails[idx].RailStart.Y;
+												currentRail.RailEnd.Y = currentRail.RailStart.Y;
 											}
 										}
 										if (Data.Blocks[BlockIndex].RailType.Length <= idx)
