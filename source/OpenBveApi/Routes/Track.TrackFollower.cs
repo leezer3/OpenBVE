@@ -53,6 +53,7 @@ namespace OpenBveApi.Routes
 			t.WorldUp = new Vector3(WorldUp);
 			t.WorldSide = new Vector3(WorldSide);
 			t.TriggerType = TriggerType;
+			t.TrackIndex = TrackIndex;
 			return t;
 		}
 
