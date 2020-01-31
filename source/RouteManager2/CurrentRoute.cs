@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using LibRender2;
 using OpenBveApi.Colors;
@@ -22,7 +23,7 @@ namespace RouteManager2
 		public string Image = "";
 
 		/// <summary>The list of tracks available in the simulation.</summary>
-		public Track[] Tracks;
+		public Dictionary<int, Track> Tracks;
 
 		/// <summary>Holds a reference to the base TrainManager.Trains array</summary>
 		public AbstractTrain[] Trains;
@@ -75,8 +76,13 @@ namespace RouteManager2
 		public CurrentRoute(BaseRenderer renderer)
 		{
 			this.renderer = renderer;
-
-			Tracks = new[] { new Track { Elements = new TrackElement[0] } };
+			
+			Tracks = new Dictionary<int, Track>();
+			Track t = new Track()
+			{
+				Elements = new TrackElement[0]
+			};
+			Tracks.Add(0, t);
 			Trains = new AbstractTrain[0];
 			Sections = new Section[0];
 			Stations = new RouteStation[0];

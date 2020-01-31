@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
@@ -49,9 +50,10 @@ namespace OpenBve {
 		/// <param name="ResetRenderer">Whether the renderer should be reset</param>
 		internal static void Reset(bool ResetLogs, bool ResetRenderer) {
 			// track manager
-			for (int i = 0; i < Program.CurrentRoute.Tracks.Length; i++)
+			for (int i = 0; i < Program.CurrentRoute.Tracks.Count; i++)
 			{
-				Program.CurrentRoute.Tracks[i] = new Track();
+				int key = Program.CurrentRoute.Tracks.ElementAt(i).Key;
+				Program.CurrentRoute.Tracks[key] = new Track();
 			}
 			// train manager
 			TrainManager.Trains = new TrainManager.Train[] { };

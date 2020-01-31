@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -370,7 +371,7 @@ namespace OpenBve
 			}
 		}
 
-		public override Track[] Tracks
+		public override Dictionary<int, Track> Tracks
 		{
 			get
 			{
