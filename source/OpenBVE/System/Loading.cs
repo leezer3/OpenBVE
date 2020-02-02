@@ -268,7 +268,7 @@ namespace OpenBve {
 					TrainProgressCurrentSum += TrainProgressCurrentWeight;
 					System.Threading.Thread.Sleep(1); if (Cancel) return;
 					TrainProgressCurrentWeight = 0.2 / TrainProgressMaximum;
-					SoundCfgParser.ParseSoundConfig(TrainManager.Trains[k].TrainFolder, CurrentTrainEncoding, TrainManager.Trains[k]);
+					SoundCfgParser.ParseSoundConfig(TrainManager.Trains[k].TrainFolder, TrainManager.Trains[k]);
 					TrainProgressCurrentSum += TrainProgressCurrentWeight;
 					System.Threading.Thread.Sleep(1); if (Cancel) return;
 					// door open/close speed

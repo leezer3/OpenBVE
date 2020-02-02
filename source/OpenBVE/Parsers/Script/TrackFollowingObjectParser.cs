@@ -176,7 +176,7 @@ namespace OpenBve
 				return;
 			}
 			TrainDatParser.ParseTrainData(TrainData, TextEncoding.GetSystemEncodingFromFile(TrainData), Train);
-			SoundCfgParser.ParseSoundConfig(TrainDirectory, Encoding.UTF8, Train);
+			SoundCfgParser.ParseSoundConfig(TrainDirectory, Train);
 			Train.AI = new Game.TrackFollowingObjectAI(Train, Data);
 
 			UnifiedObject[] CarObjects = new UnifiedObject[Train.Cars.Length];
