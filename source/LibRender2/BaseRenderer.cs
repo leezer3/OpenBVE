@@ -929,19 +929,25 @@ namespace LibRender2
 					Shader.SetIsTexture(false);
 				}
 
-				// blend mode
+				// Calculate the brightness of the poly to render
 				float factor;
 				if (material.BlendMode == MeshMaterialBlendMode.Additive)
 				{
+					//Additive blending- Full brightness
 					factor = 1.0f;
 					GL.Enable(EnableCap.Blend);
 					GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
 					Shader.SetIsFog(false);
 				}
-				else if (material.NighttimeTexture == null)
+				else if((material.Flags & MeshMaterial.EmissiveColorMask) != 0)
 				{
+					//As material is emitting light, it must be at full brightness
+					factor = 1.0f;
+				}
+				else if (material.NighttimeTexture == null || material.NighttimeTexture == material.DaytimeTexture)
+				{
+					//No nighttime texture or both are identical- Darken the polygon to match the light conditions
 					float blend = inv255 * material.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
-
 					if (blend > 1.0f)
 					{
 						blend = 1.0f;
@@ -951,6 +957,7 @@ namespace LibRender2
 				}
 				else
 				{
+					//Valid nighttime texture- Blend the two textures by DNB at max brightness
 					factor = 1.0f;
 				}
 				Shader.SetBrightness(factor);
