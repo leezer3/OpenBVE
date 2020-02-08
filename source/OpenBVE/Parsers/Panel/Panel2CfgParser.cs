@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using OpenBve.Parsers.Panel;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -19,11 +20,11 @@ namespace OpenBve {
 		/// <summary>Parses a BVE2 / openBVE panel.cfg file</summary>
 		/// <param name="PanelFile">The relative path of the panel configuration file from the train</param>
 		/// <param name="TrainPath">The on-disk path to the train</param>
-		/// <param name="Encoding">The train's text encoding</param>
 		/// <param name="Train">The train</param>
 		/// <param name="Car">The car index to add the panel to</param>
-		internal static void ParsePanel2Config(string PanelFile, string TrainPath, System.Text.Encoding Encoding, TrainManager.Train Train, int Car)
+		internal static void ParsePanel2Config(string PanelFile, string TrainPath, TrainManager.Train Train, int Car)
 		{
+			Encoding Encoding = TextEncoding.GetSystemEncodingFromFile(PanelFile);
 			//Train name, used for hacks detection
 			string trainName = new System.IO.DirectoryInfo(TrainPath).Name.ToUpperInvariant();
 			// read lines
