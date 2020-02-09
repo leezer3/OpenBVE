@@ -106,7 +106,7 @@ namespace OpenBve
 						Program.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out t);
 						Program.CurrentRoute.CurrentBackground = new StaticBackground(t, 6, false, Interface.CurrentOptions.ViewingDistance);
 					}
-					else if (Data.Backgrounds.Count == 1 && !Data.Backgrounds.ContainsKey(0) && Data.Blocks[0].Background == 0)
+					else if (Data.Backgrounds.Count > 0 && !Data.Backgrounds.ContainsKey(0) && Data.Blocks[0].Background == 0)
 					{
 						/*
 						 * Nasty little variant on the above-
