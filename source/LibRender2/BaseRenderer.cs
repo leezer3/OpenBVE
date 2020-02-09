@@ -1127,16 +1127,16 @@ namespace LibRender2
 				if (OptionLighting)
 				{
 					GL.Enable(EnableCap.Lighting);
-
-					if ((material.Flags & MeshMaterial.EmissiveColorMask) != 0)
-					{
-						GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new Color4(material.EmissiveColor.R, material.EmissiveColor.G, material.EmissiveColor.B, 255));
-					}
-					else
-					{
-						GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new Color4(0.0f, 0.0f, 0.0f, 1.0f));
-					}
 				}
+			}
+
+			if ((material.Flags & MeshMaterial.EmissiveColorMask) != 0)
+			{
+				GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new Color4(material.EmissiveColor.R, material.EmissiveColor.G, material.EmissiveColor.B, 255));
+			}
+			else
+			{
+				GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new Color4(0.0f, 0.0f, 0.0f, 1.0f));
 			}
 
 			// fog
