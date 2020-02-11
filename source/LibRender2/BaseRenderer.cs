@@ -838,9 +838,8 @@ namespace LibRender2
 			{
 				if (material.Color != lastColor)
 				{
-					Shader.SetMaterialAmbient(material.Color);  // TODO
-					Shader.SetMaterialDiffuse(material.Color);
-					Shader.SetMaterialSpecular(material.Color);  // TODO
+					Shader.SetMaterialAmbient(material.Color);
+					lastColor = material.Color;
 				}
 				Shader.SetOpacity(1.0f);
 				Shader.SetBrightness(1.0f);
@@ -849,44 +848,36 @@ namespace LibRender2
 			}
 
 			// lighting
-			if (material.NighttimeTexture == null || material.NighttimeTexture == material.DaytimeTexture)
+			if (OptionLighting)
 			{
-				if (OptionLighting)
+				if (material.Color != lastColor)
 				{
-					if (material.Color != lastColor)
-					{
-						Shader.SetMaterialAmbient(material.Color);  // TODO
-						Shader.SetMaterialDiffuse(material.Color);
-						Shader.SetMaterialSpecular(material.Color);  // TODO
-					}
+					Shader.SetMaterialAmbient(material.Color);
+					Shader.SetMaterialDiffuse(material.Color);
+					Shader.SetMaterialSpecular(material.Color);
+					//TODO: Ambient and specular colors are not set by any current parsers
+				}
 					
-					if ((material.Flags & MeshMaterial.EmissiveColorMask) != 0)
-					{
-						Shader.SetMaterialEmission(material.EmissiveColor);
-						Shader.SetMaterialEmissive(true);
-					}
-					else
-					{
-						Shader.SetMaterialEmissive(false);
-					}
-
-					Shader.SetMaterialShininess(1.0f);
+				if ((material.Flags & MeshMaterial.EmissiveColorMask) != 0)
+				{
+					Shader.SetMaterialEmission(material.EmissiveColor);
+					Shader.SetMaterialEmissive(true);
 				}
 				else
 				{
-					if (material.Color != lastColor)
-					{
-						Shader.SetMaterialAmbient(material.Color);  // TODO
-					}
+					Shader.SetMaterialEmissive(false);
 				}
+
+				Shader.SetMaterialShininess(1.0f);
 			}
 			else
 			{
 				if (material.Color != lastColor)
 				{
-					Shader.SetMaterialAmbient(material.Color);  // TODO
+					Shader.SetMaterialAmbient(material.Color);
 				}
-				
+				//As lighting is disabled, the face cannot be emitting light....
+				Shader.SetMaterialEmissive(false);
 			}
 
 			lastColor = material.Color;
