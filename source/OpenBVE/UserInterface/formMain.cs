@@ -288,7 +288,7 @@ namespace OpenBve {
 					labelReviewTrainValue.Text = Game.LogTrainName;
 					labelReviewDateValue.Text = Game.LogDateTime.ToString("yyyy-MM-dd", Culture);
 					labelReviewTimeValue.Text = Game.LogDateTime.ToString("HH:mm:ss", Culture);
-					switch (Interface.CurrentOptions.GameMode)
+					switch (Interface.CurrentOptions.PreviousGameMode)
 					{
 						case GameMode.Arcade: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_arcade"); break;
 						case GameMode.Normal: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_normal"); break;
@@ -662,7 +662,7 @@ namespace OpenBve {
 			labelScore.Text = @" " + Translations.GetInterfaceString("review_score");
 			groupboxRating.Text = Translations.GetInterfaceString("review_score_rating");
 			labelRatingModeCaption.Text = Translations.GetInterfaceString("review_score_rating_mode");
-			switch (Interface.CurrentOptions.GameMode)
+			switch (Interface.CurrentOptions.PreviousGameMode)
 			{
 				case GameMode.Arcade: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_arcade"); break;
 				case GameMode.Normal: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_normal"); break;

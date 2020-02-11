@@ -81,6 +81,9 @@ namespace OpenBve
 			internal TextEncoding.EncodingValue[] TrainEncodings;
 			/// <summary>The game mode- Affects how the score is calculated</summary>
 			internal GameMode GameMode;
+			/// <summary>The previous game mode, used for calculating the score in the main menu</summary>
+			/// <remarks>This is loaded from the black-box log if enabled, not the main options file</remarks>
+			internal GameMode PreviousGameMode;
 			/// <summary>The width of the main menu window</summary>
 			internal int MainMenuWidth;
 			/// <summary>The height of the main menu window</summary>
