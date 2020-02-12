@@ -14,7 +14,6 @@ namespace OpenBve {
 
 	// --- TimeTable.cs ---
 	internal static class Timetable {
-		internal static void AddObjectForCustomTimetable(AnimatedObject obj) { }
 		internal enum TimetableState {
 			None = 0,
 			Custom = 1,

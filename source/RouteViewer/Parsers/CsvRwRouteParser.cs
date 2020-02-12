@@ -5544,7 +5544,7 @@ namespace OpenBve
 				double StartingDistance = (double)i * Data.BlockInterval;
 				double EndingDistance = StartingDistance + Data.BlockInterval;
 				// normalize
-				World.Normalize(ref Direction.X, ref Direction.Y);
+				Direction.Normalize();
 				// track
 				if (!PreviewOnly) {
 					if (Data.Blocks[i].Cycle.Length == 1 && Data.Blocks[i].Cycle[0] == -1) {
