@@ -23,7 +23,6 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using OpenBveApi.World;
-using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using Vector3 = OpenBveApi.Math.Vector3;
@@ -288,7 +287,7 @@ namespace LibRender2
 			{
 				foreach (VertexTemplate vertex in Prototype.Mesh.Vertices)
 				{
-					OpenBveApi.Math.Vector3 Coordinates = new Vector3(vertex.Coordinates);
+					Vector3 Coordinates = new Vector3(vertex.Coordinates);
 					Coordinates.Rotate(AuxTransformation);
 
 					if (Coordinates.Z < startingDistance)
@@ -366,7 +365,7 @@ namespace LibRender2
 		}
 
 
-		public int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation AuxTransformation, Matrix4D Rotate, Matrix4D Translate, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		public int CreateStaticObject(StaticObject Prototype, Transformation AuxTransformation, Matrix4D Rotate, Matrix4D Translate, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
 		{
 			if (Prototype == null)
 			{
@@ -380,7 +379,7 @@ namespace LibRender2
 			{
 				foreach (VertexTemplate vertex in Prototype.Mesh.Vertices)
 				{
-					OpenBveApi.Math.Vector3 Coordinates = new Vector3(vertex.Coordinates);
+					Vector3 Coordinates = new Vector3(vertex.Coordinates);
 					Coordinates.Rotate(AuxTransformation);
 
 					if (Coordinates.Z < startingDistance)
