@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using OpenBveApi.Math;
 
 namespace ObjectBender {
 	/// <summary>This class contains methods for bending objects.</summary>
@@ -196,18 +198,20 @@ namespace ObjectBender {
 								bool endAtMeshBuilder = cells[i][0].Equals("Translate", StringComparison.OrdinalIgnoreCase);
 								for (int j = i - 1; j >= 0; j--) {
 									if (cells[j].Length != 0) {
-										if (cells[j][0].Equals("AddVertex", StringComparison.OrdinalIgnoreCase) || cells[j][0].Equals("Vertex", StringComparison.OrdinalIgnoreCase)) {
-											double vx = cells[j].Length >= 2 ? double.Parse(cells[j][1], culture) : 0.0;
-											double vy = cells[j].Length >= 3 ? double.Parse(cells[j][2], culture) : 0.0;
-											double vz = cells[j].Length >= 4 ? double.Parse(cells[j][3], culture) : 0.0;
-											double nx = cells[j].Length >= 5 ? double.Parse(cells[j][4], culture) : 0.0;
-											double ny = cells[j].Length >= 6 ? double.Parse(cells[j][5], culture) : 0.0;
-											double nz = cells[j].Length >= 7 ? double.Parse(cells[j][6], culture) : 0.0;
-											Normalize(ref nx, ref ny, ref nz);
-											vx += x;
-											vy += y;
-											vz += z;
-											cells[j] = new string[] { isB3d ? "Vertex" : "AddVertex", vx.ToString("R", culture), vy.ToString("R", culture), vz.ToString("R", culture), nx.ToString("R", culture), ny.ToString("R", culture), nz.ToString("R", culture) };
+										if (cells[j][0].Equals("AddVertex", StringComparison.OrdinalIgnoreCase) || cells[j][0].Equals("Vertex", StringComparison.OrdinalIgnoreCase))
+										{
+											Vector3 v, n;
+											v.X = cells[j].Length >= 2 ? double.Parse(cells[j][1], culture) : 0.0;
+											v.Y = cells[j].Length >= 3 ? double.Parse(cells[j][2], culture) : 0.0;
+											v.Z = cells[j].Length >= 4 ? double.Parse(cells[j][3], culture) : 0.0;
+											n.X = cells[j].Length >= 5 ? double.Parse(cells[j][4], culture) : 0.0;
+											n.Y = cells[j].Length >= 6 ? double.Parse(cells[j][5], culture) : 0.0;
+											n.Z = cells[j].Length >= 7 ? double.Parse(cells[j][6], culture) : 0.0;
+											n.Normalize();
+											v.X += x;
+											v.Y += y;
+											v.Z += z;
+											cells[j] = new string[] { isB3d ? "Vertex" : "AddVertex", v.X.ToString("R", culture), v.Y.ToString("R", culture), v.Z.ToString("R", culture), n.X.ToString("R", culture), n.Y.ToString("R", culture), n.Z.ToString("R", culture) };
 										} else if (endAtMeshBuilder && (cells[j][0].Equals("CreateMeshBuilder", StringComparison.OrdinalIgnoreCase) || cells[j][0].Equals("[MeshBuilder]", StringComparison.OrdinalIgnoreCase))) {
 											break;
 										}
@@ -226,16 +230,19 @@ namespace ObjectBender {
 								bool endAtMeshBuilder = cells[i][0].Equals("Scale", StringComparison.OrdinalIgnoreCase);
 								for (int j = i - 1; j >= 0; j--) {
 									if (cells[j].Length != 0) {
-										if (cells[j][0].Equals("AddVertex", StringComparison.OrdinalIgnoreCase) || cells[j][0].Equals("Vertex", StringComparison.OrdinalIgnoreCase)) {
-											double vx = cells[j].Length >= 2 ? double.Parse(cells[j][1], culture) : 0.0;
-											double vy = cells[j].Length >= 3 ? double.Parse(cells[j][2], culture) : 0.0;
-											double vz = cells[j].Length >= 4 ? double.Parse(cells[j][3], culture) : 0.0;
-											double nx = cells[j].Length >= 5 ? double.Parse(cells[j][4], culture) : 0.0;
-											double ny = cells[j].Length >= 6 ? double.Parse(cells[j][5], culture) : 0.0;
-											double nz = cells[j].Length >= 7 ? double.Parse(cells[j][6], culture) : 0.0;
-											Normalize(ref nx, ref ny, ref nz);
-											Scale(ref vx, ref vy, ref vz, ref nx, ref ny, ref nz, x, y, z);
-											cells[j] = new string[] { isB3d ? "Vertex" : "AddVertex", vx.ToString("R", culture), vy.ToString("R", culture), vz.ToString("R", culture), nx.ToString("R", culture), ny.ToString("R", culture), nz.ToString("R", culture) };
+										if (cells[j][0].Equals("AddVertex", StringComparison.OrdinalIgnoreCase) || cells[j][0].Equals("Vertex", StringComparison.OrdinalIgnoreCase))
+										{
+											Vector3 v, n;
+											v.X = cells[j].Length >= 2 ? double.Parse(cells[j][1], culture) : 0.0;
+											v.Y = cells[j].Length >= 3 ? double.Parse(cells[j][2], culture) : 0.0;
+											v.Z = cells[j].Length >= 4 ? double.Parse(cells[j][3], culture) : 0.0;
+											n.X = cells[j].Length >= 5 ? double.Parse(cells[j][4], culture) : 0.0;
+											n.Y = cells[j].Length >= 6 ? double.Parse(cells[j][5], culture) : 0.0;
+											n.Z = cells[j].Length >= 7 ? double.Parse(cells[j][6], culture) : 0.0;
+											n.Normalize();
+											v.Scale(new Vector3(x,y,z));
+											n.Scale(new Vector3(x,y,z));
+											cells[j] = new string[] { isB3d ? "Vertex" : "AddVertex", v.X.ToString("R", culture), v.Y.ToString("R", culture), v.Z.ToString("R", culture), n.X.ToString("R", culture), n.Y.ToString("R", culture), n.Z.ToString("R", culture) };
 										} else if (reverseFaceOrder && (cells[j][0].Equals("AddFace", StringComparison.OrdinalIgnoreCase) || cells[j][0].Equals("AddFace2", StringComparison.OrdinalIgnoreCase) || cells[j][0].Equals("Face", StringComparison.OrdinalIgnoreCase) || cells[j][0].Equals("Face2", StringComparison.OrdinalIgnoreCase))) {
 											for (int k = 1; k <= (cells[j].Length - 1) / 2; k++) {
 												int l = cells[j].Length - k;
@@ -274,17 +281,19 @@ namespace ObjectBender {
 								bool endAtMeshBuilder = cells[i][0].Equals("Rotate", StringComparison.OrdinalIgnoreCase);
 								for (int j = i - 1; j >= 0; j--) {
 									if (cells[j].Length != 0) {
-										if (cells[j][0].Equals("AddVertex", StringComparison.OrdinalIgnoreCase) || cells[j][0].Equals("Vertex", StringComparison.OrdinalIgnoreCase)) {
-											double vx = cells[j].Length >= 2 ? double.Parse(cells[j][1], culture) : 0.0;
-											double vy = cells[j].Length >= 3 ? double.Parse(cells[j][2], culture) : 0.0;
-											double vz = cells[j].Length >= 4 ? double.Parse(cells[j][3], culture) : 0.0;
-											double nx = cells[j].Length >= 5 ? double.Parse(cells[j][4], culture) : 0.0;
-											double ny = cells[j].Length >= 6 ? double.Parse(cells[j][5], culture) : 0.0;
-											double nz = cells[j].Length >= 7 ? double.Parse(cells[j][6], culture) : 0.0;
-											Normalize(ref nx, ref ny, ref nz);
-											Rotate(ref vx, ref vy, ref vz, x, y, z, Math.Cos(a), Math.Sin(a));
-											Rotate(ref nx, ref ny, ref nz, x, y, z, Math.Cos(a), Math.Sin(a));
-											cells[j] = new string[] { isB3d ? "Vertex" : "AddVertex", vx.ToString("R", culture), vy.ToString("R", culture), vz.ToString("R", culture), nx.ToString("R", culture), ny.ToString("R", culture), nz.ToString("R", culture) };
+										if (cells[j][0].Equals("AddVertex", StringComparison.OrdinalIgnoreCase) || cells[j][0].Equals("Vertex", StringComparison.OrdinalIgnoreCase))
+										{
+											Vector3 v, n;
+											v.X = cells[j].Length >= 2 ? double.Parse(cells[j][1], culture) : 0.0;
+											v.Y = cells[j].Length >= 3 ? double.Parse(cells[j][2], culture) : 0.0;
+											v.Z = cells[j].Length >= 4 ? double.Parse(cells[j][3], culture) : 0.0;
+											n.X = cells[j].Length >= 5 ? double.Parse(cells[j][4], culture) : 0.0;
+											n.Y = cells[j].Length >= 6 ? double.Parse(cells[j][5], culture) : 0.0;
+											n.Z = cells[j].Length >= 7 ? double.Parse(cells[j][6], culture) : 0.0;
+											n.Normalize();
+											v.Rotate(new Vector3(x,y,z),  Math.Cos(a), Math.Sin(a));
+											n.Rotate(new Vector3(x,y,z),  Math.Cos(a), Math.Sin(a));
+											cells[j] = new string[] { isB3d ? "Vertex" : "AddVertex", v.X.ToString("R", culture), v.Y.ToString("R", culture), v.Z.ToString("R", culture), n.X.ToString("R", culture), n.Y.ToString("R", culture), n.Z.ToString("R", culture) };
 										} else if (endAtMeshBuilder && (cells[j][0].Equals("CreateMeshBuilder", StringComparison.OrdinalIgnoreCase) || cells[j][0].Equals("[MeshBuilder]", StringComparison.OrdinalIgnoreCase))) {
 											break;
 										}
@@ -307,15 +316,16 @@ namespace ObjectBender {
 								for (int j = i - 1; j >= 0; j--) {
 									if (cells[j].Length != 0) {
 										if (cells[j][0].Equals("AddVertex", StringComparison.OrdinalIgnoreCase) || cells[j][0].Equals("Vertex", StringComparison.OrdinalIgnoreCase)) {
-											double vx = cells[j].Length >= 2 ? double.Parse(cells[j][1], culture) : 0.0;
-											double vy = cells[j].Length >= 3 ? double.Parse(cells[j][2], culture) : 0.0;
-											double vz = cells[j].Length >= 4 ? double.Parse(cells[j][3], culture) : 0.0;
-											double nx = cells[j].Length >= 5 ? double.Parse(cells[j][4], culture) : 0.0;
-											double ny = cells[j].Length >= 6 ? double.Parse(cells[j][5], culture) : 0.0;
-											double nz = cells[j].Length >= 7 ? double.Parse(cells[j][6], culture) : 0.0;
-											Normalize(ref nx, ref ny, ref nz);
-											Shear(ref vx, ref vy, ref vz, ref nx, ref ny, ref nz, dx, dy, dx, sx, sy, sz, r);
-											cells[j] = new string[] { isB3d ? "Vertex" : "AddVertex", vx.ToString("R", culture), vy.ToString("R", culture), vz.ToString("R", culture), nx.ToString("R", culture), ny.ToString("R", culture), nz.ToString("R", culture) };
+											Vector3 v, n;
+											v.X = cells[j].Length >= 2 ? double.Parse(cells[j][1], culture) : 0.0;
+											v.Y = cells[j].Length >= 3 ? double.Parse(cells[j][2], culture) : 0.0;
+											v.Z = cells[j].Length >= 4 ? double.Parse(cells[j][3], culture) : 0.0;
+											n.X = cells[j].Length >= 5 ? double.Parse(cells[j][4], culture) : 0.0;
+											n.Y = cells[j].Length >= 6 ? double.Parse(cells[j][5], culture) : 0.0;
+											n.Z = cells[j].Length >= 7 ? double.Parse(cells[j][6], culture) : 0.0;
+											n.Normalize();
+											Shear(ref v.X, ref v.Y, ref v.Z, ref n.X, ref n.Y, ref n.Z, dx, dy, dx, sx, sy, sz, r);
+											cells[j] = new string[] { isB3d ? "Vertex" : "AddVertex", v.X.ToString("R", culture), v.Y.ToString("R", culture), v.Z.ToString("R", culture), n.X.ToString("R", culture), n.Y.ToString("R", culture), n.Z.ToString("R", culture) };
 										} else if (endAtMeshBuilder && (cells[j][0].Equals("CreateMeshBuilder", StringComparison.OrdinalIgnoreCase) || cells[j][0].Equals("[MeshBuilder]", StringComparison.OrdinalIgnoreCase))) {
 											break;
 										}
@@ -376,17 +386,18 @@ namespace ObjectBender {
 						switch (cells[j][0].ToLowerInvariant()) {
 							case "vertex":
 							case "addvertex":
-								{
-									double vx = cells[j].Length >= 2 ? double.Parse(cells[j][1], culture) : 0.0;
-									double vy = cells[j].Length >= 3 ? double.Parse(cells[j][2], culture) : 0.0;
-									double vz = cells[j].Length >= 4 ? double.Parse(cells[j][3], culture) : 0.0;
-									double nx = cells[j].Length >= 5 ? double.Parse(cells[j][4], culture) : 0.0;
-									double ny = cells[j].Length >= 6 ? double.Parse(cells[j][5], culture) : 0.0;
-									double nz = cells[j].Length >= 7 ? double.Parse(cells[j][6], culture) : 0.0;
-									Normalize(ref nx, ref ny, ref nz);
-									vz += (double)i * options.SegmentLength;
+							{
+									Vector3 v, n;
+									v.X = cells[j].Length >= 2 ? double.Parse(cells[j][1], culture) : 0.0;
+									v.Y = cells[j].Length >= 3 ? double.Parse(cells[j][2], culture) : 0.0;
+									v.Z = cells[j].Length >= 4 ? double.Parse(cells[j][3], culture) : 0.0;
+									n.X = cells[j].Length >= 5 ? double.Parse(cells[j][4], culture) : 0.0;
+									n.Y = cells[j].Length >= 6 ? double.Parse(cells[j][5], culture) : 0.0;
+									n.Z = cells[j].Length >= 7 ? double.Parse(cells[j][6], culture) : 0.0;
+									n.Normalize();
+									v.Z += (double)i * options.SegmentLength;
 									if (cant) {
-										double f = vz / ((double)options.NumberOfSegments * options.SegmentLength);
+										double f = v.Z / ((double)options.NumberOfSegments * options.SegmentLength);
 										if (quadratic) {
 											/*
 											 * If the initial and final cants are of opposite sign,
@@ -406,35 +417,35 @@ namespace ObjectBender {
 										double sign = (double)Math.Sign(c);
 										double cosC = Math.Cos(c);
 										double sinC = Math.Sin(c);
-										vx -= 0.5 * options.RailGauge * sign;
-										Rotate(ref vx, ref vy, ref vz, 0.0, 0.0, -1.0, cosC, sinC);
-										Rotate(ref nx, ref ny, ref nz, 0.0, 0.0, -1.0, cosC, sinC);
-										vx += 0.5 * options.RailGauge * sign;
+										v.X -= 0.5 * options.RailGauge * sign;
+										v.Rotate(Vector3.Backward, cosC, sinC);
+										n.Rotate(Vector3.Backward, cosC, sinC);
+										v.X += 0.5 * options.RailGauge * sign;
 									}
 									if (options.Radius != 0.0) {
-										double r = options.Radius - vx;
-										double a = vz / options.Radius;
+										double r = options.Radius - v.X;
+										double a = v.Z / options.Radius;
 										double cosA = Math.Cos(a);
 										double sinA = Math.Sin(a);
-										vx = options.Radius - cosA * r;
-										vz = sinA * r;
-										Rotate(ref nx, ref ny, ref nz, 0.0, 1.0, 0.0, cosA, sinA);
+										v.X = options.Radius - cosA * r;
+										v.Z = sinA * r;
+										n.Rotate(Vector3.Down, cosA, sinA);
 									}
 									if (rotateB) {
-										Rotate(ref vx, ref vy, ref vz, 0.0, 1.0, 0.0, cosB, sinB);
-										Rotate(ref nx, ref ny, ref nz, 0.0, 1.0, 0.0, cosB, sinB);
+										v.Rotate(Vector3.Down, cosB, sinB);
+										n.Rotate(Vector3.Down, cosB, sinB);
 									}
 									if (isB3d) {
-										if (nx == 0.0 & ny == 0.0 & nz == 0.0) {
-											builder.AppendLine("Vertex " + vx.ToString("0.000", culture) + "," + vy.ToString("0.000", culture) + "," + vz.ToString("0.000", culture));
+										if (n.X == 0.0 & n.Y == 0.0 & n.Z == 0.0) {
+											builder.AppendLine("Vertex " + v.X.ToString("0.000", culture) + "," + v.Y.ToString("0.000", culture) + "," + v.Z.ToString("0.000", culture));
 										} else {
-											builder.AppendLine("Vertex " + vx.ToString("0.000", culture) + "," + vy.ToString("0.000", culture) + "," + vz.ToString("0.000", culture) + "," + nx.ToString("0.000", culture) + "," + ny.ToString("0.000", culture) + "," + nz.ToString("0.000", culture));
+											builder.AppendLine("Vertex " + v.X.ToString("0.000", culture) + "," + v.Y.ToString("0.000", culture) + "," + v.Z.ToString("0.000", culture) + "," + n.X.ToString("0.000", culture) + "," + n.Y.ToString("0.000", culture) + "," + n.Z.ToString("0.000", culture));
 										}
 									} else {
-										if (nx == 0.0 & ny == 0.0 & nz == 0.0) {
-											builder.AppendLine("AddVertex," + vx.ToString("0.000", culture) + "," + vy.ToString("0.000", culture) + "," + vz.ToString("0.000", culture));
+										if (n.X == 0.0 & n.Y == 0.0 & n.Z == 0.0) {
+											builder.AppendLine("AddVertex," + v.X.ToString("0.000", culture) + "," + v.Y.ToString("0.000", culture) + "," + v.Z.ToString("0.000", culture));
 										} else {
-											builder.AppendLine("AddVertex," + vx.ToString("0.000", culture) + "," + vy.ToString("0.000", culture) + "," + vz.ToString("0.000", culture) + "," + nx.ToString("0.000", culture) + "," + ny.ToString("0.000", culture) + "," + nz.ToString("0.000", culture));
+											builder.AppendLine("AddVertex," + v.X.ToString("0.000", culture) + "," + v.Y.ToString("0.000", culture) + "," + v.Z.ToString("0.000", culture) + "," + n.X.ToString("0.000", culture) + "," + n.Y.ToString("0.000", culture) + "," + n.Z.ToString("0.000", culture));
 										}
 									}
 								}
@@ -558,17 +569,14 @@ namespace ObjectBender {
 				double lowerZ = dirZ * lowerRadius;
 				double upperX = dirX * upperRadius;
 				double upperZ = dirZ * upperRadius;
-				double nx = dirX * signHeight;
-				double ny = 0.0;
-				double nz = dirZ * signHeight;
-				double ux = 0.0;
-				double uy = 1.0;
-				double uz = 0.0;
-				double rx, ry, rz;
-				Cross(nx, ny, nz, ux, uy, uz, out rx, out ry, out rz);
-				Rotate(ref nx, ref ny, ref nz, rx, ry, rz, cosSlope, sinSlope);
-				cells[cellPointer + 0] = new string[] { "AddVertex", upperX.ToString("R", culture), halfHeight.ToString("R", culture), upperZ.ToString("R", culture), nx.ToString("R", culture), ny.ToString("R", culture), nz.ToString("R", culture) };
-				cells[cellPointer + 1] = new string[] { "AddVertex", lowerX.ToString("R", culture), (-halfHeight).ToString("R", culture), lowerZ.ToString("R", culture), nx.ToString("R", culture), ny.ToString("R", culture), nz.ToString("R", culture) };
+				Vector3 n;
+				n.X = dirX * signHeight;
+				n.Y = 0.0;
+				n.Z = dirZ * signHeight;
+				Vector3 r = Vector3.Cross(n, Vector3.Down);
+				n.Rotate(r, cosSlope, sinSlope);
+				cells[cellPointer + 0] = new string[] { "AddVertex", upperX.ToString("R", culture), halfHeight.ToString("R", culture), upperZ.ToString("R", culture), n.X.ToString("R", culture), n.Y.ToString("R", culture), n.Z.ToString("R", culture) };
+				cells[cellPointer + 1] = new string[] { "AddVertex", lowerX.ToString("R", culture), (-halfHeight).ToString("R", culture), lowerZ.ToString("R", culture), n.X.ToString("R", culture), n.Y.ToString("R", culture), n.Z.ToString("R", culture) };
 				cellPointer += 2;
 				angleCurrent += angleDelta;
 			}
@@ -602,53 +610,8 @@ namespace ObjectBender {
 			return cells;
 		}
 		
-		/// <summary>Normalizes a vector.</summary>
-		private static void Normalize(ref double x, ref double y, ref double z) {
-			double t = x * x + y * y + z * z;
-			if (t != 0.0) {
-				t = 1.0 / Math.Sqrt(t);
-				x *= t;
-				y *= t;
-				z *= t;
-			}
-		}
 		
-		/// <summary>Crosses two vectors.</summary>
-		private static void Cross(double ax, double ay, double az, double bx, double by, double bz, out double cx, out double cy, out double cz) {
-			cx = -az * by + ay * bz;
-			cy = az * bx - ax * bz;
-			cz = -ay * bx + ax * by;
-		}
-
-		/// <summary>Rotates a vector.</summary>
-		private static void Rotate(ref double vx, ref double vy, ref double vz, double dx, double dy, double dz, double cos, double sin) {
-			double versin = 1.0 - cos;
-			double x = (cos + versin * dx * dx) * vx + (versin * dx * dy - sin * dz) * vy + (versin * dx * dz + sin * dy) * vz;
-			double y = (cos + versin * dy * dy) * vy + (versin * dx * dy + sin * dz) * vx + (versin * dy * dz - sin * dx) * vz;
-			double z = (cos + versin * dz * dz) * vz + (versin * dx * dz - sin * dy) * vx + (versin * dy * dz + sin * dx) * vy;
-			vx = x;
-			vy = y;
-			vz = z;
-		}
-		
-		/// <summary>Scales a vector.</summary>
-		private static void Scale(ref double vx, ref double vy, ref double vz, ref double nx, ref double ny, ref double nz, double x, double y, double z) {
-			vx *= x;
-			vy *= y;
-			vz *= z;
-			double nx2 = nx * nx;
-			double ny2 = ny * ny;
-			double nz2 = nz * nz;
-			double t = nx2 / (x * x) + ny2 / (y * y) + nz2 / (z * z);
-			if (t != 0.0) {
-				t = Math.Sqrt((nx2 + ny2 + nz2) / t);
-				nx *= t / x;
-				ny *= t / y;
-				nz *= t / z;
-			}
-		}
-		
-		/// <summary>Shears a vector.</summary>
+		/// <summary>Shears a vector and it's associated normal.</summary>
 		private static void Shear(ref double vx, ref double vy, ref double vz, ref double nx, ref double ny, ref double nz, double dx, double dy, double dz, double sx, double sy, double sz, double r) {
 			/* Shear the vector */
 			double factor = r * (vx * dx + vy * dy + vz * dz);
