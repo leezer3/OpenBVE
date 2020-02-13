@@ -792,14 +792,16 @@ namespace LibRender2
 
 		public void RenderFace(Shader Shader, FaceState State, bool IsDebugTouchMode = false)
 		{
-			RenderFace(Shader, State.Object, State.Face, IsDebugTouchMode);
+			Matrix4D modelMatrix = State.Object.ModelMatrix * Camera.TranslationMatrix;
+			Matrix4D modelViewMatrix = modelMatrix * CurrentViewMatrix;
+			RenderFace(Shader, State.Object, State.Face, modelMatrix, modelViewMatrix, IsDebugTouchMode);
 		}
-		
+
 		private Color32 lastColor;
 
 		internal int lastVAO;
 
-		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, bool IsDebugTouchMode = false)
+		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, Matrix4D modelMatrix, Matrix4D modelViewMatrix, bool IsDebugTouchMode = false)
 		{
 			if (State.Prototype.Mesh.Vertices.Length < 1)
 			{
@@ -828,8 +830,7 @@ namespace LibRender2
 			}
 
 			// matrix
-			Matrix4D modelMatrix = State.ModelMatrix * Camera.TranslationMatrix;
-			Matrix4D modelViewMatrix = modelMatrix * CurrentViewMatrix;
+			
 			Shader.SetCurrentModelViewMatrix(modelViewMatrix);
 			Shader.SetCurrentTextureMatrix(State.TextureTranslation);
 			
