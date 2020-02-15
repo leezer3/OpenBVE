@@ -97,7 +97,7 @@ namespace OpenBve
 					int index = (int)Math.Floor(ratio * (double)Translations.RatingsCount);
 					if (index >= Translations.RatingsCount) index = Translations.RatingsCount - 1;
 					string s;
-					switch (Interface.CurrentOptions.GameMode) {
+					switch (Interface.CurrentOptions.PreviousGameMode) {
 							case GameMode.Arcade: s = Translations.GetInterfaceString("mode_arcade"); break;
 							case GameMode.Normal: s = Translations.GetInterfaceString("mode_normal"); break;
 							case GameMode.Expert: s = Translations.GetInterfaceString("mode_expert"); break;

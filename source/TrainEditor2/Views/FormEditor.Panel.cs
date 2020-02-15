@@ -105,6 +105,15 @@ namespace TrainEditor2.Views
 				})
 				.AddTo(panelDisposable);
 
+			x.ListColumns
+				.ObserveResetChanged()
+				.Subscribe(_ =>
+				{
+					listViewPanel.Columns.Clear();
+					listViewPanel.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+				})
+				.AddTo(panelDisposable);
+
 			x.ListItems
 				.ObserveAddChanged()
 				.Subscribe(y =>
@@ -123,6 +132,15 @@ namespace TrainEditor2.Views
 						listViewPanel.Items.Remove(item);
 					}
 
+					listViewPanel.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+				})
+				.AddTo(panelDisposable);
+
+			x.ListItems
+				.ObserveResetChanged()
+				.Subscribe(_ =>
+				{
+					listViewPanel.Items.Clear();
 					listViewPanel.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
 				})
 				.AddTo(panelDisposable);

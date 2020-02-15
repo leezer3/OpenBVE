@@ -14,7 +14,7 @@
 				<trans-unit id="contributors">
 					<source>Unknown</source>
 					<target>ALP (Ducatista)</target>
-					<note from="translator">Esta tradução não segue o ilegal e estúpido Acordo Ortográfico de 1990 e respeita a Convenção Ortográfica de 1945 (Dec-Lei 35228 de 08-12-1945).</note>
+					<note from="translator">Esta tradução não segue o ilegal e estúpido Acordo Ortográfico de 1990 e respeita a Convenção Ortográfica de 1945 (Decreto 35228 de 08-12-1945).</note>
 				</trans-unit>
 				<trans-unit id="last_updated">
 					<source>2016-02-21</source>
@@ -298,6 +298,9 @@
 					<trans-unit id="train_settings_encoding">
 						<source>Encoding:</source>
 						<target>Codificação:</target>
+					</trans-unit>
+					<trans-unit id="train_settings_reverseconsist">
+						<source>Reverse Consist:</source>
 					</trans-unit>
 					<trans-unit id="train_settings_encoding_preview">
 						<source>Preview:</source>
@@ -923,7 +926,7 @@
 					</trans-unit>
 					<trans-unit id="list_option">
 						<source>Command Option</source>
-						<target>Command Option</target>
+						<target>Opção de comando</target>
 					</trans-unit>
 					<trans-unit id="add">
 						<source>Add control</source>
@@ -1447,6 +1450,7 @@
 					</trans-unit>
 					<trans-unit id="advanced_is_use_new_renderer">
 						<source>Enable the new renderer</source>
+					<target>Activar o novo renderizador</target>
 					</trans-unit>
 					<trans-unit id="advanced_disable_displaylists">
 						<source>Disable OpenGL display lists</source>
@@ -1518,7 +1522,7 @@
 					</trans-unit>
 					<trans-unit id="kiosk_mode_enable">
 						<source>Enable Kiosk Mode</source>
-						<target>Activa o Modo Quiosque</target>
+						<target>Activar o Modo Quiosque</target>
 					</trans-unit>
 					<trans-unit id="kiosk_mode_timer">
 						<source>Control Timeout (s)</source>
@@ -2322,15 +2326,15 @@
 					</trans-unit>
 					<trans-unit id="horn_primary">
 						<source>Plays the primary horn</source>
-						<target>Toca a corneta 1</target>
+						<target>Toca a buzina 1</target>
 					</trans-unit>
 					<trans-unit id="horn_secondary">
 						<source>Plays the secondary horn</source>
-						<target>Toca a corneta 2</target>
+						<target>Toca a buzina 2</target>
 					</trans-unit>
 					<trans-unit id="horn_music">
 						<source>Plays or stops the music horn</source>
-						<target>Liga e desliga a corneta contínua</target>
+						<target>Liga e desliga a buzina contínua</target>
 					</trans-unit>
 					<trans-unit id="device_constspeed">
 						<source>Activates or deactivates the constant speed device</source>
@@ -2806,7 +2810,7 @@
 					</trans-unit>
 					<trans-unit id="escape">
 						<source>Escape</source>
-						<target>Sair</target>
+						<target>(Escape) Sair</target>
 					</trans-unit>
 					<trans-unit id="euro">
 						<source>Euro</source>
@@ -2890,7 +2894,7 @@
 					</trans-unit>
 					<trans-unit id="home">
 						<source>Home</source>
-						<target>Início da linha</target>
+						<target>(Home) Início da linha</target>
 					</trans-unit>
 					<trans-unit id="insert">
 						<source>Insert</source>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -273,9 +274,9 @@ namespace OpenBve {
 			return Program.Renderer.CreateStaticObject(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 		}
 
-		public override int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation AuxTransformation, Matrix4D Rotate, Matrix4D Translate, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		public override int CreateStaticObject(StaticObject Prototype, Transformation AuxTransformation, Matrix4D Rotate, Matrix4D Translate, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
 		{
-			return Program.Renderer.CreateStaticObject(Prototype, Position, AuxTransformation, Rotate, Translate, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+			return Program.Renderer.CreateStaticObject(Prototype, AuxTransformation, Rotate, Translate, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 		}
 
 		public override void CreateDynamicObject(ref ObjectState internalObject)
@@ -355,7 +356,7 @@ namespace OpenBve {
 			}
 		}
 
-		public override Track[] Tracks
+		public override Dictionary<int, Track> Tracks
 		{
 			get
 			{

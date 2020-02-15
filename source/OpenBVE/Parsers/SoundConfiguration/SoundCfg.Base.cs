@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi;
 using OpenBveApi.Math;
 using SoundManager;
 
@@ -8,9 +9,8 @@ namespace OpenBve
 	{
 		/// <summary>Parses the sound configuration file for a train</summary>
 		/// <param name="TrainPath">The absolute on-disk path to the train's folder</param>
-		/// <param name="Encoding">The train's text encoding</param>
 		/// <param name="Train">The train to which to apply the new sound configuration</param>
-		internal static void ParseSoundConfig(string TrainPath, System.Text.Encoding Encoding, TrainManager.Train Train)
+		internal static void ParseSoundConfig(string TrainPath, TrainManager.Train Train)
 		{
 			Train.InitializeCarSounds();
 			SoundCfgParser.LoadDefaultATSSounds(Train, TrainPath);
@@ -27,7 +27,7 @@ namespace OpenBve
 			if (System.IO.File.Exists(FileName))
 			{
 				Program.FileSystem.AppendToLogFile("Loading sound.cfg file: " + FileName);
-				BVE4SoundParser.Parse(FileName, TrainPath, Encoding, Train);
+				BVE4SoundParser.Parse(FileName, TrainPath, Train);
 			}
 			else
 			{

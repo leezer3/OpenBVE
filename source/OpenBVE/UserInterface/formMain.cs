@@ -45,6 +45,8 @@ namespace OpenBve {
 			internal string TrainFolder;
 			/// <summary>The text encoding of the selected train</summary>
 			internal System.Text.Encoding TrainEncoding;
+			/// <summary>Whether the consist of the train is to be reversed on start</summary>
+			internal bool ReverseConsist;
 			internal string InitialStation;
 			internal double StartTime;
 			internal bool AIDriver;
@@ -286,7 +288,7 @@ namespace OpenBve {
 					labelReviewTrainValue.Text = Game.LogTrainName;
 					labelReviewDateValue.Text = Game.LogDateTime.ToString("yyyy-MM-dd", Culture);
 					labelReviewTimeValue.Text = Game.LogDateTime.ToString("HH:mm:ss", Culture);
-					switch (Interface.CurrentOptions.GameMode)
+					switch (Interface.CurrentOptions.PreviousGameMode)
 					{
 						case GameMode.Arcade: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_arcade"); break;
 						case GameMode.Normal: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_normal"); break;
@@ -635,7 +637,8 @@ namespace OpenBve {
 			groupboxTrainDetails.Text = Translations.GetInterfaceString("start_train_details");
 			tabpageTrainDescription.Text = Translations.GetInterfaceString("start_train_description");
 			tabpageTrainSettings.Text = Translations.GetInterfaceString("start_train_settings");
-			labelTrainEncoding.Text = Translations.GetInterfaceString("start_train_settings_encoding");
+			labelTrainEncoding.Text = Translations.GetInterfaceString("start_train_settings_reverseconsist");
+			labelReverseConsist.Text = Translations.GetInterfaceString("start_train_settings_encoding");
 			comboboxTrainEncoding.Items[0] = Translations.GetInterfaceString("(UTF-8)");
 			labelTrainEncodingPreview.Text = Translations.GetInterfaceString("start_train_settings_encoding_preview");
 			labelStart.Text = @" " + Translations.GetInterfaceString("start_start");
@@ -659,7 +662,7 @@ namespace OpenBve {
 			labelScore.Text = @" " + Translations.GetInterfaceString("review_score");
 			groupboxRating.Text = Translations.GetInterfaceString("review_score_rating");
 			labelRatingModeCaption.Text = Translations.GetInterfaceString("review_score_rating_mode");
-			switch (Interface.CurrentOptions.GameMode)
+			switch (Interface.CurrentOptions.PreviousGameMode)
 			{
 				case GameMode.Arcade: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_arcade"); break;
 				case GameMode.Normal: labelRatingModeValue.Text = Translations.GetInterfaceString("mode_normal"); break;
@@ -1768,6 +1771,11 @@ namespace OpenBve {
 			{
 				f.ShowDialog();
 			}
+		}
+
+		private void checkBoxReverseConsist_CheckedChanged(object sender, EventArgs e)
+		{
+			Result.ReverseConsist = checkBoxReverseConsist.Checked;
 		}
 	}
 }

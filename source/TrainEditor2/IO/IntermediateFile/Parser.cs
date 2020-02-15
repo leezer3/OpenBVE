@@ -490,16 +490,53 @@ namespace TrainEditor2.IO.IntermediateFile
 			double[] location = ((string)parent.Element("Location")).Split(',').Select(double.Parse).ToArray();
 			double[] size = ((string)parent.Element("Size")).Split(',').Select(double.Parse).ToArray();
 
-			return new Models.Panels.TouchElement(screen)
+			Models.Panels.TouchElement element = new Models.Panels.TouchElement(screen)
 			{
 				LocationX = location[0],
 				LocationY = location[1],
 				SizeX = size[0],
 				SizeY = size[1],
-				JumpScreen = (int)parent.Element("JumpScreen"),
-				SoundIndex = (int)parent.Element("SoundIndex"),
-				CommandInfo = Translations.CommandInfos.TryGetInfo((Translations.Command)Enum.Parse(typeof(Translations.Command), (string)parent.Element("CommandInfo"))),
-				CommandOption = (int)parent.Element("CommandOption")
+				JumpScreen = (int)parent.Element("JumpScreen")
+			};
+
+			if (parent.Element("SoundIndex") != null)
+			{
+				element.SoundEntries.Add(new Models.Panels.TouchElement.SoundEntry
+				{
+					Index = (int)parent.Element("SoundIndex")
+				});
+			}
+
+			if (parent.Element("CommandInfo") != null && parent.Element("CommandOption") != null)
+			{
+				element.CommandEntries.Add(new Models.Panels.TouchElement.CommandEntry
+				{
+					Info = Translations.CommandInfos.TryGetInfo((Translations.Command)Enum.Parse(typeof(Translations.Command), (string)parent.Element("CommandInfo"))),
+					Option = (int)parent.Element("CommandOption")
+				});
+			}
+
+			element.SoundEntries.AddRange(parent.XPathSelectElements("SoundEntries/Entry").Select(ParseTouchElementSoundEntryNode));
+			element.CommandEntries.AddRange(parent.XPathSelectElements("CommandEntries/Entry").Select(ParseTouchElementCommandEntryNode));
+			element.Layer = (int)parent.Element("Layer");
+
+			return element;
+		}
+
+		private static Models.Panels.TouchElement.SoundEntry ParseTouchElementSoundEntryNode(XElement parent)
+		{
+			return new Models.Panels.TouchElement.SoundEntry
+			{
+				Index = (int)parent.Element("Index")
+			};
+		}
+
+		private static Models.Panels.TouchElement.CommandEntry ParseTouchElementCommandEntryNode(XElement parent)
+		{
+			return new Models.Panels.TouchElement.CommandEntry
+			{
+				Info = Translations.CommandInfos.TryGetInfo((Translations.Command)Enum.Parse(typeof(Translations.Command), (string)parent.Element("Info"))),
+				Option = (int)parent.Element("Option")
 			};
 		}
 

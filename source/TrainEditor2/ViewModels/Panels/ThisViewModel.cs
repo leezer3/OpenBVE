@@ -175,7 +175,8 @@ namespace TrainEditor2.ViewModels.Panels
 				.ToReactivePropertyAsSynchronized(
 					x => x.TransparentColor,
 					x => x.ToString(),
-					Color24.ParseHexColor
+					Color24.ParseHexColor,
+					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
 				{

@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using OpenBve.Parsers.Panel;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -19,11 +20,11 @@ namespace OpenBve {
 		/// <summary>Parses a BVE2 / openBVE panel.cfg file</summary>
 		/// <param name="PanelFile">The relative path of the panel configuration file from the train</param>
 		/// <param name="TrainPath">The on-disk path to the train</param>
-		/// <param name="Encoding">The train's text encoding</param>
 		/// <param name="Train">The train</param>
 		/// <param name="Car">The car index to add the panel to</param>
-		internal static void ParsePanel2Config(string PanelFile, string TrainPath, System.Text.Encoding Encoding, TrainManager.Train Train, int Car)
+		internal static void ParsePanel2Config(string PanelFile, string TrainPath, TrainManager.Train Train, int Car)
 		{
+			Encoding Encoding = TextEncoding.GetSystemEncodingFromFile(PanelFile);
 			//Train name, used for hacks detection
 			string trainName = new System.IO.DirectoryInfo(TrainPath).Name.ToUpperInvariant();
 			// read lines
@@ -755,7 +756,7 @@ namespace OpenBve {
 										if (tf != String.Empty)
 										{
 											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXDirection = Direction;
-											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Program.CurrentHost, tf, true);
+											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Program.CurrentHost, tf, false);
 										}
 									}
 								} break;
@@ -931,20 +932,20 @@ namespace OpenBve {
 												{
 													if (Subject == "power")
 													{
-														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, -1, Translations.Command.PowerDecrease, 0, new Vector2(0.5, 0.5), PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
-														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, -1, Translations.Command.PowerIncrease, 0, new Vector2(0.5, 0.5), PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
+														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new TrainManager.CommandEntry { Command = Translations.Command.PowerDecrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
+														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new TrainManager.CommandEntry { Command = Translations.Command.PowerIncrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
 													}
 
 													if (Subject == "brake")
 													{
-														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, -1, Translations.Command.BrakeIncrease, 0, new Vector2(0.5, 0.5), PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
-														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, -1, Translations.Command.BrakeDecrease, 0, new Vector2(0.5, 0.5), PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
+														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new TrainManager.CommandEntry { Command = Translations.Command.BrakeIncrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
+														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new TrainManager.CommandEntry { Command = Translations.Command.BrakeDecrease } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
 													}
 
 													if (Subject == "reverser")
 													{
-														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, -1, Translations.Command.ReverserForward, 0, new Vector2(0.5, 0.5), PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
-														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, -1, Translations.Command.ReverserBackward, 0, new Vector2(0.5, 0.5), PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
+														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new TrainManager.CommandEntry { Command = Translations.Command.ReverserForward } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
+														PanelXmlParser.CreateTouchElement(Train.Cars[Car].CarSections[0].Groups[GroupIndex], new Vector2(LocationX, LocationY + Interval / 2.0), new Vector2(wday, Interval / 2.0), GroupIndex - 1, new int[0], new[] { new TrainManager.CommandEntry { Command = Translations.Command.ReverserBackward } }, new Vector2(0.5, 0.5), 0, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
 													}
 												}
 											}
@@ -1197,121 +1198,18 @@ namespace OpenBve {
 			if (Width != 0)
 			{
 				//If the width of the needle is not set, it will loop round to the starting position
-				ftc -= (double) Width/TextureWidth;
+				ftc -= (double)Width / TextureWidth;
 			}
 			double range = ftc / ((Maximum + mp) - (Minimum + mp));
-			switch(Subject.ToLowerInvariant())
-			{
-				case "pilotlamp":
-				case "passalarm":
-				case "stationadjustalarm":
-					return Subject.ToLowerInvariant();
-				case "acc":
-					return "if[acceleration < " + Maximum + ", if[acceleration > " + Minimum + ", acceleration " + " * " + range + ", 0]," + ftc + "]";
-				case "motor":
-					return "if[accelerationmotor < " + Maximum + ", if[Speed > " + Minimum + ", accelerationmotor " + " * " + range + ", 0]," + ftc + "]";
-				case "true":
-					return "0.0";
-				case "kmph":
-					Maximum /= 3.6;
-					return "if[Speed < " + Maximum + ", if[Speed > " + Minimum + ", (Speed * 3.6) " + " * " + range + ", 0]," + ftc + "]";
-				case "mph":
-					Maximum /= 2.23694;
-					return "if[Speed < " + Maximum + ", if[Speed >  " + Minimum + ", (Speed * 2.23694) " + " * " + range + ", 0]," + ftc + "]";
-				case "ms":
-					return "if[Speed < " + Maximum + ", if[Speed >  " + Minimum + ", Speed " + " * " + range + ", 0]," + ftc + "]";
-				case "bc":
-					Maximum /= 0.001;
-					return "if[BrakeCylinder < " + Maximum + ", if[BrakeCylinder >  " + Minimum + ", (BrakeCylinder * .001) " + " * " + range + ", 0]," + ftc + "]";
-				case "locobrakecylinder":
-					Maximum /= 0.001;
-					return "if[BrakeCylinder["+ Train.DriverCar + "] < " + Maximum + ", if[BrakeCylinder["+ Train.DriverCar + "] >  " + Minimum + ", (BrakeCylinder["+ Train.DriverCar + "] * .001) " + " * " + range + ", 0]," + ftc + "]";
-				case "mr":
-					Maximum /= 0.001;
-					return "if[MainReservoir < " + Maximum + ", if[MainReservoir >  " + Minimum + ", (MainReservoir * .001) " + " * " + range + ", 0]," + ftc + "]";
-				case "sap":
-					Maximum /= 0.001;
-					return "if[StraightAirPipe < " + Maximum + ", if[StraightAirPipe >  " + Minimum + ", (StraightAirPipe * .001) " + " * " + range + ", 0]," + ftc + "]";
-				case "bp":
-					Maximum /= 0.001;
-					return "if[BrakePipe < " + Maximum + ", if[BrakePipe >  " + Minimum + ", (BrakePipe * .001) " + " * " + range + ", 0]," + ftc + "]";
-				case "locobrakepipe":
-					Maximum /= 0.001;
-					return "if[BrakePipe["+ Train.DriverCar + "] < " + Maximum + ", if[BrakePipe["+ Train.DriverCar + "] >  " + Minimum + ", (BrakePipe["+ Train.DriverCar + "] * .001) " + " * " + range + ", 0]," + ftc + "]";
-				case "er":
-					Maximum /= 0.001;
-					return "if[EqualizingReservoir < " + Maximum + ", if[EqualizingReservoir >  " + Minimum + ", (EqualizingReservoir * .001) " + " * " + range + ", 0]," + ftc + "]";
-				case "doors":
-					return "if[Doors < " + Maximum + ", if[Doors >  " + Minimum + ", Doors " + " * " + range + ", 0]," + ftc + "]";
-				case "doorbuttonl":
-				case "doorbuttonleft":
-					return "if[leftdoorbuttom < " + Maximum + ", if[leftdoorbutton >  " + Minimum + ", leftdoorbutton " + " * " + range + ", 0]," + ftc + "]";
-				case "doorbuttonr":
-				case "doorbuttonright":
-					return "if[rightdoorbuttom < " + Maximum + ", if[rightdoorbutton >  " + Minimum + ", rightdoorbutton " + " * " + range + ", 0]," + ftc + "]";
-				case "power":
-					return "if[PowerNotch < " + Maximum + ", if[PowerNotch >  " + Minimum + ", PowerNotch " + " * " + range + ", 0]," + ftc + "]";
-				case "locobrake":
-					return "if[LocoBrakeNotch < " + Maximum + ", if[LocoBrakeNotch >  " + Minimum + ", LocoBrakeNotch " + " * " + range + ", 0]," + ftc + "]";
-				case "brake":
-					return "if[BrakeNotch < " + Maximum + ", if[BrakeNotch >  " + Minimum + ", BrakeNotch " + " * " + range + ", 0]," + ftc + "]";
-				case "rev":
-					return "if[ReverserNotch < " + Maximum + ", if[ReverserNotch >  " + Minimum + ", (ReverserNotch + 1) " + " * " + range + ", 0]," + ftc + "]";
-				case "hour":
-					return range / 24 + " * floor[mod[time * 0.000277777777777778, 24]]";
-				case "min":
-					return range / 60 + " * floor[time * 0.0166666666666667]";
-				case "sec":
-					return range / 60 + " * floor[time]";
-				default:
-					if (Subject.StartsWith("doorl", StringComparison.OrdinalIgnoreCase))
-					{
-						string a = Subject.Substring(5);
-						int n; if (int.TryParse(a, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out n))
-						{
-							if (n >= 0 & n < Train.Cars.Length)
-							{
-								string di = "leftDoors[" + n + "]";
-								return "if[" + di + " < " + Maximum + ", if["+ di+ " >  " + Minimum + ", "+ di + " * " + range + ", 0]," + ftc + "]";
-							}
-							else
-							{
-								return String.Empty;
-							}
-						}
-					}
-					else if (Subject.StartsWith("doorr", StringComparison.OrdinalIgnoreCase))
-					{
-						string a = Subject.Substring(5);
-						int n; if (int.TryParse(a, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out n))
-						{
-							if (n >= 0 & n < Train.Cars.Length)
-							{
-								string di = "rightDoors[" + n + "]";
-								return "if[" + di + " < " + Maximum + ", if[" + di + " >  " + Minimum + ", " + di + " * " + range + ", 0]," + ftc + "]";
-							}
-							else
-							{
-								return String.Empty;
-							}
-						}
-					}
-					if (Subject.StartsWith("ats", StringComparison.OrdinalIgnoreCase))
-					{
-						string a = Subject.Substring(3);
-						int n; if (int.TryParse(a, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out n))
-						{
-							if (n >= 0 & n <= 255)
-							{
-								return "if[PluginState[" + n + "] < " + Maximum + ", if[PluginState[" + n + "] > 0, PluginState[" + n + "] " + " * " + range + ", 0]," + ftc + "]";
-							}
-						}
-					}
-					break;
 
+			string subjectText = GetStackLanguageFromSubject(Train, Subject, ErrorLocation);
+
+			if (!string.IsNullOrEmpty(subjectText))
+			{
+				return $"{subjectText} {Maximum} < {subjectText} {Minimum} > {subjectText} {Minimum + mp} - {range} * 0 ? {ftc} ?";
 			}
-			Interface.AddMessage(MessageType.Error, false, "Invalid subject " + Subject + " encountered in " + ErrorLocation);
-			return String.Empty;
+
+			return string.Empty;
 		}
 
 		/// <summary>Converts a Panel2.cfg subject to an animation function stack</summary>

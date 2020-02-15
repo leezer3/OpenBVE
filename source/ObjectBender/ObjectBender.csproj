@@ -73,4 +73,10 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
+      <Project>{27134980-4415-4375-a564-40a9014dfa5f}</Project>
+      <Name>OpenBveApi</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

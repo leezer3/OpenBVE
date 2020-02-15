@@ -506,6 +506,12 @@ namespace TrainEditor2.Models
 				OnPropertyChanged(new PropertyChangedEventArgs(nameof(Sound)));
 
 				CreateItem();
+
+				Panel.CreateTreeItem();
+				Panel.SelectedTreeItem = Panel.TreeItem;
+
+				Sound.CreateTreeItem();
+				Sound.SelectedTreeItem = Sound.TreeItem;
 			}
 			catch (Exception e)
 			{
@@ -629,12 +635,12 @@ namespace TrainEditor2.Models
 						{
 							ExtensionsCfg.Parse(ExtensionsCfgImportLocation, Train);
 						}
-
-						CreateItem();
 						break;
 					default:
 						throw new ArgumentOutOfRangeException();
 				}
+
+				CreateItem();
 			}
 			catch (Exception e)
 			{
@@ -662,6 +668,9 @@ namespace TrainEditor2.Models
 					default:
 						throw new ArgumentOutOfRangeException();
 				}
+
+				Panel.CreateTreeItem();
+				Panel.SelectedTreeItem = Panel.TreeItem;
 			}
 			catch (Exception e)
 			{
@@ -696,6 +705,9 @@ namespace TrainEditor2.Models
 					default:
 						throw new ArgumentOutOfRangeException();
 				}
+
+				Sound.CreateTreeItem();
+				Sound.SelectedTreeItem = Sound.TreeItem;
 			}
 			catch (Exception e)
 			{
@@ -944,7 +956,7 @@ namespace TrainEditor2.Models
 
 		internal void ResetLogMessages()
 		{
-			VisibleLogMessages.RemoveAll(_ => true);
+			VisibleLogMessages.Clear();
 		}
 
 		internal void ChangeVisibleLogMessages(MessageType type, bool visible)

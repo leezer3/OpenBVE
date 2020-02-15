@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -18,6 +18,7 @@ namespace LibRender2.Objects
 		private readonly HostInterface currentHost;
 		private readonly CameraProperties camera;
 		private readonly BaseOptions currentOptions;
+		private readonly BaseRenderer renderer;
 
 		private readonly List<ObjectState> myObjects;
 		private readonly List<FaceState> myOpaqueFaces;
@@ -30,11 +31,12 @@ namespace LibRender2.Objects
 		public readonly ReadOnlyCollection<FaceState> OverlayOpaqueFaces;
 		public ReadOnlyCollection<FaceState> OverlayAlphaFaces;
 
-		internal VisibleObjectLibrary(HostInterface CurrentHost, CameraProperties Camera, BaseOptions CurrentOptions)
+		internal VisibleObjectLibrary(HostInterface CurrentHost, CameraProperties Camera, BaseOptions CurrentOptions, BaseRenderer Renderer)
 		{
 			currentHost = CurrentHost;
 			camera = Camera;
 			currentOptions = CurrentOptions;
+			renderer = Renderer;
 
 			myObjects = new List<ObjectState>();
 			myOpaqueFaces = new List<FaceState>();
@@ -83,11 +85,15 @@ namespace LibRender2.Objects
 
 		public void ShowObject(ObjectState State, ObjectType Type)
 		{
+			if (renderer.DefaultShader == null)
+			{
+				throw new Exception();
+			}
 			bool result = AddObject(State);
 
 			if (State.Prototype.Mesh.VAO == null)
 			{
-				VAOExtensions.CreateVAO(ref State.Prototype.Mesh, State.Prototype.Dynamic);
+				VAOExtensions.CreateVAO(ref State.Prototype.Mesh, State.Prototype.Dynamic, renderer.DefaultShader.VertexLayout);
 			}
 
 			if (!result)
@@ -170,9 +176,6 @@ namespace LibRender2.Objects
 					}
 				}
 
-				/*
-				 * For all lists, insert the face at the end of the list.
-				 * */
 				List<FaceState> list;
 
 				switch (Type)
@@ -188,7 +191,47 @@ namespace LibRender2.Objects
 						throw new ArgumentOutOfRangeException(nameof(Type), Type, null);
 				}
 
-				list.Add(new FaceState(State, face));
+				if (!alpha)
+				{
+					/*
+					 * If an opaque face, itinerate through the list to see if the prototype is present in the list
+					 * When the new renderer is in use, this prevents re-binding the VBO as it is simply re-drawn with
+					 * a different translation matrix
+					 * NOTE: The shader isn't currently smart enough to do depth discards, so if this changes may need to
+					 * be revisited
+					 */
+					if (list.Count == 0)
+					{
+						list.Add(new FaceState(State, face));
+					}
+					else
+					{
+						for (int i = 0; i < list.Count; i++)
+						{
+
+							if (list[i].Object.Prototype == State.Prototype)
+							{
+								list.Insert(i, new FaceState(State, face));
+								break;
+							}
+							if (i == list.Count - 1)
+							{
+								list.Add(new FaceState(State, face));
+								break;
+							}
+						}
+					}
+					
+					
+				}
+				else
+				{
+					/*
+					 * Alpha faces should be inserted at the end of the list- We're going to sort it anyway so it makes no odds
+					 */
+					list.Add(new FaceState(State, face));
+				}
+				
 			}
 		}
 

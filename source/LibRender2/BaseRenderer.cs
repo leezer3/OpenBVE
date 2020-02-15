@@ -23,7 +23,6 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using OpenBveApi.World;
-using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using Vector3 = OpenBveApi.Math.Vector3;
@@ -170,7 +169,7 @@ namespace LibRender2
 
 			StaticObjectStates = new List<ObjectState>();
 			DynamicObjectStates = new List<ObjectState>();
-			VisibleObjects = new VisibleObjectLibrary(currentHost, Camera, currentOptions);
+			VisibleObjects = new VisibleObjectLibrary(currentHost, Camera, currentOptions, this);
 			try
 			{
 				DefaultShader = new Shader("default", "default", true);
@@ -288,7 +287,7 @@ namespace LibRender2
 			{
 				foreach (VertexTemplate vertex in Prototype.Mesh.Vertices)
 				{
-					OpenBveApi.Math.Vector3 Coordinates = new Vector3(vertex.Coordinates);
+					Vector3 Coordinates = new Vector3(vertex.Coordinates);
 					Coordinates.Rotate(AuxTransformation);
 
 					if (Coordinates.Z < startingDistance)
@@ -366,7 +365,7 @@ namespace LibRender2
 		}
 
 
-		public int CreateStaticObject(StaticObject Prototype, Vector3 Position, Transformation AuxTransformation, Matrix4D Rotate, Matrix4D Translate, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		public int CreateStaticObject(StaticObject Prototype, Transformation AuxTransformation, Matrix4D Rotate, Matrix4D Translate, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
 		{
 			if (Prototype == null)
 			{
@@ -380,7 +379,7 @@ namespace LibRender2
 			{
 				foreach (VertexTemplate vertex in Prototype.Mesh.Vertices)
 				{
-					OpenBveApi.Math.Vector3 Coordinates = new Vector3(vertex.Coordinates);
+					Vector3 Coordinates = new Vector3(vertex.Coordinates);
 					Coordinates.Rotate(AuxTransformation);
 
 					if (Coordinates.Z < startingDistance)
@@ -708,6 +707,7 @@ namespace LibRender2
 			Shader.SetBrightness(1.0f);
 			Shader.SetOpacity(1.0f);
 			Shader.SetObjectIndex(0);
+			Shader.SetMaterialAdditive(0);
 		}
 
 		public void SetFogForImmediateMode()
@@ -792,14 +792,16 @@ namespace LibRender2
 
 		public void RenderFace(Shader Shader, FaceState State, bool IsDebugTouchMode = false)
 		{
-			RenderFace(Shader, State.Object, State.Face, IsDebugTouchMode);
+			Matrix4D modelMatrix = State.Object.ModelMatrix * Camera.TranslationMatrix;
+			Matrix4D modelViewMatrix = modelMatrix * CurrentViewMatrix;
+			RenderFace(Shader, State.Object, State.Face, modelMatrix, modelViewMatrix, IsDebugTouchMode);
 		}
-		
+
 		private Color32 lastColor;
 
 		internal int lastVAO;
 
-		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, bool IsDebugTouchMode = false)
+		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, Matrix4D modelMatrix, Matrix4D modelViewMatrix, bool IsDebugTouchMode = false)
 		{
 			if (State.Prototype.Mesh.Vertices.Length < 1)
 			{
@@ -811,7 +813,7 @@ namespace LibRender2
 
 			if (lastVAO != VAO.handle)
 			{
-				VAO.BindForDrawing(Shader.VertexLayout);
+				VAO.Bind();
 				lastVAO = VAO.handle;
 			}
 			
@@ -828,56 +830,54 @@ namespace LibRender2
 			}
 
 			// matrix
-			Matrix4D modelMatrix = State.ModelMatrix * Camera.TranslationMatrix;
-			Matrix4D modelViewMatrix = modelMatrix * CurrentViewMatrix;
+			
 			Shader.SetCurrentModelViewMatrix(modelViewMatrix);
 			Shader.SetCurrentTextureMatrix(State.TextureTranslation);
 			
 			if (OptionWireFrame || IsDebugTouchMode)
 			{
+				if (material.Color != lastColor)
+				{
+					Shader.SetMaterialAmbient(material.Color);
+					lastColor = material.Color;
+				}
+				Shader.SetOpacity(1.0f);
+				Shader.SetBrightness(1.0f);
 				VAO.Draw(PrimitiveType.LineLoop, Face.IboStartIndex, Face.Vertices.Length);
 				return;
 			}
 
 			// lighting
-			if (material.NighttimeTexture == null || material.NighttimeTexture == material.DaytimeTexture)
+			if (OptionLighting)
 			{
-				if (OptionLighting)
+				if (material.Color != lastColor)
 				{
-					if (material.Color != lastColor)
-					{
-						Shader.SetMaterialAmbient(material.Color);  // TODO
-						Shader.SetMaterialDiffuse(material.Color);
-						Shader.SetMaterialSpecular(material.Color);  // TODO
-					}
+					Shader.SetMaterialAmbient(material.Color);
+					Shader.SetMaterialDiffuse(material.Color);
+					Shader.SetMaterialSpecular(material.Color);
+					//TODO: Ambient and specular colors are not set by any current parsers
+				}
 					
-					if ((material.Flags & MeshMaterial.EmissiveColorMask) != 0)
-					{
-						Shader.SetMaterialEmission(material.EmissiveColor);
-						Shader.SetMaterialEmissive(true);
-					}
-					else
-					{
-						Shader.SetMaterialEmissive(false);
-					}
-
-					Shader.SetMaterialShininess(1.0f);
+				if ((material.Flags & MeshMaterial.EmissiveColorMask) != 0)
+				{
+					Shader.SetMaterialEmission(material.EmissiveColor);
+					Shader.SetMaterialEmissive(true);
 				}
 				else
 				{
-					if (material.Color != lastColor)
-					{
-						Shader.SetMaterialAmbient(material.Color);  // TODO
-					}
+					Shader.SetMaterialEmissive(false);
 				}
+
+				Shader.SetMaterialShininess(1.0f);
 			}
 			else
 			{
 				if (material.Color != lastColor)
 				{
-					Shader.SetMaterialAmbient(material.Color);  // TODO
+					Shader.SetMaterialAmbient(material.Color);
 				}
-				
+				//As lighting is disabled, the face cannot be emitting light....
+				Shader.SetMaterialEmissive(false);
 			}
 
 			lastColor = material.Color;
@@ -920,19 +920,25 @@ namespace LibRender2
 					Shader.SetIsTexture(false);
 				}
 
-				// blend mode
+				// Calculate the brightness of the poly to render
 				float factor;
 				if (material.BlendMode == MeshMaterialBlendMode.Additive)
 				{
+					//Additive blending- Full brightness
 					factor = 1.0f;
 					GL.Enable(EnableCap.Blend);
 					GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
 					Shader.SetIsFog(false);
 				}
-				else if (material.NighttimeTexture == null)
+				else if((material.Flags & MeshMaterial.EmissiveColorMask) != 0)
 				{
+					//As material is emitting light, it must be at full brightness
+					factor = 1.0f;
+				}
+				else if (material.NighttimeTexture == null || material.NighttimeTexture == material.DaytimeTexture)
+				{
+					//No nighttime texture or both are identical- Darken the polygon to match the light conditions
 					float blend = inv255 * material.DaytimeNighttimeBlend + 1.0f - Lighting.OptionLightingResultingAmount;
-
 					if (blend > 1.0f)
 					{
 						blend = 1.0f;
@@ -942,6 +948,7 @@ namespace LibRender2
 				}
 				else
 				{
+					//Valid nighttime texture- Blend the two textures by DNB at max brightness
 					factor = 1.0f;
 				}
 				Shader.SetBrightness(factor);
@@ -1013,7 +1020,7 @@ namespace LibRender2
 					}
 				}
 
-				Shader.SetOpacity(alphaFactor);
+				Shader.SetOpacity(inv255 * material.Color.A * alphaFactor);
 
 				// render polygon
 				VAO.Draw(DrawMode, Face.IboStartIndex, Face.Vertices.Length);
@@ -1029,7 +1036,7 @@ namespace LibRender2
 				Shader.SetBrightness(1.0f);
 				Shader.SetOpacity(1.0f);
 				VertexArrayObject NormalsVAO = (VertexArrayObject)State.Prototype.Mesh.NormalsVAO;
-				NormalsVAO.BindForDrawing(Shader.VertexLayout);
+				NormalsVAO.Bind();
 				lastVAO = NormalsVAO.handle;
 				NormalsVAO.Draw(PrimitiveType.Lines, Face.NormalsIboStartIndex, Face.Vertices.Length * 2);
 			}
@@ -1111,16 +1118,16 @@ namespace LibRender2
 				if (OptionLighting)
 				{
 					GL.Enable(EnableCap.Lighting);
-
-					if ((material.Flags & MeshMaterial.EmissiveColorMask) != 0)
-					{
-						GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new Color4(material.EmissiveColor.R, material.EmissiveColor.G, material.EmissiveColor.B, 255));
-					}
-					else
-					{
-						GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new Color4(0.0f, 0.0f, 0.0f, 1.0f));
-					}
 				}
+			}
+
+			if ((material.Flags & MeshMaterial.EmissiveColorMask) != 0)
+			{
+				GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new Color4(material.EmissiveColor.R, material.EmissiveColor.G, material.EmissiveColor.B, 255));
+			}
+			else
+			{
+				GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new Color4(0.0f, 0.0f, 0.0f, 1.0f));
 			}
 
 			// fog

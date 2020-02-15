@@ -4,6 +4,7 @@ using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 using System;
+using OpenTK.Platform.Windows;
 
 namespace LibRender2.Backgrounds
 {
@@ -178,7 +179,7 @@ namespace LibRender2.Backgrounds
 
 				if (data.VAO == null)
 				{
-					data.CreateVAO();
+					data.CreateVAO(renderer.DefaultShader.VertexLayout);
 				}
 
 				renderer.DefaultShader.Activate();
@@ -199,7 +200,6 @@ namespace LibRender2.Backgrounds
 
 				// texture
 				renderer.DefaultShader.SetIsTexture(true);
-				renderer.DefaultShader.SetTexture(0);
 				GL.BindTexture(TextureTarget.Texture2D, data.Texture.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp].Name);
 				renderer.LastBoundTexture = null;
 
@@ -211,7 +211,7 @@ namespace LibRender2.Backgrounds
 
 				// render polygon
 				VertexArrayObject VAO = (VertexArrayObject) data.VAO;
-				VAO.BindForDrawing(renderer.DefaultShader.VertexLayout);
+				VAO.Bind();
 				renderer.lastVAO = VAO.handle;
 				for (int i = 0; i + 9 < 32 * 10; i += 10)
 				{
@@ -366,11 +366,12 @@ namespace LibRender2.Backgrounds
 		/// <param name="data">The background object</param>
 		private void RenderBackgroundObject(BackgroundObject data)
 		{
+			renderer.DefaultShader.Activate();
+			renderer.DefaultShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
 			if (data.Object.Mesh.VAO == null)
 			{
-				VAOExtensions.CreateVAO(ref data.Object.Mesh, false);
+				VAOExtensions.CreateVAO(ref data.Object.Mesh, false, renderer.DefaultShader.VertexLayout);
 			}
-
 			foreach (MeshFace face in data.Object.Mesh.Faces)
 			{
 				OpenGlTextureWrapMode wrap = OpenGlTextureWrapMode.ClampClamp;
@@ -395,12 +396,10 @@ namespace LibRender2.Backgrounds
 						data.Object.Mesh.Materials[face.Material].WrapMode = wrap;
 					}
 				}
-
-				renderer.DefaultShader.Activate();
-				renderer.ResetShader(renderer.DefaultShader);
-				renderer.RenderFace(renderer.DefaultShader, new ObjectState { Prototype = data.Object }, face);
-				renderer.DefaultShader.Deactivate();
+				
+				renderer.RenderFace(renderer.DefaultShader, new ObjectState {Prototype = data.Object}, face, Matrix4D.NoTransformation, Matrix4D.Scale(1.0)* renderer.CurrentViewMatrix);
 			}
+			renderer.DefaultShader.Deactivate();
 		}
 	}
 }

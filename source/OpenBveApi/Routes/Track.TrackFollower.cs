@@ -53,6 +53,7 @@ namespace OpenBveApi.Routes
 			t.WorldUp = new Vector3(WorldUp);
 			t.WorldSide = new Vector3(WorldSide);
 			t.TriggerType = TriggerType;
+			t.TrackIndex = TrackIndex;
 			return t;
 		}
 
@@ -109,7 +110,7 @@ namespace OpenBveApi.Routes
 		/// <param name="AddTrackInaccuracy">Whether to add track innacuracy</param>
 		public void UpdateAbsolute(double NewTrackPosition, bool UpdateWorldCoordinates, bool AddTrackInaccuracy)
 		{
-			if (TrackIndex >= currentHost.Tracks.Length || currentHost.Tracks[TrackIndex].Elements.Length == 0) return;
+			if (!currentHost.Tracks.ContainsKey(TrackIndex) || currentHost.Tracks[TrackIndex].Elements.Length == 0) return;
 			int i = LastTrackElement;
 			while (i >= 0 && NewTrackPosition < currentHost.Tracks[TrackIndex].Elements[i].StartingTrackPosition)
 			{

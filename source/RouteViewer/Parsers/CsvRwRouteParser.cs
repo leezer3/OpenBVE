@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Globalization;
 using OpenBveApi;
@@ -5543,7 +5544,7 @@ namespace OpenBve
 				double StartingDistance = (double)i * Data.BlockInterval;
 				double EndingDistance = StartingDistance + Data.BlockInterval;
 				// normalize
-				World.Normalize(ref Direction.X, ref Direction.Y);
+				Direction.Normalize();
 				// track
 				if (!PreviewOnly) {
 					if (Data.Blocks[i].Cycle.Length == 1 && Data.Blocks[i].Cycle[0] == -1) {
@@ -5599,8 +5600,9 @@ namespace OpenBve
 						/*
 						 * Legacy brightness: This applies equally to all tracks in a block
 						 */
-						for (int t = 0; t < Program.CurrentRoute.Tracks.Length; t++)
+						for (int tt = 0; tt < Program.CurrentRoute.Tracks.Count; tt++)
 						{
+							int t = Program.CurrentRoute.Tracks.ElementAt(tt).Key;
 							int m = Program.CurrentRoute.Tracks[t].Elements[n].Events.Length;
 							Array.Resize(ref Program.CurrentRoute.Tracks[t].Elements[n].Events, m + 1);
 							double d = Data.Blocks[i].BrightnessChanges[j].TrackPosition - StartingDistance;

@@ -215,31 +215,7 @@ namespace Plugin {
 				Builder.Append(Lines[i]);
 			}
 			string Content = Builder.ToString();
-			//Horrible hack to make Blender generated materials work
-			int idx = Content.IndexOf("Material ", StringComparison.InvariantCultureIgnoreCase);
-			while(idx != -1)
-			{
-				int idx2 = idx + 9;
-				if (Content[idx2] != '{')
-				{
-					int idx3 = idx2;
-					while (idx3 < Content.Length)
-					{
-						idx3++;
-						if (Content[idx3] == '{')
-						{
-							break;
-						}
-
-						
-					}
-					StringBuilder sb = new StringBuilder(Content);
-					sb.Remove(idx2, idx3 - idx2);
-					Content = sb.ToString();
-				}
-
-				idx = Content.IndexOf("Material ", idx + 9, StringComparison.InvariantCultureIgnoreCase);
-			}
+			
 			// parse file
 			int Position = 0;
 			Structure Structure;

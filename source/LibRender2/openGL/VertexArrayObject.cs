@@ -43,11 +43,13 @@ namespace LibRender2
 		}
 
 		/// <summary>
-		/// Binds the VAO ready for drawing
+		/// Sets the VAO vertex layout attributes
 		/// </summary>
-		public void BindForDrawing(VertexLayout VertexLayout)
+		/// <remarks>
+		/// These attributes remain valid unless a different shader is used to draw the object, and will be remembered by the VAO
+		/// </remarks>
+		public void SetAttributes(VertexLayout VertexLayout)
 		{
-			GL.BindVertexArray(handle);
 			vbo.Bind();
 			vbo.EnableAttribute(VertexLayout);
 			vbo.SetAttribute(VertexLayout);
@@ -149,7 +151,7 @@ namespace LibRender2
 	{
 		/// <summary>Create an OpenGL/OpenTK VAO for a mesh</summary>
 		/// <param name="isDynamic"></param>
-		public static void CreateVAO(ref Mesh mesh, bool isDynamic)
+		public static void CreateVAO(ref Mesh mesh, bool isDynamic, VertexLayout vertexLayout)
 		{
 			var hint = isDynamic ? BufferUsageHint.DynamicDraw : BufferUsageHint.StaticDraw;
 
@@ -210,6 +212,7 @@ namespace LibRender2
 			VAO.Bind();
 			VAO.SetVBO(new VertexBufferObject(vertexData.ToArray(), hint));
 			VAO.SetIBO(new IndexBufferObject(indexData.ToArray(), hint));
+			VAO.SetAttributes(vertexLayout);
 			VAO.UnBind();
 			mesh.VAO = VAO;
 			VertexArrayObject NormalsVAO = (VertexArrayObject) mesh.NormalsVAO;
@@ -220,11 +223,12 @@ namespace LibRender2
 			NormalsVAO.Bind();
 			NormalsVAO.SetVBO(new VertexBufferObject(normalsVertexData.ToArray(), hint));
 			NormalsVAO.SetIBO(new IndexBufferObject(normalsIndexData.ToArray(), hint));
+			NormalsVAO.SetAttributes(vertexLayout);
 			NormalsVAO.UnBind();
 			mesh.NormalsVAO = NormalsVAO;
 		}
 
-		public static void CreateVAO(this StaticBackground background)
+		public static void CreateVAO(this StaticBackground background, VertexLayout vertexLayout)
 		{
 			float y0, y1;
 
@@ -337,6 +341,7 @@ namespace LibRender2
 			VAO.Bind();
 			VAO.SetVBO(new VertexBufferObject(vertexData.ToArray(), BufferUsageHint.StaticDraw));
 			VAO.SetIBO(new IndexBufferObject(indexData.ToArray(), BufferUsageHint.StaticDraw));
+			VAO.SetAttributes(vertexLayout);
 			VAO.UnBind();
 			background.VAO = VAO;
 		}

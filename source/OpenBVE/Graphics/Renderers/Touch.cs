@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using LibRender2;
 using LibRender2.Objects;
 using LibRender2.Shaders;
@@ -140,7 +141,7 @@ namespace OpenBve.Graphics.Renderers
 
 			if (state.Prototype.Mesh.VAO == null)
 			{
-				VAOExtensions.CreateVAO(ref state.Prototype.Mesh, state.Prototype.Dynamic);
+				VAOExtensions.CreateVAO(ref state.Prototype.Mesh, state.Prototype.Dynamic, renderer.DefaultShader.VertexLayout);
 			}
 
 			foreach (MeshFace face in state.Prototype.Mesh.Faces)
@@ -214,25 +215,23 @@ namespace OpenBve.Graphics.Renderers
 
 			ObjectState pickedObject = ParseFBO(Point, 5, 5);
 
-			foreach (TrainManager.TouchElement TouchElement in TouchElements)
+			foreach (TrainManager.TouchElement TouchElement in TouchElements.Where(x => x.Element.internalObject == pickedObject))
 			{
-				if (TouchElement.Element.internalObject != pickedObject)
+				foreach (int index in TouchElement.ControlIndices)
 				{
-					continue;
-				}
-
-				switch (TouchElement.Command)
-				{
-					case Translations.Command.PowerIncrease:
-					case Translations.Command.BrakeIncrease:
-					case Translations.Command.ReverserForward:
-						Status = Cursor.Status.Plus;
-						break;
-					case Translations.Command.PowerDecrease:
-					case Translations.Command.BrakeDecrease:
-					case Translations.Command.ReverserBackward:
-						Status = Cursor.Status.Minus;
-						break;
+					switch (Interface.CurrentControls[index].Command)
+					{
+						case Translations.Command.PowerIncrease:
+						case Translations.Command.BrakeIncrease:
+						case Translations.Command.ReverserForward:
+							Status = Cursor.Status.Plus;
+							break;
+						case Translations.Command.PowerDecrease:
+						case Translations.Command.BrakeDecrease:
+						case Translations.Command.ReverserBackward:
+							Status = Cursor.Status.Minus;
+							break;
+					}
 				}
 			}
 
@@ -268,42 +267,13 @@ namespace OpenBve.Graphics.Renderers
 
 			ObjectState pickedObject = ParseFBO(Point, 5, 5);
 
-			foreach (TrainManager.TouchElement TouchElement in TouchElements)
+			foreach (TrainManager.TouchElement TouchElement in TouchElements.Where(x => x.Element.internalObject == pickedObject))
 			{
-				if (TouchElement.Element.internalObject != pickedObject)
+				foreach (int index in TouchElement.ControlIndices)
 				{
-					continue;
-				}
-
-				for (int i = 0; i < Interface.CurrentControls.Length; i++)
-				{
-					if (Interface.CurrentControls[i].Method != Interface.ControlMethod.Touch)
-					{
-						continue;
-					}
-
-					bool EnableOption = false;
-
-					for (int j = 0; j < Translations.CommandInfos.Length; j++)
-					{
-						if (Interface.CurrentControls[i].Command == Translations.CommandInfos[j].Command)
-						{
-							EnableOption = Translations.CommandInfos[j].EnableOption;
-							break;
-						}
-					}
-
-					if (TouchElement.Command == Interface.CurrentControls[i].Command)
-					{
-						if (EnableOption && TouchElement.CommandOption != Interface.CurrentControls[i].Option)
-						{
-							continue;
-						}
-
-						Interface.CurrentControls[i].AnalogState = 1.0;
-						Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
-						MainLoop.AddControlRepeat(i);
-					}
+					Interface.CurrentControls[index].AnalogState = 1.0;
+					Interface.CurrentControls[index].DigitalState = Interface.DigitalControlState.Pressed;
+					MainLoop.AddControlRepeat(index);
 				}
 			}
 
@@ -345,10 +315,10 @@ namespace OpenBve.Graphics.Renderers
 					Car.CarSections[0].CurrentAdditionalGroup = TouchElement.JumpScreenIndex;
 					Car.ChangeCarSection(TrainManager.CarSectionType.Interior);
 
-					if (TouchElement.SoundIndex >= 0 && TouchElement.SoundIndex < Car.Sounds.Touch.Length)
+					foreach (var index in TouchElement.SoundIndices.Where(x => x >= 0 && x < Car.Sounds.Touch.Length))
 					{
-						SoundBuffer Buffer = Car.Sounds.Touch[TouchElement.SoundIndex].Buffer;
-						OpenBveApi.Math.Vector3 Position = Car.Sounds.Touch[TouchElement.SoundIndex].Position;
+						SoundBuffer Buffer = Car.Sounds.Touch[index].Buffer;
+						OpenBveApi.Math.Vector3 Position = Car.Sounds.Touch[index].Position;
 						Program.Sounds.PlaySound(Buffer, 1.0, 1.0, Position, TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar], false);
 					}
 				}
@@ -356,35 +326,11 @@ namespace OpenBve.Graphics.Renderers
 				// HACK: Normally terminate the command issued once.
 				if (TouchElement.Element.internalObject == pickedObject || (pickedObject != prePickedObject && TouchElement.Element.internalObject == prePickedObject))
 				{
-					for (int i = 0; i < Interface.CurrentControls.Length; i++)
+					foreach (int index in TouchElement.ControlIndices)
 					{
-						if (Interface.CurrentControls[i].Method != Interface.ControlMethod.Touch)
-						{
-							continue;
-						}
-
-						bool EnableOption = false;
-
-						for (int j = 0; j < Translations.CommandInfos.Length; j++)
-						{
-							if (Interface.CurrentControls[i].Command == Translations.CommandInfos[j].Command)
-							{
-								EnableOption = Translations.CommandInfos[j].EnableOption;
-								break;
-							}
-						}
-
-						if (TouchElement.Command == Interface.CurrentControls[i].Command)
-						{
-							if (EnableOption && TouchElement.CommandOption != Interface.CurrentControls[i].Option)
-							{
-								continue;
-							}
-
-							Interface.CurrentControls[i].AnalogState = 0.0;
-							Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Released;
-							MainLoop.RemoveControlRepeat(i);
-						}
+						Interface.CurrentControls[index].AnalogState = 0.0;
+						Interface.CurrentControls[index].DigitalState = Interface.DigitalControlState.Released;
+						MainLoop.RemoveControlRepeat(index);
 					}
 				}
 			}

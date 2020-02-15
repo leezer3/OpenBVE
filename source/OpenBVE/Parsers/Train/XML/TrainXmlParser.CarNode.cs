@@ -392,7 +392,7 @@ namespace OpenBve.Parsers.Train
 				else if (interiorFile.ToLowerInvariant().EndsWith(".cfg"))
 				{
 					//Only supports panel2.cfg format
-					Panel2CfgParser.ParsePanel2Config(System.IO.Path.GetFileName(interiorFile), System.IO.Path.GetDirectoryName(interiorFile), Encoding.UTF8, Train, Car);
+					Panel2CfgParser.ParsePanel2Config(System.IO.Path.GetFileName(interiorFile), System.IO.Path.GetDirectoryName(interiorFile), Train, Car);
 					Train.Cars[Car].CameraRestrictionMode = CameraRestrictionMode.On;
 				}
 				else if (interiorFile.ToLowerInvariant().EndsWith(".animated"))

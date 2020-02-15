@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using OpenBveApi.Colors;
@@ -105,7 +106,7 @@ namespace OpenBve
 						Program.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out t);
 						Program.CurrentRoute.CurrentBackground = new StaticBackground(t, 6, false, Interface.CurrentOptions.ViewingDistance);
 					}
-					else if (Data.Backgrounds.Count == 1 && !Data.Backgrounds.ContainsKey(0) && Data.Blocks[0].Background == 0)
+					else if (Data.Backgrounds.Count > 0 && !Data.Backgrounds.ContainsKey(0) && Data.Blocks[0].Background == 0)
 					{
 						/*
 						 * Nasty little variant on the above-
@@ -154,20 +155,17 @@ namespace OpenBve
 			Fog CurrentFog = new Fog(Program.CurrentRoute.NoFogStart, Program.CurrentRoute.NoFogEnd, Color24.Grey, 0.0);
 			for (int i = Data.FirstUsedBlock; i < Data.Blocks.Length; i++)
 			{
-				if (Data.Blocks[i].Rails.Length > Program.CurrentRoute.Tracks.Length)
+				if (Data.Blocks[i].Rails.Count > Program.CurrentRoute.Tracks.Count)
 				{
-					Array.Resize(ref Program.CurrentRoute.Tracks, Data.Blocks[i].Rails.Length);
-				}
-			}
-			for (int i = 0; i < Program.CurrentRoute.Tracks.Length; i++)
-			{
-				if (Program.CurrentRoute.Tracks[i] == null)
-				{
-					Program.CurrentRoute.Tracks[i] = new Track();
-				}
-				if (Program.CurrentRoute.Tracks[i].Elements == null)
-				{
-					Program.CurrentRoute.Tracks[i].Elements = new TrackElement[256];
+					for (int d = 0; d < Data.Blocks[i].Rails.Count; d++)
+					{
+						var item = Data.Blocks[i].Rails.ElementAt(d);
+						if (!Program.CurrentRoute.Tracks.ContainsKey(item.Key))
+						{
+							Program.CurrentRoute.Tracks.Add(item.Key, new Track());
+							Program.CurrentRoute.Tracks[item.Key].Elements = new TrackElement[256];
+						}
+					}
 				}
 			}
 			// process blocks
@@ -201,11 +199,16 @@ namespace OpenBve
 				}
 				TrackElement WorldTrackElement = Data.Blocks[i].CurrentTrackState;
 				int n = CurrentTrackLength;
-				for (int j = 0; j < Program.CurrentRoute.Tracks.Length; j++)
+				for (int j = 0; j < Program.CurrentRoute.Tracks.Count; j++)
 				{
-					if (n >= Program.CurrentRoute.Tracks[j].Elements.Length)
+					var key = Program.CurrentRoute.Tracks.ElementAt(j).Key;
+					if (Program.CurrentRoute.Tracks[key].Elements == null)
 					{
-						Array.Resize(ref Program.CurrentRoute.Tracks[j].Elements, Program.CurrentRoute.Tracks[j].Elements.Length << 1);
+						Program.CurrentRoute.Tracks[key].Elements = new TrackElement[256];
+					}
+					if (n >= Program.CurrentRoute.Tracks[key].Elements.Length)
+					{
+						Array.Resize(ref Program.CurrentRoute.Tracks[key].Elements, Program.CurrentRoute.Tracks[key].Elements.Length << 1);
 					}
 				}
 				CurrentTrackLength++;
@@ -217,9 +220,10 @@ namespace OpenBve
 				Program.CurrentRoute.Tracks[0].Elements[n].StartingTrackPosition = StartingDistance;
 				Program.CurrentRoute.Tracks[0].Elements[n].AdhesionMultiplier = Data.Blocks[i].AdhesionMultiplier;
 				Program.CurrentRoute.Tracks[0].Elements[n].CsvRwAccuracyLevel = Data.Blocks[i].Accuracy;
-				for (int j = 0; j < Program.CurrentRoute.Tracks.Length; j++)
+				for (int j = 0; j < Program.CurrentRoute.Tracks.Count; j++)
 				{
-					Program.CurrentRoute.Tracks[j].Elements[n].Events = new GeneralEvent[] { };
+					var key = Program.CurrentRoute.Tracks.ElementAt(j).Key;
+					Program.CurrentRoute.Tracks[key].Elements[n].Events = new GeneralEvent[] { };
 				}
 				// background
 				if (!PreviewOnly)
@@ -259,8 +263,9 @@ namespace OpenBve
 						/*
 						 * Legacy brightness: This applies equally to all tracks in a block
 						 */
-						for (int t = 0; t < Program.CurrentRoute.Tracks.Length; t++)
+						for (int tt = 0; tt < Program.CurrentRoute.Tracks.Count; tt++)
 						{
+							int t = Program.CurrentRoute.Tracks.ElementAt(tt).Key;
 							int m = Program.CurrentRoute.Tracks[t].Elements[n].Events.Length;
 							Array.Resize(ref Program.CurrentRoute.Tracks[t].Elements[n].Events, m + 1);
 							double d = Data.Blocks[i].BrightnessChanges[j].TrackPosition - StartingDistance;
@@ -370,14 +375,16 @@ namespace OpenBve
 				{
 					if (i < Data.Blocks.Length - 1)
 					{
-						for (int j = 0; j < Data.Blocks[i].Rails.Length; j++)
+						for (int jj = 0; jj < Data.Blocks[i].Rails.Count; jj++)
 						{
-							if (Data.Blocks[i].Rails[j].RailStarted & Data.Blocks[i + 1].Rails.Length > j)
+							int j = Data.Blocks[i].Rails.ElementAt(jj).Key;
+							if (Data.Blocks[i].Rails[j].RailStarted & Data.Blocks[i + 1].Rails.ContainsKey(j))
 							{
 								bool q = false;
-								for (int k = 0; k < Data.Blocks[i].Rails.Length; k++)
+								for (int kk = 0; kk < Data.Blocks[i].Rails.Count; kk++)
 								{
-									if (Data.Blocks[i].Rails[k].RailStarted & Data.Blocks[i + 1].Rails.Length > k)
+									int k = Data.Blocks[i].Rails.ElementAt(kk).Key;
+									if (Data.Blocks[i].Rails[k].RailStarted & Data.Blocks[i + 1].Rails.ContainsKey(k))
 									{
 										bool qx = Math.Sign(Data.Blocks[i].Rails[k].RailStart.X - Data.Blocks[i].Rails[j].RailStart.X) != Math.Sign(Data.Blocks[i + 1].Rails[k].RailEnd.X - Data.Blocks[i + 1].Rails[j].RailEnd.X);
 										bool qy = (Data.Blocks[i].Rails[k].RailStart.Y - Data.Blocks[i].Rails[j].RailStart.Y) * (Data.Blocks[i + 1].Rails[k].RailEnd.Y - Data.Blocks[i + 1].Rails[j].RailEnd.Y) <= 0.0;
@@ -622,8 +629,9 @@ namespace OpenBve
 				// rail-aligned objects
 				if (!PreviewOnly)
 				{
-					for (int j = 0; j < Data.Blocks[i].Rails.Length; j++)
+					for (int jj = 0; jj < Data.Blocks[i].Rails.Count; jj++)
 					{
+						int j = Data.Blocks[i].Rails.ElementAt(jj).Key;
 						if (j > 0 && !Data.Blocks[i].Rails[j].RailStarted) continue;
 						// rail
 						Vector3 pos;
@@ -644,7 +652,7 @@ namespace OpenBve
 							double y = Data.Blocks[i].Rails[j].RailStart.Y;
 							Vector3 offset = new Vector3(Direction.Y * x, y, -Direction.X * x);
 							pos = Position + offset;
-							if (i < Data.Blocks.Length - 1 && Data.Blocks[i + 1].Rails.Length > j)
+							if (i < Data.Blocks.Length - 1 && Data.Blocks[i + 1].Rails.ContainsKey(j))
 							{
 								// take orientation of upcoming block into account
 								Vector2 Direction2 = Direction;
@@ -751,7 +759,7 @@ namespace OpenBve
 								int m = Program.CurrentRoute.PointsOfInterest.Length;
 								Array.Resize(ref Program.CurrentRoute.PointsOfInterest, m + 1);
 								Program.CurrentRoute.PointsOfInterest[m].TrackPosition = Data.Blocks[i].PointsOfInterest[k].TrackPosition;
-								if (i < Data.Blocks.Length - 1 && Data.Blocks[i + 1].Rails.Length > j)
+								if (i < Data.Blocks.Length - 1 && Data.Blocks[i + 1].Rails.ContainsKey(j))
 								{
 									double dx = Data.Blocks[i + 1].Rails[j].RailEnd.X - Data.Blocks[i].Rails[j].RailStart.X;
 									double dy = Data.Blocks[i + 1].Rails[j].RailEnd.Y - Data.Blocks[i].Rails[j].RailStart.Y;
@@ -971,7 +979,7 @@ namespace OpenBve
 									double px0 = p > 0 ? Data.Blocks[i].Rails[p].RailStart.X : 0.0;
 									double px1 = p > 0 ? Data.Blocks[i + 1].Rails[p].RailEnd.X : 0.0;
 									int s = Data.Blocks[i].Forms[k].SecondaryRail;
-									if (s < 0 || s >= Data.Blocks[i].Rails.Length || !Data.Blocks[i].Rails[s].RailStarted)
+									if (s < 0 || !Data.Blocks[i].Rails.ContainsKey(s) || !Data.Blocks[i].Rails[s].RailStarted)
 									{
 										Interface.AddMessage(MessageType.Error, false, "RailIndex2 is out of range in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName);
 									}
@@ -1127,7 +1135,7 @@ namespace OpenBve
 								double px0 = p > 0 ? Data.Blocks[i].Rails[p].RailStart.X : 0.0;
 								double px1 = p > 0 ? Data.Blocks[i + 1].Rails[p].RailEnd.X : 0.0;
 								int s = Data.Blocks[i].Cracks[k].SecondaryRail;
-								if (s < 0 || s >= Data.Blocks[i].Rails.Length || !Data.Blocks[i].Rails[s].RailStarted)
+								if (s < 0 || !Data.Blocks[i].Rails.ContainsKey(s) || !Data.Blocks[i].Rails[s].RailStarted)
 								{
 									Interface.AddMessage(MessageType.Error, false, "RailIndex2 is out of range in Track.Crack at track position " + StartingDistance.ToString(Culture) + " in file " + FileName);
 								}
@@ -1649,8 +1657,9 @@ namespace OpenBve
 				Array.Resize(ref Program.CurrentRoute.PointsOfInterest, n);
 			}
 			// convert block-based cant into point-based cant
-			for (int i = 0; i < Program.CurrentRoute.Tracks.Length; i++)
+			for (int ii = 0; ii < Program.CurrentRoute.Tracks.Count; ii++)
 			{
+				int i = Program.CurrentRoute.Tracks.ElementAt(ii).Key;
 				for (int j = CurrentTrackLength - 1; j >= 1; j--)
 				{
 					if (Program.CurrentRoute.Tracks[i].Elements[j].CurveCant == 0.0)
@@ -1674,8 +1683,9 @@ namespace OpenBve
 				}
 			}
 			// finalize
-			for (int i = 0; i < Program.CurrentRoute.Tracks.Length; i++)
+			for (int ii = 0; ii < Program.CurrentRoute.Tracks.Count; ii++)
 			{
+				int i = Program.CurrentRoute.Tracks.ElementAt(ii).Key;
 				Array.Resize(ref Program.CurrentRoute.Tracks[i].Elements, CurrentTrackLength);
 			}
 			for (int i = 0; i < Program.CurrentRoute.Stations.Length; i++)
@@ -1836,8 +1846,9 @@ namespace OpenBve
 		// compute cant tangents
 		private static void ComputeCantTangents()
 		{
-			for (int i = 0; i < Program.CurrentRoute.Tracks.Length; i++)
+			for (int ii = 0; ii < Program.CurrentRoute.Tracks.Count; ii++)
 			{
+				int i = Program.CurrentRoute.Tracks.ElementAt(ii).Key;
 				if (Program.CurrentRoute.Tracks[i].Elements.Length == 1)
 				{
 					Program.CurrentRoute.Tracks[i].Elements[0].CurveCantTangent = 0.0;

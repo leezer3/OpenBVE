@@ -8,7 +8,6 @@ using OpenBveApi.Interface;
 using OpenBveApi.Trains;
 using OpenBveApi;
 using OpenBveApi.Math;
-using OpenTK.Graphics.ES20;
 using RouteManager2.MessageManager;
 using SoundManager;
 
@@ -752,6 +751,19 @@ namespace OpenBve
 						Program.FileSystem.AppendToLogFile("Train " + Array.IndexOf(TrainManager.Trains, this) + ", Car " + c.Index + " derailed. Current simulation time: " + Program.CurrentRoute.SecondsSinceMidnight + " Current frame time: " + ElapsedTime);
 					}
 				}
+			}
+
+			public override void Reverse()
+			{
+				double trackPosition = Cars[0].TrackPosition;
+				Cars = Cars.Reverse().ToArray();
+				for (int i = 0; i < Cars.Length; i++)
+				{
+					Cars[i].Reverse();
+				}
+				PlaceCars(trackPosition);
+				DriverCar = Cars.Length - 1 - DriverCar;
+				UpdateCabObjects();
 			}
 
 			/// <summary>Call this method to topple a car</summary>

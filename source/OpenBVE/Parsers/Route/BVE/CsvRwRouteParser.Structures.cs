@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Math;
+﻿using System.Collections.Generic;
+using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using RouteManager2.Climate;
@@ -200,7 +201,7 @@ namespace OpenBve
 			internal int[] Cycle;
 			internal RailCycle[] RailCycles;
 			internal double Height;
-			internal Rail[] Rails;
+			internal Dictionary<int, Rail> Rails;
 			internal int[] RailType;
 			internal WallDike[] RailWall;
 			internal WallDike[] RailDike;
@@ -224,6 +225,11 @@ namespace OpenBve
 			internal bool StationPassAlarm;
 			internal double Accuracy;
 			internal double AdhesionMultiplier;
+
+			internal Block()
+			{
+				Rails = new Dictionary<int, Rail>();
+			}
 		}
 
 		/// <summary>Holds the base structures for a route: These are cloned and transformed for final world placement</summary>

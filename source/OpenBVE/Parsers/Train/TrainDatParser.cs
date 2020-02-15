@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using OpenBve.BrakeSystems;
 using OpenBve.SafetySystems;
@@ -27,12 +28,23 @@ namespace OpenBve {
 			catch
 			{
 			}
-			if (Lines.Length == 0)
+			if (Lines.Length == 1 && Encoding.Equals(Encoding.Unicode))
+			{
+				/*
+				 * Probably not unicode after all
+				 * Stuff edited with BVE2 / BVE4 tools should either be ASCII or SHIFT_JIS
+				 * both of which should read OK with ASCII for our purposes
+				 */
+				Encoding = Encoding.ASCII;
+				Lines = System.IO.File.ReadAllLines(FileName, Encoding);
+			}
+			else if (Lines.Length == 0)
 			{
 				//Catch zero-length train.dat files
 				MessageBox.Show("The train.dat file " + FileName + " is of zero length.");
 				throw new Exception("The train.dat file " + FileName + " is of zero length.");
 			}
+			
 			for (int i = 0; i < Lines.Length; i++) {
 				int j = Lines[i].IndexOf(';');
 				if (j >= 0) {

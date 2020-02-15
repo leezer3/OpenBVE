@@ -421,9 +421,10 @@ namespace OpenBve.Parsers.Panel
 							Vector2 Location = new Vector2();
 							Vector2 Size = new Vector2();
 							int JumpScreen = GroupIndex - 1;
-							int SoundIndex = -1;
-							Translations.Command Command = Translations.Command.None;
-							int CommandOption = 0;
+							List<int> SoundIndices = new List<int>();
+							List<TrainManager.CommandEntry> CommandEntries = new List<TrainManager.CommandEntry>();
+							TrainManager.CommandEntry CommandEntry = new TrainManager.CommandEntry();
+							int Layer = 0;
 
 							foreach (XElement KeyNode in SectionElement.Elements())
 							{
@@ -484,13 +485,32 @@ namespace OpenBve.Parsers.Panel
 										}
 										break;
 									case "soundindex":
-										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out SoundIndex))
+										if (Value.Length != 0)
 										{
-											Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+											int SoundIndex;
+
+											if (!NumberFormats.TryParseIntVb6(Value, out SoundIndex))
+											{
+												Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+											}
+											else
+											{
+												SoundIndices.Add(SoundIndex);
+											}
 										}
 										break;
 									case "command":
 										{
+											if (!CommandEntries.Contains(CommandEntry))
+											{
+												CommandEntries.Add(CommandEntry);
+											}
+
+											if (string.Compare(Value, "N/A", StringComparison.InvariantCultureIgnoreCase) == 0)
+											{
+												break;
+											}
+
 											int i;
 											for (i = 0; i < Translations.CommandInfos.Length; i++)
 											{
@@ -505,19 +525,48 @@ namespace OpenBve.Parsers.Panel
 											}
 											else
 											{
-												Command = Translations.CommandInfos[i].Command;
+												CommandEntry.Command = Translations.CommandInfos[i].Command;
 											}
 										}
 										break;
 									case "commandoption":
-										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out CommandOption))
+										if (!CommandEntries.Contains(CommandEntry))
+										{
+											CommandEntries.Add(CommandEntry);
+										}
+
+										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out CommandEntry.Option))
 										{
 											Interface.AddMessage(MessageType.Error, false, "Value is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
 										}
 										break;
+									case "soundentries":
+										if (!KeyNode.HasElements)
+										{
+											Interface.AddMessage(MessageType.Error, false, $"An empty list of touch sound indices was defined at line {((IXmlLineInfo)KeyNode).LineNumber} in XML file {FileName}");
+											break;
+										}
+
+										ParseTouchSoundEntryNode(FileName, KeyNode, SoundIndices);
+										break;
+									case "commandentries":
+										if (!KeyNode.HasElements)
+										{
+											Interface.AddMessage(MessageType.Error, false, $"An empty list of touch commands was defined at line {((IXmlLineInfo)KeyNode).LineNumber} in XML file {FileName}");
+											break;
+										}
+
+										ParseTouchCommandEntryNode(FileName, KeyNode, CommandEntries);
+										break;
+									case "layer":
+										if (Value.Length != 0 && !NumberFormats.TryParseIntVb6(Value, out Layer))
+										{
+											Interface.AddMessage(MessageType.Error, false, "LayerIndex is invalid in " + Key + " in " + Section + " at line " + LineNumber.ToString(Culture) + " in " + FileName);
+										}
+										break;
 								}
 							}
-							CreateTouchElement(CarSection.Groups[GroupIndex], Location, Size, JumpScreen, SoundIndex, Command, CommandOption, new Vector2(0.5, 0.5), PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
+							CreateTouchElement(CarSection.Groups[GroupIndex], Location, Size, JumpScreen, SoundIndices.ToArray(), CommandEntries.ToArray(), new Vector2(0.5, 0.5), (OffsetLayer + Layer) * StackDistance, PanelResolution, PanelBottom, PanelCenter, Train.Cars[Car].Driver);
 						}
 						break;
 					case "pilotlamp":
@@ -650,7 +699,7 @@ namespace OpenBve.Parsers.Panel
 							{
 								string Key = KeyNode.Name.LocalName;
 								string Value = KeyNode.Value;
-								int LineNumber = ((IXmlLineInfo) KeyNode).LineNumber;
+								int LineNumber = ((IXmlLineInfo)KeyNode).LineNumber;
 
 								switch (Key.ToLowerInvariant())
 								{
@@ -879,6 +928,8 @@ namespace OpenBve.Parsers.Panel
 										f = Panel2CfgParser.GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
 										break;
 								}
+								InitialAngle = InitialAngle.ToRadians();
+								LastAngle = LastAngle.ToRadians();
 								double a0 = (InitialAngle * Maximum - LastAngle * Minimum) / (Maximum - Minimum);
 								double a1 = (LastAngle - InitialAngle) / (Maximum - Minimum);
 								f += " " + a1.ToString(Culture) + " * " + a0.ToString(Culture) + " +";
@@ -889,8 +940,8 @@ namespace OpenBve.Parsers.Panel
 								CarSection.Groups[GroupIndex].Elements[j].RotateZFunction = new FunctionScript(Program.CurrentHost, f, false);
 								if (Backstop)
 								{
-									CarSection.Groups[GroupIndex].Elements[j].RotateZFunction.Minimum = InitialAngle.ToRadians();
-									CarSection.Groups[GroupIndex].Elements[j].RotateZFunction.Maximum = LastAngle.ToRadians();
+									CarSection.Groups[GroupIndex].Elements[j].RotateZFunction.Minimum = InitialAngle;
+									CarSection.Groups[GroupIndex].Elements[j].RotateZFunction.Maximum = LastAngle;
 								}
 							}
 						}
@@ -1057,7 +1108,7 @@ namespace OpenBve.Parsers.Panel
 								if (tf != String.Empty)
 								{
 									CarSection.Groups[GroupIndex].Elements[j].TextureShiftXDirection = Direction;
-									CarSection.Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Program.CurrentHost, tf, true);
+									CarSection.Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Program.CurrentHost, tf, false);
 								}
 							}
 						}
@@ -1547,7 +1598,120 @@ namespace OpenBve.Parsers.Panel
 			}
 		}
 
-		internal static void CreateTouchElement(TrainManager.ElementsGroup Group, Vector2 Location, Vector2 Size, int ScreenIndex, int SoundIndex, Translations.Command Command, int CommandOption, Vector2 RelativeRotationCenter, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver)
+
+		private static void ParseTouchSoundEntryNode(string fileName, XElement parent, ICollection<int> indices)
+		{
+			foreach (XElement childNode in parent.Elements())
+			{
+				if (childNode.Name.LocalName.ToLowerInvariant() != "entry")
+				{
+					Interface.AddMessage(MessageType.Error, false, $"Invalid entry node {childNode.Name.LocalName} in XML node {parent.Name.LocalName} at line {((IXmlLineInfo)childNode).LineNumber}");
+				}
+				else
+				{
+					System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
+
+					string section = childNode.Name.LocalName;
+
+					foreach (XElement keyNode in childNode.Elements())
+					{
+						string key = keyNode.Name.LocalName;
+						string value = keyNode.Value;
+						int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
+
+						switch (keyNode.Name.LocalName.ToLowerInvariant())
+						{
+							case "index":
+								if (value.Any())
+								{
+									int index;
+
+									if (!NumberFormats.TryParseIntVb6(value, out index))
+									{
+										Interface.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+									}
+
+									indices.Add(index);
+								}
+								break;
+						}
+					}
+				}
+			}
+		}
+
+		private static void ParseTouchCommandEntryNode(string fileName, XElement parent, ICollection<TrainManager.CommandEntry> entries)
+		{
+			foreach (XElement childNode in parent.Elements())
+			{
+				if (childNode.Name.LocalName.ToLowerInvariant() != "entry")
+				{
+					Interface.AddMessage(MessageType.Error, false, $"Invalid entry node {childNode.Name.LocalName} in XML node {parent.Name.LocalName} at line {((IXmlLineInfo)childNode).LineNumber}");
+				}
+				else
+				{
+					TrainManager.CommandEntry entry = new TrainManager.CommandEntry();
+					System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
+
+					string section = childNode.Name.LocalName;
+
+					foreach (XElement keyNode in childNode.Elements())
+					{
+						string key = keyNode.Name.LocalName;
+						string value = keyNode.Value;
+						int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
+
+						switch (keyNode.Name.LocalName.ToLowerInvariant())
+						{
+							case "name":
+								if (string.Compare(value, "N/A", StringComparison.InvariantCultureIgnoreCase) == 0)
+								{
+									break;
+								}
+
+								int i;
+
+								for (i = 0; i < Translations.CommandInfos.Length; i++)
+								{
+									if (string.Compare(value, Translations.CommandInfos[i].Name, StringComparison.OrdinalIgnoreCase) == 0)
+									{
+										break;
+									}
+								}
+
+								if (i == Translations.CommandInfos.Length || Translations.CommandInfos[i].Type != Translations.CommandType.Digital)
+								{
+									Interface.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+								}
+								else
+								{
+									entry.Command = Translations.CommandInfos[i].Command;
+								}
+								break;
+							case "option":
+								if (value.Any())
+								{
+									int option;
+
+									if (!NumberFormats.TryParseIntVb6(value, out option))
+									{
+										Interface.AddMessage(MessageType.Error, false, $"value is invalid in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+									}
+									else
+									{
+										entry.Option = option;
+									}
+								}
+								break;
+						}
+					}
+
+					entries.Add(entry);
+				}
+			}
+		}
+
+		internal static void CreateTouchElement(TrainManager.ElementsGroup Group, Vector2 Location, Vector2 Size, int ScreenIndex, int[] SoundIndices, TrainManager.CommandEntry[] CommandEntries, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver)
 		{
 			double WorldWidth, WorldHeight;
 			if (Program.Renderer.Screen.Width >= Program.Renderer.Screen.Height)
@@ -1600,7 +1764,7 @@ namespace OpenBve.Parsers.Panel
 			Vector3 o;
 			o.X = xm + Driver.X;
 			o.Y = ym + Driver.Y;
-			o.Z = EyeDistance + Driver.Z;
+			o.Z = EyeDistance - Distance + Driver.Z;
 			if (Group.TouchElements == null)
 			{
 				Group.TouchElements = new TrainManager.TouchElement[0];
@@ -1611,9 +1775,8 @@ namespace OpenBve.Parsers.Panel
 			{
 				Element = new AnimatedObject(Program.CurrentHost),
 				JumpScreenIndex = ScreenIndex,
-				SoundIndex = SoundIndex,
-				Command = Command,
-				CommandOption = CommandOption
+				SoundIndices = SoundIndices,
+				ControlIndices = new int[CommandEntries.Length]
 			};
 			Group.TouchElements[n].Element.States = new[] { new ObjectState() };
 			Group.TouchElements[n].Element.States[0].Translation = Matrix4D.CreateTranslation(o.X, o.Y, -o.Z);
@@ -1622,10 +1785,14 @@ namespace OpenBve.Parsers.Panel
 			Group.TouchElements[n].Element.internalObject = new ObjectState { Prototype = Object };
 			Program.CurrentHost.CreateDynamicObject(ref Group.TouchElements[n].Element.internalObject);
 			int m = Interface.CurrentControls.Length;
-			Array.Resize(ref Interface.CurrentControls, m + 1);
-			Interface.CurrentControls[m].Command = Command;
-			Interface.CurrentControls[m].Method = Interface.ControlMethod.Touch;
-			Interface.CurrentControls[m].Option = CommandOption;
+			Array.Resize(ref Interface.CurrentControls, m + CommandEntries.Length);
+			for (int i = 0; i < CommandEntries.Length; i++)
+			{
+				Interface.CurrentControls[m + i].Command = CommandEntries[i].Command;
+				Interface.CurrentControls[m + i].Method = Interface.ControlMethod.Touch;
+				Interface.CurrentControls[m + i].Option = CommandEntries[i].Option;
+				Group.TouchElements[n].ControlIndices[i] = m + i;
+			}
 		}
 	}
 }
