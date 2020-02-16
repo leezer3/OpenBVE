@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Objects;
 using OpenBveApi.Interface;
@@ -28,6 +28,28 @@ namespace Plugin
 
 				StaticObject obj = new StaticObject(Plugin.currentHost);
 				MeshBuilder builder = new MeshBuilder(Plugin.currentHost);
+
+				if (scene.GlobalMaterials.Count != 0)
+				{
+					for (int i = 0; i < scene.GlobalMeshes.Count; i++)
+					{
+						for (int j = 0; j < scene.GlobalMeshes[i].Materials.Count; j++)
+						{
+							if (scene.GlobalMeshes[i].Materials[j].IsReference)
+							{
+								for (int k = 0; k < scene.GlobalMaterials.Count; k++)
+								{
+									if (scene.GlobalMaterials[k].Name == scene.GlobalMeshes[i].Materials[j].Name)
+									{
+										scene.GlobalMeshes[i].Materials[j] = scene.GlobalMaterials[k];
+										break;
+									}
+								}
+							}
+						}
+					}
+				}
+				
 
 				// Global
 				foreach (var mesh in scene.GlobalMeshes)
@@ -93,7 +115,7 @@ namespace Plugin
 			Array.Resize(ref builder.Vertices, v + nVerts);
 			for (int i = 0; i < nVerts; i++)
 			{
-				builder.Vertices[v + i] = new Vertex(mesh.Positions[i].X, mesh.Positions[i].Y, mesh.Positions[i].Z);
+				builder.Vertices[v + i] = new Vertex(mesh.Positions[i]);
 			}
 
 			int nFaces = mesh.PosFaces.Count;
