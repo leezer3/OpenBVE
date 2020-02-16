@@ -1005,7 +1005,7 @@ namespace OpenBve
 											}
 											else
 											{
-												StaticObject FormC = GetTransformedStaticObject((StaticObject)Data.Structure.FormCL[Data.Blocks[i].Forms[k].FormType], d0, d1);
+												StaticObject FormC = (StaticObject)Data.Structure.FormCL[Data.Blocks[i].Forms[k].FormType].Transform(d0, d1);
 												Program.Renderer.CreateStaticObject(FormC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 											}
 											if (Data.Blocks[i].Forms[k].RoofType > 0)
@@ -1024,7 +1024,7 @@ namespace OpenBve
 												}
 												else
 												{
-													StaticObject RoofC = GetTransformedStaticObject((StaticObject)Data.Structure.RoofCL[Data.Blocks[i].Forms[k].RoofType], d0, d1);
+													StaticObject RoofC = (StaticObject)Data.Structure.RoofCL[Data.Blocks[i].Forms[k].RoofType].Transform(d0, d1);
 													Program.Renderer.CreateStaticObject(RoofC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 												}
 											}
@@ -1045,7 +1045,7 @@ namespace OpenBve
 											}
 											else
 											{
-												StaticObject FormC = GetTransformedStaticObject((StaticObject)Data.Structure.FormCR[Data.Blocks[i].Forms[k].FormType], d0, d1);
+												StaticObject FormC = (StaticObject)Data.Structure.FormCR[Data.Blocks[i].Forms[k].FormType].Transform(d0, d1);
 												Program.Renderer.CreateStaticObject(FormC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 											}
 											if (Data.Blocks[i].Forms[k].RoofType > 0)
@@ -1064,7 +1064,7 @@ namespace OpenBve
 												}
 												else
 												{
-													StaticObject RoofC = GetTransformedStaticObject((StaticObject)Data.Structure.RoofCR[Data.Blocks[i].Forms[k].RoofType], d0, d1);
+													StaticObject RoofC = (StaticObject)Data.Structure.RoofCR[Data.Blocks[i].Forms[k].RoofType].Transform(d0, d1);
 													Program.Renderer.CreateStaticObject(RoofC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 												}
 											}
@@ -1153,7 +1153,7 @@ namespace OpenBve
 										}
 										else
 										{
-											StaticObject Crack = GetTransformedStaticObject((StaticObject)Data.Structure.CrackL[Data.Blocks[i].Cracks[k].Type], d0, d1);
+											StaticObject Crack = (StaticObject)Data.Structure.CrackL[Data.Blocks[i].Cracks[k].Type].Transform(d0, d1);
 											Program.Renderer.CreateStaticObject(Crack, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 										}
 									}
@@ -1165,7 +1165,7 @@ namespace OpenBve
 										}
 										else
 										{
-											StaticObject Crack = GetTransformedStaticObject((StaticObject)Data.Structure.CrackR[Data.Blocks[i].Cracks[k].Type], d0, d1);
+											StaticObject Crack = (StaticObject)Data.Structure.CrackR[Data.Blocks[i].Cracks[k].Type].Transform(d0, d1);
 											Program.Renderer.CreateStaticObject(Crack, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 										}
 									}

@@ -47,5 +47,11 @@ namespace OpenBveApi.Objects
 		/// <summary>Creates a mirrored clone of this object</summary>
 		/// <returns>The mirrored clone</returns>
 		public abstract UnifiedObject Mirror();
+
+		/// <summary>Creates a transformed clone of this object</summary>
+		/// <param name="NearDistance">The object's width at the start of the block</param>
+		/// <param name="FarDistance">The object's width at the end of the block</param>
+		/// <returns>The transformed clone</returns>
+		public abstract UnifiedObject Transform(double NearDistance, double FarDistance);
 	}
 }

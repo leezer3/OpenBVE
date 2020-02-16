@@ -153,5 +153,11 @@ namespace OpenBveApi.Objects
 				}
 				return Result;
 			}
+
+			/// <inheritdoc/>
+			public override UnifiedObject Transform(double NearDistance, double FarDistance)
+			{
+				throw new NotSupportedException();
+			}
 		}
 }
