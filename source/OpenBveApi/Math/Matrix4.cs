@@ -132,6 +132,16 @@ namespace OpenBveApi.Math
 			Row3 = new Vector4(matrixValues[12], matrixValues[13], matrixValues[14], matrixValues[15]);
 		}
 
+		/// <summary>Creates a clone of a matrix</summary>
+		/// <param name="matrix">The matrix to clone</param>
+		public Matrix4D(Matrix4D matrix)
+		{
+			Row0 = new Vector4(matrix.Row0);
+			Row1 = new Vector4(matrix.Row1);
+			Row2 = new Vector4(matrix.Row2);
+			Row3 = new Vector4(matrix.Row3);
+		}
+
 		// --- comparisons ---
 
 		/// <summary>Checks whether the two specified matrices are equal.</summary>
