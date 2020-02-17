@@ -851,6 +851,8 @@ namespace AssimpNET.X
 					string matName = GetNextToken();
 					Material material = new Material();
 					material.IsReference = true;
+					//Use default BVE white color so this is visible if the global material is missing, otherwise will be overwritten
+					material.Diffuse = Color128.White;
 					material.Name = matName;
 					mesh.Materials.Add(material);
 
