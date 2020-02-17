@@ -41,8 +41,6 @@ namespace OpenBve {
 		internal static bool processCommandLineArgs;
 		internal static string[] commandLineArguments;
 		internal static bool[] SkipArgs;
-
-		internal static bool SoundError = false;
 		
 		// keys
 		private static bool ShiftPressed = false;
@@ -118,6 +116,12 @@ namespace OpenBve {
 			Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
 			// application
 			currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8, Interface.CurrentOptions.AntiAliasingLevel);
+			if (Renderer.Screen.Width == 0 || Renderer.Screen.Height == 0)
+			{
+				//Duff values saved, so reset to something sensible else we crash
+				Renderer.Screen.Width = 1024;
+				Renderer.Screen.Height = 768;
+			}
 			currentGameWindow = new RouteViewer(Renderer.Screen.Width, Renderer.Screen.Height, currentGraphicsMode, "Route Viewer", GameWindowFlags.Default);
 			currentGameWindow.Visible = true;
 			currentGameWindow.TargetUpdateFrequency = 0;
@@ -128,20 +132,7 @@ namespace OpenBve {
 			//Unload
 			Sounds.Deinitialize();
 		}
-
-		// reset camera
-		internal static void ResetCamera() {
-			Renderer.Camera.AbsolutePosition = new Vector3(0.0, 2.5, -5.0);
-			Renderer.Camera.AbsoluteDirection = new Vector3(-Renderer.Camera.AbsolutePosition.X, -Renderer.Camera.AbsolutePosition.Y, -Renderer.Camera.AbsolutePosition.Z);
-			Renderer.Camera.AbsoluteSide = new Vector3(-Renderer.Camera.AbsolutePosition.Z, 0.0, Renderer.Camera.AbsolutePosition.X);
-			Renderer.Camera.AbsoluteDirection.Normalize();
-			Renderer.Camera.AbsoluteSide.Normalize();
-			Renderer.Camera.AbsoluteUp = Vector3.Cross(Renderer.Camera.AbsoluteDirection, Renderer.Camera.AbsoluteSide);
-			Renderer.Camera.VerticalViewingAngle = 45.0.ToRadians();
-			Renderer.Camera.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * Renderer.Camera.VerticalViewingAngle) * Renderer.Screen.AspectRatio);
-			Renderer.Camera.OriginalVerticalViewingAngle = Renderer.Camera.VerticalViewingAngle;
-		}
-
+		
 		// load route
 		internal static bool LoadRoute() {
 			

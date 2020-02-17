@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using OpenBve.BrakeSystems;
 using OpenBveApi;
 using OpenBveApi.Math;
@@ -12,11 +13,10 @@ namespace OpenBve
 	class BVE4SoundParser
 	{
 		/// <summary>Loads the sound set for a BVE4 or openBVE sound.cfg based train</summary>
-		/// <param name="Encoding">The text encoding for the sound.cfg file</param>
 		/// <param name="train">The train</param>
 		/// <param name="FileName">The absolute on-disk path to the sound.cfg file</param>
 		/// <param name="trainFolder">The absolute on-disk path to the train's folder</param>
-		internal static void Parse(string FileName, string trainFolder, System.Text.Encoding Encoding, TrainManager.Train train)
+		internal static void Parse(string FileName, string trainFolder, TrainManager.Train train)
 		{
 			//Default sound positions and radii
 
@@ -34,6 +34,7 @@ namespace OpenBve
 			//Radius at which the sound is audible at full volume, presumably in m
 			//TODO: All radii are much too SoundCfgParser.smallRadius in external mode, but we can't change them by default.....
 
+			Encoding Encoding = TextEncoding.GetSystemEncodingFromFile(FileName);
 
 			// parse configuration file
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;

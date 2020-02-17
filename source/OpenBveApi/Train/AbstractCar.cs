@@ -7,17 +7,23 @@ namespace OpenBveApi.Trains
 	{
 		/// <summary>The width of the car in meters</summary>
 		public double Width;
+
 		/// <summary>The height of the car in meters</summary>
 		public double Height;
+
 		/// <summary>The length of the car in meters</summary>
 		public double Length;
+
 		/// <summary>The Up vector</summary>
 		public Vector3 Up;
+
 		/// <summary>The current speed of this car</summary>
 		/// <remarks>Default units are km/h</remarks>
 		public double CurrentSpeed;
+
 		/// <summary>Contains the current brightness values</summary>
 		public Brightness Brightness;
+
 		/// <summary>Returns the index of the car within the train</summary>
 		public int Index;
 		
@@ -27,7 +33,7 @@ namespace OpenBveApi.Trains
 			Position = Vector3.Zero;
 			Direction = Vector3.Zero;
 		}
-		
+
 		/// <summary>Gets the track position of this car</summary>
 		public virtual double TrackPosition
 		{
@@ -53,6 +59,12 @@ namespace OpenBveApi.Trains
 			{
 				return 0.0;
 			}
+		}
+
+		/// <summary>Call this method to reverse (flip) the car</summary>
+		public virtual void Reverse()
+		{
+
 		}
 	}
 }

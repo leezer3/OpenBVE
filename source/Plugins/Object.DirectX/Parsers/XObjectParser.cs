@@ -1,11 +1,10 @@
 ﻿using System;
-using System.IO;
-using System.IO.Compression;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using System.Linq;
 using System.Text;
+using OpenBve.Formats.DirectX;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 
@@ -27,7 +26,7 @@ namespace Plugin {
 			// supported floating point format
 			if (Data[8] == 116 & Data[9] == 120 & Data[10] == 116 & Data[11] == 32) {
 				// textual flavor
-				return LoadTextualX(FileName, System.IO.File.ReadAllText(FileName), Encoding);
+				return LoadTextualX(FileName, System.IO.File.ReadAllText(FileName, Encoding));
 			} else if (Data[8] == 98 & Data[9] == 105 & Data[10] == 110 & Data[11] == 32) {
 				// binary flavor
 				return LoadBinaryX(FileName, Data, 16, FloatingPointSize);
@@ -36,7 +35,7 @@ namespace Plugin {
 				try {
 					byte[] Uncompressed = MSZip.Decompress(Data);
 					string Text = Encoding.GetString(Uncompressed);
-					return LoadTextualX(FileName, Text, Encoding);
+					return LoadTextualX(FileName, Text);
 				} catch (Exception ex) {
 					Plugin.currentHost.AddMessage(MessageType.Error, false, "An unexpected error occured (" + ex.Message + ") while attempting to decompress the binary X object file encountered in " + FileName);
 					return null;
@@ -118,7 +117,7 @@ namespace Plugin {
 		private static Structure[] LoadedMaterials;
 
 		// get template
-		private static Template GetTemplate(string Name, bool binary) {
+		private static Template GetTemplate(string Name) {
 			for (int i = 0; i < Templates.Length; i++) {
 				if (Templates[i].Name == Name) {
 					return Templates[i];
@@ -154,7 +153,7 @@ namespace Plugin {
 		// ================================
 
 		// load textual x
-		private static StaticObject LoadTextualX(string FileName, string Text, System.Text.Encoding Encoding) {
+		private static StaticObject LoadTextualX(string FileName, string Text) {
 			// load
 			string[] Lines = Text.Replace("\u000D\u000A", "\u2028").Split(new char[] { '\u000A', '\u000C', '\u000D', '\u0085', '\u2028', '\u2029' }, StringSplitOptions.None);
 			AlternateStructure = false;
@@ -215,31 +214,7 @@ namespace Plugin {
 				Builder.Append(Lines[i]);
 			}
 			string Content = Builder.ToString();
-			//Horrible hack to make Blender generated materials work
-			int idx = Content.IndexOf("Material ", StringComparison.InvariantCultureIgnoreCase);
-			while(idx != -1)
-			{
-				int idx2 = idx + 9;
-				if (Content[idx2] != '{')
-				{
-					int idx3 = idx2;
-					while (idx3 < Content.Length)
-					{
-						idx3++;
-						if (Content[idx3] == '{')
-						{
-							break;
-						}
-
-						
-					}
-					StringBuilder sb = new StringBuilder(Content);
-					sb.Remove(idx2, idx3 - idx2);
-					Content = sb.ToString();
-				}
-
-				idx = Content.IndexOf("Material ", idx + 9, StringComparison.InvariantCultureIgnoreCase);
-			}
+			
 			// parse file
 			int Position = 0;
 			Structure Structure;
@@ -330,7 +305,7 @@ namespace Plugin {
 								string s = Content.Substring(i, Position - i).Trim(new char[] { });
 								Structure o;
 								Position++;
-								if (!ReadTextualTemplate(FileName, Content, ref Position, GetTemplate(s, false), false, out o)) {
+								if (!ReadTextualTemplate(FileName, Content, ref Position, GetTemplate(s), false, out o)) {
 									return false;
 								} Position--;
 								i = Position + 1;
@@ -352,7 +327,7 @@ namespace Plugin {
 								string s = Content.Substring(i, Position - i).Trim(new char[] { });
 								Structure o;
 								Position++;
-								if (!ReadTextualTemplate(FileName, Content, ref Position, GetTemplate(s, false), false, out o)) {
+								if (!ReadTextualTemplate(FileName, Content, ref Position, GetTemplate(s), false, out o)) {
 									return false;
 								} Position--;
 								if (!IsDefaultTemplate(s))
@@ -512,7 +487,7 @@ namespace Plugin {
 						Structure.Data[Structure.Data.Length - 1] = o;
 					} else {
 						// non-primitive array
-						Template t = GetTemplate(r, false);
+						Template t = GetTemplate(r);
 						Structure[] o = new Structure[h];
 						if (h == 0) {
 							// empty array
@@ -712,7 +687,7 @@ namespace Plugin {
 								Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected end of file encountered while processing a string in template " + Template.Name + " in textual X object file " + FileName);
 								return false;
 							}
-							if (SF == true)
+							if (SF)
 							{
 
 
@@ -756,7 +731,7 @@ namespace Plugin {
 						default:
 							{
 								Structure o;
-								if (!ReadTextualTemplate(FileName, Content, ref Position, GetTemplate(Template.Members[m], false), true, out o)) {
+								if (!ReadTextualTemplate(FileName, Content, ref Position, GetTemplate(Template.Members[m]), true, out o)) {
 									return false;
 								}
 								while (Position < Content.Length) {
@@ -867,15 +842,6 @@ namespace Plugin {
 			internal int FloatsRemaining;
 		}
 		private static bool ReadBinaryTemplate(string FileName, System.IO.BinaryReader Reader, int FloatingPointSize, Template Template, bool Inline, ref BinaryCache Cache, out Structure Structure) {
-			const short TOKEN_NAME = 0x1;
-			const short TOKEN_STRING = 0x2;
-			const short TOKEN_INTEGER = 0x3;
-			const short TOKEN_INTEGER_LIST = 0x6;
-			const short TOKEN_FLOAT_LIST = 0x7;
-			const short TOKEN_OBRACE = 0xA;
-			const short TOKEN_CBRACE = 0xB;
-			const short TOKEN_COMMA = 0x13;
-			const short TOKEN_SEMICOLON = 0x14;
 			Structure = new Structure(Template.Name, new object[] { }, Template.Key);
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			System.Text.ASCIIEncoding Ascii = new System.Text.ASCIIEncoding();
@@ -888,9 +854,9 @@ namespace Plugin {
 					} else if (Cache.FloatsRemaining != 0) {
 						Plugin.currentHost.AddMessage(MessageType.Error, false, "A float list was not depleted at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 					}
-					short Token = Reader.ReadInt16();
+					TokenID Token = (TokenID)Reader.ReadInt16();
 					switch (Token) {
-						case TOKEN_NAME:
+						case TokenID.NAME:
 							{
 								Level++;
 								int n = Reader.ReadInt32();
@@ -899,17 +865,17 @@ namespace Plugin {
 									return false;
 								}
 								Reader.BaseStream.Position += n;
-								Token = Reader.ReadInt16();
-								if (Token != TOKEN_OBRACE) {
+								Token = (TokenID)Reader.ReadInt16();
+								if (Token != TokenID.OBRACE) {
 									Plugin.currentHost.AddMessage(MessageType.Error, false, "TOKEN_OBRACE expected at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 									return false;
 								}
 							} break;
-						case TOKEN_INTEGER:
+						case TokenID.INT:
 							{
 								Reader.BaseStream.Position += 4;
 							} break;
-						case TOKEN_INTEGER_LIST:
+						case TokenID.INT_LIST:
 							{
 								int n = Reader.ReadInt32();
 								if (n < 0) {
@@ -918,7 +884,7 @@ namespace Plugin {
 								}
 								Reader.BaseStream.Position += 4 * n;
 							} break;
-						case TOKEN_FLOAT_LIST:
+						case TokenID.FLOAT_LIST:
 							{
 								int n = Reader.ReadInt32();
 								if (n < 0) {
@@ -927,7 +893,7 @@ namespace Plugin {
 								}
 								Reader.BaseStream.Position += (FloatingPointSize >> 3) * n;
 							} break;
-						case TOKEN_STRING:
+						case TokenID.STRING:
 							{
 								int n = Reader.ReadInt32();
 								if (n < 0) {
@@ -935,16 +901,16 @@ namespace Plugin {
 									return false;
 								}
 								Reader.BaseStream.Position += n;
-								Token = Reader.ReadInt16();
-								if (Token != TOKEN_COMMA & Token != TOKEN_SEMICOLON) {
+								Token = (TokenID)Reader.ReadInt16();
+								if (Token != TokenID.COMMA & Token != TokenID.SEMICOLON) {
 									Plugin.currentHost.AddMessage(MessageType.Error, false, "TOKEN_COMMA or TOKEN_SEMICOLON expected at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 									return false;
 								}
 							} break;
-						case TOKEN_OBRACE:
+						case TokenID.OBRACE:
 							Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected token TOKEN_OBRACE encountered at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 							return false;
-						case TOKEN_CBRACE:
+						case TokenID.CBRACE:
 							if (Level == 0) return true;
 							Level--;
 							break;
@@ -963,28 +929,28 @@ namespace Plugin {
 						// end of file
 						return true;
 					}
-					short Token = Reader.ReadInt16();
+					TokenID Token = (TokenID)Reader.ReadInt16();
 					switch (Token) {
-						case TOKEN_NAME:
+						case TokenID.NAME:
 							int n = Reader.ReadInt32();
 							if (n < 1) {
 								Plugin.currentHost.AddMessage(MessageType.Error, false, "count is invalid in TOKEN_NAME at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 								return false;
 							}
 							string Name = new string(Ascii.GetChars(Reader.ReadBytes(n)));
-							Token = Reader.ReadInt16();
-							if (Token != TOKEN_OBRACE) {
+							Token = (TokenID)Reader.ReadInt16();
+							if (Token != TokenID.OBRACE) {
 								Plugin.currentHost.AddMessage(MessageType.Error, false, "TOKEN_OBRACE expected at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 								return false;
 							}
 							Structure o;
-							if (!ReadBinaryTemplate(FileName, Reader, FloatingPointSize, GetTemplate(Name, true), false, ref Cache, out o)) {
+							if (!ReadBinaryTemplate(FileName, Reader, FloatingPointSize, GetTemplate(Name), false, ref Cache, out o)) {
 								return false;
 							}
 							Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
 							Structure.Data[Structure.Data.Length - 1] = o;
 							break;
-						case TOKEN_CBRACE:
+						case TokenID.CBRACE:
 							if (Template.Name.Length == 0) {
 								Plugin.currentHost.AddMessage(MessageType.Error, false, "Unexpected TOKEN_CBRACE encountered at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 								return false;
@@ -1030,11 +996,11 @@ namespace Plugin {
 								return false;
 							} else {
 								while (true) {
-									short Token = Reader.ReadInt16();
-									if (Token == TOKEN_INTEGER) {
+									TokenID Token = (TokenID)Reader.ReadInt16();
+									if (Token == TokenID.INT) {
 										int a = Reader.ReadInt32();
 										o[i] = a; break;
-									} else if (Token == TOKEN_INTEGER_LIST) {
+									} else if (Token == TokenID.INT_LIST) {
 										int n = Reader.ReadInt32();
 										if (n < 0) {
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "count is invalid in TOKEN_INTEGER_LIST at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
@@ -1074,8 +1040,8 @@ namespace Plugin {
 								o[i] = a;
 							} else {
 								while (true) {
-									short Token = Reader.ReadInt16();
-									if (Token == TOKEN_FLOAT_LIST) {
+									TokenID Token = (TokenID)Reader.ReadInt16();
+									if (Token == TokenID.FLOAT_LIST) {
 										int n = Reader.ReadInt32();
 										if (n < 0) {
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "count is invalid in TOKEN_FLOAT_LIST at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
@@ -1108,7 +1074,7 @@ namespace Plugin {
 						// template array
 						Structure[] o = new Structure[h];
 						for (int i = 0; i < h; i++) {
-							ReadBinaryTemplate(FileName, Reader, FloatingPointSize, GetTemplate(r, true), true, ref Cache, out o[i]);
+							ReadBinaryTemplate(FileName, Reader, FloatingPointSize, GetTemplate(r), true, ref Cache, out o[i]);
 						}
 						Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
 						Structure.Data[Structure.Data.Length - 1] = o;
@@ -1131,13 +1097,13 @@ namespace Plugin {
 							} else {
 								// read new data
 								while (true) {
-									short Token = Reader.ReadInt16();
-									if (Token == TOKEN_INTEGER) {
+									TokenID Token = (TokenID)Reader.ReadInt16();
+									if (Token == TokenID.INT) {
 										int a = Reader.ReadInt32();
 										Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
 										Structure.Data[Structure.Data.Length - 1] = a;
 										break;
-									} else if (Token == TOKEN_INTEGER_LIST) {
+									} else if (Token == TokenID.INT_LIST) {
 										int n = Reader.ReadInt32();
 										if (n < 0) {
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "count is invalid in TOKEN_INTEGER_LIST at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
@@ -1175,8 +1141,8 @@ namespace Plugin {
 							} else {
 								// read new data
 								while (true) {
-									short Token = Reader.ReadInt16();
-									if (Token == TOKEN_FLOAT_LIST) {
+									TokenID Token = (TokenID)Reader.ReadInt16();
+									if (Token == TokenID.FLOAT_LIST) {
 										int n = Reader.ReadInt32();
 										if (n < 0) {
 											Plugin.currentHost.AddMessage(MessageType.Error, false, "count is invalid in TOKEN_FLOAT_LIST at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
@@ -1211,8 +1177,8 @@ namespace Plugin {
 								} else if (Cache.FloatsRemaining != 0) {
 									Plugin.currentHost.AddMessage(MessageType.Error, false, "A float list was not depleted at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 								}
-								short Token = Reader.ReadInt16();
-								if (Token == TOKEN_STRING) {
+								TokenID Token = (TokenID)Reader.ReadInt16();
+								if (Token == TokenID.STRING) {
 									int n = Reader.ReadInt32();
 									if (n < 0) {
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "count is invalid in TOKEN_STRING at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
@@ -1221,8 +1187,8 @@ namespace Plugin {
 									string s = new string(Ascii.GetChars(Reader.ReadBytes(n)));
 									Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
 									Structure.Data[Structure.Data.Length - 1] = s;
-									Token = Reader.ReadInt16();
-									if (Token != TOKEN_SEMICOLON) {
+									Token = (TokenID)Reader.ReadInt16();
+									if (Token != TokenID.SEMICOLON) {
 										Plugin.currentHost.AddMessage(MessageType.Error, false, "TOKEN_SEMICOLON expected at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 										return false;
 									}
@@ -1234,7 +1200,7 @@ namespace Plugin {
 						default:
 							// inlined template expected
 							Structure o;
-							ReadBinaryTemplate(FileName, Reader, FloatingPointSize, GetTemplate(Template.Members[m], true), true, ref Cache, out o);
+							ReadBinaryTemplate(FileName, Reader, FloatingPointSize, GetTemplate(Template.Members[m]), true, ref Cache, out o);
 							Array.Resize<object>(ref Structure.Data, Structure.Data.Length + 1);
 							Structure.Data[Structure.Data.Length - 1] = o;
 							break;
@@ -1246,8 +1212,8 @@ namespace Plugin {
 			} else {
 				string s = Template.Members[Template.Members.Length - 1];
 				if (s != "[???]" & s != "[...]") {
-					int Token = Reader.ReadInt16();
-					if (Token != TOKEN_CBRACE) {
+					TokenID Token = (TokenID)Reader.ReadInt16();
+					if (Token != TokenID.CBRACE) {
 						Plugin.currentHost.AddMessage(MessageType.Error, false, "TOKEN_CBRACE expected at position 0x" + Reader.BaseStream.Position.ToString("X", Culture) + " in binary X object file " + FileName);
 						return false;
 					}

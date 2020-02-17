@@ -16,7 +16,7 @@ namespace OpenBve
 	{
 		/// <summary>Parses a track following object</summary>
 		/// <param name="FileName">The XML file to parse</param>
-		internal static TrainManager.TrackFollowingObject ParseTrackFollowingObject(string FileName)
+		internal static TrainManager.TrackFollowingObject ParseTrackFollowingObject(string FileName, string ObjectPath)
 		{
 			// The current XML file to load
 			XDocument CurrentXML = XDocument.Load(FileName, LoadOptions.SetLineInfo);
@@ -42,7 +42,7 @@ namespace OpenBve
 
 			foreach (XElement Element in DocumentElements)
 			{
-				ParseTrackFollowingObjectNode(Element, FileName, Path, Train);
+				ParseTrackFollowingObjectNode(Element, FileName, Path, ObjectPath, Train);
 			}
 
 			return Train;
@@ -53,10 +53,11 @@ namespace OpenBve
 		/// <param name="FileName">The filename of the containing XML file</param>
 		/// <param name="Path">The path of the containing XML file</param>
 		/// <param name="Train">The track following object to parse this node into</param>
-		private static void ParseTrackFollowingObjectNode(XElement Element, string FileName, string Path, TrainManager.TrackFollowingObject Train)
+		private static void ParseTrackFollowingObjectNode(XElement Element, string FileName, string Path, string ObjectPath, TrainManager.TrackFollowingObject Train)
 		{
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string TrainDirectory = string.Empty;
+			bool consistReversed = false;
 			List<Game.TravelData> Data = new List<Game.TravelData>();
 
 			foreach (XElement SectionElement in Element.Elements())
@@ -88,6 +89,10 @@ namespace OpenBve
 										{
 											trainDirectory = OpenBveApi.Path.CombineFile(Program.FileSystem.TrainInstallationDirectory, Value);
 										}
+										if (!System.IO.Directory.Exists(trainDirectory))
+										{
+											trainDirectory = OpenBveApi.Path.CombineFile(ObjectPath, Value);
+										}
 
 										if(!System.IO.Directory.Exists(trainDirectory))
 										{
@@ -97,6 +102,14 @@ namespace OpenBve
 										{
 											TrainDirectory = trainDirectory;
 										}
+									}
+									break;
+								case "reversed":
+									int n;
+									NumberFormats.TryParseIntVb6(Value, out n);
+									if (n == 1 || Value.ToLowerInvariant() == "true")
+									{
+										consistReversed = true;
 									}
 									break;
 							}
@@ -146,8 +159,16 @@ namespace OpenBve
 				return;
 			}
 
-			// Initial setting
-			string TrainData = OpenBveApi.Path.CombineFile(TrainDirectory, "train.dat");
+			/*
+			 * First check for a train.ai file- Functionally identical, but allows for differently configured AI
+			 * trains not to show up as driveable
+			 */
+			string TrainData = OpenBveApi.Path.CombineFile(TrainDirectory, "train.ai");
+			if (!System.IO.File.Exists(TrainData))
+			{
+				// Check for the standard driveable train.dat
+				TrainData = OpenBveApi.Path.CombineFile(TrainDirectory, "train.dat");
+			}
 			string ExteriorFile = OpenBveApi.Path.CombineFile(TrainDirectory, "extensions.cfg");
 			if (!System.IO.File.Exists(TrainData) || !System.IO.File.Exists(ExteriorFile))
 			{
@@ -155,7 +176,7 @@ namespace OpenBve
 				return;
 			}
 			TrainDatParser.ParseTrainData(TrainData, TextEncoding.GetSystemEncodingFromFile(TrainData), Train);
-			SoundCfgParser.ParseSoundConfig(TrainDirectory, Encoding.UTF8, Train);
+			SoundCfgParser.ParseSoundConfig(TrainDirectory, Train);
 			Train.AI = new Game.TrackFollowingObjectAI(Train, Data);
 
 			UnifiedObject[] CarObjects = new UnifiedObject[Train.Cars.Length];
@@ -284,6 +305,10 @@ namespace OpenBve
 				Car.RearBogie.RearAxle.Follower.TrackIndex = Data[0].RailIndex;
 			}
 
+			if (consistReversed)
+			{
+				Train.Reverse();
+			}
 			Train.PlaceCars(Data[0].StopPosition);
 		}
 

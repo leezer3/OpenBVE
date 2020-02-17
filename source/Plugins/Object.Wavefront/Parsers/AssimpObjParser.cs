@@ -31,7 +31,7 @@ namespace Plugin
 				List<Vertex> allVertices = new List<Vertex>();
 				foreach (var vertex in model.Vertices)
 				{
-					allVertices.Add(new Vertex(vertex.X, vertex.Y, vertex.Z));
+					allVertices.Add(new Vertex(vertex));
 				}
 
 				List<Vector2> allTexCoords = new List<Vector2>();

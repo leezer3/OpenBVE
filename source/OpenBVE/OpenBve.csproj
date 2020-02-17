@@ -179,7 +179,6 @@
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Preprocess.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.RouteData.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Functions.cs" />
-    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Objects.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.PreprocessOptions.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.RouteFixes.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.SignalData.cs" />

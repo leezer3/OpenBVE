@@ -144,7 +144,12 @@ namespace OpenBve
 					}
 				}
 			}
-			Train.SafetySystems.PilotLamp.Update(newState);
+
+			if (Train.SafetySystems.PilotLamp != null)
+			{
+				Train.SafetySystems.PilotLamp.Update(newState);
+			}
+			
 			if (oldState != newState)
 			{
 				if (Train.Plugin != null)

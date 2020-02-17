@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Globalization;
 using OpenBveApi;
@@ -5260,54 +5261,6 @@ namespace OpenBve
 				BlocksUsed = ToIndex + 1;
 			}
 		}
-		
-		// get transformed object
-		private static StaticObject GetTransformedStaticObject(StaticObject Prototype, double NearDistance, double FarDistance)
-		{
-			StaticObject Result = (StaticObject)Prototype.Clone();
-			int n = 0;
-			double x2 = 0.0, x3 = 0.0, x6 = 0.0, x7 = 0.0;
-			for (int i = 0; i < Result.Mesh.Vertices.Length; i++) {
-				if (n == 2) {
-					x2 = Result.Mesh.Vertices[i].Coordinates.X;
-				} else if (n == 3) {
-					x3 = Result.Mesh.Vertices[i].Coordinates.X;
-				} else if (n == 6) {
-					x6 = Result.Mesh.Vertices[i].Coordinates.X;
-				} else if (n == 7) {
-					x7 = Result.Mesh.Vertices[i].Coordinates.X;
-				}
-				n++;
-				if (n == 8) {
-					break;
-				}
-			}
-			if (n >= 4) {
-				int m = 0;
-				for (int i = 0; i < Result.Mesh.Vertices.Length; i++) {
-					if (m == 0) {
-						Result.Mesh.Vertices[i].Coordinates.X = NearDistance - x3;
-					} else if (m == 1) {
-						Result.Mesh.Vertices[i].Coordinates.X = FarDistance - x2;
-						if (n < 8) {
-							m = 8;
-							break;
-						}
-					} else if (m == 4) {
-						Result.Mesh.Vertices[i].Coordinates.X = NearDistance - x7;
-					} else if (m == 5) {
-						Result.Mesh.Vertices[i].Coordinates.X = NearDistance - x6;
-						m = 8;
-						break;
-					}
-					m++;
-					if (m == 8) {
-						break;
-					}
-				}
-			}
-			return Result;
-		}
 
 		// load all textures
 		private static Texture[] LoadAllTextures(string BaseFile, bool IsGlowTexture)
@@ -5543,7 +5496,7 @@ namespace OpenBve
 				double StartingDistance = (double)i * Data.BlockInterval;
 				double EndingDistance = StartingDistance + Data.BlockInterval;
 				// normalize
-				World.Normalize(ref Direction.X, ref Direction.Y);
+				Direction.Normalize();
 				// track
 				if (!PreviewOnly) {
 					if (Data.Blocks[i].Cycle.Length == 1 && Data.Blocks[i].Cycle[0] == -1) {
@@ -5599,8 +5552,9 @@ namespace OpenBve
 						/*
 						 * Legacy brightness: This applies equally to all tracks in a block
 						 */
-						for (int t = 0; t < Program.CurrentRoute.Tracks.Length; t++)
+						for (int tt = 0; tt < Program.CurrentRoute.Tracks.Count; tt++)
 						{
+							int t = Program.CurrentRoute.Tracks.ElementAt(tt).Key;
 							int m = Program.CurrentRoute.Tracks[t].Elements[n].Events.Length;
 							Array.Resize(ref Program.CurrentRoute.Tracks[t].Elements[n].Events, m + 1);
 							double d = Data.Blocks[i].BrightnessChanges[j].TrackPosition - StartingDistance;
@@ -6143,7 +6097,7 @@ namespace OpenBve
 											if (!Data.Structure.FormCL.ContainsKey(Data.Blocks[i].Form[k].FormType)) {
 												Interface.AddMessage(MessageType.Error, false, "FormStructureIndex references a FormCL not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
 											} else {
-												StaticObject FormC = GetTransformedStaticObject((StaticObject)Data.Structure.FormCL[Data.Blocks[i].Form[k].FormType], d0, d1);
+												StaticObject FormC = (StaticObject)Data.Structure.FormCL[Data.Blocks[i].Form[k].FormType].Transform(d0, d1);
 												Program.Renderer.CreateStaticObject(FormC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 											}
 											if (Data.Blocks[i].Form[k].RoofType > 0) {
@@ -6155,7 +6109,7 @@ namespace OpenBve
 												if (!Data.Structure.RoofCL.ContainsKey(Data.Blocks[i].Form[k].RoofType)) {
 													Interface.AddMessage(MessageType.Error, false, "RoofStructureIndex references a RoofCL not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
 												} else {
-													StaticObject RoofC = GetTransformedStaticObject((StaticObject)Data.Structure.RoofCL[Data.Blocks[i].Form[k].RoofType], d0, d1);
+													StaticObject RoofC = (StaticObject)Data.Structure.RoofCL[Data.Blocks[i].Form[k].RoofType].Transform(d0, d1);
 													Program.Renderer.CreateStaticObject(RoofC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 												}
 											}
@@ -6168,7 +6122,7 @@ namespace OpenBve
 											if (!Data.Structure.FormCR.ContainsKey(Data.Blocks[i].Form[k].FormType)) {
 												Interface.AddMessage(MessageType.Error, false, "FormStructureIndex references a FormCR not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
 											} else {
-												StaticObject FormC = GetTransformedStaticObject((StaticObject)Data.Structure.FormCR[Data.Blocks[i].Form[k].FormType], d0, d1);
+												StaticObject FormC = (StaticObject)Data.Structure.FormCR[Data.Blocks[i].Form[k].FormType].Transform(d0, d1);
 												Program.Renderer.CreateStaticObject(FormC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 											}
 											if (Data.Blocks[i].Form[k].RoofType > 0) {
@@ -6180,7 +6134,7 @@ namespace OpenBve
 												if (!Data.Structure.RoofCR.ContainsKey(Data.Blocks[i].Form[k].RoofType)) {
 													Interface.AddMessage(MessageType.Error, false, "RoofStructureIndex references a RoofCR not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
 												} else {
-													StaticObject RoofC = GetTransformedStaticObject((StaticObject)Data.Structure.RoofCR[Data.Blocks[i].Form[k].RoofType], d0, d1);
+													StaticObject RoofC = (StaticObject)Data.Structure.RoofCR[Data.Blocks[i].Form[k].RoofType].Transform(d0, d1);
 													Program.Renderer.CreateStaticObject(RoofC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 												}
 											}
@@ -6242,14 +6196,14 @@ namespace OpenBve
 										if (!Data.Structure.CrackL.ContainsKey(Data.Blocks[i].Crack[k].Type)) {
 											Interface.AddMessage(MessageType.Error, false, "CrackStructureIndex references a CrackL not loaded in Track.Crack at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
 										} else {
-											StaticObject Crack = GetTransformedStaticObject((StaticObject)Data.Structure.CrackL[Data.Blocks[i].Crack[k].Type], d0, d1);
+											StaticObject Crack = (StaticObject)Data.Structure.CrackL[Data.Blocks[i].Crack[k].Type].Transform(d0, d1);
 											Program.Renderer.CreateStaticObject(Crack, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 										}
 									} else if (d0 > 0.0) {
 										if (!Data.Structure.CrackR.ContainsKey(Data.Blocks[i].Crack[k].Type)) {
 											Interface.AddMessage(MessageType.Error, false, "CrackStructureIndex references a CrackR not loaded in Track.Crack at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
 										} else {
-											StaticObject Crack = GetTransformedStaticObject((StaticObject)Data.Structure.CrackR[Data.Blocks[i].Crack[k].Type], d0, d1);
+											StaticObject Crack = (StaticObject)Data.Structure.CrackR[Data.Blocks[i].Crack[k].Type].Transform(d0, d1);
 											Program.Renderer.CreateStaticObject(Crack, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 										}
 									}

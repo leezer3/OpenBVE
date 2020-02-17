@@ -135,17 +135,7 @@ namespace OpenBve {
 	    }
 
 	    // reset camera
-	    internal static void ResetCamera() {
-		    Renderer.Camera.AbsolutePosition = new Vector3(-5.0, 2.5, -25.0);
-		    Renderer.Camera.AbsoluteDirection = new Vector3(-Renderer.Camera.AbsolutePosition.X, -Renderer.Camera.AbsolutePosition.Y, -Renderer.Camera.AbsolutePosition.Z);
-		    Renderer.Camera.AbsoluteSide = new Vector3(-Renderer.Camera.AbsolutePosition.Z, 0.0, Renderer.Camera.AbsolutePosition.X);
-		    Renderer.Camera.AbsoluteDirection.Normalize();
-		    Renderer.Camera.AbsoluteSide.Normalize();
-		    Renderer.Camera.AbsoluteUp = Vector3.Cross(Renderer.Camera.AbsoluteDirection, Renderer.Camera.AbsoluteSide);
-		    Renderer.Camera.VerticalViewingAngle = 45.0.ToRadians();
-		    Renderer.Camera.HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * Renderer.Camera.VerticalViewingAngle) * Renderer.Screen.AspectRatio);
-		    Renderer.Camera.OriginalVerticalViewingAngle = Renderer.Camera.VerticalViewingAngle;
-		}
+	    
 
 		internal static void MouseWheelEvent(object sender, MouseWheelEventArgs e)
 		{	
@@ -577,7 +567,7 @@ namespace OpenBve {
 	                ReducedMode = false;
 	                break;
 	            case Key.Keypad5:
-	                ResetCamera();
+	                Renderer.Camera.Reset(new Vector3(-5.0, 2.5, -25.0));
 	                break;
 	            case Key.F:
 	            case Key.F1:

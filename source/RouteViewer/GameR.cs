@@ -6,6 +6,7 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
+using System.Collections.Generic;
 using OpenBveApi.Colors;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
@@ -38,7 +39,12 @@ namespace OpenBve {
 
 		internal static void Reset() {
 			// track manager
-			Program.CurrentRoute.Tracks = new Track[] { new Track() };
+			Program.CurrentRoute.Tracks = new Dictionary<int, Track>();
+			Track t = new Track
+			{
+				Elements = new TrackElement[0]
+			};
+			Program.CurrentRoute.Tracks.Add(0, t);
 			// train manager
 			TrainManager.Trains = new TrainManager.Train[] { };
 			// game

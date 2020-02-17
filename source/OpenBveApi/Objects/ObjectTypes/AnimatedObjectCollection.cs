@@ -64,9 +64,9 @@ namespace OpenBveApi.Objects
 								Matrix4D mat = Matrix4D.Identity;
 								mat *= Objects[i].States[0].Translation;
 								mat *= (Matrix4D)new Transformation(FinalTransformation.Z, FinalTransformation.Y, FinalTransformation.X);
-								double zOffset = mat.ExtractTranslation().Z * -1.0;
+								double zOffset = mat.ExtractTranslation().Z;
 								
-								currentHost.CreateStaticObject(Objects[i].States[0].Prototype, Position, AuxTransformation, mat, Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z), AccurateObjectDisposal, zOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+								currentHost.CreateStaticObject(Objects[i].States[0].Prototype, AuxTransformation, mat, Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z), AccurateObjectDisposal, zOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 							}
 							else
 							{
@@ -152,6 +152,12 @@ namespace OpenBveApi.Objects
 					Result.Objects[i].RotateZDirection.X *= -1.0;
 				}
 				return Result;
+			}
+
+			/// <inheritdoc/>
+			public override UnifiedObject Transform(double NearDistance, double FarDistance)
+			{
+				throw new NotSupportedException();
 			}
 		}
 }

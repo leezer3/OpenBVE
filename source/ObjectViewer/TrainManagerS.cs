@@ -5,7 +5,6 @@
 // ║ The file from the openBVE main program cannot be used here. ║
 // ╚═════════════════════════════════════════════════════════════╝
 
-using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 
@@ -232,7 +231,6 @@ namespace OpenBve {
 			internal bool Reset;
 		}
 		internal struct TrainPendingTransponder {
-			//internal TrackManager.TransponderType Type;
 			internal bool SwitchSubsystem;
 			internal int OptionalInteger;
 			internal double OptionalFloat;

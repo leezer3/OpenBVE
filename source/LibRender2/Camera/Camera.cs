@@ -184,5 +184,18 @@ namespace LibRender2.Cameras
 			if (VerticalViewingAngle > 1.5) VerticalViewingAngle = 1.5;
 			Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 		}
+
+		/// <summary>Resets the camera to an absolute position</summary>
+		public void Reset(Vector3 Position) {
+			AbsolutePosition = new Vector3(-5.0, 2.5, -25.0);
+			AbsoluteDirection = new Vector3(-AbsolutePosition.X, -AbsolutePosition.Y, -AbsolutePosition.Z);
+			AbsoluteSide = new Vector3(-AbsolutePosition.Z, 0.0, AbsolutePosition.X);
+			AbsoluteDirection.Normalize();
+			AbsoluteSide.Normalize();
+			AbsoluteUp = Vector3.Cross(AbsoluteDirection, AbsoluteSide);
+			VerticalViewingAngle = 45.0.ToRadians();
+			HorizontalViewingAngle = 2.0 * Math.Atan(Math.Tan(0.5 * VerticalViewingAngle) * Renderer.Screen.AspectRatio);
+			OriginalVerticalViewingAngle = VerticalViewingAngle;
+		}
 	}
 }

@@ -46,6 +46,8 @@
 			this.textboxTrainDescription = new System.Windows.Forms.TextBox();
 			this.pictureboxTrainImage = new System.Windows.Forms.PictureBox();
 			this.tabpageTrainSettings = new System.Windows.Forms.TabPage();
+			this.checkBoxReverseConsist = new System.Windows.Forms.CheckBox();
+			this.labelReverseConsist = new System.Windows.Forms.Label();
 			this.panelTrainEncoding = new System.Windows.Forms.Panel();
 			this.labelTrainEncoding = new System.Windows.Forms.Label();
 			this.buttonTrainEncodingBig5 = new System.Windows.Forms.Button();
@@ -103,19 +105,19 @@
 			this.checkBoxInputDeviceEnable = new System.Windows.Forms.CheckBox();
 			this.buttonInputDeviceConfig = new System.Windows.Forms.Button();
 			this.groupBoxObjectParser = new System.Windows.Forms.GroupBox();
-			this.labelXparser = new System.Windows.Forms.Label();
-			this.comboBoxXparser = new System.Windows.Forms.ComboBox();
 			this.labelObjparser = new System.Windows.Forms.Label();
 			this.comboBoxObjparser = new System.Windows.Forms.ComboBox();
+			this.labelXparser = new System.Windows.Forms.Label();
+			this.comboBoxXparser = new System.Windows.Forms.ComboBox();
 			this.groupBoxKioskMode = new System.Windows.Forms.GroupBox();
 			this.labelKioskTimeout = new System.Windows.Forms.Label();
 			this.numericUpDownKioskTimeout = new System.Windows.Forms.NumericUpDown();
 			this.checkBoxEnableKiosk = new System.Windows.Forms.CheckBox();
 			this.groupBoxAdvancedOptions = new System.Windows.Forms.GroupBox();
+			this.checkBoxPanel2Extended = new System.Windows.Forms.CheckBox();
 			this.pictureboxCursor = new System.Windows.Forms.PictureBox();
 			this.labelCursor = new System.Windows.Forms.Label();
 			this.comboboxCursor = new System.Windows.Forms.ComboBox();
-			this.checkBoxPanel2Extended = new System.Windows.Forms.CheckBox();
 			this.checkBoxHacks = new System.Windows.Forms.CheckBox();
 			this.checkBoxTransparencyFix = new System.Windows.Forms.CheckBox();
 			this.checkBoxUnloadTextures = new System.Windows.Forms.CheckBox();
@@ -475,11 +477,12 @@
 			this.panelOptions.SuspendLayout();
 			this.panelOptionsPage2.SuspendLayout();
 			this.groupBoxInputDevice.SuspendLayout();
+			this.groupBoxObjectParser.SuspendLayout();
 			this.groupBoxKioskMode.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownKioskTimeout)).BeginInit();
 			this.groupBoxAdvancedOptions.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.updownTimeAccelerationFactor)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxCursor)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.updownTimeAccelerationFactor)).BeginInit();
 			this.groupBoxPackageOptions.SuspendLayout();
 			this.panelOptionsLeft.SuspendLayout();
 			this.groupboxDisplayMode.SuspendLayout();
@@ -829,6 +832,8 @@
 			// 
 			// tabpageTrainSettings
 			// 
+			this.tabpageTrainSettings.Controls.Add(this.checkBoxReverseConsist);
+			this.tabpageTrainSettings.Controls.Add(this.labelReverseConsist);
 			this.tabpageTrainSettings.Controls.Add(this.panelTrainEncoding);
 			this.tabpageTrainSettings.Controls.Add(this.labelTrainEncodingPreview);
 			this.tabpageTrainSettings.Controls.Add(this.textboxTrainEncodingPreview);
@@ -839,6 +844,27 @@
 			this.tabpageTrainSettings.TabIndex = 3;
 			this.tabpageTrainSettings.Text = "Settings";
 			this.tabpageTrainSettings.UseVisualStyleBackColor = true;
+			// 
+			// checkBoxReverseConsist
+			// 
+			this.checkBoxReverseConsist.AutoSize = true;
+			this.checkBoxReverseConsist.Location = new System.Drawing.Point(269, 61);
+			this.checkBoxReverseConsist.Name = "checkBoxReverseConsist";
+			this.checkBoxReverseConsist.Size = new System.Drawing.Size(15, 14);
+			this.checkBoxReverseConsist.TabIndex = 12;
+			this.checkBoxReverseConsist.UseVisualStyleBackColor = true;
+			this.checkBoxReverseConsist.CheckedChanged += new System.EventHandler(this.checkBoxReverseConsist_CheckedChanged);
+			// 
+			// labelReverseConsist
+			// 
+			this.labelReverseConsist.AutoEllipsis = true;
+			this.labelReverseConsist.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.labelReverseConsist.Location = new System.Drawing.Point(8, 59);
+			this.labelReverseConsist.Name = "labelReverseConsist";
+			this.labelReverseConsist.Size = new System.Drawing.Size(96, 16);
+			this.labelReverseConsist.TabIndex = 11;
+			this.labelReverseConsist.Text = "Reverse Consist:";
+			this.labelReverseConsist.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
 			// panelTrainEncoding
 			// 
@@ -917,7 +943,7 @@
 			// 
 			this.labelTrainEncodingPreview.AutoEllipsis = true;
 			this.labelTrainEncodingPreview.ForeColor = System.Drawing.SystemColors.ControlText;
-			this.labelTrainEncodingPreview.Location = new System.Drawing.Point(8, 64);
+			this.labelTrainEncodingPreview.Location = new System.Drawing.Point(7, 80);
 			this.labelTrainEncodingPreview.Name = "labelTrainEncodingPreview";
 			this.labelTrainEncodingPreview.Size = new System.Drawing.Size(96, 16);
 			this.labelTrainEncodingPreview.TabIndex = 4;
@@ -930,12 +956,12 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.textboxTrainEncodingPreview.BackColor = System.Drawing.SystemColors.Window;
-			this.textboxTrainEncodingPreview.Location = new System.Drawing.Point(104, 64);
+			this.textboxTrainEncodingPreview.Location = new System.Drawing.Point(104, 81);
 			this.textboxTrainEncodingPreview.Multiline = true;
 			this.textboxTrainEncodingPreview.Name = "textboxTrainEncodingPreview";
 			this.textboxTrainEncodingPreview.ReadOnly = true;
 			this.textboxTrainEncodingPreview.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.textboxTrainEncodingPreview.Size = new System.Drawing.Size(180, 80);
+			this.textboxTrainEncodingPreview.Size = new System.Drawing.Size(180, 63);
 			this.textboxTrainEncodingPreview.TabIndex = 5;
 			// 
 			// buttonStart
@@ -1543,6 +1569,27 @@
 			this.groupBoxObjectParser.TabStop = false;
 			this.groupBoxObjectParser.Text = "Object Parser";
 			// 
+			// labelObjparser
+			// 
+			this.labelObjparser.AutoSize = true;
+			this.labelObjparser.Location = new System.Drawing.Point(7, 48);
+			this.labelObjparser.Name = "labelObjparser";
+			this.labelObjparser.Size = new System.Drawing.Size(93, 13);
+			this.labelObjparser.TabIndex = 0;
+			this.labelObjparser.Text = "Obj Object Parser:";
+			// 
+			// comboBoxObjparser
+			// 
+			this.comboBoxObjparser.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxObjparser.FormattingEnabled = true;
+			this.comboBoxObjparser.Items.AddRange(new object[] {
+            "Original",
+            "Assimp"});
+			this.comboBoxObjparser.Location = new System.Drawing.Point(107, 44);
+			this.comboBoxObjparser.Name = "comboBoxObjparser";
+			this.comboBoxObjparser.Size = new System.Drawing.Size(190, 21);
+			this.comboBoxObjparser.TabIndex = 1;
+			// 
 			// labelXparser
 			// 
 			this.labelXparser.AutoSize = true;
@@ -1564,27 +1611,6 @@
 			this.comboBoxXparser.Name = "comboBoxXparser";
 			this.comboBoxXparser.Size = new System.Drawing.Size(190, 21);
 			this.comboBoxXparser.TabIndex = 1;
-			// 
-			// labelObjparser
-			// 
-			this.labelObjparser.AutoSize = true;
-			this.labelObjparser.Location = new System.Drawing.Point(7, 48);
-			this.labelObjparser.Name = "labelObjparser";
-			this.labelObjparser.Size = new System.Drawing.Size(84, 13);
-			this.labelObjparser.TabIndex = 0;
-			this.labelObjparser.Text = "Obj Object Parser:";
-			// 
-			// comboBoxObjparser
-			// 
-			this.comboBoxObjparser.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxObjparser.FormattingEnabled = true;
-			this.comboBoxObjparser.Items.AddRange(new object[] {
-            "Original",
-            "Assimp"});
-			this.comboBoxObjparser.Location = new System.Drawing.Point(107, 44);
-			this.comboBoxObjparser.Name = "comboBoxObjparser";
-			this.comboBoxObjparser.Size = new System.Drawing.Size(190, 21);
-			this.comboBoxObjparser.TabIndex = 1;
 			// 
 			// groupBoxKioskMode
 			// 
@@ -1655,7 +1681,7 @@
 			this.checkBoxPanel2Extended.AutoSize = true;
 			this.checkBoxPanel2Extended.Location = new System.Drawing.Point(8, 183);
 			this.checkBoxPanel2Extended.Name = "checkBoxPanel2Extended";
-			this.checkBoxPanel2Extended.Size = new System.Drawing.Size(203, 17);
+			this.checkBoxPanel2Extended.Size = new System.Drawing.Size(159, 17);
 			this.checkBoxPanel2Extended.TabIndex = 17;
 			this.checkBoxPanel2Extended.Text = "Enable Panel2 extend mode";
 			this.checkBoxPanel2Extended.UseVisualStyleBackColor = true;
@@ -1674,7 +1700,7 @@
 			this.labelCursor.AutoSize = true;
 			this.labelCursor.Location = new System.Drawing.Point(48, 145);
 			this.labelCursor.Name = "labelCursor";
-			this.labelCursor.Size = new System.Drawing.Size(13, 13);
+			this.labelCursor.Size = new System.Drawing.Size(37, 13);
 			this.labelCursor.TabIndex = 17;
 			this.labelCursor.Text = "Cursor";
 			// 
@@ -1683,7 +1709,7 @@
 			this.comboboxCursor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboboxCursor.FormattingEnabled = true;
 			this.comboboxCursor.Location = new System.Drawing.Point(48, 158);
-			this.comboboxCursor.Name = "comboboxLanguages";
+			this.comboboxCursor.Name = "comboboxCursor";
 			this.comboboxCursor.Size = new System.Drawing.Size(108, 21);
 			this.comboboxCursor.TabIndex = 18;
 			this.comboboxCursor.SelectedIndexChanged += new System.EventHandler(this.comboboxCursor_SelectedIndexChanged);
@@ -1724,24 +1750,28 @@
 			this.labelTimeAcceleration.AutoSize = true;
 			this.labelTimeAcceleration.Location = new System.Drawing.Point(8, 125);
 			this.labelTimeAcceleration.Name = "labelTimeAcceleration";
-			this.labelTimeAcceleration.Size = new System.Drawing.Size(179, 17);
+			this.labelTimeAcceleration.Size = new System.Drawing.Size(126, 13);
 			this.labelTimeAcceleration.TabIndex = 10;
 			this.labelTimeAcceleration.Text = "Accelerated Time Factor:";
 			// 
 			// updownTimeAccelerationFactor
 			// 
 			this.updownTimeAccelerationFactor.Location = new System.Drawing.Point(150, 122);
+			this.updownTimeAccelerationFactor.Maximum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
 			this.updownTimeAccelerationFactor.Name = "updownTimeAccelerationFactor";
 			this.updownTimeAccelerationFactor.Size = new System.Drawing.Size(52, 20);
 			this.updownTimeAccelerationFactor.TabIndex = 3;
-			this.updownTimeAccelerationFactor.Maximum = 5;
 			this.updownTimeAccelerationFactor.ValueChanged += new System.EventHandler(this.updownTimeAccelerationFactor_ValueChanged);
 			// 
-			// checkBoxDisableDisplayLists
+			// checkBoxIsUseNewRenderer
 			// 
 			this.checkBoxIsUseNewRenderer.AutoSize = true;
 			this.checkBoxIsUseNewRenderer.Location = new System.Drawing.Point(8, 43);
-			this.checkBoxIsUseNewRenderer.Name = "checkBoxDisableDisplayLists";
+			this.checkBoxIsUseNewRenderer.Name = "checkBoxIsUseNewRenderer";
 			this.checkBoxIsUseNewRenderer.Size = new System.Drawing.Size(159, 17);
 			this.checkBoxIsUseNewRenderer.TabIndex = 2;
 			this.checkBoxIsUseNewRenderer.Text = "Disable OpenGL display lists";
@@ -5602,9 +5632,9 @@
 			this.Controls.Add(this.labelFillerOne);
 			this.Controls.Add(this.labelFillerTwo);
 			this.Controls.Add(this.labelFillerThree);
+			this.Controls.Add(this.panelStart);
 			this.Controls.Add(this.panelOptions);
 			this.Controls.Add(this.panelControls);
-			this.Controls.Add(this.panelStart);
 			this.Controls.Add(this.panelPackages);
 			this.Controls.Add(this.panelReview);
 			this.KeyPreview = true;
@@ -5652,13 +5682,15 @@
 			this.panelOptionsPage2.ResumeLayout(false);
 			this.groupBoxInputDevice.ResumeLayout(false);
 			this.groupBoxInputDevice.PerformLayout();
+			this.groupBoxObjectParser.ResumeLayout(false);
+			this.groupBoxObjectParser.PerformLayout();
 			this.groupBoxKioskMode.ResumeLayout(false);
 			this.groupBoxKioskMode.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownKioskTimeout)).EndInit();
 			this.groupBoxAdvancedOptions.ResumeLayout(false);
 			this.groupBoxAdvancedOptions.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.updownTimeAccelerationFactor)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureboxCursor)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.updownTimeAccelerationFactor)).EndInit();
 			this.groupBoxPackageOptions.ResumeLayout(false);
 			this.groupBoxPackageOptions.PerformLayout();
 			this.panelOptionsLeft.ResumeLayout(false);
@@ -6183,5 +6215,7 @@
 		private System.Windows.Forms.ComboBox comboBoxXparser;
 		private System.Windows.Forms.Label labelObjparser;
 		private System.Windows.Forms.ComboBox comboBoxObjparser;
+		private System.Windows.Forms.CheckBox checkBoxReverseConsist;
+		private System.Windows.Forms.Label labelReverseConsist;
 	}
 }
