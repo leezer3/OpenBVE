@@ -117,7 +117,7 @@ namespace TrainEditor2.Views
 
 		private void FormBogie_Load(object sender, EventArgs e)
 		{
-			Icon = FormEditor.GetIcon();
+			Icon = WinFormsUtilities.GetIcon();
 
 			labelDefinedAxles.Text = $@"{Utilities.GetInterfaceString("car_settings", "general", "defined_axles")}:";
 			groupBoxAxles.Text = Utilities.GetInterfaceString("car_settings", "general", "axles", "name");
@@ -130,12 +130,17 @@ namespace TrainEditor2.Views
 
 		private void ButtonOpen_Click(object sender, EventArgs e)
 		{
-			FormEditor.OpenFileDialog(textBoxObject);
+			WinFormsUtilities.OpenFileDialog(textBoxObject);
 		}
 
 		private void ButtonOK_Click(object sender, EventArgs e)
 		{
 			Close();
+		}
+
+		private void checkBoxDefinedAxles_CheckedChanged(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

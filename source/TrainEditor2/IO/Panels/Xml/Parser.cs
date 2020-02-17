@@ -32,11 +32,11 @@ namespace TrainEditor2.IO.Panels.Xml
 
 			foreach (XElement panelNode in panelNodes)
 			{
-				ParsePanelNode(fileName, panelNode, panel);
+				Parse(fileName, panelNode, panel);
 			}
 		}
 
-		private static void ParsePanelNode(string fileName, XElement parent, Panel panel)
+		internal static void Parse(string fileName, XElement parent, Panel panel)
 		{
 			foreach (XElement sectionNode in parent.Elements())
 			{

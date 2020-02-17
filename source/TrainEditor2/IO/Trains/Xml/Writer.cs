@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
 using TrainEditor2.Extensions;
+using TrainEditor2.IO.Panels.Xml;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.Simulation.TrainManager;
 
@@ -13,6 +14,8 @@ namespace TrainEditor2.IO.Trains.Xml
 	{
 		internal static void Write(string fileName, Train train)
 		{
+			CultureInfo culture = CultureInfo.InvariantCulture;
+
 			XDocument xml = new XDocument(new XDeclaration("1.0", "utf-8", "yes"));
 
 			XElement openBVE = new XElement("openBVE");
@@ -24,8 +27,9 @@ namespace TrainEditor2.IO.Trains.Xml
 			openBVE.Add(trainNode);
 
 			WriteHandleNode(trainNode, train.Handle);
-			WriteCabNode(trainNode, train.Cab);
 			WriteDeviceNode(trainNode, train.Device);
+
+			trainNode.Add(new XElement("InitialDriverCar", train.InitialDriverCar.ToString(culture)));
 
 			XElement carsNode = new XElement("Cars");
 			trainNode.Add(carsNode);
@@ -40,7 +44,7 @@ namespace TrainEditor2.IO.Trains.Xml
 
 			foreach (Coupler coupler in train.Couplers)
 			{
-				WriteCouplerNode(couplersNode, coupler);
+				WriteCouplerNode(fileName, couplersNode, coupler);
 			}
 
 			xml.Save(fileName);
@@ -63,23 +67,13 @@ namespace TrainEditor2.IO.Trains.Xml
 			));
 		}
 
-		private static void WriteCabNode(XElement parent, Cab cab)
-		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
-			parent.Add(new XElement("Cab",
-				new XElement("Position", $"{cab.PositionX.ToString(culture)}, {cab.PositionY.ToString(culture)}, {cab.PositionZ.ToString(culture)}"),
-				new XElement("DriverCar", cab.DriverCar.ToString(culture))
-			));
-		}
-
 		private static void WriteDeviceNode(XElement parent, Device device)
 		{
 			CultureInfo culture = CultureInfo.InvariantCulture;
 
 			parent.Add(new XElement("Device",
-				new XElement("Ats", ((int)device.Ats).ToString(culture)),
-				new XElement("Atc", ((int)device.Atc).ToString(culture)),
+				new XElement("Ats", new XElement("Type", ((int)device.Ats).ToString(culture))),
+				new XElement("Atc", new XElement("Type", ((int)device.Atc).ToString(culture))),
 				new XElement("Eb", device.Eb),
 				new XElement("ConstSpeed", device.ConstSpeed),
 				new XElement("HoldBrake", device.HoldBrake),
@@ -113,8 +107,7 @@ namespace TrainEditor2.IO.Trains.Xml
 
 			if (car.DefinedAxles)
 			{
-				carNode.Add(new XElement("FrontAxle", car.FrontAxle.ToString(culture)));
-				carNode.Add(new XElement("RearAxle", car.RearAxle.ToString(culture)));
+				carNode.Add(new XElement("Axles", $"{car.FrontAxle.ToString(culture)}, {car.RearAxle.ToString(culture)}"));
 			}
 
 			WriteBogieNode(fileName, carNode, "FrontBogie", car.FrontBogie);
@@ -142,6 +135,15 @@ namespace TrainEditor2.IO.Trains.Xml
 				new XElement("Object", Utilities.MakeRelativePath(fileName, car.Object)),
 				new XElement("LoadingSway", car.LoadingSway)
 			);
+
+			Cab cab = (car as ControlledMotorCar)?.Cab ?? (car as ControlledTrailerCar)?.Cab;
+
+			carNode.Add(new XElement("IsControlledCar", cab != null));
+
+			if (cab != null)
+			{
+				WriteCabNode(fileName, carNode, cab);
+			}
 		}
 
 		private static void WriteBogieNode(string fileName, XElement parent, string nodeName, Car.Bogie bogie)
@@ -153,8 +155,7 @@ namespace TrainEditor2.IO.Trains.Xml
 
 			if (bogie.DefinedAxles)
 			{
-				bogieNode.Add(new XElement("FrontAxle", bogie.FrontAxle.ToString(culture)));
-				bogieNode.Add(new XElement("RearAxle", bogie.RearAxle.ToString(culture)));
+				bogieNode.Add(new XElement("Axles", $"{bogie.FrontAxle.ToString(culture)}, {bogie.RearAxle.ToString(culture)}"));
 			}
 
 			bogieNode.Add(
@@ -178,13 +179,13 @@ namespace TrainEditor2.IO.Trains.Xml
 		private static void WriteDelayNode(XElement parent, Delay delay)
 		{
 			parent.Add(new XElement("Delay",
-				WriteDelayEntriesNode("DelayPower", delay.DelayPower),
-				WriteDelayEntriesNode("DelayBrake", delay.DelayBrake),
-				WriteDelayEntriesNode("DelayLocoBrake", delay.DelayLocoBrake)
+				WriteDelayEntriesNode("Power", delay.Power),
+				WriteDelayEntriesNode("Brake", delay.Brake),
+				WriteDelayEntriesNode("LocoBrake", delay.LocoBrake)
 			));
 		}
 
-		private static XElement WriteDelayEntriesNode(string nodeName, ObservableCollection<Delay.Entry> entries)
+		private static XElement WriteDelayEntriesNode(string nodeName, ICollection<Delay.Entry> entries)
 		{
 			CultureInfo culture = CultureInfo.InvariantCulture;
 
@@ -269,12 +270,74 @@ namespace TrainEditor2.IO.Trains.Xml
 			return new XElement("Vertex", $"{vertex.X.ToString(culture)}, {vertex.Y.ToString(culture)}");
 		}
 
-		private static void WriteCouplerNode(XElement parent, Coupler coupler)
+		private static void WriteCabNode(string fileName, XElement parent, Cab cab)
+		{
+			CultureInfo culture = CultureInfo.InvariantCulture;
+
+			XElement cabNode = new XElement("Cab",
+				new XElement("Position", $"{cab.PositionX.ToString(culture)}, {cab.PositionY.ToString(culture)}, {cab.PositionZ.ToString(culture)}")
+			);
+			parent.Add(cabNode);
+
+			EmbeddedCab embeddedCab = cab as EmbeddedCab;
+
+			if (embeddedCab != null)
+			{
+				PanelCfgXml.Write(fileName, cabNode, embeddedCab.Panel);
+			}
+
+			ExternalCab externalCab = cab as ExternalCab;
+
+			if (externalCab != null)
+			{
+				WriteCameraRestrictionNode(cabNode, externalCab.CameraRestriction);
+				cabNode.Add(new XElement("Panel", Utilities.MakeRelativePath(fileName, externalCab.FileName)));
+			}
+		}
+
+		private static void WriteCameraRestrictionNode(XElement parent, CameraRestriction cameraRestriction)
+		{
+			CultureInfo culture = CultureInfo.InvariantCulture;
+
+			XElement cameraRestrictionNode = new XElement("CameraRestriction");
+			parent.Add(cameraRestrictionNode);
+
+			if (cameraRestriction.DefinedForwards)
+			{
+				cameraRestrictionNode.Add(new XElement("Forwards", cameraRestriction.Forwards.ToString(culture)));
+			}
+
+			if (cameraRestriction.DefinedBackwards)
+			{
+				cameraRestrictionNode.Add(new XElement("Backwards", cameraRestriction.Backwards.ToString(culture)));
+			}
+
+			if (cameraRestriction.DefinedLeft)
+			{
+				cameraRestrictionNode.Add(new XElement("Left", cameraRestriction.Left.ToString(culture)));
+			}
+
+			if (cameraRestriction.DefinedRight)
+			{
+				cameraRestrictionNode.Add(new XElement("Right", cameraRestriction.Right.ToString(culture)));
+			}
+
+			if (cameraRestriction.DefinedUp)
+			{
+				cameraRestrictionNode.Add(new XElement("Up", cameraRestriction.Up.ToString(culture)));
+			}
+
+			if (cameraRestriction.DefinedDown)
+			{
+				cameraRestrictionNode.Add(new XElement("Down", cameraRestriction.Down.ToString(culture)));
+			}
+		}
+
+		private static void WriteCouplerNode(string fileName, XElement parent, Coupler coupler)
 		{
 			parent.Add(new XElement("Coupler",
-				new XElement("Min", coupler.Min),
-				new XElement("Max", coupler.Max),
-				new XElement("Object", coupler.Object)
+				new XElement("Distances", $"{coupler.Min}, {coupler.Max}"),
+				new XElement("Object", Utilities.MakeRelativePath(fileName, coupler.Object))
 			));
 		}
 	}

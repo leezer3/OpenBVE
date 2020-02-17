@@ -16,7 +16,7 @@ namespace TrainEditor2.Views
 			CompositeDisposable soundDisposable = new CompositeDisposable();
 			CompositeDisposable elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-			Binders.BindToTreeView(treeViewSound, x.TreeItems, x.SelectedTreeItem).AddTo(soundDisposable);
+			WinFormsBinders.BindToTreeView(treeViewSound, x.TreeItems, x.SelectedTreeItem).AddTo(soundDisposable);
 
 			x.SelectedTreeItem
 				.BindTo(
@@ -27,7 +27,7 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(soundDisposable);
 
-			Binders.BindToListView(listViewSound, x.ListColumns, x.ListItems, x.SelectedListItem).AddTo(soundDisposable);
+			WinFormsBinders.BindToListView(listViewSound, x.ListColumns, x.ListItems, x.SelectedListItem).AddTo(soundDisposable);
 
 			x.SelectedListItem
 				.BindTo(

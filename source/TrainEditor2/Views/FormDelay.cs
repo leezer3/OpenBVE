@@ -109,7 +109,7 @@ namespace TrainEditor2.Views
 
 		private void FormDelay_Load(object sender, EventArgs e)
 		{
-			Icon = FormEditor.GetIcon();
+			Icon = WinFormsUtilities.GetIcon();
 		}
 
 		private void ListViewDelay_SelectedIndexChanged(object sender, EventArgs e)

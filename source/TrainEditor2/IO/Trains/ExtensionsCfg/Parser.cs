@@ -58,7 +58,7 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 											{
 												for (int k = n; k >= train.Cars.Count; k--)
 												{
-													train.Cars.Add(new TrailerCar());
+													train.Cars.Add(new UncontrolledTrailerCar());
 													train.Couplers.Add(new Coupler());
 
 													train.ApplyPowerNotchesToCar();
@@ -120,7 +120,7 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 									{
 										for (int j = n; j >= train.Cars.Count; j--)
 										{
-											train.Cars.Add(new TrailerCar());
+											train.Cars.Add(new UncontrolledTrailerCar());
 											train.Couplers.Add(new Coupler());
 
 											train.ApplyPowerNotchesToCar();
@@ -258,7 +258,7 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 									{
 										for (int j = n; j >= train.Couplers.Count; j--)
 										{
-											train.Cars.Add(new TrailerCar());
+											train.Cars.Add(new UncontrolledTrailerCar());
 											train.Couplers.Add(new Coupler());
 
 											train.ApplyPowerNotchesToCar();
@@ -378,7 +378,7 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 									{
 										for (int j = CarIndex; j >= train.Cars.Count; j--)
 										{
-											train.Cars.Add(new TrailerCar());
+											train.Cars.Add(new UncontrolledTrailerCar());
 											train.Couplers.Add(new Coupler());
 
 											train.ApplyPowerNotchesToCar();

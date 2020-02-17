@@ -13,6 +13,8 @@ namespace TrainEditor2.Views
 		private IDisposable BindToCab(CabViewModel y)
 		{
 			CompositeDisposable cabDisposable = new CompositeDisposable();
+			CompositeDisposable panelDisposable = new CompositeDisposable().AddTo(cabDisposable);
+			CompositeDisposable cameraRestrictionDisposable = new CompositeDisposable().AddTo(cabDisposable);
 
 			y.PositionX
 				.BindTo(
@@ -74,20 +76,43 @@ namespace TrainEditor2.Views
 				.BindToErrorProvider(errorProvider, textBoxCabZ)
 				.AddTo(cabDisposable);
 
-			y.DriverCar
+			EmbeddedCabViewModel embeddedCab = y as EmbeddedCabViewModel;
+			ExternalCabViewModel externalCab = y as ExternalCabViewModel;
+
+			embeddedCab?.Panel
+				.Subscribe(z =>
+				{
+					panelDisposable.Dispose();
+					panelDisposable = new CompositeDisposable().AddTo(cabDisposable);
+
+					BindToPanel(z).AddTo(panelDisposable);
+				})
+				.AddTo(cabDisposable);
+
+			externalCab?.FileName
 				.BindTo(
-					comboBoxDriverCar,
-					z => z.SelectedIndex,
+					textBoxCabFileName,
+					z => z.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
-							h => comboBoxDriverCar.SelectedIndexChanged += h,
-							h => comboBoxDriverCar.SelectedIndexChanged -= h
+							h => textBoxCabFileName.TextChanged += h,
+							h => textBoxCabFileName.TextChanged -= h
 						)
 						.ToUnit()
 				)
+				.AddTo(cabDisposable);
+
+			externalCab?.CameraRestriction
+				.Subscribe(z =>
+				{
+					cameraRestrictionDisposable.Dispose();
+					cameraRestrictionDisposable = new CompositeDisposable().AddTo(cabDisposable);
+
+					BindToCameraRestriction(z).AddTo(cameraRestrictionDisposable);
+				})
 				.AddTo(cabDisposable);
 
 			return cabDisposable;

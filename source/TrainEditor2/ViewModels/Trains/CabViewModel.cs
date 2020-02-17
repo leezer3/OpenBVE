@@ -1,12 +1,14 @@
 ﻿using System.Globalization;
+using System.Reactive.Linq;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Trains;
+using TrainEditor2.ViewModels.Panels;
 
 namespace TrainEditor2.ViewModels.Trains
 {
-	internal class CabViewModel : BaseViewModel
+	internal abstract class CabViewModel : BaseViewModel
 	{
 		internal ReactiveProperty<string> PositionX
 		{
@@ -19,11 +21,6 @@ namespace TrainEditor2.ViewModels.Trains
 		}
 
 		internal ReactiveProperty<string> PositionZ
-		{
-			get;
-		}
-
-		internal ReactiveProperty<int> DriverCar
 		{
 			get;
 		}
@@ -85,9 +82,50 @@ namespace TrainEditor2.ViewModels.Trains
 					return message;
 				})
 				.AddTo(disposable);
+		}
+	}
 
-			DriverCar = cab
-				.ToReactivePropertyAsSynchronized(x => x.DriverCar)
+	internal class EmbeddedCabViewModel : CabViewModel
+	{
+		internal ReadOnlyReactivePropertySlim<PanelViewModel> Panel
+		{
+			get;
+		}
+
+		internal EmbeddedCabViewModel(EmbeddedCab cab) : base(cab)
+		{
+			Panel = cab
+				.ObserveProperty(x => x.Panel)
+				.Do(_ => Panel?.Value.Dispose())
+				.Select(x => new PanelViewModel(x))
+				.ToReadOnlyReactivePropertySlim()
+				.AddTo(disposable);
+		}
+	}
+
+	internal class ExternalCabViewModel : CabViewModel
+	{
+		internal ReadOnlyReactivePropertySlim<CameraRestrictionViewModel> CameraRestriction
+		{
+			get;
+		}
+
+		internal ReactiveProperty<string> FileName
+		{
+			get;
+		}
+
+		internal ExternalCabViewModel(ExternalCab cab) : base(cab)
+		{
+			CameraRestriction = cab
+				.ObserveProperty(x => x.CameraRestriction)
+				.Do(_ => CameraRestriction?.Value.Dispose())
+				.Select(x => new CameraRestrictionViewModel(x))
+				.ToReadOnlyReactivePropertySlim()
+				.AddTo(disposable);
+
+			FileName = cab
+				.ToReactivePropertyAsSynchronized(x => x.FileName)
 				.AddTo(disposable);
 		}
 	}

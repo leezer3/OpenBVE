@@ -1,91 +1,17 @@
 ﻿using System;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Others;
 using TrainEditor2.Systems;
+using TrainEditor2.ViewModels.Panels;
 using TrainEditor2.ViewModels.Trains;
 
 namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private InputEventModel.EventArgs MouseEventArgsToModel(MouseEventArgs e)
-		{
-			return new InputEventModel.EventArgs
-			{
-				LeftButton = e.Button == MouseButtons.Left ? InputEventModel.ButtonState.Pressed : InputEventModel.ButtonState.Released,
-				MiddleButton = e.Button == MouseButtons.Middle ? InputEventModel.ButtonState.Pressed : InputEventModel.ButtonState.Released,
-				RightButton = e.Button == MouseButtons.Right ? InputEventModel.ButtonState.Pressed : InputEventModel.ButtonState.Released,
-				XButton1 = e.Button == MouseButtons.XButton1 ? InputEventModel.ButtonState.Pressed : InputEventModel.ButtonState.Released,
-				XButton2 = e.Button == MouseButtons.XButton2 ? InputEventModel.ButtonState.Pressed : InputEventModel.ButtonState.Released,
-				X = e.X,
-				Y = e.Y
-			};
-		}
-
-		private Cursor CursorTypeToCursor(InputEventModel.CursorType cursorType)
-		{
-			switch (cursorType)
-			{
-				case InputEventModel.CursorType.No:
-					return Cursors.No;
-				case InputEventModel.CursorType.Arrow:
-					return Cursors.Arrow;
-				case InputEventModel.CursorType.AppStarting:
-					return Cursors.AppStarting;
-				case InputEventModel.CursorType.Cross:
-					return Cursors.Cross;
-				case InputEventModel.CursorType.Help:
-					return Cursors.Help;
-				case InputEventModel.CursorType.IBeam:
-					return Cursors.IBeam;
-				case InputEventModel.CursorType.SizeAll:
-					return Cursors.SizeAll;
-				case InputEventModel.CursorType.SizeNESW:
-					return Cursors.SizeNESW;
-				case InputEventModel.CursorType.SizeNS:
-					return Cursors.SizeNS;
-				case InputEventModel.CursorType.SizeNWSE:
-					return Cursors.SizeNWSE;
-				case InputEventModel.CursorType.SizeWE:
-					return Cursors.SizeWE;
-				case InputEventModel.CursorType.UpArrow:
-					return Cursors.UpArrow;
-				case InputEventModel.CursorType.Wait:
-					return Cursors.WaitCursor;
-				case InputEventModel.CursorType.Hand:
-					return Cursors.Hand;
-				case InputEventModel.CursorType.ScrollNS:
-					return Cursors.NoMoveVert;
-				case InputEventModel.CursorType.ScrollWE:
-					return Cursors.NoMoveHoriz;
-				case InputEventModel.CursorType.ScrollAll:
-					return Cursors.NoMove2D;
-				case InputEventModel.CursorType.ScrollN:
-					return Cursors.PanNorth;
-				case InputEventModel.CursorType.ScrollS:
-					return Cursors.PanSouth;
-				case InputEventModel.CursorType.ScrollW:
-					return Cursors.PanWest;
-				case InputEventModel.CursorType.ScrollE:
-					return Cursors.PanEast;
-				case InputEventModel.CursorType.ScrollNW:
-					return Cursors.PanNW;
-				case InputEventModel.CursorType.ScrollNE:
-					return Cursors.PanNE;
-				case InputEventModel.CursorType.ScrollSW:
-					return Cursors.PanSW;
-				case InputEventModel.CursorType.ScrollSE:
-					return Cursors.PanSE;
-				default:
-					throw new ArgumentOutOfRangeException(nameof(cursorType), cursorType, null);
-			}
-		}
-
 		private void ModifierKeysDownUp(KeyEventArgs e)
 		{
 			MotorViewModel.TrackViewModel track = (app.Train.Value.SelectedCar.Value as MotorCarViewModel)?.Motor.Value.SelectedTrack.Value;
@@ -114,50 +40,31 @@ namespace TrainEditor2.Views
 			}
 		}
 
-		internal static void OpenFileDialog(TextBox textBox)
+		private void SetSubject(Func<PanelViewModel, SubjectViewModel> selector)
 		{
-			using (OpenFileDialog dialog = new OpenFileDialog())
+			EmbeddedCabViewModel embeddedCab = null;
+			ControlledMotorCarViewModel controlledMotorCar = app.Train.Value.SelectedCar.Value as ControlledMotorCarViewModel;
+			ControlledTrailerCarViewModel controlledTrailerCar = app.Train.Value.SelectedCar.Value as ControlledTrailerCarViewModel;
+
+			if (controlledMotorCar != null)
 			{
-				dialog.Filter = @"All files (*.*)|*";
-				dialog.CheckFileExists = true;
-
-				if (dialog.ShowDialog() != DialogResult.OK)
-				{
-					return;
-				}
-
-				textBox.Text = dialog.FileName;
+				embeddedCab = controlledMotorCar.Cab.Value as EmbeddedCabViewModel;
 			}
-		}
 
-		private void OpenColorDialog(TextBox textBox)
-		{
-			using (ColorDialog dialog = new ColorDialog())
+			if (controlledTrailerCar != null)
 			{
-				Color24 nowColor;
-				Color24.TryParseHexColor(textBox.Text, out nowColor);
-				dialog.Color = nowColor;
-
-				if (dialog.ShowDialog() != DialogResult.OK)
-				{
-					return;
-				}
-
-				textBox.Text = ((Color24)dialog.Color).ToString();
+				embeddedCab = controlledTrailerCar.Cab.Value as EmbeddedCabViewModel;
 			}
-		}
 
-		internal static Icon GetIcon()
-		{
-			return new Icon(OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder(), "icon.ico"));
-		}
+			if (embeddedCab == null)
+			{
+				return;
+			}
 
-		private Bitmap GetImage(string path)
-		{
-			string folder = Program.FileSystem.GetDataFolder("TrainEditor2");
-			Bitmap image = new Bitmap(OpenBveApi.Path.CombineFile(folder, path));
-			image.MakeTransparent();
-			return image;
+			using (FormSubject form = new FormSubject(selector(embeddedCab.Panel.Value)))
+			{
+				form.ShowDialog(this);
+			}
 		}
 
 		private void ApplyLanguage()
@@ -205,7 +112,6 @@ namespace TrainEditor2.Views
 			labelCabX.Text = $@"{Utilities.GetInterfaceString("general_settings", "cab", "x")}:";
 			labelCabY.Text = $@"{Utilities.GetInterfaceString("general_settings", "cab", "y")}:";
 			labelCabZ.Text = $@"{Utilities.GetInterfaceString("general_settings", "cab", "z")}:";
-			labelDriverCar.Text = $@"{Utilities.GetInterfaceString("general_settings", "cab", "driver_car")}:";
 
 			groupBoxDevice.Text = Utilities.GetInterfaceString("general_settings", "device", "name");
 			labelAts.Text = $@"{Utilities.GetInterfaceString("general_settings", "device", "ats", "name")}:";
@@ -238,7 +144,7 @@ namespace TrainEditor2.Views
 			comboBoxDoorCloseMode.Items[1] = Utilities.GetInterfaceString("general_settings", "device", "door_mode", "automatic");
 			comboBoxDoorCloseMode.Items[2] = Utilities.GetInterfaceString("general_settings", "device", "door_mode", "manual");
 
-			tabPageCar.Text = Utilities.GetInterfaceString("car_settings", "name");
+			tabPageCar1.Text = Utilities.GetInterfaceString("car_settings", "name");
 
 			groupBoxCarGeneral.Text = Utilities.GetInterfaceString("car_settings", "general", "name");
 			labelIsMotorCar.Text = $@"{Utilities.GetInterfaceString("car_settings", "general", "is_motor_car")}:";

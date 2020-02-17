@@ -662,6 +662,8 @@ namespace TrainEditor2.ViewModels.Trains
 				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 
+			CurrentInputMode.Where(_ => SelectedTrack.Value == null).Subscribe(_ => motor.IsRefreshGlControl = true).AddTo(disposable);
+
 			SelectedSoundIndex = motor
 				.ToReactivePropertyAsSynchronized(x => x.SelectedSoundIndex)
 				.AddTo(disposable);

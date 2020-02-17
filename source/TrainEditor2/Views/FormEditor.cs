@@ -31,11 +31,7 @@ namespace TrainEditor2.Views
 
 			disposable = new CompositeDisposable();
 
-			CompositeDisposable messageDisposable = new CompositeDisposable().AddTo(disposable);
-			CompositeDisposable openFileDialogDisposable = new CompositeDisposable().AddTo(disposable);
-			CompositeDisposable saveFileDialogDisposable = new CompositeDisposable().AddTo(disposable);
 			CompositeDisposable trainDisposable = new CompositeDisposable().AddTo(disposable);
-			CompositeDisposable panelDisposable = new CompositeDisposable().AddTo(disposable);
 			CompositeDisposable soundDisposable = new CompositeDisposable().AddTo(disposable);
 
 			app = new AppViewModel().AddTo(disposable);
@@ -50,35 +46,11 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(disposable);
 
-			app.MessageBox
-				.Subscribe(x =>
-				{
-					messageDisposable.Dispose();
-					messageDisposable = new CompositeDisposable().AddTo(disposable);
+			app.MessageBox.BindToMessageBox().AddTo(disposable);
 
-					BindToMessageBox(x).AddTo(messageDisposable);
-				})
-				.AddTo(disposable);
+			app.OpenFileDialog.BindToOpenFileDialog(this).AddTo(disposable);
 
-			app.OpenFileDialog
-				.Subscribe(x =>
-				{
-					openFileDialogDisposable.Dispose();
-					openFileDialogDisposable = new CompositeDisposable().AddTo(disposable);
-
-					BindToOpenFileDialog(x).AddTo(openFileDialogDisposable);
-				})
-				.AddTo(disposable);
-
-			app.SaveFileDialog
-				.Subscribe(x =>
-				{
-					saveFileDialogDisposable.Dispose();
-					saveFileDialogDisposable = new CompositeDisposable().AddTo(disposable);
-
-					BindToSaveFileDialog(x).AddTo(saveFileDialogDisposable);
-				})
-				.AddTo(disposable);
+			app.SaveFileDialog.BindToSaveFileDialog(this).AddTo(disposable);
 
 			app.Train
 				.Subscribe(x =>
@@ -87,16 +59,6 @@ namespace TrainEditor2.Views
 					trainDisposable = new CompositeDisposable().AddTo(disposable);
 
 					BindToTrain(x).AddTo(trainDisposable);
-				})
-				.AddTo(disposable);
-
-			app.Panel
-				.Subscribe(x =>
-				{
-					panelDisposable.Dispose();
-					panelDisposable = new CompositeDisposable().AddTo(disposable);
-
-					BindToPanel(x).AddTo(panelDisposable);
 				})
 				.AddTo(disposable);
 
@@ -110,7 +72,7 @@ namespace TrainEditor2.Views
 				})
 				.AddTo(disposable);
 
-			Binders.BindToTreeView(treeViewCars, app.TreeItems, app.SelectedTreeItem).AddTo(disposable);
+			WinFormsBinders.BindToTreeView(treeViewCars, app.TreeItems, app.SelectedTreeItem).AddTo(disposable);
 
 			app.SelectedTreeItem
 				.Subscribe(x =>
@@ -122,11 +84,6 @@ namespace TrainEditor2.Views
 							tabControlEditor.TabPages.Add(tabPageTrain);
 						}
 
-						if (!tabControlEditor.TabPages.Contains(tabPagePanel))
-						{
-							tabControlEditor.TabPages.Add(tabPagePanel);
-						}
-
 						if (!tabControlEditor.TabPages.Contains(tabPageSound))
 						{
 							tabControlEditor.TabPages.Add(tabPageSound);
@@ -135,15 +92,19 @@ namespace TrainEditor2.Views
 					else
 					{
 						tabControlEditor.TabPages.Remove(tabPageTrain);
-						tabControlEditor.TabPages.Remove(tabPagePanel);
 						tabControlEditor.TabPages.Remove(tabPageSound);
 					}
 
 					if (app.TreeItems[0].Children[1].Children.Contains(x))
 					{
-						if (!tabControlEditor.TabPages.Contains(tabPageCar))
+						if (!tabControlEditor.TabPages.Contains(tabPageCar1))
 						{
-							tabControlEditor.TabPages.Add(tabPageCar);
+							tabControlEditor.TabPages.Add(tabPageCar1);
+						}
+
+						if (!tabControlEditor.TabPages.Contains(tabPageCar2))
+						{
+							tabControlEditor.TabPages.Add(tabPageCar2);
 						}
 
 						if (x?.Tag.Value is MotorCar)
@@ -163,12 +124,26 @@ namespace TrainEditor2.Views
 							tabControlEditor.TabPages.Remove(tabPageAccel);
 							tabControlEditor.TabPages.Remove(tabPageMotor);
 						}
+
+						if ((x?.Tag.Value as ControlledMotorCar)?.Cab is EmbeddedCab || (x?.Tag.Value as ControlledTrailerCar)?.Cab is EmbeddedCab)
+						{
+							if (!tabControlEditor.TabPages.Contains(tabPagePanel))
+							{
+								tabControlEditor.TabPages.Add(tabPagePanel);
+							}
+						}
+						else
+						{
+							tabControlEditor.TabPages.Remove(tabPagePanel);
+						}
 					}
 					else
 					{
-						tabControlEditor.TabPages.Remove(tabPageCar);
+						tabControlEditor.TabPages.Remove(tabPageCar1);
+						tabControlEditor.TabPages.Remove(tabPageCar2);
 						tabControlEditor.TabPages.Remove(tabPageAccel);
 						tabControlEditor.TabPages.Remove(tabPageMotor);
+						tabControlEditor.TabPages.Remove(tabPagePanel);
 					}
 
 					if (app.TreeItems[0].Children[2].Children.Contains(x))
@@ -247,7 +222,7 @@ namespace TrainEditor2.Views
 				})
 				.AddTo(disposable);
 
-			Binders.BindToListViewItemCollection(listViewStatus, app.VisibleLogMessages, listViewStatus.Items).AddTo(disposable);
+			WinFormsBinders.BindToListViewItemCollection(listViewStatus, app.VisibleLogMessages, listViewStatus.Items).AddTo(disposable);
 
 			app.CreateNewFile.BindToButton(toolStripMenuItemNew).AddTo(disposable);
 			app.OpenFile.BindToButton(toolStripMenuItemOpen).AddTo(disposable);
@@ -260,7 +235,9 @@ namespace TrainEditor2.Views
 			app.CopyCar.BindToButton(buttonCarsCopy).AddTo(disposable);
 			app.RemoveCar.BindToButton(buttonCarsRemove).AddTo(disposable);
 
-			app.ChangeCarClass.BindToCheckBox(checkBoxIsMotorCar).AddTo(disposable);
+			app.ChangeBaseCarClass.BindToCheckBox(checkBoxIsMotorCar).AddTo(disposable);
+			app.ChangeControlledCarClass.BindToCheckBox(checkBoxIsControlledCar).AddTo(disposable);
+			app.ChangeCabClass.BindToCheckBox(checkBoxIsEmbeddedCab).AddTo(disposable);
 
 			app.ChangeVisibleLogMessages.BindToButton(MessageType.Information, toolStripMenuItemInfo).AddTo(disposable);
 			app.ChangeVisibleLogMessages.BindToButton(MessageType.Warning, toolStripMenuItemWarning).AddTo(disposable);
@@ -282,7 +259,7 @@ namespace TrainEditor2.Views
 				comboBox.DrawItem += ToolStripComboBoxIndex_DrawItem;
 			}
 
-			Icon = GetIcon();
+			Icon = WinFormsUtilities.GetIcon();
 
 			toolStripMenuItemError.Image = Bitmap.FromHicon(SystemIcons.Error.Handle);
 			toolStripMenuItemWarning.Image = Bitmap.FromHicon(SystemIcons.Warning.Handle);
@@ -297,34 +274,34 @@ namespace TrainEditor2.Views
 				Bitmap.FromHicon(SystemIcons.Error.Handle)
 			});
 
-			toolStripMenuItemNew.Image = GetImage("new.png");
-			toolStripMenuItemOpen.Image = GetImage("open.png");
-			toolStripMenuItemSave.Image = GetImage("save.png");
+			toolStripMenuItemNew.Image = WinFormsUtilities.GetImage("new.png");
+			toolStripMenuItemOpen.Image = WinFormsUtilities.GetImage("open.png");
+			toolStripMenuItemSave.Image = WinFormsUtilities.GetImage("save.png");
 
-			toolStripButtonUndo.Image = GetImage("undo.png");
-			toolStripButtonRedo.Image = GetImage("redo.png");
-			toolStripButtonDelete.Image = GetImage("delete.png");
-			toolStripButtonCleanup.Image = GetImage("cleanup.png");
-			toolStripButtonSelect.Image = GetImage("select.png");
-			toolStripButtonMove.Image = GetImage("move.png");
-			toolStripButtonDot.Image = GetImage("draw.png");
-			toolStripButtonLine.Image = GetImage("ruler.png");
+			toolStripButtonUndo.Image = WinFormsUtilities.GetImage("undo.png");
+			toolStripButtonRedo.Image = WinFormsUtilities.GetImage("redo.png");
+			toolStripButtonDelete.Image = WinFormsUtilities.GetImage("delete.png");
+			toolStripButtonCleanup.Image = WinFormsUtilities.GetImage("cleanup.png");
+			toolStripButtonSelect.Image = WinFormsUtilities.GetImage("select.png");
+			toolStripButtonMove.Image = WinFormsUtilities.GetImage("move.png");
+			toolStripButtonDot.Image = WinFormsUtilities.GetImage("draw.png");
+			toolStripButtonLine.Image = WinFormsUtilities.GetImage("ruler.png");
 
-			buttonAccelZoomIn.Image = GetImage("zoomin.png");
-			buttonAccelZoomOut.Image = GetImage("zoomout.png");
-			buttonAccelReset.Image = GetImage("reset.png");
+			buttonAccelZoomIn.Image = WinFormsUtilities.GetImage("zoomin.png");
+			buttonAccelZoomOut.Image = WinFormsUtilities.GetImage("zoomout.png");
+			buttonAccelReset.Image = WinFormsUtilities.GetImage("reset.png");
 
-			buttonMotorZoomIn.Image = GetImage("zoomin.png");
-			buttonMotorZoomOut.Image = GetImage("zoomout.png");
-			buttonMotorReset.Image = GetImage("reset.png");
+			buttonMotorZoomIn.Image = WinFormsUtilities.GetImage("zoomin.png");
+			buttonMotorZoomOut.Image = WinFormsUtilities.GetImage("zoomout.png");
+			buttonMotorReset.Image = WinFormsUtilities.GetImage("reset.png");
 
-			buttonDirectDot.Image = GetImage("draw.png");
-			buttonDirectMove.Image = GetImage("move.png");
+			buttonDirectDot.Image = WinFormsUtilities.GetImage("draw.png");
+			buttonDirectMove.Image = WinFormsUtilities.GetImage("move.png");
 
-			buttonMotorSwap.Image = GetImage("change.png");
-			buttonPlay.Image = GetImage("play.png");
-			buttonPause.Image = GetImage("pause.png");
-			buttonStop.Image = GetImage("stop.png");
+			buttonMotorSwap.Image = WinFormsUtilities.GetImage("change.png");
+			buttonPlay.Image = WinFormsUtilities.GetImage("play.png");
+			buttonPause.Image = WinFormsUtilities.GetImage("pause.png");
+			buttonStop.Image = WinFormsUtilities.GetImage("stop.png");
 
 			toolStripMenuItemError.PerformClick();
 			toolStripMenuItemWarning.PerformClick();
@@ -428,17 +405,49 @@ namespace TrainEditor2.Views
 			Interface.CurrentOptions.LanguageCode = app.CurrentLanguageCode.Value;
 		}
 
-		private void ToolStripMenuItemImport_Click(object sender, EventArgs e)
+		private void ToolStripMenuItemImportTrain_Click(object sender, EventArgs e)
 		{
-			using (FormImport form = new FormImport(app))
+			using (FormImportTrain form = new FormImportTrain(app.ImportTrainFile.Value))
 			{
 				form.ShowDialog(this);
 			}
 		}
 
-		private void ToolStripMenuItemExport_Click(object sender, EventArgs e)
+		private void ToolStripMenuItemImportPanel_Click(object sender, EventArgs e)
 		{
-			using (FormExport form = new FormExport(app))
+			using (FormImportPanel form = new FormImportPanel(app.ImportPanelFile.Value))
+			{
+				form.ShowDialog(this);
+			}
+		}
+
+		private void ToolStripMenuItemImportSound_Click(object sender, EventArgs e)
+		{
+			using (FormImportSound form = new FormImportSound(app.ImportSoundFile.Value))
+			{
+				form.ShowDialog(this);
+			}
+		}
+
+		private void ToolStripMenuItemExportTrain_Click(object sender, EventArgs e)
+		{
+			using (FormExportTrain form = new FormExportTrain(app.ExportTrainFile.Value))
+			{
+				form.ShowDialog(this);
+			}
+		}
+
+		private void ToolStripMenuItemExportPanel_Click(object sender, EventArgs e)
+		{
+			using (FormExportPanel form = new FormExportPanel(app.ExportPanelFile.Value, app.Train.Value.Cars))
+			{
+				form.ShowDialog(this);
+			}
+		}
+
+		private void ToolStripMenuItemExportSound_Click(object sender, EventArgs e)
+		{
+			using (FormExportSound form = new FormExportSound(app.ExportSoundFile.Value))
 			{
 				form.ShowDialog(this);
 			}
@@ -463,7 +472,7 @@ namespace TrainEditor2.Views
 
 		private void ButtonDelayPowerSet_Click(object sender, EventArgs e)
 		{
-			using (FormDelay form = new FormDelay(app.Train.Value.SelectedCar.Value.Delay.Value.DelayPower))
+			using (FormDelay form = new FormDelay(app.Train.Value.SelectedCar.Value.Delay.Value.Power))
 			{
 				form.ShowDialog(this);
 			}
@@ -471,7 +480,7 @@ namespace TrainEditor2.Views
 
 		private void ButtonDelayBrakeSet_Click(object sender, EventArgs e)
 		{
-			using (FormDelay form = new FormDelay(app.Train.Value.SelectedCar.Value.Delay.Value.DelayBrake))
+			using (FormDelay form = new FormDelay(app.Train.Value.SelectedCar.Value.Delay.Value.Brake))
 			{
 				form.ShowDialog(this);
 			}
@@ -479,7 +488,7 @@ namespace TrainEditor2.Views
 
 		private void ButtonDelayLocoBrakeSet_Click(object sender, EventArgs e)
 		{
-			using (FormDelay form = new FormDelay(app.Train.Value.SelectedCar.Value.Delay.Value.DelayLocoBrake))
+			using (FormDelay form = new FormDelay(app.Train.Value.SelectedCar.Value.Delay.Value.LocoBrake))
 			{
 				form.ShowDialog(this);
 			}
@@ -503,7 +512,7 @@ namespace TrainEditor2.Views
 
 		private void ButtonObjectOpen_Click(object sender, EventArgs e)
 		{
-			OpenFileDialog(textBoxObject);
+			WinFormsUtilities.OpenFileDialog(textBoxObject);
 		}
 
 		private void PictureBoxAccel_MouseEnter(object sender, EventArgs e)
@@ -515,7 +524,7 @@ namespace TrainEditor2.Views
 		{
 			MotorCarViewModel car = app.Train.Value.SelectedCar.Value as MotorCarViewModel;
 
-			car?.Acceleration.Value.MouseMove.Execute(MouseEventArgsToModel(e));
+			car?.Acceleration.Value.MouseMove.Execute(WinFormsUtilities.MouseEventArgsToModel(e));
 		}
 
 		private void ToolStripComboBoxIndex_DrawItem(object sender, DrawItemEventArgs e)
@@ -600,14 +609,14 @@ namespace TrainEditor2.Views
 		{
 			MotorViewModel.TrackViewModel track = (app.Train.Value.SelectedCar.Value as MotorCarViewModel)?.Motor.Value.SelectedTrack.Value;
 
-			track?.MouseDown.Execute(MouseEventArgsToModel(e));
+			track?.MouseDown.Execute(WinFormsUtilities.MouseEventArgsToModel(e));
 		}
 
 		private void GlControlMotor_MouseMove(object sender, MouseEventArgs e)
 		{
 			MotorViewModel motor = (app.Train.Value.SelectedCar.Value as MotorCarViewModel)?.Motor.Value;
 
-			motor?.MouseMove.Execute(MouseEventArgsToModel(e));
+			motor?.MouseMove.Execute(WinFormsUtilities.MouseEventArgsToModel(e));
 		}
 
 		private void GlControlMotor_MouseUp(object sender, MouseEventArgs e)
@@ -638,142 +647,146 @@ namespace TrainEditor2.Views
 
 		private void ButtonCouplerObject_Click(object sender, EventArgs e)
 		{
-			OpenFileDialog(textBoxCouplerObject);
+			WinFormsUtilities.OpenFileDialog(textBoxCouplerObject);
 		}
 
 		private void ButtonThisDaytimeImageOpen_Click(object sender, EventArgs e)
 		{
-			OpenFileDialog(textBoxThisDaytimeImage);
+			WinFormsUtilities.OpenFileDialog(textBoxThisDaytimeImage);
 		}
 
 		private void ButtonThisNighttimeImageOpen_Click(object sender, EventArgs e)
 		{
-			OpenFileDialog(textBoxThisNighttimeImage);
+			WinFormsUtilities.OpenFileDialog(textBoxThisNighttimeImage);
 		}
 
 		private void ButtonThisTransparentColorSet_Click(object sender, EventArgs e)
 		{
-			OpenColorDialog(textBoxThisTransparentColor);
+			WinFormsUtilities.OpenColorDialog(textBoxThisTransparentColor);
 		}
 
 		private void ButtonPilotLampSubjectSet_Click(object sender, EventArgs e)
 		{
-			using (FormSubject form = new FormSubject(app.Panel.Value.SelectedPilotLamp.Value.Subject.Value))
-			{
-				form.ShowDialog(this);
-			}
+			SetSubject(x => x.SelectedPilotLamp.Value.Subject.Value);
 		}
 
 		private void ButtonPilotLampDaytimeImageOpen_Click(object sender, EventArgs e)
 		{
-			OpenFileDialog(textBoxPilotLampDaytimeImage);
+			WinFormsUtilities.OpenFileDialog(textBoxPilotLampDaytimeImage);
 		}
 
 		private void ButtonPilotLampNighttimeImageOpen_Click(object sender, EventArgs e)
 		{
-			OpenFileDialog(textBoxPilotLampNighttimeImage);
+			WinFormsUtilities.OpenFileDialog(textBoxPilotLampNighttimeImage);
 		}
 
 		private void ButtonPilotLampTransparentColorSet_Click(object sender, EventArgs e)
 		{
-			OpenColorDialog(textBoxPilotLampTransparentColor);
+			WinFormsUtilities.OpenColorDialog(textBoxPilotLampTransparentColor);
 		}
 
 		private void ButtonNeedleSubjectSet_Click(object sender, EventArgs e)
 		{
-			using (FormSubject form = new FormSubject(app.Panel.Value.SelectedNeedle.Value.Subject.Value))
-			{
-				form.ShowDialog(this);
-			}
+			SetSubject(x => x.SelectedNeedle.Value.Subject.Value);
 		}
 
 		private void ButtonNeedleDaytimeImageOpen_Click(object sender, EventArgs e)
 		{
-			OpenFileDialog(textBoxNeedleDaytimeImage);
+			WinFormsUtilities.OpenFileDialog(textBoxNeedleDaytimeImage);
 		}
 
 		private void ButtonNeedleNighttimeImageOpen_Click(object sender, EventArgs e)
 		{
-			OpenFileDialog(textBoxNeedleNighttimeImage);
+			WinFormsUtilities.OpenFileDialog(textBoxNeedleNighttimeImage);
 		}
 
 		private void ButtonNeedleColorSet_Click(object sender, EventArgs e)
 		{
-			OpenColorDialog(textBoxNeedleColor);
+			WinFormsUtilities.OpenColorDialog(textBoxNeedleColor);
 		}
 
 		private void ButtonNeedleTransparentColorSet_Click(object sender, EventArgs e)
 		{
-			OpenColorDialog(textBoxNeedleTransparentColor);
+			WinFormsUtilities.OpenColorDialog(textBoxNeedleTransparentColor);
 		}
 
 		private void ButtonDigitalNumberSubjectSet_Click(object sender, EventArgs e)
 		{
-			using (FormSubject form = new FormSubject(app.Panel.Value.SelectedDigitalNumber.Value.Subject.Value))
-			{
-				form.ShowDialog(this);
-			}
+			SetSubject(x => x.SelectedDigitalNumber.Value.Subject.Value);
 		}
 
 		private void ButtonDigitalNumberDaytimeImageOpen_Click(object sender, EventArgs e)
 		{
-			OpenFileDialog(textBoxDigitalNumberDaytimeImage);
+			WinFormsUtilities.OpenFileDialog(textBoxDigitalNumberDaytimeImage);
 		}
 
 		private void ButtonDigitalNumberNighttimeImageOpen_Click(object sender, EventArgs e)
 		{
-			OpenFileDialog(textBoxDigitalNumberNighttimeImage);
+			WinFormsUtilities.OpenFileDialog(textBoxDigitalNumberNighttimeImage);
 		}
 
 		private void ButtonDigitalNumberTransparentColorSet_Click(object sender, EventArgs e)
 		{
-			OpenColorDialog(textBoxDigitalNumberTransparentColor);
+			WinFormsUtilities.OpenColorDialog(textBoxDigitalNumberTransparentColor);
 		}
 
 		private void ButtonDigitalGaugeSubjectSet_Click(object sender, EventArgs e)
 		{
-			using (FormSubject form = new FormSubject(app.Panel.Value.SelectedDigitalGauge.Value.Subject.Value))
-			{
-				form.ShowDialog(this);
-			}
+			SetSubject(x => x.SelectedDigitalGauge.Value.Subject.Value);
 		}
 
 		private void ButtonDigitalGaugeColorSet_Click(object sender, EventArgs e)
 		{
-			OpenColorDialog(textBoxDigitalGaugeColor);
+			WinFormsUtilities.OpenColorDialog(textBoxDigitalGaugeColor);
 		}
 
 		private void ButtonLinearGaugeSubjectSet_Click(object sender, EventArgs e)
 		{
-			using (FormSubject form = new FormSubject(app.Panel.Value.SelectedLinearGauge.Value.Subject.Value))
-			{
-				form.ShowDialog(this);
-			}
+			SetSubject(x => x.SelectedLinearGauge.Value.Subject.Value);
 		}
 
 		private void ButtonLinearGaugeDaytimeImageOpen_Click(object sender, EventArgs e)
 		{
-			OpenFileDialog(textBoxLinearGaugeDaytimeImage);
+			WinFormsUtilities.OpenFileDialog(textBoxLinearGaugeDaytimeImage);
 		}
 
 		private void ButtonLinearGaugeNighttimeImageOpen_Click(object sender, EventArgs e)
 		{
-			OpenFileDialog(textBoxLinearGaugeNighttimeImage);
+			WinFormsUtilities.OpenFileDialog(textBoxLinearGaugeNighttimeImage);
 		}
 
 		private void ButtonLinearGaugeTransparentColorSet_Click(object sender, EventArgs e)
 		{
-			OpenColorDialog(textBoxLinearGaugeTransparentColor);
+			WinFormsUtilities.OpenColorDialog(textBoxLinearGaugeTransparentColor);
 		}
 
 		private void ButtonTimetableTransparentColorSet_Click(object sender, EventArgs e)
 		{
-			OpenColorDialog(textBoxTimetableTransparentColor);
+			WinFormsUtilities.OpenColorDialog(textBoxTimetableTransparentColor);
 		}
 
 		private void ButtonTouchSoundCommand_Click(object sender, EventArgs e)
 		{
-			using (FormTouch form = new FormTouch(app.Panel.Value.SelectedTouch.Value))
+			EmbeddedCabViewModel embeddedCab = null;
+			ControlledMotorCarViewModel controlledMotorCar = app.Train.Value.SelectedCar.Value as ControlledMotorCarViewModel;
+			ControlledTrailerCarViewModel controlledTrailerCar = app.Train.Value.SelectedCar.Value as ControlledTrailerCarViewModel;
+
+			if (controlledMotorCar != null)
+			{
+				embeddedCab = controlledMotorCar.Cab.Value as EmbeddedCabViewModel;
+			}
+
+			if (controlledTrailerCar != null)
+			{
+				embeddedCab = controlledTrailerCar.Cab.Value as EmbeddedCabViewModel;
+			}
+
+			if (embeddedCab == null)
+			{
+				return;
+			}
+
+			using (FormTouch form = new FormTouch(embeddedCab.Panel.Value.SelectedTouch.Value))
 			{
 				form.ShowDialog(this);
 			}
@@ -781,7 +794,7 @@ namespace TrainEditor2.Views
 
 		private void ButtonSoundFileNameOpen_Click(object sender, EventArgs e)
 		{
-			OpenFileDialog(textBoxSoundFileName);
+			WinFormsUtilities.OpenFileDialog(textBoxSoundFileName);
 		}
 	}
 }

@@ -19,7 +19,7 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
-		internal ReadOnlyReactivePropertySlim<CabViewModel> Cab
+		internal ReactiveProperty<int> InitialDriverCar
 		{
 			get;
 		}
@@ -29,12 +29,12 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
-		internal ReadOnlyReactivePropertySlim<CarViewModel> SelectedCar
+		internal ReadOnlyReactiveCollection<CouplerViewModel> Couplers
 		{
 			get;
 		}
 
-		internal ReadOnlyReactiveCollection<CouplerViewModel> Couplers
+		internal ReadOnlyReactivePropertySlim<CarViewModel> SelectedCar
 		{
 			get;
 		}
@@ -60,29 +60,45 @@ namespace TrainEditor2.ViewModels.Trains
 				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 
-			Cab = train
-				.ObserveProperty(x => x.Cab)
-				.Do(_ => Cab?.Value.Dispose())
-				.Select(x => new CabViewModel(x))
-				.ToReadOnlyReactivePropertySlim()
+			InitialDriverCar = train
+				.ToReactivePropertyAsSynchronized(
+					x => x.InitialDriverCar,
+					ignoreValidationErrorValue: true
+				)
 				.AddTo(disposable);
 
 			Cars = train.Cars
 				.ToReadOnlyReactiveCollection(x =>
 				{
-					MotorCar motorCar = x as MotorCar;
-					TrailerCar trailerCar = x as TrailerCar;
+					CarViewModel viewModel;
 
-					CarViewModel viewModel = null;
+					MotorCar motorCar = x as MotorCar;
 
 					if (motorCar != null)
 					{
-						viewModel = new MotorCarViewModel(motorCar, train);
-					}
+						ControlledMotorCar controlledMotorCar = motorCar as ControlledMotorCar;
 
-					if (trailerCar != null)
+						if (controlledMotorCar != null)
+						{
+							viewModel = new ControlledMotorCarViewModel(controlledMotorCar, train);
+						}
+						else
+						{
+							viewModel = new UncontrolledMotorCarViewModel(motorCar, train);
+						}
+					}
+					else
 					{
-						viewModel = new TrailerCarViewModel(trailerCar);
+						ControlledTrailerCar controlledTrailerCar = x as ControlledTrailerCar;
+
+						if (controlledTrailerCar != null)
+						{
+							viewModel = new ControlledTrailerCarViewModel(controlledTrailerCar);
+						}
+						else
+						{
+							viewModel = new UncontrolledTrailerCarViewModel(x);
+						}
 					}
 
 					return viewModel;
@@ -95,16 +111,18 @@ namespace TrainEditor2.ViewModels.Trains
 
 			SelectedCar = app
 				.ObserveProperty(x => x.SelectedTreeItem)
-				.Where(x => x != null)
-				.Select(x => Cars.FirstOrDefault(y => y.Model == x.Tag))
+				.Select(x => Cars.FirstOrDefault(y => y.Model == x?.Tag))
 				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 
 			SelectedCoupler = app
 				.ObserveProperty(x => x.SelectedTreeItem)
-				.Where(x => x != null)
-				.Select(x => Couplers.FirstOrDefault(y => y.Model == x.Tag))
+				.Select(x => Couplers.FirstOrDefault(y => y.Model == x?.Tag))
 				.ToReadOnlyReactivePropertySlim()
+				.AddTo(disposable);
+
+			InitialDriverCar
+				.SetValidateNotifyError(x => x < 0 || x >= Cars.Count || Cars[x] is UncontrolledMotorCarViewModel || Cars[x] is UncontrolledTrailerCarViewModel ? @"The specified car does not have a cab." : null)
 				.AddTo(disposable);
 		}
 	}

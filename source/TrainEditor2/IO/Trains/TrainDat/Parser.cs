@@ -89,6 +89,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 			Brake brake = new Brake();
 			Pressure pressure = new Pressure();
 			Motor motor = new Motor();
+			Cab cab = new EmbeddedCab();
 
 			double motorCarMass = 40.0;
 			int numberOfMotorCars = 1;
@@ -276,16 +277,16 @@ namespace TrainEditor2.IO.Trains.TrainDat
 					case "#delay":
 						i++;
 
-						double[] delayPowerUp = delay.DelayPower.Select(x => x.Up).ToArray();
-						double[] delayPowerDown = delay.DelayPower.Select(x => x.Down).ToArray();
-						double[] delayBrakeUp = delay.DelayBrake.Select(x => x.Up).ToArray();
-						double[] delayBrakeDown = delay.DelayBrake.Select(x => x.Down).ToArray();
-						double[] delayLocoBrakeUp = delay.DelayLocoBrake.Select(x => x.Up).ToArray();
-						double[] delayLocoBrakeDown = delay.DelayLocoBrake.Select(x => x.Down).ToArray();
+						double[] delayPowerUp = delay.Power.Select(x => x.Up).ToArray();
+						double[] delayPowerDown = delay.Power.Select(x => x.Down).ToArray();
+						double[] delayBrakeUp = delay.Brake.Select(x => x.Up).ToArray();
+						double[] delayBrakeDown = delay.Brake.Select(x => x.Down).ToArray();
+						double[] delayLocoBrakeUp = delay.LocoBrake.Select(x => x.Up).ToArray();
+						double[] delayLocoBrakeDown = delay.LocoBrake.Select(x => x.Down).ToArray();
 
-						delay.DelayPower.Clear();
-						delay.DelayBrake.Clear();
-						delay.DelayLocoBrake.Clear();
+						delay.Power.Clear();
+						delay.Brake.Clear();
+						delay.LocoBrake.Clear();
 
 						while (i < lines.Length && !lines[i].StartsWith("#", StringComparison.InvariantCultureIgnoreCase))
 						{
@@ -329,7 +330,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 								entry.Down = delayPowerDown[j];
 							}
 
-							delay.DelayPower.Add(entry);
+							delay.Power.Add(entry);
 						}
 
 						for (int j = 0; j < Math.Max(delayBrakeUp.Length, delayBrakeDown.Length); j++)
@@ -346,7 +347,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 								entry.Down = delayBrakeDown[j];
 							}
 
-							delay.DelayBrake.Add(entry);
+							delay.Brake.Add(entry);
 						}
 
 						for (int j = 0; j < Math.Max(delayLocoBrakeUp.Length, delayLocoBrakeDown.Length); j++)
@@ -363,7 +364,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 								entry.Down = delayLocoBrakeDown[j];
 							}
 
-							delay.DelayLocoBrake.Add(entry);
+							delay.LocoBrake.Add(entry);
 						}
 
 						i--;
@@ -633,16 +634,16 @@ namespace TrainEditor2.IO.Trains.TrainDat
 								switch (n)
 								{
 									case 0:
-										train.Cab.PositionX = a;
+										cab.PositionX = a;
 										break;
 									case 1:
-										train.Cab.PositionY = a;
+										cab.PositionY = a;
 										break;
 									case 2:
-										train.Cab.PositionZ = a;
+										cab.PositionZ = a;
 										break;
 									case 3:
-										train.Cab.DriverCar = (int)Math.Round(a);
+										train.InitialDriverCar = (int)Math.Round(a);
 										break;
 								}
 							}
@@ -1015,7 +1016,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 
 			foreach (bool isMotorCar in isMotorCars)
 			{
-				Car car = isMotorCar ? (Car)new MotorCar() : new TrailerCar();
+				Car car = isMotorCar ? (Car)new UncontrolledMotorCar() : new UncontrolledTrailerCar();
 
 				car.Mass = isMotorCar ? motorCarMass : trailerCarMass;
 				car.Length = lengthOfACar;
@@ -1040,6 +1041,19 @@ namespace TrainEditor2.IO.Trains.TrainDat
 
 				train.Cars.Add(car);
 			}
+
+			if (isMotorCars[train.InitialDriverCar])
+			{
+				train.Cars[train.InitialDriverCar] = new ControlledMotorCar((MotorCar)train.Cars[train.InitialDriverCar]) { Cab = cab };
+			}
+			else
+			{
+				train.Cars[train.InitialDriverCar] = new ControlledTrailerCar(train.Cars[train.InitialDriverCar]) { Cab = cab };
+			}
+
+			train.ApplyPowerNotchesToCar();
+			train.ApplyBrakeNotchesToCar();
+			train.ApplyLocoBrakeNotchesToCar();
 
 			for (int i = 0; i < numberOfCars - 1; i++)
 			{

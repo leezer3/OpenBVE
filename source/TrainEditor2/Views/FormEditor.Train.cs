@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Reactive.Bindings;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
+using TrainEditor2.Extensions;
 using TrainEditor2.ViewModels.Trains;
 
 namespace TrainEditor2.Views
@@ -16,7 +18,6 @@ namespace TrainEditor2.Views
 
 			CompositeDisposable handleDisposable = new CompositeDisposable().AddTo(trainDisposable);
 			CompositeDisposable deviceDisposable = new CompositeDisposable().AddTo(trainDisposable);
-			CompositeDisposable cabDisposable = new CompositeDisposable().AddTo(trainDisposable);
 			CompositeDisposable carDisposable = new CompositeDisposable().AddTo(trainDisposable);
 			CompositeDisposable couplerDisposable = new CompositeDisposable().AddTo(trainDisposable);
 
@@ -25,18 +26,18 @@ namespace TrainEditor2.Views
 				.ToReadOnlyReactivePropertySlim()
 				.Subscribe(_ =>
 				{
-					int index = comboBoxDriverCar.SelectedIndex;
+					int index = comboBoxInitialDriverCar.SelectedIndex;
 
-					comboBoxDriverCar.Items.Clear();
-					comboBoxDriverCar.Items.AddRange(Enumerable.Range(0, x.Cars.Count).OfType<object>().ToArray());
+					comboBoxInitialDriverCar.Items.Clear();
+					comboBoxInitialDriverCar.Items.AddRange(Enumerable.Range(0, x.Cars.Count).OfType<object>().ToArray());
 
-					if (index < comboBoxDriverCar.Items.Count)
+					if (index < comboBoxInitialDriverCar.Items.Count)
 					{
-						comboBoxDriverCar.SelectedIndex = index;
+						comboBoxInitialDriverCar.SelectedIndex = index;
 					}
 					else
 					{
-						comboBoxDriverCar.SelectedIndex = comboBoxDriverCar.Items.Count - 1;
+						comboBoxInitialDriverCar.SelectedIndex = comboBoxInitialDriverCar.Items.Count - 1;
 					}
 				})
 				.AddTo(trainDisposable);
@@ -61,14 +62,24 @@ namespace TrainEditor2.Views
 				})
 				.AddTo(trainDisposable);
 
-			x.Cab
-				.Subscribe(y =>
-				{
-					cabDisposable.Dispose();
-					cabDisposable = new CompositeDisposable().AddTo(trainDisposable);
+			x.InitialDriverCar
+				.BindTo(
+					comboBoxInitialDriverCar,
+					z => z.SelectedIndex,
+					BindingMode.TwoWay,
+					null,
+					null,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxInitialDriverCar.SelectedIndexChanged += h,
+							h => comboBoxInitialDriverCar.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(trainDisposable);
 
-					BindToCab(y).AddTo(cabDisposable);
-				})
+			x.InitialDriverCar
+				.BindToErrorProvider(errorProvider, comboBoxInitialDriverCar)
 				.AddTo(trainDisposable);
 
 			x.SelectedCar
@@ -89,6 +100,22 @@ namespace TrainEditor2.Views
 					checkBoxIsMotorCar,
 					y => y.Checked,
 					y => y is MotorCarViewModel
+				)
+				.AddTo(trainDisposable);
+
+			x.SelectedCar
+				.BindTo(
+					checkBoxIsControlledCar,
+					y => y.Checked,
+					y => y is ControlledMotorCarViewModel || y is ControlledTrailerCarViewModel
+				)
+				.AddTo(trainDisposable);
+
+			x.SelectedCar
+				.BindTo(
+					groupBoxCab,
+					y => y.Enabled,
+					y => y is ControlledMotorCarViewModel || y is ControlledTrailerCarViewModel
 				)
 				.AddTo(trainDisposable);
 

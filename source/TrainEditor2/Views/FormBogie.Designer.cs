@@ -194,7 +194,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(208, 221);
+			this.ClientSize = new System.Drawing.Size(209, 225);
 			this.Controls.Add(this.buttonOK);
 			this.Controls.Add(this.checkBoxReversed);
 			this.Controls.Add(this.checkBoxDefinedAxles);

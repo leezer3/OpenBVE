@@ -1,17 +1,17 @@
 ﻿using System;
 using Prism.Mvvm;
+using TrainEditor2.Models.Panels;
 
 namespace TrainEditor2.Models.Trains
 {
 	/// <summary>
 	/// The Cab section of the train.dat. All members are stored in the unit as specified by the train.dat documentation.
 	/// </summary>
-	internal class Cab : BindableBase, ICloneable
+	internal abstract class Cab : BindableBase, ICloneable
 	{
 		private double positionX;
 		private double positionY;
 		private double positionZ;
-		private int driverCar;
 
 		internal double PositionX
 		{
@@ -49,27 +49,101 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal int DriverCar
+		protected Cab()
+		{
+			PositionX = PositionY = PositionZ = 0.0;
+		}
+
+		public virtual object Clone()
+		{
+			return MemberwiseClone();
+		}
+	}
+
+	internal class EmbeddedCab : Cab
+	{
+		private Panel panel;
+
+		internal Panel Panel
 		{
 			get
 			{
-				return driverCar;
+				return panel;
 			}
 			set
 			{
-				SetProperty(ref driverCar, value);
+				SetProperty(ref panel, value);
 			}
 		}
 
-		internal Cab()
+		internal EmbeddedCab()
 		{
-			PositionX = PositionY = PositionZ = 0.0;
-			DriverCar = 0;
+			Panel = new Panel();
 		}
 
-		public object Clone()
+		internal EmbeddedCab(Cab cab)
 		{
-			return MemberwiseClone();
+			PositionX = cab.PositionX;
+			PositionY = cab.PositionY;
+			PositionZ = cab.PositionZ;
+			Panel = new Panel();
+		}
+
+		public override object Clone()
+		{
+			EmbeddedCab cab = (EmbeddedCab)base.Clone();
+			cab.Panel = (Panel)Panel.Clone();
+			return cab;
+		}
+	}
+
+	internal class ExternalCab : Cab
+	{
+		private CameraRestriction cameraRestriction;
+		private string fileName;
+
+		internal CameraRestriction CameraRestriction
+		{
+			get
+			{
+				return cameraRestriction;
+			}
+			set
+			{
+				SetProperty(ref cameraRestriction, value);
+			}
+		}
+
+		internal string FileName
+		{
+			get
+			{
+				return fileName;
+			}
+			set
+			{
+				SetProperty(ref fileName, value);
+			}
+		}
+
+		internal ExternalCab()
+		{
+			CameraRestriction = new CameraRestriction();
+		}
+
+		internal ExternalCab(Cab cab)
+		{
+			PositionX = cab.PositionX;
+			PositionY = cab.PositionY;
+			PositionZ = cab.PositionZ;
+			CameraRestriction = new CameraRestriction();
+		}
+
+		public override object Clone()
+		{
+			ExternalCab cab = (ExternalCab)base.Clone();
+			cab.CameraRestriction = (CameraRestriction)CameraRestriction.Clone();
+			return cab;
 		}
 	}
 }

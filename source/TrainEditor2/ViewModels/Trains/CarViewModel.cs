@@ -603,7 +603,7 @@ namespace TrainEditor2.ViewModels.Trains
 		}
 	}
 
-	internal class MotorCarViewModel : CarViewModel
+	internal abstract class MotorCarViewModel : CarViewModel
 	{
 		internal ReadOnlyReactivePropertySlim<AccelerationViewModel> Acceleration
 		{
@@ -633,9 +633,95 @@ namespace TrainEditor2.ViewModels.Trains
 		}
 	}
 
-	internal class TrailerCarViewModel : CarViewModel
+	internal abstract class TrailerCarViewModel : CarViewModel
 	{
-		internal TrailerCarViewModel(TrailerCar car) : base(car)
+		internal TrailerCarViewModel(Car car) : base(car)
+		{
+		}
+	}
+
+	internal class ControlledMotorCarViewModel : MotorCarViewModel
+	{
+		internal ReadOnlyReactivePropertySlim<CabViewModel> Cab
+		{
+			get;
+		}
+
+		internal ControlledMotorCarViewModel(ControlledMotorCar car, Train train) : base(car, train)
+		{
+			Cab = car
+				.ObserveProperty(x => x.Cab)
+				.Do(_ => Cab?.Value.Dispose())
+				.Select(x =>
+				{
+					CabViewModel viewModel = null;
+
+					EmbeddedCab embeddedCab = x as EmbeddedCab;
+					ExternalCab externalCab = x as ExternalCab;
+
+					if (embeddedCab != null)
+					{
+						viewModel = new EmbeddedCabViewModel(embeddedCab);
+					}
+
+					if (externalCab != null)
+					{
+						viewModel = new ExternalCabViewModel(externalCab);
+					}
+
+					return viewModel;
+				})
+				.ToReadOnlyReactivePropertySlim()
+				.AddTo(disposable);
+		}
+	}
+
+	internal class UncontrolledMotorCarViewModel : MotorCarViewModel
+	{
+		internal UncontrolledMotorCarViewModel(MotorCar car, Train train) : base(car, train)
+		{
+		}
+	}
+
+	internal class ControlledTrailerCarViewModel : TrailerCarViewModel
+	{
+		internal ReadOnlyReactivePropertySlim<CabViewModel> Cab
+		{
+			get;
+		}
+
+		internal ControlledTrailerCarViewModel(ControlledTrailerCar car) : base(car)
+		{
+			Cab = car
+				.ObserveProperty(x => x.Cab)
+				.Do(_ => Cab?.Value.Dispose())
+				.Select(x =>
+				{
+					CabViewModel viewModel = null;
+
+					EmbeddedCab embeddedCab = x as EmbeddedCab;
+					ExternalCab externalCab = x as ExternalCab;
+
+					if (embeddedCab != null)
+					{
+						viewModel = new EmbeddedCabViewModel(embeddedCab);
+					}
+
+					if (externalCab != null)
+					{
+						viewModel = new ExternalCabViewModel(externalCab);
+					}
+
+					return viewModel;
+				})
+				.ToReadOnlyReactivePropertySlim()
+				.AddTo(disposable);
+		}
+	}
+
+	internal class UncontrolledTrailerCarViewModel : TrailerCarViewModel
+	{
+		internal UncontrolledTrailerCarViewModel(Car car) : base(car)
 		{
 		}
 	}

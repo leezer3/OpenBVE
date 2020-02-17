@@ -241,7 +241,7 @@ namespace TrainEditor2.Views
 			this.panelTouchNavi.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.panelTouchNavi.Location = new System.Drawing.Point(0, 408);
 			this.panelTouchNavi.Name = "panelTouchNavi";
-			this.panelTouchNavi.Size = new System.Drawing.Size(712, 42);
+			this.panelTouchNavi.Size = new System.Drawing.Size(712, 40);
 			this.panelTouchNavi.TabIndex = 2;
 			// 
 			// buttonOK
@@ -259,7 +259,7 @@ namespace TrainEditor2.Views
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(712, 450);
+			this.ClientSize = new System.Drawing.Size(712, 448);
 			this.Controls.Add(this.splitContainerTouch);
 			this.Controls.Add(this.panelTouch);
 			this.Controls.Add(this.panelTouchNavi);

@@ -469,7 +469,7 @@ namespace TrainEditor2.Views
 			this.labelAccelE = new System.Windows.Forms.Label();
 			this.groupBoxNotch = new System.Windows.Forms.GroupBox();
 			this.comboBoxNotch = new System.Windows.Forms.ComboBox();
-			this.tabPageCar = new System.Windows.Forms.TabPage();
+			this.tabPageCar1 = new System.Windows.Forms.TabPage();
 			this.groupBoxPressure = new System.Windows.Forms.GroupBox();
 			this.labelBrakePipeNormalPressureUnit = new System.Windows.Forms.Label();
 			this.textBoxBrakePipeNormalPressure = new System.Windows.Forms.TextBox();
@@ -609,14 +609,12 @@ namespace TrainEditor2.Views
 			this.labelAtc = new System.Windows.Forms.Label();
 			this.labelAts = new System.Windows.Forms.Label();
 			this.groupBoxCab = new System.Windows.Forms.GroupBox();
-			this.comboBoxDriverCar = new System.Windows.Forms.ComboBox();
 			this.labelCabZUnit = new System.Windows.Forms.Label();
 			this.textBoxCabZ = new System.Windows.Forms.TextBox();
 			this.labelCabYUnit = new System.Windows.Forms.Label();
 			this.textBoxCabY = new System.Windows.Forms.TextBox();
 			this.labelCabXUnit = new System.Windows.Forms.Label();
 			this.textBoxCabX = new System.Windows.Forms.TextBox();
-			this.labelDriverCar = new System.Windows.Forms.Label();
 			this.labelCabZ = new System.Windows.Forms.Label();
 			this.labelCabY = new System.Windows.Forms.Label();
 			this.labelCabX = new System.Windows.Forms.Label();
@@ -640,6 +638,55 @@ namespace TrainEditor2.Views
 			this.comboBoxHandleType = new System.Windows.Forms.ComboBox();
 			this.labelHandleType = new System.Windows.Forms.Label();
 			this.tabControlEditor = new System.Windows.Forms.TabControl();
+			this.toolStripMenuItemImportTrain = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItemImportPanel = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItemImportSound = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItemExportTrain = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItemExportPanel = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItemExportSound = new System.Windows.Forms.ToolStripMenuItem();
+			this.tabPageCar2 = new System.Windows.Forms.TabPage();
+			this.groupBoxTrainGeneral = new System.Windows.Forms.GroupBox();
+			this.comboBoxInitialDriverCar = new System.Windows.Forms.ComboBox();
+			this.labelInitialDriverCar = new System.Windows.Forms.Label();
+			this.checkBoxIsControlledCar = new System.Windows.Forms.CheckBox();
+			this.labelIsControlledCar = new System.Windows.Forms.Label();
+			this.labelIsEmbeddedCab = new System.Windows.Forms.Label();
+			this.checkBoxIsEmbeddedCab = new System.Windows.Forms.CheckBox();
+			this.groupBoxExternalCab = new System.Windows.Forms.GroupBox();
+			this.textBoxCabFileName = new System.Windows.Forms.TextBox();
+			this.labelCabFileName = new System.Windows.Forms.Label();
+			this.groupBoxCameraRestriction = new System.Windows.Forms.GroupBox();
+			this.buttonCabFileNameOpen = new System.Windows.Forms.Button();
+			this.labelCameraRestrictionForwardsUnit = new System.Windows.Forms.Label();
+			this.textBoxCameraRestrictionForwards = new System.Windows.Forms.TextBox();
+			this.labelCameraRestrictionForwards = new System.Windows.Forms.Label();
+			this.labelCameraRestrictionDefinedForwards = new System.Windows.Forms.Label();
+			this.checkBoxCameraRestrictionDefinedForwards = new System.Windows.Forms.CheckBox();
+			this.checkBoxCameraRestrictionDefinedBackwards = new System.Windows.Forms.CheckBox();
+			this.labelCameraRestrictionDefinedBackwards = new System.Windows.Forms.Label();
+			this.labelCameraRestrictionBackwardsUnit = new System.Windows.Forms.Label();
+			this.textBoxCameraRestrictionBackwards = new System.Windows.Forms.TextBox();
+			this.labelCameraRestrictionBackwards = new System.Windows.Forms.Label();
+			this.checkBoxCameraRestrictionDefinedLeft = new System.Windows.Forms.CheckBox();
+			this.labelCameraRestrictionDefinedLeft = new System.Windows.Forms.Label();
+			this.labelCameraRestrictionLeftUnit = new System.Windows.Forms.Label();
+			this.textBoxCameraRestrictionLeft = new System.Windows.Forms.TextBox();
+			this.labelCameraRestrictionLeft = new System.Windows.Forms.Label();
+			this.checkBoxCameraRestrictionDefinedRight = new System.Windows.Forms.CheckBox();
+			this.labelCameraRestrictionDefinedRight = new System.Windows.Forms.Label();
+			this.labelCameraRestrictionRightUnit = new System.Windows.Forms.Label();
+			this.textBoxCameraRestrictionRight = new System.Windows.Forms.TextBox();
+			this.labelCameraRestrictionRight = new System.Windows.Forms.Label();
+			this.checkBoxCameraRestrictionDefinedUp = new System.Windows.Forms.CheckBox();
+			this.labelCameraRestrictionDefinedUp = new System.Windows.Forms.Label();
+			this.labelCameraRestrictionUpUnit = new System.Windows.Forms.Label();
+			this.textBoxCameraRestrictionUp = new System.Windows.Forms.TextBox();
+			this.labelCameraRestrictionUp = new System.Windows.Forms.Label();
+			this.checkBoxCameraRestrictionDefinedDown = new System.Windows.Forms.CheckBox();
+			this.labelCameraRestrictionDefinedDown = new System.Windows.Forms.Label();
+			this.labelCameraRestrictionDownUnit = new System.Windows.Forms.Label();
+			this.textBoxCameraRestrictionDown = new System.Windows.Forms.TextBox();
+			this.labelCameraRestrictionDown = new System.Windows.Forms.Label();
 			this.panelCars.SuspendLayout();
 			this.panelCarsNavi.SuspendLayout();
 			this.menuStripMenu.SuspendLayout();
@@ -730,7 +777,7 @@ namespace TrainEditor2.Views
 			this.groupBoxPreview.SuspendLayout();
 			this.groupBoxParameter.SuspendLayout();
 			this.groupBoxNotch.SuspendLayout();
-			this.tabPageCar.SuspendLayout();
+			this.tabPageCar1.SuspendLayout();
 			this.groupBoxPressure.SuspendLayout();
 			this.groupBoxBrake.SuspendLayout();
 			this.groupBoxMove.SuspendLayout();
@@ -749,6 +796,10 @@ namespace TrainEditor2.Views
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBrakeNotches)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownPowerNotches)).BeginInit();
 			this.tabControlEditor.SuspendLayout();
+			this.tabPageCar2.SuspendLayout();
+			this.groupBoxTrainGeneral.SuspendLayout();
+			this.groupBoxExternalCab.SuspendLayout();
+			this.groupBoxCameraRestriction.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// panelCars
@@ -898,17 +949,23 @@ namespace TrainEditor2.Views
 			// 
 			// toolStripMenuItemImport
 			// 
+			this.toolStripMenuItemImport.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemImportTrain,
+            this.toolStripMenuItemImportPanel,
+            this.toolStripMenuItemImportSound});
 			this.toolStripMenuItemImport.Name = "toolStripMenuItemImport";
 			this.toolStripMenuItemImport.Size = new System.Drawing.Size(200, 22);
-			this.toolStripMenuItemImport.Text = "Import...";
-			this.toolStripMenuItemImport.Click += new System.EventHandler(this.ToolStripMenuItemImport_Click);
+			this.toolStripMenuItemImport.Text = "Import";
 			// 
 			// toolStripMenuItemExport
 			// 
+			this.toolStripMenuItemExport.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemExportTrain,
+            this.toolStripMenuItemExportPanel,
+            this.toolStripMenuItemExportSound});
 			this.toolStripMenuItemExport.Name = "toolStripMenuItemExport";
 			this.toolStripMenuItemExport.Size = new System.Drawing.Size(200, 22);
-			this.toolStripMenuItemExport.Text = "Export...";
-			this.toolStripMenuItemExport.Click += new System.EventHandler(this.ToolStripMenuItemExport_Click);
+			this.toolStripMenuItemExport.Text = "Export";
 			// 
 			// toolStripSeparatorExport
 			// 
@@ -965,7 +1022,7 @@ namespace TrainEditor2.Views
 			this.listViewStatus.Location = new System.Drawing.Point(0, 24);
 			this.listViewStatus.MultiSelect = false;
 			this.listViewStatus.Name = "listViewStatus";
-			this.listViewStatus.Size = new System.Drawing.Size(792, 608);
+			this.listViewStatus.Size = new System.Drawing.Size(792, 606);
 			this.listViewStatus.TabIndex = 0;
 			this.listViewStatus.UseCompatibleStateImageBehavior = false;
 			this.listViewStatus.View = System.Windows.Forms.View.Details;
@@ -982,9 +1039,9 @@ namespace TrainEditor2.Views
 			// 
 			this.panelStatusNavi.Controls.Add(this.buttonOutputLogs);
 			this.panelStatusNavi.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.panelStatusNavi.Location = new System.Drawing.Point(0, 632);
+			this.panelStatusNavi.Location = new System.Drawing.Point(0, 630);
 			this.panelStatusNavi.Name = "panelStatusNavi";
-			this.panelStatusNavi.Size = new System.Drawing.Size(792, 38);
+			this.panelStatusNavi.Size = new System.Drawing.Size(792, 40);
 			this.panelStatusNavi.TabIndex = 4;
 			// 
 			// buttonOutputLogs
@@ -4901,20 +4958,19 @@ namespace TrainEditor2.Views
 			this.comboBoxNotch.Size = new System.Drawing.Size(72, 20);
 			this.comboBoxNotch.TabIndex = 0;
 			// 
-			// tabPageCar
+			// tabPageCar1
 			// 
-			this.tabPageCar.Controls.Add(this.groupBoxPressure);
-			this.tabPageCar.Controls.Add(this.groupBoxBrake);
-			this.tabPageCar.Controls.Add(this.groupBoxMove);
-			this.tabPageCar.Controls.Add(this.groupBoxDelay);
-			this.tabPageCar.Controls.Add(this.groupBoxPerformance);
-			this.tabPageCar.Controls.Add(this.groupBoxCarGeneral);
-			this.tabPageCar.Location = new System.Drawing.Point(4, 22);
-			this.tabPageCar.Name = "tabPageCar";
-			this.tabPageCar.Size = new System.Drawing.Size(792, 670);
-			this.tabPageCar.TabIndex = 4;
-			this.tabPageCar.Text = "Car settings";
-			this.tabPageCar.UseVisualStyleBackColor = true;
+			this.tabPageCar1.Controls.Add(this.groupBoxPressure);
+			this.tabPageCar1.Controls.Add(this.groupBoxBrake);
+			this.tabPageCar1.Controls.Add(this.groupBoxMove);
+			this.tabPageCar1.Controls.Add(this.groupBoxPerformance);
+			this.tabPageCar1.Controls.Add(this.groupBoxCarGeneral);
+			this.tabPageCar1.Location = new System.Drawing.Point(4, 22);
+			this.tabPageCar1.Name = "tabPageCar1";
+			this.tabPageCar1.Size = new System.Drawing.Size(792, 670);
+			this.tabPageCar1.TabIndex = 4;
+			this.tabPageCar1.Text = "Car settings (1)";
+			this.tabPageCar1.UseVisualStyleBackColor = true;
 			// 
 			// groupBoxPressure
 			// 
@@ -5359,16 +5415,16 @@ namespace TrainEditor2.Views
 			this.groupBoxDelay.Controls.Add(this.labelDelayLocoBrake);
 			this.groupBoxDelay.Controls.Add(this.labelDelayBrake);
 			this.groupBoxDelay.Controls.Add(this.labelDelayPower);
-			this.groupBoxDelay.Location = new System.Drawing.Point(8, 568);
+			this.groupBoxDelay.Location = new System.Drawing.Point(280, 8);
 			this.groupBoxDelay.Name = "groupBoxDelay";
-			this.groupBoxDelay.Size = new System.Drawing.Size(272, 96);
+			this.groupBoxDelay.Size = new System.Drawing.Size(152, 96);
 			this.groupBoxDelay.TabIndex = 2;
 			this.groupBoxDelay.TabStop = false;
 			this.groupBoxDelay.Text = "Delay";
 			// 
 			// buttonDelayLocoBrakeSet
 			// 
-			this.buttonDelayLocoBrakeSet.Location = new System.Drawing.Point(160, 64);
+			this.buttonDelayLocoBrakeSet.Location = new System.Drawing.Point(96, 64);
 			this.buttonDelayLocoBrakeSet.Name = "buttonDelayLocoBrakeSet";
 			this.buttonDelayLocoBrakeSet.Size = new System.Drawing.Size(48, 19);
 			this.buttonDelayLocoBrakeSet.TabIndex = 37;
@@ -5378,7 +5434,7 @@ namespace TrainEditor2.Views
 			// 
 			// buttonDelayBrakeSet
 			// 
-			this.buttonDelayBrakeSet.Location = new System.Drawing.Point(160, 40);
+			this.buttonDelayBrakeSet.Location = new System.Drawing.Point(96, 40);
 			this.buttonDelayBrakeSet.Name = "buttonDelayBrakeSet";
 			this.buttonDelayBrakeSet.Size = new System.Drawing.Size(48, 19);
 			this.buttonDelayBrakeSet.TabIndex = 35;
@@ -5388,7 +5444,7 @@ namespace TrainEditor2.Views
 			// 
 			// buttonDelayPowerSet
 			// 
-			this.buttonDelayPowerSet.Location = new System.Drawing.Point(160, 16);
+			this.buttonDelayPowerSet.Location = new System.Drawing.Point(96, 16);
 			this.buttonDelayPowerSet.Name = "buttonDelayPowerSet";
 			this.buttonDelayPowerSet.Size = new System.Drawing.Size(48, 19);
 			this.buttonDelayPowerSet.TabIndex = 33;
@@ -5400,7 +5456,7 @@ namespace TrainEditor2.Views
 			// 
 			this.labelDelayLocoBrake.Location = new System.Drawing.Point(8, 64);
 			this.labelDelayLocoBrake.Name = "labelDelayLocoBrake";
-			this.labelDelayLocoBrake.Size = new System.Drawing.Size(144, 16);
+			this.labelDelayLocoBrake.Size = new System.Drawing.Size(80, 16);
 			this.labelDelayLocoBrake.TabIndex = 6;
 			this.labelDelayLocoBrake.Text = "LocoBrake:";
 			this.labelDelayLocoBrake.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -5409,7 +5465,7 @@ namespace TrainEditor2.Views
 			// 
 			this.labelDelayBrake.Location = new System.Drawing.Point(8, 40);
 			this.labelDelayBrake.Name = "labelDelayBrake";
-			this.labelDelayBrake.Size = new System.Drawing.Size(144, 16);
+			this.labelDelayBrake.Size = new System.Drawing.Size(80, 16);
 			this.labelDelayBrake.TabIndex = 4;
 			this.labelDelayBrake.Text = "Brake:";
 			this.labelDelayBrake.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -5418,7 +5474,7 @@ namespace TrainEditor2.Views
 			// 
 			this.labelDelayPower.Location = new System.Drawing.Point(8, 16);
 			this.labelDelayPower.Name = "labelDelayPower";
-			this.labelDelayPower.Size = new System.Drawing.Size(144, 16);
+			this.labelDelayPower.Size = new System.Drawing.Size(80, 16);
 			this.labelDelayPower.TabIndex = 2;
 			this.labelDelayPower.Text = "Power:";
 			this.labelDelayPower.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -5516,6 +5572,8 @@ namespace TrainEditor2.Views
 			// 
 			// groupBoxCarGeneral
 			// 
+			this.groupBoxCarGeneral.Controls.Add(this.checkBoxIsControlledCar);
+			this.groupBoxCarGeneral.Controls.Add(this.labelIsControlledCar);
 			this.groupBoxCarGeneral.Controls.Add(this.textBoxRightDoorMaxTolerance);
 			this.groupBoxCarGeneral.Controls.Add(this.textBoxRightDoorWidth);
 			this.groupBoxCarGeneral.Controls.Add(this.textBoxLeftDoorMaxTolerance);
@@ -5567,7 +5625,7 @@ namespace TrainEditor2.Views
 			this.groupBoxCarGeneral.Controls.Add(this.labelIsMotorCar);
 			this.groupBoxCarGeneral.Location = new System.Drawing.Point(8, 8);
 			this.groupBoxCarGeneral.Name = "groupBoxCarGeneral";
-			this.groupBoxCarGeneral.Size = new System.Drawing.Size(272, 552);
+			this.groupBoxCarGeneral.Size = new System.Drawing.Size(272, 576);
 			this.groupBoxCarGeneral.TabIndex = 0;
 			this.groupBoxCarGeneral.TabStop = false;
 			this.groupBoxCarGeneral.Text = "General";
@@ -6046,8 +6104,8 @@ namespace TrainEditor2.Views
 			// 
 			// tabPageTrain
 			// 
+			this.tabPageTrain.Controls.Add(this.groupBoxTrainGeneral);
 			this.tabPageTrain.Controls.Add(this.groupBoxDevice);
-			this.tabPageTrain.Controls.Add(this.groupBoxCab);
 			this.tabPageTrain.Controls.Add(this.groupBoxHandle);
 			this.tabPageTrain.Location = new System.Drawing.Point(4, 22);
 			this.tabPageTrain.Name = "tabPageTrain";
@@ -6076,9 +6134,9 @@ namespace TrainEditor2.Views
 			this.groupBoxDevice.Controls.Add(this.labelEb);
 			this.groupBoxDevice.Controls.Add(this.labelAtc);
 			this.groupBoxDevice.Controls.Add(this.labelAts);
-			this.groupBoxDevice.Location = new System.Drawing.Point(432, 8);
+			this.groupBoxDevice.Location = new System.Drawing.Point(440, 8);
 			this.groupBoxDevice.Name = "groupBoxDevice";
-			this.groupBoxDevice.Size = new System.Drawing.Size(336, 240);
+			this.groupBoxDevice.Size = new System.Drawing.Size(312, 240);
 			this.groupBoxDevice.TabIndex = 2;
 			this.groupBoxDevice.TabStop = false;
 			this.groupBoxDevice.Text = "Device";
@@ -6270,36 +6328,28 @@ namespace TrainEditor2.Views
 			// 
 			// groupBoxCab
 			// 
-			this.groupBoxCab.Controls.Add(this.comboBoxDriverCar);
+			this.groupBoxCab.Controls.Add(this.groupBoxExternalCab);
+			this.groupBoxCab.Controls.Add(this.checkBoxIsEmbeddedCab);
+			this.groupBoxCab.Controls.Add(this.labelIsEmbeddedCab);
 			this.groupBoxCab.Controls.Add(this.labelCabZUnit);
 			this.groupBoxCab.Controls.Add(this.textBoxCabZ);
 			this.groupBoxCab.Controls.Add(this.labelCabYUnit);
 			this.groupBoxCab.Controls.Add(this.textBoxCabY);
 			this.groupBoxCab.Controls.Add(this.labelCabXUnit);
 			this.groupBoxCab.Controls.Add(this.textBoxCabX);
-			this.groupBoxCab.Controls.Add(this.labelDriverCar);
 			this.groupBoxCab.Controls.Add(this.labelCabZ);
 			this.groupBoxCab.Controls.Add(this.labelCabY);
 			this.groupBoxCab.Controls.Add(this.labelCabX);
-			this.groupBoxCab.Location = new System.Drawing.Point(8, 256);
+			this.groupBoxCab.Location = new System.Drawing.Point(8, 8);
 			this.groupBoxCab.Name = "groupBoxCab";
-			this.groupBoxCab.Size = new System.Drawing.Size(416, 120);
+			this.groupBoxCab.Size = new System.Drawing.Size(264, 504);
 			this.groupBoxCab.TabIndex = 1;
 			this.groupBoxCab.TabStop = false;
 			this.groupBoxCab.Text = "Cab";
 			// 
-			// comboBoxDriverCar
-			// 
-			this.comboBoxDriverCar.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxDriverCar.FormattingEnabled = true;
-			this.comboBoxDriverCar.Location = new System.Drawing.Point(192, 88);
-			this.comboBoxDriverCar.Name = "comboBoxDriverCar";
-			this.comboBoxDriverCar.Size = new System.Drawing.Size(184, 20);
-			this.comboBoxDriverCar.TabIndex = 10;
-			// 
 			// labelCabZUnit
 			// 
-			this.labelCabZUnit.Location = new System.Drawing.Point(384, 64);
+			this.labelCabZUnit.Location = new System.Drawing.Point(200, 64);
 			this.labelCabZUnit.Name = "labelCabZUnit";
 			this.labelCabZUnit.Size = new System.Drawing.Size(24, 16);
 			this.labelCabZUnit.TabIndex = 9;
@@ -6308,14 +6358,14 @@ namespace TrainEditor2.Views
 			// 
 			// textBoxCabZ
 			// 
-			this.textBoxCabZ.Location = new System.Drawing.Point(192, 64);
+			this.textBoxCabZ.Location = new System.Drawing.Point(144, 64);
 			this.textBoxCabZ.Name = "textBoxCabZ";
-			this.textBoxCabZ.Size = new System.Drawing.Size(184, 19);
+			this.textBoxCabZ.Size = new System.Drawing.Size(48, 19);
 			this.textBoxCabZ.TabIndex = 8;
 			// 
 			// labelCabYUnit
 			// 
-			this.labelCabYUnit.Location = new System.Drawing.Point(384, 40);
+			this.labelCabYUnit.Location = new System.Drawing.Point(200, 40);
 			this.labelCabYUnit.Name = "labelCabYUnit";
 			this.labelCabYUnit.Size = new System.Drawing.Size(24, 16);
 			this.labelCabYUnit.TabIndex = 7;
@@ -6324,14 +6374,14 @@ namespace TrainEditor2.Views
 			// 
 			// textBoxCabY
 			// 
-			this.textBoxCabY.Location = new System.Drawing.Point(192, 40);
+			this.textBoxCabY.Location = new System.Drawing.Point(144, 40);
 			this.textBoxCabY.Name = "textBoxCabY";
-			this.textBoxCabY.Size = new System.Drawing.Size(184, 19);
+			this.textBoxCabY.Size = new System.Drawing.Size(48, 19);
 			this.textBoxCabY.TabIndex = 6;
 			// 
 			// labelCabXUnit
 			// 
-			this.labelCabXUnit.Location = new System.Drawing.Point(384, 16);
+			this.labelCabXUnit.Location = new System.Drawing.Point(200, 16);
 			this.labelCabXUnit.Name = "labelCabXUnit";
 			this.labelCabXUnit.Size = new System.Drawing.Size(24, 16);
 			this.labelCabXUnit.TabIndex = 5;
@@ -6340,25 +6390,16 @@ namespace TrainEditor2.Views
 			// 
 			// textBoxCabX
 			// 
-			this.textBoxCabX.Location = new System.Drawing.Point(192, 16);
+			this.textBoxCabX.Location = new System.Drawing.Point(144, 16);
 			this.textBoxCabX.Name = "textBoxCabX";
-			this.textBoxCabX.Size = new System.Drawing.Size(184, 19);
+			this.textBoxCabX.Size = new System.Drawing.Size(48, 19);
 			this.textBoxCabX.TabIndex = 4;
-			// 
-			// labelDriverCar
-			// 
-			this.labelDriverCar.Location = new System.Drawing.Point(8, 88);
-			this.labelDriverCar.Name = "labelDriverCar";
-			this.labelDriverCar.Size = new System.Drawing.Size(176, 16);
-			this.labelDriverCar.TabIndex = 3;
-			this.labelDriverCar.Text = "DriverCar:";
-			this.labelDriverCar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// labelCabZ
 			// 
 			this.labelCabZ.Location = new System.Drawing.Point(8, 64);
 			this.labelCabZ.Name = "labelCabZ";
-			this.labelCabZ.Size = new System.Drawing.Size(176, 16);
+			this.labelCabZ.Size = new System.Drawing.Size(128, 16);
 			this.labelCabZ.TabIndex = 2;
 			this.labelCabZ.Text = "Z:";
 			this.labelCabZ.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -6367,7 +6408,7 @@ namespace TrainEditor2.Views
 			// 
 			this.labelCabY.Location = new System.Drawing.Point(8, 40);
 			this.labelCabY.Name = "labelCabY";
-			this.labelCabY.Size = new System.Drawing.Size(176, 16);
+			this.labelCabY.Size = new System.Drawing.Size(128, 16);
 			this.labelCabY.TabIndex = 1;
 			this.labelCabY.Text = "Y:";
 			this.labelCabY.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -6376,7 +6417,7 @@ namespace TrainEditor2.Views
 			// 
 			this.labelCabX.Location = new System.Drawing.Point(8, 16);
 			this.labelCabX.Name = "labelCabX";
-			this.labelCabX.Size = new System.Drawing.Size(176, 16);
+			this.labelCabX.Size = new System.Drawing.Size(128, 16);
 			this.labelCabX.TabIndex = 0;
 			this.labelCabX.Text = "X:";
 			this.labelCabX.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -6401,9 +6442,9 @@ namespace TrainEditor2.Views
 			this.groupBoxHandle.Controls.Add(this.labelPowerNotches);
 			this.groupBoxHandle.Controls.Add(this.comboBoxHandleType);
 			this.groupBoxHandle.Controls.Add(this.labelHandleType);
-			this.groupBoxHandle.Location = new System.Drawing.Point(8, 8);
+			this.groupBoxHandle.Location = new System.Drawing.Point(8, 64);
 			this.groupBoxHandle.Name = "groupBoxHandle";
-			this.groupBoxHandle.Size = new System.Drawing.Size(416, 240);
+			this.groupBoxHandle.Size = new System.Drawing.Size(424, 240);
 			this.groupBoxHandle.TabIndex = 0;
 			this.groupBoxHandle.TabStop = false;
 			this.groupBoxHandle.Text = "Handle";
@@ -6575,11 +6616,12 @@ namespace TrainEditor2.Views
 			this.tabControlEditor.AllowDrop = true;
 			this.tabControlEditor.Controls.Add(this.tabPageStatus);
 			this.tabControlEditor.Controls.Add(this.tabPageTrain);
-			this.tabControlEditor.Controls.Add(this.tabPageCar);
+			this.tabControlEditor.Controls.Add(this.tabPageCar1);
+			this.tabControlEditor.Controls.Add(this.tabPageCar2);
 			this.tabControlEditor.Controls.Add(this.tabPageAccel);
 			this.tabControlEditor.Controls.Add(this.tabPageMotor);
-			this.tabControlEditor.Controls.Add(this.tabPageCoupler);
 			this.tabControlEditor.Controls.Add(this.tabPagePanel);
+			this.tabControlEditor.Controls.Add(this.tabPageCoupler);
 			this.tabControlEditor.Controls.Add(this.tabPageSound);
 			this.tabControlEditor.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tabControlEditor.Location = new System.Drawing.Point(200, 24);
@@ -6587,6 +6629,451 @@ namespace TrainEditor2.Views
 			this.tabControlEditor.SelectedIndex = 0;
 			this.tabControlEditor.Size = new System.Drawing.Size(800, 696);
 			this.tabControlEditor.TabIndex = 9;
+			// 
+			// toolStripMenuItemImportTrain
+			// 
+			this.toolStripMenuItemImportTrain.Name = "toolStripMenuItemImportTrain";
+			this.toolStripMenuItemImportTrain.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemImportTrain.Text = "Train...";
+			this.toolStripMenuItemImportTrain.Click += new System.EventHandler(this.ToolStripMenuItemImportTrain_Click);
+			// 
+			// toolStripMenuItemImportPanel
+			// 
+			this.toolStripMenuItemImportPanel.Name = "toolStripMenuItemImportPanel";
+			this.toolStripMenuItemImportPanel.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemImportPanel.Text = "Panel...";
+			this.toolStripMenuItemImportPanel.Click += new System.EventHandler(this.ToolStripMenuItemImportPanel_Click);
+			// 
+			// toolStripMenuItemImportSound
+			// 
+			this.toolStripMenuItemImportSound.Name = "toolStripMenuItemImportSound";
+			this.toolStripMenuItemImportSound.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemImportSound.Text = "Sound...";
+			this.toolStripMenuItemImportSound.Click += new System.EventHandler(this.ToolStripMenuItemImportSound_Click);
+			// 
+			// toolStripMenuItemExportTrain
+			// 
+			this.toolStripMenuItemExportTrain.Name = "toolStripMenuItemExportTrain";
+			this.toolStripMenuItemExportTrain.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemExportTrain.Text = "Train...";
+			this.toolStripMenuItemExportTrain.Click += new System.EventHandler(this.ToolStripMenuItemExportTrain_Click);
+			// 
+			// toolStripMenuItemExportPanel
+			// 
+			this.toolStripMenuItemExportPanel.Name = "toolStripMenuItemExportPanel";
+			this.toolStripMenuItemExportPanel.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemExportPanel.Text = "Panel...";
+			this.toolStripMenuItemExportPanel.Click += new System.EventHandler(this.ToolStripMenuItemExportPanel_Click);
+			// 
+			// toolStripMenuItemExportSound
+			// 
+			this.toolStripMenuItemExportSound.Name = "toolStripMenuItemExportSound";
+			this.toolStripMenuItemExportSound.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemExportSound.Text = "Sound...";
+			this.toolStripMenuItemExportSound.Click += new System.EventHandler(this.ToolStripMenuItemExportSound_Click);
+			// 
+			// tabPageCar2
+			// 
+			this.tabPageCar2.Controls.Add(this.groupBoxCab);
+			this.tabPageCar2.Controls.Add(this.groupBoxDelay);
+			this.tabPageCar2.Location = new System.Drawing.Point(4, 22);
+			this.tabPageCar2.Name = "tabPageCar2";
+			this.tabPageCar2.Size = new System.Drawing.Size(792, 670);
+			this.tabPageCar2.TabIndex = 8;
+			this.tabPageCar2.Text = "Car settings (2)";
+			this.tabPageCar2.UseVisualStyleBackColor = true;
+			// 
+			// groupBoxTrainGeneral
+			// 
+			this.groupBoxTrainGeneral.Controls.Add(this.comboBoxInitialDriverCar);
+			this.groupBoxTrainGeneral.Controls.Add(this.labelInitialDriverCar);
+			this.groupBoxTrainGeneral.Location = new System.Drawing.Point(8, 8);
+			this.groupBoxTrainGeneral.Name = "groupBoxTrainGeneral";
+			this.groupBoxTrainGeneral.Size = new System.Drawing.Size(424, 48);
+			this.groupBoxTrainGeneral.TabIndex = 3;
+			this.groupBoxTrainGeneral.TabStop = false;
+			this.groupBoxTrainGeneral.Text = "General";
+			// 
+			// comboBoxInitialDriverCar
+			// 
+			this.comboBoxInitialDriverCar.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxInitialDriverCar.FormattingEnabled = true;
+			this.comboBoxInitialDriverCar.Location = new System.Drawing.Point(192, 16);
+			this.comboBoxInitialDriverCar.Name = "comboBoxInitialDriverCar";
+			this.comboBoxInitialDriverCar.Size = new System.Drawing.Size(216, 20);
+			this.comboBoxInitialDriverCar.TabIndex = 3;
+			// 
+			// labelInitialDriverCar
+			// 
+			this.labelInitialDriverCar.Location = new System.Drawing.Point(8, 16);
+			this.labelInitialDriverCar.Name = "labelInitialDriverCar";
+			this.labelInitialDriverCar.Size = new System.Drawing.Size(176, 16);
+			this.labelInitialDriverCar.TabIndex = 2;
+			this.labelInitialDriverCar.Text = "InitialDriverCar:";
+			this.labelInitialDriverCar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// checkBoxIsControlledCar
+			// 
+			this.checkBoxIsControlledCar.Location = new System.Drawing.Point(160, 552);
+			this.checkBoxIsControlledCar.Name = "checkBoxIsControlledCar";
+			this.checkBoxIsControlledCar.Size = new System.Drawing.Size(48, 16);
+			this.checkBoxIsControlledCar.TabIndex = 52;
+			this.checkBoxIsControlledCar.UseVisualStyleBackColor = true;
+			// 
+			// labelIsControlledCar
+			// 
+			this.labelIsControlledCar.Location = new System.Drawing.Point(8, 552);
+			this.labelIsControlledCar.Name = "labelIsControlledCar";
+			this.labelIsControlledCar.Size = new System.Drawing.Size(144, 16);
+			this.labelIsControlledCar.TabIndex = 51;
+			this.labelIsControlledCar.Text = "IsControlledCar:";
+			this.labelIsControlledCar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelIsEmbeddedCab
+			// 
+			this.labelIsEmbeddedCab.Location = new System.Drawing.Point(8, 88);
+			this.labelIsEmbeddedCab.Name = "labelIsEmbeddedCab";
+			this.labelIsEmbeddedCab.Size = new System.Drawing.Size(128, 16);
+			this.labelIsEmbeddedCab.TabIndex = 10;
+			this.labelIsEmbeddedCab.Text = "IsEmbeddedCab:";
+			this.labelIsEmbeddedCab.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// checkBoxIsEmbeddedCab
+			// 
+			this.checkBoxIsEmbeddedCab.Location = new System.Drawing.Point(144, 88);
+			this.checkBoxIsEmbeddedCab.Name = "checkBoxIsEmbeddedCab";
+			this.checkBoxIsEmbeddedCab.Size = new System.Drawing.Size(48, 16);
+			this.checkBoxIsEmbeddedCab.TabIndex = 30;
+			this.checkBoxIsEmbeddedCab.UseVisualStyleBackColor = true;
+			// 
+			// groupBoxExternalCab
+			// 
+			this.groupBoxExternalCab.Controls.Add(this.buttonCabFileNameOpen);
+			this.groupBoxExternalCab.Controls.Add(this.groupBoxCameraRestriction);
+			this.groupBoxExternalCab.Controls.Add(this.textBoxCabFileName);
+			this.groupBoxExternalCab.Controls.Add(this.labelCabFileName);
+			this.groupBoxExternalCab.Location = new System.Drawing.Point(8, 112);
+			this.groupBoxExternalCab.Name = "groupBoxExternalCab";
+			this.groupBoxExternalCab.Size = new System.Drawing.Size(248, 384);
+			this.groupBoxExternalCab.TabIndex = 31;
+			this.groupBoxExternalCab.TabStop = false;
+			this.groupBoxExternalCab.Text = "ExternalCab";
+			// 
+			// textBoxCabFileName
+			// 
+			this.textBoxCabFileName.Location = new System.Drawing.Point(136, 16);
+			this.textBoxCabFileName.Name = "textBoxCabFileName";
+			this.textBoxCabFileName.Size = new System.Drawing.Size(104, 19);
+			this.textBoxCabFileName.TabIndex = 33;
+			// 
+			// labelCabFileName
+			// 
+			this.labelCabFileName.Location = new System.Drawing.Point(8, 16);
+			this.labelCabFileName.Name = "labelCabFileName";
+			this.labelCabFileName.Size = new System.Drawing.Size(120, 16);
+			this.labelCabFileName.TabIndex = 32;
+			this.labelCabFileName.Text = "Filename:";
+			this.labelCabFileName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// groupBoxCameraRestriction
+			// 
+			this.groupBoxCameraRestriction.Controls.Add(this.checkBoxCameraRestrictionDefinedDown);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionDefinedDown);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionDownUnit);
+			this.groupBoxCameraRestriction.Controls.Add(this.textBoxCameraRestrictionDown);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionDown);
+			this.groupBoxCameraRestriction.Controls.Add(this.checkBoxCameraRestrictionDefinedUp);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionDefinedUp);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionUpUnit);
+			this.groupBoxCameraRestriction.Controls.Add(this.textBoxCameraRestrictionUp);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionUp);
+			this.groupBoxCameraRestriction.Controls.Add(this.checkBoxCameraRestrictionDefinedRight);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionDefinedRight);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionRightUnit);
+			this.groupBoxCameraRestriction.Controls.Add(this.textBoxCameraRestrictionRight);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionRight);
+			this.groupBoxCameraRestriction.Controls.Add(this.checkBoxCameraRestrictionDefinedLeft);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionDefinedLeft);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionLeftUnit);
+			this.groupBoxCameraRestriction.Controls.Add(this.textBoxCameraRestrictionLeft);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionLeft);
+			this.groupBoxCameraRestriction.Controls.Add(this.checkBoxCameraRestrictionDefinedBackwards);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionDefinedBackwards);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionBackwardsUnit);
+			this.groupBoxCameraRestriction.Controls.Add(this.textBoxCameraRestrictionBackwards);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionBackwards);
+			this.groupBoxCameraRestriction.Controls.Add(this.checkBoxCameraRestrictionDefinedForwards);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionDefinedForwards);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionForwardsUnit);
+			this.groupBoxCameraRestriction.Controls.Add(this.textBoxCameraRestrictionForwards);
+			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionForwards);
+			this.groupBoxCameraRestriction.Location = new System.Drawing.Point(8, 64);
+			this.groupBoxCameraRestriction.Name = "groupBoxCameraRestriction";
+			this.groupBoxCameraRestriction.Size = new System.Drawing.Size(232, 312);
+			this.groupBoxCameraRestriction.TabIndex = 34;
+			this.groupBoxCameraRestriction.TabStop = false;
+			this.groupBoxCameraRestriction.Text = "CameraRestriction";
+			// 
+			// buttonCabFileNameOpen
+			// 
+			this.buttonCabFileNameOpen.Location = new System.Drawing.Point(184, 40);
+			this.buttonCabFileNameOpen.Name = "buttonCabFileNameOpen";
+			this.buttonCabFileNameOpen.Size = new System.Drawing.Size(56, 19);
+			this.buttonCabFileNameOpen.TabIndex = 35;
+			this.buttonCabFileNameOpen.Text = "Open...";
+			this.buttonCabFileNameOpen.UseVisualStyleBackColor = true;
+			// 
+			// labelCameraRestrictionForwardsUnit
+			// 
+			this.labelCameraRestrictionForwardsUnit.Location = new System.Drawing.Point(184, 40);
+			this.labelCameraRestrictionForwardsUnit.Name = "labelCameraRestrictionForwardsUnit";
+			this.labelCameraRestrictionForwardsUnit.Size = new System.Drawing.Size(24, 16);
+			this.labelCameraRestrictionForwardsUnit.TabIndex = 8;
+			this.labelCameraRestrictionForwardsUnit.Text = "m";
+			this.labelCameraRestrictionForwardsUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// textBoxCameraRestrictionForwards
+			// 
+			this.textBoxCameraRestrictionForwards.Location = new System.Drawing.Point(128, 40);
+			this.textBoxCameraRestrictionForwards.Name = "textBoxCameraRestrictionForwards";
+			this.textBoxCameraRestrictionForwards.Size = new System.Drawing.Size(48, 19);
+			this.textBoxCameraRestrictionForwards.TabIndex = 7;
+			// 
+			// labelCameraRestrictionForwards
+			// 
+			this.labelCameraRestrictionForwards.Location = new System.Drawing.Point(8, 40);
+			this.labelCameraRestrictionForwards.Name = "labelCameraRestrictionForwards";
+			this.labelCameraRestrictionForwards.Size = new System.Drawing.Size(112, 16);
+			this.labelCameraRestrictionForwards.TabIndex = 6;
+			this.labelCameraRestrictionForwards.Text = "Forwards:";
+			this.labelCameraRestrictionForwards.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelCameraRestrictionDefinedForwards
+			// 
+			this.labelCameraRestrictionDefinedForwards.Location = new System.Drawing.Point(8, 16);
+			this.labelCameraRestrictionDefinedForwards.Name = "labelCameraRestrictionDefinedForwards";
+			this.labelCameraRestrictionDefinedForwards.Size = new System.Drawing.Size(112, 16);
+			this.labelCameraRestrictionDefinedForwards.TabIndex = 9;
+			this.labelCameraRestrictionDefinedForwards.Text = "DefinedForwards:";
+			this.labelCameraRestrictionDefinedForwards.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// checkBoxCameraRestrictionDefinedForwards
+			// 
+			this.checkBoxCameraRestrictionDefinedForwards.Location = new System.Drawing.Point(128, 16);
+			this.checkBoxCameraRestrictionDefinedForwards.Name = "checkBoxCameraRestrictionDefinedForwards";
+			this.checkBoxCameraRestrictionDefinedForwards.Size = new System.Drawing.Size(48, 16);
+			this.checkBoxCameraRestrictionDefinedForwards.TabIndex = 31;
+			this.checkBoxCameraRestrictionDefinedForwards.UseVisualStyleBackColor = true;
+			// 
+			// checkBoxCameraRestrictionDefinedBackwards
+			// 
+			this.checkBoxCameraRestrictionDefinedBackwards.Location = new System.Drawing.Point(128, 64);
+			this.checkBoxCameraRestrictionDefinedBackwards.Name = "checkBoxCameraRestrictionDefinedBackwards";
+			this.checkBoxCameraRestrictionDefinedBackwards.Size = new System.Drawing.Size(48, 16);
+			this.checkBoxCameraRestrictionDefinedBackwards.TabIndex = 36;
+			this.checkBoxCameraRestrictionDefinedBackwards.UseVisualStyleBackColor = true;
+			// 
+			// labelCameraRestrictionDefinedBackwards
+			// 
+			this.labelCameraRestrictionDefinedBackwards.Location = new System.Drawing.Point(8, 64);
+			this.labelCameraRestrictionDefinedBackwards.Name = "labelCameraRestrictionDefinedBackwards";
+			this.labelCameraRestrictionDefinedBackwards.Size = new System.Drawing.Size(112, 16);
+			this.labelCameraRestrictionDefinedBackwards.TabIndex = 35;
+			this.labelCameraRestrictionDefinedBackwards.Text = "DefinedBackwards:";
+			this.labelCameraRestrictionDefinedBackwards.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelCameraRestrictionBackwardsUnit
+			// 
+			this.labelCameraRestrictionBackwardsUnit.Location = new System.Drawing.Point(184, 88);
+			this.labelCameraRestrictionBackwardsUnit.Name = "labelCameraRestrictionBackwardsUnit";
+			this.labelCameraRestrictionBackwardsUnit.Size = new System.Drawing.Size(24, 16);
+			this.labelCameraRestrictionBackwardsUnit.TabIndex = 34;
+			this.labelCameraRestrictionBackwardsUnit.Text = "m";
+			this.labelCameraRestrictionBackwardsUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// textBoxCameraRestrictionBackwards
+			// 
+			this.textBoxCameraRestrictionBackwards.Location = new System.Drawing.Point(128, 88);
+			this.textBoxCameraRestrictionBackwards.Name = "textBoxCameraRestrictionBackwards";
+			this.textBoxCameraRestrictionBackwards.Size = new System.Drawing.Size(48, 19);
+			this.textBoxCameraRestrictionBackwards.TabIndex = 33;
+			// 
+			// labelCameraRestrictionBackwards
+			// 
+			this.labelCameraRestrictionBackwards.Location = new System.Drawing.Point(8, 88);
+			this.labelCameraRestrictionBackwards.Name = "labelCameraRestrictionBackwards";
+			this.labelCameraRestrictionBackwards.Size = new System.Drawing.Size(112, 16);
+			this.labelCameraRestrictionBackwards.TabIndex = 32;
+			this.labelCameraRestrictionBackwards.Text = "Backwards:";
+			this.labelCameraRestrictionBackwards.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// checkBoxCameraRestrictionDefinedLeft
+			// 
+			this.checkBoxCameraRestrictionDefinedLeft.Location = new System.Drawing.Point(128, 112);
+			this.checkBoxCameraRestrictionDefinedLeft.Name = "checkBoxCameraRestrictionDefinedLeft";
+			this.checkBoxCameraRestrictionDefinedLeft.Size = new System.Drawing.Size(48, 16);
+			this.checkBoxCameraRestrictionDefinedLeft.TabIndex = 41;
+			this.checkBoxCameraRestrictionDefinedLeft.UseVisualStyleBackColor = true;
+			// 
+			// labelCameraRestrictionDefinedLeft
+			// 
+			this.labelCameraRestrictionDefinedLeft.Location = new System.Drawing.Point(8, 112);
+			this.labelCameraRestrictionDefinedLeft.Name = "labelCameraRestrictionDefinedLeft";
+			this.labelCameraRestrictionDefinedLeft.Size = new System.Drawing.Size(112, 16);
+			this.labelCameraRestrictionDefinedLeft.TabIndex = 40;
+			this.labelCameraRestrictionDefinedLeft.Text = "DefinedLeft:";
+			this.labelCameraRestrictionDefinedLeft.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelCameraRestrictionLeftUnit
+			// 
+			this.labelCameraRestrictionLeftUnit.Location = new System.Drawing.Point(184, 136);
+			this.labelCameraRestrictionLeftUnit.Name = "labelCameraRestrictionLeftUnit";
+			this.labelCameraRestrictionLeftUnit.Size = new System.Drawing.Size(24, 16);
+			this.labelCameraRestrictionLeftUnit.TabIndex = 39;
+			this.labelCameraRestrictionLeftUnit.Text = "m";
+			this.labelCameraRestrictionLeftUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// textBoxCameraRestrictionLeft
+			// 
+			this.textBoxCameraRestrictionLeft.Location = new System.Drawing.Point(128, 136);
+			this.textBoxCameraRestrictionLeft.Name = "textBoxCameraRestrictionLeft";
+			this.textBoxCameraRestrictionLeft.Size = new System.Drawing.Size(48, 19);
+			this.textBoxCameraRestrictionLeft.TabIndex = 38;
+			// 
+			// labelCameraRestrictionLeft
+			// 
+			this.labelCameraRestrictionLeft.Location = new System.Drawing.Point(8, 136);
+			this.labelCameraRestrictionLeft.Name = "labelCameraRestrictionLeft";
+			this.labelCameraRestrictionLeft.Size = new System.Drawing.Size(112, 16);
+			this.labelCameraRestrictionLeft.TabIndex = 37;
+			this.labelCameraRestrictionLeft.Text = "Left:";
+			this.labelCameraRestrictionLeft.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// checkBoxCameraRestrictionDefinedRight
+			// 
+			this.checkBoxCameraRestrictionDefinedRight.Location = new System.Drawing.Point(128, 160);
+			this.checkBoxCameraRestrictionDefinedRight.Name = "checkBoxCameraRestrictionDefinedRight";
+			this.checkBoxCameraRestrictionDefinedRight.Size = new System.Drawing.Size(48, 16);
+			this.checkBoxCameraRestrictionDefinedRight.TabIndex = 46;
+			this.checkBoxCameraRestrictionDefinedRight.UseVisualStyleBackColor = true;
+			// 
+			// labelCameraRestrictionDefinedRight
+			// 
+			this.labelCameraRestrictionDefinedRight.Location = new System.Drawing.Point(8, 160);
+			this.labelCameraRestrictionDefinedRight.Name = "labelCameraRestrictionDefinedRight";
+			this.labelCameraRestrictionDefinedRight.Size = new System.Drawing.Size(112, 16);
+			this.labelCameraRestrictionDefinedRight.TabIndex = 45;
+			this.labelCameraRestrictionDefinedRight.Text = "DefinedRight:";
+			this.labelCameraRestrictionDefinedRight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelCameraRestrictionRightUnit
+			// 
+			this.labelCameraRestrictionRightUnit.Location = new System.Drawing.Point(184, 184);
+			this.labelCameraRestrictionRightUnit.Name = "labelCameraRestrictionRightUnit";
+			this.labelCameraRestrictionRightUnit.Size = new System.Drawing.Size(24, 16);
+			this.labelCameraRestrictionRightUnit.TabIndex = 44;
+			this.labelCameraRestrictionRightUnit.Text = "m";
+			this.labelCameraRestrictionRightUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// textBoxCameraRestrictionRight
+			// 
+			this.textBoxCameraRestrictionRight.Location = new System.Drawing.Point(128, 184);
+			this.textBoxCameraRestrictionRight.Name = "textBoxCameraRestrictionRight";
+			this.textBoxCameraRestrictionRight.Size = new System.Drawing.Size(48, 19);
+			this.textBoxCameraRestrictionRight.TabIndex = 43;
+			// 
+			// labelCameraRestrictionRight
+			// 
+			this.labelCameraRestrictionRight.Location = new System.Drawing.Point(8, 184);
+			this.labelCameraRestrictionRight.Name = "labelCameraRestrictionRight";
+			this.labelCameraRestrictionRight.Size = new System.Drawing.Size(112, 16);
+			this.labelCameraRestrictionRight.TabIndex = 42;
+			this.labelCameraRestrictionRight.Text = "Right:";
+			this.labelCameraRestrictionRight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// checkBoxCameraRestrictionDefinedUp
+			// 
+			this.checkBoxCameraRestrictionDefinedUp.Location = new System.Drawing.Point(128, 208);
+			this.checkBoxCameraRestrictionDefinedUp.Name = "checkBoxCameraRestrictionDefinedUp";
+			this.checkBoxCameraRestrictionDefinedUp.Size = new System.Drawing.Size(48, 16);
+			this.checkBoxCameraRestrictionDefinedUp.TabIndex = 51;
+			this.checkBoxCameraRestrictionDefinedUp.UseVisualStyleBackColor = true;
+			// 
+			// labelCameraRestrictionDefinedUp
+			// 
+			this.labelCameraRestrictionDefinedUp.Location = new System.Drawing.Point(8, 208);
+			this.labelCameraRestrictionDefinedUp.Name = "labelCameraRestrictionDefinedUp";
+			this.labelCameraRestrictionDefinedUp.Size = new System.Drawing.Size(112, 16);
+			this.labelCameraRestrictionDefinedUp.TabIndex = 50;
+			this.labelCameraRestrictionDefinedUp.Text = "DefinedUp:";
+			this.labelCameraRestrictionDefinedUp.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelCameraRestrictionUpUnit
+			// 
+			this.labelCameraRestrictionUpUnit.Location = new System.Drawing.Point(184, 232);
+			this.labelCameraRestrictionUpUnit.Name = "labelCameraRestrictionUpUnit";
+			this.labelCameraRestrictionUpUnit.Size = new System.Drawing.Size(24, 16);
+			this.labelCameraRestrictionUpUnit.TabIndex = 49;
+			this.labelCameraRestrictionUpUnit.Text = "m";
+			this.labelCameraRestrictionUpUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// textBoxCameraRestrictionUp
+			// 
+			this.textBoxCameraRestrictionUp.Location = new System.Drawing.Point(128, 232);
+			this.textBoxCameraRestrictionUp.Name = "textBoxCameraRestrictionUp";
+			this.textBoxCameraRestrictionUp.Size = new System.Drawing.Size(48, 19);
+			this.textBoxCameraRestrictionUp.TabIndex = 48;
+			// 
+			// labelCameraRestrictionUp
+			// 
+			this.labelCameraRestrictionUp.Location = new System.Drawing.Point(8, 232);
+			this.labelCameraRestrictionUp.Name = "labelCameraRestrictionUp";
+			this.labelCameraRestrictionUp.Size = new System.Drawing.Size(112, 16);
+			this.labelCameraRestrictionUp.TabIndex = 47;
+			this.labelCameraRestrictionUp.Text = "Up:";
+			this.labelCameraRestrictionUp.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// checkBoxCameraRestrictionDefinedDown
+			// 
+			this.checkBoxCameraRestrictionDefinedDown.Location = new System.Drawing.Point(128, 256);
+			this.checkBoxCameraRestrictionDefinedDown.Name = "checkBoxCameraRestrictionDefinedDown";
+			this.checkBoxCameraRestrictionDefinedDown.Size = new System.Drawing.Size(48, 16);
+			this.checkBoxCameraRestrictionDefinedDown.TabIndex = 56;
+			this.checkBoxCameraRestrictionDefinedDown.UseVisualStyleBackColor = true;
+			// 
+			// labelCameraRestrictionDefinedDown
+			// 
+			this.labelCameraRestrictionDefinedDown.Location = new System.Drawing.Point(8, 256);
+			this.labelCameraRestrictionDefinedDown.Name = "labelCameraRestrictionDefinedDown";
+			this.labelCameraRestrictionDefinedDown.Size = new System.Drawing.Size(112, 16);
+			this.labelCameraRestrictionDefinedDown.TabIndex = 55;
+			this.labelCameraRestrictionDefinedDown.Text = "DefinedDown:";
+			this.labelCameraRestrictionDefinedDown.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// labelCameraRestrictionDownUnit
+			// 
+			this.labelCameraRestrictionDownUnit.Location = new System.Drawing.Point(184, 280);
+			this.labelCameraRestrictionDownUnit.Name = "labelCameraRestrictionDownUnit";
+			this.labelCameraRestrictionDownUnit.Size = new System.Drawing.Size(24, 16);
+			this.labelCameraRestrictionDownUnit.TabIndex = 54;
+			this.labelCameraRestrictionDownUnit.Text = "m";
+			this.labelCameraRestrictionDownUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// textBoxCameraRestrictionDown
+			// 
+			this.textBoxCameraRestrictionDown.Location = new System.Drawing.Point(128, 280);
+			this.textBoxCameraRestrictionDown.Name = "textBoxCameraRestrictionDown";
+			this.textBoxCameraRestrictionDown.Size = new System.Drawing.Size(48, 19);
+			this.textBoxCameraRestrictionDown.TabIndex = 53;
+			// 
+			// labelCameraRestrictionDown
+			// 
+			this.labelCameraRestrictionDown.Location = new System.Drawing.Point(8, 280);
+			this.labelCameraRestrictionDown.Name = "labelCameraRestrictionDown";
+			this.labelCameraRestrictionDown.Size = new System.Drawing.Size(112, 16);
+			this.labelCameraRestrictionDown.TabIndex = 52;
+			this.labelCameraRestrictionDown.Text = "Down:";
+			this.labelCameraRestrictionDown.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// FormEditor
 			// 
@@ -6730,7 +7217,7 @@ namespace TrainEditor2.Views
 			this.groupBoxParameter.ResumeLayout(false);
 			this.groupBoxParameter.PerformLayout();
 			this.groupBoxNotch.ResumeLayout(false);
-			this.tabPageCar.ResumeLayout(false);
+			this.tabPageCar1.ResumeLayout(false);
 			this.groupBoxPressure.ResumeLayout(false);
 			this.groupBoxPressure.PerformLayout();
 			this.groupBoxBrake.ResumeLayout(false);
@@ -6756,6 +7243,12 @@ namespace TrainEditor2.Views
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBrakeNotches)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownPowerNotches)).EndInit();
 			this.tabControlEditor.ResumeLayout(false);
+			this.tabPageCar2.ResumeLayout(false);
+			this.groupBoxTrainGeneral.ResumeLayout(false);
+			this.groupBoxExternalCab.ResumeLayout(false);
+			this.groupBoxExternalCab.PerformLayout();
+			this.groupBoxCameraRestriction.ResumeLayout(false);
+			this.groupBoxCameraRestriction.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -6807,14 +7300,12 @@ namespace TrainEditor2.Views
 		private Label labelAtc;
 		private Label labelAts;
 		private GroupBox groupBoxCab;
-		private ComboBox comboBoxDriverCar;
 		private Label labelCabZUnit;
 		private TextBox textBoxCabZ;
 		private Label labelCabYUnit;
 		private TextBox textBoxCabY;
 		private Label labelCabXUnit;
 		private TextBox textBoxCabX;
-		private Label labelDriverCar;
 		private Label labelCabZ;
 		private Label labelCabY;
 		private Label labelCabX;
@@ -6837,7 +7328,7 @@ namespace TrainEditor2.Views
 		private Label labelPowerNotches;
 		private ComboBox comboBoxHandleType;
 		private Label labelHandleType;
-		private TabPage tabPageCar;
+		private TabPage tabPageCar1;
 		private GroupBox groupBoxPressure;
 		private Label labelBrakePipeNormalPressureUnit;
 		private TextBox textBoxBrakePipeNormalPressure;
@@ -7369,5 +7860,54 @@ namespace TrainEditor2.Views
 		private Button buttonPanelDown;
 		private Button buttonSoundUp;
 		private Button buttonSoundDown;
+		private ToolStripMenuItem toolStripMenuItemImportTrain;
+		private ToolStripMenuItem toolStripMenuItemImportPanel;
+		private ToolStripMenuItem toolStripMenuItemImportSound;
+		private ToolStripMenuItem toolStripMenuItemExportTrain;
+		private ToolStripMenuItem toolStripMenuItemExportPanel;
+		private ToolStripMenuItem toolStripMenuItemExportSound;
+		private TabPage tabPageCar2;
+		private GroupBox groupBoxTrainGeneral;
+		private ComboBox comboBoxInitialDriverCar;
+		private Label labelInitialDriverCar;
+		private CheckBox checkBoxIsControlledCar;
+		private Label labelIsControlledCar;
+		private CheckBox checkBoxIsEmbeddedCab;
+		private Label labelIsEmbeddedCab;
+		private GroupBox groupBoxExternalCab;
+		private TextBox textBoxCabFileName;
+		private Label labelCabFileName;
+		private GroupBox groupBoxCameraRestriction;
+		private Button buttonCabFileNameOpen;
+		private Label labelCameraRestrictionForwardsUnit;
+		private TextBox textBoxCameraRestrictionForwards;
+		private Label labelCameraRestrictionForwards;
+		private CheckBox checkBoxCameraRestrictionDefinedForwards;
+		private Label labelCameraRestrictionDefinedForwards;
+		private CheckBox checkBoxCameraRestrictionDefinedBackwards;
+		private Label labelCameraRestrictionDefinedBackwards;
+		private Label labelCameraRestrictionBackwardsUnit;
+		private TextBox textBoxCameraRestrictionBackwards;
+		private Label labelCameraRestrictionBackwards;
+		private CheckBox checkBoxCameraRestrictionDefinedLeft;
+		private Label labelCameraRestrictionDefinedLeft;
+		private Label labelCameraRestrictionLeftUnit;
+		private TextBox textBoxCameraRestrictionLeft;
+		private Label labelCameraRestrictionLeft;
+		private CheckBox checkBoxCameraRestrictionDefinedRight;
+		private Label labelCameraRestrictionDefinedRight;
+		private Label labelCameraRestrictionRightUnit;
+		private TextBox textBoxCameraRestrictionRight;
+		private Label labelCameraRestrictionRight;
+		private CheckBox checkBoxCameraRestrictionDefinedUp;
+		private Label labelCameraRestrictionDefinedUp;
+		private Label labelCameraRestrictionUpUnit;
+		private TextBox textBoxCameraRestrictionUp;
+		private Label labelCameraRestrictionUp;
+		private CheckBox checkBoxCameraRestrictionDefinedDown;
+		private Label labelCameraRestrictionDefinedDown;
+		private Label labelCameraRestrictionDownUnit;
+		private TextBox textBoxCameraRestrictionDown;
+		private Label labelCameraRestrictionDown;
 	}
 }

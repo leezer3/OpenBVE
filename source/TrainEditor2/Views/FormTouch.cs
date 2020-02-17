@@ -22,7 +22,7 @@ namespace TrainEditor2.Views
 
 			InitializeComponent();
 
-			Binders.BindToTreeView(treeViewTouch, touch.TreeItems, touch.SelectedTreeItem).AddTo(disposable);
+			WinFormsBinders.BindToTreeView(treeViewTouch, touch.TreeItems, touch.SelectedTreeItem).AddTo(disposable);
 
 			touch.SelectedTreeItem
 				.BindTo(
@@ -33,7 +33,7 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(disposable);
 
-			Binders.BindToListView(listViewTouch, touch.ListColumns, touch.ListItems, touch.SelectedListItem).AddTo(disposable);
+			WinFormsBinders.BindToListView(listViewTouch, touch.ListColumns, touch.ListItems, touch.SelectedListItem).AddTo(disposable);
 
 			touch.SelectedSoundEntry
 				.BindTo(
@@ -97,7 +97,7 @@ namespace TrainEditor2.Views
 
 		private void FormTouch_Load(object sender, EventArgs e)
 		{
-			Icon = FormEditor.GetIcon();
+			Icon = WinFormsUtilities.GetIcon();
 		}
 
 		private void ButtonOK_Click(object sender, EventArgs e)

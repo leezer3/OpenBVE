@@ -24,7 +24,7 @@ namespace TrainEditor2.Views
 			CompositeDisposable timetableDisposable = new CompositeDisposable().AddTo(panelDisposable);
 			CompositeDisposable touchDisposable = new CompositeDisposable().AddTo(panelDisposable);
 
-			Binders.BindToTreeView(treeViewPanel, x.TreeItems, x.SelectedTreeItem).AddTo(panelDisposable);
+			WinFormsBinders.BindToTreeView(treeViewPanel, x.TreeItems, x.SelectedTreeItem).AddTo(panelDisposable);
 
 			x.SelectedTreeItem
 				.BindTo(
@@ -55,7 +55,7 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(panelDisposable);
 
-			Binders.BindToListView(listViewPanel, x.ListColumns, x.ListItems, x.SelectedListItem).AddTo(panelDisposable);
+			WinFormsBinders.BindToListView(listViewPanel, x.ListColumns, x.ListItems, x.SelectedListItem).AddTo(panelDisposable);
 
 			x.This
 				.Subscribe(y =>

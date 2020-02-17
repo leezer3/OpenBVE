@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml.Linq;
 using TrainEditor2.Models.Panels;
@@ -10,7 +9,7 @@ namespace TrainEditor2.IO.IntermediateFile
 {
 	internal static partial class IntermediateFile
 	{
-		internal static void Write(string fileName, Train train, Panel panel, Sound sound)
+		internal static void Write(string fileName, Train train, Sound sound)
 		{
 			XDocument xml = new XDocument(new XDeclaration("1.0", "utf-8", "yes"));
 
@@ -20,7 +19,6 @@ namespace TrainEditor2.IO.IntermediateFile
 			xml.Add(trainEditor);
 
 			WriteTrainNode(trainEditor, train);
-			WritePanelNode(trainEditor, panel);
 			WriteSoundsNode(trainEditor, sound);
 
 			xml.Save(fileName);
@@ -32,8 +30,9 @@ namespace TrainEditor2.IO.IntermediateFile
 			parent.Add(trainNode);
 
 			WriteHandleNode(trainNode, train.Handle);
-			WriteCabNode(trainNode, train.Cab);
 			WriteDeviceNode(trainNode, train.Device);
+
+			trainNode.Add(new XElement("InitialDriverCar", train.InitialDriverCar));
 
 			XElement carsNode = new XElement("Cars");
 			trainNode.Add(carsNode);
@@ -64,14 +63,6 @@ namespace TrainEditor2.IO.IntermediateFile
 				new XElement("LocoBrakeNotches", handle.LocoBrakeNotches),
 				new XElement("DriverPowerNotches", handle.DriverPowerNotches),
 				new XElement("DriverBrakeNotches", handle.DriverBrakeNotches)
-				));
-		}
-
-		private static void WriteCabNode(XElement parent, Cab cab)
-		{
-			parent.Add(new XElement("Cab",
-				new XElement("Position", $"{cab.PositionX}, {cab.PositionY}, {cab.PositionZ}"),
-				new XElement("DriverCar", cab.DriverCar)
 				));
 		}
 
@@ -137,6 +128,15 @@ namespace TrainEditor2.IO.IntermediateFile
 				new XElement("Object", car.Object),
 				new XElement("LoadingSway", car.LoadingSway)
 				);
+
+			Cab cab = (car as ControlledMotorCar)?.Cab ?? (car as ControlledTrailerCar)?.Cab;
+
+			carNode.Add(new XElement("IsControlledCar", cab != null));
+
+			if (cab != null)
+			{
+				WriteCabNode(carNode, cab);
+			}
 		}
 
 		private static void WriteBogieNode(XElement parent, string nodeName, Car.Bogie bogie)
@@ -163,9 +163,9 @@ namespace TrainEditor2.IO.IntermediateFile
 		private static void WriteDelayNode(XElement parent, Delay delay)
 		{
 			parent.Add(new XElement("Delay",
-				new XElement("DelayPower", delay.DelayPower.Select(WriteDelayEntryNode)),
-				new XElement("DelayBrake", delay.DelayBrake.Select(WriteDelayEntryNode)),
-				new XElement("DelayLocoBrake", delay.DelayLocoBrake.Select(WriteDelayEntryNode))
+				new XElement("DelayPower", delay.Power.Select(WriteDelayEntryNode)),
+				new XElement("DelayBrake", delay.Brake.Select(WriteDelayEntryNode)),
+				new XElement("DelayLocoBrake", delay.LocoBrake.Select(WriteDelayEntryNode))
 				));
 		}
 
@@ -274,6 +274,50 @@ namespace TrainEditor2.IO.IntermediateFile
 					new XElement("LeftX", area.LeftX),
 					new XElement("RightX", area.RightX)
 					))
+				));
+		}
+
+		private static void WriteCabNode(XElement parent, Cab cab)
+		{
+			XElement cabNode = new XElement("Cab");
+			parent.Add(cabNode);
+
+			EmbeddedCab embeddedCab = cab as EmbeddedCab;
+
+			cabNode.Add(
+				new XElement("IsEmbeddedCab", embeddedCab != null),
+				new XElement("Position", $"{cab.PositionX}, {cab.PositionY}, {cab.PositionZ}")
+			);
+
+			if (embeddedCab != null)
+			{
+				WritePanelNode(cabNode, embeddedCab.Panel);
+			}
+
+			ExternalCab externalCab = cab as ExternalCab;
+
+			if (externalCab != null)
+			{
+				WriteCameraRestrictionNode(cabNode, externalCab.CameraRestriction);
+				cabNode.Add(new XElement("Panel", externalCab.FileName));
+			}
+		}
+
+		private static void WriteCameraRestrictionNode(XElement parent, CameraRestriction cameraRestriction)
+		{
+			parent.Add(new XElement("CameraRestriction",
+				new XElement("DefinedForwards", cameraRestriction.DefinedForwards),
+				new XElement("DefinedBackwards", cameraRestriction.DefinedBackwards),
+				new XElement("DefinedLeft", cameraRestriction.DefinedLeft),
+				new XElement("DefinedRight", cameraRestriction.DefinedRight),
+				new XElement("DefinedUp", cameraRestriction.DefinedUp),
+				new XElement("DefinedDown", cameraRestriction.DefinedDown),
+				new XElement("Forwards", cameraRestriction.Forwards),
+				new XElement("Backwards", cameraRestriction.Backwards),
+				new XElement("Left", cameraRestriction.Left),
+				new XElement("Right", cameraRestriction.Right),
+				new XElement("Up", cameraRestriction.Up),
+				new XElement("Down", cameraRestriction.Down)
 				));
 		}
 

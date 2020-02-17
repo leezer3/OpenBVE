@@ -16,7 +16,7 @@ namespace TrainEditor2.IO.IntermediateFile
 {
 	internal static partial class IntermediateFile
 	{
-		internal static void Parse(string fileName, out Train train, out Panel panel, out Sound sound)
+		internal static void Parse(string fileName, out Train train, out Sound sound)
 		{
 			XDocument xml = XDocument.Load(fileName);
 
@@ -26,20 +26,54 @@ namespace TrainEditor2.IO.IntermediateFile
 			}
 
 			train = ParseTrainNode(xml.XPathSelectElement("/TrainEditor/Train"));
-			panel = ParsePanelNode(xml.XPathSelectElement("/TrainEditor/Panel"));
 			sound = ParseSoundsNode(xml.XPathSelectElement("/TrainEditor/Sounds"));
 		}
 
 		private static Train ParseTrainNode(XElement parent)
 		{
-			return new Train
+			Train train = new Train
 			{
 				Handle = ParseHandleNode(parent.Element("Handle")),
-				Cab = ParseCabNode(parent.Element("Cab")),
-				Device = ParseDeviceNode(parent.Element("Device")),
-				Cars = new ObservableCollection<Car>(parent.XPathSelectElements("Cars/Car").Select(ParseCarNode)),
-				Couplers = new ObservableCollection<Coupler>(parent.XPathSelectElements("Couplers/Coupler").Select(ParseCouplerNode))
+				Device = ParseDeviceNode(parent.Element("Device"))
 			};
+
+			XElement cabNode = parent.Element("Cab");
+
+			train.InitialDriverCar = cabNode != null ? (int)cabNode.Element("DriverCar") : (int)parent.Element("InitialDriverCar");
+
+			train.Cars = new ObservableCollection<Car>(parent.XPathSelectElements("Cars/Car").Select(ParseCarNode));
+			train.Couplers = new ObservableCollection<Coupler>(parent.XPathSelectElements("Couplers/Coupler").Select(ParseCouplerNode));
+
+			if (cabNode != null)
+			{
+				MotorCar motorCar = train.Cars[train.InitialDriverCar] as MotorCar;
+				Cab cab;
+
+				if (motorCar != null)
+				{
+					ControlledMotorCar controlledMotorCar = new ControlledMotorCar(motorCar);
+					cab = controlledMotorCar.Cab;
+
+					train.Cars[train.InitialDriverCar] = controlledMotorCar;
+				}
+				else
+				{
+					ControlledTrailerCar controlledTrailerCar = new ControlledTrailerCar(train.Cars[train.InitialDriverCar]);
+					cab = controlledTrailerCar.Cab;
+
+					train.Cars[train.InitialDriverCar] = controlledTrailerCar;
+				}
+
+				double[] position = ((string)cabNode.Element("Position")).Split(',').Select(double.Parse).ToArray();
+
+				cab.PositionX = position[0];
+				cab.PositionY = position[1];
+				cab.PositionZ = position[2];
+
+				((EmbeddedCab)cab).Panel = ParsePanelNode(parent.XPathSelectElement("/TrainEditor/Panel"));
+			}
+
+			return train;
 		}
 
 		private static Handle ParseHandleNode(XElement parent)
@@ -55,19 +89,6 @@ namespace TrainEditor2.IO.IntermediateFile
 				LocoBrakeNotches = (int)parent.Element("LocoBrakeNotches"),
 				DriverPowerNotches = (int)parent.Element("DriverPowerNotches"),
 				DriverBrakeNotches = (int)parent.Element("DriverBrakeNotches")
-			};
-		}
-
-		private static Cab ParseCabNode(XElement parent)
-		{
-			double[] position = ((string)parent.Element("Position")).Split(',').Select(double.Parse).ToArray();
-
-			return new Cab
-			{
-				PositionX = position[0],
-				PositionY = position[1],
-				PositionZ = position[2],
-				DriverCar = (int)parent.Element("DriverCar")
 			};
 		}
 
@@ -92,13 +113,30 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			Car car;
 
-			if ((bool)parent.Element("IsMotorCar"))
+			bool isMotorCar = (bool)parent.Element("IsMotorCar");
+			bool isControlledCar = parent.Element("Cab") != null && (bool)parent.Element("IsControlledCar");
+
+			if (isMotorCar)
 			{
-				car = new MotorCar();
+				if (isControlledCar)
+				{
+					car = new ControlledMotorCar();
+				}
+				else
+				{
+					car = new UncontrolledMotorCar();
+				}
 			}
 			else
 			{
-				car = new TrailerCar();
+				if (isControlledCar)
+				{
+					car = new ControlledTrailerCar();
+				}
+				else
+				{
+					car = new UncontrolledTrailerCar();
+				}
 			}
 
 			car.Mass = (double)parent.Element("Mass");
@@ -159,6 +197,20 @@ namespace TrainEditor2.IO.IntermediateFile
 			car.Object = (string)parent.Element("Object");
 			car.LoadingSway = (bool)parent.Element("LoadingSway");
 
+			if (isControlledCar)
+			{
+				Cab cab = ParseCabNode(parent.Element("Cab"));
+
+				if (isMotorCar)
+				{
+					((ControlledMotorCar)car).Cab = cab;
+				}
+				else
+				{
+					((ControlledTrailerCar)car).Cab = cab;
+				}
+			}
+
 			return car;
 		}
 
@@ -189,9 +241,9 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new Delay
 			{
-				DelayPower = new ObservableCollection<Delay.Entry>(parent.XPathSelectElements("DelayPower/Entry").Select(ParseDelayEntryNode)),
-				DelayBrake = new ObservableCollection<Delay.Entry>(parent.XPathSelectElements("DelayBrake/Entry").Select(ParseDelayEntryNode)),
-				DelayLocoBrake = new ObservableCollection<Delay.Entry>(parent.XPathSelectElements("DelayLocoBrake/Entry").Select(ParseDelayEntryNode))
+				Power = new ObservableCollection<Delay.Entry>(parent.XPathSelectElements("DelayPower/Entry").Select(ParseDelayEntryNode)),
+				Brake = new ObservableCollection<Delay.Entry>(parent.XPathSelectElements("DelayBrake/Entry").Select(ParseDelayEntryNode)),
+				LocoBrake = new ObservableCollection<Delay.Entry>(parent.XPathSelectElements("DelayLocoBrake/Entry").Select(ParseDelayEntryNode))
 			};
 		}
 
@@ -299,6 +351,56 @@ namespace TrainEditor2.IO.IntermediateFile
 		private static void ParseAreaNode(XElement parent, out List<Motor.Area> areas)
 		{
 			areas = new List<Motor.Area>(parent.XPathSelectElements("Areas/Area").Select(n => new Motor.Area((double)n.Element("LeftX"), (double)n.Element("RightX"), (int)n.Element("Index"))));
+		}
+
+		private static Cab ParseCabNode(XElement parent)
+		{
+			Cab cab;
+
+			XElement panelNode = parent.Element("Panel");
+
+			if ((bool)parent.Element("IsEmbeddedCab"))
+			{
+				cab = new EmbeddedCab
+				{
+					Panel = ParsePanelNode(panelNode)
+				};
+			}
+			else
+			{
+				cab = new ExternalCab
+				{
+					CameraRestriction = ParseCameraRestrictionNode(parent.Element("CameraRestriction")),
+					FileName = (string)panelNode
+				};
+			}
+
+			double[] position = ((string)parent.Element("Position")).Split(',').Select(double.Parse).ToArray();
+
+			cab.PositionX = position[0];
+			cab.PositionY = position[1];
+			cab.PositionZ = position[2];
+
+			return cab;
+		}
+
+		private static CameraRestriction ParseCameraRestrictionNode(XElement parent)
+		{
+			return new CameraRestriction
+			{
+				DefinedForwards = (bool)parent.Element("DefinedForwards"),
+				DefinedBackwards = (bool)parent.Element("DefinedBackwards"),
+				DefinedLeft = (bool)parent.Element("DefinedLeft"),
+				DefinedRight = (bool)parent.Element("DefinedRight"),
+				DefinedUp = (bool)parent.Element("DefinedUp"),
+				DefinedDown = (bool)parent.Element("DefinedDown"),
+				Forwards = (double)parent.Element("Forwards"),
+				Backwards = (double)parent.Element("Backwards"),
+				Left = (double)parent.Element("Left"),
+				Right = (double)parent.Element("Right"),
+				Up = (double)parent.Element("Up"),
+				Down = (double)parent.Element("Down")
+			};
 		}
 
 		private static Coupler ParseCouplerNode(XElement parent)

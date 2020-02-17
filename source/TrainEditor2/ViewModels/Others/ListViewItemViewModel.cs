@@ -16,12 +16,17 @@ namespace TrainEditor2.ViewModels.Others
 			get;
 		}
 
-		internal ReadOnlyReactivePropertySlim<object> Tag
+		internal ReactiveProperty<bool> Checked
 		{
 			get;
 		}
 
 		internal ReadOnlyReactivePropertySlim<int> ImageIndex
+		{
+			get;
+		}
+
+		internal ReadOnlyReactivePropertySlim<object> Tag
 		{
 			get;
 		}
@@ -32,13 +37,17 @@ namespace TrainEditor2.ViewModels.Others
 
 			SubItems = item.SubItems.ToReadOnlyReactiveCollection(x => new ListViewSubItemViewModel(x)).AddTo(disposable);
 
-			Tag = item
-				.ObserveProperty(x => x.Tag)
-				.ToReadOnlyReactivePropertySlim()
+			Checked = item
+				.ToReactivePropertyAsSynchronized(x => x.Checked)
 				.AddTo(disposable);
 
 			ImageIndex = item
 				.ObserveProperty(x => x.ImageIndex)
+				.ToReadOnlyReactivePropertySlim()
+				.AddTo(disposable);
+
+			Tag = item
+				.ObserveProperty(x => x.Tag)
 				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 		}

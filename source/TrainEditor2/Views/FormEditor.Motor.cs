@@ -15,45 +15,18 @@ namespace TrainEditor2.Views
 		private IDisposable BindToTrack(MotorViewModel.TrackViewModel w)
 		{
 			CompositeDisposable trackDisposable = new CompositeDisposable();
-			CompositeDisposable messageDisposable = new CompositeDisposable().AddTo(trackDisposable);
-			CompositeDisposable toolTipVertexPitchDisposable = new CompositeDisposable().AddTo(trackDisposable);
-			CompositeDisposable toolTipVertexVolumeDisposable = new CompositeDisposable().AddTo(trackDisposable);
 
-			w.MessageBox
-				.Subscribe(x =>
-				{
-					messageDisposable.Dispose();
-					messageDisposable = new CompositeDisposable().AddTo(trackDisposable);
+			w.MessageBox.BindToMessageBox().AddTo(trackDisposable);
 
-					BindToMessageBox(x).AddTo(messageDisposable);
-				})
-				.AddTo(trackDisposable);
+			w.ToolTipVertexPitch.BindToToolTip(glControlMotor).AddTo(trackDisposable);
 
-			w.ToolTipVertexPitch
-				.Subscribe(x =>
-				{
-					toolTipVertexPitchDisposable.Dispose();
-					toolTipVertexPitchDisposable = new CompositeDisposable().AddTo(trackDisposable);
-
-					BindToToolTip(x, glControlMotor).AddTo(toolTipVertexPitchDisposable);
-				})
-				.AddTo(trackDisposable);
-
-			w.ToolTipVertexVolume
-				.Subscribe(x =>
-				{
-					toolTipVertexVolumeDisposable.Dispose();
-					toolTipVertexVolumeDisposable = new CompositeDisposable().AddTo(trackDisposable);
-
-					BindToToolTip(x, glControlMotor).AddTo(toolTipVertexVolumeDisposable);
-				})
-				.AddTo(trackDisposable);
+			w.ToolTipVertexVolume.BindToToolTip(glControlMotor).AddTo(trackDisposable);
 
 			w.CurrentCursorType
 				.BindTo(
 					glControlMotor,
 					x => x.Cursor,
-					CursorTypeToCursor
+					WinFormsUtilities.CursorTypeToCursor
 				)
 				.AddTo(trackDisposable);
 
@@ -272,7 +245,7 @@ namespace TrainEditor2.Views
 
 			CultureInfo culture = CultureInfo.InvariantCulture;
 
-			Binders.BindToTreeView(treeViewMotor, z.TreeItems, z.SelectedTreeItem).AddTo(motorDisposable);
+			WinFormsBinders.BindToTreeView(treeViewMotor, z.TreeItems, z.SelectedTreeItem).AddTo(motorDisposable);
 
 			z.SelectedTreeItem
 				.BindTo(
@@ -342,7 +315,7 @@ namespace TrainEditor2.Views
 
 			z.StoppedSim
 				.BindTo(
-					tabPageCar,
+					tabPageCar1,
 					w => w.Enabled
 				)
 				.AddTo(motorDisposable);

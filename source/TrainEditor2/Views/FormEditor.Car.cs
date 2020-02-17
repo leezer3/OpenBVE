@@ -20,6 +20,7 @@ namespace TrainEditor2.Views
 			CompositeDisposable pressureDisposable = new CompositeDisposable().AddTo(carDisposable);
 			CompositeDisposable accelerationDisposable = new CompositeDisposable().AddTo(carDisposable);
 			CompositeDisposable motorDisposable = new CompositeDisposable().AddTo(carDisposable);
+			CompositeDisposable cabDisposable = new CompositeDisposable().AddTo(carDisposable);
 
 			y.Mass
 				.BindTo(
@@ -411,6 +412,61 @@ namespace TrainEditor2.Views
 					motorDisposable = new CompositeDisposable().AddTo(carDisposable);
 
 					BindToMotor(z).AddTo(motorDisposable);
+				})
+				.AddTo(carDisposable);
+
+			ControlledMotorCarViewModel controlledMotorCar = y as ControlledMotorCarViewModel;
+			ControlledTrailerCarViewModel controlledTrailerCar = y as ControlledTrailerCarViewModel;
+
+			controlledMotorCar?.Cab
+				.BindTo(
+					checkBoxIsEmbeddedCab,
+					z => z.Checked,
+					z => z is EmbeddedCabViewModel
+				)
+				.AddTo(carDisposable);
+
+			controlledMotorCar?.Cab
+				.BindTo(
+					groupBoxExternalCab,
+					z => z.Enabled,
+					z => z is ExternalCabViewModel
+				)
+				.AddTo(carDisposable);
+
+			controlledMotorCar?.Cab
+				.Subscribe(z =>
+				{
+					cabDisposable.Dispose();
+					cabDisposable = new CompositeDisposable().AddTo(carDisposable);
+
+					BindToCab(z).AddTo(cabDisposable);
+				})
+				.AddTo(carDisposable);
+
+			controlledTrailerCar?.Cab
+				.BindTo(
+					checkBoxIsEmbeddedCab,
+					z => z.Checked,
+					z => z is EmbeddedCabViewModel
+				)
+				.AddTo(carDisposable);
+
+			controlledTrailerCar?.Cab
+				.BindTo(
+					groupBoxExternalCab,
+					z => z.Enabled,
+					z => z is ExternalCabViewModel
+				)
+				.AddTo(carDisposable);
+
+			controlledTrailerCar?.Cab
+				.Subscribe(z =>
+				{
+					cabDisposable.Dispose();
+					cabDisposable = new CompositeDisposable().AddTo(carDisposable);
+
+					BindToCab(z).AddTo(cabDisposable);
 				})
 				.AddTo(carDisposable);
 

@@ -18,6 +18,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 
 			MotorCar firstMotorCar = train.Cars.OfType<MotorCar>().First();
 			TrailerCar firstTrailerCar = train.Cars.OfType<TrailerCar>().FirstOrDefault();
+			Cab firstCab = new[] { train.Cars.OfType<ControlledMotorCar>().Select(x => x.Cab), train.Cars.OfType<ControlledTrailerCar>().Select(x => x.Cab) }.SelectMany(x => x).First();
 
 			builder.AppendLine("OPENBVE" + currentVersion);
 
@@ -45,12 +46,12 @@ namespace TrainEditor2.IO.Trains.TrainDat
 			builder.AppendLine($"{firstMotorCar.Performance.AerodynamicDragCoefficient.ToString(culture).PadRight(n, ' ')}; AerodynamicDragCoefficient");
 
 			builder.AppendLine("#DELAY");
-			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.DelayPower.Select(d => d.Up.ToString(culture))).PadRight(n, ' ')}; DelayPowerUp");
-			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.DelayPower.Select(d => d.Down.ToString(culture))).PadRight(n, ' ')}; DelayPowerDown");
-			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.DelayBrake.Select(d => d.Up.ToString(culture))).PadRight(n, ' ')}; DelayBrakeUp");
-			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.DelayBrake.Select(d => d.Down.ToString(culture))).PadRight(n, ' ')}; DelayBrakeDown");
-			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.DelayLocoBrake.Select(d => d.Up.ToString(culture))).PadRight(n, ' ')}; DelayLocoBrakeUp (1.5.3.4+)");
-			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.DelayLocoBrake.Select(d => d.Down.ToString(culture))).PadRight(n, ' ')}; DelayLocoBrakeDown (1.5.3.4+)");
+			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.Power.Select(d => d.Up.ToString(culture))).PadRight(n, ' ')}; DelayPowerUp");
+			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.Power.Select(d => d.Down.ToString(culture))).PadRight(n, ' ')}; DelayPowerDown");
+			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.Brake.Select(d => d.Up.ToString(culture))).PadRight(n, ' ')}; DelayBrakeUp");
+			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.Brake.Select(d => d.Down.ToString(culture))).PadRight(n, ' ')}; DelayBrakeDown");
+			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.LocoBrake.Select(d => d.Up.ToString(culture))).PadRight(n, ' ')}; DelayLocoBrakeUp (1.5.3.4+)");
+			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.LocoBrake.Select(d => d.Down.ToString(culture))).PadRight(n, ' ')}; DelayLocoBrakeDown (1.5.3.4+)");
 
 			builder.AppendLine("#MOVE");
 			builder.AppendLine($"{firstMotorCar.Move.JerkPowerUp.ToString(culture).PadRight(n, ' ')}; JerkPowerUp");
@@ -85,15 +86,15 @@ namespace TrainEditor2.IO.Trains.TrainDat
 			builder.AppendLine($"{train.Handle.DriverBrakeNotches.ToString(culture).PadRight(n, ' ')}; DriverBrakeNotches (1.5.3.11+)");
 
 			builder.AppendLine("#CAB");
-			builder.AppendLine($"{train.Cab.PositionX.ToString(culture).PadRight(n, ' ')}; X");
-			builder.AppendLine($"{train.Cab.PositionY.ToString(culture).PadRight(n, ' ')}; Y");
-			builder.AppendLine($"{train.Cab.PositionZ.ToString(culture).PadRight(n, ' ')}; Z");
-			builder.AppendLine($"{train.Cab.DriverCar.ToString(culture).PadRight(n, ' ')}; DriverCar");
+			builder.AppendLine($"{firstCab.PositionX.ToString(culture).PadRight(n, ' ')}; X");
+			builder.AppendLine($"{firstCab.PositionY.ToString(culture).PadRight(n, ' ')}; Y");
+			builder.AppendLine($"{firstCab.PositionZ.ToString(culture).PadRight(n, ' ')}; Z");
+			builder.AppendLine($"{train.InitialDriverCar.ToString(culture).PadRight(n, ' ')}; DriverCar");
 
 			builder.AppendLine("#CAR");
 			builder.AppendLine($"{firstMotorCar.Mass.ToString(culture).PadRight(n, ' ')}; MotorCarMass");
 			builder.AppendLine($"{train.Cars.Count(c => c is MotorCar).ToString(culture).PadRight(n, ' ')}; NumberOfMotorCars");
-			builder.AppendLine($"{(firstTrailerCar ?? new TrailerCar()).Mass.ToString(culture).PadRight(n, ' ')}; TrailerCarMass");
+			builder.AppendLine($"{(firstTrailerCar ?? new UncontrolledTrailerCar()).Mass.ToString(culture).PadRight(n, ' ')}; TrailerCarMass");
 			builder.AppendLine($"{train.Cars.Count(c => c is TrailerCar).ToString(culture).PadRight(n, ' ')}; NumberOfTrailerCars");
 			builder.AppendLine($"{firstMotorCar.Length.ToString(culture).PadRight(n, ' ')}; LengthOfACar");
 			builder.AppendLine($"{(train.Cars.First() is MotorCar ? "1" : "0").PadRight(n, ' ')}; FrontCarIsAMotorCar");

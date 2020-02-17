@@ -62,28 +62,28 @@ namespace TrainEditor2.ViewModels.Trains
 			}
 		}
 
-		internal ReadOnlyReactiveCollection<EntryViewModel> DelayPower
+		internal ReadOnlyReactiveCollection<EntryViewModel> Power
 		{
 			get;
 		}
 
-		internal ReadOnlyReactiveCollection<EntryViewModel> DelayBrake
+		internal ReadOnlyReactiveCollection<EntryViewModel> Brake
 		{
 			get;
 		}
 
-		internal ReadOnlyReactiveCollection<EntryViewModel> DelayLocoBrake
+		internal ReadOnlyReactiveCollection<EntryViewModel> LocoBrake
 		{
 			get;
 		}
 
 		internal DelayViewModel(Delay delay)
 		{
-			DelayPower = delay.DelayPower.ToReadOnlyReactiveCollection(x => new EntryViewModel(x)).AddTo(disposable);
+			Power = delay.Power.ToReadOnlyReactiveCollection(x => new EntryViewModel(x)).AddTo(disposable);
 
-			DelayBrake = delay.DelayBrake.ToReadOnlyReactiveCollection(x => new EntryViewModel(x)).AddTo(disposable);
+			Brake = delay.Brake.ToReadOnlyReactiveCollection(x => new EntryViewModel(x)).AddTo(disposable);
 
-			DelayLocoBrake = delay.DelayLocoBrake.ToReadOnlyReactiveCollection(x => new EntryViewModel(x)).AddTo(disposable);
+			LocoBrake = delay.LocoBrake.ToReadOnlyReactiveCollection(x => new EntryViewModel(x)).AddTo(disposable);
 		}
 	}
 }

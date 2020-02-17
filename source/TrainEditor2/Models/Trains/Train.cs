@@ -16,8 +16,8 @@ namespace TrainEditor2.Models.Trains
 	internal class Train : BindableBase, ICloneable
 	{
 		private Handle handle;
-		private Cab cab;
 		private Device device;
+		private int initialDriverCar;
 
 		internal Handle Handle
 		{
@@ -28,18 +28,6 @@ namespace TrainEditor2.Models.Trains
 			set
 			{
 				SetProperty(ref handle, value);
-			}
-		}
-
-		internal Cab Cab
-		{
-			get
-			{
-				return cab;
-			}
-			set
-			{
-				SetProperty(ref cab, value);
 			}
 		}
 
@@ -55,14 +43,26 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
+		internal int InitialDriverCar
+		{
+			get
+			{
+				return initialDriverCar;
+			}
+			set
+			{
+				SetProperty(ref initialDriverCar, value);
+			}
+		}
+
 		internal ObservableCollection<Car> Cars;
 		internal ObservableCollection<Coupler> Couplers;
 
 		internal Train()
 		{
 			Handle = new Handle();
-			Cab = new Cab();
 			Device = new Device();
+			InitialDriverCar = 0;
 			Cars = new ObservableCollection<Car>();
 			Couplers = new ObservableCollection<Coupler>();
 		}
@@ -72,7 +72,6 @@ namespace TrainEditor2.Models.Trains
 			return new Train
 			{
 				Handle = (Handle)Handle.Clone(),
-				Cab = (Cab)Cab.Clone(),
 				Device = (Device)Device.Clone(),
 				Cars = new ObservableCollection<Car>(Cars.Select(c => (Car)c.Clone())),
 				Couplers = new ObservableCollection<Coupler>(Couplers.Select(c => (Coupler)c.Clone()))
@@ -85,14 +84,14 @@ namespace TrainEditor2.Models.Trains
 		{
 			foreach (Car car in Cars)
 			{
-				for (int i = car.Delay.DelayPower.Count; i < Handle.PowerNotches; i++)
+				for (int i = car.Delay.Power.Count; i < Handle.PowerNotches; i++)
 				{
-					car.Delay.DelayPower.Add(new Delay.Entry());
+					car.Delay.Power.Add(new Delay.Entry());
 				}
 
-				for (int i = car.Delay.DelayPower.Count - 1; i >= Handle.PowerNotches; i--)
+				for (int i = car.Delay.Power.Count - 1; i >= Handle.PowerNotches; i--)
 				{
-					car.Delay.DelayPower.RemoveAt(i);
+					car.Delay.Power.RemoveAt(i);
 				}
 			}
 
@@ -114,14 +113,14 @@ namespace TrainEditor2.Models.Trains
 		{
 			foreach (Car car in Cars)
 			{
-				for (int i = car.Delay.DelayBrake.Count; i < Handle.BrakeNotches; i++)
+				for (int i = car.Delay.Brake.Count; i < Handle.BrakeNotches; i++)
 				{
-					car.Delay.DelayBrake.Add(new Delay.Entry());
+					car.Delay.Brake.Add(new Delay.Entry());
 				}
 
-				for (int i = car.Delay.DelayBrake.Count - 1; i >= Handle.BrakeNotches; i--)
+				for (int i = car.Delay.Brake.Count - 1; i >= Handle.BrakeNotches; i--)
 				{
-					car.Delay.DelayBrake.RemoveAt(i);
+					car.Delay.Brake.RemoveAt(i);
 				}
 			}
 		}
@@ -130,14 +129,14 @@ namespace TrainEditor2.Models.Trains
 		{
 			foreach (Car car in Cars)
 			{
-				for (int i = car.Delay.DelayLocoBrake.Count; i < Handle.LocoBrakeNotches; i++)
+				for (int i = car.Delay.LocoBrake.Count; i < Handle.LocoBrakeNotches; i++)
 				{
-					car.Delay.DelayLocoBrake.Add(new Delay.Entry());
+					car.Delay.LocoBrake.Add(new Delay.Entry());
 				}
 
-				for (int i = car.Delay.DelayLocoBrake.Count - 1; i >= Handle.LocoBrakeNotches; i--)
+				for (int i = car.Delay.LocoBrake.Count - 1; i >= Handle.LocoBrakeNotches; i--)
 				{
-					car.Delay.DelayLocoBrake.RemoveAt(i);
+					car.Delay.LocoBrake.RemoveAt(i);
 				}
 			}
 		}

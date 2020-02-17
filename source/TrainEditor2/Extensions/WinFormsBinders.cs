@@ -8,11 +8,16 @@ using System.Reactive.Linq;
 using System.Windows.Forms;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
+using TrainEditor2.Models.Dialogs;
+using TrainEditor2.ViewModels.Dialogs;
 using TrainEditor2.ViewModels.Others;
+using MessageBox = System.Windows.Forms.MessageBox;
+using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
+using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
 
 namespace TrainEditor2.Extensions
 {
-	internal static class Binders
+	internal static class WinFormsBinders
 	{
 		internal static IDisposable BindToButton(this ReactiveCommand command, Button button)
 		{
@@ -165,6 +170,288 @@ namespace TrainEditor2.Extensions
 					h => checkBox.Click -= h
 				)
 				.Subscribe(_ => command.Execute())
+				.AddTo(disposable);
+
+			return disposable;
+		}
+
+		internal static IDisposable BindToMessageBox(this ReadOnlyReactivePropertySlim<MessageBoxViewModel> viewModel)
+		{
+			CompositeDisposable disposable = new CompositeDisposable();
+
+			CompositeDisposable messageDisposable = new CompositeDisposable().AddTo(disposable);
+
+			viewModel
+				.Subscribe(x =>
+				{
+					messageDisposable.Dispose();
+					messageDisposable = new CompositeDisposable().AddTo(disposable);
+
+					x.IsOpen
+						.Where(y => y)
+						.Subscribe(_ =>
+						{
+							MessageBoxIcon icon;
+							MessageBoxButtons button;
+
+							switch (x.Icon.Value)
+							{
+								case BaseDialog.DialogIcon.None:
+									icon = MessageBoxIcon.None;
+									break;
+								case BaseDialog.DialogIcon.Information:
+									icon = MessageBoxIcon.Information;
+									break;
+								case BaseDialog.DialogIcon.Question:
+									icon = MessageBoxIcon.Question;
+									break;
+								case BaseDialog.DialogIcon.Warning:
+									icon = MessageBoxIcon.Warning;
+									break;
+								case BaseDialog.DialogIcon.Error:
+									icon = MessageBoxIcon.Warning;
+									break;
+								default:
+									throw new ArgumentOutOfRangeException();
+							}
+
+							switch (x.Button.Value)
+							{
+								case BaseDialog.DialogButton.Ok:
+									button = MessageBoxButtons.OK;
+									break;
+								case BaseDialog.DialogButton.OkCancel:
+									button = MessageBoxButtons.OKCancel;
+									break;
+								case BaseDialog.DialogButton.YesNo:
+									button = MessageBoxButtons.YesNo;
+									break;
+								case BaseDialog.DialogButton.YesNoCancel:
+									button = MessageBoxButtons.YesNoCancel;
+									break;
+								default:
+									throw new ArgumentOutOfRangeException();
+							}
+
+							switch (MessageBox.Show(x.Text.Value, x.Title.Value, button, icon))
+							{
+								case DialogResult.OK:
+								case DialogResult.Yes:
+									x.YesCommand.Execute();
+									break;
+								case DialogResult.No:
+									x.NoCommand.Execute();
+									break;
+								case DialogResult.Cancel:
+									x.CancelCommand.Execute();
+									break;
+							}
+						})
+						.AddTo(messageDisposable);
+				})
+				.AddTo(disposable);
+
+			return disposable;
+		}
+
+		internal static IDisposable BindToOpenFileDialog(this ReadOnlyReactivePropertySlim<OpenFileDialogViewModel> viewModel, IWin32Window owner)
+		{
+			CompositeDisposable disposable = new CompositeDisposable();
+
+			CompositeDisposable dialogDisposable = new CompositeDisposable().AddTo(disposable);
+
+			viewModel
+				.Subscribe(x =>
+				{
+					dialogDisposable.Dispose();
+					dialogDisposable = new CompositeDisposable().AddTo(disposable);
+
+					x.IsOpen
+						.Where(y => y)
+						.Subscribe(_ =>
+						{
+							using (OpenFileDialog view = new OpenFileDialog())
+							{
+								view.Filter = x.Filter.Value;
+								view.CheckFileExists = x.CheckFileExists.Value;
+
+								switch (view.ShowDialog(owner))
+								{
+									case DialogResult.OK:
+									case DialogResult.Yes:
+										x.FileName.Value = view.FileName;
+										x.YesCommand.Execute();
+										break;
+									case DialogResult.No:
+										x.NoCommand.Execute();
+										break;
+									case DialogResult.Cancel:
+										x.CancelCommand.Execute();
+										break;
+								}
+							}
+						})
+						.AddTo(dialogDisposable);
+				})
+				.AddTo(disposable);
+
+			return disposable;
+		}
+
+		internal static IDisposable BindToOpenFolderDialog(this ReadOnlyReactivePropertySlim<OpenFolderDialogViewModel> viewModel, IWin32Window owner)
+		{
+			CompositeDisposable disposable = new CompositeDisposable();
+
+			CompositeDisposable dialogDisposable = new CompositeDisposable().AddTo(disposable);
+
+			viewModel
+				.Subscribe(x =>
+				{
+					dialogDisposable.Dispose();
+					dialogDisposable = new CompositeDisposable().AddTo(disposable);
+
+					x.IsOpen
+						.Where(y => y)
+						.Subscribe(_ =>
+						{
+							using (FolderBrowserDialog view = new FolderBrowserDialog())
+							{
+								view.ShowNewFolderButton = false;
+
+								switch (view.ShowDialog(owner))
+								{
+									case DialogResult.OK:
+									case DialogResult.Yes:
+										x.Folder.Value = view.SelectedPath;
+										x.YesCommand.Execute();
+										break;
+									case DialogResult.No:
+										x.NoCommand.Execute();
+										break;
+									case DialogResult.Cancel:
+										x.CancelCommand.Execute();
+										break;
+								}
+							}
+						})
+						.AddTo(dialogDisposable);
+				})
+				.AddTo(disposable);
+
+			return disposable;
+		}
+
+		internal static IDisposable BindToSaveFileDialog(this ReadOnlyReactivePropertySlim<SaveFileDialogViewModel> viewModel, IWin32Window owner)
+		{
+			CompositeDisposable disposable = new CompositeDisposable();
+
+			CompositeDisposable dialogDisposable = new CompositeDisposable().AddTo(disposable);
+
+			viewModel
+				.Subscribe(x =>
+				{
+					dialogDisposable.Dispose();
+					dialogDisposable = new CompositeDisposable().AddTo(disposable);
+
+					x.IsOpen
+						.Where(y => y)
+						.Subscribe(_ =>
+						{
+							using (SaveFileDialog view = new SaveFileDialog())
+							{
+								view.Filter = x.Filter.Value;
+								view.OverwritePrompt = x.OverwritePrompt.Value;
+
+								switch (view.ShowDialog(owner))
+								{
+									case DialogResult.OK:
+									case DialogResult.Yes:
+										x.FileName.Value = view.FileName;
+										x.YesCommand.Execute();
+										break;
+									case DialogResult.No:
+										x.NoCommand.Execute();
+										break;
+									case DialogResult.Cancel:
+										x.CancelCommand.Execute();
+										break;
+								}
+							}
+						})
+						.AddTo(dialogDisposable);
+				})
+				.AddTo(disposable);
+
+			return disposable;
+		}
+
+		internal static IDisposable BindToToolTip(this ReadOnlyReactivePropertySlim<ToolTipViewModel> viewModel, IWin32Window owner)
+		{
+			CompositeDisposable disposable = new CompositeDisposable();
+
+			CompositeDisposable toolTipDisposable = new CompositeDisposable().AddTo(disposable);
+
+			viewModel
+				.Subscribe(x =>
+				{
+					toolTipDisposable.Dispose();
+					toolTipDisposable = new CompositeDisposable().AddTo(disposable);
+
+					ToolTip toolTip = new ToolTip();
+
+					x.Title
+						.Subscribe(y => toolTip.ToolTipTitle = y)
+						.AddTo(toolTipDisposable);
+
+					x.Icon
+						.Subscribe(y => toolTip.ToolTipIcon = (ToolTipIcon)(int)y)
+						.AddTo(toolTipDisposable);
+
+					x.IsOpen
+						.Subscribe(y =>
+						{
+							if (y)
+							{
+								toolTip.Show(x.Text.Value, owner, (int)x.X.Value, (int)x.Y.Value);
+							}
+							else
+							{
+								toolTip.Hide(owner);
+							}
+						})
+						.AddTo(toolTipDisposable);
+
+					x.Text
+						.Subscribe(y =>
+						{
+							if (x.IsOpen.Value)
+							{
+								toolTip.Hide(owner);
+								toolTip.Show(y, owner, (int)x.X.Value, (int)x.Y.Value);
+							}
+						})
+						.AddTo(toolTipDisposable);
+
+					x.X.Subscribe(y =>
+						{
+							if (x.IsOpen.Value)
+							{
+								toolTip.Hide(owner);
+								toolTip.Show(x.Text.Value, owner, (int)y, (int)x.Y.Value);
+							}
+						})
+						.AddTo(toolTipDisposable);
+
+					x.Y.Subscribe(y =>
+						{
+							if (x.IsOpen.Value)
+							{
+								toolTip.Hide(owner);
+								toolTip.Show(x.Text.Value, owner, (int)x.X.Value, (int)y);
+							}
+						})
+						.AddTo(toolTipDisposable);
+				})
 				.AddTo(disposable);
 
 			return disposable;
@@ -357,11 +644,11 @@ namespace TrainEditor2.Extensions
 			return disposable;
 		}
 
-		private static IDisposable BindToTreeNode(TreeView treeView, TreeViewItemViewModel item, TreeNode node)
+		private static IDisposable BindToTreeNode(TreeView treeView, TreeViewItemViewModel viewModel, TreeNode view)
 		{
 			CompositeDisposable disposable = new CompositeDisposable();
 
-			BindToTreeNodeCollection(treeView, item.Children, node.Nodes).AddTo(disposable);
+			BindToTreeNodeCollection(treeView, viewModel.Children, view.Nodes).AddTo(disposable);
 
 			bool sourceUpdating = false;
 			bool targetUpdating = false;
@@ -383,19 +670,19 @@ namespace TrainEditor2.Extensions
 
 					try
 					{
-						item.Checked.Value = node.Checked;
+						viewModel.Checked.Value = view.Checked;
 					}
 					catch (Exception e)
 					{
 						Debug.WriteLine(e);
-						item.Checked.Value = false;
+						viewModel.Checked.Value = false;
 					}
 
 					targetUpdating = false;
 				})
 				.AddTo(disposable);
 
-			item.Title
+			viewModel.Title
 				.Subscribe(x =>
 				{
 					if (targetUpdating)
@@ -407,19 +694,19 @@ namespace TrainEditor2.Extensions
 
 					try
 					{
-						node.Text = x;
+						view.Text = x;
 					}
 					catch (Exception e)
 					{
 						Debug.WriteLine(e);
-						node.Text = string.Empty;
+						view.Text = string.Empty;
 					}
 
 					sourceUpdating = false;
 				})
 				.AddTo(disposable);
 
-			item.Checked
+			viewModel.Checked
 				.Subscribe(x =>
 				{
 					if (targetUpdating)
@@ -431,12 +718,12 @@ namespace TrainEditor2.Extensions
 
 					try
 					{
-						node.Checked = x;
+						view.Checked = x;
 					}
 					catch (Exception e)
 					{
 						Debug.WriteLine(e);
-						node.Checked = false;
+						view.Checked = false;
 					}
 
 					sourceUpdating = false;
@@ -446,7 +733,7 @@ namespace TrainEditor2.Extensions
 			bool parentUpdating = false;
 			bool childrenUpdating = false;
 
-			item.Checked
+			viewModel.Checked
 				.Subscribe(x =>
 				{
 					if (parentUpdating)
@@ -456,7 +743,7 @@ namespace TrainEditor2.Extensions
 
 					childrenUpdating = true;
 
-					foreach (TreeViewItemViewModel child in item.Children)
+					foreach (TreeViewItemViewModel child in viewModel.Children)
 					{
 						child.Checked.Value = x;
 					}
@@ -465,7 +752,7 @@ namespace TrainEditor2.Extensions
 				})
 				.AddTo(disposable);
 
-			item.Children
+			viewModel.Children
 				.ObserveElementObservableProperty(x => x.Checked)
 				.Subscribe(x =>
 				{
@@ -476,7 +763,7 @@ namespace TrainEditor2.Extensions
 
 					parentUpdating = true;
 
-					item.Checked.Value = x.Value && item.Children.All(y => y.Checked.Value);
+					viewModel.Checked.Value = x.Value && viewModel.Children.All(y => y.Checked.Value);
 
 					parentUpdating = false;
 				})
@@ -485,9 +772,9 @@ namespace TrainEditor2.Extensions
 			return disposable;
 		}
 
-		private static TreeNode SearchTreeNode(TreeViewItemViewModel item, TreeNode node)
+		private static TreeNode SearchTreeNode(TreeViewItemViewModel viewModel, TreeNode view)
 		{
-			return node.Tag == item ? node : node.Nodes.OfType<TreeNode>().Select(x => SearchTreeNode(item, x)).FirstOrDefault(x => x != null);
+			return view.Tag == viewModel ? view : view.Nodes.OfType<TreeNode>().Select(x => SearchTreeNode(viewModel, x)).FirstOrDefault(x => x != null);
 		}
 
 		internal static IDisposable BindToListView(ListView listView, ReadOnlyReactiveCollection<ListViewColumnHeaderViewModel> columns, ReadOnlyReactiveCollection<ListViewItemViewModel> items, ReactiveProperty<ListViewItemViewModel> selectedItem)
@@ -745,6 +1032,63 @@ namespace TrainEditor2.Extensions
 		private static IDisposable BindToListViewItem(ListView listView, ListViewItemViewModel viewModel, ListViewItem view)
 		{
 			CompositeDisposable disposable = new CompositeDisposable();
+
+
+			bool sourceUpdating = false;
+			bool targetUpdating = false;
+
+			Observable.FromEvent<ItemCheckEventHandler, EventArgs>(
+					h => (s, e) => h(e),
+					h => listView.ItemCheck += h,
+					h => listView.ItemCheck -= h
+				)
+				.ToUnit()
+				.Subscribe(_ =>
+				{
+					if (sourceUpdating)
+					{
+						return;
+					}
+
+					targetUpdating = true;
+
+					try
+					{
+						viewModel.Checked.Value = view.Checked;
+					}
+					catch (Exception e)
+					{
+						Debug.WriteLine(e);
+						viewModel.Checked.Value = false;
+					}
+
+					targetUpdating = false;
+				})
+				.AddTo(disposable);
+
+			viewModel.Checked
+				.Subscribe(x =>
+				{
+					if (targetUpdating)
+					{
+						return;
+					}
+
+					sourceUpdating = true;
+
+					try
+					{
+						view.Checked = x;
+					}
+					catch (Exception e)
+					{
+						Debug.WriteLine(e);
+						view.Checked = false;
+					}
+
+					sourceUpdating = false;
+				})
+				.AddTo(disposable);
 
 			viewModel.ImageIndex.Subscribe(x => view.ImageIndex = x).AddTo(disposable);
 
