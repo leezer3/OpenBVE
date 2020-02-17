@@ -25,8 +25,6 @@ namespace OpenBve {
 		internal static bool Complete;
 		private static string CurrentRouteFile;
 		private static Encoding CurrentRouteEncoding;
-		internal static double TrainProgressCurrentSum;
-		internal static double TrainProgressCurrentWeight;
 
 		internal static bool JobAvailable;
 
@@ -38,8 +36,6 @@ namespace OpenBve {
 			
 			// members
 			RouteProgress = 0.0;
-			TrainProgressCurrentSum = 0.0;
-			TrainProgressCurrentWeight = 1.0;
 			Cancel = false;
 			Complete = false;
 			CurrentRouteFile = RouteFile;
@@ -104,8 +100,6 @@ namespace OpenBve {
 		{
 			// members
 			RouteProgress = 0.0;
-			TrainProgressCurrentSum = 0.0;
-			TrainProgressCurrentWeight = 1.0;
 			Cancel = false;
 			Complete = false;
 			CurrentRouteFile = RouteFile;
