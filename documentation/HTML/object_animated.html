@@ -269,24 +269,33 @@ All operations treat 0 as false and any other value as true, and return 1 for tr
 
 </font></td></tr></table>
 <table><tr style="height: 2px;"><td /></tr></table>
-From highest precedence to lowest. Operators of same precedence are evaluated left to right in the order in they occur in the formula.<br /><br />
+From highest precedence to lowest. Operators of same precedence are evaluated either left to right or right to left, depending on if they share a precedence with another operator.<br /><br />
 <table style="border-collapse: collapse;">
-<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">a[...]</td></tr>
-<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">- (Minus)</td></tr>
-<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><tt>/</tt></td></tr>
-<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><tt>*</tt></td></tr>
-<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><tt>+</tt>, <tt>-</tt> (Subtract)</td></tr>
-<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><tt>&#61;=</tt>, <tt>!=</tt>, <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&lt;=</tt>, <tt>&gt;=</tt></td></tr>
-<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><tt>!</tt></td></tr>
-<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><tt>&amp;</tt></td></tr>
-<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><tt>^</tt></td></tr>
-<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><tt>&#124;</tt></td></tr>
+<tr><th bgcolor="#D0D0D0" style=" border: 2px; border-style: ridge; padding: 4px;">Operator</th><th bgcolor="#D0D0D0" style=" border: 2px; border-style: ridge; padding: 4px;">Associativity</th><th bgcolor="#D0D0D0" style=" border: 2px; border-style: ridge; padding: 4px;">Unparenthesized</th><th bgcolor="#D0D0D0" style=" border: 2px; border-style: ridge; padding: 4px;">Equivalent</th></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">a[...]</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">unary</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"></td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"></td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">- (Minus)</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">unary</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"></td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"></td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><tt>/</tt></td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">right-to-left</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">1 / 2 / 3</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">(1 / (2 / 3))</td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><tt>*</tt></td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">right-to-left</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">1 * 2 * 3</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">(1 * (2 * 3))</td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><tt>+</tt>, <tt>-</tt> (Subtract)</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">left-to-right</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">(1 + 2 + 3)</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">((1 + 2) + 3)</td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><tt>&#61;=</tt>, <tt>!=</tt>, <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&lt;=</tt>, <tt>&gt;=</tt></td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">left-to-right</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">1 <= 2 <= 3</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">((1 <= 2) <= 3)</td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><tt>!</tt></td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">unary</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"></td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"></td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><tt>&amp;</tt></td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">right-to-left</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">1 & 2 & 3</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">(1 & (2 & 3))</td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><tt>^</tt></td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">right-to-left</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">1 ^ 2 ^ 3</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">(1 ^ (2 ^ 3))</td></tr>
+<tr><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;"><tt>&#124;</tt></td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">right-to-left</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">1 | 2 | 3</td><td bgcolor="#FFFFFF" style=" border: 2px; border-style: ridge; padding: 4px;">(1 | (2 | 3))</td></tr>
 </table><br />
 <table cellspacing="0"><tr>
 <td><font color="red">⚠</font></td>
 <td>&nbsp;</td>
 <td bgcolor="#E0E0E0">&nbsp;</td>
-<td bgcolor="#E0E0E0">Please note that some combinations of prefix and infix operators are not recognized. For example <tt>a*-b</tt> is not accepted. Use <tt>a*(-b)</tt> or <tt>-a*b</tt> instead.</td>
+<td bgcolor="#E0E0E0">The logical not and multiplication operator are not at the same precedence level as a lot of other languages. For example <tt>!a + !b</tt> is <tt>!(a + !(b))</tt> <b>not</b> <tt>(!a) + (!b)</tt> as expected, similarly <tt>1 * 2 / 3</tt> is <tt>1 * (2 / 3)</tt> <b>not</b> <tt>(1 * 2) / 3</tt>.</td>
+<td bgcolor="#E0E0E0">&nbsp;</td>
+</tr></table>
+<br>
+<table cellspacing="0"><tr>
+<td><font color="red">⚠</font></td>
+<td>&nbsp;</td>
+<td bgcolor="#E0E0E0">&nbsp;</td>
+<td bgcolor="#E0E0E0">Please note that some combinations of prefix and infix operators are not recognized. For example <tt>a*-b</tt> is not accepted. Use <tt>a*(-b)</tt> or <tt>-b*a</tt> instead.</td>
 <td bgcolor="#E0E0E0">&nbsp;</td>
 </tr></table>
 <br /><a name="functions" />
@@ -757,17 +766,17 @@ The formal grammar for the language may not match up perfectly with the implimen
 <tr>
 <td width="16" valign="top">▶</td><td bgcolor="#D4D8FF" style="border:1px dashed">
 <tt>
-&lt;expression&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::= &lt;xor_expression&gt; "" &lt;expression&gt;&nbsp;&nbsp;&nbsp;&nbsp; | &lt;xor_expression&gt;</br>
+&lt;expression&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::= &lt;xor_expression&gt; "&amp;" &lt;expression&gt;&nbsp;&nbsp;&nbsp;&nbsp; | &lt;xor_expression&gt;</br>
 &lt;xor_expression&gt;&nbsp;&nbsp;&nbsp;&nbsp;::= &lt;or_expression&gt;&nbsp; "^" &lt;xor_expression&gt; | &lt;or_expression&gt;</br>
 &lt;or_expression&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::= &lt;not_expression&gt; "|" &lt;or_expression&gt;&nbsp; | &lt;not_expression&gt;</br>
 </br>
 &lt;not_expression&gt;&nbsp;&nbsp;&nbsp;&nbsp;::= "!" &lt;equal_expression&gt; | &lt;equal_expression&gt;</br>
 </br>
-&lt;equal_expression&gt;&nbsp;&nbsp;::= &lt;plus_expression&gt; "==" &lt;equal_expression&gt; | &lt;plus_expression&gt; "!=" &lt;equal_expression&gt; |</br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;plus_expression&gt; "&gt;"&nbsp; &lt;equal_expression&gt; | &lt;plus_expression&gt; "&lt;"&nbsp; &lt;equal_expression&gt; | </br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;plus_expression&gt; "&lt;=" &lt;equal_expression&gt; | &lt;plus_expression&gt; "&lt;=" &lt;equal_expression&gt; | &lt;plus_expression&gt;</br>
+&lt;equal_expression&gt;&nbsp;&nbsp;::= &lt;plus_expression&gt; ("==" &lt;plus_expression&gt;)* | &lt;plus_expression&gt; ("!=" &lt;plus_expression&gt;)*</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;plus_expression&gt; ("&gt;"&nbsp; &lt;plus_expression&gt;)* | &lt;plus_expression&gt; ("&lt;"&nbsp; &lt;plus_expression&gt;)* | </br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;plus_expression&gt; ("&lt;=" &lt;plus_expression&gt;)* | &lt;plus_expression&gt; ("&lt;=" &lt;plus_expression&gt;)* | &lt;plus_expression&gt;</br>
 </br>
-&lt;plus_expression&gt;&nbsp;&nbsp;&nbsp;::= &lt;times_expression&gt; "+" &lt;plus_expression&gt;&nbsp; | &lt;times_expression&gt; "-" &lt;plus_expression&gt; | &lt;times_expression&gt;</br>
+&lt;plus_expression&gt;&nbsp;&nbsp;&nbsp;::= &lt;times_expression&gt; ("+" &lt;times_expression&gt;)*&nbsp; | &lt;times_expression&gt; ("-" &lt;times_expression&gt;)* | &lt;times_expression&gt;</br>
 </br>
 &lt;times_expression&gt;&nbsp;&nbsp;::= &lt;divide_expression&gt; "*" &lt;times_expression&gt;&nbsp; | &lt;divide_expression&gt;</br>
 &lt;divide_expression&gt;&nbsp;::= &lt;minus_expression&gt;&nbsp; "/" &lt;divide_expression&gt; | &lt;minus_expression&gt;</br>
