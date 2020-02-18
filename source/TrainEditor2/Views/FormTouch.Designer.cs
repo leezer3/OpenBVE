@@ -100,7 +100,7 @@ namespace TrainEditor2.Views
 			// 
 			this.numericUpDownTouchSoundIndex.Location = new System.Drawing.Point(72, 16);
 			this.numericUpDownTouchSoundIndex.Maximum = new decimal(new int[] {
-            256,
+            1024,
             0,
             0,
             0});
@@ -156,6 +156,11 @@ namespace TrainEditor2.Views
 			// numericUpDownTouchCommandOption
 			// 
 			this.numericUpDownTouchCommandOption.Location = new System.Drawing.Point(72, 40);
+			this.numericUpDownTouchCommandOption.Maximum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
 			this.numericUpDownTouchCommandOption.Name = "numericUpDownTouchCommandOption";
 			this.numericUpDownTouchCommandOption.Size = new System.Drawing.Size(48, 19);
 			this.numericUpDownTouchCommandOption.TabIndex = 111;

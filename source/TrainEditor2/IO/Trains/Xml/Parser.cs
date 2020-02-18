@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -19,6 +20,8 @@ namespace TrainEditor2.IO.Trains.Xml
 {
 	internal static partial class TrainXml
 	{
+		private static readonly ReadOnlyCollection<int> currentVersion = Array.AsReadOnly(new[] { 1, 8 });
+
 		internal static void Parse(string fileName, out Train train)
 		{
 			XDocument xml = XDocument.Load(fileName, LoadOptions.SetLineInfo);
@@ -54,7 +57,7 @@ namespace TrainEditor2.IO.Trains.Xml
 				train.Cars[0] = new UncontrolledMotorCar(train.Cars[0]);
 			}
 
-			if (!train.Cars.OfType<ControlledMotorCar>().Any() && train.Cars.OfType<ControlledTrailerCar>().Any())
+			if (!train.Cars.OfType<ControlledMotorCar>().Any() && !train.Cars.OfType<ControlledTrailerCar>().Any())
 			{
 				Interface.AddMessage(MessageType.Error, false, $"A train requires at least one driver car in {fileName}");
 
@@ -82,6 +85,67 @@ namespace TrainEditor2.IO.Trains.Xml
 			CultureInfo culture = CultureInfo.InvariantCulture;
 
 			string section = parent.Name.LocalName;
+
+			bool isCompatibility = false;
+
+			foreach (XElement keyNode in parent.Elements())
+			{
+				string key = keyNode.Name.LocalName;
+				string value = keyNode.Value;
+				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
+
+				switch (key.ToLowerInvariant())
+				{
+					case "version":
+						if (value.Any())
+						{
+							int[] version = value.Split('.')
+								.Select(x =>
+								{
+									int result;
+
+									if (!NumberFormats.TryParseIntVb6(x, out result) || result < 0)
+									{
+										Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+									}
+
+									return result;
+								})
+								.Where(x => x >= 0)
+								.ToArray();
+
+							int minVersionLength = Math.Min(version.Length, currentVersion.Count);
+
+							for (int i = 0; i < minVersionLength; i++)
+							{
+								if (version[i] > currentVersion[i])
+								{
+									isCompatibility = false;
+									break;
+								}
+
+								isCompatibility = true;
+
+								if (version[i] < currentVersion[i])
+								{
+									break;
+								}
+							}
+
+							if (version[minVersionLength - 1] == currentVersion[minVersionLength - 1] && version.Length > currentVersion.Count)
+							{
+								isCompatibility = false;
+							}
+						}
+						break;
+				}
+			}
+
+			if (!isCompatibility)
+			{
+				Interface.AddMessage(MessageType.Warning, false, $"The train.xml {fileName} was created with a newer version of openBVE. Please check for an update.");
+				return train;
+			}
 
 			foreach (XElement keyNode in parent.Elements())
 			{
@@ -129,6 +193,9 @@ namespace TrainEditor2.IO.Trains.Xml
 						}
 
 						ParseCouplersNode(fileName, keyNode, train.Couplers);
+						break;
+					case "version":
+						// Ignore
 						break;
 					default:
 						Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {key} encountered in {section} at line {lineNumber.ToString(culture)} in {fileName}");
@@ -1876,33 +1943,36 @@ namespace TrainEditor2.IO.Trains.Xml
 				switch (key.ToLowerInvariant())
 				{
 					case "panel":
-						if (value.Any())
-						{
-							isExternalCab = true;
-							cab = new ExternalCab();
-
-							if (Path.ContainsInvalidChars(value))
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value contains illegal characters in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								string file = Path.CombineFile(basePath, value);
-
-								if (!File.Exists(file))
-								{
-									Interface.AddMessage(MessageType.Warning, true, $"The {key} object {file} does not exist in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-								}
-
-								((ExternalCab)cab).FileName = file;
-							}
-						}
-						else
+						if (keyNode.HasElements)
 						{
 							isExternalCab = false;
 							cab = new EmbeddedCab();
 
 							PanelCfgXml.Parse(fileName, keyNode, ((EmbeddedCab)cab).Panel);
+						}
+						else
+						{
+							isExternalCab = true;
+							cab = new ExternalCab();
+
+							if (value.Any())
+							{
+								if (Path.ContainsInvalidChars(value))
+								{
+									Interface.AddMessage(MessageType.Error, false, $"Value contains illegal characters in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+								}
+								else
+								{
+									string file = Path.CombineFile(basePath, value);
+
+									if (!File.Exists(file))
+									{
+										Interface.AddMessage(MessageType.Warning, true, $"The {key} object {file} does not exist in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+									}
+
+									((ExternalCab)cab).FileName = file;
+								}
+							}
 						}
 						break;
 				}

@@ -11,11 +11,14 @@ using TrainEditor2.Extensions;
 using TrainEditor2.Models.Panels;
 using TrainEditor2.Models.Sounds;
 using TrainEditor2.Models.Trains;
+using TrainEditor2.Systems;
 
 namespace TrainEditor2.IO.IntermediateFile
 {
 	internal static partial class IntermediateFile
 	{
+		private static readonly ReadOnlyCollection<int> currentVersion = Array.AsReadOnly(new[] { 1, 8 });
+
 		internal static void Parse(string fileName, out Train train, out Sound sound)
 		{
 			XDocument xml = XDocument.Load(fileName);
@@ -25,8 +28,48 @@ namespace TrainEditor2.IO.IntermediateFile
 				throw new InvalidDataException();
 			}
 
+			if (!CheckVersion(xml.XPathSelectElement("/TrainEditor/Version")))
+			{
+				Interface.AddMessage(MessageType.Warning, false, $"The .te {fileName} was created with a newer version of TrainEditor2. Please check for an update.");
+			}
+
 			train = ParseTrainNode(xml.XPathSelectElement("/TrainEditor/Train"));
 			sound = ParseSoundsNode(xml.XPathSelectElement("/TrainEditor/Sounds"));
+		}
+
+		private static bool CheckVersion(XElement parent)
+		{
+			if (parent == null)
+			{
+				return true;
+			}
+
+			bool isCompatibility = true;
+
+			int[] version = parent.Value.Split('.').Select(int.Parse).ToArray();
+
+			int minVersionLength = Math.Min(version.Length, currentVersion.Count);
+
+			for (int i = 0; i < minVersionLength; i++)
+			{
+				if (version[i] > currentVersion[i])
+				{
+					isCompatibility = false;
+					break;
+				}
+
+				if (version[i] < currentVersion[i])
+				{
+					break;
+				}
+			}
+
+			if (version[minVersionLength - 1] == currentVersion[minVersionLength - 1] && version.Length > currentVersion.Count)
+			{
+				isCompatibility = false;
+			}
+
+			return isCompatibility;
 		}
 
 		private static Train ParseTrainNode(XElement parent)

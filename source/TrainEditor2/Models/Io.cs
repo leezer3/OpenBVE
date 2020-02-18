@@ -301,7 +301,7 @@ namespace TrainEditor2.Models
 		{
 			CultureInfo culture = CultureInfo.InvariantCulture;
 
-			for (int i = app.Train.Cars.Count; i < ImportCarsList.Count; i++)
+			for (int i = ImportCarsList.Count - 1; i >= app.Train.Cars.Count; i--)
 			{
 				ImportCarsList.RemoveAt(i);
 			}
@@ -398,6 +398,8 @@ namespace TrainEditor2.Models
 						app.Train.Cars[i] = new ControlledTrailerCar(app.Train.Cars[i]) { Cab = new EmbeddedCab { Panel = (Panel)panel.Clone() } };
 					}
 				}
+
+				app.CreateTreeItem();
 			}
 			catch (Exception e)
 			{

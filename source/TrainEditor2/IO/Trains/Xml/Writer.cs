@@ -26,25 +26,33 @@ namespace TrainEditor2.IO.Trains.Xml
 			XElement trainNode = new XElement("Train");
 			openBVE.Add(trainNode);
 
+			trainNode.Add(new XElement("Version", string.Join(".", currentVersion)));
+
 			WriteHandleNode(trainNode, train.Handle);
 			WriteDeviceNode(trainNode, train.Device);
 
 			trainNode.Add(new XElement("InitialDriverCar", train.InitialDriverCar.ToString(culture)));
 
-			XElement carsNode = new XElement("Cars");
-			trainNode.Add(carsNode);
-
-			foreach (Car car in train.Cars)
+			if (train.Cars.Any())
 			{
-				WriteCarNode(fileName, carsNode, car);
+				XElement carsNode = new XElement("Cars");
+				trainNode.Add(carsNode);
+
+				foreach (Car car in train.Cars)
+				{
+					WriteCarNode(fileName, carsNode, car);
+				}
 			}
 
-			XElement couplersNode = new XElement("Couplers");
-			trainNode.Add(couplersNode);
-
-			foreach (Coupler coupler in train.Couplers)
+			if (train.Couplers.Any())
 			{
-				WriteCouplerNode(fileName, couplersNode, coupler);
+				XElement couplersNode = new XElement("Couplers");
+				trainNode.Add(couplersNode);
+
+				foreach (Coupler coupler in train.Couplers)
+				{
+					WriteCouplerNode(fileName, couplersNode, coupler);
+				}
 			}
 
 			xml.Save(fileName);

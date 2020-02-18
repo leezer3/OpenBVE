@@ -25,7 +25,7 @@ namespace TrainEditor2.Views
 
 		private readonly AppViewModel app;
 
-		public FormEditor()
+		internal FormEditor(AppViewModel app)
 		{
 			UIDispatcherScheduler.Initialize();
 
@@ -34,7 +34,7 @@ namespace TrainEditor2.Views
 			CompositeDisposable trainDisposable = new CompositeDisposable().AddTo(disposable);
 			CompositeDisposable soundDisposable = new CompositeDisposable().AddTo(disposable);
 
-			app = new AppViewModel().AddTo(disposable);
+			this.app = app;
 
 			InitializeComponent();
 

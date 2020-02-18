@@ -9,6 +9,7 @@ using TrainEditor2.Audio;
 using TrainEditor2.Graphics;
 using TrainEditor2.Systems;
 using TrainEditor2.Systems.Functions;
+using TrainEditor2.ViewModels;
 using TrainEditor2.Views;
 
 namespace TrainEditor2
@@ -59,9 +60,13 @@ namespace TrainEditor2
 				return;
 			}
 
+			AppViewModel app = new AppViewModel();
+
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new FormEditor());
+			Application.Run(new FormEditor(app));
+
+			app.Dispose();
 
 			Plugins.UnloadPlugins();
 			SoundApi.Deinitialize();

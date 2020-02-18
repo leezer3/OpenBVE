@@ -1033,14 +1033,13 @@ namespace TrainEditor2.Extensions
 		{
 			CompositeDisposable disposable = new CompositeDisposable();
 
-
 			bool sourceUpdating = false;
 			bool targetUpdating = false;
 
-			Observable.FromEvent<ItemCheckEventHandler, EventArgs>(
+			Observable.FromEvent<ItemCheckedEventHandler, EventArgs>(
 					h => (s, e) => h(e),
-					h => listView.ItemCheck += h,
-					h => listView.ItemCheck -= h
+					h => listView.ItemChecked += h,
+					h => listView.ItemChecked -= h
 				)
 				.ToUnit()
 				.Subscribe(_ =>

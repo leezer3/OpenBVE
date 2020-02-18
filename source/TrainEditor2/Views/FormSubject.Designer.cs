@@ -74,7 +74,7 @@
 			// 
 			this.numericUpDownBaseOption.Location = new System.Drawing.Point(88, 32);
 			this.numericUpDownBaseOption.Maximum = new decimal(new int[] {
-            1000,
+            1024,
             0,
             0,
             0});
@@ -108,6 +108,11 @@
 			// numericUpDownSuffixOption
 			// 
 			this.numericUpDownSuffixOption.Location = new System.Drawing.Point(88, 80);
+			this.numericUpDownSuffixOption.Maximum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
 			this.numericUpDownSuffixOption.Minimum = new decimal(new int[] {
             1,
             0,

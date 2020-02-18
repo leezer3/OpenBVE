@@ -494,7 +494,21 @@ namespace TrainEditor2.Models
 				builder.AppendLine(message);
 			}
 
-			File.WriteAllText(SaveFileDialog.FileName, builder.ToString());
+			try
+			{
+				File.WriteAllText(SaveFileDialog.FileName, builder.ToString());
+			}
+			catch (Exception e)
+			{
+				MessageBox = new MessageBox
+				{
+					Title = @"Output logs...",
+					Icon = BaseDialog.DialogIcon.Error,
+					Button = BaseDialog.DialogButton.Ok,
+					Text = e.Message,
+					IsOpen = true
+				};
+			}
 		}
 
 		private void RenameTreeViewItem(ObservableCollection<TreeViewItemModel> items)

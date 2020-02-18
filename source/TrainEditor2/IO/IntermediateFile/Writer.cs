@@ -18,6 +18,8 @@ namespace TrainEditor2.IO.IntermediateFile
 			trainEditor.Add(new XAttribute(XNamespace.Xmlns + "xsd", XNamespace.Get("http://www.w3.org/2001/XMLSchema")));
 			xml.Add(trainEditor);
 
+			trainEditor.Add(new XElement("Version", string.Join(".", currentVersion)));
+
 			WriteTrainNode(trainEditor, train);
 			WriteSoundsNode(trainEditor, sound);
 
