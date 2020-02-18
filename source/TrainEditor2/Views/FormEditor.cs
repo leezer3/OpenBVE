@@ -255,6 +255,7 @@ namespace TrainEditor2.Views
 
 			if (comboBox != null)
 			{
+				comboBox.Items.AddRange(Enumerable.Range(-1, 1024).OfType<object>().ToArray());
 				comboBox.DrawMode = DrawMode.OwnerDrawFixed;
 				comboBox.DrawItem += ToolStripComboBoxIndex_DrawItem;
 			}
