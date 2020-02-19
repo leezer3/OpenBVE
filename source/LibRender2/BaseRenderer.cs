@@ -138,6 +138,10 @@ namespace LibRender2
 		/// <summary>Stores the most recently bound texture</summary>
 		public OpenGlTexture LastBoundTexture;
 
+		private Color32 lastColor;
+
+		internal int lastVAO;
+
 		protected BaseRenderer()
 		{
 			Screen = new Screen();
@@ -157,6 +161,18 @@ namespace LibRender2
 			currentHost = CurrentHost;
 			currentOptions = CurrentOptions;
 
+			try
+			{
+				DefaultShader = new Shader("default", "default", true);
+				DefaultShader.Activate();
+				DefaultShader.Deactivate();
+			}
+			catch
+			{
+				CurrentHost.AddMessage(MessageType.Error, false, "Initializing the default shaders failed- Falling back to legacy openGL.");
+				CurrentOptions.IsUseNewRenderer = false;
+			}
+
 			Background = new Background(this);
 			Fog = new Fog();
 			OpenGlString = new OpenGlString(this);
@@ -170,17 +186,6 @@ namespace LibRender2
 			StaticObjectStates = new List<ObjectState>();
 			DynamicObjectStates = new List<ObjectState>();
 			VisibleObjects = new VisibleObjectLibrary(currentHost, Camera, currentOptions, this);
-			try
-			{
-				DefaultShader = new Shader("default", "default", true);
-				DefaultShader.Activate();
-				DefaultShader.Deactivate();
-			}
-			catch
-			{
-				CurrentHost.AddMessage(MessageType.Error, false, "Initialising the default shaders failed- Falling back to legacy openGL.");
-				CurrentOptions.IsUseNewRenderer = false;
-			}
 
 			GL.ClearColor(0.67f, 0.67f, 0.67f, 1.0f);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -338,7 +343,7 @@ namespace LibRender2
 				StartingDistance = startingDistance,
 				EndingDistance = endingDistance
 			});
-			
+
 			foreach (MeshFace face in Prototype.Mesh.Faces)
 			{
 				switch (face.Flags & MeshFace.FaceTypeMask)
@@ -429,7 +434,7 @@ namespace LibRender2
 				StartingDistance = startingDistance,
 				EndingDistance = endingDistance
 			});
-			
+
 			foreach (MeshFace face in Prototype.Mesh.Faces)
 			{
 				switch (face.Flags & MeshFace.FaceTypeMask)
@@ -467,8 +472,8 @@ namespace LibRender2
 			DynamicObjectStates.Add(internalObject);
 		}
 
-		/// <summary>Initialises the visibility of all objects within the game world</summary>
-		/// <remarks>If the new renderer is enabled, this must be run in a thread posessing an openGL context in order to successfully create
+		/// <summary>Initializes the visibility of all objects within the game world</summary>
+		/// <remarks>If the new renderer is enabled, this must be run in a thread processing an openGL context in order to successfully create
 		/// the required VAO objects</remarks>
 		public virtual void InitializeVisibility()
 		{
@@ -679,12 +684,13 @@ namespace LibRender2
 		{
 #if DEBUG
 			lastError = GL.GetError();
-			
+
 			if (lastError != ErrorCode.NoError)
 			{
 				throw new InvalidOperationException($"OpenGL Error: {lastError.ToString()}");
 			}
-#endif   
+#endif
+
 			Shader.SetCurrentProjectionMatrix(Matrix4D.Identity);
 			Shader.SetCurrentModelViewMatrix(Matrix4D.Identity);
 			Shader.SetCurrentTextureMatrix(Matrix4D.Identity);
@@ -797,10 +803,6 @@ namespace LibRender2
 			RenderFace(Shader, State.Object, State.Face, modelMatrix, modelViewMatrix, IsDebugTouchMode);
 		}
 
-		private Color32 lastColor;
-
-		internal int lastVAO;
-
 		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, Matrix4D modelMatrix, Matrix4D modelViewMatrix, bool IsDebugTouchMode = false)
 		{
 			if (State.Prototype.Mesh.Vertices.Length < 1)
@@ -816,7 +818,7 @@ namespace LibRender2
 				VAO.Bind();
 				lastVAO = VAO.handle;
 			}
-			
+
 			if (!OptionBackFaceCulling || (Face.Flags & MeshFace.Face2Mask) != 0)
 			{
 				GL.Disable(EnableCap.CullFace);
@@ -830,10 +832,9 @@ namespace LibRender2
 			}
 
 			// matrix
-			
 			Shader.SetCurrentModelViewMatrix(modelViewMatrix);
 			Shader.SetCurrentTextureMatrix(State.TextureTranslation);
-			
+
 			if (OptionWireFrame || IsDebugTouchMode)
 			{
 				if (material.Color != lastColor)
@@ -857,7 +858,7 @@ namespace LibRender2
 					Shader.SetMaterialSpecular(material.Color);
 					//TODO: Ambient and specular colors are not set by any current parsers
 				}
-					
+
 				if ((material.Flags & MeshMaterial.EmissiveColorMask) != 0)
 				{
 					Shader.SetMaterialEmission(material.EmissiveColor);
@@ -905,14 +906,14 @@ namespace LibRender2
 			// daytime polygon
 			{
 				// texture
-				if (material.DaytimeTexture != null && currentHost.LoadTexture(material.DaytimeTexture, (OpenGlTextureWrapMode) material.WrapMode))
+				if (material.DaytimeTexture != null && currentHost.LoadTexture(material.DaytimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
 				{
 					Shader.SetIsTexture(true);
-					if (LastBoundTexture != material.DaytimeTexture.OpenGlTextures[(int) material.WrapMode])
+					if (LastBoundTexture != material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode])
 					{
 						GL.BindTexture(TextureTarget.Texture2D,
-							material.DaytimeTexture.OpenGlTextures[(int) material.WrapMode].Name);
-						LastBoundTexture = material.DaytimeTexture.OpenGlTextures[(int) material.WrapMode];
+							material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode].Name);
+						LastBoundTexture = material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode];
 					}
 				}
 				else
@@ -930,7 +931,7 @@ namespace LibRender2
 					GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
 					Shader.SetIsFog(false);
 				}
-				else if((material.Flags & MeshMaterial.EmissiveColorMask) != 0)
+				else if ((material.Flags & MeshMaterial.EmissiveColorMask) != 0)
 				{
 					//As material is emitting light, it must be at full brightness
 					factor = 1.0f;
@@ -958,7 +959,7 @@ namespace LibRender2
 				if (material.GlowAttenuationData != 0)
 				{
 					alphaFactor = (float)Glow.GetDistanceFactor(modelMatrix, State.Prototype.Mesh.Vertices, ref Face, material.GlowAttenuationData, out mode);
-					
+
 				}
 				else
 				{
@@ -973,7 +974,7 @@ namespace LibRender2
 				{
 					Shader.SetMaterialAdditive(0);
 				}
-				
+
 				Shader.SetOpacity(inv255 * material.Color.A * alphaFactor);
 
 				// render polygon
@@ -990,7 +991,7 @@ namespace LibRender2
 					GL.BindTexture(TextureTarget.Texture2D, material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode].Name);
 					LastBoundTexture = material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode];
 				}
-				
+
 
 				GL.Enable(EnableCap.Blend);
 
@@ -1051,10 +1052,12 @@ namespace LibRender2
 
 		public void RenderFaceImmediateMode(FaceState State, bool IsDebugTouchMode = false)
 		{
-			RenderFaceImmediateMode(State.Object, State.Face, IsDebugTouchMode);
+			Matrix4D modelMatrix = State.Object.ModelMatrix * Camera.TranslationMatrix;
+			Matrix4D modelViewMatrix = modelMatrix * CurrentViewMatrix;
+			RenderFaceImmediateMode(State.Object, State.Face, modelMatrix, modelViewMatrix, IsDebugTouchMode);
 		}
 
-		public void RenderFaceImmediateMode(ObjectState State, MeshFace Face, bool IsDebugTouchMode = false)
+		public void RenderFaceImmediateMode(ObjectState State, MeshFace Face, Matrix4D modelMatrix, Matrix4D modelViewMatrix, bool IsDebugTouchMode = false)
 		{
 			if (State.Prototype.Mesh.Vertices.Length < 1)
 			{
@@ -1075,7 +1078,7 @@ namespace LibRender2
 					GL.Enable(EnableCap.CullFace);
 				}
 			}
-			Matrix4D modelMatrix = State.ModelMatrix * Camera.TranslationMatrix;
+
 			// matrix
 			unsafe
 			{
@@ -1091,7 +1094,7 @@ namespace LibRender2
 				{
 					GL.LoadMatrix(matrixPointer);
 				}
-				
+
 				double* matrixPointer2 = &modelMatrix.Row0.X;
 				{
 					GL.MultMatrix(matrixPointer2);
@@ -1103,9 +1106,8 @@ namespace LibRender2
 				{
 					GL.LoadMatrix(matrixPointer);
 				}
-				
+
 			}
-			
 
 			if (OptionWireFrame)
 			{
@@ -1232,6 +1234,7 @@ namespace LibRender2
 
 					GL.Vertex3(vertices[Face.Vertices[i].Index].Coordinates.X, vertices[Face.Vertices[i].Index].Coordinates.Y, -vertices[Face.Vertices[i].Index].Coordinates.Z);
 				}
+
 				GL.End();
 			}
 
