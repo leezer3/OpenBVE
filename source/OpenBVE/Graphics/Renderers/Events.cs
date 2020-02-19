@@ -24,6 +24,7 @@ namespace OpenBve.Graphics.Renderers
 		private Texture BufferTexture;
 		private Texture StopTexture;
 		private Texture PointSoundTexture;
+		private Texture RunSoundTexture;
 
 		private bool Initialized;
 
@@ -46,6 +47,7 @@ namespace OpenBve.Graphics.Renderers
 			renderer.TextureManager.RegisterTexture(Path.CombineFile(Folder, "buffer.png"), out BufferTexture);
 			renderer.TextureManager.RegisterTexture(Path.CombineFile(Folder, "sound.png"), out SoundTexture);
 			renderer.TextureManager.RegisterTexture(Path.CombineFile(Folder, "switchsound.png"), out PointSoundTexture);
+			renderer.TextureManager.RegisterTexture(Path.CombineFile(Folder, "runsound.png"), out RunSoundTexture);
 			Initialized = true;
 		}
 
@@ -148,6 +150,12 @@ namespace OpenBve.Graphics.Renderers
 							dy = 0.2;
 							dz = 0;
 							t = PointSoundTexture;
+						}
+						else if (e is RailSoundsChangeEvent)
+						{
+							s = 0.2;
+							dy = 0.8;
+							t = RunSoundTexture;
 						}
 						else
 						{
