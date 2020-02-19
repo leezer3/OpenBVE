@@ -10,6 +10,7 @@ using OpenBve.Parsers.Panel;
 using OpenBveApi.Graphics;
 using OpenBveApi.Objects;
 using OpenBveApi.Interface;
+using OpenTK.Graphics.ES20;
 
 namespace OpenBve.Parsers.Train
 {
@@ -170,7 +171,7 @@ namespace OpenBve.Parsers.Train
 						string f = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
 						if (System.IO.File.Exists(f))
 						{
-							CarObjects[Car] = ObjectManager.LoadObject(f, System.Text.Encoding.Default, false);
+							Program.CurrentHost.LoadObject(f, System.Text.Encoding.Default, out CarObjects[Car]);
 						}
 						break;
 					case "reversed":
@@ -221,7 +222,7 @@ namespace OpenBve.Parsers.Train
 										string fb = OpenBveApi.Path.CombineFile(currentPath, cc.InnerText);
 										if (System.IO.File.Exists(fb))
 										{
-											BogieObjects[Car * 2] = ObjectManager.LoadObject(fb, System.Text.Encoding.Default, false);
+											Program.CurrentHost.LoadObject(fb, System.Text.Encoding.Default, out BogieObjects[Car * 2]);
 										}
 										break;
 									case "reversed":
@@ -264,7 +265,7 @@ namespace OpenBve.Parsers.Train
 										string fb = OpenBveApi.Path.CombineFile(currentPath, cc.InnerText);
 										if (System.IO.File.Exists(fb))
 										{
-											BogieObjects[Car * 2 + 1] = ObjectManager.LoadObject(fb, System.Text.Encoding.Default, false);
+											Program.CurrentHost.LoadObject(fb, System.Text.Encoding.Default, out BogieObjects[Car * 2 + 1]);
 										}
 										break;
 									case "reversed":

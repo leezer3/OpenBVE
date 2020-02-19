@@ -96,7 +96,7 @@ namespace OpenBve.Parsers.Train
 										string f = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
 										if (System.IO.File.Exists(f))
 										{
-											CouplerObjects[carIndex - 1] = ObjectManager.LoadObject(f, System.Text.Encoding.Default, false);
+											Program.CurrentHost.LoadObject(f, System.Text.Encoding.Default, out CouplerObjects[carIndex - 1]);
 										}
 										break;
 								}

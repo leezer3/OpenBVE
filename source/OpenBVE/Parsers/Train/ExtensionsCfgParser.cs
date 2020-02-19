@@ -80,7 +80,7 @@ namespace OpenBve {
 														if (System.IO.File.Exists(File)) {
 															if (LoadObjects)
 															{
-																CarObjects[n] = ObjectManager.LoadObject(File, Encoding, false);
+																Program.CurrentHost.LoadObject(File, Encoding, out CarObjects[n]);
 															}
 														} else {
 															Interface.AddMessage(MessageType.Error, true, "The car object " + File + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -136,7 +136,7 @@ namespace OpenBve {
 																	if (System.IO.File.Exists(File)) {
 																		if (LoadObjects)
 																		{
-																			CarObjects[n] = ObjectManager.LoadObject(File, Encoding, false);
+																			Program.CurrentHost.LoadObject(File, Encoding, out CarObjects[n]);
 																		}
 																	} else {
 																		Interface.AddMessage(MessageType.Error, true, "The car object " + File + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -259,7 +259,7 @@ namespace OpenBve {
 																	if (System.IO.File.Exists(File)) {
 																		if (LoadObjects)
 																		{
-																			CouplerObjects[n] = ObjectManager.LoadObject(File, Encoding, false);
+																			Program.CurrentHost.LoadObject(File, Encoding, out CouplerObjects[n]);
 																		}
 																	} else {
 																		Interface.AddMessage(MessageType.Error, true, "The coupler object " + File + " does not exist at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -332,7 +332,7 @@ namespace OpenBve {
 																	{
 																		if (LoadObjects)
 																		{
-																			BogieObjects[n] = ObjectManager.LoadObject(File, Encoding, false);
+																			Program.CurrentHost.LoadObject(File, Encoding, out BogieObjects[n]);
 																		}
 																	}
 																	else
