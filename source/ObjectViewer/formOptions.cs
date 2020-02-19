@@ -105,7 +105,8 @@ namespace OpenBve
 #if !DEBUG
 									try {
 #endif
-                        UnifiedObject o = ObjectManager.LoadObject(Program.Files[i], System.Text.Encoding.UTF8, false);
+                        UnifiedObject o;
+                        Program.CurrentHost.LoadObject(Program.Files[i], System.Text.Encoding.UTF8, out o);
                         Program.Renderer.CreateObject(o, Vector3.Zero,
                             new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0, 0.0);
 #if !DEBUG
