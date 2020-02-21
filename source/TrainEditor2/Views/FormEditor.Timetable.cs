@@ -10,14 +10,14 @@ namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private IDisposable BindToTimetable(TimetableElementViewModel y)
+		private IDisposable BindToTimetable(TimetableElementViewModel timetable)
 		{
 			CompositeDisposable timetableDisposable = new CompositeDisposable();
 
-			y.LocationX
+			timetable.LocationX
 				.BindTo(
 					textBoxTimetableLocationX,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -30,14 +30,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(timetableDisposable);
 
-			y.LocationX
+			timetable.LocationX
 				.BindToErrorProvider(errorProvider, textBoxTimetableLocationX)
 				.AddTo(timetableDisposable);
 
-			y.LocationY
+			timetable.LocationY
 				.BindTo(
 					textBoxTimetableLocationY,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -50,17 +50,17 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(timetableDisposable);
 
-			y.LocationY
+			timetable.LocationY
 				.BindToErrorProvider(errorProvider, textBoxTimetableLocationY)
 				.AddTo(timetableDisposable);
 
-			y.Layer
+			timetable.Layer
 				.BindTo(
 					numericUpDownTimetableLayer,
-					z => z.Value,
+					x => x.Value,
 					BindingMode.TwoWay,
 					null,
-					z => (int)z,
+					x => (int)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => numericUpDownTimetableLayer.ValueChanged += h,
@@ -70,10 +70,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(timetableDisposable);
 
-			y.Width
+			timetable.Width
 				.BindTo(
 					textBoxTimetableWidth,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -86,14 +86,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(timetableDisposable);
 
-			y.Width
+			timetable.Width
 				.BindToErrorProvider(errorProvider, textBoxTimetableWidth)
 				.AddTo(timetableDisposable);
 
-			y.Height
+			timetable.Height
 				.BindTo(
 					textBoxTimetableHeight,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -106,14 +106,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(timetableDisposable);
 
-			y.Height
+			timetable.Height
 				.BindToErrorProvider(errorProvider, textBoxTimetableHeight)
 				.AddTo(timetableDisposable);
 
-			y.TransparentColor
+			timetable.TransparentColor
 				.BindTo(
 					textBoxTimetableTransparentColor,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -126,7 +126,7 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(timetableDisposable);
 
-			y.TransparentColor
+			timetable.TransparentColor
 				.BindToErrorProvider(errorProvider, textBoxTimetableTransparentColor)
 				.AddTo(timetableDisposable);
 

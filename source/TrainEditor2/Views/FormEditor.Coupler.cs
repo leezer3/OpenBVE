@@ -10,14 +10,14 @@ namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private IDisposable BindToCoupler(CouplerViewModel y)
+		private IDisposable BindToCoupler(CouplerViewModel coupler)
 		{
 			CompositeDisposable couplerDisposable = new CompositeDisposable();
 
-			y.Min
+			coupler.Min
 				.BindTo(
 					textBoxCouplerMin,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -30,14 +30,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(couplerDisposable);
 
-			y.Min
+			coupler.Min
 				.BindToErrorProvider(errorProvider, textBoxCouplerMin)
 				.AddTo(couplerDisposable);
 
-			y.Max
+			coupler.Max
 				.BindTo(
 					textBoxCouplerMax,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -50,14 +50,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(couplerDisposable);
 
-			y.Max
+			coupler.Max
 				.BindToErrorProvider(errorProvider, textBoxCouplerMax)
 				.AddTo(couplerDisposable);
 
-			y.Object
+			coupler.Object
 				.BindTo(
 					textBoxCouplerObject,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -69,8 +69,6 @@ namespace TrainEditor2.Views
 						.ToUnit()
 				)
 				.AddTo(couplerDisposable);
-
-			
 
 			return couplerDisposable;
 		}

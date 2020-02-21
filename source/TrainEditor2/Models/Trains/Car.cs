@@ -82,6 +82,56 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
+		internal class Door : BindableBase, ICloneable
+		{
+			private double width;
+			private double maxTolerance;
+
+			internal double Width
+			{
+				get
+				{
+					return width;
+				}
+				set
+				{
+					SetProperty(ref width, value);
+				}
+			}
+
+			internal double MaxTolerance
+			{
+				get
+				{
+					return maxTolerance;
+				}
+				set
+				{
+					SetProperty(ref maxTolerance, value);
+				}
+			}
+
+			internal Door()
+			{
+				Width = 1000.0;
+				MaxTolerance = 0.0;
+			}
+
+			public object Clone()
+			{
+				return MemberwiseClone();
+			}
+		}
+
+		internal enum ReAdhesionDevices
+		{
+			None = -1,
+			TypeA = 0,
+			TypeB = 1,
+			TypeC = 2,
+			TypeD = 3
+		}
+
 		private double mass;
 		private double length;
 		private double width;
@@ -96,16 +146,15 @@ namespace TrainEditor2.Models.Trains
 		private double unexposedFrontalArea;
 		private Performance performance;
 		private Delay delay;
-		private Move move;
+		private Jerk jerk;
 		private Brake brake;
 		private Pressure pressure;
 		private bool reversed;
 		private string _object;
 		private bool loadingSway;
-		private double leftDoorWidth;
-		private double leftDoorMaxTolerance;
-		private double rightDoorWidth;
-		private double rightDoorMaxTolerance;
+		private Door leftDoor;
+		private Door rightDoor;
+		private ReAdhesionDevices reAdhesionDevice;
 
 		internal double Mass
 		{
@@ -275,15 +324,15 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal Move Move
+		internal Jerk Jerk
 		{
 			get
 			{
-				return move;
+				return jerk;
 			}
 			set
 			{
-				SetProperty(ref move, value);
+				SetProperty(ref jerk, value);
 			}
 		}
 
@@ -347,51 +396,39 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double LeftDoorWidth
+		internal Door LeftDoor
 		{
 			get
 			{
-				return leftDoorWidth;
+				return leftDoor;
 			}
 			set
 			{
-				SetProperty(ref leftDoorWidth, value);
+				SetProperty(ref leftDoor, value);
 			}
 		}
 
-		internal double LeftDoorMaxTolerance
+		internal Door RightDoor
 		{
 			get
 			{
-				return leftDoorMaxTolerance;
+				return rightDoor;
 			}
 			set
 			{
-				SetProperty(ref leftDoorMaxTolerance, value);
+				SetProperty(ref rightDoor, value);
 			}
 		}
 
-		internal double RightDoorWidth
+		internal ReAdhesionDevices ReAdhesionDevice
 		{
 			get
 			{
-				return rightDoorWidth;
+				return reAdhesionDevice;
 			}
 			set
 			{
-				SetProperty(ref rightDoorWidth, value);
-			}
-		}
-
-		internal double RightDoorMaxTolerance
-		{
-			get
-			{
-				return rightDoorMaxTolerance;
-			}
-			set
-			{
-				SetProperty(ref rightDoorMaxTolerance, value);
+				SetProperty(ref reAdhesionDevice, value);
 			}
 		}
 
@@ -411,16 +448,15 @@ namespace TrainEditor2.Models.Trains
 			UnexposedFrontalArea = 1.6;
 			Performance = new Performance();
 			Delay = new Delay();
-			Move = new Move();
+			Jerk = new Jerk();
 			Brake = new Brake();
 			Pressure = new Pressure();
 			Reversed = false;
 			Object = string.Empty;
 			LoadingSway = false;
-			LeftDoorWidth = 1000.0;
-			LeftDoorMaxTolerance = 0.0;
-			RightDoorWidth = 1000.0;
-			RightDoorMaxTolerance = 0.0;
+			LeftDoor = new Door();
+			RightDoor = new Door();
+			ReAdhesionDevice = ReAdhesionDevices.TypeA;
 		}
 
 		public virtual object Clone()
@@ -430,9 +466,11 @@ namespace TrainEditor2.Models.Trains
 			car.RearBogie = (Bogie)RearBogie.Clone();
 			car.Performance = (Performance)Performance.Clone();
 			car.Delay = (Delay)Delay.Clone();
-			car.Move = (Move)Move.Clone();
+			car.Jerk = (Jerk)Jerk.Clone();
 			car.Brake = (Brake)Brake.Clone();
 			car.Pressure = (Pressure)Pressure.Clone();
+			car.LeftDoor = (Door)LeftDoor.Clone();
+			car.RightDoor = (Door)RightDoor.Clone();
 			return car;
 		}
 	}
@@ -522,7 +560,7 @@ namespace TrainEditor2.Models.Trains
 			UnexposedFrontalArea = car.UnexposedFrontalArea;
 			Performance = car.Performance;
 			Delay = car.Delay;
-			Move = car.Move;
+			Jerk = car.Jerk;
 			Brake = car.Brake;
 			Pressure = car.Pressure;
 			Reversed = car.Reversed;
@@ -549,7 +587,7 @@ namespace TrainEditor2.Models.Trains
 			UnexposedFrontalArea = car.UnexposedFrontalArea;
 			Performance = car.Performance;
 			Delay = car.Delay;
-			Move = car.Move;
+			Jerk = car.Jerk;
 			Brake = car.Brake;
 			Pressure = car.Pressure;
 			Reversed = car.Reversed;
@@ -590,7 +628,7 @@ namespace TrainEditor2.Models.Trains
 			UnexposedFrontalArea = car.UnexposedFrontalArea;
 			Performance = car.Performance;
 			Delay = car.Delay;
-			Move = car.Move;
+			Jerk = car.Jerk;
 			Brake = car.Brake;
 			Pressure = car.Pressure;
 			Reversed = car.Reversed;
@@ -616,7 +654,7 @@ namespace TrainEditor2.Models.Trains
 			UnexposedFrontalArea = car.UnexposedFrontalArea;
 			Performance = car.Performance;
 			Delay = car.Delay;
-			Move = car.Move;
+			Jerk = car.Jerk;
 			Brake = car.Brake;
 			Pressure = car.Pressure;
 			Reversed = car.Reversed;
@@ -664,7 +702,7 @@ namespace TrainEditor2.Models.Trains
 			UnexposedFrontalArea = car.UnexposedFrontalArea;
 			Performance = car.Performance;
 			Delay = car.Delay;
-			Move = car.Move;
+			Jerk = car.Jerk;
 			Brake = car.Brake;
 			Pressure = car.Pressure;
 			Reversed = car.Reversed;
@@ -689,7 +727,7 @@ namespace TrainEditor2.Models.Trains
 			UnexposedFrontalArea = car.UnexposedFrontalArea;
 			Performance = car.Performance;
 			Delay = car.Delay;
-			Move = car.Move;
+			Jerk = car.Jerk;
 			Brake = car.Brake;
 			Pressure = car.Pressure;
 			Reversed = car.Reversed;
@@ -728,7 +766,7 @@ namespace TrainEditor2.Models.Trains
 			UnexposedFrontalArea = car.UnexposedFrontalArea;
 			Performance = car.Performance;
 			Delay = car.Delay;
-			Move = car.Move;
+			Jerk = car.Jerk;
 			Brake = car.Brake;
 			Pressure = car.Pressure;
 			Reversed = car.Reversed;

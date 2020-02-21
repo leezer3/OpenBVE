@@ -10,17 +10,17 @@ namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private IDisposable BindToScreen(ScreenViewModel y)
+		private IDisposable BindToScreen(ScreenViewModel screen)
 		{
 			CompositeDisposable screenDisposable = new CompositeDisposable();
 
-			y.Number
+			screen.Number
 				.BindTo(
 					numericUpDownScreenNumber,
-					z => z.Value,
+					x => x.Value,
 					BindingMode.TwoWay,
 					null,
-					z => (int)z,
+					x => (int)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => numericUpDownScreenNumber.ValueChanged += h,
@@ -30,17 +30,17 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(screenDisposable);
 
-			y.Number
+			screen.Number
 				.BindToErrorProvider(errorProvider, numericUpDownScreenNumber)
 				.AddTo(screenDisposable);
 
-			y.Layer
+			screen.Layer
 				.BindTo(
 					numericUpDownScreenLayer,
-					z => z.Value,
+					x => x.Value,
 					BindingMode.TwoWay,
 					null,
-					z => (int)z,
+					x => (int)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => numericUpDownScreenLayer.ValueChanged += h,

@@ -11,17 +11,17 @@ namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private IDisposable BindToBrake(BrakeViewModel z)
+		private IDisposable BindToBrake(BrakeViewModel brake)
 		{
 			CompositeDisposable brakeDisposable = new CompositeDisposable();
 
-			z.BrakeType
+			brake.BrakeType
 				.BindTo(
 					comboBoxBrakeType,
-					w => w.SelectedIndex,
+					x => x.SelectedIndex,
 					BindingMode.TwoWay,
-					w => (int)w,
-					w => (Brake.BrakeTypes)w,
+					x => (int)x,
+					x => (Brake.BrakeTypes)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => comboBoxBrakeType.SelectedIndexChanged += h,
@@ -31,13 +31,13 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(brakeDisposable);
 
-			z.LocoBrakeType
+			brake.LocoBrakeType
 				.BindTo(
 					comboBoxLocoBrakeType,
-					w => w.SelectedIndex,
+					x => x.SelectedIndex,
 					BindingMode.TwoWay,
-					w => (int)w,
-					w => (Brake.LocoBrakeTypes)w,
+					x => (int)x,
+					x => (Brake.LocoBrakeTypes)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => comboBoxLocoBrakeType.SelectedIndexChanged += h,
@@ -47,13 +47,13 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(brakeDisposable);
 
-			z.BrakeControlSystem
+			brake.BrakeControlSystem
 				.BindTo(
 					comboBoxBrakeControlSystem,
-					w => w.SelectedIndex,
+					x => x.SelectedIndex,
 					BindingMode.TwoWay,
-					w => (int)w,
-					w => (Brake.BrakeControlSystems)w,
+					x => (int)x,
+					x => (Brake.BrakeControlSystems)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => comboBoxBrakeControlSystem.SelectedIndexChanged += h,
@@ -63,10 +63,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(brakeDisposable);
 
-			z.BrakeControlSpeed
+			brake.BrakeControlSpeed
 				.BindTo(
 					textBoxBrakeControlSpeed,
-					w => w.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -79,7 +79,7 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(brakeDisposable);
 
-			z.BrakeControlSpeed
+			brake.BrakeControlSpeed
 				.BindToErrorProvider(errorProvider, textBoxBrakeControlSpeed)
 				.AddTo(brakeDisposable);
 

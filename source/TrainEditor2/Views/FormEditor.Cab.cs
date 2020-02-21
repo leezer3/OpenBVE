@@ -10,16 +10,16 @@ namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private IDisposable BindToCab(CabViewModel y)
+		private IDisposable BindToCab(CabViewModel cab)
 		{
 			CompositeDisposable cabDisposable = new CompositeDisposable();
 			CompositeDisposable panelDisposable = new CompositeDisposable().AddTo(cabDisposable);
 			CompositeDisposable cameraRestrictionDisposable = new CompositeDisposable().AddTo(cabDisposable);
 
-			y.PositionX
+			cab.PositionX
 				.BindTo(
 					textBoxCabX,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -32,14 +32,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(cabDisposable);
 
-			y.PositionX
+			cab.PositionX
 				.BindToErrorProvider(errorProvider, textBoxCabX)
 				.AddTo(cabDisposable);
 
-			y.PositionY
+			cab.PositionY
 				.BindTo(
 					textBoxCabY,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -52,14 +52,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(cabDisposable);
 
-			y.PositionY
+			cab.PositionY
 				.BindToErrorProvider(errorProvider, textBoxCabY)
 				.AddTo(cabDisposable);
 
-			y.PositionZ
+			cab.PositionZ
 				.BindTo(
 					textBoxCabZ,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -72,27 +72,27 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(cabDisposable);
 
-			y.PositionZ
+			cab.PositionZ
 				.BindToErrorProvider(errorProvider, textBoxCabZ)
 				.AddTo(cabDisposable);
 
-			EmbeddedCabViewModel embeddedCab = y as EmbeddedCabViewModel;
-			ExternalCabViewModel externalCab = y as ExternalCabViewModel;
+			EmbeddedCabViewModel embeddedCab = cab as EmbeddedCabViewModel;
+			ExternalCabViewModel externalCab = cab as ExternalCabViewModel;
 
 			embeddedCab?.Panel
-				.Subscribe(z =>
+				.Subscribe(x =>
 				{
 					panelDisposable.Dispose();
 					panelDisposable = new CompositeDisposable().AddTo(cabDisposable);
 
-					BindToPanel(z).AddTo(panelDisposable);
+					BindToPanel(x).AddTo(panelDisposable);
 				})
 				.AddTo(cabDisposable);
 
 			externalCab?.FileName
 				.BindTo(
 					textBoxCabFileName,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -106,12 +106,12 @@ namespace TrainEditor2.Views
 				.AddTo(cabDisposable);
 
 			externalCab?.CameraRestriction
-				.Subscribe(z =>
+				.Subscribe(x =>
 				{
 					cameraRestrictionDisposable.Dispose();
 					cameraRestrictionDisposable = new CompositeDisposable().AddTo(cabDisposable);
 
-					BindToCameraRestriction(z).AddTo(cameraRestrictionDisposable);
+					BindToCameraRestriction(x).AddTo(cameraRestrictionDisposable);
 				})
 				.AddTo(cabDisposable);
 

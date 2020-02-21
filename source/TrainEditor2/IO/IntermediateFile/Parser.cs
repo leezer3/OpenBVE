@@ -17,7 +17,14 @@ namespace TrainEditor2.IO.IntermediateFile
 {
 	internal static partial class IntermediateFile
 	{
-		private static readonly ReadOnlyCollection<int> currentVersion = Array.AsReadOnly(new[] { 1, 8 });
+		private static readonly Version editorVersion = new Version(1, 8, 0, 0);
+
+		private enum FileVersion
+		{
+			v1700,
+			v1800,
+			Newer
+		}
 
 		internal static void Parse(string fileName, out Train train, out Sound sound)
 		{
@@ -28,66 +35,40 @@ namespace TrainEditor2.IO.IntermediateFile
 				throw new InvalidDataException();
 			}
 
-			if (!CheckVersion(xml.XPathSelectElement("/TrainEditor/Version")))
+			FileVersion fileVersion = ParseFileVersion(xml.XPathSelectElement("/TrainEditor/Version"));
+
+			if (fileVersion == FileVersion.Newer)
 			{
 				Interface.AddMessage(MessageType.Warning, false, $"The .te {fileName} was created with a newer version of TrainEditor2. Please check for an update.");
 			}
 
-			train = ParseTrainNode(xml.XPathSelectElement("/TrainEditor/Train"));
+			train = ParseTrainNode(fileVersion, xml.XPathSelectElement("/TrainEditor/Train"));
 			sound = ParseSoundsNode(xml.XPathSelectElement("/TrainEditor/Sounds"));
 		}
 
-		private static bool CheckVersion(XElement parent)
+		private static FileVersion ParseFileVersion(XElement parent)
 		{
 			if (parent == null)
 			{
-				return true;
+				return FileVersion.v1700;
 			}
 
-			bool isCompatibility = true;
-
-			int[] version = parent.Value.Split('.').Select(int.Parse).ToArray();
-
-			int minVersionLength = Math.Min(version.Length, currentVersion.Count);
-
-			for (int i = 0; i < minVersionLength; i++)
-			{
-				if (version[i] > currentVersion[i])
-				{
-					isCompatibility = false;
-					break;
-				}
-
-				if (version[i] < currentVersion[i])
-				{
-					break;
-				}
-			}
-
-			if (version[minVersionLength - 1] == currentVersion[minVersionLength - 1] && version.Length > currentVersion.Count)
-			{
-				isCompatibility = false;
-			}
-
-			return isCompatibility;
+			return new Version((string)parent) > editorVersion ? FileVersion.Newer : FileVersion.v1800;
 		}
 
-		private static Train ParseTrainNode(XElement parent)
+		private static Train ParseTrainNode(FileVersion fileVersion, XElement parent)
 		{
 			Train train = new Train
 			{
 				Handle = ParseHandleNode(parent.Element("Handle")),
-				Device = ParseDeviceNode(parent.Element("Device"))
+				Device = ParseDeviceNode(parent.Element("Device")),
+				InitialDriverCar = fileVersion > FileVersion.v1700 ? (int)parent.Element("InitialDriverCar") : (int)parent.XPathSelectElement("Cab/DriverCar"),
+				Cars = new ObservableCollection<Car>(parent.XPathSelectElements("Cars/Car").Select(x => ParseCarNode(fileVersion, x))),
+				Couplers = new ObservableCollection<Coupler>(parent.XPathSelectElements("Couplers/Coupler").Select(ParseCouplerNode))
 			};
 
-			XElement cabNode = parent.Element("Cab");
 
-			train.InitialDriverCar = cabNode != null ? (int)cabNode.Element("DriverCar") : (int)parent.Element("InitialDriverCar");
-
-			train.Cars = new ObservableCollection<Car>(parent.XPathSelectElements("Cars/Car").Select(ParseCarNode));
-			train.Couplers = new ObservableCollection<Coupler>(parent.XPathSelectElements("Couplers/Coupler").Select(ParseCouplerNode));
-
-			if (cabNode != null)
+			if (fileVersion == FileVersion.v1700)
 			{
 				MotorCar motorCar = train.Cars[train.InitialDriverCar] as MotorCar;
 				Cab cab;
@@ -107,7 +88,7 @@ namespace TrainEditor2.IO.IntermediateFile
 					train.Cars[train.InitialDriverCar] = controlledTrailerCar;
 				}
 
-				double[] position = ((string)cabNode.Element("Position")).Split(',').Select(double.Parse).ToArray();
+				double[] position = ((string)parent.XPathSelectElement("Cab/Position")).Split(',').Select(double.Parse).ToArray();
 
 				cab.PositionX = position[0];
 				cab.PositionY = position[1];
@@ -144,7 +125,6 @@ namespace TrainEditor2.IO.IntermediateFile
 				Eb = (bool)parent.Element("Eb"),
 				ConstSpeed = (bool)parent.Element("ConstSpeed"),
 				HoldBrake = (bool)parent.Element("HoldBrake"),
-				ReAdhesionDevice = (Device.ReAdhesionDevices)Enum.Parse(typeof(Device.ReAdhesionDevices), (string)parent.Element("ReAdhesionDevice")),
 				LoadCompensatingDevice = (double)parent.Element("LoadCompensatingDevice"),
 				PassAlarm = (Device.PassAlarmModes)Enum.Parse(typeof(Device.PassAlarmModes), (string)parent.Element("PassAlarm")),
 				DoorOpenMode = (Device.DoorModes)Enum.Parse(typeof(Device.DoorModes), (string)parent.Element("DoorOpenMode")),
@@ -152,7 +132,7 @@ namespace TrainEditor2.IO.IntermediateFile
 			};
 		}
 
-		private static Car ParseCarNode(XElement parent)
+		private static Car ParseCarNode(FileVersion fileVersion, XElement parent)
 		{
 			Car car;
 
@@ -188,30 +168,6 @@ namespace TrainEditor2.IO.IntermediateFile
 			car.Height = (double)parent.Element("Height");
 			car.CenterOfGravityHeight = (double)parent.Element("CenterOfGravityHeight");
 
-			XElement doorWidth = parent.XPathSelectElement("../../Device/DoorWidth");
-
-			if (doorWidth != null)
-			{
-				car.LeftDoorWidth = car.RightDoorWidth = (double)doorWidth;
-			}
-			else
-			{
-				car.LeftDoorWidth = (double)parent.Element("LeftDoorWidth");
-				car.RightDoorWidth = (double)parent.Element("RightDoorWidth");
-			}
-
-			XElement doorMaxTolerance = parent.XPathSelectElement("../../Device/DoorMaxTolerance");
-
-			if (doorMaxTolerance != null)
-			{
-				car.LeftDoorMaxTolerance = car.RightDoorMaxTolerance = (double)doorMaxTolerance;
-			}
-			else
-			{
-				car.LeftDoorMaxTolerance = (double)parent.Element("LeftDoorMaxTolerance");
-				car.RightDoorMaxTolerance = (double)parent.Element("RightDoorMaxTolerance");
-			}
-
 			car.DefinedAxles = (bool)parent.Element("DefinedAxles");
 			car.FrontAxle = (double)parent.Element("FrontAxle");
 			car.RearAxle = (double)parent.Element("RearAxle");
@@ -223,10 +179,39 @@ namespace TrainEditor2.IO.IntermediateFile
 			car.UnexposedFrontalArea = (double)parent.Element("UnexposedFrontalArea");
 
 			car.Performance = ParsePerformanceNode(parent.Element("Performance"));
-			car.Delay = ParseDelayNode(parent.Element("Delay"));
-			car.Move = ParseMoveNode(parent.Element("Move"));
+			car.Delay = ParseDelayNode(fileVersion, parent.Element("Delay"));
+
+			if (fileVersion > FileVersion.v1700)
+			{
+				car.Jerk = ParseJerkNode(parent.Element("Jerk"));
+			}
+			else
+			{
+				car.Jerk.Power.Up = (double)parent.XPathSelectElement("Move/JerkPowerUp");
+				car.Jerk.Power.Down = (double)parent.XPathSelectElement("Move/JerkPowerDown");
+				car.Jerk.Brake.Up = (double)parent.XPathSelectElement("Move/JerkBrakeUp");
+				car.Jerk.Brake.Down = (double)parent.XPathSelectElement("Move/JerkBrakeDown");
+			}
+
 			car.Brake = ParseBrakeNode(parent.Element("Brake"));
-			car.Pressure = ParsePressureNode(parent.Element("Pressure"));
+			car.Pressure = ParsePressureNode(fileVersion, parent.Element("Pressure"));
+
+			car.Reversed = (bool)parent.Element("Reversed");
+			car.Object = (string)parent.Element("Object");
+			car.LoadingSway = (bool)parent.Element("LoadingSway");
+
+			if (fileVersion > FileVersion.v1700)
+			{
+				car.LeftDoor = ParseDoorNode(parent.Element("LeftDoor"));
+				car.RightDoor = ParseDoorNode(parent.Element("RightDoor"));
+			}
+			else
+			{
+				car.LeftDoor.Width = car.RightDoor.Width = (double)parent.XPathSelectElement("../../Device/DoorWidth");
+				car.LeftDoor.MaxTolerance = car.RightDoor.MaxTolerance = (double)parent.XPathSelectElement("../../Device/DoorMaxTolerance");
+			}
+
+			car.ReAdhesionDevice = (Car.ReAdhesionDevices)Enum.Parse(typeof(Car.ReAdhesionDevices), fileVersion > FileVersion.v1700 ? (string)parent.Element("ReAdhesionDevice") : (string)parent.XPathSelectElement("../../Device/ReAdhesionDevice"));
 
 			MotorCar motorCar = car as MotorCar;
 
@@ -235,10 +220,6 @@ namespace TrainEditor2.IO.IntermediateFile
 				motorCar.Acceleration = ParseAccelerationNode(parent.Element("Acceleration"));
 				motorCar.Motor = ParseMotorNode(parent.Element("Motor"));
 			}
-
-			car.Reversed = (bool)parent.Element("Reversed");
-			car.Object = (string)parent.Element("Object");
-			car.LoadingSway = (bool)parent.Element("LoadingSway");
 
 			if (isControlledCar)
 			{
@@ -280,13 +261,13 @@ namespace TrainEditor2.IO.IntermediateFile
 			};
 		}
 
-		private static Delay ParseDelayNode(XElement parent)
+		private static Delay ParseDelayNode(FileVersion fileVersion, XElement parent)
 		{
 			return new Delay
 			{
-				Power = new ObservableCollection<Delay.Entry>(parent.XPathSelectElements("DelayPower/Entry").Select(ParseDelayEntryNode)),
-				Brake = new ObservableCollection<Delay.Entry>(parent.XPathSelectElements("DelayBrake/Entry").Select(ParseDelayEntryNode)),
-				LocoBrake = new ObservableCollection<Delay.Entry>(parent.XPathSelectElements("DelayLocoBrake/Entry").Select(ParseDelayEntryNode))
+				Power = new ObservableCollection<Delay.Entry>(parent.XPathSelectElements($"{(fileVersion > FileVersion.v1700 ? "Power" : "DelayPower")}/Entry").Select(ParseDelayEntryNode)),
+				Brake = new ObservableCollection<Delay.Entry>(parent.XPathSelectElements($"{(fileVersion > FileVersion.v1700 ? "Brake" : "DelayBrake")}/Entry").Select(ParseDelayEntryNode)),
+				LocoBrake = new ObservableCollection<Delay.Entry>(parent.XPathSelectElements($"{(fileVersion > FileVersion.v1700 ? "LocoBrake" : "DelayLocoBrake")}/Entry").Select(ParseDelayEntryNode))
 			};
 		}
 
@@ -299,14 +280,21 @@ namespace TrainEditor2.IO.IntermediateFile
 			};
 		}
 
-		private static Move ParseMoveNode(XElement parent)
+		private static Jerk ParseJerkNode(XElement parent)
 		{
-			return new Move
+			return new Jerk
 			{
-				JerkPowerUp = (double)parent.Element("JerkPowerUp"),
-				JerkPowerDown = (double)parent.Element("JerkPowerDown"),
-				JerkBrakeUp = (double)parent.Element("JerkBrakeUp"),
-				JerkBrakeDown = (double)parent.Element("JerkBrakeDown")
+				Power = ParseJerkEntryNode(parent.Element("Power")),
+				Brake = ParseJerkEntryNode(parent.Element("Brake"))
+			};
+		}
+
+		private static Jerk.Entry ParseJerkEntryNode(XElement parent)
+		{
+			return new Jerk.Entry
+			{
+				Up = (double)parent.Element("Up"),
+				Down = (double)parent.Element("Down")
 			};
 		}
 
@@ -321,15 +309,103 @@ namespace TrainEditor2.IO.IntermediateFile
 			};
 		}
 
-		private static Pressure ParsePressureNode(XElement parent)
+		private static Pressure ParsePressureNode(FileVersion fileVersion, XElement parent)
 		{
+			if (fileVersion > FileVersion.v1700)
+			{
+				return new Pressure
+				{
+					Compressor = ParseCompressorNode(parent.Element("Compressor")),
+					MainReservoir = ParseMainReservoirNode(parent.Element("MainReservoir")),
+					AuxiliaryReservoir = ParseAuxiliaryReservoirNode(parent.Element("AuxiliaryReservoir")),
+					EqualizingReservoir = ParseEqualizingReservoirNode(parent.Element("EqualizingReservoir")),
+					BrakePipe = ParseBrakePipeNode(parent.Element("BrakePipe")),
+					StraightAirPipe = ParseStraightAirPipeNode(parent.Element("StraightAirPipe")),
+					BrakeCylinder = ParseBrakeCylinderNode(parent.Element("BrakeCylinder"))
+				};
+			}
+
 			return new Pressure
 			{
-				BrakeCylinderServiceMaximumPressure = (double)parent.Element("BrakeCylinderServiceMaximumPressure"),
-				BrakeCylinderEmergencyMaximumPressure = (double)parent.Element("BrakeCylinderEmergencyMaximumPressure"),
-				MainReservoirMinimumPressure = (double)parent.Element("MainReservoirMinimumPressure"),
-				MainReservoirMaximumPressure = (double)parent.Element("MainReservoirMaximumPressure"),
-				BrakePipeNormalPressure = (double)parent.Element("BrakePipeNormalPressure")
+				MainReservoir = new MainReservoir { MinimumPressure = (double)parent.Element("MainReservoirMinimumPressure"), MaximumPressure = (double)parent.Element("MainReservoirMaximumPressure") },
+				BrakePipe = new BrakePipe { NormalPressure = (double)parent.Element("BrakePipeNormalPressure") },
+				BrakeCylinder = new BrakeCylinder { ServiceMaximumPressure = (double)parent.Element("BrakeCylinderServiceMaximumPressure"), EmergencyMaximumPressure = (double)parent.Element("BrakeCylinderEmergencyMaximumPressure") }
+			};
+		}
+
+		private static Compressor ParseCompressorNode(XElement parent)
+		{
+			return new Compressor
+			{
+				Rate = (double)parent.Element("Rate")
+			};
+		}
+
+		private static MainReservoir ParseMainReservoirNode(XElement parent)
+		{
+			return new MainReservoir
+			{
+				MinimumPressure = (double)parent.Element("MinimumPressure"),
+				MaximumPressure = (double)parent.Element("MaximumPressure")
+			};
+		}
+
+		private static AuxiliaryReservoir ParseAuxiliaryReservoirNode(XElement parent)
+		{
+			return new AuxiliaryReservoir
+			{
+				ChargeRate = (double)parent.Element("ChargeRate")
+			};
+		}
+
+		private static EqualizingReservoir ParseEqualizingReservoirNode(XElement parent)
+		{
+			return new EqualizingReservoir
+			{
+				ChargeRate = (double)parent.Element("ChargeRate"),
+				ServiceRate = (double)parent.Element("ServiceRate"),
+				EmergencyRate = (double)parent.Element("EmergencyRate")
+			};
+		}
+
+		private static BrakePipe ParseBrakePipeNode(XElement parent)
+		{
+			return new BrakePipe
+			{
+				NormalPressure = (double)parent.Element("NormalPressure"),
+				ChargeRate = (double)parent.Element("ChargeRate"),
+				ServiceRate = (double)parent.Element("ServiceRate"),
+				EmergencyRate = (double)parent.Element("EmergencyRate")
+			};
+		}
+
+		private static StraightAirPipe ParseStraightAirPipeNode(XElement parent)
+		{
+			return new StraightAirPipe
+			{
+				ServiceRate = (double)parent.Element("ServiceRate"),
+				EmergencyRate = (double)parent.Element("EmergencyRate"),
+				ReleaseRate = (double)parent.Element("ReleaseRate")
+			};
+		}
+
+		private static BrakeCylinder ParseBrakeCylinderNode(XElement parent)
+		{
+			return new BrakeCylinder
+			{
+				ServiceMaximumPressure = (double)parent.Element("ServiceMaximumPressure"),
+				EmergencyMaximumPressure = (double)parent.Element("EmergencyMaximumPressure"),
+				EmergencyRate = (double)parent.Element("EmergencyRate"),
+				ReleaseRate = (double)parent.Element("ReleaseRate")
+			};
+		}
+
+		private static Car.Door ParseDoorNode(XElement parent)
+		{
+			return new Car.Door
+			{
+				Width = (double)parent.Element("Width"),
+				MaxTolerance = (double)parent.Element("MaxTolerance")
 			};
 		}
 

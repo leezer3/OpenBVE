@@ -10,14 +10,14 @@ namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private IDisposable BindToNeedle(NeedleElementViewModel y)
+		private IDisposable BindToNeedle(NeedleElementViewModel needle)
 		{
 			CompositeDisposable needleDisposable = new CompositeDisposable();
 
-			y.LocationX
+			needle.LocationX
 				.BindTo(
 					textBoxNeedleLocationX,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -30,14 +30,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(needleDisposable);
 
-			y.LocationX
+			needle.LocationX
 				.BindToErrorProvider(errorProvider, textBoxNeedleLocationX)
 				.AddTo(needleDisposable);
 
-			y.LocationY
+			needle.LocationY
 				.BindTo(
 					textBoxNeedleLocationY,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -50,17 +50,17 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(needleDisposable);
 
-			y.LocationY
+			needle.LocationY
 				.BindToErrorProvider(errorProvider, textBoxNeedleLocationY)
 				.AddTo(needleDisposable);
 
-			y.Layer
+			needle.Layer
 				.BindTo(
 					numericUpDownNeedleLayer,
-					z => z.Value,
+					x => x.Value,
 					BindingMode.TwoWay,
 					null,
-					z => (int)z,
+					x => (int)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => numericUpDownNeedleLayer.ValueChanged += h,
@@ -70,10 +70,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(needleDisposable);
 
-			y.DaytimeImage
+			needle.DaytimeImage
 				.BindTo(
 					textBoxNeedleDaytimeImage,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -86,10 +86,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(needleDisposable);
 
-			y.NighttimeImage
+			needle.NighttimeImage
 				.BindTo(
 					textBoxNeedleNighttimeImage,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -102,10 +102,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(needleDisposable);
 
-			y.TransparentColor
+			needle.TransparentColor
 				.BindTo(
 					textBoxNeedleTransparentColor,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -118,14 +118,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(needleDisposable);
 
-			y.TransparentColor
+			needle.TransparentColor
 				.BindToErrorProvider(errorProvider, textBoxNeedleTransparentColor)
 				.AddTo(needleDisposable);
 
-			y.DefinedRadius
+			needle.DefinedRadius
 				.BindTo(
 					checkBoxNeedleDefinedRadius,
-					z => z.Checked,
+					x => x.Checked,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -138,24 +138,24 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(needleDisposable);
 
-			y.DefinedRadius
+			needle.DefinedRadius
 				.BindTo(
 					labelNeedleRadius,
-					z => z.Enabled
+					x => x.Enabled
 				)
 				.AddTo(needleDisposable);
 
-			y.DefinedRadius
+			needle.DefinedRadius
 				.BindTo(
 					textBoxNeedleRadius,
-					z => z.Enabled
+					x => x.Enabled
 				)
 				.AddTo(needleDisposable);
 
-			y.Radius
+			needle.Radius
 				.BindTo(
 					textBoxNeedleRadius,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -168,14 +168,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(needleDisposable);
 
-			y.Radius
+			needle.Radius
 				.BindToErrorProvider(errorProvider, textBoxNeedleRadius)
 				.AddTo(needleDisposable);
 
-			y.Color
+			needle.Color
 				.BindTo(
 					textBoxNeedleColor,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -188,14 +188,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(needleDisposable);
 
-			y.Color
+			needle.Color
 				.BindToErrorProvider(errorProvider, textBoxNeedleColor)
 				.AddTo(needleDisposable);
 
-			y.DefinedOrigin
+			needle.DefinedOrigin
 				.BindTo(
 					checkBoxNeedleDefinedOrigin,
-					z => z.Checked,
+					x => x.Checked,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -208,17 +208,17 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(needleDisposable);
 
-			y.DefinedOrigin
+			needle.DefinedOrigin
 				.BindTo(
 					groupBoxNeedleOrigin,
-					z => z.Enabled
+					x => x.Enabled
 				)
 				.AddTo(needleDisposable);
 
-			y.OriginX
+			needle.OriginX
 				.BindTo(
 					textBoxNeedleOriginX,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -231,14 +231,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(needleDisposable);
 
-			y.OriginX
+			needle.OriginX
 				.BindToErrorProvider(errorProvider, textBoxNeedleOriginX)
 				.AddTo(needleDisposable);
 
-			y.OriginY
+			needle.OriginY
 				.BindTo(
 					textBoxNeedleOriginY,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -251,14 +251,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(needleDisposable);
 
-			y.OriginY
+			needle.OriginY
 				.BindToErrorProvider(errorProvider, textBoxNeedleOriginY)
 				.AddTo(needleDisposable);
 
-			y.InitialAngle
+			needle.InitialAngle
 				.BindTo(
 					textBoxNeedleInitialAngle,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -271,14 +271,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(needleDisposable);
 
-			y.InitialAngle
+			needle.InitialAngle
 				.BindToErrorProvider(errorProvider, textBoxNeedleInitialAngle)
 				.AddTo(needleDisposable);
 
-			y.LastAngle
+			needle.LastAngle
 				.BindTo(
 					textBoxNeedleLastAngle,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -291,14 +291,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(needleDisposable);
 
-			y.LastAngle
+			needle.LastAngle
 				.BindToErrorProvider(errorProvider, textBoxNeedleLastAngle)
 				.AddTo(needleDisposable);
 
-			y.Minimum
+			needle.Minimum
 				.BindTo(
 					textBoxNeedleMinimum,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -311,14 +311,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(needleDisposable);
 
-			y.Minimum
+			needle.Minimum
 				.BindToErrorProvider(errorProvider, textBoxNeedleMinimum)
 				.AddTo(needleDisposable);
 
-			y.Maximum
+			needle.Maximum
 				.BindTo(
 					textBoxNeedleMaximum,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -331,14 +331,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(needleDisposable);
 
-			y.Maximum
+			needle.Maximum
 				.BindToErrorProvider(errorProvider, textBoxNeedleMaximum)
 				.AddTo(needleDisposable);
 
-			y.DefinedNaturalFreq
+			needle.DefinedNaturalFreq
 				.BindTo(
 					checkBoxNeedleDefinedNaturalFreq,
-					z => z.Checked,
+					x => x.Checked,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -351,24 +351,24 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(needleDisposable);
 
-			y.DefinedNaturalFreq
+			needle.DefinedNaturalFreq
 				.BindTo(
 					labelNeedleNaturalFreq,
-					z => z.Enabled
+					x => x.Enabled
 				)
 				.AddTo(needleDisposable);
 
-			y.DefinedNaturalFreq
+			needle.DefinedNaturalFreq
 				.BindTo(
 					textBoxNeedleNaturalFreq,
-					z => z.Enabled
+					x => x.Enabled
 				)
 				.AddTo(needleDisposable);
 
-			y.NaturalFreq
+			needle.NaturalFreq
 				.BindTo(
 					textBoxNeedleNaturalFreq,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -381,14 +381,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(needleDisposable);
 
-			y.NaturalFreq
+			needle.NaturalFreq
 				.BindToErrorProvider(errorProvider, textBoxNeedleNaturalFreq)
 				.AddTo(needleDisposable);
 
-			y.DefinedDampingRatio
+			needle.DefinedDampingRatio
 				.BindTo(
 					checkBoxNeedleDefinedDampingRatio,
-					z => z.Checked,
+					x => x.Checked,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -401,24 +401,24 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(needleDisposable);
 
-			y.DefinedDampingRatio
+			needle.DefinedDampingRatio
 				.BindTo(
 					labelNeedleDampingRatio,
-					z => z.Enabled
+					x => x.Enabled
 				)
 				.AddTo(needleDisposable);
 
-			y.DefinedDampingRatio
+			needle.DefinedDampingRatio
 				.BindTo(
 					textBoxNeedleDampingRatio,
-					z => z.Enabled
+					x => x.Enabled
 				)
 				.AddTo(needleDisposable);
 
-			y.DampingRatio
+			needle.DampingRatio
 				.BindTo(
 					textBoxNeedleDampingRatio,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -431,14 +431,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(needleDisposable);
 
-			y.DampingRatio
+			needle.DampingRatio
 				.BindToErrorProvider(errorProvider, textBoxNeedleDampingRatio)
 				.AddTo(needleDisposable);
 
-			y.Backstop
+			needle.Backstop
 				.BindTo(
 					checkBoxNeedleBackstop,
-					z => z.Checked,
+					x => x.Checked,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -451,10 +451,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(needleDisposable);
 
-			y.Smoothed
+			needle.Smoothed
 				.BindTo(
 					checkBoxNeedleSmoothed,
-					z => z.Checked,
+					x => x.Checked,
 					BindingMode.TwoWay,
 					null,
 					null,

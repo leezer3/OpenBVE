@@ -471,6 +471,22 @@ namespace TrainEditor2.Views
 			app.CurrentLanguageCode.Value = currentLanguageCode;
 		}
 
+		private void ButtonFrontBogieSet_Click(object sender, EventArgs e)
+		{
+			using (FormBogie form = new FormBogie(app.Train.Value.SelectedCar.Value.FrontBogie.Value))
+			{
+				form.ShowDialog(this);
+			}
+		}
+
+		private void ButtonRearBogieSet_Click(object sender, EventArgs e)
+		{
+			using (FormBogie form = new FormBogie(app.Train.Value.SelectedCar.Value.RearBogie.Value))
+			{
+				form.ShowDialog(this);
+			}
+		}
+
 		private void ButtonDelayPowerSet_Click(object sender, EventArgs e)
 		{
 			using (FormDelay form = new FormDelay(app.Train.Value.SelectedCar.Value.Delay.Value.Power))
@@ -495,17 +511,17 @@ namespace TrainEditor2.Views
 			}
 		}
 
-		private void ButtonFrontBogieSet_Click(object sender, EventArgs e)
+		private void ButtonJerkPowerSet_Click(object sender, EventArgs e)
 		{
-			using (FormBogie form = new FormBogie(app.Train.Value.SelectedCar.Value.FrontBogie.Value))
+			using (FormJerk form = new FormJerk(app.Train.Value.SelectedCar.Value.Jerk.Value.Power.Value))
 			{
 				form.ShowDialog(this);
 			}
 		}
 
-		private void ButtonRearBogieSet_Click(object sender, EventArgs e)
+		private void ButtonJerkBrakeSet_Click(object sender, EventArgs e)
 		{
-			using (FormBogie form = new FormBogie(app.Train.Value.SelectedCar.Value.RearBogie.Value))
+			using (FormJerk form = new FormJerk(app.Train.Value.SelectedCar.Value.Jerk.Value.Brake.Value))
 			{
 				form.ShowDialog(this);
 			}
@@ -514,6 +530,22 @@ namespace TrainEditor2.Views
 		private void ButtonObjectOpen_Click(object sender, EventArgs e)
 		{
 			WinFormsUtilities.OpenFileDialog(textBoxObject);
+		}
+
+		private void ButtonLeftDoorSet_Click(object sender, EventArgs e)
+		{
+			using (FormDoor form = new FormDoor(app.Train.Value.SelectedCar.Value.LeftDoor.Value))
+			{
+				form.ShowDialog(this);
+			}
+		}
+
+		private void ButtonRightDoorSet_Click(object sender, EventArgs e)
+		{
+			using (FormDoor form = new FormDoor(app.Train.Value.SelectedCar.Value.RightDoor.Value))
+			{
+				form.ShowDialog(this);
+			}
 		}
 
 		private void PictureBoxAccel_MouseEnter(object sender, EventArgs e)
@@ -644,11 +676,6 @@ namespace TrainEditor2.Views
 			}
 
 			glControlMotor.SwapBuffers();
-		}
-
-		private void ButtonCouplerObject_Click(object sender, EventArgs e)
-		{
-			WinFormsUtilities.OpenFileDialog(textBoxCouplerObject);
 		}
 
 		private void ButtonThisDaytimeImageOpen_Click(object sender, EventArgs e)
@@ -791,6 +818,16 @@ namespace TrainEditor2.Views
 			{
 				form.ShowDialog(this);
 			}
+		}
+
+		private void ButtonCabFileNameOpen_Click(object sender, EventArgs e)
+		{
+			WinFormsUtilities.OpenFileDialog(textBoxCabFileName);
+		}
+
+		private void ButtonCouplerObject_Click(object sender, EventArgs e)
+		{
+			WinFormsUtilities.OpenFileDialog(textBoxCouplerObject);
 		}
 
 		private void ButtonSoundFileNameOpen_Click(object sender, EventArgs e)

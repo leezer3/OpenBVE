@@ -11,7 +11,7 @@ namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private IDisposable BindToPanel(PanelViewModel x)
+		private IDisposable BindToPanel(PanelViewModel panel)
 		{
 			CompositeDisposable panelDisposable = new CompositeDisposable();
 			CompositeDisposable thisDisposable = new CompositeDisposable().AddTo(panelDisposable);
@@ -24,282 +24,282 @@ namespace TrainEditor2.Views
 			CompositeDisposable timetableDisposable = new CompositeDisposable().AddTo(panelDisposable);
 			CompositeDisposable touchDisposable = new CompositeDisposable().AddTo(panelDisposable);
 
-			WinFormsBinders.BindToTreeView(treeViewPanel, x.TreeItems, x.SelectedTreeItem).AddTo(panelDisposable);
+			WinFormsBinders.BindToTreeView(treeViewPanel, panel.TreeItems, panel.SelectedTreeItem).AddTo(panelDisposable);
 
-			x.SelectedTreeItem
+			panel.SelectedTreeItem
 				.BindTo(
 					tabControlPanel,
-					y => y.SelectedTab,
+					x => x.SelectedTab,
 					BindingMode.OneWay,
-					y => y == x.TreeItems[0].Children[0] ? tabPageThis : tabControlPanel.SelectedTab
+					x => x == panel.TreeItems[0].Children[0] ? tabPageThis : tabControlPanel.SelectedTab
 				)
 				.AddTo(panelDisposable);
 
-			x.SelectedTreeItem
+			panel.SelectedTreeItem
 				.BindTo(
 					tabPageThis,
-					y => y.Enabled,
+					x => x.Enabled,
 					BindingMode.OneWay,
-					y => y == x.TreeItems[0].Children[0]
+					x => x == panel.TreeItems[0].Children[0]
 				)
 				.AddTo(panelDisposable);
 
-			x.SelectedTreeItem
+			panel.SelectedTreeItem
 				.BindTo(
 					listViewPanel,
-					y => y.Enabled,
+					x => x.Enabled,
 					BindingMode.OneWay,
-					y => y == x.TreeItems[0].Children[1]
-						 || x.TreeItems[0].Children[1].Children.Any(z => z.Children[0].Children.Contains(y) || y == z.Children[1])
-						 || x.TreeItems[0].Children[2].Children.Contains(y)
+					x => x == panel.TreeItems[0].Children[1]
+						 || panel.TreeItems[0].Children[1].Children.Any(z => z.Children[0].Children.Contains(x) || x == z.Children[1])
+						 || panel.TreeItems[0].Children[2].Children.Contains(x)
 				)
 				.AddTo(panelDisposable);
 
-			WinFormsBinders.BindToListView(listViewPanel, x.ListColumns, x.ListItems, x.SelectedListItem).AddTo(panelDisposable);
+			WinFormsBinders.BindToListView(listViewPanel, panel.ListColumns, panel.ListItems, panel.SelectedListItem).AddTo(panelDisposable);
 
-			x.This
-				.Subscribe(y =>
+			panel.This
+				.Subscribe(x =>
 				{
 					thisDisposable.Dispose();
 					thisDisposable = new CompositeDisposable().AddTo(panelDisposable);
 
-					BindToThis(y).AddTo(thisDisposable);
+					BindToThis(x).AddTo(thisDisposable);
 				})
 				.AddTo(panelDisposable);
 
-			x.SelectedScreen
+			panel.SelectedScreen
 				.BindTo(
 					tabControlPanel,
-					y => y.SelectedTab,
-					y => y != null ? tabPageScreen : tabControlPanel.SelectedTab
+					x => x.SelectedTab,
+					x => x != null ? tabPageScreen : tabControlPanel.SelectedTab
 				)
 				.AddTo(panelDisposable);
 
-			x.SelectedScreen
+			panel.SelectedScreen
 				.BindTo(
 					tabPageScreen,
-					y => y.Enabled,
-					y => y != null
+					x => x.Enabled,
+					x => x != null
 				)
 				.AddTo(panelDisposable);
 
-			x.SelectedScreen
-				.Where(y => y != null)
-				.Subscribe(y =>
+			panel.SelectedScreen
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					screenDisposable.Dispose();
 					screenDisposable = new CompositeDisposable().AddTo(panelDisposable);
 
-					BindToScreen(y).AddTo(screenDisposable);
+					BindToScreen(x).AddTo(screenDisposable);
 				})
 				.AddTo(panelDisposable);
 
-			x.SelectedPilotLamp
+			panel.SelectedPilotLamp
 				.BindTo(
 					tabControlPanel,
-					y => y.SelectedTab,
-					y => y != null ? tabPagePilotLamp : tabControlPanel.SelectedTab
+					x => x.SelectedTab,
+					x => x != null ? tabPagePilotLamp : tabControlPanel.SelectedTab
 				)
 				.AddTo(panelDisposable);
 
-			x.SelectedPilotLamp
+			panel.SelectedPilotLamp
 				.BindTo(
 					tabPagePilotLamp,
-					y => y.Enabled,
-					y => y != null
+					x => x.Enabled,
+					x => x != null
 				)
 				.AddTo(panelDisposable);
 
-			x.SelectedPilotLamp
-				.Where(y => y != null)
-				.Subscribe(y =>
+			panel.SelectedPilotLamp
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					pilotLampDisposable.Dispose();
 					pilotLampDisposable = new CompositeDisposable().AddTo(panelDisposable);
 
-					BindToPilotLamp(y).AddTo(pilotLampDisposable);
+					BindToPilotLamp(x).AddTo(pilotLampDisposable);
 				})
 				.AddTo(panelDisposable);
 
-			x.SelectedNeedle
+			panel.SelectedNeedle
 				.BindTo(
 					tabControlPanel,
-					y => y.SelectedTab,
-					y => y != null ? tabPageNeedle : tabControlPanel.SelectedTab
+					x => x.SelectedTab,
+					x => x != null ? tabPageNeedle : tabControlPanel.SelectedTab
 				)
 				.AddTo(panelDisposable);
 
-			x.SelectedNeedle
+			panel.SelectedNeedle
 				.BindTo(
 					tabPageNeedle,
-					y => y.Enabled,
-					y => y != null
+					x => x.Enabled,
+					x => x != null
 				)
 				.AddTo(panelDisposable);
 
-			x.SelectedNeedle
-				.Where(y => y != null)
-				.Subscribe(y =>
+			panel.SelectedNeedle
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					needleDisposable.Dispose();
 					needleDisposable = new CompositeDisposable().AddTo(panelDisposable);
 
-					BindToNeedle(y).AddTo(needleDisposable);
+					BindToNeedle(x).AddTo(needleDisposable);
 				})
 				.AddTo(panelDisposable);
 
-			x.SelectedDigitalNumber
+			panel.SelectedDigitalNumber
 				.BindTo(
 					tabControlPanel,
-					y => y.SelectedTab,
-					y => y != null ? tabPageDigitalNumber : tabControlPanel.SelectedTab
+					x => x.SelectedTab,
+					x => x != null ? tabPageDigitalNumber : tabControlPanel.SelectedTab
 				)
 				.AddTo(panelDisposable);
 
-			x.SelectedDigitalNumber
+			panel.SelectedDigitalNumber
 				.BindTo(
 					tabPageDigitalNumber,
-					y => y.Enabled,
-					y => y != null
+					x => x.Enabled,
+					x => x != null
 				)
 				.AddTo(panelDisposable);
 
-			x.SelectedDigitalNumber
-				.Where(y => y != null)
-				.Subscribe(y =>
+			panel.SelectedDigitalNumber
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					digitalNumberDisposable.Dispose();
 					digitalNumberDisposable = new CompositeDisposable().AddTo(panelDisposable);
 
-					BindToDigitalNumber(y).AddTo(digitalNumberDisposable);
+					BindToDigitalNumber(x).AddTo(digitalNumberDisposable);
 				})
 				.AddTo(panelDisposable);
 
-			x.SelectedDigitalGauge
+			panel.SelectedDigitalGauge
 				.BindTo(
 					tabControlPanel,
-					y => y.SelectedTab,
-					y => y != null ? tabPageDigitalGauge : tabControlPanel.SelectedTab
+					x => x.SelectedTab,
+					x => x != null ? tabPageDigitalGauge : tabControlPanel.SelectedTab
 				)
 				.AddTo(panelDisposable);
 
-			x.SelectedDigitalGauge
+			panel.SelectedDigitalGauge
 				.BindTo(
 					tabPageDigitalGauge,
-					y => y.Enabled,
-					y => y != null
+					x => x.Enabled,
+					x => x != null
 				)
 				.AddTo(panelDisposable);
 
-			x.SelectedDigitalGauge
-				.Where(y => y != null)
-				.Subscribe(y =>
+			panel.SelectedDigitalGauge
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					digitalGaugeDisposable.Dispose();
 					digitalGaugeDisposable = new CompositeDisposable().AddTo(panelDisposable);
 
-					BindToDigitalGauge(y).AddTo(digitalGaugeDisposable);
+					BindToDigitalGauge(x).AddTo(digitalGaugeDisposable);
 				})
 				.AddTo(panelDisposable);
 
-			x.SelectedLinearGauge
+			panel.SelectedLinearGauge
 				.BindTo(
 					tabControlPanel,
-					y => y.SelectedTab,
-					y => y != null ? tabPageLinearGauge : tabControlPanel.SelectedTab
+					x => x.SelectedTab,
+					x => x != null ? tabPageLinearGauge : tabControlPanel.SelectedTab
 				)
 				.AddTo(panelDisposable);
 
-			x.SelectedLinearGauge
+			panel.SelectedLinearGauge
 				.BindTo(
 					tabPageLinearGauge,
-					y => y.Enabled,
-					y => y != null
+					x => x.Enabled,
+					x => x != null
 				)
 				.AddTo(panelDisposable);
 
-			x.SelectedLinearGauge
-				.Where(y => y != null)
-				.Subscribe(y =>
+			panel.SelectedLinearGauge
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					linearGaugeDisposable.Dispose();
 					linearGaugeDisposable = new CompositeDisposable().AddTo(panelDisposable);
 
-					BindToLinearGauge(y).AddTo(linearGaugeDisposable);
+					BindToLinearGauge(x).AddTo(linearGaugeDisposable);
 				})
 				.AddTo(panelDisposable);
 
-			x.SelectedTimetable
+			panel.SelectedTimetable
 				.BindTo(
 					tabControlPanel,
-					y => y.SelectedTab,
-					y => y != null ? tabPageTimetable : tabControlPanel.SelectedTab
+					x => x.SelectedTab,
+					x => x != null ? tabPageTimetable : tabControlPanel.SelectedTab
 				)
 				.AddTo(panelDisposable);
 
-			x.SelectedTimetable
+			panel.SelectedTimetable
 				.BindTo(
 					tabPageTimetable,
-					y => y.Enabled,
-					y => y != null
+					x => x.Enabled,
+					x => x != null
 				)
 				.AddTo(panelDisposable);
 
-			x.SelectedTimetable
-				.Where(y => y != null)
-				.Subscribe(y =>
+			panel.SelectedTimetable
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					timetableDisposable.Dispose();
 					timetableDisposable = new CompositeDisposable().AddTo(panelDisposable);
 
-					BindToTimetable(y).AddTo(timetableDisposable);
+					BindToTimetable(x).AddTo(timetableDisposable);
 				})
 				.AddTo(panelDisposable);
 
-			x.SelectedTouch
+			panel.SelectedTouch
 				.BindTo(
 					tabControlPanel,
-					y => y.SelectedTab,
-					y => y != null ? tabPageTouch : tabControlPanel.SelectedTab
+					x => x.SelectedTab,
+					x => x != null ? tabPageTouch : tabControlPanel.SelectedTab
 				)
 				.AddTo(panelDisposable);
 
-			x.SelectedTouch
+			panel.SelectedTouch
 				.BindTo(
 					tabPageTouch,
-					y => y.Enabled,
-					y => y != null
+					x => x.Enabled,
+					x => x != null
 				)
 				.AddTo(panelDisposable);
 
-			x.SelectedTouch
-				.Where(y => y != null)
-				.Subscribe(y =>
+			panel.SelectedTouch
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					touchDisposable.Dispose();
 					touchDisposable = new CompositeDisposable().AddTo(panelDisposable);
 
-					BindToTouch(y).AddTo(touchDisposable);
+					BindToTouch(x).AddTo(touchDisposable);
 				})
 				.AddTo(panelDisposable);
 
-			new[] { x.UpScreen, x.UpPilotLamp, x.UpNeedle, x.UpDigitalNumber, x.UpDigitalGauge, x.UpLinearGauge, x.UpTimetable, x.UpTouch }
+			new[] { panel.UpScreen, panel.UpPilotLamp, panel.UpNeedle, panel.UpDigitalNumber, panel.UpDigitalGauge, panel.UpLinearGauge, panel.UpTimetable, panel.UpTouch }
 				.BindToButton(buttonPanelUp)
 				.AddTo(panelDisposable);
 
-			new[] { x.DownScreen, x.DownPilotLamp, x.DownNeedle, x.DownDigitalNumber, x.DownDigitalGauge, x.DownLinearGauge, x.DownTimetable, x.DownTouch }
+			new[] { panel.DownScreen, panel.DownPilotLamp, panel.DownNeedle, panel.DownDigitalNumber, panel.DownDigitalGauge, panel.DownLinearGauge, panel.DownTimetable, panel.DownTouch }
 				.BindToButton(buttonPanelDown)
 				.AddTo(panelDisposable);
 
-			new[] { x.AddScreen, x.AddPilotLamp, x.AddNeedle, x.AddDigitalNumber, x.AddDigitalGauge, x.AddLinearGauge, x.AddTimetable, x.AddTouch }
+			new[] { panel.AddScreen, panel.AddPilotLamp, panel.AddNeedle, panel.AddDigitalNumber, panel.AddDigitalGauge, panel.AddLinearGauge, panel.AddTimetable, panel.AddTouch }
 				.BindToButton(buttonPanelAdd)
 				.AddTo(panelDisposable);
 
-			new[] { x.CopyScreen, x.CopyPilotLamp, x.CopyNeedle, x.CopyDigitalNumber, x.CopyDigitalGauge, x.CopyLinearGauge, x.CopyTimetable, x.CopyTouch }
+			new[] { panel.CopyScreen, panel.CopyPilotLamp, panel.CopyNeedle, panel.CopyDigitalNumber, panel.CopyDigitalGauge, panel.CopyLinearGauge, panel.CopyTimetable, panel.CopyTouch }
 				.BindToButton(buttonPanelCopy)
 				.AddTo(panelDisposable);
 
-			new[] { x.RemoveScreen, x.RemovePanelElement, x.RemoveTouch }
+			new[] { panel.RemoveScreen, panel.RemovePanelElement, panel.RemoveTouch }
 				.BindToButton(buttonPanelRemove)
 				.AddTo(panelDisposable);
 

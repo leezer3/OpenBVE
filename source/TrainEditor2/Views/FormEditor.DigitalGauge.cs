@@ -10,14 +10,14 @@ namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private IDisposable BindToDigitalGauge(DigitalGaugeElementViewModel y)
+		private IDisposable BindToDigitalGauge(DigitalGaugeElementViewModel digitalGauge)
 		{
 			CompositeDisposable digitalGaugeDisposable = new CompositeDisposable();
 
-			y.LocationX
+			digitalGauge.LocationX
 				.BindTo(
 					textBoxDigitalGaugeLocationX,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -30,14 +30,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(digitalGaugeDisposable);
 
-			y.LocationX
+			digitalGauge.LocationX
 				.BindToErrorProvider(errorProvider, textBoxDigitalGaugeLocationX)
 				.AddTo(digitalGaugeDisposable);
 
-			y.LocationY
+			digitalGauge.LocationY
 				.BindTo(
 					textBoxDigitalGaugeLocationY,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -50,17 +50,17 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(digitalGaugeDisposable);
 
-			y.LocationY
+			digitalGauge.LocationY
 				.BindToErrorProvider(errorProvider, textBoxDigitalGaugeLocationY)
 				.AddTo(digitalGaugeDisposable);
 
-			y.Layer
+			digitalGauge.Layer
 				.BindTo(
 					numericUpDownDigitalGaugeLayer,
-					z => z.Value,
+					x => x.Value,
 					BindingMode.TwoWay,
 					null,
-					z => (int)z,
+					x => (int)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => numericUpDownDigitalGaugeLayer.ValueChanged += h,
@@ -70,10 +70,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(digitalGaugeDisposable);
 
-			y.Radius
+			digitalGauge.Radius
 				.BindTo(
 					textBoxDigitalGaugeRadius,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -86,14 +86,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(digitalGaugeDisposable);
 
-			y.Radius
+			digitalGauge.Radius
 				.BindToErrorProvider(errorProvider, textBoxDigitalGaugeRadius)
 				.AddTo(digitalGaugeDisposable);
 
-			y.Color
+			digitalGauge.Color
 				.BindTo(
 					textBoxDigitalGaugeColor,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -106,14 +106,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(digitalGaugeDisposable);
 
-			y.Color
+			digitalGauge.Color
 				.BindToErrorProvider(errorProvider, textBoxDigitalGaugeColor)
 				.AddTo(digitalGaugeDisposable);
 
-			y.InitialAngle
+			digitalGauge.InitialAngle
 				.BindTo(
 					textBoxDigitalGaugeInitialAngle,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -126,14 +126,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(digitalGaugeDisposable);
 
-			y.InitialAngle
+			digitalGauge.InitialAngle
 				.BindToErrorProvider(errorProvider, textBoxDigitalGaugeInitialAngle)
 				.AddTo(digitalGaugeDisposable);
 
-			y.LastAngle
+			digitalGauge.LastAngle
 				.BindTo(
 					textBoxDigitalGaugeLastAngle,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -146,14 +146,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(digitalGaugeDisposable);
 
-			y.LastAngle
+			digitalGauge.LastAngle
 				.BindToErrorProvider(errorProvider, textBoxDigitalGaugeLastAngle)
 				.AddTo(digitalGaugeDisposable);
 
-			y.Minimum
+			digitalGauge.Minimum
 				.BindTo(
 					textBoxDigitalGaugeMinimum,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -166,14 +166,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(digitalGaugeDisposable);
 
-			y.Minimum
+			digitalGauge.Minimum
 				.BindToErrorProvider(errorProvider, textBoxDigitalGaugeMinimum)
 				.AddTo(digitalGaugeDisposable);
 
-			y.Maximum
+			digitalGauge.Maximum
 				.BindTo(
 					textBoxDigitalGaugeMaximum,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -186,14 +186,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(digitalGaugeDisposable);
 
-			y.Maximum
+			digitalGauge.Maximum
 				.BindToErrorProvider(errorProvider, textBoxDigitalGaugeMaximum)
 				.AddTo(digitalGaugeDisposable);
 
-			y.Step
+			digitalGauge.Step
 				.BindTo(
 					textBoxDigitalGaugeStep,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -206,7 +206,7 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(digitalGaugeDisposable);
 
-			y.Step
+			digitalGauge.Step
 				.BindToErrorProvider(errorProvider, textBoxDigitalGaugeStep)
 				.AddTo(digitalGaugeDisposable);
 

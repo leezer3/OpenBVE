@@ -131,6 +131,60 @@ namespace TrainEditor2.ViewModels.Trains
 			}
 		}
 
+		internal class DoorViewModel : BaseViewModel
+		{
+			internal ReactiveProperty<string> Width
+			{
+				get;
+			}
+
+			internal ReactiveProperty<string> MaxTolerance
+			{
+				get;
+			}
+
+			internal DoorViewModel(Car.Door door)
+			{
+				CultureInfo culture = CultureInfo.InvariantCulture;
+
+				Width = door
+					.ToReactivePropertyAsSynchronized(
+						x => x.Width,
+						x => x.ToString(culture),
+						x => double.Parse(x, NumberStyles.Float, culture),
+						ignoreValidationErrorValue: true
+					)
+					.SetValidateNotifyError(x =>
+					{
+						double result;
+						string message;
+
+						Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
+
+						return message;
+					})
+					.AddTo(disposable);
+
+				MaxTolerance = door
+					.ToReactivePropertyAsSynchronized(
+						x => x.MaxTolerance,
+						x => x.ToString(culture),
+						x => double.Parse(x, NumberStyles.Float, culture),
+						ignoreValidationErrorValue: true
+					)
+					.SetValidateNotifyError(x =>
+					{
+						double result;
+						string message;
+
+						Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
+
+						return message;
+					})
+					.AddTo(disposable);
+			}
+		}
+
 		internal Car Model
 		{
 			get;
@@ -206,7 +260,7 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
-		internal ReadOnlyReactivePropertySlim<MoveViewModel> Move
+		internal ReadOnlyReactivePropertySlim<JerkViewModel> Jerk
 		{
 			get;
 		}
@@ -236,22 +290,17 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
-		internal ReactiveProperty<string> LeftDoorWidth
+		internal ReadOnlyReactivePropertySlim<DoorViewModel> LeftDoor
 		{
 			get;
 		}
 
-		internal ReactiveProperty<string> LeftDoorMaxTolerance
+		internal ReadOnlyReactivePropertySlim<DoorViewModel> RightDoor
 		{
 			get;
 		}
 
-		internal ReactiveProperty<string> RightDoorWidth
-		{
-			get;
-		}
-
-		internal ReactiveProperty<string> RightDoorMaxTolerance
+		internal ReactiveProperty<Car.ReAdhesionDevices> ReAdhesionDevice
 		{
 			get;
 		}
@@ -438,10 +487,10 @@ namespace TrainEditor2.ViewModels.Trains
 				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 
-			Move = car
-				.ObserveProperty(x => x.Move)
-				.Do(_ => Move?.Value.Dispose())
-				.Select(x => new MoveViewModel(x))
+			Jerk = car
+				.ObserveProperty(x => x.Jerk)
+				.Do(_ => Jerk?.Value.Dispose())
+				.Select(x => new JerkViewModel(x))
 				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 
@@ -471,76 +520,22 @@ namespace TrainEditor2.ViewModels.Trains
 				.ToReactivePropertyAsSynchronized(x => x.LoadingSway)
 				.AddTo(disposable);
 
-			LeftDoorWidth = car
-				.ToReactivePropertyAsSynchronized(
-					x => x.LeftDoorWidth,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
-					ignoreValidationErrorValue: true
-				)
-				.SetValidateNotifyError(x =>
-				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
-
-					return message;
-				})
+			LeftDoor = car
+				.ObserveProperty(x => x.LeftDoor)
+				.Do(_ => LeftDoor?.Value.Dispose())
+				.Select(x => new DoorViewModel(x))
+				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 
-			LeftDoorMaxTolerance = car
-				.ToReactivePropertyAsSynchronized(
-					x => x.LeftDoorMaxTolerance,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
-					ignoreValidationErrorValue: true
-				)
-				.SetValidateNotifyError(x =>
-				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
-
-					return message;
-				})
+			RightDoor = car
+				.ObserveProperty(x => x.RightDoor)
+				.Do(_ => RightDoor?.Value.Dispose())
+				.Select(x => new DoorViewModel(x))
+				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 
-			RightDoorWidth = car
-				.ToReactivePropertyAsSynchronized(
-					x => x.RightDoorWidth,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
-					ignoreValidationErrorValue: true
-				)
-				.SetValidateNotifyError(x =>
-				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
-
-					return message;
-				})
-				.AddTo(disposable);
-
-			RightDoorMaxTolerance = car
-				.ToReactivePropertyAsSynchronized(
-					x => x.RightDoorMaxTolerance,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
-					ignoreValidationErrorValue: true
-				)
-				.SetValidateNotifyError(x =>
-				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
-
-					return message;
-				})
+			ReAdhesionDevice = car
+				.ToReactivePropertyAsSynchronized(x => x.ReAdhesionDevice)
 				.AddTo(disposable);
 
 			DefinedAxles.Subscribe(_ =>

@@ -111,7 +111,25 @@
     <Compile Include="IO\Trains\ExtensionsCfg\Writer.cs" />
     <Compile Include="IO\Trains\TrainDat\Parser.cs" />
     <Compile Include="IO\Trains\TrainDat\Writer.cs" />
+    <Compile Include="IO\Trains\Xml\Parser.Cab.cs">
+      <DependentUpon>Parser.cs</DependentUpon>
+    </Compile>
     <Compile Include="IO\Trains\Xml\Parser.cs" />
+    <Compile Include="IO\Trains\Xml\Parser.Delay.cs">
+      <DependentUpon>Parser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IO\Trains\Xml\Parser.Device.cs">
+      <DependentUpon>Parser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IO\Trains\Xml\Parser.Jerk.cs">
+      <DependentUpon>Parser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IO\Trains\Xml\Parser.Motor.cs">
+      <DependentUpon>Parser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IO\Trains\Xml\Parser.Pressure.cs">
+      <DependentUpon>Parser.cs</DependentUpon>
+    </Compile>
     <Compile Include="IO\Trains\Xml\Writer.cs" />
     <Compile Include="Models\App.cs" />
     <Compile Include="Models\Dialogs\OpenFolderDialog.cs" />
@@ -141,20 +159,27 @@
     <Compile Include="Models\Sounds\Sound.cs" />
     <Compile Include="Models\Sounds\SoundElement.cs" />
     <Compile Include="Models\Trains\Acceleration.cs" />
+    <Compile Include="Models\Trains\AuxiliaryReservoir.cs" />
     <Compile Include="Models\Trains\Brake.cs" />
+    <Compile Include="Models\Trains\BrakeCylinder.cs" />
+    <Compile Include="Models\Trains\BrakePipe.cs" />
     <Compile Include="Models\Trains\Cab.cs" />
     <Compile Include="Models\Trains\Car.cs" />
     <Compile Include="Models\Trains\CameraRestriction.cs" />
+    <Compile Include="Models\Trains\Compressor.cs" />
     <Compile Include="Models\Trains\Coupler.cs" />
     <Compile Include="Models\Trains\Delay.cs" />
     <Compile Include="Models\Trains\Device.cs" />
+    <Compile Include="Models\Trains\EqualizingReservoir.cs" />
     <Compile Include="Models\Trains\Handle.cs" />
+    <Compile Include="Models\Trains\MainReservoir.cs" />
     <Compile Include="Models\Trains\Motor.cs" />
     <Compile Include="Models\Trains\Motor.Track.cs" />
     <Compile Include="Models\Trains\Motor.Track.Functions.cs" />
-    <Compile Include="Models\Trains\Move.cs" />
+    <Compile Include="Models\Trains\Jerk.cs" />
     <Compile Include="Models\Trains\Performance.cs" />
     <Compile Include="Models\Trains\Pressure.cs" />
+    <Compile Include="Models\Trains\StraightAirPipe.cs" />
     <Compile Include="Models\Trains\Train.cs" />
     <Compile Include="Simulation\TrainManager\Car\Car.CarSounds.cs" />
     <Compile Include="Simulation\TrainManager\Car\Car.cs" />
@@ -195,18 +220,25 @@
     <Compile Include="ViewModels\Sounds\SoundElementViewModel.cs" />
     <Compile Include="ViewModels\Sounds\SoundViewModel.cs" />
     <Compile Include="ViewModels\Trains\AccelerationViewModel.cs" />
+    <Compile Include="ViewModels\Trains\AuxiliaryReservoirViewModel.cs" />
+    <Compile Include="ViewModels\Trains\BrakeCylinderViewModel.cs" />
+    <Compile Include="ViewModels\Trains\BrakePipeViewModel.cs" />
     <Compile Include="ViewModels\Trains\BrakeViewModel.cs" />
     <Compile Include="ViewModels\Trains\CabViewModel.cs" />
     <Compile Include="ViewModels\Trains\CameraRestrictionViewModel.cs" />
     <Compile Include="ViewModels\Trains\CarViewModel.cs" />
+    <Compile Include="ViewModels\Trains\CompressorViewModel.cs" />
     <Compile Include="ViewModels\Trains\CouplerViewModel.cs" />
     <Compile Include="ViewModels\Trains\DelayViewModel.cs" />
     <Compile Include="ViewModels\Trains\DeviceViewModel.cs" />
+    <Compile Include="ViewModels\Trains\EqualizingReservoirViewModel.cs" />
     <Compile Include="ViewModels\Trains\HandleViewModel.cs" />
+    <Compile Include="ViewModels\Trains\MainReservoirViewModel.cs" />
     <Compile Include="ViewModels\Trains\MotorViewModel.cs" />
-    <Compile Include="ViewModels\Trains\MoveViewModel.cs" />
+    <Compile Include="ViewModels\Trains\JerkViewModel.cs" />
     <Compile Include="ViewModels\Trains\PerformanceViewModel.cs" />
     <Compile Include="ViewModels\Trains\PressureViewModel.cs" />
+    <Compile Include="ViewModels\Trains\StraightAirPipeViewModel.cs" />
     <Compile Include="ViewModels\Trains\TrainViewModel.cs" />
     <Compile Include="Views\FormBogie.cs">
       <SubType>Form</SubType>
@@ -220,10 +252,25 @@
     <Compile Include="Views\FormDelay.Designer.cs">
       <DependentUpon>FormDelay.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\FormDoor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormDoor.Designer.cs">
+      <DependentUpon>FormDoor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\FormEditor.Acceleration.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\FormEditor.AuxiliaryReservoir.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\FormEditor.Brake.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.BrakeCylinder.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.BrakePipe.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\FormEditor.Cab.cs">
@@ -233,6 +280,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\FormEditor.Car.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.Compressor.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\FormEditor.Coupler.cs">
@@ -255,6 +305,9 @@
     <Compile Include="Views\FormEditor.DigitalNumber.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\FormEditor.EqualizingReservoir.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\FormEditor.Functions.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -264,10 +317,10 @@
     <Compile Include="Views\FormEditor.LinearGauge.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\FormEditor.Motor.cs">
+    <Compile Include="Views\FormEditor.MainReservoir.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\FormEditor.Move.cs">
+    <Compile Include="Views\FormEditor.Motor.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\FormEditor.Needle.cs">
@@ -292,6 +345,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\FormEditor.SoundElement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormEditor.StraightAirPipe.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\FormEditor.This.cs">
@@ -342,6 +398,12 @@
     <Compile Include="Views\FormImportTrain.Designer.cs">
       <DependentUpon>FormImportTrain.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\FormJerk.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormJerk.Designer.cs">
+      <DependentUpon>FormJerk.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\FormSubject.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -370,6 +432,9 @@
     <EmbeddedResource Include="Views\FormDelay.resx">
       <DependentUpon>FormDelay.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\FormDoor.resx">
+      <DependentUpon>FormDoor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\FormEditor.resx">
       <DependentUpon>FormEditor.cs</DependentUpon>
     </EmbeddedResource>
@@ -390,6 +455,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\FormImportTrain.resx">
       <DependentUpon>FormImportTrain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\FormJerk.resx">
+      <DependentUpon>FormJerk.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\FormSubject.resx">
       <DependentUpon>FormSubject.cs</DependentUpon>

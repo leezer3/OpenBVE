@@ -74,10 +74,8 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									Interface.AddMessage(MessageType.Error, false, $"The train.dat version {lines[0].ToLowerInvariant()} is invalid in {fileName}");
 								}
 							}
-
 							break;
 					}
-
 					break;
 				}
 			}
@@ -85,7 +83,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 			Acceleration acceleration = new Acceleration();
 			Performance performance = new Performance();
 			Delay delay = new Delay();
-			Move move = new Move();
+			Jerk jerk = new Jerk();
 			Brake brake = new Brake();
 			Pressure pressure = new Pressure();
 			Motor motor = new Motor();
@@ -102,8 +100,8 @@ namespace TrainEditor2.IO.Trains.TrainDat
 			double centerOfGravityHeight = 1.5;
 			double exposedFrontalArea = 5.0;
 			double unexposedFrontalArea = 1.6;
-			double doorWidth = 1000.0;
-			double doorMaxTolerance = 0.0;
+			Car.Door door = new Car.Door();
+			Car.ReAdhesionDevices reAdhesionDevice = Car.ReAdhesionDevices.TypeA;
 
 			TrainManager.MotorSound.Table[] PowerTables = new TrainManager.MotorSound.Table[2];
 			TrainManager.MotorSound.Table[] BrakeTables = new TrainManager.MotorSound.Table[2];
@@ -187,7 +185,6 @@ namespace TrainEditor2.IO.Trains.TrainDat
 												acceleration.Entries[n].V1 = acceleration.Entries[n].V2;
 												acceleration.Entries[n].V2 = x;
 											}
-
 											break;
 										case 4:
 											if (ver1220000)
@@ -211,7 +208,6 @@ namespace TrainEditor2.IO.Trains.TrainDat
 											{
 												acceleration.Entries[n].E = a;
 											}
-
 											break;
 									}
 								}
@@ -242,28 +238,24 @@ namespace TrainEditor2.IO.Trains.TrainDat
 										{
 											performance.Deceleration = a;
 										}
-
 										break;
 									case 1:
 										if (a >= 0.0)
 										{
 											performance.CoefficientOfStaticFriction = a;
 										}
-
 										break;
 									case 3:
 										if (a >= 0.0)
 										{
 											performance.CoefficientOfRollingResistance = a;
 										}
-
 										break;
 									case 4:
 										if (a >= 0.0)
 										{
 											performance.AerodynamicDragCoefficient = a;
 										}
-
 										break;
 								}
 							}
@@ -383,44 +375,38 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									case 0:
 										if (a >= 0.0)
 										{
-											move.JerkPowerUp = a;
+											jerk.Power.Up = a;
 										}
-
 										break;
 									case 1:
 										if (a >= 0.0)
 										{
-											move.JerkPowerDown = a;
+											jerk.Power.Down = a;
 										}
-
 										break;
 									case 2:
 										if (a >= 0.0)
 										{
-											move.JerkBrakeUp = a;
+											jerk.Brake.Up = a;
 										}
-
 										break;
 									case 3:
 										if (a >= 0.0)
 										{
-											move.JerkBrakeDown = a;
+											jerk.Brake.Down = a;
 										}
-
 										break;
 									case 4:
 										if (a >= 0.0)
 										{
-											move.BrakeCylinderUp = a;
+											pressure.BrakeCylinder.EmergencyRate = a;
 										}
-
 										break;
 									case 5:
 										if (a >= 0.0)
 										{
-											move.BrakeCylinderDown = a;
+											pressure.BrakeCylinder.ReleaseRate = a;
 										}
-
 										break;
 								}
 							}
@@ -449,28 +435,24 @@ namespace TrainEditor2.IO.Trains.TrainDat
 										{
 											brake.BrakeType = (Brake.BrakeTypes)b;
 										}
-
 										break;
 									case 1:
 										if (b >= 0 & b <= 2)
 										{
 											brake.BrakeControlSystem = (Brake.BrakeControlSystems)b;
 										}
-
 										break;
 									case 2:
 										if (a >= 0.0)
 										{
 											brake.BrakeControlSpeed = a;
 										}
-
 										break;
 									case 3:
 										if (a <= 0 && a > 3)
 										{
 											brake.LocoBrakeType = (Brake.LocoBrakeTypes)b;
 										}
-
 										break;
 								}
 							}
@@ -495,37 +477,32 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									case 0:
 										if (a > 0.0)
 										{
-											pressure.BrakeCylinderServiceMaximumPressure = a;
+											pressure.BrakeCylinder.ServiceMaximumPressure = a;
 										}
-
 										break;
 									case 1:
 										if (a > 0.0)
 										{
-											pressure.BrakeCylinderEmergencyMaximumPressure = a;
+											pressure.BrakeCylinder.EmergencyMaximumPressure = a;
 										}
-
 										break;
 									case 2:
 										if (a > 0.0)
 										{
-											pressure.MainReservoirMinimumPressure = a;
+											pressure.MainReservoir.MinimumPressure = a;
 										}
-
 										break;
 									case 3:
 										if (a > 0.0)
 										{
-											pressure.MainReservoirMaximumPressure = a;
+											pressure.MainReservoir.MaximumPressure = a;
 										}
-
 										break;
 									case 4:
 										if (a > 0.0)
 										{
-											pressure.BrakePipeNormalPressure = a;
+											pressure.BrakePipe.NormalPressure = a;
 										}
-
 										break;
 								}
 							}
@@ -554,63 +531,54 @@ namespace TrainEditor2.IO.Trains.TrainDat
 										{
 											train.Handle.HandleType = (Handle.HandleTypes)b;
 										}
-
 										break;
 									case 1:
 										if (b > 0)
 										{
 											train.Handle.PowerNotches = b;
 										}
-
 										break;
 									case 2:
 										if (b > 0)
 										{
 											train.Handle.BrakeNotches = b;
 										}
-
 										break;
 									case 3:
 										if (b >= 0)
 										{
 											train.Handle.PowerNotchReduceSteps = b;
 										}
-
 										break;
 									case 4:
 										if (a >= 0 && a < 4)
 										{
 											train.Handle.HandleBehaviour = (Handle.EbHandleBehaviour)b;
 										}
-
 										break;
 									case 5:
 										if (b > 0)
 										{
 											train.Handle.LocoBrakeNotches = b;
 										}
-
 										break;
 									case 6:
 										if (a <= 0 && a > 3)
 										{
 											train.Handle.LocoBrake = (Handle.LocoBrakeType)b;
 										}
-
 										break;
 									case 7:
 										if (b > 0)
 										{
 											train.Handle.DriverPowerNotches = b;
 										}
-
 										break;
 									case 8:
 										if (b > 0)
 										{
 											train.Handle.DriverBrakeNotches = b;
 										}
-
 										break;
 								}
 							}
@@ -672,35 +640,30 @@ namespace TrainEditor2.IO.Trains.TrainDat
 										{
 											motorCarMass = a;
 										}
-
 										break;
 									case 1:
 										if (b >= 1)
 										{
 											numberOfMotorCars = b;
 										}
-
 										break;
 									case 2:
 										if (a > 0.0)
 										{
 											trailerCarMass = a;
 										}
-
 										break;
 									case 3:
 										if (b >= 0)
 										{
 											numberOfTrailerCars = b;
 										}
-
 										break;
 									case 4:
 										if (b > 0.0)
 										{
 											lengthOfACar = a;
 										}
-
 										break;
 									case 5:
 										frontCarIsAMotorCar = a == 1.0;
@@ -710,14 +673,12 @@ namespace TrainEditor2.IO.Trains.TrainDat
 										{
 											widthOfACar = a;
 										}
-
 										break;
 									case 7:
 										if (a > 0.0)
 										{
 											heightOfACar = a;
 										}
-
 										break;
 									case 8:
 										centerOfGravityHeight = a;
@@ -727,14 +688,12 @@ namespace TrainEditor2.IO.Trains.TrainDat
 										{
 											exposedFrontalArea = a;
 										}
-
 										break;
 									case 10:
 										if (a > 0.0)
 										{
 											unexposedFrontalArea = a;
 										}
-
 										break;
 								}
 							}
@@ -763,14 +722,12 @@ namespace TrainEditor2.IO.Trains.TrainDat
 										{
 											train.Device.Ats = (Device.AtsModes)b;
 										}
-
 										break;
 									case 1:
 										if (b >= 0 & b <= 2)
 										{
 											train.Device.Atc = (Device.AtcModes)b;
 										}
-
 										break;
 									case 2:
 										train.Device.Eb = a == 1.0;
@@ -784,9 +741,8 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									case 5:
 										if (b >= -1 & b <= 3)
 										{
-											train.Device.ReAdhesionDevice = (Device.ReAdhesionDevices)b;
+											reAdhesionDevice = (Car.ReAdhesionDevices)b;
 										}
-
 										break;
 									case 6:
 										train.Device.LoadCompensatingDevice = a;
@@ -796,35 +752,30 @@ namespace TrainEditor2.IO.Trains.TrainDat
 										{
 											train.Device.PassAlarm = (Device.PassAlarmModes)b;
 										}
-
 										break;
 									case 8:
 										if (b >= 0 & b <= 2)
 										{
 											train.Device.DoorOpenMode = (Device.DoorModes)b;
 										}
-
 										break;
 									case 9:
 										if (b >= 0 & b <= 2)
 										{
 											train.Device.DoorCloseMode = (Device.DoorModes)b;
 										}
-
 										break;
 									case 10:
 										if (a >= 0.0)
 										{
-											doorWidth = a;
+											door.Width = a;
 										}
-
 										break;
 									case 11:
 										if (a >= 0.0)
 										{
-											doorMaxTolerance = a;
+											door.MaxTolerance = a;
 										}
-
 										break;
 								}
 							}
@@ -932,6 +883,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 
 			int numberOfCars = numberOfMotorCars + numberOfTrailerCars;
 			bool[] isMotorCars = new bool[numberOfCars];
+
 			if (numberOfMotorCars == 1)
 			{
 				if (frontCarIsAMotorCar | numberOfTrailerCars == 0)
@@ -1025,11 +977,12 @@ namespace TrainEditor2.IO.Trains.TrainDat
 				car.CenterOfGravityHeight = centerOfGravityHeight;
 				car.ExposedFrontalArea = exposedFrontalArea;
 				car.UnexposedFrontalArea = unexposedFrontalArea;
-				car.LeftDoorWidth = car.RightDoorWidth = doorWidth;
-				car.LeftDoorMaxTolerance = car.RightDoorMaxTolerance = doorMaxTolerance;
+				car.LeftDoor = (Car.Door)door.Clone();
+				car.RightDoor = (Car.Door)door.Clone();
+				car.ReAdhesionDevice = reAdhesionDevice;
 				car.Performance = (Performance)performance.Clone();
 				car.Delay = (Delay)delay.Clone();
-				car.Move = (Move)move.Clone();
+				car.Jerk = (Jerk)jerk.Clone();
 				car.Brake = (Brake)brake.Clone();
 				car.Pressure = (Pressure)pressure.Clone();
 

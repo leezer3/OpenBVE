@@ -31,11 +31,6 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
-		internal ReactiveProperty<Device.ReAdhesionDevices> ReAdhesionDevice
-		{
-			get;
-		}
-
 		internal ReactiveProperty<Device.PassAlarmModes> PassAlarm
 		{
 			get;
@@ -80,10 +75,6 @@ namespace TrainEditor2.ViewModels.Trains
 
 					return null;
 				})
-				.AddTo(disposable);
-
-			ReAdhesionDevice = device
-				.ToReactivePropertyAsSynchronized(x => x.ReAdhesionDevice)
 				.AddTo(disposable);
 
 			PassAlarm = device

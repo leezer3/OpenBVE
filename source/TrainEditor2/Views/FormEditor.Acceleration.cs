@@ -10,15 +10,15 @@ namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private IDisposable BindToAcceleration(AccelerationViewModel z)
+		private IDisposable BindToAcceleration(AccelerationViewModel acceleration)
 		{
 			CompositeDisposable accelerationDisposable = new CompositeDisposable();
 			CompositeDisposable entryDisposable = new CompositeDisposable().AddTo(accelerationDisposable);
 
-			z.SelectedEntryIndex
+			acceleration.SelectedEntryIndex
 				.BindTo(
 					comboBoxNotch,
-					w => w.SelectedIndex,
+					x => x.SelectedIndex,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -32,9 +32,9 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(accelerationDisposable);
 
-			z.SelectedEntryIndex.Value = comboBoxNotch.SelectedIndex;
+			acceleration.SelectedEntryIndex.Value = comboBoxNotch.SelectedIndex;
 
-			z.SelectedEntry
+			acceleration.SelectedEntry
 				.Where(x => x != null)
 				.Subscribe(x =>
 				{
@@ -133,10 +133,10 @@ namespace TrainEditor2.Views
 				})
 				.AddTo(accelerationDisposable);
 
-			z.MinVelocity
+			acceleration.MinVelocity
 				.BindTo(
 					textBoxAccelXmin,
-					w => w.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -149,14 +149,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(accelerationDisposable);
 
-			z.MinVelocity
+			acceleration.MinVelocity
 				.BindToErrorProvider(errorProvider, textBoxAccelXmin)
 				.AddTo(accelerationDisposable);
 
-			z.MaxVelocity
+			acceleration.MaxVelocity
 				.BindTo(
 					textBoxAccelXmax,
-					w => w.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -169,14 +169,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(accelerationDisposable);
 
-			z.MaxVelocity
+			acceleration.MaxVelocity
 				.BindToErrorProvider(errorProvider, textBoxAccelXmax)
 				.AddTo(accelerationDisposable);
 
-			z.MinAcceleration
+			acceleration.MinAcceleration
 				.BindTo(
 					textBoxAccelYmin,
-					w => w.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -189,14 +189,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(accelerationDisposable);
 
-			z.MinAcceleration
+			acceleration.MinAcceleration
 				.BindToErrorProvider(errorProvider, textBoxAccelYmin)
 				.AddTo(accelerationDisposable);
 
-			z.MaxAcceleration
+			acceleration.MaxAcceleration
 				.BindTo(
 					textBoxAccelYmax,
-					w => w.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -209,28 +209,28 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(accelerationDisposable);
 
-			z.MaxAcceleration
+			acceleration.MaxAcceleration
 				.BindToErrorProvider(errorProvider, textBoxAccelYmax)
 				.AddTo(accelerationDisposable);
 
-			z.NowVelocity
+			acceleration.NowVelocity
 				.BindTo(
 					labelAccelXValue,
-					w => w.Text
+					x => x.Text
 				)
 				.AddTo(accelerationDisposable);
 
-			z.NowAcceleration
+			acceleration.NowAcceleration
 				.BindTo(
 					labelAccelYValue,
-					w => w.Text
+					x => x.Text
 				)
 				.AddTo(accelerationDisposable);
 
-			z.Resistance
+			acceleration.Resistance
 				.BindTo(
 					checkBoxSubtractDeceleration,
-					w => w.Checked,
+					x => x.Checked,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -243,10 +243,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(accelerationDisposable);
 
-			z.ImageWidth
+			acceleration.ImageWidth
 				.BindTo(
 					pictureBoxAccel,
-					w => w.Width,
+					x => x.Width,
 					BindingMode.OneWayToSource,
 					null,
 					null,
@@ -259,12 +259,12 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(accelerationDisposable);
 
-			z.ImageWidth.Value = pictureBoxAccel.Width;
+			acceleration.ImageWidth.Value = pictureBoxAccel.Width;
 
-			z.ImageHeight
+			acceleration.ImageHeight
 				.BindTo(
 					pictureBoxAccel,
-					w => w.Height,
+					x => x.Height,
 					BindingMode.OneWayToSource,
 					null,
 					null,
@@ -277,9 +277,9 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(accelerationDisposable);
 
-			z.ImageHeight.Value = pictureBoxAccel.Height;
+			acceleration.ImageHeight.Value = pictureBoxAccel.Height;
 
-			z.Image
+			acceleration.Image
 				.Subscribe(x =>
 				{
 					pictureBoxAccel.Image = x;
@@ -287,9 +287,9 @@ namespace TrainEditor2.Views
 				})
 				.AddTo(accelerationDisposable);
 
-			z.ZoomIn.BindToButton(buttonAccelZoomIn).AddTo(accelerationDisposable);
-			z.ZoomOut.BindToButton(buttonAccelZoomOut).AddTo(accelerationDisposable);
-			z.Reset.BindToButton(buttonAccelReset).AddTo(accelerationDisposable);
+			acceleration.ZoomIn.BindToButton(buttonAccelZoomIn).AddTo(accelerationDisposable);
+			acceleration.ZoomOut.BindToButton(buttonAccelZoomOut).AddTo(accelerationDisposable);
+			acceleration.Reset.BindToButton(buttonAccelReset).AddTo(accelerationDisposable);
 
 			return accelerationDisposable;
 		}

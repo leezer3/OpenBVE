@@ -12,16 +12,15 @@ namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private IDisposable BindToTrain(TrainViewModel x)
+		private IDisposable BindToTrain(TrainViewModel train)
 		{
 			CompositeDisposable trainDisposable = new CompositeDisposable();
-
 			CompositeDisposable handleDisposable = new CompositeDisposable().AddTo(trainDisposable);
 			CompositeDisposable deviceDisposable = new CompositeDisposable().AddTo(trainDisposable);
 			CompositeDisposable carDisposable = new CompositeDisposable().AddTo(trainDisposable);
 			CompositeDisposable couplerDisposable = new CompositeDisposable().AddTo(trainDisposable);
 
-			x.Cars
+			train.Cars
 				.CollectionChangedAsObservable()
 				.ToReadOnlyReactivePropertySlim()
 				.Subscribe(_ =>
@@ -29,7 +28,7 @@ namespace TrainEditor2.Views
 					int index = comboBoxInitialDriverCar.SelectedIndex;
 
 					comboBoxInitialDriverCar.Items.Clear();
-					comboBoxInitialDriverCar.Items.AddRange(Enumerable.Range(0, x.Cars.Count).OfType<object>().ToArray());
+					comboBoxInitialDriverCar.Items.AddRange(Enumerable.Range(0, train.Cars.Count).OfType<object>().ToArray());
 
 					if (index < comboBoxInitialDriverCar.Items.Count)
 					{
@@ -42,27 +41,27 @@ namespace TrainEditor2.Views
 				})
 				.AddTo(trainDisposable);
 
-			x.Handle
-				.Subscribe(y =>
+			train.Handle
+				.Subscribe(x =>
 				{
 					handleDisposable.Dispose();
 					handleDisposable = new CompositeDisposable().AddTo(trainDisposable);
 
-					BindToHandle(y).AddTo(handleDisposable);
+					BindToHandle(x).AddTo(handleDisposable);
 				})
 				.AddTo(trainDisposable);
 
-			x.Device
-				.Subscribe(y =>
+			train.Device
+				.Subscribe(x =>
 				{
 					deviceDisposable.Dispose();
 					deviceDisposable = new CompositeDisposable().AddTo(trainDisposable);
 
-					BindToDevice(y).AddTo(deviceDisposable);
+					BindToDevice(x).AddTo(deviceDisposable);
 				})
 				.AddTo(trainDisposable);
 
-			x.InitialDriverCar
+			train.InitialDriverCar
 				.BindTo(
 					comboBoxInitialDriverCar,
 					z => z.SelectedIndex,
@@ -78,56 +77,56 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(trainDisposable);
 
-			x.InitialDriverCar
+			train.InitialDriverCar
 				.BindToErrorProvider(errorProvider, comboBoxInitialDriverCar)
 				.AddTo(trainDisposable);
 
-			x.SelectedCar
-				.Subscribe(y =>
+			train.SelectedCar
+				.Subscribe(x =>
 				{
 					carDisposable.Dispose();
 					carDisposable = new CompositeDisposable().AddTo(trainDisposable);
 
-					if (y != null)
+					if (x != null)
 					{
-						BindToCar(y).AddTo(carDisposable);
+						BindToCar(x).AddTo(carDisposable);
 					}
 				})
 				.AddTo(trainDisposable);
 
-			x.SelectedCar
+			train.SelectedCar
 				.BindTo(
 					checkBoxIsMotorCar,
-					y => y.Checked,
-					y => y is MotorCarViewModel
+					x => x.Checked,
+					x => x is MotorCarViewModel
 				)
 				.AddTo(trainDisposable);
 
-			x.SelectedCar
+			train.SelectedCar
 				.BindTo(
 					checkBoxIsControlledCar,
-					y => y.Checked,
-					y => y is ControlledMotorCarViewModel || y is ControlledTrailerCarViewModel
+					x => x.Checked,
+					x => x is ControlledMotorCarViewModel || x is ControlledTrailerCarViewModel
 				)
 				.AddTo(trainDisposable);
 
-			x.SelectedCar
+			train.SelectedCar
 				.BindTo(
 					groupBoxCab,
-					y => y.Enabled,
-					y => y is ControlledMotorCarViewModel || y is ControlledTrailerCarViewModel
+					x => x.Enabled,
+					x => x is ControlledMotorCarViewModel || x is ControlledTrailerCarViewModel
 				)
 				.AddTo(trainDisposable);
 
-			x.SelectedCoupler
-				.Subscribe(y =>
+			train.SelectedCoupler
+				.Subscribe(x =>
 				{
 					couplerDisposable.Dispose();
 					couplerDisposable = new CompositeDisposable().AddTo(trainDisposable);
 
-					if (y != null)
+					if (x != null)
 					{
-						BindToCoupler(y).AddTo(couplerDisposable);
+						BindToCoupler(x).AddTo(couplerDisposable);
 					}
 				})
 				.AddTo(trainDisposable);

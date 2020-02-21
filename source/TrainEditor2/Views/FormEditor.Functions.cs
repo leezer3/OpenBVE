@@ -125,12 +125,6 @@ namespace TrainEditor2.Views
 			labelEb.Text = $@"{Utilities.GetInterfaceString("general_settings", "device", "eb")}:";
 			labelConstSpeed.Text = $@"{Utilities.GetInterfaceString("general_settings", "device", "const_speed")}:";
 			labelHoldBrake.Text = $@"{Utilities.GetInterfaceString("general_settings", "device", "hold_brake")}:";
-			labelReAdhesionDevice.Text = $@"{Utilities.GetInterfaceString("general_settings", "device", "re_adhesion_device", "name")}:";
-			comboBoxReAdhesionDevice.Items[0] = Utilities.GetInterfaceString("general_settings", "device", "re_adhesion_device", "none");
-			comboBoxReAdhesionDevice.Items[1] = Utilities.GetInterfaceString("general_settings", "device", "re_adhesion_device", "type_a");
-			comboBoxReAdhesionDevice.Items[2] = Utilities.GetInterfaceString("general_settings", "device", "re_adhesion_device", "type_b");
-			comboBoxReAdhesionDevice.Items[3] = Utilities.GetInterfaceString("general_settings", "device", "re_adhesion_device", "type_c");
-			comboBoxReAdhesionDevice.Items[4] = Utilities.GetInterfaceString("general_settings", "device", "re_adhesion_device", "type_d");
 			labelPassAlarm.Text = $@"{Utilities.GetInterfaceString("general_settings", "device", "pass_alarm", "name")}:";
 			comboBoxPassAlarm.Items[0] = Utilities.GetInterfaceString("general_settings", "device", "pass_alarm", "none");
 			comboBoxPassAlarm.Items[1] = Utilities.GetInterfaceString("general_settings", "device", "pass_alarm", "single");
@@ -143,8 +137,6 @@ namespace TrainEditor2.Views
 			comboBoxDoorCloseMode.Items[0] = Utilities.GetInterfaceString("general_settings", "device", "door_mode", "semi_automatic");
 			comboBoxDoorCloseMode.Items[1] = Utilities.GetInterfaceString("general_settings", "device", "door_mode", "automatic");
 			comboBoxDoorCloseMode.Items[2] = Utilities.GetInterfaceString("general_settings", "device", "door_mode", "manual");
-
-			tabPageCar1.Text = Utilities.GetInterfaceString("car_settings", "name");
 
 			groupBoxCarGeneral.Text = Utilities.GetInterfaceString("car_settings", "general", "name");
 			labelIsMotorCar.Text = $@"{Utilities.GetInterfaceString("car_settings", "general", "is_motor_car")}:";
@@ -174,14 +166,6 @@ namespace TrainEditor2.Views
 			labelCoefficientOfRollingResistance.Text = $@"{Utilities.GetInterfaceString("car_settings", "performance", "rolling_resistance")}:";
 			labelAerodynamicDragCoefficient.Text = $@"{Utilities.GetInterfaceString("car_settings", "performance", "aerodynamic_drag")}:";
 
-			groupBoxMove.Text = Utilities.GetInterfaceString("car_settings", "move", "name");
-			labelJerkPowerUp.Text = $@"{Utilities.GetInterfaceString("car_settings", "move", "jerk_power_up")}:";
-			labelJerkPowerDown.Text = $@"{Utilities.GetInterfaceString("car_settings", "move", "jerk_power_down")}:";
-			labelJerkBrakeUp.Text = $@"{Utilities.GetInterfaceString("car_settings", "move", "jerk_brake_up")}:";
-			labelJerkBrakeDown.Text = $@"{Utilities.GetInterfaceString("car_settings", "move", "jerk_brake_down")}:";
-			labelBrakeCylinderUp.Text = $@"{Utilities.GetInterfaceString("car_settings", "move", "brake_cylinder_up")}:";
-			labelBrakeCylinderDown.Text = $@"{Utilities.GetInterfaceString("car_settings", "move", "brake_cylinder_down")}:";
-
 			groupBoxBrake.Text = Utilities.GetInterfaceString("car_settings", "brake", "name");
 			labelBrakeType.Text = $@"{Utilities.GetInterfaceString("car_settings", "brake", "brake_type", "name")}:";
 			comboBoxBrakeType.Items[0] = Utilities.GetInterfaceString("car_settings", "brake", "brake_type", "smee");
@@ -198,11 +182,6 @@ namespace TrainEditor2.Views
 			labelBrakeControlSpeed.Text = $@"{Utilities.GetInterfaceString("car_settings", "brake", "brake_control_speed")}:";
 
 			groupBoxPressure.Text = Utilities.GetInterfaceString("car_settings", "pressure", "name");
-			labelBrakeCylinderServiceMaximumPressure.Text = $@"{Utilities.GetInterfaceString("car_settings", "pressure", "brake_cylinder_service_max")}:";
-			labelBrakeCylinderEmergencyMaximumPressure.Text = $@"{Utilities.GetInterfaceString("car_settings", "pressure", "brake_cylinder_emergency_max")}:";
-			labelMainReservoirMinimumPressure.Text = $@"{Utilities.GetInterfaceString("car_settings", "pressure", "main_reservoir_min")}:";
-			labelMainReservoirMaximumPressure.Text = $@"{Utilities.GetInterfaceString("car_settings", "pressure", "main_reservoir_max")}:";
-			labelBrakePipeNormalPressure.Text = $@"{Utilities.GetInterfaceString("car_settings", "pressure", "brake_pipe_normal")}:";
 
 			groupBoxDelay.Text = Utilities.GetInterfaceString("car_settings", "delay", "name");
 			labelDelayPower.Text = $@"{Utilities.GetInterfaceString("car_settings", "delay", "power")}:";

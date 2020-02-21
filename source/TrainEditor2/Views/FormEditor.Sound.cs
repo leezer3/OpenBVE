@@ -11,318 +11,318 @@ namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private IDisposable BindToSound(SoundViewModel x)
+		private IDisposable BindToSound(SoundViewModel sound)
 		{
 			CompositeDisposable soundDisposable = new CompositeDisposable();
 			CompositeDisposable elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-			WinFormsBinders.BindToTreeView(treeViewSound, x.TreeItems, x.SelectedTreeItem).AddTo(soundDisposable);
+			WinFormsBinders.BindToTreeView(treeViewSound, sound.TreeItems, sound.SelectedTreeItem).AddTo(soundDisposable);
 
-			x.SelectedTreeItem
+			sound.SelectedTreeItem
 				.BindTo(
 					listViewSound,
-					y => y.Enabled,
+					x => x.Enabled,
 					BindingMode.OneWay,
-					y => x.TreeItems[0].Children.Contains(y)
+					x => sound.TreeItems[0].Children.Contains(x)
 				)
 				.AddTo(soundDisposable);
 
-			WinFormsBinders.BindToListView(listViewSound, x.ListColumns, x.ListItems, x.SelectedListItem).AddTo(soundDisposable);
+			WinFormsBinders.BindToListView(listViewSound, sound.ListColumns, sound.ListItems, sound.SelectedListItem).AddTo(soundDisposable);
 
-			x.SelectedListItem
+			sound.SelectedListItem
 				.BindTo(
 					groupBoxSoundKey,
-					y => y.Enabled,
+					x => x.Enabled,
 					BindingMode.OneWay,
-					y => y != null
+					x => x != null
 				)
 				.AddTo(soundDisposable);
 
-			x.SelectedListItem
+			sound.SelectedListItem
 				.BindTo(
 					groupBoxSoundValue,
-					y => y.Enabled,
+					x => x.Enabled,
 					BindingMode.OneWay,
-					y => y != null
+					x => x != null
 				)
 				.AddTo(soundDisposable);
 
-			x.SelectedRun
-				.Where(y => y != null)
-				.Subscribe(y =>
+			sound.SelectedRun
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement(y).AddTo(elementDisposable);
+					BindToSoundElement(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
-			x.SelectedFlange
-				.Where(y => y != null)
-				.Subscribe(y =>
+			sound.SelectedFlange
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement(y).AddTo(elementDisposable);
+					BindToSoundElement(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
-			x.SelectedMotor
-				.Where(y => y != null)
-				.Subscribe(y =>
+			sound.SelectedMotor
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement(y).AddTo(elementDisposable);
+					BindToSoundElement(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
-			x.SelectedFrontSwitch
-				.Where(y => y != null)
-				.Subscribe(y =>
+			sound.SelectedFrontSwitch
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement(y).AddTo(elementDisposable);
+					BindToSoundElement(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
-			x.SelectedRearSwitch
-				.Where(y => y != null)
-				.Subscribe(y =>
+			sound.SelectedRearSwitch
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement(y).AddTo(elementDisposable);
+					BindToSoundElement(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
-			x.SelectedBrake
-				.Where(y => y != null)
-				.Subscribe(y =>
+			sound.SelectedBrake
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<BrakeElementViewModel, BrakeKey>(y).AddTo(elementDisposable);
+					BindToSoundElement<BrakeElementViewModel, BrakeKey>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
-			x.SelectedCompressor
-				.Where(y => y != null)
-				.Subscribe(y =>
+			sound.SelectedCompressor
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<CompressorElementViewModel, CompressorKey>(y).AddTo(elementDisposable);
+					BindToSoundElement<CompressorElementViewModel, CompressorKey>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
-			x.SelectedSuspension
-				.Where(y => y != null)
-				.Subscribe(y =>
+			sound.SelectedSuspension
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<SuspensionElementViewModel, SuspensionKey>(y).AddTo(elementDisposable);
+					BindToSoundElement<SuspensionElementViewModel, SuspensionKey>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
-			x.SelectedPrimaryHorn
-				.Where(y => y != null)
-				.Subscribe(y =>
+			sound.SelectedPrimaryHorn
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<PrimaryHornElementViewModel, HornKey>(y).AddTo(elementDisposable);
+					BindToSoundElement<PrimaryHornElementViewModel, HornKey>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
-			x.SelectedSecondaryHorn
-				.Where(y => y != null)
-				.Subscribe(y =>
+			sound.SelectedSecondaryHorn
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<SecondaryHornElementViewModel, HornKey>(y).AddTo(elementDisposable);
+					BindToSoundElement<SecondaryHornElementViewModel, HornKey>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
-			x.SelectedMusicHorn
-				.Where(y => y != null)
-				.Subscribe(y =>
+			sound.SelectedMusicHorn
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<MusicHornElementViewModel, HornKey>(y).AddTo(elementDisposable);
+					BindToSoundElement<MusicHornElementViewModel, HornKey>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
-			x.SelectedDoor
-				.Where(y => y != null)
-				.Subscribe(y =>
+			sound.SelectedDoor
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<DoorElementViewModel, DoorKey>(y).AddTo(elementDisposable);
+					BindToSoundElement<DoorElementViewModel, DoorKey>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
-			x.SelectedAts
-				.Where(y => y != null)
-				.Subscribe(y =>
+			sound.SelectedAts
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement(y).AddTo(elementDisposable);
+					BindToSoundElement(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
-			x.SelectedBuzzer
-				.Where(y => y != null)
-				.Subscribe(y =>
+			sound.SelectedBuzzer
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<BuzzerElementViewModel, BuzzerKey>(y).AddTo(elementDisposable);
+					BindToSoundElement<BuzzerElementViewModel, BuzzerKey>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
-			x.SelectedPilotLamp
-				.Where(y => y != null)
-				.Subscribe(y =>
+			sound.SelectedPilotLamp
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<PilotLampElementViewModel, PilotLampKey>(y).AddTo(elementDisposable);
+					BindToSoundElement<PilotLampElementViewModel, PilotLampKey>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
-			x.SelectedBrakeHandle
-				.Where(y => y != null)
-				.Subscribe(y =>
+			sound.SelectedBrakeHandle
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<BrakeHandleElementViewModel, BrakeHandleKey>(y).AddTo(elementDisposable);
+					BindToSoundElement<BrakeHandleElementViewModel, BrakeHandleKey>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
-			x.SelectedMasterController
-				.Where(y => y != null)
-				.Subscribe(y =>
+			sound.SelectedMasterController
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<MasterControllerElementViewModel, MasterControllerKey>(y).AddTo(elementDisposable);
+					BindToSoundElement<MasterControllerElementViewModel, MasterControllerKey>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
-			x.SelectedReverser
-				.Where(y => y != null)
-				.Subscribe(y =>
+			sound.SelectedReverser
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<ReverserElementViewModel, ReverserKey>(y).AddTo(elementDisposable);
+					BindToSoundElement<ReverserElementViewModel, ReverserKey>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
-			x.SelectedBreaker
-				.Where(y => y != null)
-				.Subscribe(y =>
+			sound.SelectedBreaker
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<BreakerElementViewModel, BreakerKey>(y).AddTo(elementDisposable);
+					BindToSoundElement<BreakerElementViewModel, BreakerKey>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
-			x.SelectedRequestStop
-				.Where(y => y != null)
-				.Subscribe(y =>
+			sound.SelectedRequestStop
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<RequestStopElementViewModel, RequestStopKey>(y).AddTo(elementDisposable);
+					BindToSoundElement<RequestStopElementViewModel, RequestStopKey>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
-			x.SelectedTouch
-				.Where(y => y != null)
-				.Subscribe(y =>
+			sound.SelectedTouch
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement(y).AddTo(elementDisposable);
+					BindToSoundElement(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
-			x.SelectedOthers
-				.Where(y => y != null)
-				.Subscribe(y =>
+			sound.SelectedOthers
+				.Where(x => x != null)
+				.Subscribe(x =>
 				{
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<OthersElementViewModel, OthersKey>(y).AddTo(elementDisposable);
+					BindToSoundElement<OthersElementViewModel, OthersKey>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
 			new[]
 				{
-					x.UpRun, x.UpFlange, x.UpMotor, x.UpFrontSwitch, x.UpRearSwitch,
-					x.UpBrake, x.UpCompressor, x.UpSuspension, x.UpPrimaryHorn, x.UpSecondaryHorn,
-					x.UpMusicHorn, x.UpDoor, x.UpAts, x.UpBuzzer, x.UpPilotLamp,
-					x.UpBrakeHandle, x.UpMasterController, x.UpReverser, x.UpBreaker, x.UpRequestStop,
-					x.UpTouch, x.UpOthers
+					sound.UpRun, sound.UpFlange, sound.UpMotor, sound.UpFrontSwitch, sound.UpRearSwitch,
+					sound.UpBrake, sound.UpCompressor, sound.UpSuspension, sound.UpPrimaryHorn, sound.UpSecondaryHorn,
+					sound.UpMusicHorn, sound.UpDoor, sound.UpAts, sound.UpBuzzer, sound.UpPilotLamp,
+					sound.UpBrakeHandle, sound.UpMasterController, sound.UpReverser, sound.UpBreaker, sound.UpRequestStop,
+					sound.UpTouch, sound.UpOthers
 				}
 				.BindToButton(buttonSoundUp)
 				.AddTo(soundDisposable);
 
 			new[]
 				{
-					x.DownRun, x.DownFlange, x.DownMotor, x.DownFrontSwitch, x.DownRearSwitch,
-					x.DownBrake, x.DownCompressor, x.DownSuspension, x.DownPrimaryHorn, x.DownSecondaryHorn,
-					x.DownMusicHorn, x.DownDoor, x.DownAts, x.DownBuzzer, x.DownPilotLamp,
-					x.DownBrakeHandle, x.DownMasterController, x.DownReverser, x.DownBreaker, x.DownRequestStop,
-					x.DownTouch, x.DownOthers
+					sound.DownRun, sound.DownFlange, sound.DownMotor, sound.DownFrontSwitch, sound.DownRearSwitch,
+					sound.DownBrake, sound.DownCompressor, sound.DownSuspension, sound.DownPrimaryHorn, sound.DownSecondaryHorn,
+					sound.DownMusicHorn, sound.DownDoor, sound.DownAts, sound.DownBuzzer, sound.DownPilotLamp,
+					sound.DownBrakeHandle, sound.DownMasterController, sound.DownReverser, sound.DownBreaker, sound.DownRequestStop,
+					sound.DownTouch, sound.DownOthers
 				}
 				.BindToButton(buttonSoundDown)
 				.AddTo(soundDisposable);
 
 			new[]
 				{
-					x.AddRun, x.AddFlange, x.AddMotor, x.AddFrontSwitch, x.AddRearSwitch,
-					x.AddBrake, x.AddCompressor, x.AddSuspension, x.AddPrimaryHorn, x.AddSecondaryHorn,
-					x.AddMusicHorn, x.AddDoor, x.AddAts, x.AddBuzzer, x.AddPilotLamp,
-					x.AddBrakeHandle, x.AddMasterController, x.AddReverser, x.AddBreaker, x.AddRequestStop,
-					x.AddTouch, x.AddOthers
+					sound.AddRun, sound.AddFlange, sound.AddMotor, sound.AddFrontSwitch, sound.AddRearSwitch,
+					sound.AddBrake, sound.AddCompressor, sound.AddSuspension, sound.AddPrimaryHorn, sound.AddSecondaryHorn,
+					sound.AddMusicHorn, sound.AddDoor, sound.AddAts, sound.AddBuzzer, sound.AddPilotLamp,
+					sound.AddBrakeHandle, sound.AddMasterController, sound.AddReverser, sound.AddBreaker, sound.AddRequestStop,
+					sound.AddTouch, sound.AddOthers
 				}
 				.BindToButton(buttonSoundAdd)
 				.AddTo(soundDisposable);
 
-			x.RemoveSoundElement.BindToButton(buttonSoundRemove).AddTo(soundDisposable);
+			sound.RemoveSoundElement.BindToButton(buttonSoundRemove).AddTo(soundDisposable);
 
 			return soundDisposable;
 		}

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -9,10 +8,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
-using SoundManager;
-using TrainEditor2.IO.Panels.Xml;
 using TrainEditor2.Models.Trains;
-using TrainEditor2.Simulation.TrainManager;
 using TrainEditor2.Systems;
 using Path = OpenBveApi.Path;
 
@@ -20,7 +16,13 @@ namespace TrainEditor2.IO.Trains.Xml
 {
 	internal static partial class TrainXml
 	{
-		private static readonly ReadOnlyCollection<int> currentVersion = Array.AsReadOnly(new[] { 1, 8 });
+		private static readonly Version editorVersion = new Version(1, 8, 0, 0);
+
+		private enum FileVersion
+		{
+			v1800,
+			Newer
+		}
 
 		internal static void Parse(string fileName, out Train train)
 		{
@@ -86,7 +88,7 @@ namespace TrainEditor2.IO.Trains.Xml
 
 			string section = parent.Name.LocalName;
 
-			bool isCompatibility = false;
+			FileVersion fileVersion = FileVersion.v1800;
 
 			foreach (XElement keyNode in parent.Elements())
 			{
@@ -99,49 +101,21 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "version":
 						if (value.Any())
 						{
-							int[] version = value.Split('.')
-								.Select(x =>
-								{
-									int result;
+							Version result;
 
-									if (!NumberFormats.TryParseIntVb6(x, out result) || result < 0)
-									{
-										Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-									}
-
-									return result;
-								})
-								.Where(x => x >= 0)
-								.ToArray();
-
-							int minVersionLength = Math.Min(version.Length, currentVersion.Count);
-
-							for (int i = 0; i < minVersionLength; i++)
+							if (!Version.TryParse(value, out result))
 							{
-								if (version[i] > currentVersion[i])
-								{
-									isCompatibility = false;
-									break;
-								}
-
-								isCompatibility = true;
-
-								if (version[i] < currentVersion[i])
-								{
-									break;
-								}
+								Interface.AddMessage(MessageType.Error, false, $"Value is invalid format in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+								break;
 							}
 
-							if (version[minVersionLength - 1] == currentVersion[minVersionLength - 1] && version.Length > currentVersion.Count)
-							{
-								isCompatibility = false;
-							}
+							fileVersion = result > editorVersion ? FileVersion.Newer : FileVersion.v1800;
 						}
 						break;
 				}
 			}
 
-			if (!isCompatibility)
+			if (fileVersion == FileVersion.Newer)
 			{
 				Interface.AddMessage(MessageType.Warning, false, $"The train.xml {fileName} was created with a newer version of openBVE. Please check for an update.");
 				return train;
@@ -391,261 +365,6 @@ namespace TrainEditor2.IO.Trains.Xml
 			return handle;
 		}
 
-		private static Device ParseDeviceNode(string fileName, XElement parent)
-		{
-			Device device = new Device();
-
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
-			string section = parent.Name.LocalName;
-
-			foreach (XElement keyNode in parent.Elements())
-			{
-				string key = keyNode.Name.LocalName;
-				string value = keyNode.Value;
-				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
-
-				switch (key.ToLowerInvariant())
-				{
-					case "ats":
-						device.Ats = ParseDeviceAtsNode(fileName, keyNode);
-						break;
-					case "atc":
-						device.Atc = ParseDeviceAtcNode(fileName, keyNode);
-						break;
-					case "eb":
-						if (value.Any())
-						{
-							bool result;
-
-							if (!bool.TryParse(value, out result))
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a boolean in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								device.Eb = result;
-							}
-						}
-						break;
-					case "constspeed":
-						if (value.Any())
-						{
-							bool result;
-
-							if (!bool.TryParse(value, out result))
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a boolean in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								device.ConstSpeed = result;
-							}
-						}
-						break;
-					case "holdbrake":
-						if (value.Any())
-						{
-							bool result;
-
-							if (!bool.TryParse(value, out result))
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a boolean in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								device.HoldBrake = result;
-							}
-						}
-						break;
-					case "readhesiondevice":
-						if (value.Any())
-						{
-							int result;
-
-							if (!NumberFormats.TryParseIntVb6(value, out result) || result < 0)
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative integer number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else if (!Enum.IsDefined(typeof(Device.ReAdhesionDevices), result))
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a defined number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								device.ReAdhesionDevice = (Device.ReAdhesionDevices)result;
-							}
-						}
-						break;
-					case "loadcompensatingdevice":
-						if (value.Any())
-						{
-							double result;
-
-							if (!NumberFormats.TryParseDoubleVb6(value, out result))
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								device.LoadCompensatingDevice = result;
-							}
-						}
-						break;
-					case "passalarm":
-						if (value.Any())
-						{
-							int result;
-
-							if (!NumberFormats.TryParseIntVb6(value, out result) || result < 0)
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative integer number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else if (!Enum.IsDefined(typeof(Device.PassAlarmModes), result))
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a defined number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								device.PassAlarm = (Device.PassAlarmModes)result;
-							}
-						}
-						break;
-					case "dooropenmode":
-						if (value.Any())
-						{
-							int result;
-
-							if (!NumberFormats.TryParseIntVb6(value, out result) || result < 0)
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative integer number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else if (!Enum.IsDefined(typeof(Device.DoorModes), result))
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a defined number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								device.DoorOpenMode = (Device.DoorModes)result;
-							}
-						}
-						break;
-					case "doorclosemode":
-						if (value.Any())
-						{
-							int result;
-
-							if (!NumberFormats.TryParseIntVb6(value, out result) || result < 0)
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative integer number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else if (!Enum.IsDefined(typeof(Device.DoorModes), result))
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a defined number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								device.DoorCloseMode = (Device.DoorModes)result;
-							}
-						}
-						break;
-					default:
-						Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {key} encountered in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-						break;
-				}
-			}
-
-			return device;
-		}
-
-		private static Device.AtsModes ParseDeviceAtsNode(string fileName, XElement parent)
-		{
-			Device.AtsModes ats = Device.AtsModes.AtsSn;
-
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
-			string section = parent.Name.LocalName;
-
-			foreach (XElement keyNode in parent.Elements())
-			{
-				string key = keyNode.Name.LocalName;
-				string value = keyNode.Value;
-				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
-
-				switch (key.ToLowerInvariant())
-				{
-					case "type":
-						if (value.Any())
-						{
-							int result;
-
-							if (!NumberFormats.TryParseIntVb6(value, out result) || result < 0)
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative integer number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else if (!Enum.IsDefined(typeof(Device.AtsModes), result))
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a defined number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								ats = (Device.AtsModes)result;
-							}
-						}
-						break;
-					default:
-						Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {key} encountered in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-						break;
-				}
-			}
-
-			return ats;
-		}
-
-		private static Device.AtcModes ParseDeviceAtcNode(string fileName, XElement parent)
-		{
-			Device.AtcModes atc = Device.AtcModes.None;
-
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
-			string section = parent.Name.LocalName;
-
-			foreach (XElement keyNode in parent.Elements())
-			{
-				string key = keyNode.Name.LocalName;
-				string value = keyNode.Value;
-				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
-
-				switch (key.ToLowerInvariant())
-				{
-					case "type":
-						if (value.Any())
-						{
-							int result;
-
-							if (!NumberFormats.TryParseIntVb6(value, out result) || result < 0)
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative integer number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else if (!Enum.IsDefined(typeof(Device.AtcModes), result))
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a defined number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								atc = (Device.AtcModes)result;
-							}
-						}
-						break;
-					default:
-						Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {key} encountered in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-						break;
-				}
-			}
-
-			return atc;
-		}
-
 		private static void ParseCarsNode(string fileName, XElement parent, ICollection<Car> cars)
 		{
 			CultureInfo culture = CultureInfo.InvariantCulture;
@@ -814,66 +533,6 @@ namespace TrainEditor2.IO.Trains.Xml
 							}
 						}
 						break;
-					case "leftdoorwidth":
-						if (value.Any())
-						{
-							double result;
-
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result < 0.0)
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								car.LeftDoorWidth = result;
-							}
-						}
-						break;
-					case "leftdoormaxtolerance":
-						if (value.Any())
-						{
-							double result;
-
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result < 0.0)
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								car.LeftDoorMaxTolerance = result;
-							}
-						}
-						break;
-					case "rightdoorwidth":
-						if (value.Any())
-						{
-							double result;
-
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result < 0.0)
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								car.RightDoorWidth = result;
-							}
-						}
-						break;
-					case "rightdoormaxtolerance":
-						if (value.Any())
-						{
-							double result;
-
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result < 0.0)
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								car.RightDoorMaxTolerance = result;
-							}
-						}
-						break;
 					case "axles":
 						if (value.Any())
 						{
@@ -950,34 +609,14 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "delay":
 						car.Delay = ParseDelayNode(fileName, keyNode);
 						break;
-					case "move":
-						car.Move = ParseMoveNode(fileName, keyNode);
+					case "jerk":
+						car.Jerk = ParseJerkNode(fileName, keyNode);
 						break;
 					case "brake":
 						car.Brake = ParseBrakeNode(fileName, keyNode);
 						break;
 					case "pressure":
 						car.Pressure = ParsePressureNode(fileName, keyNode);
-						break;
-					case "acceleration":
-						if (isMotorCar)
-						{
-							((MotorCar)car).Acceleration = ParseAccelerationNode(fileName, keyNode);
-						}
-						else
-						{
-							Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {key} encountered in trailer car at line {lineNumber.ToString(culture)} in XML file {fileName}");
-						}
-						break;
-					case "motor":
-						if (isMotorCar)
-						{
-							((MotorCar)car).Motor = ParseMotorNode(fileName, keyNode);
-						}
-						else
-						{
-							Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {key} encountered in trailer car at line {lineNumber.ToString(culture)} in XML file {fileName}");
-						}
 						break;
 					case "reversed":
 						if (value.Any())
@@ -1027,6 +666,51 @@ namespace TrainEditor2.IO.Trains.Xml
 							{
 								car.LoadingSway = result;
 							}
+						}
+						break;
+					case "leftdoor":
+						car.LeftDoor = ParseDoorNode(fileName, keyNode);
+						break;
+					case "rightdoor":
+						car.RightDoor = ParseDoorNode(fileName, keyNode);
+						break;
+					case "readhesiondevice":
+						if (value.Any())
+						{
+							int result;
+
+							if (!NumberFormats.TryParseIntVb6(value, out result) || result < 0)
+							{
+								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative integer number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+							}
+							else if (!Enum.IsDefined(typeof(Car.ReAdhesionDevices), result))
+							{
+								Interface.AddMessage(MessageType.Error, false, $"Value must be a defined number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+							}
+							else
+							{
+								car.ReAdhesionDevice = (Car.ReAdhesionDevices)result;
+							}
+						}
+						break;
+					case "acceleration":
+						if (isMotorCar)
+						{
+							((MotorCar)car).Acceleration = ParseAccelerationNode(fileName, keyNode);
+						}
+						else
+						{
+							Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {key} encountered in trailer car at line {lineNumber.ToString(culture)} in XML file {fileName}");
+						}
+						break;
+					case "motor":
+						if (isMotorCar)
+						{
+							((MotorCar)car).Motor = ParseMotorNode(fileName, keyNode);
+						}
+						else
+						{
+							Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {key} encountered in trailer car at line {lineNumber.ToString(culture)} in XML file {fileName}");
 						}
 						break;
 					case "cab":
@@ -1241,235 +925,6 @@ namespace TrainEditor2.IO.Trains.Xml
 			return performance;
 		}
 
-		private static Delay ParseDelayNode(string fileName, XElement parent)
-		{
-			Delay delay = new Delay();
-
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
-			string section = parent.Name.LocalName;
-
-			foreach (XElement keyNode in parent.Elements())
-			{
-				string key = keyNode.Name.LocalName;
-				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
-
-				switch (key.ToLowerInvariant())
-				{
-					case "power":
-						ParseDelayEntriesNode(fileName, keyNode, delay.Power);
-						break;
-					case "brake":
-						ParseDelayEntriesNode(fileName, keyNode, delay.Brake);
-						break;
-					case "locobrake":
-						ParseDelayEntriesNode(fileName, keyNode, delay.LocoBrake);
-						break;
-					default:
-						Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {key} encountered in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-						break;
-				}
-			}
-
-			return delay;
-		}
-
-		private static void ParseDelayEntriesNode(string fileName, XElement parent, ICollection<Delay.Entry> entries)
-		{
-			entries.Clear();
-
-			double[] up = new double[0];
-			double[] down = new double[0];
-
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
-			string section = parent.Name.LocalName;
-
-			foreach (XElement keyNode in parent.Elements())
-			{
-				string key = keyNode.Name.LocalName;
-				string value = keyNode.Value;
-				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
-
-				switch (key.ToLowerInvariant())
-				{
-					case "up":
-						if (value.Any())
-						{
-							up = value.Split(',')
-								.Select(x =>
-								{
-									double result;
-
-									if (!NumberFormats.TryParseDoubleVb6(x, out result) || result < 0.0)
-									{
-										Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-									}
-
-									return result;
-								})
-								.Where(x => x >= 0.0)
-								.ToArray();
-						}
-						break;
-					case "down":
-						if (value.Any())
-						{
-							down = value.Split(',')
-								.Select(x =>
-								{
-									double result;
-
-									if (!NumberFormats.TryParseDoubleVb6(x, out result) || result < 0.0)
-									{
-										Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-									}
-
-									return result;
-								})
-								.Where(x => x >= 0.0)
-								.ToArray();
-						}
-						break;
-					default:
-						Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {key} encountered in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-						break;
-				}
-			}
-
-			for (int i = 0; i < Math.Max(up.Length, down.Length); i++)
-			{
-				Delay.Entry entry = new Delay.Entry();
-
-				if (i < up.Length)
-				{
-					entry.Up = up[i];
-				}
-
-				if (i < down.Length)
-				{
-					entry.Down = down[i];
-				}
-
-				entries.Add(entry);
-			}
-		}
-
-		private static Move ParseMoveNode(string fileName, XElement parent)
-		{
-			Move move = new Move();
-
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
-			string section = parent.Name.LocalName;
-
-			foreach (XElement keyNode in parent.Elements())
-			{
-				string key = keyNode.Name.LocalName;
-				string value = keyNode.Value;
-				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
-
-				switch (key.ToLowerInvariant())
-				{
-					case "jerkpowerup":
-						if (value.Any())
-						{
-							double result;
-
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result < 0.0)
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								move.JerkPowerUp = result;
-							}
-						}
-						break;
-					case "jerkpowerdown":
-						if (value.Any())
-						{
-							double result;
-
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result < 0.0)
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								move.JerkPowerDown = result;
-							}
-						}
-						break;
-					case "jerkbrakeup":
-						if (value.Any())
-						{
-							double result;
-
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result < 0.0)
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								move.JerkBrakeUp = result;
-							}
-						}
-						break;
-					case "jerkbrakedown":
-						if (value.Any())
-						{
-							double result;
-
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result < 0.0)
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								move.JerkBrakeDown = result;
-							}
-						}
-						break;
-					case "brakecylinderup":
-						if (value.Any())
-						{
-							double result;
-
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result < 0.0)
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								move.BrakeCylinderUp = result;
-							}
-						}
-						break;
-					case "brakecylinderdown":
-						if (value.Any())
-						{
-							double result;
-
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result < 0.0)
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								move.BrakeCylinderDown = result;
-							}
-						}
-						break;
-					default:
-						Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {key} encountered in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-						break;
-				}
-			}
-
-			return move;
-		}
-
 		private static Brake ParseBrakeNode(string fileName, XElement parent)
 		{
 			Brake brake = new Brake();
@@ -1567,9 +1022,9 @@ namespace TrainEditor2.IO.Trains.Xml
 			return brake;
 		}
 
-		private static Pressure ParsePressureNode(string fileName, XElement parent)
+		private static Car.Door ParseDoorNode(string fileName, XElement parent)
 		{
-			Pressure pressure = new Pressure();
+			Car.Door door = new Car.Door();
 
 			CultureInfo culture = CultureInfo.InvariantCulture;
 
@@ -1583,78 +1038,33 @@ namespace TrainEditor2.IO.Trains.Xml
 
 				switch (key.ToLowerInvariant())
 				{
-					case "brakecylinderservicemaximumpressure":
+					case "width":
 						if (value.Any())
 						{
 							double result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
+							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result < 0.0)
 							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
 							else
 							{
-								pressure.BrakeCylinderServiceMaximumPressure = result;
+								door.Width = result;
 							}
 						}
 						break;
-					case "brakecylinderemergencymaximumpressure":
+					case "maxtolerance":
 						if (value.Any())
 						{
 							double result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
+							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result < 0.0)
 							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
 							else
 							{
-								pressure.BrakeCylinderEmergencyMaximumPressure = result;
-							}
-						}
-						break;
-					case "mainreservoirminimumpressure":
-						if (value.Any())
-						{
-							double result;
-
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								pressure.MainReservoirMinimumPressure = result;
-							}
-						}
-						break;
-					case "mainreservoirmaximumpressure":
-						if (value.Any())
-						{
-							double result;
-
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								pressure.MainReservoirMaximumPressure = result;
-							}
-						}
-						break;
-					case "brakepipenormalpressure":
-						if (value.Any())
-						{
-							double result;
-
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								pressure.BrakePipeNormalPressure = result;
+								door.MaxTolerance = result;
 							}
 						}
 						break;
@@ -1664,7 +1074,7 @@ namespace TrainEditor2.IO.Trains.Xml
 				}
 			}
 
-			return pressure;
+			return door;
 		}
 
 		private static Acceleration ParseAccelerationNode(string fileName, XElement parent)
@@ -1735,453 +1145,6 @@ namespace TrainEditor2.IO.Trains.Xml
 			}
 
 			return acceleration;
-		}
-
-		private static Motor ParseMotorNode(string fileName, XElement parent)
-		{
-			Motor motor = new Motor();
-
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
-			string section = parent.Name.LocalName;
-
-			foreach (XElement keyNode in parent.Elements())
-			{
-				string key = keyNode.Name.LocalName;
-				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
-
-				switch (key.ToLowerInvariant())
-				{
-					case "powertracks":
-						ParseMotorTracksNode(fileName, keyNode, motor, Motor.TrackType.Power);
-						break;
-					case "braketracks":
-						ParseMotorTracksNode(fileName, keyNode, motor, Motor.TrackType.Brake);
-						break;
-					default:
-						Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {key} encountered in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-						break;
-				}
-			}
-
-			return motor;
-		}
-
-		private static void ParseMotorTracksNode(string fileName, XElement parent, Motor baseMotor, Motor.TrackType trackType)
-		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
-			string section = parent.Name.LocalName;
-
-			foreach (XElement keyNode in parent.Elements())
-			{
-				string key = keyNode.Name.LocalName;
-				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
-
-				if (key.ToLowerInvariant() != "track")
-				{
-					Interface.AddMessage(MessageType.Error, false, $"Invalid track node {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-					continue;
-				}
-
-				baseMotor.Tracks.Add(ParseMotorTrackNode(fileName, keyNode, baseMotor, trackType));
-			}
-		}
-
-		private static Motor.Track ParseMotorTrackNode(string fileName, XElement parent, Motor baseMotor, Motor.TrackType trackType)
-		{
-			List<TrainManager.MotorSound.Vertex<float>> pitchVertices = new List<TrainManager.MotorSound.Vertex<float>>();
-			List<TrainManager.MotorSound.Vertex<float>> volumeVertices = new List<TrainManager.MotorSound.Vertex<float>>();
-			List<TrainManager.MotorSound.Vertex<int, SoundBuffer>> soundIndexVertices = new List<TrainManager.MotorSound.Vertex<int, SoundBuffer>>();
-
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
-			string section = parent.Name.LocalName;
-
-			foreach (XElement keyNode in parent.Elements())
-			{
-				string key = keyNode.Name.LocalName;
-				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
-
-				switch (key.ToLowerInvariant())
-				{
-					case "pitch":
-						ParseMotorVerticesNode(fileName, keyNode, pitchVertices);
-						break;
-					case "volume":
-						ParseMotorVerticesNode(fileName, keyNode, volumeVertices);
-						break;
-					case "soundindex":
-						ParseMotorVerticesNode(fileName, keyNode, soundIndexVertices);
-						break;
-					default:
-						Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {key} encountered in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-						break;
-				}
-			}
-
-			return Motor.Track.MotorSoundTableToTrack(baseMotor, trackType, new TrainManager.MotorSound.Table { PitchVertices = pitchVertices.ToArray(), GainVertices = volumeVertices.ToArray(), BufferVertices = soundIndexVertices.ToArray() }, x => x, x => x, x => x);
-		}
-
-		private static void ParseMotorVerticesNode(string fileName, XElement parent, ICollection<TrainManager.MotorSound.Vertex<float>> vertices)
-		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
-			string section = parent.Name.LocalName;
-
-			foreach (XElement keyNode in parent.Elements())
-			{
-				string key = keyNode.Name.LocalName;
-				string value = keyNode.Value;
-				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
-
-				if (key.ToLowerInvariant() != "vertex")
-				{
-					Interface.AddMessage(MessageType.Error, false, $"Invalid vertex node {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-					continue;
-				}
-
-				if (value.Any())
-				{
-					string[] values = value.Split(',');
-
-					if (values.Length == 2)
-					{
-						float x, y;
-
-						if (!NumberFormats.TryParseFloatVb6(values[0], out x) || x < 0.0f)
-						{
-							Interface.AddMessage(MessageType.Error, false, $"X must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-						}
-						else if (!NumberFormats.TryParseFloatVb6(values[1], out y) || y < 0.0f)
-						{
-							Interface.AddMessage(MessageType.Error, false, $"Y must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-						}
-						else
-						{
-							vertices.Add(new TrainManager.MotorSound.Vertex<float> { X = x, Y = y });
-						}
-					}
-					else
-					{
-						Interface.AddMessage(MessageType.Error, false, $"Exactly two arguments are expected in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-					}
-				}
-			}
-		}
-
-		private static void ParseMotorVerticesNode(string fileName, XElement parent, ICollection<TrainManager.MotorSound.Vertex<int, SoundBuffer>> vertices)
-		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
-			string section = parent.Name.LocalName;
-
-			foreach (XElement keyNode in parent.Elements())
-			{
-				string key = keyNode.Name.LocalName;
-				string value = keyNode.Value;
-				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
-
-				if (key.ToLowerInvariant() != "vertex")
-				{
-					Interface.AddMessage(MessageType.Error, false, $"Invalid vertex node {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-					continue;
-				}
-
-				if (value.Any())
-				{
-					string[] values = value.Split(',');
-
-					if (values.Length == 2)
-					{
-						float x;
-						int y;
-
-						if (!NumberFormats.TryParseFloatVb6(values[0], out x) || x < 0.0f)
-						{
-							Interface.AddMessage(MessageType.Error, false, $"X must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-						}
-						else if (!NumberFormats.TryParseIntVb6(values[1], out y))
-						{
-							Interface.AddMessage(MessageType.Error, false, $"Y must be a integer number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-						}
-						else
-						{
-							if (y < 0)
-							{
-								y = -1;
-							}
-
-							vertices.Add(new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = x, Y = y });
-						}
-					}
-					else
-					{
-						Interface.AddMessage(MessageType.Error, false, $"Exactly two arguments are expected in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-					}
-				}
-			}
-		}
-
-		private static Cab ParseCabNode(string fileName, XElement parent)
-		{
-			Cab cab = new EmbeddedCab();
-
-			CultureInfo culture = CultureInfo.InvariantCulture;
-			string basePath = System.IO.Path.GetDirectoryName(fileName);
-
-			string section = parent.Name.LocalName;
-
-			bool isExternalCab = false;
-
-			foreach (XElement keyNode in parent.Elements())
-			{
-				string key = keyNode.Name.LocalName;
-				string value = keyNode.Value;
-				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
-
-				switch (key.ToLowerInvariant())
-				{
-					case "panel":
-						if (keyNode.HasElements)
-						{
-							isExternalCab = false;
-							cab = new EmbeddedCab();
-
-							PanelCfgXml.Parse(fileName, keyNode, ((EmbeddedCab)cab).Panel);
-						}
-						else
-						{
-							isExternalCab = true;
-							cab = new ExternalCab();
-
-							if (value.Any())
-							{
-								if (Path.ContainsInvalidChars(value))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"Value contains illegal characters in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-								}
-								else
-								{
-									string file = Path.CombineFile(basePath, value);
-
-									if (!File.Exists(file))
-									{
-										Interface.AddMessage(MessageType.Warning, true, $"The {key} object {file} does not exist in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-									}
-
-									((ExternalCab)cab).FileName = file;
-								}
-							}
-						}
-						break;
-				}
-			}
-
-			foreach (XElement keyNode in parent.Elements())
-			{
-				string key = keyNode.Name.LocalName;
-				string value = keyNode.Value;
-				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
-
-				switch (key.ToLowerInvariant())
-				{
-					case "position":
-						if (value.Any())
-						{
-							string[] values = value.Split(',');
-
-							if (values.Length == 3)
-							{
-								double x, y, z;
-
-								if (!NumberFormats.TryParseDoubleVb6(values[0], out x))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"X must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-								}
-								else if (!NumberFormats.TryParseDoubleVb6(values[1], out y))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"Y must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-								}
-								else if (!NumberFormats.TryParseDoubleVb6(values[2], out z))
-								{
-									Interface.AddMessage(MessageType.Error, false, $"Z must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-								}
-								else
-								{
-									cab.PositionX = x;
-									cab.PositionY = y;
-									cab.PositionZ = z;
-								}
-							}
-							else
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Exactly three arguments are expected in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-						}
-						break;
-					case "camerarestriction":
-						if (isExternalCab)
-						{
-							((ExternalCab)cab).CameraRestriction = ParseCameraRestrictionNode(fileName, keyNode);
-						}
-						else
-						{
-							Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {key} encountered in uncontrolled car at line {lineNumber.ToString(culture)} in XML file {fileName}");
-						}
-						break;
-					case "panel":
-						// Ignore
-						break;
-					default:
-						Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {key} encountered in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-						break;
-				}
-			}
-
-			return cab;
-		}
-
-		private static CameraRestriction ParseCameraRestrictionNode(string fileName, XElement parent)
-		{
-			CameraRestriction cameraRestriction = new CameraRestriction();
-
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
-			string section = parent.Name.LocalName;
-
-			foreach (XElement keyNode in parent.Elements())
-			{
-				string key = keyNode.Name.LocalName;
-				string value = keyNode.Value;
-				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
-
-				switch (key.ToLowerInvariant())
-				{
-					case "forwards":
-						if (value.Any())
-						{
-							double result;
-
-							if (!NumberFormats.TryParseDoubleVb6(value, out result))
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								cameraRestriction.DefinedForwards = true;
-								cameraRestriction.Forwards = result;
-							}
-						}
-						break;
-					case "backwards":
-						if (value.Any())
-						{
-							double result;
-
-							if (!NumberFormats.TryParseDoubleVb6(value, out result))
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								cameraRestriction.DefinedBackwards = true;
-								cameraRestriction.Backwards = result;
-							}
-						}
-						break;
-					case "left":
-						if (value.Any())
-						{
-							double result;
-
-							if (!NumberFormats.TryParseDoubleVb6(value, out result))
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								cameraRestriction.DefinedLeft = true;
-								cameraRestriction.Left = result;
-							}
-						}
-						break;
-					case "right":
-						if (value.Any())
-						{
-							double result;
-
-							if (!NumberFormats.TryParseDoubleVb6(value, out result))
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								cameraRestriction.DefinedRight = true;
-								cameraRestriction.Right = result;
-							}
-						}
-						break;
-					case "up":
-						if (value.Any())
-						{
-							double result;
-
-							if (!NumberFormats.TryParseDoubleVb6(value, out result))
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								cameraRestriction.DefinedUp = true;
-								cameraRestriction.Up = result;
-							}
-						}
-						break;
-					case "down":
-						if (value.Any())
-						{
-							double result;
-
-							if (!NumberFormats.TryParseDoubleVb6(value, out result))
-							{
-								Interface.AddMessage(MessageType.Error, false, $"Value must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							}
-							else
-							{
-								cameraRestriction.DefinedDown = true;
-								cameraRestriction.Down = result;
-							}
-						}
-						break;
-					default:
-						Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {key} encountered in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-						break;
-				}
-			}
-
-			if (cameraRestriction.DefinedForwards && cameraRestriction.DefinedBackwards && cameraRestriction.Forwards < cameraRestriction.Backwards)
-			{
-				Interface.AddMessage(MessageType.Error, false, $"Backwards is expected to be less than or equal to Forwards in {section} in {fileName}");
-
-				cameraRestriction.DefinedForwards = cameraRestriction.DefinedBackwards = false;
-			}
-
-			if (cameraRestriction.DefinedLeft && cameraRestriction.DefinedRight && cameraRestriction.Right < cameraRestriction.Left)
-			{
-				Interface.AddMessage(MessageType.Error, false, $"Left is expected to be less than or equal to Right in {section} in {fileName}");
-
-				cameraRestriction.DefinedLeft = cameraRestriction.DefinedRight = false;
-			}
-
-			if (cameraRestriction.DefinedUp && cameraRestriction.DefinedDown && cameraRestriction.Up < cameraRestriction.Down)
-			{
-				Interface.AddMessage(MessageType.Error, false, $"Down is expected to be less than or equal to Up in {section} in {fileName}");
-
-				cameraRestriction.DefinedUp = cameraRestriction.DefinedDown = false;
-			}
-
-			return cameraRestriction;
 		}
 
 		private static void ParseCouplersNode(string fileName, XElement parent, ICollection<Coupler> couplers)

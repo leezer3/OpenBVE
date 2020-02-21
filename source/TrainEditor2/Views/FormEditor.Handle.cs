@@ -12,17 +12,17 @@ namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private IDisposable BindToHandle(HandleViewModel y)
+		private IDisposable BindToHandle(HandleViewModel handle)
 		{
 			CompositeDisposable handleDisposable = new CompositeDisposable();
 
-			y.HandleType
+			handle.HandleType
 				.BindTo(
 					comboBoxHandleType,
-					z => z.SelectedIndex,
+					x => x.SelectedIndex,
 					BindingMode.TwoWay,
-					z => (int)z,
-					z => (Handle.HandleTypes)z,
+					x => (int)x,
+					x => (Handle.HandleTypes)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => comboBoxHandleType.SelectedIndexChanged += h,
@@ -32,13 +32,13 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(handleDisposable);
 
-			y.PowerNotches
+			handle.PowerNotches
 				.BindTo(
 					numericUpDownPowerNotches,
-					z => z.Value,
+					x => x.Value,
 					BindingMode.TwoWay,
 					null,
-					z => (int)z,
+					x => (int)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => numericUpDownPowerNotches.ValueChanged += h,
@@ -48,11 +48,11 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(handleDisposable);
 
-			y.PowerNotches
+			handle.PowerNotches
 				.BindToErrorProvider(errorProvider, numericUpDownPowerNotches)
 				.AddTo(handleDisposable);
 
-			y.PowerNotches
+			handle.PowerNotches
 				.Subscribe(x =>
 				{
 					int index = comboBoxNotch.SelectedIndex;
@@ -71,13 +71,13 @@ namespace TrainEditor2.Views
 				})
 				.AddTo(handleDisposable);
 
-			y.BrakeNotches
+			handle.BrakeNotches
 				.BindTo(
 					numericUpDownBrakeNotches,
-					z => z.Value,
+					x => x.Value,
 					BindingMode.TwoWay,
 					null,
-					z => (int)z,
+					x => (int)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => numericUpDownBrakeNotches.ValueChanged += h,
@@ -87,17 +87,17 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(handleDisposable);
 
-			y.BrakeNotches
+			handle.BrakeNotches
 				.BindToErrorProvider(errorProvider, numericUpDownBrakeNotches)
 				.AddTo(handleDisposable);
 
-			y.PowerNotchReduceSteps
+			handle.PowerNotchReduceSteps
 				.BindTo(
 					numericUpDownPowerNotchReduceSteps,
-					z => z.Value,
+					x => x.Value,
 					BindingMode.TwoWay,
 					null,
-					z => (int)z,
+					x => (int)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => numericUpDownPowerNotchReduceSteps.ValueChanged += h,
@@ -107,13 +107,13 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(handleDisposable);
 
-			y.DriverPowerNotches
+			handle.DriverPowerNotches
 				.BindTo(
 					numericUpDownDriverPowerNotches,
-					z => z.Value,
+					x => x.Value,
 					BindingMode.TwoWay,
 					null,
-					z => (int)z,
+					x => (int)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => numericUpDownDriverPowerNotches.ValueChanged += h,
@@ -123,17 +123,17 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(handleDisposable);
 
-			y.DriverPowerNotches
+			handle.DriverPowerNotches
 				.BindToErrorProvider(errorProvider, numericUpDownDriverPowerNotches)
 				.AddTo(handleDisposable);
 
-			y.DriverBrakeNotches
+			handle.DriverBrakeNotches
 				.BindTo(
 					numericUpDownDriverBrakeNotches,
-					z => z.Value,
+					x => x.Value,
 					BindingMode.TwoWay,
 					null,
-					z => (int)z,
+					x => (int)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => numericUpDownDriverBrakeNotches.ValueChanged += h,
@@ -143,17 +143,17 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(handleDisposable);
 
-			y.DriverBrakeNotches
+			handle.DriverBrakeNotches
 				.BindToErrorProvider(errorProvider, numericUpDownDriverBrakeNotches)
 				.AddTo(handleDisposable);
 
-			y.HandleBehaviour
+			handle.HandleBehaviour
 				.BindTo(
 					comboBoxEbHandleBehaviour,
-					z => z.SelectedIndex,
+					x => x.SelectedIndex,
 					BindingMode.TwoWay,
-					z => (int)z,
-					z => (Handle.EbHandleBehaviour)z,
+					x => (int)x,
+					x => (Handle.EbHandleBehaviour)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => comboBoxEbHandleBehaviour.SelectedIndexChanged += h,
@@ -163,13 +163,13 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(handleDisposable);
 
-			y.LocoBrake
+			handle.LocoBrake
 				.BindTo(
 					comboBoxLocoBrakeHandleType,
-					z => z.SelectedIndex,
+					x => x.SelectedIndex,
 					BindingMode.TwoWay,
-					z => (int)z,
-					z => (Handle.LocoBrakeType)z,
+					x => (int)x,
+					x => (Handle.LocoBrakeType)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => comboBoxLocoBrakeHandleType.SelectedIndexChanged += h,
@@ -179,13 +179,13 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(handleDisposable);
 
-			y.LocoBrakeNotches
+			handle.LocoBrakeNotches
 				.BindTo(
 					numericUpDownLocoBrakeNotches,
-					z => z.Value,
+					x => x.Value,
 					BindingMode.TwoWay,
 					null,
-					z => (int)z,
+					x => (int)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => numericUpDownLocoBrakeNotches.ValueChanged += h,

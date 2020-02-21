@@ -7,16 +7,16 @@ using TrainEditor2.ViewModels.Trains;
 
 namespace TrainEditor2.Views
 {
-	partial class FormEditor
+	public partial class FormEditor
 	{
-		private IDisposable BindToCameraRestriction(CameraRestrictionViewModel x)
+		private IDisposable BindToCameraRestriction(CameraRestrictionViewModel cameraRestriction)
 		{
 			CompositeDisposable cameraRestrictionDisposable = new CompositeDisposable();
 
-			x.DefinedForwards
+			cameraRestriction.DefinedForwards
 				.BindTo(
 					checkBoxCameraRestrictionDefinedForwards,
-					y => y.Checked,
+					x => x.Checked,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -29,31 +29,31 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.DefinedForwards
+			cameraRestriction.DefinedForwards
 				.BindTo(
 					labelCameraRestrictionForwards,
-					y => y.Enabled
+					x => x.Enabled
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.DefinedForwards
+			cameraRestriction.DefinedForwards
 				.BindTo(
 					textBoxCameraRestrictionForwards,
-					y => y.Enabled
+					x => x.Enabled
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.DefinedForwards
+			cameraRestriction.DefinedForwards
 				.BindTo(
 					labelCameraRestrictionForwardsUnit,
-					y => y.Enabled
+					x => x.Enabled
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.Forwards
+			cameraRestriction.Forwards
 				.BindTo(
 					textBoxCameraRestrictionForwards,
-					y => y.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -66,10 +66,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.DefinedBackwards
+			cameraRestriction.DefinedBackwards
 				.BindTo(
 					checkBoxCameraRestrictionDefinedBackwards,
-					y => y.Checked,
+					x => x.Checked,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -82,31 +82,31 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.DefinedBackwards
+			cameraRestriction.DefinedBackwards
 				.BindTo(
 					labelCameraRestrictionBackwards,
-					y => y.Enabled
+					x => x.Enabled
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.DefinedBackwards
+			cameraRestriction.DefinedBackwards
 				.BindTo(
 					textBoxCameraRestrictionBackwards,
-					y => y.Enabled
+					x => x.Enabled
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.DefinedBackwards
+			cameraRestriction.DefinedBackwards
 				.BindTo(
 					labelCameraRestrictionBackwardsUnit,
-					y => y.Enabled
+					x => x.Enabled
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.Backwards
+			cameraRestriction.Backwards
 				.BindTo(
 					textBoxCameraRestrictionBackwards,
-					y => y.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -119,10 +119,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.DefinedLeft
+			cameraRestriction.DefinedLeft
 				.BindTo(
 					checkBoxCameraRestrictionDefinedLeft,
-					y => y.Checked,
+					x => x.Checked,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -135,31 +135,31 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.DefinedLeft
+			cameraRestriction.DefinedLeft
 				.BindTo(
 					labelCameraRestrictionLeft,
-					y => y.Enabled
+					x => x.Enabled
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.DefinedLeft
+			cameraRestriction.DefinedLeft
 				.BindTo(
 					textBoxCameraRestrictionLeft,
-					y => y.Enabled
+					x => x.Enabled
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.DefinedLeft
+			cameraRestriction.DefinedLeft
 				.BindTo(
 					labelCameraRestrictionLeftUnit,
-					y => y.Enabled
+					x => x.Enabled
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.Left
+			cameraRestriction.Left
 				.BindTo(
 					textBoxCameraRestrictionLeft,
-					y => y.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -172,10 +172,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.DefinedRight
+			cameraRestriction.DefinedRight
 				.BindTo(
 					checkBoxCameraRestrictionDefinedRight,
-					y => y.Checked,
+					x => x.Checked,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -188,31 +188,31 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.DefinedRight
+			cameraRestriction.DefinedRight
 				.BindTo(
 					labelCameraRestrictionRight,
-					y => y.Enabled
+					x => x.Enabled
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.DefinedRight
+			cameraRestriction.DefinedRight
 				.BindTo(
 					textBoxCameraRestrictionRight,
-					y => y.Enabled
+					x => x.Enabled
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.DefinedRight
+			cameraRestriction.DefinedRight
 				.BindTo(
 					labelCameraRestrictionRightUnit,
-					y => y.Enabled
+					x => x.Enabled
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.Right
+			cameraRestriction.Right
 				.BindTo(
 					textBoxCameraRestrictionRight,
-					y => y.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -225,10 +225,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.DefinedUp
+			cameraRestriction.DefinedUp
 				.BindTo(
 					checkBoxCameraRestrictionDefinedUp,
-					y => y.Checked,
+					x => x.Checked,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -241,31 +241,31 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.DefinedUp
+			cameraRestriction.DefinedUp
 				.BindTo(
 					labelCameraRestrictionUp,
-					y => y.Enabled
+					x => x.Enabled
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.DefinedUp
+			cameraRestriction.DefinedUp
 				.BindTo(
 					textBoxCameraRestrictionUp,
-					y => y.Enabled
+					x => x.Enabled
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.DefinedUp
+			cameraRestriction.DefinedUp
 				.BindTo(
 					labelCameraRestrictionUpUnit,
-					y => y.Enabled
+					x => x.Enabled
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.Up
+			cameraRestriction.Up
 				.BindTo(
 					textBoxCameraRestrictionUp,
-					y => y.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -278,10 +278,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.DefinedDown
+			cameraRestriction.DefinedDown
 				.BindTo(
 					checkBoxCameraRestrictionDefinedDown,
-					y => y.Checked,
+					x => x.Checked,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -294,31 +294,31 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.DefinedDown
+			cameraRestriction.DefinedDown
 				.BindTo(
 					labelCameraRestrictionDown,
-					y => y.Enabled
+					x => x.Enabled
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.DefinedDown
+			cameraRestriction.DefinedDown
 				.BindTo(
 					textBoxCameraRestrictionDown,
-					y => y.Enabled
+					x => x.Enabled
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.DefinedDown
+			cameraRestriction.DefinedDown
 				.BindTo(
 					labelCameraRestrictionDownUnit,
-					y => y.Enabled
+					x => x.Enabled
 				)
 				.AddTo(cameraRestrictionDisposable);
 
-			x.Down
+			cameraRestriction.Down
 				.BindTo(
 					textBoxCameraRestrictionDown,
-					y => y.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,

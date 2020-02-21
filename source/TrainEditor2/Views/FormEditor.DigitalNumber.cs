@@ -10,14 +10,14 @@ namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private IDisposable BindToDigitalNumber(DigitalNumberElementViewModel y)
+		private IDisposable BindToDigitalNumber(DigitalNumberElementViewModel digitalNumber)
 		{
 			CompositeDisposable digitalNumberDisposable = new CompositeDisposable();
 
-			y.LocationX
+			digitalNumber.LocationX
 				.BindTo(
 					textBoxDigitalNumberLocationX,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -30,14 +30,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(digitalNumberDisposable);
 
-			y.LocationX
+			digitalNumber.LocationX
 				.BindToErrorProvider(errorProvider, textBoxDigitalNumberLocationX)
 				.AddTo(digitalNumberDisposable);
 
-			y.LocationY
+			digitalNumber.LocationY
 				.BindTo(
 					textBoxDigitalNumberLocationY,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -50,17 +50,17 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(digitalNumberDisposable);
 
-			y.LocationY
+			digitalNumber.LocationY
 				.BindToErrorProvider(errorProvider, textBoxDigitalNumberLocationY)
 				.AddTo(digitalNumberDisposable);
 
-			y.Layer
+			digitalNumber.Layer
 				.BindTo(
 					numericUpDownDigitalNumberLayer,
-					z => z.Value,
+					x => x.Value,
 					BindingMode.TwoWay,
 					null,
-					z => (int)z,
+					x => (int)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => numericUpDownDigitalNumberLayer.ValueChanged += h,
@@ -70,10 +70,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(digitalNumberDisposable);
 
-			y.DaytimeImage
+			digitalNumber.DaytimeImage
 				.BindTo(
 					textBoxDigitalNumberDaytimeImage,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -86,10 +86,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(digitalNumberDisposable);
 
-			y.NighttimeImage
+			digitalNumber.NighttimeImage
 				.BindTo(
 					textBoxDigitalNumberNighttimeImage,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -102,10 +102,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(digitalNumberDisposable);
 
-			y.TransparentColor
+			digitalNumber.TransparentColor
 				.BindTo(
 					textBoxDigitalNumberTransparentColor,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -118,17 +118,17 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(digitalNumberDisposable);
 
-			y.TransparentColor
+			digitalNumber.TransparentColor
 				.BindToErrorProvider(errorProvider, textBoxDigitalNumberTransparentColor)
 				.AddTo(digitalNumberDisposable);
 
-			y.Interval
+			digitalNumber.Interval
 				.BindTo(
 					numericUpDownDigitalNumberInterval,
-					z => z.Value,
+					x => x.Value,
 					BindingMode.TwoWay,
 					null,
-					z => (int)z,
+					x => (int)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => numericUpDownDigitalNumberInterval.ValueChanged += h,
