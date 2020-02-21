@@ -44,8 +44,8 @@ namespace OpenBve
 		private Texture BufferTexture;
 		private Texture StopTexture;
 		private Texture PointSoundTexture;
-
-
+		private Texture RunSoundTexture;
+		
 		public override void Initialize(HostInterface CurrentHost, BaseOptions CurrentOptions)
 		{
 			base.Initialize(CurrentHost, CurrentOptions);
@@ -62,6 +62,7 @@ namespace OpenBve
 			TextureManager.RegisterTexture(Path.CombineFile(Folder, "buffer.png"), out BufferTexture);
 			TextureManager.RegisterTexture(Path.CombineFile(Folder, "sound.png"), out SoundTexture);
 			TextureManager.RegisterTexture(Path.CombineFile(Folder, "switchsound.png"), out PointSoundTexture);
+			TextureManager.RegisterTexture(Path.CombineFile(Folder, "runsound.png"), out RunSoundTexture);
 		}
 
 		internal void CreateObject(UnifiedObject Prototype, OpenBveApi.Math.Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition)
@@ -534,6 +535,12 @@ namespace OpenBve
 							dy = f.Position.Y < 0.1 ? 0.1 : f.Position.Y;
 							dz = f.Position.Z;
 							t = f.SoundBuffer == null ? PointSoundTexture : SoundTexture;
+						}
+						else if (e is RailSoundsChangeEvent)
+						{
+							s = 0.2;
+							dy = 0.8;
+							t = RunSoundTexture;
 						}
 						else
 						{

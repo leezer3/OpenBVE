@@ -286,7 +286,7 @@ namespace OpenBve
 				}
 				for (int j = 0; j < Sounds.Run.Length; j++)
 				{
-					if (j == RearAxle.RunIndex | j == RearAxle.RunIndex)
+					if (j == FrontAxle.RunIndex | j == RearAxle.RunIndex)
 					{
 						Sounds.RunVolume[j] += 3.0 * TimeElapsed;
 						if (Sounds.RunVolume[j] > 1.0) Sounds.RunVolume[j] = 1.0;
