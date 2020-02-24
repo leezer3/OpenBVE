@@ -709,6 +709,10 @@
 						<source>Proceed......</source>
 						<target>Proceed......</target>
 					</trans-unit>
+					<trans-unit id="creation_invalid_nofiles">
+						<source>No files were selected to package- Please retry.</source>
+						<target>No files were selected to package- Please retry.</target>
+					</trans-unit>
 					<trans-unit id="creation_invalid_filename">
 						<source>The selected filename is invalid- Please retry.</source>
 						<target>The selected filename is invalid- Please retry.</target>

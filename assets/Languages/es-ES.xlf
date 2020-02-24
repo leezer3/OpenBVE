@@ -713,6 +713,10 @@
 						<source>The selected filename is invalid- Please retry.</source>
 						<target>Nombre de archivo no válido. \r\n Vuelva a intentarlo.</target>
 					</trans-unit>
+					<trans-unit id="creation_invalid_nofiles">
+						<source>No files were selected to package- Please retry.</source>
+						<target>No files were selected to package- Please retry.</target>
+					</trans-unit>
 					<trans-unit id="creation_new_id">
 						<source>The new package has been assigned the following GUID:</source>
 						<target>El nuevo paquete tiene asignado el GUID siguiente:</target>

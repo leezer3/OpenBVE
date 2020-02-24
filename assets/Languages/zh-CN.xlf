@@ -710,6 +710,10 @@
 						<source>Proceed......</source>
 						<target>继续……</target>
 					</trans-unit>
+					<trans-unit id="creation_invalid_nofiles">
+						<source>No files were selected to package- Please retry.</source>
+						<target>No files were selected to package- Please retry.</target>
+					</trans-unit>
 					<trans-unit id="creation_invalid_filename">
 						<source>The selected filename is invalid- Please retry.</source>
 						<target>选择的文件名无效, 请重输。</target>

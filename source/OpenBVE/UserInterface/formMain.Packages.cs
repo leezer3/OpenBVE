@@ -863,9 +863,12 @@ namespace OpenBve
 				if (ProblemEncountered == false)
 				{
 					string text = "";
-					for (int i = 0; i < filesToPackage.Count; i++)
+					if (filesToPackage != null && filesToPackage.Count > 0)
 					{
-						text += filesToPackage[i].relativePath + "\r\n";
+						for (int i = 0; i < filesToPackage.Count; i++)
+						{
+							text += filesToPackage[i].relativePath + "\r\n";
+						}
 					}
 					textBoxFilesInstalled.Text = text;
 					labelInstallSuccess1.Text = Translations.GetInterfaceString("packages_creation_success");
@@ -885,6 +888,12 @@ namespace OpenBve
 			if (currentPackage == null || currentPackage.GUID == null)
 			{
 				//Don't crash if we've clicked on the button without selecting anything
+				return;
+			}
+
+			if (filesToPackage == null || filesToPackage.Count == 0)
+			{
+				MessageBox.Show(Translations.GetInterfaceString("packages_creation_invalid_nofiles"));
 				return;
 			}
 			currentPackage.FileName = textBoxPackageFileName.Text;

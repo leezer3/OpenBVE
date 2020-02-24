@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -306,26 +306,29 @@ namespace OpenBveApi.Packages
 					}
 					using (var zipWriter = WriterFactory.Open(zip, type, compression))
 					{
-						for (int fileToAdd = 0; fileToAdd < packageFiles.Count; fileToAdd++)
+						if (packageFiles != null && packageFiles.Count > 0)
 						{
-							cf = fileToAdd;
-							PackageFile currentFile = packageFiles[fileToAdd];
-							fp = currentFile.absolutePath;
-							if (currentFile.absolutePath.EndsWith("thumbs.db", StringComparison.InvariantCultureIgnoreCase))
+							for (int fileToAdd = 0; fileToAdd < packageFiles.Count; fileToAdd++)
 							{
-								//Skip thumbs.db files, as they're often locked when creating or extracting
-								//Pointless too.....
-								continue;
+								cf = fileToAdd;
+								PackageFile currentFile = packageFiles[fileToAdd];
+								fp = currentFile.absolutePath;
+								if (currentFile.absolutePath.EndsWith("thumbs.db", StringComparison.InvariantCultureIgnoreCase))
+								{
+									//Skip thumbs.db files, as they're often locked when creating or extracting
+									//Pointless too.....
+									continue;
+								}
+								if (new FileInfo(currentFile.absolutePath).Length == 0)
+								{
+									//Don't archive zero-byte files, as Sharpcompress doesn't like them.....
+									continue;
+								}
+								//Add file to archive
+								zipWriter.Write(currentFile.relativePath, currentFile.absolutePath);
+								OnProgressChanged(null,
+									new ProgressReport((int) ((double) fileToAdd/packageFiles.Count*100), currentFile.absolutePath));
 							}
-							if (new FileInfo(currentFile.absolutePath).Length == 0)
-							{
-								//Don't archive zero-byte files, as Sharpcompress doesn't like them.....
-								continue;
-							}
-							//Add file to archive
-							zipWriter.Write(currentFile.relativePath, currentFile.absolutePath);
-							OnProgressChanged(null,
-								new ProgressReport((int) ((double) fileToAdd/packageFiles.Count*100), currentFile.absolutePath));
 						}
 						//Create temp directory and XML file
 						var tempXML = System.IO.Path.GetTempPath() + System.IO.Path.GetRandomFileName() + "package.xml";
