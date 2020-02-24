@@ -363,7 +363,8 @@ namespace OpenBve {
 						if (CarObjects[i] == null) {
 							// load default exterior object
 							string file = OpenBveApi.Path.CombineFile(Program.FileSystem.GetDataFolder("Compatibility"), "exterior.csv");
-							StaticObject so = ObjectManager.LoadStaticObject(file, System.Text.Encoding.UTF8, false);
+							StaticObject so;
+							Program.CurrentHost.LoadStaticObject(file, System.Text.Encoding.UTF8, false, out so);
 							if (so == null) {
 								CarObjects[i] = null;
 							} else {

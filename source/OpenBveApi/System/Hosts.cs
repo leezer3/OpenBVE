@@ -169,6 +169,20 @@ namespace OpenBveApi.Hosts {
 			Object = null;
 			return false;
 		}
+
+		/// <summary>Loads a static object</summary>
+		/// <param name="Path">The absolute on-disk path to the object</param>
+		/// <param name="Encoding">The detected text encoding</param>
+		/// <param name="PreserveVertices">Whether optimization is to be performed on the object</param>
+		/// <param name="Object">The handle to the object</param>
+		/// <returns>Whether loading the object was successful</returns>
+		/// <remarks>This will return false if an animated object is attempted to be loaded.
+		/// Selecting to preserve vertices may be useful if using the object as a deformable.</remarks>
+		public virtual bool LoadStaticObject(string Path, System.Text.Encoding Encoding, bool PreserveVertices, out StaticObject Object)
+		{
+			Object = null;
+			return false;
+		}
 		
 		/// <summary>Executes a function script in the host application</summary>
 		/// <param name="functionScript">The function script to execute</param>
