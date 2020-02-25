@@ -131,7 +131,7 @@
     <value>..\..\licenses\DotNetZip.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="en_US" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\assets\languages\en-us.xlf;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>..\..\assets\Languages\en-US.xlf;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="NAudio" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\licenses\NAudio.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
