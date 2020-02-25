@@ -177,9 +177,9 @@ namespace OpenBve
 		internal static UnifiedObject LimitPostLeft = null;
 		internal static UnifiedObject LimitPostRight = null;
 		internal static UnifiedObject LimitPostInfinite = null;
-		internal static UnifiedObject LimitOneDigit = null;
-		internal static UnifiedObject LimitTwoDigits = null;
-		internal static UnifiedObject LimitThreeDigits = null;
+		internal static StaticObject LimitOneDigit = null;
+		internal static StaticObject LimitTwoDigits = null;
+		internal static StaticObject LimitThreeDigits = null;
 		internal static UnifiedObject StopPost = null;
 		internal static UnifiedObject TransponderS = null;
 		internal static UnifiedObject TransponderSN = null;
@@ -197,9 +197,9 @@ namespace OpenBve
 			Program.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_left.csv"), System.Text.Encoding.UTF8, out LimitPostLeft);
 			Program.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_right.csv"), System.Text.Encoding.UTF8, out LimitPostRight);
 			Program.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_infinite.csv"), System.Text.Encoding.UTF8, out LimitPostInfinite);
-			LimitOneDigit = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_1_digit.csv"), System.Text.Encoding.UTF8, false);
-			LimitTwoDigits = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_2_digits.csv"), System.Text.Encoding.UTF8, false);
-			LimitThreeDigits = ObjectManager.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_3_digits.csv"), System.Text.Encoding.UTF8, false);
+			Program.CurrentHost.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_1_digit.csv"), System.Text.Encoding.UTF8, false, out LimitOneDigit);
+			Program.CurrentHost.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_2_digits.csv"), System.Text.Encoding.UTF8, false, out LimitTwoDigits);
+			Program.CurrentHost.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_3_digits.csv"), System.Text.Encoding.UTF8, false, out LimitThreeDigits);
 			Program.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(CompatibilityFolder, "stop.csv"), System.Text.Encoding.UTF8, out StopPost);
 			string TransponderPath = OpenBveApi.Path.CombineDirectory(CompatibilityFolder, "Transponders");
 			Program.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(TransponderPath, "s.csv"), System.Text.Encoding.UTF8, out TransponderS);

@@ -310,7 +310,6 @@
       <DependentUpon>formRaildriverCalibration.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
-    <Compile Include="Game\ObjectManager\ObjectManager.LoadObject.cs" />
     <Compile Include="Audio\Sounds.cs" />
     <Compile Include="Audio\Sounds.Update.cs">
       <DependentUpon>Sounds.cs</DependentUpon>
