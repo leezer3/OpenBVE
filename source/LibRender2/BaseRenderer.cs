@@ -142,6 +142,10 @@ namespace LibRender2
 
 		internal int lastVAO;
 
+		protected bool ForceLegacyOpenGL;
+
+		public bool AvailableNewRenderer => currentOptions != null && currentOptions.IsUseNewRenderer && !ForceLegacyOpenGL;
+
 		protected BaseRenderer()
 		{
 			Screen = new Screen();
@@ -171,6 +175,7 @@ namespace LibRender2
 			{
 				CurrentHost.AddMessage(MessageType.Error, false, "Initializing the default shaders failed- Falling back to legacy openGL.");
 				CurrentOptions.IsUseNewRenderer = false;
+				ForceLegacyOpenGL = true;
 			}
 
 			Background = new Background(this);

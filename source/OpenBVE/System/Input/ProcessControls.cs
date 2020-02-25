@@ -1599,7 +1599,7 @@ namespace OpenBve
 										break;
 									case Translations.Command.DebugRendererMode:
 										Interface.CurrentOptions.IsUseNewRenderer = !Interface.CurrentOptions.IsUseNewRenderer;
-										Game.AddMessage($"Renderer mode: {(Interface.CurrentOptions.IsUseNewRenderer ? "New renderer" : "Original renderer")}", MessageDependency.None, GameMode.Expert, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
+										Game.AddMessage($"Renderer mode: {(Program.Renderer.AvailableNewRenderer ? "New renderer" : "Original renderer")}", MessageDependency.None, GameMode.Expert, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 										break;
 									case Translations.Command.MiscAI:
 										// option: AI

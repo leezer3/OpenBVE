@@ -35,9 +35,12 @@ namespace OpenBve
 		{
 			base.Initialize(CurrentHost, CurrentOptions);
 
-			redAxisVAO = RegisterBox(Color128.Red);
-			greenAxisVAO = RegisterBox(Color128.Green);
-			blueAxisVAO = RegisterBox(Color128.Blue);
+			if (AvailableNewRenderer)
+			{
+				redAxisVAO = RegisterBox(Color128.Red);
+				greenAxisVAO = RegisterBox(Color128.Green);
+				blueAxisVAO = RegisterBox(Color128.Blue);
+			}
 		}
 
 		internal string GetBackgroundColorName()
@@ -168,7 +171,7 @@ namespace OpenBve
 			{
 				UnsetAlphaFunc();
 
-				if (Interface.CurrentOptions.IsUseNewRenderer)
+				if (AvailableNewRenderer)
 				{
 					Cube.DrawRetained(redAxisVAO, Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), Camera.AbsolutePosition, null);
 					Cube.DrawRetained(greenAxisVAO, Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), Camera.AbsolutePosition, null);
@@ -186,7 +189,7 @@ namespace OpenBve
 			}
 
 			// opaque face
-			if (Interface.CurrentOptions.IsUseNewRenderer)
+			if (AvailableNewRenderer)
 			{
 				//Setup the shader for rendering the scene
 				DefaultShader.Activate();
@@ -204,7 +207,7 @@ namespace OpenBve
 			ResetOpenGlState();
 			foreach (FaceState face in VisibleObjects.OpaqueFaces)
 			{
-				if (Interface.CurrentOptions.IsUseNewRenderer)
+				if (AvailableNewRenderer)
 				{
 					RenderFace(DefaultShader, face);
 				}
@@ -226,7 +229,7 @@ namespace OpenBve
 
 				foreach (FaceState face in VisibleObjects.AlphaFaces)
 				{
-					if (Interface.CurrentOptions.IsUseNewRenderer)
+					if (AvailableNewRenderer)
 					{
 						RenderFace(DefaultShader, face);
 					}
@@ -248,7 +251,7 @@ namespace OpenBve
 					{
 						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].Color.A == 255)
 						{
-							if (Interface.CurrentOptions.IsUseNewRenderer)
+							if (AvailableNewRenderer)
 							{
 								RenderFace(DefaultShader, face);
 							}
@@ -275,7 +278,7 @@ namespace OpenBve
 							additive = true;
 						}
 
-						if (Interface.CurrentOptions.IsUseNewRenderer)
+						if (AvailableNewRenderer)
 						{
 							RenderFace(DefaultShader, face);
 						}
@@ -292,7 +295,7 @@ namespace OpenBve
 							additive = false;
 						}
 
-						if (Interface.CurrentOptions.IsUseNewRenderer)
+						if (AvailableNewRenderer)
 						{
 							RenderFace(DefaultShader, face);
 						}
@@ -304,7 +307,7 @@ namespace OpenBve
 				}
 			}
 
-			if (Interface.CurrentOptions.IsUseNewRenderer)
+			if (AvailableNewRenderer)
 			{
 				DefaultShader.Deactivate();
 			}

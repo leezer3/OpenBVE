@@ -306,7 +306,7 @@ namespace OpenBve.Graphics
 
 			// world layer
 			// opaque face
-			if (Interface.CurrentOptions.IsUseNewRenderer)
+			if (AvailableNewRenderer)
 			{
 				//Setup the shader for rendering the scene
 				DefaultShader.Activate();
@@ -331,7 +331,7 @@ namespace OpenBve.Graphics
 			ResetOpenGlState();
 			foreach (FaceState face in VisibleObjects.OpaqueFaces)
 			{
-				if (Interface.CurrentOptions.IsUseNewRenderer)
+				if (AvailableNewRenderer)
 				{
 					RenderFace(DefaultShader, face);
 				}
@@ -352,7 +352,7 @@ namespace OpenBve.Graphics
 
 				foreach (FaceState face in VisibleObjects.AlphaFaces)
 				{
-					if (Interface.CurrentOptions.IsUseNewRenderer)
+					if (AvailableNewRenderer)
 					{
 						RenderFace(DefaultShader, face);
 					}
@@ -374,7 +374,7 @@ namespace OpenBve.Graphics
 					{
 						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].Color.A == 255)
 						{
-							if (Interface.CurrentOptions.IsUseNewRenderer)
+							if (AvailableNewRenderer)
 							{
 								RenderFace(DefaultShader, face);
 							}
@@ -401,7 +401,7 @@ namespace OpenBve.Graphics
 							additive = true;
 						}
 
-						if (Interface.CurrentOptions.IsUseNewRenderer)
+						if (AvailableNewRenderer)
 						{
 							RenderFace(DefaultShader, face);
 						}
@@ -418,7 +418,7 @@ namespace OpenBve.Graphics
 							additive = false;
 						}
 
-						if (Interface.CurrentOptions.IsUseNewRenderer)
+						if (AvailableNewRenderer)
 						{
 							RenderFace(DefaultShader, face);
 						}
@@ -442,7 +442,7 @@ namespace OpenBve.Graphics
 				DefaultShader.Deactivate();
 				MotionBlur.RenderFullscreen(Interface.CurrentOptions.MotionBlur, FrameRate, Math.Abs(Camera.CurrentSpeed));
 			}
-			if (Interface.CurrentOptions.IsUseNewRenderer)
+			if (AvailableNewRenderer)
 			{
 				DefaultShader.Activate();
 				ResetShader(DefaultShader); //Must reset shader between overlay and world layers for correct lighting results
@@ -467,7 +467,7 @@ namespace OpenBve.Graphics
 				// overlay opaque face
 				foreach (FaceState face in VisibleObjects.OverlayOpaqueFaces)
 				{
-					if (Interface.CurrentOptions.IsUseNewRenderer)
+					if (AvailableNewRenderer)
 					{
 						RenderFace(DefaultShader, face);
 					}
@@ -489,7 +489,7 @@ namespace OpenBve.Graphics
 
 					foreach (FaceState face in VisibleObjects.OverlayAlphaFaces)
 					{
-						if (Interface.CurrentOptions.IsUseNewRenderer)
+						if (AvailableNewRenderer)
 						{
 							RenderFace(DefaultShader, face);
 						}
@@ -511,7 +511,7 @@ namespace OpenBve.Graphics
 						{
 							if (face.Object.Prototype.Mesh.Materials[face.Face.Material].Color.A == 255)
 							{
-								if (Interface.CurrentOptions.IsUseNewRenderer)
+								if (AvailableNewRenderer)
 								{
 									RenderFace(DefaultShader, face);
 								}
@@ -538,7 +538,7 @@ namespace OpenBve.Graphics
 								additive = true;
 							}
 
-							if (Interface.CurrentOptions.IsUseNewRenderer)
+							if (AvailableNewRenderer)
 							{
 								RenderFace(DefaultShader, face);
 							}
@@ -555,7 +555,7 @@ namespace OpenBve.Graphics
 								additive = false;
 							}
 
-							if (Interface.CurrentOptions.IsUseNewRenderer)
+							if (AvailableNewRenderer)
 							{
 								RenderFace(DefaultShader, face);
 							}
@@ -586,7 +586,7 @@ namespace OpenBve.Graphics
 				VisibleObjects.SortPolygonsInOverlayAlphaFaces();
 				foreach (FaceState face in VisibleObjects.OverlayAlphaFaces)
 				{
-					if (Interface.CurrentOptions.IsUseNewRenderer)
+					if (AvailableNewRenderer)
 					{
 						RenderFace(DefaultShader, face);
 					}
@@ -596,7 +596,7 @@ namespace OpenBve.Graphics
 					}
 				}
 			}
-			if (Interface.CurrentOptions.IsUseNewRenderer)
+			if (AvailableNewRenderer)
 			{
 				/*
 				 * Must remember to de-activate at the end of the render sequence if in GL3 mode.
