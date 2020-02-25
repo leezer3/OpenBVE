@@ -1282,7 +1282,7 @@ namespace OpenBve
 									wpos += dx * RailTransformation.X + dz * RailTransformation.Z;
 									double tpos = Data.Blocks[i].Signals[k].TrackPosition;
 									double b = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
-									Program.Renderer.CreateStaticObject(CompatibilityObjects.SignalPost, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+									CompatibilityObjects.SignalPost.CreateObject(wpos, RailTransformation, NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b, false);
 								}
 								if (Data.Blocks[i].Signals[k].ShowObject)
 								{
@@ -1495,45 +1495,62 @@ namespace OpenBve
 									double b = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
 									if (Data.Blocks[i].Limits[k].Speed <= 0.0 | Data.Blocks[i].Limits[k].Speed >= 1000.0)
 									{
-										Program.Renderer.CreateStaticObject(CompatibilityObjects.LimitPostInfinite, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+										CompatibilityObjects.LimitPostInfinite.CreateObject(wpos, RailTransformation, NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b, false);
 									}
 									else
 									{
 										if (Data.Blocks[i].Limits[k].Cource < 0)
 										{
-											Program.Renderer.CreateStaticObject(CompatibilityObjects.LimitPostLeft, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+											CompatibilityObjects.LimitPostLeft.CreateObject(wpos, RailTransformation, NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b, false);
 										}
 										else if (Data.Blocks[i].Limits[k].Cource > 0)
 										{
-											Program.Renderer.CreateStaticObject(CompatibilityObjects.LimitPostRight, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+											CompatibilityObjects.LimitPostRight.CreateObject(wpos, RailTransformation, NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b, false);
 										}
 										else
 										{
-											Program.Renderer.CreateStaticObject(CompatibilityObjects.LimitPostStraight, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+											CompatibilityObjects.LimitPostStraight.CreateObject(wpos, RailTransformation, NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b, false);
 										}
 										double lim = Data.Blocks[i].Limits[k].Speed / Data.UnitOfSpeed;
 										if (lim < 10.0)
 										{
 											int d0 = (int)Math.Round(lim);
-											int o = Program.Renderer.CreateStaticObject(CompatibilityObjects.LimitOneDigit.Clone(), wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
-											if (Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials.Length >= 1)
+											if (CompatibilityObjects.LimitOneDigit is StaticObject)
 											{
-												Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials[0].DaytimeTexture);
+												StaticObject o = (StaticObject) CompatibilityObjects.LimitOneDigit.Clone();
+												if (o.Mesh.Materials.Length >= 1)
+												{
+													Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out o.Mesh.Materials[0].DaytimeTexture);
+												}
+												o.CreateObject(wpos, RailTransformation, NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b, false);
 											}
+											else
+											{
+												Program.CurrentHost.AddMessage(MessageType.Error, false, "Attempted to use an animated object for LimitOneDigit, where only static objects are allowed.");
+											}
+											
 										}
 										else if (lim < 100.0)
 										{
 											int d1 = (int)Math.Round(lim);
 											int d0 = d1 % 10;
 											d1 /= 10;
-											int o = Program.Renderer.CreateStaticObject(CompatibilityObjects.LimitTwoDigits.Clone(), wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
-											if (Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials.Length >= 1)
+											if (CompatibilityObjects.LimitTwoDigits is StaticObject)
 											{
-												Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d1 + ".png"), new TextureParameters(null, null), out Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials[0].DaytimeTexture);
+												StaticObject o = (StaticObject) CompatibilityObjects.LimitTwoDigits.Clone();
+												if (o.Mesh.Materials.Length >= 1)
+												{
+													Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d1 + ".png"), new TextureParameters(null, null), out o.Mesh.Materials[0].DaytimeTexture);
+												}
+												if (o.Mesh.Materials.Length >= 2)
+												{
+													Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out o.Mesh.Materials[1].DaytimeTexture);
+												}
+												o.CreateObject(wpos, RailTransformation, NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b, false);
 											}
-											if (Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials.Length >= 2)
+											else
 											{
-												Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials[1].DaytimeTexture);
+												Program.CurrentHost.AddMessage(MessageType.Error, false, "Attempted to use an animated object for LimitTwoDigits, where only static objects are allowed.");
 											}
 										}
 										else
@@ -1542,18 +1559,26 @@ namespace OpenBve
 											int d0 = d2 % 10;
 											int d1 = (d2 / 10) % 10;
 											d2 /= 100;
-											int o = Program.Renderer.CreateStaticObject(CompatibilityObjects.LimitThreeDigits.Clone(), wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
-											if (Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials.Length >= 1)
+											if (CompatibilityObjects.LimitThreeDigits is StaticObject)
 											{
-												Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d2 + ".png"), new TextureParameters(null, null), out Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials[0].DaytimeTexture);
+												StaticObject o = (StaticObject) CompatibilityObjects.LimitThreeDigits.Clone();
+												if (o.Mesh.Materials.Length >= 1)
+												{
+													Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d2 + ".png"), new TextureParameters(null, null), out o.Mesh.Materials[0].DaytimeTexture);
+												}
+												if (o.Mesh.Materials.Length >= 2)
+												{
+													Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d1 + ".png"), new TextureParameters(null, null), out o.Mesh.Materials[1].DaytimeTexture);
+												}
+												if (o.Mesh.Materials.Length >= 3)
+												{
+													Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out o.Mesh.Materials[2].DaytimeTexture);
+												}
+												o.CreateObject(wpos, RailTransformation, NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b, false);
 											}
-											if (Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials.Length >= 2)
+											else
 											{
-												Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d1 + ".png"), new TextureParameters(null, null), out Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials[1].DaytimeTexture);
-											}
-											if (Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials.Length >= 3)
-											{
-												Program.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out Program.Renderer.StaticObjectStates[o].Prototype.Mesh.Materials[2].DaytimeTexture);
+												Program.CurrentHost.AddMessage(MessageType.Error, false, "Attempted to use an animated object for LimitThreeDigits, where only static objects are allowed.");
 											}
 										}
 									}
@@ -1573,7 +1598,7 @@ namespace OpenBve
 									wpos += dx * RailTransformation.X + dz * RailTransformation.Z;
 									double tpos = Data.Blocks[i].StopPositions[k].TrackPosition;
 									double b = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
-									Program.Renderer.CreateStaticObject(CompatibilityObjects.StopPost, wpos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+									CompatibilityObjects.StopPost.CreateObject(wpos, RailTransformation, NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b, false);
 								}
 							}
 						}
