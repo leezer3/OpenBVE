@@ -91,7 +91,7 @@ namespace OpenBve
 						fileName = CompatibilityObjects.AvailableReplacements[i].ReplacementPath;
 						if (!string.IsNullOrEmpty(CompatibilityObjects.AvailableReplacements[i].Message))
 						{
-							Interface.AddMessage(MessageType.Warning, false, CompatibilityObjects.AvailableReplacements[i].Message);
+							Program.CurrentHost.AddMessage(MessageType.Warning, false, CompatibilityObjects.AvailableReplacements[i].Message);
 						}
 						CompatibilityObjectsUsed++;
 						return true;
@@ -137,7 +137,7 @@ namespace OpenBve
 						fileName = CompatibilityObjects.AvailableSounds[i].ReplacementPath;
 						if (!string.IsNullOrEmpty(CompatibilityObjects.AvailableSounds[i].Message))
 						{
-							Interface.AddMessage(MessageType.Warning, false, CompatibilityObjects.AvailableSounds[i].Message);
+							Program.CurrentHost.AddMessage(MessageType.Warning, false, CompatibilityObjects.AvailableSounds[i].Message);
 						}
 						CompatibilityObjectsUsed++;
 						return true;
@@ -274,7 +274,7 @@ namespace OpenBve
 										o.Message = c.InnerText.Trim(new char[] { });
 										break;
 									default:
-										Interface.AddMessage(MessageType.Warning, false, "Unexpected entry " + c.Name + " found in compatability object XML " + fileName);
+										Program.CurrentHost.AddMessage(MessageType.Warning, false, "Unexpected entry " + c.Name + " found in compatability object XML " + fileName);
 										break;
 								}
 							}
@@ -328,7 +328,7 @@ namespace OpenBve
 											o.Message = c.InnerText.Trim(new char[] { });
 											break;
 										default:
-											Interface.AddMessage(MessageType.Warning, false,
+											Program.CurrentHost.AddMessage(MessageType.Warning, false,
 												"Unexpected entry " + c.Name + " found in compatability object XML " + fileName);
 											break;
 									}
@@ -373,7 +373,7 @@ namespace OpenBve
 											LoadCompatibilityObjects(f);
 											break;
 										default:
-											Interface.AddMessage(MessageType.Warning, false, "Unexpected entry " + c.Name + " found in compatability XML list " + fileName);
+											Program.CurrentHost.AddMessage(MessageType.Warning, false, "Unexpected entry " + c.Name + " found in compatability XML list " + fileName);
 											break;
 									}
 								}
