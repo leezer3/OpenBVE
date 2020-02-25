@@ -59,12 +59,7 @@ namespace OpenBve.Graphics
 			ObjectsSortedByStart = new int[] { };
 			ObjectsSortedByEnd = new int[] { };
 		}
-
-		internal int CreateStaticObject(StaticObject Prototype, OpenBveApi.Math.Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition)
-		{
-			return base.CreateStaticObject(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, BlockLength, TrackPosition, 1.0);
-		}
-
+		
 		internal int CreateStaticObject(UnifiedObject Prototype, OpenBveApi.Math.Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
 		{
 			StaticObject obj = Prototype as StaticObject;

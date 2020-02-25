@@ -917,7 +917,7 @@ namespace OpenBve
 									}
 									else
 									{
-										Program.Renderer.CreateStaticObject((StaticObject)Data.Structure.FormCL[Data.Blocks[i].Forms[k].FormType], pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+										Program.CurrentHost.CreateStaticObject((StaticObject)Data.Structure.FormCL[Data.Blocks[i].Forms[k].FormType], pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance, 1.0);
 									}
 									if (Data.Blocks[i].Forms[k].RoofType > 0)
 									{
@@ -935,7 +935,7 @@ namespace OpenBve
 										}
 										else
 										{
-											Program.Renderer.CreateStaticObject((StaticObject)Data.Structure.RoofCL[Data.Blocks[i].Forms[k].RoofType], pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+											Program.CurrentHost.CreateStaticObject((StaticObject)Data.Structure.RoofCL[Data.Blocks[i].Forms[k].RoofType], pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance, 1.0);
 										}
 									}
 								}
@@ -955,7 +955,7 @@ namespace OpenBve
 									}
 									else
 									{
-										Program.Renderer.CreateStaticObject((StaticObject)Data.Structure.FormCR[Data.Blocks[i].Forms[k].FormType], pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+										Program.CurrentHost.CreateStaticObject((StaticObject)Data.Structure.FormCR[Data.Blocks[i].Forms[k].FormType], pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance, 1.0);
 									}
 									if (Data.Blocks[i].Forms[k].RoofType > 0)
 									{
@@ -973,7 +973,7 @@ namespace OpenBve
 										}
 										else
 										{
-											Program.Renderer.CreateStaticObject((StaticObject)Data.Structure.RoofCR[Data.Blocks[i].Forms[k].RoofType], pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+											Program.CurrentHost.CreateStaticObject((StaticObject)Data.Structure.RoofCR[Data.Blocks[i].Forms[k].RoofType], pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance, 1.0);
 										}
 									}
 								}
@@ -1010,7 +1010,7 @@ namespace OpenBve
 											else
 											{
 												StaticObject FormC = (StaticObject)Data.Structure.FormCL[Data.Blocks[i].Forms[k].FormType].Transform(d0, d1);
-												Program.Renderer.CreateStaticObject(FormC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+												Program.CurrentHost.CreateStaticObject(FormC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance, 1.0);
 											}
 											if (Data.Blocks[i].Forms[k].RoofType > 0)
 											{
@@ -1029,7 +1029,7 @@ namespace OpenBve
 												else
 												{
 													StaticObject RoofC = (StaticObject)Data.Structure.RoofCL[Data.Blocks[i].Forms[k].RoofType].Transform(d0, d1);
-													Program.Renderer.CreateStaticObject(RoofC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+													Program.CurrentHost.CreateStaticObject(RoofC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance, 1.0);
 												}
 											}
 										}
@@ -1050,7 +1050,7 @@ namespace OpenBve
 											else
 											{
 												StaticObject FormC = (StaticObject)Data.Structure.FormCR[Data.Blocks[i].Forms[k].FormType].Transform(d0, d1);
-												Program.Renderer.CreateStaticObject(FormC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+												Program.CurrentHost.CreateStaticObject(FormC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance, 1.0);
 											}
 											if (Data.Blocks[i].Forms[k].RoofType > 0)
 											{
@@ -1069,7 +1069,7 @@ namespace OpenBve
 												else
 												{
 													StaticObject RoofC = (StaticObject)Data.Structure.RoofCR[Data.Blocks[i].Forms[k].RoofType].Transform(d0, d1);
-													Program.Renderer.CreateStaticObject(RoofC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+													Program.CurrentHost.CreateStaticObject(RoofC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance, 1.0);
 												}
 											}
 										}
@@ -1158,7 +1158,7 @@ namespace OpenBve
 										else
 										{
 											StaticObject Crack = (StaticObject)Data.Structure.CrackL[Data.Blocks[i].Cracks[k].Type].Transform(d0, d1);
-											Program.Renderer.CreateStaticObject(Crack, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+											Program.CurrentHost.CreateStaticObject(Crack, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance, 1.0);
 										}
 									}
 									else if (d0 > 0.0)
@@ -1170,7 +1170,7 @@ namespace OpenBve
 										else
 										{
 											StaticObject Crack = (StaticObject)Data.Structure.CrackR[Data.Blocks[i].Cracks[k].Type].Transform(d0, d1);
-											Program.Renderer.CreateStaticObject(Crack, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+											Program.CurrentHost.CreateStaticObject(Crack, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance, 1.0);
 										}
 									}
 								}
