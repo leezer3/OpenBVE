@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using OpenBveApi.Units;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -34,6 +35,22 @@ namespace TrainEditor2.Views
 				.BindToErrorProvider(errorProvider, textBoxBrakePipeNormalPressure)
 				.AddTo(brakePipeDisposable);
 
+			brakePipe.NormalPressureUnit
+				.BindTo(
+					comboBoxBrakePipeNormalPressureUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Pressure)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxBrakePipeNormalPressureUnit.SelectedIndexChanged += h,
+							h => comboBoxBrakePipeNormalPressureUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(brakePipeDisposable);
+
 			brakePipe.ChargeRate
 				.BindTo(
 					textBoxBrakePipeChargeRate,
@@ -52,6 +69,22 @@ namespace TrainEditor2.Views
 
 			brakePipe.ChargeRate
 				.BindToErrorProvider(errorProvider, textBoxBrakePipeChargeRate)
+				.AddTo(brakePipeDisposable);
+
+			brakePipe.ChargeRateUnit
+				.BindTo(
+					comboBoxBrakePipeChargeRateUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.PressureRate)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxBrakePipeChargeRateUnit.SelectedIndexChanged += h,
+							h => comboBoxBrakePipeChargeRateUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
 				.AddTo(brakePipeDisposable);
 
 			brakePipe.ServiceRate
@@ -74,6 +107,22 @@ namespace TrainEditor2.Views
 				.BindToErrorProvider(errorProvider, textBoxBrakePipeServiceRate)
 				.AddTo(brakePipeDisposable);
 
+			brakePipe.ServiceRateUnit
+				.BindTo(
+					comboBoxBrakePipeServiceRateUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.PressureRate)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxBrakePipeServiceRateUnit.SelectedIndexChanged += h,
+							h => comboBoxBrakePipeServiceRateUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(brakePipeDisposable);
+
 			brakePipe.EmergencyRate
 				.BindTo(
 					textBoxBrakePipeEmergencyRate,
@@ -92,6 +141,22 @@ namespace TrainEditor2.Views
 
 			brakePipe.EmergencyRate
 				.BindToErrorProvider(errorProvider, textBoxBrakePipeEmergencyRate)
+				.AddTo(brakePipeDisposable);
+
+			brakePipe.EmergencyRateUnit
+				.BindTo(
+					comboBoxBrakePipeEmergencyRateUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.PressureRate)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxBrakePipeEmergencyRateUnit.SelectedIndexChanged += h,
+							h => comboBoxBrakePipeEmergencyRateUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
 				.AddTo(brakePipeDisposable);
 
 			return brakePipeDisposable;

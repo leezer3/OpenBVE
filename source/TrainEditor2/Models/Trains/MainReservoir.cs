@@ -1,14 +1,15 @@
 ﻿using System;
+using OpenBveApi.Units;
 using Prism.Mvvm;
 
 namespace TrainEditor2.Models.Trains
 {
 	internal class MainReservoir : BindableBase, ICloneable
 	{
-		private double minimumPressure;
-		private double maximumPressure;
+		private Quantity.Pressure minimumPressure;
+		private Quantity.Pressure maximumPressure;
 
-		internal double MinimumPressure
+		internal Quantity.Pressure MinimumPressure
 		{
 			get
 			{
@@ -20,7 +21,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double MaximumPressure
+		internal Quantity.Pressure MaximumPressure
 		{
 			get
 			{
@@ -34,8 +35,8 @@ namespace TrainEditor2.Models.Trains
 
 		internal MainReservoir()
 		{
-			MinimumPressure = 690.0;
-			MaximumPressure = 780.0;
+			MinimumPressure = new Quantity.Pressure(690.0, Unit.Pressure.Kilopascal);
+			MaximumPressure = new Quantity.Pressure(780.0, Unit.Pressure.Kilopascal);
 		}
 
 		public object Clone()

@@ -38,8 +38,6 @@
 			this.labelObject = new System.Windows.Forms.Label();
 			this.labelReversed = new System.Windows.Forms.Label();
 			this.groupBoxAxles = new System.Windows.Forms.GroupBox();
-			this.labelRearAxleUnit = new System.Windows.Forms.Label();
-			this.labelFrontAxleUnit = new System.Windows.Forms.Label();
 			this.textBoxRearAxle = new System.Windows.Forms.TextBox();
 			this.textBoxFrontAxle = new System.Windows.Forms.TextBox();
 			this.labelRearAxle = new System.Windows.Forms.Label();
@@ -47,6 +45,8 @@
 			this.labelDefinedAxles = new System.Windows.Forms.Label();
 			this.buttonOK = new System.Windows.Forms.Button();
 			this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+			this.comboBoxFrontAxleUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxRearAxleUnit = new System.Windows.Forms.ComboBox();
 			this.groupBoxAxles.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
 			this.SuspendLayout();
@@ -69,7 +69,7 @@
 			// 
 			// buttonOpen
 			// 
-			this.buttonOpen.Location = new System.Drawing.Point(144, 160);
+			this.buttonOpen.Location = new System.Drawing.Point(152, 160);
 			this.buttonOpen.Name = "buttonOpen";
 			this.buttonOpen.Size = new System.Drawing.Size(56, 24);
 			this.buttonOpen.TabIndex = 36;
@@ -81,7 +81,7 @@
 			// 
 			this.textBoxObject.Location = new System.Drawing.Point(96, 136);
 			this.textBoxObject.Name = "textBoxObject";
-			this.textBoxObject.Size = new System.Drawing.Size(104, 19);
+			this.textBoxObject.Size = new System.Drawing.Size(112, 19);
 			this.textBoxObject.TabIndex = 35;
 			// 
 			// labelObject
@@ -104,36 +104,18 @@
 			// 
 			// groupBoxAxles
 			// 
-			this.groupBoxAxles.Controls.Add(this.labelRearAxleUnit);
-			this.groupBoxAxles.Controls.Add(this.labelFrontAxleUnit);
+			this.groupBoxAxles.Controls.Add(this.comboBoxRearAxleUnit);
+			this.groupBoxAxles.Controls.Add(this.comboBoxFrontAxleUnit);
 			this.groupBoxAxles.Controls.Add(this.textBoxRearAxle);
 			this.groupBoxAxles.Controls.Add(this.textBoxFrontAxle);
 			this.groupBoxAxles.Controls.Add(this.labelRearAxle);
 			this.groupBoxAxles.Controls.Add(this.labelFrontAxle);
 			this.groupBoxAxles.Location = new System.Drawing.Point(8, 32);
 			this.groupBoxAxles.Name = "groupBoxAxles";
-			this.groupBoxAxles.Size = new System.Drawing.Size(192, 72);
+			this.groupBoxAxles.Size = new System.Drawing.Size(200, 72);
 			this.groupBoxAxles.TabIndex = 32;
 			this.groupBoxAxles.TabStop = false;
 			this.groupBoxAxles.Text = "Axles";
-			// 
-			// labelRearAxleUnit
-			// 
-			this.labelRearAxleUnit.Location = new System.Drawing.Point(144, 40);
-			this.labelRearAxleUnit.Name = "labelRearAxleUnit";
-			this.labelRearAxleUnit.Size = new System.Drawing.Size(40, 16);
-			this.labelRearAxleUnit.TabIndex = 27;
-			this.labelRearAxleUnit.Text = "m";
-			this.labelRearAxleUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelFrontAxleUnit
-			// 
-			this.labelFrontAxleUnit.Location = new System.Drawing.Point(144, 16);
-			this.labelFrontAxleUnit.Name = "labelFrontAxleUnit";
-			this.labelFrontAxleUnit.Size = new System.Drawing.Size(40, 16);
-			this.labelFrontAxleUnit.TabIndex = 26;
-			this.labelFrontAxleUnit.Text = "m";
-			this.labelFrontAxleUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// textBoxRearAxle
 			// 
@@ -178,7 +160,7 @@
 			// 
 			// buttonOK
 			// 
-			this.buttonOK.Location = new System.Drawing.Point(144, 192);
+			this.buttonOK.Location = new System.Drawing.Point(152, 192);
 			this.buttonOK.Name = "buttonOK";
 			this.buttonOK.Size = new System.Drawing.Size(56, 24);
 			this.buttonOK.TabIndex = 39;
@@ -190,11 +172,29 @@
 			// 
 			this.errorProvider.ContainerControl = this;
 			// 
+			// comboBoxFrontAxleUnit
+			// 
+			this.comboBoxFrontAxleUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxFrontAxleUnit.FormattingEnabled = true;
+			this.comboBoxFrontAxleUnit.Location = new System.Drawing.Point(144, 16);
+			this.comboBoxFrontAxleUnit.Name = "comboBoxFrontAxleUnit";
+			this.comboBoxFrontAxleUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxFrontAxleUnit.TabIndex = 56;
+			// 
+			// comboBoxRearAxleUnit
+			// 
+			this.comboBoxRearAxleUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxRearAxleUnit.FormattingEnabled = true;
+			this.comboBoxRearAxleUnit.Location = new System.Drawing.Point(144, 40);
+			this.comboBoxRearAxleUnit.Name = "comboBoxRearAxleUnit";
+			this.comboBoxRearAxleUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxRearAxleUnit.TabIndex = 57;
+			// 
 			// FormBogie
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(209, 225);
+			this.ClientSize = new System.Drawing.Size(217, 225);
 			this.Controls.Add(this.buttonOK);
 			this.Controls.Add(this.checkBoxReversed);
 			this.Controls.Add(this.checkBoxDefinedAxles);
@@ -225,8 +225,6 @@
 		private System.Windows.Forms.Label labelObject;
 		private System.Windows.Forms.Label labelReversed;
 		private System.Windows.Forms.GroupBox groupBoxAxles;
-		private System.Windows.Forms.Label labelRearAxleUnit;
-		private System.Windows.Forms.Label labelFrontAxleUnit;
 		private System.Windows.Forms.TextBox textBoxRearAxle;
 		private System.Windows.Forms.TextBox textBoxFrontAxle;
 		private System.Windows.Forms.Label labelRearAxle;
@@ -234,5 +232,7 @@
 		private System.Windows.Forms.Label labelDefinedAxles;
 		private System.Windows.Forms.Button buttonOK;
 		private System.Windows.Forms.ErrorProvider errorProvider;
+		private System.Windows.Forms.ComboBox comboBoxRearAxleUnit;
+		private System.Windows.Forms.ComboBox comboBoxFrontAxleUnit;
 	}
 }

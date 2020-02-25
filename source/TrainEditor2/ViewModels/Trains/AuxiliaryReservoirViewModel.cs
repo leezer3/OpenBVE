@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using OpenBveApi.Units;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -13,6 +14,11 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
+		internal ReactiveProperty<Unit.PressureRate> ChargeRateUnit
+		{
+			get;
+		}
+
 		internal AuxiliaryReservoirViewModel(AuxiliaryReservoir auxiliaryReservoir)
 		{
 			CultureInfo culture = CultureInfo.InvariantCulture;
@@ -20,8 +26,8 @@ namespace TrainEditor2.ViewModels.Trains
 			ChargeRate = auxiliaryReservoir
 				.ToReactivePropertyAsSynchronized(
 					x => x.ChargeRate,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Value.ToString(culture),
+					x => new Quantity.PressureRate(double.Parse(x, NumberStyles.Float, culture), auxiliaryReservoir.ChargeRate.UnitValue),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -33,6 +39,14 @@ namespace TrainEditor2.ViewModels.Trains
 
 					return message;
 				})
+				.AddTo(disposable);
+
+			ChargeRateUnit = auxiliaryReservoir
+				.ToReactivePropertyAsSynchronized(
+					x => x.ChargeRate,
+					x => x.UnitValue,
+					x => auxiliaryReservoir.ChargeRate.ToNewUnit(x)
+				)
 				.AddTo(disposable);
 		}
 	}

@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Units;
 using Prism.Mvvm;
 using TrainEditor2.Models.Panels;
 
@@ -9,11 +10,11 @@ namespace TrainEditor2.Models.Trains
 	/// </summary>
 	internal abstract class Cab : BindableBase, ICloneable
 	{
-		private double positionX;
-		private double positionY;
-		private double positionZ;
+		private Quantity.Length positionX;
+		private Quantity.Length positionY;
+		private Quantity.Length positionZ;
 
-		internal double PositionX
+		internal Quantity.Length PositionX
 		{
 			get
 			{
@@ -25,7 +26,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double PositionY
+		internal Quantity.Length PositionY
 		{
 			get
 			{
@@ -37,7 +38,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double PositionZ
+		internal Quantity.Length PositionZ
 		{
 			get
 			{
@@ -51,7 +52,7 @@ namespace TrainEditor2.Models.Trains
 
 		protected Cab()
 		{
-			PositionX = PositionY = PositionZ = 0.0;
+			PositionX = PositionY = PositionZ = new Quantity.Length(0.0, Unit.Length.Millimeter);
 		}
 
 		public virtual object Clone()

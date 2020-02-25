@@ -333,13 +333,13 @@ namespace TrainEditor2.Views
 			this.labelTouchLocationX = new System.Windows.Forms.Label();
 			this.tabPageCoupler = new System.Windows.Forms.TabPage();
 			this.groupBoxCouplerGeneral = new System.Windows.Forms.GroupBox();
+			this.comboBoxCouplerMaxUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxCouplerMinUnit = new System.Windows.Forms.ComboBox();
 			this.buttonCouplerObject = new System.Windows.Forms.Button();
 			this.textBoxCouplerObject = new System.Windows.Forms.TextBox();
 			this.labelCouplerObject = new System.Windows.Forms.Label();
 			this.textBoxCouplerMax = new System.Windows.Forms.TextBox();
 			this.labelCouplerMax = new System.Windows.Forms.Label();
-			this.labelCouplerMaxUnit = new System.Windows.Forms.Label();
-			this.labelCouplerMinUnit = new System.Windows.Forms.Label();
 			this.textBoxCouplerMin = new System.Windows.Forms.TextBox();
 			this.labelCouplerMin = new System.Windows.Forms.Label();
 			this.tabPageMotor = new System.Windows.Forms.TabPage();
@@ -477,6 +477,11 @@ namespace TrainEditor2.Views
 			this.comboBoxNotch = new System.Windows.Forms.ComboBox();
 			this.tabPageCar1 = new System.Windows.Forms.TabPage();
 			this.groupBoxCarGeneral = new System.Windows.Forms.GroupBox();
+			this.comboBoxCenterOfMassHeightUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxHeightUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxWidthUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxLengthUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxMassUnit = new System.Windows.Forms.ComboBox();
 			this.buttonRightDoorSet = new System.Windows.Forms.Button();
 			this.buttonLeftDoorSet = new System.Windows.Forms.Button();
 			this.checkBoxIsControlledCar = new System.Windows.Forms.CheckBox();
@@ -498,12 +503,7 @@ namespace TrainEditor2.Views
 			this.checkBoxIsMotorCar = new System.Windows.Forms.CheckBox();
 			this.buttonObjectOpen = new System.Windows.Forms.Button();
 			this.labelExposedFrontalAreaUnit = new System.Windows.Forms.Label();
-			this.labelCenterOfMassHeightUnit = new System.Windows.Forms.Label();
 			this.labelLoadingSway = new System.Windows.Forms.Label();
-			this.labelHeightUnit = new System.Windows.Forms.Label();
-			this.labelWidthUnit = new System.Windows.Forms.Label();
-			this.labelLengthUnit = new System.Windows.Forms.Label();
-			this.labelMassUnit = new System.Windows.Forms.Label();
 			this.textBoxMass = new System.Windows.Forms.TextBox();
 			this.textBoxLength = new System.Windows.Forms.TextBox();
 			this.textBoxWidth = new System.Windows.Forms.TextBox();
@@ -514,8 +514,8 @@ namespace TrainEditor2.Views
 			this.labelObject = new System.Windows.Forms.Label();
 			this.labelReversed = new System.Windows.Forms.Label();
 			this.groupBoxAxles = new System.Windows.Forms.GroupBox();
-			this.labelRearAxleUnit = new System.Windows.Forms.Label();
-			this.labelFrontAxleUnit = new System.Windows.Forms.Label();
+			this.comboBoxRearAxleUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxFrontAxleUnit = new System.Windows.Forms.ComboBox();
 			this.textBoxRearAxle = new System.Windows.Forms.TextBox();
 			this.textBoxFrontAxle = new System.Windows.Forms.TextBox();
 			this.labelRearAxle = new System.Windows.Forms.Label();
@@ -529,113 +529,100 @@ namespace TrainEditor2.Views
 			this.labelMass = new System.Windows.Forms.Label();
 			this.labelIsMotorCar = new System.Windows.Forms.Label();
 			this.groupBoxCab = new System.Windows.Forms.GroupBox();
+			this.comboBoxCabZUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxCabYUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxCabXUnit = new System.Windows.Forms.ComboBox();
 			this.groupBoxExternalCab = new System.Windows.Forms.GroupBox();
 			this.buttonCabFileNameOpen = new System.Windows.Forms.Button();
 			this.groupBoxCameraRestriction = new System.Windows.Forms.GroupBox();
+			this.comboBoxCameraRestrictionDownUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxCameraRestrictionUpUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxCameraRestrictionRightUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxCameraRestrictionLeftUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxCameraRestrictionBackwardsUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxCameraRestrictionForwardsUnit = new System.Windows.Forms.ComboBox();
 			this.checkBoxCameraRestrictionDefinedDown = new System.Windows.Forms.CheckBox();
 			this.labelCameraRestrictionDefinedDown = new System.Windows.Forms.Label();
-			this.labelCameraRestrictionDownUnit = new System.Windows.Forms.Label();
 			this.textBoxCameraRestrictionDown = new System.Windows.Forms.TextBox();
 			this.labelCameraRestrictionDown = new System.Windows.Forms.Label();
 			this.checkBoxCameraRestrictionDefinedUp = new System.Windows.Forms.CheckBox();
 			this.labelCameraRestrictionDefinedUp = new System.Windows.Forms.Label();
-			this.labelCameraRestrictionUpUnit = new System.Windows.Forms.Label();
 			this.textBoxCameraRestrictionUp = new System.Windows.Forms.TextBox();
 			this.labelCameraRestrictionUp = new System.Windows.Forms.Label();
 			this.checkBoxCameraRestrictionDefinedRight = new System.Windows.Forms.CheckBox();
 			this.labelCameraRestrictionDefinedRight = new System.Windows.Forms.Label();
-			this.labelCameraRestrictionRightUnit = new System.Windows.Forms.Label();
 			this.textBoxCameraRestrictionRight = new System.Windows.Forms.TextBox();
 			this.labelCameraRestrictionRight = new System.Windows.Forms.Label();
 			this.checkBoxCameraRestrictionDefinedLeft = new System.Windows.Forms.CheckBox();
 			this.labelCameraRestrictionDefinedLeft = new System.Windows.Forms.Label();
-			this.labelCameraRestrictionLeftUnit = new System.Windows.Forms.Label();
 			this.textBoxCameraRestrictionLeft = new System.Windows.Forms.TextBox();
 			this.labelCameraRestrictionLeft = new System.Windows.Forms.Label();
 			this.checkBoxCameraRestrictionDefinedBackwards = new System.Windows.Forms.CheckBox();
 			this.labelCameraRestrictionDefinedBackwards = new System.Windows.Forms.Label();
-			this.labelCameraRestrictionBackwardsUnit = new System.Windows.Forms.Label();
 			this.textBoxCameraRestrictionBackwards = new System.Windows.Forms.TextBox();
 			this.labelCameraRestrictionBackwards = new System.Windows.Forms.Label();
 			this.checkBoxCameraRestrictionDefinedForwards = new System.Windows.Forms.CheckBox();
 			this.labelCameraRestrictionDefinedForwards = new System.Windows.Forms.Label();
-			this.labelCameraRestrictionForwardsUnit = new System.Windows.Forms.Label();
 			this.textBoxCameraRestrictionForwards = new System.Windows.Forms.TextBox();
 			this.labelCameraRestrictionForwards = new System.Windows.Forms.Label();
 			this.textBoxCabFileName = new System.Windows.Forms.TextBox();
 			this.labelCabFileName = new System.Windows.Forms.Label();
 			this.checkBoxIsEmbeddedCab = new System.Windows.Forms.CheckBox();
 			this.labelIsEmbeddedCab = new System.Windows.Forms.Label();
-			this.labelCabZUnit = new System.Windows.Forms.Label();
 			this.textBoxCabZ = new System.Windows.Forms.TextBox();
-			this.labelCabYUnit = new System.Windows.Forms.Label();
 			this.textBoxCabY = new System.Windows.Forms.TextBox();
-			this.labelCabXUnit = new System.Windows.Forms.Label();
 			this.textBoxCabX = new System.Windows.Forms.TextBox();
 			this.labelCabZ = new System.Windows.Forms.Label();
 			this.labelCabY = new System.Windows.Forms.Label();
 			this.labelCabX = new System.Windows.Forms.Label();
 			this.groupBoxPressure = new System.Windows.Forms.GroupBox();
 			this.groupBoxBrakeCylinder = new System.Windows.Forms.GroupBox();
+			this.comboBoxBrakeCylinderEmergencyMaximumPressureUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxBrakeCylinderServiceMaximumPressureUnit = new System.Windows.Forms.ComboBox();
 			this.textBoxBrakeCylinderReleaseRate = new System.Windows.Forms.TextBox();
 			this.labelBrakeCylinderServiceMaximumPressure = new System.Windows.Forms.Label();
 			this.labelBrakeCylinderEmergencyMaximumPressure = new System.Windows.Forms.Label();
 			this.textBoxBrakeCylinderServiceMaximumPressure = new System.Windows.Forms.TextBox();
 			this.textBoxBrakeCylinderEmergencyMaximumPressure = new System.Windows.Forms.TextBox();
-			this.labelBrakeCylinderEmergencyMaximumPressureUnit = new System.Windows.Forms.Label();
-			this.labelBrakeCylinderServiceMaximumPressureUnit = new System.Windows.Forms.Label();
 			this.labelBrakeCylinderEmergencyRate = new System.Windows.Forms.Label();
 			this.labelBrakeCylinderReleaseRate = new System.Windows.Forms.Label();
-			this.labelBrakeCylinderReleaseRateUnit = new System.Windows.Forms.Label();
-			this.labelBrakeCylinderEmergencyRateUnit = new System.Windows.Forms.Label();
 			this.textBoxBrakeCylinderEmergencyRate = new System.Windows.Forms.TextBox();
 			this.groupBoxStraightAirPipe = new System.Windows.Forms.GroupBox();
 			this.labelStraightAirPipeReleaseRate = new System.Windows.Forms.Label();
-			this.labelStraightAirPipeReleaseRateUnit = new System.Windows.Forms.Label();
 			this.textBoxStraightAirPipeReleaseRate = new System.Windows.Forms.TextBox();
 			this.labelStraightAirPipeEmergencyRate = new System.Windows.Forms.Label();
-			this.labelStraightAirPipeEmergencyRateUnit = new System.Windows.Forms.Label();
 			this.textBoxStraightAirPipeEmergencyRate = new System.Windows.Forms.TextBox();
 			this.labelStraightAirPipeServiceRate = new System.Windows.Forms.Label();
-			this.labelStraightAirPipeServiceRateUnit = new System.Windows.Forms.Label();
 			this.textBoxStraightAirPipeServiceRate = new System.Windows.Forms.TextBox();
 			this.groupBoxBrakePipe = new System.Windows.Forms.GroupBox();
+			this.comboBoxBrakePipeNormalPressureUnit = new System.Windows.Forms.ComboBox();
 			this.labelBrakePipeEmergencyRate = new System.Windows.Forms.Label();
-			this.labelBrakePipeEmergencyRateUnit = new System.Windows.Forms.Label();
 			this.textBoxBrakePipeEmergencyRate = new System.Windows.Forms.TextBox();
 			this.labelBrakePipeServiceRate = new System.Windows.Forms.Label();
-			this.labelBrakePipeServiceRateUnit = new System.Windows.Forms.Label();
 			this.textBoxBrakePipeServiceRate = new System.Windows.Forms.TextBox();
 			this.labelBrakePipeChargeRate = new System.Windows.Forms.Label();
-			this.labelBrakePipeChargeRateUnit = new System.Windows.Forms.Label();
 			this.textBoxBrakePipeChargeRate = new System.Windows.Forms.TextBox();
 			this.labelBrakePipeNormalPressure = new System.Windows.Forms.Label();
 			this.textBoxBrakePipeNormalPressure = new System.Windows.Forms.TextBox();
-			this.labelBrakePipeNormalPressureUnit = new System.Windows.Forms.Label();
 			this.groupBoxEqualizingReservoir = new System.Windows.Forms.GroupBox();
 			this.labelEqualizingReservoirEmergencyRate = new System.Windows.Forms.Label();
-			this.labelEqualizingReservoirEmergencyRateUnit = new System.Windows.Forms.Label();
 			this.textBoxEqualizingReservoirEmergencyRate = new System.Windows.Forms.TextBox();
 			this.labelEqualizingReservoirServiceRate = new System.Windows.Forms.Label();
-			this.labelEqualizingReservoirServiceRateUnit = new System.Windows.Forms.Label();
 			this.textBoxEqualizingReservoirServiceRate = new System.Windows.Forms.TextBox();
 			this.labelEqualizingReservoirChargeRate = new System.Windows.Forms.Label();
-			this.labelEqualizingReservoirChargeRateUnit = new System.Windows.Forms.Label();
 			this.textBoxEqualizingReservoirChargeRate = new System.Windows.Forms.TextBox();
 			this.groupBoxAuxiliaryReservoir = new System.Windows.Forms.GroupBox();
 			this.labelAuxiliaryReservoirChargeRate = new System.Windows.Forms.Label();
-			this.labelAuxiliaryReservoirChargeRateUnit = new System.Windows.Forms.Label();
 			this.textBoxAuxiliaryReservoirChargeRate = new System.Windows.Forms.TextBox();
 			this.groupBoxMainReservoir = new System.Windows.Forms.GroupBox();
+			this.comboBoxMainReservoirMaximumPressureUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxMainReservoirMinimumPressureUnit = new System.Windows.Forms.ComboBox();
 			this.labelMainReservoirMaximumPressure = new System.Windows.Forms.Label();
 			this.labelMainReservoirMinimumPressure = new System.Windows.Forms.Label();
 			this.textBoxMainReservoirMaximumPressure = new System.Windows.Forms.TextBox();
 			this.textBoxMainReservoirMinimumPressure = new System.Windows.Forms.TextBox();
-			this.labelMainReservoirMaximumPressureUnit = new System.Windows.Forms.Label();
-			this.labelMainReservoirMinimumPressureUnit = new System.Windows.Forms.Label();
 			this.groupBoxCompressor = new System.Windows.Forms.GroupBox();
 			this.labelCompressorRate = new System.Windows.Forms.Label();
-			this.labelCompressorRateUnit = new System.Windows.Forms.Label();
 			this.textBoxCompressorRate = new System.Windows.Forms.TextBox();
 			this.groupBoxBrake = new System.Windows.Forms.GroupBox();
 			this.textBoxBrakeControlSpeed = new System.Windows.Forms.TextBox();
@@ -711,6 +698,19 @@ namespace TrainEditor2.Views
 			this.labelHandleType = new System.Windows.Forms.Label();
 			this.tabControlEditor = new System.Windows.Forms.TabControl();
 			this.tabPageCar2 = new System.Windows.Forms.TabPage();
+			this.comboBoxCompressorRateUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxAuxiliaryReservoirChargeRateUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxEqualizingReservoirChargeRateUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxEqualizingReservoirServiceRateUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxEqualizingReservoirEmergencyRateUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxBrakePipeChargeRateUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxBrakePipeServiceRateUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxBrakePipeEmergencyRateUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxStraightAirPipeServiceRateUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxStraightAirPipeEmergencyRateUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxStraightAirPipeReleaseRateUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxBrakeCylinderEmergencyRateUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxBrakeCylinderReleaseRateUnit = new System.Windows.Forms.ComboBox();
 			this.panelCars.SuspendLayout();
 			this.panelCarsNavi.SuspendLayout();
 			this.menuStripMenu.SuspendLayout();
@@ -1903,7 +1903,7 @@ namespace TrainEditor2.Views
 			this.tabPageScreen.Location = new System.Drawing.Point(4, 40);
 			this.tabPageScreen.Name = "tabPageScreen";
 			this.tabPageScreen.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPageScreen.Size = new System.Drawing.Size(312, 626);
+			this.tabPageScreen.Size = new System.Drawing.Size(312, 642);
 			this.tabPageScreen.TabIndex = 1;
 			this.tabPageScreen.Text = "Screen";
 			this.tabPageScreen.UseVisualStyleBackColor = true;
@@ -1968,7 +1968,7 @@ namespace TrainEditor2.Views
 			this.tabPagePilotLamp.Controls.Add(this.labelPilotLampTransparentColor);
 			this.tabPagePilotLamp.Location = new System.Drawing.Point(4, 40);
 			this.tabPagePilotLamp.Name = "tabPagePilotLamp";
-			this.tabPagePilotLamp.Size = new System.Drawing.Size(312, 626);
+			this.tabPagePilotLamp.Size = new System.Drawing.Size(312, 642);
 			this.tabPagePilotLamp.TabIndex = 2;
 			this.tabPagePilotLamp.Text = "PilotLamp";
 			this.tabPagePilotLamp.UseVisualStyleBackColor = true;
@@ -2184,7 +2184,7 @@ namespace TrainEditor2.Views
 			this.tabPageNeedle.Controls.Add(this.labelNeedleTransparentColor);
 			this.tabPageNeedle.Location = new System.Drawing.Point(4, 40);
 			this.tabPageNeedle.Name = "tabPageNeedle";
-			this.tabPageNeedle.Size = new System.Drawing.Size(312, 626);
+			this.tabPageNeedle.Size = new System.Drawing.Size(312, 642);
 			this.tabPageNeedle.TabIndex = 3;
 			this.tabPageNeedle.Text = "Needle";
 			this.tabPageNeedle.UseVisualStyleBackColor = true;
@@ -2657,7 +2657,7 @@ namespace TrainEditor2.Views
 			this.tabPageDigitalNumber.Controls.Add(this.labelDigitalNumberTransparentColor);
 			this.tabPageDigitalNumber.Location = new System.Drawing.Point(4, 40);
 			this.tabPageDigitalNumber.Name = "tabPageDigitalNumber";
-			this.tabPageDigitalNumber.Size = new System.Drawing.Size(312, 626);
+			this.tabPageDigitalNumber.Size = new System.Drawing.Size(312, 642);
 			this.tabPageDigitalNumber.TabIndex = 4;
 			this.tabPageDigitalNumber.Text = "DigitalNumber";
 			this.tabPageDigitalNumber.UseVisualStyleBackColor = true;
@@ -2870,7 +2870,7 @@ namespace TrainEditor2.Views
 			this.tabPageDigitalGauge.Controls.Add(this.labelDigitalGaugeSubject);
 			this.tabPageDigitalGauge.Location = new System.Drawing.Point(4, 40);
 			this.tabPageDigitalGauge.Name = "tabPageDigitalGauge";
-			this.tabPageDigitalGauge.Size = new System.Drawing.Size(312, 626);
+			this.tabPageDigitalGauge.Size = new System.Drawing.Size(312, 642);
 			this.tabPageDigitalGauge.TabIndex = 5;
 			this.tabPageDigitalGauge.Text = "DigitalGauge";
 			this.tabPageDigitalGauge.UseVisualStyleBackColor = true;
@@ -3107,7 +3107,7 @@ namespace TrainEditor2.Views
 			this.tabPageLinearGauge.Controls.Add(this.labelLinearGaugeSubject);
 			this.tabPageLinearGauge.Location = new System.Drawing.Point(4, 40);
 			this.tabPageLinearGauge.Name = "tabPageLinearGauge";
-			this.tabPageLinearGauge.Size = new System.Drawing.Size(312, 626);
+			this.tabPageLinearGauge.Size = new System.Drawing.Size(312, 642);
 			this.tabPageLinearGauge.TabIndex = 6;
 			this.tabPageLinearGauge.Text = "LinearGauge";
 			this.tabPageLinearGauge.UseVisualStyleBackColor = true;
@@ -3407,7 +3407,7 @@ namespace TrainEditor2.Views
 			this.tabPageTimetable.Controls.Add(this.groupBoxTimetableLocation);
 			this.tabPageTimetable.Location = new System.Drawing.Point(4, 40);
 			this.tabPageTimetable.Name = "tabPageTimetable";
-			this.tabPageTimetable.Size = new System.Drawing.Size(312, 626);
+			this.tabPageTimetable.Size = new System.Drawing.Size(312, 642);
 			this.tabPageTimetable.TabIndex = 7;
 			this.tabPageTimetable.Text = "Timetable";
 			this.tabPageTimetable.UseVisualStyleBackColor = true;
@@ -3548,7 +3548,7 @@ namespace TrainEditor2.Views
 			this.tabPageTouch.Controls.Add(this.groupBoxTouchLocation);
 			this.tabPageTouch.Location = new System.Drawing.Point(4, 40);
 			this.tabPageTouch.Name = "tabPageTouch";
-			this.tabPageTouch.Size = new System.Drawing.Size(312, 626);
+			this.tabPageTouch.Size = new System.Drawing.Size(312, 642);
 			this.tabPageTouch.TabIndex = 8;
 			this.tabPageTouch.Text = "Touch";
 			this.tabPageTouch.UseVisualStyleBackColor = true;
@@ -3716,13 +3716,13 @@ namespace TrainEditor2.Views
 			// 
 			// groupBoxCouplerGeneral
 			// 
+			this.groupBoxCouplerGeneral.Controls.Add(this.comboBoxCouplerMaxUnit);
+			this.groupBoxCouplerGeneral.Controls.Add(this.comboBoxCouplerMinUnit);
 			this.groupBoxCouplerGeneral.Controls.Add(this.buttonCouplerObject);
 			this.groupBoxCouplerGeneral.Controls.Add(this.textBoxCouplerObject);
 			this.groupBoxCouplerGeneral.Controls.Add(this.labelCouplerObject);
 			this.groupBoxCouplerGeneral.Controls.Add(this.textBoxCouplerMax);
 			this.groupBoxCouplerGeneral.Controls.Add(this.labelCouplerMax);
-			this.groupBoxCouplerGeneral.Controls.Add(this.labelCouplerMaxUnit);
-			this.groupBoxCouplerGeneral.Controls.Add(this.labelCouplerMinUnit);
 			this.groupBoxCouplerGeneral.Controls.Add(this.textBoxCouplerMin);
 			this.groupBoxCouplerGeneral.Controls.Add(this.labelCouplerMin);
 			this.groupBoxCouplerGeneral.Location = new System.Drawing.Point(8, 8);
@@ -3731,6 +3731,24 @@ namespace TrainEditor2.Views
 			this.groupBoxCouplerGeneral.TabIndex = 0;
 			this.groupBoxCouplerGeneral.TabStop = false;
 			this.groupBoxCouplerGeneral.Text = "General";
+			// 
+			// comboBoxCouplerMaxUnit
+			// 
+			this.comboBoxCouplerMaxUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCouplerMaxUnit.FormattingEnabled = true;
+			this.comboBoxCouplerMaxUnit.Location = new System.Drawing.Point(120, 40);
+			this.comboBoxCouplerMaxUnit.Name = "comboBoxCouplerMaxUnit";
+			this.comboBoxCouplerMaxUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxCouplerMaxUnit.TabIndex = 57;
+			// 
+			// comboBoxCouplerMinUnit
+			// 
+			this.comboBoxCouplerMinUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCouplerMinUnit.FormattingEnabled = true;
+			this.comboBoxCouplerMinUnit.Location = new System.Drawing.Point(120, 16);
+			this.comboBoxCouplerMinUnit.Name = "comboBoxCouplerMinUnit";
+			this.comboBoxCouplerMinUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxCouplerMinUnit.TabIndex = 56;
 			// 
 			// buttonCouplerObject
 			// 
@@ -3773,24 +3791,6 @@ namespace TrainEditor2.Views
 			this.labelCouplerMax.TabIndex = 25;
 			this.labelCouplerMax.Text = "Max:";
 			this.labelCouplerMax.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelCouplerMaxUnit
-			// 
-			this.labelCouplerMaxUnit.Location = new System.Drawing.Point(120, 40);
-			this.labelCouplerMaxUnit.Name = "labelCouplerMaxUnit";
-			this.labelCouplerMaxUnit.Size = new System.Drawing.Size(16, 16);
-			this.labelCouplerMaxUnit.TabIndex = 27;
-			this.labelCouplerMaxUnit.Text = "m";
-			this.labelCouplerMaxUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelCouplerMinUnit
-			// 
-			this.labelCouplerMinUnit.Location = new System.Drawing.Point(120, 16);
-			this.labelCouplerMinUnit.Name = "labelCouplerMinUnit";
-			this.labelCouplerMinUnit.Size = new System.Drawing.Size(16, 16);
-			this.labelCouplerMinUnit.TabIndex = 24;
-			this.labelCouplerMinUnit.Text = "m";
-			this.labelCouplerMinUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// textBoxCouplerMin
 			// 
@@ -5091,6 +5091,11 @@ namespace TrainEditor2.Views
 			// 
 			// groupBoxCarGeneral
 			// 
+			this.groupBoxCarGeneral.Controls.Add(this.comboBoxCenterOfMassHeightUnit);
+			this.groupBoxCarGeneral.Controls.Add(this.comboBoxHeightUnit);
+			this.groupBoxCarGeneral.Controls.Add(this.comboBoxWidthUnit);
+			this.groupBoxCarGeneral.Controls.Add(this.comboBoxLengthUnit);
+			this.groupBoxCarGeneral.Controls.Add(this.comboBoxMassUnit);
 			this.groupBoxCarGeneral.Controls.Add(this.buttonRightDoorSet);
 			this.groupBoxCarGeneral.Controls.Add(this.buttonLeftDoorSet);
 			this.groupBoxCarGeneral.Controls.Add(this.checkBoxIsControlledCar);
@@ -5112,12 +5117,7 @@ namespace TrainEditor2.Views
 			this.groupBoxCarGeneral.Controls.Add(this.checkBoxIsMotorCar);
 			this.groupBoxCarGeneral.Controls.Add(this.buttonObjectOpen);
 			this.groupBoxCarGeneral.Controls.Add(this.labelExposedFrontalAreaUnit);
-			this.groupBoxCarGeneral.Controls.Add(this.labelCenterOfMassHeightUnit);
 			this.groupBoxCarGeneral.Controls.Add(this.labelLoadingSway);
-			this.groupBoxCarGeneral.Controls.Add(this.labelHeightUnit);
-			this.groupBoxCarGeneral.Controls.Add(this.labelWidthUnit);
-			this.groupBoxCarGeneral.Controls.Add(this.labelLengthUnit);
-			this.groupBoxCarGeneral.Controls.Add(this.labelMassUnit);
 			this.groupBoxCarGeneral.Controls.Add(this.textBoxMass);
 			this.groupBoxCarGeneral.Controls.Add(this.textBoxLength);
 			this.groupBoxCarGeneral.Controls.Add(this.textBoxWidth);
@@ -5138,10 +5138,55 @@ namespace TrainEditor2.Views
 			this.groupBoxCarGeneral.Controls.Add(this.labelIsMotorCar);
 			this.groupBoxCarGeneral.Location = new System.Drawing.Point(8, 8);
 			this.groupBoxCarGeneral.Name = "groupBoxCarGeneral";
-			this.groupBoxCarGeneral.Size = new System.Drawing.Size(272, 560);
+			this.groupBoxCarGeneral.Size = new System.Drawing.Size(280, 560);
 			this.groupBoxCarGeneral.TabIndex = 0;
 			this.groupBoxCarGeneral.TabStop = false;
 			this.groupBoxCarGeneral.Text = "General";
+			// 
+			// comboBoxCenterOfMassHeightUnit
+			// 
+			this.comboBoxCenterOfMassHeightUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCenterOfMassHeightUnit.FormattingEnabled = true;
+			this.comboBoxCenterOfMassHeightUnit.Location = new System.Drawing.Point(216, 136);
+			this.comboBoxCenterOfMassHeightUnit.Name = "comboBoxCenterOfMassHeightUnit";
+			this.comboBoxCenterOfMassHeightUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxCenterOfMassHeightUnit.TabIndex = 59;
+			// 
+			// comboBoxHeightUnit
+			// 
+			this.comboBoxHeightUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxHeightUnit.FormattingEnabled = true;
+			this.comboBoxHeightUnit.Location = new System.Drawing.Point(216, 112);
+			this.comboBoxHeightUnit.Name = "comboBoxHeightUnit";
+			this.comboBoxHeightUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxHeightUnit.TabIndex = 58;
+			// 
+			// comboBoxWidthUnit
+			// 
+			this.comboBoxWidthUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxWidthUnit.FormattingEnabled = true;
+			this.comboBoxWidthUnit.Location = new System.Drawing.Point(216, 88);
+			this.comboBoxWidthUnit.Name = "comboBoxWidthUnit";
+			this.comboBoxWidthUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxWidthUnit.TabIndex = 57;
+			// 
+			// comboBoxLengthUnit
+			// 
+			this.comboBoxLengthUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxLengthUnit.FormattingEnabled = true;
+			this.comboBoxLengthUnit.Location = new System.Drawing.Point(216, 64);
+			this.comboBoxLengthUnit.Name = "comboBoxLengthUnit";
+			this.comboBoxLengthUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxLengthUnit.TabIndex = 56;
+			// 
+			// comboBoxMassUnit
+			// 
+			this.comboBoxMassUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxMassUnit.FormattingEnabled = true;
+			this.comboBoxMassUnit.Location = new System.Drawing.Point(216, 40);
+			this.comboBoxMassUnit.Name = "comboBoxMassUnit";
+			this.comboBoxMassUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxMassUnit.TabIndex = 55;
 			// 
 			// buttonRightDoorSet
 			// 
@@ -5183,7 +5228,7 @@ namespace TrainEditor2.Views
             "Type D (fast)"});
 			this.comboBoxReAdhesionDevice.Location = new System.Drawing.Point(160, 504);
 			this.comboBoxReAdhesionDevice.Name = "comboBoxReAdhesionDevice";
-			this.comboBoxReAdhesionDevice.Size = new System.Drawing.Size(104, 20);
+			this.comboBoxReAdhesionDevice.Size = new System.Drawing.Size(112, 20);
 			this.comboBoxReAdhesionDevice.TabIndex = 16;
 			// 
 			// labelIsControlledCar
@@ -5319,7 +5364,7 @@ namespace TrainEditor2.Views
 			// 
 			// buttonObjectOpen
 			// 
-			this.buttonObjectOpen.Location = new System.Drawing.Point(208, 432);
+			this.buttonObjectOpen.Location = new System.Drawing.Point(216, 432);
 			this.buttonObjectOpen.Name = "buttonObjectOpen";
 			this.buttonObjectOpen.Size = new System.Drawing.Size(56, 19);
 			this.buttonObjectOpen.TabIndex = 3;
@@ -5336,15 +5381,6 @@ namespace TrainEditor2.Views
 			this.labelExposedFrontalAreaUnit.Text = "m²";
 			this.labelExposedFrontalAreaUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// labelCenterOfMassHeightUnit
-			// 
-			this.labelCenterOfMassHeightUnit.Location = new System.Drawing.Point(216, 136);
-			this.labelCenterOfMassHeightUnit.Name = "labelCenterOfMassHeightUnit";
-			this.labelCenterOfMassHeightUnit.Size = new System.Drawing.Size(48, 16);
-			this.labelCenterOfMassHeightUnit.TabIndex = 24;
-			this.labelCenterOfMassHeightUnit.Text = "m";
-			this.labelCenterOfMassHeightUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// labelLoadingSway
 			// 
 			this.labelLoadingSway.Location = new System.Drawing.Point(8, 360);
@@ -5353,42 +5389,6 @@ namespace TrainEditor2.Views
 			this.labelLoadingSway.TabIndex = 11;
 			this.labelLoadingSway.Text = "LoadingSway:";
 			this.labelLoadingSway.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelHeightUnit
-			// 
-			this.labelHeightUnit.Location = new System.Drawing.Point(216, 112);
-			this.labelHeightUnit.Name = "labelHeightUnit";
-			this.labelHeightUnit.Size = new System.Drawing.Size(48, 16);
-			this.labelHeightUnit.TabIndex = 23;
-			this.labelHeightUnit.Text = "m";
-			this.labelHeightUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelWidthUnit
-			// 
-			this.labelWidthUnit.Location = new System.Drawing.Point(216, 88);
-			this.labelWidthUnit.Name = "labelWidthUnit";
-			this.labelWidthUnit.Size = new System.Drawing.Size(48, 16);
-			this.labelWidthUnit.TabIndex = 22;
-			this.labelWidthUnit.Text = "m";
-			this.labelWidthUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelLengthUnit
-			// 
-			this.labelLengthUnit.Location = new System.Drawing.Point(216, 64);
-			this.labelLengthUnit.Name = "labelLengthUnit";
-			this.labelLengthUnit.Size = new System.Drawing.Size(48, 16);
-			this.labelLengthUnit.TabIndex = 21;
-			this.labelLengthUnit.Text = "m";
-			this.labelLengthUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelMassUnit
-			// 
-			this.labelMassUnit.Location = new System.Drawing.Point(216, 40);
-			this.labelMassUnit.Name = "labelMassUnit";
-			this.labelMassUnit.Size = new System.Drawing.Size(48, 16);
-			this.labelMassUnit.TabIndex = 20;
-			this.labelMassUnit.Text = "1000 kg";
-			this.labelMassUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// textBoxMass
 			// 
@@ -5436,7 +5436,7 @@ namespace TrainEditor2.Views
 			// 
 			this.textBoxObject.Location = new System.Drawing.Point(160, 408);
 			this.textBoxObject.Name = "textBoxObject";
-			this.textBoxObject.Size = new System.Drawing.Size(104, 19);
+			this.textBoxObject.Size = new System.Drawing.Size(112, 19);
 			this.textBoxObject.TabIndex = 13;
 			// 
 			// labelObject
@@ -5459,36 +5459,36 @@ namespace TrainEditor2.Views
 			// 
 			// groupBoxAxles
 			// 
-			this.groupBoxAxles.Controls.Add(this.labelRearAxleUnit);
-			this.groupBoxAxles.Controls.Add(this.labelFrontAxleUnit);
+			this.groupBoxAxles.Controls.Add(this.comboBoxRearAxleUnit);
+			this.groupBoxAxles.Controls.Add(this.comboBoxFrontAxleUnit);
 			this.groupBoxAxles.Controls.Add(this.textBoxRearAxle);
 			this.groupBoxAxles.Controls.Add(this.textBoxFrontAxle);
 			this.groupBoxAxles.Controls.Add(this.labelRearAxle);
 			this.groupBoxAxles.Controls.Add(this.labelFrontAxle);
 			this.groupBoxAxles.Location = new System.Drawing.Point(8, 232);
 			this.groupBoxAxles.Name = "groupBoxAxles";
-			this.groupBoxAxles.Size = new System.Drawing.Size(256, 72);
+			this.groupBoxAxles.Size = new System.Drawing.Size(264, 72);
 			this.groupBoxAxles.TabIndex = 8;
 			this.groupBoxAxles.TabStop = false;
 			this.groupBoxAxles.Text = "Axles";
 			// 
-			// labelRearAxleUnit
+			// comboBoxRearAxleUnit
 			// 
-			this.labelRearAxleUnit.Location = new System.Drawing.Point(208, 40);
-			this.labelRearAxleUnit.Name = "labelRearAxleUnit";
-			this.labelRearAxleUnit.Size = new System.Drawing.Size(40, 16);
-			this.labelRearAxleUnit.TabIndex = 26;
-			this.labelRearAxleUnit.Text = "m";
-			this.labelRearAxleUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.comboBoxRearAxleUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxRearAxleUnit.FormattingEnabled = true;
+			this.comboBoxRearAxleUnit.Location = new System.Drawing.Point(208, 40);
+			this.comboBoxRearAxleUnit.Name = "comboBoxRearAxleUnit";
+			this.comboBoxRearAxleUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxRearAxleUnit.TabIndex = 57;
 			// 
-			// labelFrontAxleUnit
+			// comboBoxFrontAxleUnit
 			// 
-			this.labelFrontAxleUnit.Location = new System.Drawing.Point(208, 16);
-			this.labelFrontAxleUnit.Name = "labelFrontAxleUnit";
-			this.labelFrontAxleUnit.Size = new System.Drawing.Size(40, 16);
-			this.labelFrontAxleUnit.TabIndex = 25;
-			this.labelFrontAxleUnit.Text = "m";
-			this.labelFrontAxleUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.comboBoxFrontAxleUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxFrontAxleUnit.FormattingEnabled = true;
+			this.comboBoxFrontAxleUnit.Location = new System.Drawing.Point(208, 16);
+			this.comboBoxFrontAxleUnit.Name = "comboBoxFrontAxleUnit";
+			this.comboBoxFrontAxleUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxFrontAxleUnit.TabIndex = 56;
 			// 
 			// textBoxRearAxle
 			// 
@@ -5596,24 +5596,51 @@ namespace TrainEditor2.Views
 			// 
 			// groupBoxCab
 			// 
+			this.groupBoxCab.Controls.Add(this.comboBoxCabZUnit);
+			this.groupBoxCab.Controls.Add(this.comboBoxCabYUnit);
+			this.groupBoxCab.Controls.Add(this.comboBoxCabXUnit);
 			this.groupBoxCab.Controls.Add(this.groupBoxExternalCab);
 			this.groupBoxCab.Controls.Add(this.checkBoxIsEmbeddedCab);
 			this.groupBoxCab.Controls.Add(this.labelIsEmbeddedCab);
-			this.groupBoxCab.Controls.Add(this.labelCabZUnit);
 			this.groupBoxCab.Controls.Add(this.textBoxCabZ);
-			this.groupBoxCab.Controls.Add(this.labelCabYUnit);
 			this.groupBoxCab.Controls.Add(this.textBoxCabY);
-			this.groupBoxCab.Controls.Add(this.labelCabXUnit);
 			this.groupBoxCab.Controls.Add(this.textBoxCabX);
 			this.groupBoxCab.Controls.Add(this.labelCabZ);
 			this.groupBoxCab.Controls.Add(this.labelCabY);
 			this.groupBoxCab.Controls.Add(this.labelCabX);
-			this.groupBoxCab.Location = new System.Drawing.Point(288, 8);
+			this.groupBoxCab.Location = new System.Drawing.Point(296, 8);
 			this.groupBoxCab.Name = "groupBoxCab";
-			this.groupBoxCab.Size = new System.Drawing.Size(264, 504);
+			this.groupBoxCab.Size = new System.Drawing.Size(272, 504);
 			this.groupBoxCab.TabIndex = 1;
 			this.groupBoxCab.TabStop = false;
 			this.groupBoxCab.Text = "Cab";
+			// 
+			// comboBoxCabZUnit
+			// 
+			this.comboBoxCabZUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCabZUnit.FormattingEnabled = true;
+			this.comboBoxCabZUnit.Location = new System.Drawing.Point(200, 64);
+			this.comboBoxCabZUnit.Name = "comboBoxCabZUnit";
+			this.comboBoxCabZUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxCabZUnit.TabIndex = 58;
+			// 
+			// comboBoxCabYUnit
+			// 
+			this.comboBoxCabYUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCabYUnit.FormattingEnabled = true;
+			this.comboBoxCabYUnit.Location = new System.Drawing.Point(200, 40);
+			this.comboBoxCabYUnit.Name = "comboBoxCabYUnit";
+			this.comboBoxCabYUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxCabYUnit.TabIndex = 57;
+			// 
+			// comboBoxCabXUnit
+			// 
+			this.comboBoxCabXUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCabXUnit.FormattingEnabled = true;
+			this.comboBoxCabXUnit.Location = new System.Drawing.Point(200, 16);
+			this.comboBoxCabXUnit.Name = "comboBoxCabXUnit";
+			this.comboBoxCabXUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxCabXUnit.TabIndex = 56;
 			// 
 			// groupBoxExternalCab
 			// 
@@ -5623,14 +5650,14 @@ namespace TrainEditor2.Views
 			this.groupBoxExternalCab.Controls.Add(this.labelCabFileName);
 			this.groupBoxExternalCab.Location = new System.Drawing.Point(8, 112);
 			this.groupBoxExternalCab.Name = "groupBoxExternalCab";
-			this.groupBoxExternalCab.Size = new System.Drawing.Size(248, 384);
+			this.groupBoxExternalCab.Size = new System.Drawing.Size(256, 384);
 			this.groupBoxExternalCab.TabIndex = 31;
 			this.groupBoxExternalCab.TabStop = false;
 			this.groupBoxExternalCab.Text = "ExternalCab";
 			// 
 			// buttonCabFileNameOpen
 			// 
-			this.buttonCabFileNameOpen.Location = new System.Drawing.Point(184, 40);
+			this.buttonCabFileNameOpen.Location = new System.Drawing.Point(192, 40);
 			this.buttonCabFileNameOpen.Name = "buttonCabFileNameOpen";
 			this.buttonCabFileNameOpen.Size = new System.Drawing.Size(56, 19);
 			this.buttonCabFileNameOpen.TabIndex = 35;
@@ -5640,42 +5667,96 @@ namespace TrainEditor2.Views
 			// 
 			// groupBoxCameraRestriction
 			// 
+			this.groupBoxCameraRestriction.Controls.Add(this.comboBoxCameraRestrictionDownUnit);
+			this.groupBoxCameraRestriction.Controls.Add(this.comboBoxCameraRestrictionUpUnit);
+			this.groupBoxCameraRestriction.Controls.Add(this.comboBoxCameraRestrictionRightUnit);
+			this.groupBoxCameraRestriction.Controls.Add(this.comboBoxCameraRestrictionLeftUnit);
+			this.groupBoxCameraRestriction.Controls.Add(this.comboBoxCameraRestrictionBackwardsUnit);
+			this.groupBoxCameraRestriction.Controls.Add(this.comboBoxCameraRestrictionForwardsUnit);
 			this.groupBoxCameraRestriction.Controls.Add(this.checkBoxCameraRestrictionDefinedDown);
 			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionDefinedDown);
-			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionDownUnit);
 			this.groupBoxCameraRestriction.Controls.Add(this.textBoxCameraRestrictionDown);
 			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionDown);
 			this.groupBoxCameraRestriction.Controls.Add(this.checkBoxCameraRestrictionDefinedUp);
 			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionDefinedUp);
-			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionUpUnit);
 			this.groupBoxCameraRestriction.Controls.Add(this.textBoxCameraRestrictionUp);
 			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionUp);
 			this.groupBoxCameraRestriction.Controls.Add(this.checkBoxCameraRestrictionDefinedRight);
 			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionDefinedRight);
-			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionRightUnit);
 			this.groupBoxCameraRestriction.Controls.Add(this.textBoxCameraRestrictionRight);
 			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionRight);
 			this.groupBoxCameraRestriction.Controls.Add(this.checkBoxCameraRestrictionDefinedLeft);
 			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionDefinedLeft);
-			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionLeftUnit);
 			this.groupBoxCameraRestriction.Controls.Add(this.textBoxCameraRestrictionLeft);
 			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionLeft);
 			this.groupBoxCameraRestriction.Controls.Add(this.checkBoxCameraRestrictionDefinedBackwards);
 			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionDefinedBackwards);
-			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionBackwardsUnit);
 			this.groupBoxCameraRestriction.Controls.Add(this.textBoxCameraRestrictionBackwards);
 			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionBackwards);
 			this.groupBoxCameraRestriction.Controls.Add(this.checkBoxCameraRestrictionDefinedForwards);
 			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionDefinedForwards);
-			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionForwardsUnit);
 			this.groupBoxCameraRestriction.Controls.Add(this.textBoxCameraRestrictionForwards);
 			this.groupBoxCameraRestriction.Controls.Add(this.labelCameraRestrictionForwards);
 			this.groupBoxCameraRestriction.Location = new System.Drawing.Point(8, 64);
 			this.groupBoxCameraRestriction.Name = "groupBoxCameraRestriction";
-			this.groupBoxCameraRestriction.Size = new System.Drawing.Size(232, 312);
+			this.groupBoxCameraRestriction.Size = new System.Drawing.Size(240, 312);
 			this.groupBoxCameraRestriction.TabIndex = 34;
 			this.groupBoxCameraRestriction.TabStop = false;
 			this.groupBoxCameraRestriction.Text = "CameraRestriction";
+			// 
+			// comboBoxCameraRestrictionDownUnit
+			// 
+			this.comboBoxCameraRestrictionDownUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCameraRestrictionDownUnit.FormattingEnabled = true;
+			this.comboBoxCameraRestrictionDownUnit.Location = new System.Drawing.Point(184, 280);
+			this.comboBoxCameraRestrictionDownUnit.Name = "comboBoxCameraRestrictionDownUnit";
+			this.comboBoxCameraRestrictionDownUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxCameraRestrictionDownUnit.TabIndex = 62;
+			// 
+			// comboBoxCameraRestrictionUpUnit
+			// 
+			this.comboBoxCameraRestrictionUpUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCameraRestrictionUpUnit.FormattingEnabled = true;
+			this.comboBoxCameraRestrictionUpUnit.Location = new System.Drawing.Point(184, 232);
+			this.comboBoxCameraRestrictionUpUnit.Name = "comboBoxCameraRestrictionUpUnit";
+			this.comboBoxCameraRestrictionUpUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxCameraRestrictionUpUnit.TabIndex = 61;
+			// 
+			// comboBoxCameraRestrictionRightUnit
+			// 
+			this.comboBoxCameraRestrictionRightUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCameraRestrictionRightUnit.FormattingEnabled = true;
+			this.comboBoxCameraRestrictionRightUnit.Location = new System.Drawing.Point(184, 184);
+			this.comboBoxCameraRestrictionRightUnit.Name = "comboBoxCameraRestrictionRightUnit";
+			this.comboBoxCameraRestrictionRightUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxCameraRestrictionRightUnit.TabIndex = 60;
+			// 
+			// comboBoxCameraRestrictionLeftUnit
+			// 
+			this.comboBoxCameraRestrictionLeftUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCameraRestrictionLeftUnit.FormattingEnabled = true;
+			this.comboBoxCameraRestrictionLeftUnit.Location = new System.Drawing.Point(184, 136);
+			this.comboBoxCameraRestrictionLeftUnit.Name = "comboBoxCameraRestrictionLeftUnit";
+			this.comboBoxCameraRestrictionLeftUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxCameraRestrictionLeftUnit.TabIndex = 59;
+			// 
+			// comboBoxCameraRestrictionBackwardsUnit
+			// 
+			this.comboBoxCameraRestrictionBackwardsUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCameraRestrictionBackwardsUnit.FormattingEnabled = true;
+			this.comboBoxCameraRestrictionBackwardsUnit.Location = new System.Drawing.Point(184, 88);
+			this.comboBoxCameraRestrictionBackwardsUnit.Name = "comboBoxCameraRestrictionBackwardsUnit";
+			this.comboBoxCameraRestrictionBackwardsUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxCameraRestrictionBackwardsUnit.TabIndex = 58;
+			// 
+			// comboBoxCameraRestrictionForwardsUnit
+			// 
+			this.comboBoxCameraRestrictionForwardsUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCameraRestrictionForwardsUnit.FormattingEnabled = true;
+			this.comboBoxCameraRestrictionForwardsUnit.Location = new System.Drawing.Point(184, 40);
+			this.comboBoxCameraRestrictionForwardsUnit.Name = "comboBoxCameraRestrictionForwardsUnit";
+			this.comboBoxCameraRestrictionForwardsUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxCameraRestrictionForwardsUnit.TabIndex = 57;
 			// 
 			// checkBoxCameraRestrictionDefinedDown
 			// 
@@ -5693,15 +5774,6 @@ namespace TrainEditor2.Views
 			this.labelCameraRestrictionDefinedDown.TabIndex = 55;
 			this.labelCameraRestrictionDefinedDown.Text = "DefinedDown:";
 			this.labelCameraRestrictionDefinedDown.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelCameraRestrictionDownUnit
-			// 
-			this.labelCameraRestrictionDownUnit.Location = new System.Drawing.Point(184, 280);
-			this.labelCameraRestrictionDownUnit.Name = "labelCameraRestrictionDownUnit";
-			this.labelCameraRestrictionDownUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelCameraRestrictionDownUnit.TabIndex = 54;
-			this.labelCameraRestrictionDownUnit.Text = "m";
-			this.labelCameraRestrictionDownUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// textBoxCameraRestrictionDown
 			// 
@@ -5736,15 +5808,6 @@ namespace TrainEditor2.Views
 			this.labelCameraRestrictionDefinedUp.Text = "DefinedUp:";
 			this.labelCameraRestrictionDefinedUp.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// labelCameraRestrictionUpUnit
-			// 
-			this.labelCameraRestrictionUpUnit.Location = new System.Drawing.Point(184, 232);
-			this.labelCameraRestrictionUpUnit.Name = "labelCameraRestrictionUpUnit";
-			this.labelCameraRestrictionUpUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelCameraRestrictionUpUnit.TabIndex = 49;
-			this.labelCameraRestrictionUpUnit.Text = "m";
-			this.labelCameraRestrictionUpUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// textBoxCameraRestrictionUp
 			// 
 			this.textBoxCameraRestrictionUp.Location = new System.Drawing.Point(128, 232);
@@ -5777,15 +5840,6 @@ namespace TrainEditor2.Views
 			this.labelCameraRestrictionDefinedRight.TabIndex = 45;
 			this.labelCameraRestrictionDefinedRight.Text = "DefinedRight:";
 			this.labelCameraRestrictionDefinedRight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelCameraRestrictionRightUnit
-			// 
-			this.labelCameraRestrictionRightUnit.Location = new System.Drawing.Point(184, 184);
-			this.labelCameraRestrictionRightUnit.Name = "labelCameraRestrictionRightUnit";
-			this.labelCameraRestrictionRightUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelCameraRestrictionRightUnit.TabIndex = 44;
-			this.labelCameraRestrictionRightUnit.Text = "m";
-			this.labelCameraRestrictionRightUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// textBoxCameraRestrictionRight
 			// 
@@ -5820,15 +5874,6 @@ namespace TrainEditor2.Views
 			this.labelCameraRestrictionDefinedLeft.Text = "DefinedLeft:";
 			this.labelCameraRestrictionDefinedLeft.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// labelCameraRestrictionLeftUnit
-			// 
-			this.labelCameraRestrictionLeftUnit.Location = new System.Drawing.Point(184, 136);
-			this.labelCameraRestrictionLeftUnit.Name = "labelCameraRestrictionLeftUnit";
-			this.labelCameraRestrictionLeftUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelCameraRestrictionLeftUnit.TabIndex = 39;
-			this.labelCameraRestrictionLeftUnit.Text = "m";
-			this.labelCameraRestrictionLeftUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// textBoxCameraRestrictionLeft
 			// 
 			this.textBoxCameraRestrictionLeft.Location = new System.Drawing.Point(128, 136);
@@ -5861,15 +5906,6 @@ namespace TrainEditor2.Views
 			this.labelCameraRestrictionDefinedBackwards.TabIndex = 35;
 			this.labelCameraRestrictionDefinedBackwards.Text = "DefinedBackwards:";
 			this.labelCameraRestrictionDefinedBackwards.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelCameraRestrictionBackwardsUnit
-			// 
-			this.labelCameraRestrictionBackwardsUnit.Location = new System.Drawing.Point(184, 88);
-			this.labelCameraRestrictionBackwardsUnit.Name = "labelCameraRestrictionBackwardsUnit";
-			this.labelCameraRestrictionBackwardsUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelCameraRestrictionBackwardsUnit.TabIndex = 34;
-			this.labelCameraRestrictionBackwardsUnit.Text = "m";
-			this.labelCameraRestrictionBackwardsUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// textBoxCameraRestrictionBackwards
 			// 
@@ -5904,15 +5940,6 @@ namespace TrainEditor2.Views
 			this.labelCameraRestrictionDefinedForwards.Text = "DefinedForwards:";
 			this.labelCameraRestrictionDefinedForwards.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// labelCameraRestrictionForwardsUnit
-			// 
-			this.labelCameraRestrictionForwardsUnit.Location = new System.Drawing.Point(184, 40);
-			this.labelCameraRestrictionForwardsUnit.Name = "labelCameraRestrictionForwardsUnit";
-			this.labelCameraRestrictionForwardsUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelCameraRestrictionForwardsUnit.TabIndex = 8;
-			this.labelCameraRestrictionForwardsUnit.Text = "m";
-			this.labelCameraRestrictionForwardsUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// textBoxCameraRestrictionForwards
 			// 
 			this.textBoxCameraRestrictionForwards.Location = new System.Drawing.Point(128, 40);
@@ -5933,7 +5960,7 @@ namespace TrainEditor2.Views
 			// 
 			this.textBoxCabFileName.Location = new System.Drawing.Point(136, 16);
 			this.textBoxCabFileName.Name = "textBoxCabFileName";
-			this.textBoxCabFileName.Size = new System.Drawing.Size(104, 19);
+			this.textBoxCabFileName.Size = new System.Drawing.Size(112, 19);
 			this.textBoxCabFileName.TabIndex = 33;
 			// 
 			// labelCabFileName
@@ -5962,15 +5989,6 @@ namespace TrainEditor2.Views
 			this.labelIsEmbeddedCab.Text = "IsEmbeddedCab:";
 			this.labelIsEmbeddedCab.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// labelCabZUnit
-			// 
-			this.labelCabZUnit.Location = new System.Drawing.Point(200, 64);
-			this.labelCabZUnit.Name = "labelCabZUnit";
-			this.labelCabZUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelCabZUnit.TabIndex = 9;
-			this.labelCabZUnit.Text = "mm";
-			this.labelCabZUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// textBoxCabZ
 			// 
 			this.textBoxCabZ.Location = new System.Drawing.Point(144, 64);
@@ -5978,30 +5996,12 @@ namespace TrainEditor2.Views
 			this.textBoxCabZ.Size = new System.Drawing.Size(48, 19);
 			this.textBoxCabZ.TabIndex = 8;
 			// 
-			// labelCabYUnit
-			// 
-			this.labelCabYUnit.Location = new System.Drawing.Point(200, 40);
-			this.labelCabYUnit.Name = "labelCabYUnit";
-			this.labelCabYUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelCabYUnit.TabIndex = 7;
-			this.labelCabYUnit.Text = "mm";
-			this.labelCabYUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// textBoxCabY
 			// 
 			this.textBoxCabY.Location = new System.Drawing.Point(144, 40);
 			this.textBoxCabY.Name = "textBoxCabY";
 			this.textBoxCabY.Size = new System.Drawing.Size(48, 19);
 			this.textBoxCabY.TabIndex = 6;
-			// 
-			// labelCabXUnit
-			// 
-			this.labelCabXUnit.Location = new System.Drawing.Point(200, 16);
-			this.labelCabXUnit.Name = "labelCabXUnit";
-			this.labelCabXUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelCabXUnit.TabIndex = 5;
-			this.labelCabXUnit.Text = "mm";
-			this.labelCabXUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// textBoxCabX
 			// 
@@ -6048,31 +6048,49 @@ namespace TrainEditor2.Views
 			this.groupBoxPressure.Controls.Add(this.groupBoxCompressor);
 			this.groupBoxPressure.Location = new System.Drawing.Point(8, 8);
 			this.groupBoxPressure.Name = "groupBoxPressure";
-			this.groupBoxPressure.Size = new System.Drawing.Size(296, 672);
+			this.groupBoxPressure.Size = new System.Drawing.Size(304, 672);
 			this.groupBoxPressure.TabIndex = 33;
 			this.groupBoxPressure.TabStop = false;
 			this.groupBoxPressure.Text = "Pressure";
 			// 
 			// groupBoxBrakeCylinder
 			// 
+			this.groupBoxBrakeCylinder.Controls.Add(this.comboBoxBrakeCylinderReleaseRateUnit);
+			this.groupBoxBrakeCylinder.Controls.Add(this.comboBoxBrakeCylinderEmergencyRateUnit);
+			this.groupBoxBrakeCylinder.Controls.Add(this.comboBoxBrakeCylinderEmergencyMaximumPressureUnit);
+			this.groupBoxBrakeCylinder.Controls.Add(this.comboBoxBrakeCylinderServiceMaximumPressureUnit);
 			this.groupBoxBrakeCylinder.Controls.Add(this.textBoxBrakeCylinderReleaseRate);
 			this.groupBoxBrakeCylinder.Controls.Add(this.labelBrakeCylinderServiceMaximumPressure);
 			this.groupBoxBrakeCylinder.Controls.Add(this.labelBrakeCylinderEmergencyMaximumPressure);
 			this.groupBoxBrakeCylinder.Controls.Add(this.textBoxBrakeCylinderServiceMaximumPressure);
 			this.groupBoxBrakeCylinder.Controls.Add(this.textBoxBrakeCylinderEmergencyMaximumPressure);
-			this.groupBoxBrakeCylinder.Controls.Add(this.labelBrakeCylinderEmergencyMaximumPressureUnit);
-			this.groupBoxBrakeCylinder.Controls.Add(this.labelBrakeCylinderServiceMaximumPressureUnit);
 			this.groupBoxBrakeCylinder.Controls.Add(this.labelBrakeCylinderEmergencyRate);
 			this.groupBoxBrakeCylinder.Controls.Add(this.labelBrakeCylinderReleaseRate);
-			this.groupBoxBrakeCylinder.Controls.Add(this.labelBrakeCylinderReleaseRateUnit);
-			this.groupBoxBrakeCylinder.Controls.Add(this.labelBrakeCylinderEmergencyRateUnit);
 			this.groupBoxBrakeCylinder.Controls.Add(this.textBoxBrakeCylinderEmergencyRate);
 			this.groupBoxBrakeCylinder.Location = new System.Drawing.Point(8, 544);
 			this.groupBoxBrakeCylinder.Name = "groupBoxBrakeCylinder";
-			this.groupBoxBrakeCylinder.Size = new System.Drawing.Size(280, 120);
+			this.groupBoxBrakeCylinder.Size = new System.Drawing.Size(288, 120);
 			this.groupBoxBrakeCylinder.TabIndex = 46;
 			this.groupBoxBrakeCylinder.TabStop = false;
 			this.groupBoxBrakeCylinder.Text = "BrakeCylinder";
+			// 
+			// comboBoxBrakeCylinderEmergencyMaximumPressureUnit
+			// 
+			this.comboBoxBrakeCylinderEmergencyMaximumPressureUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxBrakeCylinderEmergencyMaximumPressureUnit.FormattingEnabled = true;
+			this.comboBoxBrakeCylinderEmergencyMaximumPressureUnit.Location = new System.Drawing.Point(232, 40);
+			this.comboBoxBrakeCylinderEmergencyMaximumPressureUnit.Name = "comboBoxBrakeCylinderEmergencyMaximumPressureUnit";
+			this.comboBoxBrakeCylinderEmergencyMaximumPressureUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxBrakeCylinderEmergencyMaximumPressureUnit.TabIndex = 57;
+			// 
+			// comboBoxBrakeCylinderServiceMaximumPressureUnit
+			// 
+			this.comboBoxBrakeCylinderServiceMaximumPressureUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxBrakeCylinderServiceMaximumPressureUnit.FormattingEnabled = true;
+			this.comboBoxBrakeCylinderServiceMaximumPressureUnit.Location = new System.Drawing.Point(232, 16);
+			this.comboBoxBrakeCylinderServiceMaximumPressureUnit.Name = "comboBoxBrakeCylinderServiceMaximumPressureUnit";
+			this.comboBoxBrakeCylinderServiceMaximumPressureUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxBrakeCylinderServiceMaximumPressureUnit.TabIndex = 57;
 			// 
 			// textBoxBrakeCylinderReleaseRate
 			// 
@@ -6113,24 +6131,6 @@ namespace TrainEditor2.Views
 			this.textBoxBrakeCylinderEmergencyMaximumPressure.Size = new System.Drawing.Size(48, 19);
 			this.textBoxBrakeCylinderEmergencyMaximumPressure.TabIndex = 32;
 			// 
-			// labelBrakeCylinderEmergencyMaximumPressureUnit
-			// 
-			this.labelBrakeCylinderEmergencyMaximumPressureUnit.Location = new System.Drawing.Point(232, 40);
-			this.labelBrakeCylinderEmergencyMaximumPressureUnit.Name = "labelBrakeCylinderEmergencyMaximumPressureUnit";
-			this.labelBrakeCylinderEmergencyMaximumPressureUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelBrakeCylinderEmergencyMaximumPressureUnit.TabIndex = 34;
-			this.labelBrakeCylinderEmergencyMaximumPressureUnit.Text = "kPa";
-			this.labelBrakeCylinderEmergencyMaximumPressureUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelBrakeCylinderServiceMaximumPressureUnit
-			// 
-			this.labelBrakeCylinderServiceMaximumPressureUnit.Location = new System.Drawing.Point(232, 16);
-			this.labelBrakeCylinderServiceMaximumPressureUnit.Name = "labelBrakeCylinderServiceMaximumPressureUnit";
-			this.labelBrakeCylinderServiceMaximumPressureUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelBrakeCylinderServiceMaximumPressureUnit.TabIndex = 32;
-			this.labelBrakeCylinderServiceMaximumPressureUnit.Text = "kPa";
-			this.labelBrakeCylinderServiceMaximumPressureUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// labelBrakeCylinderEmergencyRate
 			// 
 			this.labelBrakeCylinderEmergencyRate.Location = new System.Drawing.Point(8, 64);
@@ -6149,24 +6149,6 @@ namespace TrainEditor2.Views
 			this.labelBrakeCylinderReleaseRate.Text = "ReleaseRate:";
 			this.labelBrakeCylinderReleaseRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// labelBrakeCylinderReleaseRateUnit
-			// 
-			this.labelBrakeCylinderReleaseRateUnit.Location = new System.Drawing.Point(232, 88);
-			this.labelBrakeCylinderReleaseRateUnit.Name = "labelBrakeCylinderReleaseRateUnit";
-			this.labelBrakeCylinderReleaseRateUnit.Size = new System.Drawing.Size(40, 16);
-			this.labelBrakeCylinderReleaseRateUnit.TabIndex = 31;
-			this.labelBrakeCylinderReleaseRateUnit.Text = "kPa/s";
-			this.labelBrakeCylinderReleaseRateUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelBrakeCylinderEmergencyRateUnit
-			// 
-			this.labelBrakeCylinderEmergencyRateUnit.Location = new System.Drawing.Point(232, 64);
-			this.labelBrakeCylinderEmergencyRateUnit.Name = "labelBrakeCylinderEmergencyRateUnit";
-			this.labelBrakeCylinderEmergencyRateUnit.Size = new System.Drawing.Size(40, 16);
-			this.labelBrakeCylinderEmergencyRateUnit.TabIndex = 29;
-			this.labelBrakeCylinderEmergencyRateUnit.Text = "kPa/s";
-			this.labelBrakeCylinderEmergencyRateUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// textBoxBrakeCylinderEmergencyRate
 			// 
 			this.textBoxBrakeCylinderEmergencyRate.Location = new System.Drawing.Point(176, 64);
@@ -6176,18 +6158,18 @@ namespace TrainEditor2.Views
 			// 
 			// groupBoxStraightAirPipe
 			// 
+			this.groupBoxStraightAirPipe.Controls.Add(this.comboBoxStraightAirPipeReleaseRateUnit);
+			this.groupBoxStraightAirPipe.Controls.Add(this.comboBoxStraightAirPipeEmergencyRateUnit);
+			this.groupBoxStraightAirPipe.Controls.Add(this.comboBoxStraightAirPipeServiceRateUnit);
 			this.groupBoxStraightAirPipe.Controls.Add(this.labelStraightAirPipeReleaseRate);
-			this.groupBoxStraightAirPipe.Controls.Add(this.labelStraightAirPipeReleaseRateUnit);
 			this.groupBoxStraightAirPipe.Controls.Add(this.textBoxStraightAirPipeReleaseRate);
 			this.groupBoxStraightAirPipe.Controls.Add(this.labelStraightAirPipeEmergencyRate);
-			this.groupBoxStraightAirPipe.Controls.Add(this.labelStraightAirPipeEmergencyRateUnit);
 			this.groupBoxStraightAirPipe.Controls.Add(this.textBoxStraightAirPipeEmergencyRate);
 			this.groupBoxStraightAirPipe.Controls.Add(this.labelStraightAirPipeServiceRate);
-			this.groupBoxStraightAirPipe.Controls.Add(this.labelStraightAirPipeServiceRateUnit);
 			this.groupBoxStraightAirPipe.Controls.Add(this.textBoxStraightAirPipeServiceRate);
 			this.groupBoxStraightAirPipe.Location = new System.Drawing.Point(8, 440);
 			this.groupBoxStraightAirPipe.Name = "groupBoxStraightAirPipe";
-			this.groupBoxStraightAirPipe.Size = new System.Drawing.Size(280, 96);
+			this.groupBoxStraightAirPipe.Size = new System.Drawing.Size(288, 96);
 			this.groupBoxStraightAirPipe.TabIndex = 45;
 			this.groupBoxStraightAirPipe.TabStop = false;
 			this.groupBoxStraightAirPipe.Text = "StraightAirPipe";
@@ -6200,15 +6182,6 @@ namespace TrainEditor2.Views
 			this.labelStraightAirPipeReleaseRate.TabIndex = 61;
 			this.labelStraightAirPipeReleaseRate.Text = "ReleaseRate:";
 			this.labelStraightAirPipeReleaseRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelStraightAirPipeReleaseRateUnit
-			// 
-			this.labelStraightAirPipeReleaseRateUnit.Location = new System.Drawing.Point(232, 64);
-			this.labelStraightAirPipeReleaseRateUnit.Name = "labelStraightAirPipeReleaseRateUnit";
-			this.labelStraightAirPipeReleaseRateUnit.Size = new System.Drawing.Size(40, 16);
-			this.labelStraightAirPipeReleaseRateUnit.TabIndex = 60;
-			this.labelStraightAirPipeReleaseRateUnit.Text = "kPa/s";
-			this.labelStraightAirPipeReleaseRateUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// textBoxStraightAirPipeReleaseRate
 			// 
@@ -6226,15 +6199,6 @@ namespace TrainEditor2.Views
 			this.labelStraightAirPipeEmergencyRate.Text = "EmergencyRate:";
 			this.labelStraightAirPipeEmergencyRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// labelStraightAirPipeEmergencyRateUnit
-			// 
-			this.labelStraightAirPipeEmergencyRateUnit.Location = new System.Drawing.Point(232, 40);
-			this.labelStraightAirPipeEmergencyRateUnit.Name = "labelStraightAirPipeEmergencyRateUnit";
-			this.labelStraightAirPipeEmergencyRateUnit.Size = new System.Drawing.Size(40, 16);
-			this.labelStraightAirPipeEmergencyRateUnit.TabIndex = 57;
-			this.labelStraightAirPipeEmergencyRateUnit.Text = "kPa/s";
-			this.labelStraightAirPipeEmergencyRateUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// textBoxStraightAirPipeEmergencyRate
 			// 
 			this.textBoxStraightAirPipeEmergencyRate.Location = new System.Drawing.Point(176, 40);
@@ -6251,15 +6215,6 @@ namespace TrainEditor2.Views
 			this.labelStraightAirPipeServiceRate.Text = "ServiceRate:";
 			this.labelStraightAirPipeServiceRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// labelStraightAirPipeServiceRateUnit
-			// 
-			this.labelStraightAirPipeServiceRateUnit.Location = new System.Drawing.Point(232, 16);
-			this.labelStraightAirPipeServiceRateUnit.Name = "labelStraightAirPipeServiceRateUnit";
-			this.labelStraightAirPipeServiceRateUnit.Size = new System.Drawing.Size(40, 16);
-			this.labelStraightAirPipeServiceRateUnit.TabIndex = 54;
-			this.labelStraightAirPipeServiceRateUnit.Text = "kPa/s";
-			this.labelStraightAirPipeServiceRateUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// textBoxStraightAirPipeServiceRate
 			// 
 			this.textBoxStraightAirPipeServiceRate.Location = new System.Drawing.Point(176, 16);
@@ -6269,24 +6224,33 @@ namespace TrainEditor2.Views
 			// 
 			// groupBoxBrakePipe
 			// 
+			this.groupBoxBrakePipe.Controls.Add(this.comboBoxBrakePipeEmergencyRateUnit);
+			this.groupBoxBrakePipe.Controls.Add(this.comboBoxBrakePipeServiceRateUnit);
+			this.groupBoxBrakePipe.Controls.Add(this.comboBoxBrakePipeChargeRateUnit);
+			this.groupBoxBrakePipe.Controls.Add(this.comboBoxBrakePipeNormalPressureUnit);
 			this.groupBoxBrakePipe.Controls.Add(this.labelBrakePipeEmergencyRate);
-			this.groupBoxBrakePipe.Controls.Add(this.labelBrakePipeEmergencyRateUnit);
 			this.groupBoxBrakePipe.Controls.Add(this.textBoxBrakePipeEmergencyRate);
 			this.groupBoxBrakePipe.Controls.Add(this.labelBrakePipeServiceRate);
-			this.groupBoxBrakePipe.Controls.Add(this.labelBrakePipeServiceRateUnit);
 			this.groupBoxBrakePipe.Controls.Add(this.textBoxBrakePipeServiceRate);
 			this.groupBoxBrakePipe.Controls.Add(this.labelBrakePipeChargeRate);
-			this.groupBoxBrakePipe.Controls.Add(this.labelBrakePipeChargeRateUnit);
 			this.groupBoxBrakePipe.Controls.Add(this.textBoxBrakePipeChargeRate);
 			this.groupBoxBrakePipe.Controls.Add(this.labelBrakePipeNormalPressure);
 			this.groupBoxBrakePipe.Controls.Add(this.textBoxBrakePipeNormalPressure);
-			this.groupBoxBrakePipe.Controls.Add(this.labelBrakePipeNormalPressureUnit);
 			this.groupBoxBrakePipe.Location = new System.Drawing.Point(8, 312);
 			this.groupBoxBrakePipe.Name = "groupBoxBrakePipe";
-			this.groupBoxBrakePipe.Size = new System.Drawing.Size(280, 120);
+			this.groupBoxBrakePipe.Size = new System.Drawing.Size(288, 120);
 			this.groupBoxBrakePipe.TabIndex = 44;
 			this.groupBoxBrakePipe.TabStop = false;
 			this.groupBoxBrakePipe.Text = "BrakePipe";
+			// 
+			// comboBoxBrakePipeNormalPressureUnit
+			// 
+			this.comboBoxBrakePipeNormalPressureUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxBrakePipeNormalPressureUnit.FormattingEnabled = true;
+			this.comboBoxBrakePipeNormalPressureUnit.Location = new System.Drawing.Point(232, 16);
+			this.comboBoxBrakePipeNormalPressureUnit.Name = "comboBoxBrakePipeNormalPressureUnit";
+			this.comboBoxBrakePipeNormalPressureUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxBrakePipeNormalPressureUnit.TabIndex = 57;
 			// 
 			// labelBrakePipeEmergencyRate
 			// 
@@ -6296,15 +6260,6 @@ namespace TrainEditor2.Views
 			this.labelBrakePipeEmergencyRate.TabIndex = 52;
 			this.labelBrakePipeEmergencyRate.Text = "EmergencyRate:";
 			this.labelBrakePipeEmergencyRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelBrakePipeEmergencyRateUnit
-			// 
-			this.labelBrakePipeEmergencyRateUnit.Location = new System.Drawing.Point(232, 88);
-			this.labelBrakePipeEmergencyRateUnit.Name = "labelBrakePipeEmergencyRateUnit";
-			this.labelBrakePipeEmergencyRateUnit.Size = new System.Drawing.Size(40, 16);
-			this.labelBrakePipeEmergencyRateUnit.TabIndex = 51;
-			this.labelBrakePipeEmergencyRateUnit.Text = "kPa/s";
-			this.labelBrakePipeEmergencyRateUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// textBoxBrakePipeEmergencyRate
 			// 
@@ -6322,15 +6277,6 @@ namespace TrainEditor2.Views
 			this.labelBrakePipeServiceRate.Text = "ServiceRate:";
 			this.labelBrakePipeServiceRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// labelBrakePipeServiceRateUnit
-			// 
-			this.labelBrakePipeServiceRateUnit.Location = new System.Drawing.Point(232, 64);
-			this.labelBrakePipeServiceRateUnit.Name = "labelBrakePipeServiceRateUnit";
-			this.labelBrakePipeServiceRateUnit.Size = new System.Drawing.Size(40, 16);
-			this.labelBrakePipeServiceRateUnit.TabIndex = 48;
-			this.labelBrakePipeServiceRateUnit.Text = "kPa/s";
-			this.labelBrakePipeServiceRateUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// textBoxBrakePipeServiceRate
 			// 
 			this.textBoxBrakePipeServiceRate.Location = new System.Drawing.Point(176, 64);
@@ -6346,15 +6292,6 @@ namespace TrainEditor2.Views
 			this.labelBrakePipeChargeRate.TabIndex = 46;
 			this.labelBrakePipeChargeRate.Text = "ChargeRate:";
 			this.labelBrakePipeChargeRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelBrakePipeChargeRateUnit
-			// 
-			this.labelBrakePipeChargeRateUnit.Location = new System.Drawing.Point(232, 40);
-			this.labelBrakePipeChargeRateUnit.Name = "labelBrakePipeChargeRateUnit";
-			this.labelBrakePipeChargeRateUnit.Size = new System.Drawing.Size(40, 16);
-			this.labelBrakePipeChargeRateUnit.TabIndex = 45;
-			this.labelBrakePipeChargeRateUnit.Text = "kPa/s";
-			this.labelBrakePipeChargeRateUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// textBoxBrakePipeChargeRate
 			// 
@@ -6379,29 +6316,20 @@ namespace TrainEditor2.Views
 			this.textBoxBrakePipeNormalPressure.Size = new System.Drawing.Size(48, 19);
 			this.textBoxBrakePipeNormalPressure.TabIndex = 38;
 			// 
-			// labelBrakePipeNormalPressureUnit
-			// 
-			this.labelBrakePipeNormalPressureUnit.Location = new System.Drawing.Point(232, 16);
-			this.labelBrakePipeNormalPressureUnit.Name = "labelBrakePipeNormalPressureUnit";
-			this.labelBrakePipeNormalPressureUnit.Size = new System.Drawing.Size(40, 16);
-			this.labelBrakePipeNormalPressureUnit.TabIndex = 39;
-			this.labelBrakePipeNormalPressureUnit.Text = "kPa";
-			this.labelBrakePipeNormalPressureUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// groupBoxEqualizingReservoir
 			// 
+			this.groupBoxEqualizingReservoir.Controls.Add(this.comboBoxEqualizingReservoirEmergencyRateUnit);
+			this.groupBoxEqualizingReservoir.Controls.Add(this.comboBoxEqualizingReservoirServiceRateUnit);
+			this.groupBoxEqualizingReservoir.Controls.Add(this.comboBoxEqualizingReservoirChargeRateUnit);
 			this.groupBoxEqualizingReservoir.Controls.Add(this.labelEqualizingReservoirEmergencyRate);
-			this.groupBoxEqualizingReservoir.Controls.Add(this.labelEqualizingReservoirEmergencyRateUnit);
 			this.groupBoxEqualizingReservoir.Controls.Add(this.textBoxEqualizingReservoirEmergencyRate);
 			this.groupBoxEqualizingReservoir.Controls.Add(this.labelEqualizingReservoirServiceRate);
-			this.groupBoxEqualizingReservoir.Controls.Add(this.labelEqualizingReservoirServiceRateUnit);
 			this.groupBoxEqualizingReservoir.Controls.Add(this.textBoxEqualizingReservoirServiceRate);
 			this.groupBoxEqualizingReservoir.Controls.Add(this.labelEqualizingReservoirChargeRate);
-			this.groupBoxEqualizingReservoir.Controls.Add(this.labelEqualizingReservoirChargeRateUnit);
 			this.groupBoxEqualizingReservoir.Controls.Add(this.textBoxEqualizingReservoirChargeRate);
 			this.groupBoxEqualizingReservoir.Location = new System.Drawing.Point(8, 208);
 			this.groupBoxEqualizingReservoir.Name = "groupBoxEqualizingReservoir";
-			this.groupBoxEqualizingReservoir.Size = new System.Drawing.Size(280, 96);
+			this.groupBoxEqualizingReservoir.Size = new System.Drawing.Size(288, 96);
 			this.groupBoxEqualizingReservoir.TabIndex = 43;
 			this.groupBoxEqualizingReservoir.TabStop = false;
 			this.groupBoxEqualizingReservoir.Text = "EqualizingReservoir";
@@ -6414,15 +6342,6 @@ namespace TrainEditor2.Views
 			this.labelEqualizingReservoirEmergencyRate.TabIndex = 43;
 			this.labelEqualizingReservoirEmergencyRate.Text = "EmergencyRate:";
 			this.labelEqualizingReservoirEmergencyRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelEqualizingReservoirEmergencyRateUnit
-			// 
-			this.labelEqualizingReservoirEmergencyRateUnit.Location = new System.Drawing.Point(232, 64);
-			this.labelEqualizingReservoirEmergencyRateUnit.Name = "labelEqualizingReservoirEmergencyRateUnit";
-			this.labelEqualizingReservoirEmergencyRateUnit.Size = new System.Drawing.Size(40, 16);
-			this.labelEqualizingReservoirEmergencyRateUnit.TabIndex = 42;
-			this.labelEqualizingReservoirEmergencyRateUnit.Text = "kPa/s";
-			this.labelEqualizingReservoirEmergencyRateUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// textBoxEqualizingReservoirEmergencyRate
 			// 
@@ -6440,15 +6359,6 @@ namespace TrainEditor2.Views
 			this.labelEqualizingReservoirServiceRate.Text = "ServiceRate:";
 			this.labelEqualizingReservoirServiceRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// labelEqualizingReservoirServiceRateUnit
-			// 
-			this.labelEqualizingReservoirServiceRateUnit.Location = new System.Drawing.Point(232, 40);
-			this.labelEqualizingReservoirServiceRateUnit.Name = "labelEqualizingReservoirServiceRateUnit";
-			this.labelEqualizingReservoirServiceRateUnit.Size = new System.Drawing.Size(40, 16);
-			this.labelEqualizingReservoirServiceRateUnit.TabIndex = 39;
-			this.labelEqualizingReservoirServiceRateUnit.Text = "kPa/s";
-			this.labelEqualizingReservoirServiceRateUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// textBoxEqualizingReservoirServiceRate
 			// 
 			this.textBoxEqualizingReservoirServiceRate.Location = new System.Drawing.Point(176, 40);
@@ -6465,15 +6375,6 @@ namespace TrainEditor2.Views
 			this.labelEqualizingReservoirChargeRate.Text = "ChargeRate:";
 			this.labelEqualizingReservoirChargeRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// labelEqualizingReservoirChargeRateUnit
-			// 
-			this.labelEqualizingReservoirChargeRateUnit.Location = new System.Drawing.Point(232, 16);
-			this.labelEqualizingReservoirChargeRateUnit.Name = "labelEqualizingReservoirChargeRateUnit";
-			this.labelEqualizingReservoirChargeRateUnit.Size = new System.Drawing.Size(40, 16);
-			this.labelEqualizingReservoirChargeRateUnit.TabIndex = 36;
-			this.labelEqualizingReservoirChargeRateUnit.Text = "kPa/s";
-			this.labelEqualizingReservoirChargeRateUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// textBoxEqualizingReservoirChargeRate
 			// 
 			this.textBoxEqualizingReservoirChargeRate.Location = new System.Drawing.Point(176, 16);
@@ -6483,12 +6384,12 @@ namespace TrainEditor2.Views
 			// 
 			// groupBoxAuxiliaryReservoir
 			// 
+			this.groupBoxAuxiliaryReservoir.Controls.Add(this.comboBoxAuxiliaryReservoirChargeRateUnit);
 			this.groupBoxAuxiliaryReservoir.Controls.Add(this.labelAuxiliaryReservoirChargeRate);
-			this.groupBoxAuxiliaryReservoir.Controls.Add(this.labelAuxiliaryReservoirChargeRateUnit);
 			this.groupBoxAuxiliaryReservoir.Controls.Add(this.textBoxAuxiliaryReservoirChargeRate);
 			this.groupBoxAuxiliaryReservoir.Location = new System.Drawing.Point(8, 152);
 			this.groupBoxAuxiliaryReservoir.Name = "groupBoxAuxiliaryReservoir";
-			this.groupBoxAuxiliaryReservoir.Size = new System.Drawing.Size(280, 48);
+			this.groupBoxAuxiliaryReservoir.Size = new System.Drawing.Size(288, 48);
 			this.groupBoxAuxiliaryReservoir.TabIndex = 42;
 			this.groupBoxAuxiliaryReservoir.TabStop = false;
 			this.groupBoxAuxiliaryReservoir.Text = "AuxiliaryReservoir";
@@ -6502,15 +6403,6 @@ namespace TrainEditor2.Views
 			this.labelAuxiliaryReservoirChargeRate.Text = "ChargeRate:";
 			this.labelAuxiliaryReservoirChargeRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// labelAuxiliaryReservoirChargeRateUnit
-			// 
-			this.labelAuxiliaryReservoirChargeRateUnit.Location = new System.Drawing.Point(232, 16);
-			this.labelAuxiliaryReservoirChargeRateUnit.Name = "labelAuxiliaryReservoirChargeRateUnit";
-			this.labelAuxiliaryReservoirChargeRateUnit.Size = new System.Drawing.Size(40, 16);
-			this.labelAuxiliaryReservoirChargeRateUnit.TabIndex = 33;
-			this.labelAuxiliaryReservoirChargeRateUnit.Text = "kPa/s";
-			this.labelAuxiliaryReservoirChargeRateUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// textBoxAuxiliaryReservoirChargeRate
 			// 
 			this.textBoxAuxiliaryReservoirChargeRate.Location = new System.Drawing.Point(176, 16);
@@ -6520,18 +6412,36 @@ namespace TrainEditor2.Views
 			// 
 			// groupBoxMainReservoir
 			// 
+			this.groupBoxMainReservoir.Controls.Add(this.comboBoxMainReservoirMaximumPressureUnit);
+			this.groupBoxMainReservoir.Controls.Add(this.comboBoxMainReservoirMinimumPressureUnit);
 			this.groupBoxMainReservoir.Controls.Add(this.labelMainReservoirMaximumPressure);
 			this.groupBoxMainReservoir.Controls.Add(this.labelMainReservoirMinimumPressure);
 			this.groupBoxMainReservoir.Controls.Add(this.textBoxMainReservoirMaximumPressure);
 			this.groupBoxMainReservoir.Controls.Add(this.textBoxMainReservoirMinimumPressure);
-			this.groupBoxMainReservoir.Controls.Add(this.labelMainReservoirMaximumPressureUnit);
-			this.groupBoxMainReservoir.Controls.Add(this.labelMainReservoirMinimumPressureUnit);
 			this.groupBoxMainReservoir.Location = new System.Drawing.Point(8, 72);
 			this.groupBoxMainReservoir.Name = "groupBoxMainReservoir";
-			this.groupBoxMainReservoir.Size = new System.Drawing.Size(280, 72);
+			this.groupBoxMainReservoir.Size = new System.Drawing.Size(288, 72);
 			this.groupBoxMainReservoir.TabIndex = 41;
 			this.groupBoxMainReservoir.TabStop = false;
 			this.groupBoxMainReservoir.Text = "MainReservoir";
+			// 
+			// comboBoxMainReservoirMaximumPressureUnit
+			// 
+			this.comboBoxMainReservoirMaximumPressureUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxMainReservoirMaximumPressureUnit.FormattingEnabled = true;
+			this.comboBoxMainReservoirMaximumPressureUnit.Location = new System.Drawing.Point(232, 40);
+			this.comboBoxMainReservoirMaximumPressureUnit.Name = "comboBoxMainReservoirMaximumPressureUnit";
+			this.comboBoxMainReservoirMaximumPressureUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxMainReservoirMaximumPressureUnit.TabIndex = 57;
+			// 
+			// comboBoxMainReservoirMinimumPressureUnit
+			// 
+			this.comboBoxMainReservoirMinimumPressureUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxMainReservoirMinimumPressureUnit.FormattingEnabled = true;
+			this.comboBoxMainReservoirMinimumPressureUnit.Location = new System.Drawing.Point(232, 16);
+			this.comboBoxMainReservoirMinimumPressureUnit.Name = "comboBoxMainReservoirMinimumPressureUnit";
+			this.comboBoxMainReservoirMinimumPressureUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxMainReservoirMinimumPressureUnit.TabIndex = 56;
 			// 
 			// labelMainReservoirMaximumPressure
 			// 
@@ -6565,32 +6475,14 @@ namespace TrainEditor2.Views
 			this.textBoxMainReservoirMinimumPressure.Size = new System.Drawing.Size(48, 19);
 			this.textBoxMainReservoirMinimumPressure.TabIndex = 33;
 			// 
-			// labelMainReservoirMaximumPressureUnit
-			// 
-			this.labelMainReservoirMaximumPressureUnit.Location = new System.Drawing.Point(232, 40);
-			this.labelMainReservoirMaximumPressureUnit.Name = "labelMainReservoirMaximumPressureUnit";
-			this.labelMainReservoirMaximumPressureUnit.Size = new System.Drawing.Size(40, 16);
-			this.labelMainReservoirMaximumPressureUnit.TabIndex = 36;
-			this.labelMainReservoirMaximumPressureUnit.Text = "kPa";
-			this.labelMainReservoirMaximumPressureUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelMainReservoirMinimumPressureUnit
-			// 
-			this.labelMainReservoirMinimumPressureUnit.Location = new System.Drawing.Point(232, 16);
-			this.labelMainReservoirMinimumPressureUnit.Name = "labelMainReservoirMinimumPressureUnit";
-			this.labelMainReservoirMinimumPressureUnit.Size = new System.Drawing.Size(40, 16);
-			this.labelMainReservoirMinimumPressureUnit.TabIndex = 35;
-			this.labelMainReservoirMinimumPressureUnit.Text = "kPa";
-			this.labelMainReservoirMinimumPressureUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// groupBoxCompressor
 			// 
+			this.groupBoxCompressor.Controls.Add(this.comboBoxCompressorRateUnit);
 			this.groupBoxCompressor.Controls.Add(this.labelCompressorRate);
-			this.groupBoxCompressor.Controls.Add(this.labelCompressorRateUnit);
 			this.groupBoxCompressor.Controls.Add(this.textBoxCompressorRate);
 			this.groupBoxCompressor.Location = new System.Drawing.Point(8, 16);
 			this.groupBoxCompressor.Name = "groupBoxCompressor";
-			this.groupBoxCompressor.Size = new System.Drawing.Size(280, 48);
+			this.groupBoxCompressor.Size = new System.Drawing.Size(288, 48);
 			this.groupBoxCompressor.TabIndex = 40;
 			this.groupBoxCompressor.TabStop = false;
 			this.groupBoxCompressor.Text = "Compressor";
@@ -6603,15 +6495,6 @@ namespace TrainEditor2.Views
 			this.labelCompressorRate.TabIndex = 31;
 			this.labelCompressorRate.Text = "Rate:";
 			this.labelCompressorRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-			// 
-			// labelCompressorRateUnit
-			// 
-			this.labelCompressorRateUnit.Location = new System.Drawing.Point(232, 16);
-			this.labelCompressorRateUnit.Name = "labelCompressorRateUnit";
-			this.labelCompressorRateUnit.Size = new System.Drawing.Size(40, 16);
-			this.labelCompressorRateUnit.TabIndex = 30;
-			this.labelCompressorRateUnit.Text = "kPa/s";
-			this.labelCompressorRateUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// textBoxCompressorRate
 			// 
@@ -6631,7 +6514,7 @@ namespace TrainEditor2.Views
 			this.groupBoxBrake.Controls.Add(this.labelBrakeType);
 			this.groupBoxBrake.Controls.Add(this.labelBrakeControlSpeed);
 			this.groupBoxBrake.Controls.Add(this.labelBrakeControlSystem);
-			this.groupBoxBrake.Location = new System.Drawing.Point(312, 136);
+			this.groupBoxBrake.Location = new System.Drawing.Point(320, 136);
 			this.groupBoxBrake.Name = "groupBoxBrake";
 			this.groupBoxBrake.Size = new System.Drawing.Size(448, 120);
 			this.groupBoxBrake.TabIndex = 4;
@@ -6735,7 +6618,7 @@ namespace TrainEditor2.Views
 			this.groupBoxJerk.Controls.Add(this.buttonJerkPowerSet);
 			this.groupBoxJerk.Controls.Add(this.labelJerkPower);
 			this.groupBoxJerk.Controls.Add(this.labelJerkBrake);
-			this.groupBoxJerk.Location = new System.Drawing.Point(312, 264);
+			this.groupBoxJerk.Location = new System.Drawing.Point(320, 264);
 			this.groupBoxJerk.Name = "groupBoxJerk";
 			this.groupBoxJerk.Size = new System.Drawing.Size(112, 72);
 			this.groupBoxJerk.TabIndex = 3;
@@ -6791,7 +6674,7 @@ namespace TrainEditor2.Views
 			this.groupBoxPerformance.Controls.Add(this.labelCoefficientOfStaticFriction);
 			this.groupBoxPerformance.Controls.Add(this.labelDeceleration);
 			this.groupBoxPerformance.Controls.Add(this.labelCoefficientOfRollingResistance);
-			this.groupBoxPerformance.Location = new System.Drawing.Point(312, 8);
+			this.groupBoxPerformance.Location = new System.Drawing.Point(320, 8);
 			this.groupBoxPerformance.Name = "groupBoxPerformance";
 			this.groupBoxPerformance.Size = new System.Drawing.Size(448, 120);
 			this.groupBoxPerformance.TabIndex = 1;
@@ -6879,7 +6762,7 @@ namespace TrainEditor2.Views
 			this.groupBoxDelay.Controls.Add(this.labelDelayLocoBrake);
 			this.groupBoxDelay.Controls.Add(this.labelDelayBrake);
 			this.groupBoxDelay.Controls.Add(this.labelDelayPower);
-			this.groupBoxDelay.Location = new System.Drawing.Point(312, 344);
+			this.groupBoxDelay.Location = new System.Drawing.Point(320, 344);
 			this.groupBoxDelay.Name = "groupBoxDelay";
 			this.groupBoxDelay.Size = new System.Drawing.Size(152, 96);
 			this.groupBoxDelay.TabIndex = 2;
@@ -7422,6 +7305,123 @@ namespace TrainEditor2.Views
 			this.tabPageCar2.Text = "Car settings (2)";
 			this.tabPageCar2.UseVisualStyleBackColor = true;
 			// 
+			// comboBoxCompressorRateUnit
+			// 
+			this.comboBoxCompressorRateUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCompressorRateUnit.FormattingEnabled = true;
+			this.comboBoxCompressorRateUnit.Location = new System.Drawing.Point(232, 16);
+			this.comboBoxCompressorRateUnit.Name = "comboBoxCompressorRateUnit";
+			this.comboBoxCompressorRateUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxCompressorRateUnit.TabIndex = 57;
+			// 
+			// comboBoxAuxiliaryReservoirChargeRateUnit
+			// 
+			this.comboBoxAuxiliaryReservoirChargeRateUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxAuxiliaryReservoirChargeRateUnit.FormattingEnabled = true;
+			this.comboBoxAuxiliaryReservoirChargeRateUnit.Location = new System.Drawing.Point(232, 16);
+			this.comboBoxAuxiliaryReservoirChargeRateUnit.Name = "comboBoxAuxiliaryReservoirChargeRateUnit";
+			this.comboBoxAuxiliaryReservoirChargeRateUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxAuxiliaryReservoirChargeRateUnit.TabIndex = 57;
+			// 
+			// comboBoxEqualizingReservoirChargeRateUnit
+			// 
+			this.comboBoxEqualizingReservoirChargeRateUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxEqualizingReservoirChargeRateUnit.FormattingEnabled = true;
+			this.comboBoxEqualizingReservoirChargeRateUnit.Location = new System.Drawing.Point(232, 16);
+			this.comboBoxEqualizingReservoirChargeRateUnit.Name = "comboBoxEqualizingReservoirChargeRateUnit";
+			this.comboBoxEqualizingReservoirChargeRateUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxEqualizingReservoirChargeRateUnit.TabIndex = 57;
+			// 
+			// comboBoxEqualizingReservoirServiceRateUnit
+			// 
+			this.comboBoxEqualizingReservoirServiceRateUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxEqualizingReservoirServiceRateUnit.FormattingEnabled = true;
+			this.comboBoxEqualizingReservoirServiceRateUnit.Location = new System.Drawing.Point(232, 40);
+			this.comboBoxEqualizingReservoirServiceRateUnit.Name = "comboBoxEqualizingReservoirServiceRateUnit";
+			this.comboBoxEqualizingReservoirServiceRateUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxEqualizingReservoirServiceRateUnit.TabIndex = 58;
+			// 
+			// comboBoxEqualizingReservoirEmergencyRateUnit
+			// 
+			this.comboBoxEqualizingReservoirEmergencyRateUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxEqualizingReservoirEmergencyRateUnit.FormattingEnabled = true;
+			this.comboBoxEqualizingReservoirEmergencyRateUnit.Location = new System.Drawing.Point(232, 64);
+			this.comboBoxEqualizingReservoirEmergencyRateUnit.Name = "comboBoxEqualizingReservoirEmergencyRateUnit";
+			this.comboBoxEqualizingReservoirEmergencyRateUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxEqualizingReservoirEmergencyRateUnit.TabIndex = 59;
+			// 
+			// comboBoxBrakePipeChargeRateUnit
+			// 
+			this.comboBoxBrakePipeChargeRateUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxBrakePipeChargeRateUnit.FormattingEnabled = true;
+			this.comboBoxBrakePipeChargeRateUnit.Location = new System.Drawing.Point(232, 40);
+			this.comboBoxBrakePipeChargeRateUnit.Name = "comboBoxBrakePipeChargeRateUnit";
+			this.comboBoxBrakePipeChargeRateUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxBrakePipeChargeRateUnit.TabIndex = 58;
+			// 
+			// comboBoxBrakePipeServiceRateUnit
+			// 
+			this.comboBoxBrakePipeServiceRateUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxBrakePipeServiceRateUnit.FormattingEnabled = true;
+			this.comboBoxBrakePipeServiceRateUnit.Location = new System.Drawing.Point(232, 64);
+			this.comboBoxBrakePipeServiceRateUnit.Name = "comboBoxBrakePipeServiceRateUnit";
+			this.comboBoxBrakePipeServiceRateUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxBrakePipeServiceRateUnit.TabIndex = 59;
+			// 
+			// comboBoxBrakePipeEmergencyRateUnit
+			// 
+			this.comboBoxBrakePipeEmergencyRateUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxBrakePipeEmergencyRateUnit.FormattingEnabled = true;
+			this.comboBoxBrakePipeEmergencyRateUnit.Location = new System.Drawing.Point(232, 88);
+			this.comboBoxBrakePipeEmergencyRateUnit.Name = "comboBoxBrakePipeEmergencyRateUnit";
+			this.comboBoxBrakePipeEmergencyRateUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxBrakePipeEmergencyRateUnit.TabIndex = 60;
+			// 
+			// comboBoxStraightAirPipeServiceRateUnit
+			// 
+			this.comboBoxStraightAirPipeServiceRateUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxStraightAirPipeServiceRateUnit.FormattingEnabled = true;
+			this.comboBoxStraightAirPipeServiceRateUnit.Location = new System.Drawing.Point(232, 16);
+			this.comboBoxStraightAirPipeServiceRateUnit.Name = "comboBoxStraightAirPipeServiceRateUnit";
+			this.comboBoxStraightAirPipeServiceRateUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxStraightAirPipeServiceRateUnit.TabIndex = 62;
+			// 
+			// comboBoxStraightAirPipeEmergencyRateUnit
+			// 
+			this.comboBoxStraightAirPipeEmergencyRateUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxStraightAirPipeEmergencyRateUnit.FormattingEnabled = true;
+			this.comboBoxStraightAirPipeEmergencyRateUnit.Location = new System.Drawing.Point(232, 40);
+			this.comboBoxStraightAirPipeEmergencyRateUnit.Name = "comboBoxStraightAirPipeEmergencyRateUnit";
+			this.comboBoxStraightAirPipeEmergencyRateUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxStraightAirPipeEmergencyRateUnit.TabIndex = 63;
+			// 
+			// comboBoxStraightAirPipeReleaseRateUnit
+			// 
+			this.comboBoxStraightAirPipeReleaseRateUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxStraightAirPipeReleaseRateUnit.FormattingEnabled = true;
+			this.comboBoxStraightAirPipeReleaseRateUnit.Location = new System.Drawing.Point(232, 64);
+			this.comboBoxStraightAirPipeReleaseRateUnit.Name = "comboBoxStraightAirPipeReleaseRateUnit";
+			this.comboBoxStraightAirPipeReleaseRateUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxStraightAirPipeReleaseRateUnit.TabIndex = 64;
+			// 
+			// comboBoxBrakeCylinderEmergencyRateUnit
+			// 
+			this.comboBoxBrakeCylinderEmergencyRateUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxBrakeCylinderEmergencyRateUnit.FormattingEnabled = true;
+			this.comboBoxBrakeCylinderEmergencyRateUnit.Location = new System.Drawing.Point(232, 64);
+			this.comboBoxBrakeCylinderEmergencyRateUnit.Name = "comboBoxBrakeCylinderEmergencyRateUnit";
+			this.comboBoxBrakeCylinderEmergencyRateUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxBrakeCylinderEmergencyRateUnit.TabIndex = 58;
+			// 
+			// comboBoxBrakeCylinderReleaseRateUnit
+			// 
+			this.comboBoxBrakeCylinderReleaseRateUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxBrakeCylinderReleaseRateUnit.FormattingEnabled = true;
+			this.comboBoxBrakeCylinderReleaseRateUnit.Location = new System.Drawing.Point(232, 88);
+			this.comboBoxBrakeCylinderReleaseRateUnit.Name = "comboBoxBrakeCylinderReleaseRateUnit";
+			this.comboBoxBrakeCylinderReleaseRateUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxBrakeCylinderReleaseRateUnit.TabIndex = 59;
+			// 
 			// FormEditor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -7659,11 +7659,8 @@ namespace TrainEditor2.Views
 		private Label labelAtc;
 		private Label labelAts;
 		private GroupBox groupBoxCab;
-		private Label labelCabZUnit;
 		private TextBox textBoxCabZ;
-		private Label labelCabYUnit;
 		private TextBox textBoxCabY;
-		private Label labelCabXUnit;
 		private TextBox textBoxCabX;
 		private Label labelCabZ;
 		private Label labelCabY;
@@ -7689,13 +7686,8 @@ namespace TrainEditor2.Views
 		private Label labelHandleType;
 		private TabPage tabPageCar1;
 		private GroupBox groupBoxPressure;
-		private Label labelBrakePipeNormalPressureUnit;
 		private TextBox textBoxBrakePipeNormalPressure;
 		private Label labelBrakePipeNormalPressure;
-		private Label labelBrakeCylinderServiceMaximumPressureUnit;
-		private Label labelMainReservoirMaximumPressureUnit;
-		private Label labelMainReservoirMinimumPressureUnit;
-		private Label labelBrakeCylinderEmergencyMaximumPressureUnit;
 		private TextBox textBoxMainReservoirMaximumPressure;
 		private TextBox textBoxMainReservoirMinimumPressure;
 		private TextBox textBoxBrakeCylinderEmergencyMaximumPressure;
@@ -7715,9 +7707,7 @@ namespace TrainEditor2.Views
 		private Label labelBrakeControlSpeed;
 		private Label labelBrakeControlSystem;
 		private GroupBox groupBoxJerk;
-		private Label labelBrakeCylinderReleaseRateUnit;
 		private TextBox textBoxBrakeCylinderReleaseRate;
-		private Label labelBrakeCylinderEmergencyRateUnit;
 		private TextBox textBoxBrakeCylinderEmergencyRate;
 		private Label labelJerkPower;
 		private Label labelJerkBrake;
@@ -7756,12 +7746,7 @@ namespace TrainEditor2.Views
 		private CheckBox checkBoxIsMotorCar;
 		private Button buttonObjectOpen;
 		private Label labelExposedFrontalAreaUnit;
-		private Label labelCenterOfMassHeightUnit;
 		private Label labelLoadingSway;
-		private Label labelHeightUnit;
-		private Label labelWidthUnit;
-		private Label labelLengthUnit;
-		private Label labelMassUnit;
 		private TextBox textBoxMass;
 		private TextBox textBoxLength;
 		private TextBox textBoxWidth;
@@ -7772,8 +7757,6 @@ namespace TrainEditor2.Views
 		private Label labelObject;
 		private Label labelReversed;
 		private GroupBox groupBoxAxles;
-		private Label labelRearAxleUnit;
-		private Label labelFrontAxleUnit;
 		private TextBox textBoxRearAxle;
 		private TextBox textBoxFrontAxle;
 		private Label labelRearAxle;
@@ -7926,8 +7909,6 @@ namespace TrainEditor2.Views
 		private Label labelCouplerObject;
 		private TextBox textBoxCouplerMax;
 		private Label labelCouplerMax;
-		private Label labelCouplerMaxUnit;
-		private Label labelCouplerMinUnit;
 		private TextBox textBoxCouplerMin;
 		private Label labelCouplerMin;
 		private TabPage tabPagePanel;
@@ -8218,34 +8199,28 @@ namespace TrainEditor2.Views
 		private Label labelCabFileName;
 		private GroupBox groupBoxCameraRestriction;
 		private Button buttonCabFileNameOpen;
-		private Label labelCameraRestrictionForwardsUnit;
 		private TextBox textBoxCameraRestrictionForwards;
 		private Label labelCameraRestrictionForwards;
 		private CheckBox checkBoxCameraRestrictionDefinedForwards;
 		private Label labelCameraRestrictionDefinedForwards;
 		private CheckBox checkBoxCameraRestrictionDefinedBackwards;
 		private Label labelCameraRestrictionDefinedBackwards;
-		private Label labelCameraRestrictionBackwardsUnit;
 		private TextBox textBoxCameraRestrictionBackwards;
 		private Label labelCameraRestrictionBackwards;
 		private CheckBox checkBoxCameraRestrictionDefinedLeft;
 		private Label labelCameraRestrictionDefinedLeft;
-		private Label labelCameraRestrictionLeftUnit;
 		private TextBox textBoxCameraRestrictionLeft;
 		private Label labelCameraRestrictionLeft;
 		private CheckBox checkBoxCameraRestrictionDefinedRight;
 		private Label labelCameraRestrictionDefinedRight;
-		private Label labelCameraRestrictionRightUnit;
 		private TextBox textBoxCameraRestrictionRight;
 		private Label labelCameraRestrictionRight;
 		private CheckBox checkBoxCameraRestrictionDefinedUp;
 		private Label labelCameraRestrictionDefinedUp;
-		private Label labelCameraRestrictionUpUnit;
 		private TextBox textBoxCameraRestrictionUp;
 		private Label labelCameraRestrictionUp;
 		private CheckBox checkBoxCameraRestrictionDefinedDown;
 		private Label labelCameraRestrictionDefinedDown;
-		private Label labelCameraRestrictionDownUnit;
 		private TextBox textBoxCameraRestrictionDown;
 		private Label labelCameraRestrictionDown;
 		private Button buttonRightDoorSet;
@@ -8255,42 +8230,67 @@ namespace TrainEditor2.Views
 		private GroupBox groupBoxCompressor;
 		private TextBox textBoxCompressorRate;
 		private Label labelCompressorRate;
-		private Label labelCompressorRateUnit;
 		private GroupBox groupBoxMainReservoir;
 		private GroupBox groupBoxAuxiliaryReservoir;
 		private Label labelAuxiliaryReservoirChargeRate;
-		private Label labelAuxiliaryReservoirChargeRateUnit;
 		private TextBox textBoxAuxiliaryReservoirChargeRate;
 		private GroupBox groupBoxEqualizingReservoir;
 		private Label labelEqualizingReservoirChargeRate;
-		private Label labelEqualizingReservoirChargeRateUnit;
 		private TextBox textBoxEqualizingReservoirChargeRate;
 		private Label labelEqualizingReservoirEmergencyRate;
-		private Label labelEqualizingReservoirEmergencyRateUnit;
 		private TextBox textBoxEqualizingReservoirEmergencyRate;
 		private Label labelEqualizingReservoirServiceRate;
-		private Label labelEqualizingReservoirServiceRateUnit;
 		private TextBox textBoxEqualizingReservoirServiceRate;
 		private GroupBox groupBoxBrakePipe;
 		private Label labelBrakePipeEmergencyRate;
-		private Label labelBrakePipeEmergencyRateUnit;
 		private TextBox textBoxBrakePipeEmergencyRate;
 		private Label labelBrakePipeServiceRate;
-		private Label labelBrakePipeServiceRateUnit;
 		private TextBox textBoxBrakePipeServiceRate;
 		private Label labelBrakePipeChargeRate;
-		private Label labelBrakePipeChargeRateUnit;
 		private TextBox textBoxBrakePipeChargeRate;
 		private GroupBox groupBoxStraightAirPipe;
 		private Label labelStraightAirPipeReleaseRate;
-		private Label labelStraightAirPipeReleaseRateUnit;
 		private TextBox textBoxStraightAirPipeReleaseRate;
 		private Label labelStraightAirPipeEmergencyRate;
-		private Label labelStraightAirPipeEmergencyRateUnit;
 		private TextBox textBoxStraightAirPipeEmergencyRate;
 		private Label labelStraightAirPipeServiceRate;
-		private Label labelStraightAirPipeServiceRateUnit;
 		private TextBox textBoxStraightAirPipeServiceRate;
 		private GroupBox groupBoxBrakeCylinder;
+		private ComboBox comboBoxMassUnit;
+		private ComboBox comboBoxCenterOfMassHeightUnit;
+		private ComboBox comboBoxHeightUnit;
+		private ComboBox comboBoxWidthUnit;
+		private ComboBox comboBoxLengthUnit;
+		private ComboBox comboBoxRearAxleUnit;
+		private ComboBox comboBoxFrontAxleUnit;
+		private ComboBox comboBoxCabZUnit;
+		private ComboBox comboBoxCabYUnit;
+		private ComboBox comboBoxCabXUnit;
+		private ComboBox comboBoxCameraRestrictionDownUnit;
+		private ComboBox comboBoxCameraRestrictionUpUnit;
+		private ComboBox comboBoxCameraRestrictionRightUnit;
+		private ComboBox comboBoxCameraRestrictionLeftUnit;
+		private ComboBox comboBoxCameraRestrictionBackwardsUnit;
+		private ComboBox comboBoxCameraRestrictionForwardsUnit;
+		private ComboBox comboBoxCouplerMaxUnit;
+		private ComboBox comboBoxCouplerMinUnit;
+		private ComboBox comboBoxBrakeCylinderEmergencyMaximumPressureUnit;
+		private ComboBox comboBoxBrakeCylinderServiceMaximumPressureUnit;
+		private ComboBox comboBoxBrakePipeNormalPressureUnit;
+		private ComboBox comboBoxMainReservoirMaximumPressureUnit;
+		private ComboBox comboBoxMainReservoirMinimumPressureUnit;
+		private ComboBox comboBoxEqualizingReservoirEmergencyRateUnit;
+		private ComboBox comboBoxEqualizingReservoirServiceRateUnit;
+		private ComboBox comboBoxEqualizingReservoirChargeRateUnit;
+		private ComboBox comboBoxAuxiliaryReservoirChargeRateUnit;
+		private ComboBox comboBoxCompressorRateUnit;
+		private ComboBox comboBoxBrakeCylinderReleaseRateUnit;
+		private ComboBox comboBoxBrakeCylinderEmergencyRateUnit;
+		private ComboBox comboBoxStraightAirPipeReleaseRateUnit;
+		private ComboBox comboBoxStraightAirPipeEmergencyRateUnit;
+		private ComboBox comboBoxStraightAirPipeServiceRateUnit;
+		private ComboBox comboBoxBrakePipeEmergencyRateUnit;
+		private ComboBox comboBoxBrakePipeServiceRateUnit;
+		private ComboBox comboBoxBrakePipeChargeRateUnit;
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Units;
 using Prism.Mvvm;
 
 namespace TrainEditor2.Models.Trains
@@ -11,8 +12,8 @@ namespace TrainEditor2.Models.Trains
 		internal class Bogie : BindableBase, ICloneable
 		{
 			private bool definedAxles;
-			private double frontAxle;
-			private double rearAxle;
+			private Quantity.Length frontAxle;
+			private Quantity.Length rearAxle;
 			private bool reversed;
 			private string _object;
 
@@ -28,7 +29,7 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			internal double FrontAxle
+			internal Quantity.Length FrontAxle
 			{
 				get
 				{
@@ -40,7 +41,7 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			internal double RearAxle
+			internal Quantity.Length RearAxle
 			{
 				get
 				{
@@ -84,10 +85,10 @@ namespace TrainEditor2.Models.Trains
 
 		internal class Door : BindableBase, ICloneable
 		{
-			private double width;
-			private double maxTolerance;
+			private Quantity.Length width;
+			private Quantity.Length maxTolerance;
 
-			internal double Width
+			internal Quantity.Length Width
 			{
 				get
 				{
@@ -99,7 +100,7 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			internal double MaxTolerance
+			internal Quantity.Length MaxTolerance
 			{
 				get
 				{
@@ -113,8 +114,8 @@ namespace TrainEditor2.Models.Trains
 
 			internal Door()
 			{
-				Width = 1000.0;
-				MaxTolerance = 0.0;
+				Width = new Quantity.Length(1000.0, Unit.Length.Millimeter);
+				MaxTolerance = new Quantity.Length(0.0, Unit.Length.Millimeter);
 			}
 
 			public object Clone()
@@ -132,14 +133,14 @@ namespace TrainEditor2.Models.Trains
 			TypeD = 3
 		}
 
-		private double mass;
-		private double length;
-		private double width;
-		private double height;
-		private double centerOfGravityHeight;
+		private Quantity.Mass mass;
+		private Quantity.Length length;
+		private Quantity.Length width;
+		private Quantity.Length height;
+		private Quantity.Length centerOfGravityHeight;
 		private bool definedAxles;
-		private double frontAxle;
-		private double rearAxle;
+		private Quantity.Length frontAxle;
+		private Quantity.Length rearAxle;
 		private Bogie frontBogie;
 		private Bogie rearBogie;
 		private double exposedFrontalArea;
@@ -156,7 +157,7 @@ namespace TrainEditor2.Models.Trains
 		private Door rightDoor;
 		private ReAdhesionDevices reAdhesionDevice;
 
-		internal double Mass
+		internal Quantity.Mass Mass
 		{
 			get
 			{
@@ -168,7 +169,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double Length
+		internal Quantity.Length Length
 		{
 			get
 			{
@@ -180,7 +181,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double Width
+		internal Quantity.Length Width
 		{
 			get
 			{
@@ -192,7 +193,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double Height
+		internal Quantity.Length Height
 		{
 			get
 			{
@@ -204,7 +205,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double CenterOfGravityHeight
+		internal Quantity.Length CenterOfGravityHeight
 		{
 			get
 			{
@@ -228,7 +229,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double FrontAxle
+		internal Quantity.Length FrontAxle
 		{
 			get
 			{
@@ -240,7 +241,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double RearAxle
+		internal Quantity.Length RearAxle
 		{
 			get
 			{
@@ -434,14 +435,14 @@ namespace TrainEditor2.Models.Trains
 
 		internal Car()
 		{
-			Mass = 40.0;
-			Length = 20.0;
-			Width = 2.6;
-			Height = 3.2;
-			CenterOfGravityHeight = 1.5;
+			Mass = new Quantity.Mass(40.0, Unit.Mass.Tonne);
+			Length = new Quantity.Length(20.0);
+			Width = new Quantity.Length(2.6);
+			Height = new Quantity.Length(3.2);
+			CenterOfGravityHeight = new Quantity.Length(1.5);
 			DefinedAxles = false;
-			FrontAxle = 8.0;
-			RearAxle = -8.0;
+			FrontAxle = new Quantity.Length(8.0);
+			RearAxle = new Quantity.Length(-8.0);
 			FrontBogie = new Bogie();
 			RearBogie = new Bogie();
 			ExposedFrontalArea = 5.0;

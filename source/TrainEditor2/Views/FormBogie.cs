@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows.Forms;
+using OpenBveApi.Units;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -18,6 +20,11 @@ namespace TrainEditor2.Views
 			InitializeComponent();
 
 			disposable = new CompositeDisposable();
+
+			string[] lengthUnits = Enum.GetValues(typeof(Unit.Length)).OfType<Enum>().Select(x => Unit.GetRewords(x).First()).ToArray();
+
+			comboBoxFrontAxleUnit.Items.AddRange((string[])lengthUnits.Clone());
+			comboBoxRearAxleUnit.Items.AddRange((string[])lengthUnits.Clone());
 
 			bogie.DefinedAxles
 				.BindTo(
@@ -62,6 +69,22 @@ namespace TrainEditor2.Views
 				.BindToErrorProvider(errorProvider, textBoxFrontAxle)
 				.AddTo(disposable);
 
+			bogie.FrontAxleUnit
+				.BindTo(
+					comboBoxFrontAxleUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Length)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxFrontAxleUnit.SelectedIndexChanged += h,
+							h => comboBoxFrontAxleUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(disposable);
+
 			bogie.RearAxle
 				.BindTo(
 					textBoxRearAxle,
@@ -80,6 +103,22 @@ namespace TrainEditor2.Views
 
 			bogie.RearAxle
 				.BindToErrorProvider(errorProvider, textBoxRearAxle)
+				.AddTo(disposable);
+
+			bogie.RearAxleUnit
+				.BindTo(
+					comboBoxRearAxleUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Length)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxRearAxleUnit.SelectedIndexChanged += h,
+							h => comboBoxRearAxleUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
 				.AddTo(disposable);
 
 			bogie.Reversed

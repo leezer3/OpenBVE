@@ -1,10 +1,11 @@
-﻿using System.Globalization;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Units;
 using TrainEditor2.IO.Panels.Xml;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.Systems;
@@ -18,7 +19,6 @@ namespace TrainEditor2.IO.Trains.Xml
 		{
 			Cab cab = new EmbeddedCab();
 
-			CultureInfo culture = CultureInfo.InvariantCulture;
 			string basePath = System.IO.Path.GetDirectoryName(fileName);
 
 			string section = parent.Name.LocalName;
@@ -81,28 +81,30 @@ namespace TrainEditor2.IO.Trains.Xml
 						if (value.Any())
 						{
 							string[] values = value.Split(',');
+							string[] unitValues = keyNode.Attributes().FirstOrDefault(x => string.Equals(x.Name.LocalName, "Unit", StringComparison.InvariantCultureIgnoreCase))?.Value.Split(',');
 
 							if (values.Length == 3)
 							{
 								double x, y, z;
+								Unit.Length xUnit = Unit.Length.Millimeter, yUnit = Unit.Length.Millimeter, zUnit = Unit.Length.Millimeter;
 
-								if (!NumberFormats.TryParseDoubleVb6(values[0], out x))
+								if (!NumberFormats.TryParseDoubleVb6(values[0], out x) || unitValues != null && unitValues.Length > 0 && !Unit.TryParse(unitValues[0], true, out xUnit))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"X must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
-								else if (!NumberFormats.TryParseDoubleVb6(values[1], out y))
+								else if (!NumberFormats.TryParseDoubleVb6(values[1], out y) || unitValues != null && unitValues.Length > 1 && !Unit.TryParse(unitValues[1], true, out yUnit))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"Y must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
-								else if (!NumberFormats.TryParseDoubleVb6(values[2], out z))
+								else if (!NumberFormats.TryParseDoubleVb6(values[2], out z) || unitValues != null && unitValues.Length > 2 && !Unit.TryParse(unitValues[2], true, out zUnit))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"Z must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
 								else
 								{
-									cab.PositionX = x;
-									cab.PositionY = y;
-									cab.PositionZ = z;
+									cab.PositionX = new Quantity.Length(x, xUnit);
+									cab.PositionY = new Quantity.Length(y, yUnit);
+									cab.PositionZ = new Quantity.Length(z, zUnit);
 								}
 							}
 							else
@@ -135,9 +137,7 @@ namespace TrainEditor2.IO.Trains.Xml
 
 		private static CameraRestriction ParseCameraRestrictionNode(string fileName, XElement parent)
 		{
-			CameraRestriction cameraRestriction = new CameraRestriction();
-
-			CultureInfo culture = CultureInfo.InvariantCulture;
+			CameraRestriction restriction = new CameraRestriction();
 
 			string section = parent.Name.LocalName;
 
@@ -152,96 +152,96 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "forwards":
 						if (value.Any())
 						{
-							double result;
+							Quantity.Length result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result))
+							if (!Quantity.Length.TryParse(keyNode, true, out result))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
 							else
 							{
-								cameraRestriction.DefinedForwards = true;
-								cameraRestriction.Forwards = result;
+								restriction.DefinedForwards = true;
+								restriction.Forwards = result;
 							}
 						}
 						break;
 					case "backwards":
 						if (value.Any())
 						{
-							double result;
+							Quantity.Length result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result))
+							if (!Quantity.Length.TryParse(keyNode, true, out result))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
 							else
 							{
-								cameraRestriction.DefinedBackwards = true;
-								cameraRestriction.Backwards = result;
+								restriction.DefinedBackwards = true;
+								restriction.Backwards = result;
 							}
 						}
 						break;
 					case "left":
 						if (value.Any())
 						{
-							double result;
+							Quantity.Length result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result))
+							if (!Quantity.Length.TryParse(keyNode, true, out result))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
 							else
 							{
-								cameraRestriction.DefinedLeft = true;
-								cameraRestriction.Left = result;
+								restriction.DefinedLeft = true;
+								restriction.Left = result;
 							}
 						}
 						break;
 					case "right":
 						if (value.Any())
 						{
-							double result;
+							Quantity.Length result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result))
+							if (!Quantity.Length.TryParse(keyNode, true, out result))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
 							else
 							{
-								cameraRestriction.DefinedRight = true;
-								cameraRestriction.Right = result;
+								restriction.DefinedRight = true;
+								restriction.Right = result;
 							}
 						}
 						break;
 					case "up":
 						if (value.Any())
 						{
-							double result;
+							Quantity.Length result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result))
+							if (!Quantity.Length.TryParse(keyNode, true, out result))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
 							else
 							{
-								cameraRestriction.DefinedUp = true;
-								cameraRestriction.Up = result;
+								restriction.DefinedUp = true;
+								restriction.Up = result;
 							}
 						}
 						break;
 					case "down":
 						if (value.Any())
 						{
-							double result;
+							Quantity.Length result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result))
+							if (!Quantity.Length.TryParse(keyNode, true, out result))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
 							else
 							{
-								cameraRestriction.DefinedDown = true;
-								cameraRestriction.Down = result;
+								restriction.DefinedDown = true;
+								restriction.Down = result;
 							}
 						}
 						break;
@@ -251,28 +251,28 @@ namespace TrainEditor2.IO.Trains.Xml
 				}
 			}
 
-			if (cameraRestriction.DefinedForwards && cameraRestriction.DefinedBackwards && cameraRestriction.Forwards < cameraRestriction.Backwards)
+			if (restriction.DefinedForwards && restriction.DefinedBackwards && restriction.Forwards < restriction.Backwards)
 			{
 				Interface.AddMessage(MessageType.Error, false, $"Backwards is expected to be less than or equal to Forwards in {section} in {fileName}");
 
-				cameraRestriction.DefinedForwards = cameraRestriction.DefinedBackwards = false;
+				restriction.DefinedForwards = restriction.DefinedBackwards = false;
 			}
 
-			if (cameraRestriction.DefinedLeft && cameraRestriction.DefinedRight && cameraRestriction.Right < cameraRestriction.Left)
+			if (restriction.DefinedLeft && restriction.DefinedRight && restriction.Right < restriction.Left)
 			{
 				Interface.AddMessage(MessageType.Error, false, $"Left is expected to be less than or equal to Right in {section} in {fileName}");
 
-				cameraRestriction.DefinedLeft = cameraRestriction.DefinedRight = false;
+				restriction.DefinedLeft = restriction.DefinedRight = false;
 			}
 
-			if (cameraRestriction.DefinedUp && cameraRestriction.DefinedDown && cameraRestriction.Up < cameraRestriction.Down)
+			if (restriction.DefinedUp && restriction.DefinedDown && restriction.Up < restriction.Down)
 			{
 				Interface.AddMessage(MessageType.Error, false, $"Down is expected to be less than or equal to Up in {section} in {fileName}");
 
-				cameraRestriction.DefinedUp = cameraRestriction.DefinedDown = false;
+				restriction.DefinedUp = restriction.DefinedDown = false;
 			}
 
-			return cameraRestriction;
+			return restriction;
 		}
 	}
 }

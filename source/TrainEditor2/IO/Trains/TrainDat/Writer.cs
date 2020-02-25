@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using OpenBveApi.Units;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.Simulation.TrainManager;
 
@@ -58,8 +59,8 @@ namespace TrainEditor2.IO.Trains.TrainDat
 			builder.AppendLine($"{firstMotorCar.Jerk.Power.Down.ToString(culture).PadRight(n, ' ')}; JerkPowerDown");
 			builder.AppendLine($"{firstMotorCar.Jerk.Brake.Up.ToString(culture).PadRight(n, ' ')}; JerkBrakeUp");
 			builder.AppendLine($"{firstMotorCar.Jerk.Brake.Down.ToString(culture).PadRight(n, ' ')}; JerkBrakeDown");
-			builder.AppendLine($"{firstMotorCar.Pressure.BrakeCylinder.EmergencyRate.ToString(culture).PadRight(n, ' ')}; BrakeCylinderUp");
-			builder.AppendLine($"{firstMotorCar.Pressure.BrakeCylinder.ReleaseRate.ToString(culture).PadRight(n, ' ')}; BrakeCylinderDown");
+			builder.AppendLine($"{firstMotorCar.Pressure.BrakeCylinder.EmergencyRate.ToNewUnit(Unit.PressureRate.KilopascalPerSecond).Value.ToString(culture).PadRight(n, ' ')}; BrakeCylinderUp");
+			builder.AppendLine($"{firstMotorCar.Pressure.BrakeCylinder.ReleaseRate.ToNewUnit(Unit.PressureRate.KilopascalPerSecond).Value.ToString(culture).PadRight(n, ' ')}; BrakeCylinderDown");
 
 			builder.AppendLine("#BRAKE");
 			builder.AppendLine($"{((int)firstMotorCar.Brake.BrakeType).ToString(culture).PadRight(n, ' ')}; BrakeType");
@@ -68,11 +69,11 @@ namespace TrainEditor2.IO.Trains.TrainDat
 			builder.AppendLine($"{((int)firstMotorCar.Brake.LocoBrakeType).ToString(culture).PadRight(n, ' ')}; LocoBrakeType (1.5.3.4+)");
 
 			builder.AppendLine("#PRESSURE");
-			builder.AppendLine($"{firstMotorCar.Pressure.BrakeCylinder.ServiceMaximumPressure.ToString(culture).PadRight(n, ' ')}; BrakeCylinderServiceMaximumPressure");
-			builder.AppendLine($"{firstMotorCar.Pressure.BrakeCylinder.EmergencyMaximumPressure.ToString(culture).PadRight(n, ' ')}; BrakeCylinderEmergencyMaximumPressure");
-			builder.AppendLine($"{firstMotorCar.Pressure.MainReservoir.MinimumPressure.ToString(culture).PadRight(n, ' ')}; MainReservoirMinimumPressure");
-			builder.AppendLine($"{firstMotorCar.Pressure.MainReservoir.MaximumPressure.ToString(culture).PadRight(n, ' ')}; MainReservoirMaximumPressure");
-			builder.AppendLine($"{firstMotorCar.Pressure.BrakePipe.NormalPressure.ToString(culture).PadRight(n, ' ')}; BrakePipeNormalPressure");
+			builder.AppendLine($"{firstMotorCar.Pressure.BrakeCylinder.ServiceMaximumPressure.ToNewUnit(Unit.Pressure.Kilopascal).Value.ToString(culture).PadRight(n, ' ')}; BrakeCylinderServiceMaximumPressure");
+			builder.AppendLine($"{firstMotorCar.Pressure.BrakeCylinder.EmergencyMaximumPressure.ToNewUnit(Unit.Pressure.Kilopascal).Value.ToString(culture).PadRight(n, ' ')}; BrakeCylinderEmergencyMaximumPressure");
+			builder.AppendLine($"{firstMotorCar.Pressure.MainReservoir.MinimumPressure.ToNewUnit(Unit.Pressure.Kilopascal).Value.ToString(culture).PadRight(n, ' ')}; MainReservoirMinimumPressure");
+			builder.AppendLine($"{firstMotorCar.Pressure.MainReservoir.MaximumPressure.ToNewUnit(Unit.Pressure.Kilopascal).Value.ToString(culture).PadRight(n, ' ')}; MainReservoirMaximumPressure");
+			builder.AppendLine($"{firstMotorCar.Pressure.BrakePipe.NormalPressure.ToNewUnit(Unit.Pressure.Kilopascal).Value.ToString(culture).PadRight(n, ' ')}; BrakePipeNormalPressure");
 
 			builder.AppendLine("#HANDLE");
 			builder.AppendLine($"{((int)train.Handle.HandleType).ToString(culture).PadRight(n, ' ')}; HandleType");
@@ -86,21 +87,21 @@ namespace TrainEditor2.IO.Trains.TrainDat
 			builder.AppendLine($"{train.Handle.DriverBrakeNotches.ToString(culture).PadRight(n, ' ')}; DriverBrakeNotches (1.5.3.11+)");
 
 			builder.AppendLine("#CAB");
-			builder.AppendLine($"{firstCab.PositionX.ToString(culture).PadRight(n, ' ')}; X");
-			builder.AppendLine($"{firstCab.PositionY.ToString(culture).PadRight(n, ' ')}; Y");
-			builder.AppendLine($"{firstCab.PositionZ.ToString(culture).PadRight(n, ' ')}; Z");
+			builder.AppendLine($"{firstCab.PositionX.ToNewUnit(Unit.Length.Millimeter).Value.ToString(culture).PadRight(n, ' ')}; X");
+			builder.AppendLine($"{firstCab.PositionY.ToNewUnit(Unit.Length.Millimeter).Value.ToString(culture).PadRight(n, ' ')}; Y");
+			builder.AppendLine($"{firstCab.PositionZ.ToNewUnit(Unit.Length.Millimeter).Value.ToString(culture).PadRight(n, ' ')}; Z");
 			builder.AppendLine($"{train.InitialDriverCar.ToString(culture).PadRight(n, ' ')}; DriverCar");
 
 			builder.AppendLine("#CAR");
-			builder.AppendLine($"{firstMotorCar.Mass.ToString(culture).PadRight(n, ' ')}; MotorCarMass");
+			builder.AppendLine($"{firstMotorCar.Mass.ToNewUnit(Unit.Mass.Tonne).Value.ToString(culture).PadRight(n, ' ')}; MotorCarMass");
 			builder.AppendLine($"{train.Cars.Count(c => c is MotorCar).ToString(culture).PadRight(n, ' ')}; NumberOfMotorCars");
-			builder.AppendLine($"{(firstTrailerCar ?? new UncontrolledTrailerCar()).Mass.ToString(culture).PadRight(n, ' ')}; TrailerCarMass");
+			builder.AppendLine($"{(firstTrailerCar ?? new UncontrolledTrailerCar()).Mass.ToNewUnit(Unit.Mass.Tonne).Value.ToString(culture).PadRight(n, ' ')}; TrailerCarMass");
 			builder.AppendLine($"{train.Cars.Count(c => c is TrailerCar).ToString(culture).PadRight(n, ' ')}; NumberOfTrailerCars");
-			builder.AppendLine($"{firstMotorCar.Length.ToString(culture).PadRight(n, ' ')}; LengthOfACar");
+			builder.AppendLine($"{firstMotorCar.Length.ToNewUnit(Unit.Length.Meter).Value.ToString(culture).PadRight(n, ' ')}; LengthOfACar");
 			builder.AppendLine($"{(train.Cars.First() is MotorCar ? "1" : "0").PadRight(n, ' ')}; FrontCarIsAMotorCar");
-			builder.AppendLine($"{firstMotorCar.Width.ToString(culture).PadRight(n, ' ')}; WidthOfACar");
-			builder.AppendLine($"{firstMotorCar.Height.ToString(culture).PadRight(n, ' ')}; HeightOfACar");
-			builder.AppendLine($"{firstMotorCar.CenterOfGravityHeight.ToString(culture).PadRight(n, ' ')}; CenterOfGravityHeight");
+			builder.AppendLine($"{firstMotorCar.Width.ToNewUnit(Unit.Length.Meter).Value.ToString(culture).PadRight(n, ' ')}; WidthOfACar");
+			builder.AppendLine($"{firstMotorCar.Height.ToNewUnit(Unit.Length.Meter).Value.ToString(culture).PadRight(n, ' ')}; HeightOfACar");
+			builder.AppendLine($"{firstMotorCar.CenterOfGravityHeight.ToNewUnit(Unit.Length.Meter).Value.ToString(culture).PadRight(n, ' ')}; CenterOfGravityHeight");
 			builder.AppendLine($"{firstMotorCar.ExposedFrontalArea.ToString(culture).PadRight(n, ' ')}; ExposedFrontalArea");
 			builder.AppendLine($"{firstMotorCar.UnexposedFrontalArea.ToString(culture).PadRight(n, ' ')}; UnexposedFrontalArea");
 
@@ -115,8 +116,8 @@ namespace TrainEditor2.IO.Trains.TrainDat
 			builder.AppendLine($"{((int)train.Device.PassAlarm).ToString(culture).PadRight(n, ' ')}; PassAlarm");
 			builder.AppendLine($"{((int)train.Device.DoorOpenMode).ToString(culture).PadRight(n, ' ')}; DoorOpenMode");
 			builder.AppendLine($"{((int)train.Device.DoorCloseMode).ToString(culture).PadRight(n, ' ')}; DoorCloseMode");
-			builder.AppendLine($"{firstMotorCar.LeftDoor.Width.ToString(culture).PadRight(n, ' ')}; DoorWidth");
-			builder.AppendLine($"{firstMotorCar.LeftDoor.MaxTolerance.ToString(culture).PadRight(n, ' ')}; DoorMaxTolerance");
+			builder.AppendLine($"{firstMotorCar.LeftDoor.Width.ToNewUnit(Unit.Length.Millimeter).Value.ToString(culture).PadRight(n, ' ')}; DoorWidth");
+			builder.AppendLine($"{firstMotorCar.LeftDoor.MaxTolerance.ToNewUnit(Unit.Length.Millimeter).Value.ToString(culture).PadRight(n, ' ')}; DoorMaxTolerance");
 
 			TrainManager.MotorSound.Table[] powerTables = firstMotorCar.Motor.Tracks.Where(x => x.Type == Motor.TrackType.Power).Select(x => Motor.Track.TrackToMotorSoundTable(x, y => y, y => y, y => y)).ToArray();
 			TrainManager.MotorSound.Table[] brakeTables = firstMotorCar.Motor.Tracks.Where(x => x.Type == Motor.TrackType.Brake).Select(x => Motor.Track.TrackToMotorSoundTable(x, y => y, y => y, y => y)).ToArray();

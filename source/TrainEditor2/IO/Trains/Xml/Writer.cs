@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
 using TrainEditor2.Extensions;
@@ -14,8 +13,6 @@ namespace TrainEditor2.IO.Trains.Xml
 	{
 		internal static void Write(string fileName, Train train)
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			XDocument xml = new XDocument(new XDeclaration("1.0", "utf-8", "yes"));
 
 			XElement openBVE = new XElement("openBVE",
@@ -28,27 +25,16 @@ namespace TrainEditor2.IO.Trains.Xml
 				new XElement("Version", editorVersion.ToString()),
 				WriteHandleNode(train.Handle),
 				WriteDeviceNode(train.Device),
-				new XElement("InitialDriverCar", train.InitialDriverCar.ToString(culture))
+				new XElement("InitialDriverCar", train.InitialDriverCar.ToString(culture)),
+				WriteCarsNode(fileName, train.Cars, train.Couplers)
 			);
 			openBVE.Add(trainNode);
-
-			if (train.Cars.Any())
-			{
-				trainNode.Add(new XElement("Cars", train.Cars.Select(x => WriteCarNode(fileName, x))));
-			}
-
-			if (train.Couplers.Any())
-			{
-				trainNode.Add(new XElement("Couplers", train.Couplers.Select(x => WriteCouplerNode(fileName, x))));
-			}
 
 			xml.Save(fileName);
 		}
 
 		private static XElement WriteHandleNode(Handle handle)
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			return new XElement("Handle",
 				new XElement("HandleType", ((int)handle.HandleType).ToString(culture)),
 				new XElement("PowerNotches", handle.PowerNotches.ToString(culture)),
@@ -64,8 +50,6 @@ namespace TrainEditor2.IO.Trains.Xml
 
 		private static XElement WriteDeviceNode(Device device)
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			return new XElement("Device",
 				new XElement("Ats", new XElement("Type", ((int)device.Ats).ToString(culture))),
 				new XElement("Atc", new XElement("Type", ((int)device.Atc).ToString(culture))),
@@ -79,24 +63,35 @@ namespace TrainEditor2.IO.Trains.Xml
 			);
 		}
 
+		private static XElement WriteCarsNode(string fileName, ICollection<Car> cars, ICollection<Coupler> couplers)
+		{
+			XElement[] carNodes = cars.Select(x => WriteCarNode(fileName, x)).ToArray();
+			XElement[] couplerNodes = couplers.Select(x => WriteCouplerNode(fileName, x)).ToArray();
+
+			return new XElement("Cars", carNodes.Zip(couplerNodes, (x, y) => new[] { x, y }).SelectMany(x => x).Concat(carNodes.Skip(couplerNodes.Length)));
+		}
+
 		private static XElement WriteCarNode(string fileName, Car car)
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			XElement carNode = new XElement("Car");
 
 			carNode.Add(
 				new XElement("IsMotorCar", car is MotorCar),
-				new XElement("Mass", car.Mass.ToString(culture)),
-				new XElement("Length", car.Length.ToString(culture)),
-				new XElement("Width", car.Width.ToString(culture)),
-				new XElement("Height", car.Height.ToString(culture)),
-				new XElement("CenterOfGravityHeight", car.CenterOfGravityHeight.ToString(culture))
+				car.Mass.ToXElement("Mass"),
+				car.Length.ToXElement("Length"),
+				car.Width.ToXElement("Width"),
+				car.Height.ToXElement("Height"),
+				car.CenterOfGravityHeight.ToXElement("CenterOfGravityHeight")
 			);
 
 			if (car.DefinedAxles)
 			{
-				carNode.Add(new XElement("Axles", $"{car.FrontAxle.ToString(culture)}, {car.RearAxle.ToString(culture)}"));
+				carNode.Add(
+					new XElement("Axles",
+						new XAttribute("Unit", $"{car.FrontAxle.UnitValue}, {car.RearAxle.UnitValue}"),
+						$"{car.FrontAxle.Value.ToString(culture)}, {car.RearAxle.Value.ToString(culture)}"
+					)
+				);
 			}
 
 			carNode.Add(
@@ -141,13 +136,16 @@ namespace TrainEditor2.IO.Trains.Xml
 
 		private static XElement WriteBogieNode(string fileName, string nodeName, Car.Bogie bogie)
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			XElement bogieNode = new XElement(nodeName);
 
 			if (bogie.DefinedAxles)
 			{
-				bogieNode.Add(new XElement("Axles", $"{bogie.FrontAxle.ToString(culture)}, {bogie.RearAxle.ToString(culture)}"));
+				bogieNode.Add(
+					new XElement("Axles",
+						new XAttribute("Unit", $"{bogie.FrontAxle.UnitValue}, {bogie.RearAxle.UnitValue}"),
+						$"{bogie.FrontAxle.Value.ToString(culture)}, {bogie.RearAxle.Value.ToString(culture)}"
+					)
+				);
 			}
 
 			bogieNode.Add(
@@ -160,8 +158,6 @@ namespace TrainEditor2.IO.Trains.Xml
 
 		private static XElement WritePerformanceNode(Performance performance)
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			return new XElement("Performance",
 				new XElement("Deceleration", performance.Deceleration.ToString(culture)),
 				new XElement("CoefficientOfStaticFriction", performance.CoefficientOfStaticFriction.ToString(culture)),
@@ -181,8 +177,6 @@ namespace TrainEditor2.IO.Trains.Xml
 
 		private static XElement WriteDelayEntriesNode(string nodeName, ICollection<Delay.Entry> entries)
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			return new XElement(nodeName,
 				new XElement("Up", string.Join(", ", entries.Select(x => x.Up.ToString(culture)))),
 				new XElement("Down", string.Join(", ", entries.Select(x => x.Down.ToString(culture))))
@@ -199,8 +193,6 @@ namespace TrainEditor2.IO.Trains.Xml
 
 		private static XElement WriteJerkEntryNode(string nodeName, Jerk.Entry entry)
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			return new XElement(nodeName,
 				new XElement("Up", entry.Up.ToString(culture)),
 				new XElement("Down", entry.Down.ToString(culture))
@@ -209,8 +201,6 @@ namespace TrainEditor2.IO.Trains.Xml
 
 		private static XElement WriteBrakeNode(Brake brake)
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			return new XElement("Brake",
 				new XElement("BrakeType", ((int)brake.BrakeType).ToString(culture)),
 				new XElement("LocoBrakeType", ((int)brake.LocoBrakeType).ToString(culture)),
@@ -234,92 +224,74 @@ namespace TrainEditor2.IO.Trains.Xml
 
 		private static XElement WriteCompressorNode(Compressor compressor)
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			return new XElement("Compressor",
-				new XElement("Rate", compressor.Rate.ToString(culture))
+				compressor.Rate.ToXElement("Rate")
 			);
 		}
 
 		private static XElement WriteMainReservoirNode(MainReservoir mainReservoir)
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			return new XElement("MainReservoir",
-				new XElement("MinimumPressure", mainReservoir.MinimumPressure.ToString(culture)),
-				new XElement("MaximumPressure", mainReservoir.MaximumPressure.ToString(culture))
+				mainReservoir.MinimumPressure.ToXElement("MinimumPressure"),
+				mainReservoir.MaximumPressure.ToXElement("MaximumPressure")
 			);
 		}
 
 		private static XElement WriteAuxiliaryReservoirNode(AuxiliaryReservoir auxiliaryReservoir)
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			return new XElement("AuxiliaryReservoir",
-				new XElement("ChargeRate", auxiliaryReservoir.ChargeRate.ToString(culture))
+				auxiliaryReservoir.ChargeRate.ToXElement("ChargeRate")
 			);
 		}
 
 		private static XElement WriteEqualizingReservoirNode(EqualizingReservoir equalizingReservoir)
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			return new XElement("EqualizingReservoir",
-				new XElement("ChargeRate", equalizingReservoir.ChargeRate.ToString(culture)),
-				new XElement("ServiceRate", equalizingReservoir.ServiceRate.ToString(culture)),
-				new XElement("EmergencyRate", equalizingReservoir.EmergencyRate.ToString(culture))
+				equalizingReservoir.ChargeRate.ToXElement("ChargeRate"),
+				equalizingReservoir.ServiceRate.ToXElement("ServiceRate"),
+				equalizingReservoir.EmergencyRate.ToXElement("EmergencyRate")
 			);
 		}
 
 		private static XElement WriteBrakePipeNode(BrakePipe brakePipe)
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			return new XElement("BrakePipe",
-				new XElement("NormalPressure", brakePipe.NormalPressure.ToString(culture)),
-				new XElement("ChargeRate", brakePipe.ChargeRate.ToString(culture)),
-				new XElement("ServiceRate", brakePipe.ServiceRate.ToString(culture)),
-				new XElement("EmergencyRate", brakePipe.EmergencyRate.ToString(culture))
+				brakePipe.NormalPressure.ToXElement("NormalPressure"),
+				brakePipe.ChargeRate.ToXElement("ChargeRate"),
+				brakePipe.ServiceRate.ToXElement("ServiceRate"),
+				brakePipe.EmergencyRate.ToXElement("EmergencyRate")
 			);
 		}
 
 		private static XElement WriteStraightAirPipeNode(StraightAirPipe straightAirPipe)
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			return new XElement("StraightAirPipe",
-				new XElement("ServiceRate", straightAirPipe.ServiceRate.ToString(culture)),
-				new XElement("EmergencyRate", straightAirPipe.EmergencyRate.ToString(culture)),
-				new XElement("ReleaseRate", straightAirPipe.ReleaseRate.ToString(culture))
+				straightAirPipe.ServiceRate.ToXElement("ServiceRate"),
+				straightAirPipe.EmergencyRate.ToXElement("EmergencyRate"),
+				straightAirPipe.ReleaseRate.ToXElement("ReleaseRate")
 			);
 		}
 
 		private static XElement WriteBrakeCylinderNode(BrakeCylinder brakeCylinder)
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			return new XElement("BrakeCylinder",
-				new XElement("ServiceMaximumPressure", brakeCylinder.ServiceMaximumPressure.ToString(culture)),
-				new XElement("EmergencyMaximumPressure", brakeCylinder.EmergencyMaximumPressure.ToString(culture)),
-				new XElement("EmergencyRate", brakeCylinder.EmergencyRate.ToString(culture)),
-				new XElement("ReleaseRate", brakeCylinder.ReleaseRate.ToString(culture))
+				brakeCylinder.ServiceMaximumPressure.ToXElement("ServiceMaximumPressure"),
+				brakeCylinder.EmergencyMaximumPressure.ToXElement("EmergencyMaximumPressure"),
+				brakeCylinder.EmergencyRate.ToXElement("EmergencyRate"),
+				brakeCylinder.ReleaseRate.ToXElement("ReleaseRate")
 			);
 		}
 
 		private static XElement WriteDoorNode(string nodeName, Car.Door door)
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			return new XElement(nodeName,
-				new XElement("Width", door.Width.ToString(culture)),
-				new XElement("MaxTolerance", door.MaxTolerance.ToString(culture))
+				door.Width.ToXElement("Width"),
+				door.MaxTolerance.ToXElement("MaxTolerance")
 			);
 		}
 
 		private static XElement WriteAccelerationNode(Acceleration acceleration)
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			return new XElement("Acceleration",
 				acceleration.Entries.Select(entry => new XElement("Entry", $"{entry.A0.ToString(culture)}, {entry.A1.ToString(culture)}, {entry.V1.ToString(culture)}, {entry.V2.ToString(culture)}, {entry.E.ToString(culture)}"))
 			);
@@ -347,17 +319,16 @@ namespace TrainEditor2.IO.Trains.Xml
 
 		private static XElement WriteVertexNode<T>(TrainManager.MotorSound.Vertex<T> vertex) where T : struct, IConvertible
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			return new XElement("Vertex", $"{vertex.X.ToString(culture)}, {vertex.Y.ToString(culture)}");
 		}
 
 		private static XElement WriteCabNode(string fileName, Cab cab)
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			XElement cabNode = new XElement("Cab",
-				new XElement("Position", $"{cab.PositionX.ToString(culture)}, {cab.PositionY.ToString(culture)}, {cab.PositionZ.ToString(culture)}")
+				new XElement("Position",
+					new XAttribute("Unit", $"{cab.PositionX.UnitValue}, {cab.PositionY.UnitValue}, {cab.PositionZ.UnitValue}"),
+					$"{cab.PositionX.Value.ToString(culture)}, {cab.PositionY.Value.ToString(culture)}, {cab.PositionZ.Value.ToString(culture)}"
+				)
 			);
 
 			EmbeddedCab embeddedCab = cab as EmbeddedCab;
@@ -380,40 +351,38 @@ namespace TrainEditor2.IO.Trains.Xml
 			return cabNode;
 		}
 
-		private static XElement WriteCameraRestrictionNode(CameraRestriction cameraRestriction)
+		private static XElement WriteCameraRestrictionNode(CameraRestriction restriction)
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			XElement cameraRestrictionNode = new XElement("CameraRestriction");
 
-			if (cameraRestriction.DefinedForwards)
+			if (restriction.DefinedForwards)
 			{
-				cameraRestrictionNode.Add(new XElement("Forwards", cameraRestriction.Forwards.ToString(culture)));
+				cameraRestrictionNode.Add(restriction.Forwards.ToXElement("Forwards"));
 			}
 
-			if (cameraRestriction.DefinedBackwards)
+			if (restriction.DefinedBackwards)
 			{
-				cameraRestrictionNode.Add(new XElement("Backwards", cameraRestriction.Backwards.ToString(culture)));
+				cameraRestrictionNode.Add(restriction.Backwards.ToXElement("Backwards"));
 			}
 
-			if (cameraRestriction.DefinedLeft)
+			if (restriction.DefinedLeft)
 			{
-				cameraRestrictionNode.Add(new XElement("Left", cameraRestriction.Left.ToString(culture)));
+				cameraRestrictionNode.Add(restriction.Left.ToXElement("Left"));
 			}
 
-			if (cameraRestriction.DefinedRight)
+			if (restriction.DefinedRight)
 			{
-				cameraRestrictionNode.Add(new XElement("Right", cameraRestriction.Right.ToString(culture)));
+				cameraRestrictionNode.Add(restriction.Right.ToXElement("Right"));
 			}
 
-			if (cameraRestriction.DefinedUp)
+			if (restriction.DefinedUp)
 			{
-				cameraRestrictionNode.Add(new XElement("Up", cameraRestriction.Up.ToString(culture)));
+				cameraRestrictionNode.Add(restriction.Up.ToXElement("Up"));
 			}
 
-			if (cameraRestriction.DefinedDown)
+			if (restriction.DefinedDown)
 			{
-				cameraRestrictionNode.Add(new XElement("Down", cameraRestriction.Down.ToString(culture)));
+				cameraRestrictionNode.Add(restriction.Down.ToXElement("Down"));
 			}
 
 			return cameraRestrictionNode;
@@ -422,7 +391,10 @@ namespace TrainEditor2.IO.Trains.Xml
 		private static XElement WriteCouplerNode(string fileName, Coupler coupler)
 		{
 			return new XElement("Coupler",
-				new XElement("Distances", $"{coupler.Min}, {coupler.Max}"),
+				new XElement("Distances",
+					new XAttribute("Unit", $"{coupler.Min.UnitValue}, {coupler.Max.UnitValue}"),
+					$"{coupler.Min.Value.ToString(culture)}, {coupler.Max.Value.ToString(culture)}"
+				),
 				new XElement("Object", Utilities.MakeRelativePath(fileName, coupler.Object))
 			);
 		}

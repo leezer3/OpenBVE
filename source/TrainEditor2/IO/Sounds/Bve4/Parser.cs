@@ -4,9 +4,9 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using OpenBveApi;
 using OpenBveApi.Interface;
-using TrainEditor2.Extensions;
 using TrainEditor2.Models.Sounds;
 using TrainEditor2.Systems;
 using Path = OpenBveApi.Path;
@@ -236,11 +236,11 @@ namespace TrainEditor2.IO.Sounds.Bve4
 								}
 								else
 								{
-									BrakeKey[] keys = Enum.GetValues(typeof(BrakeKey)).OfType<BrakeKey>().Where(x => x.GetStringValues().Any(y => y.Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
+									SoundKey.Brake result;
 
-									if (keys.Any())
+									if (SoundKey.TryParse(a, true, out result))
 									{
-										sound.SoundElements.Add(new BrakeElement { Key = keys.First(), FilePath = Path.CombineFile(basePath, b) });
+										sound.SoundElements.Add(new BrakeElement { Key = result, FilePath = Path.CombineFile(basePath, b) });
 									}
 									else
 									{
@@ -272,11 +272,11 @@ namespace TrainEditor2.IO.Sounds.Bve4
 								}
 								else
 								{
-									CompressorKey[] keys = Enum.GetValues(typeof(CompressorKey)).OfType<CompressorKey>().Where(x => x.GetStringValues().Any(y => y.Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
+									SoundKey.Compressor result;
 
-									if (keys.Any())
+									if (SoundKey.TryParse(a, true, out result))
 									{
-										sound.SoundElements.Add(new CompressorElement { Key = keys.First(), FilePath = Path.CombineFile(basePath, b) });
+										sound.SoundElements.Add(new CompressorElement { Key = result, FilePath = Path.CombineFile(basePath, b) });
 									}
 									else
 									{
@@ -308,11 +308,11 @@ namespace TrainEditor2.IO.Sounds.Bve4
 								}
 								else
 								{
-									SuspensionKey[] keys = Enum.GetValues(typeof(SuspensionKey)).OfType<SuspensionKey>().Where(x => x.GetStringValues().Any(y => y.Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
+									SoundKey.Suspension result;
 
-									if (keys.Any())
+									if (SoundKey.TryParse(a, true, out result))
 									{
-										sound.SoundElements.Add(new SuspensionElement { Key = keys.First(), FilePath = Path.CombineFile(basePath, b) });
+										sound.SoundElements.Add(new SuspensionElement { Key = result, FilePath = Path.CombineFile(basePath, b) });
 									}
 									else
 									{
@@ -344,33 +344,47 @@ namespace TrainEditor2.IO.Sounds.Bve4
 								}
 								else
 								{
-									HornKey[] primaryKeys = Enum.GetValues(typeof(HornKey)).OfType<HornKey>().Where(x => x.GetStringValues().Any(y => $"Primary{y}".Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
-									HornKey[] secondaryKeys = Enum.GetValues(typeof(HornKey)).OfType<HornKey>().Where(x => x.GetStringValues().Any(y => $"Secondary{y}".Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
-									HornKey[] musicKeys = Enum.GetValues(typeof(HornKey)).OfType<HornKey>().Where(x => x.GetStringValues().Any(y => $"Music{y}".Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
+									if (string.Equals(a, "Primary", StringComparison.InvariantCultureIgnoreCase))
+									{
+										SoundKey.Horn result;
 
-									if (primaryKeys.Any())
-									{
-										sound.SoundElements.Add(new PrimaryHornElement { Key = primaryKeys.First(), FilePath = Path.CombineFile(basePath, b) });
+										if (SoundKey.TryParse(Regex.Replace(a, "Primary", string.Empty, RegexOptions.IgnoreCase), true, out result))
+										{
+											sound.SoundElements.Add(new PrimaryHornElement { Key = result, FilePath = Path.CombineFile(basePath, b) });
+
+										}
+										else
+										{
+											sound.SoundElements.Add(new PrimaryHornElement { Key = SoundKey.Horn.Loop, FilePath = Path.CombineFile(basePath, b) });
+										}
 									}
-									else if (secondaryKeys.Any())
+									else if (string.Equals(a, "Secondary", StringComparison.InvariantCultureIgnoreCase))
 									{
-										sound.SoundElements.Add(new SecondaryHornElement { Key = secondaryKeys.First(), FilePath = Path.CombineFile(basePath, b) });
+										SoundKey.Horn result;
+
+										if (SoundKey.TryParse(Regex.Replace(a, "Secondary", string.Empty, RegexOptions.IgnoreCase), true, out result))
+										{
+											sound.SoundElements.Add(new SecondaryHornElement { Key = SoundKey.Horn.Loop, FilePath = Path.CombineFile(basePath, b) });
+
+										}
+										else
+										{
+											sound.SoundElements.Add(new SecondaryHornElement { Key = SoundKey.Horn.Loop, FilePath = Path.CombineFile(basePath, b) });
+										}
 									}
-									else if (musicKeys.Any())
+									else if (string.Equals(a, "Music", StringComparison.InvariantCultureIgnoreCase))
 									{
-										sound.SoundElements.Add(new MusicHornElement { Key = musicKeys.First(), FilePath = Path.CombineFile(basePath, b) });
-									}
-									else if ("Primary".Equals(a, StringComparison.InvariantCultureIgnoreCase))
-									{
-										sound.SoundElements.Add(new PrimaryHornElement { Key = HornKey.Loop, FilePath = Path.CombineFile(basePath, b) });
-									}
-									else if ("Secondary".Equals(a, StringComparison.InvariantCultureIgnoreCase))
-									{
-										sound.SoundElements.Add(new SecondaryHornElement { Key = HornKey.Loop, FilePath = Path.CombineFile(basePath, b) });
-									}
-									else if ("Music".Equals(a, StringComparison.InvariantCultureIgnoreCase))
-									{
-										sound.SoundElements.Add(new MusicHornElement { Key = HornKey.Loop, FilePath = Path.CombineFile(basePath, b) });
+										SoundKey.Horn result;
+
+										if (SoundKey.TryParse(Regex.Replace(a, "Music", string.Empty, RegexOptions.IgnoreCase), true, out result))
+										{
+											sound.SoundElements.Add(new MusicHornElement { Key = result, FilePath = Path.CombineFile(basePath, b) });
+
+										}
+										else
+										{
+											sound.SoundElements.Add(new MusicHornElement { Key = SoundKey.Horn.Loop, FilePath = Path.CombineFile(basePath, b) });
+										}
 									}
 									else
 									{
@@ -402,11 +416,11 @@ namespace TrainEditor2.IO.Sounds.Bve4
 								}
 								else
 								{
-									DoorKey[] keys = Enum.GetValues(typeof(DoorKey)).OfType<DoorKey>().Where(x => x.GetStringValues().Any(y => y.Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
+									SoundKey.Door result;
 
-									if (keys.Any())
+									if (SoundKey.TryParse(a, true, out result))
 									{
-										sound.SoundElements.Add(new DoorElement { Key = keys.First(), FilePath = Path.CombineFile(basePath, b) });
+										sound.SoundElements.Add(new DoorElement { Key = result, FilePath = Path.CombineFile(basePath, b) });
 									}
 									else
 									{
@@ -481,11 +495,11 @@ namespace TrainEditor2.IO.Sounds.Bve4
 								}
 								else
 								{
-									BuzzerKey[] keys = Enum.GetValues(typeof(BuzzerKey)).OfType<BuzzerKey>().Where(x => x.GetStringValues().Any(y => y.Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
+									SoundKey.Buzzer result;
 
-									if (keys.Any())
+									if (SoundKey.TryParse(a, true, out result))
 									{
-										sound.SoundElements.Add(new BuzzerElement { Key = keys.First(), FilePath = Path.CombineFile(basePath, b) });
+										sound.SoundElements.Add(new BuzzerElement { Key = result, FilePath = Path.CombineFile(basePath, b) });
 									}
 									else
 									{
@@ -517,11 +531,11 @@ namespace TrainEditor2.IO.Sounds.Bve4
 								}
 								else
 								{
-									PilotLampKey[] keys = Enum.GetValues(typeof(PilotLampKey)).OfType<PilotLampKey>().Where(x => x.GetStringValues().Any(y => y.Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
+									SoundKey.PilotLamp result;
 
-									if (keys.Any())
+									if (SoundKey.TryParse(a, true, out result))
 									{
-										sound.SoundElements.Add(new PilotLampElement { Key = keys.First(), FilePath = Path.CombineFile(basePath, b) });
+										sound.SoundElements.Add(new PilotLampElement { Key = result, FilePath = Path.CombineFile(basePath, b) });
 									}
 									else
 									{
@@ -553,11 +567,11 @@ namespace TrainEditor2.IO.Sounds.Bve4
 								}
 								else
 								{
-									BrakeHandleKey[] keys = Enum.GetValues(typeof(BrakeHandleKey)).OfType<BrakeHandleKey>().Where(x => x.GetStringValues().Any(y => y.Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
+									SoundKey.BrakeHandle result;
 
-									if (keys.Any())
+									if (SoundKey.TryParse(a, true, out result))
 									{
-										sound.SoundElements.Add(new BrakeHandleElement { Key = keys.First(), FilePath = Path.CombineFile(basePath, b) });
+										sound.SoundElements.Add(new BrakeHandleElement { Key = result, FilePath = Path.CombineFile(basePath, b) });
 									}
 									else
 									{
@@ -589,11 +603,11 @@ namespace TrainEditor2.IO.Sounds.Bve4
 								}
 								else
 								{
-									MasterControllerKey[] keys = Enum.GetValues(typeof(MasterControllerKey)).OfType<MasterControllerKey>().Where(x => x.GetStringValues().Any(y => y.Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
+									SoundKey.MasterController result;
 
-									if (keys.Any())
+									if (SoundKey.TryParse(a, true, out result))
 									{
-										sound.SoundElements.Add(new MasterControllerElement { Key = keys.First(), FilePath = Path.CombineFile(basePath, b) });
+										sound.SoundElements.Add(new MasterControllerElement { Key = result, FilePath = Path.CombineFile(basePath, b) });
 									}
 									else
 									{
@@ -625,11 +639,11 @@ namespace TrainEditor2.IO.Sounds.Bve4
 								}
 								else
 								{
-									ReverserKey[] keys = Enum.GetValues(typeof(ReverserKey)).OfType<ReverserKey>().Where(x => x.GetStringValues().Any(y => y.Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
+									SoundKey.Reverser result;
 
-									if (keys.Any())
+									if (SoundKey.TryParse(a, true, out result))
 									{
-										sound.SoundElements.Add(new ReverserElement { Key = keys.First(), FilePath = Path.CombineFile(basePath, b) });
+										sound.SoundElements.Add(new ReverserElement { Key = result, FilePath = Path.CombineFile(basePath, b) });
 									}
 									else
 									{
@@ -661,11 +675,11 @@ namespace TrainEditor2.IO.Sounds.Bve4
 								}
 								else
 								{
-									BreakerKey[] keys = Enum.GetValues(typeof(BreakerKey)).OfType<BreakerKey>().Where(x => x.GetStringValues().Any(y => y.Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
+									SoundKey.Breaker result;
 
-									if (keys.Any())
+									if (SoundKey.TryParse(a, true, out result))
 									{
-										sound.SoundElements.Add(new BreakerElement { Key = keys.First(), FilePath = Path.CombineFile(basePath, b) });
+										sound.SoundElements.Add(new BreakerElement { Key = result, FilePath = Path.CombineFile(basePath, b) });
 									}
 									else
 									{
@@ -697,11 +711,11 @@ namespace TrainEditor2.IO.Sounds.Bve4
 								}
 								else
 								{
-									OthersKey[] keys = Enum.GetValues(typeof(OthersKey)).OfType<OthersKey>().Where(x => x.GetStringValues().Any(y => y.Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
+									SoundKey.Others result;
 
-									if (keys.Any())
+									if (SoundKey.TryParse(a, true, out result))
 									{
-										sound.SoundElements.Add(new OthersElement { Key = keys.First(), FilePath = Path.CombineFile(basePath, b) });
+										sound.SoundElements.Add(new OthersElement { Key = result, FilePath = Path.CombineFile(basePath, b) });
 									}
 									else
 									{
@@ -733,11 +747,11 @@ namespace TrainEditor2.IO.Sounds.Bve4
 								}
 								else
 								{
-									RequestStopKey[] keys = Enum.GetValues(typeof(RequestStopKey)).OfType<RequestStopKey>().Where(x => x.GetStringValues().Any(y => y.Equals(a, StringComparison.InvariantCultureIgnoreCase))).ToArray();
+									SoundKey.RequestStop result;
 
-									if (keys.Any())
+									if (SoundKey.TryParse(a, true, out result))
 									{
-										sound.SoundElements.Add(new RequestStopElement { Key = keys.First(), FilePath = Path.CombineFile(basePath, b) });
+										sound.SoundElements.Add(new RequestStopElement { Key = result, FilePath = Path.CombineFile(basePath, b) });
 									}
 									else
 									{

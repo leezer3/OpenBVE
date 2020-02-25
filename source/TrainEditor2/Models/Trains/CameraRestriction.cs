@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Units;
 using Prism.Mvvm;
 
 namespace TrainEditor2.Models.Trains
@@ -12,12 +13,12 @@ namespace TrainEditor2.Models.Trains
 		private bool definedUp;
 		private bool definedDown;
 
-		private double forwards;
-		private double backwards;
-		private double left;
-		private double right;
-		private double up;
-		private double down;
+		private Quantity.Length forwards;
+		private Quantity.Length backwards;
+		private Quantity.Length left;
+		private Quantity.Length right;
+		private Quantity.Length up;
+		private Quantity.Length down;
 
 		internal bool DefinedForwards
 		{
@@ -91,7 +92,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double Forwards
+		internal Quantity.Length Forwards
 		{
 			get
 			{
@@ -103,7 +104,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double Backwards
+		internal Quantity.Length Backwards
 		{
 			get
 			{
@@ -115,7 +116,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double Left
+		internal Quantity.Length Left
 		{
 			get
 			{
@@ -127,7 +128,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double Right
+		internal Quantity.Length Right
 		{
 			get
 			{
@@ -139,7 +140,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double Up
+		internal Quantity.Length Up
 		{
 			get
 			{
@@ -151,7 +152,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double Down
+		internal Quantity.Length Down
 		{
 			get
 			{

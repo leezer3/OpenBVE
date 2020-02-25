@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
+using OpenBveApi.Units;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Panels;
 using TrainEditor2.Models.Sounds;
@@ -18,6 +20,7 @@ namespace TrainEditor2.IO.IntermediateFile
 	internal static partial class IntermediateFile
 	{
 		private static readonly Version editorVersion = new Version(1, 8, 0, 0);
+		private static readonly CultureInfo culture = CultureInfo.InvariantCulture;
 
 		private enum FileVersion
 		{
@@ -90,9 +93,9 @@ namespace TrainEditor2.IO.IntermediateFile
 
 				double[] position = ((string)parent.XPathSelectElement("Cab/Position")).Split(',').Select(double.Parse).ToArray();
 
-				cab.PositionX = position[0];
-				cab.PositionY = position[1];
-				cab.PositionZ = position[2];
+				cab.PositionX = new Quantity.Length(position[0], Unit.Length.Millimeter);
+				cab.PositionY = new Quantity.Length(position[1], Unit.Length.Millimeter);
+				cab.PositionZ = new Quantity.Length(position[2], Unit.Length.Millimeter);
 
 				((EmbeddedCab)cab).Panel = ParsePanelNode(parent.XPathSelectElement("/TrainEditor/Panel"));
 			}
@@ -162,15 +165,15 @@ namespace TrainEditor2.IO.IntermediateFile
 				}
 			}
 
-			car.Mass = (double)parent.Element("Mass");
-			car.Length = (double)parent.Element("Length");
-			car.Width = (double)parent.Element("Width");
-			car.Height = (double)parent.Element("Height");
-			car.CenterOfGravityHeight = (double)parent.Element("CenterOfGravityHeight");
+			car.Mass = Quantity.Mass.Parse(parent.Element("Mass"), false, Unit.Mass.Tonne);
+			car.Length = Quantity.Length.Parse(parent.Element("Length"));
+			car.Width = Quantity.Length.Parse(parent.Element("Width"));
+			car.Height = Quantity.Length.Parse(parent.Element("Height"));
+			car.CenterOfGravityHeight = Quantity.Length.Parse(parent.Element("CenterOfGravityHeight"));
 
 			car.DefinedAxles = (bool)parent.Element("DefinedAxles");
-			car.FrontAxle = (double)parent.Element("FrontAxle");
-			car.RearAxle = (double)parent.Element("RearAxle");
+			car.FrontAxle = Quantity.Length.Parse(parent.Element("FrontAxle"));
+			car.RearAxle = Quantity.Length.Parse(parent.Element("RearAxle"));
 
 			car.FrontBogie = ParseBogieNode(parent.Element("FrontBogie"));
 			car.RearBogie = ParseBogieNode(parent.Element("RearBogie"));
@@ -207,8 +210,8 @@ namespace TrainEditor2.IO.IntermediateFile
 			}
 			else
 			{
-				car.LeftDoor.Width = car.RightDoor.Width = (double)parent.XPathSelectElement("../../Device/DoorWidth");
-				car.LeftDoor.MaxTolerance = car.RightDoor.MaxTolerance = (double)parent.XPathSelectElement("../../Device/DoorMaxTolerance");
+				car.LeftDoor.Width = car.RightDoor.Width = new Quantity.Length((double)parent.XPathSelectElement("../../Device/DoorWidth"), Unit.Length.Millimeter);
+				car.LeftDoor.MaxTolerance = car.RightDoor.MaxTolerance = new Quantity.Length((double)parent.XPathSelectElement("../../Device/DoorMaxTolerance"), Unit.Length.Millimeter);
 			}
 
 			car.ReAdhesionDevice = (Car.ReAdhesionDevices)Enum.Parse(typeof(Car.ReAdhesionDevices), fileVersion > FileVersion.v1700 ? (string)parent.Element("ReAdhesionDevice") : (string)parent.XPathSelectElement("../../Device/ReAdhesionDevice"));
@@ -243,8 +246,8 @@ namespace TrainEditor2.IO.IntermediateFile
 			return new Car.Bogie
 			{
 				DefinedAxles = (bool)parent.Element("DefinedAxles"),
-				FrontAxle = (double)parent.Element("FrontAxle"),
-				RearAxle = (double)parent.Element("RearAxle"),
+				FrontAxle = Quantity.Length.Parse(parent.Element("FrontAxle")),
+				RearAxle = Quantity.Length.Parse(parent.Element("RearAxle")),
 				Reversed = (bool)parent.Element("Reversed"),
 				Object = (string)parent.Element("Object")
 			};
@@ -327,9 +330,20 @@ namespace TrainEditor2.IO.IntermediateFile
 
 			return new Pressure
 			{
-				MainReservoir = new MainReservoir { MinimumPressure = (double)parent.Element("MainReservoirMinimumPressure"), MaximumPressure = (double)parent.Element("MainReservoirMaximumPressure") },
-				BrakePipe = new BrakePipe { NormalPressure = (double)parent.Element("BrakePipeNormalPressure") },
-				BrakeCylinder = new BrakeCylinder { ServiceMaximumPressure = (double)parent.Element("BrakeCylinderServiceMaximumPressure"), EmergencyMaximumPressure = (double)parent.Element("BrakeCylinderEmergencyMaximumPressure") }
+				MainReservoir = new MainReservoir
+				{
+					MinimumPressure = new Quantity.Pressure((double)parent.Element("MainReservoirMinimumPressure"), Unit.Pressure.Kilopascal),
+					MaximumPressure = new Quantity.Pressure((double)parent.Element("MainReservoirMaximumPressure"), Unit.Pressure.Kilopascal)
+				},
+				BrakePipe = new BrakePipe
+				{
+					NormalPressure = new Quantity.Pressure((double)parent.Element("BrakePipeNormalPressure"), Unit.Pressure.Kilopascal)
+				},
+				BrakeCylinder = new BrakeCylinder
+				{
+					ServiceMaximumPressure = new Quantity.Pressure((double)parent.Element("BrakeCylinderServiceMaximumPressure"), Unit.Pressure.Kilopascal),
+					EmergencyMaximumPressure = new Quantity.Pressure((double)parent.Element("BrakeCylinderEmergencyMaximumPressure"), Unit.Pressure.Kilopascal)
+				}
 			};
 		}
 
@@ -337,7 +351,7 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new Compressor
 			{
-				Rate = (double)parent.Element("Rate")
+				Rate = Quantity.PressureRate.Parse(parent.Element("Rate"))
 			};
 		}
 
@@ -345,8 +359,8 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new MainReservoir
 			{
-				MinimumPressure = (double)parent.Element("MinimumPressure"),
-				MaximumPressure = (double)parent.Element("MaximumPressure")
+				MinimumPressure = Quantity.Pressure.Parse(parent.Element("MinimumPressure")),
+				MaximumPressure = Quantity.Pressure.Parse(parent.Element("MaximumPressure"))
 			};
 		}
 
@@ -354,7 +368,7 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new AuxiliaryReservoir
 			{
-				ChargeRate = (double)parent.Element("ChargeRate")
+				ChargeRate = Quantity.PressureRate.Parse(parent.Element("ChargeRate"))
 			};
 		}
 
@@ -362,9 +376,9 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new EqualizingReservoir
 			{
-				ChargeRate = (double)parent.Element("ChargeRate"),
-				ServiceRate = (double)parent.Element("ServiceRate"),
-				EmergencyRate = (double)parent.Element("EmergencyRate")
+				ChargeRate = Quantity.PressureRate.Parse(parent.Element("ChargeRate")),
+				ServiceRate = Quantity.PressureRate.Parse(parent.Element("ServiceRate")),
+				EmergencyRate = Quantity.PressureRate.Parse(parent.Element("EmergencyRate"))
 			};
 		}
 
@@ -372,10 +386,10 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new BrakePipe
 			{
-				NormalPressure = (double)parent.Element("NormalPressure"),
-				ChargeRate = (double)parent.Element("ChargeRate"),
-				ServiceRate = (double)parent.Element("ServiceRate"),
-				EmergencyRate = (double)parent.Element("EmergencyRate")
+				NormalPressure = Quantity.Pressure.Parse(parent.Element("NormalPressure")),
+				ChargeRate = Quantity.PressureRate.Parse(parent.Element("ChargeRate")),
+				ServiceRate = Quantity.PressureRate.Parse(parent.Element("ServiceRate")),
+				EmergencyRate = Quantity.PressureRate.Parse(parent.Element("EmergencyRate"))
 			};
 		}
 
@@ -383,9 +397,9 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new StraightAirPipe
 			{
-				ServiceRate = (double)parent.Element("ServiceRate"),
-				EmergencyRate = (double)parent.Element("EmergencyRate"),
-				ReleaseRate = (double)parent.Element("ReleaseRate")
+				ServiceRate = Quantity.PressureRate.Parse(parent.Element("ServiceRate")),
+				EmergencyRate = Quantity.PressureRate.Parse(parent.Element("EmergencyRate")),
+				ReleaseRate = Quantity.PressureRate.Parse(parent.Element("ReleaseRate"))
 			};
 		}
 
@@ -393,10 +407,10 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new BrakeCylinder
 			{
-				ServiceMaximumPressure = (double)parent.Element("ServiceMaximumPressure"),
-				EmergencyMaximumPressure = (double)parent.Element("EmergencyMaximumPressure"),
-				EmergencyRate = (double)parent.Element("EmergencyRate"),
-				ReleaseRate = (double)parent.Element("ReleaseRate")
+				ServiceMaximumPressure = Quantity.Pressure.Parse(parent.Element("ServiceMaximumPressure")),
+				EmergencyMaximumPressure = Quantity.Pressure.Parse(parent.Element("EmergencyMaximumPressure")),
+				EmergencyRate = Quantity.PressureRate.Parse(parent.Element("EmergencyRate")),
+				ReleaseRate = Quantity.PressureRate.Parse(parent.Element("ReleaseRate"))
 			};
 		}
 
@@ -404,8 +418,8 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new Car.Door
 			{
-				Width = (double)parent.Element("Width"),
-				MaxTolerance = (double)parent.Element("MaxTolerance")
+				Width = Quantity.Length.Parse(parent.Element("Width")),
+				MaxTolerance = Quantity.Length.Parse(parent.Element("MaxTolerance"))
 			};
 		}
 
@@ -494,11 +508,17 @@ namespace TrainEditor2.IO.IntermediateFile
 				};
 			}
 
-			double[] position = ((string)parent.Element("Position")).Split(',').Select(double.Parse).ToArray();
+			XElement positionNode = parent.Element("Position");
 
-			cab.PositionX = position[0];
-			cab.PositionY = position[1];
-			cab.PositionZ = position[2];
+			if (positionNode != null)
+			{
+				double[] positionValues = ((string)positionNode).Split(',').Select(double.Parse).ToArray();
+				Unit.Length[] positionUnitValues = positionNode.Attributes("Unit").Select(x => x.Value).Select(Unit.Parse<Unit.Length>).ToArray();
+
+				cab.PositionX = new Quantity.Length(positionValues[0], positionUnitValues[0]);
+				cab.PositionY = new Quantity.Length(positionValues[1], positionUnitValues[1]);
+				cab.PositionZ = new Quantity.Length(positionValues[2], positionUnitValues[2]);
+			}
 
 			return cab;
 		}
@@ -513,12 +533,12 @@ namespace TrainEditor2.IO.IntermediateFile
 				DefinedRight = (bool)parent.Element("DefinedRight"),
 				DefinedUp = (bool)parent.Element("DefinedUp"),
 				DefinedDown = (bool)parent.Element("DefinedDown"),
-				Forwards = (double)parent.Element("Forwards"),
-				Backwards = (double)parent.Element("Backwards"),
-				Left = (double)parent.Element("Left"),
-				Right = (double)parent.Element("Right"),
-				Up = (double)parent.Element("Up"),
-				Down = (double)parent.Element("Down")
+				Forwards = Quantity.Length.Parse(parent.Element("Forwards")),
+				Backwards = Quantity.Length.Parse(parent.Element("Backwards")),
+				Left = Quantity.Length.Parse(parent.Element("Left")),
+				Right = Quantity.Length.Parse(parent.Element("Right")),
+				Up = Quantity.Length.Parse(parent.Element("Up")),
+				Down = Quantity.Length.Parse(parent.Element("Down"))
 			};
 		}
 
@@ -526,8 +546,8 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new Coupler
 			{
-				Min = (double)parent.Element("Min"),
-				Max = (double)parent.Element("Max"),
+				Min = Quantity.Length.Parse(parent.Element("Min")),
+				Max = Quantity.Length.Parse(parent.Element("Max")),
 				Object = (string)parent.Element("Object")
 			};
 		}
@@ -805,23 +825,23 @@ namespace TrainEditor2.IO.IntermediateFile
 			ParseArraySoundNode<MotorElement>(parent.Element("Motor"), sound.SoundElements);
 			ParseArraySoundNode<FrontSwitchElement>(parent.Element("FrontSwitch"), sound.SoundElements);
 			ParseArraySoundNode<RearSwitchElement>(parent.Element("RearSwitch"), sound.SoundElements);
-			ParseArraySoundNode<BrakeElement, BrakeKey>(parent.Element("Brake"), sound.SoundElements);
-			ParseArraySoundNode<CompressorElement, CompressorKey>(parent.Element("Compressor"), sound.SoundElements);
-			ParseArraySoundNode<SuspensionElement, SuspensionKey>(parent.Element("Suspension"), sound.SoundElements);
-			ParseArraySoundNode<PrimaryHornElement, HornKey>(parent.Element("PrimaryHorn"), sound.SoundElements);
-			ParseArraySoundNode<SecondaryHornElement, HornKey>(parent.Element("SecondaryHorn"), sound.SoundElements);
-			ParseArraySoundNode<MusicHornElement, HornKey>(parent.Element("MusicHornHorn"), sound.SoundElements);
-			ParseArraySoundNode<DoorElement, DoorKey>(parent.Element("Door"), sound.SoundElements);
+			ParseArraySoundNode<BrakeElement, SoundKey.Brake>(parent.Element("Brake"), sound.SoundElements);
+			ParseArraySoundNode<CompressorElement, SoundKey.Compressor>(parent.Element("Compressor"), sound.SoundElements);
+			ParseArraySoundNode<SuspensionElement, SoundKey.Suspension>(parent.Element("Suspension"), sound.SoundElements);
+			ParseArraySoundNode<PrimaryHornElement, SoundKey.Horn>(parent.Element("PrimaryHorn"), sound.SoundElements);
+			ParseArraySoundNode<SecondaryHornElement, SoundKey.Horn>(parent.Element("SecondaryHorn"), sound.SoundElements);
+			ParseArraySoundNode<MusicHornElement, SoundKey.Horn>(parent.Element("MusicHornHorn"), sound.SoundElements);
+			ParseArraySoundNode<DoorElement, SoundKey.Door>(parent.Element("Door"), sound.SoundElements);
 			ParseArraySoundNode<AtsElement>(parent.Element("Ats"), sound.SoundElements);
-			ParseArraySoundNode<BuzzerElement, BuzzerKey>(parent.Element("Buzzer"), sound.SoundElements);
-			ParseArraySoundNode<Models.Sounds.PilotLampElement, PilotLampKey>(parent.Element("PilotLamp"), sound.SoundElements);
-			ParseArraySoundNode<BrakeHandleElement, BrakeHandleKey>(parent.Element("BrakeHandle"), sound.SoundElements);
-			ParseArraySoundNode<MasterControllerElement, MasterControllerKey>(parent.Element("MasterController"), sound.SoundElements);
-			ParseArraySoundNode<ReverserElement, ReverserKey>(parent.Element("Reverser"), sound.SoundElements);
-			ParseArraySoundNode<BreakerElement, BreakerKey>(parent.Element("Breaker"), sound.SoundElements);
-			ParseArraySoundNode<RequestStopElement, RequestStopKey>(parent.Element("RequestStop"), sound.SoundElements);
+			ParseArraySoundNode<BuzzerElement, SoundKey.Buzzer>(parent.Element("Buzzer"), sound.SoundElements);
+			ParseArraySoundNode<Models.Sounds.PilotLampElement, SoundKey.PilotLamp>(parent.Element("PilotLamp"), sound.SoundElements);
+			ParseArraySoundNode<BrakeHandleElement, SoundKey.BrakeHandle>(parent.Element("BrakeHandle"), sound.SoundElements);
+			ParseArraySoundNode<MasterControllerElement, SoundKey.MasterController>(parent.Element("MasterController"), sound.SoundElements);
+			ParseArraySoundNode<ReverserElement, SoundKey.Reverser>(parent.Element("Reverser"), sound.SoundElements);
+			ParseArraySoundNode<BreakerElement, SoundKey.Breaker>(parent.Element("Breaker"), sound.SoundElements);
+			ParseArraySoundNode<RequestStopElement, SoundKey.RequestStop>(parent.Element("RequestStop"), sound.SoundElements);
 			ParseArraySoundNode<Models.Sounds.TouchElement>(parent.Element("Touch"), sound.SoundElements);
-			ParseArraySoundNode<OthersElement, OthersKey>(parent.Element("Others"), sound.SoundElements);
+			ParseArraySoundNode<OthersElement, SoundKey.Others>(parent.Element("Others"), sound.SoundElements);
 
 			return sound;
 		}

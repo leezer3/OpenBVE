@@ -92,7 +92,6 @@
     <Compile Include="Audio\SoundApi.cs" />
     <Compile Include="Audio\SoundApi.Update.cs" />
     <Compile Include="Extensions\WinFormsBinders.cs" />
-    <Compile Include="Extensions\StringValueAttribute.cs" />
     <Compile Include="Extensions\Utilities.cs" />
     <Compile Include="Extensions\WinFormsUtilities.cs" />
     <Compile Include="Graphics\NewRenderer.cs" />
@@ -158,6 +157,7 @@
     <Compile Include="Models\Panels\TouchElement.cs" />
     <Compile Include="Models\Sounds\Sound.cs" />
     <Compile Include="Models\Sounds\SoundElement.cs" />
+    <Compile Include="Models\Sounds\SoundKey.cs" />
     <Compile Include="Models\Trains\Acceleration.cs" />
     <Compile Include="Models\Trains\AuxiliaryReservoir.cs" />
     <Compile Include="Models\Trains\Brake.cs" />

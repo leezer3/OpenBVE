@@ -1,9 +1,8 @@
-﻿using System.Globalization;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using OpenBveApi.Interface;
-using OpenBveApi.Math;
+using OpenBveApi.Units;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.Systems;
 
@@ -14,8 +13,6 @@ namespace TrainEditor2.IO.Trains.Xml
 		private static Pressure ParsePressureNode(string fileName, XElement parent)
 		{
 			Pressure pressure = new Pressure();
-
-			CultureInfo culture = CultureInfo.InvariantCulture;
 
 			string section = parent.Name.LocalName;
 
@@ -60,8 +57,6 @@ namespace TrainEditor2.IO.Trains.Xml
 		{
 			Compressor compressor = new Compressor();
 
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			string section = parent.Name.LocalName;
 
 			foreach (XElement keyNode in parent.Elements())
@@ -75,9 +70,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "rate":
 						if (value.Any())
 						{
-							double result;
+							Quantity.PressureRate result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
+							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -100,8 +95,6 @@ namespace TrainEditor2.IO.Trains.Xml
 		{
 			MainReservoir mainReservoir = new MainReservoir();
 
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			string section = parent.Name.LocalName;
 
 			foreach (XElement keyNode in parent.Elements())
@@ -115,9 +108,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "minimumpressure":
 						if (value.Any())
 						{
-							double result;
+							Quantity.Pressure result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
+							if (!Quantity.Pressure.TryParse(keyNode, true, out result) || result.Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -130,9 +123,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "maximumpressure":
 						if (value.Any())
 						{
-							double result;
+							Quantity.Pressure result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
+							if (!Quantity.Pressure.TryParse(keyNode, true, out result) || result.Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -155,8 +148,6 @@ namespace TrainEditor2.IO.Trains.Xml
 		{
 			AuxiliaryReservoir auxiliaryReservoir = new AuxiliaryReservoir();
 
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			string section = parent.Name.LocalName;
 
 			foreach (XElement keyNode in parent.Elements())
@@ -170,9 +161,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "chargerate":
 						if (value.Any())
 						{
-							double result;
+							Quantity.PressureRate result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
+							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -195,8 +186,6 @@ namespace TrainEditor2.IO.Trains.Xml
 		{
 			EqualizingReservoir equalizingReservoir = new EqualizingReservoir();
 
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			string section = parent.Name.LocalName;
 
 			foreach (XElement keyNode in parent.Elements())
@@ -210,9 +199,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "chargerate":
 						if (value.Any())
 						{
-							double result;
+							Quantity.PressureRate result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
+							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -225,9 +214,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "servicerate":
 						if (value.Any())
 						{
-							double result;
+							Quantity.PressureRate result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
+							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -240,9 +229,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "emergencyrate":
 						if (value.Any())
 						{
-							double result;
+							Quantity.PressureRate result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
+							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -265,8 +254,6 @@ namespace TrainEditor2.IO.Trains.Xml
 		{
 			BrakePipe brakePipe = new BrakePipe();
 
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			string section = parent.Name.LocalName;
 
 			foreach (XElement keyNode in parent.Elements())
@@ -280,9 +267,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "normalpressure":
 						if (value.Any())
 						{
-							double result;
+							Quantity.Pressure result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
+							if (!Quantity.Pressure.TryParse(keyNode, true, out result) || result.Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -295,9 +282,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "chargerate":
 						if (value.Any())
 						{
-							double result;
+							Quantity.PressureRate result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
+							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -310,9 +297,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "servicerate":
 						if (value.Any())
 						{
-							double result;
+							Quantity.PressureRate result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
+							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -325,9 +312,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "emergencyrate":
 						if (value.Any())
 						{
-							double result;
+							Quantity.PressureRate result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
+							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -350,8 +337,6 @@ namespace TrainEditor2.IO.Trains.Xml
 		{
 			StraightAirPipe straightAirPipe = new StraightAirPipe();
 
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			string section = parent.Name.LocalName;
 
 			foreach (XElement keyNode in parent.Elements())
@@ -365,9 +350,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "servicerate":
 						if (value.Any())
 						{
-							double result;
+							Quantity.PressureRate result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
+							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -380,9 +365,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "emergencyrate":
 						if (value.Any())
 						{
-							double result;
+							Quantity.PressureRate result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
+							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -395,9 +380,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "releaserate":
 						if (value.Any())
 						{
-							double result;
+							Quantity.PressureRate result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
+							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -420,8 +405,6 @@ namespace TrainEditor2.IO.Trains.Xml
 		{
 			BrakeCylinder brakeCylinder = new BrakeCylinder();
 
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			string section = parent.Name.LocalName;
 
 			foreach (XElement keyNode in parent.Elements())
@@ -435,9 +418,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "servicemaximumpressure":
 						if (value.Any())
 						{
-							double result;
+							Quantity.Pressure result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
+							if (!Quantity.Pressure.TryParse(keyNode, true, out result) || result.Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -450,9 +433,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "emergencymaximumpressure":
 						if (value.Any())
 						{
-							double result;
+							Quantity.Pressure result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
+							if (!Quantity.Pressure.TryParse(keyNode, true, out result) || result.Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -465,9 +448,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "emergencyrate":
 						if (value.Any())
 						{
-							double result;
+							Quantity.PressureRate result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
+							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -480,9 +463,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "releaserate":
 						if (value.Any())
 						{
-							double result;
+							Quantity.PressureRate result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
+							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}

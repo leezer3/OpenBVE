@@ -256,7 +256,7 @@ namespace TrainEditor2.Models.Sounds
 			SoundElement element = (SoundElement)item.Tag;
 			Enum key = element.Key as Enum;
 
-			item.SubItems[0].Text = key != null ? key.GetStringValues().First() : element.Key.ToString();
+			item.SubItems[0].Text = key != null ? SoundKey.GetRewords(key).First() : element.Key.ToString();
 			item.SubItems[1].Text = element.FilePath;
 			item.SubItems[2].Text = element.DefinedPosition ? $"{element.PositionX.ToString(culture)}, {element.PositionY.ToString(culture)}, {element.PositionZ.ToString(culture)}" : string.Empty;
 			item.SubItems[3].Text = element.DefinedRadius ? element.Radius.ToString(culture) : string.Empty;

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
@@ -15,8 +14,6 @@ namespace TrainEditor2.IO.Trains.Xml
 		private static Device ParseDeviceNode(string fileName, XElement parent)
 		{
 			Device device = new Device();
-
-			CultureInfo culture = CultureInfo.InvariantCulture;
 
 			string section = parent.Name.LocalName;
 
@@ -164,8 +161,6 @@ namespace TrainEditor2.IO.Trains.Xml
 		{
 			Device.AtsModes ats = Device.AtsModes.AtsSn;
 
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			string section = parent.Name.LocalName;
 
 			foreach (XElement keyNode in parent.Elements())
@@ -207,8 +202,6 @@ namespace TrainEditor2.IO.Trains.Xml
 		private static Device.AtcModes ParseDeviceAtcNode(string fileName, XElement parent)
 		{
 			Device.AtcModes atc = Device.AtcModes.None;
-
-			CultureInfo culture = CultureInfo.InvariantCulture;
 
 			string section = parent.Name.LocalName;
 

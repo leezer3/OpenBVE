@@ -242,37 +242,37 @@ namespace TrainEditor2.ViewModels.Sounds
 		internal RearSwitchElementViewModel(RearSwitchElement element, IEnumerable<RearSwitchElement> otherElements) : base(element, otherElements) { }
 	}
 
-	internal class BrakeElementViewModel : SoundElementViewModel<BrakeKey>
+	internal class BrakeElementViewModel : SoundElementViewModel<SoundKey.Brake>
 	{
 		internal BrakeElementViewModel(BrakeElement element, IEnumerable<BrakeElement> otherElements) : base(element, otherElements) { }
 	}
 
-	internal class CompressorElementViewModel : SoundElementViewModel<CompressorKey>
+	internal class CompressorElementViewModel : SoundElementViewModel<SoundKey.Compressor>
 	{
 		internal CompressorElementViewModel(CompressorElement element, IEnumerable<CompressorElement> otherElements) : base(element, otherElements) { }
 	}
 
-	internal class SuspensionElementViewModel : SoundElementViewModel<SuspensionKey>
+	internal class SuspensionElementViewModel : SoundElementViewModel<SoundKey.Suspension>
 	{
 		internal SuspensionElementViewModel(SuspensionElement element, IEnumerable<SuspensionElement> otherElements) : base(element, otherElements) { }
 	}
 
-	internal class PrimaryHornElementViewModel : SoundElementViewModel<HornKey>
+	internal class PrimaryHornElementViewModel : SoundElementViewModel<SoundKey.Horn>
 	{
 		internal PrimaryHornElementViewModel(PrimaryHornElement element, IEnumerable<PrimaryHornElement> otherElements) : base(element, otherElements) { }
 	}
 
-	internal class SecondaryHornElementViewModel : SoundElementViewModel<HornKey>
+	internal class SecondaryHornElementViewModel : SoundElementViewModel<SoundKey.Horn>
 	{
 		internal SecondaryHornElementViewModel(SecondaryHornElement element, IEnumerable<SecondaryHornElement> otherElements) : base(element, otherElements) { }
 	}
 
-	internal class MusicHornElementViewModel : SoundElementViewModel<HornKey>
+	internal class MusicHornElementViewModel : SoundElementViewModel<SoundKey.Horn>
 	{
 		internal MusicHornElementViewModel(MusicHornElement element, IEnumerable<MusicHornElement> otherElements) : base(element, otherElements) { }
 	}
 
-	internal class DoorElementViewModel : SoundElementViewModel<DoorKey>
+	internal class DoorElementViewModel : SoundElementViewModel<SoundKey.Door>
 	{
 		internal DoorElementViewModel(DoorElement element, IEnumerable<DoorElement> otherElements) : base(element, otherElements) { }
 	}
@@ -282,37 +282,37 @@ namespace TrainEditor2.ViewModels.Sounds
 		internal AtsElementViewModel(AtsElement element, IEnumerable<AtsElement> otherElements) : base(element, otherElements) { }
 	}
 
-	internal class BuzzerElementViewModel : SoundElementViewModel<BuzzerKey>
+	internal class BuzzerElementViewModel : SoundElementViewModel<SoundKey.Buzzer>
 	{
 		internal BuzzerElementViewModel(BuzzerElement element, IEnumerable<BuzzerElement> otherElements) : base(element, otherElements) { }
 	}
 
-	internal class PilotLampElementViewModel : SoundElementViewModel<PilotLampKey>
+	internal class PilotLampElementViewModel : SoundElementViewModel<SoundKey.PilotLamp>
 	{
 		internal PilotLampElementViewModel(PilotLampElement element, IEnumerable<PilotLampElement> otherElements) : base(element, otherElements) { }
 	}
 
-	internal class BrakeHandleElementViewModel : SoundElementViewModel<BrakeHandleKey>
+	internal class BrakeHandleElementViewModel : SoundElementViewModel<SoundKey.BrakeHandle>
 	{
 		internal BrakeHandleElementViewModel(BrakeHandleElement element, IEnumerable<BrakeHandleElement> otherElements) : base(element, otherElements) { }
 	}
 
-	internal class MasterControllerElementViewModel : SoundElementViewModel<MasterControllerKey>
+	internal class MasterControllerElementViewModel : SoundElementViewModel<SoundKey.MasterController>
 	{
 		internal MasterControllerElementViewModel(MasterControllerElement element, IEnumerable<MasterControllerElement> otherElements) : base(element, otherElements) { }
 	}
 
-	internal class ReverserElementViewModel : SoundElementViewModel<ReverserKey>
+	internal class ReverserElementViewModel : SoundElementViewModel<SoundKey.Reverser>
 	{
 		internal ReverserElementViewModel(ReverserElement element, IEnumerable<ReverserElement> otherElements) : base(element, otherElements) { }
 	}
 
-	internal class BreakerElementViewModel : SoundElementViewModel<BreakerKey>
+	internal class BreakerElementViewModel : SoundElementViewModel<SoundKey.Breaker>
 	{
 		internal BreakerElementViewModel(BreakerElement element, IEnumerable<BreakerElement> otherElements) : base(element, otherElements) { }
 	}
 
-	internal class RequestStopElementViewModel : SoundElementViewModel<RequestStopKey>
+	internal class RequestStopElementViewModel : SoundElementViewModel<SoundKey.RequestStop>
 	{
 		internal RequestStopElementViewModel(RequestStopElement element, IEnumerable<RequestStopElement> otherElements) : base(element, otherElements) { }
 	}
@@ -322,7 +322,7 @@ namespace TrainEditor2.ViewModels.Sounds
 		internal TouchElementViewModel(TouchElement element, IEnumerable<TouchElement> otherElements) : base(element, otherElements) { }
 	}
 
-	internal class OthersElementViewModel : SoundElementViewModel<OthersKey>
+	internal class OthersElementViewModel : SoundElementViewModel<SoundKey.Others>
 	{
 		internal OthersElementViewModel(OthersElement element, IEnumerable<OthersElement> otherElements) : base(element, otherElements) { }
 	}

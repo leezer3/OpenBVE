@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using OpenBveApi.Units;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -34,6 +35,22 @@ namespace TrainEditor2.Views
 				.BindToErrorProvider(errorProvider, textBoxBrakeCylinderServiceMaximumPressure)
 				.AddTo(brakeCylinderDisposable);
 
+			brakeCylinder.ServiceMaximumPressureUnit
+				.BindTo(
+					comboBoxBrakeCylinderServiceMaximumPressureUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Pressure)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxBrakeCylinderServiceMaximumPressureUnit.SelectedIndexChanged += h,
+							h => comboBoxBrakeCylinderServiceMaximumPressureUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(brakeCylinderDisposable);
+
 			brakeCylinder.EmergencyMaximumPressure
 				.BindTo(
 					textBoxBrakeCylinderEmergencyMaximumPressure,
@@ -52,6 +69,22 @@ namespace TrainEditor2.Views
 
 			brakeCylinder.EmergencyMaximumPressure
 				.BindToErrorProvider(errorProvider, textBoxBrakeCylinderEmergencyMaximumPressure)
+				.AddTo(brakeCylinderDisposable);
+
+			brakeCylinder.EmergencyMaximumPressureUnit
+				.BindTo(
+					comboBoxBrakeCylinderEmergencyMaximumPressureUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Pressure)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxBrakeCylinderEmergencyMaximumPressureUnit.SelectedIndexChanged += h,
+							h => comboBoxBrakeCylinderEmergencyMaximumPressureUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
 				.AddTo(brakeCylinderDisposable);
 
 			brakeCylinder.EmergencyRate
@@ -74,6 +107,22 @@ namespace TrainEditor2.Views
 				.BindToErrorProvider(errorProvider, textBoxBrakeCylinderEmergencyRate)
 				.AddTo(brakeCylinderDisposable);
 
+			brakeCylinder.EmergencyRateUnit
+				.BindTo(
+					comboBoxBrakeCylinderEmergencyRateUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.PressureRate)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxBrakeCylinderEmergencyRateUnit.SelectedIndexChanged += h,
+							h => comboBoxBrakeCylinderEmergencyRateUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(brakeCylinderDisposable);
+
 			brakeCylinder.ReleaseRate
 				.BindTo(
 					textBoxBrakeCylinderReleaseRate,
@@ -92,6 +141,22 @@ namespace TrainEditor2.Views
 
 			brakeCylinder.ReleaseRate
 				.BindToErrorProvider(errorProvider, textBoxBrakeCylinderReleaseRate)
+				.AddTo(brakeCylinderDisposable);
+
+			brakeCylinder.ReleaseRateUnit
+				.BindTo(
+					comboBoxBrakeCylinderReleaseRateUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.PressureRate)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxBrakeCylinderReleaseRateUnit.SelectedIndexChanged += h,
+							h => comboBoxBrakeCylinderReleaseRateUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
 				.AddTo(brakeCylinderDisposable);
 
 			return brakeCylinderDisposable;

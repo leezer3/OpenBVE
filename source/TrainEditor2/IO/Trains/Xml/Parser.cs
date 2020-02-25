@@ -8,6 +8,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Units;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.Systems;
 using Path = OpenBveApi.Path;
@@ -17,6 +18,7 @@ namespace TrainEditor2.IO.Trains.Xml
 	internal static partial class TrainXml
 	{
 		private static readonly Version editorVersion = new Version(1, 8, 0, 0);
+		private static readonly CultureInfo culture = CultureInfo.InvariantCulture;
 
 		private enum FileVersion
 		{
@@ -83,8 +85,6 @@ namespace TrainEditor2.IO.Trains.Xml
 		private static Train ParseTrainNode(string fileName, XElement parent)
 		{
 			Train train = new Train();
-
-			CultureInfo culture = CultureInfo.InvariantCulture;
 
 			string section = parent.Name.LocalName;
 
@@ -157,16 +157,7 @@ namespace TrainEditor2.IO.Trains.Xml
 							break;
 						}
 
-						ParseCarsNode(fileName, keyNode, train.Cars);
-						break;
-					case "couplers":
-						if (!keyNode.HasElements)
-						{
-							Interface.AddMessage(MessageType.Error, false, $"An empty list of {key} was defined in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-							break;
-						}
-
-						ParseCouplersNode(fileName, keyNode, train.Couplers);
+						ParseCarsNode(fileName, keyNode, train.Cars, train.Couplers);
 						break;
 					case "version":
 						// Ignore
@@ -182,8 +173,6 @@ namespace TrainEditor2.IO.Trains.Xml
 		private static Handle ParseHandleNode(string fileName, XElement parent)
 		{
 			Handle handle = new Handle();
-
-			CultureInfo culture = CultureInfo.InvariantCulture;
 
 			string section = parent.Name.LocalName;
 
@@ -365,10 +354,8 @@ namespace TrainEditor2.IO.Trains.Xml
 			return handle;
 		}
 
-		private static void ParseCarsNode(string fileName, XElement parent, ICollection<Car> cars)
+		private static void ParseCarsNode(string fileName, XElement parent, ICollection<Car> cars, ICollection<Coupler> couplers)
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			string section = parent.Name.LocalName;
 
 			foreach (XElement keyNode in parent.Elements())
@@ -376,13 +363,35 @@ namespace TrainEditor2.IO.Trains.Xml
 				string key = keyNode.Name.LocalName;
 				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
 
-				if (key.ToLowerInvariant() != "car")
+				switch (key.ToLowerInvariant())
 				{
-					Interface.AddMessage(MessageType.Error, false, $"Invalid car node {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-					continue;
+					case "car":
+						cars.Add(ParseCarNode(fileName, keyNode));
+						break;
+					case "coupler":
+						if (cars.Any())
+						{
+							couplers.Add(ParseCouplerNode(fileName, keyNode));
+						}
+						else
+						{
+							Interface.AddMessage(MessageType.Error, false, $"You cannot define {key} before defining the first car in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+						}
+						break;
+					default:
+						Interface.AddMessage(MessageType.Warning, false, $"Unsupported key {key} encountered in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+						break;
 				}
+			}
 
-				cars.Add(ParseCarNode(fileName, keyNode));
+			for (int i = cars.Count; i < couplers.Count + 1; i++)
+			{
+				cars.Add(new UncontrolledTrailerCar());
+			}
+
+			for (int i = couplers.Count; i < cars.Count - 1; i++)
+			{
+				couplers.Add(new Coupler());
 			}
 		}
 
@@ -390,7 +399,6 @@ namespace TrainEditor2.IO.Trains.Xml
 		{
 			Car car;
 
-			CultureInfo culture = CultureInfo.InvariantCulture;
 			string basePath = System.IO.Path.GetDirectoryName(fileName);
 
 			string section = parent.Name.LocalName;
@@ -461,9 +469,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "mass":
 						if (value.Any())
 						{
-							double result;
+							Quantity.Mass result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
+							if (!Quantity.Mass.TryParse(keyNode, true, out result) || result.Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -476,9 +484,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "length":
 						if (value.Any())
 						{
-							double result;
+							Quantity.Length result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
+							if (!Quantity.Length.TryParse(keyNode, true, out result) || result.Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -491,9 +499,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "width":
 						if (value.Any())
 						{
-							double result;
+							Quantity.Length result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
+							if (!Quantity.Length.TryParse(keyNode, true, out result) || result.Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -506,9 +514,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "height":
 						if (value.Any())
 						{
-							double result;
+							Quantity.Length result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
+							if (!Quantity.Length.TryParse(keyNode, true, out result) || result.Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -521,9 +529,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "centerofgravityheight":
 						if (value.Any())
 						{
-							double result;
+							Quantity.Length result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result))
+							if (!Quantity.Length.TryParse(keyNode, true, out result))
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -537,28 +545,30 @@ namespace TrainEditor2.IO.Trains.Xml
 						if (value.Any())
 						{
 							string[] values = value.Split(',');
+							string[] unitValues = keyNode.Attributes().FirstOrDefault(x => string.Equals(x.Name.LocalName, "Unit", StringComparison.InvariantCultureIgnoreCase))?.Value.Split(',');
 
 							if (values.Length == 2)
 							{
 								double front, rear;
+								Unit.Length frontUnit = Unit.Length.Meter, rearUnit = Unit.Length.Meter;
 
-								if (!NumberFormats.TryParseDoubleVb6(values[0], out front))
+								if (!NumberFormats.TryParseDoubleVb6(values[0], out front) || unitValues != null && unitValues.Length > 0 && !Unit.TryParse(unitValues[0], true, out frontUnit))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"Front must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
-								else if (!NumberFormats.TryParseDoubleVb6(values[1], out rear))
+								else if (!NumberFormats.TryParseDoubleVb6(values[1], out rear) || unitValues != null && unitValues.Length > 1 && !Unit.TryParse(unitValues[1], true, out rearUnit))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"Rear must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
-								else if (front <= rear)
+								else if (new Quantity.Length(front, frontUnit) <= new Quantity.Length(rear, rearUnit))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"Rear is expected to be less than Front in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
 								else
 								{
 									car.DefinedAxles = true;
-									car.FrontAxle = front;
-									car.RearAxle = rear;
+									car.FrontAxle = new Quantity.Length(front, frontUnit);
+									car.RearAxle = new Quantity.Length(rear, rearUnit);
 								}
 							}
 							else
@@ -749,7 +759,6 @@ namespace TrainEditor2.IO.Trains.Xml
 		{
 			Car.Bogie bogie = new Car.Bogie();
 
-			CultureInfo culture = CultureInfo.InvariantCulture;
 			string basePath = System.IO.Path.GetDirectoryName(fileName);
 
 			string section = parent.Name.LocalName;
@@ -766,28 +775,30 @@ namespace TrainEditor2.IO.Trains.Xml
 						if (value.Any())
 						{
 							string[] values = value.Split(',');
+							string[] unitValues = keyNode.Attributes().FirstOrDefault(x => string.Equals(x.Name.LocalName, "Unit", StringComparison.InvariantCultureIgnoreCase))?.Value.Split(',');
 
 							if (values.Length == 2)
 							{
 								double front, rear;
+								Unit.Length frontUnit = Unit.Length.Meter, rearUnit = Unit.Length.Meter;
 
-								if (!NumberFormats.TryParseDoubleVb6(values[0], out front))
+								if (!NumberFormats.TryParseDoubleVb6(values[0], out front) || unitValues != null && unitValues.Length > 0 && !Unit.TryParse(unitValues[0], true, out frontUnit))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"Front must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
-								else if (!NumberFormats.TryParseDoubleVb6(values[1], out rear))
+								else if (!NumberFormats.TryParseDoubleVb6(values[1], out rear) || unitValues != null && unitValues.Length > 1 && !Unit.TryParse(unitValues[1], true, out rearUnit))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"Rear must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
-								else if (front <= rear)
+								else if (new Quantity.Length(front, frontUnit) <= new Quantity.Length(rear, rearUnit))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"Rear is expected to be less than Front in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
 								else
 								{
 									bogie.DefinedAxles = true;
-									bogie.FrontAxle = front;
-									bogie.RearAxle = rear;
+									bogie.FrontAxle = new Quantity.Length(front, frontUnit);
+									bogie.RearAxle = new Quantity.Length(rear, rearUnit);
 								}
 							}
 							else
@@ -843,8 +854,6 @@ namespace TrainEditor2.IO.Trains.Xml
 		private static Performance ParsePerformanceNode(string fileName, XElement parent)
 		{
 			Performance performance = new Performance();
-
-			CultureInfo culture = CultureInfo.InvariantCulture;
 
 			string section = parent.Name.LocalName;
 
@@ -928,8 +937,6 @@ namespace TrainEditor2.IO.Trains.Xml
 		private static Brake ParseBrakeNode(string fileName, XElement parent)
 		{
 			Brake brake = new Brake();
-
-			CultureInfo culture = CultureInfo.InvariantCulture;
 
 			string section = parent.Name.LocalName;
 
@@ -1026,8 +1033,6 @@ namespace TrainEditor2.IO.Trains.Xml
 		{
 			Car.Door door = new Car.Door();
 
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			string section = parent.Name.LocalName;
 
 			foreach (XElement keyNode in parent.Elements())
@@ -1041,9 +1046,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "width":
 						if (value.Any())
 						{
-							double result;
+							Quantity.Length result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result < 0.0)
+							if (!Quantity.Length.TryParse(keyNode, true, out result) || result.Value < 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1056,9 +1061,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "maxtolerance":
 						if (value.Any())
 						{
-							double result;
+							Quantity.Length result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result < 0.0)
+							if (!Quantity.Length.TryParse(keyNode, true, out result) || result.Value < 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1080,8 +1085,6 @@ namespace TrainEditor2.IO.Trains.Xml
 		private static Acceleration ParseAccelerationNode(string fileName, XElement parent)
 		{
 			Acceleration acceleration = new Acceleration();
-
-			CultureInfo culture = CultureInfo.InvariantCulture;
 
 			string section = parent.Name.LocalName;
 
@@ -1147,32 +1150,10 @@ namespace TrainEditor2.IO.Trains.Xml
 			return acceleration;
 		}
 
-		private static void ParseCouplersNode(string fileName, XElement parent, ICollection<Coupler> couplers)
-		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
-			string section = parent.Name.LocalName;
-
-			foreach (XElement keyNode in parent.Elements())
-			{
-				string key = keyNode.Name.LocalName;
-				int lineNumber = ((IXmlLineInfo)keyNode).LineNumber;
-
-				if (key.ToLowerInvariant() != "coupler")
-				{
-					Interface.AddMessage(MessageType.Error, false, $"Invalid coupler node {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
-					continue;
-				}
-
-				couplers.Add(ParseCouplerNode(fileName, keyNode));
-			}
-		}
-
 		private static Coupler ParseCouplerNode(string fileName, XElement parent)
 		{
 			Coupler coupler = new Coupler();
 
-			CultureInfo culture = CultureInfo.InvariantCulture;
 			string basePath = System.IO.Path.GetDirectoryName(fileName);
 
 			string section = parent.Name.LocalName;
@@ -1189,27 +1170,29 @@ namespace TrainEditor2.IO.Trains.Xml
 						if (value.Any())
 						{
 							string[] values = value.Split(',');
+							string[] unitValues = keyNode.Attributes().FirstOrDefault(x => string.Equals(x.Name.LocalName, "Unit", StringComparison.InvariantCultureIgnoreCase))?.Value.Split(',');
 
 							if (values.Length == 2)
 							{
 								double min, max;
+								Unit.Length minUnit = Unit.Length.Meter, maxUnit = Unit.Length.Meter;
 
-								if (!NumberFormats.TryParseDoubleVb6(values[0], out min))
+								if (!NumberFormats.TryParseDoubleVb6(values[0], out min) || unitValues != null && unitValues.Length > 0 && !Unit.TryParse(unitValues[0], true, out minUnit))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"Minimum must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
-								else if (!NumberFormats.TryParseDoubleVb6(values[1], out max))
+								else if (!NumberFormats.TryParseDoubleVb6(values[1], out max) || unitValues != null && unitValues.Length > 1 && !Unit.TryParse(unitValues[1], true, out maxUnit))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"Maximum must be a floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
-								else if (min > max)
+								else if (new Quantity.Length(min, minUnit) > new Quantity.Length(max, maxUnit))
 								{
 									Interface.AddMessage(MessageType.Error, false, $"Minimum is expected to be less than Maximum in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 								}
 								else
 								{
-									coupler.Min = min;
-									coupler.Max = max;
+									coupler.Min = new Quantity.Length(min, minUnit);
+									coupler.Max = new Quantity.Length(max, maxUnit);
 								}
 							}
 							else

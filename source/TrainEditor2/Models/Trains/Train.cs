@@ -5,6 +5,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Globalization;
 using System.Linq;
+using OpenBveApi.Units;
 using Prism.Mvvm;
 using TrainEditor2.Extensions;
 
@@ -151,7 +152,7 @@ namespace TrainEditor2.Models.Trains
 			const double AirDensity = 1.22497705587732;
 
 			velocity /= 3.6;
-			double mass = car.Mass * 1000.0;
+			double mass = car.Mass.ToNewUnit(Unit.Mass.Kilogram).Value;
 			double frontalArea = Cars.IndexOf(car) == 0 ? car.ExposedFrontalArea : car.UnexposedFrontalArea;
 
 			double f = frontalArea * car.Performance.AerodynamicDragCoefficient * AirDensity / (2.0 * mass);

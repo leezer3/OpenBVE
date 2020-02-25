@@ -1,13 +1,14 @@
 ﻿using System;
+using OpenBveApi.Units;
 using Prism.Mvvm;
 
 namespace TrainEditor2.Models.Trains
 {
 	internal class AuxiliaryReservoir : BindableBase, ICloneable
 	{
-		private double chargeRate;
+		private Quantity.PressureRate chargeRate;
 
-		internal double ChargeRate
+		internal Quantity.PressureRate ChargeRate
 		{
 			get
 			{
@@ -21,7 +22,7 @@ namespace TrainEditor2.Models.Trains
 
 		internal AuxiliaryReservoir()
 		{
-			ChargeRate = 200.0;
+			ChargeRate = new Quantity.PressureRate(200.0,Unit.PressureRate.KilopascalPerSecond);
 		}
 
 		public object Clone()

@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Reactive.Linq;
+using OpenBveApi.Units;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -15,12 +16,27 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
+		internal ReactiveProperty<Unit.Length> PositionX_Unit
+		{
+			get;
+		}
+
 		internal ReactiveProperty<string> PositionY
 		{
 			get;
 		}
 
+		internal ReactiveProperty<Unit.Length> PositionY_Unit
+		{
+			get;
+		}
+
 		internal ReactiveProperty<string> PositionZ
+		{
+			get;
+		}
+
+		internal ReactiveProperty<Unit.Length> PositionZ_Unit
 		{
 			get;
 		}
@@ -32,8 +48,8 @@ namespace TrainEditor2.ViewModels.Trains
 			PositionX = cab
 				.ToReactivePropertyAsSynchronized(
 					x => x.PositionX,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Value.ToString(culture),
+					x => new Quantity.Length(double.Parse(x, NumberStyles.Float, culture), cab.PositionX.UnitValue),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -45,13 +61,21 @@ namespace TrainEditor2.ViewModels.Trains
 
 					return message;
 				})
+				.AddTo(disposable);
+
+			PositionX_Unit = cab
+				.ToReactivePropertyAsSynchronized(
+					x => x.PositionX,
+					x => x.UnitValue,
+					x => cab.PositionX.ToNewUnit(x)
+				)
 				.AddTo(disposable);
 
 			PositionY = cab
 				.ToReactivePropertyAsSynchronized(
 					x => x.PositionY,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Value.ToString(culture),
+					x => new Quantity.Length(double.Parse(x, NumberStyles.Float, culture), cab.PositionY.UnitValue),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -65,11 +89,19 @@ namespace TrainEditor2.ViewModels.Trains
 				})
 				.AddTo(disposable);
 
+			PositionY_Unit = cab
+				.ToReactivePropertyAsSynchronized(
+					x => x.PositionY,
+					x => x.UnitValue,
+					x => cab.PositionY.ToNewUnit(x)
+				)
+				.AddTo(disposable);
+
 			PositionZ = cab
 				.ToReactivePropertyAsSynchronized(
 					x => x.PositionZ,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Value.ToString(culture),
+					x => new Quantity.Length(double.Parse(x, NumberStyles.Float, culture), cab.PositionZ.UnitValue),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -81,6 +113,14 @@ namespace TrainEditor2.ViewModels.Trains
 
 					return message;
 				})
+				.AddTo(disposable);
+
+			PositionZ_Unit = cab
+				.ToReactivePropertyAsSynchronized(
+					x => x.PositionZ,
+					x => x.UnitValue,
+					x => cab.PositionZ.ToNewUnit(x)
+				)
 				.AddTo(disposable);
 		}
 	}

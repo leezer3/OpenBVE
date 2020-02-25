@@ -1,6 +1,7 @@
 using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using OpenBveApi.Units;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -34,6 +35,22 @@ namespace TrainEditor2.Views
 				.BindToErrorProvider(errorProvider, textBoxCouplerMin)
 				.AddTo(couplerDisposable);
 
+			coupler.MinUnit
+				.BindTo(
+					comboBoxCouplerMinUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Length)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxCouplerMinUnit.SelectedIndexChanged += h,
+							h => comboBoxCouplerMinUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(couplerDisposable);
+
 			coupler.Max
 				.BindTo(
 					textBoxCouplerMax,
@@ -52,6 +69,22 @@ namespace TrainEditor2.Views
 
 			coupler.Max
 				.BindToErrorProvider(errorProvider, textBoxCouplerMax)
+				.AddTo(couplerDisposable);
+
+			coupler.MaxUnit
+				.BindTo(
+					comboBoxCouplerMaxUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Length)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxCouplerMaxUnit.SelectedIndexChanged += h,
+							h => comboBoxCouplerMaxUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
 				.AddTo(couplerDisposable);
 
 			coupler.Object

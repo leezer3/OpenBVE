@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using OpenBveApi.Units;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -34,6 +35,22 @@ namespace TrainEditor2.Views
 				.BindToErrorProvider(errorProvider, textBoxStraightAirPipeServiceRate)
 				.AddTo(straightAirPipeDisposable);
 
+			straightAirPipe.ServiceRateUnit
+				.BindTo(
+					comboBoxStraightAirPipeServiceRateUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.PressureRate)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxStraightAirPipeServiceRateUnit.SelectedIndexChanged += h,
+							h => comboBoxStraightAirPipeServiceRateUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(straightAirPipeDisposable);
+
 			straightAirPipe.EmergencyRate
 				.BindTo(
 					textBoxStraightAirPipeEmergencyRate,
@@ -54,6 +71,22 @@ namespace TrainEditor2.Views
 				.BindToErrorProvider(errorProvider, textBoxStraightAirPipeEmergencyRate)
 				.AddTo(straightAirPipeDisposable);
 
+			straightAirPipe.EmergencyRateUnit
+				.BindTo(
+					comboBoxStraightAirPipeEmergencyRateUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.PressureRate)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxStraightAirPipeEmergencyRateUnit.SelectedIndexChanged += h,
+							h => comboBoxStraightAirPipeEmergencyRateUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(straightAirPipeDisposable);
+
 			straightAirPipe.ReleaseRate
 				.BindTo(
 					textBoxStraightAirPipeReleaseRate,
@@ -72,6 +105,22 @@ namespace TrainEditor2.Views
 
 			straightAirPipe.ReleaseRate
 				.BindToErrorProvider(errorProvider, textBoxStraightAirPipeReleaseRate)
+				.AddTo(straightAirPipeDisposable);
+
+			straightAirPipe.ReleaseRateUnit
+				.BindTo(
+					comboBoxStraightAirPipeReleaseRateUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.PressureRate)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxStraightAirPipeReleaseRateUnit.SelectedIndexChanged += h,
+							h => comboBoxStraightAirPipeReleaseRateUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
 				.AddTo(straightAirPipeDisposable);
 
 			return straightAirPipeDisposable;

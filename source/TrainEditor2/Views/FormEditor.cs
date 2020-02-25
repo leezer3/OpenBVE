@@ -7,6 +7,7 @@ using System.Reactive.Disposables;
 using System.Security.Permissions;
 using System.Windows.Forms;
 using OpenBveApi.Interface;
+using OpenBveApi.Units;
 using OpenTK.Graphics.OpenGL;
 using Reactive.Bindings;
 using Reactive.Bindings.Binding;
@@ -259,6 +260,58 @@ namespace TrainEditor2.Views
 				comboBox.DrawMode = DrawMode.OwnerDrawFixed;
 				comboBox.DrawItem += ToolStripComboBoxIndex_DrawItem;
 			}
+
+			string[] massUnits = Enum.GetValues(typeof(Unit.Mass)).OfType<Enum>().Select(x => Unit.GetRewords(x).First()).ToArray();
+			string[] lengthUnits = Enum.GetValues(typeof(Unit.Length)).OfType<Enum>().Select(x => Unit.GetRewords(x).First()).ToArray();
+			string[] pressureRateUnits = Enum.GetValues(typeof(Unit.PressureRate)).OfType<Enum>().Select(x => Unit.GetRewords(x).First()).ToArray();
+			string[] pressureUnits = Enum.GetValues(typeof(Unit.Pressure)).OfType<Enum>().Select(x => Unit.GetRewords(x).First()).ToArray();
+
+			comboBoxMassUnit.Items.AddRange((string[])massUnits.Clone());
+			comboBoxLengthUnit.Items.AddRange((string[])lengthUnits.Clone());
+			comboBoxWidthUnit.Items.AddRange((string[])lengthUnits.Clone());
+			comboBoxHeightUnit.Items.AddRange((string[])lengthUnits.Clone());
+			comboBoxCenterOfMassHeightUnit.Items.AddRange((string[])lengthUnits.Clone());
+			comboBoxFrontAxleUnit.Items.AddRange((string[])lengthUnits.Clone());
+			comboBoxRearAxleUnit.Items.AddRange((string[])lengthUnits.Clone());
+
+			comboBoxCabXUnit.Items.AddRange((string[])lengthUnits.Clone());
+			comboBoxCabYUnit.Items.AddRange((string[])lengthUnits.Clone());
+			comboBoxCabZUnit.Items.AddRange((string[])lengthUnits.Clone());
+
+			comboBoxCameraRestrictionForwardsUnit.Items.AddRange((string[])lengthUnits.Clone());
+			comboBoxCameraRestrictionBackwardsUnit.Items.AddRange((string[])lengthUnits.Clone());
+			comboBoxCameraRestrictionLeftUnit.Items.AddRange((string[])lengthUnits.Clone());
+			comboBoxCameraRestrictionRightUnit.Items.AddRange((string[])lengthUnits.Clone());
+			comboBoxCameraRestrictionUpUnit.Items.AddRange((string[])lengthUnits.Clone());
+			comboBoxCameraRestrictionDownUnit.Items.AddRange((string[])lengthUnits.Clone());
+
+			comboBoxCouplerMinUnit.Items.AddRange((string[])lengthUnits.Clone());
+			comboBoxCouplerMaxUnit.Items.AddRange((string[])lengthUnits.Clone());
+
+			comboBoxCompressorRateUnit.Items.AddRange((string[])pressureRateUnits.Clone());
+
+			comboBoxMainReservoirMinimumPressureUnit.Items.AddRange((string[])pressureUnits.Clone());
+			comboBoxMainReservoirMaximumPressureUnit.Items.AddRange((string[])pressureUnits.Clone());
+
+			comboBoxAuxiliaryReservoirChargeRateUnit.Items.AddRange((string[])pressureRateUnits.Clone());
+
+			comboBoxEqualizingReservoirChargeRateUnit.Items.AddRange((string[])pressureRateUnits.Clone());
+			comboBoxEqualizingReservoirServiceRateUnit.Items.AddRange((string[])pressureRateUnits.Clone());
+			comboBoxEqualizingReservoirEmergencyRateUnit.Items.AddRange((string[])pressureRateUnits.Clone());
+
+			comboBoxBrakePipeNormalPressureUnit.Items.AddRange((string[])pressureUnits.Clone());
+			comboBoxBrakePipeChargeRateUnit.Items.AddRange((string[])pressureRateUnits.Clone());
+			comboBoxBrakePipeServiceRateUnit.Items.AddRange((string[])pressureRateUnits.Clone());
+			comboBoxBrakePipeEmergencyRateUnit.Items.AddRange((string[])pressureRateUnits.Clone());
+
+			comboBoxStraightAirPipeServiceRateUnit.Items.AddRange((string[])pressureRateUnits.Clone());
+			comboBoxStraightAirPipeEmergencyRateUnit.Items.AddRange((string[])pressureRateUnits.Clone());
+			comboBoxStraightAirPipeReleaseRateUnit.Items.AddRange((string[])pressureRateUnits.Clone());
+
+			comboBoxBrakeCylinderServiceMaximumPressureUnit.Items.AddRange((string[])pressureUnits.Clone());
+			comboBoxBrakeCylinderEmergencyMaximumPressureUnit.Items.AddRange((string[])pressureUnits.Clone());
+			comboBoxBrakeCylinderEmergencyRateUnit.Items.AddRange((string[])pressureRateUnits.Clone());
+			comboBoxBrakeCylinderReleaseRateUnit.Items.AddRange((string[])pressureRateUnits.Clone());
 
 			Icon = WinFormsUtilities.GetIcon();
 

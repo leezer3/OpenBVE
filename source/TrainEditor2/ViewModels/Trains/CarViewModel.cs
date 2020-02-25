@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Reactive.Linq;
+using OpenBveApi.Units;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -22,7 +23,17 @@ namespace TrainEditor2.ViewModels.Trains
 				get;
 			}
 
+			internal ReactiveProperty<Unit.Length> FrontAxleUnit
+			{
+				get;
+			}
+
 			internal ReactiveProperty<string> RearAxle
+			{
+				get;
+			}
+
+			internal ReactiveProperty<Unit.Length> RearAxleUnit
 			{
 				get;
 			}
@@ -48,18 +59,34 @@ namespace TrainEditor2.ViewModels.Trains
 				FrontAxle = bogie
 					.ToReactivePropertyAsSynchronized(
 						x => x.FrontAxle,
-						x => x.ToString(culture),
-						x => double.Parse(x, NumberStyles.Float, culture),
+						x => x.Value.ToString(culture),
+						x => new Quantity.Length(double.Parse(x, NumberStyles.Float, culture), bogie.FrontAxle.UnitValue),
 						ignoreValidationErrorValue: true
+					)
+					.AddTo(disposable);
+
+				FrontAxleUnit = bogie
+					.ToReactivePropertyAsSynchronized(
+						x => x.FrontAxle,
+						x => x.UnitValue,
+						x => bogie.FrontAxle.ToNewUnit(x)
 					)
 					.AddTo(disposable);
 
 				RearAxle = bogie
 					.ToReactivePropertyAsSynchronized(
 						x => x.RearAxle,
-						x => x.ToString(culture),
-						x => double.Parse(x, NumberStyles.Float, culture),
+						x => x.Value.ToString(culture),
+						x => new Quantity.Length(double.Parse(x, NumberStyles.Float, culture), bogie.RearAxle.UnitValue),
 						ignoreValidationErrorValue: true
+					)
+					.AddTo(disposable);
+
+				RearAxleUnit = bogie
+					.ToReactivePropertyAsSynchronized(
+						x => x.RearAxle,
+						x => x.UnitValue,
+						x => bogie.RearAxle.ToNewUnit(x)
 					)
 					.AddTo(disposable);
 
@@ -75,7 +102,8 @@ namespace TrainEditor2.ViewModels.Trains
 					{
 						FrontAxle.ForceValidate();
 						RearAxle.ForceValidate();
-					});
+					})
+					.AddTo(disposable);
 
 				FrontAxle.SetValidateNotifyError(x =>
 					{
@@ -86,9 +114,9 @@ namespace TrainEditor2.ViewModels.Trains
 						{
 							double rear;
 
-							if (DefinedAxles.Value && Utilities.TryParse(RearAxle.Value, NumberRange.Any, out rear) && front <= rear)
+							if (DefinedAxles.Value && Utilities.TryParse(RearAxle.Value, NumberRange.Any, out rear) && new Quantity.Length(front, bogie.FrontAxle.UnitValue) <= new Quantity.Length(rear, bogie.RearAxle.UnitValue))
 							{
-								message = "RearAxleはFrontAxle未満でなければなりません。";
+								message = "RearAxle must be less than FrontAxle.";
 							}
 						}
 
@@ -112,9 +140,9 @@ namespace TrainEditor2.ViewModels.Trains
 						{
 							double front;
 
-							if (DefinedAxles.Value && Utilities.TryParse(FrontAxle.Value, NumberRange.Any, out front) && rear >= front)
+							if (DefinedAxles.Value && Utilities.TryParse(FrontAxle.Value, NumberRange.Any, out front) && new Quantity.Length(rear, bogie.RearAxle.UnitValue) >= new Quantity.Length(front, bogie.FrontAxle.UnitValue))
 							{
-								message = "RearAxleはFrontAxle未満でなければなりません。";
+								message = "RearAxle must be less than FrontAxle.";
 							}
 						}
 
@@ -138,7 +166,17 @@ namespace TrainEditor2.ViewModels.Trains
 				get;
 			}
 
+			internal ReactiveProperty<Unit.Length> WidthUnit
+			{
+				get;
+			}
+
 			internal ReactiveProperty<string> MaxTolerance
+			{
+				get;
+			}
+
+			internal ReactiveProperty<Unit.Length> MaxToleranceUnit
 			{
 				get;
 			}
@@ -150,8 +188,8 @@ namespace TrainEditor2.ViewModels.Trains
 				Width = door
 					.ToReactivePropertyAsSynchronized(
 						x => x.Width,
-						x => x.ToString(culture),
-						x => double.Parse(x, NumberStyles.Float, culture),
+						x => x.Value.ToString(culture),
+						x => new Quantity.Length(double.Parse(x, NumberStyles.Float, culture), door.Width.UnitValue),
 						ignoreValidationErrorValue: true
 					)
 					.SetValidateNotifyError(x =>
@@ -165,11 +203,19 @@ namespace TrainEditor2.ViewModels.Trains
 					})
 					.AddTo(disposable);
 
+				WidthUnit = door
+					.ToReactivePropertyAsSynchronized(
+						x => x.Width,
+						x => x.UnitValue,
+						x => door.Width.ToNewUnit(x)
+					)
+					.AddTo(disposable);
+
 				MaxTolerance = door
 					.ToReactivePropertyAsSynchronized(
 						x => x.MaxTolerance,
-						x => x.ToString(culture),
-						x => double.Parse(x, NumberStyles.Float, culture),
+						x => x.Value.ToString(culture),
+						x => new Quantity.Length(double.Parse(x, NumberStyles.Float, culture), door.MaxTolerance.UnitValue),
 						ignoreValidationErrorValue: true
 					)
 					.SetValidateNotifyError(x =>
@@ -181,6 +227,14 @@ namespace TrainEditor2.ViewModels.Trains
 
 						return message;
 					})
+					.AddTo(disposable);
+
+				MaxToleranceUnit = door
+					.ToReactivePropertyAsSynchronized(
+						x => x.MaxTolerance,
+						x => x.UnitValue,
+						x => door.MaxTolerance.ToNewUnit(x)
+					)
 					.AddTo(disposable);
 			}
 		}
@@ -195,7 +249,17 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
+		internal ReactiveProperty<Unit.Mass> MassUnit
+		{
+			get;
+		}
+
 		internal ReactiveProperty<string> Length
+		{
+			get;
+		}
+
+		internal ReactiveProperty<Unit.Length> LengthUnit
 		{
 			get;
 		}
@@ -205,12 +269,27 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
+		internal ReactiveProperty<Unit.Length> WidthUnit
+		{
+			get;
+		}
+
 		internal ReactiveProperty<string> Height
 		{
 			get;
 		}
 
+		internal ReactiveProperty<Unit.Length> HeightUnit
+		{
+			get;
+		}
+
 		internal ReactiveProperty<string> CenterOfGravityHeight
+		{
+			get;
+		}
+
+		internal ReactiveProperty<Unit.Length> CenterOfGravityHeightUnit
 		{
 			get;
 		}
@@ -225,7 +304,17 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
+		internal ReactiveProperty<Unit.Length> FrontAxleUnit
+		{
+			get;
+		}
+
 		internal ReactiveProperty<string> RearAxle
+		{
+			get;
+		}
+
+		internal ReactiveProperty<Unit.Length> RearAxleUnit
 		{
 			get;
 		}
@@ -314,8 +403,8 @@ namespace TrainEditor2.ViewModels.Trains
 			Mass = car
 				.ToReactivePropertyAsSynchronized(
 					x => x.Mass,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Value.ToString(culture),
+					x => new Quantity.Mass(double.Parse(x, NumberStyles.Float, culture), car.Mass.UnitValue),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -327,13 +416,21 @@ namespace TrainEditor2.ViewModels.Trains
 
 					return message;
 				})
+				.AddTo(disposable);
+
+			MassUnit = car
+				.ToReactivePropertyAsSynchronized(
+					x => x.Mass,
+					x => x.UnitValue,
+					x => car.Mass.ToNewUnit(x)
+				)
 				.AddTo(disposable);
 
 			Length = car
 				.ToReactivePropertyAsSynchronized(
 					x => x.Length,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Value.ToString(culture),
+					x => new Quantity.Length(double.Parse(x, NumberStyles.Float, culture), car.Length.UnitValue),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -345,13 +442,21 @@ namespace TrainEditor2.ViewModels.Trains
 
 					return message;
 				})
+				.AddTo(disposable);
+
+			LengthUnit = car
+				.ToReactivePropertyAsSynchronized(
+					x => x.Length,
+					x => x.UnitValue,
+					x => car.Length.ToNewUnit(x)
+				)
 				.AddTo(disposable);
 
 			Width = car
 				.ToReactivePropertyAsSynchronized(
 					x => x.Width,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Value.ToString(culture),
+					x => new Quantity.Length(double.Parse(x, NumberStyles.Float, culture), car.Width.UnitValue),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -363,13 +468,21 @@ namespace TrainEditor2.ViewModels.Trains
 
 					return message;
 				})
+				.AddTo(disposable);
+
+			WidthUnit = car
+				.ToReactivePropertyAsSynchronized(
+					x => x.Width,
+					x => x.UnitValue,
+					x => car.Width.ToNewUnit(x)
+				)
 				.AddTo(disposable);
 
 			Height = car
 				.ToReactivePropertyAsSynchronized(
 					x => x.Height,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Value.ToString(culture),
+					x => new Quantity.Length(double.Parse(x, NumberStyles.Float, culture), car.Height.UnitValue),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -383,11 +496,19 @@ namespace TrainEditor2.ViewModels.Trains
 				})
 				.AddTo(disposable);
 
+			HeightUnit = car
+				.ToReactivePropertyAsSynchronized(
+					x => x.Height,
+					x => x.UnitValue,
+					x => car.Height.ToNewUnit(x)
+				)
+				.AddTo(disposable);
+
 			CenterOfGravityHeight = car
 				.ToReactivePropertyAsSynchronized(
 					x => x.CenterOfGravityHeight,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Value.ToString(culture),
+					x => new Quantity.Length(double.Parse(x, NumberStyles.Float, culture), car.CenterOfGravityHeight.UnitValue),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -401,6 +522,14 @@ namespace TrainEditor2.ViewModels.Trains
 				})
 				.AddTo(disposable);
 
+			CenterOfGravityHeightUnit = car
+				.ToReactivePropertyAsSynchronized(
+					x => x.CenterOfGravityHeight,
+					x => x.UnitValue,
+					x => car.CenterOfGravityHeight.ToNewUnit(x)
+				)
+				.AddTo(disposable);
+
 			DefinedAxles = car
 				.ToReactivePropertyAsSynchronized(x => x.DefinedAxles)
 				.AddTo(disposable);
@@ -408,18 +537,34 @@ namespace TrainEditor2.ViewModels.Trains
 			FrontAxle = car
 				.ToReactivePropertyAsSynchronized(
 					x => x.FrontAxle,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Value.ToString(culture),
+					x => new Quantity.Length(double.Parse(x, NumberStyles.Float, culture), car.FrontAxle.UnitValue),
 					ignoreValidationErrorValue: true
+				)
+				.AddTo(disposable);
+
+			FrontAxleUnit = car
+				.ToReactivePropertyAsSynchronized(
+					x => x.FrontAxle,
+					x => x.UnitValue,
+					x => car.FrontAxle.ToNewUnit(x)
 				)
 				.AddTo(disposable);
 
 			RearAxle = car
 				.ToReactivePropertyAsSynchronized(
 					x => x.RearAxle,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Value.ToString(culture),
+					x => new Quantity.Length(double.Parse(x, NumberStyles.Float, culture), car.RearAxle.UnitValue),
 					ignoreValidationErrorValue: true
+				)
+				.AddTo(disposable);
+
+			RearAxleUnit = car
+				.ToReactivePropertyAsSynchronized(
+					x => x.RearAxle,
+					x => x.UnitValue,
+					x => car.RearAxle.ToNewUnit(x)
 				)
 				.AddTo(disposable);
 
@@ -542,7 +687,8 @@ namespace TrainEditor2.ViewModels.Trains
 				{
 					FrontAxle.ForceValidate();
 					RearAxle.ForceValidate();
-				});
+				})
+				.AddTo(disposable);
 
 			FrontAxle.SetValidateNotifyError(x =>
 				{
@@ -553,9 +699,9 @@ namespace TrainEditor2.ViewModels.Trains
 					{
 						double rear;
 
-						if (DefinedAxles.Value && Utilities.TryParse(RearAxle.Value, NumberRange.Any, out rear) && front <= rear)
+						if (DefinedAxles.Value && Utilities.TryParse(RearAxle.Value, NumberRange.Any, out rear) && new Quantity.Length(front, car.FrontAxle.UnitValue) <= new Quantity.Length(rear, car.RearAxle.UnitValue))
 						{
-							message = "RearAxleはFrontAxle未満でなければなりません。";
+							message = "RearAxle must be less than FrontAxle.";
 						}
 					}
 
@@ -579,9 +725,9 @@ namespace TrainEditor2.ViewModels.Trains
 					{
 						double front;
 
-						if (DefinedAxles.Value && Utilities.TryParse(FrontAxle.Value, NumberRange.Any, out front) && rear >= front)
+						if (DefinedAxles.Value && Utilities.TryParse(FrontAxle.Value, NumberRange.Any, out front) && new Quantity.Length(rear, car.RearAxle.UnitValue) >= new Quantity.Length(front, car.FrontAxle.UnitValue))
 						{
-							message = "RearAxleはFrontAxle未満でなければなりません。";
+							message = "RearAxle must be less than FrontAxle.";
 						}
 					}
 

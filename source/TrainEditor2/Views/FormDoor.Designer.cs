@@ -33,12 +33,12 @@
 			this.components = new System.ComponentModel.Container();
 			this.textBoxMaxTolerance = new System.Windows.Forms.TextBox();
 			this.textBoxWidth = new System.Windows.Forms.TextBox();
-			this.labelMaxToleranceUnit = new System.Windows.Forms.Label();
-			this.labelWidthUnit = new System.Windows.Forms.Label();
 			this.labelMaxTolerance = new System.Windows.Forms.Label();
 			this.labelWidth = new System.Windows.Forms.Label();
 			this.buttonOK = new System.Windows.Forms.Button();
 			this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+			this.comboBoxWidthUnit = new System.Windows.Forms.ComboBox();
+			this.comboBoxMaxToleranceUnit = new System.Windows.Forms.ComboBox();
 			((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -55,24 +55,6 @@
 			this.textBoxWidth.Name = "textBoxWidth";
 			this.textBoxWidth.Size = new System.Drawing.Size(48, 19);
 			this.textBoxWidth.TabIndex = 53;
-			// 
-			// labelMaxToleranceUnit
-			// 
-			this.labelMaxToleranceUnit.Location = new System.Drawing.Point(160, 32);
-			this.labelMaxToleranceUnit.Name = "labelMaxToleranceUnit";
-			this.labelMaxToleranceUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelMaxToleranceUnit.TabIndex = 52;
-			this.labelMaxToleranceUnit.Text = "mm";
-			this.labelMaxToleranceUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelWidthUnit
-			// 
-			this.labelWidthUnit.Location = new System.Drawing.Point(160, 8);
-			this.labelWidthUnit.Name = "labelWidthUnit";
-			this.labelWidthUnit.Size = new System.Drawing.Size(24, 16);
-			this.labelWidthUnit.TabIndex = 51;
-			this.labelWidthUnit.Text = "mm";
-			this.labelWidthUnit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// labelMaxTolerance
 			// 
@@ -94,7 +76,7 @@
 			// 
 			// buttonOK
 			// 
-			this.buttonOK.Location = new System.Drawing.Point(128, 56);
+			this.buttonOK.Location = new System.Drawing.Point(152, 56);
 			this.buttonOK.Name = "buttonOK";
 			this.buttonOK.Size = new System.Drawing.Size(56, 24);
 			this.buttonOK.TabIndex = 55;
@@ -106,16 +88,34 @@
 			// 
 			this.errorProvider.ContainerControl = this;
 			// 
+			// comboBoxWidthUnit
+			// 
+			this.comboBoxWidthUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxWidthUnit.FormattingEnabled = true;
+			this.comboBoxWidthUnit.Location = new System.Drawing.Point(160, 8);
+			this.comboBoxWidthUnit.Name = "comboBoxWidthUnit";
+			this.comboBoxWidthUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxWidthUnit.TabIndex = 56;
+			// 
+			// comboBoxMaxToleranceUnit
+			// 
+			this.comboBoxMaxToleranceUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxMaxToleranceUnit.FormattingEnabled = true;
+			this.comboBoxMaxToleranceUnit.Location = new System.Drawing.Point(160, 32);
+			this.comboBoxMaxToleranceUnit.Name = "comboBoxMaxToleranceUnit";
+			this.comboBoxMaxToleranceUnit.Size = new System.Drawing.Size(48, 20);
+			this.comboBoxMaxToleranceUnit.TabIndex = 57;
+			// 
 			// FormDoor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(193, 89);
+			this.ClientSize = new System.Drawing.Size(217, 89);
+			this.Controls.Add(this.comboBoxMaxToleranceUnit);
+			this.Controls.Add(this.comboBoxWidthUnit);
 			this.Controls.Add(this.buttonOK);
 			this.Controls.Add(this.textBoxMaxTolerance);
 			this.Controls.Add(this.textBoxWidth);
-			this.Controls.Add(this.labelMaxToleranceUnit);
-			this.Controls.Add(this.labelWidthUnit);
 			this.Controls.Add(this.labelMaxTolerance);
 			this.Controls.Add(this.labelWidth);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -131,11 +131,11 @@
 
 		private System.Windows.Forms.TextBox textBoxMaxTolerance;
 		private System.Windows.Forms.TextBox textBoxWidth;
-		private System.Windows.Forms.Label labelMaxToleranceUnit;
-		private System.Windows.Forms.Label labelWidthUnit;
 		private System.Windows.Forms.Label labelMaxTolerance;
 		private System.Windows.Forms.Label labelWidth;
 		private System.Windows.Forms.Button buttonOK;
 		private System.Windows.Forms.ErrorProvider errorProvider;
+		private System.Windows.Forms.ComboBox comboBoxMaxToleranceUnit;
+		private System.Windows.Forms.ComboBox comboBoxWidthUnit;
 	}
 }

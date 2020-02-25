@@ -1,16 +1,17 @@
 ﻿using System;
+using OpenBveApi.Units;
 using Prism.Mvvm;
 
 namespace TrainEditor2.Models.Trains
 {
 	internal class BrakePipe : BindableBase, ICloneable
 	{
-		private double normalPressure;
-		private double chargeRate;
-		private double serviceRate;
-		private double emergencyRate;
+		private Quantity.Pressure normalPressure;
+		private Quantity.PressureRate chargeRate;
+		private Quantity.PressureRate serviceRate;
+		private Quantity.PressureRate emergencyRate;
 
-		internal double NormalPressure
+		internal Quantity.Pressure NormalPressure
 		{
 			get
 			{
@@ -22,7 +23,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double ChargeRate
+		internal Quantity.PressureRate ChargeRate
 		{
 			get
 			{
@@ -34,7 +35,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double ServiceRate
+		internal Quantity.PressureRate ServiceRate
 		{
 			get
 			{
@@ -46,7 +47,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double EmergencyRate
+		internal Quantity.PressureRate EmergencyRate
 		{
 			get
 			{
@@ -60,10 +61,10 @@ namespace TrainEditor2.Models.Trains
 
 		internal BrakePipe()
 		{
-			NormalPressure = 490.0;
-			ChargeRate = 10000.0;
-			ServiceRate = 1500.0;
-			EmergencyRate = 5000.0;
+			NormalPressure = new Quantity.Pressure(490.0, Unit.Pressure.Kilopascal);
+			ChargeRate = new Quantity.PressureRate(10000.0, Unit.PressureRate.KilopascalPerSecond);
+			ServiceRate = new Quantity.PressureRate(1500.0, Unit.PressureRate.KilopascalPerSecond);
+			EmergencyRate = new Quantity.PressureRate(5000.0, Unit.PressureRate.KilopascalPerSecond);
 		}
 
 		public object Clone()

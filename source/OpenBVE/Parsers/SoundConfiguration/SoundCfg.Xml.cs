@@ -352,7 +352,7 @@ namespace OpenBve
 										Interface.AddMessage(MessageType.Error, false, string.Format("An empty list of motor sounds was defined in in XML file {0}", fileName));
 										break;
 									}
-									if (!(car is TrainManager.MotorCar))
+									if (car is TrainManager.TrailerCar)
 									{
 										break;
 									}

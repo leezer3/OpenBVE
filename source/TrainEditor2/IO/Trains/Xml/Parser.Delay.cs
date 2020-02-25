@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
@@ -16,8 +15,6 @@ namespace TrainEditor2.IO.Trains.Xml
 		private static Delay ParseDelayNode(string fileName, XElement parent)
 		{
 			Delay delay = new Delay();
-
-			CultureInfo culture = CultureInfo.InvariantCulture;
 
 			string section = parent.Name.LocalName;
 
@@ -52,8 +49,6 @@ namespace TrainEditor2.IO.Trains.Xml
 
 			double[] up = new double[0];
 			double[] down = new double[0];
-
-			CultureInfo culture = CultureInfo.InvariantCulture;
 
 			string section = parent.Name.LocalName;
 

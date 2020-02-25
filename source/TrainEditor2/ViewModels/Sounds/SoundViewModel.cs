@@ -1043,15 +1043,15 @@ namespace TrainEditor2.ViewModels.Sounds
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
-						.Select(_ => Enum.GetValues(typeof(BrakeKey))
-							.OfType<BrakeKey>()
+						.Select(_ => Enum.GetValues(typeof(SoundKey.Brake))
+							.OfType<SoundKey.Brake>()
 							.Except(sound.SoundElements.OfType<BrakeElement>().Select(y => y.Key))
 							.Any()
 						)
 				}
 				.CombineLatestValuesAreAllTrue()
 				.ToReactiveCommand()
-				.WithSubscribe(sound.AddElement<BrakeElement, BrakeKey>)
+				.WithSubscribe(sound.AddElement<BrakeElement, SoundKey.Brake>)
 				.AddTo(disposable);
 
 			AddCompressor = new[]
@@ -1060,15 +1060,15 @@ namespace TrainEditor2.ViewModels.Sounds
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
-						.Select(_ => Enum.GetValues(typeof(CompressorKey))
-							.OfType<CompressorKey>()
+						.Select(_ => Enum.GetValues(typeof(SoundKey.Compressor))
+							.OfType<SoundKey.Compressor>()
 							.Except(sound.SoundElements.OfType<CompressorElement>().Select(y => y.Key))
 							.Any()
 						)
 				}
 				.CombineLatestValuesAreAllTrue()
 				.ToReactiveCommand()
-				.WithSubscribe(sound.AddElement<CompressorElement, CompressorKey>)
+				.WithSubscribe(sound.AddElement<CompressorElement, SoundKey.Compressor>)
 				.AddTo(disposable);
 
 			AddSuspension = new[]
@@ -1077,15 +1077,15 @@ namespace TrainEditor2.ViewModels.Sounds
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
-						.Select(_ => Enum.GetValues(typeof(SuspensionKey))
-							.OfType<SuspensionKey>()
+						.Select(_ => Enum.GetValues(typeof(SoundKey.Suspension))
+							.OfType<SoundKey.Suspension>()
 							.Except(sound.SoundElements.OfType<SuspensionElement>().Select(y => y.Key))
 							.Any()
 						)
 				}
 				.CombineLatestValuesAreAllTrue()
 				.ToReactiveCommand()
-				.WithSubscribe(sound.AddElement<SuspensionElement, SuspensionKey>)
+				.WithSubscribe(sound.AddElement<SuspensionElement, SoundKey.Suspension>)
 				.AddTo(disposable);
 
 			AddPrimaryHorn = new[]
@@ -1094,15 +1094,15 @@ namespace TrainEditor2.ViewModels.Sounds
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
-						.Select(_ => Enum.GetValues(typeof(HornKey))
-							.OfType<HornKey>()
+						.Select(_ => Enum.GetValues(typeof(SoundKey.Horn))
+							.OfType<SoundKey.Horn>()
 							.Except(sound.SoundElements.OfType<PrimaryHornElement>().Select(y => y.Key))
 							.Any()
 						)
 				}
 				.CombineLatestValuesAreAllTrue()
 				.ToReactiveCommand()
-				.WithSubscribe(sound.AddElement<PrimaryHornElement, HornKey>)
+				.WithSubscribe(sound.AddElement<PrimaryHornElement, SoundKey.Horn>)
 				.AddTo(disposable);
 
 			AddSecondaryHorn = new[]
@@ -1111,15 +1111,15 @@ namespace TrainEditor2.ViewModels.Sounds
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
-						.Select(_ => Enum.GetValues(typeof(HornKey))
-							.OfType<HornKey>()
+						.Select(_ => Enum.GetValues(typeof(SoundKey.Horn))
+							.OfType<SoundKey.Horn>()
 							.Except(sound.SoundElements.OfType<SecondaryHornElement>().Select(y => y.Key))
 							.Any()
 						)
 				}
 				.CombineLatestValuesAreAllTrue()
 				.ToReactiveCommand()
-				.WithSubscribe(sound.AddElement<SecondaryHornElement, HornKey>)
+				.WithSubscribe(sound.AddElement<SecondaryHornElement, SoundKey.Horn>)
 				.AddTo(disposable);
 
 			AddMusicHorn = new[]
@@ -1128,15 +1128,15 @@ namespace TrainEditor2.ViewModels.Sounds
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
-						.Select(_ => Enum.GetValues(typeof(HornKey))
-							.OfType<HornKey>()
+						.Select(_ => Enum.GetValues(typeof(SoundKey.Horn))
+							.OfType<SoundKey.Horn>()
 							.Except(sound.SoundElements.OfType<MusicHornElement>().Select(y => y.Key))
 							.Any()
 						)
 				}
 				.CombineLatestValuesAreAllTrue()
 				.ToReactiveCommand()
-				.WithSubscribe(sound.AddElement<MusicHornElement, HornKey>)
+				.WithSubscribe(sound.AddElement<MusicHornElement, SoundKey.Horn>)
 				.AddTo(disposable);
 
 			AddDoor = new[]
@@ -1145,15 +1145,15 @@ namespace TrainEditor2.ViewModels.Sounds
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
-						.Select(_ => Enum.GetValues(typeof(DoorKey))
-							.OfType<DoorKey>()
+						.Select(_ => Enum.GetValues(typeof(SoundKey.Door))
+							.OfType<SoundKey.Door>()
 							.Except(sound.SoundElements.OfType<DoorElement>().Select(y => y.Key))
 							.Any()
 						)
 				}
 				.CombineLatestValuesAreAllTrue()
 				.ToReactiveCommand()
-				.WithSubscribe(sound.AddElement<DoorElement, DoorKey>)
+				.WithSubscribe(sound.AddElement<DoorElement, SoundKey.Door>)
 				.AddTo(disposable);
 
 			AddAts = SelectedTreeItem
@@ -1168,15 +1168,15 @@ namespace TrainEditor2.ViewModels.Sounds
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
-						.Select(_ => Enum.GetValues(typeof(BuzzerKey))
-							.OfType<BuzzerKey>()
+						.Select(_ => Enum.GetValues(typeof(SoundKey.Buzzer))
+							.OfType<SoundKey.Buzzer>()
 							.Except(sound.SoundElements.OfType<BuzzerElement>().Select(y => y.Key))
 							.Any()
 						)
 				}
 				.CombineLatestValuesAreAllTrue()
 				.ToReactiveCommand()
-				.WithSubscribe(sound.AddElement<BuzzerElement, BuzzerKey>)
+				.WithSubscribe(sound.AddElement<BuzzerElement, SoundKey.Buzzer>)
 				.AddTo(disposable);
 
 			AddPilotLamp = new[]
@@ -1185,15 +1185,15 @@ namespace TrainEditor2.ViewModels.Sounds
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
-						.Select(_ => Enum.GetValues(typeof(PilotLampKey))
-							.OfType<PilotLampKey>()
+						.Select(_ => Enum.GetValues(typeof(SoundKey.PilotLamp))
+							.OfType<SoundKey.PilotLamp>()
 							.Except(sound.SoundElements.OfType<PilotLampElement>().Select(y => y.Key))
 							.Any()
 						)
 				}
 				.CombineLatestValuesAreAllTrue()
 				.ToReactiveCommand()
-				.WithSubscribe(sound.AddElement<PilotLampElement, PilotLampKey>)
+				.WithSubscribe(sound.AddElement<PilotLampElement, SoundKey.PilotLamp>)
 				.AddTo(disposable);
 
 			AddBrakeHandle = new[]
@@ -1202,15 +1202,15 @@ namespace TrainEditor2.ViewModels.Sounds
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
-						.Select(_ => Enum.GetValues(typeof(BrakeHandleKey))
-							.OfType<BrakeHandleKey>()
+						.Select(_ => Enum.GetValues(typeof(SoundKey.BrakeHandle))
+							.OfType<SoundKey.BrakeHandle>()
 							.Except(sound.SoundElements.OfType<BrakeHandleElement>().Select(y => y.Key))
 							.Any()
 						)
 				}
 				.CombineLatestValuesAreAllTrue()
 				.ToReactiveCommand()
-				.WithSubscribe(sound.AddElement<BrakeHandleElement, BrakeHandleKey>)
+				.WithSubscribe(sound.AddElement<BrakeHandleElement, SoundKey.BrakeHandle>)
 				.AddTo(disposable);
 
 			AddMasterController = new[]
@@ -1219,15 +1219,15 @@ namespace TrainEditor2.ViewModels.Sounds
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
-						.Select(_ => Enum.GetValues(typeof(MasterControllerKey))
-							.OfType<MasterControllerKey>()
+						.Select(_ => Enum.GetValues(typeof(SoundKey.MasterController))
+							.OfType<SoundKey.MasterController>()
 							.Except(sound.SoundElements.OfType<MasterControllerElement>().Select(y => y.Key))
 							.Any()
 						)
 				}
 				.CombineLatestValuesAreAllTrue()
 				.ToReactiveCommand()
-				.WithSubscribe(sound.AddElement<MasterControllerElement, MasterControllerKey>)
+				.WithSubscribe(sound.AddElement<MasterControllerElement, SoundKey.MasterController>)
 				.AddTo(disposable);
 
 			AddReverser = new[]
@@ -1236,15 +1236,15 @@ namespace TrainEditor2.ViewModels.Sounds
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
-						.Select(_ => Enum.GetValues(typeof(ReverserKey))
-							.OfType<ReverserKey>()
+						.Select(_ => Enum.GetValues(typeof(SoundKey.Reverser))
+							.OfType<SoundKey.Reverser>()
 							.Except(sound.SoundElements.OfType<ReverserElement>().Select(y => y.Key))
 							.Any()
 						)
 				}
 				.CombineLatestValuesAreAllTrue()
 				.ToReactiveCommand()
-				.WithSubscribe(sound.AddElement<ReverserElement, ReverserKey>)
+				.WithSubscribe(sound.AddElement<ReverserElement, SoundKey.Reverser>)
 				.AddTo(disposable);
 
 			AddBreaker = new[]
@@ -1253,15 +1253,15 @@ namespace TrainEditor2.ViewModels.Sounds
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
-						.Select(_ => Enum.GetValues(typeof(BreakerKey))
-							.OfType<BreakerKey>()
+						.Select(_ => Enum.GetValues(typeof(SoundKey.Breaker))
+							.OfType<SoundKey.Breaker>()
 							.Except(sound.SoundElements.OfType<BreakerElement>().Select(y => y.Key))
 							.Any()
 						)
 				}
 				.CombineLatestValuesAreAllTrue()
 				.ToReactiveCommand()
-				.WithSubscribe(sound.AddElement<BreakerElement, BreakerKey>)
+				.WithSubscribe(sound.AddElement<BreakerElement, SoundKey.Breaker>)
 				.AddTo(disposable);
 
 			AddRequestStop = new[]
@@ -1270,15 +1270,15 @@ namespace TrainEditor2.ViewModels.Sounds
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
-						.Select(_ => Enum.GetValues(typeof(RequestStopKey))
-							.OfType<RequestStopKey>()
+						.Select(_ => Enum.GetValues(typeof(SoundKey.RequestStop))
+							.OfType<SoundKey.RequestStop>()
 							.Except(sound.SoundElements.OfType<RequestStopElement>().Select(y => y.Key))
 							.Any()
 						)
 				}
 				.CombineLatestValuesAreAllTrue()
 				.ToReactiveCommand()
-				.WithSubscribe(sound.AddElement<RequestStopElement, RequestStopKey>)
+				.WithSubscribe(sound.AddElement<RequestStopElement, SoundKey.RequestStop>)
 				.AddTo(disposable);
 
 			AddTouch = SelectedTreeItem
@@ -1293,15 +1293,15 @@ namespace TrainEditor2.ViewModels.Sounds
 					sound.SoundElements
 						.CollectionChangedAsObservable()
 						.ToReadOnlyReactivePropertySlim()
-						.Select(_ => Enum.GetValues(typeof(OthersKey))
-							.OfType<OthersKey>()
+						.Select(_ => Enum.GetValues(typeof(SoundKey.Others))
+							.OfType<SoundKey.Others>()
 							.Except(sound.SoundElements.OfType<OthersElement>().Select(y => y.Key))
 							.Any()
 						)
 				}
 				.CombineLatestValuesAreAllTrue()
 				.ToReactiveCommand()
-				.WithSubscribe(sound.AddElement<OthersElement, OthersKey>)
+				.WithSubscribe(sound.AddElement<OthersElement, SoundKey.Others>)
 				.AddTo(disposable);
 
 			RemoveSoundElement = SelectedListItem

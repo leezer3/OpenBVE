@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
@@ -17,8 +16,6 @@ namespace TrainEditor2.IO.Trains.Xml
 		private static Motor ParseMotorNode(string fileName, XElement parent)
 		{
 			Motor motor = new Motor();
-
-			CultureInfo culture = CultureInfo.InvariantCulture;
 
 			string section = parent.Name.LocalName;
 
@@ -46,8 +43,6 @@ namespace TrainEditor2.IO.Trains.Xml
 
 		private static void ParseMotorTracksNode(string fileName, XElement parent, Motor baseMotor, Motor.TrackType trackType)
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			string section = parent.Name.LocalName;
 
 			foreach (XElement keyNode in parent.Elements())
@@ -70,8 +65,6 @@ namespace TrainEditor2.IO.Trains.Xml
 			List<TrainManager.MotorSound.Vertex<float>> pitchVertices = new List<TrainManager.MotorSound.Vertex<float>>();
 			List<TrainManager.MotorSound.Vertex<float>> volumeVertices = new List<TrainManager.MotorSound.Vertex<float>>();
 			List<TrainManager.MotorSound.Vertex<int, SoundBuffer>> soundIndexVertices = new List<TrainManager.MotorSound.Vertex<int, SoundBuffer>>();
-
-			CultureInfo culture = CultureInfo.InvariantCulture;
 
 			string section = parent.Name.LocalName;
 
@@ -102,8 +95,6 @@ namespace TrainEditor2.IO.Trains.Xml
 
 		private static void ParseMotorVerticesNode(string fileName, XElement parent, ICollection<TrainManager.MotorSound.Vertex<float>> vertices)
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			string section = parent.Name.LocalName;
 
 			foreach (XElement keyNode in parent.Elements())
@@ -149,8 +140,6 @@ namespace TrainEditor2.IO.Trains.Xml
 
 		private static void ParseMotorVerticesNode(string fileName, XElement parent, ICollection<TrainManager.MotorSound.Vertex<int, SoundBuffer>> vertices)
 		{
-			CultureInfo culture = CultureInfo.InvariantCulture;
-
 			string section = parent.Name.LocalName;
 
 			foreach (XElement keyNode in parent.Elements())

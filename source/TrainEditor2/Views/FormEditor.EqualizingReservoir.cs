@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using OpenBveApi.Units;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -34,6 +35,22 @@ namespace TrainEditor2.Views
 				.BindToErrorProvider(errorProvider, textBoxEqualizingReservoirChargeRate)
 				.AddTo(equalizingReservoirDisposable);
 
+			equalizingReservoir.ChargeRateUnit
+				.BindTo(
+					comboBoxEqualizingReservoirChargeRateUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.PressureRate)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxEqualizingReservoirChargeRateUnit.SelectedIndexChanged += h,
+							h => comboBoxEqualizingReservoirChargeRateUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(equalizingReservoirDisposable);
+
 			equalizingReservoir.ServiceRate
 				.BindTo(
 					textBoxEqualizingReservoirServiceRate,
@@ -54,6 +71,22 @@ namespace TrainEditor2.Views
 				.BindToErrorProvider(errorProvider, textBoxEqualizingReservoirServiceRate)
 				.AddTo(equalizingReservoirDisposable);
 
+			equalizingReservoir.ServiceRateUnit
+				.BindTo(
+					comboBoxEqualizingReservoirServiceRateUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.PressureRate)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxEqualizingReservoirServiceRateUnit.SelectedIndexChanged += h,
+							h => comboBoxEqualizingReservoirServiceRateUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(equalizingReservoirDisposable);
+
 			equalizingReservoir.EmergencyRate
 				.BindTo(
 					textBoxEqualizingReservoirEmergencyRate,
@@ -72,6 +105,22 @@ namespace TrainEditor2.Views
 
 			equalizingReservoir.EmergencyRate
 				.BindToErrorProvider(errorProvider, textBoxEqualizingReservoirEmergencyRate)
+				.AddTo(equalizingReservoirDisposable);
+
+			equalizingReservoir.EmergencyRateUnit
+				.BindTo(
+					comboBoxEqualizingReservoirEmergencyRateUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.PressureRate)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxEqualizingReservoirEmergencyRateUnit.SelectedIndexChanged += h,
+							h => comboBoxEqualizingReservoirEmergencyRateUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
 				.AddTo(equalizingReservoirDisposable);
 
 			return equalizingReservoirDisposable;

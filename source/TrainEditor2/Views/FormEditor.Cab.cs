@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using OpenBveApi.Units;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -14,7 +15,7 @@ namespace TrainEditor2.Views
 		{
 			CompositeDisposable cabDisposable = new CompositeDisposable();
 			CompositeDisposable panelDisposable = new CompositeDisposable().AddTo(cabDisposable);
-			CompositeDisposable cameraRestrictionDisposable = new CompositeDisposable().AddTo(cabDisposable);
+			CompositeDisposable restrictionDisposable = new CompositeDisposable().AddTo(cabDisposable);
 
 			cab.PositionX
 				.BindTo(
@@ -34,6 +35,22 @@ namespace TrainEditor2.Views
 
 			cab.PositionX
 				.BindToErrorProvider(errorProvider, textBoxCabX)
+				.AddTo(cabDisposable);
+
+			cab.PositionX_Unit
+				.BindTo(
+					comboBoxCabXUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Length)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxCabXUnit.SelectedIndexChanged += h,
+							h => comboBoxCabXUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
 				.AddTo(cabDisposable);
 
 			cab.PositionY
@@ -56,6 +73,22 @@ namespace TrainEditor2.Views
 				.BindToErrorProvider(errorProvider, textBoxCabY)
 				.AddTo(cabDisposable);
 
+			cab.PositionY_Unit
+				.BindTo(
+					comboBoxCabYUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Length)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxCabYUnit.SelectedIndexChanged += h,
+							h => comboBoxCabYUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(cabDisposable);
+
 			cab.PositionZ
 				.BindTo(
 					textBoxCabZ,
@@ -74,6 +107,22 @@ namespace TrainEditor2.Views
 
 			cab.PositionZ
 				.BindToErrorProvider(errorProvider, textBoxCabZ)
+				.AddTo(cabDisposable);
+
+			cab.PositionZ_Unit
+				.BindTo(
+					comboBoxCabZUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Length)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxCabZUnit.SelectedIndexChanged += h,
+							h => comboBoxCabZUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
 				.AddTo(cabDisposable);
 
 			EmbeddedCabViewModel embeddedCab = cab as EmbeddedCabViewModel;
@@ -108,10 +157,10 @@ namespace TrainEditor2.Views
 			externalCab?.CameraRestriction
 				.Subscribe(x =>
 				{
-					cameraRestrictionDisposable.Dispose();
-					cameraRestrictionDisposable = new CompositeDisposable().AddTo(cabDisposable);
+					restrictionDisposable.Dispose();
+					restrictionDisposable = new CompositeDisposable().AddTo(cabDisposable);
 
-					BindToCameraRestriction(x).AddTo(cameraRestrictionDisposable);
+					BindToCameraRestriction(x).AddTo(restrictionDisposable);
 				})
 				.AddTo(cabDisposable);
 

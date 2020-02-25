@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows.Forms;
+using OpenBveApi.Units;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -18,6 +20,11 @@ namespace TrainEditor2.Views
 			InitializeComponent();
 
 			disposable = new CompositeDisposable();
+
+			string[] lengthUnits = Enum.GetValues(typeof(Unit.Length)).OfType<Enum>().Select(x => Unit.GetRewords(x).First()).ToArray();
+
+			comboBoxWidthUnit.Items.AddRange((string[])lengthUnits.Clone());
+			comboBoxMaxToleranceUnit.Items.AddRange((string[])lengthUnits.Clone());
 
 			door.Width
 				.BindTo(
@@ -39,6 +46,22 @@ namespace TrainEditor2.Views
 				.BindToErrorProvider(errorProvider, textBoxWidth)
 				.AddTo(disposable);
 
+			door.WidthUnit
+				.BindTo(
+					comboBoxWidthUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Length)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxWidthUnit.SelectedIndexChanged += h,
+							h => comboBoxWidthUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(disposable);
+
 			door.MaxTolerance
 				.BindTo(
 					textBoxMaxTolerance,
@@ -57,6 +80,22 @@ namespace TrainEditor2.Views
 
 			door.MaxTolerance
 				.BindToErrorProvider(errorProvider, textBoxMaxTolerance)
+				.AddTo(disposable);
+
+			door.MaxToleranceUnit
+				.BindTo(
+					comboBoxMaxToleranceUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Length)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxMaxToleranceUnit.SelectedIndexChanged += h,
+							h => comboBoxMaxToleranceUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
 				.AddTo(disposable);
 		}
 

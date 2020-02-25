@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using OpenBveApi;
 using OpenBveApi.Interface;
+using OpenBveApi.Units;
 using SoundManager;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Trains;
@@ -89,15 +90,15 @@ namespace TrainEditor2.IO.Trains.TrainDat
 			Motor motor = new Motor();
 			Cab cab = new EmbeddedCab();
 
-			double motorCarMass = 40.0;
+			Quantity.Mass motorCarMass = new Quantity.Mass(40.0, Unit.Mass.Tonne);
 			int numberOfMotorCars = 1;
-			double trailerCarMass = 40.0;
+			Quantity.Mass trailerCarMass = new Quantity.Mass(40.0, Unit.Mass.Tonne);
 			int numberOfTrailerCars = 1;
-			double lengthOfACar = 20.0;
+			Quantity.Length lengthOfACar = new Quantity.Length(20.0);
 			bool frontCarIsAMotorCar = false;
-			double widthOfACar = 2.6;
-			double heightOfACar = 3.2;
-			double centerOfGravityHeight = 1.5;
+			Quantity.Length widthOfACar = new Quantity.Length(2.6);
+			Quantity.Length heightOfACar = new Quantity.Length(3.2);
+			Quantity.Length centerOfGravityHeight = new Quantity.Length(1.5);
 			double exposedFrontalArea = 5.0;
 			double unexposedFrontalArea = 1.6;
 			Car.Door door = new Car.Door();
@@ -399,13 +400,13 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									case 4:
 										if (a >= 0.0)
 										{
-											pressure.BrakeCylinder.EmergencyRate = a;
+											pressure.BrakeCylinder.EmergencyRate = new Quantity.PressureRate(a, Unit.PressureRate.KilopascalPerSecond);
 										}
 										break;
 									case 5:
 										if (a >= 0.0)
 										{
-											pressure.BrakeCylinder.ReleaseRate = a;
+											pressure.BrakeCylinder.ReleaseRate = new Quantity.PressureRate(a, Unit.PressureRate.KilopascalPerSecond);
 										}
 										break;
 								}
@@ -477,31 +478,31 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									case 0:
 										if (a > 0.0)
 										{
-											pressure.BrakeCylinder.ServiceMaximumPressure = a;
+											pressure.BrakeCylinder.ServiceMaximumPressure = new Quantity.Pressure(a, Unit.Pressure.Kilopascal);
 										}
 										break;
 									case 1:
 										if (a > 0.0)
 										{
-											pressure.BrakeCylinder.EmergencyMaximumPressure = a;
+											pressure.BrakeCylinder.EmergencyMaximumPressure = new Quantity.Pressure(a, Unit.Pressure.Kilopascal);
 										}
 										break;
 									case 2:
 										if (a > 0.0)
 										{
-											pressure.MainReservoir.MinimumPressure = a;
+											pressure.MainReservoir.MinimumPressure = new Quantity.Pressure(a, Unit.Pressure.Kilopascal);
 										}
 										break;
 									case 3:
 										if (a > 0.0)
 										{
-											pressure.MainReservoir.MaximumPressure = a;
+											pressure.MainReservoir.MaximumPressure = new Quantity.Pressure(a, Unit.Pressure.Kilopascal);
 										}
 										break;
 									case 4:
 										if (a > 0.0)
 										{
-											pressure.BrakePipe.NormalPressure = a;
+											pressure.BrakePipe.NormalPressure = new Quantity.Pressure(a, Unit.Pressure.Kilopascal);
 										}
 										break;
 								}
@@ -602,13 +603,13 @@ namespace TrainEditor2.IO.Trains.TrainDat
 								switch (n)
 								{
 									case 0:
-										cab.PositionX = a;
+										cab.PositionX = new Quantity.Length(a, Unit.Length.Millimeter);
 										break;
 									case 1:
-										cab.PositionY = a;
+										cab.PositionY = new Quantity.Length(a, Unit.Length.Millimeter);
 										break;
 									case 2:
-										cab.PositionZ = a;
+										cab.PositionZ = new Quantity.Length(a, Unit.Length.Millimeter);
 										break;
 									case 3:
 										train.InitialDriverCar = (int)Math.Round(a);
@@ -638,7 +639,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									case 0:
 										if (a > 0.0)
 										{
-											motorCarMass = a;
+											motorCarMass = new Quantity.Mass(a, Unit.Mass.Tonne);
 										}
 										break;
 									case 1:
@@ -650,7 +651,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									case 2:
 										if (a > 0.0)
 										{
-											trailerCarMass = a;
+											trailerCarMass = new Quantity.Mass(a, Unit.Mass.Tonne);
 										}
 										break;
 									case 3:
@@ -662,7 +663,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									case 4:
 										if (b > 0.0)
 										{
-											lengthOfACar = a;
+											lengthOfACar = new Quantity.Length(a);
 										}
 										break;
 									case 5:
@@ -671,17 +672,17 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									case 6:
 										if (a > 0.0)
 										{
-											widthOfACar = a;
+											widthOfACar = new Quantity.Length(a);
 										}
 										break;
 									case 7:
 										if (a > 0.0)
 										{
-											heightOfACar = a;
+											heightOfACar = new Quantity.Length(a);
 										}
 										break;
 									case 8:
-										centerOfGravityHeight = a;
+										centerOfGravityHeight = new Quantity.Length(a);
 										break;
 									case 9:
 										if (a > 0.0)
@@ -768,13 +769,13 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									case 10:
 										if (a >= 0.0)
 										{
-											door.Width = a;
+											door.Width = new Quantity.Length(a, Unit.Length.Millimeter);
 										}
 										break;
 									case 11:
 										if (a >= 0.0)
 										{
-											door.MaxTolerance = a;
+											door.MaxTolerance = new Quantity.Length(a, Unit.Length.Millimeter);
 										}
 										break;
 								}

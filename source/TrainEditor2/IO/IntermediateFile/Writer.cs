@@ -31,7 +31,7 @@ namespace TrainEditor2.IO.IntermediateFile
 			return new XElement("Train",
 				WriteHandleNode(train.Handle),
 				WriteDeviceNode(train.Device),
-				new XElement("InitialDriverCar", train.InitialDriverCar),
+				new XElement("InitialDriverCar", train.InitialDriverCar.ToString(culture)),
 				new XElement("Cars", train.Cars.Select(WriteCarNode)),
 				new XElement("Couplers", train.Couplers.Select(WriteCouplerNode))
 			);
@@ -41,14 +41,14 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new XElement("Handle",
 				new XElement("HandleType", handle.HandleType),
-				new XElement("PowerNotches", handle.PowerNotches),
-				new XElement("BrakeNotches", handle.BrakeNotches),
-				new XElement("PowerNotchReduceSteps", handle.PowerNotchReduceSteps),
+				new XElement("PowerNotches", handle.PowerNotches.ToString(culture)),
+				new XElement("BrakeNotches", handle.BrakeNotches.ToString(culture)),
+				new XElement("PowerNotchReduceSteps", handle.PowerNotchReduceSteps.ToString(culture)),
 				new XElement("EbHandleBehaviour", handle.HandleBehaviour),
 				new XElement("LocoBrakeType", handle.LocoBrake),
-				new XElement("LocoBrakeNotches", handle.LocoBrakeNotches),
-				new XElement("DriverPowerNotches", handle.DriverPowerNotches),
-				new XElement("DriverBrakeNotches", handle.DriverBrakeNotches)
+				new XElement("LocoBrakeNotches", handle.LocoBrakeNotches.ToString(culture)),
+				new XElement("DriverPowerNotches", handle.DriverPowerNotches.ToString(culture)),
+				new XElement("DriverBrakeNotches", handle.DriverBrakeNotches.ToString(culture))
 			);
 		}
 
@@ -60,7 +60,7 @@ namespace TrainEditor2.IO.IntermediateFile
 				new XElement("Eb", device.Eb),
 				new XElement("ConstSpeed", device.ConstSpeed),
 				new XElement("HoldBrake", device.HoldBrake),
-				new XElement("LoadCompensatingDevice", device.LoadCompensatingDevice),
+				new XElement("LoadCompensatingDevice", device.LoadCompensatingDevice.ToString(culture)),
 				new XElement("PassAlarm", device.PassAlarm),
 				new XElement("DoorOpenMode", device.DoorOpenMode),
 				new XElement("DoorCloseMode", device.DoorCloseMode)
@@ -73,14 +73,14 @@ namespace TrainEditor2.IO.IntermediateFile
 
 			carNode.Add(
 				new XElement("IsMotorCar", car is MotorCar),
-				new XElement("Mass", car.Mass),
-				new XElement("Length", car.Length),
-				new XElement("Width", car.Width),
-				new XElement("Height", car.Height),
-				new XElement("CenterOfGravityHeight", car.CenterOfGravityHeight),
+				car.Mass.ToXElement("Mass"),
+				car.Length.ToXElement("Length"),
+				car.Width.ToXElement("Width"),
+				car.Height.ToXElement("Height"),
+				car.CenterOfGravityHeight.ToXElement("CenterOfGravityHeight"),
 				new XElement("DefinedAxles", car.DefinedAxles),
-				new XElement("FrontAxle", car.FrontAxle),
-				new XElement("RearAxle", car.RearAxle),
+				car.FrontAxle.ToXElement("FrontAxle"),
+				car.RearAxle.ToXElement("RearAxle"),
 				WriteBogieNode("FrontBogie", car.FrontBogie),
 				WriteBogieNode("RearBogie", car.RearBogie),
 				new XElement("ExposedFrontalArea", car.ExposedFrontalArea),
@@ -124,8 +124,8 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new XElement(nodeName,
 				new XElement("DefinedAxles", bogie.DefinedAxles),
-				new XElement("FrontAxle", bogie.FrontAxle),
-				new XElement("RearAxle", bogie.RearAxle),
+				bogie.FrontAxle.ToXElement("FrontAxle"),
+				bogie.RearAxle.ToXElement("RearAxle"),
 				new XElement("Reversed", bogie.Reversed),
 				new XElement("Object", bogie.Object)
 			);
@@ -135,9 +135,9 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new XElement("Performance",
 				new XElement("Deceleration", performance.Deceleration),
-				new XElement("CoefficientOfStaticFriction", performance.CoefficientOfStaticFriction),
-				new XElement("CoefficientOfRollingResistance", performance.CoefficientOfRollingResistance),
-				new XElement("AerodynamicDragCoefficient", performance.AerodynamicDragCoefficient)
+				new XElement("CoefficientOfStaticFriction", performance.CoefficientOfStaticFriction.ToString(culture)),
+				new XElement("CoefficientOfRollingResistance", performance.CoefficientOfRollingResistance.ToString(culture)),
+				new XElement("AerodynamicDragCoefficient", performance.AerodynamicDragCoefficient.ToString(culture))
 			);
 		}
 
@@ -200,68 +200,68 @@ namespace TrainEditor2.IO.IntermediateFile
 		private static XElement WriteCompressorNode(Compressor compressor)
 		{
 			return new XElement("Compressor",
-				new XElement("Rate", compressor.Rate)
+				compressor.Rate.ToXElement("Rate")
 			);
 		}
 
 		private static XElement WriteMainReservoirNode(MainReservoir mainReservoir)
 		{
 			return new XElement("MainReservoir",
-				new XElement("MinimumPressure", mainReservoir.MinimumPressure),
-				new XElement("MaximumPressure", mainReservoir.MaximumPressure)
+				mainReservoir.MinimumPressure.ToXElement("MinimumPressure"),
+				mainReservoir.MaximumPressure.ToXElement("MaximumPressure")
 			);
 		}
 
 		private static XElement WriteAuxiliaryReservoirNode(AuxiliaryReservoir auxiliaryReservoir)
 		{
 			return new XElement("AuxiliaryReservoir",
-				new XElement("ChargeRate", auxiliaryReservoir.ChargeRate)
+				auxiliaryReservoir.ChargeRate.ToXElement("ChargeRate")
 			);
 		}
 
 		private static XElement WriteEqualizingReservoirNode(EqualizingReservoir equalizingReservoir)
 		{
 			return new XElement("EqualizingReservoir",
-				new XElement("ChargeRate", equalizingReservoir.ChargeRate),
-				new XElement("ServiceRate", equalizingReservoir.ServiceRate),
-				new XElement("EmergencyRate", equalizingReservoir.EmergencyRate)
+				equalizingReservoir.ChargeRate.ToXElement("ChargeRate"),
+				equalizingReservoir.ServiceRate.ToXElement("ServiceRate"),
+				equalizingReservoir.EmergencyRate.ToXElement("EmergencyRate")
 			);
 		}
 
 		private static XElement WriteBrakePipeNode(BrakePipe brakePipe)
 		{
 			return new XElement("BrakePipe",
-				new XElement("NormalPressure", brakePipe.NormalPressure),
-				new XElement("ChargeRate", brakePipe.ChargeRate),
-				new XElement("ServiceRate", brakePipe.ServiceRate),
-				new XElement("EmergencyRate", brakePipe.EmergencyRate)
+				brakePipe.NormalPressure.ToXElement("NormalPressure"),
+				brakePipe.ChargeRate.ToXElement("ChargeRate"),
+				brakePipe.ServiceRate.ToXElement("ServiceRate"),
+				brakePipe.EmergencyRate.ToXElement("EmergencyRate")
 			);
 		}
 
 		private static XElement WriteStraightAirPipeNode(StraightAirPipe straightAirPipe)
 		{
 			return new XElement("StraightAirPipe",
-				new XElement("ServiceRate", straightAirPipe.ServiceRate),
-				new XElement("EmergencyRate", straightAirPipe.EmergencyRate),
-				new XElement("ReleaseRate", straightAirPipe.ReleaseRate)
+				straightAirPipe.ServiceRate.ToXElement("ServiceRate"),
+				straightAirPipe.EmergencyRate.ToXElement("EmergencyRate"),
+				straightAirPipe.ReleaseRate.ToXElement("ReleaseRate")
 			);
 		}
 
 		private static XElement WriteBrakeCylinderNode(BrakeCylinder brakeCylinder)
 		{
 			return new XElement("BrakeCylinder",
-				new XElement("ServiceMaximumPressure", brakeCylinder.ServiceMaximumPressure),
-				new XElement("EmergencyMaximumPressure", brakeCylinder.EmergencyMaximumPressure),
-				new XElement("EmergencyRate", brakeCylinder.EmergencyRate),
-				new XElement("ReleaseRate", brakeCylinder.ReleaseRate)
+				brakeCylinder.ServiceMaximumPressure.ToXElement("ServiceMaximumPressure"),
+				brakeCylinder.EmergencyMaximumPressure.ToXElement("EmergencyMaximumPressure"),
+				brakeCylinder.EmergencyRate.ToXElement("EmergencyRate"),
+				brakeCylinder.ReleaseRate.ToXElement("ReleaseRate")
 			);
 		}
 
 		private static XElement WriteDoorNode(string nodeName, Car.Door door)
 		{
 			return new XElement(nodeName,
-				new XElement("Width", door.Width),
-				new XElement("MaxTolerance", door.MaxTolerance)
+				door.Width.ToXElement("Width"),
+				door.MaxTolerance.ToXElement("MaxTolerance")
 			);
 		}
 
@@ -273,7 +273,7 @@ namespace TrainEditor2.IO.IntermediateFile
 					new XElement("a1", entry.A1),
 					new XElement("v1", entry.V1),
 					new XElement("v2", entry.V2),
-					new XElement("e", entry.E)
+					new XElement("e", entry.E.ToString(culture))
 				))
 			);
 		}
@@ -298,14 +298,14 @@ namespace TrainEditor2.IO.IntermediateFile
 			return new XElement(nodeName,
 				new XElement("Vertices",
 					vertices.Select(vertex => new XElement("Vertex",
-						new XElement("Id", vertex.Key),
-						new XElement("Position", $"{vertex.Value.X}, {vertex.Value.Y}")
+						new XElement("Id", vertex.Key.ToString(culture)),
+						new XElement("Position", $"{vertex.Value.X.ToString(culture)}, {vertex.Value.Y.ToString(culture)}")
 					))
 				),
 				new XElement("Lines",
 					lines.Select(line => new XElement("Line",
-						new XElement("LeftID", line.LeftID),
-						new XElement("RightID", line.RightID)
+						new XElement("LeftID", line.LeftID.ToString(culture)),
+						new XElement("RightID", line.RightID.ToString(culture))
 					))
 				)
 			);
@@ -316,9 +316,9 @@ namespace TrainEditor2.IO.IntermediateFile
 			return new XElement("SoundIndex",
 				new XElement("Areas",
 					areas.Select(area => new XElement("Area",
-						new XElement("Index", area.Index),
-						new XElement("LeftX", area.LeftX),
-						new XElement("RightX", area.RightX)
+						new XElement("Index", area.Index.ToString(culture)),
+						new XElement("LeftX", area.LeftX.ToString(culture)),
+						new XElement("RightX", area.RightX.ToString(culture))
 					))
 				)
 			);
@@ -332,7 +332,10 @@ namespace TrainEditor2.IO.IntermediateFile
 
 			cabNode.Add(
 				new XElement("IsEmbeddedCab", embeddedCab != null),
-				new XElement("Position", $"{cab.PositionX}, {cab.PositionY}, {cab.PositionZ}")
+				new XElement("Position",
+					new XAttribute("Unit", $"{cab.PositionX.UnitValue}, {cab.PositionY.UnitValue}, {cab.PositionZ.UnitValue}"),
+					$"{cab.PositionX.Value.ToString(culture)}, {cab.PositionY.Value.ToString(culture)}, {cab.PositionZ.Value.ToString(culture)}"
+				)
 			);
 
 			if (embeddedCab != null)
@@ -365,24 +368,24 @@ namespace TrainEditor2.IO.IntermediateFile
 		private static XElement WriteThisNode(This This)
 		{
 			return new XElement("This",
-				new XElement("Resolution", This.Resolution),
-				new XElement("Left", This.Left),
-				new XElement("Right", This.Right),
-				new XElement("Top", This.Top),
-				new XElement("Bottom", This.Bottom),
+				new XElement("Resolution", This.Resolution.ToString(culture)),
+				new XElement("Left", This.Left.ToString(culture)),
+				new XElement("Right", This.Right.ToString(culture)),
+				new XElement("Top", This.Top.ToString(culture)),
+				new XElement("Bottom", This.Bottom.ToString(culture)),
 				new XElement("DaytimeImage", This.DaytimeImage),
 				new XElement("NighttimeImage", This.NighttimeImage),
 				new XElement("TransparentColor", This.TransparentColor),
-				new XElement("Center", $"{This.CenterX}, {This.CenterY}"),
-				new XElement("Origin", $"{This.OriginX}, {This.OriginY}")
+				new XElement("Center", $"{This.CenterX.ToString(culture)}, {This.CenterY.ToString(culture)}"),
+				new XElement("Origin", $"{This.OriginX.ToString(culture)}, {This.OriginY.ToString(culture)}")
 			);
 		}
 
 		private static XElement WriteScreenNode(Screen screen)
 		{
 			return new XElement("Screen",
-				new XElement("Number", screen.Number),
-				new XElement("Layer", screen.Layer),
+				new XElement("Number", screen.Number.ToString(culture)),
+				new XElement("Layer", screen.Layer.ToString(culture)),
 				new XElement("PanelElements", screen.PanelElements.Select(WritePanelElementNode)),
 				new XElement("TouchElements", screen.TouchElements.Select(WriteTouchElementNode))
 			);
@@ -438,8 +441,8 @@ namespace TrainEditor2.IO.IntermediateFile
 		private static XElement WritePilotLampElementNode(Models.Panels.PilotLampElement element)
 		{
 			return new XElement("PilotLamp",
-				new XElement("Location", $"{element.LocationX}, {element.LocationY}"),
-				new XElement("Layer", element.Layer),
+				new XElement("Location", $"{element.LocationX.ToString(culture)}, {element.LocationY.ToString(culture)}"),
+				new XElement("Layer", element.Layer.ToString(culture)),
 				WriteSubjectNode(element.Subject),
 				new XElement("DaytimeImage", element.DaytimeImage),
 				new XElement("NighttimeImage", element.NighttimeImage),
@@ -450,25 +453,25 @@ namespace TrainEditor2.IO.IntermediateFile
 		private static XElement WriteNeedleElementNode(NeedleElement element)
 		{
 			return new XElement("Needle",
-				new XElement("Location", $"{element.LocationX}, {element.LocationY}"),
-				new XElement("Layer", element.Layer),
+				new XElement("Location", $"{element.LocationX.ToString(culture)}, {element.LocationY.ToString(culture)}"),
+				new XElement("Layer", element.Layer.ToString(culture)),
 				WriteSubjectNode(element.Subject),
 				new XElement("DaytimeImage", element.DaytimeImage),
 				new XElement("NighttimeImage", element.NighttimeImage),
 				new XElement("TransparentColor", element.TransparentColor),
 				new XElement("DefinedRadius", element.DefinedRadius),
-				new XElement("Radius", element.Radius),
+				new XElement("Radius", element.Radius.ToString(culture)),
 				new XElement("Color", element.Color),
 				new XElement("DefinedOrigin", element.DefinedOrigin),
-				new XElement("Origin", $"{element.OriginX}, {element.OriginY}"),
-				new XElement("InitialAngle", element.InitialAngle),
-				new XElement("LastAngle", element.LastAngle),
-				new XElement("Minimum", element.Minimum),
-				new XElement("Maximum", element.Maximum),
+				new XElement("Origin", $"{element.OriginX.ToString(culture)}, {element.OriginY.ToString(culture)}"),
+				new XElement("InitialAngle", element.InitialAngle.ToString(culture)),
+				new XElement("LastAngle", element.LastAngle.ToString(culture)),
+				new XElement("Minimum", element.Minimum.ToString(culture)),
+				new XElement("Maximum", element.Maximum.ToString(culture)),
 				new XElement("DefinedNaturalFreq", element.DefinedNaturalFreq),
-				new XElement("NaturalFreq", element.NaturalFreq),
+				new XElement("NaturalFreq", element.NaturalFreq.ToString(culture)),
 				new XElement("DefinedDampingRatio", element.DefinedDampingRatio),
-				new XElement("DampingRatio", element.DampingRatio),
+				new XElement("DampingRatio", element.DampingRatio.ToString(culture)),
 				new XElement("Backstop", element.Backstop),
 				new XElement("Smoothed", element.Smoothed)
 			);
@@ -477,55 +480,55 @@ namespace TrainEditor2.IO.IntermediateFile
 		private static XElement WriteDigitalNumberElementNode(DigitalNumberElement element)
 		{
 			return new XElement("DigitalNumber",
-				new XElement("Location", $"{element.LocationX}, {element.LocationY}"),
-				new XElement("Layer", element.Layer),
+				new XElement("Location", $"{element.LocationX.ToString(culture)}, {element.LocationY.ToString(culture)}"),
+				new XElement("Layer", element.Layer.ToString(culture)),
 				WriteSubjectNode(element.Subject),
 				new XElement("DaytimeImage", element.DaytimeImage),
 				new XElement("NighttimeImage", element.NighttimeImage),
 				new XElement("TransparentColor", element.TransparentColor),
-				new XElement("Interval", element.Interval)
+				new XElement("Interval", element.Interval.ToString(culture))
 			);
 		}
 
 		private static XElement WriteDigitalGaugeElementNode(DigitalGaugeElement element)
 		{
 			return new XElement("DigitalGauge",
-				new XElement("Location", $"{element.LocationX}, {element.LocationY}"),
-				new XElement("Layer", element.Layer),
+				new XElement("Location", $"{element.LocationX.ToString(culture)}, {element.LocationY.ToString(culture)}"),
+				new XElement("Layer", element.Layer.ToString(culture)),
 				WriteSubjectNode(element.Subject),
-				new XElement("Radius", element.Radius),
+				new XElement("Radius", element.Radius.ToString(culture)),
 				new XElement("Color", element.Color),
-				new XElement("InitialAngle", element.InitialAngle),
-				new XElement("LastAngle", element.LastAngle),
-				new XElement("Minimum", element.Minimum),
-				new XElement("Maximum", element.Maximum),
-				new XElement("Step", element.Step)
+				new XElement("InitialAngle", element.InitialAngle.ToString(culture)),
+				new XElement("LastAngle", element.LastAngle.ToString(culture)),
+				new XElement("Minimum", element.Minimum.ToString(culture)),
+				new XElement("Maximum", element.Maximum.ToString(culture)),
+				new XElement("Step", element.Step.ToString(culture))
 			);
 		}
 
 		private static XElement WriteLinearGaugeElementNode(LinearGaugeElement element)
 		{
 			return new XElement("LinearGauge",
-				new XElement("Location", $"{element.LocationX}, {element.LocationY}"),
-				new XElement("Layer", element.Layer),
+				new XElement("Location", $"{element.LocationX.ToString(culture)}, {element.LocationY.ToString(culture)}"),
+				new XElement("Layer", element.Layer.ToString(culture)),
 				WriteSubjectNode(element.Subject),
 				new XElement("DaytimeImage", element.DaytimeImage),
 				new XElement("NighttimeImage", element.NighttimeImage),
 				new XElement("TransparentColor", element.TransparentColor),
-				new XElement("Minimum", element.Minimum),
-				new XElement("Maximum", element.Maximum),
-				new XElement("Direction", $"{element.DirectionX}, {element.DirectionY}"),
-				new XElement("Width", element.Width)
+				new XElement("Minimum", element.Minimum.ToString(culture)),
+				new XElement("Maximum", element.Maximum.ToString(culture)),
+				new XElement("Direction", $"{element.DirectionX.ToString(culture)}, {element.DirectionY.ToString(culture)}"),
+				new XElement("Width", element.Width.ToString(culture))
 			);
 		}
 
 		private static XElement WriteTimetableElementNode(TimetableElement element)
 		{
 			return new XElement("Timetable",
-				new XElement("Location", $"{element.LocationX}, {element.LocationY}"),
-				new XElement("Layer", element.Layer),
-				new XElement("Width", element.Width),
-				new XElement("Height", element.Height),
+				new XElement("Location", $"{element.LocationX.ToString(culture)}, {element.LocationY.ToString(culture)}"),
+				new XElement("Layer", element.Layer.ToString(culture)),
+				new XElement("Width", element.Width.ToString(culture)),
+				new XElement("Height", element.Height.ToString(culture)),
 				new XElement("TransparentColor", element.TransparentColor)
 			);
 		}
@@ -534,28 +537,28 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new XElement("Subject",
 				new XElement("Base", subject.Base),
-				new XElement("BaseOption", subject.BaseOption),
+				new XElement("BaseOption", subject.BaseOption.ToString(culture)),
 				new XElement("Suffix", subject.Suffix),
-				new XElement("SuffixOption", subject.SuffixOption)
+				new XElement("SuffixOption", subject.SuffixOption.ToString(culture))
 			);
 		}
 
 		private static XElement WriteTouchElementNode(Models.Panels.TouchElement element)
 		{
 			return new XElement("Touch",
-				new XElement("Location", $"{element.LocationX}, {element.LocationY}"),
-				new XElement("Size", $"{element.SizeX}, {element.SizeY}"),
-				new XElement("JumpScreen", element.JumpScreen),
+				new XElement("Location", $"{element.LocationX.ToString(culture)}, {element.LocationY.ToString(culture)}"),
+				new XElement("Size", $"{element.SizeX.ToString(culture)}, {element.SizeY.ToString(culture)}"),
+				new XElement("JumpScreen", element.JumpScreen.ToString(culture)),
 				new XElement("SoundEntries", element.SoundEntries.Select(WriteTouchElementSoundEntryNode)),
 				new XElement("CommandEntries", element.CommandEntries.Select(WriteTouchElementCommandEntryNode)),
-				new XElement("Layer", element.Layer)
+				new XElement("Layer", element.Layer.ToString(culture))
 			);
 		}
 
 		private static XElement WriteTouchElementSoundEntryNode(Models.Panels.TouchElement.SoundEntry entry)
 		{
 			return new XElement("Entry",
-				new XElement("Index", entry.Index)
+				new XElement("Index", entry.Index.ToString(culture))
 			);
 		}
 
@@ -563,7 +566,7 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new XElement("Entry",
 				new XElement("Info", entry.Info.Command),
-				new XElement("Option", entry.Option)
+				new XElement("Option", entry.Option.ToString(culture))
 			);
 		}
 
@@ -576,20 +579,20 @@ namespace TrainEditor2.IO.IntermediateFile
 				new XElement("DefinedRight", cameraRestriction.DefinedRight),
 				new XElement("DefinedUp", cameraRestriction.DefinedUp),
 				new XElement("DefinedDown", cameraRestriction.DefinedDown),
-				new XElement("Forwards", cameraRestriction.Forwards),
-				new XElement("Backwards", cameraRestriction.Backwards),
-				new XElement("Left", cameraRestriction.Left),
-				new XElement("Right", cameraRestriction.Right),
-				new XElement("Up", cameraRestriction.Up),
-				new XElement("Down", cameraRestriction.Down)
+				cameraRestriction.Forwards.ToXElement("Forwards"),
+				cameraRestriction.Backwards.ToXElement("Backwards"),
+				cameraRestriction.Left.ToXElement("Left"),
+				cameraRestriction.Right.ToXElement("Right"),
+				cameraRestriction.Up.ToXElement("Up"),
+				cameraRestriction.Down.ToXElement("Down")
 			);
 		}
 
 		private static XElement WriteCouplerNode(Coupler coupler)
 		{
 			return new XElement("Coupler",
-				new XElement("Min", coupler.Min),
-				new XElement("Max", coupler.Max),
+				coupler.Min.ToXElement("Min"),
+				coupler.Max.ToXElement("Max"),
 				new XElement("Object", coupler.Object)
 			);
 		}

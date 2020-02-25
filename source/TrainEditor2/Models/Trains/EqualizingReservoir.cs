@@ -1,15 +1,16 @@
 ﻿using System;
+using OpenBveApi.Units;
 using Prism.Mvvm;
 
 namespace TrainEditor2.Models.Trains
 {
 	internal class EqualizingReservoir : BindableBase, ICloneable
 	{
-		private double chargeRate;
-		private double serviceRate;
-		private double emergencyRate;
+		private Quantity.PressureRate chargeRate;
+		private Quantity.PressureRate serviceRate;
+		private Quantity.PressureRate emergencyRate;
 
-		internal double ChargeRate
+		internal Quantity.PressureRate ChargeRate
 		{
 			get
 			{
@@ -21,7 +22,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double ServiceRate
+		internal Quantity.PressureRate ServiceRate
 		{
 			get
 			{
@@ -33,7 +34,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double EmergencyRate
+		internal Quantity.PressureRate EmergencyRate
 		{
 			get
 			{
@@ -47,9 +48,9 @@ namespace TrainEditor2.Models.Trains
 
 		internal EqualizingReservoir()
 		{
-			ChargeRate = 50.0;
-			ServiceRate = 250.0;
-			EmergencyRate = 200.0;
+			ChargeRate = new Quantity.PressureRate(50.0, Unit.PressureRate.KilopascalPerSecond);
+			ServiceRate = new Quantity.PressureRate(250.0, Unit.PressureRate.KilopascalPerSecond);
+			EmergencyRate = new Quantity.PressureRate(200.0, Unit.PressureRate.KilopascalPerSecond);
 		}
 
 		public object Clone()

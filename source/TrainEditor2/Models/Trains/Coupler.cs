@@ -1,15 +1,16 @@
 ﻿using System;
+using OpenBveApi.Units;
 using Prism.Mvvm;
 
 namespace TrainEditor2.Models.Trains
 {
 	internal class Coupler : BindableBase, ICloneable
 	{
-		private double min;
-		private double max;
+		private Quantity.Length min;
+		private Quantity.Length max;
 		private string exteriorObject;
 
-		internal double Min
+		internal Quantity.Length Min
 		{
 			get
 			{
@@ -21,7 +22,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double Max
+		internal Quantity.Length Max
 		{
 			get
 			{
@@ -47,8 +48,8 @@ namespace TrainEditor2.Models.Trains
 
 		internal Coupler()
 		{
-			Min = 0.27;
-			Max = 0.33;
+			Min = new Quantity.Length(0.27);
+			Max = new Quantity.Length(0.33);
 			Object = string.Empty;
 		}
 

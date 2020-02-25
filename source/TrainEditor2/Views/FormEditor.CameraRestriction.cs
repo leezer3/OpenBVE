@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using OpenBveApi.Units;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
+using TrainEditor2.Extensions;
 using TrainEditor2.ViewModels.Trains;
 
 namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private IDisposable BindToCameraRestriction(CameraRestrictionViewModel cameraRestriction)
+		private IDisposable BindToCameraRestriction(CameraRestrictionViewModel restriction)
 		{
-			CompositeDisposable cameraRestrictionDisposable = new CompositeDisposable();
+			CompositeDisposable restrictionDisposable = new CompositeDisposable();
 
-			cameraRestriction.DefinedForwards
+			restriction.DefinedForwards
 				.BindTo(
 					checkBoxCameraRestrictionDefinedForwards,
 					x => x.Checked,
@@ -27,30 +29,30 @@ namespace TrainEditor2.Views
 						)
 						.ToUnit()
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.DefinedForwards
+			restriction.DefinedForwards
 				.BindTo(
 					labelCameraRestrictionForwards,
 					x => x.Enabled
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.DefinedForwards
+			restriction.DefinedForwards
 				.BindTo(
 					textBoxCameraRestrictionForwards,
 					x => x.Enabled
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.DefinedForwards
+			restriction.DefinedForwards
 				.BindTo(
-					labelCameraRestrictionForwardsUnit,
+					comboBoxCameraRestrictionForwardsUnit,
 					x => x.Enabled
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.Forwards
+			restriction.Forwards
 				.BindTo(
 					textBoxCameraRestrictionForwards,
 					x => x.Text,
@@ -64,9 +66,29 @@ namespace TrainEditor2.Views
 						)
 						.ToUnit()
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.DefinedBackwards
+			restriction.Forwards
+				.BindToErrorProvider(errorProvider, textBoxCameraRestrictionForwards)
+				.AddTo(restrictionDisposable);
+
+			restriction.ForwardsUnit
+				.BindTo(
+					comboBoxCameraRestrictionForwardsUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Length)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxCameraRestrictionForwardsUnit.SelectedIndexChanged += h,
+							h => comboBoxCameraRestrictionForwardsUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(restrictionDisposable);
+
+			restriction.DefinedBackwards
 				.BindTo(
 					checkBoxCameraRestrictionDefinedBackwards,
 					x => x.Checked,
@@ -80,30 +102,30 @@ namespace TrainEditor2.Views
 						)
 						.ToUnit()
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.DefinedBackwards
+			restriction.DefinedBackwards
 				.BindTo(
 					labelCameraRestrictionBackwards,
 					x => x.Enabled
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.DefinedBackwards
+			restriction.DefinedBackwards
 				.BindTo(
 					textBoxCameraRestrictionBackwards,
 					x => x.Enabled
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.DefinedBackwards
+			restriction.DefinedBackwards
 				.BindTo(
-					labelCameraRestrictionBackwardsUnit,
+					comboBoxCameraRestrictionBackwardsUnit,
 					x => x.Enabled
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.Backwards
+			restriction.Backwards
 				.BindTo(
 					textBoxCameraRestrictionBackwards,
 					x => x.Text,
@@ -117,9 +139,29 @@ namespace TrainEditor2.Views
 						)
 						.ToUnit()
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.DefinedLeft
+			restriction.Backwards
+				.BindToErrorProvider(errorProvider, textBoxCameraRestrictionBackwards)
+				.AddTo(restrictionDisposable);
+
+			restriction.BackwardsUnit
+				.BindTo(
+					comboBoxCameraRestrictionBackwardsUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Length)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxCameraRestrictionBackwardsUnit.SelectedIndexChanged += h,
+							h => comboBoxCameraRestrictionBackwardsUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(restrictionDisposable);
+
+			restriction.DefinedLeft
 				.BindTo(
 					checkBoxCameraRestrictionDefinedLeft,
 					x => x.Checked,
@@ -133,30 +175,30 @@ namespace TrainEditor2.Views
 						)
 						.ToUnit()
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.DefinedLeft
+			restriction.DefinedLeft
 				.BindTo(
 					labelCameraRestrictionLeft,
 					x => x.Enabled
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.DefinedLeft
+			restriction.DefinedLeft
 				.BindTo(
 					textBoxCameraRestrictionLeft,
 					x => x.Enabled
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.DefinedLeft
+			restriction.DefinedLeft
 				.BindTo(
-					labelCameraRestrictionLeftUnit,
+					comboBoxCameraRestrictionLeftUnit,
 					x => x.Enabled
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.Left
+			restriction.Left
 				.BindTo(
 					textBoxCameraRestrictionLeft,
 					x => x.Text,
@@ -170,9 +212,29 @@ namespace TrainEditor2.Views
 						)
 						.ToUnit()
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.DefinedRight
+			restriction.Left
+				.BindToErrorProvider(errorProvider, textBoxCameraRestrictionLeft)
+				.AddTo(restrictionDisposable);
+
+			restriction.LeftUnit
+				.BindTo(
+					comboBoxCameraRestrictionLeftUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Length)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxCameraRestrictionLeftUnit.SelectedIndexChanged += h,
+							h => comboBoxCameraRestrictionLeftUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(restrictionDisposable);
+
+			restriction.DefinedRight
 				.BindTo(
 					checkBoxCameraRestrictionDefinedRight,
 					x => x.Checked,
@@ -186,30 +248,30 @@ namespace TrainEditor2.Views
 						)
 						.ToUnit()
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.DefinedRight
+			restriction.DefinedRight
 				.BindTo(
 					labelCameraRestrictionRight,
 					x => x.Enabled
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.DefinedRight
+			restriction.DefinedRight
 				.BindTo(
 					textBoxCameraRestrictionRight,
 					x => x.Enabled
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.DefinedRight
+			restriction.DefinedRight
 				.BindTo(
-					labelCameraRestrictionRightUnit,
+					comboBoxCameraRestrictionRightUnit,
 					x => x.Enabled
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.Right
+			restriction.Right
 				.BindTo(
 					textBoxCameraRestrictionRight,
 					x => x.Text,
@@ -223,9 +285,29 @@ namespace TrainEditor2.Views
 						)
 						.ToUnit()
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.DefinedUp
+			restriction.Right
+				.BindToErrorProvider(errorProvider, textBoxCameraRestrictionRight)
+				.AddTo(restrictionDisposable);
+
+			restriction.RightUnit
+				.BindTo(
+					comboBoxCameraRestrictionRightUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Length)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxCameraRestrictionRightUnit.SelectedIndexChanged += h,
+							h => comboBoxCameraRestrictionRightUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(restrictionDisposable);
+
+			restriction.DefinedUp
 				.BindTo(
 					checkBoxCameraRestrictionDefinedUp,
 					x => x.Checked,
@@ -239,30 +321,30 @@ namespace TrainEditor2.Views
 						)
 						.ToUnit()
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.DefinedUp
+			restriction.DefinedUp
 				.BindTo(
 					labelCameraRestrictionUp,
 					x => x.Enabled
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.DefinedUp
+			restriction.DefinedUp
 				.BindTo(
 					textBoxCameraRestrictionUp,
 					x => x.Enabled
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.DefinedUp
+			restriction.DefinedUp
 				.BindTo(
-					labelCameraRestrictionUpUnit,
+					comboBoxCameraRestrictionUpUnit,
 					x => x.Enabled
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.Up
+			restriction.Up
 				.BindTo(
 					textBoxCameraRestrictionUp,
 					x => x.Text,
@@ -276,9 +358,29 @@ namespace TrainEditor2.Views
 						)
 						.ToUnit()
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.DefinedDown
+			restriction.Up
+				.BindToErrorProvider(errorProvider, textBoxCameraRestrictionUp)
+				.AddTo(restrictionDisposable);
+
+			restriction.UpUnit
+				.BindTo(
+					comboBoxCameraRestrictionUpUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Length)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxCameraRestrictionUpUnit.SelectedIndexChanged += h,
+							h => comboBoxCameraRestrictionUpUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(restrictionDisposable);
+
+			restriction.DefinedDown
 				.BindTo(
 					checkBoxCameraRestrictionDefinedDown,
 					x => x.Checked,
@@ -292,30 +394,30 @@ namespace TrainEditor2.Views
 						)
 						.ToUnit()
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.DefinedDown
+			restriction.DefinedDown
 				.BindTo(
 					labelCameraRestrictionDown,
 					x => x.Enabled
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.DefinedDown
+			restriction.DefinedDown
 				.BindTo(
 					textBoxCameraRestrictionDown,
 					x => x.Enabled
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.DefinedDown
+			restriction.DefinedDown
 				.BindTo(
-					labelCameraRestrictionDownUnit,
+					comboBoxCameraRestrictionDownUnit,
 					x => x.Enabled
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			cameraRestriction.Down
+			restriction.Down
 				.BindTo(
 					textBoxCameraRestrictionDown,
 					x => x.Text,
@@ -329,9 +431,29 @@ namespace TrainEditor2.Views
 						)
 						.ToUnit()
 				)
-				.AddTo(cameraRestrictionDisposable);
+				.AddTo(restrictionDisposable);
 
-			return cameraRestrictionDisposable;
+			restriction.Down
+				.BindToErrorProvider(errorProvider, textBoxCameraRestrictionDown)
+				.AddTo(restrictionDisposable);
+
+			restriction.DownUnit
+				.BindTo(
+					comboBoxCameraRestrictionDownUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Length)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxCameraRestrictionDownUnit.SelectedIndexChanged += h,
+							h => comboBoxCameraRestrictionDownUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(restrictionDisposable);
+
+			return restrictionDisposable;
 		}
 	}
 }

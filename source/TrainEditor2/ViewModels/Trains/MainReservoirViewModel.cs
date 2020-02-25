@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using OpenBveApi.Units;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -13,7 +14,17 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
+		internal ReactiveProperty<Unit.Pressure> MinimumPressureUnit
+		{
+			get;
+		}
+
 		internal ReactiveProperty<string> MaximumPressure
+		{
+			get;
+		}
+
+		internal ReactiveProperty<Unit.Pressure> MaximumPressureUnit
 		{
 			get;
 		}
@@ -25,8 +36,8 @@ namespace TrainEditor2.ViewModels.Trains
 			MinimumPressure = mainReservoir
 				.ToReactivePropertyAsSynchronized(
 					x => x.MinimumPressure,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Value.ToString(culture),
+					x => new Quantity.Pressure(double.Parse(x, NumberStyles.Float, culture), mainReservoir.MinimumPressure.UnitValue),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -40,11 +51,19 @@ namespace TrainEditor2.ViewModels.Trains
 				})
 				.AddTo(disposable);
 
+			MinimumPressureUnit = mainReservoir
+				.ToReactivePropertyAsSynchronized(
+					x => x.MinimumPressure,
+					x => x.UnitValue,
+					x => mainReservoir.MinimumPressure.ToNewUnit(x)
+				)
+				.AddTo(disposable);
+
 			MaximumPressure = mainReservoir
 				.ToReactivePropertyAsSynchronized(
 					x => x.MaximumPressure,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Value.ToString(culture),
+					x => new Quantity.Pressure(double.Parse(x, NumberStyles.Float, culture), mainReservoir.MaximumPressure.UnitValue),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -56,6 +75,14 @@ namespace TrainEditor2.ViewModels.Trains
 
 					return message;
 				})
+				.AddTo(disposable);
+
+			MaximumPressureUnit = mainReservoir
+				.ToReactivePropertyAsSynchronized(
+					x => x.MaximumPressure,
+					x => x.UnitValue,
+					x => mainReservoir.MaximumPressure.ToNewUnit(x)
+				)
 				.AddTo(disposable);
 		}
 	}

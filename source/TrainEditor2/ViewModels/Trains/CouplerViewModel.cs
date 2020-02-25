@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Reactive.Linq;
+using OpenBveApi.Units;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -20,7 +21,17 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
+		internal ReactiveProperty<Unit.Length> MinUnit
+		{
+			get;
+		}
+
 		internal ReactiveProperty<string> Max
+		{
+			get;
+		}
+
+		internal ReactiveProperty<Unit.Length> MaxUnit
 		{
 			get;
 		}
@@ -39,18 +50,34 @@ namespace TrainEditor2.ViewModels.Trains
 			Min = coupler
 				.ToReactivePropertyAsSynchronized(
 					x => x.Min,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Value.ToString(culture),
+					x => new Quantity.Length(double.Parse(x, NumberStyles.Float, culture), coupler.Min.UnitValue),
 					ignoreValidationErrorValue: true
+				)
+				.AddTo(disposable);
+
+			MinUnit = coupler
+				.ToReactivePropertyAsSynchronized(
+					x => x.Min,
+					x => x.UnitValue,
+					x => coupler.Min.ToNewUnit(x)
 				)
 				.AddTo(disposable);
 
 			Max = coupler
 				.ToReactivePropertyAsSynchronized(
 					x => x.Max,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Value.ToString(culture),
+					x => new Quantity.Length(double.Parse(x, NumberStyles.Float, culture), coupler.Max.UnitValue),
 					ignoreValidationErrorValue: true
+				)
+				.AddTo(disposable);
+
+			MaxUnit = coupler
+				.ToReactivePropertyAsSynchronized(
+					x => x.Max,
+					x => x.UnitValue,
+					x => coupler.Max.ToNewUnit(x)
 				)
 				.AddTo(disposable);
 
@@ -67,9 +94,9 @@ namespace TrainEditor2.ViewModels.Trains
 					{
 						double max;
 
-						if (Utilities.TryParse(Max.Value, NumberRange.Any, out max) && min > max)
+						if (Utilities.TryParse(Max.Value, NumberRange.Any, out max) && new Quantity.Length(min, coupler.Min.UnitValue) > new Quantity.Length(max, coupler.Max.UnitValue))
 						{
-							message = "MaxはMin以上でなければなりません。";
+							message = "Max must be greater than or equal to Min.";
 						}
 					}
 
@@ -93,9 +120,9 @@ namespace TrainEditor2.ViewModels.Trains
 					{
 						double min;
 
-						if (Utilities.TryParse(Min.Value, NumberRange.Any, out min) && max < min)
+						if (Utilities.TryParse(Min.Value, NumberRange.Any, out min) && new Quantity.Length(max, coupler.Max.UnitValue) < new Quantity.Length(min, coupler.Min.UnitValue))
 						{
-							message = "MaxはMin以上でなければなりません。";
+							message = "Max must be greater than or equal to Min.";
 						}
 					}
 

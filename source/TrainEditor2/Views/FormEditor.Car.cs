@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using OpenBveApi.Units;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -42,6 +43,22 @@ namespace TrainEditor2.Views
 				.BindToErrorProvider(errorProvider, textBoxMass)
 				.AddTo(carDisposable);
 
+			car.MassUnit
+				.BindTo(
+					comboBoxMassUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Mass)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxMassUnit.SelectedIndexChanged += h,
+							h => comboBoxMassUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(carDisposable);
+
 			car.Length
 				.BindTo(
 					textBoxLength,
@@ -60,6 +77,22 @@ namespace TrainEditor2.Views
 
 			car.Length
 				.BindToErrorProvider(errorProvider, textBoxLength)
+				.AddTo(carDisposable);
+
+			car.LengthUnit
+				.BindTo(
+					comboBoxLengthUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Length)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxLengthUnit.SelectedIndexChanged += h,
+							h => comboBoxLengthUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
 				.AddTo(carDisposable);
 
 			car.Width
@@ -82,6 +115,22 @@ namespace TrainEditor2.Views
 				.BindToErrorProvider(errorProvider, textBoxLength)
 				.AddTo(carDisposable);
 
+			car.WidthUnit
+				.BindTo(
+					comboBoxWidthUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Length)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxWidthUnit.SelectedIndexChanged += h,
+							h => comboBoxWidthUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(carDisposable);
+
 			car.Height
 				.BindTo(
 					textBoxHeight,
@@ -102,6 +151,22 @@ namespace TrainEditor2.Views
 				.BindToErrorProvider(errorProvider, textBoxHeight)
 				.AddTo(carDisposable);
 
+			car.HeightUnit
+				.BindTo(
+					comboBoxHeightUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Length)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxHeightUnit.SelectedIndexChanged += h,
+							h => comboBoxHeightUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(carDisposable);
+
 			car.CenterOfGravityHeight
 				.BindTo(
 					textBoxCenterOfMassHeight,
@@ -120,6 +185,22 @@ namespace TrainEditor2.Views
 
 			car.CenterOfGravityHeight
 				.BindToErrorProvider(errorProvider, textBoxCenterOfMassHeight)
+				.AddTo(carDisposable);
+
+			car.CenterOfGravityHeightUnit
+				.BindTo(
+					comboBoxCenterOfMassHeightUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Length)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxCenterOfMassHeightUnit.SelectedIndexChanged += h,
+							h => comboBoxCenterOfMassHeightUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
 				.AddTo(carDisposable);
 
 			car.DefinedAxles
@@ -165,6 +246,22 @@ namespace TrainEditor2.Views
 				.BindToErrorProvider(errorProvider, textBoxFrontAxle)
 				.AddTo(carDisposable);
 
+			car.FrontAxleUnit
+				.BindTo(
+					comboBoxFrontAxleUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Length)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxFrontAxleUnit.SelectedIndexChanged += h,
+							h => comboBoxFrontAxleUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(carDisposable);
+
 			car.RearAxle
 				.BindTo(
 					textBoxRearAxle,
@@ -183,6 +280,22 @@ namespace TrainEditor2.Views
 
 			car.RearAxle
 				.BindToErrorProvider(errorProvider, textBoxRearAxle)
+				.AddTo(carDisposable);
+
+			car.RearAxleUnit
+				.BindTo(
+					comboBoxRearAxleUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Length)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxRearAxleUnit.SelectedIndexChanged += h,
+							h => comboBoxRearAxleUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
 				.AddTo(carDisposable);
 
 			car.ExposedFrontalArea

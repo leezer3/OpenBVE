@@ -1,16 +1,17 @@
 ﻿using System;
+using OpenBveApi.Units;
 using Prism.Mvvm;
 
 namespace TrainEditor2.Models.Trains
 {
 	internal class BrakeCylinder : BindableBase, ICloneable
 	{
-		private double serviceMaximumPressure;
-		private double emergencyMaximumPressure;
-		private double emergencyRate;
-		private double releaseRate;
+		private Quantity.Pressure serviceMaximumPressure;
+		private Quantity.Pressure emergencyMaximumPressure;
+		private Quantity.PressureRate emergencyRate;
+		private Quantity.PressureRate releaseRate;
 
-		internal double ServiceMaximumPressure
+		internal Quantity.Pressure ServiceMaximumPressure
 		{
 			get
 			{
@@ -22,7 +23,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double EmergencyMaximumPressure
+		internal Quantity.Pressure EmergencyMaximumPressure
 		{
 			get
 			{
@@ -34,7 +35,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double EmergencyRate
+		internal Quantity.PressureRate EmergencyRate
 		{
 			get
 			{
@@ -46,7 +47,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double ReleaseRate
+		internal Quantity.PressureRate ReleaseRate
 		{
 			get
 			{
@@ -60,10 +61,10 @@ namespace TrainEditor2.Models.Trains
 
 		internal BrakeCylinder()
 		{
-			ServiceMaximumPressure = 480.0;
-			EmergencyMaximumPressure = 480.0;
-			EmergencyRate = 300.0;
-			ReleaseRate = 200.0;
+			ServiceMaximumPressure = new Quantity.Pressure(480.0, Unit.Pressure.Kilopascal);
+			EmergencyMaximumPressure = new Quantity.Pressure(480.0, Unit.Pressure.Kilopascal);
+			EmergencyRate = new Quantity.PressureRate(300.0, Unit.PressureRate.KilopascalPerSecond);
+			ReleaseRate = new Quantity.PressureRate(200.0, Unit.PressureRate.KilopascalPerSecond);
 		}
 
 		public object Clone()

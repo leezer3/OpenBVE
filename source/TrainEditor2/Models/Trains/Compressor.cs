@@ -1,13 +1,14 @@
 ﻿using System;
+using OpenBveApi.Units;
 using Prism.Mvvm;
 
 namespace TrainEditor2.Models.Trains
 {
 	internal class Compressor : BindableBase, ICloneable
 	{
-		private double rate;
+		private Quantity.PressureRate rate;
 
-		internal double Rate
+		internal Quantity.PressureRate Rate
 		{
 			get
 			{
@@ -21,7 +22,7 @@ namespace TrainEditor2.Models.Trains
 
 		internal Compressor()
 		{
-			Rate = 5.0;
+			Rate = new Quantity.PressureRate(5.0, Unit.PressureRate.KilopascalPerSecond);
 		}
 
 		public object Clone()

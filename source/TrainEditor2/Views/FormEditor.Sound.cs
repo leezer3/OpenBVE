@@ -109,7 +109,7 @@ namespace TrainEditor2.Views
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<BrakeElementViewModel, BrakeKey>(x).AddTo(elementDisposable);
+					BindToSoundElement<BrakeElementViewModel, SoundKey.Brake>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
@@ -120,7 +120,7 @@ namespace TrainEditor2.Views
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<CompressorElementViewModel, CompressorKey>(x).AddTo(elementDisposable);
+					BindToSoundElement<CompressorElementViewModel, SoundKey.Compressor>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
@@ -131,7 +131,7 @@ namespace TrainEditor2.Views
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<SuspensionElementViewModel, SuspensionKey>(x).AddTo(elementDisposable);
+					BindToSoundElement<SuspensionElementViewModel, SoundKey.Suspension>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
@@ -142,7 +142,7 @@ namespace TrainEditor2.Views
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<PrimaryHornElementViewModel, HornKey>(x).AddTo(elementDisposable);
+					BindToSoundElement<PrimaryHornElementViewModel, SoundKey.Horn>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
@@ -153,7 +153,7 @@ namespace TrainEditor2.Views
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<SecondaryHornElementViewModel, HornKey>(x).AddTo(elementDisposable);
+					BindToSoundElement<SecondaryHornElementViewModel, SoundKey.Horn>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
@@ -164,7 +164,7 @@ namespace TrainEditor2.Views
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<MusicHornElementViewModel, HornKey>(x).AddTo(elementDisposable);
+					BindToSoundElement<MusicHornElementViewModel, SoundKey.Horn>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
@@ -175,7 +175,7 @@ namespace TrainEditor2.Views
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<DoorElementViewModel, DoorKey>(x).AddTo(elementDisposable);
+					BindToSoundElement<DoorElementViewModel, SoundKey.Door>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
@@ -197,7 +197,7 @@ namespace TrainEditor2.Views
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<BuzzerElementViewModel, BuzzerKey>(x).AddTo(elementDisposable);
+					BindToSoundElement<BuzzerElementViewModel, SoundKey.Buzzer>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
@@ -208,7 +208,7 @@ namespace TrainEditor2.Views
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<PilotLampElementViewModel, PilotLampKey>(x).AddTo(elementDisposable);
+					BindToSoundElement<PilotLampElementViewModel, SoundKey.PilotLamp>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
@@ -219,7 +219,7 @@ namespace TrainEditor2.Views
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<BrakeHandleElementViewModel, BrakeHandleKey>(x).AddTo(elementDisposable);
+					BindToSoundElement<BrakeHandleElementViewModel, SoundKey.BrakeHandle>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
@@ -230,7 +230,7 @@ namespace TrainEditor2.Views
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<MasterControllerElementViewModel, MasterControllerKey>(x).AddTo(elementDisposable);
+					BindToSoundElement<MasterControllerElementViewModel, SoundKey.MasterController>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
@@ -241,7 +241,7 @@ namespace TrainEditor2.Views
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<ReverserElementViewModel, ReverserKey>(x).AddTo(elementDisposable);
+					BindToSoundElement<ReverserElementViewModel, SoundKey.Reverser>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
@@ -252,7 +252,7 @@ namespace TrainEditor2.Views
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<BreakerElementViewModel, BreakerKey>(x).AddTo(elementDisposable);
+					BindToSoundElement<BreakerElementViewModel, SoundKey.Breaker>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
@@ -263,7 +263,7 @@ namespace TrainEditor2.Views
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<RequestStopElementViewModel, RequestStopKey>(x).AddTo(elementDisposable);
+					BindToSoundElement<RequestStopElementViewModel, SoundKey.RequestStop>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 
@@ -285,7 +285,7 @@ namespace TrainEditor2.Views
 					elementDisposable.Dispose();
 					elementDisposable = new CompositeDisposable().AddTo(soundDisposable);
 
-					BindToSoundElement<OthersElementViewModel, OthersKey>(x).AddTo(elementDisposable);
+					BindToSoundElement<OthersElementViewModel, SoundKey.Others>(x).AddTo(elementDisposable);
 				})
 				.AddTo(soundDisposable);
 

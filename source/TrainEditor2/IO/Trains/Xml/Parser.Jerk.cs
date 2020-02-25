@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using OpenBveApi.Interface;
@@ -14,8 +13,6 @@ namespace TrainEditor2.IO.Trains.Xml
 		private static Jerk ParseJerkNode(string fileName, XElement parent)
 		{
 			Jerk jerk = new Jerk();
-
-			CultureInfo culture = CultureInfo.InvariantCulture;
 
 			string section = parent.Name.LocalName;
 
@@ -44,8 +41,6 @@ namespace TrainEditor2.IO.Trains.Xml
 		private static Jerk.Entry ParseJerkEntryNode(string fileName, XElement parent)
 		{
 			Jerk.Entry entry = new Jerk.Entry();
-
-			CultureInfo culture = CultureInfo.InvariantCulture;
 
 			string section = parent.Name.LocalName;
 
