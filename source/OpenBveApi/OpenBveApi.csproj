@@ -113,6 +113,11 @@
     <Compile Include="Objects\ObjectTypes\WorldSound.cs" />
     <Compile Include="Objects\Parsers\ObjParsers.cs" />
     <Compile Include="Objects\Parsers\XParsers.cs" />
+    <Compile Include="Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
     <Compile Include="Routes\Background.Handle.cs" />
     <Compile Include="Routes\Background.TransitionModes.cs" />
     <Compile Include="Routes\BackgroundObject.cs" />
@@ -187,7 +192,10 @@
     <Compile Include="World\Vertex.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\..\assets\Languages\en-US.xlf" />
+    <EmbeddedResource Include="Resource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="OpenTK.dll.config">

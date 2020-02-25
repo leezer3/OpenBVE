@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
+using System.Text;
 using System.Windows.Forms;
 
 namespace OpenBveApi.Interface {
@@ -26,8 +26,9 @@ namespace OpenBveApi.Interface {
 	                try
 	                {
 						using (FileStream stream = new FileStream(File, FileMode.Open, FileAccess.Read))
+						using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
 						{
-							Language l = new Language(stream, System.IO.Path.GetFileNameWithoutExtension(File));
+							Language l = new Language(reader, System.IO.Path.GetFileNameWithoutExtension(File));
 							AvailableLanguages.Add(l);
 						}
 	                }
@@ -42,10 +43,9 @@ namespace OpenBveApi.Interface {
 		/// <summary>Loads the embedded default language</summary>
 		private static void LoadEmbeddedLanguage()
 		{
-			var thisAssembly = Assembly.GetExecutingAssembly();
-			using (Stream stream = thisAssembly.GetManifestResourceStream("OpenBveApi.en-US.xlf"))
+			using (TextReader reader = new StringReader(Resource.en_US))
 			{
-				Language l = new Language(stream, "en-US");
+				Language l = new Language(reader, "en-US");
 				AvailableLanguages.Add(l);
 			}
 			CurrentLanguageCode = "en-US";
