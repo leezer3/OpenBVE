@@ -87,7 +87,7 @@ namespace LibRender2.Objects
 		{
 			bool result = AddObject(State);
 
-			if (currentOptions.IsUseNewRenderer && State.Prototype.Mesh.VAO == null)
+			if (renderer.AvailableNewRenderer && State.Prototype.Mesh.VAO == null)
 			{
 				VAOExtensions.CreateVAO(ref State.Prototype.Mesh, State.Prototype.Dynamic, renderer.DefaultShader.VertexLayout);
 			}

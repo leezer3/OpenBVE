@@ -114,7 +114,7 @@ namespace LibRender2.Backgrounds
 		/// <param name="scale">The scale</param>
 		private void RenderStaticBackground(StaticBackground data, float alpha, float scale)
 		{
-			if (renderer.currentOptions.IsUseNewRenderer)
+			if (renderer.AvailableNewRenderer)
 			{
 				RenderStaticBackgroundRetained(data, alpha, scale);
 			}
@@ -329,7 +329,7 @@ namespace LibRender2.Backgrounds
 		/// <param name="data">The background object</param>
 		private void RenderBackgroundObject(BackgroundObject data)
 		{
-			if (renderer.currentOptions.IsUseNewRenderer)
+			if (renderer.AvailableNewRenderer)
 			{
 				renderer.DefaultShader.Activate();
 				renderer.DefaultShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
@@ -365,7 +365,7 @@ namespace LibRender2.Backgrounds
 					}
 				}
 
-				if (renderer.currentOptions.IsUseNewRenderer)
+				if (renderer.AvailableNewRenderer)
 				{
 					renderer.RenderFace(renderer.DefaultShader, new ObjectState { Prototype = data.Object }, face, Matrix4D.NoTransformation, Matrix4D.Scale(1.0) * renderer.CurrentViewMatrix);
 				}
@@ -375,7 +375,7 @@ namespace LibRender2.Backgrounds
 				}
 			}
 
-			if (renderer.currentOptions.IsUseNewRenderer)
+			if (renderer.AvailableNewRenderer)
 			{
 				renderer.DefaultShader.Deactivate();
 			}

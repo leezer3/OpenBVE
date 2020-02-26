@@ -311,7 +311,7 @@ namespace OpenBve
 
 			// world layer
 			// opaque face
-			if (Interface.CurrentOptions.IsUseNewRenderer)
+			if (AvailableNewRenderer)
 			{
 				//Setup the shader for rendering the scene
 				DefaultShader.Activate();
@@ -337,7 +337,7 @@ namespace OpenBve
 
 			foreach (FaceState face in VisibleObjects.OpaqueFaces)
 			{
-				if (Interface.CurrentOptions.IsUseNewRenderer)
+				if (AvailableNewRenderer)
 				{
 					RenderFace(DefaultShader, face);
 				}
@@ -359,7 +359,7 @@ namespace OpenBve
 
 				foreach (FaceState face in VisibleObjects.AlphaFaces)
 				{
-					if (Interface.CurrentOptions.IsUseNewRenderer)
+					if (AvailableNewRenderer)
 					{
 						RenderFace(DefaultShader, face);
 					}
@@ -381,7 +381,7 @@ namespace OpenBve
 					{
 						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].Color.A == 255)
 						{
-							if (Interface.CurrentOptions.IsUseNewRenderer)
+							if (AvailableNewRenderer)
 							{
 								RenderFace(DefaultShader, face);
 							}
@@ -408,7 +408,7 @@ namespace OpenBve
 							additive = true;
 						}
 
-						if (Interface.CurrentOptions.IsUseNewRenderer)
+						if (AvailableNewRenderer)
 						{
 							RenderFace(DefaultShader, face);
 						}
@@ -425,7 +425,7 @@ namespace OpenBve
 							additive = false;
 						}
 
-						if (Interface.CurrentOptions.IsUseNewRenderer)
+						if (AvailableNewRenderer)
 						{
 							RenderFace(DefaultShader, face);
 						}
@@ -438,7 +438,7 @@ namespace OpenBve
 			}
 
 			// render overlays
-			if (Interface.CurrentOptions.IsUseNewRenderer)
+			if (AvailableNewRenderer)
 			{
 				DefaultShader.Deactivate();
 			}

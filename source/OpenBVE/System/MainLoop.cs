@@ -78,7 +78,7 @@ namespace OpenBve
 					Interface.CurrentOptions.WindowHeight = result.Height;
 				}
 			}
-			if (Interface.CurrentOptions.IsUseNewRenderer)
+			if (Program.Renderer.AvailableNewRenderer)
 			{
 				Program.FileSystem.AppendToLogFile("Using openGL 3.0 (new) renderer");
 			}

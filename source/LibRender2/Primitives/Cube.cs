@@ -177,7 +177,7 @@ namespace LibRender2.Primitives
 				}
 			};
 
-			if (renderer.currentOptions.IsUseNewRenderer)
+			if (renderer.AvailableNewRenderer)
 			{
 				defaultVAO = new VertexArrayObject();
 				defaultVAO.Bind();
@@ -198,7 +198,7 @@ namespace LibRender2.Primitives
 		/// <param name="TextureIndex">The texture to apply</param>
 		public void Draw(Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, double Size, Vector3 Camera, Texture TextureIndex)
 		{
-			if (renderer.currentOptions.IsUseNewRenderer)
+			if (renderer.AvailableNewRenderer)
 			{
 				Draw(Position, Direction, Up, Side, new Vector3(Size, Size, Size), Camera, TextureIndex);
 			}
@@ -219,7 +219,7 @@ namespace LibRender2.Primitives
 		/// <param name="TextureIndex">The texture to apply</param>
 		public void Draw(Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, Vector3 Size, Vector3 Camera, Texture TextureIndex)
 		{
-			if (renderer.currentOptions.IsUseNewRenderer)
+			if (renderer.AvailableNewRenderer)
 			{
 				DrawRetained(defaultVAO, Position, Direction, Up, Side, Size, Camera, TextureIndex);
 			}
