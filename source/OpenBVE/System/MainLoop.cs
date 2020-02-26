@@ -51,11 +51,11 @@ namespace OpenBve
 			if (result.InitialStation != null)
 			{
 				//We have supplied a station name or index to the loader
-				Game.InitialStationName = result.InitialStation;
+				Program.CurrentRoute.InitialStationName = result.InitialStation;
 			}
 			if (result.StartTime != default(double))
 			{
-				Game.InitialStationTime = result.StartTime;
+				Program.CurrentRoute.InitialStationTime = result.StartTime;
 			}
 
 			Game.InitialAIDriver = result.AIDriver;

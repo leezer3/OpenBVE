@@ -355,6 +355,11 @@ namespace OpenBve {
 			return Program.Sounds.PlaySound(buffer, pitch, volume, position, parent, looped);
 		}
 
+		public override void PlayMicSound(OpenBveApi.Math.Vector3 position, double backwardTolerance, double forwardTolerance)
+		{
+			Program.Sounds.PlayMicSound(position, backwardTolerance, forwardTolerance);
+		}
+
 		public override void StopSound(object SoundSource)
 		{
 			Program.Sounds.StopSound(SoundSource);

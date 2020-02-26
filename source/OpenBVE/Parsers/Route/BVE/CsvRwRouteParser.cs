@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using OpenBveApi;
 using Path = OpenBveApi.Path;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
@@ -48,9 +49,9 @@ namespace OpenBve {
 			
 			freeObjCount = 0;
 			railtypeCount = 0;
-			Game.UnitOfSpeed = "km/h";
-			Game.SpeedConversionFactor = 0.0;
-			Game.RouteInformation.RouteBriefing = null;
+			Interface.CurrentOptions.UnitOfSpeed = "km/h";
+			Interface.CurrentOptions.SpeedConversionFactor = 0.0;
+			Program.CurrentRoute.Information.RouteBriefing = null;
 			CompatibilityFolder = Program.FileSystem.GetDataFolder("Compatibility");
 			if (!PreviewOnly)
 			{
@@ -595,7 +596,7 @@ namespace OpenBve {
 										if (Arguments.Length < 1) {
 											Program.CurrentHost.AddMessage(MessageType.Error, false, "" + Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 										} else {
-											Timetable.DefaultTimetableDescription = Arguments[0];
+											Program.CurrentRoute.Information.DefaultTimetableDescription = Arguments[0];
 										}
 									} break;
 								case "route.change":
@@ -608,7 +609,7 @@ namespace OpenBve {
 											Program.CurrentHost.AddMessage(MessageType.Error, false, "Mode is expected to be -1, 0 or 1 in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											change = 0;
 										}
-										Game.TrainStart = (TrainStartMode)change;
+										Interface.CurrentOptions.TrainStart = (TrainStartMode)change;
 									} break;
 								case "route.gauge":
 								case "train.gauge":
@@ -698,7 +699,7 @@ namespace OpenBve {
 											intervals.Sort();
 											if (intervals.Count > 0)
 											{
-												Game.PrecedingTrainTimeDeltas = intervals.ToArray();
+												Program.CurrentRoute.PrecedingTrainTimeDeltas = intervals.ToArray();
 											}
 										}
 									} break;
@@ -710,7 +711,7 @@ namespace OpenBve {
 												Program.CurrentHost.AddMessage(MessageType.Error, false, "Speed is invalid in Train.Velocity at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												limit = 0.0;
 											}
-											Game.PrecedingTrainSpeedLimit = limit <= 0.0 ? double.PositiveInfinity : Data.UnitOfSpeed * limit;
+											Interface.CurrentOptions.PrecedingTrainSpeedLimit = limit <= 0.0 ? double.PositiveInfinity : Data.UnitOfSpeed * limit;
 										}
 									} break;
 								case "route.accelerationduetogravity":
@@ -741,9 +742,9 @@ namespace OpenBve {
 										}
 										else
 										{
-											if (Game.InitialStationTime == -1)
+											if (Program.CurrentRoute.InitialStationTime == -1)
 											{
-												Game.InitialStationTime = t;
+												Program.CurrentRoute.InitialStationTime = t;
 											}
 										}
 									}
@@ -785,11 +786,11 @@ namespace OpenBve {
 										Program.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have two arguments at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 										break;
 									}
-									Game.UnitOfSpeed = Arguments[0];
-									if (!double.TryParse(Arguments[1], NumberStyles.Float, Culture, out Game.SpeedConversionFactor))
+									Interface.CurrentOptions.UnitOfSpeed = Arguments[0];
+									if (!double.TryParse(Arguments[1], NumberStyles.Float, Culture, out Interface.CurrentOptions.SpeedConversionFactor))
 									{
 										Program.CurrentHost.AddMessage(MessageType.Error, false,"Speed conversion factor is invalid in " + Command + " at line " +Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) +" in file " + Expressions[j].File);
-										Game.UnitOfSpeed = "km/h";
+										Interface.CurrentOptions.UnitOfSpeed = "km/h";
 									}
 
 									break;
@@ -812,7 +813,7 @@ namespace OpenBve {
 										}
 										else
 										{
-											Game.RouteInformation.RouteBriefing = f;
+											Program.CurrentRoute.Information.RouteBriefing = f;
 										}
 									}
 									break;
@@ -986,7 +987,7 @@ namespace OpenBve {
 
 										if (cv >= 0 && cv < 4)
 										{
-											Game.InitialViewpoint = cv;
+											Interface.CurrentOptions.InitialViewpoint = cv;
 										}
 										else
 										{
@@ -1018,7 +1019,7 @@ namespace OpenBve {
 												if (Path.ContainsInvalidChars(Arguments[0])) {
 													Program.CurrentHost.AddMessage(MessageType.Error, false, "FolderName contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												} else {
-													Game.TrainName = Arguments[0];
+													Interface.CurrentOptions.TrainName = Arguments[0];
 												}
 											}
 										}
@@ -1146,7 +1147,7 @@ namespace OpenBve {
 											}
 											else
 											{
-												if (!NumberFormats.TryParseIntVb6(Arguments[0], out Game.InitialDestination))
+												if (!NumberFormats.TryParseIntVb6(Arguments[0], out Interface.CurrentOptions.InitialDestination))
 												{
 													Program.CurrentHost.AddMessage(MessageType.Error, false, "Destination is expected to be an Integer in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												}

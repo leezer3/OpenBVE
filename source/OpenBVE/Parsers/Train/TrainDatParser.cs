@@ -1092,7 +1092,7 @@ namespace OpenBve {
 			Train.SafetySystems.PassAlarm = new PassAlarm(passAlarm, Train.Cars[DriverCar]);
 			Train.SafetySystems.PilotLamp = new PilotLamp(Train.Cars[DriverCar]);
 			Train.SafetySystems.StationAdjust = new StationAdjustAlarm(Train);
-			switch (Game.TrainStart)
+			switch (Interface.CurrentOptions.TrainStart)
 			{
 				// starting mode
 				case TrainStartMode.ServiceBrakesAts:

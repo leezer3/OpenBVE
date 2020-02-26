@@ -108,26 +108,26 @@ namespace OpenBve
                     outputFile.WriteLine("Current screen resolution is: Windowed " + Interface.CurrentOptions.WindowWidth + "px x " + Interface.CurrentOptions.WindowHeight + "px ");
                 }
                 //Route and train
-	            if (Game.RouteInformation.RouteFile != null)
+	            if (Program.CurrentRoute.Information.RouteFile != null)
 	            {
-		            outputFile.WriteLine("Current routefile is: " + Game.RouteInformation.RouteFile);
+		            outputFile.WriteLine("Current routefile is: " + Program.CurrentRoute.Information.RouteFile);
 	            }
-	            if (Game.RouteInformation.TrainFolder != null)
+	            if (Program.CurrentRoute.Information.TrainFolder != null)
 	            {
-		            outputFile.WriteLine("Current train is: " + Game.RouteInformation.TrainFolder);
+		            outputFile.WriteLine("Current train is: " + Program.CurrentRoute.Information.TrainFolder);
 	            }
 	            if (TrainManager.PlayerTrain != null && TrainManager.PlayerTrain.Plugin != null)
 	            {
 		            outputFile.WriteLine("Current train plugin is: " + TrainManager.PlayerTrain.Plugin.PluginTitle);
 	            }
 	            //Errors and Warnings
-                if (Game.RouteInformation.FilesNotFound != null)
+                if (Program.CurrentRoute.Information.FilesNotFound != null)
                 {
-                    outputFile.WriteLine(Game.RouteInformation.FilesNotFound);
+                    outputFile.WriteLine(Program.CurrentRoute.Information.FilesNotFound);
                 }
-                if (Game.RouteInformation.ErrorsAndWarnings != null)
+                if (Program.CurrentRoute.Information.ErrorsAndWarnings != null)
                 {
-                    outputFile.WriteLine(Game.RouteInformation.ErrorsAndWarnings);
+                    outputFile.WriteLine(Program.CurrentRoute.Information.ErrorsAndWarnings);
                 }
                 //Track position and viewing distance
                 outputFile.WriteLine("Current track position is: " + World.CameraTrackFollower.TrackPosition.ToString("0.00", Culture) + " m");
@@ -186,21 +186,21 @@ namespace OpenBve
                 {
                     //We need the try/ catch block in order to catch errors which may have occured before initing the current route, train or plugin
                     //These may occur if we feed dud data to the sim
-                    outputFile.WriteLine("Current routefile is: " + Game.RouteInformation.RouteFile);
-                    outputFile.WriteLine("Current train is: " + Game.RouteInformation.TrainFolder);
+                    outputFile.WriteLine("Current routefile is: " + Program.CurrentRoute.Information.RouteFile);
+                    outputFile.WriteLine("Current train is: " + Program.CurrentRoute.Information.TrainFolder);
                     outputFile.WriteLine("Current train plugin is: " + TrainManager.PlayerTrain.Plugin.PluginTitle);
                 }
                 catch
                 {
                 }
                 //Errors and Warnings
-                if (Game.RouteInformation.FilesNotFound != null)
+                if (Program.CurrentRoute.Information.FilesNotFound != null)
                 {
-                    outputFile.WriteLine(Game.RouteInformation.FilesNotFound);
+                    outputFile.WriteLine(Program.CurrentRoute.Information.FilesNotFound);
                 }
-                if (Game.RouteInformation.ErrorsAndWarnings != null)
+                if (Program.CurrentRoute.Information.ErrorsAndWarnings != null)
                 {
-                    outputFile.WriteLine(Game.RouteInformation.ErrorsAndWarnings);
+                    outputFile.WriteLine(Program.CurrentRoute.Information.ErrorsAndWarnings);
                 }
                 if (Train)
                 {

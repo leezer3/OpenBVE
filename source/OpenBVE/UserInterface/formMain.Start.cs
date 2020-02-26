@@ -814,9 +814,9 @@ namespace OpenBve
 				}
 
 				textboxRouteEncodingPreview.Text = Description.ConvertNewlinesToCrLf();
-				if (Game.TrainName != null)
+				if (Interface.CurrentOptions.TrainName != null)
 				{
-					checkboxTrainDefault.Text = Translations.GetInterfaceString("start_train_usedefault") + @" (" + Game.TrainName + @")";
+					checkboxTrainDefault.Text = Translations.GetInterfaceString("start_train_usedefault") + @" (" + Interface.CurrentOptions.TrainName + @")";
 				}
 				else
 				{
@@ -976,15 +976,15 @@ namespace OpenBve
 			if (string.IsNullOrEmpty(Result.RouteFile)) {
 				return;
 			}
-			if (string.IsNullOrEmpty(Game.TrainName)) {
+			if (string.IsNullOrEmpty(Interface.CurrentOptions.TrainName)) {
 				return;
 			}
 			
 			string Folder;
 			try {
 				Folder = System.IO.Path.GetDirectoryName(Result.RouteFile);
-				if (Game.TrainName[0] == '$') {
-					Folder = OpenBveApi.Path.CombineDirectory(Folder, Game.TrainName);
+				if (Interface.CurrentOptions.TrainName[0] == '$') {
+					Folder = OpenBveApi.Path.CombineDirectory(Folder, Interface.CurrentOptions.TrainName);
 					if (System.IO.Directory.Exists(Folder)) {
 						string File = OpenBveApi.Path.CombineFile(Folder, "train.dat");
 						if (System.IO.File.Exists(File)) {
@@ -1006,7 +1006,7 @@ namespace OpenBve
 					var OldFolder = Folder;
 					if (System.IO.Directory.Exists(TrainFolder)) {
 						try {
-							Folder = OpenBveApi.Path.CombineDirectory(TrainFolder, Game.TrainName);
+							Folder = OpenBveApi.Path.CombineDirectory(TrainFolder, Interface.CurrentOptions.TrainName);
 						} catch (Exception ex) {
 							if (ex is ArgumentException)
 							{
@@ -1059,7 +1059,7 @@ namespace OpenBve
 			// train not found
 			Result.TrainFolder = null;
 			TryLoadImage(pictureboxTrainImage, "train_error.png");
-			textboxTrainDescription.Text = (Translations.GetInterfaceString("start_train_notfound") + Game.TrainName).ConvertNewlinesToCrLf();
+			textboxTrainDescription.Text = (Translations.GetInterfaceString("start_train_notfound") + Interface.CurrentOptions.TrainName).ConvertNewlinesToCrLf();
 			comboboxTrainEncoding.Tag = new object();
 			comboboxTrainEncoding.SelectedIndex = 0;
 			comboboxTrainEncoding.Tag = null;

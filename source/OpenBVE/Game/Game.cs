@@ -6,9 +6,7 @@ using OpenBveApi.Trains;
 using OpenBveApi.Routes;
 using RouteManager2;
 using RouteManager2.Climate;
-using RouteManager2.SignalManager;
 using RouteManager2.SignalManager.PreTrain;
-using RouteManager2.Stations;
 
 namespace OpenBve {
 	internal static partial class Game {
@@ -22,29 +20,7 @@ namespace OpenBve {
 		/// Train and time movements are processed, but no graphical processing is done
 		/// </summary>
 		internal static bool MinimalisticSimulation = false;
-
 		
-		
-		
-		
-
-		// other trains
-		internal static double[] PrecedingTrainTimeDeltas = new double[] { };
-		internal static double PrecedingTrainSpeedLimit = double.PositiveInfinity;
-		
-
-		
-        /// <summary>The default mode for the train's safety system to start in</summary>
-		internal static TrainStartMode TrainStart = TrainStartMode.EmergencyBrakesAts;
-        /// <summary>The name of the current train</summary>
-		internal static string TrainName = "";
-		/// <summary>The initial destination for any train within the game</summary>
-		internal static int InitialDestination = -1;
-
-		internal static int InitialViewpoint = 0;
-
-		// ================================
-
 		/// <summary>Call this function to reset the game</summary>
 		/// <param name="ResetLogs">Whether the logs should be reset</param>
 		/// <param name="ResetRenderer">Whether the renderer should be reset</param>
@@ -72,11 +48,11 @@ namespace OpenBve {
 			//Messages = new Message[] { };
 			Program.Renderer.Marker.MarkerTextures = new Texture[] { };
 			Program.CurrentRoute.PointsOfInterest = new PointOfInterest[] { };
-			PrecedingTrainTimeDeltas = new double[] { };
-			PrecedingTrainSpeedLimit = double.PositiveInfinity;
+			Program.CurrentRoute.PrecedingTrainTimeDeltas = new double[] { };
+			Interface.CurrentOptions.PrecedingTrainSpeedLimit = double.PositiveInfinity;
 			Program.CurrentRoute.BogusPreTrainInstructions = new BogusPreTrainInstruction[] { };
-			TrainName = "";
-			TrainStart = TrainStartMode.EmergencyBrakesNoAts;
+			Interface.CurrentOptions.TrainName = "";
+			Interface.CurrentOptions.TrainStart = TrainStartMode.EmergencyBrakesNoAts;
 			Program.CurrentRoute.NoFogStart = (float)Math.Max(1.33333333333333 * Interface.CurrentOptions.ViewingDistance, 800.0);
 			Program.CurrentRoute.NoFogEnd = (float)Math.Max(2.66666666666667 * Interface.CurrentOptions.ViewingDistance, 1600.0);
 			Program.CurrentRoute.PreviousFog = new Fog(Program.CurrentRoute.NoFogStart, Program.CurrentRoute.NoFogEnd, Color24.Grey, 0.0);
@@ -192,9 +168,5 @@ namespace OpenBve {
 				BlackBoxEntryCount++;
 			}
 		}
-
-
-		// buffers
-		
 	}
 }

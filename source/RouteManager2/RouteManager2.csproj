@@ -61,6 +61,7 @@
     <Compile Include="Events\TrackEnd.cs" />
     <Compile Include="Events\Transponder.cs" />
     <Compile Include="Events\Transponder.Types.cs" />
+    <Compile Include="Illustrations\RouteMap.cs" />
     <Compile Include="MessageManager\AbstractMessage.cs" />
     <Compile Include="MessageManager\MessageDependancy.cs" />
     <Compile Include="MessageManager\MessageDirection.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="MessageManager\MessageTypes\TextureMessage.cs" />
     <Compile Include="PointOfInterest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RouteInformation.cs" />
     <Compile Include="SignalManager\PreTrain\BogusPreTrainInstruction.cs" />
     <Compile Include="SignalManager\SafetySystems.cs" />
     <Compile Include="SignalManager\Section.cs" />

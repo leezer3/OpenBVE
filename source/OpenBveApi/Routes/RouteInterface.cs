@@ -1,0 +1,38 @@
+﻿namespace OpenBveApi.Routes
+{
+	/// <summary>Represents the interface for loading routes. Plugins must implement this interface if they wish to expose routes.</summary>
+	public abstract class RouteInterface {
+		/// <summary>Called when the plugin is loaded.</summary>
+		/// <param name="host">The host that loaded the plugin.</param>
+		/// <param name="Options">The options supplied by the host program</param>
+		public virtual void Load(Hosts.HostInterface host, BaseOptions Options) { }
+		
+		/// <summary>Called when the plugin is unloaded.</summary>
+		public virtual void Unload() { }
+		
+		/// <summary>Checks whether the plugin can load the specified route.</summary>
+		/// <param name="path">The path to the file or folder that contains the route.</param>
+		/// <returns>Whether the plugin can load the specified sound.</returns>
+		public abstract bool CanLoadRoute(string path);
+
+		/// <summary>Loads the specified route.</summary>
+		/// <param name="path">The path to the file or folder that contains the route.</param>
+		/// <param name="Encoding">The user-selected encoding (if appropriate)</param>
+		/// <param name="trainPath">The path to the selected train</param>
+		/// <param name="objectPath">The base object folder path</param>
+		/// <param name="soundPath">The base sound folder path</param>
+		/// <param name="PreviewOnly">Whether this is a preview</param>
+		/// <param name="route">Receives the route.</param>
+		/// <returns>Whether loading the sound was successful.</returns>
+		public abstract bool LoadRoute(string path, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly, out object route);
+
+		/// <summary>Holds the loading progress</summary>
+		public double Progress;
+
+		/// <summary>Set if loading is to be cancelled</summary>
+		public static bool Cancel;
+
+		/// <summary>Holds the current loading progress</summary>
+		public static double CurrentProgress;
+	}
+}

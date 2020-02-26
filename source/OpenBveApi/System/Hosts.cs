@@ -356,6 +356,15 @@ namespace OpenBveApi.Hosts {
 			return null;
 		}
 
+		/// <summary>Register the position to play microphone input.</summary>
+		/// <param name="position">The position.</param>
+		/// <param name="backwardTolerance">allowed tolerance in the backward direction</param>
+		/// <param name="forwardTolerance">allowed tolerance in the forward direction</param>
+		public virtual void PlayMicSound(OpenBveApi.Math.Vector3 position, double backwardTolerance, double forwardTolerance)
+		{
+
+		}
+
 		/// <summary>Stops a playing sound source</summary>
 		public virtual void StopSound(object SoundSource)
 		{

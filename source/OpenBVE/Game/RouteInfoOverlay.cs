@@ -87,10 +87,10 @@ namespace OpenBve
 					int trainX = (int)TrainManager.Trains[i].Cars[0].FrontAxle.Follower.WorldPosition.X;
 					int trainZ = (int)TrainManager.Trains[i].Cars[0].FrontAxle.Follower.WorldPosition.Z;
 					// convert to route map coordinates
-					xPos = mapSize.Width * (trainX - Game.RouteInformation.RouteMinX) /
-							(Game.RouteInformation.RouteMaxX - Game.RouteInformation.RouteMinX) - trainDotRadius;
-					zPos = mapSize.Height - mapSize.Height * (trainZ - Game.RouteInformation.RouteMinZ) /
-							(Game.RouteInformation.RouteMaxZ - Game.RouteInformation.RouteMinZ) - trainDotRadius;
+					xPos = mapSize.Width * (trainX - Program.CurrentRoute.Information.RouteMinX) /
+							(Program.CurrentRoute.Information.RouteMaxX - Program.CurrentRoute.Information.RouteMinX) - trainDotRadius;
+					zPos = mapSize.Height - mapSize.Height * (trainZ - Program.CurrentRoute.Information.RouteMinZ) /
+							(Program.CurrentRoute.Information.RouteMaxZ - Program.CurrentRoute.Information.RouteMinZ) - trainDotRadius;
 						// draw a dot at current train position
 						Program.Renderer.Rectangle.Draw(null, new Point(xPos, zPos),
 							new Size(trainDotDiameter, trainDotDiameter),
@@ -102,8 +102,8 @@ namespace OpenBve
 				// get current train position in track
 				int trackPos	= (int)(TrainManager.PlayerTrain.FrontCarTrackPosition());
 				// convert to gradient profile offset
-				xPos = gradientSize.Width * (trackPos - Game.RouteInformation.GradientMinTrack) /
-						(Game.RouteInformation.GradientMaxTrack - Game.RouteInformation.GradientMinTrack);
+				xPos = gradientSize.Width * (trackPos - Program.CurrentRoute.Information.GradientMinTrack) /
+						(Program.CurrentRoute.Information.GradientMaxTrack - Program.CurrentRoute.Information.GradientMinTrack);
 				// draw a vertical bar at the current train position
 				Program.Renderer.Rectangle.Draw(null, new Point(xPos, gradientSize.Height / 2),
 					new Size(gradientPosWidth, gradientSize.Height / 2), gradientPosBar);
@@ -132,15 +132,15 @@ namespace OpenBve
 			case state.map:
 				if (mapImage == null)
 				{
-					mapImage	= new Texture(Game.RouteInformation.RouteMap);
-					mapSize		= Game.RouteInformation.RouteMap.Size;
+					mapImage	= new Texture(Program.CurrentRoute.Information.RouteMap);
+					mapSize		= Program.CurrentRoute.Information.RouteMap.Size;
 				}
 				break;
 			case state.gradient:
 				if (gradientImage == null)
 				{
-					gradientImage	= new Texture(Game.RouteInformation.GradientProfile);
-					gradientSize	= Game.RouteInformation.GradientProfile.Size;
+					gradientImage	= new Texture(Program.CurrentRoute.Information.GradientProfile);
+					gradientSize	= Program.CurrentRoute.Information.GradientProfile.Size;
 				}
 				break;
 			}

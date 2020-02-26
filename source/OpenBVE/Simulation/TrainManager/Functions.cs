@@ -57,7 +57,7 @@ namespace OpenBve
 				{
 					if (train.Plugin != null)
 					{
-						train.Plugin.BeginJump((OpenBveApi.Runtime.InitializationModes)Game.TrainStart);
+						train.Plugin.BeginJump((OpenBveApi.Runtime.InitializationModes)Interface.CurrentOptions.TrainStart);
 					}
 				}
 				for (int h = 0; h < train.Cars.Length; h++)

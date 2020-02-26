@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using LibRender2;
@@ -17,6 +17,8 @@ namespace RouteManager2
 	{
 		private readonly BaseRenderer renderer;
 
+		/// <summary>Holds the information properties of the route</summary>
+		public RouteInformation Information;
 		/// <summary>The route's comment (For display in the main menu)</summary>
 		public string Comment = "";
 		/// <summary>The route's image file (For display in the main menu)</summary>
@@ -28,15 +30,25 @@ namespace RouteManager2
 		/// <summary>Holds a reference to the base TrainManager.Trains array</summary>
 		public AbstractTrain[] Trains;
 
+		/// <summary>Holds a reference to the base TrainManager.TFOs array</summary>
+		public AbstractTrain[] TrackFollowingObjects;
+
 		/// <summary>Holds all signal sections within the current route</summary>
 		public Section[] Sections;
 
 		/// <summary>Holds all stations within the current route</summary>
 		public RouteStation[] Stations;
 
+		/// <summary>The name of the initial station on game startup, if set via command-line arguments</summary>
+		public string InitialStationName;
+		/// <summary>The start time at the initial station, if set via command-line arguments</summary>
+		public double InitialStationTime = -1;
+
 		/// <summary>Holds all .PreTrain instructions for the current route</summary>
 		/// <remarks>Must be in distance and time ascending order</remarks>
 		public BogusPreTrainInstruction[] BogusPreTrainInstructions;
+
+		public double[] PrecedingTrainTimeDeltas = new double[] { };
 
 		/// <summary>Holds all points of interest within the game world</summary>
 		public PointOfInterest[] PointsOfInterest;
@@ -97,6 +109,8 @@ namespace RouteManager2
 			NextFog = new Fog(NoFogStart, NoFogEnd, Color24.Grey, 1.0);
 			Atmosphere = new Atmosphere();
 			SecondsSinceMidnight = 0.0;
+			Information = new RouteInformation();
+			Illustrations.CurrentRoute = this;
 		}
 
 		public void UpdateAllSections()

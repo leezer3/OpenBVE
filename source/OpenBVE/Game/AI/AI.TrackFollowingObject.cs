@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
 	internal static partial class Game
 	{
-		internal enum TravelDirection
-		{
-			Forward = 1,
-			Backward = -1
-		}
-
 		/// <summary>Travel plan of the train moving to a certain point</summary>
 		internal class TravelData
 		{

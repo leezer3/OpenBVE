@@ -9,6 +9,7 @@ using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using OpenBveApi.Routes;
+using RouteManager2;
 
 namespace OpenBve {
 	internal static class Loading {
@@ -56,10 +57,10 @@ namespace OpenBve {
 			CurrentTrainEncoding = TrainEncoding;
 
 			//Set the route and train folders in the info class
-			Game.RouteInformation.RouteFile = RouteFile;
-			Game.RouteInformation.TrainFolder = TrainFolder;
-			Game.RouteInformation.FilesNotFound = null;
-			Game.RouteInformation.ErrorsAndWarnings = null;
+			Program.CurrentRoute.Information.RouteFile = RouteFile;
+			Program.CurrentRoute.Information.TrainFolder = TrainFolder;
+			Program.CurrentRoute.Information.FilesNotFound = null;
+			Program.CurrentRoute.Information.ErrorsAndWarnings = null;
 			Loader = new Thread(LoadThreaded) {IsBackground = true};
 			Loader.Start();
 		}
@@ -185,8 +186,9 @@ namespace OpenBve {
 			//RW routes were written for BVE1 / 2, and have a different command syntax
 			bool IsRW = CsvRwRouteParser.isRWFile(CurrentRouteFile);
 			Program.FileSystem.AppendToLogFile("Route file format is: " + (IsRW ? "RW" : "CSV"));
+			Program.CurrentRoute.TrackFollowingObjects = TrainManager.TFOs;
 			CsvRwRouteParser.ParseRoute(CurrentRouteFile, IsRW, CurrentRouteEncoding, CurrentTrainFolder, ObjectFolder, SoundFolder, false);
-			Thread createIllustrations = new Thread(Game.RouteInformation.LoadInformation) {IsBackground = true};
+			Thread createIllustrations = new Thread(Program.CurrentRoute.Information.LoadInformation) {IsBackground = true};
 			createIllustrations.Start();
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			Program.CurrentRoute.Atmosphere.CalculateSeaLevelConstants();
@@ -218,7 +220,7 @@ namespace OpenBve {
 			RouteProgress = 1.0;
 			// initialize trains
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
-			TrainManager.Trains = new TrainManager.Train[Game.PrecedingTrainTimeDeltas.Length + 1 + (Program.CurrentRoute.BogusPreTrainInstructions.Length != 0 ? 1 : 0)];
+			TrainManager.Trains = new TrainManager.Train[Program.CurrentRoute.PrecedingTrainTimeDeltas.Length + 1 + (Program.CurrentRoute.BogusPreTrainInstructions.Length != 0 ? 1 : 0)];
 			for (int k = 0; k < TrainManager.Trains.Length; k++)
 			{
 				if (k == TrainManager.Trains.Length - 1 & Program.CurrentRoute.BogusPreTrainInstructions.Length != 0)
@@ -231,7 +233,7 @@ namespace OpenBve {
 				}
 				
 			}
-			TrainManager.PlayerTrain = TrainManager.Trains[Game.PrecedingTrainTimeDeltas.Length];
+			TrainManager.PlayerTrain = TrainManager.Trains[Program.CurrentRoute.PrecedingTrainTimeDeltas.Length];
 
 			UnifiedObject[] CarObjects = null;
 			UnifiedObject[] BogieObjects = null;
@@ -410,8 +412,8 @@ namespace OpenBve {
 						Program.Renderer.Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
 					}
 				} else if (TrainManager.Trains[k].State != TrainState.Bogus) {
-					TrainManager.Trains[k].AI = new Game.SimpleHumanDriverAI(TrainManager.Trains[k], Game.PrecedingTrainSpeedLimit);
-					TrainManager.Trains[k].TimetableDelta = Game.PrecedingTrainTimeDeltas[k];
+					TrainManager.Trains[k].AI = new Game.SimpleHumanDriverAI(TrainManager.Trains[k], Interface.CurrentOptions.PrecedingTrainSpeedLimit);
+					TrainManager.Trains[k].TimetableDelta = Program.CurrentRoute.PrecedingTrainTimeDeltas[k];
 					TrainManager.Trains[k].Specs.DoorOpenMode = TrainManager.DoorMode.Manual;
 					TrainManager.Trains[k].Specs.DoorCloseMode = TrainManager.DoorMode.Manual;
 				}

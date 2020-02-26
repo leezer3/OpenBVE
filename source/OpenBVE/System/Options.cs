@@ -32,19 +32,13 @@ namespace OpenBve
 			internal string UserInterfaceFolder;
 			/// <summary>The accelerated time factor (1x to 5x)</summary>
 			internal int TimeAccelerationFactor;
-			/// <summary>The viewing distance in meters</summary>
-			internal int ViewingDistance;
 			///// <summary>The current type of motion blur</summary>
 			internal MotionBlurMode MotionBlur;
-			
 			/// <summary>Whether duplicate verticies are culled during loading</summary>
 			internal bool ObjectOptimizationVertexCulling;
-			/// <summary>Whether toppling is enabled</summary>
-			internal bool Toppling;
+			
 			/// <summary>Whether collisions between trains are enabled</summary>
 			internal bool Collisions;
-			/// <summary>Whether derailments are enabled</summary>
-			internal bool Derailments;
 			/// <summary>Whether loading sway is added</summary>
 			internal bool LoadingSway;
 			/// <summary>Whether the black-box data logger is enabled</summary>
@@ -98,10 +92,7 @@ namespace OpenBve
 			internal bool PreferNativeBackend = true;
 			/// <summary>Stores whether the RailDriver speed display is in MPH (true) or KPH (false)</summary>
 			internal bool RailDriverMPH;
-			/// <summary>Enables / disables various hacks for BVE related content</summary>
-			internal bool EnableBveTsHacks;
-			/// <summary>Stores whether to use fuzzy matching for transparency colors (Matches BVE2 / BVE4 behaviour)</summary>
-			internal bool OldTransparencyMode;
+			
 			/// <summary>The list of enable Input Device Plugins</summary>
 			internal string[] EnableInputDevicePlugins;
 			/// <summary>The time in seconds after which the mouse cursor is hidden</summary>

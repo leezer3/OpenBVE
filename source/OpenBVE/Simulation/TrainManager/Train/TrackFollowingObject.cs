@@ -1,5 +1,4 @@
 ﻿using System;
-using OpenBve.SafetySystems;
 using OpenBveApi.Math;
 using OpenBveApi.Trains;
 

@@ -429,7 +429,7 @@ namespace OpenBve
 											}
 											if (d == 1 || d == -1)
 											{
-												NewData.Direction = (Game.TravelDirection)d;
+												NewData.Direction = (TravelDirection)d;
 											}
 										}
 										break;

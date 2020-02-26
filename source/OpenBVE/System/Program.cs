@@ -197,14 +197,14 @@ namespace OpenBve {
 			if (result.RouteFile != null & result.TrainFolder == null) {
 				bool isRW = string.Equals(System.IO.Path.GetExtension(result.RouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
 				CsvRwRouteParser.ParseRoute(result.RouteFile, isRW, result.RouteEncoding, null, null, null, true);
-				if (!string.IsNullOrEmpty(Game.TrainName)) {
+				if (!string.IsNullOrEmpty(Interface.CurrentOptions.TrainName)) {
 					folder = System.IO.Path.GetDirectoryName(result.RouteFile);
 					while (true) {
 						string trainFolder = OpenBveApi.Path.CombineDirectory(folder, "Train");
 						if (System.IO.Directory.Exists(trainFolder)) {
 							try
 							{
-								folder = OpenBveApi.Path.CombineDirectory(trainFolder, Game.TrainName);
+								folder = OpenBveApi.Path.CombineDirectory(trainFolder, Interface.CurrentOptions.TrainName);
 							}
 							catch (Exception ex)
 							{

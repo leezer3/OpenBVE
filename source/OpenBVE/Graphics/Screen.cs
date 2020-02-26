@@ -8,6 +8,7 @@ using OpenTK.Graphics.OpenGL;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Runtime;
+using RouteManager2;
 
 namespace OpenBve
 {

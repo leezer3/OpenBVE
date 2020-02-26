@@ -126,7 +126,6 @@
     <Compile Include="Game\Messages.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.cs" />
     <Compile Include="Game\PointsOfInterest.cs" />
-    <Compile Include="Game\RouteInformation.cs" />
     <Compile Include="Game\RouteInfoOverlay.cs" />
     <Compile Include="Game\Information.cs" />
     <Compile Include="Game\Menu.cs" />
@@ -350,7 +349,6 @@
     </Compile>
     <Compile Include="Game\ObjectManager\AnimatedObjects\FunctionScripts.cs" />
     <Compile Include="Game\Game.cs" />
-    <Compile Include="System\Functions\Illustrations.cs" />
     <Compile Include="OldCode\Interface.cs" />
     <Compile Include="System\Plugins\LegacyPlugin.cs">
       <DependentUpon>PluginManager.cs</DependentUpon>
