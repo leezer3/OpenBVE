@@ -113,6 +113,7 @@
     <Compile Include="Objects\ObjectTypes\WorldSound.cs" />
     <Compile Include="Objects\Parsers\ObjParsers.cs" />
     <Compile Include="Objects\Parsers\XParsers.cs" />
+    <Compile Include="Plugins\ContentLoadingPlugin.cs" />
     <Compile Include="Resource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

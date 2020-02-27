@@ -122,12 +122,12 @@ namespace OpenBve
             }
             Interface.CurrentOptions.CurrentXParser = (XParsers)comboBoxNewXParser.SelectedIndex;
             Interface.CurrentOptions.CurrentObjParser = (ObjParsers)comboBoxNewObjParser.SelectedIndex;
-            for (int i = 0; i < Plugins.LoadedPlugins.Length; i++)
+            for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
             {
-	            if (Plugins.LoadedPlugins[i].Object != null)
+	            if (Program.CurrentHost.Plugins[i].Object != null)
 	            {
-					Plugins.LoadedPlugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentXParser);
-					Plugins.LoadedPlugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentObjParser);
+					Program.CurrentHost.Plugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentXParser);
+					Program.CurrentHost.Plugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentObjParser);
 	            }
             }
             Options.SaveOptions();

@@ -37,11 +37,11 @@ namespace OpenBve {
 			TrainPath = trainPath;
 			if (!PreviewOnly)
 			{
-				for (int i = 0; i < Plugins.LoadedPlugins.Length; i++)
+				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 				{
-					if (Plugins.LoadedPlugins[i].Object != null)
+					if (Program.CurrentHost.Plugins[i].Object != null)
 					{
-						Plugins.LoadedPlugins[i].Object.SetObjectParser(SoundPath); //HACK: Pass out the sound folder path to those plugins which consume it
+						Program.CurrentHost.Plugins[i].Object.SetObjectParser(SoundPath); //HACK: Pass out the sound folder path to those plugins which consume it
 					}
 				}
 			}
@@ -321,14 +321,14 @@ namespace OpenBve {
 			//Apply parameters to object loaders
 			if (!PreviewOnly)
 			{
-				for (int i = 0; i < Plugins.LoadedPlugins.Length; i++)
+				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 				{
-					if (Plugins.LoadedPlugins[i].Object != null)
+					if (Program.CurrentHost.Plugins[i].Object != null)
 					{
-						Plugins.LoadedPlugins[i].Object.SetCompatibilityHacks(Interface.CurrentOptions.EnableBveTsHacks, CylinderHack);
+						Program.CurrentHost.Plugins[i].Object.SetCompatibilityHacks(Interface.CurrentOptions.EnableBveTsHacks, CylinderHack);
 						//Remember that these will be ignored if not the correct plugin
-						Plugins.LoadedPlugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentXParser);
-						Plugins.LoadedPlugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentObjParser);
+						Program.CurrentHost.Plugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentXParser);
+						Program.CurrentHost.Plugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentObjParser);
 					}
 				}
 			}
@@ -499,11 +499,11 @@ namespace OpenBve {
 									}
 									else
 									{
-										for (int i = 0; i < Plugins.LoadedPlugins.Length; i++)
+										for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 										{
-											if (Plugins.LoadedPlugins[i].Object != null)
+											if (Program.CurrentHost.Plugins[i].Object != null)
 											{
-												Plugins.LoadedPlugins[i].Object.SetObjectParser((XParsers)parser); //Remember that this will be ignored if not the X plugin!
+												Program.CurrentHost.Plugins[i].Object.SetObjectParser((XParsers)parser); //Remember that this will be ignored if not the X plugin!
 											}
 										}
 
@@ -517,11 +517,11 @@ namespace OpenBve {
 										}
 										else
 										{
-											for (int i = 0; i < Plugins.LoadedPlugins.Length; i++)
+											for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 											{
-												if (Plugins.LoadedPlugins[i].Object != null)
+												if (Program.CurrentHost.Plugins[i].Object != null)
 												{
-													Plugins.LoadedPlugins[i].Object.SetObjectParser((ObjParsers)parser); //Remember that this will be ignored if not the Obj plugin!
+													Program.CurrentHost.Plugins[i].Object.SetObjectParser((ObjParsers)parser); //Remember that this will be ignored if not the Obj plugin!
 												}
 											}
 										}

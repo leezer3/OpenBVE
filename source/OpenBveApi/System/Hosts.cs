@@ -357,6 +357,9 @@ namespace OpenBveApi.Hosts {
 		{
 
 		}
+
+		/// <summary>The list of available content loading plugins</summary>
+		public ContentLoadingPlugin[] Plugins;
 	}
 	
 }
