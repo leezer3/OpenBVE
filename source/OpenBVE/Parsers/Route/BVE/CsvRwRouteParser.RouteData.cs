@@ -34,6 +34,7 @@ namespace OpenBve
 			internal int FirstUsedBlock;
 			internal bool IgnorePitchRoll;
 			internal bool LineEndingFix;
+			internal bool ValueBasedSections = false;
 
 			/// <summary>Creates any missing blocks</summary>
 			/// <param name="BlocksUsed">The total number of blocks currently used (Will be updated via ref)</param>

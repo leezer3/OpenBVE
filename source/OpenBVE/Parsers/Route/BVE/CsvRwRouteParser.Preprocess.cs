@@ -3,6 +3,7 @@ using System.Globalization;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenTK.Graphics.ES20;
 using RouteManager2;
 
 namespace OpenBve
@@ -611,7 +612,7 @@ namespace OpenBve
 			}
 		}
 
-		private static void PreprocessSortByTrackPosition(bool IsRW, double[] UnitFactors, ref Expression[] Expressions) {
+		private static void PreprocessSortByTrackPosition(bool IsRW, ref Expression[] Expressions) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			PositionedExpression[] p = new PositionedExpression[Expressions.Length];
 			int n = 0;
@@ -630,7 +631,7 @@ namespace OpenBve
 					}
 				}
 				double x;
-				if (NumberCheck && NumberFormats.TryParseDouble(Expressions[i].Text, UnitFactors, out x)) {
+				if (NumberCheck && NumberFormats.TryParseDouble(Expressions[i].Text, Program.CurrentRoute.UnitOfLength, out x)) {
 					x += Expressions[i].TrackPositionOffset;
 					if (x >= 0.0) {
 						if (Interface.CurrentOptions.EnableBveTsHacks)
@@ -683,7 +684,7 @@ namespace OpenBve
 					a = p[i].TrackPosition;
 					e[m] = new Expression
 					{
-						Text = (a / UnitFactors[UnitFactors.Length - 1]).ToString(Culture),
+						Text = (a / Program.CurrentRoute.UnitOfLength[Program.CurrentRoute.UnitOfLength.Length - 1]).ToString(Culture),
 						Line = -1,
 						Column = -1
 					};

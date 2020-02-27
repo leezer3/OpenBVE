@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using SoundManager;
 using Path = OpenBveApi.Path;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
@@ -283,14 +282,13 @@ namespace OpenBve {
 			Expression[] Expressions;
 			PreprocessSplitIntoExpressions(FileName, IsRW, Lines, out Expressions, true, 0.0);
 			PreprocessChrRndSub(FileName, IsRW, Encoding, ref Expressions);
-			double[] UnitOfLength = new double[] { 1.0 };
+			Program.CurrentRoute.UnitOfLength = new double[] { 1.0 };
 			//Set units of speed initially to km/h
 			//This represents 1km/h in m/s
 			Data.UnitOfSpeed = 0.277777777777778;
-			PreprocessOptions(IsRW, Expressions, ref Data, ref UnitOfLength, PreviewOnly);
-			PreprocessSortByTrackPosition(IsRW, UnitOfLength, ref Expressions);
-			ParseRouteForData(FileName, IsRW, Encoding, Expressions, UnitOfLength, ref Data, PreviewOnly);
-			Program.CurrentRoute.UnitOfLength = UnitOfLength;
+			PreprocessOptions(IsRW, Expressions, ref Data, PreviewOnly);
+			PreprocessSortByTrackPosition(IsRW, ref Expressions);
+			ParseRouteForData(FileName, IsRW, Encoding, Expressions, ref Data, PreviewOnly);
 		}
 
 		// preprocess sort by track position
@@ -304,7 +302,7 @@ namespace OpenBve {
 		private static int railtypeCount = 0;
 
 		// parse route for data
-		private static void ParseRouteForData(string FileName, bool IsRW, System.Text.Encoding Encoding, Expression[] Expressions, double[] UnitOfLength, ref RouteData Data, bool PreviewOnly) {
+		private static void ParseRouteForData(string FileName, bool IsRW, System.Text.Encoding Encoding, Expression[] Expressions, ref RouteData Data, bool PreviewOnly) {
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string Section = ""; bool SectionAlwaysPrefix = false;
 			int BlockIndex = 0;
@@ -315,7 +313,7 @@ namespace OpenBve {
 			int CurrentStop = -1;
 			bool DepartureSignalUsed = false;
 			int CurrentSection = 0;
-			bool ValueBasedSections = false;
+			
 			double progressFactor = Expressions.Length == 0 ? 0.3333 : 0.3333 / (double)Expressions.Length;
 			// process non-track namespaces
 			//Check for any special-cased fixes we might need
@@ -358,7 +356,7 @@ namespace OpenBve {
 					// process command
 					double Number;
 					bool NumberCheck = !IsRW || string.Compare(Section, "track", StringComparison.OrdinalIgnoreCase) == 0;
-					if (NumberCheck && NumberFormats.TryParseDouble(Command, UnitOfLength, out Number)) {
+					if (NumberCheck && NumberFormats.TryParseDouble(Command, Program.CurrentRoute.UnitOfLength, out Number)) {
 						// track position (ignored)
 					} else {
 						// split arguments
@@ -487,7 +485,7 @@ namespace OpenBve {
 								case "options.blocklength":
 									{
 										double length = 25.0;
-										if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], UnitOfLength, out length)) {
+										if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], Program.CurrentRoute.UnitOfLength, out length)) {
 											Program.CurrentHost.AddMessage(MessageType.Error, false, "Length is invalid in Options.BlockLength at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											length = 25.0;
 										}
@@ -542,7 +540,7 @@ namespace OpenBve {
 										} else if (a != 0 & a != 1) {
 											Program.CurrentHost.AddMessage(MessageType.Error, false, "Mode is expected to be either 0 or 1 in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 										} else {
-											ValueBasedSections = a == 1;
+											Data.ValueBasedSections = a == 1;
 										}
 									} break;
 								case "options.cantbehavior":
@@ -816,7 +814,7 @@ namespace OpenBve {
 										Program.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 									} else {
 										double a;
-										if (!NumberFormats.TryParseDoubleVb6(Arguments[0], UnitOfLength, out a)) {
+										if (!NumberFormats.TryParseDoubleVb6(Arguments[0], Program.CurrentRoute.UnitOfLength, out a)) {
 											Program.CurrentHost.AddMessage(MessageType.Error, false, "Height is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 										} else {
 											Program.CurrentRoute.Atmosphere.InitialElevation = a;
@@ -2085,7 +2083,7 @@ namespace OpenBve {
 					// process command
 					double Number;
 					bool NumberCheck = !IsRW || string.Compare(Section, "track", StringComparison.OrdinalIgnoreCase) == 0;
-					if (NumberCheck && NumberFormats.TryParseDouble(Command, UnitOfLength, out Number)) {
+					if (NumberCheck && NumberFormats.TryParseDouble(Command, Program.CurrentRoute.UnitOfLength, out Number)) {
 						// track position
 						if (ArgumentSequence.Length != 0) {
 							Program.CurrentHost.AddMessage(MessageType.Error, false, "A track position must not contain any arguments at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -2346,7 +2344,7 @@ namespace OpenBve {
 											if (Arguments[1].Length > 0)
 											{
 												double x;
-												if (!NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out x))
+												if (!NumberFormats.TryParseDoubleVb6(Arguments[1], Program.CurrentRoute.UnitOfLength, out x))
 												{
 													Program.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													x = 0.0;
@@ -2363,7 +2361,7 @@ namespace OpenBve {
 											if (Arguments[2].Length > 0)
 											{
 												double y;
-												if (!NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out y))
+												if (!NumberFormats.TryParseDoubleVb6(Arguments[2], Program.CurrentRoute.UnitOfLength, out y))
 												{
 													Program.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													y = 0.0;
@@ -2455,7 +2453,7 @@ namespace OpenBve {
 											if (Arguments.Length >= 2 && Arguments[1].Length > 0)
 											{
 												double x;
-												if (!NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out x))
+												if (!NumberFormats.TryParseDoubleVb6(Arguments[1], Program.CurrentRoute.UnitOfLength, out x))
 												{
 													Program.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													x = 0.0;
@@ -2465,7 +2463,7 @@ namespace OpenBve {
 											if (Arguments.Length >= 3 && Arguments[2].Length > 0)
 											{
 												double y;
-												if (!NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out y))
+												if (!NumberFormats.TryParseDoubleVb6(Arguments[2], Program.CurrentRoute.UnitOfLength, out y))
 												{
 													Program.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													y = 0.0;
@@ -2548,7 +2546,7 @@ namespace OpenBve {
 								case "track.curve":
 									{
 										double radius = 0.0;
-										if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], UnitOfLength, out radius)) {
+										if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], Program.CurrentRoute.UnitOfLength, out radius)) {
 											Program.CurrentHost.AddMessage(MessageType.Error, false, "Radius is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											radius = 0.0;
 										}
@@ -2696,7 +2694,7 @@ namespace OpenBve {
 														aspects[i] = -1;
 													}
 												}
-												bool valueBased = ValueBasedSections | string.Equals(Command, "Track.SectionS", StringComparison.OrdinalIgnoreCase);
+												bool valueBased = Data.ValueBasedSections | string.Equals(Command, "Track.SectionS", StringComparison.OrdinalIgnoreCase);
 												if (valueBased) {
 													Array.Sort<int>(aspects);
 												}
@@ -2731,11 +2729,11 @@ namespace OpenBve {
 													section = 0;
 												}
 												double x = 0.0, y = 0.0;
-												if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out x)) {
+												if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], Program.CurrentRoute.UnitOfLength, out x)) {
 													Program.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in Track.SigF at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													x = 0.0;
 												}
-												if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], UnitOfLength, out y)) {
+												if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], Program.CurrentRoute.UnitOfLength, out y)) {
 													Program.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in Track.SigF at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													y = 0.0;
 												}
@@ -2789,11 +2787,11 @@ namespace OpenBve {
 												num = num == -3 | num == -6 | num == -1 ? -num : -4;
 											}
 											double x = 0.0, y = 0.0;
-											if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out x)) {
+											if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], Program.CurrentRoute.UnitOfLength, out x)) {
 												Program.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												x = 0.0;
 											}
-											if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], UnitOfLength, out y)) {
+											if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], Program.CurrentRoute.UnitOfLength, out y)) {
 												Program.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												y = 0.0;
 											}
@@ -2857,11 +2855,11 @@ namespace OpenBve {
 									{
 										if (!PreviewOnly) {
 											double x = 0.0, y = 0.0;
-											if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], UnitOfLength, out x)) {
+											if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], Program.CurrentRoute.UnitOfLength, out x)) {
 												Program.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in Track.Relay at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												x = 0.0;
 											}
-											if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out y)) {
+											if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], Program.CurrentRoute.UnitOfLength, out y)) {
 												Program.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in Track.Relay at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												y = 0.0;
 											}
@@ -2947,12 +2945,12 @@ namespace OpenBve {
 												}
 												double x = 0.0, y = 0.0;
 												double yaw = 0.0, pitch = 0.0, roll = 0.0;
-												if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], UnitOfLength, out x))
+												if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], Program.CurrentRoute.UnitOfLength, out x))
 												{
 													Program.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													x = 0.0;
 												}
-												if (Arguments.Length >= 7 && Arguments[6].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[6], UnitOfLength, out y))
+												if (Arguments.Length >= 7 && Arguments[6].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[6], Program.CurrentRoute.UnitOfLength, out y))
 												{
 													Program.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in Track.Destination at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													y = 0.0;
@@ -3030,11 +3028,11 @@ namespace OpenBve {
 												}
 												double x = 0.0, y = 0.0;
 												double yaw = 0.0, pitch = 0.0, roll = 0.0;
-												if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], UnitOfLength, out x)) {
+												if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], Program.CurrentRoute.UnitOfLength, out x)) {
 													Program.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in Track.Beacon at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													x = 0.0;
 												}
-												if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], UnitOfLength, out y)) {
+												if (Arguments.Length >= 6 && Arguments[5].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[5], Program.CurrentRoute.UnitOfLength, out y)) {
 													Program.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in Track.Beacon at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													y = 0.0;
 												}
@@ -3088,11 +3086,11 @@ namespace OpenBve {
 												oversig = 0;
 											}
 											double x = 0.0, y = 0.0;
-											if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], UnitOfLength, out x)) {
+											if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], Program.CurrentRoute.UnitOfLength, out x)) {
 												Program.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												x = 0.0;
 											}
-											if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], UnitOfLength, out y)) {
+											if (Arguments.Length >= 5 && Arguments[4].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[4], Program.CurrentRoute.UnitOfLength, out y)) {
 												Program.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												y = 0.0;
 											}
@@ -3230,14 +3228,14 @@ namespace OpenBve {
 											dir = 0;
 										}
 										double backw = 5.0, forw = 5.0;
-										if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out backw)) {
+										if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], Program.CurrentRoute.UnitOfLength, out backw)) {
 											Program.CurrentHost.AddMessage(MessageType.Error, false, "BackwardTolerance is invalid in Track.Stop at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											backw = 5.0;
 										} else if (backw <= 0.0) {
 											Program.CurrentHost.AddMessage(MessageType.Error, false, "BackwardTolerance is expected to be positive in Track.Stop at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											backw = 5.0;
 										}
-										if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out forw)) {
+										if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], Program.CurrentRoute.UnitOfLength, out forw)) {
 											Program.CurrentHost.AddMessage(MessageType.Error, false, "ForwardTolerance is invalid in Track.Stop at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											forw = 5.0;
 										} else if (forw <= 0.0) {
@@ -3618,7 +3616,7 @@ namespace OpenBve {
 												device = 0;
 											}
 										}
-										SoundBuffer depsnd = null;
+										OpenBveApi.Sounds.SoundHandle depsnd = null;
 										if (!PreviewOnly) {
 											if (Arguments.Length >= 6 && Arguments[5].Length != 0) {
 												if (Path.ContainsInvalidChars(Arguments[5])) {
@@ -3629,7 +3627,7 @@ namespace OpenBve {
 														Program.CurrentHost.AddMessage(MessageType.Error, true, "DepartureSound " + f + " not found in Track.Station at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
 														const double radius = 30.0;
-														depsnd = Program.Sounds.RegisterBuffer(f, radius);
+														Program.CurrentHost.RegisterSound(f, radius, out depsnd);
 													}
 												}
 											}
@@ -3794,7 +3792,7 @@ namespace OpenBve {
 												}
 												if (Arguments.Length >= 4 && Arguments[3].Length > 0) {
 													double dist;
-													if (!NumberFormats.TryParseDoubleVb6(Arguments[3], UnitOfLength, out dist)) {
+													if (!NumberFormats.TryParseDoubleVb6(Arguments[3], Program.CurrentRoute.UnitOfLength, out dist)) {
 														Program.CurrentHost.AddMessage(MessageType.Error, false, "Interval is invalid in Track.Pole at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 														dist = Data.BlockInterval;
 													}
@@ -4080,7 +4078,7 @@ namespace OpenBve {
 														break;
 													}
 													double dist = Data.BlockInterval;
-													if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out dist)) {
+													if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], Program.CurrentRoute.UnitOfLength, out dist)) {
 														Program.CurrentHost.AddMessage(MessageType.Error, false, "Distance is invalid in Track.Marker at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 														dist = Data.BlockInterval;
 													}
@@ -4161,7 +4159,7 @@ namespace OpenBve {
 									{
 										if (!PreviewOnly) {
 											double h = 0.0;
-											if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], UnitOfLength, out h)) {
+											if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], Program.CurrentRoute.UnitOfLength, out h)) {
 												Program.CurrentHost.AddMessage(MessageType.Error, false, "Height is invalid in Track.Height at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												h = 0.0;
 											}
@@ -4265,11 +4263,11 @@ namespace OpenBve {
 												} else {
 													double x = 0.0, y = 0.0;
 													double yaw = 0.0, pitch = 0.0, roll = 0.0;
-													if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out x)) {
+													if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], Program.CurrentRoute.UnitOfLength, out x)) {
 														Program.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in Track.FreeObj at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 														x = 0.0;
 													}
-													if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3], UnitOfLength, out y)) {
+													if (Arguments.Length >= 4 && Arguments[3].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[3],Program.CurrentRoute. UnitOfLength, out y)) {
 														Program.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in Track.FreeObj at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 														y = 0.0;
 													}
@@ -4400,7 +4398,7 @@ namespace OpenBve {
 														Array.Resize<Sound>(ref Data.Blocks[BlockIndex].SoundEvents, n + 1);
 														Data.Blocks[BlockIndex].SoundEvents[n].TrackPosition = Data.TrackPosition;
 														const double radius = 15.0;
-														Data.Blocks[BlockIndex].SoundEvents[n].SoundBuffer = Program.Sounds.RegisterBuffer(f, radius);
+														Program.CurrentHost.RegisterSound(f, radius, out Data.Blocks[BlockIndex].SoundEvents[n].SoundBuffer);
 														Data.Blocks[BlockIndex].SoundEvents[n].Type = speed == 0.0 ? SoundType.TrainStatic : SoundType.TrainDynamic;
 														Data.Blocks[BlockIndex].SoundEvents[n].Speed = speed * Data.UnitOfSpeed;
 													}
@@ -4422,11 +4420,11 @@ namespace OpenBve {
 														Program.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
 														double x = 0.0, y = 0.0;
-														if (Arguments.Length >= 2 && Arguments[1].Length > 0 & !NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out x)) {
+														if (Arguments.Length >= 2 && Arguments[1].Length > 0 & !NumberFormats.TryParseDoubleVb6(Arguments[1], Program.CurrentRoute.UnitOfLength, out x)) {
 															Program.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 															x = 0.0;
 														}
-														if (Arguments.Length >= 3 && Arguments[2].Length > 0 & !NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out y)) {
+														if (Arguments.Length >= 3 && Arguments[2].Length > 0 & !NumberFormats.TryParseDoubleVb6(Arguments[2], Program.CurrentRoute.UnitOfLength, out y)) {
 															Program.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 															y = 0.0;
 														}
@@ -4434,7 +4432,7 @@ namespace OpenBve {
 														Array.Resize<Sound>(ref Data.Blocks[BlockIndex].SoundEvents, n + 1);
 														Data.Blocks[BlockIndex].SoundEvents[n].TrackPosition = Data.TrackPosition;
 														const double radius = 15.0;
-														Data.Blocks[BlockIndex].SoundEvents[n].SoundBuffer = Program.Sounds.RegisterBuffer(f, radius);
+														Program.CurrentHost.RegisterSound(f, radius, out Data.Blocks[BlockIndex].SoundEvents[n].SoundBuffer);
 														Data.Blocks[BlockIndex].SoundEvents[n].Type = SoundType.World;
 														Data.Blocks[BlockIndex].SoundEvents[n].Position.X = x;
 														Data.Blocks[BlockIndex].SoundEvents[n].Position.Y = y;
@@ -4448,22 +4446,22 @@ namespace OpenBve {
 									{
 										if (!PreviewOnly) {
 											double x = 0.0, y = 0.0, back = 0.0, front = 0.0;
-											if (Arguments.Length >= 1 && Arguments[0].Length > 0 & !NumberFormats.TryParseDoubleVb6(Arguments[0], UnitOfLength, out x)) {
+											if (Arguments.Length >= 1 && Arguments[0].Length > 0 & !NumberFormats.TryParseDoubleVb6(Arguments[0], Program.CurrentRoute.UnitOfLength, out x)) {
 												Program.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												x = 0.0;
 											}
-											if (Arguments.Length >= 2 && Arguments[1].Length > 0 & !NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out y)) {
+											if (Arguments.Length >= 2 && Arguments[1].Length > 0 & !NumberFormats.TryParseDoubleVb6(Arguments[1], Program.CurrentRoute.UnitOfLength, out y)) {
 												Program.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												y = 0.0;
 											}
-											if (Arguments.Length >= 3 && Arguments[2].Length > 0 & !NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out back)) {
+											if (Arguments.Length >= 3 && Arguments[2].Length > 0 & !NumberFormats.TryParseDoubleVb6(Arguments[2], Program.CurrentRoute.UnitOfLength, out back)) {
 												Program.CurrentHost.AddMessage(MessageType.Error, false, "BackwardTolerance is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												back = 0.0;
 											} else if (back < 0.0) {
 												Program.CurrentHost.AddMessage(MessageType.Error, false, "BackwardTolerance is expected to be non-negative in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												back = 0.0;
 											}
-											if (Arguments.Length >= 4 && Arguments[3].Length > 0 & !NumberFormats.TryParseDoubleVb6(Arguments[3], UnitOfLength, out front)) {
+											if (Arguments.Length >= 4 && Arguments[3].Length > 0 & !NumberFormats.TryParseDoubleVb6(Arguments[3], Program.CurrentRoute.UnitOfLength, out front)) {
 												Program.CurrentHost.AddMessage(MessageType.Error, false, "ForwardTolerance is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												front = 0.0;
 											} else if (front < 0.0) {
@@ -4519,11 +4517,11 @@ namespace OpenBve {
 												Program.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex " + idx + " references a non-existing rail in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											}
 											double x = 0.0, y = 0.0;
-											if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], UnitOfLength, out x)) {
+											if (Arguments.Length >= 2 && Arguments[1].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[1], Program.CurrentRoute.UnitOfLength, out x)) {
 												Program.CurrentHost.AddMessage(MessageType.Error, false, "X is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												x = 0.0;
 											}
-											if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], UnitOfLength, out y)) {
+											if (Arguments.Length >= 3 && Arguments[2].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[2], Program.CurrentRoute.UnitOfLength, out y)) {
 												Program.CurrentHost.AddMessage(MessageType.Error, false, "Y is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 												y = 0.0;
 											}

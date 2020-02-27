@@ -2,6 +2,7 @@
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
+using OpenBveApi.Sounds;
 using OpenBveApi.Trains;
 using SoundManager;
 
@@ -33,11 +34,11 @@ namespace RouteManager2.Events
 			/// <param name="Position">The position of the sound relative to it's track location</param>
 			/// <param name="Speed">The speed in km/h at which this sound is played at it's original pitch (Set to zero to play at original pitch at all times)</param>
 			/// <param name="Host">The </param>
-			public SoundEvent(double TrackPositionDelta, SoundBuffer SoundBuffer, bool PlayerTrainOnly, bool Once, bool Dynamic, Vector3 Position, double Speed, HostInterface Host)
+			public SoundEvent(double TrackPositionDelta, SoundHandle SoundBuffer, bool PlayerTrainOnly, bool Once, bool Dynamic, Vector3 Position, double Speed, HostInterface Host)
 			{
 				this.TrackPositionDelta = TrackPositionDelta;
 				this.DontTriggerAnymore = false;
-				this.SoundBuffer = SoundBuffer;
+				this.SoundBuffer = (SoundBuffer)SoundBuffer;
 				this.PlayerTrainOnly = PlayerTrainOnly;
 				this.Once = Once;
 				this.Dynamic = Dynamic;
