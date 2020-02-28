@@ -796,7 +796,7 @@ namespace OpenBveApi.Objects
 				internalObject.Rotate *= Matrix4D.CreateFromAxisAngle(new Vector3(RotateZDirection.X, RotateZDirection.Y, -RotateZDirection.Z), 2.0 * System.Math.PI - radianZ);
 			}
 
-			if (Camera != null && Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
+			if (Camera != null && Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable && Camera.CurrentRestriction != CameraRestrictionMode.Restricted3D)
 			{
 				internalObject.Rotate *= States[s].Translation * Matrix4D.CreateTranslation(-Position.X, -Position.Y, Position.Z);
 				internalObject.Rotate *= (Matrix4D)new Transformation((Vector3)Camera.AbsoluteDirection, (Vector3)Camera.AbsoluteUp, (Vector3)Camera.AbsoluteSide);

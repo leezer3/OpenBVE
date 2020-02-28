@@ -121,7 +121,7 @@ namespace OpenBve
 				//Update the camera position based upon the relative car position
 				TrainManager.PlayerTrain.Cars[World.CameraCar].UpdateCamera();
 			}
-			if (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable)
+			if (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable || Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Restricted3D)
 			{
 				TrainManager.PlayerTrain.DriverBody.Update(TimeElapsed);
 			}
@@ -721,7 +721,7 @@ namespace OpenBve
 			}
 
 			// initialize camera
-			if (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable)
+			if (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable || Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Restricted3D)
 			{
 				Program.Renderer.Camera.CurrentMode = CameraViewMode.InteriorLookAhead;
 			}

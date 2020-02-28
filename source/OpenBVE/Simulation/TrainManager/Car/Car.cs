@@ -650,7 +650,7 @@ namespace OpenBve
 			private void UpdateCarSectionElement(int SectionIndex, int GroupIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
 			{
 				Vector3 p;
-				if (CarSections[SectionIndex].Groups[GroupIndex].Overlay & Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
+				if (CarSections[SectionIndex].Groups[GroupIndex].Overlay & (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable && Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.Restricted3D))
 				{
 					p = new Vector3(Driver.X, Driver.Y, Driver.Z);
 				}
@@ -695,7 +695,7 @@ namespace OpenBve
 			private void UpdateCarSectionTouchElement(int SectionIndex, int GroupIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
 			{
 				Vector3 p;
-				if (CarSections[SectionIndex].Groups[GroupIndex].Overlay & Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
+				if (CarSections[SectionIndex].Groups[GroupIndex].Overlay & (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable && Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.Restricted3D))
 				{
 					p = new Vector3(Driver.X, Driver.Y, Driver.Z);
 				}

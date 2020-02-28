@@ -318,7 +318,7 @@ namespace OpenBve {
 				double bodyRoll = 0.0;
 				double headRoll = Program.Renderer.Camera.Alignment.Roll;
 				// rotation
-				if (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable & (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead)) {
+				if ((Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable || Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Restricted3D)  & (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead)) {
 					// with body and head
 					bodyPitch += TrainManager.PlayerTrain.DriverBody.Pitch;
 					headPitch -= 0.2 * TrainManager.PlayerTrain.DriverBody.Pitch;

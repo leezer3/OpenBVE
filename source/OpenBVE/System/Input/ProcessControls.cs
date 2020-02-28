@@ -33,7 +33,7 @@ namespace OpenBve
 					World.CameraCar = TrainManager.PlayerTrain.DriverCar;
 					MainLoop.SaveCameraSettings();
 					bool lookahead = false;
-					if (Program.Renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead & Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable)
+					if (Program.Renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead & (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable || Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Restricted3D))
 					{
 						Game.AddMessage(Translations.GetInterfaceString("notification_interior_lookahead"),
 							MessageDependency.CameraView, GameMode.Expert,
