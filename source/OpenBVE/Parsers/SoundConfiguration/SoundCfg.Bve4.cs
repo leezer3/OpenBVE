@@ -66,7 +66,7 @@ namespace OpenBve
 			{
 				Interface.AddMessage(MessageType.Error, false, "Empty sound.cfg encountered in " + FileName + ".");
 			}
-			if (string.Compare(Lines[0], "version 1.0", StringComparison.OrdinalIgnoreCase) != 0)
+			else if (string.Compare(Lines[0], "version 1.0", StringComparison.OrdinalIgnoreCase) != 0)
 			{
 				Interface.AddMessage(MessageType.Error, false, "Invalid file format encountered in " + FileName + ". The first line is expected to be \"Version 1.0\".");
 			}
