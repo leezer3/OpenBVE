@@ -437,15 +437,19 @@ namespace OpenBve.Graphics
 				DefaultShader.Deactivate();
 				MotionBlur.RenderFullscreen(Interface.CurrentOptions.MotionBlur, FrameRate, Math.Abs(Camera.CurrentSpeed));
 			}
-			if (AvailableNewRenderer)
-			{
-				DefaultShader.Activate();
-				ResetShader(DefaultShader); //Must reset shader between overlay and world layers for correct lighting results
-				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
-			}
 			// overlay layer
 			OptionFog = false;
 			UpdateViewport(ViewportChangeMode.ChangeToCab);
+			if (AvailableNewRenderer)
+			{
+				/*
+				 * We must reset the shader between overlay and world layers for correct lighting results.
+				 * Additionally, the viewport change updates the projection matrix
+				 */
+				DefaultShader.Activate();
+				ResetShader(DefaultShader);
+				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
+			}
 			CurrentViewMatrix = Matrix4D.LookAt(Vector3.Zero, new Vector3(Camera.AbsoluteDirection.X, Camera.AbsoluteDirection.Y, -Camera.AbsoluteDirection.Z), new Vector3(Camera.AbsoluteUp.X, Camera.AbsoluteUp.Y, -Camera.AbsoluteUp.Z));
 			if (Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable || Camera.CurrentRestriction == CameraRestrictionMode.Restricted3D)
 			{
