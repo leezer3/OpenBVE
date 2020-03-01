@@ -19,10 +19,11 @@ namespace OpenBve
 			private readonly double PersonalitySpeedFactor;
 			private int PowerNotchAtWhichWheelSlipIsObserved;
 			private int LastStation;
+			private readonly double SpeedLimit;
 
 			private readonly TrainManager.Train Train;
 			// functions
-			internal SimpleHumanDriverAI(TrainManager.Train train)
+			internal SimpleHumanDriverAI(TrainManager.Train train, double Limit)
 			{
 				this.Train = train;
 				this.TimeLastProcessed = 0.0;
@@ -39,6 +40,7 @@ namespace OpenBve
 				{
 					this.LastStation = -1;
 				}
+				this.SpeedLimit = Limit;
 			}
 			private AIResponse PerformPlugin()
 			{
@@ -285,7 +287,7 @@ namespace OpenBve
 					}
 					// initialize
 					double acc = Train.Specs.CurrentAverageAcceleration;
-					double lim = PrecedingTrainSpeedLimit * 1.2;
+					double lim = SpeedLimit * 1.2;
 					if (Train.CurrentRouteLimit < lim)
 					{
 						lim = Train.CurrentRouteLimit;

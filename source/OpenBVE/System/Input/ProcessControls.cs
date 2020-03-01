@@ -104,7 +104,7 @@ namespace OpenBve
 					{
 						Program.Renderer.Camera.CurrentMode = CameraViewMode.InteriorLookAhead;
 					}
-					TrainManager.PlayerTrain.AI = new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain);
+					TrainManager.PlayerTrain.AI = new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain, Double.PositiveInfinity);
 					if (TrainManager.PlayerTrain.Plugin != null && !TrainManager.PlayerTrain.Plugin.SupportsAI)
 					{
 						Game.AddMessage(Translations.GetInterfaceString("notification_aiunable"), MessageDependency.None, GameMode.Expert, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
@@ -1615,7 +1615,7 @@ namespace OpenBve
 											if (TrainManager.PlayerTrain.AI == null)
 											{
 												TrainManager.PlayerTrain.AI =
-													new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain);
+													new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain, Double.PositiveInfinity);
 												if (TrainManager.PlayerTrain.Plugin != null &&
 													!TrainManager.PlayerTrain.Plugin.SupportsAI)
 												{

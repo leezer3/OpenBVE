@@ -410,7 +410,7 @@ namespace OpenBve {
 						Program.Renderer.Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
 					}
 				} else if (TrainManager.Trains[k].State != TrainState.Bogus) {
-					TrainManager.Trains[k].AI = new Game.SimpleHumanDriverAI(TrainManager.Trains[k]);
+					TrainManager.Trains[k].AI = new Game.SimpleHumanDriverAI(TrainManager.Trains[k], Game.PrecedingTrainSpeedLimit);
 					TrainManager.Trains[k].TimetableDelta = Game.PrecedingTrainTimeDeltas[k];
 					TrainManager.Trains[k].Specs.DoorOpenMode = TrainManager.DoorMode.Manual;
 					TrainManager.Trains[k].Specs.DoorCloseMode = TrainManager.DoorMode.Manual;
