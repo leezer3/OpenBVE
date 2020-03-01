@@ -772,14 +772,18 @@ namespace OpenBve {
 									{
 										continue;
 									}
-								   var splitArgument = Arguments[0].Split(new char[] { ',' });
-									if (splitArgument.Length != 2)
+
+									if (Arguments.Length == 1 && Arguments[0].IndexOf(',') != -1)
+									{
+										Arguments = Arguments[0].Split(new char[] { ',' });
+									}
+									if (Arguments.Length != 2)
 									{
 										Program.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have two arguments at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 										break;
 									}
-									Game.UnitOfSpeed = splitArgument[0];
-									if (!double.TryParse(splitArgument[1], NumberStyles.Float, Culture, out Game.SpeedConversionFactor))
+									Game.UnitOfSpeed = Arguments[0];
+									if (!double.TryParse(Arguments[1], NumberStyles.Float, Culture, out Game.SpeedConversionFactor))
 									{
 										Program.CurrentHost.AddMessage(MessageType.Error, false,"Speed conversion factor is invalid in " + Command + " at line " +Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) +" in file " + Expressions[j].File);
 										Game.UnitOfSpeed = "km/h";
