@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Reactive.Linq;
+using OpenBveApi.Units;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -16,7 +17,17 @@ namespace TrainEditor2.ViewModels.Trains
 				get;
 			}
 
+			internal ReactiveProperty<Unit.Jerk> UpUnit
+			{
+				get;
+			}
+
 			internal ReactiveProperty<string> Down
+			{
+				get;
+			}
+
+			internal ReactiveProperty<Unit.Jerk> DownUnit
 			{
 				get;
 			}
@@ -28,8 +39,8 @@ namespace TrainEditor2.ViewModels.Trains
 				Up = entry
 					.ToReactivePropertyAsSynchronized(
 						x => x.Up,
-						x => x.ToString(culture),
-						x => double.Parse(x, NumberStyles.Float, culture),
+						x => x.Value.ToString(culture),
+						x => new Quantity.Jerk(double.Parse(x, NumberStyles.Float, culture), entry.Up.UnitValue),
 						ignoreValidationErrorValue: true
 					)
 					.SetValidateNotifyError(x =>
@@ -43,11 +54,19 @@ namespace TrainEditor2.ViewModels.Trains
 					})
 					.AddTo(disposable);
 
+				UpUnit = entry
+					.ToReactivePropertyAsSynchronized(
+						x => x.Up,
+						x => x.UnitValue,
+						x => entry.Up.ToNewUnit(x)
+					)
+					.AddTo(disposable);
+
 				Down = entry
 					.ToReactivePropertyAsSynchronized(
 						x => x.Down,
-						x => x.ToString(culture),
-						x => double.Parse(x, NumberStyles.Float, culture),
+						x => x.Value.ToString(culture),
+						x => new Quantity.Jerk(double.Parse(x, NumberStyles.Float, culture), entry.Down.UnitValue),
 						ignoreValidationErrorValue: true
 					)
 					.SetValidateNotifyError(x =>
@@ -59,6 +78,14 @@ namespace TrainEditor2.ViewModels.Trains
 
 						return message;
 					})
+					.AddTo(disposable);
+
+				DownUnit = entry
+					.ToReactivePropertyAsSynchronized(
+						x => x.Down,
+						x => x.UnitValue,
+						x => entry.Down.ToNewUnit(x)
+					)
 					.AddTo(disposable);
 			}
 		}

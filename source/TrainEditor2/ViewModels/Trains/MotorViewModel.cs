@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using OpenBveApi.Units;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -308,7 +309,7 @@ namespace TrainEditor2.ViewModels.Trains
 					}
 					.CombineLatestValuesAreAllTrue()
 					.ToReactiveCommand()
-					.WithSubscribe(() => track.DirectDot(double.Parse(DirectX.Value), double.Parse(DirectY.Value)))
+					.WithSubscribe(() => track.DirectDot(new Quantity.Velocity(double.Parse(DirectX.Value), track.BaseMotor.VelocityUnit), double.Parse(DirectY.Value)))
 					.AddTo(disposable);
 
 				DirectMove = new[]
@@ -320,7 +321,7 @@ namespace TrainEditor2.ViewModels.Trains
 					}
 					.CombineLatestValuesAreAllTrue()
 					.ToReactiveCommand()
-					.WithSubscribe(() => track.DirectMove(double.Parse(DirectX.Value), double.Parse(DirectY.Value)))
+					.WithSubscribe(() => track.DirectMove(new Quantity.Velocity(double.Parse(DirectX.Value), track.BaseMotor.VelocityUnit), double.Parse(DirectY.Value)))
 					.AddTo(disposable);
 			}
 		}
@@ -341,6 +342,11 @@ namespace TrainEditor2.ViewModels.Trains
 		}
 
 		internal ReadOnlyReactivePropertySlim<bool> StoppedSim
+		{
+			get;
+		}
+
+		internal ReactiveProperty<Unit.Velocity> VelocityUnit
 		{
 			get;
 		}
@@ -421,6 +427,11 @@ namespace TrainEditor2.ViewModels.Trains
 		}
 
 		internal ReactiveProperty<string> Acceleration
+		{
+			get;
+		}
+
+		internal ReactiveProperty<Unit.Acceleration> AccelerationUnit
 		{
 			get;
 		}
@@ -576,6 +587,10 @@ namespace TrainEditor2.ViewModels.Trains
 				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 
+			VelocityUnit = motor
+				.ToReactivePropertyAsSynchronized(x => x.VelocityUnit)
+				.AddTo(disposable);
+
 			MinVelocity = motor
 				.ToReactivePropertyAsSynchronized(
 					x => x.MinVelocity,
@@ -687,8 +702,8 @@ namespace TrainEditor2.ViewModels.Trains
 			Acceleration = motor
 				.ToReactivePropertyAsSynchronized(
 					x => x.Acceleration,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Value.ToString(culture),
+					x => new Quantity.Acceleration(double.Parse(x, NumberStyles.Float, culture), motor.Acceleration.UnitValue), 
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -700,6 +715,14 @@ namespace TrainEditor2.ViewModels.Trains
 
 					return message;
 				})
+				.AddTo(disposable);
+
+			AccelerationUnit = motor
+				.ToReactivePropertyAsSynchronized(
+					x => x.Acceleration,
+					x => x.UnitValue,
+					x => motor.Acceleration.ToNewUnit(x)
+				)
 				.AddTo(disposable);
 
 			StartSpeed = motor

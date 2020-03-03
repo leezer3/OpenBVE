@@ -32,40 +32,40 @@ namespace TrainEditor2.IO.Trains.TrainDat
 
 			foreach (Acceleration.Entry entry in firstMotorCar.Acceleration.Entries)
 			{
-				builder.Append(entry.A0.ToString(culture) + ",");
-				builder.Append(entry.A1.ToString(culture) + ",");
-				builder.Append(entry.V1.ToString(culture) + ",");
-				builder.Append(entry.V2.ToString(culture) + ",");
+				builder.Append(entry.A0.ToNewUnit(Unit.Acceleration.KilometerPerHourPerSecond).Value.ToString(culture) + ",");
+				builder.Append(entry.A1.ToNewUnit(Unit.Acceleration.KilometerPerHourPerSecond).Value.ToString(culture) + ",");
+				builder.Append(entry.V1.ToNewUnit(Unit.Velocity.KilometerPerHour).Value.ToString(culture) + ",");
+				builder.Append(entry.V2.ToNewUnit(Unit.Velocity.KilometerPerHour).Value.ToString(culture) + ",");
 				builder.AppendLine(entry.E.ToString(culture));
 			}
 
 			builder.AppendLine("#PERFORMANCE");
-			builder.AppendLine($"{firstMotorCar.Performance.Deceleration.ToString(culture).PadRight(n, ' ')}; Deceleration");
+			builder.AppendLine($"{firstMotorCar.Performance.Deceleration.ToNewUnit(Unit.Acceleration.KilometerPerHourPerSecond).Value.ToString(culture).PadRight(n, ' ')}; Deceleration");
 			builder.AppendLine($"{firstMotorCar.Performance.CoefficientOfStaticFriction.ToString(culture).PadRight(n, ' ')}; CoefficientOfStaticFriction");
 			builder.AppendLine($"{"0".PadRight(n, ' ')}; Reserved (not used)");
 			builder.AppendLine($"{firstMotorCar.Performance.CoefficientOfRollingResistance.ToString(culture).PadRight(n, ' ')}; CoefficientOfRollingResistance");
 			builder.AppendLine($"{firstMotorCar.Performance.AerodynamicDragCoefficient.ToString(culture).PadRight(n, ' ')}; AerodynamicDragCoefficient");
 
 			builder.AppendLine("#DELAY");
-			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.Power.Select(d => d.Up.ToString(culture))).PadRight(n, ' ')}; DelayPowerUp");
-			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.Power.Select(d => d.Down.ToString(culture))).PadRight(n, ' ')}; DelayPowerDown");
-			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.Brake.Select(d => d.Up.ToString(culture))).PadRight(n, ' ')}; DelayBrakeUp");
-			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.Brake.Select(d => d.Down.ToString(culture))).PadRight(n, ' ')}; DelayBrakeDown");
-			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.LocoBrake.Select(d => d.Up.ToString(culture))).PadRight(n, ' ')}; DelayLocoBrakeUp (1.5.3.4+)");
-			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.LocoBrake.Select(d => d.Down.ToString(culture))).PadRight(n, ' ')}; DelayLocoBrakeDown (1.5.3.4+)");
+			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.Power.Select(d => d.Up.ToDefaultUnit().Value.ToString(culture))).PadRight(n, ' ')}; DelayPowerUp");
+			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.Power.Select(d => d.Down.ToDefaultUnit().Value.ToString(culture))).PadRight(n, ' ')}; DelayPowerDown");
+			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.Brake.Select(d => d.Up.ToDefaultUnit().Value.ToString(culture))).PadRight(n, ' ')}; DelayBrakeUp");
+			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.Brake.Select(d => d.Down.ToDefaultUnit().Value.ToString(culture))).PadRight(n, ' ')}; DelayBrakeDown");
+			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.LocoBrake.Select(d => d.Up.ToDefaultUnit().Value.ToString(culture))).PadRight(n, ' ')}; DelayLocoBrakeUp (1.5.3.4+)");
+			builder.AppendLine($"{string.Join(",", firstMotorCar.Delay.LocoBrake.Select(d => d.Down.ToDefaultUnit().Value.ToString(culture))).PadRight(n, ' ')}; DelayLocoBrakeDown (1.5.3.4+)");
 
 			builder.AppendLine("#MOVE");
-			builder.AppendLine($"{firstMotorCar.Jerk.Power.Up.ToString(culture).PadRight(n, ' ')}; JerkPowerUp");
-			builder.AppendLine($"{firstMotorCar.Jerk.Power.Down.ToString(culture).PadRight(n, ' ')}; JerkPowerDown");
-			builder.AppendLine($"{firstMotorCar.Jerk.Brake.Up.ToString(culture).PadRight(n, ' ')}; JerkBrakeUp");
-			builder.AppendLine($"{firstMotorCar.Jerk.Brake.Down.ToString(culture).PadRight(n, ' ')}; JerkBrakeDown");
+			builder.AppendLine($"{firstMotorCar.Jerk.Power.Up.ToNewUnit(Unit.Jerk.CentimeterPerSecondCubed).Value.ToString(culture).PadRight(n, ' ')}; JerkPowerUp");
+			builder.AppendLine($"{firstMotorCar.Jerk.Power.Down.ToNewUnit(Unit.Jerk.CentimeterPerSecondCubed).Value.ToString(culture).PadRight(n, ' ')}; JerkPowerDown");
+			builder.AppendLine($"{firstMotorCar.Jerk.Brake.Up.ToNewUnit(Unit.Jerk.CentimeterPerSecondCubed).Value.ToString(culture).PadRight(n, ' ')}; JerkBrakeUp");
+			builder.AppendLine($"{firstMotorCar.Jerk.Brake.Down.ToNewUnit(Unit.Jerk.CentimeterPerSecondCubed).Value.ToString(culture).PadRight(n, ' ')}; JerkBrakeDown");
 			builder.AppendLine($"{firstMotorCar.Pressure.BrakeCylinder.EmergencyRate.ToNewUnit(Unit.PressureRate.KilopascalPerSecond).Value.ToString(culture).PadRight(n, ' ')}; BrakeCylinderUp");
 			builder.AppendLine($"{firstMotorCar.Pressure.BrakeCylinder.ReleaseRate.ToNewUnit(Unit.PressureRate.KilopascalPerSecond).Value.ToString(culture).PadRight(n, ' ')}; BrakeCylinderDown");
 
 			builder.AppendLine("#BRAKE");
 			builder.AppendLine($"{((int)firstMotorCar.Brake.BrakeType).ToString(culture).PadRight(n, ' ')}; BrakeType");
 			builder.AppendLine($"{((int)firstMotorCar.Brake.BrakeControlSystem).ToString(culture).PadRight(n, ' ')}; BrakeControlSystem");
-			builder.AppendLine($"{firstMotorCar.Brake.BrakeControlSpeed.ToString(culture).PadRight(n, ' ')}; BrakeControlSpeed");
+			builder.AppendLine($"{firstMotorCar.Brake.BrakeControlSpeed.ToNewUnit(Unit.Velocity.KilometerPerHour).Value.ToString(culture).PadRight(n, ' ')}; BrakeControlSpeed");
 			builder.AppendLine($"{((int)firstMotorCar.Brake.LocoBrakeType).ToString(culture).PadRight(n, ' ')}; LocoBrakeType (1.5.3.4+)");
 
 			builder.AppendLine("#PRESSURE");
@@ -97,13 +97,13 @@ namespace TrainEditor2.IO.Trains.TrainDat
 			builder.AppendLine($"{train.Cars.Count(c => c is MotorCar).ToString(culture).PadRight(n, ' ')}; NumberOfMotorCars");
 			builder.AppendLine($"{(firstTrailerCar ?? new UncontrolledTrailerCar()).Mass.ToNewUnit(Unit.Mass.Tonne).Value.ToString(culture).PadRight(n, ' ')}; TrailerCarMass");
 			builder.AppendLine($"{train.Cars.Count(c => c is TrailerCar).ToString(culture).PadRight(n, ' ')}; NumberOfTrailerCars");
-			builder.AppendLine($"{firstMotorCar.Length.ToNewUnit(Unit.Length.Meter).Value.ToString(culture).PadRight(n, ' ')}; LengthOfACar");
+			builder.AppendLine($"{firstMotorCar.Length.ToDefaultUnit().Value.ToString(culture).PadRight(n, ' ')}; LengthOfACar");
 			builder.AppendLine($"{(train.Cars.First() is MotorCar ? "1" : "0").PadRight(n, ' ')}; FrontCarIsAMotorCar");
-			builder.AppendLine($"{firstMotorCar.Width.ToNewUnit(Unit.Length.Meter).Value.ToString(culture).PadRight(n, ' ')}; WidthOfACar");
-			builder.AppendLine($"{firstMotorCar.Height.ToNewUnit(Unit.Length.Meter).Value.ToString(culture).PadRight(n, ' ')}; HeightOfACar");
-			builder.AppendLine($"{firstMotorCar.CenterOfGravityHeight.ToNewUnit(Unit.Length.Meter).Value.ToString(culture).PadRight(n, ' ')}; CenterOfGravityHeight");
-			builder.AppendLine($"{firstMotorCar.ExposedFrontalArea.ToString(culture).PadRight(n, ' ')}; ExposedFrontalArea");
-			builder.AppendLine($"{firstMotorCar.UnexposedFrontalArea.ToString(culture).PadRight(n, ' ')}; UnexposedFrontalArea");
+			builder.AppendLine($"{firstMotorCar.Width.ToDefaultUnit().Value.ToString(culture).PadRight(n, ' ')}; WidthOfACar");
+			builder.AppendLine($"{firstMotorCar.Height.ToDefaultUnit().Value.ToString(culture).PadRight(n, ' ')}; HeightOfACar");
+			builder.AppendLine($"{firstMotorCar.CenterOfGravityHeight.ToDefaultUnit().Value.ToString(culture).PadRight(n, ' ')}; CenterOfGravityHeight");
+			builder.AppendLine($"{firstMotorCar.ExposedFrontalArea.ToDefaultUnit().Value.ToString(culture).PadRight(n, ' ')}; ExposedFrontalArea");
+			builder.AppendLine($"{firstMotorCar.UnexposedFrontalArea.ToDefaultUnit().Value.ToString(culture).PadRight(n, ' ')}; UnexposedFrontalArea");
 
 			builder.AppendLine("#DEVICE");
 			builder.AppendLine($"{((int)train.Device.Ats).ToString(culture).PadRight(n, ' ')}; Ats");
@@ -119,8 +119,8 @@ namespace TrainEditor2.IO.Trains.TrainDat
 			builder.AppendLine($"{firstMotorCar.LeftDoor.Width.ToNewUnit(Unit.Length.Millimeter).Value.ToString(culture).PadRight(n, ' ')}; DoorWidth");
 			builder.AppendLine($"{firstMotorCar.LeftDoor.MaxTolerance.ToNewUnit(Unit.Length.Millimeter).Value.ToString(culture).PadRight(n, ' ')}; DoorMaxTolerance");
 
-			TrainManager.MotorSound.Table[] powerTables = firstMotorCar.Motor.Tracks.Where(x => x.Type == Motor.TrackType.Power).Select(x => Motor.Track.TrackToMotorSoundTable(x, y => y, y => y, y => y)).ToArray();
-			TrainManager.MotorSound.Table[] brakeTables = firstMotorCar.Motor.Tracks.Where(x => x.Type == Motor.TrackType.Brake).Select(x => Motor.Track.TrackToMotorSoundTable(x, y => y, y => y, y => y)).ToArray();
+			TrainManager.MotorSound.Table[] powerTables = firstMotorCar.Motor.Tracks.Where(x => x.Type == Motor.TrackType.Power).Select(x => Motor.Track.TrackToMotorSoundTable(x,  y => y, y => y)).ToArray();
+			TrainManager.MotorSound.Table[] brakeTables = firstMotorCar.Motor.Tracks.Where(x => x.Type == Motor.TrackType.Brake).Select(x => Motor.Track.TrackToMotorSoundTable(x,  y => y, y => y)).ToArray();
 
 			for (int i = 0; i < 4; i++)
 			{
@@ -158,17 +158,17 @@ namespace TrainEditor2.IO.Trains.TrainDat
 
 				if (lastPitchVertex != null)
 				{
-					maxSpeed = Math.Max(lastPitchVertex.X, maxSpeed);
+					maxSpeed = Math.Max(lastPitchVertex.X.ToNewUnit(Unit.Velocity.KilometerPerHour).Value, maxSpeed);
 				}
 
 				if (lastGainVertex != null)
 				{
-					maxSpeed = Math.Max(lastGainVertex.X, maxSpeed);
+					maxSpeed = Math.Max(lastGainVertex.X.ToNewUnit(Unit.Velocity.KilometerPerHour).Value, maxSpeed);
 				}
 
 				if (lastBufferVertex != null)
 				{
-					maxSpeed = Math.Max(lastBufferVertex.X, maxSpeed);
+					maxSpeed = Math.Max(lastBufferVertex.X.ToNewUnit(Unit.Velocity.KilometerPerHour).Value, maxSpeed);
 				}
 
 				for (float j = 0.0f; j < maxSpeed; j += 0.2f)

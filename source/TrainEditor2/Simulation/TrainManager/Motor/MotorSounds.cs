@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using OpenBveApi.Math;
+using OpenBveApi.Units;
 using SoundManager;
 
 namespace TrainEditor2.Simulation.TrainManager
@@ -12,7 +13,7 @@ namespace TrainEditor2.Simulation.TrainManager
 		{
 			internal class Vertex<T> : ICloneable where T : struct
 			{
-				internal float X;
+				internal Quantity.VelocityF X;
 				internal T Y;
 
 				public virtual object Clone()
@@ -49,7 +50,7 @@ namespace TrainEditor2.Simulation.TrainManager
 				internal SoundBuffer PlayingBuffer;
 				internal SoundSource PlayingSource;
 
-				private static Tuple<int, SoundBuffer> GetVertex(Vertex<int, SoundBuffer>[] vertices, float x)
+				private static Tuple<int, SoundBuffer> GetVertex(Vertex<int, SoundBuffer>[] vertices, Quantity.VelocityF x)
 				{
 					if (!vertices.Any())
 					{
@@ -60,7 +61,7 @@ namespace TrainEditor2.Simulation.TrainManager
 					return new Tuple<int, SoundBuffer>(left.Y, left.Z);
 				}
 
-				private static float GetVertex(Vertex<float>[] vertices, float x)
+				private static float GetVertex(Vertex<float>[] vertices, Quantity.VelocityF x)
 				{
 					if (!vertices.Any())
 					{
@@ -75,14 +76,14 @@ namespace TrainEditor2.Simulation.TrainManager
 						return left.Y;
 					}
 
-					return left.Y + (right.Y - left.Y) / (right.X - left.X) * (x - left.X);
+					return left.Y + (right.Y - left.Y) * (x - left.X) / (right.X - left.X);
 				}
 
 				internal Entry GetEntry(float speed)
 				{
-					float pitch = GetVertex(PitchVertices, speed);
-					float gain = GetVertex(GainVertices, speed);
-					Tuple<int, SoundBuffer> buffer = GetVertex(BufferVertices, speed);
+					float pitch = GetVertex(PitchVertices, new Quantity.VelocityF(speed));
+					float gain = GetVertex(GainVertices, new Quantity.VelocityF(speed));
+					Tuple<int, SoundBuffer> buffer = GetVertex(BufferVertices, new Quantity.VelocityF(speed));
 					return new Entry { Pitch = pitch, Gain = gain, SoundIndex = buffer.Item1, Buffer = buffer.Item2 };
 				}
 

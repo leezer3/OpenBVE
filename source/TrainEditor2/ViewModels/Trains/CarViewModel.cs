@@ -334,7 +334,17 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
+		internal ReactiveProperty<Unit.Area> ExposedFrontalAreaUnit
+		{
+			get;
+		}
+
 		internal ReactiveProperty<string> UnexposedFrontalArea
+		{
+			get;
+		}
+
+		internal ReactiveProperty<Unit.Area> UnexposedFrontalAreaUnit
 		{
 			get;
 		}
@@ -585,8 +595,8 @@ namespace TrainEditor2.ViewModels.Trains
 			ExposedFrontalArea = car
 				.ToReactivePropertyAsSynchronized(
 					x => x.ExposedFrontalArea,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Value.ToString(culture),
+					x => new Quantity.Area(double.Parse(x, NumberStyles.Float, culture), car.ExposedFrontalArea.UnitValue),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -600,11 +610,19 @@ namespace TrainEditor2.ViewModels.Trains
 				})
 				.AddTo(disposable);
 
+			ExposedFrontalAreaUnit = car
+				.ToReactivePropertyAsSynchronized(
+					x => x.ExposedFrontalArea,
+					x => x.UnitValue,
+					x => car.ExposedFrontalArea.ToNewUnit(x)
+				)
+				.AddTo(disposable);
+
 			UnexposedFrontalArea = car
 				.ToReactivePropertyAsSynchronized(
 					x => x.UnexposedFrontalArea,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Value.ToString(culture),
+					x => new Quantity.Area(double.Parse(x, NumberStyles.Float, culture), car.UnexposedFrontalArea.UnitValue),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -616,6 +634,14 @@ namespace TrainEditor2.ViewModels.Trains
 
 					return message;
 				})
+				.AddTo(disposable);
+
+			UnexposedFrontalAreaUnit = car
+				.ToReactivePropertyAsSynchronized(
+					x => x.UnexposedFrontalArea,
+					x => x.UnitValue,
+					x => car.UnexposedFrontalArea.ToNewUnit(x)
+				)
 				.AddTo(disposable);
 
 			Performance = car

@@ -2,7 +2,7 @@
 using System.Xml;
 using System.Xml.Linq;
 using OpenBveApi.Interface;
-using OpenBveApi.Math;
+using OpenBveApi.Units;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.Systems;
 
@@ -55,9 +55,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "up":
 						if (value.Any())
 						{
-							double result;
+							Quantity.Jerk result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result < 0.0)
+							if (!Quantity.Jerk.TryParse(keyNode, true, out result) || result.ToDefaultUnit().Value < 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -70,9 +70,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "down":
 						if (value.Any())
 						{
-							double result;
+							Quantity.Jerk result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result < 0.0)
+							if (!Quantity.Jerk.TryParse(keyNode, true, out result) || result.ToDefaultUnit().Value < 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}

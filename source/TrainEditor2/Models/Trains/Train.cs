@@ -146,19 +146,19 @@ namespace TrainEditor2.Models.Trains
 
 		#region Acceleration
 
-		private double GetDeceleration(MotorCar car, double velocity)
+		private Quantity.Acceleration GetDeceleration(MotorCar car, Quantity.Velocity velocity)
 		{
 			const double AccelerationDueToGravity = 9.80665;
 			const double AirDensity = 1.22497705587732;
 
-			velocity /= 3.6;
-			double mass = car.Mass.ToNewUnit(Unit.Mass.Kilogram).Value;
-			double frontalArea = Cars.IndexOf(car) == 0 ? car.ExposedFrontalArea : car.UnexposedFrontalArea;
+			double v = velocity.ToDefaultUnit().Value;
+			double mass = car.Mass.ToDefaultUnit().Value;
+			Quantity.Area frontalArea = Cars.IndexOf(car) == 0 ? car.ExposedFrontalArea : car.UnexposedFrontalArea;
 
-			double f = frontalArea * car.Performance.AerodynamicDragCoefficient * AirDensity / (2.0 * mass);
-			double a = AccelerationDueToGravity * car.Performance.CoefficientOfRollingResistance + f * Math.Pow(velocity, 2.0);
+			double f = frontalArea.ToDefaultUnit().Value * car.Performance.AerodynamicDragCoefficient * AirDensity / (2.0 * mass);
+			double a = AccelerationDueToGravity * car.Performance.CoefficientOfRollingResistance + f * Math.Pow(v, 2.0);
 
-			return a * 3.6;
+			return new Quantity.Acceleration(a);
 		}
 
 		private void DrawAccelerationCurve(System.Drawing.Graphics g, MotorCar car, Acceleration.Entry entry, bool selected)
@@ -168,16 +168,17 @@ namespace TrainEditor2.Models.Trains
 
 			for (int x = 0; x < car.Acceleration.ImageWidth; x++)
 			{
-				double velocity = car.Acceleration.XtoVelocity(x);
-				double acceleration;
+				Quantity.Velocity velocity = car.Acceleration.XtoVelocity(x);
+				Quantity.Acceleration acceleration = car.Acceleration.GetAcceleration(entry, velocity);
 
 				if (car.Acceleration.Resistance)
 				{
-					acceleration = Math.Max(car.Acceleration.GetAcceleration(entry, velocity) - GetDeceleration(car, velocity), 0.0);
-				}
-				else
-				{
-					acceleration = car.Acceleration.GetAcceleration(entry, velocity);
+					acceleration -= GetDeceleration(car, velocity);
+
+					if (acceleration.ToDefaultUnit().Value < 0.0)
+					{
+						acceleration = new Quantity.Acceleration();
+					}
 				}
 
 				int y = (int)Math.Round(car.Acceleration.AccelerationToY(acceleration));
@@ -202,8 +203,8 @@ namespace TrainEditor2.Models.Trains
 
 			// points
 			{
-				double v1 = entry.V1;
-				double a1 = entry.A1;
+				Quantity.Velocity v1 = entry.V1;
+				Quantity.Acceleration a1 = entry.A1;
 
 				if (car.Acceleration.Resistance)
 				{
@@ -215,8 +216,8 @@ namespace TrainEditor2.Models.Trains
 
 				g.FillEllipse(new SolidBrush(color), new Rectangle(x1 - 2, y1 - 2, 5, 5));
 
-				double v2 = entry.V2;
-				double a2 = car.Acceleration.GetAcceleration(entry, v2);
+				Quantity.Velocity v2 = entry.V2;
+				Quantity.Acceleration a2 = car.Acceleration.GetAcceleration(entry, v2);
 
 				if (car.Acceleration.Resistance)
 				{
@@ -239,8 +240,8 @@ namespace TrainEditor2.Models.Trains
 
 				for (int x = 0; x < car.Acceleration.ImageWidth; x++)
 				{
-					double velocity = car.Acceleration.XtoVelocity(x);
-					double acceleration = GetDeceleration(car, velocity);
+					Quantity.Velocity velocity = car.Acceleration.XtoVelocity(x);
+					Quantity.Acceleration acceleration = GetDeceleration(car, velocity);
 
 					int y = (int)Math.Round(car.Acceleration.AccelerationToY(acceleration));
 
@@ -272,7 +273,7 @@ namespace TrainEditor2.Models.Trains
 			// vertical grid
 			for (double v = 0.0; v < car.Acceleration.MaxVelocity; v += 10.0)
 			{
-				float x = (float)car.Acceleration.VelocityToX(v);
+				float x = (float)car.Acceleration.VelocityToX(new Quantity.Velocity(v, car.Acceleration.VelocityUnit));
 				g.DrawLine(grayPen, new PointF(x, 0.0f), new PointF(x, car.Acceleration.ImageHeight));
 				g.DrawString(v.ToString("0", culture), font, grayBrush, new PointF(x, 1.0f));
 			}
@@ -280,7 +281,7 @@ namespace TrainEditor2.Models.Trains
 			// horizontal grid
 			for (double a = 0.0; a < car.Acceleration.MaxAcceleration; a += 1.0)
 			{
-				float y = (float)car.Acceleration.AccelerationToY(a);
+				float y = (float)car.Acceleration.AccelerationToY(new Quantity.Acceleration(a, car.Acceleration.AccelerationUnit));
 				g.DrawLine(grayPen, new PointF(0.0f, y), new PointF(car.Acceleration.ImageWidth, y));
 				g.DrawString(a.ToString("0", culture), font, grayBrush, new PointF(1.0f, y));
 			}

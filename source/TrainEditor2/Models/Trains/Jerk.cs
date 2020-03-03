@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Units;
 using Prism.Mvvm;
 
 namespace TrainEditor2.Models.Trains
@@ -7,10 +8,10 @@ namespace TrainEditor2.Models.Trains
 	{
 		internal class Entry : BindableBase, ICloneable
 		{
-			private double up;
-			private double down;
+			private Quantity.Jerk up;
+			private Quantity.Jerk down;
 
-			internal double Up
+			internal Quantity.Jerk Up
 			{
 				get
 				{
@@ -22,7 +23,7 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			internal double Down
+			internal Quantity.Jerk Down
 			{
 				get
 				{
@@ -36,8 +37,8 @@ namespace TrainEditor2.Models.Trains
 
 			internal Entry()
 			{
-				Up = 1000.0;
-				Down = 1000.0;
+				Up = new Quantity.Jerk(1000.0, Unit.Jerk.CentimeterPerSecondCubed);
+				Down = new Quantity.Jerk(1000.0, Unit.Jerk.CentimeterPerSecondCubed);
 			}
 
 			public object Clone()

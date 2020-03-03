@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using OpenBveApi.Units;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -59,6 +61,22 @@ namespace TrainEditor2.Views
 					x.A0.BindToErrorProvider(errorProvider, textBoxAccelA0)
 						.AddTo(entryDisposable);
 
+					x.A0_Unit
+						.BindTo(
+							comboBoxAccelA0Unit,
+							y => y.SelectedIndex,
+							BindingMode.TwoWay,
+							y => (int)y,
+							y => (Unit.Acceleration)y,
+							Observable.FromEvent<EventHandler, EventArgs>(
+									h => (s, e) => h(e),
+									h => comboBoxAccelA0Unit.SelectedIndexChanged += h,
+									h => comboBoxAccelA0Unit.SelectedIndexChanged -= h
+								)
+								.ToUnit()
+						)
+						.AddTo(entryDisposable);
+
 					x.A1.BindTo(
 							textBoxAccelA1,
 							y => y.Text,
@@ -75,6 +93,22 @@ namespace TrainEditor2.Views
 						.AddTo(entryDisposable);
 
 					x.A1.BindToErrorProvider(errorProvider, textBoxAccelA1)
+						.AddTo(entryDisposable);
+
+					x.A1_Unit
+						.BindTo(
+							comboBoxAccelA1Unit,
+							y => y.SelectedIndex,
+							BindingMode.TwoWay,
+							y => (int)y,
+							y => (Unit.Acceleration)y,
+							Observable.FromEvent<EventHandler, EventArgs>(
+									h => (s, e) => h(e),
+									h => comboBoxAccelA1Unit.SelectedIndexChanged += h,
+									h => comboBoxAccelA1Unit.SelectedIndexChanged -= h
+								)
+								.ToUnit()
+						)
 						.AddTo(entryDisposable);
 
 					x.V1.BindTo(
@@ -95,6 +129,22 @@ namespace TrainEditor2.Views
 					x.V1.BindToErrorProvider(errorProvider, textBoxAccelV1)
 						.AddTo(entryDisposable);
 
+					x.V1_Unit
+						.BindTo(
+							comboBoxAccelV1Unit,
+							y => y.SelectedIndex,
+							BindingMode.TwoWay,
+							y => (int)y,
+							y => (Unit.Velocity)y,
+							Observable.FromEvent<EventHandler, EventArgs>(
+									h => (s, e) => h(e),
+									h => comboBoxAccelV1Unit.SelectedIndexChanged += h,
+									h => comboBoxAccelV1Unit.SelectedIndexChanged -= h
+								)
+								.ToUnit()
+						)
+						.AddTo(entryDisposable);
+
 					x.V2.BindTo(
 							textBoxAccelV2,
 							y => y.Text,
@@ -111,6 +161,22 @@ namespace TrainEditor2.Views
 						.AddTo(entryDisposable);
 
 					x.V2.BindToErrorProvider(errorProvider, textBoxAccelV2)
+						.AddTo(entryDisposable);
+
+					x.V2_Unit
+						.BindTo(
+							comboBoxAccelV2Unit,
+							y => y.SelectedIndex,
+							BindingMode.TwoWay,
+							y => (int)y,
+							y => (Unit.Velocity)y,
+							Observable.FromEvent<EventHandler, EventArgs>(
+									h => (s, e) => h(e),
+									h => comboBoxAccelV2Unit.SelectedIndexChanged += h,
+									h => comboBoxAccelV2Unit.SelectedIndexChanged -= h
+								)
+								.ToUnit()
+						)
 						.AddTo(entryDisposable);
 
 					x.E.BindTo(
@@ -131,6 +197,74 @@ namespace TrainEditor2.Views
 					x.E.BindToErrorProvider(errorProvider, textBoxAccelE)
 						.AddTo(entryDisposable);
 				})
+				.AddTo(accelerationDisposable);
+
+			acceleration.VelocityUnit
+				.BindTo(
+					comboBoxAccelXUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Velocity)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxAccelXUnit.SelectedIndexChanged += h,
+							h => comboBoxAccelXUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(accelerationDisposable);
+
+			acceleration.VelocityUnit
+				.BindTo(
+					labelAccelXminUnit,
+					x => x.Text,
+					BindingMode.OneWay,
+					x => Unit.GetRewords(x).First()
+				)
+				.AddTo(accelerationDisposable);
+
+			acceleration.VelocityUnit
+				.BindTo(
+					labelAccelXmaxUnit,
+					x => x.Text,
+					BindingMode.OneWay,
+					x => Unit.GetRewords(x).First()
+				)
+				.AddTo(accelerationDisposable);
+
+			acceleration.AccelerationUnit
+				.BindTo(
+					comboBoxAccelYUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Acceleration)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxAccelYUnit.SelectedIndexChanged += h,
+							h => comboBoxAccelYUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(accelerationDisposable);
+
+			acceleration.AccelerationUnit
+				.BindTo(
+					labelAccelYminUnit,
+					x => x.Text,
+					BindingMode.OneWay,
+					x => Unit.GetRewords(x).First()
+				)
+				.AddTo(accelerationDisposable);
+
+			acceleration.AccelerationUnit
+				.BindTo(
+					labelAccelYmaxUnit,
+					x => x.Text,
+					BindingMode.OneWay,
+					x => Unit.GetRewords(x).First()
+				)
 				.AddTo(accelerationDisposable);
 
 			acceleration.MinVelocity

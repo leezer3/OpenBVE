@@ -318,6 +318,22 @@ namespace TrainEditor2.Views
 				.BindToErrorProvider(errorProvider, textBoxExposedFrontalArea)
 				.AddTo(carDisposable);
 
+			car.ExposedFrontalAreaUnit
+				.BindTo(
+					comboBoxExposedFrontalAreaUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Area)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxExposedFrontalAreaUnit.SelectedIndexChanged += h,
+							h => comboBoxExposedFrontalAreaUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(carDisposable);
+
 			car.UnexposedFrontalArea
 				.BindTo(
 					textBoxUnexposedFrontalArea,
@@ -336,6 +352,22 @@ namespace TrainEditor2.Views
 
 			car.UnexposedFrontalArea
 				.BindToErrorProvider(errorProvider, textBoxUnexposedFrontalArea)
+				.AddTo(carDisposable);
+
+			car.UnexposedFrontalAreaUnit
+				.BindTo(
+					comboBoxUnexposedFrontalAreaUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Area)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxUnexposedFrontalAreaUnit.SelectedIndexChanged += h,
+							h => comboBoxUnexposedFrontalAreaUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
 				.AddTo(carDisposable);
 
 			car.Performance

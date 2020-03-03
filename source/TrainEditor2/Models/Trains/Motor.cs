@@ -9,6 +9,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Units;
 using OpenTK.Graphics.OpenGL;
 using Prism.Mvvm;
 using SoundManager;
@@ -26,13 +27,16 @@ namespace TrainEditor2.Models.Trains
 		private TreeViewItemModel selectedTreeItem;
 
 		private int selectedSoundIndex;
-		private double minVelocity;
-		private double maxVelocity;
+
+		private Unit.Velocity velocityUnit;
+
+		private Quantity.Velocity minVelocity;
+		private Quantity.Velocity maxVelocity;
 		private double minPitch;
 		private double maxPitch;
 		private double minVolume;
 		private double maxVolume;
-		private double nowVelocity;
+		private Quantity.Velocity nowVelocity;
 		private double nowPitch;
 		private double nowVolume;
 
@@ -46,13 +50,17 @@ namespace TrainEditor2.Models.Trains
 		private int runIndex;
 		private bool isLoop;
 		private bool isConstant;
-		private double acceleration;
-		private double startSpeed;
-		private double endSpeed;
-		private double currentSimSpeed;
+		private Quantity.Acceleration acceleration;
+		private Quantity.Velocity startSpeed;
+		private Quantity.Velocity endSpeed;
+		private Quantity.Velocity currentSimSpeed;
 
 		private DateTime startTime;
 		private double oldElapsedTime;
+
+		private double FactorVelocity => GlControlWidth / (MaxVelocity - MinVelocity);
+		private double FactorPitch => -GlControlHeight / (MaxPitch - MinPitch);
+		private double FactorVolume => -GlControlHeight / (MaxVolume - MinVolume);
 
 		internal ObservableCollection<TreeViewItemModel> TreeItems;
 
@@ -82,15 +90,34 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
+		internal Unit.Velocity VelocityUnit
+		{
+			get
+			{
+				return velocityUnit;
+			}
+			set
+			{
+				SetProperty(ref velocityUnit, value);
+
+				minVelocity = minVelocity.ToNewUnit(value);
+				OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVelocity)));
+				maxVelocity = maxVelocity.ToNewUnit(value);
+				OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVelocity)));
+				nowVelocity = nowVelocity.ToNewUnit(value);
+				OnPropertyChanged(new PropertyChangedEventArgs(nameof(NowVelocity)));
+			}
+		}
+
 		internal double MinVelocity
 		{
 			get
 			{
-				return minVelocity;
+				return minVelocity.Value;
 			}
 			set
 			{
-				SetProperty(ref minVelocity, value);
+				SetProperty(ref minVelocity, new Quantity.Velocity(value, VelocityUnit));
 			}
 		}
 
@@ -98,11 +125,11 @@ namespace TrainEditor2.Models.Trains
 		{
 			get
 			{
-				return maxVelocity;
+				return maxVelocity.Value;
 			}
 			set
 			{
-				SetProperty(ref maxVelocity, value);
+				SetProperty(ref maxVelocity, new Quantity.Velocity(value, VelocityUnit));
 			}
 		}
 
@@ -158,11 +185,11 @@ namespace TrainEditor2.Models.Trains
 		{
 			get
 			{
-				return nowVelocity;
+				return nowVelocity.Value;
 			}
 			set
 			{
-				SetProperty(ref nowVelocity, value);
+				SetProperty(ref nowVelocity, new Quantity.Velocity(value, VelocityUnit));
 			}
 		}
 
@@ -292,7 +319,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double Acceleration
+		internal Quantity.Acceleration Acceleration
 		{
 			get
 			{
@@ -308,11 +335,11 @@ namespace TrainEditor2.Models.Trains
 		{
 			get
 			{
-				return startSpeed;
+				return startSpeed.Value;
 			}
 			set
 			{
-				SetProperty(ref startSpeed, value);
+				SetProperty(ref startSpeed, new Quantity.Velocity(value, VelocityUnit));
 			}
 		}
 
@@ -320,11 +347,11 @@ namespace TrainEditor2.Models.Trains
 		{
 			get
 			{
-				return endSpeed;
+				return endSpeed.Value;
 			}
 			set
 			{
-				SetProperty(ref endSpeed, value);
+				SetProperty(ref endSpeed, new Quantity.Velocity(value, VelocityUnit));
 			}
 		}
 
@@ -337,6 +364,8 @@ namespace TrainEditor2.Models.Trains
 
 			SelectedSoundIndex = -1;
 
+			VelocityUnit = Unit.Velocity.KilometerPerHour;
+
 			MinVelocity = 0.0;
 			MaxVelocity = 40.0;
 
@@ -348,7 +377,7 @@ namespace TrainEditor2.Models.Trains
 
 			CurrentSimState = SimulationState.Stopped;
 			RunIndex = -1;
-			Acceleration = 2.6;
+			Acceleration = new Quantity.Acceleration(2.6, Unit.Acceleration.KilometerPerHourPerSecond);
 			StartSpeed = 0.0;
 			EndSpeed = 160.0;
 		}
@@ -454,40 +483,34 @@ namespace TrainEditor2.Models.Trains
 			SelectedTreeItem = newTreeItem;
 		}
 
-		private double XtoVelocity(double x)
+		private Quantity.Velocity XtoVelocity(double x)
 		{
-			double factorVelocity = GlControlWidth / (MaxVelocity - MinVelocity);
-			return MinVelocity + x / factorVelocity;
+			return new Quantity.Velocity(MinVelocity + x / FactorVelocity, VelocityUnit);
 		}
 
 		private double YtoPitch(double y)
 		{
-			double factorPitch = -GlControlHeight / (MaxPitch - MinPitch);
-			return MinPitch + (y - GlControlHeight) / factorPitch;
+			return MinPitch + (y - GlControlHeight) / FactorPitch;
 		}
 
 		private double YtoVolume(double y)
 		{
-			double factorVolume = -GlControlHeight / (MaxVolume - MinVolume);
-			return MinVolume + (y - GlControlHeight) / factorVolume;
+			return MinVolume + (y - GlControlHeight) / FactorVolume;
 		}
 
-		private double VelocityToX(double v)
+		private double VelocityToX(Quantity.Velocity v)
 		{
-			double factorVelocity = GlControlWidth / (MaxVelocity - MinVelocity);
-			return (v - MinVelocity) * factorVelocity;
+			return (v - minVelocity).ToNewUnit(VelocityUnit).Value * FactorVelocity;
 		}
 
 		private double PitchToY(double p)
 		{
-			double factorPitch = -GlControlHeight / (MaxPitch - MinPitch);
-			return GlControlHeight + (p - MinPitch) * factorPitch;
+			return GlControlHeight + (p - MinPitch) * FactorPitch;
 		}
 
 		private double VolumeToY(double v)
 		{
-			double factorVolume = -GlControlHeight / (MaxVolume - MinVolume);
-			return GlControlHeight + (v - MinVolume) * factorVolume;
+			return GlControlHeight + (v - MinVolume) * FactorVolume;
 		}
 
 		internal void ZoomIn()
@@ -540,7 +563,7 @@ namespace TrainEditor2.Models.Trains
 
 		internal void Reset()
 		{
-			Utilities.Reset(0.5 * 40.0, ref minVelocity, ref maxVelocity);
+			Utilities.Reset(new Quantity.Velocity(0.5 * 40.0, VelocityUnit), ref minVelocity, ref maxVelocity);
 
 			OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVelocity)));
 			OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVelocity)));
@@ -618,33 +641,50 @@ namespace TrainEditor2.Models.Trains
 
 		internal void MouseMove(InputEventModel.EventArgs e)
 		{
-			NowVelocity = 0.01 * Math.Round(100.0 * XtoVelocity(e.X));
-			NowPitch = 0.01 * Math.Round(100.0 * YtoPitch(e.Y));
-			NowVolume = 0.01 * Math.Round(100.0 * YtoVolume(e.Y));
+			NowVelocity = XtoVelocity(e.X).Value;
+			NowPitch = YtoPitch(e.Y);
+			NowVolume = YtoVolume(e.Y);
 
 			(SelectedTreeItem.Tag as Track)?.MouseMove(e);
 		}
 
-		internal void DrawGlControl()
+		private static void UpdateViewport(RenderingMode renderingMode, Vector2 point, Vector2 delta)
 		{
-			// prepare
-			GL.Enable(EnableCap.PointSmooth);
-			GL.Enable(EnableCap.PolygonSmooth);
-			GL.Hint(HintTarget.PointSmoothHint, HintMode.Nicest);
-			GL.Hint(HintTarget.PolygonSmoothHint, HintMode.Nicest);
-			GL.Enable(EnableCap.Blend);
-			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-
 			GL.Viewport(0, 0, GlControlWidth, GlControlHeight);
-			GL.ClearColor(Color.Black);
-			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-			Matrix4D projPitch, projVolume, projString;
+			GL.MatrixMode(MatrixMode.Projection);
+			GL.LoadIdentity();
+
+			if (renderingMode == RenderingMode.Select)
+			{
+				if (delta.X <= 0.0 || delta.Y <= 0.0)
+				{
+					return;
+				}
+
+				GL.Translate((GlControlWidth - 2.0 * point.X) / delta.X, (GlControlHeight - 2.0 * point.Y) / delta.Y, 0);
+				GL.Scale(GlControlWidth / delta.X, GlControlHeight / delta.Y, 1.0);
+			}
+		}
+
+		private void CreateMatrix(out Matrix4D projPitch, out Matrix4D projVolume, out Matrix4D projString, out Matrix4D lookPitch, out Matrix4D lookVolume)
+		{
 			Matrix4D.CreateOrthographic(MaxVelocity - MinVelocity, MaxPitch - MinPitch, float.Epsilon, 1.0, out projPitch);
 			Matrix4D.CreateOrthographic(MaxVelocity - MinVelocity, MaxVolume - MinVolume, float.Epsilon, 1.0, out projVolume);
 			Matrix4D.CreateOrthographicOffCenter(0.0, GlControlWidth, GlControlHeight, 0.0, -1.0, 1.0, out projString);
-			Matrix4D lookPitch = Matrix4D.LookAt(new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinPitch + MaxPitch) / 2.0, float.Epsilon), new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinPitch + MaxPitch) / 2.0, 0.0), new Vector3(0, 1, 0));
-			Matrix4D lookVolume = Matrix4D.LookAt(new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinVolume + MaxVolume) / 2.0, float.Epsilon), new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinVolume + MaxVolume) / 2.0, 0.0), new Vector3(0, 1, 0));
+			lookPitch = Matrix4D.LookAt(new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinPitch + MaxPitch) / 2.0, float.Epsilon), new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinPitch + MaxPitch) / 2.0, 0.0), new Vector3(0, 1, 0));
+			lookVolume = Matrix4D.LookAt(new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinVolume + MaxVolume) / 2.0, float.Epsilon), new Vector3((MinVelocity + MaxVelocity) / 2.0, (MinVolume + MaxVolume) / 2.0, 0.0), new Vector3(0, 1, 0));
+		}
+
+		internal void DrawGlControl()
+		{
+			UpdateViewport(RenderingMode.Render, Vector2.Null, Vector2.Null);
+
+			GL.ClearColor(Color.Black);
+			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+			Matrix4D projPitch, projVolume, projString, lookPitch, lookVolume;
+			CreateMatrix(out projPitch, out projVolume, out projString, out lookPitch, out lookVolume);
 
 			// vertical grid
 			{
@@ -674,79 +714,81 @@ namespace TrainEditor2.Models.Trains
 
 				for (double v = 0.0; v < MaxVelocity; v += 10.0)
 				{
-					Program.Renderer.OpenGlString.Draw(Fonts.VerySmallFont, v.ToString("0", Culture), new Point((int)VelocityToX(v) + 1, 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
+					Program.Renderer.OpenGlString.Draw(Fonts.VerySmallFont, v.ToString("0", Culture), new Point((int)VelocityToX(new Quantity.Velocity(v, VelocityUnit)) + 1, 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
 				}
 
 				GL.Disable(EnableCap.Texture2D);
 			}
 
 			// horizontal grid
-			switch (CurrentInputMode)
 			{
-				case InputMode.Pitch:
-					unsafe
-					{
-						GL.MatrixMode(MatrixMode.Projection);
-						double* matrixPointer = &projPitch.Row0.X;
-						GL.LoadMatrix(matrixPointer);
-						GL.MatrixMode(MatrixMode.Modelview);
-						matrixPointer = &lookPitch.Row0.X;
-						GL.LoadMatrix(matrixPointer);
-					}
+				switch (CurrentInputMode)
+				{
+					case InputMode.Pitch:
+						unsafe
+						{
+							GL.MatrixMode(MatrixMode.Projection);
+							double* matrixPointer = &projPitch.Row0.X;
+							GL.LoadMatrix(matrixPointer);
+							GL.MatrixMode(MatrixMode.Modelview);
+							matrixPointer = &lookPitch.Row0.X;
+							GL.LoadMatrix(matrixPointer);
+						}
 
-					GL.Begin(PrimitiveType.Lines);
+						GL.Begin(PrimitiveType.Lines);
 
-					for (double p = 0.0; p < MaxPitch; p += 100.0)
-					{
-						GL.Color4(Color.DimGray);
-						GL.Vertex2(MinVelocity, p);
-						GL.Vertex2(MaxVelocity, p);
-					}
+						for (double p = 0.0; p < MaxPitch; p += 100.0)
+						{
+							GL.Color4(Color.DimGray);
+							GL.Vertex2(MinVelocity, p);
+							GL.Vertex2(MaxVelocity, p);
+						}
 
-					GL.End();
+						GL.End();
 
-					Program.Renderer.CurrentProjectionMatrix = projString;
-					Program.Renderer.CurrentViewMatrix = Matrix4D.Identity;
+						Program.Renderer.CurrentProjectionMatrix = projString;
+						Program.Renderer.CurrentViewMatrix = Matrix4D.Identity;
 
-					for (double p = 0.0; p < MaxPitch; p += 100.0)
-					{
-						Program.Renderer.OpenGlString.Draw(Fonts.VerySmallFont, p.ToString("0", Culture), new Point(1, (int)PitchToY(p) + 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
-					}
+						for (double p = 0.0; p < MaxPitch; p += 100.0)
+						{
+							Program.Renderer.OpenGlString.Draw(Fonts.VerySmallFont, p.ToString("0", Culture), new Point(1, (int)PitchToY(p) + 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
+						}
 
-					GL.Disable(EnableCap.Texture2D);
-					break;
-				case InputMode.Volume:
-					unsafe
-					{
-						GL.MatrixMode(MatrixMode.Projection);
-						double* matrixPointer = &projVolume.Row0.X;
-						GL.LoadMatrix(matrixPointer);
-						GL.MatrixMode(MatrixMode.Modelview);
-						matrixPointer = &lookVolume.Row0.X;
-						GL.LoadMatrix(matrixPointer);
-					}
+						GL.Disable(EnableCap.Texture2D);
+						break;
+					case InputMode.Volume:
+						unsafe
+						{
+							GL.MatrixMode(MatrixMode.Projection);
+							double* matrixPointer = &projVolume.Row0.X;
+							GL.LoadMatrix(matrixPointer);
+							GL.MatrixMode(MatrixMode.Modelview);
+							matrixPointer = &lookVolume.Row0.X;
+							GL.LoadMatrix(matrixPointer);
+						}
 
-					GL.Begin(PrimitiveType.Lines);
+						GL.Begin(PrimitiveType.Lines);
 
-					for (double v = 0.0; v < MaxVolume; v += 128.0)
-					{
-						GL.Color4(Color.DimGray);
-						GL.Vertex2(MinVelocity, v);
-						GL.Vertex2(MaxVelocity, v);
-					}
+						for (double v = 0.0; v < MaxVolume; v += 128.0)
+						{
+							GL.Color4(Color.DimGray);
+							GL.Vertex2(MinVelocity, v);
+							GL.Vertex2(MaxVelocity, v);
+						}
 
-					GL.End();
+						GL.End();
 
-					Program.Renderer.CurrentProjectionMatrix = projString;
-					Program.Renderer.CurrentViewMatrix = Matrix4D.Identity;
+						Program.Renderer.CurrentProjectionMatrix = projString;
+						Program.Renderer.CurrentViewMatrix = Matrix4D.Identity;
 
-					for (double v = 0.0; v < MaxVolume; v += 128.0)
-					{
-						Program.Renderer.OpenGlString.Draw(Fonts.VerySmallFont, v.ToString("0", Culture), new Point(1, (int)VolumeToY(v) + 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
-					}
+						for (double v = 0.0; v < MaxVolume; v += 128.0)
+						{
+							Program.Renderer.OpenGlString.Draw(Fonts.VerySmallFont, v.ToString("0", Culture), new Point(1, (int)VolumeToY(v) + 1), TextAlignment.TopLeft, new Color128(Color24.Grey));
+						}
 
-					GL.Disable(EnableCap.Texture2D);
-					break;
+						GL.Disable(EnableCap.Texture2D);
+						break;
+				}
 			}
 
 			if (SelectedTreeItem != null)
@@ -794,8 +836,8 @@ namespace TrainEditor2.Models.Trains
 				GL.Begin(PrimitiveType.Lines);
 
 				GL.Color4(Color.White);
-				GL.Vertex2((float)currentSimSpeed, 0.0f);
-				GL.Vertex2((float)currentSimSpeed, float.MaxValue);
+				GL.Vertex2(currentSimSpeed.Value, 0.0);
+				GL.Vertex2(currentSimSpeed.Value, float.MaxValue);
 
 				GL.End();
 			}
@@ -828,7 +870,7 @@ namespace TrainEditor2.Models.Trains
 
 			if (CurrentSimState != SimulationState.Paused)
 			{
-				currentSimSpeed = StartSpeed;
+				currentSimSpeed = startSpeed;
 			}
 
 			CurrentSimState = SimulationState.Started;
@@ -852,8 +894,8 @@ namespace TrainEditor2.Models.Trains
 			DisposeCar();
 
 			TrainManager.PlayerTrain = new TrainManager.Train();
-			TrainManager.PlayerTrain.Car.Sounds.Motor.PowerTables = Tracks.Where(x => x.Type == TrackType.Power).Select(x => Track.TrackToMotorSoundTable(x, y => y / 3.6, y => 0.01 * y, y => Math.Pow(0.0078125 * y, 0.25))).ToArray();
-			TrainManager.PlayerTrain.Car.Sounds.Motor.BrakeTables = Tracks.Where(x => x.Type == TrackType.Brake).Select(x => Track.TrackToMotorSoundTable(x, y => y / 3.6, y => 0.01 * y, y => Math.Pow(0.0078125 * y, 0.25))).ToArray();
+			TrainManager.PlayerTrain.Car.Sounds.Motor.PowerTables = Tracks.Where(x => x.Type == TrackType.Power).Select(x => Track.TrackToMotorSoundTable(x, y => 0.01 * y, y => Math.Pow(0.0078125 * y, 0.25))).ToArray();
+			TrainManager.PlayerTrain.Car.Sounds.Motor.BrakeTables = Tracks.Where(x => x.Type == TrackType.Brake).Select(x => Track.TrackToMotorSoundTable(x, y => 0.01 * y, y => Math.Pow(0.0078125 * y, 0.25))).ToArray();
 			TrainManager.PlayerTrain.Car.ApplySounds();
 		}
 
@@ -873,30 +915,30 @@ namespace TrainEditor2.Models.Trains
 
 			double deltaTime = nowElapsedTime - oldElapsedTime;
 
-			double outputAcceleration = Math.Sign(endSpeed - startSpeed) * Acceleration;
+			Quantity.Acceleration outputAcceleration = Math.Sign((endSpeed - startSpeed).Value) * Acceleration;
 
-			currentSimSpeed += outputAcceleration * deltaTime;
-			double minSpeed = Math.Min(startSpeed, endSpeed);
-			double maxSpeed = Math.Max(startSpeed, endSpeed);
+			currentSimSpeed += new Quantity.Velocity(outputAcceleration.ToDefaultUnit().Value * deltaTime);
+			Quantity.Velocity minSpeed = endSpeed >= startSpeed ? startSpeed : endSpeed;
+			Quantity.Velocity maxSpeed = endSpeed >= startSpeed ? endSpeed : startSpeed;
 
 			if (IsLoop)
 			{
 				if (currentSimSpeed < minSpeed)
 				{
 					currentSimSpeed = maxSpeed;
-					outputAcceleration = 0.0;
+					outputAcceleration = new Quantity.Acceleration(0.0);
 				}
 
 				if (currentSimSpeed > maxSpeed)
 				{
 					currentSimSpeed = minSpeed;
-					outputAcceleration = 0.0;
+					outputAcceleration = new Quantity.Acceleration(0.0);
 				}
 
 				if (IsConstant)
 				{
 					currentSimSpeed = startSpeed;
-					outputAcceleration = Math.Sign(endSpeed - startSpeed) * acceleration;
+					outputAcceleration = Math.Sign((endSpeed - startSpeed).Value) * acceleration;
 				}
 			}
 			else
@@ -908,8 +950,8 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			TrainManager.PlayerTrain.Car.Specs.CurrentSpeed = TrainManager.PlayerTrain.Car.Specs.CurrentPerceivedSpeed = currentSimSpeed / 3.6;
-			TrainManager.PlayerTrain.Car.Specs.CurrentAccelerationOutput = outputAcceleration / 3.6;
+			TrainManager.PlayerTrain.Car.Specs.CurrentSpeed = TrainManager.PlayerTrain.Car.Specs.CurrentPerceivedSpeed = currentSimSpeed.ToDefaultUnit().Value;
+			TrainManager.PlayerTrain.Car.Specs.CurrentAccelerationOutput = outputAcceleration.ToDefaultUnit().Value;
 
 			TrainManager.PlayerTrain.Car.UpdateRunSounds(deltaTime, RunIndex);
 
@@ -924,20 +966,20 @@ namespace TrainEditor2.Models.Trains
 
 		private void DrawSimulation()
 		{
-			double rangeVelocity = MaxVelocity - MinVelocity;
+			Quantity.Velocity rangeVelocity = maxVelocity - minVelocity;
 
-			if (StartSpeed <= EndSpeed)
+			if (startSpeed <= endSpeed)
 			{
-				if (currentSimSpeed < MinVelocity || currentSimSpeed > MaxVelocity)
+				if (currentSimSpeed < minVelocity || currentSimSpeed > maxVelocity)
 				{
-					minVelocity = 10.0 * Math.Round(0.1 * currentSimSpeed);
+					minVelocity = new Quantity.Velocity(10.0 * Math.Round(0.1 * currentSimSpeed.Value), VelocityUnit);
 
-					if (MinVelocity < 0.0)
+					if (minVelocity.Value < 0.0)
 					{
-						minVelocity = 0.0;
+						minVelocity = new Quantity.Velocity(0.0, VelocityUnit);
 					}
 
-					maxVelocity = MinVelocity + rangeVelocity;
+					maxVelocity = minVelocity + rangeVelocity;
 
 					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVelocity)));
 					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVelocity)));
@@ -947,16 +989,16 @@ namespace TrainEditor2.Models.Trains
 			}
 			else
 			{
-				if (currentSimSpeed < MinVelocity || currentSimSpeed > MaxVelocity)
+				if (currentSimSpeed < minVelocity || currentSimSpeed > maxVelocity)
 				{
-					maxVelocity = 10.0 * Math.Round(0.1 * currentSimSpeed);
+					maxVelocity = new Quantity.Velocity(10.0 * Math.Round(0.1 * currentSimSpeed.Value), VelocityUnit);
 
-					if (MaxVelocity < rangeVelocity)
+					if (maxVelocity < rangeVelocity)
 					{
 						maxVelocity = rangeVelocity;
 					}
 
-					minVelocity = MaxVelocity - rangeVelocity;
+					minVelocity = maxVelocity - rangeVelocity;
 
 					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVelocity)));
 					OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVelocity)));

@@ -143,8 +143,8 @@ namespace TrainEditor2.Models.Trains
 		private Quantity.Length rearAxle;
 		private Bogie frontBogie;
 		private Bogie rearBogie;
-		private double exposedFrontalArea;
-		private double unexposedFrontalArea;
+		private Quantity.Area exposedFrontalArea;
+		private Quantity.Area unexposedFrontalArea;
 		private Performance performance;
 		private Delay delay;
 		private Jerk jerk;
@@ -277,7 +277,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double ExposedFrontalArea
+		internal Quantity.Area ExposedFrontalArea
 		{
 			get
 			{
@@ -289,7 +289,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double UnexposedFrontalArea
+		internal Quantity.Area UnexposedFrontalArea
 		{
 			get
 			{
@@ -445,8 +445,8 @@ namespace TrainEditor2.Models.Trains
 			RearAxle = new Quantity.Length(-8.0);
 			FrontBogie = new Bogie();
 			RearBogie = new Bogie();
-			ExposedFrontalArea = 5.0;
-			UnexposedFrontalArea = 1.6;
+			ExposedFrontalArea = new Quantity.Area(5.0);
+			UnexposedFrontalArea = new Quantity.Area(1.6);
 			Performance = new Performance();
 			Delay = new Delay();
 			Jerk = new Jerk();

@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
+using OpenBveApi.Units;
 
 namespace TrainEditor2.Extensions
 {
@@ -113,6 +114,28 @@ namespace TrainEditor2.Extensions
 			max = center + 0.8 * radius;
 		}
 
+		internal static void ZoomIn(ref Quantity.Acceleration min, ref Quantity.Acceleration max)
+		{
+			double minValue = min.ToDefaultUnit().Value;
+			double maxValue = max.ToDefaultUnit().Value;
+
+			ZoomIn(ref minValue, ref maxValue);
+
+			min = new Quantity.Acceleration(minValue).ToNewUnit(min.UnitValue);
+			max = new Quantity.Acceleration(maxValue).ToNewUnit(max.UnitValue);
+		}
+
+		internal static void ZoomIn(ref Quantity.Velocity min, ref Quantity.Velocity max)
+		{
+			double minValue = min.ToDefaultUnit().Value;
+			double maxValue = max.ToDefaultUnit().Value;
+
+			ZoomIn(ref minValue, ref maxValue);
+
+			min = new Quantity.Velocity(minValue).ToNewUnit(min.UnitValue);
+			max = new Quantity.Velocity(maxValue).ToNewUnit(max.UnitValue);
+		}
+
 		internal static void ZoomOut(ref double min, ref double max)
 		{
 			double range = max - min;
@@ -132,6 +155,28 @@ namespace TrainEditor2.Extensions
 			}
 		}
 
+		internal static void ZoomOut(ref Quantity.Acceleration min, ref Quantity.Acceleration max)
+		{
+			double minValue = min.ToDefaultUnit().Value;
+			double maxValue = max.ToDefaultUnit().Value;
+
+			ZoomOut(ref minValue, ref maxValue);
+
+			min = new Quantity.Acceleration(minValue).ToNewUnit(min.UnitValue);
+			max = new Quantity.Acceleration(maxValue).ToNewUnit(max.UnitValue);
+		}
+
+		internal static void ZoomOut(ref Quantity.Velocity min, ref Quantity.Velocity max)
+		{
+			double minValue = min.ToDefaultUnit().Value;
+			double maxValue = max.ToDefaultUnit().Value;
+
+			ZoomOut(ref minValue, ref maxValue);
+
+			min = new Quantity.Velocity(minValue).ToNewUnit(min.UnitValue);
+			max = new Quantity.Velocity(maxValue).ToNewUnit(max.UnitValue);
+		}
+
 		internal static void Reset(double radius, ref double min, ref double max)
 		{
 			double center = 0.5 * (min + max);
@@ -144,6 +189,28 @@ namespace TrainEditor2.Extensions
 			}
 
 			max = min + 2.0 * radius;
+		}
+
+		internal static void Reset(Quantity.Acceleration radius, ref Quantity.Acceleration min, ref Quantity.Acceleration max)
+		{
+			double minValue = min.ToDefaultUnit().Value;
+			double maxValue = max.ToDefaultUnit().Value;
+
+			Reset(radius.ToDefaultUnit().Value, ref minValue, ref maxValue);
+
+			min = new Quantity.Acceleration(minValue).ToNewUnit(min.UnitValue);
+			max = new Quantity.Acceleration(maxValue).ToNewUnit(max.UnitValue);
+		}
+
+		internal static void Reset(Quantity.Velocity radius, ref Quantity.Velocity min, ref Quantity.Velocity max)
+		{
+			double minValue = min.ToDefaultUnit().Value;
+			double maxValue = max.ToDefaultUnit().Value;
+
+			Reset(radius.ToDefaultUnit().Value, ref minValue, ref maxValue);
+
+			min = new Quantity.Velocity(minValue).ToNewUnit(min.UnitValue);
+			max = new Quantity.Velocity(maxValue).ToNewUnit(max.UnitValue);
 		}
 
 		internal static void MoveNegative(ref double min, ref double max)
@@ -160,12 +227,56 @@ namespace TrainEditor2.Extensions
 			max = min + range;
 		}
 
+		internal static void MoveNegative(ref Quantity.Acceleration min, ref Quantity.Acceleration max)
+		{
+			double minValue = min.ToDefaultUnit().Value;
+			double maxValue = max.ToDefaultUnit().Value;
+
+			MoveNegative(ref minValue, ref maxValue);
+
+			min = new Quantity.Acceleration(minValue).ToNewUnit(min.UnitValue);
+			max = new Quantity.Acceleration(maxValue).ToNewUnit(max.UnitValue);
+		}
+
+		internal static void MoveNegative(ref Quantity.Velocity min, ref Quantity.Velocity max)
+		{
+			double minValue = min.ToDefaultUnit().Value;
+			double maxValue = max.ToDefaultUnit().Value;
+
+			MoveNegative(ref minValue, ref maxValue);
+
+			min = new Quantity.Velocity(minValue).ToNewUnit(min.UnitValue);
+			max = new Quantity.Velocity(maxValue).ToNewUnit(max.UnitValue);
+		}
+
 		internal static void MovePositive(ref double min, ref double max)
 		{
 			double range = max - min;
 
 			min += 0.1 * range;
 			max = min + range;
+		}
+
+		internal static void MovePositive(ref Quantity.Acceleration min, ref Quantity.Acceleration max)
+		{
+			double minValue = min.ToDefaultUnit().Value;
+			double maxValue = max.ToDefaultUnit().Value;
+
+			MovePositive(ref minValue, ref maxValue);
+
+			min = new Quantity.Acceleration(minValue).ToNewUnit(min.UnitValue);
+			max = new Quantity.Acceleration(maxValue).ToNewUnit(max.UnitValue);
+		}
+
+		internal static void MovePositive(ref Quantity.Velocity min, ref Quantity.Velocity max)
+		{
+			double minValue = min.ToDefaultUnit().Value;
+			double maxValue = max.ToDefaultUnit().Value;
+
+			MovePositive(ref minValue, ref maxValue);
+
+			min = new Quantity.Velocity(minValue).ToNewUnit(min.UnitValue);
+			max = new Quantity.Velocity(maxValue).ToNewUnit(max.UnitValue);
 		}
 
 		internal static Color GetColor(double Hue, bool Selected)

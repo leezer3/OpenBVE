@@ -99,8 +99,8 @@ namespace TrainEditor2.IO.Trains.TrainDat
 			Quantity.Length widthOfACar = new Quantity.Length(2.6);
 			Quantity.Length heightOfACar = new Quantity.Length(3.2);
 			Quantity.Length centerOfGravityHeight = new Quantity.Length(1.5);
-			double exposedFrontalArea = 5.0;
-			double unexposedFrontalArea = 1.6;
+			Quantity.Area exposedFrontalArea = new Quantity.Area(5.0);
+			Quantity.Area unexposedFrontalArea = new Quantity.Area(1.6);
 			Car.Door door = new Car.Door();
 			Car.ReAdhesionDevices reAdhesionDevice = Car.ReAdhesionDevices.TypeA;
 
@@ -123,12 +123,13 @@ namespace TrainEditor2.IO.Trains.TrainDat
 
 				for (int j = 0; j < 16; j++)
 				{
-					PowerTables[i].PitchVertices[j] = new TrainManager.MotorSound.Vertex<float> { X = 0.2f * j, Y = 100.0f };
-					PowerTables[i].GainVertices[j] = new TrainManager.MotorSound.Vertex<float> { X = 0.2f * j, Y = 128.0f };
-					PowerTables[i].BufferVertices[j] = new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = 0.2f * j, Y = -1 };
-					BrakeTables[i].PitchVertices[j] = new TrainManager.MotorSound.Vertex<float> { X = 0.2f * j, Y = 100.0f };
-					BrakeTables[i].GainVertices[j] = new TrainManager.MotorSound.Vertex<float> { X = 0.2f * j, Y = 128.0f };
-					BrakeTables[i].BufferVertices[j] = new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = 0.2f * j, Y = -1 };
+					Quantity.VelocityF x = new Quantity.VelocityF(0.2f * j, Unit.Velocity.KilometerPerHour);
+					PowerTables[i].PitchVertices[j] = new TrainManager.MotorSound.Vertex<float> { X = x, Y = 100.0f };
+					PowerTables[i].GainVertices[j] = new TrainManager.MotorSound.Vertex<float> { X = x, Y = 128.0f };
+					PowerTables[i].BufferVertices[j] = new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = x, Y = -1 };
+					BrakeTables[i].PitchVertices[j] = new TrainManager.MotorSound.Vertex<float> { X = x, Y = 100.0f };
+					BrakeTables[i].GainVertices[j] = new TrainManager.MotorSound.Vertex<float> { X = x, Y = 128.0f };
+					BrakeTables[i].BufferVertices[j] = new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = x, Y = -1 };
 				}
 			}
 
@@ -169,20 +170,32 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									switch (m)
 									{
 										case 0:
-											acceleration.Entries[n].A0 = Math.Max(a, 0.0);
+											if (a >= 0.0)
+											{
+												acceleration.Entries[n].A0 = new Quantity.Acceleration(a, Unit.Acceleration.KilometerPerHourPerSecond);
+											}
 											break;
 										case 1:
-											acceleration.Entries[n].A1 = Math.Max(a, 0.0);
+											if (a >= 0.0)
+											{
+												acceleration.Entries[n].A1 = new Quantity.Acceleration(a, Unit.Acceleration.KilometerPerHourPerSecond);
+											}
 											break;
 										case 2:
-											acceleration.Entries[n].V1 = Math.Max(a, 0.0);
+											if (a >= 0.0)
+											{
+												acceleration.Entries[n].V1 = new Quantity.Velocity(a, Unit.Velocity.KilometerPerHour);
+											}
 											break;
 										case 3:
-											acceleration.Entries[n].V2 = Math.Max(a, 0.0);
+											if (a >= 0.0)
+											{
+												acceleration.Entries[n].V2 = new Quantity.Velocity(a, Unit.Velocity.KilometerPerHour);
+											}
 
 											if (acceleration.Entries[n].V2 < acceleration.Entries[n].V1)
 											{
-												double x = acceleration.Entries[n].V1;
+												Quantity.Velocity x = acceleration.Entries[n].V1;
 												acceleration.Entries[n].V1 = acceleration.Entries[n].V2;
 												acceleration.Entries[n].V2 = x;
 											}
@@ -197,7 +210,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 												else
 												{
 													const double c = 1.23315173118822;
-													acceleration.Entries[n].E = 1.0 - Math.Log(a) * acceleration.Entries[n].V2 * c;
+													acceleration.Entries[n].E = 1.0 - Math.Log(a) * acceleration.Entries[n].V2.ToNewUnit(Unit.Velocity.KilometerPerHour).Value * c;
 
 													if (acceleration.Entries[n].E > 4.0)
 													{
@@ -237,7 +250,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									case 0:
 										if (a >= 0.0)
 										{
-											performance.Deceleration = a;
+											performance.Deceleration = new Quantity.Acceleration(a, Unit.Acceleration.KilometerPerHourPerSecond);
 										}
 										break;
 									case 1:
@@ -270,12 +283,12 @@ namespace TrainEditor2.IO.Trains.TrainDat
 					case "#delay":
 						i++;
 
-						double[] delayPowerUp = delay.Power.Select(x => x.Up).ToArray();
-						double[] delayPowerDown = delay.Power.Select(x => x.Down).ToArray();
-						double[] delayBrakeUp = delay.Brake.Select(x => x.Up).ToArray();
-						double[] delayBrakeDown = delay.Brake.Select(x => x.Down).ToArray();
-						double[] delayLocoBrakeUp = delay.LocoBrake.Select(x => x.Up).ToArray();
-						double[] delayLocoBrakeDown = delay.LocoBrake.Select(x => x.Down).ToArray();
+						Quantity.Time[] delayPowerUp = delay.Power.Select(x => x.Up).ToArray();
+						Quantity.Time[] delayPowerDown = delay.Power.Select(x => x.Down).ToArray();
+						Quantity.Time[] delayBrakeUp = delay.Brake.Select(x => x.Up).ToArray();
+						Quantity.Time[] delayBrakeDown = delay.Brake.Select(x => x.Down).ToArray();
+						Quantity.Time[] delayLocoBrakeUp = delay.LocoBrake.Select(x => x.Up).ToArray();
+						Quantity.Time[] delayLocoBrakeDown = delay.LocoBrake.Select(x => x.Down).ToArray();
 
 						delay.Power.Clear();
 						delay.Brake.Clear();
@@ -286,22 +299,22 @@ namespace TrainEditor2.IO.Trains.TrainDat
 							switch (n)
 							{
 								case 0:
-									delayPowerUp = lines[i].Split(',').Select(x => double.Parse(x, culture)).Where(x => x >= 0).ToArray();
+									delayPowerUp = lines[i].Split(',').Select(x => double.Parse(x, culture)).Where(x => x >= 0).Select(x => new Quantity.Time(x)).ToArray();
 									break;
 								case 1:
-									delayPowerDown = lines[i].Split(',').Select(x => double.Parse(x, culture)).Where(x => x >= 0).ToArray();
+									delayPowerDown = lines[i].Split(',').Select(x => double.Parse(x, culture)).Where(x => x >= 0).Select(x => new Quantity.Time(x)).ToArray();
 									break;
 								case 2:
-									delayBrakeUp = lines[i].Split(',').Select(x => double.Parse(x, culture)).Where(x => x >= 0).ToArray();
+									delayBrakeUp = lines[i].Split(',').Select(x => double.Parse(x, culture)).Where(x => x >= 0).Select(x => new Quantity.Time(x)).ToArray();
 									break;
 								case 3:
-									delayBrakeDown = lines[i].Split(',').Select(x => double.Parse(x, culture)).Where(x => x >= 0).ToArray();
+									delayBrakeDown = lines[i].Split(',').Select(x => double.Parse(x, culture)).Where(x => x >= 0).Select(x => new Quantity.Time(x)).ToArray();
 									break;
 								case 4:
-									delayLocoBrakeUp = lines[i].Split(',').Select(x => double.Parse(x, culture)).Where(x => x >= 0).ToArray();
+									delayLocoBrakeUp = lines[i].Split(',').Select(x => double.Parse(x, culture)).Where(x => x >= 0).Select(x => new Quantity.Time(x)).ToArray();
 									break;
 								case 5:
-									delayLocoBrakeDown = lines[i].Split(',').Select(x => double.Parse(x, culture)).Where(x => x >= 0).ToArray();
+									delayLocoBrakeDown = lines[i].Split(',').Select(x => double.Parse(x, culture)).Where(x => x >= 0).Select(x => new Quantity.Time(x)).ToArray();
 									break;
 							}
 
@@ -376,25 +389,25 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									case 0:
 										if (a >= 0.0)
 										{
-											jerk.Power.Up = a;
+											jerk.Power.Up = new Quantity.Jerk(a, Unit.Jerk.CentimeterPerSecondCubed);
 										}
 										break;
 									case 1:
 										if (a >= 0.0)
 										{
-											jerk.Power.Down = a;
+											jerk.Power.Down = new Quantity.Jerk(a, Unit.Jerk.CentimeterPerSecondCubed);
 										}
 										break;
 									case 2:
 										if (a >= 0.0)
 										{
-											jerk.Brake.Up = a;
+											jerk.Brake.Up = new Quantity.Jerk(a, Unit.Jerk.CentimeterPerSecondCubed);
 										}
 										break;
 									case 3:
 										if (a >= 0.0)
 										{
-											jerk.Brake.Down = a;
+											jerk.Brake.Down = new Quantity.Jerk(a, Unit.Jerk.CentimeterPerSecondCubed);
 										}
 										break;
 									case 4:
@@ -446,7 +459,7 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									case 2:
 										if (a >= 0.0)
 										{
-											brake.BrakeControlSpeed = a;
+											brake.BrakeControlSpeed = new Quantity.Velocity(a, Unit.Velocity.KilometerPerHour);
 										}
 										break;
 									case 3:
@@ -687,13 +700,13 @@ namespace TrainEditor2.IO.Trains.TrainDat
 									case 9:
 										if (a > 0.0)
 										{
-											exposedFrontalArea = a;
+											exposedFrontalArea = new Quantity.Area(a);
 										}
 										break;
 									case 10:
 										if (a > 0.0)
 										{
-											unexposedFrontalArea = a;
+											unexposedFrontalArea = new Quantity.Area(a);
 										}
 										break;
 								}
@@ -816,9 +829,10 @@ namespace TrainEditor2.IO.Trains.TrainDat
 
 									for (int j = u; j < 2 * u; j++)
 									{
-										table.PitchVertices[j] = new TrainManager.MotorSound.Vertex<float> { X = 0.2f * j, Y = 100.0f };
-										table.GainVertices[j] = new TrainManager.MotorSound.Vertex<float> { X = 0.2f * j, Y = 128.0f };
-										table.BufferVertices[j] = new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = 0.2f * j, Y = -1 };
+										Quantity.VelocityF x = new Quantity.VelocityF(0.2f * j, Unit.Velocity.KilometerPerHour);
+										table.PitchVertices[j] = new TrainManager.MotorSound.Vertex<float> { X = x, Y = 100.0f };
+										table.GainVertices[j] = new TrainManager.MotorSound.Vertex<float> { X = x, Y = 128.0f };
+										table.BufferVertices[j] = new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = x, Y = -1 };
 									}
 								}
 
@@ -872,9 +886,9 @@ namespace TrainEditor2.IO.Trains.TrainDat
 								Array.Resize(ref table.PitchVertices, n);
 								Array.Resize(ref table.GainVertices, n);
 								Array.Resize(ref table.BufferVertices, n);
-								table.PitchVertices = table.PitchVertices.OrderBy(x => x.X).ToArray();
-								table.GainVertices = table.GainVertices.OrderBy(x => x.X).ToArray();
-								table.BufferVertices = table.BufferVertices.OrderBy(x => x.X).ToArray();
+								table.PitchVertices = table.PitchVertices.OrderBy(x => x.X.Value).ToArray();
+								table.GainVertices = table.GainVertices.OrderBy(x => x.X.Value).ToArray();
+								table.BufferVertices = table.BufferVertices.OrderBy(x => x.X.Value).ToArray();
 							}
 							i--;
 						}
@@ -964,8 +978,8 @@ namespace TrainEditor2.IO.Trains.TrainDat
 				}
 			}
 
-			motor.Tracks.AddRange(PowerTables.Select(x => Motor.Track.MotorSoundTableToTrack(motor, Motor.TrackType.Power, x, y => y, y => y, y => y)));
-			motor.Tracks.AddRange(BrakeTables.Select(x => Motor.Track.MotorSoundTableToTrack(motor, Motor.TrackType.Brake, x, y => y, y => y, y => y)));
+			motor.Tracks.AddRange(PowerTables.Select(x => Motor.Track.MotorSoundTableToTrack(motor, Motor.TrackType.Power, x, y => y, y => y)));
+			motor.Tracks.AddRange(BrakeTables.Select(x => Motor.Track.MotorSoundTableToTrack(motor, Motor.TrackType.Brake, x, y => y, y => y)));
 
 			foreach (bool isMotorCar in isMotorCars)
 			{

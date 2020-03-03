@@ -72,7 +72,7 @@ namespace TrainEditor2.IO.Trains.Xml
 						{
 							Quantity.PressureRate result;
 
-							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.Value <= 0.0)
+							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.ToDefaultUnit().Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -163,7 +163,7 @@ namespace TrainEditor2.IO.Trains.Xml
 						{
 							Quantity.PressureRate result;
 
-							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.Value <= 0.0)
+							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.ToDefaultUnit().Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -201,7 +201,7 @@ namespace TrainEditor2.IO.Trains.Xml
 						{
 							Quantity.PressureRate result;
 
-							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.Value <= 0.0)
+							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.ToDefaultUnit().Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -216,7 +216,7 @@ namespace TrainEditor2.IO.Trains.Xml
 						{
 							Quantity.PressureRate result;
 
-							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.Value <= 0.0)
+							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.ToDefaultUnit().Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -231,7 +231,7 @@ namespace TrainEditor2.IO.Trains.Xml
 						{
 							Quantity.PressureRate result;
 
-							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.Value <= 0.0)
+							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.ToDefaultUnit().Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -284,7 +284,7 @@ namespace TrainEditor2.IO.Trains.Xml
 						{
 							Quantity.PressureRate result;
 
-							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.Value <= 0.0)
+							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.ToDefaultUnit().Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -299,7 +299,7 @@ namespace TrainEditor2.IO.Trains.Xml
 						{
 							Quantity.PressureRate result;
 
-							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.Value <= 0.0)
+							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.ToDefaultUnit().Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -314,7 +314,7 @@ namespace TrainEditor2.IO.Trains.Xml
 						{
 							Quantity.PressureRate result;
 
-							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.Value <= 0.0)
+							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.ToDefaultUnit().Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -352,7 +352,7 @@ namespace TrainEditor2.IO.Trains.Xml
 						{
 							Quantity.PressureRate result;
 
-							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.Value <= 0.0)
+							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.ToDefaultUnit().Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -367,7 +367,7 @@ namespace TrainEditor2.IO.Trains.Xml
 						{
 							Quantity.PressureRate result;
 
-							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.Value <= 0.0)
+							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.ToDefaultUnit().Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -382,7 +382,7 @@ namespace TrainEditor2.IO.Trains.Xml
 						{
 							Quantity.PressureRate result;
 
-							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.Value <= 0.0)
+							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.ToDefaultUnit().Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -450,7 +450,7 @@ namespace TrainEditor2.IO.Trains.Xml
 						{
 							Quantity.PressureRate result;
 
-							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.Value <= 0.0)
+							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.ToDefaultUnit().Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -465,7 +465,7 @@ namespace TrainEditor2.IO.Trains.Xml
 						{
 							Quantity.PressureRate result;
 
-							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.Value <= 0.0)
+							if (!Quantity.PressureRate.TryParse(keyNode, true, out result) || result.ToDefaultUnit().Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}

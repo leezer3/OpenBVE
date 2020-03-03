@@ -21,7 +21,7 @@ namespace TrainEditor2.Views
 
 			disposable = new CompositeDisposable();
 
-			string[] lengthUnits = Enum.GetValues(typeof(Unit.Length)).OfType<Enum>().Select(x => Unit.GetRewords(x).First()).ToArray();
+			string[] lengthUnits = Unit.GetAllRewords<Unit.Length>();
 
 			comboBoxWidthUnit.Items.AddRange((string[])lengthUnits.Clone());
 			comboBoxMaxToleranceUnit.Items.AddRange((string[])lengthUnits.Clone());

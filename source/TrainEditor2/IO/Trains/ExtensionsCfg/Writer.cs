@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Text;
-using OpenBveApi.Units;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Trains;
 
@@ -31,11 +30,11 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 		{
 			builder.AppendLine($"[Car{carIndex.ToString(CultureInfo.InvariantCulture)}]");
 			WriteKey(builder, "Object", Utilities.MakeRelativePath(fileName, car.Object));
-			WriteKey(builder, "Length", car.Length.ToNewUnit(Unit.Length.Meter).Value);
+			WriteKey(builder, "Length", car.Length.ToDefaultUnit().Value);
 
 			if (car.DefinedAxles)
 			{
-				WriteKey(builder, "Axles", car.RearAxle.ToNewUnit(Unit.Length.Meter).Value, car.FrontAxle.ToNewUnit(Unit.Length.Meter).Value);
+				WriteKey(builder, "Axles", car.RearAxle.ToDefaultUnit().Value, car.FrontAxle.ToDefaultUnit().Value);
 			}
 
 			WriteKey(builder, "Reversed", car.Reversed.ToString());
@@ -51,7 +50,7 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 
 			if (bogie.DefinedAxles)
 			{
-				WriteKey(builder, "Axles", bogie.RearAxle.ToNewUnit(Unit.Length.Meter).Value, bogie.FrontAxle.ToNewUnit(Unit.Length.Meter).Value);
+				WriteKey(builder, "Axles", bogie.RearAxle.ToDefaultUnit().Value, bogie.FrontAxle.ToDefaultUnit().Value);
 			}
 
 			WriteKey(builder, "Reversed", bogie.Reversed.ToString());
@@ -60,7 +59,7 @@ namespace TrainEditor2.IO.Trains.ExtensionsCfg
 		private static void WriteCouplerNode(string fileName, StringBuilder builder, int couplerIndex, Coupler coupler)
 		{
 			builder.AppendLine($"[Coupler{couplerIndex.ToString(CultureInfo.InvariantCulture)}]");
-			WriteKey(builder, "Distances", coupler.Min.ToNewUnit(Unit.Length.Meter).Value, coupler.Max.ToNewUnit(Unit.Length.Meter).Value);
+			WriteKey(builder, "Distances", coupler.Min.ToDefaultUnit().Value, coupler.Max.ToDefaultUnit().Value);
 			WriteKey(builder, "Object", Utilities.MakeRelativePath(fileName, coupler.Object));
 		}
 

@@ -471,7 +471,7 @@ namespace TrainEditor2.IO.Trains.Xml
 						{
 							Quantity.Mass result;
 
-							if (!Quantity.Mass.TryParse(keyNode, true, out result) || result.Value <= 0.0)
+							if (!Quantity.Mass.TryParse(keyNode, true, out result) || result.ToDefaultUnit().Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -486,7 +486,7 @@ namespace TrainEditor2.IO.Trains.Xml
 						{
 							Quantity.Length result;
 
-							if (!Quantity.Length.TryParse(keyNode, true, out result) || result.Value <= 0.0)
+							if (!Quantity.Length.TryParse(keyNode, true, out result) || result.ToDefaultUnit().Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -501,7 +501,7 @@ namespace TrainEditor2.IO.Trains.Xml
 						{
 							Quantity.Length result;
 
-							if (!Quantity.Length.TryParse(keyNode, true, out result) || result.Value <= 0.0)
+							if (!Quantity.Length.TryParse(keyNode, true, out result) || result.ToDefaultUnit().Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -516,7 +516,7 @@ namespace TrainEditor2.IO.Trains.Xml
 						{
 							Quantity.Length result;
 
-							if (!Quantity.Length.TryParse(keyNode, true, out result) || result.Value <= 0.0)
+							if (!Quantity.Length.TryParse(keyNode, true, out result) || result.ToDefaultUnit().Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -586,9 +586,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "exposedfrontalarea":
 						if (value.Any())
 						{
-							double result;
+							Quantity.Area result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
+							if (!Quantity.Area.TryParse(keyNode, true, out result) || result.ToDefaultUnit().Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -601,9 +601,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "unexposedfrontalarea":
 						if (value.Any())
 						{
-							double result;
+							Quantity.Area result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result <= 0.0)
+							if (!Quantity.Area.TryParse(keyNode, true, out result) || result.ToDefaultUnit().Value <= 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a positive floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -868,9 +868,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "deceleration":
 						if (value.Any())
 						{
-							double result;
+							Quantity.Acceleration result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result < 0.0)
+							if (!Quantity.Acceleration.TryParse(keyNode, true, out result) || result.ToDefaultUnit().Value < 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1008,9 +1008,9 @@ namespace TrainEditor2.IO.Trains.Xml
 					case "brakecontrolspeed":
 						if (value.Any())
 						{
-							double result;
+							Quantity.Velocity result;
 
-							if (!NumberFormats.TryParseDoubleVb6(value, out result) || result < 0.0)
+							if (!Quantity.Velocity.TryParse(keyNode, true, out result) || result.ToDefaultUnit().Value < 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1048,7 +1048,7 @@ namespace TrainEditor2.IO.Trains.Xml
 						{
 							Quantity.Length result;
 
-							if (!Quantity.Length.TryParse(keyNode, true, out result) || result.Value < 0.0)
+							if (!Quantity.Length.TryParse(keyNode, true, out result) || result.ToDefaultUnit().Value < 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1063,7 +1063,7 @@ namespace TrainEditor2.IO.Trains.Xml
 						{
 							Quantity.Length result;
 
-							if (!Quantity.Length.TryParse(keyNode, true, out result) || result.Value < 0.0)
+							if (!Quantity.Length.TryParse(keyNode, true, out result) || result.ToDefaultUnit().Value < 0.0)
 							{
 								Interface.AddMessage(MessageType.Error, false, $"Value must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 							}
@@ -1103,24 +1103,27 @@ namespace TrainEditor2.IO.Trains.Xml
 				if (value.Any())
 				{
 					string[] values = value.Split(',');
+					string[] unitValues = keyNode.Attributes().FirstOrDefault(x => string.Equals(x.Name.LocalName, "Unit", StringComparison.InvariantCultureIgnoreCase))?.Value.Split(',');
 
 					if (values.Length == 5)
 					{
-						double a0, a1, v1, v2, e;
+						double a0_Value, a1_Value, v1_Value, v2_Value, e;
+						Unit.Acceleration a0_Unit = Unit.Acceleration.MeterPerSecondSquared, a1_Unit = Unit.Acceleration.MeterPerSecondSquared;
+						Unit.Velocity v1_Unit = Unit.Velocity.MeterPerSecond, v2_Unit = Unit.Velocity.MeterPerSecond;
 
-						if (!NumberFormats.TryParseDoubleVb6(values[0], out a0) || a0 < 0.0)
+						if (!NumberFormats.TryParseDoubleVb6(values[0], out a0_Value) || unitValues != null && unitValues.Length > 0 && !Unit.TryParse(unitValues[0], true, out a0_Unit) || new Quantity.Acceleration(a0_Value, a0_Unit).ToDefaultUnit().Value < 0.0)
 						{
 							Interface.AddMessage(MessageType.Error, false, $"A0 must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 						}
-						else if (!NumberFormats.TryParseDoubleVb6(values[1], out a1) || a1 < 0.0)
+						else if (!NumberFormats.TryParseDoubleVb6(values[1], out a1_Value) || unitValues != null && unitValues.Length > 1 && !Unit.TryParse(unitValues[1], true, out a1_Unit) || new Quantity.Acceleration(a1_Value, a1_Unit).ToDefaultUnit().Value < 0.0)
 						{
 							Interface.AddMessage(MessageType.Error, false, $"A1 must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 						}
-						else if (!NumberFormats.TryParseDoubleVb6(values[2], out v1) || v1 < 0.0)
+						else if (!NumberFormats.TryParseDoubleVb6(values[2], out v1_Value) || unitValues != null && unitValues.Length > 2 && !Unit.TryParse(unitValues[2], true, out v1_Unit) || new Quantity.Velocity(v1_Value, v1_Unit).ToDefaultUnit().Value < 0.0)
 						{
 							Interface.AddMessage(MessageType.Error, false, $"V1 must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 						}
-						else if (!NumberFormats.TryParseDoubleVb6(values[3], out v2) || v2 < 0.0)
+						else if (!NumberFormats.TryParseDoubleVb6(values[3], out v2_Value) || unitValues != null && unitValues.Length > 3 && !Unit.TryParse(unitValues[3], true, out v2_Unit) || new Quantity.Velocity(v2_Value, v2_Unit).ToDefaultUnit().Value < 0.0)
 						{
 							Interface.AddMessage(MessageType.Error, false, $"V2 must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 						}
@@ -1130,14 +1133,17 @@ namespace TrainEditor2.IO.Trains.Xml
 						}
 						else
 						{
+							Quantity.Velocity v1 = new Quantity.Velocity(v1_Value, v1_Unit);
+							Quantity.Velocity v2 = new Quantity.Velocity(v2_Value, v2_Unit);
+
 							if (v2 < v1)
 							{
-								double x = v1;
+								Quantity.Velocity x = v1;
 								v1 = v2;
 								v2 = x;
 							}
 
-							acceleration.Entries.Add(new Acceleration.Entry { A0 = a0, A1 = a1, V1 = v1, V2 = v2, E = e });
+							acceleration.Entries.Add(new Acceleration.Entry { A0 = new Quantity.Acceleration(a0_Value, a0_Unit), A1 = new Quantity.Acceleration(a1_Value, a0_Unit), V1 = v1, V2 = v2, E = e });
 						}
 					}
 					else

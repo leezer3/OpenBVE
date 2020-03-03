@@ -83,8 +83,8 @@ namespace TrainEditor2.IO.IntermediateFile
 				car.RearAxle.ToXElement("RearAxle"),
 				WriteBogieNode("FrontBogie", car.FrontBogie),
 				WriteBogieNode("RearBogie", car.RearBogie),
-				new XElement("ExposedFrontalArea", car.ExposedFrontalArea),
-				new XElement("UnexposedFrontalArea", car.UnexposedFrontalArea),
+				car.ExposedFrontalArea.ToXElement("ExposedFrontalArea"),
+				car.UnexposedFrontalArea.ToXElement("UnexposedFrontalArea"),
 				WritePerformanceNode(car.Performance),
 				WriteDelayNode(car.Delay),
 				WriteJerkNode(car.Jerk),
@@ -134,7 +134,7 @@ namespace TrainEditor2.IO.IntermediateFile
 		private static XElement WritePerformanceNode(Performance performance)
 		{
 			return new XElement("Performance",
-				new XElement("Deceleration", performance.Deceleration),
+				performance.Deceleration.ToXElement("Deceleration"),
 				new XElement("CoefficientOfStaticFriction", performance.CoefficientOfStaticFriction.ToString(culture)),
 				new XElement("CoefficientOfRollingResistance", performance.CoefficientOfRollingResistance.ToString(culture)),
 				new XElement("AerodynamicDragCoefficient", performance.AerodynamicDragCoefficient.ToString(culture))
@@ -153,8 +153,8 @@ namespace TrainEditor2.IO.IntermediateFile
 		private static XElement WriteDelayEntryNode(Delay.Entry entry)
 		{
 			return new XElement("Entry",
-				new XElement("Up", entry.Up),
-				new XElement("Down", entry.Down)
+				entry.Up.ToXElement("Up"),
+				entry.Down.ToXElement("Down")
 			);
 		}
 
@@ -169,8 +169,8 @@ namespace TrainEditor2.IO.IntermediateFile
 		private static XElement WriteJerkEntryNode(string nodeName, Jerk.Entry entry)
 		{
 			return new XElement(nodeName,
-				new XElement("Up", entry.Up),
-				new XElement("Down", entry.Down)
+				entry.Up.ToXElement("Up"),
+				entry.Down.ToXElement("Down")
 			);
 		}
 
@@ -180,7 +180,7 @@ namespace TrainEditor2.IO.IntermediateFile
 				new XElement("BrakeType", brake.BrakeType),
 				new XElement("LocoBrakeType", brake.LocoBrakeType),
 				new XElement("BrakeControlSystem", brake.BrakeControlSystem),
-				new XElement("BrakeControlSpeed", brake.BrakeControlSpeed)
+				brake.BrakeControlSpeed.ToXElement("BrakeControlSpeed")
 			);
 		}
 
@@ -269,10 +269,10 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new XElement("Acceleration",
 				acceleration.Entries.Select(entry => new XElement("Entry",
-					new XElement("a0", entry.A0),
-					new XElement("a1", entry.A1),
-					new XElement("v1", entry.V1),
-					new XElement("v2", entry.V2),
+					entry.A0.ToXElement("a0"),
+					entry.A1.ToXElement("a1"),
+					entry.V1.ToXElement("v1"),
+					entry.V2.ToXElement("v2"),
 					new XElement("e", entry.E.ToString(culture))
 				))
 			);
@@ -299,7 +299,10 @@ namespace TrainEditor2.IO.IntermediateFile
 				new XElement("Vertices",
 					vertices.Select(vertex => new XElement("Vertex",
 						new XElement("Id", vertex.Key.ToString(culture)),
-						new XElement("Position", $"{vertex.Value.X.ToString(culture)}, {vertex.Value.Y.ToString(culture)}")
+						new XElement("Position",
+							new XAttribute("Unit", vertex.Value.X.UnitValue),
+							$"{vertex.Value.X.Value.ToString(culture)}, {vertex.Value.Y.ToString(culture)}"
+						)
 					))
 				),
 				new XElement("Lines",
@@ -317,8 +320,8 @@ namespace TrainEditor2.IO.IntermediateFile
 				new XElement("Areas",
 					areas.Select(area => new XElement("Area",
 						new XElement("Index", area.Index.ToString(culture)),
-						new XElement("LeftX", area.LeftX.ToString(culture)),
-						new XElement("RightX", area.RightX.ToString(culture))
+						area.LeftX.ToXElement("LeftX"),
+						area.RightX.ToXElement("RightX")
 					))
 				)
 			);

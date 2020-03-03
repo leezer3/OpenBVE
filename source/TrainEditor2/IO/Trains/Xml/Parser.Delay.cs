@@ -5,6 +5,7 @@ using System.Xml;
 using System.Xml.Linq;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Units;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.Systems;
 
@@ -48,7 +49,9 @@ namespace TrainEditor2.IO.Trains.Xml
 			entries.Clear();
 
 			double[] up = new double[0];
+			Unit.Time[] upUnits = new Unit.Time[0];
 			double[] down = new double[0];
+			Unit.Time[] downUnits = new Unit.Time[0];
 
 			string section = parent.Name.LocalName;
 
@@ -77,6 +80,20 @@ namespace TrainEditor2.IO.Trains.Xml
 								})
 								.Where(x => x >= 0.0)
 								.ToArray();
+
+							upUnits = keyNode.Attributes().FirstOrDefault(x => string.Equals(x.Name.LocalName, "Unit", StringComparison.InvariantCultureIgnoreCase))?.Value.Split(',')
+								.Select(x =>
+								{
+									Unit.Time result;
+
+									if (!Unit.TryParse(x, true, out result))
+									{
+										Interface.AddMessage(MessageType.Error, false, $"Unit is invalid value in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+									}
+
+									return result;
+								})
+								.ToArray();
 						}
 						break;
 					case "down":
@@ -96,6 +113,20 @@ namespace TrainEditor2.IO.Trains.Xml
 								})
 								.Where(x => x >= 0.0)
 								.ToArray();
+
+							downUnits = keyNode.Attributes().FirstOrDefault(x => string.Equals(x.Name.LocalName, "Unit", StringComparison.InvariantCultureIgnoreCase))?.Value.Split(',')
+								.Select(x =>
+								{
+									Unit.Time result;
+
+									if (!Unit.TryParse(x, true, out result))
+									{
+										Interface.AddMessage(MessageType.Error, false, $"Unit is invalid value in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
+									}
+
+									return result;
+								})
+								.ToArray();
 						}
 						break;
 					default:
@@ -110,12 +141,12 @@ namespace TrainEditor2.IO.Trains.Xml
 
 				if (i < up.Length)
 				{
-					entry.Up = up[i];
+					entry.Up = new Quantity.Time(up[i], upUnits != null && i < upUnits.Length ? upUnits[i] : Unit.Time.Second);
 				}
 
 				if (i < down.Length)
 				{
-					entry.Down = down[i];
+					entry.Down = new Quantity.Time(down[i], downUnits != null && i < downUnits.Length ? downUnits[i] : Unit.Time.Second);
 				}
 
 				entries.Add(entry);

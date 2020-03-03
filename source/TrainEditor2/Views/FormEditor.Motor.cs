@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using OpenBveApi.Units;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -112,6 +114,58 @@ namespace TrainEditor2.Views
 				.BindTo(
 					groupBoxArea,
 					x => x.Enabled
+				)
+				.AddTo(motorDisposable);
+
+			motor.VelocityUnit
+				.BindTo(
+					comboBoxMotorXUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Velocity)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxMotorXUnit.SelectedIndexChanged += h,
+							h => comboBoxMotorXUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(motorDisposable);
+
+			motor.VelocityUnit
+				.BindTo(
+					labelMotorMinVelocityUnit,
+					x => x.Text,
+					BindingMode.OneWay,
+					x => Unit.GetRewords(x).First()
+				)
+				.AddTo(motorDisposable);
+
+			motor.VelocityUnit
+				.BindTo(
+					labelMotorMaxVelocityUnit,
+					x => x.Text,
+					BindingMode.OneWay,
+					x => Unit.GetRewords(x).First()
+				)
+				.AddTo(motorDisposable);
+
+			motor.VelocityUnit
+				.BindTo(
+					labelDirectXUnit,
+					x => x.Text,
+					BindingMode.OneWay,
+					x => Unit.GetRewords(x).First()
+				)
+				.AddTo(motorDisposable);
+
+			motor.VelocityUnit
+				.BindTo(
+					labelMotorAreaUnit,
+					x => x.Text,
+					BindingMode.OneWay,
+					x => Unit.GetRewords(x).First()
 				)
 				.AddTo(motorDisposable);
 
@@ -239,7 +293,7 @@ namespace TrainEditor2.Views
 				.BindTo(
 					toolStripStatusLabelX,
 					x => x.Text,
-					x => $"{Utilities.GetInterfaceString("motor_sound_settings", "status", "xy", "velocity")}: {x.ToString("0.00", culture)} km/h"
+					x => $"{Utilities.GetInterfaceString("motor_sound_settings", "status", "xy", "velocity")}: {x.ToString(culture)} {Unit.GetRewords(motor.VelocityUnit.Value)}"
 				)
 				.AddTo(motorDisposable);
 
@@ -247,7 +301,7 @@ namespace TrainEditor2.Views
 				.BindTo(
 					toolStripStatusLabelY,
 					x => x.Text,
-					x => motor.CurrentInputMode.Value == Motor.InputMode.Pitch ? $"{Utilities.GetInterfaceString("motor_sound_settings", "status", "xy", "pitch")}: {x.ToString("0.00", culture)} " : toolStripStatusLabelY.Text
+					x => motor.CurrentInputMode.Value == Motor.InputMode.Pitch ? $"{Utilities.GetInterfaceString("motor_sound_settings", "status", "xy", "pitch")}: {x.ToString(culture)} " : toolStripStatusLabelY.Text
 				)
 				.AddTo(motorDisposable);
 
@@ -482,6 +536,22 @@ namespace TrainEditor2.Views
 
 			motor.Acceleration
 				.BindToErrorProvider(errorProvider, textBoxMotorAccel)
+				.AddTo(motorDisposable);
+
+			motor.AccelerationUnit
+				.BindTo(
+					comboBoxMotorAccelUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Acceleration)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxMotorAccelUnit.SelectedIndexChanged += h,
+							h => comboBoxMotorAccelUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
 				.AddTo(motorDisposable);
 
 			motor.StartSpeed

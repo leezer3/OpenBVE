@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using OpenBveApi.Units;
 using Prism.Mvvm;
 using TrainEditor2.Extensions;
 using TrainEditor2.Models.Others;
@@ -16,13 +17,13 @@ namespace TrainEditor2.Models.Trains
 	{
 		internal class Entry : BindableBase, ICloneable
 		{
-			private double a0;
-			private double a1;
-			private double v1;
-			private double v2;
+			private Quantity.Acceleration a0;
+			private Quantity.Acceleration a1;
+			private Quantity.Velocity v1;
+			private Quantity.Velocity v2;
 			private double e;
 
-			internal double A0
+			internal Quantity.Acceleration A0
 			{
 				get
 				{
@@ -34,7 +35,7 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			internal double A1
+			internal Quantity.Acceleration A1
 			{
 				get
 				{
@@ -46,7 +47,7 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			internal double V1
+			internal Quantity.Velocity V1
 			{
 				get
 				{
@@ -58,7 +59,7 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			internal double V2
+			internal Quantity.Velocity V2
 			{
 				get
 				{
@@ -84,8 +85,8 @@ namespace TrainEditor2.Models.Trains
 
 			internal Entry()
 			{
-				A0 = A1 = 1.0;
-				V1 = V2 = 25.0;
+				A0 = A1 = new Quantity.Acceleration(1.0, Unit.Acceleration.KilometerPerHourPerSecond);
+				V1 = V2 = new Quantity.Velocity(25.0, Unit.Velocity.KilometerPerHour);
 				E = 1.0;
 			}
 
@@ -96,16 +97,21 @@ namespace TrainEditor2.Models.Trains
 		}
 
 		private int selectedEntryIndex;
-		private double minVelocity;
-		private double maxVelocity;
-		private double minAcceleration;
-		private double maxAcceleration;
-		private double nowVelocity;
-		private double nowAcceleration;
+		private Unit.Velocity velocityUnit;
+		private Unit.Acceleration accelerationUnit;
+		private Quantity.Velocity minVelocity;
+		private Quantity.Velocity maxVelocity;
+		private Quantity.Acceleration minAcceleration;
+		private Quantity.Acceleration maxAcceleration;
+		private Quantity.Velocity nowVelocity;
+		private Quantity.Acceleration nowAcceleration;
 		private bool resistance;
 		private int imageWidth;
 		private int imageHeight;
 		private Bitmap image;
+
+		private double FactorVelocity => ImageWidth / (MaxVelocity - MinVelocity);
+		private double FactorAcceleration => -ImageHeight / (MaxAcceleration - MinAcceleration);
 
 		internal ObservableCollection<Entry> Entries;
 
@@ -133,15 +139,53 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
+		internal Unit.Velocity VelocityUnit
+		{
+			get
+			{
+				return velocityUnit;
+			}
+			set
+			{
+				SetProperty(ref velocityUnit, value);
+
+				minVelocity = minVelocity.ToNewUnit(value);
+				OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVelocity)));
+				maxVelocity = maxVelocity.ToNewUnit(value);
+				OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVelocity)));
+				nowVelocity = nowVelocity.ToNewUnit(value);
+				OnPropertyChanged(new PropertyChangedEventArgs(nameof(NowVelocity)));
+			}
+		}
+
+		internal Unit.Acceleration AccelerationUnit
+		{
+			get
+			{
+				return accelerationUnit;
+			}
+			set
+			{
+				SetProperty(ref accelerationUnit, value);
+
+				minAcceleration = minAcceleration.ToNewUnit(value);
+				OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinAcceleration)));
+				maxAcceleration = maxAcceleration.ToNewUnit(value);
+				OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxAcceleration)));
+				nowAcceleration = nowAcceleration.ToNewUnit(value);
+				OnPropertyChanged(new PropertyChangedEventArgs(nameof(NowAcceleration)));
+			}
+		}
+
 		internal double MinVelocity
 		{
 			get
 			{
-				return minVelocity;
+				return minVelocity.Value;
 			}
 			set
 			{
-				SetProperty(ref minVelocity, value);
+				SetProperty(ref minVelocity, new Quantity.Velocity(value, VelocityUnit));
 			}
 		}
 
@@ -149,11 +193,11 @@ namespace TrainEditor2.Models.Trains
 		{
 			get
 			{
-				return maxVelocity;
+				return maxVelocity.Value;
 			}
 			set
 			{
-				SetProperty(ref maxVelocity, value);
+				SetProperty(ref maxVelocity, new Quantity.Velocity(value, VelocityUnit));
 			}
 		}
 
@@ -161,11 +205,11 @@ namespace TrainEditor2.Models.Trains
 		{
 			get
 			{
-				return minAcceleration;
+				return minAcceleration.Value;
 			}
 			set
 			{
-				SetProperty(ref minAcceleration, value);
+				SetProperty(ref minAcceleration, new Quantity.Acceleration(value, AccelerationUnit));
 			}
 		}
 
@@ -173,11 +217,11 @@ namespace TrainEditor2.Models.Trains
 		{
 			get
 			{
-				return maxAcceleration;
+				return maxAcceleration.Value;
 			}
 			set
 			{
-				SetProperty(ref maxAcceleration, value);
+				SetProperty(ref maxAcceleration, new Quantity.Acceleration(value, AccelerationUnit));
 			}
 		}
 
@@ -185,11 +229,11 @@ namespace TrainEditor2.Models.Trains
 		{
 			get
 			{
-				return nowVelocity;
+				return nowVelocity.Value;
 			}
 			set
 			{
-				SetProperty(ref nowVelocity, value);
+				SetProperty(ref nowVelocity, new Quantity.Velocity(value, VelocityUnit));
 			}
 		}
 
@@ -197,11 +241,11 @@ namespace TrainEditor2.Models.Trains
 		{
 			get
 			{
-				return nowAcceleration;
+				return nowAcceleration.Value;
 			}
 			set
 			{
-				SetProperty(ref nowAcceleration, value);
+				SetProperty(ref nowAcceleration, new Quantity.Acceleration(value, AccelerationUnit));
 			}
 		}
 
@@ -248,7 +292,7 @@ namespace TrainEditor2.Models.Trains
 				return image;
 			}
 			set
-			{
+ 			{
 				SetProperty(ref image, value);
 			}
 		}
@@ -264,12 +308,15 @@ namespace TrainEditor2.Models.Trains
 
 			SelectedEntryIndex = 0;
 
+			VelocityUnit = Unit.Velocity.KilometerPerHour;
+			AccelerationUnit = Unit.Acceleration.KilometerPerHourPerSecond;
 			MinVelocity = 0.0;
 			MaxVelocity = 160.0;
 			MinAcceleration = 0.0;
 			MaxAcceleration = 4.0;
 			NowVelocity = 0.0;
 			NowAcceleration = 0.0;
+
 			Resistance = false;
 
 			ImageWidth = 576;
@@ -286,59 +333,55 @@ namespace TrainEditor2.Models.Trains
 			return acceleration;
 		}
 
-		internal double XtoVelocity(double x)
+		internal Quantity.Velocity XtoVelocity(double x)
 		{
-			double factorVelocity = ImageWidth / (MaxVelocity - MinVelocity);
-			return MinVelocity + x / factorVelocity;
+			return new Quantity.Velocity(MinVelocity + x / FactorVelocity, VelocityUnit);
 		}
 
-		internal double YtoAcceleration(double y)
+		internal Quantity.Acceleration YtoAcceleration(double y)
 		{
-			double factorAcceleration = -ImageHeight / (MaxAcceleration - MinAcceleration);
-			return MinAcceleration + (y - ImageHeight) / factorAcceleration;
+			return new Quantity.Acceleration(MinAcceleration + (y - ImageHeight) / FactorAcceleration, AccelerationUnit);
 		}
 
-		internal double VelocityToX(double v)
+		internal double VelocityToX(Quantity.Velocity v)
 		{
-			double factorVelocity = ImageWidth / (MaxVelocity - MinVelocity);
-			return (v - MinVelocity) * factorVelocity;
+			return (v - minVelocity).ToNewUnit(VelocityUnit).Value * FactorVelocity;
 		}
 
-		internal double AccelerationToY(double a)
+		internal double AccelerationToY(Quantity.Acceleration a)
 		{
-			double factorAcceleration = -ImageHeight / (MaxAcceleration - MinAcceleration);
-			return ImageHeight + (a - MinAcceleration) * factorAcceleration;
+			return ImageHeight + (a - minAcceleration).ToNewUnit(AccelerationUnit).Value * FactorAcceleration;
 		}
 
-		internal double GetAcceleration(Entry entry, double velocity)
+		internal Quantity.Acceleration GetAcceleration(Entry entry, Quantity.Velocity velocity)
 		{
-			velocity /= 3.6;
-			double a0 = entry.A0 / 3.6;
-			double a1 = entry.A1 / 3.6;
-			double v1 = entry.V1 / 3.6;
-			double v2 = entry.V2 / 3.6;
+			double v = velocity.ToDefaultUnit().Value;
+			double a0 = entry.A0.ToDefaultUnit().Value;
+			double a1 = entry.A1.ToDefaultUnit().Value;
+			double v1 = entry.V1.ToDefaultUnit().Value;
+			double v2 = entry.V2.ToDefaultUnit().Value;
 			double e = entry.E;
 			double a;
 
 			// ReSharper disable once CompareOfFloatsByEqualityOperator
-			if (velocity == 0.0)
+			if (v == 0.0)
 			{
 				a = a0;
 			}
-			else if (velocity < v1)
+			else if (v < v1)
 			{
-				a = a0 + (a1 - a0) * velocity / v1;
+				a = a0 + (a1 - a0) * v / v1;
 			}
-			else if (velocity < v2)
+			else if (v < v2)
 			{
-				a = v1 * a1 / velocity;
+				a = v1 * a1 / v;
 			}
 			else
 			{
-				a = v1 * a1 * Math.Pow(v2, e - 1.0) * Math.Pow(velocity, -e);
+				a = v1 * a1 * Math.Pow(v2, e - 1.0) * Math.Pow(v, -e);
 			}
 
-			return a * 3.6;
+			return new Quantity.Acceleration(a);
 		}
 
 		internal void ZoomIn()
@@ -365,8 +408,8 @@ namespace TrainEditor2.Models.Trains
 
 		internal void Reset()
 		{
-			Utilities.Reset(0.5 * 160.0, ref minVelocity, ref maxVelocity);
-			Utilities.Reset(0.5 * 4.0, ref minAcceleration, ref maxAcceleration);
+			Utilities.Reset(new Quantity.Velocity(0.5 * 160.0, VelocityUnit), ref minVelocity, ref maxVelocity);
+			Utilities.Reset(new Quantity.Acceleration(0.5 * 4.0, AccelerationUnit), ref minAcceleration, ref maxAcceleration);
 
 			OnPropertyChanged(new PropertyChangedEventArgs(nameof(MinVelocity)));
 			OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVelocity)));
@@ -408,8 +451,8 @@ namespace TrainEditor2.Models.Trains
 
 		internal void MouseMove(InputEventModel.EventArgs position)
 		{
-			NowVelocity = 0.01 * Math.Round(100.0 * XtoVelocity(position.X));
-			NowAcceleration = 0.01 * Math.Round(100.0 * YtoAcceleration(position.Y));
+			NowVelocity = 0.01 * Math.Round(100.0 * XtoVelocity(position.X).Value);
+			NowAcceleration = 0.01 * Math.Round(100.0 * YtoAcceleration(position.Y).Value);
 		}
 	}
 }

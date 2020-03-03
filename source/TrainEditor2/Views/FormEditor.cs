@@ -261,10 +261,13 @@ namespace TrainEditor2.Views
 				comboBox.DrawItem += ToolStripComboBoxIndex_DrawItem;
 			}
 
-			string[] massUnits = Enum.GetValues(typeof(Unit.Mass)).OfType<Enum>().Select(x => Unit.GetRewords(x).First()).ToArray();
-			string[] lengthUnits = Enum.GetValues(typeof(Unit.Length)).OfType<Enum>().Select(x => Unit.GetRewords(x).First()).ToArray();
-			string[] pressureRateUnits = Enum.GetValues(typeof(Unit.PressureRate)).OfType<Enum>().Select(x => Unit.GetRewords(x).First()).ToArray();
-			string[] pressureUnits = Enum.GetValues(typeof(Unit.Pressure)).OfType<Enum>().Select(x => Unit.GetRewords(x).First()).ToArray();
+			string[] massUnits = Unit.GetAllRewords<Unit.Mass>();
+			string[] lengthUnits = Unit.GetAllRewords<Unit.Length>();
+			string[] areaUnits = Unit.GetAllRewords<Unit.Area>();
+			string[] pressureRateUnits = Unit.GetAllRewords<Unit.PressureRate>();
+			string[] pressureUnits = Unit.GetAllRewords<Unit.Pressure>();
+			string[] accelerationUnits = Unit.GetAllRewords<Unit.Acceleration>();
+			string[] velocityUnits = Unit.GetAllRewords<Unit.Velocity>();
 
 			comboBoxMassUnit.Items.AddRange((string[])massUnits.Clone());
 			comboBoxLengthUnit.Items.AddRange((string[])lengthUnits.Clone());
@@ -273,6 +276,8 @@ namespace TrainEditor2.Views
 			comboBoxCenterOfMassHeightUnit.Items.AddRange((string[])lengthUnits.Clone());
 			comboBoxFrontAxleUnit.Items.AddRange((string[])lengthUnits.Clone());
 			comboBoxRearAxleUnit.Items.AddRange((string[])lengthUnits.Clone());
+			comboBoxExposedFrontalAreaUnit.Items.AddRange((string[])areaUnits.Clone());
+			comboBoxUnexposedFrontalAreaUnit.Items.AddRange((string[])areaUnits.Clone());
 
 			comboBoxCabXUnit.Items.AddRange((string[])lengthUnits.Clone());
 			comboBoxCabYUnit.Items.AddRange((string[])lengthUnits.Clone());
@@ -312,6 +317,21 @@ namespace TrainEditor2.Views
 			comboBoxBrakeCylinderEmergencyMaximumPressureUnit.Items.AddRange((string[])pressureUnits.Clone());
 			comboBoxBrakeCylinderEmergencyRateUnit.Items.AddRange((string[])pressureRateUnits.Clone());
 			comboBoxBrakeCylinderReleaseRateUnit.Items.AddRange((string[])pressureRateUnits.Clone());
+
+			comboBoxDecelerationUnit.Items.AddRange((string[])accelerationUnits.Clone());
+
+			comboBoxBrakeControlSpeedUnit.Items.AddRange((string[])velocityUnits.Clone());
+
+			comboBoxAccelA0Unit.Items.AddRange((string[])accelerationUnits.Clone());
+			comboBoxAccelA1Unit.Items.AddRange((string[])accelerationUnits.Clone());
+			comboBoxAccelV1Unit.Items.AddRange((string[])velocityUnits.Clone());
+			comboBoxAccelV2Unit.Items.AddRange((string[])velocityUnits.Clone());
+
+			comboBoxAccelXUnit.Items.AddRange((string[])velocityUnits.Clone());
+			comboBoxAccelYUnit.Items.AddRange((string[])accelerationUnits.Clone());
+
+			comboBoxMotorXUnit.Items.AddRange((string[])velocityUnits.Clone());
+			comboBoxMotorAccelUnit.Items.AddRange((string[])accelerationUnits.Clone());
 
 			Icon = WinFormsUtilities.GetIcon();
 
@@ -643,7 +663,14 @@ namespace TrainEditor2.Views
 		private void GlControlMotor_Load(object sender, EventArgs e)
 		{
 			glControlMotor.MakeCurrent();
+
 			Program.Renderer.Initialize(Program.CurrentHost, Interface.CurrentOptions);
+			GL.Enable(EnableCap.PointSmooth);
+			GL.Enable(EnableCap.PolygonSmooth);
+			GL.Hint(HintTarget.PointSmoothHint, HintMode.Nicest);
+			GL.Hint(HintTarget.PolygonSmoothHint, HintMode.Nicest);
+			GL.Enable(EnableCap.Blend);
+			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 		}
 
 		private void GlControlMotor_Resize(object sender, EventArgs e)

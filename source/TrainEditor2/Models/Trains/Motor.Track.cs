@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using OpenTK;
+using OpenBveApi.Units;
 using Prism.Mvvm;
 using TrainEditor2.Models.Dialogs;
 using TrainEditor2.Models.Others;
@@ -13,12 +13,12 @@ namespace TrainEditor2.Models.Trains
 	{
 		internal class Vertex : ICloneable
 		{
-			internal double X;
+			internal Quantity.Velocity X;
 			internal double Y;
 			internal bool Selected;
 			internal bool IsOrigin;
 
-			internal Vertex(double x, double y)
+			internal Vertex(Quantity.Velocity x, double y)
 			{
 				X = x;
 				Y = y;
@@ -53,12 +53,12 @@ namespace TrainEditor2.Models.Trains
 
 		internal class Area : ICloneable
 		{
-			internal double LeftX;
-			internal double RightX;
+			internal Quantity.Velocity LeftX;
+			internal Quantity.Velocity RightX;
 			internal int Index;
 			internal bool TBD;
 
-			internal Area(double leftX, double rightX, int index)
+			internal Area(Quantity.Velocity leftX, Quantity.Velocity rightX, int index)
 			{
 				LeftX = leftX;
 				RightX = rightX;
@@ -83,9 +83,9 @@ namespace TrainEditor2.Models.Trains
 
 			internal void Add(Vertex vertex)
 			{
-				if (this.Any(v => v.Value.X == vertex.X))
+				if (this.Any(v => v.Value.X.Equals(vertex.X, true)))
 				{
-					int id = this.First(v => v.Value.X == vertex.X).Key;
+					int id = this.First(v => v.Value.X.Equals(vertex.X, true)).Key;
 					base[id] = vertex;
 				}
 				else
@@ -139,44 +139,69 @@ namespace TrainEditor2.Models.Trains
 			Started
 		}
 
-		internal class SelectedRange
+		private struct Range
 		{
-			internal Box2d Range
+			internal Quantity.Velocity LeftX
 			{
 				get;
-				// ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local
-				private set;
+			}
+
+			internal Quantity.Velocity RightX
+			{
+				get;
+			}
+
+			internal double TopY
+			{
+				get;
+			}
+
+			internal double BottomY
+			{
+				get;
+			}
+
+			internal Range(Quantity.Velocity leftX, Quantity.Velocity rightX, double topY, double bottomY)
+			{
+				LeftX = leftX;
+				RightX = rightX;
+				TopY = topY;
+				BottomY = bottomY;
+			}
+		}
+
+		private class SelectedRange
+		{
+			internal Range Range
+			{
+				get;
 			}
 
 			internal Vertex[] SelectedVertices
 			{
 				get;
-				// ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local
-				private set;
 			}
 
 			internal Line[] SelectedLines
 			{
 				get;
-				// ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local
-				private set;
 			}
 
-			private SelectedRange(Box2d range, Vertex[] selectedVertices, Line[] selectedLines)
+			private SelectedRange(Range range, Vertex[] selectedVertices, Line[] selectedLines)
 			{
 				Range = range;
 				SelectedVertices = selectedVertices;
 				SelectedLines = selectedLines;
 			}
 
-			internal static SelectedRange CreateSelectedRange(VertexLibrary vertices, ICollection<Line> lines, double leftX, double rightX, double topY, double bottomY)
+			internal static SelectedRange CreateSelectedRange(VertexLibrary vertices, IEnumerable<Line> lines, Quantity.Velocity leftX, Quantity.Velocity rightX, double topY, double bottomY)
 			{
 				Func<Vertex, bool> conditionVertex = v => v.X >= leftX && v.X <= rightX && v.Y >= bottomY && v.Y <= topY;
 
 				Vertex[] selectedVertices = vertices.Values.Where(v => conditionVertex(v)).ToArray();
-				Line[] selectedLines = lines.Where(l => selectedVertices.Any(v => v.X == vertices[l.LeftID].X) && selectedVertices.Any(v => v.X == vertices[l.RightID].X)).ToArray();
+				Line[] selectedLines = lines.Where(l => selectedVertices.Any(v => v.X.Equals(vertices[l.LeftID].X, true)) && selectedVertices.Any(v => v.X.Equals(vertices[l.RightID].X, true))).ToArray();
 
-				return new SelectedRange(new Box2d(leftX, topY, rightX, bottomY), selectedVertices, selectedLines);
+				return new SelectedRange(new Range(leftX, rightX, topY, bottomY), selectedVertices, selectedLines);
 			}
 		}
 

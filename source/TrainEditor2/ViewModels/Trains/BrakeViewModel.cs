@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using OpenBveApi.Units;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -28,6 +29,11 @@ namespace TrainEditor2.ViewModels.Trains
 			get;
 		}
 
+		internal ReactiveProperty<Unit.Velocity> BrakeControlSpeedUnit
+		{
+			get;
+		}
+
 		internal BrakeViewModel(Brake brake)
 		{
 			CultureInfo culture = CultureInfo.InvariantCulture;
@@ -47,8 +53,8 @@ namespace TrainEditor2.ViewModels.Trains
 			BrakeControlSpeed = brake
 				.ToReactivePropertyAsSynchronized(
 					x => x.BrakeControlSpeed,
-					x => x.ToString(culture),
-					x => double.Parse(x, NumberStyles.Float, culture),
+					x => x.Value.ToString(culture),
+					x => new Quantity.Velocity(double.Parse(x, NumberStyles.Float, culture), brake.BrakeControlSpeed.UnitValue),
 					ignoreValidationErrorValue: true
 				)
 				.SetValidateNotifyError(x =>
@@ -60,6 +66,14 @@ namespace TrainEditor2.ViewModels.Trains
 
 					return message;
 				})
+				.AddTo(disposable);
+
+			BrakeControlSpeedUnit = brake
+				.ToReactivePropertyAsSynchronized(
+					x => x.BrakeControlSpeed,
+					x => x.UnitValue,
+					x => brake.BrakeControlSpeed.ToNewUnit(x)
+				)
 				.AddTo(disposable);
 		}
 	}

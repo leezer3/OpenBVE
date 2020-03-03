@@ -178,8 +178,8 @@ namespace TrainEditor2.IO.IntermediateFile
 			car.FrontBogie = ParseBogieNode(parent.Element("FrontBogie"));
 			car.RearBogie = ParseBogieNode(parent.Element("RearBogie"));
 
-			car.ExposedFrontalArea = (double)parent.Element("ExposedFrontalArea");
-			car.UnexposedFrontalArea = (double)parent.Element("UnexposedFrontalArea");
+			car.ExposedFrontalArea = Quantity.Area.Parse(parent.Element("ExposedFrontalArea"));
+			car.UnexposedFrontalArea = Quantity.Area.Parse(parent.Element("UnexposedFrontalArea"));
 
 			car.Performance = ParsePerformanceNode(parent.Element("Performance"));
 			car.Delay = ParseDelayNode(fileVersion, parent.Element("Delay"));
@@ -190,10 +190,10 @@ namespace TrainEditor2.IO.IntermediateFile
 			}
 			else
 			{
-				car.Jerk.Power.Up = (double)parent.XPathSelectElement("Move/JerkPowerUp");
-				car.Jerk.Power.Down = (double)parent.XPathSelectElement("Move/JerkPowerDown");
-				car.Jerk.Brake.Up = (double)parent.XPathSelectElement("Move/JerkBrakeUp");
-				car.Jerk.Brake.Down = (double)parent.XPathSelectElement("Move/JerkBrakeDown");
+				car.Jerk.Power.Up = new Quantity.Jerk((double)parent.XPathSelectElement("Move/JerkPowerUp"), Unit.Jerk.CentimeterPerSecondCubed);
+				car.Jerk.Power.Down = new Quantity.Jerk((double)parent.XPathSelectElement("Move/JerkPowerDown"), Unit.Jerk.CentimeterPerSecondCubed);
+				car.Jerk.Brake.Up = new Quantity.Jerk((double)parent.XPathSelectElement("Move/JerkBrakeUp"), Unit.Jerk.CentimeterPerSecondCubed);
+				car.Jerk.Brake.Down = new Quantity.Jerk((double)parent.XPathSelectElement("Move/JerkBrakeDown"), Unit.Jerk.CentimeterPerSecondCubed);
 			}
 
 			car.Brake = ParseBrakeNode(parent.Element("Brake"));
@@ -221,7 +221,7 @@ namespace TrainEditor2.IO.IntermediateFile
 			if (motorCar != null)
 			{
 				motorCar.Acceleration = ParseAccelerationNode(parent.Element("Acceleration"));
-				motorCar.Motor = ParseMotorNode(parent.Element("Motor"));
+				motorCar.Motor = ParseMotorNode(fileVersion, parent.Element("Motor"));
 			}
 
 			if (isControlledCar)
@@ -257,7 +257,7 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new Performance
 			{
-				Deceleration = (double)parent.Element("Deceleration"),
+				Deceleration = Quantity.Acceleration.Parse(parent.Element("Deceleration"), false, Unit.Acceleration.KilometerPerHourPerSecond),
 				CoefficientOfStaticFriction = (double)parent.Element("CoefficientOfStaticFriction"),
 				CoefficientOfRollingResistance = (double)parent.Element("CoefficientOfRollingResistance"),
 				AerodynamicDragCoefficient = (double)parent.Element("AerodynamicDragCoefficient")
@@ -278,8 +278,8 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new Delay.Entry
 			{
-				Up = (double)parent.Element("Up"),
-				Down = (double)parent.Element("Down")
+				Up = Quantity.Time.Parse(parent.Element("Up")),
+				Down = Quantity.Time.Parse(parent.Element("Down"))
 			};
 		}
 
@@ -296,8 +296,8 @@ namespace TrainEditor2.IO.IntermediateFile
 		{
 			return new Jerk.Entry
 			{
-				Up = (double)parent.Element("Up"),
-				Down = (double)parent.Element("Down")
+				Up = Quantity.Jerk.Parse(parent.Element("Up")),
+				Down = Quantity.Jerk.Parse(parent.Element("Down"))
 			};
 		}
 
@@ -308,7 +308,7 @@ namespace TrainEditor2.IO.IntermediateFile
 				BrakeType = (Brake.BrakeTypes)Enum.Parse(typeof(Brake.BrakeTypes), (string)parent.Element("BrakeType")),
 				LocoBrakeType = (Brake.LocoBrakeTypes)Enum.Parse(typeof(Brake.LocoBrakeTypes), (string)parent.Element("LocoBrakeType")),
 				BrakeControlSystem = (Brake.BrakeControlSystems)Enum.Parse(typeof(Brake.BrakeControlSystems), (string)parent.Element("BrakeControlSystem")),
-				BrakeControlSpeed = (double)parent.Element("BrakeControlSpeed")
+				BrakeControlSpeed = Quantity.Velocity.Parse(parent.Element("BrakeControlSpeed"), false, Unit.Velocity.KilometerPerHour)
 			};
 		}
 
@@ -429,23 +429,23 @@ namespace TrainEditor2.IO.IntermediateFile
 			{
 				Entries = new ObservableCollection<Acceleration.Entry>(parent.Elements("Entry").Select(n => new Acceleration.Entry
 				{
-					A0 = (double)n.Element("a0"),
-					A1 = (double)n.Element("a1"),
-					V1 = (double)n.Element("v1"),
-					V2 = (double)n.Element("v2"),
+					A0 = Quantity.Acceleration.Parse(n.Element("a0"), false, Unit.Acceleration.KilometerPerHourPerSecond),
+					A1 = Quantity.Acceleration.Parse(n.Element("a1"), false, Unit.Acceleration.KilometerPerHourPerSecond),
+					V1 = Quantity.Velocity.Parse(n.Element("v1"), false, Unit.Velocity.KilometerPerHour),
+					V2 = Quantity.Velocity.Parse(n.Element("v2"), false, Unit.Velocity.KilometerPerHour),
 					E = (double)n.Element("e")
 				}))
 			};
 		}
 
-		private static Motor ParseMotorNode(XElement parent)
+		private static Motor ParseMotorNode(FileVersion fileVersion, XElement parent)
 		{
 			Motor motor = new Motor();
-			motor.Tracks = new ObservableCollection<Motor.Track>(parent.Elements("Track").Select((x, y) => ParseTrackNode(motor, x, y)));
+			motor.Tracks = new ObservableCollection<Motor.Track>(parent.Elements("Track").Select((x, y) => ParseTrackNode(fileVersion, motor, x, y)));
 			return motor;
 		}
 
-		private static Motor.Track ParseTrackNode(Motor baseMotor, XElement parent, int index)
+		private static Motor.Track ParseTrackNode(FileVersion fileVersion, Motor baseMotor, XElement parent, int index)
 		{
 			Motor.Track track = new Motor.Track(baseMotor);
 
@@ -460,22 +460,30 @@ namespace TrainEditor2.IO.IntermediateFile
 				track.Type = index % 4 < 2 ? Motor.TrackType.Power : Motor.TrackType.Brake;
 			}
 
-			ParseVertexLineNode(parent.Element("Pitch"), out track.PitchVertices, out track.PitchLines);
-			ParseVertexLineNode(parent.Element("Volume"), out track.VolumeVertices, out track.VolumeLines);
+			ParseVertexLineNode(fileVersion, parent.Element("Pitch"), out track.PitchVertices, out track.PitchLines);
+			ParseVertexLineNode(fileVersion, parent.Element("Volume"), out track.VolumeVertices, out track.VolumeLines);
 			ParseAreaNode(parent.Element("SoundIndex"), out track.SoundIndices);
 
 			return track;
 		}
 
-		private static void ParseVertexLineNode(XElement parent, out Motor.VertexLibrary vertices, out List<Motor.Line> lines)
+		private static void ParseVertexLineNode(FileVersion fileVersion, XElement parent, out Motor.VertexLibrary vertices, out List<Motor.Line> lines)
 		{
 			vertices = new Motor.VertexLibrary();
 
-			foreach (XElement n in parent.XPathSelectElements("Vertices/Vertex"))
+			foreach (XElement element in parent.XPathSelectElements("Vertices/Vertex"))
 			{
-				double[] position = ((string)n.Element("Position")).Split(',').Select(double.Parse).ToArray();
+				XElement positionNode = element.Element("Position");
 
-				vertices.Add((int)n.Element("Id"), new Motor.Vertex(position[0], position[1]));
+				if (positionNode == null)
+				{
+					continue;
+				}
+
+				double[] positionValues = ((string)positionNode).Split(',').Select(double.Parse).ToArray();
+				Unit.Velocity[] positionUnitValues = positionNode.Attributes("Unit").Select(x => x.Value.Split(',')).SelectMany(x => x).Select(Unit.Parse<Unit.Velocity>).ToArray();
+
+				vertices.Add((int)element.Element("Id"), new Motor.Vertex(new Quantity.Velocity(positionValues[0], fileVersion > FileVersion.v1700 ? positionUnitValues[0] : Unit.Velocity.KilometerPerHour), positionValues[1]));
 			}
 
 			lines = new List<Motor.Line>(parent.XPathSelectElements("Lines/Line").Select(n => new Motor.Line((int)n.Element("LeftID"), (int)n.Element("RightID"))));
@@ -483,7 +491,7 @@ namespace TrainEditor2.IO.IntermediateFile
 
 		private static void ParseAreaNode(XElement parent, out List<Motor.Area> areas)
 		{
-			areas = new List<Motor.Area>(parent.XPathSelectElements("Areas/Area").Select(n => new Motor.Area((double)n.Element("LeftX"), (double)n.Element("RightX"), (int)n.Element("Index"))));
+			areas = new List<Motor.Area>(parent.XPathSelectElements("Areas/Area").Select(n => new Motor.Area(Quantity.Velocity.Parse(n.Element("LeftX"), false, Unit.Velocity.KilometerPerHour), Quantity.Velocity.Parse(n.Element("RightX"), false, Unit.Velocity.KilometerPerHour), (int)n.Element("Index"))));
 		}
 
 		private static Cab ParseCabNode(XElement parent)
@@ -513,7 +521,7 @@ namespace TrainEditor2.IO.IntermediateFile
 			if (positionNode != null)
 			{
 				double[] positionValues = ((string)positionNode).Split(',').Select(double.Parse).ToArray();
-				Unit.Length[] positionUnitValues = positionNode.Attributes("Unit").Select(x => x.Value).Select(Unit.Parse<Unit.Length>).ToArray();
+				Unit.Length[] positionUnitValues = positionNode.Attributes("Unit").Select(x => x.Value.Split(',')).SelectMany(x => x).Select(Unit.Parse<Unit.Length>).ToArray();
 
 				cab.PositionX = new Quantity.Length(positionValues[0], positionUnitValues[0]);
 				cab.PositionY = new Quantity.Length(positionValues[1], positionUnitValues[1]);

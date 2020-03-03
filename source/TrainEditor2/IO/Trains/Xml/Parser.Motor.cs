@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Units;
 using SoundManager;
 using TrainEditor2.Models.Trains;
 using TrainEditor2.Simulation.TrainManager;
@@ -90,7 +92,7 @@ namespace TrainEditor2.IO.Trains.Xml
 				}
 			}
 
-			return Motor.Track.MotorSoundTableToTrack(baseMotor, trackType, new TrainManager.MotorSound.Table { PitchVertices = pitchVertices.ToArray(), GainVertices = volumeVertices.ToArray(), BufferVertices = soundIndexVertices.ToArray() }, x => x, x => x, x => x);
+			return Motor.Track.MotorSoundTableToTrack(baseMotor, trackType, new TrainManager.MotorSound.Table { PitchVertices = pitchVertices.OrderBy(x=>x.X.ToDefaultUnit().Value).ToArray(), GainVertices = volumeVertices.OrderBy(x => x.X.ToDefaultUnit().Value).ToArray(), BufferVertices = soundIndexVertices.OrderBy(x => x.X.ToDefaultUnit().Value).ToArray() }, x => x, x => x);
 		}
 
 		private static void ParseMotorVerticesNode(string fileName, XElement parent, ICollection<TrainManager.MotorSound.Vertex<float>> vertices)
@@ -112,12 +114,14 @@ namespace TrainEditor2.IO.Trains.Xml
 				if (value.Any())
 				{
 					string[] values = value.Split(',');
+					string[] unitValues = keyNode.Attributes().FirstOrDefault(x => string.Equals(x.Name.LocalName, "Unit", StringComparison.InvariantCultureIgnoreCase))?.Value.Split(',');
 
 					if (values.Length == 2)
 					{
 						float x, y;
+						Unit.Velocity xUnit = Unit.Velocity.KilometerPerHour;
 
-						if (!NumberFormats.TryParseFloatVb6(values[0], out x) || x < 0.0f)
+						if (!NumberFormats.TryParseFloatVb6(values[0], out x) || unitValues != null && unitValues.Length > 0 && !Unit.TryParse(unitValues[0], true, out xUnit) || new Quantity.VelocityF(x, xUnit).ToDefaultUnit().Value < 0.0f)
 						{
 							Interface.AddMessage(MessageType.Error, false, $"X must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 						}
@@ -127,7 +131,7 @@ namespace TrainEditor2.IO.Trains.Xml
 						}
 						else
 						{
-							vertices.Add(new TrainManager.MotorSound.Vertex<float> { X = x, Y = y });
+							vertices.Add(new TrainManager.MotorSound.Vertex<float> { X = new Quantity.VelocityF(x, xUnit), Y = y });
 						}
 					}
 					else
@@ -157,13 +161,15 @@ namespace TrainEditor2.IO.Trains.Xml
 				if (value.Any())
 				{
 					string[] values = value.Split(',');
+					string[] unitValues = keyNode.Attributes().FirstOrDefault(x => string.Equals(x.Name.LocalName, "Unit", StringComparison.InvariantCultureIgnoreCase))?.Value.Split(',');
 
 					if (values.Length == 2)
 					{
 						float x;
 						int y;
+						Unit.Velocity xUnit = Unit.Velocity.KilometerPerHour;
 
-						if (!NumberFormats.TryParseFloatVb6(values[0], out x) || x < 0.0f)
+						if (!NumberFormats.TryParseFloatVb6(values[0], out x) || unitValues != null && unitValues.Length > 0 && !Unit.TryParse(unitValues[0], true, out xUnit) || new Quantity.VelocityF(x, xUnit).ToDefaultUnit().Value < 0.0f)
 						{
 							Interface.AddMessage(MessageType.Error, false, $"X must be a non-negative floating-point number in {key} in {section} at line {lineNumber.ToString(culture)} in {fileName}");
 						}
@@ -178,7 +184,7 @@ namespace TrainEditor2.IO.Trains.Xml
 								y = -1;
 							}
 
-							vertices.Add(new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = x, Y = y });
+							vertices.Add(new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = new Quantity.VelocityF(x, xUnit), Y = y });
 						}
 					}
 					else

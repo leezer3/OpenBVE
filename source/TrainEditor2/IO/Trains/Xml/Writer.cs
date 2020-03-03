@@ -97,8 +97,8 @@ namespace TrainEditor2.IO.Trains.Xml
 			carNode.Add(
 				WriteBogieNode(fileName, "FrontBogie", car.FrontBogie),
 				WriteBogieNode(fileName, "RearBogie", car.RearBogie),
-				new XElement("ExposedFrontalArea", car.ExposedFrontalArea.ToString(culture)),
-				new XElement("UnexposedFrontalArea", car.UnexposedFrontalArea.ToString(culture)),
+				car.ExposedFrontalArea.ToXElement("ExposedFrontalArea"),
+				car.UnexposedFrontalArea.ToXElement("UnexposedFrontalArea"),
 				WritePerformanceNode(car.Performance),
 				WriteDelayNode(car.Delay),
 				WriteJerkNode(car.Jerk),
@@ -159,7 +159,7 @@ namespace TrainEditor2.IO.Trains.Xml
 		private static XElement WritePerformanceNode(Performance performance)
 		{
 			return new XElement("Performance",
-				new XElement("Deceleration", performance.Deceleration.ToString(culture)),
+				performance.Deceleration.ToXElement("Deceleration"),
 				new XElement("CoefficientOfStaticFriction", performance.CoefficientOfStaticFriction.ToString(culture)),
 				new XElement("CoefficientOfRollingResistance", performance.CoefficientOfRollingResistance.ToString(culture)),
 				new XElement("AerodynamicDragCoefficient", performance.AerodynamicDragCoefficient.ToString(culture))
@@ -178,8 +178,8 @@ namespace TrainEditor2.IO.Trains.Xml
 		private static XElement WriteDelayEntriesNode(string nodeName, ICollection<Delay.Entry> entries)
 		{
 			return new XElement(nodeName,
-				new XElement("Up", string.Join(", ", entries.Select(x => x.Up.ToString(culture)))),
-				new XElement("Down", string.Join(", ", entries.Select(x => x.Down.ToString(culture))))
+				new XElement("Up", new XAttribute("Unit", string.Join(", ", entries.Select(x => x.Up.UnitValue))), string.Join(", ", entries.Select(x => x.Up.Value.ToString(culture)))),
+				new XElement("Down", new XAttribute("Unit", string.Join(", ", entries.Select(x => x.Down.UnitValue))), string.Join(", ", entries.Select(x => x.Down.Value.ToString(culture))))
 			);
 		}
 
@@ -194,8 +194,8 @@ namespace TrainEditor2.IO.Trains.Xml
 		private static XElement WriteJerkEntryNode(string nodeName, Jerk.Entry entry)
 		{
 			return new XElement(nodeName,
-				new XElement("Up", entry.Up.ToString(culture)),
-				new XElement("Down", entry.Down.ToString(culture))
+				entry.Up.ToXElement("Up"),
+				entry.Down.ToXElement("Down")
 			);
 		}
 
@@ -205,7 +205,7 @@ namespace TrainEditor2.IO.Trains.Xml
 				new XElement("BrakeType", ((int)brake.BrakeType).ToString(culture)),
 				new XElement("LocoBrakeType", ((int)brake.LocoBrakeType).ToString(culture)),
 				new XElement("BrakeControlSystem", ((int)brake.BrakeControlSystem).ToString(culture)),
-				new XElement("BrakeControlSpeed", brake.BrakeControlSpeed.ToString(culture))
+				brake.BrakeControlSpeed.ToXElement("BrakeControlSpeed")
 			);
 		}
 
@@ -293,14 +293,16 @@ namespace TrainEditor2.IO.Trains.Xml
 		private static XElement WriteAccelerationNode(Acceleration acceleration)
 		{
 			return new XElement("Acceleration",
-				acceleration.Entries.Select(entry => new XElement("Entry", $"{entry.A0.ToString(culture)}, {entry.A1.ToString(culture)}, {entry.V1.ToString(culture)}, {entry.V2.ToString(culture)}, {entry.E.ToString(culture)}"))
+				acceleration.Entries.Select(entry => new XElement("Entry",
+					new XAttribute("Unit", $"{entry.A0.UnitValue}, {entry.A1.UnitValue}, {entry.V1.UnitValue}, {entry.V2.UnitValue}"),
+					$"{entry.A0.Value.ToString(culture)}, {entry.A1.Value.ToString(culture)}, {entry.V1.Value.ToString(culture)}, {entry.V2.Value.ToString(culture)}, {entry.E.ToString(culture)}"))
 			);
 		}
 
 		private static XElement WriteMotorNode(Motor motor)
 		{
-			TrainManager.MotorSound.Table[] powerTables = motor.Tracks.Where(x => x.Type == Motor.TrackType.Power).Select(x => Motor.Track.TrackToMotorSoundTable(x, y => y, y => y, y => y)).ToArray();
-			TrainManager.MotorSound.Table[] brakeTables = motor.Tracks.Where(x => x.Type == Motor.TrackType.Brake).Select(x => Motor.Track.TrackToMotorSoundTable(x, y => y, y => y, y => y)).ToArray();
+			TrainManager.MotorSound.Table[] powerTables = motor.Tracks.Where(x => x.Type == Motor.TrackType.Power).Select(x => Motor.Track.TrackToMotorSoundTable(x, y => y, y => y)).ToArray();
+			TrainManager.MotorSound.Table[] brakeTables = motor.Tracks.Where(x => x.Type == Motor.TrackType.Brake).Select(x => Motor.Track.TrackToMotorSoundTable(x,  y => y, y => y)).ToArray();
 
 			return new XElement("Motor",
 				new XElement("PowerTracks", powerTables.Select(WriteTrackNode)),
@@ -319,7 +321,10 @@ namespace TrainEditor2.IO.Trains.Xml
 
 		private static XElement WriteVertexNode<T>(TrainManager.MotorSound.Vertex<T> vertex) where T : struct, IConvertible
 		{
-			return new XElement("Vertex", $"{vertex.X.ToString(culture)}, {vertex.Y.ToString(culture)}");
+			return new XElement("Vertex",
+				new XAttribute("Unit", vertex.X.UnitValue),
+				$"{vertex.X.Value.ToString(culture)}, {vertex.Y.ToString(culture)}"
+			);
 		}
 
 		private static XElement WriteCabNode(string fileName, Cab cab)

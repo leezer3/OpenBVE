@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using OpenBveApi.Math;
-using OpenTK;
+using OpenBveApi.Units;
 using OpenTK.Graphics.OpenGL;
 using SoundManager;
 using TrainEditor2.Extensions;
@@ -119,20 +119,17 @@ namespace TrainEditor2.Models.Trains
 				BaseMotor.IsRefreshGlControl = true;
 			}
 
-			internal void DirectDot(double x, double y)
+			internal void DirectDot(Quantity.Velocity x, double y)
 			{
-				x = 0.01 * Math.Round(100.0 * x);
-				y = 0.01 * Math.Round(100.0 * y);
-
 				bool exist = false;
 
 				switch (BaseMotor.CurrentInputMode)
 				{
 					case InputMode.Pitch:
-						exist = PitchVertices.Any(v => v.Value.X == x);
+						exist = PitchVertices.Any(v => v.Value.X.Equals(x, true));
 						break;
 					case InputMode.Volume:
-						exist = VolumeVertices.Any(v => v.Value.X == x);
+						exist = VolumeVertices.Any(v => v.Value.X.Equals(x, true));
 						break;
 				}
 
@@ -175,16 +172,37 @@ namespace TrainEditor2.Models.Trains
 					{
 						if (BaseMotor.CurrentInputMode != InputMode.SoundIndex)
 						{
+							Vertex pickedPitchVertex, pickedVolumeVertex;
+							Line pickedPitchLine, pickedVolumeLine;
+							PickVertex(out pickedPitchVertex, out pickedVolumeVertex);
+							PickLine(out pickedPitchLine, out pickedVolumeLine);
+
 							switch (CurrentToolMode)
 							{
 								case ToolMode.Select:
-									SelectDotLine(e);
+									switch (BaseMotor.CurrentInputMode)
+									{
+										case InputMode.Pitch:
+											SelectDotLine(PitchVertices, PitchLines, pickedPitchVertex, pickedPitchLine);
+											break;
+										case InputMode.Volume:
+											SelectDotLine(VolumeVertices, VolumeLines, pickedVolumeVertex, pickedVolumeLine);
+											break;
+									}
 									break;
 								case ToolMode.Dot:
 									DrawDot(e);
 									break;
 								case ToolMode.Line:
-									DrawLine(e);
+									switch (BaseMotor.CurrentInputMode)
+									{
+										case InputMode.Pitch:
+											DrawLine(PitchVertices, PitchLines, pickedPitchVertex);
+											break;
+										case InputMode.Volume:
+											DrawLine(VolumeVertices, VolumeLines, pickedVolumeVertex);
+											break;
+									}
 									break;
 							}
 						}
@@ -194,14 +212,19 @@ namespace TrainEditor2.Models.Trains
 
 			internal void MouseMove(InputEventModel.EventArgs e)
 			{
+				Vertex pickedPitchVertex, pickedVolumeVertex;
+				Line pickedPitchLine, pickedVolumeLine;
+				PickVertex(out pickedPitchVertex, out pickedVolumeVertex);
+				PickLine(out pickedPitchLine, out pickedVolumeLine);
+
 				if (BaseMotor.CurrentInputMode != InputMode.Volume)
 				{
-					ShowToolTipVertex(InputMode.Pitch, PitchVertices, ref hoveredVertexPitch, toolTipVertexPitch, BaseMotor.NowVelocity, BaseMotor.NowPitch);
+					ShowToolTipVertex(InputMode.Pitch, pickedPitchVertex, ref hoveredVertexPitch, toolTipVertexPitch);
 				}
 
 				if (BaseMotor.CurrentInputMode != InputMode.Pitch)
 				{
-					ShowToolTipVertex(InputMode.Pitch, VolumeVertices, ref hoveredVertexVolume, toolTipVertexVolume, BaseMotor.NowVelocity, BaseMotor.NowVolume);
+					ShowToolTipVertex(InputMode.Pitch, pickedVolumeVertex, ref hoveredVertexVolume, toolTipVertexVolume);
 				}
 
 				if (BaseMotor.CurrentSimState == SimulationState.Disable || BaseMotor.CurrentSimState == SimulationState.Stopped)
@@ -215,10 +238,10 @@ namespace TrainEditor2.Models.Trains
 								switch (BaseMotor.CurrentInputMode)
 								{
 									case InputMode.Pitch:
-										ChangeCursor(PitchVertices, PitchLines, BaseMotor.NowVelocity, BaseMotor.NowPitch);
+										ChangeCursor(PitchVertices, PitchLines, pickedPitchVertex, pickedPitchLine);
 										break;
 									case InputMode.Volume:
-										ChangeCursor(VolumeVertices, VolumeLines, BaseMotor.NowVelocity, BaseMotor.NowVolume);
+										ChangeCursor(VolumeVertices, VolumeLines, pickedVolumeVertex, pickedVolumeLine);
 										break;
 								}
 								break;
@@ -247,26 +270,22 @@ namespace TrainEditor2.Models.Trains
 						double deltaX = e.X - lastMousePosX;
 						double deltaY = e.Y - lastMousePosY;
 
-						double factorVelocity = GlControlWidth / (BaseMotor.MaxVelocity - BaseMotor.MinVelocity);
-						double factorPitch = -GlControlHeight / (BaseMotor.MaxPitch - BaseMotor.MinPitch);
-						double factorVolume = -GlControlHeight / (BaseMotor.MaxVolume - BaseMotor.MinVolume);
-
-						double deltaVelocity = 0.01 * Math.Round(100.0 * deltaX / factorVelocity);
-						double deltaPitch = 0.01 * Math.Round(100.0 * deltaY / factorPitch);
-						double deltaVolume = 0.01 * Math.Round(100.0 * deltaY / factorVolume);
+						Quantity.Velocity deltaVelocity = new Quantity.Velocity(deltaX / BaseMotor.FactorVelocity, BaseMotor.VelocityUnit);
+						double deltaPitch = deltaY / BaseMotor.FactorPitch;
+						double deltaVolume = deltaY / BaseMotor.FactorVolume;
 
 						switch (BaseMotor.CurrentInputMode)
 						{
 							case InputMode.Pitch:
-								MouseDrag(PitchVertices, PitchLines, BaseMotor.NowVelocity, BaseMotor.NowPitch, deltaVelocity, deltaPitch);
+								MouseDrag(PitchVertices, PitchLines, BaseMotor.nowVelocity, BaseMotor.NowPitch, deltaVelocity, deltaPitch);
 								break;
 							case InputMode.Volume:
-								MouseDrag(VolumeVertices, VolumeLines, BaseMotor.NowVelocity, BaseMotor.NowVolume, deltaVelocity, deltaVolume);
+								MouseDrag(VolumeVertices, VolumeLines, BaseMotor.nowVelocity, BaseMotor.NowVolume, deltaVelocity, deltaVolume);
 								break;
 							case InputMode.SoundIndex:
-								if (deltaVelocity != 0.0)
+								if (deltaVelocity.Value != 0.0)
 								{
-									previewArea = new Area(Math.Min(BaseMotor.NowVelocity - deltaVelocity, BaseMotor.NowVelocity), Math.Max(BaseMotor.NowVelocity - deltaVelocity, BaseMotor.NowVelocity), BaseMotor.SelectedSoundIndex);
+									previewArea = new Area(deltaVelocity.Value >= 0.0 ? BaseMotor.nowVelocity - deltaVelocity : BaseMotor.nowVelocity, deltaVelocity.Value >= 0 ? BaseMotor.nowVelocity : BaseMotor.nowVelocity - deltaVelocity, BaseMotor.SelectedSoundIndex);
 								}
 								else
 								{
@@ -286,12 +305,8 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			private void ShowToolTipVertex(InputMode inputMode, VertexLibrary vertices, ref Vertex hoveredVertex, ToolTipModel toolTipVertex, double x, double y)
+			private void ShowToolTipVertex(InputMode inputMode, Vertex newHoveredVertex, ref Vertex hoveredVertex, ToolTipModel toolTipVertex)
 			{
-				Func<Vertex, bool> conditionVertex = v => v.X - 0.01 < x && x < v.X + 0.01 && v.Y - 2.0 < y && y < v.Y + 2.0;
-
-				Vertex newHoveredVertex = vertices.Values.FirstOrDefault(v => conditionVertex(v));
-
 				if (newHoveredVertex != hoveredVertex)
 				{
 					if (newHoveredVertex != null)
@@ -299,15 +314,15 @@ namespace TrainEditor2.Models.Trains
 						Area area = SoundIndices.FirstOrDefault(a => a.LeftX <= newHoveredVertex.X && a.RightX >= newHoveredVertex.X);
 
 						StringBuilder builder = new StringBuilder();
-						builder.AppendLine($"{Utilities.GetInterfaceString("motor_sound_settings", "vertex_info", "velocity")}: {newHoveredVertex.X.ToString("0.00", Culture)} km/h");
+						builder.AppendLine($"{Utilities.GetInterfaceString("motor_sound_settings", "vertex_info", "velocity")}: {newHoveredVertex.X.ToNewUnit(BaseMotor.VelocityUnit).Value.ToString(Culture)} {Unit.GetRewords(BaseMotor.VelocityUnit).First()}");
 
 						switch (inputMode)
 						{
 							case InputMode.Pitch:
-								builder.AppendLine($"{Utilities.GetInterfaceString("motor_sound_settings", "vertex_info", "pitch")}: {newHoveredVertex.Y.ToString("0.00", Culture)}");
+								builder.AppendLine($"{Utilities.GetInterfaceString("motor_sound_settings", "vertex_info", "pitch")}: {newHoveredVertex.Y.ToString(Culture)}");
 								break;
 							case InputMode.Volume:
-								builder.AppendLine($"{Utilities.GetInterfaceString("motor_sound_settings", "vertex_info", "volume")}: {newHoveredVertex.Y.ToString("0.00", Culture)}");
+								builder.AppendLine($"{Utilities.GetInterfaceString("motor_sound_settings", "vertex_info", "volume")}: {newHoveredVertex.Y.ToString(Culture)}");
 								break;
 						}
 
@@ -339,11 +354,11 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			private void ChangeCursor(VertexLibrary vertices, ICollection<Line> lines, double x, double y)
+			private void ChangeCursor(VertexLibrary vertices, ICollection<Line> lines, Vertex pickedVertex, Line pickedLine)
 			{
-				if (IsSelectDotLine(vertices, lines, x, y))
+				if (pickedVertex != null || pickedLine != null)
 				{
-					if (CurrentToolMode == ToolMode.Select || IsDrawLine(vertices, lines, x, y))
+					if (CurrentToolMode == ToolMode.Select || IsDrawLine(vertices, lines, pickedVertex))
 					{
 						CurrentCursorType = InputEventModel.CursorType.Hand;
 					}
@@ -358,26 +373,18 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			private void MouseDrag(VertexLibrary vertices, ICollection<Line> lines, double x, double y, double deltaX, double deltaY)
+			private void MouseDrag(VertexLibrary vertices, IEnumerable<Line> lines, Quantity.Velocity x, double y, Quantity.Velocity deltaX, double deltaY)
 			{
 				switch (CurrentToolMode)
 				{
 					case ToolMode.Select:
+						if (deltaX.Value != 0.0 && deltaY != 0.0)
 						{
-							double leftX = Math.Min(x - deltaX, x);
-							double rightX = Math.Max(x - deltaX, x);
-
-							double topY = Math.Max(y - deltaY, y);
-							double bottomY = Math.Min(y - deltaY, y);
-
-							if (deltaX != 0.0 && deltaY != 0.0)
-							{
-								selectedRange = SelectedRange.CreateSelectedRange(vertices, lines, leftX, rightX, topY, bottomY);
-							}
-							else
-							{
-								selectedRange = null;
-							}
+							selectedRange = SelectedRange.CreateSelectedRange(vertices, lines, deltaX.Value >= 0.0 ? x - deltaX : x, deltaX.Value >= 0.0 ? x : x - deltaX, deltaY >= 0.0 ? y : y - deltaY, deltaY >= 0.0 ? y - deltaY : y);
+						}
+						else
+						{
+							selectedRange = null;
 						}
 						break;
 					case ToolMode.Move:
@@ -429,8 +436,8 @@ namespace TrainEditor2.Models.Trains
 							{
 								if (area.Index != previewArea.Index)
 								{
-									addAreas.Add(new Area(area.LeftX, previewArea.LeftX - 0.01, area.Index));
-									addAreas.Add(new Area(previewArea.RightX + 0.01, area.RightX, area.Index));
+									addAreas.Add(new Area(area.LeftX, previewArea.LeftX - new Quantity.Velocity(0.001), area.Index));
+									addAreas.Add(new Area(previewArea.RightX + new Quantity.Velocity(0.001), area.RightX, area.Index));
 									area.TBD = true;
 								}
 								else
@@ -445,7 +452,7 @@ namespace TrainEditor2.Models.Trains
 							{
 								if (area.Index != previewArea.Index)
 								{
-									area.RightX = previewArea.LeftX - 0.01;
+									area.RightX = previewArea.LeftX - new Quantity.Velocity(0.001);
 								}
 								else
 								{
@@ -457,7 +464,7 @@ namespace TrainEditor2.Models.Trains
 							{
 								if (area.Index != previewArea.Index)
 								{
-									area.LeftX = previewArea.RightX + 0.01;
+									area.LeftX = previewArea.RightX + new Quantity.Velocity(0.001);
 								}
 								else
 								{
@@ -474,7 +481,7 @@ namespace TrainEditor2.Models.Trains
 						SoundIndices.Add(previewArea);
 						SoundIndices.AddRange(addAreas);
 						SoundIndices.RemoveAll(a => a.TBD);
-						SoundIndices = new List<Area>(SoundIndices.OrderBy(a => a.LeftX));
+						SoundIndices = new List<Area>(SoundIndices.OrderBy(a => a.LeftX.ToDefaultUnit().Value));
 
 						if (previewArea.TBD)
 						{
@@ -492,11 +499,8 @@ namespace TrainEditor2.Models.Trains
 				BaseMotor.IsRefreshGlControl = true;
 			}
 
-			internal void DirectMove(double x, double y)
+			internal void DirectMove(Quantity.Velocity x, double y)
 			{
-				x = 0.01 * Math.Round(100.0 * x);
-				y = 0.01 * Math.Round(100.0 * y);
-
 				switch (BaseMotor.CurrentInputMode)
 				{
 					case InputMode.Pitch:
@@ -521,7 +525,7 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			private void ResetSelect(VertexLibrary vertices, ICollection<Line> lines)
+			private void ResetSelect(VertexLibrary vertices, IEnumerable<Line> lines)
 			{
 				foreach (Vertex vertex in vertices.Values)
 				{
@@ -545,55 +549,19 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			private bool IsSelectDotLine(VertexLibrary vertices, ICollection<Line> lines, double x, double y)
+			private void SelectDotLine(VertexLibrary vertices, IEnumerable<Line> lines, Vertex pickedVertex, Line pickedLine)
 			{
-				if (vertices.Any(v => v.Value.X - 0.01 < x && x < v.Value.X + 0.01 && v.Value.Y - 2.0 < y && y < v.Value.Y + 2.0))
+				if (pickedVertex != null)
 				{
-					return true;
-				}
-
-				if (lines.Any(l => vertices[l.LeftID].X + 0.01 < x && x < vertices[l.RightID].X - 0.01 && Math.Min(vertices[l.LeftID].Y, vertices[l.RightID].Y) - 2.0 < y && y < Math.Max(vertices[l.LeftID].Y, vertices[l.RightID].Y) + 2.0))
-				{
-					return true;
-				}
-
-				return false;
-			}
-
-			private void SelectDotLine(InputEventModel.EventArgs e)
-			{
-				double velocity = BaseMotor.XtoVelocity(e.X);
-				double pitch = BaseMotor.YtoPitch(e.Y);
-				double volume = BaseMotor.YtoVolume(e.Y);
-
-				switch (BaseMotor.CurrentInputMode)
-				{
-					case InputMode.Pitch:
-						SelectDotLine(PitchVertices, PitchLines, velocity, pitch);
-						break;
-					case InputMode.Volume:
-						SelectDotLine(VolumeVertices, VolumeLines, velocity, volume);
-						break;
-				}
-			}
-
-			private void SelectDotLine(VertexLibrary vertices, ICollection<Line> lines, double x, double y)
-			{
-				Func<Vertex, bool> conditionVertex = v => v.X - 0.01 < x && x < v.X + 0.01 && v.Y - 2.0 < y && y < v.Y + 2.0;
-
-				if (vertices.Any(v => conditionVertex(v.Value)))
-				{
-					KeyValuePair<int, Vertex> selectVertex = vertices.First(v => conditionVertex(v.Value));
-
 					if (!CurrentModifierKeys.HasFlag(InputEventModel.ModifierKeys.Control))
 					{
-						foreach (Vertex vertex in vertices.Values.Where(v => v != selectVertex.Value))
+						foreach (Vertex vertex in vertices.Values.Where(v => v != pickedVertex))
 						{
 							vertex.Selected = false;
 						}
 					}
 
-					selectVertex.Value.Selected = !selectVertex.Value.Selected;
+					pickedVertex.Selected = !pickedVertex.Selected;
 				}
 				else
 				{
@@ -606,19 +574,20 @@ namespace TrainEditor2.Models.Trains
 					}
 				}
 
-				Line selectLine = lines.FirstOrDefault(l => vertices[l.LeftID].X + 0.01 < x && x < vertices[l.RightID].X - 0.01 && Math.Min(vertices[l.LeftID].Y, vertices[l.RightID].Y) - 2.0 < y && y < Math.Max(vertices[l.LeftID].Y, vertices[l.RightID].Y) + 2.0);
-
-				if (selectLine != null)
+				if (pickedLine != null)
 				{
 					if (!CurrentModifierKeys.HasFlag(InputEventModel.ModifierKeys.Control))
 					{
-						foreach (Line line in lines.Where(l => l != selectLine))
+						foreach (Line line in lines.Where(l => l != pickedLine))
 						{
 							line.Selected = false;
 						}
 					}
 
-					selectLine.Selected = !selectLine.Selected;
+					if (pickedVertex == null)
+					{
+						pickedLine.Selected = !pickedLine.Selected;
+					}
 				}
 				else
 				{
@@ -631,7 +600,7 @@ namespace TrainEditor2.Models.Trains
 				BaseMotor.IsRefreshGlControl = true;
 			}
 
-			private void MoveDot(VertexLibrary vertices, double deltaX, double deltaY)
+			private void MoveDot(VertexLibrary vertices, Quantity.Velocity deltaX, double deltaY)
 			{
 				if (vertices.Values.Any(v => v.Selected))
 				{
@@ -642,35 +611,35 @@ namespace TrainEditor2.Models.Trains
 						isMoving = true;
 					}
 
-					foreach (Vertex select in vertices.Values.Where(v => v.Selected).OrderBy(v => v.X))
+					foreach (Vertex select in vertices.Values.Where(v => v.Selected).OrderBy(v => v.X.ToDefaultUnit().Value))
 					{
-						if (deltaX >= 0.0)
+						if (deltaX.Value >= 0.0)
 						{
-							Vertex unselectLeft = vertices.Values.OrderBy(v => v.X).FirstOrDefault(v => v.X > select.X);
+							Vertex unselectLeft = vertices.Values.OrderBy(v => v.X.ToDefaultUnit().Value).FirstOrDefault(v => v.X > select.X);
 
 							if (unselectLeft != null)
 							{
-								if (select.X + deltaX + 0.01 >= unselectLeft.X)
+								if (select.X + deltaX > unselectLeft.X)
 								{
-									deltaX = 0.0;
+									deltaX = new Quantity.Velocity(0.0);
 								}
 							}
 						}
 						else
 						{
-							Vertex unselectRight = vertices.Values.OrderBy(v => v.X).LastOrDefault(v => v.X < select.X);
+							Vertex unselectRight = vertices.Values.OrderBy(v => v.X.ToDefaultUnit().Value).LastOrDefault(v => v.X < select.X);
 
 							if (unselectRight != null)
 							{
-								if (select.X + deltaX - 0.01 <= unselectRight.X)
+								if (select.X + deltaX < unselectRight.X)
 								{
-									deltaX = 0.0;
+									deltaX = new Quantity.Velocity(0.0);
 								}
 							}
 
-							if (select.X + deltaX < 0.0)
+							if ((select.X + deltaX).Value < 0.0)
 							{
-								deltaX = 0.0;
+								deltaX = new Quantity.Velocity(0.0);
 							}
 						}
 
@@ -695,9 +664,9 @@ namespace TrainEditor2.Models.Trains
 
 			private void DrawDot(InputEventModel.EventArgs e)
 			{
-				double velocity = 0.01 * Math.Round(100.0 * BaseMotor.XtoVelocity(e.X));
-				double pitch = 0.01 * Math.Round(100.0 * BaseMotor.YtoPitch(e.Y));
-				double volume = 0.01 * Math.Round(100.0 * BaseMotor.YtoVolume(e.Y));
+				Quantity.Velocity velocity = BaseMotor.XtoVelocity(e.X);
+				double pitch = BaseMotor.YtoPitch(e.Y);
+				double volume = BaseMotor.YtoVolume(e.Y);
 
 				switch (BaseMotor.CurrentInputMode)
 				{
@@ -710,7 +679,7 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			private void DrawDot(VertexLibrary vertices, double x, double y)
+			private void DrawDot(VertexLibrary vertices, Quantity.Velocity x, double y)
 			{
 				PrevStates.Add(new TrackState(this));
 				NextStates.Clear();
@@ -719,26 +688,22 @@ namespace TrainEditor2.Models.Trains
 				BaseMotor.IsRefreshGlControl = true;
 			}
 
-			private bool IsDrawLine(VertexLibrary vertices, ICollection<Line> lines, double x, double y)
+			private bool IsDrawLine(VertexLibrary vertices, ICollection<Line> lines, Vertex pickedVertex)
 			{
-				Func<Vertex, bool> conditionVertex = v => v.X - 0.01 < x && x < v.X + 0.01 && v.Y - 2.0 < y && y < v.Y + 2.0;
-
-				if (vertices.Any(v => conditionVertex(v.Value)))
+				if (pickedVertex != null)
 				{
-					KeyValuePair<int, Vertex> selectVertex = vertices.First(v => conditionVertex(v.Value));
-
-					if (selectVertex.Value.IsOrigin)
+					if (pickedVertex.IsOrigin)
 					{
 						return true;
 					}
 
 					if (vertices.Any(v => v.Value.IsOrigin))
 					{
-						KeyValuePair<int, Vertex> origin = vertices.First(v => v.Value.IsOrigin);
-						KeyValuePair<int, Vertex>[] selectVertices = new[] { origin, selectVertex }.OrderBy(v => v.Value.X).ToArray();
+						Vertex origin = vertices.First(v => v.Value.IsOrigin).Value;
+						Vertex[] selectVertices = new[] { origin, pickedVertex }.OrderBy(v => v.X.ToDefaultUnit().Value).ToArray();
 
-						Func<Line, bool> conditionLineLeft = l => vertices[l.LeftID].X <= selectVertices[0].Value.X && selectVertices[0].Value.X < vertices[l.RightID].X;
-						Func<Line, bool> conditionLineRight = l => vertices[l.LeftID].X < selectVertices[1].Value.X && selectVertices[1].Value.X <= vertices[l.RightID].X;
+						Func<Line, bool> conditionLineLeft = l => vertices[l.LeftID].X <= selectVertices[0].X && selectVertices[0].X < vertices[l.RightID].X;
+						Func<Line, bool> conditionLineRight = l => vertices[l.LeftID].X < selectVertices[1].X && selectVertices[1].X <= vertices[l.RightID].X;
 
 						if (!lines.Any(l => conditionLineLeft(l)) && !lines.Any(l => conditionLineRight(l)))
 						{
@@ -754,39 +719,18 @@ namespace TrainEditor2.Models.Trains
 				return false;
 			}
 
-			private void DrawLine(InputEventModel.EventArgs e)
+			private void DrawLine(VertexLibrary vertices, ICollection<Line> lines, Vertex pickedVertex)
 			{
-				double velocity = BaseMotor.XtoVelocity(e.X);
-				double pitch = BaseMotor.YtoPitch(e.Y);
-				double volume = BaseMotor.YtoVolume(e.Y);
-
-				switch (BaseMotor.CurrentInputMode)
+				if (pickedVertex != null)
 				{
-					case InputMode.Pitch:
-						DrawLine(PitchVertices, PitchLines, velocity, pitch);
-						break;
-					case InputMode.Volume:
-						DrawLine(VolumeVertices, VolumeLines, velocity, volume);
-						break;
-				}
-			}
-
-			private void DrawLine(VertexLibrary vertices, ICollection<Line> lines, double x, double y)
-			{
-				Func<Vertex, bool> conditionVertex = v => v.X - 0.01 < x && x < v.X + 0.01 && v.Y - 2.0 < y && y < v.Y + 2.0;
-
-				if (vertices.Any(v => conditionVertex(v.Value)))
-				{
-					KeyValuePair<int, Vertex> selectVertex = vertices.First(v => conditionVertex(v.Value));
-
-					if (selectVertex.Value.IsOrigin)
+					if (pickedVertex.IsOrigin)
 					{
-						selectVertex.Value.IsOrigin = false;
+						pickedVertex.IsOrigin = false;
 					}
 					else if (vertices.Any(v => v.Value.IsOrigin))
 					{
 						KeyValuePair<int, Vertex> origin = vertices.First(v => v.Value.IsOrigin);
-						KeyValuePair<int, Vertex>[] selectVertices = new[] { origin, selectVertex }.OrderBy(v => v.Value.X).ToArray();
+						KeyValuePair<int, Vertex>[] selectVertices = new[] { origin, vertices.First(v => v.Value == pickedVertex) }.OrderBy(v => v.Value.X.ToDefaultUnit().Value).ToArray();
 
 						Func<Line, bool> conditionLineLeft = l => vertices[l.LeftID].X <= selectVertices[0].Value.X && selectVertices[0].Value.X < vertices[l.RightID].X;
 						Func<Line, bool> conditionLineRight = l => vertices[l.LeftID].X < selectVertices[1].Value.X && selectVertices[1].Value.X <= vertices[l.RightID].X;
@@ -798,42 +742,45 @@ namespace TrainEditor2.Models.Trains
 							lines.Add(new Line(selectVertices[0].Key, selectVertices[1].Key));
 
 							origin.Value.IsOrigin = false;
-							selectVertex.Value.IsOrigin = true;
+							pickedVertex.IsOrigin = true;
 						}
 					}
 					else
 					{
-						selectVertex.Value.IsOrigin = true;
+						pickedVertex.IsOrigin = true;
 					}
 
 					BaseMotor.IsRefreshGlControl = true;
 				}
 			}
 
-			private static TrainManager.MotorSound.Vertex<float>[] LineToMotorSoundVertices(VertexLibrary library, IEnumerable<Line> lines, Func<double, double> xConverter, Func<double, double> yConverter, double _default)
+			private static TrainManager.MotorSound.Vertex<float>[] LineToMotorSoundVertices(VertexLibrary library, IEnumerable<Line> lines, Func<double, double> yConverter, double _default)
 			{
 				List<TrainManager.MotorSound.Vertex<float>> vertices = new List<TrainManager.MotorSound.Vertex<float>>();
-				lines = lines.OrderBy(x => library[x.LeftID].X).ToArray();
+				lines = lines.OrderBy(x => library[x.LeftID].X.ToDefaultUnit().Value).ToArray();
 
 				for (int i = 0; i < lines.Count(); i++)
 				{
 					Vertex left = library[lines.ElementAt(i).LeftID];
 					Vertex right = library[lines.ElementAt(i).RightID];
 
+					// Adds a point with a default value if it is not connected to the previous line.
 					if (i > 1)
 					{
 						Vertex prevRight = library[lines.ElementAt(i - 1).RightID];
 
 						if (prevRight != left)
 						{
-							if (left.X - 0.01 > prevRight.X)
+							Quantity.Velocity newPoint = left.X - new Quantity.Velocity(0.001);
+
+							if (newPoint > prevRight.X)
 							{
-								vertices.Add(new TrainManager.MotorSound.Vertex<float> { X = (float)xConverter(left.X - 0.001), Y = (float)yConverter(_default) });
+								vertices.Add(new TrainManager.MotorSound.Vertex<float> { X = (Quantity.VelocityF)newPoint, Y = (float)yConverter(_default) });
 							}
 						}
 					}
 
-					TrainManager.MotorSound.Vertex<float> existLeft = vertices.FirstOrDefault(v => v.X == (float)xConverter(left.X));
+					TrainManager.MotorSound.Vertex<float> existLeft = vertices.FirstOrDefault(v => v.X.Equals((Quantity.VelocityF)left.X, true));
 
 					if (existLeft != null)
 					{
@@ -841,10 +788,10 @@ namespace TrainEditor2.Models.Trains
 					}
 					else
 					{
-						vertices.Add(new TrainManager.MotorSound.Vertex<float> { X = (float)xConverter(left.X), Y = (float)yConverter(left.Y) });
+						vertices.Add(new TrainManager.MotorSound.Vertex<float> { X = (Quantity.VelocityF)left.X, Y = (float)yConverter(left.Y) });
 					}
 
-					TrainManager.MotorSound.Vertex<float> existRight = vertices.FirstOrDefault(v => v.X == (float)xConverter(right.X));
+					TrainManager.MotorSound.Vertex<float> existRight = vertices.FirstOrDefault(v => v.X.Equals((Quantity.VelocityF)right.X, true));
 
 					if (existRight != null)
 					{
@@ -852,18 +799,21 @@ namespace TrainEditor2.Models.Trains
 					}
 					else
 					{
-						vertices.Add(new TrainManager.MotorSound.Vertex<float> { X = (float)xConverter(right.X), Y = (float)yConverter(right.Y) });
+						vertices.Add(new TrainManager.MotorSound.Vertex<float> { X = (Quantity.VelocityF)right.X, Y = (float)yConverter(right.Y) });
 					}
 
+					// Adds a point with a default value if it is not connected to the next line.
 					if (i < lines.Count() - 1)
 					{
 						Vertex nextLeft = library[lines.ElementAt(i + 1).LeftID];
 
 						if (nextLeft != right)
 						{
-							if (right.X + 0.01 < nextLeft.X)
+							Quantity.Velocity newPoint = right.X + new Quantity.Velocity(0.001);
+
+							if (newPoint < nextLeft.X)
 							{
-								vertices.Add(new TrainManager.MotorSound.Vertex<float> { X = (float)xConverter(right.X + 0.001), Y = (float)yConverter(_default) });
+								vertices.Add(new TrainManager.MotorSound.Vertex<float> { X = (Quantity.VelocityF)newPoint, Y = (float)yConverter(_default) });
 							}
 						}
 					}
@@ -872,24 +822,27 @@ namespace TrainEditor2.Models.Trains
 				return vertices.ToArray();
 			}
 
-			private static TrainManager.MotorSound.Vertex<int, SoundBuffer>[] IndexToMotorSoundVertices(IEnumerable<Area> areas, Func<double, double> xConverter, int _default)
+			private static TrainManager.MotorSound.Vertex<int, SoundBuffer>[] IndexToMotorSoundVertices(IEnumerable<Area> areas, int _default)
 			{
 				List<TrainManager.MotorSound.Vertex<int, SoundBuffer>> vertices = new List<TrainManager.MotorSound.Vertex<int, SoundBuffer>>();
-				areas = areas.OrderBy(x => x.LeftX).ToArray();
+				areas = areas.OrderBy(x => x.LeftX.ToDefaultUnit().Value).ToArray();
 
 				for (int i = 0; i < areas.Count(); i++)
 				{
 					Area area = areas.ElementAt(i);
 
+					// Adds a point with a default value if it is not connected to the previous area.
 					if (i > 1)
 					{
-						if (area.LeftX - 0.01 > areas.ElementAt(i - 1).RightX)
+						Quantity.Velocity newPoint = area.LeftX - new Quantity.Velocity(0.001);
+
+						if (newPoint > areas.ElementAt(i - 1).RightX)
 						{
-							vertices.Add(new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = (float)xConverter(area.LeftX - 0.001), Y = _default });
+							vertices.Add(new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = (Quantity.VelocityF)newPoint, Y = _default });
 						}
 					}
 
-					TrainManager.MotorSound.Vertex<int, SoundBuffer> existLeft = vertices.FirstOrDefault(v => v.X == (float)xConverter(area.LeftX));
+					TrainManager.MotorSound.Vertex<int, SoundBuffer> existLeft = vertices.FirstOrDefault(v => v.X.Equals((Quantity.VelocityF)area.LeftX, true));
 
 					if (existLeft != null)
 					{
@@ -897,10 +850,10 @@ namespace TrainEditor2.Models.Trains
 					}
 					else
 					{
-						vertices.Add(new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = (float)xConverter(area.LeftX), Y = area.Index });
+						vertices.Add(new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = (Quantity.VelocityF)area.LeftX, Y = area.Index });
 					}
 
-					TrainManager.MotorSound.Vertex<int, SoundBuffer> existRight = vertices.FirstOrDefault(v => v.X == (float)xConverter(area.RightX));
+					TrainManager.MotorSound.Vertex<int, SoundBuffer> existRight = vertices.FirstOrDefault(v => v.X.Equals((Quantity.VelocityF)area.RightX, true));
 
 					if (existRight != null)
 					{
@@ -908,14 +861,17 @@ namespace TrainEditor2.Models.Trains
 					}
 					else
 					{
-						vertices.Add(new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = (float)xConverter(area.RightX), Y = area.Index });
+						vertices.Add(new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = (Quantity.VelocityF)area.RightX, Y = area.Index });
 					}
 
+					// Adds a point with a default value if it is not connected to the next area.
 					if (i < areas.Count() - 1)
 					{
-						if (area.RightX + 0.01 < areas.ElementAt(i + 1).LeftX)
+						Quantity.Velocity newPoint = area.RightX + new Quantity.Velocity(0.001);
+
+						if (newPoint < areas.ElementAt(i + 1).LeftX)
 						{
-							vertices.Add(new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = (float)xConverter(area.RightX + 0.001), Y = _default });
+							vertices.Add(new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = (Quantity.VelocityF)newPoint, Y = _default });
 						}
 					}
 				}
@@ -923,31 +879,31 @@ namespace TrainEditor2.Models.Trains
 				return vertices.ToArray();
 			}
 
-			internal static TrainManager.MotorSound.Table TrackToMotorSoundTable(Track track, Func<double, double> speedConverter, Func<double, double> pitchConverter, Func<double, double> volumeConverter)
+			internal static TrainManager.MotorSound.Table TrackToMotorSoundTable(Track track, Func<double, double> pitchConverter, Func<double, double> volumeConverter)
 			{
 				return new TrainManager.MotorSound.Table
 				{
-					PitchVertices = LineToMotorSoundVertices(track.PitchVertices, track.PitchLines, speedConverter, pitchConverter, 100.0),
-					GainVertices = LineToMotorSoundVertices(track.VolumeVertices, track.VolumeLines, speedConverter, volumeConverter, 128),
-					BufferVertices = IndexToMotorSoundVertices(track.SoundIndices, speedConverter, -1)
+					PitchVertices = LineToMotorSoundVertices(track.PitchVertices, track.PitchLines, pitchConverter, 100.0),
+					GainVertices = LineToMotorSoundVertices(track.VolumeVertices, track.VolumeLines, volumeConverter, 128),
+					BufferVertices = IndexToMotorSoundVertices(track.SoundIndices, -1)
 				};
 			}
 
-			internal static Track MotorSoundTableToTrack(Motor baseMotor, TrackType type, TrainManager.MotorSound.Table table, Func<double, double> speedConverter, Func<double, double> pitchConverter, Func<double, double> volumeConverter)
+			internal static Track MotorSoundTableToTrack(Motor baseMotor, TrackType type, TrainManager.MotorSound.Table table, Func<double, double> pitchConverter, Func<double, double> volumeConverter)
 			{
 				Track track = new Track(baseMotor) { Type = type };
 
 				foreach (TrainManager.MotorSound.Vertex<float> vertex in table.PitchVertices)
 				{
-					double nextX = 0.01 * Math.Round(100.0 * speedConverter(vertex.X));
-					double nextY = 0.01 * Math.Round(100.0 * pitchConverter(vertex.Y));
+					Quantity.Velocity nextX = (Quantity.Velocity)vertex.X;
+					double nextY = pitchConverter(vertex.Y);
 
 					if (track.PitchVertices.Count >= 2)
 					{
 						KeyValuePair<int, Vertex>[] leftVertices = { track.PitchVertices.ElementAt(track.PitchVertices.Count - 2), track.PitchVertices.Last() };
-						Func<double, double> f = x => leftVertices[0].Value.Y + (leftVertices[1].Value.Y - leftVertices[0].Value.Y) / (leftVertices[1].Value.X - leftVertices[0].Value.X) * (x - leftVertices[0].Value.X);
+						Func<Quantity.Velocity, double> f = x => leftVertices[0].Value.Y + (leftVertices[1].Value.Y - leftVertices[0].Value.Y) * (x - leftVertices[0].Value.X) / (leftVertices[1].Value.X - leftVertices[0].Value.X);
 
-						if ((float)f(nextX) == nextY)
+						if ((float)f(nextX) == (float)nextY)
 						{
 							track.PitchVertices.Remove(leftVertices[1].Key);
 						}
@@ -958,26 +914,26 @@ namespace TrainEditor2.Models.Trains
 
 				foreach (TrainManager.MotorSound.Vertex<float> vertex in table.GainVertices)
 				{
-					double nextX = 0.01 * Math.Round(100.0 * speedConverter(vertex.X));
-					double nextY = 0.01 * Math.Round(100.0 * volumeConverter(vertex.Y));
+					Quantity.Velocity nextX = (Quantity.Velocity)vertex.X;
+					double nextY = volumeConverter(vertex.Y);
 
 					if (track.VolumeVertices.Count >= 2)
 					{
 						KeyValuePair<int, Vertex>[] leftVertices = { track.VolumeVertices.ElementAt(track.VolumeVertices.Count - 2), track.VolumeVertices.Last() };
-						Func<double, double> f = x => leftVertices[0].Value.Y + (leftVertices[1].Value.Y - leftVertices[0].Value.Y) / (leftVertices[1].Value.X - leftVertices[0].Value.X) * (x - leftVertices[0].Value.X);
+						Func<Quantity.Velocity, double> f = x => leftVertices[0].Value.Y + (leftVertices[1].Value.Y - leftVertices[0].Value.Y) * (x - leftVertices[0].Value.X) / (leftVertices[1].Value.X - leftVertices[0].Value.X);
 
-						if ((float)f(nextX) == nextY)
+						if ((float)f(nextX) == (float)nextY)
 						{
 							track.VolumeVertices.Remove(leftVertices[1].Key);
 						}
-
-						track.VolumeVertices.Add(new Vertex(nextX, nextY));
 					}
+
+					track.VolumeVertices.Add(new Vertex(nextX, nextY));
 				}
 
 				foreach (TrainManager.MotorSound.Vertex<int, SoundBuffer> vertex in table.BufferVertices)
 				{
-					double nextX = 0.01 * Math.Round(100.0 * speedConverter(vertex.X));
+					Quantity.Velocity nextX = (Quantity.Velocity)vertex.X;
 
 					if (track.SoundIndices.Any())
 					{
@@ -985,7 +941,7 @@ namespace TrainEditor2.Models.Trains
 
 						if (vertex.Y != leftArea.Index)
 						{
-							leftArea.RightX = nextX - 0.01;
+							leftArea.RightX = nextX - new Quantity.Velocity(0.001);
 							track.SoundIndices.Add(new Area(nextX, nextX, vertex.Y));
 						}
 						else
@@ -1013,9 +969,9 @@ namespace TrainEditor2.Models.Trains
 				{
 					Area lastArea = track.SoundIndices.Last();
 
-					if (lastArea.LeftX == lastArea.RightX)
+					if (lastArea.LeftX.Equals(lastArea.RightX, true))
 					{
-						lastArea.RightX += 0.01;
+						lastArea.RightX += new Quantity.Velocity(0.001);
 					}
 				}
 
@@ -1050,30 +1006,55 @@ namespace TrainEditor2.Models.Trains
 				GL.End();
 			}
 
-			private void DrawPolyDashLine(Matrix4D proj, Matrix4D look, Box2d box, double lineWidth, double dashLength, Color color)
+			private void DrawPolyDashLine(Matrix4D proj, Matrix4D look, Range range, double lineWidth, double dashLength, Color color)
 			{
 				Matrix4D inv = Matrix4D.Invert(look) * Matrix4D.Invert(proj);
 				Vector2 dash = new Vector2((inv.Row0.X + inv.Row0.Y) * dashLength, (inv.Row1.X + inv.Row1.Y) * dashLength) / 100.0;
 
-				for (double i = box.Left; i + dash.X < box.Right; i += dash.X * 2)
+				for (double i = range.LeftX.Value; i + dash.X < range.RightX.Value; i += dash.X * 2)
 				{
-					DrawPolyLine(proj, look, new Vector2(i, box.Bottom), new Vector2(i + dash.X, box.Bottom), lineWidth, color);
+					DrawPolyLine(proj, look, new Vector2(i, range.BottomY), new Vector2(i + dash.X, range.BottomY), lineWidth, color);
 				}
 
-				for (double i = box.Bottom; i + dash.Y < box.Top; i += dash.Y * 2)
+				for (double i = range.BottomY; i + dash.Y < range.TopY; i += dash.Y * 2)
 				{
-					DrawPolyLine(proj, look, new Vector2(box.Right, i), new Vector2(box.Right, i + dash.Y), lineWidth, color);
+					DrawPolyLine(proj, look, new Vector2(range.RightX.Value, i), new Vector2(range.RightX.Value, i + dash.Y), lineWidth, color);
 				}
 
-				for (double i = box.Left; i + dash.X < box.Right; i += dash.X * 2)
+				for (double i = range.LeftX.Value; i + dash.X < range.RightX.Value; i += dash.X * 2)
 				{
-					DrawPolyLine(proj, look, new Vector2(i, box.Top), new Vector2(i + dash.X, box.Top), lineWidth, color);
+					DrawPolyLine(proj, look, new Vector2(i, range.TopY), new Vector2(i + dash.X, range.TopY), lineWidth, color);
 				}
 
-				for (double i = box.Bottom; i + dash.Y < box.Top; i += dash.Y * 2)
+				for (double i = range.BottomY; i + dash.Y < range.TopY; i += dash.Y * 2)
 				{
-					DrawPolyLine(proj, look, new Vector2(box.Left, i), new Vector2(box.Left, i + dash.Y), lineWidth, color);
+					DrawPolyLine(proj, look, new Vector2(range.LeftX.Value, i), new Vector2(range.LeftX.Value, i + dash.Y), lineWidth, color);
 				}
+			}
+
+			private void PickVertex(out Vertex pitchVertex, out Vertex volumeVertex)
+			{
+				Quantity.Velocity deltaVelocity = new Quantity.Velocity(5.0 / BaseMotor.FactorVelocity, BaseMotor.VelocityUnit);
+				double deltaPitch = 5.0 / -BaseMotor.FactorPitch;
+				double deltaVolume = 5.0 / -BaseMotor.FactorVolume;
+				Func<Vertex, bool> conditionPitchVertex = v => v.X - deltaVelocity < BaseMotor.nowVelocity && BaseMotor.nowVelocity < v.X + deltaVelocity && v.Y - deltaPitch < BaseMotor.NowPitch && BaseMotor.NowPitch < v.Y + deltaPitch;
+				Func<Vertex, bool> conditionVolumeVertex = v => v.X - deltaVelocity < BaseMotor.nowVelocity && BaseMotor.nowVelocity < v.X + deltaVelocity && v.Y - deltaVolume < BaseMotor.NowVolume && BaseMotor.NowVolume < v.Y + deltaVolume;
+
+				pitchVertex = BaseMotor.CurrentInputMode != InputMode.Volume ? PitchVertices.Values.FirstOrDefault(conditionPitchVertex) : null;
+				volumeVertex = BaseMotor.CurrentInputMode != InputMode.Pitch ? VolumeVertices.Values.FirstOrDefault(conditionVolumeVertex) : null;
+			}
+
+			private void PickLine(out Line pitchLine, out Line volumeLine)
+			{
+				Quantity.Velocity deltaVelocity = new Quantity.Velocity(5.0 / BaseMotor.FactorVelocity, BaseMotor.VelocityUnit);
+				double deltaPitch = 5.0 / -BaseMotor.FactorPitch;
+				double deltaVolume = 5.0 / -BaseMotor.FactorVolume;
+				Func<Vertex, Vertex, Quantity.Velocity, double> f = (left, right, x) => left.Y + (right.Y - left.Y) * (x - left.X) / (right.X - left.X);
+				Func<Line, bool> conditionPitchLine = l => PitchVertices[l.LeftID].X - deltaVelocity < BaseMotor.nowVelocity && BaseMotor.nowVelocity < PitchVertices[l.RightID].X + deltaVelocity && f(PitchVertices[l.LeftID], PitchVertices[l.RightID], BaseMotor.nowVelocity) - deltaPitch < BaseMotor.NowPitch && BaseMotor.NowPitch < f(PitchVertices[l.LeftID], PitchVertices[l.RightID], BaseMotor.nowVelocity) + deltaPitch;
+				Func<Line, bool> conditionVolumeLine = l => VolumeVertices[l.LeftID].X - deltaVelocity < BaseMotor.nowVelocity && BaseMotor.nowVelocity < VolumeVertices[l.RightID].X + deltaVelocity && f(VolumeVertices[l.LeftID], VolumeVertices[l.RightID], BaseMotor.nowVelocity) - deltaVolume < BaseMotor.NowVolume && BaseMotor.NowVolume < f(VolumeVertices[l.LeftID], VolumeVertices[l.RightID], BaseMotor.nowVelocity) + deltaVolume;
+
+				pitchLine = BaseMotor.CurrentInputMode != InputMode.Volume ? PitchLines.FirstOrDefault(conditionPitchLine) : null;
+				volumeLine = BaseMotor.CurrentInputMode != InputMode.Pitch ? VolumeLines.FirstOrDefault(conditionVolumeLine) : null;
 			}
 
 			internal void DrawGlControl(Matrix4D projPitch, Matrix4D projVolume, Matrix4D lookPitch, Matrix4D lookVolume, bool isOverlay)
@@ -1118,7 +1099,7 @@ namespace TrainEditor2.Models.Trains
 						}
 
 						GL.Color4(c);
-						GL.Vertex2(vertex.X, vertex.Y);
+						GL.Vertex2(vertex.X.ToNewUnit(BaseMotor.VelocityUnit).Value, vertex.Y);
 					}
 
 					GL.End();
@@ -1163,7 +1144,7 @@ namespace TrainEditor2.Models.Trains
 						}
 
 						GL.Color4(c);
-						GL.Vertex2(vertex.X, vertex.Y);
+						GL.Vertex2(vertex.X.ToNewUnit(BaseMotor.VelocityUnit).Value, vertex.Y);
 					}
 
 					GL.End();
@@ -1187,7 +1168,7 @@ namespace TrainEditor2.Models.Trains
 						Vertex left = PitchVertices[line.LeftID];
 						Vertex right = PitchVertices[line.RightID];
 
-						Func<double, double> f = x => left.Y + (right.Y - left.Y) / (right.X - left.X) * (x - left.X);
+						Func<Quantity.Velocity, double> f = x => left.Y + (right.Y - left.Y) * (x - left.X) / (right.X - left.X);
 
 						{
 							Color c;
@@ -1201,7 +1182,7 @@ namespace TrainEditor2.Models.Trains
 								c = Color.FromArgb((int)Math.Round(Color.Silver.R * 0.6), (int)Math.Round(Color.Silver.G * 0.6), (int)Math.Round(Color.Silver.B * 0.6));
 							}
 
-							DrawPolyLine(projPitch, lookPitch, new Vector2(left.X, left.Y), new Vector2(right.X, right.Y), 1.5, c);
+							DrawPolyLine(projPitch, lookPitch, new Vector2(left.X.ToNewUnit(BaseMotor.VelocityUnit).Value, left.Y), new Vector2(right.X.ToNewUnit(BaseMotor.VelocityUnit).Value, right.Y), 1.5, c);
 						}
 
 						foreach (Area area in SoundIndices)
@@ -1214,8 +1195,8 @@ namespace TrainEditor2.Models.Trains
 							double hue = Utilities.HueFactor * area.Index;
 							hue -= Math.Floor(hue);
 
-							Vector2 p1 = new Vector2(left.X < area.LeftX ? area.LeftX : left.X, left.X < area.LeftX ? f(area.LeftX) : left.Y);
-							Vector2 p2 = new Vector2(right.X > area.RightX ? area.RightX : right.X, right.X > area.RightX ? f(area.RightX) : right.Y);
+							Vector2 p1 = new Vector2((left.X < area.LeftX ? area.LeftX : left.X).ToNewUnit(BaseMotor.VelocityUnit).Value, left.X < area.LeftX ? f(area.LeftX) : left.Y);
+							Vector2 p2 = new Vector2((right.X > area.RightX ? area.RightX : right.X).ToNewUnit(BaseMotor.VelocityUnit).Value, right.X > area.RightX ? f(area.RightX) : right.Y);
 
 							DrawPolyLine(projPitch, lookPitch, p1, p2, 1.5, Utilities.GetColor(hue, line.Selected));
 						}
@@ -1239,7 +1220,7 @@ namespace TrainEditor2.Models.Trains
 						Vertex left = VolumeVertices[line.LeftID];
 						Vertex right = VolumeVertices[line.RightID];
 
-						Func<double, double> f = x => left.Y + (right.Y - left.Y) / (right.X - left.X) * (x - left.X);
+						Func<Quantity.Velocity, double> f = x => left.Y + (right.Y - left.Y) * (x - left.X) / (right.X - left.X);
 
 						{
 							Color c;
@@ -1253,7 +1234,7 @@ namespace TrainEditor2.Models.Trains
 								c = Color.FromArgb((int)Math.Round(Color.Silver.R * 0.6), (int)Math.Round(Color.Silver.G * 0.6), (int)Math.Round(Color.Silver.B * 0.6));
 							}
 
-							DrawPolyLine(projVolume, lookVolume, new Vector2(left.X, left.Y), new Vector2(right.X, right.Y), 1.0, c);
+							DrawPolyLine(projVolume, lookVolume, new Vector2(left.X.ToNewUnit(BaseMotor.VelocityUnit).Value, left.Y), new Vector2(right.X.ToNewUnit(BaseMotor.VelocityUnit).Value, right.Y), 1.0, c);
 						}
 
 						foreach (Area area in SoundIndices)
@@ -1266,8 +1247,8 @@ namespace TrainEditor2.Models.Trains
 							double hue = Utilities.HueFactor * area.Index;
 							hue -= Math.Floor(hue);
 
-							Vector2 p1 = new Vector2(left.X < area.LeftX ? area.LeftX : left.X, left.X < area.LeftX ? f(area.LeftX) : left.Y);
-							Vector2 p2 = new Vector2(right.X > area.RightX ? area.RightX : right.X, right.X > area.RightX ? f(area.RightX) : right.Y);
+							Vector2 p1 = new Vector2((left.X < area.LeftX ? area.LeftX : left.X).ToNewUnit(BaseMotor.VelocityUnit).Value, left.X < area.LeftX ? f(area.LeftX) : left.Y);
+							Vector2 p2 = new Vector2((right.X > area.RightX ? area.RightX : right.X).ToNewUnit(BaseMotor.VelocityUnit).Value, right.X > area.RightX ? f(area.RightX) : right.Y);
 
 							DrawPolyLine(projVolume, lookVolume, p1, p2, 1.0, Utilities.GetColor(hue, line.Selected));
 						}
@@ -1316,10 +1297,10 @@ namespace TrainEditor2.Models.Trains
 						GL.Begin(PrimitiveType.TriangleStrip);
 
 						GL.Color4(Color.FromArgb(64, c));
-						GL.Vertex2(area.LeftX, 0.0);
-						GL.Vertex2(area.RightX, 0.0);
-						GL.Vertex2(area.LeftX, float.MaxValue);
-						GL.Vertex2(area.RightX, float.MaxValue);
+						GL.Vertex2(area.LeftX.ToNewUnit(BaseMotor.VelocityUnit).Value, 0.0);
+						GL.Vertex2(area.RightX.ToNewUnit(BaseMotor.VelocityUnit).Value, 0.0);
+						GL.Vertex2(area.LeftX.ToNewUnit(BaseMotor.VelocityUnit).Value, float.MaxValue);
+						GL.Vertex2(area.RightX.ToNewUnit(BaseMotor.VelocityUnit).Value, float.MaxValue);
 
 						GL.End();
 					}

@@ -6,14 +6,24 @@ namespace OpenBveApi.Units
 {
 	public static class Unit
 	{
-		public enum Mass
+		public enum Acceleration
 		{
-			Kilogram,
-			Gram,
-			Kilotonne,
-			Tonne,
-			Kilopound,
-			Pound
+			KilometerPerHourPerSecond,
+			MeterPerSecondSquared
+		}
+
+		public enum Area
+		{
+			SquareMeter,
+			SquareCentimeter,
+			SquareFoot
+		}
+
+		public enum Jerk
+		{
+			MeterPerSecondCubed,
+			CentimeterPerSecondCubed,
+			FootPerSecondCubed
 		}
 
 		public enum Length
@@ -24,6 +34,16 @@ namespace OpenBveApi.Units
 			Yard,
 			Foot,
 			Inch
+		}
+
+		public enum Mass
+		{
+			Kilogram,
+			Gram,
+			Kilotonne,
+			Tonne,
+			Kilopound,
+			Pound
 		}
 
 		public enum Pressure
@@ -38,6 +58,18 @@ namespace OpenBveApi.Units
 			KilopascalPerSecond,
 			PascalPerSecond,
 			BarPerSecond
+		}
+
+		public enum Time
+		{
+			Second,
+			Millisecond
+		}
+
+		public enum Velocity
+		{
+			KilometerPerHour,
+			MeterPerSecond
 		}
 
 		private struct TypeValuePair
@@ -64,13 +96,19 @@ namespace OpenBveApi.Units
 
 		static Unit()
 		{
-			defaultDictionary.Add(typeof(Mass), Mass.Kilogram);
-			AddReword(Mass.Kilogram, "kg");
-			AddReword(Mass.Gram, "g");
-			AddReword(Mass.Kilotonne, "kt");
-			AddReword(Mass.Tonne, "t");
-			AddReword(Mass.Kilopound, "klb");
-			AddReword(Mass.Pound, "lb");
+			defaultDictionary.Add(typeof(Area), Area.SquareMeter);
+			AddReword(Area.SquareMeter, "m²");
+			AddReword(Area.SquareCentimeter, "cm²");
+			AddReword(Area.SquareFoot, "ft²");
+
+			defaultDictionary.Add(typeof(Acceleration), Acceleration.MeterPerSecondSquared);
+			AddReword(Acceleration.KilometerPerHourPerSecond, "km/h/s");
+			AddReword(Acceleration.MeterPerSecondSquared, "m/s²");
+
+			defaultDictionary.Add(typeof(Jerk), Jerk.MeterPerSecondCubed);
+			AddReword(Jerk.MeterPerSecondCubed, "m/s³");
+			AddReword(Jerk.CentimeterPerSecondCubed, "cm/s³");
+			AddReword(Jerk.FootPerSecondCubed, "ft/s³");
 
 			defaultDictionary.Add(typeof(Length), Length.Meter);
 			AddReword(Length.Meter, "m");
@@ -79,6 +117,14 @@ namespace OpenBveApi.Units
 			AddReword(Length.Yard, "yd");
 			AddReword(Length.Foot, "ft");
 			AddReword(Length.Inch, "in");
+
+			defaultDictionary.Add(typeof(Mass), Mass.Kilogram);
+			AddReword(Mass.Kilogram, "kg");
+			AddReword(Mass.Gram, "g");
+			AddReword(Mass.Kilotonne, "kt");
+			AddReword(Mass.Tonne, "t");
+			AddReword(Mass.Kilopound, "klb");
+			AddReword(Mass.Pound, "lb");
 
 			defaultDictionary.Add(typeof(Pressure), Pressure.Pascal);
 			AddReword(Pressure.Kilopascal, "kPa");
@@ -89,6 +135,14 @@ namespace OpenBveApi.Units
 			AddReword(PressureRate.KilopascalPerSecond, "kPa/s");
 			AddReword(PressureRate.PascalPerSecond, "Pa/s");
 			AddReword(PressureRate.BarPerSecond, "bar/s");
+
+			defaultDictionary.Add(typeof(Time), Time.Second);
+			AddReword(Time.Second, "s");
+			AddReword(Time.Millisecond, "ms");
+
+			defaultDictionary.Add(typeof(Velocity), Velocity.MeterPerSecond);
+			AddReword(Velocity.KilometerPerHour, "km/h");
+			AddReword(Velocity.MeterPerSecond, "m/s");
 		}
 
 		private static void AddReword(Enum unitValue, params string[] rewords)
@@ -144,6 +198,13 @@ namespace OpenBveApi.Units
 		public static string[] GetRewords(Enum unitValue)
 		{
 			return rewordsDictionary[new TypeValuePair(unitValue.GetType(), unitValue)].ToArray();
+		}
+
+
+		public static string[] GetAllRewords<T>() where T : struct
+		{
+			Type type = typeof(T);
+			return rewordsDictionary.Where(x => x.Key.Type == type).Select(x => x.Value.First()).ToArray();
 		}
 	}
 }

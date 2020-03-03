@@ -2,6 +2,7 @@
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows.Forms;
+using OpenBveApi.Units;
 using Reactive.Bindings.Binding;
 using Reactive.Bindings.Extensions;
 using TrainEditor2.Extensions;
@@ -18,6 +19,11 @@ namespace TrainEditor2.Views
 			InitializeComponent();
 
 			disposable = new CompositeDisposable();
+
+			string[] jerkUnits = Unit.GetAllRewords<Unit.Jerk>();
+
+			comboBoxUpUnit.Items.AddRange((string[])jerkUnits.Clone());
+			comboBoxDownUnit.Items.AddRange((string[])jerkUnits.Clone());
 
 			entry.Up
 				.BindTo(
@@ -39,6 +45,22 @@ namespace TrainEditor2.Views
 				.BindToErrorProvider(errorProvider, textBoxUp)
 				.AddTo(disposable);
 
+			entry.UpUnit
+				.BindTo(
+					comboBoxUpUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Jerk)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxUpUnit.SelectedIndexChanged += h,
+							h => comboBoxUpUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
+				.AddTo(disposable);
+
 			entry.Down
 				.BindTo(
 					textBoxDown,
@@ -57,6 +79,22 @@ namespace TrainEditor2.Views
 
 			entry.Down
 				.BindToErrorProvider(errorProvider, textBoxDown)
+				.AddTo(disposable);
+
+			entry.DownUnit
+				.BindTo(
+					comboBoxDownUnit,
+					x => x.SelectedIndex,
+					BindingMode.TwoWay,
+					x => (int)x,
+					x => (Unit.Jerk)x,
+					Observable.FromEvent<EventHandler, EventArgs>(
+							h => (s, e) => h(e),
+							h => comboBoxDownUnit.SelectedIndexChanged += h,
+							h => comboBoxDownUnit.SelectedIndexChanged -= h
+						)
+						.ToUnit()
+				)
 				.AddTo(disposable);
 		}
 

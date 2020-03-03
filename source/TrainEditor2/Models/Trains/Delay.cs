@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using OpenBveApi.Units;
 using Prism.Mvvm;
 
 namespace TrainEditor2.Models.Trains
@@ -12,10 +13,10 @@ namespace TrainEditor2.Models.Trains
 	{
 		internal class Entry : BindableBase, ICloneable
 		{
-			private double up;
-			private double down;
+			private Quantity.Time up;
+			private Quantity.Time down;
 
-			internal double Up
+			internal Quantity.Time Up
 			{
 				get
 				{
@@ -27,7 +28,7 @@ namespace TrainEditor2.Models.Trains
 				}
 			}
 
-			internal double Down
+			internal Quantity.Time Down
 			{
 				get
 				{
