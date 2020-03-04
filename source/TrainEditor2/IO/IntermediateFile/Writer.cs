@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using TrainEditor2.Extensions;
 using TrainEditor2.Models.Panels;
 using TrainEditor2.Models.Sounds;
 using TrainEditor2.Models.Trains;
@@ -18,22 +19,22 @@ namespace TrainEditor2.IO.IntermediateFile
 				new XAttribute(XNamespace.Xmlns + "xsi", XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance")),
 				new XAttribute(XNamespace.Xmlns + "xsd", XNamespace.Get("http://www.w3.org/2001/XMLSchema")),
 				new XElement("Version", editorVersion.ToString()),
-				WriteTrainNode(train),
-				WriteSoundsNode(sound)
+				WriteTrainNode(fileName, train),
+				WriteSoundsNode(fileName, sound)
 			);
 
 			xml.Add(trainEditor);
 			xml.Save(fileName);
 		}
 
-		private static XElement WriteTrainNode(Train train)
+		private static XElement WriteTrainNode(string fileName, Train train)
 		{
 			return new XElement("Train",
 				WriteHandleNode(train.Handle),
 				WriteDeviceNode(train.Device),
 				new XElement("InitialDriverCar", train.InitialDriverCar.ToString(culture)),
-				new XElement("Cars", train.Cars.Select(WriteCarNode)),
-				new XElement("Couplers", train.Couplers.Select(WriteCouplerNode))
+				new XElement("Cars", train.Cars.Select(x => WriteCarNode(fileName, x))),
+				new XElement("Couplers", train.Couplers.Select(x => WriteCouplerNode(fileName, x)))
 			);
 		}
 
@@ -67,7 +68,7 @@ namespace TrainEditor2.IO.IntermediateFile
 			);
 		}
 
-		private static XElement WriteCarNode(Car car)
+		private static XElement WriteCarNode(string fileName, Car car)
 		{
 			XElement carNode = new XElement("Car");
 
@@ -81,8 +82,8 @@ namespace TrainEditor2.IO.IntermediateFile
 				new XElement("DefinedAxles", car.DefinedAxles),
 				car.FrontAxle.ToXElement("FrontAxle"),
 				car.RearAxle.ToXElement("RearAxle"),
-				WriteBogieNode("FrontBogie", car.FrontBogie),
-				WriteBogieNode("RearBogie", car.RearBogie),
+				WriteBogieNode("FrontBogie", fileName, car.FrontBogie),
+				WriteBogieNode("RearBogie", fileName, car.RearBogie),
 				car.ExposedFrontalArea.ToXElement("ExposedFrontalArea"),
 				car.UnexposedFrontalArea.ToXElement("UnexposedFrontalArea"),
 				WritePerformanceNode(car.Performance),
@@ -91,7 +92,7 @@ namespace TrainEditor2.IO.IntermediateFile
 				WriteBrakeNode(car.Brake),
 				WritePressureNode(car.Pressure),
 				new XElement("Reversed", car.Reversed),
-				new XElement("Object", car.Object),
+				new XElement("Object", Utilities.MakeRelativePath(fileName, car.Object)),
 				new XElement("LoadingSway", car.LoadingSway),
 				WriteDoorNode("LeftDoor", car.LeftDoor),
 				WriteDoorNode("RightDoor", car.RightDoor),
@@ -114,20 +115,20 @@ namespace TrainEditor2.IO.IntermediateFile
 
 			if (cab != null)
 			{
-				carNode.Add(WriteCabNode(cab));
+				carNode.Add(WriteCabNode(fileName, cab));
 			}
 
 			return carNode;
 		}
 
-		private static XElement WriteBogieNode(string nodeName, Car.Bogie bogie)
+		private static XElement WriteBogieNode(string nodeName, string fileName, Car.Bogie bogie)
 		{
 			return new XElement(nodeName,
 				new XElement("DefinedAxles", bogie.DefinedAxles),
 				bogie.FrontAxle.ToXElement("FrontAxle"),
 				bogie.RearAxle.ToXElement("RearAxle"),
 				new XElement("Reversed", bogie.Reversed),
-				new XElement("Object", bogie.Object)
+				new XElement("Object", Utilities.MakeRelativePath(fileName, bogie.Object))
 			);
 		}
 
@@ -327,7 +328,7 @@ namespace TrainEditor2.IO.IntermediateFile
 			);
 		}
 
-		private static XElement WriteCabNode(Cab cab)
+		private static XElement WriteCabNode(string fileName, Cab cab)
 		{
 			XElement cabNode = new XElement("Cab");
 
@@ -343,7 +344,7 @@ namespace TrainEditor2.IO.IntermediateFile
 
 			if (embeddedCab != null)
 			{
-				cabNode.Add(WritePanelNode(embeddedCab.Panel));
+				cabNode.Add(WritePanelNode(fileName, embeddedCab.Panel));
 			}
 
 			ExternalCab externalCab = cab as ExternalCab;
@@ -352,69 +353,69 @@ namespace TrainEditor2.IO.IntermediateFile
 			{
 				cabNode.Add(
 					WriteCameraRestrictionNode(externalCab.CameraRestriction),
-					new XElement("Panel", externalCab.FileName)
+					new XElement("Panel", Utilities.MakeRelativePath(fileName, externalCab.FileName))
 				);
 			}
 
 			return cabNode;
 		}
 
-		private static XElement WritePanelNode(Panel panel)
+		private static XElement WritePanelNode(string fileName, Panel panel)
 		{
 			return new XElement("Panel",
-				WriteThisNode(panel.This),
-				new XElement("Screens", panel.Screens.Select(WriteScreenNode)),
-				new XElement("PanelElements", panel.PanelElements.Select(WritePanelElementNode))
+				WriteThisNode(fileName, panel.This),
+				new XElement("Screens", panel.Screens.Select(x => WriteScreenNode(fileName, x))),
+				new XElement("PanelElements", panel.PanelElements.Select(x => WritePanelElementNode(fileName, x)))
 			);
 		}
 
-		private static XElement WriteThisNode(This This)
+		private static XElement WriteThisNode(string fileName, This _this)
 		{
 			return new XElement("This",
-				new XElement("Resolution", This.Resolution.ToString(culture)),
-				new XElement("Left", This.Left.ToString(culture)),
-				new XElement("Right", This.Right.ToString(culture)),
-				new XElement("Top", This.Top.ToString(culture)),
-				new XElement("Bottom", This.Bottom.ToString(culture)),
-				new XElement("DaytimeImage", This.DaytimeImage),
-				new XElement("NighttimeImage", This.NighttimeImage),
-				new XElement("TransparentColor", This.TransparentColor),
-				new XElement("Center", $"{This.CenterX.ToString(culture)}, {This.CenterY.ToString(culture)}"),
-				new XElement("Origin", $"{This.OriginX.ToString(culture)}, {This.OriginY.ToString(culture)}")
+				new XElement("Resolution", _this.Resolution.ToString(culture)),
+				new XElement("Left", _this.Left.ToString(culture)),
+				new XElement("Right", _this.Right.ToString(culture)),
+				new XElement("Top", _this.Top.ToString(culture)),
+				new XElement("Bottom", _this.Bottom.ToString(culture)),
+				new XElement("DaytimeImage", Utilities.MakeRelativePath(fileName, _this.DaytimeImage)),
+				new XElement("NighttimeImage", Utilities.MakeRelativePath(fileName, _this.NighttimeImage)),
+				new XElement("TransparentColor", _this.TransparentColor),
+				new XElement("Center", $"{_this.CenterX.ToString(culture)}, {_this.CenterY.ToString(culture)}"),
+				new XElement("Origin", $"{_this.OriginX.ToString(culture)}, {_this.OriginY.ToString(culture)}")
 			);
 		}
 
-		private static XElement WriteScreenNode(Screen screen)
+		private static XElement WriteScreenNode(string fileName, Screen screen)
 		{
 			return new XElement("Screen",
 				new XElement("Number", screen.Number.ToString(culture)),
 				new XElement("Layer", screen.Layer.ToString(culture)),
-				new XElement("PanelElements", screen.PanelElements.Select(WritePanelElementNode)),
+				new XElement("PanelElements", screen.PanelElements.Select(x => WritePanelElementNode(fileName, x))),
 				new XElement("TouchElements", screen.TouchElements.Select(WriteTouchElementNode))
 			);
 		}
 
-		private static XElement WritePanelElementNode(PanelElement element)
+		private static XElement WritePanelElementNode(string fileName, PanelElement element)
 		{
 			Models.Panels.PilotLampElement pilotLamp = element as Models.Panels.PilotLampElement;
 
 			if (pilotLamp != null)
 			{
-				return WritePilotLampElementNode(pilotLamp);
+				return WritePilotLampElementNode(fileName, pilotLamp);
 			}
 
 			NeedleElement needle = element as NeedleElement;
 
 			if (needle != null)
 			{
-				return WriteNeedleElementNode(needle);
+				return WriteNeedleElementNode(fileName, needle);
 			}
 
 			DigitalNumberElement digitalNumber = element as DigitalNumberElement;
 
 			if (digitalNumber != null)
 			{
-				return WriteDigitalNumberElementNode(digitalNumber);
+				return WriteDigitalNumberElementNode(fileName, digitalNumber);
 			}
 
 			DigitalGaugeElement digitalGauge = element as DigitalGaugeElement;
@@ -428,7 +429,7 @@ namespace TrainEditor2.IO.IntermediateFile
 
 			if (linearGauge != null)
 			{
-				return WriteLinearGaugeElementNode(linearGauge);
+				return WriteLinearGaugeElementNode(fileName, linearGauge);
 			}
 
 			TimetableElement timetable = element as TimetableElement;
@@ -441,26 +442,26 @@ namespace TrainEditor2.IO.IntermediateFile
 			throw new ArgumentException();
 		}
 
-		private static XElement WritePilotLampElementNode(Models.Panels.PilotLampElement element)
+		private static XElement WritePilotLampElementNode(string fileName, Models.Panels.PilotLampElement element)
 		{
 			return new XElement("PilotLamp",
 				new XElement("Location", $"{element.LocationX.ToString(culture)}, {element.LocationY.ToString(culture)}"),
 				new XElement("Layer", element.Layer.ToString(culture)),
 				WriteSubjectNode(element.Subject),
-				new XElement("DaytimeImage", element.DaytimeImage),
-				new XElement("NighttimeImage", element.NighttimeImage),
+				new XElement("DaytimeImage", Utilities.MakeRelativePath(fileName, element.DaytimeImage)),
+				new XElement("NighttimeImage", Utilities.MakeRelativePath(fileName, element.NighttimeImage)),
 				new XElement("TransparentColor", element.TransparentColor)
 			);
 		}
 
-		private static XElement WriteNeedleElementNode(NeedleElement element)
+		private static XElement WriteNeedleElementNode(string fileName, NeedleElement element)
 		{
 			return new XElement("Needle",
 				new XElement("Location", $"{element.LocationX.ToString(culture)}, {element.LocationY.ToString(culture)}"),
 				new XElement("Layer", element.Layer.ToString(culture)),
 				WriteSubjectNode(element.Subject),
-				new XElement("DaytimeImage", element.DaytimeImage),
-				new XElement("NighttimeImage", element.NighttimeImage),
+				new XElement("DaytimeImage", Utilities.MakeRelativePath(fileName, element.DaytimeImage)),
+				new XElement("NighttimeImage", Utilities.MakeRelativePath(fileName, element.NighttimeImage)),
 				new XElement("TransparentColor", element.TransparentColor),
 				new XElement("DefinedRadius", element.DefinedRadius),
 				new XElement("Radius", element.Radius.ToString(culture)),
@@ -480,14 +481,14 @@ namespace TrainEditor2.IO.IntermediateFile
 			);
 		}
 
-		private static XElement WriteDigitalNumberElementNode(DigitalNumberElement element)
+		private static XElement WriteDigitalNumberElementNode(string fileName, DigitalNumberElement element)
 		{
 			return new XElement("DigitalNumber",
 				new XElement("Location", $"{element.LocationX.ToString(culture)}, {element.LocationY.ToString(culture)}"),
 				new XElement("Layer", element.Layer.ToString(culture)),
 				WriteSubjectNode(element.Subject),
-				new XElement("DaytimeImage", element.DaytimeImage),
-				new XElement("NighttimeImage", element.NighttimeImage),
+				new XElement("DaytimeImage", Utilities.MakeRelativePath(fileName, element.DaytimeImage)),
+				new XElement("NighttimeImage", Utilities.MakeRelativePath(fileName, element.NighttimeImage)),
 				new XElement("TransparentColor", element.TransparentColor),
 				new XElement("Interval", element.Interval.ToString(culture))
 			);
@@ -509,14 +510,14 @@ namespace TrainEditor2.IO.IntermediateFile
 			);
 		}
 
-		private static XElement WriteLinearGaugeElementNode(LinearGaugeElement element)
+		private static XElement WriteLinearGaugeElementNode(string fileName, LinearGaugeElement element)
 		{
 			return new XElement("LinearGauge",
 				new XElement("Location", $"{element.LocationX.ToString(culture)}, {element.LocationY.ToString(culture)}"),
 				new XElement("Layer", element.Layer.ToString(culture)),
 				WriteSubjectNode(element.Subject),
-				new XElement("DaytimeImage", element.DaytimeImage),
-				new XElement("NighttimeImage", element.NighttimeImage),
+				new XElement("DaytimeImage", Utilities.MakeRelativePath(fileName, element.DaytimeImage)),
+				new XElement("NighttimeImage", Utilities.MakeRelativePath(fileName, element.NighttimeImage)),
 				new XElement("TransparentColor", element.TransparentColor),
 				new XElement("Minimum", element.Minimum.ToString(culture)),
 				new XElement("Maximum", element.Maximum.ToString(culture)),
@@ -591,48 +592,48 @@ namespace TrainEditor2.IO.IntermediateFile
 			);
 		}
 
-		private static XElement WriteCouplerNode(Coupler coupler)
+		private static XElement WriteCouplerNode(string fileName, Coupler coupler)
 		{
 			return new XElement("Coupler",
 				coupler.Min.ToXElement("Min"),
 				coupler.Max.ToXElement("Max"),
-				new XElement("Object", coupler.Object)
+				new XElement("Object", Utilities.MakeRelativePath(fileName, coupler.Object))
 			);
 		}
 
-		private static XElement WriteSoundsNode(Sound sound)
+		private static XElement WriteSoundsNode(string fileName, Sound sound)
 		{
 			return new XElement("Sounds",
-				WriteArraySoundNode("Run", sound.SoundElements.OfType<RunElement>()),
-				WriteArraySoundNode("Flange", sound.SoundElements.OfType<FlangeElement>()),
-				WriteArraySoundNode("Motor", sound.SoundElements.OfType<MotorElement>()),
-				WriteArraySoundNode("FrontSwitch", sound.SoundElements.OfType<FrontSwitchElement>()),
-				WriteArraySoundNode("RearSwitch", sound.SoundElements.OfType<RearSwitchElement>()),
-				WriteArraySoundNode("Brake", sound.SoundElements.OfType<BrakeElement>()),
-				WriteArraySoundNode("Compressor", sound.SoundElements.OfType<CompressorElement>()),
-				WriteArraySoundNode("Suspension", sound.SoundElements.OfType<SuspensionElement>()),
-				WriteArraySoundNode("PrimaryHorn", sound.SoundElements.OfType<PrimaryHornElement>()),
-				WriteArraySoundNode("SecondaryHorn", sound.SoundElements.OfType<SecondaryHornElement>()),
-				WriteArraySoundNode("MusicHorn", sound.SoundElements.OfType<MusicHornElement>()),
-				WriteArraySoundNode("Door", sound.SoundElements.OfType<DoorElement>()),
-				WriteArraySoundNode("Ats", sound.SoundElements.OfType<AtsElement>()),
-				WriteArraySoundNode("Buzzer", sound.SoundElements.OfType<BuzzerElement>()),
-				WriteArraySoundNode("PilotLamp", sound.SoundElements.OfType<Models.Sounds.PilotLampElement>()),
-				WriteArraySoundNode("BrakeHandle", sound.SoundElements.OfType<BrakeHandleElement>()),
-				WriteArraySoundNode("MasterController", sound.SoundElements.OfType<MasterControllerElement>()),
-				WriteArraySoundNode("Reverser", sound.SoundElements.OfType<ReverserElement>()),
-				WriteArraySoundNode("Breaker", sound.SoundElements.OfType<BreakerElement>()),
-				WriteArraySoundNode("RequestStop", sound.SoundElements.OfType<RequestStopElement>()),
-				WriteArraySoundNode("Touch", sound.SoundElements.OfType<Models.Sounds.TouchElement>()),
-				WriteArraySoundNode("Others", sound.SoundElements.OfType<OthersElement>())
+				WriteArraySoundNode("Run", fileName, sound.SoundElements.OfType<RunElement>()),
+				WriteArraySoundNode("Flange", fileName, sound.SoundElements.OfType<FlangeElement>()),
+				WriteArraySoundNode("Motor", fileName, sound.SoundElements.OfType<MotorElement>()),
+				WriteArraySoundNode("FrontSwitch", fileName, sound.SoundElements.OfType<FrontSwitchElement>()),
+				WriteArraySoundNode("RearSwitch", fileName, sound.SoundElements.OfType<RearSwitchElement>()),
+				WriteArraySoundNode("Brake", fileName, sound.SoundElements.OfType<BrakeElement>()),
+				WriteArraySoundNode("Compressor", fileName, sound.SoundElements.OfType<CompressorElement>()),
+				WriteArraySoundNode("Suspension", fileName, sound.SoundElements.OfType<SuspensionElement>()),
+				WriteArraySoundNode("PrimaryHorn", fileName, sound.SoundElements.OfType<PrimaryHornElement>()),
+				WriteArraySoundNode("SecondaryHorn", fileName, sound.SoundElements.OfType<SecondaryHornElement>()),
+				WriteArraySoundNode("MusicHorn", fileName, sound.SoundElements.OfType<MusicHornElement>()),
+				WriteArraySoundNode("Door", fileName, sound.SoundElements.OfType<DoorElement>()),
+				WriteArraySoundNode("Ats", fileName, sound.SoundElements.OfType<AtsElement>()),
+				WriteArraySoundNode("Buzzer", fileName, sound.SoundElements.OfType<BuzzerElement>()),
+				WriteArraySoundNode("PilotLamp", fileName, sound.SoundElements.OfType<Models.Sounds.PilotLampElement>()),
+				WriteArraySoundNode("BrakeHandle", fileName, sound.SoundElements.OfType<BrakeHandleElement>()),
+				WriteArraySoundNode("MasterController", fileName, sound.SoundElements.OfType<MasterControllerElement>()),
+				WriteArraySoundNode("Reverser", fileName, sound.SoundElements.OfType<ReverserElement>()),
+				WriteArraySoundNode("Breaker", fileName, sound.SoundElements.OfType<BreakerElement>()),
+				WriteArraySoundNode("RequestStop", fileName, sound.SoundElements.OfType<RequestStopElement>()),
+				WriteArraySoundNode("Touch", fileName, sound.SoundElements.OfType<Models.Sounds.TouchElement>()),
+				WriteArraySoundNode("Others", fileName, sound.SoundElements.OfType<OthersElement>())
 			);
 		}
 
-		private static XElement WriteSoundNode(string nodeName, SoundElement element)
+		private static XElement WriteSoundNode(string nodeName, string fileName, SoundElement element)
 		{
 			return new XElement(nodeName,
 				new XElement("Key", element.Key),
-				new XElement("FilePath", element.FilePath),
+				new XElement("FilePath", Utilities.MakeRelativePath(fileName, element.FilePath)),
 				new XElement("DefinedPosition", element.DefinedPosition),
 				new XElement("Position", $"{element.PositionX}, {element.PositionY}, {element.PositionZ}"),
 				new XElement("DefinedRadius", element.DefinedRadius),
@@ -640,9 +641,9 @@ namespace TrainEditor2.IO.IntermediateFile
 			);
 		}
 
-		private static XElement WriteArraySoundNode(string nodeName, IEnumerable<SoundElement> elements)
+		private static XElement WriteArraySoundNode(string nodeName, string fileName, IEnumerable<SoundElement> elements)
 		{
-			return new XElement(nodeName, elements.Select(x => WriteSoundNode("Sound", x)));
+			return new XElement(nodeName, elements.Select(x => WriteSoundNode("Sound", fileName, x)));
 		}
 	}
 }

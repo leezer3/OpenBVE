@@ -112,6 +112,13 @@ namespace TrainEditor2.Views
 
 			motor.StoppedSim
 				.BindTo(
+					groupBoxUnit,
+					x => x.Enabled
+				)
+				.AddTo(motorDisposable);
+
+			motor.StoppedSim
+				.BindTo(
 					groupBoxArea,
 					x => x.Enabled
 				)

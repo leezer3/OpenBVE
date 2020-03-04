@@ -106,6 +106,10 @@ namespace TrainEditor2.Models.Trains
 				OnPropertyChanged(new PropertyChangedEventArgs(nameof(MaxVelocity)));
 				nowVelocity = nowVelocity.ToNewUnit(value);
 				OnPropertyChanged(new PropertyChangedEventArgs(nameof(NowVelocity)));
+				startSpeed = startSpeed.ToNewUnit(value);
+				OnPropertyChanged(new PropertyChangedEventArgs(nameof(StartSpeed)));
+				endSpeed = endSpeed.ToNewUnit(value);
+				OnPropertyChanged(new PropertyChangedEventArgs(nameof(EndSpeed)));
 			}
 		}
 

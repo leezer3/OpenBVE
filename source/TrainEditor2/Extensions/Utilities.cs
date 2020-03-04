@@ -375,6 +375,21 @@ namespace TrainEditor2.Extensions
 			}
 		}
 
+		internal static string MakeAbsolutePath(string baseFile, string targetFile)
+		{
+			if (string.IsNullOrEmpty(baseFile) || string.IsNullOrEmpty(targetFile))
+			{
+				return string.Empty;
+			}
+
+			Uri basePathUri = new Uri($@"{Path.GetDirectoryName(baseFile)}\".Replace("%", "%25"));
+			Uri targetPathUri = new Uri(basePathUri, targetFile.Replace("%", "%25"));
+
+			string absolutePath = targetPathUri.LocalPath;
+
+			return Uri.UnescapeDataString(absolutePath).Replace("%25", "%");
+		}
+
 		internal static string MakeRelativePath(string baseFile, string targetFile)
 		{
 			if (string.IsNullOrEmpty(baseFile) || string.IsNullOrEmpty(targetFile))

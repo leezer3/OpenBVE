@@ -45,8 +45,8 @@ namespace TrainEditor2.IO.IntermediateFile
 				Interface.AddMessage(MessageType.Warning, false, $"The .te {fileName} was created with a newer version of TrainEditor2. Please check for an update.");
 			}
 
-			train = ParseTrainNode(fileVersion, xml.XPathSelectElement("/TrainEditor/Train"));
-			sound = ParseSoundsNode(xml.XPathSelectElement("/TrainEditor/Sounds"));
+			train = ParseTrainNode(fileName, fileVersion, xml.XPathSelectElement("/TrainEditor/Train"));
+			sound = ParseSoundsNode(fileName, xml.XPathSelectElement("/TrainEditor/Sounds"));
 		}
 
 		private static FileVersion ParseFileVersion(XElement parent)
@@ -59,15 +59,15 @@ namespace TrainEditor2.IO.IntermediateFile
 			return new Version((string)parent) > editorVersion ? FileVersion.Newer : FileVersion.v1800;
 		}
 
-		private static Train ParseTrainNode(FileVersion fileVersion, XElement parent)
+		private static Train ParseTrainNode(string fileName, FileVersion fileVersion, XElement parent)
 		{
 			Train train = new Train
 			{
 				Handle = ParseHandleNode(parent.Element("Handle")),
 				Device = ParseDeviceNode(parent.Element("Device")),
 				InitialDriverCar = fileVersion > FileVersion.v1700 ? (int)parent.Element("InitialDriverCar") : (int)parent.XPathSelectElement("Cab/DriverCar"),
-				Cars = new ObservableCollection<Car>(parent.XPathSelectElements("Cars/Car").Select(x => ParseCarNode(fileVersion, x))),
-				Couplers = new ObservableCollection<Coupler>(parent.XPathSelectElements("Couplers/Coupler").Select(ParseCouplerNode))
+				Cars = new ObservableCollection<Car>(parent.XPathSelectElements("Cars/Car").Select(x => ParseCarNode(fileName, fileVersion, x))),
+				Couplers = new ObservableCollection<Coupler>(parent.XPathSelectElements("Couplers/Coupler").Select(x => ParseCouplerNode(fileName, x)))
 			};
 
 
@@ -97,7 +97,7 @@ namespace TrainEditor2.IO.IntermediateFile
 				cab.PositionY = new Quantity.Length(position[1], Unit.Length.Millimeter);
 				cab.PositionZ = new Quantity.Length(position[2], Unit.Length.Millimeter);
 
-				((EmbeddedCab)cab).Panel = ParsePanelNode(parent.XPathSelectElement("/TrainEditor/Panel"));
+				((EmbeddedCab)cab).Panel = ParsePanelNode(fileName, parent.XPathSelectElement("/TrainEditor/Panel"));
 			}
 
 			return train;
@@ -135,7 +135,7 @@ namespace TrainEditor2.IO.IntermediateFile
 			};
 		}
 
-		private static Car ParseCarNode(FileVersion fileVersion, XElement parent)
+		private static Car ParseCarNode(string fileName, FileVersion fileVersion, XElement parent)
 		{
 			Car car;
 
@@ -175,8 +175,8 @@ namespace TrainEditor2.IO.IntermediateFile
 			car.FrontAxle = Quantity.Length.Parse(parent.Element("FrontAxle"));
 			car.RearAxle = Quantity.Length.Parse(parent.Element("RearAxle"));
 
-			car.FrontBogie = ParseBogieNode(parent.Element("FrontBogie"));
-			car.RearBogie = ParseBogieNode(parent.Element("RearBogie"));
+			car.FrontBogie = ParseBogieNode(fileName, parent.Element("FrontBogie"));
+			car.RearBogie = ParseBogieNode(fileName, parent.Element("RearBogie"));
 
 			car.ExposedFrontalArea = Quantity.Area.Parse(parent.Element("ExposedFrontalArea"));
 			car.UnexposedFrontalArea = Quantity.Area.Parse(parent.Element("UnexposedFrontalArea"));
@@ -200,7 +200,7 @@ namespace TrainEditor2.IO.IntermediateFile
 			car.Pressure = ParsePressureNode(fileVersion, parent.Element("Pressure"));
 
 			car.Reversed = (bool)parent.Element("Reversed");
-			car.Object = (string)parent.Element("Object");
+			car.Object = Utilities.MakeAbsolutePath(fileName, (string)parent.Element("Object"));
 			car.LoadingSway = (bool)parent.Element("LoadingSway");
 
 			if (fileVersion > FileVersion.v1700)
@@ -226,7 +226,7 @@ namespace TrainEditor2.IO.IntermediateFile
 
 			if (isControlledCar)
 			{
-				Cab cab = ParseCabNode(parent.Element("Cab"));
+				Cab cab = ParseCabNode(fileName, parent.Element("Cab"));
 
 				if (isMotorCar)
 				{
@@ -241,7 +241,7 @@ namespace TrainEditor2.IO.IntermediateFile
 			return car;
 		}
 
-		private static Car.Bogie ParseBogieNode(XElement parent)
+		private static Car.Bogie ParseBogieNode(string fileName, XElement parent)
 		{
 			return new Car.Bogie
 			{
@@ -249,7 +249,7 @@ namespace TrainEditor2.IO.IntermediateFile
 				FrontAxle = Quantity.Length.Parse(parent.Element("FrontAxle")),
 				RearAxle = Quantity.Length.Parse(parent.Element("RearAxle")),
 				Reversed = (bool)parent.Element("Reversed"),
-				Object = (string)parent.Element("Object")
+				Object = Utilities.MakeAbsolutePath(fileName, (string)parent.Element("Object"))
 			};
 		}
 
@@ -494,7 +494,7 @@ namespace TrainEditor2.IO.IntermediateFile
 			areas = new List<Motor.Area>(parent.XPathSelectElements("Areas/Area").Select(n => new Motor.Area(Quantity.Velocity.Parse(n.Element("LeftX"), false, Unit.Velocity.KilometerPerHour), Quantity.Velocity.Parse(n.Element("RightX"), false, Unit.Velocity.KilometerPerHour), (int)n.Element("Index"))));
 		}
 
-		private static Cab ParseCabNode(XElement parent)
+		private static Cab ParseCabNode(string fileName, XElement parent)
 		{
 			Cab cab;
 
@@ -504,7 +504,7 @@ namespace TrainEditor2.IO.IntermediateFile
 			{
 				cab = new EmbeddedCab
 				{
-					Panel = ParsePanelNode(panelNode)
+					Panel = ParsePanelNode(fileName, panelNode)
 				};
 			}
 			else
@@ -512,7 +512,7 @@ namespace TrainEditor2.IO.IntermediateFile
 				cab = new ExternalCab
 				{
 					CameraRestriction = ParseCameraRestrictionNode(parent.Element("CameraRestriction")),
-					FileName = (string)panelNode
+					FileName = Utilities.MakeAbsolutePath(fileName, (string)panelNode)
 				};
 			}
 
@@ -531,46 +531,17 @@ namespace TrainEditor2.IO.IntermediateFile
 			return cab;
 		}
 
-		private static CameraRestriction ParseCameraRestrictionNode(XElement parent)
-		{
-			return new CameraRestriction
-			{
-				DefinedForwards = (bool)parent.Element("DefinedForwards"),
-				DefinedBackwards = (bool)parent.Element("DefinedBackwards"),
-				DefinedLeft = (bool)parent.Element("DefinedLeft"),
-				DefinedRight = (bool)parent.Element("DefinedRight"),
-				DefinedUp = (bool)parent.Element("DefinedUp"),
-				DefinedDown = (bool)parent.Element("DefinedDown"),
-				Forwards = Quantity.Length.Parse(parent.Element("Forwards")),
-				Backwards = Quantity.Length.Parse(parent.Element("Backwards")),
-				Left = Quantity.Length.Parse(parent.Element("Left")),
-				Right = Quantity.Length.Parse(parent.Element("Right")),
-				Up = Quantity.Length.Parse(parent.Element("Up")),
-				Down = Quantity.Length.Parse(parent.Element("Down"))
-			};
-		}
-
-		private static Coupler ParseCouplerNode(XElement parent)
-		{
-			return new Coupler
-			{
-				Min = Quantity.Length.Parse(parent.Element("Min")),
-				Max = Quantity.Length.Parse(parent.Element("Max")),
-				Object = (string)parent.Element("Object")
-			};
-		}
-
-		private static Panel ParsePanelNode(XElement parent)
+		private static Panel ParsePanelNode(string fileName, XElement parent)
 		{
 			return new Panel
 			{
-				This = ParseThisNode(parent.Element("This")),
-				Screens = new ObservableCollection<Screen>(parent.XPathSelectElements("Screens/Screen").Select(ParseScreenNode)),
-				PanelElements = new ObservableCollection<PanelElement>(parent.XPathSelectElements("PanelElements/*").Select(ParsePanelElementNode).Where(x => x != null))
+				This = ParseThisNode(fileName, parent.Element("This")),
+				Screens = new ObservableCollection<Screen>(parent.XPathSelectElements("Screens/Screen").Select(x => ParseScreenNode(fileName, x))),
+				PanelElements = new ObservableCollection<PanelElement>(parent.XPathSelectElements("PanelElements/*").Select(x => ParsePanelElementNode(fileName, x)).Where(x => x != null))
 			};
 		}
 
-		private static This ParseThisNode(XElement parent)
+		private static This ParseThisNode(string fileName, XElement parent)
 		{
 			double[] center = ((string)parent.Element("Center")).Split(',').Select(double.Parse).ToArray();
 			double[] origin = ((string)parent.Element("Origin")).Split(',').Select(double.Parse).ToArray();
@@ -582,8 +553,8 @@ namespace TrainEditor2.IO.IntermediateFile
 				Right = (double)parent.Element("Right"),
 				Top = (double)parent.Element("Top"),
 				Bottom = (double)parent.Element("Bottom"),
-				DaytimeImage = (string)parent.Element("DaytimeImage"),
-				NighttimeImage = (string)parent.Element("NighttimeImage"),
+				DaytimeImage = Utilities.MakeAbsolutePath(fileName, (string)parent.Element("DaytimeImage")),
+				NighttimeImage = Utilities.MakeAbsolutePath(fileName, (string)parent.Element("NighttimeImage")),
 				TransparentColor = Color24.ParseHexColor((string)parent.Element("TransparentColor")),
 				CenterX = center[0],
 				CenterY = center[1],
@@ -592,13 +563,13 @@ namespace TrainEditor2.IO.IntermediateFile
 			};
 		}
 
-		private static Screen ParseScreenNode(XElement parent)
+		private static Screen ParseScreenNode(string fileName, XElement parent)
 		{
 			Screen screen = new Screen
 			{
 				Number = (int)parent.Element("Number"),
 				Layer = (int)parent.Element("Layer"),
-				PanelElements = new ObservableCollection<PanelElement>(parent.XPathSelectElements("PanelElements/*").Select(ParsePanelElementNode).Where(x => x != null))
+				PanelElements = new ObservableCollection<PanelElement>(parent.XPathSelectElements("PanelElements/*").Select(x => ParsePanelElementNode(fileName, x)).Where(x => x != null))
 			};
 
 			screen.TouchElements = new ObservableCollection<Models.Panels.TouchElement>(parent.XPathSelectElements("TouchElements/Touch").Select(x => ParseTouchElementNode(screen, x)));
@@ -606,26 +577,26 @@ namespace TrainEditor2.IO.IntermediateFile
 			return screen;
 		}
 
-		private static PanelElement ParsePanelElementNode(XElement parent)
+		private static PanelElement ParsePanelElementNode(string fileName, XElement parent)
 		{
 			PanelElement element = null;
 
 			switch (parent.Name.LocalName)
 			{
 				case "PilotLamp":
-					ParsePilotLampElementNode(parent, out element);
+					ParsePilotLampElementNode(fileName, parent, out element);
 					break;
 				case "Needle":
-					ParseNeedleElementNode(parent, out element);
+					ParseNeedleElementNode(fileName, parent, out element);
 					break;
 				case "DigitalNumber":
-					ParseDigitalNumberElementNode(parent, out element);
+					ParseDigitalNumberElementNode(fileName, parent, out element);
 					break;
 				case "DigitalGauge":
 					ParseDigitalGaugeElementNode(parent, out element);
 					break;
 				case "LinearGauge":
-					ParseLinearGaugeElementNode(parent, out element);
+					ParseLinearGaugeElementNode(fileName, parent, out element);
 					break;
 				case "Timetable":
 					ParseTimetableElementNode(parent, out element);
@@ -635,7 +606,7 @@ namespace TrainEditor2.IO.IntermediateFile
 			return element;
 		}
 
-		private static void ParsePilotLampElementNode(XElement parent, out PanelElement element)
+		private static void ParsePilotLampElementNode(string fileName, XElement parent, out PanelElement element)
 		{
 			double[] location = ((string)parent.Element("Location")).Split(',').Select(double.Parse).ToArray();
 
@@ -645,13 +616,13 @@ namespace TrainEditor2.IO.IntermediateFile
 				LocationY = location[1],
 				Layer = (int)parent.Element("Layer"),
 				Subject = ParseSubjectNode(parent.Element("Subject")),
-				DaytimeImage = (string)parent.Element("DaytimeImage"),
-				NighttimeImage = (string)parent.Element("NighttimeImage"),
+				DaytimeImage = Utilities.MakeAbsolutePath(fileName, (string)parent.Element("DaytimeImage")),
+				NighttimeImage = Utilities.MakeAbsolutePath(fileName, (string)parent.Element("NighttimeImage")),
 				TransparentColor = Color24.ParseHexColor((string)parent.Element("TransparentColor"))
 			};
 		}
 
-		private static void ParseNeedleElementNode(XElement parent, out PanelElement element)
+		private static void ParseNeedleElementNode(string fileName, XElement parent, out PanelElement element)
 		{
 			double[] location = ((string)parent.Element("Location")).Split(',').Select(double.Parse).ToArray();
 			double[] origin = ((string)parent.Element("Origin")).Split(',').Select(double.Parse).ToArray();
@@ -662,8 +633,8 @@ namespace TrainEditor2.IO.IntermediateFile
 				LocationY = location[1],
 				Layer = (int)parent.Element("Layer"),
 				Subject = ParseSubjectNode(parent.Element("Subject")),
-				DaytimeImage = (string)parent.Element("DaytimeImage"),
-				NighttimeImage = (string)parent.Element("NighttimeImage"),
+				DaytimeImage = Utilities.MakeAbsolutePath(fileName, (string)parent.Element("DaytimeImage")),
+				NighttimeImage = Utilities.MakeAbsolutePath(fileName, (string)parent.Element("NighttimeImage")),
 				TransparentColor = Color24.ParseHexColor((string)parent.Element("TransparentColor")),
 				DefinedRadius = (bool)parent.Element("DefinedRadius"),
 				Radius = (double)parent.Element("Radius"),
@@ -684,7 +655,7 @@ namespace TrainEditor2.IO.IntermediateFile
 			};
 		}
 
-		private static void ParseDigitalNumberElementNode(XElement parent, out PanelElement element)
+		private static void ParseDigitalNumberElementNode(string fileName, XElement parent, out PanelElement element)
 		{
 			double[] location = ((string)parent.Element("Location")).Split(',').Select(double.Parse).ToArray();
 
@@ -694,8 +665,8 @@ namespace TrainEditor2.IO.IntermediateFile
 				LocationY = location[1],
 				Layer = (int)parent.Element("Layer"),
 				Subject = ParseSubjectNode(parent.Element("Subject")),
-				DaytimeImage = (string)parent.Element("DaytimeImage"),
-				NighttimeImage = (string)parent.Element("NighttimeImage"),
+				DaytimeImage = Utilities.MakeAbsolutePath(fileName, (string)parent.Element("DaytimeImage")),
+				NighttimeImage = Utilities.MakeAbsolutePath(fileName, (string)parent.Element("NighttimeImage")),
 				TransparentColor = Color24.ParseHexColor((string)parent.Element("TransparentColor")),
 				Interval = (int)parent.Element("Interval")
 			};
@@ -721,7 +692,7 @@ namespace TrainEditor2.IO.IntermediateFile
 			};
 		}
 
-		private static void ParseLinearGaugeElementNode(XElement parent, out PanelElement element)
+		private static void ParseLinearGaugeElementNode(string fileName, XElement parent, out PanelElement element)
 		{
 			double[] location = ((string)parent.Element("Location")).Split(',').Select(double.Parse).ToArray();
 			int[] direction = ((string)parent.Element("Direction")).Split(',').Select(int.Parse).ToArray();
@@ -732,8 +703,8 @@ namespace TrainEditor2.IO.IntermediateFile
 				LocationY = location[1],
 				Layer = (int)parent.Element("Layer"),
 				Subject = ParseSubjectNode(parent.Element("Subject")),
-				DaytimeImage = (string)parent.Element("DaytimeImage"),
-				NighttimeImage = (string)parent.Element("NighttimeImage"),
+				DaytimeImage = Utilities.MakeAbsolutePath(fileName, (string)parent.Element("DaytimeImage")),
+				NighttimeImage = Utilities.MakeAbsolutePath(fileName, (string)parent.Element("NighttimeImage")),
 				TransparentColor = Color24.ParseHexColor((string)parent.Element("TransparentColor")),
 				Minimum = (double)parent.Element("Minimum"),
 				Maximum = (double)parent.Element("Maximum"),
@@ -824,44 +795,73 @@ namespace TrainEditor2.IO.IntermediateFile
 			};
 		}
 
-		private static Sound ParseSoundsNode(XElement parent)
+		private static CameraRestriction ParseCameraRestrictionNode(XElement parent)
+		{
+			return new CameraRestriction
+			{
+				DefinedForwards = (bool)parent.Element("DefinedForwards"),
+				DefinedBackwards = (bool)parent.Element("DefinedBackwards"),
+				DefinedLeft = (bool)parent.Element("DefinedLeft"),
+				DefinedRight = (bool)parent.Element("DefinedRight"),
+				DefinedUp = (bool)parent.Element("DefinedUp"),
+				DefinedDown = (bool)parent.Element("DefinedDown"),
+				Forwards = Quantity.Length.Parse(parent.Element("Forwards")),
+				Backwards = Quantity.Length.Parse(parent.Element("Backwards")),
+				Left = Quantity.Length.Parse(parent.Element("Left")),
+				Right = Quantity.Length.Parse(parent.Element("Right")),
+				Up = Quantity.Length.Parse(parent.Element("Up")),
+				Down = Quantity.Length.Parse(parent.Element("Down"))
+			};
+		}
+
+		private static Coupler ParseCouplerNode(string fileName, XElement parent)
+		{
+			return new Coupler
+			{
+				Min = Quantity.Length.Parse(parent.Element("Min")),
+				Max = Quantity.Length.Parse(parent.Element("Max")),
+				Object = Utilities.MakeAbsolutePath(fileName, (string)parent.Element("Object"))
+			};
+		}
+
+		private static Sound ParseSoundsNode(string fileName, XElement parent)
 		{
 			Sound sound = new Sound();
 
-			ParseArraySoundNode<RunElement>(parent.Element("Run"), sound.SoundElements);
-			ParseArraySoundNode<FlangeElement>(parent.Element("Flange"), sound.SoundElements);
-			ParseArraySoundNode<MotorElement>(parent.Element("Motor"), sound.SoundElements);
-			ParseArraySoundNode<FrontSwitchElement>(parent.Element("FrontSwitch"), sound.SoundElements);
-			ParseArraySoundNode<RearSwitchElement>(parent.Element("RearSwitch"), sound.SoundElements);
-			ParseArraySoundNode<BrakeElement, SoundKey.Brake>(parent.Element("Brake"), sound.SoundElements);
-			ParseArraySoundNode<CompressorElement, SoundKey.Compressor>(parent.Element("Compressor"), sound.SoundElements);
-			ParseArraySoundNode<SuspensionElement, SoundKey.Suspension>(parent.Element("Suspension"), sound.SoundElements);
-			ParseArraySoundNode<PrimaryHornElement, SoundKey.Horn>(parent.Element("PrimaryHorn"), sound.SoundElements);
-			ParseArraySoundNode<SecondaryHornElement, SoundKey.Horn>(parent.Element("SecondaryHorn"), sound.SoundElements);
-			ParseArraySoundNode<MusicHornElement, SoundKey.Horn>(parent.Element("MusicHornHorn"), sound.SoundElements);
-			ParseArraySoundNode<DoorElement, SoundKey.Door>(parent.Element("Door"), sound.SoundElements);
-			ParseArraySoundNode<AtsElement>(parent.Element("Ats"), sound.SoundElements);
-			ParseArraySoundNode<BuzzerElement, SoundKey.Buzzer>(parent.Element("Buzzer"), sound.SoundElements);
-			ParseArraySoundNode<Models.Sounds.PilotLampElement, SoundKey.PilotLamp>(parent.Element("PilotLamp"), sound.SoundElements);
-			ParseArraySoundNode<BrakeHandleElement, SoundKey.BrakeHandle>(parent.Element("BrakeHandle"), sound.SoundElements);
-			ParseArraySoundNode<MasterControllerElement, SoundKey.MasterController>(parent.Element("MasterController"), sound.SoundElements);
-			ParseArraySoundNode<ReverserElement, SoundKey.Reverser>(parent.Element("Reverser"), sound.SoundElements);
-			ParseArraySoundNode<BreakerElement, SoundKey.Breaker>(parent.Element("Breaker"), sound.SoundElements);
-			ParseArraySoundNode<RequestStopElement, SoundKey.RequestStop>(parent.Element("RequestStop"), sound.SoundElements);
-			ParseArraySoundNode<Models.Sounds.TouchElement>(parent.Element("Touch"), sound.SoundElements);
-			ParseArraySoundNode<OthersElement, SoundKey.Others>(parent.Element("Others"), sound.SoundElements);
+			ParseArraySoundNode<RunElement>(fileName, parent.Element("Run"), sound.SoundElements);
+			ParseArraySoundNode<FlangeElement>(fileName, parent.Element("Flange"), sound.SoundElements);
+			ParseArraySoundNode<MotorElement>(fileName, parent.Element("Motor"), sound.SoundElements);
+			ParseArraySoundNode<FrontSwitchElement>(fileName, parent.Element("FrontSwitch"), sound.SoundElements);
+			ParseArraySoundNode<RearSwitchElement>(fileName, parent.Element("RearSwitch"), sound.SoundElements);
+			ParseArraySoundNode<BrakeElement, SoundKey.Brake>(fileName, parent.Element("Brake"), sound.SoundElements);
+			ParseArraySoundNode<CompressorElement, SoundKey.Compressor>(fileName, parent.Element("Compressor"), sound.SoundElements);
+			ParseArraySoundNode<SuspensionElement, SoundKey.Suspension>(fileName, parent.Element("Suspension"), sound.SoundElements);
+			ParseArraySoundNode<PrimaryHornElement, SoundKey.Horn>(fileName, parent.Element("PrimaryHorn"), sound.SoundElements);
+			ParseArraySoundNode<SecondaryHornElement, SoundKey.Horn>(fileName, parent.Element("SecondaryHorn"), sound.SoundElements);
+			ParseArraySoundNode<MusicHornElement, SoundKey.Horn>(fileName, parent.Element("MusicHornHorn"), sound.SoundElements);
+			ParseArraySoundNode<DoorElement, SoundKey.Door>(fileName, parent.Element("Door"), sound.SoundElements);
+			ParseArraySoundNode<AtsElement>(fileName, parent.Element("Ats"), sound.SoundElements);
+			ParseArraySoundNode<BuzzerElement, SoundKey.Buzzer>(fileName, parent.Element("Buzzer"), sound.SoundElements);
+			ParseArraySoundNode<Models.Sounds.PilotLampElement, SoundKey.PilotLamp>(fileName, parent.Element("PilotLamp"), sound.SoundElements);
+			ParseArraySoundNode<BrakeHandleElement, SoundKey.BrakeHandle>(fileName, parent.Element("BrakeHandle"), sound.SoundElements);
+			ParseArraySoundNode<MasterControllerElement, SoundKey.MasterController>(fileName, parent.Element("MasterController"), sound.SoundElements);
+			ParseArraySoundNode<ReverserElement, SoundKey.Reverser>(fileName, parent.Element("Reverser"), sound.SoundElements);
+			ParseArraySoundNode<BreakerElement, SoundKey.Breaker>(fileName, parent.Element("Breaker"), sound.SoundElements);
+			ParseArraySoundNode<RequestStopElement, SoundKey.RequestStop>(fileName, parent.Element("RequestStop"), sound.SoundElements);
+			ParseArraySoundNode<Models.Sounds.TouchElement>(fileName, parent.Element("Touch"), sound.SoundElements);
+			ParseArraySoundNode<OthersElement, SoundKey.Others>(fileName, parent.Element("Others"), sound.SoundElements);
 
 			return sound;
 		}
 
-		private static T ParseSoundNode<T>(XElement parent) where T : SoundElement<int>, new()
+		private static T ParseSoundNode<T>(string fileName, XElement parent) where T : SoundElement<int>, new()
 		{
 			double[] position = ((string)parent.Element("Position")).Split(',').Select(double.Parse).ToArray();
 
 			return new T
 			{
 				Key = (int)parent.Element("Key"),
-				FilePath = (string)parent.Element("FilePath"),
+				FilePath = Utilities.MakeAbsolutePath(fileName, (string)parent.Element("FilePath")),
 				DefinedPosition = (bool)parent.Element("DefinedPosition"),
 				PositionX = position[0],
 				PositionY = position[1],
@@ -871,14 +871,14 @@ namespace TrainEditor2.IO.IntermediateFile
 			};
 		}
 
-		private static T ParseSoundNode<T, U>(XElement parent) where T : SoundElement<U>, new()
+		private static T ParseSoundNode<T, U>(string fileName, XElement parent) where T : SoundElement<U>, new()
 		{
 			double[] position = ((string)parent.Element("Position")).Split(',').Select(double.Parse).ToArray();
 
 			return new T
 			{
 				Key = (U)Enum.Parse(typeof(U), (string)parent.Element("Key")),
-				FilePath = (string)parent.Element("FilePath"),
+				FilePath = Utilities.MakeAbsolutePath(fileName, (string)parent.Element("FilePath")),
 				DefinedPosition = (bool)parent.Element("DefinedPosition"),
 				PositionX = position[0],
 				PositionY = position[1],
@@ -888,19 +888,19 @@ namespace TrainEditor2.IO.IntermediateFile
 			};
 		}
 
-		private static void ParseArraySoundNode<T>(XElement parent, ICollection<SoundElement> elements) where T : SoundElement<int>, new()
+		private static void ParseArraySoundNode<T>(string fileName, XElement parent, ICollection<SoundElement> elements) where T : SoundElement<int>, new()
 		{
 			if (parent != null)
 			{
-				elements.AddRange(parent.Elements("Sound").Select(ParseSoundNode<T>));
+				elements.AddRange(parent.Elements("Sound").Select(x => ParseSoundNode<T>(fileName, x)));
 			}
 		}
 
-		private static void ParseArraySoundNode<T, U>(XElement parent, ICollection<SoundElement> elements) where T : SoundElement<U>, new()
+		private static void ParseArraySoundNode<T, U>(string fileName, XElement parent, ICollection<SoundElement> elements) where T : SoundElement<U>, new()
 		{
 			if (parent != null)
 			{
-				elements.AddRange(parent.Elements("Sound").Select(ParseSoundNode<T, U>));
+				elements.AddRange(parent.Elements("Sound").Select(x => ParseSoundNode<T, U>(fileName, x)));
 			}
 		}
 	}

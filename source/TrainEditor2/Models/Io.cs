@@ -391,11 +391,15 @@ namespace TrainEditor2.Models
 
 					if (motorCar != null)
 					{
-						app.Train.Cars[i] = new ControlledMotorCar(motorCar) { Cab = new EmbeddedCab { Panel = (Panel)panel.Clone() } };
+						Cab cab = (motorCar as ControlledMotorCar)?.Cab ?? new EmbeddedCab();
+
+						app.Train.Cars[i] = new ControlledMotorCar(motorCar) { Cab = new EmbeddedCab(cab) { Panel = (Panel)panel.Clone() } };
 					}
 					else
 					{
-						app.Train.Cars[i] = new ControlledTrailerCar(app.Train.Cars[i]) { Cab = new EmbeddedCab { Panel = (Panel)panel.Clone() } };
+						Cab cab = (app.Train.Cars[i] as ControlledTrailerCar)?.Cab ?? new EmbeddedCab();
+
+						app.Train.Cars[i] = new ControlledTrailerCar(app.Train.Cars[i]) { Cab = new EmbeddedCab(cab) { Panel = (Panel)panel.Clone() } };
 					}
 				}
 
@@ -482,6 +486,7 @@ namespace TrainEditor2.Models
 
 		internal ImportSoundFile(App app) : base(app)
 		{
+			CurrentSoundFileType = SoundFileType.SoundCfg;
 			OpenFolderDialog = new OpenFolderDialog();
 		}
 
