@@ -10,11 +10,9 @@ using System.Windows.Forms;
 using OpenBveApi.World;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
-using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenTK;
 using OpenTK.Graphics;
-using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using RouteManager2;
 using ButtonState = OpenTK.Input.ButtonState;
@@ -188,22 +186,10 @@ namespace OpenBve {
 #endif
 				if (String.Compare(System.IO.Path.GetFileName(Files[i]), "extensions.cfg", StringComparison.OrdinalIgnoreCase) == 0)
 				{
-					UnifiedObject[] carObjects;
-					UnifiedObject[] bogieObjects;
+					UnifiedObject[] carObjects, bogieObjects, couplerObjects;
+					double[] axleLocations, couplerDistances;
 					TrainManager.Train train;
-					double[] axleLocations;
-					ExtensionsCfgParser.ParseExtensionsConfig(Files[i], System.Text.Encoding.UTF8, out carObjects, out bogieObjects, out axleLocations, out train, true);
-					if (axleLocations.Length == 0)
-					{
-						axleLocations = new double[train.Cars.Length * 2];
-						for (int j = 0; j < train.Cars.Length; j++)
-						{
-							double ap = train.Cars.Length * 0.4;
-							axleLocations[j] = ap;
-							j++;
-							axleLocations[j] = -ap;
-						}
-					}
+					ExtensionsCfgParser.ParseExtensionsConfig(Files[i], out carObjects, out bogieObjects, out couplerObjects, out axleLocations, out couplerDistances, out train, true);
 					double z = 0.0;
 					for (int j = 0; j < carObjects.Length; j++)
 					{
@@ -212,7 +198,8 @@ namespace OpenBve {
 						                           0.0);
 						if (j < train.Cars.Length - 1)
 						{
-							z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2;
+							z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2.0;
+							z -= couplerDistances[j];
 						}
 					}
 					z = 0.0;
@@ -228,9 +215,23 @@ namespace OpenBve {
 							0.0);
 						if (trainCar < train.Cars.Length - 1)
 						{
-							z -= (train.Cars[trainCar].Length + train.Cars[trainCar + 1].Length) / 2;
+							z -= (train.Cars[trainCar].Length + train.Cars[trainCar + 1].Length) / 2.0;
+							z -= couplerDistances[trainCar];
 						}
 						trainCar++;
+					}
+					z = 0.0;
+					for (int j = 0; j < couplerObjects.Length; j++)
+					{
+						z -= train.Cars[j].Length / 2.0;
+						z -= couplerDistances[j] / 2.0;
+						
+						Renderer.CreateObject(couplerObjects[j], new Vector3(0.0, 0.0, z),
+							new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0,
+							0.0);
+
+						z -= couplerDistances[j] / 2.0;
+						z -= train.Cars[j + 1].Length / 2.0;
 					}
 				}
 				else
@@ -333,22 +334,10 @@ namespace OpenBve {
 										#endif
 		                if (String.Compare(System.IO.Path.GetFileName(Files[i]), "extensions.cfg", StringComparison.OrdinalIgnoreCase) == 0)
 		                {
-		                	UnifiedObject[] carObjects;
-		                	UnifiedObject[] bogieObjects;
-		                    double[] axleLocations;
-		                	TrainManager.Train train;
-		                	ExtensionsCfgParser.ParseExtensionsConfig(Files[i], System.Text.Encoding.UTF8, out carObjects, out bogieObjects, out axleLocations, out train, true);
-		                    if (axleLocations.Length == 0)
-		                    {
-			                    axleLocations = new double[train.Cars.Length * 2];
-			                    for (int j = 0; j < train.Cars.Length; j++)
-			                    {
-				                    double ap = train.Cars.Length * 0.4;
-				                    axleLocations[j] = ap;
-				                    j++;
-				                    axleLocations[j] = -ap;
-			                    }
-		                    }
+			                UnifiedObject[] carObjects, bogieObjects, couplerObjects;
+			                double[] axleLocations, couplerDistances;
+			                TrainManager.Train train;
+			                ExtensionsCfgParser.ParseExtensionsConfig(Files[i], out carObjects, out bogieObjects, out couplerObjects, out axleLocations, out couplerDistances, out train, true);
 		                	double z = 0.0;
 		                    for (int j = 0; j < carObjects.Length; j++)
 		                	{
@@ -357,9 +346,10 @@ namespace OpenBve {
 		                		                           0.0);
 		                		if (j < train.Cars.Length - 1)
 		                		{
-		                			z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2;
+		                			z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2.0;
+		                            z -= couplerDistances[j];
 		                		}
-		                	}
+							}
 		                    z = 0.0;
 		                    int trainCar = 0;
 		                    for (int j = 0; j < bogieObjects.Length; j++)
@@ -373,12 +363,26 @@ namespace OpenBve {
 				                    0.0);
 			                    if (trainCar < train.Cars.Length - 1)
 			                    {
-				                    z -= (train.Cars[trainCar].Length + train.Cars[trainCar + 1].Length) / 2;
+				                    z -= (train.Cars[trainCar].Length + train.Cars[trainCar + 1].Length) / 2.0;
+				                    z -= couplerDistances[trainCar];
 			                    }
 								trainCar++;
 		                    }
-		                }
-		                else
+		                    z = 0.0;
+		                    for (int j = 0; j < couplerObjects.Length; j++)
+		                    {
+			                    z -= train.Cars[j].Length / 2.0;
+			                    z -= couplerDistances[j] / 2.0;
+
+			                    Renderer.CreateObject(couplerObjects[j], new Vector3(0.0, 0.0, z),
+				                    new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0,
+				                    0.0);
+
+			                    z -= couplerDistances[j] / 2.0;
+			                    z -= train.Cars[j + 1].Length / 2.0;
+							}
+						}
+						else
 		                {
 		                	UnifiedObject o;
 			                Program.CurrentHost.LoadObject(Files[i], System.Text.Encoding.UTF8, out o);
@@ -429,22 +433,10 @@ namespace OpenBve {
 #endif
 				            if (String.Compare(System.IO.Path.GetFileName(Files[i]), "extensions.cfg", StringComparison.OrdinalIgnoreCase) == 0)
 				            {
-					            UnifiedObject[] carObjects;
-					            UnifiedObject[] bogieObjects;
+					            UnifiedObject[] carObjects, bogieObjects, couplerObjects;
+					            double[] axleLocations, couplerDistances;
 					            TrainManager.Train train;
-					            double[] axleLocations;
-					            ExtensionsCfgParser.ParseExtensionsConfig(Files[i], System.Text.Encoding.UTF8, out carObjects, out bogieObjects, out axleLocations, out train, true);
-					            if (axleLocations.Length == 0)
-					            {
-						            axleLocations = new double[train.Cars.Length * 2];
-						            for (int j = 0; j < train.Cars.Length; j++)
-						            {
-							            double ap = train.Cars.Length * 0.4;
-							            axleLocations[j] = ap;
-							            j++;
-							            axleLocations[j] = -ap;
-						            }
-					            }
+					            ExtensionsCfgParser.ParseExtensionsConfig(Files[i], out carObjects, out bogieObjects, out couplerObjects, out axleLocations, out couplerDistances, out train, true);
 					            double z = 0.0;
 					            for (int j = 0; j < carObjects.Length; j++)
 					            {
@@ -453,9 +445,10 @@ namespace OpenBve {
 							            0.0);
 						            if (j < train.Cars.Length - 1)
 						            {
-							            z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2;
+							            z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2.0;
+							            z -= couplerDistances[j];
 						            }
-					            }
+								}
 					            z = 0.0;
 					            int trainCar = 0;
 					            for (int j = 0; j < bogieObjects.Length; j++)
@@ -469,11 +462,25 @@ namespace OpenBve {
 							            0.0);
 						            if (trainCar < train.Cars.Length - 1)
 						            {
-							            z -= (train.Cars[trainCar].Length + train.Cars[trainCar + 1].Length) / 2;
+							            z -= (train.Cars[trainCar].Length + train.Cars[trainCar + 1].Length) / 2.0;
+							            z -= couplerDistances[trainCar];
 						            }
-						            trainCar++;
+										trainCar++;
 					            }
-				            }
+					            z = 0.0;
+					            for (int j = 0; j < couplerObjects.Length; j++)
+					            {
+						            z -= train.Cars[j].Length / 2.0;
+						            z -= couplerDistances[j] / 2.0;
+
+						            Renderer.CreateObject(couplerObjects[j], new Vector3(0.0, 0.0, z),
+							            new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0,
+							            0.0);
+
+						            z -= couplerDistances[j] / 2.0;
+						            z -= train.Cars[j + 1].Length / 2.0;
+					            }
+							}
 				            else
 				            {
 				            	UnifiedObject o;
