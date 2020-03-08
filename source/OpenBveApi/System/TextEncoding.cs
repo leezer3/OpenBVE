@@ -1,4 +1,5 @@
-﻿using Ude;
+﻿using System;
+using Ude;
 
 namespace OpenBveApi
 {
@@ -70,6 +71,8 @@ namespace OpenBveApi
 
 			switch (e)
 			{
+				case Encoding.Unknown:
+					return System.Text.Encoding.Default;
 				case Encoding.Utf7:
 					return System.Text.Encoding.UTF7;
 				case Encoding.Utf8:
@@ -84,12 +87,20 @@ namespace OpenBveApi
 					return System.Text.Encoding.GetEncoding(12001);
 				case Encoding.Shift_JIS:
 					return System.Text.Encoding.GetEncoding(932);
+				case Encoding.ASCII:
+					return System.Text.Encoding.ASCII;
+				case Encoding.Windows1252:
+					return System.Text.Encoding.GetEncoding(1252);
+				case Encoding.Windows1255:
+					return System.Text.Encoding.GetEncoding(1255);
 				case Encoding.Big5:
 					return System.Text.Encoding.GetEncoding(950);
 				case Encoding.EUC_KR:
-					return System.Text.Encoding.GetEncoding(949);
+					return System.Text.Encoding.GetEncoding(51949);
+				case Encoding.OEM866:
+					return System.Text.Encoding.GetEncoding(866);
 				default:
-					return System.Text.Encoding.Default;
+					throw new ArgumentOutOfRangeException();
 			}
 		}
 
