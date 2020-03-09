@@ -275,22 +275,22 @@ namespace AssimpNET.Obj
 			{
 				case 2:
 					CopyNextWord(out tmp);
-					v.X = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
+					v.X = float.Parse(tmp, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
 
 					CopyNextWord(out tmp);
-					v.Y = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
+					v.Y = float.Parse(tmp, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
 
 					v.Z = 0.0f;
 					break;
 				case 3:
 					CopyNextWord(out tmp);
-					v.X = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
+					v.X = float.Parse(tmp, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
 
 					CopyNextWord(out tmp);
-					v.Y = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
+					v.Y = float.Parse(tmp, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
 
 					CopyNextWord(out tmp);
-					v.Z = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
+					v.Z = float.Parse(tmp, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
 					break;
 				default:
 					throw new InvalidDataException(numComponents + " arguments were supplied. A vector must supply either 2 or 3 arguments.");
@@ -304,13 +304,13 @@ namespace AssimpNET.Obj
 			Vector3 v;
 			string tmp;
 			CopyNextWord(out tmp);
-			v.X = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
+			v.X = float.Parse(tmp, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
 
 			CopyNextWord(out tmp);
-			v.Y = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
+			v.Y = float.Parse(tmp, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
 
 			CopyNextWord(out tmp);
-			v.Z = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
+			v.Z = float.Parse(tmp, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
 
 			point3dArray.Add(v);
 			DataIt = SkipLine(DataIt, DataEnd, ref Line);
@@ -321,16 +321,16 @@ namespace AssimpNET.Obj
 			Vector3 v;
 			string tmp;
 			CopyNextWord(out tmp);
-			v.X = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
+			v.X = float.Parse(tmp, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
 
 			CopyNextWord(out tmp);
-			v.Y = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
+			v.Y = float.Parse(tmp, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
 
 			CopyNextWord(out tmp);
-			v.Z = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
+			v.Z = float.Parse(tmp, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
 
 			CopyNextWord(out tmp);
-			float w = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
+			float w = float.Parse(tmp, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
 
 			Debug.Assert(w != 0);
 
@@ -344,25 +344,25 @@ namespace AssimpNET.Obj
 			Vector3 a;
 			string tmp;
 			CopyNextWord(out tmp);
-			a.X = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
+			a.X = float.Parse(tmp, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
 
 			CopyNextWord(out tmp);
-			a.Y = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
+			a.Y = float.Parse(tmp, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
 
 			CopyNextWord(out tmp);
-			a.Z = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
+			a.Z = float.Parse(tmp, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
 
 			point3dArrayA.Add(a);
 
 			Vector3 b;
 			CopyNextWord(out tmp);
-			b.X = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
+			b.X = float.Parse(tmp, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
 
 			CopyNextWord(out tmp);
-			b.Y = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
+			b.Y = float.Parse(tmp, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
 
 			CopyNextWord(out tmp);
-			b.Z = float.Parse(tmp, NumberStyles.Number, CultureInfo.InvariantCulture);
+			b.Z = float.Parse(tmp, NumberStyles.Number | NumberStyles.AllowExponent, CultureInfo.InvariantCulture);
 
 			point3dArrayB.Add(b);
 
