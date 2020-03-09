@@ -277,7 +277,7 @@ namespace Plugin
 								bool mf = false;
 								for (int k = 0; k < Builder.Materials.Length; k++)
 								{
-									if (Builder.Materials[k].Key.ToLowerInvariant() == Arguments[1].ToLowerInvariant())
+									if (Builder.Materials[k].Key != null && Builder.Materials[k].Key.ToLowerInvariant() == Arguments[1].ToLowerInvariant())
 									{
 										mf = true;
 										currentMaterial = k;

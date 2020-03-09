@@ -50,6 +50,7 @@ namespace Plugin
 		    try
 		    {   
 			    unifiedObject = WavefrontObjParser.ReadObject(path, Encoding);
+			    return true;
 		    }
 		    catch
 		    {
