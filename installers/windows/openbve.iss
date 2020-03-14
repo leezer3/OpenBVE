@@ -3,7 +3,7 @@
 
 #define MyAppName "openBVE"
 #define MyAppVersion "1.7.1.3"
-#define MyAppPublisher "Christopher Lees"
+#define MyAppPublisher "The OpenBVE Project"
 #define MyAppURL "http://www.openbve-project.net"
 #define MyAppExeName "OpenBve.exe"
 

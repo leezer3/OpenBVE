@@ -4,7 +4,7 @@ $InstallerOut = @"
 
 #define MyAppName "openBVE"
 #define MyAppVersion "$args"
-#define MyAppPublisher "Christopher Lees"
+#define MyAppPublisher "The OpenBVE Project"
 #define MyAppURL "http://www.openbve-project.net"
 #define MyAppExeName "OpenBve.exe"
 
