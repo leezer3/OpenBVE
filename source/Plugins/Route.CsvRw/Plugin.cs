@@ -27,9 +27,13 @@ namespace OpenBve
 
 	    /// <summary>Called when the plugin is loaded.</summary>
 	    /// <param name="host">The host that loaded the plugin.</param>
-	    public override void Load(HostInterface host, BaseOptions Options)
+	    /// <param name="fileSystem"></param>
+	    /// <param name="Options"></param>
+	    public override void Load(HostInterface host, FileSystem fileSystem, BaseOptions Options)
 	    {
-
+		    CurrentHost = host;
+		    FileSystem = fileSystem;
+		    CurrentOptions = Options;
 	    }
 
 	    /// <summary>Checks whether the plugin can load the specified route.</summary>

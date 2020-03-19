@@ -49,12 +49,10 @@ namespace OpenBve {
 					}
 				}
 			}
-			
 			freeObjCount = 0;
 			railtypeCount = 0;
 			Program.CurrentOptions.UnitOfSpeed = "km/h";
 			Program.CurrentOptions.SpeedConversionFactor = 0.0;
-			Program.CurrentRoute.Information.RouteBriefing = null;
 			CompatibilityFolder = Program.FileSystem.GetDataFolder("Compatibility");
 			if (!PreviewOnly)
 			{

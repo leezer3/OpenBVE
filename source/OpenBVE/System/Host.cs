@@ -424,6 +424,11 @@ namespace OpenBve {
 			Timetable.UpdateCustomTimetable(Daytime, Nighttime);
 		}
 
+		public override AbstractTrain ParseTrackFollowingObject(string tfoFile, string objectPath)
+		{
+			return TrackFollowingObjectParser.ParseTrackFollowingObject(tfoFile, objectPath);
+		}
+
 		public Host() : base(HostApplication.OpenBve)
 		{
 		}

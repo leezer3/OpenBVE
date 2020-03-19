@@ -320,6 +320,11 @@ namespace OpenBve {
 			}
 		}
 
+		public override AbstractTrain ParseTrackFollowingObject(string tfoFile, string objectPath)
+		{
+			throw new NotImplementedException();
+		}
+
 		public Host() : base(HostApplication.ObjectViewer)
 		{
 		}

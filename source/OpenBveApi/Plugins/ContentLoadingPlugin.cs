@@ -18,6 +18,9 @@
 		/// <summary>The interface to load objects as exposed by the plugin, or a null reference.</summary>
 		public Objects.ObjectInterface Object;
 
+		/// <summary>The interface to load routes as exposed by the plugin, or a null reference.</summary>
+		public Routes.RouteInterface Route;
+		
 		/// <summary>Creates a new instance of this class.</summary>
 		/// <param name="file">The plugin file.</param>
 		public ContentLoadingPlugin(string file)
@@ -47,6 +50,11 @@
 				this.Object.SetObjectParser(Options.CurrentXParser);
 				this.Object.SetObjectParser(Options.CurrentObjParser);
 			}
+
+			if (this.Route != null)
+			{
+				this.Route.Load(Host, FileSystem, Options);
+			}
 		}
 
 		/// <summary>Unloads all interfaces this plugin supports.</summary>
@@ -65,6 +73,11 @@
 			if (this.Object != null)
 			{
 				this.Object.Unload();
+			}
+
+			if (this.Route != null)
+			{
+				this.Route.Unload();
 			}
 		}
 	}

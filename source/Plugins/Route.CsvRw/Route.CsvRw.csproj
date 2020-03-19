@@ -18,7 +18,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\..\bin_debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -28,7 +28,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\..\bin_release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -71,7 +71,6 @@
     <Compile Include="XML\DynamicLight.cs" />
     <Compile Include="XML\MarkerScript.cs" />
     <Compile Include="XML\StationXml.cs" />
-    <Compile Include="XML\TrackFollowingObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\LibRender2\LibRender2.csproj">
@@ -95,4 +94,14 @@
     <Folder Include="Namespaces\Track\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+    <PropertyGroup>
+	  <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
+		  mkdir $(TargetDir)Data\Plugins\
+		  move /Y $(TargetDir)$(TargetName).* $(TargetDir)Data\Plugins\
+	  </PostBuildEvent>
+	  <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
+		  mkdir -p $(TargetDir)Data/Plugins/
+		  mv -f $(TargetDir)$(TargetName).* $(TargetDir)Data/Plugins/
+	  </PostBuildEvent>
+  </PropertyGroup>
 </Project>

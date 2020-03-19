@@ -5,6 +5,7 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Sounds;
 using OpenBveApi.Textures;
+using OpenBveApi.Trains;
 using TrainEditor2.Systems.Functions;
 
 namespace TrainEditor2.Systems
@@ -62,6 +63,11 @@ namespace TrainEditor2.Systems
 
 			sound = null;
 			return false;
+		}
+
+		public override AbstractTrain ParseTrackFollowingObject(string tfoFile, string objectPath)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

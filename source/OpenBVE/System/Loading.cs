@@ -187,7 +187,24 @@ namespace OpenBve {
 			bool IsRW = CsvRwRouteParser.isRWFile(CurrentRouteFile);
 			Program.FileSystem.AppendToLogFile("Route file format is: " + (IsRW ? "RW" : "CSV"));
 			Program.CurrentRoute.TrackFollowingObjects = TrainManager.TFOs;
-			CsvRwRouteParser.ParseRoute(CurrentRouteFile, IsRW, CurrentRouteEncoding, CurrentTrainFolder, ObjectFolder, SoundFolder, false);
+			bool loaded = false;
+			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+			{
+				if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.CanLoadRoute(CurrentRouteFile))
+				{
+					object Route;
+					Program.CurrentHost.Plugins[i].Route.LoadRoute(CurrentRouteFile, CurrentRouteEncoding, CurrentTrainFolder, ObjectFolder, SoundFolder, false, out Route);
+					Program.CurrentRoute = (CurrentRoute) Route;
+					loaded = true;
+					break;
+				}
+			}
+
+			if (!loaded)
+			{
+				throw new Exception("No plugins capable of loading routefile " + CurrentRouteFile + " were found.");
+			}
+			//CsvRwRouteParser.ParseRoute(CurrentRouteFile, IsRW, CurrentRouteEncoding, CurrentTrainFolder, ObjectFolder, SoundFolder, false);
 			Thread createIllustrations = new Thread(Program.CurrentRoute.Information.LoadInformation) {IsBackground = true};
 			createIllustrations.Start();
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
