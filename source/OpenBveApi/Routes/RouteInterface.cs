@@ -6,7 +6,8 @@
 		/// <param name="host">The host that loaded the plugin.</param>
 		/// <param name="fileSystem">The filesystem from the host application</param>
 		/// <param name="Options">The options supplied by the host program</param>
-		public virtual void Load(Hosts.HostInterface host, FileSystem.FileSystem fileSystem, BaseOptions Options) { }
+		/// <param name="rendererReference">A reference to the renderer in the host application</param>
+		public virtual void Load(Hosts.HostInterface host, FileSystem.FileSystem fileSystem, BaseOptions Options, object rendererReference) { }
 		
 		/// <summary>Called when the plugin is unloaded.</summary>
 		public virtual void Unload() { }

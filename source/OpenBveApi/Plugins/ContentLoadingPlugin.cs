@@ -32,7 +32,7 @@
 		}
 
 		/// <summary>Loads all interfaces this plugin supports.</summary>
-		public void Load(Hosts.HostInterface Host, FileSystem.FileSystem FileSystem, BaseOptions Options)
+		public void Load(Hosts.HostInterface Host, FileSystem.FileSystem FileSystem, BaseOptions Options, object RendererReference = null)
 		{
 			if (this.Texture != null)
 			{
@@ -53,7 +53,8 @@
 
 			if (this.Route != null)
 			{
-				this.Route.Load(Host, FileSystem, Options);
+				//FIXME: Remove renderer reference
+				this.Route.Load(Host, FileSystem, Options, RendererReference);
 			}
 		}
 

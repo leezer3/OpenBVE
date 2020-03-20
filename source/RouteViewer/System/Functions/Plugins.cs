@@ -72,9 +72,9 @@ namespace OpenBve
 							iruntime = true;
 						}
 					}
-					if (plugin.Texture != null | plugin.Sound != null | plugin.Object != null)
+					if (plugin.Texture != null | plugin.Sound != null | plugin.Object != null | plugin.Route != null)
 					{
-						plugin.Load(Program.CurrentHost, Program.FileSystem, Interface.CurrentOptions);
+						plugin.Load(Program.CurrentHost, Program.FileSystem, Interface.CurrentOptions, Program.Renderer);
 						list.Add(plugin);
 					}
 					else if (!iruntime)
