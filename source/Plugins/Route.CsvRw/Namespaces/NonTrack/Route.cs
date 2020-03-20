@@ -58,7 +58,7 @@ namespace OpenBve
 						}
 						else
 						{
-							Program.CurrentRoute.Information.DefaultTimetableDescription = Arguments[0];
+							CurrentRoute.Information.DefaultTimetableDescription = Arguments[0];
 						}
 					}
 
@@ -190,9 +190,9 @@ namespace OpenBve
 						}
 						else
 						{
-							if (Program.CurrentRoute.InitialStationTime == -1)
+							if (CurrentRoute.InitialStationTime == -1)
 							{
-								Program.CurrentRoute.InitialStationTime = t;
+								CurrentRoute.InitialStationTime = t;
 							}
 						}
 					}
@@ -264,7 +264,7 @@ namespace OpenBve
 						}
 						else
 						{
-							Program.CurrentRoute.Information.RouteBriefing = f;
+							CurrentRoute.Information.RouteBriefing = f;
 						}
 					}
 

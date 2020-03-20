@@ -64,7 +64,7 @@ namespace OpenBve
 						intervals.Sort();
 						if (intervals.Count > 0)
 						{
-							Program.CurrentRoute.PrecedingTrainTimeDeltas = intervals.ToArray();
+							CurrentRoute.PrecedingTrainTimeDeltas = intervals.ToArray();
 						}
 					}
 				}

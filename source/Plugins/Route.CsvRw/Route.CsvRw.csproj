@@ -65,6 +65,7 @@
     <Compile Include="Namespaces\NonTrack\Signal.cs" />
     <Compile Include="Namespaces\NonTrack\Structure.cs" />
     <Compile Include="Namespaces\NonTrack\Train.cs" />
+    <Compile Include="Namespaces\Track\Track.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XML\DynamicBackground.cs" />
@@ -90,16 +91,14 @@
       <Name>SoundManager</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Namespaces\Track\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-    <PropertyGroup>
-	  <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
+  <PropertyGroup>
+    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
 		  mkdir $(TargetDir)Data\Plugins\
 		  move /Y $(TargetDir)$(TargetName).* $(TargetDir)Data\Plugins\
 	  </PostBuildEvent>
-	  <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
+    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
 		  mkdir -p $(TargetDir)Data/Plugins/
 		  mv -f $(TargetDir)$(TargetName).* $(TargetDir)Data/Plugins/
 	  </PostBuildEvent>

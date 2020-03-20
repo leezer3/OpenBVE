@@ -7,6 +7,7 @@ using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
+using RouteManager2;
 using RouteManager2.SignalManager;
 using RouteManager2.Stations;
 
@@ -344,8 +345,8 @@ namespace OpenBve
 											{
 												if (CurrentStation > 0)
 												{
-													station.TimetableDaytimeTexture = Program.CurrentRoute.Stations[CurrentStation - 1].TimetableDaytimeTexture;
-													station.TimetableNighttimeTexture = Program.CurrentRoute.Stations[CurrentStation - 1].TimetableNighttimeTexture;
+													station.TimetableDaytimeTexture = CsvRwRouteParser.CurrentRoute.Stations[CurrentStation - 1].TimetableDaytimeTexture;
+													station.TimetableNighttimeTexture = CsvRwRouteParser.CurrentRoute.Stations[CurrentStation - 1].TimetableNighttimeTexture;
 												}
 												else if (daytimeTimetableTextures.Length > 0 & nighttimeTimetableTextures.Length > 0)
 												{
