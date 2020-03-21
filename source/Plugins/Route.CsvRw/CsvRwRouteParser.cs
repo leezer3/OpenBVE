@@ -506,6 +506,7 @@ namespace OpenBve {
 									ParseTrainCommand(Command, Arguments, CommandIndex1, UnitOfLength, Expressions[j], ref Data, PreviewOnly);
 									break;
 								case "structure":
+								case "texture":
 									ParseStructureCommand(Command, Arguments, CommandIndex1, CommandIndex2, Encoding, UnitOfLength, Expressions[j], ref Data, PreviewOnly);
 									break;
 								case "":
@@ -620,6 +621,7 @@ namespace OpenBve {
 								Command = Section + "." + Command;
 							}
 							Command = Command.Replace(".Void", "");
+							//FIXME: Most of these can go with the namespace split
 							if (Command.StartsWith("structure", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".load", StringComparison.OrdinalIgnoreCase))
 							{
 								Command = Command.Substring(0, Command.Length - 5).TrimEnd(new char[] { });
@@ -713,6 +715,7 @@ namespace OpenBve {
 								case "route":
 								case "train":
 								case "structure":
+								case "texture":
 								case "":
 								case "cycle":
 									break;
