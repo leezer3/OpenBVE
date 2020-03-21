@@ -70,12 +70,13 @@ namespace OpenBve
 	    /// <param name="PreviewOnly">Whether this is a preview</param>
 	    /// <param name="route">Receives the route.</param>
 	    /// <returns>Whether loading the sound was successful.</returns>
-	    public override bool LoadRoute(string path, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly, out object route)
+	    public override bool LoadRoute(string path, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly, ref object route)
 	    {
+		    CurrentRoute = (CurrentRoute)route;
 		    bool isRw = path.ToLowerInvariant().EndsWith(".rw");
 		    try
 		    {
-			    CsvRwRouteParser.ParseRoute(path, isRw, Encoding, trainPath, objectPath, soundPath, PreviewOnly, out route);
+			    CsvRwRouteParser.ParseRoute(path, isRw, Encoding, trainPath, objectPath, soundPath, PreviewOnly);
 			    return true;
 		    }
 		    catch

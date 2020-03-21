@@ -21,10 +21,12 @@ namespace OpenBve {
 
 		internal static CurrentRoute CurrentRoute;
 		// parse route
-		internal static void ParseRoute(string FileName, bool isRW, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly, out object route) {
+		internal static void ParseRoute(string FileName, bool isRW, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly)
+		{
+			CurrentRoute = Program.CurrentRoute;
 			// initialize data
-			CurrentRoute = new CurrentRoute(Program.Renderer);
-			CurrentRoute.Tracks[0] = new Track();
+			//CurrentRoute = new CurrentRoute(Program.Renderer);
+			//CurrentRoute.Tracks[0] = new Track();
 			/*
 			 * Store paths for later use
 			 */
@@ -260,11 +262,9 @@ namespace OpenBve {
 			ParseRouteForData(FileName, Encoding, ref Data, PreviewOnly);
 			if (Program.Cancel)
 			{
-				route = null;
 				return;
 			}
 			ApplyRouteData(FileName, ref Data, PreviewOnly);
-			route = CurrentRoute;
 
 //		    if (PreviewOnly == true && customLoadScreen == false)
 //		    {

@@ -26,7 +26,7 @@
 		/// <param name="PreviewOnly">Whether this is a preview</param>
 		/// <param name="route">Receives the route.</param>
 		/// <returns>Whether loading the sound was successful.</returns>
-		public abstract bool LoadRoute(string path, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly, out object route);
+		public abstract bool LoadRoute(string path, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly, ref object route);
 
 		/// <summary>Holds the loading progress</summary>
 		public double Progress;
