@@ -704,14 +704,23 @@ namespace OpenBve {
 								Command = Command.Substring(period + 1).ToLowerInvariant();
 							}
 
-							if (nameSpace == "track")
+							switch (nameSpace)
 							{
-								ParseTrackCommand(Command, Arguments, FileName, UnitOfLength, Expressions[j], ref Data, BlockIndex, CurrentStation, CurrentStop, DepartureSignalUsed, CurrentSection, PreviewOnly);
+								case "track":
+									ParseTrackCommand(Command, Arguments, FileName, UnitOfLength, Expressions[j], ref Data, BlockIndex, CurrentStation, CurrentStop, DepartureSignalUsed, CurrentSection, PreviewOnly);
+									break;
+								case "options":
+								case "route":
+								case "train":
+								case "structure":
+								case "":
+								case "cycle":
+									break;
+								default:
+									Program.CurrentHost.AddMessage(MessageType.Warning, false, "The command " + Command + " is not supported at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+									break;
 							}
-							else
-							{
-								Program.CurrentHost.AddMessage(MessageType.Warning, false, "The command " + Command + " is not supported at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-							}
+							
 						}
 					}
 				}
