@@ -58,7 +58,7 @@
     <Compile Include="CsvRwRouteParser.RouteFixes.cs" />
     <Compile Include="CsvRwRouteParser.SignalData.cs" />
     <Compile Include="CsvRwRouteParser.Structures.cs" />
-    <Compile Include="Namespaces\Namespaces.cs" />
+    <Compile Include="Namespaces\NameSpaces.cs" />
     <Compile Include="Namespaces\NonTrack\Cycle.cs" />
     <Compile Include="Namespaces\NonTrack\Options.cs" />
     <Compile Include="Namespaces\NonTrack\Route.cs" />
