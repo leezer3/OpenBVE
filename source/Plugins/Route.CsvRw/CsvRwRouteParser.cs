@@ -490,8 +490,8 @@ namespace OpenBve {
 							string nameSpace = string.Empty;
 							if (period != -1)
 							{
-								nameSpace = Command.Substring(0, period);
-								Command = Command.Substring(period + 1);
+								nameSpace = Command.Substring(0, period).ToLowerInvariant();
+								Command = Command.Substring(period + 1).ToLowerInvariant();
 							}
 							
 							switch (nameSpace)
@@ -514,7 +514,13 @@ namespace OpenBve {
 								case "cycle":
 									ParseCycleCommand(Command, Arguments, CommandIndex1, Expressions[j], ref Data, PreviewOnly);
 									break;
-
+								case "track":
+									break;
+								default:
+									/*
+									 * This needs an unrecognised command at some stage
+									 */
+									break;
 							}
 						}
 					}
@@ -694,8 +700,8 @@ namespace OpenBve {
 							string nameSpace = string.Empty;
 							if (period != -1)
 							{
-								nameSpace = Command.Substring(0, period);
-								Command = Command.Substring(period + 1);
+								nameSpace = Command.Substring(0, period).ToLowerInvariant();
+								Command = Command.Substring(period + 1).ToLowerInvariant();
 							}
 
 							if (nameSpace == "track")
