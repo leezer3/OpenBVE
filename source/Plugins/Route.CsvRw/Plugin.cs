@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using LibRender2;
 using OpenBveApi;
 using OpenBveApi.FileSystem;
@@ -72,7 +72,7 @@ namespace OpenBve
 	    /// <returns>Whether loading the sound was successful.</returns>
 	    public override bool LoadRoute(string path, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly, out object route)
 	    {
-		    bool isRw = path.ToLowerInvariant().EndsWith(".csv") || path.ToLowerInvariant().EndsWith(".rw");
+		    bool isRw = path.ToLowerInvariant().EndsWith(".rw");
 		    try
 		    {
 			    CsvRwRouteParser.ParseRoute(path, isRw, Encoding, trainPath, objectPath, soundPath, PreviewOnly, out route);
