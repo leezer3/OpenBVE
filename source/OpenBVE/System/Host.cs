@@ -289,6 +289,7 @@ namespace OpenBve {
 									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out unifiedObject)) {
 										if (unifiedObject is StaticObject)
 										{
+											unifiedObject.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, Interface.CurrentOptions.ObjectOptimizationVertexCulling);
 											Object = (StaticObject) unifiedObject;
 											return true;
 										}
@@ -361,8 +362,12 @@ namespace OpenBve {
 					if (Program.CurrentHost.Plugins[i].Object != null) {
 						try {
 							if (Program.CurrentHost.Plugins[i].Object.CanLoadObject(path)) {
-								try {
-									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out Object)) {
+								try
+								{
+									UnifiedObject obj;
+									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out obj)) {
+										obj.OptimizeObject(false, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, Interface.CurrentOptions.ObjectOptimizationVertexCulling);
+										Object = obj;
 										return true;
 									}
 									Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject");

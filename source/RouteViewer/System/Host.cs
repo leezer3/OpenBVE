@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -280,13 +281,58 @@ namespace OpenBve
 
 		public override bool LoadObject(string path, System.Text.Encoding Encoding, out UnifiedObject Object)
 		{
+			TextEncoding.Encoding newEncoding = TextEncoding.GetEncodingFromFile(path);
+			if (newEncoding != TextEncoding.Encoding.Unknown)
+			{
+				switch (newEncoding)
+				{
+					case TextEncoding.Encoding.Utf7:
+						Encoding = System.Text.Encoding.UTF7;
+						break;
+					case TextEncoding.Encoding.Utf8:
+						Encoding = System.Text.Encoding.UTF8;
+						break;
+					case TextEncoding.Encoding.Utf16Le:
+						Encoding = System.Text.Encoding.Unicode;
+						break;
+					case TextEncoding.Encoding.Utf16Be:
+						Encoding = System.Text.Encoding.BigEndianUnicode;
+						break;
+					case TextEncoding.Encoding.Utf32Le:
+						Encoding = System.Text.Encoding.UTF32;
+						break;
+					case TextEncoding.Encoding.Utf32Be:
+						Encoding = System.Text.Encoding.GetEncoding(12001);
+						break;
+					case TextEncoding.Encoding.Shift_JIS:
+						Encoding = System.Text.Encoding.GetEncoding(932);
+						break;
+					case TextEncoding.Encoding.ASCII:
+					case TextEncoding.Encoding.Windows1252:
+						Encoding = System.Text.Encoding.GetEncoding(1252);
+						break;
+					case TextEncoding.Encoding.Big5:
+						Encoding = System.Text.Encoding.GetEncoding(950);
+						break;
+					case TextEncoding.Encoding.EUC_KR:
+						Encoding = System.Text.Encoding.GetEncoding(949);
+						break;
+					case TextEncoding.Encoding.OEM866:
+						Encoding = System.Text.Encoding.GetEncoding(866);
+						break;
+				}
+			}
 			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++) {
 					if (Program.CurrentHost.Plugins[i].Object != null) {
 						try {
 							if (Program.CurrentHost.Plugins[i].Object.CanLoadObject(path)) {
-								try {
-									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out Object)) {
+								try
+								{
+									UnifiedObject obj;
+									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out obj)) {
+										obj.OptimizeObject(false, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, true);
+										Object = obj;
 										return true;
 									}
 									Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject");

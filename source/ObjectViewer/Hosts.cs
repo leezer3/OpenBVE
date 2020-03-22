@@ -257,8 +257,12 @@ namespace OpenBve {
 					if (Program.CurrentHost.Plugins[i].Object != null) {
 						try {
 							if (Program.CurrentHost.Plugins[i].Object.CanLoadObject(path)) {
-								try {
-									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out Object)) {
+								try
+								{
+									UnifiedObject obj;
+									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out obj)) {
+										obj.OptimizeObject(false, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, true);
+										Object = obj;
 										return true;
 									}
 									Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject");
@@ -273,7 +277,7 @@ namespace OpenBve {
 				}
 				Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
 			} else {
-				ReportProblem(ProblemType.PathNotFound, path);
+				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
 			}
 			Object = null;
 			return false;
