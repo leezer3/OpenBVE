@@ -382,6 +382,13 @@ namespace OpenBve
 				e.Cancel = true;
 				Loading.Cancel = true;
 			}
+
+			try
+			{
+				//Force-save the black-box log, as otherwise we may be missing upto 30s of data
+				Interface.SaveLogs(true);
+			}
+			catch { }
 			for (int i = 0; i < TrainManager.Trains.Length; i++)
 			{
 				if (TrainManager.Trains[i].State != TrainState.Bogus)

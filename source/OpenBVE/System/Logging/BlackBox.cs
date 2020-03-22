@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 using OpenBveApi;
 using OpenBveApi.Interface;
 
@@ -7,96 +8,120 @@ namespace OpenBve
 {
 	internal static partial class Interface
 	{
+		/// <summary>Magic bytes identifying this as an OpenBVE blackbox file</summary>
+		/// <remarks>openBVELOGS in UTF-8</remarks>
+		private static readonly byte[] Identifier = { 111, 112, 101, 110, 66, 86, 69, 95, 76, 79, 71, 83 };
+		/// <summary>Magic bytes identifying the EOF</summary>
+		/// <remarks>_fileEND in UTF-8</remarks>
+		private static readonly byte[] Footer = { 95, 102, 105, 108, 101, 69, 78, 68 };
+
 		/// <summary>Loads the black-box logs from the previous simulation run</summary>
 		internal static void LoadLogs()
 		{
 			string BlackBoxFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "logs.bin");
-			try
+			if (File.Exists(BlackBoxFile))
 			{
-				using (System.IO.FileStream Stream = new System.IO.FileStream(BlackBoxFile, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+				try
 				{
-					using (System.IO.BinaryReader Reader = new System.IO.BinaryReader(Stream, System.Text.Encoding.UTF8))
+					using (FileStream Stream = new FileStream(BlackBoxFile, FileMode.Open, FileAccess.Read))
 					{
-						byte[] Identifier = new byte[] { 111, 112, 101, 110, 66, 86, 69, 95, 76, 79, 71, 83 };
-						const short Version = 1;
-						byte[] Data = Reader.ReadBytes(Identifier.Length);
-						for (int i = 0; i < Identifier.Length; i++)
+						using (BinaryReader Reader = new BinaryReader(Stream, System.Text.Encoding.UTF8))
 						{
-							if (Identifier[i] != Data[i]) throw new System.IO.InvalidDataException();
+							const short Version = 1;
+							byte[] Data = Reader.ReadBytes(Identifier.Length);
+							for (int i = 0; i < Identifier.Length; i++)
+							{
+								if (Identifier[i] != Data[i]) throw new InvalidDataException();
+							}
+
+							short Number = Reader.ReadInt16();
+							if (Version != Number) throw new InvalidDataException();
+							Game.LogRouteName = Reader.ReadString();
+							Game.LogTrainName = Reader.ReadString();
+							Game.LogDateTime = DateTime.FromBinary(Reader.ReadInt64());
+							Interface.CurrentOptions.PreviousGameMode = (GameMode) Reader.ReadInt16();
+							Game.BlackBoxEntryCount = Reader.ReadInt32();
+							Game.BlackBoxEntries = new Game.BlackBoxEntry[Game.BlackBoxEntryCount];
+							for (int i = 0; i < Game.BlackBoxEntryCount; i++)
+							{
+								Game.BlackBoxEntries[i].Time = Reader.ReadDouble();
+								Game.BlackBoxEntries[i].Position = Reader.ReadDouble();
+								Game.BlackBoxEntries[i].Speed = Reader.ReadSingle();
+								Game.BlackBoxEntries[i].Acceleration = Reader.ReadSingle();
+								Game.BlackBoxEntries[i].ReverserDriver = Reader.ReadInt16();
+								Game.BlackBoxEntries[i].ReverserSafety = Reader.ReadInt16();
+								Game.BlackBoxEntries[i].PowerDriver = (Game.BlackBoxPower) Reader.ReadInt16();
+								Game.BlackBoxEntries[i].PowerSafety = (Game.BlackBoxPower) Reader.ReadInt16();
+								Game.BlackBoxEntries[i].BrakeDriver = (Game.BlackBoxBrake) Reader.ReadInt16();
+								Game.BlackBoxEntries[i].BrakeSafety = (Game.BlackBoxBrake) Reader.ReadInt16();
+								Game.BlackBoxEntries[i].EventToken = (Game.BlackBoxEventToken) Reader.ReadInt16();
+							}
+
+							Game.ScoreLogCount = Reader.ReadInt32();
+							Game.ScoreLogs = new Game.ScoreLog[Game.ScoreLogCount];
+							Game.CurrentScore.CurrentValue = 0;
+							for (int i = 0; i < Game.ScoreLogCount; i++)
+							{
+								Game.ScoreLogs[i].Time = Reader.ReadDouble();
+								Game.ScoreLogs[i].Position = Reader.ReadDouble();
+								Game.ScoreLogs[i].Value = Reader.ReadInt32();
+								Game.ScoreLogs[i].TextToken = (Game.ScoreTextToken) Reader.ReadInt16();
+								Game.CurrentScore.CurrentValue += Game.ScoreLogs[i].Value;
+							}
+
+							Game.CurrentScore.Maximum = Reader.ReadInt32();
+							Data = Reader.ReadBytes(Footer.Length);
+							for (int i = 0; i < Footer.Length; i++)
+							{
+								if (Footer[i] != Data[i]) throw new InvalidDataException();
+							}
+
+							Reader.Close();
 						}
-						short Number = Reader.ReadInt16();
-						if (Version != Number) throw new System.IO.InvalidDataException();
-						Game.LogRouteName = Reader.ReadString();
-						Game.LogTrainName = Reader.ReadString();
-						Game.LogDateTime = DateTime.FromBinary(Reader.ReadInt64());
-						Interface.CurrentOptions.PreviousGameMode = (GameMode)Reader.ReadInt16();
-						Game.BlackBoxEntryCount = Reader.ReadInt32();
-						Game.BlackBoxEntries = new Game.BlackBoxEntry[Game.BlackBoxEntryCount];
-						for (int i = 0; i < Game.BlackBoxEntryCount; i++)
-						{
-							Game.BlackBoxEntries[i].Time = Reader.ReadDouble();
-							Game.BlackBoxEntries[i].Position = Reader.ReadDouble();
-							Game.BlackBoxEntries[i].Speed = Reader.ReadSingle();
-							Game.BlackBoxEntries[i].Acceleration = Reader.ReadSingle();
-							Game.BlackBoxEntries[i].ReverserDriver = Reader.ReadInt16();
-							Game.BlackBoxEntries[i].ReverserSafety = Reader.ReadInt16();
-							Game.BlackBoxEntries[i].PowerDriver = (Game.BlackBoxPower)Reader.ReadInt16();
-							Game.BlackBoxEntries[i].PowerSafety = (Game.BlackBoxPower)Reader.ReadInt16();
-							Game.BlackBoxEntries[i].BrakeDriver = (Game.BlackBoxBrake)Reader.ReadInt16();
-							Game.BlackBoxEntries[i].BrakeSafety = (Game.BlackBoxBrake)Reader.ReadInt16();
-							Game.BlackBoxEntries[i].EventToken = (Game.BlackBoxEventToken)Reader.ReadInt16();
-						}
-						Game.ScoreLogCount = Reader.ReadInt32();
-						Game.ScoreLogs = new Game.ScoreLog[Game.ScoreLogCount];
-						Game.CurrentScore.CurrentValue = 0;
-						for (int i = 0; i < Game.ScoreLogCount; i++)
-						{
-							Game.ScoreLogs[i].Time = Reader.ReadDouble();
-							Game.ScoreLogs[i].Position = Reader.ReadDouble();
-							Game.ScoreLogs[i].Value = Reader.ReadInt32();
-							Game.ScoreLogs[i].TextToken = (Game.ScoreTextToken)Reader.ReadInt16();
-							Game.CurrentScore.CurrentValue += Game.ScoreLogs[i].Value;
-						}
-						Game.CurrentScore.Maximum = Reader.ReadInt32();
-						Identifier = new byte[] { 95, 102, 105, 108, 101, 69, 78, 68 };
-						Data = Reader.ReadBytes(Identifier.Length);
-						for (int i = 0; i < Identifier.Length; i++)
-						{
-							if (Identifier[i] != Data[i]) throw new System.IO.InvalidDataException();
-						}
-						Reader.Close();
-					} Stream.Close();
+
+						Stream.Close();
+					}
+					return;
+				}
+				catch
+				{
+					//Broken black box data so just discard....
 				}
 			}
-			catch
-			{
-				Game.LogRouteName = "";
-				Game.LogTrainName = "";
-				Game.LogDateTime = DateTime.Now;
-				Game.BlackBoxEntries = new Game.BlackBoxEntry[256];
-				Game.BlackBoxEntryCount = 0;
-				Game.ScoreLogs = new Game.ScoreLog[64];
-				Game.ScoreLogCount = 0;
-			}
+			Game.LogRouteName = "";
+			Game.LogTrainName = "";
+			Game.LogDateTime = DateTime.Now;
+			Game.BlackBoxEntries = new Game.BlackBoxEntry[256];
+			Game.BlackBoxEntryCount = 0;
+			Game.ScoreLogs = new Game.ScoreLog[64];
+			Game.ScoreLogCount = 0;
 		}
 
+
+		private static double lastLogSaveTime = 0;
+
 		/// <summary>Saves the current in-game black box log</summary>
-		internal static void SaveLogs()
+		internal static void SaveLogs(bool forceSave = false)
 		{
 			if (Interface.CurrentOptions.BlackBox == false)
 			{
 				return;
 			}
+
+			if (Program.CurrentRoute.SecondsSinceMidnight - lastLogSaveTime < 30 && !forceSave)
+			{
+				//TODO: This now only recreates the black-box log every ~30s
+				//Still shitty code, but still....
+				return;
+			}
+			lastLogSaveTime = Program.CurrentRoute.SecondsSinceMidnight;
 			string BlackBoxFile = OpenBveApi.Path.CombineFile(Program.FileSystem.SettingsFolder, "logs.bin");
 			try
 			{
-				using (System.IO.FileStream Stream = new System.IO.FileStream(BlackBoxFile, System.IO.FileMode.Create, System.IO.FileAccess.Write))
+				using (FileStream Stream = new FileStream(BlackBoxFile, FileMode.Create, FileAccess.Write))
 				{
-					//TODO: This code recreates the file every frame.....
-					//It should be possible to spin up a stream in a separate thread which then continously appends
-					using (System.IO.BinaryWriter Writer = new System.IO.BinaryWriter(Stream, System.Text.Encoding.UTF8))
+					using (BinaryWriter Writer = new BinaryWriter(Stream, System.Text.Encoding.UTF8))
 					{
-						byte[] Identifier = new byte[] {111, 112, 101, 110, 66, 86, 69, 95, 76, 79, 71, 83};
 						const short Version = 1;
 						Writer.Write(Identifier);
 						Writer.Write(Version);
@@ -130,8 +155,7 @@ namespace OpenBve
 						}
 
 						Writer.Write(Game.CurrentScore.Maximum);
-						Identifier = new byte[] {95, 102, 105, 108, 101, 69, 78, 68};
-						Writer.Write(Identifier);
+						Writer.Write(Footer);
 						Writer.Close();
 					}
 
