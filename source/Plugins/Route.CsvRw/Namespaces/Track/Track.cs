@@ -15,7 +15,10 @@ namespace OpenBve
 {
 	internal partial class CsvRwRouteParser
 	{
-		private static void ParseTrackCommand(string Command, string[] Arguments, string FileName, double[] UnitOfLength, Expression Expression, ref RouteData Data, int BlockIndex, int CurrentStation, int CurrentStop, bool DepartureSignalUsed, int CurrentSection, bool PreviewOnly)
+		private static int CurrentStation = -1;
+		private static int CurrentStop = -1;
+		private static int CurrentSection = 0;
+		private static void ParseTrackCommand(string Command, string[] Arguments, string FileName, double[] UnitOfLength, Expression Expression, ref RouteData Data, int BlockIndex, bool DepartureSignalUsed, bool PreviewOnly)
 		{
 			CultureInfo Culture = CultureInfo.InvariantCulture;
 			switch (Command)

@@ -310,10 +310,8 @@ namespace OpenBve {
 			int BlocksUsed = Data.Blocks.Length;
 			CurrentRoute.Stations = new RouteStation[] { };
 			Data.RequestStops = new StopRequest[] { };
-			int CurrentStation = -1;
-			int CurrentStop = -1;
+
 			bool DepartureSignalUsed = false;
-			int CurrentSection = 0;
 			double progressFactor = Expressions.Length == 0 ? 0.3333 : 0.3333 / (double)Expressions.Length;
 			// process non-track namespaces
 			//Check for any special-cased fixes we might need
@@ -709,7 +707,7 @@ namespace OpenBve {
 							switch (nameSpace)
 							{
 								case "track":
-									ParseTrackCommand(Command, Arguments, FileName, UnitOfLength, Expressions[j], ref Data, BlockIndex, CurrentStation, CurrentStop, DepartureSignalUsed, CurrentSection, PreviewOnly);
+									ParseTrackCommand(Command, Arguments, FileName, UnitOfLength, Expressions[j], ref Data, BlockIndex, DepartureSignalUsed, PreviewOnly);
 									break;
 								case "options":
 								case "route":
