@@ -737,10 +737,30 @@ namespace OpenBve
 			{
 				return;
 			}
+
+			if (!Plugins.LoadPlugins())
+			{
+				throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
+			}
 			Game.Reset(false, false);
-			bool IsRW = string.Equals(System.IO.Path.GetExtension(Result.RouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
-			CsvRwRouteParser.ParseRoute(Result.RouteFile, IsRW, Result.RouteEncoding, null, null, null, true);
-			
+			bool loaded = false;
+			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+			{
+				if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.CanLoadRoute(Result.RouteFile))
+				{
+					object Route = (object)Program.CurrentRoute; //must cast to allow us to use the ref keyword.
+					Program.CurrentHost.Plugins[i].Route.LoadRoute(Result.RouteFile, Result.RouteEncoding, null, null, null, true, ref Route);
+					Program.CurrentRoute = (CurrentRoute) Route;
+					loaded = true;
+					break;
+				}
+			}
+			Plugins.UnloadPlugins();
+			if (!loaded)
+			{
+				throw new Exception("No plugins capable of loading routefile " + Result.RouteFile + " were found.");
+			}
+
 		}
 
 		private void routeWorkerThread_completed(object sender, RunWorkerCompletedEventArgs e)

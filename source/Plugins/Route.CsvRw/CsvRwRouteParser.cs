@@ -304,6 +304,9 @@ namespace OpenBve {
 
 		// parse route for data
 		private static void ParseRouteForData(string FileName, System.Text.Encoding Encoding, Expression[] Expressions, double[] UnitOfLength, ref RouteData Data, bool PreviewOnly) {
+			CurrentStation = -1;
+			CurrentStop = -1;
+			CurrentSection = 0;
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string Section = ""; bool SectionAlwaysPrefix = false;
 			int BlockIndex = 0;
