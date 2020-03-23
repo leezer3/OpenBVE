@@ -67,13 +67,14 @@ namespace OpenBve
 						{
 							plugin.Object = (OpenBveApi.Objects.ObjectInterface)assembly.CreateInstance(type.FullName);
 						}
-						if (typeof(OpenBveApi.Runtime.IRuntime).IsAssignableFrom(type))
-						{
+						if (type.IsSubclassOf(typeof(OpenBveApi.Routes.RouteInterface))) {
+							plugin.Route = (OpenBveApi.Routes.RouteInterface)assembly.CreateInstance(type.FullName);
+						}
+						if (typeof(OpenBveApi.Runtime.IRuntime).IsAssignableFrom(type)) {
 							iruntime = true;
 						}
 					}
-					if (plugin.Texture != null | plugin.Sound != null | plugin.Object != null | plugin.Route != null)
-					{
+					if (plugin.Texture != null | plugin.Sound != null | plugin.Object != null | plugin.Route != null) {
 						plugin.Load(Program.CurrentHost, Program.FileSystem, Interface.CurrentOptions, Program.Renderer);
 						list.Add(plugin);
 					}

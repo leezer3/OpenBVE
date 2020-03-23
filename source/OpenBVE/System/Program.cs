@@ -10,7 +10,6 @@ using OpenTK;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
-using OpenBveApi.Routes;
 using RouteManager2;
 
 namespace OpenBve {
@@ -199,7 +198,7 @@ namespace OpenBve {
 				{
 					throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
 				}
-				Game.Reset(false, false);
+				Game.Reset(false);
 				bool loaded = false;
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 				{

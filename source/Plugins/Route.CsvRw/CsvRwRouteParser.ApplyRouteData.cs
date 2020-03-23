@@ -201,7 +201,7 @@ namespace OpenBve
 				for (int j = 0; j < CurrentRoute.Tracks.Count; j++)
 				{
 					var key = CurrentRoute.Tracks.ElementAt(j).Key;
-					if (CurrentRoute.Tracks[key].Elements == null)
+					if (CurrentRoute.Tracks[key].Elements == null || CurrentRoute.Tracks[key].Elements.Length == 0)
 					{
 						CurrentRoute.Tracks[key].Elements = new TrackElement[256];
 					}

@@ -15,6 +15,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
+using RouteManager2;
 
 namespace OpenBve {
 	internal static class Loading {
@@ -111,14 +112,30 @@ namespace OpenBve {
 		}
 
 		private static void LoadEverythingThreaded() {
+			Game.Reset();
 			string RailwayFolder = GetRailwayFolder(CurrentRouteFile);
 			string ObjectFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Object");
 			string SoundFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Sound");
-			// string CompatibilityFolder = OpenBveApi.Path.CombineDirectory(Application.StartupPath, "Compatibility");
 			Program.Renderer.Camera.CurrentMode = CameraViewMode.Track;
 			// load route
 			bool IsRW = string.Equals(System.IO.Path.GetExtension(CurrentRouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
-			CsvRwRouteParser.ParseRoute(CurrentRouteFile, IsRW, CurrentRouteEncoding, Application.StartupPath, ObjectFolder, SoundFolder, false);
+			bool loaded = false;
+			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+			{
+				if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.CanLoadRoute(CurrentRouteFile))
+				{
+					object Route = (object)Program.CurrentRoute; //must cast to allow us to use the ref keyword.
+					Program.CurrentHost.Plugins[i].Route.LoadRoute(CurrentRouteFile, CurrentRouteEncoding, null, ObjectFolder, SoundFolder, false, ref Route);
+					Program.CurrentRoute = (CurrentRoute) Route;
+					loaded = true;
+					break;
+				}
+			}
+
+			if (!loaded)
+			{
+				throw new Exception("No plugins capable of loading routefile " + CurrentRouteFile + " were found.");
+			}
 			World.CameraTrackFollower = new TrackFollower(Program.CurrentHost);
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			Program.CurrentRoute.Atmosphere.CalculateSeaLevelConstants();

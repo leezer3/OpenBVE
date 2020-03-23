@@ -80,7 +80,6 @@ namespace OpenBve {
 			ObjectManager.AnimatedWorldObjects = new WorldObject[4];
 			ObjectManager.AnimatedWorldObjectsUsed = 0;
 			// renderer / sound
-			Program.Renderer.Reset();
 			Program.Sounds.StopAllSounds();
 			GC.Collect();
 		}

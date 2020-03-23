@@ -24,7 +24,7 @@ namespace OpenBve {
 		/// <summary>Call this function to reset the game</summary>
 		/// <param name="ResetLogs">Whether the logs should be reset</param>
 		/// <param name="ResetRenderer">Whether the renderer should be reset</param>
-		internal static void Reset(bool ResetLogs, bool ResetRenderer) {
+		internal static void Reset(bool ResetLogs) {
 			// track manager
 			for (int i = 0; i < Program.CurrentRoute.Tracks.Count; i++)
 			{
@@ -70,17 +70,6 @@ namespace OpenBve {
 				BlackBoxEntryCount = 0;
 				BlackBoxNextUpdate = 0.0;
 			}
-			// renderer
-			if (ResetRenderer)
-			{
-				Program.Renderer.InfoTotalTriangles = 0;
-				Program.Renderer.InfoTotalTriangleStrip = 0;
-				Program.Renderer.InfoTotalQuads = 0;
-				Program.Renderer.InfoTotalQuadStrip = 0;
-				Program.Renderer.InfoTotalPolygon = 0;
-				Program.Renderer.Reset();
-			}
-			
 		}
 
 		// ================================
