@@ -182,8 +182,11 @@ namespace OpenBve
 							Train.ApplyReverser(0, false);
 						}
 						Train.ApplyNotch(-1, true, 1, true);
-						Train.ApplyAirBrakeHandle(TrainManager.AirBrakeHandleState.Service);
-						Train.ApplyEmergencyBrake();
+						if (!Train.Handles.EmergencyBrake.Driver)
+						{
+							Train.ApplyEmergencyBrake();
+						}
+						
 						CurrentInterval = 1.0;
 					}
 					else
