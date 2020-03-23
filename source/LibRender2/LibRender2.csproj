@@ -49,7 +49,6 @@
     <Compile Include="Camera\CameraAlignment.cs" />
     <Compile Include="Camera\CameraRestriction.cs" />
     <Compile Include="Fog\Fog.cs" />
-    <Compile Include="Lighting\LightDefinition.cs" />
     <Compile Include="Lighting\Lighting.cs" />
     <Compile Include="Loading\Loading.cs" />
     <Compile Include="MotionBlur\MotionBlur.cs" />

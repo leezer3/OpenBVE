@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using OpenBveApi.Routes;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
@@ -13,9 +14,6 @@ namespace LibRender2.Lightings
 
 		/// <summary>The current dynamic cab brightness</summary>
 		public double DynamicCabBrightness = 255;
-
-		/// <summary>The list of dynamic light definitions</summary>
-		public LightDefinition[] LightDefinitions;
 
 		/// <summary>The current ambient light color</summary>
 		public Color24 OptionAmbientColor = Color24.LightGrey;
@@ -62,7 +60,7 @@ namespace LibRender2.Lightings
 		}
 
 		/// <summary>Updates the lighting model on a per frame basis</summary>
-		public void UpdateLighting(double Time)
+		public void UpdateLighting(double Time, LightDefinition[] LightDefinitions)
 		{
 			//Check that we have more than one light definition & that the array is not null
 			if (DynamicLighting == false || LightDefinitions == null || LightDefinitions.Length < 2)

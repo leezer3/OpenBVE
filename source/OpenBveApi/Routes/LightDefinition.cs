@@ -1,8 +1,9 @@
 ﻿using OpenBveApi.Colors;
 using OpenBveApi.Math;
 
-namespace LibRender2.Lightings
+namespace OpenBveApi.Routes
 {
+	/// <summary>Describes the in-game lighting</summary>
 	public struct LightDefinition
 	{
 		/// <summary>The ambient lighting color</summary>
@@ -16,6 +17,7 @@ namespace LibRender2.Lightings
 		/// <summary>The cab brightness value to be applied</summary>
 		public double CabBrightness;
 
+		/// <summary>Creates a new LightDefinition</summary>
 		public LightDefinition(Color24 ambientColor, Color24 diffuseColor, Vector3 lightPosition, int time, double cab)
 		{
 			AmbientColor = ambientColor;
