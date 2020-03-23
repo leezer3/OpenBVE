@@ -195,8 +195,28 @@ namespace OpenBve {
 			}
 			// --- if a route was provided but no train, try to use the route default ---
 			if (result.RouteFile != null & result.TrainFolder == null) {
-				bool isRW = string.Equals(System.IO.Path.GetExtension(result.RouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
-				CsvRwRouteParser.ParseRoute(result.RouteFile, isRW, result.RouteEncoding, null, null, null, true);
+				if (!Plugins.LoadPlugins())
+				{
+					throw new Exception("Unable to load the required plugins- Please reinstall OpenBVE");
+				}
+				Game.Reset(false, false);
+				bool loaded = false;
+				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+				{
+					if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.CanLoadRoute(result.RouteFile))
+					{
+						object Route = (object)Program.CurrentRoute; //must cast to allow us to use the ref keyword.
+						Program.CurrentHost.Plugins[i].Route.LoadRoute(result.RouteFile, result.RouteEncoding, null, null, null, true, ref Route);
+						Program.CurrentRoute = (CurrentRoute) Route;
+						loaded = true;
+						break;
+					}
+				}
+				Plugins.UnloadPlugins();
+				if (!loaded)
+				{
+					throw new Exception("No plugins capable of loading routefile " + result.RouteFile + " were found.");
+				}
 				if (!string.IsNullOrEmpty(Interface.CurrentOptions.TrainName)) {
 					folder = System.IO.Path.GetDirectoryName(result.RouteFile);
 					while (true) {

@@ -173,8 +173,7 @@ namespace OpenBve {
 			Complete = true;
 		}
 		private static void LoadEverythingThreaded() {
-			Program.FileSystem.AppendToLogFile("Loading route file: " + CurrentRouteFile);
-			Program.FileSystem.AppendToLogFile("INFO: Route file hash " + CsvRwRouteParser.GetChecksum(CurrentRouteFile));
+			
 			string RailwayFolder = GetRailwayFolder(CurrentRouteFile);
 			string ObjectFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Object");
 			string SoundFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Sound");
@@ -182,10 +181,7 @@ namespace OpenBve {
 			Game.MinimalisticSimulation = true;
 			// screen
 			Program.Renderer.Camera.CurrentMode = CameraViewMode.Interior;
-			//First, check the format of the route file
-			//RW routes were written for BVE1 / 2, and have a different command syntax
-			bool IsRW = CsvRwRouteParser.isRWFile(CurrentRouteFile);
-			Program.FileSystem.AppendToLogFile("Route file format is: " + (IsRW ? "RW" : "CSV"));
+			
 			Program.CurrentRoute.TrackFollowingObjects = TrainManager.TFOs;
 			bool loaded = false;
 			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
