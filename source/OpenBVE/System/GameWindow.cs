@@ -156,7 +156,11 @@ namespace OpenBve
 					Environment.Exit(0);
 				}				
 			}
-			Program.Renderer.Lighting.UpdateLighting(Program.CurrentRoute.SecondsSinceMidnight, Program.CurrentRoute.LightDefinitions);
+
+			if (Program.CurrentRoute.DynamicLighting)
+			{
+				Program.Renderer.Lighting.UpdateLighting(Program.CurrentRoute.SecondsSinceMidnight, Program.CurrentRoute.LightDefinitions);
+			}
 			Program.Renderer.RenderScene(TimeElapsed);
 			Program.Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
 			Program.currentGameWindow.SwapBuffers();

@@ -9,9 +9,6 @@ namespace LibRender2.Lightings
 {
 	public class Lighting
 	{
-		/// <summary>Whether dynamic lighting is currently enabled</summary>
-		public bool DynamicLighting = false;
-
 		/// <summary>The current dynamic cab brightness</summary>
 		public double DynamicCabBrightness = 255;
 
@@ -63,7 +60,7 @@ namespace LibRender2.Lightings
 		public void UpdateLighting(double Time, LightDefinition[] LightDefinitions)
 		{
 			//Check that we have more than one light definition & that the array is not null
-			if (DynamicLighting == false || LightDefinitions == null || LightDefinitions.Length < 2)
+			if (LightDefinitions == null || LightDefinitions.Length < 2)
 			{
 				return;
 			}

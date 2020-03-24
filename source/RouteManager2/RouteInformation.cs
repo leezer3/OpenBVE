@@ -1,10 +1,14 @@
 ﻿using System.Drawing;
+using OpenBveApi.Textures;
 
 namespace RouteManager2
 {
 	/// <summary>Holds the information for a route</summary>
 	public class RouteInformation
 	{
+		/// <summary>The loading screen background</summary>
+		public Texture LoadingScreenBackground;
+
 		/// <summary>A bitmap storing the current route-map image</summary>
 		public Bitmap RouteMap;
 

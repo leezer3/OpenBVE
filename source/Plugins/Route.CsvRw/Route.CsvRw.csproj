@@ -74,10 +74,6 @@
     <Compile Include="XML\StationXml.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\LibRender2\LibRender2.csproj">
-      <Project>{68215476-302c-49f2-9f7e-aae20a2b6b12}</Project>
-      <Name>LibRender2</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-a564-40a9014dfa5f}</Project>
       <Name>OpenBveApi</Name>

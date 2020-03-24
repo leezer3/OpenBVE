@@ -1,5 +1,4 @@
 using System;
-using LibRender2;
 using OpenBveApi;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
@@ -23,8 +22,6 @@ namespace OpenBve
 
 	    public static BaseOptions CurrentOptions;
 
-	    public static BaseRenderer Renderer;
-
 	    /// <summary>Called when the plugin is loaded.</summary>
 	    /// <param name="host">The host that loaded the plugin.</param>
 	    /// <param name="fileSystem"></param>
@@ -35,16 +32,6 @@ namespace OpenBve
 		    CurrentHost = host;
 		    FileSystem = fileSystem;
 		    CurrentOptions = Options;
-		    if (rendererReference is BaseRenderer)
-		    {
-			    Renderer = (BaseRenderer)rendererReference;
-		    }
-		    else
-		    {
-				//FIXME: Can we remove the need for a reference to the renderer?
-				//Light properties should probably be in the route, other stuff seems easily movable
-			    throw new Exception("Should have passed a reference to the base renderer here");
-		    }
 	    }
 
 	    /// <summary>Checks whether the plugin can load the specified route.</summary>

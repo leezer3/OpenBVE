@@ -8,6 +8,7 @@ using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 
 namespace OpenBve
@@ -217,7 +218,10 @@ namespace OpenBve
 							Program.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
 						else
-							Program.Renderer.Loading.SetLoadingBkg(f);
+						{
+							Texture t = new Texture(f, new TextureParameters(null, null), Program.CurrentHost);
+							CurrentRoute.Information.LoadingScreenBackground = t;
+						}
 					}
 
 					break;
@@ -336,7 +340,7 @@ namespace OpenBve
 					break;
 				case "ambientlight":
 				{
-					if (Program.Renderer.Lighting.DynamicLighting == true)
+					if (Program.CurrentRoute.DynamicLighting == true)
 					{
 						Program.CurrentHost.AddMessage(MessageType.Warning, false, "Dynamic lighting is enabled- Route.AmbientLight will be ignored");
 						break;
@@ -378,7 +382,7 @@ namespace OpenBve
 					break;
 				case "directionallight":
 				{
-					if (Program.Renderer.Lighting.DynamicLighting == true)
+					if (Program.CurrentRoute.DynamicLighting == true)
 					{
 						Program.CurrentHost.AddMessage(MessageType.Warning, false, "Dynamic lighting is enabled- Route.DirectionalLight will be ignored");
 						break;
@@ -420,7 +424,7 @@ namespace OpenBve
 					break;
 				case "lightdirection":
 				{
-					if (Program.Renderer.Lighting.DynamicLighting == true)
+					if (Program.CurrentRoute.DynamicLighting == true)
 					{
 						Program.CurrentHost.AddMessage(MessageType.Warning, false, "Dynamic lighting is enabled- Route.LightDirection will be ignored");
 						break;
@@ -452,7 +456,7 @@ namespace OpenBve
 					{
 						if (DynamicLightParser.ReadLightingXML(path))
 						{
-							Program.Renderer.Lighting.DynamicLighting = true;
+							Program.CurrentRoute.DynamicLighting = true;
 						}
 						else
 						{

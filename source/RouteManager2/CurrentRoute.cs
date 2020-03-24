@@ -62,6 +62,9 @@ namespace RouteManager2
 		/// <summary>The list of dynamic light definitions</summary>
 		public LightDefinition[] LightDefinitions;
 
+		/// <summary>Whether dynamic lighting is currently enabled</summary>
+		public bool DynamicLighting = false;
+
 		/// <summary>The start of a region without fog</summary>
 		/// <remarks>Must not be below the viewing distance (e.g. 600m)</remarks>
 		public float NoFogStart;

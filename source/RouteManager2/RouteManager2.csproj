@@ -82,7 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibRender2\LibRender2.csproj">
-      <Project>{57bc7f10-0947-4349-b476-ab692a77818a}</Project>
+      <Project>{68215476-302c-49f2-9f7e-aae20a2b6b12}</Project>
       <Name>LibRender2</Name>
     </ProjectReference>
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
