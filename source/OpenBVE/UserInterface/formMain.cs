@@ -246,7 +246,7 @@ namespace OpenBve {
 				EncodingCodepages = new int[Info.Length + 1];
 				string[] EncodingDescriptions = new string[Info.Length + 1];
 				EncodingCodepages[0] = System.Text.Encoding.UTF8.CodePage;
-				EncodingDescriptions[0] = "(UTF-8)";
+				EncodingDescriptions[0] = $"{System.Text.Encoding.UTF8.EncodingName} - {System.Text.Encoding.UTF8.CodePage}";
 				for (int i = 0; i < Info.Length; i++)
 				{
 					EncodingCodepages[i + 1] = Info[i].CodePage;

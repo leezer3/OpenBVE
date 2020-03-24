@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -156,6 +157,63 @@ namespace OpenBveApi.Hosts {
 		/// <returns>Whether loading the sound was successful.</returns>
 		public virtual bool RegisterSound(Sounds.Sound sound, out SoundHandle handle) {
 			handle = null;
+			return false;
+		}
+
+		/// <summary>
+		/// Add an extension to the path of the object file that is missing the extension and no file.
+		/// </summary>
+		/// <param name="FilePath">The absolute on-disk path to the object</param>
+		/// <returns>Whether the extension could be determined</returns>
+		public bool DetermineObjectExtension(ref string FilePath)
+		{
+			if (System.IO.File.Exists(FilePath) || System.IO.Path.HasExtension(FilePath))
+			{
+				return true;
+			}
+
+			if (DetermineStaticObjectExtension(ref FilePath))
+			{
+				return true;
+			}
+
+			foreach (string extension in SupportedAnimatedObjectExtensions)
+			{
+				string testPath = Path.CombineFile(System.IO.Path.GetDirectoryName(FilePath), $"{System.IO.Path.GetFileName(FilePath)}{extension}");
+
+				if (System.IO.File.Exists(testPath))
+				{
+					FilePath = testPath;
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Add an extension to the path of the static object file that is missing the extension and no file.
+		/// </summary>
+		/// <param name="FilePath">The absolute on-disk path to the object</param>
+		/// <returns>Whether the extension could be determined</returns>
+		public bool DetermineStaticObjectExtension(ref string FilePath)
+		{
+			if (System.IO.File.Exists(FilePath) || System.IO.Path.HasExtension(FilePath))
+			{
+				return true;
+			}
+
+			foreach (string extension in SupportedStaticObjectExtensions)
+			{
+				string testPath = Path.CombineFile(System.IO.Path.GetDirectoryName(FilePath), $"{System.IO.Path.GetFileName(FilePath)}{extension}");
+
+				if (System.IO.File.Exists(testPath))
+				{
+					FilePath = testPath;
+					return true;
+				}
+			}
+
 			return false;
 		}
 
@@ -360,6 +418,15 @@ namespace OpenBveApi.Hosts {
 
 		/// <summary>The list of available content loading plugins</summary>
 		public ContentLoadingPlugin[] Plugins;
+
+		/// <summary>
+		/// Array of supported animated object extensions.
+		/// </summary>
+		public string[] SupportedAnimatedObjectExtensions => Plugins.Where(x => x.Object != null).SelectMany(x => x.Object.SupportedAnimatedObjectExtensions).ToArray();
+
+		/// <summary>
+		/// Array of supported static object extensions.
+		/// </summary>
+		public string[] SupportedStaticObjectExtensions => Plugins.Where(x => x.Object != null).SelectMany(x => x.Object.SupportedStaticObjectExtensions).ToArray();
 	}
-	
 }

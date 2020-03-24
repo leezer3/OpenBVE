@@ -569,6 +569,9 @@ namespace OpenBve {
 											Data.FogTransitionMode = a == 1;
 										}
 									} break;
+								case "options.compatibletransparencymode":
+								case "options.enablebvetshacks":
+										break;
 									// route
 								case "route.comment":
 									if (Arguments.Length < 1) {
@@ -1755,7 +1758,20 @@ namespace OpenBve {
 														string f = Arguments[0];
 														try
 														{
-															LocateObject(ref f, ObjectPath);
+															if (!LocateObject(ref f, ObjectPath))
+															{
+																string testPath = Path.CombineFile(ObjectPath, f);
+
+																if (Program.CurrentHost.DetermineStaticObjectExtension(ref testPath))
+																{
+																	f = testPath;
+																}
+																else
+																{
+																	Program.CurrentHost.AddMessage(MessageType.Error, false, "SignalFileWithoutExtension does not exist in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+																	break;
+																}
+															}
 														}
 														catch
 														{
@@ -1763,39 +1779,6 @@ namespace OpenBve {
 															//Really needs commenting fixing, rather than hacks like this.....
 															Program.CurrentHost.AddMessage(MessageType.Error, false, "SignalFileWithoutExtension does not contain a valid path in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 															break;
-														}
-														if (!System.IO.File.Exists(f) && !System.IO.Path.HasExtension(f))
-														{
-															string ff;
-															bool notFound = false;
-															while (true)
-															{
-																ff = Path.CombineFile(ObjectPath, f + ".x");
-																if (System.IO.File.Exists(ff))
-																{
-																	f = ff;
-																	break;
-																}
-																ff = Path.CombineFile(ObjectPath, f + ".csv");
-																if (System.IO.File.Exists(ff))
-																{
-																	f = ff;
-																	break;
-																}
-																ff = Path.CombineFile(ObjectPath, f + ".b3d");
-																if (System.IO.File.Exists(ff))
-																{
-																	f = ff;
-																	break;
-																}
-																Program.CurrentHost.AddMessage(MessageType.Error, false, "SignalFileWithoutExtension does not exist in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-																notFound = true;
-																break;
-															}
-															if (notFound)
-															{
-																break;
-															}
 														}
 														Bve4SignalData Signal = new Bve4SignalData
 														{
@@ -1818,51 +1801,33 @@ namespace OpenBve {
 																	if (!System.IO.File.Exists(f) && System.IO.Path.HasExtension(f))
 																	{
 																		string ext = System.IO.Path.GetExtension(f);
-																		switch (ext.ToLowerInvariant())
+
+																		if (Program.CurrentHost.SupportedStaticObjectExtensions.Contains(ext.ToLowerInvariant()))
 																		{
-																			case ".csv":
-																			case ".b3d":
-																			case ".x":
-																				Program.CurrentHost.AddMessage(MessageType.Warning, false, "GlowFileWithoutExtension should not supply a file extension in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-																				f = Path.CombineFile(ObjectPath, f);
-																				glowFileFound = true;
-																				break;
-																			case ".animated":
-																			case ".s":
-																				Program.CurrentHost.AddMessage(MessageType.Error, false, "GlowFileWithoutExtension must be a static object in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-																				break;
-																			default:
-																				Program.CurrentHost.AddMessage(MessageType.Error, false, "GlowFileWithoutExtension is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-																				break;
+																			Program.CurrentHost.AddMessage(MessageType.Warning, false, "GlowFileWithoutExtension should not supply a file extension in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+																			f = Path.CombineFile(ObjectPath, f);
+																			glowFileFound = true;
 																		}
-																		
+																		else if (Program.CurrentHost.SupportedAnimatedObjectExtensions.Contains(ext.ToLowerInvariant()))
+																		{
+																			Program.CurrentHost.AddMessage(MessageType.Error, false, "GlowFileWithoutExtension must be a static object in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+																		}
+																		else
+																		{
+																			Program.CurrentHost.AddMessage(MessageType.Error, false, "GlowFileWithoutExtension is invalid in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+																		}
 																	}
 																	if (!System.IO.File.Exists(f) && !System.IO.Path.HasExtension(f))
 																	{
-																		string ff;
-																		while (true)
+																		string testPath = Path.CombineFile(ObjectPath, f);
+
+																		if (Program.CurrentHost.DetermineStaticObjectExtension(ref testPath))
 																		{
-																			ff = Path.CombineFile(ObjectPath, f + ".x");
-																			if (System.IO.File.Exists(ff))
-																			{
-																				f = ff;
-																				glowFileFound = true;
-																				break;
-																			}
-																			ff = Path.CombineFile(ObjectPath, f + ".csv");
-																			if (System.IO.File.Exists(ff))
-																			{
-																				f = ff;
-																				glowFileFound = true;
-																				break;
-																			}
-																			ff = Path.CombineFile(ObjectPath, f + ".b3d");
-																			if (System.IO.File.Exists(ff))
-																			{
-																				f = ff;
-																				glowFileFound = true;
-																				break;
-																			}
+																			f = testPath;
+																			glowFileFound = true;
+																		}
+																		else
+																		{
 																			Program.CurrentHost.AddMessage(MessageType.Error, false, "GlowFileWithoutExtension does not exist in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 																			break;
 																		}
