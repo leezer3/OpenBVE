@@ -266,7 +266,7 @@ namespace OpenBve
 									}
 								}
 									break;
-								case "options.enablehacks":
+								case "options.enablebvetshacks":
 								{
 									//Whether to apply various hacks to fix BVE2 / BVE4 routes
 									//Whilst this is harmless, it should be DISABLED on openBVE content

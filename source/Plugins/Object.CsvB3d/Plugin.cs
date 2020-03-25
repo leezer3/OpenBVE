@@ -12,6 +12,8 @@ namespace Plugin
 	    private static bool BveTsHacks = false;
 	    private static string CompatibilityFolder;
 
+	    public override string[] SupportedStaticObjectExtensions => new[] { ".b3d", ".csv" };
+
 	    public override void Load(HostInterface host, FileSystem fileSystem) {
 		    currentHost = host;
 		    CompatibilityFolder = fileSystem.GetDataFolder("Compatibility");

@@ -3,6 +3,16 @@
 	/// <summary>Represents the interface for loading objects. Plugins must implement this interface if they wish to expose objects.</summary>
 	public abstract class ObjectInterface
 	{
+		/// <summary>
+		/// Array of supported animated object extensions.
+		/// </summary>
+		public virtual string[] SupportedAnimatedObjectExtensions => new string[0];
+
+		/// <summary>
+		/// Array of supported static object extensions.
+		/// </summary>
+		public virtual string[] SupportedStaticObjectExtensions => new string[0];
+
 		/// <summary>Called when the plugin is loaded.</summary>
 		/// <param name="host">The host that loaded the plugin.</param>
 		/// <param name="fileSystem">The program filesystem object</param>

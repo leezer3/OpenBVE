@@ -1,5 +1,4 @@
-﻿using System;
-using Ude;
+﻿using Ude;
 
 namespace OpenBveApi
 {
@@ -20,91 +19,120 @@ namespace OpenBveApi
 		public enum Encoding
 		{
 			/// <summary>The character encoding is unknown</summary>
-			Unknown = 0,
+			Unknown,
 
-			/// <summary>UTF-7</summary>
-			Utf7 = 1,
+			/// <summary>IBM855 (OEM Cyrillic)</summary>
+			IBM855 = 855,
 
-			/// <summary>UTF-8</summary>
-			Utf8 = 2,
+			/// <summary>IBM866 (Legacy Cyrillic)</summary>
+			IBM866 = 866,
+
+			/// <summary>Shift_JIS</summary>
+			SHIFT_JIS = 932,
+
+			/// <summary>EUC-KR (EUC-KR is a subset of KS_C_5601-1987 and Legacy Korean)</summary>
+			EUC_KR = 949,
+
+			/// <summary>BIG5 (Traditional Chinese)</summary>
+			BIG5 = 950,
 
 			/// <summary>UTF-16LE</summary>
-			Utf16Le = 3,
+			UTF16_LE = 1200,
 
 			/// <summary>UTF-16BE</summary>
-			Utf16Be = 4,
+			UTF16_BE = 1201,
 
-			/// <summary>UTF-32LE</summary>
-			Utf32Le = 5,
+			/// <summary>Windows-1251 (Legacy Microsoft Cyrillic)</summary>
+			WIN1251 = 1251,
 
-			/// <summary>UTF-32BE</summary>
-			Utf32Be = 6,
+			/// <summary>Windows-1252 (Legacy Microsoft Western European)</summary>
+			WIN1252 = 1252,
 
-			/// <summary>SHIFT_JIS</summary>
-			Shift_JIS = 7,
-
-			/// <summary>Basic ASCII</summary>
-			ASCII,
-
-			/// <summary>Windows-1252 (Legacy Microsoft)</summary>
-			Windows1252,
+			/// <summary>Windows-1253 (Legacy Microsoft Greek)</summary>
+			WIN1253 = 1253,
 
 			/// <summary>Windows-1255 (Legacy Microsoft Hebrew)</summary>
-			Windows1255,
+			WIN1255 = 1255,
 
-			/// <summary>BIG5</summary>
-			Big5,
+			/// <summary>x-mac-cyrillic (Legacy Mac Cyrillic)</summary>
+			MAC_CYRILLIC = 10007,
 
-			/// <summary>Legacy Korean</summary>
-			EUC_KR,
+			/// <summary>UTF-32LE</summary>
+			UTF32_LE = 12000,
 
-			/// <summary>Legacy Cyrillic</summary>
-			OEM866			
+			/// <summary>UTF-32BE</summary>
+			UTF32_BE = 12001,
+
+			/// <summary>Basic ASCII</summary>
+			ASCII = 20127,
+
+			/// <summary>KOI8-R (Legacy Cyrillic)</summary>
+			KOI8_R = 20866,
+
+			/// <summary>EUC-JP</summary>
+			EUC_JP = 20932,
+
+			/// <summary>ISO-8859-2 (ISO 8859 Central European)</summary>
+			ISO8859_2 = 28592,
+
+			/// <summary>ISO-8859-5 (ISO 8859 Cyrillic)</summary>
+			ISO8859_5 = 28595,
+
+			/// <summary>ISO-8859-7 (ISO 8859 Greek)</summary>
+			ISO8859_7 = 28597,
+
+			/// <summary>ISO-8859-8 (ISO 8859 Visual Hebrew)</summary>
+			ISO8859_8 = 28598,
+
+			/// <summary>ISO-2022-JP (ISO 2022 Japanese)</summary>
+			ISO2022_JP = 50220,
+
+			/// <summary>ISO-2022-KR (ISO 2022 Korean)</summary>
+			ISO2022_KR = 50225,
+
+			/// <summary>ISO-2022-CN (ISO 2022 Chinese)</summary>
+			ISO2022_CN = 50227,
+
+			/// <summary>HZ_GB_2312 (Simplified Chinese)</summary>
+			HZ_GB_2312 = 52936,
+
+			/// <summary>GB18030 (Simplified Chinese)</summary>
+			GB18030 = 54936,
+
+			/// <summary>UTF-7</summary>
+			UTF7 = 65000,
+
+			/// <summary>UTF-8</summary>
+			UTF8 = 65001
 		}
 
-		/// <summary>Gets the character endcoding of a file</summary>
+		/// <summary>Gets the character system encoding of a file</summary>
 		/// <param name="File">The absolute path to a file</param>
-		/// <returns>The character encoding, or the system default encoding if unknown</returns>
-		public static System.Text.Encoding GetSystemEncodingFromFile(string File)
+		/// <param name="DefaultEncoding">The encoding to use if the encoding could not be determined. If not specified, the system default encoding is used.</param>
+		/// <returns>The character system encoding, or default encoding if unknown</returns>
+		public static System.Text.Encoding GetSystemEncodingFromFile(string File, System.Text.Encoding DefaultEncoding = null)
 		{
 			Encoding e = GetEncodingFromFile(File);
 
-			switch (e)
+			if (e == Encoding.Unknown)
 			{
-				case Encoding.Unknown:
-					return System.Text.Encoding.Default;
-				case Encoding.Utf7:
-					return System.Text.Encoding.UTF7;
-				case Encoding.Utf8:
-					return System.Text.Encoding.UTF8;
-				case Encoding.Utf16Le:
-					return System.Text.Encoding.Unicode;
-				case Encoding.Utf16Be:
-					return System.Text.Encoding.BigEndianUnicode;
-				case Encoding.Utf32Le:
-					return System.Text.Encoding.UTF32;
-				case Encoding.Utf32Be:
-					return System.Text.Encoding.GetEncoding(12001);
-				case Encoding.Shift_JIS:
-					return System.Text.Encoding.GetEncoding(932);
-				case Encoding.ASCII:
-					return System.Text.Encoding.ASCII;
-				case Encoding.Windows1252:
-					return System.Text.Encoding.GetEncoding(1252);
-				case Encoding.Windows1255:
-					return System.Text.Encoding.GetEncoding(1255);
-				case Encoding.Big5:
-					return System.Text.Encoding.GetEncoding(950);
-				case Encoding.EUC_KR:
-					return System.Text.Encoding.GetEncoding(51949);
-				case Encoding.OEM866:
-					return System.Text.Encoding.GetEncoding(866);
-				default:
-					throw new ArgumentOutOfRangeException();
+				return DefaultEncoding ?? System.Text.Encoding.Default;
 			}
+
+			return System.Text.Encoding.GetEncoding((int)e);
 		}
 
-		/// <summary>Gets the character endcoding of a file</summary>
+		/// <summary>Gets the character system encoding of a file within a folder</summary>
+		/// <param name="Folder">The absolute path to the folder containing the file</param>
+		/// <param name="File">The filename</param>
+		/// <param name="DefaultEncoding">The encoding to use if the encoding could not be determined. If not specified, the system default encoding is used.</param>
+		/// <returns>The character system encoding, or default encoding if unknown</returns>
+		public static System.Text.Encoding GetSystemEncodingFromFile(string Folder, string File, System.Text.Encoding DefaultEncoding = null)
+		{
+			return GetSystemEncodingFromFile(Path.CombineFile(Folder, File), DefaultEncoding);
+		}
+
+		/// <summary>Gets the character encoding of a file</summary>
 		/// <param name="File">The absolute path to a file</param>
 		/// <returns>The character encoding, or unknown</returns>
 		public static Encoding GetEncodingFromFile(string File)
@@ -123,12 +151,12 @@ namespace OpenBveApi
 				{
 					if (Data[0] == 0xEF & Data[1] == 0xBB & Data[2] == 0xBF)
 					{
-						return Encoding.Utf8;
+						return Encoding.UTF8;
 					}
 
 					if (Data[0] == 0x2b & Data[1] == 0x2f & Data[2] == 0x76)
 					{
-						return Encoding.Utf7;
+						return Encoding.UTF7;
 					}
 				}
 
@@ -136,12 +164,12 @@ namespace OpenBveApi
 				{
 					if (Data[0] == 0xFE & Data[1] == 0xFF)
 					{
-						return Encoding.Utf16Be;
+						return Encoding.UTF16_BE;
 					}
 
 					if (Data[0] == 0xFF & Data[1] == 0xFE)
 					{
-						return Encoding.Utf16Le;
+						return Encoding.UTF16_LE;
 					}
 				}
 
@@ -149,12 +177,12 @@ namespace OpenBveApi
 				{
 					if (Data[0] == 0x00 & Data[1] == 0x00 & Data[2] == 0xFE & Data[3] == 0xFF)
 					{
-						return Encoding.Utf32Be;
+						return Encoding.UTF32_BE;
 					}
 
 					if (Data[0] == 0xFF & Data[1] == 0xFE & Data[2] == 0x00 & Data[3] == 0x00)
 					{
-						return Encoding.Utf32Le;
+						return Encoding.UTF32_LE;
 					}
 				}
 
@@ -167,70 +195,104 @@ namespace OpenBveApi
 					return Encoding.Unknown;
 				}
 				
-				switch (Det.Charset.ToUpperInvariant())
+				switch (Det.Charset)
 				{
-					case "SHIFT-JIS":
-					case "SHIFT_JIS":
-						return Encoding.Shift_JIS;
-					case "UTF-8":
-						return Encoding.Utf8;
-					case "UTF-7":
-						return Encoding.Utf7;
-					case "WINDOWS-1251":
-						if (System.IO.Path.GetFileName(File).ToLowerInvariant() == "585tc1.csv" && fInfo.Length == 37302)
-						{
-							return Encoding.Shift_JIS;
-						}
-						return Encoding.Windows1252;
-					case "WINDOWS-1252":
-						if (fInfo.Length == 62861)
-						{
-							//HK tram route. Comes in a non-unicode zip, so filename may be subject to mangling
-							return Encoding.Big5;
-						}
-						return Encoding.Windows1252;
-					case "WINDOWS-1255":
-						if (System.IO.Path.GetFileName(File).ToLowerInvariant() == "xdbetulasmall.csv" && fInfo.Length == 406)
-						{
-							//Hungarian birch tree; Actually loads OK with 1255, but use the correct one
-							return Encoding.Windows1252;
-						}
-						return Encoding.Big5;
-					case "BIG5":
+					case Charsets.IBM855:
+						return Encoding.IBM855;
+					case Charsets.IBM866:
+						return Encoding.IBM866;
+					case Charsets.SHIFT_JIS:
+						return Encoding.SHIFT_JIS;
+					case Charsets.EUCKR:
+						return Encoding.EUC_KR;
+					case Charsets.BIG5:
 						if (System.IO.Path.GetFileName(File).ToLowerInvariant() == "stoklosy.b3d" && fInfo.Length == 18256)
 						{
 							//Polish Warsaw metro object file uses diacritics in filenames
-							return Encoding.Windows1252;
+							return Encoding.WIN1252;
 						}
-						return Encoding.Big5;
-					case "EUC-KR":
-						return Encoding.EUC_KR;
-					case "ASCII":
-						return Encoding.ASCII;
-					case "IBM866":
-						return Encoding.OEM866;
-					case "X-MAC-CYRILLIC":
+
+						return Encoding.BIG5;
+					case Charsets.UTF16_LE:
+						return Encoding.UTF16_LE;
+					case Charsets.UTF16_BE:
+						return Encoding.UTF16_BE;
+					case Charsets.WIN1251:
+						if (System.IO.Path.GetFileName(File).ToLowerInvariant() == "585tc1.csv" && fInfo.Length == 37302)
+						{
+							return Encoding.SHIFT_JIS;
+						}
+
+						return Encoding.WIN1251;
+					case Charsets.WIN1252:
+						if (fInfo.Length == 62861)
+						{
+							//HK tram route. Comes in a non-unicode zip, so filename may be subject to mangling
+							return Encoding.BIG5;
+						}
+
+						return Encoding.WIN1252;
+					case Charsets.WIN1253:
+						return Encoding.WIN1253;
+					case Charsets.WIN1255:
+						if (System.IO.Path.GetFileName(File).ToLowerInvariant() == "xdbetulasmall.csv" && fInfo.Length == 406)
+						{
+							//Hungarian birch tree; Actually loads OK with 1255, but use the correct one
+							return Encoding.WIN1252;
+						}
+
+						return Encoding.WIN1255;
+					case Charsets.MAC_CYRILLIC:
 						if (System.IO.Path.GetFileName(File).ToLowerInvariant() == "exit01.csv" && fInfo.Length == 752)
 						{
 							//hira2
-							return Encoding.Shift_JIS;
+							return Encoding.SHIFT_JIS;
 						}
-						break;
-					case "GB18030":
-						//Extended new Chinese charset
-						if (System.IO.Path.GetFileName(File).ToLowerInvariant() == "people6.b3d" && fInfo.Length == 377)
-						{
-							//Polish Warsaw metro object file uses diacritics in filenames
-							return Encoding.Windows1252;
-						}
-						break;
-					case "EUC-JP":
+
+						return Encoding.MAC_CYRILLIC;
+					case Charsets.UTF32_LE:
+						return Encoding.UTF32_LE;
+					case Charsets.UTF32_BE:
+						return Encoding.UTF32_BE;
+					case Charsets.ASCII:
+						return Encoding.ASCII;
+					case Charsets.KOI8R:
+						return Encoding.KOI8_R;
+					case Charsets.EUCJP:
 						if (System.IO.Path.GetFileName(File).ToLowerInvariant() == "xsara.b3d" && fInfo.Length == 3429)
 						{
 							//Uses an odd character in the comments, ASCII works just fine
 							return Encoding.ASCII;
 						}
-						break;
+
+						return Encoding.EUC_JP;
+					case Charsets.ISO8859_2:
+						return Encoding.ISO8859_2;
+					case Charsets.ISO8859_5:
+						return Encoding.ISO8859_5;
+					case Charsets.ISO_8859_7:
+						return Encoding.ISO8859_7;
+					case Charsets.ISO8859_8:
+						return Encoding.ISO8859_8;
+					case Charsets.ISO2022_JP:
+						return Encoding.ISO2022_JP;
+					case Charsets.ISO2022_KR:
+						return Encoding.ISO2022_KR;
+					case Charsets.ISO2022_CN:
+						return Encoding.ISO2022_CN;
+					case Charsets.HZ_GB_2312:
+						return Encoding.HZ_GB_2312;
+					case Charsets.GB18030:
+						//Extended new Chinese charset
+						if (System.IO.Path.GetFileName(File).ToLowerInvariant() == "people6.b3d" && fInfo.Length == 377)
+						{
+							//Polish Warsaw metro object file uses diacritics in filenames
+							return Encoding.GB18030;
+						}
+
+						return Encoding.GB18030;
+					case Charsets.UTF8:
+						return Encoding.UTF8;
 				}
 
 				Det.Reset();
@@ -242,7 +304,7 @@ namespace OpenBveApi
 			}
 		}
 
-		/// <summary>Gets the character endcoding of a file within a folder</summary>
+		/// <summary>Gets the character encoding of a file within a folder</summary>
 		/// <param name="Folder">The absolute path to the folder containing the file</param>
 		/// <param name="File">The filename</param>
 		/// <returns>The character encoding, or unknown</returns>

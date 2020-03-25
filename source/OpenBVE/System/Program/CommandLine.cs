@@ -27,86 +27,11 @@ namespace OpenBve
 					{
 						case "/route":
 							Result.RouteFile = value;
-							switch (TextEncoding.GetEncodingFromFile(Result.RouteFile))
-							{
-								case TextEncoding.Encoding.Utf7:
-									Result.RouteEncoding = System.Text.Encoding.UTF7;
-									break;
-								case TextEncoding.Encoding.Utf8:
-									Result.RouteEncoding = System.Text.Encoding.UTF8;
-									break;
-								case TextEncoding.Encoding.Utf16Le:
-									Result.RouteEncoding = System.Text.Encoding.Unicode;
-									break;
-								case TextEncoding.Encoding.Utf16Be:
-									Result.RouteEncoding = System.Text.Encoding.BigEndianUnicode;
-									break;
-								case TextEncoding.Encoding.Utf32Le:
-									Result.RouteEncoding = System.Text.Encoding.UTF32;
-									break;
-								case TextEncoding.Encoding.Utf32Be:
-									Result.RouteEncoding = System.Text.Encoding.GetEncoding(12001);
-									break;
-								case TextEncoding.Encoding.Shift_JIS:
-									Result.RouteEncoding = System.Text.Encoding.GetEncoding(932);
-									break;
-								case TextEncoding.Encoding.ASCII:
-								case TextEncoding.Encoding.Windows1252:
-									Result.RouteEncoding = System.Text.Encoding.GetEncoding(1252);
-									break;
-								case TextEncoding.Encoding.Big5:
-									Result.RouteEncoding = System.Text.Encoding.GetEncoding(950);
-									break;
-								case TextEncoding.Encoding.EUC_KR:
-									Result.RouteEncoding = System.Text.Encoding.GetEncoding(949);
-									break;
-								case TextEncoding.Encoding.OEM866:
-									Result.RouteEncoding = System.Text.Encoding.GetEncoding(866);
-									break;
-								default:
-									Result.RouteEncoding = Encoding.Default;
-									break;
-							}
+							Result.RouteEncoding = TextEncoding.GetSystemEncodingFromFile(Result.RouteFile);
 							break;
 						case "/train":
 							Result.TrainFolder = value;
-							switch (TextEncoding.GetEncodingFromFile(Result.TrainFolder, "train.txt"))
-							{
-								case TextEncoding.Encoding.Utf8:
-									Result.TrainEncoding = System.Text.Encoding.UTF8;
-									break;
-								case TextEncoding.Encoding.Utf16Le:
-									Result.TrainEncoding = System.Text.Encoding.Unicode;
-									break;
-								case TextEncoding.Encoding.Utf16Be:
-									Result.TrainEncoding = System.Text.Encoding.BigEndianUnicode;
-									break;
-								case TextEncoding.Encoding.Utf32Le:
-									Result.TrainEncoding = System.Text.Encoding.UTF32;
-									break;
-								case TextEncoding.Encoding.Utf32Be:
-									Result.TrainEncoding = System.Text.Encoding.GetEncoding(12001);
-									break;
-								case TextEncoding.Encoding.Shift_JIS:
-									Result.TrainEncoding = System.Text.Encoding.GetEncoding(932);
-									break;
-								case TextEncoding.Encoding.ASCII:
-								case TextEncoding.Encoding.Windows1252:
-									Result.TrainEncoding = System.Text.Encoding.GetEncoding(1252);
-									break;
-								case TextEncoding.Encoding.Big5:
-									Result.TrainEncoding = System.Text.Encoding.GetEncoding(950);
-									break;
-								case TextEncoding.Encoding.EUC_KR:
-									Result.TrainEncoding = System.Text.Encoding.GetEncoding(949);
-									break;
-								case TextEncoding.Encoding.OEM866:
-									Result.TrainEncoding = System.Text.Encoding.GetEncoding(866);
-									break;
-								default:
-									Result.TrainEncoding = Encoding.Default;
-									break;
-							}
+							Result.TrainEncoding = TextEncoding.GetSystemEncodingFromFile(Result.TrainFolder, "train.txt");
 							break;
 						case "/station":
 							Result.InitialStation = value;

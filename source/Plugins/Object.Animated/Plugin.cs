@@ -12,6 +12,8 @@ namespace Plugin
 
 		private static string currentSoundFolder;
 
+		public override string[] SupportedAnimatedObjectExtensions => new[] { ".animated" };
+
 		public override void Load(HostInterface host, FileSystem fileSystem)
 		{
 			currentHost = host;

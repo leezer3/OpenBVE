@@ -11,6 +11,8 @@ namespace Plugin
 	    internal static HostInterface currentHost;
 	    private static XParsers currentXParser = XParsers.Original;
 
+	    public override string[] SupportedStaticObjectExtensions => new[] { ".x" };
+
 	    public override void Load(HostInterface host, FileSystem fileSystem) {
 		    currentHost = host;
 	    }

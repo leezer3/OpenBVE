@@ -13,6 +13,9 @@ namespace Plugin
 
 		internal static string LoksimPackageFolder;
 
+		public override string[] SupportedAnimatedObjectExtensions => new[] { ".l3dgrp" };
+		public override string[] SupportedStaticObjectExtensions => new[] { ".l3dobj" };
+
 		public override void Load(HostInterface host, FileSystem fileSystem)
 		{
 			currentHost = host;
