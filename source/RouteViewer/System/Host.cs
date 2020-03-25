@@ -282,6 +282,8 @@ namespace OpenBve
 		public override bool LoadObject(string path, System.Text.Encoding Encoding, out UnifiedObject Object)
 		{
 			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
+				Encoding = TextEncoding.GetSystemEncodingFromFile(path, Encoding);
+
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++) {
 					if (Program.CurrentHost.Plugins[i].Object != null) {
 						try {
