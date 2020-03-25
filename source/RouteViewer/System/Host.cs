@@ -281,19 +281,6 @@ namespace OpenBve
 
 		public override bool LoadObject(string path, System.Text.Encoding Encoding, out UnifiedObject Object)
 		{
-			if (string.IsNullOrEmpty(path))
-			{
-				Object = null;
-				return false;
-			}
-
-			if (!DetermineObjectExtension(ref path))
-			{
-				Interface.AddMessage(MessageType.Error, true, $"The file {path} does not have a recognized extension.");
-				Object = null;
-				return false;
-			}
-
 			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
 				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++) {
 					if (Program.CurrentHost.Plugins[i].Object != null) {

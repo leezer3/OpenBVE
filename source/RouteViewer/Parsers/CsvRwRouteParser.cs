@@ -2714,30 +2714,15 @@ namespace OpenBve
 														string f = System.IO.Path.Combine(ObjectPath, Arguments[0]);
 														if (!System.IO.File.Exists(f))
 														{
-															bool notFound = false;
-															while (true)
+															string testPath = Path.CombineFile(ObjectPath, f);
+
+															if (Program.CurrentHost.DetermineStaticObjectExtension(ref testPath))
 															{
-																f = Path.CombineFile(System.IO.Path.GetDirectoryName(f), System.IO.Path.GetFileName(f) + ".x");
-																if (System.IO.File.Exists(f))
-																{
-																	break;
-																}
-																f = Path.CombineFile(System.IO.Path.GetDirectoryName(f), System.IO.Path.GetFileName(f) + ".csv");
-																if (System.IO.File.Exists(f))
-																{
-																	break;
-																}
-																f = Path.CombineFile(System.IO.Path.GetDirectoryName(f), System.IO.Path.GetFileName(f) + ".b3d");
-																if (System.IO.File.Exists(f))
-																{
-																	break;
-																}
-																Interface.AddMessage(MessageType.Error, false, "SignalFileWithoutExtension does not exist in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-																notFound = true;
-																break;
+																f = testPath;
 															}
-															if (notFound)
+															else
 															{
+																Program.CurrentHost.AddMessage(MessageType.Error, false, "SignalFileWithoutExtension does not exist in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 																break;
 															}
 														}

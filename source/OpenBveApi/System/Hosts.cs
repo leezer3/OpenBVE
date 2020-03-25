@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -203,7 +204,8 @@ namespace OpenBveApi.Hosts {
 				return true;
 			}
 
-			foreach (string extension in SupportedStaticObjectExtensions)
+			// Search in the order of .x, .csv, .b3d, etc.
+			foreach (string extension in SupportedStaticObjectExtensions.OrderByDescending(x => Array.IndexOf(new[] { ".b3d", ".csv", ".x" }, x)))
 			{
 				string testPath = Path.CombineFile(System.IO.Path.GetDirectoryName(FilePath), $"{System.IO.Path.GetFileName(FilePath)}{extension}");
 
