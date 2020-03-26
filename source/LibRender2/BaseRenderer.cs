@@ -708,6 +708,7 @@ namespace LibRender2
 			Shader.SetMaterialDiffuse(Color24.White);
 			Shader.SetMaterialSpecular(Color24.White);
 			Shader.SetMaterialEmission(Color24.White);
+			lastColor = Color32.White;
 			Shader.SetMaterialShininess(1.0f);
 			Shader.SetIsFog(false);
 			Shader.SetFogStart(0.0f);
