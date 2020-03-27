@@ -458,8 +458,16 @@ namespace OpenBve.Graphics
 				OptionLighting = true;
 				Color24 prevOptionAmbientColor = Lighting.OptionAmbientColor;
 				Color24 prevOptionDiffuseColor = Lighting.OptionDiffuseColor;
-				Lighting.OptionAmbientColor = new Color24(178, 178, 178);
-				Lighting.OptionDiffuseColor = new Color24(178, 178, 178);
+				Lighting.OptionAmbientColor = Color24.LightGrey;
+				Lighting.OptionDiffuseColor = Color24.LightGrey;
+				if (AvailableNewRenderer)
+				{
+					DefaultShader.SetIsLight(true);
+					DefaultShader.SetLightPosition(Lighting.OptionLightPosition);
+					DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
+					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
+					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
+				}
 				GL.Light(LightName.Light0, LightParameter.Ambient, new[] { inv255 * 178, inv255 * 178, inv255 * 178, 1.0f });
 				GL.Light(LightName.Light0, LightParameter.Diffuse, new[] { inv255 * 178, inv255 * 178, inv255 * 178, 1.0f });
 
