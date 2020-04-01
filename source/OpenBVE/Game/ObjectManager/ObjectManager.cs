@@ -4,7 +4,7 @@ using OpenBveApi.Trains;
 namespace OpenBve
 {
 	/// <summary>The ObjectManager is the root class containing functions to load and manage objects within the simulation world</summary>
-	public static partial class ObjectManager
+	public static class ObjectManager
 	{
 		/// <summary>Holds all animated objects currently in use within the game world</summary>
 		internal static WorldObject[] AnimatedWorldObjects = new WorldObject[4];

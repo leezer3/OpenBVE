@@ -6,15 +6,12 @@ using OpenBveApi.Trains;
 using OpenBveApi.Routes;
 using RouteManager2;
 using RouteManager2.Climate;
-using RouteManager2.SignalManager;
 using RouteManager2.SignalManager.PreTrain;
-using RouteManager2.Stations;
 
-namespace OpenBve {
-	internal static partial class Game {
-
-		// date and time
-        
+namespace OpenBve 
+{
+	internal static partial class Game 
+	{
         /// <summary>The time at which the current game started, expressed as the number of seconds since midnight on the first day</summary>
 		internal static double StartupTime = 0.0;
 		/// <summary>Whether the game is in minimal simulation mode: 
@@ -22,19 +19,13 @@ namespace OpenBve {
 		/// Train and time movements are processed, but no graphical processing is done
 		/// </summary>
 		internal static bool MinimalisticSimulation = false;
-
-		
-		
-		
-		
-
 		// other trains
 		internal static double[] PrecedingTrainTimeDeltas = new double[] { };
 		internal static double PrecedingTrainSpeedLimit = double.PositiveInfinity;
 		
 
 		
-        /// <summary>The default mode for the train's safety system to start in</summary>
+        /// <summary>The default mode for the player train's safety system to start in</summary>
 		internal static TrainStartMode TrainStart = TrainStartMode.EmergencyBrakesAts;
         /// <summary>The name of the current train</summary>
 		internal static string TrainName = "";
@@ -42,8 +33,6 @@ namespace OpenBve {
 		internal static int InitialDestination = -1;
 
 		internal static int InitialViewpoint = 0;
-
-		// ================================
 
 		/// <summary>Call this function to reset the game</summary>
 		/// <param name="ResetLogs">Whether the logs should be reset</param>
@@ -192,9 +181,5 @@ namespace OpenBve {
 				BlackBoxEntryCount++;
 			}
 		}
-
-
-		// buffers
-		
 	}
 }

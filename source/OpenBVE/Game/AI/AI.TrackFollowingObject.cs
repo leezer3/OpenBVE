@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
@@ -55,7 +56,7 @@ namespace OpenBve
 				TimeLastProcessed = 0.0;
 			}
 
-			internal override void Trigger(double TimeElapsed)
+			public override void Trigger(double TimeElapsed)
 			{
 				// Trains need to stop more than 2 points.
 				if (Data == null || Data.Count < 2 || Program.CurrentRoute.SecondsSinceMidnight == TimeLastProcessed)

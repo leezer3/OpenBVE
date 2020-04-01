@@ -37,7 +37,7 @@ namespace OpenBve
 			
 			
 			
-			internal Game.GeneralAI AI;
+			internal GeneralAI AI;
 			private double InternalTimerTimeElapsed;
 			internal bool Derailed;
 			

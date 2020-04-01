@@ -1,7 +1,6 @@
 ﻿using System;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
-using RouteManager2;
 using RouteManager2.Events;
 
 namespace OpenBve
@@ -867,7 +866,7 @@ namespace OpenBve
 					}
 				}
 			}
-			internal override void Trigger(double TimeElapsed)
+			public override void Trigger(double TimeElapsed)
 			{
 				if (TimeLastProcessed > Program.CurrentRoute.SecondsSinceMidnight)
 				{
