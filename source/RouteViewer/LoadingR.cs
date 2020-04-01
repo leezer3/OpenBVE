@@ -127,6 +127,9 @@ namespace OpenBve {
 					object Route = (object)Program.CurrentRoute; //must cast to allow us to use the ref keyword.
 					Program.CurrentHost.Plugins[i].Route.LoadRoute(CurrentRouteFile, CurrentRouteEncoding, null, ObjectFolder, SoundFolder, false, ref Route);
 					Program.CurrentRoute = (CurrentRoute) Route;
+					Program.Renderer.Lighting.OptionAmbientColor = Program.CurrentRoute.Atmosphere.AmbientLightColor;
+					Program.Renderer.Lighting.OptionDiffuseColor = Program.CurrentRoute.Atmosphere.DiffuseLightColor;
+					Program.Renderer.Lighting.OptionLightPosition = Program.CurrentRoute.Atmosphere.LightPosition;
 					loaded = true;
 					break;
 				}
