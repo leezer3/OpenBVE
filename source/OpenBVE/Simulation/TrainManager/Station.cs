@@ -4,7 +4,6 @@ using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
-using RouteManager2;
 using RouteManager2.MessageManager;
 using SoundManager;
 
