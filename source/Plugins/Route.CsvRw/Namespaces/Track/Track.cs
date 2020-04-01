@@ -2521,7 +2521,7 @@ namespace OpenBve
 								{
 									OpenBveApi.Textures.Texture t;
 									Program.CurrentHost.RegisterTexture(f, new OpenBveApi.Textures.TextureParameters(null, new Color24(64, 64, 64)), out t);
-									Data.Markers[n].Message = new MarkerImage(Program.Renderer, t);
+									Data.Markers[n].Message = new MarkerImage(Program.CurrentHost, t);
 
 								}
 

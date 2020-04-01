@@ -445,5 +445,19 @@ namespace OpenBveApi.Hosts {
 		/// Array of supported static object extensions.
 		/// </summary>
 		public string[] SupportedStaticObjectExtensions => Plugins.Where(x => x.Object != null).SelectMany(x => x.Object.SupportedStaticObjectExtensions).ToArray();
+
+		/// <summary>Adds a marker texture to the host application's display</summary>
+		/// <param name="MarkerTexture">The texture to add</param>
+		public virtual void AddMarker(Texture MarkerTexture)
+		{
+
+		}
+
+		/// <summary>Removes a marker texture if present in the host application's display</summary>
+		/// <param name="MarkerTexture">The texture to remove</param>
+		public virtual void RemoveMarker(Texture MarkerTexture)
+		{
+
+		}
 	}
 }

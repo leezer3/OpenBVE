@@ -233,7 +233,7 @@ namespace OpenBve
 								marker.StartingPosition -= EndingPosition;
 							}
 						}
-						TextureMessage t = new TextureMessage(Program.Renderer);
+						TextureMessage t = new TextureMessage(Program.CurrentHost);
 						GeneralMessage m = new GeneralMessage();
 						//Add variants
 

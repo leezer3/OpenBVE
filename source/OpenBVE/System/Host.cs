@@ -429,6 +429,16 @@ namespace OpenBve {
 			return TrackFollowingObjectParser.ParseTrackFollowingObject(tfoFile, objectPath);
 		}
 
+		public override void AddMarker(Texture MarkerTexture)
+		{
+			Program.Renderer.Marker.AddMarker(MarkerTexture);
+		}
+
+		public override void RemoveMarker(Texture MarkerTexture)
+		{
+			Program.Renderer.Marker.RemoveMarker(MarkerTexture);
+		}
+
 		public Host() : base(HostApplication.OpenBve)
 		{
 		}
