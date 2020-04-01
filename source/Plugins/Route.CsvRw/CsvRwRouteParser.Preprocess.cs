@@ -472,9 +472,9 @@ namespace OpenBve
 									int x;
 									if (NumberFormats.TryParseIntVb6(s, out x))
 									{
-										if (x < 0 || x > 128)
+										if (x < 0 || x > 127)
 										{
-											//Standard ASCII characters from 0-128
+											//Standard ASCII characters from 0-127
 											continueWithNextExpression = true;
 											Program.CurrentHost.AddMessage(MessageType.Error, false, "Index does not correspond to a valid ASCII character in " + t + Epilog);
 										}
