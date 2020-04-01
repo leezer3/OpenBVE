@@ -439,6 +439,11 @@ namespace OpenBve {
 			Program.Renderer.Marker.RemoveMarker(MarkerTexture);
 		}
 
+		public override void CameraAtWorldEnd()
+		{
+			Program.Renderer.Camera.AtWorldEnd = !Program.Renderer.Camera.AtWorldEnd;
+		}
+
 		public Host() : base(HostApplication.OpenBve)
 		{
 		}

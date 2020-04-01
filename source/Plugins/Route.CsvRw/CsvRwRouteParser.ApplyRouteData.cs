@@ -1767,7 +1767,7 @@ namespace OpenBve
 				int n = CurrentRoute.Tracks[0].Elements.Length - 1;
 				int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
 				Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-				CurrentRoute.Tracks[0].Elements[n].Events[m] = new TrackEndEvent(Program.Renderer.Camera, Data.BlockInterval);
+				CurrentRoute.Tracks[0].Elements[n].Events[m] = new TrackEndEvent(Program.CurrentHost, Data.BlockInterval);
 			}
 			// insert compatibility beacons
 			if (!PreviewOnly)

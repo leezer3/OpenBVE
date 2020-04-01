@@ -459,5 +459,11 @@ namespace OpenBveApi.Hosts {
 		{
 
 		}
+
+		/// <summary>Called when a follower reaches the end of the world</summary>
+		public virtual void CameraAtWorldEnd()
+		{
+
+		}
 	}
 }
