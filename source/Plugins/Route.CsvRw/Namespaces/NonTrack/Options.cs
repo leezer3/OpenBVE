@@ -12,7 +12,7 @@ namespace OpenBve
 			CultureInfo Culture = CultureInfo.InvariantCulture;
 			switch (Command)
 			{
-				case "options.blocklength":
+				case "blocklength":
 				{
 					double length = 25.0;
 					if (Arguments.Length >= 1 && Arguments[0].Length > 0 && !NumberFormats.TryParseDoubleVb6(Arguments[0], UnitOfLength, out length))
@@ -24,7 +24,7 @@ namespace OpenBve
 					Data.BlockInterval = length;
 				}
 					break;
-				case "options.xparser":
+				case "xparser":
 					if (!PreviewOnly)
 					{
 						int parser = 0;
@@ -46,7 +46,7 @@ namespace OpenBve
 					}
 
 					break;
-				case "options.objparser":
+				case "objparser":
 					if (!PreviewOnly)
 					{
 						int parser = 0;
@@ -67,11 +67,11 @@ namespace OpenBve
 					}
 
 					break;
-				case "options.unitoflength":
-				case "options.unitofspeed":
-				case "options.objectvisibility":
+				case "unitoflength":
+				case "unitofspeed":
+				case "objectvisibility":
 					break;
-				case "options.sectionbehavior":
+				case "sectionbehavior":
 					if (Arguments.Length < 1)
 					{
 						Program.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -94,7 +94,7 @@ namespace OpenBve
 					}
 
 					break;
-				case "options.cantbehavior":
+				case "cantbehavior":
 					if (Arguments.Length < 1)
 					{
 						Program.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -117,7 +117,7 @@ namespace OpenBve
 					}
 
 					break;
-				case "options.fogbehavior":
+				case "fogbehavior":
 					if (Arguments.Length < 1)
 					{
 						Program.CurrentHost.AddMessage(MessageType.Error, false, Command + " is expected to have one argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
