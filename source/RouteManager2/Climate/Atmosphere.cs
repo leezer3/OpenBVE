@@ -1,10 +1,19 @@
 ﻿using System;
+using OpenBveApi.Colors;
+using OpenBveApi.Math;
 
 namespace RouteManager2.Climate
 {
 	/// <summary>Holds the atmospheric methods and properties</summary>
 	public class Atmosphere
 	{
+
+		public Vector3 LightPosition;
+
+		public Color24 DiffuseLightColor;
+
+		public Color24 AmbientLightColor;
+
 		/// <summary>The initial elevation in meters</summary>
 		public double InitialElevation = 0.0;
 

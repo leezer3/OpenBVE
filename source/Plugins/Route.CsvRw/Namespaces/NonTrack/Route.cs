@@ -377,7 +377,7 @@ namespace OpenBve
 						b = b < 0 ? 0 : 255;
 					}
 
-					Program.Renderer.Lighting.OptionAmbientColor = new Color24((byte) r, (byte) g, (byte) b);
+					Program.CurrentRoute.Atmosphere.AmbientLightColor = new Color24((byte) r, (byte) g, (byte) b);
 				}
 					break;
 				case "directionallight":
@@ -419,7 +419,7 @@ namespace OpenBve
 						b = b < 0 ? 0 : 255;
 					}
 
-					Program.Renderer.Lighting.OptionDiffuseColor = new Color24((byte) r, (byte) g, (byte) b);
+					Program. CurrentRoute.Atmosphere.DiffuseLightColor = new Color24((byte) r, (byte) g, (byte) b);
 				}
 					break;
 				case "lightdirection":
@@ -446,7 +446,7 @@ namespace OpenBve
 					double dx = Math.Cos(theta) * Math.Sin(phi);
 					double dy = -Math.Sin(theta);
 					double dz = Math.Cos(theta) * Math.Cos(phi);
-					Program.Renderer.Lighting.OptionLightPosition = new Vector3((float) -dx, (float) -dy, (float) -dz);
+					Program.CurrentRoute.Atmosphere.LightPosition = new Vector3((float) -dx, (float) -dy, (float) -dz);
 				}
 					break;
 				case "dynamiclight":
