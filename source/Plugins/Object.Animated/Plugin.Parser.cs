@@ -276,7 +276,7 @@ namespace Plugin
 																	NullObject = false;
 																}	
 															}
-															if (NullObject == true)
+															if (NullObject && Result.Objects[0] == null)
 															{
 																currentHost.AddMessage(MessageType.Error, false, "None of the specified files were found in " + a + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 																return null;

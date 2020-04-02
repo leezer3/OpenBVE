@@ -76,7 +76,7 @@ namespace OpenBve {
 			Renderer = new NewRenderer();
 			CurrentRoute = new CurrentRoute(Renderer);
 			Sounds = new Sounds();
-			Plugins.LoadPlugins();
+			
 			// command line arguments
 			SkipArgs = new bool[args.Length];
 			if (args.Length != 0) {
@@ -108,6 +108,7 @@ namespace OpenBve {
 			}
 			Options.LoadOptions();
 			var options = new ToolkitOptions();
+			Plugins.LoadPlugins();
 			options.Backend = PlatformBackend.PreferX11;
 			Toolkit.Init(options);
 			string folder = Program.FileSystem.GetDataFolder("Languages");
