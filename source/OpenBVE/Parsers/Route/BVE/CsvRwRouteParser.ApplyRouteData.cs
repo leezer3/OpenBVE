@@ -636,7 +636,11 @@ namespace OpenBve
 					for (int jj = 0; jj < Data.Blocks[i].Rails.Count; jj++)
 					{
 						int j = Data.Blocks[i].Rails.ElementAt(jj).Key;
-						if (j > 0 && !Data.Blocks[i].Rails[j].RailStarted) continue;
+						if (j > 0 && !Data.Blocks[i].Rails[j].RailStarted)
+						{
+							Program.CurrentRoute.Tracks[j].Elements[n].InvalidElement = true;
+							continue;
+						}
 						// rail
 						Vector3 pos;
 						Transformation RailTransformation = new Transformation();

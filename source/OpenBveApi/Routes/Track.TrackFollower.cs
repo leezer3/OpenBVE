@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Math;
+﻿using System.Linq;
+using OpenBveApi.Math;
 using OpenBveApi.Trains;
 
 namespace OpenBveApi.Routes
@@ -124,6 +125,23 @@ namespace OpenBveApi.Routes
 			{
 				while (i < currentHost.Tracks[TrackIndex].Elements.Length - 1)
 				{
+					if (currentHost.Tracks[TrackIndex].Elements[i + 1].InvalidElement)
+					{
+						var nextTrackStarted = currentHost.Tracks[TrackIndex].Elements.Select((x, j) => new { Index = j, Element = x }).Skip(i + 1).FirstOrDefault(x => !x.Element.InvalidElement);
+
+						if (nextTrackStarted == null)
+						{
+							break;
+						}
+
+						i = nextTrackStarted.Index;
+
+						if (i == currentHost.Tracks[TrackIndex].Elements.Length - 1)
+						{
+							break;
+						}
+					}
+
 					if (NewTrackPosition < currentHost.Tracks[TrackIndex].Elements[i + 1].StartingTrackPosition) break;
 					double ta = TrackPosition - currentHost.Tracks[TrackIndex].Elements[i].StartingTrackPosition;
 					double tb = currentHost.Tracks[TrackIndex].Elements[i + 1].StartingTrackPosition - currentHost.Tracks[TrackIndex].Elements[i].StartingTrackPosition + 0.01;
