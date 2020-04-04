@@ -1385,7 +1385,7 @@ namespace Plugin
 									snd.PlayOnHide = playOnHide;
 									Result.Sounds[SoundCount] = snd;
 									SoundCount++;
-									Result.Objects[ObjectCount] = null;
+									Result.Objects[ObjectCount - 1] = null;
 									ObjectCount--;
 								}
 
