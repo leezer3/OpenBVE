@@ -17,7 +17,7 @@ namespace TrainEditor2.ViewModels.Panels
 			get;
 		}
 
-		internal ReactiveProperty<TreeViewItemViewModel> TreeItem
+		internal ReadOnlyReactiveCollection<TreeViewItemViewModel> TreeItems
 		{
 			get;
 		}
@@ -78,6 +78,86 @@ namespace TrainEditor2.ViewModels.Panels
 		}
 
 		internal ReadOnlyReactivePropertySlim<TouchElementViewModel> SelectedTouch
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpScreen
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpPilotLamp
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpNeedle
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpDigitalNumber
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpDigitalGauge
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpLinearGauge
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpTimetable
+		{
+			get;
+		}
+
+		internal ReactiveCommand UpTouch
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownScreen
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownPilotLamp
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownNeedle
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownDigitalNumber
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownDigitalGauge
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownLinearGauge
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownTimetable
+		{
+			get;
+		}
+
+		internal ReactiveCommand DownTouch
 		{
 			get;
 		}
@@ -167,32 +247,7 @@ namespace TrainEditor2.ViewModels.Panels
 			get;
 		}
 
-		internal ReactiveCommand RemovePilotLamp
-		{
-			get;
-		}
-
-		internal ReactiveCommand RemoveNeedle
-		{
-			get;
-		}
-
-		internal ReactiveCommand RemoveDigitalNumber
-		{
-			get;
-		}
-
-		internal ReactiveCommand RemoveDigitalGauge
-		{
-			get;
-		}
-
-		internal ReactiveCommand RemoveLinearGauge
-		{
-			get;
-		}
-
-		internal ReactiveCommand RemoveTimetable
+		internal ReactiveCommand RemovePanelElement
 		{
 			get;
 		}
@@ -204,8 +259,7 @@ namespace TrainEditor2.ViewModels.Panels
 
 		internal PanelViewModel(Panel panel)
 		{
-			CompositeDisposable treeItemDisposable = new CompositeDisposable();
-			CompositeDisposable listItemDisposable = new CompositeDisposable();
+			CompositeDisposable listItemDisposable = new CompositeDisposable().AddTo(disposable);
 
 			This = panel
 				.ObserveProperty(x => x.This)
@@ -214,29 +268,12 @@ namespace TrainEditor2.ViewModels.Panels
 				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 
-			TreeItem = panel
-				.ObserveProperty(x => x.TreeItem)
-				.Do(_ => TreeItem?.Value.Dispose())
-				.Select(x => new TreeViewItemViewModel(x))
-				.ToReactiveProperty()
-				.AddTo(disposable);
-
-			TreeItem.Subscribe(x =>
-				{
-					treeItemDisposable.Dispose();
-					treeItemDisposable = new CompositeDisposable();
-
-					x.PropertyChangedAsObservable()
-						.ToReadOnlyReactivePropertySlim(mode: ReactivePropertyMode.None)
-						.Subscribe(_ => TreeItem.ForceNotify())
-						.AddTo(treeItemDisposable);
-				})
-				.AddTo(disposable);
+			TreeItems = panel.TreeItems.ToReadOnlyReactiveCollection(x => new TreeViewItemViewModel(x, null)).AddTo(disposable);
 
 			SelectedTreeItem = panel
 				.ToReactivePropertyAsSynchronized(
 					x => x.SelectedTreeItem,
-					x => TreeItem.Value.SearchViewModel(x),
+					x => TreeItems.Select(y => y.SearchViewModel(x)).FirstOrDefault(y => y != null),
 					x => x?.Model
 				)
 				.AddTo(disposable);
@@ -296,7 +333,7 @@ namespace TrainEditor2.ViewModels.Panels
 							LinearGaugeElement linearGauge = y as LinearGaugeElement;
 
 							screen?.ObserveProperty(z => z.Number)
-								.Select(_ => TreeItem.Value.Children[1].Children.FirstOrDefault(z => z.Tag.Value == screen))
+								.Select(_ => TreeItems[0].Children[1].Children.FirstOrDefault(z => z.Tag.Value == screen))
 								.Where(z => z != null)
 								.Subscribe(z => panel.RenameScreenTreeItem(z.Model))
 								.AddTo(tagDisposable);
@@ -425,56 +462,152 @@ namespace TrainEditor2.ViewModels.Panels
 				.ToReadOnlyReactivePropertySlim()
 				.AddTo(disposable);
 
+			UpScreen = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is Screen)
+				.ToReactiveCommand()
+				.WithSubscribe(panel.UpScreen)
+				.AddTo(disposable);
+
+			UpPilotLamp = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is PilotLampElement)
+				.ToReactiveCommand()
+				.WithSubscribe(panel.UpPanelElement<PilotLampElement>)
+				.AddTo(disposable);
+
+			UpNeedle = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is NeedleElement)
+				.ToReactiveCommand()
+				.WithSubscribe(panel.UpPanelElement<NeedleElement>)
+				.AddTo(disposable);
+
+			UpDigitalNumber = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is DigitalNumberElement)
+				.ToReactiveCommand()
+				.WithSubscribe(panel.UpPanelElement<DigitalNumberElement>)
+				.AddTo(disposable);
+
+			UpDigitalGauge = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is DigitalGaugeElement)
+				.ToReactiveCommand()
+				.WithSubscribe(panel.UpPanelElement<DigitalGaugeElement>)
+				.AddTo(disposable);
+
+			UpLinearGauge = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is LinearGaugeElement)
+				.ToReactiveCommand()
+				.WithSubscribe(panel.UpPanelElement<LinearGaugeElement>)
+				.AddTo(disposable);
+
+			UpTimetable = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is TimetableElement)
+				.ToReactiveCommand()
+				.WithSubscribe(panel.UpPanelElement<TimetableElement>)
+				.AddTo(disposable);
+
+			UpTouch = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) > 0 && x.Tag.Value is TouchElement)
+				.ToReactiveCommand()
+				.WithSubscribe(panel.UpTouch)
+				.AddTo(disposable);
+
+			DownScreen = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is Screen)
+				.ToReactiveCommand()
+				.WithSubscribe(panel.DownScreen)
+				.AddTo(disposable);
+
+			DownPilotLamp = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is PilotLampElement)
+				.ToReactiveCommand()
+				.WithSubscribe(panel.DownPanelElement<PilotLampElement>)
+				.AddTo(disposable);
+
+			DownNeedle = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is NeedleElement)
+				.ToReactiveCommand()
+				.WithSubscribe(panel.DownPanelElement<NeedleElement>)
+				.AddTo(disposable);
+
+			DownDigitalNumber = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is DigitalNumberElement)
+				.ToReactiveCommand()
+				.WithSubscribe(panel.DownPanelElement<DigitalNumberElement>)
+				.AddTo(disposable);
+
+			DownDigitalGauge = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is DigitalGaugeElement)
+				.ToReactiveCommand()
+				.WithSubscribe(panel.DownPanelElement<DigitalGaugeElement>)
+				.AddTo(disposable);
+
+			DownLinearGauge = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is LinearGaugeElement)
+				.ToReactiveCommand()
+				.WithSubscribe(panel.DownPanelElement<LinearGaugeElement>)
+				.AddTo(disposable);
+
+			DownTimetable = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is TimetableElement)
+				.ToReactiveCommand()
+				.WithSubscribe(panel.DownPanelElement<TimetableElement>)
+				.AddTo(disposable);
+
+			DownTouch = SelectedListItem
+				.Select(x => ListItems.IndexOf(x) >= 0 && ListItems.IndexOf(x) < ListItems.Count - 1 && x.Tag.Value is TouchElement)
+				.ToReactiveCommand()
+				.WithSubscribe(panel.DownTouch)
+				.AddTo(disposable);
+
 			AddScreen = SelectedTreeItem
-				.Select(x => x == TreeItem.Value.Children[1])
+				.Select(x => x == TreeItems[0].Children[1])
 				.ToReactiveCommand()
 				.WithSubscribe(panel.AddScreen)
 				.AddTo(disposable);
 
 			AddPilotLamp = SelectedTreeItem
-				.Select(x => TreeItem.Value.Children[1].Children.Any(y => x == y.Children[0].Children[0])
-							 || x == TreeItem.Value.Children[2].Children[0])
+				.Select(x => TreeItems[0].Children[1].Children.Any(y => x == y.Children[0].Children[0])
+							 || x == TreeItems[0].Children[2].Children[0])
 				.ToReactiveCommand()
-				.WithSubscribe(panel.AddPilotLamp)
+				.WithSubscribe(() => panel.AddPanelElement<PilotLampElement>(6))
 				.AddTo(disposable);
 
 			AddNeedle = SelectedTreeItem
-				.Select(x => TreeItem.Value.Children[1].Children.Any(y => x == y.Children[0].Children[1])
-							 || x == TreeItem.Value.Children[2].Children[1])
+				.Select(x => TreeItems[0].Children[1].Children.Any(y => x == y.Children[0].Children[1])
+							 || x == TreeItems[0].Children[2].Children[1])
 				.ToReactiveCommand()
-				.WithSubscribe(panel.AddNeedle)
+				.WithSubscribe(() => panel.AddPanelElement<NeedleElement>(17))
 				.AddTo(disposable);
 
 			AddDigitalNumber = SelectedTreeItem
-				.Select(x => TreeItem.Value.Children[1].Children.Any(y => x == y.Children[0].Children[2])
-							 || x == TreeItem.Value.Children[2].Children[2])
+				.Select(x => TreeItems[0].Children[1].Children.Any(y => x == y.Children[0].Children[2])
+							 || x == TreeItems[0].Children[2].Children[2])
 				.ToReactiveCommand()
-				.WithSubscribe(panel.AddDigitalNumber)
+				.WithSubscribe(() => panel.AddPanelElement<DigitalNumberElement>(7))
 				.AddTo(disposable);
 
 			AddDigitalGauge = SelectedTreeItem
-				.Select(x => TreeItem.Value.Children[1].Children.Any(y => x == y.Children[0].Children[3])
-							 || x == TreeItem.Value.Children[2].Children[3])
+				.Select(x => TreeItems[0].Children[1].Children.Any(y => x == y.Children[0].Children[3])
+							 || x == TreeItems[0].Children[2].Children[3])
 				.ToReactiveCommand()
-				.WithSubscribe(panel.AddDigitalGauge)
+				.WithSubscribe(() => panel.AddPanelElement<DigitalGaugeElement>(10))
 				.AddTo(disposable);
 
 			AddLinearGauge = SelectedTreeItem
-				.Select(x => TreeItem.Value.Children[1].Children.Any(y => x == y.Children[0].Children[4])
-							 || x == TreeItem.Value.Children[2].Children[4])
+				.Select(x => TreeItems[0].Children[1].Children.Any(y => x == y.Children[0].Children[4])
+							 || x == TreeItems[0].Children[2].Children[4])
 				.ToReactiveCommand()
-				.WithSubscribe(panel.AddLinearGauge)
+				.WithSubscribe(() => panel.AddPanelElement<LinearGaugeElement>(10))
 				.AddTo(disposable);
 
 			AddTimetable = SelectedTreeItem
-				.Select(x => TreeItem.Value.Children[1].Children.Any(y => x == y.Children[0].Children[5])
-							 || x == TreeItem.Value.Children[2].Children[5])
+				.Select(x => TreeItems[0].Children[1].Children.Any(y => x == y.Children[0].Children[5])
+							 || x == TreeItems[0].Children[2].Children[5])
 				.ToReactiveCommand()
-				.WithSubscribe(panel.AddTimetable)
+				.WithSubscribe(() => panel.AddPanelElement<TimetableElement>(5))
 				.AddTo(disposable);
 
 			AddTouch = SelectedTreeItem
-				.Select(x => TreeItem.Value.Children[1].Children.Any(y => x == y.Children[1]))
+				.Select(x => TreeItems[0].Children[1].Children.Any(y => x == y.Children[1]))
 				.ToReactiveCommand()
 				.WithSubscribe(panel.AddTouch)
 				.AddTo(disposable);
@@ -488,37 +621,37 @@ namespace TrainEditor2.ViewModels.Panels
 			CopyPilotLamp = SelectedPilotLamp
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(panel.CopyPilotLamp)
+				.WithSubscribe(() => panel.CopyPanelElement(6))
 				.AddTo(disposable);
 
 			CopyNeedle = SelectedNeedle
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(panel.CopyNeedle)
+				.WithSubscribe(() => panel.CopyPanelElement(17))
 				.AddTo(disposable);
 
 			CopyDigitalNumber = SelectedDigitalNumber
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(panel.CopyDigitalNumber)
+				.WithSubscribe(() => panel.CopyPanelElement(7))
 				.AddTo(disposable);
 
 			CopyDigitalGauge = SelectedDigitalGauge
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(panel.CopyDigitalGauge)
+				.WithSubscribe(() => panel.CopyPanelElement(10))
 				.AddTo(disposable);
 
 			CopyLinearGauge = SelectedLinearGauge
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(panel.CopyLinearGauge)
+				.WithSubscribe(() => panel.CopyPanelElement(10))
 				.AddTo(disposable);
 
 			CopyTimetable = SelectedTimetable
 				.Select(x => x != null)
 				.ToReactiveCommand()
-				.WithSubscribe(panel.CopyTimetable)
+				.WithSubscribe(() => panel.CopyPanelElement(5))
 				.AddTo(disposable);
 
 			CopyTouch = SelectedTouch
@@ -533,40 +666,10 @@ namespace TrainEditor2.ViewModels.Panels
 				.WithSubscribe(panel.RemoveScreen)
 				.AddTo(disposable);
 
-			RemovePilotLamp = SelectedPilotLamp
-				.Select(x => x != null)
+			RemovePanelElement = SelectedListItem
+				.Select(x => x?.Tag.Value is PanelElement)
 				.ToReactiveCommand()
-				.WithSubscribe(panel.RemovePilotLamp)
-				.AddTo(disposable);
-
-			RemoveNeedle = SelectedNeedle
-				.Select(x => x != null)
-				.ToReactiveCommand()
-				.WithSubscribe(panel.RemoveNeedle)
-				.AddTo(disposable);
-
-			RemoveDigitalNumber = SelectedDigitalNumber
-				.Select(x => x != null)
-				.ToReactiveCommand()
-				.WithSubscribe(panel.RemoveDigitalNumber)
-				.AddTo(disposable);
-
-			RemoveDigitalGauge = SelectedDigitalGauge
-				.Select(x => x != null)
-				.ToReactiveCommand()
-				.WithSubscribe(panel.RemoveDigitalGauge)
-				.AddTo(disposable);
-
-			RemoveLinearGauge = SelectedLinearGauge
-				.Select(x => x != null)
-				.ToReactiveCommand()
-				.WithSubscribe(panel.RemoveLinearGauge)
-				.AddTo(disposable);
-
-			RemoveTimetable = SelectedTimetable
-				.Select(x => x != null)
-				.ToReactiveCommand()
-				.WithSubscribe(panel.RemoveTimetable)
+				.WithSubscribe(panel.RemovePanelElement)
 				.AddTo(disposable);
 
 			RemoveTouch = SelectedTouch
@@ -574,9 +677,6 @@ namespace TrainEditor2.ViewModels.Panels
 				.ToReactiveCommand()
 				.WithSubscribe(panel.RemoveTouch)
 				.AddTo(disposable);
-
-			treeItemDisposable.AddTo(disposable);
-			listItemDisposable.AddTo(disposable);
 		}
 	}
 }

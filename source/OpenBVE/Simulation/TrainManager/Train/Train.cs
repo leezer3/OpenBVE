@@ -235,7 +235,7 @@ namespace OpenBve
 								Cars[j].RearBogie.ChangeSection(!IsPlayerTrain ? 0 : -1);
 								Cars[j].Coupler.ChangeSection(!IsPlayerTrain ? 0 : -1);
 								
-								if (Cars[j].Specs.IsMotorCar)
+								if (Cars[j] is MotorCar)
 								{
 									if (Cars[j].Sounds.Loop.Buffer != null)
 									{
@@ -454,13 +454,12 @@ namespace OpenBve
 					return;
 				}
 				// update brake system
-				double[] DecelerationDueToBrake, DecelerationDueToMotor;
-				UpdateBrakeSystem(TimeElapsed, out DecelerationDueToBrake, out DecelerationDueToMotor);
+				UpdateBrakeSystem(TimeElapsed);
 				// calculate new car speeds
 				double[] NewSpeeds = new double[Cars.Length];
 				for (int i = 0; i < Cars.Length; i++)
 				{
-					Cars[i].UpdateSpeed(TimeElapsed, DecelerationDueToMotor[i], DecelerationDueToBrake[i], out NewSpeeds[i]);
+					Cars[i].UpdateSpeed(TimeElapsed, out NewSpeeds[i]);
 				}
 				// calculate center of mass position
 				double[] CenterOfCarPositions = new double[Cars.Length];
@@ -731,6 +730,8 @@ namespace OpenBve
 			public override void Derail(int CarIndex, double ElapsedTime)
 			{
 				this.Cars[CarIndex].Derailed = true;
+				this.Cars[CarIndex].FrontAxle.Derailed = true;
+				this.Cars[CarIndex].RearAxle.Derailed = true;
 				this.Derailed = true;
 				if (Program.GenerateDebugLogging)
 				{
@@ -745,6 +746,8 @@ namespace OpenBve
 				{
 					var c = Car as TrainManager.Car;
 					c.Derailed = true;
+					c.FrontAxle.Derailed = true;
+					c.RearAxle.Derailed = true;
 					this.Derailed = true;
 					if (Program.GenerateDebugLogging)
 					{

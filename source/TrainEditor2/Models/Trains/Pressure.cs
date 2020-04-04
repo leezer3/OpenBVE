@@ -8,84 +8,121 @@ namespace TrainEditor2.Models.Trains
 	/// </summary>
 	internal class Pressure : BindableBase, ICloneable
 	{
-		private double brakeCylinderServiceMaximumPressure;
-		private double brakeCylinderEmergencyMaximumPressure;
-		private double mainReservoirMinimumPressure;
-		private double mainReservoirMaximumPressure;
-		private double brakePipeNormalPressure;
+		private Compressor compressor;
+		private MainReservoir mainReservoir;
+		private AuxiliaryReservoir auxiliaryReservoir;
+		private EqualizingReservoir equalizingReservoir;
+		private BrakePipe brakePipe;
+		private StraightAirPipe straightAirPipe;
+		private BrakeCylinder brakeCylinder;
 
-		internal double BrakeCylinderServiceMaximumPressure
+		internal Compressor Compressor
 		{
 			get
 			{
-				return brakeCylinderServiceMaximumPressure;
+				return compressor;
 			}
 			set
 			{
-				SetProperty(ref brakeCylinderServiceMaximumPressure, value);
+				SetProperty(ref compressor, value);
 			}
 		}
 
-		internal double BrakeCylinderEmergencyMaximumPressure
+		internal MainReservoir MainReservoir
 		{
 			get
 			{
-				return brakeCylinderEmergencyMaximumPressure;
+				return mainReservoir;
 			}
 			set
 			{
-				SetProperty(ref brakeCylinderEmergencyMaximumPressure, value);
+				SetProperty(ref mainReservoir, value);
 			}
 		}
 
-		internal double MainReservoirMinimumPressure
+		internal AuxiliaryReservoir AuxiliaryReservoir
 		{
 			get
 			{
-				return mainReservoirMinimumPressure;
+				return auxiliaryReservoir;
 			}
 			set
 			{
-				SetProperty(ref mainReservoirMinimumPressure, value);
+				SetProperty(ref auxiliaryReservoir, value);
 			}
 		}
 
-		internal double MainReservoirMaximumPressure
+		internal EqualizingReservoir EqualizingReservoir
 		{
 			get
 			{
-				return mainReservoirMaximumPressure;
+				return equalizingReservoir;
 			}
 			set
 			{
-				SetProperty(ref mainReservoirMaximumPressure, value);
+				SetProperty(ref equalizingReservoir, value);
 			}
 		}
 
-		internal double BrakePipeNormalPressure
+		internal BrakePipe BrakePipe
 		{
 			get
 			{
-				return brakePipeNormalPressure;
+				return brakePipe;
 			}
 			set
 			{
-				SetProperty(ref brakePipeNormalPressure, value);
+				SetProperty(ref brakePipe, value);
+			}
+		}
+
+		internal StraightAirPipe StraightAirPipe
+		{
+			get
+			{
+				return straightAirPipe;
+			}
+			set
+			{
+				SetProperty(ref straightAirPipe, value);
+			}
+		}
+
+		internal BrakeCylinder BrakeCylinder
+		{
+			get
+			{
+				return brakeCylinder;
+			}
+			set
+			{
+				SetProperty(ref brakeCylinder, value);
 			}
 		}
 
 		internal Pressure()
 		{
-			BrakeCylinderServiceMaximumPressure = 480.0;
-			BrakeCylinderEmergencyMaximumPressure = 480.0;
-			MainReservoirMinimumPressure = 690.0;
-			MainReservoirMaximumPressure = 780.0;
-			BrakePipeNormalPressure = 490.0;
+			Compressor = new Compressor();
+			MainReservoir = new MainReservoir();
+			AuxiliaryReservoir = new AuxiliaryReservoir();
+			EqualizingReservoir = new EqualizingReservoir();
+			BrakePipe = new BrakePipe();
+			StraightAirPipe = new StraightAirPipe();
+			BrakeCylinder = new BrakeCylinder();
 		}
 
 		public object Clone()
 		{
-			return MemberwiseClone();
+			return new Pressure
+			{
+				Compressor = (Compressor)Compressor.Clone(),
+				MainReservoir = (MainReservoir)MainReservoir.Clone(),
+				AuxiliaryReservoir = (AuxiliaryReservoir)AuxiliaryReservoir.Clone(),
+				EqualizingReservoir = (EqualizingReservoir)EqualizingReservoir.Clone(),
+				BrakePipe = (BrakePipe)BrakePipe.Clone(),
+				StraightAirPipe = (StraightAirPipe)StraightAirPipe.Clone(),
+				BrakeCylinder = (BrakeCylinder)BrakeCylinder.Clone()
+			};
 		}
 	}
 }

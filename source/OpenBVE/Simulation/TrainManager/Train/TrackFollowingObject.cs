@@ -71,7 +71,7 @@ namespace OpenBve
 							Cars[i].RearBogie.ChangeSection(0);
 							Cars[i].Coupler.ChangeSection(0);
 
-							if (Cars[i].Specs.IsMotorCar)
+							if (Cars[i] is MotorCar)
 							{
 								if (Cars[i].Sounds.Loop.Buffer != null)
 								{

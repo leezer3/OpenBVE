@@ -785,7 +785,7 @@ namespace OpenBve
 										case "noise":
 											for (int c = 0; c < train.Cars.Length; c++)
 											{
-												if (train.Cars[c].Specs.IsMotorCar | c == train.DriverCar)
+												if (train.Cars[c] is TrainManager.MotorCar | c == train.DriverCar)
 												{
 													train.Cars[c].Sounds.Loop = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center);
 												}
@@ -812,6 +812,61 @@ namespace OpenBve
 							i++;
 						}
 						i--; break;
+					case "[touch]":
+						i++;
+
+						while (i < Lines.Count && !Lines[i].StartsWith("[", StringComparison.Ordinal))
+						{
+							int j = Lines[i].IndexOf("=", StringComparison.Ordinal);
+
+							if (j >= 0)
+							{
+								string a = Lines[i].Substring(0, j).TrimEnd();
+								string b = Lines[i].Substring(j + 1).TrimStart();
+
+								if (b.Length == 0 || Path.ContainsInvalidChars(b))
+								{
+									Interface.AddMessage(MessageType.Error, false, $"FileName contains illegal characters or is empty at line {(i + 1).ToString(Culture)} in file {FileName}");
+								}
+								else
+								{
+									int k;
+
+									if (!int.TryParse(a, System.Globalization.NumberStyles.Integer, Culture, out k))
+									{
+										Interface.AddMessage(MessageType.Error, false, $"Invalid index appeared at line {(i + 1).ToString(Culture)} in file {FileName}");
+									}
+									else
+									{
+										if (k >= 0)
+										{
+											int n = train.Cars[train.DriverCar].Sounds.Touch.Length;
+
+											if (k >= n)
+											{
+												Array.Resize(ref train.Cars[train.DriverCar].Sounds.Touch, k + 1);
+
+												for (int h = n; h < k; h++)
+												{
+													train.Cars[train.DriverCar].Sounds.Touch[h] = new CarSound();
+												}
+											}
+
+											train.Cars[train.DriverCar].Sounds.Touch[k] = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), panel);
+										}
+										else
+										{
+											Interface.AddMessage(MessageType.Warning, false, $"Index must be greater or equal to zero at line {(i + 1).ToString(Culture)} in file {FileName}");
+										}
+									}
+								}
+							}
+
+							i++;
+						}
+
+						i--;
+						break;
 				}
 			}
 			for (int i = 0; i < train.Cars.Length; i++)
@@ -820,22 +875,34 @@ namespace OpenBve
 				train.Cars[i].Sounds.FlangeVolume = new double[train.Cars[i].Sounds.Flange.Length];
 			}
 			// motor sound
-			for (int c = 0; c < train.Cars.Length; c++)
+			foreach (TrainManager.MotorCar car in train.Cars.OfType<TrainManager.MotorCar>())
 			{
-				if (train.Cars[c].Specs.IsMotorCar)
+				car.Sounds.Motor.Position = center;
+
+				foreach (TrainManager.MotorSound.Table table in car.Sounds.Motor.PowerTables)
 				{
-					train.Cars[c].Sounds.Motor.Position = center;
-					for (int i = 0; i < train.Cars[c].Sounds.Motor.Tables.Length; i++)
+					table.PlayingBuffer = null;
+					table.PlayingSource = null;
+
+					foreach (TrainManager.MotorSound.Vertex<int, SoundBuffer> vertex in table.BufferVertices)
 					{
-						train.Cars[c].Sounds.Motor.Tables[i].Buffer = null;
-						train.Cars[c].Sounds.Motor.Tables[i].Source = null;
-						for (int j = 0; j < train.Cars[c].Sounds.Motor.Tables[i].Entries.Length; j++)
+						if (vertex.Y >= 0 && vertex.Y < MotorFiles.Length && MotorFiles[vertex.Y] != null)
 						{
-							int index = train.Cars[c].Sounds.Motor.Tables[i].Entries[j].SoundIndex;
-							if (index >= 0 && index < MotorFiles.Length && MotorFiles[index] != null)
-							{
-								train.Cars[c].Sounds.Motor.Tables[i].Entries[j].Buffer = Program.Sounds.RegisterBuffer(MotorFiles[index], SoundCfgParser.mediumRadius);
-							}
+							vertex.Z = Program.Sounds.RegisterBuffer(MotorFiles[vertex.Y], SoundCfgParser.mediumRadius);
+						}
+					}
+				}
+
+				foreach (TrainManager.MotorSound.Table table in car.Sounds.Motor.BrakeTables)
+				{
+					table.PlayingBuffer = null;
+					table.PlayingSource = null;
+
+					foreach (TrainManager.MotorSound.Vertex<int, SoundBuffer> vertex in table.BufferVertices)
+					{
+						if (vertex.Y >= 0 && vertex.Y < MotorFiles.Length && MotorFiles[vertex.Y] != null)
+						{
+							vertex.Z = Program.Sounds.RegisterBuffer(MotorFiles[vertex.Y], SoundCfgParser.mediumRadius);
 						}
 					}
 				}

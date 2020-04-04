@@ -266,7 +266,7 @@ namespace TrainEditor2.Models.Panels
 			}
 		}
 
-		internal NeedleElement()
+		public NeedleElement()
 		{
 			Subject = new Subject();
 			DaytimeImage = string.Empty;

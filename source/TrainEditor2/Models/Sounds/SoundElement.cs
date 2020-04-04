@@ -1,174 +1,8 @@
 ﻿using System;
 using Prism.Mvvm;
-using TrainEditor2.Extensions;
 
 namespace TrainEditor2.Models.Sounds
 {
-	internal enum BrakeKey
-	{
-		[StringValue("Bc Release High", "ReleaseHigh")]
-		BcReleaseHigh,
-
-		[StringValue("Bc Release", "Release")]
-		BcRelease,
-
-		[StringValue("Bc Release Full", "ReleaseFull")]
-		BcReleaseFull,
-
-		[StringValue("Emergency")]
-		Emergency,
-
-		[StringValue("BP Decomp", "Application")]
-		BpDecomp
-	}
-
-	internal enum BrakeHandleKey
-	{
-		[StringValue("Apply")]
-		Apply,
-
-		[StringValue("ApplyFast")]
-		ApplyFast,
-
-		[StringValue("Release")]
-		Release,
-
-		[StringValue("ReleaseFast")]
-		ReleaseFast,
-
-		[StringValue("Min", "Minimum")]
-		Min,
-
-		[StringValue("Max", "Maximum")]
-		Max
-	}
-
-	internal enum BreakerKey
-	{
-		[StringValue("On")]
-		On,
-
-		[StringValue("Off")]
-		Off
-	}
-
-	internal enum BuzzerKey
-	{
-		[StringValue("Correct")]
-		Correct
-	}
-
-	internal enum CompressorKey
-	{
-		[StringValue("Attack", "Start")]
-		Attack,
-
-		[StringValue("Loop")]
-		Loop,
-
-		[StringValue("Release", "Stop", "End")]
-		Release
-	}
-
-	internal enum DoorKey
-	{
-		[StringValue("Open Left", "OpenLeft", "LeftOpen")]
-		OpenLeft,
-
-		[StringValue("Close Left", "CloseLeft", "LeftClose")]
-		CloseLeft,
-
-		[StringValue("Open Right", "OpenRight", "RightOpen")]
-		OpenRight,
-
-		[StringValue("Close Right", "CloseRight", "RightClose")]
-		CloseRight
-	}
-
-	internal enum HornKey
-	{
-		[StringValue("Start")]
-		Start,
-
-		[StringValue("Loop")]
-		Loop,
-
-		[StringValue("End", "Release", "Stop")]
-		End
-	}
-
-	internal enum MasterControllerKey
-	{
-		[StringValue("Up", "Increase")]
-		Up,
-
-		[StringValue("UpFast", "IncreaseFast")]
-		UpFast,
-
-		[StringValue("Down", "Decrease")]
-		Down,
-
-		[StringValue("DownFast", "DecreaseFast")]
-		DownFast,
-
-		[StringValue("Min", "Minimum")]
-		Min,
-
-		[StringValue("Max", "Maximum")]
-		Max
-	}
-
-	internal enum OthersKey
-	{
-		[StringValue("Noise")]
-		Noise,
-
-		[StringValue("Shoe")]
-		Shoe,
-
-		[StringValue("Halt")]
-		Halt
-	}
-
-	internal enum PilotLampKey
-	{
-		[StringValue("On")]
-		On,
-
-		[StringValue("Off")]
-		Off
-	}
-
-	internal enum RequestStopKey
-	{
-		[StringValue("Stop")]
-		Stop,
-
-		[StringValue("Pass")]
-		Pass,
-
-		[StringValue("Ignored")]
-		Ignored
-	}
-
-	internal enum ReverserKey
-	{
-		[StringValue("On")]
-		On,
-
-		[StringValue("Off")]
-		Off
-	}
-
-	internal enum SuspensionKey
-	{
-		[StringValue("Left")]
-		Left,
-
-		[StringValue("Right")]
-		Right
-	}
-
 	internal abstract class SoundElement : BindableBase, ICloneable
 	{
 		protected object key;
@@ -322,31 +156,31 @@ namespace TrainEditor2.Models.Sounds
 	{
 	}
 
-	internal class BrakeElement : SoundElement<BrakeKey>
+	internal class BrakeElement : SoundElement<SoundKey.Brake>
 	{
 	}
 
-	internal class CompressorElement : SoundElement<CompressorKey>
+	internal class CompressorElement : SoundElement<SoundKey.Compressor>
 	{
 	}
 
-	internal class SuspensionElement : SoundElement<SuspensionKey>
+	internal class SuspensionElement : SoundElement<SoundKey.Suspension>
 	{
 	}
 
-	internal class PrimaryHornElement : SoundElement<HornKey>
+	internal class PrimaryHornElement : SoundElement<SoundKey.Horn>
 	{
 	}
 
-	internal class SecondaryHornElement : SoundElement<HornKey>
+	internal class SecondaryHornElement : SoundElement<SoundKey.Horn>
 	{
 	}
 
-	internal class MusicHornElement : SoundElement<HornKey>
+	internal class MusicHornElement : SoundElement<SoundKey.Horn>
 	{
 	}
 
-	internal class DoorElement : SoundElement<DoorKey>
+	internal class DoorElement : SoundElement<SoundKey.Door>
 	{
 	}
 
@@ -354,31 +188,31 @@ namespace TrainEditor2.Models.Sounds
 	{
 	}
 
-	internal class BuzzerElement : SoundElement<BuzzerKey>
+	internal class BuzzerElement : SoundElement<SoundKey.Buzzer>
 	{
 	}
 
-	internal class PilotLampElement : SoundElement<PilotLampKey>
+	internal class PilotLampElement : SoundElement<SoundKey.PilotLamp>
 	{
 	}
 
-	internal class BrakeHandleElement : SoundElement<BrakeHandleKey>
+	internal class BrakeHandleElement : SoundElement<SoundKey.BrakeHandle>
 	{
 	}
 
-	internal class MasterControllerElement : SoundElement<MasterControllerKey>
+	internal class MasterControllerElement : SoundElement<SoundKey.MasterController>
 	{
 	}
 
-	internal class ReverserElement : SoundElement<ReverserKey>
+	internal class ReverserElement : SoundElement<SoundKey.Reverser>
 	{
 	}
 
-	internal class BreakerElement : SoundElement<BreakerKey>
+	internal class BreakerElement : SoundElement<SoundKey.Breaker>
 	{
 	}
 
-	internal class RequestStopElement : SoundElement<RequestStopKey>
+	internal class RequestStopElement : SoundElement<SoundKey.RequestStop>
 	{
 	}
 
@@ -386,7 +220,7 @@ namespace TrainEditor2.Models.Sounds
 	{
 	}
 
-	internal class OthersElement : SoundElement<OthersKey>
+	internal class OthersElement : SoundElement<SoundKey.Others>
 	{
 	}
 }

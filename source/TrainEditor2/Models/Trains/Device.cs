@@ -22,15 +22,6 @@ namespace TrainEditor2.Models.Trains
 			Automatic = 2
 		}
 
-		internal enum ReAdhesionDevices
-		{
-			None = -1,
-			TypeA = 0,
-			TypeB = 1,
-			TypeC = 2,
-			TypeD = 3
-		}
-
 		internal enum PassAlarmModes
 		{
 			None = 0,
@@ -50,13 +41,10 @@ namespace TrainEditor2.Models.Trains
 		private bool eb;
 		private bool constSpeed;
 		private bool holdBrake;
-		private ReAdhesionDevices reAdhesionDevice;
 		private double loadCompensatingDevice;
 		private PassAlarmModes passAlarm;
 		private DoorModes doorOpenMode;
 		private DoorModes doorCloseMode;
-		private double doorWidth;
-		private double doorMaxTolerance;
 
 		internal AtsModes Ats
 		{
@@ -118,18 +106,6 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal ReAdhesionDevices ReAdhesionDevice
-		{
-			get
-			{
-				return reAdhesionDevice;
-			}
-			set
-			{
-				SetProperty(ref reAdhesionDevice, value);
-			}
-		}
-
 		internal double LoadCompensatingDevice
 		{
 			get
@@ -178,30 +154,6 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double DoorWidth
-		{
-			get
-			{
-				return doorWidth;
-			}
-			set
-			{
-				SetProperty(ref doorWidth, value);
-			}
-		}
-
-		internal double DoorMaxTolerance
-		{
-			get
-			{
-				return doorMaxTolerance;
-			}
-			set
-			{
-				SetProperty(ref doorMaxTolerance, value);
-			}
-		}
-
 		internal Device()
 		{
 			Ats = AtsModes.AtsSn;
@@ -209,13 +161,10 @@ namespace TrainEditor2.Models.Trains
 			Eb = false;
 			ConstSpeed = false;
 			HoldBrake = false;
-			ReAdhesionDevice = ReAdhesionDevices.TypeA;
 			LoadCompensatingDevice = 0.0;
 			PassAlarm = PassAlarmModes.None;
 			DoorOpenMode = DoorModes.SemiAutomatic;
 			DoorCloseMode = DoorModes.SemiAutomatic;
-			DoorWidth = 1000.0;
-			DoorMaxTolerance = 0.0;
 		}
 
 		public object Clone()

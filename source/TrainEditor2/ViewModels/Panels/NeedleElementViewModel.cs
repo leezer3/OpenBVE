@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Reactive.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
@@ -159,15 +160,6 @@ namespace TrainEditor2.ViewModels.Panels
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
-				.SetValidateNotifyError(x =>
-				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.NonZero, out result, out message);
-
-					return message;
-				})
 				.AddTo(disposable);
 
 			Color = needle
@@ -199,15 +191,6 @@ namespace TrainEditor2.ViewModels.Panels
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
-				.SetValidateNotifyError(x =>
-				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Any, out result, out message);
-
-					return message;
-				})
 				.AddTo(disposable);
 
 			OriginY = needle
@@ -217,15 +200,6 @@ namespace TrainEditor2.ViewModels.Panels
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
-				.SetValidateNotifyError(x =>
-				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.Any, out result, out message);
-
-					return message;
-				})
 				.AddTo(disposable);
 
 			InitialAngle = needle
@@ -311,15 +285,6 @@ namespace TrainEditor2.ViewModels.Panels
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
-				.SetValidateNotifyError(x =>
-				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
-
-					return message;
-				})
 				.AddTo(disposable);
 
 			DefinedDampingRatio = needle
@@ -333,15 +298,6 @@ namespace TrainEditor2.ViewModels.Panels
 					x => double.Parse(x, NumberStyles.Float, culture),
 					ignoreValidationErrorValue: true
 				)
-				.SetValidateNotifyError(x =>
-				{
-					double result;
-					string message;
-
-					Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
-
-					return message;
-				})
 				.AddTo(disposable);
 
 			Backstop = needle
@@ -350,6 +306,109 @@ namespace TrainEditor2.ViewModels.Panels
 
 			Smoothed = needle
 				.ToReactivePropertyAsSynchronized(x => x.Smoothed)
+				.AddTo(disposable);
+
+			DefinedRadius.Subscribe(_ => Radius.ForceValidate()).AddTo(disposable);
+
+			Radius.SetValidateNotifyError(x =>
+				{
+					string message;
+
+					if (DefinedRadius.Value)
+					{
+						double result;
+						Utilities.TryParse(x, NumberRange.NonZero, out result, out message);
+					}
+					else
+					{
+						message = string.Empty;
+					}
+
+					return message;
+				})
+				.AddTo(disposable);
+
+			DefinedOrigin.Subscribe(_ =>
+				{
+					OriginX.ForceValidate();
+					OriginY.ForceValidate();
+				})
+				.AddTo(disposable);
+
+			OriginX.SetValidateNotifyError(x =>
+				{
+					string message;
+
+					if (DefinedOrigin.Value)
+					{
+						double result;
+						Utilities.TryParse(x, NumberRange.Any, out result, out message);
+					}
+					else
+					{
+						message = string.Empty;
+					}
+
+					return message;
+				})
+				.AddTo(disposable);
+
+			OriginY.SetValidateNotifyError(x =>
+				{
+					string message;
+
+					if (DefinedOrigin.Value)
+					{
+						double result;
+						Utilities.TryParse(x, NumberRange.Any, out result, out message);
+					}
+					else
+					{
+						message = string.Empty;
+					}
+
+					return message;
+				})
+				.AddTo(disposable);
+
+			DefinedNaturalFreq.Subscribe(_ => NaturalFreq.ForceValidate()).AddTo(disposable);
+
+			NaturalFreq.SetValidateNotifyError(x =>
+				{
+					string message;
+
+					if (DefinedNaturalFreq.Value)
+					{
+						double result;
+						Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
+					}
+					else
+					{
+						message = string.Empty;
+					}
+
+					return message;
+				})
+				.AddTo(disposable);
+
+			DefinedDampingRatio.Subscribe(_ => DampingRatio.ForceValidate()).AddTo(disposable);
+
+			DampingRatio.SetValidateNotifyError(x =>
+				{
+					string message;
+
+					if (DefinedDampingRatio.Value)
+					{
+						double result;
+						Utilities.TryParse(x, NumberRange.NonNegative, out result, out message);
+					}
+					else
+					{
+						message = string.Empty;
+					}
+
+					return message;
+				})
 				.AddTo(disposable);
 		}
 	}

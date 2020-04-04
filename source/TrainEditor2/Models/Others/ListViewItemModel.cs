@@ -5,20 +5,21 @@ namespace TrainEditor2.Models.Others
 {
 	internal class ListViewItemModel : BindableBase
 	{
-		private object tag;
+		private bool _checked;
 		private int imageIndex;
+		private object tag;
 
-		internal ObservableCollection<string> Texts;
+		internal ObservableCollection<ListViewSubItemModel> SubItems;
 
-		internal object Tag
+		internal bool Checked
 		{
 			get
 			{
-				return tag;
+				return _checked;
 			}
 			set
 			{
-				SetProperty(ref tag, value);
+				SetProperty(ref _checked, value);
 			}
 		}
 
@@ -34,9 +35,21 @@ namespace TrainEditor2.Models.Others
 			}
 		}
 
+		internal object Tag
+		{
+			get
+			{
+				return tag;
+			}
+			set
+			{
+				SetProperty(ref tag, value);
+			}
+		}
+
 		internal ListViewItemModel()
 		{
-			Texts = new ObservableCollection<string>();
+			SubItems = new ObservableCollection<ListViewSubItemModel>();
 			ImageIndex = -1;
 		}
 	}

@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Units;
 using Prism.Mvvm;
 
 namespace TrainEditor2.Models.Trains
@@ -32,7 +33,7 @@ namespace TrainEditor2.Models.Trains
 		private BrakeTypes brakeType;
 		private LocoBrakeTypes locoBrakeType;
 		private BrakeControlSystems brakeControlSystem;
-		private double brakeControlSpeed;
+		private Quantity.Velocity brakeControlSpeed;
 
 		internal BrakeTypes BrakeType
 		{
@@ -70,7 +71,7 @@ namespace TrainEditor2.Models.Trains
 			}
 		}
 
-		internal double BrakeControlSpeed
+		internal Quantity.Velocity BrakeControlSpeed
 		{
 			get
 			{
@@ -87,7 +88,7 @@ namespace TrainEditor2.Models.Trains
 			BrakeType = BrakeTypes.ElectromagneticStraightAirBrake;
 			LocoBrakeType = LocoBrakeTypes.NotFitted;
 			BrakeControlSystem = BrakeControlSystems.None;
-			BrakeControlSpeed = 0.0;
+			BrakeControlSpeed = new Quantity.Velocity(0.0, Unit.Velocity.KilometerPerHour);
 		}
 
 		public object Clone()

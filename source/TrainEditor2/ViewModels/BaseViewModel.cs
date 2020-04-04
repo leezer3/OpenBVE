@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Reactive.Disposables;
-using Prism.Mvvm;
 
 namespace TrainEditor2.ViewModels
 {
-	internal abstract class BaseViewModel : BindableBase, IDisposable
+	internal abstract class BaseViewModel : IDisposable
 	{
 		protected CompositeDisposable disposable
 		{

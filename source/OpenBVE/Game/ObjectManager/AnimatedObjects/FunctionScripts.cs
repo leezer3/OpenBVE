@@ -316,7 +316,7 @@ namespace OpenBve {
 						if (Train != null) {
 							Function.Stack[s] = 0.0;
 							for (int j = 0; j < Train.Cars.Length; j++) {
-								if (Train.Cars[j].Specs.IsMotorCar) {
+								if (Train.Cars[j] is TrainManager.MotorCar) {
 									// hack: CurrentAccelerationOutput does not distinguish between forward/backward
 									if (Train.Cars[j].Specs.CurrentAccelerationOutput < 0.0) {
 										Function.Stack[s] = Train.Cars[j].Specs.CurrentAccelerationOutput * (double)Math.Sign(Train.Cars[j].CurrentSpeed);

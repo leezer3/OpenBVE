@@ -1,11 +1,12 @@
-﻿using OpenBveApi.FunctionScripting;
+﻿using System;
+using OpenBveApi.FunctionScripting;
 using OpenBveApi.Hosts;
 using OpenBveApi.Sounds;
 
 namespace SoundManager
 {
 	/// <summary>Represents a sound buffer.</summary>
-	public class SoundBuffer : SoundHandle
+	public class SoundBuffer : SoundHandle, ICloneable
 	{
 		// --- members ---
 		/// <summary>The origin where the sound can be loaded from.</summary>
@@ -90,20 +91,19 @@ namespace SoundManager
 		}
 
 		/// <summary>Creates a clone of the specified sound buffer</summary>
-		/// <param name="b">The buffer to clone</param>
 		/// <returns>The new buffer</returns>
-		internal SoundBuffer Clone(SoundBuffer b)
+		public object Clone()
 		{
-			return new SoundBuffer(b.Origin)
+			return new SoundBuffer(Origin)
 			{
-				Radius = b.Radius,
+				Radius = Radius,
 				Loaded = false,
 				OpenAlBufferName = 0,
-				Duration = b.Duration,
-				InternalVolumeFactor = b.InternalVolumeFactor,
+				Duration = Duration,
+				InternalVolumeFactor = InternalVolumeFactor,
 				Ignore = false,
-				PitchFunction = b.PitchFunction,
-				VolumeFunction = b.VolumeFunction
+				PitchFunction = PitchFunction?.Clone(),
+				VolumeFunction = VolumeFunction?.Clone()
 			};
 		}
 	}

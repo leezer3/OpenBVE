@@ -21,6 +21,8 @@ namespace OpenBve
 			/// <summary>Stores whether the point sound has been triggered</summary>
 			internal bool PointSoundTriggered;
 
+			internal bool Derailed;
+
 			internal Axle(TrainManager.Train Train, TrainManager.Car Car)
 			{
 				Follower = new TrackFollower(Program.CurrentHost, Train, Car);

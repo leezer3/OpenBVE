@@ -120,7 +120,7 @@ namespace OpenBve
                 if (Train == null) return 0.0;
                 for (int j = 0; j < Train.Cars.Length; j++)
                 {
-                    if (Train.Cars[j].Specs.IsMotorCar)
+                    if (Train.Cars[j] is TrainManager.MotorCar)
                     {
                         // hack: CurrentAccelerationOutput does not distinguish between forward/backward
                         if (Train.Cars[j].Specs.CurrentAccelerationOutput < 0.0)
@@ -145,7 +145,7 @@ namespace OpenBve
             public static double accelerationMotor(TrainManager.Train Train, int CarIndex)
             {
                 if (Train == null || Train.Cars.Length <= CarIndex) return 0.0;
-                if (Train.Cars[CarIndex].Specs.IsMotorCar)
+                if (Train.Cars[CarIndex] is TrainManager.MotorCar)
                 {
                     // hack: CurrentAccelerationOutput does not distinguish between forward/backward
                     if (Train.Cars[CarIndex].Specs.CurrentAccelerationOutput < 0.0)

@@ -8,6 +8,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Interface;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
+using SoundManager;
 
 namespace OpenBve {
 	internal static partial class TrainDatParser {
@@ -152,13 +153,31 @@ namespace OpenBve {
 			Train.Handles.HasLocoBrake = false;
 			double[] powerDelayUp = { }, powerDelayDown = { }, brakeDelayUp = { }, brakeDelayDown = { }, locoBrakeDelayUp = { }, locoBrakeDelayDown = { };
 			int powerNotches = 0, brakeNotches = 0, locoBrakeNotches = 0, powerReduceSteps = -1, locoBrakeType = 0, driverPowerNotches = 0, driverBrakeNotches = 0;
-			TrainManager.MotorSoundTable[] Tables = new TrainManager.MotorSoundTable[4];
-			for (int i = 0; i < 4; i++) {
-				Tables[i].Entries = new TrainManager.MotorSoundTableEntry[16];
-				for (int j = 0; j < 16; j++) {
-					Tables[i].Entries[j].SoundIndex = -1;
-					Tables[i].Entries[j].Pitch = 1.0f;
-					Tables[i].Entries[j].Gain = 1.0f;
+			TrainManager.MotorSound.Table[] PowerTables = new TrainManager.MotorSound.Table[2];
+			TrainManager.MotorSound.Table[] BrakeTables = new TrainManager.MotorSound.Table[2];
+			for (int i = 0; i < 2; i++)
+			{
+				PowerTables[i] = new TrainManager.MotorSound.Table
+				{
+					PitchVertices = new TrainManager.MotorSound.Vertex<float>[16],
+					GainVertices = new TrainManager.MotorSound.Vertex<float>[16],
+					BufferVertices = new TrainManager.MotorSound.Vertex<int, SoundBuffer>[16]
+				};
+				BrakeTables[i] = new TrainManager.MotorSound.Table
+				{
+					PitchVertices = new TrainManager.MotorSound.Vertex<float>[16],
+					GainVertices = new TrainManager.MotorSound.Vertex<float>[16],
+					BufferVertices = new TrainManager.MotorSound.Vertex<int, SoundBuffer>[16]
+				};
+
+				for (int j = 0; j < 16; j++)
+				{
+					PowerTables[i].PitchVertices[j] = new TrainManager.MotorSound.Vertex<float> { X = 0.2f * j / 3.6f, Y = 1.0f };
+					PowerTables[i].GainVertices[j] = new TrainManager.MotorSound.Vertex<float> { X = 0.2f * j / 3.6f, Y = 1.0f };
+					PowerTables[i].BufferVertices[j] = new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = 0.2f * j / 3.6f, Y = -1 };
+					BrakeTables[i].PitchVertices[j] = new TrainManager.MotorSound.Vertex<float> { X = 0.2f * j / 3.6f, Y = 1.0f };
+					BrakeTables[i].GainVertices[j] = new TrainManager.MotorSound.Vertex<float> { X = 0.2f * j / 3.6f, Y = 1.0f };
+					BrakeTables[i].BufferVertices[j] = new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = 0.2f * j / 3.6f, Y = -1 };
 				}
 			}
 			// parse configuration
@@ -766,21 +785,28 @@ namespace OpenBve {
 					case "#motor_b1":
 					case "#motor_b2":
 						{
-							int msi = 0;
-							switch (Lines[i].ToLowerInvariant()) {
-									case "#motor_p1": msi = TrainManager.MotorSound.MotorP1; break;
-									case "#motor_p2": msi = TrainManager.MotorSound.MotorP2; break;
-									case "#motor_b1": msi = TrainManager.MotorSound.MotorB1; break;
-									case "#motor_b2": msi = TrainManager.MotorSound.MotorB2; break;
-							} i++;
-							while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal)) {
-								int u = Tables[msi].Entries.Length;
-								if (n >= u) {
-									Array.Resize<TrainManager.MotorSoundTableEntry>(ref Tables[msi].Entries, 2 * u);
-									for (int j = u; j < 2 * u; j++) {
-										Tables[msi].Entries[j].SoundIndex = -1;
-										Tables[msi].Entries[j].Pitch = 1.0f;
-										Tables[msi].Entries[j].Gain = 1.0f;
+							TrainManager.MotorSound.Table table = PowerTables[0];
+							switch (Lines[i].ToLowerInvariant())
+							{
+								case "#motor_p1": table = PowerTables[0]; break;
+								case "#motor_p2": table = PowerTables[1]; break;
+								case "#motor_b1": table = BrakeTables[0]; break;
+								case "#motor_b2": table = BrakeTables[1]; break;
+							}
+							i++;
+							while (i < Lines.Length && !Lines[i].StartsWith("#", StringComparison.Ordinal))
+							{
+								int u = table.PitchVertices.Length;
+								if (n >= u)
+								{
+									Array.Resize(ref table.PitchVertices, 2 * u);
+									Array.Resize(ref table.GainVertices, 2 * u);
+									Array.Resize(ref table.BufferVertices, 2 * u);
+									for (int j = u; j < 2 * u; j++)
+									{
+										table.PitchVertices[j] = new TrainManager.MotorSound.Vertex<float> { X = 0.2f * j / 3.6f, Y = 1.0f };
+										table.GainVertices[j] = new TrainManager.MotorSound.Vertex<float> { X = 0.2f * j / 3.6f, Y = 1.0f };
+										table.BufferVertices[j] = new TrainManager.MotorSound.Vertex<int, SoundBuffer> { X = 0.2f * j / 3.6f, Y = -1 };
 									}
 								}
 								string t = Lines[i] + ","; int m = 0;
@@ -793,15 +819,15 @@ namespace OpenBve {
 									if (NumberFormats.TryParseDoubleVb6(s, out a)) {
 										switch (m) {
 											case 0:
-												Tables[msi].Entries[n].SoundIndex = (int)Math.Round(a);
+												table.BufferVertices[n].Y = (int)Math.Round(a);
 												break;
 											case 1:
 												if (a < 0.0) a = 0.0;
-												Tables[msi].Entries[n].Pitch = (float)(0.01 * a);
+												table.PitchVertices[n].Y = (float)(0.01 * a);
 												break;
 											case 2:
 												if (a < 0.0) a = 0.0;
-												Tables[msi].Entries[n].Gain = (float)Math.Pow((0.0078125 * a), 0.25);
+												table.GainVertices[n].Y = (float)Math.Pow(0.0078125 * a, 0.25);
 												break;
 										}
 									} m++;
@@ -814,7 +840,12 @@ namespace OpenBve {
 								 * Handle duplicated section header:
 								 * If no entries, don't resize
 								 */
-								Array.Resize<TrainManager.MotorSoundTableEntry>(ref Tables[msi].Entries, n);
+								Array.Resize(ref table.PitchVertices, n);
+								Array.Resize(ref table.GainVertices, n);
+								Array.Resize(ref table.BufferVertices, n);
+								table.PitchVertices = table.PitchVertices.OrderBy(x => x.X).ToArray();
+								table.GainVertices = table.GainVertices.OrderBy(x => x.X).ToArray();
+								table.BufferVertices = table.BufferVertices.OrderBy(x => x.X).ToArray();
 							}
 							i--;
 						} break;
@@ -884,9 +915,59 @@ namespace OpenBve {
 			if (TrailerCars < 0) TrailerCars = 0;
 			int Cars = MotorCars + TrailerCars;
 			Train.Cars = new TrainManager.Car[Cars];
+			bool[] motorCars = new bool[Cars];
+			// assign motor cars
+			if (MotorCars == 1) {
+				if (FrontCarIsMotorCar | TrailerCars == 0) {
+					motorCars[0] = true;
+				} else {
+					motorCars[Cars - 1] = true;
+				}
+			} else if (MotorCars == 2) {
+				if (FrontCarIsMotorCar | TrailerCars == 0) {
+					motorCars[0] = true;
+					motorCars[Cars - 1] = true;
+				} else if (TrailerCars == 1) {
+					motorCars[1] = true;
+					motorCars[1] = true;
+				} else {
+					int i = (int)Math.Ceiling(0.25 * (double)(Cars - 1));
+					int j = (int)Math.Floor(0.75 * (double)(Cars - 1));
+					motorCars[i] = true;
+					motorCars[j] = true;
+				}
+			} else if (MotorCars > 0) {
+				if (FrontCarIsMotorCar) {
+					motorCars[0] = true;
+					double t = 1.0 + (double)TrailerCars / (double)(MotorCars - 1);
+					double r = 0.0;
+					double x = 0.0;
+					while (true) {
+						double y = x + t - r;
+						x = Math.Ceiling(y);
+						r = x - y;
+						int i = (int)x;
+						if (i >= Cars) break;
+						motorCars[i] = true;
+					}
+				} else {
+					motorCars[1] = true;
+					double t = 1.0 + (double)(TrailerCars - 1) / (double)(MotorCars - 1);
+					double r = 0.0;
+					double x = 1.0;
+					while (true) {
+						double y = x + t - r;
+						x = Math.Ceiling(y);
+						r = x - y;
+						int i = (int)x;
+						if (i >= Cars) break;
+						motorCars[i] = true;
+					}
+				}
+			}
 			for (int i = 0; i < Train.Cars.Length; i++)
 			{
-				Train.Cars[i] = new TrainManager.Car(Train, i);
+				Train.Cars[i] = motorCars[i] ? (TrainManager.Car) new TrainManager.MotorCar(Train, i) : new TrainManager.TrailerCar(Train, i);
 			}
 			double DistanceBetweenTheCars = 0.3;
 			
@@ -960,55 +1041,7 @@ namespace OpenBve {
 					MaximumAcceleration = AccelerationCurves[i].StageOneAcceleration;
 				}
 			}
-			// assign motor cars
-			if (MotorCars == 1) {
-				if (FrontCarIsMotorCar | TrailerCars == 0) {
-					Train.Cars[0].Specs.IsMotorCar = true;
-				} else {
-					Train.Cars[Cars - 1].Specs.IsMotorCar = true;
-				}
-			} else if (MotorCars == 2) {
-				if (FrontCarIsMotorCar | TrailerCars == 0) {
-					Train.Cars[0].Specs.IsMotorCar = true;
-					Train.Cars[Cars - 1].Specs.IsMotorCar = true;
-				} else if (TrailerCars == 1) {
-					Train.Cars[1].Specs.IsMotorCar = true;
-					Train.Cars[2].Specs.IsMotorCar = true;
-				} else {
-					int i = (int)Math.Ceiling(0.25 * (double)(Cars - 1));
-					int j = (int)Math.Floor(0.75 * (double)(Cars - 1));
-					Train.Cars[i].Specs.IsMotorCar = true;
-					Train.Cars[j].Specs.IsMotorCar = true;
-				}
-			} else if (MotorCars > 0) {
-				if (FrontCarIsMotorCar) {
-					Train.Cars[0].Specs.IsMotorCar = true;
-					double t = 1.0 + (double)TrailerCars / (double)(MotorCars - 1);
-					double r = 0.0;
-					double x = 0.0;
-					while (true) {
-						double y = x + t - r;
-						x = Math.Ceiling(y);
-						r = x - y;
-						int i = (int)x;
-						if (i >= Cars) break;
-						Train.Cars[i].Specs.IsMotorCar = true;
-					}
-				} else {
-					Train.Cars[1].Specs.IsMotorCar = true;
-					double t = 1.0 + (double)(TrailerCars - 1) / (double)(MotorCars - 1);
-					double r = 0.0;
-					double x = 1.0;
-					while (true) {
-						double y = x + t - r;
-						x = Math.Ceiling(y);
-						r = x - y;
-						int i = (int)x;
-						if (i >= Cars) break;
-						Train.Cars[i].Specs.IsMotorCar = true;
-					}
-				}
-			}
+			
 			double MotorDeceleration = Math.Sqrt(MaximumAcceleration * BrakeDeceleration);
 			// apply brake-specific attributes for all cars
 			for (int i = 0; i < Cars; i++) {
@@ -1022,13 +1055,13 @@ namespace OpenBve {
 					switch (locomotiveBrakeType)
 					{
 						case BrakeSystemType.AutomaticAirBrake:
-							Train.Cars[i].CarBrake = new AutomaticAirBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
+							Train.Cars[i].CarBrake = new AutomaticAirBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, motorCars[i], BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
 							break;
 						case BrakeSystemType.ElectricCommandBrake:
-							Train.Cars[i].CarBrake = new ElectricCommandBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
+							Train.Cars[i].CarBrake = new ElectricCommandBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, motorCars[i], BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
 							break;
 						case BrakeSystemType.ElectromagneticStraightAirBrake:
-							Train.Cars[i].CarBrake = new ElectromagneticStraightAirBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
+							Train.Cars[i].CarBrake = new ElectromagneticStraightAirBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, motorCars[i], BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
 							break;
 					}
 				}
@@ -1037,18 +1070,18 @@ namespace OpenBve {
 					switch (trainBrakeType)
 					{
 						case BrakeSystemType.AutomaticAirBrake:
-							Train.Cars[i].CarBrake = new AutomaticAirBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
+							Train.Cars[i].CarBrake = new AutomaticAirBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, motorCars[i], BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
 							break;
 						case BrakeSystemType.ElectricCommandBrake:
-							Train.Cars[i].CarBrake = new ElectricCommandBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
+							Train.Cars[i].CarBrake = new ElectricCommandBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, motorCars[i], BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
 							break;
 						case BrakeSystemType.ElectromagneticStraightAirBrake:
-							Train.Cars[i].CarBrake = new ElectromagneticStraightAirBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, Train.Cars[i].Specs.IsMotorCar, BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
+							Train.Cars[i].CarBrake = new ElectromagneticStraightAirBrake(ElectropneumaticType, Train.Handles.EmergencyBrake, Train.Handles.Reverser, motorCars[i], BrakeControlSpeed, MotorDeceleration, DecelerationCurves);
 							break;
 					}
 				}
 
-				if (Train.Cars[i].Specs.IsMotorCar || Train.IsPlayerTrain && i == Train.DriverCar || trainBrakeType == BrakeSystemType.ElectricCommandBrake)
+				if (motorCars[i] || Train.IsPlayerTrain && i == Train.DriverCar || trainBrakeType == BrakeSystemType.ElectricCommandBrake)
 				{
 					Train.Cars[i].CarBrake.brakeType = BrakeType.Main;
 				}
@@ -1229,14 +1262,15 @@ namespace OpenBve {
 				Train.Cars[i].Specs.ConstSpeed = new TrainManager.CarConstSpeed(Train.Cars[i]);
 				Train.Cars[i].Specs.HoldBrake = new TrainManager.CarHoldBrake(Train.Cars[i]);
 				Train.Cars[i].Specs.ReAdhesionDevice = new TrainManager.CarReAdhesionDevice(Train.Cars[i]);
-				if (Train.Cars[i].Specs.IsMotorCar) {
+				if (Train.Cars[i] is TrainManager.MotorCar) {
 					// motor car
+					TrainManager.MotorCar currentMotorCar = Train.Cars[i] as TrainManager.MotorCar;
 					Train.Cars[i].Specs.MassEmpty = MotorCarMass;
 					Train.Cars[i].Specs.MassCurrent = MotorCarMass;
-					Array.Resize(ref Train.Cars[i].Specs.AccelerationCurves, AccelerationCurves.Length);
+					Array.Resize(ref currentMotorCar.AccelerationCurves, AccelerationCurves.Length);
 					for (int j = 0; j < AccelerationCurves.Length; j++)
 					{
-						Train.Cars[i].Specs.AccelerationCurves[j] = AccelerationCurves[j].Clone(1.0 + TrailerCars * TrailerCarMass / (MotorCars * MotorCarMass));
+						currentMotorCar.AccelerationCurves[j] = AccelerationCurves[j].Clone(1.0 + TrailerCars * TrailerCarMass / (MotorCars * MotorCarMass));
 					}
 					Train.Cars[i].Specs.AccelerationCurveMaximum = MaximumAcceleration;
 					switch (ReAdhesionDevice) {
@@ -1272,25 +1306,15 @@ namespace OpenBve {
 							break;
 					}
 					// motor sound
-					Train.Cars[i].Sounds.Motor.SpeedConversionFactor = 18.0;
-					Train.Cars[i].Sounds.Motor.Tables = new TrainManager.MotorSoundTable[4];
-					for (int j = 0; j < 4; j++) {
-						Train.Cars[i].Sounds.Motor.Tables[j].Entries = new TrainManager.MotorSoundTableEntry[Tables[j].Entries.Length];
-						for (int k = 0; k < Tables[j].Entries.Length; k++) {
-							Train.Cars[i].Sounds.Motor.Tables[j].Entries[k] = Tables[j].Entries[k];
-						}
-					}
+					Train.Cars[i].Sounds.Motor.PowerTables = PowerTables.Select(x => (TrainManager.MotorSound.Table)x.Clone()).ToArray();
+					Train.Cars[i].Sounds.Motor.BrakeTables = BrakeTables.Select(x => (TrainManager.MotorSound.Table)x.Clone()).ToArray();
 				} else {
 					// trailer car
 					Train.Cars[i].Specs.MassEmpty = TrailerCarMass;
 					Train.Cars[i].Specs.MassCurrent = TrailerCarMass;
-					Train.Cars[i].Specs.AccelerationCurves = new TrainManager.AccelerationCurve[] { };
 					Train.Cars[i].Specs.AccelerationCurveMaximum = 0.0;
-					Train.Cars[i].Sounds.Motor.SpeedConversionFactor = 18.0;
-					Train.Cars[i].Sounds.Motor.Tables = new TrainManager.MotorSoundTable[4];
-					for (int j = 0; j < 4; j++) {
-						Train.Cars[i].Sounds.Motor.Tables[j].Entries = new TrainManager.MotorSoundTableEntry[] { };
-					}
+					Train.Cars[i].Sounds.Motor.PowerTables = new TrainManager.MotorSound.Table[0];
+					Train.Cars[i].Sounds.Motor.BrakeTables = new TrainManager.MotorSound.Table[0];
 				}
 			}
 			// driver

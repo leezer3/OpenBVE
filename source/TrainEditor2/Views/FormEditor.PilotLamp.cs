@@ -10,14 +10,14 @@ namespace TrainEditor2.Views
 {
 	public partial class FormEditor
 	{
-		private IDisposable BindToPilotLamp(PilotLampElementViewModel y)
+		private IDisposable BindToPilotLamp(PilotLampElementViewModel pilotLamp)
 		{
 			CompositeDisposable pilotLampDisposable = new CompositeDisposable();
 
-			y.LocationX
+			pilotLamp.LocationX
 				.BindTo(
 					textBoxPilotLampLocationX,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -30,14 +30,14 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(pilotLampDisposable);
 
-			y.LocationX
+			pilotLamp.LocationX
 				.BindToErrorProvider(errorProvider, textBoxPilotLampLocationX)
 				.AddTo(pilotLampDisposable);
 
-			y.LocationY
+			pilotLamp.LocationY
 				.BindTo(
 					textBoxPilotLampLocationY,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -50,17 +50,17 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(pilotLampDisposable);
 
-			y.LocationY
+			pilotLamp.LocationY
 				.BindToErrorProvider(errorProvider, textBoxPilotLampLocationY)
 				.AddTo(pilotLampDisposable);
 
-			y.Layer
+			pilotLamp.Layer
 				.BindTo(
 					numericUpDownPilotLampLayer,
-					z => z.Value,
+					x => x.Value,
 					BindingMode.TwoWay,
 					null,
-					z => (int)z,
+					x => (int)x,
 					Observable.FromEvent<EventHandler, EventArgs>(
 							h => (s, e) => h(e),
 							h => numericUpDownPilotLampLayer.ValueChanged += h,
@@ -70,10 +70,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(pilotLampDisposable);
 
-			y.DaytimeImage
+			pilotLamp.DaytimeImage
 				.BindTo(
 					textBoxPilotLampDaytimeImage,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -86,10 +86,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(pilotLampDisposable);
 
-			y.NighttimeImage
+			pilotLamp.NighttimeImage
 				.BindTo(
 					textBoxPilotLampNighttimeImage,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -102,10 +102,10 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(pilotLampDisposable);
 
-			y.TransparentColor
+			pilotLamp.TransparentColor
 				.BindTo(
 					textBoxPilotLampTransparentColor,
-					z => z.Text,
+					x => x.Text,
 					BindingMode.TwoWay,
 					null,
 					null,
@@ -118,7 +118,7 @@ namespace TrainEditor2.Views
 				)
 				.AddTo(pilotLampDisposable);
 
-			y.TransparentColor
+			pilotLamp.TransparentColor
 				.BindToErrorProvider(errorProvider, textBoxPilotLampTransparentColor)
 				.AddTo(pilotLampDisposable);
 
