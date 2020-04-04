@@ -237,7 +237,7 @@ namespace Plugin
 								if (Arguments.Length > 0) {
 									currentHost.AddMessage(MessageType.Warning, false, "0 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								Builder.Apply(ref Object);
+								Builder.Apply(ref Object, Plugin.BveTsHacks);
 								Builder = new MeshBuilder(currentHost);
 								Normals = new Vector3[4];
 							} break;
@@ -1164,7 +1164,7 @@ namespace Plugin
 				}
 			}
 			// finalize object
-			Builder.Apply(ref Object);
+			Builder.Apply(ref Object, Plugin.BveTsHacks);
 			Object.Mesh.CreateNormals();
 			for (int i = 0; i < Object.Mesh.Faces.Length; i++)
 			{
