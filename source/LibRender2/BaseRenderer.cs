@@ -169,6 +169,10 @@ namespace LibRender2
 			{
 				DefaultShader = new Shader("default", "default", true);
 				DefaultShader.Activate();
+				DefaultShader.SetMaterialAmbient(Color32.White);
+				DefaultShader.SetMaterialDiffuse(Color32.White);
+				DefaultShader.SetMaterialSpecular(Color32.White);
+				lastColor = Color32.White;
 				DefaultShader.Deactivate();
 			}
 			catch
