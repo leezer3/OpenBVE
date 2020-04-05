@@ -1004,7 +1004,7 @@ namespace OpenBve {
 										}
 										int n = TrainManager.TFOs.Length;
 										Array.Resize(ref TrainManager.TFOs, n + 1);
-										TrainManager.TFOs[n] = TrackFollowingObjectParser.ParseTrackFollowingObject(tfoFile, ObjectPath);
+										TrainManager.TFOs[n] = TrackFollowingObjectParser.ParseTrackFollowingObject(ObjectPath, tfoFile);
 									}
 									break;
 									// train
