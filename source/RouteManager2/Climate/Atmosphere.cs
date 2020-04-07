@@ -7,12 +7,14 @@ namespace RouteManager2.Climate
 	/// <summary>Holds the atmospheric methods and properties</summary>
 	public class Atmosphere
 	{
+		/// <summary>The position of the light (sun) in the sky</summary>
+		public Vector3 LightPosition = new Vector3(0.223606797749979f, 0.86602540378444f, -0.447213595499958f);
+		
+		/// <summary>The diffuse light color</summary>
+		public Color24 DiffuseLightColor = Color24.LightGrey;
 
-		public Vector3 LightPosition;
-
-		public Color24 DiffuseLightColor;
-
-		public Color24 AmbientLightColor;
+		/// <summary>The ambient light color</summary>
+		public Color24 AmbientLightColor = Color24.LightGrey;
 
 		/// <summary>The initial elevation in meters</summary>
 		public double InitialElevation = 0.0;
