@@ -40,9 +40,24 @@ namespace OpenBve {
 							assembly = Assembly.LoadFile(file);
 							types = assembly.GetTypes();
 						}
-						catch
+						catch(Exception ex)
 						{
-							builder.Append("Plugin ").Append(Path.GetFileName(file)).AppendLine(" is not a .Net assembly.");
+#if!DEBUG
+							if ((ex is ReflectionTypeLoadException))
+							{
+								/*
+								 * This is actually a .Net assembly, it just failed to load a reference
+								 * Probably built against a newer API version.
+								 */
+
+								builder.Append("Plugin ").Append(Path.GetFileName(file)).AppendLine(" failed to load. \n \n Please check that you are using the most recent version of OpenBVE.");	
+
+							}
+							else
+							{
+								builder.Append("Plugin ").Append(Path.GetFileName(file)).AppendLine(" is not a .Net assembly.");	
+							}
+#endif
 							continue;
 						}
 						bool iruntime = false;
