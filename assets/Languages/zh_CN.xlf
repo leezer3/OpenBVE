@@ -12,7 +12,7 @@
 				</trans-unit>
 				<trans-unit id="contributors">
 					<source>Unknown</source>
-					<target>Alvin Wong, Nemo Zhang (www.zbx1425.tk)</target>
+					<target>Alvin Wong, zbx1425</target>
 				</trans-unit>
 				<trans-unit id="last_updated">
 					<source>2019-06-29</source>
@@ -65,7 +65,7 @@
 					</trans-unit>
 					<trans-unit id="updates_new">
 						<source>The new version [version] ([date]) is available for download on the Official Homepage.</source>
-						<target>新版本 [version] ([date]) 已在官网可供下载。</target>
+						<target>新版本 ([version] / [date]) 已在官网可供下载。</target>
 					</trans-unit>
 					<trans-unit id="close">
 						<source>Close</source>
@@ -105,7 +105,7 @@
 				<group id="errors">
 					<trans-unit id="critical_file">
 						<source>A critical error occured whilst parsing the [file] file</source>
-						<target>在解析文件 [file] 时出现了关键错误。</target>
+						<target>在解析文件 [file] 时出现了非常严重的错误。</target>
 					</trans-unit>
 					<trans-unit id="filesystem_invalid">
 						<source>The file system configuration could not be accessed or is invalid due to the following reason:</source>
@@ -137,7 +137,7 @@
 					</trans-unit>
 					<trans-unit id="controls_ingame">
 						<source>You are currently running on the [platform] backend. Please use the in-game menu to configure any joystick based controls.</source>
-						<target>由于本程序目前在 [platform] 平台上运行， 请使用游戏中暂停菜单中的设置来配置键盘和摇杆。</target>
+						<target>您目前在使用 [platform] 后端。 请使用游戏中暂停菜单中的设置来配置键盘和摇杆。</target>
 					</trans-unit>
 					<trans-unit id="sound_openal_version">
 						<source>OpenAL 1.1 is required. You seem to have version 1.0.</source>
@@ -519,7 +519,7 @@
 					</trans-unit>
 					<trans-unit id="install_invalid">
 						<source>This file does not appear to be a valid openBVE package.</source>
-						<target>此文件貌似不是openBVE扩展包。</target>
+						<target>这个文件显然不是一个openBVE扩展包。</target>
 					</trans-unit>
 					<trans-unit id="install_version_error">
 						<source>Package Version Error</source>
@@ -551,7 +551,7 @@
 					</trans-unit>
 					<trans-unit id="install_failure">
 						<source>Unfortunately, package installation failed.</source>
-						<target>扩展包安装不幸失败。</target>
+						<target>真不幸, 扩展包安装失败了。</target>
 					</trans-unit>
 					<trans-unit id="install_failure_header">
 						<source>Package Installation Failed</source>
@@ -674,11 +674,11 @@
 					</trans-unit>
 					<trans-unit id="creation_version_invalid">
 						<source>You have entered an invalid version number. \r\n Please try again.</source>
-						<target>您输入的版本号无效。 \r\n 请再试。</target>
+						<target>您输入的版本号无效。 \r\n 请再试一个正常点的。</target>
 					</trans-unit>
 					<trans-unit id="creation_success">
 						<source>Package creation was successful.</source>
-						<target>扩展包创建成功。</target>
+						<target>扩展包创建非常成功。</target>
 					</trans-unit>
 					<trans-unit id="creation_success_header">
 						<source>Package Creation Successful</source>
@@ -690,7 +690,7 @@
 					</trans-unit>
 					<trans-unit id="creation_failure">
 						<source>Unfortunately, creation of your package failed.</source>
-						<target>扩展包创建不幸失败。</target>
+						<target>真不幸, 你的扩展包创建失败了。</target>
 					</trans-unit>
 					<trans-unit id="creation_failure_header">
 						<source>Package Creation Failed</source>
@@ -706,7 +706,7 @@
 					</trans-unit>
 					<trans-unit id="creation_invalid_nofiles">
 						<source>No files were selected to package- Please retry.</source>
-						<target>没有选择任何文件。请再试。</target>
+						<target>No files were selected to package- Please retry.</target>
 					</trans-unit>
 					<trans-unit id="creation_invalid_filename">
 						<source>The selected filename is invalid- Please retry.</source>
@@ -726,7 +726,7 @@
 					</trans-unit>
 					<trans-unit id="creation_replace">
 						<source>Is this to replace an existing package?</source>
-						<target>这是要替代或升级更新一个以有的扩展包的吗？</target>
+						<target>这是要替代一个以前做好的扩展包的吗？</target>
 					</trans-unit>
 					<trans-unit id="creation_yes">
 						<source>Yes</source>
@@ -734,7 +734,7 @@
 					</trans-unit>
 					<trans-unit id="creation_no">
 						<source>No</source>
-						<target>不是</target>
+						<target>不, 这是全新的</target>
 					</trans-unit>
 					<trans-unit id="replace_select">
 						<source>Replace this Package</source>
@@ -742,7 +742,7 @@
 					</trans-unit>
 					<trans-unit id="replace_choose">
 						<source>Please select the package you wish to replace:</source>
-						<target>请选择您想要替代或更新的扩展包: </target>
+						<target>请选择你想要让它替代的扩展包: </target>
 					</trans-unit>
 					<trans-unit id="replace_noneavailable">
 						<source>No packages are currently installed.</source>
@@ -766,7 +766,7 @@
 					</trans-unit>
 					<trans-unit id="uninstall_failure">
 						<source>Unfortunately, uninstallation of this package failed.</source>
-						<target>扩展包卸载不幸失败。</target>
+						<target>真不幸, 扩展包卸载失败了。</target>
 					</trans-unit>
 					<trans-unit id="uninstall_failure_header">
 						<source>Uninstallation Failed</source>
@@ -1006,7 +1006,7 @@
 					</trans-unit>
 					<trans-unit id="selection_joystick_assignment_grab">
 						<source>Click here to enable joystick grab to automatically select the desired axis, button or hat.</source>
-						<target>按此以自动选择所需的轴向、按钮或方向键。</target>
+						<target>按此以自动选择游戏杆设定。\r\n\r\n不过, 请先把游戏杆移到默认位置并松开按钮。</target>
 					</trans-unit>
 					<trans-unit id="selection_joystick_assignment_grab_normal">
 						<source>Press a button or move an axis or hat into the desired direction...</source>
@@ -1517,7 +1517,7 @@
 					</trans-unit>
 					<trans-unit id="kiosk_mode_timer">
 						<source>Control Timeout (s)</source>
-						<target>控制超时 (s)</target>
+						<target>可控时间 (s)</target>
 					</trans-unit>
 					<trans-unit id="hud_size">
 						<source>HUD Size</source>
@@ -1537,11 +1537,11 @@
 					</trans-unit>
 					<trans-unit id="transparencyfix">
 						<source>Attempt to fix transparency issues in older content.</source>
-						<target>修复旧线路的透明材质问题</target>
+						<target>修复旧线路的透明材质问题。</target>
 					</trans-unit>
 					<trans-unit id="hacks_enable">
 						<source>Enable hacks for buggy older content.</source>
-						<target>启用旧线路的bug自动修复</target>
+						<target>启用旧线路的bug自动修复。</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin">
 						<source>Input Device Plugin</source>
@@ -1828,7 +1828,7 @@
 					</trans-unit>
 					<trans-unit id="station_passed_boarding">
 						<source>You have passed [name] while still boarding. Please come to a complete hold immediately.</source>
-						<target>乘客还在 [name] 上下车, 请立刻停车。</target>
+						<target>乘客还在上下车, 请立刻停车。</target>
 					</trans-unit>
 					<trans-unit id="loading">
 						<source>Loading. Please wait...</source>
@@ -2087,7 +2087,7 @@
 					</trans-unit>
 					<trans-unit id="atsoperation">
 						<source>ATS RUN</source>
-						<target>ATS 动作</target>
+						<target>ATS 触发</target>
 					</trans-unit>
 					<trans-unit id="atsppower">
 						<source>P POWER</source>
@@ -2099,11 +2099,11 @@
 					</trans-unit>
 					<trans-unit id="atspbrakeoverride">
 						<source>BRAKE RELEASE</source>
-						<target>制动切除</target>
+						<target>制动解除</target>
 					</trans-unit>
 					<trans-unit id="atspbrakeoperation">
 						<source>BRAKE APPLY</source>
-						<target>制动动作</target>
+						<target>制动触发</target>
 					</trans-unit>
 					<trans-unit id="atsp">
 						<source>ATS-P</source>
@@ -2131,7 +2131,7 @@
 					</trans-unit>
 					<trans-unit id="eb">
 						<source>EB</source>
-						<target>无人警惕</target>
+						<target>警惕</target>
 					</trans-unit>
 					<trans-unit id="constspeed">
 						<source>CONST SPEED</source>
@@ -2141,22 +2141,22 @@
 				<group id="handles">
 					<trans-unit id="forward">
 						<source>F</source>
-						<target>F</target>
+						<target>向前</target>
 					</trans-unit>
 					<trans-unit id="neutral">
 						<source>N</source>
-						<target>N</target>
+						<target>中位</target>
 					</trans-unit>
 					<trans-unit id="backward">
 						<source>B</source>
-						<target>B</target>
+						<target>向后</target>
 					</trans-unit>
 					<trans-unit id="power">
 						<source>P</source>
 					</trans-unit>
 					<trans-unit id="powernull">
 						<source>N</source>
-						<target>N</target>
+						<target>零位</target>
 					</trans-unit>
 					<trans-unit id="brake">
 						<source>B</source>
@@ -2167,7 +2167,7 @@
 					</trans-unit>
 					<trans-unit id="brakenull">
 						<source>N</source>
-						<target>N</target>
+						<target>缓解</target>
 					</trans-unit>
 					<trans-unit id="release">
 						<source>REL</source>
@@ -2175,7 +2175,7 @@
 					</trans-unit>
 					<trans-unit id="lap">
 						<source>LAP</source>
-						<target>中立</target>
+						<target>保持</target>
 					</trans-unit>
 					<trans-unit id="service">
 						<source>SRV</source>
@@ -2193,11 +2193,11 @@
 				<group id="doors">
 					<trans-unit id="left">
 						<source>L</source>
-						<target>左</target>
+						<target>左侧</target>
 					</trans-unit>
 					<trans-unit id="right">
 						<source>R</source>
-						<target>右</target>
+						<target>右侧</target>
 					</trans-unit>
 				</group>
 				<group id="misc">
@@ -2997,7 +2997,7 @@
 					</trans-unit>
 					<trans-unit id="numlock">
 						<source>Numlock</source>
-						<target>数字锁定</target>
+						<target>Numlock</target>
 					</trans-unit>
 					<trans-unit id="pagedown">
 						<source>Page down</source>
@@ -3075,7 +3075,7 @@
 					</trans-unit>
 					<trans-unit id="scrolllock">
 						<source>Scrolllock</source>
-						<target>滚动锁定</target>
+						<target>Scrolllock</target>
 					</trans-unit>
 					<trans-unit id="semicolon">
 						<source>Semicolon</source>
