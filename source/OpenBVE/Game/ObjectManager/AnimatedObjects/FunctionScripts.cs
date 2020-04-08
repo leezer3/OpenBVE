@@ -1279,6 +1279,16 @@ namespace OpenBve {
 								Function.Stack[s] = stationIdx;
 							}
 							s++; break;
+					case Instructions.RouteLimit:
+						if (Train == null)
+						{
+							Function.Stack[s] = 0.0; //Not part of a train, so irrelevant
+						}
+						else
+						{
+							Function.Stack[s] = Train.CurrentRouteLimit;
+						}
+						s++; break;
 						// sections
 					case Instructions.SectionAspectNumber:
 						if (IsPartOfTrain) {

@@ -969,6 +969,7 @@ namespace OpenBve {
 					case Instructions.StopsNextStation:
 					case Instructions.NextStation:
 					case Instructions.NextStationStop:
+					case Instructions.RouteLimit:
 						Function.Stack[s] = 0.0; //Unsupported in viewers
 						s++; break;
 					case Instructions.DistanceStation:
