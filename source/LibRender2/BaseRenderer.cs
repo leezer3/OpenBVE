@@ -54,6 +54,36 @@ namespace LibRender2
 		protected double LastUpdatedTrackPosition;
 
 		public Screen Screen;
+
+		
+		
+
+		/// <summary>Holds a reference to the current interface type of the game (Used by the renderer)</summary>
+		public InterfaceType CurrentInterface
+		{
+			get
+			{
+				return currentInterface;
+			}
+			set
+			{
+				previousInterface = currentInterface;
+				currentInterface = value;
+			}
+		}
+
+		/// <summary>Holds a reference to the previous interface type of the game</summary>
+		public InterfaceType PreviousInterface
+		{
+			get
+			{
+				return previousInterface;
+			}
+		}
+		//Backing properties for the interface values
+		private InterfaceType currentInterface = InterfaceType.Normal;
+		private InterfaceType previousInterface = InterfaceType.Normal;
+
 		public CameraProperties Camera;
 		public Lighting Lighting;
 		public Background Background;

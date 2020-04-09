@@ -3,6 +3,7 @@ using System.Linq;
 using LibRender2;
 using LibRender2.MotionBlurs;
 using LibRender2.Objects;
+using LibRender2.Screens;
 using LibRender2.Viewports;
 using OpenBve.Graphics.Renderers;
 using OpenBveApi;
@@ -278,7 +279,7 @@ namespace OpenBve.Graphics
 
 			// render background
 			GL.Disable(EnableCap.DepthTest);
-			Program.CurrentRoute.UpdateBackground(TimeElapsed, Game.CurrentInterface != Game.InterfaceType.Normal);
+			Program.CurrentRoute.UpdateBackground(TimeElapsed, Program.Renderer.CurrentInterface != InterfaceType.Normal);
 
 			events.Render(Camera.AbsolutePosition);
 

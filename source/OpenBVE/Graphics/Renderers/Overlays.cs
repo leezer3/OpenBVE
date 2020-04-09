@@ -143,13 +143,13 @@ namespace OpenBve.Graphics.Renderers
 			}
 
 			//If paused, fade out the screen & write PAUSE
-			if (Game.CurrentInterface == Game.InterfaceType.Pause)
+			if (Program.Renderer.CurrentInterface == InterfaceType.Pause)
 			{
 				// pause
 				renderer.Rectangle.Draw(null, new PointF(0.0f, 0.0f), new SizeF(renderer.Screen.Width, renderer.Screen.Height), new Color128(0.0f, 0.0f, 0.0f, 0.5f));
 				renderer.OpenGlString.Draw(Fonts.VeryLargeFont, "PAUSE", new Point(renderer.Screen.Width / 2, renderer.Screen.Height / 2), TextAlignment.CenterMiddle, Color128.White, true);
 			}
-			else if (Game.CurrentInterface == Game.InterfaceType.Menu)
+			else if (Program.Renderer.CurrentInterface == InterfaceType.Menu)
 			{
 				Game.Menu.Draw();
 			}

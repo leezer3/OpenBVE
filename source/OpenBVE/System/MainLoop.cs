@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Globalization;
+using LibRender2.Screens;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
 using OpenTK;
@@ -144,11 +145,11 @@ namespace OpenBve
 			if (e.Button == MouseButton.Left)
 			{
 				// if currently in a menu, forward the click to the menu system
-				if (Game.CurrentInterface == Game.InterfaceType.Menu)
+				if (Program.Renderer.CurrentInterface == InterfaceType.Menu)
 				{
 					Game.Menu.ProcessMouseDown(e.X, e.Y);
 				}
-				else if (Game.CurrentInterface == Game.InterfaceType.Normal)
+				else if (Program.Renderer.CurrentInterface == InterfaceType.Normal)
 				{
 					Program.Renderer.Touch.TouchCheck(new Vector2(e.X, e.Y));
 				}
@@ -160,7 +161,7 @@ namespace OpenBve
 			timeSinceLastMouseEvent = 0;
 			if (e.Button == MouseButton.Left)
 			{
-				if (Game.CurrentInterface == Game.InterfaceType.Normal)
+				if (Program.Renderer.CurrentInterface == InterfaceType.Normal)
 				{
 					Program.Renderer.Touch.LeaveCheck(new Vector2(e.X, e.Y));
 				}
@@ -174,7 +175,7 @@ namespace OpenBve
 		{
 			timeSinceLastMouseEvent = 0;
 			// if currently in a menu, forward the click to the menu system
-			if (Game.CurrentInterface == Game.InterfaceType.Menu)
+			if (Program.Renderer.CurrentInterface == InterfaceType.Menu)
 			{
 				Game.Menu.ProcessMouseMove(e.X, e.Y);
 			}
@@ -186,7 +187,7 @@ namespace OpenBve
 		internal static void mouseWheelEvent(object sender, MouseWheelEventArgs e)
 		{
 			timeSinceLastMouseEvent = 0;
-			if (Game.CurrentInterface == Game.InterfaceType.Menu)
+			if (Program.Renderer.CurrentInterface == InterfaceType.Menu)
 			{
 				Game.Menu.ProcessMouseScroll(e.Delta);
 			}
@@ -194,7 +195,7 @@ namespace OpenBve
 
 		internal static void UpdateMouse(double TimeElapsed)
 		{
-			if (Game.CurrentInterface != Game.InterfaceType.Menu)
+			if (Program.Renderer.CurrentInterface != InterfaceType.Menu)
 			{
 				timeSinceLastMouseEvent += TimeElapsed;
 			}
@@ -244,7 +245,7 @@ namespace OpenBve
 					JoystickManager.AttachedJoysticks[k].Poll();
 				}
 			}
-			if (Game.CurrentInterface == Game.InterfaceType.Menu && Game.Menu.IsCustomizingControl())
+			if (Program.Renderer.CurrentInterface == InterfaceType.Menu && Game.Menu.IsCustomizingControl())
 			{
 				if (Interface.CurrentOptions.UseJoysticks)
 				{

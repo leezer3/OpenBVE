@@ -114,9 +114,9 @@ namespace OpenBve
 			}
 			//If we are currently blocking key repeat events from firing, return
 			if (BlockKeyRepeat) return;
-			switch (Game.CurrentInterface)
+			switch (Program.Renderer.CurrentInterface)
 			{
-				case Game.InterfaceType.Pause:
+				case InterfaceType.Pause:
 					// pause
 					kioskModeTimer = 0;
 					for (int i = 0; i < Interface.CurrentControls.Length; i++)
@@ -130,7 +130,7 @@ namespace OpenBve
 								switch (Interface.CurrentControls[i].Command)
 								{
 									case Translations.Command.MiscPause:
-										Game.CurrentInterface = Game.InterfaceType.Normal;
+										Program.Renderer.CurrentInterface = InterfaceType.Normal;
 										break;
 									case Translations.Command.MenuActivate:
 										Game.Menu.PushMenu(Menu.MenuType.Top);
@@ -151,10 +151,10 @@ namespace OpenBve
 					}
 					break;
 /*
-				case Game.InterfaceType.CustomiseControl:
+				case InterfaceType.CustomiseControl:
 					break;
 */
-				case Game.InterfaceType.Menu:			// MENU
+				case InterfaceType.Menu:			// MENU
 					kioskModeTimer = 0;
 					for (int i = 0; i < Interface.CurrentControls.Length; i++)
 					{
@@ -168,7 +168,7 @@ namespace OpenBve
 					}
 					break;
 
-				case Game.InterfaceType.Normal:
+				case InterfaceType.Normal:
 					// normal
 					for (int i = 0; i < Interface.CurrentControls.Length; i++)
 					{
@@ -1704,7 +1704,7 @@ namespace OpenBve
 										break;
 									case Translations.Command.MiscPause:
 										// pause
-										Game.CurrentInterface = Game.InterfaceType.Pause;
+										Program.Renderer.CurrentInterface = InterfaceType.Pause;
 										break;
 									case Translations.Command.MiscClock:
 										// clock

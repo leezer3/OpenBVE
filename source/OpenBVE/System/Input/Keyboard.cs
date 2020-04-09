@@ -1,4 +1,5 @@
 ﻿using System;
+using LibRender2.Screens;
 using OpenTK.Input;
 using OpenBveApi.Interface;
 
@@ -26,7 +27,7 @@ namespace OpenBve
 			if (e.Shift) CurrentKeyboardModifier |= Interface.KeyboardModifier.Shift;
 			if (e.Control) CurrentKeyboardModifier |= Interface.KeyboardModifier.Ctrl;
 			if (e.Alt) CurrentKeyboardModifier |= Interface.KeyboardModifier.Alt;
-			if (Game.CurrentInterface == Game.InterfaceType.Menu && Game.Menu.IsCustomizingControl())
+			if (Program.Renderer.CurrentInterface == InterfaceType.Menu && Game.Menu.IsCustomizingControl())
 			{
 				Game.Menu.SetControlKbdCustomData((OpenBveApi.Input.Key)e.Key, CurrentKeyboardModifier);
 				return;
@@ -46,7 +47,7 @@ namespace OpenBve
 						Interface.CurrentControls[i].AnalogState = 1.0;
 						Interface.CurrentControls[i].DigitalState = Interface.DigitalControlState.Pressed;
 						//Key repeats should not be added in non-game interface modes, unless they are Menu Up/ Menu Down commands
-						if (Game.CurrentInterface == Game.InterfaceType.Normal || Interface.CurrentControls[i].Command == Translations.Command.MenuUp || Interface.CurrentControls[i].Command == Translations.Command.MenuDown)
+						if (Program.Renderer.CurrentInterface == InterfaceType.Normal || Interface.CurrentControls[i].Command == Translations.Command.MenuUp || Interface.CurrentControls[i].Command == Translations.Command.MenuDown)
 						{
 							if (Interface.CurrentControls[i].Command == Translations.Command.CameraInterior |
 								Interface.CurrentControls[i].Command == Translations.Command.CameraExterior |
@@ -75,11 +76,11 @@ namespace OpenBve
 				MainLoop.kioskModeTimer = 0;
 				TrainManager.PlayerTrain.AI = null;
 			}
-			if (Game.PreviousInterface == Game.InterfaceType.Menu & Game.CurrentInterface == Game.InterfaceType.Normal)
+			if (Program.Renderer.PreviousInterface == InterfaceType.Menu & Program.Renderer.CurrentInterface == InterfaceType.Normal)
 			{
-				//Block the first keyup event after the menu has been closed, as this may produce unwanted effects
+				//Set again to block the first keyup event after the menu has been closed, as this may produce unwanted effects
 				//if the menu select key is also mapped in-game
-				Game.PreviousInterface = Game.InterfaceType.Normal;
+				Program.Renderer.CurrentInterface = InterfaceType.Normal;
 				return;
 			}
 			//We don't need to check for modifiers on key up

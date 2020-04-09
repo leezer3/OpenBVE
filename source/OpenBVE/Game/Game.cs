@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using LibRender2.Screens;
 using OpenBveApi.Colors;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
@@ -48,7 +49,7 @@ namespace OpenBve
 			TrainManager.Trains = new TrainManager.Train[] { };
 			// game
 			Interface.ClearMessages();
-			CurrentInterface = InterfaceType.Normal;
+			Program.Renderer.CurrentInterface = InterfaceType.Normal;
 			Program.CurrentRoute.Comment = "";
 			Program.CurrentRoute.Image = "";
 			Program.CurrentRoute.Atmosphere.AccelerationDueToGravity = 9.80665;

@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 using LibRender2.Cameras;
+using LibRender2.Screens;
 using LibRender2.Viewports;
 using OpenBve.Graphics;
 using OpenBveApi.Colors;
@@ -65,12 +66,12 @@ namespace OpenBve
 			double RealTimeElapsed = RenderRealTimeElapsed;
 			
 			//Next, check if we're in paused/ in a menu
-			if(Game.CurrentInterface != Game.InterfaceType.Normal)
+			if(Program.Renderer.CurrentInterface != InterfaceType.Normal)
 			{
 				MainLoop.UpdateControlRepeats(0.0);
 				MainLoop.ProcessKeyboard();
 				MainLoop.ProcessControls(0.0);
-				if (Game.CurrentInterface == Game.InterfaceType.Pause)
+				if (Program.Renderer.CurrentInterface == InterfaceType.Pause)
 				{
 					System.Threading.Thread.Sleep(10);
 				}
@@ -98,10 +99,12 @@ namespace OpenBve
 			}
 			
 			
-			if (Game.PreviousInterface != Game.InterfaceType.Normal)
+			if (Program.Renderer.PreviousInterface != InterfaceType.Normal)
 			{
+				// Update animated objects with zero elapsed time (NOT time elapsed in menu)
+				// and set again to avoid glitching
 				ObjectManager.UpdateAnimatedWorldObjects(0.0, false);
-				Game.PreviousInterface = Game.InterfaceType.Normal;
+				Program.Renderer.CurrentInterface = InterfaceType.Normal;
 			}
 			else
 			{
@@ -237,7 +240,7 @@ namespace OpenBve
 			}
 
 			//We only want to update the simulation if we aren't in a menu
-			if (Game.CurrentInterface == Game.InterfaceType.Normal)
+			if (Program.Renderer.CurrentInterface == InterfaceType.Normal)
 			{
 #if DEBUG
 				//If we're in debug mode and a frame takes greater than a second to render, we can safely assume that VS has hit a breakpoint
@@ -413,7 +416,7 @@ namespace OpenBve
 		{
 			base.OnMouseMove(e);
 
-			if (Game.CurrentInterface == Game.InterfaceType.Normal)
+			if (Program.Renderer.CurrentInterface == InterfaceType.Normal)
 			{
 				OpenBve.Cursor.Status Status;
 				if (Program.Renderer.Touch.MoveCheck(new Vector2(e.X, e.Y), out Status))
