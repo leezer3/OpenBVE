@@ -2,12 +2,15 @@ using System;
 using System.Drawing;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
+using OpenBveApi.Math;
 using OpenBveApi.Textures;
 
 namespace OpenBve.Graphics.Renderers
 {
 	internal partial class Overlays
 	{
+		/// <summary>The current size of the plane upon which messages are rendered</summary>
+		private static Vector2 MessagesRendererSize = new Vector2(16.0, 16.0);
 		/// <summary>Renders the list of game (textual) messages</summary>
 		/// <param name="Element">The HUD element these are to be rendered onto</param>
 		/// <param name="TimeElapsed">The time elapsed</param>
@@ -32,8 +35,8 @@ namespace OpenBve.Graphics.Renderers
 				}
 			}
 			//Calculate the X-width of the viewing plane
-			Game.MessagesRendererSize.X += 16.0 * TimeElapsed * (totalwidth - Game.MessagesRendererSize.X);
-			totalwidth = (float)Game.MessagesRendererSize.X;
+			MessagesRendererSize.X += 16.0 * TimeElapsed * (totalwidth -MessagesRendererSize.X);
+			totalwidth = (float)MessagesRendererSize.X;
 			double lcrh, lw, rw;
 			//Calculate final viewing plane size to pass to openGL
 			CalculateViewingPlaneSize(Element, out lw, out rw, out lcrh);

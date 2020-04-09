@@ -71,7 +71,7 @@ namespace OpenBve
 			if (Program.CurrentRoute.PointsOfInterest[j].Text != null)
 			{
 				double n = 3.0 + 0.5 * Math.Sqrt((double) Program.CurrentRoute.PointsOfInterest[j].Text.Length);
-				Game.AddMessage(Program.CurrentRoute.PointsOfInterest[j].Text, MessageDependency.PointOfInterest, GameMode.Expert, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + n, null);
+				MessageManager.AddMessage(Program.CurrentRoute.PointsOfInterest[j].Text, MessageDependency.PointOfInterest, GameMode.Expert, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + n, null);
 			}
 			return true;
 		}

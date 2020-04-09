@@ -37,7 +37,7 @@ namespace OpenBve.SafetySystems
 					}
 					if (baseTrain.IsPlayerTrain)
 					{
-						Game.AddMessage(Translations.GetInterfaceString("message_station_correct"), MessageDependency.None, GameMode.Normal, MessageColor.Orange, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+						MessageManager.AddMessage(Translations.GetInterfaceString("message_station_correct"), MessageDependency.None, GameMode.Normal, MessageColor.Orange, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
 					}
 					Lit = true;
 				}

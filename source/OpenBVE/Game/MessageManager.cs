@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using OpenBveApi;
+using OpenBveApi.Colors;
 using OpenBveApi.Trains;
 using RouteManager2.MessageManager;
 using RouteManager2.MessageManager.MessageTypes;
@@ -12,6 +15,30 @@ namespace OpenBve
 		/// <summary>Contains the current image based messages</summary>
 		internal static readonly List<AbstractMessage> ImageMessages = new List<AbstractMessage>();
 		
+		/// <summary>Adds a message to the in-game interface render queue</summary>
+		/// <param name="Text">The text of the message</param>
+		/// <param name="Depencency"></param>
+		/// <param name="Mode"></param>
+		/// <param name="Color">The color of the message text</param>
+		/// <param name="Timeout">The time this message will display for</param>
+		/// <param name="key">The textual key identifiying this message</param>
+		internal static void AddMessage(string Text, MessageDependency Depencency, GameMode Mode, MessageColor Color, double Timeout, string key)
+		{
+			if (Interface.CurrentOptions.GameMode <= Mode)
+			{
+				MessageManager.GameMessage message = new MessageManager.GameMessage
+				{
+					InternalText = Text,
+					MessageToDisplay = String.Empty,
+					Depencency = Depencency,
+					Color = Color,
+					Timeout = Timeout,
+					Key = key
+				};
+				MessageManager.AddMessage(message);
+			}
+		}
+
 		/// <summary>Adds a message to the in-game display</summary>
 		/// <param name="message">The message to add</param>
 		internal static void AddMessage(AbstractMessage message)

@@ -51,7 +51,7 @@ namespace OpenBve
 						//If message is not empty, add it
 						if (!string.IsNullOrEmpty(stopRequest.PassMessage) && IsPlayerTrain)
 						{
-							Game.AddMessage(stopRequest.PassMessage, MessageDependency.None, GameMode.Normal, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
+							MessageManager.AddMessage(stopRequest.PassMessage, MessageDependency.None, GameMode.Normal, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 						}
 
 						return;
@@ -62,7 +62,7 @@ namespace OpenBve
 					//If message is not empty, add it
 					if (!string.IsNullOrEmpty(stopRequest.StopMessage) && IsPlayerTrain)
 					{
-						Game.AddMessage(stopRequest.StopMessage, MessageDependency.None, GameMode.Normal, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
+						MessageManager.AddMessage(stopRequest.StopMessage, MessageDependency.None, GameMode.Normal, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 					}
 				}
 				else
@@ -83,7 +83,7 @@ namespace OpenBve
 					//If message is not empty, add it
 					if (!string.IsNullOrEmpty(stopRequest.PassMessage) && IsPlayerTrain)
 					{
-						Game.AddMessage(stopRequest.PassMessage, MessageDependency.None, GameMode.Normal, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
+						MessageManager.AddMessage(stopRequest.PassMessage, MessageDependency.None, GameMode.Normal, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 					}
 				}
 			}
