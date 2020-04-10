@@ -97,6 +97,7 @@ namespace Plugin
 				}
 			}
 			// parse lines
+			bool firstMeshBuilder = false;
 			MeshBuilder Builder = new MeshBuilder(currentHost);
 			Vector3[] Normals = new Vector3[4];
 			bool CommentStarted = false;
@@ -229,6 +230,7 @@ namespace Plugin
 						case "createmeshbuilder":
 						case "[meshbuilder]":
 							{
+								firstMeshBuilder = true;
 								if (cmd == "createmeshbuilder" & IsB3D) {
 									currentHost.AddMessage(MessageType.Warning, false, "CreateMeshBuilder is not a supported command - did you mean [MeshBuilder]? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else if (cmd == "[meshbuilder]" & !IsB3D) {
@@ -244,6 +246,11 @@ namespace Plugin
 						case "addvertex":
 						case "vertex":
 							{
+								if (!firstMeshBuilder)
+								{
+									//https://github.com/leezer3/OpenBVE/issues/448
+									currentHost.AddMessage(MessageType.Warning, false, "Attempted to add a vertex without first creating a MeshBuilder - This may produce unexpected results - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
 								if (cmd == "addvertex" & IsB3D) {
 									currentHost.AddMessage(MessageType.Warning, false, "AddVertex is not a supported command - did you mean Vertex? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else if (cmd == "vertex" & !IsB3D) {
