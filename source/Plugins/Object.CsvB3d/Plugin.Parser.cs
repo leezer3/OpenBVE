@@ -856,6 +856,11 @@ namespace Plugin
 						case "loadtexture":
 						case "load":
 							{
+							/*
+							 * Loading a texture should definitely reset the MeshBuilder, otherwise that's insane
+							 * Hopefully won't increase error numbers on existing content too much....
+							 */
+							firstMeshBuilder = false;
 								if (cmd == "loadtexture" & IsB3D) {
 									currentHost.AddMessage(MessageType.Warning, false, "LoadTexture is not a supported command - did you mean Load? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else if (cmd == "load" & !IsB3D) {
