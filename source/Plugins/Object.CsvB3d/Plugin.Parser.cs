@@ -1301,10 +1301,6 @@ namespace Plugin
 			}
 		}
 		
-
-		// apply shear
-		
-
 		/// <summary>Checks whether the specified System.Text.Encoding is Unicode</summary>
 		/// <param name="Encoding">The Encoding</param>
 		private static bool IsUtf(System.Text.Encoding Encoding)

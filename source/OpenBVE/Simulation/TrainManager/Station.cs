@@ -38,7 +38,7 @@ namespace OpenBve
 				if (Train.StationState == TrainStopState.Pending)
 				{
 					Train.StationDepartureSoundPlayed = false;
-					if (Game.StopsAtStation(i, Train))
+					if (Program.CurrentRoute.Stations[i].StopsHere(Train))
 					{
 						Train.StationDepartureSoundPlayed = false;
 						//Check whether all doors are controlled by the driver

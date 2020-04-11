@@ -1182,7 +1182,7 @@ namespace OpenBve {
 							}
 							else
 							{
-								Function.Stack[s] = Game.StopsAtStation(stationIdx, Train) ? 1.0 : 0.0;
+								Function.Stack[s] = Program.CurrentRoute.Stations[stationIdx].StopsHere(Train) ? 1.0 : 0.0;
 							}
 						}
 						s++; break;
@@ -1225,7 +1225,7 @@ namespace OpenBve {
 							}
 							else
 							{
-								Function.Stack[s - 1] = Game.StopsAtStation(stationIdx, Train) ? 1.0 : 0.0;
+								Function.Stack[s - 1] = Program.CurrentRoute.Stations[stationIdx].StopsHere(Train) ? 1.0 : 0.0;
 							}
 						}
 						else
@@ -1270,7 +1270,7 @@ namespace OpenBve {
 
 								while (stationIdx < Program.CurrentRoute.Stations.Length - 1)
 								{
-									if (Game.StopsAtStation(stationIdx, Train))
+									if (Program.CurrentRoute.Stations[stationIdx].StopsHere(Train))
 									{
 										break;
 									}

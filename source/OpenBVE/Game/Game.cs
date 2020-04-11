@@ -23,6 +23,11 @@ namespace OpenBve
 		// other trains
 		internal static double[] PrecedingTrainTimeDeltas = new double[] { };
 		internal static double PrecedingTrainSpeedLimit = double.PositiveInfinity;
+
+		/// <summary>The name of the initial station on game startup, if set via command-line arguments</summary>
+		internal static string InitialStationName;
+		/// <summary>The start time at the initial station, if set via command-line arguments</summary>
+		internal static double InitialStationTime = -1;
 		
 
 		
