@@ -1383,6 +1383,7 @@ namespace OpenBve
 													{
 														go = b4sd.GlowObject.Clone(b4sd.GlowTextures[l], null);
 													}
+													//BUG: Should we join the glow object here? Test what BVE4 does with missing state, but provided glow
 													aoc.Objects[0].States[zi] = new ObjectState { Prototype = so };
 												}
 												if (qs | qg)
