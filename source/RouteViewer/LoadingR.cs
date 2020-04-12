@@ -140,7 +140,7 @@ namespace OpenBve {
 			{
 				throw new Exception("No plugins capable of loading routefile " + CurrentRouteFile + " were found.");
 			}
-			World.CameraTrackFollower = new TrackFollower(Program.CurrentHost);
+			Program.Renderer.CameraTrackFollower = new TrackFollower(Program.CurrentHost);
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			Program.CurrentRoute.Atmosphere.CalculateSeaLevelConstants();
 			RouteProgress = 1.0;

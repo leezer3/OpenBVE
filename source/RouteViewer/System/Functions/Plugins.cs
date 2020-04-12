@@ -82,8 +82,11 @@ namespace OpenBve
 							if (typeof(OpenBveApi.Runtime.IRuntime).IsAssignableFrom(type)) {
 								iruntime = true;
 							}
+							if (type.IsSubclassOf(typeof(OpenBveApi.Routes.RouteInterface))) {
+								plugin.Route = (OpenBveApi.Routes.RouteInterface)assembly.CreateInstance(type.FullName);
+							}
 						}
-						if (plugin.Texture != null | plugin.Sound != null | plugin.Object != null) {
+						if (plugin.Texture != null | plugin.Sound != null | plugin.Object != null | plugin.Route != null) {
 							plugin.Load(Program.CurrentHost, Program.FileSystem, Interface.CurrentOptions);
 							list.Add(plugin);
 						} else if (!iruntime) {

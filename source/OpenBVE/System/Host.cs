@@ -424,9 +424,9 @@ namespace OpenBve {
 			Timetable.UpdateCustomTimetable(Daytime, Nighttime);
 		}
 
-		public override AbstractTrain ParseTrackFollowingObject(string tfoFile, string objectPath)
+		public override AbstractTrain ParseTrackFollowingObject(string objectPath, string tfoFile)
 		{
-			return TrackFollowingObjectParser.ParseTrackFollowingObject(tfoFile, objectPath);
+			return TrackFollowingObjectParser.ParseTrackFollowingObject(objectPath, tfoFile);
 		}
 
 		public override void AddMarker(Texture MarkerTexture)

@@ -526,7 +526,7 @@ namespace OpenBve
 
 						int n = CurrentRoute.TrackFollowingObjects.Length;
 						Array.Resize(ref CurrentRoute.TrackFollowingObjects, n + 1);
-						CurrentRoute.TrackFollowingObjects[n] = Program.CurrentHost.ParseTrackFollowingObject(tfoFile, ObjectPath);
+						CurrentRoute.TrackFollowingObjects[n] = Program.CurrentHost.ParseTrackFollowingObject(ObjectPath, tfoFile);
 					}
 
 					break;
