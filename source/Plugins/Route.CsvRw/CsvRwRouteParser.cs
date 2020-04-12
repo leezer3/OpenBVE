@@ -265,11 +265,6 @@ namespace OpenBve {
 				return;
 			}
 			ApplyRouteData(FileName, ref Data, PreviewOnly);
-
-//		    if (PreviewOnly == true && customLoadScreen == false)
-//		    {
-//		        Renderer.TextureLogo = null;
-//		    }
 		}
 
 		// ================================
@@ -293,10 +288,7 @@ namespace OpenBve {
 		}
 
 		// preprocess sort by track position
-		private struct PositionedExpression {
-			internal double TrackPosition;
-			internal Expression Expression;
-		}
+		
 		
 
 		private static int freeObjCount = 0;

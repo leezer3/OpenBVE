@@ -49,7 +49,7 @@
     <Compile Include="CsvRwRouteParser.ApplyRouteData.cs" />
     <Compile Include="CsvRwRouteParser.CompatibilityObjects.cs" />
     <Compile Include="CsvRwRouteParser.cs" />
-    <Compile Include="CsvRwRouteParser.Expression.cs" />
+    <Compile Include="Structures\Expression.cs" />
     <Compile Include="CsvRwRouteParser.Functions.cs" />
     <Compile Include="CsvRwRouteParser.ObjectDictionary.cs" />
     <Compile Include="CsvRwRouteParser.Preprocess.cs" />
@@ -68,6 +68,7 @@
     <Compile Include="Namespaces\Track\Track.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Structures\Expression.PositionedExpression.cs" />
     <Compile Include="XML\DynamicBackground.cs" />
     <Compile Include="XML\DynamicLight.cs" />
     <Compile Include="XML\MarkerScript.cs" />
