@@ -3,6 +3,7 @@ using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 using System;
 using System.Drawing;
+using LibRender2.Screens;
 using LibRender2.Texts;
 using OpenBveApi;
 using OpenBveApi.Input;
@@ -439,8 +440,7 @@ namespace OpenBve
 				Array.Resize(ref Menus, CurrMenu + 1);
 			Menus[CurrMenu] = new Menu.SingleMenu(type, data);
 			PositionMenu();
-			Game.PreviousInterface = Game.CurrentInterface;
-			Game.CurrentInterface = Game.InterfaceType.Menu;
+			Program.Renderer.CurrentInterface = InterfaceType.Menu;
 		}
 
 		//
@@ -457,8 +457,7 @@ namespace OpenBve
 			else
 			{                           // if only one menu remaining...
 				Reset();
-				Game.PreviousInterface = Game.CurrentInterface;
-				Game.CurrentInterface = Game.InterfaceType.Normal;  // return to simulation
+				Program.Renderer.CurrentInterface = InterfaceType.Normal;  // return to simulation
 			}
 		}
 
@@ -553,7 +552,7 @@ namespace OpenBve
 				return false;
 			}
 			// if not in menu or during control customisation or down outside menu area, do nothing
-			if (Game.CurrentInterface != Game.InterfaceType.Menu ||
+			if (Program.Renderer.CurrentInterface != InterfaceType.Menu ||
 				isCustomisingControl)
 				return false;
 
@@ -675,8 +674,7 @@ namespace OpenBve
 								break;
 							case MenuTag.BackToSim:             // OUT OF MENU BACK TO SIMULATION
 								Reset();
-								Game.PreviousInterface = Game.InterfaceType.Menu;
-								Game.CurrentInterface = Game.InterfaceType.Normal;
+								Program.Renderer.CurrentInterface = InterfaceType.Normal;
 								break;
 
 							// simulation commands

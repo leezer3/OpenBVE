@@ -695,12 +695,16 @@ namespace OpenBveApi.FunctionScripting
 							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.NextStationStop;
 							n++; s++; if (s >= m) m = s; break;
+						case "routelimit":
+							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
+							InstructionSet[n] = Instructions.RouteLimit;
+							n++; s++; if (s >= m) m = s; break;
 							// sections
 						case "section":
 							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.SectionAspectNumber;
 							n++; s++; if (s >= m) m = s; break;
-							// default
+							// state
 						case "currentstate":
 							if (n >= InstructionSet.Length) Array.Resize<Instructions>(ref InstructionSet, InstructionSet.Length << 1);
 							InstructionSet[n] = Instructions.CurrentObjectState;

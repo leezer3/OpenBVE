@@ -116,7 +116,7 @@ namespace OpenBve
 			ObjectsSortedByStartPointer = 0;
 			ObjectsSortedByEndPointer = 0;
 
-			double p = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
+			double p = CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
 
 			foreach (ObjectState state in StaticObjectStates.Where(recipe => recipe.StartingDistance <= p + Camera.ForwardViewingDistance & recipe.EndingDistance >= p - Camera.BackwardViewingDistance))
 			{
@@ -128,7 +128,7 @@ namespace OpenBve
 		{
 			double d = TrackPosition - LastUpdatedTrackPosition;
 			int n = ObjectsSortedByStart.Length;
-			double p = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
+			double p = CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
 
 			if (d < 0.0)
 			{
@@ -270,7 +270,7 @@ namespace OpenBve
 
 			if (fd != 0.0)
 			{
-				float fr = (float)((World.CameraTrackFollower.TrackPosition - Program.CurrentRoute.PreviousFog.TrackPosition) / fd);
+				float fr = (float)((CameraTrackFollower.TrackPosition - Program.CurrentRoute.PreviousFog.TrackPosition) / fd);
 				float frc = 1.0f - fr;
 				Program.CurrentRoute.CurrentFog.Start = Program.CurrentRoute.PreviousFog.Start * frc + Program.CurrentRoute.NextFog.Start * fr;
 				Program.CurrentRoute.CurrentFog.End = Program.CurrentRoute.PreviousFog.End * frc + Program.CurrentRoute.NextFog.End * fr;
@@ -471,7 +471,7 @@ namespace OpenBve
 			for (int i = 0; i < Program.CurrentRoute.Tracks[0].Elements.Length; i++)
 			{
 				double p = Program.CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition;
-				double d = p - World.CameraTrackFollower.TrackPosition;
+				double d = p - CameraTrackFollower.TrackPosition;
 
 				if (d >= da & d <= db)
 				{
@@ -595,7 +595,7 @@ namespace OpenBve
 			// buffers
 			foreach (double p in Program.CurrentRoute.BufferTrackPositions)
 			{
-				double d = p - World.CameraTrackFollower.TrackPosition;
+				double d = p - CameraTrackFollower.TrackPosition;
 
 				if (d >= da & d <= db)
 				{
@@ -716,7 +716,7 @@ namespace OpenBve
 					// info
 					double x = 0.5 * Screen.Width - 256.0;
 					OpenGlString.Draw(Fonts.SmallFont, $"Position: {GetLengthString(Camera.Alignment.TrackPosition)} (X={GetLengthString(Camera.Alignment.Position.X)}, Y={GetLengthString(Camera.Alignment.Position.Y)}), Orientation: (Yaw={(Camera.Alignment.Yaw * 57.2957795130824).ToString("0.00", culture)}°, Pitch={(Camera.Alignment.Pitch * 57.2957795130824).ToString("0.00", culture)}°, Roll={(Camera.Alignment.Roll * 57.2957795130824).ToString("0.00", culture)}°)", new Point((int)x, 4), TextAlignment.TopLeft, Color128.White, true);
-					OpenGlString.Draw(Fonts.SmallFont, $"Radius: {GetLengthString(World.CameraTrackFollower.CurveRadius)}, Cant: {(1000.0 * World.CameraTrackFollower.CurveCant).ToString("0", culture)} mm, Adhesion={(100.0 * World.CameraTrackFollower.AdhesionMultiplier).ToString("0", culture)}", new Point((int)x, 20), TextAlignment.TopLeft, Color128.White, true);
+					OpenGlString.Draw(Fonts.SmallFont, $"Radius: {GetLengthString(CameraTrackFollower.CurveRadius)}, Cant: {(1000.0 * CameraTrackFollower.CurveCant).ToString("0", culture)} mm, Adhesion={(100.0 * CameraTrackFollower.AdhesionMultiplier).ToString("0", culture)}", new Point((int)x, 20), TextAlignment.TopLeft, Color128.White, true);
 
 					if (Program.CurrentStation >= 0)
 					{

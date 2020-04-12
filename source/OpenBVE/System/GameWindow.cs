@@ -5,7 +5,9 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
+using LibRender2;
 using LibRender2.Cameras;
+using LibRender2.Screens;
 using LibRender2.Viewports;
 using OpenBve.Graphics;
 using OpenBveApi.Colors;
@@ -65,12 +67,12 @@ namespace OpenBve
 			double RealTimeElapsed = RenderRealTimeElapsed;
 			
 			//Next, check if we're in paused/ in a menu
-			if(Game.CurrentInterface != Game.InterfaceType.Normal)
+			if(Program.Renderer.CurrentInterface != InterfaceType.Normal)
 			{
 				MainLoop.UpdateControlRepeats(0.0);
 				MainLoop.ProcessKeyboard();
 				MainLoop.ProcessControls(0.0);
-				if (Game.CurrentInterface == Game.InterfaceType.Pause)
+				if (Program.Renderer.CurrentInterface == InterfaceType.Pause)
 				{
 					System.Threading.Thread.Sleep(10);
 				}
@@ -98,10 +100,12 @@ namespace OpenBve
 			}
 			
 			
-			if (Game.PreviousInterface != Game.InterfaceType.Normal)
+			if (Program.Renderer.PreviousInterface != InterfaceType.Normal)
 			{
+				// Update animated objects with zero elapsed time (NOT time elapsed in menu)
+				// and set again to avoid glitching
 				ObjectManager.UpdateAnimatedWorldObjects(0.0, false);
-				Game.PreviousInterface = Game.InterfaceType.Normal;
+				Program.Renderer.CurrentInterface = InterfaceType.Normal;
 			}
 			else
 			{
@@ -138,7 +142,7 @@ namespace OpenBve
 			TrainManager.UpdateTrainObjects(TimeElapsed, false);
 			if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead | Program.Renderer.Camera.CurrentMode == CameraViewMode.Exterior)
 			{
-				Program.Renderer.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z);
+				Program.Renderer.UpdateVisibility(Program.Renderer.CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z);
 				int d = TrainManager.PlayerTrain.DriverCar;
 				Program.Renderer.Camera.CurrentSpeed = TrainManager.PlayerTrain.Cars[d].CurrentSpeed;
 			}
@@ -241,7 +245,7 @@ namespace OpenBve
 			}
 
 			//We only want to update the simulation if we aren't in a menu
-			if (Game.CurrentInterface == Game.InterfaceType.Normal)
+			if (Program.Renderer.CurrentInterface == InterfaceType.Normal)
 			{
 #if DEBUG
 				//If we're in debug mode and a frame takes greater than a second to render, we can safely assume that VS has hit a breakpoint
@@ -417,7 +421,7 @@ namespace OpenBve
 		{
 			base.OnMouseMove(e);
 
-			if (Game.CurrentInterface == Game.InterfaceType.Normal)
+			if (Program.Renderer.CurrentInterface == InterfaceType.Normal)
 			{
 				OpenBve.Cursor.Status Status;
 				if (Program.Renderer.Touch.MoveCheck(new Vector2(e.X, e.Y), out Status))
@@ -482,10 +486,10 @@ namespace OpenBve
 			// camera
 			Program.Renderer.InitializeVisibility();
 			TrainManager.PlayerTrain.DriverBody = new DriverBody(TrainManager.PlayerTrain);
-			World.CameraTrackFollower.UpdateAbsolute(0.0, true, false);
-			World.CameraTrackFollower.UpdateAbsolute(-0.1, true, false);
-			World.CameraTrackFollower.UpdateAbsolute(0.1, true, false);
-			World.CameraTrackFollower.TriggerType = EventTriggerType.Camera;
+			Program.Renderer.CameraTrackFollower.UpdateAbsolute(0.0, true, false);
+			Program.Renderer.CameraTrackFollower.UpdateAbsolute(-0.1, true, false);
+			Program.Renderer.CameraTrackFollower.UpdateAbsolute(0.1, true, false);
+			Program.Renderer.CameraTrackFollower.TriggerType = EventTriggerType.Camera;
 			// starting time and track position
 			Program.CurrentRoute.SecondsSinceMidnight = 0.0;
 			Game.StartupTime = 0.0;
@@ -738,8 +742,8 @@ namespace OpenBve
 			}
 			//Place the initial camera in the driver car
 			TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].UpdateCamera();
-			World.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
-			Program.Renderer.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z);
+			Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
+			Program.Renderer.UpdateVisibility(Program.Renderer.CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z);
 			World.CameraSavedExterior = new CameraAlignment(new OpenBveApi.Math.Vector3(-2.5, 1.5, -15.0), 0.3, -0.2, 0.0, PlayerFirstStationPosition, 1.0);
 			World.CameraSavedTrack = new CameraAlignment(new OpenBveApi.Math.Vector3(-3.0, 2.5, 0.0), 0.3, 0.0, 0.0, TrainManager.PlayerTrain.Cars[0].TrackPosition - 10.0, 1.0);
 			// signalling sections
@@ -800,7 +804,7 @@ namespace OpenBve
 				TrainManager.PlayerTrain.AI = new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain, Double.PositiveInfinity);
 				if (TrainManager.PlayerTrain.Plugin != null && !TrainManager.PlayerTrain.Plugin.SupportsAI)
 				{
-					Game.AddMessage(Translations.GetInterfaceString("notification_aiunable"),MessageDependency.None, GameMode.Expert,
+					MessageManager.AddMessage(Translations.GetInterfaceString("notification_aiunable"),MessageDependency.None, GameMode.Expert,
 						OpenBveApi.Colors.MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 				}
 			}
@@ -831,23 +835,23 @@ namespace OpenBve
 				if (filesNotFound != 0)
 				{
 					NotFound = filesNotFound.ToString() + " file(s) not found";
-					Game.AddMessage(NotFound, MessageDependency.None, GameMode.Expert, MessageColor.Magenta, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
+					MessageManager.AddMessage(NotFound, MessageDependency.None, GameMode.Expert, MessageColor.Magenta, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 					
 				}
 				if (errors != 0 & warnings != 0)
 				{
 					Messages = errors.ToString() + " error(s), " + warnings.ToString() + " warning(s)";
-					Game.AddMessage(Messages, MessageDependency.None, GameMode.Expert, MessageColor.Magenta, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
+					MessageManager.AddMessage(Messages, MessageDependency.None, GameMode.Expert, MessageColor.Magenta, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 				}
 				else if (errors != 0)
 				{
 					Messages = errors.ToString() + " error(s)";
-					Game.AddMessage(Messages, MessageDependency.None, GameMode.Expert, MessageColor.Magenta, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
+					MessageManager.AddMessage(Messages, MessageDependency.None, GameMode.Expert, MessageColor.Magenta, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 				}
 				else
 				{
 					Messages = warnings.ToString() + " warning(s)";
-					Game.AddMessage(Messages, MessageDependency.None, GameMode.Expert, MessageColor.Magenta, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
+					MessageManager.AddMessage(Messages, MessageDependency.None, GameMode.Expert, MessageColor.Magenta, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 				}
 				Program.CurrentRoute.Information.FilesNotFound = NotFound;
 				Program.CurrentRoute.Information.ErrorsAndWarnings = Messages;
@@ -855,8 +859,8 @@ namespace OpenBve
 				//This must be done after the simulation has init, as otherwise the timeout doesn't work
 				if (Loading.PluginError != null)
 				{
-					Game.AddMessage(Loading.PluginError, MessageDependency.None, GameMode.Expert, OpenBveApi.Colors.MessageColor.Red, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
-					Game.AddMessage(Translations.GetInterfaceString("errors_plugin_failure2"), MessageDependency.None, GameMode.Expert, OpenBveApi.Colors.MessageColor.Red, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+					MessageManager.AddMessage(Loading.PluginError, MessageDependency.None, GameMode.Expert, OpenBveApi.Colors.MessageColor.Red, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+					MessageManager.AddMessage(Translations.GetInterfaceString("errors_plugin_failure2"), MessageDependency.None, GameMode.Expert, OpenBveApi.Colors.MessageColor.Red, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
 				}
 			}
 			loadComplete = true;
@@ -893,7 +897,7 @@ namespace OpenBve
 					Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 					Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(0.0);
-					World.UpdateViewingDistances();
+					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					break;
 				case 2:
 					//Switch camera to track
@@ -912,7 +916,7 @@ namespace OpenBve
 					Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 					Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(0.0);
-					World.UpdateViewingDistances();
+					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					break;
 				case 3:
 					//Switch camera to flyby
@@ -931,7 +935,7 @@ namespace OpenBve
 					Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 					Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(0.0);
-					World.UpdateViewingDistances();
+					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					break;
 				case 4:
 					//Switch camera to flyby
@@ -950,7 +954,7 @@ namespace OpenBve
 					Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 					Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(0.0);
-					World.UpdateViewingDistances();
+					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					break;
 			}
 		}

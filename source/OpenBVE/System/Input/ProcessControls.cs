@@ -1,4 +1,5 @@
 using System;
+using LibRender2;
 using LibRender2.Cameras;
 using LibRender2.Screens;
 using LibRender2.Viewports;
@@ -35,14 +36,14 @@ namespace OpenBve
 					bool lookahead = false;
 					if (Program.Renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead & (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable || Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Restricted3D))
 					{
-						Game.AddMessage(Translations.GetInterfaceString("notification_interior_lookahead"),
+						MessageManager.AddMessage(Translations.GetInterfaceString("notification_interior_lookahead"),
 							MessageDependency.CameraView, GameMode.Expert,
 							MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 						lookahead = true;
 					}
 					else
 					{
-						Game.AddMessage(Translations.GetInterfaceString("notification_interior"),
+						MessageManager.AddMessage(Translations.GetInterfaceString("notification_interior"),
 							MessageDependency.CameraView, GameMode.Expert,
 							MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 					}
@@ -91,7 +92,7 @@ namespace OpenBve
 					Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 					Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(TimeElapsed);
-					World.UpdateViewingDistances();
+					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					if (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 					{
 						if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction))
@@ -107,16 +108,16 @@ namespace OpenBve
 					TrainManager.PlayerTrain.AI = new Game.SimpleHumanDriverAI(TrainManager.PlayerTrain, Double.PositiveInfinity);
 					if (TrainManager.PlayerTrain.Plugin != null && !TrainManager.PlayerTrain.Plugin.SupportsAI)
 					{
-						Game.AddMessage(Translations.GetInterfaceString("notification_aiunable"), MessageDependency.None, GameMode.Expert, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
+						MessageManager.AddMessage(Translations.GetInterfaceString("notification_aiunable"), MessageDependency.None, GameMode.Expert, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 					}
 
 				}
 			}
 			//If we are currently blocking key repeat events from firing, return
 			if (BlockKeyRepeat) return;
-			switch (Game.CurrentInterface)
+			switch (Program.Renderer.CurrentInterface)
 			{
-				case Game.InterfaceType.Pause:
+				case InterfaceType.Pause:
 					// pause
 					kioskModeTimer = 0;
 					for (int i = 0; i < Interface.CurrentControls.Length; i++)
@@ -130,7 +131,7 @@ namespace OpenBve
 								switch (Interface.CurrentControls[i].Command)
 								{
 									case Translations.Command.MiscPause:
-										Game.CurrentInterface = Game.InterfaceType.Normal;
+										Program.Renderer.CurrentInterface = InterfaceType.Normal;
 										break;
 									case Translations.Command.MenuActivate:
 										Game.Menu.PushMenu(Menu.MenuType.Top);
@@ -151,10 +152,10 @@ namespace OpenBve
 					}
 					break;
 /*
-				case Game.InterfaceType.CustomiseControl:
+				case InterfaceType.CustomiseControl:
 					break;
 */
-				case Game.InterfaceType.Menu:			// MENU
+				case InterfaceType.Menu:			// MENU
 					kioskModeTimer = 0;
 					for (int i = 0; i < Interface.CurrentControls.Length; i++)
 					{
@@ -168,7 +169,7 @@ namespace OpenBve
 					}
 					break;
 
-				case Game.InterfaceType.Normal:
+				case InterfaceType.Normal:
 					// normal
 					for (int i = 0; i < Interface.CurrentControls.Length; i++)
 					{
@@ -665,14 +666,14 @@ namespace OpenBve
 											bool lookahead = false;
 											if (Program.Renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead & Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable)
 											{
-												Game.AddMessage(Translations.GetInterfaceString("notification_interior_lookahead"),
+												MessageManager.AddMessage(Translations.GetInterfaceString("notification_interior_lookahead"),
 												                MessageDependency.CameraView, GameMode.Expert,
 												                MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 												lookahead = true;
 											}
 											else
 											{
-												Game.AddMessage(Translations.GetInterfaceString("notification_interior"),
+												MessageManager.AddMessage(Translations.GetInterfaceString("notification_interior"),
 												                MessageDependency.CameraView, GameMode.Expert,
 												                MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 											}
@@ -717,7 +718,7 @@ namespace OpenBve
 											Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 											Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 											World.UpdateAbsoluteCamera(TimeElapsed);
-											World.UpdateViewingDistances();
+											Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 											if (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 											{
 												if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction))
@@ -738,14 +739,14 @@ namespace OpenBve
 											bool lookahead = false;
 											if (Program.Renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead & Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable)
 											{
-												Game.AddMessage(Translations.GetInterfaceString("notification_interior_lookahead"),
+												MessageManager.AddMessage(Translations.GetInterfaceString("notification_interior_lookahead"),
 												                MessageDependency.CameraView, GameMode.Expert,
 												                MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 												lookahead = true;
 											}
 											else
 											{
-												Game.AddMessage(Translations.GetInterfaceString("notification_interior"),
+												MessageManager.AddMessage(Translations.GetInterfaceString("notification_interior"),
 												                MessageDependency.CameraView, GameMode.Expert,
 												                MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 											}
@@ -791,7 +792,7 @@ namespace OpenBve
 											Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 											Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 											World.UpdateAbsoluteCamera(TimeElapsed);
-											World.UpdateViewingDistances();
+											Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 											if (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 											{
 												if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction))
@@ -807,7 +808,7 @@ namespace OpenBve
 										break;
 									case Translations.Command.CameraExterior:
 										// camera: exterior
-										Game.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (World.CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
+										MessageManager.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (World.CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
 												MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 										SaveCameraSettings();
 										Program.Renderer.Camera.CurrentMode = CameraViewMode.Exterior;
@@ -823,7 +824,7 @@ namespace OpenBve
 										Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 										Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 										World.UpdateAbsoluteCamera(TimeElapsed);
-										World.UpdateViewingDistances();
+										Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 										break;
 									case Translations.Command.CameraTrack:
 									case Translations.Command.CameraFlyBy:
@@ -833,7 +834,7 @@ namespace OpenBve
 										if (Interface.CurrentControls[i].Command == Translations.Command.CameraTrack)
 										{
 											Program.Renderer.Camera.CurrentMode = CameraViewMode.Track;
-											Game.AddMessage(Translations.GetInterfaceString("notification_track"),
+											MessageManager.AddMessage(Translations.GetInterfaceString("notification_track"),
 												MessageDependency.CameraView, GameMode.Expert,
 												MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 										}
@@ -842,7 +843,7 @@ namespace OpenBve
 											if (Program.Renderer.Camera.CurrentMode == CameraViewMode.FlyBy)
 											{
 												Program.Renderer.Camera.CurrentMode = CameraViewMode.FlyByZooming;
-												Game.AddMessage(
+												MessageManager.AddMessage(
 													Translations.GetInterfaceString("notification_flybyzooming"),
 													MessageDependency.CameraView, GameMode.Expert,
 													MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
@@ -850,7 +851,7 @@ namespace OpenBve
 											else
 											{
 												Program.Renderer.Camera.CurrentMode = CameraViewMode.FlyBy;
-												Game.AddMessage(
+												MessageManager.AddMessage(
 													Translations.GetInterfaceString("notification_flybynormal"),
 													MessageDependency.CameraView, GameMode.Expert,
 													MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
@@ -868,7 +869,7 @@ namespace OpenBve
 										Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 										Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 										World.UpdateAbsoluteCamera(TimeElapsed);
-										World.UpdateViewingDistances();
+										Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 									}
 										break;
 									case Translations.Command.CameraPreviousPOI:
@@ -878,7 +879,7 @@ namespace OpenBve
 											if (World.CameraCar < TrainManager.PlayerTrain.Cars.Length - 1)
 											{
 												World.CameraCar++;
-												Game.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (World.CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
+												MessageManager.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (World.CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
 												MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 											}
 											return;
@@ -891,7 +892,7 @@ namespace OpenBve
 												Program.Renderer.Camera.CurrentMode != CameraViewMode.FlyByZooming)
 											{
 												Program.Renderer.Camera.CurrentMode = CameraViewMode.Track;
-												Game.AddMessage(Translations.GetInterfaceString("notification_track"),
+												MessageManager.AddMessage(Translations.GetInterfaceString("notification_track"),
 													MessageDependency.CameraView, GameMode.Expert,
 													MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 											}
@@ -909,12 +910,12 @@ namespace OpenBve
 												TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 												TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(0);
 											}
-											World.CameraTrackFollower.UpdateRelative(z, true, false);
-											Program.Renderer.Camera.Alignment.TrackPosition = World.CameraTrackFollower.TrackPosition;
+											Program.Renderer.CameraTrackFollower.UpdateRelative(z, true, false);
+											Program.Renderer.Camera.Alignment.TrackPosition = Program.Renderer.CameraTrackFollower.TrackPosition;
 											Program.Renderer.Camera.VerticalViewingAngle = Program.Renderer.Camera.OriginalVerticalViewingAngle;
 											Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 											World.UpdateAbsoluteCamera(TimeElapsed);
-											World.UpdateViewingDistances();
+											Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 										}
 										break;
 									case Translations.Command.CameraNextPOI:
@@ -924,7 +925,7 @@ namespace OpenBve
 											if (World.CameraCar > 0)
 											{
 												World.CameraCar--;
-												Game.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (World.CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
+												MessageManager.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (World.CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
 												MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 											}
 											return;
@@ -937,7 +938,7 @@ namespace OpenBve
 												Program.Renderer.Camera.CurrentMode != CameraViewMode.FlyByZooming)
 											{
 												Program.Renderer.Camera.CurrentMode = CameraViewMode.Track;
-												Game.AddMessage(Translations.GetInterfaceString("notification_track"),
+												MessageManager.AddMessage(Translations.GetInterfaceString("notification_track"),
 													MessageDependency.CameraView, GameMode.Expert,
 													MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 											}
@@ -955,13 +956,13 @@ namespace OpenBve
 												TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 												TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(0);
 											}
-											World.CameraTrackFollower.UpdateRelative(z, true, false);
+											Program.Renderer.CameraTrackFollower.UpdateRelative(z, true, false);
 											Program.Renderer.Camera.Alignment.TrackPosition =
-												World.CameraTrackFollower.TrackPosition;
+												Program.Renderer.CameraTrackFollower.TrackPosition;
 											Program.Renderer.Camera.VerticalViewingAngle = Program.Renderer.Camera.OriginalVerticalViewingAngle;
 											Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 											World.UpdateAbsoluteCamera(TimeElapsed);
-											World.UpdateViewingDistances();
+											Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 										}
 										break;
 									case Translations.Command.CameraReset:
@@ -977,7 +978,7 @@ namespace OpenBve
 										Program.Renderer.Camera.Alignment.Roll = 0.0;
 										if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Track)
 										{
-											World.CameraTrackFollower.UpdateAbsolute(
+											Program.Renderer.CameraTrackFollower.UpdateAbsolute(
 												TrainManager.PlayerTrain.Cars[0].TrackPosition, true,
 												false);
 										}
@@ -988,7 +989,7 @@ namespace OpenBve
 											{
 												double d = 30.0 +
 														   4.0*TrainManager.PlayerTrain.CurrentSpeed;
-												World.CameraTrackFollower.UpdateAbsolute(
+												Program.Renderer.CameraTrackFollower.UpdateAbsolute(
 													TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower
 														.TrackPosition + d, true, false);
 											}
@@ -996,21 +997,21 @@ namespace OpenBve
 											{
 												double d = 30.0 -
 														   4.0*TrainManager.PlayerTrain.CurrentSpeed;
-												World.CameraTrackFollower.UpdateAbsolute(
+												Program.Renderer.CameraTrackFollower.UpdateAbsolute(
 													TrainManager.PlayerTrain.Cars[
 														TrainManager.PlayerTrain.Cars.Length - 1].RearAxle.Follower
 														.TrackPosition - d, true, false);
 											}
 										}
 										Program.Renderer.Camera.Alignment.TrackPosition =
-											World.CameraTrackFollower.TrackPosition;
+											Program.Renderer.CameraTrackFollower.TrackPosition;
 										Program.Renderer.Camera.Alignment.Zoom = 0.0;
 										Program.Renderer.Camera.VerticalViewingAngle = Program.Renderer.Camera.OriginalVerticalViewingAngle;
 										Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
 										Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 										Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 										World.UpdateAbsoluteCamera(TimeElapsed);
-										World.UpdateViewingDistances();
+										Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 										if ((Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior |
 											 Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) &
 											(Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.On || Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Restricted3D))
@@ -1027,7 +1028,7 @@ namespace OpenBve
 										{
 											case CameraRestrictionMode.Restricted3D:
 												Program.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.NotAvailable;
-												Game.AddMessage(Translations.GetInterfaceString("notification_camerarestriction_off"),
+												MessageManager.AddMessage(Translations.GetInterfaceString("notification_camerarestriction_off"),
 													MessageDependency.CameraView, GameMode.Expert,
 													MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 												break;
@@ -1035,7 +1036,7 @@ namespace OpenBve
 												Program.Renderer.Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
 												if (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Restricted3D)
 												{
-													Game.AddMessage(Translations.GetInterfaceString("notification_camerarestriction_on"),
+													MessageManager.AddMessage(Translations.GetInterfaceString("notification_camerarestriction_on"),
 														MessageDependency.CameraView, GameMode.Expert,
 														MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 												}
@@ -1052,13 +1053,13 @@ namespace OpenBve
 												World.InitializeCameraRestriction();
 												if (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Off)
 												{
-													Game.AddMessage(Translations.GetInterfaceString("notification_camerarestriction_off"),
+													MessageManager.AddMessage(Translations.GetInterfaceString("notification_camerarestriction_off"),
 														MessageDependency.CameraView, GameMode.Expert,
 														MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 												}
 												else
 												{
-													Game.AddMessage(Translations.GetInterfaceString("notification_camerarestriction_on"),
+													MessageManager.AddMessage(Translations.GetInterfaceString("notification_camerarestriction_on"),
 														MessageDependency.CameraView, GameMode.Expert,
 														MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 												}
@@ -1599,13 +1600,13 @@ namespace OpenBve
 										break;
 									case Translations.Command.DebugRendererMode:
 										Interface.CurrentOptions.IsUseNewRenderer = !Interface.CurrentOptions.IsUseNewRenderer;
-										Game.AddMessage($"Renderer mode: {(Program.Renderer.AvailableNewRenderer ? "New renderer" : "Original renderer")}", MessageDependency.None, GameMode.Expert, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
+										MessageManager.AddMessage($"Renderer mode: {(Program.Renderer.AvailableNewRenderer ? "New renderer" : "Original renderer")}", MessageDependency.None, GameMode.Expert, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 										break;
 									case Translations.Command.MiscAI:
 										// option: AI
 										if (Interface.CurrentOptions.GameMode == GameMode.Expert)
 										{
-											Game.AddMessage(
+											MessageManager.AddMessage(
 												Translations.GetInterfaceString("notification_notavailableexpert"),
 												MessageDependency.None, GameMode.Expert,
 												MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
@@ -1619,7 +1620,7 @@ namespace OpenBve
 												if (TrainManager.PlayerTrain.Plugin != null &&
 													!TrainManager.PlayerTrain.Plugin.SupportsAI)
 												{
-													Game.AddMessage(
+													MessageManager.AddMessage(
 														Translations.GetInterfaceString("notification_aiunable"),
 														MessageDependency.None, GameMode.Expert,
 														MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
@@ -1667,7 +1668,7 @@ namespace OpenBve
 									case Translations.Command.MiscBackfaceCulling:
 										// option: backface culling
 										Program.Renderer.OptionBackFaceCulling = !Program.Renderer.OptionBackFaceCulling;
-										Game.AddMessage(
+										MessageManager.AddMessage(
 											Translations.GetInterfaceString(Program.Renderer.OptionBackFaceCulling
 												? "notification_backfaceculling_on"
 												: "notification_backfaceculling_off"), MessageDependency.None,
@@ -1677,7 +1678,7 @@ namespace OpenBve
 									case Translations.Command.MiscCPUMode:
 										// option: limit frame rate
 										LimitFramerate = !LimitFramerate;
-										Game.AddMessage(
+										MessageManager.AddMessage(
 											Translations.GetInterfaceString(LimitFramerate
 												? "notification_cpu_low"
 												: "notification_cpu_normal"), MessageDependency.None,
@@ -1688,7 +1689,7 @@ namespace OpenBve
 										// option: brake systems
 										if (Interface.CurrentOptions.GameMode == GameMode.Expert)
 										{
-											Game.AddMessage(
+											MessageManager.AddMessage(
 												Translations.GetInterfaceString("notification_notavailableexpert"),
 												MessageDependency.None, GameMode.Expert,
 												MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
@@ -1704,7 +1705,7 @@ namespace OpenBve
 										break;
 									case Translations.Command.MiscPause:
 										// pause
-										Game.CurrentInterface = Game.InterfaceType.Pause;
+										Program.Renderer.CurrentInterface = InterfaceType.Pause;
 										break;
 									case Translations.Command.MiscClock:
 										// clock
@@ -1716,7 +1717,7 @@ namespace OpenBve
 										{
 											if (Interface.CurrentOptions.GameMode == GameMode.Expert)
 											{
-												Game.AddMessage(
+												MessageManager.AddMessage(
 													Translations.GetInterfaceString("notification_notavailableexpert"),
 													MessageDependency.None, GameMode.Expert,
 													MessageColor.White,
@@ -1727,7 +1728,7 @@ namespace OpenBve
 												TimeFactor = TimeFactor == 1
 													? Interface.CurrentOptions.TimeAccelerationFactor
 													: 1;
-												Game.AddMessage(
+												MessageManager.AddMessage(
 													TimeFactor.ToString(
 														System.Globalization.CultureInfo.InvariantCulture) + "x",
 													MessageDependency.None, GameMode.Expert,
@@ -1740,7 +1741,7 @@ namespace OpenBve
 										// speed
 										if (Interface.CurrentOptions.GameMode == GameMode.Expert)
 										{
-											Game.AddMessage(
+											MessageManager.AddMessage(
 												Translations.GetInterfaceString("notification_notavailableexpert"),
 												MessageDependency.None, GameMode.Expert,
 												MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
@@ -1755,7 +1756,7 @@ namespace OpenBve
 										// gradient
 										if (Interface.CurrentOptions.GameMode == GameMode.Expert)
 										{
-											Game.AddMessage(
+											MessageManager.AddMessage(
 												Translations.GetInterfaceString("notification_notavailableexpert"),
 												MessageDependency.None, GameMode.Expert,
 												MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
@@ -1769,7 +1770,7 @@ namespace OpenBve
 									case Translations.Command.MiscDistanceToNextStation:
 										if (Interface.CurrentOptions.GameMode == GameMode.Expert)
 										{
-											Game.AddMessage(
+											MessageManager.AddMessage(
 												Translations.GetInterfaceString("notification_notavailableexpert"),
 												MessageDependency.None, GameMode.Expert,
 												MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);

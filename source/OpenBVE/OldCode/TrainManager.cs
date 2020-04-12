@@ -96,7 +96,7 @@ namespace OpenBve
 						//Needs to be on the thread containing the openGL context
 						Program.Renderer.InitializeVisibility();
 					});
-					World.UpdateViewingDistances();
+					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					return;
 				}
 				Interface.AddMessage(MessageType.Error, false, "The panel.xml file " + File + " failed to load. Falling back to legacy panel.");
@@ -130,7 +130,7 @@ namespace OpenBve
 								Train.Cars[Train.DriverCar].CameraRestrictionMode = CameraRestrictionMode.NotAvailable;
 								Program.Renderer.Camera.CurrentRestriction = CameraRestrictionMode.NotAvailable;
 							}
-							World.UpdateViewingDistances();
+							Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 							return;
 						}
 						catch

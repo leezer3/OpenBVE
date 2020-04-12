@@ -516,6 +516,7 @@ namespace LibRender2.Textures
 			{
 				UnloadTexture(RegisteredTextures[i]);
 			}
+			GC.Collect(); //Speculative- https://bveworldwide.forumotion.com/t1873-object-routeviewer-out-of-memory#19423
 		}
 
 

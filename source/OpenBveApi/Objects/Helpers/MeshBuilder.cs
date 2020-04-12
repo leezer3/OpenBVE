@@ -36,7 +36,7 @@ namespace OpenBveApi.Objects
 		}
 
 		/// <summary>Applies the MeshBuilder's data to a StaticObject</summary>
-		public void Apply(ref StaticObject Object)
+		public void Apply(ref StaticObject Object, bool EnableHacks = false)
 		{
 			if (TransformMatrix != Matrix4D.NoTransformation)
 			{
@@ -71,6 +71,24 @@ namespace OpenBveApi.Objects
 
 				for (int i = 0; i < Materials.Length; i++)
 				{
+					if (EnableHacks && !string.IsNullOrEmpty(Materials[i].DaytimeTexture))
+					{
+						if (Materials[i].DaytimeTexture == Materials[i].NighttimeTexture)
+						{
+							if (Materials[i].EmissiveColorUsed == false)
+							{
+								/*
+								 * Versions of openBVE prior to 1.7.0 rendered polygons with identical defined textures as unlit
+								 * The new GL 3.2 renderer corrects this behaviour
+								 * Horrid workaround....
+								 */
+								Materials[i].EmissiveColorUsed = true;
+								Materials[i].EmissiveColor = Color24.White;
+							}
+
+						}
+					}
+					
 					Object.Mesh.Materials[mm + i].Flags = (byte) ((Materials[i].EmissiveColorUsed ? MeshMaterial.EmissiveColorMask : 0) | (Materials[i].TransparentColorUsed ? MeshMaterial.TransparentColorMask : 0));
 					Object.Mesh.Materials[mm + i].Color = Materials[i].Color;
 					Object.Mesh.Materials[mm + i].TransparentColor = Materials[i].TransparentColor;

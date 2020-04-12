@@ -23,8 +23,9 @@ namespace OpenBve {
 			}
 			catch
 			{
-				
+				// ignored
 			}
+
 			List<ContentLoadingPlugin> list = new List<ContentLoadingPlugin>();
 			StringBuilder builder = new StringBuilder();
 			foreach (string file in files) {
@@ -40,9 +41,26 @@ namespace OpenBve {
 							assembly = Assembly.LoadFile(file);
 							types = assembly.GetTypes();
 						}
-						catch
+#pragma warning disable 168
+						catch(Exception ex)
+#pragma warning restore 168
 						{
-							builder.Append("Plugin ").Append(Path.GetFileName(file)).AppendLine(" is not a .Net assembly.");
+#if!DEBUG
+							if ((ex is ReflectionTypeLoadException))
+							{
+								/*
+								 * This is actually a .Net assembly, it just failed to load a reference
+								 * Probably built against a newer API version.
+								 */
+
+								builder.Append("Plugin ").Append(Path.GetFileName(file)).AppendLine(" failed to load. \n \n Please check that you are using the most recent version of OpenBVE.");	
+
+							}
+							else
+							{
+								builder.Append("Plugin ").Append(Path.GetFileName(file)).AppendLine(" is not a .Net assembly.");	
+							}
+#endif
 							continue;
 						}
 						bool iruntime = false;
@@ -85,7 +103,7 @@ namespace OpenBve {
 			Program.CurrentHost.Plugins = list.ToArray();
 			if (Program.CurrentHost.Plugins.Length == 0)
 			{
-				MessageBox.Show("No available texture & sound loader plugins were found." + Environment.NewLine +
+				MessageBox.Show("No available content loading plugins were found." + Environment.NewLine +
 				                " Please re-download openBVE.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return false;
 			}

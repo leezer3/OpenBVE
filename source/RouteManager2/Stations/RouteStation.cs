@@ -1,5 +1,7 @@
 ﻿using OpenBveApi.Math;
+using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
+using OpenBveApi.Trains;
 using RouteManager2.SignalManager;
 
 namespace RouteManager2.Stations
@@ -48,6 +50,16 @@ namespace RouteManager2.Stations
 				return Stops.Length - 1;
 			}
 			return j;
+		}
+
+		/// <summary>Indicates whether the specified train stops at this station.</summary>
+		public bool StopsHere(AbstractTrain Train)
+		{
+			if (Train.IsPlayerTrain)
+			{
+				return StopMode == StationStopMode.AllStop | StopMode == StationStopMode.PlayerStop | StopMode == StationStopMode.PlayerRequestStop | StopMode == StationStopMode.AllRequestStop;
+			}
+			return StopMode == StationStopMode.AllStop | StopMode == StationStopMode.PlayerPass | StopMode == StationStopMode.AllRequestStop;
 		}
 	}
 }

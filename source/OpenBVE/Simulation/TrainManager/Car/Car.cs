@@ -1,4 +1,5 @@
 using System;
+using LibRender2;
 using LibRender2.Camera;
 using LibRender2.Cameras;
 using OpenBve.BrakeSystems;
@@ -255,7 +256,7 @@ namespace OpenBve
 				}
 				else if (Sounds.RunNextReasynchronizationPosition == double.MaxValue & FrontAxle.RunIndex >= 0)
 				{
-					double distance = Math.Abs(FrontAxle.Follower.TrackPosition - World.CameraTrackFollower.TrackPosition);
+					double distance = Math.Abs(FrontAxle.Follower.TrackPosition - Program.Renderer.CameraTrackFollower.TrackPosition);
 					const double minDistance = 150.0;
 					const double maxDistance = 750.0;
 					if (distance > minDistance)
@@ -1126,13 +1127,13 @@ namespace OpenBve
 				cameraPosition.Y = ry + sy * driverPosition.X + Up.Y * driverPosition.Y + direction.Y * driverPosition.Z;
 				cameraPosition.Z = rz + sz * driverPosition.X + Up.Z * driverPosition.Y + direction.Z * driverPosition.Z;
 
-				World.CameraTrackFollower.WorldPosition = cameraPosition;
-				World.CameraTrackFollower.WorldDirection = direction;
-				World.CameraTrackFollower.WorldUp = new Vector3(Up);
-				World.CameraTrackFollower.WorldSide = new Vector3(sx, sy, sz);
+				Program.Renderer.CameraTrackFollower.WorldPosition = cameraPosition;
+				Program.Renderer.CameraTrackFollower.WorldDirection = direction;
+				Program.Renderer.CameraTrackFollower.WorldUp = new Vector3(Up);
+				Program.Renderer.CameraTrackFollower.WorldSide = new Vector3(sx, sy, sz);
 				double f = (Driver.Z - RearAxle.Position) / (FrontAxle.Position - RearAxle.Position);
 				double tp = (1.0 - f) * RearAxle.Follower.TrackPosition + f * FrontAxle.Follower.TrackPosition;
-				World.CameraTrackFollower.UpdateAbsolute(tp, false, false);
+				Program.Renderer.CameraTrackFollower.UpdateAbsolute(tp, false, false);
 			}
 
 			internal void UpdateSpeed(double TimeElapsed, double DecelerationDueToMotor, double DecelerationDueToBrake, out double Speed)

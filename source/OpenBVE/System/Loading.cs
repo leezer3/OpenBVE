@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Threading;
+using LibRender2;
 using OpenBve.Parsers.Train;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -225,7 +226,7 @@ namespace OpenBve {
 					}
 				}
 			}
-			World.CameraTrackFollower = new TrackFollower(Program.CurrentHost) { Train = null, Car = null };
+			Program.Renderer.CameraTrackFollower = new TrackFollower(Program.CurrentHost) { Train = null, Car = null };
 			if (Program.CurrentRoute.Stations.Length == 1)
 			{
 				//Log the fact that only a single station is present, as this is probably not right

@@ -1,4 +1,5 @@
 ﻿using System;
+using LibRender2.Screens;
 using OpenBveApi.Trains;
 using SoundManager;
 
@@ -137,8 +138,7 @@ namespace OpenBve
 				if (train.IsPlayerTrain)
 				{
 					Game.CurrentScore.DepartureStation = stationIndex;
-					Game.CurrentInterface = Game.InterfaceType.Normal;
-					//Game.Messages = new Game.Message[] { };
+					Program.Renderer.CurrentInterface = InterfaceType.Normal;
 				}
 				ObjectManager.UpdateAnimatedWorldObjects(0.0, true);
 				TrainManager.UpdateTrainObjects(0.0, true);

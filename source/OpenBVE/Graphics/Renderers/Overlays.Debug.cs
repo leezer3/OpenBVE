@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using LibRender2;
 using OpenBve.BrakeSystems;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
@@ -170,10 +171,10 @@ namespace OpenBve.Graphics.Renderers
 				"textures loaded: " + texturesLoaded.ToString(Culture) + " / " + texturesRegistered.ToString(Culture),
 				"",
 				"=camera",
-				"position: " + World.CameraTrackFollower.TrackPosition.ToString("0.00", Culture) + " m",
-				"curve radius: " + World.CameraTrackFollower.CurveRadius.ToString("0.00", Culture) + " m",
-				"curve cant: " + (1000.0 * Math.Abs(World.CameraTrackFollower.CurveCant)).ToString("0.00", Culture) + " mm" + (World.CameraTrackFollower.CurveCant < 0.0 ? " (left)" : World.CameraTrackFollower.CurveCant > 0.0 ? " (right)" : ""),
-				"pitch: " + World.CameraTrackFollower.Pitch.ToString("0.00", Culture),
+				"position: " + Program.Renderer.CameraTrackFollower.TrackPosition.ToString("0.00", Culture) + " m",
+				"curve radius: " + Program.Renderer.CameraTrackFollower.CurveRadius.ToString("0.00", Culture) + " m",
+				"curve cant: " + (1000.0 * Math.Abs(Program.Renderer.CameraTrackFollower.CurveCant)).ToString("0.00", Culture) + " mm" + (Program.Renderer.CameraTrackFollower.CurveCant < 0.0 ? " (left)" : Program.Renderer.CameraTrackFollower.CurveCant > 0.0 ? " (right)" : ""),
+				"pitch: " + Program.Renderer.CameraTrackFollower.Pitch.ToString("0.00", Culture),
 				"",
 				"=sound",
 				"sound buffers: " + soundBuffersLoaded.ToString(Culture) + " / " + soundBuffersRegistered.ToString(Culture),

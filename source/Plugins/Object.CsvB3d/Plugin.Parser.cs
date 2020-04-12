@@ -97,6 +97,7 @@ namespace Plugin
 				}
 			}
 			// parse lines
+			bool firstMeshBuilder = false;
 			MeshBuilder Builder = new MeshBuilder(currentHost);
 			Vector3[] Normals = new Vector3[4];
 			bool CommentStarted = false;
@@ -229,6 +230,7 @@ namespace Plugin
 						case "createmeshbuilder":
 						case "[meshbuilder]":
 							{
+								firstMeshBuilder = true;
 								if (cmd == "createmeshbuilder" & IsB3D) {
 									currentHost.AddMessage(MessageType.Warning, false, "CreateMeshBuilder is not a supported command - did you mean [MeshBuilder]? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else if (cmd == "[meshbuilder]" & !IsB3D) {
@@ -237,13 +239,18 @@ namespace Plugin
 								if (Arguments.Length > 0) {
 									currentHost.AddMessage(MessageType.Warning, false, "0 arguments are expected in " + Command + " at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								}
-								Builder.Apply(ref Object);
+								Builder.Apply(ref Object, Plugin.BveTsHacks);
 								Builder = new MeshBuilder(currentHost);
 								Normals = new Vector3[4];
 							} break;
 						case "addvertex":
 						case "vertex":
 							{
+								if (!firstMeshBuilder)
+								{
+									//https://github.com/leezer3/OpenBVE/issues/448
+									currentHost.AddMessage(MessageType.Warning, false, "Attempted to add a vertex without first creating a MeshBuilder - This may produce unexpected results - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
+								}
 								if (cmd == "addvertex" & IsB3D) {
 									currentHost.AddMessage(MessageType.Warning, false, "AddVertex is not a supported command - did you mean Vertex? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else if (cmd == "vertex" & !IsB3D) {
@@ -849,6 +856,11 @@ namespace Plugin
 						case "loadtexture":
 						case "load":
 							{
+							/*
+							 * Loading a texture should definitely reset the MeshBuilder, otherwise that's insane
+							 * Hopefully won't increase error numbers on existing content too much....
+							 */
+							firstMeshBuilder = false;
 								if (cmd == "loadtexture" & IsB3D) {
 									currentHost.AddMessage(MessageType.Warning, false, "LoadTexture is not a supported command - did you mean Load? - at line " + (i + 1).ToString(Culture) + " in file " + FileName);
 								} else if (cmd == "load" & !IsB3D) {
@@ -1164,7 +1176,7 @@ namespace Plugin
 				}
 			}
 			// finalize object
-			Builder.Apply(ref Object);
+			Builder.Apply(ref Object, Plugin.BveTsHacks);
 			Object.Mesh.CreateNormals();
 			for (int i = 0; i < Object.Mesh.Faces.Length; i++)
 			{
@@ -1289,10 +1301,6 @@ namespace Plugin
 			}
 		}
 		
-
-		// apply shear
-		
-
 		/// <summary>Checks whether the specified System.Text.Encoding is Unicode</summary>
 		/// <param name="Encoding">The Encoding</param>
 		private static bool IsUtf(System.Text.Encoding Encoding)

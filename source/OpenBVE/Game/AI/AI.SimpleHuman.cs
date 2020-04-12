@@ -1,7 +1,6 @@
 ﻿using System;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
-using RouteManager2;
 using RouteManager2.Events;
 
 namespace OpenBve
@@ -251,7 +250,7 @@ namespace OpenBve
 						}
 					}
 				}
-				else if (Train.Station >= 0 && stopIndex >= 0 && Train.StationDistanceToStopPoint < Program.CurrentRoute.Stations[Train.Station].Stops[stopIndex].BackwardTolerance && (StopsAtStation(Train.Station, Train) & (Program.CurrentRoute.Stations[Train.Station].OpenLeftDoors | Program.CurrentRoute.Stations[Train.Station].OpenRightDoors) & Math.Abs(Train.CurrentSpeed) < 0.25 & Train.StationState == TrainStopState.Pending))
+				else if (Train.Station >= 0 && stopIndex >= 0 && Train.StationDistanceToStopPoint < Program.CurrentRoute.Stations[Train.Station].Stops[stopIndex].BackwardTolerance && (Program.CurrentRoute.Stations[Train.Station].StopsHere(Train) & (Program.CurrentRoute.Stations[Train.Station].OpenLeftDoors | Program.CurrentRoute.Stations[Train.Station].OpenRightDoors) & Math.Abs(Train.CurrentSpeed) < 0.25 & Train.StationState == TrainStopState.Pending))
 				{
 					// arrived at station - open doors
 					if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic && Train.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked)
@@ -391,7 +390,7 @@ namespace OpenBve
 								if (Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j] is StationStartEvent && Train.NextStopSkipped == StopSkipMode.None)
 								{
 									StationStartEvent e = (StationStartEvent)Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
-									if (StopsAtStation(e.StationIndex, Train) & Train.LastStation != e.StationIndex)
+									if (Program.CurrentRoute.Stations[e.StationIndex].StopsHere(Train) & Train.LastStation != e.StationIndex)
 									{
 										int s = Program.CurrentRoute.Stations[e.StationIndex].GetStopIndex(Train.NumberOfCars);
 										if (s >= 0)
@@ -496,7 +495,7 @@ namespace OpenBve
 									if (Train.Station == -1)
 									{
 										StationStartEvent e = (StationStartEvent)Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
-										if (StopsAtStation(e.StationIndex, Train) & Train.LastStation != e.StationIndex)
+										if (Program.CurrentRoute.Stations[e.StationIndex].StopsHere(Train) & Train.LastStation != e.StationIndex)
 										{
 											int s = Program.CurrentRoute.Stations[e.StationIndex].GetStopIndex(Train.NumberOfCars);
 											if (s >= 0)
@@ -525,7 +524,7 @@ namespace OpenBve
 									if (Train.Station == -1)
 									{
 										StationStartEvent e = (StationStartEvent)Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
-										if (StopsAtStation(e.StationIndex, Train) & Train.LastStation != e.StationIndex)
+										if (Program.CurrentRoute.Stations[e.StationIndex].StopsHere(Train) & Train.LastStation != e.StationIndex)
 										{
 											int s = Program.CurrentRoute.Stations[e.StationIndex].GetStopIndex(Train.NumberOfCars);
 											if (s >= 0)
@@ -558,7 +557,7 @@ namespace OpenBve
 									if (Train.Station == -1)
 									{
 										StationEndEvent e = (StationEndEvent)Program.CurrentRoute.Tracks[currentTrack].Elements[i].Events[j];
-										if (StopsAtStation(e.StationIndex, Train) & Train.LastStation != e.StationIndex)
+										if (Program.CurrentRoute.Stations[e.StationIndex].StopsHere(Train) & Train.LastStation != e.StationIndex)
 										{
 											int s = Program.CurrentRoute.Stations[e.StationIndex].GetStopIndex(Train.NumberOfCars);
 											if (s >= 0)
@@ -682,7 +681,7 @@ namespace OpenBve
 					// current station
 					if (Train.Station >= 0 & Train.StationState == TrainStopState.Pending)
 					{
-						if (StopsAtStation(Train.Station, Train))
+						if (Program.CurrentRoute.Stations[Train.Station].StopsHere(Train))
 						{
 							int s = Program.CurrentRoute.Stations[Train.Station].GetStopIndex(Train.NumberOfCars);
 							if (s >= 0)
@@ -867,7 +866,7 @@ namespace OpenBve
 					}
 				}
 			}
-			internal override void Trigger(double TimeElapsed)
+			public override void Trigger(double TimeElapsed)
 			{
 				if (TimeLastProcessed > Program.CurrentRoute.SecondsSinceMidnight)
 				{

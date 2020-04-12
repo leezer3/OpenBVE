@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using LibRender2.Screens;
 using OpenBveApi.Colors;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
@@ -8,11 +9,10 @@ using RouteManager2;
 using RouteManager2.Climate;
 using RouteManager2.SignalManager.PreTrain;
 
-namespace OpenBve {
-	internal static partial class Game {
-
-		// date and time
-        
+namespace OpenBve 
+{
+	internal static partial class Game 
+	{
         /// <summary>The time at which the current game started, expressed as the number of seconds since midnight on the first day</summary>
 		internal static double StartupTime = 0.0;
 		/// <summary>Whether the game is in minimal simulation mode: 
@@ -35,7 +35,7 @@ namespace OpenBve {
 			TrainManager.Trains = new TrainManager.Train[] { };
 			// game
 			Interface.ClearMessages();
-			CurrentInterface = InterfaceType.Normal;
+			Program.Renderer.CurrentInterface = InterfaceType.Normal;
 			Program.CurrentRoute.Comment = "";
 			Program.CurrentRoute.Image = "";
 			Program.CurrentRoute.Atmosphere.AccelerationDueToGravity = 9.80665;
