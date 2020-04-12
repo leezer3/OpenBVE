@@ -29,65 +29,73 @@ namespace OpenBve
 			}
 			List<ContentLoadingPlugin> list = new List<ContentLoadingPlugin>();
 			StringBuilder builder = new StringBuilder();
-			foreach (string file in files)
-			{
-				if (file.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
-				{
-#if !DEBUG
+			foreach (string file in files) {
+				if (file.EndsWith(".dll", StringComparison.OrdinalIgnoreCase)) {
+					#if !DEBUG
 					try {
-#endif
-					ContentLoadingPlugin plugin = new ContentLoadingPlugin(file);
-					Assembly assembly;
-					try
-					{
-						assembly = Assembly.LoadFile(file);
-					}
-					catch
-					{
-						builder.Append("Plugin ").Append(Path.GetFileName(file)).AppendLine(" is not a .Net assembly.");
-						continue;
-					}
-					Type[] types = assembly.GetTypes();
-					bool iruntime = false;
-					foreach (Type type in types)
-					{
-						if (type.FullName == null)
+						#endif
+						ContentLoadingPlugin plugin = new ContentLoadingPlugin(file);
+						Assembly assembly;
+						Type[] types;
+						try
 						{
+							assembly = Assembly.LoadFile(file);
+							types = assembly.GetTypes();
+						}
+#pragma warning disable 168
+						catch(Exception ex)
+#pragma warning restore 168
+						{
+#if!DEBUG
+							if ((ex is ReflectionTypeLoadException))
+							{
+								/*
+								 * This is actually a .Net assembly, it just failed to load a reference
+								 * Probably built against a newer API version.
+								 */
+
+								builder.Append("Plugin ").Append(Path.GetFileName(file)).AppendLine(" failed to load. \n \n Please check that you are using the most recent version of OpenBVE.");	
+
+							}
+							else
+							{
+								builder.Append("Plugin ").Append(Path.GetFileName(file)).AppendLine(" is not a .Net assembly.");	
+							}
+#endif
 							continue;
 						}
-						if (type.IsSubclassOf(typeof(OpenBveApi.Textures.TextureInterface)))
-						{
-							plugin.Texture = (OpenBveApi.Textures.TextureInterface)assembly.CreateInstance(type.FullName);
+						bool iruntime = false;
+						foreach (Type type in types) {
+							if (type.FullName == null)
+							{
+								continue;
+							}
+							if (type.IsSubclassOf(typeof(OpenBveApi.Textures.TextureInterface))) {
+								plugin.Texture = (OpenBveApi.Textures.TextureInterface)assembly.CreateInstance(type.FullName);
+							}
+							if (type.IsSubclassOf(typeof(OpenBveApi.Sounds.SoundInterface))) {
+								plugin.Sound = (OpenBveApi.Sounds.SoundInterface)assembly.CreateInstance(type.FullName);
+							}
+							if (type.IsSubclassOf(typeof(OpenBveApi.Objects.ObjectInterface))) {
+								plugin.Object = (OpenBveApi.Objects.ObjectInterface)assembly.CreateInstance(type.FullName);
+							}
+							if (typeof(OpenBveApi.Runtime.IRuntime).IsAssignableFrom(type)) {
+								iruntime = true;
+							}
 						}
-						if (type.IsSubclassOf(typeof(OpenBveApi.Sounds.SoundInterface)))
-						{
-							plugin.Sound = (OpenBveApi.Sounds.SoundInterface)assembly.CreateInstance(type.FullName);
+						if (plugin.Texture != null | plugin.Sound != null | plugin.Object != null) {
+							plugin.Load(Program.CurrentHost, Program.FileSystem, Interface.CurrentOptions);
+							list.Add(plugin);
+						} else if (!iruntime) {
+							builder.Append("Plugin ").Append(Path.GetFileName(file)).AppendLine(" does not implement compatible interfaces.");
+							builder.AppendLine();
 						}
-						if (type.IsSubclassOf(typeof(OpenBveApi.Objects.ObjectInterface)))
-						{
-							plugin.Object = (OpenBveApi.Objects.ObjectInterface)assembly.CreateInstance(type.FullName);
-						}
-						if (typeof(OpenBveApi.Runtime.IRuntime).IsAssignableFrom(type))
-						{
-							iruntime = true;
-						}
-					}
-					if (plugin.Texture != null | plugin.Sound != null | plugin.Object != null)
-					{
-						plugin.Load(Program.CurrentHost, Program.FileSystem, Interface.CurrentOptions);
-						list.Add(plugin);
-					}
-					else if (!iruntime)
-					{
-						builder.Append("Plugin ").Append(Path.GetFileName(file)).AppendLine(" does not implement compatible interfaces.");
-						builder.AppendLine();
-					}
-#if !DEBUG
+						#if !DEBUG
 					} catch (Exception ex) {
 						builder.Append("Could not load plugin ").Append(Path.GetFileName(file)).AppendLine(":").AppendLine(ex.Message);
 						builder.AppendLine();
 					}
-#endif
+					#endif
 				}
 			}
 			Program.CurrentHost.Plugins = list.ToArray();

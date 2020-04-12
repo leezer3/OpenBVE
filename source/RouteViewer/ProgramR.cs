@@ -10,10 +10,12 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.Windows.Forms;
+using LibRender2;
 using LibRender2.Cameras;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
+using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenTK;
 using OpenTK.Graphics;
@@ -123,6 +125,7 @@ namespace OpenBve {
 				Renderer.Screen.Width = 1024;
 				Renderer.Screen.Height = 768;
 			}
+			Renderer.CameraTrackFollower = new TrackFollower(Program.CurrentHost);
 			currentGameWindow = new RouteViewer(Renderer.Screen.Width, Renderer.Screen.Height, currentGraphicsMode, "Route Viewer", GameWindowFlags.Default);
 			currentGameWindow.Visible = true;
 			currentGameWindow.TargetUpdateFrequency = 0;
@@ -162,8 +165,8 @@ namespace OpenBve {
 				for (int i = CurrentRoute.Stations.Length - 1; i >= 0; i--) {
 					if (CurrentRoute.Stations[i].Stops.Length != 0) {
 						double p = CurrentRoute.Stations[i].Stops[CurrentRoute.Stations[i].Stops.Length - 1].TrackPosition;
-						if (p < World.CameraTrackFollower.TrackPosition - 0.1) {
-							World.CameraTrackFollower.UpdateAbsolute(p, true, false);
+						if (p < Program.Renderer.CameraTrackFollower.TrackPosition - 0.1) {
+							Program.Renderer.CameraTrackFollower.UpdateAbsolute(p, true, false);
 							Renderer.Camera.Alignment.TrackPosition = p;
 							CurrentStation = i;
 							break;
@@ -174,8 +177,8 @@ namespace OpenBve {
 				for (int i = 0; i < CurrentRoute.Stations.Length; i++) {
 					if (CurrentRoute.Stations[i].Stops.Length != 0) {
 						double p = CurrentRoute.Stations[i].Stops[CurrentRoute.Stations[i].Stops.Length - 1].TrackPosition;
-						if (p > World.CameraTrackFollower.TrackPosition + 0.1) {
-							World.CameraTrackFollower.UpdateAbsolute(p, true, false);
+						if (p > Program.Renderer.CameraTrackFollower.TrackPosition + 0.1) {
+							Program.Renderer.CameraTrackFollower.UpdateAbsolute(p, true, false);
 							Renderer.Camera.Alignment.TrackPosition = p;
 							CurrentStation = i;
 							break;
@@ -197,8 +200,8 @@ namespace OpenBve {
 				if (Program.LoadRoute())
 				{
 					Renderer.Camera.Alignment = a;
-					World.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
-					World.CameraTrackFollower.UpdateAbsolute(a.TrackPosition, true, false);
+					Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
+					Program.Renderer.CameraTrackFollower.UpdateAbsolute(a.TrackPosition, true, false);
 					Renderer.Camera.AlignmentDirection = new CameraAlignment();
 					Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 					Renderer.UpdateVisibility(a.TrackPosition, true);
@@ -310,8 +313,8 @@ namespace OpenBve {
 						if (LoadRoute())
 						{
 							Renderer.Camera.Alignment = a;
-							World.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
-							World.CameraTrackFollower.UpdateAbsolute(a.TrackPosition, true, false);
+							Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
+							Program.Renderer.CameraTrackFollower.UpdateAbsolute(a.TrackPosition, true, false);
 							Renderer.Camera.AlignmentDirection = new CameraAlignment();
 							Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 							Renderer.UpdateVisibility(a.TrackPosition, true);
@@ -465,7 +468,7 @@ namespace OpenBve {
 					Renderer.Camera.VerticalViewingAngle = Renderer.Camera.OriginalVerticalViewingAngle;
 					Renderer.UpdateViewport();
 					World.UpdateAbsoluteCamera(0.0);
-					World.UpdateViewingDistances();
+					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					CpuReducedMode = false;
 					break;
 				case Key.F:
@@ -573,13 +576,13 @@ namespace OpenBve {
 								{
 									if (direction != 0)
 									{
-										value = World.CameraTrackFollower.TrackPosition + (double)direction * value;
+										value = Program.Renderer.CameraTrackFollower.TrackPosition + (double)direction * value;
 									}
 
-									World.CameraTrackFollower.UpdateAbsolute(value, true, false);
+									Program.Renderer.CameraTrackFollower.UpdateAbsolute(value, true, false);
 									Renderer.Camera.Alignment.TrackPosition = value;
 									World.UpdateAbsoluteCamera(0.0);
-									World.UpdateViewingDistances();
+									Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 								}
 							}
 						}

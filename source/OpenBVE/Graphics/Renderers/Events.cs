@@ -78,7 +78,7 @@ namespace OpenBve.Graphics.Renderers
 			for (int i = 0; i < Program.CurrentRoute.Tracks[0].Elements.Length; i++)
 			{
 				double p = Program.CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition;
-				double d = p - World.CameraTrackFollower.TrackPosition;
+				double d = p - Program.Renderer.CameraTrackFollower.TrackPosition;
 
 				if (d >= da & d <= db)
 				{
@@ -210,7 +210,7 @@ namespace OpenBve.Graphics.Renderers
 			// buffers
 			foreach (double p in Program.CurrentRoute.BufferTrackPositions)
 			{
-				double d = p - World.CameraTrackFollower.TrackPosition;
+				double d = p - Program.Renderer.CameraTrackFollower.TrackPosition;
 
 				if (d >= da & d <= db)
 				{

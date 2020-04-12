@@ -6,14 +6,13 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
+using LibRender2;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 
 namespace OpenBve {
 	public static class World
 	{
-		internal static TrackFollower CameraTrackFollower = new TrackFollower(Program.CurrentHost);
-
 		// update absolute camera
 		internal static void UpdateAbsoluteCamera(double TimeElapsed) {
 			// zoom
@@ -32,21 +31,21 @@ namespace OpenBve {
 			double tr = Program.Renderer.Camera.Alignment.TrackPosition;
 			AdjustAlignment(ref Program.Renderer.Camera.Alignment.TrackPosition, Program.Renderer.Camera.AlignmentDirection.TrackPosition, ref Program.Renderer.Camera.AlignmentSpeed.TrackPosition, TimeElapsed);
 			if (tr != Program.Renderer.Camera.Alignment.TrackPosition) {
-				World.CameraTrackFollower.UpdateAbsolute(Program.Renderer.Camera.Alignment.TrackPosition, true, false);
+				Program.Renderer.CameraTrackFollower.UpdateAbsolute(Program.Renderer.Camera.Alignment.TrackPosition, true, false);
 				q = true;
 			}
 			if (q) {
-				UpdateViewingDistances();
+				Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 			}
-			Vector3 dF = new Vector3(CameraTrackFollower.WorldDirection);
-			Vector3 uF = new Vector3(CameraTrackFollower.WorldUp);
-			Vector3 sF = new Vector3(CameraTrackFollower.WorldSide);
+			Vector3 dF = new Vector3(Program.Renderer.CameraTrackFollower.WorldDirection);
+			Vector3 uF = new Vector3(Program.Renderer.CameraTrackFollower.WorldUp);
+			Vector3 sF = new Vector3(Program.Renderer.CameraTrackFollower.WorldSide);
 			Vector3 pF = new Vector3(Program.Renderer.Camera.Alignment.Position);
 			Vector3 dx2 = new Vector3(dF);
 			Vector3 ux2 = new Vector3(uF);
-			double cx = World.CameraTrackFollower.WorldPosition.X + sF.X * pF.X + ux2.X * pF.Y + dx2.X * pF.Z;
-			double cy = World.CameraTrackFollower.WorldPosition.Y + sF.Y * pF.X + ux2.Y * pF.Y + dx2.Y * pF.Z;
-			double cz = World.CameraTrackFollower.WorldPosition.Z + sF.Z * pF.X + ux2.Z * pF.Y + dx2.Z * pF.Z;
+			double cx = Program.Renderer.CameraTrackFollower.WorldPosition.X + sF.X * pF.X + ux2.X * pF.Y + dx2.X * pF.Z;
+			double cy = Program.Renderer.CameraTrackFollower.WorldPosition.Y + sF.Y * pF.X + ux2.Y * pF.Y + dx2.Y * pF.Z;
+			double cz = Program.Renderer.CameraTrackFollower.WorldPosition.Z + sF.Z * pF.X + ux2.Z * pF.Y + dx2.Z * pF.Z;
 			if (Program.Renderer.Camera.Alignment.Yaw != 0.0) {
 				double cosa = Math.Cos(Program.Renderer.Camera.Alignment.Yaw);
 				double sina = Math.Sin(Program.Renderer.Camera.Alignment.Yaw);
@@ -98,41 +97,7 @@ namespace OpenBve {
 			}
 		}
 
-		// update viewing distance
-		internal static void UpdateViewingDistances() {
-			double f = Math.Atan2(World.CameraTrackFollower.WorldDirection.Z, World.CameraTrackFollower.WorldDirection.X);
-			double c = Math.Atan2(Program.Renderer.Camera.AbsoluteDirection.Z, Program.Renderer.Camera.AbsoluteDirection.X) - f;
-			if (c < -Math.PI) {
-				c += 2.0 * Math.PI;
-			} else if (c > Math.PI) {
-				c -= 2.0 * Math.PI;
-			}
-			double a0 = c - 0.5 * Program.Renderer.Camera.HorizontalViewingAngle;
-			double a1 = c + 0.5 * Program.Renderer.Camera.HorizontalViewingAngle;
-			double max;
-			if (a0 <= 0.0 & a1 >= 0.0) {
-				max = 1.0;
-			} else {
-				double c0 = Math.Cos(a0);
-				double c1 = Math.Cos(a1);
-				max = c0 > c1 ? c0 : c1;
-				if (max < 0.0) max = 0.0;
-			}
-			double min;
-			if (a0 <= -Math.PI | a1 >= Math.PI) {
-				min = -1.0;
-			} else {
-				double c0 = Math.Cos(a0);
-				double c1 = Math.Cos(a1);
-				min = c0 < c1 ? c0 : c1;
-				if (min > 0.0) min = 0.0;
-			}
-			double d = Program.CurrentRoute.CurrentBackground.BackgroundImageDistance + Program.Renderer.Camera.ExtraViewingDistance;
-			Program.Renderer.Camera.ForwardViewingDistance = d * max;
-			Program.Renderer.Camera.BackwardViewingDistance = -d * min;
-			Program.Renderer.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z, true);
-		}
-
+		
 		// normalize
 		internal static void Normalize(ref double x, ref double y) {
 			double t = x * x + y * y;

@@ -1,4 +1,5 @@
 using System;
+using LibRender2;
 using LibRender2.Cameras;
 using LibRender2.Screens;
 using LibRender2.Viewports;
@@ -91,7 +92,7 @@ namespace OpenBve
 					Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 					Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(TimeElapsed);
-					World.UpdateViewingDistances();
+					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					if (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 					{
 						if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction))
@@ -717,7 +718,7 @@ namespace OpenBve
 											Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 											Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 											World.UpdateAbsoluteCamera(TimeElapsed);
-											World.UpdateViewingDistances();
+											Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 											if (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 											{
 												if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction))
@@ -791,7 +792,7 @@ namespace OpenBve
 											Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 											Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 											World.UpdateAbsoluteCamera(TimeElapsed);
-											World.UpdateViewingDistances();
+											Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 											if (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
 											{
 												if (!Program.Renderer.Camera.PerformRestrictionTest(TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestriction))
@@ -823,7 +824,7 @@ namespace OpenBve
 										Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 										Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 										World.UpdateAbsoluteCamera(TimeElapsed);
-										World.UpdateViewingDistances();
+										Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 										break;
 									case Translations.Command.CameraTrack:
 									case Translations.Command.CameraFlyBy:
@@ -868,7 +869,7 @@ namespace OpenBve
 										Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 										Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 										World.UpdateAbsoluteCamera(TimeElapsed);
-										World.UpdateViewingDistances();
+										Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 									}
 										break;
 									case Translations.Command.CameraPreviousPOI:
@@ -909,12 +910,12 @@ namespace OpenBve
 												TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 												TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(0);
 											}
-											World.CameraTrackFollower.UpdateRelative(z, true, false);
-											Program.Renderer.Camera.Alignment.TrackPosition = World.CameraTrackFollower.TrackPosition;
+											Program.Renderer.CameraTrackFollower.UpdateRelative(z, true, false);
+											Program.Renderer.Camera.Alignment.TrackPosition = Program.Renderer.CameraTrackFollower.TrackPosition;
 											Program.Renderer.Camera.VerticalViewingAngle = Program.Renderer.Camera.OriginalVerticalViewingAngle;
 											Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 											World.UpdateAbsoluteCamera(TimeElapsed);
-											World.UpdateViewingDistances();
+											Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 										}
 										break;
 									case Translations.Command.CameraNextPOI:
@@ -955,13 +956,13 @@ namespace OpenBve
 												TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 												TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(0);
 											}
-											World.CameraTrackFollower.UpdateRelative(z, true, false);
+											Program.Renderer.CameraTrackFollower.UpdateRelative(z, true, false);
 											Program.Renderer.Camera.Alignment.TrackPosition =
-												World.CameraTrackFollower.TrackPosition;
+												Program.Renderer.CameraTrackFollower.TrackPosition;
 											Program.Renderer.Camera.VerticalViewingAngle = Program.Renderer.Camera.OriginalVerticalViewingAngle;
 											Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 											World.UpdateAbsoluteCamera(TimeElapsed);
-											World.UpdateViewingDistances();
+											Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 										}
 										break;
 									case Translations.Command.CameraReset:
@@ -977,7 +978,7 @@ namespace OpenBve
 										Program.Renderer.Camera.Alignment.Roll = 0.0;
 										if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Track)
 										{
-											World.CameraTrackFollower.UpdateAbsolute(
+											Program.Renderer.CameraTrackFollower.UpdateAbsolute(
 												TrainManager.PlayerTrain.Cars[0].TrackPosition, true,
 												false);
 										}
@@ -988,7 +989,7 @@ namespace OpenBve
 											{
 												double d = 30.0 +
 														   4.0*TrainManager.PlayerTrain.CurrentSpeed;
-												World.CameraTrackFollower.UpdateAbsolute(
+												Program.Renderer.CameraTrackFollower.UpdateAbsolute(
 													TrainManager.PlayerTrain.Cars[0].FrontAxle.Follower
 														.TrackPosition + d, true, false);
 											}
@@ -996,21 +997,21 @@ namespace OpenBve
 											{
 												double d = 30.0 -
 														   4.0*TrainManager.PlayerTrain.CurrentSpeed;
-												World.CameraTrackFollower.UpdateAbsolute(
+												Program.Renderer.CameraTrackFollower.UpdateAbsolute(
 													TrainManager.PlayerTrain.Cars[
 														TrainManager.PlayerTrain.Cars.Length - 1].RearAxle.Follower
 														.TrackPosition - d, true, false);
 											}
 										}
 										Program.Renderer.Camera.Alignment.TrackPosition =
-											World.CameraTrackFollower.TrackPosition;
+											Program.Renderer.CameraTrackFollower.TrackPosition;
 										Program.Renderer.Camera.Alignment.Zoom = 0.0;
 										Program.Renderer.Camera.VerticalViewingAngle = Program.Renderer.Camera.OriginalVerticalViewingAngle;
 										Program.Renderer.Camera.AlignmentDirection = new CameraAlignment();
 										Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 										Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 										World.UpdateAbsoluteCamera(TimeElapsed);
-										World.UpdateViewingDistances();
+										Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 										if ((Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior |
 											 Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead) &
 											(Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.On || Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Restricted3D))

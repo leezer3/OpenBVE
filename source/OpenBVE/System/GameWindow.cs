@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
+using LibRender2;
 using LibRender2.Cameras;
 using LibRender2.Screens;
 using LibRender2.Viewports;
@@ -141,7 +142,7 @@ namespace OpenBve
 			TrainManager.UpdateTrainObjects(TimeElapsed, false);
 			if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Interior | Program.Renderer.Camera.CurrentMode == CameraViewMode.InteriorLookAhead | Program.Renderer.Camera.CurrentMode == CameraViewMode.Exterior)
 			{
-				Program.Renderer.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z);
+				Program.Renderer.UpdateVisibility(Program.Renderer.CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z);
 				int d = TrainManager.PlayerTrain.DriverCar;
 				Program.Renderer.Camera.CurrentSpeed = TrainManager.PlayerTrain.Cars[d].CurrentSpeed;
 			}
@@ -481,10 +482,10 @@ namespace OpenBve
 			// camera
 			Program.Renderer.InitializeVisibility();
 			TrainManager.PlayerTrain.DriverBody = new DriverBody(TrainManager.PlayerTrain);
-			World.CameraTrackFollower.UpdateAbsolute(0.0, true, false);
-			World.CameraTrackFollower.UpdateAbsolute(-0.1, true, false);
-			World.CameraTrackFollower.UpdateAbsolute(0.1, true, false);
-			World.CameraTrackFollower.TriggerType = EventTriggerType.Camera;
+			Program.Renderer.CameraTrackFollower.UpdateAbsolute(0.0, true, false);
+			Program.Renderer.CameraTrackFollower.UpdateAbsolute(-0.1, true, false);
+			Program.Renderer.CameraTrackFollower.UpdateAbsolute(0.1, true, false);
+			Program.Renderer.CameraTrackFollower.TriggerType = EventTriggerType.Camera;
 			// starting time and track position
 			Program.CurrentRoute.SecondsSinceMidnight = 0.0;
 			Game.StartupTime = 0.0;
@@ -737,8 +738,8 @@ namespace OpenBve
 			}
 			//Place the initial camera in the driver car
 			TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].UpdateCamera();
-			World.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
-			Program.Renderer.UpdateVisibility(World.CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z);
+			Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
+			Program.Renderer.UpdateVisibility(Program.Renderer.CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z);
 			World.CameraSavedExterior = new CameraAlignment(new OpenBveApi.Math.Vector3(-2.5, 1.5, -15.0), 0.3, -0.2, 0.0, PlayerFirstStationPosition, 1.0);
 			World.CameraSavedTrack = new CameraAlignment(new OpenBveApi.Math.Vector3(-3.0, 2.5, 0.0), 0.3, 0.0, 0.0, TrainManager.PlayerTrain.Cars[0].TrackPosition - 10.0, 1.0);
 			// signalling sections
@@ -892,7 +893,7 @@ namespace OpenBve
 					Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 					Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(0.0);
-					World.UpdateViewingDistances();
+					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					break;
 				case 2:
 					//Switch camera to track
@@ -911,7 +912,7 @@ namespace OpenBve
 					Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 					Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(0.0);
-					World.UpdateViewingDistances();
+					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					break;
 				case 3:
 					//Switch camera to flyby
@@ -930,7 +931,7 @@ namespace OpenBve
 					Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 					Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(0.0);
-					World.UpdateViewingDistances();
+					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					break;
 				case 4:
 					//Switch camera to flyby
@@ -949,7 +950,7 @@ namespace OpenBve
 					Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 					Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 					World.UpdateAbsoluteCamera(0.0);
-					World.UpdateViewingDistances();
+					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 					break;
 			}
 		}

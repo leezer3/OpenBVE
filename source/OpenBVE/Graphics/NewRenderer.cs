@@ -84,7 +84,7 @@ namespace OpenBve.Graphics
 			ObjectsSortedByStartPointer = 0;
 			ObjectsSortedByEndPointer = 0;
 
-			double p = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
+			double p = CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
 
 			foreach (ObjectState state in StaticObjectStates.Where(recipe => recipe.StartingDistance <= p + Camera.ForwardViewingDistance & recipe.EndingDistance >= p - Camera.BackwardViewingDistance))
 			{
@@ -96,7 +96,7 @@ namespace OpenBve.Graphics
 		{
 			double d = TrackPosition - LastUpdatedTrackPosition;
 			int n = ObjectsSortedByStart.Length;
-			double p = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
+			double p = CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
 
 			if (d < 0.0)
 			{
@@ -264,7 +264,7 @@ namespace OpenBve.Graphics
 
 			if (fd != 0.0)
 			{
-				float fr = (float)((World.CameraTrackFollower.TrackPosition - Program.CurrentRoute.PreviousFog.TrackPosition) / fd);
+				float fr = (float)((CameraTrackFollower.TrackPosition - Program.CurrentRoute.PreviousFog.TrackPosition) / fd);
 				float frc = 1.0f - fr;
 				Program.CurrentRoute.CurrentFog.Start = Program.CurrentRoute.PreviousFog.Start * frc + Program.CurrentRoute.NextFog.Start * fr;
 				Program.CurrentRoute.CurrentFog.End = Program.CurrentRoute.PreviousFog.End * frc + Program.CurrentRoute.NextFog.End * fr;

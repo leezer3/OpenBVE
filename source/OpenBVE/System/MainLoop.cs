@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Globalization;
+using LibRender2;
 using LibRender2.Screens;
 using OpenBveApi.Interface;
 using OpenBveApi.Runtime;
@@ -500,8 +501,8 @@ namespace OpenBve
 				case CameraViewMode.FlyBy:
 				case CameraViewMode.FlyByZooming:
 					Program.Renderer.Camera.Alignment = World.CameraSavedTrack;
-					World.CameraTrackFollower.UpdateAbsolute(World.CameraSavedTrack.TrackPosition, true, false);
-					Program.Renderer.Camera.Alignment.TrackPosition = World.CameraTrackFollower.TrackPosition;
+					Program.Renderer.CameraTrackFollower.UpdateAbsolute(World.CameraSavedTrack.TrackPosition, true, false);
+					Program.Renderer.Camera.Alignment.TrackPosition = Program.Renderer.CameraTrackFollower.TrackPosition;
 					break;
 			}
 			Program.Renderer.Camera.Alignment.Zoom = 0.0;

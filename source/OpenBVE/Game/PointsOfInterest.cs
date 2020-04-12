@@ -1,4 +1,5 @@
 ﻿using System;
+using LibRender2;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using RouteManager2.MessageManager;
@@ -27,7 +28,7 @@ namespace OpenBve
 					t = double.NegativeInfinity;
 					for (int i = 0; i < Program.CurrentRoute.PointsOfInterest.Length; i++)
 					{
-						if (Program.CurrentRoute.PointsOfInterest[i].TrackPosition < World.CameraTrackFollower.TrackPosition)
+						if (Program.CurrentRoute.PointsOfInterest[i].TrackPosition < Program.Renderer.CameraTrackFollower.TrackPosition)
 						{
 							if (Program.CurrentRoute.PointsOfInterest[i].TrackPosition > t)
 							{
@@ -43,7 +44,7 @@ namespace OpenBve
 					t = double.PositiveInfinity;
 					for (int i = 0; i < Program.CurrentRoute.PointsOfInterest.Length; i++)
 					{
-						if (Program.CurrentRoute.PointsOfInterest[i].TrackPosition > World.CameraTrackFollower.TrackPosition)
+						if (Program.CurrentRoute.PointsOfInterest[i].TrackPosition > Program.Renderer.CameraTrackFollower.TrackPosition)
 						{
 							if (Program.CurrentRoute.PointsOfInterest[i].TrackPosition < t)
 							{
@@ -61,7 +62,7 @@ namespace OpenBve
 			}
 			// process poi
 			if (j < 0) return false;
-			World.CameraTrackFollower.UpdateAbsolute(t, true, false);
+			Program.Renderer.CameraTrackFollower.UpdateAbsolute(t, true, false);
 			Program.Renderer.Camera.Alignment.Position = Program.CurrentRoute.PointsOfInterest[j].TrackOffset;
 			Program.Renderer.Camera.Alignment.Yaw = Program.CurrentRoute.PointsOfInterest[j].TrackYaw;
 			Program.Renderer.Camera.Alignment.Pitch = Program.CurrentRoute.PointsOfInterest[j].TrackPitch;

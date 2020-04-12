@@ -21,6 +21,7 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenBveApi.World;
 using OpenTK.Graphics;
@@ -55,8 +56,8 @@ namespace LibRender2
 
 		public Screen Screen;
 
-		
-		
+		/// <summary>The track follower for the main camera</summary>
+		public TrackFollower CameraTrackFollower;
 
 		/// <summary>Holds a reference to the current interface type of the game (Used by the renderer)</summary>
 		public InterfaceType CurrentInterface
@@ -324,8 +325,8 @@ namespace LibRender2
 				return -1;
 			}
 
-			float startingDistance = float.MaxValue;
-			float endingDistance = float.MinValue;
+			float startingDistance = Single.MaxValue;
+			float endingDistance = Single.MinValue;
 
 			if (AccurateObjectDisposal)
 			{
@@ -416,8 +417,8 @@ namespace LibRender2
 				return -1;
 			}
 
-			float startingDistance = float.MaxValue;
-			float endingDistance = float.MinValue;
+			float startingDistance = Single.MaxValue;
+			float endingDistance = Single.MinValue;
 
 			if (AccurateObjectDisposal)
 			{
@@ -635,6 +636,53 @@ namespace LibRender2
 			LastUpdatedTrackPosition = TrackPosition;
 		}
 
+		public void UpdateViewingDistances(double BackgroundImageDistance)
+		{
+			double f = Math.Atan2(CameraTrackFollower.WorldDirection.Z, CameraTrackFollower.WorldDirection.X);
+			double c = Math.Atan2(Camera.AbsoluteDirection.Z, Camera.AbsoluteDirection.X) - f;
+			if (c < -Math.PI)
+			{
+				c += 2.0 * Math.PI;
+			}
+			else if (c > Math.PI)
+			{
+				c -= 2.0 * Math.PI;
+			}
+
+			double a0 = c - 0.5 * Camera.HorizontalViewingAngle;
+			double a1 = c + 0.5 * Camera.HorizontalViewingAngle;
+			double max;
+			if (a0 <= 0.0 & a1 >= 0.0)
+			{
+				max = 1.0;
+			}
+			else
+			{
+				double c0 = Math.Cos(a0);
+				double c1 = Math.Cos(a1);
+				max = c0 > c1 ? c0 : c1;
+				if (max < 0.0) max = 0.0;
+			}
+
+			double min;
+			if (a0 <= -Math.PI | a1 >= Math.PI)
+			{
+				min = -1.0;
+			}
+			else
+			{
+				double c0 = Math.Cos(a0);
+				double c1 = Math.Cos(a1);
+				min = c0 < c1 ? c0 : c1;
+				if (min > 0.0) min = 0.0;
+			}
+
+			double d = BackgroundImageDistance + Camera.ExtraViewingDistance;
+			Camera.ForwardViewingDistance = d * max;
+			Camera.BackwardViewingDistance = -d * min;
+			UpdateVisibility(CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z, true);
+		}
+
 		public void UpdateVisibility(double TrackPosition, bool ViewingDistanceChanged)
 		{
 			if (ViewingDistanceChanged)
@@ -658,7 +706,7 @@ namespace LibRender2
 
 			foreach (string extension in Extensions)
 			{
-				if (string.Compare(extension, "GL_EXT_texture_filter_anisotropic", StringComparison.OrdinalIgnoreCase) == 0)
+				if (String.Compare(extension, "GL_EXT_texture_filter_anisotropic", StringComparison.OrdinalIgnoreCase) == 0)
 				{
 					float n = GL.GetFloat((GetPName)ExtTextureFilterAnisotropic.MaxTextureMaxAnisotropyExt);
 					int MaxAF = (int)Math.Round(n);

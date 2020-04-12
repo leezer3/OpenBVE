@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using LibRender2;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
@@ -544,9 +545,9 @@ namespace OpenBve.Graphics.Renderers
 				case "gradient":
 					if (renderer.OptionGradient == NewRenderer.GradientDisplayMode.Percentage)
 					{
-						if (World.CameraTrackFollower.Pitch != 0)
+						if (Program.Renderer.CameraTrackFollower.Pitch != 0)
 						{
-							double pc = World.CameraTrackFollower.Pitch;
+							double pc = Program.Renderer.CameraTrackFollower.Pitch;
 							t = Math.Abs(pc).ToString("0.00", Culture) + "%" + (Math.Abs(pc) == pc ? " ↗" : " ↘");
 						}
 						else
@@ -558,9 +559,9 @@ namespace OpenBve.Graphics.Renderers
 					}
 					else if (renderer.OptionGradient == NewRenderer.GradientDisplayMode.UnitOfChange)
 					{
-						if (World.CameraTrackFollower.Pitch != 0)
+						if (Program.Renderer.CameraTrackFollower.Pitch != 0)
 						{
-							double gr = 1000 / World.CameraTrackFollower.Pitch;
+							double gr = 1000 / Program.Renderer.CameraTrackFollower.Pitch;
 							t = "1 in " + Math.Abs(gr).ToString("0", Culture) + (Math.Abs(gr) == gr ? " ↗" : " ↘");
 						}
 						else
@@ -572,9 +573,9 @@ namespace OpenBve.Graphics.Renderers
 					}
 					else if (renderer.OptionGradient == NewRenderer.GradientDisplayMode.Permil)
 					{
-						if (World.CameraTrackFollower.Pitch != 0)
+						if (Program.Renderer.CameraTrackFollower.Pitch != 0)
 						{
-							double pm = World.CameraTrackFollower.Pitch;
+							double pm = Program.Renderer.CameraTrackFollower.Pitch;
 							t = Math.Abs(pm).ToString("0.00", Culture) + "‰" + (Math.Abs(pm) == pm ? " ↗" : " ↘");
 						}
 						else
@@ -586,9 +587,9 @@ namespace OpenBve.Graphics.Renderers
 					}
 					else
 					{
-						if (World.CameraTrackFollower.Pitch != 0)
+						if (Program.Renderer.CameraTrackFollower.Pitch != 0)
 						{
-							double gr = 1000 / World.CameraTrackFollower.Pitch;
+							double gr = 1000 / Program.Renderer.CameraTrackFollower.Pitch;
 							t = "1 in " + Math.Abs(gr).ToString("0", Culture) + (Math.Abs(gr) == gr ? " ↗" : " ↘");
 						}
 						else
