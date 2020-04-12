@@ -337,7 +337,11 @@ namespace OpenBve {
 					SectionAlwaysPrefix = true;
 				} else {
 					// find equals
-					Expressions[j].ConvertRwToCsv(Section, SectionAlwaysPrefix);
+					if (IsRW)
+					{
+						Expressions[j].ConvertRwToCsv(Section, SectionAlwaysPrefix);
+					}
+					
 					// separate command and arguments
 					string Command, ArgumentSequence;
 					Expressions[j].SeparateCommandsAndArguments(out Command, out ArgumentSequence, Culture, false, IsRW, Section);
@@ -539,7 +543,10 @@ namespace OpenBve {
 					}
 					SectionAlwaysPrefix = true;
 				} else {
-					Expressions[j].ConvertRwToCsv(Section, SectionAlwaysPrefix);
+					if (IsRW)
+					{
+						Expressions[j].ConvertRwToCsv(Section, SectionAlwaysPrefix);
+					}
 					// separate command and arguments
 					string Command, ArgumentSequence;
 					Expressions[j].SeparateCommandsAndArguments(out Command, out ArgumentSequence, Culture, false, IsRW, Section);

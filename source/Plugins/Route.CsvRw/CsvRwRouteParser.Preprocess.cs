@@ -115,15 +115,10 @@ namespace OpenBve
 							case ',':
 								if (Level == 0 & !IsRW) {
 									string t = Lines[i].Substring(a, j - a).Trim(new char[] { });
-									if (t.Length > 0 && !t.StartsWith(";")) {
-										Expressions[e] = new Expression
-										{
-											File = FileName,
-											Text = t,
-											Line = i + 1,
-											Column = c + 1,
-											TrackPositionOffset = trackPositionOffset
-										};
+									if (t.Length > 0 && !t.StartsWith(";"))
+									{
+										Expressions[e] = new Expression(FileName, t, i + 1, c + 1, trackPositionOffset);
+										
 										e++;
 									}
 									a = j + 1;
@@ -157,15 +152,9 @@ namespace OpenBve
 								}
 								if (Level == 0 & IsRW) {
 									string t = Lines[i].Substring(a, j - a).Trim(new char[] { });
-									if (t.Length > 0 && !t.StartsWith(";")) {
-										Expressions[e] = new Expression
-										{
-											File = FileName,
-											Text = t,
-											Line = i + 1,
-											Column = c + 1,
-											TrackPositionOffset = trackPositionOffset
-										};
+									if (t.Length > 0 && !t.StartsWith(";"))
+									{
+										Expressions[e] = new Expression(FileName, t, i + 1, c + 1, trackPositionOffset);
 										e++;
 									}
 									a = j + 1;
@@ -176,15 +165,9 @@ namespace OpenBve
 					}
 					if (Lines[i].Length - a > 0) {
 						string t = Lines[i].Substring(a).Trim(new char[] { });
-						if (t.Length > 0 && !t.StartsWith(";")) {
-							Expressions[e] = new Expression
-							{
-								File = FileName,
-								Text = t,
-								Line = i + 1,
-								Column = c + 1,
-								TrackPositionOffset = trackPositionOffset
-							};
+						if (t.Length > 0 && !t.StartsWith(";"))
+						{
+							Expressions[e] = new Expression(FileName, t, i + 1, c + 1, trackPositionOffset);
 							e++;
 						}
 					}
@@ -681,12 +664,7 @@ namespace OpenBve
 			for (int i = 0; i < n; i++) {
 				if (p[i].TrackPosition != a) {
 					a = p[i].TrackPosition;
-					e[m] = new Expression
-					{
-						Text = (a / UnitFactors[UnitFactors.Length - 1]).ToString(Culture),
-						Line = -1,
-						Column = -1
-					};
+					e[m] = new Expression(string.Empty, (a / UnitFactors[UnitFactors.Length - 1]).ToString(Culture), -1, -1, -1);
 					m++;
 				}
 				e[m] = p[i].Expression;

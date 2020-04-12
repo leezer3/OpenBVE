@@ -13,6 +13,15 @@ namespace OpenBve
 		internal int Column;
 		internal double TrackPositionOffset;
 
+		internal Expression(string file, string text, int line, int column, double trackPositionOffset)
+		{
+			File = file;
+			Text = text;
+			Line = line;
+			Column = column;
+			TrackPositionOffset = trackPositionOffset;
+		}
+
 		/// <summary>Converts a RW formatted expression to CSV format</summary>
 		/// <param name="Section">The current section</param>
 		/// <param name="SectionAlwaysPrefix">Whether the section prefix should always be applied</param>
