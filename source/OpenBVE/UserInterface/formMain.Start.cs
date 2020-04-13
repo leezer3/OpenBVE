@@ -97,7 +97,7 @@ namespace OpenBve
 						for (int i = 0; i < driveInfos.Length; i++)
 						{
 							ListViewItem Item = listviewRouteFiles.Items.Add(driveInfos[i].Name);
-							Item.ImageKey = @"folder";
+							Item.ImageKey = Program.CurrentlyRunningOnWindows ? @"disk" : @"folder";
 							Item.Tag = driveInfos[i].RootDirectory.FullName;
 							listviewRouteFiles.Tag = null;
 						}
@@ -473,7 +473,8 @@ namespace OpenBve
 						for (int i = 0; i < driveInfos.Length; i++)
 						{
 							ListViewItem Item = listviewTrainFolders.Items.Add(driveInfos[i].Name);
-							Item.ImageKey = @"folder";
+							Item.ImageKey = Program.CurrentlyRunningOnWindows ? @"disk" : @"folder";
+							
 							Item.Tag = driveInfos[i].RootDirectory.FullName;
 							listviewTrainFolders.Tag = null;
 						}
