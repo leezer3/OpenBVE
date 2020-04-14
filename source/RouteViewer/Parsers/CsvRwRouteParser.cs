@@ -2714,7 +2714,17 @@ namespace OpenBve
 														string f = System.IO.Path.Combine(ObjectPath, Arguments[0]);
 														if (!System.IO.File.Exists(f))
 														{
-															string testPath = Path.CombineFile(ObjectPath, f);
+															string testPath;
+															try
+															{
+																testPath = Path.CombineFile(ObjectPath, f);
+															}
+															catch
+															{
+																Program.CurrentHost.AddMessage(MessageType.Error, false, "SignalFileWithoutExtension contains invalid characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+																break;
+															}
+
 
 															if (Program.CurrentHost.DetermineStaticObjectExtension(ref testPath))
 															{
