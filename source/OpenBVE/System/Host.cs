@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
@@ -69,9 +70,15 @@ namespace OpenBve {
 						}
 					}
 				}
-				Interface.AddMessage(MessageType.Error, false,
-				                     "No plugin found that is capable of loading texture " + path
-				                    );
+				FileInfo f = new FileInfo(path);
+				if (f.Length == 0)
+				{
+					Interface.AddMessage(MessageType.Error, false, "Zero-byte texture file encountered at " + path);
+				}
+				else
+				{
+					Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading texture " + path);
+				}
 			} else {
 				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
 			}
@@ -107,7 +114,15 @@ namespace OpenBve {
 						}
 					}
 				}
-				Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading texture " + path);
+				FileInfo f = new FileInfo(path);
+				if (f.Length == 0)
+				{
+					Interface.AddMessage(MessageType.Error, false, "Zero-byte texture file encountered at " + path);
+				}
+				else
+				{
+					Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading texture " + path);
+				}
 			} else {
 				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
 			}

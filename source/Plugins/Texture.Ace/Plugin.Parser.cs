@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.IO.Compression;
 using OpenBveApi.Colors;
@@ -70,6 +70,10 @@ namespace Plugin {
 			ulong identifier;
 			using (FileStream stream = new FileStream(file, FileMode.Open, FileAccess.Read)) {
 				using (BinaryReader reader = new BinaryReader(stream)) {
+					if (stream.Length < 8)
+					{
+						return false;
+					}
 					identifier = reader.ReadUInt64();
 				}
 			}

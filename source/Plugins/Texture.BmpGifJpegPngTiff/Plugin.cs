@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using System.IO;
 using OpenBveApi.Hosts;
 using OpenBveApi.Textures;
@@ -73,6 +73,10 @@ namespace Plugin {
 			if (File.Exists(path)) {
 				using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read)) {
 					using (BinaryReader reader = new BinaryReader(stream)) {
+						if (stream.Length < 8)
+						{
+							return false;
+						}
 						uint identifier1 = reader.ReadUInt32();
 						uint identifier2 = reader.ReadUInt32();
 						if ((identifier1 & 0xFFFF) == 0x4D42) {
