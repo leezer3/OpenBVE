@@ -64,13 +64,16 @@
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-	  <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
+    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
 		  mkdir $(TargetDir)Data\InputDevicePlugins\
 		  move /Y $(TargetDir)$(TargetName).* $(TargetDir)Data\InputDevicePlugins\
 	  </PostBuildEvent>
-	  <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
+    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
 		  mkdir -p $(TargetDir)Data/InputDevicePlugins/
 		  mv -f $(TargetDir)$(TargetName).* $(TargetDir)Data/InputDevicePlugins/
 	  </PostBuildEvent>
