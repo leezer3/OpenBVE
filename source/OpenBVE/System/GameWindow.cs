@@ -453,7 +453,7 @@ namespace OpenBve
 				Close();
 			}
 
-			lock (Illustrations.Locker)
+			lock (BaseRenderer.GdiPlusLock)
 			{
 				Timetable.CreateTimetable();
 			}

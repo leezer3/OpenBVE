@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using LibRender2;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using RouteManager2;
@@ -762,7 +763,7 @@ namespace OpenBve
 			}
 			try
 			{
-				lock (Illustrations.Locker)
+				lock (BaseRenderer.GdiPlusLock)
 				{
 					pictureboxRouteMap.Image = Illustrations.CreateRouteMap(pictureboxRouteMap.Width, pictureboxRouteMap.Height, false);
 					pictureboxRouteGradient.Image = Illustrations.CreateRouteGradientProfile(pictureboxRouteGradient.Width,

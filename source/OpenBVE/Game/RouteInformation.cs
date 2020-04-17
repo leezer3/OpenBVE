@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using LibRender2;
 
 namespace OpenBve
 {
@@ -34,7 +35,7 @@ namespace OpenBve
 				{
 					return;
 				}
-				lock (Illustrations.Locker)
+				lock (BaseRenderer.GdiPlusLock)
 				{
 					RouteMap = Illustrations.CreateRouteMap(DefaultRouteInfoSize, DefaultRouteInfoSize, true);
 					RouteMinX = Illustrations.LastRouteMinX;
