@@ -147,8 +147,8 @@ namespace OpenBve.Parsers.Train
 							Interface.AddMessage(MessageType.Warning, false, "Invalid mass defined for Car " + Car + " in XML file " + fileName);
 							break;
 						}
-						Train.Cars[Car].Specs.MassEmpty = m;
-						Train.Cars[Car].Specs.MassCurrent = m;
+						Train.Cars[Car].EmptyMass = m;
+						Train.Cars[Car].CargoMass = 0;
 						break;
 					case "frontaxle":
 						if (!NumberFormats.TryParseDoubleVb6(c.InnerText, out Train.Cars[Car].FrontAxle.Position))

@@ -93,113 +93,121 @@ namespace OpenBve.Graphics.Renderers
                 this.Height = size.Height;
             }
         }
-        private struct LampCollection
+
+        private class LampCollection
         {
-            internal Lamp[] Lamps;
-            internal float Width;
+	        internal readonly Lamp[] Lamps;
+	        internal readonly float Width;
+
+	        /// <summary>Initialises the ATS lamps for the specified train using one of the default safety systems</summary>
+	        internal LampCollection(TrainManager.Train Train)
+	        {
+		        bool atsSn = (Train.Specs.DefaultSafetySystems & TrainManager.DefaultSafetySystems.AtsSn) != 0;
+		        bool atsP = (Train.Specs.DefaultSafetySystems & TrainManager.DefaultSafetySystems.AtsP) != 0;
+		        bool atc = (Train.Specs.DefaultSafetySystems & TrainManager.DefaultSafetySystems.Atc) != 0;
+		        bool eb = (Train.Specs.DefaultSafetySystems & TrainManager.DefaultSafetySystems.Eb) != 0;
+		        Width = 0.0f;
+		        Lamps = new Lamp[17];
+		        int Count;
+		        if (Train.Plugin == null || !Train.Plugin.IsDefault)
+		        {
+			        Count = 0;
+		        }
+		        else if (atsP & atc)
+		        {
+			        Lamps[0] = new Lamp(LampType.Ats);
+			        Lamps[1] = new Lamp(LampType.AtsOperation);
+			        Lamps[2] = new Lamp(LampType.None);
+			        Lamps[3] = new Lamp(LampType.AtsPPower);
+			        Lamps[4] = new Lamp(LampType.AtsPPattern);
+			        Lamps[5] = new Lamp(LampType.AtsPBrakeOverride);
+			        Lamps[6] = new Lamp(LampType.AtsPBrakeOperation);
+			        Lamps[7] = new Lamp(LampType.AtsP);
+			        Lamps[8] = new Lamp(LampType.AtsPFailure);
+			        Lamps[9] = new Lamp(LampType.None);
+			        Lamps[10] = new Lamp(LampType.Atc);
+			        Lamps[11] = new Lamp(LampType.AtcPower);
+			        Lamps[12] = new Lamp(LampType.AtcUse);
+			        Lamps[13] = new Lamp(LampType.AtcEmergency);
+			        Count = 14;
+		        }
+		        else if (atsP)
+		        {
+			        Lamps[0] = new Lamp(LampType.Ats);
+			        Lamps[1] = new Lamp(LampType.AtsOperation);
+			        Lamps[2] = new Lamp(LampType.None);
+			        Lamps[3] = new Lamp(LampType.AtsPPower);
+			        Lamps[4] = new Lamp(LampType.AtsPPattern);
+			        Lamps[5] = new Lamp(LampType.AtsPBrakeOverride);
+			        Lamps[6] = new Lamp(LampType.AtsPBrakeOperation);
+			        Lamps[7] = new Lamp(LampType.AtsP);
+			        Lamps[8] = new Lamp(LampType.AtsPFailure);
+			        Count = 9;
+		        }
+		        else if (atsSn & atc)
+		        {
+			        Lamps[0] = new Lamp(LampType.Ats);
+			        Lamps[1] = new Lamp(LampType.AtsOperation);
+			        Lamps[2] = new Lamp(LampType.None);
+			        Lamps[3] = new Lamp(LampType.Atc);
+			        Lamps[4] = new Lamp(LampType.AtcPower);
+			        Lamps[5] = new Lamp(LampType.AtcUse);
+			        Lamps[6] = new Lamp(LampType.AtcEmergency);
+			        Count = 7;
+		        }
+		        else if (atc)
+		        {
+			        Lamps[0] = new Lamp(LampType.Atc);
+			        Lamps[1] = new Lamp(LampType.AtcPower);
+			        Lamps[2] = new Lamp(LampType.AtcUse);
+			        Lamps[3] = new Lamp(LampType.AtcEmergency);
+			        Count = 4;
+		        }
+		        else if (atsSn)
+		        {
+			        Lamps[0] = new Lamp(LampType.Ats);
+			        Lamps[1] = new Lamp(LampType.AtsOperation);
+			        Count = 2;
+		        }
+		        else
+		        {
+			        Count = 0;
+		        }
+
+		        if (Train.Plugin != null && Train.Plugin.IsDefault)
+		        {
+			        if (Count != 0 & (eb | Train.Specs.HasConstSpeed))
+			        {
+				        Lamps[Count] = new Lamp(LampType.None);
+				        Count++;
+			        }
+
+			        if (eb)
+			        {
+				        Lamps[Count] = new Lamp(LampType.Eb);
+				        Count++;
+			        }
+
+			        if (Train.Specs.HasConstSpeed)
+			        {
+				        Lamps[Count] = new Lamp(LampType.ConstSpeed);
+				        Count++;
+			        }
+		        }
+
+		        Array.Resize<Lamp>(ref Lamps, Count);
+		        for (int i = 0; i < Count; i++)
+		        {
+			        if (Lamps[i].Width > Width)
+			        {
+				        Width = Lamps[i].Width;
+			        }
+		        }
+	        }
         }
+
         private LampCollection CurrentLampCollection;
 
-		/// <summary>Initialises the ATS lamps for train using one of the default safety systems</summary>
-        private void InitializeLamps()
-        {
-            bool atsSn = (TrainManager.PlayerTrain.Specs.DefaultSafetySystems & TrainManager.DefaultSafetySystems.AtsSn) != 0;
-            bool atsP = (TrainManager.PlayerTrain.Specs.DefaultSafetySystems & TrainManager.DefaultSafetySystems.AtsP) != 0;
-            bool atc = (TrainManager.PlayerTrain.Specs.DefaultSafetySystems & TrainManager.DefaultSafetySystems.Atc) != 0;
-            bool eb = (TrainManager.PlayerTrain.Specs.DefaultSafetySystems & TrainManager.DefaultSafetySystems.Eb) != 0;
-            CurrentLampCollection.Width = 0.0f;
-            CurrentLampCollection.Lamps = new Lamp[17];
-            int Count;
-            if (TrainManager.PlayerTrain.Plugin == null || !TrainManager.PlayerTrain.Plugin.IsDefault)
-            {
-                Count = 0;
-            }
-            else if (atsP & atc)
-            {
-                CurrentLampCollection.Lamps[0] = new Lamp(LampType.Ats);
-                CurrentLampCollection.Lamps[1] = new Lamp(LampType.AtsOperation);
-                CurrentLampCollection.Lamps[2] = new Lamp(LampType.None);
-                CurrentLampCollection.Lamps[3] = new Lamp(LampType.AtsPPower);
-                CurrentLampCollection.Lamps[4] = new Lamp(LampType.AtsPPattern);
-                CurrentLampCollection.Lamps[5] = new Lamp(LampType.AtsPBrakeOverride);
-                CurrentLampCollection.Lamps[6] = new Lamp(LampType.AtsPBrakeOperation);
-                CurrentLampCollection.Lamps[7] = new Lamp(LampType.AtsP);
-                CurrentLampCollection.Lamps[8] = new Lamp(LampType.AtsPFailure);
-                CurrentLampCollection.Lamps[9] = new Lamp(LampType.None);
-                CurrentLampCollection.Lamps[10] = new Lamp(LampType.Atc);
-                CurrentLampCollection.Lamps[11] = new Lamp(LampType.AtcPower);
-                CurrentLampCollection.Lamps[12] = new Lamp(LampType.AtcUse);
-                CurrentLampCollection.Lamps[13] = new Lamp(LampType.AtcEmergency);
-                Count = 14;
-            }
-            else if (atsP)
-            {
-                CurrentLampCollection.Lamps[0] = new Lamp(LampType.Ats);
-                CurrentLampCollection.Lamps[1] = new Lamp(LampType.AtsOperation);
-                CurrentLampCollection.Lamps[2] = new Lamp(LampType.None);
-                CurrentLampCollection.Lamps[3] = new Lamp(LampType.AtsPPower);
-                CurrentLampCollection.Lamps[4] = new Lamp(LampType.AtsPPattern);
-                CurrentLampCollection.Lamps[5] = new Lamp(LampType.AtsPBrakeOverride);
-                CurrentLampCollection.Lamps[6] = new Lamp(LampType.AtsPBrakeOperation);
-                CurrentLampCollection.Lamps[7] = new Lamp(LampType.AtsP);
-                CurrentLampCollection.Lamps[8] = new Lamp(LampType.AtsPFailure);
-                Count = 9;
-            }
-            else if (atsSn & atc)
-            {
-                CurrentLampCollection.Lamps[0] = new Lamp(LampType.Ats);
-                CurrentLampCollection.Lamps[1] = new Lamp(LampType.AtsOperation);
-                CurrentLampCollection.Lamps[2] = new Lamp(LampType.None);
-                CurrentLampCollection.Lamps[3] = new Lamp(LampType.Atc);
-                CurrentLampCollection.Lamps[4] = new Lamp(LampType.AtcPower);
-                CurrentLampCollection.Lamps[5] = new Lamp(LampType.AtcUse);
-                CurrentLampCollection.Lamps[6] = new Lamp(LampType.AtcEmergency);
-                Count = 7;
-            }
-            else if (atc)
-            {
-                CurrentLampCollection.Lamps[0] = new Lamp(LampType.Atc);
-                CurrentLampCollection.Lamps[1] = new Lamp(LampType.AtcPower);
-                CurrentLampCollection.Lamps[2] = new Lamp(LampType.AtcUse);
-                CurrentLampCollection.Lamps[3] = new Lamp(LampType.AtcEmergency);
-                Count = 4;
-            }
-            else if (atsSn)
-            {
-                CurrentLampCollection.Lamps[0] = new Lamp(LampType.Ats);
-                CurrentLampCollection.Lamps[1] = new Lamp(LampType.AtsOperation);
-                Count = 2;
-            }
-            else
-            {
-                Count = 0;
-            }
-            if (TrainManager.PlayerTrain.Plugin != null && TrainManager.PlayerTrain.Plugin.IsDefault)
-            {
-                if (Count != 0 & (eb | TrainManager.PlayerTrain.Specs.HasConstSpeed))
-                {
-                    CurrentLampCollection.Lamps[Count] = new Lamp(LampType.None);
-                    Count++;
-                }
-                if (eb)
-                {
-                    CurrentLampCollection.Lamps[Count] = new Lamp(LampType.Eb);
-                    Count++;
-                }
-                if (TrainManager.PlayerTrain.Specs.HasConstSpeed)
-                {
-                    CurrentLampCollection.Lamps[Count] = new Lamp(LampType.ConstSpeed);
-                    Count++;
-                }
-            }
-            Array.Resize<Lamp>(ref CurrentLampCollection.Lamps, Count);
-            for (int i = 0; i < Count; i++)
-            {
-                if (CurrentLampCollection.Lamps[i].Width > CurrentLampCollection.Width)
-                {
-                    CurrentLampCollection.Width = CurrentLampCollection.Lamps[i].Width;
-                }
-            }
-        }
+		
     }
 }

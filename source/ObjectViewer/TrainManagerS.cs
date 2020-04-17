@@ -110,7 +110,6 @@ namespace OpenBve {
 			internal double BrakeDecelerationAtServiceMaximumPressure;
 			internal double BrakeControlSpeed;
 			internal double MotorDeceleration;
-			internal double Mass;
 			internal double ExposedFrontalArea;
 			internal double UnexposedFrontalArea;
 			internal double CoefficientOfStaticFriction;
@@ -118,7 +117,6 @@ namespace OpenBve {
 			internal double AerodynamicDragCoefficient;
 			internal double CenterOfGravityHeight;
 			internal double CriticalTopplingAngle;
-			internal double CurrentSpeed;
 			internal double CurrentPerceivedSpeed;
 			internal double CurrentAcceleration;
 			internal double CurrentAccelerationOutput;

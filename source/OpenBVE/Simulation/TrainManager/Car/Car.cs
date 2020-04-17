@@ -1224,7 +1224,7 @@ namespace OpenBve
 								else
 								{
 									FrontAxle.CurrentWheelSlip = true;
-									wheelspin += (double) baseTrain.Handles.Reverser.Actual * a * Specs.MassCurrent;
+									wheelspin += (double) baseTrain.Handles.Reverser.Actual * a * CurrentMass;
 								}
 
 								if (a < wheelSlipAccelerationMotorRear)
@@ -1234,7 +1234,7 @@ namespace OpenBve
 								else
 								{
 									RearAxle.CurrentWheelSlip = true;
-									wheelspin += (double) baseTrain.Handles.Reverser.Actual * a * Specs.MassCurrent;
+									wheelspin += (double) baseTrain.Handles.Reverser.Actual * a * CurrentMass;
 								}
 
 								// Update readhesion device
@@ -1347,7 +1347,7 @@ namespace OpenBve
 						if (a > ra) a = ra;
 					}
 
-					double factor = Specs.MassEmpty / Specs.MassCurrent;
+					double factor = EmptyMass / CurrentMass;
 					if (a >= wheelSlipAccelerationBrakeFront)
 					{
 						wheellock = true;
@@ -1375,7 +1375,7 @@ namespace OpenBve
 				// motor
 				if (baseTrain.Handles.Reverser.Actual != 0)
 				{
-					double factor = Specs.MassEmpty / Specs.MassCurrent;
+					double factor = EmptyMass / CurrentMass;
 					if (Specs.CurrentAccelerationOutput > 0.0)
 					{
 						PowerRollingCouplerAcceleration +=

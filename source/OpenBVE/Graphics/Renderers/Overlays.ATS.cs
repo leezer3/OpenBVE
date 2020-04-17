@@ -18,9 +18,9 @@ namespace OpenBve.Graphics.Renderers
 				return;
 			}
 			// ats lamps
-			if (CurrentLampCollection.Lamps == null)
+			if (CurrentLampCollection == null)
 			{
-				InitializeLamps();
+				CurrentLampCollection = new LampCollection(TrainManager.PlayerTrain);
 			}
 			double lcrh, lw, rw;
 			CalculateViewingPlaneSize(Element, out lw, out rw, out lcrh);

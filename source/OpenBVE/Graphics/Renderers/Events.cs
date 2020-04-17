@@ -4,7 +4,6 @@ using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
-using RouteManager2;
 using RouteManager2.Events;
 
 namespace OpenBve.Graphics.Renderers

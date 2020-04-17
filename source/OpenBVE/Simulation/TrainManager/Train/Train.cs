@@ -471,8 +471,8 @@ namespace OpenBve
 					double pr = Cars[i].RearAxle.Follower.TrackPosition - Cars[i].RearAxle.Position;
 					double pf = Cars[i].FrontAxle.Follower.TrackPosition - Cars[i].FrontAxle.Position;
 					CenterOfCarPositions[i] = 0.5 * (pr + pf);
-					CenterOfMassPosition += CenterOfCarPositions[i] * Cars[i].Specs.MassCurrent;
-					TrainMass += Cars[i].Specs.MassCurrent;
+					CenterOfMassPosition += CenterOfCarPositions[i] * Cars[i].CurrentMass;
+					TrainMass += Cars[i].CurrentMass;
 				}
 				if (TrainMass != 0.0)
 				{
@@ -526,9 +526,9 @@ namespace OpenBve
 						double d = CenterOfCarPositions[p] - CenterOfCarPositions[s] - 0.5 * (Cars[p].Length + Cars[s].Length);
 						if (d < min)
 						{
-							double t = (min - d) / (Cars[p].Specs.MassCurrent + Cars[s].Specs.MassCurrent);
-							double tp = t * Cars[s].Specs.MassCurrent;
-							double ts = t * Cars[p].Specs.MassCurrent;
+							double t = (min - d) / (Cars[p].CurrentMass + Cars[s].CurrentMass);
+							double tp = t * Cars[s].CurrentMass;
+							double ts = t * Cars[p].CurrentMass;
 							Cars[p].UpdateTrackFollowers(tp, false, false);
 							Cars[s].UpdateTrackFollowers(-ts, false, false);
 							CenterOfCarPositions[p] += tp;
@@ -537,9 +537,9 @@ namespace OpenBve
 						}
 						else if (d > max & !Cars[p].Derailed & !Cars[s].Derailed)
 						{
-							double t = (d - max) / (Cars[p].Specs.MassCurrent + Cars[s].Specs.MassCurrent);
-							double tp = t * Cars[s].Specs.MassCurrent;
-							double ts = t * Cars[p].Specs.MassCurrent;
+							double t = (d - max) / (Cars[p].CurrentMass + Cars[s].CurrentMass);
+							double tp = t * Cars[s].CurrentMass;
+							double ts = t * Cars[p].CurrentMass;
 
 							Cars[p].UpdateTrackFollowers(-tp, false, false);
 							Cars[s].UpdateTrackFollowers(ts, false, false);
@@ -616,8 +616,8 @@ namespace OpenBve
 							double m = 0.0;
 							for (int k = i; k <= j; k++)
 							{
-								v += NewSpeeds[k] * Cars[k].Specs.MassCurrent;
-								m += Cars[k].Specs.MassCurrent;
+								v += NewSpeeds[k] * Cars[k].CurrentMass;
+								m += Cars[k].CurrentMass;
 							}
 							if (m != 0.0)
 							{

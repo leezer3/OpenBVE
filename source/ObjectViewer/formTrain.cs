@@ -40,7 +40,7 @@ namespace OpenBve
 			if (checkBoxEnableTrain.Checked)
 			{
 				numericUpDownCars.Value = TrainManager.Trains[0].Cars.Length;
-				numericUpDownSpeed.Value = (decimal)(TrainManager.Trains[0].Cars[0].Specs.CurrentSpeed * 3.6);
+				numericUpDownSpeed.Value = (decimal)(TrainManager.Trains[0].Cars[0].CurrentSpeed * 3.6);
 				numericUpDownAccel.Value = (decimal)(TrainManager.Trains[0].Cars[0].Specs.CurrentAcceleration * 3.6);
 
 				numericUpDownMain.Value = (decimal)(TrainManager.Trains[0].Cars[0].Specs.AirBrake.MainReservoirCurrentPressure / 1000.0);
@@ -296,7 +296,7 @@ namespace OpenBve
 					for (int i = 0; i < TrainManager.Trains[0].Cars.Length; i++)
 					{
 						TrainManager.Trains[0].Cars[i] = new TrainManager.Car(TrainManager.Trains[0]);
-						TrainManager.Trains[0].Cars[i].Specs.CurrentSpeed = (int)numericUpDownSpeed.Value / 3.6;
+						TrainManager.Trains[0].Cars[i].CurrentSpeed = (int)numericUpDownSpeed.Value / 3.6;
 						TrainManager.Trains[0].Cars[i].Specs.CurrentPerceivedSpeed = (int)numericUpDownSpeed.Value / 3.6;
 						TrainManager.Trains[0].Cars[i].Specs.CurrentAcceleration = (int)numericUpDownAccel.Value / 3.6;
 

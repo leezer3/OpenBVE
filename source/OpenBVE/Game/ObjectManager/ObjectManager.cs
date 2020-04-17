@@ -1,4 +1,3 @@
-using LibRender2;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
 
