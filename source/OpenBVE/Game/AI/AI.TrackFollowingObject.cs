@@ -425,11 +425,6 @@ namespace OpenBve
 					NewPosition = Data[i].Position;
 					NewDirection = StopData?.Direction ?? NewDirection;
 
-					if (Time <= Data[i].ArrivalTime)
-					{
-						return;
-					}
-
 					if (Time <= StopData?.ClosingDoorsStartTime)
 					{
 						OpenLeftDoors = StopData.OpenLeftDoors;
@@ -445,7 +440,7 @@ namespace OpenBve
 
 					if (Time <= Data[i].AccelerationEndTime)
 					{
-						DeltaT = Time - Data[i].ArrivalTime;
+						DeltaT = Time - Data[i].DepartureTime;
 						DeltaPosition = Data[i].PassingSpeed * DeltaT + 0.5 * Data[i].Accelerate * Math.Pow(DeltaT, 2.0);
 						NewMileage += DeltaPosition;
 						NewPosition += (int)NewDirection * DeltaPosition;
