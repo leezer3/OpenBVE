@@ -640,8 +640,8 @@ namespace OpenBve {
 			groupboxTrainDetails.Text = Translations.GetInterfaceString("start_train_details");
 			tabpageTrainDescription.Text = Translations.GetInterfaceString("start_train_description");
 			tabpageTrainSettings.Text = Translations.GetInterfaceString("start_train_settings");
-			labelTrainEncoding.Text = Translations.GetInterfaceString("start_train_settings_reverseconsist");
-			labelReverseConsist.Text = Translations.GetInterfaceString("start_train_settings_encoding");
+			labelTrainEncoding.Text = Translations.GetInterfaceString("start_train_settings_encoding");
+			labelReverseConsist.Text = Translations.GetInterfaceString("start_train_settings_reverseconsist");
 			comboboxTrainEncoding.Items[0] = Translations.GetInterfaceString("(UTF-8)");
 			labelTrainEncodingPreview.Text = Translations.GetInterfaceString("start_train_settings_encoding_preview");
 			labelStart.Text = @" " + Translations.GetInterfaceString("start_start");
