@@ -150,6 +150,12 @@
 					<trans-unit id="package_file_generic">
 						<source>Failed to create the following file: \r \n</source>
 					</trans-unit>
+					<trans-unit id="security_checkaccess">
+						<source>Please check that this path is accessible.</source>
+					</trans-unit>
+					<trans-unit id="security_badlocation">
+						<source>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</source>
+					</trans-unit>
 				</group>
 				<group id="start">
 					<trans-unit id="title">

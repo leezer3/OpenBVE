@@ -196,6 +196,14 @@
 						<source>Failed to create the following file: \r \n</source>
 						<target>Failed to create the following file: \r \n</target>
 					</trans-unit>
+					<trans-unit id="security_checkaccess">
+						<source>Please check that this path is accessible.</source>
+						<target>Please check that this path is accessible.</target>
+					</trans-unit>
+					<trans-unit id="security_badlocation">
+						<source>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</source>
+						<target>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</target>
+					</trans-unit>
 				</group>
 				<group id="start">
 					<trans-unit id="title">

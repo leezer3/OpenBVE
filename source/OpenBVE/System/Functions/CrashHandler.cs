@@ -131,8 +131,15 @@ namespace OpenBve
                     outputFile.WriteLine(Game.RouteInformation.ErrorsAndWarnings);
                 }
                 //Track position and viewing distance
-                outputFile.WriteLine("Current track position is: " + Program.Renderer.CameraTrackFollower.TrackPosition.ToString("0.00", Culture) + " m");
-                outputFile.WriteLine("Current viewing distance is: " + Interface.CurrentOptions.ViewingDistance);
+                try
+                {
+	                outputFile.WriteLine("Current track position is: " + Program.Renderer.CameraTrackFollower.TrackPosition.ToString("0.00", Culture) + " m");
+	                outputFile.WriteLine("Current viewing distance is: " + Interface.CurrentOptions.ViewingDistance);
+                }
+                catch
+                {
+                }
+                
                 outputFile.WriteLine("The exception caught was as follows: ");
                 outputFile.WriteLine(ExceptionText);
                 double MemoryUsed;
