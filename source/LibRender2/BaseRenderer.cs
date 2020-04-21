@@ -231,7 +231,7 @@ namespace LibRender2
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthFunc(DepthFunction.Lequal);
-			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+			SetBlendFunc(AvailableNewRenderer ? BlendingFactor.One : BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 			GL.Hint(HintTarget.FogHint, HintMode.Fastest);
 			GL.Hint(HintTarget.LineSmoothHint, HintMode.Fastest);
 			GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Fastest);
@@ -274,7 +274,7 @@ namespace LibRender2
 			GL.Disable(EnableCap.Lighting);
 			GL.Disable(EnableCap.Fog);
 			GL.Disable(EnableCap.Texture2D);
-			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+			SetBlendFunc(AvailableNewRenderer ? BlendingFactor.One : BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 			UnsetBlendFunc();
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthMask(true);
@@ -801,7 +801,6 @@ namespace LibRender2
 			Shader.SetBrightness(1.0f);
 			Shader.SetOpacity(1.0f);
 			Shader.SetObjectIndex(0);
-			Shader.SetMaterialAdditive(0);
 		}
 
 		public void SetFogForImmediateMode()
@@ -1008,7 +1007,7 @@ namespace LibRender2
 				{
 					Shader.SetIsTexture(false);
 				}
-
+				GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
 				// Calculate the brightness of the poly to render
 				float factor;
 				if (material.BlendMode == MeshMaterialBlendMode.Additive)
@@ -1016,7 +1015,7 @@ namespace LibRender2
 					//Additive blending- Full brightness
 					factor = 1.0f;
 					GL.Enable(EnableCap.Blend);
-					GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
+					GL.BlendFunc(BlendingFactor.One, BlendingFactor.One);
 					Shader.SetIsFog(false);
 				}
 				else if ((material.Flags & MeshMaterial.EmissiveColorMask) != 0)
@@ -1053,16 +1052,7 @@ namespace LibRender2
 				{
 					alphaFactor = 1.0f;
 				}
-
-				if (material.BlendMode == MeshMaterialBlendMode.Additive)
-				{
-					Shader.SetMaterialAdditive(1 + (int)mode);
-				}
-				else
-				{
-					Shader.SetMaterialAdditive(0);
-				}
-
+				
 				Shader.SetOpacity(inv255 * material.Color.A * alphaFactor);
 
 				// render polygon

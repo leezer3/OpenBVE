@@ -296,11 +296,6 @@ namespace LibRender2.Shaders
 			GL.Uniform1(UniformLayout.IsFog, IsFog ? 1 : 0);
 		}
 
-		public void SetMaterialAdditive(int AdditiveBlendMode)
-		{
-			GL.Uniform1(UniformLayout.MaterialIsAdditive, AdditiveBlendMode);
-		}
-
 		public void SetFogStart(float FogStart)
 		{
 			GL.Uniform1(UniformLayout.FogStart, FogStart);

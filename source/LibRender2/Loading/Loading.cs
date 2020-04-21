@@ -96,8 +96,7 @@ namespace LibRender2.Loadings
 		/// <summary>Draws on OpenGL canvas the route/train loading screen</summary>
 		public void DrawLoadingScreen(OpenGlFont Font, double RouteProgress, double TrainProgress)
 		{
-			renderer.ResetOpenGlState();
-			renderer.SetBlendFunc();
+			renderer.SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); //FIXME: Remove when text switches between two renderer types
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
 			renderer.Rectangle.Draw(null, new PointF(0.0f, 0.0f), new SizeF(renderer.Screen.Width, renderer.Screen.Height), bkg);
