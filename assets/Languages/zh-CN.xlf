@@ -195,6 +195,14 @@
 						<source>Failed to create the following file: \r \n</source>
 						<target>未能创建这一文件: \r \n</target>
 					</trans-unit>
+					<trans-unit id="security_checkaccess">
+						<source>Please check that this path is accessible.</source>
+						<target>请检查该路径是否可以访问。</target>
+					</trans-unit>
+					<trans-unit id="security_badlocation">
+						<source>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</source>
+						<target>如果您要将扩展包安装在 Program Files 或 ProgramData 文件夹内，您需要选择以管理员身份运行本程序。\r\n\r\n 此配置并不安全，建议您在设置中修改。</target>
+					</trans-unit>
 				</group>
 				<group id="start">
 					<trans-unit id="title">
@@ -305,8 +313,8 @@
 						<target>预览: </target>
 					</trans-unit>
 					<trans-unit id="train_notfound">
-						<source>The default train could not be found:\n\n</source>
-						<target>找不到路线推荐的车辆: \n\n</target>
+						<source>The default train could not be found:\r\n\r\n</source>
+						<target>无法找到默认列车：\r\n\r\n</target>
 					</trans-unit>
 					<trans-unit id="train_pluginnotsupported">
 						<source>--- This train uses a safety system plugin which cannot be used on your operating system. The built-in safety systems ATS/ATC will be used instead, which might cause operational problems. ---</source>
