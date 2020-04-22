@@ -658,9 +658,9 @@ namespace OpenBve
 				{
 					h += Cars[i].FrontAxle.Follower.WorldPosition.Y + Cars[i].RearAxle.Follower.WorldPosition.Y;
 				}
-				Specs.CurrentElevation = Program.CurrentRoute.Atmosphere.InitialElevation + h / (2.0 * (double)Cars.Length);
-				Specs.CurrentAirTemperature = Program.CurrentRoute.Atmosphere.GetAirTemperature(Specs.CurrentElevation);
-				Specs.CurrentAirPressure = Program.CurrentRoute.Atmosphere.GetAirPressure(Specs.CurrentElevation, Specs.CurrentAirTemperature);
+				double elevation = Program.CurrentRoute.Atmosphere.InitialElevation + h / (2.0 * (double)Cars.Length);
+				Specs.CurrentAirTemperature = Program.CurrentRoute.Atmosphere.GetAirTemperature(elevation);
+				Specs.CurrentAirPressure = Program.CurrentRoute.Atmosphere.GetAirPressure(elevation, Specs.CurrentAirTemperature);
 				Specs.CurrentAirDensity = Program.CurrentRoute.Atmosphere.GetAirDensity(Specs.CurrentAirPressure, Specs.CurrentAirTemperature);
 			}
 
