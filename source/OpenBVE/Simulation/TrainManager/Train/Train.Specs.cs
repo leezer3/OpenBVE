@@ -12,7 +12,6 @@ namespace OpenBve
 			internal double CurrentAirDensity;
 			internal double CurrentAirTemperature;
 
-			internal ReadhesionDeviceType ReadhesionDeviceType;
 			internal DefaultSafetySystems DefaultSafetySystems;
 			internal bool HasConstSpeed;
 			internal bool CurrentConstSpeed;

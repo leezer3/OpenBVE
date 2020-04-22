@@ -105,15 +105,6 @@ namespace OpenBve {
 			internal double NextUpdateTime;
 			internal double UpdateInterval;
 		}
-		internal struct CarReAdhesionDevice {
-			internal double UpdateInterval;
-			internal double ApplicationFactor;
-			internal double ReleaseInterval;
-			internal double ReleaseFactor;
-			internal double CurrentAccelerationOutput;
-			internal double NextUpdateTime;
-			internal double TimeStable;
-		}
 		internal struct CarSpecs {
 			internal bool IsMotorCar;
 			internal AccelerationCurve[] AccelerationCurves;
@@ -135,7 +126,6 @@ namespace OpenBve {
 			internal bool CurrentMotorBrake;
 			internal CarHoldBrake HoldBrake;
 			internal CarConstSpeed ConstSpeed;
-			internal CarReAdhesionDevice ReAdhesionDevice;
 			internal CarBrakeType BrakeType;
 			internal EletropneumaticBrakeType ElectropneumaticType;
 			internal CarAirBrake AirBrake;
