@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<xliff version="1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+<?xml version="1.0" ?><xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd">
 	<file datatype="plaintext" original="en-US.xlf" source-language="en-US" target-language="zh-CN">
 		<body>
 			<group id="language">
@@ -14,11 +13,10 @@
 				<trans-unit id="contributors">
 					<source>Unknown</source>
 					<target>Alvin Wong, zbx1425</target>
-					<note from="translator">zbx1425 at BVE Worldwide/zbx1425@outlook.com</note>
 				</trans-unit>
 				<trans-unit id="last_updated">
-					<source>2016-02-21</source>
-					<target>2019-10-12</target>
+					<source>2019-06-29</source>
+					<target>2020-04-10</target>
 				</trans-unit>
 			</group>
 			<group id="openbve">
@@ -199,11 +197,11 @@
 					</trans-unit>
 					<trans-unit id="security_checkaccess">
 						<source>Please check that this path is accessible.</source>
-						<target>Please check that this path is accessible.</target>
+						<target>请检查该路径是否可以访问。</target>
 					</trans-unit>
 					<trans-unit id="security_badlocation">
 						<source>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</source>
-						<target>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</target>
+						<target>如果您要将扩展包安装在 Program Files 或 ProgramData 文件夹内，您需要选择以管理员身份运行本程序。\r\n\r\n 此配置并不安全，建议您在设置中修改。</target>
 					</trans-unit>
 				</group>
 				<group id="start">
@@ -309,14 +307,15 @@
 					</trans-unit>
 					<trans-unit id="train_settings_reverseconsist">
 						<source>Reverse Consist:</source>
+						<target>反转编组: </target>
 					</trans-unit>
 					<trans-unit id="train_settings_encoding_preview">
 						<source>Preview:</source>
 						<target>预览: </target>
 					</trans-unit>
 					<trans-unit id="train_notfound">
-						<source>The default train could not be found:\n\n</source>
-						<target>找不到路线推荐的车辆: \n\n</target>
+						<source>The default train could not be found:\r\n\r\n</source>
+						<target>无法找到默认列车：\r\n\r\n</target>
 					</trans-unit>
 					<trans-unit id="train_pluginnotsupported">
 						<source>--- This train uses a safety system plugin which cannot be used on your operating system. The built-in safety systems ATS/ATC will be used instead, which might cause operational problems. ---</source>
@@ -1462,6 +1461,7 @@
 					</trans-unit>
 					<trans-unit id="advanced_is_use_new_renderer">
 						<source>Enable the new renderer</source>
+						<target>启用新渲染器</target>
 					</trans-unit>
 					<trans-unit id="advanced_disable_displaylists">
 						<source>Disable OpenGL display lists</source>
@@ -1722,11 +1722,11 @@
 						<target>找不到文件: </target>
 					</trans-unit>
 					<trans-unit id="almost_help_filesnotfound">
-						<source>Some issues were encountered while loading the route and train.\r\n\r\nAs some files could not be found, the route or train might not appear as intended. Try to redownload the route and train packages in order to ensure that you have a complete distribution.\r\n\r\nThe following list of issues might give additional information. You can still start the route by selecting "Ignore" from below.</source>
+						<source>Some issues were encountered while loading the route and train.\r\n\r\nAs some files could not be found, the route or train might not appear as intended. Try to redownload the route and train packages in order to ensure that you have a complete distribution.\r\n\r\nThe following list of issues might give additional information. You can still start the route by selecting &quot;Ignore&quot; from below.</source>
 						<target>加载路线和车辆时发生了一些问题。\r\n\r\n因为无法找到部分文件, 路线或车辆可能显示不正确。请确认下载的路线及车辆, 确保文件完整。\r\n\r\n下列错误报告可以帮助开发者解决问题。你也可以选择‘忽略’开始游戏。</target>
 					</trans-unit>
 					<trans-unit id="almost_help_general">
-						<source>Some issues were encountered while loading the route and train. If you are the route or train developer, it might be worth taking a look at the following list of issues.\r\n\r\nAs a regular user, you can select "Ignore" at this point to start the game.</source>
+						<source>Some issues were encountered while loading the route and train. If you are the route or train developer, it might be worth taking a look at the following list of issues.\r\n\r\nAs a regular user, you can select &quot;Ignore&quot; at this point to start the game.</source>
 						<target>加载路线和车辆时发生了一些问题。如果你是制作者, 下列错误报告可能值得一看。\r\n\r\n作为玩家, 你可以选择‘忽略’开始游戏。</target>
 					</trans-unit>
 					<trans-unit id="almost_show">
@@ -2441,7 +2441,7 @@
 					</trans-unit>
 					<trans-unit id="camera_interior_nopanel">
 						<source>Switches to the train's interior view. However, the panel is not displayed.</source>
-                        <target>进入车内视点(无面板)</target>
+						<target>进入车内视点(无面板)</target>
 					</trans-unit>
 					<trans-unit id="camera_exterior">
 						<source>Switches to the train's exterior view</source>
@@ -2633,7 +2633,7 @@
 					</trans-unit>
 					<trans-unit id="debug_touch_mode">
 						<source>Shows or hides the touch range</source>
-                        <target>开关触控范围</target>
+						<target>开关触控范围</target>
 					</trans-unit>
 					<trans-unit id="route_information">
 						<source>Shows or hides the route information window</source>
@@ -2642,6 +2642,10 @@
 					<trans-unit id="show_events">
 						<source>Shows or hides event markers (For developers)</source>
 						<target>开关事件标志 (开发者用)</target>
+					</trans-unit>
+					<trans-unit id="debug_renderer_mode">
+						<source>Toggles the renderer</source>
+						<target>切换渲染器</target>
 					</trans-unit>
 					<trans-unit id="wiper_speed_up">
 						<source>Increases the speed of the windscreen wipers</source>
@@ -2706,6 +2710,10 @@
 					<trans-unit id="main_breaker">
 						<source>Toggles the main breaker</source>
 						<target>开关主断路器</target>
+					</trans-unit>
+					<trans-unit id="raildriver_speed_units">
+						<source>Toggles the RailDriver speed display units.</source>
+						<target>切换 RailDriver 速度单位</target>
 					</trans-unit>
 				</group>
 				<group id="keys">
@@ -3880,6 +3888,9 @@
 						</trans-unit>
 						<trans-unit id="wrongtype">
 							<source>You have attempted to open a train. \n\n  These cannot be opened directly- \n\n Please use the import function to import this train into TrainEditor2.</source>
+							<target>您想要打开列车数据。\n\n
+然而 TrainEditor2 并不能直接读取原版列车数据。\n\n
+请使用导入功能将这一列车数据导入为 TrainEditor2 格式。</target>
 						</trans-unit>
 					</group>
 					<trans-unit id="language">
@@ -3912,6 +3923,7 @@
 					</trans-unit>
 					<trans-unit id="copy">
 						<source>Copy</source>
+						<target>复制</target>
 					</trans-unit>
 					<trans-unit id="set">
 						<source>Set...</source>
@@ -3926,12 +3938,15 @@
 					</trans-unit>
 					<trans-unit id="general">
 						<source>General</source>
+						<target>常规</target>
 					</trans-unit>
 					<trans-unit id="cars">
 						<source>Cars</source>
+						<target>车辆</target>
 					</trans-unit>
 					<trans-unit id="couplers">
 						<source>Couplers</source>
+						<target>车钩</target>
 					</trans-unit>
 				</group>
 				<group id="general_settings">
@@ -3974,6 +3989,7 @@
 							</trans-unit>
 							<trans-unit id="no">
 								<source>No action</source>
+								<target>无动作</target>
 							</trans-unit>
 							<trans-unit id="power">
 								<source>Return power to neutral</source>
@@ -3983,6 +3999,7 @@
 							</trans-unit>
 							<trans-unit id="power_reverser">
 								<source>Return power and reverser to neutral</source>
+								<target>切断功率, 换向器回中</target>
 							</trans-unit>
 						</group>
 						<group id="loco_brake_handle_type">
@@ -3994,9 +4011,11 @@
 							</trans-unit>
 							<trans-unit id="independent">
 								<source>Independent</source>
+								<target>独立</target>
 							</trans-unit>
 							<trans-unit id="blocking">
 								<source>Blocking</source>
+								<target>阻塞</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="loco_brake_notches">
@@ -4033,9 +4052,11 @@
 							</trans-unit>
 							<trans-unit id="ats_sn">
 								<source>ATS-SN</source>
+								<target>ATS-SN</target>
 							</trans-unit>
 							<trans-unit id="ats_sn_ats_p">
 								<source>ATS-SN / ATS-P</source>
+								<target>ATS-SN / ATS-P</target>
 							</trans-unit>
 						</group>
 						<group id="atc">
@@ -4130,18 +4151,23 @@
 						</trans-unit>
 						<trans-unit id="is_motor_car">
 							<source>IsMotorCar</source>
+							<target>是否动车</target>
 						</trans-unit>
 						<trans-unit id="mass">
 							<source>Mass</source>
+							<target>质量</target>
 						</trans-unit>
 						<trans-unit id="length">
 							<source>Length</source>
+							<target>长度</target>
 						</trans-unit>
 						<trans-unit id="width">
 							<source>Width</source>
+							<target>宽度</target>
 						</trans-unit>
 						<trans-unit id="height">
 							<source>Height</source>
+							<target>高度</target>
 						</trans-unit>
 						<trans-unit id="center_of_gravity_height">
 							<source>CenterOfGravityHeight</source>
@@ -4154,6 +4180,7 @@
 						</trans-unit>
 						<trans-unit id="defined_axles">
 							<source>DefinedAxles</source>
+							<target>设定轮轴</target>
 						</trans-unit>
 						<group id="axles">
 							<trans-unit id="name">
@@ -4161,25 +4188,32 @@
 							</trans-unit>
 							<trans-unit id="front">
 								<source>FrontAxle</source>
+								<target>前轴</target>
 							</trans-unit>
 							<trans-unit id="rear">
 								<source>RearAxle</source>
+								<target>后轴</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="front_bogie">
 							<source>FrontBogie</source>
+							<target>前转向架</target>
 						</trans-unit>
 						<trans-unit id="rear_bogie">
 							<source>RearBogie</source>
+							<target>后转向架</target>
 						</trans-unit>
 						<trans-unit id="loading_sway">
 							<source>LoadingSway</source>
+							<target>乘降晃动</target>
 						</trans-unit>
 						<trans-unit id="reversed">
 							<source>Reversed</source>
+							<target>反转模型</target>
 						</trans-unit>
 						<trans-unit id="object">
 							<source>Object</source>
+							<target>物件模型</target>
 						</trans-unit>
 					</group>
 					<group id="performance">
@@ -4249,6 +4283,7 @@
 							</trans-unit>
 							<trans-unit id="notched_air_brake">
 								<source>Notched air brake</source>
+								<target>分级空气制动</target>
 							</trans-unit>
 							<trans-unit id="cl">
 								<source>Air brake with partial release</source>
@@ -4270,6 +4305,7 @@
 						</group>
 						<trans-unit id="brake_control_speed">
 							<source>BrakeControlSpeed</source>
+							<target>制动控制速度</target>
 						</trans-unit>
 					</group>
 					<group id="pressure">
@@ -4326,15 +4362,19 @@
 						</trans-unit>
 						<trans-unit id="a0">
 							<source>a0</source>
+							<target>a0</target>
 						</trans-unit>
 						<trans-unit id="a1">
 							<source>a1</source>
+							<target>a1</target>
 						</trans-unit>
 						<trans-unit id="v1">
 							<source>v1</source>
+							<target>v1</target>
 						</trans-unit>
 						<trans-unit id="v2">
 							<source>v2</source>
+							<target>v2</target>
 						</trans-unit>
 						<trans-unit id="e">
 							<source>e (2.0)</source>
@@ -4355,21 +4395,27 @@
 						</trans-unit>
 						<trans-unit id="x_min">
 							<source>x-min</source>
+							<target>x-min</target>
 						</trans-unit>
 						<trans-unit id="x_max">
 							<source>x-max</source>
+							<target>x-max</target>
 						</trans-unit>
 						<trans-unit id="y_min">
 							<source>y-min</source>
+							<target>y-min</target>
 						</trans-unit>
 						<trans-unit id="y_max">
 							<source>y-max</source>
+							<target>y-max</target>
 						</trans-unit>
 						<trans-unit id="zoom_in">
 							<source>Zoom In</source>
+							<target>放大</target>
 						</trans-unit>
 						<trans-unit id="zoom_out">
 							<source>Zoom Out</source>
+							<target>缩小</target>
 						</trans-unit>
 						<trans-unit id="reset">
 							<source>Reset</source>
@@ -4387,21 +4433,26 @@
 							</trans-unit>
 							<trans-unit id="undo">
 								<source>Undo</source>
+								<target>撤销</target>
 							</trans-unit>
 							<trans-unit id="redo">
 								<source>Redo</source>
+								<target>重做</target>
 							</trans-unit>
 							<trans-unit id="cut">
 								<source>Cut</source>
+								<target>剪切</target>
 							</trans-unit>
 							<trans-unit id="copy">
 								<source>Copy</source>
 							</trans-unit>
 							<trans-unit id="paste">
 								<source>Paste</source>
+								<target>粘贴</target>
 							</trans-unit>
 							<trans-unit id="cleanup">
 								<source>Cleanup</source>
+								<target>清理</target>
 							</trans-unit>
 							<trans-unit id="delete">
 								<source>Delete</source>
@@ -4436,6 +4487,7 @@
 							</trans-unit>
 							<trans-unit id="sound_index_none">
 								<source>None</source>
+								<target>无</target>
 							</trans-unit>
 						</group>
 						<group id="tool">
@@ -4444,15 +4496,18 @@
 							</trans-unit>
 							<trans-unit id="select">
 								<source>Select</source>
+								<target>选择</target>
 							</trans-unit>
 							<trans-unit id="move">
 								<source>Move</source>
 							</trans-unit>
 							<trans-unit id="dot">
 								<source>Dot</source>
+								<target>点</target>
 							</trans-unit>
 							<trans-unit id="line">
 								<source>Line</source>
+								<target>线</target>
 							</trans-unit>
 						</group>
 					</group>
@@ -4462,21 +4517,27 @@
 						</trans-unit>
 						<trans-unit id="min_velocity">
 							<source>x-min(Velocity)</source>
+							<target>x-min(速度)</target>
 						</trans-unit>
 						<trans-unit id="max_velocity">
 							<source>x-max(Velocity)</source>
+							<target>x-max(速度)</target>
 						</trans-unit>
 						<trans-unit id="min_pitch">
 							<source>y-min(Pitch)</source>
+							<target>y-min(音调)</target>
 						</trans-unit>
 						<trans-unit id="max_pitch">
 							<source>y-max(Pitch)</source>
+							<target>y-max(音调)</target>
 						</trans-unit>
 						<trans-unit id="min_volume">
 							<source>y-min(Volume)</source>
+							<target>y-min(音量)</target>
 						</trans-unit>
 						<trans-unit id="max_volume">
 							<source>y-max(Volume)</source>
+							<target>y-max(音量)</target>
 						</trans-unit>
 						<trans-unit id="zoom_in">
 							<source>Zoom In</source>
@@ -4515,6 +4576,7 @@
 							</trans-unit>
 							<trans-unit id="run">
 								<source>Running sound</source>
+								<target>走行音</target>
 							</trans-unit>
 							<trans-unit id="track">
 								<source>Track</source>
@@ -4526,25 +4588,30 @@
 							</trans-unit>
 							<trans-unit id="loop">
 								<source>Loop playback</source>
+								<target>循环播放</target>
 							</trans-unit>
 							<trans-unit id="constant">
 								<source>Constant speed</source>
+								<target>恒定速度</target>
 							</trans-unit>
 							<trans-unit id="acceleration">
 								<source>Acceleration:</source>
 							</trans-unit>
 							<trans-unit id="swap">
 								<source>Swap</source>
+								<target>交换</target>
 							</trans-unit>
 						</group>
 						<trans-unit id="play">
 							<source>Playback</source>
+							<target>播放</target>
 						</trans-unit>
 						<trans-unit id="pause">
 							<source>Pause</source>
 						</trans-unit>
 						<trans-unit id="stop">
 							<source>Stop</source>
+							<target>停止</target>
 						</trans-unit>
 					</group>
 					<group id="vertex_info">
@@ -4553,6 +4620,7 @@
 						</trans-unit>
 						<trans-unit id="velocity">
 							<source>Velocity</source>
+							<target>速度</target>
 						</trans-unit>
 						<trans-unit id="pitch">
 							<source>Pitch</source>
@@ -4627,6 +4695,7 @@
 					<group id="message">
 						<trans-unit id="vertex_exist">
 							<source>A point already exists at the same x coordinate, do you want to overwrite it?</source>
+							<target>同样的X坐标上已存在点，是否覆盖？</target>
 						</trans-unit>
 					</group>
 				</group>
@@ -4640,9 +4709,11 @@
 						</trans-unit>
 						<trans-unit id="min">
 							<source>Min</source>
+							<target>最小</target>
 						</trans-unit>
 						<trans-unit id="max">
 							<source>Max</source>
+							<target>最大</target>
 						</trans-unit>
 					</group>
 				</group>
@@ -4656,6 +4727,7 @@
 						</trans-unit>
 						<trans-unit id="resolution">
 							<source>Resolution</source>
+							<target>分辨率</target>
 						</trans-unit>
 						<trans-unit id="left">
 							<source>Left</source>
@@ -4665,18 +4737,23 @@
 						</trans-unit>
 						<trans-unit id="top">
 							<source>Top</source>
+							<target>顶部位置</target>
 						</trans-unit>
 						<trans-unit id="bottom">
 							<source>Bottom</source>
+							<target>底部位置</target>
 						</trans-unit>
 						<trans-unit id="daytime_image">
 							<source>DaytimeImage</source>
+							<target>日间图像</target>
 						</trans-unit>
 						<trans-unit id="nighttime_image">
 							<source>NighttimeImage</source>
+							<target>夜间图像</target>
 						</trans-unit>
 						<trans-unit id="transparent_color">
 							<source>TransparentColor</source>
+							<target>透明色</target>
 						</trans-unit>
 						<group id="center">
 							<trans-unit id="name">
@@ -4707,9 +4784,11 @@
 						</trans-unit>
 						<trans-unit id="number">
 							<source>Number</source>
+							<target>数字</target>
 						</trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
+							<target>层</target>
 						</trans-unit>
 					</group>
 					<group id="pilot_lamp">
@@ -4718,6 +4797,7 @@
 						</trans-unit>
 						<trans-unit id="subject">
 							<source>Subject</source>
+							<target>对象变量</target>
 						</trans-unit>
 						<group id="location">
 							<trans-unit id="name">
@@ -4763,9 +4843,11 @@
 						</group>
 						<trans-unit id="defined_radius">
 							<source>DefinedRadius</source>
+							<target>设定半径</target>
 						</trans-unit>
 						<trans-unit id="radius">
 							<source>Radius</source>
+							<target>半径</target>
 						</trans-unit>
 						<trans-unit id="daytime_image">
 							<source>DaytimeImage</source>
@@ -4775,12 +4857,14 @@
 						</trans-unit>
 						<trans-unit id="color">
 							<source>Color</source>
+							<target>颜色</target>
 						</trans-unit>
 						<trans-unit id="transparent_color">
 							<source>TransparentColor</source>
 						</trans-unit>
 						<trans-unit id="defined_origin">
 							<source>DefinedOrigin</source>
+							<target>设定原点</target>
 						</trans-unit>
 						<group id="origin">
 							<trans-unit id="name">
@@ -4795,33 +4879,43 @@
 						</group>
 						<trans-unit id="initial_angle">
 							<source>InitialAngle</source>
+							<target>起始角度</target>
 						</trans-unit>
 						<trans-unit id="last_angle">
 							<source>LastAngle</source>
+							<target>终止角度</target>
 						</trans-unit>
 						<trans-unit id="minimum">
 							<source>Minimum</source>
+							<target>最小值</target>
 						</trans-unit>
 						<trans-unit id="maximum">
 							<source>Maximum</source>
+							<target>最大值</target>
 						</trans-unit>
 						<trans-unit id="defined_natural_freq">
 							<source>DefinedNaturalFreq</source>
+							<target>设定固有速率</target>
 						</trans-unit>
 						<trans-unit id="natural_freq">
 							<source>NaturalFreq</source>
+							<target>固有速率</target>
 						</trans-unit>
 						<trans-unit id="defined_damping_ratio">
 							<source>DefiedDampingRatio</source>
+							<target>设定阻尼比值</target>
 						</trans-unit>
 						<trans-unit id="damping_ratio">
 							<source>DampingRatio</source>
+							<target>阻尼比值</target>
 						</trans-unit>
 						<trans-unit id="backstop">
 							<source>Backstop</source>
+							<target>限位</target>
 						</trans-unit>
 						<trans-unit id="smoothed">
 							<source>smoothed</source>
+							<target>平滑</target>
 						</trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
@@ -4859,6 +4953,7 @@
 						</trans-unit>
 						<trans-unit id="interval">
 							<source>Interval</source>
+							<target>单个高度</target>
 						</trans-unit>
 					</group>
 					<group id="digital_gauge">
@@ -4899,6 +4994,7 @@
 						</trans-unit>
 						<trans-unit id="step">
 							<source>Step</source>
+							<target>步进</target>
 						</trans-unit>
 						<trans-unit id="layer">
 							<source>Layer</source>
@@ -5011,15 +5107,18 @@
 						</group>
 						<trans-unit id="jump_screen">
 							<source>JumpScreen</source>
+							<target>跳转屏幕</target>
 						</trans-unit>
 						<trans-unit id="sound_index">
 							<source>SoundIndex</source>
 						</trans-unit>
 						<trans-unit id="command">
 							<source>Command</source>
+							<target>指令</target>
 						</trans-unit>
 						<trans-unit id="command_option">
 							<source>CommandOption</source>
+							<target>指令选项</target>
 						</trans-unit>
 					</group>
 				</group>
@@ -5029,9 +5128,11 @@
 					</trans-unit>
 					<trans-unit id="key">
 						<source>Key</source>
+						<target>键值</target>
 					</trans-unit>
 					<trans-unit id="filename">
 						<source>Filename</source>
+						<target>文件名</target>
 					</trans-unit>
 					<trans-unit id="position">
 						<source>Position</source>
@@ -5085,9 +5186,11 @@
 					<group id="message">
 						<trans-unit id="empty_filename">
 							<source>File name has not been entered.</source>
+							<target>未输入文件名。</target>
 						</trans-unit>
 						<trans-unit id="key_exist">
 							<source>The specified key is already set.</source>
+							<target>指定的键值已被使用。</target>
 						</trans-unit>
 					</group>
 				</group>
@@ -5098,12 +5201,14 @@
 					<group id="menu">
 						<trans-unit id="error">
 							<source>Error</source>
+							<target>错误</target>
 						</trans-unit>
 						<trans-unit id="warning">
 							<source>Warning</source>
 						</trans-unit>
 						<trans-unit id="info">
 							<source>Information</source>
+							<target>信息</target>
 						</trans-unit>
 						<trans-unit id="clear">
 							<source>Clear</source>
@@ -5111,9 +5216,11 @@
 					</group>
 					<trans-unit id="level">
 						<source>Level</source>
+						<target>级别</target>
 					</trans-unit>
 					<trans-unit id="description">
 						<source>Description</source>
+						<target>详情</target>
 					</trans-unit>
 				</group>
 				<group id="message">
@@ -5128,18 +5235,23 @@
 					</trans-unit>
 					<trans-unit id="positive">
 						<source>positive</source>
+						<target>正</target>
 					</trans-unit>
 					<trans-unit id="non_negative">
 						<source>non-negative</source>
+						<target>非负</target>
 					</trans-unit>
 					<trans-unit id="non_zero">
 						<source>non-zero</source>
+						<target>非零</target>
 					</trans-unit>
 					<trans-unit id="invalid_float">
 						<source>This value must be a {0}floating-point number.</source>
+						<target>该值必须为 {0}浮点数。</target>
 					</trans-unit>
 					<trans-unit id="invalid_color">
 						<source>invalid_color</source>
+						<target>颜色无效</target>
 					</trans-unit>
 				</group>
 			</group>
