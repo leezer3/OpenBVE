@@ -126,7 +126,7 @@ namespace OpenBve.Graphics.Renderers
 			double mass = 0.0;
 			for (int i = 0; i < TrainManager.PlayerTrain.Cars.Length; i++)
 			{
-				mass += TrainManager.PlayerTrain.Cars[i].Specs.MassCurrent;
+				mass += TrainManager.PlayerTrain.Cars[i].CurrentMass;
 			}
 			int hours = (int)Program.CurrentRoute.SecondsSinceMidnight / 3600,
 				remainder = (int)Program.CurrentRoute.SecondsSinceMidnight % 3600,

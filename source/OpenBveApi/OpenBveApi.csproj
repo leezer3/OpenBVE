@@ -137,6 +137,7 @@
     <Compile Include="Sounds\Sounds.SoundSourceState.cs" />
     <Compile Include="Sounds\Sounds.SoundType.cs" />
     <Compile Include="System\BaseOptions.cs" />
+    <Compile Include="System\Files.cs" />
     <Compile Include="System\FileSystem.cs" />
     <Compile Include="Graphics\InterpolationModes.cs" />
     <Compile Include="Graphics\TextAlignment.cs" />

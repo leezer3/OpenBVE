@@ -1,4 +1,5 @@
-﻿using OpenBveApi.FileSystem;
+﻿using OpenBveApi;
+using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -31,6 +32,10 @@ namespace Plugin
 		    path = path.ToLowerInvariant();
 		    if (path.EndsWith(".b3d") || path.EndsWith(".csv"))
 		    {
+			    if (System.IO.File.Exists(path) && FileFormats.IsNautilusFile(path))
+			    {
+				    return false;
+			    }
 			    return true;
 		    }
 

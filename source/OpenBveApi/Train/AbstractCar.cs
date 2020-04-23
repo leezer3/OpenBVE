@@ -21,6 +21,21 @@ namespace OpenBveApi.Trains
 		/// <remarks>Default units are km/h</remarks>
 		public double CurrentSpeed;
 
+		/// <summary>The empty mass of the car</summary>
+		public double EmptyMass;
+
+		/// <summary>Returns the current mass of the car including cargo</summary>
+		public double CurrentMass
+		{
+			get
+			{
+				return EmptyMass + CargoMass;
+			}
+		}
+
+		/// <summary>The current mass of any cargo in the car</summary>
+		public double CargoMass;
+
 		/// <summary>Contains the current brightness values</summary>
 		public Brightness Brightness;
 

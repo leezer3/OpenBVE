@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using LibRender2;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using RouteManager2;
@@ -97,7 +98,7 @@ namespace OpenBve
 						for (int i = 0; i < driveInfos.Length; i++)
 						{
 							ListViewItem Item = listviewRouteFiles.Items.Add(driveInfos[i].Name);
-							Item.ImageKey = @"folder";
+							Item.ImageKey = Program.CurrentlyRunningOnWindows ? @"disk" : @"folder";
 							Item.Tag = driveInfos[i].RootDirectory.FullName;
 							listviewRouteFiles.Tag = null;
 						}
@@ -473,7 +474,8 @@ namespace OpenBve
 						for (int i = 0; i < driveInfos.Length; i++)
 						{
 							ListViewItem Item = listviewTrainFolders.Items.Add(driveInfos[i].Name);
-							Item.ImageKey = @"folder";
+							Item.ImageKey = Program.CurrentlyRunningOnWindows ? @"disk" : @"folder";
+							
 							Item.Tag = driveInfos[i].RootDirectory.FullName;
 							listviewTrainFolders.Tag = null;
 						}
@@ -781,7 +783,7 @@ namespace OpenBve
 			}
 			try
 			{
-				lock (Illustrations.Locker)
+				lock (BaseRenderer.GdiPlusLock)
 				{
 					pictureboxRouteMap.Image = Illustrations.CreateRouteMap(pictureboxRouteMap.Width, pictureboxRouteMap.Height, false);
 					pictureboxRouteGradient.Image = Illustrations.CreateRouteGradientProfile(pictureboxRouteGradient.Width,

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using LibRender2;
 using LibRender2.Viewports;
 using OpenTK;
 using OpenTK.Graphics;
@@ -179,7 +180,7 @@ namespace OpenBve
 			Program.Renderer.Lighting.Initialize();
 			Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
 			Program.Renderer.MotionBlur.Initialize(Interface.CurrentOptions.MotionBlur);
-			lock (Illustrations.Locker)
+			lock (BaseRenderer.GdiPlusLock)
 			{
 				Timetable.CreateTimetable();
 			}
