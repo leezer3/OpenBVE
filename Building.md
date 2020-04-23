@@ -14,12 +14,12 @@ This file is a WIP set of instructions for building openBVE from source.
 #### When to use Mono
 
 - Mono 5.20.1 or later, x86 or x64
-- NuGet 2.16 or later
+- NuGet client 2.16 or later
 
 ### Linux
 
 - Mono 5.20.1 or later, x86 or x64
-- NuGet 2.16 or later
+- NuGet client 2.16 or later
 - OpenAL
 - debhelper (Debian and compatibles only)
 
@@ -39,10 +39,20 @@ NOTE: You need to get Mono from [the Mono project repository](https://www.mono-p
 sudo dnf install mono-devel mono-locale-extras nuget openal-soft
 ```
 
+#### Reference information
+
+You can install the latest NuGet client using the command below.
+
+```bash
+sudo curl -o /usr/local/bin/nuget.exe https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
+echo -e '#!/bin/sh\nexec /usr/bin/cli /usr/local/bin/nuget.exe "$@"' | sudo tee /usr/local/bin/nuget
+sudo chmod 755 /usr/local/bin/nuget
+```
+
 ### Mac
 
 - Mono 5.20.1 or later, x86 only
-- NuGet 2.16 or later
+- NuGet client 2.16 or later
 - OpenAL
 
 ## Building
