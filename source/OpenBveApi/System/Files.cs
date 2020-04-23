@@ -25,8 +25,8 @@ namespace OpenBveApi
 					using (BinaryReader reader = new BinaryReader(stream))
 					{
 						byte[] readBytes = reader.ReadBytes(16);
-						return (BitConverter.ToUInt32(readBytes, 0) == 0x554c544eu && BitConverter.ToUInt32(readBytes, 4) != 0x4d524453u
-							&& BitConverter.ToUInt32(readBytes, 8) != 0x14131211u && BitConverter.ToUInt32(readBytes, 12) != 0x00811919u);
+						return (BitConverter.ToUInt32(readBytes, 0) == 0x554c544eu && BitConverter.ToUInt32(readBytes, 4) == 0x4d524453u
+							&& BitConverter.ToUInt32(readBytes, 8) == 0x14131211u && BitConverter.ToUInt32(readBytes, 12) == 0x00811919u);
 					}
 				}
 			}
