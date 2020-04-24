@@ -699,9 +699,26 @@ namespace LibRender2
 		}
 
 		/// <summary>Determines the maximum Anisotropic filtering level the system supports</summary>
-		public void DetermineMaxAFLevel()
+		public void DetermineMaxAFLevel(bool MacOS)
 		{
-			string[] Extensions = GL.GetString(StringName.Extensions).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+			if (MacOS)
+			{
+				// Calling GL.GetString in this manner seems to be crashing the OS-X driver (No idea, but probably OpenTK....)
+				// As we only support newer Intel Macs, 16x AF is safe
+				currentOptions.AnisotropicFilteringMaximum = 16;
+				return;
+			}
+			string[] Extensions;
+			try
+			{
+				Extensions = GL.GetString(StringName.Extensions).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+			}
+			catch
+			{
+				currentOptions.AnisotropicFilteringMaximum = 0;
+				currentOptions.AnisotropicFilteringLevel = 0;
+				return;
+			}
 			currentOptions.AnisotropicFilteringMaximum = 0;
 
 			foreach (string extension in Extensions)

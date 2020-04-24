@@ -328,7 +328,7 @@ namespace OpenBve
 			jobs = new Queue<ThreadStart>(10);
 			locks = new Queue<object>(10);
 			Program.Renderer.Initialize(Program.CurrentHost, Interface.CurrentOptions);
-			Program.Renderer.DetermineMaxAFLevel();
+			Program.Renderer.DetermineMaxAFLevel(Program.CurrentlyRunningOnMacOS);
 			HUD.LoadHUD();
 			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString());
 			Program.Renderer.UpdateViewport(ViewportChangeMode.NoChange);
