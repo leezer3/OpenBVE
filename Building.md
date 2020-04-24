@@ -29,7 +29,7 @@ This file is a WIP set of instructions for building openBVE from source.
 NOTE: You need to get Mono from [the Mono project repository](https://www.mono-project.com/download/stable/#download-lin), not the distribution repository.
 
 ```bash
-sudo apt install make mono-devel libmono-i18n4.0-all nuget libopenal1 debhelper
+sudo apt install build-essential mono-devel libmono-i18n4.0-all nuget libopenal1 debhelper
 ```
 
 #### RHEL and compatibles
@@ -37,7 +37,7 @@ sudo apt install make mono-devel libmono-i18n4.0-all nuget libopenal1 debhelper
 NOTE: You need to get Mono from [the Mono project repository](https://www.mono-project.com/download/stable/#download-lin), not the distribution repository.
 
 ```bash
-sudo dnf install make mono-devel mono-locale-extras nuget openal-soft
+sudo dnf install @"Development Tools" mono-devel mono-locale-extras nuget openal-soft
 ```
 
 #### Reference information
