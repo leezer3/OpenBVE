@@ -21,6 +21,7 @@ This file is a WIP set of instructions for building openBVE from source.
 - Mono 5.20.1 or later, x86 or x64
 - NuGet client 2.16 or later
 - OpenAL
+- GNU Make
 - debhelper (Debian and compatibles only)
 
 #### Debian and compatibles
@@ -28,7 +29,7 @@ This file is a WIP set of instructions for building openBVE from source.
 NOTE: You need to get Mono from [the Mono project repository](https://www.mono-project.com/download/stable/#download-lin), not the distribution repository.
 
 ```bash
-sudo apt install mono-devel libmono-i18n4.0-all nuget libopenal1 debhelper
+sudo apt install build-essential mono-devel libmono-i18n4.0-all nuget libopenal1 debhelper
 ```
 
 #### RHEL and compatibles
@@ -36,7 +37,7 @@ sudo apt install mono-devel libmono-i18n4.0-all nuget libopenal1 debhelper
 NOTE: You need to get Mono from [the Mono project repository](https://www.mono-project.com/download/stable/#download-lin), not the distribution repository.
 
 ```bash
-sudo dnf install mono-devel mono-locale-extras nuget openal-soft
+sudo dnf install @"Development Tools" mono-devel mono-locale-extras nuget openal-soft
 ```
 
 #### Reference information
@@ -44,8 +45,8 @@ sudo dnf install mono-devel mono-locale-extras nuget openal-soft
 You can install the latest NuGet client using the command below.
 
 ```bash
-sudo curl -o /usr/local/bin/nuget.exe https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
-echo -e '#!/bin/sh\nexec /usr/bin/cli /usr/local/bin/nuget.exe "$@"' | sudo tee /usr/local/bin/nuget
+sudo curl -o /usr/local/lib/nuget.exe https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
+echo -e '#!/bin/sh\nexec /usr/bin/mono /usr/local/lib/nuget.exe "$@"' | sudo tee /usr/local/bin/nuget
 sudo chmod 755 /usr/local/bin/nuget
 ```
 
@@ -54,6 +55,7 @@ sudo chmod 755 /usr/local/bin/nuget
 - Mono 5.20.1 or later, x86 only
 - NuGet client 2.16 or later
 - OpenAL
+- GNU Make
 
 ## Building
 
@@ -71,14 +73,17 @@ sudo chmod 755 /usr/local/bin/nuget
 1. Start "Open Mono Command Prompt" from the start menu.
 2. Open the main openBVE source directory in this terminal.
 3. Restore the packages as required. `nuget restore OpenBVE.sln`
-4. Build the solution. `msbuild OpenBve.sln`
+4. Build the solution. `msbuild OpenBVE.sln`
 
 ### Mac / Linux
 
 1. Open the main openBVE source directory in the terminal.
 2. You may either build using the makefile, which supports the following options:
-   - make - Restores the NuGet packages only.
-   - make all-release - Creates a release build.
-   - make all-debug - Creates a debug build.
-   - make debian - On Debian and compatibles, creates an installable deb package.
-   - make publish - On Mac, creates an app package.
+   - `make` - Restores the NuGet packages only.
+   - `make all-release` - Creates a release build.
+   - `make all-debug` - Creates a debug build.
+   - `make clean-all` - Cleans release and debug builds.
+   - `make openbve-release` - Creates a release build without tools.
+   - `make openbve-debug` - Creates a debug build without tools.
+   - `make debian` - On Debian and compatibles, creates an installable deb package.
+   - `make publish` - On Mac, creates an app package.
