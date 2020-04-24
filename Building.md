@@ -45,7 +45,7 @@ sudo dnf install make mono-devel mono-locale-extras nuget openal-soft
 You can install the latest NuGet client using the command below.
 
 ```bash
-sudo curl  -o /usr/local/lib/nuget.exe https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
+sudo curl -o /usr/local/lib/nuget.exe https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
 echo -e '#!/bin/sh\nexec /usr/bin/mono /usr/local/lib/nuget.exe "$@"' | sudo tee /usr/local/bin/nuget
 sudo chmod 755 /usr/local/bin/nuget
 ```
