@@ -77,7 +77,7 @@ namespace OpenBve
 				double passengers = Math.Round(randomFactor * Train.Passengers.PassengerRatio * passengersPerArea * area);
 				const double massPerPassenger = 70.0;
 				double passengerMass = passengers * massPerPassenger;
-				Train.Cars[i].Specs.MassCurrent = Train.Cars[i].Specs.MassEmpty + passengerMass;
+				Train.Cars[i].CargoMass = passengerMass;
 			}
 		}
 	}

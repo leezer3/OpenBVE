@@ -135,7 +135,6 @@
     <Compile Include="Game\Score\Score.ScoreMessage.cs" />
     <Compile Include="Game\Score\Score.Tokens.cs" />
     <Compile Include="Game\Score\Score.Values.cs" />
-    <Compile Include="Game\Station.cs" />
     <Compile Include="Graphics\HUD\HUD.cs" />
     <Compile Include="Graphics\HUD\HUD.Element.cs">
       <DependentUpon>HUD.cs</DependentUpon>
@@ -179,7 +178,6 @@
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Preprocess.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.RouteData.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Functions.cs" />
-    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Objects.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.PreprocessOptions.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.RouteFixes.cs" />
     <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.SignalData.cs" />
@@ -311,7 +309,6 @@
       <DependentUpon>formRaildriverCalibration.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
-    <Compile Include="Game\ObjectManager\ObjectManager.LoadObject.cs" />
     <Compile Include="Audio\Sounds.cs" />
     <Compile Include="Audio\Sounds.Update.cs">
       <DependentUpon>Sounds.cs</DependentUpon>

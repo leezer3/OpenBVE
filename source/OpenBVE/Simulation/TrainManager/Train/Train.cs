@@ -37,7 +37,7 @@ namespace OpenBve
 			
 			
 			
-			internal Game.GeneralAI AI;
+			internal GeneralAI AI;
 			private double InternalTimerTimeElapsed;
 			internal bool Derailed;
 			
@@ -130,11 +130,11 @@ namespace OpenBve
 			{
 				if (CurrentSectionLimit == 0.0 && Game.MinimalisticSimulation == false)
 				{
-					Game.AddMessage(Translations.GetInterfaceString("message_signal_stop"), MessageDependency.PassedRedSignal, GameMode.Normal, MessageColor.Red, double.PositiveInfinity, null);
+					MessageManager.AddMessage(Translations.GetInterfaceString("message_signal_stop"), MessageDependency.PassedRedSignal, GameMode.Normal, MessageColor.Red, double.PositiveInfinity, null);
 				}
 				else if (CurrentSpeed > CurrentSectionLimit)
 				{
-					Game.AddMessage(Translations.GetInterfaceString("message_signal_overspeed"), MessageDependency.SectionLimit, GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
+					MessageManager.AddMessage(Translations.GetInterfaceString("message_signal_overspeed"), MessageDependency.SectionLimit, GameMode.Normal, MessageColor.Orange, double.PositiveInfinity, null);
 				}
 			}
 
@@ -258,7 +258,7 @@ namespace OpenBve
 							 * HACK: If the limit has changed, or we are in arcade mode, notify the player
 							 *       This conforms to the original behaviour, but doesn't need to raise the message from the event.
 							 */
-							 Game.AddMessage(Translations.GetInterfaceString("message_route_overspeed"), MessageDependency.RouteLimit, GameMode.Normal, MessageColor.Orange, Double.PositiveInfinity, null);
+							 MessageManager.AddMessage(Translations.GetInterfaceString("message_route_overspeed"), MessageDependency.RouteLimit, GameMode.Normal, MessageColor.Orange, Double.PositiveInfinity, null);
 						}
 						
 					}
@@ -267,11 +267,11 @@ namespace OpenBve
 					{
 						if (CurrentSectionLimit == 0.0)
 						{
-							Game.AddMessage(Translations.GetInterfaceString("message_signal_stop"), MessageDependency.PassedRedSignal, GameMode.Normal, MessageColor.Red, double.PositiveInfinity, null);
+							MessageManager.AddMessage(Translations.GetInterfaceString("message_signal_stop"), MessageDependency.PassedRedSignal, GameMode.Normal, MessageColor.Red, double.PositiveInfinity, null);
 						}
 						else if (CurrentSpeed > CurrentSectionLimit)
 						{
-							Game.AddMessage(Translations.GetInterfaceString("message_signal_overspeed"), MessageDependency.SectionLimit, GameMode.Normal, MessageColor.Orange, Double.PositiveInfinity, null);
+							MessageManager.AddMessage(Translations.GetInterfaceString("message_signal_overspeed"), MessageDependency.SectionLimit, GameMode.Normal, MessageColor.Orange, Double.PositiveInfinity, null);
 						}
 					}
 					if (AI != null)
@@ -427,7 +427,7 @@ namespace OpenBve
 							double a = (3.6 * CurrentSectionLimit) * Game.SpeedConversionFactor;
 							s = s.Replace("[speed]", a.ToString("0", CultureInfo.InvariantCulture));
 							s = s.Replace("[unit]", Game.UnitOfSpeed);
-							Game.AddMessage(s, MessageDependency.None, GameMode.Normal, MessageColor.Red, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+							MessageManager.AddMessage(s, MessageDependency.None, GameMode.Normal, MessageColor.Red, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
 						}
 					}
 				}
@@ -471,8 +471,8 @@ namespace OpenBve
 					double pr = Cars[i].RearAxle.Follower.TrackPosition - Cars[i].RearAxle.Position;
 					double pf = Cars[i].FrontAxle.Follower.TrackPosition - Cars[i].FrontAxle.Position;
 					CenterOfCarPositions[i] = 0.5 * (pr + pf);
-					CenterOfMassPosition += CenterOfCarPositions[i] * Cars[i].Specs.MassCurrent;
-					TrainMass += Cars[i].Specs.MassCurrent;
+					CenterOfMassPosition += CenterOfCarPositions[i] * Cars[i].CurrentMass;
+					TrainMass += Cars[i].CurrentMass;
 				}
 				if (TrainMass != 0.0)
 				{
@@ -526,9 +526,9 @@ namespace OpenBve
 						double d = CenterOfCarPositions[p] - CenterOfCarPositions[s] - 0.5 * (Cars[p].Length + Cars[s].Length);
 						if (d < min)
 						{
-							double t = (min - d) / (Cars[p].Specs.MassCurrent + Cars[s].Specs.MassCurrent);
-							double tp = t * Cars[s].Specs.MassCurrent;
-							double ts = t * Cars[p].Specs.MassCurrent;
+							double t = (min - d) / (Cars[p].CurrentMass + Cars[s].CurrentMass);
+							double tp = t * Cars[s].CurrentMass;
+							double ts = t * Cars[p].CurrentMass;
 							Cars[p].UpdateTrackFollowers(tp, false, false);
 							Cars[s].UpdateTrackFollowers(-ts, false, false);
 							CenterOfCarPositions[p] += tp;
@@ -537,9 +537,9 @@ namespace OpenBve
 						}
 						else if (d > max & !Cars[p].Derailed & !Cars[s].Derailed)
 						{
-							double t = (d - max) / (Cars[p].Specs.MassCurrent + Cars[s].Specs.MassCurrent);
-							double tp = t * Cars[s].Specs.MassCurrent;
-							double ts = t * Cars[p].Specs.MassCurrent;
+							double t = (d - max) / (Cars[p].CurrentMass + Cars[s].CurrentMass);
+							double tp = t * Cars[s].CurrentMass;
+							double ts = t * Cars[p].CurrentMass;
 
 							Cars[p].UpdateTrackFollowers(-tp, false, false);
 							Cars[s].UpdateTrackFollowers(ts, false, false);
@@ -616,8 +616,8 @@ namespace OpenBve
 							double m = 0.0;
 							for (int k = i; k <= j; k++)
 							{
-								v += NewSpeeds[k] * Cars[k].Specs.MassCurrent;
-								m += Cars[k].Specs.MassCurrent;
+								v += NewSpeeds[k] * Cars[k].CurrentMass;
+								m += Cars[k].CurrentMass;
 							}
 							if (m != 0.0)
 							{
@@ -658,9 +658,9 @@ namespace OpenBve
 				{
 					h += Cars[i].FrontAxle.Follower.WorldPosition.Y + Cars[i].RearAxle.Follower.WorldPosition.Y;
 				}
-				Specs.CurrentElevation = Program.CurrentRoute.Atmosphere.InitialElevation + h / (2.0 * (double)Cars.Length);
-				Specs.CurrentAirTemperature = Program.CurrentRoute.Atmosphere.GetAirTemperature(Specs.CurrentElevation);
-				Specs.CurrentAirPressure = Program.CurrentRoute.Atmosphere.GetAirPressure(Specs.CurrentElevation, Specs.CurrentAirTemperature);
+				double elevation = Program.CurrentRoute.Atmosphere.InitialElevation + h / (2.0 * (double)Cars.Length);
+				Specs.CurrentAirTemperature = Program.CurrentRoute.Atmosphere.GetAirTemperature(elevation);
+				Specs.CurrentAirPressure = Program.CurrentRoute.Atmosphere.GetAirPressure(elevation, Specs.CurrentAirTemperature);
 				Specs.CurrentAirDensity = Program.CurrentRoute.Atmosphere.GetAirDensity(Specs.CurrentAirPressure, Specs.CurrentAirTemperature);
 			}
 

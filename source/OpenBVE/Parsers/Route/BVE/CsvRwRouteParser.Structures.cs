@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
+using OpenBveApi.Sounds;
 using OpenBveApi.Trains;
 using RouteManager2.Climate;
 using RouteManager2.MessageManager;
@@ -136,7 +137,7 @@ namespace OpenBve
 		private struct Sound
 		{
 			internal double TrackPosition;
-			internal SoundBuffer SoundBuffer;
+			internal SoundHandle SoundBuffer;
 			internal SoundType Type;
 			internal Vector2 Position;
 			//TODO:

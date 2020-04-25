@@ -1,3 +1,4 @@
+using LibRender2.Screens;
 using LibRender2.Textures;
 using OpenBveApi.Textures;
 
@@ -31,7 +32,7 @@ namespace OpenBve.Graphics
 				}
 			}
 #endif
-			if (Game.CurrentInterface == Game.InterfaceType.Normal)
+			if (Program.Renderer.CurrentInterface == InterfaceType.Normal)
 			{
 				foreach (var Texture in Program.Renderer.TextureManager.RegisteredTextures)
 				{

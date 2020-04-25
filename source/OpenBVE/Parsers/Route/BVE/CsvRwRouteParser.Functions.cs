@@ -2,6 +2,7 @@
 using System.IO;
 using System.Security.Cryptography;
 using OpenBveApi.Colors;
+using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 
 namespace OpenBve
@@ -147,6 +148,16 @@ namespace OpenBve
 				}
 			}
 			return Textures;
+		}
+
+
+		private static StaticObject LoadStaticObject(string fileName, System.Text.Encoding encoding, bool preserveVertices)
+		{
+			//FIXME: This needs to be removed
+			//Hack to allow loading objects via the API into an array
+			StaticObject staticObject;
+			Program.CurrentHost.LoadStaticObject(fileName, encoding, preserveVertices, out staticObject);
+			return staticObject;
 		}
 
 		internal static string GetChecksum(string file)

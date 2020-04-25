@@ -16,9 +16,6 @@
 			internal double JerkBrakeDown;
 			/// brake
 			internal double MotorDeceleration;
-			/// physical properties
-			internal double MassEmpty;
-			internal double MassCurrent;
 			internal double ExposedFrontalArea;
 			internal double UnexposedFrontalArea;
 			internal double CoefficientOfStaticFriction;

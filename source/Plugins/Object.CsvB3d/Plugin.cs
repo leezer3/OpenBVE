@@ -1,4 +1,5 @@
-﻿using OpenBveApi.FileSystem;
+﻿using OpenBveApi;
+using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -11,6 +12,8 @@ namespace Plugin
 	    private static bool CylinderHack = false;
 	    private static bool BveTsHacks = false;
 	    private static string CompatibilityFolder;
+
+	    public override string[] SupportedStaticObjectExtensions => new[] { ".b3d", ".csv" };
 
 	    public override void Load(HostInterface host, FileSystem fileSystem) {
 		    currentHost = host;
@@ -29,6 +32,10 @@ namespace Plugin
 		    path = path.ToLowerInvariant();
 		    if (path.EndsWith(".b3d") || path.EndsWith(".csv"))
 		    {
+			    if (System.IO.File.Exists(path) && FileFormats.IsNautilusFile(path))
+			    {
+				    return false;
+			    }
 			    return true;
 		    }
 

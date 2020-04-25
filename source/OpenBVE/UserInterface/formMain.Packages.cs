@@ -377,11 +377,23 @@ namespace OpenBve
 			}
 			labelListFilesInstalled.Text = Translations.GetInterfaceString("packages_creation_failure_error");
 			buttonInstallFinish.Text = Translations.GetInterfaceString("packages_success");
-			//Non-localised string as this is a specific error message
-			textBoxFilesInstalled.Text = e.Exception + "\r\n \r\n encountered whilst processing the following file: \r\n\r\n" +
-			                             e.CurrentFile + " at " + e.Progress + "% completion.";
-			//Create crash dump file
-			CrashHandler.LogCrash(e.Exception + Environment.StackTrace);
+			if (e.Exception is UnauthorizedAccessException && !creatingPackage)
+			{
+				//User attempted to install in a directory which requires UAC access
+				textBoxFilesInstalled.Text = e.Exception.Message + Environment.NewLine + Environment.NewLine + Translations.GetInterfaceString("errors_security_checkaccess");
+				if (Program.CurrentlyRunningOnWindows)
+				{
+					textBoxFilesInstalled.Text+= Environment.NewLine + Environment.NewLine + Translations.GetInterfaceString("errors_security_badlocation");
+				}
+			}
+			else
+			{
+				//Non-localised string as this is a specific error message
+				textBoxFilesInstalled.Text = e.Exception + "\r\n \r\n encountered whilst processing the following file: \r\n\r\n" +
+				                             e.CurrentFile + " at " + e.Progress + "% completion.";
+				//Create crash dump file
+				CrashHandler.LogCrash(e.Exception + Environment.StackTrace);
+			}
 		}
 
 		/// <summary>This method should be called to populate a datagrid view with a list of packages</summary>
@@ -863,9 +875,12 @@ namespace OpenBve
 				if (ProblemEncountered == false)
 				{
 					string text = "";
-					for (int i = 0; i < filesToPackage.Count; i++)
+					if (filesToPackage != null && filesToPackage.Count > 0)
 					{
-						text += filesToPackage[i].relativePath + "\r\n";
+						for (int i = 0; i < filesToPackage.Count; i++)
+						{
+							text += filesToPackage[i].relativePath + "\r\n";
+						}
 					}
 					textBoxFilesInstalled.Text = text;
 					labelInstallSuccess1.Text = Translations.GetInterfaceString("packages_creation_success");
@@ -885,6 +900,12 @@ namespace OpenBve
 			if (currentPackage == null || currentPackage.GUID == null)
 			{
 				//Don't crash if we've clicked on the button without selecting anything
+				return;
+			}
+
+			if (filesToPackage == null || filesToPackage.Count == 0)
+			{
+				MessageBox.Show(Translations.GetInterfaceString("packages_creation_invalid_nofiles"));
 				return;
 			}
 			currentPackage.FileName = textBoxPackageFileName.Text;

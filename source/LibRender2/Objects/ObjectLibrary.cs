@@ -85,13 +85,9 @@ namespace LibRender2.Objects
 
 		public void ShowObject(ObjectState State, ObjectType Type)
 		{
-			if (renderer.DefaultShader == null)
-			{
-				throw new Exception();
-			}
 			bool result = AddObject(State);
 
-			if (State.Prototype.Mesh.VAO == null)
+			if (renderer.AvailableNewRenderer && State.Prototype.Mesh.VAO == null)
 			{
 				VAOExtensions.CreateVAO(ref State.Prototype.Mesh, State.Prototype.Dynamic, renderer.DefaultShader.VertexLayout);
 			}
@@ -221,8 +217,6 @@ namespace LibRender2.Objects
 							}
 						}
 					}
-					
-					
 				}
 				else
 				{
@@ -231,7 +225,6 @@ namespace LibRender2.Objects
 					 */
 					list.Add(new FaceState(State, face));
 				}
-				
 			}
 		}
 

@@ -96,7 +96,7 @@ namespace OpenBve.Parsers.Train
 										string f = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
 										if (System.IO.File.Exists(f))
 										{
-											CouplerObjects[carIndex - 1] = ObjectManager.LoadObject(f, System.Text.Encoding.Default, false);
+											Program.CurrentHost.LoadObject(f, System.Text.Encoding.Default, out CouplerObjects[carIndex - 1]);
 										}
 										break;
 								}
@@ -137,7 +137,7 @@ namespace OpenBve.Parsers.Train
 				if (Train.Cars[Train.DriverCar].CameraRestrictionMode != CameraRestrictionMode.NotSpecified)
 				{
 					Program.Renderer.Camera.CurrentRestriction = Train.Cars[Train.DriverCar].CameraRestrictionMode;
-					World.UpdateViewingDistances();
+					Program.Renderer.UpdateViewingDistances(Program.CurrentRoute.CurrentBackground.BackgroundImageDistance);
 				}
 				DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/Train/NotchDescriptions");
 				if (DocumentNodes != null && DocumentNodes.Count > 0)

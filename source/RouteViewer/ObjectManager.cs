@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using LibRender2;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
@@ -19,8 +20,8 @@ namespace OpenBve {
 				double z = AnimatedWorldObjects[i].Object.TranslateZFunction == null ? 0.0 : AnimatedWorldObjects[i].Object.TranslateZFunction.LastResult;
 				double pa = AnimatedWorldObjects[i].TrackPosition + z - AnimatedWorldObjects[i].Radius - extraRadius;
 				double pb = AnimatedWorldObjects[i].TrackPosition + z + AnimatedWorldObjects[i].Radius + extraRadius;
-				double ta = World.CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z - Program.CurrentRoute.CurrentBackground.BackgroundImageDistance - Program.Renderer.Camera.ExtraViewingDistance;
-				double tb = World.CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z + Program.CurrentRoute.CurrentBackground.BackgroundImageDistance + Program.Renderer.Camera.ExtraViewingDistance;
+				double ta = Program.Renderer.CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z - Program.CurrentRoute.CurrentBackground.BackgroundImageDistance - Program.Renderer.Camera.ExtraViewingDistance;
+				double tb = Program.Renderer.CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z + Program.CurrentRoute.CurrentBackground.BackgroundImageDistance + Program.Renderer.Camera.ExtraViewingDistance;
 				bool visible = pb >= ta & pa <= tb;
 				if (visible | ForceUpdate)
 				{
@@ -55,60 +56,6 @@ namespace OpenBve {
 			}
 		}
 
-		// load object
-		internal static UnifiedObject LoadObject(string FileName, Encoding Encoding, bool PreserveVertices) {
-			#if !DEBUG
-			try {
-				#endif
-				if (!System.IO.Path.HasExtension(FileName)) {
-					while (true) {
-						string f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".x");
-						if (System.IO.File.Exists(f)) {
-							FileName = f;
-							break;
-						}
-						f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".csv");
-						if (System.IO.File.Exists(f)) {
-							FileName = f;
-							break;
-						}
-						f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), System.IO.Path.GetFileName(FileName) + ".b3d");
-						if (System.IO.File.Exists(f)) {
-							FileName = f;
-							break;
-						}
-						break;
-					}
-				}
-				UnifiedObject Result;
-				switch (System.IO.Path.GetExtension(FileName).ToLowerInvariant()) {
-					case ".csv":
-					case ".b3d":
-					case ".x":
-					case ".obj":
-					case ".animated":
-					case ".l3dobj":
-					case ".l3dgrp":
-					case ".s":
-						Program.CurrentHost.LoadObject(FileName, Encoding, out Result);
-						break;
-					default:
-						Interface.AddMessage(MessageType.Error, false, "The file extension is not supported: " + FileName);
-						return null;
-				}
-
-				if (Result != null)
-				{
-					Result.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, false);
-				}
-				return Result;
-				#if !DEBUG
-			} catch (Exception ex) {
-				Interface.AddMessage(MessageType.Error, true, "An unexpected error occured (" + ex.Message + ") while attempting to load the file " + FileName);
-				return null;
-			}
-			#endif
-		}
 		internal static StaticObject LoadStaticObject(string FileName, Encoding Encoding, bool PreserveVertices) {
 			#if !DEBUG
 			try {

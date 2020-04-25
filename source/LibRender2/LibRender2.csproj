@@ -67,6 +67,7 @@
     <Compile Include="Primitives\Rectangle.cs" />
     <Compile Include="openGL\Vertex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Screen\InterfaceType.cs" />
     <Compile Include="Screen\OutputModes.cs" />
     <Compile Include="Screen\Screen.cs" />
     <Compile Include="Shaders\Shader.cs" />
@@ -91,6 +92,8 @@
       <Name>OpenBveApi</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Overlays\Messages\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

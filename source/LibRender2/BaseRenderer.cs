@@ -21,6 +21,7 @@ using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenBveApi.World;
 using OpenTK.Graphics;
@@ -54,6 +55,36 @@ namespace LibRender2
 		protected double LastUpdatedTrackPosition;
 
 		public Screen Screen;
+
+		/// <summary>The track follower for the main camera</summary>
+		public TrackFollower CameraTrackFollower;
+
+		/// <summary>Holds a reference to the current interface type of the game (Used by the renderer)</summary>
+		public InterfaceType CurrentInterface
+		{
+			get
+			{
+				return currentInterface;
+			}
+			set
+			{
+				previousInterface = currentInterface;
+				currentInterface = value;
+			}
+		}
+
+		/// <summary>Holds a reference to the previous interface type of the game</summary>
+		public InterfaceType PreviousInterface
+		{
+			get
+			{
+				return previousInterface;
+			}
+		}
+		//Backing properties for the interface values
+		private InterfaceType currentInterface = InterfaceType.Normal;
+		private InterfaceType previousInterface = InterfaceType.Normal;
+
 		public CameraProperties Camera;
 		public Lighting Lighting;
 		public Background Background;
@@ -138,6 +169,14 @@ namespace LibRender2
 		/// <summary>Stores the most recently bound texture</summary>
 		public OpenGlTexture LastBoundTexture;
 
+		private Color32 lastColor;
+
+		internal int lastVAO;
+
+		protected bool ForceLegacyOpenGL;
+
+		public bool AvailableNewRenderer => currentOptions != null && currentOptions.IsUseNewRenderer && !ForceLegacyOpenGL;
+
 		protected BaseRenderer()
 		{
 			Screen = new Screen();
@@ -157,6 +196,23 @@ namespace LibRender2
 			currentHost = CurrentHost;
 			currentOptions = CurrentOptions;
 
+			try
+			{
+				DefaultShader = new Shader("default", "default", true);
+				DefaultShader.Activate();
+				DefaultShader.SetMaterialAmbient(Color32.White);
+				DefaultShader.SetMaterialDiffuse(Color32.White);
+				DefaultShader.SetMaterialSpecular(Color32.White);
+				lastColor = Color32.White;
+				DefaultShader.Deactivate();
+			}
+			catch
+			{
+				CurrentHost.AddMessage(MessageType.Error, false, "Initializing the default shaders failed- Falling back to legacy openGL.");
+				CurrentOptions.IsUseNewRenderer = false;
+				ForceLegacyOpenGL = true;
+			}
+
 			Background = new Background(this);
 			Fog = new Fog();
 			OpenGlString = new OpenGlString(this);
@@ -170,23 +226,12 @@ namespace LibRender2
 			StaticObjectStates = new List<ObjectState>();
 			DynamicObjectStates = new List<ObjectState>();
 			VisibleObjects = new VisibleObjectLibrary(currentHost, Camera, currentOptions, this);
-			try
-			{
-				DefaultShader = new Shader("default", "default", true);
-				DefaultShader.Activate();
-				DefaultShader.Deactivate();
-			}
-			catch
-			{
-				CurrentHost.AddMessage(MessageType.Error, false, "Initialising the default shaders failed- Falling back to legacy openGL.");
-				CurrentOptions.IsUseNewRenderer = false;
-			}
 
 			GL.ClearColor(0.67f, 0.67f, 0.67f, 1.0f);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthFunc(DepthFunction.Lequal);
-			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+			SetBlendFunc(AvailableNewRenderer ? BlendingFactor.One : BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 			GL.Hint(HintTarget.FogHint, HintMode.Fastest);
 			GL.Hint(HintTarget.LineSmoothHint, HintMode.Fastest);
 			GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Fastest);
@@ -229,7 +274,7 @@ namespace LibRender2
 			GL.Disable(EnableCap.Lighting);
 			GL.Disable(EnableCap.Fog);
 			GL.Disable(EnableCap.Texture2D);
-			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+			SetBlendFunc(AvailableNewRenderer ? BlendingFactor.One : BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 			UnsetBlendFunc();
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthMask(true);
@@ -280,8 +325,8 @@ namespace LibRender2
 				return -1;
 			}
 
-			float startingDistance = float.MaxValue;
-			float endingDistance = float.MinValue;
+			float startingDistance = Single.MaxValue;
+			float endingDistance = Single.MinValue;
 
 			if (AccurateObjectDisposal)
 			{
@@ -338,7 +383,7 @@ namespace LibRender2
 				StartingDistance = startingDistance,
 				EndingDistance = endingDistance
 			});
-			
+
 			foreach (MeshFace face in Prototype.Mesh.Faces)
 			{
 				switch (face.Flags & MeshFace.FaceTypeMask)
@@ -372,8 +417,8 @@ namespace LibRender2
 				return -1;
 			}
 
-			float startingDistance = float.MaxValue;
-			float endingDistance = float.MinValue;
+			float startingDistance = Single.MaxValue;
+			float endingDistance = Single.MinValue;
 
 			if (AccurateObjectDisposal)
 			{
@@ -429,7 +474,7 @@ namespace LibRender2
 				StartingDistance = startingDistance,
 				EndingDistance = endingDistance
 			});
-			
+
 			foreach (MeshFace face in Prototype.Mesh.Faces)
 			{
 				switch (face.Flags & MeshFace.FaceTypeMask)
@@ -467,8 +512,8 @@ namespace LibRender2
 			DynamicObjectStates.Add(internalObject);
 		}
 
-		/// <summary>Initialises the visibility of all objects within the game world</summary>
-		/// <remarks>If the new renderer is enabled, this must be run in a thread posessing an openGL context in order to successfully create
+		/// <summary>Initializes the visibility of all objects within the game world</summary>
+		/// <remarks>If the new renderer is enabled, this must be run in a thread processing an openGL context in order to successfully create
 		/// the required VAO objects</remarks>
 		public virtual void InitializeVisibility()
 		{
@@ -591,6 +636,53 @@ namespace LibRender2
 			LastUpdatedTrackPosition = TrackPosition;
 		}
 
+		public void UpdateViewingDistances(double BackgroundImageDistance)
+		{
+			double f = Math.Atan2(CameraTrackFollower.WorldDirection.Z, CameraTrackFollower.WorldDirection.X);
+			double c = Math.Atan2(Camera.AbsoluteDirection.Z, Camera.AbsoluteDirection.X) - f;
+			if (c < -Math.PI)
+			{
+				c += 2.0 * Math.PI;
+			}
+			else if (c > Math.PI)
+			{
+				c -= 2.0 * Math.PI;
+			}
+
+			double a0 = c - 0.5 * Camera.HorizontalViewingAngle;
+			double a1 = c + 0.5 * Camera.HorizontalViewingAngle;
+			double max;
+			if (a0 <= 0.0 & a1 >= 0.0)
+			{
+				max = 1.0;
+			}
+			else
+			{
+				double c0 = Math.Cos(a0);
+				double c1 = Math.Cos(a1);
+				max = c0 > c1 ? c0 : c1;
+				if (max < 0.0) max = 0.0;
+			}
+
+			double min;
+			if (a0 <= -Math.PI | a1 >= Math.PI)
+			{
+				min = -1.0;
+			}
+			else
+			{
+				double c0 = Math.Cos(a0);
+				double c1 = Math.Cos(a1);
+				min = c0 < c1 ? c0 : c1;
+				if (min > 0.0) min = 0.0;
+			}
+
+			double d = BackgroundImageDistance + Camera.ExtraViewingDistance;
+			Camera.ForwardViewingDistance = d * max;
+			Camera.BackwardViewingDistance = -d * min;
+			UpdateVisibility(CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z, true);
+		}
+
 		public void UpdateVisibility(double TrackPosition, bool ViewingDistanceChanged)
 		{
 			if (ViewingDistanceChanged)
@@ -607,14 +699,31 @@ namespace LibRender2
 		}
 
 		/// <summary>Determines the maximum Anisotropic filtering level the system supports</summary>
-		public void DetermineMaxAFLevel()
+		public void DetermineMaxAFLevel(bool MacOS)
 		{
-			string[] Extensions = GL.GetString(StringName.Extensions).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+			if (MacOS)
+			{
+				// Calling GL.GetString in this manner seems to be crashing the OS-X driver (No idea, but probably OpenTK....)
+				// As we only support newer Intel Macs, 16x AF is safe
+				currentOptions.AnisotropicFilteringMaximum = 16;
+				return;
+			}
+			string[] Extensions;
+			try
+			{
+				Extensions = GL.GetString(StringName.Extensions).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+			}
+			catch
+			{
+				currentOptions.AnisotropicFilteringMaximum = 0;
+				currentOptions.AnisotropicFilteringLevel = 0;
+				return;
+			}
 			currentOptions.AnisotropicFilteringMaximum = 0;
 
 			foreach (string extension in Extensions)
 			{
-				if (string.Compare(extension, "GL_EXT_texture_filter_anisotropic", StringComparison.OrdinalIgnoreCase) == 0)
+				if (String.Compare(extension, "GL_EXT_texture_filter_anisotropic", StringComparison.OrdinalIgnoreCase) == 0)
 				{
 					float n = GL.GetFloat((GetPName)ExtTextureFilterAnisotropic.MaxTextureMaxAnisotropyExt);
 					int MaxAF = (int)Math.Round(n);
@@ -679,12 +788,13 @@ namespace LibRender2
 		{
 #if DEBUG
 			lastError = GL.GetError();
-			
+
 			if (lastError != ErrorCode.NoError)
 			{
 				throw new InvalidOperationException($"OpenGL Error: {lastError.ToString()}");
 			}
-#endif   
+#endif
+
 			Shader.SetCurrentProjectionMatrix(Matrix4D.Identity);
 			Shader.SetCurrentModelViewMatrix(Matrix4D.Identity);
 			Shader.SetCurrentTextureMatrix(Matrix4D.Identity);
@@ -697,6 +807,7 @@ namespace LibRender2
 			Shader.SetMaterialDiffuse(Color24.White);
 			Shader.SetMaterialSpecular(Color24.White);
 			Shader.SetMaterialEmission(Color24.White);
+			lastColor = Color32.White;
 			Shader.SetMaterialShininess(1.0f);
 			Shader.SetIsFog(false);
 			Shader.SetFogStart(0.0f);
@@ -707,7 +818,6 @@ namespace LibRender2
 			Shader.SetBrightness(1.0f);
 			Shader.SetOpacity(1.0f);
 			Shader.SetObjectIndex(0);
-			Shader.SetMaterialAdditive(0);
 		}
 
 		public void SetFogForImmediateMode()
@@ -797,10 +907,6 @@ namespace LibRender2
 			RenderFace(Shader, State.Object, State.Face, modelMatrix, modelViewMatrix, IsDebugTouchMode);
 		}
 
-		private Color32 lastColor;
-
-		internal int lastVAO;
-
 		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, Matrix4D modelMatrix, Matrix4D modelViewMatrix, bool IsDebugTouchMode = false)
 		{
 			if (State.Prototype.Mesh.Vertices.Length < 1)
@@ -816,7 +922,7 @@ namespace LibRender2
 				VAO.Bind();
 				lastVAO = VAO.handle;
 			}
-			
+
 			if (!OptionBackFaceCulling || (Face.Flags & MeshFace.Face2Mask) != 0)
 			{
 				GL.Disable(EnableCap.CullFace);
@@ -830,10 +936,9 @@ namespace LibRender2
 			}
 
 			// matrix
-			
 			Shader.SetCurrentModelViewMatrix(modelViewMatrix);
 			Shader.SetCurrentTextureMatrix(State.TextureTranslation);
-			
+
 			if (OptionWireFrame || IsDebugTouchMode)
 			{
 				if (material.Color != lastColor)
@@ -857,7 +962,7 @@ namespace LibRender2
 					Shader.SetMaterialSpecular(material.Color);
 					//TODO: Ambient and specular colors are not set by any current parsers
 				}
-					
+
 				if ((material.Flags & MeshMaterial.EmissiveColorMask) != 0)
 				{
 					Shader.SetMaterialEmission(material.EmissiveColor);
@@ -905,21 +1010,21 @@ namespace LibRender2
 			// daytime polygon
 			{
 				// texture
-				if (material.DaytimeTexture != null && currentHost.LoadTexture(material.DaytimeTexture, (OpenGlTextureWrapMode) material.WrapMode))
+				if (material.DaytimeTexture != null && currentHost.LoadTexture(material.DaytimeTexture, (OpenGlTextureWrapMode)material.WrapMode))
 				{
 					Shader.SetIsTexture(true);
-					if (LastBoundTexture != material.DaytimeTexture.OpenGlTextures[(int) material.WrapMode])
+					if (LastBoundTexture != material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode])
 					{
 						GL.BindTexture(TextureTarget.Texture2D,
-							material.DaytimeTexture.OpenGlTextures[(int) material.WrapMode].Name);
-						LastBoundTexture = material.DaytimeTexture.OpenGlTextures[(int) material.WrapMode];
+							material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode].Name);
+						LastBoundTexture = material.DaytimeTexture.OpenGlTextures[(int)material.WrapMode];
 					}
 				}
 				else
 				{
 					Shader.SetIsTexture(false);
 				}
-
+				GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
 				// Calculate the brightness of the poly to render
 				float factor;
 				if (material.BlendMode == MeshMaterialBlendMode.Additive)
@@ -927,10 +1032,10 @@ namespace LibRender2
 					//Additive blending- Full brightness
 					factor = 1.0f;
 					GL.Enable(EnableCap.Blend);
-					GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
+					GL.BlendFunc(BlendingFactor.One, BlendingFactor.One);
 					Shader.SetIsFog(false);
 				}
-				else if((material.Flags & MeshMaterial.EmissiveColorMask) != 0)
+				else if ((material.Flags & MeshMaterial.EmissiveColorMask) != 0)
 				{
 					//As material is emitting light, it must be at full brightness
 					factor = 1.0f;
@@ -958,20 +1063,11 @@ namespace LibRender2
 				if (material.GlowAttenuationData != 0)
 				{
 					alphaFactor = (float)Glow.GetDistanceFactor(modelMatrix, State.Prototype.Mesh.Vertices, ref Face, material.GlowAttenuationData, out mode);
-					
+
 				}
 				else
 				{
 					alphaFactor = 1.0f;
-				}
-
-				if (material.BlendMode == MeshMaterialBlendMode.Additive)
-				{
-					Shader.SetMaterialAdditive(1 + (int)mode);
-				}
-				else
-				{
-					Shader.SetMaterialAdditive(0);
 				}
 				
 				Shader.SetOpacity(inv255 * material.Color.A * alphaFactor);
@@ -990,7 +1086,7 @@ namespace LibRender2
 					GL.BindTexture(TextureTarget.Texture2D, material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode].Name);
 					LastBoundTexture = material.NighttimeTexture.OpenGlTextures[(int)material.WrapMode];
 				}
-				
+
 
 				GL.Enable(EnableCap.Blend);
 
@@ -1051,10 +1147,12 @@ namespace LibRender2
 
 		public void RenderFaceImmediateMode(FaceState State, bool IsDebugTouchMode = false)
 		{
-			RenderFaceImmediateMode(State.Object, State.Face, IsDebugTouchMode);
+			Matrix4D modelMatrix = State.Object.ModelMatrix * Camera.TranslationMatrix;
+			Matrix4D modelViewMatrix = modelMatrix * CurrentViewMatrix;
+			RenderFaceImmediateMode(State.Object, State.Face, modelMatrix, modelViewMatrix, IsDebugTouchMode);
 		}
 
-		public void RenderFaceImmediateMode(ObjectState State, MeshFace Face, bool IsDebugTouchMode = false)
+		public void RenderFaceImmediateMode(ObjectState State, MeshFace Face, Matrix4D modelMatrix, Matrix4D modelViewMatrix, bool IsDebugTouchMode = false)
 		{
 			if (State.Prototype.Mesh.Vertices.Length < 1)
 			{
@@ -1075,7 +1173,7 @@ namespace LibRender2
 					GL.Enable(EnableCap.CullFace);
 				}
 			}
-			Matrix4D modelMatrix = State.ModelMatrix * Camera.TranslationMatrix;
+
 			// matrix
 			unsafe
 			{
@@ -1091,7 +1189,7 @@ namespace LibRender2
 				{
 					GL.LoadMatrix(matrixPointer);
 				}
-				
+
 				double* matrixPointer2 = &modelMatrix.Row0.X;
 				{
 					GL.MultMatrix(matrixPointer2);
@@ -1103,9 +1201,8 @@ namespace LibRender2
 				{
 					GL.LoadMatrix(matrixPointer);
 				}
-				
+
 			}
-			
 
 			if (OptionWireFrame)
 			{
@@ -1232,6 +1329,7 @@ namespace LibRender2
 
 					GL.Vertex3(vertices[Face.Vertices[i].Index].Coordinates.X, vertices[Face.Vertices[i].Index].Coordinates.Y, -vertices[Face.Vertices[i].Index].Coordinates.Z);
 				}
+
 				GL.End();
 			}
 

@@ -4,7 +4,6 @@ using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
-using RouteManager2;
 using RouteManager2.Events;
 
 namespace OpenBve.Graphics.Renderers
@@ -24,6 +23,7 @@ namespace OpenBve.Graphics.Renderers
 		private Texture BufferTexture;
 		private Texture StopTexture;
 		private Texture PointSoundTexture;
+		private Texture RunSoundTexture;
 
 		private bool Initialized;
 
@@ -46,6 +46,7 @@ namespace OpenBve.Graphics.Renderers
 			renderer.TextureManager.RegisterTexture(Path.CombineFile(Folder, "buffer.png"), out BufferTexture);
 			renderer.TextureManager.RegisterTexture(Path.CombineFile(Folder, "sound.png"), out SoundTexture);
 			renderer.TextureManager.RegisterTexture(Path.CombineFile(Folder, "switchsound.png"), out PointSoundTexture);
+			renderer.TextureManager.RegisterTexture(Path.CombineFile(Folder, "runsound.png"), out RunSoundTexture);
 			Initialized = true;
 		}
 
@@ -76,7 +77,7 @@ namespace OpenBve.Graphics.Renderers
 			for (int i = 0; i < Program.CurrentRoute.Tracks[0].Elements.Length; i++)
 			{
 				double p = Program.CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition;
-				double d = p - World.CameraTrackFollower.TrackPosition;
+				double d = p - Program.Renderer.CameraTrackFollower.TrackPosition;
 
 				if (d >= da & d <= db)
 				{
@@ -149,6 +150,12 @@ namespace OpenBve.Graphics.Renderers
 							dz = 0;
 							t = PointSoundTexture;
 						}
+						else if (e is RailSoundsChangeEvent)
+						{
+							s = 0.2;
+							dy = 0.8;
+							t = RunSoundTexture;
+						}
 						else
 						{
 							s = 0.2;
@@ -202,7 +209,7 @@ namespace OpenBve.Graphics.Renderers
 			// buffers
 			foreach (double p in Program.CurrentRoute.BufferTrackPositions)
 			{
-				double d = p - World.CameraTrackFollower.TrackPosition;
+				double d = p - Program.Renderer.CameraTrackFollower.TrackPosition;
 
 				if (d >= da & d <= db)
 				{

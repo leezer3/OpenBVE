@@ -105,7 +105,8 @@ namespace OpenBve
 #if !DEBUG
 									try {
 #endif
-                        UnifiedObject o = ObjectManager.LoadObject(Program.Files[i], System.Text.Encoding.UTF8, false);
+                        UnifiedObject o;
+                        Program.CurrentHost.LoadObject(Program.Files[i], System.Text.Encoding.UTF8, out o);
                         Program.Renderer.CreateObject(o, Vector3.Zero,
                             new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0, 0.0);
 #if !DEBUG
@@ -121,12 +122,12 @@ namespace OpenBve
             }
             Interface.CurrentOptions.CurrentXParser = (XParsers)comboBoxNewXParser.SelectedIndex;
             Interface.CurrentOptions.CurrentObjParser = (ObjParsers)comboBoxNewObjParser.SelectedIndex;
-            for (int i = 0; i < Plugins.LoadedPlugins.Length; i++)
+            for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
             {
-	            if (Plugins.LoadedPlugins[i].Object != null)
+	            if (Program.CurrentHost.Plugins[i].Object != null)
 	            {
-					Plugins.LoadedPlugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentXParser);
-					Plugins.LoadedPlugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentObjParser);
+					Program.CurrentHost.Plugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentXParser);
+					Program.CurrentHost.Plugins[i].Object.SetObjectParser(Interface.CurrentOptions.CurrentObjParser);
 	            }
             }
             Options.SaveOptions();

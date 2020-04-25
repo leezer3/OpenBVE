@@ -2,8 +2,8 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "openBVE"
-#define MyAppVersion "1.6.0.0"
-#define MyAppPublisher "Christopher Lees"
+#define MyAppVersion "1.7.1.3"
+#define MyAppPublisher "The OpenBVE Project"
 #define MyAppURL "http://www.openbve-project.net"
 #define MyAppExeName "OpenBve.exe"
 
@@ -66,8 +66,8 @@ Source: "..\..\bin_release\*"; DestDir: "{app}"; Flags: recursesubdirs ignorever
 ;Custom Config File
 Source: "InstallerData\filesystem_appdata.cfg"; DestDir: "{app}\";
 Source: "InstallerData\filesystem_programfolder.cfg"; DestDir: "{app}\";
-;MS .NET 4.0 Full Web Installer.
-Source: "InstallerData\dotNetFx40_Full_setup.exe"; DestDir: "{app}"; Flags: deleteafterinstall; AfterInstall: AfterMyProgInstall('AllFilesCopy')
+;MS .NET 4.6.1 Web Installer.
+Source: "InstallerData\NDP461-KB3102438-Web.exe"; DestDir: "{app}"; Flags: deleteafterinstall; AfterInstall: AfterMyProgInstall('AllFilesCopy')
 [Icons]
 Name: "{userdesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 Name: "{userdesktop}\openBVE Addons"; Filename:"{code:GetDataDir}"; Tasks: desktopicon2
@@ -194,8 +194,12 @@ Installed: Cardinal;
 FileLines: TArrayOfString;
   begin
   //Determine whether the component is installed. 
-    if RegQueryDWordValue(GetHKLM(),'Software\Microsoft\NET Framework Setup\NDP\v4\Full', 'Install',Installed) then begin
-      use_Net4:=Installed
+    if RegQueryDWordValue(GetHKLM(),'Software\Microsoft\NET Framework Setup\NDP\v4\Full', 'Release',Installed) then begin
+      if Installed >= 394254 then begin
+        use_Net4:=1;
+      end else begin
+        use_Net4:=0;
+      end;
     end;
       begin
         if RegKeyExists(HKLM32,'Software\OpenAL') then begin
@@ -205,8 +209,8 @@ FileLines: TArrayOfString;
     begin
     if use_Net4 = 1 then begin
     end else begin
-    WizardForm.FilenameLabel.Caption := 'Installing Microsoft .NET Framework 4 Full';
-      if Exec(ExpandConstant('{app}\dotNetFx40_Full_setup.exe'), '/norestart /passive /showrmui', '', SW_SHOW,
+    WizardForm.FilenameLabel.Caption := 'Installing Microsoft .NET Framework 4.6.1';
+      if Exec(ExpandConstant('{app}\NDP461-KB3102438-Web.exe'), '/norestart /passive /showrmui', '', SW_SHOW,
         ewWaitUntilTerminated, ResultCode_Net4) then 
         begin
         IntToStr(ResultCode_Net4)

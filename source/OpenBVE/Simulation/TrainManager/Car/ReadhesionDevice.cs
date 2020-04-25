@@ -23,12 +23,50 @@ namespace OpenBve
 			private double TimeStable;
 			/// <summary>Holds a reference to the base car</summary>
 			private readonly Car Car;
+			/// <summary>The type of device</summary>
+			internal readonly ReadhesionDeviceType DeviceType;
 
-			internal CarReAdhesionDevice(Car car)
+			internal CarReAdhesionDevice(Car car, ReadhesionDeviceType type)
 			{
 				this.Car = car;
+				this.DeviceType = type;
 				this.MaximumAccelerationOutput = Double.PositiveInfinity;
 				this.ApplicationFactor = 0.0;
+				if (Car.Specs.IsMotorCar)
+				{
+					switch (type) {
+						case TrainManager.ReadhesionDeviceType.TypeA:
+							UpdateInterval = 1.0;
+							ApplicationFactor = 0.0;
+							ReleaseInterval = 1.0;
+							ReleaseFactor = 8.0;
+							break;
+						case TrainManager.ReadhesionDeviceType.TypeB:
+							UpdateInterval = 0.1;
+							ApplicationFactor = 0.9935;
+							ReleaseInterval = 4.0;
+							ReleaseFactor = 1.125;
+							break;
+						case TrainManager.ReadhesionDeviceType.TypeC:
+							UpdateInterval = 0.1;
+							ApplicationFactor = 0.965;
+							ReleaseInterval = 2.0;
+							ReleaseFactor = 1.5;
+							break;
+						case TrainManager.ReadhesionDeviceType.TypeD:
+							UpdateInterval = 0.05;
+							ApplicationFactor = 0.935;
+							ReleaseInterval = 0.3;
+							ReleaseFactor = 2.0;
+							break;
+						default:
+							UpdateInterval = 1.0;
+							ApplicationFactor = 1.0;
+							ReleaseInterval = 1.0;
+							ReleaseFactor = 99.0;
+							break;
+					}
+				}
 			}
 
 			/// <summary>Called once a frame to update the re-adhesion device when powering</summary>

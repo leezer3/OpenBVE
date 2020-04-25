@@ -1,17 +1,16 @@
 ﻿using System;
 using OpenBveApi.Graphics;
+using OpenBveApi.Math;
 using OpenBveApi.Objects;
 
 namespace OpenBve
 {
 	internal class DriverBody
 	{
-		internal double SlowX;
-		internal double FastX;
+		internal Vector2 Slow;
+		internal Vector2 Fast;
 		internal double Roll;
 		internal Damping RollDamping;
-		internal double SlowY;
-		internal double FastY;
 		internal double Pitch;
 		internal Damping PitchDamping;
 
@@ -31,41 +30,41 @@ namespace OpenBve
 					double targetY = Train.Specs.CurrentAverageAcceleration;
 					const double accelerationSlow = 0.25;
 					const double accelerationFast = 2.0;
-					if (SlowY < targetY)
+					if (Slow.Y < targetY)
 					{
-						SlowY += accelerationSlow * TimeElapsed;
-						if (SlowY > targetY)
+						Slow.Y += accelerationSlow * TimeElapsed;
+						if (Slow.Y > targetY)
 						{
-							SlowY = targetY;
+							Slow.Y = targetY;
 						}
 					}
-					else if (SlowY > targetY)
+					else if (Slow.Y > targetY)
 					{
-						SlowY -= accelerationSlow * TimeElapsed;
-						if (SlowY < targetY)
+						Slow.Y -= accelerationSlow * TimeElapsed;
+						if (Slow.Y < targetY)
 						{
-							SlowY = targetY;
-						}
-					}
-
-					if (FastY < targetY)
-					{
-						FastY += accelerationFast * TimeElapsed;
-						if (FastY > targetY)
-						{
-							FastY = targetY;
-						}
-					}
-					else if (FastY > targetY)
-					{
-						FastY -= accelerationFast * TimeElapsed;
-						if (FastY < targetY)
-						{
-							FastY = targetY;
+							Slow.Y = targetY;
 						}
 					}
 
-					double diffY = FastY - SlowY;
+					if (Fast.Y < targetY)
+					{
+						Fast.Y += accelerationFast * TimeElapsed;
+						if (Fast.Y > targetY)
+						{
+							Fast.Y = targetY;
+						}
+					}
+					else if (Fast.Y > targetY)
+					{
+						Fast.Y -= accelerationFast * TimeElapsed;
+						if (Fast.Y < targetY)
+						{
+							Fast.Y = targetY;
+						}
+					}
+
+					double diffY = Fast.Y - Slow.Y;
 					diffY = (double) Math.Sign(diffY) * diffY * diffY;
 					Pitch = 0.5 * Math.Atan(0.1 * diffY);
 					if (Pitch > 0.1)
@@ -123,41 +122,41 @@ namespace OpenBve
 
 					const double accelerationSlow = 1.0;
 					const double accelerationFast = 10.0;
-					if (SlowX < targetX)
+					if (Slow.X < targetX)
 					{
-						SlowX += accelerationSlow * TimeElapsed;
-						if (SlowX > targetX)
+						Slow.X += accelerationSlow * TimeElapsed;
+						if (Slow.X > targetX)
 						{
-							SlowX = targetX;
+							Slow.X = targetX;
 						}
 					}
-					else if (SlowX > targetX)
+					else if (Slow.X > targetX)
 					{
-						SlowX -= accelerationSlow * TimeElapsed;
-						if (SlowX < targetX)
+						Slow.X -= accelerationSlow * TimeElapsed;
+						if (Slow.X < targetX)
 						{
-							SlowX = targetX;
-						}
-					}
-
-					if (FastX < targetX)
-					{
-						FastX += accelerationFast * TimeElapsed;
-						if (FastX > targetX)
-						{
-							FastX = targetX;
-						}
-					}
-					else if (FastX > targetX)
-					{
-						FastX -= accelerationFast * TimeElapsed;
-						if (FastX < targetX)
-						{
-							FastX = targetX;
+							Slow.X = targetX;
 						}
 					}
 
-					double diffX = SlowX - FastX;
+					if (Fast.X < targetX)
+					{
+						Fast.X += accelerationFast * TimeElapsed;
+						if (Fast.X > targetX)
+						{
+							Fast.X = targetX;
+						}
+					}
+					else if (Fast.X > targetX)
+					{
+						Fast.X -= accelerationFast * TimeElapsed;
+						if (Fast.X < targetX)
+						{
+							Fast.X = targetX;
+						}
+					}
+
+					double diffX = Slow.X - Fast.X;
 					diffX = (double) Math.Sign(diffX) * diffX * diffX;
 					Roll = 0.5 * Math.Atan(0.3 * diffX);
 					if (RollDamping == null)

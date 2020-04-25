@@ -1,4 +1,5 @@
 using System;
+using LibRender2;
 using LibRender2.Camera;
 using LibRender2.Cameras;
 using OpenBve.BrakeSystems;
@@ -255,7 +256,7 @@ namespace OpenBve
 				}
 				else if (Sounds.RunNextReasynchronizationPosition == double.MaxValue & FrontAxle.RunIndex >= 0)
 				{
-					double distance = Math.Abs(FrontAxle.Follower.TrackPosition - World.CameraTrackFollower.TrackPosition);
+					double distance = Math.Abs(FrontAxle.Follower.TrackPosition - Program.Renderer.CameraTrackFollower.TrackPosition);
 					const double minDistance = 150.0;
 					const double maxDistance = 750.0;
 					if (distance > minDistance)
@@ -286,7 +287,7 @@ namespace OpenBve
 				}
 				for (int j = 0; j < Sounds.Run.Length; j++)
 				{
-					if (j == RearAxle.RunIndex | j == RearAxle.RunIndex)
+					if (j == FrontAxle.RunIndex | j == RearAxle.RunIndex)
 					{
 						Sounds.RunVolume[j] += 3.0 * TimeElapsed;
 						if (Sounds.RunVolume[j] > 1.0) Sounds.RunVolume[j] = 1.0;
@@ -650,7 +651,7 @@ namespace OpenBve
 			private void UpdateCarSectionElement(int SectionIndex, int GroupIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
 			{
 				Vector3 p;
-				if (CarSections[SectionIndex].Groups[GroupIndex].Overlay & Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
+				if (CarSections[SectionIndex].Groups[GroupIndex].Overlay & (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable && Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.Restricted3D))
 				{
 					p = new Vector3(Driver.X, Driver.Y, Driver.Z);
 				}
@@ -695,7 +696,7 @@ namespace OpenBve
 			private void UpdateCarSectionTouchElement(int SectionIndex, int GroupIndex, int ElementIndex, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, bool Show, double TimeElapsed, bool ForceUpdate, bool EnableDamping)
 			{
 				Vector3 p;
-				if (CarSections[SectionIndex].Groups[GroupIndex].Overlay & Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable)
+				if (CarSections[SectionIndex].Groups[GroupIndex].Overlay & (Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.NotAvailable && Program.Renderer.Camera.CurrentRestriction != CameraRestrictionMode.Restricted3D))
 				{
 					p = new Vector3(Driver.X, Driver.Y, Driver.Z);
 				}
@@ -1126,13 +1127,13 @@ namespace OpenBve
 				cameraPosition.Y = ry + sy * driverPosition.X + Up.Y * driverPosition.Y + direction.Y * driverPosition.Z;
 				cameraPosition.Z = rz + sz * driverPosition.X + Up.Z * driverPosition.Y + direction.Z * driverPosition.Z;
 
-				World.CameraTrackFollower.WorldPosition = cameraPosition;
-				World.CameraTrackFollower.WorldDirection = direction;
-				World.CameraTrackFollower.WorldUp = new Vector3(Up);
-				World.CameraTrackFollower.WorldSide = new Vector3(sx, sy, sz);
+				Program.Renderer.CameraTrackFollower.WorldPosition = cameraPosition;
+				Program.Renderer.CameraTrackFollower.WorldDirection = direction;
+				Program.Renderer.CameraTrackFollower.WorldUp = new Vector3(Up);
+				Program.Renderer.CameraTrackFollower.WorldSide = new Vector3(sx, sy, sz);
 				double f = (Driver.Z - RearAxle.Position) / (FrontAxle.Position - RearAxle.Position);
 				double tp = (1.0 - f) * RearAxle.Follower.TrackPosition + f * FrontAxle.Follower.TrackPosition;
-				World.CameraTrackFollower.UpdateAbsolute(tp, false, false);
+				Program.Renderer.CameraTrackFollower.UpdateAbsolute(tp, false, false);
 			}
 
 			internal void UpdateSpeed(double TimeElapsed, double DecelerationDueToMotor, double DecelerationDueToBrake, out double Speed)
@@ -1223,7 +1224,7 @@ namespace OpenBve
 								else
 								{
 									FrontAxle.CurrentWheelSlip = true;
-									wheelspin += (double) baseTrain.Handles.Reverser.Actual * a * Specs.MassCurrent;
+									wheelspin += (double) baseTrain.Handles.Reverser.Actual * a * CurrentMass;
 								}
 
 								if (a < wheelSlipAccelerationMotorRear)
@@ -1233,7 +1234,7 @@ namespace OpenBve
 								else
 								{
 									RearAxle.CurrentWheelSlip = true;
-									wheelspin += (double) baseTrain.Handles.Reverser.Actual * a * Specs.MassCurrent;
+									wheelspin += (double) baseTrain.Handles.Reverser.Actual * a * CurrentMass;
 								}
 
 								// Update readhesion device
@@ -1346,7 +1347,7 @@ namespace OpenBve
 						if (a > ra) a = ra;
 					}
 
-					double factor = Specs.MassEmpty / Specs.MassCurrent;
+					double factor = EmptyMass / CurrentMass;
 					if (a >= wheelSlipAccelerationBrakeFront)
 					{
 						wheellock = true;
@@ -1374,7 +1375,7 @@ namespace OpenBve
 				// motor
 				if (baseTrain.Handles.Reverser.Actual != 0)
 				{
-					double factor = Specs.MassEmpty / Specs.MassCurrent;
+					double factor = EmptyMass / CurrentMass;
 					if (Specs.CurrentAccelerationOutput > 0.0)
 					{
 						PowerRollingCouplerAcceleration +=

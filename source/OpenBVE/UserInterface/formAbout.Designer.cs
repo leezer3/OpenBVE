@@ -107,7 +107,6 @@
             this.textBoxOpenSourceLicences.Size = new System.Drawing.Size(454, 160);
             this.textBoxOpenSourceLicences.TabIndex = 4;
             this.textBoxOpenSourceLicences.TabStop = false;
-            this.textBoxOpenSourceLicences.Text = resources.GetString("textBoxOpenSourceLicences.Text");
             // 
             // labelOpenSourceHeader
             // 

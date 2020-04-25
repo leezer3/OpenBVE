@@ -150,6 +150,12 @@
 					<trans-unit id="package_file_generic">
 						<source>Failed to create the following file: \r \n</source>
 					</trans-unit>
+					<trans-unit id="security_checkaccess">
+						<source>Please check that this path is accessible.</source>
+					</trans-unit>
+					<trans-unit id="security_badlocation">
+						<source>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</source>
+					</trans-unit>
 				</group>
 				<group id="start">
 					<trans-unit id="title">
@@ -234,7 +240,7 @@
 						<source>Preview:</source>
 					</trans-unit>
 					<trans-unit id="train_notfound">
-						<source>The default train could not be found:\n\n</source>
+						<source>The default train could not be found:\r\n\r\n</source>
 					</trans-unit>
 					<trans-unit id="train_pluginnotsupported">
 						<source>--- This train uses a safety system plugin which cannot be used on your operating system. The built-in safety systems ATS/ATC will be used instead, which might cause operational problems. ---</source>
@@ -536,6 +542,9 @@
 					</trans-unit>
 					<trans-unit id="creation_proceed">
 						<source>Proceed......</source>
+					</trans-unit>
+					<trans-unit id="creation_invalid_nofiles">
+						<source>No files were selected to package- Please retry.</source>
 					</trans-unit>
 					<trans-unit id="creation_invalid_filename">
 						<source>The selected filename is invalid- Please retry.</source>

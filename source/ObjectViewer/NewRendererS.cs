@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Windows.Forms;
 using LibRender2;
 using LibRender2.Objects;
 using OpenBveApi;
@@ -12,7 +13,6 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.World;
 using OpenTK.Graphics.OpenGL;
-using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve
 {
@@ -35,9 +35,12 @@ namespace OpenBve
 		{
 			base.Initialize(CurrentHost, CurrentOptions);
 
-			redAxisVAO = RegisterBox(Color128.Red);
-			greenAxisVAO = RegisterBox(Color128.Green);
-			blueAxisVAO = RegisterBox(Color128.Blue);
+			if (AvailableNewRenderer)
+			{
+				redAxisVAO = RegisterBox(Color128.Red);
+				greenAxisVAO = RegisterBox(Color128.Green);
+				blueAxisVAO = RegisterBox(Color128.Blue);
+			}
 		}
 
 		internal string GetBackgroundColorName()
@@ -80,7 +83,7 @@ namespace OpenBve
 			GL.ClearColor(red / 255.0f, green / 255.0f, blue / 255.0f, 1.0f);
 		}
 
-		internal void CreateObject(UnifiedObject Prototype, OpenBveApi.Math.Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition)
+		internal void CreateObject(UnifiedObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition)
 		{
 			if (Prototype != null)
 			{
@@ -88,7 +91,7 @@ namespace OpenBve
 			}
 		}
 
-		internal void CreateObject(UnifiedObject Prototype, OpenBveApi.Math.Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
+		internal void CreateObject(UnifiedObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
 		{
 			if (Prototype is StaticObject)
 			{
@@ -102,7 +105,7 @@ namespace OpenBve
 			}
 		}
 
-		internal int CreateStaticObject(UnifiedObject Prototype, OpenBveApi.Math.Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		internal int CreateStaticObject(UnifiedObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
 		{
 			StaticObject obj = Prototype as StaticObject;
 
@@ -146,6 +149,7 @@ namespace OpenBve
 			vao.Bind();
 			vao.SetVBO(new VertexBufferObject(vertexData, BufferUsageHint.StaticDraw));
 			vao.SetIBO(new IndexBufferObject(indexData, BufferUsageHint.StaticDraw));
+			vao.SetAttributes(DefaultShader.VertexLayout);
 			vao.UnBind();
 
 			return vao;
@@ -165,12 +169,27 @@ namespace OpenBve
 
 			if (OptionCoordinateSystem)
 			{
-				Cube.Draw(redAxisVAO, Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), Camera.AbsolutePosition, null);
-				Cube.Draw(greenAxisVAO, Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), Camera.AbsolutePosition, null);
-				Cube.Draw(blueAxisVAO, Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), Camera.AbsolutePosition, null);
+				UnsetAlphaFunc();
+
+				if (AvailableNewRenderer)
+				{
+					Cube.DrawRetained(redAxisVAO, Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), Camera.AbsolutePosition, null);
+					Cube.DrawRetained(greenAxisVAO, Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), Camera.AbsolutePosition, null);
+					Cube.DrawRetained(blueAxisVAO, Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), Camera.AbsolutePosition, null);
+				}
+				else
+				{
+					GL.Color4(1.0, 0.0, 0.0, 0.2);
+					Cube.DrawImmediate(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(100.0, 0.01, 0.01), Camera.AbsolutePosition, null);
+					GL.Color4(0.0, 1.0, 0.0, 0.2);
+					Cube.DrawImmediate(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 100.0, 0.01), Camera.AbsolutePosition, null);
+					GL.Color4(0.0, 0.0, 1.0, 0.2);
+					Cube.DrawImmediate(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), Camera.AbsolutePosition, null);
+				}
 			}
+
 			// opaque face
-			if (Interface.CurrentOptions.IsUseNewRenderer)
+			if (AvailableNewRenderer)
 			{
 				//Setup the shader for rendering the scene
 				DefaultShader.Activate();
@@ -188,7 +207,7 @@ namespace OpenBve
 			ResetOpenGlState();
 			foreach (FaceState face in VisibleObjects.OpaqueFaces)
 			{
-				if (Interface.CurrentOptions.IsUseNewRenderer)
+				if (AvailableNewRenderer)
 				{
 					RenderFace(DefaultShader, face);
 				}
@@ -210,7 +229,7 @@ namespace OpenBve
 
 				foreach (FaceState face in VisibleObjects.AlphaFaces)
 				{
-					if (Interface.CurrentOptions.IsUseNewRenderer)
+					if (AvailableNewRenderer)
 					{
 						RenderFace(DefaultShader, face);
 					}
@@ -232,7 +251,7 @@ namespace OpenBve
 					{
 						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].Color.A == 255)
 						{
-							if (Interface.CurrentOptions.IsUseNewRenderer)
+							if (AvailableNewRenderer)
 							{
 								RenderFace(DefaultShader, face);
 							}
@@ -259,7 +278,7 @@ namespace OpenBve
 							additive = true;
 						}
 
-						if (Interface.CurrentOptions.IsUseNewRenderer)
+						if (AvailableNewRenderer)
 						{
 							RenderFace(DefaultShader, face);
 						}
@@ -276,7 +295,7 @@ namespace OpenBve
 							additive = false;
 						}
 
-						if (Interface.CurrentOptions.IsUseNewRenderer)
+						if (AvailableNewRenderer)
 						{
 							RenderFace(DefaultShader, face);
 						}
@@ -287,10 +306,12 @@ namespace OpenBve
 					}
 				}
 			}
-			if (Interface.CurrentOptions.IsUseNewRenderer)
+
+			if (AvailableNewRenderer)
 			{
 				DefaultShader.Deactivate();
 			}
+
 			// render overlays
 			ResetOpenGlState();
 			OptionLighting = false;
@@ -322,7 +343,7 @@ namespace OpenBve
 					OpenGlString.Draw(Fonts.SmallFont, "Open one or more objects", new Point(32, 4), TextAlignment.TopLeft, TextColor);
 					OpenGlString.Draw(Fonts.SmallFont, "Display the options window", new Point(32, 24), TextAlignment.TopLeft, TextColor);
 					OpenGlString.Draw(Fonts.SmallFont, "Display the train settings window", new Point(32, 44), TextAlignment.TopLeft, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, $"v{System.Windows.Forms.Application.ProductVersion}", new Point(Screen.Width - 8, Screen.Height - 20), TextAlignment.TopLeft, TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, $"v{Application.ProductVersion}", new Point(Screen.Width - 8, Screen.Height - 20), TextAlignment.TopLeft, TextColor);
 				}
 				else
 				{

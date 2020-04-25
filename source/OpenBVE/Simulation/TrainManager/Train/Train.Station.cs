@@ -62,13 +62,13 @@ namespace OpenBve
 							{
 								string s = Translations.GetInterfaceString("message_station_passed");
 								s = s.Replace("[name]", Program.CurrentRoute.Stations[stationIndex].Name);
-								Game.AddMessage(s, MessageDependency.None, GameMode.Normal, MessageColor.Orange, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
+								MessageManager.AddMessage(s, MessageDependency.None, GameMode.Normal, MessageColor.Orange, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 							}
 							else if (Program.CurrentRoute.Stations[stationIndex].PlayerStops() & TrainManager.PlayerTrain.StationState == TrainStopState.Boarding)
 							{
 								string s = Translations.GetInterfaceString("message_station_passed_boarding");
 								s = s.Replace("[name]", Program.CurrentRoute.Stations[stationIndex].Name);
-								Game.AddMessage(s, MessageDependency.None, GameMode.Normal, MessageColor.Red, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
+								MessageManager.AddMessage(s, MessageDependency.None, GameMode.Normal, MessageColor.Red, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 							}
 						}
 						Station = -1;

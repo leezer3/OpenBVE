@@ -44,8 +44,8 @@ namespace OpenBve
 		private Texture BufferTexture;
 		private Texture StopTexture;
 		private Texture PointSoundTexture;
-
-
+		private Texture RunSoundTexture;
+		
 		public override void Initialize(HostInterface CurrentHost, BaseOptions CurrentOptions)
 		{
 			base.Initialize(CurrentHost, CurrentOptions);
@@ -62,6 +62,7 @@ namespace OpenBve
 			TextureManager.RegisterTexture(Path.CombineFile(Folder, "buffer.png"), out BufferTexture);
 			TextureManager.RegisterTexture(Path.CombineFile(Folder, "sound.png"), out SoundTexture);
 			TextureManager.RegisterTexture(Path.CombineFile(Folder, "switchsound.png"), out PointSoundTexture);
+			TextureManager.RegisterTexture(Path.CombineFile(Folder, "runsound.png"), out RunSoundTexture);
 		}
 
 		internal void CreateObject(UnifiedObject Prototype, OpenBveApi.Math.Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition)
@@ -115,7 +116,7 @@ namespace OpenBve
 			ObjectsSortedByStartPointer = 0;
 			ObjectsSortedByEndPointer = 0;
 
-			double p = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
+			double p = CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
 
 			foreach (ObjectState state in StaticObjectStates.Where(recipe => recipe.StartingDistance <= p + Camera.ForwardViewingDistance & recipe.EndingDistance >= p - Camera.BackwardViewingDistance))
 			{
@@ -127,7 +128,7 @@ namespace OpenBve
 		{
 			double d = TrackPosition - LastUpdatedTrackPosition;
 			int n = ObjectsSortedByStart.Length;
-			double p = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
+			double p = CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
 
 			if (d < 0.0)
 			{
@@ -269,7 +270,7 @@ namespace OpenBve
 
 			if (fd != 0.0)
 			{
-				float fr = (float)((World.CameraTrackFollower.TrackPosition - Program.CurrentRoute.PreviousFog.TrackPosition) / fd);
+				float fr = (float)((CameraTrackFollower.TrackPosition - Program.CurrentRoute.PreviousFog.TrackPosition) / fd);
 				float frc = 1.0f - fr;
 				Program.CurrentRoute.CurrentFog.Start = Program.CurrentRoute.PreviousFog.Start * frc + Program.CurrentRoute.NextFog.Start * fr;
 				Program.CurrentRoute.CurrentFog.End = Program.CurrentRoute.PreviousFog.End * frc + Program.CurrentRoute.NextFog.End * fr;
@@ -310,7 +311,7 @@ namespace OpenBve
 
 			// world layer
 			// opaque face
-			if (Interface.CurrentOptions.IsUseNewRenderer)
+			if (AvailableNewRenderer)
 			{
 				//Setup the shader for rendering the scene
 				DefaultShader.Activate();
@@ -336,7 +337,7 @@ namespace OpenBve
 
 			foreach (FaceState face in VisibleObjects.OpaqueFaces)
 			{
-				if (Interface.CurrentOptions.IsUseNewRenderer)
+				if (AvailableNewRenderer)
 				{
 					RenderFace(DefaultShader, face);
 				}
@@ -358,7 +359,7 @@ namespace OpenBve
 
 				foreach (FaceState face in VisibleObjects.AlphaFaces)
 				{
-					if (Interface.CurrentOptions.IsUseNewRenderer)
+					if (AvailableNewRenderer)
 					{
 						RenderFace(DefaultShader, face);
 					}
@@ -380,7 +381,7 @@ namespace OpenBve
 					{
 						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].Color.A == 255)
 						{
-							if (Interface.CurrentOptions.IsUseNewRenderer)
+							if (AvailableNewRenderer)
 							{
 								RenderFace(DefaultShader, face);
 							}
@@ -407,7 +408,7 @@ namespace OpenBve
 							additive = true;
 						}
 
-						if (Interface.CurrentOptions.IsUseNewRenderer)
+						if (AvailableNewRenderer)
 						{
 							RenderFace(DefaultShader, face);
 						}
@@ -424,7 +425,7 @@ namespace OpenBve
 							additive = false;
 						}
 
-						if (Interface.CurrentOptions.IsUseNewRenderer)
+						if (AvailableNewRenderer)
 						{
 							RenderFace(DefaultShader, face);
 						}
@@ -437,7 +438,7 @@ namespace OpenBve
 			}
 
 			// render overlays
-			if (Interface.CurrentOptions.IsUseNewRenderer)
+			if (AvailableNewRenderer)
 			{
 				DefaultShader.Deactivate();
 			}
@@ -470,7 +471,7 @@ namespace OpenBve
 			for (int i = 0; i < Program.CurrentRoute.Tracks[0].Elements.Length; i++)
 			{
 				double p = Program.CurrentRoute.Tracks[0].Elements[i].StartingTrackPosition;
-				double d = p - World.CameraTrackFollower.TrackPosition;
+				double d = p - CameraTrackFollower.TrackPosition;
 
 				if (d >= da & d <= db)
 				{
@@ -535,6 +536,12 @@ namespace OpenBve
 							dz = f.Position.Z;
 							t = f.SoundBuffer == null ? PointSoundTexture : SoundTexture;
 						}
+						else if (e is RailSoundsChangeEvent)
+						{
+							s = 0.2;
+							dy = 0.8;
+							t = RunSoundTexture;
+						}
 						else
 						{
 							s = 0.2;
@@ -588,7 +595,7 @@ namespace OpenBve
 			// buffers
 			foreach (double p in Program.CurrentRoute.BufferTrackPositions)
 			{
-				double d = p - World.CameraTrackFollower.TrackPosition;
+				double d = p - CameraTrackFollower.TrackPosition;
 
 				if (d >= da & d <= db)
 				{
@@ -709,7 +716,7 @@ namespace OpenBve
 					// info
 					double x = 0.5 * Screen.Width - 256.0;
 					OpenGlString.Draw(Fonts.SmallFont, $"Position: {GetLengthString(Camera.Alignment.TrackPosition)} (X={GetLengthString(Camera.Alignment.Position.X)}, Y={GetLengthString(Camera.Alignment.Position.Y)}), Orientation: (Yaw={(Camera.Alignment.Yaw * 57.2957795130824).ToString("0.00", culture)}°, Pitch={(Camera.Alignment.Pitch * 57.2957795130824).ToString("0.00", culture)}°, Roll={(Camera.Alignment.Roll * 57.2957795130824).ToString("0.00", culture)}°)", new Point((int)x, 4), TextAlignment.TopLeft, Color128.White, true);
-					OpenGlString.Draw(Fonts.SmallFont, $"Radius: {GetLengthString(World.CameraTrackFollower.CurveRadius)}, Cant: {(1000.0 * World.CameraTrackFollower.CurveCant).ToString("0", culture)} mm, Adhesion={(100.0 * World.CameraTrackFollower.AdhesionMultiplier).ToString("0", culture)}", new Point((int)x, 20), TextAlignment.TopLeft, Color128.White, true);
+					OpenGlString.Draw(Fonts.SmallFont, $"Radius: {GetLengthString(CameraTrackFollower.CurveRadius)}, Cant: {(1000.0 * CameraTrackFollower.CurveCant).ToString("0", culture)} mm, Adhesion={(100.0 * CameraTrackFollower.AdhesionMultiplier).ToString("0", culture)}", new Point((int)x, 20), TextAlignment.TopLeft, Color128.White, true);
 
 					if (Program.CurrentStation >= 0)
 					{

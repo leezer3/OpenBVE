@@ -1,4 +1,6 @@
-﻿namespace OpenBve
+﻿using OpenBveApi.Trains;
+
+namespace OpenBve
 {
 	internal static partial class Game
 	{
@@ -16,7 +18,7 @@
 				this.Train = train;
 			}
 
-			internal override void Trigger(double TimeElapsed)
+			public override void Trigger(double TimeElapsed)
 			{
 				if (Program.CurrentRoute.SecondsSinceMidnight - TimeLastProcessed >= CurrentInterval)
 				{

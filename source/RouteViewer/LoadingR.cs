@@ -10,6 +10,7 @@ using System.Threading;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using LibRender2;
 using LibRender2.Cameras;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -25,8 +26,6 @@ namespace OpenBve {
 		internal static bool Complete;
 		private static string CurrentRouteFile;
 		private static Encoding CurrentRouteEncoding;
-		internal static double TrainProgressCurrentSum;
-		internal static double TrainProgressCurrentWeight;
 
 		internal static bool JobAvailable;
 
@@ -38,8 +37,6 @@ namespace OpenBve {
 			
 			// members
 			RouteProgress = 0.0;
-			TrainProgressCurrentSum = 0.0;
-			TrainProgressCurrentWeight = 1.0;
 			Cancel = false;
 			Complete = false;
 			CurrentRouteFile = RouteFile;
@@ -104,8 +101,6 @@ namespace OpenBve {
 		{
 			// members
 			RouteProgress = 0.0;
-			TrainProgressCurrentSum = 0.0;
-			TrainProgressCurrentWeight = 1.0;
 			Cancel = false;
 			Complete = false;
 			CurrentRouteFile = RouteFile;
@@ -125,15 +120,15 @@ namespace OpenBve {
 			// load route
 			bool IsRW = string.Equals(System.IO.Path.GetExtension(CurrentRouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
 			CsvRwRouteParser.ParseRoute(CurrentRouteFile, IsRW, CurrentRouteEncoding, Application.StartupPath, ObjectFolder, SoundFolder, false);
-			World.CameraTrackFollower = new TrackFollower(Program.CurrentHost);
+			Program.Renderer.CameraTrackFollower = new TrackFollower(Program.CurrentHost);
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			Program.CurrentRoute.Atmosphere.CalculateSeaLevelConstants();
 			RouteProgress = 1.0;
 			// camera
-			World.CameraTrackFollower.UpdateAbsolute( 0.0, true, false);
-			World.CameraTrackFollower.UpdateAbsolute(0.1, true, false);
-			World.CameraTrackFollower.UpdateAbsolute(-0.1, true, false);
-			World.CameraTrackFollower.TriggerType = EventTriggerType.Camera;
+			Program.Renderer.CameraTrackFollower.UpdateAbsolute( 0.0, true, false);
+			Program.Renderer.CameraTrackFollower.UpdateAbsolute(0.1, true, false);
+			Program.Renderer.CameraTrackFollower.UpdateAbsolute(-0.1, true, false);
+			Program.Renderer.CameraTrackFollower.TriggerType = EventTriggerType.Camera;
 			// default starting time
 			Game.SecondsSinceMidnight = 0.0;
 			Game.StartupTime = 0.0;
@@ -166,8 +161,8 @@ namespace OpenBve {
 				}
 			}
 			// initialize camera
-			World.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
-			World.CameraTrackFollower.UpdateAbsolute(FirstStationPosition, true, false);
+			Program.Renderer.CameraTrackFollower.UpdateAbsolute(-1.0, true, false);
+			Program.Renderer.CameraTrackFollower.UpdateAbsolute(FirstStationPosition, true, false);
 			Program.Renderer.Camera.Alignment = new CameraAlignment(new Vector3(0.0, 2.5, 0.0), 0.0, 0.0, 0.0, FirstStationPosition, 1.0);
 			World.UpdateAbsoluteCamera(0.0);
 		}

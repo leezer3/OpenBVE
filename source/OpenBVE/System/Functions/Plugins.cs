@@ -4,74 +4,13 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using OpenBveApi;
+using Path = System.IO.Path;
 
 namespace OpenBve {
 	/// <summary>Represents plugins loaded by the program.</summary>
-	internal static class Plugins {
-		
-		// --- classes ---
-		
-		/// <summary>Represents a plugin.</summary>
-		internal class Plugin {
-			// --- members ---
-			/// <summary>The plugin file.</summary>
-			internal readonly string File;
-			/// <summary>The plugin title.</summary>
-			internal readonly string Title;
-			/// <summary>The interface to load textures as exposed by the plugin, or a null reference.</summary>
-			internal OpenBveApi.Textures.TextureInterface Texture;
-			/// <summary>The interface to load sounds as exposed by the plugin, or a null reference.</summary>
-			internal OpenBveApi.Sounds.SoundInterface Sound;
-			/// <summary>The interface to load objects as exposed by the plugin, or a null reference.</summary>
-			internal OpenBveApi.Objects.ObjectInterface Object;
-			// --- constructors ---
-			/// <summary>Creates a new instance of this class.</summary>
-			/// <param name="file">The plugin file.</param>
-			internal Plugin(string file) {
-				this.File = file;
-				this.Title = Path.GetFileName(file);
-				this.Texture = null;
-				this.Sound = null;
-			}
-			// --- functions ---
-			/// <summary>Loads all interfaces this plugin supports.</summary>
-			internal void Load() {
-				if (this.Texture != null) {
-					this.Texture.Load(Program.CurrentHost);
-				}
-				if (this.Sound != null) {
-					this.Sound.Load(Program.CurrentHost);
-				}
-				if (this.Object != null) {
-					this.Object.Load(Program.CurrentHost, Program.FileSystem);
-					this.Object.SetObjectParser(Interface.CurrentOptions.CurrentXParser);
-					this.Object.SetObjectParser(Interface.CurrentOptions.CurrentObjParser);
-				}
-			}
-			/// <summary>Unloads all interfaces this plugin supports.</summary>
-			internal void Unload() {
-				if (this.Texture != null) {
-					this.Texture.Unload();
-				}
-				if (this.Sound != null) {
-					this.Sound.Unload();
-				}
-				if (this.Object != null)
-				{
-					this.Object.Unload();
-				}
-			}
-		}
-		
-		
-		// --- members ---
-		
-		/// <summary>A list of all non-runtime plugins that are currently loaded, or a null reference.</summary>
-		internal static Plugin[] LoadedPlugins = null;
-		
-		
-		// --- functions ---
-
+	internal static class Plugins 
+	{
 		/// <summary>Loads all non-runtime plugins.</summary>
 		/// <returns>Whether loading all plugins was successful.</returns>
 		internal static bool LoadPlugins() {
@@ -84,16 +23,17 @@ namespace OpenBve {
 			}
 			catch
 			{
-				
+				// ignored
 			}
-			List<Plugin> list = new List<Plugin>();
+
+			List<ContentLoadingPlugin> list = new List<ContentLoadingPlugin>();
 			StringBuilder builder = new StringBuilder();
 			foreach (string file in files) {
 				if (file.EndsWith(".dll", StringComparison.OrdinalIgnoreCase)) {
 					#if !DEBUG
 					try {
 						#endif
-						Plugin plugin = new Plugin(file);
+						ContentLoadingPlugin plugin = new ContentLoadingPlugin(file);
 						Assembly assembly;
 						Type[] types;
 						try
@@ -101,9 +41,26 @@ namespace OpenBve {
 							assembly = Assembly.LoadFile(file);
 							types = assembly.GetTypes();
 						}
-						catch
+#pragma warning disable 168
+						catch(Exception ex)
+#pragma warning restore 168
 						{
-							builder.Append("Plugin ").Append(Path.GetFileName(file)).AppendLine(" is not a .Net assembly.");
+#if!DEBUG
+							if ((ex is ReflectionTypeLoadException))
+							{
+								/*
+								 * This is actually a .Net assembly, it just failed to load a reference
+								 * Probably built against a newer API version.
+								 */
+
+								builder.Append("Plugin ").Append(Path.GetFileName(file)).AppendLine(" failed to load. \n \n Please check that you are using the most recent version of OpenBVE.");	
+
+							}
+							else
+							{
+								builder.Append("Plugin ").Append(Path.GetFileName(file)).AppendLine(" is not a .Net assembly.");	
+							}
+#endif
 							continue;
 						}
 						bool iruntime = false;
@@ -126,7 +83,7 @@ namespace OpenBve {
 							}
 						}
 						if (plugin.Texture != null | plugin.Sound != null | plugin.Object != null) {
-							plugin.Load();
+							plugin.Load(Program.CurrentHost, Program.FileSystem, Interface.CurrentOptions);
 							list.Add(plugin);
 						} else if (!iruntime) {
 							builder.Append("Plugin ").Append(Path.GetFileName(file)).AppendLine(" does not implement compatible interfaces.");
@@ -140,10 +97,10 @@ namespace OpenBve {
 					#endif
 				}
 			}
-			LoadedPlugins = list.ToArray();
-			if (LoadedPlugins.Length == 0)
+			Program.CurrentHost.Plugins = list.ToArray();
+			if (Program.CurrentHost.Plugins.Length == 0)
 			{
-				MessageBox.Show("No available texture & sound loader plugins were found." + Environment.NewLine +
+				MessageBox.Show("No available content loading plugins were found." + Environment.NewLine +
 				                " Please re-download openBVE.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return false;
 			}
@@ -158,8 +115,8 @@ namespace OpenBve {
 		/// <summary>Unloads all non-runtime plugins.</summary>
 		internal static void UnloadPlugins() {
 			StringBuilder builder = new StringBuilder();
-			if (LoadedPlugins != null) {
-				foreach (Plugin plugin in LoadedPlugins) {
+			if (Program.CurrentHost.Plugins != null) {
+				foreach (ContentLoadingPlugin plugin in Program.CurrentHost.Plugins) {
 					#if !DEBUG
 					try {
 						#endif
@@ -171,7 +128,7 @@ namespace OpenBve {
 					}
 					#endif
 				}
-				LoadedPlugins = null;
+				Program.CurrentHost.Plugins = null;
 			}
 			string message = builder.ToString().Trim(new char[] { });
 			if (message.Length != 0) {

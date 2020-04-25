@@ -95,22 +95,12 @@ namespace OpenBve {
 			internal double NextUpdateTime;
 			internal double UpdateInterval;
 		}
-		internal struct CarReAdhesionDevice {
-			internal double UpdateInterval;
-			internal double ApplicationFactor;
-			internal double ReleaseInterval;
-			internal double ReleaseFactor;
-			internal double CurrentAccelerationOutput;
-			internal double NextUpdateTime;
-			internal double TimeStable;
-		}
 		internal struct CarSpecs {
 			internal bool IsMotorCar;
 			internal double AccelerationCurvesMultiplier;
 			internal double BrakeDecelerationAtServiceMaximumPressure;
 			internal double BrakeControlSpeed;
 			internal double MotorDeceleration;
-			internal double Mass;
 			internal double ExposedFrontalArea;
 			internal double UnexposedFrontalArea;
 			internal double CoefficientOfStaticFriction;
@@ -118,7 +108,6 @@ namespace OpenBve {
 			internal double AerodynamicDragCoefficient;
 			internal double CenterOfGravityHeight;
 			internal double CriticalTopplingAngle;
-			internal double CurrentSpeed;
 			internal double CurrentPerceivedSpeed;
 			internal double CurrentAcceleration;
 			internal double CurrentAccelerationOutput;
@@ -126,7 +115,6 @@ namespace OpenBve {
 			internal bool CurrentMotorBrake;
 			internal CarHoldBrake HoldBrake;
 			internal CarConstSpeed ConstSpeed;
-			internal CarReAdhesionDevice ReAdhesionDevice;
 			internal CarBrakeType BrakeType;
 			internal EletropneumaticBrakeType ElectropneumaticType;
 			internal CarAirBrake AirBrake;
@@ -262,7 +250,6 @@ namespace OpenBve {
 			internal double CurrentAirPressure;
 			internal double CurrentAirDensity;
 			internal double CurrentAirTemperature;
-			internal double CurrentElevation;
 			internal bool SingleHandle;
 			internal int PowerNotchReduceSteps;
 			internal int MaximumPowerNotch;

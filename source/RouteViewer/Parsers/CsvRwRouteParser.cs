@@ -392,11 +392,11 @@ namespace OpenBve
 		internal static void ParseRoute(string FileName, bool IsRW, System.Text.Encoding Encoding, string TrainPath, string ObjectPath, string SoundPath, bool PreviewOnly) {
 			// initialize data
 			string CompatibilityFolder = Program.FileSystem.GetDataFolder("Compatibility");
-			for (int i = 0; i < Plugins.LoadedPlugins.Length; i++)
+			for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
 			{
-				if (Plugins.LoadedPlugins[i].Object != null)
+				if (Program.CurrentHost.Plugins[i].Object != null)
 				{
-					Plugins.LoadedPlugins[i].Object.SetObjectParser(SoundPath); //HACK: Pass out the sound folder path to those plugins which consume it
+					Program.CurrentHost.Plugins[i].Object.SetObjectParser(SoundPath); //HACK: Pass out the sound folder path to those plugins which consume it
 				}
 			}
 			RouteData Data = new RouteData();
@@ -2158,7 +2158,8 @@ namespace OpenBve
 													if (!System.IO.File.Exists(f)) {
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														UnifiedObject obj = ObjectManager.LoadObject(f, Encoding, false);
+														UnifiedObject obj;
+														Program.CurrentHost.LoadObject(f, Encoding, out obj);
 														if (obj != null)
 														{
 															Data.Structure.RailObjects.Add(CommandIndex1, obj, "RailStructure");
@@ -2183,7 +2184,8 @@ namespace OpenBve
 													if (!System.IO.File.Exists(f)) {
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														UnifiedObject obj = ObjectManager.LoadObject(f, Encoding, false);
+														UnifiedObject obj;
+														Program.CurrentHost.LoadObject(f, Encoding, out obj);
 														if (obj != null)
 														{
 															Data.Structure.Beacon.Add(CommandIndex1, obj, "BeaconStructure");
@@ -2213,7 +2215,9 @@ namespace OpenBve
 													if (!System.IO.File.Exists(f)) {
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														Data.Structure.Poles[CommandIndex1].Add(CommandIndex2, ObjectManager.LoadObject(f, Encoding, false));
+														UnifiedObject obj;
+														Program.CurrentHost.LoadObject(f, Encoding, out obj);
+														Data.Structure.Poles[CommandIndex1].Add(CommandIndex2, obj);
 													}
 												}
 											}
@@ -2234,7 +2238,8 @@ namespace OpenBve
 													if (!System.IO.File.Exists(f)) {
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														UnifiedObject obj = ObjectManager.LoadObject(f, Encoding, false);
+														UnifiedObject obj;
+														Program.CurrentHost.LoadObject(f, Encoding, out obj);
 														if (obj != null)
 														{
 															Data.Structure.Ground.Add(CommandIndex1, obj, "GroundStructure");
@@ -2259,7 +2264,8 @@ namespace OpenBve
 													if (!System.IO.File.Exists(f)) {
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														UnifiedObject obj = ObjectManager.LoadObject(f, Encoding, false);
+														UnifiedObject obj;
+														Program.CurrentHost.LoadObject(f, Encoding, out obj);
 														if (obj != null)
 														{
 															Data.Structure.WallL.Add(CommandIndex1, obj, "Left WallStructure");
@@ -2284,7 +2290,8 @@ namespace OpenBve
 													if (!System.IO.File.Exists(f)) {
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														UnifiedObject obj = ObjectManager.LoadObject(f, Encoding, false);
+														UnifiedObject obj;
+														Program.CurrentHost.LoadObject(f, Encoding, out obj);
 														if (obj != null)
 														{
 															Data.Structure.WallR.Add(CommandIndex1, obj, "Right WallStructure");
@@ -2309,7 +2316,8 @@ namespace OpenBve
 													if (!System.IO.File.Exists(f)) {
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														UnifiedObject obj = ObjectManager.LoadObject(f, Encoding, false);
+														UnifiedObject obj;
+														Program.CurrentHost.LoadObject(f, Encoding, out obj);
 														if (obj != null)
 														{
 															Data.Structure.DikeL.Add(CommandIndex1, obj, "Left DikeStructure");
@@ -2334,7 +2342,8 @@ namespace OpenBve
 													if (!System.IO.File.Exists(f)) {
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														UnifiedObject obj = ObjectManager.LoadObject(f, Encoding, false);
+														UnifiedObject obj;
+														Program.CurrentHost.LoadObject(f, Encoding, out obj);
 														if (obj != null)
 														{
 															Data.Structure.DikeR.Add(CommandIndex1, obj, "Right DikeStructure");
@@ -2359,7 +2368,8 @@ namespace OpenBve
 													if (!System.IO.File.Exists(f)) {
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														UnifiedObject obj = ObjectManager.LoadObject(f, Encoding, false);
+														UnifiedObject obj;
+														Program.CurrentHost.LoadObject(f, Encoding, out obj);
 														if (obj != null)
 														{
 															Data.Structure.FormL.Add(CommandIndex1, obj, "Left FormStructure");
@@ -2384,7 +2394,8 @@ namespace OpenBve
 													if (!System.IO.File.Exists(f)) {
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														UnifiedObject obj = ObjectManager.LoadObject(f, Encoding, false);
+														UnifiedObject obj;
+														Program.CurrentHost.LoadObject(f, Encoding, out obj);
 														if (obj != null)
 														{
 															Data.Structure.FormR.Add(CommandIndex1, obj, "Right FormStructure");
@@ -2653,7 +2664,8 @@ namespace OpenBve
 													if (!System.IO.File.Exists(f)) {
 														Interface.AddMessage(MessageType.Error, true, "FileName " + f + " could not be found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 													} else {
-														UnifiedObject obj = ObjectManager.LoadObject(f, Encoding, false);
+														UnifiedObject obj;
+														Program.CurrentHost.LoadObject(f, Encoding, out obj);
 														if (obj != null)
 														{
 															Data.Structure.FreeObjects.Add(CommandIndex1, obj, "FreeObject");
@@ -2681,10 +2693,11 @@ namespace OpenBve
 														if (!System.IO.File.Exists(f)) {
 															Interface.AddMessage(MessageType.Error, true, "SignalFileWithoutExtension " + f + " not found in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 														} else {
-															UnifiedObject Object = ObjectManager.LoadObject(f, Encoding, false);
-															if (Object is AnimatedObjectCollection) {
+															UnifiedObject obj;
+															Program.CurrentHost.LoadObject(f, Encoding, out obj);
+															if (obj is AnimatedObjectCollection) {
 																AnimatedObjectSignalData Signal = new AnimatedObjectSignalData();
-																Signal.Objects = Object;
+																Signal.Objects = obj;
 																Data.SignalData[CommandIndex1] = Signal;
 															} else {
 																Interface.AddMessage(MessageType.Error, true, "GlowFileWithoutExtension " + f + " is not a valid animated object in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
@@ -2701,30 +2714,25 @@ namespace OpenBve
 														string f = System.IO.Path.Combine(ObjectPath, Arguments[0]);
 														if (!System.IO.File.Exists(f))
 														{
-															bool notFound = false;
-															while (true)
+															string testPath;
+															try
 															{
-																f = Path.CombineFile(System.IO.Path.GetDirectoryName(f), System.IO.Path.GetFileName(f) + ".x");
-																if (System.IO.File.Exists(f))
-																{
-																	break;
-																}
-																f = Path.CombineFile(System.IO.Path.GetDirectoryName(f), System.IO.Path.GetFileName(f) + ".csv");
-																if (System.IO.File.Exists(f))
-																{
-																	break;
-																}
-																f = Path.CombineFile(System.IO.Path.GetDirectoryName(f), System.IO.Path.GetFileName(f) + ".b3d");
-																if (System.IO.File.Exists(f))
-																{
-																	break;
-																}
-																Interface.AddMessage(MessageType.Error, false, "SignalFileWithoutExtension does not exist in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-																notFound = true;
+																testPath = Path.CombineFile(ObjectPath, f);
+															}
+															catch
+															{
+																Program.CurrentHost.AddMessage(MessageType.Error, false, "SignalFileWithoutExtension contains invalid characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 																break;
 															}
-															if (notFound)
+
+
+															if (Program.CurrentHost.DetermineStaticObjectExtension(ref testPath))
 															{
+																f = testPath;
+															}
+															else
+															{
+																Program.CurrentHost.AddMessage(MessageType.Error, false, "SignalFileWithoutExtension does not exist in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 																break;
 															}
 														}
@@ -5261,54 +5269,6 @@ namespace OpenBve
 				BlocksUsed = ToIndex + 1;
 			}
 		}
-		
-		// get transformed object
-		private static StaticObject GetTransformedStaticObject(StaticObject Prototype, double NearDistance, double FarDistance)
-		{
-			StaticObject Result = (StaticObject)Prototype.Clone();
-			int n = 0;
-			double x2 = 0.0, x3 = 0.0, x6 = 0.0, x7 = 0.0;
-			for (int i = 0; i < Result.Mesh.Vertices.Length; i++) {
-				if (n == 2) {
-					x2 = Result.Mesh.Vertices[i].Coordinates.X;
-				} else if (n == 3) {
-					x3 = Result.Mesh.Vertices[i].Coordinates.X;
-				} else if (n == 6) {
-					x6 = Result.Mesh.Vertices[i].Coordinates.X;
-				} else if (n == 7) {
-					x7 = Result.Mesh.Vertices[i].Coordinates.X;
-				}
-				n++;
-				if (n == 8) {
-					break;
-				}
-			}
-			if (n >= 4) {
-				int m = 0;
-				for (int i = 0; i < Result.Mesh.Vertices.Length; i++) {
-					if (m == 0) {
-						Result.Mesh.Vertices[i].Coordinates.X = NearDistance - x3;
-					} else if (m == 1) {
-						Result.Mesh.Vertices[i].Coordinates.X = FarDistance - x2;
-						if (n < 8) {
-							m = 8;
-							break;
-						}
-					} else if (m == 4) {
-						Result.Mesh.Vertices[i].Coordinates.X = NearDistance - x7;
-					} else if (m == 5) {
-						Result.Mesh.Vertices[i].Coordinates.X = NearDistance - x6;
-						m = 8;
-						break;
-					}
-					m++;
-					if (m == 8) {
-						break;
-					}
-				}
-			}
-			return Result;
-		}
 
 		// load all textures
 		private static Texture[] LoadAllTextures(string BaseFile, bool IsGlowTexture)
@@ -5673,9 +5633,12 @@ namespace OpenBve
 					int j = Data.Blocks[i].RailType[0];
 					int r = j < Data.Structure.Run.Length ? Data.Structure.Run[j] : 0;
 					int f = j < Data.Structure.Flange.Length ? Data.Structure.Flange[j] : 0;
-					int m = Program.CurrentRoute.Tracks[0].Elements[n].Events.Length;
-					Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-					Program.CurrentRoute.Tracks[0].Elements[n].Events[m] = new RailSoundsChangeEvent(0.0, CurrentRunIndex, CurrentFlangeIndex, r, f);
+					if (CurrentRunIndex != r || CurrentFlangeIndex != f)
+					{
+						int m = Program.CurrentRoute.Tracks[0].Elements[n].Events.Length;
+						Array.Resize(ref Program.CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
+						Program.CurrentRoute.Tracks[0].Elements[n].Events[m] = new RailSoundsChangeEvent(0.0, CurrentRunIndex, CurrentFlangeIndex, r, f);
+					}
 					CurrentRunIndex = r;
 					CurrentFlangeIndex = f;
 				}
@@ -6145,7 +6108,7 @@ namespace OpenBve
 											if (!Data.Structure.FormCL.ContainsKey(Data.Blocks[i].Form[k].FormType)) {
 												Interface.AddMessage(MessageType.Error, false, "FormStructureIndex references a FormCL not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
 											} else {
-												StaticObject FormC = GetTransformedStaticObject((StaticObject)Data.Structure.FormCL[Data.Blocks[i].Form[k].FormType], d0, d1);
+												StaticObject FormC = (StaticObject)Data.Structure.FormCL[Data.Blocks[i].Form[k].FormType].Transform(d0, d1);
 												Program.Renderer.CreateStaticObject(FormC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 											}
 											if (Data.Blocks[i].Form[k].RoofType > 0) {
@@ -6157,7 +6120,7 @@ namespace OpenBve
 												if (!Data.Structure.RoofCL.ContainsKey(Data.Blocks[i].Form[k].RoofType)) {
 													Interface.AddMessage(MessageType.Error, false, "RoofStructureIndex references a RoofCL not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
 												} else {
-													StaticObject RoofC = GetTransformedStaticObject((StaticObject)Data.Structure.RoofCL[Data.Blocks[i].Form[k].RoofType], d0, d1);
+													StaticObject RoofC = (StaticObject)Data.Structure.RoofCL[Data.Blocks[i].Form[k].RoofType].Transform(d0, d1);
 													Program.Renderer.CreateStaticObject(RoofC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 												}
 											}
@@ -6170,7 +6133,7 @@ namespace OpenBve
 											if (!Data.Structure.FormCR.ContainsKey(Data.Blocks[i].Form[k].FormType)) {
 												Interface.AddMessage(MessageType.Error, false, "FormStructureIndex references a FormCR not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
 											} else {
-												StaticObject FormC = GetTransformedStaticObject((StaticObject)Data.Structure.FormCR[Data.Blocks[i].Form[k].FormType], d0, d1);
+												StaticObject FormC = (StaticObject)Data.Structure.FormCR[Data.Blocks[i].Form[k].FormType].Transform(d0, d1);
 												Program.Renderer.CreateStaticObject(FormC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 											}
 											if (Data.Blocks[i].Form[k].RoofType > 0) {
@@ -6182,7 +6145,7 @@ namespace OpenBve
 												if (!Data.Structure.RoofCR.ContainsKey(Data.Blocks[i].Form[k].RoofType)) {
 													Interface.AddMessage(MessageType.Error, false, "RoofStructureIndex references a RoofCR not loaded in Track.Form at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
 												} else {
-													StaticObject RoofC = GetTransformedStaticObject((StaticObject)Data.Structure.RoofCR[Data.Blocks[i].Form[k].RoofType], d0, d1);
+													StaticObject RoofC = (StaticObject)Data.Structure.RoofCR[Data.Blocks[i].Form[k].RoofType].Transform(d0, d1);
 													Program.Renderer.CreateStaticObject(RoofC, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 												}
 											}
@@ -6244,14 +6207,14 @@ namespace OpenBve
 										if (!Data.Structure.CrackL.ContainsKey(Data.Blocks[i].Crack[k].Type)) {
 											Interface.AddMessage(MessageType.Error, false, "CrackStructureIndex references a CrackL not loaded in Track.Crack at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
 										} else {
-											StaticObject Crack = GetTransformedStaticObject((StaticObject)Data.Structure.CrackL[Data.Blocks[i].Crack[k].Type], d0, d1);
+											StaticObject Crack = (StaticObject)Data.Structure.CrackL[Data.Blocks[i].Crack[k].Type].Transform(d0, d1);
 											Program.Renderer.CreateStaticObject(Crack, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 										}
 									} else if (d0 > 0.0) {
 										if (!Data.Structure.CrackR.ContainsKey(Data.Blocks[i].Crack[k].Type)) {
 											Interface.AddMessage(MessageType.Error, false, "CrackStructureIndex references a CrackR not loaded in Track.Crack at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
 										} else {
-											StaticObject Crack = GetTransformedStaticObject((StaticObject)Data.Structure.CrackR[Data.Blocks[i].Crack[k].Type], d0, d1);
+											StaticObject Crack = (StaticObject)Data.Structure.CrackR[Data.Blocks[i].Crack[k].Type].Transform(d0, d1);
 											Program.Renderer.CreateStaticObject(Crack, pos, RailTransformation, NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
 										}
 									}

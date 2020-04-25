@@ -11,6 +11,8 @@ namespace Plugin
 	    internal static HostInterface currentHost;
 	    private static ObjParsers currentObjParser = ObjParsers.Original;
 
+	    public override string[] SupportedStaticObjectExtensions => new[] { ".obj" };
+
 	    public override void Load(HostInterface host, FileSystem fileSystem) {
 		    currentHost = host;
 	    }
@@ -50,6 +52,7 @@ namespace Plugin
 		    try
 		    {   
 			    unifiedObject = WavefrontObjParser.ReadObject(path, Encoding);
+			    return true;
 		    }
 		    catch
 		    {

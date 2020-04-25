@@ -4,61 +4,17 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using OpenBveApi;
 using OpenBveApi.Objects;
 using OpenBveApi.Sounds;
 using OpenBveApi.Textures;
+using Path = System.IO.Path;
 
 namespace TrainEditor2.Systems.Functions
 {
 	/// <summary>Represents plugins loaded by the program.</summary>
 	internal static class Plugins
 	{
-		// --- classes ---
-		/// <summary>Represents a plugin.</summary>
-		internal class Plugin
-		{
-			// --- members ---
-			/// <summary>The plugin file.</summary>
-			internal readonly string File;
-
-			/// <summary>The plugin title.</summary>
-			internal readonly string Title;
-
-			/// <summary>The interface to load sounds as exposed by the plugin, or a null reference.</summary>
-			internal SoundInterface Sound;
-
-
-			// --- constructors ---
-			/// <summary>Creates a new instance of this class.</summary>
-			/// <param name="file">The plugin file.</param>
-			internal Plugin(string file)
-			{
-				File = file;
-				Title = Path.GetFileName(file);
-				Sound = null;
-			}
-
-
-			// --- functions ---
-			/// <summary>Loads all interfaces this plugin supports.</summary>
-			internal void Load()
-			{
-				Sound?.Load(Program.CurrentHost);
-			}
-
-			/// <summary>Unloads all interfaces this plugin supports.</summary>
-			internal void Unload()
-			{
-				Sound?.Unload();
-			}
-		}
-
-
-		// --- members ---
-		/// <summary>A list of all non-runtime plugins that are currently loaded, or a null reference.</summary>
-		internal static Plugin[] LoadedPlugins;
-
-
 		// --- functions ---
 		/// <summary>Loads all non-runtime plugins.</summary>
 		/// <returns>Whether loading all plugins was successful.</returns>
@@ -77,7 +33,7 @@ namespace TrainEditor2.Systems.Functions
 				// ignored
 			}
 
-			List<Plugin> list = new List<Plugin>();
+			List<ContentLoadingPlugin> list = new List<ContentLoadingPlugin>();
 			StringBuilder builder = new StringBuilder();
 
 			foreach (string file in files)
@@ -87,7 +43,7 @@ namespace TrainEditor2.Systems.Functions
 #if !DEBUG
 					try {
 #endif
-					Plugin plugin = new Plugin(file);
+					ContentLoadingPlugin plugin = new ContentLoadingPlugin(file);
 					Assembly assembly;
 					Type[] types;
 
@@ -136,7 +92,7 @@ namespace TrainEditor2.Systems.Functions
 
 					if (plugin.Sound != null)
 					{
-						plugin.Load();
+						plugin.Load(Program.CurrentHost, Program.FileSystem, new Interface.Options());
 						list.Add(plugin);
 					}
 					else if (!iTexture && !iObject && !iRuntime)
@@ -153,9 +109,9 @@ namespace TrainEditor2.Systems.Functions
 				}
 			}
 
-			LoadedPlugins = list.ToArray();
+			Program.CurrentHost.Plugins = list.ToArray();
 
-			if (LoadedPlugins.Length == 0)
+			if (Program.CurrentHost.Plugins.Length == 0)
 			{
 				MessageBox.Show($@"No available texture & sound loader plugins were found.{Environment.NewLine} Please re-download openBVE.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Hand);
 				return false;
@@ -176,9 +132,9 @@ namespace TrainEditor2.Systems.Functions
 		{
 			StringBuilder builder = new StringBuilder();
 
-			if (LoadedPlugins != null)
+			if (Program.CurrentHost.Plugins != null)
 			{
-				foreach (Plugin plugin in LoadedPlugins)
+				foreach (ContentLoadingPlugin plugin in Program.CurrentHost.Plugins)
 				{
 #if !DEBUG
 					try {
@@ -192,7 +148,7 @@ namespace TrainEditor2.Systems.Functions
 #endif
 				}
 
-				LoadedPlugins = null;
+				Program.CurrentHost.Plugins = null;
 			}
 
 			string message = builder.ToString().Trim(new char[] { });

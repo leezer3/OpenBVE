@@ -297,7 +297,7 @@ namespace OpenBve {
 		/// <param name="Time">The time in seconds for which to display the message</param>
 		internal void AddInterfaceMessage(string Message, MessageColor Color, double Time)
 		{
-			Game.AddMessage(Message, MessageDependency.Plugin, GameMode.Expert, Color, Program.CurrentRoute.SecondsSinceMidnight + Time, null);
+			MessageManager.AddMessage(Message, MessageDependency.Plugin, GameMode.Expert, Color, Program.CurrentRoute.SecondsSinceMidnight + Time, null);
 		}
 
 		/// <summary>May be called from a .Net plugin, in order to add a score to the post-game log</summary>

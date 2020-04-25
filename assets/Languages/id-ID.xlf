@@ -195,6 +195,14 @@
 						<source>Failed to create the following file: \r \n</source>
 						<target>Gagal membuat file: \r \n</target>
 					</trans-unit>
+					<trans-unit id="security_checkaccess">
+						<source>Please check that this path is accessible.</source>
+						<target>Please check that this path is accessible.</target>
+					</trans-unit>
+					<trans-unit id="security_badlocation">
+						<source>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</source>
+						<target>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</target>
+					</trans-unit>
 				</group>
 				<group id="start">
 					<trans-unit id="title">
@@ -298,6 +306,7 @@
 					</trans-unit>
 					<trans-unit id="train_settings_reverseconsist">
 						<source>Reverse Consist:</source>
+						<target>Putar rangkaian:</target>
 					</trans-unit>
 					<trans-unit id="train_settings_encoding_preview">
 						<source>Preview:</source>
@@ -702,6 +711,10 @@
 					<trans-unit id="creation_proceed">
 						<source>Proceed......</source>
 						<target>OK</target>
+					</trans-unit>
+					<trans-unit id="creation_invalid_nofiles">
+						<source>No files were selected to package- Please retry.</source>
+						<target>No files were selected to package- Please retry.</target>
 					</trans-unit>
 					<trans-unit id="creation_invalid_filename">
 						<source>The selected filename is invalid- Please retry.</source>
@@ -1440,10 +1453,7 @@
 					</trans-unit>
 					<trans-unit id="advanced_is_use_new_renderer">
 						<source>Enable the new renderer</source>
-					</trans-unit>
-					<trans-unit id="advanced_disable_displaylists">
-						<source>Disable OpenGL display lists</source>
-						<target>Matikan list display OpenGL</target>
+						<target>Gunakan mode render terbaru</target>
 					</trans-unit>
 					<trans-unit id="advanced_timefactor">
 						<source>Accelerated Time Factor</source>
@@ -2611,6 +2621,10 @@
 					<trans-unit id="show_events">
 						<source>Shows or hides event markers (For developers)</source>
 						<target>Tampilkan / sembunyikan markers (untuk kreator)</target>
+					</trans-unit>
+					<trans-unit id="debug_renderer_mode">
+						<source>Toggles the renderer</source>
+						<target>Jenis perangkat render</target>
 					</trans-unit>
 					<trans-unit id="wiper_speed_up">
 						<source>Increases the speed of the windscreen wipers</source>

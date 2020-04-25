@@ -84,8 +84,9 @@ namespace OpenBve
 										}
 										else
 										{
-											UnifiedObject b = ObjectManager.LoadObject(f, System.Text.Encoding.Default, false);
-											o = (StaticObject) b;
+											UnifiedObject obj;
+											Program.CurrentHost.LoadObject(f, System.Text.Encoding.Default, out obj);
+											o = (StaticObject) obj;
 										}
 										break;
 									case "repetitions":

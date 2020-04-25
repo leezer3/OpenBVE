@@ -3,6 +3,7 @@ using System.Linq;
 using LibRender2;
 using LibRender2.MotionBlurs;
 using LibRender2.Objects;
+using LibRender2.Screens;
 using LibRender2.Viewports;
 using OpenBve.Graphics.Renderers;
 using OpenBveApi;
@@ -59,12 +60,7 @@ namespace OpenBve.Graphics
 			ObjectsSortedByStart = new int[] { };
 			ObjectsSortedByEnd = new int[] { };
 		}
-
-		internal int CreateStaticObject(StaticObject Prototype, OpenBveApi.Math.Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition)
-		{
-			return base.CreateStaticObject(Prototype, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, BlockLength, TrackPosition, 1.0);
-		}
-
+		
 		internal int CreateStaticObject(UnifiedObject Prototype, OpenBveApi.Math.Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
 		{
 			StaticObject obj = Prototype as StaticObject;
@@ -88,7 +84,7 @@ namespace OpenBve.Graphics
 			ObjectsSortedByStartPointer = 0;
 			ObjectsSortedByEndPointer = 0;
 
-			double p = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
+			double p = CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
 
 			foreach (ObjectState state in StaticObjectStates.Where(recipe => recipe.StartingDistance <= p + Camera.ForwardViewingDistance & recipe.EndingDistance >= p - Camera.BackwardViewingDistance))
 			{
@@ -100,7 +96,7 @@ namespace OpenBve.Graphics
 		{
 			double d = TrackPosition - LastUpdatedTrackPosition;
 			int n = ObjectsSortedByStart.Length;
-			double p = World.CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
+			double p = CameraTrackFollower.TrackPosition + Camera.Alignment.Position.Z;
 
 			if (d < 0.0)
 			{
@@ -268,7 +264,7 @@ namespace OpenBve.Graphics
 
 			if (fd != 0.0)
 			{
-				float fr = (float)((World.CameraTrackFollower.TrackPosition - Program.CurrentRoute.PreviousFog.TrackPosition) / fd);
+				float fr = (float)((CameraTrackFollower.TrackPosition - Program.CurrentRoute.PreviousFog.TrackPosition) / fd);
 				float frc = 1.0f - fr;
 				Program.CurrentRoute.CurrentFog.Start = Program.CurrentRoute.PreviousFog.Start * frc + Program.CurrentRoute.NextFog.Start * fr;
 				Program.CurrentRoute.CurrentFog.End = Program.CurrentRoute.PreviousFog.End * frc + Program.CurrentRoute.NextFog.End * fr;
@@ -283,7 +279,7 @@ namespace OpenBve.Graphics
 
 			// render background
 			GL.Disable(EnableCap.DepthTest);
-			Program.CurrentRoute.UpdateBackground(TimeElapsed, Game.CurrentInterface != Game.InterfaceType.Normal);
+			Program.CurrentRoute.UpdateBackground(TimeElapsed, Program.Renderer.CurrentInterface != InterfaceType.Normal);
 
 			events.Render(Camera.AbsolutePosition);
 
@@ -306,7 +302,7 @@ namespace OpenBve.Graphics
 
 			// world layer
 			// opaque face
-			if (Interface.CurrentOptions.IsUseNewRenderer)
+			if (AvailableNewRenderer)
 			{
 				//Setup the shader for rendering the scene
 				DefaultShader.Activate();
@@ -331,7 +327,7 @@ namespace OpenBve.Graphics
 			ResetOpenGlState();
 			foreach (FaceState face in VisibleObjects.OpaqueFaces)
 			{
-				if (Interface.CurrentOptions.IsUseNewRenderer)
+				if (AvailableNewRenderer)
 				{
 					RenderFace(DefaultShader, face);
 				}
@@ -352,7 +348,7 @@ namespace OpenBve.Graphics
 
 				foreach (FaceState face in VisibleObjects.AlphaFaces)
 				{
-					if (Interface.CurrentOptions.IsUseNewRenderer)
+					if (AvailableNewRenderer)
 					{
 						RenderFace(DefaultShader, face);
 					}
@@ -374,7 +370,7 @@ namespace OpenBve.Graphics
 					{
 						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].Color.A == 255)
 						{
-							if (Interface.CurrentOptions.IsUseNewRenderer)
+							if (AvailableNewRenderer)
 							{
 								RenderFace(DefaultShader, face);
 							}
@@ -401,7 +397,7 @@ namespace OpenBve.Graphics
 							additive = true;
 						}
 
-						if (Interface.CurrentOptions.IsUseNewRenderer)
+						if (AvailableNewRenderer)
 						{
 							RenderFace(DefaultShader, face);
 						}
@@ -418,7 +414,7 @@ namespace OpenBve.Graphics
 							additive = false;
 						}
 
-						if (Interface.CurrentOptions.IsUseNewRenderer)
+						if (AvailableNewRenderer)
 						{
 							RenderFace(DefaultShader, face);
 						}
@@ -442,15 +438,19 @@ namespace OpenBve.Graphics
 				DefaultShader.Deactivate();
 				MotionBlur.RenderFullscreen(Interface.CurrentOptions.MotionBlur, FrameRate, Math.Abs(Camera.CurrentSpeed));
 			}
-			if (Interface.CurrentOptions.IsUseNewRenderer)
-			{
-				DefaultShader.Activate();
-				ResetShader(DefaultShader); //Must reset shader between overlay and world layers for correct lighting results
-				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
-			}
 			// overlay layer
 			OptionFog = false;
 			UpdateViewport(ViewportChangeMode.ChangeToCab);
+			if (AvailableNewRenderer)
+			{
+				/*
+				 * We must reset the shader between overlay and world layers for correct lighting results.
+				 * Additionally, the viewport change updates the projection matrix
+				 */
+				DefaultShader.Activate();
+				ResetShader(DefaultShader);
+				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);
+			}
 			CurrentViewMatrix = Matrix4D.LookAt(Vector3.Zero, new Vector3(Camera.AbsoluteDirection.X, Camera.AbsoluteDirection.Y, -Camera.AbsoluteDirection.Z), new Vector3(Camera.AbsoluteUp.X, Camera.AbsoluteUp.Y, -Camera.AbsoluteUp.Z));
 			if (Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable || Camera.CurrentRestriction == CameraRestrictionMode.Restricted3D)
 			{
@@ -459,15 +459,23 @@ namespace OpenBve.Graphics
 				OptionLighting = true;
 				Color24 prevOptionAmbientColor = Lighting.OptionAmbientColor;
 				Color24 prevOptionDiffuseColor = Lighting.OptionDiffuseColor;
-				Lighting.OptionAmbientColor = new Color24(178, 178, 178);
-				Lighting.OptionDiffuseColor = new Color24(178, 178, 178);
+				Lighting.OptionAmbientColor = Color24.LightGrey;
+				Lighting.OptionDiffuseColor = Color24.LightGrey;
+				if (AvailableNewRenderer)
+				{
+					DefaultShader.SetIsLight(true);
+					DefaultShader.SetLightPosition(Lighting.OptionLightPosition);
+					DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
+					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
+					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
+				}
 				GL.Light(LightName.Light0, LightParameter.Ambient, new[] { inv255 * 178, inv255 * 178, inv255 * 178, 1.0f });
 				GL.Light(LightName.Light0, LightParameter.Diffuse, new[] { inv255 * 178, inv255 * 178, inv255 * 178, 1.0f });
 
 				// overlay opaque face
 				foreach (FaceState face in VisibleObjects.OverlayOpaqueFaces)
 				{
-					if (Interface.CurrentOptions.IsUseNewRenderer)
+					if (AvailableNewRenderer)
 					{
 						RenderFace(DefaultShader, face);
 					}
@@ -489,7 +497,7 @@ namespace OpenBve.Graphics
 
 					foreach (FaceState face in VisibleObjects.OverlayAlphaFaces)
 					{
-						if (Interface.CurrentOptions.IsUseNewRenderer)
+						if (AvailableNewRenderer)
 						{
 							RenderFace(DefaultShader, face);
 						}
@@ -511,7 +519,7 @@ namespace OpenBve.Graphics
 						{
 							if (face.Object.Prototype.Mesh.Materials[face.Face.Material].Color.A == 255)
 							{
-								if (Interface.CurrentOptions.IsUseNewRenderer)
+								if (AvailableNewRenderer)
 								{
 									RenderFace(DefaultShader, face);
 								}
@@ -538,7 +546,7 @@ namespace OpenBve.Graphics
 								additive = true;
 							}
 
-							if (Interface.CurrentOptions.IsUseNewRenderer)
+							if (AvailableNewRenderer)
 							{
 								RenderFace(DefaultShader, face);
 							}
@@ -555,7 +563,7 @@ namespace OpenBve.Graphics
 								additive = false;
 							}
 
-							if (Interface.CurrentOptions.IsUseNewRenderer)
+							if (AvailableNewRenderer)
 							{
 								RenderFace(DefaultShader, face);
 							}
@@ -586,7 +594,7 @@ namespace OpenBve.Graphics
 				VisibleObjects.SortPolygonsInOverlayAlphaFaces();
 				foreach (FaceState face in VisibleObjects.OverlayAlphaFaces)
 				{
-					if (Interface.CurrentOptions.IsUseNewRenderer)
+					if (AvailableNewRenderer)
 					{
 						RenderFace(DefaultShader, face);
 					}
@@ -596,7 +604,7 @@ namespace OpenBve.Graphics
 					}
 				}
 			}
-			if (Interface.CurrentOptions.IsUseNewRenderer)
+			if (AvailableNewRenderer)
 			{
 				/*
 				 * Must remember to de-activate at the end of the render sequence if in GL3 mode.
@@ -611,6 +619,7 @@ namespace OpenBve.Graphics
 			// render overlays
 			ResetOpenGlState();
 			UnsetAlphaFunc();
+			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); //FIXME: Remove when text switches between two renderer types
 			GL.Disable(EnableCap.DepthTest);
 			overlays.Render(TimeElapsed);
 			OptionLighting = true;

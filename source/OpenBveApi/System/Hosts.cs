@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -159,12 +161,84 @@ namespace OpenBveApi.Hosts {
 			return false;
 		}
 
+		/// <summary>
+		/// Add an extension to the path of the object file that is missing the extension and no file.
+		/// </summary>
+		/// <param name="FilePath">The absolute on-disk path to the object</param>
+		/// <returns>Whether the extension could be determined</returns>
+		public bool DetermineObjectExtension(ref string FilePath)
+		{
+			if (System.IO.File.Exists(FilePath) || System.IO.Path.HasExtension(FilePath))
+			{
+				return true;
+			}
+
+			if (DetermineStaticObjectExtension(ref FilePath))
+			{
+				return true;
+			}
+
+			foreach (string extension in SupportedAnimatedObjectExtensions)
+			{
+				string testPath = Path.CombineFile(System.IO.Path.GetDirectoryName(FilePath), $"{System.IO.Path.GetFileName(FilePath)}{extension}");
+
+				if (System.IO.File.Exists(testPath))
+				{
+					FilePath = testPath;
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Add an extension to the path of the static object file that is missing the extension and no file.
+		/// </summary>
+		/// <param name="FilePath">The absolute on-disk path to the object</param>
+		/// <returns>Whether the extension could be determined</returns>
+		public bool DetermineStaticObjectExtension(ref string FilePath)
+		{
+			if (System.IO.File.Exists(FilePath) || System.IO.Path.HasExtension(FilePath))
+			{
+				return true;
+			}
+
+			// Search in the order of .x, .csv, .b3d, etc.
+			foreach (string extension in SupportedStaticObjectExtensions.OrderByDescending(x => Array.IndexOf(new[] { ".b3d", ".csv", ".x" }, x)))
+			{
+				string testPath = Path.CombineFile(System.IO.Path.GetDirectoryName(FilePath), $"{System.IO.Path.GetFileName(FilePath)}{extension}");
+
+				if (System.IO.File.Exists(testPath))
+				{
+					FilePath = testPath;
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 		/// <summary>Loads an object</summary>
 		/// <param name="Path">The absolute on-disk path to the object</param>
 		/// <param name="Encoding">The detected text encoding</param>
 		/// <param name="Object">The handle to the object</param>
 		/// <returns>Whether loading the object was successful</returns>
 		public virtual bool LoadObject(string Path, System.Text.Encoding Encoding, out UnifiedObject Object)
+		{
+			Object = null;
+			return false;
+		}
+
+		/// <summary>Loads a static object</summary>
+		/// <param name="Path">The absolute on-disk path to the object</param>
+		/// <param name="Encoding">The detected text encoding</param>
+		/// <param name="PreserveVertices">Whether optimization is to be performed on the object</param>
+		/// <param name="Object">The handle to the object</param>
+		/// <returns>Whether loading the object was successful</returns>
+		/// <remarks>This will return false if an animated object is attempted to be loaded.
+		/// Selecting to preserve vertices may be useful if using the object as a deformable.</remarks>
+		public virtual bool LoadStaticObject(string Path, System.Text.Encoding Encoding, bool PreserveVertices, out StaticObject Object)
 		{
 			Object = null;
 			return false;
@@ -343,6 +417,18 @@ namespace OpenBveApi.Hosts {
 		{
 
 		}
+
+		/// <summary>The list of available content loading plugins</summary>
+		public ContentLoadingPlugin[] Plugins;
+
+		/// <summary>
+		/// Array of supported animated object extensions.
+		/// </summary>
+		public string[] SupportedAnimatedObjectExtensions => Plugins.Where(x => x.Object != null).SelectMany(x => x.Object.SupportedAnimatedObjectExtensions).ToArray();
+
+		/// <summary>
+		/// Array of supported static object extensions.
+		/// </summary>
+		public string[] SupportedStaticObjectExtensions => Plugins.Where(x => x.Object != null).SelectMany(x => x.Object.SupportedStaticObjectExtensions).ToArray();
 	}
-	
 }

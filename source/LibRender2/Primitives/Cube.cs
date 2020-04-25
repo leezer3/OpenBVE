@@ -176,12 +176,14 @@ namespace LibRender2.Primitives
 					Color = Color128.White
 				}
 			};
-			if (renderer.currentOptions.IsUseNewRenderer)
+
+			if (renderer.AvailableNewRenderer)
 			{
 				defaultVAO = new VertexArrayObject();
 				defaultVAO.Bind();
 				defaultVAO.SetVBO(new VertexBufferObject(vertexData, BufferUsageHint.StaticDraw));
 				defaultVAO.SetIBO(new IndexBufferObject(Enumerable.Range(0, vertexData.Length).Select(x => (ushort) x).ToArray(), BufferUsageHint.StaticDraw));
+				defaultVAO.SetAttributes(renderer.DefaultShader.VertexLayout);
 				defaultVAO.UnBind();
 			}
 		}
@@ -194,15 +196,15 @@ namespace LibRender2.Primitives
 		/// <param name="Size">The size of the cube in M</param>
 		/// <param name="Camera">The camera position</param>
 		/// <param name="TextureIndex">The texture to apply</param>
-		public void Draw(OpenBveApi.Math.Vector3 Position, OpenBveApi.Math.Vector3 Direction, OpenBveApi.Math.Vector3 Up, OpenBveApi.Math.Vector3 Side, double Size, OpenBveApi.Math.Vector3 Camera, Texture TextureIndex)
+		public void Draw(Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, double Size, Vector3 Camera, Texture TextureIndex)
 		{
-			if (renderer.currentOptions.IsUseNewRenderer)
+			if (renderer.AvailableNewRenderer)
 			{
-				Draw(Position, Direction, Up, Side, new OpenBveApi.Math.Vector3(Size, Size, Size), Camera, TextureIndex);
+				Draw(Position, Direction, Up, Side, new Vector3(Size, Size, Size), Camera, TextureIndex);
 			}
 			else
 			{
-				DrawImmediate(Position, Direction, Up, Side, new OpenBveApi.Math.Vector3(Size, Size, Size), Camera, TextureIndex);
+				DrawImmediate(Position, Direction, Up, Side, new Vector3(Size, Size, Size), Camera, TextureIndex);
 			}
 			
 		}
@@ -215,11 +217,11 @@ namespace LibRender2.Primitives
 		/// <param name="Size">A 3D vector describing the size of the cube</param>
 		/// <param name="Camera">The camera position</param>
 		/// <param name="TextureIndex">The texture to apply</param>
-		public void Draw(OpenBveApi.Math.Vector3 Position, OpenBveApi.Math.Vector3 Direction, OpenBveApi.Math.Vector3 Up, OpenBveApi.Math.Vector3 Side, OpenBveApi.Math.Vector3 Size, OpenBveApi.Math.Vector3 Camera, Texture TextureIndex)
+		public void Draw(Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, Vector3 Size, Vector3 Camera, Texture TextureIndex)
 		{
-			if (renderer.currentOptions.IsUseNewRenderer)
+			if (renderer.AvailableNewRenderer)
 			{
-				Draw(defaultVAO, Position, Direction, Up, Side, Size, Camera, TextureIndex);
+				DrawRetained(defaultVAO, Position, Direction, Up, Side, Size, Camera, TextureIndex);
 			}
 			else
 			{
@@ -236,7 +238,7 @@ namespace LibRender2.Primitives
 		/// <param name="Size">A 3D vector describing the size of the cube</param>
 		/// <param name="Camera">The camera position</param>
 		/// <param name="TextureIndex">The texture to apply</param>
-		public void Draw(VertexArrayObject VAO, OpenBveApi.Math.Vector3 Position, OpenBveApi.Math.Vector3 Direction, OpenBveApi.Math.Vector3 Up, OpenBveApi.Math.Vector3 Side, OpenBveApi.Math.Vector3 Size, OpenBveApi.Math.Vector3 Camera, Texture TextureIndex)
+		public void DrawRetained(VertexArrayObject VAO, Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, Vector3 Size, Vector3 Camera, Texture TextureIndex)
 		{
 			renderer.DefaultShader.Activate();
 			renderer.ResetShader(renderer.DefaultShader);
@@ -274,7 +276,7 @@ namespace LibRender2.Primitives
 		/// <param name="Size">A 3D vector describing the size of the cube</param>
 		/// <param name="Camera">The camera position</param>
 		/// <param name="TextureIndex">The texture to apply</param>
-		public void DrawImmediate(OpenBveApi.Math.Vector3 Position, OpenBveApi.Math.Vector3 Direction, OpenBveApi.Math.Vector3 Up, OpenBveApi.Math.Vector3 Side, OpenBveApi.Math.Vector3 Size, OpenBveApi.Math.Vector3 Camera, Texture TextureIndex)
+		public void DrawImmediate(Vector3 Position, Vector3 Direction, Vector3 Up, Vector3 Side, Vector3 Size, Vector3 Camera, Texture TextureIndex)
 		{
 			renderer.LastBoundTexture = null;
 			GL.MatrixMode(MatrixMode.Projection);
@@ -307,12 +309,12 @@ namespace LibRender2.Primitives
 				v[i] += Position - Camera;
 			}
 			int[][] Faces = new int[6][];
-			Faces[0] = new int[] { 0, 1, 2, 3 };
-			Faces[1] = new int[] { 0, 4, 5, 1 };
-			Faces[2] = new int[] { 0, 3, 7, 4 };
-			Faces[3] = new int[] { 6, 5, 4, 7 };
-			Faces[4] = new int[] { 6, 7, 3, 2 };
-			Faces[5] = new int[] { 6, 2, 1, 5 };
+			Faces[0] = new[] { 0, 1, 2, 3 };
+			Faces[1] = new[] { 0, 4, 5, 1 };
+			Faces[2] = new[] { 0, 3, 7, 4 };
+			Faces[3] = new[] { 6, 5, 4, 7 };
+			Faces[4] = new[] { 6, 7, 3, 2 };
+			Faces[5] = new[] { 6, 2, 1, 5 };
 			if (TextureIndex == null || !renderer.currentHost.LoadTexture(TextureIndex, OpenGlTextureWrapMode.ClampClamp))
 			{
 				GL.Disable(EnableCap.Texture2D);
@@ -330,12 +332,12 @@ namespace LibRender2.Primitives
 			GL.Enable(EnableCap.Texture2D);
 			GL.BindTexture(TextureTarget.Texture2D, TextureIndex.OpenGlTextures[(int)OpenGlTextureWrapMode.ClampClamp].Name);
 			Vector2[][] t = new Vector2[6][];
-			t[0] = new Vector2[] { new Vector2(1.0, 0.0), new Vector2(1.0, 1.0), new Vector2(0.0, 1.0), new Vector2(0.0, 0.0) };
-			t[1] = new Vector2[] { new Vector2(0.0, 0.0), new Vector2(1.0, 0.0), new Vector2(1.0, 1.0), new Vector2(0.0, 1.0) };
-			t[2] = new Vector2[] { new Vector2(1.0, 1.0), new Vector2(0.0, 1.0), new Vector2(0.0, 0.0), new Vector2(1.0, 0.0) };
-			t[3] = new Vector2[] { new Vector2(1.0, 1.0), new Vector2(0.0, 1.0), new Vector2(0.0, 0.0), new Vector2(1.0, 0.0) };
-			t[4] = new Vector2[] { new Vector2(0.0, 1.0), new Vector2(0.0, 0.0), new Vector2(1.0, 0.0), new Vector2(1.0, 1.0) };
-			t[5] = new Vector2[] { new Vector2(0.0, 1.0), new Vector2(0.0, 0.0), new Vector2(1.0, 0.0), new Vector2(1.0, 1.0) };
+			t[0] = new[] { new Vector2(1.0, 0.0), new Vector2(1.0, 1.0), new Vector2(0.0, 1.0), new Vector2(0.0, 0.0) };
+			t[1] = new[] { new Vector2(0.0, 0.0), new Vector2(1.0, 0.0), new Vector2(1.0, 1.0), new Vector2(0.0, 1.0) };
+			t[2] = new[] { new Vector2(1.0, 1.0), new Vector2(0.0, 1.0), new Vector2(0.0, 0.0), new Vector2(1.0, 0.0) };
+			t[3] = new[] { new Vector2(1.0, 1.0), new Vector2(0.0, 1.0), new Vector2(0.0, 0.0), new Vector2(1.0, 0.0) };
+			t[4] = new[] { new Vector2(0.0, 1.0), new Vector2(0.0, 0.0), new Vector2(1.0, 0.0), new Vector2(1.0, 1.0) };
+			t[5] = new[] { new Vector2(0.0, 1.0), new Vector2(0.0, 0.0), new Vector2(1.0, 0.0), new Vector2(1.0, 1.0) };
 			for (int i = 0; i < 6; i++)
 			{
 				GL.Begin(PrimitiveType.Quads);

@@ -16,6 +16,8 @@ namespace Plugin
 
 		internal static string LoksimPackageFolder;
 
+		public override string[] SupportedAnimatedObjectExtensions => new[] { ".s" };
+
 		public override void Load(HostInterface host, FileSystem fileSystem)
 		{
 			currentHost = host;

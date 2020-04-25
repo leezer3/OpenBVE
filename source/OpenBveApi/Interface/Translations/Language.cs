@@ -19,13 +19,8 @@ namespace OpenBveApi.Interface
 			/// <summary>The quick-reference strings for this language</summary>
 			internal readonly InterfaceQuickReference myQuickReferences;
 			/// <summary>Returns the number of translated strings contained in the language</summary>
-			internal int InterfaceStringCount
-			{
-				get
-				{
-					return InterfaceStrings.Length;
-				}
-			}
+			internal int InterfaceStringCount => InterfaceStrings.Length;
+
 			/// <summary>The language name</summary>
 			internal readonly string Name;
 			/// <summary>The language flag</summary>
@@ -75,9 +70,9 @@ namespace OpenBveApi.Interface
 				internal readonly Group[] Groups;
 				internal readonly Unit[] Units;
 
-				internal XliffFile(Stream stream, string languageCode)
+				internal XliffFile(TextReader reader, string languageCode)
 				{
-					XDocument xml = XDocument.Load(stream);
+					XDocument xml = XDocument.Load(reader);
 					XNamespace xmlns = xml.Root.Name.Namespace;
 					XElement body = xml.Root.Element(xmlns + "file").Element(xmlns + "body");
 
@@ -87,9 +82,9 @@ namespace OpenBveApi.Interface
 			}
 
 			/// <summary>Creates a new language from a file stream</summary>
-			/// <param name="languageStream">The file stream</param>
+			/// <param name="languageReader">The file stream</param>
 			/// <param name="languageCode">The language code</param>
-			internal Language(Stream languageStream, string languageCode)
+			internal Language(TextReader languageReader, string languageCode)
 			{
 				Name = "Unknown";
 				LanguageCode = languageCode;
@@ -101,7 +96,7 @@ namespace OpenBveApi.Interface
 				Array.Copy(TranslatedKeys, KeyInfos, TranslatedKeys.Length);
 
 				string prefix = string.Empty;
-				XliffFile file = new XliffFile(languageStream, languageCode);
+				XliffFile file = new XliffFile(languageReader, languageCode);
 				List<InterfaceString> strings = new List<InterfaceString>();
 
 				ExportUnits(prefix, file.Units, strings);

@@ -4,7 +4,6 @@ using OpenBveApi.Colors;
 using OpenBveApi.Runtime;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
-using RouteManager2;
 using RouteManager2.MessageManager;
 using SoundManager;
 
@@ -39,7 +38,7 @@ namespace OpenBve
 				if (Train.StationState == TrainStopState.Pending)
 				{
 					Train.StationDepartureSoundPlayed = false;
-					if (Game.StopsAtStation(i, Train))
+					if (Program.CurrentRoute.Stations[i].StopsHere(Train))
 					{
 						Train.StationDepartureSoundPlayed = false;
 						//Check whether all doors are controlled by the driver
@@ -172,11 +171,11 @@ namespace OpenBve
 									s = s.Replace("[name]", Program.CurrentRoute.Stations[i].Name);
 									s = s.Replace("[time]", b);
 									s = s.Replace("[difference]", c);
-									Game.AddMessage(s, MessageDependency.StationArrival, GameMode.Normal, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
+									MessageManager.AddMessage(s, MessageDependency.StationArrival, GameMode.Normal, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 									if (Program.CurrentRoute.Stations[i].Type == StationType.Normal)
 									{
 										s = Translations.GetInterfaceString("message_station_deadline");
-										Game.AddMessage(s, MessageDependency.StationDeparture, GameMode.Normal, MessageColor.White, double.PositiveInfinity, null);
+										MessageManager.AddMessage(s, MessageDependency.StationDeparture, GameMode.Normal, MessageColor.White, double.PositiveInfinity, null);
 									}
 									Timetable.UpdateCustomTimetable(Program.CurrentRoute.Stations[i].TimetableDaytimeTexture, Program.CurrentRoute.Stations[i].TimetableNighttimeTexture);
 								}
@@ -419,11 +418,11 @@ namespace OpenBve
 											break; // Only trigger messages for the player train
 										if (!Program.CurrentRoute.Stations[i].OpenLeftDoors & !Program.CurrentRoute.Stations[i].OpenRightDoors | Train.Specs.DoorCloseMode != DoorMode.Manual)
 										{
-											Game.AddMessage(Translations.GetInterfaceString("message_station_depart"), MessageDependency.None, GameMode.Normal, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+											MessageManager.AddMessage(Translations.GetInterfaceString("message_station_depart"), MessageDependency.None, GameMode.Normal, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
 										}
 										else
 										{
-											Game.AddMessage(Translations.GetInterfaceString("message_station_depart_closedoors"), MessageDependency.None, GameMode.Normal, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+											MessageManager.AddMessage(Translations.GetInterfaceString("message_station_depart_closedoors"), MessageDependency.None, GameMode.Normal, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
 										}
 										break;
 									case StationType.ChangeEnds:
@@ -442,7 +441,7 @@ namespace OpenBve
 							Train.StationState = TrainStopState.Completed;
 							if (Train.IsPlayerTrain & Program.CurrentRoute.Stations[i].Type == StationType.Normal)
 							{
-								Game.AddMessage(Translations.GetInterfaceString("message_station_depart"), MessageDependency.None, GameMode.Normal, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
+								MessageManager.AddMessage(Translations.GetInterfaceString("message_station_depart"), MessageDependency.None, GameMode.Normal, MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
 							}
 						}
 					}

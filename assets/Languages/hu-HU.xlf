@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <xliff version="1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2">
 	<file datatype="plaintext" original="en-US.xlf" source-language="en-US" target-language="hu-HU">
 		<body>
@@ -17,14 +17,14 @@
 				</trans-unit>
 				<trans-unit id="last_updated">
 					<source>2016-02-21</source>
-					<target>2018-10-23</target>
+					<target state="translated">2020-04-16</target>
 				</trans-unit>
 			</group>
 			<group id="openbve">
 				<group id="program">
 					<trans-unit id="title">
 						<source>openBVE</source>
-						<target>openBVE</target>
+						<target state="translated">OpenBVE</target>
 					</trans-unit>
 				</group>
 				<group id="panel">
@@ -42,7 +42,7 @@
 					</trans-unit>
 					<trans-unit id="controls">
 						<source>Customize controls</source>
-						<target>Kezelőszervek</target>
+						<target state="translated">Kezelés testreszabása</target>
 					</trans-unit>
 					<trans-unit id="options">
 						<source>Options</source>
@@ -118,27 +118,27 @@
 					</trans-unit>
 					<trans-unit id="controls_missing">
 						<source>No control configuration files found.</source>
-						<target>Nem található kezelőszerv konfigurációs fájl.</target>
+						<target state="translated">Nem található kezelőeszköz konfigurációs fájl.</target>
 					</trans-unit>
 					<trans-unit id="controls_oldversion">
 						<source>An older key-configuration file was found.</source>
-						<target>Egy régebbi kezelőszerv konfigurációs fájlt találtunk.</target>
+						<target state="translated">Egy régebbi kezelőeszköz konfigurációs fájlt találtunk.</target>
 					</trans-unit>
 					<trans-unit id="controls_reset">
 						<source>The current key-configuration has been reset to defaults.</source>
-						<target>A jelenlegi kezelőszerv konfigurációt visszaállítottuk az alapértelmezettre.</target>
+						<target state="translated">A jelenlegi kezelőeszköz konfigurációt visszaállítottuk az alapértelmezettre.</target>
 					</trans-unit>
 					<trans-unit id="controls_default_oldversion">
 						<source>The default key assingment file is an older version or corrupt.</source>
-						<target>Az alapértelmezett kezelőszerv konfigurációs fájl régebbi verziójú vagy sérült.</target>
+						<target state="translated">Az alapértelmezett kezelőeszköz konfigurációs fájl régebbi verziójú vagy sérült.</target>
 					</trans-unit>
 					<trans-unit id="controls_default_missing">
 						<source>The default key assignment file does not exist.</source>
-						<target>Az alapértelmezett kezelőszerv konfigurációs fájl nem létezik.</target>
+						<target state="translated">Az alapértelmezett kezelőeszköz konfigurációs fájl nem létezik.</target>
 					</trans-unit>
 					<trans-unit id="controls_ingame">
 						<source>You are currently running on the [platform] backend. Please use the in-game menu to configure any joystick based controls.</source>
-						<target>Ön jelenleg a [platform] rendszert használja. Kérjük, használja a játék közbeni menüt a joystick alapú kezelőszervek konfigurálására.</target>
+						<target state="translated">Ön jelenleg a [platform] rendszert használja. Kérjük, használja a játék közbeni menüt a joystick alapú kezelőeszközök konfigurálására.</target>
 					</trans-unit>
 					<trans-unit id="sound_openal_version">
 						<source>OpenAL 1.1 is required. You seem to have version 1.0.</source>
@@ -166,11 +166,11 @@
 					</trans-unit>
 					<trans-unit id="route_corrupt_nostations">
 						<source>The selected route is corrupt: \r\n No stations defined.</source>
-						<target>The selected route is corrupt: \r\n No stations defined.</target>
+						<target state="translated">A kiválasztott pálya hibás: \r\n Nincsenek állomások.</target>
 					</trans-unit>
 					<trans-unit id="route_corrupt_noobjects">
 						<source>The selected route is corrupt: \r\n No objects defined.</source>
-						<target>The selected route is corrupt: \r\n No objects defined.</target>
+						<target state="translated">A kiválasztott pálya hibás: \r\n Nincsenek objektumok.</target>
 					</trans-unit>
 					<trans-unit id="plugin_failure1">
 						<source>The train plugin [plugin] failed to load.</source>
@@ -182,19 +182,27 @@
 					</trans-unit>
 					<trans-unit id="package_filename_empty">
 						<source>Attempted to create a package with an empty filename.</source>
-						<target>Attempted to create a package with an empty filename.</target>
+						<target state="translated">Üres fájlnévvel próbált csomagot létrehozni.</target>
 					</trans-unit>
 					<trans-unit id="package_directory_missing">
 						<source>The directory in which you attempted to save the package file does not exist: \r \n</source>
-						<target>The directory in which you attempted to save the package file does not exist: \r \n</target>
+						<target state="translated">A könyvtár ahova a csomagot menteni próbálta nem létezik: \r \n</target>
 					</trans-unit>
 					<trans-unit id="package_directory_nowrite">
 						<source>No write access available in the directory in which you attempted to save the package file: \r \n</source>
-						<target>No write access available in the directory in which you attempted to save the package file: \r \n</target>
+						<target state="translated">Nincs írásjogosultság a csomag mentésére megadott könyvtárhoz: \r \n</target>
 					</trans-unit>
 					<trans-unit id="package_file_generic">
 						<source>Failed to create the following file: \r \n</source>
-						<target>Failed to create the following file: \r \n</target>
+						<target state="translated">Nem sikerült létrehozni a fájlt: \r \n</target>
+					</trans-unit>
+					<trans-unit id="security_checkaccess">
+						<source>Please check that this path is accessible.</source>
+						<target>Please check that this path is accessible.</target>
+					</trans-unit>
+					<trans-unit id="security_badlocation">
+						<source>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</source>
+						<target>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</target>
 					</trans-unit>
 				</group>
 				<group id="start">
@@ -300,6 +308,7 @@
 					</trans-unit>
 					<trans-unit id="train_settings_reverseconsist">
 						<source>Reverse Consist:</source>
+						<target state="translated">Vonat fordítva:</target>
 					</trans-unit>
 					<trans-unit id="train_settings_encoding_preview">
 						<source>Preview:</source>
@@ -709,6 +718,10 @@
 						<source>Proceed......</source>
 						<target>Folytatás......</target>
 					</trans-unit>
+					<trans-unit id="creation_invalid_nofiles">
+						<source>No files were selected to package- Please retry.</source>
+						<target state="translated">Nem jelölt ki fájlokat a csomaghoz. Próbálja újra.</target>
+					</trans-unit>
 					<trans-unit id="creation_invalid_filename">
 						<source>The selected filename is invalid- Please retry.</source>
 						<target>A kiválasztott fájlnév érvénytelen - próbálja újra.</target>
@@ -883,7 +896,7 @@
 					</trans-unit>
 					<trans-unit id="directory_nowrite">
 						<source>No write access available in the directory in which you attempted to save the package file: \r \n</source>
-						<target>Nincs írásjoga a könyvtárhoz, ahova menteni kívánta a fájlt: \r \n</target>
+						<target state="translated">Nincs írásjogosultság a könyvtárhoz, ahova menteni kívánta a fájlt: \r \n</target>
 					</trans-unit>
 					<trans-unit id="file_generic">
 						<source>Failed to create the following file: \r \n</source>
@@ -893,7 +906,7 @@
 				<group id="controls">
 					<trans-unit id="title">
 						<source>Customize controls</source>
-						<target>A kezelőszervek beállítása</target>
+						<target state="translated">Kezelés testreszabása</target>
 					</trans-unit>
 					<trans-unit id="list_command">
 						<source>Command</source>
@@ -921,11 +934,11 @@
 					</trans-unit>
 					<trans-unit id="list_assignment">
 						<source>Assignment</source>
-						<target>Kezelőszerv</target>
+						<target state="translated">Hozzárendelés</target>
 					</trans-unit>
 					<trans-unit id="list_option">
 						<source>Command Option</source>
-						<target>Command Option</target>
+						<target state="translated">Parancs opció</target>
 					</trans-unit>
 					<trans-unit id="add">
 						<source>Add control</source>
@@ -965,7 +978,7 @@
 					</trans-unit>
 					<trans-unit id="selection_command_option">
 						<source>Command Option:</source>
-						<target>Command Option:</target>
+						<target state="translated">Parancs opció:</target>
 					</trans-unit>
 					<trans-unit id="selection_keyboard">
 						<source>Keyboard:</source>
@@ -1005,7 +1018,7 @@
 					</trans-unit>
 					<trans-unit id="selection_joystick_assignment">
 						<source>Assignment:</source>
-						<target>Kezelőszerv:</target>
+						<target state="translated">Hozzárendelés:</target>
 					</trans-unit>
 					<trans-unit id="selection_joystick_assignment_grab">
 						<source>Click here to enable joystick grab to automatically select the desired axis, button or hat.</source>
@@ -1449,6 +1462,7 @@
 					</trans-unit>
 					<trans-unit id="advanced_is_use_new_renderer">
 						<source>Enable the new renderer</source>
+						<target state="translated">Új renderer bekapcsolása</target>
 					</trans-unit>
 					<trans-unit id="advanced_disable_displaylists">
 						<source>Disable OpenGL display lists</source>
@@ -1552,51 +1566,51 @@
 					</trans-unit>
 					<trans-unit id="input_device_plugin">
 						<source>Input Device Plugin</source>
-						<target>Input Device Plugin</target>
+						<target state="translated">Bemeneti eszköz pluginok</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_warning">
 						<source>WARNING: If you enable Input Device Plugin(s), these may conflict with one or more controls.</source>
-						<target>WARNING: If you enable Input Device Plugin(s), these may conflict with one or more controls.</target>
+						<target state="translated">FIGYELEM: Ha engedélyez bemeneti eszköz plugin(ok)at az konfliktust okozhat egy vagy több kezelési beállítással.</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_name">
 						<source>Name</source>
-						<target>Name</target>
+						<target state="translated">Név</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_status">
 						<source>Status</source>
-						<target>Status</target>
+						<target state="translated">Állapot</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_status_failure">
 						<source>Failure</source>
-						<target>Failure</target>
+						<target state="translated">Hiba</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_status_disable">
 						<source>Disable</source>
-						<target>Disable</target>
+						<target state="translated">Ki</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_status_enable">
 						<source>Enable</source>
-						<target>Enable</target>
+						<target state="translated">Be</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_version">
 						<source>Version</source>
-						<target>Version</target>
+						<target state="translated">Verzió</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_provider">
 						<source>Provider</source>
-						<target>Provider</target>
+						<target state="translated">Készítő</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_file_name">
 						<source>File Name</source>
-						<target>File Name</target>
+						<target state="translated">Fájlnév</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_switch">
 						<source>Enable this Input Device Plugin</source>
-						<target>Enable this Input Device Plugin</target>
+						<target state="translated">Kijelölt plugin bekapcsolása</target>
 					</trans-unit>
 					<trans-unit id="input_device_plugin_config">
 						<source>Config</source>
-						<target>Config</target>
+						<target state="translated">Beállítások</target>
 					</trans-unit>
 				</group>
 				<group id="dialog">
@@ -2042,7 +2056,7 @@
 					</trans-unit>
 					<trans-unit id="quit">
 						<source>Quit</source>
-						<target>Kilépés az openBVE-ből</target>
+						<target state="translated">Kilépés az OpenBVE-ből</target>
 					</trans-unit>
 					<trans-unit id="quit_question">
 						<source>Do you really want to quit?</source>
@@ -2062,7 +2076,7 @@
 					</trans-unit>
 					<trans-unit id="customize_controls">
 						<source>Customise controls</source>
-						<target>Kezelőszervek beállítása</target>
+						<target state="translated">Kezelés testreszabása</target>
 					</trans-unit>
 					<trans-unit id="assign">
 						<source>Please press any key or move a joystick axis to set this control...</source>
@@ -2288,19 +2302,19 @@
 					</trans-unit>
 					<trans-unit id="power_any_notch">
 						<source>Adjusts the power notch directly from a command option value.</source>
-						<target>Adjusts the power notch directly from a command option value.</target>
+						<target state="translated">A menetfokozatot közvetlenül a megadott értékre állítja.</target>
 					</trans-unit>
 					<trans-unit id="brake_any_notch">
 						<source>Adjusts the brake notch directly from a command option value.</source>
-						<target>Adjusts the brake notch directly from a command option value.</target>
+						<target state="translated">A fékfokozatot közvetlenül a megadott értékre állítja.</target>
 					</trans-unit>
 					<trans-unit id="reverser_any_position">
 						<source>Adjusts the reverser directly from a command option value.</source>
-						<target>Adjusts the reverser directly from a command option value.</target>
+						<target state="translated">Az irányváltót közvetlenül a megadott állásba állítja.</target>
 					</trans-unit>
 					<trans-unit id="hold_brake">
 						<source>Hold Brake</source>
-						<target>Hold Brake</target>
+						<target state="translated">Fék tartása</target>
 					</trans-unit>
 					<trans-unit id="reverser_forward">
 						<source>Moves reverser forward by one notch</source>
@@ -2312,7 +2326,7 @@
 					</trans-unit>
 					<trans-unit id="reverser_fullaxis">
 						<source>Controls reverser on a full joystick axis</source>
-						<target>Irányváltó joysticken</target>
+						<target state="translated">Irányváltó joysticken</target>
 					</trans-unit>
 					<trans-unit id="doors_left">
 						<source>Opens or closes the left doors</source>
@@ -2428,6 +2442,7 @@
 					</trans-unit>
 					<trans-unit id="camera_interior_nopanel">
 						<source>Switches to the train's interior view. However, the panel is not displayed.</source>
+						<target state="translated">Belső nézetre vált, de a vezetőállás nem jelenik meg.</target>
 					</trans-unit>
 					<trans-unit id="camera_exterior">
 						<source>Switches to the train's exterior view</source>
@@ -2619,6 +2634,7 @@
 					</trans-unit>
 					<trans-unit id="debug_touch_mode">
 						<source>Shows or hides the touch range</source>
+						<target state="translated">Mutatja vagy elrejti az érintés területét</target>
 					</trans-unit>
 					<trans-unit id="route_information">
 						<source>Shows or hides the route information window</source>
@@ -3256,15 +3272,15 @@
 					</trans-unit>
 					<trans-unit id="new_message">
 						<source>Do you want to save data before creating a new train?</source>
-						<target>Do you want to save data before creating a new train?</target>
+						<target state="translated">El akarja menteni az adatokat új vonat létrehozása előtt?</target>
 					</trans-unit>
 					<trans-unit id="open_message">
 						<source>Do you want to save data before opening another train?</source>
-						<target>Do you want to save data before opening another train?</target>
+						<target state="translated">El akarja menteni az adatokat új vonat megnyitása előtt?</target>
 					</trans-unit>
 					<trans-unit id="close_message">
 						<source>Do you want to save data before closing?</source>
-						<target>Do you want to save data before closing?</target>
+						<target state="translated">El akarja menteni az adatokat bezárás előtt?</target>
 					</trans-unit>
 					<trans-unit id="properties_one">
 						<source>Properties (1)</source>
@@ -3278,11 +3294,11 @@
 				<group id="performance">
 					<trans-unit id="performance">
 						<source>Performance</source>
-						<target>Performance</target>
+						<target state="translated">Teljesítmény</target>
 					</trans-unit>
 					<trans-unit id="deceleration">
 						<source>Deceleration:</source>
-						<target>Deceleration:</target>
+						<target state="translated">Lassulás</target>
 					</trans-unit>
 					<trans-unit id="static_friction">
 						<source>CoefficientOfStaticFriction:</source>

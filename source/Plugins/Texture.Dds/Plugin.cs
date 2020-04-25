@@ -35,6 +35,10 @@ namespace Plugin {
 				{
 					using (BinaryReader reader = new BinaryReader(fileStream))
 					{
+						if (fileStream.Length < 4)
+						{
+							return false;
+						}
 						byte[] signature = reader.ReadBytes(4);
 						if (!(signature[0] == 'D' && signature[1] == 'D' && signature[2] == 'S' && signature[3] == ' '))
 						{

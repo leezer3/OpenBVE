@@ -153,6 +153,7 @@ namespace OpenBve {
 			string MenuFolder = Program.FileSystem.GetDataFolder("Menu");
 			Image ParentIcon = LoadImage(MenuFolder, "icon_parent.png");
 			Image FolderIcon = LoadImage(MenuFolder, "icon_folder.png");
+			Image DiskIcon = LoadImage(MenuFolder, "icon_disk.png");
 			Image RouteIcon = LoadImage(MenuFolder, "icon_route.png");
 			Image TrainIcon = LoadImage(MenuFolder, "icon_train.png");
 			Image KeyboardIcon = LoadImage(MenuFolder, "icon_keyboard.png");
@@ -183,6 +184,7 @@ namespace OpenBve {
 			if (ParentIcon != null) listviewRouteFiles.SmallImageList.Images.Add("parent", ParentIcon);
 			if (FolderIcon != null) listviewRouteFiles.SmallImageList.Images.Add("folder", FolderIcon);
 			if (RouteIcon != null) listviewRouteFiles.SmallImageList.Images.Add("route", RouteIcon);
+			if (DiskIcon != null) listviewRouteFiles.SmallImageList.Images.Add("disk", DiskIcon);
 			listviewRouteFiles.Columns.Clear();
 			listviewRouteFiles.Columns.Add("");
 			listviewRouteRecently.Items.Clear();
@@ -207,6 +209,7 @@ namespace OpenBve {
 			if (ParentIcon != null) listviewTrainFolders.SmallImageList.Images.Add("parent", ParentIcon);
 			if (FolderIcon != null) listviewTrainFolders.SmallImageList.Images.Add("folder", FolderIcon);
 			if (TrainIcon != null) listviewTrainFolders.SmallImageList.Images.Add("train", TrainIcon);
+			if (DiskIcon != null) listviewTrainFolders.SmallImageList.Images.Add("disk", DiskIcon);
 			listviewTrainFolders.Columns.Clear();
 			listviewTrainFolders.Columns.Add("");
 			listviewTrainRecently.Columns.Clear();
@@ -246,7 +249,7 @@ namespace OpenBve {
 				EncodingCodepages = new int[Info.Length + 1];
 				string[] EncodingDescriptions = new string[Info.Length + 1];
 				EncodingCodepages[0] = System.Text.Encoding.UTF8.CodePage;
-				EncodingDescriptions[0] = "(UTF-8)";
+				EncodingDescriptions[0] = $"{System.Text.Encoding.UTF8.EncodingName} - {System.Text.Encoding.UTF8.CodePage}";
 				for (int i = 0; i < Info.Length; i++)
 				{
 					EncodingCodepages[i + 1] = Info[i].CodePage;
@@ -637,8 +640,8 @@ namespace OpenBve {
 			groupboxTrainDetails.Text = Translations.GetInterfaceString("start_train_details");
 			tabpageTrainDescription.Text = Translations.GetInterfaceString("start_train_description");
 			tabpageTrainSettings.Text = Translations.GetInterfaceString("start_train_settings");
-			labelTrainEncoding.Text = Translations.GetInterfaceString("start_train_settings_reverseconsist");
-			labelReverseConsist.Text = Translations.GetInterfaceString("start_train_settings_encoding");
+			labelTrainEncoding.Text = Translations.GetInterfaceString("start_train_settings_encoding");
+			labelReverseConsist.Text = Translations.GetInterfaceString("start_train_settings_reverseconsist");
 			comboboxTrainEncoding.Items[0] = Translations.GetInterfaceString("(UTF-8)");
 			labelTrainEncodingPreview.Text = Translations.GetInterfaceString("start_train_settings_encoding_preview");
 			labelStart.Text = @" " + Translations.GetInterfaceString("start_start");

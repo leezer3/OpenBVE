@@ -5,6 +5,8 @@ namespace OpenBveApi.Routes
 	/// <summary>Defines a single track element (cell)</summary>
 	public struct TrackElement
 	{
+		/// <summary>Whether the element is invalid</summary>
+		public bool InvalidElement;
 		/// <summary>The starting linear track position of this element</summary>
 		public double StartingTrackPosition;
 		/// <summary>The curve radius applying to this element</summary>
@@ -34,6 +36,7 @@ namespace OpenBveApi.Routes
 		/// <param name="StartingTrackPosition">The starting position (relative to zero)</param>
 		public TrackElement(double StartingTrackPosition)
 		{
+			this.InvalidElement = false;
 			this.StartingTrackPosition = StartingTrackPosition;
 			this.Pitch = 0.0;
 			this.CurveRadius = 0.0;

@@ -1333,6 +1333,9 @@ namespace OpenBve {
 				case "doorbuttonr":
 					Code = "rightdoorbutton";
 					break;
+				case "routelimit":
+					Code = "routelimit";
+					break;
 				default:
 					{
 						Code = "0";

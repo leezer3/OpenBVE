@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using OpenBveApi;
 using OpenBveApi.Graphics;
 using OpenBveApi.Hosts;
 using OpenBveApi.Sounds;
@@ -30,7 +31,7 @@ namespace TrainEditor2.Systems
 		{
 			if (File.Exists(path) || Directory.Exists(path))
 			{
-				foreach (Plugins.Plugin plugin in Plugins.LoadedPlugins)
+				foreach (ContentLoadingPlugin plugin in Program.CurrentHost.Plugins)
 				{
 					if (plugin.Sound != null)
 					{

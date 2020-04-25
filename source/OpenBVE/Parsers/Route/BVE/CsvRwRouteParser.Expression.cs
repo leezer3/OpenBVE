@@ -126,7 +126,7 @@ namespace OpenBve
 								{
 									if (stationName)
 									{
-										Interface.AddMessage(MessageType.Error, false, "Invalid opening parenthesis encountered at line " + Line.ToString(Culture) + ", column " +
+										Program.CurrentHost.AddMessage(MessageType.Error, false, "Invalid opening parenthesis encountered at line " + Line.ToString(Culture) + ", column " +
 										                                                         Column.ToString(Culture) + " in file " + File);
 										openingerror = true;
 									}
@@ -154,7 +154,7 @@ namespace OpenBve
 						{
 							if (RaiseErrors & !closingerror)
 							{
-								Interface.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
+								Program.CurrentHost.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 								closingerror = true;
 							}
 							Text += ")";
@@ -164,7 +164,7 @@ namespace OpenBve
 					{
 						if (RaiseErrors & !closingerror)
 						{
-							Interface.AddMessage(MessageType.Error, false, "Invalid closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
+							Program.CurrentHost.AddMessage(MessageType.Error, false, "Invalid closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 							closingerror = true;
 						}
 					}
@@ -204,7 +204,7 @@ namespace OpenBve
 							// only opening parenthesis found
 							if (RaiseErrors & !closingerror)
 							{
-								Interface.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
+								Program.CurrentHost.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 							}
 
 							ArgumentSequence = ArgumentSequence.Substring(1).TrimStart(new char[] { });
@@ -250,7 +250,7 @@ namespace OpenBve
 									{
 										if (RaiseErrors & !openingerror & !closingerror)
 										{
-											Interface.AddMessage(MessageType.Error, false, "Invalid syntax encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
+											Program.CurrentHost.AddMessage(MessageType.Error, false, "Invalid syntax encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 											openingerror = true;
 											closingerror = true;
 										}
@@ -267,7 +267,7 @@ namespace OpenBve
 										// only opening parenthesis found
 										if (RaiseErrors & !closingerror)
 										{
-											Interface.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
+											Program.CurrentHost.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 										}
 
 										ArgumentSequence = ArgumentSequence.Substring(1).TrimStart(new char[] { });
@@ -279,7 +279,7 @@ namespace OpenBve
 								// no closing parenthesis found
 								if (RaiseErrors & !closingerror)
 								{
-									Interface.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
+									Program.CurrentHost.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 								}
 
 								Command = Text.Substring(0, i).TrimEnd(new char[] { });
@@ -301,7 +301,7 @@ namespace OpenBve
 								// only opening parenthesis found
 								if (RaiseErrors & !closingerror)
 								{
-									Interface.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
+									Program.CurrentHost.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 								}
 
 								ArgumentSequence = ArgumentSequence.Substring(1).TrimStart(new char[] { });
@@ -333,7 +333,7 @@ namespace OpenBve
 						{
 							if (RaiseErrors & !closingerror)
 							{
-								Interface.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
+								Program.CurrentHost.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 							}
 
 							Command = Text.Substring(0, i).TrimEnd(new char[] { });
@@ -346,7 +346,7 @@ namespace OpenBve
 								i = Text.IndexOf(')');
 								if (i >= 0 & !closingerror)
 								{
-									Interface.AddMessage(MessageType.Error, false, "Invalid closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
+									Program.CurrentHost.AddMessage(MessageType.Error, false, "Invalid closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 								}
 							}
 							Command = Text;
@@ -359,7 +359,7 @@ namespace OpenBve
 				{
 					if (RaiseErrors)
 					{
-						Interface.AddMessage(MessageType.Error, false, "Invalid trailing semicolon encountered in " + Command + " at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
+						Program.CurrentHost.AddMessage(MessageType.Error, false, "Invalid trailing semicolon encountered in " + Command + " at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 					}
 					while (Command.EndsWith(";"))
 					{

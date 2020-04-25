@@ -1,5 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
+using OpenBveApi.Routes;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
@@ -12,28 +14,78 @@ namespace OpenBve
 		}
 
 		/// <summary>Travel plan of the train moving to a certain point</summary>
-		internal class TravelData
+		internal abstract class TravelData
 		{
 			// Parameters from XML
 			internal double Decelerate;
-			internal double StopPosition;
-			internal double StopTime;
-			internal bool OpenLeftDoors;
-			internal bool OpenRightDoors;
+			internal double Position;
+			internal virtual double PassingSpeed
+			{
+				get;
+				set;
+			}
 			internal double Accelerate;
 			internal double TargetSpeed;
-			internal TravelDirection Direction;
 			internal int RailIndex;
 
 			// Parameters calculated by the SetupTravelData function
 			internal double DecelerationStartPosition;
 			internal double DecelerationStartTime;
-			internal double ArrivalTime;
-			internal double OpeningDoorsEndTime;
-			internal double ClosingDoorsStartTime;
-			internal double DepartureTime;
+			internal virtual double ArrivalTime
+			{
+				get;
+				set;
+			}
+			internal double Mileage;
+			internal virtual double DepartureTime
+			{
+				get;
+				set;
+			}
 			internal double AccelerationEndPosition;
 			internal double AccelerationEndTime;
+		}
+
+		internal class TravelPointData : TravelData
+		{
+			// Parameters calculated by the SetupTravelData function
+			private double PassingTime;
+			internal override double ArrivalTime
+			{
+				get
+				{
+					return PassingTime;
+				}
+				set
+				{
+					PassingTime = value;
+				}
+			}
+			internal override double DepartureTime
+			{
+				get
+				{
+					return PassingTime;
+				}
+				set
+				{
+					PassingTime = value;
+				}
+			}
+		}
+
+		internal class TravelStopData : TravelData
+		{
+			// Parameters from XML
+			internal override double PassingSpeed => 0.0;
+			internal double StopTime;
+			internal bool OpenLeftDoors;
+			internal bool OpenRightDoors;
+			internal TravelDirection Direction;
+
+			// Parameters calculated by the SetupTravelData function
+			internal double OpeningDoorsEndTime;
+			internal double ClosingDoorsStartTime;
 		}
 
 		internal class TrackFollowingObjectAI : GeneralAI
@@ -41,24 +93,23 @@ namespace OpenBve
 			private readonly TrainManager.TrackFollowingObject Train;
 
 			/// <summary>Travel plan of train</summary>
-			private readonly List<TravelData> Data;
+			private readonly TravelData[] Data;
 
 			private double TimeLastProcessed;
 			private double CurrentPosition;
 			internal double AppearanceTime;
 			internal double LeaveTime;
 
-			internal TrackFollowingObjectAI(TrainManager.TrackFollowingObject train, List<TravelData> data)
+			internal TrackFollowingObjectAI(TrainManager.TrackFollowingObject train, TravelData[] data)
 			{
 				Train = train;
 				Data = data;
 				TimeLastProcessed = 0.0;
 			}
 
-			internal override void Trigger(double TimeElapsed)
+			public override void Trigger(double TimeElapsed)
 			{
-				// Trains need to stop more than 2 points.
-				if (Data == null || Data.Count < 2 || Program.CurrentRoute.SecondsSinceMidnight == TimeLastProcessed)
+				if (Program.CurrentRoute.SecondsSinceMidnight == TimeLastProcessed)
 				{
 					return;
 				}
@@ -68,109 +119,35 @@ namespace OpenBve
 				{
 					SetupTravelData(Program.CurrentRoute.SecondsSinceMidnight);
 					CheckTravelData(Program.CurrentRoute.SecondsSinceMidnight);
-					CurrentPosition = Data[0].StopPosition;
+					CurrentPosition = Data[0].Position;
 				}
 
 				TimeLastProcessed = Program.CurrentRoute.SecondsSinceMidnight;
 
+				// Dispose the train if it is past the leave time of the train
+				if (LeaveTime > AppearanceTime && Program.CurrentRoute.SecondsSinceMidnight >= LeaveTime)
+				{
+					Train.Dispose();
+					return;
+				}
+
 				// Calculate the position where the train is at the present time.
-				double DeltaT;
-				double Position = Data[0].StopPosition;
-				int RailIndex = Data[0].RailIndex;
-				bool OpenLeftDoors = false;
-				bool OpenRightDoors = false;
-
-				if (Program.CurrentRoute.SecondsSinceMidnight >= Data[0].ArrivalTime)
-				{
-					OpenLeftDoors = Data[0].OpenLeftDoors;
-					OpenRightDoors = Data[0].OpenRightDoors;
-				}
-
-				if (Program.CurrentRoute.SecondsSinceMidnight >= Data[0].ClosingDoorsStartTime)
-				{
-					OpenLeftDoors = false;
-					OpenRightDoors = false;
-				}
-
-				// The start point does not slow down. Acceleration only.
-				if (Program.CurrentRoute.SecondsSinceMidnight >= Data[0].DepartureTime)
-				{
-					if (Program.CurrentRoute.SecondsSinceMidnight < Data[0].AccelerationEndTime)
-					{
-						DeltaT = Program.CurrentRoute.SecondsSinceMidnight - Data[0].DepartureTime;
-					}
-					else
-					{
-						DeltaT = Data[0].AccelerationEndTime - Data[0].DepartureTime;
-					}
-					Position += (int)Data[0].Direction * (0.5 * Data[0].Accelerate * Math.Pow(DeltaT, 2.0));
-				}
-
-				for (int i = 1; i < Data.Count; i++)
-				{
-					if (Program.CurrentRoute.SecondsSinceMidnight >= Data[i - 1].AccelerationEndTime)
-					{
-						if (Program.CurrentRoute.SecondsSinceMidnight < Data[i].DecelerationStartTime)
-						{
-							DeltaT = Program.CurrentRoute.SecondsSinceMidnight - Data[i - 1].AccelerationEndTime;
-						}
-						else
-						{
-							DeltaT = Data[i].DecelerationStartTime - Data[i - 1].AccelerationEndTime;
-						}
-						Position += (int)Data[i - 1].Direction * (Data[i - 1].TargetSpeed * DeltaT);
-					}
-
-					if (Program.CurrentRoute.SecondsSinceMidnight >= Data[i].DecelerationStartTime)
-					{
-						if (Program.CurrentRoute.SecondsSinceMidnight < Data[i].ArrivalTime)
-						{
-							DeltaT = Program.CurrentRoute.SecondsSinceMidnight - Data[i].DecelerationStartTime;
-						}
-						else
-						{
-							DeltaT = Data[i].ArrivalTime - Data[i].DecelerationStartTime;
-						}
-						Position += (int)Data[i - 1].Direction * (Data[i - 1].TargetSpeed * DeltaT - 0.5 * Data[i].Decelerate * Math.Pow(DeltaT, 2.0));
-					}
-
-					if (Program.CurrentRoute.SecondsSinceMidnight >= Data[i].ArrivalTime)
-					{
-						OpenLeftDoors = Data[i].OpenLeftDoors;
-						OpenRightDoors = Data[i].OpenRightDoors;
-					}
-
-					if (Program.CurrentRoute.SecondsSinceMidnight >= Data[i].ClosingDoorsStartTime)
-					{
-						OpenLeftDoors = false;
-						OpenRightDoors = false;
-					}
-
-					if (Program.CurrentRoute.SecondsSinceMidnight >= Data[i].DepartureTime)
-					{
-						if (Program.CurrentRoute.SecondsSinceMidnight < Data[i].AccelerationEndTime)
-						{
-							DeltaT = Program.CurrentRoute.SecondsSinceMidnight - Data[i].DepartureTime;
-						}
-						else
-						{
-							DeltaT = Data[i].AccelerationEndTime - Data[i].DepartureTime;
-						}
-						Position += (int)Data[i].Direction * (0.5 * Data[i].Accelerate * Math.Pow(DeltaT, 2.0));
-						RailIndex = Data[i].RailIndex;
-					}
-				}
+				double NewMileage;
+				double NewPosition;
+				TravelDirection NewDirection;
+				bool OpenLeftDoors;
+				bool OpenRightDoors;
+				GetNewState(Program.CurrentRoute.SecondsSinceMidnight, out NewMileage, out NewPosition, out NewDirection, out OpenLeftDoors, out OpenRightDoors);
 
 				// Calculate the travel distance of the train.
-				double Delta = Position - CurrentPosition;
-				CurrentPosition = Position;
+				double DeltaPosition = NewPosition - CurrentPosition;
 
 				// Set the state quantity of the train.
-				if (Delta < 0)
+				if (DeltaPosition < 0)
 				{
 					Train.Handles.Reverser.Driver = TrainManager.ReverserPosition.Reverse;
 				}
-				else if (Delta > 0)
+				else if (DeltaPosition > 0)
 				{
 					Train.Handles.Reverser.Driver = TrainManager.ReverserPosition.Forwards;
 				}
@@ -179,74 +156,78 @@ namespace OpenBve
 				TrainManager.OpenTrainDoors(Train, OpenLeftDoors, OpenRightDoors);
 				TrainManager.CloseTrainDoors(Train, !OpenLeftDoors, !OpenRightDoors);
 
+				if (TimeElapsed != 0.0)
+				{
+					Train.CurrentSpeed = DeltaPosition / TimeElapsed;
+					Train.Specs.CurrentAverageAcceleration = Math.Sign(Train.CurrentSpeed) * Train.CurrentSpeed / TimeElapsed;
+				}
+				else
+				{
+					Train.CurrentSpeed = 0.0;
+					Train.Specs.CurrentAverageAcceleration = 0.0;
+				}
+
 				foreach (var Car in Train.Cars)
 				{
-					Car.FrontAxle.Follower.TrackIndex = RailIndex;
-					Car.RearAxle.Follower.TrackIndex = RailIndex;
-					Car.FrontBogie.FrontAxle.Follower.TrackIndex = RailIndex;
-					Car.FrontBogie.RearAxle.Follower.TrackIndex = RailIndex;
-					Car.RearBogie.FrontAxle.Follower.TrackIndex = RailIndex;
-					Car.RearBogie.RearAxle.Follower.TrackIndex = RailIndex;
-					Car.Move(Delta);
-					if (TimeElapsed != 0.0)
-					{
-						Car.CurrentSpeed = Delta / TimeElapsed;
-						Car.Specs.CurrentPerceivedSpeed = Car.CurrentSpeed;
-						if (Car.Specs.CurrentPerceivedSpeed < 0)
-						{
-							Car.Specs.CurrentAcceleration = -(Car.CurrentSpeed / TimeElapsed);
-						}
-						else
-						{
-							Car.Specs.CurrentAcceleration = Car.CurrentSpeed / TimeElapsed;
-						}
-						Car.Specs.CurrentAccelerationOutput = Car.Specs.CurrentAcceleration;
-					}
-					else
-					{
-						Car.CurrentSpeed = 0.0;
-						Car.Specs.CurrentPerceivedSpeed = 0.0;
-						Car.Specs.CurrentAcceleration = 0.0;
-						Car.Specs.CurrentAccelerationOutput = 0.0;
-					}
+					SetRailIndex(NewMileage, NewDirection, Car.FrontAxle.Follower);
+					SetRailIndex(NewMileage, NewDirection, Car.RearAxle.Follower);
+					SetRailIndex(NewMileage, NewDirection, Car.FrontBogie.FrontAxle.Follower);
+					SetRailIndex(NewMileage, NewDirection, Car.FrontBogie.RearAxle.Follower);
+					SetRailIndex(NewMileage, NewDirection, Car.RearBogie.FrontAxle.Follower);
+					SetRailIndex(NewMileage, NewDirection, Car.RearBogie.RearAxle.Follower);
+
+					Car.Move(DeltaPosition);
+
+					Car.CurrentSpeed = Train.CurrentSpeed;
+					Car.Specs.CurrentPerceivedSpeed = Train.CurrentSpeed;
+					Car.Specs.CurrentAcceleration = Train.Specs.CurrentAverageAcceleration;
+					Car.Specs.CurrentAccelerationOutput = Train.Specs.CurrentAverageAcceleration;
 				}
 
-				Train.CurrentSpeed = Train.Cars[0].CurrentSpeed;
-				Train.Specs.CurrentAverageAcceleration = Train.Cars[0].Specs.CurrentAcceleration;
-
-				// Dispose the train if it is past the leave time of the train
-				if (LeaveTime > AppearanceTime && Program.CurrentRoute.SecondsSinceMidnight >= LeaveTime)
-				{
-					Train.Dispose();
-				}
+				CurrentPosition = NewPosition;
 			}
 
 			/// <summary>Create a train operation plan.</summary>
 			internal void SetupTravelData(double InitializeTime)
 			{
-				// The start point does not slow down. Acceleration only.
-				double DeltaPosition = 0.0;
-				if (Data[0].Accelerate != 0.0)
-				{
-					DeltaPosition = Math.Pow(Data[0].TargetSpeed, 2.0) / (2.0 * Data[0].Accelerate);
-				}
-				Data[0].AccelerationEndPosition = Data[0].StopPosition + (int)Data[0].Direction * DeltaPosition;
+				// The first point must be TravelStopData.
+				TravelStopData FirstData = (TravelStopData)Data[0];
 
-				for (int i = 1; i < Data.Count; i++)
+				// Calculate the end point of acceleration and the start point of deceleration.
 				{
-					DeltaPosition = 0.0;
-					if (Data[i].Decelerate != 0.0)
-					{
-						DeltaPosition = Math.Pow(Data[i - 1].TargetSpeed, 2.0) / (2.0 * Data[i].Decelerate);
-					}
-					Data[i].DecelerationStartPosition = Data[i].StopPosition - (int)Data[i - 1].Direction * DeltaPosition;
+					TravelDirection LastDirection;
+					double DeltaPosition;
 
-					DeltaPosition = 0.0;
-					if (Data[i].Accelerate != 0.0)
+					// The start point does not slow down. Acceleration only.
 					{
-						DeltaPosition = Math.Pow(Data[i].TargetSpeed, 2.0) / (2.0 * Data[i].Accelerate);
+						FirstData.Mileage = 0.0;
+						LastDirection = FirstData.Direction;
+						DeltaPosition = 0.0;
+						if (FirstData.Accelerate != 0.0)
+						{
+							DeltaPosition = Math.Pow(FirstData.TargetSpeed, 2.0) / (2.0 * FirstData.Accelerate);
+						}
+						FirstData.AccelerationEndPosition = FirstData.Position + (int)LastDirection * DeltaPosition;
 					}
-					Data[i].AccelerationEndPosition = Data[i].StopPosition + (int)Data[i].Direction * DeltaPosition;
+
+					for (int i = 1; i < Data.Length; i++)
+					{
+						DeltaPosition = 0.0;
+						if (Data[i].Decelerate != 0.0)
+						{
+							DeltaPosition = (Math.Pow(Data[i].PassingSpeed, 2.0) - Math.Pow(Data[i - 1].TargetSpeed, 2.0)) / (2.0 * Data[i].Decelerate);
+						}
+						Data[i].DecelerationStartPosition = Data[i].Position - (int)LastDirection * DeltaPosition;
+
+						Data[i].Mileage = Data[i - 1].Mileage + Math.Abs(Data[i].Position - Data[i - 1].Position);
+						LastDirection = (Data[i] as TravelStopData)?.Direction ?? LastDirection;
+						DeltaPosition = 0.0;
+						if (Data[i].Accelerate != 0.0)
+						{
+							DeltaPosition = (Math.Pow(Data[i].TargetSpeed, 2.0) - Math.Pow(Data[i].PassingSpeed, 2.0)) / (2.0 * Data[i].Accelerate);
+						}
+						Data[i].AccelerationEndPosition = Data[i].Position + (int)LastDirection * DeltaPosition;
+					}
 				}
 
 				// Time to operate the door
@@ -262,65 +243,79 @@ namespace OpenBve
 					ClosingDoorsTime = 1.0 / Train.Cars[0].Specs.DoorCloseFrequency;
 				}
 
-				// Delay
-				Data[0].ArrivalTime = InitializeTime;
-				AppearanceTime = InitializeTime;
-				LeaveTime = Train.LeaveTime + InitializeTime;
-
-				Data[0].OpeningDoorsEndTime = Data[0].ArrivalTime;
-				if (Data[0].OpenLeftDoors || Data[0].OpenRightDoors)
+				// Reflect the delay until the TFO becomes effective at the first point.
 				{
-					Data[0].OpeningDoorsEndTime += OpeningDoorsTime;
+					FirstData.ArrivalTime = InitializeTime;
+					AppearanceTime = InitializeTime;
+					LeaveTime = Train.LeaveTime + InitializeTime;
+
+					FirstData.OpeningDoorsEndTime = FirstData.ArrivalTime;
+					if (FirstData.OpenLeftDoors || FirstData.OpenRightDoors)
+					{
+						FirstData.OpeningDoorsEndTime += OpeningDoorsTime;
+					}
+					FirstData.ClosingDoorsStartTime = FirstData.OpeningDoorsEndTime + FirstData.StopTime;
+					FirstData.DepartureTime = FirstData.ClosingDoorsStartTime;
+					if (FirstData.OpenLeftDoors || FirstData.OpenRightDoors)
+					{
+						FirstData.DepartureTime += ClosingDoorsTime;
+					}
 				}
-				Data[0].ClosingDoorsStartTime = Data[0].OpeningDoorsEndTime + Data[0].StopTime;
-				Data[0].DepartureTime = Data[0].ClosingDoorsStartTime;
-				if (Data[0].OpenLeftDoors || Data[0].OpenRightDoors)
+
+				// Calculate the time of each point.
 				{
-					Data[0].DepartureTime += ClosingDoorsTime;
-				}
+					double DeltaT;
 
-				// The start point does not slow down. Acceleration only.
-				double DeltaT = 0.0;
-				if (Data[0].Accelerate != 0.0)
-				{
-					DeltaT = Data[0].TargetSpeed / Data[0].Accelerate;
-				}
-				Data[0].AccelerationEndTime = Data[0].DepartureTime + DeltaT;
-
-				for (int i = 1; i < Data.Count; i++)
-				{
-					DeltaT = 0.0;
-					if (Data[i - 1].TargetSpeed != 0.0)
+					// The start point does not slow down. Acceleration only.
 					{
-						DeltaT = Math.Abs(Data[i].DecelerationStartPosition - Data[i - 1].AccelerationEndPosition) / Data[i - 1].TargetSpeed;
-					}
-					Data[i].DecelerationStartTime = Data[i - 1].AccelerationEndTime + DeltaT;
-
-					DeltaT = 0.0;
-					if (Data[i].Decelerate != 0.0)
-					{
-						DeltaT = Data[i - 1].TargetSpeed / Data[i].Decelerate;
-					}
-					Data[i].ArrivalTime = Data[i].DecelerationStartTime + DeltaT;
-
-					Data[i].OpeningDoorsEndTime = Data[i].ArrivalTime;
-					if (Data[i].OpenLeftDoors || Data[i].OpenRightDoors)
-					{
-						Data[i].OpeningDoorsEndTime += OpeningDoorsTime;
-					}
-					Data[i].ClosingDoorsStartTime = Data[i].OpeningDoorsEndTime + Data[i].StopTime;
-					Data[i].DepartureTime = Data[i].ClosingDoorsStartTime;
-					if (Data[i].OpenLeftDoors || Data[i].OpenRightDoors)
-					{
-						Data[i].DepartureTime += ClosingDoorsTime;
+						DeltaT = 0.0;
+						if (FirstData.Accelerate != 0.0)
+						{
+							DeltaT = FirstData.TargetSpeed / FirstData.Accelerate;
+						}
+						FirstData.AccelerationEndTime = FirstData.DepartureTime + DeltaT;
 					}
 
-					DeltaT = 0.0;
-					if (Data[i].Accelerate != 0.0)
+					for (int i = 1; i < Data.Length; i++)
 					{
-						DeltaT = Data[i].TargetSpeed / Data[i].Accelerate;
+						DeltaT = 0.0;
+						if (Data[i - 1].TargetSpeed != 0.0)
+						{
+							DeltaT = Math.Abs(Data[i].DecelerationStartPosition - Data[i - 1].AccelerationEndPosition) / Data[i - 1].TargetSpeed;
+						}
+						Data[i].DecelerationStartTime = Data[i - 1].AccelerationEndTime + DeltaT;
+
+						DeltaT = 0.0;
+						if (Data[i].Decelerate != 0.0)
+						{
+							DeltaT = (Data[i].PassingSpeed - Data[i - 1].TargetSpeed) / Data[i].Decelerate;
+						}
+						Data[i].ArrivalTime = Data[i].DecelerationStartTime + DeltaT;
+
+						TravelStopData StopData = Data[i] as TravelStopData;
+
+						if (StopData != null)
+						{
+							StopData.OpeningDoorsEndTime = StopData.ArrivalTime;
+							if (StopData.OpenLeftDoors || StopData.OpenRightDoors)
+							{
+								StopData.OpeningDoorsEndTime += OpeningDoorsTime;
+							}
+							StopData.ClosingDoorsStartTime = StopData.OpeningDoorsEndTime + StopData.StopTime;
+							StopData.DepartureTime = StopData.ClosingDoorsStartTime;
+							if (StopData.OpenLeftDoors || StopData.OpenRightDoors)
+							{
+								StopData.DepartureTime += ClosingDoorsTime;
+							}
+						}
+
+						DeltaT = 0.0;
+						if (Data[i].Accelerate != 0.0)
+						{
+							DeltaT = (Data[i].TargetSpeed - Data[i].PassingSpeed) / Data[i].Accelerate;
+						}
+						Data[i].AccelerationEndTime = Data[i].DepartureTime + DeltaT;
 					}
-					Data[i].AccelerationEndTime = Data[i].DepartureTime + DeltaT;
 				}
 			}
 
@@ -328,21 +323,24 @@ namespace OpenBve
 			private void CheckTravelData(double InitializeTime)
 			{
 				bool Recalculation = false;
+				TravelDirection LastDirection = ((TravelStopData)Data[0]).Direction;
 
-				for (int i = 1; i < Data.Count; i++)
+				for (int i = 1; i < Data.Length; i++)
 				{
 					// The deceleration start point must appear after the acceleration end point.
-					if ((Data[i - 1].AccelerationEndPosition - Data[i].DecelerationStartPosition) * (int)Data[i - 1].Direction > 0)
+					if ((Data[i - 1].AccelerationEndPosition - Data[i].DecelerationStartPosition) * (int)LastDirection > 0)
 					{
 						// Reset acceleration and deceleration.
-						double Delta = Math.Abs(Data[i].StopPosition - Data[i - 1].StopPosition);
+						double Delta = Math.Abs(Data[i].Position - Data[i - 1].Position);
 						if (Delta != 0.0)
 						{
-							Data[i - 1].Accelerate = Math.Pow(Data[i - 1].TargetSpeed, 2.0) / Delta;
-							Data[i].Decelerate = Data[i - 1].Accelerate;
+							Data[i - 1].Accelerate = (Math.Pow(Data[i - 1].TargetSpeed, 2.0) - Math.Pow(Data[i - 1].PassingSpeed, 2.0)) / Delta;
+							Data[i].Decelerate = (Math.Pow(Data[i].PassingSpeed, 2.0) - Math.Pow(Data[i - 1].TargetSpeed, 2.0)) / Delta;
 							Recalculation = true;
 						}
 					}
+
+					LastDirection = (Data[i] as TravelStopData)?.Direction ?? LastDirection;
 				}
 
 				// Recreate the operation plan of the train.
@@ -350,6 +348,113 @@ namespace OpenBve
 				{
 					SetupTravelData(InitializeTime);
 				}
+			}
+
+			private void GetNewState(double Time, out double NewMileage, out double NewPosition, out TravelDirection NewDirection, out bool OpenLeftDoors, out bool OpenRightDoors)
+			{
+				double DeltaT;
+				double DeltaPosition;
+				OpenLeftDoors = false;
+				OpenRightDoors = false;
+
+				{
+					// The first point must be TravelStopData.
+					TravelStopData FirstData = (TravelStopData)Data[0];
+
+					NewMileage = FirstData.Mileage;
+					NewPosition = FirstData.Position;
+					NewDirection = FirstData.Direction;
+
+					if (Time <= FirstData.ArrivalTime)
+					{
+						return;
+					}
+
+					if (Time <= FirstData.ClosingDoorsStartTime)
+					{
+						OpenLeftDoors = FirstData.OpenLeftDoors;
+						OpenRightDoors = FirstData.OpenRightDoors;
+						return;
+					}
+
+					if (Time <= FirstData.DepartureTime)
+					{
+						return;
+					}
+
+					// The start point does not slow down. Acceleration only.
+					if (Time <= FirstData.AccelerationEndTime)
+					{
+						DeltaT = Time - FirstData.DepartureTime;
+						DeltaPosition = 0.5 * FirstData.Accelerate * Math.Pow(DeltaT, 2.0);
+						NewMileage += DeltaPosition;
+						NewPosition += (int)NewDirection * DeltaPosition;
+						return;
+					}
+
+					NewMileage += Math.Abs(FirstData.AccelerationEndPosition - NewPosition);
+					NewPosition = FirstData.AccelerationEndPosition;
+				}
+
+				for (int i = 1; i < Data.Length; i++)
+				{
+					if (Time <= Data[i].DecelerationStartTime)
+					{
+						DeltaT = Time - Data[i - 1].AccelerationEndTime;
+						DeltaPosition = Data[i - 1].TargetSpeed * DeltaT;
+						NewMileage += DeltaPosition;
+						NewPosition += (int)NewDirection * DeltaPosition;
+						return;
+					}
+
+					NewMileage += Math.Abs(Data[i].DecelerationStartPosition - NewPosition);
+					NewPosition = Data[i].DecelerationStartPosition;
+
+					if (Time <= Data[i].ArrivalTime)
+					{
+						DeltaT = Time - Data[i].DecelerationStartTime;
+						DeltaPosition = Data[i - 1].TargetSpeed * DeltaT + 0.5 * Data[i].Decelerate * Math.Pow(DeltaT, 2.0);
+						NewMileage += DeltaPosition;
+						NewPosition += (int)NewDirection * DeltaPosition;
+						return;
+					}
+
+					TravelStopData StopData = Data[i] as TravelStopData;
+
+					NewMileage = Data[i].Mileage;
+					NewPosition = Data[i].Position;
+					NewDirection = StopData?.Direction ?? NewDirection;
+
+					if (Time <= StopData?.ClosingDoorsStartTime)
+					{
+						OpenLeftDoors = StopData.OpenLeftDoors;
+						OpenRightDoors = StopData.OpenRightDoors;
+						return;
+					}
+
+					// The end point does not accelerate.
+					if (Time <= Data[i].DepartureTime || i == Data.Length - 1)
+					{
+						return;
+					}
+
+					if (Time <= Data[i].AccelerationEndTime)
+					{
+						DeltaT = Time - Data[i].DepartureTime;
+						DeltaPosition = Data[i].PassingSpeed * DeltaT + 0.5 * Data[i].Accelerate * Math.Pow(DeltaT, 2.0);
+						NewMileage += DeltaPosition;
+						NewPosition += (int)NewDirection * DeltaPosition;
+						return;
+					}
+
+					NewMileage += Math.Abs(Data[i].AccelerationEndPosition - NewPosition);
+					NewPosition = Data[i].AccelerationEndPosition;
+				}
+			}
+
+			private void SetRailIndex(double Mileage, TravelDirection Direction, TrackFollower TrackFollower)
+			{
+				TrackFollower.TrackIndex = Data.LastOrDefault(x => x.Mileage <= Mileage + (int)Direction * (TrackFollower.TrackPosition - CurrentPosition))?.RailIndex ?? Data[0].RailIndex;
 			}
 		}
 	}
