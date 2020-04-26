@@ -1,4 +1,5 @@
-﻿using Ude;
+﻿using System;
+using Ude;
 
 namespace OpenBveApi
 {
@@ -119,7 +120,16 @@ namespace OpenBveApi
 				return DefaultEncoding ?? System.Text.Encoding.Default;
 			}
 
-			return System.Text.Encoding.GetEncoding((int)e);
+			try
+			{
+				return System.Text.Encoding.GetEncoding((int)e);
+			}
+			catch
+			{
+				// MAC_CYRILLIC under Mono (Missing codepage?)
+				return System.Text.Encoding.Default;
+			}
+			
 		}
 
 		/// <summary>Gets the character system encoding of a file within a folder</summary>
