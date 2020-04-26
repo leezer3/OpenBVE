@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
@@ -317,6 +317,7 @@ namespace OpenBve
 			OptionLighting = false;
 			UnsetAlphaFunc();
 			GL.Disable(EnableCap.DepthTest);
+			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); //FIXME: Remove when text switches between two renderer types
 			RenderOverlays();
 			OptionLighting = true;
 		}
