@@ -231,7 +231,7 @@ namespace LibRender2
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthFunc(DepthFunction.Lequal);
-			SetBlendFunc(AvailableNewRenderer ? BlendingFactor.One : BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 			GL.Hint(HintTarget.FogHint, HintMode.Fastest);
 			GL.Hint(HintTarget.LineSmoothHint, HintMode.Fastest);
 			GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Fastest);
@@ -274,7 +274,7 @@ namespace LibRender2
 			GL.Disable(EnableCap.Lighting);
 			GL.Disable(EnableCap.Fog);
 			GL.Disable(EnableCap.Texture2D);
-			SetBlendFunc(AvailableNewRenderer ? BlendingFactor.One : BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 			UnsetBlendFunc();
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthMask(true);
@@ -1024,7 +1024,6 @@ namespace LibRender2
 				{
 					Shader.SetIsTexture(false);
 				}
-				GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
 				// Calculate the brightness of the poly to render
 				float factor;
 				if (material.BlendMode == MeshMaterialBlendMode.Additive)
@@ -1059,11 +1058,10 @@ namespace LibRender2
 				Shader.SetBrightness(factor);
 
 				float alphaFactor;
-				GlowAttenuationMode mode = GlowAttenuationMode.None;
 				if (material.GlowAttenuationData != 0)
 				{
+					GlowAttenuationMode mode;
 					alphaFactor = (float)Glow.GetDistanceFactor(modelMatrix, State.Prototype.Mesh.Vertices, ref Face, material.GlowAttenuationData, out mode);
-
 				}
 				else
 				{
