@@ -1,108 +1,71 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using LibRender2;
-using LibRender2.Objects;
-using LibRender2.Shaders;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Runtime;
-using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using SoundManager;
+using Vector2 = OpenTK.Vector2;
 
 namespace OpenBve.Graphics.Renderers
 {
 	internal class Touch
 	{
+		private struct PickedObject
+		{
+			internal int NameDepth;
+			internal int[] Names;
+			internal double MinDepth;
+			internal double MaxDepth;
+		}
+
 		private readonly NewRenderer renderer;
-		private readonly List<ObjectState> objectStates;
-		private readonly List<FaceState> touchFaces;
-		private readonly Shader pickingShader;
-		private readonly FrameBufferObject fbo;
+		private readonly List<ObjectState> touchableObject;
+		private FrameBufferObject fbo;
 		private ObjectState prePickedObject;
 
 		internal Touch(NewRenderer renderer)
 		{
 			this.renderer = renderer;
+			touchableObject = new List<ObjectState>();
 
-			objectStates = new List<ObjectState>();
-			touchFaces = new List<FaceState>();
-			try
+			if (!renderer.ForceLegacyOpenGL)
 			{
-				pickingShader = new Shader("default", "picking", true);
-				pickingShader.Activate();
-				pickingShader.Deactivate();
+				fbo = new FrameBufferObject();
+				fbo.Bind();
+				fbo.SetTextureBuffer(FrameBufferObject.TargetBuffer.Color, PixelInternalFormat.R32f, PixelFormat.Red, PixelType.Float, renderer.Screen.Width, renderer.Screen.Height);
+				fbo.DrawBuffers(new[] { DrawBuffersEnum.ColorAttachment0 });
+				fbo.UnBind();
 			}
-			catch
-			{
-				Interface.AddMessage(MessageType.Error, false, "Initialising the touch shader failed- Falling back to legacy openGL.");
-				Interface.CurrentOptions.IsUseNewRenderer = false;
-			}
-			
-
-			fbo = new FrameBufferObject();
-			fbo.Bind();
-			fbo.SetTextureBuffer(FrameBufferObject.TargetBuffer.Color, PixelInternalFormat.R32f, PixelFormat.Red, PixelType.Float, renderer.Screen.Width, renderer.Screen.Height);
-			fbo.DrawBuffers(new[] { DrawBuffersEnum.ColorAttachment0 });
-			fbo.UnBind();
 		}
 
 		internal void UpdateViewport()
 		{
-			fbo.Bind();
-			fbo.SetTextureBuffer(FrameBufferObject.TargetBuffer.Color, PixelInternalFormat.R32f, PixelFormat.Red, PixelType.Float, renderer.Screen.Width, renderer.Screen.Height);
-			fbo.DrawBuffers(new[] { DrawBuffersEnum.ColorAttachment0 });
-			fbo.UnBind();
+			if (renderer.AvailableNewRenderer)
+			{
+				fbo.Bind();
+				fbo.SetTextureBuffer(FrameBufferObject.TargetBuffer.Color, PixelInternalFormat.R32f, PixelFormat.Red, PixelType.Float, renderer.Screen.Width, renderer.Screen.Height);
+				fbo.DrawBuffers(new[] { DrawBuffersEnum.ColorAttachment0 });
+				fbo.UnBind();
+			}
 		}
 
-		internal void RenderScene()
+		private void ShowObject(ObjectState state)
 		{
-			
-			PreRender();
-			if (touchFaces.Count == 0)
-			{
-				//Drop out early if the pre-render process reveals no available touch faces for a minor boost
-				return;
-			}
-			renderer.ResetOpenGlState();
+			touchableObject.Add(state);
 
-			fbo.Bind();
-
-			GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-			pickingShader.Activate();
-			pickingShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
-			foreach (FaceState face in touchFaces)
+			if (renderer.AvailableNewRenderer && state.Prototype.Mesh.VAO == null)
 			{
-				pickingShader.SetObjectIndex(objectStates.IndexOf(face.Object) + 1);
-				renderer.RenderFace(pickingShader, face);
-			}
-			//Must deactivate and unbind here
-			pickingShader.Deactivate();
-			fbo.UnBind();
-
-			// for debug
-			if (renderer.DebugTouchMode)
-			{
-				GL.DepthMask(false);
-				GL.Disable(EnableCap.DepthTest);
-				renderer.DefaultShader.Activate();
-				renderer.ResetShader(renderer.DefaultShader);
-				renderer.DefaultShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
-				foreach (FaceState face in touchFaces)
-				{
-					
-					renderer.RenderFace(renderer.DefaultShader, face, true);
-					
-				}
-				renderer.DefaultShader.Deactivate();
+				VAOExtensions.CreateVAO(ref state.Prototype.Mesh, state.Prototype.Dynamic, renderer.DefaultShader.VertexLayout);
 			}
 		}
 
 		private void PreRender()
 		{
-			objectStates.Clear();
-			touchFaces.Clear();
+			touchableObject.Clear();
 
 			if (!Loading.SimulationSetup)
 			{
@@ -135,18 +98,73 @@ namespace OpenBve.Graphics.Renderers
 			}
 		}
 
-		private void ShowObject(ObjectState state)
+		internal void RenderScene()
 		{
-			objectStates.Add(state);
+			PreRender();
 
-			if (state.Prototype.Mesh.VAO == null)
+			if (!touchableObject.Any())
 			{
-				VAOExtensions.CreateVAO(ref state.Prototype.Mesh, state.Prototype.Dynamic, renderer.DefaultShader.VertexLayout);
+				//Drop out early if the pre-render process reveals no available touch faces for a minor boost
+				return;
 			}
 
-			foreach (MeshFace face in state.Prototype.Mesh.Faces)
+			renderer.ResetOpenGlState();
+
+			if (renderer.AvailableNewRenderer)
 			{
-				touchFaces.Add(new FaceState(state, face));
+				fbo.Bind();
+				GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+				GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+				renderer.pickingShader.Activate();
+				renderer.pickingShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
+
+				for (int i = 0; i < touchableObject.Count; i++)
+				{
+					renderer.pickingShader.SetObjectIndex(i + 1);
+
+					foreach (MeshFace face in touchableObject[i].Prototype.Mesh.Faces)
+					{
+						renderer.RenderFace(renderer.pickingShader, touchableObject[i], face);
+					}
+				}
+
+				//Must deactivate and unbind here
+				renderer.pickingShader.Deactivate();
+				fbo.UnBind();
+			}
+
+			// for debug
+			if (renderer.DebugTouchMode)
+			{
+				GL.DepthMask(false);
+				GL.Disable(EnableCap.DepthTest);
+
+				if (renderer.AvailableNewRenderer)
+				{
+					renderer.DefaultShader.Activate();
+					renderer.ResetShader(renderer.DefaultShader);
+					renderer.DefaultShader.SetCurrentProjectionMatrix(renderer.CurrentProjectionMatrix);
+
+					foreach (ObjectState objectState in touchableObject)
+					{
+						foreach (MeshFace face in objectState.Prototype.Mesh.Faces)
+						{
+							renderer.RenderFace(renderer.DefaultShader, objectState, face, true);
+						}
+					}
+
+					renderer.DefaultShader.Deactivate();
+				}
+				else
+				{
+					foreach (ObjectState objectState in touchableObject)
+					{
+						foreach (MeshFace face in objectState.Prototype.Mesh.Faces)
+						{
+							renderer.RenderFaceImmediateMode(objectState, face, true);
+						}
+					}
+				}
 			}
 		}
 
@@ -157,15 +175,7 @@ namespace OpenBve.Graphics.Renderers
 
 			fbo.Bind();
 			GL.ReadBuffer(ReadBufferMode.ColorAttachment0);
-
-			for (int i = 0; i < deltaX; i++)
-			{
-				for (int j = 0; j < deltaY; j++)
-				{
-					GL.ReadPixels((int)topLeft.X + i, renderer.Screen.Height - ((int)topLeft.Y - j), 1, 1, PixelFormat.Red, PixelType.Float, ref objectIndices[i, j]);
-				}
-			}
-
+			GL.ReadPixels((int)topLeft.X, renderer.Screen.Height - (int)topLeft.Y, deltaX, deltaY, PixelFormat.Red, PixelType.Float, objectIndices);
 			GL.ReadBuffer(ReadBufferMode.None);
 			fbo.UnBind();
 
@@ -173,13 +183,113 @@ namespace OpenBve.Graphics.Renderers
 			{
 				int index = (int)objectIndex - 1;
 
-				if (index >= 0 && index < objectStates.Count)
+				if (index >= 0 && index < touchableObject.Count)
 				{
-					return objectStates[index];
+					return touchableObject[index];
 				}
 			}
 
 			return null;
+		}
+
+		/// <summary>Make a projection matrix that can be used to limit drawing to small areas of the viewport.</summary>
+		/// <param name="point">Center of picking area at window coordinates</param>
+		/// <param name="delta">Width and height of picking area in window coordinates</param>
+		private Matrix4D CreatePickMatrix(Vector2 point, Vector2 delta)
+		{
+			if (delta.X <= 0 || delta.Y <= 0)
+			{
+				return Matrix4D.Identity;
+			}
+
+			Matrix4D translateMatrix = Matrix4D.CreateTranslation((renderer.Screen.Width - 2 * point.X) / delta.X, (2 * point.Y - renderer.Screen.Height) / delta.Y, 0);
+			Matrix4D scaleMatrix = Matrix4D.Scale(renderer.Screen.Width / delta.X, renderer.Screen.Height / delta.Y, 1.0);
+
+			return renderer.CurrentProjectionMatrix * scaleMatrix * translateMatrix;
+		}
+
+		private static List<PickedObject> ParseSelectBuffer(int[] selectBuffer)
+		{
+			List<PickedObject> pickedObjects = new List<PickedObject>();
+			int position = 0;
+
+			try
+			{
+				while (position < selectBuffer.Length)
+				{
+					if (selectBuffer[position] == 0)
+					{
+						break;
+					}
+
+					PickedObject pickedObject = new PickedObject
+					{
+						NameDepth = selectBuffer[position++],
+						MinDepth = (double)selectBuffer[position++] / int.MaxValue,
+						MaxDepth = (double)selectBuffer[position++] / int.MaxValue
+					};
+					pickedObject.Names = new int[pickedObject.NameDepth];
+
+					for (int i = 0; i < pickedObject.NameDepth; i++)
+					{
+						pickedObject.Names[i] = selectBuffer[position++];
+					}
+
+					pickedObjects.Add(pickedObject);
+				}
+
+				return pickedObjects;
+			}
+			catch (IndexOutOfRangeException)
+			{
+				if (position >= selectBuffer.Length)
+				{
+					return pickedObjects;
+				}
+
+				throw;
+			}
+		}
+
+		private ObjectState RenderSceneSelection(Vector2 point, Vector2 delta)
+		{
+			// Pre
+			PreRender();
+			renderer.ResetOpenGlState();
+			int[] selectBuffer = new int[2048];
+			GL.SelectBuffer(selectBuffer.Length, selectBuffer);
+			GL.RenderMode(RenderingMode.Select);
+			renderer.PushMatrix(MatrixMode.Projection);
+			renderer.CurrentProjectionMatrix = CreatePickMatrix(point, delta);
+			int partID = 0;
+			GL.InitNames();
+			GL.PushName(0);
+
+			// Rendering
+			foreach (ObjectState objectState in touchableObject)
+			{
+				GL.LoadName(partID);
+
+				foreach (MeshFace face in objectState.Prototype.Mesh.Faces)
+				{
+					renderer.RenderFaceImmediateMode(objectState, face);
+				}
+
+				partID++;
+			}
+
+			// Post
+			GL.PopName();
+			renderer.PopMatrix(MatrixMode.Projection);
+			int hits = GL.RenderMode(RenderingMode.Render);
+
+			if (hits <= 0)
+			{
+				return null;
+			}
+
+			List<PickedObject> pickedObjects = ParseSelectBuffer(selectBuffer);
+			return pickedObjects.Any() ? touchableObject[pickedObjects.OrderBy(x => x.MinDepth).First().Names[0]] : null;
 		}
 
 		internal bool MoveCheck(Vector2 Point, out Cursor.Status Status)
@@ -213,7 +323,7 @@ namespace OpenBve.Graphics.Renderers
 				return false;
 			}
 
-			ObjectState pickedObject = ParseFBO(Point, 5, 5);
+			ObjectState pickedObject = renderer.AvailableNewRenderer ? ParseFBO(Point, 5, 5) : RenderSceneSelection(Point, new Vector2(5.0f));
 
 			foreach (TrainManager.TouchElement TouchElement in TouchElements.Where(x => x.Element.internalObject == pickedObject))
 			{
@@ -265,7 +375,7 @@ namespace OpenBve.Graphics.Renderers
 				return;
 			}
 
-			ObjectState pickedObject = ParseFBO(Point, 5, 5);
+			ObjectState pickedObject = renderer.AvailableNewRenderer ? ParseFBO(Point, 5, 5) : RenderSceneSelection(Point, new Vector2(5.0f));
 
 			foreach (TrainManager.TouchElement TouchElement in TouchElements.Where(x => x.Element.internalObject == pickedObject))
 			{
@@ -306,7 +416,7 @@ namespace OpenBve.Graphics.Renderers
 				return;
 			}
 
-			ObjectState pickedObject = ParseFBO(Point, 5, 5);
+			ObjectState pickedObject = renderer.AvailableNewRenderer ? ParseFBO(Point, 5, 5) : RenderSceneSelection(Point, new Vector2(5.0f));
 
 			foreach (TrainManager.TouchElement TouchElement in TouchElements)
 			{
@@ -318,7 +428,7 @@ namespace OpenBve.Graphics.Renderers
 					foreach (var index in TouchElement.SoundIndices.Where(x => x >= 0 && x < Car.Sounds.Touch.Length))
 					{
 						SoundBuffer Buffer = Car.Sounds.Touch[index].Buffer;
-						OpenBveApi.Math.Vector3 Position = Car.Sounds.Touch[index].Position;
+						Vector3 Position = Car.Sounds.Touch[index].Position;
 						Program.Sounds.PlaySound(Buffer, 1.0, 1.0, Position, TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar], false);
 					}
 				}
