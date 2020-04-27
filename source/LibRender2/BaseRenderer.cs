@@ -173,7 +173,11 @@ namespace LibRender2
 
 		internal int lastVAO;
 
-		protected bool ForceLegacyOpenGL;
+		public bool ForceLegacyOpenGL
+		{
+			get;
+			protected set;
+		}
 
 		public bool AvailableNewRenderer => currentOptions != null && currentOptions.IsUseNewRenderer && !ForceLegacyOpenGL;
 
@@ -902,9 +906,14 @@ namespace LibRender2
 
 		public void RenderFace(Shader Shader, FaceState State, bool IsDebugTouchMode = false)
 		{
-			Matrix4D modelMatrix = State.Object.ModelMatrix * Camera.TranslationMatrix;
+			RenderFace(Shader, State.Object, State.Face, IsDebugTouchMode);
+		}
+
+		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, bool IsDebugTouchMode = false)
+		{
+			Matrix4D modelMatrix = State.ModelMatrix * Camera.TranslationMatrix;
 			Matrix4D modelViewMatrix = modelMatrix * CurrentViewMatrix;
-			RenderFace(Shader, State.Object, State.Face, modelMatrix, modelViewMatrix, IsDebugTouchMode);
+			RenderFace(Shader, State, Face, modelMatrix, modelViewMatrix, IsDebugTouchMode);
 		}
 
 		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, Matrix4D modelMatrix, Matrix4D modelViewMatrix, bool IsDebugTouchMode = false)
@@ -1067,7 +1076,7 @@ namespace LibRender2
 				{
 					alphaFactor = 1.0f;
 				}
-				
+
 				Shader.SetOpacity(inv255 * material.Color.A * alphaFactor);
 
 				// render polygon
@@ -1145,9 +1154,14 @@ namespace LibRender2
 
 		public void RenderFaceImmediateMode(FaceState State, bool IsDebugTouchMode = false)
 		{
-			Matrix4D modelMatrix = State.Object.ModelMatrix * Camera.TranslationMatrix;
+			RenderFaceImmediateMode(State.Object, State.Face, IsDebugTouchMode);
+		}
+
+		public void RenderFaceImmediateMode(ObjectState State, MeshFace Face, bool IsDebugTouchMode = false)
+		{
+			Matrix4D modelMatrix = State.ModelMatrix * Camera.TranslationMatrix;
 			Matrix4D modelViewMatrix = modelMatrix * CurrentViewMatrix;
-			RenderFaceImmediateMode(State.Object, State.Face, modelMatrix, modelViewMatrix, IsDebugTouchMode);
+			RenderFaceImmediateMode(State, Face, modelMatrix, modelViewMatrix, IsDebugTouchMode);
 		}
 
 		public void RenderFaceImmediateMode(ObjectState State, MeshFace Face, Matrix4D modelMatrix, Matrix4D modelViewMatrix, bool IsDebugTouchMode = false)
@@ -1202,7 +1216,7 @@ namespace LibRender2
 
 			}
 
-			if (OptionWireFrame)
+			if (OptionWireFrame || IsDebugTouchMode)
 			{
 				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
 			}
@@ -1416,7 +1430,7 @@ namespace LibRender2
 			}
 
 			// finalize
-			if (OptionWireFrame)
+			if (OptionWireFrame || IsDebugTouchMode)
 			{
 				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 			}

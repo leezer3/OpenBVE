@@ -177,7 +177,7 @@ namespace LibRender2.Primitives
 				}
 			};
 
-			if (renderer.AvailableNewRenderer)
+			if (!renderer.ForceLegacyOpenGL)
 			{
 				defaultVAO = new VertexArrayObject();
 				defaultVAO.Bind();

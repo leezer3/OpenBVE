@@ -35,7 +35,7 @@ namespace OpenBve
 		{
 			base.Initialize(CurrentHost, CurrentOptions);
 
-			if (AvailableNewRenderer)
+			if (!ForceLegacyOpenGL)
 			{
 				redAxisVAO = RegisterBox(Color128.Red);
 				greenAxisVAO = RegisterBox(Color128.Green);
