@@ -7,6 +7,7 @@ using LibRender2.Screens;
 using LibRender2.Texts;
 using OpenBveApi;
 using OpenBveApi.Input;
+using OpenTK;
 
 namespace OpenBve
 {
@@ -433,6 +434,11 @@ namespace OpenBve
 		/// <param name= "data">The index of the menu in the menu stack (If pushing an existing higher level menu)</param>
 		public void PushMenu(MenuType type, int data = 0)
 		{
+			if (Program.Renderer.CurrentInterface != InterfaceType.Menu)
+			{
+				// Deliberately set to the standard cursor, as touch controls may have set to something else
+				Program.currentGameWindow.Cursor = MouseCursor.Default;
+			}
 			if (!isInitialized)
 				Init();
 			CurrMenu++;
