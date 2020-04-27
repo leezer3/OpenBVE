@@ -31,7 +31,17 @@ namespace OpenBve
 			string Folder = textboxRouteFolder.Text;
 			while (!Directory.Exists(Folder) && System.IO.Path.IsPathRooted(Folder))
 			{
-				Folder = Directory.GetParent(Folder).ToString();
+				try
+				{
+					Folder = Directory.GetParent(Folder).ToString();
+				}
+				catch
+				{
+					// Can't get the root of \\ => https://github.com/leezer3/OpenBVE/issues/468
+					// Probably safer overall too
+					return;
+				}
+				
 			}
 
 			if (rf != Folder)
@@ -414,7 +424,16 @@ namespace OpenBve
 			string Folder = textboxTrainFolder.Text;
 			while (!Directory.Exists(Folder) && System.IO.Path.IsPathRooted(Folder) && Folder.Length > 2)
 			{
-				Folder = Directory.GetParent(Folder).ToString();
+				try
+				{
+					Folder = Directory.GetParent(Folder).ToString();
+				}
+				catch
+				{
+					// Can't get the root of \\ => https://github.com/leezer3/OpenBVE/issues/468
+					// Probably safer overall too
+					return;
+				}
 			}
 			if (tf != Folder)
 			{
