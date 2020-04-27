@@ -24,7 +24,7 @@ namespace OpenBve.Graphics.Renderers
 
 		private readonly NewRenderer renderer;
 		private readonly List<ObjectState> touchableObject;
-		private FrameBufferObject fbo;
+		private readonly FrameBufferObject fbo;
 		private ObjectState prePickedObject;
 
 		internal Touch(NewRenderer renderer)
