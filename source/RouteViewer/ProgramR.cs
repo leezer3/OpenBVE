@@ -594,6 +594,9 @@ namespace OpenBve {
 					JumpToPositionEnabled = false;
 					CpuReducedMode = false;
 					break;
+				case Key.H:
+					Interface.CurrentOptions.IsUseNewRenderer = !Interface.CurrentOptions.IsUseNewRenderer;
+					break;
 
 			}
 		}

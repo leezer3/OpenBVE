@@ -42,7 +42,6 @@ out float oFogFactor;
 void main()
 {
 	vec4 viewPos = uCurrentModelViewMatrix * vec4(vec3(iPosition.x, iPosition.y, -iPosition.z), 1.0);
-	vec3 viewNormal = mat3(transpose(inverse(uCurrentModelViewMatrix))) * vec3(iNormal.x, iNormal.y, -iNormal.z);
 	gl_Position = uCurrentProjectionMatrix * viewPos;
 
 	// Lighting
@@ -50,7 +49,7 @@ void main()
 	vec4 ambient  = vec4(uLight.ambient.x, uLight.ambient.y, uLight.ambient.z, 1.0) * uMaterial.ambient;
 
 	// Diffuse
-	viewNormal = normalize(viewNormal);
+	viewNormal = normalize(iNormal);
 	vec3 eye = normalize(-viewPos.xyz);
 	float diff = max(dot(viewNormal, uLight.position), 0.0);
 	vec4 diffuse = vec4(uLight.diffuse.x, uLight.diffuse.y, uLight.diffuse.z, 1.0) * (diff * uMaterial.diffuse);
