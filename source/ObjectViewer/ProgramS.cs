@@ -118,6 +118,11 @@ namespace OpenBve {
 	        Interface.CurrentOptions.ObjectOptimizationFullThreshold = 250;
 	        Interface.CurrentOptions.AntiAliasingLevel = 16;
 	        Interface.CurrentOptions.AnisotropicFilteringLevel = 16;
+	        if (Renderer.Screen.Width == 0 || Renderer.Screen.Height == 0)
+	        {
+		        Renderer.Screen.Width = 960;
+		        Renderer.Screen.Height = 600;
+	        }
 	        // initialize camera
 
 	        currentGraphicsMode = new GraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 8,Interface.CurrentOptions.AntiAliasingLevel);
@@ -631,6 +636,9 @@ namespace OpenBve {
 	                }
 	                ReducedMode = false;
 	                break;
+				case Key.H:
+					Interface.CurrentOptions.IsUseNewRenderer = !Interface.CurrentOptions.IsUseNewRenderer;
+					break;
 	        }
 	    }
 

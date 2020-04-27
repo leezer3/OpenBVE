@@ -1015,7 +1015,7 @@ namespace LibRender2
 					DrawMode = PrimitiveType.Polygon;
 					break;
 			}
-
+			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 			// daytime polygon
 			{
 				// texture
