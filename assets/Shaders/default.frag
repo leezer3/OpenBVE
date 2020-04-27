@@ -1,14 +1,17 @@
 #version 150
 
+in vec4 oViewPos;
 in vec2 oUv;
 in vec4 oColor;
-in float oFogFactor;
 
-uniform vec3  uFogColor;
 uniform bool uIsTexture;
 uniform sampler2D uTexture;
 uniform float uBrightness;
 uniform float uOpacity;
+uniform bool uIsFog;
+uniform float uFogStart;
+uniform float uFogEnd;
+uniform vec3  uFogColor;
 
 void main(void)
 {
@@ -23,5 +26,13 @@ void main(void)
 	float finalA = oColor.a * textureColor.a * uOpacity;
 	finalRGB *= finalA;
 		
-	gl_FragData[0] = clamp(vec4(mix(uFogColor, finalRGB, oFogFactor), finalA), 0.0, 1.0);
+	// Fog
+	float fogFactor = 1.0;
+
+	if (uIsFog)
+	{
+		fogFactor *= clamp((uFogEnd - length(oViewPos)) / (uFogEnd - uFogStart), 0.0, 1.0);
+	}
+
+	gl_FragData[0] = clamp(vec4(mix(uFogColor, finalRGB, fogFactor), finalA), 0.0, 1.0);
 }
