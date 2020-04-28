@@ -1,14 +1,17 @@
 #version 150
 
+in vec4 oViewPos;
 in vec2 oUv;
 in vec4 oColor;
-in float oFogFactor;
 
-uniform vec3  uFogColor;
 uniform bool uIsTexture;
 uniform sampler2D uTexture;
 uniform float uBrightness;
 uniform float uOpacity;
+uniform bool uIsFog;
+uniform float uFogStart;
+uniform float uFogEnd;
+uniform vec3  uFogColor;
 
 void main(void)
 {
@@ -18,10 +21,30 @@ void main(void)
 	{
 		textureColor *= texture2D(uTexture, oUv);
 	}
+	float finalA;
+	vec4 finalColor;
+	if(textureColor.a < 1.0)
+	{
+		finalA = textureColor.a; //store before mix
+		finalColor = vec4(mix(oColor, textureColor, textureColor.a)) * uBrightness;
+		finalColor.a = finalA * uOpacity;
+	}
+	else
+	{
+		finalColor.rgb = oColor.rgb * textureColor.rgb * uBrightness;
+		finalColor.a = oColor.a * textureColor.a  * uOpacity;
+		finalColor.rgb *= finalColor.a;
+	}
+	
+	
+	
+	// Fog
+	float fogFactor = 1.0;
 
-	vec3 finalRGB = vec3(oColor.rgb * textureColor.rgb * uBrightness);
-	float finalA = oColor.a * textureColor.a * uOpacity;
-	finalRGB *= finalA;
-		
-	gl_FragData[0] = clamp(vec4(mix(uFogColor, finalRGB, oFogFactor), finalA), 0.0, 1.0);
+	if (uIsFog)
+	{
+		fogFactor *= clamp((uFogEnd - length(oViewPos)) / (uFogEnd - uFogStart), 0.0, 1.0);
+	}
+
+	gl_FragData[0] = vec4(mix(uFogColor, finalColor.rgb, fogFactor), finalColor.a);
 }
