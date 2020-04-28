@@ -3,6 +3,7 @@
 in vec4 oViewPos;
 in vec2 oUv;
 in vec4 oColor;
+in vec4 lightResult;
 
 uniform bool uIsTexture;
 uniform sampler2D uTexture;
@@ -16,28 +17,15 @@ uniform vec3  uFogColor;
 void main(void)
 {
 	vec4 textureColor = vec4(1.0);
-
+	
 	if(uIsTexture)
 	{
 		textureColor *= texture2D(uTexture, oUv);
 	}
-	float finalA;
-	vec4 finalColor;
-	if(textureColor.a < 1.0)
-	{
-		finalA = textureColor.a; //store before mix
-		finalColor = vec4(mix(oColor, textureColor, textureColor.a)) * uBrightness;
-		finalColor.a = finalA * uOpacity;
-	}
-	else
-	{
-		finalColor.rgb = oColor.rgb * textureColor.rgb * uBrightness;
-		finalColor.a = oColor.a * textureColor.a  * uOpacity;
-		finalColor.rgb *= finalColor.a;
-	}
 	
-	
-	
+	vec4 finalColor = vec4(((textureColor.rgb) * 1.0) + (oColor.rgb * (1 - textureColor.a)), textureColor.a * uOpacity);
+	finalColor *= lightResult; //Apply the lighting results *after* the final color has been calculated
+		
 	// Fog
 	float fogFactor = 1.0;
 

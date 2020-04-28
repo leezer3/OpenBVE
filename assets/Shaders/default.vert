@@ -35,6 +35,7 @@ uniform MaterialColor uMaterial;
 out vec4 oViewPos;
 out vec2 oUv;
 out vec4 oColor;
+out vec4 lightResult;
 
 void main()
 {
@@ -65,24 +66,22 @@ void main()
 	oUv = (uCurrentTextureMatrix * vec4(iUv, 1.0, 1.0)).xy;
 
 	oColor = iColor;
-
+	
 	if (uIsLight)
 	{
 		vec4 result;
 		if(uMaterial.isEmissive)
 		{
-			vec4 result = clamp(ambient + diffuse + specular + vec4(uMaterial.emission.x, uMaterial.emission.y, uMaterial.emission.z, 1.0), 0.0, 1.0);
-			oColor *= result;
+			lightResult = clamp(ambient + diffuse + specular + vec4(uMaterial.emission.x, uMaterial.emission.y, uMaterial.emission.z, 1.0), 0.0, 1.0);
 		}
 		else
 		{
-			vec4 result = clamp(ambient + diffuse + specular, 0.0, 1.0);
-			oColor *= result;
+			lightResult = clamp(ambient + diffuse + specular, 0.0, 1.0);
 		}
 	}
 	else
 	{
-		vec4 globalAmbient = vec4(1.0);
-		oColor *= globalAmbient * uMaterial.ambient;
+		lightResult = vec4(1.0) * uMaterial.ambient;
 	}
+	oColor.rgb *= oColor.a;
 }
