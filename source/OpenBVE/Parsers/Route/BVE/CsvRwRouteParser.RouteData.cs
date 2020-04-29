@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 using OpenBveApi.Textures;
+using RouteManager2.SignalManager;
 
 namespace OpenBve
 {
@@ -23,7 +25,7 @@ namespace OpenBve
 			internal bool FogTransitionMode;
 			internal StructureData Structure;
 			internal SignalDictionary Signals;
-			internal CompatibilitySignalData[] CompatibilitySignals;
+			internal CompatibilitySignalObject[] CompatibilitySignals;
 			internal Texture[] TimetableDaytime;
 			internal Texture[] TimetableNighttime;
 			internal BackgroundDictionary Backgrounds;

@@ -1,0 +1,12 @@
+﻿CreateMeshBuilder
+AddVertex,-0.3,-0.85,-0.4
+AddVertex,-0.3,0.0,-0.4
+AddVertex,0.3,0.0,-0.4
+AddVertex,0.3,-0.85,-0.4
+AddFace,0,1,2,3
+SetTextureCoordinates,0,0.0,1.0
+SetTextureCoordinates,1,0.0,0.0
+SetTextureCoordinates,2,1.0,0.0
+SetTextureCoordinates,3,1.0,1.0
+LoadTexture,Signal2.png
+SetDecalTransparentColor,0,0,255

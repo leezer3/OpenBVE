@@ -39,6 +39,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Climate\Atmosphere.cs" />
@@ -75,6 +76,8 @@
     <Compile Include="SignalManager\Section.cs" />
     <Compile Include="SignalManager\SectionAspect.cs" />
     <Compile Include="SignalManager\SectionTypes.cs" />
+    <Compile Include="SignalManager\SignalObject.Compatability.cs" />
+    <Compile Include="SignalManager\SignalObject.cs" />
     <Compile Include="Stations\RouteStation.cs" />
     <Compile Include="Stations\Station.Stop.cs" />
   </ItemGroup>

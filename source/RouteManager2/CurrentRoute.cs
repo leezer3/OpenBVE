@@ -1,8 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Xml;
 using LibRender2;
 using OpenBveApi.Colors;
+using OpenBveApi.Hosts;
+using OpenBveApi.Interface;
+using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
@@ -10,6 +16,7 @@ using RouteManager2.Climate;
 using RouteManager2.SignalManager;
 using RouteManager2.SignalManager.PreTrain;
 using RouteManager2.Stations;
+using Path = OpenBveApi.Path;
 
 namespace RouteManager2
 {
@@ -98,7 +105,8 @@ namespace RouteManager2
 			Atmosphere = new Atmosphere();
 			SecondsSinceMidnight = 0.0;
 		}
-
+		
+		/// <summary>Updates all sections within the route</summary>
 		public void UpdateAllSections()
 		{
 			UpdateSection(Sections.LastOrDefault());

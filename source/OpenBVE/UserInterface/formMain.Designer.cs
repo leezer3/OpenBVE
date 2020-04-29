@@ -76,6 +76,8 @@
 			this.tabpageRouteGradient = new System.Windows.Forms.TabPage();
 			this.pictureboxRouteGradient = new System.Windows.Forms.PictureBox();
 			this.tabpageRouteSettings = new System.Windows.Forms.TabPage();
+			this.labelCompatibilitySignalSet = new System.Windows.Forms.Label();
+			this.comboBoxCompatibilitySignals = new System.Windows.Forms.ComboBox();
 			this.panelRouteEncoding = new System.Windows.Forms.Panel();
 			this.buttonRouteEncodingLatin1 = new System.Windows.Forms.Button();
 			this.buttonRouteEncodingBig5 = new System.Windows.Forms.Button();
@@ -1221,6 +1223,8 @@
 			// 
 			// tabpageRouteSettings
 			// 
+			this.tabpageRouteSettings.Controls.Add(this.labelCompatibilitySignalSet);
+			this.tabpageRouteSettings.Controls.Add(this.comboBoxCompatibilitySignals);
 			this.tabpageRouteSettings.Controls.Add(this.panelRouteEncoding);
 			this.tabpageRouteSettings.Controls.Add(this.labelRouteEncodingPreview);
 			this.tabpageRouteSettings.Controls.Add(this.textboxRouteEncodingPreview);
@@ -1232,6 +1236,30 @@
 			this.tabpageRouteSettings.Text = "Settings";
 			this.tabpageRouteSettings.UseVisualStyleBackColor = true;
 			// 
+			// labelCompatibilitySignalSet
+			// 
+			this.labelCompatibilitySignalSet.AutoEllipsis = true;
+			this.labelCompatibilitySignalSet.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.labelCompatibilitySignalSet.Location = new System.Drawing.Point(13, 6);
+			this.labelCompatibilitySignalSet.Name = "labelCompatibilitySignalSet";
+			this.labelCompatibilitySignalSet.Size = new System.Drawing.Size(96, 16);
+			this.labelCompatibilitySignalSet.TabIndex = 8;
+			this.labelCompatibilitySignalSet.Text = "Default Signals:";
+			this.labelCompatibilitySignalSet.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			// 
+			// comboBoxCompatibilitySignals
+			// 
+			this.comboBoxCompatibilitySignals.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.comboBoxCompatibilitySignals.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxCompatibilitySignals.ForeColor = System.Drawing.SystemColors.WindowText;
+			this.comboBoxCompatibilitySignals.FormattingEnabled = true;
+			this.comboBoxCompatibilitySignals.Location = new System.Drawing.Point(109, 6);
+			this.comboBoxCompatibilitySignals.Name = "comboBoxCompatibilitySignals";
+			this.comboBoxCompatibilitySignals.Size = new System.Drawing.Size(180, 21);
+			this.comboBoxCompatibilitySignals.TabIndex = 9;
+			this.comboBoxCompatibilitySignals.SelectedIndexChanged += new System.EventHandler(this.comboBoxCompatibilitySignals_SelectedIndexChanged);
+			// 
 			// panelRouteEncoding
 			// 
 			this.panelRouteEncoding.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -1242,7 +1270,7 @@
 			this.panelRouteEncoding.Controls.Add(this.buttonRouteEncodingShiftJis);
 			this.panelRouteEncoding.Controls.Add(this.comboboxRouteEncoding);
 			this.panelRouteEncoding.ForeColor = System.Drawing.SystemColors.ControlText;
-			this.panelRouteEncoding.Location = new System.Drawing.Point(8, 8);
+			this.panelRouteEncoding.Location = new System.Drawing.Point(13, 33);
 			this.panelRouteEncoding.Name = "panelRouteEncoding";
 			this.panelRouteEncoding.Size = new System.Drawing.Size(276, 48);
 			this.panelRouteEncoding.TabIndex = 7;
@@ -1311,7 +1339,7 @@
 			// 
 			this.labelRouteEncodingPreview.AutoEllipsis = true;
 			this.labelRouteEncodingPreview.ForeColor = System.Drawing.SystemColors.ControlText;
-			this.labelRouteEncodingPreview.Location = new System.Drawing.Point(8, 64);
+			this.labelRouteEncodingPreview.Location = new System.Drawing.Point(12, 87);
 			this.labelRouteEncodingPreview.Name = "labelRouteEncodingPreview";
 			this.labelRouteEncodingPreview.Size = new System.Drawing.Size(96, 16);
 			this.labelRouteEncodingPreview.TabIndex = 5;
@@ -1325,7 +1353,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.textboxRouteEncodingPreview.BackColor = System.Drawing.SystemColors.Window;
 			this.textboxRouteEncodingPreview.ForeColor = System.Drawing.SystemColors.WindowText;
-			this.textboxRouteEncodingPreview.Location = new System.Drawing.Point(104, 64);
+			this.textboxRouteEncodingPreview.Location = new System.Drawing.Point(108, 87);
 			this.textboxRouteEncodingPreview.Multiline = true;
 			this.textboxRouteEncodingPreview.Name = "textboxRouteEncodingPreview";
 			this.textboxRouteEncodingPreview.ReadOnly = true;
@@ -6217,5 +6245,7 @@
 		private System.Windows.Forms.ComboBox comboBoxObjparser;
 		private System.Windows.Forms.CheckBox checkBoxReverseConsist;
 		private System.Windows.Forms.Label labelReverseConsist;
+		private System.Windows.Forms.Label labelCompatibilitySignalSet;
+		private System.Windows.Forms.ComboBox comboBoxCompatibilitySignals;
 	}
 }

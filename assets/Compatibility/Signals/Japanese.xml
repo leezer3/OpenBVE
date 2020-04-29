@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">Japanese\
+	<CompatibilitySignals>
+		<SignalSetName>Japanese</SignalSetName>
+		<!-- NOTE: Must contain exactly 9 signals in order -->
+		<Signal>
+			<!-- 2 aspect orange, red -->
+			<Aspect Number="0">Japanese\signal_2_0.csv</Aspect>
+			<Aspect Number="2">Japanese\signal_2a_2.csv</Aspect>
+		</Signal>
+		<Signal>
+			<!-- 2 aspect green, red -->
+			<Aspect Number="0">Japanese\signal_2_0.csv</Aspect>
+			<Aspect Number="2">Japanese\signal_2b_4.csv</Aspect>
+		</Signal>
+		<Signal>
+			<!-- 3 aspect green, orange, red -->
+			<Aspect Number="0">Japanese\signal_3_0.csv</Aspect>
+			<Aspect Number="2">Japanese\signal_3_2.csv</Aspect>
+			<Aspect Number="4">Japanese\signal_3_4.csv</Aspect>
+		</Signal>
+		<Signal>
+			<!-- 4 aspect green, double orange, orange, red -->
+			<Aspect Number="0">Japanese\signal_4_0.csv</Aspect>
+			<Aspect Number="1">Japanese\signal_4a_1.csv</Aspect>
+			<Aspect Number="2">Japanese\signal_4a_2.csv</Aspect>
+			<Aspect Number="4">Japanese\signal_4a_4.csv</Aspect>
+		</Signal>
+		<Signal>
+			<!-- 4 aspect green, orange green, orange, red -->
+			<Aspect Number="0">Japanese\signal_4_0.csv</Aspect>
+			<Aspect Number="2">Japanese\signal_4b_2.csv</Aspect>
+			<Aspect Number="3">Japanese\signal_4b_3.csv</Aspect>
+			<Aspect Number="4">Japanese\signal_4b_4.csv</Aspect>
+		</Signal>
+		<Signal>
+			<!-- 5 aspect green, orange green, orange, double orange, red -->
+			<Aspect Number="0">Japanese\signal_5_0.csv</Aspect>
+			<Aspect Number="1">Japanese\signal_5a_1.csv</Aspect>
+			<Aspect Number="2">Japanese\signal_5_2.csv</Aspect>
+			<Aspect Number="3">Japanese\signal_5_3.csv</Aspect>
+			<Aspect Number="4">Japanese\signal_5_4.csv</Aspect>
+		</Signal>
+		<Signal>
+			<!-- 5 aspect double green, green, orange green, orange, red -->
+			<Aspect Number="0">Japanese\signal_5_0.csv</Aspect>
+			<Aspect Number="2">Japanese\signal_5_2.csv</Aspect>
+			<Aspect Number="3">Japanese\signal_5_3.csv</Aspect>
+			<Aspect Number="4">Japanese\signal_5_4.csv</Aspect>
+			<Aspect Number="5">Japanese\signal_5b_5.csv</Aspect>
+		</Signal>
+		<Signal>
+			<!-- 6 aspect double green, green, orange green, orange, double orange, red -->
+			<Aspect Number="0">Japanese\signal_6_0.csv</Aspect>
+			<Aspect Number="1">Japanese\signal_6_1.csv</Aspect>
+			<Aspect Number="2">Japanese\signal_6_2.csv</Aspect>
+			<Aspect Number="3">Japanese\signal_6_3.csv</Aspect>
+			<Aspect Number="4">Japanese\signal_6_4.csv</Aspect>
+			<Aspect Number="5">Japanese\signal_6_5.csv</Aspect>
+		</Signal>
+		<Signal>
+			<!-- Banner repeater -->
+			<Aspect Number="0">Japanese\repeatingsignal_0.csv</Aspect>
+			<Aspect Number="3">Japanese\repeatingsignal_3.csv</Aspect>
+			<Aspect Number="4">Japanese\repeatingsignal_4.csv</Aspect>
+		</Signal>
+	</CompatibilitySignals>
+</openBVE>

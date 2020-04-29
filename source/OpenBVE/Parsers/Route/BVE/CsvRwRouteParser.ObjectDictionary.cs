@@ -2,6 +2,7 @@
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
+using RouteManager2.SignalManager;
 
 namespace OpenBve
 {
@@ -74,12 +75,12 @@ namespace OpenBve
 
 		/// <inheritdoc/>
 		/// <summary>Defines a dictionary of signals</summary>
-		private class SignalDictionary : Dictionary<int, SignalData>
+		private class SignalDictionary : Dictionary<int, SignalObject>
 		{
 			/// <summary>Adds a new signal to the dictionary</summary>
 			/// <param name="key">The signal index</param>
 			/// <param name="signal">The signal object</param>
-			internal new void Add(int key, SignalData signal)
+			internal new void Add(int key, SignalObject signal)
 			{
 				if (this.ContainsKey(key))
 				{

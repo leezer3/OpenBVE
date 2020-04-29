@@ -12,6 +12,7 @@ using System.Globalization;
 using System.Windows.Forms;
 using LibRender2;
 using LibRender2.Cameras;
+using OpenBveApi;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;

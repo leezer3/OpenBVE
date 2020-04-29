@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">Japanese\
+	<CompatibilitySignals>
+		<SignalSetName>British Rail</SignalSetName>
+		<!-- NOTE: Must contain exactly 9 signals in order -->
+		<Signal>
+			<!-- 2 aspect orange, red -->
+			<Aspect Number="0">Japanese\signal_2_0.csv</Aspect>
+			<Aspect Number="2">Japanese\signal_2a_2.csv</Aspect>
+		</Signal>
+		<Signal>
+			<!-- 2 aspect green, red -->
+			<Aspect Number="0">Japanese\signal_2_0.csv</Aspect>
+			<Aspect Number="2">Japanese\signal_2b_4.csv</Aspect>
+		</Signal>
+		<Signal>
+			<!-- 3 aspect green, orange, red -->
+			<Aspect Number="0">Japanese\signal_3_0.csv</Aspect>
+			<Aspect Number="2">Japanese\signal_3_2.csv</Aspect>
+			<Aspect Number="4">Japanese\signal_3_4.csv</Aspect>
+		</Signal>
+		<Signal>
+			<!-- 4 aspect green, double yellow, yellow, red -->
+			<Aspect Number="0">BritishRail\signal_4_0.csv</Aspect>
+			<Aspect Number="1">BritishRail\signal_4_1.csv</Aspect>
+			<Aspect Number="2">BritishRail\signal_4_2.csv</Aspect>
+			<Aspect Number="4">BritishRail\signal_4_4.csv</Aspect>
+		</Signal>
+		<Signal>
+			<!-- 4 aspect green, double yellow, yellow, red -->
+			<Aspect Number="0">BritishRail\signal_4_0.csv</Aspect>
+			<Aspect Number="1">BritishRail\signal_4_1.csv</Aspect>
+			<Aspect Number="2">BritishRail\signal_4_2.csv</Aspect>
+			<Aspect Number="4">BritishRail\signal_4_4.csv</Aspect>
+		</Signal>
+		<Signal>
+			<!-- 5 aspect green, orange green, orange, double orange, red -->
+			<Aspect Number="0">Japanese\signal_5_0.csv</Aspect>
+			<Aspect Number="1">Japanese\signal_5a_1.csv</Aspect>
+			<Aspect Number="2">Japanese\signal_5_2.csv</Aspect>
+			<Aspect Number="3">Japanese\signal_5_3.csv</Aspect>
+			<Aspect Number="4">Japanese\signal_5_4.csv</Aspect>
+		</Signal>
+		<Signal>
+			<!-- 5 aspect double green, green, orange green, orange, red -->
+			<Aspect Number="0">Japanese\signal_5_0.csv</Aspect>
+			<Aspect Number="2">Japanese\signal_5_2.csv</Aspect>
+			<Aspect Number="3">Japanese\signal_5_3.csv</Aspect>
+			<Aspect Number="4">Japanese\signal_5_4.csv</Aspect>
+			<Aspect Number="5">Japanese\signal_5b_5.csv</Aspect>
+		</Signal>
+		<Signal>
+			<!-- 6 aspect double green, green, orange green, orange, double orange, red -->
+			<Aspect Number="0">Japanese\signal_6_0.csv</Aspect>
+			<Aspect Number="1">Japanese\signal_6_1.csv</Aspect>
+			<Aspect Number="2">Japanese\signal_6_2.csv</Aspect>
+			<Aspect Number="3">Japanese\signal_6_3.csv</Aspect>
+			<Aspect Number="4">Japanese\signal_6_4.csv</Aspect>
+			<Aspect Number="5">Japanese\signal_6_5.csv</Aspect>
+		</Signal>
+		<Signal>
+			<!-- Banner repeater -->
+			<Aspect Number="0">BritishRail\repeatingsignal_0.csv</Aspect>
+			<Aspect Number="3">BritishRail\repeatingsignal_3.csv</Aspect>
+			<Aspect Number="4">BritishRail\repeatingsignal_4.csv</Aspect>
+		</Signal>
+		<SignalPost>Japanese\signal_post.csv</SignalPost>
+	</CompatibilitySignals>
+</openBVE>
