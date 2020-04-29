@@ -636,7 +636,7 @@ namespace OpenBve {
 	                }
 	                ReducedMode = false;
 	                break;
-				case Key.H:
+				case Key.R:
 					Interface.CurrentOptions.IsUseNewRenderer = !Interface.CurrentOptions.IsUseNewRenderer;
 					break;
 	        }

@@ -677,9 +677,13 @@ namespace OpenBve
 					OpenGlString.Draw(Fonts.SmallFont, "Mute:", new Point(Screen.Width - 32, 84), TextAlignment.TopRight, Color128.White, true);
 					OpenGlString.Draw(Fonts.SmallFont, "Hide interface:", new Point(Screen.Width - 32, 104), TextAlignment.TopRight, Color128.White, true);
 					OpenGlString.Draw(Fonts.SmallFont, $"{(RenderStatsOverlay ? "Hide" : "Show")} renderer statistics", new Point(Screen.Width - 32, 124), TextAlignment.TopRight, Color128.White, true);
+					OpenGlString.Draw(Fonts.SmallFont, $"Switch renderer type:", new Point(Screen.Width - 32, 144), TextAlignment.TopRight, Color128.White, true);
 
 					keys = new[] { new[] { "F10" } };
 					Keys.Render(Screen.Width - 32, 124, 30, Fonts.SmallFont, keys);
+
+					keys = new[] { new[] { "R" } };
+					Keys.Render(Screen.Width - 20, 144, 16, Fonts.SmallFont, keys);
 
 					keys = new[] { new[] { null, "W", null }, new[] { "A", "S", "D" } };
 					Keys.Render(4, Screen.Height - 40, 16, Fonts.SmallFont, keys);
