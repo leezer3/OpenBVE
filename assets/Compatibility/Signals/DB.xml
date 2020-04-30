@@ -51,9 +51,9 @@
 		</Signal>
 		<Signal>
 			<!-- Banner repeater -->
-			<Aspect Number="0">Japanese\repeatingsignal_0.csv</Aspect>
-			<Aspect Number="3">Japanese\repeatingsignal_3.csv</Aspect>
-			<Aspect Number="4">Japanese\repeatingsignal_4.csv</Aspect>
+			<Aspect Number="0">DB\repeatingsignal_0.csv</Aspect>
+			<Aspect Number="3">DB\repeatingsignal_1.csv</Aspect>
+			<Aspect Number="4">DB\repeatingsignal_2.csv</Aspect>
 		</Signal>
 		<SignalPost>DB\signal_post.b3d</SignalPost>
 		<SpeedLimits>
