@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using Path = OpenBveApi.Path;
 
@@ -26,18 +27,26 @@ namespace RouteManager2.SignalManager
 		/// <summary>Loads a list of compatibility signal objects</summary>
 		/// <param name="currentHost">The host application interface</param>
 		/// <param name="fileName">The file name of the object list</param>
+		/// <param name="objects">The returned array of speed limits</param>
 		/// <param name="signalPost">Sets the default signal post</param>
+		/// <param name="speedLimits">The array of signal speed limits</param>
 		/// <returns>An array of compatability signal objects</returns>
-		public static CompatibilitySignalObject[] ReadCompatibilitySignalXML(HostInterface currentHost, string fileName, out UnifiedObject signalPost)
+		public static void ReadCompatibilitySignalXML(HostInterface currentHost, string fileName, out CompatibilitySignalObject[] objects, out UnifiedObject signalPost, out double[] speedLimits)
 		{
-			//TODO: It should be possible to add default limits for these too to overwrite the Japanese ones
 			signalPost = new StaticObject(currentHost);
-			CompatibilitySignalObject[] objects = new CompatibilitySignalObject[9];
+			objects = new CompatibilitySignalObject[9];
+			//Default Japanese speed limits converted to m/s
+			speedLimits = new[] { 0.0, 6.94444444444444, 15.2777777777778, 20.8333333333333, double.PositiveInfinity, double.PositiveInfinity };
 			XmlDocument currentXML = new XmlDocument();
 			currentXML.Load(fileName);
 			string currentPath = System.IO.Path.GetDirectoryName(fileName);
 			if (currentXML.DocumentElement != null)
 			{
+				XmlNode node = currentXML.SelectSingleNode("/openBVE/CompatibilitySignals/SignalSetName");
+				if (node != null)
+				{
+					currentHost.AddMessage(MessageType.Information, false, "INFO: Using the " + node.InnerText + " compatibility signal set.");
+				}
 				XmlNodeList DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/CompatibilitySignals/Signal");
 				if (DocumentNodes != null)
 				{
@@ -48,8 +57,6 @@ namespace RouteManager2.SignalManager
 						List<int> aspectList = new List<int>();
 						try
 						{
-
-
 							if (nn.HasChildNodes)
 							{
 								foreach (XmlNode n in nn.ChildNodes)
@@ -60,9 +67,10 @@ namespace RouteManager2.SignalManager
 									}
 
 									int aspect = 0;
-									if (n.Attributes != null)
+									if (!NumberFormats.TryParseIntVb6(n.Attributes["Number"].Value, out aspect))
 									{
-										int.TryParse(n.Attributes["Number"].Value, out aspect);
+										currentHost.AddMessage(MessageType.Error, true, "Invalid aspect number " + aspect + " in the signal object list in the compatability signal file " + fileName);
+										continue;
 									}
 
 									aspectList.Add(aspect);
@@ -83,7 +91,7 @@ namespace RouteManager2.SignalManager
 						}
 						catch
 						{
-							currentHost.AddMessage(MessageType.Error, true, "An unexpected error was encountered whilst processing the compatability signal list in " + fileName);
+							currentHost.AddMessage(MessageType.Error, true, "An unexpected error was encountered whilst processing the compatability signal file " + fileName);
 						}
 						objects[index] = new CompatibilitySignalObject(aspectList.ToArray(), objectList.ToArray());
 						index++;
@@ -93,7 +101,7 @@ namespace RouteManager2.SignalManager
 				string signalPostFile = Path.CombineFile(currentPath, "Japanese\\signal_post.csv"); //default plain post
 				try
 				{
-					XmlNode node = currentXML.SelectSingleNode("/openBVE/CompatibilitySignals/SignalPost");
+					node = currentXML.SelectSingleNode("/openBVE/CompatibilitySignals/SignalPost");
 					if (node != null)
 					{
 						string newFile = Path.CombineFile(currentPath, node.InnerText);
@@ -106,10 +114,68 @@ namespace RouteManager2.SignalManager
 				}
 				catch
 				{
-					currentHost.AddMessage(MessageType.Error, true, "An unexpected error was encountered whilst processing the compatability signal list in " + fileName);
+					currentHost.AddMessage(MessageType.Error, true, "An unexpected error was encountered whilst processing the compatability signal file " + fileName);
+				}
+
+				DocumentNodes = currentXML.DocumentElement.SelectNodes("/openBVE/CompatibilitySignals/SpeedLimits");
+				if (DocumentNodes != null)
+				{
+					foreach (XmlNode nn in DocumentNodes)
+					{
+						try
+						{
+							if (nn.HasChildNodes)
+							{
+								foreach (XmlNode n in nn.ChildNodes)
+								{
+									if (n.Name != "Aspect")
+									{
+										continue;
+									}
+
+									int aspect = 0;
+									if (n.Attributes != null)
+									{
+										if (!NumberFormats.TryParseIntVb6(n.Attributes["Number"].Value, out aspect))
+										{
+											currentHost.AddMessage(MessageType.Error, true, "Invalid aspect number " + aspect + " in the speed limit list in the compatability signal file " + fileName);
+											continue;
+										}
+									}
+
+									if (aspect <= speedLimits.Length)
+									{
+										int l = speedLimits.Length;
+										Array.Resize(ref speedLimits, aspect + 1);
+										for (int i = l; i < speedLimits.Length; i++)
+										{
+											speedLimits[i] = double.PositiveInfinity;
+										}
+
+										if (!NumberFormats.TryParseDoubleVb6(n.InnerText, out speedLimits[aspect]))
+										{
+											speedLimits[aspect] = double.MaxValue;
+											if (n.InnerText.ToLowerInvariant() != "unlimited")
+											{
+												currentHost.AddMessage(MessageType.Error, true, "Invalid speed limit provided for aspect " + aspect + " in the compatability signal file " + fileName);
+											}
+										}
+										else
+										{
+											//convert to m/s as that's what we use internally
+											speedLimits[aspect] *= 0.277777777777778;
+										}
+									}
+								}
+							}
+						}
+						catch
+						{
+							currentHost.AddMessage(MessageType.Error, true, "An unexpected error was encountered whilst processing the compatability signal file " + fileName);
+						}
+					}
 				}
 			}
-			return objects;
 		}
 	}
 }

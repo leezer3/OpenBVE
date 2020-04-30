@@ -144,7 +144,7 @@ namespace OpenBve {
 				{
 					compatibilitySignalSet = Path.CombineFile(Program.FileSystem.GetDataFolder("Compatibility"), "Signals\\Japanese.xml");
 				}
-				Data.CompatibilitySignals = CompatibilitySignalObject.ReadCompatibilitySignalXML(Program.CurrentHost, compatibilitySignalSet, out CompatibilityObjects.SignalPost);
+				CompatibilitySignalObject.ReadCompatibilitySignalXML(Program.CurrentHost, compatibilitySignalSet, out Data.CompatibilitySignals, out CompatibilityObjects.SignalPost, out Data.SignalSpeeds);
 
 				Data.Signals.Add(3, Data.CompatibilitySignals[2]);
 				Data.Signals.Add(4, Data.CompatibilitySignals[3]);
@@ -162,11 +162,6 @@ namespace OpenBve {
 				Program.CurrentRoute.Sections[0].TrackPosition = 0;
 				Program.CurrentRoute.Sections[0].Trains = new AbstractTrain[] {};
 
-				/*
-				 * These are the speed limits for the default Japanese signal aspects, and in most cases will be overwritten
-				 */
-				Data.SignalSpeeds = new double[]
-				{0.0, 6.94444444444444, 15.2777777777778, 20.8333333333333, double.PositiveInfinity, double.PositiveInfinity};
 			}
 			ParseRouteForData(FileName, IsRW, Encoding, ref Data, PreviewOnly);
 			if (Loading.Cancel) return;

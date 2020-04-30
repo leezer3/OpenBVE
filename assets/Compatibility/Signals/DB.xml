@@ -2,7 +2,6 @@
 <openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">Japanese\
 	<CompatibilitySignals>
 		<SignalSetName>German (Old)</SignalSetName>
-		<!-- NOTE: Must contain exactly 9 signals in order -->
 		<Signal>
 			<Aspect Number="0">DB\signal_0.csv</Aspect>
 			<Aspect Number="2">DB\signal_1.csv</Aspect>
@@ -57,5 +56,15 @@
 			<Aspect Number="4">Japanese\repeatingsignal_4.csv</Aspect>
 		</Signal>
 		<SignalPost>DB\signal_post.b3d</SignalPost>
+		<SpeedLimits>
+			<!-- Limits set by SignalChanger, may not be prototypical
+				but assume OK for the original content as designed-->
+			<Aspect Number="0">0</Aspect>
+			<Aspect Number="1">Unlimited</Aspect>
+			<Aspect Number="2">Unlimited</Aspect>
+			<Aspect Number="3">Unlimited</Aspect>
+			<Aspect Number="4">Unlimited</Aspect>
+			<Aspect Number="5">Unlimited</Aspect>
+		</SpeedLimits>
 	</CompatibilitySignals>
 </openBVE>

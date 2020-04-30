@@ -2,7 +2,6 @@
 <openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">Japanese\
 	<CompatibilitySignals>
 		<SignalSetName>British Rail</SignalSetName>
-		<!-- NOTE: Must contain exactly 9 signals in order -->
 		<Signal>
 			<!-- 2 aspect orange, red -->
 			<Aspect Number="0">Japanese\signal_2_0.csv</Aspect>
@@ -65,5 +64,14 @@
 			<Aspect Number="4">BritishRail\repeatingsignal_4.csv</Aspect>
 		</Signal>
 		<SignalPost>Japanese\signal_post.csv</SignalPost>
+		<SpeedLimits>
+			<!-- BR signals are not speed restrictive -->
+			<Aspect Number="0">0</Aspect>
+			<Aspect Number="1">Unlimited</Aspect>
+			<Aspect Number="2">Unlimited</Aspect>
+			<Aspect Number="3">Unlimited</Aspect>
+			<Aspect Number="4">Unlimited</Aspect>
+			<Aspect Number="5">Unlimited</Aspect>
+		</SpeedLimits>
 	</CompatibilitySignals>
 </openBVE>

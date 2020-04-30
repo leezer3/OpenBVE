@@ -2,7 +2,8 @@
 <openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">Japanese\
 	<CompatibilitySignals>
 		<SignalSetName>Japanese</SignalSetName>
-		<!-- NOTE: Must contain exactly 9 signals in order -->
+		<!-- NOTE: Must contain exactly 9 signals in order 
+			SignalSetName must be unique-->
 		<Signal>
 			<!-- 2 aspect orange, red -->
 			<Aspect Number="0">Japanese\signal_2_0.csv</Aspect>
@@ -64,5 +65,15 @@
 			<Aspect Number="3">Japanese\repeatingsignal_3.csv</Aspect>
 			<Aspect Number="4">Japanese\repeatingsignal_4.csv</Aspect>
 		</Signal>
+		<SpeedLimits>
+			<!-- Default speed limits for each aspect number in km/h
+				NOTE: Will likely be overriden by Route.Signal-->
+			<Aspect Number="0">0</Aspect>
+			<Aspect Number="1">25</Aspect>
+			<Aspect Number="2">55</Aspect>
+			<Aspect Number="3">75</Aspect>
+			<Aspect Number="4">Unlimited</Aspect>
+			<Aspect Number="5">Unlimited</Aspect>
+		</SpeedLimits>
 	</CompatibilitySignals>
 </openBVE>
