@@ -377,7 +377,7 @@ namespace OpenBve
 			internal Block[] Blocks;
 			internal Marker[] Markers;
 			internal int FirstUsedBlock;
-			internal StaticObject SignalPost;
+			internal UnifiedObject SignalPost;
 		}
 
 		// parse route
@@ -468,7 +468,7 @@ namespace OpenBve
 				Data.TimetableNighttime = new OpenBveApi.Textures.Texture[] {null, null, null, null};
 				// signals
 				string compatibilitySignalSet = Path.CombineFile(Program.FileSystem.GetDataFolder("Compatibility"), "Signals\\Japanese.xml");
-				Data.CompatibilitySignals = CompatibilitySignalObject.ReadCompatibilitySignalXML(Program.CurrentHost, compatibilitySignalSet, out Data.SignalPost);
+				CompatibilitySignalObject.ReadCompatibilitySignalXML(Program.CurrentHost, compatibilitySignalSet, out Data.CompatibilitySignals, out Data.SignalPost, out Data.SignalSpeeds);
 
 				Data.Signals.Add(3, Data.CompatibilitySignals[2]);
 				Data.Signals.Add(4, Data.CompatibilitySignals[3]);
@@ -484,9 +484,8 @@ namespace OpenBve
 				Program.CurrentRoute.Sections[0].StationIndex = -1;
 				Program.CurrentRoute.Sections[0].TrackPosition = 0;
 				Program.CurrentRoute.Sections[0].Trains = new TrainManager.Train[] { };
-				// continue
-				Data.SignalSpeeds = new double[] { 0.0, 6.94444444444444, 15.2777777777778, 20.8333333333333, double.PositiveInfinity, double.PositiveInfinity };
-			}
+				
+            }
 			ParseRouteForData(FileName, IsRW, Encoding, TrainPath, ObjectPath, SoundPath, ref Data, PreviewOnly);
 			if (Loading.Cancel) return;
 			ApplyRouteData(FileName, Encoding, ref Data, PreviewOnly);
