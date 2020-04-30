@@ -21,7 +21,7 @@
 			<Aspect Number="4">Japanese\signal_3_4.csv</Aspect>
 		</Signal>
 		<Signal>
-			<!-- 4 aspect green, double orange, orange, red -->
+			<!-- 4 aspect green, orange, double orange, red -->
 			<Aspect Number="0">Japanese\signal_4_0.csv</Aspect>
 			<Aspect Number="1">Japanese\signal_4a_1.csv</Aspect>
 			<Aspect Number="2">Japanese\signal_4a_2.csv</Aspect>
