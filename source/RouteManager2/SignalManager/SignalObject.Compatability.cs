@@ -74,17 +74,20 @@ namespace RouteManager2.SignalManager
 									}
 
 									aspectList.Add(aspect);
-									string objectFile = Path.CombineFile(currentPath, n.InnerText);
+									
 									StaticObject staticObject = new StaticObject(currentHost);
-									if (File.Exists(objectFile))
+									if (n.InnerText.ToLowerInvariant() != "null")
 									{
-										currentHost.LoadStaticObject(objectFile, Encoding.UTF8, false, out staticObject);
+										string objectFile = Path.CombineFile(currentPath, n.InnerText);
+										if (File.Exists(objectFile))
+										{
+											currentHost.LoadStaticObject(objectFile, Encoding.UTF8, false, out staticObject);
+										}
+										else
+										{
+											currentHost.AddMessage(MessageType.Error, true, "Compatibility signal file " + objectFile + " not found in " + fileName);
+										}
 									}
-									else
-									{
-										currentHost.AddMessage(MessageType.Error, true, "Compatibility signal file " + objectFile + " not found in " + fileName);
-									}
-
 									objectList.Add(staticObject);
 								}
 							}
