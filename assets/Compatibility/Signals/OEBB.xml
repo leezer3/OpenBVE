@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">Japanese\
+	<CompatibilitySignals>
+		<SignalSetName>OEBB</SignalSetName>
+		<Signal>
+			<Aspect Number="0">OEBB\signal_0.csv</Aspect>
+			<Aspect Number="2">OEBB\signal_1.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">OEBB\signal_0.csv</Aspect>
+			<Aspect Number="4">OEBB\signal_2.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">OEBB\signal_0.csv</Aspect>
+			<Aspect Number="2">OEBB\signal_1.csv</Aspect>
+			<Aspect Number="4">OEBB\signal_2.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">OEBB\signal_0.csv</Aspect>
+			<Aspect Number="1">OEBB\signal_1.csv</Aspect>
+			<Aspect Number="2">OEBB\signal_3.csv</Aspect>
+			<Aspect Number="4">OEBB\signal_2.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">OEBB\signal_0.csv</Aspect>
+			<Aspect Number="2">OEBB\signal_1.csv</Aspect>
+			<Aspect Number="3">OEBB\signal_1.csv</Aspect>
+			<Aspect Number="4">OEBB\signal_2.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">OEBB\signal_0.csv</Aspect>
+			<Aspect Number="1">OEBB\signal_1.csv</Aspect>
+			<Aspect Number="1">OEBB\signal_1.csv</Aspect>
+			<Aspect Number="2">OEBB\signal_1.csv</Aspect>
+			<Aspect Number="3">OEBB\signal_2.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">OEBB\signal_0.csv</Aspect>
+			<Aspect Number="2">OEBB\signal_1.csv</Aspect>
+			<Aspect Number="3">OEBB\signal_1.csv</Aspect>
+			<Aspect Number="4">OEBB\signal_1.csv</Aspect>
+			<Aspect Number="5">OEBB\signal_2.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">OEBB\signal_0.csv</Aspect>
+			<Aspect Number="1">OEBB\signal_1.csv</Aspect>
+			<Aspect Number="2">OEBB\signal_1.csv</Aspect>
+			<Aspect Number="3">OEBB\signal_3.csv</Aspect>
+			<Aspect Number="4">OEBB\signal_3.csv</Aspect>
+			<Aspect Number="5">OEBB\signal_2.csv</Aspect>
+		</Signal>
+		<Signal>
+			<!-- Banner repeater -->
+			<Aspect Number="0">OEBB\repeatingsignal_0.csv</Aspect>
+			<Aspect Number="3">OEBB\repeatingsignal_1.csv</Aspect>
+			<Aspect Number="4">OEBB\repeatingsignal_2.csv</Aspect>
+		</Signal>
+		<SignalPost>OEBB\signal_post.b3d</SignalPost>
+		<SpeedLimits>
+			<!-- Limits set by SignalChanger, may not be prototypical
+				but assume OK for the original content as designed-->
+			<Aspect Number="0">0</Aspect>
+			<Aspect Number="1">Unlimited</Aspect>
+			<Aspect Number="2">Unlimited</Aspect>
+			<Aspect Number="3">Unlimited</Aspect>
+			<Aspect Number="4">Unlimited</Aspect>
+			<Aspect Number="5">Unlimited</Aspect>
+		</SpeedLimits>
+	</CompatibilitySignals>
+</openBVE>

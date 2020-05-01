@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">Japanese\
+	<CompatibilitySignals>
+		<SignalSetName>KS</SignalSetName>
+		<Signal>
+			<Aspect Number="0">KS\signal_0.csv</Aspect>
+			<Aspect Number="2">KS\signal_1.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">KS\signal_0.csv</Aspect>
+			<Aspect Number="4">KS\signal_2.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">KS\signal_0.csv</Aspect>
+			<Aspect Number="2">KS\signal_1.csv</Aspect>
+			<Aspect Number="4">KS\signal_2.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">KS\signal_0.csv</Aspect>
+			<Aspect Number="1">KS\signal_3.csv</Aspect>
+			<Aspect Number="2">KS\signal_4.csv</Aspect>
+			<Aspect Number="4">KS\signal_2.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">KS\signal_0.csv</Aspect>
+			<Aspect Number="2">KS\signal_1.csv</Aspect>
+			<Aspect Number="3">KS\signal_5.csv</Aspect>
+			<Aspect Number="4">KS\signal_2.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">KS\signal_0.csv</Aspect>
+			<Aspect Number="1">KS\signal_1.csv</Aspect>
+			<Aspect Number="1">KS\signal_1.csv</Aspect>
+			<Aspect Number="2">KS\signal_5.csv</Aspect>
+			<Aspect Number="3">KS\signal_2.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">KS\signal_0.csv</Aspect>
+			<Aspect Number="2">KS\signal_1.csv</Aspect>
+			<Aspect Number="3">KS\signal_1.csv</Aspect>
+			<Aspect Number="4">KS\signal_5.csv</Aspect>
+			<Aspect Number="5">KS\signal_2.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">KS\signal_0.csv</Aspect>
+			<Aspect Number="1">KS\signal_1.csv</Aspect>
+			<Aspect Number="2">KS\signal_1.csv</Aspect>
+			<Aspect Number="3">KS\signal_2.csv</Aspect>
+			<Aspect Number="4">KS\signal_2.csv</Aspect>
+			<Aspect Number="5">KS\signal_5.csv</Aspect>
+		</Signal>
+		<Signal>
+			<!-- Banner repeater -->
+			<Aspect Number="0">KS\repeatingsignal_0.csv</Aspect>
+			<Aspect Number="3">KS\repeatingsignal_1.csv</Aspect>
+			<Aspect Number="4">KS\repeatingsignal_2.csv</Aspect>
+		</Signal>
+		<SignalPost>KS\signal_post.b3d</SignalPost>
+		<SpeedLimits>
+			<!-- Limits set by SignalChanger, may not be prototypical
+				but assume OK for the original content as designed-->
+			<Aspect Number="0">0</Aspect>
+			<Aspect Number="1">Unlimited</Aspect>
+			<Aspect Number="2">Unlimited</Aspect>
+			<Aspect Number="3">Unlimited</Aspect>
+			<Aspect Number="4">Unlimited</Aspect>
+			<Aspect Number="5">Unlimited</Aspect>
+		</SpeedLimits>
+	</CompatibilitySignals>
+</openBVE>
