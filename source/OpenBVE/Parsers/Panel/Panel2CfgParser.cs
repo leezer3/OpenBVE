@@ -400,7 +400,14 @@ namespace OpenBve {
 										int h = tday.Height;
 										int j = CreateElement(ref Train.Cars[Car].CarSections[0].Groups[GroupIndex], LocationX, LocationY, w, h, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, tday, tnight, Color32.White, false);
 										string f = GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
-										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Program.CurrentHost, f + " 1 == --", false);
+										try
+										{
+											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Program.CurrentHost, f + " 1 == --", false);
+										}
+										catch
+										{
+											Program.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+										}
 									}
 								} break;
 								// needle
@@ -610,7 +617,14 @@ namespace OpenBve {
 										if (NaturalFrequency >= 0.0 & DampingRatio >= 0.0) {
 											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateZDamping = new Damping(NaturalFrequency, DampingRatio);
 										}
-										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction = new FunctionScript(Program.CurrentHost, f, false);
+										try
+										{
+											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction = new FunctionScript(Program.CurrentHost, f, false);
+										}
+										catch
+										{
+											Program.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+										}
 										if (Backstop)
 										{
 											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].RotateZFunction.Minimum = InitialAngle;
@@ -756,7 +770,14 @@ namespace OpenBve {
 										if (tf != String.Empty)
 										{
 											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXDirection = Direction;
-											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Program.CurrentHost, tf, false);
+											try
+											{
+												Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].TextureShiftXFunction = new FunctionScript(Program.CurrentHost, tf, false);
+											}
+											catch
+											{
+												Program.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											}
 										}
 									}
 								} break;
@@ -924,7 +945,14 @@ namespace OpenBve {
 												if (k == 0) j = l;
 											}
 											string f = GetStackLanguageFromSubject(Train, Subject, Section + " in " + FileName);
-											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Program.CurrentHost, f, false);
+											try
+											{
+												Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Program.CurrentHost, f, false);
+											}
+											catch
+											{
+												Program.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+											}
 
 											if (Interface.CurrentOptions.Panel2ExtendedMode)
 											{
@@ -1109,7 +1137,14 @@ namespace OpenBve {
 											f += " " + s + " * floor " + t + " *";
 										}
 										f += " " + a1.ToString(Culture) + " " + a0.ToString(Culture) + " fma";
-										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].LEDFunction = new FunctionScript(Program.CurrentHost, f, false);
+										try
+										{
+											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].LEDFunction = new FunctionScript(Program.CurrentHost, f, false);
+										}
+										catch
+										{
+											Program.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+										}
 									} else {
 										Interface.AddMessage(MessageType.Error, false, "Radius is required to be specified in " + Section + " in " + FileName);
 									}
@@ -1177,7 +1212,15 @@ namespace OpenBve {
 									}
 									if (Width > 0.0 & Height > 0.0) {
 										int j = CreateElement(ref Train.Cars[Car].CarSections[0].Groups[GroupIndex], LocationX, LocationY, Width, Height, new Vector2(0.5, 0.5), (double)Layer * StackDistance, PanelResolution, PanelTop, PanelBottom, PanelCenter, Train.Cars[Car].Driver, null, null, Color32.White, false);
-										Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Program.CurrentHost, "timetable", false);
+										try
+										{
+											Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j].StateFunction = new FunctionScript(Program.CurrentHost, "timetable", false);
+										}
+										catch
+										{
+											Program.CurrentHost.AddMessage(MessageType.Error, false, "Invalid animated function provided in " + Section + " at line " + (i + 1).ToString(Culture) + " in " + FileName);
+										}
+										
 										Timetable.AddObjectForCustomTimetable(Train.Cars[Car].CarSections[0].Groups[GroupIndex].Elements[j]);
 									}
 								} break;
@@ -1277,7 +1320,7 @@ namespace OpenBve {
 					Code = "straightairpipe 0.001 *";
 					break;
 				case "locobrakepipe":
-					Code = Train.DriverCar + "brakepipeindex 0.001 *";
+					Code = Train.DriverCar + " brakepipeindex 0.001 *";
 					break;
 				case "bp":
 					Code = "brakepipe 0.001 *";
