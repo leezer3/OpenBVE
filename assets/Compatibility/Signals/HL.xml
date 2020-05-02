@@ -53,7 +53,8 @@
 			<Aspect Number="0">null</Aspect>
 			<Aspect Number="3">null</Aspect>
 			<Aspect Number="4">null</Aspect>
-		</Signal>DB\signal_post.b3d</SignalPost>
+		</Signal>
+		<SignalPost>DB\signal_post.b3d</SignalPost>
 		<SpeedLimits>
 			<Aspect Number="0">0</Aspect>
 			<Aspect Number="1">Unlimited</Aspect>
