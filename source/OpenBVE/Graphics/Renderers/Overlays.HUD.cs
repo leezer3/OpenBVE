@@ -671,6 +671,7 @@ namespace OpenBve.Graphics.Renderers
 							{
 								int n = Program.CurrentRoute.Stations[i].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
 								p1 = Program.CurrentRoute.Stations[i].Stops.Length > 0 ? Program.CurrentRoute.Stations[i].Stops[n].TrackPosition : Program.CurrentRoute.Stations[i].DefaultTrackPosition;
+								break;
 							}
 						}
 						
