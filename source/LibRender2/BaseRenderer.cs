@@ -1040,7 +1040,7 @@ namespace LibRender2
 					//Additive blending- Full brightness
 					factor = 1.0f;
 					GL.Enable(EnableCap.Blend);
-					GL.BlendFunc(BlendingFactor.One, BlendingFactor.One);
+					GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
 					Shader.SetIsFog(false);
 				}
 				else if ((material.Flags & MeshMaterial.EmissiveColorMask) != 0)
