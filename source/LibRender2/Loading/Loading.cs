@@ -4,6 +4,7 @@ using LibRender2.Texts;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 
@@ -99,7 +100,7 @@ namespace LibRender2.Loadings
 			renderer.SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); //FIXME: Remove when text switches between two renderer types
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-			renderer.Rectangle.Draw(null, new PointF(0.0f, 0.0f), new SizeF(renderer.Screen.Width, renderer.Screen.Height), bkg);
+			renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(renderer.Screen.Width, renderer.Screen.Height), bkg);
 
 			// BACKGROUND IMAGE
 			int fontHeight = (int)Font.FontSize;
@@ -126,7 +127,7 @@ namespace LibRender2.Loadings
 				}
 
 				// draw the background image down from the top screen edge
-				renderer.Rectangle.Draw(TextureLoadingBkg, new Point((renderer.Screen.Width - bkgWidth) / 2, 0), new Size(bkgWidth, bkgHeight), Color128.White);
+				renderer.Rectangle.Draw(TextureLoadingBkg, new Vector2((renderer.Screen.Width - bkgWidth) / 2.0, 0), new Vector2(bkgWidth, bkgHeight), Color128.White);
 			}
 
 			// if the route has no custom loading image, add the openBVE logo
@@ -140,11 +141,11 @@ namespace LibRender2.Loadings
 					renderer.UnsetBlendFunc();
 					renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 					GL.DepthMask(true);
-					renderer.Rectangle.Draw(TextureLogo, new Point((renderer.Screen.Width - TextureLogo.Width) / 2, logoTop), new Size(TextureLogo.Width, TextureLogo.Height), Color128.White);
+					renderer.Rectangle.Draw(TextureLogo, new Vector2((renderer.Screen.Width - TextureLogo.Width) / 2.0, logoTop), new Vector2(TextureLogo.Width, TextureLogo.Height), Color128.White);
 					renderer.SetBlendFunc();
 					renderer.SetAlphaFunc(AlphaFunction.Less, 1.0f);
 					GL.DepthMask(false);
-					renderer.Rectangle.Draw(TextureLogo, new Point((renderer.Screen.Width - TextureLogo.Width) / 2, logoTop), new Size(TextureLogo.Width, TextureLogo.Height), Color128.White);
+					renderer.Rectangle.Draw(TextureLogo, new Vector2((renderer.Screen.Width - TextureLogo.Width) / 2.0, logoTop), new Vector2(TextureLogo.Width, TextureLogo.Height), Color128.White);
 					renderer.SetAlphaFunc(AlphaFunction.Equal, 1.0f);
 				}
 			}
@@ -185,10 +186,10 @@ namespace LibRender2.Loadings
 			string percStr = percent.ToString("0") + "%";
 
 			// progress frame
-			renderer.Rectangle.Draw(null, new Point(progrMargin - progrBorder, progressTop - progrBorder), new Size(progressWidth + progrBorder * 2, fontHeight + 6), Color128.White);
+			renderer.Rectangle.Draw(null, new Vector2(progrMargin - progrBorder, progressTop - progrBorder), new Vector2(progressWidth + progrBorder * 2, fontHeight + 6), Color128.White);
 
 			// progress bar
-			renderer.Rectangle.Draw(null, new Point(progrMargin, progressTop), new Size(progressWidth * (int)percent / 100, fontHeight + 4), ColourProgressBar);
+			renderer.Rectangle.Draw(null, new Vector2(progrMargin, progressTop), new Vector2(progressWidth * (int)percent / 100.0, fontHeight + 4), ColourProgressBar);
 
 			// progress percent
 			renderer.OpenGlString.Draw(Font, percStr, new Point(halfWidth, progressTop), TextAlignment.TopMiddle, Color128.Black);

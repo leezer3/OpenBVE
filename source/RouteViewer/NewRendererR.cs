@@ -19,6 +19,7 @@ using OpenBveApi.World;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using RouteManager2.Events;
+using Vector2 = OpenBveApi.Math.Vector2;
 using Vector3 = OpenBveApi.Math.Vector3;
 
 namespace OpenBve
@@ -642,7 +643,7 @@ namespace OpenBve
 						int w = t.Width;
 						int h = t.Height;
 						GL.Color4(1.0, 1.0, 1.0, 1.0);
-						Rectangle.Draw(t, new Point(Screen.Width - w - 8, y), new Size(w, h));
+						Rectangle.Draw(t, new Vector2(Screen.Width - w - 8, y), new Vector2(w, h));
 						y += h + 8;
 					}
 				}
