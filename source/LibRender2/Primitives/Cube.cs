@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Textures;
@@ -177,14 +178,22 @@ namespace LibRender2.Primitives
 				}
 			};
 
-			if (!renderer.ForceLegacyOpenGL)
+			if (!BaseRenderer.ForceLegacyOpenGL)
 			{
-				defaultVAO = new VertexArrayObject();
-				defaultVAO.Bind();
-				defaultVAO.SetVBO(new VertexBufferObject(vertexData, BufferUsageHint.StaticDraw));
-				defaultVAO.SetIBO(new IndexBufferObject(Enumerable.Range(0, vertexData.Length).Select(x => (ushort) x).ToArray(), BufferUsageHint.StaticDraw));
-				defaultVAO.SetAttributes(renderer.DefaultShader.VertexLayout);
-				defaultVAO.UnBind();
+				try
+				{
+					defaultVAO = new VertexArrayObject();
+					defaultVAO.Bind();
+					defaultVAO.SetVBO(new VertexBufferObject(vertexData, BufferUsageHint.StaticDraw));
+					defaultVAO.SetIBO(new IndexBufferObject(Enumerable.Range(0, vertexData.Length).Select(x => (ushort) x).ToArray(), BufferUsageHint.StaticDraw));
+					defaultVAO.SetAttributes(renderer.DefaultShader.VertexLayout);
+					defaultVAO.UnBind();
+				}
+				catch
+				{
+					BaseRenderer.ForceLegacyOpenGL = true;
+				}
+				
 			}
 		}
 

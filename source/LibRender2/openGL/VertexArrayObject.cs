@@ -149,8 +149,10 @@ namespace LibRender2
 
 	public static class VAOExtensions
 	{
-		/// <summary>Create an OpenGL/OpenTK VAO for a mesh</summary>
-		/// <param name="isDynamic"></param>
+		/// <summary>Creates an OpenGL/OpenTK VAO for a mesh</summary>
+		/// <param name="mesh">The mesh to create the VAO for</param>
+		/// <param name="isDynamic">Whether the mesh is dynamic (e.g. part of train, animated object etc.)</param>
+		/// <param name="vertexLayout">The vertex layout for the shader</param>
 		public static void CreateVAO(ref Mesh mesh, bool isDynamic, VertexLayout vertexLayout)
 		{
 			var hint = isDynamic ? BufferUsageHint.DynamicDraw : BufferUsageHint.StaticDraw;
@@ -204,28 +206,36 @@ namespace LibRender2
 				normalsIndexData.AddRange(Enumerable.Range(mesh.Faces[i].NormalsIboStartIndex, mesh.Faces[i].Vertices.Length * 2).Select(x => (ushort) x));
 			}
 
-			VertexArrayObject VAO = (VertexArrayObject) mesh.VAO;
-			VAO?.UnBind();
-			VAO?.Dispose();
+			try
+			{
+				VertexArrayObject VAO = (VertexArrayObject) mesh.VAO;
+				VAO?.UnBind();
+				VAO?.Dispose();
 
-			VAO = new VertexArrayObject();
-			VAO.Bind();
-			VAO.SetVBO(new VertexBufferObject(vertexData.ToArray(), hint));
-			VAO.SetIBO(new IndexBufferObject(indexData.ToArray(), hint));
-			VAO.SetAttributes(vertexLayout);
-			VAO.UnBind();
-			mesh.VAO = VAO;
-			VertexArrayObject NormalsVAO = (VertexArrayObject) mesh.NormalsVAO;
-			NormalsVAO?.UnBind();
-			NormalsVAO?.Dispose();
+				VAO = new VertexArrayObject();
+				VAO.Bind();
+				VAO.SetVBO(new VertexBufferObject(vertexData.ToArray(), hint));
+				VAO.SetIBO(new IndexBufferObject(indexData.ToArray(), hint));
+				VAO.SetAttributes(vertexLayout);
+				VAO.UnBind();
+				mesh.VAO = VAO;
+				VertexArrayObject NormalsVAO = (VertexArrayObject) mesh.NormalsVAO;
+				NormalsVAO?.UnBind();
+				NormalsVAO?.Dispose();
 
-			NormalsVAO = new VertexArrayObject();
-			NormalsVAO.Bind();
-			NormalsVAO.SetVBO(new VertexBufferObject(normalsVertexData.ToArray(), hint));
-			NormalsVAO.SetIBO(new IndexBufferObject(normalsIndexData.ToArray(), hint));
-			NormalsVAO.SetAttributes(vertexLayout);
-			NormalsVAO.UnBind();
-			mesh.NormalsVAO = NormalsVAO;
+				NormalsVAO = new VertexArrayObject();
+				NormalsVAO.Bind();
+				NormalsVAO.SetVBO(new VertexBufferObject(normalsVertexData.ToArray(), hint));
+				NormalsVAO.SetIBO(new IndexBufferObject(normalsIndexData.ToArray(), hint));
+				NormalsVAO.SetAttributes(vertexLayout);
+				NormalsVAO.UnBind();
+				mesh.NormalsVAO = NormalsVAO;
+			}
+			catch
+			{
+				BaseRenderer.ForceLegacyOpenGL = true;
+			}
+			
 		}
 
 		public static void CreateVAO(this StaticBackground background, VertexLayout vertexLayout)
@@ -333,17 +343,25 @@ namespace LibRender2
 				textureX += textureIncrement;
 			}
 
-			VertexArrayObject VAO = (VertexArrayObject) background.VAO;
-			VAO?.UnBind();
-			VAO?.Dispose();
+			try
+			{
+				VertexArrayObject VAO = (VertexArrayObject) background.VAO;
+				VAO?.UnBind();
+				VAO?.Dispose();
 
-			VAO = new VertexArrayObject();
-			VAO.Bind();
-			VAO.SetVBO(new VertexBufferObject(vertexData.ToArray(), BufferUsageHint.StaticDraw));
-			VAO.SetIBO(new IndexBufferObject(indexData.ToArray(), BufferUsageHint.StaticDraw));
-			VAO.SetAttributes(vertexLayout);
-			VAO.UnBind();
-			background.VAO = VAO;
+				VAO = new VertexArrayObject();
+				VAO.Bind();
+				VAO.SetVBO(new VertexBufferObject(vertexData.ToArray(), BufferUsageHint.StaticDraw));
+				VAO.SetIBO(new IndexBufferObject(indexData.ToArray(), BufferUsageHint.StaticDraw));
+				VAO.SetAttributes(vertexLayout);
+				VAO.UnBind();
+				background.VAO = VAO;
+			}
+			catch
+			{
+				BaseRenderer.ForceLegacyOpenGL = true;
+			}
+			
 		}
 	}
 }

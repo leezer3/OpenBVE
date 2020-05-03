@@ -173,10 +173,12 @@ namespace LibRender2
 
 		internal int lastVAO;
 
-		public bool ForceLegacyOpenGL
+		/// <summary>Whether to force fallback to the GL1.2 renderer</summary>
+		/// <remarks>Set when initialising a shader VBO, FBO etc. fails</remarks>
+		public static bool ForceLegacyOpenGL
 		{
 			get;
-			protected set;
+			set;
 		}
 
 		public bool AvailableNewRenderer => currentOptions != null && currentOptions.IsUseNewRenderer && !ForceLegacyOpenGL;

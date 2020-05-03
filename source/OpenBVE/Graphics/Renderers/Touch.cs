@@ -32,13 +32,21 @@ namespace OpenBve.Graphics.Renderers
 			this.renderer = renderer;
 			touchableObject = new List<ObjectState>();
 
-			if (!renderer.ForceLegacyOpenGL)
+			if (!BaseRenderer.ForceLegacyOpenGL)
 			{
-				fbo = new FrameBufferObject();
-				fbo.Bind();
-				fbo.SetTextureBuffer(FrameBufferObject.TargetBuffer.Color, PixelInternalFormat.R32f, PixelFormat.Red, PixelType.Float, renderer.Screen.Width, renderer.Screen.Height);
-				fbo.DrawBuffers(new[] { DrawBuffersEnum.ColorAttachment0 });
-				fbo.UnBind();
+				try
+				{
+					fbo = new FrameBufferObject();
+					fbo.Bind();
+					fbo.SetTextureBuffer(FrameBufferObject.TargetBuffer.Color, PixelInternalFormat.R32f, PixelFormat.Red, PixelType.Float, renderer.Screen.Width, renderer.Screen.Height);
+					fbo.DrawBuffers(new[] { DrawBuffersEnum.ColorAttachment0 });
+					fbo.UnBind();
+				}
+				catch
+				{
+					BaseRenderer.ForceLegacyOpenGL = true;
+				}
+				
 			}
 		}
 
