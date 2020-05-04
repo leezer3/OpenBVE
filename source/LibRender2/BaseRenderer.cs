@@ -176,7 +176,7 @@ namespace LibRender2
 		public bool ForceLegacyOpenGL
 		{
 			get;
-			protected set;
+			set;
 		}
 
 		public bool AvailableNewRenderer => currentOptions != null && currentOptions.IsUseNewRenderer && !ForceLegacyOpenGL;
@@ -1040,7 +1040,7 @@ namespace LibRender2
 					//Additive blending- Full brightness
 					factor = 1.0f;
 					GL.Enable(EnableCap.Blend);
-					GL.BlendFunc(BlendingFactor.One, BlendingFactor.One);
+					GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
 					Shader.SetIsFog(false);
 				}
 				else if ((material.Flags & MeshMaterial.EmissiveColorMask) != 0)
@@ -1424,7 +1424,7 @@ namespace LibRender2
 					GL.Begin(PrimitiveType.Lines);
 					GL.Color4(new Color4(material.Color.R, material.Color.G, material.Color.B, 255));
 					GL.Vertex3(vertices[Face.Vertices[i].Index].Coordinates.X, vertices[Face.Vertices[i].Index].Coordinates.Y, -vertices[Face.Vertices[i].Index].Coordinates.Z);
-					GL.Vertex3(vertices[Face.Vertices[i].Index].Coordinates.X + Face.Vertices[i].Normal.X, vertices[Face.Vertices[i].Index].Coordinates.Y + +Face.Vertices[i].Normal.Z, -(vertices[Face.Vertices[i].Index].Coordinates.Z + Face.Vertices[i].Normal.Z));
+					GL.Vertex3(vertices[Face.Vertices[i].Index].Coordinates.X + Face.Vertices[i].Normal.X, vertices[Face.Vertices[i].Index].Coordinates.Y + +Face.Vertices[i].Normal.Y, -(vertices[Face.Vertices[i].Index].Coordinates.Z + Face.Vertices[i].Normal.Z));
 					GL.End();
 				}
 			}

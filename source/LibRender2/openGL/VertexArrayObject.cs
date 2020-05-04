@@ -171,7 +171,7 @@ namespace LibRender2
 					var data = new LibRenderVertex
 					{
 						Position = mesh.Vertices[vertex.Index].Coordinates,
-						Normal = new Vector3f(vertex.Normal.X, vertex.Normal.Y, -vertex.Normal.Z),
+						Normal = vertex.Normal,
 						UV = new Vector2f(mesh.Vertices[vertex.Index].TextureCoordinates)
 					};
 
