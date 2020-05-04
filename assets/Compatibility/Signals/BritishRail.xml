@@ -60,8 +60,8 @@
 		<Signal>
 			<!-- Banner repeater -->
 			<Aspect Number="0">BritishRail\repeatingsignal_0.csv</Aspect>
-			<Aspect Number="3">BritishRail\repeatingsignal_3.csv</Aspect>
-			<Aspect Number="4">BritishRail\repeatingsignal_4.csv</Aspect>
+			<Aspect Number="3">BritishRail\repeatingsignal_1.csv</Aspect>
+			<Aspect Number="4">BritishRail\repeatingsignal_1.csv</Aspect>
 		</Signal>
 		<SignalPost>Japanese\signal_post.csv</SignalPost>
 		<SpeedLimits>
