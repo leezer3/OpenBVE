@@ -6,7 +6,7 @@ using OpenBveApi.Textures;
 
 namespace LibRender2.Texts
 {
-	/// <summary>Represents a table of 256 consecutive codepoints rendered into the same texture.</summary>
+	/// <summary>Represents a table of 256 consecutive code points rendered into the same texture.</summary>
 	public class OpenGlFontTable : IDisposable
 	{
 		// --- members ---
@@ -37,45 +37,59 @@ namespace LibRender2.Texts
 
 			for (int i = 0; i < 256; i++)
 			{
-				SizeF physicalSize = graphics.MeasureString(char.ConvertFromUtf32(offset + i), font, int.MaxValue, StringFormat.GenericDefault);
-				SizeF typographicSize = graphics.MeasureString(char.ConvertFromUtf32(offset + i), font, int.MaxValue, StringFormat.GenericTypographic);
+				string character = char.ConvertFromUtf32(offset + i);
+				SizeF physicalSize = graphics.MeasureString(character, font, int.MaxValue, StringFormat.GenericDefault);
+				SizeF typographicSize = graphics.MeasureString(character, font, int.MaxValue, StringFormat.GenericTypographic);
 				physicalSizes[i] = new Size((int)Math.Ceiling(physicalSize.Width), (int)Math.Ceiling(physicalSize.Height));
 				typographicSizes[i] = new Size((int)Math.Ceiling(typographicSize.Width == 0.0f ? physicalSize.Width : typographicSize.Width), (int)Math.Ceiling(typographicSize.Height == 0.0f ? physicalSize.Height : typographicSize.Height));
 			}
 
+			graphics.Dispose();
+			bitmap.Dispose();
+
 			/*
 			 * Find suitable bitmap dimensions.
 			 * */
-			const int width = 256;
 			const int border = 1;
-			int x = border;
-			int y = border;
+			int width = border;
+			int height = border;
+			int lineWidth = 0;
 			int lineHeight = 0;
+			PointF[] coordinates = new PointF[256];
 
 			for (int i = 0; i < 256; i++)
 			{
-				if (x + physicalSizes[i].Width + border > width)
+				if (i % 16 == 0)
 				{
-					x = border;
-					y += lineHeight;
+					// new line
+					if (lineWidth > width)
+					{
+						width = lineWidth;
+					}
+					lineWidth = border;
+
+					height += lineHeight;
 					lineHeight = 0;
 				}
-				else
-				{
-					x += physicalSizes[i].Width + 2 * border;
-				}
+
+				coordinates[i] = new PointF(lineWidth, height);
+
+				lineWidth += physicalSizes[i].Width + border;
 
 				if (physicalSizes[i].Height + border > lineHeight)
 				{
-					lineHeight = physicalSizes[i].Height + 2 * border;
+					lineHeight = physicalSizes[i].Height + border;
 				}
 			}
 
-			y += lineHeight;
-			int height = (int)RoundToPowerOfTwo((uint)y);
-			graphics.Dispose();
-			bitmap.Dispose();
-			
+			if (lineWidth > width)
+			{
+				width = lineWidth;
+			}
+			height += lineHeight;
+			width = (int)RoundToPowerOfTwo((uint)width);
+			height = (int)RoundToPowerOfTwo((uint)height);
+
 			/*
 			 * Draw character to bitmap.
 			 * */
@@ -83,32 +97,16 @@ namespace LibRender2.Texts
 			graphics = Graphics.FromImage(bitmap);
 			graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 			graphics.Clear(Color.Black);
-			x = border;
-			y = border;
-			lineHeight = 0;
 			Characters = new OpenGlFontChar[256];
 
 			for (int i = 0; i < 256; i++)
 			{
-				if (x + physicalSizes[i].Width + border > width)
-				{
-					x = border;
-					y += lineHeight;
-					lineHeight = 0;
-				}
-
-				graphics.DrawString(char.ConvertFromUtf32(offset + i), font, Brushes.White, new PointF(x, y));
-				float x0 = (x - border) / (float)width;
-				float x1 = (x + physicalSizes[i].Width + border) / (float)width;
-				float y0 = (y - border) / (float)height;
-				float y1 = (y + physicalSizes[i].Height + border) / (float)height;
+				graphics.DrawString(char.ConvertFromUtf32(offset + i), font, Brushes.White, coordinates[i]);
+				float x0 = (coordinates[i].X - border) / width;
+				float x1 = (coordinates[i].X + physicalSizes[i].Width + border) / width;
+				float y0 = (coordinates[i].Y - border) / height;
+				float y1 = (coordinates[i].Y + physicalSizes[i].Height + border) / height;
 				Characters[i] = new OpenGlFontChar(new RectangleF(x0, y0, x1 - x0, y1 - y0), new Size(physicalSizes[i].Width + 2 * border, physicalSizes[i].Height + 2 * border), typographicSizes[i]);
-				x += physicalSizes[i].Width + 2 * border;
-
-				if (physicalSizes[i].Height + border > lineHeight)
-				{
-					lineHeight = physicalSizes[i].Height + 2 * border;
-				}
 			}
 
 			graphics.Dispose();
