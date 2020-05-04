@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">Japanese\
 	<CompatibilitySignals>
-		<SignalSetName>DVB</SignalSetName>
+		<SignalSetName>DVB Tram</SignalSetName>
 		<Signal>
 			<Aspect Number="0">DVB\signal_0.csv</Aspect>
 			<Aspect Number="2">DVB\signal_1.csv</Aspect>
@@ -57,8 +57,8 @@
 		<SignalPost>Japanese\signal_post.csv</SignalPost>
 		<SpeedLimits>
 			<Aspect Number="0">0</Aspect>
-			<Aspect Number="1">Unlimited</Aspect>
-			<Aspect Number="2">Unlimited</Aspect>
+			<Aspect Number="1">30</Aspect>
+			<Aspect Number="2">30</Aspect>
 			<Aspect Number="3">Unlimited</Aspect>
 			<Aspect Number="4">Unlimited</Aspect>
 			<Aspect Number="5">Unlimited</Aspect>
