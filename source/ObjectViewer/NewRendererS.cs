@@ -148,7 +148,7 @@ namespace OpenBve
 			VertexArrayObject vao = new VertexArrayObject();
 			vao.Bind();
 			vao.SetVBO(new VertexBufferObject(vertexData, BufferUsageHint.StaticDraw));
-			vao.SetIBO(new IndexBufferObject(indexData, BufferUsageHint.StaticDraw));
+			vao.SetIBO(new IndexBufferObjectU(indexData, BufferUsageHint.StaticDraw));
 			vao.SetAttributes(DefaultShader.VertexLayout);
 			vao.UnBind();
 

@@ -182,7 +182,7 @@ namespace LibRender2.Primitives
 				defaultVAO = new VertexArrayObject();
 				defaultVAO.Bind();
 				defaultVAO.SetVBO(new VertexBufferObject(vertexData, BufferUsageHint.StaticDraw));
-				defaultVAO.SetIBO(new IndexBufferObject(Enumerable.Range(0, vertexData.Length).Select(x => (ushort) x).ToArray(), BufferUsageHint.StaticDraw));
+				defaultVAO.SetIBO(new IndexBufferObjectU(Enumerable.Range(0, vertexData.Length).Select(x => (ushort) x).ToArray(), BufferUsageHint.StaticDraw));
 				defaultVAO.SetAttributes(renderer.DefaultShader.VertexLayout);
 				defaultVAO.UnBind();
 			}
