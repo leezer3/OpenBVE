@@ -50,7 +50,7 @@ void main()
 	// Diffuse
 	viewNormal = normalize(viewNormal);
 	vec3 eye = normalize(-oViewPos.xyz);
-	float diff = max(dot(viewNormal, uLight.position), 0.0);
+	float diff = max(dot(viewNormal, vec3(uLight.position.x, uLight.position.y, -uLight.position.z)), 0.0);
 	vec4 diffuse = vec4(uLight.diffuse.x, uLight.diffuse.y, uLight.diffuse.z, 1.0) * (diff * uMaterial.diffuse);
 
 	// Specular
@@ -58,7 +58,7 @@ void main()
 
 	if(diff > 0.0)
 	{
-		vec3 halfVector = normalize(uLight.position + eye);
+		vec3 halfVector = normalize(vec3(uLight.position.x, uLight.position.y, -uLight.position.z) + eye);
 		float spec = pow(max(dot(halfVector, viewNormal), 0.0), uMaterial.shininess);
 		specular = vec4(uLight.specular.x, uLight.specular.y, uLight.specular.z, 1.0) * (spec * uMaterial.specular);
 	}
