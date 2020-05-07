@@ -220,7 +220,7 @@ namespace LibRender2
 			Background = new Background(this);
 			Fog = new Fog();
 			OpenGlString = new OpenGlString(this);
-			TextureManager = new TextureManager(currentHost);
+			TextureManager = new TextureManager(currentHost, this);
 			Cube = new Cube(this);
 			Rectangle = new Rectangle(this);
 			Loading = new Loading(this);
