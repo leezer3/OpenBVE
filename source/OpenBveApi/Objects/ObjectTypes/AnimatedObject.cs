@@ -485,18 +485,36 @@ namespace OpenBveApi.Objects
 			bool shifty = TextureShiftYFunction != null;
 			internalObject.TextureTranslation = Matrix4D.Identity;
 
-			if ((shiftx | shifty) & UpdateFunctions)
+			if (shiftx | shifty)
 			{
 				if (shiftx)
 				{
-					double x = TextureShiftXFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+					double x;
+					if (UpdateFunctions)
+					{
+						x = TextureShiftXFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+					}
+					else
+					{
+						x = TextureShiftXFunction.LastResult;
+					}
+
 					x -= System.Math.Floor(x);
 					internalObject.TextureTranslation *= Matrix4D.CreateTranslation(x * TextureShiftXDirection.X, x * TextureShiftXDirection.Y, 1.0);
 				}
 
 				if (shifty)
 				{
-					double y = TextureShiftYFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+					double y;
+					if (UpdateFunctions)
+					{
+						y = TextureShiftYFunction.Perform(Train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
+					}
+					else
+					{
+						y = TextureShiftYFunction.LastResult;
+					}
+
 					y -= System.Math.Floor(y);
 					internalObject.TextureTranslation *= Matrix4D.CreateTranslation(y * TextureShiftYDirection.X, y * TextureShiftYDirection.Y, 1.0);
 				}
