@@ -183,7 +183,7 @@ namespace LibRender2
 					}
 					else
 					{
-						data.Color = Color128.White;
+						data.Color = Color128.Transparent;
 					}
 
 					vertexData.Add(data);
