@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -1232,16 +1232,23 @@ namespace Plugin
 			Builder.Vertices[v + 7] = new Vertex(-sx, sy, sz);
 			int f = Builder.Faces.Length;
 			Array.Resize<MeshFace>(ref Builder.Faces, f + 6);
-			Builder.Faces[f + 0].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 1), new MeshFaceVertex(v + 2), new MeshFaceVertex(v + 3) };
-			Builder.Faces[f + 1].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 4), new MeshFaceVertex(v + 5), new MeshFaceVertex(v + 1) };
-			Builder.Faces[f + 2].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 3), new MeshFaceVertex(v + 7), new MeshFaceVertex(v + 4) };
-			Builder.Faces[f + 3].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 5), new MeshFaceVertex(v + 4), new MeshFaceVertex(v + 7) };
-			Builder.Faces[f + 4].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 7), new MeshFaceVertex(v + 3), new MeshFaceVertex(v + 2) };
-			Builder.Faces[f + 5].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 2), new MeshFaceVertex(v + 1), new MeshFaceVertex(v + 5) };
+			Builder.Faces[f + 0].Vertices = new[]  { new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 1), new MeshFaceVertex(v + 2), new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 2), new MeshFaceVertex(v + 3) };
+			Builder.Faces[f + 0].Flags |= MeshFace.FaceTypeTriangles;
+			Builder.Faces[f + 1].Vertices = new[] { new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 4), new MeshFaceVertex(v + 5), new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 5), new MeshFaceVertex(v + 1) };
+			Builder.Faces[f + 1].Flags |= MeshFace.FaceTypeTriangles;
+			Builder.Faces[f + 2].Vertices = new[] { new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 3), new MeshFaceVertex(v + 7), new MeshFaceVertex(v + 0), new MeshFaceVertex(v + 7), new MeshFaceVertex(v + 4) };
+			Builder.Faces[f + 2].Flags |= MeshFace.FaceTypeTriangles;
+			Builder.Faces[f + 3].Vertices = new[] { new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 5), new MeshFaceVertex(v + 4), new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 4), new MeshFaceVertex(v + 7) };
+			Builder.Faces[f + 3].Flags |= MeshFace.FaceTypeTriangles;
+			Builder.Faces[f + 4].Vertices = new[] { new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 7), new MeshFaceVertex(v + 3), new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 3), new MeshFaceVertex(v + 2) };
+			Builder.Faces[f + 4].Flags |= MeshFace.FaceTypeTriangles;
+			Builder.Faces[f + 5].Vertices = new[] { new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 2), new MeshFaceVertex(v + 1), new MeshFaceVertex(v + 6), new MeshFaceVertex(v + 1) , new MeshFaceVertex(v + 5) };
+			Builder.Faces[f + 5].Flags |= MeshFace.FaceTypeTriangles;
 		}
 
 		// create cylinder
-		private static void CreateCylinder(ref MeshBuilder Builder, int n, double r1, double r2, double h) {
+		private static void CreateCylinder(ref MeshBuilder Builder, int n, double r1, double r2, double h)
+		{
 			// parameters
 			bool uppercap = r1 > 0.0;
 			bool lowercap = r2 > 0.0;
@@ -1285,20 +1292,35 @@ namespace Plugin
 				int i1 = (2 * i + 3) % (2 * n);
 				int i2 = 2 * i + 1;
 				int i3 = 2 * i;
-				Builder.Faces[f + i].Vertices = new MeshFaceVertex[] { new MeshFaceVertex(v + i0, Normals[i0]), new MeshFaceVertex(v + i1, Normals[i1]), new MeshFaceVertex(v + i2, Normals[i2]), new MeshFaceVertex(v + i3, Normals[i3]) };
+				Builder.Faces[f + i].Vertices = new[] { new MeshFaceVertex(v + i0, Normals[i0]), new MeshFaceVertex(v + i1, Normals[i1]), new MeshFaceVertex(v + i2, Normals[i2]), new MeshFaceVertex(v + i0, Normals[i0]), new MeshFaceVertex(v + i2, Normals[i2]), new MeshFaceVertex(v + i3, Normals[i3]) };
+				Builder.Faces[f + i].Flags |= MeshFace.FaceTypeTriangles;
 			}
+
 			for (int i = 0; i < m; i++) {
-				Builder.Faces[f + n + i].Vertices = new MeshFaceVertex[n];
-				for (int j = 0; j < n; j++) {
+				List<MeshFaceVertex> verts = new List<MeshFaceVertex>();
+				for (int j = 0; j < n; j++)
+				{
+					if (verts.Count > 2)
+					{
+						verts.Add(verts[0]);
+						verts.Add(verts[verts.Count - 2]);
+					}
 					if (i == 0 & lowercap) {
 						// lower cap
-						Builder.Faces[f + n + i].Vertices[j] = new MeshFaceVertex(v + 2 * j + 1);
+						verts.Add(new MeshFaceVertex(v + 2 * j + 1));
 					} else {
 						// upper cap
-						Builder.Faces[f + n + i].Vertices[j] = new MeshFaceVertex(v + 2 * (n - j - 1));
+						verts.Add(new MeshFaceVertex(v + 2 * (n - j - 1)));
 					}
 				}
+				verts.Add(verts[0]);
+				verts.Add(verts[verts.Count - 1]);
+				verts.Add(verts[1]);
+				Builder.Faces[f + n + i].Vertices = verts.ToArray();
+				Builder.Faces[f + n + i].Flags |= MeshFace.FaceTypeTriangles;
+				
 			}
+
 		}
 		
 		/// <summary>Checks whether the specified System.Text.Encoding is Unicode</summary>

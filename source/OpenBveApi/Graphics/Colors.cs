@@ -666,6 +666,8 @@ namespace OpenBveApi.Colors {
 		// --- read-only fields ---
 		/// <summary>Represents a black color.</summary>
 		public static readonly Color128 Black = new Color128(0.0f, 0.0f, 0.0f);
+		/// <summary>Represents a black color.</summary>
+		public static readonly Color128 Grey = new Color128(0.5f, 0.5f, 0.5f);
 		/// <summary>Represents a red color.</summary>
 		public static readonly Color128 Red = new Color128(1.0f, 0.0f, 0.0f);
 		/// <summary>Represents a green color.</summary>

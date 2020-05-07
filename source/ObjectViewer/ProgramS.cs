@@ -70,6 +70,11 @@ namespace OpenBve {
 	        Renderer = new NewRenderer();
 	        CurrentRoute = new CurrentRoute(Renderer);
 	        Options.LoadOptions();
+	        if (Renderer.Screen.Width == 0 || Renderer.Screen.Height == 0)
+	        {
+		        Renderer.Screen.Width = 960;
+		        Renderer.Screen.Height = 600;
+	        }
 		    Plugins.LoadPlugins();
 	        // command line arguments
 	        SkipArgs = new bool[args.Length];
@@ -631,6 +636,9 @@ namespace OpenBve {
 	                }
 	                ReducedMode = false;
 	                break;
+				case Key.R:
+					Interface.CurrentOptions.IsUseNewRenderer = !Interface.CurrentOptions.IsUseNewRenderer;
+					break;
 	        }
 	    }
 

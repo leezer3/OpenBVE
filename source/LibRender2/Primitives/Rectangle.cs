@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using OpenBveApi.Colors;
+using OpenBveApi.Math;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
 
@@ -22,7 +23,7 @@ namespace LibRender2.Primitives
 		/// <param name="bottom">The bottom co-ordinate</param>
 		public void RenderOverlayTexture(Texture texture, double left, double top, double right, double bottom)
 		{
-			Draw(texture, new PointF((float)left, (float)top), new SizeF((float)(right - left), (float)(bottom - top)));
+			Draw(texture, new Vector2(left, top), new Vector2((right - left), (bottom - top)));
 		}
 
 		/// <summary>Renders a solid color rectangular overlay</summary>
@@ -32,7 +33,7 @@ namespace LibRender2.Primitives
 		/// <param name="bottom">The bottom co-ordinate</param>
 		public void RenderOverlaySolid(double left, double top, double right, double bottom)
 		{
-			Draw(null, new PointF((float)left, (float)top), new SizeF((float)(right - left), (float)(bottom - top)));
+			Draw(null, new Vector2(left, top), new Vector2((right - left), (bottom - top)));
 		}
 
 		/// <summary>Draws a simple 2D rectangle.</summary>
@@ -40,7 +41,7 @@ namespace LibRender2.Primitives
 		/// <param name="point">The top-left coordinates in pixels.</param>
 		/// <param name="size">The size in pixels.</param>
 		/// <param name="color">The color, or a null reference.</param>
-		public void Draw(Texture texture, PointF point, SizeF size, Color128? color = null)
+		public void Draw(Texture texture, Vector2 point, Vector2 size, Color128? color = null)
 		{
 			renderer.LastBoundTexture = null;
 			// TODO: Remove Nullable<T> from color once RenderOverlayTexture and RenderOverlaySolid are fully replaced.
@@ -71,9 +72,9 @@ namespace LibRender2.Primitives
 
 				GL.Begin(PrimitiveType.Quads);
 				GL.Vertex2(point.X, point.Y);
-				GL.Vertex2(point.X + size.Width, point.Y);
-				GL.Vertex2(point.X + size.Width, point.Y + size.Height);
-				GL.Vertex2(point.X, point.Y + size.Height);
+				GL.Vertex2(point.X + size.X, point.Y);
+				GL.Vertex2(point.X + size.X, point.Y + size.Y);
+				GL.Vertex2(point.X, point.Y + size.Y);
 				GL.End();
 			}
 			else
@@ -90,11 +91,11 @@ namespace LibRender2.Primitives
 				GL.TexCoord2(0.0f, 0.0f);
 				GL.Vertex2(point.X, point.Y);
 				GL.TexCoord2(1.0f, 0.0f);
-				GL.Vertex2(point.X + size.Width, point.Y);
+				GL.Vertex2(point.X + size.X, point.Y);
 				GL.TexCoord2(1.0f, 1.0f);
-				GL.Vertex2(point.X + size.Width, point.Y + size.Height);
+				GL.Vertex2(point.X + size.X, point.Y + size.Y);
 				GL.TexCoord2(0.0f, 1.0f);
-				GL.Vertex2(point.X, point.Y + size.Height);
+				GL.Vertex2(point.X, point.Y + size.Y);
 				GL.End();
 				GL.Disable(EnableCap.Texture2D);
 			}

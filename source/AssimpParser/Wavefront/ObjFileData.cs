@@ -196,7 +196,7 @@ namespace AssimpNET.Obj
 		//! Index of refraction
 		public float Ior = 1.0f;
 		//! Transparency color
-		public Color128 Transparent = new Color128(1.0f, 1.0f, 1.0f, 1.0f);
+		public Color128 Transparent = Color128.White;
 	}
 
 	// ------------------------------------------------------------------------------------------------

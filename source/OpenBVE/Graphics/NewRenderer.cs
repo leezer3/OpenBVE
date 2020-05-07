@@ -4,6 +4,7 @@ using LibRender2;
 using LibRender2.MotionBlurs;
 using LibRender2.Objects;
 using LibRender2.Screens;
+using LibRender2.Shaders;
 using LibRender2.Viewports;
 using OpenBve.Graphics.Renderers;
 using OpenBveApi;
@@ -46,6 +47,7 @@ namespace OpenBve.Graphics
 		internal bool OptionBrakeSystems = false;
 		internal bool DebugTouchMode = false;
 
+		internal Shader pickingShader;
 		private Events events;
 		private Overlays overlays;
 		internal Touch Touch;
@@ -54,6 +56,19 @@ namespace OpenBve.Graphics
 		{
 			base.Initialize(CurrentHost, CurrentOptions);
 
+			try
+			{
+				pickingShader = new Shader("default", "picking", true);
+				pickingShader.Activate();
+				pickingShader.Deactivate();
+			}
+			catch
+			{
+				Interface.AddMessage(MessageType.Error, false, "Initializing the touch shader failed- Falling back to legacy openGL.");
+				Interface.CurrentOptions.IsUseNewRenderer = false;
+				ForceLegacyOpenGL = true;
+			}
+
 			events = new Events(this);
 			overlays = new Overlays(this);
 			Touch = new Touch(this);
@@ -61,7 +76,7 @@ namespace OpenBve.Graphics
 			ObjectsSortedByEnd = new int[] { };
 		}
 		
-		internal int CreateStaticObject(UnifiedObject Prototype, OpenBveApi.Math.Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
+		internal int CreateStaticObject(UnifiedObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
 		{
 			StaticObject obj = Prototype as StaticObject;
 			if (obj == null)

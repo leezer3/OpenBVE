@@ -6,6 +6,7 @@ using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using OpenBveApi.Trains;
 using RouteManager2;
 
@@ -671,6 +672,7 @@ namespace OpenBve.Graphics.Renderers
 							{
 								int n = Program.CurrentRoute.Stations[i].GetStopIndex(TrainManager.PlayerTrain.NumberOfCars);
 								p1 = Program.CurrentRoute.Stations[i].Stops.Length > 0 ? Program.CurrentRoute.Stations[i].Stops[n].TrackPosition : Program.CurrentRoute.Stations[i].DefaultTrackPosition;
+								break;
 							}
 						}
 						
@@ -843,7 +845,7 @@ namespace OpenBve.Graphics.Renderers
 					if (Program.CurrentHost.LoadTexture(Element.CenterMiddle.BackgroundTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
 						Color128 c = Element.BackgroundColor.CreateBackColor(sc, alpha);
-						renderer.Rectangle.Draw(Element.CenterMiddle.BackgroundTexture, new PointF((float)x, (float)y), new SizeF((float)w, (float)h), new Color128(c.R, c.G, c.B, c.A));
+						renderer.Rectangle.Draw(Element.CenterMiddle.BackgroundTexture, new Vector2(x, y), new Vector2(w, h), c);
 					}
 				}
 				{ // text
@@ -863,7 +865,7 @@ namespace OpenBve.Graphics.Renderers
 					if (Program.CurrentHost.LoadTexture(Element.CenterMiddle.OverlayTexture, OpenGlTextureWrapMode.ClampClamp))
 					{
 						Color128 c = Element.OverlayColor.CreateBackColor(sc, alpha);
-						renderer.Rectangle.Draw(Element.CenterMiddle.BackgroundTexture, new PointF((float)x, (float)y), new SizeF((float)w, (float)h), new Color128(c.R, c.G, c.B, c.A));
+						renderer.Rectangle.Draw(Element.CenterMiddle.BackgroundTexture, new Vector2(x, y), new Vector2(w, h), c);
 					}
 				}
 			}

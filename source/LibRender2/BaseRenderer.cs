@@ -173,7 +173,11 @@ namespace LibRender2
 
 		internal int lastVAO;
 
-		protected bool ForceLegacyOpenGL;
+		public bool ForceLegacyOpenGL
+		{
+			get;
+			set;
+		}
 
 		public bool AvailableNewRenderer => currentOptions != null && currentOptions.IsUseNewRenderer && !ForceLegacyOpenGL;
 
@@ -216,7 +220,7 @@ namespace LibRender2
 			Background = new Background(this);
 			Fog = new Fog();
 			OpenGlString = new OpenGlString(this);
-			TextureManager = new TextureManager(currentHost);
+			TextureManager = new TextureManager(currentHost, this);
 			Cube = new Cube(this);
 			Rectangle = new Rectangle(this);
 			Loading = new Loading(this);
@@ -231,7 +235,7 @@ namespace LibRender2
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthFunc(DepthFunction.Lequal);
-			SetBlendFunc(AvailableNewRenderer ? BlendingFactor.One : BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 			GL.Hint(HintTarget.FogHint, HintMode.Fastest);
 			GL.Hint(HintTarget.LineSmoothHint, HintMode.Fastest);
 			GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Fastest);
@@ -274,7 +278,7 @@ namespace LibRender2
 			GL.Disable(EnableCap.Lighting);
 			GL.Disable(EnableCap.Fog);
 			GL.Disable(EnableCap.Texture2D);
-			SetBlendFunc(AvailableNewRenderer ? BlendingFactor.One : BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 			UnsetBlendFunc();
 			GL.Enable(EnableCap.DepthTest);
 			GL.DepthMask(true);
@@ -902,9 +906,14 @@ namespace LibRender2
 
 		public void RenderFace(Shader Shader, FaceState State, bool IsDebugTouchMode = false)
 		{
-			Matrix4D modelMatrix = State.Object.ModelMatrix * Camera.TranslationMatrix;
+			RenderFace(Shader, State.Object, State.Face, IsDebugTouchMode);
+		}
+
+		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, bool IsDebugTouchMode = false)
+		{
+			Matrix4D modelMatrix = State.ModelMatrix * Camera.TranslationMatrix;
 			Matrix4D modelViewMatrix = modelMatrix * CurrentViewMatrix;
-			RenderFace(Shader, State.Object, State.Face, modelMatrix, modelViewMatrix, IsDebugTouchMode);
+			RenderFace(Shader, State, Face, modelMatrix, modelViewMatrix, IsDebugTouchMode);
 		}
 
 		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, Matrix4D modelMatrix, Matrix4D modelViewMatrix, bool IsDebugTouchMode = false)
@@ -1024,7 +1033,6 @@ namespace LibRender2
 				{
 					Shader.SetIsTexture(false);
 				}
-				GL.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
 				// Calculate the brightness of the poly to render
 				float factor;
 				if (material.BlendMode == MeshMaterialBlendMode.Additive)
@@ -1032,7 +1040,7 @@ namespace LibRender2
 					//Additive blending- Full brightness
 					factor = 1.0f;
 					GL.Enable(EnableCap.Blend);
-					GL.BlendFunc(BlendingFactor.One, BlendingFactor.One);
+					GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
 					Shader.SetIsFog(false);
 				}
 				else if ((material.Flags & MeshMaterial.EmissiveColorMask) != 0)
@@ -1059,17 +1067,16 @@ namespace LibRender2
 				Shader.SetBrightness(factor);
 
 				float alphaFactor;
-				GlowAttenuationMode mode = GlowAttenuationMode.None;
 				if (material.GlowAttenuationData != 0)
 				{
+					GlowAttenuationMode mode;
 					alphaFactor = (float)Glow.GetDistanceFactor(modelMatrix, State.Prototype.Mesh.Vertices, ref Face, material.GlowAttenuationData, out mode);
-
 				}
 				else
 				{
 					alphaFactor = 1.0f;
 				}
-				
+
 				Shader.SetOpacity(inv255 * material.Color.A * alphaFactor);
 
 				// render polygon
@@ -1147,9 +1154,14 @@ namespace LibRender2
 
 		public void RenderFaceImmediateMode(FaceState State, bool IsDebugTouchMode = false)
 		{
-			Matrix4D modelMatrix = State.Object.ModelMatrix * Camera.TranslationMatrix;
+			RenderFaceImmediateMode(State.Object, State.Face, IsDebugTouchMode);
+		}
+
+		public void RenderFaceImmediateMode(ObjectState State, MeshFace Face, bool IsDebugTouchMode = false)
+		{
+			Matrix4D modelMatrix = State.ModelMatrix * Camera.TranslationMatrix;
 			Matrix4D modelViewMatrix = modelMatrix * CurrentViewMatrix;
-			RenderFaceImmediateMode(State.Object, State.Face, modelMatrix, modelViewMatrix, IsDebugTouchMode);
+			RenderFaceImmediateMode(State, Face, modelMatrix, modelViewMatrix, IsDebugTouchMode);
 		}
 
 		public void RenderFaceImmediateMode(ObjectState State, MeshFace Face, Matrix4D modelMatrix, Matrix4D modelViewMatrix, bool IsDebugTouchMode = false)
@@ -1204,7 +1216,7 @@ namespace LibRender2
 
 			}
 
-			if (OptionWireFrame)
+			if (OptionWireFrame || IsDebugTouchMode)
 			{
 				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
 			}
@@ -1412,13 +1424,13 @@ namespace LibRender2
 					GL.Begin(PrimitiveType.Lines);
 					GL.Color4(new Color4(material.Color.R, material.Color.G, material.Color.B, 255));
 					GL.Vertex3(vertices[Face.Vertices[i].Index].Coordinates.X, vertices[Face.Vertices[i].Index].Coordinates.Y, -vertices[Face.Vertices[i].Index].Coordinates.Z);
-					GL.Vertex3(vertices[Face.Vertices[i].Index].Coordinates.X + Face.Vertices[i].Normal.X, vertices[Face.Vertices[i].Index].Coordinates.Y + +Face.Vertices[i].Normal.Z, -(vertices[Face.Vertices[i].Index].Coordinates.Z + Face.Vertices[i].Normal.Z));
+					GL.Vertex3(vertices[Face.Vertices[i].Index].Coordinates.X + Face.Vertices[i].Normal.X, vertices[Face.Vertices[i].Index].Coordinates.Y + +Face.Vertices[i].Normal.Y, -(vertices[Face.Vertices[i].Index].Coordinates.Z + Face.Vertices[i].Normal.Z));
 					GL.End();
 				}
 			}
 
 			// finalize
-			if (OptionWireFrame)
+			if (OptionWireFrame || IsDebugTouchMode)
 			{
 				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 			}

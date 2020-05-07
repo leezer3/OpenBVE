@@ -15,17 +15,20 @@ namespace LibRender2.Textures
 	{
 		private readonly HostInterface currentHost;
 
+		private readonly BaseRenderer renderer;
+
 		/// <summary>Holds all currently registered textures.</summary>
 		public Texture[] RegisteredTextures;
 
 		/// <summary>The number of currently registered textures.</summary>
 		public int RegisteredTexturesCount;
 
-		internal TextureManager(HostInterface CurrentHost)
+		internal TextureManager(HostInterface CurrentHost, BaseRenderer Renderer)
 		{
 			currentHost = CurrentHost;
 			RegisteredTextures = new Texture[16];
 			RegisteredTexturesCount = 0;
+			renderer = Renderer;
 		}
 
 
@@ -275,13 +278,16 @@ namespace LibRender2.Textures
 						GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (float)TextureWrapMode.ClampToEdge);
 					}
 
-					if (Interpolation == InterpolationMode.NearestNeighbor || Interpolation == InterpolationMode.Bilinear)
+					if (renderer.ForceLegacyOpenGL)
 					{
-						GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, 0);
-					}
-					else
-					{
-						GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, 1);
+						if (Interpolation == InterpolationMode.NearestNeighbor || Interpolation == InterpolationMode.Bilinear)
+						{
+							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, 0);
+						}
+						else
+						{
+							GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, 1);
+						}
 					}
 
 					if (Interpolation == InterpolationMode.AnisotropicFiltering && AnisotropicFilteringLevel > 0)
@@ -338,7 +344,10 @@ namespace LibRender2.Textures
 							OpenTK.Graphics.OpenGL.PixelFormat.Rgba,
 							PixelType.UnsignedByte, texture.Bytes);
 					}
-
+					if (renderer.ForceLegacyOpenGL == false)
+					{
+						GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+					}
 					handle.OpenGlTextures[(int)wrap].Valid = true;
 					return true;
 				}
