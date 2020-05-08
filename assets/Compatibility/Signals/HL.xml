@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">Japanese\
 	<CompatibilitySignals>
-		<SignalSetName>HL</SignalSetName>
+		<SignalSetName>HL (East German)</SignalSetName>
 		<Signal>
 			<Aspect Number="0">HL\signal_0.csv</Aspect>
 			<Aspect Number="2">HL\signal_2.csv</Aspect>

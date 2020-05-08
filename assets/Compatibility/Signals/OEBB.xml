@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">Japanese\
 	<CompatibilitySignals>
-		<SignalSetName>OEBB</SignalSetName>
+		<SignalSetName>OEBB (Austrian)</SignalSetName>
 		<Signal>
 			<Aspect Number="0">OEBB\signal_0.csv</Aspect>
 			<Aspect Number="2">OEBB\signal_1.csv</Aspect>
