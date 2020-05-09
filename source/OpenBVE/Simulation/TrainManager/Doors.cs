@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenBveApi.Runtime;
 using SoundManager;
 
 namespace OpenBve
@@ -199,12 +200,12 @@ namespace OpenBve
 			bool sl = false, sr = false;
 			for (int i = 0; i < Train.Cars.Length; i++)
 			{
-				if (Left & !Train.Cars[i].Doors[0].AnticipatedOpen)
+				if (Left & !Train.Cars[i].Doors[0].AnticipatedOpen  & (Train.SafetySystems.DoorInterlockState == DoorInterlockStates.Left | Train.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
 				{
 					Train.Cars[i].Doors[0].AnticipatedOpen = true;
 					sl = true;
 				}
-				if (Right & !Train.Cars[i].Doors[1].AnticipatedOpen)
+				if (Right & !Train.Cars[i].Doors[1].AnticipatedOpen & (Train.SafetySystems.DoorInterlockState == DoorInterlockStates.Right | Train.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
 				{
 					Train.Cars[i].Doors[1].AnticipatedOpen = true;
 					sr = true;
@@ -258,12 +259,12 @@ namespace OpenBve
 		internal static void OpenTrainDoors(Train Train, int CarIndex, bool Left, bool Right)
 		{
 			bool sl = false, sr = false;
-			if (Left & !Train.Cars[CarIndex].Doors[0].AnticipatedOpen)
+			if (Left & !Train.Cars[CarIndex].Doors[0].AnticipatedOpen & (Train.SafetySystems.DoorInterlockState == DoorInterlockStates.Left | Train.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
 			{
 				Train.Cars[CarIndex].Doors[0].AnticipatedOpen = true;
 				sl = true;
 			}
-			if (Right & !Train.Cars[CarIndex].Doors[1].AnticipatedOpen)
+			if (Right & !Train.Cars[CarIndex].Doors[1].AnticipatedOpen & (Train.SafetySystems.DoorInterlockState == DoorInterlockStates.Right | Train.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
 			{
 				Train.Cars[CarIndex].Doors[1].AnticipatedOpen = true;
 				sr = true;
@@ -319,12 +320,12 @@ namespace OpenBve
 			bool sl = false, sr = false;
 			for (int i = 0; i < Train.Cars.Length; i++)
 			{
-				if (Left & Train.Cars[i].Doors[0].AnticipatedOpen)
+				if (Left & Train.Cars[i].Doors[0].AnticipatedOpen & (Train.SafetySystems.DoorInterlockState == DoorInterlockStates.Left | Train.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
 				{
 					Train.Cars[i].Doors[0].AnticipatedOpen = false;
 					sl = true;
 				}
-				if (Right & Train.Cars[i].Doors[1].AnticipatedOpen)
+				if (Right & Train.Cars[i].Doors[1].AnticipatedOpen & (Train.SafetySystems.DoorInterlockState == DoorInterlockStates.Right | Train.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked))
 				{
 					Train.Cars[i].Doors[1].AnticipatedOpen = false;
 					sr = true;
