@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
@@ -169,11 +169,12 @@ namespace RouteManager2.SignalManager
 					}
 					else
 					{
+
 						aspect = Aspects[Aspects.Length - 1].Number;
 
 						if (NextSection != null)
 						{
-							int value = Aspects[CurrentAspect].Number;
+							int value = NextSection.Aspects[NextSection.CurrentAspect].Number;
 
 							for (int i = 0; i < Aspects.Length; i++)
 							{
