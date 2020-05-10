@@ -1610,6 +1610,15 @@
 						<source>Config</source>
 						<target>設定</target>
 					</trans-unit>
+					<trans-unit id="panel2_extended">
+						<source>Enable Panel2 Extended Mode</source>
+					</trans-unit>
+					<trans-unit id="xobject_parser">
+						<source>X Object Parser</source>
+					</trans-unit>
+					<trans-unit id="objobject_parser">
+						<source>OBJ Object Parser</source>
+					</trans-unit>
 				</group>
 				<group id="dialog">
 					<trans-unit id="csvfiles">

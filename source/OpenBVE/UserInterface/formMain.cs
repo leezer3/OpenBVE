@@ -569,7 +569,9 @@ namespace OpenBve {
 			//Options Page
 			buttonOptionsPrevious.Text = Translations.GetInterfaceString("options_page_previous");
 			buttonOptionsNext.Text = Translations.GetInterfaceString("options_page_next");
-
+			checkBoxPanel2Extended.Text = Translations.GetInterfaceString("options_panel2_extended");
+			labelXparser.Text = Translations.GetInterfaceString("options_xobject_parser");
+			labelObjparser.Text = Translations.GetInterfaceString("options_objobject_parser");
 			/*
 			 * Options Page 2
 			 */
