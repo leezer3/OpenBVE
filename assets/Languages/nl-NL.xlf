@@ -3847,6 +3847,1298 @@
 					</trans-unit>
 				</group>
 			</group>
+			<group id="train_editor2">
+				<group id="menu">
+					<group id="file">
+						<trans-unit id="name">
+							<source>File</source>
+						</trans-unit>
+						<trans-unit id="new">
+							<source>New</source>
+						</trans-unit>
+						<trans-unit id="open">
+							<source>Open...</source>
+						</trans-unit>
+						<trans-unit id="save">
+							<source>Save</source>
+						</trans-unit>
+						<trans-unit id="save_as">
+							<source>Save as...</source>
+						</trans-unit>
+						<trans-unit id="import">
+							<source>Import...</source>
+						</trans-unit>
+						<trans-unit id="export">
+							<source>Export...</source>
+						</trans-unit>
+						<trans-unit id="exit">
+							<source>Exit</source>
+						</trans-unit>
+						<trans-unit id="wrongtype">
+							<source>You have attempted to open a train. \n\n  These cannot be opened directly- \n\n Please use the import function to import this train into TrainEditor2.</source>
+						</trans-unit>
+					</group>
+					<trans-unit id="language">
+						<source>Language</source>
+					</trans-unit>
+					<group id="message">
+						<trans-unit id="new">
+							<source>Do you want to save the current file before creating a new one?</source>
+						</trans-unit>
+						<trans-unit id="open">
+							<source>Do you want to save the current file before opening another file?</source>
+						</trans-unit>
+						<trans-unit id="exit">
+							<source>Do you want to save the current file before closing?</source>
+						</trans-unit>
+					</group>
+				</group>
+				<group id="navigation">
+					<trans-unit id="up">
+						<source>Up</source>
+					</trans-unit>
+					<trans-unit id="down">
+						<source>Down</source>
+					</trans-unit>
+					<trans-unit id="add">
+						<source>Add</source>
+					</trans-unit>
+					<trans-unit id="remove">
+						<source>Remove</source>
+					</trans-unit>
+					<trans-unit id="copy">
+						<source>Copy</source>
+					</trans-unit>
+					<trans-unit id="set">
+						<source>Set...</source>
+					</trans-unit>
+					<trans-unit id="open">
+						<source>Open...</source>
+					</trans-unit>
+				</group>
+				<group id="tree_cars">
+					<trans-unit id="train">
+						<source>Train</source>
+					</trans-unit>
+					<trans-unit id="general">
+						<source>General</source>
+					</trans-unit>
+					<trans-unit id="cars">
+						<source>Cars</source>
+					</trans-unit>
+					<trans-unit id="couplers">
+						<source>Couplers</source>
+					</trans-unit>
+				</group>
+				<group id="general_settings">
+					<trans-unit id="name">
+						<source>General settings</source>
+					</trans-unit>
+					<group id="handle">
+						<trans-unit id="name">
+							<source>Handle</source>
+						</trans-unit>
+						<group id="handle_type">
+							<trans-unit id="name">
+								<source>HandleType</source>
+							</trans-unit>
+							<trans-unit id="separated">
+								<source>Separated</source>
+							</trans-unit>
+							<trans-unit id="combined">
+								<source>Combined</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="power_notches">
+							<source>PowerNotches</source>
+						</trans-unit>
+						<trans-unit id="brake_notches">
+							<source>BrakeNotches</source>
+						</trans-unit>
+						<trans-unit id="power_notch_reduce_steps">
+							<source>PowerNotchReduceSteps</source>
+						</trans-unit>
+						<trans-unit id="driver_power_notches">
+							<source>DriverPowerNotches</source>
+						</trans-unit>
+						<trans-unit id="driver_brake_notches">
+							<source>DriverBrakeNotches</source>
+						</trans-unit>
+						<group id="eb_handle_behaviour">
+							<trans-unit id="name">
+								<source>EbHandleBehaviour</source>
+							</trans-unit>
+							<trans-unit id="no">
+								<source>No action</source>
+							</trans-unit>
+							<trans-unit id="power">
+								<source>Return power to neutral</source>
+							</trans-unit>
+							<trans-unit id="reverser">
+								<source>Return reverser to neutral</source>
+							</trans-unit>
+							<trans-unit id="power_reverser">
+								<source>Return power and reverser to neutral</source>
+							</trans-unit>
+						</group>
+						<group id="loco_brake_handle_type">
+							<trans-unit id="name">
+								<source>LocoBrakeHandleType</source>
+							</trans-unit>
+							<trans-unit id="combined">
+								<source>Combined</source>
+							</trans-unit>
+							<trans-unit id="independent">
+								<source>Independent</source>
+							</trans-unit>
+							<trans-unit id="blocking">
+								<source>Blocking</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="loco_brake_notches">
+							<source>LocoBrakeNotches</source>
+						</trans-unit>
+					</group>
+					<group id="cab">
+						<trans-unit id="name">
+							<source>Cab</source>
+						</trans-unit>
+						<trans-unit id="x">
+							<source>X</source>
+						</trans-unit>
+						<trans-unit id="y">
+							<source>Y</source>
+						</trans-unit>
+						<trans-unit id="z">
+							<source>Z</source>
+						</trans-unit>
+						<trans-unit id="driver_car">
+							<source>DriverCar</source>
+						</trans-unit>
+					</group>
+					<group id="device">
+						<trans-unit id="name">
+							<source>Device</source>
+						</trans-unit>
+						<group id="ats">
+							<trans-unit id="name">
+								<source>Ats</source>
+							</trans-unit>
+							<trans-unit id="none">
+								<source>None</source>
+							</trans-unit>
+							<trans-unit id="ats_sn">
+								<source>ATS-SN</source>
+							</trans-unit>
+							<trans-unit id="ats_sn_ats_p">
+								<source>ATS-SN / ATS-P</source>
+							</trans-unit>
+						</group>
+						<group id="atc">
+							<trans-unit id="name">
+								<source>Atc</source>
+							</trans-unit>
+							<trans-unit id="none">
+								<source>None</source>
+							</trans-unit>
+							<trans-unit id="manual">
+								<source>Manual switching</source>
+							</trans-unit>
+							<trans-unit id="automatic">
+								<source>Automatic switching</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="eb">
+							<source>Eb</source>
+						</trans-unit>
+						<trans-unit id="const_speed">
+							<source>ConstSpeed</source>
+						</trans-unit>
+						<trans-unit id="hold_brake">
+							<source>HoldBrake</source>
+						</trans-unit>
+						<group id="re_adhesion_device">
+							<trans-unit id="name">
+								<source>ReAdhesionDevice</source>
+							</trans-unit>
+							<trans-unit id="none">
+								<source>None</source>
+							</trans-unit>
+							<trans-unit id="type_a">
+								<source>Type A (instant)</source>
+							</trans-unit>
+							<trans-unit id="type_b">
+								<source>Type B (slow)</source>
+							</trans-unit>
+							<trans-unit id="type_c">
+								<source>Type C (medium)</source>
+							</trans-unit>
+							<trans-unit id="type_d">
+								<source>Type D (fast)</source>
+							</trans-unit>
+						</group>
+						<group id="pass_alarm">
+							<trans-unit id="name">
+								<source>PassAlarm</source>
+							</trans-unit>
+							<trans-unit id="none">
+								<source>None</source>
+							</trans-unit>
+							<trans-unit id="single">
+								<source>Single</source>
+							</trans-unit>
+							<trans-unit id="looping">
+								<source>Looping</source>
+							</trans-unit>
+						</group>
+						<group id="door_mode">
+							<trans-unit id="open">
+								<source>DoorOpenMode</source>
+							</trans-unit>
+							<trans-unit id="close">
+								<source>DoorCloseMode</source>
+							</trans-unit>
+							<trans-unit id="semi_automatic">
+								<source>Semi-automatic</source>
+							</trans-unit>
+							<trans-unit id="automatic">
+								<source>Automatic</source>
+							</trans-unit>
+							<trans-unit id="manual">
+								<source>Manual</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="door_width">
+							<source>DoorWidth</source>
+						</trans-unit>
+						<trans-unit id="door_max_tolerance">
+							<source>DoorMaxTolerance</source>
+						</trans-unit>
+					</group>
+				</group>
+				<group id="car_settings">
+					<trans-unit id="name">
+						<source>Car settings</source>
+					</trans-unit>
+					<group id="general">
+						<trans-unit id="name">
+							<source>General</source>
+						</trans-unit>
+						<trans-unit id="is_motor_car">
+							<source>IsMotorCar</source>
+						</trans-unit>
+						<trans-unit id="mass">
+							<source>Mass</source>
+						</trans-unit>
+						<trans-unit id="length">
+							<source>Length</source>
+						</trans-unit>
+						<trans-unit id="width">
+							<source>Width</source>
+						</trans-unit>
+						<trans-unit id="height">
+							<source>Height</source>
+						</trans-unit>
+						<trans-unit id="center_of_gravity_height">
+							<source>CenterOfGravityHeight</source>
+						</trans-unit>
+						<trans-unit id="exposed_frontal_area">
+							<source>ExposedFrontalArea</source>
+						</trans-unit>
+						<trans-unit id="unexposed_frontal_area">
+							<source>UnexposedFrontalArea</source>
+						</trans-unit>
+						<trans-unit id="defined_axles">
+							<source>DefinedAxles</source>
+						</trans-unit>
+						<group id="axles">
+							<trans-unit id="name">
+								<source>Axles</source>
+							</trans-unit>
+							<trans-unit id="front">
+								<source>FrontAxle</source>
+							</trans-unit>
+							<trans-unit id="rear">
+								<source>RearAxle</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="front_bogie">
+							<source>FrontBogie</source>
+						</trans-unit>
+						<trans-unit id="rear_bogie">
+							<source>RearBogie</source>
+						</trans-unit>
+						<trans-unit id="loading_sway">
+							<source>LoadingSway</source>
+						</trans-unit>
+						<trans-unit id="reversed">
+							<source>Reversed</source>
+						</trans-unit>
+						<trans-unit id="object">
+							<source>Object</source>
+						</trans-unit>
+					</group>
+					<group id="performance">
+						<trans-unit id="name">
+							<source>Performance</source>
+						</trans-unit>
+						<trans-unit id="deceleration">
+							<source>Deceleration</source>
+						</trans-unit>
+						<trans-unit id="static_friction">
+							<source>CoefficientOfStaticFriction</source>
+						</trans-unit>
+						<trans-unit id="rolling_resistance">
+							<source>CoefficientOfRollingResistance</source>
+						</trans-unit>
+						<trans-unit id="aerodynamic_drag">
+							<source>AerodynamicDragCoefficient</source>
+						</trans-unit>
+					</group>
+					<group id="move">
+						<trans-unit id="name">
+							<source>Move</source>
+						</trans-unit>
+						<trans-unit id="jerk_power_up">
+							<source>JerkPowerUp</source>
+						</trans-unit>
+						<trans-unit id="jerk_power_down">
+							<source>JerkPowerDown</source>
+						</trans-unit>
+						<trans-unit id="jerk_brake_up">
+							<source>JerkBrakeUp</source>
+						</trans-unit>
+						<trans-unit id="jerk_brake_down">
+							<source>JerkBrakeDown</source>
+						</trans-unit>
+						<trans-unit id="brake_cylinder_up">
+							<source>BrakeCylinderUp</source>
+						</trans-unit>
+						<trans-unit id="brake_cylinder_down">
+							<source>BrakeCylinderDown</source>
+						</trans-unit>
+					</group>
+					<group id="brake">
+						<trans-unit id="name">
+							<source>Brake</source>
+						</trans-unit>
+						<group id="brake_type">
+							<trans-unit id="name">
+								<source>BrakeType</source>
+							</trans-unit>
+							<trans-unit id="smee">
+								<source>Electromagnetic straight air brake</source>
+							</trans-unit>
+							<trans-unit id="ecb">
+								<source>Electro-pneumatic air brake without brake pipe</source>
+							</trans-unit>
+							<trans-unit id="cl">
+								<source>Air brake with partial release feature</source>
+							</trans-unit>
+						</group>
+						<group id="loco_brake_type">
+							<trans-unit id="name">
+								<source>LocoBrakeType</source>
+							</trans-unit>
+							<trans-unit id="none">
+								<source>Not fitted</source>
+							</trans-unit>
+							<trans-unit id="notched_air_brake">
+								<source>Notched air brake</source>
+							</trans-unit>
+							<trans-unit id="cl">
+								<source>Air brake with partial release</source>
+							</trans-unit>
+						</group>
+						<group id="brake_control_system">
+							<trans-unit id="name">
+								<source>BrakeControlSystem</source>
+							</trans-unit>
+							<trans-unit id="none">
+								<source>None</source>
+							</trans-unit>
+							<trans-unit id="lock_out_valve">
+								<source>Closing electromagnetic valve</source>
+							</trans-unit>
+							<trans-unit id="delay_including_control">
+								<source>Delay-including control</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="brake_control_speed">
+							<source>BrakeControlSpeed</source>
+						</trans-unit>
+					</group>
+					<group id="pressure">
+						<trans-unit id="name">
+							<source>Pressure</source>
+						</trans-unit>
+						<trans-unit id="brake_cylinder_service_max">
+							<source>BrakeCylinderServiceMaximumPressure</source>
+						</trans-unit>
+						<trans-unit id="brake_cylinder_emergency_max">
+							<source>BrakeCylinderEmergencyMaximumPressure</source>
+						</trans-unit>
+						<trans-unit id="main_reservoir_min">
+							<source>MainReservoirMinimumPressure</source>
+						</trans-unit>
+						<trans-unit id="main_reservoir_max">
+							<source>MainReservoirMaximumPressure</source>
+						</trans-unit>
+						<trans-unit id="brake_pipe_normal">
+							<source>BrakePipeNormalPressure</source>
+						</trans-unit>
+					</group>
+					<group id="delay">
+						<trans-unit id="name">
+							<source>Delay</source>
+						</trans-unit>
+						<trans-unit id="power">
+							<source>Power</source>
+						</trans-unit>
+						<trans-unit id="brake">
+							<source>Brake</source>
+						</trans-unit>
+						<trans-unit id="loco_brake">
+							<source>LocoBrake</source>
+						</trans-unit>
+						<trans-unit id="notch">
+							<source>Notch</source>
+						</trans-unit>
+						<trans-unit id="value">
+							<source>Value</source>
+						</trans-unit>
+					</group>
+				</group>
+				<group id="acceleration_settings">
+					<trans-unit id="name">
+						<source>Acceleration settings</source>
+					</trans-unit>
+					<trans-unit id="notch">
+						<source>Notch</source>
+					</trans-unit>
+					<group id="parameter">
+						<trans-unit id="name">
+							<source>Parameter</source>
+						</trans-unit>
+						<trans-unit id="a0">
+							<source>a0</source>
+						</trans-unit>
+						<trans-unit id="a1">
+							<source>a1</source>
+						</trans-unit>
+						<trans-unit id="v1">
+							<source>v1</source>
+						</trans-unit>
+						<trans-unit id="v2">
+							<source>v2</source>
+						</trans-unit>
+						<trans-unit id="e">
+							<source>e (2.0)</source>
+						</trans-unit>
+					</group>
+					<group id="preview">
+						<trans-unit id="name">
+							<source>Preview</source>
+						</trans-unit>
+						<trans-unit id="subtract_deceleration">
+							<source>Subtract deceleration due to air and rolling resistance</source>
+						</trans-unit>
+						<trans-unit id="x">
+							<source>X</source>
+						</trans-unit>
+						<trans-unit id="y">
+							<source>Y</source>
+						</trans-unit>
+						<trans-unit id="x_min">
+							<source>x-min</source>
+						</trans-unit>
+						<trans-unit id="x_max">
+							<source>x-max</source>
+						</trans-unit>
+						<trans-unit id="y_min">
+							<source>y-min</source>
+						</trans-unit>
+						<trans-unit id="y_max">
+							<source>y-max</source>
+						</trans-unit>
+						<trans-unit id="zoom_in">
+							<source>Zoom In</source>
+						</trans-unit>
+						<trans-unit id="zoom_out">
+							<source>Zoom Out</source>
+						</trans-unit>
+						<trans-unit id="reset">
+							<source>Reset</source>
+						</trans-unit>
+					</group>
+				</group>
+				<group id="motor_sound_settings">
+					<trans-unit id="name">
+						<source>Motor sound settings</source>
+					</trans-unit>
+					<group id="menu">
+						<group id="edit">
+							<trans-unit id="name">
+								<source>Edit</source>
+							</trans-unit>
+							<trans-unit id="undo">
+								<source>Undo</source>
+							</trans-unit>
+							<trans-unit id="redo">
+								<source>Redo</source>
+							</trans-unit>
+							<trans-unit id="cut">
+								<source>Cut</source>
+							</trans-unit>
+							<trans-unit id="copy">
+								<source>Copy</source>
+							</trans-unit>
+							<trans-unit id="paste">
+								<source>Paste</source>
+							</trans-unit>
+							<trans-unit id="cleanup">
+								<source>Cleanup</source>
+							</trans-unit>
+							<trans-unit id="delete">
+								<source>Delete</source>
+							</trans-unit>
+						</group>
+						<group id="view">
+							<trans-unit id="name">
+								<source>View</source>
+							</trans-unit>
+							<trans-unit id="power">
+								<source>Power</source>
+							</trans-unit>
+							<trans-unit id="brake">
+								<source>Brake</source>
+							</trans-unit>
+							<trans-unit id="track">
+								<source>Track</source>
+							</trans-unit>
+						</group>
+						<group id="input">
+							<trans-unit id="name">
+								<source>Input</source>
+							</trans-unit>
+							<trans-unit id="pitch">
+								<source>Pitch</source>
+							</trans-unit>
+							<trans-unit id="volume">
+								<source>Volume</source>
+							</trans-unit>
+							<trans-unit id="sound_index">
+								<source>Sound source index</source>
+							</trans-unit>
+							<trans-unit id="sound_index_none">
+								<source>None</source>
+							</trans-unit>
+						</group>
+						<group id="tool">
+							<trans-unit id="name">
+								<source>Tool</source>
+							</trans-unit>
+							<trans-unit id="select">
+								<source>Select</source>
+							</trans-unit>
+							<trans-unit id="move">
+								<source>Move</source>
+							</trans-unit>
+							<trans-unit id="dot">
+								<source>Dot</source>
+							</trans-unit>
+							<trans-unit id="line">
+								<source>Line</source>
+							</trans-unit>
+						</group>
+					</group>
+					<group id="view_setting">
+						<trans-unit id="name">
+							<source>View setting</source>
+						</trans-unit>
+						<trans-unit id="min_velocity">
+							<source>x-min(Velocity)</source>
+						</trans-unit>
+						<trans-unit id="max_velocity">
+							<source>x-max(Velocity)</source>
+						</trans-unit>
+						<trans-unit id="min_pitch">
+							<source>y-min(Pitch)</source>
+						</trans-unit>
+						<trans-unit id="max_pitch">
+							<source>y-max(Pitch)</source>
+						</trans-unit>
+						<trans-unit id="min_volume">
+							<source>y-min(Volume)</source>
+						</trans-unit>
+						<trans-unit id="max_volume">
+							<source>y-max(Volume)</source>
+						</trans-unit>
+						<trans-unit id="zoom_in">
+							<source>Zoom In</source>
+						</trans-unit>
+						<trans-unit id="zoom_out">
+							<source>Zoom Out</source>
+						</trans-unit>
+						<trans-unit id="reset">
+							<source>Reset</source>
+						</trans-unit>
+					</group>
+					<group id="direct_input">
+						<trans-unit id="name">
+							<source>Direct input</source>
+						</trans-unit>
+						<trans-unit id="x">
+							<source>x coordinate</source>
+						</trans-unit>
+						<trans-unit id="y">
+							<source>y coordinate</source>
+						</trans-unit>
+						<trans-unit id="dot">
+							<source>Dot</source>
+						</trans-unit>
+						<trans-unit id="move">
+							<source>Move</source>
+						</trans-unit>
+					</group>
+					<group id="play_setting">
+						<trans-unit id="name">
+							<source>Playback setting</source>
+						</trans-unit>
+						<group id="source">
+							<trans-unit id="name">
+								<source>Sound source setting</source>
+							</trans-unit>
+							<trans-unit id="run">
+								<source>Running sound</source>
+							</trans-unit>
+							<trans-unit id="track">
+								<source>Track</source>
+							</trans-unit>
+						</group>
+						<group id="area">
+							<trans-unit id="name">
+								<source>Area setting</source>
+							</trans-unit>
+							<trans-unit id="loop">
+								<source>Loop playback</source>
+							</trans-unit>
+							<trans-unit id="constant">
+								<source>Constant speed</source>
+							</trans-unit>
+							<trans-unit id="acceleration">
+								<source>Acceleration:</source>
+							</trans-unit>
+							<trans-unit id="swap">
+								<source>Swap</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="play">
+							<source>Playback</source>
+						</trans-unit>
+						<trans-unit id="pause">
+							<source>Pause</source>
+						</trans-unit>
+						<trans-unit id="stop">
+							<source>Stop</source>
+						</trans-unit>
+					</group>
+					<group id="vertex_info">
+						<trans-unit id="name">
+							<source>Vertex information</source>
+						</trans-unit>
+						<trans-unit id="velocity">
+							<source>Velocity</source>
+						</trans-unit>
+						<trans-unit id="pitch">
+							<source>Pitch</source>
+						</trans-unit>
+						<trans-unit id="volume">
+							<source>Volume</source>
+						</trans-unit>
+						<trans-unit id="sound_index">
+							<source>Sound source index</source>
+						</trans-unit>
+					</group>
+					<group id="status">
+						<group id="type">
+							<trans-unit id="name">
+								<source>Type</source>
+							</trans-unit>
+							<trans-unit id="power">
+								<source>Power</source>
+							</trans-unit>
+							<trans-unit id="brake">
+								<source>Brake</source>
+							</trans-unit>
+						</group>
+						<group id="track">
+							<trans-unit id="name">
+								<source>Track</source>
+							</trans-unit>
+						</group>
+						<group id="mode">
+							<trans-unit id="name">
+								<source>Mode</source>
+							</trans-unit>
+							<trans-unit id="pitch">
+								<source>Pitch</source>
+							</trans-unit>
+							<trans-unit id="volume">
+								<source>Volume</source>
+							</trans-unit>
+							<trans-unit id="sound_index">
+								<source>Sound source index</source>
+							</trans-unit>
+						</group>
+						<group id="tool">
+							<trans-unit id="name">
+								<source>Tool</source>
+							</trans-unit>
+							<trans-unit id="select">
+								<source>Select</source>
+							</trans-unit>
+							<trans-unit id="move">
+								<source>Move</source>
+							</trans-unit>
+							<trans-unit id="dot">
+								<source>Dot</source>
+							</trans-unit>
+							<trans-unit id="line">
+								<source>Line</source>
+							</trans-unit>
+						</group>
+						<group id="xy">
+							<trans-unit id="velocity">
+								<source>Velocity</source>
+							</trans-unit>
+							<trans-unit id="pitch">
+								<source>Pitch</source>
+							</trans-unit>
+							<trans-unit id="volume">
+								<source>Volume</source>
+							</trans-unit>
+						</group>
+					</group>
+					<group id="message">
+						<trans-unit id="vertex_exist">
+							<source>A point already exists at the same x coordinate, do you want to overwrite it?</source>
+						</trans-unit>
+					</group>
+				</group>
+				<group id="coupler_settings">
+					<trans-unit id="name">
+						<source>Coupler settings</source>
+					</trans-unit>
+					<group id="general">
+						<trans-unit id="name">
+							<source>General</source>
+						</trans-unit>
+						<trans-unit id="min">
+							<source>Min</source>
+						</trans-unit>
+						<trans-unit id="max">
+							<source>Max</source>
+						</trans-unit>
+					</group>
+				</group>
+				<group id="panel_settings">
+					<trans-unit id="name">
+						<source>Panel settings</source>
+					</trans-unit>
+					<group id="this">
+						<trans-unit id="name">
+							<source>This</source>
+						</trans-unit>
+						<trans-unit id="resolution">
+							<source>Resolution</source>
+						</trans-unit>
+						<trans-unit id="left">
+							<source>Left</source>
+						</trans-unit>
+						<trans-unit id="right">
+							<source>Right</source>
+						</trans-unit>
+						<trans-unit id="top">
+							<source>Top</source>
+						</trans-unit>
+						<trans-unit id="bottom">
+							<source>Bottom</source>
+						</trans-unit>
+						<trans-unit id="daytime_image">
+							<source>DaytimeImage</source>
+						</trans-unit>
+						<trans-unit id="nighttime_image">
+							<source>NighttimeImage</source>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+							<source>TransparentColor</source>
+						</trans-unit>
+						<group id="center">
+							<trans-unit id="name">
+								<source>Center</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<group id="origin">
+							<trans-unit id="name">
+								<source>Origin</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+					</group>
+					<group id="screen">
+						<trans-unit id="name">
+							<source>Screen</source>
+						</trans-unit>
+						<trans-unit id="number">
+							<source>Number</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
+					</group>
+					<group id="pilot_lamp">
+						<trans-unit id="name">
+							<source>PilotLamp</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="daytime_image">
+							<source>DaytimeImage</source>
+						</trans-unit>
+						<trans-unit id="nighttime_image">
+							<source>NighttimeImage</source>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+							<source>TransparentColor</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
+					</group>
+					<group id="needle">
+						<trans-unit id="name">
+							<source>Needle</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="defined_radius">
+							<source>DefinedRadius</source>
+						</trans-unit>
+						<trans-unit id="radius">
+							<source>Radius</source>
+						</trans-unit>
+						<trans-unit id="daytime_image">
+							<source>DaytimeImage</source>
+						</trans-unit>
+						<trans-unit id="nighttime_image">
+							<source>NighttimeImage</source>
+						</trans-unit>
+						<trans-unit id="color">
+							<source>Color</source>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+							<source>TransparentColor</source>
+						</trans-unit>
+						<trans-unit id="defined_origin">
+							<source>DefinedOrigin</source>
+						</trans-unit>
+						<group id="origin">
+							<trans-unit id="name">
+								<source>Origin</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="initial_angle">
+							<source>InitialAngle</source>
+						</trans-unit>
+						<trans-unit id="last_angle">
+							<source>LastAngle</source>
+						</trans-unit>
+						<trans-unit id="minimum">
+							<source>Minimum</source>
+						</trans-unit>
+						<trans-unit id="maximum">
+							<source>Maximum</source>
+						</trans-unit>
+						<trans-unit id="defined_natural_freq">
+							<source>DefinedNaturalFreq</source>
+						</trans-unit>
+						<trans-unit id="natural_freq">
+							<source>NaturalFreq</source>
+						</trans-unit>
+						<trans-unit id="defined_damping_ratio">
+							<source>DefiedDampingRatio</source>
+						</trans-unit>
+						<trans-unit id="damping_ratio">
+							<source>DampingRatio</source>
+						</trans-unit>
+						<trans-unit id="backstop">
+							<source>Backstop</source>
+						</trans-unit>
+						<trans-unit id="smoothed">
+							<source>smoothed</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
+					</group>
+					<group id="digital_number">
+						<trans-unit id="name">
+							<source>DigitalNumber</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="daytime_image">
+							<source>DaytimeImage</source>
+						</trans-unit>
+						<trans-unit id="nighttime_image">
+							<source>NighttimeImage</source>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+							<source>TransparentColor</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
+						<trans-unit id="interval">
+							<source>Interval</source>
+						</trans-unit>
+					</group>
+					<group id="digital_gauge">
+						<trans-unit id="name">
+							<source>DigitalGauge</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="radius">
+							<source>Radius</source>
+						</trans-unit>
+						<trans-unit id="color">
+							<source>Color</source>
+						</trans-unit>
+						<trans-unit id="initial_angle">
+							<source>InitialAngle</source>
+						</trans-unit>
+						<trans-unit id="last_angle">
+							<source>LastAngle</source>
+						</trans-unit>
+						<trans-unit id="minimum">
+							<source>Minimum</source>
+						</trans-unit>
+						<trans-unit id="maximum">
+							<source>Maximum</source>
+						</trans-unit>
+						<trans-unit id="step">
+							<source>Step</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
+					</group>
+					<group id="linear_gauge">
+						<trans-unit id="name">
+							<source>LinearGauge</source>
+						</trans-unit>
+						<trans-unit id="subject">
+							<source>Subject</source>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="daytime_image">
+							<source>DaytimeImage</source>
+						</trans-unit>
+						<trans-unit id="nighttime_image">
+							<source>NighttimeImage</source>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+							<source>TransparentColor</source>
+						</trans-unit>
+						<trans-unit id="minimum">
+							<source>Minimum</source>
+						</trans-unit>
+						<trans-unit id="maximum">
+							<source>Maximum</source>
+						</trans-unit>
+						<group id="direction">
+							<trans-unit id="name">
+								<source>Direction</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="width">
+							<source>Width</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
+					</group>
+					<group id="timetable">
+						<trans-unit id="name">
+							<source>Timetable</source>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="height">
+							<source>Height</source>
+						</trans-unit>
+						<trans-unit id="width">
+							<source>Width</source>
+						</trans-unit>
+						<trans-unit id="transparent_color">
+							<source>TransparentColor</source>
+						</trans-unit>
+						<trans-unit id="layer">
+							<source>Layer</source>
+						</trans-unit>
+					</group>
+					<group id="touch">
+						<trans-unit id="name">
+							<source>Touch</source>
+						</trans-unit>
+						<group id="location">
+							<trans-unit id="name">
+								<source>Location</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<group id="size">
+							<trans-unit id="name">
+								<source>Size</source>
+							</trans-unit>
+							<trans-unit id="x">
+								<source>X</source>
+							</trans-unit>
+							<trans-unit id="y">
+								<source>Y</source>
+							</trans-unit>
+						</group>
+						<trans-unit id="jump_screen">
+							<source>JumpScreen</source>
+						</trans-unit>
+						<trans-unit id="sound_index">
+							<source>SoundIndex</source>
+						</trans-unit>
+						<trans-unit id="command">
+							<source>Command</source>
+						</trans-unit>
+						<trans-unit id="command_option">
+							<source>CommandOption</source>
+						</trans-unit>
+					</group>
+				</group>
+				<group id="sound_settings">
+					<trans-unit id="name">
+						<source>Sound settings</source>
+					</trans-unit>
+					<trans-unit id="key">
+						<source>Key</source>
+					</trans-unit>
+					<trans-unit id="filename">
+						<source>Filename</source>
+					</trans-unit>
+					<trans-unit id="position">
+						<source>Position</source>
+					</trans-unit>
+					<trans-unit id="radius">
+						<source>Radius</source>
+					</trans-unit>
+					<group id="edit_entry">
+						<trans-unit id="name">
+							<source>Edit entry</source>
+						</trans-unit>
+						<group id="section">
+							<trans-unit id="name">
+								<source>Section select</source>
+							</trans-unit>
+						</group>
+						<group id="key">
+							<trans-unit id="name">
+								<source>Key type select</source>
+							</trans-unit>
+						</group>
+						<group id="value">
+							<trans-unit id="name">
+								<source>Input value</source>
+							</trans-unit>
+							<trans-unit id="filename">
+								<source>Filename</source>
+							</trans-unit>
+							<trans-unit id="radius">
+								<source>Radius</source>
+							</trans-unit>
+							<trans-unit id="position">
+								<source>Position setting</source>
+							</trans-unit>
+							<group id="position">
+								<trans-unit id="name">
+									<source>Position</source>
+								</trans-unit>
+								<trans-unit id="x">
+									<source>x coordinate</source>
+								</trans-unit>
+								<trans-unit id="y">
+									<source>y coordinate</source>
+								</trans-unit>
+								<trans-unit id="z">
+									<source>z coordinate</source>
+								</trans-unit>
+							</group>
+						</group>
+					</group>
+					<group id="message">
+						<trans-unit id="empty_filename">
+							<source>File name has not been entered.</source>
+						</trans-unit>
+						<trans-unit id="key_exist">
+							<source>The specified key is already set.</source>
+						</trans-unit>
+					</group>
+				</group>
+				<group id="status">
+					<trans-unit id="name">
+						<source>Status</source>
+					</trans-unit>
+					<group id="menu">
+						<trans-unit id="error">
+							<source>Error</source>
+						</trans-unit>
+						<trans-unit id="warning">
+							<source>Warning</source>
+						</trans-unit>
+						<trans-unit id="info">
+							<source>Information</source>
+						</trans-unit>
+						<trans-unit id="clear">
+							<source>Clear</source>
+						</trans-unit>
+					</group>
+					<trans-unit id="level">
+						<source>Level</source>
+					</trans-unit>
+					<trans-unit id="description">
+						<source>Description</source>
+					</trans-unit>
+				</group>
+				<group id="message">
+					<trans-unit id="error">
+						<source>Error</source>
+					</trans-unit>
+					<trans-unit id="warning">
+						<source>Warning</source>
+					</trans-unit>
+					<trans-unit id="info">
+						<source>Information</source>
+					</trans-unit>
+					<trans-unit id="positive">
+						<source>positive</source>
+					</trans-unit>
+					<trans-unit id="non_negative">
+						<source>non-negative</source>
+					</trans-unit>
+					<trans-unit id="non_zero">
+						<source>non-zero</source>
+					</trans-unit>
+					<trans-unit id="invalid_float">
+						<source>This value must be a {0}floating-point number.</source>
+					</trans-unit>
+					<trans-unit id="invalid_color">
+						<source>invalid_color</source>
+					</trans-unit>
+				</group>
+			</group>
 		</body>
 	</file>
 </xliff>
