@@ -185,7 +185,14 @@ namespace OpenBve
 						{
 							Train.ApplyEmergencyBrake();
 						}
-						
+						if (Train.Station >= 0 && stopIndex >= 0 && Train.StationDistanceToStopPoint < Program.CurrentRoute.Stations[Train.Station].Stops[stopIndex].BackwardTolerance && (Program.CurrentRoute.Stations[Train.Station].StopsHere(Train) & (Program.CurrentRoute.Stations[Train.Station].OpenLeftDoors | Program.CurrentRoute.Stations[Train.Station].OpenRightDoors) & Math.Abs(Train.CurrentSpeed) < 0.25 & Train.StationState == TrainStopState.Pending))
+						{
+							// doors not fully open at station - open doors
+							if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
+							{
+								TrainManager.OpenTrainDoors(Train, Program.CurrentRoute.Stations[Train.Station].OpenLeftDoors, Program.CurrentRoute.Stations[Train.Station].OpenRightDoors);
+							}
+						}
 						CurrentInterval = 1.0;
 					}
 					else
@@ -232,7 +239,7 @@ namespace OpenBve
 						if (Train.Station >= 0 & Train.StationState == TrainStopState.Completed)
 						{
 							// ready for departure - close doors
-							if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic && Train.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked)
+							if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
 							{
 								TrainManager.CloseTrainDoors(Train, true, true);
 							}
@@ -240,10 +247,19 @@ namespace OpenBve
 						else if (Train.Station >= 0 & Train.StationState == TrainStopState.Boarding)
 						{
 						}
+						else if (Train.Station >= 0 && stopIndex >= 0 && Train.StationDistanceToStopPoint < Program.CurrentRoute.Stations[Train.Station].Stops[stopIndex].BackwardTolerance && (Program.CurrentRoute.Stations[Train.Station].StopsHere(Train) & (Program.CurrentRoute.Stations[Train.Station].OpenLeftDoors | Program.CurrentRoute.Stations[Train.Station].OpenRightDoors) & Math.Abs(Train.CurrentSpeed) < 0.25 & Train.StationState == TrainStopState.Pending))
+						{
+							// doors not fully open at station - open doors
+							if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
+							{
+								TrainManager.OpenTrainDoors(Train, Program.CurrentRoute.Stations[Train.Station].OpenLeftDoors, Program.CurrentRoute.Stations[Train.Station].OpenRightDoors);
+							}
+							CurrentInterval = 1.0;
+						}
 						else
 						{
 							// not at station - close doors
-							if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic && Train.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked)
+							if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
 							{
 								TrainManager.CloseTrainDoors(Train, true, true);
 							}
@@ -253,7 +269,7 @@ namespace OpenBve
 				else if (Train.Station >= 0 && stopIndex >= 0 && Train.StationDistanceToStopPoint < Program.CurrentRoute.Stations[Train.Station].Stops[stopIndex].BackwardTolerance && (Program.CurrentRoute.Stations[Train.Station].StopsHere(Train) & (Program.CurrentRoute.Stations[Train.Station].OpenLeftDoors | Program.CurrentRoute.Stations[Train.Station].OpenRightDoors) & Math.Abs(Train.CurrentSpeed) < 0.25 & Train.StationState == TrainStopState.Pending))
 				{
 					// arrived at station - open doors
-					if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic && Train.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked)
+					if (Train.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
 					{
 						TrainManager.OpenTrainDoors(Train, Program.CurrentRoute.Stations[Train.Station].OpenLeftDoors, Program.CurrentRoute.Stations[Train.Station].OpenRightDoors);
 					}
