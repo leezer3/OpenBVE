@@ -101,6 +101,8 @@ namespace LibRender2
 		public Matrix4D CurrentProjectionMatrix;
 		public Matrix4D CurrentViewMatrix;
 
+		public Vector3 TransformedLightPosition;
+
 		protected List<Matrix4D> projectionMatrixList;
 		protected List<Matrix4D> viewMatrixList;
 
@@ -185,7 +187,7 @@ namespace LibRender2
 		{
 			Screen = new Screen();
 			Camera = new CameraProperties(this);
-			Lighting = new Lighting();
+			Lighting = new Lighting(this);
 			Marker = new Marker();
 
 			projectionMatrixList = new List<Matrix4D>();
@@ -918,6 +920,7 @@ namespace LibRender2
 
 		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, Matrix4D modelMatrix, Matrix4D modelViewMatrix, bool IsDebugTouchMode = false)
 		{
+			GL.Disable(EnableCap.Lighting);
 			if (State.Prototype.Mesh.Vertices.Length < 1)
 			{
 				return;

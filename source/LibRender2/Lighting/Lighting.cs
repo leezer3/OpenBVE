@@ -8,6 +8,8 @@ namespace LibRender2.Lightings
 {
 	public class Lighting
 	{
+		private readonly BaseRenderer renderer;
+
 		/// <summary>Whether dynamic lighting is currently enabled</summary>
 		public bool DynamicLighting = false;
 
@@ -32,17 +34,21 @@ namespace LibRender2.Lightings
 		/// <remarks>0.0f represents no light, 1.0f represents full brightness</remarks>
 		public float OptionLightingResultingAmount;
 
-		internal Lighting()
+		internal Lighting(BaseRenderer Renderer)
 		{
+			renderer = Renderer;
 		}
 
 		/// <summary>Updates the lighting model on a per frame basis</summary>
 		public void Initialize()
 		{
-			GL.Light(LightName.Light0, LightParameter.Ambient,new Color4(OptionAmbientColor.R,OptionAmbientColor.G,OptionAmbientColor.B,255));
-			GL.Light(LightName.Light0, LightParameter.Diffuse, new Color4(OptionDiffuseColor.R, OptionDiffuseColor.G, OptionDiffuseColor.B, 255));
-			GL.LightModel(LightModelParameter.LightModelAmbient, new[] { 0.0f, 0.0f, 0.0f, 1.0f });
-			GL.Enable(EnableCap.Light0);
+			if (!renderer.AvailableNewRenderer)
+			{
+				GL.Light(LightName.Light0, LightParameter.Ambient,new Color4(OptionAmbientColor.R,OptionAmbientColor.G,OptionAmbientColor.B,255));
+				GL.Light(LightName.Light0, LightParameter.Diffuse, new Color4(OptionDiffuseColor.R, OptionDiffuseColor.G, OptionDiffuseColor.B, 255));
+				GL.LightModel(LightModelParameter.LightModelAmbient, new[] { 0.0f, 0.0f, 0.0f, 1.0f });
+				GL.Enable(EnableCap.Light0);
+			}
 			GL.Enable(EnableCap.ColorMaterial);
 
 			float x = OptionAmbientColor.R + (float)OptionAmbientColor.G + OptionAmbientColor.B;
