@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
+using OpenBveApi.Objects;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Vector3 = OpenBveApi.Math.Vector3;
@@ -162,7 +163,7 @@ namespace LibRender2.Shaders
 				MaterialSpecular = (short)GL.GetUniformLocation(handle, "uMaterial.specular"),
 				MaterialEmission = (short)GL.GetUniformLocation(handle, "uMaterial.emission"),
 				MaterialShininess = (short)GL.GetUniformLocation(handle, "uMaterial.shininess"),
-				MaterialIsEmissive = (short)GL.GetUniformLocation(handle, "uMaterial.isEmissive"),
+				MaterialFlags = (short)GL.GetUniformLocation(handle, "uMaterial.flags"),
 				MaterialIsAdditive = (short)GL.GetUniformLocation(handle, "uIsAdditive"),
 				IsFog = (short)GL.GetUniformLocation(handle, "uIsFog"),
 				FogStart = (short)GL.GetUniformLocation(handle, "uFogStart"),
@@ -286,9 +287,9 @@ namespace LibRender2.Shaders
 			GL.Uniform1(UniformLayout.MaterialShininess, MaterialShininess);
 		}
 
-		public void SetMaterialEmissive(bool Emissive)
+		public void SetMaterialFlags(MaterialFlags Flags)
 		{
-			GL.Uniform1(UniformLayout.MaterialIsEmissive, Emissive ? 1 : 0);
+			GL.Uniform1(UniformLayout.MaterialFlags, (int)Flags);
 		}
 
 		public void SetIsFog(bool IsFog)

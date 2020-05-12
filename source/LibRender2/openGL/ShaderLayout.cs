@@ -94,9 +94,9 @@
 		public short MaterialShininess = -1;
 
 		/// <summary>
-		/// The handle of "uMaterial.isEmmisive" within the shader
+		/// The handle of "uMaterial.flags" within the shader
 		/// </summary>
-		public short MaterialIsEmissive = -1;
+		public short MaterialFlags = -1;
 
 		/// <summary>
 		/// The handle of "uMaterial.isEmmisive" within the shader

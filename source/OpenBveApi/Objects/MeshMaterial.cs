@@ -9,7 +9,7 @@ namespace OpenBveApi.Objects
 	public struct MeshMaterial
 	{
 		/// <summary>A bit mask combining constants of the MeshMaterial structure.</summary>
-		public byte Flags;
+		public MaterialFlags Flags;
 		/// <summary>The base color of the material</summary>
 		public Color32 Color;
 		/// <summary>The texture transparent color</summary>
@@ -28,10 +28,6 @@ namespace OpenBveApi.Objects
 		/// <summary>A bit mask specifying the glow properties. Use GetGlowAttenuationData to create valid data for this field.</summary>
 		[CLSCompliant(false)]
 		public ushort GlowAttenuationData;
-		/// <summary>The mask used when determining the emissive color</summary>
-		public const int EmissiveColorMask = 1;
-		/// <summary>The mask used when determining the transparent color</summary>
-		public const int TransparentColorMask = 2;
 		/// <summary>The wrap mode, or null to allow the renderer to decide</summary>
 		public OpenGlTextureWrapMode? WrapMode;
 

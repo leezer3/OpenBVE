@@ -1,5 +1,5 @@
 #version 150
-
+precision highp int;
 struct Light
 {
 	vec3 position;
@@ -15,7 +15,7 @@ struct MaterialColor
 	vec4 specular;
 	vec3 emission;
 	float shininess;
-	bool isEmissive;
+	int flags; //bitmask as per stored in the object
 }; 
 
 in vec3 iPosition;
@@ -28,7 +28,6 @@ uniform mat4 uCurrentModelViewMatrix;
 uniform mat4 uCurrentTextureMatrix;
 
 uniform bool uIsLight;
-uniform bool uIsEmissive;
 uniform Light uLight;
 uniform MaterialColor uMaterial;
 
@@ -57,9 +56,21 @@ void findDirectionalLight(in vec3 normal)
    {
        pf = pow(nDotHV, uMaterial.shininess);
    }
-   Ambient  += vec4(uLight.ambient, 1.0);
-   Diffuse  += vec4(uLight.diffuse, 1.0) * nDotVP;
-   Specular += vec4(uLight.specular, 1.0) * pf;
+   
+   if((uMaterial.flags & 1) != 0)
+   {
+	  //Emissive, so replace all lights with pure white
+      Ambient  = vec4(1.0);
+	  Diffuse  = vec4(1.0);
+	  Specular = vec4(1.0);
+   }
+   else
+   {
+      Ambient  += vec4(uLight.ambient, 1.0);
+      Diffuse  += vec4(uLight.diffuse, 1.0) * nDotVP;
+	  Specular += vec4(uLight.specular, 1.0) * pf;
+   }
+   
 }
 
 vec4 getLightResult(in vec3 normal, in vec4 ecPosition)
@@ -100,9 +111,9 @@ void main()
 	{
 		lightResult = getLightResult(eyeNormal, oViewPos);
 
-		if(uMaterial.isEmissive)
+		if((uMaterial.flags & 1) != 0)
 		{
-			lightResult += vec4(uMaterial.emission, 1.0);
+			lightResult = clamp(lightResult + vec4(uMaterial.emission, 1.0), 0.0, 1.0);
 		}
 	}
 	else

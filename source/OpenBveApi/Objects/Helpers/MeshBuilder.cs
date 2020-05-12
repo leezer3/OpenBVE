@@ -73,12 +73,12 @@ namespace OpenBveApi.Objects
 				{
 					if (EnableHacks && !string.IsNullOrEmpty(Materials[i].DaytimeTexture))
 					{
-						if (Materials[i].DaytimeTexture == Materials[i].NighttimeTexture)
+						if (!string.IsNullOrEmpty(Materials[i].NighttimeTexture))
 						{
 							if (Materials[i].EmissiveColorUsed == false)
 							{
 								/*
-								 * Versions of openBVE prior to 1.7.0 rendered polygons with identical defined textures as unlit
+								 * Versions of openBVE prior to 1.7.0 rendered polygons with two defined textures as unlit
 								 * The new GL 3.2 renderer corrects this behaviour
 								 * Horrid workaround....
 								 */
@@ -88,8 +88,16 @@ namespace OpenBveApi.Objects
 
 						}
 					}
-					
-					Object.Mesh.Materials[mm + i].Flags = (byte) ((Materials[i].EmissiveColorUsed ? MeshMaterial.EmissiveColorMask : 0) | (Materials[i].TransparentColorUsed ? MeshMaterial.TransparentColorMask : 0));
+
+					Object.Mesh.Materials[mm + i].Flags = new MaterialFlags();
+					if (Materials[i].EmissiveColorUsed)
+					{
+						Object.Mesh.Materials[mm + i].Flags |= MaterialFlags.Emissive;
+					}
+					if (Materials[i].TransparentColorUsed)
+					{
+						Object.Mesh.Materials[mm + i].Flags |= MaterialFlags.TransparentColor;
+					}
 					Object.Mesh.Materials[mm + i].Color = Materials[i].Color;
 					Object.Mesh.Materials[mm + i].TransparentColor = Materials[i].TransparentColor;
 					if (Materials[i].DaytimeTexture != null || Materials[i].Text != null)
