@@ -953,15 +953,7 @@ namespace LibRender2
 
 			if (OptionWireFrame || IsDebugTouchMode)
 			{
-				if (material.Color != lastColor)
-				{
-					Shader.SetMaterialAmbient(material.Color);
-					lastColor = material.Color;
-				}
-				Shader.SetOpacity(1.0f);
-				Shader.SetBrightness(1.0f);
-				VAO.Draw(PrimitiveType.LineLoop, Face.IboStartIndex, Face.Vertices.Length);
-				return;
+				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
 			}
 
 			// lighting
@@ -1152,6 +1144,10 @@ namespace LibRender2
 			{
 				RestoreBlendFunc();
 				Shader.SetIsFog(OptionFog);
+			}
+			if (OptionWireFrame || IsDebugTouchMode)
+			{
+				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 			}
 		}
 
