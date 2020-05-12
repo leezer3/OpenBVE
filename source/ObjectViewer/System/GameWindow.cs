@@ -275,8 +275,9 @@ namespace OpenBve
 				Program.Renderer.Lighting.OptionDiffuseColor.R = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative);
 				Program.Renderer.Lighting.OptionDiffuseColor.G = (byte)Math.Round(32.0 + 128.0 * Program.LightingRelative);
 				Program.Renderer.Lighting.OptionDiffuseColor.B = (byte)Math.Round(32.0 + 128.0 * Math.Sqrt(Program.LightingRelative));
-				Program.Renderer.Lighting.Initialize();
+				
             }
+            Program.Renderer.Lighting.Initialize();
             Program.Renderer.RenderScene();
             SwapBuffers();
         }

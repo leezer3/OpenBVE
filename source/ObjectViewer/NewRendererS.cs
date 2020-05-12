@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using LibRender2;
 using LibRender2.Objects;
+using LibRender2.Viewports;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
@@ -162,8 +163,19 @@ namespace OpenBve
 			ResetOpenGlState();
 
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
+			UpdateViewport(ViewportChangeMode.ChangeToScenery);
 			CurrentViewMatrix = Matrix4D.LookAt(Vector3.Zero, new Vector3(Camera.AbsoluteDirection.X, Camera.AbsoluteDirection.Y, -Camera.AbsoluteDirection.Z), new Vector3(Camera.AbsoluteUp.X, Camera.AbsoluteUp.Y, -Camera.AbsoluteUp.Z));
+			if (!AvailableNewRenderer)
+			{
+				GL.Light(LightName.Light0, LightParameter.Position, new[] { (float)Lighting.OptionLightPosition.X, (float)Lighting.OptionLightPosition.Y, (float)-Lighting.OptionLightPosition.Z, 0.0f });
+			}
+
+			Lighting.OptionLightingResultingAmount = (Lighting.OptionAmbientColor.R + Lighting.OptionAmbientColor.G + Lighting.OptionAmbientColor.B) / 480.0f;
+
+			if (Lighting.OptionLightingResultingAmount > 1.0f)
+			{
+				Lighting.OptionLightingResultingAmount = 1.0f;
+			}
 
 			OptionFog = false;
 
@@ -187,7 +199,7 @@ namespace OpenBve
 					Cube.DrawImmediate(Vector3.Zero, Vector3.Forward, Vector3.Down, Vector3.Right, new Vector3(0.01, 0.01, 100.0), Camera.AbsolutePosition, null);
 				}
 			}
-
+			GL.Disable(EnableCap.DepthTest);
 			// opaque face
 			if (AvailableNewRenderer)
 			{
@@ -198,6 +210,7 @@ namespace OpenBve
 					DefaultShader.SetIsLight(true);
 					TransformedLightPosition = new Vector3(Lighting.OptionLightPosition.X, Lighting.OptionLightPosition.Y, -Lighting.OptionLightPosition.Z);
 					TransformedLightPosition.Transform(CurrentViewMatrix);
+					DefaultShader.SetLightPosition(TransformedLightPosition);
 					DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
 					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
 					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
