@@ -1610,6 +1610,9 @@
 						<source>Config</source>
 						<target>Config</target>
 					</trans-unit>
+					<trans-unit id="compatibility_signals">
+						<source>Default Signals:</source>
+					</trans-unit>
 					<trans-unit id="panel2_extended">
 						<source>Enable Panel2 Extended Mode</source>
 					</trans-unit>

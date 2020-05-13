@@ -1267,7 +1267,7 @@ namespace OpenBve
 							// signals
 							for (int k = 0; k < Data.Blocks[i].Signals.Length; k++)
 							{
-								SignalData sd;
+								SignalObject sd;
 								if (Data.Blocks[i].Signals[k].SignalCompatibilityObjectIndex >= 0)
 								{
 									sd = Data.CompatibilitySignals[Data.Blocks[i].Signals[k].SignalCompatibilityObjectIndex];
@@ -1296,32 +1296,32 @@ namespace OpenBve
 									Vector3 wpos = pos;
 									wpos += dx * RailTransformation.X + dy * RailTransformation.Y + dz * RailTransformation.Z;
 									double tpos = Data.Blocks[i].Signals[k].TrackPosition;
-									if (sd is AnimatedObjectSignalData)
+									if (sd is AnimatedObjectSignalObject)
 									{
-										AnimatedObjectSignalData aosd = (AnimatedObjectSignalData)sd;
+										AnimatedObjectSignalObject aosd = (AnimatedObjectSignalObject)sd;
 										aosd.Objects.CreateObject(wpos, RailTransformation, new Transformation(Data.Blocks[i].Signals[k].Yaw, Data.Blocks[i].Signals[k].Pitch, Data.Blocks[i].Signals[k].Roll), Data.Blocks[i].Signals[k].SectionIndex, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, 1.0, false);
 									}
-									else if (sd is CompatibilitySignalData)
+									else if (sd is CompatibilitySignalObject)
 									{
-										CompatibilitySignalData csd = (CompatibilitySignalData)sd;
-										if (csd.Numbers.Length != 0)
+										CompatibilitySignalObject csd = (CompatibilitySignalObject)sd;
+										if (csd.AspectNumbers.Length != 0)
 										{
 											double brightness = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
 											AnimatedObjectCollection aoc = new AnimatedObjectCollection(Program.CurrentHost);
 											aoc.Objects = new AnimatedObject[1];
 											aoc.Objects[0] = new AnimatedObject(Program.CurrentHost);
-											aoc.Objects[0].States = new ObjectState[csd.Numbers.Length];
-											for (int l = 0; l < csd.Numbers.Length; l++)
+											aoc.Objects[0].States = new ObjectState[csd.AspectNumbers.Length];
+											for (int l = 0; l < csd.AspectNumbers.Length; l++)
 											{
 												aoc.Objects[0].States[l] = new ObjectState { Prototype = (StaticObject)csd.Objects[l].Clone() };
 											}
 											string expr = "";
-											for (int l = 0; l < csd.Numbers.Length - 1; l++)
+											for (int l = 0; l < csd.AspectNumbers.Length - 1; l++)
 											{
-												expr += "section " + csd.Numbers[l].ToString(Culture) + " <= " + l.ToString(Culture) + " ";
+												expr += "section " + csd.AspectNumbers[l].ToString(Culture) + " <= " + l.ToString(Culture) + " ";
 											}
-											expr += (csd.Numbers.Length - 1).ToString(Culture);
-											for (int l = 0; l < csd.Numbers.Length - 1; l++)
+											expr += (csd.AspectNumbers.Length - 1).ToString(Culture);
+											for (int l = 0; l < csd.AspectNumbers.Length - 1; l++)
 											{
 												expr += " ?";
 											}
@@ -1330,9 +1330,9 @@ namespace OpenBve
 											aoc.CreateObject(wpos, RailTransformation, new Transformation(Data.Blocks[i].Signals[k].Yaw, Data.Blocks[i].Signals[k].Pitch, Data.Blocks[i].Signals[k].Roll), Data.Blocks[i].Signals[k].SectionIndex, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, brightness, false);
 										}
 									}
-									else if (sd is Bve4SignalData)
+									else if (sd is Bve4SignalObject)
 									{
-										Bve4SignalData b4sd = (Bve4SignalData)sd;
+										Bve4SignalObject b4sd = (Bve4SignalObject)sd;
 										if (b4sd.SignalTextures.Length != 0)
 										{
 											int m = Math.Max(b4sd.SignalTextures.Length, b4sd.GlowTextures.Length);

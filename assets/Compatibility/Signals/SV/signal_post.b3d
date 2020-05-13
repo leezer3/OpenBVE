@@ -1,0 +1,40 @@
+[meshbuilder]
+vertex -0.4, 3.3, -0.20
+vertex 0.4, 3.3, -0.20
+vertex 0.4,-0.1, -0.20
+vertex -0.4, -0.1, -0.20
+face 0,1,2,3
+[texture]
+load ..\sbb\Mast.png
+coordinates 0,0,0
+coordinates 1,1,0
+coordinates 2,1,1
+coordinates 3,0,1
+transparent 0,0,255
+
+[MeshBuilder]
+Vertex -0.5, 4, -0.4
+Vertex  0.5, 4, -0.4
+Vertex  0.5, 1.7, -0.4
+Vertex -0.5, 1.7, -0.4
+Face 0, 1, 2, 3
+[Texture]
+Load schirm.png
+Coordinates 0, 0, 0
+Coordinates 1, 1, 0
+Coordinates 2, 1, 1
+Coordinates 3, 0, 1
+Transparent 0, 0, 255
+
+[meshbuilder]
+vertex -0.05, 2.5, -0.25
+vertex 0.05, 2.5, -0.25
+vertex 0.05,  1.5, -0.25
+vertex -0.05,  1.5, -0.25
+face 0,1,2,3
+[texture]
+load Schild.png
+coordinates 0,0,0
+coordinates 1,1,0
+coordinates 2,1,1
+coordinates 3,0,1

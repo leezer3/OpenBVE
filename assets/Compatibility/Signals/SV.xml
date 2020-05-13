@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">Japanese\
+	<CompatibilitySignals>
+		<SignalSetName>SV (Swiss)</SignalSetName>
+		<!-- NOTE: Must contain exactly 9 signals in order 
+			SignalSetName must be unique-->
+		<Signal>
+			<Aspect Number="0">SV\signal_0.csv</Aspect>
+			<Aspect Number="2">SV\signal_1.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">SV\signal_0.csv</Aspect>
+			<Aspect Number="2">SV\signal_3.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">SV\signal_0.csv</Aspect>
+			<Aspect Number="2">SV\signal_1.csv</Aspect>
+			<Aspect Number="4">SV\signal_3.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">SV\signal_0.csv</Aspect>
+			<Aspect Number="1">SV\signal_1.csv</Aspect>
+			<Aspect Number="2">SV\signal_1.csv</Aspect>
+			<Aspect Number="4">SV\signal_3.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">SV\signal_0.csv</Aspect>
+			<Aspect Number="2">SV\signal_1.csv</Aspect>
+			<Aspect Number="3">SV\signal_2.csv</Aspect>
+			<Aspect Number="4">SV\signal_3.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">SV\signal_0.csv</Aspect>
+			<Aspect Number="1">SV\signal_1.csv</Aspect>
+			<Aspect Number="2">SV\signal_1.csv</Aspect>
+			<Aspect Number="3">SV\signal_2.csv</Aspect>
+			<Aspect Number="4">SV\signal_3.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">SV\signal_0.csv</Aspect>
+			<Aspect Number="2">SV\signal_1.csv</Aspect>
+			<Aspect Number="3">SV\signal_1.csv</Aspect>
+			<Aspect Number="4">SV\signal_2.csv</Aspect>
+			<Aspect Number="5">SV\signal_3.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">SV\signal_0.csv</Aspect>
+			<Aspect Number="1">SV\signal_1.csv</Aspect>
+			<Aspect Number="2">SV\signal_1.csv</Aspect>
+			<Aspect Number="3">SV\signal_2.csv</Aspect>
+			<Aspect Number="4">SV\signal_2.csv</Aspect>
+			<Aspect Number="5">SV\signal_3.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">null</Aspect>
+			<Aspect Number="3">null</Aspect>
+			<Aspect Number="4">null</Aspect>
+		</Signal>
+		<SignalPost>SV\signal_post.b3d</SignalPost>
+		<SpeedLimits>
+			<Aspect Number="0">0</Aspect>
+			<Aspect Number="1">Unlimited</Aspect>
+			<Aspect Number="2">Unlimited</Aspect>
+			<Aspect Number="3">Unlimited</Aspect>
+			<Aspect Number="4">Unlimited</Aspect>
+			<Aspect Number="5">Unlimited</Aspect>
+		</SpeedLimits>
+	</CompatibilitySignals>
+</openBVE>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">Japanese\
+	<CompatibilitySignals>
+		<SignalSetName>SNCF (French)</SignalSetName>
+		<!-- NOTE: Must contain exactly 9 signals in order 
+			SignalSetName must be unique-->
+		<Signal>
+			<Aspect Number="0">SNCF\signal_2_0.csv</Aspect>
+			<Aspect Number="2">SNCF\signal_2a_2.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">SNCF\signal_2_0.csv</Aspect>
+			<Aspect Number="2">SNCF\signal_2b_4.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">SNCF\signal_3_0.csv</Aspect>
+			<Aspect Number="2">SNCF\signal_3_2.csv</Aspect>
+			<Aspect Number="4">SNCF\signal_3_4.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">SNCF\signal_4_0.csv</Aspect>
+			<Aspect Number="1">SNCF\signal_4_1.csv</Aspect>
+			<Aspect Number="2">SNCF\signal_4_2.csv</Aspect>
+			<Aspect Number="4">SNCF\signal_4_3.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">SNCF\signal_4_0.csv</Aspect>
+			<Aspect Number="2">SNCF\signal_4_2.csv</Aspect>
+			<Aspect Number="3">SNCF\signal_4_5.csv</Aspect>
+			<Aspect Number="4">SNCF\signal_4_3.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">SNCF\signal_5_0.csv</Aspect>
+			<Aspect Number="1">SNCF\signal_5_1.csv</Aspect>
+			<Aspect Number="2">SNCF\signal_5_2.csv</Aspect>
+			<Aspect Number="3">SNCF\signal_5_3.csv</Aspect>
+			<Aspect Number="4">SNCF\signal_5_4.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">SNCF\signal_5_0.csv</Aspect>
+			<Aspect Number="1">SNCF\signal_5_2.csv</Aspect>
+			<Aspect Number="2">SNCF\signal_5_3.csv</Aspect>
+			<Aspect Number="3">SNCF\signal_5_4.csv</Aspect>
+			<Aspect Number="4">SNCF\signal_5_5.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">SNCF\signal_5_0.csv</Aspect>
+			<Aspect Number="2">SNCF\signal_5_1.csv</Aspect>
+			<Aspect Number="3">SNCF\signal_5_2.csv</Aspect>
+			<Aspect Number="4">SNCF\signal_5_3.csv</Aspect>
+			<Aspect Number="5">SNCF\signal_5_4.csv</Aspect>
+		</Signal>
+		<Signal>
+			<!-- Banner repeater -->
+			<Aspect Number="0">SNCF\repeatingsignal_0.csv</Aspect>
+			<Aspect Number="3">SNCF\repeatingsignal_1.csv</Aspect>
+			<Aspect Number="4">SNCF\repeatingsignal_2.csv</Aspect>
+		</Signal>
+		<SpeedLimits>
+			<!-- Default speed limits for each aspect number in km/h
+				NOTE: Will likely be overriden by Route.Signal-->
+			<Aspect Number="0">0</Aspect>
+			<Aspect Number="1">Unlimited</Aspect>
+			<Aspect Number="2">Unlimited</Aspect>
+			<Aspect Number="3">Unlimited</Aspect>
+			<Aspect Number="4">Unlimited</Aspect>
+			<Aspect Number="5">Unlimited</Aspect>
+		</SpeedLimits>
+	</CompatibilitySignals>
+</openBVE>
