@@ -354,7 +354,7 @@ namespace OpenBve {
 					{
 						ExtensionsCfgParser.ParseExtensionsConfig(TrainManager.Trains[k].TrainFolder, CurrentTrainEncoding, ref CarObjects, ref BogieObjects, ref CouplerObjects, TrainManager.Trains[k], LoadObjects);
 					}
-					World.CameraCar = TrainManager.Trains[k].DriverCar;
+					TrainManager.PlayerTrain.CameraCar = TrainManager.Trains[k].DriverCar;
 					System.Threading.Thread.Sleep(1); if (Cancel) return;
 					//Stores the current array index of the bogie object to add
 					//Required as there are two bogies per car, and we're using a simple linear array....
@@ -407,7 +407,7 @@ namespace OpenBve {
 					if (Game.InitialReversedConsist)
 					{
 						TrainManager.Trains[k].Reverse();
-						World.CameraCar = TrainManager.Trains[k].DriverCar;
+						TrainManager.PlayerTrain.CameraCar = TrainManager.Trains[k].DriverCar;
 						Program.Renderer.Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
 					}
 				} else if (TrainManager.Trains[k].State != TrainState.Bogus) {

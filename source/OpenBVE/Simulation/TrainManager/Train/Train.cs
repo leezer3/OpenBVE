@@ -25,6 +25,9 @@ namespace OpenBve
 			internal PluginManager.Plugin Plugin;
 			/// <summary>The driver body</summary>
 			internal DriverBody DriverBody;
+
+			/// <summary>The index of the car which the camera is currently anchored to</summary>
+			internal int CameraCar;
 			internal Handles Handles;
 			internal Car[] Cars;
 			internal TrainSpecs Specs;
