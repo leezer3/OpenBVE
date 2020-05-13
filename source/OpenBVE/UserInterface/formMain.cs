@@ -653,6 +653,7 @@ namespace OpenBve {
 			comboboxMode.Items[0] = Translations.GetInterfaceString("mode_arcade");
 			comboboxMode.Items[1] = Translations.GetInterfaceString("mode_normal");
 			comboboxMode.Items[2] = Translations.GetInterfaceString("mode_expert");
+			labelCompatibilitySignalSet.Text = Translations.GetInterfaceString("options_compatibility_signals");
 			/*
 			 * Localisation for strings in the game review pane
 			 */
