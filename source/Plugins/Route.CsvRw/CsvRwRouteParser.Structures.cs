@@ -16,7 +16,7 @@ namespace OpenBve
 	 */
 	internal partial class CsvRwRouteParser
 	{
-		private struct Rail
+		internal struct Rail
 		{
 			internal bool RailStarted;
 			internal bool RailStartRefreshed;
@@ -25,7 +25,7 @@ namespace OpenBve
 			internal Vector2 RailEnd;
 			internal double CurveCant;
 		}
-		private struct WallDike
+		internal struct WallDike
 		{
 			/// <summary>Whether the wall/ dike is shown for this block</summary>
 			internal bool Exists;
@@ -35,7 +35,7 @@ namespace OpenBve
 			internal int Direction;
 		}
 		
-		private struct Pole
+		internal struct Pole
 		{
 			internal bool Exists;
 			internal int Mode;
@@ -43,7 +43,7 @@ namespace OpenBve
 			internal double Interval;
 			internal int Type;
 		}
-		private struct Form
+		internal struct Form
 		{
 			internal int PrimaryRail;
 			internal int SecondaryRail;
@@ -53,13 +53,13 @@ namespace OpenBve
 			internal const int SecondaryRailL = -1;
 			internal const int SecondaryRailR = -2;
 		}
-		private struct Crack
+		internal struct Crack
 		{
 			internal int PrimaryRail;
 			internal int SecondaryRail;
 			internal int Type;
 		}
-		private struct Signal
+		internal struct Signal
 		{
 			internal double TrackPosition;
 			internal int SectionIndex;
@@ -72,15 +72,8 @@ namespace OpenBve
 			internal bool ShowObject;
 			internal bool ShowPost;
 		}
-		private struct Section
-		{
-			internal double TrackPosition;
-			internal int[] Aspects;
-			internal int DepartureStationIndex;
-			internal bool Invisible;
-			internal SectionType Type;
-		}
-		private struct Limit
+		
+		internal struct Limit
 		{
 			internal double TrackPosition;
 			internal double Speed;
@@ -88,7 +81,7 @@ namespace OpenBve
 			internal int Cource;
 		}
 		
-		private struct Brightness
+		internal struct Brightness
 		{
 			internal double TrackPosition;
 			internal float Value;
@@ -111,9 +104,9 @@ namespace OpenBve
 			internal RequestStop Late;
 			internal bool FullSpeed;
 		}
-		private enum SoundType { World, TrainStatic, TrainDynamic }
+		internal enum SoundType { World, TrainStatic, TrainDynamic }
 
-		private struct Sound
+		internal struct Sound
 		{
 			internal double TrackPosition;
 			internal SoundHandle SoundBuffer;
@@ -131,7 +124,7 @@ namespace OpenBve
 			internal double ForwardTolerance;
 			internal double BackwardTolerance;
 		}
-		private struct Transponder
+		internal struct Transponder
 		{
 			internal double TrackPosition;
 			internal int Type;
@@ -145,7 +138,7 @@ namespace OpenBve
 			internal double Pitch;
 			internal double Roll;
 		}
-		private struct DestinationEvent
+		internal struct DestinationEvent
 		{
 			internal double TrackPosition;
 			internal int Type;
@@ -158,7 +151,7 @@ namespace OpenBve
 			internal double Pitch;
 			internal double Roll;
 		}
-		private struct PointOfInterest
+		internal struct PointOfInterest
 		{
 			internal double TrackPosition;
 			internal int RailIndex;
@@ -168,11 +161,12 @@ namespace OpenBve
 			internal double Roll;
 			internal string Text;
 		}
-		private struct RailCycle {
+		internal struct RailCycle {
             internal int RailCycleIndex;
             internal int CurrentCycle;
         }
-		private class Block
+
+		internal class Block
 		{
 			internal int Background;
 			internal Brightness[] BrightnessChanges;

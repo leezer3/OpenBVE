@@ -537,14 +537,7 @@ namespace OpenBve
 					CurrentRoute.Tracks[0].Elements[n].WorldUp = Vector3.Cross(CurrentRoute.Tracks[0].Elements[n].WorldDirection, CurrentRoute.Tracks[0].Elements[n].WorldSide);
 				}
 				//Pitch
-				if (Data.Blocks[i].Pitch != 0.0)
-				{
-					CurrentRoute.Tracks[0].Elements[n].Pitch = Data.Blocks[i].Pitch;
-				}
-				else
-				{
-					CurrentRoute.Tracks[0].Elements[n].Pitch = 0.0;
-				}
+				CurrentRoute.Tracks[0].Elements[n].Pitch = Data.Blocks[i].Pitch;
 				// curves
 				double a = 0.0;
 				double c = Data.BlockInterval;
@@ -1264,59 +1257,7 @@ namespace OpenBve
 							// sections
 							for (int k = 0; k < Data.Blocks[i].Sections.Length; k++)
 							{
-								int m = CurrentRoute.Sections.Length;
-								Array.Resize(ref CurrentRoute.Sections, m + 1);
-								// create associated transponders
-								for (int g = 0; g <= i; g++)
-								{
-									for (int l = 0; l < Data.Blocks[g].Transponders.Length; l++)
-									{
-										if (Data.Blocks[g].Transponders[l].Type != -1 & Data.Blocks[g].Transponders[l].SectionIndex == m)
-										{
-											int o = CurrentRoute.Tracks[0].Elements[n - i + g].Events.Length;
-											Array.Resize(ref CurrentRoute.Tracks[0].Elements[n - i + g].Events, o + 1);
-											double dt = Data.Blocks[g].Transponders[l].TrackPosition - StartingDistance + (double)(i - g) * Data.BlockInterval;
-											CurrentRoute.Tracks[0].Elements[n - i + g].Events[o] = new TransponderEvent(CurrentRoute, dt, Data.Blocks[g].Transponders[l].Type, Data.Blocks[g].Transponders[l].Data, m, Data.Blocks[g].Transponders[l].ClipToFirstRedSection);
-											Data.Blocks[g].Transponders[l].Type = -1;
-										}
-									}
-								}
-								// create section
-								CurrentRoute.Sections[m] = new RouteManager2.SignalManager.Section();
-								CurrentRoute.Sections[m].TrackPosition = Data.Blocks[i].Sections[k].TrackPosition;
-								CurrentRoute.Sections[m].Aspects = new SectionAspect[Data.Blocks[i].Sections[k].Aspects.Length];
-								for (int l = 0; l < Data.Blocks[i].Sections[k].Aspects.Length; l++)
-								{
-									CurrentRoute.Sections[m].Aspects[l].Number = Data.Blocks[i].Sections[k].Aspects[l];
-									if (Data.Blocks[i].Sections[k].Aspects[l] >= 0 & Data.Blocks[i].Sections[k].Aspects[l] < Data.SignalSpeeds.Length)
-									{
-										CurrentRoute.Sections[m].Aspects[l].Speed = Data.SignalSpeeds[Data.Blocks[i].Sections[k].Aspects[l]];
-									}
-									else
-									{
-										CurrentRoute.Sections[m].Aspects[l].Speed = double.PositiveInfinity;
-									}
-								}
-								CurrentRoute.Sections[m].Type = Data.Blocks[i].Sections[k].Type;
-								CurrentRoute.Sections[m].CurrentAspect = -1;
-								if (m > 0)
-								{
-									CurrentRoute.Sections[m].PreviousSection = CurrentRoute.Sections[m - 1];
-									CurrentRoute.Sections[m - 1].NextSection = CurrentRoute.Sections[m];
-								}
-								else
-								{
-									CurrentRoute.Sections[m].PreviousSection = null;
-								}
-								CurrentRoute.Sections[m].NextSection = null;
-								CurrentRoute.Sections[m].StationIndex = Data.Blocks[i].Sections[k].DepartureStationIndex;
-								CurrentRoute.Sections[m].Invisible = Data.Blocks[i].Sections[k].Invisible;
-								CurrentRoute.Sections[m].Trains = new AbstractTrain[] { };
-								// create section change event
-								double d = Data.Blocks[i].Sections[k].TrackPosition - StartingDistance;
-								int p = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-								Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, p + 1);
-								CurrentRoute.Tracks[0].Elements[n].Events[p] = new SectionChangeEvent(CurrentRoute, d, m - 1, m);
+								Data.Blocks[i].Sections[k].Create(CurrentRoute, Data.Blocks, i, n, Data.SignalSpeeds, StartingDistance, Data.BlockInterval);
 							}
 							// transponders introduced after corresponding sections
 							for (int l = 0; l < Data.Blocks[i].Transponders.Length; l++)

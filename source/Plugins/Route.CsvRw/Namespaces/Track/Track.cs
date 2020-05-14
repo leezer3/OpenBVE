@@ -541,18 +541,17 @@ namespace OpenBve
 
 							int n = Data.Blocks[BlockIndex].Sections.Length;
 							Array.Resize<Section>(ref Data.Blocks[BlockIndex].Sections, n + 1);
-							Data.Blocks[BlockIndex].Sections[n].TrackPosition = Data.TrackPosition;
-							Data.Blocks[BlockIndex].Sections[n].Aspects = aspects;
-							Data.Blocks[BlockIndex].Sections[n].Type = valueBased ? SectionType.ValueBased : SectionType.IndexBased;
-							Data.Blocks[BlockIndex].Sections[n].DepartureStationIndex = -1;
+							int departureStationIndex = -1;
 							if (CurrentStation >= 0 && CurrentRoute.Stations[CurrentStation].ForceStopSignal)
 							{
 								if (CurrentStation >= 0 & CurrentStop >= 0 & !DepartureSignalUsed)
 								{
-									Data.Blocks[BlockIndex].Sections[n].DepartureStationIndex = CurrentStation;
+									departureStationIndex = CurrentStation;
 									DepartureSignalUsed = true;
 								}
 							}
+							Data.Blocks[BlockIndex].Sections[n]= new Section(Data.TrackPosition, aspects, departureStationIndex, valueBased ? SectionType.ValueBased : SectionType.IndexBased);
+							
 
 							CurrentSection++;
 						}
@@ -740,20 +739,17 @@ namespace OpenBve
 
 						int n = Data.Blocks[BlockIndex].Sections.Length;
 						Array.Resize<Section>(ref Data.Blocks[BlockIndex].Sections, n + 1);
-						Data.Blocks[BlockIndex].Sections[n].TrackPosition = Data.TrackPosition;
-						Data.Blocks[BlockIndex].Sections[n].Aspects = aspects;
-						Data.Blocks[BlockIndex].Sections[n].DepartureStationIndex = -1;
-						Data.Blocks[BlockIndex].Sections[n].Invisible = x == 0.0;
-						Data.Blocks[BlockIndex].Sections[n].Type = SectionType.ValueBased;
+						int departureStationIndex = -1;
 						if (CurrentStation >= 0 && CurrentRoute.Stations[CurrentStation].ForceStopSignal)
 						{
 							if (CurrentStation >= 0 & CurrentStop >= 0 & !DepartureSignalUsed)
 							{
-								Data.Blocks[BlockIndex].Sections[n].DepartureStationIndex = CurrentStation;
+								departureStationIndex = CurrentStation;
 								DepartureSignalUsed = true;
 							}
 						}
 
+						Data.Blocks[BlockIndex].Sections[n] = new Section(Data.TrackPosition, aspects, departureStationIndex, SectionType.ValueBased, x == 0.0);
 						CurrentSection++;
 						n = Data.Blocks[BlockIndex].Signals.Length;
 						Array.Resize<Signal>(ref Data.Blocks[BlockIndex].Signals, n + 1);
