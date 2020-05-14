@@ -68,6 +68,7 @@
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Structures\Expression.PositionedExpression.cs" />
+    <Compile Include="Structures\Route\Station.Stop.cs" />
     <Compile Include="Structures\Signals\SignalData.BVE4.cs" />
     <Compile Include="XML\DynamicBackground.cs" />
     <Compile Include="XML\DynamicLight.cs" />

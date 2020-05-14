@@ -1286,12 +1286,7 @@ namespace OpenBve
 
 						int n = Data.Blocks[BlockIndex].StopPositions.Length;
 						Array.Resize<Stop>(ref Data.Blocks[BlockIndex].StopPositions, n + 1);
-						Data.Blocks[BlockIndex].StopPositions[n].TrackPosition = Data.TrackPosition;
-						Data.Blocks[BlockIndex].StopPositions[n].Station = CurrentStation;
-						Data.Blocks[BlockIndex].StopPositions[n].Direction = dir;
-						Data.Blocks[BlockIndex].StopPositions[n].ForwardTolerance = forw;
-						Data.Blocks[BlockIndex].StopPositions[n].BackwardTolerance = backw;
-						Data.Blocks[BlockIndex].StopPositions[n].Cars = cars;
+						Data.Blocks[BlockIndex].StopPositions[n] = new Stop(Data.TrackPosition, CurrentStation, dir, forw, backw, cars);
 						CurrentStop = cars;
 					}
 

@@ -452,28 +452,7 @@ namespace OpenBve
 				// stop
 				for (int j = 0; j < Data.Blocks[i].StopPositions.Length; j++)
 				{
-					int s = Data.Blocks[i].StopPositions[j].Station;
-					int t = CurrentRoute.Stations[s].Stops.Length;
-					Array.Resize(ref CurrentRoute.Stations[s].Stops, t + 1);
-					CurrentRoute.Stations[s].Stops[t].TrackPosition = Data.Blocks[i].StopPositions[j].TrackPosition;
-					CurrentRoute.Stations[s].Stops[t].ForwardTolerance = Data.Blocks[i].StopPositions[j].ForwardTolerance;
-					CurrentRoute.Stations[s].Stops[t].BackwardTolerance = Data.Blocks[i].StopPositions[j].BackwardTolerance;
-					CurrentRoute.Stations[s].Stops[t].Cars = Data.Blocks[i].StopPositions[j].Cars;
-					double dx, dy = 2.0;
-					if (CurrentRoute.Stations[s].OpenLeftDoors & !CurrentRoute.Stations[s].OpenRightDoors)
-					{
-						dx = -5.0;
-					}
-					else if (!CurrentRoute.Stations[s].OpenLeftDoors & CurrentRoute.Stations[s].OpenRightDoors)
-					{
-						dx = 5.0;
-					}
-					else
-					{
-						dx = 0.0;
-					}
-
-					CurrentRoute.Stations[s].SoundOrigin = Position + dx * CurrentRoute.Tracks[0].Elements[n].WorldSide + dy * CurrentRoute.Tracks[0].Elements[n].WorldUp;
+					Data.Blocks[i].StopPositions[j].CreateEvent(ref CurrentRoute.Stations, Position, CurrentRoute.Tracks[0].Elements[n].WorldUp, CurrentRoute.Tracks[0].Elements[n].WorldSide);
 				}
 				// limit
 				for (int j = 0; j < Data.Blocks[i].Limits.Length; j++)

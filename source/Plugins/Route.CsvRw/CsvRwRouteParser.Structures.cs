@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
-using OpenBveApi.Sounds;
+using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using RouteManager2.Climate;
 using RouteManager2.MessageManager;
 using RouteManager2.SignalManager;
 using SoundManager;
+using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
 namespace OpenBve
 {
@@ -100,15 +101,7 @@ namespace OpenBve
 			internal int Direction;
 			internal int Cource;
 		}
-		private struct Stop
-		{
-			internal double TrackPosition;
-			internal int Station;
-			internal int Direction;
-			internal double ForwardTolerance;
-			internal double BackwardTolerance;
-			internal int Cars;
-		}
+		
 		private struct Brightness
 		{
 			internal double TrackPosition;
