@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">Japanese\
+	<CompatibilitySignals>
+		<SignalSetName>Deutsche Bahn- Old (German)</SignalSetName>
+		<Signal>
+			<Aspect Number="0">DB\signal_0.csv</Aspect>
+			<Aspect Number="2">DB\signal_1.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">DB\signal_0.csv</Aspect>
+			<Aspect Number="4">DB\signal_2.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">DB\signal_0.csv</Aspect>
+			<Aspect Number="2">DB\signal_1.csv</Aspect>
+			<Aspect Number="4">DB\signal_2.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">DB\signal_0.csv</Aspect>
+			<Aspect Number="1">DB\signal_1.csv</Aspect>
+			<Aspect Number="2">DB\signal_1.csv</Aspect>
+			<Aspect Number="4">DB\signal_2.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">DB\signal_0.csv</Aspect>
+			<Aspect Number="2">DB\signal_1.csv</Aspect>
+			<Aspect Number="3">DB\signal_1.csv</Aspect>
+			<Aspect Number="4">DB\signal_2.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">DB\signal_0.csv</Aspect>
+			<Aspect Number="1">DB\signal_1.csv</Aspect>
+			<Aspect Number="1">DB\signal_1.csv</Aspect>
+			<Aspect Number="2">DB\signal_2.csv</Aspect>
+			<Aspect Number="3">DB\signal_3.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">DB\signal_0.csv</Aspect>
+			<Aspect Number="2">DB\signal_1.csv</Aspect>
+			<Aspect Number="3">DB\signal_1.csv</Aspect>
+			<Aspect Number="4">DB\signal_2.csv</Aspect>
+			<Aspect Number="5">DB\signal_3.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">DB\signal_0.csv</Aspect>
+			<Aspect Number="1">DB\signal_1.csv</Aspect>
+			<Aspect Number="2">DB\signal_1.csv</Aspect>
+			<Aspect Number="3">DB\signal_2.csv</Aspect>
+			<Aspect Number="4">DB\signal_3.csv</Aspect>
+			<Aspect Number="5">DB\signal_3.csv</Aspect>
+		</Signal>
+		<Signal>
+			<!-- Banner repeater -->
+			<Aspect Number="0">DB\repeatingsignal_0.csv</Aspect>
+			<Aspect Number="3">DB\repeatingsignal_1.csv</Aspect>
+			<Aspect Number="4">DB\repeatingsignal_2.csv</Aspect>
+		</Signal>
+		<SignalPost>DB\signal_post.b3d</SignalPost>
+		<SpeedLimits>
+			<!-- Limits set by SignalChanger, may not be prototypical
+				but assume OK for the original content as designed-->
+			<Aspect Number="0">0</Aspect>
+			<Aspect Number="1">Unlimited</Aspect>
+			<Aspect Number="2">Unlimited</Aspect>
+			<Aspect Number="3">Unlimited</Aspect>
+			<Aspect Number="4">Unlimited</Aspect>
+			<Aspect Number="5">Unlimited</Aspect>
+		</SpeedLimits>
+	</CompatibilitySignals>
+</openBVE>

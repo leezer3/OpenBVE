@@ -5,6 +5,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using OpenBveApi.World;
+using RouteManager2.SignalManager;
 
 namespace OpenBve
 {
@@ -12,14 +13,14 @@ namespace OpenBve
 	/// A signal has a face based mesh and glow
 	/// Textures are then substituted according to the aspect
 	/// </summary>
-	internal class Bve4SignalData : SignalData
+	internal class Bve4SignalData : SignalObject
 	{
 		internal StaticObject BaseObject;
 		internal StaticObject GlowObject;
 		internal Texture[] SignalTextures;
 		internal Texture[] GlowTextures;
 
-		internal override void Create(Vector3 wpos, Transformation RailTransformation, Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockInterval, double TrackPosition, double Brightness)
+		public override void Create(Vector3 wpos, Transformation RailTransformation, Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockInterval, double TrackPosition, double Brightness)
 		{
 			if (SignalTextures.Length != 0)
 			{

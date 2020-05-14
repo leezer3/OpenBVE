@@ -197,11 +197,11 @@
 					</trans-unit>
 					<trans-unit id="security_checkaccess">
 						<source>Please check that this path is accessible.</source>
-						<target>Please check that this path is accessible.</target>
+						<target>Pastikan file bisa ditemukan.</target>
 					</trans-unit>
 					<trans-unit id="security_badlocation">
 						<source>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</source>
-						<target>If you are attempting to install addons in the Program Files or ProgramData folders, this may require administrator permission. \r\n\r\n This is not recommended for security reasons.</target>
+						<target>Saat menginstal add-on di folder Program Files atau ProgramData, sistem mungkin meminta izin administrator. \r\n\r\n Tidak direkomendasikan untuk melakukannya.</target>
 					</trans-unit>
 				</group>
 				<group id="start">
@@ -313,8 +313,8 @@
 						<target>Tampilan</target>
 					</trans-unit>
 					<trans-unit id="train_notfound">
-						<source>The default train could not be found:\n\n</source>
-						<target>Kereta disarankan tidak ditemukan:\n\n</target>
+						<source>The default train could not be found:\r\n\r\n</source>
+						<target>Rute yang disarankan tidak ditemukan:\r\n\r\n</target>
 					</trans-unit>
 					<trans-unit id="train_pluginnotsupported">
 						<source>--- This train uses a safety system plugin which cannot be used on your operating system. The built-in safety systems ATS/ATC will be used instead, which might cause operational problems. ---</source>
@@ -1598,6 +1598,21 @@
 					<trans-unit id="input_device_plugin_config">
 						<source>Config</source>
 						<target>Aturan input</target>
+					</trans-unit>
+					<trans-unit id="panel2_extended">
+						<source>Enable Panel2 Extended Mode</source>
+						<target>Gunakan Panel2 Extended</target>
+					</trans-unit>
+					<trans-unit id="xobject_parser">
+						<source>X Object Parser</source>
+						<target>Pengurai file X</target>
+					</trans-unit>
+					<trans-unit id="objobject_parser">
+						<source>OBJ Object Parser</source>
+						<target>Pengurai file OBJ</target>
+					</trans-unit>
+					<trans-unit id="compatibility_signals">
+						<source>Default Signals:</source>
 					</trans-unit>
 				</group>
 				<group id="dialog">

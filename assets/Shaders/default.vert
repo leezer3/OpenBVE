@@ -2,19 +2,19 @@
 
 struct Light
 {
-    vec3 position;
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
+	vec3 position;
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
 };
 
 struct MaterialColor
 {
-    vec4 ambient;
-    vec4 diffuse;
-    vec4 specular;
+	vec4 ambient;
+	vec4 diffuse;
+	vec4 specular;
 	vec3 emission;
-    float shininess;
+	float shininess;
 	bool isEmissive;
 }; 
 
@@ -31,19 +31,17 @@ uniform bool uIsLight;
 uniform bool uIsEmissive;
 uniform Light uLight;
 uniform MaterialColor uMaterial;
-uniform bool uIsFog;
-uniform float uFogStart;
-uniform float uFogEnd;
 
+out vec4 oViewPos;
 out vec2 oUv;
 out vec4 oColor;
-out float oFogFactor;
+out vec4 lightResult;
 
 void main()
 {
-	vec4 viewPos = uCurrentModelViewMatrix * vec4(vec3(iPosition.x, iPosition.y, -iPosition.z), 1.0);
+	oViewPos = uCurrentModelViewMatrix * vec4(vec3(iPosition.x, iPosition.y, -iPosition.z), 1.0);
 	vec3 viewNormal = mat3(transpose(inverse(uCurrentModelViewMatrix))) * vec3(iNormal.x, iNormal.y, -iNormal.z);
-	gl_Position = uCurrentProjectionMatrix * viewPos;
+	gl_Position = uCurrentProjectionMatrix * oViewPos;
 
 	// Lighting
 	// Ambient
@@ -51,8 +49,8 @@ void main()
 
 	// Diffuse
 	viewNormal = normalize(viewNormal);
-	vec3 eye = normalize(-viewPos.xyz);
-	float diff = max(dot(viewNormal, uLight.position), 0.0);
+	vec3 eye = normalize(-oViewPos.xyz);
+	float diff = max(dot(viewNormal, vec3(uLight.position.x, uLight.position.y, -uLight.position.z)), 0.0);
 	vec4 diffuse = vec4(uLight.diffuse.x, uLight.diffuse.y, uLight.diffuse.z, 1.0) * (diff * uMaterial.diffuse);
 
 	// Specular
@@ -60,42 +58,30 @@ void main()
 
 	if(diff > 0.0)
 	{
-		vec3 halfVector = normalize(uLight.position + eye);
+		vec3 halfVector = normalize(vec3(uLight.position.x, uLight.position.y, -uLight.position.z) + eye);
 		float spec = pow(max(dot(halfVector, viewNormal), 0.0), uMaterial.shininess);
 		specular = vec4(uLight.specular.x, uLight.specular.y, uLight.specular.z, 1.0) * (spec * uMaterial.specular);
-	}
-
-	// Fog
-	oFogFactor = 1.0;
-
-	if (uIsFog)
-	{
-		oFogFactor *= clamp((uFogEnd - length(viewPos)) / (uFogEnd - uFogStart), 0.0, 1.0);
 	}
 
 	oUv = (uCurrentTextureMatrix * vec4(iUv, 1.0, 1.0)).xy;
 
 	oColor = iColor;
-
+	
 	if (uIsLight)
 	{
 		vec4 result;
 		if(uMaterial.isEmissive)
 		{
-			vec4 result = clamp(ambient + diffuse + specular + vec4(uMaterial.emission.x, uMaterial.emission.y, uMaterial.emission.z, 1.0), 0.0, 1.0);
-			oColor *= result;
+			lightResult = clamp(ambient + diffuse + specular + vec4(uMaterial.emission.x, uMaterial.emission.y, uMaterial.emission.z, 1.0), 0.0, 1.0);
 		}
 		else
 		{
-			vec4 result = clamp(ambient + diffuse + specular, 0.0, 1.0);
-			oColor *= result;
+			lightResult = clamp(ambient + diffuse + specular, 0.0, 1.0);
 		}
-		
-		
 	}
 	else
 	{
-		vec4 globalAmbient = vec4(1.0);
-		oColor *= globalAmbient * uMaterial.ambient;
+		lightResult = vec4(1.0) * uMaterial.ambient;
 	}
+	oColor.rgb *= oColor.a;
 }

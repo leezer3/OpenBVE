@@ -472,15 +472,15 @@ namespace OpenBve
 			{
 				case CameraViewMode.Interior:
 				case CameraViewMode.InteriorLookAhead:
-					TrainManager.PlayerTrain.Cars[World.CameraCar].InteriorCamera = Program.Renderer.Camera.Alignment;
+					TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar].InteriorCamera = Program.Renderer.Camera.Alignment;
 					break;
 				case CameraViewMode.Exterior:
-					World.CameraSavedExterior = Program.Renderer.Camera.Alignment;
+					Program.Renderer.Camera.SavedExterior = Program.Renderer.Camera.Alignment;
 					break;
 				case CameraViewMode.Track:
 				case CameraViewMode.FlyBy:
 				case CameraViewMode.FlyByZooming:
-					World.CameraSavedTrack = Program.Renderer.Camera.Alignment;
+					Program.Renderer.Camera.SavedTrack = Program.Renderer.Camera.Alignment;
 					break;
 			}
 		}
@@ -492,16 +492,16 @@ namespace OpenBve
 			{
 				case CameraViewMode.Interior:
 				case CameraViewMode.InteriorLookAhead:
-					Program.Renderer.Camera.Alignment = TrainManager.PlayerTrain.Cars[World.CameraCar].InteriorCamera;
+					Program.Renderer.Camera.Alignment = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.CameraCar].InteriorCamera;
 					break;
 				case CameraViewMode.Exterior:
-					Program.Renderer.Camera.Alignment = World.CameraSavedExterior;
+					Program.Renderer.Camera.Alignment = Program.Renderer.Camera.SavedExterior;
 					break;
 				case CameraViewMode.Track:
 				case CameraViewMode.FlyBy:
 				case CameraViewMode.FlyByZooming:
-					Program.Renderer.Camera.Alignment = World.CameraSavedTrack;
-					Program.Renderer.CameraTrackFollower.UpdateAbsolute(World.CameraSavedTrack.TrackPosition, true, false);
+					Program.Renderer.Camera.Alignment = Program.Renderer.Camera.SavedTrack;
+					Program.Renderer.CameraTrackFollower.UpdateAbsolute(Program.Renderer.Camera.SavedTrack.TrackPosition, true, false);
 					Program.Renderer.Camera.Alignment.TrackPosition = Program.Renderer.CameraTrackFollower.TrackPosition;
 					break;
 			}

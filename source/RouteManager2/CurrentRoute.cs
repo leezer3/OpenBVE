@@ -118,7 +118,8 @@ namespace RouteManager2
 			Information = new RouteInformation();
 			Illustrations.CurrentRoute = this;
 		}
-
+		
+		/// <summary>Updates all sections within the route</summary>
 		public void UpdateAllSections()
 		{
 			UpdateSection(Sections.LastOrDefault());

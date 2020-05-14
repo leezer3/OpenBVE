@@ -12,7 +12,7 @@ namespace LibRender2.Texts
 		private readonly Font Font;
 		/// <summary>The size of the underlying font in pixels.</summary>
 		public readonly float FontSize;
-		/// <summary>The 4352 tables containing 256 character each to make up 1114112 codepoints.</summary>
+		/// <summary>The 4352 tables containing 256 character each to make up 1114112 code points (U+0000...U+10FFFF).</summary>
 		private readonly OpenGlFontTable[] Tables;
 
 		private bool disposed;

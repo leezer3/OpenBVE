@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
@@ -35,7 +35,7 @@ namespace OpenBve
 		{
 			base.Initialize(CurrentHost, CurrentOptions);
 
-			if (AvailableNewRenderer)
+			if (!ForceLegacyOpenGL)
 			{
 				redAxisVAO = RegisterBox(Color128.Red);
 				greenAxisVAO = RegisterBox(Color128.Green);
@@ -148,7 +148,7 @@ namespace OpenBve
 			VertexArrayObject vao = new VertexArrayObject();
 			vao.Bind();
 			vao.SetVBO(new VertexBufferObject(vertexData, BufferUsageHint.StaticDraw));
-			vao.SetIBO(new IndexBufferObject(indexData, BufferUsageHint.StaticDraw));
+			vao.SetIBO(new IndexBufferObjectU(indexData, BufferUsageHint.StaticDraw));
 			vao.SetAttributes(DefaultShader.VertexLayout);
 			vao.UnBind();
 
@@ -317,6 +317,7 @@ namespace OpenBve
 			OptionLighting = false;
 			UnsetAlphaFunc();
 			GL.Disable(EnableCap.DepthTest);
+			SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); //FIXME: Remove when text switches between two renderer types
 			RenderOverlays();
 			OptionLighting = true;
 		}
@@ -348,7 +349,7 @@ namespace OpenBve
 				else
 				{
 					OpenGlString.Draw(Fonts.SmallFont, $"Position: {Camera.AbsolutePosition.X.ToString("0.00", culture)}, {Camera.AbsolutePosition.Y.ToString("0.00", culture)}, {Camera.AbsolutePosition.Z.ToString("0.00", culture)}", new Point((int)(0.5 * Screen.Width - 88), 4), TextAlignment.TopLeft, TextColor);
-
+					OpenGlString.Draw(Fonts.SmallFont, $"Renderer: {(AvailableNewRenderer ? "New (GL 3.0)" : "Old (GL 1.2)")}", new Point((int)(0.5 * Screen.Width - 88), 24), TextAlignment.TopLeft, TextColor);
 					keys = new[] { new[] { "F5" }, new[] { "F7" }, new[] { "del" }, new[] { "F8" }, new[] { "F10" } };
 					Keys.Render(4, 4, 24, Fonts.SmallFont, keys);
 					OpenGlString.Draw(Fonts.SmallFont, "Reload the currently open objects", new Point(32, 4), TextAlignment.TopLeft, TextColor);
@@ -357,14 +358,15 @@ namespace OpenBve
 					OpenGlString.Draw(Fonts.SmallFont, "Display the options window", new Point(32, 64), TextAlignment.TopLeft, TextColor);
 					OpenGlString.Draw(Fonts.SmallFont, "Display the train settings window", new Point(32, 84), TextAlignment.TopLeft, TextColor);
 
-					keys = new[] { new[] { "F" }, new[] { "N" }, new[] { "L" }, new[] { "G" }, new[] { "B" }, new[] { "I" } };
+					keys = new[] { new[] { "F" }, new[] { "N" }, new[] { "L" }, new[] { "G" }, new[] { "B" }, new[] { "I" }, new[] { "R" } };
 					Keys.Render(Screen.Width - 20, 4, 16, Fonts.SmallFont, keys);
 					OpenGlString.Draw(Fonts.SmallFont, $"WireFrame: {(OptionWireFrame ? "on" : "off")}", new Point(Screen.Width - 28, 4), TextAlignment.TopRight, TextColor);
 					OpenGlString.Draw(Fonts.SmallFont, $"Normals: {(OptionNormals ? "on" : "off")}", new Point(Screen.Width - 28, 24), TextAlignment.TopRight, TextColor);
 					OpenGlString.Draw(Fonts.SmallFont, $"Lighting: {(Program.LightingTarget == 0 ? "night" : "day")}", new Point(Screen.Width - 28, 44), TextAlignment.TopRight, TextColor);
 					OpenGlString.Draw(Fonts.SmallFont, $"Grid: {(OptionCoordinateSystem ? "on" : "off")}", new Point(Screen.Width - 28, 64), TextAlignment.TopRight, TextColor);
 					OpenGlString.Draw(Fonts.SmallFont, $"Background: {GetBackgroundColorName()}", new Point(Screen.Width - 28, 84), TextAlignment.TopRight, TextColor);
-					OpenGlString.Draw(Fonts.SmallFont, "Hide interface", new Point(Screen.Width - 28, 104), TextAlignment.TopRight, TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, $"Hide interface:", new Point(Screen.Width - 28, 104), TextAlignment.TopRight, TextColor);
+					OpenGlString.Draw(Fonts.SmallFont, $"Switch renderer type:", new Point(Screen.Width - 28, 124), TextAlignment.TopRight, TextColor);
 
 					keys = new[] { new[] { null, "W", null }, new[] { "A", "S", "D" } };
 					Keys.Render(4, Screen.Height - 40, 16, Fonts.SmallFont, keys);

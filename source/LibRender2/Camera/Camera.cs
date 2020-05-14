@@ -67,6 +67,10 @@ namespace LibRender2.Cameras
 		public CameraViewMode CurrentMode;
 		/// <summary>The current camera restriction mode</summary>
 		public CameraRestrictionMode CurrentRestriction = CameraRestrictionMode.NotAvailable;
+		/// <summary>The saved exterior camera alignment</summary>
+		public CameraAlignment SavedExterior;
+		/// <summary>The saved track camera alignment</summary>
+		public CameraAlignment SavedTrack;
 
 		private Vector3 absolutePosition;
 

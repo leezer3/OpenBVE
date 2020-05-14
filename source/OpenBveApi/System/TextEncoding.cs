@@ -1,4 +1,5 @@
-﻿using Ude;
+﻿using System;
+using Ude;
 
 namespace OpenBveApi
 {
@@ -112,14 +113,26 @@ namespace OpenBveApi
 		/// <returns>The character system encoding, or default encoding if unknown</returns>
 		public static System.Text.Encoding GetSystemEncodingFromFile(string File, System.Text.Encoding DefaultEncoding = null)
 		{
-			Encoding e = GetEncodingFromFile(File);
+			Encoding encoding = GetEncodingFromFile(File);
 
-			if (e == Encoding.Unknown)
+			if (encoding == Encoding.Unknown)
 			{
 				return DefaultEncoding ?? System.Text.Encoding.Default;
 			}
 
-			return System.Text.Encoding.GetEncoding((int)e);
+			System.Text.Encoding systemEncoding;
+
+			try
+			{
+				systemEncoding = System.Text.Encoding.GetEncoding((int)encoding);
+			}
+			catch (SystemException e) when (e is ArgumentException || e is NotSupportedException)
+			{
+				// MAC_CYRILLIC under Mono (Missing codepage?)
+				systemEncoding = DefaultEncoding ?? System.Text.Encoding.Default;
+			}
+
+			return systemEncoding;
 		}
 
 		/// <summary>Gets the character system encoding of a file within a folder</summary>
@@ -194,7 +207,7 @@ namespace OpenBveApi
 				{
 					return Encoding.Unknown;
 				}
-				
+
 				switch (Det.Charset)
 				{
 					case Charsets.IBM855:

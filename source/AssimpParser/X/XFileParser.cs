@@ -765,7 +765,7 @@ namespace AssimpNET.X
 				ThrowException("Vertex color count does not match vertex count");
 			}
 
-			List<Color128> colors = Enumerable.Repeat(new Color128(0.0f, 0.0f, 0.0f, 1.0f), (int)numColors).ToList();
+			List<Color128> colors = Enumerable.Repeat(Color128.Black, (int)numColors).ToList();
 			for (int a = 0; a < (int)numColors; a++)
 			{
 				uint index = ReadInt();

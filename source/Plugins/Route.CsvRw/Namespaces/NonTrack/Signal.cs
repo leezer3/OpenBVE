@@ -5,6 +5,7 @@ using System.Text;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
+using RouteManager2.SignalManager;
 
 namespace OpenBve
 {
@@ -48,8 +49,7 @@ namespace OpenBve
 										Program.CurrentHost.LoadObject(f, Encoding, out obj);
 										if (obj is AnimatedObjectCollection)
 										{
-											AnimatedObjectSignalData Signal = new AnimatedObjectSignalData();
-											Signal.Objects = obj;
+											AnimatedObjectSignalData Signal = new AnimatedObjectSignalData(obj);
 											Data.Signals[Index] = Signal;
 										}
 										else

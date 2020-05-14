@@ -1,0 +1,13 @@
+[MeshBuilder]
+Vertex -0.28, 5, -0.15
+Vertex  0.28, 5, -0.15
+Vertex  0.28, -0.1, -0.15
+Vertex -0.28, -0.1, -0.15
+Face 0, 1, 2, 3
+[Texture]
+Load mast.png
+Coordinates 0, 0, 0
+Coordinates 1, 1, 0
+Coordinates 2, 1, 1
+Coordinates 3, 0, 1
+Transparent 0,0,255

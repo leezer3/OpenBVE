@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openBVE xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">Japanese\
+	<CompatibilitySignals>
+		<SignalSetName>SBB (Swiss)</SignalSetName>
+		<!-- NOTE: Must contain exactly 9 signals in order 
+			SignalSetName must be unique-->
+		<Signal>
+			<Aspect Number="0">SBB\Signal_0.csv</Aspect>
+			<Aspect Number="2">SBB\Signal_1.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">SBB\Signal_0.csv</Aspect>
+			<Aspect Number="2">SBB\Signal_2.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">SBB\Signal_0.csv</Aspect>
+			<Aspect Number="2">SBB\Signal_1.csv</Aspect>
+			<Aspect Number="3">SBB\Signal_2.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">SBB\Signal_0.csv</Aspect>
+			<Aspect Number="2">SBB\Signal_1.csv</Aspect>
+			<Aspect Number="3">SBB\Signal_2.csv</Aspect>
+			<Aspect Number="4">SBB\Signal_3.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">SBB\Signal_0.csv</Aspect>
+			<Aspect Number="2">SBB\Signal_1.csv</Aspect>
+			<Aspect Number="3">SBB\Signal_2.csv</Aspect>
+			<Aspect Number="4">SBB\Signal_3.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">SBB\Signal_0.csv</Aspect>
+			<Aspect Number="1">SBB\Signal_1.csv</Aspect>
+			<Aspect Number="2">SBB\Signal_1.csv</Aspect>
+			<Aspect Number="3">SBB\Signal_2.csv</Aspect>
+			<Aspect Number="4">SBB\Signal_3.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">SBB\Signal_0.csv</Aspect>
+			<Aspect Number="2">SBB\Signal_1.csv</Aspect>
+			<Aspect Number="3">SBB\Signal_2.csv</Aspect>
+			<Aspect Number="4">SBB\Signal_3.csv</Aspect>
+			<Aspect Number="5">SBB\Signal_3.csv</Aspect>
+		</Signal>
+		<Signal>
+			<Aspect Number="0">SBB\Signal_0.csv</Aspect>
+			<Aspect Number="1">SBB\Signal_1.csv</Aspect>
+			<Aspect Number="2">SBB\Signal_1.csv</Aspect>
+			<Aspect Number="3">SBB\Signal_2.csv</Aspect>
+			<Aspect Number="4">SBB\Signal_3.csv</Aspect>
+			<Aspect Number="5">SBB\Signal_3.csv</Aspect>
+		</Signal>
+		<Signal>
+			<!-- Banner repeater -->
+			<Aspect Number="0">SBB\repeatingsignal_0.csv</Aspect>
+			<Aspect Number="3">SBB\repeatingsignal_1.csv</Aspect>
+			<Aspect Number="4">SBB\repeatingsignal_2.csv</Aspect>
+		</Signal>
+		<SpeedLimits>
+			<!-- Default speed limits for each aspect number in km/h
+				NOTE: Will likely be overriden by Route.Signal-->
+			<Aspect Number="0">0</Aspect>
+			<Aspect Number="1">40</Aspect>
+			<Aspect Number="2">40</Aspect>
+			<Aspect Number="3">60</Aspect>
+			<Aspect Number="4">Unlimited</Aspect>
+			<Aspect Number="5">Unlimited</Aspect>
+		</SpeedLimits>
+	</CompatibilitySignals>
+</openBVE>

@@ -1,0 +1,47 @@
+[MeshBuilder]
+Vertex -0.28, 2.6, -0.15
+Vertex  0.28, 2.6, -0.15
+Vertex  0.28, 0.9, -0.15
+Vertex -0.28, 0.9, -0.15
+Face 0, 1, 2, 3
+[Texture]
+Load mast_r.png
+Coordinates 0, 0, 0
+Coordinates 1, 1, 0
+Coordinates 2, 1, 1
+Coordinates 3, 0, 1
+Transparent 0, 0, 255
+
+[MeshBuilder]
+Vertex -0.1,5,0.0
+Vertex 0.1,5,0.0
+Vertex 0.1,5,0.3
+Vertex -0.1,5,0.3
+Vertex -0.1,0,0.1
+Vertex 0.1,0,0.1
+Vertex 0.1,0,0.4
+Vertex -0.1,0,0.4
+Face 0,1,5,4
+Face 1,2,6,5
+Face 2,3,7,6
+Face 3,0,4,7
+Color 128,128,128
+
+[MeshBuilder]
+Vertex -0.3,1.1,0.3
+Vertex 0.3,1.1,0.3
+Vertex 0.3,1.1,0.7
+Vertex -0.3,1.1,0.7
+Vertex -0.3,0,0.3
+Vertex 0.3,0,0.3
+Vertex 0.3,0,0.7
+Vertex -0.3,0,0.7
+Face 0,1,5,4
+Face 1,2,6,5
+Face 2,3,7,6
+Face 3,0,4,7
+Face 0,3,2,1
+Color 192,192,192
+
+
+

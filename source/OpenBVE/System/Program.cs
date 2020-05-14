@@ -32,6 +32,9 @@ namespace OpenBve {
 		/// <summary>Whether the program is currently running on Microsoft Windows or compatible. This is of interest for whether running Win32 plugins is possible.</summary>
 		internal static bool CurrentlyRunningOnWindows = false;
 
+		/// <summary>Whether the program is currently running on MacOS</summary>
+		internal static bool CurrentlyRunningOnMacOS = false;
+
 		/// <summary>Stores the current CPU architecture</summary>
 		internal static ImageFileMachine CurrentCPUArchitecture;
 
@@ -111,6 +114,12 @@ namespace OpenBve {
 					MessageBox.Show(
 						"You are currently running as the root user." + System.Environment.NewLine +
 						"This is a bad idea, please dont!", Translations.GetInterfaceString("program_title"), MessageBoxButtons.OK, MessageBoxIcon.Hand);
+				}
+
+				if (File.Exists(@"/System/Library/CoreServices/SystemVersion.plist"))
+				{
+					//Mono's platform detection doesn't reliably differentiate between OS-X and Unix
+					CurrentlyRunningOnMacOS = true;
 				}
 			}
 			else

@@ -68,7 +68,7 @@ namespace OpenBve
 		    FileSystem.AppendToLogFile("Route file format is: " + (isRw ? "RW" : "CSV"));
 		    try
 		    {
-			    CsvRwRouteParser.ParseRoute(path, isRw, Encoding, trainPath, objectPath, soundPath, PreviewOnly);
+			    CsvRwRouteParser.ParseRoute(path, isRw, Encoding, trainPath, objectPath, soundPath, null, PreviewOnly);  //FIXME: Doesn't pass the new signal set parameter yet
 			    return true;
 		    }
 		    catch

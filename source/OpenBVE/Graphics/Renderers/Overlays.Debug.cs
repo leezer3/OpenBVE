@@ -4,6 +4,7 @@ using LibRender2;
 using OpenBve.BrakeSystems;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
+using OpenBveApi.Math;
 using SoundManager;
 
 namespace OpenBve.Graphics.Renderers
@@ -15,7 +16,7 @@ namespace OpenBve.Graphics.Renderers
 		{
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			// debug
-			renderer.Rectangle.Draw(null, new PointF(0.0f, 0.0f), new SizeF(renderer.Screen.Width, renderer.Screen.Height), new Color128(0.5f, 0.5f, 0.5f, 0.5f));
+			renderer.Rectangle.Draw(null, Vector2.Null, new Vector2(renderer.Screen.Width, renderer.Screen.Height), new Color128(0.5f, 0.5f, 0.5f, 0.5f));
 			// actual handles
 			{
 				string t = "actual: " + (TrainManager.PlayerTrain.Handles.Reverser.Actual == TrainManager.ReverserPosition.Reverse ? "B" : TrainManager.PlayerTrain.Handles.Reverser.Actual == TrainManager.ReverserPosition.Forwards ? "F" : "N");
@@ -196,7 +197,7 @@ namespace OpenBve.Graphics.Renderers
 					{
 						string text = Lines[i].Substring(1);
 						Size size = Fonts.SmallFont.MeasureString(text);
-						renderer.Rectangle.Draw(null, new PointF((float)x, (float)y), new SizeF(size.Width + 6.0f, size.Height + 2.0f), new Color128(0.35f, 0.65f, 0.90f, 0.8f));
+						renderer.Rectangle.Draw(null, new Vector2((float)x, (float)y), new Vector2(size.Width + 6.0f, size.Height + 2.0f), new Color128(0.35f, 0.65f, 0.90f, 0.8f));
 						renderer.OpenGlString.Draw(Fonts.SmallFont, text, new Point((int)x + 3, (int)y), TextAlignment.TopLeft, Color128.White);
 					}
 					else
@@ -221,7 +222,7 @@ namespace OpenBve.Graphics.Renderers
 		{
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			// debug
-			renderer.Rectangle.Draw(null, new PointF(0.0f, 0.0f), new SizeF(renderer.Screen.Width, renderer.Screen.Height), new Color128(0.5f, 0.5f, 0.5f, 0.5f));
+			renderer.Rectangle.Draw(null, new Vector2(0.0f, 0.0f), new Vector2(renderer.Screen.Width, renderer.Screen.Height), new Color128(0.5f, 0.5f, 0.5f, 0.5f));
 			string[] Lines;
 			if (TrainManager.PlayerTrain.Plugin.Panel.Length > 0)
 			{
@@ -250,7 +251,7 @@ namespace OpenBve.Graphics.Renderers
 					{
 						string text = Lines[i].Substring(1);
 						Size size = Fonts.SmallFont.MeasureString(text);
-						renderer.Rectangle.Draw(null, new PointF((float)x, (float)y), new SizeF(size.Width + 6.0f, size.Height + 2.0f), new Color128(0.35f, 0.65f, 0.9f, 0.8f));
+						renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(size.Width + 6.0f, size.Height + 2.0f), new Color128(0.35f, 0.65f, 0.9f, 0.8f));
 						renderer.OpenGlString.Draw(Fonts.SmallFont, text, new Point((int)x + 3, (int)y), TextAlignment.TopLeft, Color128.White);
 					}
 					else
@@ -287,10 +288,10 @@ namespace OpenBve.Graphics.Renderers
 						renderer.OpenGlString.Draw(Fonts.SmallFont, "Brake pipe", new Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
 						heading[0] = true;
 					}
-					renderer.Rectangle.Draw(null, new PointF((float)x, (float)y), new SizeF((float)w, (float)h), new Color128(0.0f, 0.0f, 0.0f, 1.0f));
+					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(w, h), Color128.Black);
 					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.brakePipe.CurrentPressure;
 					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.brakePipe.NormalPressure;
-					renderer.Rectangle.Draw(null, new PointF((float)x, (float)y), new SizeF((float)(r * w), (float)h), new Color128(1.0f, 1.0f, 0.0f, 1.0f));
+					renderer.Rectangle.Draw(null, new Vector2((float)x, (float)y), new Vector2(r * w, h), Color128.Yellow);
 				}
 				x += w + 8.0;
 				// auxillary reservoir
@@ -301,10 +302,10 @@ namespace OpenBve.Graphics.Renderers
 						renderer.OpenGlString.Draw(Fonts.SmallFont, "Auxillary reservoir", new Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
 						heading[1] = true;
 					}
-					renderer.Rectangle.Draw(null, new PointF((float)x, (float)y), new SizeF((float)w, (float)h), new Color128(0.0f, 0.0f, 0.0f, 1.0f));
+					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(w, h), Color128.Black);
 					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.auxiliaryReservoir.CurrentPressure;
 					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.auxiliaryReservoir.MaximumPressure;
-					renderer.Rectangle.Draw(null, new PointF((float)x, (float)y), new SizeF((float)(r * w), (float)h), new Color128(0.5f, 0.5f, 0.5f, 1.0f));
+					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(r * w, h), Color128.Grey);
 				}
 				x += w + 8.0;
 				// brake cylinder
@@ -314,10 +315,11 @@ namespace OpenBve.Graphics.Renderers
 						renderer.OpenGlString.Draw(Fonts.SmallFont, "Brake cylinder", new Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
 						heading[2] = true;
 					}
-					renderer.Rectangle.Draw(null, new PointF((float)x, (float)y), new SizeF((float)w, (float)h), new Color128(0.0f, 0.0f, 0.0f, 1.0f));
+
+					renderer.Rectangle.Draw(null, new Vector2((float) x, (float) y), new Vector2(w, h), Color128.Black);
 					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.brakeCylinder.CurrentPressure;
 					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.brakeCylinder.EmergencyMaximumPressure;
-					renderer.Rectangle.Draw(null, new PointF((float)x, (float)y), new SizeF((float)(r * w), (float)h), new Color128(0.75f, 0.5f, 0.25f, 1.0f));
+					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(r * w, h), new Color128(0.75f, 0.5f, 0.25f, 1.0f));
 				}
 				x += w + 8.0;
 				// main reservoir
@@ -328,10 +330,10 @@ namespace OpenBve.Graphics.Renderers
 						renderer.OpenGlString.Draw(Fonts.SmallFont, "Main reservoir", new Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
 						heading[3] = true;
 					}
-					renderer.Rectangle.Draw(null, new PointF((float)x, (float)y), new SizeF((float)w, (float)h), new Color128(0.0f, 0.0f, 0.0f, 1.0f));
+					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(w, h), Color128.Black);
 					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.mainReservoir.CurrentPressure;
 					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.mainReservoir.MaximumPressure;
-					renderer.Rectangle.Draw(null, new PointF((float)x, (float)y), new SizeF((float)(r * w), (float)h), new Color128(1.0f, 0.0f, 0.0f, 1.0f));
+					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(r * w, h), Color128.Red);
 				}
 				x += w + 8.0;
 				// equalizing reservoir
@@ -342,10 +344,10 @@ namespace OpenBve.Graphics.Renderers
 						renderer.OpenGlString.Draw(Fonts.SmallFont, "Equalizing reservoir", new Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
 						heading[4] = true;
 					}
-					renderer.Rectangle.Draw(null, new PointF((float)x, (float)y), new SizeF((float)w, (float)h), new Color128(0.0f, 0.0f, 0.0f, 1.0f));
+					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(w, h), Color128.Black);
 					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.equalizingReservoir.CurrentPressure;
 					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.equalizingReservoir.NormalPressure;
-					renderer.Rectangle.Draw(null, new PointF((float)x, (float)y), new SizeF((float)(r * w), (float)h), new Color128(0.0f, 0.75f, 0.0f, 1.0f));
+					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(r * w, h), new Color128(0.0f, 0.75f, 0.0f, 1.0f));
 				}
 				x += w + 8.0;
 				// straight air pipe
@@ -356,11 +358,11 @@ namespace OpenBve.Graphics.Renderers
 						renderer.OpenGlString.Draw(Fonts.SmallFont, "Straight air pipe", new Point((int)x, (int)(oy - 16)), TextAlignment.TopLeft, Color128.White, true);
 						heading[5] = true;
 					}
-					renderer.Rectangle.Draw(null, new PointF((float)x, (float)y), new SizeF((float)w, (float)h), new Color128(0.0f, 0.0f, 0.0f, 1.0f));
+					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2((float)w, (float)h), Color128.Black);
 					double p = TrainManager.PlayerTrain.Cars[i].CarBrake.straightAirPipe.CurrentPressure;
 					double r = p / TrainManager.PlayerTrain.Cars[i].CarBrake.brakeCylinder.EmergencyMaximumPressure;
-					renderer.Rectangle.Draw(null, new PointF((float)x, (float)y), new SizeF((float)(r * w), (float)h), new Color128(0.0f, 0.75f, 1.0f, 1.0f));
-				} //x += w + 8.0;
+					renderer.Rectangle.Draw(null, new Vector2(x, y), new Vector2(r * w, h), new Color128(0.0f, 0.75f, 1.0f, 1.0f));
+				}
 				y += h + 8.0;
 			}
 		}

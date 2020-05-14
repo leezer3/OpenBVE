@@ -1265,7 +1265,7 @@ namespace OpenBve
 							// signals
 							for (int k = 0; k < Data.Blocks[i].Signals.Length; k++)
 							{
-								SignalData sd;
+								SignalObject sd;
 								if (Data.Blocks[i].Signals[k].SignalCompatibilityObjectIndex >= 0)
 								{
 									sd = Data.CompatibilitySignals[Data.Blocks[i].Signals[k].SignalCompatibilityObjectIndex];

@@ -57,6 +57,8 @@
     <Compile Include="Objects\ObjectLibrary.cs" />
     <Compile Include="openGL\FrameBufferObject.cs" />
     <Compile Include="openGL\IndexBufferObject.cs" />
+    <Compile Include="openGL\IndexBufferObjectI.cs" />
+    <Compile Include="openGL\IndexBufferObjectU.cs" />
     <Compile Include="openGL\ShaderLayout.cs" />
     <Compile Include="openGL\VertexArrayObject.cs" />
     <Compile Include="openGL\VertexBufferObject.cs" />

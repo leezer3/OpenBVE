@@ -156,10 +156,10 @@ namespace LibRender2
 			var hint = isDynamic ? BufferUsageHint.DynamicDraw : BufferUsageHint.StaticDraw;
 
 			var vertexData = new List<LibRenderVertex>();
-			var indexData = new List<ushort>();
+			var indexData = new List<uint>();
 
 			var normalsVertexData = new List<LibRenderVertex>();
-			var normalsIndexData = new List<ushort>();
+			var normalsIndexData = new List<uint>();
 
 			for (int i = 0; i < mesh.Faces.Length; i++)
 			{
@@ -183,7 +183,7 @@ namespace LibRender2
 					}
 					else
 					{
-						data.Color = Color128.White;
+						data.Color = Color128.Transparent;
 					}
 
 					vertexData.Add(data);
@@ -200,8 +200,8 @@ namespace LibRender2
 					normalsVertexData.AddRange(normalsData);
 				}
 
-				indexData.AddRange(Enumerable.Range(mesh.Faces[i].IboStartIndex, mesh.Faces[i].Vertices.Length).Select(x => (ushort) x));
-				normalsIndexData.AddRange(Enumerable.Range(mesh.Faces[i].NormalsIboStartIndex, mesh.Faces[i].Vertices.Length * 2).Select(x => (ushort) x));
+				indexData.AddRange(Enumerable.Range(mesh.Faces[i].IboStartIndex, mesh.Faces[i].Vertices.Length).Select(x => (uint) x));
+				normalsIndexData.AddRange(Enumerable.Range(mesh.Faces[i].NormalsIboStartIndex, mesh.Faces[i].Vertices.Length * 2).Select(x => (uint) x));
 			}
 
 			VertexArrayObject VAO = (VertexArrayObject) mesh.VAO;
@@ -211,7 +211,16 @@ namespace LibRender2
 			VAO = new VertexArrayObject();
 			VAO.Bind();
 			VAO.SetVBO(new VertexBufferObject(vertexData.ToArray(), hint));
-			VAO.SetIBO(new IndexBufferObject(indexData.ToArray(), hint));
+			if (indexData.Count > 65530)
+			{
+				//Marginal headroom, although it probably doesn't matter
+				VAO.SetIBO(new IndexBufferObjectI(indexData.ToArray(), hint));
+			}
+			else
+			{
+				VAO.SetIBO(new IndexBufferObjectU(indexData.Select(x => (ushort) x).ToArray(), hint));
+			}
+			
 			VAO.SetAttributes(vertexLayout);
 			VAO.UnBind();
 			mesh.VAO = VAO;
@@ -222,7 +231,15 @@ namespace LibRender2
 			NormalsVAO = new VertexArrayObject();
 			NormalsVAO.Bind();
 			NormalsVAO.SetVBO(new VertexBufferObject(normalsVertexData.ToArray(), hint));
-			NormalsVAO.SetIBO(new IndexBufferObject(normalsIndexData.ToArray(), hint));
+			if (normalsIndexData.Count > 65530)
+			{
+				//Marginal headroom, although it probably doesn't matter
+				NormalsVAO.SetIBO(new IndexBufferObjectI(normalsIndexData.ToArray(), hint));
+			}
+			else
+			{
+				NormalsVAO.SetIBO(new IndexBufferObjectU(normalsIndexData.Select(x => (ushort) x).ToArray(), hint));
+			}
 			NormalsVAO.SetAttributes(vertexLayout);
 			NormalsVAO.UnBind();
 			mesh.NormalsVAO = NormalsVAO;
@@ -340,7 +357,7 @@ namespace LibRender2
 			VAO = new VertexArrayObject();
 			VAO.Bind();
 			VAO.SetVBO(new VertexBufferObject(vertexData.ToArray(), BufferUsageHint.StaticDraw));
-			VAO.SetIBO(new IndexBufferObject(indexData.ToArray(), BufferUsageHint.StaticDraw));
+			VAO.SetIBO(new IndexBufferObjectU(indexData.ToArray(), BufferUsageHint.StaticDraw));
 			VAO.SetAttributes(vertexLayout);
 			VAO.UnBind();
 			background.VAO = VAO;

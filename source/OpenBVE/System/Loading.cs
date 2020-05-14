@@ -35,6 +35,8 @@ namespace OpenBve {
 		private static Encoding CurrentRouteEncoding;
 		/// <summary>The current train folder</summary>
 		private static string CurrentTrainFolder;
+		/// <summary>The current compatibility signal set</summary>
+		private static string CurrentCompatibilitySignalSet;
 		/// <summary>The character encoding of this train</summary>
 		private static Encoding CurrentTrainEncoding;
 		internal static double TrainProgressCurrentSum;
@@ -44,7 +46,7 @@ namespace OpenBve {
 
 		// load
 		/// <summary>Initializes loading the route and train asynchronously. Set the Loading.Cancel member to cancel loading. Check the Loading.Complete member to see when loading has finished.</summary>
-		internal static void LoadAsynchronously(string RouteFile, Encoding RouteEncoding, string TrainFolder, Encoding TrainEncoding) {
+		internal static void LoadAsynchronously(string RouteFile, Encoding RouteEncoding, string CompatibilitySignalSet, string TrainFolder, Encoding TrainEncoding) {
 			// members
 			RouteProgress = 0.0;
 			TrainProgress = 0.0;
@@ -56,6 +58,7 @@ namespace OpenBve {
 			CurrentRouteEncoding = RouteEncoding;
 			CurrentTrainFolder = TrainFolder;
 			CurrentTrainEncoding = TrainEncoding;
+			CurrentCompatibilitySignalSet = CompatibilitySignalSet;
 
 			//Set the route and train folders in the info class
 			Program.CurrentRoute.Information.RouteFile = RouteFile;
@@ -371,7 +374,7 @@ namespace OpenBve {
 					{
 						ExtensionsCfgParser.ParseExtensionsConfig(TrainManager.Trains[k].TrainFolder, CurrentTrainEncoding, ref CarObjects, ref BogieObjects, ref CouplerObjects, TrainManager.Trains[k], LoadObjects);
 					}
-					World.CameraCar = TrainManager.Trains[k].DriverCar;
+					TrainManager.PlayerTrain.CameraCar = TrainManager.Trains[k].DriverCar;
 					System.Threading.Thread.Sleep(1); if (Cancel) return;
 					//Stores the current array index of the bogie object to add
 					//Required as there are two bogies per car, and we're using a simple linear array....
@@ -424,7 +427,7 @@ namespace OpenBve {
 					if (Game.InitialReversedConsist)
 					{
 						TrainManager.Trains[k].Reverse();
-						World.CameraCar = TrainManager.Trains[k].DriverCar;
+						TrainManager.PlayerTrain.CameraCar = TrainManager.Trains[k].DriverCar;
 						Program.Renderer.Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
 					}
 				} else if (TrainManager.Trains[k].State != TrainState.Bogus) {

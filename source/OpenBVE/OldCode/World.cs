@@ -2,7 +2,6 @@
 #pragma warning disable 0661 // Defines == or != but does not override Object.GetHashCode
 
 using System;
-using LibRender2;
 using LibRender2.Cameras;
 using LibRender2.Viewports;
 using OpenBveApi.Graphics;
@@ -14,14 +13,6 @@ using OpenBveApi.Trains;
 
 namespace OpenBve {
 	internal static class World {
-		
-		
-		/// <summary>The index of the car which the camera is currently anchored to</summary>
-		internal static int CameraCar;
-		
-		// camera memory
-		internal static CameraAlignment CameraSavedExterior;
-		internal static CameraAlignment CameraSavedTrack;
 
 		// camera restriction
 		internal static void InitializeCameraRestriction() {
