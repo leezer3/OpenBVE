@@ -34,21 +34,7 @@ namespace OpenBve
 			/// <summary>The direction the object(s) are placed in: -1 for left, 0 for both, 1 for right</summary>
 			internal int Direction;
 		}
-		private struct FreeObj
-		{
-			/// <summary>The track position of the object</summary>
-			internal double TrackPosition;
-			/// <summary>The routefile index of the object</summary>
-			internal int Type;
-			/// <summary>The position of the object</summary>
-			internal Vector2 Position;
-			/// <summary>The yaw of the object (radians)</summary>
-			internal double Yaw;
-			/// <summary>The pitch of the object (radians)</summary>
-			internal double Pitch;
-			/// <summary>The roll of the object (radians)</summary>
-			internal double Roll;
-		}
+		
 		private struct Pole
 		{
 			internal bool Exists;

@@ -7,7 +7,6 @@ using OpenBveApi.Runtime;
 using OpenBveApi.World;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
-using OpenBveApi.FunctionScripting;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.Routes;
@@ -598,13 +597,7 @@ namespace OpenBve
 				{
 					for (int j = 0; j < Data.Blocks[i].GroundFreeObj.Length; j++)
 					{
-						int sttype = Data.Blocks[i].GroundFreeObj[j].Type;
-						double d = Data.Blocks[i].GroundFreeObj[j].TrackPosition - StartingDistance;
-						double dx = Data.Blocks[i].GroundFreeObj[j].Position.X;
-						double dy = Data.Blocks[i].GroundFreeObj[j].Position.Y;
-						Vector3 wpos = Position + new Vector3(Direction.X * d + Direction.Y * dx, dy - Data.Blocks[i].Height, Direction.Y * d - Direction.X * dx);
-						double tpos = Data.Blocks[i].GroundFreeObj[j].TrackPosition;
-						Data.Structure.FreeObjects[sttype].CreateObject(wpos, GroundTransformation, new Transformation(Data.Blocks[i].GroundFreeObj[j].Yaw, Data.Blocks[i].GroundFreeObj[j].Pitch, Data.Blocks[i].GroundFreeObj[j].Roll), Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos);
+						Data.Blocks[i].GroundFreeObj[j].CreateGroundAligned(Data.Structure.FreeObjects, Position, GroundTransformation, Direction, Data.Blocks[i].Height, StartingDistance, EndingDistance, Data.BlockInterval, Data.AccurateObjectDisposal);
 					}
 				}
 				// rail-aligned objects
@@ -1162,16 +1155,7 @@ namespace OpenBve
 						{
 							for (int k = 0; k < Data.Blocks[i].RailFreeObj[j].Length; k++)
 							{
-								int sttype = Data.Blocks[i].RailFreeObj[j][k].Type;
-								double dx = Data.Blocks[i].RailFreeObj[j][k].Position.X;
-								double dy = Data.Blocks[i].RailFreeObj[j][k].Position.Y;
-								double dz = Data.Blocks[i].RailFreeObj[j][k].TrackPosition - StartingDistance;
-								Vector3 wpos = pos;
-								wpos += dx * RailTransformation.X + dy * RailTransformation.Y + dz * RailTransformation.Z;
-								double tpos = Data.Blocks[i].RailFreeObj[j][k].TrackPosition;
-								UnifiedObject obj;
-								Data.Structure.FreeObjects.TryGetValue(sttype, out obj);
-								obj.CreateObject(wpos, RailTransformation, new Transformation(Data.Blocks[i].RailFreeObj[j][k].Yaw, Data.Blocks[i].RailFreeObj[j][k].Pitch, Data.Blocks[i].RailFreeObj[j][k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, 1.0, false);
+								Data.Blocks[i].RailFreeObj[j][k].CreateRailAligned(Data.Structure.FreeObjects, new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, Data.BlockInterval, Data.AccurateObjectDisposal);
 							}
 						}
 						// transponder objects

@@ -2720,20 +2720,13 @@ namespace OpenBve
 								{
 									int n = Data.Blocks[BlockIndex].GroundFreeObj.Length;
 									Array.Resize<FreeObj>(ref Data.Blocks[BlockIndex].GroundFreeObj, n + 1);
-									Data.Blocks[BlockIndex].GroundFreeObj[n].TrackPosition = Data.TrackPosition;
-									Data.Blocks[BlockIndex].GroundFreeObj[n].Type = sttype;
-									Data.Blocks[BlockIndex].GroundFreeObj[n].Position.X = x;
-									Data.Blocks[BlockIndex].GroundFreeObj[n].Position.Y = y;
-									Data.Blocks[BlockIndex].GroundFreeObj[n].Yaw = yaw.ToRadians();
 									if (!Data.IgnorePitchRoll)
 									{
-										Data.Blocks[BlockIndex].GroundFreeObj[n].Pitch = pitch.ToRadians();
-										Data.Blocks[BlockIndex].GroundFreeObj[n].Roll = roll.ToRadians();
+										Data.Blocks[BlockIndex].GroundFreeObj[n] = new FreeObj(Data.TrackPosition, sttype, new Vector2(x, y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians());
 									}
 									else
 									{
-										Data.Blocks[BlockIndex].GroundFreeObj[n].Pitch = 0;
-										Data.Blocks[BlockIndex].GroundFreeObj[n].Roll = 0;
+										Data.Blocks[BlockIndex].GroundFreeObj[n] = new FreeObj(Data.TrackPosition, sttype, new Vector2(x, y), yaw.ToRadians());
 									}
 								}
 								else
@@ -2755,20 +2748,13 @@ namespace OpenBve
 										Array.Resize<FreeObj>(ref Data.Blocks[BlockIndex].RailFreeObj[idx], n + 1);
 									}
 
-									Data.Blocks[BlockIndex].RailFreeObj[idx][n].TrackPosition = Data.TrackPosition;
-									Data.Blocks[BlockIndex].RailFreeObj[idx][n].Type = sttype;
-									Data.Blocks[BlockIndex].RailFreeObj[idx][n].Position.X = x;
-									Data.Blocks[BlockIndex].RailFreeObj[idx][n].Position.Y = y;
-									Data.Blocks[BlockIndex].RailFreeObj[idx][n].Yaw = yaw.ToRadians();
 									if (!Data.IgnorePitchRoll)
 									{
-										Data.Blocks[BlockIndex].RailFreeObj[idx][n].Pitch = pitch.ToRadians();
-										Data.Blocks[BlockIndex].RailFreeObj[idx][n].Roll = roll.ToRadians();
+										Data.Blocks[BlockIndex].RailFreeObj[idx][n] = new FreeObj(Data.TrackPosition, sttype, new Vector2(x, y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians());
 									}
 									else
 									{
-										Data.Blocks[BlockIndex].RailFreeObj[idx][n].Pitch = 0;
-										Data.Blocks[BlockIndex].RailFreeObj[idx][n].Roll = 0;
+										Data.Blocks[BlockIndex].RailFreeObj[idx][n] = new FreeObj(Data.TrackPosition, sttype, new Vector2(x, y), yaw.ToRadians());
 									}
 								}
 							}
