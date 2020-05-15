@@ -612,17 +612,7 @@ namespace OpenBve
 
 							int n = Data.Blocks[BlockIndex].Signals.Length;
 							Array.Resize<Signal>(ref Data.Blocks[BlockIndex].Signals, n + 1);
-							Data.Blocks[BlockIndex].Signals[n].TrackPosition = Data.TrackPosition;
-							Data.Blocks[BlockIndex].Signals[n].SectionIndex = CurrentSection + section;
-							Data.Blocks[BlockIndex].Signals[n].SignalCompatibilityObjectIndex = -1;
-							Data.Blocks[BlockIndex].Signals[n].SignalObjectIndex = objidx;
-							Data.Blocks[BlockIndex].Signals[n].Position.X = x;
-							Data.Blocks[BlockIndex].Signals[n].Position.Y = y < 0.0 ? 4.8 : y;
-							Data.Blocks[BlockIndex].Signals[n].Yaw = yaw.ToRadians();
-							Data.Blocks[BlockIndex].Signals[n].Pitch = pitch.ToRadians();
-							Data.Blocks[BlockIndex].Signals[n].Roll = roll.ToRadians();
-							Data.Blocks[BlockIndex].Signals[n].ShowObject = true;
-							Data.Blocks[BlockIndex].Signals[n].ShowPost = y < 0.0;
+							Data.Blocks[BlockIndex].Signals[n] = new Signal(Data.TrackPosition, CurrentSection, Data.Signals[objidx], new Vector2(x, y < 0.0 ? 4.8 : y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians(), true, y < 0.0);
 						}
 						else
 						{
@@ -753,17 +743,7 @@ namespace OpenBve
 						CurrentSection++;
 						n = Data.Blocks[BlockIndex].Signals.Length;
 						Array.Resize<Signal>(ref Data.Blocks[BlockIndex].Signals, n + 1);
-						Data.Blocks[BlockIndex].Signals[n].TrackPosition = Data.TrackPosition;
-						Data.Blocks[BlockIndex].Signals[n].SectionIndex = CurrentSection;
-						Data.Blocks[BlockIndex].Signals[n].SignalCompatibilityObjectIndex = comp;
-						Data.Blocks[BlockIndex].Signals[n].SignalObjectIndex = -1;
-						Data.Blocks[BlockIndex].Signals[n].Position.X = x;
-						Data.Blocks[BlockIndex].Signals[n].Position.Y = y < 0.0 ? 4.8 : y;
-						Data.Blocks[BlockIndex].Signals[n].Yaw = yaw.ToRadians();
-						Data.Blocks[BlockIndex].Signals[n].Pitch = pitch.ToRadians();
-						Data.Blocks[BlockIndex].Signals[n].Roll = roll.ToRadians();
-						Data.Blocks[BlockIndex].Signals[n].ShowObject = x != 0.0;
-						Data.Blocks[BlockIndex].Signals[n].ShowPost = x != 0.0 & y < 0.0;
+						Data.Blocks[BlockIndex].Signals[n] = new Signal(Data.TrackPosition, CurrentSection, Data.CompatibilitySignals[comp], new Vector2(x, y < 0.0 ? 4.8 : y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians(), x != 0.0, x != 0.0 & y < 0.0);
 					}
 				}
 					break;
@@ -805,17 +785,7 @@ namespace OpenBve
 
 						int n = Data.Blocks[BlockIndex].Signals.Length;
 						Array.Resize<Signal>(ref Data.Blocks[BlockIndex].Signals, n + 1);
-						Data.Blocks[BlockIndex].Signals[n].TrackPosition = Data.TrackPosition;
-						Data.Blocks[BlockIndex].Signals[n].SectionIndex = CurrentSection + 1;
-						Data.Blocks[BlockIndex].Signals[n].SignalCompatibilityObjectIndex = 8;
-						Data.Blocks[BlockIndex].Signals[n].SignalObjectIndex = -1;
-						Data.Blocks[BlockIndex].Signals[n].Position.X = x;
-						Data.Blocks[BlockIndex].Signals[n].Position.Y = y < 0.0 ? 4.8 : y;
-						Data.Blocks[BlockIndex].Signals[n].Yaw = yaw.ToRadians();
-						Data.Blocks[BlockIndex].Signals[n].Pitch = pitch.ToRadians();
-						Data.Blocks[BlockIndex].Signals[n].Roll = roll.ToRadians();
-						Data.Blocks[BlockIndex].Signals[n].ShowObject = x != 0.0;
-						Data.Blocks[BlockIndex].Signals[n].ShowPost = x != 0.0 & y < 0.0;
+						Data.Blocks[BlockIndex].Signals[n] = new Signal(Data.TrackPosition, CurrentSection + 1, Data.CompatibilitySignals[8], new Vector2(x, y < 0.0 ? 4.8 : y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians(), x != 0.0, x != 0.0 & y < 0.0);
 					}
 				}
 					break;
@@ -1991,10 +1961,7 @@ namespace OpenBve
 
 							int n = Data.Blocks[BlockIndex].Forms.Length;
 							Array.Resize<Form>(ref Data.Blocks[BlockIndex].Forms, n + 1);
-							Data.Blocks[BlockIndex].Forms[n].PrimaryRail = idx1;
-							Data.Blocks[BlockIndex].Forms[n].SecondaryRail = idx2;
-							Data.Blocks[BlockIndex].Forms[n].FormType = pf;
-							Data.Blocks[BlockIndex].Forms[n].RoofType = roof;
+							Data.Blocks[BlockIndex].Forms[n] = new Form(idx1, idx2, pf, roof);
 						}
 					}
 				}
@@ -2622,9 +2589,7 @@ namespace OpenBve
 
 								int n = Data.Blocks[BlockIndex].Cracks.Length;
 								Array.Resize<Crack>(ref Data.Blocks[BlockIndex].Cracks, n + 1);
-								Data.Blocks[BlockIndex].Cracks[n].PrimaryRail = idx1;
-								Data.Blocks[BlockIndex].Cracks[n].SecondaryRail = idx2;
-								Data.Blocks[BlockIndex].Cracks[n].Type = sttype;
+								Data.Blocks[BlockIndex].Cracks[n] = new Crack(idx1, idx2, sttype);
 							}
 						}
 					}

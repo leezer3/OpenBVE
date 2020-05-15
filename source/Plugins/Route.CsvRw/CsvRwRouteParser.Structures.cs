@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
-using OpenBveApi.Runtime;
 using OpenBveApi.Trains;
 using RouteManager2.Climate;
 using RouteManager2.MessageManager;
-using RouteManager2.SignalManager;
-using SoundManager;
 using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
 namespace OpenBve
@@ -43,35 +40,9 @@ namespace OpenBve
 			internal double Interval;
 			internal int Type;
 		}
-		internal struct Form
-		{
-			internal int PrimaryRail;
-			internal int SecondaryRail;
-			internal int FormType;
-			internal int RoofType;
-			internal const int SecondaryRailStub = 0;
-			internal const int SecondaryRailL = -1;
-			internal const int SecondaryRailR = -2;
-		}
-		internal struct Crack
-		{
-			internal int PrimaryRail;
-			internal int SecondaryRail;
-			internal int Type;
-		}
-		internal struct Signal
-		{
-			internal double TrackPosition;
-			internal int SectionIndex;
-			internal int SignalCompatibilityObjectIndex;
-			internal int SignalObjectIndex;
-			internal Vector2 Position;
-			internal double Yaw;
-			internal double Pitch;
-			internal double Roll;
-			internal bool ShowObject;
-			internal bool ShowPost;
-		}
+		
+		
+		
 		
 		internal struct Limit
 		{

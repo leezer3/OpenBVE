@@ -9,7 +9,7 @@ namespace OpenBve
 {
 	internal partial class CsvRwRouteParser
 	{
-		private static void PreprocessSplitIntoExpressions(string FileName, string[] Lines, out Expression[] Expressions, bool AllowRwRouteDescription, double trackPositionOffset) {
+		private static void PreprocessSplitIntoExpressions(string FileName, string[] Lines, out Expression[] Expressions, bool AllowRwRouteDescription, double trackPositionOffset = 0.0) {
 			Expressions = new Expression[4096];
 			int e = 0;
 			// full-line rw comments

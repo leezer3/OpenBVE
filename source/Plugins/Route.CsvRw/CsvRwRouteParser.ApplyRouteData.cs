@@ -1221,38 +1221,7 @@ namespace OpenBve
 							// signals
 							for (int k = 0; k < Data.Blocks[i].Signals.Length; k++)
 							{
-								SignalObject sd;
-								if (Data.Blocks[i].Signals[k].SignalCompatibilityObjectIndex >= 0)
-								{
-									sd = Data.CompatibilitySignals[Data.Blocks[i].Signals[k].SignalCompatibilityObjectIndex];
-								}
-								else
-								{
-									sd = Data.Signals[Data.Blocks[i].Signals[k].SignalObjectIndex];
-								}
-								// objects
-								double dz = Data.Blocks[i].Signals[k].TrackPosition - StartingDistance;
-								if (Data.Blocks[i].Signals[k].ShowPost)
-								{
-									// post
-									double dx = Data.Blocks[i].Signals[k].Position.X;
-									Vector3 wpos = pos;
-									wpos += dx * RailTransformation.X + dz * RailTransformation.Z;
-									double tpos = Data.Blocks[i].Signals[k].TrackPosition;
-									double b = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
-									CompatibilityObjects.SignalPost.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b, false);
-								}
-								if (Data.Blocks[i].Signals[k].ShowObject)
-								{
-									// signal object
-									double dx = Data.Blocks[i].Signals[k].Position.X;
-									double dy = Data.Blocks[i].Signals[k].Position.Y;
-									Vector3 wpos = pos;
-									wpos += dx * RailTransformation.X + dy * RailTransformation.Y + dz * RailTransformation.Z;
-									double tpos = Data.Blocks[i].Signals[k].TrackPosition;
-									double brightness = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
-									sd.Create(wpos, RailTransformation, new Transformation(Data.Blocks[i].Signals[k].Yaw, Data.Blocks[i].Signals[k].Pitch, Data.Blocks[i].Signals[k].Roll), Data.Blocks[i].Signals[k].SectionIndex, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, brightness);
-								}
+								Data.Blocks[i].Signals[k].Create(new Vector3(pos), RailTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, 0.27 + 0.75 * GetBrightness(ref Data, Data.Blocks[i].Signals[k].TrackPosition));
 							}
 							// sections
 							for (int k = 0; k < Data.Blocks[i].Sections.Length; k++)

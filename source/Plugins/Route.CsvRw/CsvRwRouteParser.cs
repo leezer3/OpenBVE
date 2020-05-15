@@ -149,12 +149,6 @@ namespace OpenBve {
 				CurrentRoute.Sections[0].StationIndex = -1;
 				CurrentRoute.Sections[0].TrackPosition = 0;
 				CurrentRoute.Sections[0].Trains = new AbstractTrain[] {};
-
-				/*
-				 * These are the speed limits for the default Japanese signal aspects, and in most cases will be overwritten
-				 */
-				Data.SignalSpeeds = new double[]
-				{0.0, 6.94444444444444, 15.2777777777778, 20.8333333333333, double.PositiveInfinity, double.PositiveInfinity};
 			}
 			ParseRouteForData(FileName, Encoding, ref Data, PreviewOnly);
 			if (Program.Cancel)
@@ -172,7 +166,7 @@ namespace OpenBve {
 			//Read the entire routefile into memory
 			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
 			Expression[] Expressions;
-			PreprocessSplitIntoExpressions(FileName, Lines, out Expressions, true, 0.0);
+			PreprocessSplitIntoExpressions(FileName, Lines, out Expressions, true);
 			PreprocessChrRndSub(FileName, Encoding, ref Expressions);
 			double[] UnitOfLength = new double[] { 1.0 };
 			//Set units of speed initially to km/h
