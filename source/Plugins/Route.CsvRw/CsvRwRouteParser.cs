@@ -337,7 +337,7 @@ namespace OpenBve {
 							} else if (Command.StartsWith("route.signal", StringComparison.OrdinalIgnoreCase) & Command.EndsWith(".set", StringComparison.OrdinalIgnoreCase))  {
 								Command = Command.Substring(0, Command.Length - 4).TrimEnd(new char[] { });
 							} else if (Command.StartsWith("route.runinterval", StringComparison.OrdinalIgnoreCase)) {
-								Command = "train.interval" + Command.Substring(14, Command.Length - 14);
+								Command = "train.interval" + Command.Substring(17, Command.Length - 17);
 							} else if (Command.StartsWith("train.gauge", StringComparison.OrdinalIgnoreCase)) {
 								Command = "route.gauge" + Command.Substring(11, Command.Length - 11);
 							} else if (Command.StartsWith("texture.", StringComparison.OrdinalIgnoreCase)) {
