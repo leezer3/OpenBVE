@@ -329,6 +329,45 @@ namespace OpenBve
 			return false;
 		}
 
+		public override bool LoadStaticObject(string path, System.Text.Encoding Encoding, bool PreserveVertices, out StaticObject Object)
+		{
+			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
+				Encoding = TextEncoding.GetSystemEncodingFromFile(path, Encoding);
+
+				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++) {
+					if (Program.CurrentHost.Plugins[i].Object != null) {
+						try {
+							if (Program.CurrentHost.Plugins[i].Object.CanLoadObject(path)) {
+								try {
+									UnifiedObject unifiedObject;
+									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out unifiedObject)) {
+										if (unifiedObject is StaticObject)
+										{
+											unifiedObject.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, false);
+											Object = (StaticObject) unifiedObject;
+											return true;
+										}
+										Object = null;
+										Interface.AddMessage(MessageType.Error, false, "Attempted to load " + path + " which is an animated object where only static objects are allowed.");
+									}
+									Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject");
+								} catch (Exception ex) {
+									Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " raised the following exception at LoadObject:" + ex.Message);
+								}
+							}
+						} catch (Exception ex) {
+							Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " raised the following exception at CanLoadObject:" + ex.Message);
+						}
+					}
+				}
+				Interface.AddMessage(MessageType.Error, false, "No plugin found that is capable of loading object " + path);
+			} else {
+				ReportProblem(OpenBveApi.Hosts.ProblemType.PathNotFound, path);
+			}
+			Object = null;
+			return false;
+		}
+
 		public override void ExecuteFunctionScript(OpenBveApi.FunctionScripting.FunctionScript functionScript, AbstractTrain train, int CarIndex, Vector3 Position, double TrackPosition, int SectionIndex, bool IsPartOfTrain, double TimeElapsed, int CurrentState)
 		{
 			FunctionScripts.ExecuteFunctionScript(functionScript, (TrainManager.Train)train, CarIndex, Position, TrackPosition, SectionIndex, IsPartOfTrain, TimeElapsed, CurrentState);
