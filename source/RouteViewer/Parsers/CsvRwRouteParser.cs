@@ -469,7 +469,7 @@ namespace OpenBve
 				// signals
 				string compatibilitySignalSet = Path.CombineFile(Program.FileSystem.GetDataFolder("Compatibility"), "Signals\\Japanese.xml");
 				CompatibilitySignalObject.ReadCompatibilitySignalXML(Program.CurrentHost, compatibilitySignalSet, out Data.CompatibilitySignals, out Data.SignalPost, out Data.SignalSpeeds);
-
+				Data.Signals = new SignalDictionary();
 				Data.Signals.Add(3, Data.CompatibilitySignals[2]);
 				Data.Signals.Add(4, Data.CompatibilitySignals[3]);
 				Data.Signals.Add(5, Data.CompatibilitySignals[5]);
@@ -4655,8 +4655,18 @@ namespace OpenBve
 												Interface.AddMessage(MessageType.Error, false, "Track.Marker is expected to have at least one argument at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 											} else if (Path.ContainsInvalidChars(Arguments[0])) {
 												Interface.AddMessage(MessageType.Error, false, "FileName " + Arguments[0] + " contains illegal characters in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-											} else {
-												string f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
+											} else
+											{
+												string f;
+												try
+												{
+													f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
+												}
+												catch
+												{
+													Interface.AddMessage(MessageType.Error, true, "FileName " + Arguments[0] + " was empty or invalid in Track.Marker at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+													break;
+												}
 												if (!System.IO.File.Exists(f) && Command.ToLowerInvariant() == "track.marker")
 												{
 													Interface.AddMessage(MessageType.Error, true, "FileName " + f + " not found in Track.Marker at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
