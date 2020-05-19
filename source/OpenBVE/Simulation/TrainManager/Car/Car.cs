@@ -70,13 +70,13 @@ namespace OpenBve
 
 			internal bool HasInteriorView = false;
 			
-			internal Car(Train train, int index)
+			internal Car(Train train, int index, double CoefficientOfFriction)
 			{
 				baseTrain = train;
 				Index = index;
 				CarSections = new CarSection[] { };
-				FrontAxle = new Axle(train, this);
-				RearAxle = new Axle(train, this);
+				FrontAxle = new Axle(train, this, 0.35);
+				RearAxle = new Axle(train, this, 0.35);
 				BeaconReceiver = new TrackFollower(Program.CurrentHost, train);
 				FrontBogie = new Bogie(train, this);
 				RearBogie = new Bogie(train, this);
@@ -1151,8 +1151,8 @@ namespace OpenBve
 				double FrictionBrakeAcceleration;
 				{
 					double v = Math.Abs(CurrentSpeed);
-					double a = GetResistance(baseTrain, Index, ref FrontAxle, v);
-					double b = GetResistance(baseTrain, Index, ref RearAxle, v);
+					double a = FrontAxle.GetResistance(baseTrain, v);
+					double b = RearAxle.GetResistance(baseTrain, v);
 					FrictionBrakeAcceleration = 0.5 * (a + b);
 				}
 				// power
@@ -1170,18 +1170,10 @@ namespace OpenBve
 				}
 				else
 				{
-					wheelSlipAccelerationMotorFront = GetCriticalWheelSlipAccelerationForElectricMotor(baseTrain, Index,
-						FrontAxle.Follower.AdhesionMultiplier, FrontAxle.Follower.WorldUp.Y,
-						CurrentSpeed);
-					wheelSlipAccelerationMotorRear = GetCriticalWheelSlipAccelerationForElectricMotor(baseTrain, Index,
-						RearAxle.Follower.AdhesionMultiplier, RearAxle.Follower.WorldUp.Y,
-						CurrentSpeed);
-					wheelSlipAccelerationBrakeFront = GetCriticalWheelSlipAccelerationForFrictionBrake(baseTrain, Index,
-						FrontAxle.Follower.AdhesionMultiplier, FrontAxle.Follower.WorldUp.Y,
-						CurrentSpeed);
-					wheelSlipAccelerationBrakeRear = GetCriticalWheelSlipAccelerationForFrictionBrake(baseTrain, Index,
-						RearAxle.Follower.AdhesionMultiplier, RearAxle.Follower.WorldUp.Y,
-						CurrentSpeed);
+					wheelSlipAccelerationMotorFront = FrontAxle.CriticalWheelSlipAccelerationForElectricMotor();
+					wheelSlipAccelerationMotorRear = RearAxle.CriticalWheelSlipAccelerationForElectricMotor();
+					wheelSlipAccelerationBrakeFront = FrontAxle.CriticalWheelSlipAccelerationForFrictionBrake();
+					wheelSlipAccelerationBrakeRear = RearAxle.CriticalWheelSlipAccelerationForFrictionBrake();
 				}
 
 				if (DecelerationDueToMotor == 0.0)

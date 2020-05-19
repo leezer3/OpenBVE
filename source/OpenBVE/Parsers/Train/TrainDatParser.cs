@@ -886,7 +886,7 @@ namespace OpenBve {
 			Train.Cars = new TrainManager.Car[Cars];
 			for (int i = 0; i < Train.Cars.Length; i++)
 			{
-				Train.Cars[i] = new TrainManager.Car(Train, i);
+				Train.Cars[i] = new TrainManager.Car(Train, i, CoefficientOfStaticFriction);
 			}
 			double DistanceBetweenTheCars = 0.3;
 			
@@ -1201,7 +1201,6 @@ namespace OpenBve {
 				Train.Cars[i].Specs.JerkPowerDown = JerkPowerDown;
 				Train.Cars[i].Specs.JerkBrakeUp = JerkBrakeUp;
 				Train.Cars[i].Specs.JerkBrakeDown = JerkBrakeDown;
-				Train.Cars[i].Specs.CoefficientOfStaticFriction = CoefficientOfStaticFriction;
 				Train.Cars[i].Specs.CoefficientOfRollingResistance = CoefficientOfRollingResistance;
 				Train.Cars[i].Specs.AerodynamicDragCoefficient = AerodynamicDragCoefficient;
 				Train.Cars[i].Specs.ExposedFrontalArea = CarExposedFrontalArea;

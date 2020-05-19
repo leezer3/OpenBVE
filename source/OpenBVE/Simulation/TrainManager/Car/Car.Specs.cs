@@ -18,7 +18,6 @@
 			internal double MotorDeceleration;
 			internal double ExposedFrontalArea;
 			internal double UnexposedFrontalArea;
-			internal double CoefficientOfStaticFriction;
 			internal double CoefficientOfRollingResistance;
 			internal double AerodynamicDragCoefficient;
 			internal double CenterOfGravityHeight;
@@ -50,6 +49,8 @@
 			internal double DoorCloseFrequency;
 			internal double DoorOpenPitch;
 			internal double DoorClosePitch;
+
+			
 		}
 	}
 }

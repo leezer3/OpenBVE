@@ -332,7 +332,7 @@ namespace OpenBve {
 				// add panel section
 				if (TrainManager.Trains[k].IsPlayerTrain) {	
 					TrainProgressCurrentWeight = 0.7 / TrainProgressMaximum;
-					TrainManager.ParsePanelConfig(TrainManager.Trains[k].TrainFolder, CurrentTrainEncoding, TrainManager.Trains[k]);
+					TrainManager.Trains[k].ParsePanelConfig(TrainManager.Trains[k].TrainFolder, CurrentTrainEncoding);
 					TrainProgressCurrentSum += TrainProgressCurrentWeight;
 					System.Threading.Thread.Sleep(1); if (Cancel) return;
 					Program.FileSystem.AppendToLogFile("Train panel loaded sucessfully.");

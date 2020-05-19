@@ -41,8 +41,8 @@ namespace OpenBve
 				baseTrain = train;
 				baseCar = car;
 				CarSections = new CarSection[] { };
-				FrontAxle = new Axle(train, car);
-				RearAxle = new Axle(train, car);
+				FrontAxle = new Axle(train, car, 0.35);
+				RearAxle = new Axle(train, car, 0.35);
 			}
 
 			internal void UpdateObjects(double TimeElapsed, bool ForceUpdate)
