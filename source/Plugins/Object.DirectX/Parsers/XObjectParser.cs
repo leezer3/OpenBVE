@@ -2153,7 +2153,16 @@ namespace Plugin {
 									Object.Mesh.Materials[mm + j].DaytimeTexture = null;
 									transparent = false;
 								}
-								Object.Mesh.Materials[mm + j].Flags = (byte)((transparent ? MeshMaterial.TransparentColorMask : 0) | (emissive ? MeshMaterial.EmissiveColorMask : 0));
+
+								Object.Mesh.Materials[mm + j].Flags = new MaterialFlags();
+								if (transparent)
+								{
+									Object.Mesh.Materials[mm + j].Flags |= MaterialFlags.TransparentColor;
+								}
+								if (emissive)
+								{
+									Object.Mesh.Materials[mm + j].Flags |= MaterialFlags.Emissive;
+								}
 								Object.Mesh.Materials[mm + j].Color = Materials[j].faceColor;
 								Object.Mesh.Materials[mm + j].TransparentColor = Color24.Black;
 								Object.Mesh.Materials[mm + j].EmissiveColor = Materials[j].emissiveColor;

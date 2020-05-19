@@ -125,7 +125,12 @@ namespace OpenBve
             }
 			else
             {
+	            GL.Viewport(0, 0, Program.Renderer.Screen.Width, Program.Renderer.Screen.Height);
+	            Program.Renderer.PopMatrix(MatrixMode.Modelview);
 	            Matrix4D.CreateOrthographicOffCenter(0.0f, Program.Renderer.Screen.Width, Program.Renderer.Screen.Height, 0.0f, -1.0f, 1.0f, out Program.Renderer.CurrentProjectionMatrix);
+	            Program.Renderer.PushMatrix(MatrixMode.Modelview);
+	            Program.Renderer.CurrentViewMatrix = Matrix4D.Identity;
+				Program.Renderer.ResetOpenGlState();
             }
 	    }
 
