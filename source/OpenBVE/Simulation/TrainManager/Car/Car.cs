@@ -18,10 +18,7 @@ namespace OpenBve
 		/// <summary>The base class containing the properties of a train car</summary>
 		internal partial class Car : AbstractCar
 		{
-			/// <summary>Front axle about which the car pivots</summary>
-			internal Axle FrontAxle;
-			/// <summary>Rear axle about which the car pivots</summary>
-			internal Axle RearAxle;
+			
 			/// <summary>The front bogie</summary>
 			internal Bogie FrontBogie;
 			/// <summary>The rear bogie</summary>
@@ -59,8 +56,7 @@ namespace OpenBve
 			internal bool EnableLoadingSway = true;
 			/// <summary>A reference to the base train</summary>
 			private readonly Train baseTrain;
-			/// <summary>The index of the car within the train</summary>
-			internal readonly int Index;
+
 			/// <summary>Stores the camera restriction mode for the interior view of this car</summary>
 			internal CameraRestrictionMode CameraRestrictionMode = CameraRestrictionMode.NotSpecified;
 
@@ -70,13 +66,30 @@ namespace OpenBve
 
 			internal bool HasInteriorView = false;
 			
-			internal Car(Train train, int index, double CoefficientOfFriction)
+			internal Car(Train train, int index, double CoefficientOfFriction, double CoefficientOfRollingResistance, double AerodynamicDragCoefficient)
 			{
 				baseTrain = train;
 				Index = index;
 				CarSections = new CarSection[] { };
-				FrontAxle = new Axle(train, this, 0.35);
-				RearAxle = new Axle(train, this, 0.35);
+				FrontAxle = new Axle(Program.CurrentHost, train, this, CoefficientOfFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient);
+				RearAxle = new Axle(Program.CurrentHost, train, this, CoefficientOfFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient);
+				BeaconReceiver = new TrackFollower(Program.CurrentHost, train);
+				FrontBogie = new Bogie(train, this);
+				RearBogie = new Bogie(train, this);
+				Doors = new Door[2];
+				Doors[0].Width = 1000.0;
+				Doors[0].MaxTolerance = 0.0;
+				Doors[1].Width = 1000.0;
+				Doors[1].MaxTolerance = 0.0;
+			}
+
+			internal Car(Train train, int index)
+			{
+				baseTrain = train;
+				Index = index;
+				CarSections = new CarSection[] { };
+				FrontAxle = new Axle(Program.CurrentHost, train, this);
+				RearAxle = new Axle(Program.CurrentHost, train, this);
 				BeaconReceiver = new TrackFollower(Program.CurrentHost, train);
 				FrontBogie = new Bogie(train, this);
 				RearBogie = new Bogie(train, this);
@@ -189,6 +202,12 @@ namespace OpenBve
 					return FrontAxle.Follower.TrackPosition;
 				}
 				
+			}
+
+			/// <summary>Backing property for the index of the car within the train</summary>
+			public override int Index
+			{
+				get;
 			}
 
 			public override void Reverse()
@@ -1151,8 +1170,9 @@ namespace OpenBve
 				double FrictionBrakeAcceleration;
 				{
 					double v = Math.Abs(CurrentSpeed);
-					double a = FrontAxle.GetResistance(baseTrain, v);
-					double b = RearAxle.GetResistance(baseTrain, v);
+					double t = Index == 0 & CurrentSpeed >= 0.0 || Index == baseTrain.Cars.Length - 1 & CurrentSpeed <= 0.0 ? Specs.ExposedFrontalArea : Specs.UnexposedFrontalArea;
+					double a = FrontAxle.GetResistance(v, t, baseTrain.Specs.CurrentAirDensity, Program.CurrentRoute.Atmosphere.AccelerationDueToGravity);
+					double b = RearAxle.GetResistance(v, t, baseTrain.Specs.CurrentAirDensity, Program.CurrentRoute.Atmosphere.AccelerationDueToGravity);
 					FrictionBrakeAcceleration = 0.5 * (a + b);
 				}
 				// power
@@ -1170,10 +1190,10 @@ namespace OpenBve
 				}
 				else
 				{
-					wheelSlipAccelerationMotorFront = FrontAxle.CriticalWheelSlipAccelerationForElectricMotor();
-					wheelSlipAccelerationMotorRear = RearAxle.CriticalWheelSlipAccelerationForElectricMotor();
-					wheelSlipAccelerationBrakeFront = FrontAxle.CriticalWheelSlipAccelerationForFrictionBrake();
-					wheelSlipAccelerationBrakeRear = RearAxle.CriticalWheelSlipAccelerationForFrictionBrake();
+					wheelSlipAccelerationMotorFront = FrontAxle.CriticalWheelSlipAccelerationForElectricMotor(Program.CurrentRoute.Atmosphere.AccelerationDueToGravity);
+					wheelSlipAccelerationMotorRear = RearAxle.CriticalWheelSlipAccelerationForElectricMotor(Program.CurrentRoute.Atmosphere.AccelerationDueToGravity);
+					wheelSlipAccelerationBrakeFront = FrontAxle.CriticalWheelSlipAccelerationForFrictionBrake(Program.CurrentRoute.Atmosphere.AccelerationDueToGravity);
+					wheelSlipAccelerationBrakeRear = RearAxle.CriticalWheelSlipAccelerationForFrictionBrake(Program.CurrentRoute.Atmosphere.AccelerationDueToGravity);
 				}
 
 				if (DecelerationDueToMotor == 0.0)

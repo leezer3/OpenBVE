@@ -18,8 +18,6 @@
 			internal double MotorDeceleration;
 			internal double ExposedFrontalArea;
 			internal double UnexposedFrontalArea;
-			internal double CoefficientOfRollingResistance;
-			internal double AerodynamicDragCoefficient;
 			internal double CenterOfGravityHeight;
 			internal double CriticalTopplingAngle;
 			/// current data

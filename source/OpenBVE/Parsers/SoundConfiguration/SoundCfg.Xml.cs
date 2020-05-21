@@ -391,7 +391,10 @@ namespace OpenBve
 										Interface.AddMessage(MessageType.Error, false, "An empty list of point front axle sounds was defined in in XML file " + fileName);
 										break;
 									}
-									ParseArrayNode(c, out car.FrontAxle.PointSounds, new Vector3(0.0, 0.0, car.FrontAxle.Position), SoundCfgParser.smallRadius);
+
+									CarSound[] frontAxlePointSounds;
+									ParseArrayNode(c, out frontAxlePointSounds, new Vector3(0.0, 0.0, car.FrontAxle.Position), SoundCfgParser.smallRadius);
+									car.FrontAxle.PointSounds = frontAxlePointSounds;
 									break;
 								case "pointrearaxle":
 								case "switchrearaxle":
@@ -400,7 +403,9 @@ namespace OpenBve
 										Interface.AddMessage(MessageType.Error, false, "An empty list of point rear axle sounds was defined in in XML file " + fileName);
 										break;
 									}
-									ParseArrayNode(c, out car.RearAxle.PointSounds, new Vector3(0.0, 0.0, car.FrontAxle.Position), SoundCfgParser.smallRadius);
+									CarSound[] rearAxlePointSounds;
+									ParseArrayNode(c, out rearAxlePointSounds, new Vector3(0.0, 0.0, car.FrontAxle.Position), SoundCfgParser.smallRadius);
+									car.RearAxle.PointSounds = rearAxlePointSounds;
 									break;
 								case "reverser":
 								case "reverserhandle":

@@ -14,11 +14,6 @@ namespace OpenBve {
 // Silence the absurd amount of unused variable warnings
 #pragma warning disable 0649
 
-		// structures
-		internal struct Axle {
-			internal TrackFollower Follower;
-		}
-
 		// cars
 		internal struct Door {
 			internal int Direction;

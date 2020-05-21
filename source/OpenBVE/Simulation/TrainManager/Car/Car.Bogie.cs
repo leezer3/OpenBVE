@@ -1,7 +1,7 @@
 ﻿using System;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
-using OpenBveApi.Routes;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
@@ -41,8 +41,8 @@ namespace OpenBve
 				baseTrain = train;
 				baseCar = car;
 				CarSections = new CarSection[] { };
-				FrontAxle = new Axle(train, car, 0.35);
-				RearAxle = new Axle(train, car, 0.35);
+				FrontAxle = new Axle(Program.CurrentHost, train, car);
+				RearAxle = new Axle(Program.CurrentHost, train, car);
 			}
 
 			internal void UpdateObjects(double TimeElapsed, bool ForceUpdate)
