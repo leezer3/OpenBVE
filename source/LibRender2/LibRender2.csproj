@@ -78,6 +78,8 @@
     <Compile Include="Text\OpenGlFontChar.cs" />
     <Compile Include="Text\OpenGlFontTable.cs" />
     <Compile Include="Text\OpenGlString.cs" />
+    <Compile Include="Trains\ElementsGroup.cs" />
+    <Compile Include="Trains\Panel\TouchElement.cs" />
     <Compile Include="Viewport\ViewportChangeModes.cs" />
     <Compile Include="Viewport\ViewportModes.cs" />
   </ItemGroup>

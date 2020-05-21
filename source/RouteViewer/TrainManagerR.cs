@@ -109,9 +109,6 @@ namespace OpenBve {
 			internal double MotorDeceleration;
 			internal double ExposedFrontalArea;
 			internal double UnexposedFrontalArea;
-			internal double CoefficientOfStaticFriction;
-			internal double CoefficientOfRollingResistance;
-			internal double AerodynamicDragCoefficient;
 			internal double CenterOfGravityHeight;
 			internal double CriticalTopplingAngle;
 			internal double CurrentPerceivedSpeed;
@@ -210,18 +207,10 @@ namespace OpenBve {
 			internal CarSound ToAtc;
 			internal CarSound ToAts;
 			internal CarSound[] Plugin;
-			internal int FrontAxleRunIndex;
-			internal int RearAxleRunIndex;
-			internal int FrontAxleFlangeIndex;
-			internal int RearAxleFlangeIndex;
 			internal double FlangePitch;
 			internal double SpringPlayedAngle;
 		}
 		internal class Car : AbstractCar {
-			internal Axle FrontAxle;
-			internal Axle RearAxle;
-			internal double FrontAxlePosition;
-			internal double RearAxlePosition;
 			internal int CurrentSection;
 			internal CarSpecs Specs;
 			internal CarSounds Sounds;
@@ -364,12 +353,12 @@ namespace OpenBve {
 
 			public override double FrontCarTrackPosition()
 			{
-				return Cars[0].FrontAxle.Follower.TrackPosition - Cars[0].FrontAxlePosition + 0.5 * Cars[0].Length;
+				return Cars[0].FrontAxle.Follower.TrackPosition - Cars[0].FrontAxle.Position + 0.5 * Cars[0].Length;
 			}
 
 			public override double RearCarTrackPosition()
 			{
-				return Cars[Cars.Length - 1].RearAxle.Follower.TrackPosition - Cars[Cars.Length - 1].RearAxlePosition - 0.5 * Cars[Cars.Length - 1].Length;
+				return Cars[Cars.Length - 1].RearAxle.Follower.TrackPosition - Cars[Cars.Length - 1].RearAxle.Position - 0.5 * Cars[Cars.Length - 1].Length;
 			}
 
 			public override bool IsPlayerTrain

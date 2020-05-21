@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Interface;
+﻿using LibRender2.Trains;
+using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 
 namespace OpenBve
@@ -10,32 +11,6 @@ namespace OpenBve
 		{
 			internal Translations.Command Command;
 			internal int Option;
-		}
-
-		internal class TouchElement
-		{
-			internal AnimatedObject Element;
-			internal int JumpScreenIndex;
-			internal int[] SoundIndices;
-			internal int[] ControlIndices;
-		}
-
-		internal class ElementsGroup
-		{
-			internal AnimatedObject[] Elements;
-			internal bool Overlay;
-			internal TouchElement[] TouchElements;
-
-			internal void Initialize(bool CurrentlyVisible)
-			{
-				for (int i = 0; i < Elements.Length; i++)
-				{
-					for (int j = 0; j < Elements[i].States.Length; j++)
-					{
-						Elements[i].Initialize(j, Overlay, CurrentlyVisible);
-					}
-				}
-			}
 		}
 
 		/// <summary>An animated object attached to a car (Exterior, cab etc.)</summary>
