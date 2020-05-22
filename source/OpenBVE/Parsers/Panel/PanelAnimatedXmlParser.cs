@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using LibRender2.Trains;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Graphics;
@@ -100,11 +101,7 @@ namespace OpenBve.Parsers.Panel
 							if (n + 1 >= CarSection.Groups.Length)
 							{
 								Array.Resize(ref CarSection.Groups, n + 2);
-								CarSection.Groups[n + 1] = new TrainManager.ElementsGroup
-								{
-									Elements = new AnimatedObject[] { },
-									Overlay = true
-								};
+								CarSection.Groups[n + 1] = new ElementsGroup(true);
 							}
 
 							ParsePanelAnimatedNode(SectionElement, FileName, TrainPath, Train, Car, CarSection, n + 1);
@@ -377,7 +374,7 @@ namespace OpenBve.Parsers.Panel
 			}
 		}
 
-		private static void CreateTouchElement(TrainManager.ElementsGroup Group, Vector3 Position, Vector3 Size, int ScreenIndex, int[] SoundIndices, TrainManager.CommandEntry[] CommandEntries)
+		private static void CreateTouchElement(ElementsGroup Group, Vector3 Position, Vector3 Size, int ScreenIndex, int[] SoundIndices, TrainManager.CommandEntry[] CommandEntries)
 		{
 			Vertex t0 = new Vertex(Size.X, Size.Y, -Size.Z);
             Vertex t1 = new Vertex(Size.X, -Size.Y, -Size.Z);
@@ -399,11 +396,11 @@ namespace OpenBve.Parsers.Panel
 			Object.Dynamic = true;
 			if (Group.TouchElements == null)
 			{
-				Group.TouchElements = new TrainManager.TouchElement[0];
+				Group.TouchElements = new TouchElement[0];
 			}
 			int n = Group.TouchElements.Length;
 			Array.Resize(ref Group.TouchElements, n + 1);
-			Group.TouchElements[n] = new TrainManager.TouchElement
+			Group.TouchElements[n] = new TouchElement
 			{
 				Element = new AnimatedObject(Program.CurrentHost),
 				JumpScreenIndex = ScreenIndex,

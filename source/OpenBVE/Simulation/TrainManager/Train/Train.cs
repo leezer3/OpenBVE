@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using LibRender2.Trains;
 using OpenBve.BrakeSystems;
 using OpenBve.Parsers.Panel;
 using OpenBveApi.Colors;
@@ -94,11 +95,7 @@ namespace OpenBve
 				{
 					Groups = new ElementsGroup[1]
 				};
-				Cars[DriverCar].CarSections[0].Groups[0] = new ElementsGroup
-				{
-					Elements = new AnimatedObject[] { },
-					Overlay = true
-				};
+				Cars[DriverCar].CarSections[0].Groups[0] = new ElementsGroup(true);
 				string File = OpenBveApi.Path.CombineFile(TrainPath, "panel.xml");
 				if (!System.IO.File.Exists(File))
 				{
@@ -472,16 +469,20 @@ namespace OpenBve
 						
 						Cars[i].FrontAxle.PointSoundTriggered = false;
 						int bufferIndex = Cars[i].FrontAxle.RunIndex;
+						if (bufferIndex > Cars[i].FrontAxle.PointSounds.Length - 1)
+						{
+							//If the switch sound does not exist, return zero
+							//Required to handle legacy trains which don't have idx specific run sounds defined
+							bufferIndex = 0;
+						}
 						CarSound c = (CarSound) Cars[i].FrontAxle.PointSounds[bufferIndex];
 						if (Cars[i].FrontAxle.PointSounds == null || Cars[i].FrontAxle.PointSounds.Length == 0)
 						{
 							//No point sounds defined at all
 							continue;
 						}
-						if (bufferIndex > Cars[i].FrontAxle.PointSounds.Length - 1 || c.Buffer == null)
+						if (c.Buffer == null)
 						{
-							//If the switch sound does not exist, return zero
-							//Required to handle legacy trains which don't have idx specific run sounds defined
 							c = (CarSound)Cars[i].FrontAxle.PointSounds[0];
 						}
 						buffer = c.Buffer;

@@ -1,4 +1,5 @@
 ﻿using System;
+using LibRender2.Trains;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Trains;
@@ -153,7 +154,7 @@ namespace OpenBve
 				{
 					Groups = new ElementsGroup[1]
 				};
-				CarSections[j].Groups[0] = new ElementsGroup();
+				CarSections[j].Groups[0] = new ElementsGroup(false);
 				if (currentObject is StaticObject)
 				{
 					StaticObject s = (StaticObject)currentObject;

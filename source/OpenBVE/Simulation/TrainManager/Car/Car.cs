@@ -2,6 +2,7 @@ using System;
 using LibRender2;
 using LibRender2.Camera;
 using LibRender2.Cameras;
+using LibRender2.Trains;
 using OpenBve.BrakeSystems;
 using OpenBveApi.Graphics;
 using OpenBveApi.Math;
@@ -462,7 +463,7 @@ namespace OpenBve
 				{
 					Groups = new ElementsGroup[1]
 				};
-				CarSections[j].Groups[0] = new ElementsGroup();
+				CarSections[j].Groups[0] = new ElementsGroup(false);
 				if (currentObject is StaticObject)
 				{
 					StaticObject s = (StaticObject)currentObject;
