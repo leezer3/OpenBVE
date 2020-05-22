@@ -424,7 +424,7 @@ namespace OpenBve.Graphics.Renderers
 				if (TouchElement.Element.internalObject == pickedObject)
 				{
 					Car.CarSections[0].CurrentAdditionalGroup = TouchElement.JumpScreenIndex;
-					Car.ChangeCarSection(TrainManager.CarSectionType.Interior);
+					Car.ChangeCarSection(CarSectionType.Interior);
 
 					foreach (var index in TouchElement.SoundIndices.Where(x => x >= 0 && x < Car.Sounds.Touch.Length))
 					{

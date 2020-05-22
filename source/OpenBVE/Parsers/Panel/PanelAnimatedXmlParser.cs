@@ -55,7 +55,7 @@ namespace OpenBve.Parsers.Panel
 			}
 		}
 
-		private static void ParsePanelAnimatedNode(XElement Element, string FileName, string TrainPath, TrainManager.Train Train, int Car, TrainManager.CarSection CarSection, int GroupIndex)
+		private static void ParsePanelAnimatedNode(XElement Element, string FileName, string TrainPath, TrainManager.Train Train, int Car, CarSection CarSection, int GroupIndex)
 		{
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using LibRender2.Trains;
 using OpenBve.BrakeSystems;
 using OpenBve.SafetySystems;
 using OpenBveApi.Math;
@@ -1185,7 +1186,7 @@ namespace OpenBve {
 				}
 				
 				Train.Cars[i].CurrentCarSection = -1;
-				Train.Cars[i].ChangeCarSection(TrainManager.CarSectionType.NotVisible);
+				Train.Cars[i].ChangeCarSection(CarSectionType.NotVisible);
 				Train.Cars[i].FrontBogie.ChangeSection(-1);
 				Train.Cars[i].RearBogie.ChangeSection(-1);
 				Train.Cars[i].Coupler.ChangeSection(-1);

@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using LibRender2;
 using LibRender2.Cameras;
 using LibRender2.Screens;
+using LibRender2.Trains;
 using LibRender2.Viewports;
 using OpenBve.Graphics;
 using OpenBveApi.Colors;
@@ -873,7 +874,7 @@ namespace OpenBve
 						 * HACK: The cab view has been created using the position of the initial driver car.
 						 * Trigger a forced change to ensure that it is now correctly positioned in the consist
 						 */
-						TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(TrainManager.CarSectionType.Interior);
+						TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(CarSectionType.Interior);
 					}
 					break;
 				case 1:
@@ -883,7 +884,7 @@ namespace OpenBve
 					MainLoop.RestoreCameraSettings();
 					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 					{
-						TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Exterior);
+						TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
 						//Make bogies visible
 						TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
 						TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
@@ -902,7 +903,7 @@ namespace OpenBve
 					MainLoop.RestoreCameraSettings();
 					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 					{
-						TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Exterior);
+						TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
 						TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
 						TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 						TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(0);
@@ -921,7 +922,7 @@ namespace OpenBve
 					MainLoop.RestoreCameraSettings();
 					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 					{
-						TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Exterior);
+						TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
 						TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
 						TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 						TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(0);
@@ -940,7 +941,7 @@ namespace OpenBve
 					MainLoop.RestoreCameraSettings();
 					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 					{
-						TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Exterior);
+						TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
 						TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
 						TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 						TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(0);

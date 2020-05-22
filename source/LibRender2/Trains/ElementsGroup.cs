@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using OpenBveApi.Objects;
+﻿using OpenBveApi.Objects;
 
 namespace LibRender2.Trains
 {

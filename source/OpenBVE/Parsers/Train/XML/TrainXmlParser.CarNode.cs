@@ -308,12 +308,8 @@ namespace OpenBve.Parsers.Train
 							break;
 						}
 						Train.Cars[Car].HasInteriorView = true;
-						Train.Cars[Car].CarSections = new TrainManager.CarSection[1];
-						Train.Cars[Car].CarSections[0] = new TrainManager.CarSection
-						{
-							Groups = new ElementsGroup[1]
-						};
-						Train.Cars[Car].CarSections[0].Groups[0] = new ElementsGroup(true);
+						Train.Cars[Car].CarSections = new CarSection[1];
+						Train.Cars[Car].CarSections[0] = new CarSection(Program.Renderer, true);
 
 						string cv = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
 						if (!System.IO.File.Exists(cv))

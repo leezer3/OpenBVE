@@ -150,11 +150,7 @@ namespace OpenBve
 			{
 				int j = CarSections.Length;
 				Array.Resize(ref CarSections, j + 1);
-				CarSections[j] = new CarSection
-				{
-					Groups = new ElementsGroup[1]
-				};
-				CarSections[j].Groups[0] = new ElementsGroup(false);
+				CarSections[j] = new CarSection(Program.Renderer, false);
 				if (currentObject is StaticObject)
 				{
 					StaticObject s = (StaticObject)currentObject;
