@@ -215,6 +215,7 @@ namespace LibRender2.Textures
 					handle.LastAccess = currentTicks;
 					for (int i = 0; i < 4; i++)
 					{
+						GL.DeleteTexture(handle.OpenGlTextures[i].Name);
 						handle.OpenGlTextures[i].Valid = false;
 					}
 				}
