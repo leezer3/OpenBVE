@@ -217,6 +217,12 @@ namespace OpenBve {
 			internal bool Derailed;
 			internal bool Topples;
 
+			internal Car(Train train)
+			{
+				FrontAxle = new Axle(Program.CurrentHost, train, this);
+				RearAxle = new Axle(Program.CurrentHost, train, this);
+			}
+
 			public override void CreateWorldCoordinates(Vector3 Car, out Vector3 Position, out Vector3 Direction)
 			{
 				Direction = FrontAxle.Follower.WorldPosition - RearAxle.Follower.WorldPosition;
