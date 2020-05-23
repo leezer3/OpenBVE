@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
+using OpenBveApi;
 using OpenBveApi.Hosts;
 using OpenBveApi.Textures;
 using OpenTK.Graphics.OpenGL;
@@ -203,15 +204,35 @@ namespace LibRender2.Textures
 			{
 				return false;
 			}
-
+			
+			if (handle.MultipleFrames)
+			{
+				double elapsedTime = CPreciseTimer.GetElapsedTime(handle.LastAccess, currentTicks);
+				int elapsedFrames = (int)(elapsedTime / handle.FrameInterval);
+				if (elapsedFrames > 0)
+				{
+					handle.CurrentFrame += elapsedFrames;
+					handle.LastAccess = currentTicks;
+					for (int i = 0; i < 4; i++)
+					{
+						handle.OpenGlTextures[i].Valid = false;
+					}
+				}
+			}
+			else
+			{
+				handle.LastAccess = currentTicks;	
+			}
 			//Set last access time
-			handle.LastAccess = currentTicks;
+			
 
 			if (handle.OpenGlTextures[(int)wrap].Valid)
 			{
 				return true;
 			}
 
+			
+			
 			if (handle.Ignore)
 			{
 				return false;
@@ -221,6 +242,12 @@ namespace LibRender2.Textures
 
 			if (handle.Origin.GetTexture(out texture))
 			{
+				if (texture.MultipleFrames)
+				{
+					handle.MultipleFrames = true;
+					handle.FrameInterval = texture.FrameInterval;
+					texture.CurrentFrame = handle.CurrentFrame % texture.TotalFrames;
+				}
 				if (texture.BitsPerPixel == 32)
 				{
 					int[] names = new int[1];

@@ -17,7 +17,7 @@ namespace OpenBveApi.Textures {
 		/// <summary>The number of bits per pixel. Must be 32.</summary>
 		private readonly int MyBitsPerPixel;
 		/// <summary>The texture data. Pixels are stored row-based from top to bottom, and within a row from left to right. For 32 bits per pixel, four bytes are used in the order red, green, blue and alpha.</summary>
-		private readonly byte[] MyBytes;
+		private readonly byte[][] MyBytes;
 		/// <summary>The restricted color palette for this texture, or a null reference if the texture was 24/ 32 bit originally</summary>
 		private readonly Color24[] MyPalette;
 		/// <summary>Whether the texture is invalid and should be ignored</summary>
@@ -25,13 +25,21 @@ namespace OpenBveApi.Textures {
 		public bool Ignore;
 		/// <summary>The last access of this texture in clockticks</summary>
 		/// <remarks>Used by the engine when deciding to unload unused textures</remarks>
-		public double LastAccess;
+		public int LastAccess;
 		/// <summary>Holds the OpenGL textures</summary>
 		public readonly OpenGlTexture[] OpenGlTextures;
 		/// <summary>Holds the origin where this texture may be loaded from</summary>
 		public readonly TextureOrigin Origin;
 		/// <summary>The type of transparency used by this texture</summary>
 		public TextureTransparencyType Transparency;
+		/// <summary>Whether the texture has multiple frames</summary>
+		public bool MultipleFrames;
+		/// <summary>The current frame if multiple frames</summary>
+		public int CurrentFrame = 0;
+		/// <summary>The current frame interval if multiple frames</summary>
+		public double FrameInterval = -1;
+		/// <summary>The total number of frames</summary>
+		public int TotalFrames;
 
 		/// <summary>Whether this texture uses the compatible transparency mode (Matches to the nearest color in a restricted pallete)</summary>
 		public bool CompatibleTransparencyMode;
@@ -39,8 +47,9 @@ namespace OpenBveApi.Textures {
 		/// <summary>Gets the color of the given pixel</summary>
 		/// <param name="X">The X-coordinate of the pixel</param>
 		/// <param name="Y">The Y-coordinate of the pixel</param>
+		/// <param name="frame">The frame</param>
 		/// <returns></returns>
-		public Color24 GetPixel(int X, int Y)
+		public Color24 GetPixel(int X, int Y, int frame = 0)
 		{
 			if (X > MyWidth)
 			{
@@ -53,7 +62,7 @@ namespace OpenBveApi.Textures {
 			}
 
 			int firstByte = 4 * X * Y;
-			return new Color24(MyBytes[firstByte], MyBytes[firstByte + 1], MyBytes[firstByte + 2]);
+			return new Color24(MyBytes[frame][firstByte], MyBytes[frame][firstByte + 1], MyBytes[frame][firstByte + 2]);
 		}
 
 		/// <summary>Creates a new instance of this class.</summary>
@@ -85,8 +94,47 @@ namespace OpenBveApi.Textures {
 			this.MyWidth = width;
 			this.MyHeight = height;
 			this.MyBitsPerPixel = bitsPerPixel;
-			this.MyBytes = bytes;
+			this.MyBytes = new byte[1][];
+			this.MyBytes[0] = bytes;
 			this.MyPalette = palette;
+		}
+
+		/// <summary>Creates a new instance of this class.</summary>
+		/// <param name="width">The width of the texture in pixels.</param>
+		/// <param name="height">The height of the texture in pixels.</param>
+		/// <param name="bitsPerPixel">The number of bits per pixel. Must be 32.</param>
+		/// <param name="bytes">The texture data. Pixels are stored row-based from top to bottom, and within a row from left to right. For 32 bits per pixel, four bytes are used in the order red, green, blue and alpha.</param>
+		/// <param name="frameInterval">The frame interval</param>
+		/// <param name="totalFrames">The total number of frames</param>
+		/// <exception cref="System.ArgumentException">Raised when the number of bits per pixel is not 32.</exception>
+		/// <exception cref="System.ArgumentNullException">Raised when the byte array is a null reference.</exception>
+		/// <exception cref="System.ArgumentException">Raised when the byte array is of unexpected length.</exception>
+		public Texture(int width, int height, int bitsPerPixel, byte[][] bytes, double frameInterval, int totalFrames)
+		{
+			if (bitsPerPixel != 32)
+			{
+				throw new ArgumentException("The number of bits per pixel is supported.");
+			}
+
+			if (bytes == null)
+			{
+				throw new ArgumentNullException("bytes");
+			}
+
+			if (bytes[0].Length != 4 * width * height)
+			{
+				throw new ArgumentException("The data bytes are not of the expected length.");
+			}
+
+			this.MyWidth = width;
+			this.MyHeight = height;
+			this.MyBitsPerPixel = bitsPerPixel;
+			this.MyBytes = new byte[1][];
+			this.MyBytes = bytes;
+			this.MyPalette = null;
+			this.MultipleFrames = true;
+			this.FrameInterval = frameInterval;
+			this.TotalFrames = totalFrames;
 		}
 
 		/// <summary>Creates a new texture.</summary>
@@ -182,7 +230,14 @@ namespace OpenBveApi.Textures {
 		{
 			get
 			{
-				return this.MyBytes;
+				if (MultipleFrames == false)
+				{
+					return this.MyBytes[0];
+				}
+				else
+				{
+					return this.MyBytes[CurrentFrame];
+				}
 			}
 		}
 
@@ -265,7 +320,7 @@ namespace OpenBveApi.Textures {
 		/// <summary>Gets the type of transparency encountered in this texture.</summary>
 		/// <returns>The type of transparency encountered in this texture.</returns>
 		/// <exception cref="System.NotSupportedException">Raised when the bits per pixel in the texture is not supported.</exception>
-		public TextureTransparencyType GetTransparencyType()
+		public TextureTransparencyType GetTransparencyType(int frame = 0)
 		{
 			if (this.MyBitsPerPixel == 24)
 			{
@@ -276,11 +331,11 @@ namespace OpenBveApi.Textures {
 			{
 				for (int i = 3; i < this.MyBytes.Length; i += 4)
 				{
-					if (this.MyBytes[i] != 255)
+					if (this.MyBytes[frame][i] != 255)
 					{
 						for (int j = i; j < this.MyBytes.Length; j += 4)
 						{
-							if (this.MyBytes[j] != 0 & this.MyBytes[j] != 255)
+							if (this.MyBytes[frame][j] != 0 & this.MyBytes[frame][j] != 255)
 							{
 								return TextureTransparencyType.Alpha;
 							}
@@ -297,32 +352,32 @@ namespace OpenBveApi.Textures {
 		}
 
 		/// <summary>Inverts the lightness values of a texture used for a glow</summary>
-		public void InvertLightness()
+		public void InvertLightness(int frame = 0)
 		{
 			for (int i = 0; i < MyBytes.Length; i += 4)
 			{
-				if (MyBytes[i] != 0 | MyBytes[i + 1] != 0 | MyBytes[i + 2] != 0)
+				if (MyBytes[frame][i] != 0 | MyBytes[frame][i + 1] != 0 | MyBytes[frame][i + 2] != 0)
 				{
-					int r = MyBytes[i + 0];
-					int g = MyBytes[i + 1];
-					int b = MyBytes[i + 2];
+					int r = MyBytes[frame][i + 0];
+					int g = MyBytes[frame][i + 1];
+					int b = MyBytes[frame][i + 2];
 					if (g <= r & r <= b | b <= r & r <= g)
 					{
-						MyBytes[i + 0] = (byte)(255 + r - g - b);
-						MyBytes[i + 1] = (byte)(255 - b);
-						MyBytes[i + 2] = (byte)(255 - g);
+						MyBytes[frame][i + 0] = (byte)(255 + r - g - b);
+						MyBytes[frame][i + 1] = (byte)(255 - b);
+						MyBytes[frame][i + 2] = (byte)(255 - g);
 					}
 					else if (r <= g & g <= b | b <= g & g <= r)
 					{
-						MyBytes[i + 0] = (byte)(255 - b);
-						MyBytes[i + 1] = (byte)(255 + g - r - b);
-						MyBytes[i + 2] = (byte)(255 - r);
+						MyBytes[frame][i + 0] = (byte)(255 - b);
+						MyBytes[frame][i + 1] = (byte)(255 + g - r - b);
+						MyBytes[frame][i + 2] = (byte)(255 - r);
 					}
 					else
 					{
-						MyBytes[i + 0] = (byte)(255 - g);
-						MyBytes[i + 1] = (byte)(255 - r);
-						MyBytes[i + 2] = (byte)(255 + b - r - g);
+						MyBytes[frame][i + 0] = (byte)(255 - g);
+						MyBytes[frame][i + 1] = (byte)(255 - r);
+						MyBytes[frame][i + 2] = (byte)(255 + b - r - g);
 					}
 				}
 			}

@@ -1,7 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
+using System.IO;
 using OpenBveApi.Colors;
 using OpenBveApi.Textures;
 using OpenBveApi.Hosts;
@@ -18,10 +19,65 @@ namespace Plugin {
 			 * Read the bitmap. This will be a bitmap of just
 			 * any format, not necessarily the one that allows
 			 * us to extract the bitmap data easily.
-			 */
-			Bitmap bitmap = new Bitmap(file);
-			Color24[] p = null;
-			if (file.ToLowerInvariant().EndsWith(".bmp") && EnabledHacks.ReduceTransparencyColorDepth && (bitmap.PixelFormat == PixelFormat.Format32bppArgb || bitmap.PixelFormat == PixelFormat.Format24bppRgb))
+			 * */
+
+			using (var image = Image.FromFile(file))
+			{
+				if (image.RawFormat.Equals(ImageFormat.Gif))
+				{
+					List<Bitmap> frames = new List<Bitmap>();
+
+					if (ImageAnimator.CanAnimate(image))
+					{
+						var dimension = new FrameDimension(image.FrameDimensionsList[0]);
+						int frameCount = image.GetFrameCount(dimension);
+
+						int index = 0;
+						int duration = 0;
+						for (int i = 0; i < frameCount; i++)
+						{
+							image.SelectActiveFrame(dimension, i);
+							frames.Add(new Bitmap(image));
+
+							var delay = BitConverter.ToInt32(image.GetPropertyItem(20736).Value, index) * 10;
+							duration += (delay < 100 ? 100 : delay);
+
+							index += 4;
+						}
+
+						int numFrames = duration / frameCount;
+						List<byte[]> frameBytes = new List<byte[]>();
+						for (int i = 0; i < frames.Count; i++)
+						{
+							Color24[] p; //unused here, but don't clone the method- BVE2 had no support for animted gif
+							frameBytes.Add(GetRawBitmapData(frames[i], out p));
+						}
+
+						texture = new Texture(frames[0].Width, frames[0].Height, 32, frameBytes.ToArray(), ((double)duration / frameCount) / 10000000.0, frameCount);
+						return true;
+					}
+				}
+			}
+
+			System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(file);
+			Color24[] pallete;
+			byte[] raw = GetRawBitmapData(bitmap, out pallete);
+			if (raw != null)
+			{
+				texture = new Texture(bitmap.Width, bitmap.Height, 32, raw, pallete);
+				return true;
+			}
+			else
+			{
+				texture = null;
+				return false;
+			}
+		}
+
+		private byte[] GetRawBitmapData(Bitmap bitmap, out Color24[] p)
+		{
+			p = null;
+			if (bitmap.PixelFormat != PixelFormat.Format32bppArgb && bitmap.PixelFormat != PixelFormat.Format24bppRgb)
 			{
 				/*
 				 * Our source bitmap is *not* a 256 color bitmap but has been made for BVE2 / BVE4.
@@ -141,9 +197,20 @@ namespace Plugin {
 					raw[i] = raw[i + 2];
 					raw[i + 2] = temp;
 				}
-				texture = new Texture(width, height, 32, raw, p);
+
+				return raw;
+			} else {
+				/*
+				 * The stride is invalid. This indicates that the
+				 * CLI either does not implement the conversion to
+				 * 32-bit BGRA correctly, or that the CLI has
+				 * applied additional padding that we do not
+				 * support.
+				 * */
+				bitmap.UnlockBits(data);
 				bitmap.Dispose();
-				return true;
+				CurrentHost.ReportProblem(ProblemType.InvalidOperation, "Invalid stride encountered.");
+				return null;
 			}
 
 			/*
