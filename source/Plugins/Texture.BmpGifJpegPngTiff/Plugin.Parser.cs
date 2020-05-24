@@ -20,7 +20,7 @@ namespace Plugin {
 			 * any format, not necessarily the one that allows
 			 * us to extract the bitmap data easily.
 			 * */
-
+			int width, height;
 			using (var image = Image.FromFile(file))
 			{
 				if (image.RawFormat.Equals(ImageFormat.Gif))
@@ -50,7 +50,7 @@ namespace Plugin {
 						for (int i = 0; i < frames.Count; i++)
 						{
 							Color24[] p; //unused here, but don't clone the method- BVE2 had no support for animted gif
-							frameBytes.Add(GetRawBitmapData(frames[i], out p));
+							frameBytes.Add(GetRawBitmapData(frames[i], out width, out height, out p));
 						}
 
 						texture = new Texture(frames[0].Width, frames[0].Height, 32, frameBytes.ToArray(), ((double)duration / frameCount) / 10000000.0, frameCount);
@@ -59,12 +59,13 @@ namespace Plugin {
 				}
 			}
 
-			System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(file);
+			Bitmap bitmap = new Bitmap(file);
 			Color24[] pallete;
-			byte[] raw = GetRawBitmapData(bitmap, out pallete);
+			
+			byte[] raw = GetRawBitmapData(bitmap, out width, out height, out pallete);
 			if (raw != null)
 			{
-				texture = new Texture(bitmap.Width, bitmap.Height, 32, raw, pallete);
+				texture = new Texture(width, height, 32, raw, pallete);
 				return true;
 			}
 			else
@@ -74,7 +75,7 @@ namespace Plugin {
 			}
 		}
 
-		private byte[] GetRawBitmapData(Bitmap bitmap, out Color24[] p)
+		private byte[] GetRawBitmapData(Bitmap bitmap, out int width, out int height, out Color24[] p)
 		{
 			p = null;
 			if (bitmap.PixelFormat != PixelFormat.Format32bppArgb && bitmap.PixelFormat != PixelFormat.Format24bppRgb)
@@ -186,8 +187,8 @@ namespace Plugin {
 				byte[] raw = new byte[data.Stride * data.Height];
 				System.Runtime.InteropServices.Marshal.Copy(data.Scan0, raw, 0, data.Stride * data.Height);
 				bitmap.UnlockBits(data);
-				int width = bitmap.Width;
-				int height = bitmap.Height;
+				width = bitmap.Width;
+				height = bitmap.Height;
 				
 				/*
 				 * Change the byte order from BGRA to RGBA.
@@ -210,6 +211,8 @@ namespace Plugin {
 				bitmap.UnlockBits(data);
 				bitmap.Dispose();
 				CurrentHost.ReportProblem(ProblemType.InvalidOperation, "Invalid stride encountered.");
+				width = 0;
+				height = 0;
 				return null;
 			}
 

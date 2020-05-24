@@ -329,11 +329,11 @@ namespace OpenBveApi.Textures {
 
 			if (this.MyBitsPerPixel == 32)
 			{
-				for (int i = 3; i < this.MyBytes.Length; i += 4)
+				for (int i = 3; i < this.MyBytes[frame].Length; i += 4)
 				{
 					if (this.MyBytes[frame][i] != 255)
 					{
-						for (int j = i; j < this.MyBytes.Length; j += 4)
+						for (int j = i; j < this.MyBytes[frame].Length; j += 4)
 						{
 							if (this.MyBytes[frame][j] != 0 & this.MyBytes[frame][j] != 255)
 							{
