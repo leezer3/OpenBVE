@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
@@ -21,6 +22,8 @@ namespace LibRender2.Textures
 		/// <summary>Holds all currently registered textures.</summary>
 		public Texture[] RegisteredTextures;
 
+		private Dictionary<TextureOrigin, Texture> animatedTextures;
+
 		/// <summary>The number of currently registered textures.</summary>
 		public int RegisteredTexturesCount;
 
@@ -30,6 +33,7 @@ namespace LibRender2.Textures
 			RegisteredTextures = new Texture[16];
 			RegisteredTexturesCount = 0;
 			renderer = Renderer;
+			animatedTextures = new Dictionary<TextureOrigin, Texture>();
 		}
 
 
@@ -199,6 +203,8 @@ namespace LibRender2.Textures
 		/// <returns>Whether loading the texture was successful.</returns>
 		public bool LoadTexture(Texture handle, OpenGlTextureWrapMode wrap, int currentTicks, InterpolationMode Interpolation, int AnisotropicFilteringLevel)
 		{
+
+			Texture texture = null;
 			//Don't try to load a texture to a null handle, this is a seriously bad idea....
 			if (handle == null || handle.OpenGlTextures == null)
 			{
@@ -207,6 +213,19 @@ namespace LibRender2.Textures
 			
 			if (handle.MultipleFrames)
 			{
+				if (!(animatedTextures.ContainsKey(handle.Origin)))
+				{
+					if (!handle.Origin.GetTexture(out texture))
+					{
+						//Loading animated texture barfed
+						return false;
+					}
+					animatedTextures.Add(handle.Origin, texture);
+				}
+				else
+				{
+					texture = animatedTextures[handle.Origin];
+				}
 				double elapsedTime = CPreciseTimer.GetElapsedTime(handle.LastAccess, currentTicks);
 				int elapsedFrames = (int)(elapsedTime / handle.FrameInterval);
 				if (elapsedFrames > 0)
@@ -239,9 +258,7 @@ namespace LibRender2.Textures
 				return false;
 			}
 
-			Texture texture;
-
-			if (handle.Origin.GetTexture(out texture))
+			if (texture == null && handle.Origin.GetTexture(out texture) || texture != null)
 			{
 				if (texture.MultipleFrames)
 				{
