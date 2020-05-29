@@ -34,18 +34,22 @@ namespace Plugin {
 
 						int index = 0;
 						int duration = 0;
+						
 						for (int i = 0; i < frameCount; i++)
 						{
 							image.SelectActiveFrame(dimension, i);
 							frames.Add(new Bitmap(image));
-
-							var delay = BitConverter.ToInt32(image.GetPropertyItem(20736).Value, index) * 10;
+							byte[] times = image.GetPropertyItem(0x5100).Value;
+							/*
+							 * Mono difference:
+							 * They return the delay for the selected frame only, .Net returns an array containing the delay for all frames
+							 */
+							int delay = times.Length == 4 ? BitConverter.ToInt32(times, 0) * 10 : BitConverter.ToInt32(times, index) * 10;
 							duration += (delay < 100 ? 100 : delay);
 
 							index += 4;
+							
 						}
-
-						int numFrames = duration / frameCount;
 						List<byte[]> frameBytes = new List<byte[]>();
 						for (int i = 0; i < frames.Count; i++)
 						{
