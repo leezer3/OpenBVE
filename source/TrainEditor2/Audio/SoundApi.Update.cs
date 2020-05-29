@@ -253,7 +253,7 @@ namespace TrainEditor2.Audio
 					 * */
 					if (source.State != SoundSourceState.Playing)
 					{
-						LoadBuffer(source.Buffer);
+						source.Buffer.Load();
 						if (source.Buffer.Loaded)
 						{
 							AL.GenSources(1, out source.OpenAlSourceName);

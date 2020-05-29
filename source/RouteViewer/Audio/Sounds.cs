@@ -15,15 +15,7 @@ namespace OpenBve
 		/// <returns>The sound source.</returns>
 		internal void PlayCarSound(CarSound sound, double pitch, double volume, AbstractCar car, bool looped)
 		{
-			if (sound.Buffer == null)
-			{
-				return;
-			}
-			if (car == null)
-			{
-				throw new InvalidDataException("A valid car must be specified");
-			}
-			sound.Source = PlaySound(sound.Buffer, pitch, volume, sound.Position, car, looped);
+			sound.Play(pitch, volume, looped);
 		}
 	}
 }

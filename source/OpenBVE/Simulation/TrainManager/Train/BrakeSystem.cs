@@ -173,11 +173,7 @@ namespace OpenBve
 
 				if(Cars[CarIndex].CarBrake.airSound != null)
 				{
-					SoundBuffer buffer = Cars[CarIndex].CarBrake.airSound.Buffer;
-					if (buffer != null)
-					{
-						Program.Sounds.PlaySound(buffer, 1.0, 1.0, Cars[CarIndex].CarBrake.airSound.Position, Cars[CarIndex], false);
-					}
+					Cars[CarIndex].CarBrake.airSound.Play(1.0, 1.0, false);
 				}
 
 				// deceleration provided by motor
@@ -205,8 +201,8 @@ namespace OpenBve
 				Cars[CarIndex].Specs.HoldBrake.Update(ref DecelerationDueToMotor, Handles.HoldBrake.Actual);
 				{
 					// rub sound
-					SoundBuffer buffer = Cars[CarIndex].CarBrake.Rub.Buffer;
-					if (buffer != null)
+					CarSound rub = Cars[CarIndex].CarBrake.Rub;
+					if (rub != null)
 					{
 						double spd = Math.Abs(Cars[CarIndex].CurrentSpeed);
 						double pitch = 1.0 / (spd + 1.0) + 1.0;
@@ -227,8 +223,8 @@ namespace OpenBve
 						{
 							if (pitch > 0.01 & gain > 0.001)
 							{
-								Cars[CarIndex].CarBrake.Rub.Source.Pitch = pitch;
-								Cars[CarIndex].CarBrake.Rub.Source.Volume = gain;
+								rub.Source.Pitch = pitch;
+								rub.Source.Volume = gain;
 							}
 							else
 							{
@@ -237,7 +233,7 @@ namespace OpenBve
 						}
 						else if (pitch > 0.02 & gain > 0.01)
 						{
-							Cars[CarIndex].CarBrake.Rub.Source = Program.Sounds.PlaySound(buffer, pitch, gain, Cars[CarIndex].CarBrake.Rub.Position, Cars[CarIndex], true);
+							rub.Play(pitch, gain, true);
 						}
 					}
 				}

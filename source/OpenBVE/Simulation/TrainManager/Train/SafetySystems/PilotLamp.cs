@@ -30,20 +30,12 @@ namespace OpenBve.SafetySystems
 			if (oldState != DoorStates.None & newState == DoorStates.None)
 			{
 				Lit = true;
-				SoundBuffer buffer = OnSound.Buffer;
-				if (buffer != null)
-				{
-					Program.Sounds.PlaySound(buffer, 1.0, 1.0, OnSound.Position, baseCar, false);
-				}
+				OnSound.Play(1.0, 1.0, false);
 			}
 			else if (oldState == DoorStates.None & newState != DoorStates.None)
 			{
 				Lit = false;
-				SoundBuffer buffer = OffSound.Buffer;
-				if (buffer != null)
-				{
-					Program.Sounds.PlaySound(buffer, 1.0, 1.0, OffSound.Position, baseCar, false);
-				}
+				OffSound.Play(1.0, 1.0, false);
 			}
 			oldState = newState;
 		}

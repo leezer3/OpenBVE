@@ -405,10 +405,7 @@ namespace OpenBve
 								
 								if (Cars[j].Specs.IsMotorCar)
 								{
-									if (Cars[j].Sounds.Loop.Buffer != null)
-									{
-										Cars[j].Sounds.Loop.Source = Program.Sounds.PlaySound(Cars[j].Sounds.Loop.Buffer, 1.0, 1.0, Cars[j].Sounds.Loop.Position, Cars[j], true);
-									}
+									Cars[j].Sounds.Loop.Play(1.0, 1.0, true);
 								}
 							}
 						}
@@ -458,8 +455,7 @@ namespace OpenBve
 				//Trigger point sounds if appropriate
 				for (int i = 0; i < Cars.Length; i++)
 				{
-					Vector3 p = Vector3.Zero;
-					SoundBuffer buffer = null;
+					CarSound pointSound = null;
 					if (Cars[i].FrontAxle.PointSoundTriggered)
 					{
 						
@@ -481,21 +477,20 @@ namespace OpenBve
 						{
 							c = (CarSound)Cars[i].FrontAxle.PointSounds[0];
 						}
-						buffer = c.Buffer;
-						p = c.Position;
+						pointSound = c;
 					}
-					if (buffer != null)
+					if (pointSound != null)
 					{
 						double spd = Math.Abs(CurrentSpeed);
 						double pitch = spd / 12.5;
 						double gain = pitch < 0.5 ? 2.0 * pitch : 1.0;
 						if (pitch < 0.2 | gain < 0.2)
 						{
-							buffer = null;
+							pointSound = null;
 						}
-						if (buffer != null)
+						if (pointSound != null)
 						{
-							Program.Sounds.PlaySound(buffer, pitch, gain, p, Cars[i], false);
+							pointSound.Play(pitch, gain, false);
 						}
 					}
 				}
@@ -566,23 +561,13 @@ namespace OpenBve
 					if (breaker & !Cars[DriverCar].Sounds.BreakerResumed)
 					{
 						// resume
-						if (Cars[DriverCar].Sounds.BreakerResume.Buffer != null)
-						{
-							Program.Sounds.PlaySound(Cars[DriverCar].Sounds.BreakerResume.Buffer, 1.0, 1.0, Cars[DriverCar].Sounds.BreakerResume.Position, Cars[DriverCar], false);
-						}
-						if (Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Buffer != null)
-						{
-							Program.Sounds.PlaySound(Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Buffer, 1.0, 1.0, Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Position, Cars[DriverCar], false);
-						}
+						Cars[DriverCar].Sounds.BreakerResume.Play(1.0, 1.0, false);
 						Cars[DriverCar].Sounds.BreakerResumed = true;
 					}
 					else if (!breaker & Cars[DriverCar].Sounds.BreakerResumed)
 					{
 						// interrupt
-						if (Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Buffer != null)
-						{
-							Program.Sounds.PlaySound(Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Buffer, 1.0, 1.0, Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Position, Cars[DriverCar], false);
-						}
+						Cars[DriverCar].Sounds.BreakerResumeOrInterrupt.Play(1.0, 1.0, false);
 						Cars[DriverCar].Sounds.BreakerResumed = false;
 					}
 				}

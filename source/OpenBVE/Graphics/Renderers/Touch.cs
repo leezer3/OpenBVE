@@ -428,9 +428,7 @@ namespace OpenBve.Graphics.Renderers
 
 					foreach (var index in TouchElement.SoundIndices.Where(x => x >= 0 && x < Car.Sounds.Touch.Length))
 					{
-						SoundBuffer Buffer = Car.Sounds.Touch[index].Buffer;
-						Vector3 Position = Car.Sounds.Touch[index].Position;
-						Program.Sounds.PlaySound(Buffer, 1.0, 1.0, Position, TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar], false);
+						Car.Sounds.Touch[index].Play(1.0, 1.0, false);
 					}
 				}
 

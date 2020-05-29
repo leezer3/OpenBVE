@@ -1,4 +1,5 @@
 using System;
+using CSScriptLibrary;
 using LibRender2;
 using LibRender2.Camera;
 using LibRender2.Cameras;
@@ -283,15 +284,11 @@ namespace OpenBve
 					{
 						if (FrontAxle.RunIndex < Sounds.Run.Length)
 						{
-							SoundBuffer buffer = Sounds.Run[FrontAxle.RunIndex].Buffer;
-							if (buffer != null)
+							double duration = Sounds.Run[FrontAxle.RunIndex].Duration;
+							if (duration > 0.0)
 							{
-								double duration = Program.Sounds.GetDuration(buffer);
-								if (duration > 0.0)
-								{
-									double offset = distance > maxDistance ? 25.0 : 300.0;
-									Sounds.RunNextReasynchronizationPosition = duration * Math.Ceiling((baseTrain.Cars[0].FrontAxle.Follower.TrackPosition + offset) / duration);
-								}
+								double offset = distance > maxDistance ? 25.0 : 300.0;
+								Sounds.RunNextReasynchronizationPosition = duration * Math.Ceiling((baseTrain.Cars[0].FrontAxle.Follower.TrackPosition + offset) / duration);
 							}
 						}
 					}
@@ -332,11 +329,7 @@ namespace OpenBve
 					}
 					else if (pitch > 0.02 & gain > 0.01)
 					{
-						SoundBuffer buffer = Sounds.Run[j].Buffer;
-						if (buffer != null)
-						{
-							Sounds.Run[j].Source = Program.Sounds.PlaySound(buffer, pitch, gain, Sounds.Run[j].Position, this, true);
-						}
+						Sounds.Run[j].Play(pitch, gain, true);
 					}
 				}
 			}
@@ -1027,25 +1020,17 @@ namespace OpenBve
 					const double angleTolerance = 0.001;
 					if (diff < -angleTolerance)
 					{
-						SoundBuffer buffer = Sounds.SpringL.Buffer;
-						if (buffer != null)
+						if (!Program.Sounds.IsPlaying(Sounds.SpringL))
 						{
-							if (!Program.Sounds.IsPlaying(Sounds.SpringL.Source))
-							{
-								Sounds.SpringL.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, Sounds.SpringL.Position, this, false);
-							}
+							Sounds.SpringL.Play(1.0, 1.0, false);
 						}
 						Sounds.SpringPlayedAngle = a;
 					}
 					else if (diff > angleTolerance)
 					{
-						SoundBuffer buffer = Sounds.SpringR.Buffer;
-						if (buffer != null)
+						if (!Program.Sounds.IsPlaying(Sounds.SpringR))
 						{
-							if (!Program.Sounds.IsPlaying(Sounds.SpringR.Source))
-							{
-								Sounds.SpringR.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, Sounds.SpringR.Position, this, false);
-							}
+							Sounds.SpringR.Play(1.0, 1.0, false);
 						}
 						Sounds.SpringPlayedAngle = a;
 					}
@@ -1116,11 +1101,7 @@ namespace OpenBve
 						}
 						else if (pitch > 0.02 & gain > 0.01)
 						{
-							SoundBuffer buffer = Sounds.Flange[i].Buffer;
-							if (buffer != null)
-							{
-								Sounds.Flange[i].Source = Program.Sounds.PlaySound(buffer, pitch, gain, Sounds.Flange[i].Position, this, true);
-							}
+							Sounds.Flange[i].Play(pitch, gain, true);
 						}
 					}
 				}

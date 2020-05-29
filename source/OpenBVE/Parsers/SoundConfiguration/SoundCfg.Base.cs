@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenBveApi;
 using OpenBveApi.Math;
+using OpenBveApi.Trains;
 using SoundManager;
 
 namespace OpenBve
@@ -48,8 +49,9 @@ namespace OpenBve
 		/// <param name="FileEnd">The last sound file</param>
 		/// <param name="Position">The position the sound is to be emitted from within the car</param>
 		/// <param name="Radius">The sound radius</param>
+		/// <param name="Car">The car</param>
 		/// <returns>The new car sound array</returns>
-		internal static CarSound[] TryLoadSoundArray(string Folder, string FileStart, string FileEnd, Vector3 Position, double Radius)
+		internal static CarSound[] TryLoadSoundArray(string Folder, string FileStart, string FileEnd, Vector3 Position, double Radius, AbstractCar Car)
 		{
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			CarSound[] Sounds = { };
@@ -82,7 +84,7 @@ namespace OpenBve
 										Sounds[j].Source = null;
 									}
 								}
-								Sounds[n] = new CarSound(Program.Sounds.RegisterBuffer(Files[i], Radius), Position);
+								Sounds[n] = new CarSound(Program.Sounds.RegisterBuffer(Files[i], Radius), Position, Car);
 							}
 						}
 					}

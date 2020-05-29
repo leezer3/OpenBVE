@@ -172,21 +172,21 @@ namespace OpenBve
 				{
 					if (Car.Doors[0].OpenSound.Buffer != null & Car.Doors[1].OpenSound.Buffer != null)
 					{
-						Program.Sounds.LoadBuffer(Car.Doors[0].OpenSound.Buffer);
-						Program.Sounds.LoadBuffer(Car.Doors[1].OpenSound.Buffer);
-						double a = Car.Doors[0].OpenSound.Buffer.Duration;
-						double b = Car.Doors[1].OpenSound.Buffer.Duration;
+						Car.Doors[0].OpenSound.Buffer.Load();
+						Car.Doors[1].OpenSound.Buffer.Load();
+						double a = Car.Doors[0].OpenSound.Duration;
+						double b = Car.Doors[1].OpenSound.Duration;
 						Car.Specs.DoorOpenFrequency = a + b > 0.0 ? 2.0 / (a + b) : 0.8;
 					}
 					else if (Car.Doors[0].OpenSound.Buffer != null)
 					{
-						Program.Sounds.LoadBuffer(Car.Doors[0].OpenSound.Buffer);
+						Car.Doors[0].OpenSound.Buffer.Load();
 						double a = Car.Doors[0].OpenSound.Buffer.Duration;
 						Car.Specs.DoorOpenFrequency = a > 0.0 ? 1.0 / a : 0.8;
 					}
 					else if (Car.Doors[1].OpenSound.Buffer != null)
 					{
-						Program.Sounds.LoadBuffer(Car.Doors[0].OpenSound.Buffer);
+						Car.Doors[0].OpenSound.Buffer.Load();
 						double b = Car.Doors[1].OpenSound.Buffer.Duration;
 						Car.Specs.DoorOpenFrequency = b > 0.0 ? 1.0 / b : 0.8;
 					}
@@ -199,22 +199,22 @@ namespace OpenBve
 				{
 					if (Car.Doors[0].CloseSound.Buffer != null & Car.Doors[1].CloseSound.Buffer != null)
 					{
-						Program.Sounds.LoadBuffer(Car.Doors[0].CloseSound.Buffer);
-						Program.Sounds.LoadBuffer(Car.Doors[1].CloseSound.Buffer);
-						double a = Car.Doors[0].CloseSound.Buffer.Duration;
-						double b = Car.Doors[1].CloseSound.Buffer.Duration;
+						Car.Doors[0].CloseSound.Buffer.Load();
+						Car.Doors[1].CloseSound.Buffer.Load();
+						double a = Car.Doors[0].CloseSound.Duration;
+						double b = Car.Doors[1].CloseSound.Duration;
 						Car.Specs.DoorCloseFrequency = a + b > 0.0 ? 2.0 / (a + b) : 0.8;
 					}
 					else if (Car.Doors[0].CloseSound.Buffer != null)
 					{
-						Program.Sounds.LoadBuffer(Car.Doors[0].CloseSound.Buffer);
-						double a = Car.Doors[0].CloseSound.Buffer.Duration;
+						Car.Doors[0].CloseSound.Buffer.Load();
+						double a = Car.Doors[0].CloseSound.Duration;
 						Car.Specs.DoorCloseFrequency = a > 0.0 ? 1.0 / a : 0.8;
 					}
 					else if (Car.Doors[1].CloseSound.Buffer != null)
 					{
-						Program.Sounds.LoadBuffer(Car.Doors[0].CloseSound.Buffer);
-						double b = Car.Doors[1].CloseSound.Buffer.Duration;
+						Car.Doors[0].CloseSound.Buffer.Load();
+						double b = Car.Doors[1].CloseSound.Duration;
 						Car.Specs.DoorCloseFrequency = b > 0.0 ? 1.0 / b : 0.8;
 					}
 					else

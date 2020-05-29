@@ -166,8 +166,9 @@ namespace OpenBve
 						 * For non-looping sounds, check if the sound is still playing.
 						 * */
 						gain = (gain - GainThreshold) / (1.0 - GainThreshold);
-						if (Sources[i].State != SoundSourceState.Playing) {
-							LoadBuffer(Sources[i].Buffer);
+						if (Sources[i].State != SoundSourceState.Playing)
+						{
+							Sources[i].Buffer.Load();
 							if (Sources[i].Buffer.Loaded) {
 								AL.GenSources(1, out Sources[i].OpenAlSourceName);
 								AL.Source(Sources[i].OpenAlSourceName, ALSourcei.Buffer, Sources[i].Buffer.OpenAlBufferName);
@@ -493,8 +494,9 @@ namespace OpenBve
 					/*
 					 * Ensure the buffer is loaded, then play the sound.
 					 * */
-					if (source.State != SoundSourceState.Playing) {
-						LoadBuffer(source.Buffer);
+					if (source.State != SoundSourceState.Playing)
+					{
+						source.Buffer.Load();
 						if (source.Buffer.Loaded) {
 							AL.GenSources(1, out source.OpenAlSourceName);
 							AL.Source(source.OpenAlSourceName, ALSourcei.Buffer, source.Buffer.OpenAlBufferName);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using OpenBveApi.Math;
+using OpenBveApi.Trains;
 using SoundManager;
 using TrainEditor2.Models.Sounds;
 
@@ -76,13 +77,7 @@ namespace TrainEditor2.Simulation.TrainManager
 					}
 					else if (pitch > 0.02 & gain > 0.01)
 					{
-						SoundBuffer buffer = Sounds.Run[j].Buffer;
-
-						if (buffer != null)
-						{
-							Vector3 pos = Sounds.Run[j].Position;
-							Sounds.Run[j].Source = Program.SoundApi.PlaySound(buffer, pitch, gain, pos, baseTrain, true);
-						}
+						Sounds.Run[j].Play(pitch, gain, true);
 					}
 				}
 			}
@@ -215,7 +210,7 @@ namespace TrainEditor2.Simulation.TrainManager
 						}
 					}
 
-					Sounds.Run[element.Key] = new CarSound(Program.SoundApi.RegisterBuffer(element.FilePath, mediumRadius), center);
+					Sounds.Run[element.Key] = new CarSound(Program.SoundApi.RegisterBuffer(element.FilePath, mediumRadius), center, new AbstractCar());
 				}
 
 				Sounds.RunVolume = new double[Sounds.Run.Length];

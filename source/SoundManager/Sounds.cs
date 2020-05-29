@@ -28,10 +28,10 @@ namespace SoundManager
 		private int BufferCount = 0;
 
 		/// <summary>A list of all sound sources.</summary>
-		protected SoundSource[] Sources = new SoundSource[16];
+		protected internal static SoundSource[] Sources = new SoundSource[16];
 
 		/// <summary>The number of sound sources.</summary>
-		protected int SourceCount = 0;
+		protected internal static int SourceCount = 0;
 
 		/// <summary>The gain threshold. Sounds with gains below this value are not played.</summary>
 		protected const double GainThreshold = 0.0001;
@@ -261,45 +261,12 @@ namespace SoundManager
 			return null;
 		}
 
-
-		// --- loading buffers ---
-
-		/// <summary>Loads the specified sound buffer.</summary>
-		/// <param name="buffer">The sound buffer.</param>
-		/// <returns>Whether loading the buffer was successful.</returns>
-		public void LoadBuffer(SoundBuffer buffer)
-		{
-			if (buffer.Loaded)
-			{
-				return;
-			}
-			if (buffer.Ignore)
-			{
-				return;
-			}
-			Sound sound;
-			if (buffer.Origin.GetSound(out sound))
-			{
-				if (sound.BitsPerSample == 8 | sound.BitsPerSample == 16)
-				{
-					byte[] bytes = sound.GetMonoMix();
-					AL.GenBuffers(1, out buffer.OpenAlBufferName);
-					ALFormat format = sound.BitsPerSample == 8 ? ALFormat.Mono8 : ALFormat.Mono16;
-					AL.BufferData(buffer.OpenAlBufferName, format, bytes, bytes.Length, sound.SampleRate);
-					buffer.Duration = sound.Duration;
-					buffer.Loaded = true;
-					return;
-				}
-			}
-			buffer.Ignore = true;
-		}
-
 		/// <summary>Loads all sound buffers immediately.</summary>
 		internal void LoadAllBuffers()
 		{
 			for (int i = 0; i < BufferCount; i++)
 			{
-				LoadBuffer(Buffers[i]);
+				Buffers[i].Load();
 			}
 		}
 
@@ -521,6 +488,22 @@ namespace SoundManager
 			return false;
 		}
 
+		/// <summary>Checks whether the specified sound is playing or supposed to be playing.</summary>
+		/// <param name="carSound">The sound source, or a null reference.</param>
+		/// <returns>Whether the sound is playing or supposed to be playing.</returns>
+		public bool IsPlaying(CarSound carSound)
+		{
+			SoundSource source = carSound.Source;
+			if (source != null)
+			{
+				if (source.State == SoundSourceState.PlayPending | source.State == SoundSourceState.Playing)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
 		/// <summary>Checks whether the specified sound is stopped or supposed to be stopped.</summary>
 		/// <param name="source">The sound source, or a null reference.</param>
 		/// <returns>Whether the sound is stopped or supposed to be stopped.</returns>
@@ -541,7 +524,7 @@ namespace SoundManager
 		/// <returns>The duration of the sound buffer in seconds, or zero if the buffer could not be loaded.</returns>
 		public double GetDuration(SoundBuffer buffer)
 		{
-			LoadBuffer(buffer);
+			buffer.Load();
 			return buffer.Duration;
 		}
 

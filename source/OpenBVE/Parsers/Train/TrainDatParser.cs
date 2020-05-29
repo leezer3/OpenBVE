@@ -1090,7 +1090,7 @@ namespace OpenBve {
 				Train.Handles.SingleHandle = false;
 				Train.Handles.HasHoldBrake = false;
 			}
-			Train.SafetySystems.PassAlarm = new PassAlarm(passAlarm, Train.Cars[DriverCar]);
+			Train.SafetySystems.PassAlarm = new PassAlarm(passAlarm);
 			Train.SafetySystems.PilotLamp = new PilotLamp(Train.Cars[DriverCar]);
 			Train.SafetySystems.StationAdjust = new StationAdjustAlarm(Train);
 			switch (Game.TrainStart)

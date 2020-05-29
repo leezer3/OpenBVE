@@ -114,7 +114,7 @@ namespace OpenBve
 													train.Cars[c].Sounds.Run[h] = new CarSound();
 												}
 											}
-											train.Cars[c].Sounds.Run[k] = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center);
+											train.Cars[c].Sounds.Run[k] = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center, train.Cars[c]);
 										}
 									}
 									else
@@ -158,7 +158,7 @@ namespace OpenBve
 													train.Cars[c].Sounds.Flange[h] = new CarSound();
 												}
 											}
-											train.Cars[c].Sounds.Flange[k] = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center);
+											train.Cars[c].Sounds.Flange[k] = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center, train.Cars[c]);
 										}
 									}
 									else
@@ -242,8 +242,8 @@ namespace OpenBve
 										}
 										Vector3 frontaxle = new Vector3(0.0, 0.0, train.Cars[c].FrontAxle.Position);
 										Vector3 rearaxle = new Vector3(0.0, 0.0, train.Cars[c].RearAxle.Position);
-										train.Cars[c].FrontAxle.PointSounds[runIndex] = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), frontaxle);
-										train.Cars[c].RearAxle.PointSounds[runIndex] = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), rearaxle);
+										train.Cars[c].FrontAxle.PointSounds[runIndex] = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), frontaxle, train.Cars[c]);
+										train.Cars[c].RearAxle.PointSounds[runIndex] = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), rearaxle, train.Cars[c]);
 									}
 								}
 								else
@@ -273,31 +273,31 @@ namespace OpenBve
 										case "bc release high":
 											for (int c = 0; c < train.Cars.Length; c++)
 											{
-												train.Cars[c].CarBrake.AirHigh = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), center);
+												train.Cars[c].CarBrake.AirHigh = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), center, train.Cars[c]);
 											}
 											break;
 										case "bc release":
 											for (int c = 0; c < train.Cars.Length; c++)
 											{
-												train.Cars[c].CarBrake.Air = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), center);
+												train.Cars[c].CarBrake.Air = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), center, train.Cars[c]);
 											}
 											break;
 										case "bc release full":
 											for (int c = 0; c < train.Cars.Length; c++)
 											{
-												train.Cars[c].CarBrake.AirZero = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), center);
+												train.Cars[c].CarBrake.AirZero = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), center, train.Cars[c]);
 											}
 											break;
 										case "emergency":
-											train.Handles.EmergencyBrake.ApplicationSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center);
+											train.Handles.EmergencyBrake.ApplicationSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center, train.Cars[train.DriverCar]);
 											break;
 										case "emergencyrelease":
-											train.Handles.EmergencyBrake.ReleaseSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center);
+											train.Handles.EmergencyBrake.ReleaseSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center, train.Cars[train.DriverCar]);
 											break;
 										case "bp decomp":
 											for (int c = 0; c < train.Cars.Length; c++)
 											{
-												train.Cars[c].Sounds.Brake = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), center);
+												train.Cars[c].Sounds.Brake = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), center, train.Cars[c]);
 											}
 											break;
 										default:
@@ -330,13 +330,13 @@ namespace OpenBve
 											switch (a.ToLowerInvariant())
 											{
 												case "attack":
-													train.Cars[c].CarBrake.airCompressor.StartSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center);
+													train.Cars[c].CarBrake.airCompressor.StartSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center, train.Cars[c]);
 													break;
 												case "loop":
-													train.Cars[c].CarBrake.airCompressor.LoopSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center);
+													train.Cars[c].CarBrake.airCompressor.LoopSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center, train.Cars[c]);
 													break;
 												case "release":
-													train.Cars[c].CarBrake.airCompressor.EndSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center);
+													train.Cars[c].CarBrake.airCompressor.EndSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center, train.Cars[c]);
 													break;
 												default:
 													Interface.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -368,13 +368,13 @@ namespace OpenBve
 										case "left":
 											for (int c = 0; c < train.Cars.Length; c++)
 											{
-												train.Cars[c].Sounds.SpringL = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), left);
+												train.Cars[c].Sounds.SpringL = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), left, train.Cars[c]);
 											}
 											break;
 										case "right":
 											for (int c = 0; c < train.Cars.Length; c++)
 											{
-												train.Cars[c].Sounds.SpringR = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), right);
+												train.Cars[c].Sounds.SpringR = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), right, train.Cars[c]);
 											}
 											break;
 										default:
@@ -485,25 +485,25 @@ namespace OpenBve
 										case "open left":
 											for (int c = 0; c < train.Cars.Length; c++)
 											{
-												train.Cars[c].Doors[0].OpenSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), left);
+												train.Cars[c].Doors[0].OpenSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), left, train.Cars[c]);
 											}
 											break;
 										case "open right":
 											for (int c = 0; c < train.Cars.Length; c++)
 											{
-												train.Cars[c].Doors[1].OpenSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), right);
+												train.Cars[c].Doors[1].OpenSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), right, train.Cars[c]);
 											}
 											break;
 										case "close left":
 											for (int c = 0; c < train.Cars.Length; c++)
 											{
-												train.Cars[c].Doors[0].CloseSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), left);
+												train.Cars[c].Doors[0].CloseSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), left, train.Cars[c]);
 											}
 											break;
 										case "close right":
 											for (int c = 0; c < train.Cars.Length; c++)
 											{
-												train.Cars[c].Doors[1].CloseSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), right);
+												train.Cars[c].Doors[1].CloseSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), right, train.Cars[c]);
 											}
 											break;
 										default:
@@ -547,7 +547,7 @@ namespace OpenBve
 													train.Cars[train.DriverCar].Sounds.Plugin[h] = new CarSound();
 												}
 											}
-											train.Cars[train.DriverCar].Sounds.Plugin[k] = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
+											train.Cars[train.DriverCar].Sounds.Plugin[k] = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel, train.Cars[train.DriverCar]);
 										}
 										else
 										{
@@ -576,7 +576,7 @@ namespace OpenBve
 									switch (a.ToLowerInvariant())
 									{
 										case "correct":
-											train.SafetySystems.StationAdjust.AdjustAlarm = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
+											train.SafetySystems.StationAdjust.AdjustAlarm = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel, train.Cars[train.DriverCar]);
 											break;
 										default:
 											Interface.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -604,10 +604,10 @@ namespace OpenBve
 									switch (a.ToLowerInvariant())
 									{
 										case "on":
-											train.SafetySystems.PilotLamp.OnSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
+											train.SafetySystems.PilotLamp.OnSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel, train.Cars[train.DriverCar]);
 											break;
 										case "off":
-											train.SafetySystems.PilotLamp.OffSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
+											train.SafetySystems.PilotLamp.OffSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel, train.Cars[train.DriverCar]);
 											break;
 										default:
 											Interface.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -635,22 +635,22 @@ namespace OpenBve
 									switch (a.ToLowerInvariant())
 									{
 										case "apply":
-											train.Handles.Brake.Increase = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
+											train.Handles.Brake.Increase = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel, train.Cars[train.DriverCar]);
 											break;
 										case "applyfast":
-											train.Handles.Brake.IncreaseFast = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
+											train.Handles.Brake.IncreaseFast = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel, train.Cars[train.DriverCar]);
 											break;
 										case "release":
-											train.Handles.Brake.Decrease = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
+											train.Handles.Brake.Decrease = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel, train.Cars[train.DriverCar]);
 											break;
 										case "releasefast":
-											train.Handles.Brake.DecreaseFast = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
+											train.Handles.Brake.DecreaseFast = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel, train.Cars[train.DriverCar]);
 											break;
 										case "min":
-											train.Handles.Brake.Min = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
+											train.Handles.Brake.Min = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel, train.Cars[train.DriverCar]);
 											break;
 										case "max":
-											train.Handles.Brake.Max = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
+											train.Handles.Brake.Max = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel, train.Cars[train.DriverCar]);
 											break;
 										default:
 											Interface.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -678,22 +678,22 @@ namespace OpenBve
 									switch (a.ToLowerInvariant())
 									{
 										case "up":
-											train.Handles.Power.Increase = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
+											train.Handles.Power.Increase = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel, train.Cars[train.DriverCar]);
 											break;
 										case "upfast":
-											train.Handles.Power.IncreaseFast = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
+											train.Handles.Power.IncreaseFast = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel, train.Cars[train.DriverCar]);
 											break;
 										case "down":
-											train.Handles.Power.Decrease = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
+											train.Handles.Power.Decrease = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel, train.Cars[train.DriverCar]);
 											break;
 										case "downfast":
-											train.Handles.Power.DecreaseFast = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
+											train.Handles.Power.DecreaseFast = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel, train.Cars[train.DriverCar]);
 											break;
 										case "min":
-											train.Handles.Power.Min = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
+											train.Handles.Power.Min = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel, train.Cars[train.DriverCar]);
 											break;
 										case "max":
-											train.Handles.Power.Max = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
+											train.Handles.Power.Max = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel, train.Cars[train.DriverCar]);
 											break;
 										default:
 											Interface.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -721,10 +721,10 @@ namespace OpenBve
 									switch (a.ToLowerInvariant())
 									{
 										case "on":
-											train.Handles.Reverser.EngageSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
+											train.Handles.Reverser.EngageSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel, train.Cars[train.DriverCar]);
 											break;
 										case "off":
-											train.Handles.Reverser.ReleaseSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
+											train.Handles.Reverser.ReleaseSound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel, train.Cars[train.DriverCar]);
 											break;
 										default:
 											Interface.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -752,10 +752,10 @@ namespace OpenBve
 									switch (a.ToLowerInvariant())
 									{
 										case "on":
-											train.Cars[train.DriverCar].Sounds.BreakerResume = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), panel);
+											train.Cars[train.DriverCar].Sounds.BreakerResume = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), panel, train.Cars[train.DriverCar]);
 											break;
 										case "off":
-											train.Cars[train.DriverCar].Sounds.BreakerResumeOrInterrupt = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), panel);
+											train.Cars[train.DriverCar].Sounds.BreakerResumeOrInterrupt = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.smallRadius), panel, train.Cars[train.DriverCar]);
 											break;
 										default:
 											Interface.AddMessage(MessageType.Warning, false, "Unsupported key " + a + " encountered at line " + (i + 1).ToString(Culture) + " in file " + FileName);
@@ -787,20 +787,20 @@ namespace OpenBve
 											{
 												if (train.Cars[c].Specs.IsMotorCar | c == train.DriverCar)
 												{
-													train.Cars[c].Sounds.Loop = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center);
+													train.Cars[c].Sounds.Loop = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center, train.Cars[c]);
 												}
 											}
 											break;
 										case "shoe":
 											for (int c = 0; c < train.Cars.Length; c++)
 											{
-												train.Cars[c].CarBrake.Rub = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center);
+												train.Cars[c].CarBrake.Rub = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.mediumRadius), center, train.Cars[c]);
 											}
 											break;
 										case "halt":
 											for (int c = 0; c < train.Cars.Length; c++)
 											{
-												train.SafetySystems.PassAlarm.Sound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel);
+												train.SafetySystems.PassAlarm.Sound = new CarSound(Program.Sounds.RegisterBuffer(OpenBveApi.Path.CombineFile(trainFolder, b), SoundCfgParser.tinyRadius), panel, train.Cars[c]);
 											}
 											break;
 										default:

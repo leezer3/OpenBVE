@@ -1,6 +1,7 @@
 ﻿using OpenBveApi.FunctionScripting;
 using OpenBveApi.Hosts;
 using OpenBveApi.Sounds;
+using OpenTK.Audio.OpenAL;
 
 namespace SoundManager
 {
@@ -105,6 +106,35 @@ namespace SoundManager
 				PitchFunction = b.PitchFunction,
 				VolumeFunction = b.VolumeFunction
 			};
+		}
+
+		/// <summary>Loads the specified sound buffer.</summary>
+		/// <returns>Whether loading the buffer was successful.</returns>
+		public void Load()
+		{
+			if (Loaded)
+			{
+				return;
+			}
+			if (Ignore)
+			{
+				return;
+			}
+			Sound sound;
+			if (Origin.GetSound(out sound))
+			{
+				if (sound.BitsPerSample == 8 | sound.BitsPerSample == 16)
+				{
+					byte[] bytes = sound.GetMonoMix();
+					AL.GenBuffers(1, out OpenAlBufferName);
+					ALFormat format = sound.BitsPerSample == 8 ? ALFormat.Mono8 : ALFormat.Mono16;
+					AL.BufferData(OpenAlBufferName, format, bytes, bytes.Length, sound.SampleRate);
+					Duration = sound.Duration;
+					Loaded = true;
+					return;
+				}
+			}
+			Ignore = true;
 		}
 	}
 }

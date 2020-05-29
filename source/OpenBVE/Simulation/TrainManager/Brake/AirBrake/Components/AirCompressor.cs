@@ -44,17 +44,8 @@ namespace OpenBve.BrakeSystems
 				{
 					Enabled = false;
 					LoopStarted = false;
-					SoundBuffer buffer = EndSound.Buffer;
-					if (buffer != null)
-					{
-						Program.Sounds.PlaySound(buffer, 1.0, 1.0, EndSound.Position, baseCar, false);
-					}
-
-					buffer = LoopSound.Buffer;
-					if (buffer != null)
-					{
-						LoopSound.Stop();
-					}
+					EndSound.Play(1.0, 1.0, false);
+					LoopSound.Stop();
 				}
 				else
 				{
@@ -62,11 +53,7 @@ namespace OpenBve.BrakeSystems
 					if (!LoopStarted && Program.CurrentRoute.SecondsSinceMidnight > TimeStarted + 5.0)
 					{
 						LoopStarted = true;
-						SoundBuffer buffer = LoopSound.Buffer;
-						if (buffer != null)
-						{
-							LoopSound.Source = Program.Sounds.PlaySound(buffer, 1.0, 1.0, LoopSound.Position, baseCar, true);
-						}
+						LoopSound.Play(1.0, 1.0, true);
 					}
 				}
 			}
@@ -76,11 +63,7 @@ namespace OpenBve.BrakeSystems
 				{
 					Enabled = true;
 					TimeStarted = Program.CurrentRoute.SecondsSinceMidnight;
-					SoundBuffer buffer = StartSound.Buffer;
-					if (buffer != null)
-					{
-						Program.Sounds.PlaySound(buffer, 1.0, 1.0, StartSound.Position, baseCar, false);
-					}
+					StartSound.Play(1.0, 1.0, false);
 				}
 			}
 		}

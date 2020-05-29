@@ -29,12 +29,7 @@ namespace OpenBve.SafetySystems
 				// correct stop position
 				if (!Lit & (baseTrain.StationDistanceToStopPoint > tb | baseTrain.StationDistanceToStopPoint < -tf))
 				{
-					SoundBuffer buffer = AdjustAlarm.Buffer;
-					if (buffer != null)
-					{
-						OpenBveApi.Math.Vector3 pos = AdjustAlarm.Position;
-						Program.Sounds.PlaySound(buffer, 1.0, 1.0, pos, baseTrain.Cars[baseTrain.DriverCar], false);
-					}
+					AdjustAlarm.Play(1.0, 1.0, false);
 					if (baseTrain.IsPlayerTrain)
 					{
 						MessageManager.AddMessage(Translations.GetInterfaceString("message_station_correct"), MessageDependency.None, GameMode.Normal, MessageColor.Orange, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);
