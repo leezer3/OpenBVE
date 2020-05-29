@@ -227,10 +227,11 @@ namespace LibRender2.Textures
 					texture = animatedTextures[handle.Origin];
 				}
 				double elapsedTime = CPreciseTimer.GetElapsedTime(handle.LastAccess, currentTicks);
-				int elapsedFrames = (int)(elapsedTime / handle.FrameInterval);
+				int elapsedFrames = (int)(elapsedTime / texture.FrameInterval);
 				if (elapsedFrames > 0)
 				{
-					handle.CurrentFrame += elapsedFrames;
+					texture.CurrentFrame += elapsedFrames;
+					texture.CurrentFrame = texture.CurrentFrame % texture.TotalFrames;
 					handle.LastAccess = currentTicks;
 					for (int i = 0; i < 4; i++)
 					{
@@ -263,8 +264,6 @@ namespace LibRender2.Textures
 				if (texture.MultipleFrames)
 				{
 					handle.MultipleFrames = true;
-					handle.FrameInterval = texture.FrameInterval;
-					texture.CurrentFrame = handle.CurrentFrame % texture.TotalFrames;
 				}
 				if (texture.BitsPerPixel == 32)
 				{
