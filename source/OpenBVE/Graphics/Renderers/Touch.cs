@@ -60,7 +60,7 @@ namespace OpenBve.Graphics.Renderers
 
 			if (renderer.AvailableNewRenderer && state.Prototype.Mesh.VAO == null)
 			{
-				VAOExtensions.CreateVAO(ref state.Prototype.Mesh, state.Prototype.Dynamic, renderer.pickingShader.VertexLayout);
+				VAOExtensions.CreateVAO(ref state.Prototype.Mesh, state.Prototype.Dynamic, renderer.pickingShader.VertexLayout, renderer);
 			}
 		}
 

@@ -146,7 +146,7 @@ namespace LibRender2.Backgrounds
 
 				if (data.VAO == null)
 				{
-					data.CreateVAO(renderer.DefaultShader.VertexLayout);
+					data.CreateVAO(renderer.DefaultShader.VertexLayout, renderer);
 				}
 
 				renderer.DefaultShader.Activate();
@@ -336,7 +336,7 @@ namespace LibRender2.Backgrounds
 
 				if (data.Object.Mesh.VAO == null)
 				{
-					VAOExtensions.CreateVAO(ref data.Object.Mesh, false, renderer.DefaultShader.VertexLayout);
+					VAOExtensions.CreateVAO(ref data.Object.Mesh, false, renderer.DefaultShader.VertexLayout, renderer);
 				}
 			}
 

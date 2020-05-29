@@ -705,7 +705,7 @@ namespace OpenBve
 				CarSections[SectionIndex].Groups[GroupIndex].Elements[ElementIndex].Update(true, baseTrain, Index, CurrentCarSection, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, EnableDamping, false, CarSections[SectionIndex].Groups[GroupIndex].Overlay ? Program.Renderer.Camera : null);
 				if (!Program.Renderer.ForceLegacyOpenGL && CarSections[SectionIndex].Groups[GroupIndex].Elements[ElementIndex].UpdateVAO)
 				{
-					VAOExtensions.CreateVAO(ref CarSections[SectionIndex].Groups[GroupIndex].Elements[ElementIndex].internalObject.Prototype.Mesh, true, Program.Renderer.DefaultShader.VertexLayout);
+					VAOExtensions.CreateVAO(ref CarSections[SectionIndex].Groups[GroupIndex].Elements[ElementIndex].internalObject.Prototype.Mesh, true, Program.Renderer.DefaultShader.VertexLayout, Program.Renderer);
 				}
 			}
 
@@ -750,7 +750,7 @@ namespace OpenBve
 				CarSections[SectionIndex].Groups[GroupIndex].TouchElements[ElementIndex].Element.Update(true, baseTrain, Index, CurrentCarSection, FrontAxle.Follower.TrackPosition - FrontAxle.Position, p, Direction, Up, Side, updatefunctions, Show, timeDelta, EnableDamping, true, CarSections[SectionIndex].Groups[GroupIndex].Overlay ? Program.Renderer.Camera : null);
 				if (!Program.Renderer.ForceLegacyOpenGL && CarSections[SectionIndex].Groups[GroupIndex].TouchElements[ElementIndex].Element.UpdateVAO)
 				{
-					VAOExtensions.CreateVAO(ref CarSections[SectionIndex].Groups[GroupIndex].TouchElements[ElementIndex].Element.internalObject.Prototype.Mesh, true, Program.Renderer.DefaultShader.VertexLayout);
+					VAOExtensions.CreateVAO(ref CarSections[SectionIndex].Groups[GroupIndex].TouchElements[ElementIndex].Element.internalObject.Prototype.Mesh, true, Program.Renderer.DefaultShader.VertexLayout, Program.Renderer);
 				}
 			}
 
