@@ -153,10 +153,9 @@ namespace OpenBve {
 			return false;
 		}
 
-		public override bool LoadTexture(Texture Texture, OpenGlTextureWrapMode wrapMode)
+		public override bool LoadTexture(ref Texture Texture, OpenGlTextureWrapMode wrapMode)
 		{
-			return Program.Renderer.TextureManager.LoadTexture(Texture, wrapMode, CPreciseTimer.GetClockTicks(), Interface.CurrentOptions.Interpolation, Interface.CurrentOptions.AnisotropicFilteringLevel);
-
+			return Program.Renderer.TextureManager.LoadTexture(ref Texture, wrapMode, CPreciseTimer.GetClockTicks(), Interface.CurrentOptions.Interpolation, Interface.CurrentOptions.AnisotropicFilteringLevel);
 		}
 		
 		/// <summary>Registers a texture and returns a handle to the texture.</summary>

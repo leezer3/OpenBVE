@@ -139,9 +139,9 @@ namespace ObjectViewer {
 			return false;
 		}
 		
-		public override bool LoadTexture(Texture Texture, OpenGlTextureWrapMode wrapMode)
+		public override bool LoadTexture(ref Texture Texture, OpenGlTextureWrapMode wrapMode)
 		{
-			return Program.Renderer.TextureManager.LoadTexture(Texture, wrapMode, CPreciseTimer.GetClockTicks(), Interface.CurrentOptions.Interpolation, Interface.CurrentOptions.AnisotropicFilteringLevel);
+			return Program.Renderer.TextureManager.LoadTexture(ref Texture, wrapMode, CPreciseTimer.GetClockTicks(), Interface.CurrentOptions.Interpolation, Interface.CurrentOptions.AnisotropicFilteringLevel);
 		}
 
 		public override bool RegisterTexture(string path, TextureParameters parameters, out Texture handle, bool loadTexture = false) {

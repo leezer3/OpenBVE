@@ -27,7 +27,7 @@ namespace OpenBveApi.Textures {
 		/// <remarks>Used by the engine when deciding to unload unused textures</remarks>
 		public int LastAccess;
 		/// <summary>Holds the OpenGL textures</summary>
-		public readonly OpenGlTexture[] OpenGlTextures;
+		private readonly OpenGlTexture[][] MyOpenGlTextures;
 		/// <summary>Holds the origin where this texture may be loaded from</summary>
 		public readonly TextureOrigin Origin;
 		/// <summary>The type of transparency used by this texture</summary>
@@ -129,12 +129,16 @@ namespace OpenBveApi.Textures {
 			this.MyWidth = width;
 			this.MyHeight = height;
 			this.MyBitsPerPixel = bitsPerPixel;
-			this.MyBytes = new byte[1][];
 			this.MyBytes = bytes;
 			this.MyPalette = null;
 			this.MultipleFrames = true;
 			this.FrameInterval = frameInterval;
 			this.TotalFrames = totalFrames;
+			this.MyOpenGlTextures = new OpenGlTexture[bytes.Length][];
+			for (int i = 0; i < bytes.Length; i++)
+			{
+				MyOpenGlTextures[i] = new OpenGlTexture[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
+			}
 		}
 
 		/// <summary>Creates a new texture.</summary>
@@ -144,7 +148,9 @@ namespace OpenBveApi.Textures {
 		public Texture(string path, TextureParameters parameters, Hosts.HostInterface currentHost)
 		{
 			this.Origin = new PathOrigin(path, parameters, currentHost);
-			this.OpenGlTextures = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
+			this.MyOpenGlTextures = new OpenGlTexture[1][];
+			this.MyOpenGlTextures[0] = new OpenGlTexture[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
+			
 		}
 
 		/// <summary>Creates a new texture.</summary>
@@ -152,7 +158,8 @@ namespace OpenBveApi.Textures {
 		public Texture(Bitmap bitmap)
 		{
 			this.Origin = new BitmapOrigin(bitmap);
-			this.OpenGlTextures = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
+			this.MyOpenGlTextures = new OpenGlTexture[1][];
+			this.MyOpenGlTextures[0] = new OpenGlTexture[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
 		}
 
 		/// <summary>Creates a new texture.</summary>
@@ -161,7 +168,8 @@ namespace OpenBveApi.Textures {
 		public Texture(Bitmap bitmap, TextureParameters parameters)
 		{
 			this.Origin = new BitmapOrigin(bitmap, parameters);
-			this.OpenGlTextures = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
+			this.MyOpenGlTextures = new OpenGlTexture[1][];
+			this.MyOpenGlTextures[0] = new OpenGlTexture[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
 		}
 
 		/// <summary>Creates a new texture.</summary>
@@ -169,7 +177,17 @@ namespace OpenBveApi.Textures {
 		public Texture(OpenBveApi.Textures.Texture texture)
 		{
 			this.Origin = new RawOrigin(texture);
-			this.OpenGlTextures = new[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
+			this.MyOpenGlTextures = new OpenGlTexture[1][];
+			this.MyOpenGlTextures[0] = new OpenGlTexture[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
+		}
+
+		/// <summary>Creates a new texture from a texture origin.</summary>
+		/// <param name="origin">The texture raw data.</param>
+		public Texture(OpenBveApi.Textures.TextureOrigin origin)
+		{
+			this.Origin = origin;
+			this.MyOpenGlTextures = new OpenGlTexture[1][];
+			this.MyOpenGlTextures[0] = new OpenGlTexture[] {new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture(), new OpenGlTexture()};
 		}
 
 		// --- properties ---
@@ -237,6 +255,21 @@ namespace OpenBveApi.Textures {
 				else
 				{
 					return this.MyBytes[CurrentFrame];
+				}
+			}
+		}
+
+		public OpenGlTexture[] OpenGlTextures
+		{
+			get
+			{
+				if (MultipleFrames == false)
+				{
+					return this.MyOpenGlTextures[0];
+				}
+				else
+				{
+					return this.MyOpenGlTextures[CurrentFrame];
 				}
 			}
 		}

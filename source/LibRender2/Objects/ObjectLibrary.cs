@@ -145,7 +145,7 @@ namespace LibRender2.Objects
 				{
 					if (State.Prototype.Mesh.Materials[face.Material].DaytimeTexture != null)
 					{
-						currentHost.LoadTexture(State.Prototype.Mesh.Materials[face.Material].DaytimeTexture, (OpenGlTextureWrapMode)State.Prototype.Mesh.Materials[face.Material].WrapMode);
+						currentHost.LoadTexture(ref State.Prototype.Mesh.Materials[face.Material].DaytimeTexture, (OpenGlTextureWrapMode)State.Prototype.Mesh.Materials[face.Material].WrapMode);
 
 						if (State.Prototype.Mesh.Materials[face.Material].DaytimeTexture.Transparency == TextureTransparencyType.Alpha)
 						{
@@ -159,7 +159,7 @@ namespace LibRender2.Objects
 
 					if (State.Prototype.Mesh.Materials[face.Material].NighttimeTexture != null)
 					{
-						currentHost.LoadTexture(State.Prototype.Mesh.Materials[face.Material].NighttimeTexture, (OpenGlTextureWrapMode)State.Prototype.Mesh.Materials[face.Material].WrapMode);
+						currentHost.LoadTexture(ref State.Prototype.Mesh.Materials[face.Material].NighttimeTexture, (OpenGlTextureWrapMode)State.Prototype.Mesh.Materials[face.Material].WrapMode);
 
 						if (State.Prototype.Mesh.Materials[face.Material].NighttimeTexture.Transparency == TextureTransparencyType.Alpha)
 						{
