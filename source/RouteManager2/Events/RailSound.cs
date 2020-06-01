@@ -26,31 +26,30 @@ namespace RouteManager2.Events
 			/// <param name="Car">The car which triggered this sound</param>
 			public override void Trigger(int Direction, EventTriggerType TriggerType, AbstractTrain Train, AbstractCar Car)
 			{
-				dynamic c = Car;
 				if (TriggerType == EventTriggerType.FrontCarFrontAxle | TriggerType == EventTriggerType.OtherCarFrontAxle)
 				{
 					if (Direction < 0)
 					{
-						c.FrontAxle.RunIndex = this.PreviousRunIndex;
-						c.FrontAxle.FlangeIndex = this.PreviousFlangeIndex;
+						Car.FrontAxle.RunIndex = this.PreviousRunIndex;
+						Car.FrontAxle.FlangeIndex = this.PreviousFlangeIndex;
 					}
 					else if (Direction > 0)
 					{
-						c.FrontAxle.RunIndex = this.NextRunIndex;
-						c.FrontAxle.FlangeIndex = this.NextFlangeIndex;
+						Car.FrontAxle.RunIndex = this.NextRunIndex;
+						Car.FrontAxle.FlangeIndex = this.NextFlangeIndex;
 					}
 				}
 				else if (TriggerType == EventTriggerType.RearCarRearAxle | TriggerType == EventTriggerType.OtherCarRearAxle)
 				{
 					if (Direction < 0)
 					{
-						c.RearAxle.RunIndex = this.PreviousRunIndex;
-						c.RearAxle.FlangeIndex = this.PreviousFlangeIndex;
+						Car.RearAxle.RunIndex = this.PreviousRunIndex;
+						Car.RearAxle.FlangeIndex = this.PreviousFlangeIndex;
 					}
 					else if (Direction > 0)
 					{
-						c.RearAxle.RunIndex = this.NextRunIndex;
-						c.RearAxle.FlangeIndex = this.NextFlangeIndex;
+						Car.RearAxle.RunIndex = this.NextRunIndex;
+						Car.RearAxle.FlangeIndex = this.NextFlangeIndex;
 					}
 				}
 			}

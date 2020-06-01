@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using LibRender2;
+using LibRender2.Trains;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -59,7 +60,7 @@ namespace OpenBve.Graphics.Renderers
 
 			if (renderer.AvailableNewRenderer && state.Prototype.Mesh.VAO == null)
 			{
-				VAOExtensions.CreateVAO(ref state.Prototype.Mesh, state.Prototype.Dynamic, renderer.pickingShader.VertexLayout);
+				VAOExtensions.CreateVAO(ref state.Prototype.Mesh, state.Prototype.Dynamic, renderer.pickingShader.VertexLayout, renderer);
 			}
 		}
 
@@ -85,14 +86,14 @@ namespace OpenBve.Graphics.Renderers
 				return;
 			}
 
-			TrainManager.TouchElement[] TouchElements = Car.CarSections[0].Groups[add].TouchElements;
+			TouchElement[] TouchElements = Car.CarSections[0].Groups[add].TouchElements;
 
 			if (TouchElements == null)
 			{
 				return;
 			}
 
-			foreach (TrainManager.TouchElement element in TouchElements)
+			foreach (TouchElement element in TouchElements)
 			{
 				ShowObject(element.Element.internalObject);
 			}
@@ -316,7 +317,7 @@ namespace OpenBve.Graphics.Renderers
 				return false;
 			}
 
-			TrainManager.TouchElement[] TouchElements = Car.CarSections[0].Groups[add].TouchElements;
+			TouchElement[] TouchElements = Car.CarSections[0].Groups[add].TouchElements;
 
 			if (TouchElements == null)
 			{
@@ -325,7 +326,7 @@ namespace OpenBve.Graphics.Renderers
 
 			ObjectState pickedObject = renderer.AvailableNewRenderer ? ParseFBO(Point, 5, 5) : RenderSceneSelection(Point, new Vector2(5.0f));
 
-			foreach (TrainManager.TouchElement TouchElement in TouchElements.Where(x => x.Element.internalObject == pickedObject))
+			foreach (TouchElement TouchElement in TouchElements.Where(x => x.Element.internalObject == pickedObject))
 			{
 				foreach (int index in TouchElement.ControlIndices)
 				{
@@ -368,7 +369,7 @@ namespace OpenBve.Graphics.Renderers
 				return;
 			}
 
-			TrainManager.TouchElement[] TouchElements = Car.CarSections[0].Groups[add].TouchElements;
+			TouchElement[] TouchElements = Car.CarSections[0].Groups[add].TouchElements;
 
 			if (TouchElements == null)
 			{
@@ -377,7 +378,7 @@ namespace OpenBve.Graphics.Renderers
 
 			ObjectState pickedObject = renderer.AvailableNewRenderer ? ParseFBO(Point, 5, 5) : RenderSceneSelection(Point, new Vector2(5.0f));
 
-			foreach (TrainManager.TouchElement TouchElement in TouchElements.Where(x => x.Element.internalObject == pickedObject))
+			foreach (TouchElement TouchElement in TouchElements.Where(x => x.Element.internalObject == pickedObject))
 			{
 				foreach (int index in TouchElement.ControlIndices)
 				{
@@ -409,7 +410,7 @@ namespace OpenBve.Graphics.Renderers
 				return;
 			}
 
-			TrainManager.TouchElement[] TouchElements = Car.CarSections[0].Groups[add].TouchElements;
+			TouchElement[] TouchElements = Car.CarSections[0].Groups[add].TouchElements;
 
 			if (TouchElements == null)
 			{
@@ -418,12 +419,12 @@ namespace OpenBve.Graphics.Renderers
 
 			ObjectState pickedObject = renderer.AvailableNewRenderer ? ParseFBO(Point, 5, 5) : RenderSceneSelection(Point, new Vector2(5.0f));
 
-			foreach (TrainManager.TouchElement TouchElement in TouchElements)
+			foreach (TouchElement TouchElement in TouchElements)
 			{
 				if (TouchElement.Element.internalObject == pickedObject)
 				{
 					Car.CarSections[0].CurrentAdditionalGroup = TouchElement.JumpScreenIndex;
-					Car.ChangeCarSection(TrainManager.CarSectionType.Interior);
+					Car.ChangeCarSection(CarSectionType.Interior);
 
 					foreach (var index in TouchElement.SoundIndices.Where(x => x >= 0 && x < Car.Sounds.Touch.Length))
 					{

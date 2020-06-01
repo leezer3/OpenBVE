@@ -2,6 +2,7 @@ using System;
 using LibRender2;
 using LibRender2.Cameras;
 using LibRender2.Screens;
+using LibRender2.Trains;
 using LibRender2.Viewports;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -31,7 +32,7 @@ namespace OpenBve
 					 * ==> Switch back to the interior view of the driver's car
 					 * ==> Enable AI
 					 */
-					World.CameraCar = TrainManager.PlayerTrain.DriverCar;
+					TrainManager.PlayerTrain.CameraCar = TrainManager.PlayerTrain.DriverCar;
 					MainLoop.SaveCameraSettings();
 					bool lookahead = false;
 					if (Program.Renderer.Camera.CurrentMode != CameraViewMode.InteriorLookAhead & (Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.NotAvailable || Program.Renderer.Camera.CurrentRestriction == CameraRestrictionMode.Restricted3D))
@@ -53,30 +54,30 @@ namespace OpenBve
 					bool returnToCab = false;
 					for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 					{
-						if (j == World.CameraCar)
+						if (j == TrainManager.PlayerTrain.CameraCar)
 						{
 							if (TrainManager.PlayerTrain.Cars[j].HasInteriorView)
 							{
-								TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Interior);
+								TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Interior);
 								Program.Renderer.Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[j].CameraRestrictionMode;
 							}
 							else
 							{
-								TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.NotVisible);
+								TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
 								returnToCab = true;
 							}
 						}
 						else
 						{
-							TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.NotVisible);
+							TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
 						}
 					}
 
 					if (returnToCab)
 					{
 						//If our selected car does not have an interior view, we must store this fact, and return to the driver car after the loop has finished
-						World.CameraCar = TrainManager.PlayerTrain.DriverCar;
-						TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(TrainManager.CarSectionType.Interior);
+						TrainManager.PlayerTrain.CameraCar = TrainManager.PlayerTrain.DriverCar;
+						TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(CarSectionType.Interior);
 						Program.Renderer.Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
 					}
 
@@ -682,29 +683,29 @@ namespace OpenBve
 											bool returnToCab = false;
 											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 											{
-												if (j == World.CameraCar)
+												if (j == TrainManager.PlayerTrain.CameraCar)
 												{
 													if (TrainManager.PlayerTrain.Cars[j].HasInteriorView)
 													{
-														TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Interior);
+														TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Interior);
 														Program.Renderer.Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[j].CameraRestrictionMode;
 													}
 													else
 													{
-														TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.NotVisible);
+														TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
 														returnToCab = true;
 													}
 												}
 												else
 												{
-													TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.NotVisible);
+													TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
 												}
 											}
 											if (returnToCab)
 											{
 												//If our selected car does not have an interior view, we must store this fact, and return to the driver car after the loop has finished
-												World.CameraCar = TrainManager.PlayerTrain.DriverCar;
-												TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(TrainManager.CarSectionType.Interior);
+												TrainManager.PlayerTrain.CameraCar = TrainManager.PlayerTrain.DriverCar;
+												TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(CarSectionType.Interior);
 												Program.Renderer.Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
 											}
 											//Hide bogies
@@ -755,35 +756,35 @@ namespace OpenBve
 											bool returnToCab = false;
 											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 											{
-												if (j == World.CameraCar)
+												if (j == TrainManager.PlayerTrain.CameraCar)
 												{
 													if (TrainManager.PlayerTrain.Cars[j].HasInteriorView)
 													{
-														TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Interior);
+														TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Interior);
 														Program.Renderer.Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[j].CameraRestrictionMode;
 													}
 													else
 													{
-														TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.NotVisible);
+														TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
 														returnToCab = true;
 													}
 												}
 												else
 												{
-													TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.NotVisible);
+													TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
 												}
 											}
 											if (returnToCab)
 											{
 												//If our selected car does not have an interior view, we must store this fact, and return to the driver car after the loop has finished
-												World.CameraCar = TrainManager.PlayerTrain.DriverCar;
-												TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(TrainManager.CarSectionType.Interior);
+												TrainManager.PlayerTrain.CameraCar = TrainManager.PlayerTrain.DriverCar;
+												TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].ChangeCarSection(CarSectionType.Interior);
 												Program.Renderer.Camera.CurrentRestriction = TrainManager.PlayerTrain.Cars[TrainManager.PlayerTrain.DriverCar].CameraRestrictionMode;
 											}
 											//Hide interior and bogies
 											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 											{
-												TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.NotVisible);
+												TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.NotVisible);
 												TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(-1);
 												TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(-1);
 												TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(-1);
@@ -808,14 +809,14 @@ namespace OpenBve
 										break;
 									case Translations.Command.CameraExterior:
 										// camera: exterior
-										MessageManager.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (World.CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
+										MessageManager.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (TrainManager.PlayerTrain.CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
 												MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 										SaveCameraSettings();
 										Program.Renderer.Camera.CurrentMode = CameraViewMode.Exterior;
 										RestoreCameraSettings();
 										for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 										{
-											TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Exterior);
+											TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
 											TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
 											TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 											TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(0);
@@ -860,7 +861,7 @@ namespace OpenBve
 										RestoreCameraSettings();
 										for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 										{
-											TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Exterior);
+											TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
 											TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
 											TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 											TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(0);
@@ -876,10 +877,10 @@ namespace OpenBve
 										//If we are in the exterior train view, shift down one car until we hit the last car
 										if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Exterior)
 										{
-											if (World.CameraCar < TrainManager.PlayerTrain.Cars.Length - 1)
+											if (TrainManager.PlayerTrain.CameraCar < TrainManager.PlayerTrain.Cars.Length - 1)
 											{
-												World.CameraCar++;
-												MessageManager.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (World.CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
+												TrainManager.PlayerTrain.CameraCar++;
+												MessageManager.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (TrainManager.PlayerTrain.CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
 												MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 											}
 											return;
@@ -905,7 +906,7 @@ namespace OpenBve
 											Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 											{
-												TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Exterior);
+												TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
 												TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
 												TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 												TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(0);
@@ -922,10 +923,10 @@ namespace OpenBve
 										//If we are in the exterior train view, shift up one car until we hit index 0
 										if (Program.Renderer.Camera.CurrentMode == CameraViewMode.Exterior)
 										{
-											if (World.CameraCar > 0)
+											if (TrainManager.PlayerTrain.CameraCar > 0)
 											{
-												World.CameraCar--;
-												MessageManager.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (World.CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
+												TrainManager.PlayerTrain.CameraCar--;
+												MessageManager.AddMessage(Translations.GetInterfaceString("notification_exterior") + " " + (TrainManager.PlayerTrain.CameraCar + 1), MessageDependency.CameraView, GameMode.Expert,
 												MessageColor.White, Program.CurrentRoute.SecondsSinceMidnight + 2.0, null);
 											}
 											return;
@@ -951,7 +952,7 @@ namespace OpenBve
 											Program.Renderer.Camera.AlignmentSpeed = new CameraAlignment();
 											for (int j = 0; j < TrainManager.PlayerTrain.Cars.Length; j++)
 											{
-												TrainManager.PlayerTrain.Cars[j].ChangeCarSection(TrainManager.CarSectionType.Exterior);
+												TrainManager.PlayerTrain.Cars[j].ChangeCarSection(CarSectionType.Exterior);
 												TrainManager.PlayerTrain.Cars[j].FrontBogie.ChangeSection(0);
 												TrainManager.PlayerTrain.Cars[j].RearBogie.ChangeSection(0);
 												TrainManager.PlayerTrain.Cars[j].Coupler.ChangeSection(0);
@@ -1433,18 +1434,14 @@ namespace OpenBve
 										if ((TrainManager.GetDoorsState(TrainManager.PlayerTrain, true, false) &
 											 TrainManager.TrainDoorState.Opened) == 0)
 										{
-											if (TrainManager.PlayerTrain.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic
-												& (TrainManager.PlayerTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked
-												   | TrainManager.PlayerTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Left))
+											if (TrainManager.PlayerTrain.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
 											{
 												TrainManager.OpenTrainDoors(TrainManager.PlayerTrain, true, false);
 											}
 										}
 										else
 										{
-											if (TrainManager.PlayerTrain.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic
-												& (TrainManager.PlayerTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked
-												   | TrainManager.PlayerTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Left))
+											if (TrainManager.PlayerTrain.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
 											{
 												TrainManager.CloseTrainDoors(TrainManager.PlayerTrain, true, false);
 											}
@@ -1465,18 +1462,14 @@ namespace OpenBve
 										if ((TrainManager.GetDoorsState(TrainManager.PlayerTrain, false, true) &
 											 TrainManager.TrainDoorState.Opened) == 0)
 										{
-											if (TrainManager.PlayerTrain.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic
-												& (TrainManager.PlayerTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked
-												   | TrainManager.PlayerTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Right))
+											if (TrainManager.PlayerTrain.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
 											{
 												TrainManager.OpenTrainDoors(TrainManager.PlayerTrain, false, true);
 											}
 										}
 										else
 										{
-											if (TrainManager.PlayerTrain.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic
-												& (TrainManager.PlayerTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Unlocked
-												   | TrainManager.PlayerTrain.SafetySystems.DoorInterlockState == DoorInterlockStates.Right))
+											if (TrainManager.PlayerTrain.Specs.DoorOpenMode != TrainManager.DoorMode.Automatic)
 											{
 												TrainManager.CloseTrainDoors(TrainManager.PlayerTrain, false, true);
 											}

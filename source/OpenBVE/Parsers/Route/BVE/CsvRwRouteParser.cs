@@ -26,7 +26,7 @@ namespace OpenBve {
 		internal static bool CylinderHack = false;
 
 		// parse route
-		internal static void ParseRoute(string FileName, bool IsRW, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly) {
+		internal static void ParseRoute(string FileName, bool IsRW, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, string compatibilitySignalSet, bool PreviewOnly) {
 			// initialize data
 
 			/*
@@ -138,113 +138,19 @@ namespace OpenBve {
 				Data.TimetableDaytime = new OpenBveApi.Textures.Texture[] {null, null, null, null};
 				Data.TimetableNighttime = new OpenBveApi.Textures.Texture[] {null, null, null, null};
 				// signals
-				string SignalFolder = OpenBveApi.Path.CombineDirectory(CompatibilityFolder, "Signals");
+				
 				Data.Signals = new SignalDictionary();
-				Data.Signals.Add(3, new CompatibilitySignalData(new int[] {0, 2, 4}, new StaticObject[]
+				if (compatibilitySignalSet == null) //not selected via main form
 				{
-					LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_0.csv"), System.Text.Encoding.UTF8, false),
-					LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_2.csv"), System.Text.Encoding.UTF8, false),
-					LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_4.csv"), System.Text.Encoding.UTF8, false)
-				}));
-				Data.Signals.Add(4, new CompatibilitySignalData(new int[] {0, 1, 2, 4}, new StaticObject[]
-				{
-					LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4_0.csv"), System.Text.Encoding.UTF8, false),
-					LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_1.csv"), System.Text.Encoding.UTF8, false),
-					LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_2.csv"), System.Text.Encoding.UTF8, false),
-					LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_4.csv"), System.Text.Encoding.UTF8, false)
-				}));
-				Data.Signals.Add(5, new CompatibilitySignalData(new int[] {0, 1, 2, 3, 4}, new StaticObject[]
-				{
-					LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_0.csv"), System.Text.Encoding.UTF8, false),
-					LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5a_1.csv"), System.Text.Encoding.UTF8, false),
-					LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_2.csv"), System.Text.Encoding.UTF8, false),
-					LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_3.csv"), System.Text.Encoding.UTF8, false),
-					LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_4.csv"), System.Text.Encoding.UTF8, false)
-				}));
-				Data.Signals.Add(6, new CompatibilitySignalData(new int[] {0, 3, 4}, new StaticObject[]
-				{
-					LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_0.csv"),
-						System.Text.Encoding.UTF8, false),
-					LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_3.csv"),
-						System.Text.Encoding.UTF8, false),
-					LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_4.csv"),
-						System.Text.Encoding.UTF8, false)
-				}));
-				// compatibility signals
-				Data.CompatibilitySignals = new CompatibilitySignalData[9];
-				Data.CompatibilitySignals[0] = new CompatibilitySignalData(new int[] {0, 2},
-					new StaticObject[]
-					{
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_2_0.csv"), System.Text.Encoding.UTF8, false),
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_2a_2.csv"), System.Text.Encoding.UTF8, false)
-					});
-				Data.CompatibilitySignals[1] = new CompatibilitySignalData(new int[] {0, 4},
-					new StaticObject[]
-					{
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_2_0.csv"), System.Text.Encoding.UTF8, false),
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_2b_4.csv"), System.Text.Encoding.UTF8, false)
-					});
-				Data.CompatibilitySignals[2] = new CompatibilitySignalData(new int[] {0, 2, 4},
-					new StaticObject[]
-					{
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_0.csv"), System.Text.Encoding.UTF8, false),
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_2.csv"), System.Text.Encoding.UTF8, false),
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_3_4.csv"), System.Text.Encoding.UTF8, false)
-					});
-				Data.CompatibilitySignals[3] = new CompatibilitySignalData(new int[] {0, 1, 2, 4},
-					new StaticObject[]
-					{
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4_0.csv"), System.Text.Encoding.UTF8, false),
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_1.csv"), System.Text.Encoding.UTF8, false),
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_2.csv"), System.Text.Encoding.UTF8, false),
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4a_4.csv"), System.Text.Encoding.UTF8, false)
-					});
-				Data.CompatibilitySignals[4] = new CompatibilitySignalData(new int[] {0, 2, 3, 4},
-					new StaticObject[]
-					{
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4_0.csv"), System.Text.Encoding.UTF8, false),
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4b_2.csv"), System.Text.Encoding.UTF8, false),
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4b_3.csv"), System.Text.Encoding.UTF8, false),
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_4b_4.csv"), System.Text.Encoding.UTF8, false)
-					});
-				Data.CompatibilitySignals[5] = new CompatibilitySignalData(new int[] {0, 1, 2, 3, 4},
-					new StaticObject[]
-					{
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_0.csv"), System.Text.Encoding.UTF8, false),
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5a_1.csv"), System.Text.Encoding.UTF8, false),
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_2.csv"), System.Text.Encoding.UTF8, false),
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_3.csv"), System.Text.Encoding.UTF8, false),
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_4.csv"), System.Text.Encoding.UTF8, false)
-					});
-				Data.CompatibilitySignals[6] = new CompatibilitySignalData(new int[] {0, 2, 3, 4, 5},
-					new StaticObject[]
-					{
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_0.csv"), System.Text.Encoding.UTF8, false),
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_2.csv"), System.Text.Encoding.UTF8, false),
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_3.csv"), System.Text.Encoding.UTF8, false),
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5_4.csv"), System.Text.Encoding.UTF8, false),
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_5b_5.csv"), System.Text.Encoding.UTF8, false)
-					});
-				Data.CompatibilitySignals[7] = new CompatibilitySignalData(new int[] {0, 1, 2, 3, 4, 5},
-					new StaticObject[]
-					{
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_0.csv"), System.Text.Encoding.UTF8, false),
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_1.csv"), System.Text.Encoding.UTF8, false),
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_2.csv"), System.Text.Encoding.UTF8, false),
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_3.csv"), System.Text.Encoding.UTF8, false),
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_4.csv"), System.Text.Encoding.UTF8, false),
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "signal_6_5.csv"), System.Text.Encoding.UTF8, false)
-					});
-				Data.CompatibilitySignals[8] = new CompatibilitySignalData(new int[] {0, 3, 4},
-					new StaticObject[]
-					{
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_0.csv"),
-							System.Text.Encoding.UTF8, false),
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_3.csv"),
-							System.Text.Encoding.UTF8, false),
-						LoadStaticObject(OpenBveApi.Path.CombineFile(SignalFolder, "repeatingsignal_4.csv"),
-							System.Text.Encoding.UTF8, false)
-					});
+					compatibilitySignalSet = Path.CombineFile(Program.FileSystem.GetDataFolder("Compatibility"), "Signals\\Japanese.xml");
+				}
+				CompatibilitySignalObject.ReadCompatibilitySignalXML(Program.CurrentHost, compatibilitySignalSet, out Data.CompatibilitySignals, out CompatibilityObjects.SignalPost, out Data.SignalSpeeds);
+
+				Data.Signals.Add(3, Data.CompatibilitySignals[2]);
+				Data.Signals.Add(4, Data.CompatibilitySignals[3]);
+				Data.Signals.Add(5, Data.CompatibilitySignals[5]);
+				Data.Signals.Add(6, Data.CompatibilitySignals[8]);
+				
 				// game data
 				Program.CurrentRoute.Sections = new []{new RouteManager2.SignalManager.Section() };
 				Program.CurrentRoute.Sections[0].Aspects = new SectionAspect[]
@@ -256,11 +162,6 @@ namespace OpenBve {
 				Program.CurrentRoute.Sections[0].TrackPosition = 0;
 				Program.CurrentRoute.Sections[0].Trains = new AbstractTrain[] {};
 
-				/*
-				 * These are the speed limits for the default Japanese signal aspects, and in most cases will be overwritten
-				 */
-				Data.SignalSpeeds = new double[]
-				{0.0, 6.94444444444444, 15.2777777777778, 20.8333333333333, double.PositiveInfinity, double.PositiveInfinity};
 			}
 			ParseRouteForData(FileName, IsRW, Encoding, ref Data, PreviewOnly);
 			if (Loading.Cancel) return;
@@ -1739,7 +1640,7 @@ namespace OpenBve {
 															UnifiedObject obj;
 															Program.CurrentHost.LoadObject(f, Encoding, out obj);
 															if (obj is AnimatedObjectCollection) {
-																AnimatedObjectSignalData Signal = new AnimatedObjectSignalData();
+																AnimatedObjectSignalObject Signal = new AnimatedObjectSignalObject();
 																Signal.Objects = obj;
 																Data.Signals[CommandIndex1] = Signal;
 															} else {
@@ -1780,7 +1681,7 @@ namespace OpenBve {
 															Program.CurrentHost.AddMessage(MessageType.Error, false, "SignalFileWithoutExtension does not contain a valid path in " + Command + " at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 															break;
 														}
-														Bve4SignalData Signal = new Bve4SignalData
+														Bve4SignalObject Signal = new Bve4SignalObject
 														{
 															BaseObject = LoadStaticObject(f, Encoding, false),
 															GlowObject = null

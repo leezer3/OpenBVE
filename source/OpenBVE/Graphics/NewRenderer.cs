@@ -266,8 +266,11 @@ namespace OpenBve.Graphics
 
 			// set up camera
 			CurrentViewMatrix = Matrix4D.LookAt(Vector3.Zero, new Vector3(Camera.AbsoluteDirection.X, Camera.AbsoluteDirection.Y, -Camera.AbsoluteDirection.Z), new Vector3(Camera.AbsoluteUp.X, Camera.AbsoluteUp.Y, -Camera.AbsoluteUp.Z));
-			GL.Light(LightName.Light0, LightParameter.Position, new[] { (float)Lighting.OptionLightPosition.X, (float)Lighting.OptionLightPosition.Y, (float)-Lighting.OptionLightPosition.Z, 0.0f });
-			
+			if (!AvailableNewRenderer)
+			{
+				GL.Light(LightName.Light0, LightParameter.Position, new[] { (float)Lighting.OptionLightPosition.X, (float)Lighting.OptionLightPosition.Y, (float)-Lighting.OptionLightPosition.Z, 0.0f });
+			}
+
 			Lighting.OptionLightingResultingAmount = (Lighting.OptionAmbientColor.R + Lighting.OptionAmbientColor.G + Lighting.OptionAmbientColor.B) / 480.0f;
 
 			if (Lighting.OptionLightingResultingAmount > 1.0f)
@@ -324,7 +327,9 @@ namespace OpenBve.Graphics
 				if (OptionLighting)
 				{
 					DefaultShader.SetIsLight(true);
-					DefaultShader.SetLightPosition(Lighting.OptionLightPosition);
+					TransformedLightPosition = new Vector3(Lighting.OptionLightPosition.X, Lighting.OptionLightPosition.Y, -Lighting.OptionLightPosition.Z);
+					TransformedLightPosition.Transform(CurrentViewMatrix);
+					DefaultShader.SetLightPosition(TransformedLightPosition);
 					DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
 					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
 					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
@@ -479,13 +484,19 @@ namespace OpenBve.Graphics
 				if (AvailableNewRenderer)
 				{
 					DefaultShader.SetIsLight(true);
-					DefaultShader.SetLightPosition(Lighting.OptionLightPosition);
+					TransformedLightPosition = new Vector3(Lighting.OptionLightPosition.X, Lighting.OptionLightPosition.Y, -Lighting.OptionLightPosition.Z);
+					TransformedLightPosition.Transform(CurrentViewMatrix);
+					DefaultShader.SetLightPosition(TransformedLightPosition);
 					DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
 					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
 					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
 				}
-				GL.Light(LightName.Light0, LightParameter.Ambient, new[] { inv255 * 178, inv255 * 178, inv255 * 178, 1.0f });
-				GL.Light(LightName.Light0, LightParameter.Diffuse, new[] { inv255 * 178, inv255 * 178, inv255 * 178, 1.0f });
+				else
+				{
+					GL.Light(LightName.Light0, LightParameter.Ambient, new[] { inv255 * 178, inv255 * 178, inv255 * 178, 1.0f });
+					GL.Light(LightName.Light0, LightParameter.Diffuse, new[] { inv255 * 178, inv255 * 178, inv255 * 178, 1.0f });	
+				}
+				
 
 				// overlay opaque face
 				foreach (FaceState face in VisibleObjects.OverlayOpaqueFaces)

@@ -5,6 +5,12 @@ namespace OpenBveApi.Trains
 	/// <summary>An abstract train car</summary>
 	public class AbstractCar
 	{
+		/// <summary>Front axle about which the car pivots</summary>
+		public Axle FrontAxle;
+
+		/// <summary>Rear axle about which the car pivots</summary>
+		public Axle RearAxle;
+
 		/// <summary>The width of the car in meters</summary>
 		public double Width;
 
@@ -52,6 +58,16 @@ namespace OpenBveApi.Trains
 			get
 			{
 				return 0.0;
+			}
+		}
+
+		/// <summary>The index of the car within the train</summary>
+		public virtual int Index
+		{
+			get
+			{
+				// A single car is by itself a train, hence index zero
+				return 0;
 			}
 		}
 

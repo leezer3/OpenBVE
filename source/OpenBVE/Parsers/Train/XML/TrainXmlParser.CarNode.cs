@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Linq;
+using LibRender2.Trains;
 using OpenBve.BrakeSystems;
 using OpenBve.Parsers.Panel;
 using OpenBveApi.Graphics;
@@ -307,17 +308,9 @@ namespace OpenBve.Parsers.Train
 							break;
 						}
 						Train.Cars[Car].HasInteriorView = true;
-						Train.Cars[Car].CarSections = new TrainManager.CarSection[1];
-						Train.Cars[Car].CarSections[0] = new TrainManager.CarSection
-						{
-							Groups = new TrainManager.ElementsGroup[1]
-						};
-						Train.Cars[Car].CarSections[0].Groups[0] = new TrainManager.ElementsGroup
-						{
-							Elements = new AnimatedObject[] { },
-							Overlay = true
-						};
-						
+						Train.Cars[Car].CarSections = new CarSection[1];
+						Train.Cars[Car].CarSections[0] = new CarSection(Program.Renderer, true);
+
 						string cv = OpenBveApi.Path.CombineFile(currentPath, c.InnerText);
 						if (!System.IO.File.Exists(cv))
 						{

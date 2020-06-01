@@ -1191,7 +1191,11 @@ namespace OpenBve {
 			Object.Mesh.Vertices = new VertexTemplate[] { t0, t1, t2, t3 };
 			Object.Mesh.Faces = new MeshFace[] { new MeshFace(new int[] { 0, 1, 2, 3 }) };
 			Object.Mesh.Materials = new MeshMaterial[1];
-			Object.Mesh.Materials[0].Flags = Texture != null ? (byte)MeshMaterial.TransparentColorMask : (byte)0;
+			Object.Mesh.Materials[0].Flags = new MaterialFlags();
+			if (Texture != null)
+			{
+				Object.Mesh.Materials[0].Flags |= MaterialFlags.TransparentColor;
+			}
 			Object.Mesh.Materials[0].Color = Color;
 			Object.Mesh.Materials[0].TransparentColor = Color24.Blue;
 			Object.Mesh.Materials[0].DaytimeTexture = Texture;

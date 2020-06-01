@@ -182,5 +182,21 @@ namespace OpenBve
 				}
 			}
 		}
+
+		/// <summary>Updates the objects for all trains within the simulation world</summary>
+		/// <param name="TimeElapsed">The time elapsed</param>
+		/// <param name="ForceUpdate">Whether this is a forced update</param>
+		internal static void UpdateTrainObjects(double TimeElapsed, bool ForceUpdate)
+		{
+			for (int i = 0; i < Trains.Length; i++)
+			{
+				Trains[i].UpdateObjects(TimeElapsed, ForceUpdate);
+			}
+
+			foreach (var Train in TFOs)
+			{
+				Train.UpdateObjects(TimeElapsed, ForceUpdate);
+			}
+		}
 	}
 }

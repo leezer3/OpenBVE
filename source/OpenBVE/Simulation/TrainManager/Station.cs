@@ -48,32 +48,7 @@ namespace OpenBve
 							if (Math.Abs(Train.CurrentSpeed) < 0.1 / 3.6 &
 							    Math.Abs(Train.Specs.CurrentAverageAcceleration) < 0.1 / 3.6)
 							{
-								//Check the interlock state for the doors
-								switch (Train.SafetySystems.DoorInterlockState)
-								{
-									case DoorInterlockStates.Unlocked:
-										if (Program.CurrentRoute.Stations[i].OpenLeftDoors || Program.CurrentRoute.Stations[i].OpenRightDoors)
-										{
-											AttemptToOpenDoors(Train, i, tb, tf);
-										}
-										break;
-									case DoorInterlockStates.Left:
-										if (Program.CurrentRoute.Stations[i].OpenLeftDoors && !Program.CurrentRoute.Stations[i].OpenRightDoors)
-										{
-											AttemptToOpenDoors(Train, i, tb, tf);
-										}
-										break;
-									case DoorInterlockStates.Right:
-										if (!Program.CurrentRoute.Stations[i].OpenLeftDoors && Program.CurrentRoute.Stations[i].OpenRightDoors)
-										{
-											AttemptToOpenDoors(Train, i, tb, tf);
-										}
-										break;
-									case DoorInterlockStates.Locked:
-										//All doors are currently locked, do nothing
-										break;
-
-								}
+								AttemptToOpenDoors(Train, i, tb, tf);
 							}
 						}
 						// detect arrival
@@ -228,30 +203,9 @@ namespace OpenBve
 							//e.g. Change ends
 							if (Train.Specs.DoorCloseMode != DoorMode.Manual & Program.CurrentRoute.Stations[i].Type == StationType.Normal)
 							{
-								//Check the interlock state for the doors
-								switch (Train.SafetySystems.DoorInterlockState)
-								{
-									case DoorInterlockStates.Unlocked:
-										AttemptToCloseDoors(Train);
-										break;
-									case DoorInterlockStates.Left:
-										if (Program.CurrentRoute.Stations[i].OpenLeftDoors)
-										{
-											AttemptToCloseDoors(Train);
-										}
-										break;
-									case DoorInterlockStates.Right:
-										if (Program.CurrentRoute.Stations[i].OpenRightDoors)
-										{
-											AttemptToCloseDoors(Train);
-										}
-										break;
-									case DoorInterlockStates.Locked:
-										//All doors are currently locked, do nothing
-										break;
-								}
+								AttemptToCloseDoors(Train);
 
-								if (Train.SafetySystems.DoorInterlockState != DoorInterlockStates.Locked & Train.Specs.DoorClosureAttempted)
+								if (Train.Specs.DoorClosureAttempted)
 								{
 									if (Program.CurrentRoute.Stations[i].OpenLeftDoors && !Train.Cars[j].Doors[0].AnticipatedReopen && Program.RandomNumberGenerator.NextDouble() < Program.CurrentRoute.Stations[i].ReopenDoor)
 									{
@@ -456,7 +410,7 @@ namespace OpenBve
 				
 			}
 			// automatically close doors
-			if (Train.Specs.DoorCloseMode != DoorMode.Manual & Train.SafetySystems.DoorInterlockState != DoorInterlockStates.Locked & !Train.Specs.DoorClosureAttempted)
+			if (Train.Specs.DoorCloseMode != DoorMode.Manual & !Train.Specs.DoorClosureAttempted)
 			{
 				if (Train.Station == -1 | Train.StationState == TrainStopState.Completed)
 				{

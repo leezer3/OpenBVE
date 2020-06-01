@@ -17,19 +17,19 @@ namespace OpenBve {
 		internal static void UpdateAbsoluteCamera(double TimeElapsed) {
 			// zoom
 			double zm = Program.Renderer.Camera.Alignment.Zoom;
-			AdjustAlignment(ref Program.Renderer.Camera.Alignment.Zoom, Program.Renderer.Camera.AlignmentDirection.Zoom, ref Program.Renderer.Camera.AlignmentSpeed.Zoom, TimeElapsed, Program.Renderer.Camera.AlignmentSpeed.Zoom != 0.0);
+			Program.Renderer.Camera.AdjustAlignment(ref Program.Renderer.Camera.Alignment.Zoom, Program.Renderer.Camera.AlignmentDirection.Zoom, ref Program.Renderer.Camera.AlignmentSpeed.Zoom, TimeElapsed, Program.Renderer.Camera.AlignmentSpeed.Zoom != 0.0);
 			if (zm != Program.Renderer.Camera.Alignment.Zoom) {
 				Program.Renderer.Camera.ApplyZoom();
 			}
 			// current alignment
-			AdjustAlignment(ref Program.Renderer.Camera.Alignment.Position.X, Program.Renderer.Camera.AlignmentDirection.Position.X, ref Program.Renderer.Camera.AlignmentSpeed.Position.X, TimeElapsed);
-			AdjustAlignment(ref Program.Renderer.Camera.Alignment.Position.Y, Program.Renderer.Camera.AlignmentDirection.Position.Y, ref Program.Renderer.Camera.AlignmentSpeed.Position.Y, TimeElapsed);
+			Program.Renderer.Camera.AdjustAlignment(ref Program.Renderer.Camera.Alignment.Position.X, Program.Renderer.Camera.AlignmentDirection.Position.X, ref Program.Renderer.Camera.AlignmentSpeed.Position.X, TimeElapsed);
+			Program.Renderer.Camera.AdjustAlignment(ref Program.Renderer.Camera.Alignment.Position.Y, Program.Renderer.Camera.AlignmentDirection.Position.Y, ref Program.Renderer.Camera.AlignmentSpeed.Position.Y, TimeElapsed);
 			bool q = Program.Renderer.Camera.AlignmentSpeed.Yaw != 0.0 | Program.Renderer.Camera.AlignmentSpeed.Pitch != 0.0 | Program.Renderer.Camera.AlignmentSpeed.Roll != 0.0;
-			AdjustAlignment(ref Program.Renderer.Camera.Alignment.Yaw, Program.Renderer.Camera.AlignmentDirection.Yaw, ref Program.Renderer.Camera.AlignmentSpeed.Yaw, TimeElapsed);
-			AdjustAlignment(ref Program.Renderer.Camera.Alignment.Pitch, Program.Renderer.Camera.AlignmentDirection.Pitch, ref Program.Renderer.Camera.AlignmentSpeed.Pitch, TimeElapsed);
-			AdjustAlignment(ref Program.Renderer.Camera.Alignment.Roll, Program.Renderer.Camera.AlignmentDirection.Roll, ref Program.Renderer.Camera.AlignmentSpeed.Roll, TimeElapsed);
+			Program.Renderer.Camera.AdjustAlignment(ref Program.Renderer.Camera.Alignment.Yaw, Program.Renderer.Camera.AlignmentDirection.Yaw, ref Program.Renderer.Camera.AlignmentSpeed.Yaw, TimeElapsed);
+			Program.Renderer.Camera.AdjustAlignment(ref Program.Renderer.Camera.Alignment.Pitch, Program.Renderer.Camera.AlignmentDirection.Pitch, ref Program.Renderer.Camera.AlignmentSpeed.Pitch, TimeElapsed);
+			Program.Renderer.Camera.AdjustAlignment(ref Program.Renderer.Camera.Alignment.Roll, Program.Renderer.Camera.AlignmentDirection.Roll, ref Program.Renderer.Camera.AlignmentSpeed.Roll, TimeElapsed);
 			double tr = Program.Renderer.Camera.Alignment.TrackPosition;
-			AdjustAlignment(ref Program.Renderer.Camera.Alignment.TrackPosition, Program.Renderer.Camera.AlignmentDirection.TrackPosition, ref Program.Renderer.Camera.AlignmentSpeed.TrackPosition, TimeElapsed);
+			Program.Renderer.Camera.AdjustAlignment(ref Program.Renderer.Camera.Alignment.TrackPosition, Program.Renderer.Camera.AlignmentDirection.TrackPosition, ref Program.Renderer.Camera.AlignmentSpeed.TrackPosition, TimeElapsed);
 			if (tr != Program.Renderer.Camera.Alignment.TrackPosition) {
 				Program.Renderer.CameraTrackFollower.UpdateAbsolute(Program.Renderer.Camera.Alignment.TrackPosition, true, false);
 				q = true;
@@ -71,33 +71,8 @@ namespace OpenBve {
 			Program.Renderer.Camera.AbsoluteUp = uF;
 			Program.Renderer.Camera.AbsoluteSide = sF;
 		}
-		private static void AdjustAlignment(ref double Source, double Direction, ref double Speed, double TimeElapsed) {
-			AdjustAlignment(ref Source, Direction, ref Speed, TimeElapsed, false);
-		}
-		private static void AdjustAlignment(ref double Source, double Direction, ref double Speed, double TimeElapsed, bool Zoom) {
-			if (TimeElapsed > 0.0) {
-				if (Direction == 0.0) {
-					double d = (0.025 + 5.0 * Math.Abs(Speed)) * TimeElapsed;
-					if (Speed >= -d & Speed <= d) {
-						Speed = 0.0;
-					} else {
-						Speed -= (double)Math.Sign(Speed) * d;
-					}
-				} else {
-					double t = Math.Abs(Direction);
-					double d = ((1.15 - 1.0 / (1.0 + 0.025 * Math.Abs(Speed)))) * TimeElapsed;
-					Speed += Direction * d;
-					if (Speed < -t) {
-						Speed = -t;
-					} else if (Speed > t) {
-						Speed = t;
-					}
-				}
-				Source += Speed * TimeElapsed;
-			}
-		}
 
-		
+
 		// normalize
 		internal static void Normalize(ref double x, ref double y) {
 			double t = x * x + y * y;

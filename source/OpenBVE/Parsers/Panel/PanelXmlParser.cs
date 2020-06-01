@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using LibRender2.Trains;
 using OpenBveApi.Colors;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Interface;
@@ -58,7 +59,7 @@ namespace OpenBve.Parsers.Panel
 			}
 		}
 
-		private static void ParsePanelNode(XElement Element, string FileName, string TrainPath, TrainManager.Train Train, int Car, ref TrainManager.CarSection CarSection, int GroupIndex, int OffsetLayer, double PanelResolution = 1024.0, double PanelLeft = 0.0, double PanelRight = 1024.0, double PanelTop = 0.0, double PanelBottom = 1024.0, double PanelCenterX = 0, double PanelCenterY = 512, double PanelOriginX = 0, double PanelOriginY = 512)
+		private static void ParsePanelNode(XElement Element, string FileName, string TrainPath, TrainManager.Train Train, int Car, ref CarSection CarSection, int GroupIndex, int OffsetLayer, double PanelResolution = 1024.0, double PanelLeft = 0.0, double PanelRight = 1024.0, double PanelTop = 0.0, double PanelBottom = 1024.0, double PanelCenterX = 0, double PanelCenterY = 512, double PanelOriginX = 0, double PanelOriginY = 512)
 		{
 			//Train name, used for hacks detection
 			string trainName = new System.IO.DirectoryInfo(TrainPath).Name.ToUpperInvariant();
@@ -405,11 +406,7 @@ namespace OpenBve.Parsers.Panel
 							if (n + 1 >= CarSection.Groups.Length)
 							{
 								Array.Resize(ref CarSection.Groups, n + 2);
-								CarSection.Groups[n + 1] = new TrainManager.ElementsGroup
-								{
-									Elements = new AnimatedObject[] { },
-									Overlay = true
-								};
+								CarSection.Groups[n + 1] = new ElementsGroup(true);
 							}
 
 							ParsePanelNode(SectionElement, FileName, TrainPath, Train, Car, ref CarSection, n + 1, Layer, PanelResolution, PanelLeft, PanelRight, PanelTop, PanelBottom, PanelCenter.X, PanelCenter.Y, PanelOriginX, PanelOriginY);
@@ -1711,7 +1708,7 @@ namespace OpenBve.Parsers.Panel
 			}
 		}
 
-		internal static void CreateTouchElement(TrainManager.ElementsGroup Group, Vector2 Location, Vector2 Size, int ScreenIndex, int[] SoundIndices, TrainManager.CommandEntry[] CommandEntries, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver)
+		internal static void CreateTouchElement(ElementsGroup Group, Vector2 Location, Vector2 Size, int ScreenIndex, int[] SoundIndices, TrainManager.CommandEntry[] CommandEntries, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelBottom, Vector2 PanelCenter, Vector3 Driver)
 		{
 			double WorldWidth, WorldHeight;
 			if (Program.Renderer.Screen.Width >= Program.Renderer.Screen.Height)
@@ -1767,11 +1764,11 @@ namespace OpenBve.Parsers.Panel
 			o.Z = EyeDistance - Distance + Driver.Z;
 			if (Group.TouchElements == null)
 			{
-				Group.TouchElements = new TrainManager.TouchElement[0];
+				Group.TouchElements = new TouchElement[0];
 			}
 			int n = Group.TouchElements.Length;
 			Array.Resize(ref Group.TouchElements, n + 1);
-			Group.TouchElements[n] = new TrainManager.TouchElement
+			Group.TouchElements[n] = new TouchElement
 			{
 				Element = new AnimatedObject(Program.CurrentHost),
 				JumpScreenIndex = ScreenIndex,

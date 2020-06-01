@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using LibRender2.Trains;
 using OpenBve.Parsers.Panel;
 using OpenBveApi;
 using OpenBveApi.Colors;
@@ -294,11 +295,7 @@ namespace OpenBve {
 			{
 				GroupIndex++;
 				Array.Resize(ref Train.Cars[Car].CarSections[0].Groups, GroupIndex + 1);
-				Train.Cars[Car].CarSections[0].Groups[GroupIndex] = new TrainManager.ElementsGroup
-				{
-					Elements = new AnimatedObject[] { },
-					Overlay = true
-				};
+				Train.Cars[Car].CarSections[0].Groups[GroupIndex] = new ElementsGroup(true);
 			}
 
 			// parse lines for rest
@@ -1424,7 +1421,7 @@ namespace OpenBve {
 
 		
 
-		internal static int CreateElement(ref TrainManager.ElementsGroup Group, double Left, double Top, double Width, double Height, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelTop, double PanelBottom, Vector2 PanelCenter, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, Color32 Color, bool AddStateToLastElement)
+		internal static int CreateElement(ref ElementsGroup Group, double Left, double Top, double Width, double Height, Vector2 RelativeRotationCenter, double Distance, double PanelResolution, double PanelTop, double PanelBottom, Vector2 PanelCenter, Vector3 Driver, Texture DaytimeTexture, Texture NighttimeTexture, Color32 Color, bool AddStateToLastElement)
 		{
 			double WorldWidth, WorldHeight;
 			if (Program.Renderer.Screen.Width >= Program.Renderer.Screen.Height) {
@@ -1462,7 +1459,11 @@ namespace OpenBve {
 			Object.Mesh.Vertices = new VertexTemplate[] { t0, t1, t2, t3 };
 			Object.Mesh.Faces = new MeshFace[] { new MeshFace(new int[] { 0, 1, 2, 3 }) };
 			Object.Mesh.Materials = new MeshMaterial[1];
-			Object.Mesh.Materials[0].Flags = (byte)(DaytimeTexture != null ? MeshMaterial.TransparentColorMask : 0);
+			Object.Mesh.Materials[0].Flags = new MaterialFlags();
+			if (DaytimeTexture != null)
+			{
+				Object.Mesh.Materials[0].Flags |= MaterialFlags.TransparentColor;
+			}
 			Object.Mesh.Materials[0].Color = Color;
 			Object.Mesh.Materials[0].TransparentColor = Color24.Blue;
 			Object.Mesh.Materials[0].DaytimeTexture = DaytimeTexture;

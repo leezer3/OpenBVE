@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using LibRender2.Trains;
 using OpenBve.BrakeSystems;
 using OpenBve.SafetySystems;
 using OpenBveApi.Math;
@@ -886,7 +887,7 @@ namespace OpenBve {
 			Train.Cars = new TrainManager.Car[Cars];
 			for (int i = 0; i < Train.Cars.Length; i++)
 			{
-				Train.Cars[i] = new TrainManager.Car(Train, i);
+				Train.Cars[i] = new TrainManager.Car(Train, i, CoefficientOfStaticFriction, CoefficientOfRollingResistance, AerodynamicDragCoefficient);
 			}
 			double DistanceBetweenTheCars = 0.3;
 			
@@ -1185,7 +1186,7 @@ namespace OpenBve {
 				}
 				
 				Train.Cars[i].CurrentCarSection = -1;
-				Train.Cars[i].ChangeCarSection(TrainManager.CarSectionType.NotVisible);
+				Train.Cars[i].ChangeCarSection(CarSectionType.NotVisible);
 				Train.Cars[i].FrontBogie.ChangeSection(-1);
 				Train.Cars[i].RearBogie.ChangeSection(-1);
 				Train.Cars[i].Coupler.ChangeSection(-1);
@@ -1201,9 +1202,6 @@ namespace OpenBve {
 				Train.Cars[i].Specs.JerkPowerDown = JerkPowerDown;
 				Train.Cars[i].Specs.JerkBrakeUp = JerkBrakeUp;
 				Train.Cars[i].Specs.JerkBrakeDown = JerkBrakeDown;
-				Train.Cars[i].Specs.CoefficientOfStaticFriction = CoefficientOfStaticFriction;
-				Train.Cars[i].Specs.CoefficientOfRollingResistance = CoefficientOfRollingResistance;
-				Train.Cars[i].Specs.AerodynamicDragCoefficient = AerodynamicDragCoefficient;
 				Train.Cars[i].Specs.ExposedFrontalArea = CarExposedFrontalArea;
 				Train.Cars[i].Specs.UnexposedFrontalArea = CarUnexposedFrontalArea;
 				Train.Cars[i].Doors[0].Direction = -1;

@@ -1,13 +1,16 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using System.Xml;
 using LibRender2;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using RouteManager2;
+using Path = OpenBveApi.Path;
 
 namespace OpenBve
 {
@@ -21,6 +24,31 @@ namespace OpenBve
 		private string rf;
 		private FileSystemWatcher routeWatcher;
 		private FileSystemWatcher trainWatcher;
+
+		private Dictionary<string, string> compatibilitySignals = new Dictionary<string, string>();
+
+		private void LoadCompatibilitySignalSets()
+		{
+			string[] possibleFiles = Directory.GetFiles(Path.CombineDirectory(Program.FileSystem.GetDataFolder("Compatibility"), "Signals"), "*.xml");
+			for (int i = 0; i < possibleFiles.Length; i++)
+			{
+				XmlDocument currentXML = new XmlDocument();
+				try
+				{
+					currentXML.Load(possibleFiles[i]);
+					XmlNode node = currentXML.SelectSingleNode("/openBVE/CompatibilitySignals/SignalSetName");
+					if (node != null)
+					{
+						compatibilitySignals.Add(node.InnerText, possibleFiles[i]);
+						comboBoxCompatibilitySignals.Items.Add(node.InnerText);
+					}
+				}
+				catch
+				{
+				}
+
+			}
+		}
 
 		private void textboxRouteFolder_TextChanged(object sender, EventArgs e)
 		{
@@ -760,7 +788,7 @@ namespace OpenBve
 			}
 			Game.Reset(false, false);
 			bool IsRW = string.Equals(System.IO.Path.GetExtension(Result.RouteFile), ".rw", StringComparison.OrdinalIgnoreCase);
-			CsvRwRouteParser.ParseRoute(Result.RouteFile, IsRW, Result.RouteEncoding, null, null, null, true);
+			CsvRwRouteParser.ParseRoute(Result.RouteFile, IsRW, Result.RouteEncoding, null, null, null, null, true);
 			
 		}
 

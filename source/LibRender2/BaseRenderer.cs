@@ -101,6 +101,8 @@ namespace LibRender2
 		public Matrix4D CurrentProjectionMatrix;
 		public Matrix4D CurrentViewMatrix;
 
+		public Vector3 TransformedLightPosition;
+
 		protected List<Matrix4D> projectionMatrixList;
 		protected List<Matrix4D> viewMatrixList;
 
@@ -185,7 +187,7 @@ namespace LibRender2
 		{
 			Screen = new Screen();
 			Camera = new CameraProperties(this);
-			Lighting = new Lighting();
+			Lighting = new Lighting(this);
 			Marker = new Marker();
 
 			projectionMatrixList = new List<Matrix4D>();
@@ -918,6 +920,7 @@ namespace LibRender2
 
 		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, Matrix4D modelMatrix, Matrix4D modelViewMatrix, bool IsDebugTouchMode = false)
 		{
+			GL.Disable(EnableCap.Lighting);
 			if (State.Prototype.Mesh.Vertices.Length < 1)
 			{
 				return;
@@ -950,15 +953,7 @@ namespace LibRender2
 
 			if (OptionWireFrame || IsDebugTouchMode)
 			{
-				if (material.Color != lastColor)
-				{
-					Shader.SetMaterialAmbient(material.Color);
-					lastColor = material.Color;
-				}
-				Shader.SetOpacity(1.0f);
-				Shader.SetBrightness(1.0f);
-				VAO.Draw(PrimitiveType.LineLoop, Face.IboStartIndex, Face.Vertices.Length);
-				return;
+				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
 			}
 
 			// lighting
@@ -971,15 +966,10 @@ namespace LibRender2
 					Shader.SetMaterialSpecular(material.Color);
 					//TODO: Ambient and specular colors are not set by any current parsers
 				}
-
-				if ((material.Flags & MeshMaterial.EmissiveColorMask) != 0)
+				Shader.SetMaterialFlags(material.Flags);
+				if ((material.Flags & MaterialFlags.Emissive) != 0)
 				{
 					Shader.SetMaterialEmission(material.EmissiveColor);
-					Shader.SetMaterialEmissive(true);
-				}
-				else
-				{
-					Shader.SetMaterialEmissive(false);
 				}
 
 				Shader.SetMaterialShininess(1.0f);
@@ -990,8 +980,6 @@ namespace LibRender2
 				{
 					Shader.SetMaterialAmbient(material.Color);
 				}
-				//As lighting is disabled, the face cannot be emitting light....
-				Shader.SetMaterialEmissive(false);
 			}
 
 			lastColor = material.Color;
@@ -1043,7 +1031,7 @@ namespace LibRender2
 					GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
 					Shader.SetIsFog(false);
 				}
-				else if ((material.Flags & MeshMaterial.EmissiveColorMask) != 0)
+				else if ((material.Flags & MaterialFlags.Emissive) != 0)
 				{
 					//As material is emitting light, it must be at full brightness
 					factor = 1.0f;
@@ -1150,6 +1138,10 @@ namespace LibRender2
 				RestoreBlendFunc();
 				Shader.SetIsFog(OptionFog);
 			}
+			if (OptionWireFrame || IsDebugTouchMode)
+			{
+				GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+			}
 		}
 
 		public void RenderFaceImmediateMode(FaceState State, bool IsDebugTouchMode = false)
@@ -1230,7 +1222,7 @@ namespace LibRender2
 				}
 			}
 
-			if ((material.Flags & MeshMaterial.EmissiveColorMask) != 0)
+			if ((material.Flags & MaterialFlags.Emissive) != 0)
 			{
 				GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, new Color4(material.EmissiveColor.R, material.EmissiveColor.G, material.EmissiveColor.B, 255));
 			}

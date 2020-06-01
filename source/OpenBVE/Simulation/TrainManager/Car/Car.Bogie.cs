@@ -1,7 +1,8 @@
 ﻿using System;
+using LibRender2.Trains;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
-using OpenBveApi.Routes;
+using OpenBveApi.Trains;
 
 namespace OpenBve
 {
@@ -41,8 +42,8 @@ namespace OpenBve
 				baseTrain = train;
 				baseCar = car;
 				CarSections = new CarSection[] { };
-				FrontAxle = new Axle(train, car);
-				RearAxle = new Axle(train, car);
+				FrontAxle = new Axle(Program.CurrentHost, train, car);
+				RearAxle = new Axle(Program.CurrentHost, train, car);
 			}
 
 			internal void UpdateObjects(double TimeElapsed, bool ForceUpdate)
@@ -149,11 +150,7 @@ namespace OpenBve
 			{
 				int j = CarSections.Length;
 				Array.Resize(ref CarSections, j + 1);
-				CarSections[j] = new CarSection
-				{
-					Groups = new ElementsGroup[1]
-				};
-				CarSections[j].Groups[0] = new ElementsGroup();
+				CarSections[j] = new CarSection(Program.Renderer, false);
 				if (currentObject is StaticObject)
 				{
 					StaticObject s = (StaticObject)currentObject;

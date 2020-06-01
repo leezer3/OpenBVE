@@ -465,7 +465,15 @@ namespace Plugin
 				}
 				for (int i = 0; i < Builder.Materials.Length; i++)
 				{
-					Object.Mesh.Materials[mm + i].Flags = (byte)((Builder.Materials[i].EmissiveColorUsed ? MeshMaterial.EmissiveColorMask : 0) | (Builder.Materials[i].TransparentColorUsed ? MeshMaterial.TransparentColorMask : 0));
+					Object.Mesh.Materials[mm + i].Flags = new MaterialFlags();
+					if (Builder.Materials[i].EmissiveColorUsed)
+					{
+						Object.Mesh.Materials[mm + i].Flags |= MaterialFlags.Emissive;
+					}
+					if (Builder.Materials[i].TransparentColorUsed)
+					{
+						Object.Mesh.Materials[mm + i].Flags |= MaterialFlags.TransparentColor;
+					}
 					Object.Mesh.Materials[mm + i].Color = Builder.Materials[i].Color;
 					Object.Mesh.Materials[mm + i].TransparentColor = Builder.Materials[i].TransparentColor;
 					if (Builder.Materials[i].DaytimeTexture != null)

@@ -24,7 +24,8 @@ void main(void)
 	}
 	
 	vec4 finalColor = vec4(((textureColor.rgb) * 1.0) + (oColor.rgb * (1 - textureColor.a)), textureColor.a * uOpacity);
-	finalColor *= lightResult; //Apply the lighting results *after* the final color has been calculated
+	//Apply the lighting results *after* the final color has been calculated
+	finalColor *= lightResult;
 		
 	// Fog
 	float fogFactor = 1.0;

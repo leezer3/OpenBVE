@@ -99,6 +99,7 @@
     <Compile Include="Objects\MeshFaceVertex.cs" />
     <Compile Include="Objects\MeshMaterial.BlendMode.cs" />
     <Compile Include="Objects\MeshMaterial.cs" />
+    <Compile Include="Objects\MeshMaterial.Flags.cs" />
     <Compile Include="Objects\ObjectInterface.cs" />
     <Compile Include="Objects\ObjectState.cs" />
     <Compile Include="Objects\ObjectTypes\AnimatedObject.AnimatedObjectState.cs" />
@@ -154,6 +155,7 @@
     <Compile Include="System\TextEncoding.cs" />
     <Compile Include="Train\AbstractCar.cs" />
     <Compile Include="Train\AbstractTrain.cs" />
+    <Compile Include="Train\Axle.cs" />
     <Compile Include="Train\CarBrightness.cs" />
     <Compile Include="Train\AbstractCoupler.cs" />
     <Compile Include="Train\GeneralAI.cs" />

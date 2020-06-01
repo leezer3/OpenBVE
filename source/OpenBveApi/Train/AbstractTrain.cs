@@ -62,6 +62,13 @@ namespace OpenBveApi.Trains
 			}
 		}
 
+		/// <summary>Updates the train</summary>
+		/// <param name="TimeElapsed">The time elapsed since the last call to update</param>
+		public virtual void Update(double TimeElapsed)
+		{
+
+		}
+
 		/// <summary>Derails a car within the train</summary>
 		/// <param name="CarIndex">The index of the car to derail</param>
 		/// <param name="ElapsedTime">The frame time elapsed</param>

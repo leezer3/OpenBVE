@@ -67,6 +67,10 @@ namespace LibRender2.Cameras
 		public CameraViewMode CurrentMode;
 		/// <summary>The current camera restriction mode</summary>
 		public CameraRestrictionMode CurrentRestriction = CameraRestrictionMode.NotAvailable;
+		/// <summary>The saved exterior camera alignment</summary>
+		public CameraAlignment SavedExterior;
+		/// <summary>The saved track camera alignment</summary>
+		public CameraAlignment SavedTrack;
 
 		private Vector3 absolutePosition;
 
@@ -176,6 +180,92 @@ namespace LibRender2.Cameras
 			return true;
 		}
 
+		/// <summary>Performs progressive adjustments taking into account the specified camera restriction</summary>
+		public bool PerformProgressiveAdjustmentForCameraRestriction(ref double Source, double Target, bool Zoom, CameraRestriction Restriction)
+		{
+			if ((CurrentMode != CameraViewMode.Interior & CurrentMode != CameraViewMode.InteriorLookAhead) | (CurrentRestriction != CameraRestrictionMode.On && CurrentRestriction != CameraRestrictionMode.Restricted3D))
+			{
+				Source = Target;
+				return true;
+			}
+
+			double best = Source;
+			const int Precision = 8;
+			double a = Source;
+			double b = Target;
+			Source = Target;
+			if (Zoom) ApplyZoom();
+			if (PerformRestrictionTest(Restriction))
+			{
+				return true;
+			}
+
+			double x = 0.5 * (a + b);
+			bool q = true;
+			for (int i = 0; i < Precision; i++)
+			{
+
+#pragma warning disable IDE0059 //IDE is wrong, best may never be updated if q is never true
+				Source = x;
+#pragma warning restore IDE0059
+				if (Zoom) ApplyZoom();
+				q = PerformRestrictionTest(Restriction);
+				if (q)
+				{
+					a = x;
+					best = x;
+				}
+				else
+				{
+					b = x;
+				}
+
+				x = 0.5 * (a + b);
+			}
+
+			Source = best;
+			if (Zoom) ApplyZoom();
+			return q;
+		}
+
+		/// <summary>Adjusts the camera alignment based upon the specified parameters</summary>
+		public void AdjustAlignment(ref double Source, double Direction, ref double Speed, double TimeElapsed, bool Zoom = false, CameraRestriction? Restriction = null) {
+			if (Direction != 0.0 | Speed != 0.0) {
+				if (TimeElapsed > 0.0) {
+					if (Direction == 0.0) {
+						double d = (0.025 + 5.0 * Math.Abs(Speed)) * TimeElapsed;
+						if (Speed >= -d & Speed <= d) {
+							Speed = 0.0;
+						} else {
+							Speed -= Math.Sign(Speed) * d;
+						}
+					} else {
+						double t = Math.Abs(Direction);
+						double d = ((1.15 - 1.0 / (1.0 + 0.025 * Math.Abs(Speed)))) * TimeElapsed;
+						Speed += Direction * d;
+						if (Speed < -t) {
+							Speed = -t;
+						} else if (Speed > t) {
+							Speed = t;
+						}
+					}
+
+					if (Restriction != null)
+					{
+						double x = Source + Speed * TimeElapsed;
+						if (!PerformProgressiveAdjustmentForCameraRestriction(ref Source, x, Zoom, (CameraRestriction)Restriction))
+						{
+							Speed = 0.0;
+						}
+					}
+					else
+					{
+						Source += Speed * TimeElapsed;
+					}
+				}
+			}
+		}
+
 		/// <summary>Applies the current zoom settings after a change</summary>
 		public void ApplyZoom()
 		{
@@ -186,8 +276,9 @@ namespace LibRender2.Cameras
 		}
 
 		/// <summary>Resets the camera to an absolute position</summary>
-		public void Reset(Vector3 Position) {
-			AbsolutePosition = new Vector3(-5.0, 2.5, -25.0);
+		public void Reset(Vector3 Position)
+		{
+			AbsolutePosition = Position;
 			AbsoluteDirection = new Vector3(-AbsolutePosition.X, -AbsolutePosition.Y, -AbsolutePosition.Z);
 			AbsoluteSide = new Vector3(-AbsolutePosition.Z, 0.0, AbsolutePosition.X);
 			AbsoluteDirection.Normalize();
