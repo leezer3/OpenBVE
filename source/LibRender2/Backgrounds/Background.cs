@@ -199,7 +199,6 @@ namespace LibRender2.Backgrounds
 		/// <param name="scale">The scale</param>
 		private void RenderStaticBackgroundImmediate(StaticBackground data, float alpha, float scale)
 		{
-			//return;
 			if (data.Texture != null && renderer.currentHost.LoadTexture(data.Texture, OpenGlTextureWrapMode.RepeatClamp))
 			{
 				GL.MatrixMode(MatrixMode.Projection);
@@ -226,6 +225,8 @@ namespace LibRender2.Backgrounds
 				else
 				{
 					GL.Enable(EnableCap.Blend);
+					GL.Enable(EnableCap.AlphaTest);
+					renderer.SetAlphaFunc(AlphaFunction.Greater, 0.0f);
 				}
 				GL.BindTexture(TextureTarget.Texture2D, data.Texture.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp].Name);
 				renderer.LastBoundTexture = data.Texture.OpenGlTextures[(int)OpenGlTextureWrapMode.RepeatClamp];
