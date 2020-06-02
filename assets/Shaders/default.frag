@@ -21,6 +21,7 @@ void main(void)
 	if(uIsTexture)
 	{
 		textureColor *= texture2D(uTexture, oUv);
+		textureColor.rgb *= uBrightness;
 	}
 	
 	vec4 finalColor = vec4(((textureColor.rgb) * 1.0) + (oColor.rgb * (1 - textureColor.a)), textureColor.a * uOpacity);
