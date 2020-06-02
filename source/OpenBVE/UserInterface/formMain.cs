@@ -1583,7 +1583,6 @@ namespace OpenBve {
 			else
 			{
 				checkBoxUnloadTextures.Enabled = true;
-				checkBoxIsUseNewRenderer.Enabled = true;
 			}
 		}
 
@@ -1592,13 +1591,12 @@ namespace OpenBve {
 			if (checkBoxUnloadTextures.Checked)
 			{
 				//If we use display lists, a stale texture reference may remain in the GPU, resulting in untextured faces
-				checkBoxIsUseNewRenderer.Checked = true;
-				checkBoxIsUseNewRenderer.Enabled = false;
+				checkBoxLoadInAdvance.Checked = false;
+				checkBoxLoadInAdvance.Enabled = false;
 			}
 			else
 			{
-				checkBoxIsUseNewRenderer.Enabled = true;
-				checkBoxIsUseNewRenderer.Checked = false;
+				checkBoxLoadInAdvance.Enabled = true;
 			}
 		}
 
