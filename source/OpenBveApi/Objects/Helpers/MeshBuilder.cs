@@ -83,9 +83,8 @@ namespace OpenBveApi.Objects
 								 * Horrid workaround....
 								 */
 								Materials[i].EmissiveColorUsed = true;
-								Materials[i].EmissiveColor = Color24.White;
 							}
-
+							Materials[i].EmissiveColor = Color24.White;
 						}
 					}
 
