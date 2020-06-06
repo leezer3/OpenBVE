@@ -214,6 +214,7 @@ namespace OpenBve
 					DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
 					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
 					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
+					DefaultShader.SetLightModel(Lighting.LightModel);
 				}
 				DefaultShader.SetTexture(0);
 				DefaultShader.SetCurrentProjectionMatrix(CurrentProjectionMatrix);

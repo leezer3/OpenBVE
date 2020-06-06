@@ -328,6 +328,7 @@ namespace OpenBve
 					DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
 					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
 					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
+					DefaultShader.SetLightModel(Lighting.LightModel);
 				}
 				if (OptionFog)
 				{

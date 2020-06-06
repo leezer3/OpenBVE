@@ -809,6 +809,7 @@ namespace LibRender2
 			Shader.SetLightAmbient(Color24.White);
 			Shader.SetLightDiffuse(Color24.White);
 			Shader.SetLightSpecular(Color24.White);
+			Shader.SetLightModel(Lighting.LightModel);
 			Shader.SetMaterialAmbient(Color24.White);
 			Shader.SetMaterialDiffuse(Color24.White);
 			Shader.SetMaterialSpecular(Color24.White);

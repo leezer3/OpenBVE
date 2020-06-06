@@ -9,6 +9,7 @@ using OpenBveApi.Objects;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Vector3 = OpenBveApi.Math.Vector3;
+using Vector4 = OpenBveApi.Math.Vector4;
 
 namespace LibRender2.Shaders
 {
@@ -158,6 +159,7 @@ namespace LibRender2.Shaders
 				LightAmbient = (short)GL.GetUniformLocation(handle, "uLight.ambient"),
 				LightDiffuse = (short)GL.GetUniformLocation(handle, "uLight.diffuse"),
 				LightSpecular = (short)GL.GetUniformLocation(handle, "uLight.specular"),
+				LightModel = (short)GL.GetUniformLocation(handle, "uLight.lightModel"),
 				MaterialAmbient = (short)GL.GetUniformLocation(handle, "uMaterial.ambient"),
 				MaterialDiffuse = (short)GL.GetUniformLocation(handle, "uMaterial.diffuse"),
 				MaterialSpecular = (short)GL.GetUniformLocation(handle, "uMaterial.specular"),
@@ -260,6 +262,11 @@ namespace LibRender2.Shaders
 		public void SetLightSpecular(Color24 LightSpecular)
 		{
 			GL.Uniform3(UniformLayout.LightSpecular, LightSpecular.R / 255.0f, LightSpecular.G / 255.0f, LightSpecular.B / 255.0f);
+		}
+
+		public void SetLightModel(Vector4 LightModel)
+		{
+			GL.Uniform4(UniformLayout.LightModel, LightModel.X, LightModel.Y, LightModel.Z, LightModel.W);
 		}
 
 		public void SetMaterialAmbient(Color32 MaterialAmbient)

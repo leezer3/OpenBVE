@@ -333,6 +333,7 @@ namespace OpenBve.Graphics
 					DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
 					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
 					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
+					DefaultShader.SetLightModel(Lighting.LightModel);
 				}
 				if (OptionFog)
 				{
@@ -490,6 +491,7 @@ namespace OpenBve.Graphics
 					DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
 					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
 					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
+					DefaultShader.SetLightModel(Lighting.LightModel);
 				}
 				else
 				{
