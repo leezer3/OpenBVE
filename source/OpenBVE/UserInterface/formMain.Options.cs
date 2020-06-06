@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using LibRender2.Overlays;
 using OpenBveApi.Graphics;
 using OpenBveApi.Interface;
 
@@ -30,7 +31,7 @@ namespace OpenBve {
 
 		private void comboBoxTimeTableDisplayMode_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			Interface.CurrentOptions.TimeTableStyle = (Interface.TimeTableMode)comboBoxTimeTableDisplayMode.SelectedIndex;
+			Interface.CurrentOptions.TimeTableStyle = (TimeTableMode)comboBoxTimeTableDisplayMode.SelectedIndex;
 		}
 
 

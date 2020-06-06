@@ -7,6 +7,7 @@
 
 using System;
 using System.Globalization;
+using LibRender2.Overlays;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
@@ -16,12 +17,7 @@ namespace OpenBve {
 
 	// --- TimeTable.cs ---
 	internal static class Timetable {
-		internal enum TimetableState {
-			None = 0,
-			Custom = 1,
-			Default = 2
-		}
-		internal static TimetableState CurrentTimetable = TimetableState.None;
+		internal static TimeTableMode CurrentTimetable = TimeTableMode.None;
 		internal static bool CustomTimetableAvailable = false;
 		internal static string DefaultTimetableDescription = null;
 		internal static Texture[] CustomTextureIndices = null;

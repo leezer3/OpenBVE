@@ -65,6 +65,7 @@
     <Compile Include="openGL\VertexBufferObject.cs" />
     <Compile Include="Overlays\Keys.cs" />
     <Compile Include="Overlays\Marker.cs" />
+    <Compile Include="Overlays\TimeTableMode.cs" />
     <Compile Include="Primitives\Cube.cs" />
     <Compile Include="Primitives\Rectangle.cs" />
     <Compile Include="openGL\Vertex.cs" />
