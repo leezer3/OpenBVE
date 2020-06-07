@@ -266,7 +266,7 @@ namespace LibRender2.Shaders
 
 		public void SetLightModel(Vector4 LightModel)
 		{
-			GL.Uniform4(UniformLayout.LightModel, LightModel.X, LightModel.Y, LightModel.Z, LightModel.W);
+			GL.Uniform4(UniformLayout.LightModel, (float)LightModel.X, (float)LightModel.Y, (float)LightModel.Z, (float)LightModel.W);
 		}
 
 		public void SetMaterialAmbient(Color32 MaterialAmbient)
