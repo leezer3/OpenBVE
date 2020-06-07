@@ -21,7 +21,7 @@ void main(void)
 	if(uIsTexture)
 	{
 		textureColor *= texture2D(uTexture, oUv);
-		if((uMaterialFlags & 2) == 0 && (uMaterialFlags & 4) == 0)
+		if((uMaterialFlags & 1) == 0 && (uMaterialFlags & 4) == 0)
 		{
 			//Material is not emissive and lighting is enabled, so multiply by brightness
 			textureColor.rgb *= uBrightness;
