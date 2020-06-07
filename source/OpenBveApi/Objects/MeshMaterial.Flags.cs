@@ -10,5 +10,7 @@ namespace OpenBveApi.Objects
 		Emissive = 1,
 		/// <summary>The material uses the Transparent Color in its texture</summary>
 		TransparentColor = 2,
+		/// <summary>The material is to be rendered with disabled lighting</summary>
+		DisableLighting = 4
 	}
 }

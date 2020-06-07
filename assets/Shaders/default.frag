@@ -13,21 +13,28 @@ uniform bool uIsFog;
 uniform float uFogStart;
 uniform float uFogEnd;
 uniform vec3  uFogColor;
+uniform int uMaterialFlags;
 
 void main(void)
 {
 	vec4 textureColor = vec4(1.0);
-	
 	if(uIsTexture)
 	{
 		textureColor *= texture2D(uTexture, oUv);
-		textureColor.rgb *= uBrightness;
+		if((uMaterialFlags & 2) == 0 && (uMaterialFlags & 4) == 0)
+		{
+			//Material is not emissive and lighting is enabled, so multiply by brightness
+			textureColor.rgb *= uBrightness;
+		}
 	}
 	
 	vec4 finalColor = vec4(((textureColor.rgb) * 1.0) + (oColor.rgb * (1 - textureColor.a)), textureColor.a * uOpacity);
 	//Apply the lighting results *after* the final color has been calculated
-	finalColor *= lightResult;
-		
+	if((uMaterialFlags & 4) == 0)
+	{
+		//Lighting is enabled, so multiply by light result
+		finalColor *= lightResult;
+	}	
 	// Fog
 	float fogFactor = 1.0;
 

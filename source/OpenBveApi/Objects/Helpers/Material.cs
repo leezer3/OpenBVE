@@ -41,7 +41,9 @@ namespace OpenBveApi.Objects
 		/// <summary>The font to use for the text</summary>
 		public string Font;
 		/// <summary>The text padding to apply</summary>
-		public Vector2 TextPadding; 
+		public Vector2 TextPadding;
+		/// <summary>Whether lighting is disabled by the renderer</summary>
+		internal bool DisableLighting;
 
 		/// <summary>Creates a new Material with default properties</summary>
 		public Material() {

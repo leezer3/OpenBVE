@@ -16,7 +16,6 @@ struct MaterialColor
 	vec4 specular;
 	vec3 emission;
 	float shininess;
-	int flags; //bitmask as per stored in the object
 }; 
 
 in vec3 iPosition;
@@ -31,6 +30,7 @@ uniform mat4 uCurrentTextureMatrix;
 uniform bool uIsLight;
 uniform Light uLight;
 uniform MaterialColor uMaterial;
+uniform int uMaterialFlags;
 
 out vec4 oViewPos;
 out vec2 oUv;
@@ -78,7 +78,7 @@ vec4 getLightResult(in vec3 normal, in vec4 ecPosition)
 
     findDirectionalLight(normal);
 	vec4 sceneColor = uLight.lightModel;
-	if((uMaterial.flags & 1) != 0)
+	if((uMaterialFlags & 1) != 0)
 	{
 		sceneColor = vec4(uMaterial.emission, 1.0) + uMaterial.ambient * uLight.lightModel;
 	}

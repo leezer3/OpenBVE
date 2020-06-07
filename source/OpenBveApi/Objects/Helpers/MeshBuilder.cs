@@ -82,9 +82,8 @@ namespace OpenBveApi.Objects
 								 * The new GL 3.2 renderer corrects this behaviour
 								 * Horrid workaround....
 								 */
-								Materials[i].EmissiveColorUsed = true;
+								Materials[i].DisableLighting = true;
 							}
-							Materials[i].EmissiveColor = Color24.White;
 						}
 					}
 
@@ -96,6 +95,10 @@ namespace OpenBveApi.Objects
 					if (Materials[i].TransparentColorUsed)
 					{
 						Object.Mesh.Materials[mm + i].Flags |= MaterialFlags.TransparentColor;
+					}
+					if (Materials[i].DisableLighting)
+					{
+						Object.Mesh.Materials[mm + i].Flags |= MaterialFlags.DisableLighting;
 					}
 					Object.Mesh.Materials[mm + i].Color = Materials[i].Color;
 					Object.Mesh.Materials[mm + i].TransparentColor = Materials[i].TransparentColor;

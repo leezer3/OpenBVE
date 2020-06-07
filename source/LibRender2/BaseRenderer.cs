@@ -1033,11 +1033,6 @@ namespace LibRender2
 					GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
 					Shader.SetIsFog(false);
 				}
-				else if ((material.Flags & MaterialFlags.Emissive) != 0)
-				{
-					//As material is emitting light, it must be at full brightness
-					factor = 1.0f;
-				}
 				else if (material.NighttimeTexture == null || material.NighttimeTexture == material.DaytimeTexture)
 				{
 					//No nighttime texture or both are identical- Darken the polygon to match the light conditions
@@ -1301,6 +1296,10 @@ namespace LibRender2
 					factor = 1.0f;
 				}
 
+				if ((material.Flags & MaterialFlags.DisableLighting) != 0)
+				{
+					GL.Disable(EnableCap.Lighting);
+				}
 				float alphaFactor;
 				if (material.GlowAttenuationData != 0)
 				{

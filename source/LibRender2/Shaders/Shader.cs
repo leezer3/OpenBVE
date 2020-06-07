@@ -169,7 +169,7 @@ namespace LibRender2.Shaders
 				MaterialSpecular = (short)GL.GetUniformLocation(handle, "uMaterial.specular"),
 				MaterialEmission = (short)GL.GetUniformLocation(handle, "uMaterial.emission"),
 				MaterialShininess = (short)GL.GetUniformLocation(handle, "uMaterial.shininess"),
-				MaterialFlags = (short)GL.GetUniformLocation(handle, "uMaterial.flags"),
+				MaterialFlags = (short)GL.GetUniformLocation(handle, "uMaterialFlags"),
 				MaterialIsAdditive = (short)GL.GetUniformLocation(handle, "uIsAdditive"),
 				IsFog = (short)GL.GetUniformLocation(handle, "uIsFog"),
 				FogStart = (short)GL.GetUniformLocation(handle, "uFogStart"),
