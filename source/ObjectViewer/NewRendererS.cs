@@ -325,6 +325,7 @@ namespace OpenBve
 			if (AvailableNewRenderer)
 			{
 				DefaultShader.Deactivate();
+				lastVAO = -1;
 			}
 
 			// render overlays

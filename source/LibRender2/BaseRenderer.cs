@@ -173,7 +173,8 @@ namespace LibRender2
 
 		private Color32 lastColor;
 
-		internal int lastVAO;
+		/// <summary>Holds the handle of the last VAO bound by openGL</summary>
+		public int lastVAO;
 
 		public bool ForceLegacyOpenGL
 		{
@@ -204,7 +205,7 @@ namespace LibRender2
 
 			try
 			{
-				DefaultShader = new Shader("default", "default", true);
+				DefaultShader = new Shader(this,"default", "default", true);
 				DefaultShader.Activate();
 				DefaultShader.SetMaterialAmbient(Color32.White);
 				DefaultShader.SetMaterialDiffuse(Color32.White);

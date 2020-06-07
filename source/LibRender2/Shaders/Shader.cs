@@ -27,15 +27,18 @@ namespace LibRender2.Shaders
 		public readonly UniformLayout UniformLayout;
 		private bool disposed;
 		private bool isActive;
+		private readonly BaseRenderer renderer;
 
 		/// <summary>
 		/// Constructor
 		/// </summary>
+		/// <param name="Renderer">A reference to the base renderer</param>
 		/// <param name="VertexShaderName">file path and name to vertex shader source</param>
 		/// <param name="FragmentShaderName">file path and name to fragment shader source</param>
 		/// <param name="IsFromStream"></param>
-		public Shader(string VertexShaderName, string FragmentShaderName, bool IsFromStream = false)
+		public Shader(BaseRenderer Renderer, string VertexShaderName, string FragmentShaderName, bool IsFromStream = false)
 		{
+			renderer = Renderer;
 			int status;
 			handle = GL.CreateProgram();
 
@@ -134,6 +137,7 @@ namespace LibRender2.Shaders
 			}
 			GL.UseProgram(handle);
 			isActive = true;
+			renderer.lastVAO = -1;
 		}
 
 		public VertexLayout GetVertexLayout()
@@ -184,6 +188,7 @@ namespace LibRender2.Shaders
 		{
 			isActive = false;
 			GL.UseProgram(0);
+			renderer.lastVAO = -1;
 		}
 
 		/// <summary>Cleans up, releasing the underlying openTK/OpenGL shader program</summary>
