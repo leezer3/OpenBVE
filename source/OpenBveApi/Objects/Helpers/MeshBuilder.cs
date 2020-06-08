@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
@@ -75,15 +75,12 @@ namespace OpenBveApi.Objects
 					{
 						if (!string.IsNullOrEmpty(Materials[i].NighttimeTexture))
 						{
-							if (Materials[i].EmissiveColorUsed == false)
-							{
-								/*
-								 * Versions of openBVE prior to 1.7.0 rendered polygons with two defined textures as unlit
-								 * The new GL 3.2 renderer corrects this behaviour
-								 * Horrid workaround....
-								 */
-								Materials[i].DisableLighting = true;
-							}
+							/*
+							 * Versions of openBVE prior to 1.7.0 rendered polygons with two defined textures as unlit
+							* The new GL 3.2 renderer corrects this behaviour
+							 * Horrid workaround....
+							 */
+							Materials[i].DisableLighting = true;
 						}
 					}
 

@@ -324,7 +324,7 @@ namespace OpenBve
 				{
 					DefaultShader.SetIsLight(true);
 					TransformedLightPosition = new Vector3(Lighting.OptionLightPosition.X, Lighting.OptionLightPosition.Y, -Lighting.OptionLightPosition.Z);
-					TransformedLightPosition.Transform(CurrentViewMatrix);
+					DefaultShader.SetLightPosition(TransformedLightPosition);
 					DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
 					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
 					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
