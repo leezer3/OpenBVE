@@ -597,6 +597,7 @@ namespace OpenBve {
 					break;
 				case Key.R:
 					Interface.CurrentOptions.IsUseNewRenderer = !Interface.CurrentOptions.IsUseNewRenderer;
+					Renderer.Lighting.Initialize();
 					break;
 			}
 		}
