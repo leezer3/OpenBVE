@@ -138,6 +138,7 @@ namespace LibRender2.Shaders
 			GL.UseProgram(handle);
 			isActive = true;
 			renderer.lastVAO = -1;
+			renderer.CurrentShader = this;
 		}
 
 		public VertexLayout GetVertexLayout()

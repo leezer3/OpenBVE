@@ -108,6 +108,9 @@ namespace LibRender2
 
 		private ErrorCode lastError;
 
+		/// <summary>The current shader in use</summary>
+		internal Shader CurrentShader;
+
 		public Shader DefaultShader;
 
 		/// <summary>Whether fog is enabled in the debug options</summary>
@@ -908,11 +911,18 @@ namespace LibRender2
 			}
 		}
 
-		public void RenderFace(Shader Shader, FaceState State, bool IsDebugTouchMode = false)
+		/// <summary>Draws a face using the current shader</summary>
+		/// <param name="State">The FaceState to draw</param>
+		/// <param name="IsDebugTouchMode">Whether debug touch mode</param>
+		public void RenderFace(FaceState State, bool IsDebugTouchMode = false)
 		{
-			RenderFace(Shader, State.Object, State.Face, IsDebugTouchMode);
+			RenderFace(CurrentShader, State.Object, State.Face, IsDebugTouchMode);
 		}
 
+		/// <summary>Draws a face using the specified shader</summary>
+		/// <param name="Shader">The shader to use</param>
+		/// <param name="State">The FaceState to draw</param>
+		/// <param name="IsDebugTouchMode">Whether debug touch mode</param>
 		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, bool IsDebugTouchMode = false)
 		{
 			Matrix4D modelMatrix = State.ModelMatrix * Camera.TranslationMatrix;

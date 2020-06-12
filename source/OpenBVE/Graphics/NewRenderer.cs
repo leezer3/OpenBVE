@@ -347,14 +347,7 @@ namespace OpenBve.Graphics
 			ResetOpenGlState();
 			foreach (FaceState face in VisibleObjects.OpaqueFaces)
 			{
-				if (AvailableNewRenderer)
-				{
-					RenderFace(DefaultShader, face);
-				}
-				else
-				{
-					RenderFaceImmediateMode(face);
-				}
+				face.Draw();
 			}
 
 			// alpha face
@@ -368,14 +361,7 @@ namespace OpenBve.Graphics
 
 				foreach (FaceState face in VisibleObjects.AlphaFaces)
 				{
-					if (AvailableNewRenderer)
-					{
-						RenderFace(DefaultShader, face);
-					}
-					else
-					{
-						RenderFaceImmediateMode(face);
-					}
+					face.Draw();
 				}
 			}
 			else
@@ -390,14 +376,7 @@ namespace OpenBve.Graphics
 					{
 						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].Color.A == 255)
 						{
-							if (AvailableNewRenderer)
-							{
-								RenderFace(DefaultShader, face);
-							}
-							else
-							{
-								RenderFaceImmediateMode(face);
-							}
+							face.Draw();
 						}
 					}
 				}
@@ -417,14 +396,7 @@ namespace OpenBve.Graphics
 							additive = true;
 						}
 
-						if (AvailableNewRenderer)
-						{
-							RenderFace(DefaultShader, face);
-						}
-						else
-						{
-							RenderFaceImmediateMode(face);
-						}
+						face.Draw();
 					}
 					else
 					{
@@ -433,15 +405,7 @@ namespace OpenBve.Graphics
 							SetAlphaFunc();
 							additive = false;
 						}
-
-						if (AvailableNewRenderer)
-						{
-							RenderFace(DefaultShader, face);
-						}
-						else
-						{
-							RenderFaceImmediateMode(face);
-						}
+						face.Draw();
 					}
 				}
 			}
@@ -501,14 +465,7 @@ namespace OpenBve.Graphics
 				// overlay opaque face
 				foreach (FaceState face in VisibleObjects.OverlayOpaqueFaces)
 				{
-					if (AvailableNewRenderer)
-					{
-						RenderFace(DefaultShader, face);
-					}
-					else
-					{
-						RenderFaceImmediateMode(face);
-					}
+					face.Draw();
 				}
 
 				// overlay alpha face
@@ -523,14 +480,7 @@ namespace OpenBve.Graphics
 
 					foreach (FaceState face in VisibleObjects.OverlayAlphaFaces)
 					{
-						if (AvailableNewRenderer)
-						{
-							RenderFace(DefaultShader, face);
-						}
-						else
-						{
-							RenderFaceImmediateMode(face);
-						}
+						face.Draw();
 					}
 				}
 				else
@@ -545,14 +495,7 @@ namespace OpenBve.Graphics
 						{
 							if (face.Object.Prototype.Mesh.Materials[face.Face.Material].Color.A == 255)
 							{
-								if (AvailableNewRenderer)
-								{
-									RenderFace(DefaultShader, face);
-								}
-								else
-								{
-									RenderFaceImmediateMode(face);
-								}
+								face.Draw();
 							}
 						}
 					}
@@ -572,14 +515,7 @@ namespace OpenBve.Graphics
 								additive = true;
 							}
 
-							if (AvailableNewRenderer)
-							{
-								RenderFace(DefaultShader, face);
-							}
-							else
-							{
-								RenderFaceImmediateMode(face);
-							}
+							face.Draw();
 						}
 						else
 						{
@@ -589,14 +525,7 @@ namespace OpenBve.Graphics
 								additive = false;
 							}
 
-							if (AvailableNewRenderer)
-							{
-								RenderFace(DefaultShader, face);
-							}
-							else
-							{
-								RenderFaceImmediateMode(face);
-							}
+							face.Draw();
 						}
 					}
 				}
@@ -620,14 +549,7 @@ namespace OpenBve.Graphics
 				VisibleObjects.SortPolygonsInOverlayAlphaFaces();
 				foreach (FaceState face in VisibleObjects.OverlayAlphaFaces)
 				{
-					if (AvailableNewRenderer)
-					{
-						RenderFace(DefaultShader, face);
-					}
-					else
-					{
-						RenderFaceImmediateMode(face);
-					}
+					face.Draw();
 				}
 			}
 			if (AvailableNewRenderer)
