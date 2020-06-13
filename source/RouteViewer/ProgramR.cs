@@ -268,6 +268,8 @@ namespace OpenBve {
 
 		internal static void FileDrop(object sender, FileDropEventArgs e)
 		{
+			//Seem to need to flush the WM queue after dropping a file, else it crashes nastily after load on Mono
+			Application.DoEvents();
 			CurrentlyLoading = true;
 			CurrentRouteFile = e.FileName;
 			LoadRoute();
