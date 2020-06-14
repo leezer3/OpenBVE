@@ -108,6 +108,9 @@ namespace LibRender2
 
 		private ErrorCode lastError;
 
+		/// <summary>The current shader in use</summary>
+		internal Shader CurrentShader;
+
 		public Shader DefaultShader;
 
 		/// <summary>Whether fog is enabled in the debug options</summary>
@@ -173,7 +176,8 @@ namespace LibRender2
 
 		private Color32 lastColor;
 
-		internal int lastVAO;
+		/// <summary>Holds the handle of the last VAO bound by openGL</summary>
+		public int lastVAO;
 
 		public bool ForceLegacyOpenGL
 		{
@@ -204,7 +208,7 @@ namespace LibRender2
 
 			try
 			{
-				DefaultShader = new Shader("default", "default", true);
+				DefaultShader = new Shader(this,"default", "default", true);
 				DefaultShader.Activate();
 				DefaultShader.SetMaterialAmbient(Color32.White);
 				DefaultShader.SetMaterialDiffuse(Color32.White);
@@ -809,6 +813,7 @@ namespace LibRender2
 			Shader.SetLightAmbient(Color24.White);
 			Shader.SetLightDiffuse(Color24.White);
 			Shader.SetLightSpecular(Color24.White);
+			Shader.SetLightModel(Lighting.LightModel);
 			Shader.SetMaterialAmbient(Color24.White);
 			Shader.SetMaterialDiffuse(Color24.White);
 			Shader.SetMaterialSpecular(Color24.White);
@@ -906,11 +911,18 @@ namespace LibRender2
 			}
 		}
 
-		public void RenderFace(Shader Shader, FaceState State, bool IsDebugTouchMode = false)
+		/// <summary>Draws a face using the current shader</summary>
+		/// <param name="State">The FaceState to draw</param>
+		/// <param name="IsDebugTouchMode">Whether debug touch mode</param>
+		public void RenderFace(FaceState State, bool IsDebugTouchMode = false)
 		{
-			RenderFace(Shader, State.Object, State.Face, IsDebugTouchMode);
+			RenderFace(CurrentShader, State.Object, State.Face, IsDebugTouchMode);
 		}
 
+		/// <summary>Draws a face using the specified shader</summary>
+		/// <param name="Shader">The shader to use</param>
+		/// <param name="State">The FaceState to draw</param>
+		/// <param name="IsDebugTouchMode">Whether debug touch mode</param>
 		public void RenderFace(Shader Shader, ObjectState State, MeshFace Face, bool IsDebugTouchMode = false)
 		{
 			Matrix4D modelMatrix = State.ModelMatrix * Camera.TranslationMatrix;
@@ -1030,11 +1042,6 @@ namespace LibRender2
 					GL.Enable(EnableCap.Blend);
 					GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.One);
 					Shader.SetIsFog(false);
-				}
-				else if ((material.Flags & MaterialFlags.Emissive) != 0)
-				{
-					//As material is emitting light, it must be at full brightness
-					factor = 1.0f;
 				}
 				else if (material.NighttimeTexture == null || material.NighttimeTexture == material.DaytimeTexture)
 				{
@@ -1299,6 +1306,10 @@ namespace LibRender2
 					factor = 1.0f;
 				}
 
+				if ((material.Flags & MaterialFlags.DisableLighting) != 0)
+				{
+					GL.Disable(EnableCap.Lighting);
+				}
 				float alphaFactor;
 				if (material.GlowAttenuationData != 0)
 				{

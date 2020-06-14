@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
@@ -75,17 +75,12 @@ namespace OpenBveApi.Objects
 					{
 						if (!string.IsNullOrEmpty(Materials[i].NighttimeTexture))
 						{
-							if (Materials[i].EmissiveColorUsed == false)
-							{
-								/*
-								 * Versions of openBVE prior to 1.7.0 rendered polygons with two defined textures as unlit
-								 * The new GL 3.2 renderer corrects this behaviour
-								 * Horrid workaround....
-								 */
-								Materials[i].EmissiveColorUsed = true;
-								Materials[i].EmissiveColor = Color24.White;
-							}
-
+							/*
+							 * Versions of openBVE prior to 1.7.0 rendered polygons with two defined textures as unlit
+							* The new GL 3.2 renderer corrects this behaviour
+							 * Horrid workaround....
+							 */
+							Materials[i].DisableLighting = true;
 						}
 					}
 
@@ -97,6 +92,10 @@ namespace OpenBveApi.Objects
 					if (Materials[i].TransparentColorUsed)
 					{
 						Object.Mesh.Materials[mm + i].Flags |= MaterialFlags.TransparentColor;
+					}
+					if (Materials[i].DisableLighting)
+					{
+						Object.Mesh.Materials[mm + i].Flags |= MaterialFlags.DisableLighting;
 					}
 					Object.Mesh.Materials[mm + i].Color = Materials[i].Color;
 					Object.Mesh.Materials[mm + i].TransparentColor = Materials[i].TransparentColor;

@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Net;
 using System.Windows.Forms;
@@ -908,7 +909,7 @@ namespace OpenBve {
 		}
 
 		// form closing
-		private void formMain_FormClosing(object sender, FormClosingEventArgs e)
+		private void formMain_FormClosing()
 		{
 			Interface.CurrentOptions.FullscreenMode = radiobuttonFullscreen.Checked;
 			Interface.CurrentOptions.VerticalSynchronization = comboboxVSync.SelectedIndex == 1;
@@ -1377,13 +1378,14 @@ namespace OpenBve {
 			}
 			//HACK: Call Application.DoEvents() to force the message pump to process all pending messages when the form closes
 			//This fixes the main form failing to close on Linux
-			formMain_FormClosing(sender, new FormClosingEventArgs(CloseReason.UserClosing, false));
+			formMain_FormClosing();
 			Application.DoEvents();
 			if (Program.CurrentlyRunningOnMono && sender != StartGame)
 			{
-				//On some systems, the process *still* seems to hang around, so explicity issue the Environment.Exit() call
+				//On some systems, the process *still* seems to hang around
 				//https://github.com/leezer3/OpenBVE/issues/213
-				Environment.Exit(0);
+				//Altered (again) https://github.com/cefsharp/CefSharp/issues/990#issuecomment-134962152
+				Process.GetCurrentProcess().Kill();
 			}
 		}
 
@@ -1583,7 +1585,6 @@ namespace OpenBve {
 			else
 			{
 				checkBoxUnloadTextures.Enabled = true;
-				checkBoxIsUseNewRenderer.Enabled = true;
 			}
 		}
 
@@ -1592,13 +1593,12 @@ namespace OpenBve {
 			if (checkBoxUnloadTextures.Checked)
 			{
 				//If we use display lists, a stale texture reference may remain in the GPU, resulting in untextured faces
-				checkBoxIsUseNewRenderer.Checked = true;
-				checkBoxIsUseNewRenderer.Enabled = false;
+				checkBoxLoadInAdvance.Checked = false;
+				checkBoxLoadInAdvance.Enabled = false;
 			}
 			else
 			{
-				checkBoxIsUseNewRenderer.Enabled = true;
-				checkBoxIsUseNewRenderer.Checked = false;
+				checkBoxLoadInAdvance.Enabled = true;
 			}
 		}
 

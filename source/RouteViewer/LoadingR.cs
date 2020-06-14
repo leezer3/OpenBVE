@@ -93,8 +93,6 @@ namespace OpenBve {
 			{
 				Interface.AddMessage(MessageType.Critical, false, "The route and train loader encountered the following critical error: " + ex.Message);
 			}
-
-			Complete = true;
 		}
 
 		internal static void LoadAsynchronously(string RouteFile, Encoding RouteEncoding)
@@ -108,6 +106,7 @@ namespace OpenBve {
 
 			//Set the route and train folders in the info class
 			// ReSharper disable once UnusedVariable
+			
 			Task loadThreaded = LoadThreaded();
 		}
 
@@ -165,6 +164,7 @@ namespace OpenBve {
 			Program.Renderer.CameraTrackFollower.UpdateAbsolute(FirstStationPosition, true, false);
 			Program.Renderer.Camera.Alignment = new CameraAlignment(new Vector3(0.0, 2.5, 0.0), 0.0, 0.0, 0.0, FirstStationPosition, 1.0);
 			World.UpdateAbsoluteCamera(0.0);
+			Complete = true;
 		}
 
 	}

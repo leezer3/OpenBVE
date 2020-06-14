@@ -198,7 +198,7 @@ namespace LibRender2.Objects
 					 */
 					if (list.Count == 0)
 					{
-						list.Add(new FaceState(State, face));
+						list.Add(new FaceState(State, face, renderer));
 					}
 					else
 					{
@@ -207,12 +207,12 @@ namespace LibRender2.Objects
 
 							if (list[i].Object.Prototype == State.Prototype)
 							{
-								list.Insert(i, new FaceState(State, face));
+								list.Insert(i, new FaceState(State, face, renderer));
 								break;
 							}
 							if (i == list.Count - 1)
 							{
-								list.Add(new FaceState(State, face));
+								list.Add(new FaceState(State, face, renderer));
 								break;
 							}
 						}
@@ -223,7 +223,7 @@ namespace LibRender2.Objects
 					/*
 					 * Alpha faces should be inserted at the end of the list- We're going to sort it anyway so it makes no odds
 					 */
-					list.Add(new FaceState(State, face));
+					list.Add(new FaceState(State, face, renderer));
 				}
 			}
 		}

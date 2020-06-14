@@ -91,6 +91,7 @@ namespace OpenBve
 				Program.Renderer.UpdateVisibility(Program.Renderer.CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z);
 	            Program.Sounds.Update(TimeElapsed, SoundModels.Linear);
             }
+            Program.Renderer.Lighting.UpdateLighting(Program.CurrentRoute.SecondsSinceMidnight);
             Program.Renderer.RenderScene(TimeElapsed);
             MessageManager.UpdateMessages();
             SwapBuffers();

@@ -69,6 +69,11 @@
 		public short LightSpecular = -1;
 
 		/// <summary>
+		/// The handle of "uLight.lightModel" within the shader
+		/// </summary>
+		public short LightModel = -1;
+
+		/// <summary>
 		/// The handle of "uMaterial.ambient" within the shader
 		/// </summary>
 		public short MaterialAmbient = -1;

@@ -58,7 +58,7 @@ namespace OpenBve.Graphics
 
 			try
 			{
-				pickingShader = new Shader("default", "picking", true);
+				pickingShader = new Shader(this, "default", "picking", true);
 				pickingShader.Activate();
 				pickingShader.Deactivate();
 			}
@@ -328,11 +328,11 @@ namespace OpenBve.Graphics
 				{
 					DefaultShader.SetIsLight(true);
 					TransformedLightPosition = new Vector3(Lighting.OptionLightPosition.X, Lighting.OptionLightPosition.Y, -Lighting.OptionLightPosition.Z);
-					TransformedLightPosition.Transform(CurrentViewMatrix);
 					DefaultShader.SetLightPosition(TransformedLightPosition);
 					DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
 					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
 					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
+					DefaultShader.SetLightModel(Lighting.LightModel);
 				}
 				if (OptionFog)
 				{
@@ -347,14 +347,7 @@ namespace OpenBve.Graphics
 			ResetOpenGlState();
 			foreach (FaceState face in VisibleObjects.OpaqueFaces)
 			{
-				if (AvailableNewRenderer)
-				{
-					RenderFace(DefaultShader, face);
-				}
-				else
-				{
-					RenderFaceImmediateMode(face);
-				}
+				face.Draw();
 			}
 
 			// alpha face
@@ -368,14 +361,7 @@ namespace OpenBve.Graphics
 
 				foreach (FaceState face in VisibleObjects.AlphaFaces)
 				{
-					if (AvailableNewRenderer)
-					{
-						RenderFace(DefaultShader, face);
-					}
-					else
-					{
-						RenderFaceImmediateMode(face);
-					}
+					face.Draw();
 				}
 			}
 			else
@@ -390,14 +376,7 @@ namespace OpenBve.Graphics
 					{
 						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].Color.A == 255)
 						{
-							if (AvailableNewRenderer)
-							{
-								RenderFace(DefaultShader, face);
-							}
-							else
-							{
-								RenderFaceImmediateMode(face);
-							}
+							face.Draw();
 						}
 					}
 				}
@@ -417,14 +396,7 @@ namespace OpenBve.Graphics
 							additive = true;
 						}
 
-						if (AvailableNewRenderer)
-						{
-							RenderFace(DefaultShader, face);
-						}
-						else
-						{
-							RenderFaceImmediateMode(face);
-						}
+						face.Draw();
 					}
 					else
 					{
@@ -433,15 +405,7 @@ namespace OpenBve.Graphics
 							SetAlphaFunc();
 							additive = false;
 						}
-
-						if (AvailableNewRenderer)
-						{
-							RenderFace(DefaultShader, face);
-						}
-						else
-						{
-							RenderFaceImmediateMode(face);
-						}
+						face.Draw();
 					}
 				}
 			}
@@ -485,11 +449,11 @@ namespace OpenBve.Graphics
 				{
 					DefaultShader.SetIsLight(true);
 					TransformedLightPosition = new Vector3(Lighting.OptionLightPosition.X, Lighting.OptionLightPosition.Y, -Lighting.OptionLightPosition.Z);
-					TransformedLightPosition.Transform(CurrentViewMatrix);
 					DefaultShader.SetLightPosition(TransformedLightPosition);
 					DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
 					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
 					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
+					DefaultShader.SetLightModel(Lighting.LightModel);
 				}
 				else
 				{
@@ -501,14 +465,7 @@ namespace OpenBve.Graphics
 				// overlay opaque face
 				foreach (FaceState face in VisibleObjects.OverlayOpaqueFaces)
 				{
-					if (AvailableNewRenderer)
-					{
-						RenderFace(DefaultShader, face);
-					}
-					else
-					{
-						RenderFaceImmediateMode(face);
-					}
+					face.Draw();
 				}
 
 				// overlay alpha face
@@ -523,14 +480,7 @@ namespace OpenBve.Graphics
 
 					foreach (FaceState face in VisibleObjects.OverlayAlphaFaces)
 					{
-						if (AvailableNewRenderer)
-						{
-							RenderFace(DefaultShader, face);
-						}
-						else
-						{
-							RenderFaceImmediateMode(face);
-						}
+						face.Draw();
 					}
 				}
 				else
@@ -545,14 +495,7 @@ namespace OpenBve.Graphics
 						{
 							if (face.Object.Prototype.Mesh.Materials[face.Face.Material].Color.A == 255)
 							{
-								if (AvailableNewRenderer)
-								{
-									RenderFace(DefaultShader, face);
-								}
-								else
-								{
-									RenderFaceImmediateMode(face);
-								}
+								face.Draw();
 							}
 						}
 					}
@@ -572,14 +515,7 @@ namespace OpenBve.Graphics
 								additive = true;
 							}
 
-							if (AvailableNewRenderer)
-							{
-								RenderFace(DefaultShader, face);
-							}
-							else
-							{
-								RenderFaceImmediateMode(face);
-							}
+							face.Draw();
 						}
 						else
 						{
@@ -589,14 +525,7 @@ namespace OpenBve.Graphics
 								additive = false;
 							}
 
-							if (AvailableNewRenderer)
-							{
-								RenderFace(DefaultShader, face);
-							}
-							else
-							{
-								RenderFaceImmediateMode(face);
-							}
+							face.Draw();
 						}
 					}
 				}
@@ -620,14 +549,7 @@ namespace OpenBve.Graphics
 				VisibleObjects.SortPolygonsInOverlayAlphaFaces();
 				foreach (FaceState face in VisibleObjects.OverlayAlphaFaces)
 				{
-					if (AvailableNewRenderer)
-					{
-						RenderFace(DefaultShader, face);
-					}
-					else
-					{
-						RenderFaceImmediateMode(face);
-					}
+					face.Draw();
 				}
 			}
 			if (AvailableNewRenderer)

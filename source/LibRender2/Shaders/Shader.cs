@@ -9,6 +9,7 @@ using OpenBveApi.Objects;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Vector3 = OpenBveApi.Math.Vector3;
+using Vector4 = OpenBveApi.Math.Vector4;
 
 namespace LibRender2.Shaders
 {
@@ -26,15 +27,18 @@ namespace LibRender2.Shaders
 		public readonly UniformLayout UniformLayout;
 		private bool disposed;
 		private bool isActive;
+		private readonly BaseRenderer renderer;
 
 		/// <summary>
 		/// Constructor
 		/// </summary>
+		/// <param name="Renderer">A reference to the base renderer</param>
 		/// <param name="VertexShaderName">file path and name to vertex shader source</param>
 		/// <param name="FragmentShaderName">file path and name to fragment shader source</param>
 		/// <param name="IsFromStream"></param>
-		public Shader(string VertexShaderName, string FragmentShaderName, bool IsFromStream = false)
+		public Shader(BaseRenderer Renderer, string VertexShaderName, string FragmentShaderName, bool IsFromStream = false)
 		{
+			renderer = Renderer;
 			int status;
 			handle = GL.CreateProgram();
 
@@ -133,6 +137,8 @@ namespace LibRender2.Shaders
 			}
 			GL.UseProgram(handle);
 			isActive = true;
+			renderer.lastVAO = -1;
+			renderer.CurrentShader = this;
 		}
 
 		public VertexLayout GetVertexLayout()
@@ -158,12 +164,13 @@ namespace LibRender2.Shaders
 				LightAmbient = (short)GL.GetUniformLocation(handle, "uLight.ambient"),
 				LightDiffuse = (short)GL.GetUniformLocation(handle, "uLight.diffuse"),
 				LightSpecular = (short)GL.GetUniformLocation(handle, "uLight.specular"),
+				LightModel = (short)GL.GetUniformLocation(handle, "uLight.lightModel"),
 				MaterialAmbient = (short)GL.GetUniformLocation(handle, "uMaterial.ambient"),
 				MaterialDiffuse = (short)GL.GetUniformLocation(handle, "uMaterial.diffuse"),
 				MaterialSpecular = (short)GL.GetUniformLocation(handle, "uMaterial.specular"),
 				MaterialEmission = (short)GL.GetUniformLocation(handle, "uMaterial.emission"),
 				MaterialShininess = (short)GL.GetUniformLocation(handle, "uMaterial.shininess"),
-				MaterialFlags = (short)GL.GetUniformLocation(handle, "uMaterial.flags"),
+				MaterialFlags = (short)GL.GetUniformLocation(handle, "uMaterialFlags"),
 				MaterialIsAdditive = (short)GL.GetUniformLocation(handle, "uIsAdditive"),
 				IsFog = (short)GL.GetUniformLocation(handle, "uIsFog"),
 				FogStart = (short)GL.GetUniformLocation(handle, "uFogStart"),
@@ -182,6 +189,7 @@ namespace LibRender2.Shaders
 		{
 			isActive = false;
 			GL.UseProgram(0);
+			renderer.lastVAO = -1;
 		}
 
 		/// <summary>Cleans up, releasing the underlying openTK/OpenGL shader program</summary>
@@ -260,6 +268,11 @@ namespace LibRender2.Shaders
 		public void SetLightSpecular(Color24 LightSpecular)
 		{
 			GL.Uniform3(UniformLayout.LightSpecular, LightSpecular.R / 255.0f, LightSpecular.G / 255.0f, LightSpecular.B / 255.0f);
+		}
+
+		public void SetLightModel(Vector4 LightModel)
+		{
+			GL.Uniform4(UniformLayout.LightModel, (float)LightModel.X, (float)LightModel.Y, (float)LightModel.Z, (float)LightModel.W);
 		}
 
 		public void SetMaterialAmbient(Color32 MaterialAmbient)

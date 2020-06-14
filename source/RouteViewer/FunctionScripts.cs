@@ -2,6 +2,7 @@ using System;
 using OpenBveApi.Math;
 using OpenBveApi.FunctionScripting;
 using OpenBveApi.Runtime;
+using LibRender2.Overlays;
 
 namespace OpenBve {
 	internal static class FunctionScripts {
@@ -948,7 +949,7 @@ namespace OpenBve {
 						break;
 						// timetable
 					case Instructions.TimetableVisible:
-						Function.Stack[s] = Timetable.CurrentTimetable == Timetable.TimetableState.Custom & Timetable.CustomTimetableAvailable ? 0.0 : -1.0;
+						Function.Stack[s] = Timetable.CurrentTimetable == TimeTableMode.PreferCustom & Timetable.CustomTimetableAvailable ? 0.0 : -1.0;
 						s++; break;
 					case Instructions.DistanceNextStation:
 					case Instructions.StopsNextStation:

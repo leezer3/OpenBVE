@@ -324,10 +324,11 @@ namespace OpenBve
 				{
 					DefaultShader.SetIsLight(true);
 					TransformedLightPosition = new Vector3(Lighting.OptionLightPosition.X, Lighting.OptionLightPosition.Y, -Lighting.OptionLightPosition.Z);
-					TransformedLightPosition.Transform(CurrentViewMatrix);
+					DefaultShader.SetLightPosition(TransformedLightPosition);
 					DefaultShader.SetLightAmbient(Lighting.OptionAmbientColor);
 					DefaultShader.SetLightDiffuse(Lighting.OptionDiffuseColor);
 					DefaultShader.SetLightSpecular(Lighting.OptionSpecularColor);
+					DefaultShader.SetLightModel(Lighting.LightModel);
 				}
 				if (OptionFog)
 				{
@@ -343,14 +344,7 @@ namespace OpenBve
 
 			foreach (FaceState face in VisibleObjects.OpaqueFaces)
 			{
-				if (AvailableNewRenderer)
-				{
-					RenderFace(DefaultShader, face);
-				}
-				else
-				{
-					RenderFaceImmediateMode(face);
-				}
+				face.Draw();
 			}
 
 			// alpha face
@@ -365,14 +359,7 @@ namespace OpenBve
 
 				foreach (FaceState face in VisibleObjects.AlphaFaces)
 				{
-					if (AvailableNewRenderer)
-					{
-						RenderFace(DefaultShader, face);
-					}
-					else
-					{
-						RenderFaceImmediateMode(face);
-					}
+					face.Draw();
 				}
 			}
 			else
@@ -387,14 +374,7 @@ namespace OpenBve
 					{
 						if (face.Object.Prototype.Mesh.Materials[face.Face.Material].Color.A == 255)
 						{
-							if (AvailableNewRenderer)
-							{
-								RenderFace(DefaultShader, face);
-							}
-							else
-							{
-								RenderFaceImmediateMode(face);
-							}
+							face.Draw();
 						}
 					}
 				}
@@ -414,14 +394,7 @@ namespace OpenBve
 							additive = true;
 						}
 
-						if (AvailableNewRenderer)
-						{
-							RenderFace(DefaultShader, face);
-						}
-						else
-						{
-							RenderFaceImmediateMode(face);
-						}
+						face.Draw();
 					}
 					else
 					{
@@ -431,14 +404,7 @@ namespace OpenBve
 							additive = false;
 						}
 
-						if (AvailableNewRenderer)
-						{
-							RenderFace(DefaultShader, face);
-						}
-						else
-						{
-							RenderFaceImmediateMode(face);
-						}
+						face.Draw();
 					}
 				}
 			}

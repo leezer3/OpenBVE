@@ -26,13 +26,17 @@ namespace LibRender2.Lightings
 		public Color24 OptionDiffuseColor = Color24.LightGrey;
 
 		public Color24 OptionSpecularColor = Color24.Black;  // TODO
-
+		
 		/// <summary>The current ambient light position</summary>
 		public Vector3 OptionLightPosition = new Vector3(0.223606797749979f, 0.86602540378444f, -0.447213595499958f);
 
 		/// <summary>The absolute current lighting value</summary>
 		/// <remarks>0.0f represents no light, 1.0f represents full brightness</remarks>
 		public float OptionLightingResultingAmount;
+
+		/// <summary>The light model parameters to be passed to openGL</summary>
+		/// <remarks>BEWARE: This is NOT the default set by GL1.2</remarks>
+		public Vector4 LightModel = new Vector4(0.0, 0.0, 0.0, 1.0);
 
 		internal Lighting(BaseRenderer Renderer)
 		{
@@ -46,7 +50,7 @@ namespace LibRender2.Lightings
 			{
 				GL.Light(LightName.Light0, LightParameter.Ambient,new Color4(OptionAmbientColor.R,OptionAmbientColor.G,OptionAmbientColor.B,255));
 				GL.Light(LightName.Light0, LightParameter.Diffuse, new Color4(OptionDiffuseColor.R, OptionDiffuseColor.G, OptionDiffuseColor.B, 255));
-				GL.LightModel(LightModelParameter.LightModelAmbient, new[] { 0.0f, 0.0f, 0.0f, 1.0f });
+				GL.LightModel(LightModelParameter.LightModelAmbient, new[] { (float)LightModel.X, (float)LightModel.Y, (float)LightModel.Z, (float)LightModel.W });
 				GL.Enable(EnableCap.Light0);
 			}
 			GL.Enable(EnableCap.ColorMaterial);
