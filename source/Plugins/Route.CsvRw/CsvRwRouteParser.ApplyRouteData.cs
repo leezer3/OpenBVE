@@ -434,7 +434,7 @@ namespace OpenBve
 					{
 						if (Data.Blocks[i].StationPassAlarm)
 						{
-							int b = i - 6;
+							int b = Data.BlockInterval != 25.0 ? i - (int) (150.0 / Data.BlockInterval) : i - 6;
 							if (b >= 0)
 							{
 								int j = b - Data.FirstUsedBlock;
