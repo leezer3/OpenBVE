@@ -8,7 +8,7 @@ using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Textures;
 
-namespace OpenBve
+namespace CsvRwRouteParser
 {
 	class DynamicBackgroundParser
 	{
@@ -63,7 +63,7 @@ namespace OpenBve
 												mode = BackgroundTransitionMode.None;
 												break;
 											default:
-												Program.CurrentHost.AddMessage(MessageType.Error, true, c.InnerText +  "is not a valid background fade mode in file " + fileName);
+												Plugin.CurrentHost.AddMessage(MessageType.Error, true, c.InnerText +  "is not a valid background fade mode in file " + fileName);
 												break;
 										}
 										break;
@@ -75,24 +75,24 @@ namespace OpenBve
 										}
 										catch
 										{
-											Program.CurrentHost.AddMessage(MessageType.Error, true, "BackgroundObject FileName is malformed in file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BackgroundObject FileName is malformed in file " + fileName);
 											break;
 										}
 										if (!System.IO.File.Exists(f))
 										{
-											Program.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in file " + fileName);
 										}
 										else
 										{
 											UnifiedObject obj;
-											Program.CurrentHost.LoadObject(f, System.Text.Encoding.Default, out obj);
+											Plugin.CurrentHost.LoadObject(f, System.Text.Encoding.Default, out obj);
 											o = (StaticObject) obj;
 										}
 										break;
 									case "repetitions":
 										if (!NumberFormats.TryParseDoubleVb6(Arguments[0], UnitOfLength, out repetitions))
 										{
-											Program.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid number of repetitions in " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid number of repetitions in " + fileName);
 										}
 										break;
 									case "texture":
@@ -103,28 +103,28 @@ namespace OpenBve
 										}
 										catch
 										{
-											Program.CurrentHost.AddMessage(MessageType.Error, true, "BackgroundTexture FileName is malformed in file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BackgroundTexture FileName is malformed in file " + fileName);
 											break;
 										}									
 										if (!System.IO.File.Exists(file))
 										{
-											Program.CurrentHost.AddMessage(MessageType.Error, false, "The background texture file " + c.InnerText + " does not exist in " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The background texture file " + c.InnerText + " does not exist in " + fileName);
 										}
 										else
 										{
-											Program.CurrentHost.RegisterTexture(file, new TextureParameters(null, null), out t);
+											Plugin.CurrentHost.RegisterTexture(file, new TextureParameters(null, null), out t);
 										}
 										break;
 									case "time":
-										if (!CsvRwRouteParser.TryParseTime(Arguments[0].Trim(new char[] { }), out DisplayTime))
+										if (!Parser.TryParseTime(Arguments[0].Trim(new char[] { }), out DisplayTime))
 										{
-											Program.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid time in file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid time in file " + fileName);
 										}
 										break;
 									case "transitiontime":
 										if (!NumberFormats.TryParseDoubleVb6(Arguments[0], UnitOfLength, out TransitionTime))
 										{
-											Program.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " is not a valid background transition time in " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " is not a valid background transition time in " + fileName);
 										}
 										break;
 								}

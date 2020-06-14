@@ -6,7 +6,7 @@ using System.Linq;
 using OpenBveApi.Interface;
 using OpenBveApi.Routes;
 
-namespace OpenBve
+namespace CsvRwRouteParser
 {
 	class DynamicLightParser
 	{
@@ -14,7 +14,7 @@ namespace OpenBve
 		public static bool ReadLightingXML(string fileName)
 		{
 			//Prep
-			Program.CurrentRoute.LightDefinitions = new LightDefinition[0];
+			Plugin.CurrentRoute.LightDefinitions = new LightDefinition[0];
 			//The current XML file to load
 			XmlDocument currentXML = new XmlDocument();
 			//Load the object's XML file 
@@ -55,7 +55,7 @@ namespace OpenBve
 										}
 										if (b > 255 || b < 0)
 										{
-											Program.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " is not a valid brightness value in file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " is not a valid brightness value in file " + fileName);
 											currentLight.CabBrightness = 255;
 											break;
 										}
@@ -63,7 +63,7 @@ namespace OpenBve
 										break;
 									case "time":
 										double t;
-										if (CsvRwRouteParser.TryParseTime(Arguments[0].Trim(new char[] { }), out t))
+										if (Parser.TryParseTime(Arguments[0].Trim(new char[] { }), out t))
 										{
 											currentLight.Time = (int)t;
 											tf = true;
@@ -72,7 +72,7 @@ namespace OpenBve
 										}
 										else
 										{
-											Program.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid time in file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid time in file " + fileName);
 										}
 										break;
 									case "ambientlight":
@@ -86,7 +86,7 @@ namespace OpenBve
 											}
 											else
 											{
-												Program.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid color in file " + fileName);
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid color in file " + fileName);
 											}
 										}
 										else
@@ -99,7 +99,7 @@ namespace OpenBve
 													break;
 												}
 											}
-											Program.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not contain three arguments in file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not contain three arguments in file " + fileName);
 										}
 										break;
 									case "directionallight":
@@ -113,7 +113,7 @@ namespace OpenBve
 											}
 											else
 											{
-												Program.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid color in file " + fileName);
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid color in file " + fileName);
 											}
 										}
 										else
@@ -126,7 +126,7 @@ namespace OpenBve
 													break;
 												}
 											}
-											Program.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not contain three arguments in file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not contain three arguments in file " + fileName);
 										}
 										break;
 									case "cartesianlightdirection":
@@ -141,12 +141,12 @@ namespace OpenBve
 											}
 											else
 											{
-												Program.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid direction in file " + fileName);
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid direction in file " + fileName);
 											}
 										}
 										else
 										{
-											Program.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not contain three arguments in file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not contain three arguments in file " + fileName);
 										}
 										break;
 									case "sphericallightdirection":
@@ -160,12 +160,12 @@ namespace OpenBve
 											}
 											else
 											{
-												Program.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid direction in file " + fileName);
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not parse to a valid direction in file " + fileName);
 											}
 										}
 										else
 										{
-											Program.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not contain two arguments in file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, c.InnerText + " does not contain two arguments in file " + fileName);
 										}
 										break;
 								}
@@ -175,19 +175,19 @@ namespace OpenBve
 							{
 								//HACK: No way to break out of the first loop and continue with the second, so we've got to use a variable
 								bool Break = false;
-								int l = Program.CurrentRoute.LightDefinitions.Length;
+								int l = Plugin.CurrentRoute.LightDefinitions.Length;
 								for (int i = 0; i > l; i++)
 								{
-									if (Program.CurrentRoute.LightDefinitions[i].Time == currentLight.Time)
+									if (Plugin.CurrentRoute.LightDefinitions[i].Time == currentLight.Time)
 									{
 										Break = true;
 										if (ts == null)
 										{
-											Program.CurrentHost.AddMessage(MessageType.Error, false, "Multiple undefined times were encountered in file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Multiple undefined times were encountered in file " + fileName);
 										}
 										else
 										{
-											Program.CurrentHost.AddMessage(MessageType.Error, false, "Duplicate time found: " + ts + " in file " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Duplicate time found: " + ts + " in file " + fileName);
 										}
 										break;
 									}
@@ -200,14 +200,14 @@ namespace OpenBve
 								int t = 0;
 								if (l == 1)
 								{
-									t = currentLight.Time > Program.CurrentRoute.LightDefinitions[0].Time ? 1 : 0;
+									t = currentLight.Time > Plugin.CurrentRoute.LightDefinitions[0].Time ? 1 : 0;
 								}
 								else if (l > 1)
 								{
 									for (int i = 1; i < l; i++)
 									{
 										t = i + 1;
-										if (currentLight.Time > Program.CurrentRoute.LightDefinitions[i - 1].Time && currentLight.Time < Program.CurrentRoute.LightDefinitions[i].Time)
+										if (currentLight.Time > Plugin.CurrentRoute.LightDefinitions[i - 1].Time && currentLight.Time < Plugin.CurrentRoute.LightDefinitions[i].Time)
 										{
 											break;
 										}
@@ -215,20 +215,20 @@ namespace OpenBve
 								}
 								//Resize array
 								defined = true;
-								Array.Resize(ref Program.CurrentRoute.LightDefinitions, l + 1);
+								Array.Resize(ref Plugin.CurrentRoute.LightDefinitions, l + 1);
 								if (t == l)
 								{
 									//Straight insert at the end of the array
-									Program.CurrentRoute.LightDefinitions[l] = currentLight;
+									Plugin.CurrentRoute.LightDefinitions[l] = currentLight;
 								}
 								else
 								{
 									for (int u = t; u < l; u++)
 									{
 										//Otherwise, shift all elements to compensate
-										Program.CurrentRoute.LightDefinitions[u + 1] = Program.CurrentRoute.LightDefinitions[u];
+										Plugin.CurrentRoute.LightDefinitions[u + 1] = Plugin.CurrentRoute.LightDefinitions[u];
 									}
-									Program.CurrentRoute.LightDefinitions[t] = currentLight;
+									Plugin.CurrentRoute.LightDefinitions[t] = currentLight;
 								}
 								
 							}

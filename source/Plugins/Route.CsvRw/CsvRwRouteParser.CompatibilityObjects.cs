@@ -4,9 +4,9 @@ using System.Linq;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 
-namespace OpenBve
+namespace CsvRwRouteParser
 {
-	internal partial class CsvRwRouteParser
+	internal partial class Parser
 	{
 		/// <summary>Locates the absolute on-disk path of the object to be loaded, or an available compatible replacement if not found</summary>
 		/// <param name="fileName">The object's file-name</param>
@@ -30,7 +30,7 @@ namespace OpenBve
 				return true;
 			}
 
-			if (Program.CurrentOptions.EnableBveTsHacks)
+			if (Plugin.CurrentOptions.EnableBveTsHacks)
 			{
 				string fn;
 				//The Midland Suburban Line has a malformed object zip, so let's try again....
@@ -91,7 +91,7 @@ namespace OpenBve
 						fileName = CompatibilityObjects.AvailableReplacements[i].ReplacementPath;
 						if (!string.IsNullOrEmpty(CompatibilityObjects.AvailableReplacements[i].Message))
 						{
-							Program.CurrentHost.AddMessage(MessageType.Warning, false, CompatibilityObjects.AvailableReplacements[i].Message);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, CompatibilityObjects.AvailableReplacements[i].Message);
 						}
 						CompatibilityObjectsUsed++;
 						return true;
@@ -137,7 +137,7 @@ namespace OpenBve
 						fileName = CompatibilityObjects.AvailableSounds[i].ReplacementPath;
 						if (!string.IsNullOrEmpty(CompatibilityObjects.AvailableSounds[i].Message))
 						{
-							Program.CurrentHost.AddMessage(MessageType.Warning, false, CompatibilityObjects.AvailableSounds[i].Message);
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, CompatibilityObjects.AvailableSounds[i].Message);
 						}
 						CompatibilityObjectsUsed++;
 						return true;
@@ -191,20 +191,20 @@ namespace OpenBve
 		{
 			string LimitPath = OpenBveApi.Path.CombineDirectory(CompatibilityFolder, "Limits");
 			LimitGraphicsPath = OpenBveApi.Path.CombineDirectory(LimitPath, "Graphics");
-			Program.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_straight.csv"), System.Text.Encoding.UTF8, out LimitPostStraight);
-			Program.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_left.csv"), System.Text.Encoding.UTF8, out LimitPostLeft);
-			Program.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_right.csv"), System.Text.Encoding.UTF8, out LimitPostRight);
-			Program.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_infinite.csv"), System.Text.Encoding.UTF8, out LimitPostInfinite);
-			Program.CurrentHost.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_1_digit.csv"), System.Text.Encoding.UTF8, false, out LimitOneDigit);
-			Program.CurrentHost.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_2_digits.csv"), System.Text.Encoding.UTF8, false, out LimitTwoDigits);
-			Program.CurrentHost.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_3_digits.csv"), System.Text.Encoding.UTF8, false, out LimitThreeDigits);
-			Program.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(CompatibilityFolder, "stop.csv"), System.Text.Encoding.UTF8, out StopPost);
+			Plugin.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_straight.csv"), System.Text.Encoding.UTF8, out LimitPostStraight);
+			Plugin.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_left.csv"), System.Text.Encoding.UTF8, out LimitPostLeft);
+			Plugin.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_right.csv"), System.Text.Encoding.UTF8, out LimitPostRight);
+			Plugin.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_infinite.csv"), System.Text.Encoding.UTF8, out LimitPostInfinite);
+			Plugin.CurrentHost.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_1_digit.csv"), System.Text.Encoding.UTF8, false, out LimitOneDigit);
+			Plugin.CurrentHost.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_2_digits.csv"), System.Text.Encoding.UTF8, false, out LimitTwoDigits);
+			Plugin.CurrentHost.LoadStaticObject(OpenBveApi.Path.CombineFile(LimitPath, "limit_3_digits.csv"), System.Text.Encoding.UTF8, false, out LimitThreeDigits);
+			Plugin.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(CompatibilityFolder, "stop.csv"), System.Text.Encoding.UTF8, out StopPost);
 			string TransponderPath = OpenBveApi.Path.CombineDirectory(CompatibilityFolder, "Transponders");
-			Program.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(TransponderPath, "s.csv"), System.Text.Encoding.UTF8, out TransponderS);
-			Program.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(TransponderPath, "sn.csv"), System.Text.Encoding.UTF8, out TransponderSN);
-			Program.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(TransponderPath, "falsestart.csv"), System.Text.Encoding.UTF8, out TransponderFalseStart);
-			Program.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(TransponderPath, "porigin.csv"), System.Text.Encoding.UTF8, out TransponderPOrigin);
-			Program.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(TransponderPath, "pstop.csv"), System.Text.Encoding.UTF8, out TransponderPStop);
+			Plugin.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(TransponderPath, "s.csv"), System.Text.Encoding.UTF8, out TransponderS);
+			Plugin.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(TransponderPath, "sn.csv"), System.Text.Encoding.UTF8, out TransponderSN);
+			Plugin.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(TransponderPath, "falsestart.csv"), System.Text.Encoding.UTF8, out TransponderFalseStart);
+			Plugin.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(TransponderPath, "porigin.csv"), System.Text.Encoding.UTF8, out TransponderPOrigin);
+			Plugin.CurrentHost.LoadObject(OpenBveApi.Path.CombineFile(TransponderPath, "pstop.csv"), System.Text.Encoding.UTF8, out TransponderPStop);
 		}
 
 		/// <summary>The array containing the paths to all available replacement objects</summary>
@@ -272,7 +272,7 @@ namespace OpenBve
 										o.Message = c.InnerText.Trim(new char[] { });
 										break;
 									default:
-										Program.CurrentHost.AddMessage(MessageType.Warning, false, "Unexpected entry " + c.Name + " found in compatability object XML " + fileName);
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Unexpected entry " + c.Name + " found in compatability object XML " + fileName);
 										break;
 								}
 							}
@@ -326,7 +326,7 @@ namespace OpenBve
 											o.Message = c.InnerText.Trim(new char[] { });
 											break;
 										default:
-											Program.CurrentHost.AddMessage(MessageType.Warning, false,
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false,
 												"Unexpected entry " + c.Name + " found in compatability object XML " + fileName);
 											break;
 									}
@@ -371,7 +371,7 @@ namespace OpenBve
 											LoadCompatibilityObjects(f);
 											break;
 										default:
-											Program.CurrentHost.AddMessage(MessageType.Warning, false, "Unexpected entry " + c.Name + " found in compatability XML list " + fileName);
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Unexpected entry " + c.Name + " found in compatability XML list " + fileName);
 											break;
 									}
 								}

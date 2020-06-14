@@ -6,9 +6,9 @@ using OpenBveApi.Interface;
 using OpenBveApi.Routes;
 using RouteManager2;
 
-namespace OpenBve
+namespace CsvRwRouteParser
 {
-    public class Program : RouteInterface
+    public class Plugin : RouteInterface
     {
 	    public static HostInterface CurrentHost;
 
@@ -60,7 +60,7 @@ namespace OpenBve
 	    public override bool LoadRoute(string path, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly, ref object route)
 	    {
 		    FileSystem.AppendToLogFile("Loading route file: " + path);
-		    FileSystem.AppendToLogFile("INFO: Route file hash " + CsvRwRouteParser.GetChecksum(path));
+		    FileSystem.AppendToLogFile("INFO: Route file hash " + Parser.GetChecksum(path));
 		    CurrentRoute = (CurrentRoute)route;
 		    //First, check the format of the route file
 		    //RW routes were written for BVE1 / 2, and have a different command syntax
@@ -68,7 +68,7 @@ namespace OpenBve
 		    FileSystem.AppendToLogFile("Route file format is: " + (isRw ? "RW" : "CSV"));
 		    try
 		    {
-			    CsvRwRouteParser.ParseRoute(path, isRw, Encoding, trainPath, objectPath, soundPath, null, PreviewOnly);  //FIXME: Doesn't pass the new signal set parameter yet
+			    Parser.ParseRoute(path, isRw, Encoding, trainPath, objectPath, soundPath, null, PreviewOnly);  //FIXME: Doesn't pass the new signal set parameter yet
 			    return true;
 		    }
 		    catch

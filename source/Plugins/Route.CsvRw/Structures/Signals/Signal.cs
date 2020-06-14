@@ -3,7 +3,7 @@ using OpenBveApi.Routes;
 using OpenBveApi.World;
 using RouteManager2.SignalManager;
 
-namespace OpenBve
+namespace CsvRwRouteParser
 {
 	internal class Signal
 	{

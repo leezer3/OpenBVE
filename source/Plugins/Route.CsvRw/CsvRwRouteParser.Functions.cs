@@ -8,12 +8,12 @@ using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 
-namespace OpenBve
+namespace CsvRwRouteParser
 {
 	/*
 	 * This file contains functions used by the CSV & RW route parser
 	 */
-	internal partial class CsvRwRouteParser
+	internal partial class Parser
 	{
 		/// <summary>This method checks whether a given route file is in the .rw format</summary>
 		/// <param name="FileName">The file to check</param>
@@ -130,18 +130,18 @@ namespace OpenBve
 										if (IsGlowTexture)
 										{
 											Texture texture;
-											if (Program.CurrentHost.LoadTexture(Files[i], null, out texture))
+											if (Plugin.CurrentHost.LoadTexture(Files[i], null, out texture))
 											{
 												if (texture.BitsPerPixel == 32)
 												{
 													texture.InvertLightness();
 												}
-												Program.CurrentHost.RegisterTexture(texture, new TextureParameters(null, null), out Textures[j]);
+												Plugin.CurrentHost.RegisterTexture(texture, new TextureParameters(null, null), out Textures[j]);
 											}
 										}
 										else
 										{
-											Program.CurrentHost.RegisterTexture(Files[i], new TextureParameters(null, Color24.Black), out Textures[j]);
+											Plugin.CurrentHost.RegisterTexture(Files[i], new TextureParameters(null, Color24.Black), out Textures[j]);
 										}
 										break;
 								}
@@ -178,13 +178,13 @@ namespace OpenBve
 						} else if (n >= 3) {
 							if (n > 4)
 							{
-								Program.CurrentHost.AddMessage(MessageType.Warning, false, "A maximum of 4 digits of precision are supported in TIME values");
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "A maximum of 4 digits of precision are supported in TIME values");
 								n = 4;
 							}
 							uint m; if (uint.TryParse(Expression.Substring(i + 1, 2), NumberStyles.None, Culture, out m)) {
 								uint s;
 								string ss = Expression.Substring(i + 3, n - 2);
-								if (Program.CurrentOptions.EnableBveTsHacks)
+								if (Plugin.CurrentOptions.EnableBveTsHacks)
 								{
 									/*
 									 * Handles values in the following format:
@@ -229,7 +229,7 @@ namespace OpenBve
 			//FIXME: This needs to be removed
 			//Hack to allow loading objects via the API into an array
 			StaticObject staticObject;
-			Program.CurrentHost.LoadStaticObject(fileName, encoding, preserveVertices, out staticObject);
+			Plugin.CurrentHost.LoadStaticObject(fileName, encoding, preserveVertices, out staticObject);
 			return staticObject;
 		}
 

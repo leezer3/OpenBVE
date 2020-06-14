@@ -5,9 +5,9 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using RouteManager2;
 
-namespace OpenBve
+namespace CsvRwRouteParser
 {
-	internal partial class CsvRwRouteParser
+	internal partial class Parser
 	{
 		private static void PreprocessSplitIntoExpressions(string FileName, string[] Lines, out Expression[] Expressions, bool AllowRwRouteDescription, double trackPositionOffset = 0.0) {
 			Expressions = new Expression[4096];
@@ -94,7 +94,7 @@ namespace OpenBve
 								Level++;
 								break;
 							case ')':
-								if (Program.CurrentOptions.EnableBveTsHacks)
+								if (Plugin.CurrentOptions.EnableBveTsHacks)
 								{
 
 									if (Level > 0)
@@ -104,7 +104,7 @@ namespace OpenBve
 									}
 									else
 									{
-										Program.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid additional closing parenthesis encountered at line " + i + " character " + j + " in file " + FileName);
+										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Invalid additional closing parenthesis encountered at line " + i + " character " + j + " in file " + FileName);
 									}
 								}
 								else
@@ -126,12 +126,12 @@ namespace OpenBve
 								}
 								break;
 							case '@':
-								if (Level == 1 & IsRW & Program.CurrentOptions.EnableBveTsHacks)
+								if (Level == 1 & IsRW & Plugin.CurrentOptions.EnableBveTsHacks)
 								{
 									//BVE2 doesn't care if a bracket is unclosed, fixes various routefiles
 									Level--;
 								}
-								else if (Level == 2 && IsRW & Program.CurrentOptions.EnableBveTsHacks)
+								else if (Level == 2 && IsRW & Plugin.CurrentOptions.EnableBveTsHacks)
 								{
 									int k = j;
 									while (k > 0)
@@ -208,7 +208,7 @@ namespace OpenBve
 										l--;
 										if (l < 0) {
 											continueWithNextExpression = true;
-											Program.CurrentHost.AddMessage(MessageType.Error, false, "Invalid parenthesis structure in " + t + Epilog);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid parenthesis structure in " + t + Epilog);
 										}
 										break;
 								}
@@ -220,14 +220,14 @@ namespace OpenBve
 								break;
 							}
 							if (l != 0) {
-								Program.CurrentHost.AddMessage(MessageType.Error, false, "Invalid parenthesis structure in " + t + Epilog);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid parenthesis structure in " + t + Epilog);
 								break;
 							}
 							string s = Expressions[i].Text.Substring(k + 1, h - k - 1).Trim(new char[] { });
 							switch (t.ToLowerInvariant()) {
 								case "$if":
 									if (j != 0) {
-										Program.CurrentHost.AddMessage(MessageType.Error, false, "The $If directive must not appear within another statement" + Epilog);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The $If directive must not appear within another statement" + Epilog);
 									} else {
 										double num;
 										if (double.TryParse(s, System.Globalization.NumberStyles.Float, Culture, out num)) {
@@ -262,13 +262,13 @@ namespace OpenBve
 													i++;
 												}
 												if (level != 0) {
-													Program.CurrentHost.AddMessage(MessageType.Error, false, "$EndIf missing at the end of the file" + Epilog);
+													Plugin.CurrentHost.AddMessage(MessageType.Error, false, "$EndIf missing at the end of the file" + Epilog);
 												}
 											}
 											continueWithNextExpression = true;
 											break;
 										} else {
-											Program.CurrentHost.AddMessage(MessageType.Error, false, "The $If condition does not evaluate to a number" + Epilog);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The $If condition does not evaluate to a number" + Epilog);
 										}
 									}
 									continueWithNextExpression = true;
@@ -288,7 +288,7 @@ namespace OpenBve
 											} else if (Expressions[i].Text.StartsWith("$else", StringComparison.OrdinalIgnoreCase)) {
 												Expressions[i].Text = string.Empty;
 												if (level == 1) {
-													Program.CurrentHost.AddMessage(MessageType.Error, false, "Duplicate $Else encountered" + Epilog);
+													Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Duplicate $Else encountered" + Epilog);
 												}
 											} else if (Expressions[i].Text.StartsWith("$endif", StringComparison.OrdinalIgnoreCase)) {
 												Expressions[i].Text = string.Empty;
@@ -303,10 +303,10 @@ namespace OpenBve
 											i++;
 										}
 										if (level != 0) {
-											Program.CurrentHost.AddMessage(MessageType.Error, false, "$EndIf missing at the end of the file" + Epilog);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "$EndIf missing at the end of the file" + Epilog);
 										}
 									} else {
-										Program.CurrentHost.AddMessage(MessageType.Error, false, "$Else without matching $If encountered" + Epilog);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "$Else without matching $If encountered" + Epilog);
 									}
 									continueWithNextExpression = true;
 									break;
@@ -315,13 +315,13 @@ namespace OpenBve
 									if (openIfs != 0) {
 										openIfs--;
 									} else {
-										Program.CurrentHost.AddMessage(MessageType.Error, false, "$EndIf without matching $If encountered" + Epilog);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "$EndIf without matching $If encountered" + Epilog);
 									}
 									continueWithNextExpression = true;
 									break;
 								case "$include":
 									if (j != 0) {
-										Program.CurrentHost.AddMessage(MessageType.Error, false, "The $Include directive must not appear within another statement" + Epilog);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The $Include directive must not appear within another statement" + Epilog);
 										continueWithNextExpression = true;
 										break;
 									}
@@ -344,7 +344,7 @@ namespace OpenBve
 											string value = args[2 * ia].Substring(colon + 1).TrimStart(new char[] { });
 											if (!double.TryParse(value, NumberStyles.Float, Culture, out offset)) {
 												continueWithNextExpression = true;
-												Program.CurrentHost.AddMessage(MessageType.Error, false, "The track position offset " + value + " is invalid in " + t + Epilog);
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The track position offset " + value + " is invalid in " + t + Epilog);
 												break;
 											}
 										} else {
@@ -355,7 +355,7 @@ namespace OpenBve
 										offsets[ia] = offset;
 										if (!System.IO.File.Exists(files[ia])) {
 											continueWithNextExpression = true;
-											Program.CurrentHost.AddMessage(MessageType.Error, false, "The file " + file + " could not be found in " + t + Epilog);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The file " + file + " could not be found in " + t + Epilog);
 											for (int ta = i; ta < Expressions.Length - 1; ta++)
 											{
 												Expressions[ta] = Expressions[ta + 1];
@@ -368,12 +368,12 @@ namespace OpenBve
 										{
 											if (!NumberFormats.TryParseDoubleVb6(args[2 * ia + 1], out weights[ia])) {
 												continueWithNextExpression = true;
-												Program.CurrentHost.AddMessage(MessageType.Error, false, "A weight is invalid in " + t + Epilog);
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A weight is invalid in " + t + Epilog);
 												break;
 											}
 											if (weights[ia] <= 0.0) {
 												continueWithNextExpression = true;
-												Program.CurrentHost.AddMessage(MessageType.Error, false, "A weight is not positive in " + t + Epilog);
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A weight is not positive in " + t + Epilog);
 												break;
 											}
 											weightsTotal += weights[ia];
@@ -385,11 +385,11 @@ namespace OpenBve
 									}
 									if (count == 0) {
 										continueWithNextExpression = true;
-										Program.CurrentHost.AddMessage(MessageType.Error, false, "No file was specified in " + t + Epilog);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "No file was specified in " + t + Epilog);
 										break;
 									}
 									if (!continueWithNextExpression) {
-										double number = Program.RandomNumberGenerator.NextDouble() * weightsTotal;
+										double number = Plugin.RandomNumberGenerator.NextDouble() * weightsTotal;
 										double value = 0.0;
 										int chosenIndex = 0;
 										for (int ia = 0; ia < count; ia++) {
@@ -406,7 +406,7 @@ namespace OpenBve
 										{
 											//If the encodings do not match, add a warning
 											//This is not critical, but it's a bad idea to mix and match character encodings within a routefile, as the auto-detection may sometimes be wrong
-											Program.CurrentHost.AddMessage(MessageType.Warning, false, "The text encoding of the $Include file " + files[chosenIndex] + " does not match that of the base routefile.");
+											Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The text encoding of the $Include file " + files[chosenIndex] + " does not match that of the base routefile.");
 										}
 										string[] lines = System.IO.File.ReadAllLines(files[chosenIndex], includeEncoding);
 										PreprocessSplitIntoExpressions(files[chosenIndex], lines, out expr, false, offsets[chosenIndex] + Expressions[i].TrackPositionOffset);
@@ -438,7 +438,7 @@ namespace OpenBve
 											{
 												//Must be non-negative
 												continueWithNextExpression = true;
-												Program.CurrentHost.AddMessage(MessageType.Error, false, "Index must be a non-negative character in " + t + Epilog);
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Index must be a non-negative character in " + t + Epilog);
 											}
 											else
 											{
@@ -447,7 +447,7 @@ namespace OpenBve
 										}
 										else {
 											continueWithNextExpression = true;
-											Program.CurrentHost.AddMessage(MessageType.Error, false, "Index is invalid in " + t + Epilog);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Index is invalid in " + t + Epilog);
 										}
 									} break;
 								case "$chrascii":
@@ -459,7 +459,7 @@ namespace OpenBve
 										{
 											//Standard ASCII characters from 0-127
 											continueWithNextExpression = true;
-											Program.CurrentHost.AddMessage(MessageType.Error, false, "Index does not correspond to a valid ASCII character in " + t + Epilog);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Index does not correspond to a valid ASCII character in " + t + Epilog);
 										}
 										else
 										{
@@ -469,7 +469,7 @@ namespace OpenBve
 									else
 									{
 										continueWithNextExpression = true;
-										Program.CurrentHost.AddMessage(MessageType.Error, false, "Index is invalid in " + t + Epilog);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Index is invalid in " + t + Epilog);
 									}
 								}
 									break;
@@ -482,19 +482,19 @@ namespace OpenBve
 											string s2 = s.Substring(m + 1).TrimStart(new char[] { });
 											int x; if (NumberFormats.TryParseIntVb6(s1, out x)) {
 												int y; if (NumberFormats.TryParseIntVb6(s2, out y)) {
-													int z = x + (int)Math.Floor(Program.RandomNumberGenerator.NextDouble() * (double)(y - x + 1));
+													int z = x + (int)Math.Floor(Plugin.RandomNumberGenerator.NextDouble() * (double)(y - x + 1));
 													Expressions[i].Text = Expressions[i].Text.Substring(0, j) + z.ToString(Culture) + Expressions[i].Text.Substring(h + 1);
 												} else {
 													continueWithNextExpression = true;
-													Program.CurrentHost.AddMessage(MessageType.Error, false, "Index2 is invalid in " + t + Epilog);
+													Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Index2 is invalid in " + t + Epilog);
 												}
 											} else {
 												continueWithNextExpression = true;
-												Program.CurrentHost.AddMessage(MessageType.Error, false, "Index1 is invalid in " + t + Epilog);
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Index1 is invalid in " + t + Epilog);
 											}
 										} else {
 											continueWithNextExpression = true;
-											Program.CurrentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + t + Epilog);
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Two arguments are expected in " + t + Epilog);
 										}
 									} break;
 								case "$sub":
@@ -536,11 +536,11 @@ namespace OpenBve
 													Expressions[i].Text = Expressions[i].Text.Substring(0, j) + Expressions[i].Text.Substring(n);
 												} else {
 													continueWithNextExpression = true;
-													Program.CurrentHost.AddMessage(MessageType.Error, false, "Index is expected to be non-negative in " + t + Epilog);
+													Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Index is expected to be non-negative in " + t + Epilog);
 												}
 											} else {
 												continueWithNextExpression = true;
-												Program.CurrentHost.AddMessage(MessageType.Error, false, "Index is invalid in " + t + Epilog);
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Index is invalid in " + t + Epilog);
 											}
 										} else {
 											int x;
@@ -549,11 +549,11 @@ namespace OpenBve
 													Expressions[i].Text = Expressions[i].Text.Substring(0, j) + Subs[x] + Expressions[i].Text.Substring(h + 1);
 												} else {
 													continueWithNextExpression = true;
-													Program.CurrentHost.AddMessage(MessageType.Error, false, "Index is out of range in " + t + Epilog);
+													Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Index is out of range in " + t + Epilog);
 												}
 											} else {
 												continueWithNextExpression = true;
-												Program.CurrentHost.AddMessage(MessageType.Error, false, "Index is invalid in " + t + Epilog);
+												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Index is invalid in " + t + Epilog);
 											}
 										}
 										
@@ -616,7 +616,7 @@ namespace OpenBve
 				if (NumberCheck && NumberFormats.TryParseDouble(Expressions[i].Text, UnitFactors, out x)) {
 					x += Expressions[i].TrackPositionOffset;
 					if (x >= 0.0) {
-						if (Program.CurrentOptions.EnableBveTsHacks)
+						if (Plugin.CurrentOptions.EnableBveTsHacks)
 						{
 							switch (System.IO.Path.GetFileName(Expressions[i].File.ToLowerInvariant()))
 							{
@@ -639,7 +639,7 @@ namespace OpenBve
 						}
 						
 					} else {
-						Program.CurrentHost.AddMessage(MessageType.Error, false, "Negative track position encountered at line " + Expressions[i].Line.ToString(Culture) + ", column " + Expressions[i].Column.ToString(Culture) + " in file " + Expressions[i].File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Negative track position encountered at line " + Expressions[i].Line.ToString(Culture) + ", column " + Expressions[i].Column.ToString(Culture) + " in file " + Expressions[i].File);
 					}
 				} else {
 					p[n].TrackPosition = a;

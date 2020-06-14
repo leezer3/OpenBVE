@@ -6,12 +6,12 @@ using RouteManager2.Climate;
 using RouteManager2.MessageManager;
 using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
-namespace OpenBve
+namespace CsvRwRouteParser
 {
 	/*
 	 * This file contains definitions for the generic BVE data structures as parsed from a routefile
 	 */
-	internal partial class CsvRwRouteParser
+	internal partial class Parser
 	{
 		internal struct Rail
 		{

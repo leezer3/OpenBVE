@@ -1,4 +1,4 @@
-﻿namespace OpenBve
+﻿namespace CsvRwRouteParser
 {
 	/// <summary>The different namespaces used in CSV / RW routes</summary>
 	internal enum Namespaces

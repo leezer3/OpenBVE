@@ -4,7 +4,7 @@ using RouteManager2;
 using RouteManager2.Events;
 using RouteManager2.SignalManager;
 
-namespace OpenBve
+namespace CsvRwRouteParser
 {
 	internal class Section
 	{
@@ -24,7 +24,7 @@ namespace OpenBve
 		private readonly bool Invisible;
 		private readonly SectionType Type;
 
-		internal void Create(CurrentRoute CurrentRoute, CsvRwRouteParser.Block[] Blocks, int CurrentBlock, int CurrentTrackElement, double[] SignalSpeeds, double StartingDistance, double BlockInterval)
+		internal void Create(CurrentRoute CurrentRoute, Parser.Block[] Blocks, int CurrentBlock, int CurrentTrackElement, double[] SignalSpeeds, double StartingDistance, double BlockInterval)
 		{
 			int m = CurrentRoute.Sections.Length;
 			Array.Resize(ref CurrentRoute.Sections, m + 1);

@@ -5,9 +5,9 @@ using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using RouteManager2.SignalManager;
 
-namespace OpenBve
+namespace CsvRwRouteParser
 {
-	internal partial class CsvRwRouteParser
+	internal partial class Parser
 	{
 		private class RouteData
 		{

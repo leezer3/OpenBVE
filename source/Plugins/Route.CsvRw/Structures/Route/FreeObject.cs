@@ -2,7 +2,7 @@
 using OpenBveApi.Objects;
 using OpenBveApi.World;
 
-namespace OpenBve
+namespace CsvRwRouteParser
 {
 	internal class FreeObj
 	{

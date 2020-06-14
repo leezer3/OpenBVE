@@ -3,7 +3,7 @@ using OpenBveApi.Math;
 using System.Linq;
 using OpenBveApi.Interface;
 
-namespace OpenBve
+namespace CsvRwRouteParser
 {
 	internal class Expression
 	{
@@ -65,7 +65,7 @@ namespace OpenBve
 		{
 			bool openingerror = false, closingerror = false;
 			int i, firstClosingBracket = 0;
-			if (Program.CurrentOptions.EnableBveTsHacks)
+			if (Plugin.CurrentOptions.EnableBveTsHacks)
 			{
 				if (Text.StartsWith("Train. ", StringComparison.InvariantCultureIgnoreCase))
 				{
@@ -141,7 +141,7 @@ namespace OpenBve
 							{
 								if (stationName)
 								{
-									Program.CurrentHost.AddMessage(MessageType.Error, false, "Invalid opening parenthesis encountered at line " + Line.ToString(Culture) + ", column " +
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid opening parenthesis encountered at line " + Line.ToString(Culture) + ", column " +
 									                                                         Column.ToString(Culture) + " in file " + File);
 									openingerror = true;
 								}
@@ -172,7 +172,7 @@ namespace OpenBve
 					{
 						if (RaiseErrors & !closingerror)
 						{
-							Program.CurrentHost.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 							closingerror = true;
 						}
 
@@ -183,7 +183,7 @@ namespace OpenBve
 				{
 					if (RaiseErrors & !closingerror)
 					{
-						Program.CurrentHost.AddMessage(MessageType.Error, false, "Invalid closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
+						Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 						closingerror = true;
 					}
 				}
@@ -225,7 +225,7 @@ namespace OpenBve
 						// only opening parenthesis found
 						if (RaiseErrors & !closingerror)
 						{
-							Program.CurrentHost.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 						}
 
 						ArgumentSequence = ArgumentSequence.Substring(1).TrimStart(new char[] { });
@@ -276,7 +276,7 @@ namespace OpenBve
 								{
 									if (RaiseErrors & !openingerror & !closingerror)
 									{
-										Program.CurrentHost.AddMessage(MessageType.Error, false, "Invalid syntax encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid syntax encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 										closingerror = true;
 									}
 
@@ -294,7 +294,7 @@ namespace OpenBve
 									// only opening parenthesis found
 									if (RaiseErrors & !closingerror)
 									{
-										Program.CurrentHost.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
+										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 									}
 
 									ArgumentSequence = ArgumentSequence.Substring(1).TrimStart(new char[] { });
@@ -306,7 +306,7 @@ namespace OpenBve
 							// no closing parenthesis found
 							if (RaiseErrors & !closingerror)
 							{
-								Program.CurrentHost.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 							}
 
 							Command = Text.Substring(0, i).TrimEnd(new char[] { });
@@ -328,7 +328,7 @@ namespace OpenBve
 							// only opening parenthesis found
 							if (RaiseErrors & !closingerror)
 							{
-								Program.CurrentHost.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 							}
 
 							ArgumentSequence = ArgumentSequence.Substring(1).TrimStart(new char[] { });
@@ -360,7 +360,7 @@ namespace OpenBve
 					{
 						if (RaiseErrors & !closingerror)
 						{
-							Program.CurrentHost.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Missing closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 						}
 
 						Command = Text.Substring(0, i).TrimEnd(new char[] { });
@@ -373,7 +373,7 @@ namespace OpenBve
 							i = Text.IndexOf(')');
 							if (i >= 0 & !closingerror)
 							{
-								Program.CurrentHost.AddMessage(MessageType.Error, false, "Invalid closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid closing parenthesis encountered at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 							}
 						}
 
@@ -388,7 +388,7 @@ namespace OpenBve
 			{
 				if (RaiseErrors)
 				{
-					Program.CurrentHost.AddMessage(MessageType.Error, false, "Invalid trailing semicolon encountered in " + Command + " at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
+					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid trailing semicolon encountered in " + Command + " at line " + Line.ToString(Culture) + ", column " + Column.ToString(Culture) + " in file " + File);
 				}
 
 				while (Command.EndsWith(";"))

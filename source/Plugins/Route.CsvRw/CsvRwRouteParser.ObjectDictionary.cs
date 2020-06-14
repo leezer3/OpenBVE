@@ -4,7 +4,7 @@ using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using RouteManager2.SignalManager;
 
-namespace OpenBve
+namespace CsvRwRouteParser
 {
 	/// <inheritdoc />
 	/// <summary>Defines a dictionary of objects</summary>
@@ -19,7 +19,7 @@ namespace OpenBve
 			if (this.ContainsKey(key))
 			{
 				this[key] = unifiedObject;
-				Program.CurrentHost.AddMessage(MessageType.Warning, false, "The " + Type + " with an index of " + key + " has been declared twice: The most recent declaration will be used.");
+				Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The " + Type + " with an index of " + key + " has been declared twice: The most recent declaration will be used.");
 			}
 			else
 			{
@@ -36,7 +36,7 @@ namespace OpenBve
 			if (this.ContainsKey(key))
 			{
 				this[key] = staticObject;
-				Program.CurrentHost.AddMessage(MessageType.Warning, false, "The " + Type + " with an index of " + key + " has been declared twice: The most recent declaration will be used.");
+				Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The " + Type + " with an index of " + key + " has been declared twice: The most recent declaration will be used.");
 			}
 			else
 			{
@@ -49,7 +49,7 @@ namespace OpenBve
 			if (this.ContainsKey(key))
 			{
 				this[key] = unifiedObject;
-				Program.CurrentHost.AddMessage(MessageType.Warning, false, "The object with an index of " + key + " has been declared twice: The most recent declaration will be used.");
+				Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The object with an index of " + key + " has been declared twice: The most recent declaration will be used.");
 			}
 			else
 			{
@@ -62,7 +62,7 @@ namespace OpenBve
 			if (this.ContainsKey(key))
 			{
 				this[key] = staticObject;
-				Program.CurrentHost.AddMessage(MessageType.Warning, false, "The object with an index of " + key + " has been declared twice: The most recent declaration will be used.");
+				Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The object with an index of " + key + " has been declared twice: The most recent declaration will be used.");
 			}
 			else
 			{
@@ -83,7 +83,7 @@ namespace OpenBve
 			if (this.ContainsKey(key))
 			{
 				this[key] = signal;
-				Program.CurrentHost.AddMessage(MessageType.Warning, false, "The Signal with an index of " + key + " has been declared twice: The most recent declaration will be used.");
+				Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The Signal with an index of " + key + " has been declared twice: The most recent declaration will be used.");
 			}
 			else
 			{
@@ -104,7 +104,7 @@ namespace OpenBve
 			if (this.ContainsKey(key))
 			{
 				this[key] = handle;
-				Program.CurrentHost.AddMessage(MessageType.Warning, false, "The Background with an index of " + key + " has been declared twice: The most recent declaration will be used.");
+				Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The Background with an index of " + key + " has been declared twice: The most recent declaration will be used.");
 			}
 			else
 			{
@@ -123,7 +123,7 @@ namespace OpenBve
 			if (this.ContainsKey(key))
 			{
 				this[key] = dict;
-				Program.CurrentHost.AddMessage(MessageType.Warning, false, "The Background with an index of " + key + " has been declared twice: The most recent declaration will be used.");
+				Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The Background with an index of " + key + " has been declared twice: The most recent declaration will be used.");
 			}
 			else
 			{

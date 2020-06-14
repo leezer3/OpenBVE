@@ -2,7 +2,7 @@
 using OpenBveApi.Math;
 using RouteManager2.Stations;
 
-namespace OpenBve
+namespace CsvRwRouteParser
 {
 	internal class Stop
 	{

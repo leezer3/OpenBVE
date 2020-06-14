@@ -11,8 +11,8 @@ using RouteManager2;
 using RouteManager2.SignalManager;
 using RouteManager2.Stations;
 
-namespace OpenBve {
-	internal partial class CsvRwRouteParser {
+namespace CsvRwRouteParser {
+	internal partial class Parser {
 		internal static string ObjectPath;
 		internal static string SoundPath;
 		internal static string TrainPath;
@@ -24,7 +24,7 @@ namespace OpenBve {
 		// parse route
 		internal static void ParseRoute(string FileName, bool isRW, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, string compatibilitySignalSet, bool PreviewOnly)
 		{
-			CurrentRoute = Program.CurrentRoute;
+			CurrentRoute = Plugin.CurrentRoute;
 			/*
 			 * Store paths for later use
 			 */
@@ -34,19 +34,19 @@ namespace OpenBve {
 			IsRW = isRW;
 			if (!PreviewOnly)
 			{
-				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+				for (int i = 0; i < Plugin.CurrentHost.Plugins.Length; i++)
 				{
-					if (Program.CurrentHost.Plugins[i].Object != null)
+					if (Plugin.CurrentHost.Plugins[i].Object != null)
 					{
-						Program.CurrentHost.Plugins[i].Object.SetObjectParser(SoundPath); //HACK: Pass out the sound folder path to those plugins which consume it
+						Plugin.CurrentHost.Plugins[i].Object.SetObjectParser(SoundPath); //HACK: Pass out the sound folder path to those plugins which consume it
 					}
 				}
 			}
 			freeObjCount = 0;
 			railtypeCount = 0;
-			Program.CurrentOptions.UnitOfSpeed = "km/h";
-			Program.CurrentOptions.SpeedConversionFactor = 0.0;
-			CompatibilityFolder = Program.FileSystem.GetDataFolder("Compatibility");
+			Plugin.CurrentOptions.UnitOfSpeed = "km/h";
+			Plugin.CurrentOptions.SpeedConversionFactor = 0.0;
+			CompatibilityFolder = Plugin.FileSystem.GetDataFolder("Compatibility");
 			if (!PreviewOnly)
 			{
 				CompatibilityObjects.LoadCompatibilityObjects(OpenBveApi.Path.CombineFile(CompatibilityFolder,"CompatibilityObjects.xml"));
@@ -136,9 +136,9 @@ namespace OpenBve {
 				Data.Signals = new SignalDictionary();
 				if (compatibilitySignalSet == null) //not selected via main form
 				{
-					compatibilitySignalSet = Path.CombineFile(Program.FileSystem.GetDataFolder("Compatibility"), "Signals\\Japanese.xml");
+					compatibilitySignalSet = Path.CombineFile(Plugin.FileSystem.GetDataFolder("Compatibility"), "Signals\\Japanese.xml");
 				}
-				CompatibilitySignalObject.ReadCompatibilitySignalXML(Program.CurrentHost, compatibilitySignalSet, out Data.CompatibilitySignals, out CompatibilityObjects.SignalPost, out Data.SignalSpeeds);
+				CompatibilitySignalObject.ReadCompatibilitySignalXML(Plugin.CurrentHost, compatibilitySignalSet, out Data.CompatibilitySignals, out CompatibilityObjects.SignalPost, out Data.SignalSpeeds);
 				// game data
 				CurrentRoute.Sections = new []{new RouteManager2.SignalManager.Section() };
 				CurrentRoute.Sections[0].Aspects = new SectionAspect[]
@@ -151,7 +151,7 @@ namespace OpenBve {
 				CurrentRoute.Sections[0].Trains = new AbstractTrain[] {};
 			}
 			ParseRouteForData(FileName, Encoding, ref Data, PreviewOnly);
-			if (Program.Cancel)
+			if (Plugin.Cancel)
 			{
 				return;
 			}
@@ -203,23 +203,23 @@ namespace OpenBve {
 			//Apply parameters to object loaders
 			if (!PreviewOnly)
 			{
-				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+				for (int i = 0; i < Plugin.CurrentHost.Plugins.Length; i++)
 				{
-					if (Program.CurrentHost.Plugins[i].Object != null)
+					if (Plugin.CurrentHost.Plugins[i].Object != null)
 					{
-						Program.CurrentHost.Plugins[i].Object.SetCompatibilityHacks(Program.CurrentOptions.EnableBveTsHacks, CylinderHack);
+						Plugin.CurrentHost.Plugins[i].Object.SetCompatibilityHacks(Plugin.CurrentOptions.EnableBveTsHacks, CylinderHack);
 						//Remember that these will be ignored if not the correct plugin
-						Program.CurrentHost.Plugins[i].Object.SetObjectParser(Program.CurrentOptions.CurrentXParser);
-						Program.CurrentHost.Plugins[i].Object.SetObjectParser(Program.CurrentOptions.CurrentObjParser);
+						Plugin.CurrentHost.Plugins[i].Object.SetObjectParser(Plugin.CurrentOptions.CurrentXParser);
+						Plugin.CurrentHost.Plugins[i].Object.SetObjectParser(Plugin.CurrentOptions.CurrentObjParser);
 					}
 				}
 			}
 			
 			for (int j = 0; j < Expressions.Length; j++) {
-				Program.CurrentProgress = (double)j * progressFactor;
+				Plugin.CurrentProgress = (double)j * progressFactor;
 				if ((j & 255) == 0) {
 					System.Threading.Thread.Sleep(1);
-					if (Program.Cancel) return;
+					if (Plugin.Cancel) return;
 				}
 				if (Expressions[j].Text.StartsWith("[") & Expressions[j].Text.EndsWith("]")) {
 					Section = Expressions[j].Text.Substring(1, Expressions[j].Text.Length - 2).Trim(new char[] { });
@@ -352,16 +352,16 @@ namespace OpenBve {
 										string a = Indices.Substring(0, h).TrimEnd(new char[] { });
 										string b = Indices.Substring(h + 1).TrimStart(new char[] { });
 										if (a.Length > 0 && !NumberFormats.TryParseIntVb6(a, out CommandIndex1)) {
-											Program.CurrentHost.AddMessage(MessageType.Error, false, "Invalid first index appeared at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File + ".");
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid first index appeared at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File + ".");
 											Command = null;
 										} 
 										if (b.Length > 0 && !NumberFormats.TryParseIntVb6(b, out CommandIndex2)) {
-											Program.CurrentHost.AddMessage(MessageType.Error, false, "Invalid second index appeared at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File + ".");
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid second index appeared at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File + ".");
 											Command = null;
 										}
 									} else {
 										if (Indices.Length > 0 && !NumberFormats.TryParseIntVb6(Indices, out CommandIndex1)) {
-											Program.CurrentHost.AddMessage(MessageType.Error, false, "Invalid index appeared at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File + ".");
+											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid index appeared at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File + ".");
 											Command = null;
 										}
 									}
@@ -416,10 +416,10 @@ namespace OpenBve {
 			
 			// process track namespace
 			for (int j = 0; j < Expressions.Length; j++) {
-				Program.CurrentProgress = 0.3333 + (double)j * progressFactor;
+				Plugin.CurrentProgress = 0.3333 + (double)j * progressFactor;
 				if ((j & 255) == 0) {
 					System.Threading.Thread.Sleep(1);
-					if (Program.Cancel) return;
+					if (Plugin.Cancel) return;
 				}
 				if (Data.LineEndingFix)
 				{
@@ -450,11 +450,11 @@ namespace OpenBve {
 					if (NumberCheck && NumberFormats.TryParseDouble(Command, UnitOfLength, out Number)) {
 						// track position
 						if (ArgumentSequence.Length != 0) {
-							Program.CurrentHost.AddMessage(MessageType.Error, false, "A track position must not contain any arguments at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A track position must not contain any arguments at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 						} else if (Number < 0.0) {
-							Program.CurrentHost.AddMessage(MessageType.Error, false, "Negative track position encountered at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Negative track position encountered at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 						} else {
-							if (Program.CurrentOptions.EnableBveTsHacks && IsRW && Number == 4535545100)
+							if (Plugin.CurrentOptions.EnableBveTsHacks && IsRW && Number == 4535545100)
 							{
 								//WMATA Red line has an erroneous track position causing an out of memory cascade
 								Number = 45355;
@@ -536,7 +536,7 @@ namespace OpenBve {
 								case "cycle":
 									break;
 								default:
-									Program.CurrentHost.AddMessage(MessageType.Warning, false, "The command " + Command + " is not supported at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
+									Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "The command " + Command + " is not supported at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 									break;
 							}
 							

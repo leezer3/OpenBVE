@@ -1,13 +1,13 @@
 ﻿using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 
-namespace OpenBve
+namespace CsvRwRouteParser
 {
-	internal partial class CsvRwRouteParser
+	internal partial class Parser
 	{
 		private static void CheckRouteSpecificFixes(string FileName, ref RouteData Data, ref Expression[] Expressions, bool PreviewOnly)
 		{
-			if (Program.CurrentOptions.EnableBveTsHacks == false)
+			if (Plugin.CurrentOptions.EnableBveTsHacks == false)
 			{
 				return;
 			}
@@ -16,33 +16,33 @@ namespace OpenBve
 			{
 				case "F0D6AC84D94F63144F9ED5497CDF7697BDB45FF11223E2C001CF8BDA943D4E66":
 					//Jundiai-Francisco Morato.rw
-					Program.CurrentHost.AddMessage(MessageType.Warning, false, "Jundiai - Francisco Morato routefile detected- Applying fix to line endings.");
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Jundiai - Francisco Morato routefile detected- Applying fix to line endings.");
 					Data.LineEndingFix = true;
 					break;
 				case "7C21D03D487E36CCA2D9D1003732614BEEF682E421CB861E8632418CCD8D9D41":
 					//kurra_fine1.csv
 					Data.IgnorePitchRoll = true;
-					Program.CurrentHost.AddMessage(MessageType.Warning, false, "Richmond- Kurrajong routefile detected- Applying fix to yaw / roll.");
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Richmond- Kurrajong routefile detected- Applying fix to yaw / roll.");
 					break;
 				case "FD99B78D5A1847070A3ED3DFEE3E3B6BD56CE578DE1CEB056AFDA799989BF14B":
 					//FVES3.rw
 					Data.IgnorePitchRoll = true;
-					Program.CurrentHost.AddMessage(MessageType.Warning, false, "Linie S3 (FVE) routefile detected- Applying fix to yaw / roll.");
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Linie S3 (FVE) routefile detected- Applying fix to yaw / roll.");
 					break;
 				case "FF2B19C253C09CB541E57AB144CE67792E069F6FC2022D918ED7CBD9B59A1994":
 					//kurrajong.csv
 					Data.IgnorePitchRoll = true;
-					Program.CurrentHost.AddMessage(MessageType.Warning, false, "Richmond- Kurrajong routefile detected- Applying fix to yaw / roll.");
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Richmond- Kurrajong routefile detected- Applying fix to yaw / roll.");
 					break;
 				case "6BFDD2746C56A64FCB5BE116C64530FFA0AD7C2889B8F77DCFFBFAD526070704":
 					//camden_17.csv
 					Data.IgnorePitchRoll = true;
-					Program.CurrentHost.AddMessage(MessageType.Warning, false, "Campbelltown- Camden routefile detected- Applying fix to yaw / roll.");
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Campbelltown- Camden routefile detected- Applying fix to yaw / roll.");
 					break;
 				case "83EE400BA3A9FE0112AD5146D12968B8BE981B28E5D27449027EFBBB6583B68A":
 					//Zwolle-Vlissingen.rw
 					Data.IgnorePitchRoll = true;
-					Program.CurrentHost.AddMessage(MessageType.Warning, false, "Zwolle - Vlissingen routefile detected- Applying fix to yaw / roll.");
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Zwolle - Vlissingen routefile detected- Applying fix to yaw / roll.");
 					break;
 				case "54281BEA1964A11925E3B1E9F6CF8DBFF39156CBE6272977150A2B7F08799DD1":
 				case "D8B88EE63CF98D271EC8A75577539752E84A8B74A46EF1B49D57FCA6A53BDBB4":
@@ -57,7 +57,7 @@ namespace OpenBve
 					//Sanbie-773-nonstop-bve4.csv
 					//Sanbie-773-rain-nonstop-bve4.csv
 					Data.IgnorePitchRoll = true;
-					Program.CurrentHost.AddMessage(MessageType.Warning, false, "Sanbie routefile detected- Applying fix to yaw / roll.");
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Sanbie routefile detected- Applying fix to yaw / roll.");
 					break;
 				case "DDBE5CFDE20F0AD7D03AFC187F70B1B6044B637109758B392B9EBA61FA169F69":
 					//目蒲線普.csv
@@ -75,14 +75,14 @@ namespace OpenBve
 					//Queen's Park to Harrow SILVERLINK Cl313.csv
 					//Followed by BVE4 versions, same filenames
 					CylinderHack = true;
-					Program.CurrentHost.AddMessage(MessageType.Warning, false, "Bakerloo v3 routefile detected- Applying cylinder hack.");
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Bakerloo v3 routefile detected- Applying cylinder hack.");
 					break;
 				case "AA6528402BE457A20DF77A8B7CAFBC2580F3F8326BB56B9A691A4558174AE152":
 				case "2EB087770AEC2C6A0F2AADC0A8D531117502B1AB33E94CBBC11940DA4FFF4A30":
 					//V.2.1.1 Aldwych BVE4- no fog.csv
 					//V.2.1.1 Aldwych BVE4.csv
 					CylinderHack = true;
-					Program.CurrentHost.AddMessage(MessageType.Warning, false, "Aldwych v2.1.1 routefile detected- Applying cylinder hack.");
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Aldwych v2.1.1 routefile detected- Applying cylinder hack.");
 					break;
 				case "9D87539BAC426DE5B1ECB638A935EF8AC37B31AD6B16D645B1D3F2A7E2D1B23F":
 				case "078324311EC9048F313513849B5EBDCF3C3CAF193520F947258324FEDDD6A2BD":
@@ -97,7 +97,7 @@ namespace OpenBve
 					//Barons Ct to Wood Green.csv
 					//Hyde Pk Cnr to Wood Green.csv
 					CylinderHack = true;
-					Program.CurrentHost.AddMessage(MessageType.Warning, false, "Picadilly v5.2 routefile detected- Applying cylinder hack.");
+					Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Picadilly v5.2 routefile detected- Applying cylinder hack.");
 					break;
 				case "C4061E0E53862BA4951A76746B2AB1AFA3A7D4126F375D5EF96E4DEBDFC969EF":
 					//citta2.csv
@@ -121,21 +121,21 @@ namespace OpenBve
 					//737 Test Flight-
 					//Arrive Night.csv
 					//Arrive.csv
-					Program.CurrentOptions.Derailments = false;
+					Plugin.CurrentOptions.Derailments = false;
 					break;
 				case "471C1CC06E55D1B40E7B992028FA25200E480A37778E51B1B0F36BE475B250AF":
 					//Iiyama 2060-
 					//9001.csv
 					Expressions[434].Text = ".section 0; 103; 104; 105; 106";
-					if (Program.CurrentOptions.CurrentXParser == XParsers.Original)
+					if (Plugin.CurrentOptions.CurrentXParser == XParsers.Original)
 					{
 						//Various broken stuff with the original parser, either Assimp or new will do
-						Program.CurrentOptions.CurrentXParser = XParsers.NewXParser;
+						Plugin.CurrentOptions.CurrentXParser = XParsers.NewXParser;
 					}
 					break;
 				case "B97E93C1A21B43CCDA2C504F254E6F8FF099FD51E502E2EE875E6B05FBDE5326":
 					//NYCT-L.csv
-					Program.CurrentOptions.Toppling = false;
+					Plugin.CurrentOptions.Toppling = false;
 					break;
 				case "B44150CA3636B904E2A0058902CA739DE3F7B24D5D551C7FFD53597F3157FB79":
 					//M4.csv
@@ -146,8 +146,8 @@ namespace OpenBve
 				case "5E976BA173F3267271746FB161730FFC205FAC85A38DB369BDC2FB25297B05E1":
 					//spaceroute1.csv
 					Data.IgnorePitchRoll = true;
-					Program.CurrentOptions.Derailments = false;
-					Program.CurrentOptions.Toppling = false;
+					Plugin.CurrentOptions.Derailments = false;
+					Plugin.CurrentOptions.Toppling = false;
 					break;
 				case "64F6EECA5B5976F271DC9686C585026A1A5732E743A1BA1DB6DC57C6672E9F3B":
 				case "FEFAF4332990CDDBC8F563010B539320AD00FB49CC6EFB14546FE30A65752752":
@@ -183,8 +183,8 @@ namespace OpenBve
 					//all2000.csv
 					if (!PreviewOnly)
 					{
-						Data.Structure.Ground.Add(1, new StaticObject(Program.CurrentHost));
-						Data.Structure.RailObjects.Add(16, new StaticObject(Program.CurrentHost));
+						Data.Structure.Ground.Add(1, new StaticObject(Plugin.CurrentHost));
+						Data.Structure.RailObjects.Add(16, new StaticObject(Plugin.CurrentHost));
 						Expressions[376].Text = ".freeobj 2;17;1.6;0;0";
 						Expressions[396].Text = ".freeobj 2;17;1.6;0;0";
 						Expressions[415].Text = ".freeobj 0;15;2;0;0";

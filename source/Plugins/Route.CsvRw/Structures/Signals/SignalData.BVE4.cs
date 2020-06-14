@@ -7,7 +7,7 @@ using OpenBveApi.Textures;
 using OpenBveApi.World;
 using RouteManager2.SignalManager;
 
-namespace OpenBve
+namespace CsvRwRouteParser
 {
 	/// <summary>Defines a BVE 4 standard signal:
 	/// A signal has a face based mesh and glow
@@ -34,9 +34,9 @@ namespace OpenBve
 					}
 				}
 
-				AnimatedObjectCollection aoc = new AnimatedObjectCollection(Program.CurrentHost);
+				AnimatedObjectCollection aoc = new AnimatedObjectCollection(Plugin.CurrentHost);
 				aoc.Objects = new AnimatedObject[1];
-				aoc.Objects[0] = new AnimatedObject(Program.CurrentHost);
+				aoc.Objects[0] = new AnimatedObject(Plugin.CurrentHost);
 				aoc.Objects[0].States = new ObjectState[zn];
 				int zi = 0;
 				string expr = "";
@@ -44,7 +44,7 @@ namespace OpenBve
 				{
 					bool qs = l < SignalTextures.Length && SignalTextures[l] != null;
 					bool qg = l < GlowTextures.Length && GlowTextures[l] != null;
-					StaticObject so = new StaticObject(Program.CurrentHost);
+					StaticObject so = new StaticObject(Plugin.CurrentHost);
 					StaticObject go = null;
 					if (qs & qg)
 					{
@@ -103,8 +103,8 @@ namespace OpenBve
 					expr += " ?";
 				}
 
-				aoc.Objects[0].StateFunction = new FunctionScript(Program.CurrentHost, expr, false);
-				aoc.Objects[0].RefreshRate = 1.0 + 0.01 * Program.RandomNumberGenerator.NextDouble();
+				aoc.Objects[0].StateFunction = new FunctionScript(Plugin.CurrentHost, expr, false);
+				aoc.Objects[0].RefreshRate = 1.0 + 0.01 * Plugin.RandomNumberGenerator.NextDouble();
 				aoc.CreateObject(wpos, RailTransformation, AuxTransformation, SectionIndex, AccurateObjectDisposal, StartingDistance, EndingDistance, BlockInterval, TrackPosition, 1.0, false);
 			}
 		}
