@@ -521,6 +521,10 @@ namespace CsvRwRouteParser {
 								nameSpace = Command.Substring(0, period).ToLowerInvariant();
 								Command = Command.Substring(period + 1).ToLowerInvariant();
 							}
+							else if (Command.StartsWith("signal", StringComparison.InvariantCultureIgnoreCase))
+							{
+								nameSpace = "";
+							}
 
 							switch (nameSpace)
 							{

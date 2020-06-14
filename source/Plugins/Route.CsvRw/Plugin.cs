@@ -10,17 +10,17 @@ namespace CsvRwRouteParser
 {
     public class Plugin : RouteInterface
     {
-	    public static HostInterface CurrentHost;
+	    internal static HostInterface CurrentHost;
 
-	    public static CurrentRoute CurrentRoute;
+	    internal static CurrentRoute CurrentRoute;
 
-	    public static Random RandomNumberGenerator = new Random();
+	    internal static Random RandomNumberGenerator = new Random();
 
-	    public static FileSystem FileSystem;
+	    internal static FileSystem FileSystem;
 
-	    public static bool EnableBveTsHacks;
+	    internal static bool EnableBveTsHacks;
 
-	    public static BaseOptions CurrentOptions;
+	    internal static BaseOptions CurrentOptions;
 
 	    /// <summary>Called when the plugin is loaded.</summary>
 	    /// <param name="host">The host that loaded the plugin.</param>

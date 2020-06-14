@@ -208,7 +208,12 @@ namespace CsvRwRouteParser
 									}
 								}
 
-								string f = OpenBveApi.Path.CombineFile(TrainPath, Arguments[0]);
+								string f = string.Empty;
+								if (!string.IsNullOrEmpty(TrainPath))
+								{
+									f = OpenBveApi.Path.CombineFile(TrainPath, Arguments[0]);
+								}
+									
 								if (!System.IO.File.Exists(f))
 								{
 									f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
@@ -257,7 +262,12 @@ namespace CsvRwRouteParser
 									}
 								}
 
-								string f = OpenBveApi.Path.CombineFile(TrainPath, Arguments[0]);
+								string f = string.Empty;
+								if(!string.IsNullOrEmpty(TrainPath))
+								{
+									f = OpenBveApi.Path.CombineFile(TrainPath, Arguments[0]);
+								}
+
 								if (!System.IO.File.Exists(f))
 								{
 									f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
