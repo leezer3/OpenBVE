@@ -377,8 +377,9 @@ namespace CsvRwRouteParser {
 							if (period != -1)
 							{
 								nameSpace = Command.Substring(0, period).ToLowerInvariant();
-								Command = Command.Substring(period + 1).ToLowerInvariant();
+								Command = Command.Substring(period + 1);
 							}
+							Command = Command.ToLowerInvariant();
 							
 							switch (nameSpace)
 							{
@@ -519,12 +520,13 @@ namespace CsvRwRouteParser {
 							if (period != -1)
 							{
 								nameSpace = Command.Substring(0, period).ToLowerInvariant();
-								Command = Command.Substring(period + 1).ToLowerInvariant();
+								Command = Command.Substring(period + 1);
 							}
-							else if (Command.StartsWith("signal", StringComparison.InvariantCultureIgnoreCase))
+							if (nameSpace.StartsWith("signal", StringComparison.InvariantCultureIgnoreCase))
 							{
 								nameSpace = "";
 							}
+							Command = Command.ToLowerInvariant();
 
 							switch (nameSpace)
 							{
