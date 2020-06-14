@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Security.Cryptography;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
+using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 
@@ -245,6 +247,74 @@ namespace CsvRwRouteParser
 				byte[] checksum = sha.ComputeHash(stream);
 				return BitConverter.ToString(checksum).Replace("-", string.Empty);
 			}
+		}
+
+		private static string[] SplitArguments(string ArgumentSequence)
+		{
+			string[] Arguments;
+			{
+				int n = 0;
+				for (int k = 0; k < ArgumentSequence.Length; k++) {
+					if (IsRW & ArgumentSequence[k] == ',') {
+						n++;
+					} else if (ArgumentSequence[k] == ';') {
+						n++;
+					}
+				}
+				Arguments = new string[n + 1];
+				int a = 0, h = 0;
+				for (int k = 0; k < ArgumentSequence.Length; k++) {
+					if (IsRW & ArgumentSequence[k] == ',') {
+						Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim(new char[] { });
+						a = k + 1; h++;
+					} else if (ArgumentSequence[k] == ';') {
+						Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim(new char[] { });
+						a = k + 1; h++;
+					}
+				}
+				if (ArgumentSequence.Length - a > 0) {
+					Arguments[h] = ArgumentSequence.Substring(a).Trim(new char[] { });
+					h++;
+				}
+				Array.Resize<string>(ref Arguments, h);
+			}
+			return Arguments;
+		}
+
+		private static int[] FindIndices(string Command, Expression Expression)
+		{
+			int[] commandIndices = { 0, 0};
+			if (Command != null && Command.EndsWith(")")) {
+				for (int k = Command.Length - 2; k >= 0; k--) {
+					if (Command[k] == '(')
+					{
+						string Indices = Command.Substring(k + 1, Command.Length - k - 2).TrimStart(new char[] { });
+						Command = Command.Substring(0, k).TrimEnd(new char[] { });
+						int h = Indices.IndexOf(";", StringComparison.Ordinal);
+						if (h >= 0)
+						{
+							string a = Indices.Substring(0, h).TrimEnd(new char[] { });
+							string b = Indices.Substring(h + 1).TrimStart(new char[] { });
+							if (a.Length > 0 && !NumberFormats.TryParseIntVb6(a, out commandIndices[0])) {
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid first index appeared at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File + ".");
+								Command = null;
+							} 
+							if (b.Length > 0 && !NumberFormats.TryParseIntVb6(b, out commandIndices[1])) {
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid second index appeared at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File + ".");
+								Command = null;
+							}
+						} else {
+							if (Indices.Length > 0 && !NumberFormats.TryParseIntVb6(Indices, out commandIndices[0])) {
+								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid index appeared at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File + ".");
+								Command = null;
+							}
+						}
+						break;
+					}
+				}
+			}
+
+			return commandIndices;
 		}
 	}
 }

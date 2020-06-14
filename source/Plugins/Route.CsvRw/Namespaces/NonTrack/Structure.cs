@@ -12,7 +12,7 @@ namespace CsvRwRouteParser
 {
 	internal partial class Parser
 	{
-		private static void ParseStructureCommand(string Command, string[] Arguments, int Index, int Index1, Encoding Encoding, double[] UnitOfLength, Expression Expression, ref RouteData Data, bool PreviewOnly)
+		private static void ParseStructureCommand(string Command, string[] Arguments, int[] commandIndices, Encoding Encoding, double[] UnitOfLength, Expression Expression, ref RouteData Data, bool PreviewOnly)
 		{
 			CultureInfo Culture = CultureInfo.InvariantCulture;
 			switch (Command)
@@ -21,7 +21,7 @@ namespace CsvRwRouteParser
 				{
 					if (!PreviewOnly)
 					{
-						if (Index < 0)
+						if (commandIndices[0] < 0)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -48,7 +48,7 @@ namespace CsvRwRouteParser
 									Plugin.CurrentHost.LoadObject(f, Encoding, out obj);
 									if (obj != null)
 									{
-										Data.Structure.RailObjects.Add(Index, obj, "RailStructure");
+										Data.Structure.RailObjects.Add(commandIndices[0], obj, "RailStructure");
 									}
 								}
 							}
@@ -60,7 +60,7 @@ namespace CsvRwRouteParser
 				{
 					if (!PreviewOnly)
 					{
-						if (Index < 0)
+						if (commandIndices[0] < 0)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BeaconStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -87,7 +87,7 @@ namespace CsvRwRouteParser
 									Plugin.CurrentHost.LoadObject(f, Encoding, out obj);
 									if (obj != null)
 									{
-										Data.Structure.Beacon.Add(Index, obj, "BeaconStructure");
+										Data.Structure.Beacon.Add(commandIndices[0], obj, "BeaconStructure");
 									}
 								}
 							}
@@ -99,11 +99,11 @@ namespace CsvRwRouteParser
 				{
 					if (!PreviewOnly)
 					{
-						if (Index < 0)
+						if (commandIndices[0] < 0)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "AdditionalRailsCovered is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
-						else if (Index1 < 0)
+						else if (commandIndices[1] < 0)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "PoleStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -120,9 +120,9 @@ namespace CsvRwRouteParser
 							else
 							{
 
-								if (!Data.Structure.Poles.ContainsKey(Index))
+								if (!Data.Structure.Poles.ContainsKey(commandIndices[0]))
 								{
-									Data.Structure.Poles.Add(Index, new ObjectDictionary());
+									Data.Structure.Poles.Add(commandIndices[0], new ObjectDictionary());
 								}
 
 								string f = Arguments[0];
@@ -134,7 +134,7 @@ namespace CsvRwRouteParser
 								{
 									UnifiedObject obj;
 									Plugin.CurrentHost.LoadObject(f, Encoding, out obj);
-									Data.Structure.Poles[Index].Add(Index1, obj);
+									Data.Structure.Poles[commandIndices[0]].Add(commandIndices[1], obj);
 								}
 							}
 						}
@@ -145,7 +145,7 @@ namespace CsvRwRouteParser
 				{
 					if (!PreviewOnly)
 					{
-						if (Index < 0)
+						if (commandIndices[0] < 0)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "GroundStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -172,7 +172,7 @@ namespace CsvRwRouteParser
 									Plugin.CurrentHost.LoadObject(f, Encoding, out obj);
 									if (obj != null)
 									{
-										Data.Structure.Ground.Add(Index, obj, "GroundStructure");
+										Data.Structure.Ground.Add(commandIndices[0], obj, "GroundStructure");
 									}
 								}
 							}
@@ -184,7 +184,7 @@ namespace CsvRwRouteParser
 				{
 					if (!PreviewOnly)
 					{
-						if (Index < 0)
+						if (commandIndices[0] < 0)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Left WallStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -211,7 +211,7 @@ namespace CsvRwRouteParser
 									Plugin.CurrentHost.LoadObject(f, Encoding, out obj);
 									if (obj != null)
 									{
-										Data.Structure.WallL.Add(Index, obj, "Left WallStructure");
+										Data.Structure.WallL.Add(commandIndices[0], obj, "Left WallStructure");
 									}
 								}
 							}
@@ -223,7 +223,7 @@ namespace CsvRwRouteParser
 				{
 					if (!PreviewOnly)
 					{
-						if (Index < 0)
+						if (commandIndices[0] < 0)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Right WallStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -250,7 +250,7 @@ namespace CsvRwRouteParser
 									Plugin.CurrentHost.LoadObject(f, Encoding, out obj);
 									if (obj != null)
 									{
-										Data.Structure.WallR.Add(Index, obj, "Right WallStructure");
+										Data.Structure.WallR.Add(commandIndices[0], obj, "Right WallStructure");
 									}
 								}
 							}
@@ -262,7 +262,7 @@ namespace CsvRwRouteParser
 				{
 					if (!PreviewOnly)
 					{
-						if (Index < 0)
+						if (commandIndices[0] < 0)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Left DikeStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -289,7 +289,7 @@ namespace CsvRwRouteParser
 									Plugin.CurrentHost.LoadObject(f, Encoding, out obj);
 									if (obj != null)
 									{
-										Data.Structure.DikeL.Add(Index, obj, "Left DikeStructure");
+										Data.Structure.DikeL.Add(commandIndices[0], obj, "Left DikeStructure");
 									}
 								}
 							}
@@ -301,7 +301,7 @@ namespace CsvRwRouteParser
 				{
 					if (!PreviewOnly)
 					{
-						if (Index < 0)
+						if (commandIndices[0] < 0)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Right DikeStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -328,7 +328,7 @@ namespace CsvRwRouteParser
 									Plugin.CurrentHost.LoadObject(f, Encoding, out obj);
 									if (obj != null)
 									{
-										Data.Structure.DikeR.Add(Index, obj, "Right DikeStructure");
+										Data.Structure.DikeR.Add(commandIndices[0], obj, "Right DikeStructure");
 									}
 								}
 							}
@@ -340,7 +340,7 @@ namespace CsvRwRouteParser
 				{
 					if (!PreviewOnly)
 					{
-						if (Index < 0)
+						if (commandIndices[0] < 0)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Left FormStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -367,7 +367,7 @@ namespace CsvRwRouteParser
 									Plugin.CurrentHost.LoadObject(f, Encoding, out obj);
 									if (obj != null)
 									{
-										Data.Structure.FormL.Add(Index, obj, "Left FormStructure");
+										Data.Structure.FormL.Add(commandIndices[0], obj, "Left FormStructure");
 									}
 								}
 							}
@@ -379,7 +379,7 @@ namespace CsvRwRouteParser
 				{
 					if (!PreviewOnly)
 					{
-						if (Index < 0)
+						if (commandIndices[0] < 0)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Right FormStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -406,7 +406,7 @@ namespace CsvRwRouteParser
 									Plugin.CurrentHost.LoadObject(f, Encoding, out obj);
 									if (obj != null)
 									{
-										Data.Structure.FormR.Add(Index, obj, "Right FormStructure");
+										Data.Structure.FormR.Add(commandIndices[0], obj, "Right FormStructure");
 									}
 								}
 							}
@@ -418,7 +418,7 @@ namespace CsvRwRouteParser
 				{
 					if (!PreviewOnly)
 					{
-						if (Index < 0)
+						if (commandIndices[0] < 0)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Left FormCStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -445,7 +445,7 @@ namespace CsvRwRouteParser
 									Plugin.CurrentHost.LoadStaticObject(f, Encoding, false, out obj);
 									if (obj != null)
 									{
-										Data.Structure.FormCL.Add(Index, obj, "Left FormCStructure");
+										Data.Structure.FormCL.Add(commandIndices[0], obj, "Left FormCStructure");
 									}
 								}
 							}
@@ -457,7 +457,7 @@ namespace CsvRwRouteParser
 				{
 					if (!PreviewOnly)
 					{
-						if (Index < 0)
+						if (commandIndices[0] < 0)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Right FormCStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -484,7 +484,7 @@ namespace CsvRwRouteParser
 									Plugin.CurrentHost.LoadStaticObject(f, Encoding, false, out obj);
 									if (obj != null)
 									{
-										Data.Structure.FormCR.Add(Index, obj, "Right FormCStructure");
+										Data.Structure.FormCR.Add(commandIndices[0], obj, "Right FormCStructure");
 									}
 								}
 							}
@@ -496,7 +496,7 @@ namespace CsvRwRouteParser
 				{
 					if (!PreviewOnly)
 					{
-						if (Index < 0)
+						if (commandIndices[0] < 0)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Left RoofStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -512,17 +512,17 @@ namespace CsvRwRouteParser
 							}
 							else
 							{
-								if (Index == 0)
+								if (commandIndices[0] == 0)
 								{
 									if (!IsRW)
 									{
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex was omitted or is 0 in " + Command + " argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 									}
 
-									Index = 1;
+									commandIndices[0] = 1;
 								}
 
-								if (Index < 0)
+								if (commandIndices[0] < 0)
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex is expected to be non-negative in " + Command + " argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 								}
@@ -539,7 +539,7 @@ namespace CsvRwRouteParser
 										Plugin.CurrentHost.LoadObject(f, Encoding, out obj);
 										if (obj != null)
 										{
-											Data.Structure.RoofL.Add(Index, obj, "Left RoofStructure");
+											Data.Structure.RoofL.Add(commandIndices[0], obj, "Left RoofStructure");
 										}
 									}
 								}
@@ -552,7 +552,7 @@ namespace CsvRwRouteParser
 				{
 					if (!PreviewOnly)
 					{
-						if (Index < 0)
+						if (commandIndices[0] < 0)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Right RoofStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -568,17 +568,17 @@ namespace CsvRwRouteParser
 							}
 							else
 							{
-								if (Index == 0)
+								if (commandIndices[0] == 0)
 								{
 									if (!IsRW)
 									{
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex was omitted or is 0 in " + Command + " argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 									}
 
-									Index = 1;
+									commandIndices[0] = 1;
 								}
 
-								if (Index < 0)
+								if (commandIndices[0] < 0)
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex is expected to be non-negative in " + Command + " argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 								}
@@ -595,7 +595,7 @@ namespace CsvRwRouteParser
 										Plugin.CurrentHost.LoadObject(f, Encoding, out obj);
 										if (obj != null)
 										{
-											Data.Structure.RoofR.Add(Index, obj, "Right RoofStructure");
+											Data.Structure.RoofR.Add(commandIndices[0], obj, "Right RoofStructure");
 										}
 									}
 								}
@@ -608,7 +608,7 @@ namespace CsvRwRouteParser
 				{
 					if (!PreviewOnly)
 					{
-						if (Index < 0)
+						if (commandIndices[0] < 0)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Left RoofCStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -624,17 +624,17 @@ namespace CsvRwRouteParser
 							}
 							else
 							{
-								if (Index == 0)
+								if (commandIndices[0] == 0)
 								{
 									if (!IsRW)
 									{
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex was omitted or is 0 in " + Command + " argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 									}
 
-									Index = 1;
+									commandIndices[0] = 1;
 								}
 
-								if (Index < 0)
+								if (commandIndices[0] < 0)
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex is expected to be non-negative in " + Command + " argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 								}
@@ -651,7 +651,7 @@ namespace CsvRwRouteParser
 										Plugin.CurrentHost.LoadStaticObject(f, Encoding, false, out obj);
 										if (obj != null)
 										{
-											Data.Structure.RoofCL.Add(Index, obj, "Left RoofCStructure");
+											Data.Structure.RoofCL.Add(commandIndices[0], obj, "Left RoofCStructure");
 										}
 									}
 								}
@@ -664,7 +664,7 @@ namespace CsvRwRouteParser
 				{
 					if (!PreviewOnly)
 					{
-						if (Index < 0)
+						if (commandIndices[0] < 0)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Right RoofCStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -680,17 +680,17 @@ namespace CsvRwRouteParser
 							}
 							else
 							{
-								if (Index == 0)
+								if (commandIndices[0] == 0)
 								{
 									if (!IsRW)
 									{
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex was omitted or is 0 in " + Command + " argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 									}
 
-									Index = 1;
+									commandIndices[0] = 1;
 								}
 
-								if (Index < 0)
+								if (commandIndices[0] < 0)
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RoofStructureIndex is expected to be non-negative in " + Command + " argument at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 								}
@@ -707,7 +707,7 @@ namespace CsvRwRouteParser
 										Plugin.CurrentHost.LoadStaticObject(f, Encoding, false, out obj);
 										if (obj != null)
 										{
-											Data.Structure.RoofCR.Add(Index, obj, "Right RoofCStructure");
+											Data.Structure.RoofCR.Add(commandIndices[0], obj, "Right RoofCStructure");
 										}
 									}
 								}
@@ -720,7 +720,7 @@ namespace CsvRwRouteParser
 				{
 					if (!PreviewOnly)
 					{
-						if (Index < 0)
+						if (commandIndices[0] < 0)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Left CrackStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -747,7 +747,7 @@ namespace CsvRwRouteParser
 									Plugin.CurrentHost.LoadStaticObject(f, Encoding, true, out obj);
 									if (obj != null)
 									{
-										Data.Structure.CrackL.Add(Index, obj, "Left CrackStructure");
+										Data.Structure.CrackL.Add(commandIndices[0], obj, "Left CrackStructure");
 									}
 								}
 							}
@@ -759,7 +759,7 @@ namespace CsvRwRouteParser
 				{
 					if (!PreviewOnly)
 					{
-						if (Index < 0)
+						if (commandIndices[0] < 0)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Right CrackStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -786,7 +786,7 @@ namespace CsvRwRouteParser
 									Plugin.CurrentHost.LoadStaticObject(f, Encoding, true, out obj);
 									if (obj != null)
 									{
-										Data.Structure.CrackR.Add(Index, obj, "Right CrackStructure");
+										Data.Structure.CrackR.Add(commandIndices[0], obj, "Right CrackStructure");
 									}
 								}
 							}
@@ -798,7 +798,7 @@ namespace CsvRwRouteParser
 				{
 					if (!PreviewOnly)
 					{
-						if (Index < 0)
+						if (commandIndices[0] < 0)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "FreeObjStructureIndex is expected to be non-negative in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -825,7 +825,7 @@ namespace CsvRwRouteParser
 									Plugin.CurrentHost.LoadObject(f, Encoding, out obj);
 									if (obj != null)
 									{
-										Data.Structure.FreeObjects.Add(Index, obj, "FreeObject");
+										Data.Structure.FreeObjects.Add(commandIndices[0], obj, "FreeObject");
 									}
 								}
 							}
@@ -842,7 +842,7 @@ namespace CsvRwRouteParser
 				{
 					if (!PreviewOnly)
 					{
-						if (Index < 0)
+						if (commandIndices[0] < 0)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackgroundTextureIndex is expected to be non-negative at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
@@ -858,9 +858,9 @@ namespace CsvRwRouteParser
 							}
 							else
 							{
-								if (!Data.Backgrounds.ContainsKey(Index))
+								if (!Data.Backgrounds.ContainsKey(commandIndices[0]))
 								{
-									Data.Backgrounds.Add(Index, new StaticBackground(null, 6, false, Plugin.CurrentOptions.ViewingDistance));
+									Data.Backgrounds.Add(commandIndices[0], new StaticBackground(null, 6, false, Plugin.CurrentOptions.ViewingDistance));
 								}
 
 								string f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
@@ -890,7 +890,7 @@ namespace CsvRwRouteParser
 										try
 										{
 											BackgroundHandle h = DynamicBackgroundParser.ReadBackgroundXML(f);
-											Data.Backgrounds[Index] = h;
+											Data.Backgrounds[commandIndices[0]] = h;
 										}
 										catch
 										{
@@ -899,9 +899,9 @@ namespace CsvRwRouteParser
 									}
 									else
 									{
-										if (Data.Backgrounds[Index] is StaticBackground)
+										if (Data.Backgrounds[commandIndices[0]] is StaticBackground)
 										{
-											StaticBackground b = Data.Backgrounds[Index] as StaticBackground;
+											StaticBackground b = Data.Backgrounds[commandIndices[0]] as StaticBackground;
 											if (b != null)
 											{
 												Plugin.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out b.Texture);
@@ -920,9 +920,9 @@ namespace CsvRwRouteParser
 				{
 					if (!PreviewOnly)
 					{
-						if (Index < 0)
+						if (commandIndices[0] < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackgroundTextureIndex " + Index + " is expected to be non-negative at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackgroundTextureIndex " + commandIndices[0] + " is expected to be non-negative at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
 						else if (Arguments.Length < 1)
 						{
@@ -930,9 +930,9 @@ namespace CsvRwRouteParser
 						}
 						else
 						{
-							if (!Data.Backgrounds.ContainsKey(Index))
+							if (!Data.Backgrounds.ContainsKey(commandIndices[0]))
 							{
-								Data.Backgrounds.Add(Index, new StaticBackground(null, 6, false, Plugin.CurrentOptions.ViewingDistance));
+								Data.Backgrounds.Add(commandIndices[0], new StaticBackground(null, 6, false, Plugin.CurrentOptions.ViewingDistance));
 							}
 
 							int x;
@@ -946,7 +946,7 @@ namespace CsvRwRouteParser
 							}
 							else
 							{
-								StaticBackground b = Data.Backgrounds[Index] as StaticBackground;
+								StaticBackground b = Data.Backgrounds[commandIndices[0]] as StaticBackground;
 								if (b != null)
 								{
 									b.Repetition = x;
@@ -961,9 +961,9 @@ namespace CsvRwRouteParser
 				{
 					if (!PreviewOnly)
 					{
-						if (Index < 0)
+						if (commandIndices[0] < 0)
 						{
-							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackgroundTextureIndex " + Index + " is expected to be non-negative at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "BackgroundTextureIndex " + commandIndices[0] + " is expected to be non-negative at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}
 						else if (Arguments.Length < 1)
 						{
@@ -971,9 +971,9 @@ namespace CsvRwRouteParser
 						}
 						else
 						{
-							if (!Data.Backgrounds.ContainsKey(Index))
+							if (!Data.Backgrounds.ContainsKey(commandIndices[0]))
 							{
-								Data.Backgrounds.Add(Index, new StaticBackground(null, 6, false, Plugin.CurrentOptions.ViewingDistance));
+								Data.Backgrounds.Add(commandIndices[0], new StaticBackground(null, 6, false, Plugin.CurrentOptions.ViewingDistance));
 							}
 
 							int aspect;
@@ -987,7 +987,7 @@ namespace CsvRwRouteParser
 							}
 							else
 							{
-								StaticBackground b = Data.Backgrounds[Index] as StaticBackground;
+								StaticBackground b = Data.Backgrounds[commandIndices[0]] as StaticBackground;
 								if (b != null)
 								{
 									b.KeepAspectRatio = aspect == 1;

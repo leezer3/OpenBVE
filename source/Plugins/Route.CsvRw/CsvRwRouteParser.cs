@@ -158,10 +158,6 @@ namespace CsvRwRouteParser {
 			ApplyRouteData(FileName, ref Data, PreviewOnly);
 		}
 
-		// ================================
-
-		// parse route for data
-		
 		private static void ParseRouteForData(string FileName, System.Text.Encoding Encoding, ref RouteData Data, bool PreviewOnly) {
 			//Read the entire routefile into memory
 			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
@@ -177,20 +173,17 @@ namespace CsvRwRouteParser {
 			ParseRouteForData(FileName, Encoding, Expressions, UnitOfLength, ref Data, PreviewOnly);
 			CurrentRoute.UnitOfLength = UnitOfLength;
 		}
-
-		// preprocess sort by track position
 		
-		
-
 		private static int freeObjCount = 0;
 		private static int railtypeCount = 0;
+		private static readonly System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 
 		// parse route for data
 		private static void ParseRouteForData(string FileName, System.Text.Encoding Encoding, Expression[] Expressions, double[] UnitOfLength, ref RouteData Data, bool PreviewOnly) {
 			CurrentStation = -1;
 			CurrentStop = -1;
 			CurrentSection = 0;
-			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
+			
 			string Section = ""; bool SectionAlwaysPrefix = false;
 			int BlockIndex = 0;
 			int BlocksUsed = Data.Blocks.Length;
@@ -245,34 +238,8 @@ namespace CsvRwRouteParser {
 					if (NumberCheck && NumberFormats.TryParseDouble(Command, UnitOfLength, out Number)) {
 						// track position (ignored)
 					} else {
-						// split arguments
-						string[] Arguments;
-						{
-							int n = 0;
-							for (int k = 0; k < ArgumentSequence.Length; k++) {
-								if (IsRW & ArgumentSequence[k] == ',') {
-									n++;
-								} else if (ArgumentSequence[k] == ';') {
-									n++;
-								}
-							}
-							Arguments = new string[n + 1];
-							int a = 0, h = 0;
-							for (int k = 0; k < ArgumentSequence.Length; k++) {
-								if (IsRW & ArgumentSequence[k] == ',') {
-									Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim(new char[] { });
-									a = k + 1; h++;
-								} else if (ArgumentSequence[k] == ';') {
-									Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim(new char[] { });
-									a = k + 1; h++;
-								}
-							}
-							if (ArgumentSequence.Length - a > 0) {
-								Arguments[h] = ArgumentSequence.Substring(a).Trim(new char[] { });
-								h++;
-							}
-							Array.Resize<string>(ref Arguments, h);
-						}
+						string[] Arguments = SplitArguments(ArgumentSequence);
+
 						// preprocess command
 						if (Command.ToLowerInvariant() == "with") {
 							if (Arguments.Length >= 1) {
@@ -338,37 +305,9 @@ namespace CsvRwRouteParser {
 								Command = "structure." + Command.Substring(8, Command.Length - 8);
 							}
 						}
-						// handle indices
-						int CommandIndex1 = 0, CommandIndex2 = 0;
-						if (Command != null && Command.EndsWith(")")) {
-							for (int k = Command.Length - 2; k >= 0; k--) {
-								if (Command[k] == '(')
-								{
-									string Indices = Command.Substring(k + 1, Command.Length - k - 2).TrimStart(new char[] { });
-									Command = Command.Substring(0, k).TrimEnd(new char[] { });
-									int h = Indices.IndexOf(";", StringComparison.Ordinal);
-									if (h >= 0)
-									{
-										string a = Indices.Substring(0, h).TrimEnd(new char[] { });
-										string b = Indices.Substring(h + 1).TrimStart(new char[] { });
-										if (a.Length > 0 && !NumberFormats.TryParseIntVb6(a, out CommandIndex1)) {
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid first index appeared at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File + ".");
-											Command = null;
-										} 
-										if (b.Length > 0 && !NumberFormats.TryParseIntVb6(b, out CommandIndex2)) {
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid second index appeared at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File + ".");
-											Command = null;
-										}
-									} else {
-										if (Indices.Length > 0 && !NumberFormats.TryParseIntVb6(Indices, out CommandIndex1)) {
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid index appeared at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File + ".");
-											Command = null;
-										}
-									}
-									break;
-								}
-							}
-						}
+
+						int[] commandIndices = FindIndices(Command, Expressions[j]);
+
 						// process command
 						if (!string.IsNullOrEmpty(Command))
 						{
@@ -387,20 +326,20 @@ namespace CsvRwRouteParser {
 									ParseOptionCommand(Command, Arguments, UnitOfLength, Expressions[j], ref Data, PreviewOnly);
 									break;
 								case "route":
-									ParseRouteCommand(Command, Arguments, CommandIndex1, FileName, UnitOfLength, Expressions[j], ref Data, PreviewOnly);
+									ParseRouteCommand(Command, Arguments, commandIndices[0], FileName, UnitOfLength, Expressions[j], ref Data, PreviewOnly);
 									break;
 								case "train":
-									ParseTrainCommand(Command, Arguments, CommandIndex1, UnitOfLength, Expressions[j], ref Data, PreviewOnly);
+									ParseTrainCommand(Command, Arguments, commandIndices[0], UnitOfLength, Expressions[j], ref Data, PreviewOnly);
 									break;
 								case "structure":
 								case "texture":
-									ParseStructureCommand(Command, Arguments, CommandIndex1, CommandIndex2, Encoding, UnitOfLength, Expressions[j], ref Data, PreviewOnly);
+									ParseStructureCommand(Command, Arguments, commandIndices, Encoding, UnitOfLength, Expressions[j], ref Data, PreviewOnly);
 									break;
 								case "":
-									ParseSignalCommand(Command, Arguments, CommandIndex1, Encoding, Expressions[j], ref Data, PreviewOnly);
+									ParseSignalCommand(Command, Arguments, commandIndices[0], Encoding, Expressions[j], ref Data, PreviewOnly);
 									break;
 								case "cycle":
-									ParseCycleCommand(Command, Arguments, CommandIndex1, Expressions[j], ref Data, PreviewOnly);
+									ParseCycleCommand(Command, Arguments, commandIndices[0], Expressions[j], ref Data, PreviewOnly);
 									break;
 								case "track":
 									break;
@@ -466,34 +405,8 @@ namespace CsvRwRouteParser {
 							Data.CreateMissingBlocks(ref BlocksUsed, BlockIndex, PreviewOnly);
 						}
 					} else {
-						// split arguments
-						string[] Arguments;
-						{
-							int n = 0;
-							for (int k = 0; k < ArgumentSequence.Length; k++) {
-								if (IsRW & ArgumentSequence[k] == ',') {
-									n++;
-								} else if (ArgumentSequence[k] == ';') {
-									n++;
-								}
-							}
-							Arguments = new string[n + 1];
-							int a = 0, h = 0;
-							for (int k = 0; k < ArgumentSequence.Length; k++) {
-								if (IsRW & ArgumentSequence[k] == ',') {
-									Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim(new char[] { });
-									a = k + 1; h++;
-								} else if (ArgumentSequence[k] == ';') {
-									Arguments[h] = ArgumentSequence.Substring(a, k - a).Trim(new char[] { });
-									a = k + 1; h++;
-								}
-							}
-							if (ArgumentSequence.Length - a > 0) {
-								Arguments[h] = ArgumentSequence.Substring(a).Trim(new char[] { });
-								h++;
-							}
-							Array.Resize<string>(ref Arguments, h);
-						}
+						string[] Arguments = SplitArguments(ArgumentSequence);
+						
 						// preprocess command
 						if (Command.ToLowerInvariant() == "with") {
 							if (Arguments.Length >= 1) {
