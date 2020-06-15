@@ -84,11 +84,6 @@ namespace OpenBve.Graphics
 				Interface.AddMessage(MessageType.Error, false, "Attempted to use an animated object where only static objects are allowed.");
 				return -1;
 			}
-			if (obj.Mesh.Faces.Length == 0)
-			{
-				//Null object- Waste of time trying to calculate anything for these
-				return -1;
-			}
 			return base.CreateStaticObject(obj, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
 		}
 

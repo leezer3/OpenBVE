@@ -106,9 +106,7 @@ namespace OpenBveApi.Objects
 		/// <summary>Clones this ObjectState</summary>
 		public object Clone()
 		{
-			ObjectState os = (ObjectState) MemberwiseClone();
-			os.Prototype = Prototype?.Clone() as StaticObject;
-			return os;
+			return MemberwiseClone();
 		}
 	}
 }
