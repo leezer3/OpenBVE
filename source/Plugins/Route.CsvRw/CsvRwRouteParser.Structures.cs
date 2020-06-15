@@ -33,11 +33,7 @@ namespace CsvRwRouteParser
 			internal int Type;
 		}
 		
-		internal struct Brightness
-		{
-			internal double TrackPosition;
-			internal float Value;
-		}
+		
 
 		internal struct Marker
 		{

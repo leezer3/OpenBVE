@@ -407,8 +407,7 @@ namespace CsvRwRouteParser
 						if (value > 1.0f) value = 1.0f;
 						int n = Data.Blocks[BlockIndex].BrightnessChanges.Length;
 						Array.Resize(ref Data.Blocks[BlockIndex].BrightnessChanges, n + 1);
-						Data.Blocks[BlockIndex].BrightnessChanges[n].TrackPosition = Data.TrackPosition;
-						Data.Blocks[BlockIndex].BrightnessChanges[n].Value = value;
+						Data.Blocks[BlockIndex].BrightnessChanges[n] = new Brightness(Data.TrackPosition, value);
 					}
 				}
 					break;
