@@ -3,7 +3,6 @@ using System.Globalization;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
-using RouteManager2;
 
 namespace CsvRwRouteParser
 {
@@ -84,7 +83,7 @@ namespace CsvRwRouteParser
 					// create expressions
 					int m = e + n + 1;
 					while (m >= Expressions.Length) {
-						Array.Resize<Expression>(ref Expressions, Expressions.Length << 1);
+						Array.Resize(ref Expressions, Expressions.Length << 1);
 					}
 					Level = 0;
 					int a = 0, c = 0;
@@ -173,12 +172,11 @@ namespace CsvRwRouteParser
 					}
 				}
 			}
-			Array.Resize<Expression>(ref Expressions, e);
+			Array.Resize(ref Expressions, e);
 		}
 
 		/// <summary>This function processes the list of expressions for $Char, $Rnd, $If and $Sub directives, and evaluates them into the final expressions dataset</summary>
 		private static void PreprocessChrRndSub(string FileName, System.Text.Encoding Encoding, ref Expression[] Expressions) {
-			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string[] Subs = new string[16];
 			int openIfs = 0;
 			for (int i = 0; i < Expressions.Length; i++) {
@@ -230,7 +228,7 @@ namespace CsvRwRouteParser
 										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The $If directive must not appear within another statement" + Epilog);
 									} else {
 										double num;
-										if (double.TryParse(s, System.Globalization.NumberStyles.Float, Culture, out num)) {
+										if (double.TryParse(s, NumberStyles.Float, Culture, out num)) {
 											openIfs++;
 											Expressions[i].Text = string.Empty;
 											if (num == 0.0) {
@@ -351,7 +349,7 @@ namespace CsvRwRouteParser
 											file = args[2 * ia];
 											offset = 0.0;
 										}
-										files[ia] = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), file);
+										files[ia] = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), file);
 										offsets[ia] = offset;
 										if (!System.IO.File.Exists(files[ia])) {
 											continueWithNextExpression = true;
@@ -360,7 +358,7 @@ namespace CsvRwRouteParser
 											{
 												Expressions[ta] = Expressions[ta + 1];
 											}
-											Array.Resize<Expression>(ref Expressions, Expressions.Length - 1);
+											Array.Resize(ref Expressions, Expressions.Length - 1);
 											i--;
 											break;
 										}
@@ -415,9 +413,9 @@ namespace CsvRwRouteParser
 											for (int ia = i; ia < Expressions.Length - 1; ia++) {
 												Expressions[ia] = Expressions[ia + 1];
 											}
-											Array.Resize<Expression>(ref Expressions, length - 1);
+											Array.Resize(ref Expressions, length - 1);
 										} else {
-											Array.Resize<Expression>(ref Expressions, length + expr.Length - 1);
+											Array.Resize(ref Expressions, length + expr.Length - 1);
 											for (int ia = Expressions.Length - 1; ia >= i + expr.Length; ia--) {
 												Expressions[ia] = Expressions[ia - expr.Length + 1];
 											}
@@ -482,7 +480,7 @@ namespace CsvRwRouteParser
 											string s2 = s.Substring(m + 1).TrimStart(new char[] { });
 											int x; if (NumberFormats.TryParseIntVb6(s1, out x)) {
 												int y; if (NumberFormats.TryParseIntVb6(s2, out y)) {
-													int z = x + (int)Math.Floor(Plugin.RandomNumberGenerator.NextDouble() * (double)(y - x + 1));
+													int z = x + (int)Math.Floor(Plugin.RandomNumberGenerator.NextDouble() * (y - x + 1));
 													Expressions[i].Text = Expressions[i].Text.Substring(0, j) + z.ToString(Culture) + Expressions[i].Text.Substring(h + 1);
 												} else {
 													continueWithNextExpression = true;
@@ -506,10 +504,12 @@ namespace CsvRwRouteParser
 											switch (Expressions[i].Text[m]) {
 													case '(': l++; break;
 													case ')': l--; break;
-													case '=': if (l == 0) {
-														f = true;
-													}
-													break;
+													case '=':
+														if (l == 0)
+														{
+															f = true;
+														}
+														break;
 												default:
 													if (!char.IsWhiteSpace(Expressions[i].Text[m])) l = -1;
 													break;
@@ -530,7 +530,7 @@ namespace CsvRwRouteParser
 											if (NumberFormats.TryParseIntVb6(s, out x)) {
 												if (x >= 0) {
 													while (x >= Subs.Length) {
-														Array.Resize<string>(ref Subs, Subs.Length << 1);
+														Array.Resize(ref Subs, Subs.Length << 1);
 													}
 													Subs[x] = Expressions[i].Text.Substring(m + 1, n - m - 1).Trim(new char[] { });
 													Expressions[i].Text = Expressions[i].Text.Substring(0, j) + Expressions[i].Text.Substring(n);
@@ -589,13 +589,12 @@ namespace CsvRwRouteParser
 					}
 				}
 				if (length != Expressions.Length) {
-					Array.Resize<Expression>(ref Expressions, length);
+					Array.Resize(ref Expressions, length);
 				}
 			}
 		}
 
 		private static void PreprocessSortByTrackPosition(double[] UnitFactors, ref Expression[] Expressions) {
-			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			PositionedExpression[] p = new PositionedExpression[Expressions.Length];
 			int n = 0;
 			double a = -1.0;
@@ -670,7 +669,7 @@ namespace CsvRwRouteParser
 				e[m] = p[i].Expression;
 				m++;
 			}
-			Array.Resize<Expression>(ref e, m);
+			Array.Resize(ref e, m);
 			Expressions = e;
 		}
 	}

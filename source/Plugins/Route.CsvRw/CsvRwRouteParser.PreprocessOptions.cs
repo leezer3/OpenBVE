@@ -14,7 +14,6 @@ namespace CsvRwRouteParser
 		/// <param name="PreviewOnly">Whether this is a preview only</param>
 		private static void PreprocessOptions(Expression[] Expressions, ref RouteData Data, ref double[] UnitOfLength, bool PreviewOnly)
 		{
-			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			string Section = "";
 			bool SectionAlwaysPrefix = false;
 			// process expressions
@@ -79,7 +78,7 @@ namespace CsvRwRouteParser
 								Arguments[h] = ArgumentSequence.Substring(a).Trim(new char[] { });
 								h++;
 							}
-							Array.Resize<string>(ref Arguments, h);
+							Array.Resize(ref Arguments, h);
 						}
 						// preprocess command
 						if (Command.ToLowerInvariant() == "with")

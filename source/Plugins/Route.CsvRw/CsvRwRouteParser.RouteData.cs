@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using OpenBveApi.Math;
-using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using RouteManager2.SignalManager;
 
@@ -47,7 +46,7 @@ namespace CsvRwRouteParser
 				{
 					while (Blocks.Length <= ToIndex)
 					{
-						Array.Resize<Block>(ref Blocks, Blocks.Length << 1);
+						Array.Resize(ref Blocks, Blocks.Length << 1);
 					}
 					for (int i = BlocksUsed; i <= ToIndex; i++)
 					{

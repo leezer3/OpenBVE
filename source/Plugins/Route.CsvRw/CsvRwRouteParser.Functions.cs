@@ -1,14 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Security.Cryptography;
+using System.Text;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
+using Path = System.IO.Path;
 
 namespace CsvRwRouteParser
 {
@@ -24,7 +25,7 @@ namespace CsvRwRouteParser
 		{
 			//TODO: Write a RW check function, which *doesn't* requite checking the extension
 			//This is a kludge, and likely to fall over with misnamed files
-			return string.Equals(System.IO.Path.GetExtension(FileName), ".rw", StringComparison.OrdinalIgnoreCase);
+			return string.Equals(Path.GetExtension(FileName), ".rw", StringComparison.OrdinalIgnoreCase);
 		}
 
 		/// <summary>Sets the brightness value for the specified track position</summary>
@@ -43,7 +44,7 @@ namespace CsvRwRouteParser
 					if (Data.Blocks[i].BrightnessChanges[j].TrackPosition <= TrackPosition)
 					{
 						tmin = Data.Blocks[i].BrightnessChanges[j].TrackPosition;
-						bmin = (double)Data.Blocks[i].BrightnessChanges[j].Value;
+						bmin = Data.Blocks[i].BrightnessChanges[j].Value;
 					}
 				}
 			}
@@ -54,7 +55,7 @@ namespace CsvRwRouteParser
 					if (Data.Blocks[i].BrightnessChanges[j].TrackPosition >= TrackPosition)
 					{
 						tmax = Data.Blocks[i].BrightnessChanges[j].TrackPosition;
-						bmax = (double)Data.Blocks[i].BrightnessChanges[j].Value;
+						bmax = Data.Blocks[i].BrightnessChanges[j].Value;
 					}
 				}
 			}
@@ -62,23 +63,24 @@ namespace CsvRwRouteParser
 			{
 				return 1.0;
 			}
-			else if (tmin == double.PositiveInfinity)
+
+			if (tmin == double.PositiveInfinity)
 			{
 				return (bmax - 1.0) * TrackPosition / tmax + 1.0;
 			}
-			else if (tmax == double.NegativeInfinity)
+
+			if (tmax == double.NegativeInfinity)
 			{
 				return bmin;
 			}
-			else if (tmin == tmax)
+
+			if (tmin == tmax)
 			{
 				return 0.5 * (bmin + bmax);
 			}
-			else
-			{
-				double n = (TrackPosition - tmin) / (tmax - tmin);
-				return (1.0 - n) * bmin + n * bmax;
-			}
+
+			double n = (TrackPosition - tmin) / (tmax - tmin);
+			return (1.0 - n) * bmin + n * bmax;
 		}
 
 		/// <summary>Loads all BVE4 signal or glow textures (Non animated file)</summary>
@@ -87,33 +89,38 @@ namespace CsvRwRouteParser
 		/// <returns>All textures matching the base file.</returns>
 		private static Texture[] LoadAllTextures(string BaseFile, bool IsGlowTexture)
 		{
-			string Folder = System.IO.Path.GetDirectoryName(BaseFile);
-			if (Folder != null && !System.IO.Directory.Exists(Folder))
+			string Folder = Path.GetDirectoryName(BaseFile);
+			if (Folder != null && !Directory.Exists(Folder))
 			{
 				return new Texture[] { };
 			}
-			string Name = System.IO.Path.GetFileNameWithoutExtension(BaseFile);
-			Texture[] Textures = new Texture[] { };
+			string Name = Path.GetFileNameWithoutExtension(BaseFile);
+			Texture[] Textures = { };
 			if (Folder == null) return Textures;
-			string[] Files = System.IO.Directory.GetFiles(Folder);
+			string[] Files = Directory.GetFiles(Folder);
 			for (int i = 0; i < Files.Length; i++)
 			{
-				string a = System.IO.Path.GetFileNameWithoutExtension(Files[i]);
-				if (a == null || Name == null) return Textures;
+				string a = Path.GetFileNameWithoutExtension(Files[i]);
+				if (a == null)
+				{
+					return Textures;
+				}
 				if (a.StartsWith(Name, StringComparison.OrdinalIgnoreCase))
 				{
 					if (a.Length > Name.Length)
 					{
-						string b = a.Substring(Name.Length).TrimStart(new char[] { });
-						int j; if (int.TryParse(b, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out j))
+						string b = a.Substring(Name.Length).TrimStart();
+						int j; if (int.TryParse(b, NumberStyles.Integer, CultureInfo.InvariantCulture, out j))
 						{
 							if (j >= 0)
 							{
-								string c = System.IO.Path.GetExtension(Files[i]);
-								if (c == null) return Textures;
+								string c = Path.GetExtension(Files[i]);
+								
 								switch (c.ToLowerInvariant())
 								{
+									case ".ace":
 									case ".bmp":
+									case ".dds":
 									case ".gif":
 									case ".jpg":
 									case ".jpeg":
@@ -123,7 +130,7 @@ namespace CsvRwRouteParser
 										if (j >= Textures.Length)
 										{
 											int n = Textures.Length;
-											Array.Resize<Texture>(ref Textures, j + 1);
+											Array.Resize(ref Textures, j + 1);
 											for (int k = n; k < j; k++)
 											{
 												Textures[k] = null;
@@ -146,6 +153,8 @@ namespace CsvRwRouteParser
 											Plugin.CurrentHost.RegisterTexture(Files[i], new TextureParameters(null, Color24.Black), out Textures[j]);
 										}
 										break;
+									case "":
+										return Textures;
 								}
 							}
 						}
@@ -163,7 +172,6 @@ namespace CsvRwRouteParser
 		{
 			Expression = Expression.TrimInside();
 			if (Expression.Length != 0) {
-				CultureInfo Culture = CultureInfo.InvariantCulture;
 				int i = Expression.IndexOf('.');
 				if (i == -1)
 				{
@@ -174,7 +182,7 @@ namespace CsvRwRouteParser
 						int n = Expression.Length - i - 1;
 						if (n == 1 | n == 2) {
 							uint m; if (uint.TryParse(Expression.Substring(i + 1, n), NumberStyles.None, Culture, out m)) {
-								Value = 3600.0 * (double)h + 60.0 * (double)m;
+								Value = 3600.0 * h + 60.0 * m;
 								return true;
 							}
 						} else if (n >= 3) {
@@ -198,7 +206,7 @@ namespace CsvRwRouteParser
 									}
 								}
 								if (uint.TryParse(ss, NumberStyles.None, Culture, out s)) {
-									Value = 3600.0 * (double)h + 60.0 * (double)m + (double)s;
+									Value = 3600.0 * h + 60.0 * m + s;
 									return true;
 								}
 							}
@@ -206,7 +214,7 @@ namespace CsvRwRouteParser
 					}
 				} else if (i == -1) {
 					int h; if (int.TryParse(Expression, NumberStyles.Integer, Culture, out h)) {
-						Value = 3600.0 * (double)h;
+						Value = 3600.0 * h;
 						return true;
 					}
 				}
@@ -226,7 +234,7 @@ namespace CsvRwRouteParser
 			}
 		}
 
-		private static StaticObject LoadStaticObject(string fileName, System.Text.Encoding encoding, bool preserveVertices)
+		private static StaticObject LoadStaticObject(string fileName, Encoding encoding, bool preserveVertices)
 		{
 			//FIXME: This needs to be removed
 			//Hack to allow loading objects via the API into an array
@@ -276,25 +284,25 @@ namespace CsvRwRouteParser
 					Arguments[h] = ArgumentSequence.Substring(a).Trim(new char[] { });
 					h++;
 				}
-				Array.Resize<string>(ref Arguments, h);
+				Array.Resize(ref Arguments, h);
 			}
 			return Arguments;
 		}
 
-		private static int[] FindIndices(string Command, Expression Expression)
+		private static int[] FindIndices(ref string Command, Expression Expression)
 		{
 			int[] commandIndices = { 0, 0};
 			if (Command != null && Command.EndsWith(")")) {
 				for (int k = Command.Length - 2; k >= 0; k--) {
 					if (Command[k] == '(')
 					{
-						string Indices = Command.Substring(k + 1, Command.Length - k - 2).TrimStart(new char[] { });
-						Command = Command.Substring(0, k).TrimEnd(new char[] { });
+						string Indices = Command.Substring(k + 1, Command.Length - k - 2).TrimStart();
+						Command = Command.Substring(0, k).TrimEnd();
 						int h = Indices.IndexOf(";", StringComparison.Ordinal);
 						if (h >= 0)
 						{
-							string a = Indices.Substring(0, h).TrimEnd(new char[] { });
-							string b = Indices.Substring(h + 1).TrimStart(new char[] { });
+							string a = Indices.Substring(0, h).TrimEnd();
+							string b = Indices.Substring(h + 1).TrimStart();
 							if (a.Length > 0 && !NumberFormats.TryParseIntVb6(a, out commandIndices[0])) {
 								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Invalid first index appeared at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File + ".");
 								Command = null;

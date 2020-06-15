@@ -251,7 +251,7 @@ namespace CsvRwRouteParser
 									case "name":
 										if (c.InnerText.IndexOf(';') == -1)
 										{
-											names = new string[]
+											names = new[]
 											{
 												c.InnerText
 											};
@@ -305,7 +305,7 @@ namespace CsvRwRouteParser
 										case "name":
 											if (c.InnerText.IndexOf(';') == -1)
 											{
-												names = new string[]
+												names = new[]
 												{
 													c.InnerText
 												};
@@ -366,7 +366,9 @@ namespace CsvRwRouteParser
 													f = OpenBveApi.Path.CombineFile(d, f);
 												}
 												catch
-												{ }
+												{
+													//Deliberately suppress all errors
+												}
 											}
 											LoadCompatibilityObjects(f);
 											break;

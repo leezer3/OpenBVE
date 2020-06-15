@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Math;
-using OpenBveApi.Objects;
 using OpenBveApi.Interface;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
@@ -49,7 +48,7 @@ namespace CsvRwRouteParser {
 			CompatibilityFolder = Plugin.FileSystem.GetDataFolder("Compatibility");
 			if (!PreviewOnly)
 			{
-				CompatibilityObjects.LoadCompatibilityObjects(OpenBveApi.Path.CombineFile(CompatibilityFolder,"CompatibilityObjects.xml"));
+				CompatibilityObjects.LoadCompatibilityObjects(Path.CombineFile(CompatibilityFolder,"CompatibilityObjects.xml"));
 			}
 			RouteData Data = new RouteData
 			{
@@ -61,7 +60,7 @@ namespace CsvRwRouteParser {
 			Data.Blocks[0] = new Block();
 			Data.Blocks[0].Rails = new Dictionary<int, Rail>();
 			Data.Blocks[0].Rails.Add(0, new Rail { RailStarted =  true });
-			Data.Blocks[0].RailType = new int[] { 0 };
+			Data.Blocks[0].RailType = new[] { 0 };
 			Data.Blocks[0].Limits = new Limit[] { };
 			Data.Blocks[0].StopPositions = new Stop[] { };
 			Data.Blocks[0].Station = -1;
@@ -76,7 +75,7 @@ namespace CsvRwRouteParser {
 				Data.Blocks[0].Fog.Start = CurrentRoute.NoFogStart;
 				Data.Blocks[0].Fog.End = CurrentRoute.NoFogEnd;
 				Data.Blocks[0].Fog.Color = Color24.Grey;
-				Data.Blocks[0].Cycle = new int[] {-1};
+				Data.Blocks[0].Cycle = new[] {-1};
 				Data.Blocks[0].RailCycles = new RailCycle[1];
 				Data.Blocks[0].RailCycles[0].RailCycleIndex = -1;
 				Data.Blocks[0].Height = IsRW ? 0.3 : 0.0;
@@ -95,16 +94,16 @@ namespace CsvRwRouteParser {
 				Data.Blocks[0].PointsOfInterest = new PointOfInterest[] {};
 				Data.Markers = new Marker[] {};
 				Data.RequestStops = new StopRequest[] { };
-				string PoleFolder = OpenBveApi.Path.CombineDirectory(CompatibilityFolder, "Poles");
+				string PoleFolder = Path.CombineDirectory(CompatibilityFolder, "Poles");
 				Data.Structure.Poles = new PoleDictionary();
 				Data.Structure.Poles.Add(0, new ObjectDictionary());
-				Data.Structure.Poles[0].Add(0, LoadStaticObject(OpenBveApi.Path.CombineFile(PoleFolder, "pole_1.csv"), System.Text.Encoding.UTF8, false));
+				Data.Structure.Poles[0].Add(0, LoadStaticObject(Path.CombineFile(PoleFolder, "pole_1.csv"), System.Text.Encoding.UTF8, false));
 				Data.Structure.Poles.Add(1, new ObjectDictionary());
-				Data.Structure.Poles[1].Add(0, LoadStaticObject(OpenBveApi.Path.CombineFile(PoleFolder, "pole_2.csv"), System.Text.Encoding.UTF8, false));
+				Data.Structure.Poles[1].Add(0, LoadStaticObject(Path.CombineFile(PoleFolder, "pole_2.csv"), System.Text.Encoding.UTF8, false));
 				Data.Structure.Poles.Add(2, new ObjectDictionary());
-				Data.Structure.Poles[2].Add(0, LoadStaticObject(OpenBveApi.Path.CombineFile(PoleFolder, "pole_3.csv"), System.Text.Encoding.UTF8, false));
+				Data.Structure.Poles[2].Add(0, LoadStaticObject(Path.CombineFile(PoleFolder, "pole_3.csv"), System.Text.Encoding.UTF8, false));
 				Data.Structure.Poles.Add(3, new ObjectDictionary());
-				Data.Structure.Poles[3].Add(0, LoadStaticObject(OpenBveApi.Path.CombineFile(PoleFolder, "pole_4.csv"), System.Text.Encoding.UTF8, false));
+				Data.Structure.Poles[3].Add(0, LoadStaticObject(Path.CombineFile(PoleFolder, "pole_4.csv"), System.Text.Encoding.UTF8, false));
 				
 				Data.Structure.RailObjects = new ObjectDictionary();
 				Data.Structure.RailObjects = new ObjectDictionary();
@@ -140,9 +139,15 @@ namespace CsvRwRouteParser {
 				}
 				CompatibilitySignalObject.ReadCompatibilitySignalXML(Plugin.CurrentHost, compatibilitySignalSet, out Data.CompatibilitySignals, out CompatibilityObjects.SignalPost, out Data.SignalSpeeds);
 				// game data
-				CurrentRoute.Sections = new []{new RouteManager2.SignalManager.Section() };
-				CurrentRoute.Sections[0].Aspects = new SectionAspect[]
-				{new SectionAspect(0, 0.0), new SectionAspect(4, double.PositiveInfinity)};
+				CurrentRoute.Sections = new[]
+				{
+					new RouteManager2.SignalManager.Section()
+				};
+				CurrentRoute.Sections[0].Aspects = new[]
+				{
+					new SectionAspect(0, 0.0),
+					new SectionAspect(4, double.PositiveInfinity)
+				};
 				CurrentRoute.Sections[0].CurrentAspect = 0;
 				CurrentRoute.Sections[0].NextSection = null;
 				CurrentRoute.Sections[0].PreviousSection = null;
@@ -151,7 +156,7 @@ namespace CsvRwRouteParser {
 				CurrentRoute.Sections[0].Trains = new AbstractTrain[] {};
 			}
 			ParseRouteForData(FileName, Encoding, ref Data, PreviewOnly);
-			if (Plugin.Cancel)
+			if (RouteInterface.Cancel)
 			{
 				return;
 			}
@@ -174,8 +179,8 @@ namespace CsvRwRouteParser {
 			CurrentRoute.UnitOfLength = UnitOfLength;
 		}
 		
-		private static int freeObjCount = 0;
-		private static int railtypeCount = 0;
+		private static int freeObjCount;
+		private static int railtypeCount;
 		private static readonly System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 
 		// parse route for data
@@ -189,7 +194,7 @@ namespace CsvRwRouteParser {
 			int BlocksUsed = Data.Blocks.Length;
 			CurrentRoute.Stations = new RouteStation[] { };
 			Data.RequestStops = new StopRequest[] { };
-			double progressFactor = Expressions.Length == 0 ? 0.3333 : 0.3333 / (double)Expressions.Length;
+			double progressFactor = Expressions.Length == 0 ? 0.3333 : 0.3333 / Expressions.Length;
 			// process non-track namespaces
 			//Check for any special-cased fixes we might need
 			CheckRouteSpecificFixes(FileName, ref Data, ref Expressions, PreviewOnly);
@@ -209,10 +214,10 @@ namespace CsvRwRouteParser {
 			}
 			
 			for (int j = 0; j < Expressions.Length; j++) {
-				Plugin.CurrentProgress = (double)j * progressFactor;
+				RouteInterface.CurrentProgress = j * progressFactor;
 				if ((j & 255) == 0) {
 					System.Threading.Thread.Sleep(1);
-					if (Plugin.Cancel) return;
+					if (RouteInterface.Cancel) return;
 				}
 				if (Expressions[j].Text.StartsWith("[") & Expressions[j].Text.EndsWith("]")) {
 					Section = Expressions[j].Text.Substring(1, Expressions[j].Text.Length - 2).Trim(new char[] { });
@@ -233,9 +238,8 @@ namespace CsvRwRouteParser {
 					string Command, ArgumentSequence;
 					Expressions[j].SeparateCommandsAndArguments(out Command, out ArgumentSequence, Culture, false, IsRW, Section);
 					// process command
-					double Number;
 					bool NumberCheck = !IsRW || string.Compare(Section, "track", StringComparison.OrdinalIgnoreCase) == 0;
-					if (NumberCheck && NumberFormats.TryParseDouble(Command, UnitOfLength, out Number)) {
+					if (NumberCheck && NumberFormats.IsValidDouble(Command, UnitOfLength)) {
 						// track position (ignored)
 					} else {
 						string[] Arguments = SplitArguments(ArgumentSequence);
@@ -306,7 +310,7 @@ namespace CsvRwRouteParser {
 							}
 						}
 
-						int[] commandIndices = FindIndices(Command, Expressions[j]);
+						int[] commandIndices = FindIndices(ref Command, Expressions[j]);
 
 						// process command
 						if (!string.IsNullOrEmpty(Command))
@@ -343,6 +347,7 @@ namespace CsvRwRouteParser {
 									break;
 								case "track":
 									break;
+								// ReSharper disable once RedundantEmptySwitchSection
 								default:
 									/*
 									 * This needs an unrecognised command at some stage
@@ -356,10 +361,10 @@ namespace CsvRwRouteParser {
 			
 			// process track namespace
 			for (int j = 0; j < Expressions.Length; j++) {
-				Plugin.CurrentProgress = 0.3333 + (double)j * progressFactor;
+				RouteInterface.CurrentProgress = 0.3333 + j * progressFactor;
 				if ((j & 255) == 0) {
 					System.Threading.Thread.Sleep(1);
-					if (Plugin.Cancel) return;
+					if (RouteInterface.Cancel) return;
 				}
 				if (Data.LineEndingFix)
 				{
