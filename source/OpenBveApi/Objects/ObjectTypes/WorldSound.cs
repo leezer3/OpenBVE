@@ -1,4 +1,5 @@
 ﻿using OpenBveApi.FunctionScripting;
+using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Sounds;
@@ -10,8 +11,6 @@ namespace OpenBveApi.Objects
 	/// <summary>Represents a world sound attached to an .animated file</summary>
 	public class WorldSound : WorldObject
 	{
-		/// <summary>Stores a reference to the current host</summary>
-		private readonly Hosts.HostInterface currentHost;
 		/// <summary>The sound buffer to play</summary>
 		public readonly SoundHandle Buffer;
 		/// <summary>The sound source for this file</summary>
@@ -33,20 +32,25 @@ namespace OpenBveApi.Objects
 
 		/// <inheritdoc/>
 		/// <remarks>In this case, the position of the track follower is returned.</remarks>
-		public override double RelativeTrackPosition
-		{
-			get
-			{
-				return Follower.TrackPosition;
-			}
-		}
+		public override double RelativeTrackPosition => Follower.TrackPosition;
 
 		/// <summary>Creates a new WorldSound</summary>
-		public WorldSound(Hosts.HostInterface Host, SoundHandle buffer)
+		public WorldSound(HostInterface Host, SoundHandle buffer) : base(Host)
 		{
 			Radius = 25.0;
-			currentHost = Host;
 			Buffer = buffer;
+		}
+
+		/// <inheritdoc/>
+		public override WorldObject Clone()
+		{
+			WorldSound ws = (WorldSound)base.Clone();
+			ws.Source = null;
+			ws.Follower = Follower?.Clone();
+			ws.TrackFollowerFunction = TrackFollowerFunction?.Clone();
+			ws.VolumeFunction = VolumeFunction?.Clone();
+			ws.PitchFunction = PitchFunction?.Clone();
+			return ws;
 		}
 
 		/// <summary>Creates the animated object within the game world</summary>
@@ -58,22 +62,11 @@ namespace OpenBveApi.Objects
 		public void CreateSound(Vector3 position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, double trackPosition)
 		{
 			int a = currentHost.AnimatedWorldObjectsUsed;
-			
-			WorldSound snd = new WorldSound(currentHost, this.Buffer)
-			{
-				//Must clone the vector, not pass the reference
-				Position = new Vector3(position),
-				Follower = new TrackFollower(currentHost),
-				currentTrackPosition = trackPosition,
-				TrackFollowerFunction =  TrackFollowerFunction,
-				PitchFunction =  PitchFunction,
-				VolumeFunction =  VolumeFunction
-			};
+
+			WorldSound snd = (WorldSound)Clone();
+			snd.currentTrackPosition = trackPosition;
+			snd.Follower = new TrackFollower(currentHost);
 			snd.Follower.UpdateAbsolute(trackPosition, true, true);
-			if (this.TrackFollowerFunction != null)
-			{
-				snd.TrackFollowerFunction = this.TrackFollowerFunction.Clone();
-			}
 
 			currentHost.AnimatedWorldObjects[a] = snd;
 			currentHost.AnimatedWorldObjectsUsed++;
@@ -92,19 +85,19 @@ namespace OpenBveApi.Objects
 				if (this.TrackFollowerFunction != null)
 				{
 
-					double delta = this.TrackFollowerFunction.Perform(NearestTrain, NearestTrain == null ? 0 : NearestTrain.DriverCar, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
+					double delta = this.TrackFollowerFunction.Perform(NearestTrain, NearestTrain?.DriverCar ?? 0, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
 					this.Follower.UpdateRelative(this.currentTrackPosition + delta, true, true);
 					this.Follower.UpdateWorldCoordinates(false);
 				}
 
 				if (this.VolumeFunction != null)
 				{
-					this.currentVolume = this.VolumeFunction.Perform(NearestTrain, NearestTrain == null ? 0 : NearestTrain.DriverCar, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
+					this.currentVolume = this.VolumeFunction.Perform(NearestTrain, NearestTrain?.DriverCar ?? 0, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
 				}
 
 				if (this.PitchFunction != null)
 				{
-					this.currentPitch = this.PitchFunction.Perform(NearestTrain, NearestTrain == null ? 0 : NearestTrain.DriverCar, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
+					this.currentPitch = this.PitchFunction.Perform(NearestTrain, NearestTrain?.DriverCar ?? 0, this.Position, this.Follower.TrackPosition, 0, false, TimeElapsed, 0);
 				}
 
 				if (this.Source != null)

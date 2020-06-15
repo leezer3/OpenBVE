@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenBveApi.World;
@@ -95,16 +96,8 @@ namespace OpenBveApi.Objects
 					{
 						continue;
 					}
-					var snd = this.Sounds[i] as WorldSound;
-					if (snd != null)
-					{
-						snd.CreateSound(Sounds[i].Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition);
-					}
-					var snd2 = this.Sounds[i] as AnimatedWorldObjectStateSound;
-					if (snd2 != null)
-					{
-						snd2.Create(Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition, Brightness);
-					}
+					(Sounds[i] as WorldSound)?.CreateSound(Sounds[i].Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition);
+					(Sounds[i] as AnimatedWorldObjectStateSound)?.Create(Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition, Brightness);
 				}
 			}
 
@@ -127,7 +120,11 @@ namespace OpenBveApi.Objects
 			/// <inheritdoc/>
 			public override UnifiedObject Clone()
 			{
-				throw new NotSupportedException();
+				return new AnimatedObjectCollection(currentHost)
+				{
+					Objects = Objects.Select(x => x?.Clone()).ToArray(),
+					Sounds = Sounds.Select(x => x?.Clone()).ToArray()
+				};
 			}
 
 			/// <summary>Creates a mirrored clone of this object</summary>

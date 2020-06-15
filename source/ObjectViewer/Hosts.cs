@@ -227,6 +227,11 @@ namespace OpenBve {
 
 		public override bool LoadObject(string path, System.Text.Encoding Encoding, out UnifiedObject Object)
 		{
+			if (base.LoadObject(path, Encoding, out Object))
+			{
+				return true;
+			}
+
 			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
 				Encoding = TextEncoding.GetSystemEncodingFromFile(path, Encoding);
 
@@ -240,6 +245,20 @@ namespace OpenBve {
 									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out obj)) {
 										obj.OptimizeObject(false, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, true);
 										Object = obj;
+
+										StaticObject staticObject = Object as StaticObject;
+										if (staticObject != null)
+										{
+											StaticObjectCache.Add(ValueTuple.Create(path, false), staticObject);
+											return true;
+										}
+
+										AnimatedObjectCollection aoc = Object as AnimatedObjectCollection;
+										if (aoc != null)
+										{
+											AnimatedObjectCollectionCache.Add(path, aoc);
+										}
+
 										return true;
 									}
 									Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject");

@@ -1,4 +1,5 @@
-﻿using OpenBveApi.Math;
+﻿using OpenBveApi.Hosts;
+using OpenBveApi.Math;
 using OpenBveApi.Trains;
 
 namespace OpenBveApi.Objects
@@ -6,18 +7,15 @@ namespace OpenBveApi.Objects
 	/// <summary>Represents an abstract object or sound placed within the game world</summary>
 	public abstract class WorldObject
 	{
+		/// <summary>Holds a reference to the host application</summary>
+		protected readonly HostInterface currentHost;
+
 		/// <summary>The position vector for this object</summary>
 		public Vector3 Position;
 		/// <summary>The track position for this object</summary>
 		public double TrackPosition;
 		/// <summary>The relative track position for this object</summary>
-		public virtual double RelativeTrackPosition
-		{
-			get
-			{
-				return TrackPosition;
-			}
-		}
+		public virtual double RelativeTrackPosition => TrackPosition;
 
 		/// <summary>Whether the object is currently visible at the player's camera position</summary>
 		public bool Visible;
@@ -31,6 +29,27 @@ namespace OpenBveApi.Objects
 		public double Radius;
 		/// <summary>The actual animated object</summary>
 		public AnimatedObject Object;
+
+		/// <summary>Creates a new WorldObject</summary>
+		protected WorldObject(HostInterface Host)
+		{
+			currentHost = Host;
+		}
+
+		/// <summary>Clones this object</summary>
+		/// <returns>The new object</returns>
+		public virtual WorldObject Clone()
+		{
+			WorldObject wo = (WorldObject)MemberwiseClone();
+			wo.Object = Object?.Clone();
+
+			if (wo.Object != null)
+			{
+				currentHost.CreateDynamicObject(ref wo.Object.internalObject);
+			}
+
+			return wo;
+		}
 
 		/// <summary>Updates the object</summary>
 		/// <param name="NearestTrain">The nearest train to this object</param>

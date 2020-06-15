@@ -1,4 +1,4 @@
-﻿using System;
+﻿using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenBveApi.Sounds;
 using OpenBveApi.Trains;
@@ -9,8 +9,6 @@ namespace OpenBveApi.Objects
 	/// <summary>Represents an animated object which plays a sound upon state change</summary>
 	public class AnimatedWorldObjectStateSound : WorldObject
 	{
-		/// <summary>Holds a reference to the host application</summary>
-		private readonly Hosts.HostInterface currentHost;
 		/// <summary>The signalling section the object refers to (Only relevant for objects placed using Track.Sig</summary>
 		public int SectionIndex;
 		/// <summary>The sound buffer array</summary>
@@ -31,9 +29,16 @@ namespace OpenBveApi.Objects
 		private int lastState;
 
 		/// <summary>Creates a new AnimatedWorldObjectStateSound</summary>
-		public AnimatedWorldObjectStateSound(Hosts.HostInterface Host)
+		public AnimatedWorldObjectStateSound(HostInterface Host) : base(Host)
 		{
-			currentHost = Host;
+		}
+
+		/// <inheritdoc/>
+		public override WorldObject Clone()
+		{
+			AnimatedWorldObjectStateSound awoss = (AnimatedWorldObjectStateSound)base.Clone();
+			awoss.Source = null;
+			return awoss;
 		}
 
 		/// <inheritdoc/>
@@ -126,22 +131,13 @@ namespace OpenBveApi.Objects
 			int a = currentHost.AnimatedWorldObjectsUsed;
 			Transformation FinalTransformation = new Transformation(AuxTransformation, BaseTransformation);
 
-			var o = this.Object.Clone();
-			currentHost.CreateDynamicObject(ref o.internalObject);
-			AnimatedWorldObjectStateSound currentObject = new AnimatedWorldObjectStateSound(currentHost)
-			{
-				Position = Position,
-				Direction = FinalTransformation.Z,
-				Up = FinalTransformation.Y,
-				Side = FinalTransformation.X,
-				Object = o,
-				SectionIndex = SectionIndex,
-				TrackPosition = TrackPosition,
-				Buffers = Buffers,
-				SingleBuffer = SingleBuffer,
-				PlayOnShow = PlayOnShow,
-				PlayOnHide = PlayOnHide
-			};
+			AnimatedWorldObjectStateSound currentObject = (AnimatedWorldObjectStateSound)Clone();
+			currentObject.Position = Position;
+			currentObject.Direction = FinalTransformation.Z;
+			currentObject.Up = FinalTransformation.Y;
+			currentObject.Side = FinalTransformation.X;
+			currentObject.SectionIndex = SectionIndex;
+			currentObject.TrackPosition = TrackPosition;
 			for (int i = 0; i < currentObject.Object.States.Length; i++)
 			{
 				if (currentObject.Object.States[i].Prototype == null)

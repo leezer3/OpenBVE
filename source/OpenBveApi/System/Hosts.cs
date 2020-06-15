@@ -6,7 +6,6 @@ using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
-using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
@@ -54,6 +53,8 @@ namespace OpenBveApi.Hosts {
 		protected HostInterface(HostApplication host)
 		{
 			Application = host;
+			StaticObjectCache = new Dictionary<ValueTuple<string, bool>, StaticObject>();
+			AnimatedObjectCollectionCache = new Dictionary<string, AnimatedObjectCollection>();
 		}
 
 		/// <summary></summary>
@@ -226,6 +227,20 @@ namespace OpenBveApi.Hosts {
 		/// <returns>Whether loading the object was successful</returns>
 		public virtual bool LoadObject(string Path, System.Text.Encoding Encoding, out UnifiedObject Object)
 		{
+			ValueTuple<string, bool> key = ValueTuple.Create(Path, false);
+
+			if (StaticObjectCache.ContainsKey(key))
+			{
+				Object = StaticObjectCache[key].Clone();
+				return true;
+			}
+
+			if (AnimatedObjectCollectionCache.ContainsKey(Path))
+			{
+				Object = AnimatedObjectCollectionCache[Path].Clone();
+				return true;
+			}
+
 			Object = null;
 			return false;
 		}
@@ -240,6 +255,14 @@ namespace OpenBveApi.Hosts {
 		/// Selecting to preserve vertices may be useful if using the object as a deformable.</remarks>
 		public virtual bool LoadStaticObject(string Path, System.Text.Encoding Encoding, bool PreserveVertices, out StaticObject Object)
 		{
+			ValueTuple<string, bool> key = ValueTuple.Create(Path, PreserveVertices);
+
+			if (StaticObjectCache.ContainsKey(key))
+			{
+				Object = (StaticObject)StaticObjectCache[key].Clone();
+				return true;
+			}
+
 			Object = null;
 			return false;
 		}
@@ -328,8 +351,8 @@ namespace OpenBveApi.Hosts {
 		public virtual void AddMessage(MessageType type, bool FileNotFound, string text) { }
 
 		/// <summary>Adds a message to the in-game display</summary>
-		/// <param name="AbstractMesage">The message to add</param>
-		public virtual void AddMessage(object AbstractMesage)
+		/// <param name="AbstractMessage">The message to add</param>
+		public virtual void AddMessage(object AbstractMessage)
 		{
 			/*
 			 * Using object as a parameter type allows us to keep the messages out the API...
@@ -363,13 +386,7 @@ namespace OpenBveApi.Hosts {
 		}
 
 		/// <summary>Returns whether the simulation is currently in progress</summary>
-		public virtual bool SimulationSetup
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public virtual bool SimulationSetup => false;
 
 		/// <summary>Returns the number of animated world objects used</summary>
 		public virtual int AnimatedWorldObjectsUsed
@@ -430,5 +447,16 @@ namespace OpenBveApi.Hosts {
 		/// Array of supported static object extensions.
 		/// </summary>
 		public string[] SupportedStaticObjectExtensions => Plugins.Where(x => x.Object != null).SelectMany(x => x.Object.SupportedStaticObjectExtensions).ToArray();
+
+		/// <summary>
+		/// Dictionary of StaticObject with Path and PreserveVertices as keys.
+		/// </summary>
+		public readonly Dictionary<ValueTuple<string, bool>, StaticObject> StaticObjectCache;
+
+		/// <summary>
+		/// Dictionary of AnimatedObjectCollection with Path as key.
+		/// </summary>
+
+		public readonly Dictionary<string, AnimatedObjectCollection> AnimatedObjectCollectionCache;
 	}
 }
