@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using OpenBveApi;
@@ -13,7 +12,6 @@ namespace CsvRwRouteParser
 	{
 		private static void ParseSignalCommand(string Command, string[] Arguments, int Index, Encoding Encoding, Expression Expression, ref RouteData Data, bool PreviewOnly)
 		{
-			CultureInfo Culture = CultureInfo.InvariantCulture;
 			switch (Command)
 			{
 				case "signal":
@@ -38,7 +36,7 @@ namespace CsvRwRouteParser
 										Plugin.CurrentHost.AddMessage(MessageType.Warning, false, Command + " is expected to have exactly 1 argument when using animated objects at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 									}
 
-									string f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
+									string f = Path.CombineFile(ObjectPath, Arguments[0]);
 									if (!System.IO.File.Exists(f))
 									{
 										Plugin.CurrentHost.AddMessage(MessageType.Error, true, "SignalFileWithoutExtension " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);

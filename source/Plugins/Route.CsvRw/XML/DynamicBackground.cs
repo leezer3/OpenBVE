@@ -78,7 +78,7 @@ namespace CsvRwRouteParser
 											Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BackgroundObject FileName is malformed in file " + fileName);
 											break;
 										}
-										if (!System.IO.File.Exists(f))
+										if (!File.Exists(f))
 										{
 											Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in file " + fileName);
 										}
@@ -106,7 +106,7 @@ namespace CsvRwRouteParser
 											Plugin.CurrentHost.AddMessage(MessageType.Error, true, "BackgroundTexture FileName is malformed in file " + fileName);
 											break;
 										}									
-										if (!System.IO.File.Exists(file))
+										if (!File.Exists(file))
 										{
 											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "The background texture file " + c.InnerText + " does not exist in " + fileName);
 										}

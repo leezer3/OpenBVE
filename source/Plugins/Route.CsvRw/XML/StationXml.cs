@@ -7,7 +7,6 @@ using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
-using RouteManager2;
 using RouteManager2.SignalManager;
 using RouteManager2.Stations;
 

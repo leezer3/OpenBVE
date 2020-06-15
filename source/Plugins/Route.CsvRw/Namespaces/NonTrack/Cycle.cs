@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 
@@ -9,7 +8,6 @@ namespace CsvRwRouteParser
 	{
 		private static void ParseCycleCommand(string Command, string[] Arguments, int Index, Expression Expression, ref RouteData Data, bool PreviewOnly)
 		{
-			CultureInfo Culture = CultureInfo.InvariantCulture;
 			switch (Command)
 			{
 				case "ground":
@@ -17,7 +15,7 @@ namespace CsvRwRouteParser
 					{
 						if (Index >= Data.Structure.Cycles.Length)
 						{
-							Array.Resize<int[]>(ref Data.Structure.Cycles, Index + 1);
+							Array.Resize(ref Data.Structure.Cycles, Index + 1);
 						}
 
 						Data.Structure.Cycles[Index] = new int[Arguments.Length];
@@ -47,7 +45,7 @@ namespace CsvRwRouteParser
 					{
 						if (Index >= Data.Structure.RailCycles.Length)
 						{
-							Array.Resize<int[]>(ref Data.Structure.RailCycles, Index + 1);
+							Array.Resize(ref Data.Structure.RailCycles, Index + 1);
 						}
 
 						Data.Structure.RailCycles[Index] = new int[Arguments.Length];

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Text;
 using OpenBveApi;
 using OpenBveApi.Interface;
@@ -14,7 +13,6 @@ namespace CsvRwRouteParser
 	{
 		private static void ParseStructureCommand(string Command, string[] Arguments, int[] commandIndices, Encoding Encoding, double[] UnitOfLength, Expression Expression, ref RouteData Data, bool PreviewOnly)
 		{
-			CultureInfo Culture = CultureInfo.InvariantCulture;
 			switch (Command)
 			{
 				case "rail":
@@ -76,7 +74,7 @@ namespace CsvRwRouteParser
 							}
 							else
 							{
-								string f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
+								string f = Path.CombineFile(ObjectPath, Arguments[0]);
 								if (!System.IO.File.Exists(f))
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);

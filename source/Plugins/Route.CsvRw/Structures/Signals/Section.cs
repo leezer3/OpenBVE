@@ -37,7 +37,7 @@ namespace CsvRwRouteParser
 					{
 						int o = CurrentRoute.Tracks[0].Elements[CurrentTrackElement - CurrentBlock + g].Events.Length;
 						Array.Resize(ref CurrentRoute.Tracks[0].Elements[CurrentTrackElement - CurrentBlock + g].Events, o + 1);
-						double dt = Blocks[g].Transponders[l].TrackPosition - StartingDistance + (double) (CurrentBlock - g) * BlockInterval;
+						double dt = Blocks[g].Transponders[l].TrackPosition - StartingDistance + (CurrentBlock - g) * BlockInterval;
 						CurrentRoute.Tracks[0].Elements[CurrentTrackElement - CurrentBlock + g].Events[o] = new TransponderEvent(CurrentRoute, dt, Blocks[g].Transponders[l].Type, Blocks[g].Transponders[l].Data, m, Blocks[g].Transponders[l].ClipToFirstRedSection);
 						Blocks[g].Transponders[l].Type = -1;
 					}

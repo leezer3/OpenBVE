@@ -333,7 +333,7 @@ namespace CsvRwRouteParser {
 									ParseRouteCommand(Command, Arguments, commandIndices[0], FileName, UnitOfLength, Expressions[j], ref Data, PreviewOnly);
 									break;
 								case "train":
-									ParseTrainCommand(Command, Arguments, commandIndices[0], UnitOfLength, Expressions[j], ref Data, PreviewOnly);
+									ParseTrainCommand(Command, Arguments, commandIndices[0], Expressions[j], ref Data, PreviewOnly);
 									break;
 								case "structure":
 								case "texture":

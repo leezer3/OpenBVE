@@ -39,7 +39,6 @@ namespace CsvRwRouteParser
 			}
 			
 			// initialize
-			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 			int LastBlock = (int)Math.Floor((Data.TrackPosition + 600.0) / Data.BlockInterval + 0.001) + 1;
 			if (Data.Blocks[Data.Blocks.Length - 1].CurrentTrackState.CurveRadius < 300)
 			{
@@ -52,7 +51,7 @@ namespace CsvRwRouteParser
 			}
 			int BlocksUsed = Data.Blocks.Length;
 			Data.CreateMissingBlocks(ref BlocksUsed, LastBlock, PreviewOnly);
-			Array.Resize<Block>(ref Data.Blocks, BlocksUsed);
+			Array.Resize(ref Data.Blocks, BlocksUsed);
 			// interpolate height
 			if (!PreviewOnly)
 			{
@@ -67,7 +66,7 @@ namespace CsvRwRouteParser
 							{
 								double a = Data.Blocks[j].Height;
 								double b = Data.Blocks[i].Height;
-								double d = (b - a) / (double)(i - j);
+								double d = (b - a) / (i - j);
 								for (int k = j + 1; k < i; k++)
 								{
 									a += d;
@@ -126,7 +125,7 @@ namespace CsvRwRouteParser
 			int CurrentBrightnessElement = -1;
 			int CurrentBrightnessEvent = -1;
 			float CurrentBrightnessValue = 1.0f;
-			double CurrentBrightnessTrackPosition = (double)Data.FirstUsedBlock * Data.BlockInterval;
+			double CurrentBrightnessTrackPosition = Data.FirstUsedBlock * Data.BlockInterval;
 			if (!PreviewOnly)
 			{
 				for (int i = Data.FirstUsedBlock; i < Data.Blocks.Length; i++)
@@ -167,16 +166,16 @@ namespace CsvRwRouteParser
 				}
 			}
 			// process blocks
-			double progressFactor = Data.Blocks.Length - Data.FirstUsedBlock == 0 ? 0.5 : 0.5 / (double)(Data.Blocks.Length - Data.FirstUsedBlock);
+			double progressFactor = Data.Blocks.Length - Data.FirstUsedBlock == 0 ? 0.5 : 0.5 / (Data.Blocks.Length - Data.FirstUsedBlock);
 			for (int i = Data.FirstUsedBlock; i < Data.Blocks.Length; i++)
 			{
-				Plugin.CurrentProgress = 0.6667 + (double)(i - Data.FirstUsedBlock) * progressFactor;
+				Plugin.CurrentProgress = 0.6667 + (i - Data.FirstUsedBlock) * progressFactor;
 				if ((i & 15) == 0)
 				{
 					System.Threading.Thread.Sleep(1);
 					if (Plugin.Cancel) return;
 				}
-				double StartingDistance = (double)i * Data.BlockInterval;
+				double StartingDistance = i * Data.BlockInterval;
 				double EndingDistance = StartingDistance + Data.BlockInterval;
 				// normalize
 				Direction.Normalize();
@@ -551,7 +550,7 @@ namespace CsvRwRouteParser
 					h = s * p;
 					double b = s / Math.Abs(r);
 					c = Math.Sqrt(2.0 * r * r * (1.0 - Math.Cos(b)));
-					a = 0.5 * (double)Math.Sign(r) * b;
+					a = 0.5 * Math.Sign(r) * b;
 					Direction.Rotate(Math.Cos(-a), Math.Sin(-a));
 				}
 				else if (WorldTrackElement.CurveRadius != 0.0)
@@ -560,7 +559,7 @@ namespace CsvRwRouteParser
 					double r = WorldTrackElement.CurveRadius;
 					double b = d / Math.Abs(r);
 					c = Math.Sqrt(2.0 * r * r * (1.0 - Math.Cos(b)));
-					a = 0.5 * (double)Math.Sign(r) * b;
+					a = 0.5 * Math.Sign(r) * b;
 					Direction.Rotate(Math.Cos(-a), Math.Sin(-a));
 				}
 				else if (Data.Blocks[i].Pitch != 0.0)
@@ -1157,7 +1156,7 @@ namespace CsvRwRouteParser
 							for (int k = 0; k < Data.Blocks[i].Transponders.Length; k++)
 							{
 								UnifiedObject obj = null;
-								if (Data.Blocks[i].Transponders[k].ShowDefaultObject)
+								if (Data.Blocks[i].Transponders[k].BeaconStructureIndex == -2)
 								{
 									switch (Data.Blocks[i].Transponders[k].Type)
 									{
@@ -1184,7 +1183,7 @@ namespace CsvRwRouteParser
 									Vector3 wpos = pos;
 									wpos += dx * RailTransformation.X + dy * RailTransformation.Y + dz * RailTransformation.Z;
 									double tpos = Data.Blocks[i].Transponders[k].TrackPosition;
-									if (Data.Blocks[i].Transponders[k].ShowDefaultObject)
+									if (Data.Blocks[i].Transponders[k].BeaconStructureIndex == -2)
 									{
 										double b = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
 										obj.CreateObject(wpos, RailTransformation, new Transformation(Data.Blocks[i].Transponders[k].Yaw, Data.Blocks[i].Transponders[k].Pitch, Data.Blocks[i].Transponders[k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b, false);

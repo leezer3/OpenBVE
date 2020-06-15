@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using OpenBveApi.Interface;
+﻿using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
 
@@ -9,7 +8,6 @@ namespace CsvRwRouteParser
 	{
 		private static void ParseOptionCommand(string Command, string[] Arguments, double[] UnitOfLength, Expression Expression, ref RouteData Data, bool PreviewOnly)
 		{
-			CultureInfo Culture = CultureInfo.InvariantCulture;
 			switch (Command)
 			{
 				case "blocklength":

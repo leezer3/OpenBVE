@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
@@ -21,7 +20,6 @@ namespace CsvRwRouteParser
 		private static bool DepartureSignalUsed = false;
 		private static void ParseTrackCommand(string Command, string[] Arguments, string FileName, double[] UnitOfLength, Expression Expression, ref RouteData Data, int BlockIndex, bool PreviewOnly)
 		{
-			CultureInfo Culture = CultureInfo.InvariantCulture;
 			switch (Command)
 			{
 				case "railstart":
@@ -56,7 +54,7 @@ namespace CsvRwRouteParser
 							if (idx >= Data.Blocks[BlockIndex].RailCycles.Length)
 							{
 								int ol = Data.Blocks[BlockIndex].RailCycles.Length;
-								Array.Resize<RailCycle>(ref Data.Blocks[BlockIndex].RailCycles, idx + 1);
+								Array.Resize(ref Data.Blocks[BlockIndex].RailCycles, idx + 1);
 								for (int rc = ol; rc < Data.Blocks[BlockIndex].RailCycles.Length; rc++)
 								{
 									Data.Blocks[BlockIndex].RailCycles[rc].RailCycleIndex = -1;
@@ -115,7 +113,7 @@ namespace CsvRwRouteParser
 
 						if (Data.Blocks[BlockIndex].RailType.Length <= idx)
 						{
-							Array.Resize<int>(ref Data.Blocks[BlockIndex].RailType, idx + 1);
+							Array.Resize(ref Data.Blocks[BlockIndex].RailType, idx + 1);
 						}
 
 						if (Arguments.Length >= 4 && Arguments[3].Length != 0)
@@ -266,7 +264,7 @@ namespace CsvRwRouteParser
 							{
 								if (Data.Blocks[BlockIndex].RailType.Length <= idx)
 								{
-									Array.Resize<int>(ref Data.Blocks[BlockIndex].RailType, idx + 1);
+									Array.Resize(ref Data.Blocks[BlockIndex].RailType, idx + 1);
 									int ol = Data.Blocks[BlockIndex].RailCycles.Length;
 									Array.Resize(ref Data.Blocks[BlockIndex].RailCycles, idx + 1);
 									for (int rc = ol; rc < Data.Blocks[BlockIndex].RailCycles.Length; rc++)
@@ -348,12 +346,12 @@ namespace CsvRwRouteParser
 					{
 						if (radius != 0.0)
 						{
-							cant *= (double) Math.Sign(radius);
+							cant *= Math.Sign(radius);
 						}
 					}
 					else
 					{
-						cant = Math.Abs(cant) * (double) Math.Sign(radius);
+						cant = Math.Abs(cant) * Math.Sign(radius);
 					}
 
 					Data.Blocks[BlockIndex].CurrentTrackState.CurveRadius = radius;
@@ -406,7 +404,7 @@ namespace CsvRwRouteParser
 						if (value < 0.0f) value = 0.0f;
 						if (value > 1.0f) value = 1.0f;
 						int n = Data.Blocks[BlockIndex].BrightnessChanges.Length;
-						Array.Resize<Brightness>(ref Data.Blocks[BlockIndex].BrightnessChanges, n + 1);
+						Array.Resize(ref Data.Blocks[BlockIndex].BrightnessChanges, n + 1);
 						Data.Blocks[BlockIndex].BrightnessChanges[n].TrackPosition = Data.TrackPosition;
 						Data.Blocks[BlockIndex].BrightnessChanges[n].Value = value;
 					}
@@ -536,11 +534,11 @@ namespace CsvRwRouteParser
 							bool valueBased = Data.ValueBasedSections | string.Equals(Command, "SectionS", StringComparison.OrdinalIgnoreCase);
 							if (valueBased)
 							{
-								Array.Sort<int>(aspects);
+								Array.Sort(aspects);
 							}
 
 							int n = Data.Blocks[BlockIndex].Sections.Length;
-							Array.Resize<Section>(ref Data.Blocks[BlockIndex].Sections, n + 1);
+							Array.Resize(ref Data.Blocks[BlockIndex].Sections, n + 1);
 							int departureStationIndex = -1;
 							if (CurrentStation >= 0 && CurrentRoute.Stations[CurrentStation].ForceStopSignal)
 							{
@@ -611,7 +609,7 @@ namespace CsvRwRouteParser
 							}
 
 							int n = Data.Blocks[BlockIndex].Signals.Length;
-							Array.Resize<Signal>(ref Data.Blocks[BlockIndex].Signals, n + 1);
+							Array.Resize(ref Data.Blocks[BlockIndex].Signals, n + 1);
 							Data.Blocks[BlockIndex].Signals[n] = new Signal(Data.TrackPosition, CurrentSection, Data.Signals[objidx], new Vector2(x, y < 0.0 ? 4.8 : y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians(), true, y < 0.0);
 						}
 						else
@@ -633,7 +631,7 @@ namespace CsvRwRouteParser
 							num = -2;
 						}
 
-						if (num == 0 && IsRW == true)
+						if (num == 0 && IsRW)
 						{
 							//Aspects value of zero in RW routes produces a 2-aspect R/G signal
 							num = -2;
@@ -682,53 +680,53 @@ namespace CsvRwRouteParser
 						switch (num)
 						{
 							case 1:
-								aspects = new int[] {0, 2, 3};
+								aspects = new[] {0, 2, 3};
 								comp = 4;
 								break;
 							case 2:
-								aspects = new int[] {0, 2};
+								aspects = new[] {0, 2};
 								comp = 0;
 								break;
 							case -2:
-								aspects = new int[] {0, 4};
+								aspects = new[] {0, 4};
 								comp = 1;
 								break;
 							case -3:
-								aspects = new int[] {0, 2, 4};
+								aspects = new[] {0, 2, 4};
 								comp = 2;
 								break; //Undocumented, see https://github.com/leezer3/OpenBVE/issues/336
 							case 3:
-								aspects = new int[] {0, 2, 4};
+								aspects = new[] {0, 2, 4};
 								comp = 2;
 								break;
 							case 4:
-								aspects = new int[] {0, 1, 2, 4};
+								aspects = new[] {0, 1, 2, 4};
 								comp = 3;
 								break;
 							case -4:
-								aspects = new int[] {0, 2, 3, 4};
+								aspects = new[] {0, 2, 3, 4};
 								comp = 4;
 								break;
 							case 5:
-								aspects = new int[] {0, 1, 2, 3, 4};
+								aspects = new[] {0, 1, 2, 3, 4};
 								comp = 5;
 								break;
 							case -5:
-								aspects = new int[] {0, 2, 3, 4, 5};
+								aspects = new[] {0, 2, 3, 4, 5};
 								comp = 6;
 								break;
 							case 6:
-								aspects = new int[] {0, 1, 2, 3, 4, 5};
+								aspects = new[] {0, 1, 2, 3, 4, 5};
 								comp = 7;
 								break;
 							default:
-								aspects = new int[] {0, 2};
+								aspects = new[] {0, 2};
 								comp = 0;
 								break;
 						}
 
 						int n = Data.Blocks[BlockIndex].Sections.Length;
-						Array.Resize<Section>(ref Data.Blocks[BlockIndex].Sections, n + 1);
+						Array.Resize(ref Data.Blocks[BlockIndex].Sections, n + 1);
 						int departureStationIndex = -1;
 						if (CurrentStation >= 0 && CurrentRoute.Stations[CurrentStation].ForceStopSignal)
 						{
@@ -742,7 +740,7 @@ namespace CsvRwRouteParser
 						Data.Blocks[BlockIndex].Sections[n] = new Section(Data.TrackPosition, aspects, departureStationIndex, SectionType.ValueBased, x == 0.0);
 						CurrentSection++;
 						n = Data.Blocks[BlockIndex].Signals.Length;
-						Array.Resize<Signal>(ref Data.Blocks[BlockIndex].Signals, n + 1);
+						Array.Resize(ref Data.Blocks[BlockIndex].Signals, n + 1);
 						Data.Blocks[BlockIndex].Signals[n] = new Signal(Data.TrackPosition, CurrentSection, Data.CompatibilitySignals[comp], new Vector2(x, y < 0.0 ? 4.8 : y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians(), x != 0.0, x != 0.0 & y < 0.0);
 					}
 				}
@@ -784,7 +782,7 @@ namespace CsvRwRouteParser
 						}
 
 						int n = Data.Blocks[BlockIndex].Signals.Length;
-						Array.Resize<Signal>(ref Data.Blocks[BlockIndex].Signals, n + 1);
+						Array.Resize(ref Data.Blocks[BlockIndex].Signals, n + 1);
 						Data.Blocks[BlockIndex].Signals[n] = new Signal(Data.TrackPosition, CurrentSection + 1, Data.CompatibilitySignals[8], new Vector2(x, y < 0.0 ? 4.8 : y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians(), x != 0.0, x != 0.0 & y < 0.0);
 					}
 				}
@@ -881,7 +879,7 @@ namespace CsvRwRouteParser
 							}
 
 							int n = Data.Blocks[BlockIndex].DestinationChanges.Length;
-							Array.Resize<DestinationEvent>(ref Data.Blocks[BlockIndex].DestinationChanges, n + 1);
+							Array.Resize(ref Data.Blocks[BlockIndex].DestinationChanges, n + 1);
 							Data.Blocks[BlockIndex].DestinationChanges[n].TrackPosition = Data.TrackPosition;
 							Data.Blocks[BlockIndex].DestinationChanges[n].Type = type;
 							Data.Blocks[BlockIndex].DestinationChanges[n].TriggerOnce = triggerOnce != 0;
@@ -991,18 +989,8 @@ namespace CsvRwRouteParser
 							}
 
 							int n = Data.Blocks[BlockIndex].Transponders.Length;
-							Array.Resize<Transponder>(ref Data.Blocks[BlockIndex].Transponders, n + 1);
-							Data.Blocks[BlockIndex].Transponders[n].TrackPosition = Data.TrackPosition;
-							Data.Blocks[BlockIndex].Transponders[n].Type = type;
-							Data.Blocks[BlockIndex].Transponders[n].Data = optional;
-							Data.Blocks[BlockIndex].Transponders[n].BeaconStructureIndex = structure;
-							Data.Blocks[BlockIndex].Transponders[n].SectionIndex = section;
-							Data.Blocks[BlockIndex].Transponders[n].ShowDefaultObject = false;
-							Data.Blocks[BlockIndex].Transponders[n].Position.X = x;
-							Data.Blocks[BlockIndex].Transponders[n].Position.Y = y;
-							Data.Blocks[BlockIndex].Transponders[n].Yaw = yaw.ToRadians();
-							Data.Blocks[BlockIndex].Transponders[n].Pitch = pitch.ToRadians();
-							Data.Blocks[BlockIndex].Transponders[n].Roll = roll.ToRadians();
+							Array.Resize(ref Data.Blocks[BlockIndex].Transponders, n + 1);
+							Data.Blocks[BlockIndex].Transponders[n] = new Transponder(Data.TrackPosition, type, optional, new Vector2(x, y), section, structure, false, yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians());
 						}
 					}
 				}
@@ -1070,19 +1058,8 @@ namespace CsvRwRouteParser
 						}
 
 						int n = Data.Blocks[BlockIndex].Transponders.Length;
-						Array.Resize<Transponder>(ref Data.Blocks[BlockIndex].Transponders, n + 1);
-						Data.Blocks[BlockIndex].Transponders[n].TrackPosition = Data.TrackPosition;
-						Data.Blocks[BlockIndex].Transponders[n].Type = type;
-						Data.Blocks[BlockIndex].Transponders[n].Data = work;
-						Data.Blocks[BlockIndex].Transponders[n].ShowDefaultObject = true;
-						Data.Blocks[BlockIndex].Transponders[n].BeaconStructureIndex = -1;
-						Data.Blocks[BlockIndex].Transponders[n].Position.X = x;
-						Data.Blocks[BlockIndex].Transponders[n].Position.Y = y;
-						Data.Blocks[BlockIndex].Transponders[n].Yaw = yaw.ToRadians();
-						Data.Blocks[BlockIndex].Transponders[n].Pitch = pitch.ToRadians();
-						Data.Blocks[BlockIndex].Transponders[n].Roll = roll.ToRadians();
-						Data.Blocks[BlockIndex].Transponders[n].SectionIndex = CurrentSection + oversig + 1;
-						Data.Blocks[BlockIndex].Transponders[n].ClipToFirstRedSection = true;
+						Array.Resize(ref Data.Blocks[BlockIndex].Transponders, n + 1);
+						Data.Blocks[BlockIndex].Transponders[n] = new Transponder(Data.TrackPosition, type, work, new Vector2(x, y), CurrentSection + oversig + 1, -2, true, yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians());
 					}
 				}
 					break;
@@ -1091,14 +1068,8 @@ namespace CsvRwRouteParser
 					if (!PreviewOnly)
 					{
 						int n = Data.Blocks[BlockIndex].Transponders.Length;
-						Array.Resize<Transponder>(ref Data.Blocks[BlockIndex].Transponders, n + 1);
-						Data.Blocks[BlockIndex].Transponders[n].TrackPosition = Data.TrackPosition;
-						Data.Blocks[BlockIndex].Transponders[n].Type = 0;
-						Data.Blocks[BlockIndex].Transponders[n].Data = 0;
-						Data.Blocks[BlockIndex].Transponders[n].ShowDefaultObject = true;
-						Data.Blocks[BlockIndex].Transponders[n].BeaconStructureIndex = -1;
-						Data.Blocks[BlockIndex].Transponders[n].SectionIndex = CurrentSection + 1;
-						Data.Blocks[BlockIndex].Transponders[n].ClipToFirstRedSection = true;
+						Array.Resize(ref Data.Blocks[BlockIndex].Transponders, n + 1);
+						Data.Blocks[BlockIndex].Transponders[n] = new Transponder(Data.TrackPosition, 0, 0, new Vector2(), CurrentSection + 1, -2);
 					}
 				}
 					break;
@@ -1107,14 +1078,8 @@ namespace CsvRwRouteParser
 					if (!PreviewOnly)
 					{
 						int n = Data.Blocks[BlockIndex].Transponders.Length;
-						Array.Resize<Transponder>(ref Data.Blocks[BlockIndex].Transponders, n + 1);
-						Data.Blocks[BlockIndex].Transponders[n].TrackPosition = Data.TrackPosition;
-						Data.Blocks[BlockIndex].Transponders[n].Type = 3;
-						Data.Blocks[BlockIndex].Transponders[n].Data = 0;
-						Data.Blocks[BlockIndex].Transponders[n].ShowDefaultObject = true;
-						Data.Blocks[BlockIndex].Transponders[n].BeaconStructureIndex = -1;
-						Data.Blocks[BlockIndex].Transponders[n].SectionIndex = CurrentSection + 1;
-						Data.Blocks[BlockIndex].Transponders[n].ClipToFirstRedSection = true;
+						Array.Resize(ref Data.Blocks[BlockIndex].Transponders, n + 1);
+						Data.Blocks[BlockIndex].Transponders[n] = new Transponder(Data.TrackPosition, 3, 0, new Vector2(), CurrentSection + 1, -2);
 					}
 				}
 					break;
@@ -1137,21 +1102,15 @@ namespace CsvRwRouteParser
 						}
 
 						int n = Data.Blocks[BlockIndex].Transponders.Length;
-						Array.Resize<Transponder>(ref Data.Blocks[BlockIndex].Transponders, n + 1);
-						Data.Blocks[BlockIndex].Transponders[n].TrackPosition = Data.TrackPosition;
+						Array.Resize(ref Data.Blocks[BlockIndex].Transponders, n + 1);
 						if (type == 0)
 						{
-							Data.Blocks[BlockIndex].Transponders[n].Type = (int) TransponderTypes.InternalAtsPTemporarySpeedLimit;
-							Data.Blocks[BlockIndex].Transponders[n].Data = speed == 0.0 ? int.MaxValue : (int) Math.Round(speed * Data.UnitOfSpeed * 3.6);
+							Data.Blocks[BlockIndex].Transponders[n] = new Transponder(Data.TrackPosition, TransponderTypes.InternalAtsPTemporarySpeedLimit, speed == 0.0 ? int.MaxValue : (int) Math.Round(speed * Data.UnitOfSpeed * 3.6));
 						}
 						else
 						{
-							Data.Blocks[BlockIndex].Transponders[n].Type = (int) TransponderTypes.AtsPPermanentSpeedLimit;
-							Data.Blocks[BlockIndex].Transponders[n].Data = speed == 0.0 ? int.MaxValue : (int) Math.Round(speed * Data.UnitOfSpeed * 3.6);
+							Data.Blocks[BlockIndex].Transponders[n] = new Transponder(Data.TrackPosition, TransponderTypes.AtsPPermanentSpeedLimit, speed == 0.0 ? int.MaxValue : (int) Math.Round(speed * Data.UnitOfSpeed * 3.6));
 						}
-
-						Data.Blocks[BlockIndex].Transponders[n].SectionIndex = -1;
-						Data.Blocks[BlockIndex].Transponders[n].BeaconStructureIndex = -1;
 					}
 				}
 					break;
@@ -1168,11 +1127,7 @@ namespace CsvRwRouteParser
 
 						int n = Data.Blocks[BlockIndex].Transponders.Length;
 						Array.Resize<Transponder>(ref Data.Blocks[BlockIndex].Transponders, n + 1);
-						Data.Blocks[BlockIndex].Transponders[n].TrackPosition = Data.TrackPosition;
-						Data.Blocks[BlockIndex].Transponders[n].Type = (int) TransponderTypes.AtsPPermanentSpeedLimit;
-						Data.Blocks[BlockIndex].Transponders[n].Data = speed == 0.0 ? int.MaxValue : (int) Math.Round(speed * Data.UnitOfSpeed * 3.6);
-						Data.Blocks[BlockIndex].Transponders[n].SectionIndex = -1;
-						Data.Blocks[BlockIndex].Transponders[n].BeaconStructureIndex = -1;
+						Data.Blocks[BlockIndex].Transponders[n] = new Transponder(Data.TrackPosition, TransponderTypes.AtsPPermanentSpeedLimit, speed == 0.0 ? int.MaxValue : (int) Math.Round(speed * Data.UnitOfSpeed * 3.6));
 					}
 				}
 					break;
@@ -2527,7 +2482,7 @@ namespace CsvRwRouteParser
 							}
 							else
 							{
-								Data.Blocks[BlockIndex].Cycle = new int[] {cytype};
+								Data.Blocks[BlockIndex].Cycle = new[] {cytype};
 							}
 						}
 					}

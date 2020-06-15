@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
@@ -10,9 +9,8 @@ namespace CsvRwRouteParser
 {
 	internal partial class Parser
 	{
-		private static void ParseTrainCommand(string Command, string[] Arguments, int Index, double[] UnitOfLength, Expression Expression, ref RouteData Data, bool PreviewOnly)
+		private static void ParseTrainCommand(string Command, string[] Arguments, int Index, Expression Expression, ref RouteData Data, bool PreviewOnly)
 		{
-			CultureInfo Culture = CultureInfo.InvariantCulture;
 			switch (Command)
 			{
 				case "interval":
@@ -133,7 +131,7 @@ namespace CsvRwRouteParser
 
 							if (Index >= Data.Structure.Run.Length)
 							{
-								Array.Resize<int>(ref Data.Structure.Run, Index + 1);
+								Array.Resize(ref Data.Structure.Run, Index + 1);
 							}
 
 							Data.Structure.Run[Index] = val;
@@ -170,7 +168,7 @@ namespace CsvRwRouteParser
 
 							if (Index >= Data.Structure.Flange.Length)
 							{
-								Array.Resize<int>(ref Data.Structure.Flange, Index + 1);
+								Array.Resize(ref Data.Structure.Flange, Index + 1);
 							}
 
 							Data.Structure.Flange[Index] = val;
@@ -201,7 +199,7 @@ namespace CsvRwRouteParser
 								while (Index >= Data.TimetableDaytime.Length)
 								{
 									int n = Data.TimetableDaytime.Length;
-									Array.Resize<OpenBveApi.Textures.Texture>(ref Data.TimetableDaytime, n << 1);
+									Array.Resize(ref Data.TimetableDaytime, n << 1);
 									for (int i = n; i < Data.TimetableDaytime.Length; i++)
 									{
 										Data.TimetableDaytime[i] = null;
@@ -211,12 +209,12 @@ namespace CsvRwRouteParser
 								string f = string.Empty;
 								if (!string.IsNullOrEmpty(TrainPath))
 								{
-									f = OpenBveApi.Path.CombineFile(TrainPath, Arguments[0]);
+									f = Path.CombineFile(TrainPath, Arguments[0]);
 								}
 									
 								if (!System.IO.File.Exists(f))
 								{
-									f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
+									f = Path.CombineFile(ObjectPath, Arguments[0]);
 								}
 
 								if (System.IO.File.Exists(f))
@@ -255,7 +253,7 @@ namespace CsvRwRouteParser
 								while (Index >= Data.TimetableNighttime.Length)
 								{
 									int n = Data.TimetableNighttime.Length;
-									Array.Resize<OpenBveApi.Textures.Texture>(ref Data.TimetableNighttime, n << 1);
+									Array.Resize(ref Data.TimetableNighttime, n << 1);
 									for (int i = n; i < Data.TimetableNighttime.Length; i++)
 									{
 										Data.TimetableNighttime[i] = null;
@@ -265,12 +263,12 @@ namespace CsvRwRouteParser
 								string f = string.Empty;
 								if(!string.IsNullOrEmpty(TrainPath))
 								{
-									f = OpenBveApi.Path.CombineFile(TrainPath, Arguments[0]);
+									f = Path.CombineFile(TrainPath, Arguments[0]);
 								}
 
 								if (!System.IO.File.Exists(f))
 								{
-									f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
+									f = Path.CombineFile(ObjectPath, Arguments[0]);
 								}
 
 								if (System.IO.File.Exists(f))

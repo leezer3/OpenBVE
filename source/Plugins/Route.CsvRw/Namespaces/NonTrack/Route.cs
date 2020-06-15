@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
@@ -17,7 +14,6 @@ namespace CsvRwRouteParser
 	{
 		private static void ParseRouteCommand(string Command, string[] Arguments, int Index, string FileName, double[] UnitOfLength, Expression Expression, ref RouteData Data, bool PreviewOnly)
 		{
-			CultureInfo Culture = CultureInfo.InvariantCulture;
 			switch (Command)
 			{
 				case "comment":
@@ -38,7 +34,7 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						string f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+						string f = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
 						if (!System.IO.File.Exists(f))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -139,7 +135,7 @@ namespace CsvRwRouteParser
 									if (Index >= Data.SignalSpeeds.Length)
 									{
 										int n = Data.SignalSpeeds.Length;
-										Array.Resize<double>(ref Data.SignalSpeeds, Index + 1);
+										Array.Resize(ref Data.SignalSpeeds, Index + 1);
 										for (int i = n; i < Index; i++)
 										{
 											Data.SignalSpeeds[i] = double.PositiveInfinity;
@@ -212,7 +208,7 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						string f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+						string f = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
 						if (!System.IO.File.Exists(f))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -261,7 +257,7 @@ namespace CsvRwRouteParser
 					}
 					else
 					{
-						string f = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+						string f = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
 						if (!System.IO.File.Exists(f))
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -340,7 +336,7 @@ namespace CsvRwRouteParser
 					break;
 				case "ambientlight":
 				{
-					if (Plugin.CurrentRoute.DynamicLighting == true)
+					if (Plugin.CurrentRoute.DynamicLighting)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Dynamic lighting is enabled- Route.AmbientLight will be ignored");
 						break;
@@ -382,7 +378,7 @@ namespace CsvRwRouteParser
 					break;
 				case "directionallight":
 				{
-					if (Plugin.CurrentRoute.DynamicLighting == true)
+					if (Plugin.CurrentRoute.DynamicLighting)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Dynamic lighting is enabled- Route.DirectionalLight will be ignored");
 						break;
@@ -424,7 +420,7 @@ namespace CsvRwRouteParser
 					break;
 				case "lightdirection":
 				{
-					if (Plugin.CurrentRoute.DynamicLighting == true)
+					if (Plugin.CurrentRoute.DynamicLighting)
 					{
 						Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Dynamic lighting is enabled- Route.LightDirection will be ignored");
 						break;
@@ -451,7 +447,7 @@ namespace CsvRwRouteParser
 					break;
 				case "dynamiclight":
 					//Read the lighting XML file
-					string path = OpenBveApi.Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
+					string path = Path.CombineFile(System.IO.Path.GetDirectoryName(FileName), Arguments[0]);
 					if (System.IO.File.Exists(path))
 					{
 						if (DynamicLightParser.ReadLightingXML(path))

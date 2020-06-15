@@ -267,7 +267,7 @@ namespace CsvRwRouteParser
 											{
 												o.ReplacementPath = f;
 											}
-										break;
+											break;
 									case "message":
 										o.Message = c.InnerText.Trim(new char[] { });
 										break;
