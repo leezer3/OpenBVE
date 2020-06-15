@@ -41,17 +41,6 @@ namespace CsvRwRouteParser
 			internal int Type;
 		}
 		
-		
-		
-		
-		internal struct Limit
-		{
-			internal double TrackPosition;
-			internal double Speed;
-			internal int Direction;
-			internal int Cource;
-		}
-		
 		internal struct Brightness
 		{
 			internal double TrackPosition;

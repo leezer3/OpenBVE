@@ -1126,7 +1126,7 @@ namespace CsvRwRouteParser
 						}
 
 						int n = Data.Blocks[BlockIndex].Transponders.Length;
-						Array.Resize<Transponder>(ref Data.Blocks[BlockIndex].Transponders, n + 1);
+						Array.Resize(ref Data.Blocks[BlockIndex].Transponders, n + 1);
 						Data.Blocks[BlockIndex].Transponders[n] = new Transponder(Data.TrackPosition, TransponderTypes.AtsPPermanentSpeedLimit, speed == 0.0 ? int.MaxValue : (int) Math.Round(speed * Data.UnitOfSpeed * 3.6));
 					}
 				}
@@ -1154,11 +1154,8 @@ namespace CsvRwRouteParser
 					}
 
 					int n = Data.Blocks[BlockIndex].Limits.Length;
-					Array.Resize<Limit>(ref Data.Blocks[BlockIndex].Limits, n + 1);
-					Data.Blocks[BlockIndex].Limits[n].TrackPosition = Data.TrackPosition;
-					Data.Blocks[BlockIndex].Limits[n].Speed = limit <= 0.0 ? double.PositiveInfinity : Data.UnitOfSpeed * limit;
-					Data.Blocks[BlockIndex].Limits[n].Direction = direction;
-					Data.Blocks[BlockIndex].Limits[n].Cource = cource;
+					Array.Resize(ref Data.Blocks[BlockIndex].Limits, n + 1);
+					Data.Blocks[BlockIndex].Limits[n] = new Limit(Data.TrackPosition, limit <= 0.0 ? double.PositiveInfinity : Data.UnitOfSpeed * limit, direction, cource);
 				}
 					break;
 				case "stop":
