@@ -35,12 +35,7 @@ namespace CsvRwRouteParser
 		
 		
 
-		internal struct Marker
-		{
-			internal double StartingPosition;
-			internal double EndingPosition;
-			internal AbstractMessage Message;
-		}
+		
 
 		internal struct StopRequest
 		{

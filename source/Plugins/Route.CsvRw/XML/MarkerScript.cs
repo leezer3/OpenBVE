@@ -5,15 +5,17 @@ using OpenBveApi.Math;
 using System.Linq;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
+using RouteManager2.MessageManager;
 using RouteManager2.MessageManager.MessageTypes;
 
 namespace CsvRwRouteParser
 {
 	class MarkerScriptParser
 	{
-		public static bool ReadMarkerXML(string fileName, ref Parser.Marker marker)
+		public static bool ReadMarkerXML(string fileName, double StartingPosition, ref Marker Marker)
 		{
-			
+			double EndingPosition = Double.PositiveInfinity;
+			AbstractMessage Message = null;
 			//The current XML file to load
 			XmlDocument currentXML = new XmlDocument();
 			//Load the marker's XML file 
@@ -34,7 +36,6 @@ namespace CsvRwRouteParser
 					Plugin.CurrentHost.AddMessage(MessageType.Error, false, "No marker nodes defined in XML file " + fileName);
 					return false;
 				}
-				//marker = new CsvRwRouteParser.Marker();
 				foreach (XmlNode n in DocumentNodes)
 				{
 					if (n.ChildNodes.OfType<XmlElement>().Any())
@@ -43,7 +44,7 @@ namespace CsvRwRouteParser
 						string EarlyText = null, Text = null, LateText = null;
 						string[] Trains = null;
 						Texture EarlyTexture = null, Texture = null, LateTexture = null;
-						double EarlyTime = 0.0, LateTime = 0.0, TimeOut = Double.PositiveInfinity, EndingPosition = Double.PositiveInfinity;
+						double EarlyTime = 0.0, LateTime = 0.0, TimeOut = Double.PositiveInfinity;
 						MessageColor EarlyColor = MessageColor.White, OnTimeColor = MessageColor.White, LateColor = MessageColor.White;
 						foreach (XmlNode c in n.ChildNodes)
 						{
@@ -224,13 +225,13 @@ namespace CsvRwRouteParser
 							if (Math.Abs(EndingPosition) == EndingPosition)
 							{
 								//Positive
-								marker.EndingPosition = marker.StartingPosition + EndingPosition;
+								EndingPosition = StartingPosition + EndingPosition;
 							}
 							else
 							{
 								//Negative
-								marker.EndingPosition = marker.StartingPosition;
-								marker.StartingPosition -= EndingPosition;
+								EndingPosition = StartingPosition;
+								StartingPosition -= EndingPosition;
 							}
 						}
 						TextureMessage t = new TextureMessage(Plugin.CurrentHost);
@@ -315,16 +316,17 @@ namespace CsvRwRouteParser
 						}
 						if (iM)
 						{
-							marker.Message = t;
+							Message = t;
 						}
 						else
 						{
-							marker.Message = m;
+							Message = m;
 						}
 					}
 				}
 				
 			}
+			Marker = new Marker(StartingPosition, EndingPosition, Message);
 			return true;
 		}
 

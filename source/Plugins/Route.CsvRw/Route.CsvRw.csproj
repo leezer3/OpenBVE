@@ -80,6 +80,7 @@
     <Compile Include="Structures\Signals\Transponder.cs" />
     <Compile Include="Structures\Trains\Brightness.cs" />
     <Compile Include="Structures\Trains\Limit.cs" />
+    <Compile Include="Structures\Trains\Marker.cs" />
     <Compile Include="XML\DynamicBackground.cs" />
     <Compile Include="XML\DynamicLight.cs" />
     <Compile Include="XML\MarkerScript.cs" />

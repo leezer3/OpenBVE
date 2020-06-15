@@ -8,6 +8,7 @@ using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
 using RouteManager2.Events;
+using RouteManager2.MessageManager;
 using RouteManager2.MessageManager.MessageTypes;
 using RouteManager2.SignalManager;
 using RouteManager2.Stations;
@@ -2341,12 +2342,11 @@ namespace CsvRwRouteParser
 							{
 								if (System.IO.File.Exists(f) && f.ToLowerInvariant().EndsWith(".xml"))
 								{
-									Marker m = new Marker();
-									m.StartingPosition = Data.TrackPosition;
-									if (MarkerScriptParser.ReadMarkerXML(f, ref m))
+									Marker m = null;
+									if (MarkerScriptParser.ReadMarkerXML(f, Data.TrackPosition, ref m))
 									{
 										int nn = Data.Markers.Length;
-										Array.Resize<Marker>(ref Data.Markers, nn + 1);
+										Array.Resize(ref Data.Markers, nn + 1);
 										Data.Markers[nn] = m;
 									}
 
@@ -2377,46 +2377,45 @@ namespace CsvRwRouteParser
 								if (end <= start) end = start + 0.01;
 								int n = Data.Markers.Length;
 								Array.Resize<Marker>(ref Data.Markers, n + 1);
-								Data.Markers[n].StartingPosition = start;
-								Data.Markers[n].EndingPosition = end;
+								AbstractMessage message;
 								if (Command.ToLowerInvariant() == "textmarker")
 								{
-									Data.Markers[n].Message = new MarkerText(Arguments[0]);
+									message = new MarkerText(Arguments[0]);
 									if (Arguments.Length >= 3)
 									{
 										switch (Arguments[2].ToLowerInvariant())
 										{
 											case "black":
 											case "1":
-												Data.Markers[n].Message.Color = MessageColor.Black;
+												message.Color = MessageColor.Black;
 												break;
 											case "gray":
 											case "2":
-												Data.Markers[n].Message.Color = MessageColor.Gray;
+												message.Color = MessageColor.Gray;
 												break;
 											case "white":
 											case "3":
-												Data.Markers[n].Message.Color = MessageColor.White;
+												message.Color = MessageColor.White;
 												break;
 											case "red":
 											case "4":
-												Data.Markers[n].Message.Color = MessageColor.Red;
+												message.Color = MessageColor.Red;
 												break;
 											case "orange":
 											case "5":
-												Data.Markers[n].Message.Color = MessageColor.Orange;
+												message.Color = MessageColor.Orange;
 												break;
 											case "green":
 											case "6":
-												Data.Markers[n].Message.Color = MessageColor.Green;
+												message.Color = MessageColor.Green;
 												break;
 											case "blue":
 											case "7":
-												Data.Markers[n].Message.Color = MessageColor.Blue;
+												message.Color = MessageColor.Blue;
 												break;
 											case "magenta":
 											case "8":
-												Data.Markers[n].Message.Color = MessageColor.Magenta;
+												message.Color = MessageColor.Magenta;
 												break;
 											default:
 												Plugin.CurrentHost.AddMessage(MessageType.Error, false, "MessageColor is invalid in Track.TextMarker at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -2429,10 +2428,9 @@ namespace CsvRwRouteParser
 								{
 									OpenBveApi.Textures.Texture t;
 									Plugin.CurrentHost.RegisterTexture(f, new OpenBveApi.Textures.TextureParameters(null, new Color24(64, 64, 64)), out t);
-									Data.Markers[n].Message = new MarkerImage(Plugin.CurrentHost, t);
-
+									message = new MarkerImage(Plugin.CurrentHost, t);
 								}
-
+								Data.Markers[n] = new Marker(start, end, message);
 							}
 						}
 					}
