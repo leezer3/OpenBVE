@@ -73,17 +73,29 @@ namespace OpenBveApi.Objects
 						}
 						else
 						{
-							int bufferIndex = this.Object.CurrentState;
+							int bufferIndex = this.Object.CurrentState + 1;
+							if (this.Buffers.Length < bufferIndex || this.Buffers[bufferIndex] == null)
+							{
+								return;
+							}
 							switch (bufferIndex)
 							{
-								case -1:
-									//Do not play sound when completely hiding the object from view
+								case 0:
+									if (this.PlayOnHide)
+									{
+										//Current state has changed to completely hidden, hence OnShow irrelevant
+										Source = currentHost.PlaySound(Buffers[bufferIndex], currentPitch, currentVolume, Position, null, false);
+									}
 									break;
-								default:
-									if (this.Buffers.Length >= bufferIndex && this.Buffers[bufferIndex] != null)
+								case 1:
+									if (this.PlayOnShow || this.lastState != -1)
 									{
 										Source = currentHost.PlaySound(Buffers[bufferIndex], currentPitch, currentVolume, Position, null, false);
 									}
+									break;
+								default:
+									//PlayOnHide or PlayOnShow is set & we've already determined the buffer is valid so play
+									Source = currentHost.PlaySound(Buffers[bufferIndex], currentPitch, currentVolume, Position, null, false);
 									break;
 							}
 						}

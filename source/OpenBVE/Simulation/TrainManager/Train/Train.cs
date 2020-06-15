@@ -471,12 +471,12 @@ namespace OpenBve
 							//Required to handle legacy trains which don't have idx specific run sounds defined
 							bufferIndex = 0;
 						}
-						CarSound c = (CarSound) Cars[i].FrontAxle.PointSounds[bufferIndex];
 						if (Cars[i].FrontAxle.PointSounds == null || Cars[i].FrontAxle.PointSounds.Length == 0)
 						{
 							//No point sounds defined at all
 							continue;
 						}
+						CarSound c = (CarSound) Cars[i].FrontAxle.PointSounds[bufferIndex];
 						if (c.Buffer == null)
 						{
 							c = (CarSound)Cars[i].FrontAxle.PointSounds[0];
