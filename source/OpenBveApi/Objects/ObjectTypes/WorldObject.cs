@@ -30,7 +30,7 @@ namespace OpenBveApi.Objects
 		public AnimatedObject Object;
 
 		/// <summary>Creates a new WorldObject</summary>
-		protected WorldObject(HostInterface Host)
+		protected WorldObject(Hosts.HostInterface Host)
 		{
 			currentHost = Host;
 		}

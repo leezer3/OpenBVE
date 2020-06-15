@@ -1,5 +1,4 @@
 ﻿using System;
-using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
@@ -27,12 +26,13 @@ namespace OpenBveApi.Objects
 
 		/// <summary>Creates a new Track Following Object</summary>
 		/// <param name="Host">The host application</param>
-		public TrackFollowingObject(HostInterface Host) : base(Host)
+		public TrackFollowingObject(Hosts.HostInterface Host) : base(Host)
 		{
 			FrontAxleFollower = new TrackFollower(currentHost);
 			RearAxleFollower = new TrackFollower(currentHost);
 		}
 
+		/// <inheritdoc/>
 		public override WorldObject Clone()
 		{
 			throw new NotSupportedException();
