@@ -1,5 +1,4 @@
 ﻿using System;
-using OpenBveApi.Hosts;
 using OpenBveApi.Trains;
 
 namespace OpenBveApi.Objects
@@ -12,7 +11,7 @@ namespace OpenBveApi.Objects
 
 		/// <summary>Creates a new Animated World Object</summary>
 		/// <param name="Host">The host application</param>
-		public AnimatedWorldObject(HostInterface Host) : base(Host)
+		public AnimatedWorldObject(Hosts.HostInterface Host) : base(Host)
 		{
 		}
 

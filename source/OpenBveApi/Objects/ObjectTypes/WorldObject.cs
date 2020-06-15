@@ -1,5 +1,4 @@
-﻿using OpenBveApi.Hosts;
-using OpenBveApi.Math;
+﻿using OpenBveApi.Math;
 using OpenBveApi.Trains;
 
 namespace OpenBveApi.Objects
@@ -8,7 +7,7 @@ namespace OpenBveApi.Objects
 	public abstract class WorldObject
 	{
 		/// <summary>Holds a reference to the host application</summary>
-		protected readonly HostInterface currentHost;
+		protected readonly Hosts.HostInterface currentHost;
 
 		/// <summary>The position vector for this object</summary>
 		public Vector3 Position;

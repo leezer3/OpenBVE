@@ -1,5 +1,4 @@
 ﻿using OpenBveApi.FunctionScripting;
-using OpenBveApi.Hosts;
 using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Sounds;
@@ -35,7 +34,7 @@ namespace OpenBveApi.Objects
 		public override double RelativeTrackPosition => Follower.TrackPosition;
 
 		/// <summary>Creates a new WorldSound</summary>
-		public WorldSound(HostInterface Host, SoundHandle buffer) : base(Host)
+		public WorldSound(Hosts.HostInterface Host, SoundHandle buffer) : base(Host)
 		{
 			Radius = 25.0;
 			Buffer = buffer;

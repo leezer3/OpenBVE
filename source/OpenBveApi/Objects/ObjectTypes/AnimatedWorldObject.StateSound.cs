@@ -1,5 +1,4 @@
-﻿using OpenBveApi.Hosts;
-using OpenBveApi.Math;
+﻿using OpenBveApi.Math;
 using OpenBveApi.Sounds;
 using OpenBveApi.Trains;
 using OpenBveApi.World;
@@ -29,7 +28,7 @@ namespace OpenBveApi.Objects
 		private int lastState;
 
 		/// <summary>Creates a new AnimatedWorldObjectStateSound</summary>
-		public AnimatedWorldObjectStateSound(HostInterface Host) : base(Host)
+		public AnimatedWorldObjectStateSound(Hosts.HostInterface Host) : base(Host)
 		{
 		}
 
