@@ -97,16 +97,6 @@ namespace CsvRwRouteParser
 			internal double Pitch;
 			internal double Roll;
 		}
-		internal struct PointOfInterest
-		{
-			internal double TrackPosition;
-			internal int RailIndex;
-			internal Vector2 Position;
-			internal double Yaw;
-			internal double Pitch;
-			internal double Roll;
-			internal string Text;
-		}
 		internal struct RailCycle {
             internal int RailCycleIndex;
             internal int CurrentCycle;

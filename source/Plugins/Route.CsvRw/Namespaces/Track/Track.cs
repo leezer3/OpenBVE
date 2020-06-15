@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.Linq.Expressions;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
@@ -2964,15 +2966,8 @@ namespace CsvRwRouteParser
 						}
 
 						int n = Data.Blocks[BlockIndex].PointsOfInterest.Length;
-						Array.Resize<PointOfInterest>(ref Data.Blocks[BlockIndex].PointsOfInterest, n + 1);
-						Data.Blocks[BlockIndex].PointsOfInterest[n].TrackPosition = Data.TrackPosition;
-						Data.Blocks[BlockIndex].PointsOfInterest[n].RailIndex = idx;
-						Data.Blocks[BlockIndex].PointsOfInterest[n].Position.X = x;
-						Data.Blocks[BlockIndex].PointsOfInterest[n].Position.Y = y;
-						Data.Blocks[BlockIndex].PointsOfInterest[n].Yaw = yaw.ToRadians();
-						Data.Blocks[BlockIndex].PointsOfInterest[n].Pitch = pitch.ToRadians();
-						Data.Blocks[BlockIndex].PointsOfInterest[n].Roll = roll.ToRadians();
-						Data.Blocks[BlockIndex].PointsOfInterest[n].Text = text;
+						Array.Resize(ref Data.Blocks[BlockIndex].PointsOfInterest, n + 1);
+						Data.Blocks[BlockIndex].PointsOfInterest[n] = new PointOfInterest(Data.TrackPosition, idx, text, new Vector2(x, y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians());
 					}
 				}
 					break;
