@@ -2145,9 +2145,7 @@ namespace CsvRwRouteParser
 									Array.Resize<WallDike>(ref Data.Blocks[BlockIndex].RailWall, idx + 1);
 								}
 
-								Data.Blocks[BlockIndex].RailWall[idx].Exists = true;
-								Data.Blocks[BlockIndex].RailWall[idx].Type = sttype;
-								Data.Blocks[BlockIndex].RailWall[idx].Direction = dir;
+								Data.Blocks[BlockIndex].RailWall[idx] = new WallDike(sttype, dir);
 							}
 						}
 					}
@@ -2287,9 +2285,7 @@ namespace CsvRwRouteParser
 									Array.Resize<WallDike>(ref Data.Blocks[BlockIndex].RailDike, idx + 1);
 								}
 
-								Data.Blocks[BlockIndex].RailDike[idx].Exists = true;
-								Data.Blocks[BlockIndex].RailDike[idx].Type = sttype;
-								Data.Blocks[BlockIndex].RailDike[idx].Direction = dir;
+								Data.Blocks[BlockIndex].RailDike[idx] = new WallDike(sttype, dir);
 							}
 						}
 					}

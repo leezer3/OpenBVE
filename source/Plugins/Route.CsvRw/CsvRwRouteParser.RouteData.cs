@@ -111,12 +111,12 @@ namespace CsvRwRouteParser
 							Blocks[i].RailWall = new WallDike[Blocks[i - 1].RailWall.Length];
 							for (int j = 0; j < Blocks[i].RailWall.Length; j++)
 							{
-								Blocks[i].RailWall[j] = Blocks[i - 1].RailWall[j];
+								Blocks[i].RailWall[j] = Blocks[i - 1].RailWall[j].Clone();
 							}
 							Blocks[i].RailDike = new WallDike[Blocks[i - 1].RailDike.Length];
 							for (int j = 0; j < Blocks[i].RailDike.Length; j++)
 							{
-								Blocks[i].RailDike[j] = Blocks[i - 1].RailDike[j];
+								Blocks[i].RailDike[j] = Blocks[i - 1].RailDike[j].Clone();
 							}
 							Blocks[i].RailPole = new Pole[Blocks[i - 1].RailPole.Length];
 							for (int j = 0; j < Blocks[i].RailPole.Length; j++)

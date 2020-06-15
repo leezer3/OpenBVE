@@ -73,6 +73,7 @@
     <Compile Include="Structures\Route\Form.cs" />
     <Compile Include="Structures\Route\FreeObject.cs" />
     <Compile Include="Structures\Route\Station.Stop.cs" />
+    <Compile Include="Structures\Route\WallDike.cs" />
     <Compile Include="Structures\Signals\Section.cs" />
     <Compile Include="Structures\Signals\Signal.cs" />
     <Compile Include="Structures\Signals\SignalData.BVE4.cs" />
