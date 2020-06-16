@@ -176,7 +176,7 @@ namespace CsvRwRouteParser
 								//HACK: No way to break out of the first loop and continue with the second, so we've got to use a variable
 								bool Break = false;
 								int l = Plugin.CurrentRoute.LightDefinitions.Length;
-								for (int i = 0; i > l; i++)
+								for (int i = 0; i < l; i++)
 								{
 									if (Plugin.CurrentRoute.LightDefinitions[i].Time == currentLight.Time)
 									{
