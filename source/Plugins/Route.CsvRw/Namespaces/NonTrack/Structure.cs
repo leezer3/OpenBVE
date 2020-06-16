@@ -11,7 +11,7 @@ namespace CsvRwRouteParser
 {
 	internal partial class Parser
 	{
-		private static void ParseStructureCommand(string Command, string[] Arguments, int[] commandIndices, Encoding Encoding, double[] UnitOfLength, Expression Expression, ref RouteData Data, bool PreviewOnly)
+		private static void ParseStructureCommand(string Command, string[] Arguments, int[] commandIndices, Encoding Encoding, Expression Expression, ref RouteData Data, bool PreviewOnly)
 		{
 			switch (Command)
 			{
@@ -861,11 +861,11 @@ namespace CsvRwRouteParser
 									Data.Backgrounds.Add(commandIndices[0], new StaticBackground(null, 6, false, Plugin.CurrentOptions.ViewingDistance));
 								}
 
-								string f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
+								string f = Path.CombineFile(ObjectPath, Arguments[0]);
 								if (!System.IO.File.Exists(f) && (Arguments[0].ToLowerInvariant() == "back_mt.bmp" || Arguments[0] == "back_mthigh.bmp"))
 								{
 									//Default background textures supplied with Uchibo for BVE1 / BVE2, so map to something that's not totally black
-									f = OpenBveApi.Path.CombineFile(Plugin.FileSystem.GetDataFolder("Compatibility"), "Uchibo\\Back_Mt.png");
+									f = Path.CombineFile(Plugin.FileSystem.GetDataFolder("Compatibility"), "Uchibo\\Back_Mt.png");
 								}
 
 								if (!System.IO.File.Exists(f) && Plugin.CurrentOptions.EnableBveTsHacks)
@@ -873,7 +873,7 @@ namespace CsvRwRouteParser
 									if (Arguments[0].StartsWith("Midland Suburban Line", StringComparison.InvariantCultureIgnoreCase))
 									{
 										Arguments[0] = "Midland Suburban Line Objects" + Arguments[0].Substring(21);
-										f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
+										f = Path.CombineFile(ObjectPath, Arguments[0]);
 									}
 								}
 

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Drawing;
-using System.Linq.Expressions;
 using OpenBveApi;
 using OpenBveApi.Colors;
 using OpenBveApi.Interface;
@@ -1205,7 +1203,7 @@ namespace CsvRwRouteParser
 						}
 
 						int n = Data.Blocks[BlockIndex].StopPositions.Length;
-						Array.Resize<Stop>(ref Data.Blocks[BlockIndex].StopPositions, n + 1);
+						Array.Resize(ref Data.Blocks[BlockIndex].StopPositions, n + 1);
 						Data.Blocks[BlockIndex].StopPositions[n] = new Stop(Data.TrackPosition, CurrentStation, dir, forw, backw, cars);
 						CurrentStop = cars;
 					}
@@ -1413,7 +1411,7 @@ namespace CsvRwRouteParser
 							}
 							else
 							{
-								string f = OpenBveApi.Path.CombineFile(SoundPath, Arguments[7]);
+								string f = Path.CombineFile(SoundPath, Arguments[7]);
 								if (!System.IO.File.Exists(f))
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "ArrivalSound " + f + " not found in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -1463,7 +1461,7 @@ namespace CsvRwRouteParser
 							}
 							else
 							{
-								string f = OpenBveApi.Path.CombineFile(SoundPath, Arguments[10]);
+								string f = Path.CombineFile(SoundPath, Arguments[10]);
 								if (!System.IO.File.Exists(f))
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "DepartureSound " + f + " not found in Track.Sta at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -1745,7 +1743,7 @@ namespace CsvRwRouteParser
 							}
 							else
 							{
-								string f = OpenBveApi.Path.CombineFile(SoundPath, Arguments[5]);
+								string f = Path.CombineFile(SoundPath, Arguments[5]);
 								if (!System.IO.File.Exists(f))
 								{
 									Plugin.CurrentHost.AddMessage(MessageType.Error, true, "DepartureSound " + f + " not found in Track.Station at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -1806,7 +1804,7 @@ namespace CsvRwRouteParser
 					if (CurrentRoute.Stations[CurrentStation].Type == StationType.RequestStop)
 					{
 						int l = Data.RequestStops.Length;
-						Array.Resize<StopRequest>(ref Data.RequestStops, l + 1);
+						Array.Resize(ref Data.RequestStops, l + 1);
 						Data.RequestStops[l] = sr;
 					}
 
@@ -1817,7 +1815,7 @@ namespace CsvRwRouteParser
 					if (!PreviewOnly)
 					{
 						int n = CurrentRoute.BufferTrackPositions.Length;
-						Array.Resize<double>(ref CurrentRoute.BufferTrackPositions, n + 1);
+						Array.Resize(ref CurrentRoute.BufferTrackPositions, n + 1);
 						CurrentRoute.BufferTrackPositions[n] = Data.TrackPosition;
 					}
 				}
@@ -1914,7 +1912,7 @@ namespace CsvRwRouteParser
 							}
 
 							int n = Data.Blocks[BlockIndex].Forms.Length;
-							Array.Resize<Form>(ref Data.Blocks[BlockIndex].Forms, n + 1);
+							Array.Resize(ref Data.Blocks[BlockIndex].Forms, n + 1);
 							Data.Blocks[BlockIndex].Forms[n] = new Form(idx1, idx2, pf, roof);
 						}
 					}
@@ -1944,7 +1942,7 @@ namespace CsvRwRouteParser
 
 							if (idx >= Data.Blocks[BlockIndex].RailPole.Length)
 							{
-								Array.Resize<Pole>(ref Data.Blocks[BlockIndex].RailPole, idx + 1);
+								Array.Resize(ref Data.Blocks[BlockIndex].RailPole, idx + 1);
 								Data.Blocks[BlockIndex].RailPole[idx].Mode = 0;
 								Data.Blocks[BlockIndex].RailPole[idx].Location = 0;
 								Data.Blocks[BlockIndex].RailPole[idx].Interval = 2.0 * Data.BlockInterval;
@@ -2114,39 +2112,33 @@ namespace CsvRwRouteParser
 						}
 						else
 						{
-							if (idx < 0)
+							if (dir == 0)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is expected to be non-negative in Track.Wall at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								if (!Data.Structure.WallL.ContainsKey(sttype))
+								{
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "LeftWallStructureIndex " + sttype + " references an object not loaded in Track.WallBothSides at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									dir = 1;
+								}
+
+								if (!Data.Structure.WallR.ContainsKey(sttype))
+								{
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RightWallStructureIndex " + sttype + " references an object not loaded in Track.WallBothSides at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									dir = -1;
+								}
 							}
-							else
+
+							if (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx) || !Data.Blocks[BlockIndex].Rails[idx].RailStarted)
 							{
-								if (dir == 0)
-								{
-									if (!Data.Structure.WallL.ContainsKey(sttype))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "LeftWallStructureIndex " + sttype + " references an object not loaded in Track.WallBothSides at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-										dir = 1;
-									}
-
-									if (!Data.Structure.WallR.ContainsKey(sttype))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RightWallStructureIndex " + sttype + " references an object not loaded in Track.WallBothSides at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-										dir = -1;
-									}
-								}
-
-								if (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx) || !Data.Blocks[BlockIndex].Rails[idx].RailStarted)
-								{
-									Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.Wall at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-								}
-
-								if (idx >= Data.Blocks[BlockIndex].RailWall.Length)
-								{
-									Array.Resize<WallDike>(ref Data.Blocks[BlockIndex].RailWall, idx + 1);
-								}
-
-								Data.Blocks[BlockIndex].RailWall[idx] = new WallDike(sttype, dir);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.Wall at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
+
+							if (idx >= Data.Blocks[BlockIndex].RailWall.Length)
+							{
+								Array.Resize(ref Data.Blocks[BlockIndex].RailWall, idx + 1);
+							}
+
+							Data.Blocks[BlockIndex].RailWall[idx] = new WallDike(sttype, dir);
+
 						}
 					}
 				}
@@ -2254,40 +2246,34 @@ namespace CsvRwRouteParser
 						}
 						else
 						{
-							if (idx < 0)
+							if (dir == 0)
 							{
-								Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex is expected to be non-negative in Track.Dike at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+								if (!Data.Structure.DikeL.ContainsKey(sttype))
+								{
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "LeftDikeStructureIndex " + sttype + " references an object not loaded in Track.DikeBothSides at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									dir = 1;
+								}
+
+								if (!Data.Structure.DikeR.ContainsKey(sttype))
+								{
+									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RightDikeStructureIndex " + sttype + " references an object not loaded in Track.DikeBothSides at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
+									dir = -1;
+								}
 							}
-							else
+
+							if (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx) || !Data.Blocks[BlockIndex].Rails[idx].RailStarted)
 							{
-								if (dir == 0)
-								{
-									if (!Data.Structure.DikeL.ContainsKey(sttype))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "LeftDikeStructureIndex " + sttype + " references an object not loaded in Track.DikeBothSides at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-										dir = 1;
-									}
-
-									if (!Data.Structure.DikeR.ContainsKey(sttype))
-									{
-										Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RightDikeStructureIndex " + sttype + " references an object not loaded in Track.DikeBothSides at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-										dir = -1;
-									}
-								}
-
-								if (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx) || !Data.Blocks[BlockIndex].Rails[idx].RailStarted)
-								{
-									Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.Dike at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
-								}
-
-								if (idx >= Data.Blocks[BlockIndex].RailDike.Length)
-								{
-									Array.Resize<WallDike>(ref Data.Blocks[BlockIndex].RailDike, idx + 1);
-								}
-
-								Data.Blocks[BlockIndex].RailDike[idx] = new WallDike(sttype, dir);
+								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.Dike at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
+
+							if (idx >= Data.Blocks[BlockIndex].RailDike.Length)
+							{
+								Array.Resize(ref Data.Blocks[BlockIndex].RailDike, idx + 1);
+							}
+
+							Data.Blocks[BlockIndex].RailDike[idx] = new WallDike(sttype, dir);
 						}
+
 					}
 				}
 					break;
@@ -2333,7 +2319,7 @@ namespace CsvRwRouteParser
 						}
 						else
 						{
-							string f = OpenBveApi.Path.CombineFile(ObjectPath, Arguments[0]);
+							string f = Path.CombineFile(ObjectPath, Arguments[0]);
 							if (!System.IO.File.Exists(f) && Command.ToLowerInvariant() == "marker")
 							{
 								Plugin.CurrentHost.AddMessage(MessageType.Error, true, "FileName " + f + " not found in Track.Marker at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
@@ -2376,7 +2362,7 @@ namespace CsvRwRouteParser
 								if (end < 0.0) end = 0.0;
 								if (end <= start) end = start + 0.01;
 								int n = Data.Markers.Length;
-								Array.Resize<Marker>(ref Data.Markers, n + 1);
+								Array.Resize(ref Data.Markers, n + 1);
 								AbstractMessage message;
 								if (Command.ToLowerInvariant() == "textmarker")
 								{
@@ -2535,7 +2521,7 @@ namespace CsvRwRouteParser
 								}
 
 								int n = Data.Blocks[BlockIndex].Cracks.Length;
-								Array.Resize<Crack>(ref Data.Blocks[BlockIndex].Cracks, n + 1);
+								Array.Resize(ref Data.Blocks[BlockIndex].Cracks, n + 1);
 								Data.Blocks[BlockIndex].Cracks[n] = new Crack(idx1, idx2, sttype);
 							}
 						}
@@ -2627,7 +2613,7 @@ namespace CsvRwRouteParser
 								if (idx == -1)
 								{
 									int n = Data.Blocks[BlockIndex].GroundFreeObj.Length;
-									Array.Resize<FreeObj>(ref Data.Blocks[BlockIndex].GroundFreeObj, n + 1);
+									Array.Resize(ref Data.Blocks[BlockIndex].GroundFreeObj, n + 1);
 									if (!Data.IgnorePitchRoll)
 									{
 										Data.Blocks[BlockIndex].GroundFreeObj[n] = new FreeObj(Data.TrackPosition, sttype, new Vector2(x, y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians());
@@ -2641,7 +2627,7 @@ namespace CsvRwRouteParser
 								{
 									if (idx >= Data.Blocks[BlockIndex].RailFreeObj.Length)
 									{
-										Array.Resize<FreeObj[]>(ref Data.Blocks[BlockIndex].RailFreeObj, idx + 1);
+										Array.Resize(ref Data.Blocks[BlockIndex].RailFreeObj, idx + 1);
 									}
 
 									int n;
@@ -2653,7 +2639,7 @@ namespace CsvRwRouteParser
 									else
 									{
 										n = Data.Blocks[BlockIndex].RailFreeObj[idx].Length;
-										Array.Resize<FreeObj>(ref Data.Blocks[BlockIndex].RailFreeObj[idx], n + 1);
+										Array.Resize(ref Data.Blocks[BlockIndex].RailFreeObj[idx], n + 1);
 									}
 
 									if (!Data.IgnorePitchRoll)
@@ -2753,7 +2739,7 @@ namespace CsvRwRouteParser
 									}
 
 									int n = Data.Blocks[BlockIndex].SoundEvents.Length;
-									Array.Resize<Sound>(ref Data.Blocks[BlockIndex].SoundEvents, n + 1);
+									Array.Resize(ref Data.Blocks[BlockIndex].SoundEvents, n + 1);
 									Data.Blocks[BlockIndex].SoundEvents[n].TrackPosition = Data.TrackPosition;
 									const double radius = 15.0;
 									Plugin.CurrentHost.RegisterSound(f, radius, out Data.Blocks[BlockIndex].SoundEvents[n].SoundBuffer);
@@ -2802,7 +2788,7 @@ namespace CsvRwRouteParser
 									}
 
 									int n = Data.Blocks[BlockIndex].SoundEvents.Length;
-									Array.Resize<Sound>(ref Data.Blocks[BlockIndex].SoundEvents, n + 1);
+									Array.Resize(ref Data.Blocks[BlockIndex].SoundEvents, n + 1);
 									Data.Blocks[BlockIndex].SoundEvents[n].TrackPosition = Data.TrackPosition;
 									const double radius = 15.0;
 									Plugin.CurrentHost.RegisterSound(f, radius, out Data.Blocks[BlockIndex].SoundEvents[n].SoundBuffer);
@@ -2856,7 +2842,7 @@ namespace CsvRwRouteParser
 						}
 
 						int n = Data.Blocks[BlockIndex].SoundEvents.Length;
-						Array.Resize<Sound>(ref Data.Blocks[BlockIndex].SoundEvents, n + 1);
+						Array.Resize(ref Data.Blocks[BlockIndex].SoundEvents, n + 1);
 						Data.Blocks[BlockIndex].SoundEvents[n].TrackPosition = Data.TrackPosition;
 						Data.Blocks[BlockIndex].SoundEvents[n].Type = SoundType.World;
 						Data.Blocks[BlockIndex].SoundEvents[n].Position.X = x;
@@ -2915,7 +2901,7 @@ namespace CsvRwRouteParser
 							idx = 0;
 						}
 
-						if (idx >= 0 && (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx) || !Data.Blocks[BlockIndex].Rails[idx].RailStarted))
+						if (!Data.Blocks[BlockIndex].Rails.ContainsKey(idx) || !Data.Blocks[BlockIndex].Rails[idx].RailStarted)
 						{
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex " + idx + " references a non-existing rail in " + Command + " at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 						}

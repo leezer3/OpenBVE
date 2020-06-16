@@ -337,7 +337,7 @@ namespace CsvRwRouteParser {
 									break;
 								case "structure":
 								case "texture":
-									ParseStructureCommand(Command, Arguments, commandIndices, Encoding, UnitOfLength, Expressions[j], ref Data, PreviewOnly);
+									ParseStructureCommand(Command, Arguments, commandIndices, Encoding, Expressions[j], ref Data, PreviewOnly);
 									break;
 								case "":
 									ParseSignalCommand(Command, Arguments, commandIndices[0], Encoding, Expressions[j], ref Data, PreviewOnly);
