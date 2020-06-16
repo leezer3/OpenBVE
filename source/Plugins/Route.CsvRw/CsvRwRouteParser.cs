@@ -141,19 +141,11 @@ namespace CsvRwRouteParser {
 				// game data
 				CurrentRoute.Sections = new[]
 				{
-					new RouteManager2.SignalManager.Section()
+					new RouteManager2.SignalManager.Section(0, new SectionAspect[] { new SectionAspect(0, 0.0), new SectionAspect(4, double.PositiveInfinity) }, SectionType.IndexBased)
 				};
-				CurrentRoute.Sections[0].Aspects = new[]
-				{
-					new SectionAspect(0, 0.0),
-					new SectionAspect(4, double.PositiveInfinity)
-				};
+				
 				CurrentRoute.Sections[0].CurrentAspect = 0;
-				CurrentRoute.Sections[0].NextSection = null;
-				CurrentRoute.Sections[0].PreviousSection = null;
 				CurrentRoute.Sections[0].StationIndex = -1;
-				CurrentRoute.Sections[0].TrackPosition = 0;
-				CurrentRoute.Sections[0].Trains = new AbstractTrain[] {};
 			}
 			ParseRouteForData(FileName, Encoding, ref Data, PreviewOnly);
 			if (RouteInterface.Cancel)
@@ -390,22 +382,22 @@ namespace CsvRwRouteParser {
 					string Command, ArgumentSequence;
 					Expressions[j].SeparateCommandsAndArguments(out Command, out ArgumentSequence, Culture, false, IsRW, Section);
 					// process command
-					double Number;
+					double currentTrackPosition;
 					bool NumberCheck = !IsRW || string.Compare(Section, "track", StringComparison.OrdinalIgnoreCase) == 0;
-					if (NumberCheck && NumberFormats.TryParseDouble(Command, UnitOfLength, out Number)) {
+					if (NumberCheck && NumberFormats.TryParseDouble(Command, UnitOfLength, out currentTrackPosition)) {
 						// track position
 						if (ArgumentSequence.Length != 0) {
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "A track position must not contain any arguments at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
-						} else if (Number < 0.0) {
+						} else if (currentTrackPosition < 0.0) {
 							Plugin.CurrentHost.AddMessage(MessageType.Error, false, "Negative track position encountered at line " + Expressions[j].Line.ToString(Culture) + ", column " + Expressions[j].Column.ToString(Culture) + " in file " + Expressions[j].File);
 						} else {
-							if (Plugin.CurrentOptions.EnableBveTsHacks && IsRW && Number == 4535545100)
+							if (Plugin.CurrentOptions.EnableBveTsHacks && IsRW && currentTrackPosition == 4535545100)
 							{
 								//WMATA Red line has an erroneous track position causing an out of memory cascade
-								Number = 45355;
+								currentTrackPosition = 45355;
 							}
-							Data.TrackPosition = Number;
-							BlockIndex = (int)Math.Floor(Number / Data.BlockInterval + 0.001);
+							Data.TrackPosition = currentTrackPosition;
+							BlockIndex = (int)Math.Floor(currentTrackPosition / Data.BlockInterval + 0.001);
 							if (Data.FirstUsedBlock == -1) Data.FirstUsedBlock = BlockIndex;
 							Data.CreateMissingBlocks(ref BlocksUsed, BlockIndex, PreviewOnly);
 						}

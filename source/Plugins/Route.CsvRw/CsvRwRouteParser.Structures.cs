@@ -3,7 +3,6 @@ using OpenBveApi.Math;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using RouteManager2.Climate;
-using RouteManager2.MessageManager;
 using SoundHandle = OpenBveApi.Sounds.SoundHandle;
 
 namespace CsvRwRouteParser

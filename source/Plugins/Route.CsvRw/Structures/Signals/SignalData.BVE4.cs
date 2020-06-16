@@ -34,10 +34,17 @@ namespace CsvRwRouteParser
 					}
 				}
 
-				AnimatedObjectCollection aoc = new AnimatedObjectCollection(Plugin.CurrentHost);
-				aoc.Objects = new AnimatedObject[1];
-				aoc.Objects[0] = new AnimatedObject(Plugin.CurrentHost);
-				aoc.Objects[0].States = new ObjectState[zn];
+				AnimatedObjectCollection aoc = new AnimatedObjectCollection(Plugin.CurrentHost)
+				{
+					Objects = new[]
+					{
+						new AnimatedObject(Plugin.CurrentHost)
+						{
+							States = new ObjectState[zn]
+						}
+					}
+				};
+
 				int zi = 0;
 				string expr = "";
 				for (int l = 0; l < m; l++)

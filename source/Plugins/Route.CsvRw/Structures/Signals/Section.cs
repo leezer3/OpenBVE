@@ -1,5 +1,4 @@
 ﻿using System;
-using OpenBveApi.Trains;
 using RouteManager2;
 using RouteManager2.Events;
 using RouteManager2.SignalManager;
@@ -45,38 +44,34 @@ namespace CsvRwRouteParser
 			}
 
 			// create section
-			CurrentRoute.Sections[m] = new RouteManager2.SignalManager.Section();
-			CurrentRoute.Sections[m].TrackPosition = TrackPosition;
-			CurrentRoute.Sections[m].Aspects = new SectionAspect[Aspects.Length];
+			SectionAspect[] newAspects = new SectionAspect[Aspects.Length];
 			for (int l = 0; l < Aspects.Length; l++)
 			{
-				CurrentRoute.Sections[m].Aspects[l].Number = Aspects[l];
+				newAspects[l].Number = Aspects[l];
 				if (Aspects[l] >= 0 & Aspects[l] < SignalSpeeds.Length)
 				{
-					CurrentRoute.Sections[m].Aspects[l].Speed = SignalSpeeds[Aspects[l]];
+					newAspects[l].Speed = SignalSpeeds[Aspects[l]];
 				}
 				else
 				{
-					CurrentRoute.Sections[m].Aspects[l].Speed = double.PositiveInfinity;
+					newAspects[l].Speed = double.PositiveInfinity;
 				}
 			}
-
-			CurrentRoute.Sections[m].Type = Type;
+			
 			CurrentRoute.Sections[m].CurrentAspect = -1;
 			if (m > 0)
 			{
-				CurrentRoute.Sections[m].PreviousSection = CurrentRoute.Sections[m - 1];
+				CurrentRoute.Sections[m] = new RouteManager2.SignalManager.Section(TrackPosition, newAspects, Type, CurrentRoute.Sections[m - 1]);
 				CurrentRoute.Sections[m - 1].NextSection = CurrentRoute.Sections[m];
 			}
 			else
 			{
-				CurrentRoute.Sections[m].PreviousSection = null;
+				CurrentRoute.Sections[m] = new RouteManager2.SignalManager.Section(TrackPosition, newAspects, Type);
 			}
 
 			CurrentRoute.Sections[m].NextSection = null;
 			CurrentRoute.Sections[m].StationIndex = DepartureStationIndex;
 			CurrentRoute.Sections[m].Invisible = Invisible;
-			CurrentRoute.Sections[m].Trains = new AbstractTrain[] { };
 			// create section change event
 			double d = TrackPosition - StartingDistance;
 			int p = CurrentRoute.Tracks[0].Elements[CurrentTrackElement].Events.Length;

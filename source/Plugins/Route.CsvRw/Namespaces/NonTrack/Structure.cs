@@ -897,14 +897,9 @@ namespace CsvRwRouteParser
 									}
 									else
 									{
-										if (Data.Backgrounds[commandIndices[0]] is StaticBackground)
+										if (Data.Backgrounds[commandIndices[0]] is StaticBackground b)
 										{
-											StaticBackground b = Data.Backgrounds[commandIndices[0]] as StaticBackground;
-											if (b != null)
-											{
-												Plugin.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out b.Texture);
-											}
-
+											Plugin.CurrentHost.RegisterTexture(f, new TextureParameters(null, null), out b.Texture);
 										}
 									}
 								}
@@ -944,8 +939,7 @@ namespace CsvRwRouteParser
 							}
 							else
 							{
-								StaticBackground b = Data.Backgrounds[commandIndices[0]] as StaticBackground;
-								if (b != null)
+								if (Data.Backgrounds[commandIndices[0]] is StaticBackground b)
 								{
 									b.Repetition = x;
 								}
@@ -985,8 +979,7 @@ namespace CsvRwRouteParser
 							}
 							else
 							{
-								StaticBackground b = Data.Backgrounds[commandIndices[0]] as StaticBackground;
-								if (b != null)
+								if (Data.Backgrounds[commandIndices[0]] is StaticBackground b)
 								{
 									b.KeepAspectRatio = aspect == 1;
 								}

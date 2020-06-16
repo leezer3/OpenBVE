@@ -8,7 +8,6 @@ using OpenBveApi.World;
 using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
-using OpenBveApi.Trains;
 using OpenBveApi.Routes;
 using RouteManager2.Climate;
 using RouteManager2.Events;
@@ -169,11 +168,11 @@ namespace CsvRwRouteParser
 			double progressFactor = Data.Blocks.Length - Data.FirstUsedBlock == 0 ? 0.5 : 0.5 / (Data.Blocks.Length - Data.FirstUsedBlock);
 			for (int i = Data.FirstUsedBlock; i < Data.Blocks.Length; i++)
 			{
-				Plugin.CurrentProgress = 0.6667 + (i - Data.FirstUsedBlock) * progressFactor;
+				RouteInterface.CurrentProgress = 0.6667 + (i - Data.FirstUsedBlock) * progressFactor;
 				if ((i & 15) == 0)
 				{
 					System.Threading.Thread.Sleep(1);
-					if (Plugin.Cancel) return;
+					if (RouteInterface.Cancel) return;
 				}
 				double StartingDistance = i * Data.BlockInterval;
 				double EndingDistance = StartingDistance + Data.BlockInterval;
@@ -186,7 +185,7 @@ namespace CsvRwRouteParser
 					{
 						if (Data.Structure.Cycles.Length == 0 || Data.Structure.Cycles[0] == null)
 						{
-							Data.Blocks[i].Cycle = new int[] { 0 };
+							Data.Blocks[i].Cycle = new[] { 0 };
 						}
 						else
 						{
