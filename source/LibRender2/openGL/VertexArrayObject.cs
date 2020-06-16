@@ -175,19 +175,9 @@ namespace LibRender2
 						{
 							Position = mesh.Vertices[vertex.Index].Coordinates,
 							Normal = vertex.Normal,
-							UV = new Vector2f(mesh.Vertices[vertex.Index].TextureCoordinates)
+							UV = new Vector2f(mesh.Vertices[vertex.Index].TextureCoordinates),
+							Color = (mesh.Vertices[vertex.Index] as ColoredVertex)?.Color ?? Color128.Transparent
 						};
-
-						var coloredVertex = mesh.Vertices[vertex.Index] as ColoredVertex;
-
-						if (coloredVertex != null)
-						{
-							data.Color = coloredVertex.Color;
-						}
-						else
-						{
-							data.Color = Color128.Transparent;
-						}
 
 						vertexData.Add(data);
 
@@ -203,11 +193,11 @@ namespace LibRender2
 						normalsVertexData.AddRange(normalsData);
 					}
 
-					indexData.AddRange(Enumerable.Range(mesh.Faces[i].IboStartIndex, mesh.Faces[i].Vertices.Length).Select(x => (uint) x));
-					normalsIndexData.AddRange(Enumerable.Range(mesh.Faces[i].NormalsIboStartIndex, mesh.Faces[i].Vertices.Length * 2).Select(x => (uint) x));
+					indexData.AddRange(Enumerable.Range(mesh.Faces[i].IboStartIndex, mesh.Faces[i].Vertices.Length).Select(x => (uint)x));
+					normalsIndexData.AddRange(Enumerable.Range(mesh.Faces[i].NormalsIboStartIndex, mesh.Faces[i].Vertices.Length * 2).Select(x => (uint)x));
 				}
 
-				VertexArrayObject VAO = (VertexArrayObject) mesh.VAO;
+				VertexArrayObject VAO = (VertexArrayObject)mesh.VAO;
 				VAO?.UnBind();
 				VAO?.Dispose();
 
@@ -217,17 +207,17 @@ namespace LibRender2
 				if (indexData.Count > 65530)
 				{
 					//Marginal headroom, although it probably doesn't matter
-					VAO.SetIBO(new IndexBufferObjectI(indexData.ToArray(), hint));
+					VAO.SetIBO(new IndexBufferObjectUI(indexData.ToArray(), hint));
 				}
 				else
 				{
-					VAO.SetIBO(new IndexBufferObjectU(indexData.Select(x => (ushort) x).ToArray(), hint));
+					VAO.SetIBO(new IndexBufferObjectUS(indexData.Select(x => (ushort)x).ToArray(), hint));
 				}
 
 				VAO.SetAttributes(vertexLayout);
 				VAO.UnBind();
 				mesh.VAO = VAO;
-				VertexArrayObject NormalsVAO = (VertexArrayObject) mesh.NormalsVAO;
+				VertexArrayObject NormalsVAO = (VertexArrayObject)mesh.NormalsVAO;
 				NormalsVAO?.UnBind();
 				NormalsVAO?.Dispose();
 
@@ -237,11 +227,11 @@ namespace LibRender2
 				if (normalsIndexData.Count > 65530)
 				{
 					//Marginal headroom, although it probably doesn't matter
-					NormalsVAO.SetIBO(new IndexBufferObjectI(normalsIndexData.ToArray(), hint));
+					NormalsVAO.SetIBO(new IndexBufferObjectUI(normalsIndexData.ToArray(), hint));
 				}
 				else
 				{
-					NormalsVAO.SetIBO(new IndexBufferObjectU(normalsIndexData.Select(x => (ushort) x).ToArray(), hint));
+					NormalsVAO.SetIBO(new IndexBufferObjectUS(normalsIndexData.Select(x => (ushort)x).ToArray(), hint));
 				}
 
 				NormalsVAO.SetAttributes(vertexLayout);
@@ -251,7 +241,7 @@ namespace LibRender2
 			catch (Exception e)
 			{
 				renderer.ForceLegacyOpenGL = true;
-				renderer.currentHost.AddMessage(MessageType.Error, false, "Creating VAO failed with the following error: " + e);
+				renderer.currentHost.AddMessage(MessageType.Error, false, $"Creating VAO failed with the following error: {e}");
 			}
 		}
 
@@ -265,14 +255,14 @@ namespace LibRender2
 				{
 					int tw = background.Texture.Width;
 					int th = background.Texture.Height;
-					double hh = System.Math.PI * background.BackgroundImageDistance * th / (tw * background.Repetition);
-					y0 = (float) (-0.5 * hh);
-					y1 = (float) (1.5 * hh);
+					double hh = Math.PI * background.BackgroundImageDistance * th / (tw * background.Repetition);
+					y0 = (float)(-0.5 * hh);
+					y1 = (float)(1.5 * hh);
 				}
 				else
 				{
-					y0 = (float) (-0.125 * background.BackgroundImageDistance);
-					y1 = (float) (0.375 * background.BackgroundImageDistance);
+					y0 = (float)(-0.125 * background.BackgroundImageDistance);
+					y1 = (float)(0.375 * background.BackgroundImageDistance);
 				}
 
 				const int n = 32;
@@ -288,15 +278,15 @@ namespace LibRender2
 				 * */
 				for (int i = 0; i < n; i++)
 				{
-					float x = (float) (background.BackgroundImageDistance * System.Math.Cos(angleValue));
-					float z = (float) (background.BackgroundImageDistance * System.Math.Sin(angleValue));
+					float x = (float)(background.BackgroundImageDistance * Math.Cos(angleValue));
+					float z = (float)(background.BackgroundImageDistance * Math.Sin(angleValue));
 					bottom[i] = new Vector3f(x, y0, z);
 					top[i] = new Vector3f(x, y1, z);
 					angleValue += angleIncrement;
 				}
 
-				float textureStart = 0.5f * (float) background.Repetition / n;
-				float textureIncrement = -(float) background.Repetition / n;
+				float textureStart = 0.5f * (float)background.Repetition / n;
+				float textureIncrement = -(float)background.Repetition / n;
 				float textureX = textureStart;
 
 				List<LibRenderVertex> vertexData = new List<LibRenderVertex>();
@@ -336,7 +326,7 @@ namespace LibRender2
 						Color = Color128.White
 					});
 
-					indexData.AddRange(new[] {0, 1, 2, 3}.Select(x => x + indexOffset).Select(x => (ushort) x));
+					indexData.AddRange(new[] { 0, 1, 2, 3 }.Select(x => x + indexOffset).Select(x => (ushort)x));
 
 					// top cap
 					vertexData.Add(new LibRenderVertex
@@ -346,7 +336,7 @@ namespace LibRender2
 						Color = Color128.White
 					});
 
-					indexData.AddRange(new[] {0, 3, 4}.Select(x => x + indexOffset).Select(x => (ushort) x));
+					indexData.AddRange(new[] { 0, 3, 4 }.Select(x => x + indexOffset).Select(x => (ushort)x));
 
 					// bottom cap
 					vertexData.Add(new LibRenderVertex
@@ -356,20 +346,20 @@ namespace LibRender2
 						Color = Color128.White
 					});
 
-					indexData.AddRange(new[] {5, 2, 1}.Select(x => x + indexOffset).Select(x => (ushort) x));
+					indexData.AddRange(new[] { 5, 2, 1 }.Select(x => x + indexOffset).Select(x => (ushort)x));
 
 					// finish
 					textureX += textureIncrement;
 				}
 
-				VertexArrayObject VAO = (VertexArrayObject) background.VAO;
+				VertexArrayObject VAO = (VertexArrayObject)background.VAO;
 				VAO?.UnBind();
 				VAO?.Dispose();
 
 				VAO = new VertexArrayObject();
 				VAO.Bind();
 				VAO.SetVBO(new VertexBufferObject(vertexData.ToArray(), BufferUsageHint.StaticDraw));
-				VAO.SetIBO(new IndexBufferObjectU(indexData.ToArray(), BufferUsageHint.StaticDraw));
+				VAO.SetIBO(new IndexBufferObjectUS(indexData.ToArray(), BufferUsageHint.StaticDraw));
 				VAO.SetAttributes(vertexLayout);
 				VAO.UnBind();
 				background.VAO = VAO;
@@ -377,9 +367,8 @@ namespace LibRender2
 			catch (Exception e)
 			{
 				renderer.ForceLegacyOpenGL = true;
-				renderer.currentHost.AddMessage(MessageType.Error, false, "Creating VAO failed with the following error: " + e);
+				renderer.currentHost.AddMessage(MessageType.Error, false, $"Creating VAO failed with the following error: {e}");
 			}
-
 		}
 	}
 }

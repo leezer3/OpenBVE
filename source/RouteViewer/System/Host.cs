@@ -296,6 +296,11 @@ namespace OpenBve
 
 		public override bool LoadObject(string path, System.Text.Encoding Encoding, out UnifiedObject Object)
 		{
+			if (base.LoadObject(path, Encoding, out Object))
+			{
+				return true;
+			}
+
 			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
 				Encoding = TextEncoding.GetSystemEncodingFromFile(path, Encoding);
 
@@ -309,6 +314,20 @@ namespace OpenBve
 									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out obj)) {
 										obj.OptimizeObject(false, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, true);
 										Object = obj;
+
+										StaticObject staticObject = Object as StaticObject;
+										if (staticObject != null)
+										{
+											StaticObjectCache.Add(ValueTuple.Create(path, false), staticObject);
+											return true;
+										}
+
+										AnimatedObjectCollection aoc = Object as AnimatedObjectCollection;
+										if (aoc != null)
+										{
+											AnimatedObjectCollectionCache.Add(path, aoc);
+										}
+
 										return true;
 									}
 									Interface.AddMessage(MessageType.Error, false, "Plugin " + Program.CurrentHost.Plugins[i].Title + " returned unsuccessfully at LoadObject");
@@ -331,6 +350,11 @@ namespace OpenBve
 
 		public override bool LoadStaticObject(string path, System.Text.Encoding Encoding, bool PreserveVertices, out StaticObject Object)
 		{
+			if (base.LoadStaticObject(path, Encoding, PreserveVertices, out Object))
+			{
+				return true;
+			}
+
 			if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)) {
 				Encoding = TextEncoding.GetSystemEncodingFromFile(path, Encoding);
 
@@ -341,12 +365,15 @@ namespace OpenBve
 								try {
 									UnifiedObject unifiedObject;
 									if (Program.CurrentHost.Plugins[i].Object.LoadObject(path, Encoding, out unifiedObject)) {
-										if (unifiedObject is StaticObject)
+										StaticObject staticObject = unifiedObject as StaticObject;
+										if (staticObject != null)
 										{
-											unifiedObject.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, false);
-											Object = (StaticObject) unifiedObject;
+											staticObject.OptimizeObject(PreserveVertices, Interface.CurrentOptions.ObjectOptimizationBasicThreshold, false);
+											Object = staticObject;
+											StaticObjectCache.Add(ValueTuple.Create(path, PreserveVertices), Object);
 											return true;
 										}
+
 										Object = null;
 										Interface.AddMessage(MessageType.Error, false, "Attempted to load " + path + " which is an animated object where only static objects are allowed.");
 									}
