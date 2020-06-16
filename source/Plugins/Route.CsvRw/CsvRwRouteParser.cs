@@ -5,7 +5,6 @@ using OpenBveApi.Colors;
 using OpenBveApi.Math;
 using OpenBveApi.Interface;
 using OpenBveApi.Routes;
-using OpenBveApi.Trains;
 using RouteManager2;
 using RouteManager2.SignalManager;
 using RouteManager2.Stations;
@@ -141,7 +140,7 @@ namespace CsvRwRouteParser {
 				// game data
 				CurrentRoute.Sections = new[]
 				{
-					new RouteManager2.SignalManager.Section(0, new SectionAspect[] { new SectionAspect(0, 0.0), new SectionAspect(4, double.PositiveInfinity) }, SectionType.IndexBased)
+					new RouteManager2.SignalManager.Section(0, new[] { new SectionAspect(0, 0.0), new SectionAspect(4, double.PositiveInfinity) }, SectionType.IndexBased)
 				};
 				
 				CurrentRoute.Sections[0].CurrentAspect = 0;

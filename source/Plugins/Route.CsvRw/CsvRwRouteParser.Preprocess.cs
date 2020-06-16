@@ -602,13 +602,10 @@ namespace CsvRwRouteParser
 			for (int i = 0; i < Expressions.Length; i++) {
 				if (IsRW) {
 					// only check for track positions in the railway section for RW routes
-					if (Expressions[i].Text.StartsWith("[", StringComparison.Ordinal) & Expressions[i].Text.EndsWith("]", StringComparison.Ordinal)) {
+					if (Expressions[i].Text.StartsWith("[", StringComparison.Ordinal) & Expressions[i].Text.EndsWith("]", StringComparison.Ordinal))
+					{
 						string s = Expressions[i].Text.Substring(1, Expressions[i].Text.Length - 2).Trim(new char[] { });
-						if (string.Compare(s, "Railway", StringComparison.OrdinalIgnoreCase) == 0) {
-							NumberCheck = true;
-						} else {
-							NumberCheck = false;
-						}
+						NumberCheck = string.Compare(s, "Railway", StringComparison.OrdinalIgnoreCase) == 0;
 					}
 				}
 				double x;

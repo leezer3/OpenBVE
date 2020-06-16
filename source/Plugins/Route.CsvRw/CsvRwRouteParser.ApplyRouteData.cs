@@ -575,7 +575,7 @@ namespace CsvRwRouteParser
 				// ground
 				if (!PreviewOnly)
 				{
-					int cb = (int)Math.Floor((double)i + 0.001);
+					int cb = (int)Math.Floor(i + 0.001);
 					int ci = (cb % Data.Blocks[i].Cycle.Length + Data.Blocks[i].Cycle.Length) % Data.Blocks[i].Cycle.Length;
 					int gi = Data.Blocks[i].Cycle[ci];
 					if (gi >= 0 & Data.Structure.Ground.ContainsKey(gi))
@@ -652,7 +652,7 @@ namespace CsvRwRouteParser
 									// h2 = s2 * p2;
 									double b2 = s2 / Math.Abs(r2);
 									// c2 = Math.Sqrt(2.0 * r2 * r2 * (1.0 - Math.Cos(b2)));
-									a2 = 0.5 * (double)Math.Sign(r2) * b2;
+									a2 = 0.5 * Math.Sign(r2) * b2;
 									Direction2.Rotate(Math.Cos(-a2), Math.Sin(-a2));
 								}
 								else if (Data.Blocks[i + 1].CurrentTrackState.CurveRadius != 0.0)
@@ -661,7 +661,7 @@ namespace CsvRwRouteParser
 									double r2 = Data.Blocks[i + 1].CurrentTrackState.CurveRadius;
 									double b2 = d2 / Math.Abs(r2);
 									// c2 = Math.Sqrt(2.0 * r2 * r2 * (1.0 - Math.Cos(b2)));
-									a2 = 0.5 * (double)Math.Sign(r2) * b2;
+									a2 = 0.5 * Math.Sign(r2) * b2;
 									Direction2.Rotate(Math.Cos(-a2), Math.Sin(-a2));
 								}
 								// else if (Data.Blocks[i + 1].Pitch != 0.0) {
@@ -1250,7 +1250,7 @@ namespace CsvRwRouteParser
 							{
 								if (Data.Blocks[i].Limits[k].Direction != 0)
 								{
-									double dx = 2.2 * (double)Data.Blocks[i].Limits[k].Direction;
+									double dx = 2.2 * Data.Blocks[i].Limits[k].Direction;
 									double dz = Data.Blocks[i].Limits[k].TrackPosition - StartingDistance;
 									Vector3 wpos = pos;
 									wpos += dx * RailTransformation.X + dz * RailTransformation.Z;
@@ -1355,7 +1355,7 @@ namespace CsvRwRouteParser
 							{
 								if (Data.Blocks[i].StopPositions[k].Direction != 0)
 								{
-									double dx = 1.8 * (double)Data.Blocks[i].StopPositions[k].Direction;
+									double dx = 1.8 * Data.Blocks[i].StopPositions[k].Direction;
 									double dz = Data.Blocks[i].StopPositions[k].TrackPosition - StartingDistance;
 									Vector3 wpos = pos;
 									wpos += dx * RailTransformation.X + dz * RailTransformation.Z;
@@ -1413,10 +1413,10 @@ namespace CsvRwRouteParser
 				if (j >= 0)
 				{
 					double p = CurrentRoute.Stations[i].Stops[j].TrackPosition + CurrentRoute.Stations[i].Stops[j].ForwardTolerance + Data.BlockInterval;
-					int k = (int)Math.Floor(p / (double)Data.BlockInterval) - Data.FirstUsedBlock;
+					int k = (int)Math.Floor(p / Data.BlockInterval) - Data.FirstUsedBlock;
 					if (k >= 0 & k < Data.Blocks.Length)
 					{
-						double d = p - (double)(k + Data.FirstUsedBlock) * (double)Data.BlockInterval;
+						double d = p - (k + Data.FirstUsedBlock) * Data.BlockInterval;
 						int m = CurrentRoute.Tracks[0].Elements[k].Events.Length;
 						Array.Resize(ref CurrentRoute.Tracks[0].Elements[k].Events, m + 1);
 						CurrentRoute.Tracks[0].Elements[k].Events[m] = new StationEndEvent(d, i, CurrentRoute, Plugin.CurrentHost);
