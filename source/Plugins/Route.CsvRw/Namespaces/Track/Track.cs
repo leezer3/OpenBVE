@@ -612,7 +612,7 @@ namespace CsvRwRouteParser
 
 							int n = Data.Blocks[BlockIndex].Signals.Length;
 							Array.Resize(ref Data.Blocks[BlockIndex].Signals, n + 1);
-							Data.Blocks[BlockIndex].Signals[n] = new Signal(Data.TrackPosition, CurrentSection, Data.Signals[objidx], new Vector2(x, y < 0.0 ? 4.8 : y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians(), true, y < 0.0);
+							Data.Blocks[BlockIndex].Signals[n] = new Signal(Data.TrackPosition, CurrentSection + section, Data.Signals[objidx], new Vector2(x, y < 0.0 ? 4.8 : y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians(), true, y < 0.0);
 						}
 						else
 						{
