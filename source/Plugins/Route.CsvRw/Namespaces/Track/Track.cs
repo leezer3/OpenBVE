@@ -2740,11 +2740,7 @@ namespace CsvRwRouteParser
 
 									int n = Data.Blocks[BlockIndex].SoundEvents.Length;
 									Array.Resize(ref Data.Blocks[BlockIndex].SoundEvents, n + 1);
-									Data.Blocks[BlockIndex].SoundEvents[n].TrackPosition = Data.TrackPosition;
-									const double radius = 15.0;
-									Plugin.CurrentHost.RegisterSound(f, radius, out Data.Blocks[BlockIndex].SoundEvents[n].SoundBuffer);
-									Data.Blocks[BlockIndex].SoundEvents[n].Type = speed == 0.0 ? SoundType.TrainStatic : SoundType.TrainDynamic;
-									Data.Blocks[BlockIndex].SoundEvents[n].Speed = speed * Data.UnitOfSpeed;
+									Data.Blocks[BlockIndex].SoundEvents[n] = new Sound(Data.TrackPosition, f, speed * Data.UnitOfSpeed);
 								}
 							}
 						}
@@ -2789,13 +2785,7 @@ namespace CsvRwRouteParser
 
 									int n = Data.Blocks[BlockIndex].SoundEvents.Length;
 									Array.Resize(ref Data.Blocks[BlockIndex].SoundEvents, n + 1);
-									Data.Blocks[BlockIndex].SoundEvents[n].TrackPosition = Data.TrackPosition;
-									const double radius = 15.0;
-									Plugin.CurrentHost.RegisterSound(f, radius, out Data.Blocks[BlockIndex].SoundEvents[n].SoundBuffer);
-									Data.Blocks[BlockIndex].SoundEvents[n].Type = SoundType.World;
-									Data.Blocks[BlockIndex].SoundEvents[n].Position.X = x;
-									Data.Blocks[BlockIndex].SoundEvents[n].Position.Y = y;
-									Data.Blocks[BlockIndex].SoundEvents[n].Radius = radius;
+									Data.Blocks[BlockIndex].SoundEvents[n] = new Sound(Data.TrackPosition, f, -1, new Vector2(x, y));
 								}
 							}
 						}
@@ -2843,13 +2833,7 @@ namespace CsvRwRouteParser
 
 						int n = Data.Blocks[BlockIndex].SoundEvents.Length;
 						Array.Resize(ref Data.Blocks[BlockIndex].SoundEvents, n + 1);
-						Data.Blocks[BlockIndex].SoundEvents[n].TrackPosition = Data.TrackPosition;
-						Data.Blocks[BlockIndex].SoundEvents[n].Type = SoundType.World;
-						Data.Blocks[BlockIndex].SoundEvents[n].Position.X = x;
-						Data.Blocks[BlockIndex].SoundEvents[n].Position.Y = y;
-						Data.Blocks[BlockIndex].SoundEvents[n].IsMicSound = true;
-						Data.Blocks[BlockIndex].SoundEvents[n].BackwardTolerance = back;
-						Data.Blocks[BlockIndex].SoundEvents[n].ForwardTolerance = front;
+						Data.Blocks[BlockIndex].SoundEvents[n] = new Sound(Data.TrackPosition, string.Empty, -1, new Vector2(x, y), front, back);
 					}
 				}
 					break;

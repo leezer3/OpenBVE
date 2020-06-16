@@ -69,6 +69,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Structures\Expression.PositionedExpression.cs" />
     <Compile Include="Structures\Miscellaneous\PointOfInterest.cs" />
+    <Compile Include="Structures\Miscellaneous\Sound.cs" />
     <Compile Include="Structures\Route\Crack.cs" />
     <Compile Include="Structures\Route\Form.cs" />
     <Compile Include="Structures\Route\FreeObject.cs" />
