@@ -14,7 +14,7 @@ namespace CsvRwRouteParser
 {
 	class StationXMLParser
 	{
-		public static RouteStation ReadStationXML(string fileName, bool PreviewOnly, Texture[] daytimeTimetableTextures, Texture[] nighttimeTimetableTextures, int CurrentStation, ref bool passAlarm, ref Parser.StopRequest stopRequest)
+		public static RouteStation ReadStationXML(string fileName, bool PreviewOnly, Texture[] daytimeTimetableTextures, Texture[] nighttimeTimetableTextures, int CurrentStation, ref bool passAlarm, ref StopRequest stopRequest)
 		{
 			RouteStation station = new RouteStation
 			{

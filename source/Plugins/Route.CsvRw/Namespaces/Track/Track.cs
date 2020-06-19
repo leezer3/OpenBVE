@@ -880,17 +880,7 @@ namespace CsvRwRouteParser
 
 							int n = Data.Blocks[BlockIndex].DestinationChanges.Length;
 							Array.Resize(ref Data.Blocks[BlockIndex].DestinationChanges, n + 1);
-							Data.Blocks[BlockIndex].DestinationChanges[n].TrackPosition = Data.TrackPosition;
-							Data.Blocks[BlockIndex].DestinationChanges[n].Type = type;
-							Data.Blocks[BlockIndex].DestinationChanges[n].TriggerOnce = triggerOnce != 0;
-							Data.Blocks[BlockIndex].DestinationChanges[n].PreviousDestination = previousDestination;
-							Data.Blocks[BlockIndex].DestinationChanges[n].BeaconStructureIndex = structure;
-							Data.Blocks[BlockIndex].DestinationChanges[n].NextDestination = nextDestination;
-							Data.Blocks[BlockIndex].DestinationChanges[n].Position.X = x;
-							Data.Blocks[BlockIndex].DestinationChanges[n].Position.Y = y;
-							Data.Blocks[BlockIndex].DestinationChanges[n].Yaw = yaw.ToRadians();
-							Data.Blocks[BlockIndex].DestinationChanges[n].Pitch = pitch.ToRadians();
-							Data.Blocks[BlockIndex].DestinationChanges[n].Roll = roll.ToRadians();
+							Data.Blocks[BlockIndex].DestinationChanges[n] = new DestinationEvent(Data.TrackPosition, type, triggerOnce != 0, structure, nextDestination, previousDestination, new Vector2(x, y), yaw.ToRadians(), pitch.ToRadians(), roll.ToRadians());
 						}
 					}
 				}

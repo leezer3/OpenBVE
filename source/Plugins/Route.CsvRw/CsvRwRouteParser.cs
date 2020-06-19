@@ -57,7 +57,6 @@ namespace CsvRwRouteParser {
 				Blocks = new Block[1]
 			};
 			Data.Blocks[0] = new Block();
-			Data.Blocks[0].Rails = new Dictionary<int, Rail>();
 			Data.Blocks[0].Rails.Add(0, new Rail { RailStarted =  true });
 			Data.Blocks[0].RailType = new[] { 0 };
 			Data.Blocks[0].Limits = new Limit[] { };
