@@ -1,5 +1,4 @@
-﻿using LibRender2;
-using OpenBveApi.Hosts;
+﻿using OpenBveApi.Hosts;
 using OpenBveApi.Textures;
 
 namespace RouteManager2.MessageManager.MessageTypes

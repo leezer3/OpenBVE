@@ -149,7 +149,7 @@ namespace RouteManager2
 			int		mode = inGame ? 1 : 0;
 			Bitmap b = new Bitmap(Width, Height, inGame ? System.Drawing.Imaging.PixelFormat.Format32bppArgb
 				: System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-			System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(b);
+			Graphics g = Graphics.FromImage(b);
 			g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 			g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 			g.Clear(mapColors[mode].background);
@@ -339,7 +339,7 @@ namespace RouteManager2
 				if (zMax >= Height)
 					zMax = Height - 1;
 				Bitmap nb = new Bitmap((int)(xMax - xMin + 1.0), (int)(zMax - zMin + 1.0));	// round up
-				g = System.Drawing.Graphics.FromImage(nb);
+				g = Graphics.FromImage(nb);
 				g.DrawImage(b, (int)-xMin, (int)-zMin);										// round down
 				// set total bitmap world X and Z ranges from bitmap ranges
 				lastRouteMinX = (int)((xMin - ox) / xd + x0);
@@ -411,7 +411,7 @@ namespace RouteManager2
 			Bitmap b = new Bitmap(Width, Height,
 					inGame ? System.Drawing.Imaging.PixelFormat.Format32bppArgb
 					: System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-			System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(b);
+			Graphics g = Graphics.FromImage(b);
 			g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 			g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 			int mode = inGame ? 1 : 0;
@@ -561,7 +561,7 @@ namespace RouteManager2
 		}
 
 		// draw segmented curve
-		private static void DrawSegmentedCurve(System.Drawing.Graphics Graphics, Pen Pen, PointF[] Points, int Start, int Length) {
+		private static void DrawSegmentedCurve(Graphics Graphics, Pen Pen, PointF[] Points, int Start, int Length) {
 			const int Count = 1000;
 			int End = Start + Length - 1;
 			for (int k = Start; k <= End; k += Count)

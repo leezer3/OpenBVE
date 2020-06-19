@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Security;
 using System.Text;
 using System.Xml;
 using OpenBveApi.FunctionScripting;
@@ -35,9 +34,13 @@ namespace RouteManager2.SignalManager
 		{
 			if (AspectNumbers.Length != 0)
 			{
-				AnimatedObjectCollection aoc = new AnimatedObjectCollection(currentHost);
-				aoc.Objects = new AnimatedObject[1];
-				aoc.Objects[0] = new AnimatedObject(currentHost);
+				AnimatedObjectCollection aoc = new AnimatedObjectCollection(currentHost)
+				{
+					Objects = new[]
+					{
+						new AnimatedObject(currentHost)
+					}
+				};
 				aoc.Objects[0].States = new ObjectState[AspectNumbers.Length];
 				for (int l = 0; l < AspectNumbers.Length; l++)
 				{
@@ -102,7 +105,7 @@ namespace RouteManager2.SignalManager
 										continue;
 									}
 
-									int aspect = 0;
+									int aspect;
 									if (!NumberFormats.TryParseIntVb6(n.Attributes["Number"].Value, out aspect))
 									{
 										currentHost.AddMessage(MessageType.Error, true, "Invalid aspect number " + aspect + " in the signal object list in the compatability signal file " + fileName);
@@ -144,7 +147,7 @@ namespace RouteManager2.SignalManager
 					if (node != null)
 					{
 						string newFile = Path.CombineFile(currentPath, node.InnerText);
-						if (System.IO.File.Exists(newFile))
+						if (File.Exists(newFile))
 						{
 							signalPostFile = newFile;
 						}

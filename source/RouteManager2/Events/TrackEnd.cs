@@ -1,5 +1,4 @@
-﻿using LibRender2.Cameras;
-using OpenBveApi.Hosts;
+﻿using OpenBveApi.Hosts;
 using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 
