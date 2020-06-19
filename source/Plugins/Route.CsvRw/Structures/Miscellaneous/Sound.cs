@@ -1,5 +1,7 @@
-﻿using OpenBveApi.Math;
+﻿using System;
+using OpenBveApi.Math;
 using OpenBveApi.Sounds;
+using RouteManager2.Events;
 
 namespace CsvRwRouteParser
 {
@@ -18,7 +20,7 @@ namespace CsvRwRouteParser
 		/// <summary>If a dynamic sound, the train speed at which the sound will be played at original speed</summary>
 		internal readonly double Speed;
 		/// <summary>Whether this is a MicSound</summary>
-		internal readonly bool IsMicSound;
+		private readonly bool IsMicSound;
 		/// <summary>The forwards tolerance for triggering the sound</summary>
 		internal readonly double ForwardTolerance;
 		/// <summary>The backwards tolerance for triggering the sound</summary>
@@ -58,6 +60,33 @@ namespace CsvRwRouteParser
 			Position = position;
 			ForwardTolerance = forwardTolerance;
 			BackwardTolerance = backwardTolerance;
+		}
+
+		internal void Create(Vector3 pos, double StartingDistance, Vector2 Direction, double planar, double updown)
+		{
+			if (Type == Parser.SoundType.World)
+			{
+				if (SoundBuffer != null || IsMicSound)
+				{
+					double d = TrackPosition - StartingDistance;
+					double dx = Position.X;
+					double dy = Position.Y;
+					double wa = Math.Atan2(Direction.Y, Direction.X) - planar;
+					Vector3 w = new Vector3(Math.Cos(wa), Math.Tan(updown), Math.Sin(wa));
+					w.Normalize();
+					Vector3 s = new Vector3(Direction.Y, 0.0, -Direction.X);
+					Vector3 u = Vector3.Cross(w, s);
+					Vector3 wpos = pos + new Vector3(s.X * dx + u.X * dy + w.X * d, s.Y * dx + u.Y * dy + w.Y * d, s.Z * dx + u.Z * dy + w.Z * d);
+					if (IsMicSound)
+					{
+						Plugin.CurrentHost.PlayMicSound(wpos, BackwardTolerance, ForwardTolerance);
+					}
+					else
+					{
+						Plugin.CurrentHost.PlaySound(SoundBuffer, 1.0, 1.0, wpos, null, true);
+					}
+				}
+			}
 		}
 	}
 }

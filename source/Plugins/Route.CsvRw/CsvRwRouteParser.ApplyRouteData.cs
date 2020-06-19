@@ -782,30 +782,7 @@ namespace CsvRwRouteParser
 						{
 							for (int k = 0; k < Data.Blocks[i].SoundEvents.Length; k++)
 							{
-								if (Data.Blocks[i].SoundEvents[k].Type == SoundType.World)
-								{
-									if (Data.Blocks[i].SoundEvents[k].SoundBuffer != null || Data.Blocks[i].SoundEvents[k].IsMicSound)
-									{
-										var SoundEvent = Data.Blocks[i].SoundEvents[k];
-										double d = SoundEvent.TrackPosition - StartingDistance;
-										double dx = SoundEvent.Position.X;
-										double dy = SoundEvent.Position.Y;
-										double wa = Math.Atan2(Direction.Y, Direction.X) - planar;
-										Vector3 w = new Vector3(Math.Cos(wa), Math.Tan(updown), Math.Sin(wa));
-										w.Normalize();
-										Vector3 s = new Vector3(Direction.Y, 0.0, -Direction.X);
-										Vector3 u = Vector3.Cross(w, s);
-										Vector3 wpos = pos + new Vector3(s.X * dx + u.X * dy + w.X * d, s.Y * dx + u.Y * dy + w.Y * d, s.Z * dx + u.Z * dy + w.Z * d);
-										if (SoundEvent.IsMicSound)
-										{
-											Plugin.CurrentHost.PlayMicSound(wpos, SoundEvent.BackwardTolerance, SoundEvent.ForwardTolerance);
-										}
-										else
-										{
-											Plugin.CurrentHost.PlaySound(SoundEvent.SoundBuffer, 1.0, 1.0, wpos, null, true);
-										}
-									}
-								}
+								Data.Blocks[i].SoundEvents[k].Create(pos, StartingDistance, Direction, planar, updown);
 							}
 						}
 						// forms
