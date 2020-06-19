@@ -751,37 +751,7 @@ namespace CsvRwRouteParser
 						// poles
 						if (Data.Blocks[i].RailPole.Length > j && Data.Blocks[i].RailPole[j].Exists)
 						{
-							double dz = StartingDistance / Data.Blocks[i].RailPole[j].Interval;
-							dz -= Math.Floor(dz + 0.5);
-							if (dz >= -0.01 & dz <= 0.01)
-							{
-								if (Data.Blocks[i].RailPole[j].Mode == 0)
-								{
-									if (Data.Blocks[i].RailPole[j].Location <= 0.0)
-									{
-										Data.Structure.Poles[0][Data.Blocks[i].RailPole[j].Type].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
-									}
-									else
-									{
-										UnifiedObject Pole = Data.Structure.Poles[0][Data.Blocks[i].RailPole[j].Type].Mirror();
-										Pole.CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
-									}
-								}
-								else
-								{
-									int m = Data.Blocks[i].RailPole[j].Mode;
-									double dx = -Data.Blocks[i].RailPole[j].Location * 3.8;
-									double wa = Math.Atan2(Direction.Y, Direction.X) - planar;
-									Vector3 w = new Vector3(Math.Cos(wa), Math.Tan(updown), Math.Sin(wa));
-									w.Normalize();
-									double sx = Direction.Y;
-									double sy = 0.0;
-									double sz = -Direction.X;
-									Vector3 wpos = pos + new Vector3(sx * dx + w.X * dz, sy * dx + w.Y * dz, sz * dx + w.Z * dz);
-									int type = Data.Blocks[i].RailPole[j].Type;
-									Data.Structure.Poles[m][type].CreateObject(wpos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
-								}
-							}
+							Data.Blocks[i].RailPole[j].Create(Data.Structure.Poles, pos, RailTransformation, Direction, planar, updown, StartingDistance, EndingDistance, Data.BlockInterval, Data.AccurateObjectDisposal);
 						}
 						// walls
 						if (Data.Blocks[i].RailWall.Length > j && Data.Blocks[i].RailWall[j].Exists)
