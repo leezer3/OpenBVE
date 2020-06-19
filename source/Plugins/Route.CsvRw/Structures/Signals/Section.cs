@@ -58,7 +58,6 @@ namespace CsvRwRouteParser
 				}
 			}
 			
-			CurrentRoute.Sections[m].CurrentAspect = -1;
 			if (m > 0)
 			{
 				CurrentRoute.Sections[m] = new RouteManager2.SignalManager.Section(TrackPosition, newAspects, Type, CurrentRoute.Sections[m - 1]);
@@ -69,7 +68,6 @@ namespace CsvRwRouteParser
 				CurrentRoute.Sections[m] = new RouteManager2.SignalManager.Section(TrackPosition, newAspects, Type);
 			}
 
-			CurrentRoute.Sections[m].NextSection = null;
 			CurrentRoute.Sections[m].StationIndex = DepartureStationIndex;
 			CurrentRoute.Sections[m].Invisible = Invisible;
 			// create section change event

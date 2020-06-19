@@ -754,7 +754,7 @@ namespace CsvRwRouteParser
 							Data.Blocks[i].RailPole[j].Create(Data.Structure.Poles, pos, RailTransformation, Direction, planar, updown, StartingDistance, EndingDistance, Data.BlockInterval, Data.AccurateObjectDisposal);
 						}
 						// walls
-						if (Data.Blocks[i].RailWall.Length > j && Data.Blocks[i].RailWall[j].Exists)
+						if (Data.Blocks[i].RailWall.Length > j && Data.Blocks[i].RailWall[j] != null && Data.Blocks[i].RailWall[j].Exists)
 						{
 							if (Data.Blocks[i].RailWall[j].Direction <= 0)
 							{
@@ -766,7 +766,7 @@ namespace CsvRwRouteParser
 							}
 						}
 						// dikes
-						if (Data.Blocks[i].RailDike.Length > j && Data.Blocks[i].RailDike[j].Exists)
+						if (Data.Blocks[i].RailDike.Length > j && Data.Blocks[i].RailDike[j] != null && Data.Blocks[i].RailDike[j].Exists)
 						{
 							if (Data.Blocks[i].RailDike[j].Direction <= 0)
 							{

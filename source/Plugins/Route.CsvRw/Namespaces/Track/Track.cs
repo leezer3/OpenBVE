@@ -2155,7 +2155,10 @@ namespace CsvRwRouteParser
 								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.WallEnd at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
 
-							Data.Blocks[BlockIndex].RailWall[idx].Exists = false;
+							if (Data.Blocks[BlockIndex].RailWall[idx] != null)
+							{
+								Data.Blocks[BlockIndex].RailWall[idx].Exists = false;
+							}
 						}
 					}
 				}
@@ -2289,7 +2292,10 @@ namespace CsvRwRouteParser
 								Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "RailIndex " + idx + " could be out of range in Track.DikeEnd at line " + Expression.Line.ToString(Culture) + ", column " + Expression.Column.ToString(Culture) + " in file " + Expression.File);
 							}
 
-							Data.Blocks[BlockIndex].RailDike[idx].Exists = false;
+							if (Data.Blocks[BlockIndex].RailDike[idx] != null)
+							{
+								Data.Blocks[BlockIndex].RailDike[idx].Exists = false;
+							}
 						}
 					}
 				}

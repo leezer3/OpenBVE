@@ -6,16 +6,6 @@ namespace CsvRwRouteParser
 {
 	internal class FreeObj
 	{
-		internal FreeObj(double trackPosition, int type, Vector2 position, double yaw, double pitch = 0, double roll = 0)
-		{
-			TrackPosition = trackPosition;
-			Type = type;
-			Position = position;
-			Yaw = yaw;
-			Pitch = pitch;
-			Roll = roll;
-		}
-
 		/// <summary>The track position of the object</summary>
 		private readonly double TrackPosition;
 		/// <summary>The routefile index of the object</summary>
@@ -28,6 +18,16 @@ namespace CsvRwRouteParser
 		private readonly double Pitch;
 		/// <summary>The roll of the object (radians)</summary>
 		private readonly double Roll;
+
+		internal FreeObj(double trackPosition, int type, Vector2 position, double yaw, double pitch = 0, double roll = 0)
+		{
+			TrackPosition = trackPosition;
+			Type = type;
+			Position = position;
+			Yaw = yaw;
+			Pitch = pitch;
+			Roll = roll;
+		}
 
 		internal void CreateRailAligned(ObjectDictionary FreeObjects, Vector3 WorldPosition, Transformation RailTransformation, double StartingDistance, double EndingDistance, double BlockInterval, bool AccurateObjectDisposal)
 		{

@@ -49,6 +49,7 @@ namespace RouteManager2.SignalManager
 			Trains = new AbstractTrain[] {};
 			PreviousSection = previousSection;
 			NextSection = null;
+			CurrentAspect = -1;
 		}
 
 		/// <summary>Called when a train enters the section</summary>
