@@ -48,7 +48,7 @@
     <OutputPath>..\..\..\bin_release\</OutputPath>
     <LangVersion>6</LangVersion>
   </PropertyGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
