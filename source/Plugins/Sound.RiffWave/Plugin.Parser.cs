@@ -223,7 +223,9 @@ namespace Plugin
 						if (ckSize > 16)
 						{
 							format.cbSize = reader.ReadUInt16(endianness);
-							reader.BaseStream.Position += format.cbSize;
+
+							// This is a countermeasure to the cbSize is not correct file.
+							reader.BaseStream.Position += Math.Min(format.cbSize, ckSize - 18);
 						}
 
 						if (format is WaveFormatPcm)
