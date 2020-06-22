@@ -6,6 +6,7 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,9 +22,34 @@ using RouteManager2;
 namespace OpenBve {
 	internal static class Loading {
 
-		// members
-		internal static double RouteProgress;
-		internal static bool Cancel;
+		internal static bool Cancel
+		{
+			get
+			{
+				return _cancel;
+			}
+			set
+			{
+				if (value)
+				{
+					//Send cancellation call to plugins
+					for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+					{
+						if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.IsLoading)
+						{
+							Program.CurrentHost.Plugins[i].Route.Cancel = true;
+						}
+					}
+					_cancel = true;
+				}
+				else
+				{
+					_cancel = false;
+				}
+			}
+		}
+
+		private static bool _cancel;
 		internal static bool Complete;
 		private static string CurrentRouteFile;
 		private static Encoding CurrentRouteEncoding;
@@ -37,7 +63,6 @@ namespace OpenBve {
 			Program.Renderer.Loading.InitLoading(Program.FileSystem.GetDataFolder("In-game"), typeof(NewRenderer).Assembly.GetName().Version.ToString());
 			
 			// members
-			RouteProgress = 0.0;
 			Cancel = false;
 			Complete = false;
 			CurrentRouteFile = RouteFile;
@@ -101,7 +126,6 @@ namespace OpenBve {
 		internal static void LoadAsynchronously(string RouteFile, Encoding RouteEncoding)
 		{
 			// members
-			RouteProgress = 0.0;
 			Cancel = false;
 			Complete = false;
 			CurrentRouteFile = RouteFile;
@@ -143,7 +167,6 @@ namespace OpenBve {
 			Program.Renderer.CameraTrackFollower = new TrackFollower(Program.CurrentHost);
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			Program.CurrentRoute.Atmosphere.CalculateSeaLevelConstants();
-			RouteProgress = 1.0;
 			// camera
 			Program.Renderer.CameraTrackFollower.UpdateAbsolute( 0.0, true, false);
 			Program.Renderer.CameraTrackFollower.UpdateAbsolute(0.1, true, false);

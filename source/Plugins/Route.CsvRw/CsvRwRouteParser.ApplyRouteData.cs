@@ -168,11 +168,11 @@ namespace CsvRwRouteParser
 			double progressFactor = Data.Blocks.Length - Data.FirstUsedBlock == 0 ? 0.5 : 0.5 / (Data.Blocks.Length - Data.FirstUsedBlock);
 			for (int i = Data.FirstUsedBlock; i < Data.Blocks.Length; i++)
 			{
-				RouteInterface.CurrentProgress = 0.6667 + (i - Data.FirstUsedBlock) * progressFactor;
+				Plugin.CurrentProgress = 0.6667 + (i - Data.FirstUsedBlock) * progressFactor;
 				if ((i & 15) == 0)
 				{
 					System.Threading.Thread.Sleep(1);
-					if (RouteInterface.Cancel) return;
+					if (Plugin.Cancel) return;
 				}
 				double StartingDistance = i * Data.BlockInterval;
 				double EndingDistance = StartingDistance + Data.BlockInterval;

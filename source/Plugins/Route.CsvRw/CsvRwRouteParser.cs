@@ -17,10 +17,13 @@ namespace CsvRwRouteParser {
 		internal static bool CylinderHack = false;
 		internal static bool IsRW;
 
+		internal static Plugin Plugin;
+
 		internal static CurrentRoute CurrentRoute;
 		// parse route
-		internal static void ParseRoute(string FileName, bool isRW, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, string compatibilitySignalSet, bool PreviewOnly)
+		internal static void ParseRoute(string FileName, bool isRW, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, string compatibilitySignalSet, bool PreviewOnly, Plugin hostPlugin)
 		{
+			Plugin = hostPlugin;
 			CurrentRoute = Plugin.CurrentRoute;
 			/*
 			 * Store paths for later use
@@ -145,7 +148,7 @@ namespace CsvRwRouteParser {
 				CurrentRoute.Sections[0].StationIndex = -1;
 			}
 			ParseRouteForData(FileName, Encoding, ref Data, PreviewOnly);
-			if (RouteInterface.Cancel)
+			if (Plugin.Cancel)
 			{
 				return;
 			}
@@ -203,10 +206,10 @@ namespace CsvRwRouteParser {
 			}
 			
 			for (int j = 0; j < Expressions.Length; j++) {
-				RouteInterface.CurrentProgress = j * progressFactor;
+				Plugin.CurrentProgress = j * progressFactor;
 				if ((j & 255) == 0) {
 					System.Threading.Thread.Sleep(1);
-					if (RouteInterface.Cancel) return;
+					if (Plugin.Cancel) return;
 				}
 				if (Expressions[j].Text.StartsWith("[") & Expressions[j].Text.EndsWith("]")) {
 					Section = Expressions[j].Text.Substring(1, Expressions[j].Text.Length - 2).Trim(new char[] { });
@@ -350,10 +353,10 @@ namespace CsvRwRouteParser {
 			
 			// process track namespace
 			for (int j = 0; j < Expressions.Length; j++) {
-				RouteInterface.CurrentProgress = 0.3333 + j * progressFactor;
+				Plugin.CurrentProgress = 0.3333 + j * progressFactor;
 				if ((j & 255) == 0) {
 					System.Threading.Thread.Sleep(1);
-					if (RouteInterface.Cancel) return;
+					if (Plugin.Cancel) return;
 				}
 				if (Data.LineEndingFix)
 				{

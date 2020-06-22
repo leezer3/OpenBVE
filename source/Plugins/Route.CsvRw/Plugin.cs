@@ -59,6 +59,9 @@ namespace CsvRwRouteParser
 	    /// <returns>Whether loading the sound was successful.</returns>
 	    public override bool LoadRoute(string path, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly, ref object route)
 	    {
+		    Cancel = false;
+		    CurrentProgress = 0.0;
+		    IsLoading = true;
 		    FileSystem.AppendToLogFile("Loading route file: " + path);
 		    FileSystem.AppendToLogFile("INFO: Route file hash " + Parser.GetChecksum(path));
 		    CurrentRoute = (CurrentRoute)route;
@@ -68,13 +71,15 @@ namespace CsvRwRouteParser
 		    FileSystem.AppendToLogFile("Route file format is: " + (isRw ? "RW" : "CSV"));
 		    try
 		    {
-			    Parser.ParseRoute(path, isRw, Encoding, trainPath, objectPath, soundPath, null, PreviewOnly);  //FIXME: Doesn't pass the new signal set parameter yet
+				Parser.ParseRoute(path, isRw, Encoding, trainPath, objectPath, soundPath, null, PreviewOnly, this);  //FIXME: Doesn't pass the new signal set parameter yet
+				IsLoading = false;
 			    return true;
 		    }
 		    catch
 		    {
 			    route = null;
 			    CurrentHost.AddMessage(MessageType.Error, false, "An unexpected error occured whilst attempting to load the following routefile: " + path);
+			    IsLoading = false;
 			    return false;
 		    }
 	    }

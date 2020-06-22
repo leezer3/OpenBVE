@@ -28,13 +28,13 @@
 		/// <returns>Whether loading the sound was successful.</returns>
 		public abstract bool LoadRoute(string path, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, bool PreviewOnly, ref object route);
 
-		/// <summary>Holds the loading progress</summary>
-		public double Progress;
-
+		/// <summary>Holds whether loading is currently in progress</summary>
+		public bool IsLoading;
+		
 		/// <summary>Set if loading is to be cancelled</summary>
-		public static bool Cancel;
+		public bool Cancel;
 
 		/// <summary>Holds the current loading progress</summary>
-		public static double CurrentProgress;
+		public double CurrentProgress;
 	}
 }

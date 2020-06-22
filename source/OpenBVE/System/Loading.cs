@@ -14,14 +14,37 @@ using RouteManager2;
 
 namespace OpenBve {
 	internal static class Loading {
-
-		// members
-		/// <summary>The current route loading progress</summary>
-		internal static double RouteProgress;
 		/// <summary>The current train loading progress</summary>
 		internal static double TrainProgress;
 		/// <summary>Set this member to true to cancel loading</summary>
-		internal static bool Cancel;
+		internal static bool Cancel
+		{
+			get
+			{
+				return _cancel;
+			}
+			set
+			{
+				if (value)
+				{
+					//Send cancellation call to plugins
+					for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+					{
+						if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.IsLoading)
+						{
+							Program.CurrentHost.Plugins[i].Route.Cancel = true;
+						}
+					}
+					_cancel = true;
+				}
+				else
+				{
+					_cancel = false;
+				}
+			}
+		}
+
+		private static bool _cancel;
 		/// <summary>Whether loading is complete</summary>
 		internal static bool Complete;
 		/// <summary>True when the simulation has been completely setup</summary>
@@ -48,7 +71,6 @@ namespace OpenBve {
 		/// <summary>Initializes loading the route and train asynchronously. Set the Loading.Cancel member to cancel loading. Check the Loading.Complete member to see when loading has finished.</summary>
 		internal static void LoadAsynchronously(string RouteFile, Encoding RouteEncoding, string CompatibilitySignalSet, string TrainFolder, Encoding TrainEncoding) {
 			// members
-			RouteProgress = 0.0;
 			TrainProgress = 0.0;
 			TrainProgressCurrentSum = 0.0;
 			TrainProgressCurrentWeight = 1.0;
@@ -236,7 +258,6 @@ namespace OpenBve {
 				Program.FileSystem.AppendToLogFile("The processed route file only contains a single station.");
 			}
 			Program.FileSystem.AppendToLogFile("Route file loaded successfully.");
-			RouteProgress = 1.0;
 			// initialize trains
 			System.Threading.Thread.Sleep(1); if (Cancel) return;
 			TrainManager.Trains = new TrainManager.Train[Program.CurrentRoute.PrecedingTrainTimeDeltas.Length + 1 + (Program.CurrentRoute.BogusPreTrainInstructions.Length != 0 ? 1 : 0)];
