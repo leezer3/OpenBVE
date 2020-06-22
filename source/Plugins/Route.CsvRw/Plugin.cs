@@ -18,8 +18,6 @@ namespace CsvRwRouteParser
 
 	    internal static FileSystem FileSystem;
 
-	    internal static bool EnableBveTsHacks;
-
 	    internal static BaseOptions CurrentOptions;
 
 	    /// <summary>Called when the plugin is loaded.</summary>

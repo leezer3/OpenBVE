@@ -91,7 +91,7 @@ namespace CsvRwRouteParser
 				}
 				else
 				{
-					if (Plugin.EnableBveTsHacks && Data.Backgrounds.Count == 0)
+					if (Plugin.CurrentOptions.EnableBveTsHacks && Data.Backgrounds.Count == 0)
 					{
 						/*
 						 * If no backgrounds are defined, this causes some interesting render artifacts
