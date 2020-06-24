@@ -81,8 +81,7 @@
     <Compile Include="FunctionScripts\FunctionScript.Notation.cs" />
     <Compile Include="FunctionScripts\Instructions.cs" />
     <Compile Include="Graphics\Camera.RestrictionModes.cs" />
-    <Compile Include="Graphics\Colors.cs">
-    </Compile>
+    <Compile Include="Graphics\Colors.cs" />
     <Compile Include="Interface\Input\InputDevice.cs" />
     <Compile Include="Interface\Key.cs" />
     <Compile Include="Interface\Logging\LogMessage.cs" />
@@ -211,14 +210,11 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
-  <PropertyGroup>
-    <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">
-		  echo Resoloving dependencies
-		  xcopy /E /Y "$(SolutionDir)dependencies" "$(TargetDir)"
-	  </PreBuildEvent>
-    <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">
-		  cp -r "$(SolutionDir)dependencies/." "$(TargetDir)"
-	  </PreBuildEvent>
-  </PropertyGroup>
+  <Target Name="AfterBuild">
+    <ItemGroup>
+      <DependentFiles Include="$(SolutionDir)dependencies\**\*.*" />
+    </ItemGroup>
+    <Message Importance="High" Text="Resoloving dependencies" />
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(DependentFiles)" DestinationFiles="@(DependentFiles->'$(TargetDir)%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
 </Project>

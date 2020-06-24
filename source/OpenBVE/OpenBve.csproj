@@ -495,21 +495,15 @@
     <PreBuildEvent Condition=" '$(OS)' != 'Unix' and !Exists('$(VSToolsPath)\TextTemplating\Microsoft.TextTemplating.targets')">$(ProjectDir)..\DevTools\TextTransform\TextTransform.exe $(ProjectDir)\Properties\AssemblyInfo.tt</PreBuildEvent>
     <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">bash $(ProjectDir)Properties/AssemblyInfo.sh</PreBuildEvent>
   </PropertyGroup>
-  <PropertyGroup>
-    <!-- Copy in dependancies and child projects -->
-    <!-- Finally, set LBA flag & cleanup -->
-    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
-		xcopy "$(SolutionDir)assets\*.*" "$(TargetDir)Data" /Y /I /E /C	
-"$(TargetDir)DevTools\LBAHeader.exe" OpenBve.exe 
-	</PostBuildEvent>
-    <!-- NOTE: Whilst AtsPluginProxy.dll is Windows specific, we still want to copy it in the auto-generated nightly builds -->
-    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
-		cp -rf "$(SolutionDir)assets/." "$(TargetDir)Data/"
-mono "$(TargetDir)DevTools\LBAHeader.exe" OpenBve.exe 
-	</PostBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="AfterBuild">
-  </Target>-->
+    <!-- Set LBA flag -->
+    <Exec Condition="'$(OS)' != 'Unix'" Command="$(TargetDir)DevTools\LBAHeader.exe $(TargetDir)OpenBve.exe" />
+    <Exec Condition="'$(OS)' == 'Unix'" Command="mono $(TargetDir)DevTools/LBAHeader.exe $(TargetDir)OpenBve.exe" />
+    <!-- Copy in dependancies -->
+    <!-- NOTE: Whilst AtsPluginProxy.dll is Windows specific, we still want to copy it in the auto-generated nightly builds -->
+    <ItemGroup>
+      <AssetFiles Include="$(SolutionDir)assets\**\*.*" />
+    </ItemGroup>
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(AssetFiles)" DestinationFiles="@(AssetFiles->'$(TargetDir)Data\%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
 </Project>
