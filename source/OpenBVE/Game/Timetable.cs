@@ -11,7 +11,7 @@ namespace OpenBve {
 	internal static class Timetable {
 
 		// members (built-in timetable)
-		internal static string DefaultTimetableDescription = "";
+		
 		internal static Texture DefaultTimetableTexture;
 		internal static double DefaultTimetablePosition = 0.0;
 		
@@ -249,7 +249,7 @@ namespace OpenBve {
 					float y0 = 8;
 					if (k == 1)
 					{
-						t = DefaultTimetableDescription;
+						t = Program.CurrentRoute.Information.DefaultTimetableDescription;
 						g.DrawString(t, f, Brushes.Black, new RectangleF(x0, 6, descriptionwidth, descriptionheight + 8));
 						y0 += descriptionheight + 2;
 					}
@@ -482,7 +482,7 @@ namespace OpenBve {
 					// description
 					if (k == 0)
 					{
-						t = DefaultTimetableDescription;
+						t = Program.CurrentRoute.Information.DefaultTimetableDescription;
 						s = g.MeasureString(t, f, w - 16);
 						descriptionwidth = s.Width;
 						descriptionheight = s.Height + 2;

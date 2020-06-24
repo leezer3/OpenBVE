@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Xml;
+using OpenBveApi.FunctionScripting;
 using OpenBveApi.Hosts;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.World;
 using Path = OpenBveApi.Path;
 
 namespace RouteManager2.SignalManager
@@ -18,10 +21,46 @@ namespace RouteManager2.SignalManager
 		public readonly int[] AspectNumbers;
 		/// <summary>The object states</summary>
 		public readonly StaticObject[] Objects;
-		public CompatibilitySignalObject(int[] aspectNumbers, StaticObject[] Objects)
+
+		private readonly HostInterface currentHost;
+		public CompatibilitySignalObject(int[] aspectNumbers, StaticObject[] Objects, HostInterface Host)
 		{
 			this.AspectNumbers = aspectNumbers;
 			this.Objects = Objects;
+			this.currentHost = Host;
+		}
+
+		public override void Create(Vector3 wpos, Transformation railTransformation, Transformation auxTransformation, int sectionIndex, bool accurateObjectDisposal, double startingDistance, double endingDistance, double blockInterval, double trackPosition, double brightness)
+		{
+			if (AspectNumbers.Length != 0)
+			{
+				AnimatedObjectCollection aoc = new AnimatedObjectCollection(currentHost)
+				{
+					Objects = new[]
+					{
+						new AnimatedObject(currentHost)
+					}
+				};
+				aoc.Objects[0].States = new ObjectState[AspectNumbers.Length];
+				for (int l = 0; l < AspectNumbers.Length; l++)
+				{
+					aoc.Objects[0].States[l] = new ObjectState { Prototype = (StaticObject)Objects[l].Clone() };
+				}
+				CultureInfo Culture = CultureInfo.InvariantCulture;
+				string expr = "";
+				for (int l = 0; l < AspectNumbers.Length - 1; l++)
+				{
+					expr += "section " + AspectNumbers[l].ToString(Culture) + " <= " + l.ToString(Culture) + " ";
+				}
+				expr += (AspectNumbers.Length - 1).ToString(Culture);
+				for (int l = 0; l < AspectNumbers.Length - 1; l++)
+				{
+					expr += " ?";
+				}
+				aoc.Objects[0].StateFunction = new FunctionScript(currentHost, expr, false);
+				aoc.Objects[0].RefreshRate = 1.0 + 0.01 * new Random().NextDouble();
+				aoc.CreateObject(wpos, railTransformation, auxTransformation, sectionIndex, accurateObjectDisposal, startingDistance, endingDistance, blockInterval, trackPosition, brightness, false);
+			}
 		}
 
 		/// <summary>Loads a list of compatibility signal objects</summary>
@@ -66,7 +105,7 @@ namespace RouteManager2.SignalManager
 										continue;
 									}
 
-									int aspect = 0;
+									int aspect;
 									if (!NumberFormats.TryParseIntVb6(n.Attributes["Number"].Value, out aspect))
 									{
 										currentHost.AddMessage(MessageType.Error, true, "Invalid aspect number " + aspect + " in the signal object list in the compatability signal file " + fileName);
@@ -96,7 +135,7 @@ namespace RouteManager2.SignalManager
 						{
 							currentHost.AddMessage(MessageType.Error, true, "An unexpected error was encountered whilst processing the compatability signal file " + fileName);
 						}
-						objects[index] = new CompatibilitySignalObject(aspectList.ToArray(), objectList.ToArray());
+						objects[index] = new CompatibilitySignalObject(aspectList.ToArray(), objectList.ToArray(), currentHost);
 						index++;
 					}
 				}
@@ -108,7 +147,7 @@ namespace RouteManager2.SignalManager
 					if (node != null)
 					{
 						string newFile = Path.CombineFile(currentPath, node.InnerText);
-						if (System.IO.File.Exists(newFile))
+						if (File.Exists(newFile))
 						{
 							signalPostFile = newFile;
 						}

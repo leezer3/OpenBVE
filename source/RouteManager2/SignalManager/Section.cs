@@ -9,7 +9,7 @@ namespace RouteManager2.SignalManager
 	public class Section
 	{
 		/// <summary>The previous section</summary>
-		public Section PreviousSection;
+		public readonly Section PreviousSection;
 
 		/// <summary>The next section</summary>
 		public Section NextSection;
@@ -27,19 +27,30 @@ namespace RouteManager2.SignalManager
 		public bool Invisible;
 
 		/// <summary>The track position at which this section is placed</summary>
-		public double TrackPosition;
+		public readonly double TrackPosition;
 
 		/// <summary>The type of section</summary>
-		public SectionType Type;
+		public readonly SectionType Type;
 
 		/// <summary>The aspects attached to this section</summary>
-		public SectionAspect[] Aspects;
+		public readonly SectionAspect[] Aspects;
 
 		/// <summary>The current aspect</summary>
 		public int CurrentAspect;
 
 		/// <summary>The number of free sections ahead of this section</summary>
 		public int FreeSections;
+
+		public Section(double trackPosition, SectionAspect[] aspects, SectionType type, Section previousSection = null)
+		{
+			TrackPosition = trackPosition;
+			Aspects = aspects;
+			Type = type;
+			Trains = new AbstractTrain[] {};
+			PreviousSection = previousSection;
+			NextSection = null;
+			CurrentAspect = -1;
+		}
 
 		/// <summary>Called when a train enters the section</summary>
 		/// <param name="Train">The train</param>

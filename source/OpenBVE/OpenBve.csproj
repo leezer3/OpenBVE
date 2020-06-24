@@ -138,7 +138,6 @@
     <Compile Include="Game\Messages.cs" />
     <Compile Include="Game\ObjectManager\ObjectManager.cs" />
     <Compile Include="Game\PointsOfInterest.cs" />
-    <Compile Include="Game\RouteInformation.cs" />
     <Compile Include="Game\RouteInfoOverlay.cs" />
     <Compile Include="Game\Information.cs" />
     <Compile Include="Game\Menu.cs" />
@@ -183,22 +182,7 @@
     <Compile Include="Graphics\Textures.cs" />
     <Compile Include="Parsers\Panel\PanelAnimatedXmlParser.cs" />
     <Compile Include="Parsers\Panel\PanelXmlParser.cs" />
-    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.ApplyRouteData.cs" />
-    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.CompatibilityObjects.cs" />
-    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Expression.cs" />
-    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.ObjectDictionary.cs" />
-    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Preprocess.cs" />
-    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.RouteData.cs" />
-    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Functions.cs" />
-    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.PreprocessOptions.cs" />
-    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.RouteFixes.cs" />
-    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.SignalData.cs" />
-    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.Structures.cs" />
     <Compile Include="Parsers\Script\TrackFollowingObjectParser.cs" />
-    <Compile Include="Parsers\Script\StationXMLParser.cs" />
-    <Compile Include="Parsers\Script\DynamicBackgroundParser.cs" />
-    <Compile Include="Parsers\Script\DynamicLightParser.cs" />
-    <Compile Include="Parsers\Script\MarkerScriptParser.cs" />
     <Compile Include="Parsers\SoundConfiguration\SoundCfg.Ats.cs" />
     <Compile Include="Parsers\SoundConfiguration\SoundCfg.Base.cs" />
     <Compile Include="Parsers\SoundConfiguration\SoundCfg.Bve2.cs" />
@@ -360,7 +344,6 @@
     </Compile>
     <Compile Include="Game\ObjectManager\AnimatedObjects\FunctionScripts.cs" />
     <Compile Include="Game\Game.cs" />
-    <Compile Include="System\Functions\Illustrations.cs" />
     <Compile Include="OldCode\Interface.cs" />
     <Compile Include="System\Plugins\LegacyPlugin.cs">
       <DependentUpon>PluginManager.cs</DependentUpon>
@@ -378,7 +361,6 @@
     <Compile Include="OldCode\World.cs" />
     <Compile Include="Parsers\Train\ExtensionsCfgParser.cs" />
     <Compile Include="Parsers\Panel\Panel2CfgParser.cs" />
-    <Compile Include="Parsers\Route\BVE\CsvRwRouteParser.cs" />
     <Compile Include="Parsers\Panel\PanelCfgParser.cs" />
     <Compile Include="System\Host.cs" />
     <Compile Include="System\Input\JoystickManager.cs" />

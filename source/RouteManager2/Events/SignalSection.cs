@@ -1,5 +1,4 @@
-﻿using System;
-using OpenBveApi.Routes;
+﻿using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 
 namespace RouteManager2.Events

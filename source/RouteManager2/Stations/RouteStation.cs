@@ -7,7 +7,7 @@ using RouteManager2.SignalManager;
 namespace RouteManager2.Stations
 {
 	/// <summary>The derived route station class</summary>
-	public class RouteStation : OpenBveApi.Runtime.Station
+	public class RouteStation : Station
 	{
 		/// <summary>The ratio of passengers at this station (100 is a standard, fully loaded train)</summary>
 		public double PassengerRatio;

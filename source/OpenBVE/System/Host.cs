@@ -397,6 +397,11 @@ namespace OpenBve {
 			return Program.Sounds.PlaySound(buffer, pitch, volume, position, parent, looped);
 		}
 
+		public override void PlayMicSound(OpenBveApi.Math.Vector3 position, double backwardTolerance, double forwardTolerance)
+		{
+			Program.Sounds.PlayMicSound(position, backwardTolerance, forwardTolerance);
+		}
+
 		public override void StopSound(object SoundSource)
 		{
 			Program.Sounds.StopSound(SoundSource);
@@ -459,6 +464,26 @@ namespace OpenBve {
 		public override void UpdateCustomTimetable(Texture Daytime, Texture Nighttime)
 		{
 			Timetable.UpdateCustomTimetable(Daytime, Nighttime);
+		}
+
+		public override AbstractTrain ParseTrackFollowingObject(string objectPath, string tfoFile)
+		{
+			return TrackFollowingObjectParser.ParseTrackFollowingObject(objectPath, tfoFile);
+		}
+
+		public override void AddMarker(Texture MarkerTexture)
+		{
+			Program.Renderer.Marker.AddMarker(MarkerTexture);
+		}
+
+		public override void RemoveMarker(Texture MarkerTexture)
+		{
+			Program.Renderer.Marker.RemoveMarker(MarkerTexture);
+		}
+
+		public override void CameraAtWorldEnd()
+		{
+			Program.Renderer.Camera.AtWorldEnd = !Program.Renderer.Camera.AtWorldEnd;
 		}
 
 		public Host() : base(HostApplication.OpenBve)

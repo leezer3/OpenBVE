@@ -127,7 +127,7 @@ namespace OpenBve
 				bool hasLocoBrake = Handles.HasLocoBrake;
 				int cars = Cars.Length;
 				VehicleSpecs specs = new VehicleSpecs(powerNotches, brakeType, brakeNotches, hasHoldBrake, hasLocoBrake, cars);
-				InitializationModes mode = (InitializationModes) Game.TrainStart;
+				InitializationModes mode = (InitializationModes) Interface.CurrentOptions.TrainStart;
 				/*
 				 * Check if the plugin is a .NET plugin.
 				 * */

@@ -95,7 +95,7 @@ namespace LibRender2.Loadings
 		}
 
 		/// <summary>Draws on OpenGL canvas the route/train loading screen</summary>
-		public void DrawLoadingScreen(OpenGlFont Font, double RouteProgress, double TrainProgress)
+		public void DrawLoadingScreen(OpenGlFont Font, double RouteProgress, double TrainProgress = double.MaxValue)
 		{
 			renderer.SetBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha); //FIXME: Remove when text switches between two renderer types
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -182,7 +182,15 @@ namespace LibRender2.Loadings
 
 			// sum of route progress and train progress arrives up to 2.0:
 			// => times 50.0 to convert to %
-			double percent = 50.0 * (routeProgress + trainProgress);
+			double percent;
+			if (TrainProgress != double.MaxValue)
+			{
+				percent = 50.0 * (routeProgress + trainProgress);
+			}
+			else
+			{
+				percent = 100.0 * routeProgress;
+			}
 			string percStr = percent.ToString("0") + "%";
 
 			// progress frame

@@ -92,7 +92,7 @@ namespace TrainEditor2.Systems.Functions
 
 					if (plugin.Sound != null)
 					{
-						plugin.Load(Program.CurrentHost, Program.FileSystem, new Interface.Options());
+						plugin.Load(Program.CurrentHost, Program.FileSystem, new Interface.Options(), null); //Doesn't actually need a rendererer reference at all here
 						list.Add(plugin);
 					}
 					else if (!iTexture && !iObject && !iRuntime)

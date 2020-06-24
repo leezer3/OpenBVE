@@ -110,6 +110,7 @@ namespace OpenBve {
 				}
 			}
 			Options.LoadOptions();
+			Plugins.LoadPlugins();
 			var options = new ToolkitOptions();
 			Plugins.LoadPlugins();
 			options.Backend = PlatformBackend.PreferX11;
