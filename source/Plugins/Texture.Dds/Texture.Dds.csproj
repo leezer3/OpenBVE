@@ -69,6 +69,9 @@
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
   <Target Name="AfterBuild">
     <ItemGroup>
       <OutputFiles Include="$(TargetDir)$(TargetName).*" />

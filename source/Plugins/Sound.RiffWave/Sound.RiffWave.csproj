@@ -53,9 +53,8 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Reference Include="NAudio, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\NAudio.1.9.0\lib\net35\NAudio.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="NAudio, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\NAudio.1.10.0\lib\net35\NAudio.dll</HintPath>
     </Reference>
     <Reference Include="NLayer, Version=1.12.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\NLayer.1.12.0\lib\net35\NLayer.dll</HintPath>
@@ -63,7 +62,6 @@
     </Reference>
     <Reference Include="NLayer.NAudioSupport, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\NLayer.NAudioSupport.1.0.0\lib\net35\NLayer.NAudioSupport.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
@@ -82,6 +80,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Target Name="AfterBuild">
