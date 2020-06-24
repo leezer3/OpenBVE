@@ -379,6 +379,15 @@ namespace OpenBveApi.Hosts {
 			return null;
 		}
 
+		/// <summary>Register the position to play microphone input.</summary>
+		/// <param name="position">The position.</param>
+		/// <param name="backwardTolerance">allowed tolerance in the backward direction</param>
+		/// <param name="forwardTolerance">allowed tolerance in the forward direction</param>
+		public virtual void PlayMicSound(OpenBveApi.Math.Vector3 position, double backwardTolerance, double forwardTolerance)
+		{
+
+		}
+
 		/// <summary>Stops a playing sound source</summary>
 		public virtual void StopSound(object SoundSource)
 		{
@@ -435,6 +444,12 @@ namespace OpenBveApi.Hosts {
 
 		}
 
+		/// <summary>Loads a track following object via the host program</summary>
+		/// <param name="objectPath">The path to the object directory</param>
+		/// /// <param name="tfoFile">The TFO parameters file</param>
+		/// <returns>The track following object</returns>
+		public abstract AbstractTrain ParseTrackFollowingObject(string objectPath, string tfoFile);
+
 		/// <summary>The list of available content loading plugins</summary>
 		public ContentLoadingPlugin[] Plugins;
 
@@ -458,5 +473,25 @@ namespace OpenBveApi.Hosts {
 		/// </summary>
 
 		public readonly Dictionary<string, AnimatedObjectCollection> AnimatedObjectCollectionCache;
+
+		/// <summary>Adds a marker texture to the host application's display</summary>
+		/// <param name="MarkerTexture">The texture to add</param>
+		public virtual void AddMarker(Texture MarkerTexture)
+		{
+
+		}
+
+		/// <summary>Removes a marker texture if present in the host application's display</summary>
+		/// <param name="MarkerTexture">The texture to remove</param>
+		public virtual void RemoveMarker(Texture MarkerTexture)
+		{
+
+		}
+
+		/// <summary>Called when a follower reaches the end of the world</summary>
+		public virtual void CameraAtWorldEnd()
+		{
+
+		}
 	}
 }

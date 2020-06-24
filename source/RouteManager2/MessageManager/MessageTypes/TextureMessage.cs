@@ -1,4 +1,4 @@
-﻿using LibRender2;
+﻿using OpenBveApi.Hosts;
 using OpenBveApi.Textures;
 
 namespace RouteManager2.MessageManager.MessageTypes
@@ -6,7 +6,7 @@ namespace RouteManager2.MessageManager.MessageTypes
 	/// <summary>Defines an image based message to be displayed in-game</summary>
 	public class TextureMessage : AbstractMessage
 	{
-		private readonly BaseRenderer renderer;
+		private readonly HostInterface currentHost;
 
 		/// <summary>The message texture to be displayed if early</summary>
 		public Texture MessageEarlyTexture;
@@ -25,10 +25,9 @@ namespace RouteManager2.MessageManager.MessageTypes
 		/// NOTE: Not worth creating an enum just for this...
 		private int currentTexture;
 
-		public TextureMessage(BaseRenderer Renderer)
+		public TextureMessage(HostInterface Host)
 		{
-			renderer = Renderer;
-
+			currentHost = Host;
 			Timeout = 10000;
 			TriggerOnce = true;
 			Direction = MessageDirection.Forwards;
@@ -48,19 +47,19 @@ namespace RouteManager2.MessageManager.MessageTypes
 			if (currentTime <= MessageEarlyTime)
 			{
 				//We are early
-				renderer.Marker.AddMarker(MessageEarlyTexture);
+				currentHost.AddMarker(MessageEarlyTexture);
 				currentTexture = 0;
 			}
 			else if (currentTime >= MessageLateTime)
 			{
 				//Late
-				renderer.Marker.AddMarker(MessageLateTexture);
+				currentHost.AddMarker(MessageLateTexture);
 				currentTexture = 2;
 			}
 			else
 			{
 				//On time
-				renderer.Marker.AddMarker(MessageOnTimeTexture);
+				currentHost.AddMarker(MessageOnTimeTexture);
 				currentTexture = 1;
 			}
 		}
@@ -72,13 +71,13 @@ namespace RouteManager2.MessageManager.MessageTypes
 				switch (currentTexture)
 				{
 					case 0:
-						renderer.Marker.RemoveMarker(MessageEarlyTexture);
+						currentHost.RemoveMarker(MessageEarlyTexture);
 						break;
 					case 1:
-						renderer.Marker.RemoveMarker(MessageOnTimeTexture);
+						currentHost.RemoveMarker(MessageOnTimeTexture);
 						break;
 					case 2:
-						renderer.Marker.RemoveMarker(MessageLateTexture);
+						currentHost.RemoveMarker(MessageLateTexture);
 						break;
 				}
 			}

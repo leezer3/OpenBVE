@@ -88,6 +88,16 @@ namespace OpenBveApi.Math {
 			return false;
 		}
 
+		/// <summary>Returns whether a string contains a valid double, using the supplied unit conversion factor(s)</summary>
+		/// <param name="Expression">The expression to parse</param>
+		/// <param name="UnitFactors">An array of unit conversion factors</param>
+		/// <returns>True if parsing succeds, false otherwise</returns>
+		public static bool IsValidDouble(string Expression, double[] UnitFactors)
+		{
+			double n;
+			return TryParseDouble(Expression, UnitFactors, out n);
+		}
+
 		/// <summary>Parses a double from a string, using the supplied unit conversion factor(s)</summary>
 		/// <param name="Expression">The expression to parse</param>
 		/// <param name="UnitFactors">An array of unit conversion factors</param>

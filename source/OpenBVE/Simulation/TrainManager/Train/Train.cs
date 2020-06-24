@@ -73,7 +73,7 @@ namespace OpenBve
 			internal Train(TrainState state)
 			{
 				State = state;
-				Destination = Game.InitialDestination;
+				Destination = Interface.CurrentOptions.InitialDestination;
 				Station = -1;
 				RouteLimits = new double[] { double.PositiveInfinity };
 				CurrentRouteLimit = double.PositiveInfinity;
@@ -597,7 +597,7 @@ namespace OpenBve
 						if (IsPlayerTrain)
 						{
 							string s = Translations.GetInterfaceString("message_signal_proceed");
-							double a = (3.6 * CurrentSectionLimit) * Game.SpeedConversionFactor;
+							double a = (3.6 * CurrentSectionLimit) * Interface.CurrentOptions.SpeedConversionFactor;
 							s = s.Replace("[speed]", a.ToString("0", CultureInfo.InvariantCulture));
 							s = s.Replace("[unit]", Game.UnitOfSpeed);
 							MessageManager.AddMessage(s, MessageDependency.None, GameMode.Normal, MessageColor.Red, Program.CurrentRoute.SecondsSinceMidnight + 5.0, null);

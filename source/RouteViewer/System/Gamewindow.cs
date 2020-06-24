@@ -91,7 +91,7 @@ namespace OpenBve
 				Program.Renderer.UpdateVisibility(Program.Renderer.CameraTrackFollower.TrackPosition + Program.Renderer.Camera.Alignment.Position.Z);
 	            Program.Sounds.Update(TimeElapsed, SoundModels.Linear);
             }
-            Program.Renderer.Lighting.UpdateLighting(Program.CurrentRoute.SecondsSinceMidnight);
+            Program.Renderer.Lighting.UpdateLighting(Program.CurrentRoute.SecondsSinceMidnight, Program.CurrentRoute.LightDefinitions);
             Program.Renderer.RenderScene(TimeElapsed);
             MessageManager.UpdateMessages();
             SwapBuffers();
@@ -170,7 +170,15 @@ namespace OpenBve
 				Program.currentGameWindow.ProcessEvents();
 				if (Program.currentGameWindow.IsExiting)
 					Loading.Cancel = true;
-				Program.Renderer.Loading.DrawLoadingScreen(Fonts.SmallFont, Loading.RouteProgress, 1.0);
+				double routeProgress = 1.0;
+				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+				{
+					if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.IsLoading)
+					{
+						routeProgress = Program.CurrentHost.Plugins[i].Route.CurrentProgress;
+					}
+				}
+				Program.Renderer.Loading.DrawLoadingScreen(Fonts.SmallFont, routeProgress);
 				Program.currentGameWindow.SwapBuffers();
 
 				if (Loading.JobAvailable)

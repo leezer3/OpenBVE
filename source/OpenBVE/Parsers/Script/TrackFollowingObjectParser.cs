@@ -549,7 +549,7 @@ namespace OpenBve
 									d = -1;
 									break;
 								default:
-									if (Value.Any() && (!NumberFormats.TryParseIntVb6(Value, out d) || !Enum.IsDefined(typeof(Game.TravelDirection), d)))
+									if (Value.Any() && (!NumberFormats.TryParseIntVb6(Value, out d) || !Enum.IsDefined(typeof(TravelDirection), d)))
 									{
 										Interface.AddMessage(MessageType.Error, false, $"Value is invalid in {Key} in {Section} at line {LineNumber.ToString(culture)} in {FileName}");
 										d = 1;
@@ -557,7 +557,7 @@ namespace OpenBve
 									break;
 							}
 
-							Data.Direction = (Game.TravelDirection)d;
+							Data.Direction = (TravelDirection)d;
 						}
 						break;
 					case "decelerate":

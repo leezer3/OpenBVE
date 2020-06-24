@@ -162,7 +162,11 @@ namespace OpenBve
 					Environment.Exit(0);
 				}				
 			}
-			Program.Renderer.Lighting.UpdateLighting(Program.CurrentRoute.SecondsSinceMidnight);
+
+			if (Program.CurrentRoute.DynamicLighting)
+			{
+				Program.Renderer.Lighting.UpdateLighting(Program.CurrentRoute.SecondsSinceMidnight, Program.CurrentRoute.LightDefinitions);
+			}
 			Program.Renderer.RenderScene(TimeElapsed);
 			Program.Sounds.Update(TimeElapsed, Interface.CurrentOptions.SoundModel);
 			Program.currentGameWindow.SwapBuffers();
@@ -497,9 +501,9 @@ namespace OpenBve
 			bool f = false;
 			for (int i = 0; i < Program.CurrentRoute.Stations.Length; i++)
 			{
-				if (!String.IsNullOrEmpty(Game.InitialStationName))
+				if (!String.IsNullOrEmpty(Program.CurrentRoute.InitialStationName))
 				{
-					if (Game.InitialStationName.ToLowerInvariant() == Program.CurrentRoute.Stations[i].Name.ToLowerInvariant())
+					if (Program.CurrentRoute.InitialStationName.ToLowerInvariant() == Program.CurrentRoute.Stations[i].Name.ToLowerInvariant())
 					{
 						PlayerFirstStationIndex = i;
 					}
@@ -564,10 +568,10 @@ namespace OpenBve
 				{
 					PlayerFirstStationPosition = Program.CurrentRoute.Stations[PlayerFirstStationIndex].DefaultTrackPosition;
 				}
-				if (Game.InitialStationTime != -1)
+				if (Program.CurrentRoute.InitialStationTime != -1)
 				{
-					Program.CurrentRoute.SecondsSinceMidnight = Game.InitialStationTime;
-					Game.StartupTime = Game.InitialStationTime;
+					Program.CurrentRoute.SecondsSinceMidnight = Program.CurrentRoute.InitialStationTime;
+					Game.StartupTime = Program.CurrentRoute.InitialStationTime;
 				}
 				else
 				{
@@ -628,9 +632,9 @@ namespace OpenBve
 					break;
 				}
 			}
-			if (Game.PrecedingTrainTimeDeltas.Length != 0)
+			if (Program.CurrentRoute.PrecedingTrainTimeDeltas.Length != 0)
 			{
-				OtherFirstStationTime -= Game.PrecedingTrainTimeDeltas[Game.PrecedingTrainTimeDeltas.Length - 1];
+				OtherFirstStationTime -= Program.CurrentRoute.PrecedingTrainTimeDeltas[Program.CurrentRoute.PrecedingTrainTimeDeltas.Length - 1];
 				if (OtherFirstStationTime < Program.CurrentRoute.SecondsSinceMidnight)
 				{
 					Program.CurrentRoute.SecondsSinceMidnight = OtherFirstStationTime;
@@ -728,9 +732,9 @@ namespace OpenBve
 				}
 			}
 			// timetable
-			if (Timetable.DefaultTimetableDescription.Length == 0)
+			if (Program.CurrentRoute.Information.DefaultTimetableDescription.Length == 0)
 			{
-				Timetable.DefaultTimetableDescription = Game.LogTrainName;
+				Program.CurrentRoute.Information.DefaultTimetableDescription = Game.LogTrainName;
 			}
 
 			// initialize camera
@@ -851,8 +855,8 @@ namespace OpenBve
 					Messages = warnings.ToString() + " warning(s)";
 					MessageManager.AddMessage(Messages, MessageDependency.None, GameMode.Expert, MessageColor.Magenta, Program.CurrentRoute.SecondsSinceMidnight + 10.0, null);
 				}
-				Game.RouteInformation.FilesNotFound = NotFound;
-				Game.RouteInformation.ErrorsAndWarnings = Messages;
+				Program.CurrentRoute.Information.FilesNotFound = NotFound;
+				Program.CurrentRoute.Information.ErrorsAndWarnings = Messages;
 				//Print the plugin error encountered (If any) for 10s
 				//This must be done after the simulation has init, as otherwise the timeout doesn't work
 				if (Loading.PluginError != null)
@@ -866,7 +870,7 @@ namespace OpenBve
 			RenderTimeElapsed = 0.0;
 			World.InitializeCameraRestriction();
 			Loading.SimulationSetup = true;
-			switch (Game.InitialViewpoint)
+			switch (Interface.CurrentOptions.InitialViewpoint)
 			{
 				case 0:
 					if (Game.InitialReversedConsist)
@@ -970,7 +974,15 @@ namespace OpenBve
 				this.ProcessEvents();
 				if (this.IsExiting)
 					Loading.Cancel = true;
-				Program.Renderer.Loading.DrawLoadingScreen(Fonts.SmallFont, Loading.RouteProgress, Loading.TrainProgress);
+				double routeProgress = 1.0;
+				for (int i = 0; i < Program.CurrentHost.Plugins.Length; i++)
+				{
+					if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.IsLoading)
+					{
+						routeProgress = Program.CurrentHost.Plugins[i].Route.CurrentProgress;
+					}
+				}
+				Program.Renderer.Loading.DrawLoadingScreen(Fonts.SmallFont, routeProgress, Loading.TrainProgress);
 				Program.currentGameWindow.SwapBuffers();
 				
 				if (Loading.JobAvailable)

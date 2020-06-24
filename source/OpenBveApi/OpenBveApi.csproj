@@ -129,6 +129,8 @@
     <Compile Include="Routes\DynamicBackground.cs" />
     <Compile Include="Routes\Events.cs" />
     <Compile Include="Routes\Events.TriggerTypes.cs" />
+    <Compile Include="Routes\LightDefinition.cs" />
+    <Compile Include="Routes\RouteInterface.cs" />
     <Compile Include="Routes\StaticBackground.cs" />
     <Compile Include="Routes\Track.cs" />
     <Compile Include="Routes\Track.TrackElement.cs" />
@@ -167,6 +169,7 @@
     <Compile Include="Train\TrainStartMode.cs" />
     <Compile Include="Train\TrainState.cs" />
     <Compile Include="Train\TrainStopState.cs" />
+    <Compile Include="Train\TravelDirection.cs" />
     <Compile Include="World\Orientation3.cs" />
     <Compile Include="Packages\Packages.cs" />
     <Compile Include="Packages\Packages.Database.cs" />
