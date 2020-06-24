@@ -1,7 +1,6 @@
 ﻿using System;
 using OpenBveApi.Math;
 using OpenBveApi.Sounds;
-using RouteManager2.Events;
 
 namespace CsvRwRouteParser
 {

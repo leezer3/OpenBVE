@@ -18,16 +18,6 @@ namespace CsvRwRouteParser
 	 */
 	internal partial class Parser
 	{
-		/// <summary>This method checks whether a given route file is in the .rw format</summary>
-		/// <param name="FileName">The file to check</param>
-		/// <returns>True if this file is a RW, false otherwise</returns>
-		internal static bool isRWFile(string FileName)
-		{
-			//TODO: Write a RW check function, which *doesn't* requite checking the extension
-			//This is a kludge, and likely to fall over with misnamed files
-			return string.Equals(Path.GetExtension(FileName), ".rw", StringComparison.OrdinalIgnoreCase);
-		}
-
 		/// <summary>Sets the brightness value for the specified track position</summary>
 		/// <param name="Data">The route data (Accessed via 'ref') which we wish to query the brightnes value from</param>
 		/// <param name="TrackPosition">The track position to get the brightness value for</param>
