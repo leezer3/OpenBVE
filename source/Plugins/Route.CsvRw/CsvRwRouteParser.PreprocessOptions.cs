@@ -12,7 +12,7 @@ namespace CsvRwRouteParser
 		/// <param name="Data">The finalized route data</param>
 		/// <param name="UnitOfLength">The units of length conversion factor to be applied</param>
 		/// <param name="PreviewOnly">Whether this is a preview only</param>
-		private static void PreprocessOptions(Expression[] Expressions, ref RouteData Data, ref double[] UnitOfLength, bool PreviewOnly)
+		private void PreprocessOptions(Expression[] Expressions, ref RouteData Data, ref double[] UnitOfLength, bool PreviewOnly)
 		{
 			string Section = "";
 			bool SectionAlwaysPrefix = false;

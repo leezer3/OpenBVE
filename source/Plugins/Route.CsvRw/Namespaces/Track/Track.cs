@@ -15,11 +15,11 @@ namespace CsvRwRouteParser
 {
 	internal partial class Parser
 	{
-		private static int CurrentStation = -1;
-		private static int CurrentStop = -1;
-		private static int CurrentSection = 0;
-		private static bool DepartureSignalUsed = false;
-		private static void ParseTrackCommand(string Command, string[] Arguments, string FileName, double[] UnitOfLength, Expression Expression, ref RouteData Data, int BlockIndex, bool PreviewOnly)
+		private int CurrentStation = -1;
+		private int CurrentStop = -1;
+		private int CurrentSection = 0;
+		private bool DepartureSignalUsed = false;
+		private void ParseTrackCommand(string Command, string[] Arguments, string FileName, double[] UnitOfLength, Expression Expression, ref RouteData Data, int BlockIndex, bool PreviewOnly)
 		{
 			switch (Command)
 			{
@@ -1790,7 +1790,7 @@ namespace CsvRwRouteParser
 					StopRequest sr = new StopRequest();
 					sr.TrackPosition = Data.TrackPosition;
 					sr.StationIndex = CurrentStation;
-					CurrentRoute.Stations[CurrentStation] = StationXMLParser.ReadStationXML(fn, PreviewOnly, Data.TimetableDaytime, Data.TimetableNighttime, CurrentStation, ref Data.Blocks[BlockIndex].StationPassAlarm, ref sr);
+					CurrentRoute.Stations[CurrentStation] = StationXMLParser.ReadStationXML(CurrentRoute, fn, PreviewOnly, Data.TimetableDaytime, Data.TimetableNighttime, CurrentStation, ref Data.Blocks[BlockIndex].StationPassAlarm, ref sr);
 					if (CurrentRoute.Stations[CurrentStation].Type == StationType.RequestStop)
 					{
 						int l = Data.RequestStops.Length;

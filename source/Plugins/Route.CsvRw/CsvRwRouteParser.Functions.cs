@@ -22,7 +22,7 @@ namespace CsvRwRouteParser
 		/// <param name="Data">The route data (Accessed via 'ref') which we wish to query the brightnes value from</param>
 		/// <param name="TrackPosition">The track position to get the brightness value for</param>
 		/// <returns>The brightness value</returns>
-		private static double GetBrightness(ref RouteData Data, double TrackPosition)
+		private double GetBrightness(ref RouteData Data, double TrackPosition)
 		{
 			double tmin = double.PositiveInfinity;
 			double tmax = double.NegativeInfinity;
@@ -160,6 +160,7 @@ namespace CsvRwRouteParser
 		/// <returns>True if the parse succeeds, false if it does not</returns>
 		internal static bool TryParseTime(string Expression, out double Value)
 		{
+			CultureInfo Culture = CultureInfo.InvariantCulture;
 			Expression = Expression.TrimInside();
 			if (Expression.Length != 0) {
 				int i = Expression.IndexOf('.');
@@ -247,7 +248,7 @@ namespace CsvRwRouteParser
 			}
 		}
 
-		private static string[] SplitArguments(string ArgumentSequence)
+		private string[] SplitArguments(string ArgumentSequence)
 		{
 			string[] Arguments;
 			{
@@ -279,7 +280,7 @@ namespace CsvRwRouteParser
 			return Arguments;
 		}
 
-		private static int[] FindIndices(ref string Command, Expression Expression)
+		private int[] FindIndices(ref string Command, Expression Expression)
 		{
 			int[] commandIndices = { 0, 0};
 			if (Command != null && Command.EndsWith(")")) {

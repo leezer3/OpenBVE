@@ -69,7 +69,8 @@ namespace CsvRwRouteParser
 		    FileSystem.AppendToLogFile("Route file format is: " + (isRw ? "RW" : "CSV"));
 		    try
 		    {
-				Parser.ParseRoute(path, isRw, Encoding, trainPath, objectPath, soundPath, null, PreviewOnly, this);  //FIXME: Doesn't pass the new signal set parameter yet
+				Parser parser = new Parser();
+				parser.ParseRoute(path, isRw, Encoding, trainPath, objectPath, soundPath, null, PreviewOnly, this);  //FIXME: Doesn't pass the new signal set parameter yet
 				IsLoading = false;
 			    return true;
 		    }

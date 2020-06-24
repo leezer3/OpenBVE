@@ -9,7 +9,7 @@ namespace CsvRwRouteParser
 {
 	internal partial class Parser
 	{
-		private static void ParseTrainCommand(string Command, string[] Arguments, int Index, Expression Expression, ref RouteData Data, bool PreviewOnly)
+		private void ParseTrainCommand(string Command, string[] Arguments, int Index, Expression Expression, ref RouteData Data, bool PreviewOnly)
 		{
 			switch (Command)
 			{

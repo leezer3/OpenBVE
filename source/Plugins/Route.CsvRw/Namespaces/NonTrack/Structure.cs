@@ -11,7 +11,7 @@ namespace CsvRwRouteParser
 {
 	internal partial class Parser
 	{
-		private static void ParseStructureCommand(string Command, string[] Arguments, int[] commandIndices, Encoding Encoding, Expression Expression, ref RouteData Data, bool PreviewOnly)
+		private void ParseStructureCommand(string Command, string[] Arguments, int[] commandIndices, Encoding Encoding, Expression Expression, ref RouteData Data, bool PreviewOnly)
 		{
 			switch (Command)
 			{

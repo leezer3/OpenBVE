@@ -5,7 +5,7 @@ namespace CsvRwRouteParser
 {
 	internal partial class Parser
 	{
-		private static void CheckRouteSpecificFixes(string FileName, ref RouteData Data, ref Expression[] Expressions, bool PreviewOnly)
+		private void CheckRouteSpecificFixes(string FileName, ref RouteData Data, ref Expression[] Expressions, bool PreviewOnly)
 		{
 			if (Plugin.CurrentOptions.EnableBveTsHacks == false)
 			{

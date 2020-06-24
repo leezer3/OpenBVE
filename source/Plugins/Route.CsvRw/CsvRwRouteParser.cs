@@ -10,18 +10,18 @@ using RouteManager2.Stations;
 
 namespace CsvRwRouteParser {
 	internal partial class Parser {
-		internal static string ObjectPath;
-		internal static string SoundPath;
-		internal static string TrainPath;
-		internal static string CompatibilityFolder;
-		internal static bool CylinderHack = false;
-		internal static bool IsRW;
+		internal string ObjectPath;
+		internal string SoundPath;
+		internal string TrainPath;
+		internal string CompatibilityFolder;
+		internal bool CylinderHack = false;
+		internal bool IsRW;
 
-		internal static Plugin Plugin;
+		internal Plugin Plugin;
 
-		internal static CurrentRoute CurrentRoute;
+		internal CurrentRoute CurrentRoute;
 		// parse route
-		internal static void ParseRoute(string FileName, bool isRW, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, string compatibilitySignalSet, bool PreviewOnly, Plugin hostPlugin)
+		internal void ParseRoute(string FileName, bool isRW, System.Text.Encoding Encoding, string trainPath, string objectPath, string soundPath, string compatibilitySignalSet, bool PreviewOnly, Plugin hostPlugin)
 		{
 			Plugin = hostPlugin;
 			CurrentRoute = Plugin.CurrentRoute;
@@ -155,7 +155,7 @@ namespace CsvRwRouteParser {
 			ApplyRouteData(FileName, ref Data, PreviewOnly);
 		}
 
-		private static void ParseRouteForData(string FileName, System.Text.Encoding Encoding, ref RouteData Data, bool PreviewOnly) {
+		private void ParseRouteForData(string FileName, System.Text.Encoding Encoding, ref RouteData Data, bool PreviewOnly) {
 			//Read the entire routefile into memory
 			string[] Lines = System.IO.File.ReadAllLines(FileName, Encoding);
 			Expression[] Expressions;
@@ -171,12 +171,12 @@ namespace CsvRwRouteParser {
 			CurrentRoute.UnitOfLength = UnitOfLength;
 		}
 		
-		private static int freeObjCount;
-		private static int railtypeCount;
-		private static readonly System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
+		private int freeObjCount;
+		private int railtypeCount;
+		private readonly System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
 
 		// parse route for data
-		private static void ParseRouteForData(string FileName, System.Text.Encoding Encoding, Expression[] Expressions, double[] UnitOfLength, ref RouteData Data, bool PreviewOnly) {
+		private void ParseRouteForData(string FileName, System.Text.Encoding Encoding, Expression[] Expressions, double[] UnitOfLength, ref RouteData Data, bool PreviewOnly) {
 			CurrentStation = -1;
 			CurrentStop = -1;
 			CurrentSection = 0;

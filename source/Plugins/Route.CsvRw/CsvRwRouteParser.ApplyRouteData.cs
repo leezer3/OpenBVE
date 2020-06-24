@@ -18,7 +18,7 @@ namespace CsvRwRouteParser
 {
 	internal partial class Parser
 	{
-		private static void ApplyRouteData(string FileName, ref RouteData Data, bool PreviewOnly)
+		private void ApplyRouteData(string FileName, ref RouteData Data, bool PreviewOnly)
 		{
 			if (CompatibilityObjectsUsed != 0)
 			{
@@ -1581,7 +1581,7 @@ namespace CsvRwRouteParser
 			}
 		}
 
-		private static void ComputeCantTangents()
+		private void ComputeCantTangents()
 		{
 			for (int ii = 0; ii < CurrentRoute.Tracks.Count; ii++)
 			{

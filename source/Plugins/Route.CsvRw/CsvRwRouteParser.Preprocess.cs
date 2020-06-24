@@ -8,7 +8,7 @@ namespace CsvRwRouteParser
 {
 	internal partial class Parser
 	{
-		private static void PreprocessSplitIntoExpressions(string FileName, string[] Lines, out Expression[] Expressions, bool AllowRwRouteDescription, double trackPositionOffset = 0.0) {
+		private void PreprocessSplitIntoExpressions(string FileName, string[] Lines, out Expression[] Expressions, bool AllowRwRouteDescription, double trackPositionOffset = 0.0) {
 			Expressions = new Expression[4096];
 			int e = 0;
 			// full-line rw comments
@@ -176,7 +176,7 @@ namespace CsvRwRouteParser
 		}
 
 		/// <summary>This function processes the list of expressions for $Char, $Rnd, $If and $Sub directives, and evaluates them into the final expressions dataset</summary>
-		private static void PreprocessChrRndSub(string FileName, System.Text.Encoding Encoding, ref Expression[] Expressions) {
+		private void PreprocessChrRndSub(string FileName, System.Text.Encoding Encoding, ref Expression[] Expressions) {
 			string[] Subs = new string[16];
 			int openIfs = 0;
 			for (int i = 0; i < Expressions.Length; i++) {
@@ -594,7 +594,7 @@ namespace CsvRwRouteParser
 			}
 		}
 
-		private static void PreprocessSortByTrackPosition(double[] UnitFactors, ref Expression[] Expressions) {
+		private void PreprocessSortByTrackPosition(double[] UnitFactors, ref Expression[] Expressions) {
 			PositionedExpression[] p = new PositionedExpression[Expressions.Length];
 			int n = 0;
 			double a = -1.0;

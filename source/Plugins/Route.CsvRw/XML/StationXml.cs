@@ -7,6 +7,7 @@ using OpenBveApi.Runtime;
 using OpenBveApi.Textures;
 using OpenBveApi.Interface;
 using OpenBveApi.Trains;
+using RouteManager2;
 using RouteManager2.SignalManager;
 using RouteManager2.Stations;
 
@@ -14,7 +15,7 @@ namespace CsvRwRouteParser
 {
 	class StationXMLParser
 	{
-		public static RouteStation ReadStationXML(string fileName, bool PreviewOnly, Texture[] daytimeTimetableTextures, Texture[] nighttimeTimetableTextures, int CurrentStation, ref bool passAlarm, ref StopRequest stopRequest)
+		public static RouteStation ReadStationXML(CurrentRoute Route, string fileName, bool PreviewOnly, Texture[] daytimeTimetableTextures, Texture[] nighttimeTimetableTextures, int CurrentStation, ref bool passAlarm, ref StopRequest stopRequest)
 		{
 			RouteStation station = new RouteStation
 			{
@@ -344,8 +345,8 @@ namespace CsvRwRouteParser
 											{
 												if (CurrentStation > 0)
 												{
-													station.TimetableDaytimeTexture = Parser.CurrentRoute.Stations[CurrentStation - 1].TimetableDaytimeTexture;
-													station.TimetableNighttimeTexture = Parser.CurrentRoute.Stations[CurrentStation - 1].TimetableNighttimeTexture;
+													station.TimetableDaytimeTexture = Route.Stations[CurrentStation - 1].TimetableDaytimeTexture;
+													station.TimetableNighttimeTexture = Route.Stations[CurrentStation - 1].TimetableNighttimeTexture;
 												}
 												else if (daytimeTimetableTextures.Length > 0 & nighttimeTimetableTextures.Length > 0)
 												{
