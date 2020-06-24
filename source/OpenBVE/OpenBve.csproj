@@ -87,9 +87,6 @@
     </AllowedReferenceRelatedFileExtensions>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CSScriptLibrary, Version=3.29.0.0, Culture=neutral, PublicKeyToken=70fcc3d18c749033, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CS-Script.lib.3.29.0\lib\CSScriptLibrary.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="OpenTK, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>..\..\packages\OpenTK.3.1.0\lib\net20\OpenTK.dll</HintPath>
@@ -101,7 +98,6 @@
       <HintPath>..\..\packages\SharpCompress.0.24.0\lib\net45\SharpCompress.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
@@ -395,7 +391,9 @@
     <Compile Include="Parsers\Train\TrainDatParser.cs" />
     <Compile Include="Simulation\TrainManager\Train\Handles\Handles.AirBrake.cs" />
     <EmbeddedResource Include="..\..\assets\Controls\Default.controls" />
-    <None Include="OpenTK.dll.config" />
+    <None Include="OpenTK.dll.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -430,14 +428,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AssimpParser\AssimpParser.csproj">
-      <Project>{77ccae62-d374-468e-98a0-dd8adb461c10}</Project>
-      <Name>AssimpParser</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DevTools\LBAHeader\LBAHeader.csproj">
-      <Project>{e9b64673-65b7-4d77-a4db-4b441a7c9197}</Project>
-      <Name>LBAHeader</Name>
-    </ProjectReference>
     <ProjectReference Include="..\LibRender2\LibRender2.csproj">
       <Project>{68215476-302c-49f2-9f7e-aae20a2b6b12}</Project>
       <Name>LibRender2</Name>
@@ -445,11 +435,6 @@
     <ProjectReference Include="..\OpenBveApi\OpenBveApi.csproj">
       <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
       <Name>OpenBveApi</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Plugins\Formats.Msts\Formats.Msts.csproj">
-      <Project>{E81B7BD8-A326-47D3-B7EE-E9C7D4D119FA}</Project>
-      <Name>Formats.Msts</Name>
-      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\RouteManager2\RouteManager2.csproj">
       <Project>{4ef680d7-df17-4978-9872-133edc169b4b}</Project>
