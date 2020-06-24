@@ -12,7 +12,7 @@ namespace CsvRwRouteParser
 		/// <summary>The sound buffer to play</summary>
 		internal readonly SoundHandle SoundBuffer;
 		/// <summary>The type of sound</summary>
-		internal readonly Parser.SoundType Type;
+		internal readonly SoundType Type;
 		/// <summary>The relative sound position to the track position</summary>
 		internal readonly Vector2 Position;
 		/// <summary>The radius of the sound</summary>
@@ -45,13 +45,13 @@ namespace CsvRwRouteParser
 			switch (speed)
 			{
 				case -1:
-					Type = Parser.SoundType.World;
+					Type = SoundType.Ambient;
 					break;
 				case 0:
-					Type = Parser.SoundType.TrainStatic;
+					Type = SoundType.TrainStatic;
 					break;
 				default:
-					Type = Parser.SoundType.TrainDynamic;
+					Type = SoundType.TrainDynamic;
 					break;
 			}
 			
@@ -64,7 +64,7 @@ namespace CsvRwRouteParser
 
 		internal void Create(Vector3 pos, double StartingDistance, Vector2 Direction, double planar, double updown)
 		{
-			if (Type == Parser.SoundType.World)
+			if (Type == SoundType.Ambient)
 			{
 				if (SoundBuffer != null || IsMicSound)
 				{

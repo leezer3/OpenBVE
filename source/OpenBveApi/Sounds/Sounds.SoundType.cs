@@ -7,6 +7,12 @@
 		TrainCar,
 		/// <summary>The sound source is emitted when triggered from a track location</summary>
 		TrackSound,
+		/// <summary>The sound source is emitted in the train cab when triggered from a track location</summary>
+		/// <remarks>Playback speed is not effected by train speed (e.g. announcement)</remarks>
+		TrainStatic,
+		/// <summary>The sound source is emitted in the train cab when triggered from a track location</summary>
+		/// <remarks>Playback speed is effected by train speed (e.g. passing train sound)</remarks>
+		TrainDynamic,
 		/// <summary>The sound source is ambient</summary>
 		Ambient,
 		/// <summary>The sound source is emitted from a fixed position (Placed via the routefile)</summary>

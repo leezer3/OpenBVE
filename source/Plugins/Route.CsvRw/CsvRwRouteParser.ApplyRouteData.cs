@@ -9,6 +9,7 @@ using OpenBveApi.Interface;
 using OpenBveApi.Objects;
 using OpenBveApi.Textures;
 using OpenBveApi.Routes;
+using OpenBveApi.Sounds;
 using RouteManager2.Climate;
 using RouteManager2.Events;
 using RouteManager2.SignalManager;
