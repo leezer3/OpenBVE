@@ -45,9 +45,6 @@ namespace OpenBve
 			internal bool StationDepartureSoundPlayed;
 			internal double StationDistanceToStopPoint;
 			
-			
-			
-			internal GeneralAI AI;
 			private double InternalTimerTimeElapsed;
 			internal bool Derailed;
 			

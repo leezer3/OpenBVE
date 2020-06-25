@@ -12,7 +12,7 @@ namespace OpenBve
 		/// <summary>A reference to the train of the Trains element that corresponds to the player's train.</summary>
 		internal static Train PlayerTrain = null;
 		/// <summary>The list of TrackFollowingObject available on other tracks in the simulation.</summary>
-		internal static TrackFollowingObject[] TFOs = new TrackFollowingObject[] { };
+		internal static AbstractTrain[] TFOs = new AbstractTrain[] { };
 		
 		/// <summary>This method should be called once a frame to update the position, speed and state of all trains within the simulation</summary>
 		/// <param name="TimeElapsed">The time elapsed since the last call to this function</param>
@@ -345,7 +345,8 @@ namespace OpenBve
 			{
 				if (TFOs[i].State != TrainState.Disposed & TFOs[i].State != TrainState.Bogus)
 				{
-					foreach (var Car in TFOs[i].Cars)
+					TrackFollowingObject t = (TrackFollowingObject) TFOs[i];
+					foreach (var Car in t.Cars)
 					{
 						Car.FrontAxle.Follower.UpdateWorldCoordinates(true);
 						Car.FrontBogie.FrontAxle.Follower.UpdateWorldCoordinates(true);

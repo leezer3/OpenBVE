@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -225,6 +225,7 @@ namespace OpenBve {
 				}
 			}
 
+			TrainManager.TFOs = Program.CurrentRoute.TrackFollowingObjects;
 			if (!loaded)
 			{
 				throw new Exception("No plugins capable of loading routefile " + CurrentRouteFile + " were found.");

@@ -1,5 +1,6 @@
 ﻿using System;
 using LibRender2.Screens;
+using OpenBveApi.Routes;
 using OpenBveApi.Trains;
 using SoundManager;
 
@@ -171,7 +172,8 @@ namespace OpenBve
 
 		internal static void JumpTFO()
 		{
-			foreach (var Train in TFOs)
+			// ReSharper disable once PossibleInvalidCastExceptionInForeachLoop
+			foreach (TrackFollowingObject Train in TFOs)
 			{
 				Train.Dispose();
 				Train.State = TrainState.Pending;
@@ -193,7 +195,8 @@ namespace OpenBve
 				Trains[i].UpdateObjects(TimeElapsed, ForceUpdate);
 			}
 
-			foreach (var Train in TFOs)
+			// ReSharper disable once PossibleInvalidCastExceptionInForeachLoop
+			foreach (TrackFollowingObject Train in TFOs)
 			{
 				Train.UpdateObjects(TimeElapsed, ForceUpdate);
 			}
