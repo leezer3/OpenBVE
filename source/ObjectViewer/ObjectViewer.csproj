@@ -61,11 +61,8 @@
     </AllowedReferenceRelatedFileExtensions>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\OpenTK.3.1.0\lib\net20\OpenTK.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpCompress, Version=0.24.0.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SharpCompress.0.24.0\lib\net45\SharpCompress.dll</HintPath>
+    <Reference Include="OpenTK, Version=3.2.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\OpenTK.3.2\lib\net20\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
@@ -73,7 +70,6 @@
       <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="formOptions.cs">
@@ -123,10 +119,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AssimpParser\AssimpParser.csproj">
-      <Project>{77ccae62-d374-468e-98a0-dd8adb461c10}</Project>
-      <Name>AssimpParser</Name>
-    </ProjectReference>
     <ProjectReference Include="..\LibRender2\LibRender2.csproj">
       <Project>{68215476-302c-49f2-9f7e-aae20a2b6b12}</Project>
       <Name>LibRender2</Name>
@@ -135,11 +127,6 @@
       <Project>{27134980-4415-4375-A564-40A9014DFA5F}</Project>
       <Name>OpenBveApi</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Plugins\Formats.Msts\Formats.Msts.csproj">
-      <Project>{E81B7BD8-A326-47D3-B7EE-E9C7D4D119FA}</Project>
-      <Name>Formats.Msts</Name>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\RouteManager2\RouteManager2.csproj">
       <Project>{4ef680d7-df17-4978-9872-133edc169b4b}</Project>
       <Name>RouteManager2</Name>
@@ -147,16 +134,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="OpenTK.dll.config" />
+    <None Include="OpenTK.dll.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
   <Target Name="AfterBuild">
+    <!-- Copy in dependancies -->
+    <!-- NOTE: Whilst AtsPluginProxy.dll is Windows specific, we still want to copy it in the auto-generated nightly builds -->
+    <ItemGroup>
+      <AssetFiles Include="$(SolutionDir)assets\**\*.*" />
+    </ItemGroup>
+    <Copy SkipUnchangedFiles="true" SourceFiles="@(AssetFiles)" DestinationFiles="@(AssetFiles->'$(TargetDir)Data\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
-  -->
 </Project>

@@ -39,10 +39,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -102,21 +98,13 @@
       <Project>{4ef680d7-df17-4978-9872-133edc169b4b}</Project>
       <Name>RouteManager2</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\SoundManager\SoundManager.csproj">
-      <Project>{90abfa0c-abca-444e-adef-9a299aed6524}</Project>
-      <Name>SoundManager</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
-		  mkdir $(TargetDir)Data\Plugins\
-		  move /Y $(TargetDir)$(TargetName).* $(TargetDir)Data\Plugins\
-	  </PostBuildEvent>
-    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
-		  mkdir -p $(TargetDir)Data/Plugins/
-		  mv -f $(TargetDir)$(TargetName).* $(TargetDir)Data/Plugins/
-	  </PostBuildEvent>
-  </PropertyGroup>
+  <Target Name="AfterBuild">
+    <ItemGroup>
+      <OutputFiles Include="$(TargetDir)$(TargetName).*" />
+    </ItemGroup>
+    <Move SourceFiles="@(OutputFiles)" DestinationFolder="$(TargetDir)Data\Plugins\" />
+  </Target>
 </Project>

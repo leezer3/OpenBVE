@@ -46,6 +46,7 @@ namespace OpenBve {
 							builder.Append("Plugin ").Append(Path.GetFileName(file)).AppendLine(" is not a .Net assembly.");
 							continue;
 						}
+						bool iroute = false;
 						bool iruntime = false;
 						foreach (Type type in types) {
 							if (type.FullName == null)
@@ -61,6 +62,10 @@ namespace OpenBve {
 							if (type.IsSubclassOf(typeof(OpenBveApi.Objects.ObjectInterface))) {
 								plugin.Object = (OpenBveApi.Objects.ObjectInterface)assembly.CreateInstance(type.FullName);
 							}
+							if (type.IsSubclassOf(typeof(OpenBveApi.Routes.RouteInterface)))
+							{
+								iroute = true;
+							}
 							if (typeof(OpenBveApi.Runtime.IRuntime).IsAssignableFrom(type)) {
 								iruntime = true;
 							}
@@ -68,7 +73,7 @@ namespace OpenBve {
 						if (plugin.Texture != null | plugin.Sound != null | plugin.Object != null) {
 							plugin.Load(Program.CurrentHost, Program.FileSystem, Interface.CurrentOptions);
 							list.Add(plugin);
-						} else if (!iruntime) {
+						} else if (!iroute && !iruntime) {
 							builder.Append("Plugin ").Append(Path.GetFileName(file)).AppendLine(" does not implement compatible interfaces.");
 							builder.AppendLine();
 						}
