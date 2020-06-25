@@ -150,6 +150,7 @@ namespace CsvRwRouteParser {
 			ParseRouteForData(FileName, Encoding, ref Data, PreviewOnly);
 			if (Plugin.Cancel)
 			{
+				Plugin.IsLoading = false;
 				return;
 			}
 			ApplyRouteData(FileName, ref Data, PreviewOnly);
@@ -209,7 +210,11 @@ namespace CsvRwRouteParser {
 				Plugin.CurrentProgress = j * progressFactor;
 				if ((j & 255) == 0) {
 					System.Threading.Thread.Sleep(1);
-					if (Plugin.Cancel) return;
+					if (Plugin.Cancel)
+					{
+						Plugin.IsLoading = false;
+						return;
+					}
 				}
 				if (Expressions[j].Text.StartsWith("[") & Expressions[j].Text.EndsWith("]")) {
 					Section = Expressions[j].Text.Substring(1, Expressions[j].Text.Length - 2).Trim(new char[] { });
@@ -356,7 +361,11 @@ namespace CsvRwRouteParser {
 				Plugin.CurrentProgress = 0.3333 + j * progressFactor;
 				if ((j & 255) == 0) {
 					System.Threading.Thread.Sleep(1);
-					if (Plugin.Cancel) return;
+					if (Plugin.Cancel)
+					{
+						Plugin.IsLoading = false;
+						return;
+					}
 				}
 				if (Data.LineEndingFix)
 				{

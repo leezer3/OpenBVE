@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using OpenBveApi;
 using OpenBveApi.FileSystem;
 using OpenBveApi.Hosts;
@@ -30,6 +31,15 @@ namespace CsvRwRouteParser
 		    CurrentHost = host;
 		    FileSystem = fileSystem;
 		    CurrentOptions = Options;
+	    }
+
+	    public override void Unload()
+	    {
+		    Cancel = true;
+		    while (IsLoading)
+		    {
+			    Thread.Sleep(100);
+		    }
 	    }
 
 	    /// <summary>Checks whether the plugin can load the specified route.</summary>

@@ -804,7 +804,12 @@ namespace OpenBve
 					break;
 				}
 			}
-			Plugins.UnloadPlugins();
+
+			if (Loading.Complete)
+			{
+				Plugins.UnloadPlugins();
+			}
+			
 			if (!loaded)
 			{
 				throw new Exception("No plugins capable of loading routefile " + Result.RouteFile + " were found.");

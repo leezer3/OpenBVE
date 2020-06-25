@@ -173,7 +173,11 @@ namespace CsvRwRouteParser
 				if ((i & 15) == 0)
 				{
 					System.Threading.Thread.Sleep(1);
-					if (Plugin.Cancel) return;
+					if (Plugin.Cancel)
+					{
+						Plugin.IsLoading = false;
+						return;
+					}
 				}
 				double StartingDistance = i * Data.BlockInterval;
 				double EndingDistance = StartingDistance + Data.BlockInterval;
