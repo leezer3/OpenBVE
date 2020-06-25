@@ -198,6 +198,10 @@ namespace CsvRwRouteParser
 				int n = CurrentTrackLength;
 				for (int j = 0; j < CurrentRoute.Tracks.Count; j++)
 				{
+					if (PreviewOnly && j != 0)
+					{
+						break;
+					}
 					var key = CurrentRoute.Tracks.ElementAt(j).Key;
 					if (CurrentRoute.Tracks[key].Elements == null || CurrentRoute.Tracks[key].Elements.Length == 0)
 					{
@@ -219,6 +223,10 @@ namespace CsvRwRouteParser
 				CurrentRoute.Tracks[0].Elements[n].CsvRwAccuracyLevel = Data.Blocks[i].Accuracy;
 				for (int j = 0; j < CurrentRoute.Tracks.Count; j++)
 				{
+					if (PreviewOnly && j != 0)
+					{
+						break;
+					}
 					var key = CurrentRoute.Tracks.ElementAt(j).Key;
 					CurrentRoute.Tracks[key].Elements[n].Events = new GeneralEvent[] { };
 				}
@@ -453,13 +461,16 @@ namespace CsvRwRouteParser
 					Data.Blocks[i].StopPositions[j].CreateEvent(ref CurrentRoute.Stations, Position, CurrentRoute.Tracks[0].Elements[n].WorldUp, CurrentRoute.Tracks[0].Elements[n].WorldSide);
 				}
 				// limit
-				for (int j = 0; j < Data.Blocks[i].Limits.Length; j++)
+				if (!PreviewOnly)
 				{
-					int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-					Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-					double d = Data.Blocks[i].Limits[j].TrackPosition - StartingDistance;
-					CurrentRoute.Tracks[0].Elements[n].Events[m] = new LimitChangeEvent(d, CurrentSpeedLimit, Data.Blocks[i].Limits[j].Speed);
-					CurrentSpeedLimit = Data.Blocks[i].Limits[j].Speed;
+					for (int j = 0; j < Data.Blocks[i].Limits.Length; j++)
+					{
+						int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
+						Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
+						double d = Data.Blocks[i].Limits[j].TrackPosition - StartingDistance;
+						CurrentRoute.Tracks[0].Elements[n].Events[m] = new LimitChangeEvent(d, CurrentSpeedLimit, Data.Blocks[i].Limits[j].Speed);
+						CurrentSpeedLimit = Data.Blocks[i].Limits[j].Speed;
+					}
 				}
 				// marker
 				if (!PreviewOnly)
@@ -569,10 +580,17 @@ namespace CsvRwRouteParser
 					c = d / Math.Sqrt(1.0 + p * p);
 					h = c * p;
 				}
-				double TrackYaw = Math.Atan2(Direction.X, Direction.Y);
-				double TrackPitch = Math.Atan(Data.Blocks[i].Pitch);
-				Transformation GroundTransformation = new Transformation(TrackYaw, 0.0, 0.0);
-				Transformation TrackTransformation = new Transformation(TrackYaw, TrackPitch, 0.0);
+
+				Transformation TrackTransformation = null;
+				Transformation GroundTransformation = null;
+				if (!PreviewOnly)
+				{
+					double TrackYaw = Math.Atan2(Direction.X, Direction.Y);
+					double TrackPitch = Math.Atan(Data.Blocks[i].Pitch);
+					GroundTransformation = new Transformation(TrackYaw, 0.0, 0.0);
+					TrackTransformation = new Transformation(TrackYaw, TrackPitch, 0.0);
+				}
+				
 				// ground
 				if (!PreviewOnly)
 				{
