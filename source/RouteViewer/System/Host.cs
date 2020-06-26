@@ -464,7 +464,8 @@ namespace OpenBve
 
 		public override AbstractTrain ParseTrackFollowingObject(string tfoFile, string objectPath)
 		{
-			throw new NotImplementedException();
+			Interface.AddMessage(MessageType.Warning, false, "Track Following Objects are not shown in Route Viewer. Please test using the main simulation.");
+			return null;
 		}
 
 		public Host() : base(HostApplication.RouteViewer)
