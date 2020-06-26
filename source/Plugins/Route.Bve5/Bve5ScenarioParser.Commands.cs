@@ -181,8 +181,7 @@ namespace Bve5RouteParser
 		/// <param name="Arguments"></param>
 		/// <param name="Data"></param>
 		/// <param name="BlockIndex"></param>
-		/// <param name="UnitOfLength"></param>
-		static void SetBackground(string key, string[] Arguments, ref RouteData Data, int BlockIndex, double[] UnitOfLength)
+		static void SetBackground(string key, string[] Arguments, ref RouteData Data, int BlockIndex)
 		{
 			if (key.ToLowerInvariant() != "change")
 			{
@@ -242,8 +241,7 @@ namespace Bve5RouteParser
 		/// <param name="Arguments">The command arguments</param>
 		/// <param name="Data">The RouteData (updated via 'ref')</param>
 		/// <param name="BlockIndex">The index of the current block</param>
-		/// <param name="UnitOfLength">The current unit of length</param>
-		static void SetAdhesion(string[] Arguments, ref RouteData Data, int BlockIndex, double[] UnitOfLength)
+		static void SetAdhesion(string[] Arguments, ref RouteData Data, int BlockIndex)
 		{
 			switch (Arguments.Length)
 			{
@@ -418,50 +416,18 @@ namespace Bve5RouteParser
 			{
 				case 0:
 					//Object is horizontal
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].TrackPosition = Data.TrackPosition;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Type = sttype;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].X = x;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Y = y;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Z = z;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Yaw = yaw * 0.0174532925199433;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Pitch = pitch * 0.0174532925199433;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Roll = roll * 0.0174532925199433;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].BaseTransformation = RailTransformationTypes.Flat;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n] = new Object(Data.TrackPosition, String.Empty, sttype, new Vector3(x, y, z), yaw * 0.0174532925199433, pitch * 0.0174532925199433, roll * 0.0174532925199433, RailTransformationTypes.Flat);
 					break;
 				case 1:
 					//Follows gradient
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].TrackPosition = Data.TrackPosition;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Type = sttype;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].X = x;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Y = y;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Z = z;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Yaw = yaw * 0.0174532925199433;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Pitch = pitch * 0.0174532925199433;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Roll = roll * 0.0174532925199433;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].BaseTransformation = RailTransformationTypes.FollowsPitch;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n] = new Object(Data.TrackPosition, String.Empty, sttype, new Vector3(x, y, z), yaw * 0.0174532925199433, pitch * 0.0174532925199433, roll * 0.0174532925199433, RailTransformationTypes.FollowsPitch);
 					break;
 				case 2:
 					//Follows cant
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].TrackPosition = Data.TrackPosition;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Type = sttype;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].X = x;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Y = y;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Z = z;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Yaw = yaw * 0.0174532925199433;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Pitch = pitch * 0.0174532925199433;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Roll = roll * 0.0174532925199433;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].BaseTransformation = RailTransformationTypes.FollowsCant;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n] = new Object(Data.TrackPosition, String.Empty, sttype, new Vector3(x, y, z), yaw * 0.0174532925199433, pitch * 0.0174532925199433, roll * 0.0174532925199433, RailTransformationTypes.FollowsCant);
 					break;
 				case 3:
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].TrackPosition = Data.TrackPosition;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Type = sttype;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].X = x;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Y = y;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Z = z;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Yaw = yaw*0.0174532925199433;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Pitch = pitch*0.0174532925199433;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].Roll = roll*0.0174532925199433;
-					Data.Blocks[BlockIndex].RailFreeObj[idx][n].BaseTransformation = RailTransformationTypes.FollowsBoth;
+					Data.Blocks[BlockIndex].RailFreeObj[idx][n] = new Object(Data.TrackPosition, String.Empty, sttype, new Vector3(x, y, z), yaw * 0.0174532925199433, pitch * 0.0174532925199433, roll * 0.0174532925199433, RailTransformationTypes.FollowsBoth);
 					break;
 			}
 		}
@@ -766,9 +732,7 @@ namespace Bve5RouteParser
 			Data.Blocks[BlockIndex].Repeaters[n].RepetitionInterval = interval;
 			Data.Blocks[BlockIndex].Repeaters[n].TrackPosition = Data.TrackPosition;
 
-			Data.Blocks[BlockIndex].Repeaters[n].X = x;
-			Data.Blocks[BlockIndex].Repeaters[n].Y = y;
-			Data.Blocks[BlockIndex].Repeaters[n].Z = z;
+			Data.Blocks[BlockIndex].Repeaters[n].Position = new Vector3(x, y, z);
 			Data.Blocks[BlockIndex].Repeaters[n].Yaw = yaw;
 			Data.Blocks[BlockIndex].Repeaters[n].Pitch = pitch;
 			Data.Blocks[BlockIndex].Repeaters[n].Roll = roll;

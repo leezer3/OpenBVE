@@ -1,8 +1,14 @@
 ﻿namespace Bve5RouteParser
 {
-	internal struct ObjectPointer
+	internal class ObjectPointer
 	{
-		internal string Name;
-		internal string Path;
+		internal readonly string Name;
+		internal readonly string Path;
+
+		internal ObjectPointer(string name, string path)
+		{
+			Name = name;
+			Path = path;
+		}
 	}
 }

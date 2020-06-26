@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Serialization;
-using OpenBveApi;
 using OpenBveApi.Interface;
 using OpenBveApi.Math;
 using OpenBveApi.Objects;
@@ -16,6 +14,8 @@ namespace Bve5RouteParser
 		/// <summary>Loads the list of objects for a BVE5 map</summary>
 		/// <param name="ObjectList">The absolute on-disk path to the object list</param>
 		/// <param name="Data">The route data</param>
+		/// <param name="Encoding">The text encoding to use whilst parsing the file</param>
+		/// <param name="PreviewOnly">Whether this is a preview only</param>
 		private void LoadObjects(string ObjectList, ref RouteData Data, System.Text.Encoding Encoding, bool PreviewOnly)
 		{
 			//Read object list file into memory
@@ -80,7 +80,8 @@ namespace Bve5RouteParser
 				{
 					Array.Resize(ref Data.ObjectList, Data.ObjectList.Length + 1);
 				}
-				Data.ObjectList[Data.UsedObjects] = new ObjectPointer { Name = Name, Path = FilePath };
+
+				Data.ObjectList[Data.UsedObjects] = new ObjectPointer(Name, FilePath);
 				
 				if (!PreviewOnly)
 				{

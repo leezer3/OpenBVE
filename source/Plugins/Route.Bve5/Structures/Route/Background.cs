@@ -4,8 +4,8 @@ namespace Bve5RouteParser
 {
 	internal class Background
 	{
-		internal BackgroundHandle Handle;
-		internal string Key;
+		internal readonly BackgroundHandle Handle;
+		internal readonly string Key;
 
 		internal Background(string key, BackgroundHandle handle)
 		{

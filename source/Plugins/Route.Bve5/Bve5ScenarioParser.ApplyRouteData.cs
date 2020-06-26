@@ -3,7 +3,6 @@ using OpenBveApi.Math;
 using OpenBveApi.Colors;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using OpenBveApi.Objects;
 using OpenBveApi.Routes;
 using OpenBveApi.Runtime;
@@ -11,7 +10,6 @@ using RouteManager2.Climate;
 using RouteManager2.Events;
 using OpenBveApi.World;
 using OpenBveApi.Interface;
-using OpenBveApi.Trains;
 using RouteManager2;
 using RouteManager2.SignalManager;
 using OpenBveApi.Textures;
@@ -22,9 +20,9 @@ namespace Bve5RouteParser
 	{
 		private void ApplyRouteData(string FileName, System.Text.Encoding Encoding, ref RouteData Data, bool PreviewOnly)
 		{
-			string SignalPath, LimitPath, LimitGraphicsPath, TransponderPath;
+			string SignalPath, LimitPath, LimitGraphicsPath;
 			StaticObject SignalPost, LimitPostStraight, LimitPostLeft, LimitPostRight, LimitPostInfinite;
-			StaticObject LimitOneDigit, LimitTwoDigits, LimitThreeDigits, StopPost;
+			StaticObject LimitOneDigit, LimitTwoDigits, LimitThreeDigits;
 			if (!PreviewOnly)
 			{
 				string CompatibilityFolder = Plugin.FileSystem.GetDataFolder("Compatibility");
@@ -47,7 +45,6 @@ namespace Bve5RouteParser
 				SignalPath = null;
 				LimitPath = null;
 				LimitGraphicsPath = null;
-				TransponderPath = null;
 				SignalPost = null;
 				LimitPostStraight = null;
 				LimitPostLeft = null;
@@ -56,7 +53,6 @@ namespace Bve5RouteParser
 				LimitOneDigit = null;
 				LimitTwoDigits = null;
 				LimitThreeDigits = null;
-				StopPost = null;
 			}
 			// initialize
 			System.Globalization.CultureInfo Culture = System.Globalization.CultureInfo.InvariantCulture;
@@ -486,15 +482,7 @@ namespace Bve5RouteParser
 													ol = Data.Blocks[i].RailFreeObj[idx].Length;
 													Array.Resize(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
 												}
-												Data.Blocks[i].RailFreeObj[idx][ol].TrackPosition = nextRepetition;
-												Data.Blocks[i].RailFreeObj[idx][ol].Type = Data.Blocks[i].Repeaters[j].StructureTypes[0];
-												Data.Blocks[i].RailFreeObj[idx][ol].X = Data.Blocks[i].Repeaters[j].X;
-												Data.Blocks[i].RailFreeObj[idx][ol].Y = Data.Blocks[i].Repeaters[j].Y;
-												Data.Blocks[i].RailFreeObj[idx][ol].Z = Data.Blocks[i].Repeaters[j].Z;
-												Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
-												Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
-												Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll;
-												Data.Blocks[i].RailFreeObj[idx][ol].BaseTransformation = RailTransformationTypes.Flat;
+												Data.Blocks[i].RailFreeObj[idx][ol] = new Object(nextRepetition, Data.Blocks[i].Repeaters[j], RailTransformationTypes.Flat);
 											}
 										}
 									}
@@ -512,15 +500,7 @@ namespace Bve5RouteParser
 											Array.Resize(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
 										}
 										nextRepetition += Data.Blocks[i].Repeaters[j].RepetitionInterval;
-										Data.Blocks[i].RailFreeObj[idx][ol].TrackPosition = nextRepetition;
-										Data.Blocks[i].RailFreeObj[idx][ol].Type = Data.Blocks[i].Repeaters[j].StructureTypes[0];
-										Data.Blocks[i].RailFreeObj[idx][ol].X = Data.Blocks[i].Repeaters[j].X;
-										Data.Blocks[i].RailFreeObj[idx][ol].Y = Data.Blocks[i].Repeaters[j].Y;
-										Data.Blocks[i].RailFreeObj[idx][ol].Z = Data.Blocks[i].Repeaters[j].Z;
-										Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
-										Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
-										Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll;
-										Data.Blocks[i].RailFreeObj[idx][ol].BaseTransformation = RailTransformationTypes.Flat;
+										Data.Blocks[i].RailFreeObj[idx][ol] = new Object(nextRepetition, Data.Blocks[i].Repeaters[j], RailTransformationTypes.Flat);
 									}
 									Data.Blocks[i].Repeaters[j].TrackPosition = nextRepetition;
 
@@ -543,15 +523,7 @@ namespace Bve5RouteParser
 										ol = Data.Blocks[i].RailFreeObj[idx].Length;
 										Array.Resize(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
 									}
-									Data.Blocks[i].RailFreeObj[idx][ol].TrackPosition = Data.Blocks[i].Repeaters[j].TrackPosition;
-									Data.Blocks[i].RailFreeObj[idx][ol].Type = Data.Blocks[i].Repeaters[j].StructureTypes[0];
-									Data.Blocks[i].RailFreeObj[idx][ol].X = Data.Blocks[i].Repeaters[j].X;
-									Data.Blocks[i].RailFreeObj[idx][ol].Y = Data.Blocks[i].Repeaters[j].Y;
-									Data.Blocks[i].RailFreeObj[idx][ol].Z = Data.Blocks[i].Repeaters[j].Z;
-									Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
-									Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
-									Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll;
-									Data.Blocks[i].RailFreeObj[idx][ol].BaseTransformation = RailTransformationTypes.Flat;
+									Data.Blocks[i].RailFreeObj[idx][ol] = new Object(Data.Blocks[i].Repeaters[j], RailTransformationTypes.Flat);
 								}
 								break;
 							case 1:
@@ -586,15 +558,7 @@ namespace Bve5RouteParser
 													ol = Data.Blocks[i].RailFreeObj[idx].Length;
 													Array.Resize(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
 												}
-												Data.Blocks[i].RailFreeObj[idx][ol].TrackPosition = nextRepetition;
-												Data.Blocks[i].RailFreeObj[idx][ol].Type = Data.Blocks[i].Repeaters[j].StructureTypes[0];
-												Data.Blocks[i].RailFreeObj[idx][ol].X = Data.Blocks[i].Repeaters[j].X;
-												Data.Blocks[i].RailFreeObj[idx][ol].Y = Data.Blocks[i].Repeaters[j].Y;
-												Data.Blocks[i].RailFreeObj[idx][ol].Z = Data.Blocks[i].Repeaters[j].Z;
-												Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
-												Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
-												Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll;
-												Data.Blocks[i].RailFreeObj[idx][ol].BaseTransformation = RailTransformationTypes.FollowsPitch;
+												Data.Blocks[i].RailFreeObj[idx][ol] = new Object(nextRepetition, Data.Blocks[i].Repeaters[j], RailTransformationTypes.FollowsPitch);
 											}
 										}
 									}
@@ -612,15 +576,7 @@ namespace Bve5RouteParser
 											Array.Resize(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
 										}
 										nextRepetition += Data.Blocks[i].Repeaters[j].RepetitionInterval;
-										Data.Blocks[i].RailFreeObj[idx][ol].TrackPosition = nextRepetition;
-										Data.Blocks[i].RailFreeObj[idx][ol].Type = Data.Blocks[i].Repeaters[j].StructureTypes[0];
-										Data.Blocks[i].RailFreeObj[idx][ol].X = Data.Blocks[i].Repeaters[j].X;
-										Data.Blocks[i].RailFreeObj[idx][ol].Y = Data.Blocks[i].Repeaters[j].Y;
-										Data.Blocks[i].RailFreeObj[idx][ol].Z = Data.Blocks[i].Repeaters[j].Z;
-										Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
-										Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
-										Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll;
-										Data.Blocks[i].RailFreeObj[idx][ol].BaseTransformation = RailTransformationTypes.FollowsPitch;
+										Data.Blocks[i].RailFreeObj[idx][ol] = new Object(nextRepetition, Data.Blocks[i].Repeaters[j], RailTransformationTypes.FollowsPitch);
 									}
 									Data.Blocks[i].Repeaters[j].TrackPosition = nextRepetition;
 
@@ -643,15 +599,7 @@ namespace Bve5RouteParser
 										ol = Data.Blocks[i].RailFreeObj[idx].Length;
 										Array.Resize(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
 									}
-									Data.Blocks[i].RailFreeObj[idx][ol].TrackPosition = Data.Blocks[i].Repeaters[j].TrackPosition;
-									Data.Blocks[i].RailFreeObj[idx][ol].Type = Data.Blocks[i].Repeaters[j].StructureTypes[0];
-									Data.Blocks[i].RailFreeObj[idx][ol].X = Data.Blocks[i].Repeaters[j].X;
-									Data.Blocks[i].RailFreeObj[idx][ol].Y = Data.Blocks[i].Repeaters[j].Y;
-									Data.Blocks[i].RailFreeObj[idx][ol].Z = Data.Blocks[i].Repeaters[j].Z;
-									Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
-									Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
-									Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll;
-									Data.Blocks[i].RailFreeObj[idx][ol].BaseTransformation = RailTransformationTypes.FollowsPitch;
+									Data.Blocks[i].RailFreeObj[idx][ol] = new Object(Data.Blocks[i].Repeaters[j], RailTransformationTypes.FollowsPitch);
 								}
 								break;
 							case 2:
@@ -686,15 +634,7 @@ namespace Bve5RouteParser
 													ol = Data.Blocks[i].RailFreeObj[idx].Length;
 													Array.Resize(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
 												}
-												Data.Blocks[i].RailFreeObj[idx][ol].TrackPosition = nextRepetition;
-												Data.Blocks[i].RailFreeObj[idx][ol].Type = Data.Blocks[i].Repeaters[j].StructureTypes[0];
-												Data.Blocks[i].RailFreeObj[idx][ol].X = Data.Blocks[i].Repeaters[j].X;
-												Data.Blocks[i].RailFreeObj[idx][ol].Y = Data.Blocks[i].Repeaters[j].Y;
-												Data.Blocks[i].RailFreeObj[idx][ol].Z = Data.Blocks[i].Repeaters[j].Z;
-												Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
-												Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
-												Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll;
-												Data.Blocks[i].RailFreeObj[idx][ol].BaseTransformation = RailTransformationTypes.FollowsCant;
+												Data.Blocks[i].RailFreeObj[idx][ol] = new Object(nextRepetition, Data.Blocks[i].Repeaters[j], RailTransformationTypes.FollowsCant);
 											}
 										}
 									}
@@ -712,15 +652,7 @@ namespace Bve5RouteParser
 											Array.Resize(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
 										}
 										nextRepetition += Data.Blocks[i].Repeaters[j].RepetitionInterval;
-										Data.Blocks[i].RailFreeObj[idx][ol].TrackPosition = nextRepetition;
-										Data.Blocks[i].RailFreeObj[idx][ol].Type = Data.Blocks[i].Repeaters[j].StructureTypes[0];
-										Data.Blocks[i].RailFreeObj[idx][ol].X = Data.Blocks[i].Repeaters[j].X;
-										Data.Blocks[i].RailFreeObj[idx][ol].Y = Data.Blocks[i].Repeaters[j].Y;
-										Data.Blocks[i].RailFreeObj[idx][ol].Z = Data.Blocks[i].Repeaters[j].Z;
-										Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
-										Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
-										Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll;
-										Data.Blocks[i].RailFreeObj[idx][ol].BaseTransformation = RailTransformationTypes.FollowsCant;
+										Data.Blocks[i].RailFreeObj[idx][ol] = new Object(nextRepetition, Data.Blocks[i].Repeaters[j], RailTransformationTypes.FollowsCant);
 									}
 									Data.Blocks[i].Repeaters[j].TrackPosition = nextRepetition;
 
@@ -743,15 +675,7 @@ namespace Bve5RouteParser
 										ol = Data.Blocks[i].RailFreeObj[idx].Length;
 										Array.Resize(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
 									}
-									Data.Blocks[i].RailFreeObj[idx][ol].TrackPosition = Data.Blocks[i].Repeaters[j].TrackPosition;
-									Data.Blocks[i].RailFreeObj[idx][ol].Type = Data.Blocks[i].Repeaters[j].StructureTypes[0];
-									Data.Blocks[i].RailFreeObj[idx][ol].X = Data.Blocks[i].Repeaters[j].X;
-									Data.Blocks[i].RailFreeObj[idx][ol].Y = Data.Blocks[i].Repeaters[j].Y;
-									Data.Blocks[i].RailFreeObj[idx][ol].Z = Data.Blocks[i].Repeaters[j].Z;
-									Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
-									Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
-									Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll;
-									Data.Blocks[i].RailFreeObj[idx][ol].BaseTransformation = RailTransformationTypes.FollowsCant;
+									Data.Blocks[i].RailFreeObj[idx][ol] = new Object(Data.Blocks[i].Repeaters[j], RailTransformationTypes.FollowsCant);
 								}
 								break;
 							case 3:
@@ -788,15 +712,7 @@ namespace Bve5RouteParser
 													ol = Data.Blocks[i].RailFreeObj[idx].Length;
 													Array.Resize(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
 												}
-												Data.Blocks[i].RailFreeObj[idx][ol].TrackPosition = nextRepetition;
-												Data.Blocks[i].RailFreeObj[idx][ol].Type = Data.Blocks[i].Repeaters[j].StructureTypes[0];
-												Data.Blocks[i].RailFreeObj[idx][ol].X = Data.Blocks[i].Repeaters[j].X;
-												Data.Blocks[i].RailFreeObj[idx][ol].Y = Data.Blocks[i].Repeaters[j].Y;
-												Data.Blocks[i].RailFreeObj[idx][ol].Z = Data.Blocks[i].Repeaters[j].Z;
-												Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
-												Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
-												Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll + CantAngle;
-												Data.Blocks[i].RailFreeObj[idx][ol].BaseTransformation = RailTransformationTypes.FollowsBoth;
+												Data.Blocks[i].RailFreeObj[idx][ol] = new Object(nextRepetition, Data.Blocks[i].Repeaters[j], RailTransformationTypes.FollowsBoth);
 											}
 										}
 									}
@@ -814,15 +730,7 @@ namespace Bve5RouteParser
 											Array.Resize(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
 										}
 										nextRepetition += Data.Blocks[i].Repeaters[j].RepetitionInterval;
-										Data.Blocks[i].RailFreeObj[idx][ol].TrackPosition = nextRepetition;
-										Data.Blocks[i].RailFreeObj[idx][ol].Type = Data.Blocks[i].Repeaters[j].StructureTypes[0];
-										Data.Blocks[i].RailFreeObj[idx][ol].X = Data.Blocks[i].Repeaters[j].X;
-										Data.Blocks[i].RailFreeObj[idx][ol].Y = Data.Blocks[i].Repeaters[j].Y;
-										Data.Blocks[i].RailFreeObj[idx][ol].Z = Data.Blocks[i].Repeaters[j].Z;
-										Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
-										Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
-										Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll + CantAngle;
-										Data.Blocks[i].RailFreeObj[idx][ol].BaseTransformation = RailTransformationTypes.FollowsBoth;
+										Data.Blocks[i].RailFreeObj[idx][ol] = new Object(nextRepetition, Data.Blocks[i].Repeaters[j], RailTransformationTypes.FollowsBoth);
 									}
 									Data.Blocks[i].Repeaters[j].TrackPosition = nextRepetition;
 
@@ -845,15 +753,7 @@ namespace Bve5RouteParser
 										ol = Data.Blocks[i].RailFreeObj[idx].Length;
 										Array.Resize(ref Data.Blocks[i].RailFreeObj[idx], ol + 1);
 									}
-									Data.Blocks[i].RailFreeObj[idx][ol].TrackPosition = Data.Blocks[i].Repeaters[j].TrackPosition;
-									Data.Blocks[i].RailFreeObj[idx][ol].Type = Data.Blocks[i].Repeaters[j].StructureTypes[0];
-									Data.Blocks[i].RailFreeObj[idx][ol].X = Data.Blocks[i].Repeaters[j].X;
-									Data.Blocks[i].RailFreeObj[idx][ol].Y = Data.Blocks[i].Repeaters[j].Y;
-									Data.Blocks[i].RailFreeObj[idx][ol].Z = Data.Blocks[i].Repeaters[j].Z;
-									Data.Blocks[i].RailFreeObj[idx][ol].Yaw = Data.Blocks[i].Repeaters[j].Yaw;
-									Data.Blocks[i].RailFreeObj[idx][ol].Pitch = Data.Blocks[i].Repeaters[j].Pitch;
-									Data.Blocks[i].RailFreeObj[idx][ol].Roll = Data.Blocks[i].Repeaters[j].Roll + CantAngle;
-									Data.Blocks[i].RailFreeObj[idx][ol].BaseTransformation = RailTransformationTypes.FollowsBoth;
+									Data.Blocks[i].RailFreeObj[idx][ol] = new Object(Data.Blocks[i].Repeaters[j], RailTransformationTypes.FollowsCant);
 								}
 								break;
 						}
@@ -865,9 +765,9 @@ namespace Bve5RouteParser
 					for (int j = 0; j < Data.Blocks[i].GroundFreeObj.Length; j++)
 					{
 						int sttype = Data.Blocks[i].GroundFreeObj[j].Type;
-						double d = Data.Blocks[i].GroundFreeObj[j].TrackPosition - StartingDistance + Data.Blocks[i].GroundFreeObj[j].Z;
-						double dx = Data.Blocks[i].GroundFreeObj[j].X;
-						double dy = Data.Blocks[i].GroundFreeObj[j].Y;
+						double d = Data.Blocks[i].GroundFreeObj[j].TrackPosition - StartingDistance + Data.Blocks[i].GroundFreeObj[j].Position.Z;
+						double dx = Data.Blocks[i].GroundFreeObj[j].Position.X;
+						double dy = Data.Blocks[i].GroundFreeObj[j].Position.Y;
 						Vector3 wpos = Position + new Vector3(Direction.X * d + Direction.Y * dx, dy - Data.Blocks[i].Height, Direction.Y * d - Direction.X * dx);
 						double tpos = Data.Blocks[i].GroundFreeObj[j].TrackPosition;
 						if (sttype > Data.Structure.Objects.Length || Data.Structure.Objects[sttype] == null)
@@ -1062,9 +962,9 @@ namespace Bve5RouteParser
 								int sttype = Data.Blocks[i].RailFreeObj[j][k].Type;
 								if (sttype != -1)
 								{
-									double dx = Data.Blocks[i].RailFreeObj[j][k].X;
-									double dy = Data.Blocks[i].RailFreeObj[j][k].Y;
-									double dz = Data.Blocks[i].RailFreeObj[j][k].TrackPosition - StartingDistance + Data.Blocks[i].RailFreeObj[j][k].Z;
+									double dx = Data.Blocks[i].RailFreeObj[j][k].Position.X;
+									double dy = Data.Blocks[i].RailFreeObj[j][k].Position.Y;
+									double dz = Data.Blocks[i].RailFreeObj[j][k].TrackPosition - StartingDistance + Data.Blocks[i].RailFreeObj[j][k].Position.Z;
 
 									Vector3 wpos = pos;
 									wpos.X += dx * RailTransformation.X.X + dy * RailTransformation.Y.X + dz * RailTransformation.Z.X;

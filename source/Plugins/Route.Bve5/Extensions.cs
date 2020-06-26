@@ -1,4 +1,6 @@
-﻿namespace Bve5RouteParser
+﻿using System;
+
+namespace Bve5RouteParser
 {
 	/// <summary>Provides extension methods for working with text</summary>
 	public static class TextExtensions
@@ -12,7 +14,7 @@
 			{
 				String = String.Substring(0, j);
 			}
-			int k = String.IndexOf("//");
+			int k = String.IndexOf("//", StringComparison.InvariantCultureIgnoreCase);
 			if (k >= 0)
 			{
 				String = String.Substring(0, k);

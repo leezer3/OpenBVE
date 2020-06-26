@@ -199,9 +199,7 @@ namespace Bve5RouteParser
 				Data.Blocks[CurrentBlock].Repeaters[j].Type = Data.Blocks[CurrentBlock - 1].Repeaters[j].Type;
 				Data.Blocks[CurrentBlock].Repeaters[j].RepetitionInterval = Data.Blocks[CurrentBlock - 1].Repeaters[j].RepetitionInterval;
 				Data.Blocks[CurrentBlock].Repeaters[j].Span = Data.Blocks[CurrentBlock - 1].Repeaters[j].Span;
-				Data.Blocks[CurrentBlock].Repeaters[j].X = Data.Blocks[CurrentBlock - 1].Repeaters[j].X;
-				Data.Blocks[CurrentBlock].Repeaters[j].Y = Data.Blocks[CurrentBlock - 1].Repeaters[j].Y;
-				Data.Blocks[CurrentBlock].Repeaters[j].Z = Data.Blocks[CurrentBlock - 1].Repeaters[j].Z;
+				Data.Blocks[CurrentBlock].Repeaters[j].Position = Data.Blocks[CurrentBlock - 1].Repeaters[j].Position;
 				for (int k = 0; k < Data.Blocks[CurrentBlock - 1].Repeaters[j].StructureTypes.Length; k++)
 				{
 					Data.Blocks[CurrentBlock].Repeaters[j].StructureTypes[k] = Data.Blocks[CurrentBlock - 1].Repeaters[j].StructureTypes[k];
@@ -267,6 +265,10 @@ namespace Bve5RouteParser
 			using (StreamReader reader = new StreamReader(FileName))
 			{
 				var firstLine = reader.ReadLine();
+				if (firstLine == null)
+				{
+					return Encoding.UTF8;
+				}
 				string[] Header = firstLine.Split(':');
 				if (Header.Length == 1)
 				{

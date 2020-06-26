@@ -1,4 +1,6 @@
-﻿namespace Bve5RouteParser
+﻿using OpenBveApi.Math;
+
+namespace Bve5RouteParser
 {
 	internal struct Repeater
 	{
@@ -17,9 +19,7 @@
 
 		internal int RailIndex;
 
-		internal double X;
-		internal double Y;
-		internal double Z;
+		internal Vector3 Position;
 		internal double Yaw;
 		internal double Pitch;
 		internal double Roll;

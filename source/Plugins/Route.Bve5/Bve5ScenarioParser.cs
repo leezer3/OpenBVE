@@ -30,7 +30,6 @@ namespace Bve5RouteParser
 			Plugin.CurrentOptions.UnitOfSpeed = "km/h";
 			Plugin.CurrentOptions.SpeedConversionFactor = 0.0;
 			//		    customLoadScreen = false;
-			string CompatibilityFolder = Plugin.FileSystem.GetDataFolder("Compatibility");
 			RouteData Data = new RouteData
 			{
 				BlockInterval = 25.0,
@@ -486,7 +485,7 @@ namespace Bve5RouteParser
 								int ida = Commands[c].IndexOf('.');
 								int idb = Commands[c].IndexOf('(');
 								string key = Commands[c].Substring(ida + 1, idb - ida - 1).ToLowerInvariant();
-								SetBackground(key, Arguments, ref Data, BlockIndex, UnitOfLength);
+								SetBackground(key, Arguments, ref Data, BlockIndex);
 								continue;
 							}
 							if (command.StartsWith("adhesion.") && !PreviewOnly)
@@ -495,7 +494,7 @@ namespace Bve5RouteParser
 								int ida = Commands[c].IndexOf('.');
 								int idb = Commands[c].IndexOf('(');
 								string key = Commands[c].Substring(ida + 1, idb - ida - 1).ToLowerInvariant();
-								SetAdhesion(Arguments, ref Data, BlockIndex, UnitOfLength);
+								SetAdhesion(Arguments, ref Data, BlockIndex);
 								continue;
 							}
 							if (command.StartsWith("jointnoise.") && !PreviewOnly)

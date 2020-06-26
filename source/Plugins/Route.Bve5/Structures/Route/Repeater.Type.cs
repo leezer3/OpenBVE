@@ -1,9 +1,15 @@
 ﻿namespace Bve5RouteParser
 {
-	internal struct RepeaterType
+	internal class RepeaterType
 	{
-		internal int Type;
-		internal int ObjectArrayIndex;
+		internal readonly int Type;
+		internal readonly int ObjectArrayIndex;
+
+		internal RepeaterType(int type, int objectArrayIndex)
+		{
+			Type = type;
+			ObjectArrayIndex = objectArrayIndex;
+		}
 
 		public RepeaterType(RepeaterType typeToClone)
 		{
