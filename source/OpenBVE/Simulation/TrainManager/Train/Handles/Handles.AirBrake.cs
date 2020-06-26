@@ -11,6 +11,7 @@
 			internal AirBrakeHandle()
 			{
 				this.MaximumNotch = 3;
+				this.MaximumDriverNotch = 3;
 			}
 
 			internal override void Update()
