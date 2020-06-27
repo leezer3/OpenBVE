@@ -90,6 +90,10 @@ namespace LibRender2.Loadings
 
 		public void SetLoadingBkg(Texture texture)
 		{
+			if (customLoadScreen || texture == null)
+			{
+				return;
+			}
 			TextureLoadingBkg = texture;
 			customLoadScreen = true;
 		}

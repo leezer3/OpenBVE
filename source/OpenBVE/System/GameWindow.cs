@@ -981,8 +981,11 @@ namespace OpenBve
 					if (Program.CurrentHost.Plugins[i].Route != null && Program.CurrentHost.Plugins[i].Route.IsLoading)
 					{
 						routeProgress = Program.CurrentHost.Plugins[i].Route.CurrentProgress;
+						break;
 					}
 				}
+
+				Program.Renderer.Loading.SetLoadingBkg(Program.CurrentRoute.Information.LoadingScreenBackground);
 				Program.Renderer.Loading.DrawLoadingScreen(Fonts.SmallFont, routeProgress, Loading.TrainProgress);
 				Program.currentGameWindow.SwapBuffers();
 				
