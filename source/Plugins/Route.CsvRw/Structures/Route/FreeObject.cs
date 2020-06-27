@@ -44,7 +44,7 @@ namespace CsvRwRouteParser
 		internal void CreateGroundAligned(ObjectDictionary FreeObjects, Vector3 WorldPosition, Transformation GroundTransformation, Vector2 Direction, double Height, double StartingDistance, double EndingDistance, double BlockInterval, bool AccurateObjectDisposal)
 		{
 			double d = TrackPosition - StartingDistance;
-			Vector3 wpos = WorldPosition + new Vector3(Direction.X * d + Direction.Y * Position.X, Position.Y - Height, Direction.Y * d - Direction.X * Position.Y);
+			Vector3 wpos = WorldPosition + new Vector3(Direction.X * d + Direction.Y * Position.X, Position.Y - Height, Direction.Y * d - Direction.X * Position.X);
 			UnifiedObject obj;
 			FreeObjects.TryGetValue(Type, out obj);
 			if (obj != null)
