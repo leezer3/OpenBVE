@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenBveApi.Math;
 using OpenBveApi.Colors;
 using System.Collections.Generic;
@@ -365,9 +365,7 @@ namespace Bve5RouteParser
 					{
 						dx = 0.0;
 					}
-					CurrentRoute.Stations[s].SoundOrigin.X = Position.X + dx * CurrentRoute.Tracks[0].Elements[n].WorldSide.X + dy * CurrentRoute.Tracks[0].Elements[n].WorldUp.X;
-					CurrentRoute.Stations[s].SoundOrigin.Y = Position.Y + dx * CurrentRoute.Tracks[0].Elements[n].WorldSide.Y + dy * CurrentRoute.Tracks[0].Elements[n].WorldUp.Y;
-					CurrentRoute.Stations[s].SoundOrigin.Z = Position.Z + dx * CurrentRoute.Tracks[0].Elements[n].WorldSide.Z + dy * CurrentRoute.Tracks[0].Elements[n].WorldUp.Z;
+					CurrentRoute.Stations[s].SoundOrigin = Position + dx * CurrentRoute.Tracks[0].Elements[n].WorldSide + dy * CurrentRoute.Tracks[0].Elements[n].WorldUp;
 				}
 				// limit
 				for (int j = 0; j < Data.Blocks[i].Limit.Length; j++)
@@ -451,7 +449,7 @@ namespace Bve5RouteParser
 						}
 						switch (Data.Blocks[i].Repeaters[j].Type)
 						{
-							case 0:
+							case RailTransformationTypes.Flat:
 								if (Data.Blocks[i].Repeaters[j].RepetitionInterval != 0.0 && Data.Blocks[i].Repeaters[j].RepetitionInterval != Data.BlockInterval)
 								{
 									int idx = Data.Blocks[i].Repeaters[j].RailIndex;
@@ -526,7 +524,7 @@ namespace Bve5RouteParser
 									Data.Blocks[i].RailFreeObj[idx][ol] = new Object(Data.Blocks[i].Repeaters[j], RailTransformationTypes.Flat);
 								}
 								break;
-							case 1:
+							case RailTransformationTypes.FollowsPitch:
 								//The repeater follows the gradient of it's attached rail, or Rail0 if not specified, so we must add it to the rail's object array
 								if (Data.Blocks[i].Repeaters[j].RepetitionInterval != 0.0 && Data.Blocks[i].Repeaters[j].RepetitionInterval != Data.BlockInterval)
 								{
@@ -602,7 +600,7 @@ namespace Bve5RouteParser
 									Data.Blocks[i].RailFreeObj[idx][ol] = new Object(Data.Blocks[i].Repeaters[j], RailTransformationTypes.FollowsPitch);
 								}
 								break;
-							case 2:
+							case RailTransformationTypes.FollowsCant:
 								//The repeater follows the cant of it's attached rail, or Rail0 if not specified, so we must add it to the rail's object array
 								if (Data.Blocks[i].Repeaters[j].RepetitionInterval != 0.0 && Data.Blocks[i].Repeaters[j].RepetitionInterval != Data.BlockInterval)
 								{
@@ -678,7 +676,7 @@ namespace Bve5RouteParser
 									Data.Blocks[i].RailFreeObj[idx][ol] = new Object(Data.Blocks[i].Repeaters[j], RailTransformationTypes.FollowsCant);
 								}
 								break;
-							case 3:
+							case RailTransformationTypes.FollowsBoth:
 								//The repeater follows the gradient & cant of it's attached rail, or Rail0 if not specified, so we must add it to the rail's object array
 								double CantAngle = Math.Tan((Math.Atan(Data.Blocks[i].CurrentTrackState.CurveCant)));
 								if (Data.Blocks[i].Repeaters[j].RepetitionInterval != 0.0)

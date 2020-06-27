@@ -725,7 +725,7 @@ namespace Bve5RouteParser
 			}
 			Data.Blocks[BlockIndex].Repeaters[n].RailIndex = idx;
 			Data.Blocks[BlockIndex].Repeaters[n].Name = key;
-			Data.Blocks[BlockIndex].Repeaters[n].Type = type;
+			Data.Blocks[BlockIndex].Repeaters[n].Type = (RailTransformationTypes)type;
 			Data.Blocks[BlockIndex].Repeaters[n].StructureTypes = new int[1];
 			Data.Blocks[BlockIndex].Repeaters[n].StructureTypes[0] = sttype;
 			Data.Blocks[BlockIndex].Repeaters[n].Span = span;

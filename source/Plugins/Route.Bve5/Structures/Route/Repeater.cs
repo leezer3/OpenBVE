@@ -7,7 +7,7 @@ namespace Bve5RouteParser
 		/// <summary>The name-key that this is referred to by in the routefile</summary>
 		internal string Name;
 
-		internal int Type;
+		internal RailTransformationTypes Type;
 		/// <summary>The objects to use</summary>
 		internal int[] StructureTypes;
 		/// <summary>The length of the object</summary>

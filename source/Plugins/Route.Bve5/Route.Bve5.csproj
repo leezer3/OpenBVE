@@ -61,7 +61,6 @@
     <Compile Include="Structures\Route\Rail.cs" />
     <Compile Include="Structures\Route\Rail.TransformationTypes.cs" />
     <Compile Include="Structures\Route\Repeater.cs" />
-    <Compile Include="Structures\Route\Repeater.Type.cs" />
     <Compile Include="Structures\Route\Station.Stop.cs" />
     <Compile Include="Structures\Signals\Section.cs" />
     <Compile Include="Structures\Signals\Signal.cs" />
