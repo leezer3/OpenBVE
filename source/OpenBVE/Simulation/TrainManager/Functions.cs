@@ -173,7 +173,7 @@ namespace OpenBve
 		internal static void JumpTFO()
 		{
 			// ReSharper disable once PossibleInvalidCastExceptionInForeachLoop
-			foreach (TrackFollowingObject Train in TFOs)
+			foreach (TrackFollowingObject Train in TFOs) //Must not use var, as otherwise the wrong inferred type
 			{
 				Train.Dispose();
 				Train.State = TrainState.Pending;
@@ -196,7 +196,7 @@ namespace OpenBve
 			}
 
 			// ReSharper disable once PossibleInvalidCastExceptionInForeachLoop
-			foreach (TrackFollowingObject Train in TFOs)
+			foreach (TrackFollowingObject Train in TFOs) //Must not use var, as otherwise the wrong inferred type
 			{
 				Train.UpdateObjects(TimeElapsed, ForceUpdate);
 			}

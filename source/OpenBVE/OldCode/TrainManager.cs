@@ -22,7 +22,8 @@ namespace OpenBve
 				Trains[i].Update(TimeElapsed);
 			}
 
-			foreach (var Train in TFOs)
+			// ReSharper disable once PossibleInvalidCastExceptionInForeachLoop
+			foreach (TrackFollowingObject Train in TFOs) //Must not use var, as otherwise the wrong inferred type
 			{
 				Train.Update(TimeElapsed);
 			}
