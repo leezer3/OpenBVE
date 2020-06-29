@@ -297,6 +297,8 @@ namespace OpenBve {
 					AltPressed = true;
 					break;
 				case Key.F5:
+					CurrentHost.AnimatedObjectCollectionCache.Clear();
+					CurrentHost.StaticObjectCache.Clear();
 					if (CurrentRouteFile != null && CurrentlyLoading == false)
 					{
 						Bitmap bitmap = null;

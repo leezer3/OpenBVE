@@ -131,12 +131,10 @@ namespace OpenBve {
 
 			//Set the route and train folders in the info class
 			// ReSharper disable once UnusedVariable
-			
 			Task loadThreaded = LoadThreaded();
 		}
 
 		private static void LoadEverythingThreaded() {
-			Game.Reset();
 			string RailwayFolder = GetRailwayFolder(CurrentRouteFile);
 			string ObjectFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Object");
 			string SoundFolder = OpenBveApi.Path.CombineDirectory(RailwayFolder, "Sound");

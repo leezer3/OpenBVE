@@ -6,6 +6,7 @@
 // ╚═════════════════════════════════════════════════════════════╝
 
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using OpenBveApi.World;
 using OpenBveApi.FileSystem;
@@ -327,6 +328,8 @@ namespace OpenBve {
 	                break;
 	            case Key.F5:
 	                // reset
+					CurrentHost.AnimatedObjectCollectionCache.Clear();
+					CurrentHost.StaticObjectCache.Clear();
 	                ReducedMode = false;
 	                LightingRelative = -1.0;
 	                Game.Reset();

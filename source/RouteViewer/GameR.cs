@@ -39,6 +39,7 @@ namespace OpenBve {
 		// ================================
 
 		internal static void Reset() {
+			Program.Renderer.Initialize(Program.CurrentHost, Interface.CurrentOptions);
 			// track manager
 			Program.CurrentRoute.Tracks = new Dictionary<int, Track>();
 			Track t = new Track
