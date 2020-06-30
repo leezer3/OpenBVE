@@ -19,7 +19,7 @@ namespace CsvRwRouteParser
 			Type = type;
 		}
 
-		internal void Create(int CurrentRail, Transformation RailTransformation, Vector3 pos, Block CurrentBlock, Block NextBlock, double BlockInterval, StructureData Structure, double StartingDistance, double EndingDistance, bool AccurateObjectDisposal, string FileName)
+		internal void Create(int CurrentRail, Transformation RailTransformation, Vector3 pos, Block CurrentBlock, Block NextBlock, StructureData Structure, double StartingDistance, double EndingDistance, bool AccurateObjectDisposal, string FileName)
 		{
 			if (PrimaryRail != CurrentRail)
 			{
@@ -49,7 +49,7 @@ namespace CsvRwRouteParser
 					else
 					{
 						StaticObject Crack = (StaticObject) Structure.CrackL[Type].Transform(d0, d1);
-						Plugin.CurrentHost.CreateStaticObject(Crack, pos, RailTransformation, Transformation.NullTransformation, AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, BlockInterval, StartingDistance, 1.0);
+						Plugin.CurrentHost.CreateStaticObject(Crack, pos, RailTransformation, Transformation.NullTransformation, AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, StartingDistance, 1.0);
 					}
 				}
 				else if (d0 > 0.0)
@@ -61,7 +61,7 @@ namespace CsvRwRouteParser
 					else
 					{
 						StaticObject Crack = (StaticObject) Structure.CrackR[Type].Transform(d0, d1);
-						Plugin.CurrentHost.CreateStaticObject(Crack, pos, RailTransformation, Transformation.NullTransformation, AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, BlockInterval, StartingDistance, 1.0);
+						Plugin.CurrentHost.CreateStaticObject(Crack, pos, RailTransformation, Transformation.NullTransformation, AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, StartingDistance, 1.0);
 					}
 				}
 			}

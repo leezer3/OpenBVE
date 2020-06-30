@@ -457,7 +457,7 @@ namespace OpenBveApi.Objects
 			int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength,
 			double TrackPosition, double Brightness, bool DuplicateMaterials)
 		{
-			currentHost.CreateStaticObject(this, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
+			currentHost.CreateStaticObject(this, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, TrackPosition, Brightness);
 		}
 
 		/// <inheritdoc />

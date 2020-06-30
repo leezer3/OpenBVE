@@ -49,6 +49,8 @@ namespace CsvRwRouteParser
 				 */
 				Data.Blocks[Data.Blocks.Length - 1].CurrentTrackState.CurveRadius = 0.0;
 			}
+
+			CurrentRoute.BlockLength = Data.BlockInterval;
 			int BlocksUsed = Data.Blocks.Length;
 			Data.CreateMissingBlocks(ref BlocksUsed, LastBlock, PreviewOnly);
 			Array.Resize(ref Data.Blocks, BlocksUsed);
@@ -813,7 +815,7 @@ namespace CsvRwRouteParser
 									}
 									else
 									{
-										Plugin.CurrentHost.CreateStaticObject((StaticObject)Data.Structure.FormCL[Data.Blocks[i].Forms[k].FormType], pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance, 1.0);
+										Plugin.CurrentHost.CreateStaticObject((StaticObject)Data.Structure.FormCL[Data.Blocks[i].Forms[k].FormType], pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, StartingDistance, 1.0);
 									}
 									if (Data.Blocks[i].Forms[k].RoofType > 0)
 									{
@@ -831,7 +833,7 @@ namespace CsvRwRouteParser
 										}
 										else
 										{
-											Plugin.CurrentHost.CreateStaticObject((StaticObject)Data.Structure.RoofCL[Data.Blocks[i].Forms[k].RoofType], pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance, 1.0);
+											Plugin.CurrentHost.CreateStaticObject((StaticObject)Data.Structure.RoofCL[Data.Blocks[i].Forms[k].RoofType], pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, StartingDistance, 1.0);
 										}
 									}
 								}
@@ -851,7 +853,7 @@ namespace CsvRwRouteParser
 									}
 									else
 									{
-										Plugin.CurrentHost.CreateStaticObject((StaticObject)Data.Structure.FormCR[Data.Blocks[i].Forms[k].FormType], pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance, 1.0);
+										Plugin.CurrentHost.CreateStaticObject((StaticObject)Data.Structure.FormCR[Data.Blocks[i].Forms[k].FormType], pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, StartingDistance, 1.0);
 									}
 									if (Data.Blocks[i].Forms[k].RoofType > 0)
 									{
@@ -869,7 +871,7 @@ namespace CsvRwRouteParser
 										}
 										else
 										{
-											Plugin.CurrentHost.CreateStaticObject((StaticObject)Data.Structure.RoofCR[Data.Blocks[i].Forms[k].RoofType], pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance, 1.0);
+											Plugin.CurrentHost.CreateStaticObject((StaticObject)Data.Structure.RoofCR[Data.Blocks[i].Forms[k].RoofType], pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, StartingDistance, 1.0);
 										}
 									}
 								}
@@ -906,7 +908,7 @@ namespace CsvRwRouteParser
 											else
 											{
 												StaticObject FormC = (StaticObject)Data.Structure.FormCL[Data.Blocks[i].Forms[k].FormType].Transform(d0, d1);
-												Plugin.CurrentHost.CreateStaticObject(FormC, pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance, 1.0);
+												Plugin.CurrentHost.CreateStaticObject(FormC, pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, StartingDistance, 1.0);
 											}
 											if (Data.Blocks[i].Forms[k].RoofType > 0)
 											{
@@ -925,7 +927,7 @@ namespace CsvRwRouteParser
 												else
 												{
 													StaticObject RoofC = (StaticObject)Data.Structure.RoofCL[Data.Blocks[i].Forms[k].RoofType].Transform(d0, d1);
-													Plugin.CurrentHost.CreateStaticObject(RoofC, pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance, 1.0);
+													Plugin.CurrentHost.CreateStaticObject(RoofC, pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, StartingDistance, 1.0);
 												}
 											}
 										}
@@ -946,7 +948,7 @@ namespace CsvRwRouteParser
 											else
 											{
 												StaticObject FormC = (StaticObject)Data.Structure.FormCR[Data.Blocks[i].Forms[k].FormType].Transform(d0, d1);
-												Plugin.CurrentHost.CreateStaticObject(FormC, pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance, 1.0);
+												Plugin.CurrentHost.CreateStaticObject(FormC, pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, StartingDistance, 1.0);
 											}
 											if (Data.Blocks[i].Forms[k].RoofType > 0)
 											{
@@ -965,7 +967,7 @@ namespace CsvRwRouteParser
 												else
 												{
 													StaticObject RoofC = (StaticObject)Data.Structure.RoofCR[Data.Blocks[i].Forms[k].RoofType].Transform(d0, d1);
-													Plugin.CurrentHost.CreateStaticObject(RoofC, pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance, 1.0);
+													Plugin.CurrentHost.CreateStaticObject(RoofC, pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, StartingDistance, 1.0);
 												}
 											}
 										}
@@ -1029,7 +1031,7 @@ namespace CsvRwRouteParser
 						// cracks
 						for (int k = 0; k < Data.Blocks[i].Cracks.Length; k++)
 						{
-							Data.Blocks[i].Cracks[k].Create(j, RailTransformation, pos, Data.Blocks[i], Data.Blocks[i + 1], Data.BlockInterval, Data.Structure, StartingDistance, EndingDistance, Data.AccurateObjectDisposal, FileName);
+							Data.Blocks[i].Cracks[k].Create(j, RailTransformation, pos, Data.Blocks[i], Data.Blocks[i + 1], Data.Structure, StartingDistance, EndingDistance, Data.AccurateObjectDisposal, FileName);
 						}
 						// free objects
 						if (Data.Blocks[i].RailFreeObj.Length > j && Data.Blocks[i].RailFreeObj[j] != null)

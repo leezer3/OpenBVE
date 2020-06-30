@@ -91,6 +91,9 @@ namespace RouteManager2
 		/// <summary>Holds the length conversion units</summary>
 		public double[] UnitOfLength = new double[] { 1.0 };
 
+		/// <summary>The length of a block in meters</summary>
+		public double BlockLength = 25.0;
+
 		public CurrentRoute(BaseRenderer renderer)
 		{
 			this.renderer = renderer;
