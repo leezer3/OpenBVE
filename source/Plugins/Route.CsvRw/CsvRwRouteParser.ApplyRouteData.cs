@@ -269,46 +269,7 @@ namespace CsvRwRouteParser
 				{
 					for (int j = 0; j < Data.Blocks[i].BrightnessChanges.Length; j++)
 					{
-						/*
-						 * Legacy brightness: This applies equally to all tracks in a block
-						 */
-						for (int tt = 0; tt < CurrentRoute.Tracks.Count; tt++)
-						{
-							int t = CurrentRoute.Tracks.ElementAt(tt).Key;
-							int m = CurrentRoute.Tracks[t].Elements[n].Events.Length;
-							Array.Resize(ref CurrentRoute.Tracks[t].Elements[n].Events, m + 1);
-							double d = Data.Blocks[i].BrightnessChanges[j].TrackPosition - StartingDistance;
-							CurrentRoute.Tracks[t].Elements[n].Events[m] = new BrightnessChangeEvent(d, Data.Blocks[i].BrightnessChanges[j].Value, CurrentBrightnessValue, Data.Blocks[i].BrightnessChanges[j].TrackPosition - CurrentBrightnessTrackPosition);
-							
-							if (t == 0)
-							{
-								if (CurrentBrightnessElement >= 0 & CurrentBrightnessEvent >= 0)
-								{
-									BrightnessChangeEvent bce = (BrightnessChangeEvent)CurrentRoute.Tracks[t].Elements[CurrentBrightnessElement].Events[CurrentBrightnessEvent];
-									bce.NextBrightness = Data.Blocks[i].BrightnessChanges[j].Value;
-									bce.NextDistance = Data.Blocks[i].BrightnessChanges[j].TrackPosition - CurrentBrightnessTrackPosition;
-								}
-								CurrentBrightnessEvent = m;
-								
-							}
-							else
-							{
-								if (CurrentBrightnessElement >= 0 & CurrentBrightnessEvent >= 0)
-								{
-									for (int e = 0; e < CurrentRoute.Tracks[t].Elements[CurrentBrightnessElement].Events.Length; e++)
-									{
-										if (!(CurrentRoute.Tracks[t].Elements[CurrentBrightnessElement].Events[e] is BrightnessChangeEvent))
-											continue;
-										BrightnessChangeEvent bce = (BrightnessChangeEvent)CurrentRoute.Tracks[t].Elements[CurrentBrightnessElement].Events[e];
-										bce.NextBrightness = Data.Blocks[i].BrightnessChanges[j].Value;
-										bce.NextDistance = Data.Blocks[i].BrightnessChanges[j].TrackPosition - CurrentBrightnessTrackPosition;
-									}
-								}
-							}
-						}
-						CurrentBrightnessElement = n;
-						CurrentBrightnessTrackPosition = Data.Blocks[i].BrightnessChanges[j].TrackPosition;
-						CurrentBrightnessValue = Data.Blocks[i].BrightnessChanges[j].Value;
+						Data.Blocks[i].BrightnessChanges[j].Create(CurrentRoute, StartingDistance, n, ref CurrentBrightnessElement, ref CurrentBrightnessEvent, ref CurrentBrightnessTrackPosition, ref CurrentBrightnessValue);
 					}
 				}
 				// fog
@@ -1068,48 +1029,7 @@ namespace CsvRwRouteParser
 						// cracks
 						for (int k = 0; k < Data.Blocks[i].Cracks.Length; k++)
 						{
-							if (Data.Blocks[i].Cracks[k].PrimaryRail == j)
-							{
-								int p = Data.Blocks[i].Cracks[k].PrimaryRail;
-								double px0 = p > 0 ? Data.Blocks[i].Rails[p].RailStart.X : 0.0;
-								double px1 = p > 0 ? Data.Blocks[i + 1].Rails[p].RailEnd.X : 0.0;
-								int s = Data.Blocks[i].Cracks[k].SecondaryRail;
-								if (s < 0 || !Data.Blocks[i].Rails.ContainsKey(s) || !Data.Blocks[i].Rails[s].RailStarted)
-								{
-									Plugin.CurrentHost.AddMessage(MessageType.Error, false, "RailIndex2 is out of range in Track.Crack at track position " + StartingDistance.ToString(Culture) + " in file " + FileName);
-								}
-								else
-								{
-									double sx0 = Data.Blocks[i].Rails[s].RailStart.X;
-									double sx1 = Data.Blocks[i + 1].Rails[s].RailEnd.X;
-									double d0 = sx0 - px0;
-									double d1 = sx1 - px1;
-									if (d0 < 0.0)
-									{
-										if (!Data.Structure.CrackL.ContainsKey(Data.Blocks[i].Cracks[k].Type))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "CrackStructureIndex references a CrackL not loaded in Track.Crack at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
-										}
-										else
-										{
-											StaticObject Crack = (StaticObject)Data.Structure.CrackL[Data.Blocks[i].Cracks[k].Type].Transform(d0, d1);
-											Plugin.CurrentHost.CreateStaticObject(Crack, pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance, 1.0);
-										}
-									}
-									else if (d0 > 0.0)
-									{
-										if (!Data.Structure.CrackR.ContainsKey(Data.Blocks[i].Cracks[k].Type))
-										{
-											Plugin.CurrentHost.AddMessage(MessageType.Error, false, "CrackStructureIndex references a CrackR not loaded in Track.Crack at track position " + StartingDistance.ToString(Culture) + " in file " + FileName + ".");
-										}
-										else
-										{
-											StaticObject Crack = (StaticObject)Data.Structure.CrackR[Data.Blocks[i].Cracks[k].Type].Transform(d0, d1);
-											Plugin.CurrentHost.CreateStaticObject(Crack, pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance, 1.0);
-										}
-									}
-								}
-							}
+							Data.Blocks[i].Cracks[k].Create(j, RailTransformation, pos, Data.Blocks[i], Data.Blocks[i + 1], Data.BlockInterval, Data.Structure, StartingDistance, EndingDistance, Data.AccurateObjectDisposal, FileName);
 						}
 						// free objects
 						if (Data.Blocks[i].RailFreeObj.Length > j && Data.Blocks[i].RailFreeObj[j] != null)
