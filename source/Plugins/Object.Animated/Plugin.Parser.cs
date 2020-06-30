@@ -891,16 +891,19 @@ namespace Plugin
 										}
 										if (StaticXRotation)
 										{
+											Result.Objects[ObjectCount].States[j].Prototype = (StaticObject)Result.Objects[ObjectCount].States[j].Prototype.Clone();
 											ApplyStaticRotation(ref Result.Objects[ObjectCount].States[j].Prototype.Mesh, Result.Objects[ObjectCount].RotateXDirection, RotateX);
 											Result.Objects[ObjectCount].RotateXFunction = null;
 										}
 										if (StaticYRotation)
 										{
+											Result.Objects[ObjectCount].States[j].Prototype = (StaticObject)Result.Objects[ObjectCount].States[j].Prototype.Clone();
 											ApplyStaticRotation(ref Result.Objects[ObjectCount].States[j].Prototype.Mesh, Result.Objects[ObjectCount].RotateYDirection, RotateY);
 											Result.Objects[ObjectCount].RotateYFunction = null;
 										}
 										if (StaticZRotation)
 										{
+											Result.Objects[ObjectCount].States[j].Prototype = (StaticObject)Result.Objects[ObjectCount].States[j].Prototype.Clone();
 											ApplyStaticRotation(ref Result.Objects[ObjectCount].States[j].Prototype.Mesh, Result.Objects[ObjectCount].RotateZDirection, RotateZ);
 											Result.Objects[ObjectCount].RotateZFunction = null;
 										}
