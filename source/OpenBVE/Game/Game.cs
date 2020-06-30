@@ -38,12 +38,8 @@ namespace OpenBve
 			Program.Renderer.CurrentInterface = InterfaceType.Normal;
 			Program.CurrentRoute.Comment = "";
 			Program.CurrentRoute.Image = "";
-			Program.CurrentRoute.Atmosphere.AccelerationDueToGravity = 9.80665;
-			Program.CurrentRoute.Atmosphere.InitialAirPressure = 101325.0;
-			Program.CurrentRoute.Atmosphere.InitialAirTemperature = 293.15;
-			Program.CurrentRoute.Atmosphere.InitialElevation = 0.0;
-			Program.CurrentRoute.Atmosphere.SeaLevelAirPressure = 101325.0;
-			Program.CurrentRoute.Atmosphere.SeaLevelAirTemperature = 293.15;
+			Program.CurrentRoute.Atmosphere = new Atmosphere();
+			Program.CurrentRoute.LightDefinitions = new LightDefinition[] { };
 			Program.CurrentRoute.BufferTrackPositions = new double[] { };
 			//Messages = new Message[] { };
 			Program.Renderer.Marker.MarkerTextures = new Texture[] { };
