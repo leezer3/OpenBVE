@@ -1190,13 +1190,15 @@ namespace Plugin
 								{
 									SoundHandle currentSound;
 									currentHost.RegisterSound(fileName, radius, out currentSound);
-									WorldSound snd = new WorldSound(currentHost, currentSound);
-									snd.currentPitch = pitch;
-									snd.currentVolume = volume;
-									snd.Position = Position;
-									snd.TrackFollowerFunction = TrackFollowerFunction;
-									snd.PitchFunction = PitchFunction;
-									snd.VolumeFunction = VolumeFunction;
+									WorldSound snd = new WorldSound(currentHost, currentSound)
+									{
+										currentPitch = pitch,
+										currentVolume = volume,
+										Position = Position,
+										TrackFollowerFunction = TrackFollowerFunction,
+										PitchFunction = PitchFunction,
+										VolumeFunction = VolumeFunction
+									};
 									Result.Sounds[SoundCount] = snd;
 									SoundCount++;
 								}
@@ -1369,9 +1371,11 @@ namespace Plugin
 								i--;
 								if (fileNames.Length != 0 && ObjectCount > 0)
 								{
-									AnimatedWorldObjectStateSound snd = new AnimatedWorldObjectStateSound(currentHost);
-									snd.Object = Result.Objects[ObjectCount -1].Clone();
-									snd.Buffers = new SoundHandle[fileNames.Length];
+									AnimatedWorldObjectStateSound snd = new AnimatedWorldObjectStateSound(currentHost)
+									{
+										Object = Result.Objects[ObjectCount - 1].Clone(),
+										Buffers = new SoundHandle[fileNames.Length]
+									};
 									for (int j = 0; j < fileNames.Length; j++)
 									{
 										if (fileNames[j] != null)

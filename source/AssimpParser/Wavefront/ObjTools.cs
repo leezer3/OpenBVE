@@ -77,7 +77,6 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -133,7 +132,6 @@ namespace AssimpNET.Obj
 				tmp++;
 				if (IsLineEnd(tmp))
 				{
-					tmp++;
 					return true;
 				}
 			}
@@ -399,9 +397,9 @@ namespace AssimpNET.Obj
 			string tmp = string.Empty;
 			while (!IsLineEnd(position))
 			{
-				if (char.IsDigit((char)Buffer[position]))
+				if (char.IsDigit(Buffer[position]))
 				{
-					tmp += (char)Buffer[position];
+					tmp += Buffer[position];
 					++position;
 				}
 				else

@@ -271,16 +271,7 @@ namespace AssimpNET.X
 					// Decompress the compressed block
 					blockBytes = new byte[compressedBlockSize];
 					inputStream.Read(blockBytes, 0, compressedBlockSize);
-					byte[] decompressedBytes;
-
-					if (currentBlock == 0)
-					{
-						decompressedBytes = DeflateCompression.ZlibDecompressWithDictionary(blockBytes, null);
-					}
-					else
-					{
-						decompressedBytes = DeflateCompression.ZlibDecompressWithDictionary(blockBytes, previousBlockBytes);
-					}
+					byte[] decompressedBytes = DeflateCompression.ZlibDecompressWithDictionary(blockBytes, currentBlock == 0 ? null : previousBlockBytes);
 
 					outputStream.Write(decompressedBytes, 0, decompressedBytes.Length);
 					previousBlockBytes = decompressedBytes;
@@ -417,8 +408,7 @@ namespace AssimpNET.X
 			ReadHeadOfDataObject(out name);
 
 			// create a named node and place it at its parent, if given
-			Node node = new Node(parent);
-			node.Name = name;
+			Node node = new Node(name, parent);
 
 			if (parent != null)
 			{
@@ -433,8 +423,7 @@ namespace AssimpNET.X
 					if (Scene.RootNode.Name != "$dummy_root")
 					{
 						Node exroot = Scene.RootNode;
-						Scene.RootNode = new Node();
-						Scene.RootNode.Name = "$dummy_root";
+						Scene.RootNode = new Node("$dummy_root");
 						Scene.RootNode.Children.Add(exroot);
 						exroot.Parent = Scene.RootNode;
 					}

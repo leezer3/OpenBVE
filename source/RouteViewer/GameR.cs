@@ -29,10 +29,6 @@ namespace OpenBve {
 		internal static double SecondsSinceMidnight = 0.0;
 		internal static double StartupTime = 0.0;
 
-		// game constants
-		internal static double[] PrecedingTrainTimeDeltas;
-		internal static double PrecedingTrainSpeedLimit;
-
 		internal static TrainStartMode TrainStart = TrainStartMode.EmergencyBrakesNoAts;
 		internal static string TrainName = "";
 
