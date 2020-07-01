@@ -1412,6 +1412,13 @@ namespace CsvRwRouteParser
 							CurrentRoute.Stations[i].Type = StationType.Terminal;
 						}
 						break;
+					case StationType.Terminal:
+						if (i == 0)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Station " + CurrentRoute.Stations[i].Name + " is marked as \"terminal\" but is the first station in file " + FileName);
+							CurrentRoute.Stations[i].Type = StationType.Normal;
+						}
+						break;
 				}
 			}
 			if (CurrentRoute.Stations.Length != 0)

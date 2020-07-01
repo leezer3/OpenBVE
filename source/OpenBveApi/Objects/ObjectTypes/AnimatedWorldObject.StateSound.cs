@@ -78,7 +78,7 @@ namespace OpenBveApi.Objects
 						else
 						{
 							int bufferIndex = this.Object.CurrentState + 1;
-							if (this.Buffers.Length < bufferIndex || this.Buffers[bufferIndex] == null)
+							if (this.Buffers.Length - 1 < bufferIndex || this.Buffers[bufferIndex] == null)
 							{
 								return;
 							}
