@@ -958,6 +958,18 @@ namespace OpenBve {
 					case Instructions.RouteLimit:
 						Function.Stack[s] = 0.0; //Unsupported in viewers
 						s++; break;
+					case Instructions.TerminalStation:
+						int idx = Program.CurrentRoute.Stations.Length;
+						for (int j = Program.CurrentRoute.Stations.Length - 1; j >= 0; j--)
+						{
+							if (Program.CurrentRoute.Stations[j].Type == StationType.Terminal)
+							{
+								idx = j;
+								break;
+							}
+						}
+						Function.Stack[s] = idx;
+						s++; break;
 					case Instructions.DistanceStation:
 					case Instructions.StopsStation:
 						Function.Stack[s - 1] = 0.0; //Unsupported in viewers

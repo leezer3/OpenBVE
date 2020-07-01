@@ -1278,6 +1278,18 @@ namespace OpenBve {
 								}
 								Function.Stack[s] = stationIdx;
 							}
+							s++; break; 
+					case Instructions.TerminalStation:
+							int idx = Program.CurrentRoute.Stations.Length;
+							for (int j = Program.CurrentRoute.Stations.Length - 1; j >= 0; j--)
+							{
+								if (Program.CurrentRoute.Stations[j].Type == StationType.Terminal)
+								{
+									idx = j;
+									break;
+								}
+							}
+							Function.Stack[s] = idx;
 							s++; break;
 					case Instructions.RouteLimit:
 						if (Train == null)
