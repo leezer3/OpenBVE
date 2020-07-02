@@ -84,41 +84,6 @@ namespace OpenBve
 			GL.ClearColor(red / 255.0f, green / 255.0f, blue / 255.0f, 1.0f);
 		}
 
-		internal void CreateObject(UnifiedObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition)
-		{
-			if (Prototype != null)
-			{
-				CreateObject(Prototype, Position, BaseTransformation, AuxTransformation, -1, AccurateObjectDisposal, StartingDistance, EndingDistance, BlockLength, TrackPosition, 1.0, false);
-			}
-		}
-
-		internal void CreateObject(UnifiedObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials)
-		{
-			if (Prototype is StaticObject)
-			{
-				StaticObject s = (StaticObject)Prototype;
-				CreateStaticObject(s, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, 0.0, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
-			}
-			else if (Prototype is AnimatedObjectCollection)
-			{
-				AnimatedObjectCollection a = (AnimatedObjectCollection)Prototype;
-				a.CreateObject(Position, BaseTransformation, AuxTransformation, SectionIndex, AccurateObjectDisposal, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness, DuplicateMaterials);
-			}
-		}
-
-		internal int CreateStaticObject(UnifiedObject Prototype, Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double AccurateObjectDisposalZOffset, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness)
-		{
-			StaticObject obj = Prototype as StaticObject;
-
-			if (obj == null)
-			{
-				Interface.AddMessage(MessageType.Error, false, "Attempted to use an animated object where only static objects are allowed.");
-				return -1;
-			}
-
-			return base.CreateStaticObject(obj, Position, BaseTransformation, AuxTransformation, AccurateObjectDisposal, AccurateObjectDisposalZOffset, StartingDistance, EndingDistance, BlockLength, TrackPosition, Brightness);
-		}
-
 		private VertexArrayObject RegisterBox(Color128 Color)
 		{
 			LibRenderVertex[] vertexData = new LibRenderVertex[8];

@@ -27,7 +27,7 @@ namespace CsvRwRouteParser
 				// post
 				double dx = Position.X;
 				wpos += dx * RailTransformation.X + dz * RailTransformation.Z;
-				CompatibilityObjects.SignalPost.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, AccurateObjectDisposal, StartingDistance, EndingDistance, BlockInterval, TrackPosition, Brightness, false);
+				CompatibilityObjects.SignalPost.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, AccurateObjectDisposal, StartingDistance, EndingDistance, BlockInterval, TrackPosition, Brightness);
 			}
 			if (ShowObject)
 			{

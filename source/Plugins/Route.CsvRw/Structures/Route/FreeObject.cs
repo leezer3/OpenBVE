@@ -37,7 +37,7 @@ namespace CsvRwRouteParser
 			FreeObjects.TryGetValue(Type, out obj);
 			if (obj != null)
 			{
-				obj.CreateObject(WorldPosition, RailTransformation, new Transformation(Yaw, Pitch, Roll), -1, AccurateObjectDisposal, StartingDistance, EndingDistance, BlockInterval, TrackPosition, 1.0, false);
+				obj.CreateObject(WorldPosition, RailTransformation, new Transformation(Yaw, Pitch, Roll), -1, AccurateObjectDisposal, StartingDistance, EndingDistance, BlockInterval, TrackPosition, 1.0);
 			}
 		}
 

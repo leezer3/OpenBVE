@@ -17,7 +17,7 @@ namespace OpenBveApi.Objects
 		/// <param name="TrackPosition">The absolute track position at which this object is placed</param>
 		public void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition)
 		{
-			CreateObject(Position, BaseTransformation, AuxTransformation, -1, AccurateObjectDisposal, StartingDistance, EndingDistance, BlockLength, TrackPosition, 1.0, false);
+			CreateObject(Position, BaseTransformation, AuxTransformation, -1, AccurateObjectDisposal, StartingDistance, EndingDistance, BlockLength, TrackPosition, 1.0);
 		}
 
 		/// <summary>Creates the object within the world</summary>
@@ -32,7 +32,7 @@ namespace OpenBveApi.Objects
 		/// <param name="TrackPosition">The absolute track position at which this object is placed</param>
 		/// <param name="Brightness">The brightness value of this object</param>
 		/// <param name="DuplicateMaterials">Whether the materials are to be duplicated (Not set when creating BVE4 signals)</param>
-		public abstract void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials);
+		public abstract void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength, double TrackPosition, double Brightness, bool DuplicateMaterials = false);
 
 		/// <summary>Call this method to optimize the object</summary>
 		/// <param name="PreserveVerticies">Whether duplicate verticies are to be preserved (Takes less time)</param>

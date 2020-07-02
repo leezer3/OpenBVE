@@ -25,7 +25,7 @@ namespace OpenBveApi.Objects
 			/// <inheritdoc/>
 			public override void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation,
 				int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockLength,
-				double TrackPosition, double Brightness, bool DuplicateMaterials)
+				double TrackPosition, double Brightness, bool DuplicateMaterials = false)
 			{
 				bool[] free = new bool[Objects.Length];
 				bool anyfree = false;
