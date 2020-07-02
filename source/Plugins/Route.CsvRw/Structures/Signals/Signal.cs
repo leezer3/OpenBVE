@@ -19,7 +19,7 @@ namespace CsvRwRouteParser
 			ShowPost = showPost;
 		}
 
-		internal void Create(Vector3 wpos, Transformation RailTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double BlockInterval, double Brightness)
+		internal void Create(Vector3 wpos, Transformation RailTransformation, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance, double Brightness)
 		{
 			double dz = TrackPosition - StartingDistance;
 			if (ShowPost)
@@ -27,7 +27,7 @@ namespace CsvRwRouteParser
 				// post
 				double dx = Position.X;
 				wpos += dx * RailTransformation.X + dz * RailTransformation.Z;
-				CompatibilityObjects.SignalPost.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, AccurateObjectDisposal, StartingDistance, EndingDistance, BlockInterval, TrackPosition, Brightness);
+				CompatibilityObjects.SignalPost.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, AccurateObjectDisposal, StartingDistance, EndingDistance, TrackPosition, Brightness);
 			}
 			if (ShowObject)
 			{
@@ -35,7 +35,7 @@ namespace CsvRwRouteParser
 				double dx = Position.X;
 				double dy = Position.Y;
 				wpos += dx * RailTransformation.X + dy * RailTransformation.Y + dz * RailTransformation.Z;
-				SignalObject.Create(wpos, RailTransformation, new Transformation(Yaw, Pitch, Roll), SectionIndex, AccurateObjectDisposal, StartingDistance, EndingDistance, BlockInterval, TrackPosition, Brightness);
+				SignalObject.Create(wpos, RailTransformation, new Transformation(Yaw, Pitch, Roll), SectionIndex, AccurateObjectDisposal, StartingDistance, EndingDistance, TrackPosition, Brightness);
 			}
 		}
 

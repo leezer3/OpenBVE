@@ -30,7 +30,7 @@ namespace RouteManager2.SignalManager
 			this.currentHost = Host;
 		}
 
-		public override void Create(Vector3 wpos, Transformation railTransformation, Transformation auxTransformation, int sectionIndex, bool accurateObjectDisposal, double startingDistance, double endingDistance, double blockInterval, double trackPosition, double brightness)
+		public override void Create(Vector3 wpos, Transformation railTransformation, Transformation auxTransformation, int sectionIndex, bool accurateObjectDisposal, double startingDistance, double endingDistance, double trackPosition, double brightness)
 		{
 			if (AspectNumbers.Length != 0)
 			{
@@ -59,7 +59,7 @@ namespace RouteManager2.SignalManager
 				}
 				aoc.Objects[0].StateFunction = new FunctionScript(currentHost, expr, false);
 				aoc.Objects[0].RefreshRate = 1.0 + 0.01 * new Random().NextDouble();
-				aoc.CreateObject(wpos, railTransformation, auxTransformation, sectionIndex, accurateObjectDisposal, startingDistance, endingDistance, blockInterval, trackPosition, brightness);
+				aoc.CreateObject(wpos, railTransformation, auxTransformation, sectionIndex, accurateObjectDisposal, startingDistance, endingDistance, trackPosition, brightness);
 			}
 		}
 

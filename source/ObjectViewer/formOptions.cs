@@ -108,7 +108,7 @@ namespace OpenBve
                         UnifiedObject o;
                         Program.CurrentHost.LoadObject(Program.Files[i], System.Text.Encoding.UTF8, out o);
                         o.CreateObject(Vector3.Zero,
-                            new Transformation(), new Transformation(), true, 0.0, 0.0, 25.0, 0.0);
+                            new Transformation(), new Transformation(), true, 0.0, 0.0, 0.0);
 #if !DEBUG
 									} catch (Exception ex) {
 										Interface.AddMessage(MessageType.Critical, false, "Unhandled error (" + ex.Message + ") encountered while processing the file " + Program.Files[i] + ".");

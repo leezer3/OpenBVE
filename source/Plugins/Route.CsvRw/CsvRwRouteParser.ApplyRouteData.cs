@@ -566,7 +566,7 @@ namespace CsvRwRouteParser
 					int gi = Data.Blocks[i].Cycle[ci];
 					if (gi >= 0 & Data.Structure.Ground.ContainsKey(gi))
 					{
-						Data.Structure.Ground[Data.Blocks[i].Cycle[ci]].CreateObject(Position + new Vector3(0.0, -Data.Blocks[i].Height, 0.0), GroundTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+						Data.Structure.Ground[Data.Blocks[i].Cycle[ci]].CreateObject(Position + new Vector3(0.0, -Data.Blocks[i].Height, 0.0), GroundTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, StartingDistance);
 					}
 				}
 				// ground-aligned free objects
@@ -574,7 +574,7 @@ namespace CsvRwRouteParser
 				{
 					for (int j = 0; j < Data.Blocks[i].GroundFreeObj.Length; j++)
 					{
-						Data.Blocks[i].GroundFreeObj[j].CreateGroundAligned(Data.Structure.FreeObjects, Position, GroundTransformation, Direction, Data.Blocks[i].Height, StartingDistance, EndingDistance, Data.BlockInterval, Data.AccurateObjectDisposal);
+						Data.Blocks[i].GroundFreeObj[j].CreateGroundAligned(Data.Structure.FreeObjects, Position, GroundTransformation, Direction, Data.Blocks[i].Height, StartingDistance, EndingDistance, Data.AccurateObjectDisposal);
 					}
 				}
 				// rail-aligned objects
@@ -700,7 +700,7 @@ namespace CsvRwRouteParser
 						{
 							if (Data.Structure.RailObjects[Data.Blocks[i].RailType[j]] != null)
 							{
-								Data.Structure.RailObjects[Data.Blocks[i].RailType[j]].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+								Data.Structure.RailObjects[Data.Blocks[i].RailType[j]].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, StartingDistance);
 							}
 						}
 						// points of interest
@@ -737,18 +737,18 @@ namespace CsvRwRouteParser
 						// poles
 						if (Data.Blocks[i].RailPole.Length > j && Data.Blocks[i].RailPole[j].Exists)
 						{
-							Data.Blocks[i].RailPole[j].Create(Data.Structure.Poles, pos, RailTransformation, Direction, planar, updown, StartingDistance, EndingDistance, Data.BlockInterval, Data.AccurateObjectDisposal);
+							Data.Blocks[i].RailPole[j].Create(Data.Structure.Poles, pos, RailTransformation, Direction, planar, updown, StartingDistance, EndingDistance, Data.AccurateObjectDisposal);
 						}
 						// walls
 						if (Data.Blocks[i].RailWall.Length > j && Data.Blocks[i].RailWall[j] != null && Data.Blocks[i].RailWall[j].Exists)
 						{
 							if (Data.Blocks[i].RailWall[j].Direction <= 0)
 							{
-								Data.Structure.WallL[Data.Blocks[i].RailWall[j].Type].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+								Data.Structure.WallL[Data.Blocks[i].RailWall[j].Type].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, StartingDistance);
 							}
 							if (Data.Blocks[i].RailWall[j].Direction >= 0)
 							{
-								Data.Structure.WallR[Data.Blocks[i].RailWall[j].Type].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+								Data.Structure.WallR[Data.Blocks[i].RailWall[j].Type].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, StartingDistance);
 							}
 						}
 						// dikes
@@ -756,11 +756,11 @@ namespace CsvRwRouteParser
 						{
 							if (Data.Blocks[i].RailDike[j].Direction <= 0)
 							{
-								Data.Structure.DikeL[Data.Blocks[i].RailDike[j].Type].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+								Data.Structure.DikeL[Data.Blocks[i].RailDike[j].Type].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, StartingDistance);
 							}
 							if (Data.Blocks[i].RailDike[j].Direction >= 0)
 							{
-								Data.Structure.DikeR[Data.Blocks[i].RailDike[j].Type].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+								Data.Structure.DikeR[Data.Blocks[i].RailDike[j].Type].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, StartingDistance);
 							}
 						}
 						// sounds
@@ -785,7 +785,7 @@ namespace CsvRwRouteParser
 									}
 									else
 									{
-										Data.Structure.FormL[Data.Blocks[i].Forms[k].FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+										Data.Structure.FormL[Data.Blocks[i].Forms[k].FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, StartingDistance);
 										if (Data.Blocks[i].Forms[k].RoofType > 0)
 										{
 											if (!Data.Structure.RoofL.ContainsKey(Data.Blocks[i].Forms[k].RoofType))
@@ -794,7 +794,7 @@ namespace CsvRwRouteParser
 											}
 											else
 											{
-												Data.Structure.RoofL[Data.Blocks[i].Forms[k].RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+												Data.Structure.RoofL[Data.Blocks[i].Forms[k].RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, StartingDistance);
 											}
 										}
 									}
@@ -807,7 +807,7 @@ namespace CsvRwRouteParser
 									}
 									else
 									{
-										Data.Structure.FormL[Data.Blocks[i].Forms[k].FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+										Data.Structure.FormL[Data.Blocks[i].Forms[k].FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, StartingDistance);
 									}
 									if (!Data.Structure.FormCL.ContainsKey(Data.Blocks[i].Forms[k].FormType))
 									{
@@ -825,7 +825,7 @@ namespace CsvRwRouteParser
 										}
 										else
 										{
-											Data.Structure.RoofL[Data.Blocks[i].Forms[k].RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+											Data.Structure.RoofL[Data.Blocks[i].Forms[k].RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, StartingDistance);
 										}
 										if (!Data.Structure.RoofCL.ContainsKey(Data.Blocks[i].Forms[k].RoofType))
 										{
@@ -845,7 +845,7 @@ namespace CsvRwRouteParser
 									}
 									else
 									{
-										Data.Structure.FormR[Data.Blocks[i].Forms[k].FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+										Data.Structure.FormR[Data.Blocks[i].Forms[k].FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, StartingDistance);
 									}
 									if (!Data.Structure.FormCR.ContainsKey(Data.Blocks[i].Forms[k].FormType))
 									{
@@ -863,7 +863,7 @@ namespace CsvRwRouteParser
 										}
 										else
 										{
-											Data.Structure.RoofR[Data.Blocks[i].Forms[k].RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+											Data.Structure.RoofR[Data.Blocks[i].Forms[k].RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, StartingDistance);
 										}
 										if (!Data.Structure.RoofCR.ContainsKey(Data.Blocks[i].Forms[k].RoofType))
 										{
@@ -899,7 +899,7 @@ namespace CsvRwRouteParser
 											}
 											else
 											{
-												Data.Structure.FormL[Data.Blocks[i].Forms[k].FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+												Data.Structure.FormL[Data.Blocks[i].Forms[k].FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, StartingDistance);
 											}
 											if (!Data.Structure.FormCL.ContainsKey(Data.Blocks[i].Forms[k].FormType))
 											{
@@ -918,7 +918,7 @@ namespace CsvRwRouteParser
 												}
 												else
 												{
-													Data.Structure.RoofL[Data.Blocks[i].Forms[k].RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+													Data.Structure.RoofL[Data.Blocks[i].Forms[k].RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, StartingDistance);
 												}
 												if (!Data.Structure.RoofCL.ContainsKey(Data.Blocks[i].Forms[k].RoofType))
 												{
@@ -939,7 +939,7 @@ namespace CsvRwRouteParser
 											}
 											else
 											{
-												Data.Structure.FormR[Data.Blocks[i].Forms[k].FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+												Data.Structure.FormR[Data.Blocks[i].Forms[k].FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, StartingDistance);
 											}
 											if (!Data.Structure.FormCR.ContainsKey(Data.Blocks[i].Forms[k].FormType))
 											{
@@ -958,7 +958,7 @@ namespace CsvRwRouteParser
 												}
 												else
 												{
-													Data.Structure.RoofR[Data.Blocks[i].Forms[k].RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+													Data.Structure.RoofR[Data.Blocks[i].Forms[k].RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, StartingDistance);
 												}
 												if (!Data.Structure.RoofCR.ContainsKey(Data.Blocks[i].Forms[k].RoofType))
 												{
@@ -990,7 +990,7 @@ namespace CsvRwRouteParser
 									}
 									else
 									{
-										Data.Structure.FormL[Data.Blocks[i].Forms[k].FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+										Data.Structure.FormL[Data.Blocks[i].Forms[k].FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, StartingDistance);
 									}
 									if (Data.Blocks[i].Forms[k].RoofType > 0)
 									{
@@ -1000,7 +1000,7 @@ namespace CsvRwRouteParser
 										}
 										else
 										{
-											Data.Structure.RoofL[Data.Blocks[i].Forms[k].RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+											Data.Structure.RoofL[Data.Blocks[i].Forms[k].RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, StartingDistance);
 										}
 									}
 								}
@@ -1012,7 +1012,7 @@ namespace CsvRwRouteParser
 									}
 									else
 									{
-										Data.Structure.FormR[Data.Blocks[i].Forms[k].FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+										Data.Structure.FormR[Data.Blocks[i].Forms[k].FormType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, StartingDistance);
 									}
 									if (Data.Blocks[i].Forms[k].RoofType > 0)
 									{
@@ -1022,7 +1022,7 @@ namespace CsvRwRouteParser
 										}
 										else
 										{
-											Data.Structure.RoofR[Data.Blocks[i].Forms[k].RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, StartingDistance);
+											Data.Structure.RoofR[Data.Blocks[i].Forms[k].RoofType].CreateObject(pos, RailTransformation, Transformation.NullTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, StartingDistance);
 										}
 									}
 								}
@@ -1038,7 +1038,7 @@ namespace CsvRwRouteParser
 						{
 							for (int k = 0; k < Data.Blocks[i].RailFreeObj[j].Length; k++)
 							{
-								Data.Blocks[i].RailFreeObj[j][k].CreateRailAligned(Data.Structure.FreeObjects, new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, Data.BlockInterval, Data.AccurateObjectDisposal);
+								Data.Blocks[i].RailFreeObj[j][k].CreateRailAligned(Data.Structure.FreeObjects, new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, Data.AccurateObjectDisposal);
 							}
 						}
 						// transponder objects
@@ -1077,11 +1077,11 @@ namespace CsvRwRouteParser
 									if (Data.Blocks[i].Transponders[k].BeaconStructureIndex == -2)
 									{
 										double b = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
-										obj.CreateObject(wpos, RailTransformation, new Transformation(Data.Blocks[i].Transponders[k].Yaw, Data.Blocks[i].Transponders[k].Pitch, Data.Blocks[i].Transponders[k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+										obj.CreateObject(wpos, RailTransformation, new Transformation(Data.Blocks[i].Transponders[k].Yaw, Data.Blocks[i].Transponders[k].Pitch, Data.Blocks[i].Transponders[k].Roll), -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, tpos, b);
 									}
 									else
 									{
-										obj.CreateObject(wpos, RailTransformation, new Transformation(Data.Blocks[i].Transponders[k].Yaw, Data.Blocks[i].Transponders[k].Pitch, Data.Blocks[i].Transponders[k].Roll), Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos);
+										obj.CreateObject(wpos, RailTransformation, new Transformation(Data.Blocks[i].Transponders[k].Yaw, Data.Blocks[i].Transponders[k].Pitch, Data.Blocks[i].Transponders[k].Roll), Data.AccurateObjectDisposal, StartingDistance, EndingDistance, tpos);
 									}
 								}
 							}
@@ -1101,7 +1101,7 @@ namespace CsvRwRouteParser
 									Vector3 wpos = pos;
 									wpos += dx * RailTransformation.X + dy * RailTransformation.Y + dz * RailTransformation.Z;
 									double tpos = Data.Blocks[i].DestinationChanges[k].TrackPosition;
-									obj.CreateObject(wpos, RailTransformation, new Transformation(Data.Blocks[i].DestinationChanges[k].Yaw, Data.Blocks[i].DestinationChanges[k].Pitch, Data.Blocks[i].DestinationChanges[k].Roll), Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos);
+									obj.CreateObject(wpos, RailTransformation, new Transformation(Data.Blocks[i].DestinationChanges[k].Yaw, Data.Blocks[i].DestinationChanges[k].Pitch, Data.Blocks[i].DestinationChanges[k].Roll), Data.AccurateObjectDisposal, StartingDistance, EndingDistance, tpos);
 								}
 							}
 						}
@@ -1111,7 +1111,7 @@ namespace CsvRwRouteParser
 							// signals
 							for (int k = 0; k < Data.Blocks[i].Signals.Length; k++)
 							{
-								Data.Blocks[i].Signals[k].Create(new Vector3(pos), RailTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, 0.27 + 0.75 * GetBrightness(ref Data, Data.Blocks[i].Signals[k].TrackPosition));
+								Data.Blocks[i].Signals[k].Create(new Vector3(pos), RailTransformation, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, 0.27 + 0.75 * GetBrightness(ref Data, Data.Blocks[i].Signals[k].TrackPosition));
 							}
 							// sections
 							for (int k = 0; k < Data.Blocks[i].Sections.Length; k++)
@@ -1150,21 +1150,21 @@ namespace CsvRwRouteParser
 									double b = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
 									if (Data.Blocks[i].Limits[k].Speed <= 0.0 | Data.Blocks[i].Limits[k].Speed >= 1000.0)
 									{
-										CompatibilityObjects.LimitPostInfinite.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+										CompatibilityObjects.LimitPostInfinite.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, tpos, b);
 									}
 									else
 									{
 										if (Data.Blocks[i].Limits[k].Cource < 0)
 										{
-											CompatibilityObjects.LimitPostLeft.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+											CompatibilityObjects.LimitPostLeft.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, tpos, b);
 										}
 										else if (Data.Blocks[i].Limits[k].Cource > 0)
 										{
-											CompatibilityObjects.LimitPostRight.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+											CompatibilityObjects.LimitPostRight.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, tpos, b);
 										}
 										else
 										{
-											CompatibilityObjects.LimitPostStraight.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+											CompatibilityObjects.LimitPostStraight.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, tpos, b);
 										}
 										double lim = Data.Blocks[i].Limits[k].Speed / Data.UnitOfSpeed;
 										if (lim < 10.0)
@@ -1177,7 +1177,7 @@ namespace CsvRwRouteParser
 												{
 													Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out o.Mesh.Materials[0].DaytimeTexture);
 												}
-												o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+												o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, tpos, b);
 											}
 											else
 											{
@@ -1201,7 +1201,7 @@ namespace CsvRwRouteParser
 												{
 													Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out o.Mesh.Materials[1].DaytimeTexture);
 												}
-												o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+												o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, tpos, b);
 											}
 											else
 											{
@@ -1229,7 +1229,7 @@ namespace CsvRwRouteParser
 												{
 													Plugin.CurrentHost.RegisterTexture(OpenBveApi.Path.CombineFile(LimitGraphicsPath, "limit_" + d0 + ".png"), new TextureParameters(null, null), out o.Mesh.Materials[2].DaytimeTexture);
 												}
-												o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+												o.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, tpos, b);
 											}
 											else
 											{
@@ -1253,7 +1253,7 @@ namespace CsvRwRouteParser
 									wpos += dx * RailTransformation.X + dz * RailTransformation.Z;
 									double tpos = Data.Blocks[i].StopPositions[k].TrackPosition;
 									double b = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
-									CompatibilityObjects.StopPost.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, Data.BlockInterval, tpos, b);
+									CompatibilityObjects.StopPost.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, Data.AccurateObjectDisposal, StartingDistance, EndingDistance, tpos, b);
 								}
 							}
 						}

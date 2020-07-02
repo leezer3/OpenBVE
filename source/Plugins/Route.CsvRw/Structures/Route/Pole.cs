@@ -18,7 +18,7 @@ namespace CsvRwRouteParser
 		/// <summary>The structure type</summary>
 		internal int Type;
 
-		internal void Create(PoleDictionary Poles, Vector3 WorldPosition, Transformation RailTransformation, Vector2 Direction, double planar, double updown, double StartingDistance, double EndingDistance, double BlockInterval, bool AccurateObjectDisposal)
+		internal void Create(PoleDictionary Poles, Vector3 WorldPosition, Transformation RailTransformation, Vector2 Direction, double planar, double updown, double StartingDistance, double EndingDistance, bool AccurateObjectDisposal)
 		{
 			double dz = StartingDistance / Interval;
 			dz -= Math.Floor(dz + 0.5);
@@ -28,12 +28,12 @@ namespace CsvRwRouteParser
 				{
 					if (Location <= 0.0)
 					{
-						Poles[0][Type].CreateObject(WorldPosition, RailTransformation, Transformation.NullTransformation, AccurateObjectDisposal, StartingDistance, EndingDistance, BlockInterval, StartingDistance);
+						Poles[0][Type].CreateObject(WorldPosition, RailTransformation, Transformation.NullTransformation, AccurateObjectDisposal, StartingDistance, EndingDistance, StartingDistance);
 					}
 					else
 					{
 						UnifiedObject Pole = Poles[0][Type].Mirror();
-						Pole.CreateObject(WorldPosition, RailTransformation, Transformation.NullTransformation, AccurateObjectDisposal, StartingDistance, EndingDistance, BlockInterval, StartingDistance);
+						Pole.CreateObject(WorldPosition, RailTransformation, Transformation.NullTransformation, AccurateObjectDisposal, StartingDistance, EndingDistance, StartingDistance);
 					}
 				}
 				else
@@ -48,7 +48,7 @@ namespace CsvRwRouteParser
 					double sz = -Direction.X;
 					Vector3 wpos = WorldPosition + new Vector3(sx * dx + w.X * dz, sy * dx + w.Y * dz, sz * dx + w.Z * dz);
 					int type = Type;
-					Poles[m][type].CreateObject(wpos, RailTransformation, Transformation.NullTransformation, AccurateObjectDisposal, StartingDistance, EndingDistance, BlockInterval, StartingDistance);
+					Poles[m][type].CreateObject(wpos, RailTransformation, Transformation.NullTransformation, AccurateObjectDisposal, StartingDistance, EndingDistance, StartingDistance);
 				}
 			}
 		}
