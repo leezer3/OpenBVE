@@ -29,7 +29,7 @@ namespace CsvRwRouteParser
 			Roll = roll;
 		}
 
-		internal void CreateRailAligned(ObjectDictionary FreeObjects, Vector3 WorldPosition, Transformation RailTransformation, double StartingDistance, double EndingDistance, bool AccurateObjectDisposal)
+		internal void CreateRailAligned(ObjectDictionary FreeObjects, Vector3 WorldPosition, Transformation RailTransformation, double StartingDistance, double EndingDistance)
 		{
 			double dz = TrackPosition - StartingDistance;
 			WorldPosition += Position.X * RailTransformation.X + Position.Y * RailTransformation.Y + dz * RailTransformation.Z;
@@ -37,7 +37,7 @@ namespace CsvRwRouteParser
 			FreeObjects.TryGetValue(Type, out obj);
 			if (obj != null)
 			{
-				obj.CreateObject(WorldPosition, RailTransformation, new Transformation(Yaw, Pitch, Roll), -1, AccurateObjectDisposal, StartingDistance, EndingDistance, TrackPosition, 1.0);
+				obj.CreateObject(WorldPosition, RailTransformation, new Transformation(Yaw, Pitch, Roll), -1, StartingDistance, EndingDistance, TrackPosition, 1.0);
 			}
 		}
 
@@ -49,7 +49,7 @@ namespace CsvRwRouteParser
 			FreeObjects.TryGetValue(Type, out obj);
 			if (obj != null)
 			{
-				obj.CreateObject(wpos, GroundTransformation, new Transformation(Yaw, Pitch, Roll), AccurateObjectDisposal, StartingDistance, EndingDistance, TrackPosition);
+				obj.CreateObject(wpos, GroundTransformation, new Transformation(Yaw, Pitch, Roll), StartingDistance, EndingDistance, TrackPosition);
 			}
 			
 		}

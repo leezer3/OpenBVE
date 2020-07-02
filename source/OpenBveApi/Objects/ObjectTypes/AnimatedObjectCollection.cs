@@ -24,7 +24,7 @@ namespace OpenBveApi.Objects
 
 			/// <inheritdoc/>
 			public override void CreateObject(Vector3 Position, Transformation BaseTransformation, Transformation AuxTransformation,
-				int SectionIndex, bool AccurateObjectDisposal, double StartingDistance, double EndingDistance,
+				int SectionIndex, double StartingDistance, double EndingDistance,
 				double TrackPosition, double Brightness, bool DuplicateMaterials = false)
 			{
 				bool[] free = new bool[Objects.Length];
@@ -67,7 +67,7 @@ namespace OpenBveApi.Objects
 								mat *= (Matrix4D)new Transformation(FinalTransformation.Z, FinalTransformation.Y, FinalTransformation.X);
 								double zOffset = Objects[i].States[0].Translation.ExtractTranslation().Z * -1.0; //To calculate the Z-offset within the object, we want the untransformed co-ordinates, not the world co-ordinates
 								
-								currentHost.CreateStaticObject(Objects[i].States[0].Prototype, AuxTransformation, mat, Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z), AccurateObjectDisposal, zOffset, StartingDistance, EndingDistance, TrackPosition, Brightness);
+								currentHost.CreateStaticObject(Objects[i].States[0].Prototype, AuxTransformation, mat, Matrix4D.CreateTranslation(Position.X, Position.Y, -Position.Z), zOffset, StartingDistance, EndingDistance, TrackPosition, Brightness);
 							}
 							else
 							{

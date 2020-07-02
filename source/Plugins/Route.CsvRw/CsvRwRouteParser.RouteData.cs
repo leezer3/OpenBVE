@@ -16,9 +16,7 @@ namespace CsvRwRouteParser
 			/// This value is used to convert between the speed set by Options.UnitsOfSpeed and m/s
 			/// </summary>
 			internal double UnitOfSpeed;
-			/// <summary>If this bool is set to FALSE, then objects will disappear when the block in which their command is placed is exited via by the camera
-			/// Certain BVE2/4 era routes used this as an animation trick
-			/// </summary>
+			
 			internal bool AccurateObjectDisposal;
 			internal bool SignedCant;
 			internal bool FogTransitionMode;

@@ -199,8 +199,7 @@ namespace OpenBve {
 					double z = 0.0;
 					for (int j = 0; j < carObjects.Length; j++)
 					{
-						carObjects[j].CreateObject(new Vector3(0.0, 0.0, z),
-						                           new Transformation(), new Transformation(), true, 0.0, 0.0, 0.0);
+						carObjects[j].CreateObject(new Vector3(0.0, 0.0, z), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
 						if (j < train.Cars.Length - 1)
 						{
 							z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2.0;
@@ -215,15 +214,13 @@ namespace OpenBve {
 						{
 							continue;
 						}
-						bogieObjects[j].CreateObject(new Vector3(0.0, 0.0, z + axleLocations[j]),
-							new Transformation(), new Transformation(), true, 0.0, 0.0, 0.0);
+						bogieObjects[j].CreateObject(new Vector3(0.0, 0.0, z + axleLocations[j]), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
 						j++;
 						if (bogieObjects[j] == null)
 						{
 							continue;
 						}
-						bogieObjects[j].CreateObject(new Vector3(0.0, 0.0, z + axleLocations[j]),
-							new Transformation(), new Transformation(), true, 0.0, 0.0, 0.0);
+						bogieObjects[j].CreateObject(new Vector3(0.0, 0.0, z + axleLocations[j]), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
 						if (trainCar < train.Cars.Length - 1)
 						{
 							z -= (train.Cars[trainCar].Length + train.Cars[trainCar + 1].Length) / 2.0;
@@ -240,8 +237,7 @@ namespace OpenBve {
 						{
 							continue;
 						}
-						couplerObjects[j].CreateObject(new Vector3(0.0, 0.0, z),
-							new Transformation(), new Transformation(), true, 0.0, 0.0, 0.0);
+						couplerObjects[j].CreateObject(new Vector3(0.0, 0.0, z), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
 
 						z -= couplerDistances[j] / 2.0;
 						z -= train.Cars[j + 1].Length / 2.0;
@@ -251,8 +247,7 @@ namespace OpenBve {
 				{
 					UnifiedObject o;
 					Program.CurrentHost.LoadObject(Files[i], System.Text.Encoding.UTF8, out o);
-					o.CreateObject(Vector3.Zero,
-					                           new Transformation(), new Transformation(), true, 0.0, 0.0, 0.0);
+					o.CreateObject(Vector3.Zero, new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
 				}
 #if !DEBUG
 				            }
@@ -355,8 +350,7 @@ namespace OpenBve {
 		                	double z = 0.0;
 		                    for (int j = 0; j < carObjects.Length; j++)
 		                	{
-			                    carObjects[j].CreateObject(new Vector3(0.0, 0.0, z),
-		                		                           new Transformation(), new Transformation(), true, 0.0, 0.0, 0.0);
+			                    carObjects[j].CreateObject(new Vector3(0.0, 0.0, z), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
 		                		if (j < train.Cars.Length - 1)
 		                		{
 		                			z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2.0;
@@ -371,15 +365,13 @@ namespace OpenBve {
 			                    {
 				                    continue;
 			                    }
-			                    bogieObjects[j].CreateObject(new Vector3(0.0, 0.0, z + axleLocations[j]),
-				                    new Transformation(), new Transformation(), true, 0.0, 0.0, 0.0);
+			                    bogieObjects[j].CreateObject(new Vector3(0.0, 0.0, z + axleLocations[j]), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
 			                    j++;
 			                    if (bogieObjects[j] == null)
 			                    {
 				                    continue;
 			                    }
-			                    bogieObjects[j].CreateObject(new Vector3(0.0, 0.0, z + axleLocations[j]),
-				                    new Transformation(), new Transformation(), true, 0.0, 0.0, 0.0);
+			                    bogieObjects[j].CreateObject(new Vector3(0.0, 0.0, z + axleLocations[j]), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
 			                    if (trainCar < train.Cars.Length - 1)
 			                    {
 				                    z -= (train.Cars[trainCar].Length + train.Cars[trainCar + 1].Length) / 2.0;
@@ -396,8 +388,7 @@ namespace OpenBve {
 			                    {
 				                    continue;
 			                    }
-			                    couplerObjects[j].CreateObject(new Vector3(0.0, 0.0, z),
-				                    new Transformation(), new Transformation(), true, 0.0, 0.0, 0.0);
+			                    couplerObjects[j].CreateObject(new Vector3(0.0, 0.0, z), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
 
 			                    z -= couplerDistances[j] / 2.0;
 			                    z -= train.Cars[j + 1].Length / 2.0;
@@ -407,8 +398,7 @@ namespace OpenBve {
 		                {
 		                	UnifiedObject o;
 			                Program.CurrentHost.LoadObject(Files[i], System.Text.Encoding.UTF8, out o);
-		                    o.CreateObject(Vector3.Zero,
-		                	                           new Transformation(), new Transformation(), true, 0.0, 0.0, 0.0);
+		                    o.CreateObject(Vector3.Zero, new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
 		                }
 #if !DEBUG
 									} catch (Exception ex) {
@@ -460,8 +450,7 @@ namespace OpenBve {
 					            double z = 0.0;
 					            for (int j = 0; j < carObjects.Length; j++)
 					            {
-						            carObjects[j].CreateObject(new Vector3(0.0, 0.0, z),
-							            new Transformation(), new Transformation(), true, 0.0, 0.0, 0.0);
+						            carObjects[j].CreateObject(new Vector3(0.0, 0.0, z), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
 						            if (j < train.Cars.Length - 1)
 						            {
 							            z -= (train.Cars[j].Length + train.Cars[j + 1].Length) / 2.0;
@@ -476,15 +465,13 @@ namespace OpenBve {
 						            {
 							            continue;
 						            }
-						            bogieObjects[j].CreateObject(new Vector3(0.0, 0.0, z + axleLocations[j]),
-							            new Transformation(), new Transformation(), true, 0.0, 0.0, 0.0);
+						            bogieObjects[j].CreateObject(new Vector3(0.0, 0.0, z + axleLocations[j]), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
 						            j++;
 						            if (bogieObjects[j] == null)
 						            {
 							            continue;
 						            }
-						            bogieObjects[j].CreateObject(new Vector3(0.0, 0.0, z + axleLocations[j]),
-							            new Transformation(), new Transformation(), true, 0.0, 0.0, 0.0);
+						            bogieObjects[j].CreateObject(new Vector3(0.0, 0.0, z + axleLocations[j]), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
 						            if (trainCar < train.Cars.Length - 1)
 						            {
 							            z -= (train.Cars[trainCar].Length + train.Cars[trainCar + 1].Length) / 2.0;
@@ -501,8 +488,7 @@ namespace OpenBve {
 						            {
 							            continue;
 						            }
-						            couplerObjects[j].CreateObject(new Vector3(0.0, 0.0, z),
-							            new Transformation(), new Transformation(), true, 0.0, 0.0, 0.0);
+						            couplerObjects[j].CreateObject(new Vector3(0.0, 0.0, z), new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
 
 						            z -= couplerDistances[j] / 2.0;
 						            z -= train.Cars[j + 1].Length / 2.0;
@@ -512,8 +498,7 @@ namespace OpenBve {
 				            {
 				            	UnifiedObject o;
 					            Program.CurrentHost.LoadObject(Files[i], System.Text.Encoding.UTF8, out o);
-				                o.CreateObject(Vector3.Zero,
-				            	                           new Transformation(), new Transformation(), true, 0.0, 0.0, 0.0);
+				                o.CreateObject(Vector3.Zero, new Transformation(), new Transformation(), 0.0, 0.0, 0.0);
 				            }
 #if !DEBUG
 				            }
