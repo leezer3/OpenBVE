@@ -891,6 +891,7 @@ namespace LibRender2
 			}
 
 			// lighting
+			Shader.SetMaterialFlags(material.Flags);
 			if (OptionLighting)
 			{
 				if (material.Color != lastColor)
@@ -900,7 +901,6 @@ namespace LibRender2
 					Shader.SetMaterialSpecular(material.Color);
 					//TODO: Ambient and specular colors are not set by any current parsers
 				}
-				Shader.SetMaterialFlags(material.Flags);
 				if ((material.Flags & MaterialFlags.Emissive) != 0)
 				{
 					Shader.SetMaterialEmission(material.EmissiveColor);

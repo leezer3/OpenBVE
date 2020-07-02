@@ -537,6 +537,11 @@ namespace OpenBve.Graphics
                  */
 				ResetOpenGlState();
 				OptionLighting = false;
+				if (AvailableNewRenderer)
+				{
+					DefaultShader.SetIsLight(false);
+				}
+				
 				SetBlendFunc();
 				UnsetAlphaFunc();
 				GL.Disable(EnableCap.DepthTest);
