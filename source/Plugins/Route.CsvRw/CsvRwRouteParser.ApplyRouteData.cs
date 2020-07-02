@@ -1383,6 +1383,12 @@ namespace CsvRwRouteParser
 				switch (CurrentRoute.Stations[i].Type)
 				{
 					case StationType.ChangeEnds:
+						if (i == 0)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Station " + CurrentRoute.Stations[i].Name + " is marked as \"change ends\" but is the first station in file " + FileName);
+							CurrentRoute.Stations[i].Type = StationType.Normal;
+							break;
+						}
 						if (i < CurrentRoute.Stations.Length - 1)
 						{
 							if (CurrentRoute.Stations[i + 1].StopMode != StationStopMode.AllStop)
@@ -1398,6 +1404,12 @@ namespace CsvRwRouteParser
 						}
 						break;
 					case StationType.Jump:
+						if (i == 0)
+						{
+							Plugin.CurrentHost.AddMessage(MessageType.Warning, false, "Station " + CurrentRoute.Stations[i].Name + " is marked as a \"jump trigger\" but is the first station in file " + FileName);
+							CurrentRoute.Stations[i].Type = StationType.Normal;
+							break;
+						}
 						if (CurrentRoute.Stations[i].JumpIndex < CurrentRoute.Stations.Length)
 						{
 							if (CurrentRoute.Stations[CurrentRoute.Stations[i].JumpIndex].StopMode != StationStopMode.AllStop)
