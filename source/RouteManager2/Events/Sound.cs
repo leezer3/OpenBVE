@@ -47,6 +47,26 @@ namespace RouteManager2.Events
 				this.currentHost = Host;
 			}
 
+			/// <param name="TrackPositionDelta">The delta position of the sound within a track block.</param>
+			/// <param name="SoundBuffer">The sound buffer to play.</param>
+			/// <param name="PlayerTrainOnly">Defines whether this sound is played for the player's train only, or for player and AI trains</param>
+			/// <param name="Once">Defines whether this sound repeats looped, or plays once</param>
+			/// <param name="Dynamic">Whether this sound is dynamic (Attached to a train)</param>
+			/// <param name="Position">The position of the sound relative to it's track location</param>
+			/// <param name="Host">The </param>
+			public SoundEvent(double TrackPositionDelta, SoundHandle SoundBuffer, bool PlayerTrainOnly, bool Once, bool Dynamic, Vector3 Position, HostInterface Host)
+			{
+				this.TrackPositionDelta = TrackPositionDelta;
+				this.DontTriggerAnymore = false;
+				this.SoundBuffer = (SoundBuffer)SoundBuffer;
+				this.PlayerTrainOnly = PlayerTrainOnly;
+				this.Once = Once;
+				this.Dynamic = Dynamic;
+				this.Position = Position;
+				this.Speed = 0.0;
+				this.currentHost = Host;
+			}
+
 			/// <summary>Triggers the playback of a sound</summary>
 			/// <param name="Direction">The direction of travel- 1 for forwards, and -1 for backwards</param>
 			/// <param name="TriggerType">They type of event which triggered this sound</param>
