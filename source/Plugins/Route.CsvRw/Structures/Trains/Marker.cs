@@ -1,4 +1,7 @@
-﻿using RouteManager2.MessageManager;
+﻿using System;
+using OpenBveApi.Routes;
+using RouteManager2.Events;
+using RouteManager2.MessageManager;
 
 namespace CsvRwRouteParser
 {
@@ -17,6 +20,30 @@ namespace CsvRwRouteParser
 			StartingPosition = startingPosition;
 			EndingPosition = endingPosition;
 			Message = message;
+		}
+
+		internal void CreateEvent(double StartingDistance, double EndingDistance, ref TrackElement Element)
+		{
+			if (StartingPosition >= StartingDistance & StartingPosition < EndingDistance)
+			{
+				int m = Element.Events.Length;
+				Array.Resize(ref Element.Events, m + 1);
+				double d = StartingPosition - StartingDistance;
+				if (Message != null)
+				{
+					Element.Events[m] = new MarkerStartEvent(d, Message, Plugin.CurrentHost);
+				}
+			}
+			if (EndingPosition >= StartingDistance & EndingPosition < EndingDistance)
+			{
+				int m = Element.Events.Length;
+				Array.Resize(ref Element.Events, m + 1);
+				double d = EndingPosition - StartingDistance;
+				if (Message != null)
+				{
+					Element.Events[m] = new MarkerEndEvent(d, Message, Plugin.CurrentHost);
+				}
+			}
 		}
 	}
 }

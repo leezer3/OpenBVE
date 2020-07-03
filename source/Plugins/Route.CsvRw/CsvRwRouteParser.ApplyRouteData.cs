@@ -433,11 +433,7 @@ namespace CsvRwRouteParser
 				{
 					for (int j = 0; j < Data.Blocks[i].Limits.Length; j++)
 					{
-						int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-						Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-						double d = Data.Blocks[i].Limits[j].TrackPosition - StartingDistance;
-						CurrentRoute.Tracks[0].Elements[n].Events[m] = new LimitChangeEvent(d, CurrentSpeedLimit, Data.Blocks[i].Limits[j].Speed);
-						CurrentSpeedLimit = Data.Blocks[i].Limits[j].Speed;
+						Data.Blocks[i].Limits[j].CreateEvent(StartingDistance, ref CurrentSpeedLimit, ref CurrentRoute.Tracks[0].Elements[n]);
 					}
 				}
 				// marker
@@ -445,26 +441,7 @@ namespace CsvRwRouteParser
 				{
 					for (int j = 0; j < Data.Markers.Length; j++)
 					{
-						if (Data.Markers[j].StartingPosition >= StartingDistance & Data.Markers[j].StartingPosition < EndingDistance)
-						{
-							int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-							Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-							double d = Data.Markers[j].StartingPosition - StartingDistance;
-							if (Data.Markers[j].Message != null)
-							{
-								CurrentRoute.Tracks[0].Elements[n].Events[m] = new MarkerStartEvent(d, Data.Markers[j].Message, Plugin.CurrentHost);
-							}
-						}
-						if (Data.Markers[j].EndingPosition >= StartingDistance & Data.Markers[j].EndingPosition < EndingDistance)
-						{
-							int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-							Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-							double d = Data.Markers[j].EndingPosition - StartingDistance;
-							if (Data.Markers[j].Message != null)
-							{
-								CurrentRoute.Tracks[0].Elements[n].Events[m] = new MarkerEndEvent(d, Data.Markers[j].Message, Plugin.CurrentHost);
-							}
-						}
+						Data.Markers[j].CreateEvent(StartingDistance, EndingDistance, ref CurrentRoute.Tracks[0].Elements[n]);
 					}
 				}
 				// request stops
@@ -472,12 +449,7 @@ namespace CsvRwRouteParser
 				{
 					for (int j = 0; j < Data.RequestStops.Length; j++)
 					{
-						if (Data.RequestStops[j].TrackPosition >= StartingDistance & Data.RequestStops[j].TrackPosition < EndingDistance)
-						{
-							int m = CurrentRoute.Tracks[0].Elements[n].Events.Length;
-							Array.Resize(ref CurrentRoute.Tracks[0].Elements[n].Events, m + 1);
-							CurrentRoute.Tracks[0].Elements[n].Events[m] = new RequestStopEvent(CurrentRoute, Data.RequestStops[j].StationIndex, Data.RequestStops[j].MaxNumberOfCars, Data.RequestStops[j].FullSpeed, Data.RequestStops[j].OnTime, Data.RequestStops[j].Early, Data.RequestStops[j].Late);
-						}
+						Data.RequestStops[j].CreateEvent(StartingDistance, EndingDistance, ref CurrentRoute.Tracks[0].Elements[n]);
 						
 					}
 				}

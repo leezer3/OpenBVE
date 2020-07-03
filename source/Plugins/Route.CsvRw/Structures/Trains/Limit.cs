@@ -1,4 +1,8 @@
-﻿namespace CsvRwRouteParser
+﻿using System;
+using OpenBveApi.Routes;
+using RouteManager2.Events;
+
+namespace CsvRwRouteParser
 {
 	internal class Limit
 	{
@@ -18,6 +22,15 @@
 			Speed = speed;
 			Direction = direction;
 			Cource = cource;
+		}
+
+		internal void CreateEvent(double StartingDistance, ref double CurrentSpeedLimit, ref TrackElement Element)
+		{
+			int m = Element.Events.Length;
+			Array.Resize(ref Element.Events, m + 1);
+			double d = TrackPosition - StartingDistance;
+			Element.Events[m] = new LimitChangeEvent(d, CurrentSpeedLimit, Speed);
+			CurrentSpeedLimit = Speed;
 		}
 	}
 }
