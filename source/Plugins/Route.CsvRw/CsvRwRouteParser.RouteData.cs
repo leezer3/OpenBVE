@@ -48,11 +48,10 @@ namespace CsvRwRouteParser
 					}
 					for (int i = BlocksUsed; i <= ToIndex; i++)
 					{
-						Blocks[i] = new Block();
+						Blocks[i] = new Block(PreviewOnly);
 						if (!PreviewOnly)
 						{
 							Blocks[i].Background = -1;
-							Blocks[i].BrightnessChanges = new Brightness[] { };
 							Blocks[i].Fog = Blocks[i - 1].Fog;
 							Blocks[i].FogDefined = false;
 							Blocks[i].Cycle = Blocks[i - 1].Cycle;
@@ -129,22 +128,8 @@ namespace CsvRwRouteParser
 							{
 								Blocks[i].RailPole[j] = Blocks[i - 1].RailPole[j];
 							}
-							Blocks[i].Forms = new Form[] { };
-							Blocks[i].Cracks = new Crack[] { };
-							Blocks[i].Signals = new Signal[] { };
-							Blocks[i].Sections = new Section[] { };
-							Blocks[i].SoundEvents = new Sound[] { };
-							Blocks[i].Transponders = new Transponder[] { };
-							Blocks[i].DestinationChanges = new DestinationEvent[] { };
-							Blocks[i].RailFreeObj = new FreeObj[][] { };
-							Blocks[i].GroundFreeObj = new FreeObj[] { };
-							Blocks[i].PointsOfInterest = new PointOfInterest[] { };
 						}
 						Blocks[i].Pitch = Blocks[i - 1].Pitch;
-						Blocks[i].Limits = new Limit[] { };
-						Blocks[i].StopPositions = new Stop[] { };
-						Blocks[i].Station = -1;
-						Blocks[i].StationPassAlarm = false;
 						Blocks[i].CurrentTrackState = Blocks[i - 1].CurrentTrackState;
 						Blocks[i].Turn = 0.0;
 						Blocks[i].Accuracy = Blocks[i - 1].Accuracy;

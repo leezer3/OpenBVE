@@ -58,20 +58,15 @@ namespace CsvRwRouteParser {
 				FirstUsedBlock = -1,
 				Blocks = new Block[1]
 			};
-			Data.Blocks[0] = new Block();
+			Data.Blocks[0] = new Block(PreviewOnly);
 			Data.Blocks[0].Rails.Add(0, new Rail { RailStarted =  true });
 			Data.Blocks[0].RailType = new[] { 0 };
-			Data.Blocks[0].Limits = new Limit[] { };
-			Data.Blocks[0].StopPositions = new Stop[] { };
-			Data.Blocks[0].Station = -1;
-			Data.Blocks[0].StationPassAlarm = false;
 			Data.Blocks[0].Accuracy = 2.0;
 			Data.Blocks[0].AdhesionMultiplier = 1.0;
 			Data.Blocks[0].CurrentTrackState = new TrackElement(0.0);
 			if (!PreviewOnly)
 			{
 				Data.Blocks[0].Background = 0;
-				Data.Blocks[0].BrightnessChanges = new Brightness[] {};
 				Data.Blocks[0].Fog.Start = CurrentRoute.NoFogStart;
 				Data.Blocks[0].Fog.End = CurrentRoute.NoFogEnd;
 				Data.Blocks[0].Fog.Color = Color24.Grey;
@@ -84,14 +79,6 @@ namespace CsvRwRouteParser {
 				Data.Blocks[0].RailWall = new WallDike[] {};
 				Data.Blocks[0].RailDike = new WallDike[] {};
 				Data.Blocks[0].RailPole = new Pole[] {};
-				Data.Blocks[0].Forms = new Form[] {};
-				Data.Blocks[0].Cracks = new Crack[] {};
-				Data.Blocks[0].Signals = new Signal[] {};
-				Data.Blocks[0].Sections = new Section[] {};
-				Data.Blocks[0].SoundEvents = new Sound[] {};
-				Data.Blocks[0].Transponders = new Transponder[] {};
-				Data.Blocks[0].DestinationChanges = new DestinationEvent[] {};
-				Data.Blocks[0].PointsOfInterest = new PointOfInterest[] {};
 				Data.Markers = new Marker[] {};
 				Data.RequestStops = new StopRequest[] { };
 				string PoleFolder = Path.CombineDirectory(CompatibilityFolder, "Poles");

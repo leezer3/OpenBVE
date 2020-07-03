@@ -37,11 +37,11 @@ namespace CsvRwRouteParser
 			FreeObjects.TryGetValue(Type, out obj);
 			if (obj != null)
 			{
-				obj.CreateObject(WorldPosition, RailTransformation, new Transformation(Yaw, Pitch, Roll), -1, StartingDistance, EndingDistance, TrackPosition, 1.0);
+				obj.CreateObject(WorldPosition, RailTransformation, new Transformation(Yaw, Pitch, Roll), StartingDistance, EndingDistance, TrackPosition);
 			}
 		}
 
-		internal void CreateGroundAligned(ObjectDictionary FreeObjects, Vector3 WorldPosition, Transformation GroundTransformation, Vector2 Direction, double Height, double StartingDistance, double EndingDistance, bool AccurateObjectDisposal)
+		internal void CreateGroundAligned(ObjectDictionary FreeObjects, Vector3 WorldPosition, Transformation GroundTransformation, Vector2 Direction, double Height, double StartingDistance, double EndingDistance)
 		{
 			double d = TrackPosition - StartingDistance;
 			Vector3 wpos = WorldPosition + new Vector3(Direction.X * d + Direction.Y * Position.X, Position.Y - Height, Direction.Y * d - Direction.X * Position.X);

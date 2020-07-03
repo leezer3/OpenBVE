@@ -575,7 +575,7 @@ namespace CsvRwRouteParser
 				{
 					for (int j = 0; j < Data.Blocks[i].GroundFreeObj.Length; j++)
 					{
-						Data.Blocks[i].GroundFreeObj[j].CreateGroundAligned(Data.Structure.FreeObjects, Position, GroundTransformation, Direction, Data.Blocks[i].Height, StartingDistance, EndingDistance, Data.AccurateObjectDisposal);
+						Data.Blocks[i].GroundFreeObj[j].CreateGroundAligned(Data.Structure.FreeObjects, Position, GroundTransformation, Direction, Data.Blocks[i].Height, StartingDistance, EndingDistance);
 					}
 				}
 				// rail-aligned objects

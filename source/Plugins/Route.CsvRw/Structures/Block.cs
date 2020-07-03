@@ -40,9 +40,27 @@ namespace CsvRwRouteParser
 		internal double Accuracy;
 		internal double AdhesionMultiplier;
 
-		internal Block()
+		internal Block(bool PreviewOnly)
 		{
 			Rails = new Dictionary<int, Rail>();
+			Limits = new Limit[] { };
+			StopPositions = new Stop[] { };
+			Station = -1;
+			StationPassAlarm = false;
+			if (!PreviewOnly)
+			{
+				BrightnessChanges = new Brightness[] { };
+				Forms = new Form[] { };
+				Cracks = new Crack[] { };
+				Signals = new Signal[] { };
+				Sections = new Section[] { };
+				SoundEvents = new Sound[] { };
+				Transponders = new Transponder[] { };
+				DestinationChanges = new DestinationEvent[] { };
+				RailFreeObj = new FreeObj[][] { };
+				GroundFreeObj = new FreeObj[] { };
+				PointsOfInterest = new PointOfInterest[] { };
+			}
 		}
 	}
 }
