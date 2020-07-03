@@ -1,4 +1,6 @@
 ﻿using OpenBveApi.Math;
+using OpenBveApi.Objects;
+using OpenBveApi.World;
 using RouteManager2.Events;
 
 namespace CsvRwRouteParser
@@ -56,6 +58,46 @@ namespace CsvRwRouteParser
 			Pitch = 0;
 			Roll = 0;
 			BeaconStructureIndex = -1;
+		}
+
+		internal void Create(Vector3 wpos, Transformation RailTransformation, double StartingDistance, double EndingDistance, double Brightness, ObjectDictionary Beacon)
+		{
+			UnifiedObject obj = null;
+			if (BeaconStructureIndex == -2)
+			{
+				switch (Type)
+				{
+					case 0: obj = CompatibilityObjects.TransponderS; break;
+					case 1: obj = CompatibilityObjects.TransponderSN; break;
+					case 2: obj = CompatibilityObjects.TransponderFalseStart; break;
+					case 3: obj = CompatibilityObjects.TransponderPOrigin; break;
+					case 4: obj = CompatibilityObjects.TransponderPStop; break;
+				}
+			}
+			else
+			{
+				int b = BeaconStructureIndex;
+				if (b >= 0 & Beacon.ContainsKey(b))
+				{
+					obj = Beacon[b];
+				}
+			}
+			if (obj != null)
+			{
+				double dx = Position.X;
+				double dy = Position.Y;
+				double dz = TrackPosition - StartingDistance;
+				wpos += dx * RailTransformation.X + dy * RailTransformation.Y + dz * RailTransformation.Z;
+				double tpos = TrackPosition;
+				if (BeaconStructureIndex == -2)
+				{
+					obj.CreateObject(wpos, RailTransformation, new Transformation(Yaw, Pitch, Roll), -1, StartingDistance, EndingDistance, tpos, Brightness);
+				}
+				else
+				{
+					obj.CreateObject(wpos, RailTransformation, new Transformation(Yaw, Pitch, Roll), StartingDistance, EndingDistance, tpos);
+				}
+			}
 		}
 	}
 }

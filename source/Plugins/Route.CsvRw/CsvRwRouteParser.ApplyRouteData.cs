@@ -1019,44 +1019,8 @@ namespace CsvRwRouteParser
 						{
 							for (int k = 0; k < Data.Blocks[i].Transponders.Length; k++)
 							{
-								UnifiedObject obj = null;
-								if (Data.Blocks[i].Transponders[k].BeaconStructureIndex == -2)
-								{
-									switch (Data.Blocks[i].Transponders[k].Type)
-									{
-										case 0: obj = CompatibilityObjects.TransponderS; break;
-										case 1: obj = CompatibilityObjects.TransponderSN; break;
-										case 2: obj = CompatibilityObjects.TransponderFalseStart; break;
-										case 3: obj = CompatibilityObjects.TransponderPOrigin; break;
-										case 4: obj = CompatibilityObjects.TransponderPStop; break;
-									}
-								}
-								else
-								{
-									int b = Data.Blocks[i].Transponders[k].BeaconStructureIndex;
-									if (b >= 0 & Data.Structure.Beacon.ContainsKey(b))
-									{
-										obj = Data.Structure.Beacon[b];
-									}
-								}
-								if (obj != null)
-								{
-									double dx = Data.Blocks[i].Transponders[k].Position.X;
-									double dy = Data.Blocks[i].Transponders[k].Position.Y;
-									double dz = Data.Blocks[i].Transponders[k].TrackPosition - StartingDistance;
-									Vector3 wpos = pos;
-									wpos += dx * RailTransformation.X + dy * RailTransformation.Y + dz * RailTransformation.Z;
-									double tpos = Data.Blocks[i].Transponders[k].TrackPosition;
-									if (Data.Blocks[i].Transponders[k].BeaconStructureIndex == -2)
-									{
-										double b = 0.25 + 0.75 * GetBrightness(ref Data, tpos);
-										obj.CreateObject(wpos, RailTransformation, new Transformation(Data.Blocks[i].Transponders[k].Yaw, Data.Blocks[i].Transponders[k].Pitch, Data.Blocks[i].Transponders[k].Roll), -1, StartingDistance, EndingDistance, tpos, b);
-									}
-									else
-									{
-										obj.CreateObject(wpos, RailTransformation, new Transformation(Data.Blocks[i].Transponders[k].Yaw, Data.Blocks[i].Transponders[k].Pitch, Data.Blocks[i].Transponders[k].Roll), StartingDistance, EndingDistance, tpos);
-									}
-								}
+								double b = 0.25 + 0.75 * GetBrightness(ref Data, Data.Blocks[i].Transponders[k].TrackPosition);
+								Data.Blocks[i].Transponders[k].Create(new Vector3(pos), RailTransformation, StartingDistance, EndingDistance, b, Data.Structure.Beacon);
 							}
 							for (int k = 0; k < Data.Blocks[i].DestinationChanges.Length; k++)
 							{
