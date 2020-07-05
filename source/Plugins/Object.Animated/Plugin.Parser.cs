@@ -149,7 +149,7 @@ namespace Plugin
 										}
 										else if (obj[j] is AnimatedObjectCollection)
 										{
-											AnimatedObjectCollection a = (AnimatedObjectCollection)obj[j];
+											AnimatedObjectCollection a = (AnimatedObjectCollection)obj[j].Clone();
 											for (int k = 0; k < a.Objects.Length; k++)
 											{
 												if (ObjectCount >= Result.Objects.Length)
