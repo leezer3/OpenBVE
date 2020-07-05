@@ -96,7 +96,7 @@ namespace OpenBveApi.Objects
 					{
 						continue;
 					}
-					(Sounds[i] as WorldSound)?.CreateSound(Sounds[i].Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition);
+					(Sounds[i] as WorldSound)?.CreateSound(Position + Sounds[i].Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition);
 					(Sounds[i] as AnimatedWorldObjectStateSound)?.Create(Position, BaseTransformation, AuxTransformation, SectionIndex, TrackPosition, Brightness);
 				}
 			}

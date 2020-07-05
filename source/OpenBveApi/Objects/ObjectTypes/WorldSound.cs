@@ -61,8 +61,9 @@ namespace OpenBveApi.Objects
 		public void CreateSound(Vector3 position, Transformation BaseTransformation, Transformation AuxTransformation, int SectionIndex, double trackPosition)
 		{
 			int a = currentHost.AnimatedWorldObjectsUsed;
-
 			WorldSound snd = (WorldSound)Clone();
+			snd.Position = position;
+			snd.TrackPosition = trackPosition;
 			snd.currentTrackPosition = trackPosition;
 			snd.Follower = new TrackFollower(currentHost);
 			snd.Follower.UpdateAbsolute(trackPosition, true, true);
