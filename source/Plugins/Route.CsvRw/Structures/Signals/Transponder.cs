@@ -1,6 +1,9 @@
-﻿using OpenBveApi.Math;
+﻿using System;
+using OpenBveApi.Math;
 using OpenBveApi.Objects;
+using OpenBveApi.Routes;
 using OpenBveApi.World;
+using RouteManager2;
 using RouteManager2.Events;
 
 namespace CsvRwRouteParser
@@ -96,6 +99,22 @@ namespace CsvRwRouteParser
 				else
 				{
 					obj.CreateObject(wpos, RailTransformation, new Transformation(Yaw, Pitch, Roll), StartingDistance, EndingDistance, tpos);
+				}
+			}
+		}
+
+		internal void CreateEvent(ref TrackElement Element, double StartingDistance)
+		{
+			if (Type != -1)
+			{
+				int t = SectionIndex;
+				if (t >= 0 & t < Plugin.CurrentRoute.Sections.Length)
+				{
+					int m = Element.Events.Length;
+					Array.Resize(ref Element.Events, m + 1);
+					double dt = TrackPosition - StartingDistance;
+					Element.Events[m] = new TransponderEvent(Plugin.CurrentRoute, dt, Type, Data, t, ClipToFirstRedSection);
+					Type = -1;
 				}
 			}
 		}

@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenBveApi.Math;
+using OpenBveApi.World;
 using RouteManager2.Stations;
 
 namespace CsvRwRouteParser
@@ -22,6 +23,18 @@ namespace CsvRwRouteParser
 		private readonly double ForwardTolerance;
 		private readonly double BackwardTolerance;
 		private readonly int Cars;
+
+		internal void Create(Vector3 wpos, Transformation RailTransformation, double StartingDistance, double EndingDistance, double b)
+		{
+			if (Direction != 0)
+			{
+				double dx = 1.8 * Direction;
+				double dz = TrackPosition - StartingDistance;
+				wpos += dx * RailTransformation.X + dz * RailTransformation.Z;
+				double tpos = TrackPosition;
+				CompatibilityObjects.StopPost.CreateObject(wpos, RailTransformation, Transformation.NullTransformation, -1, StartingDistance, EndingDistance, tpos, b);
+			}
+		}
 
 		internal void CreateEvent(ref RouteStation[] Stations, Vector3 Position, Vector3 Up, Vector3 Side)
 		{

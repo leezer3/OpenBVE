@@ -1,4 +1,6 @@
 ﻿using OpenBveApi.Math;
+using OpenBveApi.Objects;
+using OpenBveApi.World;
 
 namespace CsvRwRouteParser
 {
@@ -28,5 +30,23 @@ namespace CsvRwRouteParser
 			Pitch = pitch;
 			Roll = roll;
 		}
-	}
+
+		internal void Create(Vector3 wpos, Transformation RailTransformation, double StartingDistance, double EndingDistance, ObjectDictionary Beacon)
+		{
+			UnifiedObject obj = null;
+			if (BeaconStructureIndex >= 0 & Beacon.ContainsKey(BeaconStructureIndex))
+			{
+				obj = Beacon[BeaconStructureIndex];
+			}
+			if (obj != null)
+			{
+				double dx = Position.X;
+				double dy = Position.Y;
+				double dz = TrackPosition - StartingDistance;
+				wpos += dx * RailTransformation.X + dy * RailTransformation.Y + dz * RailTransformation.Z;
+				double tpos = TrackPosition;
+				obj.CreateObject(wpos, RailTransformation, new Transformation(Yaw, Pitch, Roll), StartingDistance, EndingDistance, tpos);
+			}
+		}
+}
 }
